@@ -1,146 +1,132 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5490771;
-	Fri, 23 Apr 2021 10:11:18 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2756B61406;
-	Fri, 23 Apr 2021 10:11:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1619172677;
-	bh=/o0BXhvCn3g+qLDsEXyFdO+FwTtsbkOwzDn8RkxaNLo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ekx0DYnh1ATISx6W3yjr6KQhPx8EfgS3Os+sBUwW/ksP5iHaJDJ8sY1soCTX6J5xU
-	 M6D/OB24ACFSWHXzdvNe69/DnufgtffGere6A0qY9Ch7c84wROVsoD10642+MoQejf
-	 4Sq6tHGMyiKCQm0X9Vq5da/GX/OdMi/O7TBucMQE=
-Date: Fri, 23 Apr 2021 12:11:12 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <linux@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CDA2FA1;
+	Fri, 23 Apr 2021 10:49:34 +0000 (UTC)
+Received: from ip4d14bd53.dynamic.kabel-deutschland.de ([77.20.189.83] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1lZtNG-0000is-Iv; Fri, 23 Apr 2021 12:49:26 +0200
+To: Greg KH <gregkh@linuxfoundation.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	regressions@lists.linux.dev,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-	Pablo Neira Ayuso <pablo@netfilter.org>, ksummit@lists.linux.dev,
-	workflows@vger.kernel.org
+ "Rafael J. Wysocki" <rafael@kernel.org>, regressions@lists.linux.dev,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+ Pablo Neira Ayuso <pablo@netfilter.org>, ksummit@lists.linux.dev,
+ workflows@vger.kernel.org
+References: <268a3049-7c0b-8a33-1ff6-5a2d35fcba16@leemhuis.info>
+ <YIKdQKJNZOSfdL9B@kroah.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
 Subject: Re: RFC: building a regression tracking bot for Linux kernel
  development
-Message-ID: <YIKdQKJNZOSfdL9B@kroah.com>
-References: <268a3049-7c0b-8a33-1ff6-5a2d35fcba16@leemhuis.info>
+Message-ID: <8a44e6b3-fff4-ea6f-2643-bb2a15ff990a@leemhuis.info>
+Date: Fri, 23 Apr 2021 12:49:25 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+In-Reply-To: <YIKdQKJNZOSfdL9B@kroah.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-BS
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <268a3049-7c0b-8a33-1ff6-5a2d35fcba16@leemhuis.info>
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1619174974;c67f6ab2;
+X-HE-SMSGID: 1lZtNG-0000is-Iv
 
-On Thu, Apr 22, 2021 at 09:16:40AM +0200, Thorsten Leemhuis wrote:
-> Lo! As mentioned a few times recently I'm staring to build a bot for
-> semi-automatic Linux kernel regressions tracking. Find below a rough
-> description of how I imagine it's going to work. That way I want to give
-> everyone a chance to influence things before I'm starting to code for
-> real. Early feedback will help to build something that's acceptable for
-> the Linux kernel developer community and used in practice in the long
-> run, and that's what I aim for.
+On 23.04.21 12:11, Greg KH wrote:
+> On Thu, Apr 22, 2021 at 09:16:40AM +0200, Thorsten Leemhuis wrote:
+>> Lo! As mentioned a few times recently I'm staring to build a bot for
+>> semi-automatic Linux kernel regressions tracking. Find below a rough
+>> description of how I imagine it's going to work. That way I want to give
+>> everyone a chance to influence things before I'm starting to code for
+>> real. Early feedback will help to build something that's acceptable for
+>> the Linux kernel developer community and used in practice in the long
+>> run, and that's what I aim for.
+>>
+>> I know, I know, "Talk is cheap. Show me the code.". But I had to think
+>> things through and write some of it down anyway, so no harm done in
+>> posting it as RFC. I CCed ksummit, as many maintainers hang out there
+>> and because this is a follow up to my former regression tracking work we
+>> discussed on both kernel and maintainers summit 2017; it fact it
+>> hopefully might be something for this year as well, we'll see, too early
+>> to tell.
+>>
+>> So how will the "regzbot" work? The ideal case is simple:
+>>
+>> Someone reports a regression to the recently created regressions mailing
+>> list(regressions@lists.linux.dev). There the user includes a tag like this:
+>>> #regzb introduced: 94a632d91ad1 ("usc: xhbi-foo: check bar_params earlier")
 > 
-> I know, I know, "Talk is cheap. Show me the code.". But I had to think
-> things through and write some of it down anyway, so no harm done in
-> posting it as RFC. I CCed ksummit, as many maintainers hang out there
-> and because this is a follow up to my former regression tracking work we
-> discussed on both kernel and maintainers summit 2017; it fact it
-> hopefully might be something for this year as well, we'll see, too early
-> to tell.
+> That's great, but the ability for most people to track stuff down to the
+> commit id feels very low.  I would think that the "this no longer works"
+> is the bug report / regression, and eventually that can be tracked down
+> to "commit XXXX caused this" which is what you want to see above.
 > 
-> So how will the "regzbot" work? The ideal case is simple:
+> Or am I confused?
+
+Sorry, I should have made it more obvious that I leave some stuff out
+initially and get to aspect like that later. :-/
+
+[…]
+>> That can't be all
+>> -----------------
+>>
+>> Of course the world is more complicated than the simple example scenario
+>> above, as the devil is always in the details. The three most obvious
+>> problems the initial ideal scenario left aside:
+>>
+>> * The reporter doesn't specify the #regzb tag at all. Regzbot can't do
+>> anything about it, it sadly won't have visionary power and a AI engine
+>> any time soon. Some human (for a while that often will be me) thus needs
+>> to reply with the tag with a proper reply-to to the report to make
+>> regboz track it.
 > 
-> Someone reports a regression to the recently created regressions mailing
-> list(regressions@lists.linux.dev). There the user includes a tag like this:
-> > #regzb introduced: 94a632d91ad1 ("usc: xhbi-foo: check bar_params earlier")
+> Any specific format/tag we can use to help make this easier?  Or is that
+> just something that you are going to do "by hand" to start with?
 
-That's great, but the ability for most people to track stuff down to the
-commit id feels very low.  I would think that the "this no longer works"
-is the bug report / regression, and eventually that can be tracked down
-to "commit XXXX caused this" which is what you want to see above.
+For now making sure regressions@lists.linux.dev is added to the CCed of
+any replies to regression reports would be a really big help to already
+establish it as central place where they are all visible. Then no human
+or bot needs to monitor hundreds of mailing list to find them -- which
+obviously is doomed to fail and was one of the pain points when I
+tracked regressions manually years ago.
 
-Or am I confused?
+And in the long run of course everyone is free to use those tags
+(obviously they won't help before I get that bot running), but for in
+the beginning it will be mainly "me doing it by hand"...
 
-> That will make regzbot add the report to its list of regressions it
-> tracks, which among other will make it store the mail's message-id
-> (let's assume it's `xt6uzpqtaqru6pmh@earth.solsystem`). Ideally some
-> developer within a few days will fix the regression with a patch. When
-> doing so, they already often include a tag linking to the report:
-> > Link: https://lore.kernel.org/r/xt6uzpqtaqru6pmh@earth.solsystem
+>>  * regression in stable and longterm kernels sometimes affect multiple
+>> versions, for example if a patch that works fine in mainline was
+>> backported to the longterm kernel 5.10 and 5.4 – but causes problems in
+>> both, as something required by the patch is missing in those lines. How
+>> this will be solved exactly remains to be seen, maybe like this:
+>>> #regzb Introduced: c39667ddcfd6 e39667ddcfd1 ("usc: xhbi-foo: check bar_params a little later again")
+>>
+>>  Then regzbot can look those commits up and from that determine the
+>> affected versions. Obviously the reporter will likely not be aware of
+>> it, hence it's likely that the stable maintainer or the developer need
+>> to send a mail to make regzbot aware that this regression affects
+>> multiple versions.
 > 
+> This shouldn't be that big of an issue, as the stable maintainers have
+> simple tools that can show "what releases was this commit in" today,
+> which is what we use to track what commits need to be backported where.
 > 
-> Regzbot will notice this tag refers to the regression it tracks and
-> automatically close the entry for it.
-> 
-> That's it already. The regression was tracked with:
-> 
->  * minimal overhead for the reporter
->  * no additional overhead for the developers – only something they ought
-> to do already became more important
+> I can give you a copy of my tools off-line if you are curious about this
+> and think it's worth adding to your tool.
 
-That's great, and for tracking commits that we know are bad (like a few
-I see being reported against linux-next right now), that's wonderful and
-a huge step forward.
+Guess I might get back to that sooner or later, but if you already have
+something to handle that I might ignore that case initially and focus on
+other aspects to make sure that stuff gets properly off the ground.
 
-But how are you going to track "issues that are not narrowed down to a
-commit" with this?  Or is that not the goal here?
+> Oh, and many thanks for doing this, I think this looks great.
 
-Ah, I should have kept reading:
+Thx for taking a look. Feels good to hear that, as I really don't want
+to build something which in the end doesn't get used.
 
-> That can't be all
-> -----------------
-> 
-> Of course the world is more complicated than the simple example scenario
-> above, as the devil is always in the details. The three most obvious
-> problems the initial ideal scenario left aside:
-> 
-> * The reporter doesn't specify the #regzb tag at all. Regzbot can't do
-> anything about it, it sadly won't have visionary power and a AI engine
-> any time soon. Some human (for a while that often will be me) thus needs
-> to reply with the tag with a proper reply-to to the report to make
-> regboz track it.
+Ciao, Thorsten
 
-Any specific format/tag we can use to help make this easier?  Or is that
-just something that you are going to do "by hand" to start with?
-
-> * The commit causing the regression is unknown to the reporter. In that
-> case the tag should mention the span when the regression was introduced:
-> > #regzb introduced: v5.7..v5.8-rc1
-
-Ah, "introduced", I should have read the whole email, my fault...
-
-> * The developer who fixes the issue forgets to place the "Link:" tag,
-> which can't be added once committed. In that case some human needs to
-> reply to the thread with the initial report with a tag like this:
-> > #regzb Fixed-by: c39667ddcfd5 
-
-nice!
-
->  * regression in stable and longterm kernels sometimes affect multiple
-> versions, for example if a patch that works fine in mainline was
-> backported to the longterm kernel 5.10 and 5.4 – but causes problems in
-> both, as something required by the patch is missing in those lines. How
-> this will be solved exactly remains to be seen, maybe like this:
-> > #regzb Introduced: c39667ddcfd6 e39667ddcfd1 ("usc: xhbi-foo: check bar_params a little later again")
-> 
->  Then regzbot can look those commits up and from that determine the
-> affected versions. Obviously the reporter will likely not be aware of
-> it, hence it's likely that the stable maintainer or the developer need
-> to send a mail to make regzbot aware that this regression affects
-> multiple versions.
-
-This shouldn't be that big of an issue, as the stable maintainers have
-simple tools that can show "what releases was this commit in" today,
-which is what we use to track what commits need to be backported where.
-
-I can give you a copy of my tools off-line if you are curious about this
-and think it's worth adding to your tool.
-
-Oh, and many thanks for doing this, I think this looks great.
-
-greg k-h
+P.S.: There is one thing I forgot to mention: regzbot will obviously in
+the long run also be able to generate reports in text form and send them
+to Linus or LKML occasionally (likely once a week before or after a new rc).
