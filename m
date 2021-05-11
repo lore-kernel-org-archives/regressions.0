@@ -1,56 +1,122 @@
-Received: from muru.com (muru.com [72.249.23.125])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0E2A70
-	for <regressions@lists.linux.dev>; Fri,  7 May 2021 09:40:50 +0000 (UTC)
-Received: from atomide.com (localhost [127.0.0.1])
-	by muru.com (Postfix) with ESMTPS id 1FBCD80E0;
-	Fri,  7 May 2021 09:40:50 +0000 (UTC)
-Date: Fri, 7 May 2021 12:40:45 +0300
-From: Tony Lindgren <tony@atomide.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	lkft-triage@lists.linaro.org,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	Linux-OMAP <linux-omap@vger.kernel.org>,
-	regressions@lists.linux.dev, Benoit Cousson <bcousson@baylibre.com>,
-	Kishon Vijay Abraham I <kishon@ti.com>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>
-Subject: Re: #regzb introduced: 98feab31ac49 ("ARM: OMAP2+: Drop legacy
- platform data for dra7 sata")
-Message-ID: <YJULHXtTFD9wqQzq@atomide.com>
-References: <CA+G9fYtTN6ug3eBAW3wMcDeESUo+ebj7L5HBe5_fj4uqDExFQg@mail.gmail.com>
- <YJPYvsdkfx4JD4vT@atomide.com>
- <CA+G9fYv48aJ6tmSaf_HtRKHse4yN40hEYSPR5=A3W6HRoJ8p_g@mail.gmail.com>
- <YJTz+D9Sp8Eyp+iw@atomide.com>
- <e896704c-c13a-739d-0723-22fec35406ed@leemhuis.info>
- <YJUJ0AMAWvNMaCRu@atomide.com>
- <fac6076d-5d2b-3165-b60a-b17a1ebbc506@leemhuis.info>
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A83072
+	for <regressions@lists.linux.dev>; Tue, 11 May 2021 05:21:41 +0000 (UTC)
+Received: by mail-ej1-f46.google.com with SMTP id n2so27859795ejy.7
+        for <regressions@lists.linux.dev>; Mon, 10 May 2021 22:21:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=o7qvVYTxIMvAfWp7wQVxyaZrRU/DExjEtTnActjnLoY=;
+        b=CUvd21dZicHSdFcB2WKTwesV82JRksY6kwmw63mPPVEIqln3djKwKo0ohzdHfRpoC0
+         ciPwj/lBWy8yZpu/Q8/rtDpybfjlNpChL1jFK+8GTyg1ixnYGQLU060m14an8Y/IfY5+
+         7TZN9rEX38BiBVOXNXwO5Wocx9dVszZG5bAoRuXTO5eCUmMgS9m01Awxk420gZ/pV381
+         MQ8cwvNDdTQL7Ogmvj+9QcnHqyBHIRd+4YPecYMlAI/LePaAjh7oyR7HVni0VVkEbWlm
+         lKDKUgntZnzejJ5MpdpHFhr471/bDu22Qpo6thTOh+VRl9DZVz/8jJPCrEfbRMh/OI8O
+         qTrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o7qvVYTxIMvAfWp7wQVxyaZrRU/DExjEtTnActjnLoY=;
+        b=jaRLXR98/0b4VHv3xjH6AKdzA8C8Ie/bmsVw/WxWIq+4UOeVKrcOW65hi2M+FhEvJz
+         Y5JsP9HV3O7L02bBKE0ki4jM11dgrp5xKrdcYFdSi1CwcUL7q1JXJ51PDPBkjWZxyAld
+         P138Q6k8BKgWwzlEUPwFEjJovpI7pMy00a16gO0vX4+azEd4/OFNVSlW9Wnozv6yGVRK
+         26A/MTEmhOoUro4BWpi44Rw2UIvVpsT1pk65Hrc9wcP9mhXdCC0R1shCwQ6PNWr/KrD9
+         AR/1dd8tnF0nN73TSqJtQw2Iw5YCLGi8yYYIllBXXf70d4g8r68w7VQX4w468ua1lstb
+         KUkQ==
+X-Gm-Message-State: AOAM532rYEHSg6uOIbtZ1puSkmGEmHBFYFxLHUX35T6gOq/a3Qg4/kbx
+	7tyeB6zUzxYPhFcyvwaTtjfowmOLZ4gTrKinHwD2vA==
+X-Google-Smtp-Source: ABdhPJxXDOxOInJbvAi7HHYEeYbA2V9jdKzkjQD1c3CtgM+zhQj43lQN1OUFreObmxolmlLp1EYRdC3tFAoh8sBWeMU=
+X-Received: by 2002:a17:906:85da:: with SMTP id i26mr29846987ejy.287.1620710499783;
+ Mon, 10 May 2021 22:21:39 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fac6076d-5d2b-3165-b60a-b17a1ebbc506@leemhuis.info>
+References: <20210503142905.21468-1-amadeus@jmu.edu.cn>
+In-Reply-To: <20210503142905.21468-1-amadeus@jmu.edu.cn>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 11 May 2021 10:51:28 +0530
+Message-ID: <CA+G9fYsRZswjeDZj1hiGDu5HZ+jYCVsOOL6MAzEb=LVfQ1_NpA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] arm64: dts: allwinner: h5: Add NanoPi R1S H5 support
+To: Chukun Pan <amadeus@jmu.edu.cn>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@siol.net>, Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	linux-sunxi@lists.linux.dev, open list <linux-kernel@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-* Thorsten Leemhuis <linux@leemhuis.info> [210507 09:39]:
-> On 07.05.21 11:35, Tony Lindgren wrote:
-> > * Thorsten Leemhuis <linux@leemhuis.info> [210507 08:27]:
-> >> Great to see that this is about to be fixed. And Naresh, many thx for
-> >> giving the #regzb tag a try, even if regzbot (shameless plug for the
-> >> unaware: https://linux-regtracking.leemhuis.info/post/regzbot-approach/
-> >> ) is not up and running already, much appreciated!
-> >
-> > Hmm so the link above does not show where to git clone the regzb program
-> > from? Or is that not yet published? Just wondering.
-> 
-> The code is still very early WIP, so not yet published, but I'll publish
-> the first few bits in a week or two, even if they are not yet useful to
-> anyone besides myself. ;-)
+On Mon, 3 May 2021 at 20:09, Chukun Pan <amadeus@jmu.edu.cn> wrote:
+>
+> The NanoPi R1S H5 is a open source board made by FriendlyElec.
+> It has the following features:
+>
+> - Allwinner H5, Quad-core Cortex-A53
+> - 512MB DDR3 RAM
+> - 10/100/1000M Ethernet x 2
+> - RTL8189ETV WiFi 802.11b/g/n
+> - USB 2.0 host port (A)
+> - MicroSD Slot
+> - Serial Debug Port
+> - 5V 2A DC power-supply
+>
+> Signed-off-by: Chukun Pan <amadeus@jmu.edu.cn>
 
-OK thanks for the update.
+Linux next tag next-20210511 arm64 build failed due to this error.
 
-Tony
+Error: /builds/linux/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-r1s-h5.dts:35.15-16
+syntax error
+FATAL ERROR: Unable to parse input tree
+make[3]: *** [/builds/linux/scripts/Makefile.lib:365:
+arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-r1s-h5.dtb] Error 1
+make[3]: Target '__build' not remade because of errors.
+
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+
+#regzb introduced: 7c9dbeda744f ("arm64: dts: allwinner: h5: Add
+NanoPi R1S H5 support")
+
+
+> ---
+>  arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+>  .../dts/allwinner/sun50i-h5-nanopi-r1s-h5.dts | 194 ++++++++++++++++++
+>  2 files changed, 195 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-r1s-h5.dts
+
+
+steps to reproduce:
+--------------------------
+# TuxMake is a command line tool and Python library that provides
+# portable and repeatable Linux kernel builds across a variety of
+# architectures, toolchains, kernel configurations, and make targets.
+#
+# TuxMake supports the concept of runtimes.
+# See https://docs.tuxmake.org/runtimes/, for that to work it requires
+# that you install podman or docker on your system.
+#
+# To install tuxmake on your system globally:
+# sudo pip3 install -U tuxmake
+#
+# See https://docs.tuxmake.org/ for complete documentation.
+
+
+tuxmake --runtime podman --target-arch arm64 --toolchain gcc-9
+--kconfig defconfig --kconfig-add
+https://builds.tuxbuild.com/1sNFFZazb6TLzCYLxNoyIcWs0eU/config
+
+
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+  git commit: 4bf27b1f73303c33c5570b63f8ed734abcd1991f
+  git describe: next-20210511
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
