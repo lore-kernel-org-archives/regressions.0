@@ -1,120 +1,83 @@
-Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3BB2FB6
-	for <regressions@lists.linux.dev>; Wed, 19 May 2021 15:00:35 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1621436438; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=638YVhE9uQAJ1yHYklSQlB/9IUMfzjqyYCUeaH69iag=; b=l1a8YtDUJUqvkUwReXFz7jSPvaj9UHaYKSl9EyekmjtxnK/SmYhaoV8Tu61EfE39BzJ3MY4a
- /slRGTbRuiTX73Kp5k1W0IfZrWfvBIH3RQq0XSEf8Ag7a7aaglwClsa8TXo/EMHSiLmSBfqx
- izNlHMOXS++aPB0tsQpG3lT8Zk4=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
- 60a52809b15734c8f92b0b5f (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 19 May 2021 15:00:25
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-	id 9F4E3C43147; Wed, 19 May 2021 15:00:24 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-	aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: kvalo)
-	by smtp.codeaurora.org (Postfix) with ESMTPSA id 14244C433D3;
-	Wed, 19 May 2021 15:00:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 14244C433D3
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-From: Kalle Valo <kvalo@codeaurora.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,  kernel test robot
- <oliver.sang@intel.com>,  Thomas =?utf-8?Q?Hellstr=C3=B6m?=
- <thomas.hellstrom@linux.intel.com>,  Serge Belyshev
- <belyshev@depni.sinp.msu.ru>,  Chris Wilson <chris@chris-wilson.co.uk>,
-  Daniel Vetter <daniel.vetter@ffwll.ch>,  Jani Nikula
- <jani.nikula@linux.intel.com>,  Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>,  Peter Zijlstra <peterz@infradead.org>,
-  Rodrigo Vivi <rodrigo.vivi@intel.com>,  Andrew Morton
- <akpm@linux-foundation.org>,  LKML <linux-kernel@vger.kernel.org>,
-  lkp@lists.01.org,  kernel test robot <lkp@intel.com>,
- regressions@lists.linux.dev
-Subject: Re: [i915] b12d691ea5: kernel_BUG_at_mm/memory.c
-References: <20210519024322.GA29704@xsang-OptiPlex-9020>
-	<CAHk-=whcr5M=4Mz2ydu4XtxTL_34WkXPnmFmA4f8r+ELXDC6hg@mail.gmail.com>
-	<20210519133330.GA14452@lst.de>
-Date: Wed, 19 May 2021 18:00:14 +0300
-In-Reply-To: <20210519133330.GA14452@lst.de> (Christoph Hellwig's message of
-	"Wed, 19 May 2021 15:33:30 +0200")
-Message-ID: <87y2ca6a69.fsf@tynnyri.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656F12FB6
+	for <regressions@lists.linux.dev>; Wed, 19 May 2021 16:11:49 +0000 (UTC)
+Received: by mail-lj1-f181.google.com with SMTP id f12so16301527ljp.2
+        for <regressions@lists.linux.dev>; Wed, 19 May 2021 09:11:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n38yI3oq9hOs0w7+qSvFPZKuNPxOuHm402NSUUthZyA=;
+        b=BrlJyx9AUrw2lHOaGBlhvxuHGUWn4JGwoZHMIip/Cz5zCwjc3amf34js0LZtyhhYg/
+         Kn+CAL4R8ueE98Wxql/NUDPbmhynUChlJlPuL8SRI4i/0L7ZpSD6YwBgZXhGhOewPA/3
+         td+EVvuvVWxSislyyclLVv2EpK7SiWO5zda0s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n38yI3oq9hOs0w7+qSvFPZKuNPxOuHm402NSUUthZyA=;
+        b=HtRypNBc7U65OAlch5Xws2rWH9JQSiBfqPJJ8ScSCIx9xq6rywpAsY9RODNuSikxhO
+         W1tc+qM91GRsd0CxEKDu1DgRQDr+S2SpXJjL/kZHwA9EWld0FywrKHGq/Y1jeNGE6Q+9
+         1qceHvS+exhqzosITfK/GaH0nKrT5G3/sh1G8n/Gzzv7MNcER/jaKjKybu4GvPImdWUX
+         i5EB4UTG9WRapHD3eBpgtuqOVQNbHmZzT2bEYgh/gWpjZU21fVJsklQjDi/uWhLXozbK
+         PMjA2Oi7G5xh7x/v1yGJn0u+98nLTkkfg5syL0xl/fPFU/sYcLQvnc4+l5Wk1uO256TZ
+         hIyw==
+X-Gm-Message-State: AOAM53303i0Ir7y11222Adxhm5IdbRzCNfp4YK3YDqoC7Ckxwf6uKeQa
+	PI/TDgFeWGRiNqZV+QTTHkLxW8cuBsht8qgt+rE=
+X-Google-Smtp-Source: ABdhPJxrvjTwnlPf5dFyghX9CT4iieoNRLx/0HLEO3UX2YPGfFuRCxNRX7dA4DqpzF8irLTM2zol5Q==
+X-Received: by 2002:a2e:2e12:: with SMTP id u18mr32153lju.200.1621440707163;
+        Wed, 19 May 2021 09:11:47 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id j5sm12989lfb.101.2021.05.19.09.11.44
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 May 2021 09:11:45 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id x19so19931578lfa.2
+        for <regressions@lists.linux.dev>; Wed, 19 May 2021 09:11:44 -0700 (PDT)
+X-Received: by 2002:a05:6512:36c5:: with SMTP id e5mr157954lfs.41.1621440704505;
+ Wed, 19 May 2021 09:11:44 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20210519024322.GA29704@xsang-OptiPlex-9020> <CAHk-=whcr5M=4Mz2ydu4XtxTL_34WkXPnmFmA4f8r+ELXDC6hg@mail.gmail.com>
+ <20210519133330.GA14452@lst.de> <87y2ca6a69.fsf@tynnyri.adurom.net>
+In-Reply-To: <87y2ca6a69.fsf@tynnyri.adurom.net>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Wed, 19 May 2021 06:11:28 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wgYqF3bffW0EPmVTUFcoV0jXECu-A_dyWZ0ZwUwhCHi+A@mail.gmail.com>
+Message-ID: <CAHk-=wgYqF3bffW0EPmVTUFcoV0jXECu-A_dyWZ0ZwUwhCHi+A@mail.gmail.com>
+Subject: Re: [i915] b12d691ea5: kernel_BUG_at_mm/memory.c
+To: Kalle Valo <kvalo@codeaurora.org>
+Cc: Christoph Hellwig <hch@lst.de>, kernel test robot <oliver.sang@intel.com>, 
+	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+	Serge Belyshev <belyshev@depni.sinp.msu.ru>, Chris Wilson <chris@chris-wilson.co.uk>, 
+	Daniel Vetter <daniel.vetter@ffwll.ch>, Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org, 
+	kernel test robot <lkp@intel.com>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Christoph Hellwig <hch@lst.de> writes:
-
-> On Tue, May 18, 2021 at 04:58:31PM -1000, Linus Torvalds wrote:
->> On Tue, May 18, 2021 at 4:26 PM kernel test robot <oliver.sang@intel.com> wrote:
->> >
->> > commit: b12d691ea5e01db42ccf3b4207e57cb3ce7cfe91 ("i915: fix remap_io_sg to verify the pgprot")
->> > [...]
->> > [  778.550996] kernel BUG at mm/memory.c:2183!
->> > [ 778.559015] RIP: 0010:remap_pfn_range_notrack
->> > (kbuild/src/consumer/mm/memory.c:2183
->> > kbuild/src/consumer/mm/memory.c:2211
->> > kbuild/src/consumer/mm/memory.c:2233
->> > kbuild/src/consumer/mm/memory.c:2255
->> > kbuild/src/consumer/mm/memory.c:2311)
->> > [  778.688951] remap_pfn_range (kbuild/src/consumer/mm/memory.c:2342)
->> > [  778.692700] remap_io_sg (kbuild/src/consumer/drivers/gpu/drm/i915/i915_mm.c:71) i915
->> 
->> Yeah, so that BUG_ON() checks that theer isn't any old mapping there.
->> 
->> You can't just remap over an old one, but it does seem like that is
->> exactly what commit b12d691ea5e0 ("i915: fix remap_io_sg to verify the
->> pgprot") ends up doing.
->> 
->> So the code used to just do "apply_to_page_range()", which admittedly
->> was odd too. But it didn't mind having old mappings and re-applying
->> something over them.
->> 
->> Converting it to use remap_pfn_range() does look better, but it kind
->> of depends on it ever being done *once*. But the caller seems to very
->> much remap the whole vmsa at fault time, so...
->> 
->> I don't know what the right thing to do here is, because I don't know
->> the invalidation logic and when faults happen.
->> 
->> I see that there is another thread about different issues on the
->> intel-gfx list. Adding a few people to this kernel test robot thread
->> too.
->> 
->> I'd be inclined to revert the commits as "not ready yet", but it would
->> be better if somebody can go "yeah, this should be done properly like
->> X".
+On Wed, May 19, 2021 at 5:00 AM Kalle Valo <kvalo@codeaurora.org> wrote:
 >
-> I think reverting just this commit for now is the best thing.
+> Christoph Hellwig <hch@lst.de> writes:
+>
+> > On Tue, May 18, 2021 at 04:58:31PM -1000, Linus Torvalds wrote:
+> >>
+> >> I'd be inclined to revert the commits as "not ready yet", but it would
+> >> be better if somebody can go "yeah, this should be done properly like
+> >> X".
+> >
+> > I think reverting just this commit for now is the best thing.
+>
+> Yes, please revert it if there's no quick fix. On my Dell XPS 13 9310
+> laptop (with Debian 10) X won't start until I revert commit
+> b12d691ea5e0, so this is a major issue.
 
-Yes, please revert it if there's no quick fix. On my Dell XPS 13 9310
-laptop (with Debian 10) X won't start until I revert commit
-b12d691ea5e0, so this is a major issue.
+Reverted.
 
-Also adding the new regressions list, as this is an i915 regression
-introduced in v5.13-rc1.
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+                 Linus
