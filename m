@@ -1,107 +1,120 @@
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3BB2FB6
+	for <regressions@lists.linux.dev>; Wed, 19 May 2021 15:00:35 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1621436438; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=638YVhE9uQAJ1yHYklSQlB/9IUMfzjqyYCUeaH69iag=; b=l1a8YtDUJUqvkUwReXFz7jSPvaj9UHaYKSl9EyekmjtxnK/SmYhaoV8Tu61EfE39BzJ3MY4a
+ /slRGTbRuiTX73Kp5k1W0IfZrWfvBIH3RQq0XSEf8Ag7a7aaglwClsa8TXo/EMHSiLmSBfqx
+ izNlHMOXS++aPB0tsQpG3lT8Zk4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-east-1.postgun.com with SMTP id
+ 60a52809b15734c8f92b0b5f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Wed, 19 May 2021 15:00:25
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+	id 9F4E3C43147; Wed, 19 May 2021 15:00:24 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+Received: from tynnyri.adurom.net (tynnyri.adurom.net [51.15.11.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948EB2FB6
-	for <regressions@lists.linux.dev>; Wed, 19 May 2021 08:24:04 +0000 (UTC)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-	by mailout.west.internal (Postfix) with ESMTP id EFD2B138F;
-	Wed, 19 May 2021 04:24:02 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Wed, 19 May 2021 04:24:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=fm3; bh=0SETtIoHoSLRFxXXnzA6YE1GPr8
-	GujCyHaH8e/QgHPw=; b=hY/Nq5O95Dc8JehlHpmNDbro8HW8Cb+fg86jFv+XgMq
-	V2JQzZ4tI7os8riZbecQW4jLdqdfBx78/Bg7Q08WAeKZtuAgg/+k3bsoZZPqOOOh
-	Y50xtDJ48RtyZq1QcsdLu0HAFbwB5ZSpzv2ErSm5ME0LhbBMoDcGMfVXOpn1+iiG
-	Qn6gmzq+wt9ZQSyBfGkfatgzTmXKv/bnN18C0itB4S+TbKQlo+tlBoUnK90RalkK
-	kvLQGZhk+G8iLc/tML4mn0Ro/NzaEWyG5OAHYjc09y9cM2RfITHlwncHSQRmbpIc
-	0IXnDPwGjwrR6qtiv5EMmkIRw2gzNA3LcWiS31lfRyA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=0SETtI
-	oHoSLRFxXXnzA6YE1GPr8GujCyHaH8e/QgHPw=; b=KIdR8VKzjoWWBVh4UJIfKl
-	9IyVFOgxfSzgSJ4QNQETYmZPKXM/qudwutpM4SqqNNele+xb0VzhiRMOD3cSGVHE
-	Indli67jnHrVaypwU4neMXk/YTUc2oft/qpW036FVuBWWUkB2epB9RXtPR/gecEb
-	23bY2jSBEy44n0TOUGbuWKkDzMJGngsjSAUHR8ykxb9SHVIKfccl3i8C5U81C5Fb
-	zNjn+09B1toPtJrwalRkGql6meJnR1MpbNvbq3JL0+uJYVlZPzf2ArQOy5zB0jjc
-	vzQdD85SvuHYC9IqiEfVvuEHCb54q5cHITqXGAF6RWdtmKkykBxVHc1hRkUR1Ywg
-	==
-X-ME-Sender: <xms:IMukYF9XY0nczE2Uhsmj57ssDDknb1rY5JhSkt0r6CmO8tEJUUnIew>
-    <xme:IMukYJupVbVunz67hytUpbdhta1virt4BjvfDBSHHhUexrDW5fNgs9x54W68YlM8S
-    XsRMLob_MKzBA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduledrvdeiledgtddvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdortddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeevhefgje
-    eitdfffefhvdegleeigeejgeeiffekieffjeeflefhieegtefhudejueenucfkphepkeef
-    rdekiedrjeegrdeigeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:IMukYDDRHujoX71qbuh-B_b7JUT6O1EEnJp3kqmj8v2YYHztQBrQIA>
-    <xmx:IMukYJedM0LON_i_MQhtM_97Juw2U1_7HOFWEyh0uSTvKIqV9c0CKA>
-    <xmx:IMukYKOHBwVFYK0hsGvmeRr9Jya6mAmVFR133CndRV59PmKJHHijfg>
-    <xmx:IsukYJfQuKKLcSpds_LRO-Mv2-KUxUPwIJD_mPZLiLnG2QfIYLUERQ>
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-	by mail.messagingengine.com (Postfix) with ESMTPA;
-	Wed, 19 May 2021 04:24:00 -0400 (EDT)
-Date: Wed, 19 May 2021 10:23:58 +0200
-From: Greg KH <greg@kroah.com>
-To: "Anatoli N.Chechelnickiy" <Anatoli.Chechelnickiy@m.interpipe.biz>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"sashal@kernel.org" <sashal@kernel.org>
-Subject: Re: regressions in iommu system with 5.10.37
-Message-ID: <YKTLHuWCdIhEIObv@kroah.com>
-References: <8893cfb2-d4e8-f3e9-e0b9-bbacf1220dca@m.interpipe.biz>
+	(Authenticated sender: kvalo)
+	by smtp.codeaurora.org (Postfix) with ESMTPSA id 14244C433D3;
+	Wed, 19 May 2021 15:00:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 14244C433D3
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
+From: Kalle Valo <kvalo@codeaurora.org>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,  kernel test robot
+ <oliver.sang@intel.com>,  Thomas =?utf-8?Q?Hellstr=C3=B6m?=
+ <thomas.hellstrom@linux.intel.com>,  Serge Belyshev
+ <belyshev@depni.sinp.msu.ru>,  Chris Wilson <chris@chris-wilson.co.uk>,
+  Daniel Vetter <daniel.vetter@ffwll.ch>,  Jani Nikula
+ <jani.nikula@linux.intel.com>,  Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>,  Peter Zijlstra <peterz@infradead.org>,
+  Rodrigo Vivi <rodrigo.vivi@intel.com>,  Andrew Morton
+ <akpm@linux-foundation.org>,  LKML <linux-kernel@vger.kernel.org>,
+  lkp@lists.01.org,  kernel test robot <lkp@intel.com>,
+ regressions@lists.linux.dev
+Subject: Re: [i915] b12d691ea5: kernel_BUG_at_mm/memory.c
+References: <20210519024322.GA29704@xsang-OptiPlex-9020>
+	<CAHk-=whcr5M=4Mz2ydu4XtxTL_34WkXPnmFmA4f8r+ELXDC6hg@mail.gmail.com>
+	<20210519133330.GA14452@lst.de>
+Date: Wed, 19 May 2021 18:00:14 +0300
+In-Reply-To: <20210519133330.GA14452@lst.de> (Christoph Hellwig's message of
+	"Wed, 19 May 2021 15:33:30 +0200")
+Message-ID: <87y2ca6a69.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8893cfb2-d4e8-f3e9-e0b9-bbacf1220dca@m.interpipe.biz>
+Content-Type: text/plain
 
-On Wed, May 19, 2021 at 08:01:29AM +0000, Anatoli N.Chechelnickiy wrote:
-> Hi
-> 
-> I'm sorry to report about regression in 5.10.37
-> 
-> with
-> 
-> CONFIG_IOMMU_IOVA=y
-> CONFIG_IOMMU_API=y
-> CONFIG_IOMMU_SUPPORT=y
-> CONFIG_OF_IOMMU=y
-> CONFIG_INTEL_IOMMU=y
-> CONFIG_INTEL_IOMMU_SVM=y
-> CONFIG_INTEL_IOMMU_DEFAULT_ON=y
-> CONFIG_INTEL_IOMMU_FLOPPY_WA=y
-> 
-> and iommu=on in grub.cfg
-> 
-> 
-> All my dell r340 and all lenovo servers won't boot any more. Just black
-> screen at once.
-> 
-> 
-> with intel_iommu=on iommu=pt DELL R240 and Lenovo SR350 cat boot
-> 
-> Older Lenovo cannot boot even with "intel_iommu=on iommu=pt" only with
-> iommu=off in grub
-> 
-> With iommu=off in grub all servers are booting well
-> 
-> With 5.4.36 do not have this problem
-> 
-> 
-> tested last 4 days with 10+ different servers(
+Christoph Hellwig <hch@lst.de> writes:
 
-Should be fixed with 5.10.38.  If not, please let us know.
+> On Tue, May 18, 2021 at 04:58:31PM -1000, Linus Torvalds wrote:
+>> On Tue, May 18, 2021 at 4:26 PM kernel test robot <oliver.sang@intel.com> wrote:
+>> >
+>> > commit: b12d691ea5e01db42ccf3b4207e57cb3ce7cfe91 ("i915: fix remap_io_sg to verify the pgprot")
+>> > [...]
+>> > [  778.550996] kernel BUG at mm/memory.c:2183!
+>> > [ 778.559015] RIP: 0010:remap_pfn_range_notrack
+>> > (kbuild/src/consumer/mm/memory.c:2183
+>> > kbuild/src/consumer/mm/memory.c:2211
+>> > kbuild/src/consumer/mm/memory.c:2233
+>> > kbuild/src/consumer/mm/memory.c:2255
+>> > kbuild/src/consumer/mm/memory.c:2311)
+>> > [  778.688951] remap_pfn_range (kbuild/src/consumer/mm/memory.c:2342)
+>> > [  778.692700] remap_io_sg (kbuild/src/consumer/drivers/gpu/drm/i915/i915_mm.c:71) i915
+>> 
+>> Yeah, so that BUG_ON() checks that theer isn't any old mapping there.
+>> 
+>> You can't just remap over an old one, but it does seem like that is
+>> exactly what commit b12d691ea5e0 ("i915: fix remap_io_sg to verify the
+>> pgprot") ends up doing.
+>> 
+>> So the code used to just do "apply_to_page_range()", which admittedly
+>> was odd too. But it didn't mind having old mappings and re-applying
+>> something over them.
+>> 
+>> Converting it to use remap_pfn_range() does look better, but it kind
+>> of depends on it ever being done *once*. But the caller seems to very
+>> much remap the whole vmsa at fault time, so...
+>> 
+>> I don't know what the right thing to do here is, because I don't know
+>> the invalidation logic and when faults happen.
+>> 
+>> I see that there is another thread about different issues on the
+>> intel-gfx list. Adding a few people to this kernel test robot thread
+>> too.
+>> 
+>> I'd be inclined to revert the commits as "not ready yet", but it would
+>> be better if somebody can go "yeah, this should be done properly like
+>> X".
+>
+> I think reverting just this commit for now is the best thing.
 
-thanks,
+Yes, please revert it if there's no quick fix. On my Dell XPS 13 9310
+laptop (with Debian 10) X won't start until I revert commit
+b12d691ea5e0, so this is a major issue.
 
-greg k-h
+Also adding the new regressions list, as this is an i915 regression
+introduced in v5.13-rc1.
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
