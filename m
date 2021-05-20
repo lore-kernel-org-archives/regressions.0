@@ -1,98 +1,136 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49ACE70
-	for <regressions@lists.linux.dev>; Thu, 20 May 2021 17:58:54 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 2DCA960C3F;
-	Thu, 20 May 2021 17:58:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1621533533;
-	bh=XsfOuPt63fmIg+N8ZtNu+v8I5jpBSf8W7VEdPtvFqFw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=x27KGaKhlad12cvdKHDnCjcU7PggBmhEQcYxItnrX3bW4uefszeNP7+h6RR60dkOI
-	 5jWpX7ygXj1290jeaI8atjJm1/EP4pNzv2usjM6ZTAAux2GznbQipwgarKAI+5Ngel
-	 YGtJI8rLxKYVVLC4+aws4LuPzaZvvH1lNNGZ59Zo=
-Date: Thu, 20 May 2021 19:58:49 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Bhaumik Bhatt <bbhatt@codeaurora.org>
-Cc: Kalle Valo <kvalo@codeaurora.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Loic Poulain <loic.poulain@linaro.org>, ath11k@lists.infradead.org,
-	linux-wireless@vger.kernel.org, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [regressions] ath11k: v5.12.3 mhi regression
-Message-ID: <YKajWVPUSTzNVVm8@kroah.com>
-References: <87v97dhh2u.fsf@codeaurora.org>
- <YKYzwBJNTy4Czd1A@kroah.com>
- <20210520104313.GA128703@thinkpad>
- <87r1i1h9an.fsf@codeaurora.org>
- <3e8bac3b02e3549a55b7c9b78b699965@codeaurora.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D8970
+	for <regressions@lists.linux.dev>; Thu, 20 May 2021 18:04:20 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1621533864; h=Message-ID: References: In-Reply-To: Reply-To:
+ Subject: Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=AFeMf3IUMl/U4pe6K8pI5cxfDW/3X5GMZL/kEyjcntY=;
+ b=TIMyVPB0byW2XhZoE1amDu9nC9Dy69yJct3GTFC/l8F5zeBKnfFxJGrH4bABC1qtEDuycoi8
+ 8cDq7zB/mVg7B6p39QGy3FwuR/blME9HI3x0sZrcwmaJqwIFNQVbdJfO+BB9l1fETo43dtfV
+ AJ5tlK7Let79m5NJVfdv1Un6cOk=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
+ 60a6a497d1aee7698d618889 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 20 May 2021 18:04:07
+ GMT
+Sender: bbhatt=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+	id 90819C43460; Thu, 20 May 2021 18:04:06 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00
+	autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: bbhatt)
+	by smtp.codeaurora.org (Postfix) with ESMTPSA id 8BCFFC4338A;
+	Thu, 20 May 2021 18:04:05 +0000 (UTC)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3e8bac3b02e3549a55b7c9b78b699965@codeaurora.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date: Thu, 20 May 2021 11:04:05 -0700
+From: Bhaumik Bhatt <bbhatt@codeaurora.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Kalle Valo <kvalo@codeaurora.org>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Loic Poulain <loic.poulain@linaro.org>,
+ ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
+ regressions@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [regressions] ath11k: v5.12.3 mhi regression
+Organization: Qualcomm Innovation Center, Inc.
+Reply-To: bbhatt@codeaurora.org
+Mail-Reply-To: bbhatt@codeaurora.org
+In-Reply-To: <YKajWVPUSTzNVVm8@kroah.com>
+References: <87v97dhh2u.fsf@codeaurora.org> <YKYzwBJNTy4Czd1A@kroah.com>
+ <20210520104313.GA128703@thinkpad> <87r1i1h9an.fsf@codeaurora.org>
+ <3e8bac3b02e3549a55b7c9b78b699965@codeaurora.org>
+ <YKajWVPUSTzNVVm8@kroah.com>
+Message-ID: <608474b9b9feae5bd0616ad16d6d6bbd@codeaurora.org>
+X-Sender: bbhatt@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 
-On Thu, May 20, 2021 at 10:38:12AM -0700, Bhaumik Bhatt wrote:
-> On 2021-05-20 05:36 AM, Kalle Valo wrote:
-> > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> writes:
-> > 
-> > > On Thu, May 20, 2021 at 12:02:40PM +0200, Greg KH wrote:
-> > > > On Thu, May 20, 2021 at 12:47:53PM +0300, Kalle Valo wrote:
-> > > > > Hi,
-> > > > >
-> > > > > I got several reports that this mhi commit broke ath11k in v5.12.3:
-> > > > >
-> > > > > commit 29b9829718c5e9bd68fc1c652f5e0ba9b9a64fed
-> > > > > Author: Bhaumik Bhatt <bbhatt@codeaurora.org>
-> > > > > Date:   Wed Feb 24 15:23:04 2021 -0800
-> > > > >
-> > > > >     bus: mhi: core: Process execution environment changes serially
-> > > > >
-> > > > >     [ Upstream commit ef2126c4e2ea2b92f543fae00a2a0332e4573c48 ]
-> > > > >
-> > > > > Here are the reports:
-> > > > >
-> > > > > https://bugzilla.kernel.org/show_bug.cgi?id=213055
-> > > > >
-> > > > > https://bugzilla.kernel.org/show_bug.cgi?id=212187
-> > > > >
-> > > > > https://bugs.archlinux.org/task/70849?project=1&string=linux
-> > > > >
-> > > > > Interestingly v5.13-rc1 seems to work fine, at least for me, though I
-> > > > > have not tested v5.12.3 myself. Can someone revert this commit in the
-> > > > > stable release so that people get their wifi working again, please?
-> > > > 
-> > > > How does the mhi bus code relate to a ath11k driver?  What bus
-> > > > is that
-> > > > on?
-> > > > 
-> > > 
-> > > MHI is the transport used by the ath11k driver to work with the WLAN
-> > > devices
-> > > over PCIe.
-> > > 
-> > > Regarding the bug, I'd suggest to wait for Bhaumik (the author of
-> > > 29b9829718c5)
-> > > to comment on the possible commit which needs backporting from
-> > > mainline.
-> > 
-> > Ok, but if a quick fix is not available I think we should just revert
-> > this in the stable releases. I also got a report that v5.11.21 is
-> > broken:
-> > 
-> > https://bugzilla.kernel.org/show_bug.cgi?id=213055#c11
+On 2021-05-20 10:58 AM, Greg KH wrote:
+> On Thu, May 20, 2021 at 10:38:12AM -0700, Bhaumik Bhatt wrote:
+>> On 2021-05-20 05:36 AM, Kalle Valo wrote:
+>> > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> writes:
+>> >
+>> > > On Thu, May 20, 2021 at 12:02:40PM +0200, Greg KH wrote:
+>> > > > On Thu, May 20, 2021 at 12:47:53PM +0300, Kalle Valo wrote:
+>> > > > > Hi,
+>> > > > >
+>> > > > > I got several reports that this mhi commit broke ath11k in v5.12.3:
+>> > > > >
+>> > > > > commit 29b9829718c5e9bd68fc1c652f5e0ba9b9a64fed
+>> > > > > Author: Bhaumik Bhatt <bbhatt@codeaurora.org>
+>> > > > > Date:   Wed Feb 24 15:23:04 2021 -0800
+>> > > > >
+>> > > > >     bus: mhi: core: Process execution environment changes serially
+>> > > > >
+>> > > > >     [ Upstream commit ef2126c4e2ea2b92f543fae00a2a0332e4573c48 ]
+>> > > > >
+>> > > > > Here are the reports:
+>> > > > >
+>> > > > > https://bugzilla.kernel.org/show_bug.cgi?id=213055
+>> > > > >
+>> > > > > https://bugzilla.kernel.org/show_bug.cgi?id=212187
+>> > > > >
+>> > > > > https://bugs.archlinux.org/task/70849?project=1&string=linux
+>> > > > >
+>> > > > > Interestingly v5.13-rc1 seems to work fine, at least for me, though I
+>> > > > > have not tested v5.12.3 myself. Can someone revert this commit in the
+>> > > > > stable release so that people get their wifi working again, please?
+>> > > >
+>> > > > How does the mhi bus code relate to a ath11k driver?  What bus
+>> > > > is that
+>> > > > on?
+>> > > >
+>> > >
+>> > > MHI is the transport used by the ath11k driver to work with the WLAN
+>> > > devices
+>> > > over PCIe.
+>> > >
+>> > > Regarding the bug, I'd suggest to wait for Bhaumik (the author of
+>> > > 29b9829718c5)
+>> > > to comment on the possible commit which needs backporting from
+>> > > mainline.
+>> >
+>> > Ok, but if a quick fix is not available I think we should just revert
+>> > this in the stable releases. I also got a report that v5.11.21 is
+>> > broken:
+>> >
+>> > https://bugzilla.kernel.org/show_bug.cgi?id=213055#c11
+>> 
+>> Please pick [1] as the dependency to [ Upstream commit
+>> ef2126c4e2ea2b92f543fae00a2a0332e4573c48 ].
 > 
-> Please pick [1] as the dependency to [ Upstream commit
-> ef2126c4e2ea2b92f543fae00a2a0332e4573c48 ].
+> what is [1]???
+> 
+> What commit do I need to backport, a commit id would be nice...
+> 
+> thanks,
+> 
+> greg k-h
+Sure Greg. Commit id is: 4884362f6977fc05cbec736625665241c0e0732f
 
-what is [1]???
+Title of patch:
+bus: mhi: core: Download AMSS image from appropriate function
 
-What commit do I need to backport, a commit id would be nice...
+It was supposed to be a link but not sure why it's not seen.
 
-thanks,
-
-greg k-h
+Thanks,
+Bhaumik
+---
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum,
+a Linux Foundation Collaborative Project
