@@ -1,140 +1,134 @@
-Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF292F80
-	for <regressions@lists.linux.dev>; Mon, 24 May 2021 05:56:27 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1621835789; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=be4eKo2P5DdMYwKNrNDybOr8ySR6R9EZI7Dx3bWOIS4=; b=Nn98ceKmkjiEH5EvLq20tIZsd6EodUagP72Ljqxwoux3yDqHAAmKoWf6dyL8bVACGlQho0Jd
- 6MuuNn4J9xR6DbpbticG1E+Q5d5m7p2TS1YFSXSF+9Hz+Gm4VphGK8SWlwzyUYYoxmM/MDny
- W6YvxQkD2vBgEUUR8I2hSoR1Rcc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 60ab400467d156359ac28040 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 24 May 2021 05:56:20
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-	id DB20CC4323A; Mon, 24 May 2021 05:56:19 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-	aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL
-	autolearn=no autolearn_force=no version=3.4.0
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: kvalo)
-	by smtp.codeaurora.org (Postfix) with ESMTPSA id 887CBC433D3;
-	Mon, 24 May 2021 05:56:16 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 887CBC433D3
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=kvalo@codeaurora.org
-From: Kalle Valo <kvalo@codeaurora.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Bhaumik Bhatt <bbhatt@codeaurora.org>,  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Loic Poulain <loic.poulain@linaro.org>,  ath11k@lists.infradead.org,  linux-wireless@vger.kernel.org,  regressions@lists.linux.dev,  stable@vger.kernel.org
-Subject: Re: [regressions] ath11k: v5.12.3 mhi regression
-References: <87v97dhh2u.fsf@codeaurora.org> <YKYzwBJNTy4Czd1A@kroah.com>
-	<20210520104313.GA128703@thinkpad> <87r1i1h9an.fsf@codeaurora.org>
-	<3e8bac3b02e3549a55b7c9b78b699965@codeaurora.org>
-	<YKajWVPUSTzNVVm8@kroah.com>
-	<608474b9b9feae5bd0616ad16d6d6bbd@codeaurora.org>
-	<YKanuzzvDhztYxm/@kroah.com>
-Date: Mon, 24 May 2021 08:56:14 +0300
-In-Reply-To: <YKanuzzvDhztYxm/@kroah.com> (Greg KH's message of "Thu, 20 May
-	2021 20:17:31 +0200")
-Message-ID: <87eedwhdz5.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4ACC17F
+	for <regressions@lists.linux.dev>; Wed, 26 May 2021 12:42:46 +0000 (UTC)
+Received: by mail-oi1-f173.google.com with SMTP id d21so1305908oic.11
+        for <regressions@lists.linux.dev>; Wed, 26 May 2021 05:42:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=dwum+8aX5rhRZZc9oSdUWyzotqp8m20BOmDsbkb3RWA=;
+        b=MElApe/xfGOoGnQi791FhqDpJf5XQbcIDZk374ZqRCbbrvgYpIaJ9YLnfhisOLZese
+         dV7yjwjX7+Y8i4VJJ6mGO2SUvCkEDTVqIRQD8MbZ4Zk8RWQY5MW1HTZRvurkeL37GwuQ
+         UGUy06Uo0RzQXqJICLD9ckirVXeCbsTaCo6CGT0cM5isQoaKWvVFpahG9ZWqFQvFdDjO
+         iVYyeoMngHt+h/KURK/DwnPMjuCSoyQm4UTFx0uWlkx240LoKtbIqPoIukyK5bYfq0zU
+         CDsBv/WFwBR+RBTEu9zuPxWEMubJMeMhbq3TSLIg//wa8BmFfgZShQqzsElXobi6eQug
+         CeYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=dwum+8aX5rhRZZc9oSdUWyzotqp8m20BOmDsbkb3RWA=;
+        b=PfSZhIO33CChGgDPDOIg4fjnbWBCjenKpNSzJzKJe9yzypsLobIOvI00TWhetl6nyA
+         gdF+zpyrc2hbRnFh3Ca4mq/LlnYywGVZenX8ab3f08hJFdXXcAxoXZrr5AfqI/hfxbAA
+         n+8Poxzs2NbYNT7dEiQYL96k8+QxNEuW2Pgzyac+f2uNrdw7nhOV6fcuiCXbWo2WUYGg
+         0omtxHIKDceEqTS7YwB9qG+C0SG1KmLkAKcYDNdjERIYw8QUUFCcwSyufMZkcc9sezLQ
+         McvPWYpRMzQboepyIQ1UAjtljLqLFtWzk6PrlAhNRt324RIKVie+/zSlZ2loTZ2UcCdh
+         aEug==
+X-Gm-Message-State: AOAM533GqeYKohRskhHMJhIFokV4Rz5J3kb5bjIkO5/ASxg1TZ0ASwhq
+	FJJ8sf0SLMOe3/QYHSz0JSYlDp/OBxWaKlLcwuT1CA==
+X-Google-Smtp-Source: ABdhPJz56rpsI/xenQj5Smfd872uoPw6PI4cjiKmJI+/xB/Ri+hA5jA/abVX+aJRQ1+8BwwWbtiywBZU6setowDJZXM=
+X-Received: by 2002:aca:db41:: with SMTP id s62mr1675221oig.167.1622032965674;
+ Wed, 26 May 2021 05:42:45 -0700 (PDT)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 26 May 2021 18:12:34 +0530
+Message-ID: <CA+G9fYtwXKK1U+SovWvuKttgqj59tNeJcRzHxWmfmyCRricmsA@mail.gmail.com>
+Subject: [next] arm64: boot failed next-20210526
+To: Linux-Next Mailing List <linux-next@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@linux.ibm.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, Will Deacon <will@kernel.org>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Greg KH <gregkh@linuxfoundation.org> writes:
+While booting Linux next-20210526 tag on arm64 the following crash noticed.
 
-> On Thu, May 20, 2021 at 11:04:05AM -0700, Bhaumik Bhatt wrote:
->> On 2021-05-20 10:58 AM, Greg KH wrote:
->> > On Thu, May 20, 2021 at 10:38:12AM -0700, Bhaumik Bhatt wrote:
->> > > On 2021-05-20 05:36 AM, Kalle Valo wrote:
->> > > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> writes:
->> > > >
->> > > > > On Thu, May 20, 2021 at 12:02:40PM +0200, Greg KH wrote:
->> > > > > > On Thu, May 20, 2021 at 12:47:53PM +0300, Kalle Valo wrote:
->> > > > > > > Hi,
->> > > > > > >
->> > > > > > > I got several reports that this mhi commit broke ath11k in v5.12.3:
->> > > > > > >
->> > > > > > > commit 29b9829718c5e9bd68fc1c652f5e0ba9b9a64fed
->> > > > > > > Author: Bhaumik Bhatt <bbhatt@codeaurora.org>
->> > > > > > > Date:   Wed Feb 24 15:23:04 2021 -0800
->> > > > > > >
->> > > > > > >     bus: mhi: core: Process execution environment changes serially
->> > > > > > >
->> > > > > > >     [ Upstream commit ef2126c4e2ea2b92f543fae00a2a0332e4573c48 ]
->> > > > > > >
->> > > > > > > Here are the reports:
->> > > > > > >
->> > > > > > > https://bugzilla.kernel.org/show_bug.cgi?id=213055
->> > > > > > >
->> > > > > > > https://bugzilla.kernel.org/show_bug.cgi?id=212187
->> > > > > > >
->> > > > > > > https://bugs.archlinux.org/task/70849?project=1&string=linux
->> > > > > > >
->> > > > > > > Interestingly v5.13-rc1 seems to work fine, at least for me, though I
->> > > > > > > have not tested v5.12.3 myself. Can someone revert this commit in the
->> > > > > > > stable release so that people get their wifi working again, please?
->> > > > > >
->> > > > > > How does the mhi bus code relate to a ath11k driver?  What bus
->> > > > > > is that
->> > > > > > on?
->> > > > > >
->> > > > >
->> > > > > MHI is the transport used by the ath11k driver to work with the WLAN
->> > > > > devices
->> > > > > over PCIe.
->> > > > >
->> > > > > Regarding the bug, I'd suggest to wait for Bhaumik (the author of
->> > > > > 29b9829718c5)
->> > > > > to comment on the possible commit which needs backporting from
->> > > > > mainline.
->> > > >
->> > > > Ok, but if a quick fix is not available I think we should just revert
->> > > > this in the stable releases. I also got a report that v5.11.21 is
->> > > > broken:
->> > > >
->> > > > https://bugzilla.kernel.org/show_bug.cgi?id=213055#c11
->> > > 
->> > > Please pick [1] as the dependency to [ Upstream commit
->> > > ef2126c4e2ea2b92f543fae00a2a0332e4573c48 ].
->> > 
->> > what is [1]???
->> > 
->> > What commit do I need to backport, a commit id would be nice...
->> > 
->> > thanks,
->> > 
->> > greg k-h
->> Sure Greg. Commit id is: 4884362f6977fc05cbec736625665241c0e0732f
->> 
->> Title of patch:
->> bus: mhi: core: Download AMSS image from appropriate function
->> 
->> It was supposed to be a link but not sure why it's not seen.
->
-> Text email doesn't have links :)
->
-> Anyway, thanks, now queued up.
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
+[    0.000000] Linux version 5.13.0-rc3-next-20210526
+(tuxmake@52aac593b9ff) (aarch64-linux-gnu-gcc (Debian 11.1.0-1)
+11.1.0, GNU ld (GNU Binutils for Debian) 2.36.1) #1 SMP PREEMPT Wed
+May 26 08:29:48 UTC 2021
+[    0.000000] Machine model: linux,dummy-virt
+[    0.000000] earlycon: pl11 at MMIO 0x0000000009000000 (options '')
+[    0.000000] printk: bootconsole [pl11] enabled
+[    0.000000] efi: UEFI not found.
+[    0.000000] NUMA: No NUMA configuration found
+[    0.000000] NUMA: Faking a node at [mem
+0x0000000040000000-0x00000000bfffffff]
+[    0.000000] NUMA: NODE_DATA [mem 0xbfc00d40-0xbfc03fff]
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000]   DMA32    empty
+[    0.000000]   Normal   empty
+[    0.000000]   Device   empty
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   0: [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000] Initmem setup node 0 [mem 0x0000000040000000-0x00000000bfffffff]
+[    0.000000] cma: Reserved 32 MiB at 0x00000000bb800000
+[    0.000000] kasan: KernelAddressSanitizer initialized
+[    0.000000] psci: probing for conduit method from DT.
+[    0.000000] psci: PSCIv1.0 detected in firmware.
+[    0.000000] psci: Using standard PSCI v0.2 function IDs
+[    0.000000] psci: Trusted OS migration not required
+[    0.000000] psci: SMC Calling Convention v1.1
+[    0.000000] percpu: Embedded 500 pages/cpu s2009624 r8192 d30184 u2048000
+[    0.000000] ------------[ cut here ]------------
+[    0.000000] kernel BUG at arch/arm64/kernel/traps.c:406!
+[    0.000000] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+[    0.000000] Modules linked in:
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Tainted: G                T
+5.13.0-rc3-next-20210526 #1 c8ad07b8a918e7b0a25b795f9cc1c902737164cf
+[    0.000000] Hardware name: linux,dummy-virt (DT)
+[    0.000000] pstate: 404000c5 (nZcv daIF +PAN -UAO -TCO BTYPE=--)
+[    0.000000] pc : do_undefinstr+0x88/0xc0
+[    0.000000] lr : do_undefinstr+0x88/0xc0
+[    0.000000] sp : ffff800014267be0
+[    0.000000] x29: ffff800014267be0 x28: ffff80001429b040 x27: 0000000000000000
+[    0.000000] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
+[    0.000000] x23: 00000000604000c5 x22: ffff800010038528 x21: 0000000002000000
+[    0.000000] x20: 0000000000000005 x19: ffff800014267c50 x18: 0000000000000000
+[    0.000000] x17: 000c0400bb44ffff x16: 00000032b5503510 x15: 0000000000000000
+[    0.000000] x14: 00000000bfc12000 x13: 0000001000000000 x12: 00000000f1f1f1f1
+[    0.000000] x11: dfff800000000000 x10: ffff70000284cf44 x9 : ffff8000128bf2e0
+[    0.000000] x8 : ffff700002854905 x7 : 1ffff00002854904 x6 : ffff700002854904
+[    0.000000] x5 : dfff800000000000 x4 : ffff8000142a4820 x3 : ffff80001429b040
+[    0.000000] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
+[    0.000000] Call trace:
+[    0.000000]  do_undefinstr+0x88/0xc0
+[    0.000000]  el1_undef+0x30/0x80
+[    0.000000]  el1_sync_handler+0xc0/0x140
+[    0.000000]  el1_sync+0x7c/0x100
+[    0.000000]  __cpuinfo_store_cpu+0xe8/0x440
+[    0.000000]  cpuinfo_store_boot_cpu+0x54/0xb4
+[    0.000000]  smp_prepare_boot_cpu+0x68/0x1a4
+[    0.000000]  start_kernel+0x128/0x870
+[    0.000000]  __primary_switched+0x94/0x98
+[    0.000000] Code: aa1403e1 940dda91 b4000074 940dd94f (d4210000)
+[    0.000000] random: get_random_bytes called from
+oops_exit+0x54/0xc0 with crng_init=0
+[    0.000000] ---[ end trace 0000000000000000 ]---
+[    0.000000] Kernel panic - not syncing: Oops - BUG: Fatal exception
+[    0.000000] ---[ end Kernel panic - not syncing: Oops - BUG: Fatal
+exception ]---
 
-I'm now getting confirmations that this issue is fixed in v5.12.6.
-Thanks for the quick fix and the quick new release!
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+metadata:
+  git branch: master
+  git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git commit: f6b46ef27317b3441138b902689bd89e4f82c6f4
+  git describe: next-20210526
+  kernel-config: https://builds.tuxbuild.com/1t46TuDwqgMc1uwoRh8V24PQUzH/config
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
+--
+Linaro LKFT
+https://lkft.linaro.org
