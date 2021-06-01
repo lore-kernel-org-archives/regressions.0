@@ -1,117 +1,132 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [46.235.227.227])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AB8B17F
-	for <regressions@lists.linux.dev>; Wed, 26 May 2021 13:21:02 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 64B35613C3;
-	Wed, 26 May 2021 13:20:59 +0000 (UTC)
-Date: Wed, 26 May 2021 14:20:56 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Will Deacon <will@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Linux-Next Mailing List <linux-next@vger.kernel.org>,
-	linux-mm <linux-mm@kvack.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
-	Arnd Bergmann <arnd@arndb.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@linux.ibm.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: [next] arm64: boot failed next-20210526
-Message-ID: <20210526132056.GE19992@arm.com>
-References: <CA+G9fYtwXKK1U+SovWvuKttgqj59tNeJcRzHxWmfmyCRricmsA@mail.gmail.com>
- <20210526131936.GA19341@willie-the-truck>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C05470
+	for <regressions@lists.linux.dev>; Tue,  1 Jun 2021 16:07:01 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(Authenticated sender: tintou)
+	with ESMTPSA id 3ED2D1F42769
+Message-ID: <3724b6d19b0bf4741c44977e083c1a655df57b55.camel@collabora.com>
+Subject: virtio-net: kernel panic in virtio_net.c
+From: Corentin =?ISO-8859-1?Q?No=EBl?= <corentin.noel@collabora.com>
+To: stable@vger.kernel.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+  virtualization@lists.linux-foundation.org, regressions@lists.linux.dev,
+ Eric Dumazet <edumazet@google.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+Date: Tue, 01 Jun 2021 18:06:50 +0200
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.4-0ubuntu1 
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210526131936.GA19341@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 26, 2021 at 02:19:37PM +0100, Will Deacon wrote:
-> On Wed, May 26, 2021 at 06:12:34PM +0530, Naresh Kamboju wrote:
-> > While booting Linux next-20210526 tag on arm64 the following crash noticed.
-> > 
-> > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
-> > [    0.000000] Linux version 5.13.0-rc3-next-20210526
-> > (tuxmake@52aac593b9ff) (aarch64-linux-gnu-gcc (Debian 11.1.0-1)
-> > 11.1.0, GNU ld (GNU Binutils for Debian) 2.36.1) #1 SMP PREEMPT Wed
-> > May 26 08:29:48 UTC 2021
-> > [    0.000000] Machine model: linux,dummy-virt
-> > [    0.000000] earlycon: pl11 at MMIO 0x0000000009000000 (options '')
-> > [    0.000000] printk: bootconsole [pl11] enabled
-> > [    0.000000] efi: UEFI not found.
-> > [    0.000000] NUMA: No NUMA configuration found
-> > [    0.000000] NUMA: Faking a node at [mem
-> > 0x0000000040000000-0x00000000bfffffff]
-> > [    0.000000] NUMA: NODE_DATA [mem 0xbfc00d40-0xbfc03fff]
-> > [    0.000000] Zone ranges:
-> > [    0.000000]   DMA      [mem 0x0000000040000000-0x00000000bfffffff]
-> > [    0.000000]   DMA32    empty
-> > [    0.000000]   Normal   empty
-> > [    0.000000]   Device   empty
-> > [    0.000000] Movable zone start for each node
-> > [    0.000000] Early memory node ranges
-> > [    0.000000]   node   0: [mem 0x0000000040000000-0x00000000bfffffff]
-> > [    0.000000] Initmem setup node 0 [mem 0x0000000040000000-0x00000000bfffffff]
-> > [    0.000000] cma: Reserved 32 MiB at 0x00000000bb800000
-> > [    0.000000] kasan: KernelAddressSanitizer initialized
-> > [    0.000000] psci: probing for conduit method from DT.
-> > [    0.000000] psci: PSCIv1.0 detected in firmware.
-> > [    0.000000] psci: Using standard PSCI v0.2 function IDs
-> > [    0.000000] psci: Trusted OS migration not required
-> > [    0.000000] psci: SMC Calling Convention v1.1
-> > [    0.000000] percpu: Embedded 500 pages/cpu s2009624 r8192 d30184 u2048000
-> > [    0.000000] ------------[ cut here ]------------
-> > [    0.000000] kernel BUG at arch/arm64/kernel/traps.c:406!
-> > [    0.000000] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> > [    0.000000] Modules linked in:
-> > [    0.000000] CPU: 0 PID: 0 Comm: swapper Tainted: G                T
-> > 5.13.0-rc3-next-20210526 #1 c8ad07b8a918e7b0a25b795f9cc1c902737164cf
-> > [    0.000000] Hardware name: linux,dummy-virt (DT)
-> > [    0.000000] pstate: 404000c5 (nZcv daIF +PAN -UAO -TCO BTYPE=--)
-> > [    0.000000] pc : do_undefinstr+0x88/0xc0
-> > [    0.000000] lr : do_undefinstr+0x88/0xc0
-> > [    0.000000] sp : ffff800014267be0
-> > [    0.000000] x29: ffff800014267be0 x28: ffff80001429b040 x27: 0000000000000000
-> > [    0.000000] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000000
-> > [    0.000000] x23: 00000000604000c5 x22: ffff800010038528 x21: 0000000002000000
-> > [    0.000000] x20: 0000000000000005 x19: ffff800014267c50 x18: 0000000000000000
-> > [    0.000000] x17: 000c0400bb44ffff x16: 00000032b5503510 x15: 0000000000000000
-> > [    0.000000] x14: 00000000bfc12000 x13: 0000001000000000 x12: 00000000f1f1f1f1
-> > [    0.000000] x11: dfff800000000000 x10: ffff70000284cf44 x9 : ffff8000128bf2e0
-> > [    0.000000] x8 : ffff700002854905 x7 : 1ffff00002854904 x6 : ffff700002854904
-> > [    0.000000] x5 : dfff800000000000 x4 : ffff8000142a4820 x3 : ffff80001429b040
-> > [    0.000000] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
-> > [    0.000000] Call trace:
-> > [    0.000000]  do_undefinstr+0x88/0xc0
-> > [    0.000000]  el1_undef+0x30/0x80
-> > [    0.000000]  el1_sync_handler+0xc0/0x140
-> > [    0.000000]  el1_sync+0x7c/0x100
-> > [    0.000000]  __cpuinfo_store_cpu+0xe8/0x440
-> > [    0.000000]  cpuinfo_store_boot_cpu+0x54/0xb4
-> > [    0.000000]  smp_prepare_boot_cpu+0x68/0x1a4
-> > [    0.000000]  start_kernel+0x128/0x870
-> > [    0.000000]  __primary_switched+0x94/0x98
-> > [    0.000000] Code: aa1403e1 940dda91 b4000074 940dd94f (d4210000)
-> > [    0.000000] random: get_random_bytes called from
-> > oops_exit+0x54/0xc0 with crng_init=0
-> > [    0.000000] ---[ end trace 0000000000000000 ]---
-> > [    0.000000] Kernel panic - not syncing: Oops - BUG: Fatal exception
-> > [    0.000000] ---[ end Kernel panic - not syncing: Oops - BUG: Fatal
-> > exception ]---
-> 
-> I'm guessing that's due to the newly introduced read of GMID_EL1, which does
-> indeed appear to be undefined on cpus without FEAT_MTE2.
-> 
-> Catalin -- I'll drop your patches for now.
+I've been experiencing crashes with 5.13 that do not occur with 5.12,
+here is the crash trace:
 
-Yeah, I just noticed. I'll fix them and repost.
+[   47.713713] skbuff: skb_over_panic: text:ffffffffb73a8354 len:3762
+put:3762 head:ffff9e1e1e48e000 data:ffff9e1e1e48e010 tail:0xec2
+end:0xec0 dev:<NULL>
+[   47.716267] kernel BUG at net/core/skbuff.c:110!
+[   47.717197] invalid opcode: 0000 [#1] SMP PTI
+[   47.718049] CPU: 2 PID: 730 Comm: llvmpipe-0 Not tainted 5.13.0-
+rc3linux-v5.13-rc3-for-mesa-ci-87614d7f3282.tar.bz2 #1
+[   47.719739] Hardware name: ChromiumOS crosvm, BIOS 0 
+[   47.720656] RIP: 0010:skb_panic+0x43/0x45
+[   47.721426] Code: 4f 70 50 8b 87 bc 00 00 00 50 8b 87 b8 00 00 00 50
+ff b7 c8 00 00 00 4c 8b 8f c0 00 00 00 48 c7 c7 78 ae ef b7 e8 7f 4c fb
+ff <0f> 0b 48 8b 14 24 48 c7 c1 a0 22 d1 b7 e8 ab ff ff ff 48 c7 c6 e0
+[   47.725944] RSP: 0000:ffffacec01347c20 EFLAGS: 00010246
+[   47.726735] RAX: 000000000000008b RBX: 0000000000000010 RCX:
+00000000ffffdfff
+[   47.727820] RDX: 0000000000000000 RSI: 00000000ffffffea RDI:
+0000000000000000
+[   47.729096] RBP: ffffeb2700792380 R08: ffffffffb8144b08 R09:
+0000000000009ffb
+[   47.730260] R10: 00000000ffffe000 R11: 3fffffffffffffff R12:
+ffff9e1e1e95b300
+[   47.731411] R13: 0000000000000000 R14: ffff9e1e1e48e000 R15:
+0000000000000eb2
+[   47.732541] FS:  00007f3a82b53700(0000) GS:ffff9e1f2bd00000(0000)
+knlGS:0000000000000000
+[   47.733858] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   47.734813] CR2: 00000000010d24f8 CR3: 0000000012d6e004 CR4:
+0000000000370ee0
+[   47.735968] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+0000000000000000
+[   47.737091] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+0000000000000400
+[   47.738318] Call Trace:
+[   47.738812]  skb_put.cold+0x10/0x10
+[   47.739450]  page_to_skb+0xe4/0x400
+[   47.740072]  receive_buf+0x86/0x1660
+[   47.740693]  ? inet_gro_receive+0x54/0x2c0
+[   47.741279]  ? dev_gro_receive+0x194/0x6a0
+[   47.741846]  virtnet_poll+0x2b8/0x3c0
+[   47.742357]  __napi_poll+0x25/0x150
+[   47.742844]  net_rx_action+0x22f/0x280
+[   47.743388]  __do_softirq+0xba/0x264
+[   47.743947]  irq_exit_rcu+0x90/0xb0
+[   47.744435]  common_interrupt+0x40/0xa0
+[   47.744978]  ? asm_common_interrupt+0x8/0x40
+[   47.745582]  asm_common_interrupt+0x1e/0x40
+[   47.746182] RIP: 0033:0x7f3a7a276ed4
+[   47.746708] Code: a0 03 00 00 c5 fc 29 84 24 40 0f 00 00 c5 bc 54 c8
+c5 7c 28 84 24 80 01 00 00 c5 bc 59 e9 c5 fe 5b ed c5 fd 76 c0 c5 d5 fa
+c0 <c5> fd db ec c5 fd 7f 84 24 20 0f 00 00 c5 fc 5b ed c4 e2 55 b8 cb
+[   47.749292] RSP: 002b:00007f3a82b4dba0 EFLAGS: 00000212
+[   47.750006] RAX: 00007f3a8c210324 RBX: ffffffffffffffff RCX:
+ffffffffffffffff
+[   47.750964] RDX: 00007f3a8c210348 RSI: 00007f3a8c21034c RDI:
+00007f3a7c0575a0
+[   47.752049] RBP: 00007f3a82b52ca0 R08: 00007f3a8c210350 R09:
+00007f3a8c210354
+[   47.753161] R10: 00007f3a8c210358 R11: 000000000000ffef R12:
+00007f3a8c210340
+[   47.754260] R13: 00007f3a8c210344 R14: 00007f3a7c057580 R15:
+00007f3a8c21033c
+[   47.755354] Modules linked in:
+[   47.755871] ---[ end trace a8b692ea99c9cd9e ]---
+[   47.756606] RIP: 0010:skb_panic+0x43/0x45
+[   47.757297] Code: 4f 70 50 8b 87 bc 00 00 00 50 8b 87 b8 00 00 00 50
+ff b7 c8 00 00 00 4c 8b 8f c0 00 00 00 48 c7 c7 78 ae ef b7 e8 7f 4c fb
+ff <0f> 0b 48 8b 14 24 48 c7 c1 a0 22 d1 b7 e8 ab ff ff ff 48 c7 c6 e0
+[   47.760168] RSP: 0000:ffffacec01347c20 EFLAGS: 00010246
+[   47.760896] RAX: 000000000000008b RBX: 0000000000000010 RCX:
+00000000ffffdfff
+[   47.761903] RDX: 0000000000000000 RSI: 00000000ffffffea RDI:
+0000000000000000
+[   47.762945] RBP: ffffeb2700792380 R08: ffffffffb8144b08 R09:
+0000000000009ffb
+[   47.764059] R10: 00000000ffffe000 R11: 3fffffffffffffff R12:
+ffff9e1e1e95b300
+[   47.765169] R13: 0000000000000000 R14: ffff9e1e1e48e000 R15:
+0000000000000eb2
+[   47.766261] FS:  00007f3a82b53700(0000) GS:ffff9e1f2bd00000(0000)
+knlGS:0000000000000000
+[   47.767512] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   47.768389] CR2: 00000000010d24f8 CR3: 0000000012d6e004 CR4:
+0000000000370ee0
+[   47.769381] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+0000000000000000
+[   47.770362] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+0000000000000400
+[   47.771339] Kernel panic - not syncing: Fatal exception in interrupt
+[   47.772814] Kernel Offset: 0x35c00000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
 
--- 
-Catalin
+I've been able to bisect the issue a little bit and the issue
+disappeared after reverting the 4 following commits:
+ * fb32856b16ad9d5bcd75b76a274e2c515ac7b9d7
+ * af39c8f72301b268ad8b04bae646b6025918b82b
+ * f5d7872a8b8a3176e65dc6f7f0705ce7e9a699e6
+ * f80bd740cb7c954791279590b2e810ba6c214e52
+
+Here is my kernel config: 
+https://gitlab.freedesktop.org/tintou/mesa/-/blob/e5d6c56bfae8522e924217883d2c6a6bfc1b332b/.gitlab-ci/container/x86_64.config
+
+Regards,
+Corentin
+
