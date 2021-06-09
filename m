@@ -1,66 +1,45 @@
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C0729CA
-	for <regressions@lists.linux.dev>; Wed,  9 Jun 2021 06:24:23 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 5F66E61352;
-	Wed,  9 Jun 2021 06:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1623219862;
-	bh=PZI/QDz7xWSlIQGk4btpDqsFHnCoZdsyGl8U8TeVF0I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AdkrvkPn7Vz0F83eSHoKjTTFChar0SwNy1QF2SKAGj3MFeCu7KATd25KEcqPXCKSv
-	 4HGm46qFXm0Jhan4TzkanLoy4P1ox9SnkW/c4ZPbagjb7uP9KQIYryFrIQB14Y0tPs
-	 iCus5CsZW9jOeQrNXNqH8JYf2ESPWxYNVPzbhwPk=
-Date: Wed, 9 Jun 2021 08:24:20 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-Cc: stable@vger.kernel.org, "Michael S.Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	virtualization@lists.linux-foundation.org,
-	regressions@lists.linux.dev, Eric Dumazet <edumazet@google.com>,
-	Corentin =?iso-8859-1?Q?No=EBl?= <corentin.noel@collabora.com>
-Subject: Re: virtio-net: kernel panic in virtio_net.c
-Message-ID: <YMBelFMOAhEqWoc+@kroah.com>
-References: <YMBIghQaTelAvXOY@kroah.com>
- <1623218897.4150124-1-xuanzhuo@linux.alibaba.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C116C70
+	for <regressions@lists.linux.dev>; Wed,  9 Jun 2021 06:40:13 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 5C77B61181;
+	Wed,  9 Jun 2021 06:40:11 +0000 (UTC)
+Date: Wed, 9 Jun 2021 08:40:08 +0200
+From: Christian Brauner <christian.brauner@ubuntu.com>
+To: Kees Cook <keescook@chromium.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Andrea Righi <andrea.righi@canonical.com>, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH] proc: Track /proc/$pid/attr/ opener mm_struct
+Message-ID: <20210609064008.liz2gvpjtyqwx6qr@wittgenstein>
+References: <20210608171221.276899-1-keescook@chromium.org>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1623218897.4150124-1-xuanzhuo@linux.alibaba.com>
+In-Reply-To: <20210608171221.276899-1-keescook@chromium.org>
 
-On Wed, Jun 09, 2021 at 02:08:17PM +0800, Xuan Zhuo wrote:
-> On Wed, 9 Jun 2021 06:50:10 +0200, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Wed, Jun 09, 2021 at 09:48:33AM +0800, Xuan Zhuo wrote:
-> > > > > With this patch and the latest net branch I no longer get crashes.
-> > > >
-> > > > Did this ever get properly submitted to the networking tree to get into
-> > > > 5.13-final?
-> > >
-> > > The patch has been submitted.
-> > >
-> > > 	[PATCH net] virtio-net: fix for skb_over_panic inside big mode
-> >
-> > Submitted where?  Do you have a lore.kernel.org link somewhere?
+On Tue, Jun 08, 2021 at 10:12:21AM -0700, Kees Cook wrote:
+> Commit bfb819ea20ce ("proc: Check /proc/$pid/attr/ writes against file opener")
+> tried to make sure that there could not be a confusion between the opener of
+> a /proc/$pid/attr/ file and the writer. It used struct cred to make sure
+> the privileges didn't change. However, there were existing cases where a more
+> privileged thread was passing the opened fd to a differently privileged thread
+> (during container setup). Instead, use mm_struct to track whether the opener
+> and writer are still the same process. (This is what several other proc files
+> already do, though for different reasons.)
 > 
-> 
-> https://lore.kernel.org/netdev/20210603170901.66504-1-xuanzhuo@linux.alibaba.com/
+> Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Reported-by: Andrea Righi <andrea.righi@canonical.com>
+> Tested-by: Andrea Righi <andrea.righi@canonical.com>
+> Fixes: bfb819ea20ce ("proc: Check /proc/$pid/attr/ writes against file opener")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
 
-So this is commit 1a8024239dac ("virtio-net: fix for skb_over_panic
-inside big mode") in Linus's tree, right?
-
-But why is that referencing:
-	Fixes: fb32856b16ad ("virtio-net: page_to_skb() use build_skb when there's sufficient tailroom")
-
-when this problem was seen in stable kernels that had a different commit
-backported to it?
-
-Is there nothing needed to be done for the stable kernel trees?
-
-confused,
-
-greg k-h
+Thanks!
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
