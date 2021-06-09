@@ -1,115 +1,299 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-42.freemail.mail.aliyun.com (out30-42.freemail.mail.aliyun.com [115.124.30.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38C792F80
-	for <regressions@lists.linux.dev>; Tue,  8 Jun 2021 17:12:25 +0000 (UTC)
-Received: by mail-pf1-f175.google.com with SMTP id c12so16236026pfl.3
-        for <regressions@lists.linux.dev>; Tue, 08 Jun 2021 10:12:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LsfQiWd97yOtmV8s3TncV+9PPnjyb/KIQiQemE+zye8=;
-        b=lAbyMhf7YpRAuqY4tAMv7/brwjdlwNtfr+Mcg/sxOfs++wRgjKLM9PCQLpHqBgS9U4
-         ZIsk57Lm32YYU0oOQk825Eka54WfUDgaX47FDF3XUrBrpsIBx7UWJqip/w4hJd/gEMMx
-         CCDDBYH/Ps/nE97zYBlwHigVdNudtcIblJFIU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LsfQiWd97yOtmV8s3TncV+9PPnjyb/KIQiQemE+zye8=;
-        b=b2Hhrpps07v6c3CJgwOZlfds8QOr2Ps523kgegUjol1ba1LUMxQwyrZHKfWJHXRTLv
-         jPPJjqmEgkRTdLrqUsvb6Hssiw/g8CWXYnDdSwpSRkoapWRrfkBcRmhKU15H2CX6SQtZ
-         04flXCcvLZw0rhFZ07MBiN3uNP8Y05gVHtLyp4rhhS1ZYrlLQ4JsX3HhYImHnKjTX4qQ
-         IdRmr1Q33kTY+aVbZum4N6K1962WvoSvUI1NNUndkDGIkTPZb74CHmps9NU6vvM+NWCw
-         YVekQeYMBV5sEUOUHMn+SycEowcv4qxzFHQ7ZjmR+VnZF7EgaBFxtSMGW5jwm2S+k22+
-         0v/w==
-X-Gm-Message-State: AOAM53230ywuZ1ebgbzqBsIkKZs1Y4hf4YkNc7HN0NJMXQ/dwtDVD5y8
-	MmyN2gCdZhLu32h5AbQPMalA/vevM5FIYA==
-X-Google-Smtp-Source: ABdhPJxBmc52fN5Fzl9HQxIOeIzImtBdpWptvHFr4JnebiLD20NAtCnwmZFY8u9PIU0XZhaLklEdPQ==
-X-Received: by 2002:a62:2e04:0:b029:2db:4c99:614f with SMTP id u4-20020a622e040000b02902db4c99614fmr862818pfu.47.1623172344700;
-        Tue, 08 Jun 2021 10:12:24 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id c4sm1528336pfo.189.2021.06.08.10.12.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Jun 2021 10:12:24 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Kees Cook <keescook@chromium.org>,
-	Christian Brauner <christian.brauner@ubuntu.com>,
-	Andrea Righi <andrea.righi@canonical.com>,
-	stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [PATCH] proc: Track /proc/$pid/attr/ opener mm_struct
-Date: Tue,  8 Jun 2021 10:12:21 -0700
-Message-Id: <20210608171221.276899-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A290B2F80
+	for <regressions@lists.linux.dev>; Wed,  9 Jun 2021 01:49:29 +0000 (UTC)
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Ubohsn1_1623203361;
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0Ubohsn1_1623203361)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 09 Jun 2021 09:49:21 +0800
+Content-Type: text/plain; charset="utf-8"
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Patch-Hashes: v=1; h=sha256; g=cab007d90ab2594b4813f56a3d3ec12879c5f4be; i=jUA78oRN/AMcDxOpnurfp4e2tGWh+F5DhA4jKTmbuSU=; m=5IH87NogdOjq9S6JPLku9CCKrPsDQaaCiq+A4siNk0Q=; p=uhi3mxYNybAOwPzHDVCoMxXbfTOvQcgY/re3LiUOVx0=
-X-Patch-Sig: m=pgp; i=keescook@chromium.org; s=0x0x8972F4DFDC6DC026; b=iQIzBAABCgAdFiEEpcP2jyKd1g9yPm4TiXL039xtwCYFAmC/pPUACgkQiXL039xtwCb+shAAniU UwnXMZD1U1RjMQ/p2lXYkIH+p4j+rb7BmwMlvKzpTO/gzk55T7lk2EUIWwB4ymnNt5Sx51BoHRuJN 32HgVT24kYjM8xf7ZaSqzcktQr0hS+Bx+uHB9hW8VQ8sSrOFmTnuWOSGWpUt5GLJ6J3XTHWjZo1h3 wtDQXBv3945FDIECuMCIuQh0NTNtzFnmbVZmjQi8faPnbbkw9ATP9CWiELUDQBgWief97YzwEidov GaaQMe8a1Zv+/GP1BQz6q7ylAZSaGsy/1d7+GEo9xddGgFjN16uR5TUkKxLZ0bQ/gSGRVBqxc5Fwn FgASyURJXgtGf+nFRnhZtPB+tPb+/qxhYTlq8TTZAAayXjM4Ct5c6+KZLEhaY5FRC+A1xjjzh39GY Wxs57x1kESOBC7nF+U+ouKrL8B9rS9v6aFIovcgqDcZevWZv+FZb18b+cnpj+h7Ev83YIPnbh0xsq i1qzC11cogjCPBOD5oKTcy4pY6yru5dKIwLjoEdrjSEMnGiH2ieJwhCcxzrRYSslLr/oTMvrZP8NS Sg7wiv1hGQlvyvOPJtub/A60OWtNVIlX+9xoRSg38KW0BXVjIVBECkKA1MuIBj2V7OU4aCc9Yoc5W 3OwQ+mf8rPnhtvgLu2RII7KtUWZtbr2nWmF4Sm0018RfHscag1nR3wjdstQIos6w=
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1623203313.4303577-1-xuanzhuo@linux.alibaba.com>
+Subject: Re: virtio-net: kernel panic in virtio_net.c
+Date: Wed, 09 Jun 2021 09:48:33 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, Michael S.Tsirkin <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>, virtualization@lists.linux-foundation.org,
+ regressions@lists.linux.dev, Eric Dumazet <edumazet@google.com>,
+ =?utf-8?q?Corentin_No=C3=ABl?= <corentin.noel@collabora.com>
+In-Reply-To: <YL9f9uFoPGj2Q9Zl@kroah.com>
 
-Commit bfb819ea20ce ("proc: Check /proc/$pid/attr/ writes against file opener")
-tried to make sure that there could not be a confusion between the opener of
-a /proc/$pid/attr/ file and the writer. It used struct cred to make sure
-the privileges didn't change. However, there were existing cases where a more
-privileged thread was passing the opened fd to a differently privileged thread
-(during container setup). Instead, use mm_struct to track whether the opener
-and writer are still the same process. (This is what several other proc files
-already do, though for different reasons.)
+On Tue, 8 Jun 2021 14:17:58 +0200, Greg KH <gregkh@linuxfoundation.org> wro=
+te:
+> On Thu, Jun 03, 2021 at 10:57:52AM +0200, Corentin No=C3=ABl wrote:
+> > Le jeudi 03 juin 2021 =C3=A0 10:44 +0800, Xuan Zhuo a =C3=A9crit :
+> > > On Wed, 02 Jun 2021 19:54:41 +0200, Corentin No=C3=ABl <
+> > > corentin.noel@collabora.com> wrote:
+> > > > Sure, here is the decoded trace:
+> > > >
+> > > > [   44.523231] skbuff: skb_over_panic: text:ffffffffad1a8434
+> > > > len:3762
+> > > > put:3762 head:ffff9799e6b6b000 data:ffff9799e6b6b010 tail:0xec2
+> > > > end:0xec0 dev:<NULL>
+> > > > [   44.525254] kernel BUG at net/core/skbuff.c:110!
+> > > > [   44.525910] invalid opcode: 0000 [#1] SMP PTI
+> > > > [   44.526521] CPU: 2 PID: 245 Comm: llvmpipe-0 Not tainted 5.13.0-
+> > > > rc4linux-v5.13-rc4-for-mesa-ci-184862285c49.tar.bz2 #1
+> > > > [   44.528109] Hardware name: ChromiumOS crosvm, BIOS 0
+> > > > [   44.529243] RIP: 0010:skb_panic (net/core/skbuff.c:110)
+> > > > [ 44.530284] Code: 4f 70 50 8b 87 bc 00 00 00 50 8b 87 b8 00 00 00
+> > > > 50
+> > > > ff b7 c8 00 00 00 4c 8b 8f c0 00 00 00 48 c7 c7 f0 af cf ad e8 43
+> > > > 4c fb
+> > > > ff <0f> 0b 48 8b 14 24 48 c7 c1 20 23 b1 ad e8 ab ff ff ff 48 c7 c6
+> > > > 60
+> > > > All code
+> > > > =3D=3D=3D=3D=3D=3D=3D=3D
+> > > >    0:	4f 70 50             	rex.WRXB jo 0x53
+> > > >    3:	8b 87 bc 00 00 00    	mov    0xbc(%rdi),%eax
+> > > >    9:	50                   	push   %rax
+> > > >    a:	8b 87 b8 00 00 00    	mov    0xb8(%rdi),%eax
+> > > >   10:	50                   	push   %rax
+> > > >   11:	ff b7 c8 00 00 00    	pushq  0xc8(%rdi)
+> > > >   17:	4c 8b 8f c0 00 00 00 	mov    0xc0(%rdi),%r9
+> > > >   1e:	48 c7 c7 f0 af cf ad 	mov    $0xffffffffadcfaff0,
+> > > > %rdi
+> > > >   25:	e8 43 4c fb ff       	callq  0xfffffffffffb4c6d
+> > > >   2a:*	0f 0b                	ud2    		<--
+> > > > trapping
+> > > > instruction
+> > > >   2c:	48 8b 14 24          	mov    (%rsp),%rdx
+> > > >   30:	48 c7 c1 20 23 b1 ad 	mov    $0xffffffffadb12320,
+> > > > %rcx
+> > > >   37:	e8 ab ff ff ff       	callq  0xffffffffffffffe7
+> > > >   3c:	48                   	rex.W
+> > > >   3d:	c7                   	.byte 0xc7
+> > > >   3e:	c6                   	(bad)
+> > > >   3f:	60                   	(bad)
+> > > >
+> > > > Code starting with the faulting instruction
+> > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > >    0:	0f 0b                	ud2
+> > > >    2:	48 8b 14 24          	mov    (%rsp),%rdx
+> > > >    6:	48 c7 c1 20 23 b1 ad 	mov    $0xffffffffadb12320,
+> > > > %rcx
+> > > >    d:	e8 ab ff ff ff       	callq  0xffffffffffffffbd
+> > > >   12:	48                   	rex.W
+> > > >   13:	c7                   	.byte 0xc7
+> > > >   14:	c6                   	(bad)
+> > > >   15:	60                   	(bad)
+> > > > [   44.533988] RSP: 0000:ffffa651c134fc20 EFLAGS: 00010246
+> > > > [   44.534723] RAX: 000000000000008b RBX: 0000000000000010 RCX:
+> > > > 00000000ffffdfff
+> > > > [   44.535772] RDX: 0000000000000000 RSI: 00000000ffffffea RDI:
+> > > > 0000000000000000
+> > > > [   44.536693] RBP: ffffd77b009adac0 R08: ffffffffadf44b08 R09:
+> > > > 0000000000009ffb
+> > > > [   44.537569] R10: 00000000ffffe000 R11: 3fffffffffffffff R12:
+> > > > ffff979ad2aa5600
+> > > > [   44.538449] R13: 0000000000000000 R14: ffff9799e6b6b000 R15:
+> > > > 0000000000000eb2
+> > > > [   44.539300] FS:  00007fdb9cb11700(0000)
+> > > > GS:ffff979aebd00000(0000)
+> > > > knlGS:0000000000000000
+> > > > [   44.540376] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > [   44.541103] CR2: 00007f99099f4024 CR3: 0000000129558005 CR4:
+> > > > 0000000000370ee0
+> > > > [   44.542057] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> > > > 0000000000000000
+> > > > [   44.543063] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> > > > 0000000000000400
+> > > > [   44.544063] Call Trace:
+> > > > [   44.544385] skb_put.cold (net/core/skbuff.c:5254 (discriminator
+> > > > 1)
+> > > > net/core/skbuff.c:5252 (discriminator 1))
+> > > > [   44.544864] page_to_skb (drivers/net/virtio_net.c:485)
+> > > > [   44.545361] receive_buf (drivers/net/virtio_net.c:849
+> > > > drivers/net/virtio_net.c:1131)
+> > > > [   44.545870] ? netif_receive_skb_list_internal
+> > > > (net/core/dev.c:5714)
+> > > > [   44.546628] ? dev_gro_receive (net/core/dev.c:6103)
+> > > > [   44.547135] ? napi_complete_done (./include/linux/list.h:35
+> > > > net/core/dev.c:5867 net/core/dev.c:5862 net/core/dev.c:6565)
+> > > > [   44.547672] virtnet_poll (drivers/net/virtio_net.c:1427
+> > > > drivers/net/virtio_net.c:1525)
+> > > > [   44.548251] __napi_poll (net/core/dev.c:6985)
+> > > > [   44.548744] net_rx_action (net/core/dev.c:7054
+> > > > net/core/dev.c:7139)
+> > > > [   44.549264] __do_softirq (./arch/x86/include/asm/jump_label.h:19
+> > > > ./include/linux/jump_label.h:200 ./include/trace/events/irq.h:142
+> > > > kernel/softirq.c:560)
+> > > > [   44.549762] irq_exit_rcu (kernel/softirq.c:433
+> > > > kernel/softirq.c:637
+> > > > kernel/softirq.c:649)
+> > > > [   44.551384] common_interrupt (arch/x86/kernel/irq.c:240
+> > > > (discriminator 13))
+> > > > [   44.551991] ? asm_common_interrupt
+> > > > (./arch/x86/include/asm/idtentry.h:638)
+> > > > [   44.552654] asm_common_interrupt
+> > > > (./arch/x86/include/asm/idtentry.h:638)
+> > > > [   44.553276] RIP: 0033:0x7fdb981a82e4
+> > > > [ 44.553809] Code: d2 48 63 f6 c4 41 7a 6f 0c 01 c4 41 7a 6f 14 09
+> > > > c4
+> > > > 41 7a 6f 24 11 c4 41 7a 6f 2c 31 c4 c1 31 6a c2 c4 c1 19 6a d5 c5
+> > > > f9 6c
+> > > > f2 <c5> 79 6d c2 c5 f9 71 d6 08 c5 f9 db 44 24 20 c5 c1 71 f6 0b c5
+> > > > f9
+> > > > All code
+> > > > =3D=3D=3D=3D=3D=3D=3D=3D
+> > > >    0:	d2 48 63             	rorb   %cl,0x63(%rax)
+> > > >    3:	f6 c4 41             	test   $0x41,%ah
+> > > >    6:	7a 6f                	jp     0x77
+> > > >    8:	0c 01                	or     $0x1,%al
+> > > >    a:	c4 41 7a 6f 14 09    	vmovdqu (%r9,%rcx,1),%xmm10
+> > > >   10:	c4 41 7a 6f 24 11    	vmovdqu (%r9,%rdx,1),%xmm12
+> > > >   16:	c4 41 7a 6f 2c 31    	vmovdqu (%r9,%rsi,1),%xmm13
+> > > >   1c:	c4 c1 31 6a c2       	vpunpckhdq
+> > > > %xmm10,%xmm9,%xmm0
+> > > >   21:	c4 c1 19 6a d5       	vpunpckhdq
+> > > > %xmm13,%xmm12,%xmm2
+> > > >   26:	c5 f9 6c f2          	vpunpcklqdq
+> > > > %xmm2,%xmm0,%xmm6
+> > > >   2a:*	c5 79 6d c2          	vpunpckhqdq
+> > > > %xmm2,%xmm0,%xmm8
+> > > > <-- trapping instruction
+> > > >   2e:	c5 f9 71 d6 08       	vpsrlw $0x8,%xmm6,%xmm0
+> > > >   33:	c5 f9 db 44 24 20    	vpand  0x20(%rsp),%xmm0,%xm
+> > > > m0
+> > > >   39:	c5 c1 71 f6 0b       	vpsllw $0xb,%xmm6,%xmm7
+> > > >   3e:	c5                   	.byte 0xc5
+> > > >   3f:	f9                   	stc
+> > > >
+> > > > Code starting with the faulting instruction
+> > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > >    0:	c5 79 6d c2          	vpunpckhqdq
+> > > > %xmm2,%xmm0,%xmm8
+> > > >    4:	c5 f9 71 d6 08       	vpsrlw $0x8,%xmm6,%xmm0
+> > > >    9:	c5 f9 db 44 24 20    	vpand  0x20(%rsp),%xmm0,%xm
+> > > > m0
+> > > >    f:	c5 c1 71 f6 0b       	vpsllw $0xb,%xmm6,%xmm7
+> > > >   14:	c5                   	.byte 0xc5
+> > > >   15:	f9                   	stc
+> > > > [   44.556477] RSP: 002b:00007fdb9cb10240 EFLAGS: 00000202
+> > > > [   44.557224] RAX: 0000000000122d40 RBX: 00007fdb5f9e8790 RCX:
+> > > > 0000000000122d40
+> > > > [   44.558200] RDX: 0000000000122d40 RSI: 0000000000122d40 RDI:
+> > > > 000055d7049b9368
+> > > > [   44.559088] RBP: 00007fdb9cb10ba0 R08: 00007fdb981a5174 R09:
+> > > > 00007fdb5e544040
+> > > > [   44.560042] R10: 000000000000ffff R11: 000000000000ffff R12:
+> > > > 0000000000000000
+> > > > [   44.560991] R13: 0000000000000000 R14: 0000000000005000 R15:
+> > > > 0000000000000000
+> > > > [   44.561965] Modules linked in:
+> > > > [   44.562426] ---[ end trace 9a32eb9d31cb21a1 ]---
+> > > > [   44.563091] RIP: 0010:skb_panic (net/core/skbuff.c:110)
+> > > > [ 44.563721] Code: 4f 70 50 8b 87 bc 00 00 00 50 8b 87 b8 00 00 00
+> > > > 50
+> > > > ff b7 c8 00 00 00 4c 8b 8f c0 00 00 00 48 c7 c7 f0 af cf ad e8 43
+> > > > 4c fb
+> > > > ff <0f> 0b 48 8b 14 24 48 c7 c1 20 23 b1 ad e8 ab ff ff ff 48 c7 c6
+> > > > 60
+> > > > All code
+> > > > =3D=3D=3D=3D=3D=3D=3D=3D
+> > > >    0:	4f 70 50             	rex.WRXB jo 0x53
+> > > >    3:	8b 87 bc 00 00 00    	mov    0xbc(%rdi),%eax
+> > > >    9:	50                   	push   %rax
+> > > >    a:	8b 87 b8 00 00 00    	mov    0xb8(%rdi),%eax
+> > > >   10:	50                   	push   %rax
+> > > >   11:	ff b7 c8 00 00 00    	pushq  0xc8(%rdi)
+> > > >   17:	4c 8b 8f c0 00 00 00 	mov    0xc0(%rdi),%r9
+> > > >   1e:	48 c7 c7 f0 af cf ad 	mov    $0xffffffffadcfaff0,
+> > > > %rdi
+> > > >   25:	e8 43 4c fb ff       	callq  0xfffffffffffb4c6d
+> > > >   2a:*	0f 0b                	ud2    		<--
+> > > > trapping
+> > > > instruction
+> > > >   2c:	48 8b 14 24          	mov    (%rsp),%rdx
+> > > >   30:	48 c7 c1 20 23 b1 ad 	mov    $0xffffffffadb12320,
+> > > > %rcx
+> > > >   37:	e8 ab ff ff ff       	callq  0xffffffffffffffe7
+> > > >   3c:	48                   	rex.W
+> > > >   3d:	c7                   	.byte 0xc7
+> > > >   3e:	c6                   	(bad)
+> > > >   3f:	60                   	(bad)
+> > > >
+> > > > Code starting with the faulting instruction
+> > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > >    0:	0f 0b                	ud2
+> > > >    2:	48 8b 14 24          	mov    (%rsp),%rdx
+> > > >    6:	48 c7 c1 20 23 b1 ad 	mov    $0xffffffffadb12320,
+> > > > %rcx
+> > > >    d:	e8 ab ff ff ff       	callq  0xffffffffffffffbd
+> > > >   12:	48                   	rex.W
+> > > >   13:	c7                   	.byte 0xc7
+> > > >   14:	c6                   	(bad)
+> > > >   15:	60                   	(bad)
+> > > > [   44.566252] RSP: 0000:ffffa651c134fc20 EFLAGS: 00010246
+> > > > [   44.567051] RAX: 000000000000008b RBX: 0000000000000010 RCX:
+> > > > 00000000ffffdfff
+> > > > [   44.567947] RDX: 0000000000000000 RSI: 00000000ffffffea RDI:
+> > > > 0000000000000000
+> > > > [   44.568839] RBP: ffffd77b009adac0 R08: ffffffffadf44b08 R09:
+> > > > 0000000000009ffb
+> > > > [   44.569725] R10: 00000000ffffe000 R11: 3fffffffffffffff R12:
+> > > > ffff979ad2aa5600
+> > > > [   44.570608] R13: 0000000000000000 R14: ffff9799e6b6b000 R15:
+> > > > 0000000000000eb2
+> > > > [   44.571483] FS:  00007fdb9cb11700(0000)
+> > > > GS:ffff979aebd00000(0000)
+> > > > knlGS:0000000000000000
+> > > > [   44.572694] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > [   44.573474] CR2: 00007f99099f4024 CR3: 0000000129558005 CR4:
+> > > > 0000000000370ee0
+> > > > [   44.574531] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> > > > 0000000000000000
+> > > > [   44.575597] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> > > > 0000000000000400
+> > > > [   44.576618] Kernel panic - not syncing: Fatal exception in
+> > > > interrupt
+> > > > [   44.577996] Kernel Offset: 0x2ba00000 from 0xffffffff81000000
+> > > > (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+> > > >
+> > >
+> > > Can you test this patch on the latest net branch?
+> > >
+> > > Thanks.
+> > >
+> > > diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> > > index fa407eb8b457..78a01c71a17c 100644
+> > > --- a/drivers/net/virtio_net.c
+> > > +++ b/drivers/net/virtio_net.c
+> > > @@ -406,7 +406,7 @@ static struct sk_buff *page_to_skb(struct
+> > > virtnet_info *vi,
+> > >          * add_recvbuf_mergeable() + get_mergeable_buf_len()
+> > >          */
+> > >         truesize =3D headroom ? PAGE_SIZE : truesize;
+> > > -       tailroom =3D truesize - len - headroom;
+> > > +       tailroom =3D truesize - len - headroom - (hdr_padded_len -
+> > > hdr_len);
+> > >         buf =3D p - headroom;
+> > >
+> > >         len -=3D hdr_len;
+> >
+> > With this patch and the latest net branch I no longer get crashes.
+>
+> Did this ever get properly submitted to the networking tree to get into
+> 5.13-final?
 
-Reported-by: Christian Brauner <christian.brauner@ubuntu.com>
-Reported-by: Andrea Righi <andrea.righi@canonical.com>
-Tested-by: Andrea Righi <andrea.righi@canonical.com>
-Fixes: bfb819ea20ce ("proc: Check /proc/$pid/attr/ writes against file opener")
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- fs/proc/base.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+The patch has been submitted.
 
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 58bbf334265b..7118ebe38fa6 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -2674,6 +2674,11 @@ static int proc_pident_readdir(struct file *file, struct dir_context *ctx,
- }
- 
- #ifdef CONFIG_SECURITY
-+static int proc_pid_attr_open(struct inode *inode, struct file *file)
-+{
-+	return __mem_open(inode, file, PTRACE_MODE_READ_FSCREDS);
-+}
-+
- static ssize_t proc_pid_attr_read(struct file * file, char __user * buf,
- 				  size_t count, loff_t *ppos)
- {
-@@ -2704,7 +2709,7 @@ static ssize_t proc_pid_attr_write(struct file * file, const char __user * buf,
- 	int rv;
- 
- 	/* A task may only write when it was the opener. */
--	if (file->f_cred != current_real_cred())
-+	if (file->private_data != current->mm)
- 		return -EPERM;
- 
- 	rcu_read_lock();
-@@ -2754,9 +2759,11 @@ static ssize_t proc_pid_attr_write(struct file * file, const char __user * buf,
- }
- 
- static const struct file_operations proc_pid_attr_operations = {
-+	.open		= proc_pid_attr_open,
- 	.read		= proc_pid_attr_read,
- 	.write		= proc_pid_attr_write,
- 	.llseek		= generic_file_llseek,
-+	.release	= mem_release,
- };
- 
- #define LSM_DIR_OPS(LSM) \
--- 
-2.25.1
+	[PATCH net] virtio-net: fix for skb_over_panic inside big mode
 
+Thanks.
+
+
+>
+> thanks,
+>
+> greg k-h
