@@ -1,95 +1,54 @@
-Received: from 16.mo6.mail-out.ovh.net (16.mo6.mail-out.ovh.net [87.98.139.208])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEB12FB8
-	for <regressions@lists.linux.dev>; Mon, 14 Jun 2021 12:25:54 +0000 (UTC)
-Received: from player738.ha.ovh.net (unknown [10.108.16.31])
-	by mo6.mail-out.ovh.net (Postfix) with ESMTP id CD0AF255E2A
-	for <regressions@lists.linux.dev>; Mon, 14 Jun 2021 13:47:48 +0200 (CEST)
-Received: from RCM-web3.webmail.mail.ovh.net (static-176-175-108-40.ftth.abo.bbox.fr [176.175.108.40])
-	(Authenticated sender: adel.ks@zegrapher.com)
-	by player738.ha.ovh.net (Postfix) with ESMTPSA id 93BA21F3CE657;
-	Mon, 14 Jun 2021 11:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F26570
+	for <regressions@lists.linux.dev>; Mon, 14 Jun 2021 13:58:21 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 71F536120E;
+	Mon, 14 Jun 2021 13:58:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1623679101;
+	bh=vr6RUwBhWqWJKE6xgP0FELDsoZf3I21l3sAjPQ6ipMU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Nj0m4H1NskiNjBcpZq/iRpddVI/wuHeQsJssTewDphx1WlFKaDcfvH2v2DqZobVgP
+	 jlVaf6/bXR1uClUtqL6fxQUmsi2hIDpToXqUzAwlfR2YVw9AV7qUGJM0+x2KiBB2th
+	 JVMwLJz+s6VztV/N/bIAxUvp0166ABD+FFOMwtak=
+Date: Mon, 14 Jun 2021 15:58:18 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: adel.ks@zegrapher.com
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Kernel 5.12.10 and 5.12.9 freezing after boot-up with while
+ sound output is looping
+Message-ID: <YMdgev1GDhmbAF4U@kroah.com>
+References: <d086de2a793eb2ea52acb11ed143675c@zegrapher.com>
+ <YMbmeRH38Wp6BHPf@kroah.com>
+ <b56d3d96-70d6-4ad5-9b8f-9b6fea958ad7@zegrapher.com>
+ <f454b38b7987773caa72b656c4d2e3fb@zegrapher.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Mon, 14 Jun 2021 13:47:46 +0200
-From: adel.ks@zegrapher.com
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Kernel 5.12.10 and 5.12.9 freezing after boot-up with while sound
- output is looping
-In-Reply-To: <b56d3d96-70d6-4ad5-9b8f-9b6fea958ad7@zegrapher.com>
-References: <d086de2a793eb2ea52acb11ed143675c@zegrapher.com>
- <YMbmeRH38Wp6BHPf@kroah.com>
- <b56d3d96-70d6-4ad5-9b8f-9b6fea958ad7@zegrapher.com>
-User-Agent: Roundcube Webmail/1.4.10
-Message-ID: <f454b38b7987773caa72b656c4d2e3fb@zegrapher.com>
-X-Sender: adel.ks@zegrapher.com
-X-Originating-IP: 176.175.108.40
-X-Webmail-UserID: adel.ks@zegrapher.com
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 4747919909701261173
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduledrfedvhedggedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggffhffvufgjfhgfkfigihgtgfesthekjhdttderjeenucfhrhhomheprgguvghlrdhkshesiigvghhrrghphhgvrhdrtghomhenucggtffrrghtthgvrhhnpeeuleegteeuueeuleevjeejvdfgjefggeefleffteehieefueekheduffevgeetieenucfkpheptddrtddrtddrtddpudejiedrudejhedruddtkedrgedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeefkedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegruggvlhdrkhhsseiivghgrhgrphhhvghrrdgtohhmpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f454b38b7987773caa72b656c4d2e3fb@zegrapher.com>
 
-Hello,
-
-I decided to test first the ALSA changes, which happen to be the commits 
-right after v5.12.8, and the very first commit of the series, `73d862c55 
-ALSA: hda/realtek: the bass speaker can't output sound on Yoga 9i` made 
-the freeze happen (although it took some time when compared to f3c23683d 
-and 59ef5291f).
-
-I am ready and willing to help further on the matter.
-
-Kind regards,
-
-Adel K.S.
-
-On 2021-06-14 11:03, Adel Kara Slimane wrote:
+On Mon, Jun 14, 2021 at 01:47:46PM +0200, adel.ks@zegrapher.com wrote:
 > Hello,
 > 
-> Yes I can, I will do then report back. It will take me some time as I
-> only know how to do it manually.
+> I decided to test first the ALSA changes, which happen to be the commits
+> right after v5.12.8, and the very first commit of the series, `73d862c55
+> ALSA: hda/realtek: the bass speaker can't output sound on Yoga 9i` made the
+> freeze happen (although it took some time when compared to f3c23683d and
+> 59ef5291f).
 > 
-> Thank you for your help,
-> 
-> Adel
-> 
-> Jun 14, 2021 07:17:59 Greg KH <gregkh@linuxfoundation.org>:
-> 
->> On Sun, Jun 13, 2021 at 08:19:37PM +0200, adel.ks@zegrapher.com wrote:
->>> Hello,
->>> 
->>> I am encountering an issue where my system freezes entirely after a 
->>> random
->>> but short time after boot-up: the computer does not react to any user 
->>> input,
->>> be it mouse, keyboard or plugging-unplugging peripherals.  The image 
->>> on
->>> screen remains still and does not go black. Any sound that was 
->>> playing at
->>> the moment of the freeze loops indefinitely with a period of around 
->>> 1s. I
->>> have the intuition that the issue is sound related because of that.
->>> 
->>> Some additional information with this issue
->>> - Only happens only with the latest stable releases of the kernel:  
->>> 5.12.9
->>> and 5.12.10 . 5.12.8  does not have this issue. I have not tested 
->>> other
->>> kernel version, e.g. LTS 5.10 , to see if it's a change that got
->>> back-ported.
->> 
->> Any chance you can run 'git bisect' to find the offending change?
->> That's the easiest way to fix this up.
->> 
->> thanks,
->> 
->> greg k-h
+> I am ready and willing to help further on the matter.
+
+Thanks for testing!
+
+So I am also guessing that 5.13-rc6 fails in this same way?
+
+And you do have this specific hardware, for this specific patch, right?
+
+thanks,
+
+greg k-h
