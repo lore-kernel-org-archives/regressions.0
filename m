@@ -1,75 +1,95 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 16.mo6.mail-out.ovh.net (16.mo6.mail-out.ovh.net [87.98.139.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F2872
-	for <regressions@lists.linux.dev>; Mon, 14 Jun 2021 10:02:51 +0000 (UTC)
-Received: by mail-pg1-f173.google.com with SMTP id t17so8213606pga.5
-        for <regressions@lists.linux.dev>; Mon, 14 Jun 2021 03:02:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rNQD4x8X3fqLopq7YlxB2amn3le3fNKisSEzfuWGwmk=;
-        b=KsODG2p+0P7TzUkSGtY6l1BPl3iRfswiPFdZQxactpYuArBXPIkRUm6upHjC6LdNOh
-         xbbN5+6kFwV+b14IfzU4ZbNpljF11z8KxifrIXCBWDGhOlzAScB8ft0Gj2pPeAkrKEoI
-         1t9usoOwl0+TURy3AsUREHmYK9qzBAjJOaednhBf6v9GeLZLAYSBEDM6+Pb4XTNQoMJZ
-         i7ZHxdJ8ayX7wtdjPujrE9YY8kmp7v0CTIXx0Qv1V7rs5PYDk5RWCk1t2GDTe1z/Hmon
-         t7ZPdNY5/En/TKh6G/8mrPI9HAhlSfmqudiPAMp3Boy+oFGb8uuEDVqWROnxIlU0zsLd
-         2w5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rNQD4x8X3fqLopq7YlxB2amn3le3fNKisSEzfuWGwmk=;
-        b=YXMJvlfmlFMnV5ZCZ3vPbeR2TW7jhiiwHIJ+OzotgbzZ9wGsWMpAs+UQbEhPri0Uwr
-         mPeBWAQBLcTD04iS8Ft8cyHq75UlOBWMKWZ2Rq8O6SnUXIxE0Fin3nwA1hO4HJjBwS2L
-         tIkpfXJ9seBAzDeepf16OHNpvKbalv7jsBcj859UnDVa+J3yH0T3/rydjPMcQDXe8r/B
-         WFYdIpSIAaYYwWo/LpaYxkczfTwqJq5nzynxnATcQuJCYo/yqQCpNlYEubzZYBc7xxa8
-         mrWFc1i4ILrlSraOY3XRPwEyUDD5GkMI46Knv3t1clZaQX3PEbTy6SwisZxXCgWeIvUh
-         6YnQ==
-X-Gm-Message-State: AOAM5314nETkXlGJwfQT2wE7CJGt4yqOopgKCCRIBoj3lIkVc8wI41d6
-	Vp0qEGlsT7yMKDUDOfC751g=
-X-Google-Smtp-Source: ABdhPJznYWcNRclazSfMjDvL7XG0PCNfjNv0tmjFeg+HSzd1vhRPQW2g+gETCvqtBzX2rwbDieEAvg==
-X-Received: by 2002:aa7:83c3:0:b029:2e8:f2ba:3979 with SMTP id j3-20020aa783c30000b02902e8f2ba3979mr21137727pfn.8.1623664971383;
-        Mon, 14 Jun 2021 03:02:51 -0700 (PDT)
-Received: from localhost.localdomain ([143.244.42.72])
-        by smtp.gmail.com with ESMTPSA id x28sm12005906pff.201.2021.06.14.03.02.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Jun 2021 03:02:51 -0700 (PDT)
-From: youling257 <youling257@gmail.com>
-To: keescook@chromium.org
-Cc: torvalds@linux-foundation.org,
-	christian.brauner@ubuntu.com,
-	andrea.righi@canonical.com,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] proc: Track /proc/$pid/attr/ opener mm_struct
-Date: Mon, 14 Jun 2021 18:02:34 +0800
-Message-Id: <20210614100234.12077-1-youling257@gmail.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20210608171221.276899-1-keescook@chromium.org>
-References: <20210608171221.276899-1-keescook@chromium.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECEB12FB8
+	for <regressions@lists.linux.dev>; Mon, 14 Jun 2021 12:25:54 +0000 (UTC)
+Received: from player738.ha.ovh.net (unknown [10.108.16.31])
+	by mo6.mail-out.ovh.net (Postfix) with ESMTP id CD0AF255E2A
+	for <regressions@lists.linux.dev>; Mon, 14 Jun 2021 13:47:48 +0200 (CEST)
+Received: from RCM-web3.webmail.mail.ovh.net (static-176-175-108-40.ftth.abo.bbox.fr [176.175.108.40])
+	(Authenticated sender: adel.ks@zegrapher.com)
+	by player738.ha.ovh.net (Postfix) with ESMTPSA id 93BA21F3CE657;
+	Mon, 14 Jun 2021 11:47:46 +0000 (UTC)
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Date: Mon, 14 Jun 2021 13:47:46 +0200
+From: adel.ks@zegrapher.com
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Kernel 5.12.10 and 5.12.9 freezing after boot-up with while sound
+ output is looping
+In-Reply-To: <b56d3d96-70d6-4ad5-9b8f-9b6fea958ad7@zegrapher.com>
+References: <d086de2a793eb2ea52acb11ed143675c@zegrapher.com>
+ <YMbmeRH38Wp6BHPf@kroah.com>
+ <b56d3d96-70d6-4ad5-9b8f-9b6fea958ad7@zegrapher.com>
+User-Agent: Roundcube Webmail/1.4.10
+Message-ID: <f454b38b7987773caa72b656c4d2e3fb@zegrapher.com>
+X-Sender: adel.ks@zegrapher.com
+X-Originating-IP: 176.175.108.40
+X-Webmail-UserID: adel.ks@zegrapher.com
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 4747919909701261173
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeduledrfedvhedggedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggffhffvufgjfhgfkfigihgtgfesthekjhdttderjeenucfhrhhomheprgguvghlrdhkshesiigvghhrrghphhgvrhdrtghomhenucggtffrrghtthgvrhhnpeeuleegteeuueeuleevjeejvdfgjefggeefleffteehieefueekheduffevgeetieenucfkpheptddrtddrtddrtddpudejiedrudejhedruddtkedrgedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmohguvgepshhmthhpqdhouhhtpdhhvghlohepphhlrgihvghrjeefkedrhhgrrdhovhhhrdhnvghtpdhinhgvtheptddrtddrtddrtddpmhgrihhlfhhrohhmpegruggvlhdrkhhsseiivghgrhgrphhhvghrrdgtohhmpdhrtghpthhtoheprhgvghhrvghsshhiohhnsheslhhishhtshdrlhhinhhugidruggvvh
 
-I used mainline kernel on android, this patch cause "failed to retrieve pid context" problem.
+Hello,
 
-06-14 02:15:51.165  1685  1685 E ServiceManager: SELinux: getpidcon(pid=1682) failed to retrieve pid context.
-06-14 02:15:51.166  1685  1685 E ServiceManager: add_service('batteryproperties',1) uid=0 - PERMISSION DENIED
-06-14 02:15:51.166  1682  1682 I ServiceManager: addService() batteryproperties failed (err -1 - no service manager yet?).  Retrying...
-06-14 02:15:51.197  1685  1685 E ServiceManager: SELinux: getpidcon(pid=1695) failed to retrieve pid context.
-06-14 02:15:51.197  1685  1685 E ServiceManager: add_service('android.security.keystore',1) uid=1017 - PERMISSION DENIED
-06-14 02:15:51.198  1695  1695 I ServiceManager: addService() android.security.keystore failed (err -1 - no service manager yet?).  Retrying...
-06-14 02:15:51.207  1685  1685 E ServiceManager: SELinux: getpidcon(pid=1708) failed to retrieve pid context.
-06-14 02:15:51.207  1685  1685 E ServiceManager: add_service('android.service.gatekeeper.IGateKeeperService',1) uid=1000 - PERMISSION DENIED
-06-14 02:15:51.207  1708  1708 I ServiceManager: addService() android.service.gatekeeper.IGateKeeperService failed (err -1 - no service manager yet?).  Retrying...
-06-14 02:15:51.275  1685  1685 E ServiceManager: SELinux: getpidcon(pid=1693) failed to retrieve pid context.
-06-14 02:15:51.275  1692  1692 I cameraserver: ServiceManager: 0xf6d309e0
-06-14 02:15:51.275  1685  1685 E ServiceManager: add_service('drm.drmManager',1) uid=1019 - PERMISSION DENIED
-06-14 02:15:51.276  1693  1693 I ServiceManager: addService() drm.drmManager failed (err -1 - no service manager yet?).  Retrying...
+I decided to test first the ALSA changes, which happen to be the commits 
+right after v5.12.8, and the very first commit of the series, `73d862c55 
+ALSA: hda/realtek: the bass speaker can't output sound on Yoga 9i` made 
+the freeze happen (although it took some time when compared to f3c23683d 
+and 59ef5291f).
 
+I am ready and willing to help further on the matter.
+
+Kind regards,
+
+Adel K.S.
+
+On 2021-06-14 11:03, Adel Kara Slimane wrote:
+> Hello,
+> 
+> Yes I can, I will do then report back. It will take me some time as I
+> only know how to do it manually.
+> 
+> Thank you for your help,
+> 
+> Adel
+> 
+> Jun 14, 2021 07:17:59 Greg KH <gregkh@linuxfoundation.org>:
+> 
+>> On Sun, Jun 13, 2021 at 08:19:37PM +0200, adel.ks@zegrapher.com wrote:
+>>> Hello,
+>>> 
+>>> I am encountering an issue where my system freezes entirely after a 
+>>> random
+>>> but short time after boot-up: the computer does not react to any user 
+>>> input,
+>>> be it mouse, keyboard or plugging-unplugging peripherals.  The image 
+>>> on
+>>> screen remains still and does not go black. Any sound that was 
+>>> playing at
+>>> the moment of the freeze loops indefinitely with a period of around 
+>>> 1s. I
+>>> have the intuition that the issue is sound related because of that.
+>>> 
+>>> Some additional information with this issue
+>>> - Only happens only with the latest stable releases of the kernel:  
+>>> 5.12.9
+>>> and 5.12.10 . 5.12.8  does not have this issue. I have not tested 
+>>> other
+>>> kernel version, e.g. LTS 5.10 , to see if it's a change that got
+>>> back-ported.
+>> 
+>> Any chance you can run 'git bisect' to find the offending change?
+>> That's the easiest way to fix this up.
+>> 
+>> thanks,
+>> 
+>> greg k-h
