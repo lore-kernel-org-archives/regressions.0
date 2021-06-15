@@ -1,92 +1,129 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F8B72
-	for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 11:26:44 +0000 (UTC)
-Received: by mail-ej1-f43.google.com with SMTP id h24so21987970ejy.2
-        for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 04:26:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Blp/IrsrSShZRKUsMEp/iJdzOG+tUUDSwjzDuCyoAwk=;
-        b=xX411P79z/T56H3ueR41/3ATmURuhk9lY0Zqm8WA8n0z449r9OJ+eLJpY1Xin8ZKyG
-         dHhQAPfj8o4kT0lWHzFUIjXUa+dM35JdLFAWg8Xv68u+KWFfo2Pw3lkcTwYYDKCh7YeG
-         tdVrmZWWIbABT2zvE5+EnT6W57ixhegoZ657XwEFCrgHOIJxFLf6edio4WKDZQNa/9X0
-         nyroe5B54Djn9vGULpI1nzoIDbmAMUc/jXkBpFAmbu6haeY64pBEWBTR2qpHB8WrK+O3
-         VKW8aNaPWt2tvOBj+uY5lmrjk2JrRb5wy3/j795Sakn692JspyTEE49tsd9hf1dORKor
-         3pSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Blp/IrsrSShZRKUsMEp/iJdzOG+tUUDSwjzDuCyoAwk=;
-        b=NbdLa4EHnUNOSg8twCV3Sx2RmgdGUO7Z2iSS8cLGS8w0yZmoPUH4QPVXf1hMeTfZvY
-         10vHtkIB1YkS1svSgWeABvdXH4Izzhp0K9Nw40SEH+xgKUus6yGRyfWImJL8cUWmoSda
-         4zYN/d6gI34B1uJJmEbiTjS42F4QlGw/hlE5+Ml6W4wNee4zjVMj5e0alOUDwRqa3ZVp
-         hfVcvTdlm/RDa01JVFrWoTQmNpIo4hVad34S1ENEAugAsEfYT2CxoN7ZWY221OAqRZdY
-         WJdeYu8gbHSoaRNE90KkIClyJcahs5u0wA5+9l+GqexahV8GSUOSRcb7UjUytRWWRqYc
-         G/ag==
-X-Gm-Message-State: AOAM531EdYergF3idSdRx0LqkFlNA9UZl+/plAGyzqoShSaZGQJuwuGa
-	y6JYwhsT7a3pRJ+5cQ5OdJQT+LKtpYMNm5Un3hmgcA==
-X-Google-Smtp-Source: ABdhPJySGALxoxfe1c0PKH/BE3HG448iqXZfqzm4W3zQEc1OEoF6taRfIyCS5e5Zy6u6tlSLIohV3PLljO9l7JJrkfU=
-X-Received: by 2002:a17:906:480a:: with SMTP id w10mr3772979ejq.18.1623756402663;
- Tue, 15 Jun 2021 04:26:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41BB72
+	for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 11:50:50 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4A165613BF;
+	Tue, 15 Jun 2021 11:50:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1623757850;
+	bh=q1+9+561eC7jmhlBQGchmKhaf063MtAVBSjBfa/pKvs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UmCtA2/eef34H13ygfdC+6kV9vk8kNdh7SXa2j2d1Er5i1KNTi1XV2p7lq+6vvJla
+	 0sEhqYO2gme/hoNYL/Wdy+e5hugm8tRABjisZS7YLLe7EP7HxlQaYLQaS/3uR+3EvL
+	 wDsLz9ynF2E16oncM83gvzreSf6fHhcBWMJcvBqLR9ZgopIkQn5P7dJ6hWCKaadd6q
+	 drMR97ncGKnkcsxXZFpy41lEHSWWBpMH0Qox2m4qzGwv4vVADrU3aO/1aX96yL1Bc3
+	 ne1aFU1RQ8BMSewv5ol/rGDN2AX05so/aM2UlYUX7q4PUi3M43DZo7RBxpWjkh9Kj5
+	 K+Gh5Du/lvzGw==
+Date: Tue, 15 Jun 2021 12:50:45 +0100
+From: Will Deacon <will@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Linux-Next Mailing List <linux-next@vger.kernel.org>,
+	linux-mm <linux-mm@kvack.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mike Rapoport <rppt@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: Re: [next] [arm64] kernel BUG at arch/arm64/mm/physaddr.c
+Message-ID: <20210615115044.GC20598@willie-the-truck>
+References: <CA+G9fYvvm2tW5QAe9hzPgs7sV8udsoufxs0Qu6N0ZjV0Z686vw@mail.gmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYurEcTfV7Z=co2Ki-TubF4d-Ext7ivZPaQT9SR5XazUtQ@mail.gmail.com>
-In-Reply-To: <CA+G9fYurEcTfV7Z=co2Ki-TubF4d-Ext7ivZPaQT9SR5XazUtQ@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 15 Jun 2021 16:56:31 +0530
-Message-ID: <CA+G9fYschBRxbugv19pZegUG6+Y10dJfJr7RHQE7M+Z_3RgqrQ@mail.gmail.com>
-Subject: Re: [next] [arm64] Unable to handle kernel NULL pointer dereference
- at virtual address 0000000000000068
-To: Linux-Next Mailing List <linux-next@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>, 
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev
-Cc: Andrew Morton <akpm@linux-foundation.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Mike Rapoport <rppt@linux.ibm.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvvm2tW5QAe9hzPgs7sV8udsoufxs0Qu6N0ZjV0Z686vw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, 15 Jun 2021 at 16:49, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> Following kernel crash reported while booting linux next 20210615 tag
-> on qemu_arm64.
+Hi Naresh,
 
-Similar crash reported while booting Linux next 20210615 tag kernel on
-the qemu arm.
+On Tue, Jun 15, 2021 at 04:41:25PM +0530, Naresh Kamboju wrote:
+> Following kernel crash reported while boot linux next 20210615 tag on qemu_arm64
+> with allmodconfig build.
+> 
+> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
+> [    0.000000] Linux version 5.13.0-rc6-next-20210615
+> (tuxmake@ac7978cddede) (aarch64-linux-gnu-gcc (Debian 11.1.0-1)
+> 11.1.0, GNU ld (GNU Binutils for Debian) 2.36.50.20210601) #1 SMP
+> PREEMPT Tue Jun 15 10:20:51 UTC 2021
+> [    0.000000] Machine model: linux,dummy-virt
+> [    0.000000] earlycon: pl11 at MMIO 0x0000000009000000 (options '')
+> [    0.000000] printk: bootconsole [pl11] enabled
+> [    0.000000] efi: UEFI not found.
+> [    0.000000] NUMA: No NUMA configuration found
+> [    0.000000] NUMA: Faking a node at [mem
+> 0x0000000040000000-0x00000000bfffffff]
+> [    0.000000] NUMA: NODE_DATA [mem 0xbfc00d40-0xbfc03fff]
+> [    0.000000] ------------[ cut here ]------------
+> [    0.000000] kernel BUG at arch/arm64/mm/physaddr.c:27!
+> [    0.000000] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> [    0.000000] Modules linked in:
+> [    0.000000] CPU: 0 PID: 0 Comm: swapper Tainted: G                T
+> 5.13.0-rc6-next-20210615 #1 c150a8161d8ff395c5ae7ee0c3c8f22c3689fae4
+> [    0.000000] Hardware name: linux,dummy-virt (DT)
+> [    0.000000] pstate: 404000c5 (nZcv daIF +PAN -UAO -TCO BTYPE=--)
+> [    0.000000] pc : __phys_addr_symbol+0x44/0xc0
+> [    0.000000] lr : __phys_addr_symbol+0x44/0xc0
+> [    0.000000] sp : ffff800014287b00
+> [    0.000000] x29: ffff800014287b00 x28: fc49a9b89db36f0a x27: ffffffffffffffff
+> [    0.000000] x26: 0000000000000280 x25: 0000000000000010 x24: ffff8000145a8000
+> [    0.000000] x23: 0000000008000000 x22: 0000000000000010 x21: 0000000000000000
+> [    0.000000] x20: ffff800010000000 x19: ffff00007fc00d40 x18: 0000000000000000
+> [    0.000000] x17: 00000000003ee000 x16: 00000000bfc12000 x15: 0000001000000000
+> [    0.000000] x14: 000000000000de8c x13: 0000001000000000 x12: 00000000f1f1f1f1
+> [    0.000000] x11: dfff800000000000 x10: ffff700002850eea x9 : 0000000000000000
+> [    0.000000] x8 : ffff00007fbe0d40 x7 : 0000000000000000 x6 : 000000000000003f
+> [    0.000000] x5 : 0000000000000040 x4 : 0000000000000005 x3 : ffff8000142bb0c0
+> [    0.000000] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
+> [    0.000000] Call trace:
+> [    0.000000]  __phys_addr_symbol+0x44/0xc0
+> [    0.000000]  sparse_init_nid+0x98/0x6d0
+> [    0.000000]  sparse_init+0x460/0x4d4
+> [    0.000000]  bootmem_init+0x110/0x340
+> [    0.000000]  setup_arch+0x1b8/0x2e0
+> [    0.000000]  start_kernel+0x110/0x870
+> [    0.000000]  __primary_switched+0xa8/0xb0
+> [    0.000000] Code: 940ccf23 eb13029f 54000069 940cce60 (d4210000)
+> [    0.000000] random: get_random_bytes called from
+> oops_exit+0x54/0xc0 with crng_init=0
+> [    0.000000] ---[ end trace 0000000000000000 ]---
+> [    0.000000] Kernel panic - not syncing: Oops - BUG: Fatal exception
+> [    0.000000] ---[ end Kernel panic - not syncing: Oops - BUG: Fatal
+> exception ]---
+> 
+> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
-https://lkft.validation.linaro.org/scheduler/job/2901326#L441
+Thanks for the report, although since this appears to be part of a broader
+testing effort, here are some things that I think would make the reports
+even more useful:
 
->
-> Crash log:
-> -------------
-> [    0.767379] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000068
-> [    0.769815] Mem abort info:
-> [    0.770735]   ESR = 0x96000004
-> [    0.771598]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [    0.773008]   SET = 0, FnV = 0
-> [    0.773865]   EA = 0, S1PTW = 0
-> [    0.774844]   FSC = 0x04: level 0 translation fault
-> [    0.776195] Data abort info:
-> [    0.776968]   ISV = 0, ISS = 0x00000004
-> [    0.778010]   CM = 0, WnR = 0
-> [    0.778961] [0000000000000068] user address but active_mm is swapper
-> [    0.780643] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-> [    0.782189] Modules linked in:
-> [    0.783098] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
-> 5.13.0-rc6-next-20210615 #1
-> [    0.785239] Hardware name: linux,dummy-virt (DT)
-> [    0.786626] pstate: 00000005 (nzcv daif -PAN -UAO -TCO BTYPE=--)
-> [    0.788352] pc : blk_finish_plug+0x88/0x270
-> [    0.789598] lr : blk_queue_write_cache+0x34/0x80
-d.com/1tyksDCCPiTvc0x6psxC3JvSWqJ/config
+  1. An indication as to whether or not this is a regression (i.e. do you
+     have a known good build, perhaps even a bisection?)
 
-- Naresh
+  2. Either a link to the vmlinux, or faddr2line run on the backtrace.
+     Looking at the above, I can't tell what sparse_init_nid+0x98/0x6d0
+     actually is.
+
+  3. The exact QEMU command-line you are using, so I can try to reproduce
+     this locally. I think the 0-day bot wraps the repro up in a shell
+     script for you.
+
+  4. Whether or not the issue is reproducible.
+
+  5. Information about the toolchain you used to build the kernel (it
+     happens to be present here because it's in the kernel log, but
+     generally I think it would be handy to specify that in the report).
+
+Please can you provide that information for this crash? It would really
+help in debugging it.
+
+Thanks!
+
+Will
