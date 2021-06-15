@@ -1,67 +1,49 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393C32FB8
-	for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 06:01:19 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 35EE860720;
-	Tue, 15 Jun 2021 06:01:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1623736878;
-	bh=6+Xsjc6mhzFwkeVtJlWg7rfSXLGzA8yfj6gPeHytIjk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HeClBzVnN5StT2aEIrpy6h6FjrvrEj6Hmq1BmbSTY5vL4TD0JLvVXKsP/JjWujddP
-	 Z9lfxC8bSyNgN25G59UHj5YC3GT4B6dUsR1dzC5AzxpzpoKysYhxTiZstURNolWlaB
-	 d8f5zF8NS6UNmQAHTqxkm7EuQvF+acDJJX24z4s8=
-Date: Tue, 15 Jun 2021 08:01:15 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Adam Edge <baronedge@protonmail.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05D62FB8
+	for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 06:13:57 +0000 (UTC)
+Date: Tue, 15 Jun 2021 06:13:46 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail; t=1623737627;
+	bh=famUP8ZoSshK6eenlnLRC/aecYEaPBAo5l23qJBhuXg=;
+	h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+	b=nmoR0h8WjEZ/V0bdSV/jDdJ5nGhxP61m6gTsgJfGZcnPRbHxeoYplLrLiPMxfAy6q
+	 s3Nt0UnmCdamTuDaErkJ6pkR9vNxWFKZhLS7+7CHPW5GWv/uwNZJ11xKEACiwiDmco
+	 1hKz102n3zNk8BPEEkwPrKpx23rOPXrlLhMmVP5U=
+To: Greg KH <gregkh@linuxfoundation.org>
+From: Adam Edge <baronedge@protonmail.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Reply-To: Adam Edge <baronedge@protonmail.com>
 Subject: Re: Regression after 5.7.19 causing major freezes on CPU loads
-Message-ID: <YMhCK8x7R4TbnLAF@kroah.com>
-References: <HnYKcqmY_z0ERb5qOOUauOLY1vt6nxuKHXzuKVrZ297elyqtzpsWTrjUUnlIDG7mQUYnJMfS8HkFceFMf0Fd_GLzOMghgf4btNt9YhwwZK0=@protonmail.com>
+Message-ID: <GUSUkWNwTxbgBsjYfpPEreYbwdu5JGec4XqJhWkFs8UncAWLJ9MdDIUvmZ0wYDLj8dFmEGcImo_fDBWte9QaFV2Yil6W7XLHlyXENv6vqd8=@protonmail.com>
+In-Reply-To: <YMhCK8x7R4TbnLAF@kroah.com>
+References: <HnYKcqmY_z0ERb5qOOUauOLY1vt6nxuKHXzuKVrZ297elyqtzpsWTrjUUnlIDG7mQUYnJMfS8HkFceFMf0Fd_GLzOMghgf4btNt9YhwwZK0=@protonmail.com> <YMhCK8x7R4TbnLAF@kroah.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <HnYKcqmY_z0ERb5qOOUauOLY1vt6nxuKHXzuKVrZ297elyqtzpsWTrjUUnlIDG7mQUYnJMfS8HkFceFMf0Fd_GLzOMghgf4btNt9YhwwZK0=@protonmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM shortcircuit=no
+	autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+	mailout.protonmail.ch
 
-On Mon, Jun 14, 2021 at 07:21:55PM +0000, Adam Edge wrote:
-> Hello,
-> 
-> After I've upgraded from 5.7.11 (didn't have access to this machine for
-> about 10 months) to 5.12.10, I've noticed that anytime I used all my
-> cores to, for example, compile a project, the system would degrade
-> significantly in performance and applications would start to stutter.
-> Compiles are also about 3-4x slower on kernels with the regression vs.
-> without. After debugging this for the past 24 hours or so, I've narrowed
-> it down to a change between 5.7.19 and 5.8.1. Sadly, bisect does not
-> help, because trying to run any of the 5.8 RC kernels causes the kernel
-> to be stuck before init, without any apparent errors on the screen (and
-> I don't have a serial cable to dump the kernel output to). I'm listing
-> all the information I know and my system information below.
-> 
-> Reproduction steps (dunno if this helps, but):
-> 1. Boot with kernel with the regression
-> 2. Do something that uses all cores, like compiling the Linux kernel
-> 3. Observe long compile times and stuttering applications (which doesn't
-> happen even on full load with a working kernel)
-> 
-> Regression between kernel versions:
-> 5.7 - working
-> 5.7.11 - working
-> 5.7.19 - working
-> 5.8.1 - broken
-> 5.8.18 - broken
-> 5.12.10 - broken
-> 8ecfa36cd4db3275bf3b6c6f32c7e3c6bb537de2 (master on 2021-06-13) - broken
+On Tuesday, June 15th, 2021 at 6:01 AM, Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+> Can you use 'git bisect' to track down the commit that caused the
+> problem?
 
-Can you use 'git bisect' to track down the commit that caused the
-problem?
+As I have mentioned in my previous email, anytime I'm within the v5.8-rc*
+range of commits, running the kernel fails to get past a certain point
+at boot. init doesn't get executed, but SysRq keys work and I can reboot
+from there. Has this happened before? If there is an alternate method
+of getting the kernel debug logs for this (that doesn't involve a serial
+connection, as I don't have the equipment for that), I'm happy to get
+them for you.
 
-thanks,
-
-greg k-h
+Best Regards,
+Adam Edge
