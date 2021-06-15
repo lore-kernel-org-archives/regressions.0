@@ -1,36 +1,30 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41BB72
-	for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 11:50:50 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 4A165613BF;
-	Tue, 15 Jun 2021 11:50:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1623757850;
-	bh=q1+9+561eC7jmhlBQGchmKhaf063MtAVBSjBfa/pKvs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UmCtA2/eef34H13ygfdC+6kV9vk8kNdh7SXa2j2d1Er5i1KNTi1XV2p7lq+6vvJla
-	 0sEhqYO2gme/hoNYL/Wdy+e5hugm8tRABjisZS7YLLe7EP7HxlQaYLQaS/3uR+3EvL
-	 wDsLz9ynF2E16oncM83gvzreSf6fHhcBWMJcvBqLR9ZgopIkQn5P7dJ6hWCKaadd6q
-	 drMR97ncGKnkcsxXZFpy41lEHSWWBpMH0Qox2m4qzGwv4vVADrU3aO/1aX96yL1Bc3
-	 ne1aFU1RQ8BMSewv5ol/rGDN2AX05so/aM2UlYUX7q4PUi3M43DZo7RBxpWjkh9Kj5
-	 K+Gh5Du/lvzGw==
-Date: Tue, 15 Jun 2021 12:50:45 +0100
-From: Will Deacon <will@kernel.org>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 729146D00
+	for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 12:47:55 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EDF221063;
+	Tue, 15 Jun 2021 05:47:54 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.9.115])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A4D43F719;
+	Tue, 15 Jun 2021 05:47:51 -0700 (PDT)
+Date: Tue, 15 Jun 2021 13:47:45 +0100
+From: Mark Rutland <mark.rutland@arm.com>
 To: Naresh Kamboju <naresh.kamboju@linaro.org>
 Cc: Linux-Next Mailing List <linux-next@vger.kernel.org>,
 	linux-mm <linux-mm@kvack.org>,
 	Linux ARM <linux-arm-kernel@lists.infradead.org>,
 	open list <linux-kernel@vger.kernel.org>,
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+	Will Deacon <will@kernel.org>, lkft-triage@lists.linaro.org,
+	regressions@lists.linux.dev,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Stephen Rothwell <sfr@canb.auug.org.au>,
 	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
 	Catalin Marinas <catalin.marinas@arm.com>,
 	Mike Rapoport <rppt@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Miles Chen <miles.chen@mediatek.com>
 Subject: Re: [next] [arm64] kernel BUG at arch/arm64/mm/physaddr.c
-Message-ID: <20210615115044.GC20598@willie-the-truck>
+Message-ID: <20210615124745.GA47121@C02TD0UTHF1T.local>
 References: <CA+G9fYvvm2tW5QAe9hzPgs7sV8udsoufxs0Qu6N0ZjV0Z686vw@mail.gmail.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,9 +34,6 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <CA+G9fYvvm2tW5QAe9hzPgs7sV8udsoufxs0Qu6N0ZjV0Z686vw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-
-Hi Naresh,
 
 On Tue, Jun 15, 2021 at 04:41:25PM +0530, Naresh Kamboju wrote:
 > Following kernel crash reported while boot linux next 20210615 tag on qemu_arm64
@@ -85,6 +76,21 @@ On Tue, Jun 15, 2021 at 04:41:25PM +0530, Naresh Kamboju wrote:
 > [    0.000000] Call trace:
 > [    0.000000]  __phys_addr_symbol+0x44/0xc0
 > [    0.000000]  sparse_init_nid+0x98/0x6d0
+
+From the looks of it, this is pgdat_to_phys, as introduced in next
+commit:
+
+  e1db6ef7336d817c ("mm/sparse: fix check_usemap_section_nr warnings")
+
+It appears thta allmodconfig doesn't have CONFIG_NEED_MULTIPLE_NODES=y,
+but does have CONFIG_NUMA=y, and so *does* use the dynamically-allocated
+node_data array (since contig_page_data is only defined for !NUMA).
+
+I don't think that commit is correct.
+
+Thanks,
+Mark.
+
 > [    0.000000]  sparse_init+0x460/0x4d4
 > [    0.000000]  bootmem_init+0x110/0x340
 > [    0.000000]  setup_arch+0x1b8/0x2e0
@@ -99,31 +105,7 @@ On Tue, Jun 15, 2021 at 04:41:25PM +0530, Naresh Kamboju wrote:
 > exception ]---
 > 
 > Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-
-Thanks for the report, although since this appears to be part of a broader
-testing effort, here are some things that I think would make the reports
-even more useful:
-
-  1. An indication as to whether or not this is a regression (i.e. do you
-     have a known good build, perhaps even a bisection?)
-
-  2. Either a link to the vmlinux, or faddr2line run on the backtrace.
-     Looking at the above, I can't tell what sparse_init_nid+0x98/0x6d0
-     actually is.
-
-  3. The exact QEMU command-line you are using, so I can try to reproduce
-     this locally. I think the 0-day bot wraps the repro up in a shell
-     script for you.
-
-  4. Whether or not the issue is reproducible.
-
-  5. Information about the toolchain you used to build the kernel (it
-     happens to be present here because it's in the kernel log, but
-     generally I think it would be handy to specify that in the report).
-
-Please can you provide that information for this crash? It would really
-help in debugging it.
-
-Thanks!
-
-Will
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
