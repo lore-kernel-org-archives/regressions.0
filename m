@@ -1,138 +1,64 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01A972FB8
-	for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 13:19:08 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97B2911D4;
-	Tue, 15 Jun 2021 06:19:08 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.9.115])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FADA3F719;
-	Tue, 15 Jun 2021 06:19:05 -0700 (PDT)
-Date: Tue, 15 Jun 2021 14:19:02 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Mike Rapoport <rppt@linux.ibm.com>,
-	Miles Chen <miles.chen@mediatek.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Linux-Next Mailing List <linux-next@vger.kernel.org>,
-	linux-mm <linux-mm@kvack.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	Will Deacon <will@kernel.org>, lkft-triage@lists.linaro.org,
-	regressions@lists.linux.dev,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>
+Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
+	(using TLSv1.2 with cipher AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3A470
+	for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 14:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
+  t=1623768762; x=1655304762;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=h7JitUKvd260OU0nQerm2mqsf2MMNeE1rFFHSDrosFY=;
+  b=l+uc1r/D+1I+tAFujvyTqHqwN0QONCwEyKqRiOO0gj3uBBxRSG5QSLcH
+   pXgy/VEQvIMMbq4SXbtlAOtnX89HrlwkCNBJq6Rf9ykZ9OFUw5NfO3oxy
+   0RKf6Su7VIYakSGRrMycTxfzQk92K1Ct3Ai0wxKpuwEzMXSiyE1A7r6EI
+   M=;
+Received: from unknown (HELO ironmsg-SD-alpha.qualcomm.com) ([10.53.140.30])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 15 Jun 2021 07:50:34 -0700
+X-QCInternal: smtphost
+Received: from nasanexm03e.na.qualcomm.com ([10.85.0.48])
+  by ironmsg-SD-alpha.qualcomm.com with ESMTP/TLS/AES256-SHA; 15 Jun 2021 07:50:34 -0700
+Received: from [10.111.175.185] (10.80.80.8) by nasanexm03e.na.qualcomm.com
+ (10.85.0.48) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Tue, 15 Jun
+ 2021 07:50:32 -0700
 Subject: Re: [next] [arm64] kernel BUG at arch/arm64/mm/physaddr.c
-Message-ID: <20210615131902.GB47121@C02TD0UTHF1T.local>
+To: Mark Rutland <mark.rutland@arm.com>, Naresh Kamboju
+	<naresh.kamboju@linaro.org>, Mike Rapoport <rppt@linux.ibm.com>, Miles Chen
+	<miles.chen@mediatek.com>, Andrew Morton <akpm@linux-foundation.org>
+CC: Linux-Next Mailing List <linux-next@vger.kernel.org>, linux-mm
+	<linux-mm@kvack.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, open
+ list <linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>,
+	<lkft-triage@lists.linaro.org>, <regressions@lists.linux.dev>, Stephen
+ Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, Ard
+ Biesheuvel <ardb@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>
 References: <CA+G9fYvvm2tW5QAe9hzPgs7sV8udsoufxs0Qu6N0ZjV0Z686vw@mail.gmail.com>
  <20210615124745.GA47121@C02TD0UTHF1T.local>
+ <20210615131902.GB47121@C02TD0UTHF1T.local>
+From: Qian Cai <quic_qiancai@quicinc.com>
+Message-ID: <076665b9-9fb1-71da-5f7d-4d2c7f892103@quicinc.com>
+Date: Tue, 15 Jun 2021 10:50:31 -0400
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210615124745.GA47121@C02TD0UTHF1T.local>
+In-Reply-To: <20210615131902.GB47121@C02TD0UTHF1T.local>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanexm03g.na.qualcomm.com (10.85.0.49) To
+ nasanexm03e.na.qualcomm.com (10.85.0.48)
 
-On Tue, Jun 15, 2021 at 01:47:45PM +0100, Mark Rutland wrote:
-> On Tue, Jun 15, 2021 at 04:41:25PM +0530, Naresh Kamboju wrote:
-> > Following kernel crash reported while boot linux next 20210615 tag on qemu_arm64
-> > with allmodconfig build.
-> > 
-> > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]
-> > [    0.000000] Linux version 5.13.0-rc6-next-20210615
-> > (tuxmake@ac7978cddede) (aarch64-linux-gnu-gcc (Debian 11.1.0-1)
-> > 11.1.0, GNU ld (GNU Binutils for Debian) 2.36.50.20210601) #1 SMP
-> > PREEMPT Tue Jun 15 10:20:51 UTC 2021
-> > [    0.000000] Machine model: linux,dummy-virt
-> > [    0.000000] earlycon: pl11 at MMIO 0x0000000009000000 (options '')
-> > [    0.000000] printk: bootconsole [pl11] enabled
-> > [    0.000000] efi: UEFI not found.
-> > [    0.000000] NUMA: No NUMA configuration found
-> > [    0.000000] NUMA: Faking a node at [mem
-> > 0x0000000040000000-0x00000000bfffffff]
-> > [    0.000000] NUMA: NODE_DATA [mem 0xbfc00d40-0xbfc03fff]
-> > [    0.000000] ------------[ cut here ]------------
-> > [    0.000000] kernel BUG at arch/arm64/mm/physaddr.c:27!
-> > [    0.000000] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> > [    0.000000] Modules linked in:
-> > [    0.000000] CPU: 0 PID: 0 Comm: swapper Tainted: G                T
-> > 5.13.0-rc6-next-20210615 #1 c150a8161d8ff395c5ae7ee0c3c8f22c3689fae4
-> > [    0.000000] Hardware name: linux,dummy-virt (DT)
-> > [    0.000000] pstate: 404000c5 (nZcv daIF +PAN -UAO -TCO BTYPE=--)
-> > [    0.000000] pc : __phys_addr_symbol+0x44/0xc0
-> > [    0.000000] lr : __phys_addr_symbol+0x44/0xc0
-> > [    0.000000] sp : ffff800014287b00
-> > [    0.000000] x29: ffff800014287b00 x28: fc49a9b89db36f0a x27: ffffffffffffffff
-> > [    0.000000] x26: 0000000000000280 x25: 0000000000000010 x24: ffff8000145a8000
-> > [    0.000000] x23: 0000000008000000 x22: 0000000000000010 x21: 0000000000000000
-> > [    0.000000] x20: ffff800010000000 x19: ffff00007fc00d40 x18: 0000000000000000
-> > [    0.000000] x17: 00000000003ee000 x16: 00000000bfc12000 x15: 0000001000000000
-> > [    0.000000] x14: 000000000000de8c x13: 0000001000000000 x12: 00000000f1f1f1f1
-> > [    0.000000] x11: dfff800000000000 x10: ffff700002850eea x9 : 0000000000000000
-> > [    0.000000] x8 : ffff00007fbe0d40 x7 : 0000000000000000 x6 : 000000000000003f
-> > [    0.000000] x5 : 0000000000000040 x4 : 0000000000000005 x3 : ffff8000142bb0c0
-> > [    0.000000] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
-> > [    0.000000] Call trace:
-> > [    0.000000]  __phys_addr_symbol+0x44/0xc0
-> > [    0.000000]  sparse_init_nid+0x98/0x6d0
+
+
+On 6/15/2021 9:19 AM, Mark Rutland wrote:
+> Looking some more, it looks like that's correct in isolation, but it
+> clashes with commit:
 > 
-> From the looks of it, this is pgdat_to_phys, as introduced in next
-> commit:
-> 
->   e1db6ef7336d817c ("mm/sparse: fix check_usemap_section_nr warnings")
-> 
-> It appears thta allmodconfig doesn't have CONFIG_NEED_MULTIPLE_NODES=y,
-> but does have CONFIG_NUMA=y, and so *does* use the dynamically-allocated
-> node_data array (since contig_page_data is only defined for !NUMA).
-> 
-> I don't think that commit is correct.
+>   5831eedad2ac6f38 ("mm: replace CONFIG_NEED_MULTIPLE_NODES with CONFIG_NUMA")
 
-Looking some more, it looks like that's correct in isolation, but it
-clashes with commit:
-
-  5831eedad2ac6f38 ("mm: replace CONFIG_NEED_MULTIPLE_NODES with CONFIG_NUMA")
-
-... and I reckon it'd be clearer and more robust to define
-pgdat_to_phys() in the same ifdefs as contig_page_data so that
-these, stay in-sync. e.g. have:
-
-| #ifdef CONFIG_NUMA
-| #define pgdat_to_phys(x)	virt_to_phys(x)
-| #else /* CONFIG_NUMA */
-| 
-| extern struct pglist_data contig_page_data;
-| ...
-| #define pgdat_to_phys(x)	__pa_symbol(&contig_page_data)
-|
-| #endif /* CONIFIG_NUMA */
-
-... which'd also make clear that contig_page_data is the *only* expected
-pglist_data.
-
-Thanks,
-Mark.
-
-> Thanks,
-> Mark.
-> 
-> > [    0.000000]  sparse_init+0x460/0x4d4
-> > [    0.000000]  bootmem_init+0x110/0x340
-> > [    0.000000]  setup_arch+0x1b8/0x2e0
-> > [    0.000000]  start_kernel+0x110/0x870
-> > [    0.000000]  __primary_switched+0xa8/0xb0
-> > [    0.000000] Code: 940ccf23 eb13029f 54000069 940cce60 (d4210000)
-> > [    0.000000] random: get_random_bytes called from
-> > oops_exit+0x54/0xc0 with crng_init=0
-> > [    0.000000] ---[ end trace 0000000000000000 ]---
-> > [    0.000000] Kernel panic - not syncing: Oops - BUG: Fatal exception
-> > [    0.000000] ---[ end Kernel panic - not syncing: Oops - BUG: Fatal
-> > exception ]---
-> > 
-> > Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> > 
-> > --
-> > Linaro LKFT
-> > https://lkft.linaro.org
+Just a data point. Reverting the commit alone fixed the same crash for me.
