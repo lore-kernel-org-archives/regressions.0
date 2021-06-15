@@ -1,99 +1,119 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140312FB2
-	for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 18:19:23 +0000 (UTC)
-Received: by mail-lf1-f49.google.com with SMTP id bp38so28590561lfb.0
-        for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 11:19:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Av+6lPQlyv+Sn6WN/JAS+BG6bGNrpjaP5opx8sV0nnc=;
-        b=WQuQwtCiT/eoKl6qV5lHYx4lH+0EDr7+nOJYQ1h6yvBunl0woPiervNHkI2DWuHNMS
-         q2DNf1dI8WkF30DAo2o970Na/Exs7H+KKRGluFxJ9QUdoPaAT85CHvggye+xAbjL8yy7
-         H4ASmIp9BBpePbCJfnUYj3imRXf4Pc4Dds7lg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Av+6lPQlyv+Sn6WN/JAS+BG6bGNrpjaP5opx8sV0nnc=;
-        b=PNqX8MtqoAGvHCX9EG7/LR5gf2sOtKYhmb52yfuTUTknI8OG6etoAbGZ5DxD4gUlPI
-         IE+ClkzBHtupfqABPuquPtC6AMBhDl4em400LjQbR55rON6A8CaXSMmJkdn29ecbVuSC
-         Sp1T9YU9nFs2/rMPsEI6T/7csAmhKFs2P1Mgc2vVCnlYl9cEU3lpssNCzDNRWMZaipXJ
-         FXoRb+rhRrxB25lzO2rAA18+zp2syEUWL+YJzZlIWygNTZKLHyOULUFMMdWjJ9zr6iSp
-         Yn09MJKlNchwPHMGEIgAk8FV564vMoQDOWyUFvH89JDVTAQYnb23F3XwXNOUzJOBJDAz
-         DUrA==
-X-Gm-Message-State: AOAM531W7IiEZW9iHM+UwZD5M+a1Q8lkPsC5XU3OV7H/Qv8rLGFpdx4D
-	iMgT0Axn8PTVsaWnX+jItrA+gLSvHMfcXbkS
-X-Google-Smtp-Source: ABdhPJybLNaPLJ6boSqibYV9rlG8FN17HqmL308/3+thKsaC/e4TIou5RtUBWfUfxQ1ctmREpLTJjg==
-X-Received: by 2002:a05:6512:926:: with SMTP id f6mr514756lft.552.1623781161915;
-        Tue, 15 Jun 2021 11:19:21 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id f14sm2253204ljk.42.2021.06.15.11.19.20
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 15 Jun 2021 11:19:21 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id m21so28442552lfg.13
-        for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 11:19:20 -0700 (PDT)
-X-Received: by 2002:a05:6512:374b:: with SMTP id a11mr468018lfs.377.1623781160087;
- Tue, 15 Jun 2021 11:19:20 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E57173
+	for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 19:22:21 +0000 (UTC)
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15FJ3ige068549;
+	Tue, 15 Jun 2021 15:21:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=CbeQvqjWYMEKIm/ohd1i/mP8vgkL07rDKlVpu0ojC1c=;
+ b=EbTJXgQyBbHny+WfsPb8xFRbI2X5tr2lfEa+Yo5wMgLKy2+q4VNDKTABBouQmxV/J1Gk
+ 1BrV87Gb/sTAQcL8BDrgB9g6t8oP/gaKKGBIg4JCEDyiSsPNIv/qnF7oO4dpyIw90nyJ
+ VvVaq3LXfV63g3IYLpBu797ZoDKggVGeHqTaPJwTaIMoznSbWE9e5Jw/OkTE/Pbh6rGS
+ xW26tnb/4c6TARHVeTrGPSJgjw/hs4PdOe6lNOhVnuPUit1OqiXqp83QQx5IvC3+blKw
+ QuH+XzOxslnHvHPTtzgVvpgaiZd4hU5Jg3RiA3Tsh+8QBlH4niLJw7crK/+KWbhnT+5A gQ== 
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+	by mx0a-001b2d01.pphosted.com with ESMTP id 3970pmk4nh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Jun 2021 15:21:44 -0400
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+	by ppma03fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15FJLfc7019130;
+	Tue, 15 Jun 2021 19:21:41 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+	by ppma03fra.de.ibm.com with ESMTP id 394mj90wsf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 15 Jun 2021 19:21:41 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+	by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15FJKYbP26149338
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 15 Jun 2021 19:20:34 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 191DC4C044;
+	Tue, 15 Jun 2021 19:21:39 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 64A1F4C040;
+	Tue, 15 Jun 2021 19:21:35 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.145.174.39])
+	by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+	Tue, 15 Jun 2021 19:21:35 +0000 (GMT)
+Date: Tue, 15 Jun 2021 22:21:32 +0300
+From: Mike Rapoport <rppt@linux.ibm.com>
+To: Qian Cai <quic_qiancai@quicinc.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>, lkft-triage@lists.linaro.org,
+        regressions@lists.linux.dev, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>, Ard Biesheuvel <ardb@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: Re: [next] [arm64] kernel BUG at arch/arm64/mm/physaddr.c
+Message-ID: <YMj9vHhHOiCVN4BF@linux.ibm.com>
+References: <CA+G9fYvvm2tW5QAe9hzPgs7sV8udsoufxs0Qu6N0ZjV0Z686vw@mail.gmail.com>
+ <20210615124745.GA47121@C02TD0UTHF1T.local>
+ <20210615131902.GB47121@C02TD0UTHF1T.local>
+ <076665b9-9fb1-71da-5f7d-4d2c7f892103@quicinc.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20210608171221.276899-1-keescook@chromium.org>
- <20210614100234.12077-1-youling257@gmail.com> <202106140826.7912F27CD@keescook>
- <202106140941.7CE5AE64@keescook> <CAOzgRdZJeN6sQWP=Ou0H3bTrp+7ijKuJikG-f4eer5f1oVjrCQ@mail.gmail.com>
- <202106141503.B3144DFE@keescook> <CAOzgRdahaEjtk4jS5N=FQEDbsZVnB+-=xD+-WtV9zD9Tgbm0Hg@mail.gmail.com>
-In-Reply-To: <CAOzgRdahaEjtk4jS5N=FQEDbsZVnB+-=xD+-WtV9zD9Tgbm0Hg@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 15 Jun 2021 11:19:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=winAqy0sjgog9oEsjoBWOGJscFYEc3-=nvtzbyjTw_b+g@mail.gmail.com>
-Message-ID: <CAHk-=winAqy0sjgog9oEsjoBWOGJscFYEc3-=nvtzbyjTw_b+g@mail.gmail.com>
-Subject: Re: [PATCH] proc: Track /proc/$pid/attr/ opener mm_struct
-To: youling 257 <youling257@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>, Christian Brauner <christian.brauner@ubuntu.com>, 
-	Andrea Righi <andrea.righi@canonical.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, 
-	regressions@lists.linux.dev, LSM List <linux-security-module@vger.kernel.org>, 
-	Paul Moore <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, 
-	SElinux list <selinux@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <076665b9-9fb1-71da-5f7d-4d2c7f892103@quicinc.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 7__BV3WxWPyUURMkkduVQYEarOn1Xzpx
+X-Proofpoint-ORIG-GUID: 7__BV3WxWPyUURMkkduVQYEarOn1Xzpx
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.761
+ definitions=2021-06-15_07:2021-06-15,2021-06-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
+ priorityscore=1501 adultscore=0 lowpriorityscore=0 bulkscore=0
+ mlxlogscore=999 spamscore=0 malwarescore=0 impostorscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2104190000 definitions=main-2106150119
 
-On Mon, Jun 14, 2021 at 6:55 PM youling 257 <youling257@gmail.com> wrote:
->
-> if try to find problem on userspace, i used linux 5.13rc6 on old
-> android 7 cm14.1, not aosp android 11.
-> http://git.osdn.net/view?p=android-x86/system-core.git;a=blob;f=init/service.cpp;h=a5334f447fc2fc34453d2f6a37523bedccadc690;hb=refs/heads/cm-14.1-x86#l457
->
->  457         if (!seclabel_.empty()) {
->  458             if (setexeccon(seclabel_.c_str()) < 0) {
->  459                 ERROR("cannot setexeccon('%s'): %s\n",
->  460                       seclabel_.c_str(), strerror(errno));
->  461                 _exit(127);
->  462             }
->  463         }
+On Tue, Jun 15, 2021 at 10:50:31AM -0400, Qian Cai wrote:
+> 
+> 
+> On 6/15/2021 9:19 AM, Mark Rutland wrote:
+> > Looking some more, it looks like that's correct in isolation, but it
+> > clashes with commit:
+> > 
+> >   5831eedad2ac6f38 ("mm: replace CONFIG_NEED_MULTIPLE_NODES with CONFIG_NUMA")
+> 
+> Just a data point. Reverting the commit alone fixed the same crash for me.
 
-I have no idea where the cm14.1 libraries are. Does anybody know where
-the matching source code for setexeccon() would be?
+Yeah, that commit didn't take into the account the change in
+pgdat_to_phys().
 
-For me - obviously not on cm14.1 - all "setexeccon()" does is
+The patch below should fix it. In the long run I think we should get rid of
+contig_page_data and allocate NODE_DATA(0) for !NUMA case as well.
 
-   n = openat(AT_FDCWD, "/proc/thread-self/attr/exec", O_RDWR|O_CLOEXEC)
-   write(n, string, len)
-   close(n)
+Andrew, can you please add this as a fixup to "mm: replace
+CONFIG_NEED_MULTIPLE_NODES with CONFIG_NUMA"?
 
-and if that fails, it would seem to indicate that proc_mem_open()
-failed. Which would be mm_access() failing. But I don't see how that
-can be the case, because mm_access() explicitly allows "mm ==
-current->mm" (which the above clearly should be).
 
-youling, can you double-check with the current -git tree? But as far
-as I can tell, my minimal patch is exactly the same as Kees' patch
-(just smaller and simpler).
+diff --git a/mm/sparse.c b/mm/sparse.c
+index a0e9cdb5bc38..6326cdf36c4f 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -347,7 +347,7 @@ size_t mem_section_usage_size(void)
+ 
+ static inline phys_addr_t pgdat_to_phys(struct pglist_data *pgdat)
+ {
+-#ifndef CONFIG_NEED_MULTIPLE_NODES
++#ifndef CONFIG_NUMA
+ 	return __pa_symbol(pgdat);
+ #else
+ 	return __pa(pgdat);
 
-Kees, do you see anything?
-
-           Linus
+-- 
+Sincerely yours,
+Mike.
