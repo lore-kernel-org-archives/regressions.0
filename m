@@ -1,56 +1,47 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FF52FB8
-	for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 06:17:54 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id B7270613DA;
-	Tue, 15 Jun 2021 06:17:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1623737874;
-	bh=KeB5L0kVFMc/wPmzyE6S1gGGHbRh8TTAbFMMtnLQ6PU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VyTrAwHr24tIhhAoqdQ4x1fQnZlyjZW/9lgVUbCC7roYcTseuelGm+Sjoe4Ine78K
-	 u02jLrJQFubxJmJ9GaBx3yv1JFOCnsl7NIhdwXJTE3QZrK0e68vqpMAKAcNS8mM7OA
-	 r4XFJYaRV85OJphIgekhLAq9O5oYxhFWxJZFoIzI=
-Date: Tue, 15 Jun 2021 08:17:51 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Adam Edge <baronedge@protonmail.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4B12FB8
+	for <regressions@lists.linux.dev>; Tue, 15 Jun 2021 06:21:09 +0000 (UTC)
+Date: Tue, 15 Jun 2021 06:20:59 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail; t=1623738059;
+	bh=lw5osVgYiJfQCZCofGUwhScUt21f+XdpmwbqzERy+Jc=;
+	h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+	b=HrgYwr+x8IsQK9b8k6EDnk9AgYBDC1Dnvati/jg7c1vCprDjbEzaUYU2a0dnsV+iQ
+	 NluyFHC1VJwKnrv8QdGjcRBa2W7mK0+XJsFMkiCQmmT75MCgOIvLo1zdyLQj+8o7BL
+	 zUVPO+/nVQXjWSSZKQfHDHZz4kD3pGCiCuYYtjA8=
+To: Greg KH <gregkh@linuxfoundation.org>
+From: Adam Edge <baronedge@protonmail.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Reply-To: Adam Edge <baronedge@protonmail.com>
 Subject: Re: Regression after 5.7.19 causing major freezes on CPU loads
-Message-ID: <YMhGDxrELFMrye9c@kroah.com>
-References: <HnYKcqmY_z0ERb5qOOUauOLY1vt6nxuKHXzuKVrZ297elyqtzpsWTrjUUnlIDG7mQUYnJMfS8HkFceFMf0Fd_GLzOMghgf4btNt9YhwwZK0=@protonmail.com>
- <YMhCK8x7R4TbnLAF@kroah.com>
- <GUSUkWNwTxbgBsjYfpPEreYbwdu5JGec4XqJhWkFs8UncAWLJ9MdDIUvmZ0wYDLj8dFmEGcImo_fDBWte9QaFV2Yil6W7XLHlyXENv6vqd8=@protonmail.com>
+Message-ID: <Db4HNrx24ySuyTJUmyA1QlComifjMlUPL1BUdigtYp3uALuovNXf28l8YARD3sg-9RcOoobqiLg5tgQDbK3bA0ECXtCNHhINA_OV2_60mu4=@protonmail.com>
+In-Reply-To: <YMhGDxrELFMrye9c@kroah.com>
+References: <HnYKcqmY_z0ERb5qOOUauOLY1vt6nxuKHXzuKVrZ297elyqtzpsWTrjUUnlIDG7mQUYnJMfS8HkFceFMf0Fd_GLzOMghgf4btNt9YhwwZK0=@protonmail.com> <YMhCK8x7R4TbnLAF@kroah.com> <GUSUkWNwTxbgBsjYfpPEreYbwdu5JGec4XqJhWkFs8UncAWLJ9MdDIUvmZ0wYDLj8dFmEGcImo_fDBWte9QaFV2Yil6W7XLHlyXENv6vqd8=@protonmail.com> <YMhGDxrELFMrye9c@kroah.com>
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <GUSUkWNwTxbgBsjYfpPEreYbwdu5JGec4XqJhWkFs8UncAWLJ9MdDIUvmZ0wYDLj8dFmEGcImo_fDBWte9QaFV2Yil6W7XLHlyXENv6vqd8=@protonmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM shortcircuit=no
+	autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+	mailout.protonmail.ch
 
-On Tue, Jun 15, 2021 at 06:13:46AM +0000, Adam Edge wrote:
-> On Tuesday, June 15th, 2021 at 6:01 AM, Greg KH <gregkh@linuxfoundation.org> wrote:
-> > Can you use 'git bisect' to track down the commit that caused the
-> > problem?
-> 
-> As I have mentioned in my previous email, anytime I'm within the v5.8-rc*
-> range of commits, running the kernel fails to get past a certain point
-> at boot. init doesn't get executed, but SysRq keys work and I can reboot
-> from there. Has this happened before? If there is an alternate method
-> of getting the kernel debug logs for this (that doesn't involve a serial
-> connection, as I don't have the equipment for that), I'm happy to get
-> them for you.
+On Tuesday, June 15th, 2021 at 6:17 AM, Greg KH <gregkh@linuxfoundation.org=
+> wrote:
+> That sounds like the offending commit is in that range, which is good,
+> you have narrowed it down.
+> Just use 'git bisect' to track down the place where this fails at,
+> that's all we want. No need to get a debug log yet, "failing to boot"
+> is a good sign something is going wrong :)
 
-That sounds like the offending commit is in that range, which is good,
-you have narrowed it down.
+Thank you. I will have to get back to this in the weekend then, I will
+inform you (and the list! :^) of the bisect results as soon as possible.
 
-Just use 'git bisect' to track down the place where this fails at,
-that's all we want.  No need to get a debug log yet, "failing to boot"
-is a good sign something is going wrong :)
-
-thanks,
-
-greg k-h
+Best Regards,
+Adam Edge
