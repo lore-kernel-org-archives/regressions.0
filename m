@@ -1,125 +1,115 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from www259.your-server.de (www259.your-server.de [188.40.28.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D0170
-	for <regressions@lists.linux.dev>; Wed, 30 Jun 2021 07:20:52 +0000 (UTC)
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 15U72h5B048508;
-	Wed, 30 Jun 2021 03:20:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=973EgiF50mXgJhpr6evy6DSCnIvYAM1+Him4gsa37N0=;
- b=DYHls9J7VDS4TuDrPst0cZROzjEDEmQlt3LyuBLnAjWFbtzsPxmjP5RFyhsnpnKltizH
- HVShX7HG6dzrBOOn0TzACr+etLXVmda5PWLPr7VPfd+0hl70d6lYIg5XdsIrWYdCDmWS
- Pfd8moMG5YTwu8sjyfR8hAgwO7ggsY3YcfNLFR67vXH2Ii7mNvaV2tV0ehnWhVVuwaTM
- it0yOvrQ26jFGJmlAzUJYes7u8dXAJ8gQsvD+OuEanYoQ+1gLXiGZkOm1AC1gGrxhji1
- +Jr1owPew/GdB+rQZzguLWtQg/GBM7FlEZ3/2IHVnlvkTD70qkZhTaHzfHMNrJFzZF8R gQ== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-	by mx0b-001b2d01.pphosted.com with ESMTP id 39gk5d1jup-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Jun 2021 03:20:30 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-	by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 15U7Cd5D024447;
-	Wed, 30 Jun 2021 07:20:28 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-	by ppma04ams.nl.ibm.com with ESMTP id 39duv8hmm3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Jun 2021 07:20:28 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-	by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 15U7KQg420775172
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 30 Jun 2021 07:20:26 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 00AA5A4092;
-	Wed, 30 Jun 2021 07:20:25 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E2F7FA40A1;
-	Wed, 30 Jun 2021 07:20:23 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.145.56.105])
-	by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-	Wed, 30 Jun 2021 07:20:23 +0000 (GMT)
-Date: Wed, 30 Jun 2021 10:20:21 +0300
-From: Mike Rapoport <rppt@linux.ibm.com>
-To: Tony Lindgren <tony@atomide.com>
-Cc: Mike Rapoport <rppt@kernel.org>, linux-arm-kernel@lists.infradead.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-omap@vger.kernel.org,
-        regressions@lists.linux.dev
-Subject: Re: [PATCH v2 3/3] arm: extend pfn_valid to take into accound freed
- memory map alignment
-Message-ID: <YNwbNX7oyosZAuEJ@linux.ibm.com>
-References: <20210519141436.11961-1-rppt@kernel.org>
- <20210519141436.11961-4-rppt@kernel.org>
- <YNmiW6CYzy9lG8ks@atomide.com>
- <YNnLxFM4ZeQ5epX3@linux.ibm.com>
- <YNnqIv3PApHFZMgp@atomide.com>
- <YNqwl8EPVYZJV0EF@linux.ibm.com>
- <YNrfqtBpKsNj033w@atomide.com>
- <YNr6+wOiR7/Yx9M1@linux.ibm.com>
- <YNsJh7trg4up5l26@atomide.com>
- <YNsXDEgreCpshZxb@linux.ibm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F55170
+	for <regressions@lists.linux.dev>; Thu,  1 Jul 2021 11:06:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=waldheinz.de; s=default1911; h=MIME-Version:Content-Type:Subject:Cc:To:From
+	:Message-ID:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=olo+q1cjkFiUEc1+lqyaJ97zQc/9rXBpSSCctXlU9IU=; b=NUSaLnZ+eNDbFL+yVpNkDfMybV
+	44R+wChzeFxFmRp15INUM4066E+99FuF8O7fJ4a/gpqBWbL2sPvORD7D+fJuKszpoBcYky8Ls9wXj
+	0w5AvLqaFyoS2BT+HF2yTRsWTxHvykS+KdjOMWf+hEyoTh+AGBQmnYtT79TkeyABrN4CpVNhReXTT
+	pFdBDFerboSFM0vVyzH2P89Vh8SaeyK6OOvioXwIA0IiU3Q6umerKvCVE/GWH6tqczVxxbFK/kCbi
+	i7AoLeC2INxPm9fVigesa+7NiEHo8BXXYM8187uB2wET0vMYnMz83g6jt847ags2iIeHCWF7BaJPv
+	gq9wR3sg==;
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+	by www259.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+	(Exim 4.92.3)
+	(envelope-from <mt@waldheinz.de>)
+	id 1lyuEV-0006ze-GM; Thu, 01 Jul 2021 12:47:47 +0200
+Received: from [192.168.0.31] (helo=mail.your-server.de)
+	by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-CHACHA20-POLY1305:256)
+	(Exim 4.92)
+	(envelope-from <mt@waldheinz.de>)
+	id 1lyuEV-000Xy1-9u; Thu, 01 Jul 2021 12:47:47 +0200
+Received: from [77.21.132.210] ([77.21.132.210]) by mail.your-server.de
+ (Horde Framework) with HTTPS; Thu, 01 Jul 2021 12:47:47 +0200
+Date: Thu, 01 Jul 2021 12:47:32 +0200
+Message-ID: <20210701124732.Horde.HT4urccbfqv0Nr1Aayuy0BM@mail.your-server.de>
+From: Matthias Treydte <mt@waldheinz.de>
+To: stable@vger.kernel.org
+Cc: netdev@vger.kernel.org, regressions@lists.linux.dev,
+ davem@davemloft.net, yoshfuji@linux-ipv6.org, dsahern@kernel.org
+Subject: [regression] UDP recv data corruption
+User-Agent: Horde Application Framework 5
+Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YNsXDEgreCpshZxb@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: rvs5R5nyoEt68OsbalfVyq0zwKsMmEvN
-X-Proofpoint-GUID: rvs5R5nyoEt68OsbalfVyq0zwKsMmEvN
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
- definitions=2021-06-30_01:2021-06-29,2021-06-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- impostorscore=0 suspectscore=0 phishscore=0 clxscore=1015 bulkscore=0
- spamscore=0 malwarescore=0 priorityscore=1501 adultscore=0 mlxlogscore=487
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2104190000
- definitions=main-2106300045
+X-Authenticated-Sender: mt@waldheinz.de
+X-Virus-Scanned: Clear (ClamAV 0.103.2/26217/Wed Jun 30 13:10:04 2021)
 
-On Tue, Jun 29, 2021 at 03:50:23PM +0300, Mike Rapoport wrote:
-> On Tue, Jun 29, 2021 at 02:52:39PM +0300, Tony Lindgren wrote:
-> > * Mike Rapoport <rppt@linux.ibm.com> [210629 10:51]:
-> > > As it seems, the new version of pfn_valid() decides that last pages are not
-> > > valid because of the overflow in memblock_overlaps_region(). As the result,
-> > > __sync_icache_dcache() skips flushing these pages.
-> > > 
-> > > The patch below should fix this. I've left the prints for now, hopefully
-> > > they will not appear anymore. 
-> > 
-> > Yes this allows the system to boot for me :)
-> > 
-> > I'm still seeing these three prints though:
-> > 
-> > ...
-> > smp: Brought up 1 node, 2 CPUs
-> > SMP: Total of 2 processors activated (3994.41 BogoMIPS).
-> > CPU: All CPU(s) started in SVC mode.
-> > pfn_valid(__pageblock_pfn_to_page+0x14/0xa8): pfn: afe00: is_map: 0 overlaps: 1
-> > pfn_valid(__pageblock_pfn_to_page+0x28/0xa8): pfn: affff: is_map: 0 overlaps: 1
-> > pfn_valid(__pageblock_pfn_to_page+0x38/0xa8): pfn: afe00: is_map: 0 overlaps: 1
-> 
-> These pfns do have memory map despite they are stolen in
-> arm_memblock_steal():
-> 
-> memblock_free: [0xaff00000-0xafffffff] arm_memblock_steal+0x50/0x70
-> memblock_remove: [0xaff00000-0xafffffff] arm_memblock_steal+0x5c/0x70
-> ...
-> memblock_free: [0xafe00000-0xafefffff] arm_memblock_steal+0x50/0x70
-> memblock_remove: [0xafe00000-0xafefffff] arm_memblock_steal+0x5c/0x70
-> 
-> But the struct pages there are never initialized.
+Hello,
 
-Actually, with FLATMEM these struct pages will be always set to 0 because
-we don't do memory map poisoning with FLATMEM.
+we recently upgraded the Linux kernel from 5.11.21 to 5.12.12 in our  
+video stream receiver appliance and noticed compression artifacts on  
+video streams that were previously looking fine. We are receiving UDP  
+multicast MPEG TS streams through an FFMpeg / libav layer which does  
+the socket and lower level protocol handling. For affected kernels it  
+spills the log with messages like
 
-I could not find a case where zeroed struct page would cause real trouble,
-so I'd say it is more theoretical issue and it can be addressed unrelated
-to these changes.
+> [mpegts @ 0x7fa130000900] Packet corrupt (stream = 0, dts = 6870802195).
+> [mpegts @ 0x7fa11c000900] Packet corrupt (stream = 0, dts = 6870821068).
 
--- 
-Sincerely yours,
-Mike.
+Bisecting identified commit 18f25dc399901426dff61e676ba603ff52c666f7  
+as the one introducing the problem in the mainline kernel. It was  
+backported to the 5.12 series in  
+450687386cd16d081b58cd7a342acff370a96078. Some random observations  
+which may help to understand what's going on:
+
+    * the problem exists in Linux 5.13
+    * reverting that commit on top of 5.13 makes the problem go away
+    * Linux 5.10.45 is fine
+    * no relevant output in dmesg
+    * can be reproduced on different hardware (Intel, AMD, different NICs, ...)
+    * we do use the bonding driver on the systems (but I did not yet  
+verify that this is related)
+    * we do not use vxlan (mentioned in the commit message)
+    * the relevant code in FFMpeg identifying packet corruption is here:
+      https://github.com/FFmpeg/FFmpeg/blob/master/libavformat/mpegts.c#L2758
+
+And the bonding configuration:
+
+# cat /proc/net/bonding/bond0
+Ethernet Channel Bonding Driver: v5.10.45
+
+Bonding Mode: fault-tolerance (active-backup)
+Primary Slave: None
+Currently Active Slave: enp2s0
+MII Status: up
+MII Polling Interval (ms): 100
+Up Delay (ms): 0
+Down Delay (ms): 0
+Peer Notification Delay (ms): 0
+
+Slave Interface: enp2s0
+MII Status: up
+Speed: 1000 Mbps
+Duplex: full
+Link Failure Count: 0
+Permanent HW addr: 80:ee:73:XX:XX:XX
+Slave queue ID: 0
+
+Slave Interface: enp3s0
+MII Status: down
+Speed: Unknown
+Duplex: Unknown
+Link Failure Count: 0
+Permanent HW addr: 80:ee:73:XX:XX:XX
+Slave queue ID: 0
+
+
+If there is anything else I can do to help tracking this down please  
+let me know.
+
+
+Regards,
+-Matthias Treydte
+
+
