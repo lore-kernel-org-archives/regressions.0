@@ -1,75 +1,81 @@
-Received: from www259.your-server.de (www259.your-server.de [188.40.28.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFDF370
-	for <regressions@lists.linux.dev>; Fri,  2 Jul 2021 16:07:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=waldheinz.de; s=default1911; h=MIME-Version:Content-Type:In-Reply-To:
-	References:Subject:Cc:To:From:Message-ID:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=hWt17Shkuog8hefVCxJUntGf6/HLr5wdnQGS2wj7iuU=; b=RC5ZjxwoL0R3e0YelkR4/L5oW/
-	DAOvoftFt5Cp9AF431KKPDxtckbhh3gDM+NqIWli5j+LJZuZVdBLVE/ztIb9JWuyhzVHe0F2N86HN
-	QV14FF9IM/TA8ONSKPkGX1TLXzu+LMgnP1LOFawTFJOEYc2x4+x8iZiepRg881DlfLsEFpTdm9sbF
-	Z2QoUR/cWIsD5EGIKED08f8ijzvp1S/cUaAaFATE3XiZ6+k94q+48V+dGebuerZs2goS4ZP2A74Ol
-	UEvQPVacHs0G9C43tApNta4C90O4t9trayYhirbmbayMmnKr4nGjoGsU68ro16G3QaIolJnP6Lmbh
-	2xzbcWUg==;
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-	by www259.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-	(Exim 4.92.3)
-	(envelope-from <mt@waldheinz.de>)
-	id 1lzLhn-0009hO-KU; Fri, 02 Jul 2021 18:07:51 +0200
-Received: from [192.168.0.32] (helo=mail.your-server.de)
-	by sslproxy05.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-CHACHA20-POLY1305:256)
-	(Exim 4.92)
-	(envelope-from <mt@waldheinz.de>)
-	id 1lzLhn-000Wz4-Bs; Fri, 02 Jul 2021 18:07:51 +0200
-Received: from ip4d1584d2.dynamic.kabel-deutschland.de
- (ip4d1584d2.dynamic.kabel-deutschland.de [77.21.132.210]) by
- mail.your-server.de (Horde Framework) with HTTPS; Fri, 02 Jul 2021 18:07:51
- +0200
-Date: Fri, 02 Jul 2021 18:07:51 +0200
-Message-ID: <20210702180751.Horde.xzhWI6XTdaZk0z3VkOQvQEv@mail.your-server.de>
-From: Matthias Treydte <mt@waldheinz.de>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, David Ahern
- <dsahern@gmail.com>, stable@vger.kernel.org, netdev@vger.kernel.org,
- regressions@lists.linux.dev, davem@davemloft.net, yoshfuji@linux-ipv6.org,
- dsahern@kernel.org
-Subject: Re: [regression] UDP recv data corruption
-References: <20210701124732.Horde.HT4urccbfqv0Nr1Aayuy0BM@mail.your-server.de>
- <38ddc0e8-ba27-279b-8b76-4062db6719c6@gmail.com>
- <CA+FuTSc3POcZo0En3JBqRwq2+eF645_Cs4U-4nBmTs9FvjoVkg@mail.gmail.com>
- <20210702143642.Horde.PFbG3LFNTZ3wp0TYiBRGsCM@mail.your-server.de>
- <6c6eee2832c658d689895aa9585fd30f54ab3ed9.camel@redhat.com>
- <d8061b19ec2a8123d7cf69dad03f1250a5b03220.camel@redhat.com>
- <20210702172345.Horde.VhYvsDcOcRfOxOFrUo9F1Ge@mail.your-server.de>
- <54cd08089682aa14cc43236b0799ebf8424a23c5.camel@redhat.com>
-In-Reply-To: <54cd08089682aa14cc43236b0799ebf8424a23c5.camel@redhat.com>
-User-Agent: Horde Application Framework 5
-Content-Type: text/plain; charset=utf-8; format=flowed; DelSp=Yes
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24108168
+	for <regressions@lists.linux.dev>; Fri,  2 Jul 2021 18:50:03 +0000 (UTC)
+Received: by mail-lf1-f42.google.com with SMTP id q16so19804503lfr.4
+        for <regressions@lists.linux.dev>; Fri, 02 Jul 2021 11:50:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=71nuSMvaqgHrgpwAtP1N6KiE3ICrLSTcXVzeIPBvQ4o=;
+        b=M7diCQUwMpzKQ1GXJoVPs9ZHH6w/FGKZMDIDOCrHx9bDTbOzzu8tbcnHNGtiUjvfRe
+         7nD4xqc8ZKvmjMItQppsaUWB7+CxM4/HXNOlQPoFXIptkAOTbwmoM8RuNSbTOSK9Qk6c
+         MNnPD0+78LLKPaN9r+5vwqH2uhsVbhc4Az2RY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=71nuSMvaqgHrgpwAtP1N6KiE3ICrLSTcXVzeIPBvQ4o=;
+        b=FXMFUnSBIVFvckPblul0BXpSOLy3jQ0ys1o4qUsNruuoqbhEB4CG6Oart884IYO3rI
+         cJEgbxtJjKrxeAESpzUDhcxEiT0DuZ1MWhDlTFwrOGnMk6Y+qcOCU4nAGKUhUEbFhU/4
+         kxYtEFqgpz+uY7pfRjL9pX+3gSQ80q+Y2ZVwaPT/Q/dfHpctbOnfKaS/lfNbjrSHzrQF
+         Xe9DKq9oRjxAzvraCeSZAO+Lgs1nuxpcAlqqrf17T0ucQDd4BYiLqvLq4gl1wh00x6q+
+         Cu2Zj5PHOSQ60vApStG97op9Jhp7HphM8Phtg1T+tZWj4CKyijMklSvdTvY2UQWnJFag
+         VAZQ==
+X-Gm-Message-State: AOAM530b7rO7v8Jxmtd7KMqzNJcf8aCD0W7IL1FuXvkUDDTotFCSAbS9
+	Uw5HK5T3oNcwuivbNOMk9DP3VPMXggJI9dEd
+X-Google-Smtp-Source: ABdhPJzR1Sl6n7046iE1/IKzzMEGfRtJNAglHFs7Zx/Ugu/g9OYSeIrn0CMWrsidH4yAhURh7gwDwA==
+X-Received: by 2002:a05:6512:90a:: with SMTP id e10mr785041lft.70.1625251800930;
+        Fri, 02 Jul 2021 11:50:00 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id w21sm372616lfu.80.2021.07.02.11.49.59
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 Jul 2021 11:50:00 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id k10so19690139lfv.13
+        for <regressions@lists.linux.dev>; Fri, 02 Jul 2021 11:49:59 -0700 (PDT)
+X-Received: by 2002:a05:6512:3f82:: with SMTP id x2mr716901lfa.421.1625251799639;
+ Fri, 02 Jul 2021 11:49:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Disposition: inline
-X-Authenticated-Sender: mt@waldheinz.de
-X-Virus-Scanned: Clear (ClamAV 0.103.2/26219/Fri Jul  2 13:06:52 2021)
+References: <CA+G9fYuBvh-H8Vqp58j-coXUD8p1A6h2it_aZdRiYcN2soGNdg@mail.gmail.com>
+In-Reply-To: <CA+G9fYuBvh-H8Vqp58j-coXUD8p1A6h2it_aZdRiYcN2soGNdg@mail.gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 2 Jul 2021 11:49:43 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgJJtZ9TD_zDefSnaLzLAcjVKXPJoK2o=K-QWkhLGxyuQ@mail.gmail.com>
+Message-ID: <CAHk-=wgJJtZ9TD_zDefSnaLzLAcjVKXPJoK2o=K-QWkhLGxyuQ@mail.gmail.com>
+Subject: Re: [mainline] [arm64] Internal error: Oops - percpu_counter_add_batch
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-ext4 <linux-ext4@vger.kernel.org>, 
+	Ritesh Harjani <riteshh@linux.ibm.com>, Harshad Shirwadkar <harshadshirwadkar@gmail.com>, 
+	Theodore Tso <tytso@mit.edu>, lkft-triage@lists.linaro.org, 
+	linux-fsdevel <linux-fsdevel@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Andreas Dilger <adilger.kernel@dilger.ca>, Jens Axboe <axboe@kernel.dk>, 
+	Zhang Yi <yi.zhang@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, Jul 2, 2021 at 1:24 AM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> The git log short summary between good and bad.
 
-Quoting Paolo Abeni <pabeni@redhat.com>:
+Ity would have been really good to have a full bisect.
 
-> Would be great instead if you could have a spin to the proposed variant
-> above - not stritly needed, I'm really asking for a few extra miles
-> here ;)
+But from another report:
 
-Although this variant lacks the "else", to my surprise I have to admit  
-that it works just as well. :-)
+    https://lore.kernel.org/lkml/87ade24e-08f2-5fb1-7616-e6032af399a3@nvidia.com/
 
+ it seems to be commit 4ba3fcdde7e3 ("jbd2,ext4: add a shrinker to
+release checkpointed buffers"):
 
-It was a pleasure and thanks for your work,
--Matthias
+Ted, when there is a fix for this, it would be interesting to see what
+made this all work fine on x86-64 but fail elsewhere...
 
-
+         Linus
