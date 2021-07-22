@@ -1,109 +1,244 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [216.205.24.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E42D70
-	for <regressions@lists.linux.dev>; Wed,  7 Jul 2021 14:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1625667354;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v7TkRYJsDfarqXSn4EBmx0Hd12Melpzh3GqncamrRv0=;
-	b=eL78irsKPKOtKpi7eK3/ww4MDKFXjWxdCvd61LfSaS6Bp05l497zI+5SMUVGG5/wkGaThi
-	J6CyvTXtdehEfcFb3j9rwkS7TDV2V7h2v2E/bZDSGyDUu2IOojS2kGhaONjp2sI/G729nb
-	lTjSPjMJUPjwl4hmMQNpCeNLxDpNvsA=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-437-BQEPt2FqPHiHKcLCPNfwTA-1; Wed, 07 Jul 2021 10:15:53 -0400
-X-MC-Unique: BQEPt2FqPHiHKcLCPNfwTA-1
-Received: by mail-ed1-f71.google.com with SMTP id d17-20020a05640208d1b0290399de3a0eecso1508027edz.0
-        for <regressions@lists.linux.dev>; Wed, 07 Jul 2021 07:15:52 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1451173
+	for <regressions@lists.linux.dev>; Thu, 22 Jul 2021 21:07:55 +0000 (UTC)
+Received: by mail-qk1-f172.google.com with SMTP id j184so6768780qkd.6
+        for <regressions@lists.linux.dev>; Thu, 22 Jul 2021 14:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:reply-to:cc:to:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=CduIsUTaPs462M2iaUF9/WrJWDcDsrRGnpTf3ly+zgI=;
+        b=fGrSZ3h+G7eXBPt9bvrn1tCERSa6/nWed2AbCTtOlp8i9GQ0UJ73ani1uz3yol8Cyp
+         DhtvZy7KvlHsKt5oy9F4FAEZv0Dv2FvE2uTB2yLmKE1owR38MykAez6sotxOyGrp0eJc
+         6E5SjhcACsL4pMQkMxeO20K2Ur4i8JFbnYMZySJWUoAzP8A0aXK4L0VCqhVawAixTE9M
+         vuQlfZBx42sm3TYyzat3tDmLWu0OXWcK/S9tzAl3NTnsi6DZldtvCgzlTz3g4XFiJbAQ
+         UzFd8pmqtxp8pavxWiYQILvwK7P0nXLJFNp+KacN2PCFsV/U9kk8w6fVjpxczI9aHpGT
+         s2Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=v7TkRYJsDfarqXSn4EBmx0Hd12Melpzh3GqncamrRv0=;
-        b=kflWHI8ELKV9gpKUIA+6etMOrYKZPayMXHcsq5tD3qIry+UllEyV6h9GRdZdj2TqSj
-         4WS04yHguKA4YPUX//tnFK0h9wbn1ES23H19d5n3VO2OTUvWdCK2GK52iE1HZ2EukhBG
-         trhdI2i9hRO/0qtopVFAJoYb8JwJ+rzO8gaW7bMLDJZUNB8/uAj/SmjN0uwOItuRZNIs
-         6QVPMBllOwR1MmlgCCiI1fUM5kHljXyGogJNTII4KVL3U2V0ScrpS57XfSPNDqYJBcWV
-         dsMeK83HNLUQbPxh/VKiQxo6AtT1/hU9ogYXdVHs/69iBbqTWReOQbl0VCdYTFKMWyyc
-         w8tg==
-X-Gm-Message-State: AOAM532bsCLMpyRW7M++qfPQUvZQSD4tXMZkMTHWInXRE91yw125NNNK
-	K3nf+8SXJFBcRGFMv8SuvPCumLQdIITbu/bVUEH6B6Kffhxg5ikl6ZVSRqRl2mKrBQca5Xe5oCY
-	CoZYRdZ0YZ/064cUJ27dvJkF/eaVBFkI+slfLBhX2MAo+CbG4omA2MaYhzdILtxSxmlhGbMXy1/
-	M=
-X-Received: by 2002:a17:906:842:: with SMTP id f2mr24646150ejd.460.1625667351756;
-        Wed, 07 Jul 2021 07:15:51 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxogJG5EZkoMMu8maydXHcDJhSX3aRBwefzb6CXUOxZgETiNeOxmsHGUhIROgdGHhgQ760dLw==
-X-Received: by 2002:a17:906:842:: with SMTP id f2mr24646105ejd.460.1625667351434;
-        Wed, 07 Jul 2021 07:15:51 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c8dd:75d4:99ab:290a? ([2001:b07:6468:f312:c8dd:75d4:99ab:290a])
-        by smtp.gmail.com with ESMTPSA id zp1sm6983114ejb.92.2021.07.07.07.15.50
+        h=x-gm-message-state:from:subject:reply-to:cc:to:message-id:date
+         :user-agent:mime-version:content-language:content-transfer-encoding;
+        bh=CduIsUTaPs462M2iaUF9/WrJWDcDsrRGnpTf3ly+zgI=;
+        b=WQS3uUJ3vivtiUD1KF6gbLmsbEaqCja44BxYn/DNhcl/vxZzEoD81fUpxjXEb5N75C
+         INS1OiQ0nGziENAEOGHhaXva1XHAGzdgzZXZYASRBryQYANJTx1vmJCkIl8CJGtPwcv5
+         KUyUaJunxzxrVyBHyV2EYCwEshPBQimVk1j3YsmJWLJmmwSMgig/V+0A/sWQ7ipFiUFW
+         I/+i01ysvekJlDb5K/zSAe8s0VQm47uXRw5rH7qDNrGwcDp7T5jEqjJJxNdlfpQkzBZm
+         tJTR74LDu1CBFGuXrk4kaIB/8KUWBcP6Uf5pJ72j58GlvuzV3dKO2N0shzHQdg1KSwkR
+         kMSA==
+X-Gm-Message-State: AOAM531D3sRxzJKGgTa6EWfd1QEd6p5wcm3SbAkQRzLWlp7HKP3z5qKc
+	Sntww6DAFxmVbrvA8FE3CYvNH8hqDYg=
+X-Google-Smtp-Source: ABdhPJwuOKCfovc3FejBAH9K9zxphPjrPIE2ox0ARt2I75Z7GpJLgmGW8tzdx18TCFSglXwdSB3KfA==
+X-Received: by 2002:a37:65ce:: with SMTP id z197mr1786779qkb.144.1626988074557;
+        Thu, 22 Jul 2021 14:07:54 -0700 (PDT)
+Received: from mua.localhost ([2600:1700:e380:2c20::47])
+        by smtp.gmail.com with ESMTPSA id v5sm13109445qkh.39.2021.07.22.14.07.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Jul 2021 07:15:50 -0700 (PDT)
-Subject: Re: [PATCH 3/4] KVM: x86: WARN and reject loading KVM if NX is
- supported but not enabled
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Sean Christopherson <seanjc@google.com>,
- Vitaly Kuznetsov <vkuznets@redhat.com>, Wanpeng Li <wanpengli@tencent.com>,
- Jim Mattson <jmattson@google.com>, Joerg Roedel <joro@8bytes.org>,
- kvm list <kvm@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- lkft-triage@lists.linaro.org, regressions@lists.linux.dev
-References: <20210615164535.2146172-1-seanjc@google.com>
- <20210615164535.2146172-4-seanjc@google.com> <YNUITW5fsaQe4JSo@google.com>
- <ad85c5db-c780-bd13-c6ce-e3478838acbe@redhat.com>
- <CA+G9fYsrQo3FvtW1VhXocY2xkaPLNADA4S5f=fBM5uqa=C5LYg@mail.gmail.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <40623553-310a-68f7-2981-f8ea9c7bd5b0@redhat.com>
-Date: Wed, 7 Jul 2021 16:15:49 +0200
+        Thu, 22 Jul 2021 14:07:54 -0700 (PDT)
+From: PGNet Dev <pgnet.dev@gmail.com>
+Subject: boot of J1900 (quad-core Celeron) mobo: kernel <= 5.12.15, OK; kernel
+ >= 5.12.17, 5.13.4, slow boot (>> 660 secs) + hang/FAIL
+Reply-To: pgnet.dev@gmail.com
+Cc: regressions@lists.linux.dev
+To: stable@vger.kernel.org
+Message-ID: <5b5d1b7f-7327-52a2-5221-de39206a07a3@gmail.com>
+Date: Thu, 22 Jul 2021 17:10:02 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+ Firefox/78.0 Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CA+G9fYsrQo3FvtW1VhXocY2xkaPLNADA4S5f=fBM5uqa=C5LYg@mail.gmail.com>
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pbonzini@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 07/07/21 14:09, Naresh Kamboju wrote:
-> On Fri, 25 Jun 2021 at 14:35, Paolo Bonzini <pbonzini@redhat.com> wrote:
->>
->> On 25/06/21 00:33, Sean Christopherson wrote:
->>> On Tue, Jun 15, 2021, Sean Christopherson wrote:
->>>> WARN if NX is reported as supported but not enabled in EFER.  All flavors
->>>> of the kernel, including non-PAE 32-bit kernels, set EFER.NX=1 if NX is
->>>> supported, even if NX usage is disable via kernel command line.
->>>
->>> Ugh, I misread .Ldefault_entry in head_32.S, it skips over the entire EFER code
->>> if PAE=0.  Apparently I didn't test this with non-PAE paging and EPT?
->>>
->>> Paolo, I'll send a revert since it's in kvm/next, but even better would be if
->>> you can drop the patch :-)  Lucky for me you didn't pick up patch 4/4 that
->>> depends on this...
->>>
->>> I'll revisit this mess in a few weeks.
->>
->> Rather, let's keep this, see if anyone complains and possibly add a
->> "depends on X86_PAE || X86_64" to KVM.
-> 
-> [ please ignore if this is already reported ]
-> 
-> The following kernel warning noticed while booting linus master branch and
-> Linux next 20210707 tag on i386 kernel booting on x86_64 machine.
+My servers run Fedora 34, with latest kernels.
 
-Ok, so the "depends on" is needed.  Let's add it, I'm getting back to 
-KVM work and will send the patch today or tomorrow.
+Updating to any of minimally- or un- patched 5.12.17 or 5.13.4 hangs/fails, as follows.
 
-Paolo
+On just one server , an old ASRockRack J1900D2Y (quad-core Celeron) motherboard build,
 
+	hwinfo --bios
+		01: None 00.0: 10105 BIOS
+		  [Created at bios.186]
+		  Unique ID: rdCR.lZF+r4EgHp4
+		  Hardware Class: bios
+		  BIOS Keyboard LED Status:
+		    Scroll Lock: off
+		    Num Lock: off
+		    Caps Lock: off
+		  Serial Port 0: 0x3f8
+		  Base Memory: 626 kB
+		  PnP BIOS: @@@0000
+		  MP spec rev 1.4 info:
+		    OEM id: "A M I"
+		    Product id: "ALASKA"
+		    4 CPUs (0 disabled)
+		  SMBIOS Version: 2.8
+		  BIOS Info: #0
+		    Vendor: "American Megatrends Inc."
+		    Version: "P1.10"
+		    Date: "01/23/2015"
+		    Start Address: 0xf0000
+		    ROM Size: 8192 kB
+		    Features: 0x0d03000000013f8b9880
+		      PCI supported
+		      BIOS flashable
+		      BIOS shadowing allowed
+		      CD boot supported
+		      Selectable boot supported
+		      BIOS ROM socketed
+		      EDD spec supported
+		      1.2MB Floppy supported
+		      720kB Floppy supported
+		      2.88MB Floppy supported
+		      Print Screen supported
+		      8042 Keyboard Services supported
+		      Serial Services supported
+		      Printer Services supported
+		      ACPI supported
+		      USB Legacy supported
+		      BIOS Boot Spec supported
+		  System Info: #1
+		    Manufacturer: "To Be Filled By O.E.M."
+		    Product: "To Be Filled By O.E.M."
+		    Version: "To Be Filled By O.E.M."
+		    Serial: "To Be Filled By O.E.M."
+		    UUID: 03000200-0400-0500-0006-000700080009
+		    Wake-up: 0x06 (Power Switch)
+		  Board Info: #2
+		    Manufacturer: "ASRock"
+		    Product: "J1900D2Y"
+		    Type: 0x0a (Motherboard)
+		    Features: 0x09
+		      Hosting Board
+		      Replaceable
+		    Chassis: #3
+		...
+
+with Fedora34 Kernel <=
+
+	Fedora (5.12.15-300.fc34.x86_64) 34 (Thirty Four)
+
+the box boots/runs OK,
+
+	[    0.000000] microcode: microcode updated early to revision 0x838, date = 2019-04-22
+	[    0.000000] Linux version 5.12.15-300.fc34.x86_64 (mockbuild@bkernel01.iad2.fedoraproject.org) (gcc (GCC) 11.1.1 20210531 (Red Hat 11.1.1-3), GNU ld version 2.35.1-41.fc34) #1 SMP Wed Jul 7 19:46:50 UTC 2021
+	[    0.000000] Command line: BOOT_IMAGE=(mduuid/5687b25f8f25671a243a83cb661f7841)/vmlinuz-5.12.15-300.fc34.x86_64 root=/dev/mapper/VG0-LV_ROOT ro i915.modeset=1 vconsole.keymap=us vconsole.font=eurlatgr vconsole.font_map=trivial domdadm_
+	[    0.000000] x86/fpu: x87 FPU will use FXSAVE
+	[    0.000000] BIOS-provided physical RAM map:
+	[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009dfff] usable
+	[    0.000000] BIOS-e820: [mem 0x000000000009e000-0x000000000009efff] reserved
+	[    0.000000] BIOS-e820: [mem 0x000000000009f000-0x000000000009ffff] usable
+	[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000001fffffff] usable
+	[    0.000000] BIOS-e820: [mem 0x0000000020000000-0x00000000200fffff] reserved
+	[    0.000000] BIOS-e820: [mem 0x0000000020100000-0x000000006d66cfff] usable
+	[    0.000000] BIOS-e820: [mem 0x000000006d66d000-0x000000006d69cfff] reserved
+	[    0.000000] BIOS-e820: [mem 0x000000006d69d000-0x000000006d6acfff] ACPI data
+	[    0.000000] BIOS-e820: [mem 0x000000006d6ad000-0x000000006d7f1fff] ACPI NVS
+	[    0.000000] BIOS-e820: [mem 0x000000006d7f2000-0x000000006db80fff] reserved
+	[    0.000000] BIOS-e820: [mem 0x000000006db81000-0x000000006db81fff] usable
+	[    0.000000] BIOS-e820: [mem 0x000000006db82000-0x000000006dbc3fff] reserved
+	[    0.000000] BIOS-e820: [mem 0x000000006dbc4000-0x000000006dd31fff] usable
+	[    0.000000] BIOS-e820: [mem 0x000000006dd32000-0x000000006dff9fff] reserved
+	[    0.000000] BIOS-e820: [mem 0x000000006dffa000-0x000000006dffffff] usable
+	[    0.000000] BIOS-e820: [mem 0x00000000e00f8000-0x00000000e00f8fff] reserved
+	[    0.000000] BIOS-e820: [mem 0x00000000fed01000-0x00000000fed01fff] reserved
+	[    0.000000] BIOS-e820: [mem 0x00000000ffb00000-0x00000000ffffffff] reserved
+	[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000047fffffff] usable
+	[    0.000000] printk: console [earlyser0] enabled
+	Memory KASLR using RDRAND RDTSC...
+	Poking KASLR using RDRAND RDTSC...
+
+	Welcome to Fedora 34 (Thirty Four) dracut-055-3.fc34 (Initramfs)!
+
+	[  OK  ] Started Dispatch Password …ts to Console Directory Watch.
+	[  OK  ] Reached target Local File Systems.
+	[  OK  ] Reached target Path Units.
+	...
+	Fedora 34 (Thirty Four)
+	Kernel 5.12.15-300.fc34.x86_64 on an x86_64 (ttyS0)
+
+	srv01 login:
+	...
+	lsb_release -rd
+		Description:    Fedora release 34 (Thirty Four)
+		Release:        34
+	uname -rm
+		5.12.15-300.fc34.x86_64 x86_64
+
+updating to any of minimally- or un- patched,
+
+	Fedora (5.12.17-300.fc34.x86_64) 34 (Thirty Four)
+		https://koji.fedoraproject.org/koji/buildinfo?buildID=1780670
+
+	Fedora (5.13.4-200.fc34.x86_64) 34 (Thirty Four)
+		https://koji.fedoraproject.org/koji/buildinfo?buildID=1782334
+
+	Fedora (5.13.4-250.vanilla.1.fc34.x86_64) 34 (Thirty Four)
+	    https://fedoraproject.org/wiki/Kernel_Vanilla_Repositories
+	    https://repos.fedorapeople.org/repos/thl/kernel-vanilla-stable/fedora-34/x86_64/
+		https://fedorapeople.org/cgit/thl/public_git/kernel.git/tree/?h=kernel-5.13.3-250.vanilla.1.fc34
+
+and re-gen'ing initrd, system boot hangs early in each case,
+
+
+	[    0.000000] microcode: microcode updated early to revision 0x838, date = 2019-04-22
+	[    0.000000] Linux version 5.13.4-200.fc34.x86_64 (mockbuild@bkernel01.iad2.fedoraproject.org) (gcc (GCC) 11.1.1 20210531 (Red Hat 11.1.1-3), GNU ld version 2.35.1-41.fc34) #1 SMP Tue Jul 20 20:27:29 UTC 2021
+	[    0.000000] Command line: BOOT_IMAGE=(mduuid/5687b25f8f25671a243a83cb661f7841)/vmlinuz-5.13.4-200.fc34.x86_64 root=/dev/mapper/VG0-LV_ROOT ro i915.modeset=1 vconsole.keymap=us vconsole.font=eurlatgr vconsole.font_map=trivial domdadm b
+	[    0.000000] x86/fpu: x87 FPU will use FXSAVE
+	[    0.000000] BIOS-provided physical RAM map:
+	[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009dfff] usable
+	[    0.000000] BIOS-e820: [mem 0x000000000009e000-0x000000000009efff] reserved
+	[    0.000000] BIOS-e820: [mem 0x000000000009f000-0x000000000009ffff] usable
+	[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000001fffffff] usable
+	[    0.000000] BIOS-e820: [mem 0x0000000020000000-0x00000000200fffff] reserved
+	[    0.000000] BIOS-e820: [mem 0x0000000020100000-0x000000006d66cfff] usable
+	[    0.000000] BIOS-e820: [mem 0x000000006d66d000-0x000000006d69cfff] reserved
+	[    0.000000] BIOS-e820: [mem 0x000000006d69d000-0x000000006d6acfff] ACPI data
+	[    0.000000] BIOS-e820: [mem 0x000000006d6ad000-0x000000006d7f1fff] ACPI NVS
+	[    0.000000] BIOS-e820: [mem 0x000000006d7f2000-0x000000006db80fff] reserved
+	[    0.000000] BIOS-e820: [mem 0x000000006db81000-0x000000006db81fff] usable
+	[    0.000000] BIOS-e820: [mem 0x000000006db82000-0x000000006dbc3fff] reserved
+	[    0.000000] BIOS-e820: [mem 0x000000006dbc4000-0x000000006dd31fff] usable
+	[    0.000000] BIOS-e820: [mem 0x000000006dd32000-0x000000006dff9fff] reserved
+	[    0.000000] BIOS-e820: [mem 0x000000006dffa000-0x000000006dffffff] usable
+	[    0.000000] BIOS-e820: [mem 0x00000000e00f8000-0x00000000e00f8fff] reserved
+	[    0.000000] BIOS-e820: [mem 0x00000000fed01000-0x00000000fed01fff] reserved
+	[    0.000000] BIOS-e820: [mem 0x00000000ffb00000-0x00000000ffffffff] reserved
+	[    0.000000] BIOS-e820: [mem 0x0000000100000000-0x000000047fffffff] usable
+	[    0.000000] printk: console [earlyser0] enabled
+	Memory KASLR using RDRAND RDTSC...
+	Poking KASLR using RDRAND RDTSC...
+
+, and proceeds no further.
+
+drop-back to
+
+	Fedora (5.12.15-300.fc34.x86_64) 34 (Thirty Four)
+
+boots, again, with no issues.
+
+for the
+
+	Fedora (5.13.4-200.fc34.x86_64) 34 (Thirty Four)
+
+case, with logging dialed up,
+
+logs show a sloooooow boot process ( 700+ seconds and counting ), with eventual, complete hang @
+
+	"Starting Apply Kernel Variables..."
+
+--> https://pastebin.com/dP6Lm84J
+
+So far, this occurs on this J1900 box only; other-hardware F34 installs with kernel >= 5.12.17 are booting fine.
+
+AND, for _this_ J1900, all kernels <= 5.12.15 boot OK.
+
+
+
+if there's specific, additional logging that'd be informative, I can attach.
