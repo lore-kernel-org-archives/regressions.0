@@ -1,44 +1,44 @@
 Received: from mo1.intermailgate.com (mo1.intermailgate.com [91.203.103.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D086372
-	for <regressions@lists.linux.dev>; Wed, 28 Jul 2021 17:10:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDECB72
+	for <regressions@lists.linux.dev>; Wed, 28 Jul 2021 17:40:55 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by mo1.intermailgate.com (Postfix) with ESMTP id F236D81981;
-	Wed, 28 Jul 2021 19:02:13 +0200 (CEST)
+	by mo1.intermailgate.com (Postfix) with ESMTP id 6E18481A44;
+	Wed, 28 Jul 2021 19:40:54 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=bof.de; s=20180522;
-	t=1627491733; bh=cCRdLlafyGDIl+RQidyc8uOVuM6AJ5xpWA5QJpK60q4=;
+	t=1627494054; bh=cCRdLlafyGDIl+RQidyc8uOVuM6AJ5xpWA5QJpK60q4=;
 	h=Date:From:To:Cc:Subject;
-	b=svL5NR6Xe5BrLAJz1osCa/PrfMlRIyDaimMH9OHVpq/cnr1m2fc9YYwqfpzreqd6a
-	 kA1L+Xy+fHOehIUSq7vT61F4svWhTF8UxlvFkUZF/ODlfIArXpvU2zfs1/zcXjLMU/
-	 XAS4fLN0keas529LjbYZdGCxUrmTb+zD+/MnX8hQ=
+	b=p3Hv3BOYxjekysINWj8C7sZtK0sggfBRsYAhqtjJKNfIsl4buu/t9pzYSHlv4zSfq
+	 gtrV3NR+8NFU1BGZVI7El2sc6X3jfvf6Fh/18o10h3FcYArINh2/29ymm4eK38DfGu
+	 jgB/2IDsrhz0QQ/z+UaxdFnE/QINBhWueWrRHkvQ=
 Authentication-Results: mail.intermailgate.com (amavisd-new);
-	dkim=pass (1024-bit key) header.d=bof.de header.b=UDEpZ6Bq;
-	dkim=pass (1024-bit key) header.d=bof.de header.b=UDEpZ6Bq
+	dkim=pass (1024-bit key) header.d=bof.de header.b=LdXCiXbQ;
+	dkim=pass (1024-bit key) header.d=bof.de header.b=LdXCiXbQ
 Received: from c1.locanto.info (c1.yalwa.net [192.168.8.10])
-	by mo1.intermailgate.com (Postfix) with ESMTPS id C42D3818D2;
-	Wed, 28 Jul 2021 19:02:11 +0200 (CEST)
+	by mo1.intermailgate.com (Postfix) with ESMTPS id 457F6818D2;
+	Wed, 28 Jul 2021 19:40:52 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=bof.de; s=20180522;
-	t=1627491731; bh=cCRdLlafyGDIl+RQidyc8uOVuM6AJ5xpWA5QJpK60q4=;
+	t=1627494052; bh=cCRdLlafyGDIl+RQidyc8uOVuM6AJ5xpWA5QJpK60q4=;
 	h=Date:From:To:Cc:Subject;
-	b=UDEpZ6BqQyA2aJGQo9i20n5mPbuixyBndTHLnKyipV4Zs7ZNIiSa+zaf/hsLru157
-	 kBlH9IIqfzlD16Kt78d0rANk60SSQQIHwebCZHJcmq0CX7nwrQIz5JyVUpp23rshcp
-	 5C56uBISMsK2yq0aUj2VbVUuevP33yd2l356feTU=
+	b=LdXCiXbQj+uIcSY8kIVNDMIWoL+pqFMzMj2xTVpx8ne/2il9zzaA7qPP6T8Frou/o
+	 o5VyT4+KZW4m+bWqao+9un+ZXmZhiqfrPm7hGWinQvFauI/wXiQ1EEbNIvrUwGIVOm
+	 G4QPZQqVqiSvk0dNUscqG7FtVwe7tpnRlhJbSVDs=
 Received: by c1.locanto.info (Postfix, from userid 1018)
-	id B6BAC66741; Wed, 28 Jul 2021 19:02:11 +0200 (CEST)
+	id 3E15165C66; Wed, 28 Jul 2021 19:40:52 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=bof.de; s=20180522;
-	t=1627491731; bh=cCRdLlafyGDIl+RQidyc8uOVuM6AJ5xpWA5QJpK60q4=;
+	t=1627494052; bh=cCRdLlafyGDIl+RQidyc8uOVuM6AJ5xpWA5QJpK60q4=;
 	h=Date:From:To:Cc:Subject;
-	b=UDEpZ6BqQyA2aJGQo9i20n5mPbuixyBndTHLnKyipV4Zs7ZNIiSa+zaf/hsLru157
-	 kBlH9IIqfzlD16Kt78d0rANk60SSQQIHwebCZHJcmq0CX7nwrQIz5JyVUpp23rshcp
-	 5C56uBISMsK2yq0aUj2VbVUuevP33yd2l356feTU=
-Date: Wed, 28 Jul 2021 19:02:11 +0200
+	b=LdXCiXbQj+uIcSY8kIVNDMIWoL+pqFMzMj2xTVpx8ne/2il9zzaA7qPP6T8Frou/o
+	 o5VyT4+KZW4m+bWqao+9un+ZXmZhiqfrPm7hGWinQvFauI/wXiQ1EEbNIvrUwGIVOm
+	 G4QPZQqVqiSvk0dNUscqG7FtVwe7tpnRlhJbSVDs=
+Date: Wed, 28 Jul 2021 19:40:52 +0200
 From: bof@bof.de
 To: stable@vger.kernel.org
 Cc: bof@bof.de, regressions@lists.linux.dev
 Subject: stable 5.4.135 REGRESSION / once-a-day WARNING: at
  kthread_is_per_cpu+0x1c/0x20
-Message-ID: <61018d93.xsvXcO161PFLQFCX%bof@bof.de>
+Message-ID: <610196a4.FyVwZvHjoSB5ZDrN%bof@bof.de>
 User-Agent: Heirloom mailx 12.5 7/5/10
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
