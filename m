@@ -1,209 +1,118 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F739177
-	for <regressions@lists.linux.dev>; Sun,  8 Aug 2021 07:01:18 +0000 (UTC)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-	by smtp-out2.suse.de (Postfix) with ESMTP id 718561FFA9;
-	Sun,  8 Aug 2021 07:01:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1628406076; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y5UpqnLRSiY0Moj3dbDfnxwe3jlYV3PbUnFP0GwyrTQ=;
-	b=qEgIKjyXYF6QGoha7rkKCR+IRANTmbPGlkFFyG7Nf6rCQoPAtN9cWcMBuRQKUi2KNIl4sQ
-	XfCbuqI167GFDIIeazBtWWgtcjmdHOwxVF2MtoeX768DlkNJFchaXq4hfGCFeMQuk7P/Id
-	qQM5/lwA12DMUYlHMB6+AeoE1o/SJwM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1628406076;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y5UpqnLRSiY0Moj3dbDfnxwe3jlYV3PbUnFP0GwyrTQ=;
-	b=jsyvJN7fey1mzQjMrfh5PHVmvCZ5tJBSptfULwVepV1ij0OBFI/Jp2ngn/ubD75pGtJkCz
-	n+g2EULDwITUp9CQ==
-Received: from alsa1.suse.de (alsa1.suse.de [10.160.4.42])
-	by relay2.suse.de (Postfix) with ESMTP id 5E0B7A3B81;
-	Sun,  8 Aug 2021 07:01:16 +0000 (UTC)
-Date: Sun, 08 Aug 2021 09:01:16 +0200
-Message-ID: <s5him0gpghv.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Jeff Woods <jwoods@fnordco.com>
-Cc: "Greg KH" <gregkh@linuxfoundation.org>,
-	"alsa-devel" <alsa-devel@alsa-project.org>,
-	"stable" <stable@vger.kernel.org>,
-	"regressions" <regressions@lists.linux.dev>
-Subject: Re: Kernel 5.13.6 breaks mmap with snd-hdsp module
-In-Reply-To: <17b22d08355.f21da1f938057.6900412371441404465@fnordco.com>
-References: <17b1f9647ee.1179b6a05461889.5940365952430364689@fnordco.com>
-	<YQ5Bb+mPgPivLqvX@kroah.com>
-	<s5htuk1ppvb.wl-tiwai@suse.de>
-	<17b22d08355.f21da1f938057.6900412371441404465@fnordco.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
- FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
- (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C1B8177
+	for <regressions@lists.linux.dev>; Sun,  8 Aug 2021 07:43:06 +0000 (UTC)
+Received: by mail-lf1-f48.google.com with SMTP id t9so27341476lfc.6
+        for <regressions@lists.linux.dev>; Sun, 08 Aug 2021 00:43:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xaUXR1M3JrHIdKjUj68yVCDcrvnHzz2hp1oLUNxXisE=;
+        b=qjch1H5CzzL3+K62Q2+8APOp9t4p5Jtfut8uxQPrvNb14HvpEPNGuHoiCXzo85tu4A
+         U1r3fPaqJpPhz7Rqy/+DwPVq147CdooU4ues2yeHmdBsYpmuWQWaInB+SM+YfnK564BU
+         uxbNkF+BRJVFZWUWBviO36GbXvNSi6IlskCPwzMMuN0fOsluwHbJt/M0/gtZ4PGDSFTP
+         XMJ//znqepDQl9ld3e+zYZYOO/cZKO3ly8J/RxCRygOOONJZLnmv4myQCsmPi9cHM+19
+         MZYfBSyr3zy9IuTBKteZE6laeRiWQUdeoZ+JGyFtP6mVaY45UWr8AEpYQSZ0vyoxXj4/
+         ZDtg==
+X-Gm-Message-State: AOAM53282sZR4vINvAfINbufXxQXAbUFSLvzhNWpRiPmfyIHI0rLtfee
+	0nRp3qzxIBfkS9mTQhZDcxM=
+X-Google-Smtp-Source: ABdhPJyeTvDkHfiGdvbVtaYGP13f9+eXjPw0AdUagtYcpdUXM+or0c1ZyInJHTL3QHsZ0YJkGzemAw==
+X-Received: by 2002:a05:6512:22c4:: with SMTP id g4mr13342499lfu.287.1628408584560;
+        Sun, 08 Aug 2021 00:43:04 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-236-56.ip.moscow.rt.ru. [188.32.236.56])
+        by smtp.googlemail.com with ESMTPSA id c19sm406282lfc.70.2021.08.08.00.43.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 08 Aug 2021 00:43:04 -0700 (PDT)
+From: Denis Efremov <efremov@linux.com>
+To: linux-block@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Denis Efremov <efremov@linux.com>,
+	Mark Hounschell <markh@compro.net>,
+	Jiri Kosina <jkosina@suse.cz>,
+	Wim Osterholt <wim@djo.tudelft.nl>,
+	Kurt Garloff <kurt@garloff.de>,
+	stable@vger.kernel.org
+Subject: [PATCH] Revert "floppy: reintroduce O_NDELAY fix"
+Date: Sun,  8 Aug 2021 10:42:46 +0300
+Message-Id: <20210808074246.33449-1-efremov@linux.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <de10cb47-34d1-5a88-7751-225ca380f735@compro.net>
+References: <de10cb47-34d1-5a88-7751-225ca380f735@compro.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sun, 08 Aug 2021 00:51:35 +0200,
-Jeff Woods wrote:
-> 
->  ---- On Sat, 07 Aug 2021 02:26:32 -0700 Takashi Iwai <tiwai@suse.de> wrote ----
->  > On Sat, 07 Aug 2021 10:16:47 +0200,
->  > Greg KH wrote:
->  > > 
->  > > On Sat, Aug 07, 2021 at 12:49:07AM -0700, Jeff Woods wrote:
->  > > > Specifically, commit c4824ae7db418aee6f50f308a20b832e58e997fd triggers the problem. Reverting this change restores functionality.
->  > > > 
->  > > > The device is an RME Multiface II, using the snd-hdsp driver.
->  > > > 
->  > > > Expected behavior: Device plays sound normally
->  > > > 
->  > > > Exhibited behavior: When a program attempts to open the device, the following ALSA lib error happens:
->  > > > 
->  > > > ALSA lib pcm_direct.c:1169:(snd1_pcm_direct_initialize_slave) slave plugin does not support mmap interleaved or mmap noninterleaved access
->  > > > 
->  > > > This change hasn't affected my other computers with less esoteric hardware, so probably the problem lies with the snd-hdsp driver, but the device is unusable without reverting that commit.
->  > > > 
->  > > > I am available to test any patches for this issue.
->  > > 
->  > > Have you notified the developers involved in this change about this
->  > > issue?
->  > 
->  > No, it's a new report :)
->  > 
->  > > Adding them now...
->  > 
->  > Could you try the patch below?
->  > 
->  > 
->  > thanks,
->  > 
->  > Takashi
->  > 
->  > -- 8< --
->  > From: Takashi Iwai <tiwai@suse.de>
->  > Subject: [PATCH] ALSA: pci: rme: Fix mmap breakage
->  > 
->  > The recent change in the PCM core restricts the mmap of unknown buffer
->  > type, and this broke the mmap on RME9652 and HDSP drivers that didn't
->  > set up properly.  Actually those driver do use the buffers allocated
->  > in a standard way, and the proper calls should fix the breakage.
->  > 
->  > Fixes: c4824ae7db41 ("ALSA: pcm: Fix mmap capability check")
->  > Cc: <stable@vger.kernel.org>
->  > Signed-off-by: Takashi Iwai <tiwai@suse.de>
->  > ---
->  >  sound/pci/rme9652/hdsp.c    | 6 ++----
->  >  sound/pci/rme9652/rme9652.c | 6 ++----
->  >  2 files changed, 4 insertions(+), 8 deletions(-)
->  > 
->  > diff --git a/sound/pci/rme9652/hdsp.c b/sound/pci/rme9652/hdsp.c
->  > index 8457a4bbc3df..b32a72e28917 100644
->  > --- a/sound/pci/rme9652/hdsp.c
->  > +++ b/sound/pci/rme9652/hdsp.c
->  > @@ -4518,8 +4518,7 @@ static int snd_hdsp_playback_open(struct snd_pcm_substream *substream)
->  >      snd_pcm_set_sync(substream);
->  >  
->  >          runtime->hw = snd_hdsp_playback_subinfo;
->  > -    runtime->dma_area = hdsp->playback_buffer;
->  > -    runtime->dma_bytes = HDSP_DMA_AREA_BYTES;
->  > +    snd_pcm_set_runtime_buffer(substream, hdsp->playback_dma_buf);
->  >  
->  >      hdsp->playback_pid = current->pid;
->  >      hdsp->playback_substream = substream;
->  > @@ -4595,8 +4594,7 @@ static int snd_hdsp_capture_open(struct snd_pcm_substream *substream)
->  >      snd_pcm_set_sync(substream);
->  >  
->  >      runtime->hw = snd_hdsp_capture_subinfo;
->  > -    runtime->dma_area = hdsp->capture_buffer;
->  > -    runtime->dma_bytes = HDSP_DMA_AREA_BYTES;
->  > +    snd_pcm_set_runtime_buffer(substream, hdsp->capture_dma_buf);
->  >  
->  >      hdsp->capture_pid = current->pid;
->  >      hdsp->capture_substream = substream;
->  > diff --git a/sound/pci/rme9652/rme9652.c b/sound/pci/rme9652/rme9652.c
->  > index f1aad38760d6..8036ed761d53 100644
->  > --- a/sound/pci/rme9652/rme9652.c
->  > +++ b/sound/pci/rme9652/rme9652.c
->  > @@ -2279,8 +2279,7 @@ static int snd_rme9652_playback_open(struct snd_pcm_substream *substream)
->  >      snd_pcm_set_sync(substream);
->  >  
->  >          runtime->hw = snd_rme9652_playback_subinfo;
->  > -    runtime->dma_area = rme9652->playback_buffer;
->  > -    runtime->dma_bytes = RME9652_DMA_AREA_BYTES;
->  > +    snd_pcm_set_runtime_buffer(substream, rme9652->playback_dma_buf);
->  >  
->  >      if (rme9652->capture_substream == NULL) {
->  >          rme9652_stop(rme9652);
->  > @@ -2339,8 +2338,7 @@ static int snd_rme9652_capture_open(struct snd_pcm_substream *substream)
->  >      snd_pcm_set_sync(substream);
->  >  
->  >      runtime->hw = snd_rme9652_capture_subinfo;
->  > -    runtime->dma_area = rme9652->capture_buffer;
->  > -    runtime->dma_bytes = RME9652_DMA_AREA_BYTES;
->  > +    snd_pcm_set_runtime_buffer(substream, rme9652->capture_dma_buf);
->  >  
->  >      if (rme9652->playback_substream == NULL) {
->  >          rme9652_stop(rme9652);
->  > -- 
->  > 2.26.2
->  > 
->  
-> I applied the patch to kernel 5.13.8, but compilation fails with these errors:
+The patch breaks userspace implementations (e.g. fdutils) and introduces
+regressions in behaviour. Previously, it was possible to O_NDELAY open a
+floppy device with no media inserted or with write protected media without
+an error. Some userspace tools use this particular behavior for probing.
 
-Oops, sorry, that was the patch for linux-next, and I forgot the
-recent code change.  And it turned out not to be effective.
+It's not the first time when we revert this patch. Previous revert is in
+commit f2791e7eadf4 (Revert "floppy: refactor open() flags handling").
 
-Below is another try.  Scratch the previous one (although it cannot
-hurt), and try this one instead.
+This reverts commit 8a0c014cd20516ade9654fc13b51345ec58e7be8.
 
-
-thanks,
-
-Takashi
-
--- 8< --
-From: Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH] ALSA: pcm: Fix mmap breakage without explicit buffer setup
-
-The recent fix c4824ae7db41 ("ALSA: pcm: Fix mmap capability check")
-restricts the mmap capability only to the drivers that properly set up
-the buffers, but it caused a regression for a few drivers that manage
-the buffer on its own way.
-
-For those with UNKNOWN buffer type (i.e. the uninitialized / unused
-substream->dma_buffer), just assume that the driver handles the mmap
-properly and blindly trust the hardware info bit.
-
-Fixes: c4824ae7db41 ("ALSA: pcm: Fix mmap capability check")
+Link: https://lore.kernel.org/linux-block/de10cb47-34d1-5a88-7751-225ca380f735@compro.net/
+Reported-by: Mark Hounschell <markh@compro.net>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Wim Osterholt <wim@djo.tudelft.nl>
+Cc: Kurt Garloff <kurt@garloff.de>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- sound/core/pcm_native.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/block/floppy.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/sound/core/pcm_native.c b/sound/core/pcm_native.c
-index 09c0e2a6489c..71323d807dbf 100644
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -251,7 +251,10 @@ static bool hw_support_mmap(struct snd_pcm_substream *substream)
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 87460e0e5c72..fef79ea52e3e 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -4029,23 +4029,23 @@ static int floppy_open(struct block_device *bdev, fmode_t mode)
+ 	if (fdc_state[FDC(drive)].rawcmd == 1)
+ 		fdc_state[FDC(drive)].rawcmd = 2;
  
- 	switch (substream->dma_buffer.dev.type) {
- 	case SNDRV_DMA_TYPE_UNKNOWN:
--		return false;
-+		/* we can't know the device, so just assume that the driver does
-+		 * everything right
-+		 */
-+		return true;
- 	case SNDRV_DMA_TYPE_CONTINUOUS:
- 	case SNDRV_DMA_TYPE_VMALLOC:
- 		return true;
+-	if (mode & (FMODE_READ|FMODE_WRITE)) {
+-		drive_state[drive].last_checked = 0;
+-		clear_bit(FD_OPEN_SHOULD_FAIL_BIT, &drive_state[drive].flags);
+-		if (bdev_check_media_change(bdev))
+-			floppy_revalidate(bdev->bd_disk);
+-		if (test_bit(FD_DISK_CHANGED_BIT, &drive_state[drive].flags))
+-			goto out;
+-		if (test_bit(FD_OPEN_SHOULD_FAIL_BIT, &drive_state[drive].flags))
++	if (!(mode & FMODE_NDELAY)) {
++		if (mode & (FMODE_READ|FMODE_WRITE)) {
++			drive_state[drive].last_checked = 0;
++			clear_bit(FD_OPEN_SHOULD_FAIL_BIT,
++				  &drive_state[drive].flags);
++			if (bdev_check_media_change(bdev))
++				floppy_revalidate(bdev->bd_disk);
++			if (test_bit(FD_DISK_CHANGED_BIT, &drive_state[drive].flags))
++				goto out;
++			if (test_bit(FD_OPEN_SHOULD_FAIL_BIT, &drive_state[drive].flags))
++				goto out;
++		}
++		res = -EROFS;
++		if ((mode & FMODE_WRITE) &&
++		    !test_bit(FD_DISK_WRITABLE_BIT, &drive_state[drive].flags))
+ 			goto out;
+ 	}
+-
+-	res = -EROFS;
+-
+-	if ((mode & FMODE_WRITE) &&
+-			!test_bit(FD_DISK_WRITABLE_BIT, &drive_state[drive].flags))
+-		goto out;
+-
+ 	mutex_unlock(&open_lock);
+ 	mutex_unlock(&floppy_mutex);
+ 	return 0;
 -- 
-2.26.2
+2.31.1
 
