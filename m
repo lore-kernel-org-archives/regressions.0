@@ -1,27 +1,60 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B1872
-	for <regressions@lists.linux.dev>; Mon,  9 Aug 2021 12:20:41 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C901160EBC;
-	Mon,  9 Aug 2021 12:20:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1628511641;
-	bh=Qyg0UVVkr5hB9GejBJx4gSNk9oN8V18v7pfNhDlOV1Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q1vuqrro31ZYr/mFp0EH0kbes5XINUOoTaL2wmkUqTxfup3iY/VwN4Oeqvhf5bj6w
-	 QFTgx6NFhuEyTpsVkDIVz1/TGXRmhSiD7Nzl5mBFicMxhdROwOVomXrQgMMCtGo6N/
-	 qZYm7JYSSQ/8cm7NuPiVWOkm7+9b+HKSMfcL+gDg=
-Date: Mon, 9 Aug 2021 14:20:38 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: PGNet Dev <pgnet.dev@gmail.com>
-Cc: hui.wang@canonical.com, rafael.j.wysocki@intel.com,
-	stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Patch "Revert "ACPI: resources: Add checks for ACPI IRQ
- override"" has been added to the 5.13-stable tree
-Message-ID: <YREdlli29GUfvaUx@kroah.com>
-References: <16277146132219@kroah.com>
- <e9810931-b21c-195f-26cb-75b46aa9eb9a@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23D3F72
+	for <regressions@lists.linux.dev>; Mon,  9 Aug 2021 12:27:14 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+	by mailout.nyi.internal (Postfix) with ESMTP id 57E395C00DF;
+	Mon,  9 Aug 2021 08:27:13 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 09 Aug 2021 08:27:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=fm1; bh=AdJj11WOeMxOsGS2VukRYuSdN7K
+	Cr738JS2MrX1t4AY=; b=O92RbYWvJ0NcMaHXf8NImaFUzVrVvFRqS6qxMbMH+Ag
+	rx3ykbdvnAOIfPhbfQVriQD+OJbqC/eK6MujScW6OaS8jLjAp+XAIBMkcHMeaVJp
+	xIimyBb6rOcpmPU+PRuZLaIeXU4OZZfIkJno9/acD1W3MmM9eSkbIpeKyHu5YDw5
+	ERN6zb/CBccfeOjeRSt74yrGujICz9HybnJPn+BmNQmbk12uNAw2rznQlhtnT7TH
+	fSbPFD8q52C76UxgmHlwBXXqU3w9XrgOYseoNSjvlLQkKIYt7/imB9L/uKOoOCVe
+	rcBhlebr6rTon9AeXEypanI07dgf4ArvVE34gAqbJYQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=AdJj11
+	WOeMxOsGS2VukRYuSdN7KCr738JS2MrX1t4AY=; b=U9itvKUmpzvSdzP2q9BB3w
+	y6nBCu2Aua5QosJ38I+CkO2xnaQTW08dXaFMNvL/cKvPB89EFi6OAht3WLxY5OV1
+	y+dmrc1f+1bnhuUNeZP1ehbJ9ZBG0gBVn1JcesxCF6PMvscCKoY9ZD8g562h2oT+
+	P4UEcHfxmZ3zh3X6lGGCiylD8CxlqE3qrkBdui2ft5O0bfI8aK50Zze1beWnQsPL
+	xAs+nRvF/1quZNWRfDqVnrx35R9KCS6UmCBT+DT7nSh/0w38RkdUXbXQg3707XmV
+	IvfTHSaJO74hHpvknqBfsJtTg4HHwj/5s+C+erOOwaKm8jzX4h7+L0snIjxffOWw
+	==
+X-ME-Sender: <xms:IR8RYcLN3Qdejm-BLr2dpi2rsLml7tAYT177lDaQaQKCEZERo_X3ug>
+    <xme:IR8RYcIDG9M5ueYyRNB-Bhg7wNwM2TkOn5AYcDFL0ha5IgoNezmx9BIIvK26UGMFs
+    STTBBryUPVo3Q>
+X-ME-Received: <xmr:IR8RYcs9GdK_vomgewQ_dZmaKU8Vkec-mVwXnS__meCALKYVDtUDr3fNZGtnPn9-YlmZD_JeeEnaMAopmaOxSkPu6wCETPWW>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrjeejgdehfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
+    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuheejgf
+    ffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecuvehluhhsthgv
+    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrd
+    gtohhm
+X-ME-Proxy: <xmx:IR8RYZYdS2hek9V9gnPZLkw8zoL39vjwbugk_b0fdw1ETZYn45Jlag>
+    <xmx:IR8RYTYhHHspzrs_naBXYj2FgEUk5WDIpWnLyxxNFVj2ytCI1C7-Qg>
+    <xmx:IR8RYVBEf6MXdd_EO6pxnEG32PvmQvQGcFH_NB2jcFNPBPX03vKE_Q>
+    <xmx:IR8RYSUzdH3KK-K2LzkjXcU2jJfZ_p9HPIqPjFmc3ynwevMe--gwOQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 9 Aug 2021 08:27:12 -0400 (EDT)
+Date: Mon, 9 Aug 2021 14:27:10 +0200
+From: Greg KH <greg@kroah.com>
+To: nelakurthi koteswararao <koteswararao18@gmail.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Futex crash in Normal 4.9 Kernel
+Message-ID: <YREfHsGDx/Yows56@kroah.com>
+References: <CAGJbQdfVXdjcDjwUae9QdWWu8MJM5EamN4S1pQCRZO2KwjeFaA@mail.gmail.com>
+ <YREQ8H6AmD2P5nL0@kroah.com>
+ <CAGJbQde8vgDBknH7gevnRx5cxwjOvuNoU7jHDnj3fN+dJgt2uA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -30,60 +63,24 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e9810931-b21c-195f-26cb-75b46aa9eb9a@gmail.com>
+In-Reply-To: <CAGJbQde8vgDBknH7gevnRx5cxwjOvuNoU7jHDnj3fN+dJgt2uA@mail.gmail.com>
 
-On Mon, Aug 09, 2021 at 08:15:11AM -0400, PGNet Dev wrote:
-> On 7/31/21 2:56 AM, gregkh@linuxfoundation.org wrote:
-> > 
-> > This is a note to let you know that I've just added the patch titled
-> > 
-> >      Revert "ACPI: resources: Add checks for ACPI IRQ override"
-> > 
-> > to the 5.13-stable tree which can be found at:
-> >      http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-> > 
-> > The filename of the patch is:
-> >       revert-acpi-resources-add-checks-for-acpi-irq-override.patch
-> > and it can be found in the queue-5.13 subdirectory.
-> > 
-> > If you, or anyone else, feels it should not be added to the stable tree,
-> > please let <stable@vger.kernel.org> know about it.
-> > 
-> > 
-> >  From e0eef3690dc66b3ecc6e0f1267f332403eb22bea Mon Sep 17 00:00:00 2001
-> > From: Hui Wang <hui.wang@canonical.com>
-> > Date: Wed, 28 Jul 2021 23:19:58 +0800
-> > Subject: Revert "ACPI: resources: Add checks for ACPI IRQ override"
-> > 
-> > From: Hui Wang <hui.wang@canonical.com>
-> > 
-> > commit e0eef3690dc66b3ecc6e0f1267f332403eb22bea upstream.
+On Mon, Aug 09, 2021 at 05:52:17PM +0530, nelakurthi koteswararao wrote:
+> Dear Greg,
 > 
-> Confirming that this^ revert resolves the reported non-boot regression
-> 
-> System does boot cleanly; but, then REboots @ 60 seconds.
-> 
-> It's a known bug, with fix already in 5.13.9/stable:
-> 
->  Revert "watchdog: iTCO_wdt: Account for rebooting on second timeout"
->  https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.13.y&id=02db470b866fd06d8951
-> 
-> , causing TCO watchdog auto-reboot @ 60 secs.
-> 
-> Although particularly nasty on servers with /boot on RAID, breaking arrays if watchdog boots before arrays correctly assembled, iiuc, it's UN-related
-> 
-> With interim workaround
-> 
->  edit /etc/modprobe.d/blacklist.conf
-> 
-> +	blacklist iTCO_wdt
-> +	blacklist iTCO_vendor_support
-> 
-> for this second issue in place, 5.13.8 boots & appears stable.
+> Thank you for your reply. I noticed most of the futex changes between
+> 4.9.233 to 4.9.279 is related to Priority Inheritance that comes in
+> to use in the Real time kernel. But I am using the 4.9.232 Normal Kernel.
 
-I do not understand, am I missing something in the queue for the next
-5.13 release that needs to be applied?
+I do not know what a "4.9.232 Normal Kernel" is.
 
-confused,
+> That's the reason I posted futex crash to the mailing list for input.
+> is the race between futex_wait() thread and futex_wake() threads leading to
+> NULL pointer crash? any input in that direction?
+
+Again, please try the latest 4.9.y kernel release, we do not support
+older releases for obvious reasons.
+
+thanks,
 
 greg k-h
