@@ -1,128 +1,84 @@
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354A217F
-	for <regressions@lists.linux.dev>; Mon,  9 Aug 2021 12:38:31 +0000 (UTC)
-Received: by mail-qv1-f53.google.com with SMTP id js7so8817086qvb.4
-        for <regressions@lists.linux.dev>; Mon, 09 Aug 2021 05:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+yO3K6qk9feyKDpYOnpP1GKKVS0QyGkKDMEe18ApotA=;
-        b=QhOxaclaO5C9XEqW3/dt2zQ54o0NRTBORYfzkU9PBJjr/UzmE2xsIM+58DA1fbhiay
-         AAf6KFL7D3w7DxMJb7giIVrQxx9er0yYXsMpBTH+fwbjUnrrcroQJ8DFWGmTaZ6MCkj0
-         wkpsk28h5ZeZLjITr6tGSNgdK7I15Bp/VYCzD17BWQePtaEgF3KTo5NiantjxdQ0NolO
-         3m1UFnssZgrhxTPaljP/kFtrCPGTnNOihVijXNtIAvoT9J/IjBHDjlmd/Dh2+oGEx0Po
-         hYbIjo2BQAF+HSf2nxMZcZOhZmXhuXq1C+lz7V/upW+ZsmLfokuHu+rC/6e9ytswB63W
-         Cj5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+yO3K6qk9feyKDpYOnpP1GKKVS0QyGkKDMEe18ApotA=;
-        b=pPqncFWgYZyJsbi2sknMOuxj4W6//JldHv/BB5xVOJlkMmr+YgXcsAZmKXV5qM9z93
-         +osI5IplozoPJplqYVfhixO+mq5JLzQqatGQ2Q+TVbJDQCzx5BFQ1kJzNBj8RcJi5erL
-         qxLkjCYre6CmHSC/MZAOSut4kTDwW9wRA/aj7jFGblzZocuFkjWPx6cYZKt8tN8ix7f5
-         0IL1DW+bsIW+oicidRO3mf5S0mN5HLSX5QEDZjwib+wFLGLr8B7prIPM2l0xaTx6iEiE
-         rCzEcI8+Wt08mll+ysWXIloJsxKHUaba7rkX5WNYlN0C7EyzFcGyAYk580Owb+G1sseL
-         YcQQ==
-X-Gm-Message-State: AOAM532xeJR5Vj0bBuZrgKZU3mOyEXGU4tk2nGRdUE58kUP6ESJ4aLNg
-	eol58ti4Yu9RcOmryD4znk3gI2LKFrs=
-X-Google-Smtp-Source: ABdhPJycn7m4kUzagdayz9QBx/KLopvqrvEoCCjYQEVimz6yzoFCEMcXNI6pbJqj3OxvDihnxTHyfA==
-X-Received: by 2002:a05:6214:501d:: with SMTP id jo29mr11974612qvb.43.1628512710180;
-        Mon, 09 Aug 2021 05:38:30 -0700 (PDT)
-Received: from mua.localhost ([2600:1700:e380:2c20::47])
-        by smtp.gmail.com with ESMTPSA id f12sm6574242qtj.40.2021.08.09.05.38.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Aug 2021 05:38:29 -0700 (PDT)
-Subject: Re: Patch "Revert "ACPI: resources: Add checks for ACPI IRQ
- override"" has been added to the 5.13-stable tree
-From: PGNet Dev <pgnet.dev@gmail.com>
-To: gregkh@linuxfoundation.org
-Cc: hui.wang@canonical.com, rafael.j.wysocki@intel.com,
- stable@vger.kernel.org, regressions@lists.linux.dev
-References: <16277146132219@kroah.com>
- <e9810931-b21c-195f-26cb-75b46aa9eb9a@gmail.com> <YREdlli29GUfvaUx@kroah.com>
-Message-ID: <a64b85a6-cc26-afc3-4d6a-85c7a366576b@gmail.com>
-Date: Mon, 9 Aug 2021 08:41:01 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.12.0
+Received: from mail.holtmann.org (coyote.holtmann.net [212.227.132.17])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3E7917F
+	for <regressions@lists.linux.dev>; Mon,  9 Aug 2021 13:32:40 +0000 (UTC)
+Received: from smtpclient.apple (p5b3d23f8.dip0.t-ipconnect.de [91.61.35.248])
+	by mail.holtmann.org (Postfix) with ESMTPSA id 6C332CED47;
+	Mon,  9 Aug 2021 15:26:18 +0200 (CEST)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-In-Reply-To: <YREdlli29GUfvaUx@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.100.0.2.22\))
+Subject: Re: regression: Bluetooth interface broken on systems with Mediatek
+ CPU
+From: Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <a9cd03da-b816-eed3-7e77-d539924cbe88@roeck-us.net>
+Date: Mon, 9 Aug 2021 15:26:18 +0200
+Cc: regressions@lists.linux.dev,
+ stable <stable@vger.kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Kai-Heng Feng <kai.heng.feng@canonical.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <7621B196-B25E-475C-8D6E-AE6CFDFF8183@holtmann.org>
+References: <a9cd03da-b816-eed3-7e77-d539924cbe88@roeck-us.net>
+To: Guenter Roeck <linux@roeck-us.net>
+X-Mailer: Apple Mail (2.3654.100.0.2.22)
 
-On 8/9/21 8:20 AM, Greg KH wrote:
-> On Mon, Aug 09, 2021 at 08:15:11AM -0400, PGNet Dev wrote:
->> On 7/31/21 2:56 AM, gregkh@linuxfoundation.org wrote:
->>>
->>> This is a note to let you know that I've just added the patch titled
->>>
->>>       Revert "ACPI: resources: Add checks for ACPI IRQ override"
->>>
->>> to the 5.13-stable tree which can be found at:
->>>       http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
->>>
->>> The filename of the patch is:
->>>        revert-acpi-resources-add-checks-for-acpi-irq-override.patch
->>> and it can be found in the queue-5.13 subdirectory.
->>>
->>> If you, or anyone else, feels it should not be added to the stable tree,
->>> please let <stable@vger.kernel.org> know about it.
->>>
->>>
->>>   From e0eef3690dc66b3ecc6e0f1267f332403eb22bea Mon Sep 17 00:00:00 2001
->>> From: Hui Wang <hui.wang@canonical.com>
->>> Date: Wed, 28 Jul 2021 23:19:58 +0800
->>> Subject: Revert "ACPI: resources: Add checks for ACPI IRQ override"
->>>
->>> From: Hui Wang <hui.wang@canonical.com>
->>>
->>> commit e0eef3690dc66b3ecc6e0f1267f332403eb22bea upstream.
->>
->> Confirming that this^ revert resolves the reported non-boot regression
->>
->> System does boot cleanly; but, then REboots @ 60 seconds.
->>
->> It's a known bug, with fix already in 5.13.9/stable:
->>
->>   Revert "watchdog: iTCO_wdt: Account for rebooting on second timeout"
->>   https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.13.y&id=02db470b866fd06d8951
->>
->> , causing TCO watchdog auto-reboot @ 60 secs.
->>
->> Although particularly nasty on servers with /boot on RAID, breaking arrays if watchdog boots before arrays correctly assembled, iiuc, it's UN-related
->>
->> With interim workaround
->>
->>   edit /etc/modprobe.d/blacklist.conf
->>
->> +	blacklist iTCO_wdt
->> +	blacklist iTCO_vendor_support
->>
->> for this second issue in place, 5.13.8 boots & appears stable.
-> 
-> I do not understand, am I missing something in the queue for the next
-> 5.13 release that needs to be applied?
+Hi Guenter,
 
-no.
+> [ Greg asked me to submit a report to regressions@, so here it is. ]
+>=20
+> The following error was observed on Chromebooks with MT8183 CPU
+> (ASUS Chromebook Detachable CM3, HP Chromebook 11a, and others):
+>=20
+> [  224.735198] Bluetooth: qca_setup() hci0: setting up ROME/QCA6390
+> [  225.205024] Bluetooth: qca_read_soc_version() hci0: QCA Product ID  =
+ :0x00000008
+> [  225.205040] Bluetooth: qca_read_soc_version() hci0: QCA SOC Version =
+ :0x00000044
+> [  225.205045] Bluetooth: qca_read_soc_version() hci0: QCA ROM Version =
+ :0x00000302
+> [  225.205049] Bluetooth: qca_read_soc_version() hci0: QCA Patch =
+Version:0x000003e8
+> [  225.205055] Bluetooth: qca_uart_setup() hci0: QCA controller =
+version 0x00440302
+> [  225.205061] Bluetooth: qca_download_firmware() hci0: QCA =
+Downloading qca/rampatch_00440302.bin
+> [  227.252653] Bluetooth: hci_cmd_timeout() hci0: command 0xfc00 tx =
+timeout
+> ...
+> [  223.604971] Bluetooth: qca_recv() hci0: Frame reassembly failed =
+(-84)
+> [  223.605027] Bluetooth: qca_recv() hci0: Frame reassembly failed =
+(-84)
+> (repeated several times)
+> ...
+>=20
+> The Bluetooth interface on those Chromebooks can not be enabled.
+>=20
+> Bisect suggests that upstream commit 0ea9fd001a14 ("Bluetooth: =
+Shutdown
+> controller after workqueues are flushed or cancelled") introduced the =
+problem.
+> Reverting it fixes the problem.
+>=20
+> The problem was also reported at [1] on a Mediatek Pumpkin board.
+>=20
+> As of this writing, the problem is still present in the upstream =
+kernel
+> as well as in all stable releases which include commit 0ea9fd001a14.
 
-just confirming this^ revert, landed in 5.13.8, _works_ to fix non-boot.
+post it to the linux-bluetooth@vger mailing list. This is Qualcomm =
+driver
+specific and maybe they broke something. However there is an ongoing
+discussion about your bi-sected commit regarding Mediatek Bluetooth =
+device
+where this seems to also have caused a problem.
 
-system _does_ bump into 60-sec REboot.
-wasn't sure it's related to this^ or not ...
+Regards
 
-the fix for this _next_ issue appears already in 5.13.9/stable (https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.13.y&id=02db470b866fd06d8951)
-The module blacklist workaround works for 5.13.8.
-
-i.e., as it stands, 5.13.8 is usable (here), iff the iTCO mod blacklist workaround is applied.
-5.13.9 is expected to resolved it.
+Marcel
 
