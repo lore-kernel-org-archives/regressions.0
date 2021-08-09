@@ -1,101 +1,108 @@
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C58D72
-	for <regressions@lists.linux.dev>; Mon,  9 Aug 2021 11:26:47 +0000 (UTC)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailout.west.internal (Postfix) with ESMTP id 4959332001BB;
-	Mon,  9 Aug 2021 07:26:46 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Mon, 09 Aug 2021 07:26:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=fm1; bh=tkZwoyoE1yWn1BXOHqiuJgEAkDb
-	CUcvfkY6uuwIgd+Q=; b=AkN3Khoy6f5unBGJUdZctqt64AuWOWnKz//LYMJSLtD
-	8MmJuCGq1KawAPsFKosQSd2BU6/7swPvrFxd+SMtze3Ivx31+mAz9UmGhl1ZeHnG
-	wsfXyle6bXMTwDPGfw0lk+QuzuVBWXSDZggNsi8TFs1sSaiVwt3T7bznL9Y8szwy
-	HacACvefh0k1KcKr3XsnqFF3bghD9DJtKwMGyvO/qSIXmA52cFo2/RnIKZ93VZMV
-	9UnLNxQd/NDeH9qif9v+B9DzMMSO63q8crf0tLP+CQPQGTx1oCZjH17fdIIAfySK
-	fPDZe8sq/aX+oVkFc1tDz1Nqt110+C4Kz111nOPDVWA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=tkZwoy
-	oE1yWn1BXOHqiuJgEAkDbCUcvfkY6uuwIgd+Q=; b=aAePLaCXeNMmYsRHBcN6AG
-	pJyfFJgfqMjKsegtns2l8/sRCqEHCWtsFYLiFk4zNEFMPTmAv1VdckVDtuhR/rqK
-	9yWENjYasxKmX4thhpTu4KAtJygBuOJl905bmMm9XlQFVtqd4zcnaxvM6eQFFZDG
-	Bw9OMz79nniBDukt2maplDgM3mi9UQZeBB6/MYnut97H40d5GIL2kowLps7WXV5U
-	hVuufaOx5Dc01OCDDp3SP4pZ6G1QV+0TINEQYTRYUMM5hasOOsICzHWvHCSq5CgW
-	Nrj0oGCLbHIox2nKPDqanpXgPsKFGKeAuTmZ+xArveuxf2gkWIn7SVVd/lcEXJdA
-	==
-X-ME-Sender: <xms:9RARYQt6Q2PpoNfRaW5iNd_IGzxYsNagGPnAyk2pqoDjQ4OGNZvWyg>
-    <xme:9RARYdf0ejcOZKCwae_UDEZ_y6hnNrEzYdDuWtV5OuwL4z5bmvLaxsGA2jAIWV7a9
-    Pie126toRUr_w>
-X-ME-Received: <xmr:9RARYbzB5zav3-v_Wf2YJP0y88SOF4DiCH88zoL8HcriqwsiFNMs0BvToSj9PiKXPGjPcqVI_SNinNlM3FRhV5nVsCHhalOG>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrjeejgdegudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghgucfm
-    jfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepveeuheejgf
-    ffgfeivddukedvkedtleelleeghfeljeeiueeggeevueduudekvdetnecuvehluhhsthgv
-    rhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorghhrd
-    gtohhm
-X-ME-Proxy: <xmx:9RARYTPR737T0pSeM_ydQ2y7qPM6qs9OAdT2M1YGPU7eXsg44nw9mQ>
-    <xmx:9RARYQ-pV9Ml-XOvzcDCenQ9ADrM9crCzXc1Djxi3SunaNiaraiB0w>
-    <xmx:9RARYbUR8RoRAlB98UOYXzUIEVX2CWvxuTa-86DJE8JEIaOdNmRz5w>
-    <xmx:9RARYUZE5ygymPEu28YBVraXe_MgB9dZ2l7bIiX_a3Iohc_nJZUH-g>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 9 Aug 2021 07:26:45 -0400 (EDT)
-Date: Mon, 9 Aug 2021 13:26:40 +0200
-From: Greg KH <greg@kroah.com>
-To: nelakurthi koteswararao <koteswararao18@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1214C72
+	for <regressions@lists.linux.dev>; Mon,  9 Aug 2021 12:12:43 +0000 (UTC)
+Received: by mail-qv1-f47.google.com with SMTP id f91so8782070qva.9
+        for <regressions@lists.linux.dev>; Mon, 09 Aug 2021 05:12:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:references:cc:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3O4sNg9lZ+RPsPEbPeTqhty2VenuMzMUdATYBIYMPSM=;
+        b=XNTaf9kZPJjnaMNbzGwJaEi5zLEKec8dJ6Nyjir56RVuRdFezKMBvTVDOFjgF2zm6L
+         JOwX+/DgvByL82JJPO5tOhJOhPvSuxuHc/hMfUHn4SlUKYf6Ql45AoBsxVURG5mkHVNE
+         nFzuRMNIAlEoJasCU+Xv8tXA3AS+1lTHhx2AP7U12cqnS+cPWkPz9rL5sss1g9P/bsVj
+         NIZMf732mkhnisX42mnQ/KcSBkIpNcnTH2361SELP8YjbEDGiUdwwoBsh25KU0C/77LG
+         677FTS1LWftKjrqK6IXHgU696Bmanbw2cDz52CMTX/09JR5kqqbQVOpKS1MGxrbvKCeF
+         4+1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:cc:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3O4sNg9lZ+RPsPEbPeTqhty2VenuMzMUdATYBIYMPSM=;
+        b=Y0LIQu3q7htXSW3yEG5IhpDxxYOYek2zKtL/nvWe/iTaK8dA1M4MXtocYZTwGaBGDq
+         hVjmmNPFfS4Jqjx/nxJtD2te9XTV4C045aV7KXhHP8Y3XQyS8Z3P43yxWocAALBhRUnE
+         wOy6jR5kgN/fIcgoE1n5JhXPABIk6y08jn0O7m3bzSVxL0o07uoj9OTYDntqh7CP+w65
+         JI5oC6xCl5qpgmhf1S9VtrabIhscM5t2VNPAM/E/Aex/rUsXZrK0f0m9tISTVHeSCVcX
+         8W2GA565bv/zLl7a9G0N96g+YKYWYBdBxHFThUxxa3D6LM9lXcAxtURTBPouLLp/Oh7e
+         +amQ==
+X-Gm-Message-State: AOAM533JSkgNZ0gTcWLnjqMC6XBBbCbyD3EStn5Ha333hrQSgAW5B/hv
+	oXtdWhvgiURYVOI0jDnYwYOtTgKEdts=
+X-Google-Smtp-Source: ABdhPJxU0CCJPmso9N/zZleWZy/90uaT//VoYhnRpy03eIwFRX0gMFBpt3Vfj06jfQ8sTSJHtEZ/Tg==
+X-Received: by 2002:ad4:4442:: with SMTP id l2mr23211998qvt.2.1628511162107;
+        Mon, 09 Aug 2021 05:12:42 -0700 (PDT)
+Received: from mua.localhost ([2600:1700:e380:2c20::47])
+        by smtp.gmail.com with ESMTPSA id y2sm8957497qkd.38.2021.08.09.05.12.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Aug 2021 05:12:41 -0700 (PDT)
+Subject: Re: Patch "Revert "ACPI: resources: Add checks for ACPI IRQ
+ override"" has been added to the 5.13-stable tree
+From: PGNet Dev <pgnet.dev@gmail.com>
+To: gregkh@linuxfoundation.org, hui.wang@canonical.com,
+ rafael.j.wysocki@intel.com
+References: <16277146132219@kroah.com>
 Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Futex crash in Normal 4.9 Kernel
-Message-ID: <YREQ8H6AmD2P5nL0@kroah.com>
-References: <CAGJbQdfVXdjcDjwUae9QdWWu8MJM5EamN4S1pQCRZO2KwjeFaA@mail.gmail.com>
+Message-ID: <e9810931-b21c-195f-26cb-75b46aa9eb9a@gmail.com>
+Date: Mon, 9 Aug 2021 08:15:11 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGJbQdfVXdjcDjwUae9QdWWu8MJM5EamN4S1pQCRZO2KwjeFaA@mail.gmail.com>
+In-Reply-To: <16277146132219@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 09, 2021 at 04:44:13PM +0530, nelakurthi koteswararao wrote:
-> Dear Stable kernel Contributors
+On 7/31/21 2:56 AM, gregkh@linuxfoundation.org wrote:
 > 
-> Observed Futex kernel crash while using navigation app in Broxton Device
-> flashed with Normal 4.9.x kernel.
-> Futex Crash details are given below.
-> {{
-> 1>[ 1383.591633] Time of kernel crash: (2021-02-16 12:04:19)
-> <1>[ 1383.597480] BUG: unable to handle kernel NULL pointer dereference at
->           (null)
-> <1>[ 1383.606247] IP: [<ffffffffa211c271>] futex_wake+0xe1/0x180
-> <4>[ 1383.612386] PGD 130f62067
-> <4>[ 1383.615209] PUD 130f61067
-> <4>[ 1383.618230] PMD 0
-> <4>[ 1383.620275]
-> <4>[ 1383.621926] Oops: 0000 [#1] PREEMPT SMP
-> <4>[ 1383.626211] Modules linked in: bcmdhd(O) sxmio(C) rfkill_gpio
-> cfg80211 ehset dwc3_pci dwc3 ishtp_tty_client dabridge camera_status mei_me
-> anc_ipc igb_avb(O) mei xhci_pci xhci_hcd intel_ish_ipc intel_ishtp
-> snd_soc_bxt_ivi_ull trusty_timer trusty_wall trusty_log trusty_virtio
-> trusty_ipc dcsd_ts trusty_mem cyttsp6_i2c snd_soc_skl trusty
-> snd_soc_skl_ipc snd_soc_sst_ipc cyttsp6_device_access snd_soc_sst_dsp
-> snd_soc_sst_acpi virtio_ring snd_soc_sst_match snd_hda_ext_core
-> cyttsp6_debug snd_hda_core dcsd_display virtio cyttsp6 [last unloaded:
-> bcmdhd]
-> <4>[ 1383.680139] CPU: 2 PID: 7292 Comm: Thread-48 Tainted: G     U   C O
->  4.9.232-quilt-2e5dc0ac-g33302ae #1
+> This is a note to let you know that I've just added the patch titled
+> 
+>      Revert "ACPI: resources: Add checks for ACPI IRQ override"
+> 
+> to the 5.13-stable tree which can be found at:
+>      http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+> 
+> The filename of the patch is:
+>       revert-acpi-resources-add-checks-for-acpi-irq-override.patch
+> and it can be found in the queue-5.13 subdirectory.
+> 
+> If you, or anyone else, feels it should not be added to the stable tree,
+> please let <stable@vger.kernel.org> know about it.
+> 
+> 
+>  From e0eef3690dc66b3ecc6e0f1267f332403eb22bea Mon Sep 17 00:00:00 2001
+> From: Hui Wang <hui.wang@canonical.com>
+> Date: Wed, 28 Jul 2021 23:19:58 +0800
+> Subject: Revert "ACPI: resources: Add checks for ACPI IRQ override"
+> 
+> From: Hui Wang <hui.wang@canonical.com>
+> 
+> commit e0eef3690dc66b3ecc6e0f1267f332403eb22bea upstream.
 
-4.9.232 is quite old, it was released over a year ago.  A large number
-of futexes fixes has gone in since then, can you please update to the
-latest 4.9.y release (4.9.279 as of today) and let us know if that
-solves the issue or not?
+Confirming that this^ revert resolves the reported non-boot regression
 
-thanks,
+System does boot cleanly; but, then REboots @ 60 seconds.
 
-greg k-h
+It's a known bug, with fix already in 5.13.9/stable:
+
+  Revert "watchdog: iTCO_wdt: Account for rebooting on second timeout"
+  https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-5.13.y&id=02db470b866fd06d8951
+
+, causing TCO watchdog auto-reboot @ 60 secs.
+
+Although particularly nasty on servers with /boot on RAID, breaking arrays if watchdog boots before arrays correctly assembled, iiuc, it's UN-related
+
+With interim workaround
+
+  edit /etc/modprobe.d/blacklist.conf
+
++	blacklist iTCO_wdt
++	blacklist iTCO_vendor_support
+
+for this second issue in place, 5.13.8 boots & appears stable.
