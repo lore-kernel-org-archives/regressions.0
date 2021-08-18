@@ -1,192 +1,109 @@
-Received: from hazard.jcu.cz (hazard.jcu.cz [160.217.1.6])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD0B82FAD
-	for <regressions@lists.linux.dev>; Tue, 17 Aug 2021 06:58:28 +0000 (UTC)
-Received: by hazard.jcu.cz (Postfix, from userid 1000)
-	id 7D6E53139D0; Tue, 17 Aug 2021 08:52:10 +0200 (CEST)
-Date: Tue, 17 Aug 2021 08:52:10 +0200
-From: Jan Marek <jmarek@jcu.cz>
-To: linux-kernel@vger.kernel.org
-Cc: regressions@lists.linux.dev
-Subject: [REGRESSION][BISECTED] Corrupted files on CIFS in 5.x kernels
-Message-ID: <20210817065210.iposihe4yuutfijy@hazard.jcu.cz>
-References: <20210812064542.omomndvwlsfgqgqz@hazard.jcu.cz>
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42286D13
+	for <regressions@lists.linux.dev>; Wed, 18 Aug 2021 15:54:01 +0000 (UTC)
+Received: by mail-lf1-f41.google.com with SMTP id p38so5727271lfa.0
+        for <regressions@lists.linux.dev>; Wed, 18 Aug 2021 08:54:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BHMjZ/i4Omck1upCZSLIcKpTxWs6ScKdudtkHXwFkLE=;
+        b=JlAMpmvQAcnvqxNk88BR3qSHSe9ZZa7k/OcVIY570riziDbSf3DLPuqNFMHWgV0I0n
+         5QMUFXPgwLIUgi3arHQZphJo8cgrCvg+jVgx967NQxQu08NppuIB460BQDGt8/mFkLrP
+         MLTDlHl1qhAPFYhz16LezFv1Qgqyih6aXRqcW/gFiqnc11Dndqj0AlkE716+0EhDIo55
+         s3R1hJTvNL1/Njev/e3+3cYsskk1WcNwf6DZv6y/Ync8tt9vS+JlnwLrntuk50XmHMwb
+         pCnzddyy2I63HxfTPOn97yfVOBCFyojMx+c8eQxPKDnxkKaQByZ30UrdGmeV5uOKjAXS
+         YZIA==
+X-Gm-Message-State: AOAM532AndF3OC0hSNKW8nLUa2THlKcp9ZhjrE1pa5quAsVqFC/7K/U8
+	6MQ4MDvwLdRbjfWX8OPp/Es=
+X-Google-Smtp-Source: ABdhPJzX63+YdtxMD3d2t0KhRquyfJSWRbwehMnKvCRyitRNSB4q0CCa4GjIT1G2HjeO+ujGwlCaDg==
+X-Received: by 2002:a05:6512:1501:: with SMTP id bq1mr7028514lfb.286.1629302040079;
+        Wed, 18 Aug 2021 08:54:00 -0700 (PDT)
+Received: from [10.68.32.40] (broadband-188-32-236-56.ip.moscow.rt.ru. [188.32.236.56])
+        by smtp.gmail.com with ESMTPSA id n18sm27302ljg.40.2021.08.18.08.53.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Aug 2021 08:53:59 -0700 (PDT)
+Subject: Re: [PATCH] Revert "floppy: reintroduce O_NDELAY fix"
+To: Jiri Kosina <jikos@kernel.org>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, Mark Hounschell <markh@compro.net>,
+ Wim Osterholt <wim@djo.tudelft.nl>, Kurt Garloff <kurt@garloff.de>,
+ stable@vger.kernel.org
+References: <de10cb47-34d1-5a88-7751-225ca380f735@compro.net>
+ <20210808074246.33449-1-efremov@linux.com>
+ <nycvar.YFH.7.76.2108160914070.8253@cbobk.fhfr.pm>
+From: Denis Efremov <efremov@linux.com>
+Message-ID: <5ca95b90-c6e0-99b3-b129-75dc05cfb1d4@linux.com>
+Date: Wed, 18 Aug 2021 18:53:58 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wgmsen6kpo5mh5li"
-Content-Disposition: inline
-In-Reply-To: <20210812064542.omomndvwlsfgqgqz@hazard.jcu.cz>
-User-Agent: NeoMutt/20180716
-
-
---wgmsen6kpo5mh5li
+In-Reply-To: <nycvar.YFH.7.76.2108160914070.8253@cbobk.fhfr.pm>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-Hello lkml,
+Hi,
 
-I've did a bisect to find 'bad' commit, and I've found, that problem
-commit is:
+On 8/16/21 10:17 AM, Jiri Kosina wrote:
+> On Sun, 8 Aug 2021, Denis Efremov wrote:
+> 
+>> The patch breaks userspace implementations (e.g. fdutils) and introduces
+>> regressions in behaviour. Previously, it was possible to O_NDELAY open a
+>> floppy device with no media inserted or with write protected media without
+>> an error. Some userspace tools use this particular behavior for probing.
+>>
+>> It's not the first time when we revert this patch. Previous revert is in
+>> commit f2791e7eadf4 (Revert "floppy: refactor open() flags handling").
+>>
+>> This reverts commit 8a0c014cd20516ade9654fc13b51345ec58e7be8.
+> 
+> By reverting it you bring back the bugs that were fixed by it
 
-# first bad commit: [e8506d25f740fd058791cc12a6dfa9386ada6b96] smb3: make d=
-efault i/o size for smb3 mounts larger
+I agree with you, that O_NDELAY is broken for floppies (and always been).
+However, just by removing O_NDELAY we break many existing tools that use
+it for probing and ioctl-only opens. With the patch tools fail to open the
+device without a diskette and try to read a diskette if there is one (this is
+not as fast on a real hardware as in QEMU).
+I think that there should be a better fix that doesn't break existing tools.
+It appears that people still use software that depends on O_NDELAY in floppies.
+Same patch was already reverted in 2016 (presumably) by the same reason.
 
-It seems, that problem is somewhere in cifs?
+>  -- e.g. the 
+> possibility to livelock mmap() on the returned fd to keep waiting on the 
+> page unlock bit forever
 
-Detailed information about mounting this cifs filesystem:
+As far as I understand this is a problem only for syzkaller.
+And this is not a security issue nowadays since most distributions
+(I don't know exceptions) require at least "disk" group to access floppies.
+Do you know a link for the syzkaller reproducer?
 
-fstab:
+> or the functionality bug reported at [1], and 
+> likely others.
+> 
+> [1] https://bugzilla.suse.com/show_bug.cgi?id=1181018
 
-//some.machine/jmarek       /mnt/smb   cifs    _netdev,credentials=3D/etc/c=
-red_file,forceuid,forcegid,uid=3Droot,gid=3Droot,vers=3D1.0 3 0
+The patch starts to return -ENXIO for O_NDELAY|O_RDONLY opens and devices
+without a diskette. I don't think this is an expected behavior during 
+libblkid probing.
 
-some.machine runs Samba (sorry, I don't know, which version,
-server administrator is just now on vacancy).
+Probably there is a better fix for [1], maybe even an additional workaround
+for floppies in libblkid. They already have workarounds for cdroms
+https://github.com/karelzak/util-linux/commit/dc30fd4383e57a0440cdb0e16ba5c4336a43b290
 
-Questions are welcome.
+I started to add simple tests https://lkml.org/lkml/2021/8/18/845
+However, I failed to reproduce mount bug [1], probably
+because I don't know how to configure cloudinit properly. I tried to reproduce
+a mount fail bug with open("/dev/fd0", O_NDELAY|O_RDONLY) and mount("/dev/fd0", ...)
+but it works. Looks like there should be something else in between...
 
-I can test patches, if you will need.
-
-Sincerely
-Jan Marek
-
-Dne =C4=8Ct, srp 12, 2021 at 08:45:42 CEST napsal Jan Marek:
-> Hello lkml,
->=20
-> I have problem with two "network" filesystems in 5.x kernels.
->=20
-> I've Debian Buster server with Postfix and Dovecot, users have
-> Maildir mailboxes on CEPHfs. Backup of these mailboxes are making
-> by the borgbackup to the remote machine, using CIFS.
->=20
-> Debian Buster have "normal" distro kernel v. 4.19 (in my case
-> 4.19.194-3), which works fine. I've tried to use kernel from
-> buster-backports, linux-image-5.10.0-0.bpo.8-amd64, which is
-> 5.10.46-2~bpo10+1.
->=20
-> From time of booting this kernel, I've problems with massive corruption
-> of dovecot index files on CEPHfs. I've tried to set up dovecot in
-> the similar manner, as for NFS filesystem, although mailboxes are not
-> sharing by multiple machines, but it not works.
->=20
-> As the second problem, I've cannot do borg backup of mailboxes to
-> CIFS directory - borgbackup had problem with corrupted archives.
->=20
-> When I reboot back to 4.19.194-3, problems disappeared.
->=20
-> I've tried to reproduce from my work computer, where I have
-> Debian Buster and kernel 5.12.0-19.2-liquorix-amd64, which is
-> 5.12-28.1~buster, and there is the same problem with CIFS
-> filesystem and borg backup. You can easily reproduce it:
->=20
-> 1) mount CIFS filesystem
-> 2) make directory on it
-> 3) try to init borg archive direcory from this directory
->=20
-> In my case:
->=20
-> mount /mnt/smb
-> cd /mnt/smb/tmp
-> mkdir tmp
-> borg init -e none tmp
->=20
-> I've got this (the same problem, as on email machine):
-> Inconsistency detected. Please run "borg check /mnt/smb/tmp/tmp" - althou=
-gh likely this is "beyond repair".
-> Traceback (most recent call last):
->   File "/usr/lib/python3/dist-packages/borg/archiver.py", line 4455, in m=
-ain
->     exit_code =3D archiver.run(args)
->   File "/usr/lib/python3/dist-packages/borg/archiver.py", line 4387, in r=
-un
->     return set_ec(func(args))
->   File "/usr/lib/python3/dist-packages/borg/archiver.py", line 154, in wr=
-apper
->     return method(self, args, repository=3Drepository, **kwargs)
->   File "/usr/lib/python3/dist-packages/borg/archiver.py", line 276, in do=
-_init
->     with Cache(repository, key, manifest, warn_if_unencrypted=3DFalse):
->   File "/usr/lib/python3/dist-packages/borg/cache.py", line 380, in __new=
-__
->     return local()
->   File "/usr/lib/python3/dist-packages/borg/cache.py", line 374, in local
->     lock_wait=3Dlock_wait, cache_mode=3Dcache_mode)
->   File "/usr/lib/python3/dist-packages/borg/cache.py", line 467, in __ini=
-t__
->     self.sync()
->   File "/usr/lib/python3/dist-packages/borg/cache.py", line 851, in sync
->     self.chunks =3D create_master_idx(self.chunks)
->   File "/usr/lib/python3/dist-packages/borg/cache.py", line 786, in creat=
-e_master_idx
->     master_index_capacity =3D int(len(self.repository) / ChunkIndex.MAX_L=
-OAD_FACTOR)
->   File "/usr/lib/python3/dist-packages/borg/repository.py", line 1009, in=
- __len__
->     self.index =3D self.open_index(self.get_transaction_id())
->   File "/usr/lib/python3/dist-packages/borg/repository.py", line 376, in =
-get_transaction_id
->     self.check_transaction()
->   File "/usr/lib/python3/dist-packages/borg/repository.py", line 365, in =
-check_transaction
->     raise self.CheckNeeded(msg)
-> borg.repository.Repository.CheckNeeded: Inconsistency detected. Please ru=
-n "borg check /mnt/smb/tmp/tmp" - although likely this is "beyond repair".
->=20
-> Platform: Linux hazard 5.12.0-19.2-liquorix-amd64 #1 ZEN SMP PREEMPT liqu=
-orix 5.12-28.1~buster (2021-07-22) x86_64
-> Linux: debian 10.10
-> Borg: 1.1.9  Python: CPython 3.7.3
-> PID: 3320  CWD: /mnt/smb/tmp
-> sys.argv: ['/usr/bin/borg', 'init', '-e', 'none', 'tmp']
-> SSH_ORIGINAL_COMMAND: None
->=20
-> You can try repair this archive directory, but it didn't happend:
->=20
-> borg check tmp
->=20
-> Data integrity error: Invalid segment entry size 0 - too small [segment 1=
-, offset 17]
-> Completed repository check, errors found.
->=20
-> On local filesystems, there is no problem, everythink works fine
-> - tested on ext4, JFS and XFS.
->=20
-> It seems, there is problem with caching of this filesystems?
->=20
-> Questions are welcome.
->=20
-> Sincerely
-> Jan Marek
-> --=20
-> Ing. Jan Marek
-> University of South Bohemia
-> Academic Computer Centre
-> Phone: +420389032080
-> http://www.gnu.org/philosophy/no-word-attachments.cs.html
-
-
-
---=20
-Ing. Jan Marek
-University of South Bohemia
-Academic Computer Centre
-Phone: +420389032080
-http://www.gnu.org/philosophy/no-word-attachments.cs.html
-
---wgmsen6kpo5mh5li
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQQUTxPtzAjqwmJlmbXiFFMStj9tyQUCYRtclQAKCRDiFFMStj9t
-ycAHAP95RzG9xm7wcSHwAtai3bPfRGHUgS6JRajEcztTOzXjqAD/ZICLWmalcWc+
-/XchAzu3WS66H3WtogWCPA2Q406yLQI=
-=QMav
------END PGP SIGNATURE-----
-
---wgmsen6kpo5mh5li--
+Regards,
+Denis
