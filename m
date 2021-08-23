@@ -1,109 +1,83 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from so254-9.mailgun.net (so254-9.mailgun.net [198.61.254.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D42286D13
-	for <regressions@lists.linux.dev>; Wed, 18 Aug 2021 15:54:01 +0000 (UTC)
-Received: by mail-lf1-f41.google.com with SMTP id p38so5727271lfa.0
-        for <regressions@lists.linux.dev>; Wed, 18 Aug 2021 08:54:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BHMjZ/i4Omck1upCZSLIcKpTxWs6ScKdudtkHXwFkLE=;
-        b=JlAMpmvQAcnvqxNk88BR3qSHSe9ZZa7k/OcVIY570riziDbSf3DLPuqNFMHWgV0I0n
-         5QMUFXPgwLIUgi3arHQZphJo8cgrCvg+jVgx967NQxQu08NppuIB460BQDGt8/mFkLrP
-         MLTDlHl1qhAPFYhz16LezFv1Qgqyih6aXRqcW/gFiqnc11Dndqj0AlkE716+0EhDIo55
-         s3R1hJTvNL1/Njev/e3+3cYsskk1WcNwf6DZv6y/Ync8tt9vS+JlnwLrntuk50XmHMwb
-         pCnzddyy2I63HxfTPOn97yfVOBCFyojMx+c8eQxPKDnxkKaQByZ30UrdGmeV5uOKjAXS
-         YZIA==
-X-Gm-Message-State: AOAM532AndF3OC0hSNKW8nLUa2THlKcp9ZhjrE1pa5quAsVqFC/7K/U8
-	6MQ4MDvwLdRbjfWX8OPp/Es=
-X-Google-Smtp-Source: ABdhPJzX63+YdtxMD3d2t0KhRquyfJSWRbwehMnKvCRyitRNSB4q0CCa4GjIT1G2HjeO+ujGwlCaDg==
-X-Received: by 2002:a05:6512:1501:: with SMTP id bq1mr7028514lfb.286.1629302040079;
-        Wed, 18 Aug 2021 08:54:00 -0700 (PDT)
-Received: from [10.68.32.40] (broadband-188-32-236-56.ip.moscow.rt.ru. [188.32.236.56])
-        by smtp.gmail.com with ESMTPSA id n18sm27302ljg.40.2021.08.18.08.53.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Aug 2021 08:53:59 -0700 (PDT)
-Subject: Re: [PATCH] Revert "floppy: reintroduce O_NDELAY fix"
-To: Jiri Kosina <jikos@kernel.org>
-Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, Mark Hounschell <markh@compro.net>,
- Wim Osterholt <wim@djo.tudelft.nl>, Kurt Garloff <kurt@garloff.de>,
- stable@vger.kernel.org
-References: <de10cb47-34d1-5a88-7751-225ca380f735@compro.net>
- <20210808074246.33449-1-efremov@linux.com>
- <nycvar.YFH.7.76.2108160914070.8253@cbobk.fhfr.pm>
-From: Denis Efremov <efremov@linux.com>
-Message-ID: <5ca95b90-c6e0-99b3-b129-75dc05cfb1d4@linux.com>
-Date: Wed, 18 Aug 2021 18:53:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.11.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88803FC4
+	for <regressions@lists.linux.dev>; Mon, 23 Aug 2021 12:53:23 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1629723203; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=JcfDWR4cffqT+kvemo31Qw9aFals0hPQCxPipl6EkWA=; b=EPWLnd/LrkDXjgD10FN7UZjzEKgPLgZazFnHM665FBRn0q4iSh2fpoL4X80GxXcXnrTkW+tu
+ /enNrfHkq1fVupNm16ndYHoVZTshUJs0fQWu162u4EH7DV86KpuFQiNr7xJ6QXc+kLeb69I5
+ DRdAtO1kyyPfbS9v7bjfpIpsjNo=
+X-Mailgun-Sending-Ip: 198.61.254.9
+X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 61239a42f588e42af1e6613b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 23 Aug 2021 12:53:22
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+	id 1F809C4360C; Mon, 23 Aug 2021 12:53:22 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL
+	autolearn=no autolearn_force=no version=3.4.0
+Received: from tykki (tynnyri.adurom.net [51.15.11.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: kvalo)
+	by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F0DDC4338F;
+	Mon, 23 Aug 2021 12:53:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 7F0DDC4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+From: Kalle Valo <kvalo@codeaurora.org>
+To: Wren Turkal <wt@penguintechs.org>
+Cc: ath11k@lists.infradead.org, linux-wireless@vger.kernel.org, regressions@lists.linux.dev, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Hemant Kumar <hemantk@codeaurora.org>, Loic Poulain <loic.poulain@linaro.org>
+Subject: Re: 5.14 rc6 broken for QCA6390 on Dell XPS 13 9310
+References: <a8cddf24-ecfc-088e-27f4-98cbbb5fb67c@penguintechs.org>
+Date: Mon, 23 Aug 2021 15:53:14 +0300
+In-Reply-To: <a8cddf24-ecfc-088e-27f4-98cbbb5fb67c@penguintechs.org> (Wren
+	Turkal's message of "Sun, 22 Aug 2021 14:08:11 -0700")
+Message-ID: <87y28sqq4l.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <nycvar.YFH.7.76.2108160914070.8253@cbobk.fhfr.pm>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+(adding linux-wireless, regressions and some mhi folks)
 
-On 8/16/21 10:17 AM, Jiri Kosina wrote:
-> On Sun, 8 Aug 2021, Denis Efremov wrote:
-> 
->> The patch breaks userspace implementations (e.g. fdutils) and introduces
->> regressions in behaviour. Previously, it was possible to O_NDELAY open a
->> floppy device with no media inserted or with write protected media without
->> an error. Some userspace tools use this particular behavior for probing.
->>
->> It's not the first time when we revert this patch. Previous revert is in
->> commit f2791e7eadf4 (Revert "floppy: refactor open() flags handling").
->>
->> This reverts commit 8a0c014cd20516ade9654fc13b51345ec58e7be8.
-> 
-> By reverting it you bring back the bugs that were fixed by it
+Wren Turkal <wt@penguintechs.org> writes:
 
-I agree with you, that O_NDELAY is broken for floppies (and always been).
-However, just by removing O_NDELAY we break many existing tools that use
-it for probing and ioctl-only opens. With the patch tools fail to open the
-device without a diskette and try to read a diskette if there is one (this is
-not as fast on a real hardware as in QEMU).
-I think that there should be a better fix that doesn't break existing tools.
-It appears that people still use software that depends on O_NDELAY in floppies.
-Same patch was already reverted in 2016 (presumably) by the same reason.
+> I have no device for the wifi on my computer. 5.13 worked pretty well.
+> I also found others reporting similar issues:
+> https://forum.manjaro.org/t/kernel5-14-rc6-ath11k-on-qca6390-regression-m=
+hi-probe-failure/79362
+>
+> Here's info about the hardware on my laptop:
+> =E2=9E=9C  ~ sudo dmidecode -s system-product-name
+> XPS 13 9310
+>
+> =E2=9E=9C  ~ sudo dmidecode -s bios-version
+> 3.0.4
 
->  -- e.g. the 
-> possibility to livelock mmap() on the returned fd to keep waiting on the 
-> page unlock bit forever
+Do you get the same mhi error as in the forum post?
 
-As far as I understand this is a problem only for syzkaller.
-And this is not a security issue nowadays since most distributions
-(I don't know exceptions) require at least "disk" group to access floppies.
-Do you know a link for the syzkaller reproducer?
+qcom_mhi_qrtr: probe of mhi0_IPCR failed with error -22
 
-> or the functionality bug reported at [1], and 
-> likely others.
-> 
-> [1] https://bugzilla.suse.com/show_bug.cgi?id=1181018
+MHI folks, any ideas? I have XPS 13 9310 myself but I'm not able to test
+v5.14-rc6 kernel right now.
 
-The patch starts to return -ENXIO for O_NDELAY|O_RDONLY opens and devices
-without a diskette. I don't think this is an expected behavior during 
-libblkid probing.
+--=20
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-Probably there is a better fix for [1], maybe even an additional workaround
-for floppies in libblkid. They already have workarounds for cdroms
-https://github.com/karelzak/util-linux/commit/dc30fd4383e57a0440cdb0e16ba5c4336a43b290
-
-I started to add simple tests https://lkml.org/lkml/2021/8/18/845
-However, I failed to reproduce mount bug [1], probably
-because I don't know how to configure cloudinit properly. I tried to reproduce
-a mount fail bug with open("/dev/fd0", O_NDELAY|O_RDONLY) and mount("/dev/fd0", ...)
-but it works. Looks like there should be something else in between...
-
-Regards,
-Denis
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
