@@ -1,71 +1,232 @@
-Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
+Received: from so254-9.mailgun.net (so254-9.mailgun.net [198.61.254.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CBD72
-	for <regressions@lists.linux.dev>; Thu, 26 Aug 2021 16:34:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CB272
+	for <regressions@lists.linux.dev>; Thu, 26 Aug 2021 17:28:46 +0000 (UTC)
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1629995691; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=RUzgoB5Wzejq4UjttdL32gI6WODI4MFawRGmvOvlL7A=; b=sIuGCPWqsmB13eRY24qoPeg7DvT+T8o0wS/I3uvpFzswqvOr5rshaBq1EzEExiP17lEECE6E
- iy1D4qhbZEfpiA2Dn9MDewQs4iAzI0/Id+92+Bu5HSw9TNpW2VzcnuO+zZq1XgGoI3CN0ycJ
- lLrH2/SqN8YSeqWWFTRJ/EXpcko=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ s=smtp; t=1629998928; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=PfdLDssuVocpX0OAfjQ6bnz0pnV5VdAo1CkeOfpph+A=; b=hxXDT3o7dCVR3G4iZKlI5uRnebUpQy2xn2t00RBRiFNcQUf+WDvgY4ULeTuFk70L4XuJyPF6
+ 76gdBo38mk5XhQluTBaSReKSMBtD3HI45YxufonvrYQ4aWk078AWU556GTj3g0xlKKPxA4oW
+ 1mohR13cnPFA0An5t4P6eTldN3U=
+X-Mailgun-Sending-Ip: 198.61.254.9
 X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 6127c2a3e0fcecca199f624a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 26 Aug 2021 16:34:43
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 6127cf39096d475c7cdc0e14 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 26 Aug 2021 17:28:25
  GMT
 Sender: kvalo=codeaurora.org@mg.codeaurora.org
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-	id D1153C43616; Thu, 26 Aug 2021 16:34:41 +0000 (UTC)
+	id 5AF7CC43619; Thu, 26 Aug 2021 17:28:25 +0000 (UTC)
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-caf-mail-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from tykki (tynnyri.adurom.net [51.15.11.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from tykki.adurom.net (tynnyri.adurom.net [51.15.11.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
 	(Authenticated sender: kvalo)
-	by smtp.codeaurora.org (Postfix) with ESMTPSA id CF4F2C43460;
-	Thu, 26 Aug 2021 16:34:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org CF4F2C43460
+	by smtp.codeaurora.org (Postfix) with ESMTPSA id D9C01C43460;
+	Thu, 26 Aug 2021 17:28:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org D9C01C43460
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
 From: Kalle Valo <kvalo@codeaurora.org>
-To: Loic Poulain <loic.poulain@linaro.org>
-Cc: kuba@kernel.org,  davem@davemloft.net,  netdev@vger.kernel.org,  ath11k@lists.infradead.org,  regressions@lists.linux.dev,  hemantk@codeaurora.org,  nschichan@freebox.fr,  manivannan.sadhasivam@linaro.org
-Subject: Re: [PATCH] qrtr: mhi: Fix duplicate channel start
-References: <1629992163-6252-1-git-send-email-loic.poulain@linaro.org>
-Date: Thu, 26 Aug 2021 19:34:32 +0300
-In-Reply-To: <1629992163-6252-1-git-send-email-loic.poulain@linaro.org> (Loic
-	Poulain's message of "Thu, 26 Aug 2021 17:36:03 +0200")
-Message-ID: <87a6l46u7b.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+To: netdev@vger.kernel.org
+Cc: ath11k@lists.infradead.org,
+	linux-wireless@vger.kernel.org,
+	regressions@lists.linux.dev,
+	wt@penguintechs.org,
+	manivannan.sadhasivam@linaro.org,
+	hemantk@codeaurora.org,
+	loic.poulain@linaro.org,
+	nschichan@freebox.fr
+Subject: [PATCH] Revert "net: really fix the build..."
+Date: Thu, 26 Aug 2021 20:28:16 +0300
+Message-Id: <20210826172816.24478-1-kvalo@codeaurora.org>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Loic Poulain <loic.poulain@linaro.org> writes:
+This reverts commit ce78ffa3ef1681065ba451cfd545da6126f5ca88.
 
-> commit ce78ffa3ef16 ("net: really fix the build...") handling a merge
-> conflict causes the mhi_prepare_for_transfer() function to be called
-> twice (with different flags), leading to QRTR probing issues.
->
-> Fixes: ce78ffa3ef16 ("net: really fix the build...")
-> Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
+Wren and Nicolas reported that ath11k was failing to initialise QCA6390
+Wi-Fi 6 device with error:
 
-Thanks for the patch, but with this patch the whole kernel crashes. I
-tested on a NUC box with QCA6390 using v5.14-rc7. Unfortunately no
-netconsole at the moment as I'm moving my workstations.
+qcom_mhi_qrtr: probe of mhi0_IPCR failed with error -22
 
+Commit ce78ffa3ef16 ("net: really fix the build..."), introduced in
+v5.14-rc5, caused this regression in qrtr. Most likely all ath11k
+devices are broken, but I only tested QCA6390. Let's revert the broken
+commit so that ath11k works again.
+
+Reported-by: Wren Turkal <wt@penguintechs.org>
+Reported-by: Nicolas Schichan <nschichan@freebox.fr>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+---
+ drivers/bus/mhi/core/internal.h  |  2 +-
+ drivers/bus/mhi/core/main.c      |  9 +++------
+ drivers/net/mhi/net.c            |  2 +-
+ drivers/net/wwan/mhi_wwan_ctrl.c |  2 +-
+ include/linux/mhi.h              |  7 +------
+ net/qrtr/mhi.c                   | 16 +---------------
+ 6 files changed, 8 insertions(+), 30 deletions(-)
+
+diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+index bc239a11aa69..5b9ea66b92dc 100644
+--- a/drivers/bus/mhi/core/internal.h
++++ b/drivers/bus/mhi/core/internal.h
+@@ -682,7 +682,7 @@ void mhi_rddm_prepare(struct mhi_controller *mhi_cntrl,
+ 		      struct image_info *img_info);
+ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl);
+ int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
+-			struct mhi_chan *mhi_chan, unsigned int flags);
++			struct mhi_chan *mhi_chan);
+ int mhi_init_chan_ctxt(struct mhi_controller *mhi_cntrl,
+ 		       struct mhi_chan *mhi_chan);
+ void mhi_deinit_chan_ctxt(struct mhi_controller *mhi_cntrl,
+diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+index 84448233f64c..fc9196f11cb7 100644
+--- a/drivers/bus/mhi/core/main.c
++++ b/drivers/bus/mhi/core/main.c
+@@ -1430,7 +1430,7 @@ static void mhi_unprepare_channel(struct mhi_controller *mhi_cntrl,
+ }
+ 
+ int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
+-			struct mhi_chan *mhi_chan, unsigned int flags)
++			struct mhi_chan *mhi_chan)
+ {
+ 	int ret = 0;
+ 	struct device *dev = &mhi_chan->mhi_dev->dev;
+@@ -1455,9 +1455,6 @@ int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
+ 	if (ret)
+ 		goto error_pm_state;
+ 
+-	if (mhi_chan->dir == DMA_FROM_DEVICE)
+-		mhi_chan->pre_alloc = !!(flags & MHI_CH_INBOUND_ALLOC_BUFS);
+-	
+ 	/* Pre-allocate buffer for xfer ring */
+ 	if (mhi_chan->pre_alloc) {
+ 		int nr_el = get_nr_avail_ring_elements(mhi_cntrl,
+@@ -1613,7 +1610,7 @@ void mhi_reset_chan(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan)
+ }
+ 
+ /* Move channel to start state */
+-int mhi_prepare_for_transfer(struct mhi_device *mhi_dev, unsigned int flags)
++int mhi_prepare_for_transfer(struct mhi_device *mhi_dev)
+ {
+ 	int ret, dir;
+ 	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
+@@ -1624,7 +1621,7 @@ int mhi_prepare_for_transfer(struct mhi_device *mhi_dev, unsigned int flags)
+ 		if (!mhi_chan)
+ 			continue;
+ 
+-		ret = mhi_prepare_channel(mhi_cntrl, mhi_chan, flags);
++		ret = mhi_prepare_channel(mhi_cntrl, mhi_chan);
+ 		if (ret)
+ 			goto error_open_chan;
+ 	}
+diff --git a/drivers/net/mhi/net.c b/drivers/net/mhi/net.c
+index 11be6bcdd551..e60e38c1f09d 100644
+--- a/drivers/net/mhi/net.c
++++ b/drivers/net/mhi/net.c
+@@ -335,7 +335,7 @@ static int mhi_net_newlink(void *ctxt, struct net_device *ndev, u32 if_id,
+ 	u64_stats_init(&mhi_netdev->stats.tx_syncp);
+ 
+ 	/* Start MHI channels */
+-	err = mhi_prepare_for_transfer(mhi_dev, 0);
++	err = mhi_prepare_for_transfer(mhi_dev);
+ 	if (err)
+ 		goto out_err;
+ 
+diff --git a/drivers/net/wwan/mhi_wwan_ctrl.c b/drivers/net/wwan/mhi_wwan_ctrl.c
+index d0a98f34c54d..e4d0f696687f 100644
+--- a/drivers/net/wwan/mhi_wwan_ctrl.c
++++ b/drivers/net/wwan/mhi_wwan_ctrl.c
+@@ -110,7 +110,7 @@ static int mhi_wwan_ctrl_start(struct wwan_port *port)
+ 	int ret;
+ 
+ 	/* Start mhi device's channel(s) */
+-	ret = mhi_prepare_for_transfer(mhiwwan->mhi_dev, 0);
++	ret = mhi_prepare_for_transfer(mhiwwan->mhi_dev);
+ 	if (ret)
+ 		return ret;
+ 
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index 5e08468854db..944aa3aa3035 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -719,13 +719,8 @@ void mhi_device_put(struct mhi_device *mhi_dev);
+  *                            host and device execution environments match and
+  *                            channels are in a DISABLED state.
+  * @mhi_dev: Device associated with the channels
+- * @flags: MHI channel flags
+  */
+-int mhi_prepare_for_transfer(struct mhi_device *mhi_dev,
+-			     unsigned int flags);
+-
+-/* Automatically allocate and queue inbound buffers */
+-#define MHI_CH_INBOUND_ALLOC_BUFS BIT(0)
++int mhi_prepare_for_transfer(struct mhi_device *mhi_dev);
+ 
+ /**
+  * mhi_unprepare_from_transfer - Reset UL and DL channels for data transfer.
+diff --git a/net/qrtr/mhi.c b/net/qrtr/mhi.c
+index 1dc955ca57d3..fa611678af05 100644
+--- a/net/qrtr/mhi.c
++++ b/net/qrtr/mhi.c
+@@ -15,7 +15,6 @@ struct qrtr_mhi_dev {
+ 	struct qrtr_endpoint ep;
+ 	struct mhi_device *mhi_dev;
+ 	struct device *dev;
+-	struct completion ready;
+ };
+ 
+ /* From MHI to QRTR */
+@@ -51,10 +50,6 @@ static int qcom_mhi_qrtr_send(struct qrtr_endpoint *ep, struct sk_buff *skb)
+ 	struct qrtr_mhi_dev *qdev = container_of(ep, struct qrtr_mhi_dev, ep);
+ 	int rc;
+ 
+-	rc = wait_for_completion_interruptible(&qdev->ready);
+-	if (rc)
+-		goto free_skb;
+-
+ 	if (skb->sk)
+ 		sock_hold(skb->sk);
+ 
+@@ -84,7 +79,7 @@ static int qcom_mhi_qrtr_probe(struct mhi_device *mhi_dev,
+ 	int rc;
+ 
+ 	/* start channels */
+-	rc = mhi_prepare_for_transfer(mhi_dev, 0);
++	rc = mhi_prepare_for_transfer(mhi_dev);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -101,15 +96,6 @@ static int qcom_mhi_qrtr_probe(struct mhi_device *mhi_dev,
+ 	if (rc)
+ 		return rc;
+ 
+-	/* start channels */
+-	rc = mhi_prepare_for_transfer(mhi_dev, MHI_CH_INBOUND_ALLOC_BUFS);
+-	if (rc) {
+-		qrtr_endpoint_unregister(&qdev->ep);
+-		dev_set_drvdata(&mhi_dev->dev, NULL);
+-		return rc;
+-	}
+-
+-	complete_all(&qdev->ready);
+ 	dev_dbg(qdev->dev, "Qualcomm MHI QRTR driver probed\n");
+ 
+ 	return 0;
 -- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+2.20.1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
