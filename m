@@ -1,52 +1,36 @@
-Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECAF3FC8
-	for <regressions@lists.linux.dev>; Thu, 26 Aug 2021 14:25:42 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1629987943; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
- To: From: Sender; bh=m3dDgaFcDlNATkZhVEgLrNuWBjLykZdjwnfxtS/CmN0=; b=DLrTgjDF+ULDHo7j5fe4pCAUC4vJS+Wyf9Tsi6T0f0PXNz2hcxVaigkrS7Wa7k6nvikR3VVO
- uSC2EobJHY5deAwZWWTei2eLpYWffEphDFdZe9c+ZImb1Kv5IU+jkRLGJ3e3VCWrkmtEbrMa
- WQqGXbC2dgJoCnpZQICtuqY8qso=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 6127a44bd6653df767eeb781 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 26 Aug 2021 14:25:15
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-	id A2E54C43638; Thu, 26 Aug 2021 14:25:13 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-	aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from tykki (tynnyri.adurom.net [51.15.11.48])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	(Authenticated sender: kvalo)
-	by smtp.codeaurora.org (Postfix) with ESMTPSA id 0FE45C4338F;
-	Thu, 26 Aug 2021 14:25:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 0FE45C4338F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-From: Kalle Valo <kvalo@codeaurora.org>
-To: David S. Miller <davem@davemloft.net>,  Jakub Kicinski <kuba@kernel.org>, Linus Torvalds <torvalds@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Wren Turkal <wt@penguintechs.org>,  ath11k@lists.infradead.org,  linux-wireless@vger.kernel.org,  regressions@lists.linux.dev,  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Hemant Kumar <hemantk@codeaurora.org>,  Loic Poulain <loic.poulain@linaro.org>, Nicolas Schichan <nschichan@freebox.fr>
-Subject: [regression] Re: 5.14 rc6 broken for QCA6390 on Dell XPS 13 9310
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40CA3FCB
+	for <regressions@lists.linux.dev>; Thu, 26 Aug 2021 14:38:38 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 9409261027;
+	Thu, 26 Aug 2021 14:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1629988718;
+	bh=hENEpileTUK7xnFY44JId6KBZv8d7ZlqXE+OKdAQKDk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=uijFCrg68CeGFmPoqmagkalMujlkMDFRA5rIEOBYbubddWh0omcHTESLQk7mLOsPK
+	 yG5fDXYAOaMUJuFlWgtWlrwgceOuAzl65ylnDnLEkExGwia7KsWYBHW8rdW/MIsBo1
+	 UMCYg0PNujDOHph+l1zianvriMQ2QG4kPyID1OaA=
+Date: Thu, 26 Aug 2021 16:38:35 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Linus Torvalds <torvalds@linuxfoundation.org>,
+	Wren Turkal <wt@penguintechs.org>, ath11k@lists.infradead.org,
+	linux-wireless@vger.kernel.org, regressions@lists.linux.dev,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Hemant Kumar <hemantk@codeaurora.org>,
+	Loic Poulain <loic.poulain@linaro.org>,
+	Nicolas Schichan <nschichan@freebox.fr>
+Subject: Re: [regression] Re: 5.14 rc6 broken for QCA6390 on Dell XPS 13 9310
+Message-ID: <YSenaxWzxRkYkucv@kroah.com>
 References: <a8cddf24-ecfc-088e-27f4-98cbbb5fb67c@penguintechs.org>
-	<87y28sqq4l.fsf@codeaurora.org>
-	<843e7689-fa1e-441b-c49a-ed7291046d5f@freebox.fr>
-	<87tujgqcth.fsf@codeaurora.org>
-Date: Thu, 26 Aug 2021 17:25:04 +0300
-In-Reply-To: <87tujgqcth.fsf@codeaurora.org> (Kalle Valo's message of "Mon, 23
-	Aug 2021 20:40:42 +0300")
-Message-ID: <87mtp47073.fsf_-_@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+ <87y28sqq4l.fsf@codeaurora.org>
+ <843e7689-fa1e-441b-c49a-ed7291046d5f@freebox.fr>
+ <87tujgqcth.fsf@codeaurora.org>
+ <87mtp47073.fsf_-_@codeaurora.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -54,97 +38,100 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87mtp47073.fsf_-_@codeaurora.org>
 
-(Adding Linus and Greg)
+On Thu, Aug 26, 2021 at 05:25:04PM +0300, Kalle Valo wrote:
+> (Adding Linus and Greg)
+> 
+> Kalle Valo <kvalo@codeaurora.org> writes:
+> 
+> > (Adding Dave and Jakub to CC)
+> >
+> > Nicolas Schichan <nschichan@freebox.fr> writes:
+> >
+> >> On 23/08/2021 14:53, Kalle Valo wrote:
+> >>> (adding linux-wireless, regressions and some mhi folks)
+> >>> 
+> >>> Wren Turkal <wt@penguintechs.org> writes:
+> >>> 
+> >>>> I have no device for the wifi on my computer. 5.13 worked pretty well.
+> >>>> I also found others reporting similar issues:
+> >>>> https://forum.manjaro.org/t/kernel5-14-rc6-ath11k-on-qca6390-regression-mhi-probe-failure/79362
+> >>>>
+> >>>> Here's info about the hardware on my laptop:
+> >>>> ➜  ~ sudo dmidecode -s system-product-name
+> >>>> XPS 13 9310
+> >>>>
+> >>>> ➜  ~ sudo dmidecode -s bios-version
+> >>>> 3.0.4
+> >>> 
+> >>> Do you get the same mhi error as in the forum post?
+> >>> 
+> >>> qcom_mhi_qrtr: probe of mhi0_IPCR failed with error -22
+> >>> 
+> >>> MHI folks, any ideas? I have XPS 13 9310 myself but I'm not able to test
+> >>> v5.14-rc6 kernel right now.
+> >>
+> >> Hello,
+> >>
+> >> I have hit the same issue on Linux 5.14-rc7:
+> >>
+> >> [   14.780566] qcom_mhi_qrtr: probe of mhi0_IPCR failed with error -22
+> >>
+> >> This looks to be caused by commit:
+> >>
+> >> ce78ffa3ef16 net: really fix the build...
+> >>
+> >> Reverting this commit results in ath11k being able to load without errors.
+> >
+> > Thanks, this helps a lot. Commit ce78ffa3ef16 was introduced in
+> > v5.14-rc5 so I assume that's the first release which broke ath11k.
+> >
+> > Dave, what build issue did you fix with commit ce78ffa3ef16? Could we
+> > revert the commit? The problem is that, unless we fix this issue, with
+> > v5.14 WLAN will be broken on a quite few newer Dell laptops.
+> 
+> I did some investiation and I suspect that commit ce78ffa3ef16 ("net:
+> really fix the build...")[1] is for handling a conflict between net-next
+> and char-misc-next trees related to Loic's commit 0092a1e3f763 ("bus:
+> mhi: Add inbound buffers allocation flag"). Greg mentions this in a
+> commit[2]:
+> 
+> commit 813272ed5238b37c81e448b302048e8008570121
+> Merge: de0534df9347 36a21d51725a
+> Author:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+>     Merge 5.14-rc5 into char-misc-next
+>     
+>     We need the fixes in here as well, and resolves some merge issues with
+>     the mhi codebase.
+> 
+> If my assumption is correct when I propose that we revert commit
+> ce78ffa3ef16 for v5.14, AFAICS it's not really needed for v5.14 (commit
+> 0092a1e3f763 is in -next, not in Linus' tree yet) and commit
+> ce78ffa3ef16 breaks ath11k. And the conflict between net-next and
+> char-misc-next can be then later fixed during the merge window.
+> 
+> Will this work for everyone? If no objections, I'll submit the revert to
+> Linus later today. We are getting really close to final v5.14 release so
+> not much time left to fix this.
+> 
+> Just to reiterate why the urgency: commit ce78ffa3ef16 broke ath11k in
+> v5.14-rc5, users have reported (and I have confirmed) that at least
+> QCA6390 support is broken but I suspect all Qualcomm Wi-Fi 6 devices
+> supported by ath11k are currently broken.
 
-Kalle Valo <kvalo@codeaurora.org> writes:
+No objection from me for reverting that, if it fixes the problems you
+are seeing for 5.14-final.
 
-> (Adding Dave and Jakub to CC)
->
-> Nicolas Schichan <nschichan@freebox.fr> writes:
->
->> On 23/08/2021 14:53, Kalle Valo wrote:
->>> (adding linux-wireless, regressions and some mhi folks)
->>>=20
->>> Wren Turkal <wt@penguintechs.org> writes:
->>>=20
->>>> I have no device for the wifi on my computer. 5.13 worked pretty well.
->>>> I also found others reporting similar issues:
->>>> https://forum.manjaro.org/t/kernel5-14-rc6-ath11k-on-qca6390-regressio=
-n-mhi-probe-failure/79362
->>>>
->>>> Here's info about the hardware on my laptop:
->>>> =E2=9E=9C  ~ sudo dmidecode -s system-product-name
->>>> XPS 13 9310
->>>>
->>>> =E2=9E=9C  ~ sudo dmidecode -s bios-version
->>>> 3.0.4
->>>=20
->>> Do you get the same mhi error as in the forum post?
->>>=20
->>> qcom_mhi_qrtr: probe of mhi0_IPCR failed with error -22
->>>=20
->>> MHI folks, any ideas? I have XPS 13 9310 myself but I'm not able to test
->>> v5.14-rc6 kernel right now.
->>
->> Hello,
->>
->> I have hit the same issue on Linux 5.14-rc7:
->>
->> [   14.780566] qcom_mhi_qrtr: probe of mhi0_IPCR failed with error -22
->>
->> This looks to be caused by commit:
->>
->> ce78ffa3ef16 net: really fix the build...
->>
->> Reverting this commit results in ath11k being able to load without error=
-s.
->
-> Thanks, this helps a lot. Commit ce78ffa3ef16 was introduced in
-> v5.14-rc5 so I assume that's the first release which broke ath11k.
->
-> Dave, what build issue did you fix with commit ce78ffa3ef16? Could we
-> revert the commit? The problem is that, unless we fix this issue, with
-> v5.14 WLAN will be broken on a quite few newer Dell laptops.
+The goal was for the mhi changes to go through the networking tree in
+the first place, I don't see how this got out of sync.
 
-I did some investiation and I suspect that commit ce78ffa3ef16 ("net:
-really fix the build...")[1] is for handling a conflict between net-next
-and char-misc-next trees related to Loic's commit 0092a1e3f763 ("bus:
-mhi: Add inbound buffers allocation flag"). Greg mentions this in a
-commit[2]:
+If this is reverted, some help on how to resolve the merge issues it
+will cause would be appreciated.
 
-commit 813272ed5238b37c81e448b302048e8008570121
-Merge: de0534df9347 36a21d51725a
-Author:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+thanks,
 
-    Merge 5.14-rc5 into char-misc-next
-=20=20=20=20
-    We need the fixes in here as well, and resolves some merge issues with
-    the mhi codebase.
-
-If my assumption is correct when I propose that we revert commit
-ce78ffa3ef16 for v5.14, AFAICS it's not really needed for v5.14 (commit
-0092a1e3f763 is in -next, not in Linus' tree yet) and commit
-ce78ffa3ef16 breaks ath11k. And the conflict between net-next and
-char-misc-next can be then later fixed during the merge window.
-
-Will this work for everyone? If no objections, I'll submit the revert to
-Linus later today. We are getting really close to final v5.14 release so
-not much time left to fix this.
-
-Just to reiterate why the urgency: commit ce78ffa3ef16 broke ath11k in
-v5.14-rc5, users have reported (and I have confirmed) that at least
-QCA6390 support is broken but I suspect all Qualcomm Wi-Fi 6 devices
-supported by ath11k are currently broken.
-
-[1] https://git.kernel.org/linus/ce78ffa3ef16
-
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git/co=
-mmit/?h=3Dchar-misc-next&id=3D813272ed5238b37c81e448b302048e8008570121
-
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+greg k-h
