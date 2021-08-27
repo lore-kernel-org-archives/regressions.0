@@ -1,25 +1,25 @@
 Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E6D3FC6
-	for <regressions@lists.linux.dev>; Fri, 27 Aug 2021 12:44:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702D73FC6
+	for <regressions@lists.linux.dev>; Fri, 27 Aug 2021 12:47:06 +0000 (UTC)
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1630068260; h=Content-Type: MIME-Version: Message-ID:
+ s=smtp; t=1630068429; h=Content-Type: MIME-Version: Message-ID:
  In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=u+0kQZv41mny+Fwi1KMh+dQh0dHtpUUvJt6TRvhKLhs=; b=XwlQvSEVvRkkEKRLgT7PbHehOwMjK4tp4in31pp4IiulshXYk1jPD1iW91/PJMRoUMY+nitR
- BtAXWxibiRKsvfJUCKa4TpyA2s4+KOJ5yXaHVfE2x6tHLYiMstFtFhaZlyWdt55sQ471Wst7
- /WudHFqeUVv8SolAc1jeQ4Cp0bI=
+ bh=uG5FVSn/f9JM1ZVPwji494DZnJkYhEBJ3nhkVaTww/A=; b=brHQYMoV1kXDBs+ZXic/37RUbHF7ZThiY1sxB8NwWgWa5glpb9oCuW8psxLu/HWL7758M7Ah
+ Bye1Nej60dvUYKjf9oNSZqP5Vcfw38QQQky3ZvPIaMH1RqdKgIR6shOXWqXApLH5pFI1BZnX
+ GG1HPVNOgtWNQnIf8OwCDnr0t34=
 X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 6128de13fc1f4cb6925d0941 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 27 Aug 2021 12:44:03
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 6128dec3d6653df767c76ad3 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 27 Aug 2021 12:46:59
  GMT
 Sender: kvalo=codeaurora.org@mg.codeaurora.org
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-	id 4786BC43460; Fri, 27 Aug 2021 12:44:03 +0000 (UTC)
+	id 11B82C43618; Fri, 27 Aug 2021 12:46:59 +0000 (UTC)
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-caf-mail-1.web.codeaurora.org
 X-Spam-Level: 
@@ -29,22 +29,24 @@ Received: from tykki (tynnyri.adurom.net [51.15.11.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	(Authenticated sender: kvalo)
-	by smtp.codeaurora.org (Postfix) with ESMTPSA id A485DC4338F;
-	Fri, 27 Aug 2021 12:44:00 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org A485DC4338F
+	by smtp.codeaurora.org (Postfix) with ESMTPSA id 4D754C4338F;
+	Fri, 27 Aug 2021 12:46:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 4D754C4338F
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
 From: Kalle Valo <kvalo@codeaurora.org>
-To: Wren Turkal <wt@penguintechs.org>
-Cc: ath11k@lists.infradead.org,  linux-wireless@vger.kernel.org,  regressions@lists.linux.dev,  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Hemant Kumar <hemantk@codeaurora.org>,  Loic Poulain <loic.poulain@linaro.org>
-Subject: Re: 5.14 rc6 broken for QCA6390 on Dell XPS 13 9310
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "David S. Miller" <davem@davemloft.net>,  Jakub Kicinski <kuba@kernel.org>,  Linus Torvalds <torvalds@linuxfoundation.org>,  Wren Turkal <wt@penguintechs.org>,  ath11k@lists.infradead.org,  linux-wireless@vger.kernel.org,  regressions@lists.linux.dev,  Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  Hemant Kumar <hemantk@codeaurora.org>,  Loic Poulain <loic.poulain@linaro.org>,  Nicolas Schichan <nschichan@freebox.fr>
+Subject: Re: [regression] Re: 5.14 rc6 broken for QCA6390 on Dell XPS 13 9310
 References: <a8cddf24-ecfc-088e-27f4-98cbbb5fb67c@penguintechs.org>
 	<87y28sqq4l.fsf@codeaurora.org>
-	<d2795e7c-69cf-557d-19c4-f800c3a80997@penguintechs.org>
-Date: Fri, 27 Aug 2021 15:43:58 +0300
-In-Reply-To: <d2795e7c-69cf-557d-19c4-f800c3a80997@penguintechs.org> (Wren
-	Turkal's message of "Mon, 23 Aug 2021 09:17:19 -0700")
-Message-ID: <87o89j5a7l.fsf@codeaurora.org>
+	<843e7689-fa1e-441b-c49a-ed7291046d5f@freebox.fr>
+	<87tujgqcth.fsf@codeaurora.org> <87mtp47073.fsf_-_@codeaurora.org>
+	<YSenaxWzxRkYkucv@kroah.com>
+Date: Fri, 27 Aug 2021 15:46:50 +0300
+In-Reply-To: <YSenaxWzxRkYkucv@kroah.com> (Greg Kroah-Hartman's message of
+	"Thu, 26 Aug 2021 16:38:35 +0200")
+Message-ID: <87k0k75a2t.fsf@codeaurora.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -54,24 +56,52 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain
 
-Wren Turkal <wt@penguintechs.org> writes:
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
 
-> On 8/23/21 5:53 AM, Kalle Valo wrote:
->> Do you get the same mhi error as in the forum post?
->>
->> qcom_mhi_qrtr: probe of mhi0_IPCR failed with error -22
->>
->> MHI folks, any ideas? I have XPS 13 9310 myself but I'm not able to test
->> v5.14-rc6 kernel right now.
+>> I did some investiation and I suspect that commit ce78ffa3ef16 ("net:
+>> really fix the build...")[1] is for handling a conflict between net-next
+>> and char-misc-next trees related to Loic's commit 0092a1e3f763 ("bus:
+>> mhi: Add inbound buffers allocation flag"). Greg mentions this in a
+>> commit[2]:
+>> 
+>> commit 813272ed5238b37c81e448b302048e8008570121
+>> Merge: de0534df9347 36a21d51725a
+>> Author:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> 
+>>     Merge 5.14-rc5 into char-misc-next
+>>     
+>>     We need the fixes in here as well, and resolves some merge issues with
+>>     the mhi codebase.
+>> 
+>> If my assumption is correct when I propose that we revert commit
+>> ce78ffa3ef16 for v5.14, AFAICS it's not really needed for v5.14 (commit
+>> 0092a1e3f763 is in -next, not in Linus' tree yet) and commit
+>> ce78ffa3ef16 breaks ath11k. And the conflict between net-next and
+>> char-misc-next can be then later fixed during the merge window.
+>> 
+>> Will this work for everyone? If no objections, I'll submit the revert to
+>> Linus later today. We are getting really close to final v5.14 release so
+>> not much time left to fix this.
+>> 
+>> Just to reiterate why the urgency: commit ce78ffa3ef16 broke ath11k in
+>> v5.14-rc5, users have reported (and I have confirmed) that at least
+>> QCA6390 support is broken but I suspect all Qualcomm Wi-Fi 6 devices
+>> supported by ath11k are currently broken.
 >
-> Yes, I get that same message in my logs.
->
-> FWIW, ath11k_pci now does not get loaded on boot. I can manually load
-> it, but it doesn't seem to do anything.
+> No objection from me for reverting that, if it fixes the problems you
+> are seeing for 5.14-final.
 
-Do you know if this automatic module loading is related to this qrtr
-regression or a separate problem? Can you try Linus' tree and report if
-the module load problem still exists? The qrtr regression is fixed now.
+Thanks!
+
+> The goal was for the mhi changes to go through the networking tree in
+> the first place, I don't see how this got out of sync.
+>
+> If this is reverted, some help on how to resolve the merge issues it
+> will cause would be appreciated.
+
+Yes, I'll help with this. I see that Stephen already reported the
+reappeared merge issue. It's just that I'm not familiar with inner
+workings of the MHI subsystem, but I can test code etc.
 
 -- 
 https://patchwork.kernel.org/project/linux-wireless/list/
