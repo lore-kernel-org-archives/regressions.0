@@ -1,151 +1,125 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097BD3FC7
-	for <regressions@lists.linux.dev>; Thu, 23 Sep 2021 10:39:57 +0000 (UTC)
-Received: by mail-pl1-f175.google.com with SMTP id t4so3782233plo.0
-        for <regressions@lists.linux.dev>; Thu, 23 Sep 2021 03:39:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=0l5Qjk10ns9RTcZCx62S0Ghtn1+O62O0rQJz+8Rhm0I=;
-        b=n8Wqw2WAmNvR3Tfi0IN+hvY9FiUzaOcCcnnXcLK89WtSIR7TucrqCxR1kymTRGKzwU
-         2lTZq5gtLAKlj0ciNizxwCSSFk5at9MDpjkx7Zix2Wa70HQjvjPKCaiNqDykmbEoH+0V
-         IFOyuUukiqSdgrTjdg5IWPbFKSQ9W6cyN4e8+E4K/su0afRI2cG12hJwBSKbkVlH/luA
-         xC/qtUiLMECJ+SayzxbbsghqViDuQL2G7P/zthFDVFRmsOBAMDOQXUWKleB7Cgz9AnLm
-         OO587hdDoTtG1l4kyieL5kdJFDw37yZx5NO2SV7BHVc7DxaXCx2jf6CJWV259SyveSK6
-         WMLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=0l5Qjk10ns9RTcZCx62S0Ghtn1+O62O0rQJz+8Rhm0I=;
-        b=23ff7auvsPu+64TjnrC/rDu0AqSZ85d4vV6IRL6IVADk4yVQ4z74M8QcUpyNc8GGF3
-         tD6DytgxqetBMb1DwBjUL0v3N8yu7H+LQVpyEcCrFlMPiQGtPEbXYJq0pbgmGaWfiw8u
-         L8hDPZMC8XRG0vwNoLdMiSDsrnjp76G8zrp+ElBZiUMM3A9hNv5SJnPkNG392LxuWWEd
-         1rn5CtZya57dIJtJKC81aW6SYihJBd+1iQsahUDqYh37TSNHxdmFEAj7d5Bq98Vy4qq5
-         AQGhKl+pUlvFiHJzzHmPwdq2FE39qf+hm/uGhny/OwhVqO6ni8Qjdw4Ew/S4q2KB+hWQ
-         FSZg==
-X-Gm-Message-State: AOAM531AX1gozIKiK10UOrX9vZq8j7kLnE3upxfCgAwvrdR3uDWbj8uQ
-	SfFXnTWfAIS2HLMHYvgSPu4uf4WVRLaCBZhpfdF2Jw==
-X-Google-Smtp-Source: ABdhPJzkbgNlQdn54hfS6ArGL5SRw53Cv7Fuq/8iSKoYVDZpajH5rCyoTEjEMX9HaJM31dUcaJsRWZRXBwZKT3o3JOw=
-X-Received: by 2002:a17:90b:4a88:: with SMTP id lp8mr4495426pjb.159.1632393597263;
- Thu, 23 Sep 2021 03:39:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7463FC7
+	for <regressions@lists.linux.dev>; Thu, 23 Sep 2021 11:04:36 +0000 (UTC)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+	by mailnew.nyi.internal (Postfix) with ESMTP id 367D35802D9;
+	Thu, 23 Sep 2021 07:04:35 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Thu, 23 Sep 2021 07:04:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=fm1; bh=WiSiNj5Dd4L3sJtCbOLr5sy4Eh6
+	6vg0BdL+CDFeLWzI=; b=pKzs3k+1PkbeH5UZ1NglyqTY51nkSI+yHijyRhSHMjM
+	vUnz40shknrCSWW2jGz55dLprD+Wf1FuA62NFoinE1VLBn9kj3eG+kFJaA8iq/kG
+	IaWm/j8yAA++K4y9JRwAikmv6hkX8GhGvAa1p8KeRyvzyfqH0NaC15ZtGt0NcEqw
+	V/31aH/zPjl2LbXUg9AO8/N3VpiXbshqGELQb/h8nf01ykzzjtjGtHnY/yYAxI9p
+	HTvnsDt9PnWDJtxWBZlYU0VKpqiEijxaYt703hgPp2yW9c3pWFl4X8C37YSK8199
+	W0IppLz8Lj4ub87XxoTAgd89y2hJCp3rcCSutwN26rw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=WiSiNj
+	5Dd4L3sJtCbOLr5sy4Eh66vg0BdL+CDFeLWzI=; b=wwBNx0HfcIs+YJqH3e5oZA
+	Rp5Dk4lDQhaGlbEKuGwQkP0Aaw4jspJpjFQwMLxRE5Oxiu12Wp6yGso+wl3V5+o6
+	hGqD4TFyfPcnpFEbNWgv57zJl+MIBOktWNCrCzp+ApucEWDofn+n3hT+DJvO6ogp
+	faPXtTLkAOqHZyhO46XR+fx1t/r2BbA/dOhgJwXfyq508IuAOJii5vUXY7QNXpMR
+	71QAXp+wQHkkz2OqMvfTTnv4oVmsK2ysEzJk6QGWkYAkT4pDFG/egtYmx2xAiSx0
+	/hLyS/rQ5IorSFw6lkXU85HRJ4GFGEtICu/W8TqD1GDg05rVli5QnFsPMxK7aukQ
+	==
+X-ME-Sender: <xms:Ql9MYXzyiYlX_ullhmfzGJGVkcU6S2a-N3jdLhMC0NvNiB1QT-a2fQ>
+    <xme:Ql9MYfTC3dlwWs97aTM_35lXQYhZRtYvLOjtH821fOoHuqdQ1hMg_L5Jl0MU6r6c8
+    0hn_C8j7feRAg>
+X-ME-Received: <xmr:Ql9MYRWS40hXiqlmp_VUga_SQf6fL_-JPs1w1-1Mn1Mespqpwj-m-DiGAbj4cuYgwqoUFrNE7XeZPf-CRl9tVn6LffzCvOYh>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudeiledgfeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieevhf
+    ehtddvudefjeehffegtdfghfdvvdektdehueduleeiteffkefffedtheenucffohhmrghi
+    nhepuhhrlhguvghfvghnshgvrdgtohhmpdhkvghrnhgvlhdrohhrghenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdr
+    tghomh
+X-ME-Proxy: <xmx:Ql9MYRh9Y6RwzFdfGK3qIXezBsgXAtLpKnVYPFgMi8JPa7YUfAfU8A>
+    <xmx:Ql9MYZCXI7-qDW9Vj3FDtBAfS-3sJh8SGBmol4lLCWLUsmrGUHo5fA>
+    <xmx:Ql9MYaKE-XUbEw2BvyYvPXDh6KZyU92RdUEhW55LbGwQmm-Slhw4Tw>
+    <xmx:Q19MYR69HCpkknODMKDCxiIoXPCU7BaIncWlrqhwduJOGaluSmXOTA>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 23 Sep 2021 07:04:34 -0400 (EDT)
+Date: Thu, 23 Sep 2021 13:04:31 +0200
+From: Greg KH <greg@kroah.com>
+To: Leon Romanovsky <leonro@nvidia.com>
+Cc: Patrick.Mclean@sony.com, stable@vger.kernel.org,
+	regressions@lists.linux.dev, ayal@nvidia.com, saeedm@nvidia.com,
+	netdev@vger.kernel.org, Aaron.U'ren@sony.com,
+	Russell.Brown@sony.com, Victor.Payno@sony.com
+Subject: Re: mlx5_core 5.10 stable series regression starting at 5.10.65
+Message-ID: <YUxfP7K7jABqk6VE@kroah.com>
+References: <BY5PR13MB3604D3031E984CA34A57B7C9EEA09@BY5PR13MB3604.namprd13.prod.outlook.com>
+ <YUl8PKVz/em51KHR@kroah.com>
+ <BY5PR13MB3604527F4A98D0F86B02AC98EEA19@BY5PR13MB3604.namprd13.prod.outlook.com>
+ <YUrLfMhATS3u6jq5@unreal>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <871r5p0x2u.fsf@codeaurora.org> <CAMZdPi8UJLvBFQd8-nf-iHAQh8cEuihq97PUFfZ7Q=rxRQoPsg@mail.gmail.com>
- <20210916111218.GA12918@thinkpad> <CAMZdPi94607mZorp+Zmkw3seWXak6p9Jr05CQ5hhfgKQoG8n7Q@mail.gmail.com>
- <20210916163529.GA9027@thinkpad> <87k0jgxyjp.fsf@codeaurora.org>
- <20210916171927.GB9027@thinkpad> <b7c0906041dcafb43be215bd4f55326a@codeaurora.org>
- <20210923085926.GD6083@thinkpad> <6912b6840858c0554922c01a0f9c47b8@codeaurora.org>
-In-Reply-To: <6912b6840858c0554922c01a0f9c47b8@codeaurora.org>
-From: Loic Poulain <loic.poulain@linaro.org>
-Date: Thu, 23 Sep 2021 12:50:08 +0200
-Message-ID: <CAMZdPi-3WOj_TT7diUJJ00RaoHgKw-tu-heQJu6vDUK1yZ4CZg@mail.gmail.com>
-Subject: Re: [regression] mhi: ath11k resume fails on some devices
-To: Carl Huang <cjhuang@codeaurora.org>, Kalle Valo <kvalo@codeaurora.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, ath11k@lists.infradead.org, 
-	linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-wireless@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YUrLfMhATS3u6jq5@unreal>
 
-Hi Carl and Kalle,
+On Wed, Sep 22, 2021 at 09:21:48AM +0300, Leon Romanovsky wrote:
+> On Tue, Sep 21, 2021 at 10:22:57PM +0000, Patrick.Mclean@sony.com wrote:
+> > > On Mon, Sep 20, 2021 at 08:22:44PM +0000, Patrick.Mclean@sony.com wrote:
+> > > > In 5.10 stable kernels since 5.10.65 certain mlx5 cards are no longer usable (relevant dmesg logs and lspci output are pasted below).
+> > > >
+> > > > Bisecting the problem tracks the problem down to this commit:
+> > > > https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.10.y&id=fe6322774ca28669868a7e231e173e09f7422118__;!!JmoZiZGBv3RvKRSx!phUrsR595UusBY2Q9eNJQS7-VNtnb72Rcvhe-W0QKDPir1WY9mvWOkLLfe63k-6Uvw$
+> > > >
+> > > > Here is how lscpi -nn identifies the cards:
+> > > > 41:00.0 Ethernet controller [0200]: Mellanox Technologies MT27800 Family [ConnectX-5] [15b3:1017]
+> > > > 41:00.1 Ethernet controller [0200]: Mellanox Technologies MT27800 Family [ConnectX-5] [15b3:1017]
+> > > >
+> > > > Here are the relevant dmesg logs:
+> > > > [   13.409473] mlx5_core 0000:41:00.0: firmware version: 16.31.1014
+> > > > [   13.415944] mlx5_core 0000:41:00.0: 126.016 Gb/s available PCIe bandwidth (8.0 GT/s PCIe x16 link)
+> > > > [   13.707425] mlx5_core 0000:41:00.0: Rate limit: 127 rates are supported, range: 0Mbps to 24414Mbps
+> > > > [   13.718221] mlx5_core 0000:41:00.0: E-Switch: Total vports 2, per vport: max uc(128) max mc(2048)
+> > > > [   13.740607] mlx5_core 0000:41:00.0: Port module event: module 0, Cable plugged
+> > > > [   13.759857] mlx5_core 0000:41:00.0: mlx5_pcie_event:294:(pid 586): PCIe slot advertised sufficient power (75W).
+> > > > [   17.986973] mlx5_core 0000:41:00.0: E-Switch: cleanup
+> > > > [   18.686204] mlx5_core 0000:41:00.0: init_one:1371:(pid 803): mlx5_load_one failed with error code -22
+> > > > [   18.701352] mlx5_core: probe of 0000:41:00.0 failed with error -22
+> > > > [   18.727364] mlx5_core 0000:41:00.1: firmware version: 16.31.1014
+> > > > [   18.743853] mlx5_core 0000:41:00.1: 126.016 Gb/s available PCIe bandwidth (8.0 GT/s PCIe x16 link)
+> > > > [   19.015349] mlx5_core 0000:41:00.1: Rate limit: 127 rates are supported, range: 0Mbps to 24414Mbps
+> > > > [   19.025157] mlx5_core 0000:41:00.1: E-Switch: Total vports 2, per vport: max uc(128) max mc(2048)
+> > > > [   19.053569] mlx5_core 0000:41:00.1: Port module event: module 1, Cable unplugged
+> > > > [   19.062093] mlx5_core 0000:41:00.1: mlx5_pcie_event:294:(pid 591): PCIe slot advertised sufficient power (75W).
+> > > > [   22.826932] mlx5_core 0000:41:00.1: E-Switch: cleanup
+> > > > [   23.544747] mlx5_core 0000:41:00.1: init_one:1371:(pid 803): mlx5_load_one failed with error code -22
+> > > > [   23.555071] mlx5_core: probe of 0000:41:00.1 failed with error -22
+> > > >
+> > > > Please let me know if I can provide any further information.
+> > > 
+> > > If you revert that single change, do things work properly?
+> > 
+> > Yes, things work properly after reverting that single change (tested with 5.10.67).
+> 
+> The stable@ kernel is missing commit 3d347b1b19da ("net/mlx5: Add support for devlink traps
+> in mlx5 core driver"), which added mlx5 devlink callbacks (.trap_init and .trap_fini).
 
-On Thu, 23 Sept 2021 at 11:26, Carl Huang <cjhuang@codeaurora.org> wrote:
->
-> On 2021-09-23 16:59, Manivannan Sadhasivam wrote:
-> > On Thu, Sep 23, 2021 at 04:34:43PM +0800, Carl Huang wrote:
-> >> On 2021-09-17 01:19, Manivannan Sadhasivam wrote:
-> >> > On Thu, Sep 16, 2021 at 07:42:02PM +0300, Kalle Valo wrote:
-> >> > > Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> writes:
-> >> > >
-> >> > > > On Thu, Sep 16, 2021 at 01:18:22PM +0200, Loic Poulain wrote:
-> >> > > >> Le jeu. 16 sept. 2021 =C3=A0 13:12, Manivannan Sadhasivam <
-> >> > > >> manivannan.sadhasivam@linaro.org> a =C3=A9crit :
-> >> > > >>
-> >> > > >
-> >> > > > [...]
-> >> > > >
-> >> > > >> > If things seems to work fine without that patch, then it impl=
-ies that
-> >> > > >> > setting M0
-> >> > > >> > state works during resume. I think we should just revert that=
- patch.
-> >> > > >> >
-> >> > > >> > Loic, did that patch fix any issue for you or it was a cosmet=
-ic fix only?
-> >> > > >>
-> >> > > >>
-> >> > > >> It fixes sdx modem resuming issue, without that we don=E2=80=99=
-t know modem needs
-> >> > > >> to be reinitialized.
-> >> > > >>
-> >> > > >
-> >> > > > Okay. Then in that case, the recovery mechanism has to be added =
-to the ath11k
-> >> > > > MHI controller.
-> >> > >
-> >> > > What does that mean in practise, do you have any pointers or
-> >> > > examples? I
-> >> > > have no clue what you are proposing :)
-> >> > >
-> >> >
-> >> > Take a look at the mhi_pci_recovery_work() function below:
-> >> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/t=
-ree/drivers/bus/mhi/pci_generic.c#n610
-> >> >
-> >> > You need to implement something similar that basically powers up the=
- MHI
-> >> > endpoint (QCA6390) in case pm_resume() fails. At minimum, you need t=
-o
-> >> > call
-> >> > below functions:
-> >> >
-> >> > # Check if the device is powered on. If yes, then power it down to b=
-ring
-> >> > it back
-> >> > mhi_power_down()
-> >> > mhi_unprepare_after_power_down()
-> >> >
-> >> > # Power up the device
-> >> > mhi_prepare_for_power_up()
-> >> > mhi_sync_power_up()
-> >> >
-> >> > This implies that the WLAN device has been powered off during suspen=
-d,
-> >> > so the
-> >> > resume fails and we are bringing the device back to working state.
-> >> >
-> >> This is fine for platform which doesn't provide power supply during
-> >> suspend.
-> >> But NUC has power supply in suspend state.
-> >
-> > If NUC retains power supply during suspend then it should work with
-> > that commit.
-> > During resume, the device is expected to be in M3 state and that's what
-> > the
-> > commit verifies.
-> >
-> > If the device is in a different state, then most likely the device have
-> > power
-> > cycled.
-> >
-> But the tricky thing here is that upstream QCA6390 doesn't have recovery
-> mechanism to download
-> firmware again, so QCA6390 has no way to work after a power cycle.
+Ok, will go revert this now, thanks for confirming it and letting me
+know.
 
-Maybe a simple quick-fix would be to add a 'force' parameter to the
-mhi resume function and discard state testing in case it is forced,
-that would allow both ath11k and modem to work for now. Then
-investigating what happens on ath11k side.
+> I don't know why the commit that you reverted was added to stable@ in
+> the first place. It doesn't fix any bug and has no Fixes tag.
 
-Thoughts?
+Looks like it was brought in as a dependancy for another fix that
+required it as the revert was not clean and I had to do it "by hand".
 
-Regards,
-Loic
+thanks,
+
+greg k-h
