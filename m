@@ -1,161 +1,146 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E313FC8
-	for <regressions@lists.linux.dev>; Wed, 22 Sep 2021 11:21:28 +0000 (UTC)
-Received: by mail-qk1-f181.google.com with SMTP id q81so4678432qke.5
-        for <regressions@lists.linux.dev>; Wed, 22 Sep 2021 04:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XBkQaLoJFY3Nt7OwoQ6/7lzhxTuoEyjysqz5W7urwSI=;
-        b=PlpkA6+3wsVQJU0jUmF5nNb/fwQsrdTvfonPn2SL6UVtcj1PjnfKqKn7v1DhHtuf2s
-         iitwrOiQhTfJOtWYRyjIHatzadgc/uu34c6YMNneSINqQuHT2NoDXdNyzU0wfqawf+Ny
-         b2Q8T8w1HWNHzGCn3h8Vq6gs8KcbSXTECnqQTOV8maQVxGNu2T+FwyqgxkAkbxfQK5Tb
-         rXUkD9VXDVy1Wc1/L40UwUXDR4uXFvHvQmOZpDaBBs/3NBuZU/gpQbEHe+0TR8vk20cG
-         hOeoD/5qJAVHtZrlyBxjyj0ZaILGTJ2WZzMmetIqwWsm/PmDs4HrTF+q3+KEmEwYYCoG
-         /Kog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XBkQaLoJFY3Nt7OwoQ6/7lzhxTuoEyjysqz5W7urwSI=;
-        b=AlszyFRWuX7Qfe7sJMUqrIFwHUe/9pyjhfSrpEGoEQTFO1N6chEul2r5bGa/AwNmaR
-         tRifW4IiNl9mgwPRfSqXmPhHZu0+99gBRkJutCE2rPOy3iXuDQHBPvXH4Oi/OmWra8IK
-         YJtoHfxGAXqAE6l+XbY2/oYR5Xztw+GQ78DojBopkeFut3p9aTd9UY78uzXDyQE1BMUy
-         LgHcroOMSL4Xm379UcER46dZmIJa9VxEDIQ4r07kCYwa3R21pxi1uD3PjEGgwfNh0Ija
-         Ctd07kqJFS60PrVGgAeRU8W42MRSDiWJv26MTVGR07WODP+lJhCc8Jw06ZgaHbTJBZ5O
-         U0cA==
-X-Gm-Message-State: AOAM5320F03EYl2NTDqwHanDV3pfte62LLOmHa0NkmxHIhUe6K6MN4iY
-	f7qpGyJjCd8rr8cUY6ZWyLpmiX1AUSF9xAYQF/Y=
-X-Google-Smtp-Source: ABdhPJxfOxoaqJ9qJtwPKJmRdP07b/eFIWne3Aru1UUuefVLCXuB27CA8ThyVovWBMbZpLUbMzIDsRfYFxcJnJRqzvU=
-X-Received: by 2002:a5b:ecb:: with SMTP id a11mr44209942ybs.434.1632309687464;
- Wed, 22 Sep 2021 04:21:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B3D3FC8
+	for <regressions@lists.linux.dev>; Thu, 23 Sep 2021 08:34:45 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1632386085; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=RnAXDb/cdy2vNbulmV0mjCa/sumMUiZffdwxvVj6GIc=;
+ b=xbwNheJIMlQj2gzzlACf5oE4WRrACz0AIMQ+hzHvGt42zbkZrDttkXqZxGcw89g5891YBaHW
+ oC4DCn5asFPB2Sqy0NOaY2yVWZYDfNN7bwFEXiF55CIz3O2L5kgaguLAv+7DLqUJQpTtvsQq
+ +0l/LjItZXcFIhETToEqC/wPjmQ=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 614c3c24ec62f57c9ad4d9df (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 23 Sep 2021 08:34:44
+ GMT
+Sender: cjhuang=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+	id D92CDC4360D; Thu, 23 Sep 2021 08:34:43 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+	(using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: cjhuang)
+	by smtp.codeaurora.org (Postfix) with ESMTPSA id 10B7EC4338F;
+	Thu, 23 Sep 2021 08:34:43 +0000 (UTC)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CACT4Y+YvovgRNC5EFhN_d=jApwSAsWcNj35=FCJf1k867vBqfw@mail.gmail.com>
- <067b8eea-3c77-c1f0-8e68-b99e6bf0c033@leemhuis.info>
-In-Reply-To: <067b8eea-3c77-c1f0-8e68-b99e6bf0c033@leemhuis.info>
-From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Date: Wed, 22 Sep 2021 13:21:18 +0200
-Message-ID: <CAKXUXMxg-eywEYrR0oSAo14F7CmiYAT7VDxV71U4-Tv8E0LeVQ@mail.gmail.com>
-Subject: Re: finding regressions with syzkaller
-To: Thorsten Leemhuis <linux@leemhuis.info>, Paul Albertella <paul.albertella@codethink.co.uk>
-Cc: Dmitry Vyukov <dvyukov@google.com>, regressions@lists.linux.dev, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Guillaume Tucker <guillaume.tucker@collabora.com>, automated-testing@yoctoproject.org, 
-	Sasha Levin <sashalevin@google.com>, Marco Elver <elver@google.com>, 
-	syzkaller <syzkaller@googlegroups.com>, Mara Mihali <mihalimara22@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date: Thu, 23 Sep 2021 16:34:43 +0800
+From: Carl Huang <cjhuang@codeaurora.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Kalle Valo <kvalo@codeaurora.org>, Loic Poulain
+ <loic.poulain@linaro.org>, ath11k@lists.infradead.org, linux-arm-msm
+ <linux-arm-msm@vger.kernel.org>, linux-wireless@vger.kernel.org,
+ regressions@lists.linux.dev
+Subject: Re: [regression] mhi: ath11k resume fails on some devices
+In-Reply-To: <20210916171927.GB9027@thinkpad>
+References: <871r5p0x2u.fsf@codeaurora.org>
+ <CAMZdPi8UJLvBFQd8-nf-iHAQh8cEuihq97PUFfZ7Q=rxRQoPsg@mail.gmail.com>
+ <20210916111218.GA12918@thinkpad>
+ <CAMZdPi94607mZorp+Zmkw3seWXak6p9Jr05CQ5hhfgKQoG8n7Q@mail.gmail.com>
+ <20210916163529.GA9027@thinkpad> <87k0jgxyjp.fsf@codeaurora.org>
+ <20210916171927.GB9027@thinkpad>
+Message-ID: <b7c0906041dcafb43be215bd4f55326a@codeaurora.org>
+X-Sender: cjhuang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 
-On Wed, Aug 11, 2021 at 1:25 PM Thorsten Leemhuis <linux@leemhuis.info> wro=
-te:
->
-> [CCing Lukas]
->
-> Hi Dmitry!
->
-> On 10.08.21 19:08, Dmitry Vyukov wrote:
-> > [...]
-> > The idea is to generate random test programs (as syzkaller does) and
-> > then execute them on 2 different kernels and compare results (so
-> > called "differential fuzzing"). This has the potential of finding not
-> > just various "crashes" but also logical bugs and regressions.
->
-> Hmmm, interesting concept!
->
-> > The major issue is various false positive differences caused by
-> > timings, non-determinism, accumulated state, intentional and
-> > semi-intentional changes (e.g. subtle API extensions), etc. We learnt
-> > how to deal with some of these to some degree, but feasibility is
-> > still an open question.
->
-> Sounds complicated and like a lot of manual work.
->
-> Do you have in mind that Linus and hence many other Kernel developers
-> afaics only care about regressions someone actually observed in a
-> practice? Like a software or script breaking due to a kernel-side change?
->
-> To quote Linus from
-> https://lore.kernel.org/lkml/CA+55aFx3RswnjmCErk8QhCo0KrCvxZnuES3WALBR1Nk=
-PbUZ8qw@mail.gmail.com/
->
-> ```The Linux "no regressions" rule is not about some theoretical
-> "the ABI changed". It's about actual observed regressions.
->
-> So if we can improve the ABI without any user program or workflow
-> breaking, that's fine.```
->
-> His stance on that afaik has not changed since then.
->
-> Thus after ruling our all false positives syzkaller might find, there
-> will always be the follow-up question "well, does anything/anyone
-> actually care?". That might be hard to answer and requires yet more
-> manual work by some human. Maybe this working hours at least for now are
-> better spend in other areas.
->
-> > Since this work is in very early stage, I only have very high-level que=
-stions:
-> >  - what do you think about feasibility/usefulness of this idea in gener=
-al?
->
-> TBH I'm a bit sceptical due to the above factors. Don't get me wrong,
-> making syzkaller look out for regressions sounds great, but I wonder if
-> there are more pressing issues that are worth getting at first.
->
-> Another aspect: CI testing already finds quite a few regressions, but
-> those that are harder to catch are afaics often in driver code. And you
-> often can't test that without the hardware, which makes me assume that
-> syzkaller wouldn't help here (or am I wrong?)
->
-> >  - any suggestions on how to make the tool find more differences/bugs
-> > or how to make it more reliable?
-> >  - is there a list or pointers to some known past regressions that
-> > would be useful to find with such tool? (I've looked at the things
-> > reported on the regressions@ list, but it's mostly crashes/not
-> > booting, but that's what syzkaller can find already well)
->
-> I first wanted to tell you "look up the reports I compiled in 2017 in
-> the LKML archives", but I guess the way better solution is: just grep
-> for "regression" in the commit log.
->
-> >  - anybody else we should CC?
->
-> I guess the people from the Elisa project might be interested in this,
-> that's why I CCed Lukas.
->
+On 2021-09-17 01:19, Manivannan Sadhasivam wrote:
+> On Thu, Sep 16, 2021 at 07:42:02PM +0300, Kalle Valo wrote:
+>> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> writes:
+>> 
+>> > On Thu, Sep 16, 2021 at 01:18:22PM +0200, Loic Poulain wrote:
+>> >> Le jeu. 16 sept. 2021 à 13:12, Manivannan Sadhasivam <
+>> >> manivannan.sadhasivam@linaro.org> a écrit :
+>> >>
+>> >
+>> > [...]
+>> >
+>> >> > If things seems to work fine without that patch, then it implies that
+>> >> > setting M0
+>> >> > state works during resume. I think we should just revert that patch.
+>> >> >
+>> >> > Loic, did that patch fix any issue for you or it was a cosmetic fix only?
+>> >>
+>> >>
+>> >> It fixes sdx modem resuming issue, without that we don’t know modem needs
+>> >> to be reinitialized.
+>> >>
+>> >
+>> > Okay. Then in that case, the recovery mechanism has to be added to the ath11k
+>> > MHI controller.
+>> 
+>> What does that mean in practise, do you have any pointers or examples? 
+>> I
+>> have no clue what you are proposing :)
+>> 
+> 
+> Take a look at the mhi_pci_recovery_work() function below:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/bus/mhi/pci_generic.c#n610
+> 
+> You need to implement something similar that basically powers up the 
+> MHI
+> endpoint (QCA6390) in case pm_resume() fails. At minimum, you need to 
+> call
+> below functions:
+> 
+> # Check if the device is powered on. If yes, then power it down to 
+> bring it back
+> mhi_power_down()
+> mhi_unprepare_after_power_down()
+> 
+> # Power up the device
+> mhi_prepare_for_power_up()
+> mhi_sync_power_up()
+> 
+> This implies that the WLAN device has been powered off during suspend, 
+> so the
+> resume fails and we are bringing the device back to working state.
+> 
+This is fine for platform which doesn't provide power supply during 
+suspend.
+But NUC has power supply in suspend state.
+QCA6390 on NUC works after just reverting this commit also proves NUC 
+has power supply in
+suspend state.
 
-Thanks, Thorsten. I do follow the syzkaller mailing list, so I have
-seen that email before, but I do appreciate your implicit
-acknowledgement here :)
+The reason is MHI-STATUS register can't be read somehow in M3 state on 
+NUC.
+Does the MHI spec state that MHI-STATUS register can be read in M3 
+state?
 
-... and Dmitry is back from vacation and I guess we will hear more
-today at the Testing and Fuzzing MC on this topic.
-
-Further people/lists to CC are: Paul Albertella
-<paul.albertella@codethink.co.uk> (already CCed here)
-
-I am personally certainly interested and I think this work gives
-companies in the area of building trustable software and systems (see
-Paul's area of expertise) a good understanding how reliable and to
-which extent the statement "all Linux kernels are backwards
-compatible" really holds.
-
-I unfortunately lost the Fuzzing Team (Jouni H=C3=B6gander, Jukka Kaartinen
-et al.) previously working with me, and I need to first get back some
-budget, build up a new team and hope that we can then also follow this
-idea and contribute here as well. (Fingers crossed that I can convince
-some others to give me money and work with me on this...)
-
-Looking forward to the presentation at the MC.
-
-Best regards,
-
-Lukas
+>> > If that's too much of work for Kalle, then I'll look into it. But I might get
+>> > time only after Plumbers.
+>> 
+>> I'm busy, as always, so not sure when I'm able to do it either. I 
+>> think
+>> we should seriously consider reverting 020d3b26c07a and adding it back
+>> after ath11k is able to handle this new situation.
+>> 
+> 
+> Since Loic said that reverting would cause his modem (SDX device) to 
+> fail during
+> resume, this is not possible.
+> 
+> Thanks,
+> Mani
+> 
+>> --
+>> https://patchwork.kernel.org/project/linux-wireless/list/
+>> 
+>> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
