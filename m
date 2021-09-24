@@ -1,125 +1,169 @@
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
+Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA9153FC8
+	for <regressions@lists.linux.dev>; Fri, 24 Sep 2021 08:36:50 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1632472610; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=sFHIE4zJB+Alz/t8lIYIlIY1gRwMFajWERj2jYFYL78=; b=v9cdT2Gk8RCl8qUkphJA3Hagc3z87i0XT1rwy/H8deq8fLHTYW7BN3FwJVl0c/rSg0DOW1ns
+ tFAMOGd0ipgBfhDZqdE3MN/PeDvms3CPkIzSDsaOvDMMj7Am+viium7Eu72Xd3aVYoLnJNnY
+ DjGse4briOz6JXFTVr4Tisq0SfU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-west-2.postgun.com with SMTP id
+ 614d8e21b585cc7d244bce5d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 24 Sep 2021 08:36:49
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+	id CCD8BC4361C; Fri, 24 Sep 2021 08:36:48 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL
+	autolearn=no autolearn_force=no version=3.4.0
+Received: from tykki (tynnyri.adurom.net [51.15.11.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7463FC7
-	for <regressions@lists.linux.dev>; Thu, 23 Sep 2021 11:04:36 +0000 (UTC)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 367D35802D9;
-	Thu, 23 Sep 2021 07:04:35 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Thu, 23 Sep 2021 07:04:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=fm1; bh=WiSiNj5Dd4L3sJtCbOLr5sy4Eh6
-	6vg0BdL+CDFeLWzI=; b=pKzs3k+1PkbeH5UZ1NglyqTY51nkSI+yHijyRhSHMjM
-	vUnz40shknrCSWW2jGz55dLprD+Wf1FuA62NFoinE1VLBn9kj3eG+kFJaA8iq/kG
-	IaWm/j8yAA++K4y9JRwAikmv6hkX8GhGvAa1p8KeRyvzyfqH0NaC15ZtGt0NcEqw
-	V/31aH/zPjl2LbXUg9AO8/N3VpiXbshqGELQb/h8nf01ykzzjtjGtHnY/yYAxI9p
-	HTvnsDt9PnWDJtxWBZlYU0VKpqiEijxaYt703hgPp2yW9c3pWFl4X8C37YSK8199
-	W0IppLz8Lj4ub87XxoTAgd89y2hJCp3rcCSutwN26rw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=WiSiNj
-	5Dd4L3sJtCbOLr5sy4Eh66vg0BdL+CDFeLWzI=; b=wwBNx0HfcIs+YJqH3e5oZA
-	Rp5Dk4lDQhaGlbEKuGwQkP0Aaw4jspJpjFQwMLxRE5Oxiu12Wp6yGso+wl3V5+o6
-	hGqD4TFyfPcnpFEbNWgv57zJl+MIBOktWNCrCzp+ApucEWDofn+n3hT+DJvO6ogp
-	faPXtTLkAOqHZyhO46XR+fx1t/r2BbA/dOhgJwXfyq508IuAOJii5vUXY7QNXpMR
-	71QAXp+wQHkkz2OqMvfTTnv4oVmsK2ysEzJk6QGWkYAkT4pDFG/egtYmx2xAiSx0
-	/hLyS/rQ5IorSFw6lkXU85HRJ4GFGEtICu/W8TqD1GDg05rVli5QnFsPMxK7aukQ
-	==
-X-ME-Sender: <xms:Ql9MYXzyiYlX_ullhmfzGJGVkcU6S2a-N3jdLhMC0NvNiB1QT-a2fQ>
-    <xme:Ql9MYfTC3dlwWs97aTM_35lXQYhZRtYvLOjtH821fOoHuqdQ1hMg_L5Jl0MU6r6c8
-    0hn_C8j7feRAg>
-X-ME-Received: <xmr:Ql9MYRWS40hXiqlmp_VUga_SQf6fL_-JPs1w1-1Mn1Mespqpwj-m-DiGAbj4cuYgwqoUFrNE7XeZPf-CRl9tVn6LffzCvOYh>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvtddrudeiledgfeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeeiieevhf
-    ehtddvudefjeehffegtdfghfdvvdektdehueduleeiteffkefffedtheenucffohhmrghi
-    nhepuhhrlhguvghfvghnshgvrdgtohhmpdhkvghrnhgvlhdrohhrghenucevlhhushhtvg
-    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdr
-    tghomh
-X-ME-Proxy: <xmx:Ql9MYRh9Y6RwzFdfGK3qIXezBsgXAtLpKnVYPFgMi8JPa7YUfAfU8A>
-    <xmx:Ql9MYZCXI7-qDW9Vj3FDtBAfS-3sJh8SGBmol4lLCWLUsmrGUHo5fA>
-    <xmx:Ql9MYaKE-XUbEw2BvyYvPXDh6KZyU92RdUEhW55LbGwQmm-Slhw4Tw>
-    <xmx:Q19MYR69HCpkknODMKDCxiIoXPCU7BaIncWlrqhwduJOGaluSmXOTA>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 23 Sep 2021 07:04:34 -0400 (EDT)
-Date: Thu, 23 Sep 2021 13:04:31 +0200
-From: Greg KH <greg@kroah.com>
-To: Leon Romanovsky <leonro@nvidia.com>
-Cc: Patrick.Mclean@sony.com, stable@vger.kernel.org,
-	regressions@lists.linux.dev, ayal@nvidia.com, saeedm@nvidia.com,
-	netdev@vger.kernel.org, Aaron.U'ren@sony.com,
-	Russell.Brown@sony.com, Victor.Payno@sony.com
-Subject: Re: mlx5_core 5.10 stable series regression starting at 5.10.65
-Message-ID: <YUxfP7K7jABqk6VE@kroah.com>
-References: <BY5PR13MB3604D3031E984CA34A57B7C9EEA09@BY5PR13MB3604.namprd13.prod.outlook.com>
- <YUl8PKVz/em51KHR@kroah.com>
- <BY5PR13MB3604527F4A98D0F86B02AC98EEA19@BY5PR13MB3604.namprd13.prod.outlook.com>
- <YUrLfMhATS3u6jq5@unreal>
+	(Authenticated sender: kvalo)
+	by smtp.codeaurora.org (Postfix) with ESMTPSA id 0D652C43460;
+	Fri, 24 Sep 2021 08:36:44 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 0D652C43460
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+From: Kalle Valo <kvalo@codeaurora.org>
+To: Loic Poulain <loic.poulain@linaro.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  ath11k@lists.infradead.org,  linux-wireless@vger.kernel.org,  linux-arm-msm <linux-arm-msm@vger.kernel.org>,  regressions@lists.linux.dev
+Subject: Re: [regression] mhi: ath11k resume fails on some devices
+References: <871r5p0x2u.fsf@codeaurora.org>
+	<CAMZdPi8UJLvBFQd8-nf-iHAQh8cEuihq97PUFfZ7Q=rxRQoPsg@mail.gmail.com>
+Date: Fri, 24 Sep 2021 11:36:41 +0300
+In-Reply-To: <CAMZdPi8UJLvBFQd8-nf-iHAQh8cEuihq97PUFfZ7Q=rxRQoPsg@mail.gmail.com>
+	(Loic Poulain's message of "Thu, 16 Sep 2021 12:18:10 +0200")
+Message-ID: <877df6tlnq.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YUrLfMhATS3u6jq5@unreal>
+Content-Type: text/plain
 
-On Wed, Sep 22, 2021 at 09:21:48AM +0300, Leon Romanovsky wrote:
-> On Tue, Sep 21, 2021 at 10:22:57PM +0000, Patrick.Mclean@sony.com wrote:
-> > > On Mon, Sep 20, 2021 at 08:22:44PM +0000, Patrick.Mclean@sony.com wrote:
-> > > > In 5.10 stable kernels since 5.10.65 certain mlx5 cards are no longer usable (relevant dmesg logs and lspci output are pasted below).
-> > > >
-> > > > Bisecting the problem tracks the problem down to this commit:
-> > > > https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.10.y&id=fe6322774ca28669868a7e231e173e09f7422118__;!!JmoZiZGBv3RvKRSx!phUrsR595UusBY2Q9eNJQS7-VNtnb72Rcvhe-W0QKDPir1WY9mvWOkLLfe63k-6Uvw$
-> > > >
-> > > > Here is how lscpi -nn identifies the cards:
-> > > > 41:00.0 Ethernet controller [0200]: Mellanox Technologies MT27800 Family [ConnectX-5] [15b3:1017]
-> > > > 41:00.1 Ethernet controller [0200]: Mellanox Technologies MT27800 Family [ConnectX-5] [15b3:1017]
-> > > >
-> > > > Here are the relevant dmesg logs:
-> > > > [   13.409473] mlx5_core 0000:41:00.0: firmware version: 16.31.1014
-> > > > [   13.415944] mlx5_core 0000:41:00.0: 126.016 Gb/s available PCIe bandwidth (8.0 GT/s PCIe x16 link)
-> > > > [   13.707425] mlx5_core 0000:41:00.0: Rate limit: 127 rates are supported, range: 0Mbps to 24414Mbps
-> > > > [   13.718221] mlx5_core 0000:41:00.0: E-Switch: Total vports 2, per vport: max uc(128) max mc(2048)
-> > > > [   13.740607] mlx5_core 0000:41:00.0: Port module event: module 0, Cable plugged
-> > > > [   13.759857] mlx5_core 0000:41:00.0: mlx5_pcie_event:294:(pid 586): PCIe slot advertised sufficient power (75W).
-> > > > [   17.986973] mlx5_core 0000:41:00.0: E-Switch: cleanup
-> > > > [   18.686204] mlx5_core 0000:41:00.0: init_one:1371:(pid 803): mlx5_load_one failed with error code -22
-> > > > [   18.701352] mlx5_core: probe of 0000:41:00.0 failed with error -22
-> > > > [   18.727364] mlx5_core 0000:41:00.1: firmware version: 16.31.1014
-> > > > [   18.743853] mlx5_core 0000:41:00.1: 126.016 Gb/s available PCIe bandwidth (8.0 GT/s PCIe x16 link)
-> > > > [   19.015349] mlx5_core 0000:41:00.1: Rate limit: 127 rates are supported, range: 0Mbps to 24414Mbps
-> > > > [   19.025157] mlx5_core 0000:41:00.1: E-Switch: Total vports 2, per vport: max uc(128) max mc(2048)
-> > > > [   19.053569] mlx5_core 0000:41:00.1: Port module event: module 1, Cable unplugged
-> > > > [   19.062093] mlx5_core 0000:41:00.1: mlx5_pcie_event:294:(pid 591): PCIe slot advertised sufficient power (75W).
-> > > > [   22.826932] mlx5_core 0000:41:00.1: E-Switch: cleanup
-> > > > [   23.544747] mlx5_core 0000:41:00.1: init_one:1371:(pid 803): mlx5_load_one failed with error code -22
-> > > > [   23.555071] mlx5_core: probe of 0000:41:00.1 failed with error -22
-> > > >
-> > > > Please let me know if I can provide any further information.
-> > > 
-> > > If you revert that single change, do things work properly?
-> > 
-> > Yes, things work properly after reverting that single change (tested with 5.10.67).
-> 
-> The stable@ kernel is missing commit 3d347b1b19da ("net/mlx5: Add support for devlink traps
-> in mlx5 core driver"), which added mlx5 devlink callbacks (.trap_init and .trap_fini).
+Loic Poulain <loic.poulain@linaro.org> writes:
 
-Ok, will go revert this now, thanks for confirming it and letting me
-know.
+> Hi Kalle,
+>
+> On Thu, 16 Sept 2021 at 10:00, Kalle Valo <kvalo@codeaurora.org> wrote:
+>>
+>> Hi Loic and Mani,
+>>
+>> I hate to be the bearer of bad news again :)
+>>
+>> I noticed already a while ago that commit 020d3b26c07a ("bus: mhi: Early
+>> MHI resume failure in non M3 state"), introduced in v5.13-rc1, broke
+>> ath11k resume on my NUC x86 testbox using QCA6390. Interestingly enough
+>> Dell XPS 13 9310 laptop (with QCA6390 as well) does not have this
+>> problem, I only see the problem on the NUC. I do not know what's causing
+>> this difference.
+>
+> I suppose the NUC is current PCI-Express power during suspend while
+> the laptop maintains PCIe/M2 power.
 
-> I don't know why the commit that you reverted was added to stable@ in
-> the first place. It doesn't fix any bug and has no Fixes tag.
+Sorry, I'm not able to parse that sentence. Can you elaborate more?
 
-Looks like it was brought in as a dependancy for another fix that
-required it as the revert was not clean and I had to do it "by hand".
+>> At the moment I'm running my tests with commit 020d3b26c07a reverted and
+>> everything works without problems. Is there a simple way to fix this? Or
+>> maybe we should just revert the commit? Commit log and kernel logs from
+>> a failing case below.
+>
+> Do you have log of success case?
 
-thanks,
+A log from a successful case in the end of email, using v5.15-rc1 plus
+revert of commit 020d3b26c07abe27.
 
-greg k-h
+> To me, the device loses power, that is why MHI resuming is failing.
+> Normally the device should be properly recovered/reinitialized. Before
+> that patch the power loss was simply not detected (or handled at
+> higher stack level).
+
+Currently in ath11k we always keep the firmware running when in suspend,
+this is a workaround due to problems between mac80211 and MHI stack.
+IIRC the problem was something related MHI creating struct device during
+resume or something like that.
+
+[  164.088772] PM: suspend entry (deep)
+[  164.089867] Filesystems sync: 0.000 seconds
+[  164.140383] Freezing user space processes ... (elapsed 0.004 seconds) done.
+[  164.146245] OOM killer disabled.
+[  164.148024] Freezing remaining freezable tasks ... (elapsed 0.001 seconds) done.
+[  164.151767] printk: Suspending console(s) (use no_console_suspend to debug)
+[  164.155767] wlan0: deauthenticating from <SENSORED> by local choice (Reason: 3=DEAUTH_LEAVING)
+[  164.197460] e1000e: EEE TX LPI TIMER: 00000011
+[  164.787849] ACPI: EC: interrupt blocked
+[  164.863887] ACPI: PM: Preparing to enter system sleep state S3
+[  164.898479] ACPI: EC: event blocked
+[  164.898483] ACPI: EC: EC stopped
+[  164.898487] ACPI: PM: Saving platform NVS memory
+[  164.898496] Disabling non-boot CPUs ...
+[  164.910527] numa_remove_cpu cpu 1 node 0: mask now 0,2-7
+[  164.911609] smpboot: CPU 1 is now offline
+[  164.929506] numa_remove_cpu cpu 2 node 0: mask now 0,3-7
+[  164.930593] smpboot: CPU 2 is now offline
+[  164.947111] numa_remove_cpu cpu 3 node 0: mask now 0,4-7
+[  164.948192] smpboot: CPU 3 is now offline
+[  164.965687] numa_remove_cpu cpu 4 node 0: mask now 0,5-7
+[  164.967133] smpboot: CPU 4 is now offline
+[  164.983150] numa_remove_cpu cpu 5 node 0: mask now 0,6-7
+[  164.984211] smpboot: CPU 5 is now offline
+[  164.992047] numa_remove_cpu cpu 6 node 0: mask now 0,7
+[  164.993549] smpboot: CPU 6 is now offline
+[  165.004382] numa_remove_cpu cpu 7 node 0: mask now 0
+[  165.005456] smpboot: CPU 7 is now offline
+[  165.009866] ACPI: PM: Low-level resume complete
+[  165.010106] ACPI: EC: EC started
+[  165.010109] ACPI: PM: Restoring platform NVS memory
+[  165.012344] Enabling non-boot CPUs ...
+[  165.012978] x86: Booting SMP configuration:
+[  165.012984] smpboot: Booting Node 0 Processor 1 APIC 0x2
+[  165.014850] numa_add_cpu cpu 1 node 0: mask now 0-1
+[  165.023818] CPU1 is up
+[  165.024455] smpboot: Booting Node 0 Processor 2 APIC 0x4
+[  165.026190] numa_add_cpu cpu 2 node 0: mask now 0-2
+[  165.034904] CPU2 is up
+[  165.035479] smpboot: Booting Node 0 Processor 3 APIC 0x6
+[  165.037193] numa_add_cpu cpu 3 node 0: mask now 0-3
+[  165.046102] CPU3 is up
+[  165.046639] smpboot: Booting Node 0 Processor 4 APIC 0x1
+[  165.047005] numa_add_cpu cpu 4 node 0: mask now 0-4
+[  165.058328] CPU4 is up
+[  165.058976] smpboot: Booting Node 0 Processor 5 APIC 0x3
+[  165.059342] numa_add_cpu cpu 5 node 0: mask now 0-5
+[  165.070520] CPU5 is up
+[  165.071192] smpboot: Booting Node 0 Processor 6 APIC 0x5
+[  165.071574] numa_add_cpu cpu 6 node 0: mask now 0-6
+[  165.082952] CPU6 is up
+[  165.083609] smpboot: Booting Node 0 Processor 7 APIC 0x7
+[  165.083980] numa_add_cpu cpu 7 node 0: mask now 0-7
+[  165.095544] CPU7 is up
+[  165.099137] ACPI: PM: Waking up from system sleep state S3
+[  166.045084] ACPI: EC: interrupt unblocked
+[  166.045242] pcieport 0000:00:1c.4: Intel SPT PCH root port ACS workaround enabled
+[  166.056234] pcieport 0000:00:1c.1: Intel SPT PCH root port ACS workaround enabled
+[  166.057410] pcieport 0000:00:1d.0: Intel SPT PCH root port ACS workaround enabled
+[  166.057413] pcieport 0000:00:1c.2: Intel SPT PCH root port ACS workaround enabled
+[  167.210794] ACPI: EC: event unblocked
+[  167.258815] nvme nvme0: 8/0/0 default/read/poll queues
+[  167.694965] atkbd serio0: Unknown key released (translated set 2, code 0x7c on isa0060/serio0).
+[  167.695953] OOM killer enabled.
+[  167.697336] atkbd serio0: Use 'setkeycodes 7c <keycode>' to make it known.
+[  167.750241] Restarting tasks ... done.
+[  167.770450] PM: suspend exit
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
