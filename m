@@ -1,130 +1,166 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-4327.protonmail.ch (mail-4327.protonmail.ch [185.70.43.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617613FC8
-	for <regressions@lists.linux.dev>; Fri, 24 Sep 2021 10:00:38 +0000 (UTC)
-Received: by mail-pg1-f176.google.com with SMTP id n18so9346656pgm.12
-        for <regressions@lists.linux.dev>; Fri, 24 Sep 2021 03:00:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4vMQMisBtZM7XcTiorQkl1JxcgLI/TRL5gZOHXdOV3E=;
-        b=qwydP1VOrJxnox75F1D8NMnpDrI8ksfDG0NgGcSOEDnix9AeVUWkcNqI/P1xHLHJqm
-         A3L3ZJEAL8hLM6RT6jq0O1LQrlUSKPr8qpQJhHJo+p6teiulFYwv2AEj7E8dOJeNvuXW
-         UVL0mbY/xitJd8g5epDHcI4GZXBMAgBKZdXQBZUUOBCm8J1S+ACZ5AWWAAGJvpT/kkL/
-         nkxzXhsKbshQlRe5QjvxZ6F8XYpFh/ivjtOQAvAPEVtiPlurfMXMSxaXYnLnXooR2W2w
-         H0lVDyhkXtQHBca4+9uU9D3WidYSQoOwuw7lzeVLENHJdzd8BVzfS1HsRl/cvtRnohLc
-         p6Mg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4vMQMisBtZM7XcTiorQkl1JxcgLI/TRL5gZOHXdOV3E=;
-        b=VSIpqyHjKMSfEZsfqt6L9F1YbuvAduYHJsesmbT5OaS/LtugkrvEscbhBsyUqEBc9G
-         U3q0XfitFKruqd3g0zMEKuPi3/nCMFIzJmkKaaV1NmRTCs66uXY0EAdlZvcSSgWlvf4I
-         DILQODTAjhCt/fhfiEOj50scYITVBY/EIUZr6Nt2kuKgS5Gm/daJCCLx/DNgoRbnG3cK
-         vNkM2H0MGQjnd2AGPyejEpL+QxAI30rzPohwS5Lm0WdE++wUD6X4KJfm/L8pRaZCR+7d
-         uRe87AYeAHpelD/tYY3/OIUto2Pvu9yVQGQCywgIDyWx2NoYdfds1wgJk2kKBZrrjqxM
-         RVvw==
-X-Gm-Message-State: AOAM5338PrNnaizlAHLJlYLB/i/CMW40jDE/qaMFjUQPnEFP7fYKWRj0
-	MzvaHFlcqW97ASgWnLLtpHQ/
-X-Google-Smtp-Source: ABdhPJwhSmGRcYlTGqj1+MU++RDDBntBGaII2yLpDeqa1IaBUCnpQs290DoxEcaPsYRdSIkCDfHREw==
-X-Received: by 2002:a63:5252:: with SMTP id s18mr3048353pgl.94.1632477637829;
-        Fri, 24 Sep 2021 03:00:37 -0700 (PDT)
-Received: from workstation ([120.138.12.62])
-        by smtp.gmail.com with ESMTPSA id f144sm8399311pfa.24.2021.09.24.03.00.35
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 24 Sep 2021 03:00:37 -0700 (PDT)
-Date: Fri, 24 Sep 2021 15:30:34 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Loic Poulain <loic.poulain@linaro.org>
-Cc: Kalle Valo <kvalo@codeaurora.org>, ath11k@lists.infradead.org,
-	linux-wireless@vger.kernel.org,
-	linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-	regressions@lists.linux.dev
-Subject: Re: [regression] mhi: ath11k resume fails on some devices
-Message-ID: <20210924100034.GC19050@workstation>
-References: <871r5p0x2u.fsf@codeaurora.org>
- <CAMZdPi8UJLvBFQd8-nf-iHAQh8cEuihq97PUFfZ7Q=rxRQoPsg@mail.gmail.com>
- <877df6tlnq.fsf@codeaurora.org>
- <CAMZdPi8P7YZPhPir+WfS3cY_a7He1m2Pq2uqBhczPdEeoNRb0Q@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8080A3FC8
+	for <regressions@lists.linux.dev>; Sat, 25 Sep 2021 13:28:03 +0000 (UTC)
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	by mail-4321.protonmail.ch (Postfix) with ESMTPS id 4HGq5w5h8Kz4x43k
+	for <regressions@lists.linux.dev>; Sat, 25 Sep 2021 13:11:00 +0000 (UTC)
+Authentication-Results: mail-4321.protonmail.ch;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="uryIr0DW"
+Date: Sat, 25 Sep 2021 13:10:42 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail; t=1632575444;
+	bh=Bn/10dq7x8kiU4jAeigMgLyL1jyoLt0qpxzmZqwig8Q=;
+	h=Date:To:From:Cc:Reply-To:Subject:From;
+	b=uryIr0DWCAMk6jkK3iSNk+fDuehcafcc7iD93nYGQVFYlr5ShzOzkXAkKUosb1amF
+	 KSGIlqk1MO7nJvU8IukG0fyE8gHhxj3rMMXJZcBYsYJLv3w/uz2FteueutJA4eNIiS
+	 tyh0UvJfN1BqVtm1uACQLYJT3xUctBcDIk8VYlI0=
+To: "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+From: Orlando Chamberlain <redecorating@protonmail.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "gargaditya08@live.com" <gargaditya08@live.com>, "kbusch@kernel.org" <kbusch@kernel.org>, "sagi@grimberg.me" <sagi@grimberg.me>, "hare@suse.de" <hare@suse.de>, "dwagner@suse.de" <dwagner@suse.de>, "hch@lst.de" <hch@lst.de>
+Reply-To: Orlando Chamberlain <redecorating@protonmail.com>
+Subject: [REGRESSION] nvme: code command_id with a genctr for use-after-free validation crashes apple T2 SSD
+Message-ID: <cjJiSFV77WM51ciS8EuBcdeBcv9T83PUB-Kw3yi8PuC_LwrrUUnQ3w5RC1PbKvSYE72KryXp3wOJhv4Ov_WWIe2gKWOOo5uwuUjbbFA8HDM=@protonmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMZdPi8P7YZPhPir+WfS3cY_a7He1m2Pq2uqBhczPdEeoNRb0Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/mixed;
+ boundary="b1_yUMSB9H47XNrREPo1cfCTbZLKAODEeONvts7ZCFIlU"
+X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM shortcircuit=no
+	autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+	mailout.protonmail.ch
 
-On Fri, Sep 24, 2021 at 11:43:55AM +0200, Loic Poulain wrote:
-> Hi Kalle,
-> 
-> On Fri, 24 Sept 2021 at 10:36, Kalle Valo <kvalo@codeaurora.org> wrote:
-> >
-> > Loic Poulain <loic.poulain@linaro.org> writes:
-> >
-> > > Hi Kalle,
-> > >
-> > > On Thu, 16 Sept 2021 at 10:00, Kalle Valo <kvalo@codeaurora.org> wrote:
-> > >>
-> > >> Hi Loic and Mani,
-> > >>
-> > >> I hate to be the bearer of bad news again :)
-> > >>
-> > >> I noticed already a while ago that commit 020d3b26c07a ("bus: mhi: Early
-> > >> MHI resume failure in non M3 state"), introduced in v5.13-rc1, broke
-> > >> ath11k resume on my NUC x86 testbox using QCA6390. Interestingly enough
-> > >> Dell XPS 13 9310 laptop (with QCA6390 as well) does not have this
-> > >> problem, I only see the problem on the NUC. I do not know what's causing
-> > >> this difference.
-> > >
-> > > I suppose the NUC is current PCI-Express power during suspend while
-> > > the laptop maintains PCIe/M2 power.
-> >
-> > Sorry, I'm not able to parse that sentence. Can you elaborate more?
-> 
-> Ouch, yes, I wanted to say that the NUC does not maintain the power of
-> PCI express during suspend (leading to PCI D3cold state), whereas the
-> laptop maintains the power of the M2 card... well, not sure now I see
-> your logs.
-> 
-> >
-> > >> At the moment I'm running my tests with commit 020d3b26c07a reverted and
-> > >> everything works without problems. Is there a simple way to fix this? Or
-> > >> maybe we should just revert the commit? Commit log and kernel logs from
-> > >> a failing case below.
-> > >
-> > > Do you have log of success case?
-> >
-> > A log from a successful case in the end of email, using v5.15-rc1 plus
-> > revert of commit 020d3b26c07abe27.
-> >
-> > > To me, the device loses power, that is why MHI resuming is failing.
-> > > Normally the device should be properly recovered/reinitialized. Before
-> > > that patch the power loss was simply not detected (or handled at
-> > > higher stack level).
-> >
-> > Currently in ath11k we always keep the firmware running when in suspend,
-> > this is a workaround due to problems between mac80211 and MHI stack.
-> > IIRC the problem was something related MHI creating struct device during
-> > resume or something like that.
-> 
-> Could you give a try with the attached patch? It should solve your
-> issue without breaking modem support.
-> 
+This is a multi-part message in MIME format.
 
-It will... But we should first try to see what is causing the device to
-be in MHI RESET state. We can't add a force resume case without knowing
-the rootcause.
+--b1_yUMSB9H47XNrREPo1cfCTbZLKAODEeONvts7ZCFIlU
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-And for workaround, we can proceed resume if device is in RESET state
-adding a comment on why. But let's first get the MHI debug logs.
+Commit e7006de6c238 causes the SSD controller on Apple T2 computers to cras=
+h
+and prevents linux from booting.
 
-> Regards,
-> Loic
+This commit implemented a counter that is stored within the NVMe command_id=
+,
+however this counter makes the command_id higher than normal, causing a pan=
+ic
+on the T2 security chip that functions as the SSD controller, which then
+causes the system to power off after a few seconds.
 
+This was reported on bugzilla here:
+https://bugzilla.kernel.org/show_bug.cgi?id=3D214509 but it was not origina=
+lly
+classified as NVMe (when the report was created it was unknown what was
+causing it), so I don't know if it notified the NVMe mailing list when it
+was later reclassified to NVMe. Sorry if you've already seen this issue.
+
+The T2 security chip (which is the SSD) has this line in its crash log (the
+rest of this log is in an attachment on the bugzilla report):
+
+panic(cpu 1 caller 0xfffffff028d884ec): ANS2 Recoverable Panic - assert fai=
+led: [7447]:command id out of range error (cid =3D 4120), status_reg: 0x200=
+0 - Null(2)
+
+This is the entry in lspci -nn for the ssd:
+
+04:00.0 Mass storage controller [0180]: Apple Inc. ANS2 NVMe Controller [10=
+6b:2005] (rev 01)
+
+This commit was included in 5.14.6 and backported to 5.10.67, but does not
+occur in 5.14.5 and 5.10.66. I am on a MacBookPro16,1, the crash has been
+reproduced on a MacBookPro16,2 as well. I have been able to reproduce on Ar=
+ch
+Linux with vanilla kernel 5.10.67 (others have gotten it on 5.14.6) with no
+DKMS modules, and I bisected it to that commit
+(e7006de6c23803799be000a5dcce4d916a36541a).
+
+I've tried to modify the genctr so that it is in the other side of the
+command_id (which I thought might make the command_id's lower) with the pat=
+ch
+below, but it did not prevent the crash.
+
+Regards,
+Orlando Chamberlain
+
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -489,17 +489,20 @@ struct nvme_ctrl_ops {
+
+ /*
+  * nvme command_id is constructed as such:
+- * | xxxx | xxxxxxxxxxxx |
+- *   gen    request tag
+- */
++ * | xxxxxxxxxxxx | xxxx |
++ *   request tag    gen
++ *
++ * The gen is at the end as the SSD in Apple T2 Computers
++ * crashes when the command_id is too high.
++*/
+ #define nvme_genctr_mask(gen)                  (gen & 0xf)
+-#define nvme_cid_install_genctr(gen)           (nvme_genctr_mask(gen) << 1=
+2)
+-#define nvme_genctr_from_cid(cid)              ((cid & 0xf000) >> 12)
+-#define nvme_tag_from_cid(cid)                 (cid & 0xfff)
++#define nvme_cid_install_genctr(gen)           (nvme_genctr_mask(gen))
++#define nvme_genctr_from_cid(cid)              ((cid & 0x000f))
++#define nvme_tag_from_cid(cid)                 ((cid & 0xfff0) >> 4)
+
+ static inline u16 nvme_cid(struct request *rq)
+ {
+-       return nvme_cid_install_genctr(nvme_req(rq)->genctr) | rq->tag;
++       return nvme_cid_install_genctr(nvme_req(rq)->genctr) | (rq->tag << =
+4);
+ }
+
+ static inline struct request *nvme_find_rq(struct blk_mq_tags *tags,
+--b1_yUMSB9H47XNrREPo1cfCTbZLKAODEeONvts7ZCFIlU
+Content-Type: application/pgp-keys; name="publickey - redecorating@protonmail.com - 0xEE1BCCD7.asc"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="publickey - redecorating@protonmail.com - 0xEE1BCCD7.asc"
+
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tDQpWZXJzaW9uOiBPcGVuUEdQLmpz
+IHY0LjEwLjEwDQpDb21tZW50OiBodHRwczovL29wZW5wZ3Bqcy5vcmcNCg0KeHNCTkJGKzNDYUlC
+Q0FDdS9jQVp0ZDhKeFY0bVVWU1B6VnBQSlRLUEg2Q3BhN1JkMHJCT1pUK3lzNXJBDQpzM01hQmc0
+K3hHYWJDL0w1eWdoalUwOXVrbndQYUh5UEJOWXlYMTZEMHpYL05SVHBGeEpkOGYxSmFMNzANCkpB
+V0pWOFdCVnZFOGZ4U3VZNGFmVW1qQStpL3N5VzNHSG1IUmVySC84Z09ySHFVOTQ3TjczZWVEcVlu
+NQ0KSXNhQUJGYW1yVkRqNmhhZzluN1lyWVVVRkh1R1I3Vm9sQXNSck5OcDF1ZTFqVjg1SUV5MGxp
+VUM2ZkJkDQpsR1NtcVg3WStxOVo3QUxlOHVrMEIySk5QWktGRSsvbnRNRHo2TEVraGdzWE42YjFX
+MGk3em55cVV3cmwNCnFoZEoxcUU5MURLQWpLZ09sR0lqd2tYOUprRGJObEh3VWxCOEFUc1EvMTJB
+ejBCS3BhVnhqVCs1QUJFQg0KQUFITk9YSmxaR1ZqYjNKaGRHbHVaMEJ3Y205MGIyNXRZV2xzTG1O
+dmJTQThjbVZrWldOdmNtRjBhVzVuDQpRSEJ5YjNSdmJtMWhhV3d1WTI5dFBzTEFqUVFRQVFnQUlB
+VUNYN2NKb2dZTENRY0lBd0lFRlFnS0FnUVcNCkFnRUFBaGtCQWhzREFoNEJBQ0VKRVBOYzNOTm10
+ZmxXRmlFRTdodk0xd3J4YnFSSjhjbVM4MXpjMDJhMQ0KK1ZZQStBZi9YeHVQdTVZS1ZYK0RlcUVl
+c3lSbVBlTlVmVW9KaVNWS2FvNzdqV1NnZzhZTHRqZGdyZ3VRDQpVaG5qdXhFSjdpVWlBR1FTM1J3
+LzhUMzVKOXpyd01jbXhpMnE4ZjY3VEJVNkVyRTJ4TkpIcXhjbldiaUgNCm5aeDBFYStwUTY4bUVS
+ay9MZHlOUXhZSkM4cEsyTHg2WVdQdjFFN2VsTllJR2Q3WXlNdlY1YmFUTmtqbQ0KVDdsMTJCbnRs
+RlFqYWNtY1RtWUd1aUdwWWdlNjQ0dFpPc1ZrbDhMd0FXT0VTTzkweGlZNW40Z3oyVXpTDQp0eGdI
+cFJ5TWdSSnNwVTRlWEpxRWIxdExpeW1DbDVxeHpybnVEM0dSZDAwZ0VBUmVsUktGUWxVQW9UdWEN
+Ck84cmVYclZwOTRMb1YzcDIrR0dtR1gyU3hWSVJKVzk1VlVBOVNXaDRrRGhLLzdlMDc4N0FUUVJm
+dHdtaQ0KQVFnQTNLR1BGdksyV29yajQ3Wmo5azdrd2Y0T2JrK0p4MFdoMlNZUFVibmlBYzUxeUFy
+S3dqRkJncE5PDQpBYnBGNmRHeThJeEl6YnkybVlTSmczYmpaeXNBNnZDU3FjSXhvZ2hnelppL3NG
+amZ6dUVmVUQ5RlhPTnYNClgxRk9hUEo3Z2YvcWVqYUJYVGZTY2JlRGM1YTdNQ3Vqd0hrSzNuWlRL
+WGtWa1l0NGVVTnA2cWkwcTdqZw0KQXJMRnVLT2lzTEx2VkpTVlZQZk5UWE9HaEdTS1FJc0xEamo2
+cWp1VWFOckgrMW1kZGlubkM4TGh1dUpVDQpxNzl0d0NYWEVoZGxXYmk1MFFiTnM5UHdCYnQvNUVH
+YUF0YlNzRHpRdHhvZDZpalRIc1Y4SGlkUmpmZ1gNCm13eTVMaXphOEhtWnQ5UmpxajdablpaQmJx
+ZXFqSVJQa1ZQRlR1SFg2SXIwY3dBUkFRQUJ3c0IyQkJnQg0KQ0FBSkJRSmZ0d21pQWhzTUFDRUpF
+UE5jM05ObXRmbFdGaUVFN2h2TTF3cnhicVJKOGNtUzgxemMwMmExDQorVlozYlFmL1Y3bUxpaDFl
+a2g5VlJIbkxkT3ZPY3Ezbjh6SlN0WFVDYmV2eTZOMjNvZmxrTE43VTlDc1INCmRsUmY2dCszK2Ju
+ajNpWEhmNkdrOERLbzEwS3lQTzFMRlJjR3lSZjZsNHlRL3FvdVNqa0ttVTJOc0kvZQ0KeTVBemNL
+VElyOTAxZ0hJeU9GV2IyNjVTQ1B0Tld0SGI4bTFpUUxSdXZCNndqSTk4MGdvdVdSL1lXOFFlDQpE
+bUlBa2RNSmJvTThyTnZvVFN5UHhqS1VFN08ySDluVVhqRGcxQk5NbW9Wc2w1SngyKzNtNlQ4VDVs
+eG0NCkkzb2cwYWdKd04rMnVKRW5JNmIrTnlMZ21BS0dPWVppd1psckxTb0UrQ2R5dnBNM001L1Zp
+cDZqbGJaaw0Kbmk0Tm1JdkVua3NSSnRKMkpNcXJORWFuVXFGdis3cVVkejgxY3BEajJ6K1hNMmts
+ZWc9PQ0KPWh4eEcNCi0tLS0tRU5EIFBHUCBQVUJMSUMgS0VZIEJMT0NLLS0tLS0NCg==
+
+--b1_yUMSB9H47XNrREPo1cfCTbZLKAODEeONvts7ZCFIlU--
 
