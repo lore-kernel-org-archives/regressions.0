@@ -1,61 +1,78 @@
-Received: from mail-4324.protonmail.ch (mail-4324.protonmail.ch [185.70.43.24])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FAA3FCB
-	for <regressions@lists.linux.dev>; Sun, 26 Sep 2021 04:35:40 +0000 (UTC)
-Date: Sun, 26 Sep 2021 04:35:30 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail; t=1632630937;
-	bh=uyKFsLwtoH4+xjiAgqs5q5lalDBftqKXjyAvkyXZCQQ=;
-	h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-	b=D6D8wc0U8g/2laBhqWc22Jb32Cuv+ecXUkAP5Qm2gOGLJJ99OBPG8w0jSF8RfymZ4
-	 b88cNI5GOstqy1VoN+HGBMgJnyKZUa8CCMtPErfG9KS6EETcB60cK4ngdCrAAT9QkY
-	 6e0Kli2mR+Q++4EgREdU0VZ3KKwm8tQzs+9KrXAY=
-To: Keith Busch <kbusch@kernel.org>
-From: Orlando Chamberlain <redecorating@protonmail.com>
-Cc: "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "gargaditya08@live.com" <gargaditya08@live.com>, "sagi@grimberg.me" <sagi@grimberg.me>, "hare@suse.de" <hare@suse.de>, "dwagner@suse.de" <dwagner@suse.de>, "hch@lst.de" <hch@lst.de>
-Reply-To: Orlando Chamberlain <redecorating@protonmail.com>
-Subject: Re: [REGRESSION] nvme: code command_id with a genctr for use-after-free validation crashes apple T2 SSD
-Message-ID: <1b5d6bef-db6f-073f-8d24-4963f0df82ab@protonmail.com>
-In-Reply-To: <1a6f5030-27d9-d1ae-aff4-0ed2a10dce6b@protonmail.com>
-References: <cjJiSFV77WM51ciS8EuBcdeBcv9T83PUB-Kw3yi8PuC_LwrrUUnQ3w5RC1PbKvSYE72KryXp3wOJhv4Ov_WWIe2gKWOOo5uwuUjbbFA8HDM=@protonmail.com> <20210925171618.GA116968@dhcp-10-100-145-180.wdc.com> <fa9de055-c3b8-20d3-41e0-12e43d0c336a@protonmail.com> <20210926020839.GA96176@C02WT3WMHTD6> <1a6f5030-27d9-d1ae-aff4-0ed2a10dce6b@protonmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096723FCB
+	for <regressions@lists.linux.dev>; Sun, 26 Sep 2021 05:59:10 +0000 (UTC)
+Received: from ip4d14bdef.dynamic.kabel-deutschland.de ([77.20.189.239] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mUNBt-00016e-1j; Sun, 26 Sep 2021 07:59:09 +0200
+Message-ID: <438d711b-094b-fcfd-79e3-69f03a14df21@leemhuis.info>
+Date: Sun, 26 Sep 2021 07:59:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM shortcircuit=no
-	autolearn=disabled version=3.4.4
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
-	mailout.protonmail.ch
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.0
+Content-Language: en-BZ
+References: <cjJiSFV77WM51ciS8EuBcdeBcv9T83PUB-Kw3yi8PuC_LwrrUUnQ3w5RC1PbKvSYE72KryXp3wOJhv4Ov_WWIe2gKWOOo5uwuUjbbFA8HDM=@protonmail.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] nvme: code command_id with a genctr for
+ use-after-free validation crashes apple T2 SSD
+In-Reply-To: <cjJiSFV77WM51ciS8EuBcdeBcv9T83PUB-Kw3yi8PuC_LwrrUUnQ3w5RC1PbKvSYE72KryXp3wOJhv4Ov_WWIe2gKWOOo5uwuUjbbFA8HDM=@protonmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1632635951;0162d67e;
+X-HE-SMSGID: 1mUNBt-00016e-1j
 
-On 26/9/21 13:53, Orlando Chamberlain wrote:
->> Great, that's essentially what I proposed in a different thread (sorry, =
-I see
->> now you were not copied there):
->>
->>   http://lists.infradead.org/pipermail/linux-nvme/2021-September/027665.=
-html
->>
->> The final patch may look a bit different, but it should be okay to test =
-with
->> the one in the link.
->>
-> I've tried that patch, it doesn't crash, but /dev/nvme0, /dev/nvme0n1 etc=
- don't show up so
-> it doesn't progress past the initramfs. There weren't any errors other th=
-an preexisting
-> acpi table ones.
->=20
+On 25.09.21 15:10, Orlando Chamberlain wrote:
+> Commit e7006de6c238 causes the SSD controller on Apple T2 computers to crash
+> and prevents linux from booting.
+> 
+> This commit implemented a counter that is stored within the NVMe command_id,
+> however this counter makes the command_id higher than normal, causing a panic
+> on the T2 security chip that functions as the SSD controller, which then
+> causes the system to power off after a few seconds.
+> 
+> This was reported on bugzilla here:
+> https://bugzilla.kernel.org/show_bug.cgi?id=214509 but it was not originally
+> classified as NVMe (when the report was created it was unknown what was
+> causing it), so I don't know if it notified the NVMe mailing list when it
+> was later reclassified to NVMe. Sorry if you've already seen this issue.
+> 
+> The T2 security chip (which is the SSD) has this line in its crash log (the
+> rest of this log is in an attachment on the bugzilla report):
+> 
+> panic(cpu 1 caller 0xfffffff028d884ec): ANS2 Recoverable Panic - assert failed: [7447]:command id out of range error (cid = 4120), status_reg: 0x2000 - Null(2)
+> 
+> This is the entry in lspci -nn for the ssd:
+> 
+> 04:00.0 Mass storage controller [0180]: Apple Inc. ANS2 NVMe Controller [106b:2005] (rev 01)
+> 
+> This commit was included in 5.14.6 and backported to 5.10.67, but does not
+> occur in 5.14.5 and 5.10.66. I am on a MacBookPro16,1, the crash has been
+> reproduced on a MacBookPro16,2 as well. I have been able to reproduce on Arch
+> Linux with vanilla kernel 5.10.67 (others have gotten it on 5.14.6) with no
+> DKMS modules, and I bisected it to that commit
+> (e7006de6c23803799be000a5dcce4d916a36541a).
 
-The issue was that there's a , instead of a | at the end of the second line=
- here. It works when that is replaced with a |.
+Feel free to ignore this message. I write it to make regzbot track above
+issue. Regzbot is the regression tracking bot I'm working on. It's still
+in the early stages and this is still one of the first few regression I
+make it track to get started and things tested in the field. That also
+why I'm sending the mail just to the regressions list (it will do its
+fully magic nevertheless). For details see:
+https://linux-regtracking.leemhuis.info/post/inital-regzbot-running/
+https://linux-regtracking.leemhuis.info/post/regzbot-approach/
 
--=09=09=09=09NVME_QUIRK_SHARED_TAGS },
-+=09=09=09=09NVME_QUIRK_SHARED_TAGS ,
-+=09=09=09=09NVME_QUIRK_SKIP_CID_GEN },
+#regzbot ^introduced e7006de6c23803799be000a5dcce4d916a36541a
+
+#regzbot monitor
+https://lore.kernel.org/lkml/CAHk-=wgML11x9afCvmg9yhVm9wi5mvnjBvmX+i7OfMA0Vd4FWA@mail.gmail.com/
+
+Ciao, Thorsten
+
 
