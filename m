@@ -1,40 +1,111 @@
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+Received: from IND01-MA1-obe.outbound.protection.outlook.com (mail-ma1ind01olkn0147.outbound.protection.outlook.com [104.47.100.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EC43FCB
-	for <regressions@lists.linux.dev>; Mon, 27 Sep 2021 04:22:23 +0000 (UTC)
-Date: Mon, 27 Sep 2021 04:22:05 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail; t=1632716526;
-	bh=0KQC3UH/Oil+fYCXtnSPv7zcDj9qxOzq5y5CNs7SIPw=;
-	h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-	b=a6+EivaBU0r1brTMGg+2pfMHxDa7GO9TS+5lvCTNM5L5g7Aglm2geqIjzK8UZN9Ho
-	 Ptnp9UCUClZRZdCp2UgaT+1morD5xUggHVlrtI3B2PQvewq77zCpplKauHRBQNDEHi
-	 lZYZmhBM/9wZRS4N8m29h3BWCepXuwI6vHpd47gc=
-To: Sagi Grimberg <sagi@grimberg.me>, Aditya Garg <gargaditya08@live.com>, "kbusch@kernel.org" <kbusch@kernel.org>
-From: Orlando Chamberlain <redecorating@protonmail.com>
-Cc: "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "hare@suse.de" <hare@suse.de>, "dwagner@suse.de" <dwagner@suse.de>, "hch@lst.de" <hch@lst.de>
-Reply-To: Orlando Chamberlain <redecorating@protonmail.com>
-Subject: Re: [REGRESSION] nvme: code command_id with a genctr for use-after-free validation crashes apple T2 SSD
-Message-ID: <31c4dc69-5d10-cc6a-4295-e42bbc0993d0@protonmail.com>
-In-Reply-To: <d65ecc69-35c9-4400-8fb0-95aa04360b03@grimberg.me>
-References: <cjJiSFV77WM51ciS8EuBcdeBcv9T83PUB-Kw3yi8PuC_LwrrUUnQ3w5RC1PbKvSYE72KryXp3wOJhv4Ov_WWIe2gKWOOo5uwuUjbbFA8HDM=@protonmail.com> <20210925171618.GA116968@dhcp-10-100-145-180.wdc.com> <fa9de055-c3b8-20d3-41e0-12e43d0c336a@protonmail.com> <20210926020839.GA96176@C02WT3WMHTD6> <1a6f5030-27d9-d1ae-aff4-0ed2a10dce6b@protonmail.com> <1b5d6bef-db6f-073f-8d24-4963f0df82ab@protonmail.com> <PNZPR01MB4415801C6084E8CFD068A84AB8A69@PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM> <d65ecc69-35c9-4400-8fb0-95aa04360b03@grimberg.me>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B843FC8
+	for <regressions@lists.linux.dev>; Mon, 27 Sep 2021 04:51:47 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YQztUy3opnu6g473NOV0KVM4z1XAmbfeI3XNHjjb8g2ckhkgHDcnc/vaP7MHXgfU0eTdQPhrTnmncoUgY0n4lG/8vlJYmk4dPefKVwqzc8nJt98A19pLmU/xfTBbxFyEvt3TZTH1grmBowhcc2FUa+3LpSEmRb5pA9TPzcgCg6Yrr40w5O7oT2NY+0w5+Goyz3uQxHld7+zxYfFNMYotv365oIAsv31pgDTcc9g2DqW0OLclVSACZyjkgfhSGthUaE2cTg6OW/427+zajbSm4hp36cTWEQA8KPYrTf9oZtuVLNCDReCFdDkb8JD02eoKRHky9p2SvvgVr+YeyxM+Pw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
+ bh=ohqAZxbULPnG7HzMclSqjh4dwvbun6Qb4uzJviiyiwI=;
+ b=bCYkGnBVl82EoU8bgWpNNLEEC/wmzRCMNBXI9CbesqsUpXJ0CwJAU+vBqmNw42znbpSHAjCg5Q+uCHv9VbPjs9nTdPvd0QbIqq4JkDhyDxSgxygU9PRSqKku4Q0Qp2waJeRKO39vlpc5AUnZ/tOBR83ZoCpBe5PmU9Nrds0O+wsJKoFxQA6r7SclC5kWIdFPD+IvDG0u4f7kBYWcArvxsGcJUMGGwwrQiDCmsTf/dKMUVNrccw2IZ6hYDGJ7PiEgAzKwqLkfL9aKze4xksJxfcv7L1w5RhYQ6KAJ0kKk/Z/jqPlSZeCHk5vvgYN3j1B8FEf2h2Q0hwoU+0fNdd0SJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ohqAZxbULPnG7HzMclSqjh4dwvbun6Qb4uzJviiyiwI=;
+ b=QVRMVV5gM2ppr22nvX5mkyY6EklULWuTR8Bik+7sEaJ6+yHQbQfVYrJXUiQeqCRRKyTrn16ffWw3VaUxnDMVfbzMkGNOt4d5jtm5FjyViW96ZcdcZTHx9o4fOZdZAec5YARqJ0wo4V/GdjJjiqHvMOqctRMzkBnLtcdP/sMNiXLr/ZrTOLBzZn1osBOerM95s2/AKG76Xv+lT+soVN/UyXbylGVB8bMQ5tnFq4rSI+qeo/kpfS1pt1ZaI8lnIp6Tb8Ro/5mRN6P8u658SQrPPXt2EV0a28Urwlff6Zu0MXNy6dLRoDdHn8Ac/RTQyZgM3Ng+/gDiXiGvw2yJaeZvZg==
+Received: from PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:1b::13)
+ by PN2PR01MB5303.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:41::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.15; Mon, 27 Sep
+ 2021 04:51:40 +0000
+Received: from PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::fc30:dd98:6807:9ea]) by PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::fc30:dd98:6807:9ea%3]) with mapi id 15.20.4544.021; Mon, 27 Sep 2021
+ 04:51:41 +0000
+From: Aditya Garg <gargaditya08@live.com>
+To: Orlando Chamberlain <redecorating@protonmail.com>, "sagi@grimberg.me"
+	<sagi@grimberg.me>, "kbusch@kernel.org" <kbusch@kernel.org>
+CC: "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, "hare@suse.de"
+	<hare@suse.de>, "dwagner@suse.de" <dwagner@suse.de>, "hch@lst.de"
+	<hch@lst.de>, "torvalds@linux-foundation.org"
+	<torvalds@linux-foundation.org>, "axboe@fb.com" <axboe@fb.com>,
+	"james.smart@broadcom.com" <james.smart@broadcom.com>,
+	"chaitanya.kulkarni@wdc.com" <chaitanya.kulkarni@wdc.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [REGRESSION] nvme: code command_id with a genctr for
+ use-after-free validation crashes apple T2 SSD
+Thread-Topic: [REGRESSION] nvme: code command_id with a genctr for
+ use-after-free validation crashes apple T2 SSD
+Thread-Index:
+ AQHXsg7CBo+QhwDP1UmDUyEbq2iBR6u0/f0AgABrS4CAAClygIAAHUkAgAALvgCAADxJoYAACSmAgAFJI4CAAAePCA==
+Date: Mon, 27 Sep 2021 04:51:40 +0000
+Message-ID:
+ <PNZPR01MB4415F35759F136E812A8F91DB8A79@PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM>
+References:
+ <cjJiSFV77WM51ciS8EuBcdeBcv9T83PUB-Kw3yi8PuC_LwrrUUnQ3w5RC1PbKvSYE72KryXp3wOJhv4Ov_WWIe2gKWOOo5uwuUjbbFA8HDM=@protonmail.com>
+ <20210925171618.GA116968@dhcp-10-100-145-180.wdc.com>
+ <fa9de055-c3b8-20d3-41e0-12e43d0c336a@protonmail.com>
+ <20210926020839.GA96176@C02WT3WMHTD6>
+ <1a6f5030-27d9-d1ae-aff4-0ed2a10dce6b@protonmail.com>
+ <1b5d6bef-db6f-073f-8d24-4963f0df82ab@protonmail.com>
+ <PNZPR01MB4415801C6084E8CFD068A84AB8A69@PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM>
+ <d65ecc69-35c9-4400-8fb0-95aa04360b03@grimberg.me>
+ <31c4dc69-5d10-cc6a-4295-e42bbc0993d0@protonmail.com>
+In-Reply-To: <31c4dc69-5d10-cc6a-4295-e42bbc0993d0@protonmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+suggested_attachment_session_id: fdfe681c-7e35-0900-3d68-f150ad9ae297
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn: [fAPw0Df6oF/JyrNv7ppmT+hiArvnqTWF/7rM8WXHIxa3K/pYowHL1M1+ewfQtOvU]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f8c45e1c-ec1d-4e64-82ef-08d981727f39
+x-ms-traffictypediagnostic: PN2PR01MB5303:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ w2wM+pbR4hQme/EmwA+fmlN8y4dzR0eS719jQgeyR2g0Rr+lYKIJNNTk+thUyN3nFpInd2rfEsxqW9ma2alIxyVfSmUb0Dv/vKGWl0WlYLh0Uti6zh6sgIb25UP25ec8evT1tQGR5CopS+uPda5TC6H31JHFs2fFfQo6CmsJa4I/sb1AYUmyYtNxZS/A/ihMHP1OIWwlU+Ae0DfmOZKBLSmbgVvjIRWAUczDZ38l5zsMJp91cB8qxBln3lwYaflVfx7uZMkVQ53z/zvSK1DA8Ut38ryC0Xu8FLlX+pxWoJF7so/iwQvS5Yt3y/u4gh0uRxB/1o0mlx7afqaJFiStBIkvNsZNsweesETARP02gHSMARCLl8F6xlqD5RsCTgEjbTUIYG/CgHezO1tcL9sk9CkaI0MJW90ZEOSbokxhCsUx3iZUPNE8recN55v3hFp1/c8iFhs8qvwNTbKMKXtZjKTyTwGBTQJ7PWqXKshZY3X4DPanW6H2LbdpGKnmqrYK1K2H1HDblfy6Uxlg5SkKZQ==
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ Bd/jQMSCrc+iZPb6hRJtGBBxbn6cTxZlxX0ZmYDD9zNz+PmY4SxhYbanj3F9PBB0H/KTegkU14opJ8VMuCdA+D3aigYnjq2M1qvKxd0PBisIVTAfDECOYndjVmTM7GxrN3+SlW4wq+4UClkzj4wx4yqbrB7OaNr9uMSgBEct3rf8C0m8K8KQoT2t908Spx49xaVrahdoFS7YiP5Z2Udb6A==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM shortcircuit=no
-	autolearn=disabled version=3.4.4
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
-	mailout.protonmail.ch
+X-OriginatorOrg: sct-15-20-3174-20-msonline-outlook-a1a1a.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: f8c45e1c-ec1d-4e64-82ef-08d981727f39
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2021 04:51:40.9509
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2PR01MB5303
+
+I am getting the same error.
+
+________________________________________
+From: Orlando Chamberlain <redecorating@protonmail.com>
+Sent: Monday, September 27, 2021 4:22 AM
+To: Sagi Grimberg; Aditya Garg; kbusch@kernel.org
+Cc: linux-nvme@lists.infradead.org; regressions@lists.linux.dev; hare@suse.=
+de; dwagner@suse.de; hch@lst.de
+Subject: Re: [REGRESSION] nvme: code command_id with a genctr for use-after=
+-free validation crashes apple T2 SSD
 
 On 26/9/21 18:44, Sagi Grimberg wrote:
->=20
+>
 >> I checked out the proposal sent by Orlando Chamberlain to replace NVME_Q=
 UIRK_SHARED_TAGS , by NVME_QUIRK_SHARED_TAGS | given in the patch on http:/=
 /lists.infradead.org/pipermail/linux-nvme/2021-September/027665.html. The ,=
@@ -42,11 +113,11 @@ UIRK_SHARED_TAGS , by NVME_QUIRK_SHARED_TAGS | given in the patch on http:/=
 ernel boots correctly without panicking the T2, but in case we are having L=
 inux on an External Drive, which is my case, then the internal SSD doesn't =
 seem to be recognised at all. I've tested the patch on 5.14.7.
->=20
+>
 > That sounds like a separate issue, because with this patch applied,
 > all tags should be within the queue entry range (with generation
 > set to 0 always).
->=20
+>
 > Is it possible that the io_queue_depth is being set to something
 > that exceeds NVME_PCI_MAX_QUEUE_SIZE (4095) ? the default is 1024
 >
