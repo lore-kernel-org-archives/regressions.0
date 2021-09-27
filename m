@@ -1,75 +1,107 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 087F63FC8
-	for <regressions@lists.linux.dev>; Mon, 27 Sep 2021 11:26:01 +0000 (UTC)
-Received: from ip4d14bdef.dynamic.kabel-deutschland.de ([77.20.189.239] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mUold-0001hE-VN; Mon, 27 Sep 2021 13:25:54 +0200
-Message-ID: <7a27099a-efae-be50-bc88-1ee02bf0461c@leemhuis.info>
-Date: Mon, 27 Sep 2021 13:25:53 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2C93FCC
+	for <regressions@lists.linux.dev>; Mon, 27 Sep 2021 15:02:53 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CC38F60FED;
+	Mon, 27 Sep 2021 15:02:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1632754972;
+	bh=NOnXKz3j8SF7vlCFUvHvs5X4xIJFwfY2ZbVXhTcTrwI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XMaBKXiDeZdKN9ENJh8WDYkhbQxEE/tE7UWhY7FlgduHrpeWWtgxJ6NC+C/b2deJ5
+	 6FnIjyM52Guvmwd9NiUmUV6uZcI/zATz7lQcGAe2AQPSv50DqxvrwOiqEjPEc1q8t3
+	 aTA1a4B33/Wh3qG7C2R2O2btYC7J4ntjyAp8YXJB5KxR/3za9pajrvTHUlbCFVzGuc
+	 FG3jOXuIgGEiJL/Opz6hu0wcbHn4TpByvOsSgwChqZyzZFg/fWIjRIMR2TqQaAWrmv
+	 +Ws+9Zan3zWGmHhphwILYYveKZyHO81kp7O46gLKXaUY3sXYFtEnG9LDEyI3JTtrRD
+	 mWmmTFNWwpyLA==
+Date: Mon, 27 Sep 2021 08:02:49 -0700
+From: Keith Busch <kbusch@kernel.org>
+To: Sven Peter <sven@svenpeter.dev>
+Cc: Aditya Garg <gargaditya08@live.com>,
+	Orlando Chamberlain <redecorating@protonmail.com>,
+	"sagi@grimberg.me" <sagi@grimberg.me>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"hare@suse.de" <hare@suse.de>, "dwagner@suse.de" <dwagner@suse.de>,
+	"hch@lst.de" <hch@lst.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"axboe@fb.com" <axboe@fb.com>,
+	"james.smart@broadcom.com" <james.smart@broadcom.com>,
+	"chaitanya.kulkarni@wdc.com" <chaitanya.kulkarni@wdc.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [REGRESSION] nvme: code command_id with a genctr for
+ use-after-free validation crashes apple T2 SSD
+Message-ID: <20210927150249.GA148020@dhcp-10-100-145-180.wdc.com>
+References: <20210925171618.GA116968@dhcp-10-100-145-180.wdc.com>
+ <fa9de055-c3b8-20d3-41e0-12e43d0c336a@protonmail.com>
+ <20210926020839.GA96176@C02WT3WMHTD6>
+ <1a6f5030-27d9-d1ae-aff4-0ed2a10dce6b@protonmail.com>
+ <1b5d6bef-db6f-073f-8d24-4963f0df82ab@protonmail.com>
+ <PNZPR01MB4415801C6084E8CFD068A84AB8A69@PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM>
+ <d65ecc69-35c9-4400-8fb0-95aa04360b03@grimberg.me>
+ <31c4dc69-5d10-cc6a-4295-e42bbc0993d0@protonmail.com>
+ <PNZPR01MB4415F35759F136E812A8F91DB8A79@PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM>
+ <d4fb602c-43ab-4b5d-93ad-fa9116462dec@www.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Content-Language: en-BS
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <CAH4F6usFu8-A6k5Z7rU9__iENcSC6Zr-NtRhh_aypR74UvN1uQ@mail.gmail.com>
- <87o88muvvz.fsf@codeaurora.org>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: Bug in Memory Layout of rx_desc for QCA6174
-In-Reply-To: <87o88muvvz.fsf@codeaurora.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1632741962;afe84a3a;
-X-HE-SMSGID: 1mUold-0001hE-VN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d4fb602c-43ab-4b5d-93ad-fa9116462dec@www.fastmail.com>
 
-
-On 21.09.21 11:21, Kalle Valo wrote:
-> (adding linux-wireless and regression lists)
+On Mon, Sep 27, 2021 at 08:05:00AM +0200, Sven Peter wrote:
+> Hi,
 > 
-> Francesco Magliocca <franciman12@gmail.com> writes:
 > 
->> Hello everyone,
->> I have a QCA6174 PCIe board, I am using linux kernel 5.12.10.
->> The firmware loaded is:
->>> [ 4.483131] ath10k_pci 0000:02:00.0: qca6174 hw3.2 target 0x05030000
->>> chip_id 0x00340aff sub 1a56:143a
->>> [ 4.483136] ath10k_pci 0000:02:00.0: kconfig debug 0 debugfs 1
->>> tracing 0 dfs 0 testmode 0
->>> [ 4.483567] ath10k_pci 0000:02:00.0: firmware ver
->>> WLAN.RM.4.4.1-00157-QCARMSWPZ-1 api 6 features wowlan,ignore-otp,mfp
->>> crc32 90eebefb
->>> [    4.572730] ath10k_pci 0000:02:00.0: board_file api 2 bmi_id N/A crc32 318825bf
->>> [ 4.665592] ath10k_pci 0000:02:00.0: htt-ver 3.60 wmi-op 4 htt-op 3
->>> cal otp max-sta 32 raw 0 hwcrypto 1
->>
->> around six months ago I reported a bug which is still haunting me:
->> When I am connected to my home's Wi-Fi network and my father's Huawei
->> smartphone is connected too
->> my Wi-Fi card hangs and gets stuck, I have to force restart of the device.
->>
->> Note that this problem does not happen if my pc and the smartphone are
->> connected to different networks (for example
->> I tried connecting my pc to the 2.4GHz network and the smartphone to
->> the 5GHz network, and the bug does not appear).
->>
->> Now, I tried bisecting driver changes, and I found the faulty one,
->> it is the commit: e3def6f7ddf88636febb12e1e3e86387a4ce5452
+> On Mon, Sep 27, 2021, at 06:51, Aditya Garg wrote:
+> > I am getting the same error.
+> >
+> > ________________________________________
+> > From: Orlando Chamberlain <redecorating@protonmail.com>
+> > Sent: Monday, September 27, 2021 4:22 AM
+> > To: Sagi Grimberg; Aditya Garg; kbusch@kernel.org
+> > Cc: linux-nvme@lists.infradead.org; regressions@lists.linux.dev; 
+> > hare@suse.de; dwagner@suse.de; hch@lst.de
+> > Subject: Re: [REGRESSION] nvme: code command_id with a genctr for 
+> > use-after-free validation crashes apple T2 SSD
+> >
+> > On 26/9/21 18:44, Sagi Grimberg wrote:
+> >>
+> >>> I checked out the proposal sent by Orlando Chamberlain to replace NVME_QUIRK_SHARED_TAGS , by NVME_QUIRK_SHARED_TAGS | given in the patch on http://lists.infradead.org/pipermail/linux-nvme/2021-September/027665.html. The , still causes panics to the T2 as described before. In the case of |, the kernel boots correctly without panicking the T2, but in case we are having Linux on an External Drive, which is my case, then the internal SSD doesn't seem to be recognised at all. I've tested the patch on 5.14.7.
+> >>
+> >> That sounds like a separate issue, because with this patch applied,
+> >> all tags should be within the queue entry range (with generation
+> >> set to 0 always).
+> >>
+> >> Is it possible that the io_queue_depth is being set to something
+> >> that exceeds NVME_PCI_MAX_QUEUE_SIZE (4095) ? the default is 1024
+> >>
+> > I've been able to reproduce it by using the same kernel Aditya is using:
+> > https://github.com/AdityaGarg8/T2-Big-Sur-Ubuntu-Kernel/actions/runs/1275383460
+> >
+> > From the initramfs:
+> >
+> > # dmesg | grep nvme
+> > nvme nvme0: pci function 0000:04:00.0
+> > nvme nvme0: 1/0/0 default/read/poll queues
+> > nvme nvme0: Identify NS List failed (status=0xb)
+> > nvme nvme0: LightNVM init failure
+> 
+> Maybe I should've just submitted the quirks required for the M1 already...
+> The ANS2 firmware on there doesn't support the vanilla nvme_scan_ns_list
+> call. That should not break anything though because core.c falls back to
+> nvme_scan_ns_sequential in that case which does work. It just results
+> in that "Identify NS List failed (status=0xb)" error message.
+> 
+> Not sure where that LightNVM failure comes from though. Afaict lightnvm has been 
+> removed from 5.15 and shouldn't be used for the Apple controller anyway.
 
-Feel free to ignore this message. I write it to make regzbot track above
-issue. Regzbot is the regression tracking bot I'm working on. It's still
-in the early stages and this is still one of the first few regression I
-make it track to get started and things tested in the field. That also
-why I'm sending the mail just to the regressions list (it will do its
-fully magic nevertheless). For details see:
-https://linux-regtracking.leemhuis.info/post/inital-regzbot-running/
-https://linux-regtracking.leemhuis.info/post/regzbot-approach/
-
-#regzbot ^^introduced e3def6f7ddf88636febb12e1e3e86387a4ce5452
-
-Ciao, Thorsten
+Yes, lightnvm was removed in 5.15, so the quirk bit identifying these
+devices was removed. The patch was made for upstream 5.15. If you want
+to backport it to stable, the bit will need to be changed, otherwise it
+make the driver think its an openchannel SSD instead and fail.
