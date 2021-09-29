@@ -1,107 +1,217 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2C93FCC
-	for <regressions@lists.linux.dev>; Mon, 27 Sep 2021 15:02:53 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CC38F60FED;
-	Mon, 27 Sep 2021 15:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1632754972;
-	bh=NOnXKz3j8SF7vlCFUvHvs5X4xIJFwfY2ZbVXhTcTrwI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XMaBKXiDeZdKN9ENJh8WDYkhbQxEE/tE7UWhY7FlgduHrpeWWtgxJ6NC+C/b2deJ5
-	 6FnIjyM52Guvmwd9NiUmUV6uZcI/zATz7lQcGAe2AQPSv50DqxvrwOiqEjPEc1q8t3
-	 aTA1a4B33/Wh3qG7C2R2O2btYC7J4ntjyAp8YXJB5KxR/3za9pajrvTHUlbCFVzGuc
-	 FG3jOXuIgGEiJL/Opz6hu0wcbHn4TpByvOsSgwChqZyzZFg/fWIjRIMR2TqQaAWrmv
-	 +Ws+9Zan3zWGmHhphwILYYveKZyHO81kp7O46gLKXaUY3sXYFtEnG9LDEyI3JTtrRD
-	 mWmmTFNWwpyLA==
-Date: Mon, 27 Sep 2021 08:02:49 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Sven Peter <sven@svenpeter.dev>
-Cc: Aditya Garg <gargaditya08@live.com>,
-	Orlando Chamberlain <redecorating@protonmail.com>,
-	"sagi@grimberg.me" <sagi@grimberg.me>,
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"hare@suse.de" <hare@suse.de>, "dwagner@suse.de" <dwagner@suse.de>,
-	"hch@lst.de" <hch@lst.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"axboe@fb.com" <axboe@fb.com>,
-	"james.smart@broadcom.com" <james.smart@broadcom.com>,
-	"chaitanya.kulkarni@wdc.com" <chaitanya.kulkarni@wdc.com>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [REGRESSION] nvme: code command_id with a genctr for
- use-after-free validation crashes apple T2 SSD
-Message-ID: <20210927150249.GA148020@dhcp-10-100-145-180.wdc.com>
-References: <20210925171618.GA116968@dhcp-10-100-145-180.wdc.com>
- <fa9de055-c3b8-20d3-41e0-12e43d0c336a@protonmail.com>
- <20210926020839.GA96176@C02WT3WMHTD6>
- <1a6f5030-27d9-d1ae-aff4-0ed2a10dce6b@protonmail.com>
- <1b5d6bef-db6f-073f-8d24-4963f0df82ab@protonmail.com>
- <PNZPR01MB4415801C6084E8CFD068A84AB8A69@PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM>
- <d65ecc69-35c9-4400-8fb0-95aa04360b03@grimberg.me>
- <31c4dc69-5d10-cc6a-4295-e42bbc0993d0@protonmail.com>
- <PNZPR01MB4415F35759F136E812A8F91DB8A79@PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM>
- <d4fb602c-43ab-4b5d-93ad-fa9116462dec@www.fastmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0912F80
+	for <regressions@lists.linux.dev>; Wed, 29 Sep 2021 05:09:42 +0000 (UTC)
+Date: Wed, 29 Sep 2021 05:09:17 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail; t=1632892166;
+	bh=4/h3hHhx8+ST7KvURyRE3yY/JnALcxX0E3zpkWI8jvg=;
+	h=Date:To:From:Cc:Reply-To:Subject:From;
+	b=XuQHetD+L6k3gd44OMGH7fMo2iDvLzhlMNdCvnYpktQdOhSfZOR17JOHqbRfQDZSk
+	 O96JOytkGsWrPR+r0wu0LGxmHmehafr7DhpS8OxdQJK8uUVmmvNuVm+Idd3BxCku2Y
+	 rJimkNqLcdFUg9UssX12p5v5grZ5HlmTw81dijIg=
+To: linux-bluetooth@vger.kernel.org
+From: Orlando Chamberlain <redecorating@protonmail.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, sonnysasaka@chromium.org, danielwinkler@google.com, marcel@holtmann.org, johan.hedberg@intel.com
+Reply-To: Orlando Chamberlain <redecorating@protonmail.com>
+Subject: [regression] Bluetooth: Query LE tx power on startup broke Bluetooth on MacBookPro16,1
+Message-ID: <4970a940-211b-25d6-edab-21a815313954@protonmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d4fb602c-43ab-4b5d-93ad-fa9116462dec@www.fastmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM shortcircuit=no
+	autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+	mailout.protonmail.ch
 
-On Mon, Sep 27, 2021 at 08:05:00AM +0200, Sven Peter wrote:
-> Hi,
-> 
-> 
-> On Mon, Sep 27, 2021, at 06:51, Aditya Garg wrote:
-> > I am getting the same error.
-> >
-> > ________________________________________
-> > From: Orlando Chamberlain <redecorating@protonmail.com>
-> > Sent: Monday, September 27, 2021 4:22 AM
-> > To: Sagi Grimberg; Aditya Garg; kbusch@kernel.org
-> > Cc: linux-nvme@lists.infradead.org; regressions@lists.linux.dev; 
-> > hare@suse.de; dwagner@suse.de; hch@lst.de
-> > Subject: Re: [REGRESSION] nvme: code command_id with a genctr for 
-> > use-after-free validation crashes apple T2 SSD
-> >
-> > On 26/9/21 18:44, Sagi Grimberg wrote:
-> >>
-> >>> I checked out the proposal sent by Orlando Chamberlain to replace NVME_QUIRK_SHARED_TAGS , by NVME_QUIRK_SHARED_TAGS | given in the patch on http://lists.infradead.org/pipermail/linux-nvme/2021-September/027665.html. The , still causes panics to the T2 as described before. In the case of |, the kernel boots correctly without panicking the T2, but in case we are having Linux on an External Drive, which is my case, then the internal SSD doesn't seem to be recognised at all. I've tested the patch on 5.14.7.
-> >>
-> >> That sounds like a separate issue, because with this patch applied,
-> >> all tags should be within the queue entry range (with generation
-> >> set to 0 always).
-> >>
-> >> Is it possible that the io_queue_depth is being set to something
-> >> that exceeds NVME_PCI_MAX_QUEUE_SIZE (4095) ? the default is 1024
-> >>
-> > I've been able to reproduce it by using the same kernel Aditya is using:
-> > https://github.com/AdityaGarg8/T2-Big-Sur-Ubuntu-Kernel/actions/runs/1275383460
-> >
-> > From the initramfs:
-> >
-> > # dmesg | grep nvme
-> > nvme nvme0: pci function 0000:04:00.0
-> > nvme nvme0: 1/0/0 default/read/poll queues
-> > nvme nvme0: Identify NS List failed (status=0xb)
-> > nvme nvme0: LightNVM init failure
-> 
-> Maybe I should've just submitted the quirks required for the M1 already...
-> The ANS2 firmware on there doesn't support the vanilla nvme_scan_ns_list
-> call. That should not break anything though because core.c falls back to
-> nvme_scan_ns_sequential in that case which does work. It just results
-> in that "Identify NS List failed (status=0xb)" error message.
-> 
-> Not sure where that LightNVM failure comes from though. Afaict lightnvm has been 
-> removed from 5.15 and shouldn't be used for the Apple controller anyway.
+Commit 7c395ea521e6 made Bluetooth stop working on the MacBookPro16,1. I
 
-Yes, lightnvm was removed in 5.15, so the quirk bit identifying these
-devices was removed. The patch was made for upstream 5.15. If you want
-to backport it to stable, the bit will need to be changed, otherwise it
-make the driver think its an openchannel SSD instead and fail.
+believe this also affected the iMac20,1. The patch below introduces a quirk
+
+disabling Read LE Min/Max Tx Power for affected computers, based off the br=
+cm
+chip
+ id 150.
+
+
+
+I think there are a couple of issues with this patch that I don't have the
+
+knowledge to resolve:
+
+1. I don't know how accurate the description of the quirk is, I based it of=
+f
+
+   the commit message of 7c395ea521e6m, however I don't understand much abo=
+ut
+
+   how Bluetooth works. Other Bluetooth quirks also have explanations as to
+
+   why they are needed, I don't know why this quirk is needed (is it that
+
+   these chips incorrectly say they support read le minmax tx power? I just
+
+   don't know).
+
+2. It may be a bug in the min max le tx power code that could be fixed inst=
+ead
+
+   of disabling it for the affected devices.
+
+
+
+I haven't had much success in figuring out exactly why reading le minmax tx
+
+power stops Bluetooth from working. I have noticed that these lines are not
+
+present in dmesg when Bluetooth is not working due to this issue:
+
+
+
+Bluetooth: RFCOMM TTY layer initialized
+
+Bluetooth: RFCOMM socket layer initialized
+
+Bluetooth: RFCOMM ver 1.11
+
+
+
+I have also added some logging around the changes in 7c395ea521e6, the two
+
+patches (one with bt working one without) I tried and their associated dmes=
+gs
+
+are here https://gist.github.com/Redecorating/8330bb58a7cb8730be3956058ba45=
+99f
+
+
+
+Regards,
+
+Orlando Chamberlain
+
+
+
+---
+
+ drivers/bluetooth/btbcm.c   | 4 ++++
+
+ include/net/bluetooth/hci.h | 9 +++++++++
+
+ net/bluetooth/hci_core.c    | 3 ++-
+
+ 3 files changed, 15 insertions(+), 1 deletion(-)
+
+
+
+diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+
+index e4182acee488..4ecc50d93107 100644
+
+--- a/drivers/bluetooth/btbcm.c
+
++++ b/drivers/bluetooth/btbcm.c
+
+@@ -353,6 +353,10 @@ static int btbcm_read_info(struct hci_dev *hdev)
+
+ =09=09return PTR_ERR(skb);
+
+
+
+ =09bt_dev_info(hdev, "BCM: chip id %u", skb->data[1]);
+
++
+
++=09if (skb->data[1] =3D=3D 150)
+
++=09=09set_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks);
+
++
+
+ =09kfree_skb(skb);
+
+
+
+ =09/* Read Controller Features */
+
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+
+index b80415011dcd..9ce46cb8564d 100644
+
+--- a/include/net/bluetooth/hci.h
+
++++ b/include/net/bluetooth/hci.h
+
+@@ -246,6 +246,15 @@ enum {
+
+ =09 * HCI after resume.
+
+ =09 */
+
+ =09HCI_QUIRK_NO_SUSPEND_NOTIFIER,
+
++
+
++=09/*
+
++=09 * When this quirk is set, LE tx power is not queried on startup
+
++=09 * and the min/max tx power values default to HCI_TX_POWER_INVALID.
+
++=09 *
+
++=09 * This quirk can be set before hci_register_dev is called or
+
++=09 * during the hdev->setup vendor callback.
+
++=09 */
+
++=09HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER,
+
+ };
+
+
+
+ /* HCI device flags */
+
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+
+index 8a47a3017d61..9a23fe7c8d67 100644
+
+--- a/net/bluetooth/hci_core.c
+
++++ b/net/bluetooth/hci_core.c
+
+@@ -742,7 +742,8 @@ static int hci_init3_req(struct hci_request *req, unsig=
+ned long opt)
+
+ =09=09=09hci_req_add(req, HCI_OP_LE_READ_ADV_TX_POWER, 0, NULL);
+
+ =09=09}
+
+
+
+-=09=09if (hdev->commands[38] & 0x80) {
+
++=09=09if (hdev->commands[38] & 0x80 &&
+
++=09    =09!test_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks)) =
+{
+
+ =09=09=09/* Read LE Min/Max Tx Power*/
+
+ =09=09=09hci_req_add(req, HCI_OP_LE_READ_TRANSMIT_POWER,
+
+ =09=09=09=09    0, NULL);
+
+--
+
+2.33.0
+
