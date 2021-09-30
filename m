@@ -1,71 +1,118 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3D1072
-	for <regressions@lists.linux.dev>; Thu, 30 Sep 2021 17:03:51 +0000 (UTC)
-Received: from ip4d14bdef.dynamic.kabel-deutschland.de ([77.20.189.239] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mVzT7-0000ha-IF; Thu, 30 Sep 2021 19:03:37 +0200
-Message-ID: <43fb97ad-69eb-95ad-d50a-b8f1113dbee6@leemhuis.info>
-Date: Thu, 30 Sep 2021 19:03:36 +0200
+Received: from mail.holtmann.org (coyote.holtmann.net [212.227.132.17])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1E7E3FC3
+	for <regressions@lists.linux.dev>; Thu, 30 Sep 2021 18:05:48 +0000 (UTC)
+Received: from smtpclient.apple (p5b3d2185.dip0.t-ipconnect.de [91.61.33.133])
+	by mail.holtmann.org (Postfix) with ESMTPSA id 12109CED17;
+	Thu, 30 Sep 2021 19:58:55 +0200 (CEST)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Content-Language: en-BS
-To: Orlando Chamberlain <redecorating@protonmail.com>
-Cc: danielwinkler@google.com, johan.hedberg@intel.com,
- linux-bluetooth@vger.kernel.org, marcel@holtmann.org,
- regressions@lists.linux.dev, sonnysasaka@chromium.org,
+Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
+Subject: Re: [PATCH] Bluetooth: add quirk disabling query LE tx power
+From: Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20210930141256.19943-1-redecorating@protonmail.com>
+Date: Thu, 30 Sep 2021 19:58:54 +0200
+Cc: danielwinkler@google.com,
+ Johan Hedberg <johan.hedberg@intel.com>,
+ linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+ regressions@lists.linux.dev,
+ sonnysasaka@chromium.org,
  linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <FA02CDD7-CFEC-4481-9940-BA95D81FD3F3@holtmann.org>
 References: <4970a940-211b-25d6-edab-21a815313954@protonmail.com>
  <20210930063106.19881-1-redecorating@protonmail.com>
  <20210930141256.19943-1-redecorating@protonmail.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH] Bluetooth: add quirk disabling query LE tx power
-In-Reply-To: <20210930141256.19943-1-redecorating@protonmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1633021432;0e157b2d;
-X-HE-SMSGID: 1mVzT7-0000ha-IF
+To: Orlando Chamberlain <redecorating@protonmail.com>
+X-Mailer: Apple Mail (2.3654.120.0.1.13)
 
-On 30.09.21 16:13, Orlando Chamberlain wrote:
+Hi Orlando,
+
 > Querying LE tx power on startup broke Bluetooth on some Broadcom chips
-> in Apple computers (at least MacBookPro16,1 and iMac20,1). Added a quirk
+> in Apple computers (at least MacBookPro16,1 and iMac20,1). Added a =
+quirk
 > disabling this query for affected devices, based off their common chip
-> id 150. Affected devices will not be able to query LE tx power, however
+> id 150. Affected devices will not be able to query LE tx power, =
+however
 > they were not doing this before.
-> 
+>=20
 > Fixes: 7c395ea521e6m ("Bluetooth: Query LE tx power on startup")
 > Signed-off-by: Orlando Chamberlain <redecorating@protonmail.com>
+> ---
+> drivers/bluetooth/btbcm.c   | 4 ++++
+> include/net/bluetooth/hci.h | 8 ++++++++
+> net/bluetooth/hci_core.c    | 3 ++-
+> 3 files changed, 14 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+> index e4182acee488..4ecc50d93107 100644
+> --- a/drivers/bluetooth/btbcm.c
+> +++ b/drivers/bluetooth/btbcm.c
+> @@ -353,6 +353,10 @@ static int btbcm_read_info(struct hci_dev *hdev)
+> 		return PTR_ERR(skb);
+>=20
+> 	bt_dev_info(hdev, "BCM: chip id %u", skb->data[1]);
+> +
+> +	if (skb->data[1] =3D=3D 150)
+> +		set_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, =
+&hdev->quirks);
+> +
+> 	kfree_skb(skb);
+>=20
+> 	/* Read Controller Features */
+> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+> index b80415011dcd..5e0dd0c39ade 100644
+> --- a/include/net/bluetooth/hci.h
+> +++ b/include/net/bluetooth/hci.h
+> @@ -246,6 +246,14 @@ enum {
+> 	 * HCI after resume.
+> 	 */
+> 	HCI_QUIRK_NO_SUSPEND_NOTIFIER,
+> +
+> +	/*
+> +	 * When this quirk is set, LE tx power is not queried on =
+startup.
+> +	 *
+> +	 * This quirk can be set before hci_register_dev is called or
+> +	 * during the hdev->setup vendor callback.
+> +	 */
+> +	HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER,
+> };
+>=20
+> /* HCI device flags */
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index 8a47a3017d61..16e39739c662 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -742,7 +742,8 @@ static int hci_init3_req(struct hci_request *req, =
+unsigned long opt)
+> 			hci_req_add(req, HCI_OP_LE_READ_ADV_TX_POWER, 0, =
+NULL);
+> 		}
+>=20
+> -		if (hdev->commands[38] & 0x80) {
+> +		if (hdev->commands[38] & 0x80 &&
+> +			!test_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, =
+&hdev->quirks)) {
+> 			/* Read LE Min/Max Tx Power*/
+> 			hci_req_add(req, HCI_OP_LE_READ_TRANSMIT_POWER,
+> 				    0, NULL);
 
-FWIW, if you need to respin this for some reason, could you do me a
-favour and add the following after the "Fixes" line please:
+so I really need the btmon traces from the device init (so unload and =
+reload the module) and we need to see what commands are supported and =
+what commands are failing.
 
-Link:
-https://lore.kernel.org/r/4970a940-211b-25d6-edab-21a815313954@protonmail.com
+Since you say this is on a MacBook, I assume this is an UART based =
+Broadcom chip. Sometimes Broadcom has been really flaky with their =
+actually implemented commands. However in some cases firmware updates do =
+fix this. So any chance you can boot OS X and check that the latest =
+firmware is loaded.
 
-That makes is easier to find related discussions and rationale behind a
-certain change, as explained here:
-https://www.kernel.org/doc/html/latest/maintainer/configure-git.html
+Regards
 
-This line is not crucial, but it makes my life easier as well, as I
-slowly start to track regressions again. And this time I'm doing it with
-the help of a software I wrote just for this purpose. I used your report
-as one of the first few to give this "regzbot" a test, hence the issue
-can now be seen in the webinterface (which is still a bit ugly, but it
-does the job):
+Marcel
 
-https://linux-regtracking.leemhuis.info/regzbot/mainline.html
-
-And the thing is: when regzbot sees a patch with above Link:-tag hit
-mainline it will automatically mark the issue as resolved, saving me
-some work.
-
-Thx!
-
-Ciao, Thorsten
