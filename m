@@ -1,118 +1,195 @@
-Received: from mail.holtmann.org (coyote.holtmann.net [212.227.132.17])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1E7E3FC3
-	for <regressions@lists.linux.dev>; Thu, 30 Sep 2021 18:05:48 +0000 (UTC)
-Received: from smtpclient.apple (p5b3d2185.dip0.t-ipconnect.de [91.61.33.133])
-	by mail.holtmann.org (Postfix) with ESMTPSA id 12109CED17;
-	Thu, 30 Sep 2021 19:58:55 +0200 (CEST)
-Content-Type: text/plain;
-	charset=us-ascii
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991E73FCA
+	for <regressions@lists.linux.dev>; Fri,  1 Oct 2021 03:37:31 +0000 (UTC)
+Date: Fri, 01 Oct 2021 03:37:12 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail; t=1633059441;
+	bh=wbT/YxksNbpXIxygDUBBltEQxbsIjbL1dpqdJhyCWhs=;
+	h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+	b=jQTOqCJ17snc2K7xVW85S02omw7lzG3eBod0NjAsxgOaH3tQO8UlUNC7EC3Zwj7d8
+	 /xvI4dAc2co/C5eyA0poho2CXP1VWXXgeOIXLHBW1oAnAtdNLug6GHryyCVjpCP2Lh
+	 jEWIH1fBr6zvEMZzK5EVXD4eG6HlH/Zgry01Udzc=
+To: Marcel Holtmann <marcel@holtmann.org>
+From: Orlando Chamberlain <redecorating@protonmail.com>
+Cc: danielwinkler@google.com, Johan Hedberg <johan.hedberg@intel.com>, linux-bluetooth <linux-bluetooth@vger.kernel.org>, regressions@lists.linux.dev, sonnysasaka@chromium.org, linux-kernel@vger.kernel.org
+Reply-To: Orlando Chamberlain <redecorating@protonmail.com>
+Subject: Re: [PATCH] Bluetooth: add quirk disabling query LE tx power
+Message-ID: <275acce4-9eab-9cba-7145-5a75a69ca530@protonmail.com>
+In-Reply-To: <FA02CDD7-CFEC-4481-9940-BA95D81FD3F3@holtmann.org>
+References: <4970a940-211b-25d6-edab-21a815313954@protonmail.com> <20210930063106.19881-1-redecorating@protonmail.com> <20210930141256.19943-1-redecorating@protonmail.com> <FA02CDD7-CFEC-4481-9940-BA95D81FD3F3@holtmann.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
-Subject: Re: [PATCH] Bluetooth: add quirk disabling query LE tx power
-From: Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20210930141256.19943-1-redecorating@protonmail.com>
-Date: Thu, 30 Sep 2021 19:58:54 +0200
-Cc: danielwinkler@google.com,
- Johan Hedberg <johan.hedberg@intel.com>,
- linux-bluetooth <linux-bluetooth@vger.kernel.org>,
- regressions@lists.linux.dev,
- sonnysasaka@chromium.org,
- linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="b1_QyD3q1wsYzPCN4Wpoew4UPb3trelXIZ8pQMlvRTglU"
+X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM shortcircuit=no
+	autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+	mailout.protonmail.ch
+
+This is a multi-part message in MIME format.
+
+--b1_QyD3q1wsYzPCN4Wpoew4UPb3trelXIZ8pQMlvRTglU
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <FA02CDD7-CFEC-4481-9940-BA95D81FD3F3@holtmann.org>
-References: <4970a940-211b-25d6-edab-21a815313954@protonmail.com>
- <20210930063106.19881-1-redecorating@protonmail.com>
- <20210930141256.19943-1-redecorating@protonmail.com>
-To: Orlando Chamberlain <redecorating@protonmail.com>
-X-Mailer: Apple Mail (2.3654.120.0.1.13)
 
-Hi Orlando,
+On 1/10/21 03:58, Marcel Holtmann wrote:
+> so I really need the btmon traces from the device init (so unload and rel=
+oad the module) and we need to see what commands are supported and what com=
+mands are failing.
+I'll attach the full file I got with btmon -w MacBookPro16,1.btsnoop, but t=
+hese seem
+like the important bits:
 
-> Querying LE tx power on startup broke Bluetooth on some Broadcom chips
-> in Apple computers (at least MacBookPro16,1 and iMac20,1). Added a =
-quirk
-> disabling this query for affected devices, based off their common chip
-> id 150. Affected devices will not be able to query LE tx power, =
-however
-> they were not doing this before.
->=20
-> Fixes: 7c395ea521e6m ("Bluetooth: Query LE tx power on startup")
-> Signed-off-by: Orlando Chamberlain <redecorating@protonmail.com>
-> ---
-> drivers/bluetooth/btbcm.c   | 4 ++++
-> include/net/bluetooth/hci.h | 8 ++++++++
-> net/bluetooth/hci_core.c    | 3 ++-
-> 3 files changed, 14 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-> index e4182acee488..4ecc50d93107 100644
-> --- a/drivers/bluetooth/btbcm.c
-> +++ b/drivers/bluetooth/btbcm.c
-> @@ -353,6 +353,10 @@ static int btbcm_read_info(struct hci_dev *hdev)
-> 		return PTR_ERR(skb);
->=20
-> 	bt_dev_info(hdev, "BCM: chip id %u", skb->data[1]);
-> +
-> +	if (skb->data[1] =3D=3D 150)
-> +		set_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, =
-&hdev->quirks);
-> +
-> 	kfree_skb(skb);
->=20
-> 	/* Read Controller Features */
-> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> index b80415011dcd..5e0dd0c39ade 100644
-> --- a/include/net/bluetooth/hci.h
-> +++ b/include/net/bluetooth/hci.h
-> @@ -246,6 +246,14 @@ enum {
-> 	 * HCI after resume.
-> 	 */
-> 	HCI_QUIRK_NO_SUSPEND_NOTIFIER,
-> +
-> +	/*
-> +	 * When this quirk is set, LE tx power is not queried on =
-startup.
-> +	 *
-> +	 * This quirk can be set before hci_register_dev is called or
-> +	 * during the hdev->setup vendor callback.
-> +	 */
-> +	HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER,
-> };
->=20
-> /* HCI device flags */
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index 8a47a3017d61..16e39739c662 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -742,7 +742,8 @@ static int hci_init3_req(struct hci_request *req, =
-unsigned long opt)
-> 			hci_req_add(req, HCI_OP_LE_READ_ADV_TX_POWER, 0, =
-NULL);
-> 		}
->=20
-> -		if (hdev->commands[38] & 0x80) {
-> +		if (hdev->commands[38] & 0x80 &&
-> +			!test_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, =
-&hdev->quirks)) {
-> 			/* Read LE Min/Max Tx Power*/
-> 			hci_req_add(req, HCI_OP_LE_READ_TRANSMIT_POWER,
-> 				    0, NULL);
+< HCI Command: Read Local Supported Commands (0x04|0x0002) plen 0=09#43 [hc=
+i0] 9.217379
 
-so I really need the btmon traces from the device init (so unload and =
-reload the module) and we need to see what commands are supported and =
-what commands are failing.
+> HCI Event: Command Complete (0x0e) plen 68=09=09=09=09#44 [hci0] 9.218033
 
-Since you say this is on a MacBook, I assume this is an UART based =
-Broadcom chip. Sometimes Broadcom has been really flaky with their =
-actually implemented commands. However in some cases firmware updates do =
-fix this. So any chance you can boot OS X and check that the latest =
-firmware is loaded.
+      Read Local Supported Commands (0x04|0x0002) ncmd 1
 
-Regards
+        Status: Success (0x00)
 
-Marcel
+        Commands: 223 entries
+=09## many many lines here ##
+=09LE Read Transmit Power (Octet 38 - Bit 7)
+=09LE Read RF Path Compensation (Octet 39 - Bit 0)
+
+=09LE Write RF Path Compensation (Octet 39 - Bit 1)
+
+=09LE Set Privacy Mode (Octet 39 - Bit 2)
+
+=09Read Local Simple Pairing Options (Octet 41 - Bit=20
+
+At the end of the trace:
+
+< HCI Command: LE Read Transmit Power (0x08|0x004b) plen 0=09=09#69 [hci0] =
+9.226953
+> HCI Event: Command Complete (0x0e) plen 4=09=09=09=09#70 [hci0] 9.227515
+      LE Read Transmit Power (0x08|0x004b) ncmd 1
+        Status: Unknown HCI Command (0x01)
+=3D Close Index: F8:FF:C2:06:46:63=09=09=09=09=09[hci0] 9.227666
+
+I'm guessing that this means it reports that it supports the command but it=
+ doesn't,
+so if this is the case, I'd have to change the description of the quirk to =
+clarify that.
+
+> Since you say this is on a MacBook, I assume this is an UART based Broadc=
+om chip. Sometimes Broadcom has been really flaky with their actually imple=
+mented commands. However in some cases firmware updates do fix this. So any=
+ chance you can boot OS X and check that the latest firmware is loaded.
+
+Bluetooth for this device is indeed through uart:
+
+# lspci -vvvnnd '8086:a328'
+00:1e.0 Communication controller [0780]: Intel Corporation Cannon Lake PCH =
+Serial IO UART Host Controller    [8086:a328] (rev 10)
+
+    Subsystem: Intel Corporation Device [8086:7270]
+
+    Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Ste=
+pping- SERR- FastB2B- DisINTx-
+
+    Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=3Dfast >TAbort- <TAbor=
+t- <MAbort- >SERR- <PERR- INTx-
+
+    Latency: 0, Cache Line Size: 256 bytes
+
+    Interrupt: pin A routed to IRQ 20
+
+    IOMMU group: 8
+
+    Region 0: Memory at 4000000000 (64-bit, non-prefetchable) [size=3D4K]
+
+    Capabilities: [80] Power Management version 3
+
+        Flags: PMEClk- DSI- D1- D2- AuxCurrent=3D0mA PME(D0-,D1-,D2-,D3hot-=
+,D3cold-)
+
+        Status: D0 NoSoftRst+ PME-Enable- DSel=3D0 DScale=3D0 PME-
+
+    Capabilities: [90] Vendor Specific Information: Len=3D14 <?>
+
+    Kernel driver in use: intel-lpss
+
+    Kernel modules: intel_lpss_pci
+
+$ cat /sys/bus/pci/devices/0000:00:1e.0/dw-apb-uart.0/serial0/serial0-0/mod=
+alias
+
+acpi:BCM2E7C:APPLE-UART-BLTH:
+
+I've just updated macOS to 11.6, which should have updated firmware. The is=
+sue is still present.
+--b1_QyD3q1wsYzPCN4Wpoew4UPb3trelXIZ8pQMlvRTglU
+Content-Type: application/octet-stream; name=MacBookPro161.btsnoop
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename=MacBookPro161.btsnoop
+
+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
+
+--b1_QyD3q1wsYzPCN4Wpoew4UPb3trelXIZ8pQMlvRTglU--
 
