@@ -1,60 +1,107 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail-4325.protonmail.ch (mail-4325.protonmail.ch [185.70.43.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CD7029CA
-	for <regressions@lists.linux.dev>; Fri,  1 Oct 2021 08:24:18 +0000 (UTC)
-Received: from ip4d14bdef.dynamic.kabel-deutschland.de ([77.20.189.239] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mWDq4-0007tf-D3; Fri, 01 Oct 2021 10:24:16 +0200
-Message-ID: <d4405cdb-95ee-1dd9-6957-502269feb15e@leemhuis.info>
-Date: Fri, 1 Oct 2021 10:24:16 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AD72FB3
+	for <regressions@lists.linux.dev>; Fri,  1 Oct 2021 08:36:30 +0000 (UTC)
+Date: Fri, 01 Oct 2021 08:36:18 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail; t=1633077382;
+	bh=R70czlvvk3XDeVB9oVaPPYq0I5725a5+YjSYUTpQ7+s=;
+	h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
+	b=qn4gHqOzKzYNuBxxRQp4214pq069o7QXUO95qxqlv6crz5SZ+eS7w2eRreRrThLvt
+	 bNAp7JX3WwQTdHcylAV4fbHwMww6L1PPoG8N7CWVvdEseVslf9Qv3xk7eRUivKzFmK
+	 6rkqHq4urGgYJc+EyJWWe8WZyuyJLtHThUGG+Mpk=
+To: redecorating@protonmail.com
+From: Orlando Chamberlain <redecorating@protonmail.com>
+Cc: danielwinkler@google.com, johan.hedberg@intel.com, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, marcel@holtmann.org, regressions@lists.linux.dev, sonnysasaka@chromium.org
+Reply-To: Orlando Chamberlain <redecorating@protonmail.com>
+Subject: [PATCHv2] Bluetooth: quirk disabling LE Read Transmit Power
+Message-ID: <20211001083412.3078-1-redecorating@protonmail.com>
+In-Reply-To: <275acce4-9eab-9cba-7145-5a75a69ca530@protonmail.com>
+References: <4970a940-211b-25d6-edab-21a815313954@protonmail.com> <20210930063106.19881-1-redecorating@protonmail.com> <20210930141256.19943-1-redecorating@protonmail.com> <FA02CDD7-CFEC-4481-9940-BA95D81FD3F3@holtmann.org> <275acce4-9eab-9cba-7145-5a75a69ca530@protonmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Content-Language: en-BS
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <bff7d309-a816-6a75-51b6-5928ef4f7a8c@exuvo.se>
- <20190927080303.GA7667@redhat.com>
- <CA+GwT0B5SyRZnGLqwqOeuJK4CWMVc=dKaWre9VN8KQC6kBzKGw@mail.gmail.com>
- <20191203075736.GA701@redhat.com>
- <d74dab51-3a84-9035-d89e-ea8f63e89198@exuvo.se>
- <a8eeb0bc-95da-291a-7fb9-5d15d1174c27@exuvo.se>
- <c22673af-40e0-3af2-5ab7-69b23fc03598@exuvo.se>
- <f935dc15-08bd-2e28-fc1b-b27634c618be@exuvo.se>
- <87czop5j33.fsf@tynnyri.adurom.net>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: rt2x00 regression
-In-Reply-To: <87czop5j33.fsf@tynnyri.adurom.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1633076658;2fbcf55c;
-X-HE-SMSGID: 1mWDq4-0007tf-D3
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM shortcircuit=no
+	autolearn=disabled version=3.4.4
+X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
+	mailout.protonmail.ch
 
-On 01.10.21 08:56, Kalle Valo wrote:
-> (adding regressions list for easier tracking)
+The LE Read Transmit Power command is Advertised on some Broadcom
+controlers, but not supported. Using this command breaks Bluetooth
+on the MacBookPro16,1 and iMac20,1. Added a quirk disabling LE Read
+Transmit Power for these devices, based off their common chip id 150.
 
-Feel free to ignore this message. I write it to make regzbot track above
-issue. Regzbot is the regression tracking bot I'm working on. It's still
-in the early stages and this is still one of the first few regression I
-make it track to get started and things tested in the field. That also
-why I'm sending the mail just to the regressions list (it will do its
-full magic nevertheless). For details see:
-https://linux-regtracking.leemhuis.info/post/inital-regzbot-running/
-https://linux-regtracking.leemhuis.info/post/regzbot-approach/
+Link: https://lore.kernel.org/r/4970a940-211b-25d6-edab-21a815313954@proton=
+mail.com
+Signed-off-by: Orlando Chamberlain <redecorating@protonmail.com>
+---
+v1->v2: Clarified quirk description
 
-#regzbot ^introduced e383c70474db32b9d4a3de6dfbd08784d19e6751
-#regzbot monitor
-https://lore.kernel.org/linux-wireless/bff7d309-a816-6a75-51b6-5928ef4f7a8c@exuvo.se/
-#regzbot ignore-activitiy
+ drivers/bluetooth/btbcm.c   |  4 ++++
+ include/net/bluetooth/hci.h | 11 +++++++++++
+ net/bluetooth/hci_core.c    |  3 ++-
+ 3 files changed, 17 insertions(+), 1 deletion(-)
 
-BTW, in case anyone is reading this: the regzbot's webinterface that
-gives insights into what is tracked can be found here:
+diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+index e4182acee488..4ecc50d93107 100644
+--- a/drivers/bluetooth/btbcm.c
++++ b/drivers/bluetooth/btbcm.c
+@@ -353,6 +353,10 @@ static int btbcm_read_info(struct hci_dev *hdev)
+ =09=09return PTR_ERR(skb);
+=20
+ =09bt_dev_info(hdev, "BCM: chip id %u", skb->data[1]);
++
++=09if (skb->data[1] =3D=3D 150)
++=09=09set_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks);
++
+ =09kfree_skb(skb);
+=20
+ =09/* Read Controller Features */
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index b80415011dcd..6da9bd6b7259 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -246,6 +246,17 @@ enum {
+ =09 * HCI after resume.
+ =09 */
+ =09HCI_QUIRK_NO_SUSPEND_NOTIFIER,
++
++=09/* When this quirk is set, LE Read Transmit Power is disabled.
++=09 * This is mainly due to the fact that the HCI LE Read Transmit
++=09 * Power command is advertised, but not supported; these
++=09 * controllers often reply with unknown command and need a hard
++=09 * reset.
++=09 *
++=09 * This quirk can be set before hci_register_dev is called or
++=09 * during the hdev->setup vendor callback.
++=09 */
++=09HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER,
+ };
+=20
+ /* HCI device flags */
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 8a47a3017d61..9a23fe7c8d67 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -742,7 +742,8 @@ static int hci_init3_req(struct hci_request *req, unsig=
+ned long opt)
+ =09=09=09hci_req_add(req, HCI_OP_LE_READ_ADV_TX_POWER, 0, NULL);
+ =09=09}
+=20
+-=09=09if (hdev->commands[38] & 0x80) {
++=09=09if (hdev->commands[38] & 0x80 &&
++=09=09=09!test_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks)) {
+ =09=09=09/* Read LE Min/Max Tx Power*/
+ =09=09=09hci_req_add(req, HCI_OP_LE_READ_TRANSMIT_POWER,
+ =09=09=09=09    0, NULL);
+--=20
+2.33.0
 
-https://linux-regtracking.leemhuis.info/regzbot/mainline.html
 
-Ciao, Thorsten
