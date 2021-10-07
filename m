@@ -1,98 +1,101 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051BE2C89
+	for <regressions@lists.linux.dev>; Thu,  7 Oct 2021 09:48:29 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1633600112; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=vGI68wyoqpDAZBA89Pt6Cbg+azmy5aIwL+2+C+Cr1xA=; b=LwYtBdiEJo3JCYAfLEbUEcuZmY2DaO3RZ+v1OPTB683Pv4SpUbw98tC8rJe1J/InfyLxWkB/
+ u3ZwgrIrTG78yJBLy3tME5NW555YlEm840IgMUzgfcYXc9zfiAq1w6oxVagPCCCb/7kDgclt
+ TP2TAIgbUOmSe0jKU2LOxY9zIkM=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 615ec26b0e38ad481d31a324 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Thu, 07 Oct 2021 09:48:27
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+	id 75551C43460; Thu,  7 Oct 2021 09:48:26 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL
+	autolearn=no autolearn_force=no version=3.4.0
+Received: from tykki (tynnyri.adurom.net [51.15.11.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627B73FF9
-	for <regressions@lists.linux.dev>; Tue,  5 Oct 2021 05:50:07 +0000 (UTC)
-Received: from ip4d14bdef.dynamic.kabel-deutschland.de ([77.20.189.239] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mXdL3-0006sE-5r; Tue, 05 Oct 2021 07:50:05 +0200
-Message-ID: <33e3bba4-309a-23d7-64be-03c863723457@leemhuis.info>
-Date: Tue, 5 Oct 2021 07:50:02 +0200
+	(Authenticated sender: kvalo)
+	by smtp.codeaurora.org (Postfix) with ESMTPSA id 56A93C4338F;
+	Thu,  7 Oct 2021 09:48:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org 56A93C4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+From: Kalle Valo <kvalo@codeaurora.org>
+To: Loic Poulain <loic.poulain@linaro.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,  ath11k@lists.infradead.org,  linux-wireless@vger.kernel.org,  linux-arm-msm <linux-arm-msm@vger.kernel.org>,  regressions@lists.linux.dev,
+    mhi <mhi@lists.linux.dev>
+Subject: Re: [regression] mhi: ath11k resume fails on some devices
+References: <871r5p0x2u.fsf@codeaurora.org>
+	<CAMZdPi8UJLvBFQd8-nf-iHAQh8cEuihq97PUFfZ7Q=rxRQoPsg@mail.gmail.com>
+	<877df6tlnq.fsf@codeaurora.org>
+	<CAMZdPi8P7YZPhPir+WfS3cY_a7He1m2Pq2uqBhczPdEeoNRb0Q@mail.gmail.com>
+Date: Thu, 07 Oct 2021 12:48:19 +0300
+In-Reply-To: <CAMZdPi8P7YZPhPir+WfS3cY_a7He1m2Pq2uqBhczPdEeoNRb0Q@mail.gmail.com>
+	(Loic Poulain's message of "Fri, 24 Sep 2021 11:43:55 +0200")
+Message-ID: <87a6jl9ndo.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Content-Language: en-BS
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <cjJiSFV77WM51ciS8EuBcdeBcv9T83PUB-Kw3yi8PuC_LwrrUUnQ3w5RC1PbKvSYE72KryXp3wOJhv4Ov_WWIe2gKWOOo5uwuUjbbFA8HDM=@protonmail.com>
- <438d711b-094b-fcfd-79e3-69f03a14df21@leemhuis.info>
- <637b0f3f-ac23-1e32-db7f-c696a04c1c73@leemhuis.info>
- <YVrI9rb4mnIs6RnF@kroah.com>
- <a5349810-aed0-3f35-654c-bfd89b2fc285@leemhuis.info>
- <YVrnN3pnmr/MOx/v@kroah.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [REGRESSION] nvme: code command_id with a genctr for
- use-after-free validation crashes apple T2 SSD
-In-Reply-To: <YVrnN3pnmr/MOx/v@kroah.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1633413007;73249b82;
-X-HE-SMSGID: 1mXdL3-0006sE-5r
+Content-Type: text/plain
 
-On 04.10.21 13:36, Greg KH wrote:
-> On Mon, Oct 04, 2021 at 12:11:43PM +0200, Thorsten Leemhuis wrote:
->> On 04.10.21 11:27, Greg KH wrote:
->>> On Mon, Oct 04, 2021 at 11:17:21AM +0200, Thorsten Leemhuis wrote:
->>>> On 26.09.21 07:59, Thorsten Leemhuis wrote:
->>>>> On 25.09.21 15:10, Orlando Chamberlain wrote:
->>>>>> Commit e7006de6c238 causes the SSD controller on Apple T2 computers to crash
->>>>>> and prevents linux from booting.
->>>>>>
->>>>>> This commit implemented a counter that is stored within the NVMe command_id,
->>>>>> however this counter makes the command_id higher than normal, causing a panic
->>>>>> on the T2 security chip that functions as the SSD controller, which then
->>>>>> causes the system to power off after a few seconds.
->>>>>>
->>>>>> This was reported on bugzilla here:
->>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=214509 but it was not originally
->>>>>> classified as NVMe (when the report was created it was unknown what was
->>>>>> causing it), so I don't know if it notified the NVMe mailing list when it
->>>>>> was later reclassified to NVMe. Sorry if you've already seen this issue.
->>> [...]
->>>>> Feel free to ignore this message. I write it to make regzbot track above
->>> [...]
->>>> FWIW, this is just for the record: the fix for this landed in mainline,
->>>> but didn't refer to this thread or the one montitored, hence I need to
->>>> write this mail to make regzbot mark this regression as resolved:
->>>>
->>>> #regzbot monitor
->>>> https://lore.kernel.org/all/20210927154306.387437-1-kbusch@kernel.org/
->>>
->>> Thanks for tracking this, I'll go queue it up for 5.10.y and 5.14.y now.
+(adding the new mhi list, yay)
+
+Hi Loic,
+
+Loic Poulain <loic.poulain@linaro.org> writes:
+
+>> Loic Poulain <loic.poulain@linaro.org> writes:
 >>
->> Nice to hear that regzbot is helpful even while still in the early stage
->> of field testing. FWIW, this regression made me consider adding two things:
+>> > On Thu, 16 Sept 2021 at 10:00, Kalle Valo <kvalo@codeaurora.org> wrote:
 >>
->> * guess it would be a good idea if regzbot would simply export a
->> parseable list with commit IDs of still unresolved mainline regressions,
->> as your backports script then could simply consult it and put such
->> commits on hold
-> 
-> That would be nice, but that's not a normal thing that happens often.
+>> >> At the moment I'm running my tests with commit 020d3b26c07a reverted and
+>> >> everything works without problems. Is there a simple way to fix this? Or
+>> >> maybe we should just revert the commit? Commit log and kernel logs from
+>> >> a failing case below.
+>> >
+>> > Do you have log of success case?
+>>
+>> A log from a successful case in the end of email, using v5.15-rc1 plus
+>> revert of commit 020d3b26c07abe27.
+>>
+>> > To me, the device loses power, that is why MHI resuming is failing.
+>> > Normally the device should be properly recovered/reinitialized. Before
+>> > that patch the power loss was simply not detected (or handled at
+>> > higher stack level).
+>>
+>> Currently in ath11k we always keep the firmware running when in suspend,
+>> this is a workaround due to problems between mac80211 and MHI stack.
+>> IIRC the problem was something related MHI creating struct device during
+>> resume or something like that.
+>
+> Could you give a try with the attached patch? It should solve your
+> issue without breaking modem support.
 
-Okay, thx for letting me know, I already suspected something like that.
+Sorry for taking so long, but I now tested your patch on top of
+v5.15-rc3 and, as expected, everything works as before with QCA6390 on
+NUC x86 testbox.
 
->> * it afaics should even be possible to make regzbot detect "hey, this
->> commit was backported, but the fix was not yet, so lets add it to the
->> list of regressions in stable and longterm kernels and notify the stable
->> team about it.
-> 
-> If a commit has a Fixes: tag in it, our scripts will pick this up.  But
-> this commit did not have a Fixes: tag in it, so it missed it :(
-> 
-> Ideally all regression fixes will have a fixes: tag in them, and then
-> you don't have to add any new scripting.
+Tested-by: Kalle Valo <kvalo@codeaurora.org>
 
-Yeah, sure, but maybe some users run into the regression before it's
-fixed in mainline or before the fix is backported to the stable trees.
-Hence it IMHO might be good to have it listed to save users the trouble
-of reporting the issue again. But whatever, that's finetuning that can
-be done later, for now there are more important things that regzbot
-needs to learn first IMHO. :-D
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-Ciao, Thorsten
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
