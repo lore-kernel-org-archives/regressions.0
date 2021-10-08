@@ -1,56 +1,54 @@
-Received: from out4436.biz.mail.alibaba.com (out4436.biz.mail.alibaba.com [47.88.44.36])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363F52C81
-	for <regressions@lists.linux.dev>; Thu,  7 Oct 2021 16:18:27 +0000 (UTC)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=xuanzhuo@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0Uqr86Q-_1633623496;
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0Uqr86Q-_1633623496)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 08 Oct 2021 00:18:16 +0800
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95BA12C88
+	for <regressions@lists.linux.dev>; Fri,  8 Oct 2021 08:00:04 +0000 (UTC)
+Received: from ip4d14bdef.dynamic.kabel-deutschland.de ([77.20.189.239] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mYknN-0003O3-5h; Fri, 08 Oct 2021 09:59:57 +0200
+Message-ID: <ae2879df-64b8-0258-e4ee-59d7c279676f@leemhuis.info>
+Date: Fri, 8 Oct 2021 09:59:56 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-message-id: <1633623446.6192446-1-xuanzhuo@linux.alibaba.com>
-subject: Re: virtio-net: kernel panic in virtio_net.c
-date: Fri, 08 Oct 2021 00:17:26 +0800
-from: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-to: Greg KH <gregkh@linuxfoundation.org>
-cc: =?utf-8?q?Corentin_No=C3=ABl?= <corentin.noel@collabora.com>,
- Michael S. Tsirkin <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
- virtualization@lists.linux-foundation.org, regressions@lists.linux.dev,
- Eric Dumazet <edumazet@google.com>, stable@vger.kernel.org
-in-reply-to: <YV8RTqGSTuVLMFOP@kroah.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.0
+Content-Language: en-US
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <5edaa2b7c2fe4abd0347b8454b2ac032b6694e2c.camel@collabora.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: virtio-net: kernel panic in virtio_net.c
+In-Reply-To: <5edaa2b7c2fe4abd0347b8454b2ac032b6694e2c.camel@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1633680004;33826070;
+X-HE-SMSGID: 1mYknN-0003O3-5h
 
-On Thu, 7 Oct 2021 17:25:02 +0200, Greg KH <gregkh@linuxfoundation.org> wro=
-te:
-> On Thu, Oct 07, 2021 at 11:06:12PM +0800, Xuan Zhuo wrote:
-> > On Thu, 07 Oct 2021 14:04:22 +0200, Corentin No=C3=ABl <corentin.noel@c=
-ollabora.com> wrote:
-> > > I've been experiencing crashes with 5.14-rc1 and above that do not
-> > > occur with 5.13,
-> >
-> > I should have fixed this problem before. I don't know why, I just looke=
-d at the
-> > latest net code, and this commit seems to be lost.
-> >
-> >      1a8024239dacf53fcf39c0f07fbf2712af22864f virtio-net: fix for skb_o=
-ver_panic inside big mode
-> >
-> > Can you test this patch again?
->
-> That commit showed up in 5.13-rc5, so 5.14-rc1 and 5.13 should have had
-> it in it, right?
->
+On 07.10.21 14:04, Corentin Noël wrote:
+> I've been experiencing crashes with 5.14-rc1 and above that do not
+> occur with 5.13,
 
-Yes, it may be lost due to conflicts during a certain merge.
+Feel free to ignore this message. I write it to make regzbot track above
+issue. Regzbot is the regression tracking bot I'm working on. It's still
+in the early stages and this is still one of the first few regression I
+make it track to get started and things tested in the field. That also
+why I'm sending the mail just to the regressions list (it will do its
+full magic nevertheless). For details see:
+https://linux-regtracking.leemhuis.info/post/inital-regzbot-running/
+https://linux-regtracking.leemhuis.info/post/regzbot-approach/
 
-Thanks.
+#regzbot ^introduced v5.13..v5.14-rc1
+#regzbot link 
+https://lore.kernel.org/regressions/1633623446.6192446-1-xuanzhuo@linux.alibaba.com/ 
+Looks like a fix for this somehow fall through the cracks
+#regzbot ignore-activitiy
 
-> thanks,
->
-> greg k-h
+BTW, in case anyone is reading this: the regzbot's webinterface that
+gives insights into what is tracked can be found here:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline.html
+
+Ciao, Thorsten
