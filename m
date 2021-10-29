@@ -1,127 +1,126 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800E22C80
-	for <regressions@lists.linux.dev>; Thu, 21 Oct 2021 10:03:09 +0000 (UTC)
-Received: by mail-pj1-f45.google.com with SMTP id q2-20020a17090a2e0200b001a0fd4efd49so5475663pjd.1
-        for <regressions@lists.linux.dev>; Thu, 21 Oct 2021 03:03:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dyIzNS94yVFn26I1+Vs+X45Vc6HJjjNBIVAQhUczpSM=;
-        b=VWDF7tT1/ERaiy+hd0f6TMm9xFOihJIvjzaya/s3ODTaGnjpSPJdbYprA4nNTrVcbD
-         bGlCes4+wktbJ3qFkdxKX+pF3DSJZ3pwm1T+rFQES8zBRpNnOrXkgKXHJ2bue3r3p4G+
-         H69wUbUsY4TqDGOuFqhQvBvO6pAo8G6ZO6CEnUPDxxUOz6DdGTmalk5Q68ba/STSUsLs
-         cds7OJH3l3frdAhraIIVaAAqHEX+fjg63+fTS/Iv2xbAF5DLtfQp8/2JJG6vSVgCrzCp
-         biMIQFzCz+kKkNEb+g8wP/QnInQP1CRNTU7ldpMMsO8ZEgAaQcc58to35Vlx9L2XWw8h
-         b6aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dyIzNS94yVFn26I1+Vs+X45Vc6HJjjNBIVAQhUczpSM=;
-        b=XCwZyX8HwIVIMyFpjf33hpGH1DQ58nEBWXpXimscRalD8BNwkgp8VLX3NkoYWryaxZ
-         aayCGDlN1zac6INBL+n/JoVMCkX95rD4aCbclCrj3xrdbqhPo41lbzj/08Zr2B5EIgji
-         HzBePRYifPUNIr9HHW3f2KWabvI0nz3uPwerb1CNLyximslkfx4RS9LPX3KQYIaohTf/
-         95uM8UJHib5uxnbQUz7grHOyQFd99WxtBKl8uKtiHOsXjxHAZb1IZTRpvj3jIcUWcjdQ
-         zCF/eLF0Jy8nfczKwkrvtSgJijtiuQzA0pRdR2uuQHUZXD7+NGx9g9NdHJgTGSETXXtT
-         I8GA==
-X-Gm-Message-State: AOAM530i0LStPShbXheVAHTjg2vIeVcBzCM8rogw/xydmCJBqblWO7YH
-	hEtB+llG09JpOXbXPmvDfUOkoKRk7CaZ
-X-Google-Smtp-Source: ABdhPJzzDD1MByFwNyBzIySK4PYWZmbpJVSVMenRc0Dxbbe1gHD8Vc4vuRM4kZ/i3/h7/Lf0nSzXIA==
-X-Received: by 2002:a17:90b:1196:: with SMTP id gk22mr5654164pjb.126.1634810589002;
-        Thu, 21 Oct 2021 03:03:09 -0700 (PDT)
-Received: from workstation ([202.21.43.20])
-        by smtp.gmail.com with ESMTPSA id f33sm8717545pjk.42.2021.10.21.03.03.06
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 21 Oct 2021 03:03:08 -0700 (PDT)
-Date: Thu, 21 Oct 2021 15:33:05 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Kalle Valo <kvalo@codeaurora.org>
-Cc: Loic Poulain <loic.poulain@linaro.org>, ath11k@lists.infradead.org,
-	linux-wireless@vger.kernel.org,
-	linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-	regressions@lists.linux.dev, mhi <mhi@lists.linux.dev>
-Subject: Re: [regression] mhi: ath11k resume fails on some devices
-Message-ID: <20211021100305.GD7580@workstation>
-References: <871r5p0x2u.fsf@codeaurora.org>
- <CAMZdPi8UJLvBFQd8-nf-iHAQh8cEuihq97PUFfZ7Q=rxRQoPsg@mail.gmail.com>
- <877df6tlnq.fsf@codeaurora.org>
- <CAMZdPi8P7YZPhPir+WfS3cY_a7He1m2Pq2uqBhczPdEeoNRb0Q@mail.gmail.com>
- <87a6jl9ndo.fsf@codeaurora.org>
- <87ee8hgqni.fsf@codeaurora.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29142C87
+	for <regressions@lists.linux.dev>; Fri, 29 Oct 2021 09:39:12 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mgNr9-00029N-Ei; Fri, 29 Oct 2021 11:07:23 +0200
+Message-ID: <e355589e-3162-76ed-edec-5cffc1f77356@leemhuis.info>
+Date: Fri, 29 Oct 2021 11:07:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ee8hgqni.fsf@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Content-Language: en-BS
+To: Kalle Valo <kvalo@codeaurora.org>,
+ Francesco Magliocca <franciman12@gmail.com>
+Cc: ath10k@lists.infradead.org,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CAH4F6usFu8-A6k5Z7rU9__iENcSC6Zr-NtRhh_aypR74UvN1uQ@mail.gmail.com>
+ <87o88muvvz.fsf@codeaurora.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: Bug in Memory Layout of rx_desc for QCA6174
+In-Reply-To: <87o88muvvz.fsf@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1635500352;23dec0b4;
+X-HE-SMSGID: 1mgNr9-00029N-Ei
 
-On Tue, Oct 19, 2021 at 03:12:01PM +0300, Kalle Valo wrote:
-> Kalle Valo <kvalo@codeaurora.org> writes:
-> 
-> > (adding the new mhi list, yay)
-> >
-> > Hi Loic,
-> >
-> > Loic Poulain <loic.poulain@linaro.org> writes:
-> >
-> >>> Loic Poulain <loic.poulain@linaro.org> writes:
-> >>>
-> >>> > On Thu, 16 Sept 2021 at 10:00, Kalle Valo <kvalo@codeaurora.org> wrote:
-> >>>
-> >>> >> At the moment I'm running my tests with commit 020d3b26c07a reverted and
-> >>> >> everything works without problems. Is there a simple way to fix this? Or
-> >>> >> maybe we should just revert the commit? Commit log and kernel logs from
-> >>> >> a failing case below.
-> >>> >
-> >>> > Do you have log of success case?
-> >>>
-> >>> A log from a successful case in the end of email, using v5.15-rc1 plus
-> >>> revert of commit 020d3b26c07abe27.
-> >>>
-> >>> > To me, the device loses power, that is why MHI resuming is failing.
-> >>> > Normally the device should be properly recovered/reinitialized. Before
-> >>> > that patch the power loss was simply not detected (or handled at
-> >>> > higher stack level).
-> >>>
-> >>> Currently in ath11k we always keep the firmware running when in suspend,
-> >>> this is a workaround due to problems between mac80211 and MHI stack.
-> >>> IIRC the problem was something related MHI creating struct device during
-> >>> resume or something like that.
-> >>
-> >> Could you give a try with the attached patch? It should solve your
-> >> issue without breaking modem support.
-> >
-> > Sorry for taking so long, but I now tested your patch on top of
-> > v5.15-rc3 and, as expected, everything works as before with QCA6390 on
-> > NUC x86 testbox.
-> >
-> > Tested-by: Kalle Valo <kvalo@codeaurora.org>
-> 
-> I doubt we will find enough time to fully debug this mhi issue anytime
-> soon. Can we commit Loic's patch so that this regression is resolved?
-> 
+On 21.09.21 11:21, Kalle Valo wrote:
+> (adding linux-wireless and regression lists)
 
-Sorry no :( Eventhough Loic's patch is working, I want to understand the
-issue properly so that we could add a proper fix or patch the firmware
-if possible.
+thx for that, this made be add the regression to regzbot
+(https://linux-regtracking.leemhuis.info/regzbot/mainline/ ). That's why
+I noticed there hasn't been any recent activity wrt to this regression
+-- at least in this thread. Was progress made somewhere else? If not:
+what can be done to get things moving again? Sure, it's an old
+regression, but nevertheless it would be nice to get it fixed.
 
-Let's try to get the debug logs as I requested.
+Ciao, Thorsten
 
-Thanks,
-Mani
+#regzbot ignore-activity
 
-> At the moment I'm doing all my regression testing with commit
-> 020d3b26c07abe27 reverted. That's a risk, I would prefer to do my
-> testing without any hacks.
+> Francesco Magliocca <franciman12@gmail.com> writes:
 > 
-> -- 
-> https://patchwork.kernel.org/project/linux-wireless/list/
+>> Hello everyone,
+>> I have a QCA6174 PCIe board, I am using linux kernel 5.12.10.
+>> The firmware loaded is:
+>>> [ 4.483131] ath10k_pci 0000:02:00.0: qca6174 hw3.2 target 0x05030000
+>>> chip_id 0x00340aff sub 1a56:143a
+>>> [ 4.483136] ath10k_pci 0000:02:00.0: kconfig debug 0 debugfs 1
+>>> tracing 0 dfs 0 testmode 0
+>>> [ 4.483567] ath10k_pci 0000:02:00.0: firmware ver
+>>> WLAN.RM.4.4.1-00157-QCARMSWPZ-1 api 6 features wowlan,ignore-otp,mfp
+>>> crc32 90eebefb
+>>> [    4.572730] ath10k_pci 0000:02:00.0: board_file api 2 bmi_id N/A crc32 318825bf
+>>> [ 4.665592] ath10k_pci 0000:02:00.0: htt-ver 3.60 wmi-op 4 htt-op 3
+>>> cal otp max-sta 32 raw 0 hwcrypto 1
+>>
+>> around six months ago I reported a bug which is still haunting me:
+>> When I am connected to my home's Wi-Fi network and my father's Huawei
+>> smartphone is connected too
+>> my Wi-Fi card hangs and gets stuck, I have to force restart of the device.
+>>
+>> Note that this problem does not happen if my pc and the smartphone are
+>> connected to different networks (for example
+>> I tried connecting my pc to the 2.4GHz network and the smartphone to
+>> the 5GHz network, and the bug does not appear).
+>>
+>> Now, I tried bisecting driver changes, and I found the faulty one,
+>> it is the commit: e3def6f7ddf88636febb12e1e3e86387a4ce5452
 > 
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> Ok, so this is the commit:
+> 
+> commit e3def6f7ddf88636febb12e1e3e86387a4ce5452
+> Author:     Govind Singh <govinds@qti.qualcomm.com>
+> AuthorDate: Thu Dec 21 14:30:51 2017 +0530
+> Commit:     Kalle Valo <kvalo@qca.qualcomm.com>
+> CommitDate: Wed Dec 27 12:05:35 2017 +0200
+> 
+>     ath10k: Update rx descriptor for WCN3990 target
+>     
+>     WCN3990 rx descriptor uses different offset of msdu start, msdu end,
+>     ppdu end, rx pkt end and rx frag info.
+>     To accommodate different offsets, define respective fields in
+>     rx descriptor of WCN3990 target.
+>     
+>     Signed-off-by: Govind Singh <govinds@qti.qualcomm.com>
+>     Signed-off-by: Kalle Valo <kvalo@qca.qualcomm.com>
+> 
+>> It adds some fields to structures like rx_msdu_start, rx_frag_info, etc..
+>> The changes modify the size of these structures!
+>>
+>> If I revert this commit changes, the bug does not happen
+>> (I tested it for two weeks, while the bug happens at least once in 2-3 hours
+>> from when the smartphone is connected to the wifi network).
+> 
+> Good, I was just about to ask about that.
+> 
+>> Also, if I selectively remove some of the changes introduced by the
+>> faulty commit, the bug does not go away, so it looks like the problem
+>> is in the change of size of the data structures.
+> 
+> Heh, I was also about to ask about that as well :) The firmware is
+> supposed to handle length differences but clearly it's not.
+> 
+>> Now, I'd like to ask you what we can do to fix this problem... Is
+>> there something I am doing wrong? Or is there a bug in the firmware?
+>>
+>> If the firmware can't be easily fixed, I was thinking that we can
+>> abstract the htt_rx_desc (in the same way we do with ops in other
+>> parts of the driver) to have two versions: one for 32-bit descriptors
+>> (like my QCA6174) and one for 64-bit descriptors (i.e. WCN3990, which
+>> was the cause of this change).
+>>
+>> I'd be really happy to help, but I am not sure I fully understand what
+>> is going on, so what do you think is happening and what should we do?
+> 
+> Getting the firmware fixed is difficult. I would first try abstracting
+> the htt_rx_desc, can you send a patch?
+> 
