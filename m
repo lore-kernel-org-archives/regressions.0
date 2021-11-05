@@ -1,119 +1,86 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C16968
-	for <regressions@lists.linux.dev>; Fri,  5 Nov 2021 13:39:44 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mizRS-0006hc-NT; Fri, 05 Nov 2021 14:39:39 +0100
-Message-ID: <5ee758fc-571d-a28a-9f12-4f7d74835ec0@leemhuis.info>
-Date: Fri, 5 Nov 2021 14:39:38 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99972C9D
+	for <regressions@lists.linux.dev>; Fri,  5 Nov 2021 19:49:55 +0000 (UTC)
+Received: by mail-pl1-f176.google.com with SMTP id t21so11714945plr.6
+        for <regressions@lists.linux.dev>; Fri, 05 Nov 2021 12:49:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gXlN5FZf8wjatJCZa1cF2r5Z+UdMJg7+lQZ4SVQt93Q=;
+        b=oTbQ0d/+lTXVt3GBVKXQT/pp6n7r3RqdQEjEw2JoDqFrPTYGX2FQVokdLUtDEsVZ40
+         6qSS0kGc4WYQcSBq0r0SJN7kgc3ePYAI4H2FCJ6mEeZ6CJ6BML/ra3wBXUXWjqrMLQ9k
+         VLvyOOj3KNOvrQ/noz1Am8T6a8+1qu6bzRfZKIjWh8Xp3tKbcTQXWcJgAwEBj2tRRhZI
+         nQK9qzH+Qp66ipCPBTCaK4ED0BqcuN+4BkY25VPS1E63k8n1TeGknM5WN28vRFtu2Ms/
+         BsyaU2DVJz6BjvhEw7etyuFA7Oizm4jALNXV5VS1vAonicz/NXulFY8b5noLBIVxtoZA
+         Hl4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gXlN5FZf8wjatJCZa1cF2r5Z+UdMJg7+lQZ4SVQt93Q=;
+        b=Z01KW1eyPz5HN+sL5k8It1clYerkk5IvYhejUEuUtaPdF2Lp0S46Wc/rbRXzDAaHsz
+         17pijXBq3b/wc0gCcjvQAfyG8A7uZvAK9v01NKKsnONk8Ct+UzowoKfeltsbaSk8L2Zx
+         E9vOprAKVrxF2a3RMO8xDiwv5EdsVXc4JoyRmMRssz4JeC3Y7eybv0gQKwByypBxVrSX
+         IahXtFB4VW+2sF5MXU8ZHl21CV5DXTiBgGS6MbBnAA60dHC4wkPSMO75dUO+Pko++2eG
+         TiQVNVmfGl1QaEkR2oQi3iI/NFYhAT4RNcaiNAvDyzc4XOAxFjYaFHciWYZdUw08Qb4+
+         BhNQ==
+X-Gm-Message-State: AOAM531GqIESePwM17ZnFRucJJaJY2pw/Kgiab0ISD+Qi0nkm11EVrfq
+	yqJ0jDPTy72BbN4za8OFILI=
+X-Google-Smtp-Source: ABdhPJy1Jei+Ck+ketcco+bQgcpLPAwEzazIAeUVp/5E9QSv4AGBr/NiprU6POJCCiUC+Nuv4ORNvQ==
+X-Received: by 2002:a17:90a:f182:: with SMTP id bv2mr32222695pjb.139.1636141795300;
+        Fri, 05 Nov 2021 12:49:55 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:808])
+        by smtp.gmail.com with ESMTPSA id mg12sm9813843pjb.10.2021.11.05.12.49.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Nov 2021 12:49:55 -0700 (PDT)
+Date: Fri, 5 Nov 2021 12:49:52 -0700
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To: Lorenz Bauer <lmb@cloudflare.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	kernel-team <kernel-team@cloudflare.com>, bpf <bpf@vger.kernel.org>,
+	regressions@lists.linux.dev, Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: Verifier rejects previously accepted program
+Message-ID: <20211105194952.xve6u6lgh2oy46dy@ast-mbp.dhcp.thefacebook.com>
+References: <CACAyw99hVEJFoiBH_ZGyy=+oO-jyydoz6v1DeKPKs2HVsUH28w@mail.gmail.com>
+ <CAADnVQKsK_2HHfOLs4XK7h_LC4+b7tfFw9261Psy5St8P+GWFA@mail.gmail.com>
+ <CACAyw9_GmNotSyG0g1OOt648y9kx5Bd72f58TtS-QQD9FaV06w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCHv2] Bluetooth: quirk disabling LE Read Transmit Power
-Content-Language: en-BS
-To: Orlando Chamberlain <redecorating@protonmail.com>,
- Marcel Holtmann <marcel@holtmann.org>
-Cc: danielwinkler@google.com, Johan Hedberg <johan.hedberg@intel.com>,
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, sonnysasaka@chromium.org
-References: <4970a940-211b-25d6-edab-21a815313954@protonmail.com>
- <20210930063106.19881-1-redecorating@protonmail.com>
- <20210930141256.19943-1-redecorating@protonmail.com>
- <FA02CDD7-CFEC-4481-9940-BA95D81FD3F3@holtmann.org>
- <275acce4-9eab-9cba-7145-5a75a69ca530@protonmail.com>
- <20211001083412.3078-1-redecorating@protonmail.com>
- <1D2217A9-EA73-4D93-8D0B-5BC2718D4788@holtmann.org>
- <20211001132756.434e56bb@localhost> <20211004111518.0765650c@localhost>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20211004111518.0765650c@localhost>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1636119584;9487fd9c;
-X-HE-SMSGID: 1mizRS-0006hc-NT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACAyw9_GmNotSyG0g1OOt648y9kx5Bd72f58TtS-QQD9FaV06w@mail.gmail.com>
 
-Lo, this is your Linux kernel regression tracker speaking. I have this
-regression on the radar of regzbot, my Linux regression tracking bot:
-https://linux-regtracking.leemhuis.info/regzbot/regression/4970a940-211b-25d6-edab-21a815313954@protonmail.com/
+On Fri, Nov 05, 2021 at 10:41:40AM +0000, Lorenz Bauer wrote:
+> 
+> bpf-next with f30d4968e9ae on top:
+> 
+>     works!
 
-Has any progress been made since below mail? If not: how can we get the
-ball rolling again and get this regression fixed?
+Awesome.
 
-Ciao, Thorsten
+> commit 3e8ce29850f1 ("bpf: Prevent pointer mismatch in
+> bpf_timer_init.") (found via bisection):
+> 
+>     BPF program is too large. Processed 1000001 insn
+> 
+> commit 3e8ce29850f1^ ("bpf: Add map side support for bpf timers."):
+> 
+>    works!
 
-P.S.: I have no personal interest in this issue. Hence, feel free to
-exclude me on further messages in this thread after the first reply, as
-I'm only posting this mail to hopefully get a status update and things
-rolling again.
-
-#regzbot poke
-
-On 04.10.21 13:15, Orlando Chamberlain wrote:
-> On Fri, 01 Oct 2021 23:28:03 +1000
-> "Orlando Chamberlain" <redecorating@protonmail.com> wrote:
->> On Fri, 01 Oct 2021 19:35:16 +1000
->> "Marcel Holtmann" <marcel@holtmann.org> wrote:
->>
->>> I would really prefer to do that via the ACPI table matching in
->>> hci_bcm.c and not via some magic chip id check.
->>
->> Initially I thought we may be able to do this based off BCM2E7C (which
->> is in the DSDT table which I'll attach), however it seems like many
->> Macs also have that (i.e. MacBookPro14,1, MacBookAir8,1, MacBook9,1),
->> so unless all these don't support LE Read Transmit Power, (which
->> would be hard to determine), I don't know if BCM2E7C can be used to
->> quirk it.
-> 
-> I think there aren't any Macs that support LE Read Transmit Power.
-> 
-> I checked the Bluetooth spec here
-> https://www.bluetooth.com/specifications/specs/core-specification-5-1/
-> and it seems like 5.1 is the first version that mentions LE Read
-> Transmit Power. It says 5.1 was adopted on 21 Jan 2019.
-> 
-> As far as I know, all of the models released after that date that have
-> ever had working Bluetooth were affected, while unaffected models were
-> released before that date (and thus shouldn't support LE Read Transmit
-> Power? This is at least true for the MacBookPro15,1, a 2018 model that
-> doesn't support the command).
-> 
-> I think this means that no Apple computer released so far supports the
-> command, so disabling LE Read Transmit Power for all Apple controllers
-> based off "apple-uart-blth" (probably a better choice than "BCM2E7C")
-> won't affect any controllers that actually support it.
-> 
-> Device (BLTH)
-> {
->     Name (_HID, EisaId ("BCM2E7C"))  // _HID: Hardware ID
->     Name (_CID, "apple-uart-blth")  // _CID: Compatible ID
->     Name (_UID, One)  // _UID: Unique ID
->     Name (_ADR, Zero)  // _ADR: Address
-> 
-> As to future Apple computers, they seem to no longer be using UART and
-> instead have a second Broadcom PCI device (the first being for WiFi)
-> that is for Bluetooth. 3 Intel Macs Models have this second device
-> (MacBookPro15,4, MacBookPro16,3 and MacBookAir9,1), and so do the M1
-> ones.
-> 
-> I can't say that they won't move back to UART at some point and then
-> support LE Read Transmit Power, but if they do, I don't think they
-> would move back to x86_64, so only having this quirk activated when
-> compiling for x86_64 might be an option if that's an issue.
-> 
->> I'll try to see if I can find something else in the ACPI tables that
->> can be used as a quirk. (I'll see if I can get the table of a similar
->> model that wasn't affected and compare the BLTH sections)
-> 
-> The BLTH sections were the same for affected and unaffected macs.
-> 
-> 
-> 
-> Would disabling LE Read Transmit Power if the controller is
-> "apple-uart-blth" work for you?
-> 
+So with just 3e8ce29850f1 it's "too large" and with parent commit it works ?
+I've analyzed offending commit again and don't see how it can be causing
+state pruning to be more conservative for your asm.
+reg->map_uid should only be non-zero for lookups from inner maps,
+but your asm doesn't have lookups at all in that loop.
+Maybe in some case map_uid doesn't get cleared, but I couldn't find
+such code path with manual code analysis.
+I think it's worth investigating further.
+Please craft a reproducer.
