@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0869B68
-	for <regressions@lists.linux.dev>; Fri,  5 Nov 2021 13:26:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C16968
+	for <regressions@lists.linux.dev>; Fri,  5 Nov 2021 13:39:44 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mizED-0007tg-Qy; Fri, 05 Nov 2021 14:25:57 +0100
-Message-ID: <6366d9bd-9752-dbc2-8970-442bdc6e8eea@leemhuis.info>
-Date: Fri, 5 Nov 2021 14:25:57 +0100
+	id 1mizRS-0006hc-NT; Fri, 05 Nov 2021 14:39:39 +0100
+Message-ID: <5ee758fc-571d-a28a-9f12-4f7d74835ec0@leemhuis.info>
+Date: Fri, 5 Nov 2021 14:39:38 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,80 +16,104 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Content-Language: en-BZ
-To: Stanislaw Gruszka <sgruszka@redhat.com>
-Cc: linux-wireless@vger.kernel.org, Helmut Schaa
- <helmut.schaa@googlemail.com>, regressions@lists.linux.dev,
- Kalle Valo <kvalo@codeaurora.org>, Exuvo <exuvo@exuvo.se>
-References: <bff7d309-a816-6a75-51b6-5928ef4f7a8c@exuvo.se>
- <20190927080303.GA7667@redhat.com>
- <CA+GwT0B5SyRZnGLqwqOeuJK4CWMVc=dKaWre9VN8KQC6kBzKGw@mail.gmail.com>
- <20191203075736.GA701@redhat.com>
- <d74dab51-3a84-9035-d89e-ea8f63e89198@exuvo.se>
- <a8eeb0bc-95da-291a-7fb9-5d15d1174c27@exuvo.se>
- <c22673af-40e0-3af2-5ab7-69b23fc03598@exuvo.se>
- <f935dc15-08bd-2e28-fc1b-b27634c618be@exuvo.se>
- <87czop5j33.fsf@tynnyri.adurom.net>
+Subject: Re: [PATCHv2] Bluetooth: quirk disabling LE Read Transmit Power
+Content-Language: en-BS
+To: Orlando Chamberlain <redecorating@protonmail.com>,
+ Marcel Holtmann <marcel@holtmann.org>
+Cc: danielwinkler@google.com, Johan Hedberg <johan.hedberg@intel.com>,
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, sonnysasaka@chromium.org
+References: <4970a940-211b-25d6-edab-21a815313954@protonmail.com>
+ <20210930063106.19881-1-redecorating@protonmail.com>
+ <20210930141256.19943-1-redecorating@protonmail.com>
+ <FA02CDD7-CFEC-4481-9940-BA95D81FD3F3@holtmann.org>
+ <275acce4-9eab-9cba-7145-5a75a69ca530@protonmail.com>
+ <20211001083412.3078-1-redecorating@protonmail.com>
+ <1D2217A9-EA73-4D93-8D0B-5BC2718D4788@holtmann.org>
+ <20211001132756.434e56bb@localhost> <20211004111518.0765650c@localhost>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: rt2x00 regression
-In-Reply-To: <87czop5j33.fsf@tynnyri.adurom.net>
+In-Reply-To: <20211004111518.0765650c@localhost>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1636118766;862ad67b;
-X-HE-SMSGID: 1mizED-0007tg-Qy
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1636119584;9487fd9c;
+X-HE-SMSGID: 1mizRS-0006hc-NT
 
-Lo, this is your Linux kernel regression tracker speaking.
+Lo, this is your Linux kernel regression tracker speaking. I have this
+regression on the radar of regzbot, my Linux regression tracking bot:
+https://linux-regtracking.leemhuis.info/regzbot/regression/4970a940-211b-25d6-edab-21a815313954@protonmail.com/
 
-On 01.10.21 08:56, Kalle Valo wrote:
-> (adding regressions list for easier tracking)
-
-Thx for this, that's how it got on the radar of regzbot, my Linux kernel
-regression tracking bot:
-https://linux-regtracking.leemhuis.info/regzbot/regression/87czop5j33.fsf@tynnyri.adurom.net/
-
-
-> Exuvo <exuvo@exuvo.se> writes:
-> 
->> I would like to get this resolved, is there any more information you need from me?
->>
->> I have been manually patching this all year with:
->>
->> drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
->> - if (rt2x00dev->num_proto_errs > 8)
->> -    return true;
->>
->> It seems to just be some part of rt2800_load_firmware that is not
->> supported on my device and generating errors but it has been running
->> without problems in AP mode with daily usage.
-> 
-> [...]
-> 
->>>>>>>> This most likely is the problem introduced by commit:
->>>>>>>>
->>>>>>>> commit e383c70474db32b9d4a3de6dfbd08784d19e6751
->>>>>>>> Author: Stanislaw Gruszka <sgruszka@redhat.com>
->>>>>>>> Date:   Tue Mar 12 10:51:42 2019 +0100
->>>>>>>>
->>>>>>>>      rt2x00: check number of EPROTO errors
->>>>>>>>
->>>>>>>> Plase check below patch that increase number of EPROTO checks
->>>>>>>> before marking device removed. If it does not help, plese
->>>>>>>> check if reverting above commits helps.
-> 
-> Should we do a revert? Can someone submit that including an explanation
-> of the regression.
-
-Afaics nothing happened since then. Or did I miss anything? How can we
-get the ball rolling again?
-
-Stanislaw, is there anything Exuvo (who offered to help afaics) could
-test to get us closer to a fix?
+Has any progress been made since below mail? If not: how can we get the
+ball rolling again and get this regression fixed?
 
 Ciao, Thorsten
 
-P.S.: I have no personal interest in this issue and watch it using
-regzbot. Hence, feel free to exclude me on further messages in this
-thread after the first reply, as I'm only posting this mail to hopefully
-get a status update and things rolling again.
+P.S.: I have no personal interest in this issue. Hence, feel free to
+exclude me on further messages in this thread after the first reply, as
+I'm only posting this mail to hopefully get a status update and things
+rolling again.
 
 #regzbot poke
+
+On 04.10.21 13:15, Orlando Chamberlain wrote:
+> On Fri, 01 Oct 2021 23:28:03 +1000
+> "Orlando Chamberlain" <redecorating@protonmail.com> wrote:
+>> On Fri, 01 Oct 2021 19:35:16 +1000
+>> "Marcel Holtmann" <marcel@holtmann.org> wrote:
+>>
+>>> I would really prefer to do that via the ACPI table matching in
+>>> hci_bcm.c and not via some magic chip id check.
+>>
+>> Initially I thought we may be able to do this based off BCM2E7C (which
+>> is in the DSDT table which I'll attach), however it seems like many
+>> Macs also have that (i.e. MacBookPro14,1, MacBookAir8,1, MacBook9,1),
+>> so unless all these don't support LE Read Transmit Power, (which
+>> would be hard to determine), I don't know if BCM2E7C can be used to
+>> quirk it.
+> 
+> I think there aren't any Macs that support LE Read Transmit Power.
+> 
+> I checked the Bluetooth spec here
+> https://www.bluetooth.com/specifications/specs/core-specification-5-1/
+> and it seems like 5.1 is the first version that mentions LE Read
+> Transmit Power. It says 5.1 was adopted on 21 Jan 2019.
+> 
+> As far as I know, all of the models released after that date that have
+> ever had working Bluetooth were affected, while unaffected models were
+> released before that date (and thus shouldn't support LE Read Transmit
+> Power? This is at least true for the MacBookPro15,1, a 2018 model that
+> doesn't support the command).
+> 
+> I think this means that no Apple computer released so far supports the
+> command, so disabling LE Read Transmit Power for all Apple controllers
+> based off "apple-uart-blth" (probably a better choice than "BCM2E7C")
+> won't affect any controllers that actually support it.
+> 
+> Device (BLTH)
+> {
+>     Name (_HID, EisaId ("BCM2E7C"))  // _HID: Hardware ID
+>     Name (_CID, "apple-uart-blth")  // _CID: Compatible ID
+>     Name (_UID, One)  // _UID: Unique ID
+>     Name (_ADR, Zero)  // _ADR: Address
+> 
+> As to future Apple computers, they seem to no longer be using UART and
+> instead have a second Broadcom PCI device (the first being for WiFi)
+> that is for Bluetooth. 3 Intel Macs Models have this second device
+> (MacBookPro15,4, MacBookPro16,3 and MacBookAir9,1), and so do the M1
+> ones.
+> 
+> I can't say that they won't move back to UART at some point and then
+> support LE Read Transmit Power, but if they do, I don't think they
+> would move back to x86_64, so only having this quirk activated when
+> compiling for x86_64 might be an option if that's an issue.
+> 
+>> I'll try to see if I can find something else in the ACPI tables that
+>> can be used as a quirk. (I'll see if I can get the table of a similar
+>> model that wasn't affected and compare the BLTH sections)
+> 
+> The BLTH sections were the same for affected and unaffected macs.
+> 
+> 
+> 
+> Would disabling LE Read Transmit Power if the controller is
+> "apple-uart-blth" work for you?
+> 
