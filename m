@@ -1,86 +1,178 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99972C9D
-	for <regressions@lists.linux.dev>; Fri,  5 Nov 2021 19:49:55 +0000 (UTC)
-Received: by mail-pl1-f176.google.com with SMTP id t21so11714945plr.6
-        for <regressions@lists.linux.dev>; Fri, 05 Nov 2021 12:49:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58B12C96
+	for <regressions@lists.linux.dev>; Fri,  5 Nov 2021 21:47:51 +0000 (UTC)
+Received: by mail-ua1-f46.google.com with SMTP id e10so19649416uab.3
+        for <regressions@lists.linux.dev>; Fri, 05 Nov 2021 14:47:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gXlN5FZf8wjatJCZa1cF2r5Z+UdMJg7+lQZ4SVQt93Q=;
-        b=oTbQ0d/+lTXVt3GBVKXQT/pp6n7r3RqdQEjEw2JoDqFrPTYGX2FQVokdLUtDEsVZ40
-         6qSS0kGc4WYQcSBq0r0SJN7kgc3ePYAI4H2FCJ6mEeZ6CJ6BML/ra3wBXUXWjqrMLQ9k
-         VLvyOOj3KNOvrQ/noz1Am8T6a8+1qu6bzRfZKIjWh8Xp3tKbcTQXWcJgAwEBj2tRRhZI
-         nQK9qzH+Qp66ipCPBTCaK4ED0BqcuN+4BkY25VPS1E63k8n1TeGknM5WN28vRFtu2Ms/
-         BsyaU2DVJz6BjvhEw7etyuFA7Oizm4jALNXV5VS1vAonicz/NXulFY8b5noLBIVxtoZA
-         Hl4g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SNdos9POwx5teo6slctN6D5d4noCRiJaTJnZmu9nuXI=;
+        b=R47IGUQE1gMa0l78gVRe+t64y9HO/incrm3swHBtIjj7ajLTsjtDzkMsn5Q2beJrOm
+         meebDsXtNI6ZAZIZcDCdShOqe5q5PUszDbAkL+em0U2cPpUbKZjubYC4rCi32oAqYBcy
+         UK+4mrkD7Aflzt6cgRKVpaEa/RW9T1uJ1jvb85jCa5Paxup+Q72MEJVPc7kc5corqcgh
+         ALLQvf3CmtYRJx/csNH3ZSY/QzncXXM92ezrkAjO9uychQSsrxn/r6wWIvoeJT98Uf6r
+         hvV4pylNRWeLiijqIAEGib4KKi3ffDUivTPvH5r2d32wFdUMCnNi06LD9LMXNM5KE2EJ
+         NLzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gXlN5FZf8wjatJCZa1cF2r5Z+UdMJg7+lQZ4SVQt93Q=;
-        b=Z01KW1eyPz5HN+sL5k8It1clYerkk5IvYhejUEuUtaPdF2Lp0S46Wc/rbRXzDAaHsz
-         17pijXBq3b/wc0gCcjvQAfyG8A7uZvAK9v01NKKsnONk8Ct+UzowoKfeltsbaSk8L2Zx
-         E9vOprAKVrxF2a3RMO8xDiwv5EdsVXc4JoyRmMRssz4JeC3Y7eybv0gQKwByypBxVrSX
-         IahXtFB4VW+2sF5MXU8ZHl21CV5DXTiBgGS6MbBnAA60dHC4wkPSMO75dUO+Pko++2eG
-         TiQVNVmfGl1QaEkR2oQi3iI/NFYhAT4RNcaiNAvDyzc4XOAxFjYaFHciWYZdUw08Qb4+
-         BhNQ==
-X-Gm-Message-State: AOAM531GqIESePwM17ZnFRucJJaJY2pw/Kgiab0ISD+Qi0nkm11EVrfq
-	yqJ0jDPTy72BbN4za8OFILI=
-X-Google-Smtp-Source: ABdhPJy1Jei+Ck+ketcco+bQgcpLPAwEzazIAeUVp/5E9QSv4AGBr/NiprU6POJCCiUC+Nuv4ORNvQ==
-X-Received: by 2002:a17:90a:f182:: with SMTP id bv2mr32222695pjb.139.1636141795300;
-        Fri, 05 Nov 2021 12:49:55 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:808])
-        by smtp.gmail.com with ESMTPSA id mg12sm9813843pjb.10.2021.11.05.12.49.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Nov 2021 12:49:55 -0700 (PDT)
-Date: Fri, 5 Nov 2021 12:49:52 -0700
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To: Lorenz Bauer <lmb@cloudflare.com>
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	kernel-team <kernel-team@cloudflare.com>, bpf <bpf@vger.kernel.org>,
-	regressions@lists.linux.dev, Andrii Nakryiko <andrii@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: Verifier rejects previously accepted program
-Message-ID: <20211105194952.xve6u6lgh2oy46dy@ast-mbp.dhcp.thefacebook.com>
-References: <CACAyw99hVEJFoiBH_ZGyy=+oO-jyydoz6v1DeKPKs2HVsUH28w@mail.gmail.com>
- <CAADnVQKsK_2HHfOLs4XK7h_LC4+b7tfFw9261Psy5St8P+GWFA@mail.gmail.com>
- <CACAyw9_GmNotSyG0g1OOt648y9kx5Bd72f58TtS-QQD9FaV06w@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SNdos9POwx5teo6slctN6D5d4noCRiJaTJnZmu9nuXI=;
+        b=DvsOYtYpZ8FCIXZcL1lxvGWlczQUB5SbFjIiXBOS0fWoiEnrZXYUO+t4iFO9TBW2GR
+         adzeGCxUGG7nvYhMU7xRnkIDyIfcJhHMSxvBf/ZqeuOISk3OTOOIpVpLmIhXSDYSlhjn
+         AScuuLD3InPVC9+5rjvWWosH4+NvQ+fwoSfja1t4l33WbqeJlA/zLn2CY0EIzF1Wk6RN
+         DEhu+t2ZnoYiH/mxugwmELwg0TRxV0oYnQ56qVAHvRYq+UyEDXW4ZBu4i36LTZwlAleU
+         TWdAsTEE00aTKcI8piqHgNOG7LDy4PfiKf9j+D0gZztnoKoi8BEBIAujyGdlyO7I5XPg
+         Wiig==
+X-Gm-Message-State: AOAM530hC7rZtR61SKHP+VBCDSOuyBt9Z60SPevkLLSvOx8i7w+i0Z+f
+	oFsoVQ/tKXxHRjJA87UtvrhG9eQ4z0wPAXvLH1w=
+X-Google-Smtp-Source: ABdhPJzhELxTPB/pFC8B/UNNCEbqqjXZJj3tlQEvW7XvJ/D/6pGVtHZfeP19aqSYIWCZXuIv40o//Bc6G7Z+1MB/jHM=
+X-Received: by 2002:a05:6102:390f:: with SMTP id e15mr53003720vsu.10.1636148870674;
+ Fri, 05 Nov 2021 14:47:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACAyw9_GmNotSyG0g1OOt648y9kx5Bd72f58TtS-QQD9FaV06w@mail.gmail.com>
+References: <4970a940-211b-25d6-edab-21a815313954@protonmail.com>
+ <20210930063106.19881-1-redecorating@protonmail.com> <20210930141256.19943-1-redecorating@protonmail.com>
+ <FA02CDD7-CFEC-4481-9940-BA95D81FD3F3@holtmann.org> <275acce4-9eab-9cba-7145-5a75a69ca530@protonmail.com>
+ <20211001083412.3078-1-redecorating@protonmail.com>
+In-Reply-To: <20211001083412.3078-1-redecorating@protonmail.com>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Fri, 5 Nov 2021 14:47:39 -0700
+Message-ID: <CABBYNZLjSfcG_KqTEbL6NOSvHhA5-b1t_S=3FQP4=GwW21kuzg@mail.gmail.com>
+Subject: Re: [PATCHv2] Bluetooth: quirk disabling LE Read Transmit Power
+To: Orlando Chamberlain <redecorating@protonmail.com>
+Cc: Daniel Winkler <danielwinkler@google.com>, Johan Hedberg <johan.hedberg@intel.com>, 
+	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	regressions@lists.linux.dev, Sonny Sasaka <sonnysasaka@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Nov 05, 2021 at 10:41:40AM +0000, Lorenz Bauer wrote:
-> 
-> bpf-next with f30d4968e9ae on top:
-> 
->     works!
+Hi Orlando,
 
-Awesome.
+On Fri, Oct 1, 2021 at 1:56 AM Orlando Chamberlain
+<redecorating@protonmail.com> wrote:
+>
+> The LE Read Transmit Power command is Advertised on some Broadcom
+> controlers, but not supported. Using this command breaks Bluetooth
+> on the MacBookPro16,1 and iMac20,1. Added a quirk disabling LE Read
+> Transmit Power for these devices, based off their common chip id 150.
+>
+> Link: https://lore.kernel.org/r/4970a940-211b-25d6-edab-21a815313954@protonmail.com
+> Signed-off-by: Orlando Chamberlain <redecorating@protonmail.com>
+> ---
+> v1->v2: Clarified quirk description
+>
+>  drivers/bluetooth/btbcm.c   |  4 ++++
+>  include/net/bluetooth/hci.h | 11 +++++++++++
+>  net/bluetooth/hci_core.c    |  3 ++-
+>  3 files changed, 17 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
+> index e4182acee488..4ecc50d93107 100644
+> --- a/drivers/bluetooth/btbcm.c
+> +++ b/drivers/bluetooth/btbcm.c
+> @@ -353,6 +353,10 @@ static int btbcm_read_info(struct hci_dev *hdev)
+>                 return PTR_ERR(skb);
+>
+>         bt_dev_info(hdev, "BCM: chip id %u", skb->data[1]);
+> +
+> +       if (skb->data[1] == 150)
+> +               set_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks);
+> +
+>         kfree_skb(skb);
+>
+>         /* Read Controller Features */
+> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+> index b80415011dcd..6da9bd6b7259 100644
+> --- a/include/net/bluetooth/hci.h
+> +++ b/include/net/bluetooth/hci.h
+> @@ -246,6 +246,17 @@ enum {
+>          * HCI after resume.
+>          */
+>         HCI_QUIRK_NO_SUSPEND_NOTIFIER,
+> +
+> +       /* When this quirk is set, LE Read Transmit Power is disabled.
+> +        * This is mainly due to the fact that the HCI LE Read Transmit
+> +        * Power command is advertised, but not supported; these
+> +        * controllers often reply with unknown command and need a hard
+> +        * reset.
+> +        *
+> +        * This quirk can be set before hci_register_dev is called or
+> +        * during the hdev->setup vendor callback.
+> +        */
+> +       HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER,
+>  };
+>
+>  /* HCI device flags */
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index 8a47a3017d61..9a23fe7c8d67 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -742,7 +742,8 @@ static int hci_init3_req(struct hci_request *req, unsigned long opt)
+>                         hci_req_add(req, HCI_OP_LE_READ_ADV_TX_POWER, 0, NULL);
+>                 }
+>
+> -               if (hdev->commands[38] & 0x80) {
+> +               if (hdev->commands[38] & 0x80 &&
+> +                       !test_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks)) {
+>                         /* Read LE Min/Max Tx Power*/
+>                         hci_req_add(req, HCI_OP_LE_READ_TRANSMIT_POWER,
+>                                     0, NULL);
+> --
+> 2.33.0
 
-> commit 3e8ce29850f1 ("bpf: Prevent pointer mismatch in
-> bpf_timer_init.") (found via bisection):
-> 
->     BPF program is too large. Processed 1000001 insn
-> 
-> commit 3e8ce29850f1^ ("bpf: Add map side support for bpf timers."):
-> 
->    works!
+Nowadays it is possible to treat errors such like this on a per
+command basis (assuming it is not essential for the init sequence):
 
-So with just 3e8ce29850f1 it's "too large" and with parent commit it works ?
-I've analyzed offending commit again and don't see how it can be causing
-state pruning to be more conservative for your asm.
-reg->map_uid should only be non-zero for lookups from inner maps,
-but your asm doesn't have lookups at all in that loop.
-Maybe in some case map_uid doesn't get cleared, but I couldn't find
-such code path with manual code analysis.
-I think it's worth investigating further.
-Please craft a reproducer.
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index 979da5179ff4..f244f42cc609 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -551,6 +551,7 @@ enum {
+ #define HCI_LK_AUTH_COMBINATION_P256   0x08
+
+ /* ---- HCI Error Codes ---- */
++#define HCI_ERROR_UNKNOWN_CMD          0x01
+ #define HCI_ERROR_UNKNOWN_CONN_ID      0x02
+ #define HCI_ERROR_AUTH_FAILURE         0x05
+ #define HCI_ERROR_PIN_OR_KEY_MISSING   0x06
+diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
+index bb88d31d2212..9c697e058974 100644
+--- a/net/bluetooth/hci_sync.c
++++ b/net/bluetooth/hci_sync.c
+@@ -3325,11 +3325,18 @@ static int
+hci_le_read_adv_tx_power_sync(struct hci_dev *hdev)
+ /* Read LE Min/Max Tx Power*/
+ static int hci_le_read_tx_power_sync(struct hci_dev *hdev)
+ {
++       int status;
++
+        if (!(hdev->commands[38] & 0x80))
+                return 0;
+
+-       return __hci_cmd_sync_status(hdev, HCI_OP_LE_READ_TRANSMIT_POWER,
+-                                    0, NULL, HCI_CMD_TIMEOUT);
++       status = __hci_cmd_sync_status(hdev, HCI_OP_LE_READ_TRANSMIT_POWER,
++                                      0, NULL, HCI_CMD_TIMEOUT);
++       /* Ignore if command is not really supported */
++       if (status == HCI_ERROR_UNKNOWN_CMD)
++               return 0;
++
++       return status;
+ }
+
+ /* Read LE Accept List Size */
+
+Anyway, it would probably be worth pointing out to the vendor they
+have a broken firmware if they do mark the command as supported but
+return such error.
+
+-- 
+Luiz Augusto von Dentz
