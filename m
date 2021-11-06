@@ -1,178 +1,96 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D58B12C96
-	for <regressions@lists.linux.dev>; Fri,  5 Nov 2021 21:47:51 +0000 (UTC)
-Received: by mail-ua1-f46.google.com with SMTP id e10so19649416uab.3
-        for <regressions@lists.linux.dev>; Fri, 05 Nov 2021 14:47:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SNdos9POwx5teo6slctN6D5d4noCRiJaTJnZmu9nuXI=;
-        b=R47IGUQE1gMa0l78gVRe+t64y9HO/incrm3swHBtIjj7ajLTsjtDzkMsn5Q2beJrOm
-         meebDsXtNI6ZAZIZcDCdShOqe5q5PUszDbAkL+em0U2cPpUbKZjubYC4rCi32oAqYBcy
-         UK+4mrkD7Aflzt6cgRKVpaEa/RW9T1uJ1jvb85jCa5Paxup+Q72MEJVPc7kc5corqcgh
-         ALLQvf3CmtYRJx/csNH3ZSY/QzncXXM92ezrkAjO9uychQSsrxn/r6wWIvoeJT98Uf6r
-         hvV4pylNRWeLiijqIAEGib4KKi3ffDUivTPvH5r2d32wFdUMCnNi06LD9LMXNM5KE2EJ
-         NLzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SNdos9POwx5teo6slctN6D5d4noCRiJaTJnZmu9nuXI=;
-        b=DvsOYtYpZ8FCIXZcL1lxvGWlczQUB5SbFjIiXBOS0fWoiEnrZXYUO+t4iFO9TBW2GR
-         adzeGCxUGG7nvYhMU7xRnkIDyIfcJhHMSxvBf/ZqeuOISk3OTOOIpVpLmIhXSDYSlhjn
-         AScuuLD3InPVC9+5rjvWWosH4+NvQ+fwoSfja1t4l33WbqeJlA/zLn2CY0EIzF1Wk6RN
-         DEhu+t2ZnoYiH/mxugwmELwg0TRxV0oYnQ56qVAHvRYq+UyEDXW4ZBu4i36LTZwlAleU
-         TWdAsTEE00aTKcI8piqHgNOG7LDy4PfiKf9j+D0gZztnoKoi8BEBIAujyGdlyO7I5XPg
-         Wiig==
-X-Gm-Message-State: AOAM530hC7rZtR61SKHP+VBCDSOuyBt9Z60SPevkLLSvOx8i7w+i0Z+f
-	oFsoVQ/tKXxHRjJA87UtvrhG9eQ4z0wPAXvLH1w=
-X-Google-Smtp-Source: ABdhPJzhELxTPB/pFC8B/UNNCEbqqjXZJj3tlQEvW7XvJ/D/6pGVtHZfeP19aqSYIWCZXuIv40o//Bc6G7Z+1MB/jHM=
-X-Received: by 2002:a05:6102:390f:: with SMTP id e15mr53003720vsu.10.1636148870674;
- Fri, 05 Nov 2021 14:47:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD3668
+	for <regressions@lists.linux.dev>; Sat,  6 Nov 2021 09:26:58 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mjHyT-0000Hd-0L; Sat, 06 Nov 2021 10:26:57 +0100
+Message-ID: <f9e01ccd-5bcd-36db-fc84-e7129955e15c@leemhuis.info>
+Date: Sat, 6 Nov 2021 10:26:56 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <4970a940-211b-25d6-edab-21a815313954@protonmail.com>
- <20210930063106.19881-1-redecorating@protonmail.com> <20210930141256.19943-1-redecorating@protonmail.com>
- <FA02CDD7-CFEC-4481-9940-BA95D81FD3F3@holtmann.org> <275acce4-9eab-9cba-7145-5a75a69ca530@protonmail.com>
- <20211001083412.3078-1-redecorating@protonmail.com>
-In-Reply-To: <20211001083412.3078-1-redecorating@protonmail.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Fri, 5 Nov 2021 14:47:39 -0700
-Message-ID: <CABBYNZLjSfcG_KqTEbL6NOSvHhA5-b1t_S=3FQP4=GwW21kuzg@mail.gmail.com>
-Subject: Re: [PATCHv2] Bluetooth: quirk disabling LE Read Transmit Power
-To: Orlando Chamberlain <redecorating@protonmail.com>
-Cc: Daniel Winkler <danielwinkler@google.com>, Johan Hedberg <johan.hedberg@intel.com>, 
-	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	regressions@lists.linux.dev, Sonny Sasaka <sonnysasaka@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Content-Language: en-BS
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <42bcbea6-5eb8-16c7-336a-2cb72e71bc36@redhat.com>
+ <466b8730-1424-dfc0-3f14-f279954188b9@leemhuis.info>
+ <YYOF9+wDS2J0oqU8@kroah.com>
+ <e75eb70e-2495-dce5-34b2-0b933d887f4a@leemhuis.info>
+ <YYTju3KSkC2MHvhf@kroah.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: 5.14.14+ USB regression caused by "usb: core: hcd: Add support
+ for deferring roothub registration" series
+In-Reply-To: <YYTju3KSkC2MHvhf@kroah.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1636190819;7669021c;
+X-HE-SMSGID: 1mjHyT-0000Hd-0L
 
-Hi Orlando,
+On 05.11.21 08:56, Greg KH wrote:
+> On Thu, Nov 04, 2021 at 09:50:12AM +0100, Thorsten Leemhuis wrote:
+>> aOn 04.11.21 08:04, Greg KH wrote:
+>>> On Thu, Nov 04, 2021 at 07:53:37AM +0100, Thorsten Leemhuis wrote:
+>>>> On 03.11.21 10:02, Hans de Goede wrote:
+>>>>>
+>>>>> We (Fedora) have been receiving multiple reports about USB devices stopping
+>>>>> working starting with 5.14.14 .
+>>>>>
+>>>>> An Arch Linux user has found that reverting the first 2 patches from this series:
+>>>>> https://lore.kernel.org/all/20210909064200.16216-1-kishon@ti.com/
+>>>>>
+>>>>> Fixes things (the 3th patch is just some mostly unrelated refactoring/cleanup).
+>>>>>
+>>>>> See here for the Arch-linux discussion surrounding this:
+>>>>> https://bbs.archlinux.org/viewtopic.php?pid=2000956#p2000956
+>>>>>
+>>>>> And here are 2 Fedora bug reports of Fedora users being unable to use their
+>>>>> machines due their mouse + kbd not working:
+>>>>>
+>>>>> https://bugzilla.redhat.com/show_bug.cgi?id=2019542
+>>>>> https://bugzilla.redhat.com/show_bug.cgi?id=2019576
+>>>>>
+>>>>> Can we get this patch-series reverted from the 5.14.y releases please ?
+>>>> #regzbot ^introduced: b7a0a792f864583207c593b50fd1b752ed89f4c1
+>>>> #regzbot ignore-activity
+>>>
+>>> Process question.  Is there anything I need to do here when this is
+>>> resolved?  I'm thinking of reverting the offending patches in 5.16-rc1,
+>>> but when/if that happens, how will the regzbot know this?
+>>
+>> You don't need to do something special, but you need to do something ;-)
+>> Regzbot will know the regression got resolved if the commit message of
+>> the fix (a proper one or a revert) in mainline links to the report with
+>> a Link: tag. Hence, the commit should have something like this:
+>>
+>> Link:
+>> https://lore.kernel.org/stable/42bcbea6-5eb8-16c7-336a-2cb72e71bc36@redhat.com/
+> 
+> Close, the patch will have this link tag:
+>     Link: https://lore.kernel.org/r/42bcbea6-5eb8-16c7-336a-2cb72e71bc36@redhat.com
+> 
+> Is that ok?
 
-On Fri, Oct 1, 2021 at 1:56 AM Orlando Chamberlain
-<redecorating@protonmail.com> wrote:
->
-> The LE Read Transmit Power command is Advertised on some Broadcom
-> controlers, but not supported. Using this command breaks Bluetooth
-> on the MacBookPro16,1 and iMac20,1. Added a quirk disabling LE Read
-> Transmit Power for these devices, based off their common chip id 150.
->
-> Link: https://lore.kernel.org/r/4970a940-211b-25d6-edab-21a815313954@protonmail.com
-> Signed-off-by: Orlando Chamberlain <redecorating@protonmail.com>
-> ---
-> v1->v2: Clarified quirk description
->
->  drivers/bluetooth/btbcm.c   |  4 ++++
->  include/net/bluetooth/hci.h | 11 +++++++++++
->  net/bluetooth/hci_core.c    |  3 ++-
->  3 files changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-> index e4182acee488..4ecc50d93107 100644
-> --- a/drivers/bluetooth/btbcm.c
-> +++ b/drivers/bluetooth/btbcm.c
-> @@ -353,6 +353,10 @@ static int btbcm_read_info(struct hci_dev *hdev)
->                 return PTR_ERR(skb);
->
->         bt_dev_info(hdev, "BCM: chip id %u", skb->data[1]);
-> +
-> +       if (skb->data[1] == 150)
-> +               set_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks);
-> +
->         kfree_skb(skb);
->
->         /* Read Controller Features */
-> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-> index b80415011dcd..6da9bd6b7259 100644
-> --- a/include/net/bluetooth/hci.h
-> +++ b/include/net/bluetooth/hci.h
-> @@ -246,6 +246,17 @@ enum {
->          * HCI after resume.
->          */
->         HCI_QUIRK_NO_SUSPEND_NOTIFIER,
-> +
-> +       /* When this quirk is set, LE Read Transmit Power is disabled.
-> +        * This is mainly due to the fact that the HCI LE Read Transmit
-> +        * Power command is advertised, but not supported; these
-> +        * controllers often reply with unknown command and need a hard
-> +        * reset.
-> +        *
-> +        * This quirk can be set before hci_register_dev is called or
-> +        * during the hdev->setup vendor callback.
-> +        */
-> +       HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER,
->  };
->
->  /* HCI device flags */
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index 8a47a3017d61..9a23fe7c8d67 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -742,7 +742,8 @@ static int hci_init3_req(struct hci_request *req, unsigned long opt)
->                         hci_req_add(req, HCI_OP_LE_READ_ADV_TX_POWER, 0, NULL);
->                 }
->
-> -               if (hdev->commands[38] & 0x80) {
-> +               if (hdev->commands[38] & 0x80 &&
-> +                       !test_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks)) {
->                         /* Read LE Min/Max Tx Power*/
->                         hci_req_add(req, HCI_OP_LE_READ_TRANSMIT_POWER,
->                                     0, NULL);
-> --
-> 2.33.0
+Yes, of course it is, in fact I just forgot to do s/stable/r/ when
+writing above mail. But an url with /stable/ in it would work, too, as
+Regzbot in this case will not care what's between lore.kernel.org/ and
+the /<msgid> part.
 
-Nowadays it is possible to treat errors such like this on a per
-command basis (assuming it is not essential for the init sequence):
+> I've committed the reverts to my tree and pushed them out so they show
+> up in the next linux-next release and will get the reverts to Linus
+> before 5.16-rc1.  Let's see if the bot can notice them :)
 
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 979da5179ff4..f244f42cc609 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -551,6 +551,7 @@ enum {
- #define HCI_LK_AUTH_COMBINATION_P256   0x08
+It should even notice them in linux-next and mark the regression as "to
+be fixed" until the commits land mainline. Just to be sure I wanted to
+wait for this to happen before writing this mail, but forgot it's
+Saturday today -- there thus is no new linux-next, so I have to wait
+till Monday. :-/
 
- /* ---- HCI Error Codes ---- */
-+#define HCI_ERROR_UNKNOWN_CMD          0x01
- #define HCI_ERROR_UNKNOWN_CONN_ID      0x02
- #define HCI_ERROR_AUTH_FAILURE         0x05
- #define HCI_ERROR_PIN_OR_KEY_MISSING   0x06
-diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
-index bb88d31d2212..9c697e058974 100644
---- a/net/bluetooth/hci_sync.c
-+++ b/net/bluetooth/hci_sync.c
-@@ -3325,11 +3325,18 @@ static int
-hci_le_read_adv_tx_power_sync(struct hci_dev *hdev)
- /* Read LE Min/Max Tx Power*/
- static int hci_le_read_tx_power_sync(struct hci_dev *hdev)
- {
-+       int status;
-+
-        if (!(hdev->commands[38] & 0x80))
-                return 0;
+Ciao, Thorsten
 
--       return __hci_cmd_sync_status(hdev, HCI_OP_LE_READ_TRANSMIT_POWER,
--                                    0, NULL, HCI_CMD_TIMEOUT);
-+       status = __hci_cmd_sync_status(hdev, HCI_OP_LE_READ_TRANSMIT_POWER,
-+                                      0, NULL, HCI_CMD_TIMEOUT);
-+       /* Ignore if command is not really supported */
-+       if (status == HCI_ERROR_UNKNOWN_CMD)
-+               return 0;
-+
-+       return status;
- }
-
- /* Read LE Accept List Size */
-
-Anyway, it would probably be worth pointing out to the vendor they
-have a broken firmware if they do mark the command as supported but
-return such error.
-
--- 
-Luiz Augusto von Dentz
