@@ -1,77 +1,83 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926ED68
-	for <regressions@lists.linux.dev>; Tue,  9 Nov 2021 10:28:56 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mkON4-0002G7-E0; Tue, 09 Nov 2021 11:28:54 +0100
-Message-ID: <c156e850-2aa6-33e5-37c6-efcc2fd72b42@leemhuis.info>
-Date: Tue, 9 Nov 2021 11:28:54 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 872A02C8B
+	for <regressions@lists.linux.dev>; Tue,  9 Nov 2021 12:14:20 +0000 (UTC)
+Received: (wp-smtpd smtp.wp.pl 9402 invoked from network); 9 Nov 2021 13:07:37 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1636459657; bh=x8vezP+ySAQMzU4aH5GB9K9Xh+JMJ6//MlNYqk14zok=;
+          h=From:To:Cc:Subject;
+          b=k+P4M5FgvLpAcMCfITZmyobD4N5nuaymyVw2Fa3w7bNV2kfg6ZlzGLyokZ38Q1z67
+           mmN3OgarorLXdHDDEVTUdu56haV9lyaRttndZyqvAKuOqZd4rkqzabk0+aHcGDuOzh
+           1IIvg+rI+VxEsWpgbSidKyHX2rZ9KlmMbqZsrPtI=
+Received: from 89-64-85-14.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.85.14])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <regressions@leemhuis.info>; 9 Nov 2021 13:07:37 +0100
+Date: Tue, 9 Nov 2021 13:07:37 +0100
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Stanislaw Gruszka <sgruszka@redhat.com>, linux-wireless@vger.kernel.org,
+	Helmut Schaa <helmut.schaa@googlemail.com>,
+	regressions@lists.linux.dev, Kalle Valo <kvalo@codeaurora.org>,
+	Exuvo <exuvo@exuvo.se>
+Subject: Re: rt2x00 regression
+Message-ID: <20211109120737.GA120005@wp.pl>
+References: <CA+GwT0B5SyRZnGLqwqOeuJK4CWMVc=dKaWre9VN8KQC6kBzKGw@mail.gmail.com>
+ <20191203075736.GA701@redhat.com>
+ <d74dab51-3a84-9035-d89e-ea8f63e89198@exuvo.se>
+ <a8eeb0bc-95da-291a-7fb9-5d15d1174c27@exuvo.se>
+ <c22673af-40e0-3af2-5ab7-69b23fc03598@exuvo.se>
+ <f935dc15-08bd-2e28-fc1b-b27634c618be@exuvo.se>
+ <87czop5j33.fsf@tynnyri.adurom.net>
+ <6366d9bd-9752-dbc2-8970-442bdc6e8eea@leemhuis.info>
+ <7d353dd2-2ffb-6d5e-9983-f983c8b4f6da@leemhuis.info>
+ <20211109073127.GA109212@wp.pl>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Content-Language: en-US
-From: Thorsten Leemhuis <linux@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <1618017645-12259-1-git-send-email-chunfeng.yun@mediatek.com>
- <c639c965-5231-b745-7b59-476877202e0c@gmail.com>
- <fd7df619-3eba-b142-cc20-97edf9f20c4d@leemhuis.info>
-Subject: Re: [PATCH v2] usb: core: reduce power-on-good delay time of root hub
-In-Reply-To: <fd7df619-3eba-b142-cc20-97edf9f20c4d@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1636453736;a136f721;
-X-HE-SMSGID: 1mkON4-0002G7-E0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211109073127.GA109212@wp.pl>
+X-WP-MailID: 1d59ce342643a1460894678b87309333
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000000 [ocO0]                               
 
-On 01.11.21 17:46, Thorsten Leemhuis wrote:
-> On 01.11.21 04:33, Walt Jr. Brake wrote:
->> Three month ago, My USB 3.1 device cannot be detected after upgrade
->> kernel from version 5.10.41 to 5.10.42.
->>
->> And I found some other people ran into the same issue:
->>
->> https://forum.manjaro.org/t/kernel-5-10-59-doesnt-detect-a-connected-usb-external-disk/79320
->>
->> https://forum.manjaro.org/t/how-to-make-active-usb-hub-work-in-manjaro/84548
->>
->>
->> Two days ago, I try to fix the issue myself, and I found out that it was
->> cause by this patch. After revert this patch, my USB 3.1 device can be
->> detect again.
->>
->> I have already file a bug on here:
->> https://bugzilla.kernel.org/show_bug.cgi?id=214875.
+On Tue, Nov 09, 2021 at 08:32:07AM +0100, Stanislaw Gruszka wrote:
+> On Mon, Nov 08, 2021 at 07:00:20PM +0100, Thorsten Leemhuis wrote:
+> > Sending this again, but this time also to Stanislaw's email address
+> > currently found in MAINTAINERS.
+> >
+> > Stanislaw, can you help with this regression?
 > 
-> #regzbot ^introduced 90d28fb53d4a51299ff324dede015d5cb11b88a2
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=214875
+> Yes. 
+> 
+> I'll check on mail archives what is the status and what can be done.
 
-#regzbot fixed-by e1959faf085b004e6c3afaaaa743381f00e7c015
-#regzbot ignore-activity
+Ok, so what I can see here  
+https://lore.kernel.org/linux-wireless/20211109073127.GA109212@wp.pl/T/#m6a677995c1afaf6b9b1ff19de9566f304089d3ac
+is that this problem happen only on firmware load,
+so I think we can use below patch as fix.
 
-BTW, to anyone is reading this and wondering why it's needed: regzbot
-needed the above, as the fix for this regression(¹) lacked a Link: tag
-with the URL to the report. It it had been there, regzbot would have
-automatically noticed the fix when it showed up in next.
+Anton, please test it.
 
-Thinking aloud: The fix was posted in the thread with the regression
-report. Regzbot could be enhanced to detect such cases automatically.
+Thanks
+Stanislaw
 
-Thinking aloud, too: regzbot could be enhanced to notice if a mail or a
-commit mentioned a commit-id that is known to cause a tracked regression.
-
-I guess the former might not be worth it, the latter OTOH might be a
-good idea I will keep in mind.
-
-Ciao, Thorsten
-
-
-(¹)
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=e1959faf085b004e6c3afaaaa743381f00e7c015
-
-
+diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
+index e4473a551241..57c947dad036 100644
+--- a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
+@@ -30,7 +30,8 @@ static bool rt2x00usb_check_usb_error(struct rt2x00_dev *rt2x00dev, int status)
+ 	else
+ 		rt2x00dev->num_proto_errs = 0;
+ 
+-	if (rt2x00dev->num_proto_errs > 3)
++	if (rt2x00dev->num_proto_errs > 3 &&
++	    !test_bit(DEVICE_STATE_STARTED, &rt2x00dev->flags))
+ 		return true;
+ 
+ 	return false;
