@@ -1,97 +1,107 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A493672
-	for <regressions@lists.linux.dev>; Wed, 10 Nov 2021 19:50:00 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mktba-0006uQ-AI; Wed, 10 Nov 2021 20:49:58 +0100
-Message-ID: <b1b8bf55-1db5-3343-29da-d284a33d10d4@leemhuis.info>
-Date: Wed, 10 Nov 2021 20:49:57 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D435F72
+	for <regressions@lists.linux.dev>; Wed, 10 Nov 2021 20:02:56 +0000 (UTC)
+Received: by mail-lj1-f169.google.com with SMTP id h11so7550116ljk.1
+        for <regressions@lists.linux.dev>; Wed, 10 Nov 2021 12:02:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=QrY6DTXVsJXnxgZM0Vf8TBQU6FkE1rvTuD+fiMvH20c=;
+        b=Feof8M4nyNH527Qrvhf9zoyT0pcoz6VCbSW341AfYot8EsdyZe/LBgPtHi/oFwgoH1
+         8okXUyJnJpXxRAS9I/mECNLBkzXjxJGEsBOjXbhbV1hvy/zwHs+DUd6giijj/fuUCdr8
+         JCVmfvYNsn+7dcDQ1E8rlCJvV0/lsRWqD3XW8fRGBxPMIvGvmcpjHiLC8eKGZxLoqQ4G
+         +z4ZVRAqJRRKyMRHFyRiTYP0AFQrchLq8Nts6ASOn3eNNKCMGEb5Zn1Wa3TAqkS+V4pS
+         74QdixjWc8UOe77Vo22nU9qhwZKe/pso1RbuP/rb9MkXSwvhYQ+y0L2fHCRADr6G9bEi
+         QX+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=QrY6DTXVsJXnxgZM0Vf8TBQU6FkE1rvTuD+fiMvH20c=;
+        b=eRu1oGbEYH0OGl34uUnSrqESAJFST0Zh2YmpZ0Yf5m5+X2sVJR86KA4OFr/dxw5/fo
+         m7g5QLaxd+9cfIlld4WyGzEzmD0pikHFkds8fXvKktzAKRG3rw7QgA0Kn+CiTlcpDU89
+         +VxVMf1Af/I3986IqcNY6OPYk9Z1hzG6U3fA7YnOSMch1XBWD09GWSqkmdJVlDskNXfY
+         Yk+J/EwRhmJM15Wi4fyyKNEhPPIbVmSYitevbe1l4EHBD+HvVqZnbTDQlKEc070r581j
+         G4pUTUCxjE8rPjtkGSlKH8BNtbLmf6F3suVVAEBEcyyaLqGFQaHcGP4sCoxcBwSmwVx4
+         XINw==
+X-Gm-Message-State: AOAM531uRuftXoLlWTaJko3/P9ZcrGVJa9nBGNBZvw4gHauWcXDJ1wj+
+	pzxC+LzJdaE/uTCqz04l++U=
+X-Google-Smtp-Source: ABdhPJyopJbTR3pmC18s8EjWmFMTxwza5dakDnojaHWRZIjFaxEm4Y55Xa357tNVVGrgvOonVSjPxA==
+X-Received: by 2002:a2e:3a18:: with SMTP id h24mr1448702lja.372.1636574575025;
+        Wed, 10 Nov 2021 12:02:55 -0800 (PST)
+Received: from lahvuun (93-76-191-141.kha.volia.net. [93.76.191.141])
+        by smtp.gmail.com with ESMTPSA id i6sm79856lfr.163.2021.11.10.12.02.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Nov 2021 12:02:54 -0800 (PST)
+Date: Wed, 10 Nov 2021 22:02:53 +0200
+From: Ilya Trukhanov <lahvuun@gmail.com>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, linux-efi@vger.kernel.org,
+	linux-pm@vger.kernel.org, javierm@redhat.com, tzimmermann@suse.de,
+	ardb@kernel.org, rafael@kernel.org, len.brown@intel.com,
+	pavel@ucw.cz
+Subject: [REGRESSION]: drivers/firmware: move x86 Generic System Framebuffers
+ support
+Message-ID: <20211110200253.rfudkt3edbd3nsyj@lahvuun>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: Verifier rejects previously accepted program
-Content-Language: en-BW
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Lorenz Bauer <lmb@cloudflare.com>, Alexei Starovoitov <ast@kernel.org>,
- kernel-team <kernel-team@cloudflare.com>, bpf <bpf@vger.kernel.org>,
- regressions@lists.linux.dev, Andrii Nakryiko <andrii@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>
-References: <CACAyw99hVEJFoiBH_ZGyy=+oO-jyydoz6v1DeKPKs2HVsUH28w@mail.gmail.com>
- <CAADnVQKsK_2HHfOLs4XK7h_LC4+b7tfFw9261Psy5St8P+GWFA@mail.gmail.com>
- <CACAyw9_GmNotSyG0g1OOt648y9kx5Bd72f58TtS-QQD9FaV06w@mail.gmail.com>
- <20211105194952.xve6u6lgh2oy46dy@ast-mbp.dhcp.thefacebook.com>
- <CACAyw99KGdTAz+G3aU8G3eqC926YYpgD57q-A+NFNVqqiJPY3g@mail.gmail.com>
- <20211110042530.6ye65mpspre7au5f@ast-mbp.dhcp.thefacebook.com>
- <CACAyw9-s0ahY8m7WtMd1OK=ZF9w5gS9gktQ6S8Kak2pznXgw0w@mail.gmail.com>
- <20211110165044.kkjqrjpmnz7hkmq3@ast-mbp.dhcp.thefacebook.com>
- <7e7f180c-6cf6-ba86-e8fd-49b3b291e81e@leemhuis.info>
- <CAADnVQ+1xY2fGKH2=VxeukSwBUc0D=+6ChqCgwEMPGMPKeKiOA@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAADnVQ+1xY2fGKH2=VxeukSwBUc0D=+6ChqCgwEMPGMPKeKiOA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1636573800;0421b2f7;
-X-HE-SMSGID: 1mktba-0006uQ-AI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 10.11.21 20:16, Alexei Starovoitov wrote:
-> On Wed, Nov 10, 2021 at 10:01 AM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
->> On 10.11.21 17:50, Alexei Starovoitov wrote:
->>> On Wed, Nov 10, 2021 at 11:41:09AM +0000, Lorenz Bauer wrote:
->>>>
->>>> uid changes on every invocation, and therefore regsafe() returns false?
->>>
->>> That's correct.
->>> Could you please try the following fix.
->>> I think it's less risky and more accurate than what I've tried before.
->>>
->>> >From be7736582945b56e88d385ddd4a05e13e4bc6784 Mon Sep 17 00:00:00 2001
->>> From: Alexei Starovoitov <ast@kernel.org>
->>> Date: Wed, 10 Nov 2021 08:47:52 -0800
->>> Subject: [PATCH] bpf: Fix inner map state pruning regression.
->>>
->>> Fixes: 3e8ce29850f1 ("bpf: Prevent pointer mismatch in bpf_timer_init.")
->>> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
->>
->> Thanks for working on a fix for this regression. There is one small
->> detail that afaics could be improved (maybe you left that for later, if
->> that's the case please simply stop reading and ignore this mail):
->>
->> The commit message would benefit from a link to the regression report.
->> This is explained in Documentation/process/submitting-patches.rst, which
->> recently was changed slightly to make this aspect clearer:
->> https://git.kernel.org/linus/1f57bd42b77c
-> 
-> I don't think you're familiar with bpf process of applying patches.
+Suspend-to-RAM with elogind under Wayland stopped working in 5.15.
 
-That's totally correct, but why should someone working as a regression
-tracker for all of the Linux kernel has to know the exact inner workings
-of all the various subsystems?
+This occurs with 5.15, 5.15.1 and latest master at
+89d714ab6043bca7356b5c823f5335f5dce1f930. 5.14 and earlier releases work
+fine.
 
-> Please take a look at bpf tree. The 'Link:' exists for every commit.
+git bisect gives d391c58271072d0b0fad93c82018d495b2633448.
 
-One of us is missing something. I might be wrong, but you afaics mean
-that every commit has a 'Link:' to the latest review posting added when
-a patch is committed. Many thx for that, I really like that, as it made
-my life easier a few times in the past already.
+To reproduce:
+- Use elogind and Linux 5.15.1 with CONFIG_SYSFB_SIMPLEFB=n.
+- Start a Wayland session. I tested sway and weston, neither worked.
+- In a terminal emulator (I used alacritty) execute `loginctl suspend`.
 
-But that was not what I was asking got. I was asking for a 'Link:' to
-the *regression report*. To quote myself again from above:
+Normally after the last step the system would suspend, but it no longer
+does so after I upgraded to Linux 5.15. After running `loginctl suspend`
+in dmesg I get the following:
+[  103.098782] elogind-daemon[2357]: Suspending system...
+[  103.098794] PM: suspend entry (deep)
+[  103.124621] Filesystems sync: 0.025 seconds
 
->> The commit message would benefit from a link to the regression report.
->> [...] https://git.kernel.org/linus/1f57bd42b77c
+But nothing happens afterwards.
 
-To quote from there:
-```
-In case your patch fixes a bug, for example, add a tag with a URL
-referencing the report in the mailing list archives or a bug tracker
-````
+Suspend works as expected if I do any of the following:
+- Revert d391c58271072d0b0fad93c82018d495b2633448.
+- Build with CONFIG_SYSFB_SIMPLEFB=y.
+- Suspend from tty, even if a Wayland session is running in parallel.
+- Suspend from under an X11 session.
+- Suspend with `echo mem > /sys/power/state`.
 
-Or what am I missing? Ciao, Thorsten
+If I attach strace to the elogind-daemon process after running
+`loginctl suspend` then the system immediately suspends. However, if
+I attach strace *prior* to running `loginctl suspend` then no suspend,
+and the process gets stuck on a write syscall to `/sys/power/state`.
+
+I "traced" a little bit with printk (sorry, I don't know of a better
+way) and the call chain is as follows:
+state_store -> pm_suspend -> enter_state -> suspend_prepare
+-> pm_prepare_console -> vt_move_to_console -> vt_waitactive
+-> __vt_event_wait
+
+__vt_event_wait just waits until wait_event_interruptible completes, but
+it never does (not until I attach to elogind-daemon with strace, at
+least). I did not follow the chain further.
+
+- Linux version 5.15.1 (lahvuun@lahvuun) (gcc (Gentoo 11.2.0 p1) 11.2.0,
+  GNU ld (Gentoo 2.37_p1 p0) 2.37) #51 SMP PREEMPT Tue Nov 9 23:39:25
+  EET 2021
+- Gentoo Linux 2.8
+- x86_64 AuthenticAMD
+- dmesg: https://pastebin.com/duj33bY8
+- .config: https://pastebin.com/7Hew1g0T
