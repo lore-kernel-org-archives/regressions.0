@@ -1,52 +1,95 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFA42C82
-	for <regressions@lists.linux.dev>; Wed, 10 Nov 2021 17:38:40 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 7493761246;
-	Wed, 10 Nov 2021 17:38:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1636565920;
-	bh=6G1IgHFg5QdJERQZMbsEQvzO9rPuJ1HBs90x9flrvVM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xUNZ52Q+5LwUFpNRyKzef3bePEUClWXsxzT1+52Kope87bognQ8sjTsMnCmYV1REr
-	 /ENcsk4gfnCJp8bWAycg84YPRBvBzodQaucDhU2HbY+5UnWwghTV9rKYHMMveR8plC
-	 GQjW8O7Hte8aW8kmVc+cTHxIq07SAOI0ytK7MArU=
-Date: Wed, 10 Nov 2021 18:38:37 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Mark Boddington <lkml@badpenguin.co.uk>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: kernel 5.15.1: AMD RX 6700 XT - Fails to resume after screen
- blank
-Message-ID: <YYwDnbpES0rrnWBw@kroah.com>
-References: <dbadfe41-24bf-5811-cf38-74973df45214@badpenguin.co.uk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058662C82
+	for <regressions@lists.linux.dev>; Wed, 10 Nov 2021 18:01:23 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mkruN-0000Aa-4Y; Wed, 10 Nov 2021 19:01:15 +0100
+Message-ID: <7e7f180c-6cf6-ba86-e8fd-49b3b291e81e@leemhuis.info>
+Date: Wed, 10 Nov 2021 19:01:14 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dbadfe41-24bf-5811-cf38-74973df45214@badpenguin.co.uk>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Content-Language: en-BW
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+ Lorenz Bauer <lmb@cloudflare.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+ kernel-team <kernel-team@cloudflare.com>, bpf <bpf@vger.kernel.org>,
+ regressions@lists.linux.dev, Andrii Nakryiko <andrii@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>
+References: <CACAyw99hVEJFoiBH_ZGyy=+oO-jyydoz6v1DeKPKs2HVsUH28w@mail.gmail.com>
+ <CAADnVQKsK_2HHfOLs4XK7h_LC4+b7tfFw9261Psy5St8P+GWFA@mail.gmail.com>
+ <CACAyw9_GmNotSyG0g1OOt648y9kx5Bd72f58TtS-QQD9FaV06w@mail.gmail.com>
+ <20211105194952.xve6u6lgh2oy46dy@ast-mbp.dhcp.thefacebook.com>
+ <CACAyw99KGdTAz+G3aU8G3eqC926YYpgD57q-A+NFNVqqiJPY3g@mail.gmail.com>
+ <20211110042530.6ye65mpspre7au5f@ast-mbp.dhcp.thefacebook.com>
+ <CACAyw9-s0ahY8m7WtMd1OK=ZF9w5gS9gktQ6S8Kak2pznXgw0w@mail.gmail.com>
+ <20211110165044.kkjqrjpmnz7hkmq3@ast-mbp.dhcp.thefacebook.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: Verifier rejects previously accepted program
+In-Reply-To: <20211110165044.kkjqrjpmnz7hkmq3@ast-mbp.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1636567284;c603b658;
+X-HE-SMSGID: 1mkruN-0000Aa-4Y
 
-On Wed, Nov 10, 2021 at 04:27:39PM +0000, Mark Boddington wrote:
-> Hi all,
+
+
+On 10.11.21 17:50, Alexei Starovoitov wrote:
+> On Wed, Nov 10, 2021 at 11:41:09AM +0000, Lorenz Bauer wrote:
+>>
+>> uid changes on every invocation, and therefore regsafe() returns false?
 > 
-> I run the mainline Linux kernel on Ubuntu 20.04, built from
-> https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.1/
+> That's correct.
+> Could you please try the following fix.
+> I think it's less risky and more accurate than what I've tried before.
 > 
-> There appears to be a regression in 5.15.1 which causes the GPU to fail to
-> resume after power saving.
+>>From be7736582945b56e88d385ddd4a05e13e4bc6784 Mon Sep 17 00:00:00 2001
+> From: Alexei Starovoitov <ast@kernel.org>
+> Date: Wed, 10 Nov 2021 08:47:52 -0800
+> Subject: [PATCH] bpf: Fix inner map state pruning regression.
 > 
-> Could it be this change??:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c?h=v5.15.1&id=8af3a335b5531ca3df0920b1cca43e456cd110ad
+> Fixes: 3e8ce29850f1 ("bpf: Prevent pointer mismatch in bpf_timer_init.")
+> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 
-If you revert it, does it solve the problem for you?
+Thanks for working on a fix for this regression. There is one small
+detail that afaics could be improved (maybe you left that for later, if
+that's the case please simply stop reading and ignore this mail):
 
-If not, what kernel version did work for you with this hardware?
+The commit message would benefit from a link to the regression report.
+This is explained in Documentation/process/submitting-patches.rst, which
+recently was changed slightly to make this aspect clearer:
+https://git.kernel.org/linus/1f57bd42b77c
 
-thanks,
+E.g. add something like this
 
-greg k-h
+Link:
+https://linux-regtracking.leemhuis.info/regzbot/regression/CACAyw99hVEJFoiBH_ZGyy=%2BoO-jyydoz6v1DeKPKs2HVsUH28w@mail.gmail.com/
+
+Thanks in advance.
+
+FWIW, in case anyone wonders why I'm asking for this: yes, that link is
+not really crucial; but it's good to have if someone needs to look into
+the backstory of this change sometime in the future. But I care for a
+different reason. I'm tracking this regression (and others) with
+regzbot, my relative new Linux kernel regression tracking bot. The entry
+for this regression can be found at:
+https://linux-regtracking.leemhuis.info/regzbot/regression/CACAyw99hVEJFoiBH_ZGyy=%2BoO-jyydoz6v1DeKPKs2HVsUH28w@mail.gmail.com/
+
+This bot will notice if a patch with a Link: tag to a tracked regression
+gets posted. It will record that and show a link in the web-interface,
+which allows anyone looking into a regression to quickly gasp the
+current status. The bot will also notice if a commit with a Link: tag to
+a regression report is applied by Linus and then automatically mark the
+regression as resolved then.
+
+IOW: this tag makes my life easier, as I otherwise have to tell regzbot
+manually about each and every fix for a regression manually. ;-)
+
+Ciao, your Linux kernel regression tracker (Thorsten)
