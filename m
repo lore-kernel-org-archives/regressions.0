@@ -1,130 +1,260 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468FC2C83
-	for <regressions@lists.linux.dev>; Tue,  9 Nov 2021 15:22:34 +0000 (UTC)
-Received: by mail-lf1-f42.google.com with SMTP id bi35so45178719lfb.9
-        for <regressions@lists.linux.dev>; Tue, 09 Nov 2021 07:22:33 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9BF2C80
+	for <regressions@lists.linux.dev>; Wed, 10 Nov 2021 04:25:33 +0000 (UTC)
+Received: by mail-pj1-f54.google.com with SMTP id n15-20020a17090a160f00b001a75089daa3so739421pja.1
+        for <regressions@lists.linux.dev>; Tue, 09 Nov 2021 20:25:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=exuvo-se.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=GcVUHwm/eJAM3fbrKDDGYlEYtYCiryEx3rFGza3K/4o=;
-        b=jHwn4dVwIlptfxRjWoZbgr4hx+IT4CBSOk7Sra0w9UwVFgYLVkZER2UU1RNjEDlXB3
-         PugklcFTNIG2ABeD+IxF2OBE2/lEUJk4je6ZkhVzl7XfAwOdv8Q1VYYE6KzQ6egyi4fg
-         E0jwWGa70FG9j6108byRX7hRvOx6p23fVzhtIwbzAeBgC2ELY3JQZAHS90k8Zan1EwLY
-         7cuDTvE27MzkMl4c9u1lnnHVwtDgtIB9oTFO0K0P2v952gfcMudZ6d6kpNqGISOoxLbk
-         ismy32NDTinVPtKSqiCGYdMh8Lv9X4NYcoUOH6bOsn3oYEJteSmAMpj+w62IeR4G5BiB
-         jVvQ==
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/7g9dxEw/DHYc528KeoSbI28xVSmQac5QGJUNydBMQE=;
+        b=A/vkU0lhW7nZueduIWWRtJgqQS7hWjVJcsWmwQ6E21n/Dzk2nlJySrVlrNpmKEe/Wb
+         APb++SQU58zxBZE4EMPUFDLa027VQiqjzAabMpIUiM2P7LgnXz9ln+uf+c5XaWBtNuQ1
+         qDJpAXx7JiTNl/gsTea/ypW+Tf5KSruqzywsJh0vhpJoqUf+UdCmW6c2tp3cQzXH10Vb
+         r3485GGs5Leh21wvR2kASNAJ36722ZZtMyZ9ICWC0DepJeSUQdE1jqG/qV7kKv1hOaCk
+         HZZUJUeBQXwZj0NMGTsm5S4sDGzgwWyZLjfXVPIBqcl1EnGAx9trithEsNMoTYThjwMz
+         5omg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=GcVUHwm/eJAM3fbrKDDGYlEYtYCiryEx3rFGza3K/4o=;
-        b=h+UN3Ir+QK3deyqdEs6S/HKbAfS5sF/wZdloBr3XLXTBdYF6O+SyGX4hYyXFyNzsq8
-         Xo0bYZpYUHRJauQul6Or2QZ2tPumXCnyH7GAbgImG5y6WKrUPgtfA6DmmRQbd/a81I4t
-         x8qKY9zUeGAeLvEHLyO6W6cFosrTWr9v6s+0ivforMkhdZdRQ52WnV8ZzHuNCX9Tw2iy
-         riIwW9BVqcmvreGVk1DQ+CO62T/wYzsCynjJid+JGZrJGln/gbbg9+itv8JxEAxyNX5O
-         h3Gbj3l02ghmx3N0nxe46L5jlAUPChC0yYP78ysnV/T7JM3LOvh/UwqWK3402xP28+Y3
-         f6Jw==
-X-Gm-Message-State: AOAM531dDZlDc+sqF3cXEAdfUIg7GMVrJcF1K3Ad6kOP8kRjx/OuTdPI
-	7/udXbusnhwcg1GttqeUke+YdQ==
-X-Google-Smtp-Source: ABdhPJxq1n6uE/+cplvZ09vkFXDhN1T8ui3iM2ewFV7amxDQqh4ZbpuPjagF9SN4ed8/OojIrYMaww==
-X-Received: by 2002:ac2:55a5:: with SMTP id y5mr7645335lfg.468.1636471352109;
-        Tue, 09 Nov 2021 07:22:32 -0800 (PST)
-Received: from ?IPV6:2001:9b0:218:2b00::30? ([2001:9b0:218:2b00::30])
-        by smtp.googlemail.com with ESMTPSA id m8sm521735lfq.27.2021.11.09.07.22.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Nov 2021 07:22:31 -0800 (PST)
-Message-ID: <c81f829d-fd87-7580-fb9a-1a84958f890f@exuvo.se>
-Date: Tue, 9 Nov 2021 16:22:31 +0100
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/7g9dxEw/DHYc528KeoSbI28xVSmQac5QGJUNydBMQE=;
+        b=X1sWaHLEFMD/tL9oRlHL1uhUPOYgHOzNiO0IRkDRtkebpENDGWcfD0o/UGZainPspc
+         eSC9WH2Maed/OLCnmqRRMOPBDboTxChTrFLICcLjcmkKY8mxQPimWrLP6/GTMTMX0lnr
+         IjIN00IYqCZ6pFQ31mDmqYj/Ctgm4BEtihOFcyP+ZYxuCnI0ethzm/3CV316ajJv26by
+         /5KUH8bjp9UOniogX99fXq0HPMZ2C4d9yqYU89XGgiuaFv07wx1lhkhLM2yCFp5rVOHx
+         Pggpwq39EP/Fa1udJneIr4wLmI9+qxfNGYCb/yuAotI/T+zyI4J3s81IVBv+h2HODnXm
+         e3hA==
+X-Gm-Message-State: AOAM5334PVAfcxuqvlgFuiEsx2IZaywsz7UqaKdPAA09rs0zt/x6SLoM
+	XHSK4lErX+NrMwrVKKFPJYzVkO26SGQ=
+X-Google-Smtp-Source: ABdhPJxpUQYPkskilBTvPZdInItTvDQq3bccNp6BVpoVenXIfZnawTKPthzP24TRFfSoz5HSB1yqOg==
+X-Received: by 2002:a17:90b:3b45:: with SMTP id ot5mr13238459pjb.235.1636518332989;
+        Tue, 09 Nov 2021 20:25:32 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:8f53])
+        by smtp.gmail.com with ESMTPSA id w20sm329149pga.52.2021.11.09.20.25.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Nov 2021 20:25:32 -0800 (PST)
+Date: Tue, 9 Nov 2021 20:25:30 -0800
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To: Lorenz Bauer <lmb@cloudflare.com>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	kernel-team <kernel-team@cloudflare.com>, bpf <bpf@vger.kernel.org>,
+	regressions@lists.linux.dev, Andrii Nakryiko <andrii@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: Verifier rejects previously accepted program
+Message-ID: <20211110042530.6ye65mpspre7au5f@ast-mbp.dhcp.thefacebook.com>
+References: <CACAyw99hVEJFoiBH_ZGyy=+oO-jyydoz6v1DeKPKs2HVsUH28w@mail.gmail.com>
+ <CAADnVQKsK_2HHfOLs4XK7h_LC4+b7tfFw9261Psy5St8P+GWFA@mail.gmail.com>
+ <CACAyw9_GmNotSyG0g1OOt648y9kx5Bd72f58TtS-QQD9FaV06w@mail.gmail.com>
+ <20211105194952.xve6u6lgh2oy46dy@ast-mbp.dhcp.thefacebook.com>
+ <CACAyw99KGdTAz+G3aU8G3eqC926YYpgD57q-A+NFNVqqiJPY3g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: rt2x00 regression
-Content-Language: en-US
-To: Stanislaw Gruszka <stf_xl@wp.pl>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Stanislaw Gruszka <sgruszka@redhat.com>, linux-wireless@vger.kernel.org,
- Helmut Schaa <helmut.schaa@googlemail.com>, regressions@lists.linux.dev,
- Kalle Valo <kvalo@codeaurora.org>
-References: <CA+GwT0B5SyRZnGLqwqOeuJK4CWMVc=dKaWre9VN8KQC6kBzKGw@mail.gmail.com>
- <20191203075736.GA701@redhat.com>
- <d74dab51-3a84-9035-d89e-ea8f63e89198@exuvo.se>
- <a8eeb0bc-95da-291a-7fb9-5d15d1174c27@exuvo.se>
- <c22673af-40e0-3af2-5ab7-69b23fc03598@exuvo.se>
- <f935dc15-08bd-2e28-fc1b-b27634c618be@exuvo.se>
- <87czop5j33.fsf@tynnyri.adurom.net>
- <6366d9bd-9752-dbc2-8970-442bdc6e8eea@leemhuis.info>
- <7d353dd2-2ffb-6d5e-9983-f983c8b4f6da@leemhuis.info>
- <20211109073127.GA109212@wp.pl> <20211109120737.GA120005@wp.pl>
-From: Exuvo <exuvo@exuvo.se>
-In-Reply-To: <20211109120737.GA120005@wp.pl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACAyw99KGdTAz+G3aU8G3eqC926YYpgD57q-A+NFNVqqiJPY3g@mail.gmail.com>
 
-Just tested it and it passes the rt2x00lib_load_firmware but still errors on rt2800usb_set_device_state:
+On Mon, Nov 08, 2021 at 01:21:12PM +0000, Lorenz Bauer wrote:
+> On Fri, 5 Nov 2021 at 19:49, Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > On Fri, Nov 05, 2021 at 10:41:40AM +0000, Lorenz Bauer wrote:
+> > >
+> > > bpf-next with f30d4968e9ae on top:
+> > >
+> > >     works!
+> >
+> > Awesome.
+> >
+> > > commit 3e8ce29850f1 ("bpf: Prevent pointer mismatch in
+> > > bpf_timer_init.") (found via bisection):
+> > >
+> > >     BPF program is too large. Processed 1000001 insn
+> > >
+> > > commit 3e8ce29850f1^ ("bpf: Add map side support for bpf timers."):
+> > >
+> > >    works!
+> >
+> > So with just 3e8ce29850f1 it's "too large" and with parent commit it works ?
+> > I've analyzed offending commit again and don't see how it can be causing
+> > state pruning to be more conservative for your asm.
+> > reg->map_uid should only be non-zero for lookups from inner maps,
+> > but your asm doesn't have lookups at all in that loop.
+> 
+> I misattributed the problem to the loop, since it was really prominent
+> in the verifier output. We use nested maps extensively, most likely
+> those are what's causing the problem.
+> 
+> > Maybe in some case map_uid doesn't get cleared, but I couldn't find
+> > such code path with manual code analysis.
+> > I think it's worth investigating further.
+> > Please craft a reproducer.
+> 
+> I've started with some verifier log analysis to narrow the problem down.
+> 
+> * Same test case as before
+> * Dump verifier output with log_level=2 for both 3e8ce29850f1 and 3e8ce29850f1^
+> * Use diff to find the first non-matching line
+> 
+> 3e8ce29850f1 makes the verifier do a lot more work on our code. Some
+> later commit then drops the complexity below what the verifier will
+> accept, probably the more precise scalar spill tracking.
+> 
+> 3e8ce29850f1^:                  295498 insns
+> 3e8ce29850f1:                > 1000000 insns
+> be2f2d1680df + bd479d103883:    450161 insns
+> 
+> Trace from 3e8ce29850f1^ (working):
+> 
+> 1033: R0=map_value(id=0,off=0,ks=4,vs=36,imm=0) R1_w=invP0
+> R3_w=map_value(id=0,off=0,ks=4,vs=36,imm=0) R6=ctx(id=0,off=0,imm=0)
+> R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0) R9=inv0 R10=fp0
+> fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmm00m0 fp-48=mmmm0000
+> fp-56=00000000 fp-64=00000000 fp-72=0000mmmm fp-80=mmmmmmmm
+> fp-88=map_value fp-96=pkt_end fp-104=map_value fp-112=pkt fp-120=fp
+> fp-128=map_value
+> 1033: (16) if w1 == 0x0 goto pc+43
+> 1077: safe
+> 1178: R0=inv0 R1=map_ptr(id=0,off=0,ks=4,vs=4,imm=0) R2_w=inv0
+> R3=inv2388976653695081527 R4=inv-8645972361240307355 R5=inv(id=6898)
+> R6=ctx(id=0,off=0,imm=0) R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0)
+> R9=inv0 R10=fp0 fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmm00m0
+> fp-48=mmmm0000 fp-56=00000000 fp-64=00000000 fp-72=0000mmmm
+> fp-80=mmmmmmmm fp-88=map_value fp-96=pkt_end fp-104=map_value
+> fp-112=pkt fp-120=fp fp-128=map_value
+> 1178: (63) *(u32 *)(r10 -32) = r7
+> <...>
+> processed 295498 insns (limit 1000000) max_states_per_insn 29
+> total_states 14527 peak_states 1322 mark_read 53
+> 
+> Trace from 3e8ce29850f1 (broken):
+> 
+> 1033: R0=map_value(id=0,off=0,ks=4,vs=36,imm=0) R1_w=invP0
+> R3_w=map_value(id=0,off=0,ks=4,vs=36,imm=0) R6=ctx(id=0,off=0,imm=0)
+> R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0) R9=inv0 R10=fp0
+> fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmm00m0 fp-48=mmmm0000
+> fp-56=00000000 fp-64=00000000 fp-72=0000mmmm fp-80=mmmmmmmm
+> fp-88=map_value fp-96=pkt_end fp-104=map_value fp-112=pkt fp-120=fp
+> fp-128=map_value
+> 1033: (16) if w1 == 0x0 goto pc+43
+> 1077: R0=map_value(id=0,off=0,ks=4,vs=36,imm=0) R1_w=invP0
+> R3_w=map_value(id=0,off=0,ks=4,vs=36,imm=0) R6=ctx(id=0,off=0,imm=0)
+> R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0) R9=inv0 R10=fp0
+> fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmm00m0 fp-48=mmmm0000
+> fp-56=00000000 fp-64=00000000 fp-72=0000mmmm fp-80=mmmmmmmm
+> fp-88=map_value fp-96=pkt_end fp-104=map_value fp-112=pkt fp-120=fp
+> fp-128=map_value
+> 1077: (79) r2 = *(u64 *)(r10 -128)
 
-[  348.363942] ieee80211 phy1: rt2x00lib_request_firmware: Info - Loading firmware file 'rt2870.bin'
-[  348.364519] ieee80211 phy1: rt2x00lib_request_firmware: Info - Firmware detected - version: 0.36
-[  348.650321] ieee80211 phy1: rt2x00usb_vendor_request: Error - Vendor Request 0x06 failed for offset 0x0404 with error -71
-[  349.695576] ieee80211 phy1: rt2800_wait_csr_ready: Error - Unstable hardware
-[  349.695606] ieee80211 phy1: rt2800usb_set_device_state: Error - Device failed to enter state 4 (-5)
+R2 loads a spilled map_value.
 
-which was the last error i got in my previous dump_stack too (which you linked):
+> 1078: R0=map_value(id=0,off=0,ks=4,vs=36,imm=0) R1_w=invP0
+> R2_w=map_value(id=0,off=0,ks=4,vs=32,imm=0)
+> R3_w=map_value(id=0,off=0,ks=4,vs=36,imm=0) R6=ctx(id=0,off=0,imm=0)
+> R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0) R9=inv0 R10=fp0
+> fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmm00m0 fp-48=mmmm0000
+> fp-56=00000000 fp-64=00000000 fp-72=0000mmmm fp-80=mmmmmmmm
+> fp-88=map_value fp-96=pkt_end fp-104=map_value fp-112=pkt fp-120=fp
+> fp-128=map_value
+> 1078: (79) r1 = *(u64 *)(r2 +0)
+> <...>
+> (truncated)
+> 
+> Trace from be2f2d1680df ("libbpf: Deprecate bpf_program__load() API")
+> with bd479d103883 ("bpf: Do not reject when the stack read size is
+> different from the tracked scalar size") cherry picked:
+> 
+> processed 450161 insns (limit 1000000) max_states_per_insn 19
+> total_states 19452 peak_states 1319 mark_read 53
+> 
+> r2 is the result of a lookup from a per-CPU array, ts_metrics in the
+> snippet below:
+> 
+> struct bpf_map_def traffic_set_metrics_map __section("maps") = {
+>     .type        = BPF_MAP_TYPE_PERCPU_ARRAY,
+>     .key_size    = sizeof(traffic_set_id_t),
+>     .value_size  = sizeof(traffic_set_metrics_t),
+>     .max_entries = SET_BY_USERSPACE,
+> };
+> 
+>     traffic_set_metrics_t *ts_metrics =
+> bpf_map_lookup_elem(&traffic_set_metrics_map, &meta->ts_id);
+>     if (ts_metrics == NULL) {
+>         return XDP_ABORTED;
+>     }
+> 
+>    <...>
+> 
+>    if (meta->from_plurimog) {
+>         ts_metrics->packets_total_plurimog_ingress++;
+>     } else {
+>         ts_metrics->packets_total_main++; // insn 1078
+>     }
 
-2020-07-15T19:16:10.956602+0000 kernel: Call Trace:
-2020-07-15T19:16:10.956620+0000 kernel:  dump_stack+0x64/0x88
-2020-07-15T19:16:10.956635+0000 kernel: rt2x00usb_vendor_request.cold+0x2b/0x69 [rt2x00usb]
-2020-07-15T19:16:10.956649+0000 kernel: rt2x00usb_vendor_req_buff_lock+0xa6/0x230 [rt2x00usb]
-2020-07-15T19:16:10.956663+0000 kernel: rt2x00usb_register_write_lock+0x37/0x60 [rt2800usb]
-2020-07-15T19:16:10.956677+0000 kernel: rt2800_mcu_request+0x100/0x110 [rt2800lib]
-2020-07-15T19:16:10.956696+0000 kernel: rt2800_enable_radio+0xb6/0x2d36 [rt2800lib]
-2020-07-15T19:16:10.956712+0000 kernel: rt2800usb_set_device_state+0xbd/0x18b [rt2800usb]
-2020-07-15T19:16:10.956735+0000 kernel: rt2x00lib_enable_radio+0x3e/0xa0 [rt2x00lib]
-2020-07-15T19:16:10.956754+0000 kernel:  rt2x00lib_start+0x7c/0xc0 [rt2x00lib]
-2020-07-15T19:16:10.956778+0000 kernel:  drv_start+0x3e/0x130 [mac80211]
+but it goes into R2 from non-inner map which ruins all my theories.
 
-Anton "exuvo" Olsson
-    exuvo@exuvo.se
+I've tried to craft a test case based on a theory and so far couldn't do so.
+Could you please try the following hack:
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 1aafb43f61d1..89b8f79b7236 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -665,9 +665,10 @@ static void print_verifier_state(struct bpf_verifier_env *env,
+                                 t == PTR_TO_MAP_KEY ||
+                                 t == PTR_TO_MAP_VALUE ||
+                                 t == PTR_TO_MAP_VALUE_OR_NULL)
+-                               verbose(env, ",ks=%d,vs=%d",
++                               verbose(env, ",ks=%d,vs=%d,uid=%d",
+                                        reg->map_ptr->key_size,
+-                                       reg->map_ptr->value_size);
++                                       reg->map_ptr->value_size,
++                                       reg->map_uid);
+                        if (tnum_is_const(reg->var_off)) {
+                                /* Typically an immediate SCALAR_VALUE, but
+                                 * could be a pointer whose offset is too big
+@@ -10509,8 +10510,11 @@ static bool regsafe(struct bpf_verifier_env *env, struct bpf_reg_state *rold,
+                 */
+                if (rcur->type != PTR_TO_MAP_VALUE_OR_NULL)
+                        return false;
+-               if (memcmp(rold, rcur, offsetof(struct bpf_reg_state, id)))
++               if (memcmp(rold, rcur, offsetof(struct bpf_reg_state, map_uid)))
+                        return false;
++               if (rcur->map_uid)
++                       if (!check_ids(rold->map_uid, rcur->map_uid, idmap))
++                               return false;
+                /* Check our ids match any regs they're supposed to */
+                return check_ids(rold->id, rcur->id, idmap);
+        case PTR_TO_PACKET_META:
 
-On 2021-11-09 13:07, Stanislaw Gruszka wrote:
-> On Tue, Nov 09, 2021 at 08:32:07AM +0100, Stanislaw Gruszka wrote:
->> On Mon, Nov 08, 2021 at 07:00:20PM +0100, Thorsten Leemhuis wrote:
->>> Sending this again, but this time also to Stanislaw's email address
->>> currently found in MAINTAINERS.
->>>
->>> Stanislaw, can you help with this regression?
->> Yes.
->>
->> I'll check on mail archives what is the status and what can be done.
-> Ok, so what I can see here
-> https://lore.kernel.org/linux-wireless/20211109073127.GA109212@wp.pl/T/#m6a677995c1afaf6b9b1ff19de9566f304089d3ac
-> is that this problem happen only on firmware load,
-> so I think we can use below patch as fix.
->
-> Anton, please test it.
->
-> Thanks
-> Stanislaw
->
-> diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-> index e4473a551241..57c947dad036 100644
-> --- a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-> +++ b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-> @@ -30,7 +30,8 @@ static bool rt2x00usb_check_usb_error(struct rt2x00_dev *rt2x00dev, int status)
->   	else
->   		rt2x00dev->num_proto_errs = 0;
->   
-> -	if (rt2x00dev->num_proto_errs > 3)
-> +	if (rt2x00dev->num_proto_errs > 3 &&
-> +	    !test_bit(DEVICE_STATE_STARTED, &rt2x00dev->flags))
->   		return true;
->   
->   	return false;
+
+The verbose() part will help to confirm that R2 in the above should be uid=0.
+
+After that please try only with:
+-               if (memcmp(rold, rcur, offsetof(struct bpf_reg_state, id)))
++               if (memcmp(rold, rcur, offsetof(struct bpf_reg_state, map_uid)))
+
+It should resolve the regression, but will break timer safety check and makes
+the map_uid logic not quite right (though no existing test will show it).
+Hence the check_ids() part in the hunk above that should make map_uid correct again
+and hopefully not repeat the infinite loop you're seeing.
+
+Without a reproducer it's all wild guesses.
+
+If offsetof(map_uid) doesn't help another guess would be:
+@@ -10496,7 +10497,7 @@ static bool regsafe(struct bpf_verifier_env *env, struct bpf_reg_state *rold,
+                 * it's valid for all map elements regardless of the key
+                 * used in bpf_map_lookup()
+                 */
+-               return memcmp(rold, rcur, offsetof(struct bpf_reg_state, id)) == 0 &&
++               return memcmp(rold, rcur, offsetof(struct bpf_reg_state, map_uid)) == 0 &&
+                       range_within(rold, rcur) &&
+                       tnum_in(rold->var_off, rcur->var_off);
+that's for PTR_TO_MAP_VALUE and that would be a different theory which makes even less sense.
+
+If neither help the reproducer would be must have to make further progress.
