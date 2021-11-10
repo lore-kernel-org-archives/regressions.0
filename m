@@ -1,101 +1,181 @@
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2F962C81
-	for <regressions@lists.linux.dev>; Wed, 10 Nov 2021 08:01:51 +0000 (UTC)
-Received: (wp-smtpd smtp.wp.pl 6841 invoked from network); 10 Nov 2021 09:01:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1636531302; bh=EYEVDSSY9Cjna9ZsPC0tjF2JJlj2uNQ53XJtrw1H++I=;
-          h=From:To:Cc:Subject;
-          b=mH/5PpI9PDOuXqMm6EiYiSBhMcJVf3glUydjOHSEAVx23LCHD/nu0gYeP64n7h98C
-           nAPrwUI5F/8wc8W64AkowacZ12vG/+ExadUYtbkWKYDJ5vw5WsLXOhJzg4gfrfei3A
-           VQqGpDp7+9q74+vpdHXjGSq6QqBNU3GHvA7zy4ck=
-Received: from 89-64-85-114.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.85.114])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <kvalo@codeaurora.org>; 10 Nov 2021 09:01:41 +0100
-Date: Wed, 10 Nov 2021 09:01:41 +0100
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: Kalle Valo <kvalo@codeaurora.org>
-Cc: Exuvo <exuvo@exuvo.se>, Thorsten Leemhuis <regressions@leemhuis.info>,
-	Stanislaw Gruszka <sgruszka@redhat.com>,
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-	Helmut Schaa <helmut.schaa@googlemail.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: rt2x00 regression
-Message-ID: <20211110080141.GA123566@wp.pl>
-References: <c22673af-40e0-3af2-5ab7-69b23fc03598@exuvo.se>
- <f935dc15-08bd-2e28-fc1b-b27634c618be@exuvo.se>
- <87czop5j33.fsf@tynnyri.adurom.net>
- <6366d9bd-9752-dbc2-8970-442bdc6e8eea@leemhuis.info>
- <7d353dd2-2ffb-6d5e-9983-f983c8b4f6da@leemhuis.info>
- <20211109073127.ga109212@wp.pl>
- <20211109120737.ga120005@wp.pl>
- <c81f829d-fd87-7580-fb9a-1a84958f890f@exuvo.se>
- <cc85b4e8a038417b865069c6578acf50@grupawp.pl>
- <87wnlgo5rp.fsf@codeaurora.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDBF2C80
+	for <regressions@lists.linux.dev>; Wed, 10 Nov 2021 11:41:22 +0000 (UTC)
+Received: by mail-lj1-f175.google.com with SMTP id e9so4688616ljl.5
+        for <regressions@lists.linux.dev>; Wed, 10 Nov 2021 03:41:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=csmTgtaZMnyvU7jhPmCPCXw06UF8KdqBzZmK1KMCI6o=;
+        b=QhmY5KuYe0XdpWl7mKeMIy/WVvxYHv/BXvIrQukvJNN+zYtG7FaI9dc6ohVUtjEqyX
+         XoSQB1OuxL8X/onouOs9GEENzOYrok3YqfvL/NZ/uf8imt/TO+A7OQoDt7tEIljikIgc
+         6pXdy1pwSlazlj3uAQ4yk7ZrbqknDC6UK9Hsw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=csmTgtaZMnyvU7jhPmCPCXw06UF8KdqBzZmK1KMCI6o=;
+        b=ZP8A7dD1+4En5+UQfsfgtTyWbC7X72eMwEsb3CvcKfHWtEcaGGy+U1eE2HRZo0NTIW
+         926HsFysBXtGfR6E5cnXOLccYZe+vV+l1Vudd0z6ntJ/ixl8eznTauy17UCok/lR51VE
+         +V+XIJ4FzsZVY1Y9dLwIHoUGw3uWMQG3zk/Bc65DP+7ZFF8cVFFvFF780NFKY2/JGq3/
+         7V/61wVOivE/mkmoEIu7D74udBaJITkrkBa5WV+51bGmsPx4y41ty6Gwx6TOMgOvJuPH
+         EZEJYv8/r2yqCv1PXkgX4iYIZan2E7UjzONjwERMGr6vYY6rVVrg4HZPmraoaHOXrUfd
+         zRuw==
+X-Gm-Message-State: AOAM533ulIq6NSf5joJkIpxtmQkjtdq9LJTC16OFvXDE/9PrzMOP2TVL
+	7Ob+osfg8+CCilklXYapi0hQJQ+hp5/sNnOuuczNSw==
+X-Google-Smtp-Source: ABdhPJwg3ODydwUYEKknDDnRtSuPDjfEhEAzaBDjNvT4+ZA3qibPjvBsZvquxzyGi6U0EeSCcvuLWnZdwf8Dxs4QE68=
+X-Received: by 2002:a2e:9c02:: with SMTP id s2mr15129322lji.121.1636544480017;
+ Wed, 10 Nov 2021 03:41:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87wnlgo5rp.fsf@codeaurora.org>
-X-WP-MailID: 3fc3f747f092fb63581fc54dcfbfd1b2
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [AZNU]                               
+References: <CACAyw99hVEJFoiBH_ZGyy=+oO-jyydoz6v1DeKPKs2HVsUH28w@mail.gmail.com>
+ <CAADnVQKsK_2HHfOLs4XK7h_LC4+b7tfFw9261Psy5St8P+GWFA@mail.gmail.com>
+ <CACAyw9_GmNotSyG0g1OOt648y9kx5Bd72f58TtS-QQD9FaV06w@mail.gmail.com>
+ <20211105194952.xve6u6lgh2oy46dy@ast-mbp.dhcp.thefacebook.com>
+ <CACAyw99KGdTAz+G3aU8G3eqC926YYpgD57q-A+NFNVqqiJPY3g@mail.gmail.com> <20211110042530.6ye65mpspre7au5f@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20211110042530.6ye65mpspre7au5f@ast-mbp.dhcp.thefacebook.com>
+From: Lorenz Bauer <lmb@cloudflare.com>
+Date: Wed, 10 Nov 2021 11:41:09 +0000
+Message-ID: <CACAyw9-s0ahY8m7WtMd1OK=ZF9w5gS9gktQ6S8Kak2pznXgw0w@mail.gmail.com>
+Subject: Re: Verifier rejects previously accepted program
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Alexei Starovoitov <ast@kernel.org>, kernel-team <kernel-team@cloudflare.com>, 
+	bpf <bpf@vger.kernel.org>, regressions@lists.linux.dev, 
+	Andrii Nakryiko <andrii@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Nov 10, 2021 at 08:59:22AM +0200, Kalle Valo wrote:
-> Stanisław Gruszka <stf_xl@wp.pl> writes:
-> 
-> > Dnia 9 listopada 2021 16:22 Exuvo <exuvo@exuvo.se> napisał(a):
-> >
-> >  Just tested it and it passes the rt2x00lib_load_firmware but still errors on
-> >  rt2800usb_set_device_state:
-> >
-> > <snip>
-> >
-> >  @@ -30,7 +30,8 @@ static bool rt2x00usb_check_usb_error(struct rt2x00_dev *rt2x00dev, int status)
-> >    else
-> >    rt2x00dev->num_proto_errs = 0;
-> >   
-> >  - if (rt2x00dev->num_proto_errs > 3)
-> >  + if (rt2x00dev->num_proto_errs > 3 &&
-> >  +    !test_bit(DEVICE_STATE_STARTED, &rt2x00dev->flags))
-> >    return true;
-> >   
-> >    return false;
-> >
-> > Sorry, I screwed logic in my patch. It should be test_bit() instead of !test_bit(). 
-> > And also we should not count when device did not start. So patch should be somewhat different. I'll
-> > send tomorrow hopefully better patch. 
-> 
-> No HTML, please :) I'll reply so that lists see your email.
+On Wed, 10 Nov 2021 at 04:25, Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> but it goes into R2 from non-inner map which ruins all my theories.
 
-Eh, I sent from my phone to give quick update, did not realize
-it send in HTML.
+The trace does contain modifications from inner maps, but they aren't
+at the start of the block at 1077. Your suggested hack makes this
+clear:
 
-Anyway, below is updated patch. I hope it will work correctly now.
+1033: R0=map_value(id=0,off=0,ks=4,vs=36,uid=6900,imm=0) R1_w=invP0
+R3_w=map_value(id=0,off=0,ks=4,vs=36,uid=6900,imm=0)
+R6=ctx(id=0,off=0,imm=0) R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0)
+R9=inv0 R10=fp0 fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmm00m0
+fp-48=mmmm0000 fp-56=00000000 fp-64=00000000 fp-72=0000mmmm
+fp-80=mmmmmmmm fp-88=map_value fp-96=pkt_end fp-104=map_value
+fp-112=pkt fp-120=fp fp-128=map_value
+1033: (16) if w1 == 0x0 goto pc+43
+1077: R0=map_value(id=0,off=0,ks=4,vs=36,uid=6900,imm=0) R1_w=invP0
+R3_w=map_value(id=0,off=0,ks=4,vs=36,uid=6900,imm=0)
+R6=ctx(id=0,off=0,imm=0) R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0)
+R9=inv0 R10=fp0 fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmm00m0
+fp-48=mmmm0000 fp-56=00000000 fp-64=00000000 fp-72=0000mmmm
+fp-80=mmmmmmmm fp-88=map_value fp-96=pkt_end fp-104=map_value
+fp-112=pkt fp-120=fp fp-128=map_value
+1077: (79) r2 = *(u64 *)(r10 -128)
+1078: R0=map_value(id=0,off=0,ks=4,vs=36,uid=6900,imm=0) R1_w=invP0
+R2_w=map_value(id=0,off=0,ks=4,vs=32,uid=0,imm=0)
+R3_w=map_value(id=0,off=0,ks=4,vs=36,uid=6900,imm=0)
+R6=ctx(id=0,off=0,imm=0) R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0)
+R9=inv0 R10=fp0 fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmm00m0
+fp-48=mmmm0000 fp-56=00000000 fp-64=00000000 fp-72=0000mmmm
+fp-80=mmmmmmmm fp-88=map_value fp-96=pkt_end fp-104=map_value
+fp-112=pkt fp-120=fp fp-128=map_value
 
-Regards 
-Stanislaw
+r2 is the per-CPU array. r0, r3 are from an inner map. There are
+accesses to r3 a couple instructions later:
 
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-index e4473a551241..74c3d8cb3100 100644
---- a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-@@ -25,6 +25,9 @@ static bool rt2x00usb_check_usb_error(struct rt2x00_dev *rt2x00dev, int status)
- 	if (status == -ENODEV || status == -ENOENT)
- 		return true;
- 
-+	if (!test_bit(DEVICE_STATE_STARTED, &rt2x00dev->flags))
-+		return false;
-+
- 	if (status == -EPROTO || status == -ETIMEDOUT)
- 		rt2x00dev->num_proto_errs++;
- 	else
+1081: R0=map_value(id=0,off=0,ks=4,vs=36,uid=6900,imm=0)
+R1_w=inv(id=0) R2_w=map_value(id=0,off=0,ks=4,vs=32,uid=0,imm=0)
+R3_w=map_value(id=0,off=0,ks=4,vs=36,uid=6900,imm=0)
+R6=ctx(id=0,off=0,imm=0) R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0)
+R9=inv0 R10=fp0 fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmm00m0
+fp-48=mmmm0000 fp-56=00000000 fp-64=00000000 fp-72=0000mmmm
+fp-80=mmmmmmmm fp-88=map_value fp-96=pkt_end fp-104=map_value
+fp-112=pkt fp-120=fp fp-128=map_value
+1081: (71) r1 = *(u8 *)(r3 +32)
+ R0=map_value(id=0,off=0,ks=4,vs=36,uid=6900,imm=0) R1_w=inv(id=0)
+R2_w=map_value(id=0,off=0,ks=4,vs=32,uid=0,imm=0)
+R3_w=map_value(id=0,off=0,ks=4,vs=36,uid=6900,imm=0)
+R6=ctx(id=0,off=0,imm=0) R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0)
+R9=inv0 R10=fp0 fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmm00m0
+fp-48=mmmm0000 fp-56=00000000 fp-64=00000000 fp-72=0000mmmm
+fp-80=mmmmmmmm fp-88=map_value fp-96=pkt_end fp-104=map_value
+fp-112=pkt fp-120=fp fp-128=map_value
 
+> The verbose() part will help to confirm that R2 in the above should be uid=0.
 
+Yes, uid=0, see above.
+
+> After that please try only with:
+> -               if (memcmp(rold, rcur, offsetof(struct bpf_reg_state, id)))
+> +               if (memcmp(rold, rcur, offsetof(struct bpf_reg_state, map_uid)))
+>
+> It should resolve the regression, but will break timer safety check and makes
+> the map_uid logic not quite right (though no existing test will show it).
+
+This doesn't help.
+
+>
+> If offsetof(map_uid) doesn't help another guess would be:
+> @@ -10496,7 +10497,7 @@ static bool regsafe(struct bpf_verifier_env *env, struct bpf_reg_state *rold,
+>                  * it's valid for all map elements regardless of the key
+>                  * used in bpf_map_lookup()
+>                  */
+> -               return memcmp(rold, rcur, offsetof(struct bpf_reg_state, id)) == 0 &&
+> +               return memcmp(rold, rcur, offsetof(struct bpf_reg_state, map_uid)) == 0 &&
+>                        range_within(rold, rcur) &&
+>                        tnum_in(rold->var_off, rcur->var_off);
+> that's for PTR_TO_MAP_VALUE and that would be a different theory which makes even less sense.
+
+This change resolves the regression. The first five occurrences of
+insn 1077 in the trace, with your logging applied:
+
+1077: R0=map_value(id=0,off=0,ks=4,vs=36,uid=13,imm=0) R1=invP0
+R3=map_value(id=0,off=0,ks=4,vs=36,uid=13,imm=0)
+R6=ctx(id=0,off=0,imm=0) R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0)
+R9=inv0 R10=fp0 fp-24=00000000 fp-32=0000mmmm fp-40=mmmm00m0
+fp-48=mmmm0000 fp-56=00000000 fp-64=00000000 fp-72=0000mmmm
+fp-80=mmmmmmmm fp-88=map_value fp-96=pkt_end fp-104=map_value
+fp-112=pkt fp-120=fp fp-128=map_value
+1077: R0=map_value(id=0,off=0,ks=4,vs=36,uid=6875,imm=0) R1_w=invP0
+R3_w=map_value(id=0,off=0,ks=4,vs=36,uid=6875,imm=0)
+R6=ctx(id=0,off=0,imm=0) R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0)
+R9=inv0 R10=fp0 fp-24=00000000 fp-32=0000mmmm fp-40=mmmm00m0
+fp-48=mmmm0000 fp-56=00000000 fp-64=00000000 fp-72=0000mmmm
+fp-80=mmmmmmmm fp-88=map_value fp-96=pkt_end fp-104=map_value
+fp-112=pkt fp-120=fp fp-128=map_value
+1077: R0=map_value(id=0,off=0,ks=4,vs=36,uid=6900,imm=0) R1_w=invP0
+R3_w=map_value(id=0,off=0,ks=4,vs=36,uid=6900,imm=0)
+R6=ctx(id=0,off=0,imm=0) R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0)
+R9=inv0 R10=fp0 fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmm00m0
+fp-48=mmmm0000 fp-56=00000000 fp-64=00000000 fp-72=0000mmmm
+fp-80=mmmmmmmm fp-88=map_value fp-96=pkt_end fp-104=map_value
+fp-112=pkt fp-120=fp fp-128=map_value
+1077: R0=map_value(id=0,off=0,ks=4,vs=36,uid=6908,imm=0) R1_w=invP0
+R3_w=map_value(id=0,off=0,ks=4,vs=36,uid=6908,imm=0)
+R6=ctx(id=0,off=0,imm=0) R7=inv(id=0) R8=pkt(id=0,off=18,r=38,imm=0)
+R9=inv0 R10=fp0 fp-24=mmmmmmmm fp-32=mmmmmmmm fp-40=mmmm00m0
+fp-48=mmmm0000 fp-56=00000000 fp-64=00000000 fp-72=0000mmmm
+fp-80=mmmmmmmm fp-88=map_value fp-96=pkt_end fp-104=map_value
+fp-112=pkt fp-120=fp fp-128=map_value
+1077: R0=map_value(id=0,off=0,ks=16,vs=36,uid=0,imm=0) R1=invP0
+R2=map_value(id=0,off=0,ks=4,vs=368,uid=0,imm=0)
+R3=map_value(id=0,off=0,ks=16,vs=36,uid=0,imm=0)
+R6=ctx(id=0,off=0,imm=0)
+R7=map_value(id=0,off=0,ks=4,vs=368,uid=0,imm=0)
+R8=pkt(id=0,off=18,r=38,imm=0) R9=inv0 R10=fp0 fp-24=mmmmmmmm
+fp-32=mmmmmmmm fp-40=mmmm00m0 fp-48=mmmm0000 fp-56=00000000
+fp-64=00000000 fp-72=0000mmmm fp-80=mmmmmmmm fp-88=map_value
+fp-96=pkt_end fp-104=map_value fp-112=pkt fp-120=fp fp-128=map_value
+
+uid changes on every invocation, and therefore regsafe() returns false?
+
+-- 
+Lorenz Bauer  |  Systems Engineer
+6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
+
+www.cloudflare.com
