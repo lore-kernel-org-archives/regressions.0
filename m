@@ -1,114 +1,81 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6158C68
-	for <regressions@lists.linux.dev>; Thu, 11 Nov 2021 11:13:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1636629193;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ddK+70QDiwNPVqUQi478CHOJroN8im0gkQitsQ5o/Ho=;
-	b=ZxjVyJql9IypLfYUgtOAJICk3rQMWYMU99Df3mHR3+RZnfdnztLXuqt0g1Of8wM8vTGfJ3
-	BwoEppJCX2DYNaGL1irzr2BzG4Dyg/zW2OnIwFcZvF0XX+LvqBz6i7EpUXsfIzGAFZbW2f
-	UGtgzMsf0yY3Y3xXRz06qHPTyU8FfiI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-504-ArNqD1gCOLul3CrWRvvhNg-1; Thu, 11 Nov 2021 06:13:12 -0500
-X-MC-Unique: ArNqD1gCOLul3CrWRvvhNg-1
-Received: by mail-wr1-f71.google.com with SMTP id f3-20020a5d50c3000000b00183ce1379feso955079wrt.5
-        for <regressions@lists.linux.dev>; Thu, 11 Nov 2021 03:13:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=ddK+70QDiwNPVqUQi478CHOJroN8im0gkQitsQ5o/Ho=;
-        b=YOlxA+zv4ynMYIghTzQFl7V4AHFZuPn8Ne1MXmK2Le6f1xRcnLeFkagLSB0F25zblG
-         u8fGIika6xUSTJoSsY4EtZIJvP5EFQ5Dr31Ejq96m71g3D5BcVNeKd4GEeWD1Qx3IXYV
-         lbPoev6dc/TFhh4Rz3xcnpqbjGRKqhxpw7UJCPXsvcmaBvRR5RfZRkna4aXQoGKDU6xR
-         9VR3zzKtnxFMu2j+rekAFZhu50XWyK4DmoPsKo1hKW1FUGb+O3Vmvh6/RdcZCqAmq8g9
-         Obso55SYAPJdz2Yoe5HwrBfwnKXXv5+RAD1z8o6gw2cCsAszciso5vqWxRdpeA5bBNBt
-         TzVQ==
-X-Gm-Message-State: AOAM532+ISwoX2h5NpgZBozfG0g48DkaQtmk+IgR1DG1RwMJ1x4vqfrt
-	uFHRI6nHsxc3x8I68u5lyl9giA+qD1+0RV7hgjl/urYoO3h5g/hn776TlM6vcu8fAXAFcsaBQvb
-	Db69rqLsCaoMP0ejBepmX+w4=
-X-Received: by 2002:a5d:5581:: with SMTP id i1mr7779709wrv.107.1636629191045;
-        Thu, 11 Nov 2021 03:13:11 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyWXqQHtS7h8deuBVKj8mfFEGhzdn9o1xM6poKRsJPw8JHivw0tsu1S4SnD6oLmcppXJO704g==
-X-Received: by 2002:a5d:5581:: with SMTP id i1mr7779676wrv.107.1636629190866;
-        Thu, 11 Nov 2021 03:13:10 -0800 (PST)
-Received: from [192.168.1.102] ([92.176.231.106])
-        by smtp.gmail.com with ESMTPSA id d6sm2585948wrx.60.2021.11.11.03.13.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Nov 2021 03:13:10 -0800 (PST)
-Message-ID: <1b6c6fbe-0b20-95e7-c1ed-bc2b2c13c044@redhat.com>
-Date: Thu, 11 Nov 2021 12:13:09 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F00E72
+	for <regressions@lists.linux.dev>; Thu, 11 Nov 2021 14:10:13 +0000 (UTC)
+Received: (wp-smtpd smtp.wp.pl 13722 invoked from network); 11 Nov 2021 15:10:03 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1636639803; bh=yM0ZL6Vn7C9FbY7TO+H0xrn+lkdEt4dPBObH2uDM7dA=;
+          h=From:To:Cc:Subject;
+          b=kDavkAmbQqf0eZ48y8HuhcZ/QjATj+EN9w9aU3A8ihdxFQlb/6EwfWWxLvWWS+Qda
+           RWHhfKYhY+oJoXSVKoQY4ntjGMb6gMqDTR/fyZcHhD4ZCqHVPeJPGfV9KyKb5XxZAp
+           yPgIxUTWDIcpyFcb0GBnpqPbz0RDqAjx2TSMRpIM=
+Received: from 89-64-85-114.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.85.114])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <exuvo@exuvo.se>; 11 Nov 2021 15:10:03 +0100
+Date: Thu, 11 Nov 2021 15:10:03 +0100
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: Exuvo <exuvo@exuvo.se>
+Cc: Kalle Valo <kvalo@codeaurora.org>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Stanislaw Gruszka <sgruszka@redhat.com>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	Helmut Schaa <helmut.schaa@googlemail.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: [PATCH] rt2x00: do not mark device gone on EPROTO errors during start
+Message-ID: <20211111141003.GA134627@wp.pl>
+References: <87czop5j33.fsf@tynnyri.adurom.net>
+ <6366d9bd-9752-dbc2-8970-442bdc6e8eea@leemhuis.info>
+ <7d353dd2-2ffb-6d5e-9983-f983c8b4f6da@leemhuis.info>
+ <20211109073127.ga109212@wp.pl>
+ <20211109120737.ga120005@wp.pl>
+ <c81f829d-fd87-7580-fb9a-1a84958f890f@exuvo.se>
+ <cc85b4e8a038417b865069c6578acf50@grupawp.pl>
+ <87wnlgo5rp.fsf@codeaurora.org>
+ <20211110080141.GA123566@wp.pl>
+ <b3b9c143-485f-5fe1-312c-c64a8ce33f8a@exuvo.se>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [REGRESSION]: drivers/firmware: move x86 Generic System
- Framebuffers support
-To: Ilya Trukhanov <lahvuun@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- linux-efi@vger.kernel.org, linux-pm@vger.kernel.org, tzimmermann@suse.de,
- ardb@kernel.org, rafael@kernel.org, len.brown@intel.com, pavel@ucw.cz,
- dri-devel <dri-devel@lists.freedesktop.org>
-References: <20211110200253.rfudkt3edbd3nsyj@lahvuun>
- <627b6cd1-3446-5e55-ea38-5283a186af39@redhat.com>
- <20211111004539.vd7nl3duciq72hkf@lahvuun>
- <af0552fb-5fb5-acae-2813-86c32e008e58@redhat.com>
- <1ddb9e88-1ef8-9888-113b-fd2a2759f019@redhat.com>
- <20211111105232.apk2msip4ng7hgsw@lahvuun>
-From: Javier Martinez Canillas <javierm@redhat.com>
-In-Reply-To: <20211111105232.apk2msip4ng7hgsw@lahvuun>
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=javierm@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b3b9c143-485f-5fe1-312c-c64a8ce33f8a@exuvo.se>
+X-WP-MailID: 17f86cb316900cb2700aaacdc2ce2206
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000000 [MZNE]                               
 
-Hello Ilya,
+As reported by Exuvo is possible that we have lot's of EPROTO errors
+during device start i.e. firmware load. But after that device works
+correctly. Hence marking device gone by few EPROTO errors done by
+commit e383c70474db ("rt2x00: check number of EPROTO errors") caused
+regression - Exuvo device stop working after kernel update. To fix
+disable the check during device start.
 
-On 11/11/21 11:52, Ilya Trukhanov wrote:
-> On Thu, Nov 11, 2021 at 10:24:56AM +0100, Javier Martinez Canillas wrote:
->> On 11/11/21 08:31, Javier Martinez Canillas wrote:
->>
->> [snip]
->>
->>>>> And for each check /proc/fb, the kernel boot log, and if Suspend-to-RAM works.
->>>>>
->>>>> If the explanation above is correct, then I would expect (1) and (2) to work and
->>>>> (3) to also fail.
->>>>>
->>>
->>> Your testing confirms my assumptions. I'll check how this could be solved to
->>> prevent the efifb driver to be probed if there's already a framebuffer device.
->>>
->>
->> I've posted [0] which does this and also for the simplefb driver.
->>
->> [0]: https://lore.kernel.org/dri-devel/20211111092053.1328304-1-javierm@redhat.com/T/#u
-> 
-> I applied the patch and it fixes the issue for me.
-> Thank you!
-> 
+Reported-and-tested-by: Exuvo <exuvo@exuvo.se>
+Fixes: e383c70474db ("rt2x00: check number of EPROTO errors")
+Cc: stable@vger.kernel.org
+Signed-off-by: Stanislaw Gruszka <stf_xl@wp.pl>
+---
+ drivers/net/wireless/ralink/rt2x00/rt2x00usb.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Great! And thanks for tracking this down.
-
-Feel free to add your Tested-by to v2.
-
-Best regards,
+diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
+index e4473a551241..74c3d8cb3100 100644
+--- a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
++++ b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
+@@ -25,6 +25,9 @@ static bool rt2x00usb_check_usb_error(struct rt2x00_dev *rt2x00dev, int status)
+ 	if (status == -ENODEV || status == -ENOENT)
+ 		return true;
+ 
++	if (!test_bit(DEVICE_STATE_STARTED, &rt2x00dev->flags))
++		return false;
++
+ 	if (status == -EPROTO || status == -ETIMEDOUT)
+ 		rt2x00dev->num_proto_errs++;
+ 	else
 -- 
-Javier Martinez Canillas
-Linux Engineering
-Red Hat
-
+2.25.4
