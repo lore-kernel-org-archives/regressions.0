@@ -1,93 +1,126 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C3E68
-	for <regressions@lists.linux.dev>; Thu, 11 Nov 2021 10:52:36 +0000 (UTC)
-Received: by mail-lj1-f170.google.com with SMTP id t11so11103599ljh.6
-        for <regressions@lists.linux.dev>; Thu, 11 Nov 2021 02:52:36 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA5468
+	for <regressions@lists.linux.dev>; Thu, 11 Nov 2021 10:54:15 +0000 (UTC)
+Received: by mail-lj1-f173.google.com with SMTP id d11so11093682ljg.8
+        for <regressions@lists.linux.dev>; Thu, 11 Nov 2021 02:54:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iEKA4VskprioZ3wq/U9m+wCXLZ4G97pCcQBnvlOh4Uo=;
-        b=btLkorl9c8K853xVrxR1ADIOhdX23K66lM173VTISdcLAui9Uwt/y1wOtf64uYH2kZ
-         Dfqh0Mnz01q/fHVPSAumedyawbY8zGsiN/ohklkbofF6iyOEsGIEtbyeA5Gwq8kyPC7K
-         3Ie4wEUiPPjhiE+nr7bjZnLKswnBoKEO1ecaoOyktehx1CpwAgxDIP5AuT0iu0FoAmCw
-         0BnmH6TUueo4T4bI2DbIHmxBLl0f/0vwYnYNvzJWPCF0LoxzJkAGFcnpBi5OQ/WDEBtA
-         jbKlgVKxeFZlbzmDYcKMQsrlZ+pnWXSFveJITJ2PsdwpND/o6akXMvq+h+syJTulliUn
-         B5SQ==
+        d=exuvo-se.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=dRLHwqrTsyOcJE6upu8cYqSGo8L6w9AqKKbX0nen3sw=;
+        b=wZApJBu/3B1yHkQcgDVreFJ7//jvgeJqTiRJ6+ZhbbfvOzSz67+TRphnj0F5LBuwC5
+         Ue0I0Dpd+TxARhQS5XIH3awjfUV/m2BrKG96BOdWVOWtlvDKbqZ8KBcC5yUlJilKeI2U
+         NpR/puDDnZY4xx3iGxHX+eCa5+iJ7HeGWKk4VqPFzvhBUh4MRJLUSSN04EI2ezansRQe
+         qzL/8xQS+DNdP8XObh68b/kNBNKRMvTXySvMMraAXAnC59fLFoVFTfDLbhIU3GarrmHW
+         NPzXm+gbm0AWj84uhVmdtp6KP4oGQV7uuoS03xFT48jtW1JmYMdis/gD8aYDOW4uepjF
+         KBVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iEKA4VskprioZ3wq/U9m+wCXLZ4G97pCcQBnvlOh4Uo=;
-        b=nSDu5MdFi17Z3au5svopqKk0Ph2MzesX6/nEPgRq1Hn7nZC32b2Qr211xiZoU2MycF
-         GO/ZcCuVVo+niG2YEjp5OOaE9FGDlEP887FW6hmxRFyrpoqOz6dYjcoI3Wx+Qp5DoQ4n
-         xtLelpQ9TBn2y0UG52P08QxnjgPYgenSMZQccrpcBOo7/GyJH/YOy015Om7+MRIdZMHA
-         iCk/b0f/iVOSOP8jJ7EqcBJMsjgp9Uzvpu35IVYU7X8BJyA9MJl52edYXmBtjRXlJAUa
-         71jup4LlcSkz0q52rQX68JOpoLGt72K3x+ZpsKaKtbNnm479oeAbkNKlACiX+IFekew0
-         jEIA==
-X-Gm-Message-State: AOAM5338PMUS1qj5m9KkmRKEcXIBCOGPCj2KWxCoTV3SeCIjLDnwltf3
-	lcqEEt/O0wi3sA9NTLYe2GQ=
-X-Google-Smtp-Source: ABdhPJz1IYsvS04cZQ+CvSu8XzvmkMKAcCwl/+9b0JTk3164neupuBhveziHtfju1ysnhZD2DcJ+Dw==
-X-Received: by 2002:a2e:83c6:: with SMTP id s6mr6345880ljh.477.1636627954556;
-        Thu, 11 Nov 2021 02:52:34 -0800 (PST)
-Received: from lahvuun (93-76-191-141.kha.volia.net. [93.76.191.141])
-        by smtp.gmail.com with ESMTPSA id l11sm255066lfg.79.2021.11.11.02.52.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Nov 2021 02:52:34 -0800 (PST)
-Date: Thu, 11 Nov 2021 12:52:32 +0200
-From: Ilya Trukhanov <lahvuun@gmail.com>
-To: Javier Martinez Canillas <javierm@redhat.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
-	linux-efi@vger.kernel.org, linux-pm@vger.kernel.org,
-	tzimmermann@suse.de, ardb@kernel.org, rafael@kernel.org,
-	len.brown@intel.com, pavel@ucw.cz,
-	dri-devel <dri-devel@lists.freedesktop.org>
-Subject: Re: [REGRESSION]: drivers/firmware: move x86 Generic System
- Framebuffers support
-Message-ID: <20211111105232.apk2msip4ng7hgsw@lahvuun>
-References: <20211110200253.rfudkt3edbd3nsyj@lahvuun>
- <627b6cd1-3446-5e55-ea38-5283a186af39@redhat.com>
- <20211111004539.vd7nl3duciq72hkf@lahvuun>
- <af0552fb-5fb5-acae-2813-86c32e008e58@redhat.com>
- <1ddb9e88-1ef8-9888-113b-fd2a2759f019@redhat.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=dRLHwqrTsyOcJE6upu8cYqSGo8L6w9AqKKbX0nen3sw=;
+        b=CByzY0Vd+hZS040Iyf9krMKodauu3hzy2fr77lkOTT7NbVYqhi8j7EQMkdnnOgT7Ps
+         DHHSWpmqw7DfliUSslSaE+T6WzTGwUN1UoFUF1/B1ATrc0jrO8VtvAFrGlXznPlfSt9t
+         7do/8BmpqtYpU5Rhn+rzUM9iPAu+R9LQIeXE6m2SZwol1G0QLm4bSyKVMEgBsJl6W4FY
+         W+FNOjN4ExCt+Jv/cSYv7usQoa6ri1XDd88xgb+3MSbRH6TDsvpHm2cnrfe4LS6Rgyqc
+         oOGDrGr2lSWUF2a44Yxgwi6HMuK1aUQC8eLMhfskf9WkUB363KojrllTw3fIV1Rpd3/6
+         ryOA==
+X-Gm-Message-State: AOAM532lApyfhvHcIdvlcy8EDpZKrDoYA4x7AI/eiUkp2KxlAxl6E8T1
+	hWw+VywOmEYtCWJjIWZjDRCy6w==
+X-Google-Smtp-Source: ABdhPJwbtGi5L/PvJf7+aam1+CKynLnSusufMnfQGhdyJqzPdnhEbj4xQmeUz+eV4u8InDRxUNksIw==
+X-Received: by 2002:a2e:a785:: with SMTP id c5mr6147076ljf.384.1636628053744;
+        Thu, 11 Nov 2021 02:54:13 -0800 (PST)
+Received: from ?IPV6:2001:9b0:218:2b00::30? ([2001:9b0:218:2b00::30])
+        by smtp.googlemail.com with ESMTPSA id y1sm252858lfd.204.2021.11.11.02.54.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 Nov 2021 02:54:13 -0800 (PST)
+Message-ID: <b3b9c143-485f-5fe1-312c-c64a8ce33f8a@exuvo.se>
+Date: Thu, 11 Nov 2021 11:54:12 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1ddb9e88-1ef8-9888-113b-fd2a2759f019@redhat.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: rt2x00 regression
+Content-Language: en-US
+To: Stanislaw Gruszka <stf_xl@wp.pl>, Kalle Valo <kvalo@codeaurora.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Stanislaw Gruszka <sgruszka@redhat.com>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ Helmut Schaa <helmut.schaa@googlemail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <c22673af-40e0-3af2-5ab7-69b23fc03598@exuvo.se>
+ <f935dc15-08bd-2e28-fc1b-b27634c618be@exuvo.se>
+ <87czop5j33.fsf@tynnyri.adurom.net>
+ <6366d9bd-9752-dbc2-8970-442bdc6e8eea@leemhuis.info>
+ <7d353dd2-2ffb-6d5e-9983-f983c8b4f6da@leemhuis.info>
+ <20211109073127.ga109212@wp.pl> <20211109120737.ga120005@wp.pl>
+ <c81f829d-fd87-7580-fb9a-1a84958f890f@exuvo.se>
+ <cc85b4e8a038417b865069c6578acf50@grupawp.pl> <87wnlgo5rp.fsf@codeaurora.org>
+ <20211110080141.GA123566@wp.pl>
+From: Exuvo <exuvo@exuvo.se>
+In-Reply-To: <20211110080141.GA123566@wp.pl>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 11, 2021 at 10:24:56AM +0100, Javier Martinez Canillas wrote:
-> On 11/11/21 08:31, Javier Martinez Canillas wrote:
-> 
-> [snip]
-> 
-> >>> And for each check /proc/fb, the kernel boot log, and if Suspend-to-RAM works.
-> >>>
-> >>> If the explanation above is correct, then I would expect (1) and (2) to work and
-> >>> (3) to also fail.
-> >>>
-> > 
-> > Your testing confirms my assumptions. I'll check how this could be solved to
-> > prevent the efifb driver to be probed if there's already a framebuffer device.
-> > 
-> 
-> I've posted [0] which does this and also for the simplefb driver.
-> 
-> [0]: https://lore.kernel.org/dri-devel/20211111092053.1328304-1-javierm@redhat.com/T/#u
+Yes that patch works :D
 
-I applied the patch and it fixes the issue for me.
-Thank you!
+Anton "exuvo" Olsson
+    exuvo@exuvo.se
 
-> 
-> Best regards,
-> -- 
-> Javier Martinez Canillas
-> Linux Engineering
-> Red Hat
-> 
+On 2021-11-10 09:01, Stanislaw Gruszka wrote:
+> On Wed, Nov 10, 2021 at 08:59:22AM +0200, Kalle Valo wrote:
+>> Stanisław Gruszka <stf_xl@wp.pl> writes:
+>>
+>>> Dnia 9 listopada 2021 16:22 Exuvo <exuvo@exuvo.se> napisał(a):
+>>>
+>>>   Just tested it and it passes the rt2x00lib_load_firmware but still errors on
+>>>   rt2800usb_set_device_state:
+>>>
+>>> <snip>
+>>>
+>>>   @@ -30,7 +30,8 @@ static bool rt2x00usb_check_usb_error(struct rt2x00_dev *rt2x00dev, int status)
+>>>     else
+>>>     rt2x00dev->num_proto_errs = 0;
+>>>    
+>>>   - if (rt2x00dev->num_proto_errs > 3)
+>>>   + if (rt2x00dev->num_proto_errs > 3 &&
+>>>   +    !test_bit(DEVICE_STATE_STARTED, &rt2x00dev->flags))
+>>>     return true;
+>>>    
+>>>     return false;
+>>>
+>>> Sorry, I screwed logic in my patch. It should be test_bit() instead of !test_bit().
+>>> And also we should not count when device did not start. So patch should be somewhat different. I'll
+>>> send tomorrow hopefully better patch.
+>> No HTML, please :) I'll reply so that lists see your email.
+> Eh, I sent from my phone to give quick update, did not realize
+> it send in HTML.
+>
+> Anyway, below is updated patch. I hope it will work correctly now.
+>
+> Regards
+> Stanislaw
+>
+> diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
+> index e4473a551241..74c3d8cb3100 100644
+> --- a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
+> +++ b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
+> @@ -25,6 +25,9 @@ static bool rt2x00usb_check_usb_error(struct rt2x00_dev *rt2x00dev, int status)
+>   	if (status == -ENODEV || status == -ENOENT)
+>   		return true;
+>   
+> +	if (!test_bit(DEVICE_STATE_STARTED, &rt2x00dev->flags))
+> +		return false;
+> +
+>   	if (status == -EPROTO || status == -ETIMEDOUT)
+>   		rt2x00dev->num_proto_errs++;
+>   	else
+>
+>
