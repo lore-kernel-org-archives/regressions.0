@@ -1,81 +1,110 @@
-Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.9])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F00E72
-	for <regressions@lists.linux.dev>; Thu, 11 Nov 2021 14:10:13 +0000 (UTC)
-Received: (wp-smtpd smtp.wp.pl 13722 invoked from network); 11 Nov 2021 15:10:03 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1636639803; bh=yM0ZL6Vn7C9FbY7TO+H0xrn+lkdEt4dPBObH2uDM7dA=;
-          h=From:To:Cc:Subject;
-          b=kDavkAmbQqf0eZ48y8HuhcZ/QjATj+EN9w9aU3A8ihdxFQlb/6EwfWWxLvWWS+Qda
-           RWHhfKYhY+oJoXSVKoQY4ntjGMb6gMqDTR/fyZcHhD4ZCqHVPeJPGfV9KyKb5XxZAp
-           yPgIxUTWDIcpyFcb0GBnpqPbz0RDqAjx2TSMRpIM=
-Received: from 89-64-85-114.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.64.85.114])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <exuvo@exuvo.se>; 11 Nov 2021 15:10:03 +0100
-Date: Thu, 11 Nov 2021 15:10:03 +0100
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: Exuvo <exuvo@exuvo.se>
-Cc: Kalle Valo <kvalo@codeaurora.org>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Stanislaw Gruszka <sgruszka@redhat.com>,
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-	Helmut Schaa <helmut.schaa@googlemail.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: [PATCH] rt2x00: do not mark device gone on EPROTO errors during start
-Message-ID: <20211111141003.GA134627@wp.pl>
-References: <87czop5j33.fsf@tynnyri.adurom.net>
- <6366d9bd-9752-dbc2-8970-442bdc6e8eea@leemhuis.info>
- <7d353dd2-2ffb-6d5e-9983-f983c8b4f6da@leemhuis.info>
- <20211109073127.ga109212@wp.pl>
- <20211109120737.ga120005@wp.pl>
- <c81f829d-fd87-7580-fb9a-1a84958f890f@exuvo.se>
- <cc85b4e8a038417b865069c6578acf50@grupawp.pl>
- <87wnlgo5rp.fsf@codeaurora.org>
- <20211110080141.GA123566@wp.pl>
- <b3b9c143-485f-5fe1-312c-c64a8ce33f8a@exuvo.se>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5A12C82;
+	Fri, 12 Nov 2021 11:36:28 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mlUqw-0005bg-KI; Fri, 12 Nov 2021 12:36:18 +0100
+Message-ID: <be20e91d-9285-b044-e415-c3728c399c1b@leemhuis.info>
+Date: Fri, 12 Nov 2021 12:36:17 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3b9c143-485f-5fe1-312c-c64a8ce33f8a@exuvo.se>
-X-WP-MailID: 17f86cb316900cb2700aaacdc2ce2206
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [MZNE]                               
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Content-Language: en-BS
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+ Kalle Valo <kvalo@codeaurora.org>
+Cc: Loic Poulain <loic.poulain@linaro.org>, ath11k@lists.infradead.org,
+ linux-wireless@vger.kernel.org, linux-arm-msm
+ <linux-arm-msm@vger.kernel.org>, regressions@lists.linux.dev,
+ mhi <mhi@lists.linux.dev>
+References: <871r5p0x2u.fsf@codeaurora.org>
+ <CAMZdPi8UJLvBFQd8-nf-iHAQh8cEuihq97PUFfZ7Q=rxRQoPsg@mail.gmail.com>
+ <877df6tlnq.fsf@codeaurora.org>
+ <CAMZdPi8P7YZPhPir+WfS3cY_a7He1m2Pq2uqBhczPdEeoNRb0Q@mail.gmail.com>
+ <87a6jl9ndo.fsf@codeaurora.org> <87ee8hgqni.fsf@codeaurora.org>
+ <20211021100305.GD7580@workstation>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [regression] mhi: ath11k resume fails on some devices
+In-Reply-To: <20211021100305.GD7580@workstation>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1636716988;995205b6;
+X-HE-SMSGID: 1mlUqw-0005bg-KI
 
-As reported by Exuvo is possible that we have lot's of EPROTO errors
-during device start i.e. firmware load. But after that device works
-correctly. Hence marking device gone by few EPROTO errors done by
-commit e383c70474db ("rt2x00: check number of EPROTO errors") caused
-regression - Exuvo device stop working after kernel update. To fix
-disable the check during device start.
+On 21.10.21 12:03, Manivannan Sadhasivam wrote:
+> On Tue, Oct 19, 2021 at 03:12:01PM +0300, Kalle Valo wrote:
+>> Kalle Valo <kvalo@codeaurora.org> writes:
+>>> (adding the new mhi list, yay)
+>>> Loic Poulain <loic.poulain@linaro.org> writes:
+>>>>> Loic Poulain <loic.poulain@linaro.org> writes:
+>>>>>> On Thu, 16 Sept 2021 at 10:00, Kalle Valo <kvalo@codeaurora.org> wrote:
+>>>>>>> At the moment I'm running my tests with commit 020d3b26c07a reverted and
+>>>>>>> everything works without problems. Is there a simple way to fix this? Or
+>>>>>>> maybe we should just revert the commit? Commit log and kernel logs from
+>>>>>>> a failing case below.
+>>>>>>
+>>>>>> Do you have log of success case?
+>>>>>
+>>>>> A log from a successful case in the end of email, using v5.15-rc1 plus
+>>>>> revert of commit 020d3b26c07abe27.
+>>>>>
+>>>>>> To me, the device loses power, that is why MHI resuming is failing.
+>>>>>> Normally the device should be properly recovered/reinitialized. Before
+>>>>>> that patch the power loss was simply not detected (or handled at
+>>>>>> higher stack level).
+>>>>>
+>>>>> Currently in ath11k we always keep the firmware running when in suspend,
+>>>>> this is a workaround due to problems between mac80211 and MHI stack.
+>>>>> IIRC the problem was something related MHI creating struct device during
+>>>>> resume or something like that.
+>>>>
+>>>> Could you give a try with the attached patch? It should solve your
+>>>> issue without breaking modem support.
+>>>
+>>> Sorry for taking so long, but I now tested your patch on top of
+>>> v5.15-rc3 and, as expected, everything works as before with QCA6390 on
+>>> NUC x86 testbox.
+>>>
+>>> Tested-by: Kalle Valo <kvalo@codeaurora.org>
+>>
+>> I doubt we will find enough time to fully debug this mhi issue anytime
+>> soon. Can we commit Loic's patch so that this regression is resolved?
+> 
+> Sorry no :( Eventhough Loic's patch is working, I want to understand the
+> issue properly so that we could add a proper fix or patch the firmware
+> if possible.
 
-Reported-and-tested-by: Exuvo <exuvo@exuvo.se>
-Fixes: e383c70474db ("rt2x00: check number of EPROTO errors")
-Cc: stable@vger.kernel.org
-Signed-off-by: Stanislaw Gruszka <stf_xl@wp.pl>
----
- drivers/net/wireless/ralink/rt2x00/rt2x00usb.c | 3 +++
- 1 file changed, 3 insertions(+)
+Lo, this is your Linux kernel regression tracker speaking!
 
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-index e4473a551241..74c3d8cb3100 100644
---- a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-@@ -25,6 +25,9 @@ static bool rt2x00usb_check_usb_error(struct rt2x00_dev *rt2x00dev, int status)
- 	if (status == -ENODEV || status == -ENOENT)
- 		return true;
- 
-+	if (!test_bit(DEVICE_STATE_STARTED, &rt2x00dev->flags))
-+		return false;
-+
- 	if (status == -EPROTO || status == -ETIMEDOUT)
- 		rt2x00dev->num_proto_errs++;
- 	else
--- 
-2.25.4
+> Let's try to get the debug logs as I requested.
+
+That was 3 weeks ago. Afaics nothing happened since then (except the
+other mail about this on the same day in this thread). Or did I miss
+anything? And if not: How can we get the ball rolling somehow again to
+get this regression finally fixed?
+
+Ciao, Thorsten (carrying his Linux kernel regression tracker hat)
+
+P.S.: I have no personal interest in this issue and watch it using
+regzbot. Hence feel free to exclude me on further messages in this
+thread, as I'm only posting this mail to hopefully get a status update
+and things rolling again.
+
+#regzbot poke
+
+>> At the moment I'm doing all my regression testing with commit
+>> 020d3b26c07abe27 reverted. That's a risk, I would prefer to do my
+>> testing without any hacks.
+>>
+>> -- 
+>> https://patchwork.kernel.org/project/linux-wireless/list/
+>>
+>> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> 
+> 
