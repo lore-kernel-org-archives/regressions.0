@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5A12C82;
-	Fri, 12 Nov 2021 11:36:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B64668
+	for <regressions@lists.linux.dev>; Fri, 12 Nov 2021 16:04:46 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mlUqw-0005bg-KI; Fri, 12 Nov 2021 12:36:18 +0100
-Message-ID: <be20e91d-9285-b044-e415-c3728c399c1b@leemhuis.info>
-Date: Fri, 12 Nov 2021 12:36:17 +0100
+	id 1mlZ2i-0006EO-9d; Fri, 12 Nov 2021 17:04:44 +0100
+Message-ID: <e0f6f173-95a6-3868-5cc1-44092acd9267@leemhuis.info>
+Date: Fri, 12 Nov 2021 17:04:43 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,94 +17,81 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
 Content-Language: en-BS
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Kalle Valo <kvalo@codeaurora.org>
-Cc: Loic Poulain <loic.poulain@linaro.org>, ath11k@lists.infradead.org,
- linux-wireless@vger.kernel.org, linux-arm-msm
- <linux-arm-msm@vger.kernel.org>, regressions@lists.linux.dev,
- mhi <mhi@lists.linux.dev>
-References: <871r5p0x2u.fsf@codeaurora.org>
- <CAMZdPi8UJLvBFQd8-nf-iHAQh8cEuihq97PUFfZ7Q=rxRQoPsg@mail.gmail.com>
- <877df6tlnq.fsf@codeaurora.org>
- <CAMZdPi8P7YZPhPir+WfS3cY_a7He1m2Pq2uqBhczPdEeoNRb0Q@mail.gmail.com>
- <87a6jl9ndo.fsf@codeaurora.org> <87ee8hgqni.fsf@codeaurora.org>
- <20211021100305.GD7580@workstation>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [regression] mhi: ath11k resume fails on some devices
-In-Reply-To: <20211021100305.GD7580@workstation>
+To: Mark Boddington <lkml@badpenguin.co.uk>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+References: <dbadfe41-24bf-5811-cf38-74973df45214@badpenguin.co.uk>
+ <YYwDnbpES0rrnWBw@kroah.com>
+ <b266047e-5674-d1e6-de4b-59a90299f022@badpenguin.co.uk>
+ <797107e1-6595-f3ef-e7b2-5784667f73e7@badpenguin.co.uk>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: kernel 5.15.1: AMD RX 6700 XT - Fails to resume after screen
+ blank
+In-Reply-To: <797107e1-6595-f3ef-e7b2-5784667f73e7@badpenguin.co.uk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1636716988;995205b6;
-X-HE-SMSGID: 1mlUqw-0005bg-KI
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1636733086;5112ffe1;
+X-HE-SMSGID: 1mlZ2i-0006EO-9d
 
-On 21.10.21 12:03, Manivannan Sadhasivam wrote:
-> On Tue, Oct 19, 2021 at 03:12:01PM +0300, Kalle Valo wrote:
->> Kalle Valo <kvalo@codeaurora.org> writes:
->>> (adding the new mhi list, yay)
->>> Loic Poulain <loic.poulain@linaro.org> writes:
->>>>> Loic Poulain <loic.poulain@linaro.org> writes:
->>>>>> On Thu, 16 Sept 2021 at 10:00, Kalle Valo <kvalo@codeaurora.org> wrote:
->>>>>>> At the moment I'm running my tests with commit 020d3b26c07a reverted and
->>>>>>> everything works without problems. Is there a simple way to fix this? Or
->>>>>>> maybe we should just revert the commit? Commit log and kernel logs from
->>>>>>> a failing case below.
->>>>>>
->>>>>> Do you have log of success case?
->>>>>
->>>>> A log from a successful case in the end of email, using v5.15-rc1 plus
->>>>> revert of commit 020d3b26c07abe27.
->>>>>
->>>>>> To me, the device loses power, that is why MHI resuming is failing.
->>>>>> Normally the device should be properly recovered/reinitialized. Before
->>>>>> that patch the power loss was simply not detected (or handled at
->>>>>> higher stack level).
->>>>>
->>>>> Currently in ath11k we always keep the firmware running when in suspend,
->>>>> this is a workaround due to problems between mac80211 and MHI stack.
->>>>> IIRC the problem was something related MHI creating struct device during
->>>>> resume or something like that.
->>>>
->>>> Could you give a try with the attached patch? It should solve your
->>>> issue without breaking modem support.
->>>
->>> Sorry for taking so long, but I now tested your patch on top of
->>> v5.15-rc3 and, as expected, everything works as before with QCA6390 on
->>> NUC x86 testbox.
->>>
->>> Tested-by: Kalle Valo <kvalo@codeaurora.org>
->>
->> I doubt we will find enough time to fully debug this mhi issue anytime
->> soon. Can we commit Loic's patch so that this regression is resolved?
+Hi Mark. Replying inline
+(https://en.wikipedia.org/wiki/Posting_style#Interleaved_style ), as
+that's the norm and kinda expected on Linux kernel mailing lists:
+
+On 11.11.21 00:11, Mark Boddington wrote:
+> And also
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c?h=linux-5.15.y&id=f02abeb0779700c308e661a412451b38962b8a0b
 > 
-> Sorry no :( Eventhough Loic's patch is working, I want to understand the
-> issue properly so that we could add a proper fix or patch the firmware
-> if possible.
+> Maybe if the function is called during resume() without being called
+> during init(), bad things happen???
 
-Lo, this is your Linux kernel regression tracker speaking!
+Have you tried to revert any of the patches you suspect to cause this
+and see if things improve? And BTW: did 5.15 (aka 5.15.0) work? Or was
+some process to resolve this made already somewhere else and I just
+missed it?
 
-> Let's try to get the debug logs as I requested.
-
-That was 3 weeks ago. Afaics nothing happened since then (except the
-other mail about this on the same day in this thread). Or did I miss
-anything? And if not: How can we get the ball rolling somehow again to
-get this regression finally fixed?
-
-Ciao, Thorsten (carrying his Linux kernel regression tracker hat)
-
-P.S.: I have no personal interest in this issue and watch it using
-regzbot. Hence feel free to exclude me on further messages in this
-thread, as I'm only posting this mail to hopefully get a status update
-and things rolling again.
+Ciao, Thorsten (with his Linux kernel regression tracker hat on)
 
 #regzbot poke
 
->> At the moment I'm doing all my regression testing with commit
->> 020d3b26c07abe27 reverted. That's a risk, I would prefer to do my
->> testing without any hacks.
+> On 10/11/2021 23:02, Mark Boddington wrote:
+>> I think I've found the problem.
 >>
->> -- 
->> https://patchwork.kernel.org/project/linux-wireless/list/
+>> The amdgpu_amdkfd_resume_iommu(adev) call has been moved around a few
+>> times recently, but in 5.15.1 it's been removed completely.
 >>
->> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+>> I think reverting this patch fixes the issue:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c?h=linux-5.15.y&id=f17dca0ab3f38b19c0f1b935f417f62d4a528723
+>>
+>>
+>> See also:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c?h=linux-5.15.y&id=714d9e4574d54596973ee3b0624ee4a16264d700
+>>
+>>
+>> Cheers,
+>>
+>> Mark
+>>
+>> On 10/11/2021 17:38, Greg KH wrote:
+>>> On Wed, Nov 10, 2021 at 04:27:39PM +0000, Mark Boddington wrote:
+>>>> Hi all,
+>>>>
+>>>> I run the mainline Linux kernel on Ubuntu 20.04, built from
+>>>> https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.1/
+>>>>
+>>>> There appears to be a regression in 5.15.1 which causes the GPU to
+>>>> fail to
+>>>> resume after power saving.
+>>>>
+>>>> Could it be this change??:
+>>>>
+>>>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_debugfs.c?h=v5.15.1&id=8af3a335b5531ca3df0920b1cca43e456cd110ad
+>>>>
+>>> If you revert it, does it solve the problem for you?
+>>>
+>>> If not, what kernel version did work for you with this hardware?
+>>>
+>>> thanks,
+>>>
+>>> greg k-h
 > 
 > 
