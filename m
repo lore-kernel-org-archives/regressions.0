@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386162C85
-	for <regressions@lists.linux.dev>; Sat, 13 Nov 2021 08:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4609C2C80
+	for <regressions@lists.linux.dev>; Mon, 15 Nov 2021 14:23:17 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mloBn-0005T2-1b; Sat, 13 Nov 2021 09:15:07 +0100
-Message-ID: <ec02e9bf-2c3b-c22b-ce94-d4a3e1fa102f@leemhuis.info>
-Date: Sat, 13 Nov 2021 09:15:06 +0100
+	id 1mmct3-0007wL-6W; Mon, 15 Nov 2021 15:23:09 +0100
+Message-ID: <d37ce254-e3b6-760d-42a0-3529b8b4ea6d@leemhuis.info>
+Date: Mon, 15 Nov 2021 15:23:08 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,82 +16,35 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Content-Language: en-BS
-To: Mark Boddington <lkml@badpenguin.co.uk>,
- Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-References: <dbadfe41-24bf-5811-cf38-74973df45214@badpenguin.co.uk>
- <YYwDnbpES0rrnWBw@kroah.com>
- <b266047e-5674-d1e6-de4b-59a90299f022@badpenguin.co.uk>
- <797107e1-6595-f3ef-e7b2-5784667f73e7@badpenguin.co.uk>
- <e0f6f173-95a6-3868-5cc1-44092acd9267@leemhuis.info>
- <ab370b30-3d01-6f7e-4e56-dd7b61251e25@badpenguin.co.uk>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: kernel 5.15.1: AMD RX 6700 XT - Fails to resume after screen
- blank
-In-Reply-To: <ab370b30-3d01-6f7e-4e56-dd7b61251e25@badpenguin.co.uk>
+Content-Language: en-US
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <f6a0f4be-ad53-489c-0036-09dead99f368@gmail.com>
+ <be354029-6062-b8e5-50a4-70df088f93d2@leemhuis.info>
+Subject: Re: DEAD callback error for CPU, WARNING: CPU: 3 PID: 1134 at
+ kernel/cpu.c:1163 _cpu_down+0x20a/0x3a0
+In-Reply-To: <be354029-6062-b8e5-50a4-70df088f93d2@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1636791309;c1884b42;
-X-HE-SMSGID: 1mloBn-0005T2-1b
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1636986197;b2bf1d21;
+X-HE-SMSGID: 1mmct3-0007wL-6W
 
-On 12.11.21 18:24, Mark Boddington wrote:
-> On 12/11/2021 16:04, Thorsten Leemhuis wrote:
-> [...]
->> On 11.11.21 00:11, Mark Boddington wrote:
->>> And also
->>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c?h=linux-5.15.y&id=f02abeb0779700c308e661a412451b38962b8a0b
->>>
->>>
->>> Maybe if the function is called during resume() without being called
->>> during init(), bad things happen???
->> Have you tried to revert any of the patches you suspect to cause this
->> and see if things improve? And BTW: did 5.15 (aka 5.15.0) work? Or was
->> some process to resolve this made already somewhere else and I just
->> missed it?
+On 07.11.21 18:38, Thorsten Leemhuis wrote:
+> On 07.11.21 12:59, Colin King (gmail) wrote:
+>> On a SMP system in a VM, a deadlock callback error can be reproduced
+>> with 5.15, tested from head at commit
+>> d4439a1189f93d0ac1eaf0197db8e6b3e197d5c7
 >>
->> Ciao, Thorsten (with his Linux kernel regression tracker hat on)
->>
->> #regzbot poke
+>> Didn't see this issue on 5.13
+>> […]
+>> See bug report https://bugzilla.kernel.org/show_bug.cgi?id=214955
 > 
-> I tried reverting both, but they didn't improve the situation.
-> 
-> I also had the deadlock happen on 5.15 yesterday so the last stabl> kernel I have used is 5.14.15. I can try the latest 5.14.x if that will
-> help?
+> #regzbot ^introduced: v5.13..
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=214955
+> Bugzilla Ticket
+> #regzbot activity-ignore
 
-You can give it a shot, maybe the problem shows up there now. But I
-doubt it, as in situations like this the change that's causing the
-problem likely was introduced in mainline (v5.14..v5.15) and not in
-stable (v5.15..v5.15.1).
-
-I'd suggest you do the following: install and run the latest 5.14.y
-release, just to be sure (and to get something installed running properly).
-
-In parallel check if someone reported such a problem already to the
-developers of the driver in question. This document explains how to find
-their mailing list or bug tracker archive to check:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-It also explains many other aspects around searching for existing
-reports and reporting Linux kernel issues that might be of help.
-
-If you don't find any existing reports, report your problem anew with
-the regression mailing list in CC (no need to CC me or the stable list).
-Maybe a developer then has a idea what might cause this and point you in
-some direction to confirm. But in the end in situations like this you'll
-likely need to bisect the problem using a git bisection (see reporting
-issues). So consider to do that before reporting, it's not as hard and
-time-consuming as many people think.
-
-Note: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table and can only look briefly into them. Due to that I sometimes
-will get things wrong and thus might give bad advice. I hope that's not
-the case here. But if you think I got something wrong, don't hesitate to
-tell me about that. That's in both other interest to prevent you from
-going down the wrong rabbit hole.
-
-Ciao, Thorsten (carrying his Linux kernel regression tracker hat)
-
-P.S.: Feel free to ignore the following lines, they are for regzbot, my
-Linux kernel regression tracking bot:
-
-#regzbot introduced v5.14..v5.15
+#regzbot ^introduced: 7a89d7eacf8e84f2afb94db5ae9d9f9faa93f01c
+#regzbot monitor:
+https://lore.kernel.org/lkml/20211108062345.273855-1-daniel.lezcano@linaro.org/
+#rezbot fixed-by: 4d1cd1443db3d5605ebcde8672869b1944ade92d
