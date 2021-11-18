@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A336968
-	for <regressions@lists.linux.dev>; Thu, 18 Nov 2021 06:16:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E545B2C80
+	for <regressions@lists.linux.dev>; Thu, 18 Nov 2021 08:57:43 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mnaiz-0007WA-J0; Thu, 18 Nov 2021 07:16:45 +0100
-Message-ID: <cfac5f5c-83d7-e0d9-5368-07ca041ebaed@leemhuis.info>
-Date: Thu, 18 Nov 2021 07:16:45 +0100
+	id 1mndEj-00017M-2J; Thu, 18 Nov 2021 09:57:41 +0100
+Message-ID: <99d07599-3d72-d389-cfc2-f463230037a5@leemhuis.info>
+Date: Thu, 18 Nov 2021 09:57:40 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,132 +16,133 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
-Subject: Re: [PATCH] rt2x00: do not mark device gone on EPROTO errors during
- start
-Content-Language: en-US
-To: Stanislaw Gruszka <stf_xl@wp.pl>, Exuvo <exuvo@exuvo.se>
-Cc: Kalle Valo <kvalo@codeaurora.org>, Stanislaw Gruszka
- <sgruszka@redhat.com>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- Helmut Schaa <helmut.schaa@googlemail.com>,
+Subject: Re: [OOPS] Linux 5.14.19 crashes and burns!
+Content-Language: en-BS
+To: Chris Rankin <rankincj@gmail.com>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <87czop5j33.fsf@tynnyri.adurom.net>
- <6366d9bd-9752-dbc2-8970-442bdc6e8eea@leemhuis.info>
- <7d353dd2-2ffb-6d5e-9983-f983c8b4f6da@leemhuis.info>
- <20211109073127.ga109212@wp.pl> <20211109120737.ga120005@wp.pl>
- <c81f829d-fd87-7580-fb9a-1a84958f890f@exuvo.se>
- <cc85b4e8a038417b865069c6578acf50@grupawp.pl> <87wnlgo5rp.fsf@codeaurora.org>
- <20211110080141.GA123566@wp.pl>
- <b3b9c143-485f-5fe1-312c-c64a8ce33f8a@exuvo.se>
- <20211111141003.GA134627@wp.pl>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20211111141003.GA134627@wp.pl>
+References: <CAK2bqV+NuRYNU0dHni9Cmfvi5CZ7Ycp6rGrNRDLzrdU9xkSXaw@mail.gmail.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+In-Reply-To: <CAK2bqV+NuRYNU0dHni9Cmfvi5CZ7Ycp6rGrNRDLzrdU9xkSXaw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1637216209;982b7ef6;
-X-HE-SMSGID: 1mnaiz-0007WA-J0
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1637225864;bc851f86;
+X-HE-SMSGID: 1mndEj-00017M-2J
 
-Hi, this is your Linux kernel regression tracker speaking. Thx for this fix.
+Lo! CCing stable and regressions list. FWIW, I have a Fedora 34 VM that
+stopped booting with 5.14.19 as well. More inline:
 
-On 11.11.21 15:10, Stanislaw Gruszka wrote:
-> As reported by Exuvo is possible that we have lot's of EPROTO errors
-> during device start i.e. firmware load. But after that device works
-> correctly. Hence marking device gone by few EPROTO errors done by
-> commit e383c70474db ("rt2x00: check number of EPROTO errors") caused
-> regression - Exuvo device stop working after kernel update. To fix
-> disable the check during device start.
+On 18.11.21 01:55, Chris Rankin wrote:
+>
+> I have tried to boot a vanilla 5.14.19 kernel, but it crashes when
+> "switching root" away from the initramfs. ("Unable to handle page
+> fault...)
 > 
-> Reported-and-tested-by: Exuvo <exuvo@exuvo.se>
-
-FWIW: In case you need to send an improved patch, could you
-please add this before the 'Reported-by:' (see at (¹) below for the
-reasoning):
-
-Link:
-https://lore.kernel.org/linux-wireless/bff7d309-a816-6a75-51b6-5928ef4f7a8c@exuvo.se/
-
-And if the patch is already good to go: could the subsystem maintainer
-please add it when applying?
-
-> Fixes: e383c70474db ("rt2x00: check number of EPROTO errors")
-
-What's the plan to getting this merged? Just wondering, because there
-*afaics* wasn't any activity for a week now. Yes, e383c70474db was a
-commit for v5.2-rc1, so it's not a new regression that needs to be
-handled really urgently. But it's still a regression that would be good
-to get fixed rather sooner than later, as there might be still people
-out there then might run into this on a update.
-
-Ciao, Thorsten (carrying his Linux kernel regression tracker hat)
-
-
-(¹) Long story: The commit message would benefit from a link to the
-regression report, for reasons explained in
-Documentation/process/submitting-patches.rst. To quote:
-
-```
-If related discussions or any other background information behind the
-change can be found on the web, add 'Link:' tags pointing to it. In case
-your patch fixes a bug, for example, add a tag with a URL referencing
-the report in the mailing list archives or a bug tracker; [...]
-```
-
-This concept is old, but the text was reworked recently to make this use
-case for the Link: tag clearer. For details see:
-https://git.kernel.org/linus/1f57bd42b77c
-
-Yes, that "Link:" is not really crucial; but it's good to have if
-someone needs to look into the backstory of this change sometime in the
-future. But I care for a different reason. I'm tracking this regression
-(and others) with regzbot, my Linux kernel regression tracking bot. This
-bot will notice if a patch with a Link: tag to a tracked regression gets
-posted and record that, which allowed anyone looking into the regression
-to quickly gasp the current status from regzbot's webui
-(https://linux-regtracking.leemhuis.info/regzbot ) or its reports. The
-bot will also notice if a commit with a Link: tag to a regression report
-is applied by Linus and then automatically mark the regression as
-resolved then.
-
-IOW: this tag makes my life a regression tracker a lot easier, as I
-otherwise have to tell regzbot manually when the fix lands. :-/
-
-
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply. That's in everyone's interest, as
-what I wrote above might be misleading to everyone reading this; any
-suggestion I gave they thus might sent someone reading this down the
-wrong rabbit hole, which none of us wants.
-
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activitie wrt to this regression. Ohh, and feel free to
-ignore the following lines, they are meant for regzbot:
-
-#regzbot poke
-
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Stanislaw Gruszka <stf_xl@wp.pl>
-> ---
->  drivers/net/wireless/ralink/rt2x00/rt2x00usb.c | 3 +++
->  1 file changed, 3 insertions(+)
+> Google's "copy text from image" feature has managed to scrape this
+> information from my phone camera:
 > 
-> diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-> index e4473a551241..74c3d8cb3100 100644
-> --- a/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-> +++ b/drivers/net/wireless/ralink/rt2x00/rt2x00usb.c
-> @@ -25,6 +25,9 @@ static bool rt2x00usb_check_usb_error(struct rt2x00_dev *rt2x00dev, int status)
->  	if (status == -ENODEV || status == -ENOENT)
->  		return true;
->  
-> +	if (!test_bit(DEVICE_STATE_STARTED, &rt2x00dev->flags))
-> +		return false;
-> +
->  	if (status == -EPROTO || status == -ETIMEDOUT)
->  		rt2x00dev->num_proto_errs++;
->  	else
+> 1tch Noo
+> BUG: unable to handle page fault for address: ffffc980006cfeDS
+> #PF: supervisor read access in kernel mode #PF: error_code (8x8888) -
+> not-present page
+> PGD 100000067 P4D 100000067 PUD 18885e867 PMD 104486867 PTE 8
+> Oops: 0888 [#1] PREEMPT SMP PTI
+> CPU: 6 PID: 1 Comm: systemd Tainted: G Hardware name: Gigabyte
+> Technology Co., Ltd. EX58-UD3R/EX58-UD3R, BIOS FB 05/04/2009
+> 5.14.19 #1
+> RIP: 0010: __unwind_start+8xb5/8x15f
+> Code: 48 8d 8d 88 88 88 88 48 89 e2 48 89 e8 48 89 4d 48 48 89 55 38
+> 48 RSP: 0018:ffffc90088823bf0 EFLAGS: 00010006
+> RAX: ffffc900006efde8 RBX: 0000000000000000 RCX: 08 RDX:
+> ffffc900006efe18 RSI : ffff88818a9f6c80 RDI: ffffc
+> RBP: ffffc90808823c18 R08: 00000000000001de R89: R10: ffff888107d20000
+> R11: ffff888183b4ba88 R12: ffffc900006ef dell
+> R13: ffff88810a9f73bc R14: ffff888103c58480 R15: FS: 00007f528fd19b40
+> (0800) GS:ffff888343488808 (0888) knl6S:
+> CS: 0818 DS: 0000 ES: 0000 CRO: 0888000088858833
+> CR2: ffffc900006efe88 CR3: 088080818186a888 CR4: 8888
+> Call Trace:
+> <TASK>
+> get_wchan+8x42/8x8f
+> get_wchan+8x45/8x59
+> do_task_stat+0x3ab/0x38
+> proc_single_show+8x1e/8x68
+> seq_read_iter+0x151/8x342 seq_read+8xf1/8x117
+> uf's_read+Bxa3/8x183
+> ksys_read+8x71/8xb9 do_syscal1_64+8x6d/8x88
+> entry_SYSCALL_64_after_huframe+8x11/8xne
+> RIP: 8033:8x7f529884f832
+> Code: c0 e9 b2 fe ff ff 50 48 8d 3d ea 2e Bc 80 68 65 £9 01 00 0f 16 44 000
+> RSP: 082b:00087ffed3b91f18 EFLAGS: 88888246 ORIG RAX:
+> RAX: ffffffffffffffda RBX: 8888559462036658 RCX: 000071529084/83
+> RDX: 0000000000000100 RSI: 8088559462c90b78 RDI:
+> RBP: 000071529894a300 BAR:
+> te fa
 > 
+> And also this:
+> 
+> do_syscall_64+0x6d/0x80
+> entry_SYSCALL_64_after_huframe+0x44/0xae
+> RIP: 8033:0x7f529884f832
+> Code: c0 e9 b2 fe ff ff 50 48 8d 3d ea Ze Bc 80 e8 b5 f9 01 00 0f 1f
+> 44 00 00 f3 Bf 1e fa 64 8b 84 25 18 88 RSP: 082b:00087ffed3b91f 18
+> EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+> RAX: ffffffffffffffda RBX: 0000559462c36650 RCX: 000071529084f832 RDX:
+> 0000000000000400 RSI: 0000559462c90b70 RDI: 0000000000000006
+> RBP: 000071529094a3a0 R08: 0000000000000006 RO9: 0000000000000001 R18:
+> 0000000000001000 R11: 0000000000000246 R12: 00007f528fd198f0
+> R13: 0000000000000168 R14: 00007f52909497a0 R15: 00000000000001468
+> </TASK>
+> Modules linked in: ext4 crc32c_generic crc16 mbcache jbd2 sr_mod
+> sd_mod cdrom hid_microsoft usbhid amdgpu uh ci drm_kms_helper ehci_hcd
+> cf bf illrect syscopyarea cfbimgblt sysfillrect sysimgblt xhci pci
+> xhci_hcd fb_sys_ mod usb_common drm_panel_orientation_quirks
+> ipmi_devintf ipmi_msghandler msr sha256_ssse3 sha256_generic ipu CRZ:
+> ffffc900006efe08
+> --- end trace 9771b79967a8dd89 ]--- RIP: 8010:_unwind_start+8xb5/0x15f
+> Code: 48 8d 8d 00 00 00 00 48 89 e2 48 89 e8 48 89 4d 48 48 89 55 38
+> 48 89 45 40 eb 29 48 8b 86 98 Ba 80 00 RSP: 0818:ffffc90000023bf0
+> EFLAGS: 00010006 RAX: ffffc900006efde0 RBX: 0000000000000000 RCX:
+> 0000000000000000
+> RDX: ffffc900006efe18 RSI: ffff88810a9f6c00 RDI: ffffc90000023c78 RBP:
+> ffffc98800023c18 R08: 00000000000001de R09: 00000000005b20c6
+> R10: ffff888107120000 R11: ffff888103b4ba80 R12: ffffc900006ef de
+> R13: ffff88818a9f73bc R14: ffff888103c50480 R15: 0000000000000000 FS:
+> 00007f528fd19b40(8000) GS:ffff888343180000 (0800)
+> knlGS:0000000000000000 CS: 0810 DS: 0000 ES: 0000 CRO:
+> 0000000080050033
+> CR2: ffffc908806efe88 CR3: 000000010186a000 CR4: 00000000000006e0
+> note: systemd [1] exited with preempt_count 1
+> Kernel panic - not syncing: Attempted to kill init!
+> exitcode=0x00000009 Kernel Offset: disabled
+> --- [ end Kernel panic not syncing: Attempted to kill initf
+> exitcode=0x00000009 1--- -
+> 
+> I cannot capture the exact oops via any other means, although I can
+> send the original camera pictures that I captured the text from, on
+> request.
+
+By default I didn't get to see any messages, the VM just hangs when
+switching to root. Did anyone else already report or even track this
+down already? Guess otherwise I need to take a closer look and maybe
+start bisecting...
+
+To be sure this issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, the Linux kernel regression tracking bot:
+
+#regzbot ^introduced v5.14.18..v5.14.19
+#regzbot title 5.14.19 crashes when switching from initramfs to root
+
+Ciao, Thorsten (as Linux kernel regression tracker and someone that is
+affected by this...)
+
+P.S.: If you want to know more about regzbot, check out its
+web-interface, the getting start guide, and/or the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+But note, regzbot is doing its first field-testing now and thus still
+has some bugs. Adding this regression will help be to find them, hence
+feel free to ignore this mail or any errors you spot in the web-ui.
