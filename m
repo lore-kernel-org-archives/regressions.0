@@ -1,90 +1,57 @@
-Received: from mail.holtmann.org (coyote.holtmann.net [212.227.132.17])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6925068
-	for <regressions@lists.linux.dev>; Wed, 17 Nov 2021 19:01:19 +0000 (UTC)
-Received: from smtpclient.apple (p4fefc15c.dip0.t-ipconnect.de [79.239.193.92])
-	by mail.holtmann.org (Postfix) with ESMTPSA id AE6D9CECF6;
-	Wed, 17 Nov 2021 20:01:17 +0100 (CET)
-Content-Type: text/plain;
-	charset=us-ascii
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A9768
+	for <regressions@lists.linux.dev>; Thu, 18 Nov 2021 05:43:59 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mnaDF-0004TW-Pt; Thu, 18 Nov 2021 06:43:57 +0100
+Message-ID: <23cc4d9c-c20c-cc68-d1fe-e3fda96b357d@leemhuis.info>
+Date: Thu, 18 Nov 2021 06:43:57 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.20.0.1.32\))
-Subject: Re: [PATCHv2] Bluetooth: quirk disabling LE Read Transmit Power
-From: Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20211117124717.12352-1-redecorating@protonmail.com>
-Date: Wed, 17 Nov 2021 20:01:17 +0100
-Cc: regressions@leemhuis.info,
- danielwinkler@google.com,
- gargaditya08@live.com,
- gregkh@linuxfoundation.org,
- Johan Hedberg <johan.hedberg@intel.com>,
- linux-bluetooth@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- regressions@lists.linux.dev,
- sonnysasaka@chromium.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F8D12EA8-4B37-4887-998E-DC0EBE60E730@holtmann.org>
-References: <20211001083412.3078-1-redecorating@protonmail.com>
- <YYePw07y2DzEPSBR@kroah.com>
- <70a875d0-7162-d149-dbc1-c2f5e1a8e701@leemhuis.info>
- <20211116090128.17546-1-redecorating@protonmail.com>
- <e75bf933-9b93-89d2-d73f-f85af65093c8@leemhuis.info>
- <3B8E16FA-97BF-40E5-9149-BBC3E2A245FE@live.com> <YZSuWHB6YCtGclLs@kroah.com>
- <52DEDC31-EEB2-4F39-905F-D5E3F2BBD6C0@live.com>
- <8919a36b-e485-500a-2722-529ffa0d2598@leemhuis.info>
- <20211117124717.12352-1-redecorating@protonmail.com>
-To: Orlando Chamberlain <redecorating@protonmail.com>
-X-Mailer: Apple Mail (2.3693.20.0.1.32)
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Subject: Re: [REGRESSION] 5.16rc1: SA_IMMUTABLE breaks debuggers
+Content-Language: en-BS
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CAP045AoMY4xf8aC_4QU_-j7obuEPYgTcnQQP3Yxk=2X90jtpjw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1637214240;e66f581f;
+X-HE-SMSGID: 1mnaDF-0004TW-Pt
 
-Hi Orlando,
+On 17.11.21 19:47, Kyle Huey wrote:
+> rr, a userspace record and replay debugger[0], is completely broken on
+> 5.16rc1. I bisected this to 00b06da29cf9dc633cdba87acd3f57f4df3fd5c7.
 
->> So if this just affects two macs, why can't the fix be realized as a
->> quirk that is only enabled on those two systems? Or are they =
-impossible
->> to detect clearly via DMI data or something like that?
->=20
-> I think we should be able to quirk based off the acpi _CID =
-"apple-uart-blth"
-> or _HID "BCM2E7C". Marcel suggested quirking based of the acpi table =
-here
-> =
-https://lore.kernel.org/linux-bluetooth/1D2217A9-EA73-4D93-8D0B-5BC2718D47=
-88@holtmann.org/
->=20
-> This would catch some unaffected Macs, but they don't support the LE =
-Read
-> Transmit Power command anyway (the affected macs were released after =
-it
-> was added to the Bluetooth spec, while the unaffected Macs were =
-released
-> before it was added to the spec, and thus don't support it).
->=20
-> I'm not sure how to go about applying a quirk based off this, there =
-are
-> quirks in drivers/bluetooth/hci_bcm.c (no_early_set_baudrate and
-> drive_rts_on_open), but they don't seem to be based off acpi ids.
->=20
-> It might be simpler to make it ignore the Unknown Command error, like
-> in this patch =
-https://lore.kernel.org/linux-bluetooth/CABBYNZLjSfcG_KqTEbL6NOSvHhA5-b1t_=
-S=3D3FQP4=3DGwW21kuzg@mail.gmail.com/
-> however that only applies on bluetooth-next and needed the status it
-> checks for to be -56, not 0x01.
+TWIMC: To be sure this issue doesn't fall through the cracks unnoticed,
+I'm adding it to regzbot, my Linux kernel regression tracking bot:
 
-so we abstain from try-and-error sending of commands. The Bluetooth spec
-has a list of supported commands that a host can query for a reason. =
-This
-is really broken behavior of the controller and needs to be pointed out =
-as
-such.
+#regzbot ^introduced 00b06da29cf9dc633cdba87acd3f57f4df3fd5c7
+#regzbot title SA_IMMUTABLE breaks debuggers like rr
+#regzbot ignore-activity
 
-The question is just how we quirk it.
+FYI: I removed everyone else and the other lists from the To or CC to
+avoid noise, as this mail is meaningless for them.
 
-Regards
+Ciao, Thorsten, your Linux kernel regression tracker.
 
-Marcel
+P.S.: If you want to know more about regzbot, check out its
+web-interface, the getting start guide, and/or the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+But note, regzbot is doing its first field-testing now and thus still
+has some bugs. Adding this regression will help be to find them, hence
+feel free to ignore this mail or any errors you spot in the web-ui.
 
