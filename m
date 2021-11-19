@@ -1,56 +1,110 @@
-Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E7ED68
-	for <regressions@lists.linux.dev>; Fri, 19 Nov 2021 06:34:11 +0000 (UTC)
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 47A6461101;
-	Fri, 19 Nov 2021 06:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1637303650;
-	bh=NOGQh8//ImED3ZSXNLHFe1B3kwT9YtEODJhVob7C6yc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L4m9B/6ruVNnPZ9qqEZT4IXH0vD+W+HobXTFi6lCquqNHPT4QPbtj/0/A0RCXEgDe
-	 SIJW1spW0ZD1KpiPRJZ+Ou4GvZJO1+GZY9D2CwpjlSZcEwM/MB+M5ctM8OmvqEb+Ph
-	 iVgJNkayooFHFKKFA3hJikAog/V7cLiF07zXXphs=
-Date: Fri, 19 Nov 2021 07:34:08 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Chris Rankin <rankincj@gmail.com>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [OOPS] Linux 5.14.19 crashes and burns!
-Message-ID: <YZdFYFpTswGqO/o1@kroah.com>
-References: <CAK2bqV+NuRYNU0dHni9Cmfvi5CZ7Ycp6rGrNRDLzrdU9xkSXaw@mail.gmail.com>
- <99d07599-3d72-d389-cfc2-f463230037a5@leemhuis.info>
- <ed000478-2a60-0066-c337-a04bffc112b1@leemhuis.info>
- <YZYc6uSpp76Sz4vO@kroah.com>
- <YZZdUxGbKJKz0x8i@kroah.com>
- <CAK2bqVJyi-g0b=dSDPS5ELb1d8joKark4k4+6AGQdtuM81k2kg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5170C2C80
+	for <regressions@lists.linux.dev>; Fri, 19 Nov 2021 10:47:59 +0000 (UTC)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AJAgkqa002432;
+	Fri, 19 Nov 2021 10:47:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : content-type : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=wUcXGEWGnF+3/I7AmpsR+d/nS7Ul250ciiKvgphWc2o=;
+ b=JjRyxc/ONtULxEPuYc0q4Jqe3dyqSew0HqgDJk/TJMxUlsvCSe6pAOTv7pnR/McF4LSm
+ TCE5OKQzFM5jxsWQiYT1882oFTBhnEv8S8XSjJlDFSDbqUI2pf18fkvMG7qRpSCDrsV4
+ C0H4ZTQ+Hi3m2PHeprQbTD+KznWDZLyTUaAyV8CIgRYWI/h7NiI9V9mbM+vK95pRmfzW
+ CeAF3wjgsrA9dUdBBJcp6A2ovOLWKnDbv7z+JJqHU9czYb5u+RcVfEp2aS5oWM0jmuKx
+ yXgaKdp0jixYBdQm/NkHHQbNrNB0d/fXco6yELk7AVOQt9PsW5pPdY3G15dmR+wrsRWx oQ== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+	by mx0b-001b2d01.pphosted.com with ESMTP id 3ceadp834d-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Nov 2021 10:47:57 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+	by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AJAldRv029958;
+	Fri, 19 Nov 2021 10:47:56 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+	by ppma03ams.nl.ibm.com with ESMTP id 3ca50ayk7w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 19 Nov 2021 10:47:56 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+	by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AJAlrnI63045924
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 19 Nov 2021 10:47:53 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B39BC42041;
+	Fri, 19 Nov 2021 10:47:53 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 47CA84203F;
+	Fri, 19 Nov 2021 10:47:53 +0000 (GMT)
+Received: from sig-9-145-57-93.uk.ibm.com (unknown [9.145.57.93])
+	by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+	Fri, 19 Nov 2021 10:47:53 +0000 (GMT)
+Message-ID: <a627b3cbd2ed4ba5dd75e1163760730187f1416b.camel@linux.ibm.com>
+Subject: Regression in v5.16-rc1: Timeout in mlx5_health_wait_pci_up() may
+ try to wait 245 million years
+From: Niklas Schnelle <schnelle@linux.ibm.com>
+To: Amir Tzin <amirtz@nvidia.com>, Moshe Shemesh <moshe@nvidia.com>,
+        Saeed
+	Mahameed <saeedm@nvidia.com>
+Cc: linux-netdev <linux-netdev@vger.kernel.org>, regressions@lists.linux.dev,
+        linux-s390 <linux-s390@vger.kernel.org>
+Date: Fri, 19 Nov 2021 11:47:52 +0100
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-16.el8) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK2bqVJyi-g0b=dSDPS5ELb1d8joKark4k4+6AGQdtuM81k2kg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 9_a_1aVXWXsCgcALaPjQh5LCLifi7IUm
+X-Proofpoint-ORIG-GUID: 9_a_1aVXWXsCgcALaPjQh5LCLifi7IUm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
+ definitions=2021-11-19_08,2021-11-17_01,2020-04-07_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 phishscore=0 impostorscore=0
+ mlxscore=0 clxscore=1011 mlxlogscore=999 malwarescore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2111190058
 
-On Thu, Nov 18, 2021 at 11:02:30PM +0000, Chris Rankin wrote:
-> Hi,
-> 
-> Yes, 5.14.20 fixes the boot problem in 5.14.19. Thank you. However,
-> this WARNING is still present, as with every other 5.14.x kernel I
-> have been able to test:
-> 
-> [   95.796055] ------------[ cut here ]------------
-> [   95.819648] WARNING: CPU: 3 PID: 1 at
-> drivers/gpu/drm/ttm/ttm_bo.c:409 ttm_bo_release+0x1c/0x266 [ttm]
+Hello Amir, Moshe, and Saeed,
 
-Does this work with 5.15.3?
+During testing of PCI device recovery, I found a problem in the mlx5
+recovery support introduced in v5.16-rc1 by commit 32def4120e48
+("net/mlx5: Read timeout values from DTOR"). It follows my analysis of
+the problem.
 
-I would suggest asking the graphics developers about this, as this is
-their code :)
+When the device is in an error state, at least on s390 but I believe
+also on other systems, it is isolated and all PCI MMIO reads return
+0xff. This is detected by your driver and it will immediately attempt
+to recovery the device with a mlx5_core driver specific recovery
+mechanism. Since at this point no reset has been done that would take
+the device out of isolation this will of course fail as it can't
+communicate with the device. Under normal circumstances this reset
+would happen later during the new recovery flow introduced in
+4cdf2f4e24ff ("s390/pci: implement minimal PCI error recovery") once
+firmware has done their side of the recovery allowing that to succeed
+once the driver specific recovery has failed.
 
-thanks,
+With v5.16-rc1 however the driver specific recovery gets stuck holding
+locks which will block our recovery. Without our recovery mechanism
+this can also be seen by "echo 1 > /sys/bus/pci/devices/<dev>/remove"
+which hangs on the device lock forever.
 
-greg k-h
+Digging into this I tracked the problem down to
+mlx5_health_wait_pci_up() hangig. I added a debug print to it and it
+turns out that with the device isolated mlx5_tout_ms(dev, FW_RESET)
+returns 774039849367420401 (0x6B...6B) milliseconds and we try to wait
+245 million years. After reverting that commit things work again,
+though of course the driver specific recovery flow will still fail
+before ours can kick in and finally succeed.
+
+Thanks,
+Niklas Schnelle
+
+#regzbot introduced: 32def4120e48
+
+
