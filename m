@@ -1,64 +1,104 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0732D72
+	for <regressions@lists.linux.dev>; Fri, 19 Nov 2021 14:19:46 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1637331586; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=Rbzo4r3SRTGCcI5IqrLcAO4VSfc6twRgwENQLwCuv5w=; b=ppSTvhmEn3M076/TFa9/1RHv2Tm56djWgK8XhpIxof+xFslq05J059k4KPHpk2X2OqG2HA4G
+ S06hCF8cM5h0ipkQSULcsTTSXn0xvAl3ZD5BJ/P7yaol+b9UiT3vQrFgLAKui737/GDWr260
+ 4ds6fitPweGXO5XNcXcA7AoerKA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 6197b2815bbbed1f70ad23e6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Nov 2021 14:19:45
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+	id 9723CC4360C; Fri, 19 Nov 2021 14:19:45 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+Received: from tykki (tynnyri.adurom.net [51.15.11.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67E22C80
-	for <regressions@lists.linux.dev>; Fri, 19 Nov 2021 12:17:43 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mo2pq-0002al-6d; Fri, 19 Nov 2021 13:17:42 +0100
-Message-ID: <e42c1c04-c503-2833-fa73-1636776512fd@leemhuis.info>
-Date: Fri, 19 Nov 2021 13:17:39 +0100
+	(Authenticated sender: kvalo)
+	by smtp.codeaurora.org (Postfix) with ESMTPSA id D7D9BC4338F;
+	Fri, 19 Nov 2021 14:19:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org D7D9BC4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+From: Kalle Valo <kvalo@codeaurora.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Stanislaw Gruszka <stf_xl@wp.pl>,  Exuvo <exuvo@exuvo.se>,  Stanislaw Gruszka <sgruszka@redhat.com>,  "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>,  Helmut Schaa <helmut.schaa@googlemail.com>,  "regressions\@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [PATCH] rt2x00: do not mark device gone on EPROTO errors during start
+References: <87czop5j33.fsf@tynnyri.adurom.net>
+	<6366d9bd-9752-dbc2-8970-442bdc6e8eea@leemhuis.info>
+	<7d353dd2-2ffb-6d5e-9983-f983c8b4f6da@leemhuis.info>
+	<20211109073127.ga109212@wp.pl> <20211109120737.ga120005@wp.pl>
+	<c81f829d-fd87-7580-fb9a-1a84958f890f@exuvo.se>
+	<cc85b4e8a038417b865069c6578acf50@grupawp.pl>
+	<87wnlgo5rp.fsf@codeaurora.org> <20211110080141.GA123566@wp.pl>
+	<b3b9c143-485f-5fe1-312c-c64a8ce33f8a@exuvo.se>
+	<20211111141003.GA134627@wp.pl>
+	<cfac5f5c-83d7-e0d9-5368-07ca041ebaed@leemhuis.info>
+Date: Fri, 19 Nov 2021 16:19:39 +0200
+In-Reply-To: <cfac5f5c-83d7-e0d9-5368-07ca041ebaed@leemhuis.info> (Thorsten
+	Leemhuis's message of "Thu, 18 Nov 2021 07:16:45 +0100")
+Message-ID: <87zgq0b538.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: Regression in v5.16-rc1: Timeout in mlx5_health_wait_pci_up() may
- try to wait 245 million years
-Content-Language: en-BW
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <a627b3cbd2ed4ba5dd75e1163760730187f1416b.camel@linux.ibm.com>
- <3777c646-26ca-1c1b-350c-ddcc7c484483@leemhuis.info>
-In-Reply-To: <3777c646-26ca-1c1b-350c-ddcc7c484483@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1637324264;62592772;
-X-HE-SMSGID: 1mo2pq-0002al-6d
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 19.11.21 12:38, Thorsten Leemhuis wrote:
-> 
-> 
-> 
-> On 19.11.21 11:47, Niklas Schnelle wrote:
->> Hello Amir, Moshe, and Saeed,
->>
->> During testing of PCI device recovery, I found a problem in the mlx5
->> recovery support introduced in v5.16-rc1 by commit 32def4120e48
->> ("net/mlx5: Read timeout values from DTOR"). It follows my analysis of
->> the problem.
->>
->> [...]
->>
->> Thanks,
->> Niklas Schnelle
->>
->> #regzbot introduced: 32def4120e48
-> 
-> Many thx for getting regzbot directly involved. Due to the repost it now
-> has two entries for this regressions, thus I'm marking this one as a
-> duplicate of the repost:
-> 
-> #regzbot dup-of:
-> https://lore.kernel.org/regressions/a627b3cbd2ed4ba5dd75e1163760730187f1416b.camel@linux.ibm.com/
+Thorsten Leemhuis <regressions@leemhuis.info> writes:
 
-Brown paperbag mail:
+> Hi, this is your Linux kernel regression tracker speaking. Thx for this f=
+ix.
+>
+> On 11.11.21 15:10, Stanislaw Gruszka wrote:
+>> As reported by Exuvo is possible that we have lot's of EPROTO errors
+>> during device start i.e. firmware load. But after that device works
+>> correctly. Hence marking device gone by few EPROTO errors done by
+>> commit e383c70474db ("rt2x00: check number of EPROTO errors") caused
+>> regression - Exuvo device stop working after kernel update. To fix
+>> disable the check during device start.
+>>=20
+>> Reported-and-tested-by: Exuvo <exuvo@exuvo.se>
+>
+> FWIW: In case you need to send an improved patch, could you
+> please add this before the 'Reported-by:' (see at (=C2=B9) below for the
+> reasoning):
+>
+> Link:
+> https://lore.kernel.org/linux-wireless/bff7d309-a816-6a75-51b6-5928ef4f7a=
+8c@exuvo.se/
+>
+> And if the patch is already good to go: could the subsystem maintainer
+> please add it when applying?
 
-Ugh, that command told regzbot to mark the regression as a duplicate of
-itself, which obviously is stupid. Trying it again:
+Sure, I'll add it during commit.
 
-#regzbot dup-of:
-https://lore.kernel.org/regressions/15db9c1d11d32fb16269afceb527b5d743177ac4.camel@linux.ibm.com
+>> Fixes: e383c70474db ("rt2x00: check number of EPROTO errors")
+>
+> What's the plan to getting this merged?
+
+My plan is to commit this to wireless-drivers tree, the tree was just
+closed due to the merge window.
+
+--=20
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
