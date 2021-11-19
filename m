@@ -1,112 +1,55 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CF029CA
-	for <regressions@lists.linux.dev>; Fri, 19 Nov 2021 10:58:11 +0000 (UTC)
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1AJA19pm014534;
-	Fri, 19 Nov 2021 10:58:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : content-type : mime-version :
- content-transfer-encoding; s=pp1;
- bh=cQuLGA+1C1h2cNYXzDrXQjXFb4S9v9DENFSoucv9ijA=;
- b=TdtrhdA9Lw3fCDdvXb5yDdC7s7vyHlBa03h5DL0mI95EfV0zhB8bDV/oQNoFaj+X0ioc
- WP43FEGM2Jyd430aQQStgP5mAlUZoPgjSCqjd3+Ll6ogmlrKWN4FKrqLuLMLnf9GTaKy
- 8GjSpZFGZJZPyVCbAGnJBmC/qB5IYeR6IGVYWBDGncaLP6MG9Xfc3IdmUTfSAQ2uZf+z
- ubXuct3R5qnf+DgIPdpXNn/2HPk7tgf23Xhjp2Byd/WLXSSwHpljLCbF/rYaUFLW1PjB
- Svz8t1LWydVZR82PylFeD1B5EGw1VS71/wlv3MZwzIxA3Bj4Yx9df2AZS5bVN8LlIvsq +Q== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-	by mx0b-001b2d01.pphosted.com with ESMTP id 3ce7u33n5x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Nov 2021 10:58:10 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-	by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 1AJAriGL032682;
-	Fri, 19 Nov 2021 10:58:09 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-	by ppma05fra.de.ibm.com with ESMTP id 3ca50aw9pt-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Nov 2021 10:58:08 +0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-	by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 1AJAp7Fn56557850
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 19 Nov 2021 10:51:07 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 859F94204B;
-	Fri, 19 Nov 2021 10:58:06 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 152A94203F;
-	Fri, 19 Nov 2021 10:58:06 +0000 (GMT)
-Received: from sig-9-145-57-93.uk.ibm.com (unknown [9.145.57.93])
-	by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-	Fri, 19 Nov 2021 10:58:05 +0000 (GMT)
-Message-ID: <15db9c1d11d32fb16269afceb527b5d743177ac4.camel@linux.ibm.com>
-Subject: Regression in v5.16-rc1: Timeout in mlx5_health_wait_pci_up() may
- try to wait 245 million years
-From: Niklas Schnelle <schnelle@linux.ibm.com>
-To: Amir Tzin <amirtz@nvidia.com>, Moshe Shemesh <moshe@nvidia.com>,
-        Saeed
-	Mahameed <saeedm@nvidia.com>
-Cc: netdev <netdev@vger.kernel.org>, regressions@lists.linux.dev,
-        linux-s390
-	 <linux-s390@vger.kernel.org>
-Date: Fri, 19 Nov 2021 11:58:05 +0100
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-16.el8) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5072C80
+	for <regressions@lists.linux.dev>; Fri, 19 Nov 2021 11:38:19 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mo2Dh-0004g4-Jz; Fri, 19 Nov 2021 12:38:17 +0100
+Message-ID: <3777c646-26ca-1c1b-350c-ddcc7c484483@leemhuis.info>
+Date: Fri, 19 Nov 2021 12:38:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.0
+Content-Language: en-BW
+To: Niklas Schnelle <schnelle@linux.ibm.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <a627b3cbd2ed4ba5dd75e1163760730187f1416b.camel@linux.ibm.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: Regression in v5.16-rc1: Timeout in mlx5_health_wait_pci_up() may
+ try to wait 245 million years
+In-Reply-To: <a627b3cbd2ed4ba5dd75e1163760730187f1416b.camel@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: zH2_SJjrw3r4M6XeocrOtJsjkOKifYsX
-X-Proofpoint-ORIG-GUID: zH2_SJjrw3r4M6XeocrOtJsjkOKifYsX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.790,Hydra:6.0.425,FMLib:17.0.607.475
- definitions=2021-11-19_08,2021-11-17_01,2020-04-07_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- mlxscore=0 phishscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999
- spamscore=0 malwarescore=0 lowpriorityscore=0 impostorscore=0
- clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2111190058
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1637321899;23dae24c;
+X-HE-SMSGID: 1mo2Dh-0004g4-Jz
 
-Hello Amir, Moshe, and Saeed,
 
-(resent due to wrong netdev mailing list address, sorry about that)
 
-During testing of PCI device recovery, I found a problem in the mlx5
-recovery support introduced in v5.16-rc1 by commit 32def4120e48
-("net/mlx5: Read timeout values from DTOR"). It follows my analysis of
-the problem.
 
-When the device is in an error state, at least on s390 but I believe
-also on other systems, it is isolated and all PCI MMIO reads return
-0xff. This is detected by your driver and it will immediately attempt
-to recovery the device with a mlx5_core driver specific recovery
-mechanism. Since at this point no reset has been done that would take
-the device out of isolation this will of course fail as it can't
-communicate with the device. Under normal circumstances this reset
-would happen later during the new recovery flow introduced in
-4cdf2f4e24ff ("s390/pci: implement minimal PCI error recovery") once
-firmware has done their side of the recovery allowing that to succeed
-once the driver specific recovery has failed.
+On 19.11.21 11:47, Niklas Schnelle wrote:
+> Hello Amir, Moshe, and Saeed,
+> 
+> During testing of PCI device recovery, I found a problem in the mlx5
+> recovery support introduced in v5.16-rc1 by commit 32def4120e48
+> ("net/mlx5: Read timeout values from DTOR"). It follows my analysis of
+> the problem.
+>
+> [...]
+>
+> Thanks,
+> Niklas Schnelle
+> 
+> #regzbot introduced: 32def4120e48
 
-With v5.16-rc1 however the driver specific recovery gets stuck holding
-locks which will block our recovery. Without our recovery mechanism
-this can also be seen by "echo 1 > /sys/bus/pci/devices/<dev>/remove"
-which hangs on the device lock forever.
+Many thx for getting regzbot directly involved. Due to the repost it now
+has two entries for this regressions, thus I'm marking this one as a
+duplicate of the repost:
 
-Digging into this I tracked the problem down to
-mlx5_health_wait_pci_up() hangig. I added a debug print to it and it
-turns out that with the device isolated mlx5_tout_ms(dev, FW_RESET)
-returns 774039849367420401 (0x6B...6B) milliseconds and we try to wait
-245 million years. After reverting that commit things work again,
-though of course the driver specific recovery flow will still fail
-before ours can kick in and finally succeed.
-
-Thanks,
-Niklas Schnelle
-
-#regzbot introduced: 32def4120e48
-
+#regzbot dup-of:
+https://lore.kernel.org/regressions/a627b3cbd2ed4ba5dd75e1163760730187f1416b.camel@linux.ibm.com/
