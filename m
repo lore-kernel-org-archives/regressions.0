@@ -1,104 +1,138 @@
-Received: from m43-7.mailgun.net (m43-7.mailgun.net [69.72.43.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0732D72
-	for <regressions@lists.linux.dev>; Fri, 19 Nov 2021 14:19:46 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1637331586; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
- To: From: Sender; bh=Rbzo4r3SRTGCcI5IqrLcAO4VSfc6twRgwENQLwCuv5w=; b=ppSTvhmEn3M076/TFa9/1RHv2Tm56djWgK8XhpIxof+xFslq05J059k4KPHpk2X2OqG2HA4G
- S06hCF8cM5h0ipkQSULcsTTSXn0xvAl3ZD5BJ/P7yaol+b9UiT3vQrFgLAKui737/GDWr260
- 4ds6fitPweGXO5XNcXcA7AoerKA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 6197b2815bbbed1f70ad23e6 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Fri, 19 Nov 2021 14:19:45
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-	id 9723CC4360C; Fri, 19 Nov 2021 14:19:45 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-	aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=2.0 tests=ALL_TRUSTED,BAYES_00,SPF_FAIL,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
-Received: from tykki (tynnyri.adurom.net [51.15.11.48])
+Received: from IND01-BO1-obe.outbound.protection.outlook.com (mail-bo1ind01olkn0162.outbound.protection.outlook.com [104.47.101.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	(Authenticated sender: kvalo)
-	by smtp.codeaurora.org (Postfix) with ESMTPSA id D7D9BC4338F;
-	Fri, 19 Nov 2021 14:19:42 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org D7D9BC4338F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-From: Kalle Valo <kvalo@codeaurora.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Stanislaw Gruszka <stf_xl@wp.pl>,  Exuvo <exuvo@exuvo.se>,  Stanislaw Gruszka <sgruszka@redhat.com>,  "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>,  Helmut Schaa <helmut.schaa@googlemail.com>,  "regressions\@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [PATCH] rt2x00: do not mark device gone on EPROTO errors during start
-References: <87czop5j33.fsf@tynnyri.adurom.net>
-	<6366d9bd-9752-dbc2-8970-442bdc6e8eea@leemhuis.info>
-	<7d353dd2-2ffb-6d5e-9983-f983c8b4f6da@leemhuis.info>
-	<20211109073127.ga109212@wp.pl> <20211109120737.ga120005@wp.pl>
-	<c81f829d-fd87-7580-fb9a-1a84958f890f@exuvo.se>
-	<cc85b4e8a038417b865069c6578acf50@grupawp.pl>
-	<87wnlgo5rp.fsf@codeaurora.org> <20211110080141.GA123566@wp.pl>
-	<b3b9c143-485f-5fe1-312c-c64a8ce33f8a@exuvo.se>
-	<20211111141003.GA134627@wp.pl>
-	<cfac5f5c-83d7-e0d9-5368-07ca041ebaed@leemhuis.info>
-Date: Fri, 19 Nov 2021 16:19:39 +0200
-In-Reply-To: <cfac5f5c-83d7-e0d9-5368-07ca041ebaed@leemhuis.info> (Thorsten
-	Leemhuis's message of "Thu, 18 Nov 2021 07:16:45 +0100")
-Message-ID: <87zgq0b538.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD5CA2C82
+	for <regressions@lists.linux.dev>; Fri, 19 Nov 2021 16:59:38 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ESq7YlKXl+EmAB4cMPti7xf/8xlYUZ6jL1JCObWXJn2yWDpFhyEn83AgH0RCR1fSwY9gSdQZTIiKEEJAVUoLPC52lxPHLSCIRZljk8CpPukGC8TDRTSOMpiMvlOaJHLMTE8wLeXFfkcT0nOI+tSrfkabxU1vir6C8psf72SJ/k96nO2u+PwIXknWS2fcDG4NMhCugGfc2SXOeDIqwyWoGg6C/8NkleksNIgEGuKdEjbzTOnCnuzkbRTbjyZEtwcPR8GQ3xwvspvKeYS0TfUh5QMKbBVU92LWqFjEft/WXCN7HoFJaU+o8SuJrMZnERGo5Hxr9/oxr1HZfUzmbgGtHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u1WZ20gIs8SqMhtqEtCg+PkcoYpk9zK+UKo58u2vcP4=;
+ b=cbBTU1/HmsnYi6ArfivJ/sWX5rnzGEsCj1kyLY5UQXlOmtk3lsPQGOHvZtnd537pyXW4QWnCMNbRVQQTKsY52GkRrQfKvnmhfoBnZq6a+62VwPsgLUqgZGr6O8mdD7g9FSFlvlV2mCy74AgjATurro+RMrkwsXAF1oePMblL8jQ8giEfJ0l760gT6X3zec87TX9eVmRMquRgJmhbKKvqOPN0twdt+RNhFRQ5peOf4AdqZrYonC8f15CnBXaUmnyaZ7M5shpPLm6wLdC2a2f63pzCBYjSeI+EbUpyupdzxPA9DyYS2Rjs4Yz1LUkjIcGj7B7KwgfvejoJyAbE3Tc8eg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=u1WZ20gIs8SqMhtqEtCg+PkcoYpk9zK+UKo58u2vcP4=;
+ b=awyORlJMJA3OXf1/Cc3Px6d8T/zrmImSSqNLrS5VwkGZQ5DxlltWAKw008vf+9SlW8ycXO2tzXARlEjSHxwHc71zCBzVRqOCrHF6cHhqk6WqQFZSI8U8sywuD6RexN2JeRWx81imexWEaWMgkdKOPcTT0OIY6Q1oykyKKPumFs6L7sQ59f66dMeJiF6U121Z+fILlPIWSOuI3608udbY+UWTO3IzY7Qn2o2MVT055qZei6YOAaKra46ucavP/gEHWgf/7UPrBe2PjatPQgn+X0vvCWjDTE/Oi3VJ241Mrkc2wN7GjNQvvtg4wtCpB/9Mqk8rwoK+gNIsj89Z/6NxwQ==
+Received: from PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:1b::13)
+ by PN2PR01MB5256.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:5a::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19; Fri, 19 Nov
+ 2021 16:59:32 +0000
+Received: from PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::cdc4:def5:dc73:28f7]) by PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::cdc4:def5:dc73:28f7%7]) with mapi id 15.20.4690.029; Fri, 19 Nov 2021
+ 16:59:32 +0000
+From: Aditya Garg <gargaditya08@live.com>
+To: Marcel Holtmann <marcel@holtmann.org>
+CC: Orlando Chamberlain <redecorating@protonmail.com>, Thorsten Leemhuis
+	<regressions@leemhuis.info>, Daniel Winkler <danielwinkler@google.com>, Greg
+ KH <gregkh@linuxfoundation.org>, Johan Hedberg <johan.hedberg@intel.com>,
+	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Luiz Augusto
+ von Dentz <luiz.dentz@gmail.com>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>, "sonnysasaka@chromium.org"
+	<sonnysasaka@chromium.org>
+Subject: Re: [PATCHv2] Bluetooth: quirk disabling LE Read Transmit Power
+Thread-Topic: [PATCHv2] Bluetooth: quirk disabling LE Read Transmit Power
+Thread-Index:
+ AQHX0vJ15A6zQVMGfEiNGmUN6kF0hKv3vuGAgA4gSACAAAxJAIAABrOAgAEuUwCAAEInAIAAIdSAgAAEmwCAADPsAIAAaCCAgAMCoIA=
+Date: Fri, 19 Nov 2021 16:59:32 +0000
+Message-ID: <40550C00-4EE5-480F-AFD4-A2ACA01F9DBB@live.com>
+References: <20211001083412.3078-1-redecorating@protonmail.com>
+ <YYePw07y2DzEPSBR@kroah.com>
+ <70a875d0-7162-d149-dbc1-c2f5e1a8e701@leemhuis.info>
+ <20211116090128.17546-1-redecorating@protonmail.com>
+ <e75bf933-9b93-89d2-d73f-f85af65093c8@leemhuis.info>
+ <3B8E16FA-97BF-40E5-9149-BBC3E2A245FE@live.com> <YZSuWHB6YCtGclLs@kroah.com>
+ <52DEDC31-EEB2-4F39-905F-D5E3F2BBD6C0@live.com>
+ <8919a36b-e485-500a-2722-529ffa0d2598@leemhuis.info>
+ <20211117124717.12352-1-redecorating@protonmail.com>
+ <F8D12EA8-4B37-4887-998E-DC0EBE60E730@holtmann.org>
+In-Reply-To: <F8D12EA8-4B37-4887-998E-DC0EBE60E730@holtmann.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn: [Dq6e8ab1WhxuAnggjNla7NOSUdljpyA3zCPAilLa/8ZcZHCG9wHjuO1S2v+HbGA5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bb3f7af7-d8d2-459f-330a-08d9ab7df56e
+x-ms-traffictypediagnostic: PN2PR01MB5256:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ F2VFo6sabM8eZcnNkec+2SuJ0Xxd6AyIu+qGDQCjrPev7doF5Sz7OZCMYD7V9V/eFGGymv7M74BpQ709Spj9Ct2tAVXBLDB5wYLDeNFzE1kgAUJYJEYUlmF8LK+P6eIYPgZ4lFAIWVmjrzvmGeD72MmSF9Sq9Rf73Dzou5kUajqUCaM60N+nTAOaJOwzOAIgkOWvXea+W3aL+qfBJyS5OLHMQ4ZdzkwYo0sqAOLcmIoTyBQzgD1yag4+sEAi83JK08n4l9PT9wvrUYriTOGm3T45ds4X7xSwTHtQdMxi7kcADSGMbfKcr8yqBRyXYxkeYbGBqjzovcx05ITH8K+9ldqbbC1Ig5e70DZH29qaYEsO4IJkxcXzd21WGztwF47fu7Rr7BWNeAAGXKpAjDpqafZdviail70W5HerfJxqLx8qkD6aK+Rj0yGIMh0n8WsNkgXr8fC4j2C1p5OLXgsI9wnwjEx1D0aJdDL2g6XxazwMTwLjC5cbCBiPV55vg8HL5PRyHb7PVfVnLebX2J2zTeR+mGprYud74hfiePhi5IBA2cpSto7ud3zd0I1bkl5e9rgIvpJAyLeEwhkWprg+eQ==
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ IICF0/hyHBwiYvHKd2HOnG9uGguQlcKAR2ZyLXQ1BRIw3P3lVTwLsqStUe8AEhfaFRuZ3srx6XJjTxHugNVN7cBhYmC47VUp2AD7fnHWslLdvHCQiPRSczmBtRjgCbvyNfly7W7ucmNtjo3Ja+trOjwnnvfPUZ4PSJXC4VVMgXffa+vbOeSW1HnDn4a69i2928lE3TP7GjCvmvY2ovXmGmKVUUCC+l5iQKGASaSIvZaKqlwkEJzorpWLJrpeFFpl4EDwNUj6VwjepbgTTuSgU6gEN67cHFHtWx5aQv9lJb5AsfHi5U8cYBu0Z5UAYMxO1YE4gVlBNCueygRTNf2ugmFDrFTyztL9IdT8iNkGBPFO4Q1qy0jJ2NWFQPW+wgjjfz0AJlguy4NR0N/tEHlvne0AXT37y5uvlFvsQbf6gz30YVkDUvxjgmGoMEqK3WZ4DkTEakmiDRiX20XsyFSuNJuap4laXHbmMnQM8chsR5aEkPmDZbTdtgRVrP4VMEN+Aqt8ZHcCYOdfio53cV5pRw1zGnqjW7je23QvPneHYsglx7UQDETDCYSpRpKV24I9GztUPwS3/6zUk6iB7cBGK+iy+RCBW2fD0fHvXe57vVCOx/bT6cZWBUptu2aPEZbVL1LIlUmfgjpfvZkO2jl2Ye4lVWeZgfVW2zhpuqANf6Ag6MJqxApwiURHg7DOqWvOC1GUvO8nfWqKkomWjGNEwqPCn1mPVMM3dXQBR0BPMuXWGjE+WD+fqPVTgjIO7/eaQcZzarFwJL5JVSDmz7Q69Q==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E0631C0AB96C4D4BB50251C598AB6F99@INDPRD01.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: sct-15-20-3174-20-msonline-outlook-a1a1a.templateTenant
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb3f7af7-d8d2-459f-330a-08d9ab7df56e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Nov 2021 16:59:32.5073
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2PR01MB5256
 
-Thorsten Leemhuis <regressions@leemhuis.info> writes:
 
-> Hi, this is your Linux kernel regression tracker speaking. Thx for this f=
-ix.
->
-> On 11.11.21 15:10, Stanislaw Gruszka wrote:
->> As reported by Exuvo is possible that we have lot's of EPROTO errors
->> during device start i.e. firmware load. But after that device works
->> correctly. Hence marking device gone by few EPROTO errors done by
->> commit e383c70474db ("rt2x00: check number of EPROTO errors") caused
->> regression - Exuvo device stop working after kernel update. To fix
->> disable the check during device start.
+
+> On 18-Nov-2021, at 12:31 AM, Marcel Holtmann <marcel@holtmann.org> wrote:
+>=20
+> Hi Orlando,
+>=20
+>>> So if this just affects two macs, why can't the fix be realized as a
+>>> quirk that is only enabled on those two systems? Or are they impossible
+>>> to detect clearly via DMI data or something like that?
 >>=20
->> Reported-and-tested-by: Exuvo <exuvo@exuvo.se>
->
-> FWIW: In case you need to send an improved patch, could you
-> please add this before the 'Reported-by:' (see at (=C2=B9) below for the
-> reasoning):
->
-> Link:
-> https://lore.kernel.org/linux-wireless/bff7d309-a816-6a75-51b6-5928ef4f7a=
-8c@exuvo.se/
->
-> And if the patch is already good to go: could the subsystem maintainer
-> please add it when applying?
+>> I think we should be able to quirk based off the acpi _CID "apple-uart-b=
+lth"
+>> or _HID "BCM2E7C". Marcel suggested quirking based of the acpi table her=
+e
+>> https://lore.kernel.org/linux-bluetooth/1D2217A9-EA73-4D93-8D0B-5BC2718D=
+4788@holtmann.org/
+>>=20
+>> This would catch some unaffected Macs, but they don't support the LE Rea=
+d
+>> Transmit Power command anyway (the affected macs were released after it
+>> was added to the Bluetooth spec, while the unaffected Macs were released
+>> before it was added to the spec, and thus don't support it).
+>>=20
+>> I'm not sure how to go about applying a quirk based off this, there are
+>> quirks in drivers/bluetooth/hci_bcm.c (no_early_set_baudrate and
+>> drive_rts_on_open), but they don't seem to be based off acpi ids.
+>>=20
+>> It might be simpler to make it ignore the Unknown Command error, like
+>> in this patch https://lore.kernel.org/linux-bluetooth/CABBYNZLjSfcG_KqTE=
+bL6NOSvHhA5-b1t_S=3D3FQP4=3DGwW21kuzg@mail.gmail.com/
+>> however that only applies on bluetooth-next and needed the status it
+>> checks for to be -56, not 0x01.
+>=20
+> so we abstain from try-and-error sending of commands. The Bluetooth spec
+> has a list of supported commands that a host can query for a reason. This
+> is really broken behavior of the controller and needs to be pointed out a=
+s
+> such.
+Well all I can do is provide you any logs or information I can. But we do r=
+eally wish to get this regression fixed soon.
+>=20
+> The question is just how we quirk it.
+>=20
+> Regards
+>=20
+> Marcel
+>=20
 
-Sure, I'll add it during commit.
-
->> Fixes: e383c70474db ("rt2x00: check number of EPROTO errors")
->
-> What's the plan to getting this merged?
-
-My plan is to commit this to wireless-drivers tree, the tree was just
-closed due to the merge window.
-
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
