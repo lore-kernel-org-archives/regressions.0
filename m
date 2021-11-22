@@ -1,96 +1,114 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333082C83
-	for <regressions@lists.linux.dev>; Sun, 21 Nov 2021 13:52:02 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1monGC-0005ft-7s; Sun, 21 Nov 2021 14:52:00 +0100
-Message-ID: <6cc591c5-ed71-3213-3119-c778b3b2823d@leemhuis.info>
-Date: Sun, 21 Nov 2021 14:51:59 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981232C86
+	for <regressions@lists.linux.dev>; Mon, 22 Nov 2021 06:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1637563611;
+	bh=C6LIvmc696yIdTukGLDaZor0Z2/Ukm396tIyvEaAsfg=;
+	h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=jQ6REg+4I80JoLJkgSalT8ad+oxxJOnJ9MhDAlubCdfTZszkes+5xAqeLS8FdSddg
+	 HVnBspflDfhap7v9WuZdCN0wqrU7iimJknBB3QO0plw+iu28tdgz2TszulO11xKiVL
+	 1eVfvrG0ZW5S6xoWMoLQgW8aIJj3NCwN+bzNITjM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from homer.fritz.box ([185.191.216.218]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1M5QJJ-1mps342f1p-001UnP; Mon, 22
+ Nov 2021 07:46:51 +0100
+Message-ID: <723736b7736da3810cab582dee4591fec063618b.camel@gmx.de>
+Subject: Re: mm: LTP/memcg testcase regression induced by
+ 8cd7c588decf..66ce520bb7c2 series
+From: Mike Galbraith <efault@gmx.de>
+To: Thorsten Leemhuis <regressions@leemhuis.info>, lkml
+	 <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
+	 <regressions@lists.linux.dev>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Date: Mon, 22 Nov 2021 07:46:50 +0100
+In-Reply-To: <6cc591c5-ed71-3213-3119-c778b3b2823d@leemhuis.info>
+References: <99e779783d6c7fce96448a3402061b9dc1b3b602.camel@gmx.de>
+	 <6cc591c5-ed71-3213-3119-c778b3b2823d@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: mm: LTP/memcg testcase regression induced by
- 8cd7c588decf..66ce520bb7c2 series
-Content-Language: en-BS
-To: Mike Galbraith <efault@gmx.de>, lkml <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-References: <99e779783d6c7fce96448a3402061b9dc1b3b602.camel@gmx.de>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <99e779783d6c7fce96448a3402061b9dc1b3b602.camel@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1637502722;3cb9c3f7;
-X-HE-SMSGID: 1monGC-0005ft-7s
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:LgTFEfLTW34s5E/9UQnKKGKkWuiSMJxzqz8SKD8VEZDVKkCDi4g
+ giQQ+qjOZYM2SvbO9ZDmjIj3PA+Glbxac8eX2hdb/6v1NC1PoFRfff1YTiA4KEXrkA6joF5
+ 30yxpDb9JwSLOAvAwCgRUPAZpXj1eWr2iGQjdyiHf3n8GRQt+HkkVVj/3COHse7hbjJALXl
+ DxUkvtO8Jfp79WnFxAIjg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ASGXN+dd1OM=:U4165REqhXYapPxWlx18uT
+ 6QD3/3cUI+H8t9MA6x3azns+7tgsRKY6hygGkt8C1A2P4+7pN5FCcTYuMbyvhFezg8wTXnKoR
+ bgJrp5SSAnJciotzqZOxD8bhuGokHRbWBpYdQEiGkyRbkr91ZDwHHDPwtS27oah6aicjYmekZ
+ 0fR/dvqC4iCflDB+CD4poLeEHUusplVCuMmO763JNSpsDfkWEPmgO77+rrbbfwyB4vC/6BdyZ
+ IFqYtHYbpf/bcWQbtqiJ+M4IHVCvSfOD0FyQB/BbGXhhyOWCCzPaEI9mTHwO485WMdsDe4ihE
+ MweE2MC2356mqi7YCWr3zFKE9rzKfLlhEqBD5sfTQgevU5Y58wohsFvQPW0GmTXp9gdHc6mo4
+ YWbE7O/2oiy4Uu1yJTxRkQI1yEhB8IK0S2cSJhVEyW758FivyoraPXSkGYmu1L6QeC1y8Hcxf
+ AFVM1UzdP4jp0dPX+/6/OIe7yrabliVz/4sBKJHOJkrj0hjNO7VHeESOUSMdnr55wpz9tkY1e
+ dzX8ES4Mwq1fUxU9iRB2+LFKSQWfTd+sszsPIdEZL4tTXt1zbQ6RNrU1fqbvOCs68aQkFv0eA
+ 64TaRGyK9DNmioYVVYDgqFfNLhnADaU4XaA7ywksbRLGDEZjVf91nmfpfmAvzmN7mcHPiHGZo
+ /NRdyADLa+Ta0r74VWKCDhSp0wFExl23+vsfpeOIwegPfbGH0uK3iWKTqZ0GVqdY/VMvO7XgU
+ eWTSXU8iR+aBDdaj1saNj/1mXfaNFKsO2BKYMd2q10kEVdVxHrnKFifKthYwwSk3kHY5kuhHw
+ /zqcjCikb4/Q+BiKyyBpOaspZKRgaV8dUXYZp1KQxjSsobxs0SuRGuEyliMM1E1Mvjw0YVk4K
+ 9bNKiVmhTolaUY5f2tx/hZn23d8QpsQE/7bLM/7RpKsPW3c7xRGxNVqlyJu2AdVvS8i0SIChQ
+ IToq03dWWWdj4Nmjn/U7HB/fi7TJFoa0i1RJXhvSnSWrJme3adL//naIyiCqi20ucy4XsKJDe
+ /ppMFu6AjBaTbvhObG8vVrMQIauCZL2/D4oirrs23D1gPHdq1nH7QaAo/mSTkxH6zIU3Bt/T0
+ kp6NnGcTZwXL+E=
+
+On Sun, 2021-11-21 at 14:51 +0100, Thorsten Leemhuis wrote:
+>
+> Hi, this is your Linux kernel regression tracker speaking.
+
+This isn't necessarily a kernel regression, though the fact that
+bystander tasks like ps can get snagged for ages as the testcase runs
+at an amazingly glacial pace doesn't look particularly wonderful.
+
+homer:/root # time ps lax
+...
+real    11m33.258s
+user    0m0.004s
+sys     0m0.008s
+homer:/root #
+
+The other memcg tests complete fine, though taking more time to do so.
+Running all tests except memcg_regression, (and  memcg_stress because
+it's a 30 minute swap storm from hell as delivered), runtime increased
+from 0m37s to 4m43s.
+
+The problematic testcase is root intentionally shooting its own foot,
+then checking for battle damage that occurred in days of yore, so it
+now hurting in a different way isn't necessarily grounds to gripe at
+the kernel.. even with the rather ugly side effects.. maybe <shrug>.
+
+#-------------------------------------------------------------------------=
+--
+# Bug:    The bug was, while forking mass processes, trigger memcgroup OOM=
+,
+#         then NULL pointer dereference may be hit.
+# Kernel: 2.6.25-rcX
+# Links:  http://lkml.org/lkml/2008/4/14/38
+# Fix:    commit e115f2d89253490fb2dbf304b627f8d908df26f1
+#-------------------------------------------------------------------------=
+--
+test_1()
+{
+        mkdir memcg/0/
+        echo 0 > memcg/0/memory.limit_in_bytes
+
+        ./memcg_test_1
+
+        rmdir memcg/0/
+
+        check_kernel_bug
+        if [ $? -eq 1 ]; then
+                tst_resm TPASS "no kernel bug was found"
+        fi
+}
 
 
-Hi, this is your Linux kernel regression tracker speaking.
+I'm gonna just comment the little bugger out as obsolete and walk away.
 
-CCing regression mailing list, which should be in the loop for all
-regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-
-On 21.11.21 11:57, Mike Galbraith wrote:
-> Greetings,
-> 
-> FYI, something in this series causes LTP controllers::memcg_regression
-> testcase to hang forever.  Verified via brute force revert of the lot.
-> 
-> After letting box moan for 4.5 hours, I poked ^C repeatedly, but runltp
-> didn't exit/recover gracefully, and ps hung, so I nuked the box.  All
-> memcg_test_1 instances were stuck in reclaim_throttle().
-> [...]
-
-TWIMC: To be sure this issue doesn't fall through the cracks unnoticed,
-I'm adding it to regzbot, my Linux kernel regression tracking bot:
-
-#regzbot ^introduced 8cd7c588decf..66ce520bb7c2
-#regzbot ignore-activity
-
-Ciao, Thorsten, your Linux kernel regression tracker.
-
-P.S.: If you want to know more about regzbot, check out its
-web-interface, the getting start guide, and/or the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for the reporter: when reporting a regression it's in your interest
-to tell #regzbot about it in the report, as that will ensure the
-regression gets on the radar of regzbot and the regression tracker.
-That's in your interest, as they will make sure the report won't fall
-through the cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot, just
-fix the issue as you normally would. Just remember to include a 'Link:'
-tag to the report in the commit message, as explained in
-Documentation/process/submitting-patches.rst
-That aspect was recently was made more explicit in commit 1f57bd42b77c:
-https://git.kernel.org/linus/1f57bd42b77c
-
-
-P.P.S.: As a Linux kernel regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them.
-Unfortunately therefore I sometimes will get things wrong or miss
-something important. I hope that's not the case here; if you think it
-is, don't hesitate to tell me about it in a public reply. That's in
-everyone's interest, as what I wrote above might be misleading to
-everyone reading this; any suggestion I gave they thus might sent
-someone reading this down the wrong rabbit hole, which none of us wants.
-
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activity wrt to this regression.
+	-Mike
