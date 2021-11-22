@@ -1,81 +1,98 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3ADD2C86
-	for <regressions@lists.linux.dev>; Mon, 22 Nov 2021 07:41:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1637566869;
-	bh=dTmZMthKahVkE+y6Z29DpA/hG4mF7c7sYvRewTqOYIs=;
-	h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=efvzeR1j08+ZaiGUCEP0oI1H8s3eh0sajASbFxczLk+8bq7JrIsO3ELw1NsLyKkNi
-	 1jqnlJJOvZ9pZjR25VgQv0R8zG553pvprEDzYIyx4OFIqLKzOq4MTl6D/r8kdlWG2L
-	 8aQ0N7xmxLgua9KkOeJRt5/urZM1y7O6HU4nPU68=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from homer.fritz.box ([185.191.216.218]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M2f5T-1mn8PL4A07-004CX5; Mon, 22
- Nov 2021 08:41:09 +0100
-Message-ID: <813ba08684c710a4c3d82d7f894c37838a8cec5a.camel@gmx.de>
-Subject: Re: mm: LTP/memcg testcase regression induced by
- 8cd7c588decf..66ce520bb7c2 series
-From: Mike Galbraith <efault@gmx.de>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, lkml
-	 <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev"
-	 <regressions@lists.linux.dev>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Date: Mon, 22 Nov 2021 08:41:08 +0100
-In-Reply-To: <723736b7736da3810cab582dee4591fec063618b.camel@gmx.de>
-References: <99e779783d6c7fce96448a3402061b9dc1b3b602.camel@gmx.de>
-	 <6cc591c5-ed71-3213-3119-c778b3b2823d@leemhuis.info>
-	 <723736b7736da3810cab582dee4591fec063618b.camel@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2FB2C81
+	for <regressions@lists.linux.dev>; Mon, 22 Nov 2021 19:02:21 +0000 (UTC)
+Received: (wp-smtpd smtp.wp.pl 25075 invoked from network); 22 Nov 2021 19:55:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1637607338; bh=/aiVtgsJvQemMMgznBzEJcslTpOzV+/MTlG713p8LlM=;
+          h=From:To:Cc:Subject;
+          b=NsbReASeJX5R49dEDoB5tanS0nFYy27Cv9UKMSGpymsgX2EzLDZeBws60BSuu8I4T
+           uIIfk7fmNAxvKRTq/B6nlYA/LwKMHC+nxLSow8aAfBKz7txKzkpTB3CTAga2mv1bTR
+           ulZUZaMxw0yLFciF9SROlhgq0hqYCegLZOlYPGQg=
+Received: from 89-74-82-70.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.74.82.70])
+          (envelope-sender <stf_xl@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <regressions@leemhuis.info>; 22 Nov 2021 19:55:38 +0100
+Date: Mon, 22 Nov 2021 19:55:37 +0100
+From: Stanislaw Gruszka <stf_xl@wp.pl>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Robert W <rwbugreport@lost-in-the-void.net>,
+	Helmut Schaa <helmut.schaa@googlemail.com>,
+	linux-wireless@vger.kernel.org,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: Bug/Regression - Ralink RT2800 kernel deference issue since
+ kernel 5.14
+Message-ID: <20211122185515.GA289958@wp.pl>
+References: <c07b4142fb725ed87a2cef530bae9ee7@lost-in-the-void.net>
+ <60b9dbe3-852b-9e63-2857-0264d7093930@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-X-Provags-ID: V03:K1:OKSFMELpZPFlviVMukTZ5Pu6u1os7E4Tx89OkEPfe3zKRK0cS98
- 3FsqSGqZYkkCpqUS9mxZ4QNEzFqLZ93RjrUquiCf08XDDfcmAV4p6/AWzRDCuEgYp7/O8Ft
- sZ2iW0gB0abxNomvwEKkbrLWvgLupgGxBK8DhiboFVXOjbcRjqBdTVKL3tSF5cRXLlNk0p3
- drKbs+ZjNZOr3wEj+83Yw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tDAjn74Zc38=:ON2ZZe9o7u6RhvU2lzGgpW
- gbWLEzgZVgfJJnjMnq1SB3icpR2AAIuoW8D4U1bCnsbq6Rn6gruh9Q2wCXR6PDAZPa1oa4zCC
- tAOZdOj/4FW7fE7oR2BwF0hl18q6HGoTIUfkQ24H4LryiEo3NpkiDcgnt417UMlGTC/80jqFS
- u/SCjJgOXyR7a0UMdl/7SV+J2v8dOKLuzEFRj2bXeq518crTO16GBwB3l2tpkStyWqGqZyScd
- c5IyviLBtjYhFh97Oe2biiLRflmA5HVJW0mqQBP/H5Ew/LFI0nm4WvcXyF3kt/XPSP8sCe9Pd
- Cmys88szD4DNovPsTTeLHkFYtDYlwjXRXJ0O4rGI2tIS4xXQ2y0r77eAlWHDWdn35aZGHLCGa
- JN1Ul0WG/juMsDfKuQIRQPRS9TJ5kPPfzPIGQbo0z0Y7t4+RJRkxUUdmZYff2tIqmk8OSCDv2
- G8Bph5if2AV+3oWWTlXNr7aoybrLseh1SQ26NGk57sMTZjF+GKO5veI4424UGEusFKZX8Vl/U
- YX0Wfh6lUHdO/cM80ukOKXgXOvRARKy8sn6odAxVxF+KXXE1KnAkKa0lVAtItqkf273Xz91Dj
- /d1psWWsUTwxnRKFL01dhBdxqqnzI81021Tu1q97FFaFvWUDYaCZVNWiwWfFi4YjLek0Iv5BG
- EZGkE6JkpWth7YsM/yupFB3VJQumnSTShGd5g9Ay7thTLLQlLZ8iq6MqHZye7o0/5X0IBACq/
- rftXMb2hb32ItATbYvRzXDdI/Yv+Y+RklERPMw2tDmXBmVwXmrGS5ZLuGFZl3Mt2XAVp/UX2J
- 64ACFs4QDqG2eqvEMmtsqCuNV+xABMRuFXPW1jqmeSZ1ixEUxVU5QuLvNN/oRUeK3x94m2cJD
- zYBbDVI3QvlItd74tScq2jMbsJxOJnnXp+/VMNr8Yv0q8UdOnGMIgVsxdYuOREH3jHjP7cMHU
- 0Wl1wd2pEKqwYLlFE02mXRE0L2T+tD16NhspL/Op8rsp396mzfddmQ8Jjml3TUIDwVuYNxxcs
- yyDeWjWBZrOY+S60kIhm0VJUFaRaFNswNb2GEkYF3i6T8KMWHMVu+gokWD8wco7LW6titKOnZ
- 0Az12a0rU36RC8=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <60b9dbe3-852b-9e63-2857-0264d7093930@leemhuis.info>
+X-WP-MailID: a664ab15c8886e3e672fadde8f9c2a9a
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000001 [kXIW]                               
 
-T24gTW9uLCAyMDIxLTExLTIyIGF0IDA3OjQ2ICswMTAwLCBNaWtlIEdhbGJyYWl0aCB3cm90ZToN
-Cj4gDQo+ICMtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtLS0tLS0tDQo+ICMgQnVnOsKgwqDCoCBUaGUgYnVnIHdh
-cywgd2hpbGUgZm9ya2luZyBtYXNzIHByb2Nlc3NlcywgdHJpZ2dlcg0KPiBtZW1jZ3JvdXAgT09N
-LA0KPiAjwqDCoMKgwqDCoMKgwqDCoCB0aGVuIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSBtYXkg
-YmUgaGl0Lg0KPiAjIEtlcm5lbDogMi42LjI1LXJjWA0KPiAjIExpbmtzOsKgIGh0dHA6Ly9sa21s
-Lm9yZy9sa21sLzIwMDgvNC8xNC8zOA0KPiAjIEZpeDrCoMKgwqAgY29tbWl0IGUxMTVmMmQ4OTI1
-MzQ5MGZiMmRiZjMwNGI2MjdmOGQ5MDhkZjI2ZjENCj4gIy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IC0tLS0tLS0N
-Cj4gdGVzdF8xKCkNCj4ge8KgwqDCoMKgwqDCoCANCj4gwqDCoMKgwqDCoMKgwqAgbWtkaXIgbWVt
-Y2cvMC8NCj4gwqDCoMKgwqDCoMKgwqAgZWNobyAwID4gbWVtY2cvMC9tZW1vcnkubGltaXRfaW5f
-Ynl0ZXMNCj4gwqDCoMKgwqDCoMKgwqAgDQo+IMKgwqDCoMKgwqDCoMKgIC4vbWVtY2dfdGVzdF8x
-DQo+IMKgwqDCoMKgwqDCoMKgIA0KPiDCoMKgwqDCoMKgwqDCoCBybWRpciBtZW1jZy8wLw0KPiDC
-oMKgwqDCoMKgwqDCoCANCj4gwqDCoMKgwqDCoMKgwqAgY2hlY2tfa2VybmVsX2J1ZyANCj4gwqDC
-oMKgwqDCoMKgwqAgaWYgWyAkPyAtZXEgMSBdOyB0aGVuDQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCB0c3RfcmVzbSBUUEFTUyAibm8ga2VybmVsIGJ1ZyB3YXMgZm91bmQiDQo+IMKg
-wqDCoMKgwqDCoMKgIGZpDQo+IH0NCj4gDQo+IA0KPiBJJ20gZ29ubmEganVzdCBjb21tZW50IHRo
-ZSBsaXR0bGUgYnVnZ2VyIG91dCBhcyBvYnNvbGV0ZSBhbmQgd2Fsaw0KPiBhd2F5Lg0KDQp0ZXN0
-MigpIGFuZCB0ZXN0MygpIHRoZW4gcGFzcywgYnV0IHRlc3RfNCgpIGhhbmdzLCBhbmQgbG9va3Mg
-bGlrZSBpdA0Kc2hvdWxkIG5vdCwgc28uLi4NCg0KCS1NaWtlDQo=
+On Sun, Nov 21, 2021 at 02:38:02PM +0100, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> CCing regression mailing list, which should be in the loop for all
+> regressions, as explained here:
+> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+> 
+> Also adding Helmut and Stanislaw (or just a different of his
+> addresses?), as afaics nothing happened since the report.
+
+FYI: stf_xl@wp.pl is the only valid public e-mail address currently
+used by me.
+
+> On 12.11.21 22:21, Robert W wrote:
+> > 
+> > I have recently tried to upgrade a system to run the 5.14 kernel and
+> > noticed that I was getting hangs on the system which seem to relate to
+> > this wireless dongle which I am running hostapd against to provide a
+> > small AP. Since that time kernel 5.15 was released and I have tested
+> > that kernel as well and the problem persists.  The issue sometimes
+> > occurs within an hour and other times it takes a few hours. I have tried
+> > to narrow down what is causing the issue.  I thought it might be a
+> > change elsewhere outside the mac80211/driver area so I tried to run the
+> > wireless backports 5.15-rc6 on top of the last stable kernel of 5.13 so
+> > as to have the smallest number of changes on the system. The backports
+> > crashes with the same error.  I have included below the netconsole
+> > output and the gdb of the kernel module in question. The capture was
+> > from when I was using the backports, but the error  is the same.  I hope
+> > the pastebins are okay to use on the list.  I did try to get some
+> > assistance on linux-wireless IRC and some one asked for the outputs I
+> > had for the information so I am reusing them here.
+> > 
+> > The following pastebin is the data sent to a netconsole instance.
+> > 
+> > https://pastebin.com/UxRrTtUh
+<snip>
+> > (gdb) list *(rt2x00queue_create_tx_descriptor+0x176)
+> > 0x37e6 is in rt2x00queue_create_tx_descriptor (/home/robert/backport/backports-5.15-rc6-1/drivers/net/wireless/ralink/rt2x00/rt2x00queue.c:324).
+> > 319                      */
+> > 320                     if (sta && txdesc->u.ht.mcs > 7 &&
+> > 321                         sta->smps_mode == IEEE80211_SMPS_DYNAMIC)
+> > 322                             __set_bit(ENTRY_TXD_HT_MIMO_PS, &txdesc->flags);
+> > 323             } else {
+> > 324                     txdesc->u.ht.mcs = rt2x00_get_rate_mcs(hwrate->mcs);
+> > 325                     if (txrate->flags & IEEE80211_TX_RC_USE_SHORT_PREAMBLE)
+> > 326                             txdesc->u.ht.mcs |= 0x08;
+> > 327             }
+> > 328
+
+Looking at the mailing list archives, seems Felix already provided
+patch for this. Hopefully patch fixes the problem. However if changes
+in the rt2x00 drivers are needed further, I can look at this.
+
+Regards
+Stanislaw
+
