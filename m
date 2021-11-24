@@ -1,98 +1,143 @@
-Received: from mx3.wp.pl (mx3.wp.pl [212.77.101.10])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2FB2C81
-	for <regressions@lists.linux.dev>; Mon, 22 Nov 2021 19:02:21 +0000 (UTC)
-Received: (wp-smtpd smtp.wp.pl 25075 invoked from network); 22 Nov 2021 19:55:38 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1637607338; bh=/aiVtgsJvQemMMgznBzEJcslTpOzV+/MTlG713p8LlM=;
-          h=From:To:Cc:Subject;
-          b=NsbReASeJX5R49dEDoB5tanS0nFYy27Cv9UKMSGpymsgX2EzLDZeBws60BSuu8I4T
-           uIIfk7fmNAxvKRTq/B6nlYA/LwKMHC+nxLSow8aAfBKz7txKzkpTB3CTAga2mv1bTR
-           ulZUZaMxw0yLFciF9SROlhgq0hqYCegLZOlYPGQg=
-Received: from 89-74-82-70.dynamic.chello.pl (HELO localhost) (stf_xl@wp.pl@[89.74.82.70])
-          (envelope-sender <stf_xl@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <regressions@leemhuis.info>; 22 Nov 2021 19:55:38 +0100
-Date: Mon, 22 Nov 2021 19:55:37 +0100
-From: Stanislaw Gruszka <stf_xl@wp.pl>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Robert W <rwbugreport@lost-in-the-void.net>,
-	Helmut Schaa <helmut.schaa@googlemail.com>,
-	linux-wireless@vger.kernel.org,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: Bug/Regression - Ralink RT2800 kernel deference issue since
- kernel 5.14
-Message-ID: <20211122185515.GA289958@wp.pl>
-References: <c07b4142fb725ed87a2cef530bae9ee7@lost-in-the-void.net>
- <60b9dbe3-852b-9e63-2857-0264d7093930@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD9D2C81
+	for <regressions@lists.linux.dev>; Wed, 24 Nov 2021 07:28:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1637738920;
+	bh=IMUp4Ztgn3b+6L4MDjD7KSSA5ldvAI9KNoDlsmCRQuY=;
+	h=X-UI-Sender-Class:Subject:From:To:Cc:Date;
+	b=VMsKqHx3Iqow+NYGUL3sFwKmqEYrl5EdIYKJ9TE6iLWyaAFSYpDWi5SwrYTRig5Bn
+	 FhKeVrkbMWdCESMskie2dyCeMMrETjseL/cwn2XQPKaiFuLrmtEKh2tpxv910H2L3e
+	 RLfQoflSl79uoRUjxAirJu++rH8aCMvDRyzhmGmM=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from machineone ([84.190.131.218]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MrhUK-1mJjff3rzo-00nlp6; Wed, 24
+ Nov 2021 08:28:39 +0100
+Message-ID: <924175a188159f4e03bd69908a91e606b574139b.camel@gmx.de>
+Subject: [REGRESSION] Kernel 5.15 reboots / freezes upon ifup/ifdown
+From: Stefan Dietrich <roots@gmx.de>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+Date: Wed, 24 Nov 2021 08:28:39 +0100
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <60b9dbe3-852b-9e63-2857-0264d7093930@leemhuis.info>
-X-WP-MailID: a664ab15c8886e3e672fadde8f9c2a9a
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000001 [kXIW]                               
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:h/1nXgH+kMZMSQs2ptkxS15s5grYstyOohZUefaC+dPvCLM02SE
+ zA6X/Y6MRru9ExGG7uI97zJ1wMtR0NL33a0fAY6mZkMpmwzJtKDUk7eKC/dBc7Hjrf/oirX
+ jBL7ImIJSX37a+wABC5UtYshKnZIvDCuzzsEeCIV+VF8mmgeAEnR792EBHMV0KW2NVtdcD9
+ rvJGaUkjfHDOUxp1dP2zg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:9wyMni8/+3M=:Xv6VeU2vp78HC8IKLd7sSp
+ u9W9rxP0ZVztbu/R48Kf3CEU0lG56VYxEheGp3f1Lj+5+YC87pmwJspunOG4YVrcSPjcJm7A5
+ GZ9JNCD3k9Vh/lGzVC/9Om/J2R8rZgEsqluG8xuvpkx8etaOPd7qcE/vD2q1QHK6TcrBIDvGS
+ dr0VVSTbMNxdAJW7VB8KP5jNPg9I012KQe0ubYqgjvVguf2p0YdIHBQlAu9p6i+wmD3JLJnV7
+ bY0HS6sqdDkljFsHz85mGQAKNMNKzGa+Agf3G9dU8q3xwwaYepSo8jcitB4nchpMM8dkFoIPp
+ y9e5t8840vlt/82Hv69+QZ/5cVSNn/kFU5Ezg1Pl2+dwmurMVHFUjNFWg/9sgDcrM0sAuSZOR
+ TT/Ak+IrHU9/CjEni2C+4zZMcW1tn48zOBZ4eE3tKKjLbU60TGlqw1H092FLLcWASwl244drP
+ plTkhP5fyHAyiu41t5JQGebJUtyd9B0n+i/mSOUqyyF6mDaiDvP0EUKtIP6LXWj8KmgJuZfvn
+ TM/gz76oevQymw90wm3fcK88fS6lqHvwSk8PRDXsI6LjAWRCaPQHEfqwULVgHgin2fEfD1Bjq
+ d6E2y7krAvXp0+ziB0yGLvyN3dfUHviQaK77ryjd5M70uxq5QYxVNRJfEqiVFEuztxg9Ta4fu
+ vUkC5mnVcBqu2Xs9gEj8vnx+o/vSz4AXfXMbEA3xxaCcZ0dLfF13WM7FIIp2cBcOiTWiTg8Yz
+ 13DmL3dYzKLZYJqVODEUN2g3cWlQxKc7ItD/onBMD2fGRYes3YroLzMB2IH7PRh4wUgX2HxF4
+ j4afc75kEqLuJvFioIRRi4PCYTcEOsnRwEAXznr/b7MaEUV9wTfSZGYdDlmTsNk3T/rYHyPvv
+ AcqQGQPyjdi+SRtYrLbhbNX4kKZq4nEt5CwGHY+5DkKhqFC1lzHloxrguLgGEmV9qrLJWrSVk
+ V9yl73+DHC1N6Gw8+whB/46KucVyiAXyjAeWdWxmsUZaeLKCwQhHDh96uhEb2CkmtnKw0Rv3T
+ /mLYbiflpEqr3cIi8qEI0M3ZNjzTT4/puvJNGfmo9h9Hpi4lLhPRW40wU2zYhGB0Tw==
 
-On Sun, Nov 21, 2021 at 02:38:02PM +0100, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker speaking.
-> 
-> CCing regression mailing list, which should be in the loop for all
-> regressions, as explained here:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-> 
-> Also adding Helmut and Stanislaw (or just a different of his
-> addresses?), as afaics nothing happened since the report.
+Summary: When attempting to rise or shut down a NIC manually or via
+network-manager under 5.15, the machine reboots or freezes.
 
-FYI: stf_xl@wp.pl is the only valid public e-mail address currently
-used by me.
+Occurs with: 5.15.4-051504-generic and earlier 5.15 mainline (
+https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.4/) as well as
+liquorix flavours.
+Does not occur with: 5.14 and 5.13 (both with various flavours)
 
-> On 12.11.21 22:21, Robert W wrote:
-> > 
-> > I have recently tried to upgrade a system to run the 5.14 kernel and
-> > noticed that I was getting hangs on the system which seem to relate to
-> > this wireless dongle which I am running hostapd against to provide a
-> > small AP. Since that time kernel 5.15 was released and I have tested
-> > that kernel as well and the problem persists.  The issue sometimes
-> > occurs within an hour and other times it takes a few hours. I have tried
-> > to narrow down what is causing the issue.  I thought it might be a
-> > change elsewhere outside the mac80211/driver area so I tried to run the
-> > wireless backports 5.15-rc6 on top of the last stable kernel of 5.13 so
-> > as to have the smallest number of changes on the system. The backports
-> > crashes with the same error.  I have included below the netconsole
-> > output and the gdb of the kernel module in question. The capture was
-> > from when I was using the backports, but the error  is the same.  I hope
-> > the pastebins are okay to use on the list.  I did try to get some
-> > assistance on linux-wireless IRC and some one asked for the outputs I
-> > had for the information so I am reusing them here.
-> > 
-> > The following pastebin is the data sent to a netconsole instance.
-> > 
-> > https://pastebin.com/UxRrTtUh
-<snip>
-> > (gdb) list *(rt2x00queue_create_tx_descriptor+0x176)
-> > 0x37e6 is in rt2x00queue_create_tx_descriptor (/home/robert/backport/backports-5.15-rc6-1/drivers/net/wireless/ralink/rt2x00/rt2x00queue.c:324).
-> > 319                      */
-> > 320                     if (sta && txdesc->u.ht.mcs > 7 &&
-> > 321                         sta->smps_mode == IEEE80211_SMPS_DYNAMIC)
-> > 322                             __set_bit(ENTRY_TXD_HT_MIMO_PS, &txdesc->flags);
-> > 323             } else {
-> > 324                     txdesc->u.ht.mcs = rt2x00_get_rate_mcs(hwrate->mcs);
-> > 325                     if (txrate->flags & IEEE80211_TX_RC_USE_SHORT_PREAMBLE)
-> > 326                             txdesc->u.ht.mcs |= 0x08;
-> > 327             }
-> > 328
 
-Looking at the mailing list archives, seems Felix already provided
-patch for this. Hopefully patch fixes the problem. However if changes
-in the rt2x00 drivers are needed further, I can look at this.
+Hi all,
 
-Regards
-Stanislaw
+I'm experiencing a severe bug that causes the machine to reboot or
+freeze when trying to login and/or rise/shutdown a NIC. Here's a brief
+description of scenarios I've tested:
+
+Scenario 1: enp6s0 managed manually using /etc/networking/interfaces,
+DHCP
+a. Issuing ifdown enp6s0 in terminal will throw
+	"/etc/resolvconf/update.d/libc: Warning: /etc/resolv.conf is
+	not a symbolic link to /run/resolvconf/resolv.conf"
+and cause the machine to reboot after ~10s of showing a blinking cursor
+
+b. Issuing shutdown -h now or trying to shutdown/reboot machine via
+GUI:
+shutdown will stop on "stop job is running for ifdown enp6s0" and after
+approx. 10..15s the countdown freezes. Repeated ALT-SysReq-REISUB does
+not reboot the machine, a hard reset is required.
+
+=2D-
+
+Scenario 2: enp6s0 managed manually using /etc/networking/interfaces,
+STATIC
+a. Issuing ifdown enp6s0 in terminal will throw
+	"send_packet: Operation not permitted
+	dhclient.c:3010: Failed to send 300 byte long packet over
+	fallback interface."
+and cause the machine to reboot after ~10s of blinking cursor.
+
+b. Issuing shutdown -h now or trying to shutdown or reboot machine via
+GUI: shutdown will stop on "stop job is running for ifdown enp6s0" and
+after approx. 10..15s the countdown freezes. Repeated ALT-SysReq-REISUB
+does not reboot the machine, a hard reset is required.
+
+=2D-
+
+Scenario 3: enp6s0 managed by network manager
+a. After booting and logging in either via GUI or TTY, the display will
+stay blank and only show a blinking cursor and then freeze after
+5..10s. ALT-SysReq-REISUB does not reboot the machine, a hard reset is
+required.
+
+=2D-
+
+Here's a snippet from the journal for Scenario 1a:
+
+Nov 21 10:39:25 computer sudo[5606]:    user : TTY=3Dpts/0 ;
+PWD=3D/home/user ; USER=3Droot ; COMMAND=3D/usr/sbin/ifdown enp6s0
+Nov 21 10:39:25 computer sudo[5606]: pam_unix(sudo:session): session
+opened for user root by (uid=3D0)
+=2D- Reboot --
+Nov 21 10:40:14 computer systemd-journald[478]: Journal started
+
+=2D-
+
+I'm running Alder Lake i9 12900K but I have E-cores disabled in BIOS.
+Here are some more specs with working kernel:
+
+$ inxi -bxz
+System:    Kernel: 5.14.0-19.2-liquorix-amd64 x86_64 bits: 64 compiler:
+N/A Desktop: Xfce 4.16.3
+           Distro: Ubuntu 20.04.3 LTS (Focal Fossa)
+Machine:   Type: Desktop System: ASUS product: N/A v: N/A serial: N/A
+           Mobo: ASUSTeK model: ROG STRIX Z690-A GAMING WIFI D4 v: Rev
+1.xx serial: <filter>
+           UEFI [Legacy]: American Megatrends v: 0707 date: 11/10/2021
+CPU:       8-Core: 12th Gen Intel Core i9-12900K type: MT MCP arch: N/A
+speed: 5381 MHz max: 3201 MHz
+Graphics:  Device-1: NVIDIA vendor: Gigabyte driver: nvidia v: 470.86
+bus ID: 01:00.0
+           Display: server: X.Org 1.20.11 driver: nvidia tty: N/A
+           Message: Unable to show advanced data. Required tool glxinfo
+missing.
+Network:   Device-1: Intel vendor: ASUSTeK driver: igc v: kernel port:
+4000 bus ID: 06:00.0
+
+
+Please advice how I may assist in debugging!
+
+Thanks.
 
