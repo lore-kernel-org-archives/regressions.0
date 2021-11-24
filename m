@@ -1,80 +1,104 @@
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7DA2C81
-	for <regressions@lists.linux.dev>; Wed, 24 Nov 2021 07:33:56 +0000 (UTC)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id 7DA395C0099;
-	Wed, 24 Nov 2021 02:33:55 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Wed, 24 Nov 2021 02:33:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=fm2; bh=ZlqFarHAXijg9pmi5CNDixjvKeH
-	xGYNcISljKKu2PdE=; b=SUdCYeOYrZnIzGrnaYAbDXBM0pURP7nSl/mS/lEDqAZ
-	6vLjoQbWLDKMqECDdc4LWd7qKaucxlN3KsvhX6hIWBaMhNNwzLyuupUjRse+bGjX
-	IM1RYEQi9/Ns+G0jS2wYc9eJnMsB+wsAfE+t4ZaVRFLukgKpStF6a7rEQf6MJEZ3
-	AxIlFhbcn+Q9aF3SjdzcdTo8p+9t9weJ1I8FjR2VGN+lkaQAHPe9x7Nm/AZIjOgM
-	YQMtlWoizX4z6LctpGIi0tnvRsYv50prqq8+6YuVtSyU5oQnpdA3TcPF0+2diGHe
-	5TMtNyitt0kiMgNi+mECoAgwH5idMJR6B2zCy24Soqg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to:x-me-proxy
-	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ZlqFar
-	HAXijg9pmi5CNDixjvKeHxGYNcISljKKu2PdE=; b=Ri1yMkHdkeG/GfUrvGJqzW
-	XJajV9O/MdsFlxYIDRDHSEMhOKGv8glFwWANoMCcPoAGB+qBjnEo9Zlf2gBI1GpJ
-	hE0J8iBqLkM5gKKpIU724G6Dlz5nRN+bC/4hDZX1plXSO9w+bdN6O+gA96W43wb5
-	vxSWRs0F+lw9tewsHXLJVk8fEaCtvfUGvK3OjDC8+Oy4lk66nYaJMSLyBvZg0rN3
-	YOse8oCeB6+6yIHHKlB7fowXKMiC4cwd9pngoYpYTK+EctK5fWbaUhClvIMQ2mCc
-	xsl+6pXNygcP2X4Y7NDKEnspxWsEAX1ghEAVZa0KhbP1LBkWfQrMbmFOyxKoNgnQ
-	==
-X-ME-Sender: <xms:4-qdYSDf0aftvUUAU1LFe6jOEtUvErDJsrWDCXZkSQcxE_i2HD9RHw>
-    <xme:4-qdYcjcSLxNX-Lr-zqakVICekjPVAkdBXcA6nZhhuHHBG7Kokag42DfLWRISnaRT
-    eARvmvDjBCzCA>
-X-ME-Received: <xmr:4-qdYVkJIpFfl41bHWVIdD3Lo0fSMnMiiG7K-geij1toxRDJcj9xr6QYkt3CqBoq2AKIjpuNmy2Ne2lFOR_EUirGjfdaor5l>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddrgeejgdduuddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvuffkfhggtggujgesthdtre
-    dttddtvdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheq
-    necuggftrfgrthhtvghrnheplefhueelvdffjeeffffgudejteehgeekhfefvdeiueduff
-    eftdefheegfeeutedunecuffhomhgrihhnpehusghunhhtuhdrtghomhenucevlhhushht
-    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhh
-    drtghomh
-X-ME-Proxy: <xmx:4-qdYQxd03DRZSXpyH0dmCTOR3Dkd-AevfiYpUPGS6bLaVwtnWkOug>
-    <xmx:4-qdYXQq61pUrmmloKcrHmn8rMoRXlULbJgQSn-OqNiR4EegB36Eeg>
-    <xmx:4-qdYbbnGzptW6MF1cdstsJce83uXWrjjhLvo18FwuA6TOkf-8CdTA>
-    <xmx:4-qdYVOJlsrqR3gjOMc8-7XUNEmP2TQ5-usS7ZV0f9HCysSN27kiKg>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 24 Nov 2021 02:33:54 -0500 (EST)
-Date: Wed, 24 Nov 2021 08:33:52 +0100
-From: Greg KH <greg@kroah.com>
-To: Stefan Dietrich <roots@gmx.de>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Kernel 5.15 reboots / freezes upon ifup/ifdown
-Message-ID: <YZ3q4OKhU2EPPttE@kroah.com>
-References: <924175a188159f4e03bd69908a91e606b574139b.camel@gmx.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7DE2C81
+	for <regressions@lists.linux.dev>; Wed, 24 Nov 2021 07:41:11 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mpmtc-0002cq-I6; Wed, 24 Nov 2021 08:40:48 +0100
+Message-ID: <f9361bfa-4e5c-7095-48d4-2b3950c4b85e@leemhuis.info>
+Date: Wed, 24 Nov 2021 08:40:47 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <924175a188159f4e03bd69908a91e606b574139b.camel@gmx.de>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: mm: 5.16 regression: reclaim_throttle leads to stall in near-OOM
+ conditions
+Content-Language: en-BS
+To: Alexey Avramov <hakavlad@inbox.lv>, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, mgorman@techsingularity.net,
+ mhocko@suse.com, vbabka@suse.cz, neilb@suse.de, akpm@linux-foundation.org,
+ corbet@lwn.net, riel@surriel.com, hannes@cmpxchg.org, david@fromorbit.com,
+ willy@infradead.org, hdanton@sina.com, penguin-kernel@i-love.sakura.ne.jp,
+ oleksandr@natalenko.name, kernel@xanmod.org, michael@michaellarabel.com,
+ aros@gmx.com, hakavlad@gmail.com,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20211124011954.7cab9bb4@mail.inbox.lv>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20211124011954.7cab9bb4@mail.inbox.lv>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1637739672;7d152ea5;
+X-HE-SMSGID: 1mpmtc-0002cq-I6
 
-On Wed, Nov 24, 2021 at 08:28:39AM +0100, Stefan Dietrich wrote:
-> Summary: When attempting to rise or shut down a NIC manually or via
-> network-manager under 5.15, the machine reboots or freezes.
+Hi, this is your Linux kernel regression tracker speaking.
+
+CCing regression mailing list, which should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+On 23.11.21 17:19, Alexey Avramov wrote:
+> I found stalls in near-OOM conditions with Linux 5.16. This is not the
+> hang-up that was reported by Artem S. Tashkinov in 2019 [1]. It's a *new* 
+> regression. I will demonstrate this with one simple experiment, which I
+> will reproduce with different kernels or settings.
 > 
-> Occurs with: 5.15.4-051504-generic and earlier 5.15 mainline (
-> https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.4/) as well as
-> liquorix flavours.
-> Does not occur with: 5.14 and 5.13 (both with various flavours)
+> With older versions of the kernel, running the `tail /dev/zero` command
+> usually quickly leads to OOM condition.
+> 
+> I will run the command `for i in {1...3}; do tail /dev/zero; done` and log
+> PSI metrics (using psi2log script from nohang v0.2.0 [2]) and some values
+> from `/proc/meminfo` (using mem2log v0.1.0 [3]) while this command is
+> running. During the experiment a single tab browser will be kept opened in
+> which some video will be playing.
+> [...]
+TWIMC: To be sure this issue doesn't fall through the cracks unnoticed,
+I'm adding it to regzbot, my Linux kernel regression tracking bot:
 
-Can you use 'git bisect' between 5.14 and 5.15 to find the problem
-commit?
+#regzbot ^introduced v5.15..v5.16-rc1
+#regzbot title mm: reclaim_throttle leads to stall in near-OOM conditions
+#regzbot ignore-activity
 
-thanks,
+Ciao, Thorsten, your Linux kernel regression tracker.
 
-greg k-h
+P.S.: If you want to know more about regzbot, check out its
+web-interface, the getting start guide, and/or the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for the reporter: when reporting a regression it's in your interest
+to tell #regzbot about it in the report, as that will ensure the
+regression gets on the radar of regzbot and the regression tracker.
+That's in your interest, as they will make sure the report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot, just
+fix the issue as you normally would. Just remember to include a 'Link:'
+tag to the report in the commit message, as explained in
+Documentation/process/submitting-patches.rst
+That aspect was recently was made more explicit in commit 1f57bd42b77c:
+https://git.kernel.org/linus/1f57bd42b77c
+
+P.P.S.: As a Linux kernel regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them.
+Unfortunately therefore I sometimes will get things wrong or miss
+something important. I hope that's not the case here; if you think it
+is, don't hesitate to tell me about it in a public reply. That's in
+everyone's interest, as what I wrote above might be misleading to
+everyone reading this; any suggestion I gave they thus might sent
+someone reading this down the wrong rabbit hole, which none of us wants.
+
+BTW, I have no personal interest in this issue, which is tracked using
+regzbot, my Linux kernel regression tracking bot
+(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+this mail to get things rolling again and hence don't need to be CC on
+all further activities wrt to this regression.
