@@ -1,171 +1,267 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF43C2C81
-	for <regressions@lists.linux.dev>; Wed, 24 Nov 2021 08:05:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1637741121;
-	bh=GveQo0h8sUt9oirjZ/UP5JvsVcwvbv9in8jSuu4a0qw=;
-	h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=hgHJssc0u7riAOX4vO6VKmvvvB/PXWzOPGa1M8raYRthO3K0uBoje43NxhORp5buh
-	 uGTUBe6+rJBk3EafSJFNdtZc1WZRHzFe7BaTfc7Ne1vwdKssdewrb5mZ1JuaS4B9DN
-	 L/Dzn/zvaQMiV223VTq5suRe9lGHbX2bMWaz617g=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from machineone ([84.190.131.218]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MxUrx-1mR6hF3WIL-00xqmo; Wed, 24
- Nov 2021 09:05:20 +0100
-Message-ID: <a525098b284e323edf2abecb3efa907992abc843.camel@gmx.de>
-Subject: Re: [REGRESSION] Kernel 5.15 reboots / freezes upon ifup/ifdown
-From: Stefan Dietrich <roots@gmx.de>
-To: stable@vger.kernel.org, netdev@vger.kernel.org, Thorsten Leemhuis
-	 <regressions@leemhuis.info>
-Cc: regressions@lists.linux.dev
-Date: Wed, 24 Nov 2021 09:05:20 +0100
-In-Reply-To: <924175a188159f4e03bd69908a91e606b574139b.camel@gmx.de>
-References: <924175a188159f4e03bd69908a91e606b574139b.camel@gmx.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20FC68
+	for <regressions@lists.linux.dev>; Wed, 24 Nov 2021 09:25:32 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1mpoWw-0000Gx-EJ; Wed, 24 Nov 2021 10:25:30 +0100
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Regzbot <regressions@leemhuis.info>
+Subject: Linux regressions report for mainline [2021-11-24]
+Date: Wed, 24 Nov 2021 09:25:29 +0000
+Message-Id: <163774583541.221636.5062449110647587402@leemhuis.info>
+X-Mailer: git-send-email 2.31.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RorKLRjyJL0sDDEB0YEcICUx/+xtNhEFCJiON6jwGOE122Az3aH
- DXAtYDcppoTJjq+l45pVQXEVn1mpx4oFUgO/Y7nlrH7tYHlmVc1m1DzNh4l59yOpO3KRXfw
- GE++ibY+ArF6FMLcB/WF6bAHdnujs196tB7l9XlpWXlXmEJFAnz3I+sr6OorKPbwymjJHeH
- A7rVYfsXuZNt433HYA16A==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:hijyk411OrY=:1bBZRGWtG+S6l1S2Lt+bzI
- I6cocloq8rK72+rcav4CZQsPpoFK5nT7kh33Qyrjoii1tbyapHE5eBmvb6jvIxzH5UravFPBM
- vra/zVtvlqo8Hpso7qo8+p3bi9V/iV8P/0e+b1MscTwpCEuYl3LKLA8ZHFmBDz5+PotW/+9nF
- RI21Z4zCtspKMdEaehofM+OJR0B99LYeXsy1F1lLks4T63oAHjX0300c6Dn5nD39IC1qcelB3
- MYIh2m7Qmul65D1M/xPQ35AvvjcXXZII1hsXiu0q1ku3e4SPp4imKmjpBRhnFL183eu23POIm
- ZJv67sBGhNPlgAJX+a5QAZCxQaYm20JskguE+Ejoi98Qfb2r7utAGAGdelQYBoNKMQfDZJy04
- rLPQs2hOzmCH8UziLI7elJMme7UrymwuE3jRp8TvuLiNCtWa0ytoDnzee+oD8z0mgHaQ1aZf7
- B1TbFBcf1u4MwLhgczx5mCxOrJvUQYGpOWVBl3Yzx3AblRvKEijeyN5KZlqF3u/MB5AGnzPbn
- bFXhIjn28jVch8BlKiz4RkDvl7IRne6iFwY3ZyglUWzn3I8x3NE6B1v5SekR7Dg+XOC8/VsFg
- CCo/9DKNNpUwgIDw9mk2llBwhD4sJ/nO9giQrFWoxekN1yaSDyg+OAhqNvrS0c0pHwRADMd9O
- rFPNyoBXR/vY0swc1DA5oWWGSy25r+n6EjZ97qwhU+1QrulDhGcJ4Sti3CP9oDNgObwdKcBkW
- t755VZOFzws0biHC5DwmTeVkTmy/Ukn8eE6QSFbDMdCSUC8Jb08bBNU31+Paqoc9Awlq3zWeA
- zxAnmuotC6Hf6AsnkmZtV2KPcLJ9InUFh7PiqmWSiPrKayrNksj4zQTRUluZ9udwsfBMJxccr
- /avP5BmYYadr/SUUNVtXu9ZcC+bRqyawnRM9L2CzyIKGPnv+2EaS7Ol2yB8G9P7pJvGa66n58
- lGe6NnoUXNb5cChwqVhDEWTTbu5vYo8w0jG/wyF0PczfspDhUlzb09jGI6neWrQIasxBh67Hf
- 2uVI+k2rSGYKoZqaprzOuFWNgZSmiNLIoIbE5DXGAKe2cZXKMsyzu5KGGI0GLYHH6SQGfJYsw
- txMYK3f/pCa4Dg=
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1637745932;a22c217a;
+X-HE-SMSGID: 1mpoWw-0000Gx-EJ
 
-Hi Thorsten,
+From: Regzbot (for Thorsten Leemhuis) <regressions@leemhuis.info>
 
-thanks for the pointer. netdev should be in the loop now.
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 15 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
 
 
-Stefan
+========================================================
+current cycle (v5.15.. aka v5.16-rc), culprit identified
+========================================================
 
-On Wed, 2021-11-24 at 08:28 +0100, Stefan Dietrich wrote:
-> Summary: When attempting to rise or shut down a NIC manually or via
-> network-manager under 5.15, the machine reboots or freezes.
->
-> Occurs with: 5.15.4-051504-generic and earlier 5.15 mainline (
-> https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.15.4/) as well as
-> liquorix flavours.
-> Does not occur with: 5.14 and 5.13 (both with various flavours)
->
->
-> Hi all,
->
-> I'm experiencing a severe bug that causes the machine to reboot or
-> freeze when trying to login and/or rise/shutdown a NIC. Here's a
-> brief
-> description of scenarios I've tested:
->
-> Scenario 1: enp6s0 managed manually using /etc/networking/interfaces,
-> DHCP
-> a. Issuing ifdown enp6s0 in terminal will throw
-> 	"/etc/resolvconf/update.d/libc: Warning: /etc/resolv.conf is
-> 	not a symbolic link to /run/resolvconf/resolv.conf"
-> and cause the machine to reboot after ~10s of showing a blinking
-> cursor
->
-> b. Issuing shutdown -h now or trying to shutdown/reboot machine via
-> GUI:
-> shutdown will stop on "stop job is running for ifdown enp6s0" and
-> after
-> approx. 10..15s the countdown freezes. Repeated ALT-SysReq-REISUB
-> does
-> not reboot the machine, a hard reset is required.
->
-> --
->
-> Scenario 2: enp6s0 managed manually using /etc/networking/interfaces,
-> STATIC
-> a. Issuing ifdown enp6s0 in terminal will throw
-> 	"send_packet: Operation not permitted
-> 	dhclient.c:3010: Failed to send 300 byte long packet over
-> 	fallback interface."
-> and cause the machine to reboot after ~10s of blinking cursor.
->
-> b. Issuing shutdown -h now or trying to shutdown or reboot machine
-> via
-> GUI: shutdown will stop on "stop job is running for ifdown enp6s0"
-> and
-> after approx. 10..15s the countdown freezes. Repeated ALT-SysReq-
-> REISUB
-> does not reboot the machine, a hard reset is required.
->
-> --
->
-> Scenario 3: enp6s0 managed by network manager
-> a. After booting and logging in either via GUI or TTY, the display
-> will
-> stay blank and only show a blinking cursor and then freeze after
-> 5..10s. ALT-SysReq-REISUB does not reboot the machine, a hard reset
-> is
-> required.
->
-> --
->
-> Here's a snippet from the journal for Scenario 1a:
->
-> Nov 21 10:39:25 computer sudo[5606]:    user : TTY=3Dpts/0 ;
-> PWD=3D/home/user ; USER=3Droot ; COMMAND=3D/usr/sbin/ifdown enp6s0
-> Nov 21 10:39:25 computer sudo[5606]: pam_unix(sudo:session): session
-> opened for user root by (uid=3D0)
-> -- Reboot --
-> Nov 21 10:40:14 computer systemd-journald[478]: Journal started
->
-> --
->
-> I'm running Alder Lake i9 12900K but I have E-cores disabled in BIOS.
-> Here are some more specs with working kernel:
->
-> $ inxi -bxz
-> System:    Kernel: 5.14.0-19.2-liquorix-amd64 x86_64 bits: 64
-> compiler:
-> N/A Desktop: Xfce 4.16.3
->            Distro: Ubuntu 20.04.3 LTS (Focal Fossa)
-> Machine:   Type: Desktop System: ASUS product: N/A v: N/A serial: N/A
->            Mobo: ASUSTeK model: ROG STRIX Z690-A GAMING WIFI D4 v:
-> Rev
-> 1.xx serial: <filter>
->            UEFI [Legacy]: American Megatrends v: 0707 date:
-> 11/10/2021
-> CPU:       8-Core: 12th Gen Intel Core i9-12900K type: MT MCP arch:
-> N/A
-> speed: 5381 MHz max: 3201 MHz
-> Graphics:  Device-1: NVIDIA vendor: Gigabyte driver: nvidia v: 470.86
-> bus ID: 01:00.0
->            Display: server: X.Org 1.20.11 driver: nvidia tty: N/A
->            Message: Unable to show advanced data. Required tool
-> glxinfo
-> missing.
-> Network:   Device-1: Intel vendor: ASUSTeK driver: igc v: kernel
-> port:
-> 4000 bus ID: 06:00.0
->
->
-> Please advice how I may assist in debugging!
->
-> Thanks.
->
 
+Regression in v5.16-rc1: Timeout in mlx5_health_wait_pci_up() may try to wait 245 million years
+-----------------------------------------------------------------------------------------------
+https://lore.kernel.org/regressions/15db9c1d11d32fb16269afceb527b5d743177ac4.camel@linux.ibm.com
+By Niklas Schnelle, 4 days ago; 3 activities, latest 3 days ago.
+Introduced in 32def4120e48 (v5.16-rc1)
+https://linux-regtracking.leemhuis.info/regzbot/regression/15db9c1d11d32fb16269afceb527b5d743177ac4.camel@linux.ibm.com
+
+
+=========================================================================================
+previous cycle (v5.14..v5.15), culprit identified, with activity in the past three months
+=========================================================================================
+
+
+CONFIG_SYSFB_SIMPLEFB breaks console scrolling
+----------------------------------------------
+https://lore.kernel.org/lkml/e50d5ad5-19fd-07ae-41e4-5a2d26a98bcf@afaics.de
+By Harald Dunkel, 8 days ago; 1 activities, latest 8 days ago.
+Introduced in 8633ef82f101 (v5.15-rc1)
+https://linux-regtracking.leemhuis.info/regzbot/regression/e50d5ad5-19fd-07ae-41e4-5a2d26a98bcf@afaics.de
+
+
+==================================================================================
+older cycles (..v5.14), culprit identified, with activity in the past three months
+==================================================================================
+
+
+wireless AP (Raspberry Pi with rt2x00usb) crashes every hour or so
+------------------------------------------------------------------
+https://lore.kernel.org/lkml/20211118132556.GD334428@darkstar.musicnaut.iki.fi
+By Aaro Koskinen, 5 days ago; 5 activities, latest 1 days ago.
+Introduced in 03c3911d2d67 (v5.14-rc1)
+https://linux-regtracking.leemhuis.info/regzbot/regression/20211118132556.GD334428@darkstar.musicnaut.iki.fi
+
+Latest activity with a patch:
+* [PATCH 5.16] mac80211: fix rate control for retransmitted frames
+  https://lore.kernel.org/linux-wireless/20211122204323.9787-1-nbd@nbd.name
+  1 days ago, by Felix Fietkau; thread monitored.
+
+
+Bluetooth: Query LE tx power on startup broke Bluetooth on MacBookPro16,1
+-------------------------------------------------------------------------
+https://lore.kernel.org/regressions/4970a940-211b-25d6-edab-21a815313954@protonmail.com
+By Orlando Chamberlain, 56 days ago; 30 activities, latest 4 days ago.
+Introduced in 7c395ea521e6 (v5.11-rc1)
+https://linux-regtracking.leemhuis.info/regzbot/regression/4970a940-211b-25d6-edab-21a815313954@protonmail.com
+
+Latest activity with a patch:
+* Re: [PATCHv2] Bluetooth: quirk disabling LE Read Transmit Power
+  https://lore.kernel.org/lkml/CABBYNZLjSfcG_KqTEbL6NOSvHhA5-b1t_S=3FQP4=GwW21kuzg@mail.gmail.com
+  18 days ago, by Luiz Augusto von Dentz
+
+Noteworthy links:
+* Re: [PATCH] Bluetooth: add quirk disabling query LE tx power
+  https://lore.kernel.org/lkml/43fb97ad-69eb-95ad-d50a-b8f1113dbee6@leemhuis.info
+  54 days ago, by Thorsten Leemhuis; thread monitored.
+* [PATCHv2] Bluetooth: quirk disabling LE Read Transmit Power
+  https://lore.kernel.org/lkml/20211001083412.3078-1-redecorating@protonmail.com
+  54 days ago, by Orlando Chamberlain; thread monitored.
+
+
+Re: rt2x00 regression
+---------------------
+https://lore.kernel.org/regressions/87czop5j33.fsf@tynnyri.adurom.net
+By Kalle Valo, 54 days ago; 16 activities, latest 4 days ago.
+Introduced in e383c70474db (v5.2-rc1)
+https://linux-regtracking.leemhuis.info/regzbot/regression/87czop5j33.fsf@tynnyri.adurom.net
+
+Latest activity with a patch:
+* [PATCH] rt2x00: do not mark device gone on EPROTO errors during start
+  https://lore.kernel.org/regressions/20211111141003.GA134627@wp.pl
+  12 days ago, by Stanislaw Gruszka
+
+Noteworthy links:
+* rt2x00 regression
+  https://lore.kernel.org/linux-wireless/bff7d309-a816-6a75-51b6-5928ef4f7a8c@exuvo.se
+  789 days ago, by Anton Olsson; thread monitored.
+
+
+PCIe regression on APM Merlin (aarch64 dev platform) preventing NVME initialization
+-----------------------------------------------------------------------------------
+https://lore.kernel.org/linux-pci/CA%2Benf=v9rY_xnZML01oEgKLmvY1NGBUUhnSJaETmXtDtXfaczA@mail.gmail.com
+By Stéphane Graber, 5 days ago; 4 activities, latest 5 days ago.
+Introduced in 6dce5aa59e0b (v5.5-rc1)
+https://linux-regtracking.leemhuis.info/regzbot/regression/CA%2Benf=v9rY_xnZML01oEgKLmvY1NGBUUhnSJaETmXtDtXfaczA@mail.gmail.com
+
+Latest activity with a patch:
+* Re: PCIe regression on APM Merlin (aarch64 dev platform) preventing NVME initialization
+  https://lore.kernel.org/linux-pci/CAL_JsqKrfpDtQZMMuhA_tURit6fO82FzPbKA40o6_8jWRewm8g@mail.gmail.com
+  5 days ago, by Rob Herring
+
+
+mhi: ath11k resume fails on some devices
+----------------------------------------
+https://lore.kernel.org/regressions/871r5p0x2u.fsf@codeaurora.org
+By Kalle Valo, 69 days ago; 23 activities, latest 5 days ago.
+Introduced in 020d3b26c07a (v5.13-rc1)
+https://linux-regtracking.leemhuis.info/regzbot/regression/871r5p0x2u.fsf@codeaurora.org
+
+
+bug: usb: gadget: FSL_UDC_CORE Corrupted request list leads to unrecoverable loop.
+----------------------------------------------------------------------------------
+https://lore.kernel.org/linuxppc-dev/MWHPR2201MB152074F47BF142189365627B91879@MWHPR2201MB1520.namprd22.prod.outlook.com
+By Eugene Bordenkircher, 25 days ago; 7 activities, latest 7 days ago.
+Introduced in f79a60b8785 (v3.4-rc4)
+https://linux-regtracking.leemhuis.info/regzbot/regression/MWHPR2201MB152074F47BF142189365627B91879@MWHPR2201MB1520.namprd22.prod.outlook.com
+
+Noteworthy links:
+* https://lore.kernel.org/all/CADRPPNSrhiwr8jmBb2h4cFYqHtuDKK8rL0i6Bkg7+xEyXJPATA@mail.gmail.com/
+  22 days ago, by Thorsten Leemhuis
+* https://lore.kernel.org/all/2c275adc278477e1e512ea6ecc0c1f4dcc46969d.camel@infinera.com/
+  22 days ago, by Thorsten Leemhuis
+
+
+Bug in Memory Layout of rx_desc for QCA6174
+-------------------------------------------
+https://lore.kernel.org/ath10k/CAH4F6usFu8-A6k5Z7rU9__iENcSC6Zr-NtRhh_aypR74UvN1uQ@mail.gmail.com
+By Francesco Magliocca, 159 days ago; 5 activities, latest 24 days ago.
+Introduced in e3def6f7ddf8 (v4.16-rc1)
+https://linux-regtracking.leemhuis.info/regzbot/regression/CAH4F6usFu8-A6k5Z7rU9__iENcSC6Zr-NtRhh_aypR74UvN1uQ@mail.gmail.com
+
+Noteworthy links:
+* Bug in Memory Layout of rx_desc for QCA6174
+  https://lore.kernel.org/ath10k/CAH4F6uvX=xtTnBDaj1BVHSx_FDSUbpc4TRC2DGTHBmGJSD2oEA@mail.gmail.com
+  25 days ago, by Francesco Magliocca; thread monitored.
+
+
+====================================================
+current cycle (v5.15.. aka v5.16-rc), unkown culprit
+====================================================
+
+
+mm: reclaim_throttle leads to stall in near-OOM conditions
+----------------------------------------------------------
+https://lore.kernel.org/lkml/20211124011954.7cab9bb4@mail.inbox.lv
+By Alexey Avramov, 0 days ago; 1 activities, latest 0 days ago.
+Introduced in v5.15..v5.16-rc1
+https://linux-regtracking.leemhuis.info/regzbot/regression/20211124011954.7cab9bb4@mail.inbox.lv
+
+
+mm: LTP/memcg testcase regression induced by 8cd7c588decf..66ce520bb7c2 series
+------------------------------------------------------------------------------
+https://lore.kernel.org/lkml/99e779783d6c7fce96448a3402061b9dc1b3b602.camel@gmx.de
+By Mike Galbraith, 2 days ago; 8 activities, latest 0 days ago.
+Introduced in 8cd7c588decf..66ce520bb7c2 (v5.15..v5.16-rc1)
+https://linux-regtracking.leemhuis.info/regzbot/regression/99e779783d6c7fce96448a3402061b9dc1b3b602.camel@gmx.de
+
+
+====================================================================================
+previous cycle (v5.14..v5.15), unkown culprit, with activity in the past three weeks
+====================================================================================
+
+
+Kernel 5.15 reboots / freezes upon ifup/ifdown
+----------------------------------------------
+https://lore.kernel.org/stable/924175a188159f4e03bd69908a91e606b574139b.camel@gmx.de
+By Stefan Dietrich, 0 days ago; 5 activities, latest 0 days ago.
+Introduced in v5.14..v5.15
+https://linux-regtracking.leemhuis.info/regzbot/regression/924175a188159f4e03bd69908a91e606b574139b.camel@gmx.de
+
+
+kernel 5.15.1: AMD RX 6700 XT - Fails to resume after screen blank
+------------------------------------------------------------------
+https://lore.kernel.org/stable/dbadfe41-24bf-5811-cf38-74973df45214@badpenguin.co.uk
+By Mark Boddington, 13 days ago; 7 activities, latest 11 days ago.
+Introduced in v5.14..v5.15
+https://linux-regtracking.leemhuis.info/regzbot/regression/dbadfe41-24bf-5811-cf38-74973df45214@badpenguin.co.uk
+
+
+=============================================================================
+older cycles (..v5.14), unkown culprit, with activity in the past three weeks
+=============================================================================
+
+
+Ralink RT2800 kernel deference issue since kernel 5.14
+------------------------------------------------------
+https://lore.kernel.org/linux-wireless/c07b4142fb725ed87a2cef530bae9ee7@lost-in-the-void.net
+By Robert W, 11 days ago; 5 activities, latest 1 days ago.
+Introduced in v5.13..v5.14
+https://linux-regtracking.leemhuis.info/regzbot/regression/c07b4142fb725ed87a2cef530bae9ee7@lost-in-the-void.net
+
+Latest activity with a patch:
+* [PATCH 5.16] mac80211: fix rate control for retransmitted frames
+  https://lore.kernel.org/linux-wireless/20211122204323.9787-1-nbd@nbd.name
+  1 days ago, by Felix Fietkau; thread monitored.
+
+
+====================================================================
+all others with unkown culprit and activity in the past three months
+====================================================================
+
+
+idle power increased from ~20 to ~28 watts
+------------------------------------------
+https://lore.kernel.org/lkml/c11d94b4-1701-4e26-efd1-42038342c4aa@kaputniks.org
+By Idzibear, 22 days ago; 3 activities, latest 22 days ago.
+Introduced in v5.14..v5.15
+https://linux-regtracking.leemhuis.info/regzbot/regression/c11d94b4-1701-4e26-efd1-42038342c4aa@kaputniks.org
+
+
+=============
+End of report
+=============
+
+-- 
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
