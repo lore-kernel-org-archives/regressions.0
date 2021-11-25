@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A8CF72
-	for <regressions@lists.linux.dev>; Thu, 25 Nov 2021 11:52:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A2372
+	for <regressions@lists.linux.dev>; Thu, 25 Nov 2021 12:00:16 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mqDIM-0004lJ-BD; Thu, 25 Nov 2021 12:52:06 +0100
-Message-ID: <b9fc1beb-0495-b6b7-b352-d2505e709af2@leemhuis.info>
-Date: Thu, 25 Nov 2021 12:52:06 +0100
+	id 1mqDQC-0004Av-6v; Thu, 25 Nov 2021 13:00:12 +0100
+Message-ID: <d9acb4ba-691b-3496-f77b-175c441f887d@leemhuis.info>
+Date: Thu, 25 Nov 2021 13:00:11 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,79 +16,89 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: Linux regressions report for mainline [2021-11-24]
-Content-Language: en-BS
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <163774583541.221636.5062449110647587402@leemhuis.info>
- <CAHk-=wimd-G9+etiTb=_yqxy8H45su-=WXdLBrhi2TJK+gB+Mw@mail.gmail.com>
+Subject: Re: 5.15 regression: CONFIG_SYSFB_SIMPLEFB breaks console scrolling
+Content-Language: en-BW
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAHk-=wimd-G9+etiTb=_yqxy8H45su-=WXdLBrhi2TJK+gB+Mw@mail.gmail.com>
+To: Harald Dunkel <harri@afaics.de>,
+ Javier Martinez Canillas <javierm@redhat.com>
+Cc: Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org, Thomas Zimmermann <tzimmermann@suse.de>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <e50d5ad5-19fd-07ae-41e4-5a2d26a98bcf@afaics.de>
+ <4bf94684-6410-db9f-5bec-ea0540a2ea76@leemhuis.info>
+In-Reply-To: <4bf94684-6410-db9f-5bec-ea0540a2ea76@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1637841128;66603d0d;
-X-HE-SMSGID: 1mqDIM-0004lJ-BD
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1637841616;27339291;
+X-HE-SMSGID: 1mqDQC-0004Av-6v
 
+On 21.11.21 12:47, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
 
-On 24.11.21 19:13, Linus Torvalds wrote:
-> Ok, nice to see the new regression tracking bot start to show life.
+/me again
 
-Yeah. :-D
-
-Sadly one of my biggest problems with regression tracking remains:
-getting aware of regression reports. I can fully understand that most
-people don't care about regzbot for now, but it would really help if
-everyone would CC regressions@lists.linux.dev on mails regarding
-regressions (e.g. reports or any replies to them).
-
-> Greg had one suggestion,
-
-Still not sure how to approach his use case, but for now I started
-adding the usual subsystem commit summary prefixes (e.g. "net:", "usb:",
-"drm/amd") to the title of newly added regression, which might help
-somewhat and won't hurt.
-
-> I have another - namely about grouping of these things.
->
-> I like how you group them by "identified" and "unknown", because
-> that's certainly very meaningful.
+> On 16.11.21 05:52, Harald Dunkel wrote:
+>>
+>> if I enable CONFIG_SYSFB_SIMPLEFB in 5.15.2 and use grub's default
+>> configuration
+>> (Debian sid amd64), then a few lines at the bottom of /dev/tty1 including
+>> login prompt are off-screen. Scrolling is broken. I can login, though.
+>>
+>> Enabling GRUB_TERMINAL=console in grub doesn't make a difference. Using
+>> the same kernel except for CONFIG_SYSFB_SIMPLEFB the problem is gone.
+>>
+>> Graphics card is a GeForce GTX 1650. I tried with both CONFIG_DRM_NOUVEAU
+>> and proprietary graphics drivers disabled.
+>>
+>> Attached you can find the config file. Please mail if I can help to track
+>> this problem down.
 > 
-> But at the same time it does mean that if I look for "what are current
-> issues with the development kernel", it ends up being very spread out:
+> Thx for the report. I'm not totally sure if this is a regression, as
+> that's a new config option. But it might be one considered a successor
+> to an older one, hence it might count as regression. Adding two
+> developers and a mailing list to the CC, hopefully someone can clarify.
 
-Hah, fun fact: the order you purposed was the one I initially had in
-mind. But I later changed my mind, as I thought 'hey, if the culprit of
-the regression is known, it should be able to fix this quickly (e.g. by
-a revert, if there are no conflicts) even for regressions that made it
-into proper releases".
+Javier, I'd be interested in your option on this.
 
-But whatever: I'm totally fine with this and already changed the web
-interface yesterday after your mail arrived, only took a minute:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Next report will use this order as well.
-
-> I suspect that Greg may have a slightly similar issue - as a driver
-> maintainer, he cares about current cycle things (but mainly only when
-> they affect his subsystems), but with his stable maintainer hat on he
-> then cares more about the older cycles.
-> 
-> Greg suggested splitting out the issues one by one - to try to have
-> the right people on the Cc for any _particular_ issue, and while I
-> think that's not the solution in this case (I very much want to see
-> the "summary" email), it would be good to perhaps at least organize
-> that summary email slightly differently.
-> 
-> I suspect this is something we'd need to iterate on as we use this in
-> our workflow
-
-Definitely. If there is something else you want to see changed or think
-is odd wrt to regzbot or my work as regression tracker, just let me know.
-
-> but that was my initial reaction to this first report.
-
-Thx for the feedback, much appreciated.
+Harald, did you have CONFIG_X86_SYSFB enabled in earlier kernel versions
+(and did console scrolling work then)? The answer would help me to
+decide if this a regression, as those ideally should be fixed as quickly
+as possible.
 
 Ciao, Thorsten
+
+> TWIMC: To be sure this issue doesn't fall through the cracks unnoticed,
+> I'm adding it to regzbot, my Linux kernel regression tracking bot:
+> 
+> #regzbot ^introduced 8633ef82f101c040427b57d4df7b706261420b94
+> #regzbot title CONFIG_SYSFB_SIMPLEFB breaks console scrolling
+> #regzbot ignore-activity
+> 
+> Ciao, Thorsten, your Linux kernel regression tracker.
+> 
+> P.S.: If you want to know more about regzbot, check out its
+> web-interface, the getting start guide, and/or the references documentation:
+> 
+> https://linux-regtracking.leemhuis.info/regzbot/
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> 
+> The last two documents will explain how you can interact with regzbot
+> yourself if your want to.
+> 
+> Hint for the reporter: when reporting a regression it's in your interest
+> to tell #regzbot about it in the report, as that will ensure the
+> regression gets on the radar of regzbot and the regression tracker.
+> That's in your interest, as they will make sure the report won't fall
+> through the cracks unnoticed.
+> 
+> Hint for developers: you normally don't need to care about regzbot, just
+> fix the issue as you normally would. Just remember to include a 'Link:'
+> tag to the report in the commit message, as explained in
+> Documentation/process/submitting-patches.rst
+> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+> https://git.kernel.org/linus/1f57bd42b77c
+
+#regzbot title drm: CONFIG_SYSFB_SIMPLEFB breaks console scrolling
+
+
