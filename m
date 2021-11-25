@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97A2372
-	for <regressions@lists.linux.dev>; Thu, 25 Nov 2021 12:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E0272
+	for <regressions@lists.linux.dev>; Thu, 25 Nov 2021 12:26:53 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mqDQC-0004Av-6v; Thu, 25 Nov 2021 13:00:12 +0100
-Message-ID: <d9acb4ba-691b-3496-f77b-175c441f887d@leemhuis.info>
-Date: Thu, 25 Nov 2021 13:00:11 +0100
+	id 1mqDpr-0006L6-UD; Thu, 25 Nov 2021 13:26:44 +0100
+Message-ID: <332a19f1-30f0-7058-ac18-c21cf78759bb@leemhuis.info>
+Date: Thu, 25 Nov 2021 13:26:43 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,89 +16,79 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: 5.15 regression: CONFIG_SYSFB_SIMPLEFB breaks console scrolling
-Content-Language: en-BW
+Subject: Re: [PATCHv2] Bluetooth: quirk disabling LE Read Transmit Power
+Content-Language: en-BS
+To: Aditya Garg <gargaditya08@live.com>, Marcel Holtmann <marcel@holtmann.org>
+Cc: Orlando Chamberlain <redecorating@protonmail.com>,
+ Daniel Winkler <danielwinkler@google.com>,
+ Greg KH <gregkh@linuxfoundation.org>, Johan Hedberg
+ <johan.hedberg@intel.com>,
+ "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "sonnysasaka@chromium.org" <sonnysasaka@chromium.org>
+References: <20211001083412.3078-1-redecorating@protonmail.com>
+ <YYePw07y2DzEPSBR@kroah.com>
+ <70a875d0-7162-d149-dbc1-c2f5e1a8e701@leemhuis.info>
+ <20211116090128.17546-1-redecorating@protonmail.com>
+ <e75bf933-9b93-89d2-d73f-f85af65093c8@leemhuis.info>
+ <3B8E16FA-97BF-40E5-9149-BBC3E2A245FE@live.com> <YZSuWHB6YCtGclLs@kroah.com>
+ <52DEDC31-EEB2-4F39-905F-D5E3F2BBD6C0@live.com>
+ <8919a36b-e485-500a-2722-529ffa0d2598@leemhuis.info>
+ <20211117124717.12352-1-redecorating@protonmail.com>
+ <F8D12EA8-4B37-4887-998E-DC0EBE60E730@holtmann.org>
+ <40550C00-4EE5-480F-AFD4-A2ACA01F9DBB@live.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Harald Dunkel <harri@afaics.de>,
- Javier Martinez Canillas <javierm@redhat.com>
-Cc: Kernel Mailing List <linux-kernel@vger.kernel.org>,
- dri-devel@lists.freedesktop.org, Thomas Zimmermann <tzimmermann@suse.de>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <e50d5ad5-19fd-07ae-41e4-5a2d26a98bcf@afaics.de>
- <4bf94684-6410-db9f-5bec-ea0540a2ea76@leemhuis.info>
-In-Reply-To: <4bf94684-6410-db9f-5bec-ea0540a2ea76@leemhuis.info>
+In-Reply-To: <40550C00-4EE5-480F-AFD4-A2ACA01F9DBB@live.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1637841616;27339291;
-X-HE-SMSGID: 1mqDQC-0004Av-6v
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1637843213;d6e3dde0;
+X-HE-SMSGID: 1mqDpr-0006L6-UD
 
-On 21.11.21 12:47, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker speaking.
+Hi, this is your Linux kernel regression tracker speaking again.
 
-/me again
-
-> On 16.11.21 05:52, Harald Dunkel wrote:
+On 19.11.21 17:59, Aditya Garg wrote:
+>> On 18-Nov-2021, at 12:31 AM, Marcel Holtmann <marcel@holtmann.org> wrote:
+>>>> So if this just affects two macs, why can't the fix be realized as a
+>>>> quirk that is only enabled on those two systems? Or are they impossible
+>>>> to detect clearly via DMI data or something like that?
+>>>
+>>> I think we should be able to quirk based off the acpi _CID "apple-uart-blth"
+>>> or _HID "BCM2E7C". Marcel suggested quirking based of the acpi table here
+>>> https://lore.kernel.org/linux-bluetooth/1D2217A9-EA73-4D93-8D0B-5BC2718D4788@holtmann.org/
+>>>
+>>> This would catch some unaffected Macs, but they don't support the LE Read
+>>> Transmit Power command anyway (the affected macs were released after it
+>>> was added to the Bluetooth spec, while the unaffected Macs were released
+>>> before it was added to the spec, and thus don't support it).
+>>>
+>>> I'm not sure how to go about applying a quirk based off this, there are
+>>> quirks in drivers/bluetooth/hci_bcm.c (no_early_set_baudrate and
+>>> drive_rts_on_open), but they don't seem to be based off acpi ids.
+>>>
+>>> It might be simpler to make it ignore the Unknown Command error, like
+>>> in this patch https://lore.kernel.org/linux-bluetooth/CABBYNZLjSfcG_KqTEbL6NOSvHhA5-b1t_S=3FQP4=GwW21kuzg@mail.gmail.com/
+>>> however that only applies on bluetooth-next and needed the status it
+>>> checks for to be -56, not 0x01.
 >>
->> if I enable CONFIG_SYSFB_SIMPLEFB in 5.15.2 and use grub's default
->> configuration
->> (Debian sid amd64), then a few lines at the bottom of /dev/tty1 including
->> login prompt are off-screen. Scrolling is broken. I can login, though.
+>> so we abstain from try-and-error sending of commands. The Bluetooth spec
+>> has a list of supported commands that a host can query for a reason. This
+>> is really broken behavior of the controller and needs to be pointed out as
+>> such.
+> Well all I can do is provide you any logs or information I can. But we do really wish to get this regression fixed soon.
 >>
->> Enabling GRUB_TERMINAL=console in grub doesn't make a difference. Using
->> the same kernel except for CONFIG_SYSFB_SIMPLEFB the problem is gone.
->>
->> Graphics card is a GeForce GTX 1650. I tried with both CONFIG_DRM_NOUVEAU
->> and proprietary graphics drivers disabled.
->>
->> Attached you can find the config file. Please mail if I can help to track
->> this problem down.
-> 
-> Thx for the report. I'm not totally sure if this is a regression, as
-> that's a new config option. But it might be one considered a successor
-> to an older one, hence it might count as regression. Adding two
-> developers and a mailing list to the CC, hopefully someone can clarify.
+>> The question is just how we quirk it.
 
-Javier, I'd be interested in your option on this.
-
-Harald, did you have CONFIG_X86_SYSFB enabled in earlier kernel versions
-(and did console scrolling work then)? The answer would help me to
-decide if this a regression, as those ideally should be fixed as quickly
-as possible.
+This thread once again looks stalled and smells a lot like "everyone
+agrees that his should be fixed, but afaics nobody submitted a fix or
+committed to work on one". Please speak up if my impression is wrong, as
+this is a regression and thus needs to be fixed, ideally quickly. Part
+of my job is to make that happen and thus remind developers and
+maintainers about this until we have a fix.
 
 Ciao, Thorsten
 
-> TWIMC: To be sure this issue doesn't fall through the cracks unnoticed,
-> I'm adding it to regzbot, my Linux kernel regression tracking bot:
-> 
-> #regzbot ^introduced 8633ef82f101c040427b57d4df7b706261420b94
-> #regzbot title CONFIG_SYSFB_SIMPLEFB breaks console scrolling
-> #regzbot ignore-activity
-> 
-> Ciao, Thorsten, your Linux kernel regression tracker.
-> 
-> P.S.: If you want to know more about regzbot, check out its
-> web-interface, the getting start guide, and/or the references documentation:
-> 
-> https://linux-regtracking.leemhuis.info/regzbot/
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-> 
-> The last two documents will explain how you can interact with regzbot
-> yourself if your want to.
-> 
-> Hint for the reporter: when reporting a regression it's in your interest
-> to tell #regzbot about it in the report, as that will ensure the
-> regression gets on the radar of regzbot and the regression tracker.
-> That's in your interest, as they will make sure the report won't fall
-> through the cracks unnoticed.
-> 
-> Hint for developers: you normally don't need to care about regzbot, just
-> fix the issue as you normally would. Just remember to include a 'Link:'
-> tag to the report in the commit message, as explained in
-> Documentation/process/submitting-patches.rst
-> That aspect was recently was made more explicit in commit 1f57bd42b77c:
-> https://git.kernel.org/linus/1f57bd42b77c
-
-#regzbot title drm: CONFIG_SYSFB_SIMPLEFB breaks console scrolling
-
-
+#regzbot title bluetooth: "Query LE tx power on startup" broke Bluetooth
+on MacBookPro16,1
+#regzbot poke
