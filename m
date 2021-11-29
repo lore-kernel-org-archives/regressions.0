@@ -1,183 +1,84 @@
-Received: from IND01-BO1-obe.outbound.protection.outlook.com (mail-bo1ind01olkn0161.outbound.protection.outlook.com [104.47.101.161])
+Received: from so254-9.mailgun.net (so254-9.mailgun.net [198.61.254.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3DC2C80
+	for <regressions@lists.linux.dev>; Mon, 29 Nov 2021 10:54:15 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1638183255; h=Date: Message-ID: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=Q5OpnUeQRBjKRr8DJQYcMiUeDh8TD5lfyHLllP2qBBk=;
+ b=YvJGwktdAMABREc+d8Lw6HK3NYPUn3exVTESyjTkuyQeYqF45W8hCm/hajRGVKLZ/OHedL7x
+ GbqnWJMf6fIl/kJxL0yKRGbwuYG65C3yAJr7oYXnhST1tf59VwiUfSms2ldv3mBzmUZq2io5
+ uLuD7CxtNfwxndfUbWNf6sGiLio=
+X-Mailgun-Sending-Ip: 198.61.254.9
+X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 61a4b1564fca5da46dafb617 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Nov 2021 10:54:14
+ GMT
+Sender: kvalo=codeaurora.org@mg.codeaurora.org
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+	id 86ADDC43618; Mon, 29 Nov 2021 10:54:14 +0000 (UTC)
+X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
+	aws-us-west-2-caf-mail-1.web.codeaurora.org
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.5 required=2.0 tests=ALL_TRUSTED,BAYES_00,
+	MISSING_DATE,SPF_FAIL,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
+Received: from tykki.adurom.net (tynnyri.adurom.net [51.15.11.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837C372
-	for <regressions@lists.linux.dev>; Mon, 29 Nov 2021 09:25:55 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lfO3B6Qscfcpfusy6FjwbppjwYwgY0VzCZjOjzd7yxngg2VczGWCcy31QrcC4GCNiffHtKHtvALJ9n3ftluD4r67GN8bYBorTJr95aPKhQKT0Cb3cin2vwEAKNoJ0EYxgWrQb7QMvXIAjNFPcApwEtPARFYKdMHZgvA3wx8Z4SQWSAGIk1ZT2MQ/KhQFvFv1kCz8+sI8QcQZtYOiFGXtIyk4i2zZNs3avUTglql7GWQFBbe9McHYjSV5ZCYEJOi9e+Rvy9dmFf0XgUd4lCaezEH/+FhFJRlzNeyaDpGC41C9a9uC1i8gVKSQqsNyi/TgGqqa9OagUbwygkMpT3xETg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5x5p6nRUXwp5Yw4ZOa530IAmoex3j79M9wC7R26R7HM=;
- b=Da/mO33+mvgBiK+PX1/xYAzNE8r8RIE9JwixrODs84r6RvMHLf7SkLP6pZZCxx9lR3B83vgHIFpL/KmNWv3pWJAn3XifX0XMR/Thr9zaMsf6jkhwV4z/V7FBThjZ4cY49l3lKS6N4dGu0ks9m1ctX9OnUbv7NF1wPOhC3HcQeYps6/x1q/Tpl9CqjVjXT7VrFAjcg9YLgctz0Rhh3TecBSzRxm9V0hO3SULrvwz0k6dkd/wm9oXTv8HPWmd941uCCe0EVR5yg3iugjPZ5lMvQlOPX9rp9Ih1XBYHNXzxQ3RUZY17HqHBDt1az2TKABWWWVkH5V2GkG7J46iUCI3r8Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5x5p6nRUXwp5Yw4ZOa530IAmoex3j79M9wC7R26R7HM=;
- b=mRY0LvEMGHZAobud8nyK7i0sAWXI5ZQPW1kz4SXq7GHm05vJF33unT8ksjJajuEgIum2o/zGAn2YB92Ism1gzK18f1Q3cSZh/bDC1Ki5XIFjEDMApZeMAAWYE4n/gqkbIqfOZaMwQx/ge/0TOMDCyvzbn0SOLMDLGWvZkeiG23zez+wzpw+wkLgclpBehq2S0K4Ba2FF5P4IQl4aqiOgBcylzD6IantuB7/fBsTW7D1MKiysCmXmbwqnkflpeWHmXfxGV4O7WVgyp9zGo9sU1mINL3ltmBRCc/4t/kVM/xvg8xTBc0u5gqZ7Ro6idOETlI4oUoW6oMEGhR2vZvpz/Q==
-Received: from PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:1b::13)
- by PN2PR01MB5269.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:5d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Mon, 29 Nov
- 2021 09:25:49 +0000
-Received: from PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::7ca6:9165:19ec:4cd7]) by PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::7ca6:9165:19ec:4cd7%5]) with mapi id 15.20.4734.024; Mon, 29 Nov 2021
- 09:25:49 +0000
-From: Aditya Garg <gargaditya08@live.com>
-To: Marcel Holtmann <marcel@holtmann.org>
-CC: Greg KH <gregkh@linuxfoundation.org>, Thorsten Leemhuis
-	<regressions@leemhuis.info>, Orlando Chamberlain
-	<redecorating@protonmail.com>, Daniel Winkler <danielwinkler@google.com>,
-	Johan Hedberg <johan.hedberg@intel.com>, "linux-bluetooth@vger.kernel.org"
-	<linux-bluetooth@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Luiz Augusto von Dentz
-	<luiz.dentz@gmail.com>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "sonnysasaka@chromium.org"
-	<sonnysasaka@chromium.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: [PATCH v5 2/2] btbcm: disable read tx power for affected Macs with
- the T2 Security chip
-Thread-Topic: [PATCH v5 2/2] btbcm: disable read tx power for affected Macs
- with the T2 Security chip
-Thread-Index: AQHX5QMYdnDWYBZS10KI1TQLMU/cyA==
-Date: Mon, 29 Nov 2021 09:25:49 +0000
-Message-ID: <72F677FD-FBCD-448F-84A5-75F42052FF5C@live.com>
-References: <3B8E16FA-97BF-40E5-9149-BBC3E2A245FE@live.com>
- <YZSuWHB6YCtGclLs@kroah.com> <52DEDC31-EEB2-4F39-905F-D5E3F2BBD6C0@live.com>
- <8919a36b-e485-500a-2722-529ffa0d2598@leemhuis.info>
- <20211117124717.12352-1-redecorating@protonmail.com>
- <F8D12EA8-4B37-4887-998E-DC0EBE60E730@holtmann.org>
- <40550C00-4EE5-480F-AFD4-A2ACA01F9DBB@live.com>
- <332a19f1-30f0-7058-ac18-c21cf78759bb@leemhuis.info>
- <D9375D91-1062-4265-9DE9-C7CF2B705F3F@live.com>
- <BC534C52-7FCF-4238-8933-C5706F494A11@live.com> <YaSCJg+Xkyx8w2M1@kroah.com>
- <287DE71A-2BF2-402D-98C8-24A9AEEE55CB@live.com>
- <42E2EC08-1D09-4DDE-B8B8-7855379C23C5@holtmann.org>
- <6ABF3770-A9E8-4DAF-A22D-DA7113F444F3@live.com>
- <A003A45E-EE35-43EC-879F-3395CCB5EF59@live.com>
- <6326984F-8428-4A3D-9734-1A408B9E82BB@live.com>
- <3EA0850B-7D40-4B21-85A5-B42C4CE8A942@live.com>
-In-Reply-To: <3EA0850B-7D40-4B21-85A5-B42C4CE8A942@live.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn: [iD2owS4PBmXARJZix0HMBae80BALj6+SXNNNO62SvoRwJsG+I3nmeaUeEmNi5ayq]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a2e0510f-787d-4141-818c-08d9b31a3b53
-x-ms-traffictypediagnostic: PN2PR01MB5269:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- kU+yZuNZ0jXjZOy0QV5+jcz3hhFJ23OX/sI5JVFqjrJblrys6ZS3orMev3+3Av6GKl/jGzuihlifTeejAqSTynClCPG43fhAE7b7W1FnnrT1A7iZyTp5k9wF62LlBSBEl8Mpci+YQLkmOH30vGzA09FmnZPlSqcPCJ/t5u0pVQLLlBDutROtiFNus7nSxGTXtztN9/BThBt5kd39yxtsoFowGrNy0y6kMx00HFpWDYn2KDvrUlz1iD1K6mbOlGQk4gC/aA3UDSnxcfGQIr09+UMgzK1Cd6kKQJcDr9THfdNB+YeLio4rTTGXEntF3fIqLvwAX13mF84GEgc3XHuo/TB+hm2K3fD7mWrM9V0IP3wWgFV1mk1+F81JSLbOet95DADq9bILbpkJJlG3e7iavRmSX24KUcczDXDmBL5x4wWWbghwtfkkO8iL2qNQ9/9a4IdA3c5dKaPsRNGP+SgmvgYKTrIrwmbPY41Roopk2jrt5wm7KCWXuKyBhE2fUqwp8WaQfH1oXWeTbyddGVPZeEseM3iAXWl59Ral/WEShbWL8CE9Hl2NsGAhqHAtaJdnw/BZX8PDgrygj7/yq0aaaid2zvNvu5m+9Vkm0y6SawTSGw8OyOFM2zPgoRGixN8l
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- htJ/Pedx6TVGePF4q8e0rZLXFEi8VQJD0IEMXZ44wevVi1lrdboTjVPgiBr0Tj5LfH+Fi1sHT8FMUmXhgHV4EJQqacsXu6ORZT2mT3YV86AlMBl2dbv+/k+Kyj+l7hj+zWoq83wqmrg/po7hQKpn3wnW4Ry1znPssxBQj3OqfKYLL2+UaSXBnAQBTPrZDQmTeMTdpZEn/nCDK7gA+DUtejt5ptiPq8aoifYz2ZFbbfZ9uPjpbopeSSinFrmOTnDDWDUj+Fh0FWZzPDro6y/NaT9QDy/LAiquFD6QtQaNwBPMrgw3AxsN3ARCQpUV+dg2nQ2wF/7LUiegaW2T8bDR0rQ0NKNGgF4nq0rHSzYTogDR+h/0XJS8K9jn2AHgevwOR6KSI/47/sxu3q84aOW+8GCp5FZXUrTTEEJxAtmSpXvzVjOCLKIaEKswU6hFYvPLEQvPXETEg8mF5Q+tYVmw0Ppk7sx/OBYf6BtsmK1j0AuWjA8ZpqoTDETVRGsuAACF9t26UD32X67fDsiXVJ6SPx02jbulQoX9f4u9CP5TRQ5Lo1xluBrUA2l+Qo2SfEct81xc1K9dPhmas4loK/dqN6uCc++kYuUrfryC9aSRquELdd2oY+5OsLGDoNuXOZGBubQq+ebhSfz1oHBtXGpDyrFyYDg3yose7/zRw6e6TePTJDMssaUlMMi4NVqNrNQUN3HnvveziZ3VWRrePKfvNjDGrqn4Nn6kZXGjFvnX/P9G9G95fuDuy6t8vphZALttn0YAleZ7NKUire4G6WAewg==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <77DAB2A863F03444B63FD57FFF72AD49@INDPRD01.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: quoted-printable
+	(Authenticated sender: kvalo)
+	by smtp.codeaurora.org (Postfix) with ESMTPSA id ED6E7C4338F;
+	Mon, 29 Nov 2021 10:54:11 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org ED6E7C4338F
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-3174-20-msonline-outlook-a1a1a.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: a2e0510f-787d-4141-818c-08d9b31a3b53
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Nov 2021 09:25:49.4490
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN2PR01MB5269
+Content-Transfer-Encoding: 7bit
+Subject: Re: rt2x00: do not mark device gone on EPROTO errors during start
+From: Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20211111141003.GA134627@wp.pl>
+References: <20211111141003.GA134627@wp.pl>
+To: Stanislaw Gruszka <stf_xl@wp.pl>
+Cc: Exuvo <exuvo@exuvo.se>, Thorsten Leemhuis <regressions@leemhuis.info>,
+ Stanislaw Gruszka <sgruszka@redhat.com>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ Helmut Schaa <helmut.schaa@googlemail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
+Message-ID: <163818324905.4761.11561065862250916009.kvalo@codeaurora.org>
+Date: Mon, 29 Nov 2021 10:54:14 +0000 (UTC)
 
-From: Aditya Garg <gargaditya08@live.com>
+Stanislaw Gruszka <stf_xl@wp.pl> wrote:
 
-Some Macs with the T2 security chip had Bluetooth not working.
-To fix it we add DMI based quirks to disable querying of LE Tx power.
+> As reported by Exuvo is possible that we have lot's of EPROTO errors
+> during device start i.e. firmware load. But after that device works
+> correctly. Hence marking device gone by few EPROTO errors done by
+> commit e383c70474db ("rt2x00: check number of EPROTO errors") caused
+> regression - Exuvo device stop working after kernel update. To fix
+> disable the check during device start.
+> 
+> Link: https://lore.kernel.org/linux-wireless/bff7d309-a816-6a75-51b6-5928ef4f7a8c@exuvo.se/
+> Reported-and-tested-by: Exuvo <exuvo@exuvo.se>
+> Fixes: e383c70474db ("rt2x00: check number of EPROTO errors")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Stanislaw Gruszka <stf_xl@wp.pl>
 
-Signed-off-by: Aditya Garg <gargaditya08@live.com>
-Reported-by: Orlando Chamberlain <redecorating@protonmail.com>
-Link:
-https://lore.kernel.org/r/4970a940-211b-25d6-edab-21a815313954@protonmail.c=
-om
-Fixes: 7c395ea521e6 ("Bluetooth: Query LE tx power on startup")
----
- drivers/bluetooth/btbcm.c | 40 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Patch applied to wireless-drivers.git, thanks.
 
-diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-index e4182acee488c5..40f7c9c5cf0a5a 100644
---- a/drivers/bluetooth/btbcm.c
-+++ b/drivers/bluetooth/btbcm.c
-@@ -8,6 +8,7 @@
-=20
- #include <linux/module.h>
- #include <linux/firmware.h>
-+#include <linux/dmi.h>
- #include <asm/unaligned.h>
-=20
- #include <net/bluetooth/bluetooth.h>
-@@ -343,9 +344,44 @@ static struct sk_buff *btbcm_read_usb_product(struct h=
-ci_dev *hdev)
- 	return skb;
- }
-=20
-+static const struct dmi_system_id disable_broken_read_transmit_power[] =3D=
- {
-+	{
-+		 .matches =3D {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,1"),
-+		},
-+	},
-+	{
-+		 .matches =3D {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,2"),
-+		},
-+	},
-+	{
-+		 .matches =3D {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,4"),
-+		},
-+	},
-+	{
-+		 .matches =3D {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "iMac20,1"),
-+		},
-+	},
-+	{
-+		 .matches =3D {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "iMac20,2"),
-+		},
-+	},
-+	{ }
-+};
-+
- static int btbcm_read_info(struct hci_dev *hdev)
- {
- 	struct sk_buff *skb;
-+	const struct dmi_system_id *dmi_id;
-=20
- 	/* Read Verbose Config Version Info */
- 	skb =3D btbcm_read_verbose_config(hdev);
-@@ -363,6 +399,10 @@ static int btbcm_read_info(struct hci_dev *hdev)
- 	bt_dev_info(hdev, "BCM: features 0x%2.2x", skb->data[1]);
- 	kfree_skb(skb);
-=20
-+	/* Read DMI and disable broken Read LE Min/Max Tx Power */
-+	if (dmi_first_match(disable_broken_read_transmit_power))
-+		set_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks);
-+
- 	return 0;
- }
-=20
+ed53ae756930 rt2x00: do not mark device gone on EPROTO errors during start
+
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20211111141003.GA134627@wp.pl/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
