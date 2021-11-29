@@ -1,84 +1,108 @@
-Received: from so254-9.mailgun.net (so254-9.mailgun.net [198.61.254.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA3DC2C80
-	for <regressions@lists.linux.dev>; Mon, 29 Nov 2021 10:54:15 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1638183255; h=Date: Message-ID: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=Q5OpnUeQRBjKRr8DJQYcMiUeDh8TD5lfyHLllP2qBBk=;
- b=YvJGwktdAMABREc+d8Lw6HK3NYPUn3exVTESyjTkuyQeYqF45W8hCm/hajRGVKLZ/OHedL7x
- GbqnWJMf6fIl/kJxL0yKRGbwuYG65C3yAJr7oYXnhST1tf59VwiUfSms2ldv3mBzmUZq2io5
- uLuD7CxtNfwxndfUbWNf6sGiLio=
-X-Mailgun-Sending-Ip: 198.61.254.9
-X-Mailgun-Sid: WyI0YzJmNCIsICJyZWdyZXNzaW9uc0BsaXN0cy5saW51eC5kZXYiLCAiYmU5ZTRhIl0=
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
- 61a4b1564fca5da46dafb617 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Nov 2021 10:54:14
- GMT
-Sender: kvalo=codeaurora.org@mg.codeaurora.org
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-	id 86ADDC43618; Mon, 29 Nov 2021 10:54:14 +0000 (UTC)
-X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
-	aws-us-west-2-caf-mail-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=2.0 tests=ALL_TRUSTED,BAYES_00,
-	MISSING_DATE,SPF_FAIL,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
-Received: from tykki.adurom.net (tynnyri.adurom.net [51.15.11.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: kvalo)
-	by smtp.codeaurora.org (Postfix) with ESMTPSA id ED6E7C4338F;
-	Mon, 29 Nov 2021 10:54:11 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.4.1 smtp.codeaurora.org ED6E7C4338F
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=fail smtp.mailfrom=codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+Received: from mail.holtmann.org (coyote.holtmann.net [212.227.132.17])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D9DA2C80
+	for <regressions@lists.linux.dev>; Mon, 29 Nov 2021 11:02:25 +0000 (UTC)
+Received: from smtpclient.apple (p5b3d2e91.dip0.t-ipconnect.de [91.61.46.145])
+	by mail.holtmann.org (Postfix) with ESMTPSA id 05F6FCED20;
+	Mon, 29 Nov 2021 12:02:23 +0100 (CET)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: rt2x00: do not mark device gone on EPROTO errors during start
-From: Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20211111141003.GA134627@wp.pl>
-References: <20211111141003.GA134627@wp.pl>
-To: Stanislaw Gruszka <stf_xl@wp.pl>
-Cc: Exuvo <exuvo@exuvo.se>, Thorsten Leemhuis <regressions@leemhuis.info>,
- Stanislaw Gruszka <sgruszka@redhat.com>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- Helmut Schaa <helmut.schaa@googlemail.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.7.3
-Message-ID: <163818324905.4761.11561065862250916009.kvalo@codeaurora.org>
-Date: Mon, 29 Nov 2021 10:54:14 +0000 (UTC)
+Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.20.0.1.32\))
+Subject: Re: [PATCH v3 1/2] Bluetooth: add quirk disabling LE Read Transmit
+ Power
+From: Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <6ABF3770-A9E8-4DAF-A22D-DA7113F444F3@live.com>
+Date: Mon, 29 Nov 2021 12:02:23 +0100
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Orlando Chamberlain <redecorating@protonmail.com>,
+ Daniel Winkler <danielwinkler@google.com>,
+ Johan Hedberg <johan.hedberg@intel.com>,
+ "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "sonnysasaka@chromium.org" <sonnysasaka@chromium.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <516543B6-9C30-479E-AC9B-A658C836C703@holtmann.org>
+References: <3B8E16FA-97BF-40E5-9149-BBC3E2A245FE@live.com>
+ <YZSuWHB6YCtGclLs@kroah.com> <52DEDC31-EEB2-4F39-905F-D5E3F2BBD6C0@live.com>
+ <8919a36b-e485-500a-2722-529ffa0d2598@leemhuis.info>
+ <20211117124717.12352-1-redecorating@protonmail.com>
+ <F8D12EA8-4B37-4887-998E-DC0EBE60E730@holtmann.org>
+ <40550C00-4EE5-480F-AFD4-A2ACA01F9DBB@live.com>
+ <332a19f1-30f0-7058-ac18-c21cf78759bb@leemhuis.info>
+ <D9375D91-1062-4265-9DE9-C7CF2B705F3F@live.com>
+ <BC534C52-7FCF-4238-8933-C5706F494A11@live.com> <YaSCJg+Xkyx8w2M1@kroah.com>
+ <287DE71A-2BF2-402D-98C8-24A9AEEE55CB@live.com>
+ <42E2EC08-1D09-4DDE-B8B8-7855379C23C5@holtmann.org>
+ <6ABF3770-A9E8-4DAF-A22D-DA7113F444F3@live.com>
+To: Aditya Garg <gargaditya08@live.com>
+X-Mailer: Apple Mail (2.3693.20.0.1.32)
 
-Stanislaw Gruszka <stf_xl@wp.pl> wrote:
+Hi Aditya,
 
-> As reported by Exuvo is possible that we have lot's of EPROTO errors
-> during device start i.e. firmware load. But after that device works
-> correctly. Hence marking device gone by few EPROTO errors done by
-> commit e383c70474db ("rt2x00: check number of EPROTO errors") caused
-> regression - Exuvo device stop working after kernel update. To fix
-> disable the check during device start.
-> 
-> Link: https://lore.kernel.org/linux-wireless/bff7d309-a816-6a75-51b6-5928ef4f7a8c@exuvo.se/
-> Reported-and-tested-by: Exuvo <exuvo@exuvo.se>
-> Fixes: e383c70474db ("rt2x00: check number of EPROTO errors")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Stanislaw Gruszka <stf_xl@wp.pl>
+> Some devices have a bug causing them to not work if they query=20
+> LE tx power on startup. Thus we add a quirk in order to not query it=20=
 
-Patch applied to wireless-drivers.git, thanks.
+> and default min/max tx power values to HCI_TX_POWER_INVALID.
+>=20
+> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+> ---
+> include/net/bluetooth/hci.h | 9 +++++++++
+> net/bluetooth/hci_core.c    | 3 ++-
+> 2 files changed, 11 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+> index 63065bc01b766c..383342efcdc464 100644
+> --- a/include/net/bluetooth/hci.h
+> +++ b/include/net/bluetooth/hci.h
+> @@ -246,6 +246,15 @@ enum {
+> 	 * HCI after resume.
+> 	 */
+> 	HCI_QUIRK_NO_SUSPEND_NOTIFIER,
+> +
+> +	/*
+> +	 * When this quirk is set, LE tx power is not queried on startup
+> +	 * and the min/max tx power values default to =
+HCI_TX_POWER_INVALID.
+> +	 *
+> +	 * This quirk can be set before hci_register_dev is called or
+> +	 * during the hdev->setup vendor callback.
+> +	 */
+> +	HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER,
+> };
+>=20
+> /* HCI device flags */
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index 8d33aa64846b1c..434c6878fe9640 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -619,7 +619,8 @@ static int hci_init3_req(struct hci_request *req, =
+unsigned long opt)
+> 			hci_req_add(req, HCI_OP_LE_READ_ADV_TX_POWER, 0, =
+NULL);
+> 		}
+>=20
+> -		if (hdev->commands[38] & 0x80) {
+> +		if (hdev->commands[38] & 0x80 &&
+> +		!test_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, =
+&hdev->quirks)) {
 
-ed53ae756930 rt2x00: do not mark device gone on EPROTO errors during start
+		if ((hdev->commands[38] && 0x80) &&
+		    !test_bit(HCI_QUIRK_.., &hdev->quirks)) {
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/patch/20211111141003.GA134627@wp.pl/
+> 			/* Read LE Min/Max Tx Power*/
+> 			hci_req_add(req, HCI_OP_LE_READ_TRANSMIT_POWER,
+> 				    0, NULL);
+>=20
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Regards
+
+Marcel
 
