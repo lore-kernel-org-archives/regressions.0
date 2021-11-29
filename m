@@ -1,18 +1,18 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B14029CA
-	for <regressions@lists.linux.dev>; Mon, 29 Nov 2021 07:47:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D011C004E1;
-	Mon, 29 Nov 2021 07:47:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A05F2C81
+	for <regressions@lists.linux.dev>; Mon, 29 Nov 2021 07:47:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98DF8C004E1;
+	Mon, 29 Nov 2021 07:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1638172054;
-	bh=KtAb67LnalHmYppYJg4a+4Vsjh86YMhiNv+w58SdATU=;
+	s=korg; t=1638172074;
+	bh=kPK1gJMxvTYCVwiHG1lGyKaBQ0tpNH+0ELh1qIRljDk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=xMAsrXZhSbEiNDC8TVQP2x7jnQWqmAnWuLMErBeYo5q4wgFQIcl5skdtTOgCyQIRV
-	 KhNrDfqCdAzo6PS6wvEszhFmMgmfg9+A0fWeM3OzFN+V+zFnlzFJDozaU7njVaC2Bv
-	 nl7FE+ZivpNMQwqmRHO35hNlvMpiT46+Qy2tvoCc=
-Date: Mon, 29 Nov 2021 08:47:31 +0100
+	b=uCWl9wqLt64nU7dBHqAm5WC9ZxLliBmfMMEzq2DP5A6usB0ePrNbohkenq4qVosZ3
+	 NoVIniDOk60OZapzXchP7TL3QAE2mNR5ZPE5AvCnasNcwbKgMXbNSfI0TVhGWQjyhQ
+	 XX+oWncCVTXWvAGAKPlyHJJc7tM6lwSVEbk/NWR8=
+Date: Mon, 29 Nov 2021 08:47:51 +0100
 From: Greg KH <gregkh@linuxfoundation.org>
 To: Aditya Garg <gargaditya08@live.com>
 Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
@@ -28,7 +28,7 @@ Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
 	"stable@vger.kernel.org" <stable@vger.kernel.org>
 Subject: Re: [PATCH v2 1/6] Bluetooth: add quirk disabling LE Read Transmit
  Power
-Message-ID: <YaSFk4uY9bs8kEI3@kroah.com>
+Message-ID: <YaSFp8TpRPjP54nX@kroah.com>
 References: <52DEDC31-EEB2-4F39-905F-D5E3F2BBD6C0@live.com>
  <8919a36b-e485-500a-2722-529ffa0d2598@leemhuis.info>
  <20211117124717.12352-1-redecorating@protonmail.com>
@@ -56,11 +56,46 @@ On Mon, Nov 29, 2021 at 07:42:39AM +0000, Aditya Garg wrote:
 > quirk in order to not query it and default min/max tx power values to HCI_TX_POWER_INVALID.
 > 
 > v2: Wrap the changeling at 72 columns, correct email and remove tested by.
+> 
+> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+> ---
+>  include/net/bluetooth/hci.h | 9 +++++++++
+>  net/bluetooth/hci_core.c    | 3 ++-
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+> index 63065bc01b766c..383342efcdc464 100644
+> --- a/include/net/bluetooth/hci.h
+> +++ b/include/net/bluetooth/hci.h
+> @@ -246,6 +246,15 @@ enum {
+>  	 * HCI after resume.
+>  	 */
+>  	HCI_QUIRK_NO_SUSPEND_NOTIFIER,
+> +
+> +	/*
+> +	 * When this quirk is set, LE tx power is not queried on startup
+> +	 * and the min/max tx power values default to HCI_TX_POWER_INVALID.
+> +	 *
+> +	 * This quirk can be set before hci_register_dev is called or
+> +	 * during the hdev->setup vendor callback.
+> +	 */
+> +	HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER,
+>  };
+>  
+>  /* HCI device flags */
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index 8d33aa64846b1c..434c6878fe9640 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -619,7 +619,8 @@ static int hci_init3_req(struct hci_request *req, unsigned long opt)
+>  			hci_req_add(req, HCI_OP_LE_READ_ADV_TX_POWER, 0, NULL);
+>  		}
+>  
+> -		if (hdev->commands[38] & 0x80) {
+> +		if (hdev->commands[38] & 0x80 &&
+> +		!test_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks)) {
 
-These lines are not wrapped at 72 columns :(
-
-Also the changes line goes below the --- line, as documented in the
-kernel documentation on how to submit a patch.
+You did not fix this formatting?  Why not?
 
 thanks,
 
