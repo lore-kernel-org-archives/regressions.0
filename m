@@ -1,157 +1,88 @@
-Received: from IND01-BO1-obe.outbound.protection.outlook.com (mail-bo1ind01olkn0180.outbound.protection.outlook.com [104.47.101.180])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977A22C9D
-	for <regressions@lists.linux.dev>; Tue, 30 Nov 2021 11:50:13 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lYxW8IY8stAr5ymdOR+wIKmv3IB2e0VvOs1Kz0kEIaHDTOz6x5dIiIEUjhxipif4ZX8ISZwSknkxU6pYd9tdgvtZgSAi3ciOlUFtAUjhKvbwyzxAvrgGJWE1RihtuEV4sxCLNSBrfThZE3aqdcUJgERCge/LoGVftAYs/slg1g3lraQ3O35ThGlUyV/Yp1tCR0wTyZ5SEIwAi4nJXrzAQ7UJ4LSUhKUVcMLoA8USIjeNV5IbmiaLgURR5TXajitJZibtbv9cDpxmuNOoIA7fKev7d1bABB8XUwcpqrv+jugFBENEf0eXb9zpSMS+kvlHGffRGD3G+U3MEjpIEFaWTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VtZ1vtIDAN0FUuJoZPBheK7iqn020NtZpmc3jBnqU/0=;
- b=nKn3mIpVxE32q5M0ru/SUmZIYFGHmEzLRc6emApItscwcZbtYyRAEyYCM4M/LBgUjhd8NWhBtsfskXYdlmEJ4AbA2pUI46rfn3Kt0c740WmegLXhl0xugKwxb3wEi4E4AATSlbL1t3pKysMHRkvEs8l2WxRHew15n+wgYzwFg6AP5ZWFUQUtTlWZP7aTkiKGKhuRyobUfRz80qucBdVOD0qi5xdrStxfTUcFSzAWoulw8KrBPQhJ1AGgqb0cuAlTJqnO726Qxo4fu7w/XaRmrfTZif2f1ksTr0fXmU7Ohu2QCzHHU9QmwrxIcVFcEnwBWURR0WL3FF6tnJCekdvJVw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VtZ1vtIDAN0FUuJoZPBheK7iqn020NtZpmc3jBnqU/0=;
- b=hgiG1amDKeLESaptrJynwwPnXXt2KohMKTqb6cEKVI43Pdk6JA/Ft7ky3AEottJfU1xX5EqZiyCSVrR7CUUh097arZR6vTAOO6N34tzNcvRjPG+2ednwRq+3p2ewh12GCSPtUr44TwPj+AxF0XRE9TQDxSrK4bEhMz3ciVqSnExDLYAEmroFfcSjs/iX4Ooww8KFCV76D7ikXwhki3V7IxvoOjoTEz+52NLRholS0ZNge3F+wsPVkLprSc2uyF7okRzP+neLjucf2+rqYXXJNF6stw44/5h9oTBDzg/JcCwBVPFCu3IKrXED1Qj8LThQErliCJssrjkjFNkklMtyRw==
-Received: from PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:1b::13)
- by PN1PR0101MB1903.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:13::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Tue, 30 Nov
- 2021 11:50:06 +0000
-Received: from PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::7ca6:9165:19ec:4cd7]) by PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM
- ([fe80::7ca6:9165:19ec:4cd7%5]) with mapi id 15.20.4734.024; Tue, 30 Nov 2021
- 11:50:06 +0000
-From: Aditya Garg <gargaditya08@live.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-CC: Marcel Holtmann <marcel@holtmann.org>, Thorsten Leemhuis
-	<regressions@leemhuis.info>, Orlando Chamberlain
-	<redecorating@protonmail.com>, Daniel Winkler <danielwinkler@google.com>,
-	Johan Hedberg <johan.hedberg@intel.com>, "linux-bluetooth@vger.kernel.org"
-	<linux-bluetooth@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Luiz Augusto von Dentz
-	<luiz.dentz@gmail.com>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "sonnysasaka@chromium.org"
-	<sonnysasaka@chromium.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v7 1/2] Bluetooth: add quirk disabling LE Read Transmit
- Power
-Thread-Topic: [PATCH v7 1/2] Bluetooth: add quirk disabling LE Read Transmit
- Power
-Thread-Index: AQHX5d7dHicx4XyL6UmjXwqFY5glRawb8qOAgAACc4A=
-Date: Tue, 30 Nov 2021 11:50:06 +0000
-Message-ID: <AF3FE4B9-2210-40CE-93F4-A8EAFFD81E3B@live.com>
-References: <BC534C52-7FCF-4238-8933-C5706F494A11@live.com>
- <YaSCJg+Xkyx8w2M1@kroah.com> <287DE71A-2BF2-402D-98C8-24A9AEEE55CB@live.com>
- <42E2EC08-1D09-4DDE-B8B8-7855379C23C5@holtmann.org>
- <6ABF3770-A9E8-4DAF-A22D-DA7113F444F3@live.com>
- <92FBACD6-F4F2-4DE8-9000-2D30852770FC@live.com>
- <3716D644-CD1B-4A5C-BC96-A51FF360E31D@live.com>
- <9E6473A2-2ABE-4692-8DCF-D8F06BDEAE29@live.com>
- <64E15BD0-665E-471F-94D9-991DFB87DEA0@live.com>
- <A6DD9616-E669-4382-95A0-B9DBAF46712D@live.com> <YaYN35NRBTV61qpT@kroah.com>
-In-Reply-To: <YaYN35NRBTV61qpT@kroah.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn: [6244ijVRyFmR575fepgmURv9qn60FtfkmeElb7DWD4DQlYLsmiBqoSOapCXlnmdm]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c7a8623e-37bb-4af2-6fea-08d9b3f78db3
-x-ms-traffictypediagnostic: PN1PR0101MB1903:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- IeVsYtDqtE0nYZfn1p/EOREFa36jnEytVWJ+zxaOM0ST5JT5mkqq+/oFoWAXgcwlVufKEZtCF+MUbCccDIT4un0F4b3yF/4WmLBzj6mmNp0jCcCcZcuY7O6qC8JepiRyb/FynxuWqFGgwB8F+qxx0gX8uDPVHfmsDatyygnAczLASc/xO4BDPYpRBzaRxgOmPonnA7Ir3Zq3sO0bMvvv8ieI4UML73KTnnS0yuJrwTJ9qV8iIKb+6X1P+0D5BWQv2ix7CnPaAzJWAausbUOAnq/uDIcza4UDWu1oezaNUCgvakdrmjZbO6XeljMuh7f7OXjKa5seuodJ16sgGORBZaZB8Ru3ZYRf3/TaYCamQf087xYfkJrwPCVeQ1ffVmj4SfZgZHJGnOq9lmlT2Ok+Za7hDD4iOdfTpqYtPB8bJBBrN+FxOSacDYyL3Y90VweYP7k7AnRSfAjBhh+DQgDbm1TSEir9GefclfBeHBvRhKTW+Hk+kqsw8pWxcGzP58qp9NRFSFEJPcI5IvJJZpLdUM/pG2Ta+KetWoq98CQZLNGztsv0TktFvDGD3UYrcRDzvZhnJuMomHIR+4B7Dw/v/+9AmoUiVfqFKxCCPpJaGgznioFR5CngNo9TM/74I1oI
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- h29pPmR0UJupkECY9uTKDpkfWo6h6lG/nvtYbE98FikYyJFC0PwcQ6QToK5TpRVv/tzyzn38F/VS0+htBkBdDia2BBEvzEpL1dRLXA9YWX8y+H+PXMHONhSYs0W3CcbSwI23t0Y6aqQd44X92ZhCSa8cAlFC2jM5wRwSDeaTAzO8ryGAhDOxfajR5N7OWeRK7FAw+PRCGnR/7ZHMh0BI1rwsNAwCVZliLyf7Q4UFYmAlhSXJteu85nBBOF9xNL3zAZ8a9aMzAHSajUnGOcq2VjFCGv4FT+OEoip6H+bKddzf+xZiHSSqTkm/CF6dHwDd5PWxM5wlHTuXdZEF7JYYmJmqrMsgYMJlEM1cuDNWSqVczBkYbDphGbOYT/4mbnhBcYccHGhk3OB8YykCrPM2JaE59mhiUnhST8KQ1BgMOqMgbakMSt2vjPzk8jyrJ7IuO9ZiU/phRvlewgHD6yhG9SnT3/nP9o/enursNn0CbFEA1+/TdfL4/DpgyBNHfLXaMKT6O+cOcJXyYLxqrggapLGE8QuRWk96/qiIaVGglNb/asvR0B9IPshEN8TZS1bpTfOvxw8YjqU8+KWMO6iTg92q3ph3VnOGhu4l33Q7HO05D0OJUQKil8ZPkgEAbyNA7LpWAvXSW48XcvQdomFQD5oWwVzcG7e0gAQPh6dN93teTKtIFASeozrYh6qOa4o5UfjS2uIPODGSrIfIV2shdu7nQQKdtgi/sQNqdNb1+0P6Alw8csPQ2oEjAo8ojwN8ZvwVeb3GMSMGxbqY3L0kYA==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9109C2326066D14A92E1412E16E163FD@INDPRD01.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9888C2C9D
+	for <regressions@lists.linux.dev>; Tue, 30 Nov 2021 12:00:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1638273622;
+	bh=86mLRP7RxLciX6WFesgCpFI0qfy9gXogt8D2ha7z4+A=;
+	h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=AXivPj5XQ42x2j05j7S7RsluKY6J0DKySHx2IYzGEZWs3E1q5T7RSqLrp3G9GLwNk
+	 0akdRYeC/XPTuKnQAVQCaV/ngA4FM097mYbxzBdeisObq2J6LHWVqy4sejvkBbFZOV
+	 dPwdwR6mGr4aLnBritwZEcB/Z5qCoxnO/Q/75U80=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from homer.fritz.box ([185.146.50.175]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N1OXT-1mTnrh0aQF-012nJz; Tue, 30
+ Nov 2021 13:00:22 +0100
+Message-ID: <b8f607c771a4f698fcb651379ca30d3bb6a83ccd.camel@gmx.de>
+Subject: Re: [PATCH 1/1] mm: vmscan: Reduce throttling due to a failure to
+ make progress
+From: Mike Galbraith <efault@gmx.de>
+To: Mel Gorman <mgorman@techsingularity.net>
+Cc: Alexey Avramov <hakavlad@inbox.lv>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, Vlastimil
+ Babka <vbabka@suse.cz>, Rik van Riel <riel@surriel.com>, Darrick Wong
+ <djwong@kernel.org>, regressions@lists.linux.dev, Linux-fsdevel
+ <linux-fsdevel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, LKML
+ <linux-kernel@vger.kernel.org>
+Date: Tue, 30 Nov 2021 13:00:18 +0100
+In-Reply-To: <20211130112244.GQ3366@techsingularity.net>
+References: <20211125151853.8540-1-mgorman@techsingularity.net>
+	 <20211127011246.7a8ac7b8@mail.inbox.lv>
+	 <20211129150117.GO3366@techsingularity.net>
+	 <a20f17c4b1b5fdfade3f48375d148e97bd162dd6.camel@gmx.de>
+	 <20211130112244.GQ3366@techsingularity.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-3174-20-msonline-outlook-a1a1a.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PNZPR01MB4415.INDPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7a8623e-37bb-4af2-6fea-08d9b3f78db3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Nov 2021 11:50:06.4141
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN1PR0101MB1903
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:Q8Rcm+TDsMGclzpLvPpIUOG460Khlbhybxb+OmjHoQ7eWlSZjwe
+ iInZPJV5ei36SlSySfzp57ZCs3OM51mS7uS/FRFL1ovBCSwF4GcSRjYfvB7Q+GCdpxR2D4m
+ hnr5S95PsvQKQWjyQuTejCqngOfcVJ6Xck3dqr7ySjF+TRZAV6ZlB8yiDsxB0PN9R/O3Lrw
+ dYGqpUqgAVY6735G5zwQw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4FgWfCmXmJQ=:QpOMsYUbzenGVGbOqzhwNZ
+ 6zL4AIN0w6dOK7sxB0IFmJyv9C0MlwGzHcOgoyoBEcsYUXF1QLYv+6l6+HtcVhdTaDlHQi8rG
+ FmAVvq4RLvC4cD2ndlS4Or4dvJI+7w1edc5vRgEGoZajS76Kka0UfMBuJEP64QfaIctGFLi1e
+ ivjCCcE7w7K5m9l6gtdnfp+6TNkuQCrlJRATdOEscgSTB6qdEep+USC/PgMaEIppktbXifWRP
+ Yse6KCWFtOCdsBG+p/ICWTqwbWFu2o0ELpkv0X1qCAevwEQ0WEGchfqfQvKSeM8J7nO9VZzgz
+ YOJAO17bwfXFhN3PneNTivUuksJQRTJNPtKrKYdgjN4yiv4VPsY8yGZu+G1Q9keXC8HF2EpD/
+ di7q4Jj4gi8FA/kBto8U7SM5seeyqVLLPvgrwOPuHQ0mimAM36V2WUYfvxKN8y8DrWi7oubpw
+ KAms+0Ts7QjiyQ1hOs+wrSGPdXL5tlrNdtnyiRZtoYGF5eWG+FoKoYOVbJUrXJe6xKmtqk6fH
+ MhCJKhUN1Ti/fy9bBwfSpSFc8mIRLjbjOOXb5dJGX4IPpYnPa9MmjKkYbAJKn95g91tXM4l85
+ eOa35a6GtNrAWslosEccnoorhlhXkei+fs1w0BgOnChc4mmHWA0SVKvjMnudHP2E5rCM5qn8N
+ s3NZBH8LtLVm6w72tZGtmXxuGEAj8Qa/AqwX809uMeJ8rpdz9JrZHkCsjDAB5OHrs7BLwkHnY
+ mE61LUKvf8zdxWvFUssoTY87crGGn1Tb25LrL6YAsDWWy61rhRq6B6EQaQDHm8KHCwcQoon1K
+ FodR4TDCsBKGhyZRadedT+SmZ7eojQnOAt62dcOUNWbhK4E35TaeReq5RpSTHfZMFUNLUNQBv
+ bAZ7a1yJ95X1OfdF0Rt0EeOefVGLJ5ayfr866ugH1cOzb3bp7UoU980+hrLd+pAt5oj8Z3fOh
+ WOEJc2k/qu8aRWSCoDkJfa3yPvqOaotVPfttvBEyIK2Rr1UCy+m4AATm0Yh6XyTuoiYlSDpix
+ di9Qm9fHeZcJ/5il7uoFcI6soPBbPS7QYZSC0LXwmszfOB+5k1BE//erw+AU9ZQvn2eJpJ+l/
+ qUl/XvzRC87XzU=
 
+On Tue, 2021-11-30 at 11:22 +0000, Mel Gorman wrote:
+> On Tue, Nov 30, 2021 at 11:14:32AM +0100, Mike Galbraith wrote:
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (2 * write_pending <=
+=3D reclaimable)
+> >
+> > That is always true here...
+> >
+>
+> Always true for you or always true in general?
 
+"Here" as in the boxen located at my GPS coordinates :)
 
-> On 30-Nov-2021, at 5:11 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
->=20
-> On Tue, Nov 30, 2021 at 11:38:58AM +0000, Aditya Garg wrote:
->> From: Aditya Garg <gargaditya08@live.com>
->>=20
->> Some devices have a bug causing them to not work if they query=20
->> LE tx power on startup. Thus we add a quirk in order to not query it=20
->> and default min/max tx power values to HCI_TX_POWER_INVALID.
->>=20
->> Signed-off-by: Aditya Garg <gargaditya08@live.com>
->> Reported-by: Orlando Chamberlain <redecorating@protonmail.com>
->> Tested-by: Orlando Chamberlain <redecorating@protonmail.com>
->> Link:
->> https://lore.kernel.org/r/4970a940-211b-25d6-edab-21a815313954@protonmai=
-l.com
->> Fixes: 7c395ea521e6 ("Bluetooth: Query LE tx power on startup")
->> ---
->> v7 :- Added Tested-by.
->> include/net/bluetooth/hci.h | 9 +++++++++
->> net/bluetooth/hci_core.c    | 3 ++-
->> 2 files changed, 11 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
->> index 63065bc01b766c..383342efcdc464 100644
->> --- a/include/net/bluetooth/hci.h
->> +++ b/include/net/bluetooth/hci.h
->> @@ -246,6 +246,15 @@ enum {
->> 	 * HCI after resume.
->> 	 */
->> 	HCI_QUIRK_NO_SUSPEND_NOTIFIER,
->> +
->> +	/*
->> +	 * When this quirk is set, LE tx power is not queried on startup
->> +	 * and the min/max tx power values default to HCI_TX_POWER_INVALID.
->> +	 *
->> +	 * This quirk can be set before hci_register_dev is called or
->> +	 * during the hdev->setup vendor callback.
->> +	 */
->> +	HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER,
->> };
->>=20
->> /* HCI device flags */
->> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
->> index 8d33aa64846b1c..434c6878fe9640 100644
->> --- a/net/bluetooth/hci_core.c
->> +++ b/net/bluetooth/hci_core.c
->> @@ -619,7 +619,8 @@ static int hci_init3_req(struct hci_request *req, un=
-signed long opt)
->> 			hci_req_add(req, HCI_OP_LE_READ_ADV_TX_POWER, 0, NULL);
->> 		}
->>=20
->> -		if (hdev->commands[38] & 0x80) {
->> +		if ((hdev->commands[38] & 0x80) &&
->> +		!test_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks)) {
->=20
-> This line is still not properly formatted.
-I hope its fine in the resent patch. I sent the patch as HTML by mistake.
->=20
-> Please always use scripts/checkpatch.pl to find issues like this.
->=20
-> thanks,
->=20
-> greg k-h
+> The intent of the check is "are a majority of reclaimable pages
+> marked WRITE_PENDING?". It's similar to the check that existed prior
+> to 132b0d21d21f ("mm/page_alloc: remove the throttling logic from the
+> page allocator").
+
+I'll put my trace_printk() back and see if I can't bend-adjust it.
+
+	-Mike
 
