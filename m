@@ -1,128 +1,99 @@
-Received: from shark4.inbox.lv (shark4.inbox.lv [194.152.32.84])
+Received: from outbound-smtp01.blacknight.com (outbound-smtp01.blacknight.com [81.17.249.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4ADA68
-	for <regressions@lists.linux.dev>; Tue, 30 Nov 2021 16:04:08 +0000 (UTC)
-Received: from shark4.inbox.lv (localhost [127.0.0.1])
-	by shark4-out.inbox.lv (Postfix) with ESMTP id 0B852C01B9;
-	Tue, 30 Nov 2021 18:04:00 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=inbox.lv; s=30062014;
-	t=1638288240; bh=MaBmrbP8dDC347/MJhlAP6RXqkK7vpRItGnOjqKVKMc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=NHNGWgWsZJ0U++0xL+tMHjxROjFFZ/sdn4qopEIzHxDtyrUFP4nkbPUkdk0PGvmPU
-	 bbAtMtPxn6lE1RTAMHf7rcZHmk13R+Aw042Wb5lv5NJS6683c6bFAjfWHKYiaCpqau
-	 +C6ATRtiK7Z8iF+gG+/sd2Jqghb6wZPHk6t3bfd8=
-Received: from localhost (localhost [127.0.0.1])
-	by shark4-in.inbox.lv (Postfix) with ESMTP id F33CCC01A8;
-	Tue, 30 Nov 2021 18:03:59 +0200 (EET)
-Received: from shark4.inbox.lv ([127.0.0.1])
-	by localhost (shark4.inbox.lv [127.0.0.1]) (spamfilter, port 35)
-	with ESMTP id wR-tlqMNy4Vw; Tue, 30 Nov 2021 18:03:59 +0200 (EET)
-Received: from mail.inbox.lv (pop1 [127.0.0.1])
-	by shark4-in.inbox.lv (Postfix) with ESMTP id 76F78C018F;
-	Tue, 30 Nov 2021 18:03:59 +0200 (EET)
-Date: Wed, 1 Dec 2021 01:03:48 +0900
-From: Alexey Avramov <hakavlad@inbox.lv>
-To: Mel Gorman <mgorman@techsingularity.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Michal Hocko
- <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>, Rik van Riel
- <riel@surriel.com>, Mike Galbraith <efault@gmx.de>, Darrick Wong
- <djwong@kernel.org>, regressions@lists.linux.dev, Linux-fsdevel
- <linux-fsdevel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, LKML
- <linux-kernel@vger.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E30E2C80
+	for <regressions@lists.linux.dev>; Tue, 30 Nov 2021 17:34:08 +0000 (UTC)
+Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
+	by outbound-smtp01.blacknight.com (Postfix) with ESMTPS id 1D42BC4B13
+	for <regressions@lists.linux.dev>; Tue, 30 Nov 2021 17:27:56 +0000 (GMT)
+Received: (qmail 22121 invoked from network); 30 Nov 2021 17:27:55 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.17.29])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 30 Nov 2021 17:27:55 -0000
+Date: Tue, 30 Nov 2021 17:27:54 +0000
+From: Mel Gorman <mgorman@techsingularity.net>
+To: Alexey Avramov <hakavlad@inbox.lv>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Rik van Riel <riel@surriel.com>, Mike Galbraith <efault@gmx.de>,
+	Darrick Wong <djwong@kernel.org>, regressions@lists.linux.dev,
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH 1/1] mm: vmscan: Reduce throttling due to a failure to
  make progress
-Message-ID: <20211201010348.31e99637@mail.inbox.lv>
-In-Reply-To: <20211129150117.GO3366@techsingularity.net>
+Message-ID: <20211130172754.GS3366@techsingularity.net>
 References: <20211125151853.8540-1-mgorman@techsingularity.net>
-	<20211127011246.7a8ac7b8@mail.inbox.lv>
-	<20211129150117.GO3366@techsingularity.net>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+ <20211127011246.7a8ac7b8@mail.inbox.lv>
+ <20211129150117.GO3366@techsingularity.net>
+ <20211201010348.31e99637@mail.inbox.lv>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: OK
-X-ESPOL: G4mERXADmHlDpsG9Ippu5OH4tai+FgVjoUWJw7wx9RAtu7LHst18d2eTGIHzanG0EAbD
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20211201010348.31e99637@mail.inbox.lv>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-I tested this [1] patch on top of 5.16-rc2. It's the same test with 10 tails.
+On Wed, Dec 01, 2021 at 01:03:48AM +0900, Alexey Avramov wrote:
+> I tested this [1] patch on top of 5.16-rc2. It's the same test with 10 tails.
+> 
+> - with noswap
+> 
+> Summary:
+> 
+> 2021-11-30 23:32:36,890: Stall times for the last 548.6s:
+> 2021-11-30 23:32:36,890: -----------
+> 2021-11-30 23:32:36,891: some cpu     3.7s, avg 0.7%
+> 2021-11-30 23:32:36,891: -----------
+> 2021-11-30 23:32:36,891: some io      187.6s, avg 34.2%
+> 2021-11-30 23:32:36,891: full io      178.3s, avg 32.5%
+> 2021-11-30 23:32:36,891: -----------
+> 2021-11-30 23:32:36,892: some memory  392.2s, avg 71.5%
+> 2021-11-30 23:32:36,892: full memory  390.7s, avg 71.2%
+> 
+> full psi:
+> https://raw.githubusercontent.com/hakavlad/cache-tests/main/516-reclaim-throttle/516-rc2/patch5/noswap/psi
+> 
+> mem:
+> https://raw.githubusercontent.com/hakavlad/cache-tests/main/516-reclaim-throttle/516-rc2/patch5/noswap/mem
+> 
 
-- with noswap
+Ok, taking just noswap in isolation, this is what I saw when running
+firefox + youtube vido and running tail /dev/zero 10 times in a row
 
-Summary:
+2021-11-30 17:10:11,817: =================================
+2021-11-30 17:10:11,817: Peak values:  avg10  avg60 avg300
+2021-11-30 17:10:11,817: -----------  ------ ------ ------
+2021-11-30 17:10:11,817: some cpu       1.00   0.96   0.56
+2021-11-30 17:10:11,817: -----------  ------ ------ ------
+2021-11-30 17:10:11,817: some io        0.24   0.06   0.04
+2021-11-30 17:10:11,817: full io        0.24   0.06   0.01
+2021-11-30 17:10:11,817: -----------  ------ ------ ------
+2021-11-30 17:10:11,817: some memory    2.48   0.51   0.38
+2021-11-30 17:10:11,817: full memory    2.48   0.51   0.37
+2021-11-30 17:10:11,817: =================================
+2021-11-30 17:10:11,817: Stall times for the last 53.7s:
+2021-11-30 17:10:11,817: -----------
+2021-11-30 17:10:11,817: some cpu     0.4s, avg 0.8%
+2021-11-30 17:10:11,817: -----------
+2021-11-30 17:10:11,817: some io      0.1s, avg 0.2%
+2021-11-30 17:10:11,817: full io      0.1s, avg 0.2%
+2021-11-30 17:10:11,817: -----------
+2021-11-30 17:10:11,817: some memory  0.3s, avg 0.6%
+2021-11-30 17:10:11,817: full memory  0.3s, avg 0.6%
 
-2021-11-30 23:32:36,890: Stall times for the last 548.6s:
-2021-11-30 23:32:36,890: -----------
-2021-11-30 23:32:36,891: some cpu     3.7s, avg 0.7%
-2021-11-30 23:32:36,891: -----------
-2021-11-30 23:32:36,891: some io      187.6s, avg 34.2%
-2021-11-30 23:32:36,891: full io      178.3s, avg 32.5%
-2021-11-30 23:32:36,891: -----------
-2021-11-30 23:32:36,892: some memory  392.2s, avg 71.5%
-2021-11-30 23:32:36,892: full memory  390.7s, avg 71.2%
+Obviously a fairly different experience and most likely due to the
+underlying storage.
 
-full psi:
-https://raw.githubusercontent.com/hakavlad/cache-tests/main/516-reclaim-throttle/516-rc2/patch5/noswap/psi
+Can you run the same test but after doing this
 
-mem:
-https://raw.githubusercontent.com/hakavlad/cache-tests/main/516-reclaim-throttle/516-rc2/patch5/noswap/mem
+$ echo 1 > /sys/kernel/debug/tracing/events/vmscan/mm_vmscan_throttled/enable
+$ cat /sys/kernel/debug/tracing/trace_pipe > trace.out
 
-- with swappiness=0
+and send me the trace.out file please?
 
-Summary:
-
-2021-11-30 23:51:48,969: Stall times for the last 919.4s:
-2021-11-30 23:51:48,969: -----------
-2021-11-30 23:51:48,969: some cpu     5.5s, avg 0.6%
-2021-11-30 23:51:48,970: -----------
-2021-11-30 23:51:48,970: some io      240.4s, avg 26.2%
-2021-11-30 23:51:48,970: full io      230.6s, avg 25.1%
-2021-11-30 23:51:48,970: -----------
-2021-11-30 23:51:48,970: some memory  806.1s, avg 87.7%
-2021-11-30 23:51:48,971: full memory  800.5s, avg 87.1%
-
-psi log:
-https://raw.githubusercontent.com/hakavlad/cache-tests/main/516-reclaim-throttle/516-rc2/patch5/swappiness0/psi
-
-mem log:
-https://raw.githubusercontent.com/hakavlad/cache-tests/main/516-reclaim-throttle/516-rc2/patch5/swappiness0/mem
-
-In some cases stalls was very short, but in many cases stalls was long. 
-The result is still not good enough.
-
-
-offtop
-======
-
-The same test with the patch [1] on top of 5.16-rc2 + le9 patch [2] 
-with vm.clean_min_kbytes=99000.
-
-- with noswap
-
-Summary:
-
-2021-11-30 23:59:32,209: Stall times for the last 73.1s:
-2021-11-30 23:59:32,209: -----------
-2021-11-30 23:59:32,209: some cpu     0.4s, avg 0.5%
-2021-11-30 23:59:32,209: -----------
-2021-11-30 23:59:32,210: some io      5.8s, avg 8.0%
-2021-11-30 23:59:32,210: full io      5.3s, avg 7.3%
-2021-11-30 23:59:32,210: -----------
-2021-11-30 23:59:32,210: some memory  3.3s, avg 4.5%
-2021-11-30 23:59:32,210: full memory  3.1s, avg 4.2%
-
-This is just an example of what a result close to the expected 
-result might be (especially note io pressure values).
-
-full psi:
-https://raw.githubusercontent.com/hakavlad/cache-tests/main/516-reclaim-throttle/516-rc2/patch5/noswap_le9_min99k/psi
-
-mem:
-https://raw.githubusercontent.com/hakavlad/cache-tests/main/516-reclaim-throttle/516-rc2/patch5/noswap_le9_min99k/mem
-
-[1] https://lore.kernel.org/lkml/20211129150117.GO3366@techsingularity.net/
-[2] https://lore.kernel.org/all/20211130201652.2218636d@mail.inbox.lv/
+-- 
+Mel Gorman
+SUSE Labs
