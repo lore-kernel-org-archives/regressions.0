@@ -1,164 +1,91 @@
-Received: from mail-4327.protonmail.ch (mail-4327.protonmail.ch [185.70.43.27])
+Received: from outbound-smtp57.blacknight.com (outbound-smtp57.blacknight.com [46.22.136.241])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F29429CA
-	for <regressions@lists.linux.dev>; Tue, 30 Nov 2021 10:33:52 +0000 (UTC)
-Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(No client certificate requested)
-	by mail-4321.protonmail.ch (Postfix) with ESMTPS id 4J3JNB2RJwz4wx4T
-	for <regressions@lists.linux.dev>; Tue, 30 Nov 2021 10:28:42 +0000 (UTC)
-Authentication-Results: mail-4321.protonmail.ch;
-	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="K/+iOcR9"
-Date: Tue, 30 Nov 2021 10:28:19 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail; t=1638268105;
-	bh=4CxBkUAhjShO6mhtkiCe234FaKXdEmvGEiGyRqiAttw=;
-	h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-	b=K/+iOcR9yhNWGCqMefwfp1ozhoVP7gVRa350qYOrsqrVM1WEKN0CW+Fklz0ICXfqh
-	 9eLTBIesdqHipG3Kpg0MVARurDz09KVL1N68ABvUErr01cRXndnAZfEAKLIb5m5y86
-	 YkYYLLQxWLPxHPbycUhAAUIzQmv1OE8vWN09bR1s=
-To: Aditya Garg <gargaditya08@live.com>
-From: Orlando Chamberlain <redecorating@protonmail.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Daniel Winkler <danielwinkler@google.com>, Johan Hedberg <johan.hedberg@intel.com>, "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "sonnysasaka@chromium.org" <sonnysasaka@chromium.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
-Reply-To: Orlando Chamberlain <redecorating@protonmail.com>
-Subject: Re: [PATCH v6 2/2] btbcm: disable read tx power for affected Macs with the T2 Security chip
-Message-ID: <20211130102812.66cddfec@localhost>
-In-Reply-To: <75EC7983-3043-41E7-BBC6-BAB56C16E298@live.com>
-References: <3B8E16FA-97BF-40E5-9149-BBC3E2A245FE@live.com> <287DE71A-2BF2-402D-98C8-24A9AEEE55CB@live.com> <42E2EC08-1D09-4DDE-B8B8-7855379C23C5@holtmann.org> <6ABF3770-A9E8-4DAF-A22D-DA7113F444F3@live.com> <92FBACD6-F4F2-4DE8-9000-2D30852770FC@live.com> <3716D644-CD1B-4A5C-BC96-A51FF360E31D@live.com> <9E6473A2-2ABE-4692-8DCF-D8F06BDEAE29@live.com> <64E15BD0-665E-471F-94D9-991DFB87DEA0@live.com> <75EC7983-3043-41E7-BBC6-BAB56C16E298@live.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A879629CA
+	for <regressions@lists.linux.dev>; Tue, 30 Nov 2021 11:31:08 +0000 (UTC)
+Received: from mail.blacknight.com (pemlinmail06.blacknight.ie [81.17.255.152])
+	by outbound-smtp57.blacknight.com (Postfix) with ESMTPS id 50017FAFC2
+	for <regressions@lists.linux.dev>; Tue, 30 Nov 2021 11:22:47 +0000 (GMT)
+Received: (qmail 5292 invoked from network); 30 Nov 2021 11:22:47 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.17.29])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 30 Nov 2021 11:22:46 -0000
+Date: Tue, 30 Nov 2021 11:22:44 +0000
+From: Mel Gorman <mgorman@techsingularity.net>
+To: Mike Galbraith <efault@gmx.de>
+Cc: Alexey Avramov <hakavlad@inbox.lv>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Rik van Riel <riel@surriel.com>, Darrick Wong <djwong@kernel.org>,
+	regressions@lists.linux.dev,
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] mm: vmscan: Reduce throttling due to a failure to
+ make progress
+Message-ID: <20211130112244.GQ3366@techsingularity.net>
+References: <20211125151853.8540-1-mgorman@techsingularity.net>
+ <20211127011246.7a8ac7b8@mail.inbox.lv>
+ <20211129150117.GO3366@techsingularity.net>
+ <a20f17c4b1b5fdfade3f48375d148e97bd162dd6.camel@gmx.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.2 required=10.0 tests=ALL_TRUSTED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM shortcircuit=no
-	autolearn=disabled version=3.4.4
-X-Spam-Checker-Version: SpamAssassin 3.4.4 (2020-01-24) on
-	mailout.protonmail.ch
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a20f17c4b1b5fdfade3f48375d148e97bd162dd6.camel@gmx.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, 30 Nov 2021 01:00:43 +1100
-"Aditya Garg" <gargaditya08@live.com> wrote:
-> From: Aditya Garg <gargaditya08@live.com>
->=20
-> Some Macs with the T2 security chip had Bluetooth not working.
-> To fix it we add DMI based quirks to disable querying of LE Tx power.
->=20
-> Signed-off-by: Aditya Garg <gargaditya08@live.com>
-> Reported-by: Orlando Chamberlain <redecorating@protonmail.com>
-> Link:
-> https://lore.kernel.org/r/4970a940-211b-25d6-edab-21a815313954@protonmail=
-.com
-> Fixes: 7c395ea521e6 ("Bluetooth: Query LE tx power on startup")
-> ---
+On Tue, Nov 30, 2021 at 11:14:32AM +0100, Mike Galbraith wrote:
+> > diff --git a/mm/vmscan.c b/mm/vmscan.c
+> > index fb9584641ac7..1af12072f40e 100644
+> > --- a/mm/vmscan.c
+> > +++ b/mm/vmscan.c
+> > @@ -1021,6 +1021,39 @@ static void handle_write_error(struct address_space *mapping,
+> >         unlock_page(page);
+> >  }
+> >  
+> > +bool skip_throttle_noprogress(pg_data_t *pgdat)
+> > +{
+> > +       int reclaimable = 0, write_pending = 0;
+> > +       int i;
+> > +
+> > +       /*
+> > +        * If kswapd is disabled, reschedule if necessary but do not
+> > +        * throttle as the system is likely near OOM.
+> > +        */
+> > +       if (pgdat->kswapd_failures >= MAX_RECLAIM_RETRIES)
+> > +               return true;
+> > +
+> > +       /*
+> > +        * If there are a lot of dirty/writeback pages then do not
+> > +        * throttle as throttling will occur when the pages cycle
+> > +        * towards the end of the LRU if still under writeback.
+> > +        */
+> > +       for (i = 0; i < MAX_NR_ZONES; i++) {
+> > +               struct zone *zone = pgdat->node_zones + i;
+> > +
+> > +               if (!populated_zone(zone))
+> > +                       continue;
+> > +
+> > +               reclaimable += zone_reclaimable_pages(zone);
+> > +               write_pending += zone_page_state_snapshot(zone,
+> > +                                                 NR_ZONE_WRITE_PENDING);
+> > +       }
+> > +       if (2 * write_pending <= reclaimable)
+> 
+> That is always true here...
+> 
 
-It's hard to tell what the differences between versions of this patch
-are. This spot here after the "---" is often used for a change log
-(e.g. "v5->v6: Made change X and change Y"), so it would be useful to
-have that if you can add one in future patches. I think someone may have
-mentioned this earlier.
+Always true for you or always true in general?
 
->  drivers/bluetooth/btbcm.c | 40
-> +++++++++++++++++++++++++++++++++++++++ 1 file changed, 40
-> insertions(+)
->=20
-> diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-> index e4182acee488c5..40f7c9c5cf0a5a 100644
-> --- a/drivers/bluetooth/btbcm.c
-> +++ b/drivers/bluetooth/btbcm.c
-> @@ -8,6 +8,7 @@
->=20
->  #include <linux/module.h>
->  #include <linux/firmware.h>
-> +#include <linux/dmi.h>
->  #include <asm/unaligned.h>
->=20
->  #include <net/bluetooth/bluetooth.h>
-> @@ -343,9 +344,44 @@ static struct sk_buff
-> *btbcm_read_usb_product(struct hci_dev *hdev) return skb;
->  }
->=20
-> +static const struct dmi_system_id
-> disable_broken_read_transmit_power[] =3D {
-> +=09{
-> +=09=09 .matches =3D {
-> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME,
-> "MacBookPro16,1"),
-> +=09=09},
-> +=09},
-> +=09{
-> +=09=09 .matches =3D {
-> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME,
-> "MacBookPro16,2"),
-> +=09=09},
-> +=09},
-> +=09{
-> +=09=09 .matches =3D {
-> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME,
-> "MacBookPro16,4"),
-> +=09=09},
-> +=09},
-> +=09{
-> +=09=09 .matches =3D {
-> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "iMac20,1"),
-> +=09=09},
-> +=09},
-> +=09{
-> +=09=09 .matches =3D {
-> +=09=09=09DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-> +=09=09=09DMI_MATCH(DMI_PRODUCT_NAME, "iMac20,2"),
-> +=09=09},
-> +=09},
-> +=09{ }
-> +};
-> +
->  static int btbcm_read_info(struct hci_dev *hdev)
->  {
->  =09struct sk_buff *skb;
-> +=09const struct dmi_system_id;
+The intent of the check is "are a majority of reclaimable pages
+marked WRITE_PENDING?". It's similar to the check that existed prior
+to 132b0d21d21f ("mm/page_alloc: remove the throttling logic from the
+page allocator").
 
-This line seems to produce a compiler warning:
-
-drivers/bluetooth/btbcm.c: In function =E2=80=98btbcm_read_info=E2=80=99:
-drivers/bluetooth/btbcm.c:384:22: warning: empty declaration with type
-qualifier does not redeclare  tag
-  384 |         const struct dmi_system_id;
-      |                      ^~~~~~~~~~~~~
-
-I think Marcel mentioned this line could be removed.
-
-The two patches make Bluetooth work on my MacBookPro16,1, with and without
-that line.
-
-Tested-by: Orlando Chamberlain <redecorating@protonmail.com>
-
->=20
->  =09/* Read Verbose Config Version Info */
->  =09skb =3D btbcm_read_verbose_config(hdev);
-> @@ -363,6 +399,10 @@ static int btbcm_read_info(struct hci_dev *hdev)
->  =09bt_dev_info(hdev, "BCM: features 0x%2.2x", skb->data[1]);
->  =09kfree_skb(skb);
->=20
-> +=09/* Read DMI and disable broken Read LE Min/Max Tx Power */
-> +=09if (dmi_first_match(disable_broken_read_transmit_power))
-> +=09=09set_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER,
-> &hdev->quirks); +
->  =09return 0;
->  }
->=20
->=20
-
---=20
-
-Thanks,
-
-Orlando
-
+-- 
+Mel Gorman
+SUSE Labs
