@@ -1,150 +1,66 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488E52C80
-	for <regressions@lists.linux.dev>; Tue, 30 Nov 2021 08:54:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B995C53FCD;
-	Tue, 30 Nov 2021 08:54:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1638262457;
-	bh=KEKlYH2VmtWar206GD1+Dp6Q+cMHF4NKpvs4fvgzIvo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Ga4ode4d4QSv8vt0ZjyJpiH3EM3plIy1HBIK5plOJI44bwKBMPr10DdgsSv7Jal59
-	 X2BXkU85AvvjViGlNHlXqkhGDV43WPJF3NKJqpHCO62TJU2xUmD2NhmuLRu7Q982Bp
-	 6ZfMeyUAvbtsLw4M2BDP2O8WqppSU17TnpIX4rdw=
-Date: Tue, 30 Nov 2021 09:54:15 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Aditya Garg <gargaditya08@live.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Orlando Chamberlain <redecorating@protonmail.com>,
-	Daniel Winkler <danielwinkler@google.com>,
-	Johan Hedberg <johan.hedberg@intel.com>,
-	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"sonnysasaka@chromium.org" <sonnysasaka@chromium.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH v6 2/2] btbcm: disable read tx power for affected Macs
- with the T2 Security chip
-Message-ID: <YaXmt1WJqRy4pOss@kroah.com>
-References: <YaSCJg+Xkyx8w2M1@kroah.com>
- <287DE71A-2BF2-402D-98C8-24A9AEEE55CB@live.com>
- <42E2EC08-1D09-4DDE-B8B8-7855379C23C5@holtmann.org>
- <6ABF3770-A9E8-4DAF-A22D-DA7113F444F3@live.com>
- <92FBACD6-F4F2-4DE8-9000-2D30852770FC@live.com>
- <3716D644-CD1B-4A5C-BC96-A51FF360E31D@live.com>
- <9E6473A2-2ABE-4692-8DCF-D8F06BDEAE29@live.com>
- <64E15BD0-665E-471F-94D9-991DFB87DEA0@live.com>
- <75EC7983-3043-41E7-BBC6-BAB56C16E298@live.com>
- <087A6F82-BC44-41DE-9FE9-05B5932A2911@live.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38E132C80
+	for <regressions@lists.linux.dev>; Tue, 30 Nov 2021 09:16:19 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mrzFJ-0001Vs-68; Tue, 30 Nov 2021 10:16:17 +0100
+Message-ID: <d0648a69-e34b-95ae-d291-6cba56526915@leemhuis.info>
+Date: Tue, 30 Nov 2021 10:16:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <087A6F82-BC44-41DE-9FE9-05B5932A2911@live.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Content-Language: en-BS
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <bff7d309-a816-6a75-51b6-5928ef4f7a8c@exuvo.se>
+ <20190927080303.GA7667@redhat.com>
+ <CA+GwT0B5SyRZnGLqwqOeuJK4CWMVc=dKaWre9VN8KQC6kBzKGw@mail.gmail.com>
+ <20191203075736.GA701@redhat.com>
+ <d74dab51-3a84-9035-d89e-ea8f63e89198@exuvo.se>
+ <a8eeb0bc-95da-291a-7fb9-5d15d1174c27@exuvo.se>
+ <c22673af-40e0-3af2-5ab7-69b23fc03598@exuvo.se>
+ <f935dc15-08bd-2e28-fc1b-b27634c618be@exuvo.se>
+ <87czop5j33.fsf@tynnyri.adurom.net>
+ <d4405cdb-95ee-1dd9-6957-502269feb15e@leemhuis.info>
+Subject: Re: rt2x00 regression #forregzbot
+In-Reply-To: <d4405cdb-95ee-1dd9-6957-502269feb15e@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1638263779;4670eaf0;
+X-HE-SMSGID: 1mrzFJ-0001Vs-68
 
-On Tue, Nov 30, 2021 at 08:45:44AM +0000, Aditya Garg wrote:
+On 01.10.21 10:24, Thorsten Leemhuis wrote:
+> On 01.10.21 08:56, Kalle Valo wrote:
+>> (adding regressions list for easier tracking)
 > 
+> Feel free to ignore this message. I write it to make regzbot track above
+> issue. Regzbot is the regression tracking bot I'm working on. It's still
+> in the early stages and this is still one of the first few regression I
+> make it track to get started and things tested in the field. That also
+> why I'm sending the mail just to the regressions list (it will do its
+> full magic nevertheless). For details see:
+> https://linux-regtracking.leemhuis.info/post/inital-regzbot-running/
+> https://linux-regtracking.leemhuis.info/post/regzbot-approach/
 > 
-> > On 29-Nov-2021, at 7:30 PM, Aditya Garg <gargaditya08@live.com> wrote:
-> > 
-> > From: Aditya Garg <gargaditya08@live.com>
-> > 
-> > Some Macs with the T2 security chip had Bluetooth not working.
-> > To fix it we add DMI based quirks to disable querying of LE Tx power.
-> > 
-> > Signed-off-by: Aditya Garg <gargaditya08@live.com>
-> > Reported-by: Orlando Chamberlain <redecorating@protonmail.com>
-> > Link:
-> > https://lore.kernel.org/r/4970a940-211b-25d6-edab-21a815313954@protonmail.com
-> > Fixes: 7c395ea521e6 ("Bluetooth: Query LE tx power on startup")
-> > ---
-> > drivers/bluetooth/btbcm.c | 40 +++++++++++++++++++++++++++++++++++++++
-> > 1 file changed, 40 insertions(+)
-> > 
-> > diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-> > index e4182acee488c5..40f7c9c5cf0a5a 100644
-> > --- a/drivers/bluetooth/btbcm.c
-> > +++ b/drivers/bluetooth/btbcm.c
-> > @@ -8,6 +8,7 @@
-> > 
-> > #include <linux/module.h>
-> > #include <linux/firmware.h>
-> > +#include <linux/dmi.h>
-> > #include <asm/unaligned.h>
-> > 
-> > #include <net/bluetooth/bluetooth.h>
-> > @@ -343,9 +344,44 @@ static struct sk_buff *btbcm_read_usb_product(struct hci_dev *hdev)
-> > 	return skb;
-> > }
-> > 
-> > +static const struct dmi_system_id disable_broken_read_transmit_power[] = {
-> > +	{
-> > +		 .matches = {
-> > +			DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-> > +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,1"),
-> > +		},
-> > +	},
-> > +	{
-> > +		 .matches = {
-> > +			DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-> > +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,2"),
-> > +		},
-> > +	},
-> > +	{
-> > +		 .matches = {
-> > +			DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-> > +			DMI_MATCH(DMI_PRODUCT_NAME, "MacBookPro16,4"),
-> > +		},
-> > +	},
-> > +	{
-> > +		 .matches = {
-> > +			DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-> > +			DMI_MATCH(DMI_PRODUCT_NAME, "iMac20,1"),
-> > +		},
-> > +	},
-> > +	{
-> > +		 .matches = {
-> > +			DMI_MATCH(DMI_BOARD_VENDOR, "Apple Inc."),
-> > +			DMI_MATCH(DMI_PRODUCT_NAME, "iMac20,2"),
-> > +		},
-> > +	},
-> > +	{ }
-> > +};
-> > +
-> > static int btbcm_read_info(struct hci_dev *hdev)
-> > {
-> > 	struct sk_buff *skb;
-> > +	const struct dmi_system_id;
-> > 
-> > 	/* Read Verbose Config Version Info */
-> > 	skb = btbcm_read_verbose_config(hdev);
-> > @@ -363,6 +399,10 @@ static int btbcm_read_info(struct hci_dev *hdev)
-> > 	bt_dev_info(hdev, "BCM: features 0x%2.2x", skb->data[1]);
-> > 	kfree_skb(skb);
-> > 
-> > +	/* Read DMI and disable broken Read LE Min/Max Tx Power */
-> > +	if (dmi_first_match(disable_broken_read_transmit_power))
-> > +		set_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, &hdev->quirks);
-> > +
-> > 	return 0;
-> > }
-> > 
-> May I know whether this is fine or not.
+> #regzbot ^introduced e383c70474db32b9d4a3de6dfbd08784d19e6751
+> #regzbot monitor
+> https://lore.kernel.org/linux-wireless/bff7d309-a816-6a75-51b6-5928ef4f7a8c@exuvo.se/
+> #regzbot ignore-activitiy
 
-Please realize that maintainers have lots and lots of patches to review.
-If after 2 weeks of no response, it is fine to resend the patch again.
+#regzbot fixed-by: ed53ae75693096f1c10b4561edd31a07b631bd72
 
-If you wish to help out with the maintainer's review load, please feel
-free to review patches on the relevant mailing list to help lighten that
-load such that your patch can be reviewed quicker.
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-thanks,
+Ciao, Thorsten, your Linux kernel regression tracker.
 
-greg k-h
+P.S:: Normally this mail wouldn't have been needed, but when I added
+this regression to regzbot I didn't pointed it to the initial report
