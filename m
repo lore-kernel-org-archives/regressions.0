@@ -1,114 +1,124 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D832C9D
-	for <regressions@lists.linux.dev>; Wed,  1 Dec 2021 04:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1638333153;
-	bh=AKqwOapI/P1+DWQeKxnW+oEXUCmtI8Mg9I4HQaXQU7Y=;
-	h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=UqkvJd2ahQIAuyl9j1YzgMG50sqR/5OpomlZmypMwqGiTP85NDvoqaNiUiBXWvMcP
-	 oOxyFJEodjklEnh1Tgmq10Z9aT9tc1LZty2e/w+RPyobq6RF6StEhz1pJuxeSE8RpQ
-	 43zKm1jPIRLT7y3elFCvFlUel/o2H98g3R4Zv1H4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from homer.fritz.box ([185.221.151.67]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MzQgC-1mer331C6q-00vNDD; Wed, 01
- Dec 2021 05:32:33 +0100
-Message-ID: <b76e36115d202d5cb30dc29496bf5ecddc185fe8.camel@gmx.de>
-Subject: Re: [PATCH 1/1] mm: vmscan: Reduce throttling due to a failure to
- make progress
-From: Mike Galbraith <efault@gmx.de>
-To: Mel Gorman <mgorman@techsingularity.net>
-Cc: Alexey Avramov <hakavlad@inbox.lv>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, Vlastimil
- Babka <vbabka@suse.cz>, Rik van Riel <riel@surriel.com>, Darrick Wong
- <djwong@kernel.org>, regressions@lists.linux.dev, Linux-fsdevel
- <linux-fsdevel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, LKML
- <linux-kernel@vger.kernel.org>
-Date: Wed, 01 Dec 2021 05:32:31 +0100
-In-Reply-To: <20211130130935.GR3366@techsingularity.net>
-References: <20211125151853.8540-1-mgorman@techsingularity.net>
-	 <20211127011246.7a8ac7b8@mail.inbox.lv>
-	 <20211129150117.GO3366@techsingularity.net>
-	 <a20f17c4b1b5fdfade3f48375d148e97bd162dd6.camel@gmx.de>
-	 <20211130112244.GQ3366@techsingularity.net>
-	 <b8f607c771a4f698fcb651379ca30d3bb6a83ccd.camel@gmx.de>
-	 <b966ccc578ac60d3684cff0c88c1b9046b408ea3.camel@gmx.de>
-	 <20211130130935.GR3366@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.1 
+Received: from mail.holtmann.org (coyote.holtmann.net [212.227.132.17])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0B6C68
+	for <regressions@lists.linux.dev>; Wed,  1 Dec 2021 07:25:16 +0000 (UTC)
+Received: from smtpclient.apple (p5b3d2e91.dip0.t-ipconnect.de [91.61.46.145])
+	by mail.holtmann.org (Postfix) with ESMTPSA id 9507FCECDD;
+	Wed,  1 Dec 2021 08:25:09 +0100 (CET)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.20.0.1.32\))
+Subject: Re: [PATCH v8 1/2] Bluetooth: add quirk disabling LE Read Transmit
+ Power
+From: Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CDAA8BE2-F2B0-4020-AEB3-5C9DD4A6E08C@live.com>
+Date: Wed, 1 Dec 2021 08:25:09 +0100
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Orlando Chamberlain <redecorating@protonmail.com>,
+ Daniel Winkler <danielwinkler@google.com>,
+ Johan Hedberg <johan.hedberg@intel.com>,
+ "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "sonnysasaka@chromium.org" <sonnysasaka@chromium.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:P3WByZj5IDN7qpCbMRUdgA/WTK8GizMAVsIN61yMDHaJW9Aq2Vz
- VhFrMz9er39O0JZqazAdxSygFPMsoyMR3PTvUx9VypiXulAqCVgzb9J7H7Htx8D1Etg3sLa
- bK3XbFZHps/IPIfH7yrllKNJF60EYe1nKInrlk3smXjFEiVCJ7yTDaoHjFHEEOBxIOkJoUn
- a1Eaa8x/hEaL9TpLNKabQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:chVfPrHgdZ4=:MJ0T8ADoYCth8LEO+meIi+
- ZN8JysXyiMCqpzeOVqZYC6dfK0v4Y891gd6DUwgcTwx0olADHGZALa8eEmEi95fON0vt+yjQ3
- LSq6PhdpcMCKIvhunYKWk4e7Fy1KmPGXrQ40FlqoiAHXT+udHMTRjSqciLG5mwcONHRJ4VKO7
- EIZfB63BSWr2LK8YpEWQ8VHRenUBhmMGg+nuVUsrys4qBBqFZGnCofltdmacE869mX6QSElnn
- 7XalJKsfY7MK0f+ySzPfiJ04PFDQT3IRnIS2qsauYYOo2Hf7YemUQFrRc9sfHtKsX/cWrQvZh
- Y3U+iHBl05NThO93Ey2JeNJNkYnH/pNv/7K0ADDPr0eG1+2bmliwKEvda6eUL/uDj1HNcwm8W
- CbwVE4j/DBEX0bpfcVAS10TDpL6g3BN2Mn5trwne16XRjL81fPp7M67mp+SdZ/9NcuKJU7wMA
- +O1jKm8X+Tjb21uz9Jgp/586nnYQrCmLpy6Dckuqruda/j1oEWYOUysRs1pGxR5YX09SL38Q8
- vprLFMCvlpHcIpd1MdTCgC6/8oDwzFEokbzgubfphTKq2/QjPMD1i4C6IqVk3QqD6zme7eCLu
- JVOZEv8aIopvtBnpB9EiaWqFE/Pgof6HmuN7To/jowyL9gNBk0nwa/iOL0POhqTmEFb3L6oBO
- 6qcX4UHLYjrzK/W7/WNJaDbeXn6YLUlDrzmQzEENH0nFNlP1H3c35TWGvCL2rxVYZ5mXY0Juf
- Su7p9LUtlZAxB9Hmh/tVzY+7cxbAWDGcaAaUd8XVRVY6FkxBM8FFp1OrKTo4c3EWcrh+FZBQx
- dOOtdj64MLAlrTMngMCyTQlNWqiHWEKk734q98lZdpsxQccVh+w+demR2enRbBEpUEWGqZXeS
- 9jGfp7zV+zNPi6KFhFjGIdgBuYTi9EEXTizId2XOd7CMYYifcyC+4vlwligURhfl+hbGSnm2/
- RZ/f44sIas5T+dR9SItkN3hexqvATpuHAlWffhBVuBRAA+WDJacPekOCgDsnAkiNPKWLEpnKd
- XgX9mBD++xoOneEVMfrBlog7ijKOVRWPUyCh74MHvkYogPLM4jLKZjaekxsXFDpFY8HoGGokU
- aupIRr3fRJdugk=
+Message-Id: <E294B230-4703-4952-8726-8C69617EDF2D@holtmann.org>
+References: <3B8E16FA-97BF-40E5-9149-BBC3E2A245FE@live.com>
+ <YZSuWHB6YCtGclLs@kroah.com> <52DEDC31-EEB2-4F39-905F-D5E3F2BBD6C0@live.com>
+ <8919a36b-e485-500a-2722-529ffa0d2598@leemhuis.info>
+ <20211117124717.12352-1-redecorating@protonmail.com>
+ <F8D12EA8-4B37-4887-998E-DC0EBE60E730@holtmann.org>
+ <40550C00-4EE5-480F-AFD4-A2ACA01F9DBB@live.com>
+ <332a19f1-30f0-7058-ac18-c21cf78759bb@leemhuis.info>
+ <D9375D91-1062-4265-9DE9-C7CF2B705F3F@live.com>
+ <BC534C52-7FCF-4238-8933-C5706F494A11@live.com> <YaSCJg+Xkyx8w2M1@kroah.com>
+ <287DE71A-2BF2-402D-98C8-24A9AEEE55CB@live.com>
+ <42E2EC08-1D09-4DDE-B8B8-7855379C23C5@holtmann.org>
+ <6ABF3770-A9E8-4DAF-A22D-DA7113F444F3@live.com>
+ <92FBACD6-F4F2-4DE8-9000-2D30852770FC@live.com>
+ <3716D644-CD1B-4A5C-BC96-A51FF360E31D@live.com>
+ <9E6473A2-2ABE-4692-8DCF-D8F06BDEAE29@live.com>
+ <64E15BD0-665E-471F-94D9-991DFB87DEA0@live.com>
+ <A6DD9616-E669-4382-95A0-B9DBAF46712D@live.com>
+ <312202C7-C7BE-497D-8093-218C68176658@live.com>
+ <CDAA8BE2-F2B0-4020-AEB3-5C9DD4A6E08C@live.com>
+To: Aditya Garg <gargaditya08@live.com>
+X-Mailer: Apple Mail (2.3693.20.0.1.32)
 
-On Tue, 2021-11-30 at 13:09 +0000, Mel Gorman wrote:
-> On Tue, Nov 30, 2021 at 01:51:10PM +0100, Mike Galbraith wrote:
-> > On Tue, 2021-11-30 at 13:00 +0100, Mike Galbraith wrote:
-> > > On Tue, 2021-11-30 at 11:22 +0000, Mel Gorman wrote:
-> > > > On Tue, Nov 30, 2021 at 11:14:32AM +0100, Mike Galbraith wrote:
-> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (2 * write_pendi=
-ng <=3D reclaimable)
-> > > > >
-> > > > > That is always true here...
-> > > > >
-> > > >
-> > > > Always true for you or always true in general?
-> > >
-> > > "Here" as in the boxen located at my GPS coordinates :)
-> > >
-> > > > The intent of the check is "are a majority of reclaimable pages
-> > > > marked WRITE_PENDING?". It's similar to the check that existed pri=
-or
-> > > > to 132b0d21d21f ("mm/page_alloc: remove the throttling logic from =
-the
-> > > > page allocator").
-> > >
-> > > I'll put my trace_printk() back and see if I can't bend-adjust it.
-> >
-> > As it sits, write_pending is always 0 with tail /dev/zero.
-> >
->
-> That is not a surprise for the test in question as it doesn't trigger
-> a case where there are lots of page cache being marked dirty and write
-> pending.
+Hi Aditya,
 
-I found a way to make it go false, around 80% of the time on the way to
-the first oom-kill in fact. Starting 2 memcg stress instances and a
-memory sized bonnie did the trick.  'course getting those started was
-the last thing my desktop did before taking up residence on spinning
-rust and staying there for the 10 minute test duration, mouse pointer
-didn't even manage to twitch :)
+> Some devices have a bug causing them to not work if they query=20
+> LE tx power on startup. Thus we add a quirk in order to not query it=20=
 
-That's way worse than having box try to swallow /dev/zero, that gets
-killed pretty quickly with your latest patch.  The grim reaper tried to
-help with nutty overcommit, but two kills in 10 minutes wasn't enough.
+> and default min/max tx power values to HCI_TX_POWER_INVALID.
+>=20
+> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+> Reported-by: Orlando Chamberlain <redecorating@protonmail.com>
+> Tested-by: Orlando Chamberlain <redecorating@protonmail.com>
+> Link:
+> =
+https://lore.kernel.org/r/4970a940-211b-25d6-edab-21a815313954@protonmail.=
+com
+> Fixes: 7c395ea521e6 ("Bluetooth: Query LE tx power on startup")
+> ---
+> v7 :- Added Tested-by.
+> v8 :- Fix checkpatch error.
+> include/net/bluetooth/hci.h | 9 +++++++++
+> net/bluetooth/hci_core.c    | 3 ++-
+> 2 files changed, 11 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+> index 63065bc01b766c..383342efcdc464 100644
+> --- a/include/net/bluetooth/hci.h
+> +++ b/include/net/bluetooth/hci.h
+> @@ -246,6 +246,15 @@ enum {
+> 	 * HCI after resume.
+> 	 */
+> 	HCI_QUIRK_NO_SUSPEND_NOTIFIER,
+> +
+> +	/*
+> +	 * When this quirk is set, LE tx power is not queried on startup
+> +	 * and the min/max tx power values default to =
+HCI_TX_POWER_INVALID.
+> +	 *
+> +	 * This quirk can be set before hci_register_dev is called or
+> +	 * during the hdev->setup vendor callback.
+> +	 */
+> +	HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER,
+> };
+>=20
+> /* HCI device flags */
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index 8d33aa64846b1c..434c6878fe9640 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -619,7 +619,8 @@ static int hci_init3_req(struct hci_request *req, =
+unsigned long opt)
+> 			hci_req_add(req, HCI_OP_LE_READ_ADV_TX_POWER, 0, =
+NULL);
+> 		}
+>=20
+> -		if (hdev->commands[38] & 0x80) {
+> +		if ((hdev->commands[38] & 0x80) &&
+> +		    !test_bit(HCI_QUIRK_BROKEN_READ_TRANSMIT_POWER, =
+&hdev->quirks)) {
+> 			/* Read LE Min/Max Tx Power*/
+> 			hci_req_add(req, HCI_OP_LE_READ_TRANSMIT_POWER,
+> 				    0, NULL);
+>=20
 
-	-Mike
+while patch and indentation look good now, it doesn=E2=80=99t actually =
+apply
+cleanly against bluetooth-next tree. So you need to re-spin it.
+
+Regards
+
+Marcel
 
