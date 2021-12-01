@@ -1,74 +1,114 @@
-Received: from shark2.inbox.lv (shark2.inbox.lv [194.152.32.82])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571BB2CA1
-	for <regressions@lists.linux.dev>; Tue, 30 Nov 2021 18:45:51 +0000 (UTC)
-Received: from shark2.inbox.lv (localhost [127.0.0.1])
-	by shark2-out.inbox.lv (Postfix) with ESMTP id 79DF9C0199;
-	Tue, 30 Nov 2021 20:38:46 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=inbox.lv; s=30062014;
-	t=1638297526; bh=BEyYRApqsqPgfBPxdS8CKfzax9QZDjnvQ2ldgIGpwDk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Z0N8nheiRV6C73uvKwMTkSaSi09rbNlTDXASywsnAJ5hFAkXKLZ0/yGBAme1NuQtr
-	 fFaXzWOK0F2Pfk7JGQ1p6nZUYIlg6fm9BRdcWaYZzBWB+kkprL+cuNSPi9MhptC5Lg
-	 jNLfaITvChpzI4O9B/m+/cI6j1S3Rfb7PxunxUa8=
-Received: from localhost (localhost [127.0.0.1])
-	by shark2-in.inbox.lv (Postfix) with ESMTP id 6B929C0179;
-	Tue, 30 Nov 2021 20:38:46 +0200 (EET)
-Received: from shark2.inbox.lv ([127.0.0.1])
-	by localhost (shark2.inbox.lv [127.0.0.1]) (spamfilter, port 35)
-	with ESMTP id yMbWe0OGI621; Tue, 30 Nov 2021 20:38:46 +0200 (EET)
-Received: from mail.inbox.lv (pop1 [127.0.0.1])
-	by shark2-in.inbox.lv (Postfix) with ESMTP id 2504CC00DB;
-	Tue, 30 Nov 2021 20:38:46 +0200 (EET)
-Date: Wed, 1 Dec 2021 03:38:36 +0900
-From: Alexey Avramov <hakavlad@inbox.lv>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D832C9D
+	for <regressions@lists.linux.dev>; Wed,  1 Dec 2021 04:32:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1638333153;
+	bh=AKqwOapI/P1+DWQeKxnW+oEXUCmtI8Mg9I4HQaXQU7Y=;
+	h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=UqkvJd2ahQIAuyl9j1YzgMG50sqR/5OpomlZmypMwqGiTP85NDvoqaNiUiBXWvMcP
+	 oOxyFJEodjklEnh1Tgmq10Z9aT9tc1LZty2e/w+RPyobq6RF6StEhz1pJuxeSE8RpQ
+	 43zKm1jPIRLT7y3elFCvFlUel/o2H98g3R4Zv1H4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from homer.fritz.box ([185.221.151.67]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MzQgC-1mer331C6q-00vNDD; Wed, 01
+ Dec 2021 05:32:33 +0100
+Message-ID: <b76e36115d202d5cb30dc29496bf5ecddc185fe8.camel@gmx.de>
+Subject: Re: [PATCH 1/1] mm: vmscan: Reduce throttling due to a failure to
+ make progress
+From: Mike Galbraith <efault@gmx.de>
 To: Mel Gorman <mgorman@techsingularity.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Michal Hocko
- <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>, Rik van Riel
- <riel@surriel.com>, Mike Galbraith <efault@gmx.de>, Darrick Wong
+Cc: Alexey Avramov <hakavlad@inbox.lv>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, Vlastimil
+ Babka <vbabka@suse.cz>, Rik van Riel <riel@surriel.com>, Darrick Wong
  <djwong@kernel.org>, regressions@lists.linux.dev, Linux-fsdevel
  <linux-fsdevel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, LKML
  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/1] mm: vmscan: Reduce throttling due to a failure to
- make progress
-Message-ID: <20211201033836.4382a474@mail.inbox.lv>
-In-Reply-To: <20211130172754.GS3366@techsingularity.net>
+Date: Wed, 01 Dec 2021 05:32:31 +0100
+In-Reply-To: <20211130130935.GR3366@techsingularity.net>
 References: <20211125151853.8540-1-mgorman@techsingularity.net>
-	<20211127011246.7a8ac7b8@mail.inbox.lv>
-	<20211129150117.GO3366@techsingularity.net>
-	<20211201010348.31e99637@mail.inbox.lv>
-	<20211130172754.GS3366@techsingularity.net>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+	 <20211127011246.7a8ac7b8@mail.inbox.lv>
+	 <20211129150117.GO3366@techsingularity.net>
+	 <a20f17c4b1b5fdfade3f48375d148e97bd162dd6.camel@gmx.de>
+	 <20211130112244.GQ3366@techsingularity.net>
+	 <b8f607c771a4f698fcb651379ca30d3bb6a83ccd.camel@gmx.de>
+	 <b966ccc578ac60d3684cff0c88c1b9046b408ea3.camel@gmx.de>
+	 <20211130130935.GR3366@techsingularity.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: OK
-X-ESPOL: EZeEAiZdhRs1tcG/N/0M6uTt2NezU0Qivi7kzL4y9QEqu9Gkr7wBfW6TGofmHgq/cWbD
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:P3WByZj5IDN7qpCbMRUdgA/WTK8GizMAVsIN61yMDHaJW9Aq2Vz
+ VhFrMz9er39O0JZqazAdxSygFPMsoyMR3PTvUx9VypiXulAqCVgzb9J7H7Htx8D1Etg3sLa
+ bK3XbFZHps/IPIfH7yrllKNJF60EYe1nKInrlk3smXjFEiVCJ7yTDaoHjFHEEOBxIOkJoUn
+ a1Eaa8x/hEaL9TpLNKabQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:chVfPrHgdZ4=:MJ0T8ADoYCth8LEO+meIi+
+ ZN8JysXyiMCqpzeOVqZYC6dfK0v4Y891gd6DUwgcTwx0olADHGZALa8eEmEi95fON0vt+yjQ3
+ LSq6PhdpcMCKIvhunYKWk4e7Fy1KmPGXrQ40FlqoiAHXT+udHMTRjSqciLG5mwcONHRJ4VKO7
+ EIZfB63BSWr2LK8YpEWQ8VHRenUBhmMGg+nuVUsrys4qBBqFZGnCofltdmacE869mX6QSElnn
+ 7XalJKsfY7MK0f+ySzPfiJ04PFDQT3IRnIS2qsauYYOo2Hf7YemUQFrRc9sfHtKsX/cWrQvZh
+ Y3U+iHBl05NThO93Ey2JeNJNkYnH/pNv/7K0ADDPr0eG1+2bmliwKEvda6eUL/uDj1HNcwm8W
+ CbwVE4j/DBEX0bpfcVAS10TDpL6g3BN2Mn5trwne16XRjL81fPp7M67mp+SdZ/9NcuKJU7wMA
+ +O1jKm8X+Tjb21uz9Jgp/586nnYQrCmLpy6Dckuqruda/j1oEWYOUysRs1pGxR5YX09SL38Q8
+ vprLFMCvlpHcIpd1MdTCgC6/8oDwzFEokbzgubfphTKq2/QjPMD1i4C6IqVk3QqD6zme7eCLu
+ JVOZEv8aIopvtBnpB9EiaWqFE/Pgof6HmuN7To/jowyL9gNBk0nwa/iOL0POhqTmEFb3L6oBO
+ 6qcX4UHLYjrzK/W7/WNJaDbeXn6YLUlDrzmQzEENH0nFNlP1H3c35TWGvCL2rxVYZ5mXY0Juf
+ Su7p9LUtlZAxB9Hmh/tVzY+7cxbAWDGcaAaUd8XVRVY6FkxBM8FFp1OrKTo4c3EWcrh+FZBQx
+ dOOtdj64MLAlrTMngMCyTQlNWqiHWEKk734q98lZdpsxQccVh+w+demR2enRbBEpUEWGqZXeS
+ 9jGfp7zV+zNPi6KFhFjGIdgBuYTi9EEXTizId2XOd7CMYYifcyC+4vlwligURhfl+hbGSnm2/
+ RZ/f44sIas5T+dR9SItkN3hexqvATpuHAlWffhBVuBRAA+WDJacPekOCgDsnAkiNPKWLEpnKd
+ XgX9mBD++xoOneEVMfrBlog7ijKOVRWPUyCh74MHvkYogPLM4jLKZjaekxsXFDpFY8HoGGokU
+ aupIRr3fRJdugk=
 
->due to the
->underlying storage.
+On Tue, 2021-11-30 at 13:09 +0000, Mel Gorman wrote:
+> On Tue, Nov 30, 2021 at 01:51:10PM +0100, Mike Galbraith wrote:
+> > On Tue, 2021-11-30 at 13:00 +0100, Mike Galbraith wrote:
+> > > On Tue, 2021-11-30 at 11:22 +0000, Mel Gorman wrote:
+> > > > On Tue, Nov 30, 2021 at 11:14:32AM +0100, Mike Galbraith wrote:
+> > > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> > > > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (2 * write_pendi=
+ng <=3D reclaimable)
+> > > > >
+> > > > > That is always true here...
+> > > > >
+> > > >
+> > > > Always true for you or always true in general?
+> > >
+> > > "Here" as in the boxen located at my GPS coordinates :)
+> > >
+> > > > The intent of the check is "are a majority of reclaimable pages
+> > > > marked WRITE_PENDING?". It's similar to the check that existed pri=
+or
+> > > > to 132b0d21d21f ("mm/page_alloc: remove the throttling logic from =
+the
+> > > > page allocator").
+> > >
+> > > I'll put my trace_printk() back and see if I can't bend-adjust it.
+> >
+> > As it sits, write_pending is always 0 with tail /dev/zero.
+> >
+>
+> That is not a surprise for the test in question as it doesn't trigger
+> a case where there are lots of page cache being marked dirty and write
+> pending.
 
-I agree.
+I found a way to make it go false, around 80% of the time on the way to
+the first oom-kill in fact. Starting 2 memcg stress instances and a
+memory sized bonnie did the trick.  'course getting those started was
+the last thing my desktop did before taking up residence on spinning
+rust and staying there for the 10 minute test duration, mouse pointer
+didn't even manage to twitch :)
 
->and send me the trace.out file please?
+That's way worse than having box try to swallow /dev/zero, that gets
+killed pretty quickly with your latest patch.  The grim reaper tried to
+help with nutty overcommit, but two kills in 10 minutes wasn't enough.
 
-https://drive.google.com/file/d/1FBjAmXwXakWPPjcn6K-B50S04vyySQO6/view
+	-Mike
 
-Typical entries:
-
-           Timer-10841   [006] ..... 14341.639496: mm_vmscan_throttled: nid=0 usec_timeout=100000 usect_delayed=100000 reason=VMSCAN_THROTTLE_WRITEBACK
-           gmain-1246    [004] ..... 14341.639498: mm_vmscan_throttled: nid=0 usec_timeout=100000 usect_delayed=100000 reason=VMSCAN_THROTTLE_WRITEBACK
-          php7.0-11149   [001] ..... 14341.647498: mm_vmscan_throttled: nid=0 usec_timeout=100000 usect_delayed=100000 reason=VMSCAN_THROTTLE_WRITEBACK
-      obfs-local-908     [001] ..... 14341.651510: mm_vmscan_throttled: nid=0 usec_timeout=100000 usect_delayed=100000 reason=VMSCAN_THROTTLE_WRITEBACK
-     Web Content-10876   [000] ..... 14341.651522: mm_vmscan_throttled: nid=0 usec_timeout=100000 usect_delayed=100000 reason=VMSCAN_THROTTLE_WRITEBACK
-  NetworkManager-812     [004] ..... 14341.667495: mm_vmscan_throttled: nid=0 usec_timeout=100000 usect_delayed=100000 reason=VMSCAN_THROTTLE_WRITEBACK
-             tor-941     [000] ..... 14341.667495: mm_vmscan_throttled: nid=0 usec_timeout=100000 usect_delayed=100000 reason=VMSCAN_THROTTLE_WRITEBACK
-   IndexedDB #18-11165   [007] ..... 14341.667520: mm_vmscan_throttled: nid=0 usec_timeout=100000 usect_delayed=100000 reason=VMSCAN_THROTTLE_WRITEBACK
-           Timer-10755   [002] ..... 14341.667538: mm_vmscan_throttled: nid=0 usec_timeout=100000 usect_delayed=100000 reason=VMSCAN_THROTTLE_WRITEBACK
-     JS Watchdog-10884   [000] ..... 14341.699489: mm_vmscan_throttled: nid=0 usec_timeout=100000 usect_delayed=100000 reason=VMSCAN_THROTTLE_WRITEBACK
