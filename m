@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D220468;
-	Wed,  1 Dec 2021 07:34:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48F72C80
+	for <regressions@lists.linux.dev>; Wed,  1 Dec 2021 09:07:05 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1msK83-0000cS-8F; Wed, 01 Dec 2021 08:34:11 +0100
-Message-ID: <915c3760-181e-bbac-aec4-1e20d0dab2a9@leemhuis.info>
-Date: Wed, 1 Dec 2021 08:34:09 +0100
+	id 1msLZs-0008EO-2v; Wed, 01 Dec 2021 10:07:01 +0100
+Message-ID: <96b3682d-71b3-ada0-6fc7-686e51609968@leemhuis.info>
+Date: Wed, 1 Dec 2021 10:06:59 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,118 +16,105 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
+Subject: Re: Compex WLE200NX: regdomain sanitized regression
 Content-Language: en-BS
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Kalle Valo <kvalo@codeaurora.org>
-Cc: Loic Poulain <loic.poulain@linaro.org>, ath11k@lists.infradead.org,
- linux-wireless@vger.kernel.org, linux-arm-msm
- <linux-arm-msm@vger.kernel.org>, regressions@lists.linux.dev,
- mhi <mhi@lists.linux.dev>
-References: <871r5p0x2u.fsf@codeaurora.org>
- <CAMZdPi8UJLvBFQd8-nf-iHAQh8cEuihq97PUFfZ7Q=rxRQoPsg@mail.gmail.com>
- <877df6tlnq.fsf@codeaurora.org>
- <CAMZdPi8P7YZPhPir+WfS3cY_a7He1m2Pq2uqBhczPdEeoNRb0Q@mail.gmail.com>
- <87a6jl9ndo.fsf@codeaurora.org> <87ee8hgqni.fsf@codeaurora.org>
- <20211021100305.GD7580@workstation> <20211118174145.GA31300@thinkpad>
+To: Nuno Oliveira <nuno@eq.uc.pt>, Sebastian Bachmann <hello@reox.at>,
+ Kalle Valo <kvalo@codeaurora.org>, wgong@codeaurora.org
+Cc: ath10k@lists.infradead.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <1c160dfb-6ccc-b4d6-76f6-4364e0adb6dd@reox.at>
+ <YaIix40KaVlxT+XG@eq.uc.pt>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [regression] mhi: ath11k resume fails on some devices
-In-Reply-To: <20211118174145.GA31300@thinkpad>
+In-Reply-To: <YaIix40KaVlxT+XG@eq.uc.pt>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1638344059;003ecd7e;
-X-HE-SMSGID: 1msK83-0000cS-8F
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1638349625;7c8820e3;
+X-HE-SMSGID: 1msLZs-0008EO-2v
 
-Hi, this is your Linux kernel regression tracker speaking, this time
-looking for a status update.
 
-On 18.11.21 18:41, Manivannan Sadhasivam wrote:
-> On Thu, Oct 21, 2021 at 03:33:05PM +0530, Manivannan Sadhasivam wrote:
->> On Tue, Oct 19, 2021 at 03:12:01PM +0300, Kalle Valo wrote:
->>> Kalle Valo <kvalo@codeaurora.org> writes:
->>>
->>>> (adding the new mhi list, yay)
->>>>
->>>> Hi Loic,
->>>>
->>>> Loic Poulain <loic.poulain@linaro.org> writes:
->>>>
->>>>>> Loic Poulain <loic.poulain@linaro.org> writes:
->>>>>>
->>>>>>> On Thu, 16 Sept 2021 at 10:00, Kalle Valo <kvalo@codeaurora.org> wrote:
->>>>>>
->>>>>>>> At the moment I'm running my tests with commit 020d3b26c07a reverted and
->>>>>>>> everything works without problems. Is there a simple way to fix this? Or
->>>>>>>> maybe we should just revert the commit? Commit log and kernel logs from
->>>>>>>> a failing case below.
->>>>>>>
->>>>>>> Do you have log of success case?
->>>>>>
->>>>>> A log from a successful case in the end of email, using v5.15-rc1 plus
->>>>>> revert of commit 020d3b26c07abe27.
->>>>>>
->>>>>>> To me, the device loses power, that is why MHI resuming is failing.
->>>>>>> Normally the device should be properly recovered/reinitialized. Before
->>>>>>> that patch the power loss was simply not detected (or handled at
->>>>>>> higher stack level).
->>>>>>
->>>>>> Currently in ath11k we always keep the firmware running when in suspend,
->>>>>> this is a workaround due to problems between mac80211 and MHI stack.
->>>>>> IIRC the problem was something related MHI creating struct device during
->>>>>> resume or something like that.
->>>>>
->>>>> Could you give a try with the attached patch? It should solve your
->>>>> issue without breaking modem support.
->>>>
->>>> Sorry for taking so long, but I now tested your patch on top of
->>>> v5.15-rc3 and, as expected, everything works as before with QCA6390 on
->>>> NUC x86 testbox.
->>>>
->>>> Tested-by: Kalle Valo <kvalo@codeaurora.org>
->>>
->>> I doubt we will find enough time to fully debug this mhi issue anytime
->>> soon. Can we commit Loic's patch so that this regression is resolved?
->>>
+Hi, this is your Linux kernel regression tracker speaking.
+
+On 27.11.21 13:21, Nuno Oliveira wrote:
+> * Sebastian Bachmann <hello@reox.at> [2021-11-27 08:17]:
+>
+>> I recently upgraded my Debian based AP from buster to bullseye, just
+>> to find out that hostapd does not work any more, because all 5GHz
+>> channels are marked as No-IR. This regression was already discussed on
+>> this ML here:
+>> https://www.mail-archive.com/ath10k@lists.infradead.org/msg12018.html
+>> and there is also an entry in Debian's bug tracker for the same issue:
+>> https://bugs.debian.org/959821
 >>
->> Sorry no :( Eventhough Loic's patch is working, I want to understand the
->> issue properly so that we could add a proper fix or patch the firmware
->> if possible.
+>> I have a slightly different card (branded Compex WLE200NX):
+>> 04:00.0 Network controller: Qualcomm Atheros AR928X Wireless Network
+>> Adapter (PCI-Express) (rev 01)
+>>        Subsystem: Qualcomm Atheros AR928X Wireless Network Adapter
+>> (PCI-Express)
+>>        Kernel driver in use: ath9k
+>>        Kernel modules: ath9k
 >>
->> Let's try to get the debug logs as I requested.
+>> But as you can see, also the EEPROM gets sanitized:
+>> [   15.461755] ath9k 0000:04:00.0: enabling device (0000 -> 0002)
+>> [   15.911600] ath: EEPROM regdomain sanitized
+>> [   15.911612] ath: EEPROM regdomain: 0x64
+>> [   15.911615] ath: EEPROM indicates we should expect a direct regpair
+>> map
+>> [   15.911625] ath: Country alpha2 being used: 00
+>> [   15.911628] ath: Regpair used: 0x64
+>>
+>> I read in the other thread, that this is a regression, but the actual
+>> commit causing it was never reverted.
+>> I tried to search for newer messages explaining the issue, however as
+>> far as I can tell, the thread ends in June 2020 with no solution
+>> available.
+>>
+>> Therefore, I kindly want to ask if there is any workaround available
+>> to re-enable 5GHz channels in AP mode for my card? (expect sticking to
+>> a pre-5.6 kernel or manually patching and recompiling ath)
 > 
-> I'm able to reproduce the issue on my NUC. I'm still investigating on how to
-> properly fix this issue. Expect a patch soon.
+> After June 2020 there were other users also affected by this change (see
+> e.g.,
+> https://lists.infradead.org/pipermail/ath10k/2021-August/012802.html).
+> Users were complaining that this change was too restrictive since it
+> meant that the intersection of restrictions for regdomains 0x00, 0x64,
+> US, and their local domain, together with a cumulative mode of applying
+> these constraints meant that, in practice, they would not be able to use
+> their world domain cards anymore as APs in the 5GHz band, for certain
+> regdomains where they were located.
+> 
+> And several people pinpointed the exact source changes responsible for
+> this. In my case, I ended up applying the attached patch, that just
+> loads the parameters for the regdomain that I'm interested in
+> (CTRY_PORTUGAL). I'm not in the US; and I care for their regulatory
+> restrictions as much as they are interested in mine.
+> 
+> So I think that you might be able to use the attached changes, with the
+> specific CTRY_xxx parameter suitable for your case. And then recompile
+> the respective Debian kernel package, which takes a lot of CPU if you
+> just recompile the whole package. Let me know if you need instructions.
+> 
+> A more robust option would be to go the OpenWRT way, and use their
+> patches to make this country selection a parameter for the kernel
+> module. This way, you would just reload the kernel module to change to a
+> new regdomain, subject to the restrictions of your hardware / firmware.
+> I have not looked into that. Please let me know if you isolate these
+> patches.
+> 
+> In any case it seems difficult to escape a kernel recompile, due to this
+> small, entirely legitimate, yet remarkable decision by the driver
+> maintainers.
 
-Was there some progress? This issue was reported 75 days ago and still
-is not fixed. From the point of the Linux kernel regression tracker I'd
-say: it should not take this long. Looking back at it I wonder if
-'reverted the culprit and reapply later together with a proper fix'
-would have been the better strategy. I wonder if that still would be the
-best way forward if no patch is forthcoming soon.
+This is a regression due to 2dc016599cfa ("ath: add support for special
+0x0 regulatory domain") that seems to affect quite a few users, but
+afaics was never properly addressed. I fully understand that this might
+be a special case where Linus' "no regressions" rule can't be simply
+applied.
+
+But isn't there some way to provide users with a solution that doesn't
+force users to compile a module or a kernel? Like a module-parameter
+that only works if the the regulatory domain code in the EEPROM is empty
+(as apparently used by OpenWRT?). Yes, module parameters are normally a
+bad idea, but this case it might be a situation where it's the best
+solution.
 
 Ciao, Thorsten
-
-#regzbot poke
-
->>> At the moment I'm doing all my regression testing with commit
->>> 020d3b26c07abe27 reverted. That's a risk, I would prefer to do my
->>> testing without any hacks.
->>>
->>> -- 
->>> https://patchwork.kernel.org/project/linux-wireless/list/
->>>
->>> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply. That's in everyone's interest, as
-what I wrote above might be misleading to everyone reading this; any
-suggestion I gave they thus might sent someone reading this down the
-wrong rabbit hole, which none of us wants.
-
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
