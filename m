@@ -1,135 +1,112 @@
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71AAF2C9D
-	for <regressions@lists.linux.dev>; Wed,  1 Dec 2021 17:47:54 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="236739997"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF31C68
+	for <regressions@lists.linux.dev>; Wed,  1 Dec 2021 18:58:41 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="216547098"
 X-IronPort-AV: E=Sophos;i="5.87,279,1631602800"; 
-   d="scan'208";a="236739997"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 09:47:53 -0800
+   d="scan'208";a="216547098"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 10:58:41 -0800
 X-IronPort-AV: E=Sophos;i="5.87,279,1631602800"; 
-   d="scan'208";a="512129845"
-Received: from ammonk-mobl.amr.corp.intel.com (HELO vcostago-mobl3) ([10.212.205.220])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 09:47:53 -0800
+   d="scan'208";a="500371301"
+Received: from ammonk-mobl.amr.corp.intel.com (HELO vcostago-mobl3.intel.com) ([10.212.205.220])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 10:58:40 -0800
 From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, Stefan Dietrich
- <roots@gmx.de>, Jakub Kicinski <kuba@kernel.org>
-Cc: Greg KH <greg@kroah.com>, netdev@vger.kernel.org,
- stable@vger.kernel.org, regressions@lists.linux.dev, Dvora Fuxbrumer
- <dvorax.fuxbrumer@linux.intel.com>, Tony Nguyen
- <anthony.l.nguyen@intel.com>, intel-wired-lan@lists.osuosl.org
-Subject: Re: [REGRESSION] Kernel 5.15 reboots / freezes upon ifup/ifdown
-In-Reply-To: <cd155eaf-8559-b7ad-d9da-818f59f21872@leemhuis.info>
-References: <924175a188159f4e03bd69908a91e606b574139b.camel@gmx.de>
- <YZ3q4OKhU2EPPttE@kroah.com>
- <8119066974f099aa11f08a4dad3653ac0ba32cd6.camel@gmx.de>
- <20211124153449.72c9cfcd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <87a6htm4aj.fsf@intel.com>
- <227af6b0692a0a57f5fb349d4d9c914301753209.camel@gmx.de>
- <cd155eaf-8559-b7ad-d9da-818f59f21872@leemhuis.info>
-Date: Wed, 01 Dec 2021 09:47:52 -0800
-Message-ID: <87r1awtdx3.fsf@intel.com>
+To: roots@gmx.de
+Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+	kuba@kernel.org,
+	greg@kroah.com,
+	netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [PATCH] igc: Avoid possible deadlock during suspend/resume
+Date: Wed,  1 Dec 2021 10:57:31 -0800
+Message-Id: <20211201185731.236130-1-vinicius.gomes@intel.com>
+X-Mailer: git-send-email 2.33.1
+In-Reply-To: <87r1awtdx3.fsf@intel.com>
+References: <87r1awtdx3.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Inspired by:
+https://bugzilla.kernel.org/show_bug.cgi?id=215129
 
-Thorsten Leemhuis <regressions@leemhuis.info> writes:
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+---
+Just to see if it's indeed the same problem as the bug report above.
 
-> Hi, this is your Linux kernel regression tracker speaking.
->
-> On 25.11.21 09:41, Stefan Dietrich wrote:
->> 
->> thanks - this was spot-on: disabling CONFIG_PCIE_PTM resolves the issue
->> for latest 5.15.4 (stable from git) for both manual and network-manager
->> NIC configuration.
->> 
->> Let me know if I may assist in debugging this further.
->
-> What is the status here? There afaics hasn't been any progress since
-> nearly a week.
->
-> Vinicius, do you still have this on your radar? Or was there some progress?
->
-> Or is this really related to another issue, as Jakub suspected? Then it
-> might be solved by the patch here:
->
-> https://bugzilla.kernel.org/show_bug.cgi?id=215129
+ drivers/net/ethernet/intel/igc/igc_main.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-What I am thinking right now is that we are facing a similar problem as
-the bug above, only in the igc driver. The difference is that it's the
-PCIe PTM messages (from the PCIe root) that are triggering the deadlock
-in the suspend/resume path in igc.
-
-I will produce a patch in a few moments, very similar to the one in the
-bug report, let's see if it helps.
-
->
-> Ciao, Thorsten
->
->> On Wed, 2021-11-24 at 17:07 -0800, Vinicius Costa Gomes wrote:
->>> Hi Stefan,
->>>
->>> Jakub Kicinski <kuba@kernel.org> writes:
->>>
->>>> On Wed, 24 Nov 2021 18:20:40 +0100 Stefan Dietrich wrote:
->>>>> Hi all,
->>>>>
->>>>> six exciting hours and a lot of learning later, here it is.
->>>>> Symptomatically, the critical commit appears for me between
->>>>> 5.14.21-
->>>>> 051421-generic and 5.15.0-051500rc2-generic - I did not find an
->>>>> amd64
->>>>> build for rc1.
->>>>>
->>>>> Please see the git-bisect output below and let me know how I may
->>>>> further assist in debugging!
->>>>
->>>> Well, let's CC those involved, shall we? :)
->>>>
->>>> Thanks for working thru the bisection!
->>>>
->>>>> a90ec84837325df4b9a6798c2cc0df202b5680bd is the first bad commit
->>>>> commit a90ec84837325df4b9a6798c2cc0df202b5680bd
->>>>> Author: Vinicius Costa Gomes <vinicius.gomes@intel.com>
->>>>> Date:   Mon Jul 26 20:36:57 2021 -0700
->>>>>
->>>>>     igc: Add support for PTP getcrosststamp()
->>>
->>> Oh! That's interesting.
->>>
->>> Can you try disabling CONFIG_PCIE_PTM in your kernel config? If it
->>> works, then it's a point in favor that this commit is indeed the
->>> problematic one.
->>>
->>> I am still trying to think of what could be causing the lockup you
->>> are
->>> seeing.
->>>
->>>
->
-> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-> on my table. I can only look briefly into most of them. Unfortunately
-> therefore I sometimes will get things wrong or miss something important.
-> I hope that's not the case here; if you think it is, don't hesitate to
-> tell me about it in a public reply. That's in everyone's interest, as
-> what I wrote above might be misleading to everyone reading this; any
-> suggestion I gave they thus might sent someone reading this down the
-> wrong rabbit hole, which none of us wants.
->
-> BTW, I have no personal interest in this issue, which is tracked using
-> regzbot, my Linux kernel regression tracking bot
-> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> this mail to get things rolling again and hence don't need to be CC on
-> all further activities wrt to this regression.
->
-> #regzbot poke
-
+diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+index 0e19b4d02e62..c58bf557a2a1 100644
+--- a/drivers/net/ethernet/intel/igc/igc_main.c
++++ b/drivers/net/ethernet/intel/igc/igc_main.c
+@@ -6619,7 +6619,7 @@ static void igc_deliver_wake_packet(struct net_device *netdev)
+ 	netif_rx(skb);
+ }
+ 
+-static int __maybe_unused igc_resume(struct device *dev)
++static int __maybe_unused __igc_resume(struct device *dev, bool rpm)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct net_device *netdev = pci_get_drvdata(pdev);
+@@ -6661,20 +6661,27 @@ static int __maybe_unused igc_resume(struct device *dev)
+ 
+ 	wr32(IGC_WUS, ~0);
+ 
+-	rtnl_lock();
++	if (!rpm)
++		rtnl_lock();
+ 	if (!err && netif_running(netdev))
+ 		err = __igc_open(netdev, true);
+ 
+ 	if (!err)
+ 		netif_device_attach(netdev);
+-	rtnl_unlock();
++	if (!rpm)
++		rtnl_unlock();
+ 
+ 	return err;
+ }
+ 
+ static int __maybe_unused igc_runtime_resume(struct device *dev)
+ {
+-	return igc_resume(dev);
++	return __igc_resume(dev, true);
++}
++
++static int __maybe_unused igc_resume(struct device *dev)
++{
++	return __igc_resume(dev, false);
+ }
+ 
+ static int __maybe_unused igc_suspend(struct device *dev)
+@@ -6738,7 +6745,7 @@ static pci_ers_result_t igc_io_error_detected(struct pci_dev *pdev,
+  *  @pdev: Pointer to PCI device
+  *
+  *  Restart the card from scratch, as if from a cold-boot. Implementation
+- *  resembles the first-half of the igc_resume routine.
++ *  resembles the first-half of the __igc_resume routine.
+  **/
+ static pci_ers_result_t igc_io_slot_reset(struct pci_dev *pdev)
+ {
+@@ -6777,7 +6784,7 @@ static pci_ers_result_t igc_io_slot_reset(struct pci_dev *pdev)
+  *
+  *  This callback is called when the error recovery driver tells us that
+  *  its OK to resume normal operation. Implementation resembles the
+- *  second-half of the igc_resume routine.
++ *  second-half of the __igc_resume routine.
+  */
+ static void igc_io_resume(struct pci_dev *pdev)
+ {
 -- 
-Vinicius
+2.33.1
+
