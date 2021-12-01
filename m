@@ -1,119 +1,79 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from outbound-smtp56.blacknight.com (outbound-smtp56.blacknight.com [46.22.136.240])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24D792C82
-	for <regressions@lists.linux.dev>; Wed,  1 Dec 2021 11:45:47 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1msO3O-00074i-FC; Wed, 01 Dec 2021 12:45:38 +0100
-Message-ID: <cd155eaf-8559-b7ad-d9da-818f59f21872@leemhuis.info>
-Date: Wed, 1 Dec 2021 12:45:38 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6B868
+	for <regressions@lists.linux.dev>; Wed,  1 Dec 2021 13:11:09 +0000 (UTC)
+Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
+	by outbound-smtp56.blacknight.com (Postfix) with ESMTPS id A452CFAB00
+	for <regressions@lists.linux.dev>; Wed,  1 Dec 2021 13:01:57 +0000 (GMT)
+Received: (qmail 12057 invoked from network); 1 Dec 2021 13:01:57 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.17.29])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 1 Dec 2021 13:01:57 -0000
+Date: Wed, 1 Dec 2021 13:01:55 +0000
+From: Mel Gorman <mgorman@techsingularity.net>
+To: Mike Galbraith <efault@gmx.de>
+Cc: Alexey Avramov <hakavlad@inbox.lv>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Rik van Riel <riel@surriel.com>, Darrick Wong <djwong@kernel.org>,
+	regressions@lists.linux.dev,
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] mm: vmscan: Reduce throttling due to a failure to
+ make progress
+Message-ID: <20211201130155.GT3366@techsingularity.net>
+References: <20211125151853.8540-1-mgorman@techsingularity.net>
+ <20211127011246.7a8ac7b8@mail.inbox.lv>
+ <20211129150117.GO3366@techsingularity.net>
+ <20211201010348.31e99637@mail.inbox.lv>
+ <20211130172754.GS3366@techsingularity.net>
+ <c2aee7e6b9096556aab9b47156e91082c9345a90.camel@gmx.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Content-Language: en-BS
-To: Stefan Dietrich <roots@gmx.de>,
- Vinicius Costa Gomes <vinicius.gomes@intel.com>,
- Jakub Kicinski <kuba@kernel.org>
-Cc: Greg KH <greg@kroah.com>, netdev@vger.kernel.org, stable@vger.kernel.org,
- regressions@lists.linux.dev,
- Dvora Fuxbrumer <dvorax.fuxbrumer@linux.intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>, intel-wired-lan@lists.osuosl.org
-References: <924175a188159f4e03bd69908a91e606b574139b.camel@gmx.de>
- <YZ3q4OKhU2EPPttE@kroah.com>
- <8119066974f099aa11f08a4dad3653ac0ba32cd6.camel@gmx.de>
- <20211124153449.72c9cfcd@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <87a6htm4aj.fsf@intel.com>
- <227af6b0692a0a57f5fb349d4d9c914301753209.camel@gmx.de>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [REGRESSION] Kernel 5.15 reboots / freezes upon ifup/ifdown
-In-Reply-To: <227af6b0692a0a57f5fb349d4d9c914301753209.camel@gmx.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1638359147;ebe05d5d;
-X-HE-SMSGID: 1msO3O-00074i-FC
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <c2aee7e6b9096556aab9b47156e91082c9345a90.camel@gmx.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi, this is your Linux kernel regression tracker speaking.
-
-On 25.11.21 09:41, Stefan Dietrich wrote:
+On Tue, Nov 30, 2021 at 06:59:58PM +0100, Mike Galbraith wrote:
+> On Tue, 2021-11-30 at 17:27 +0000, Mel Gorman wrote:
+> >
+> > Obviously a fairly different experience and most likely due to the
+> > underlying storage.
 > 
-> thanks - this was spot-on: disabling CONFIG_PCIE_PTM resolves the issue
-> for latest 5.15.4 (stable from git) for both manual and network-manager
-> NIC configuration.
+> I bet a virtual nickle this is the sore spot.
 > 
-> Let me know if I may assist in debugging this further.
 
-What is the status here? There afaics hasn't been any progress since
-nearly a week.
+You win a virtual nickle!
 
-Vinicius, do you still have this on your radar? Or was there some progress?
+Using an older laptop with slower storage and less memory a frequency
+analysis of the stall reasons and source showed the top triggering event
+was
 
-Or is this really related to another issue, as Jakub suspected? Then it
-might be solved by the patch here:
+Event count:                6210
+ mm_vmscan_throttled: nid=0 usec_timeout=100000 usect_delayed=xxx reason=VMSCAN_THROTTLE_WRITEBACK
 
-https://bugzilla.kernel.org/show_bug.cgi?id=215129
+ => trace_event_raw_event_mm_vmscan_throttled <ffffffff9987224a>
+ => reclaim_throttle <ffffffff99873df2>
+ => shrink_node <ffffffff99875bd5>
+ => do_try_to_free_pages <ffffffff99875cf8>
+ => try_to_free_pages <ffffffff998772e3>
+ => __alloc_pages_slowpath.constprop.114 <ffffffff998c2ad9>
+ => __alloc_pages <ffffffff998c366b>
+ => folio_alloc <ffffffff998e4107>
+ => page_cache_ra_unbounded <ffffffff99868fab>
+ => filemap_fault <ffffffff9985cb13>
+ => __do_fault <ffffffff99899361>
+ => __handle_mm_fault <ffffffff998a1470>
+ => handle_mm_fault <ffffffff998a19ba>
+ => do_user_addr_fault <ffffffff99688734>
+ => exc_page_fault <ffffffff9a07bcd7>
+ => asm_exc_page_fault <ffffffff9a200ace>
 
-Ciao, Thorsten
-
-> On Wed, 2021-11-24 at 17:07 -0800, Vinicius Costa Gomes wrote:
->> Hi Stefan,
->>
->> Jakub Kicinski <kuba@kernel.org> writes:
->>
->>> On Wed, 24 Nov 2021 18:20:40 +0100 Stefan Dietrich wrote:
->>>> Hi all,
->>>>
->>>> six exciting hours and a lot of learning later, here it is.
->>>> Symptomatically, the critical commit appears for me between
->>>> 5.14.21-
->>>> 051421-generic and 5.15.0-051500rc2-generic - I did not find an
->>>> amd64
->>>> build for rc1.
->>>>
->>>> Please see the git-bisect output below and let me know how I may
->>>> further assist in debugging!
->>>
->>> Well, let's CC those involved, shall we? :)
->>>
->>> Thanks for working thru the bisection!
->>>
->>>> a90ec84837325df4b9a6798c2cc0df202b5680bd is the first bad commit
->>>> commit a90ec84837325df4b9a6798c2cc0df202b5680bd
->>>> Author: Vinicius Costa Gomes <vinicius.gomes@intel.com>
->>>> Date:   Mon Jul 26 20:36:57 2021 -0700
->>>>
->>>>     igc: Add support for PTP getcrosststamp()
->>
->> Oh! That's interesting.
->>
->> Can you try disabling CONFIG_PCIE_PTM in your kernel config? If it
->> works, then it's a point in favor that this commit is indeed the
->> problematic one.
->>
->> I am still trying to think of what could be causing the lockup you
->> are
->> seeing.
->>
->>
-
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply. That's in everyone's interest, as
-what I wrote above might be misleading to everyone reading this; any
-suggestion I gave they thus might sent someone reading this down the
-wrong rabbit hole, which none of us wants.
-
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
-
-#regzbot poke
+-- 
+Mel Gorman
+SUSE Labs
