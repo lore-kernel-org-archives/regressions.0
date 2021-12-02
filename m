@@ -1,77 +1,54 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A282C82
-	for <regressions@lists.linux.dev>; Thu,  2 Dec 2021 03:11:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1638414703;
-	bh=DVqu7uvF6pnD7OhaDz7OP59dbYk4wRpIUL2hfNMFbJ4=;
-	h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=JKSocHQYmlzpGHX5cYa3pmkarZpiiadQAuvxlLiexZ/IUJStIkNAfDLJcZIJj0Knl
-	 TG0RoWFdElQoC22Z44vx5R2buNQBZi6IN+4thCnDhyC9ThftQGOOObUc1I/0eOxp+9
-	 l4BCgkQ6H5Rsazy+fFUk1Iymqdc0bDJQrHEo2Eys=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from homer.fritz.box ([185.221.149.39]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MPGRz-1nDq7f40pZ-00PaIQ; Thu, 02
- Dec 2021 04:11:43 +0100
-Message-ID: <74248b525d5ee03bfd00aaa66cd08a4582998cd6.camel@gmx.de>
-Subject: Re: [PATCH 1/1] mm: vmscan: Reduce throttling due to a failure to
- make progress
-From: Mike Galbraith <efault@gmx.de>
-To: Mel Gorman <mgorman@techsingularity.net>, Alexey Avramov
- <hakavlad@inbox.lv>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Michal Hocko
- <mhocko@suse.com>,  Vlastimil Babka <vbabka@suse.cz>, Rik van Riel
- <riel@surriel.com>, Darrick Wong <djwong@kernel.org>,
- regressions@lists.linux.dev, Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-Date: Thu, 02 Dec 2021 04:11:38 +0100
-In-Reply-To: <20211201140005.GU3366@techsingularity.net>
-References: <20211125151853.8540-1-mgorman@techsingularity.net>
-	 <20211127011246.7a8ac7b8@mail.inbox.lv>
-	 <20211129150117.GO3366@techsingularity.net>
-	 <20211201010348.31e99637@mail.inbox.lv>
-	 <20211130172754.GS3366@techsingularity.net>
-	 <20211201033836.4382a474@mail.inbox.lv>
-	 <20211201140005.GU3366@techsingularity.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385F468
+	for <regressions@lists.linux.dev>; Thu,  2 Dec 2021 06:41:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7A76C53FCC;
+	Thu,  2 Dec 2021 06:41:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1638427299;
+	bh=N6s8uyXaMMbHTbaRzaIZf1iqKMVGcdcuwE2QAnSJP/M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=1edUzoosLnLNB5sm67pQrYuNM4Ra5WTtE6YDOHP/Fn8dG7nIk4Dz8fcYVVnUMec+M
+	 5fOnktik/v6hXjPN16lvDO9XJFdXN9y9YKfyLgZpSYFh6U+YAhNDolL8Ou//5Ywd1M
+	 GYMoTE4fgmnhodSJfECMg2sZopMtU1p9vAFnUfhg=
+Date: Thu, 2 Dec 2021 07:41:34 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc: roots@gmx.de, kuba@kernel.org, netdev@vger.kernel.org,
+	intel-wired-lan@lists.osuosl.org, stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] igc: Avoid possible deadlock during suspend/resume
+Message-ID: <YahqnvgmT63iG48E@kroah.com>
+References: <87r1awtdx3.fsf@intel.com>
+ <20211201185731.236130-1-vinicius.gomes@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:HO9NY5VYEjQHVfACzrMvWO3O/JI53j0Q8WbvUccG0MAx2Ucw+71
- zhJpKvCHaVgfJdDGNnaiMRlu2ORSvYqrqQGSZGL8SqYgIrR+o4iX1WFhsGcQIKDyMAkec/D
- JIwIgNtCItRBIFlTYFUf+n4UfzKtVIKW7UY9BFajmO5CfkQr0w1qupU0LWF6224I7t9O2aQ
- 3JDbRYzF969uqPSmO2Krg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:aTN8X1KSxJc=:8jGWgxKTfL9dmjXiL6oRGC
- OoUVTIKsjeAJzbHFHUVrZj55EdKHr5tgyvUKzZQSeVRz71uvdr1dBYv1LNlSa8fdL55g5M6oV
- 8ipLep07stHz2V2mHM/bAoJu/w/ifiYsbpZpgMaipGuw+skk7EOi+GSKMWJPbB0NMbTwT6O+f
- O4xzlqeNd8EvJh7zQXU6gQPJs/baobv07/ikpsx0OvqqrdI3KsFt8HHDsmlxRSaNOITvxUqDh
- zvMeMrWR+XhiRPh6Ier8wEoSID6Ogtb7hjNeTzfClfr8uO/VCvfrPrH4AKgnp7c/KubxosMyA
- Eri7kuTtDG3JgUTuBmsqj6tS/hxjbxPdh3elUbeeciv05nI3XOzMlZQTZv5ZTQ1NhKaQdme+X
- YrGUDUnUVpNitMZzNppdH40lQbpE0iqJmumNPcr0XfK3BJceyHGo+NHCK5hHE7N0+IyrFQ0Qi
- PLbLiIm1br6TFlHMwvSxYn7PV29wyu9a1otVsin+86Tj+Ir11E84xBF6sT3Q4ssi8plt8oHZJ
- NR2d3SPvcQfQKvelL74EvCgPxUv9BItecF84eAawtc6i5BKTRGz0I02/z1U7G94D31QZPkOra
- PdqKHH0DBHS3J9dLFdHWnf8t21tv/zHHrhU0/0g41574if6Tj9clB2qNOwCn3eli1k7ifVn5s
- RPUtUI6Zoi/fjDTT1fkq2GCD4iuuVE6susqKqhIWeeMHZRVfZmMpa9fY4HYDduFJqgfoxxypS
- 1LONQXL/VACOiOzSY/LmDY4W6XdPFBDMGT14LyLlygpONX89tiLSvMrIRqD5Z2wo88ezrggGV
- Ak7JIykcP3IiN1jreBdK5D64swEKQ6AqKnnOOuMoipMWsV4f8lifhcLit5CPyy2/B5hbNyPj3
- LztV0pYz6e9F0WWAZddECgvB8MlLVk6apYhIqilwDgi+HU5H/iScKqTrJ5pdeTPEaaTydfkvt
- Z+m3n9hRWa+pMPIdeVgId8OaiheV9l8uV3lRgkIC3I4E7AHMykwT0O26Sjg2THAEmgLSocIkl
- g4rLH5MGJtKeEEt1iLGqswMJZkxeXhMi1KFqYqrIwQLXJXQLuyehl4QaHCEFBxOOhr8YvcqC4
- 66O+yI3d/0HWCw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211201185731.236130-1-vinicius.gomes@intel.com>
 
-On Wed, 2021-12-01 at 14:00 +0000, Mel Gorman wrote:
->
-> I've included another patch below against 5.16-rc1 but it'll apply to
-> 5.16-rc3. Using the same test I get
+On Wed, Dec 01, 2021 at 10:57:31AM -0800, Vinicius Costa Gomes wrote:
+> Inspired by:
+> https://bugzilla.kernel.org/show_bug.cgi?id=215129
+> 
 
-LTP testcases that stalled my box no longer do, nor can I manually
-trigger any unexpected behavior.
+This changelog does not say anything at all, sorry.  Please explain what
+is happening here as the kernel documentation asks you to.
 
-	-Mike
+> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+> ---
+> Just to see if it's indeed the same problem as the bug report above.
+
+<formletter>
+
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
+
+</formletter>
