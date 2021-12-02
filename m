@@ -1,35 +1,42 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9444E2C82;
-	Thu,  2 Dec 2021 16:03:38 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="223971608"
-X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
-   d="scan'208";a="223971608"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 08:03:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
-   d="scan'208";a="500794876"
-Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
-  by orsmga007.jf.intel.com with ESMTP; 02 Dec 2021 08:03:34 -0800
-Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
-	(envelope-from <lkp@intel.com>)
-	id 1msoYY-000GT3-8S; Thu, 02 Dec 2021 16:03:34 +0000
-Date: Fri, 3 Dec 2021 00:02:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mel Gorman <mgorman@suse.de>, Andrew Morton <akpm@linux-foundation.org>
-Cc: llvm@lists.linux.dev, kbuild-all@lists.01.org,
-	Linux Memory Management List <linux-mm@kvack.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F1C2C82
+	for <regressions@lists.linux.dev>; Thu,  2 Dec 2021 16:09:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B86FEC00446;
+	Thu,  2 Dec 2021 16:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1638461370;
+	bh=pIo5eiwP+Dtx+LxnVanei0w9hk4uYILZ609rHZrcAdc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iFPrk4rtYAf+Rx4IKVph3SNlRQDmzxLr4kBwk3DdYPsd7+4WyvpLfVw3gY0J8tqFE
+	 gAIM3Gt9UlRs0yDRiSDml+wTdofUpjN26Hj43gBmJCISV2UVsGWG46sxVXtMkqEIOd
+	 40JbY005yCQiB8BH9Rjm1psgDLlpzyZS1eOgSwyiLb1tN91LZcHBZluM5A3w7OOlzE
+	 /Q+2yooCOST9j28KNJ/8Fl5Bq6Bw287Laa9U68lSIhU2iHUBnz226tMqqLTV5X0G6o
+	 zNuGukctfv6FFtDT+CTxTYAxSMLFSwq9r5CVFa40/+7FGFxcLiBGI2Z89hPASenblC
+	 1S7V3HvJMyPkA==
+Date: Thu, 2 Dec 2021 08:09:30 -0800
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: Mel Gorman <mgorman@techsingularity.net>
+Cc: Alexey Avramov <hakavlad@inbox.lv>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>,
-	Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>,
+	Rik van Riel <riel@surriel.com>, Mike Galbraith <efault@gmx.de>,
 	regressions@lists.linux.dev,
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH 1/1] mm: vmscan: Reduce throttling due to a failure to
  make progress
-Message-ID: <202112030001.HUiErCyK-lkp@intel.com>
-References: <20211202131842.9217-1-mgorman@techsingularity.net>
+Message-ID: <20211202160930.GC8492@magnolia>
+References: <20211125151853.8540-1-mgorman@techsingularity.net>
+ <20211127011246.7a8ac7b8@mail.inbox.lv>
+ <20211129150117.GO3366@techsingularity.net>
+ <20211201010348.31e99637@mail.inbox.lv>
+ <20211130172754.GS3366@techsingularity.net>
+ <20211201033836.4382a474@mail.inbox.lv>
+ <20211201140005.GU3366@techsingularity.net>
+ <20211201172920.GA8492@magnolia>
+ <20211202094332.GW3366@techsingularity.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -38,82 +45,28 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211202131842.9217-1-mgorman@techsingularity.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20211202094332.GW3366@techsingularity.net>
 
-Hi Mel,
+On Thu, Dec 02, 2021 at 09:43:32AM +0000, Mel Gorman wrote:
+> On Wed, Dec 01, 2021 at 09:29:20AM -0800, Darrick J. Wong wrote:
+> > > Again 5.16-rc1 stuttered badly but the new patch was comparable to 5.15.
+> > > 
+> > > As my baseline figures are very different to yours due to differences in
+> > > storage, can you test the following please?
+> > 
+> > I don't know if this was directed at me, but I reran my swapfile
+> > testcase on 5.16-rc3 and found that it had nearly the same runtime as it
+> > did in 5.15.
+> > 
+> 
+> Thanks Darrick. Can I add the following?
+> 
+> Tested-by: Darrick J. Wong <djwong@kernel.org>
 
-I love your patch! Perhaps something to improve:
+Yes, please! :)
 
-[auto build test WARNING on hnaz-mm/master]
+--D
 
-url:    https://github.com/0day-ci/linux/commits/Mel-Gorman/mm-vmscan-Reduce-throttling-due-to-a-failure-to-make-progress/20211202-212004
-base:   https://github.com/hnaz/linux-mm master
-config: x86_64-buildonly-randconfig-r001-20211202 (https://download.01.org/0day-ci/archive/20211203/202112030001.HUiErCyK-lkp@intel.com/config)
-compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project 4b553297ef3ee4dc2119d5429adf3072e90fac38)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/01dada07590ae9c69a9415ba9af96d5ae184d861
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review Mel-Gorman/mm-vmscan-Reduce-throttling-due-to-a-failure-to-make-progress/20211202-212004
-        git checkout 01dada07590ae9c69a9415ba9af96d5ae184d861
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> mm/vmscan.c:1024:6: warning: no previous prototype for function 'skip_throttle_noprogress' [-Wmissing-prototypes]
-   bool skip_throttle_noprogress(pg_data_t *pgdat)
-        ^
-   mm/vmscan.c:1024:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-   bool skip_throttle_noprogress(pg_data_t *pgdat)
-   ^
-   static 
-   1 warning generated.
-
-
-vim +/skip_throttle_noprogress +1024 mm/vmscan.c
-
-  1023	
-> 1024	bool skip_throttle_noprogress(pg_data_t *pgdat)
-  1025	{
-  1026		int reclaimable = 0, write_pending = 0;
-  1027		int i;
-  1028	
-  1029		/*
-  1030		 * If kswapd is disabled, reschedule if necessary but do not
-  1031		 * throttle as the system is likely near OOM.
-  1032		 */
-  1033		if (pgdat->kswapd_failures >= MAX_RECLAIM_RETRIES)
-  1034			return true;
-  1035	
-  1036		/*
-  1037		 * If there are a lot of dirty/writeback pages then do not
-  1038		 * throttle as throttling will occur when the pages cycle
-  1039		 * towards the end of the LRU if still under writeback.
-  1040		 */
-  1041		for (i = 0; i < MAX_NR_ZONES; i++) {
-  1042			struct zone *zone = pgdat->node_zones + i;
-  1043	
-  1044			if (!populated_zone(zone))
-  1045				continue;
-  1046	
-  1047			reclaimable += zone_reclaimable_pages(zone);
-  1048			write_pending += zone_page_state_snapshot(zone,
-  1049							  NR_ZONE_WRITE_PENDING);
-  1050		}
-  1051		if (2 * write_pending <= reclaimable)
-  1052			return true;
-  1053	
-  1054		return false;
-  1055	}
-  1056	
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> -- 
+> Mel Gorman
+> SUSE Labs
