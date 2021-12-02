@@ -1,110 +1,147 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C6C68
-	for <regressions@lists.linux.dev>; Thu,  2 Dec 2021 06:52:57 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1msfxf-0000Ty-51; Thu, 02 Dec 2021 07:52:55 +0100
-Message-ID: <68f2163e-63a2-c6dd-1491-fd748a92ac36@leemhuis.info>
-Date: Thu, 2 Dec 2021 07:52:54 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABDC2C80
+	for <regressions@lists.linux.dev>; Thu,  2 Dec 2021 08:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1638434044;
+	bh=Kf0ZfEWjrHIYAgO6oFML6iYFQEHAKOlFcW+N+Mh9O2M=;
+	h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=ZtRNMx5dMLwa+UK4w4i1sxFXEU7j7B9d/MxeRq9pxhEx4oQsiE3Qobqcx/nrrsFJV
+	 79ZRFyBIgbTYUWN1DlYbsU7N1Nh7fIOJeuh2a5vhqR20M8hsqKM/aL/Y1/+eCaOmZa
+	 rR0LGisLCW5IL2gbJzbLNqbP3X9jdASuF7VDGesA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from machineone.fritz.box ([84.190.129.192]) by mail.gmx.net
+ (mrgmx104 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 1MdefJ-1mJdq11WXB-00Zc3j; Thu, 02 Dec 2021 09:34:04 +0100
+Message-ID: <5a4b31d43d9bf32e518188f3ef84c433df3a18b1.camel@gmx.de>
+Subject: Re: [PATCH] igc: Avoid possible deadlock during suspend/resume
+From: Stefan Dietrich <roots@gmx.de>
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Cc: kuba@kernel.org, greg@kroah.com, netdev@vger.kernel.org, 
+	intel-wired-lan@lists.osuosl.org, regressions@lists.linux.dev
+Date: Thu, 02 Dec 2021 09:34:03 +0100
+In-Reply-To: <20211201185731.236130-1-vinicius.gomes@intel.com>
+References: <87r1awtdx3.fsf@intel.com>
+	 <20211201185731.236130-1-vinicius.gomes@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Content-Language: en-BS
-To: Moshe Shemesh <moshe@nvidia.com>, Niklas Schnelle
- <schnelle@linux.ibm.com>, Amir Tzin <amirtz@nvidia.com>,
- Saeed Mahameed <saeedm@nvidia.com>
-Cc: netdev <netdev@vger.kernel.org>, regressions@lists.linux.dev,
- linux-s390 <linux-s390@vger.kernel.org>
-References: <15db9c1d11d32fb16269afceb527b5d743177ac4.camel@linux.ibm.com>
- <129f5e00-db76-3230-75a5-243e8cd5beb0@nvidia.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Regression in v5.16-rc1: Timeout in mlx5_health_wait_pci_up() may
- try to wait 245 million years
-In-Reply-To: <129f5e00-db76-3230-75a5-243e8cd5beb0@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1638427977;19ffb723;
-X-HE-SMSGID: 1msfxf-0000Ty-51
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ZnGiQBhmCloJ2vtHSuLmhgfpM8PYIjcZXr2BckGgeHFi9eij+We
+ s1O7sEBKotkEOCezmMiXs3HBB7CWm5T4yc/4LT8KQbbnflyxpIi0v4s9K3n9svM2K3W6Et/
+ JowtMfwyGr8jyMTNCWkBp1JzQXUPIN65JA85mjyw1OYvXlwDLpJvTQiDItvTUBO3ZMwX1xy
+ L4GY26I6uuqA3lKYw5Pmg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Yo/aOvVyU08=:UemHymsbrm9Rt+jlg3IZcz
+ yBAiSVJFBNpjb0AbOioiEsGblAv0x7FsSJl1HClBIjYNiA8udwYSmiZ7ZSim1P6Cb+S34p5EY
+ oSo9Pds9I7dw6zNvKboQUVu12oSUVfaJfpmDWqwxakIhiGzgUbwWpu7EBXgY+7dfqj7u9Sccg
+ VfElmMzslF4Z7c4zup193q/UMtWngaLNTcTd73/FMV3+gAvwyisxI7+ZGg7r4HXrs3GS4wT4R
+ +L4GSJjyeKDNKY5A1SjFIhs/4JZgjoou2Pop9G4CvjRADwBhzTA1T16ghIWSPZNuVpcMF2cls
+ C8lRYl/FCAPU3KdFfKUteopyxsoLMd/qSDJ0Ul+UwgxIro/CE2851OZ3qvxZGA9beBvwflt13
+ 3OAoTSwNORpNHK1ncYAQU2pzyjIuw0xtseeG1lhw6+Ne6mSusrJiZVVjIIEDtyWPkVp+eOips
+ kaJ+vD+6Ps7N6qiWq5kpUQS471eW/F6RkEchSkuscGaD9oiGt5VYwHi2pY35D0zrKQXRag7Vi
+ sAIZgGVQp2ZzLzOuoJ+SJ6QACQF9HNuEKYmZIrIEvgMbE8afKCEG/7fQS+PXBQjyvnYFRuZAl
+ rp1KGLYe1hyA6eC1GRA4tYepYKncwb/+ECPRr4MtCXYsgaBAx65orVIU7SoIKyrlnspEa69y/
+ XeIV/aHZKe8qhP4jb9NT35L793Wz1CyxC/CQPgpnWJS+GjFMKwqzOcl99EHJfFdxCDfuTF5BN
+ mVKa78Y55d+7l0MMwLw/YwCFGxZcwQBPxwtdkk8JM/hvqQ1jXoMoL07+7/Etw+zcIVe1QPJ7E
+ MmJuR5bPMeaECBzWjtxZwMHj0+pVMbz8crbU4yuItP+L9L1EhUP4fsEHtcAojk0ULJde1OP26
+ ndxD787glVcqiZvT1eKajFIBYmWshDNMn46Cp653AesGLPEApG3UtVqYLwSRP6pIXBpXvVifI
+ mEu123gNGmTNHcwHZ6TRBkt7tEkPf4NntmbSaNIQ2yNjeBts9+CTLmKNzsNWX9J3WROpp0WTV
+ Tkk2+vqetoqUhOXSl0NZELS9/hD0T4Vw661/0y+rMZgiz8fTxVP2lCalHfM0nJhQkQ==
 
-Hi, this is your Linux kernel regression tracker speaking.
+Hi Vinicius,
 
-On 20.11.21 17:38, Moshe Shemesh wrote:
-> Thank you for reporting Niklas.
-> 
-> This is actually a case of use after free, as following that patch the
-> recovery flow goes through mlx5_tout_cleanup() while timeouts structure
-> is still needed in this flow.
-> 
-> We know the root cause and will send a fix.
+thanks for the patch - unfortunately it did not solve the issue and I
+am still getting reboots/lockups.
 
-That was twelve days ago, thus allow me asking: has any progress been
-made? I could not find any with a quick search on lore.
 
-Ciao, Thorsten
+Cheers,
+Stefan
 
-> On 11/19/2021 12:58 PM, Niklas Schnelle wrote:
->> Hello Amir, Moshe, and Saeed,
->>
->> (resent due to wrong netdev mailing list address, sorry about that)
->>
->> During testing of PCI device recovery, I found a problem in the mlx5
->> recovery support introduced in v5.16-rc1 by commit 32def4120e48
->> ("net/mlx5: Read timeout values from DTOR"). It follows my analysis of
->> the problem.
->>
->> When the device is in an error state, at least on s390 but I believe
->> also on other systems, it is isolated and all PCI MMIO reads return
->> 0xff. This is detected by your driver and it will immediately attempt
->> to recovery the device with a mlx5_core driver specific recovery
->> mechanism. Since at this point no reset has been done that would take
->> the device out of isolation this will of course fail as it can't
->> communicate with the device. Under normal circumstances this reset
->> would happen later during the new recovery flow introduced in
->> 4cdf2f4e24ff ("s390/pci: implement minimal PCI error recovery") once
->> firmware has done their side of the recovery allowing that to succeed
->> once the driver specific recovery has failed.
->>
->> With v5.16-rc1 however the driver specific recovery gets stuck holding
->> locks which will block our recovery. Without our recovery mechanism
->> this can also be seen by "echo 1 > /sys/bus/pci/devices/<dev>/remove"
->> which hangs on the device lock forever.
->>
->> Digging into this I tracked the problem down to
->> mlx5_health_wait_pci_up() hangig. I added a debug print to it and it
->> turns out that with the device isolated mlx5_tout_ms(dev, FW_RESET)
->> returns 774039849367420401 (0x6B...6B) milliseconds and we try to wait
->> 245 million years. After reverting that commit things work again,
->> though of course the driver specific recovery flow will still fail
->> before ours can kick in and finally succeed.
->>
->> Thanks,
->> Niklas Schnelle
->>
->> #regzbot introduced: 32def4120e48
->>
-> 
-> 
+On Wed, 2021-12-01 at 10:57 -0800, Vinicius Costa Gomes wrote:
+> Inspired by:
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D215129
+>
+> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+> ---
+> Just to see if it's indeed the same problem as the bug report above.
+>
+>  drivers/net/ethernet/intel/igc/igc_main.c | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c
+> b/drivers/net/ethernet/intel/igc/igc_main.c
+> index 0e19b4d02e62..c58bf557a2a1 100644
+> --- a/drivers/net/ethernet/intel/igc/igc_main.c
+> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+> @@ -6619,7 +6619,7 @@ static void igc_deliver_wake_packet(struct
+> net_device *netdev)
+>  	netif_rx(skb);
+>  }
+>
+> -static int __maybe_unused igc_resume(struct device *dev)
+> +static int __maybe_unused __igc_resume(struct device *dev, bool rpm)
+>  {
+>  	struct pci_dev *pdev =3D to_pci_dev(dev);
+>  	struct net_device *netdev =3D pci_get_drvdata(pdev);
+> @@ -6661,20 +6661,27 @@ static int __maybe_unused igc_resume(struct
+> device *dev)
+>
+>  	wr32(IGC_WUS, ~0);
+>
+> -	rtnl_lock();
+> +	if (!rpm)
+> +		rtnl_lock();
+>  	if (!err && netif_running(netdev))
+>  		err =3D __igc_open(netdev, true);
+>
+>  	if (!err)
+>  		netif_device_attach(netdev);
+> -	rtnl_unlock();
+> +	if (!rpm)
+> +		rtnl_unlock();
+>
+>  	return err;
+>  }
+>
+>  static int __maybe_unused igc_runtime_resume(struct device *dev)
+>  {
+> -	return igc_resume(dev);
+> +	return __igc_resume(dev, true);
+> +}
+> +
+> +static int __maybe_unused igc_resume(struct device *dev)
+> +{
+> +	return __igc_resume(dev, false);
+>  }
+>
+>  static int __maybe_unused igc_suspend(struct device *dev)
+> @@ -6738,7 +6745,7 @@ static pci_ers_result_t
+> igc_io_error_detected(struct pci_dev *pdev,
+>   *  @pdev: Pointer to PCI device
+>   *
+>   *  Restart the card from scratch, as if from a cold-boot.
+> Implementation
+> - *  resembles the first-half of the igc_resume routine.
+> + *  resembles the first-half of the __igc_resume routine.
+>   **/
+>  static pci_ers_result_t igc_io_slot_reset(struct pci_dev *pdev)
+>  {
+> @@ -6777,7 +6784,7 @@ static pci_ers_result_t
+> igc_io_slot_reset(struct pci_dev *pdev)
+>   *
+>   *  This callback is called when the error recovery driver tells us
+> that
+>   *  its OK to resume normal operation. Implementation resembles the
+> - *  second-half of the igc_resume routine.
+> + *  second-half of the __igc_resume routine.
+>   */
+>  static void igc_io_resume(struct pci_dev *pdev)
+>  {
 
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply. That's in everyone's interest, as
-what I wrote above might be misleading to everyone reading this; any
-suggestion I gave they thus might sent someone reading this down the
-wrong rabbit hole, which none of us wants.
-
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
-
-#regzbot poke
