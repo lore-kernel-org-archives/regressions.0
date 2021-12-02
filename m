@@ -1,112 +1,77 @@
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF31C68
-	for <regressions@lists.linux.dev>; Wed,  1 Dec 2021 18:58:41 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="216547098"
-X-IronPort-AV: E=Sophos;i="5.87,279,1631602800"; 
-   d="scan'208";a="216547098"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 10:58:41 -0800
-X-IronPort-AV: E=Sophos;i="5.87,279,1631602800"; 
-   d="scan'208";a="500371301"
-Received: from ammonk-mobl.amr.corp.intel.com (HELO vcostago-mobl3.intel.com) ([10.212.205.220])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Dec 2021 10:58:40 -0800
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To: roots@gmx.de
-Cc: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-	kuba@kernel.org,
-	greg@kroah.com,
-	netdev@vger.kernel.org,
-	intel-wired-lan@lists.osuosl.org,
-	stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: [PATCH] igc: Avoid possible deadlock during suspend/resume
-Date: Wed,  1 Dec 2021 10:57:31 -0800
-Message-Id: <20211201185731.236130-1-vinicius.gomes@intel.com>
-X-Mailer: git-send-email 2.33.1
-In-Reply-To: <87r1awtdx3.fsf@intel.com>
-References: <87r1awtdx3.fsf@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A282C82
+	for <regressions@lists.linux.dev>; Thu,  2 Dec 2021 03:11:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1638414703;
+	bh=DVqu7uvF6pnD7OhaDz7OP59dbYk4wRpIUL2hfNMFbJ4=;
+	h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=JKSocHQYmlzpGHX5cYa3pmkarZpiiadQAuvxlLiexZ/IUJStIkNAfDLJcZIJj0Knl
+	 TG0RoWFdElQoC22Z44vx5R2buNQBZi6IN+4thCnDhyC9ThftQGOOObUc1I/0eOxp+9
+	 l4BCgkQ6H5Rsazy+fFUk1Iymqdc0bDJQrHEo2Eys=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from homer.fritz.box ([185.221.149.39]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MPGRz-1nDq7f40pZ-00PaIQ; Thu, 02
+ Dec 2021 04:11:43 +0100
+Message-ID: <74248b525d5ee03bfd00aaa66cd08a4582998cd6.camel@gmx.de>
+Subject: Re: [PATCH 1/1] mm: vmscan: Reduce throttling due to a failure to
+ make progress
+From: Mike Galbraith <efault@gmx.de>
+To: Mel Gorman <mgorman@techsingularity.net>, Alexey Avramov
+ <hakavlad@inbox.lv>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Michal Hocko
+ <mhocko@suse.com>,  Vlastimil Babka <vbabka@suse.cz>, Rik van Riel
+ <riel@surriel.com>, Darrick Wong <djwong@kernel.org>,
+ regressions@lists.linux.dev, Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+Date: Thu, 02 Dec 2021 04:11:38 +0100
+In-Reply-To: <20211201140005.GU3366@techsingularity.net>
+References: <20211125151853.8540-1-mgorman@techsingularity.net>
+	 <20211127011246.7a8ac7b8@mail.inbox.lv>
+	 <20211129150117.GO3366@techsingularity.net>
+	 <20211201010348.31e99637@mail.inbox.lv>
+	 <20211130172754.GS3366@techsingularity.net>
+	 <20211201033836.4382a474@mail.inbox.lv>
+	 <20211201140005.GU3366@techsingularity.net>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:HO9NY5VYEjQHVfACzrMvWO3O/JI53j0Q8WbvUccG0MAx2Ucw+71
+ zhJpKvCHaVgfJdDGNnaiMRlu2ORSvYqrqQGSZGL8SqYgIrR+o4iX1WFhsGcQIKDyMAkec/D
+ JIwIgNtCItRBIFlTYFUf+n4UfzKtVIKW7UY9BFajmO5CfkQr0w1qupU0LWF6224I7t9O2aQ
+ 3JDbRYzF969uqPSmO2Krg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:aTN8X1KSxJc=:8jGWgxKTfL9dmjXiL6oRGC
+ OoUVTIKsjeAJzbHFHUVrZj55EdKHr5tgyvUKzZQSeVRz71uvdr1dBYv1LNlSa8fdL55g5M6oV
+ 8ipLep07stHz2V2mHM/bAoJu/w/ifiYsbpZpgMaipGuw+skk7EOi+GSKMWJPbB0NMbTwT6O+f
+ O4xzlqeNd8EvJh7zQXU6gQPJs/baobv07/ikpsx0OvqqrdI3KsFt8HHDsmlxRSaNOITvxUqDh
+ zvMeMrWR+XhiRPh6Ier8wEoSID6Ogtb7hjNeTzfClfr8uO/VCvfrPrH4AKgnp7c/KubxosMyA
+ Eri7kuTtDG3JgUTuBmsqj6tS/hxjbxPdh3elUbeeciv05nI3XOzMlZQTZv5ZTQ1NhKaQdme+X
+ YrGUDUnUVpNitMZzNppdH40lQbpE0iqJmumNPcr0XfK3BJceyHGo+NHCK5hHE7N0+IyrFQ0Qi
+ PLbLiIm1br6TFlHMwvSxYn7PV29wyu9a1otVsin+86Tj+Ir11E84xBF6sT3Q4ssi8plt8oHZJ
+ NR2d3SPvcQfQKvelL74EvCgPxUv9BItecF84eAawtc6i5BKTRGz0I02/z1U7G94D31QZPkOra
+ PdqKHH0DBHS3J9dLFdHWnf8t21tv/zHHrhU0/0g41574if6Tj9clB2qNOwCn3eli1k7ifVn5s
+ RPUtUI6Zoi/fjDTT1fkq2GCD4iuuVE6susqKqhIWeeMHZRVfZmMpa9fY4HYDduFJqgfoxxypS
+ 1LONQXL/VACOiOzSY/LmDY4W6XdPFBDMGT14LyLlygpONX89tiLSvMrIRqD5Z2wo88ezrggGV
+ Ak7JIykcP3IiN1jreBdK5D64swEKQ6AqKnnOOuMoipMWsV4f8lifhcLit5CPyy2/B5hbNyPj3
+ LztV0pYz6e9F0WWAZddECgvB8MlLVk6apYhIqilwDgi+HU5H/iScKqTrJ5pdeTPEaaTydfkvt
+ Z+m3n9hRWa+pMPIdeVgId8OaiheV9l8uV3lRgkIC3I4E7AHMykwT0O26Sjg2THAEmgLSocIkl
+ g4rLH5MGJtKeEEt1iLGqswMJZkxeXhMi1KFqYqrIwQLXJXQLuyehl4QaHCEFBxOOhr8YvcqC4
+ 66O+yI3d/0HWCw=
 
-Inspired by:
-https://bugzilla.kernel.org/show_bug.cgi?id=215129
+On Wed, 2021-12-01 at 14:00 +0000, Mel Gorman wrote:
+>
+> I've included another patch below against 5.16-rc1 but it'll apply to
+> 5.16-rc3. Using the same test I get
 
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
----
-Just to see if it's indeed the same problem as the bug report above.
+LTP testcases that stalled my box no longer do, nor can I manually
+trigger any unexpected behavior.
 
- drivers/net/ethernet/intel/igc/igc_main.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
-index 0e19b4d02e62..c58bf557a2a1 100644
---- a/drivers/net/ethernet/intel/igc/igc_main.c
-+++ b/drivers/net/ethernet/intel/igc/igc_main.c
-@@ -6619,7 +6619,7 @@ static void igc_deliver_wake_packet(struct net_device *netdev)
- 	netif_rx(skb);
- }
- 
--static int __maybe_unused igc_resume(struct device *dev)
-+static int __maybe_unused __igc_resume(struct device *dev, bool rpm)
- {
- 	struct pci_dev *pdev = to_pci_dev(dev);
- 	struct net_device *netdev = pci_get_drvdata(pdev);
-@@ -6661,20 +6661,27 @@ static int __maybe_unused igc_resume(struct device *dev)
- 
- 	wr32(IGC_WUS, ~0);
- 
--	rtnl_lock();
-+	if (!rpm)
-+		rtnl_lock();
- 	if (!err && netif_running(netdev))
- 		err = __igc_open(netdev, true);
- 
- 	if (!err)
- 		netif_device_attach(netdev);
--	rtnl_unlock();
-+	if (!rpm)
-+		rtnl_unlock();
- 
- 	return err;
- }
- 
- static int __maybe_unused igc_runtime_resume(struct device *dev)
- {
--	return igc_resume(dev);
-+	return __igc_resume(dev, true);
-+}
-+
-+static int __maybe_unused igc_resume(struct device *dev)
-+{
-+	return __igc_resume(dev, false);
- }
- 
- static int __maybe_unused igc_suspend(struct device *dev)
-@@ -6738,7 +6745,7 @@ static pci_ers_result_t igc_io_error_detected(struct pci_dev *pdev,
-  *  @pdev: Pointer to PCI device
-  *
-  *  Restart the card from scratch, as if from a cold-boot. Implementation
-- *  resembles the first-half of the igc_resume routine.
-+ *  resembles the first-half of the __igc_resume routine.
-  **/
- static pci_ers_result_t igc_io_slot_reset(struct pci_dev *pdev)
- {
-@@ -6777,7 +6784,7 @@ static pci_ers_result_t igc_io_slot_reset(struct pci_dev *pdev)
-  *
-  *  This callback is called when the error recovery driver tells us that
-  *  its OK to resume normal operation. Implementation resembles the
-- *  second-half of the igc_resume routine.
-+ *  second-half of the __igc_resume routine.
-  */
- static void igc_io_resume(struct pci_dev *pdev)
- {
--- 
-2.33.1
-
+	-Mike
