@@ -1,153 +1,112 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2FE68
-	for <regressions@lists.linux.dev>; Thu,  2 Dec 2021 13:57:01 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1msmZy-0004LN-Aq; Thu, 02 Dec 2021 14:56:54 +0100
-Message-ID: <bbb0dbf7-5374-d3bb-5bcc-e69043133ed6@leemhuis.info>
-Date: Thu, 2 Dec 2021 14:56:53 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B0A2C82
+	for <regressions@lists.linux.dev>; Thu,  2 Dec 2021 14:52:37 +0000 (UTC)
+X-IronPort-AV: E=McAfee;i="6200,9189,10185"; a="223956556"
+X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
+   d="scan'208";a="223956556"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 06:52:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
+   d="scan'208";a="541247071"
+Received: from lkp-server02.sh.intel.com (HELO 9e1e9f9b3bcb) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 02 Dec 2021 06:52:33 -0800
+Received: from kbuild by 9e1e9f9b3bcb with local (Exim 4.92)
+	(envelope-from <lkp@intel.com>)
+	id 1msnRo-000GPN-OZ; Thu, 02 Dec 2021 14:52:32 +0000
+Date: Thu, 2 Dec 2021 22:51:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mel Gorman <mgorman@suse.de>, Andrew Morton <akpm@linux-foundation.org>
+Cc: kbuild-all@lists.01.org,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>,
+	Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>,
+	regressions@lists.linux.dev,
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 1/1] mm: vmscan: Reduce throttling due to a failure to
+ make progress
+Message-ID: <202112022232.gARZWe0c-lkp@intel.com>
+References: <20211202131842.9217-1-mgorman@techsingularity.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: Regression in v5.16-rc1: Timeout in mlx5_health_wait_pci_up() may
- try to wait 245 million years
-Content-Language: en-BS
-To: Moshe Shemesh <moshe@nvidia.com>, Niklas Schnelle
- <schnelle@linux.ibm.com>, Amir Tzin <amirtz@nvidia.com>,
- Saeed Mahameed <saeedm@nvidia.com>
-Cc: netdev <netdev@vger.kernel.org>, regressions@lists.linux.dev,
- linux-s390 <linux-s390@vger.kernel.org>
-References: <15db9c1d11d32fb16269afceb527b5d743177ac4.camel@linux.ibm.com>
- <129f5e00-db76-3230-75a5-243e8cd5beb0@nvidia.com>
- <68f2163e-63a2-c6dd-1491-fd748a92ac36@leemhuis.info>
- <c8cf2b24-c790-fa70-c2c5-474201743b4d@nvidia.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <c8cf2b24-c790-fa70-c2c5-474201743b4d@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1638453422;7227f82c;
-X-HE-SMSGID: 1msmZy-0004LN-Aq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211202131842.9217-1-mgorman@techsingularity.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On 02.12.21 11:05, Moshe Shemesh wrote:
-> On 12/2/2021 8:52 AM, Thorsten Leemhuis wrote:
->> On 20.11.21 17:38, Moshe Shemesh wrote:
->>> Thank you for reporting Niklas.
->>>
->>> This is actually a case of use after free, as following that patch the
->>> recovery flow goes through mlx5_tout_cleanup() while timeouts structure
->>> is still needed in this flow.
->>>
->>> We know the root cause and will send a fix.
->> That was twelve days ago, thus allow me asking: has any progress been
->> made? I could not find any with a quick search on lore.
-> 
-> Yes, fix was submitted by Saeed yesterday, title: "[net 10/13] net/mlx5:
-> Fix use after free in mlx5_health_wait_pci_up".
+Hi Mel,
 
-Ahh, thx.
+I love your patch! Perhaps something to improve:
 
-FWIW: would have been nice if the fix would have linked to the mail
-which the regression report, for reasons explained in
-Documentation/process/submitting-patches.rst. To quote:
+[auto build test WARNING on hnaz-mm/master]
 
-```
-If related discussions or any other background information behind the
-change can be found on the web, add 'Link:' tags pointing to it. In case
-your patch fixes a bug, for example, add a tag with a URL referencing
-the report in the mailing list archives or a bug tracker;
-```
+url:    https://github.com/0day-ci/linux/commits/Mel-Gorman/mm-vmscan-Reduce-throttling-due-to-a-failure-to-make-progress/20211202-212004
+base:   https://github.com/hnaz/linux-mm master
+config: um-i386_defconfig (https://download.01.org/0day-ci/archive/20211202/202112022232.gARZWe0c-lkp@intel.com/config)
+compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/0day-ci/linux/commit/01dada07590ae9c69a9415ba9af96d5ae184d861
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Mel-Gorman/mm-vmscan-Reduce-throttling-due-to-a-failure-to-make-progress/20211202-212004
+        git checkout 01dada07590ae9c69a9415ba9af96d5ae184d861
+        # save the config file to linux build tree
+        mkdir build_dir
+        make W=1 O=build_dir ARCH=um SUBARCH=i386 SHELL=/bin/bash
 
-This concept is old, but the text was reworked recently to make this use
-case for the Link: tag clearer. For details see:
-https://git.kernel.org/linus/1f57bd42b77c
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-Yes, that "Link:" is not really crucial; but it's good to have if
-someone needs to look into the backstory of this change sometime in the
-future. But I care for a different reason. I'm tracking this regression
-(and others) with regzbot, my Linux kernel regression tracking bot. This
-bot will notice if a patch with a Link: tag to a tracked regression gets
-posted and record that, which allowed anyone looking into the regression
-to quickly gasp the current status from regzbot's webui
-(https://linux-regtracking.leemhuis.info/regzbot ) or its reports. The
-bot will also notice if a commit with a Link: tag to a regression report
-is applied by Linus and then automatically mark the regression as
-resolved then.
+All warnings (new ones prefixed by >>):
 
-Whatever, too late now, but maybe next time :-D I just rell regzbot
-manually that a fix is heading towards mailine:
+>> mm/vmscan.c:1024:6: warning: no previous prototype for 'skip_throttle_noprogress' [-Wmissing-prototypes]
+    1024 | bool skip_throttle_noprogress(pg_data_t *pgdat)
+         |      ^~~~~~~~~~~~~~~~~~~~~~~~
 
-#regzbot monitor:
-https://lore.kernel.org/r/20211201063709.229103-11-saeed@kernel.org/
-#regzbot fixed-by: 76091b0fb60970f610b7ba2d886cd7fb95c5eb2e
-#regzbot ignore-activity
 
-Ciao, Thorsten
+vim +/skip_throttle_noprogress +1024 mm/vmscan.c
 
->> Ciao, Thorsten
->>
->>> On 11/19/2021 12:58 PM, Niklas Schnelle wrote:
->>>> Hello Amir, Moshe, and Saeed,
->>>>
->>>> (resent due to wrong netdev mailing list address, sorry about that)
->>>>
->>>> During testing of PCI device recovery, I found a problem in the mlx5
->>>> recovery support introduced in v5.16-rc1 by commit 32def4120e48
->>>> ("net/mlx5: Read timeout values from DTOR"). It follows my analysis of
->>>> the problem.
->>>>
->>>> When the device is in an error state, at least on s390 but I believe
->>>> also on other systems, it is isolated and all PCI MMIO reads return
->>>> 0xff. This is detected by your driver and it will immediately attempt
->>>> to recovery the device with a mlx5_core driver specific recovery
->>>> mechanism. Since at this point no reset has been done that would take
->>>> the device out of isolation this will of course fail as it can't
->>>> communicate with the device. Under normal circumstances this reset
->>>> would happen later during the new recovery flow introduced in
->>>> 4cdf2f4e24ff ("s390/pci: implement minimal PCI error recovery") once
->>>> firmware has done their side of the recovery allowing that to succeed
->>>> once the driver specific recovery has failed.
->>>>
->>>> With v5.16-rc1 however the driver specific recovery gets stuck holding
->>>> locks which will block our recovery. Without our recovery mechanism
->>>> this can also be seen by "echo 1 > /sys/bus/pci/devices/<dev>/remove"
->>>> which hangs on the device lock forever.
->>>>
->>>> Digging into this I tracked the problem down to
->>>> mlx5_health_wait_pci_up() hangig. I added a debug print to it and it
->>>> turns out that with the device isolated mlx5_tout_ms(dev, FW_RESET)
->>>> returns 774039849367420401 (0x6B...6B) milliseconds and we try to wait
->>>> 245 million years. After reverting that commit things work again,
->>>> though of course the driver specific recovery flow will still fail
->>>> before ours can kick in and finally succeed.
->>>>
->>>> Thanks,
->>>> Niklas Schnelle
->>>>
->>>> #regzbot introduced: 32def4120e48
->>>>
->>>
->> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
->> on my table. I can only look briefly into most of them. Unfortunately
->> therefore I sometimes will get things wrong or miss something important.
->> I hope that's not the case here; if you think it is, don't hesitate to
->> tell me about it in a public reply. That's in everyone's interest, as
->> what I wrote above might be misleading to everyone reading this; any
->> suggestion I gave they thus might sent someone reading this down the
->> wrong rabbit hole, which none of us wants.
->>
->> BTW, I have no personal interest in this issue, which is tracked using
->> regzbot, my Linux kernel regression tracking bot
->> (https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flinux-regtracking.leemhuis.info%2Fregzbot%2F&amp;data=04%7C01%7Cmoshe%40nvidia.com%7C33857ebcf13946a09c6408d9b5605f19%7C43083d15727340c1b7db39efd9ccc17a%7C0%7C0%7C637740248366231179%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C2000&amp;sdata=Fuqme7inI68fhvGfPh2WPzvussq1awkqxFLqKHm%2FSmQ%3D&amp;reserved=0).
->> I'm only posting
->> this mail to get things rolling again and hence don't need to be CC on
->> all further activities wrt to this regression.
->>
->> #regzbot poke
-> 
+  1023	
+> 1024	bool skip_throttle_noprogress(pg_data_t *pgdat)
+  1025	{
+  1026		int reclaimable = 0, write_pending = 0;
+  1027		int i;
+  1028	
+  1029		/*
+  1030		 * If kswapd is disabled, reschedule if necessary but do not
+  1031		 * throttle as the system is likely near OOM.
+  1032		 */
+  1033		if (pgdat->kswapd_failures >= MAX_RECLAIM_RETRIES)
+  1034			return true;
+  1035	
+  1036		/*
+  1037		 * If there are a lot of dirty/writeback pages then do not
+  1038		 * throttle as throttling will occur when the pages cycle
+  1039		 * towards the end of the LRU if still under writeback.
+  1040		 */
+  1041		for (i = 0; i < MAX_NR_ZONES; i++) {
+  1042			struct zone *zone = pgdat->node_zones + i;
+  1043	
+  1044			if (!populated_zone(zone))
+  1045				continue;
+  1046	
+  1047			reclaimable += zone_reclaimable_pages(zone);
+  1048			write_pending += zone_page_state_snapshot(zone,
+  1049							  NR_ZONE_WRITE_PENDING);
+  1050		}
+  1051		if (2 * write_pending <= reclaimable)
+  1052			return true;
+  1053	
+  1054		return false;
+  1055	}
+  1056	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
