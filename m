@@ -1,143 +1,146 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from outbound-smtp49.blacknight.com (outbound-smtp49.blacknight.com [46.22.136.233])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D182C82
-	for <regressions@lists.linux.dev>; Thu,  2 Dec 2021 22:34:23 +0000 (UTC)
-X-IronPort-AV: E=McAfee;i="6200,9189,10186"; a="300245954"
-X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
-   d="scan'208";a="300245954"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 14:34:22 -0800
-X-IronPort-AV: E=Sophos;i="5.87,282,1631602800"; 
-   d="scan'208";a="746314689"
-Received: from vcostago-desk1.jf.intel.com (HELO vcostago-desk1) ([10.54.70.10])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Dec 2021 14:34:21 -0800
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-To: Stefan Dietrich <roots@gmx.de>
-Cc: kuba@kernel.org, greg@kroah.com, netdev@vger.kernel.org,
- intel-wired-lan@lists.osuosl.org, regressions@lists.linux.dev
-Subject: Re: [PATCH] igc: Avoid possible deadlock during suspend/resume
-In-Reply-To: <5a4b31d43d9bf32e518188f3ef84c433df3a18b1.camel@gmx.de>
-References: <87r1awtdx3.fsf@intel.com>
- <20211201185731.236130-1-vinicius.gomes@intel.com>
- <5a4b31d43d9bf32e518188f3ef84c433df3a18b1.camel@gmx.de>
-Date: Thu, 02 Dec 2021 14:34:21 -0800
-Message-ID: <87o85yljpu.fsf@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FBD68
+	for <regressions@lists.linux.dev>; Fri,  3 Dec 2021 09:11:32 +0000 (UTC)
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+	by outbound-smtp49.blacknight.com (Postfix) with ESMTPS id 24C74FAFFB
+	for <regressions@lists.linux.dev>; Fri,  3 Dec 2021 09:01:40 +0000 (GMT)
+Received: (qmail 7408 invoked from network); 3 Dec 2021 09:01:39 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.17.29])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 3 Dec 2021 09:01:39 -0000
+Date: Fri, 3 Dec 2021 09:01:37 +0000
+From: Mel Gorman <mgorman@techsingularity.net>
+To: Shakeel Butt <shakeelb@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>,
+	Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>,
+	regressions@lists.linux.dev,
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure to
+ make progress
+Message-ID: <20211203090137.GA3366@techsingularity.net>
+References: <20211202150614.22440-1-mgorman@techsingularity.net>
+ <CALvZod6am_QrZCSf_de6eyzbOtKnWuL1CQZVn+srQVt20cnpFg@mail.gmail.com>
+ <20211202165220.GZ3366@techsingularity.net>
+ <CALvZod5tiDgEz4JwxMHQvkzLxYeV0OtNGGsX5ZdT5mTQdUdUUA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CALvZod5tiDgEz4JwxMHQvkzLxYeV0OtNGGsX5ZdT5mTQdUdUUA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi Stefan,
+On Thu, Dec 02, 2021 at 09:41:04AM -0800, Shakeel Butt wrote:
+> On Thu, Dec 2, 2021 at 8:52 AM Mel Gorman <mgorman@techsingularity.net> wrote:
+> >
+> > On Thu, Dec 02, 2021 at 08:30:51AM -0800, Shakeel Butt wrote:
+> > > Hi Mel,
+> > >
+> > > On Thu, Dec 2, 2021 at 7:07 AM Mel Gorman <mgorman@techsingularity.net> wrote:
+> > > >
+> > > > Mike Galbraith, Alexey Avramov and Darrick Wong all reported similar
+> > > > problems due to reclaim throttling for excessive lengths of time.
+> > > > In Alexey's case, a memory hog that should go OOM quickly stalls for
+> > > > several minutes before stalling. In Mike and Darrick's cases, a small
+> > > > memcg environment stalled excessively even though the system had enough
+> > > > memory overall.
+> > > >
+> > > > Commit 69392a403f49 ("mm/vmscan: throttle reclaim when no progress is being
+> > > > made") introduced the problem although commit a19594ca4a8b ("mm/vmscan:
+> > > > increase the timeout if page reclaim is not making progress") made it
+> > > > worse. Systems at or near an OOM state that cannot be recovered must
+> > > > reach OOM quickly and memcg should kill tasks if a memcg is near OOM.
+> > > >
+> > >
+> > > Is there a reason we can't simply revert 69392a403f49 instead of adding
+> > > more code/heuristics? Looking more into 69392a403f49, I don't think the
+> > > code and commit message are in sync.
+> > >
+> > > For the memcg reclaim, instead of just removing congestion_wait or
+> > > replacing it with schedule_timeout in mem_cgroup_force_empty(), why
+> > > change the behavior of all memcg reclaim. Also this patch effectively
+> > > reverts that behavior of 69392a403f49.
+> > >
+> >
+> > It doesn't fully revert it but I did consider reverting it. The reason
+> > why I preserved it because the intent originally was to throttle somewhat
+> > when progress is not being made to avoid a premature OOM and I wanted to
+> > preserve that charactersistic. Right now, this is the least harmful way
+> > of doing it.
+> 
+> If I understand correctly, the original intent of 69392a403f49 which
+> you want to preserve is "avoid premature OOMs when reclaim is not
+> making progress". Were there any complaints or bug reports on these
+> premature OOMs?
+> 
 
-Stefan Dietrich <roots@gmx.de> writes:
+Not recently that I'm aware of but historically reclaim has been plagued by
+at least two classes of problems -- premature OOM and excessive CPU usage
+churning through the LRU. Going back, the solution was basically to sleep
+something like "disable kswapd if it fails to make progress for too long".
+Commit 69392a403f49 addressed a case where calling congestion_wait might as
+well have been schedule_timeout_uninterruptible(HZ/10) because congestion
+is no longer tracked by the block layer.
 
-> Hi Vinicius,
->
-> thanks for the patch - unfortunately it did not solve the issue and I
-> am still getting reboots/lockups.
->
+Hence 69392a403f49 allows reclaim to throttle on NOPROGRESS but if
+another task makes progress, the throttled tasks can be woken before the
+timeout. The flaw was throttling too easily or for too long delaying OOM
+being properly detected.
 
-Thanks for the test. We learned something, not a lot, but something: the
-problem you are facing is PTM related and it's not the same bug as that
-PM deadlock.
+> >
+> > As more memcg, I removed the NOTHROTTLE because the primary reason why a
+> > memcg might fail to make progress is excessive writeback and that should
+> > still throttle. Completely failing to make progress in a memcg is most
+> > likely due to a memcg-OOM.
+> >
+> > > For direct reclaimers under global pressure, why is page allocator a bad
+> > > place for stalling on no progress reclaim? IMHO the callers of the
+> > > reclaim should decide what to do if reclaim is not making progress.
+> >
+> > Because it's a layering violation and the caller has little direct control
+> > over the reclaim retry logic. The page allocator has no visibility on
+> > why reclaim failed only that it did fail.
+> >
+> 
+> Isn't it better that the reclaim returns why it is failing instead of
+> littering the reclaim code with 'is this global reclaim', 'is this
+> memcg reclaim', 'am I kswapd' which is also a layering violation. IMO
+> this is the direction we should be going towards though not asking to
+> do this now.
+> 
 
-I am still trying to understand what's going on.
+It's not clear why you think the page allocator can make better decisions
+about reclaim than reclaim can. It might make sense if callers were
+returned enough information to make a decision but even if they could,
+it would not be popular as the API would be difficult to use properly.
 
-Are you able to send me the 'dmesg' output for the two kernel configs
-(CONFIG_PCIE_PTM enabled and disabled)? (no need to bring the network
-interface up or down). Your kernel .config would be useful as well.
+Is your primary objection the cgroup_reclaim(sc) check? If so, I can
+remove it. While there is a mild risk that OOM would be delayed, it's very
+unlikely because a memcg failing to make progress in the local case will
+probably call cond_resched() if there are not lots of of pages pending
+writes globally.
 
->
-> Cheers,
-> Stefan
->
-> On Wed, 2021-12-01 at 10:57 -0800, Vinicius Costa Gomes wrote:
->> Inspired by:
->> https://bugzilla.kernel.org/show_bug.cgi?id=215129
->>
->> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
->> ---
->> Just to see if it's indeed the same problem as the bug report above.
->>
->>  drivers/net/ethernet/intel/igc/igc_main.c | 19 +++++++++++++------
->>  1 file changed, 13 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c
->> b/drivers/net/ethernet/intel/igc/igc_main.c
->> index 0e19b4d02e62..c58bf557a2a1 100644
->> --- a/drivers/net/ethernet/intel/igc/igc_main.c
->> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
->> @@ -6619,7 +6619,7 @@ static void igc_deliver_wake_packet(struct
->> net_device *netdev)
->>  	netif_rx(skb);
->>  }
->>
->> -static int __maybe_unused igc_resume(struct device *dev)
->> +static int __maybe_unused __igc_resume(struct device *dev, bool rpm)
->>  {
->>  	struct pci_dev *pdev = to_pci_dev(dev);
->>  	struct net_device *netdev = pci_get_drvdata(pdev);
->> @@ -6661,20 +6661,27 @@ static int __maybe_unused igc_resume(struct
->> device *dev)
->>
->>  	wr32(IGC_WUS, ~0);
->>
->> -	rtnl_lock();
->> +	if (!rpm)
->> +		rtnl_lock();
->>  	if (!err && netif_running(netdev))
->>  		err = __igc_open(netdev, true);
->>
->>  	if (!err)
->>  		netif_device_attach(netdev);
->> -	rtnl_unlock();
->> +	if (!rpm)
->> +		rtnl_unlock();
->>
->>  	return err;
->>  }
->>
->>  static int __maybe_unused igc_runtime_resume(struct device *dev)
->>  {
->> -	return igc_resume(dev);
->> +	return __igc_resume(dev, true);
->> +}
->> +
->> +static int __maybe_unused igc_resume(struct device *dev)
->> +{
->> +	return __igc_resume(dev, false);
->>  }
->>
->>  static int __maybe_unused igc_suspend(struct device *dev)
->> @@ -6738,7 +6745,7 @@ static pci_ers_result_t
->> igc_io_error_detected(struct pci_dev *pdev,
->>   *  @pdev: Pointer to PCI device
->>   *
->>   *  Restart the card from scratch, as if from a cold-boot.
->> Implementation
->> - *  resembles the first-half of the igc_resume routine.
->> + *  resembles the first-half of the __igc_resume routine.
->>   **/
->>  static pci_ers_result_t igc_io_slot_reset(struct pci_dev *pdev)
->>  {
->> @@ -6777,7 +6784,7 @@ static pci_ers_result_t
->> igc_io_slot_reset(struct pci_dev *pdev)
->>   *
->>   *  This callback is called when the error recovery driver tells us
->> that
->>   *  its OK to resume normal operation. Implementation resembles the
->> - *  second-half of the igc_resume routine.
->> + *  second-half of the __igc_resume routine.
->>   */
->>  static void igc_io_resume(struct pci_dev *pdev)
->>  {
->
+> Regarding this patch and 69392a403f49, I am still confused on the main
+> motivation behind 69392a403f49 to change the behavior of 'direct
+> reclaimers from page allocator'.
+> 
 
+The main motivation of the series overall was to remove the reliance on
+congestion_wait and wait_iff_congested because both are fundamentally
+broken when congestion is not tracked by the block layer. Replacing with
+schedule_timeout_uninterruptible() would be silly because where possible
+decisions on whether to pause or throttle should be based on events,
+not time. For example, if there are too many pages waiting on writeback
+then throttle but if writeback completes, wake the throttled tasks
+instead of "sleep some time and hope for the best".
 
-Cheers,
 -- 
-Vinicius
+Mel Gorman
+SUSE Labs
