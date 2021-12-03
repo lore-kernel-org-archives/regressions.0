@@ -1,169 +1,85 @@
-Received: from outbound-smtp08.blacknight.com (outbound-smtp08.blacknight.com [46.22.139.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F228D2CA2
-	for <regressions@lists.linux.dev>; Fri,  3 Dec 2021 19:08:17 +0000 (UTC)
-Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-	by outbound-smtp08.blacknight.com (Postfix) with ESMTPS id B26231C3A4F
-	for <regressions@lists.linux.dev>; Fri,  3 Dec 2021 19:08:09 +0000 (GMT)
-Received: (qmail 22072 invoked from network); 3 Dec 2021 19:08:09 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.17.29])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 3 Dec 2021 19:08:09 -0000
-Date: Fri, 3 Dec 2021 19:08:07 +0000
-From: Mel Gorman <mgorman@techsingularity.net>
-To: Shakeel Butt <shakeelb@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>,
-	Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>,
-	regressions@lists.linux.dev,
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure to
- make progress
-Message-ID: <20211203190807.GE3366@techsingularity.net>
-References: <20211202150614.22440-1-mgorman@techsingularity.net>
- <CALvZod6am_QrZCSf_de6eyzbOtKnWuL1CQZVn+srQVt20cnpFg@mail.gmail.com>
- <20211202165220.GZ3366@techsingularity.net>
- <CALvZod5tiDgEz4JwxMHQvkzLxYeV0OtNGGsX5ZdT5mTQdUdUUA@mail.gmail.com>
- <20211203090137.GA3366@techsingularity.net>
- <CALvZod46SFiNvUSLCJWEVccsXKx=NwT4=gk9wS6Nt8cZd0WOgg@mail.gmail.com>
+Received: from mail.holtmann.org (coyote.holtmann.net [212.227.132.17])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D91D68
+	for <regressions@lists.linux.dev>; Fri,  3 Dec 2021 21:28:15 +0000 (UTC)
+Received: from smtpclient.apple (p5b3d2e91.dip0.t-ipconnect.de [91.61.46.145])
+	by mail.holtmann.org (Postfix) with ESMTPSA id 48360CED20;
+	Fri,  3 Dec 2021 22:28:07 +0100 (CET)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CALvZod46SFiNvUSLCJWEVccsXKx=NwT4=gk9wS6Nt8cZd0WOgg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.20.0.1.32\))
+Subject: Re: [PATCH v10 2/2] btbcm: disable read tx power for some Macs with
+ the T2 Security chip
+From: Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <51575680-E9C3-4962-A3C4-ADCBD6DBCA00@live.com>
+Date: Fri, 3 Dec 2021 22:28:06 +0100
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ Orlando Chamberlain <redecorating@protonmail.com>,
+ Daniel Winkler <danielwinkler@google.com>,
+ Johan Hedberg <johan.hedberg@intel.com>,
+ "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "sonnysasaka@chromium.org" <sonnysasaka@chromium.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <BF89065D-FE7B-4E57-BFEF-DEACC67C25AB@holtmann.org>
+References: <3B8E16FA-97BF-40E5-9149-BBC3E2A245FE@live.com>
+ <YZSuWHB6YCtGclLs@kroah.com> <52DEDC31-EEB2-4F39-905F-D5E3F2BBD6C0@live.com>
+ <8919a36b-e485-500a-2722-529ffa0d2598@leemhuis.info>
+ <20211117124717.12352-1-redecorating@protonmail.com>
+ <F8D12EA8-4B37-4887-998E-DC0EBE60E730@holtmann.org>
+ <40550C00-4EE5-480F-AFD4-A2ACA01F9DBB@live.com>
+ <332a19f1-30f0-7058-ac18-c21cf78759bb@leemhuis.info>
+ <D9375D91-1062-4265-9DE9-C7CF2B705F3F@live.com>
+ <BC534C52-7FCF-4238-8933-C5706F494A11@live.com> <YaSCJg+Xkyx8w2M1@kroah.com>
+ <287DE71A-2BF2-402D-98C8-24A9AEEE55CB@live.com>
+ <42E2EC08-1D09-4DDE-B8B8-7855379C23C5@holtmann.org>
+ <6ABF3770-A9E8-4DAF-A22D-DA7113F444F3@live.com>
+ <92FBACD6-F4F2-4DE8-9000-2D30852770FC@live.com>
+ <3716D644-CD1B-4A5C-BC96-A51FF360E31D@live.com>
+ <9E6473A2-2ABE-4692-8DCF-D8F06BDEAE29@live.com>
+ <64E15BD0-665E-471F-94D9-991DFB87DEA0@live.com>
+ <A6DD9616-E669-4382-95A0-B9DBAF46712D@live.com>
+ <312202C7-C7BE-497D-8093-218C68176658@live.com>
+ <CDAA8BE2-F2B0-4020-AEB3-5C9DD4A6E08C@live.com>
+ <3F7CFEF0-10D6-4046-A3AE-33ECF81A2EB3@live.com>
+ <DCEC0C45-D974-4DC7-9E86-8F2D3D8F7E1D@live.com>
+ <51575680-E9C3-4962-A3C4-ADCBD6DBCA00@live.com>
+To: Aditya Garg <gargaditya08@live.com>
+X-Mailer: Apple Mail (2.3693.20.0.1.32)
 
-On Fri, Dec 03, 2021 at 09:50:51AM -0800, Shakeel Butt wrote:
-> On Fri, Dec 3, 2021 at 1:01 AM Mel Gorman <mgorman@techsingularity.net> wrote:
-> >
-> [...]
-> >
-> > Not recently that I'm aware of but historically reclaim has been plagued by
-> > at least two classes of problems -- premature OOM and excessive CPU usage
-> > churning through the LRU. Going back, the solution was basically to sleep
-> > something like "disable kswapd if it fails to make progress for too long".
-> > Commit 69392a403f49 addressed a case where calling congestion_wait might as
-> > well have been schedule_timeout_uninterruptible(HZ/10) because congestion
-> > is no longer tracked by the block layer.
-> >
-> > Hence 69392a403f49 allows reclaim to throttle on NOPROGRESS but if
-> > another task makes progress, the throttled tasks can be woken before the
-> > timeout. The flaw was throttling too easily or for too long delaying OOM
-> > being properly detected.
-> >
-> 
-> To remove congestion_wait of mem_cgroup_force_empty_write(), the
-> commit 69392a403f49 has changed the behavior of all memcg reclaim
-> codepaths as well as direct global reclaimers.
+Hi Aditya,
 
-Well, yes, it moved it to stalling on writeback if it's in progress
-and waking up if writeback makes forward progress instead of a
-schedule_timeout_interruptible().
+> Some Macs with the T2 security chip had Bluetooth not working.
+> To fix it we add DMI based quirks to disable querying of LE Tx power.
+>=20
+> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+> Reported-by: Orlando Chamberlain <redecorating@protonmail.com>
+> Tested-by: Orlando Chamberlain <redecorating@protonmail.com>
+> Link:
+> =
+https://lore.kernel.org/r/4970a940-211b-25d6-edab-21a815313954@protonmail.=
+com
+> Fixes: 7c395ea521e6 ("Bluetooth: Query LE tx power on startup")
+> Cc: stable@vger.kernel.org
+> ---
+> v7 :- Removed unused variable and added Tested-by.
+> v8 :- No change.
+> v9 :- Add Cc: stable@vger.kernel.org
+> v10 :- Fix gitlint
+> drivers/bluetooth/btbcm.c | 39 +++++++++++++++++++++++++++++++++++++++
+> 1 file changed, 39 insertions(+)
 
-> Were there other
-> congestion_wait() instances which commit 69392a403f49 was targeting
-> but those congestion_wait() were replaced/removed by different
-> commits?
-> 
+patch has been applied to bluetooth-next tree.
 
-Yes, the series removed congestion_wait from other places because the
-interface is broken and has been for a long time.
+Regards
 
-> [...]
-> 
-> > >
-> > > Isn't it better that the reclaim returns why it is failing instead of
-> > > littering the reclaim code with 'is this global reclaim', 'is this
-> > > memcg reclaim', 'am I kswapd' which is also a layering violation. IMO
-> > > this is the direction we should be going towards though not asking to
-> > > do this now.
-> > >
-> >
-> > It's not clear why you think the page allocator can make better decisions
-> > about reclaim than reclaim can. It might make sense if callers were
-> > returned enough information to make a decision but even if they could,
-> > it would not be popular as the API would be difficult to use properly.
-> >
-> 
-> The above is a separate discussion for later.
-> 
-> > Is your primary objection the cgroup_reclaim(sc) check?
-> 
-> No, I am of the opinion that we should revert 69392a403f49 and we
-> should have just replaced congestion_wait in
-> mem_cgroup_force_empty_write with a simple
-> schedule_timeout_interruptible.
+Marcel
 
-That is a bit weak. Depending on the type of storage, writeback may
-completes in microseconds or seconds. The event used to be "sleep until
-congestion clears" which is no longer an event that can be waited upon
-in the vast majority of cases (NFS being an obvious exception). Now,
-it may throttle writeback on a waitqueue and if enough writeback
-completes, the task will be woken before the timeout to minimise the
-stall. schedule_timeout_interruptible() always waits for a fixed duration
-regardless of what else happens in the meantime.
-
-> The memory.force_empty is a cgroup v1
-> interface (to be deprecated) and it is very normal to expect that the
-> user will trigger that interface multiple times. We should not change
-> the behavior of all the memcg reclaimers and direct global reclaimers
-> so that we can remove congestion_wait from
-> mem_cgroup_force_empty_write.
-> 
-
-The mem_cgroup_force_empty_write() path will throttle on writeback in
-the same way that global reclaim does at this point
-
-                /*
-                 * If kswapd scans pages marked for immediate
-                 * reclaim and under writeback (nr_immediate), it
-                 * implies that pages are cycling through the LRU
-                 * faster than they are written so forcibly stall
-                 * until some pages complete writeback.
-                 */
-                if (sc->nr.immediate)
-                        reclaim_throttle(pgdat, VMSCAN_THROTTLE_WRITEBACK);
-
-With this patch, memcg does not stall on NOPROGRESS.
-
-> > If so, I can
-> > remove it. While there is a mild risk that OOM would be delayed, it's very
-> > unlikely because a memcg failing to make progress in the local case will
-> > probably call cond_resched() if there are not lots of of pages pending
-> > writes globally.
-> >
-> > > Regarding this patch and 69392a403f49, I am still confused on the main
-> > > motivation behind 69392a403f49 to change the behavior of 'direct
-> > > reclaimers from page allocator'.
-> > >
-> >
-> > The main motivation of the series overall was to remove the reliance on
-> > congestion_wait and wait_iff_congested because both are fundamentally
-> > broken when congestion is not tracked by the block layer. Replacing with
-> > schedule_timeout_uninterruptible() would be silly because where possible
-> > decisions on whether to pause or throttle should be based on events,
-> > not time. For example, if there are too many pages waiting on writeback
-> > then throttle but if writeback completes, wake the throttled tasks
-> > instead of "sleep some time and hope for the best".
-> >
-> 
-> I am in agreement with the motivation of the whole series. I am just
-> making sure that the motivation of VMSCAN_THROTTLE_NOPROGRESS based
-> throttle is more than just the congestion_wait of
-> mem_cgroup_force_empty_write.
-> 
-
-The commit that primarily targets congestion_wait is 8cd7c588decf
-("mm/vmscan: throttle reclaim until some writeback completes if
-congested"). The series recognises that there are other reasons why
-reclaim can fail to make progress that is not directly writeback related.
-
--- 
-Mel Gorman
-SUSE Labs
