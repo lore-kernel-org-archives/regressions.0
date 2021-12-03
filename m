@@ -1,146 +1,115 @@
-Received: from outbound-smtp49.blacknight.com (outbound-smtp49.blacknight.com [46.22.136.233])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FBD68
-	for <regressions@lists.linux.dev>; Fri,  3 Dec 2021 09:11:32 +0000 (UTC)
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-	by outbound-smtp49.blacknight.com (Postfix) with ESMTPS id 24C74FAFFB
-	for <regressions@lists.linux.dev>; Fri,  3 Dec 2021 09:01:40 +0000 (GMT)
-Received: (qmail 7408 invoked from network); 3 Dec 2021 09:01:39 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.17.29])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 3 Dec 2021 09:01:39 -0000
-Date: Fri, 3 Dec 2021 09:01:37 +0000
-From: Mel Gorman <mgorman@techsingularity.net>
-To: Shakeel Butt <shakeelb@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>,
-	Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>,
-	regressions@lists.linux.dev,
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure to
- make progress
-Message-ID: <20211203090137.GA3366@techsingularity.net>
-References: <20211202150614.22440-1-mgorman@techsingularity.net>
- <CALvZod6am_QrZCSf_de6eyzbOtKnWuL1CQZVn+srQVt20cnpFg@mail.gmail.com>
- <20211202165220.GZ3366@techsingularity.net>
- <CALvZod5tiDgEz4JwxMHQvkzLxYeV0OtNGGsX5ZdT5mTQdUdUUA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7769F2C9D
+	for <regressions@lists.linux.dev>; Fri,  3 Dec 2021 10:40:16 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mt5z3-00055G-Es; Fri, 03 Dec 2021 11:40:05 +0100
+Message-ID: <bf5d157b-4661-3549-5c90-e28be1846e70@leemhuis.info>
+Date: Fri, 3 Dec 2021 11:40:04 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CALvZod5tiDgEz4JwxMHQvkzLxYeV0OtNGGsX5ZdT5mTQdUdUUA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: 5.15 regression: CONFIG_SYSFB_SIMPLEFB breaks console scrolling
+Content-Language: en-BW
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Harald Dunkel <harri@afaics.de>,
+ Javier Martinez Canillas <javierm@redhat.com>
+Cc: Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org, Thomas Zimmermann <tzimmermann@suse.de>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <e50d5ad5-19fd-07ae-41e4-5a2d26a98bcf@afaics.de>
+ <4bf94684-6410-db9f-5bec-ea0540a2ea76@leemhuis.info>
+ <d9acb4ba-691b-3496-f77b-175c441f887d@leemhuis.info>
+In-Reply-To: <d9acb4ba-691b-3496-f77b-175c441f887d@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1638528016;18470835;
+X-HE-SMSGID: 1mt5z3-00055G-Es
 
-On Thu, Dec 02, 2021 at 09:41:04AM -0800, Shakeel Butt wrote:
-> On Thu, Dec 2, 2021 at 8:52 AM Mel Gorman <mgorman@techsingularity.net> wrote:
-> >
-> > On Thu, Dec 02, 2021 at 08:30:51AM -0800, Shakeel Butt wrote:
-> > > Hi Mel,
-> > >
-> > > On Thu, Dec 2, 2021 at 7:07 AM Mel Gorman <mgorman@techsingularity.net> wrote:
-> > > >
-> > > > Mike Galbraith, Alexey Avramov and Darrick Wong all reported similar
-> > > > problems due to reclaim throttling for excessive lengths of time.
-> > > > In Alexey's case, a memory hog that should go OOM quickly stalls for
-> > > > several minutes before stalling. In Mike and Darrick's cases, a small
-> > > > memcg environment stalled excessively even though the system had enough
-> > > > memory overall.
-> > > >
-> > > > Commit 69392a403f49 ("mm/vmscan: throttle reclaim when no progress is being
-> > > > made") introduced the problem although commit a19594ca4a8b ("mm/vmscan:
-> > > > increase the timeout if page reclaim is not making progress") made it
-> > > > worse. Systems at or near an OOM state that cannot be recovered must
-> > > > reach OOM quickly and memcg should kill tasks if a memcg is near OOM.
-> > > >
-> > >
-> > > Is there a reason we can't simply revert 69392a403f49 instead of adding
-> > > more code/heuristics? Looking more into 69392a403f49, I don't think the
-> > > code and commit message are in sync.
-> > >
-> > > For the memcg reclaim, instead of just removing congestion_wait or
-> > > replacing it with schedule_timeout in mem_cgroup_force_empty(), why
-> > > change the behavior of all memcg reclaim. Also this patch effectively
-> > > reverts that behavior of 69392a403f49.
-> > >
-> >
-> > It doesn't fully revert it but I did consider reverting it. The reason
-> > why I preserved it because the intent originally was to throttle somewhat
-> > when progress is not being made to avoid a premature OOM and I wanted to
-> > preserve that charactersistic. Right now, this is the least harmful way
-> > of doing it.
+On 25.11.21 13:00, Thorsten Leemhuis wrote:
+> On 21.11.21 12:47, Thorsten Leemhuis wrote:
+>> Hi, this is your Linux kernel regression tracker speaking.
+> /me again
+
+and again :-D
+
+>> On 16.11.21 05:52, Harald Dunkel wrote:
+>>>
+>>> if I enable CONFIG_SYSFB_SIMPLEFB in 5.15.2 and use grub's default
+>>> configuration
+>>> (Debian sid amd64), then a few lines at the bottom of /dev/tty1 including
+>>> login prompt are off-screen. Scrolling is broken. I can login, though.
+>>>
+>>> Enabling GRUB_TERMINAL=console in grub doesn't make a difference. Using
+>>> the same kernel except for CONFIG_SYSFB_SIMPLEFB the problem is gone.
+>>>
+>>> Graphics card is a GeForce GTX 1650. I tried with both CONFIG_DRM_NOUVEAU
+>>> and proprietary graphics drivers disabled.
+>>>
+>>> Attached you can find the config file. Please mail if I can help to track
+>>> this problem down.
+>>
+>> Thx for the report. I'm not totally sure if this is a regression, as
+>> that's a new config option. But it might be one considered a successor
+>> to an older one, hence it might count as regression. Adding two
+>> developers and a mailing list to the CC, hopefully someone can clarify.
 > 
-> If I understand correctly, the original intent of 69392a403f49 which
-> you want to preserve is "avoid premature OOMs when reclaim is not
-> making progress". Were there any complaints or bug reports on these
-> premature OOMs?
+> Javier, I'd be interested in your option on this.
 > 
+> Harald, did you have CONFIG_X86_SYSFB enabled in earlier kernel versions
+> (and did console scrolling work then)? The answer would help me to
+> decide if this a regression, as those ideally should be fixed as quickly
+> as possible.
 
-Not recently that I'm aware of but historically reclaim has been plagued by
-at least two classes of problems -- premature OOM and excessive CPU usage
-churning through the LRU. Going back, the solution was basically to sleep
-something like "disable kswapd if it fails to make progress for too long".
-Commit 69392a403f49 addressed a case where calling congestion_wait might as
-well have been schedule_timeout_uninterruptible(HZ/10) because congestion
-is no longer tracked by the block layer.
+Harald, a reply would have been very helpful; I wonder if Javier is
+waiting for the answer, too. If I get none in the next few days I guess
+I'll drop this from the list of tracked regressions.
 
-Hence 69392a403f49 allows reclaim to throttle on NOPROGRESS but if
-another task makes progress, the throttled tasks can be woken before the
-timeout. The flaw was throttling too easily or for too long delaying OOM
-being properly detected.
+Ciao, Thorsten
 
-> >
-> > As more memcg, I removed the NOTHROTTLE because the primary reason why a
-> > memcg might fail to make progress is excessive writeback and that should
-> > still throttle. Completely failing to make progress in a memcg is most
-> > likely due to a memcg-OOM.
-> >
-> > > For direct reclaimers under global pressure, why is page allocator a bad
-> > > place for stalling on no progress reclaim? IMHO the callers of the
-> > > reclaim should decide what to do if reclaim is not making progress.
-> >
-> > Because it's a layering violation and the caller has little direct control
-> > over the reclaim retry logic. The page allocator has no visibility on
-> > why reclaim failed only that it did fail.
-> >
+#regzbot ignore-activity
+
+>> TWIMC: To be sure this issue doesn't fall through the cracks unnoticed,
+>> I'm adding it to regzbot, my Linux kernel regression tracking bot:
+>>
+>> #regzbot ^introduced 8633ef82f101c040427b57d4df7b706261420b94
+>> #regzbot title CONFIG_SYSFB_SIMPLEFB breaks console scrolling
+>> #regzbot ignore-activity
+>>
+>> Ciao, Thorsten, your Linux kernel regression tracker.
+>>
+>> P.S.: If you want to know more about regzbot, check out its
+>> web-interface, the getting start guide, and/or the references documentation:
+>>
+>> https://linux-regtracking.leemhuis.info/regzbot/
+>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+>>
+>> The last two documents will explain how you can interact with regzbot
+>> yourself if your want to.
+>>
+>> Hint for the reporter: when reporting a regression it's in your interest
+>> to tell #regzbot about it in the report, as that will ensure the
+>> regression gets on the radar of regzbot and the regression tracker.
+>> That's in your interest, as they will make sure the report won't fall
+>> through the cracks unnoticed.
+>>
+>> Hint for developers: you normally don't need to care about regzbot, just
+>> fix the issue as you normally would. Just remember to include a 'Link:'
+>> tag to the report in the commit message, as explained in
+>> Documentation/process/submitting-patches.rst
+>> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+>> https://git.kernel.org/linus/1f57bd42b77c
 > 
-> Isn't it better that the reclaim returns why it is failing instead of
-> littering the reclaim code with 'is this global reclaim', 'is this
-> memcg reclaim', 'am I kswapd' which is also a layering violation. IMO
-> this is the direction we should be going towards though not asking to
-> do this now.
+> #regzbot title drm: CONFIG_SYSFB_SIMPLEFB breaks console scrolling
 > 
-
-It's not clear why you think the page allocator can make better decisions
-about reclaim than reclaim can. It might make sense if callers were
-returned enough information to make a decision but even if they could,
-it would not be popular as the API would be difficult to use properly.
-
-Is your primary objection the cgroup_reclaim(sc) check? If so, I can
-remove it. While there is a mild risk that OOM would be delayed, it's very
-unlikely because a memcg failing to make progress in the local case will
-probably call cond_resched() if there are not lots of of pages pending
-writes globally.
-
-> Regarding this patch and 69392a403f49, I am still confused on the main
-> motivation behind 69392a403f49 to change the behavior of 'direct
-> reclaimers from page allocator'.
 > 
-
-The main motivation of the series overall was to remove the reliance on
-congestion_wait and wait_iff_congested because both are fundamentally
-broken when congestion is not tracked by the block layer. Replacing with
-schedule_timeout_uninterruptible() would be silly because where possible
-decisions on whether to pause or throttle should be based on events,
-not time. For example, if there are too many pages waiting on writeback
-then throttle but if writeback completes, wake the throttled tasks
-instead of "sleep some time and hope for the best".
-
--- 
-Mel Gorman
-SUSE Labs
+> 
+> 
