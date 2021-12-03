@@ -1,65 +1,141 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AFF72C80
-	for <regressions@lists.linux.dev>; Fri,  3 Dec 2021 17:25:01 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mtCIn-0003QH-7t; Fri, 03 Dec 2021 18:24:53 +0100
-Message-ID: <e03ddc81-c60b-bd28-b959-0602142f0efc@leemhuis.info>
-Date: Fri, 3 Dec 2021 18:24:52 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218C62C80
+	for <regressions@lists.linux.dev>; Fri,  3 Dec 2021 17:51:06 +0000 (UTC)
+Received: by mail-lf1-f53.google.com with SMTP id k37so8358743lfv.3
+        for <regressions@lists.linux.dev>; Fri, 03 Dec 2021 09:51:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Xm0FOcKnB1VB3SyGY+sZgit/QboKHbPIM25nrSjiVeY=;
+        b=N0n18KpBckGWjsg5X9h/A83ty0o4Y2ajbVK+oq8W2DGblpELSt9Dhvxst6zT5umQca
+         l22wF2EXENaFxvBlgmOdgP9MwEyAzpw27Kext1rqCrvLVpBAfvt6zXCP1lqyoIF7zGoe
+         P+afmkfI0PbMaFi7yUICWBHgB7jiKFB1ZYccLqS1kg83qgtm00eMb3dXtX5nf8A8RqV0
+         lEvR4CQfkt7+jF9vNelvn1aufiBq4DbTy/UFIBtrH8tnqAZHskqzMXZd37eO4HSU2juD
+         s0Zgxp4s9rj+X0058T9NaXCB8niGEAjIdKnzglKON6QX0G+Z6kZ7R6kXSQU4Mxiu8c+J
+         Gh7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Xm0FOcKnB1VB3SyGY+sZgit/QboKHbPIM25nrSjiVeY=;
+        b=fFrWCl19MVVAKxGZG9VNOEpYygM88e8F3Pdg30KVLvIlpa1zxslDDrnCwHwL2sS96R
+         y6+MHPhd5kBlyhQMgFtLg14OKbRj0oKphOsUn72xXb/Kh2yOe/C2OLWGId1HdNF3cGkQ
+         CKyiBagctj99mQt/RUCDB/4Dd1pme09KRn5/rrbLy/kodOdhr7nR6eO3TcYxLLw8ezm4
+         VWdLi+nZwXwo7RHQv7jsghB+TOg8lHCnS0WQKv5hNx7p0PgqHAIAvbm3hZYPQxTg/keL
+         4mKDh5MXAlNRsGhJy4eYLruNrW9OfANzbCYPlvFYyswtwiVLDC+Ae8OMTjWEs0smnZ6+
+         8Wew==
+X-Gm-Message-State: AOAM531SG2+6oOdsWAA67TRoDp6mx7ztT7ArhC+PUlONkYMDCFjwsg1b
+	gBSVmwLo2vPxB0Fp/eMzTw8Vr+YRcGmUQc6oH5VpAQ==
+X-Google-Smtp-Source: ABdhPJy+QmtD0vN6/vIdbzeiC2xsRqs0giW2uF6k3loJjaViYyrjKE72ZpAM7vEUEZc+Y+AUnuF0gnrkB9wwTa1wxWk=
+X-Received: by 2002:a05:6512:5c2:: with SMTP id o2mr18773168lfo.8.1638553863883;
+ Fri, 03 Dec 2021 09:51:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: Regression: plugging in USB scanner breaks all USB functionality
- #forregzbot
-Content-Language: en-BS
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <35f7428b39f996c793f5b4a6a314772681c73d7a.camel@apache.org>
- <3eb9c3f8-6bca-da08-47ec-af2a02d6a485@leemhuis.info>
-To: regressions@lists.linux.dev
-In-Reply-To: <3eb9c3f8-6bca-da08-47ec-af2a02d6a485@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1638552301;85845ddf;
-X-HE-SMSGID: 1mtCIn-0003QH-7t
+References: <20211202150614.22440-1-mgorman@techsingularity.net>
+ <CALvZod6am_QrZCSf_de6eyzbOtKnWuL1CQZVn+srQVt20cnpFg@mail.gmail.com>
+ <20211202165220.GZ3366@techsingularity.net> <CALvZod5tiDgEz4JwxMHQvkzLxYeV0OtNGGsX5ZdT5mTQdUdUUA@mail.gmail.com>
+ <20211203090137.GA3366@techsingularity.net>
+In-Reply-To: <20211203090137.GA3366@techsingularity.net>
+From: Shakeel Butt <shakeelb@google.com>
+Date: Fri, 3 Dec 2021 09:50:51 -0800
+Message-ID: <CALvZod46SFiNvUSLCJWEVccsXKx=NwT4=gk9wS6Nt8cZd0WOgg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure to
+ make progress
+To: Mel Gorman <mgorman@techsingularity.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>, 
+	Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>, regressions@lists.linux.dev, 
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 02.12.21 16:13, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker speaking.
-> 
-> Thanks for the report.
-> 
-> Top-posting for once, to make this easy accessible to everyone.
-> 
-> FWIW, 5.14 is EOL, so it might not be fixed there. As the problem is in
-> newer kernels as well, I suspect that it was a change applies to 5.15 or
-> 5.16 that got backported. Maybe one of the developers might have an idea
-> which commit causes it. If that's not the case you likely should try a
-> bisection to find the culprit. Performing one between v5.14.11..v5.14.14
-> is likely the easiest and quickest way to find it.
-> 
-> To be sure this issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, my Linux kernel regression tracking bot:
-> 
-> #regzbot ^introduced v5.14.11..v5.14.14
-> #regzbot title usb: plugging in USB scanner breaks all USB functionality
-> [regression present in 5.15.2 und 5.16-rc3, too]
-> #regzbot ignore-activity
+On Fri, Dec 3, 2021 at 1:01 AM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+[...]
+>
+> Not recently that I'm aware of but historically reclaim has been plagued by
+> at least two classes of problems -- premature OOM and excessive CPU usage
+> churning through the LRU. Going back, the solution was basically to sleep
+> something like "disable kswapd if it fails to make progress for too long".
+> Commit 69392a403f49 addressed a case where calling congestion_wait might as
+> well have been schedule_timeout_uninterruptible(HZ/10) because congestion
+> is no longer tracked by the block layer.
+>
+> Hence 69392a403f49 allows reclaim to throttle on NOPROGRESS but if
+> another task makes progress, the throttled tasks can be woken before the
+> timeout. The flaw was throttling too easily or for too long delaying OOM
+> being properly detected.
+>
 
-#regzbot introduced ff0e50d3564f
-#regzbot fixed-by 385b5b09c3546c87cfb730b76abe5f8d73c579a2
+To remove congestion_wait of mem_cgroup_force_empty_write(), the
+commit 69392a403f49 has changed the behavior of all memcg reclaim
+codepaths as well as direct global reclaimers. Were there other
+congestion_wait() instances which commit 69392a403f49 was targeting
+but those congestion_wait() were replaced/removed by different
+commits?
 
-Ciao, Thorsten, your Linux kernel regression tracker
+[...]
 
-P.S.: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+> >
+> > Isn't it better that the reclaim returns why it is failing instead of
+> > littering the reclaim code with 'is this global reclaim', 'is this
+> > memcg reclaim', 'am I kswapd' which is also a layering violation. IMO
+> > this is the direction we should be going towards though not asking to
+> > do this now.
+> >
+>
+> It's not clear why you think the page allocator can make better decisions
+> about reclaim than reclaim can. It might make sense if callers were
+> returned enough information to make a decision but even if they could,
+> it would not be popular as the API would be difficult to use properly.
+>
 
+The above is a separate discussion for later.
 
+> Is your primary objection the cgroup_reclaim(sc) check?
 
+No, I am of the opinion that we should revert 69392a403f49 and we
+should have just replaced congestion_wait in
+mem_cgroup_force_empty_write with a simple
+schedule_timeout_interruptible. The memory.force_empty is a cgroup v1
+interface (to be deprecated) and it is very normal to expect that the
+user will trigger that interface multiple times. We should not change
+the behavior of all the memcg reclaimers and direct global reclaimers
+so that we can remove congestion_wait from
+mem_cgroup_force_empty_write.
+
+> If so, I can
+> remove it. While there is a mild risk that OOM would be delayed, it's very
+> unlikely because a memcg failing to make progress in the local case will
+> probably call cond_resched() if there are not lots of of pages pending
+> writes globally.
+>
+> > Regarding this patch and 69392a403f49, I am still confused on the main
+> > motivation behind 69392a403f49 to change the behavior of 'direct
+> > reclaimers from page allocator'.
+> >
+>
+> The main motivation of the series overall was to remove the reliance on
+> congestion_wait and wait_iff_congested because both are fundamentally
+> broken when congestion is not tracked by the block layer. Replacing with
+> schedule_timeout_uninterruptible() would be silly because where possible
+> decisions on whether to pause or throttle should be based on events,
+> not time. For example, if there are too many pages waiting on writeback
+> then throttle but if writeback completes, wake the throttled tasks
+> instead of "sleep some time and hope for the best".
+>
+
+I am in agreement with the motivation of the whole series. I am just
+making sure that the motivation of VMSCAN_THROTTLE_NOPROGRESS based
+throttle is more than just the congestion_wait of
+mem_cgroup_force_empty_write.
+
+thanks,
+Shakeel
