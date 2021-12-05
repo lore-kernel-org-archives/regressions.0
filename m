@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 352402C9D
-	for <regressions@lists.linux.dev>; Sat,  4 Dec 2021 11:06:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F082C80
+	for <regressions@lists.linux.dev>; Sun,  5 Dec 2021 06:56:23 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mtSsD-0003mW-AQ; Sat, 04 Dec 2021 12:06:33 +0100
-Message-ID: <7d5df080-0564-f265-f0b3-eb3dbca41599@leemhuis.info>
-Date: Sat, 4 Dec 2021 12:06:32 +0100
+	id 1mtlRU-0007SW-AZ; Sun, 05 Dec 2021 07:56:12 +0100
+Message-ID: <d4a5c811-5874-8889-e503-925a9bb5b225@leemhuis.info>
+Date: Sun, 5 Dec 2021 07:56:11 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,88 +16,77 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: Regression: plugging in USB scanner breaks all USB functionality
-Content-Language: en-BS
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: regressions@lists.linux.dev, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <35f7428b39f996c793f5b4a6a314772681c73d7a.camel@apache.org>
- <3eb9c3f8-6bca-da08-47ec-af2a02d6a485@leemhuis.info>
- <e03ddc81-c60b-bd28-b959-0602142f0efc@leemhuis.info>
- <Yas83rCCAQcabahe@kroah.com>
- <73b325e3-d5d9-f768-9033-3aa0d3683e47@leemhuis.info>
- <YatGfEzzniH/Srn4@kroah.com>
+Subject: Re: 5.15 regression: CONFIG_SYSFB_SIMPLEFB breaks console scrolling
+Content-Language: en-BW
+To: Javier Martinez Canillas <javierm@redhat.com>,
+ Harald Dunkel <harri@afaics.de>
+Cc: Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org, Thomas Zimmermann <tzimmermann@suse.de>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <e50d5ad5-19fd-07ae-41e4-5a2d26a98bcf@afaics.de>
+ <4bf94684-6410-db9f-5bec-ea0540a2ea76@leemhuis.info>
+ <5de368f7-91cd-5998-9fe4-1bf448e32742@redhat.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <YatGfEzzniH/Srn4@kroah.com>
+In-Reply-To: <5de368f7-91cd-5998-9fe4-1bf448e32742@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1638615995;aceac55a;
-X-HE-SMSGID: 1mtSsD-0003mW-AQ
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1638687383;7cb8be3d;
+X-HE-SMSGID: 1mtlRU-0007SW-AZ
 
+Hi, this is your Linux kernel regression tracker speaking.
 
-
-On 04.12.21 11:44, Greg KH wrote:
-> On Sat, Dec 04, 2021 at 11:26:45AM +0100, Thorsten Leemhuis wrote:
->>
->> On 04.12.21 11:03, Greg KH wrote:
->>> On Fri, Dec 03, 2021 at 06:24:52PM +0100, Thorsten Leemhuis wrote:
->>>> On 02.12.21 16:13, Thorsten Leemhuis wrote:
->>>>> Hi, this is your Linux kernel regression tracker speaking.
->>>>>
->>>>> Thanks for the report.
->>>>>
->>>>> Top-posting for once, to make this easy accessible to everyone.
->>>>>
->>>>> FWIW, 5.14 is EOL, so it might not be fixed there. As the problem is in
->>>>> newer kernels as well, I suspect that it was a change applies to 5.15 or
->>>>> 5.16 that got backported. Maybe one of the developers might have an idea
->>>>> which commit causes it. If that's not the case you likely should try a
->>>>> bisection to find the culprit. Performing one between v5.14.11..v5.14.14
->>>>> is likely the easiest and quickest way to find it.
->>>>>
->>>>> To be sure this issue doesn't fall through the cracks unnoticed, I'm
->>>>> adding it to regzbot, my Linux kernel regression tracking bot:
->>>>>
->>>>> #regzbot ^introduced v5.14.11..v5.14.14
->>>>> #regzbot title usb: plugging in USB scanner breaks all USB functionality
->>>>> [regression present in 5.15.2 und 5.16-rc3, too]
->>>>> #regzbot ignore-activity
->>>>
->>>> #regzbot introduced ff0e50d3564f
->>>> #regzbot fixed-by 385b5b09c3546c87cfb730b76abe5f8d73c579a2
->>>
->>> Odd, where did that git commit id come from?  I don't see it in
->>> linux-next or Linus's tree.
->>>
->>> confused,
->>
->> Yeah, sorry, after sending that mail it occurred to me that this wasn't
->> ideal and hard to follow.
->>
->> I got it from here:
->> https://lore.kernel.org/lkml/a649395b-0b91-a0d2-c510-ea8ec4aef917@linux.intel.com/
->>
->> I already decided that next time something like this comes up I'll reply
->> to the mail with the details instead (with proper quoting) to make this
->> easier to follow.
->>
->> Reading that message again I suspect that I might have been a bit quick
->> as well, as this might not be the commit id this ends up with when it
->> gets merged: I now see that this is likely a developers tree and not one
->> that gets indirectly merged.
->>
->> Sorry, I'll manually keep an eye on things to fix this up once that
->> patch gets its real it.
+On 03.12.21 12:20, Javier Martinez Canillas wrote:
+> Sorry for the late reply.
 > 
-> Ah, found it, it's now in my usb-linus branch, and I'll send it to Linus
-> later today:
-> 	09f736aa9547 ("xhci: Fix commad ring abort, write all 64 bits to CRCR register.")
+> On 11/21/21 12:47, Thorsten Leemhuis wrote:
+>> Hi, this is your Linux kernel regression tracker speaking.
+>>
+>> On 16.11.21 05:52, Harald Dunkel wrote:
+>>>
+>>> if I enable CONFIG_SYSFB_SIMPLEFB in 5.15.2 and use grub's default
+>>> configuration
+>>> (Debian sid amd64), then a few lines at the bottom of /dev/tty1 including
+>>> login prompt are off-screen. Scrolling is broken. I can login, though.
+>>>
+>>> Enabling GRUB_TERMINAL=console in grub doesn't make a difference. Using
+>>> the same kernel except for CONFIG_SYSFB_SIMPLEFB the problem is gone.
+>>>
+>>> Graphics card is a GeForce GTX 1650. I tried with both CONFIG_DRM_NOUVEAU
+>>> and proprietary graphics drivers disabled.
+>>>
+>>> Attached you can find the config file. Please mail if I can help to track
+>>> this problem down.
+>>
+>> Thx for the report. I'm not totally sure if this is a regression, as
+>> that's a new config option. But it might be one considered a successor
+>> to an older one, hence it might count as regression. Adding two
+>> developers and a mailing list to the CC, hopefully someone can clarify.
+> 
+> I don't think this is a regression since enabling CONFIG_SYSFB_SIMPLEFB will
+> make the simpledrm driver to be bound while disabling the option makes the
+> efifb driver to be bound instead.
+>  Yes, it seems to be a bug in the simpledrm driver but the solution if you
+> have issues with the simpledrm is to not enable CONFIG_SYSFB_SIMPLEFB and
+> keep using the old fbdev driver.
 
-Great, thx for letting me known, then I will let regzbot know:
+Mandy thx for the answer, Javier. Harald is quiet for some time already
+and didn't object so far, hence I'll remove this from regzbot:
 
-#regbzot fixed-by: 09f736aa9547
-
-TWIMC: regbzot will automatically pick up the title once it sees the
-commit in next or mainline.
+#regzbot invalid: problem caused by a new CONFIG option
 
 Ciao, Thorsten
+
+P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+on my table. I can only look briefly into most of them. Unfortunately
+therefore I sometimes will get things wrong or miss something important.
+I hope that's not the case here; if you think it is, don't hesitate to
+tell me about it in a public reply. That's in everyone's interest, as
+what I wrote above might be misleading to everyone reading this; any
+suggestion I gave they thus might sent someone reading this down the
+wrong rabbit hole, which none of us wants.
+
+BTW, I have no personal interest in this issue, which is tracked using
+regzbot, my Linux kernel regression tracking bot
+(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+this mail to get things rolling again and hence don't need to be CC on
+all further activities wrt to this regression.
