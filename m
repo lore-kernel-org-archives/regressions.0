@@ -1,175 +1,79 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1A72C9D
-	for <regressions@lists.linux.dev>; Sun,  5 Dec 2021 18:55:53 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mtwfw-00027y-6u; Sun, 05 Dec 2021 19:55:52 +0100
-Message-ID: <3022040f-761c-54a0-62df-c975288822f4@leemhuis.info>
-Date: Sun, 5 Dec 2021 19:55:51 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E7B2C9D
+	for <regressions@lists.linux.dev>; Mon,  6 Dec 2021 06:06:40 +0000 (UTC)
+Received: by mail-lf1-f50.google.com with SMTP id z7so22620178lfi.11
+        for <regressions@lists.linux.dev>; Sun, 05 Dec 2021 22:06:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vv0znKZkXJZMzsECckGi47A2Z/lLUzawdx8IEXbnGWk=;
+        b=YsEjqepZeQvUbFx/aqXDHvbDkAi16fxHMOFnyDNfNhyWoBQvVeaAjLcoFIxE4ZFE6r
+         e0yQfiOvKFKism80QUNMHwZJ/aTzVLwEFwZDAcQPSazF2BXWGCty9K4kE/czm/gV7K2b
+         EDOROzNqqQ8qBhibAUtJLEvyY41oVBjI+P1L2+9UXkZ2DCdoXFZKq1ZOfD4Kf8h/dVZM
+         qrCUT+zK0Tv6UuPUZOdNPB6trOKeGiPcBuTHEiSqIX6vKVgROLoDvg0UYEzkiE60Gb8g
+         sHVTe99J9n1ZhiZsQ2Zy53UpR3egvHVWiTHfjNrcDWwqID3ak8hZG3fO/BVdjAuQWo/5
+         8x6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vv0znKZkXJZMzsECckGi47A2Z/lLUzawdx8IEXbnGWk=;
+        b=pr2zIT5p1TT5FYWwdhjaB1Rl9tnKpvguFPB/VpPofiJYTamHy70IgWmaXkzY7tI922
+         CgDkUD8TXWLRz00wZt2u6QbJyjn9pe/quqb15li21qhK0OEQD+l+R4iwswlJ5rJgtHrz
+         Y3kYEQEdC7+CBvu7J2feipDUjnlcwz2iKgtQfk39PvudxUgNUALhQT+l76rsMnyCg8Xr
+         rfu8XyCzDOjTjCXeVHp8f/xY4Pa3cpiZ+hQ8aUMjR27OWZlyp+jlxt+x7QQisQjV1LYq
+         dOEK6ElIZvOA/T6cUFC38IGx0yxoCmox7D1/9TyFVfRNj+j9QMTdDfbNF+TUU7H+ZZm2
+         9NSg==
+X-Gm-Message-State: AOAM5303kBHurrPjkLyPXQ8rDBaQxaLdAfSXHuTqeBdeoOvjnAteHFc8
+	yapvaEIxOebjXLLqR+2qPgDOL6JEHQ4vEb0RckyfiQ==
+X-Google-Smtp-Source: ABdhPJzDUE/FOglwH1X1yflrVsaHq5ki2OSiI7rH+J6rd9KuybYkMfGkVUfJ+ZsNJDQKf6M+bs18NYyHI8A9InkI0es=
+X-Received: by 2002:a05:6512:1113:: with SMTP id l19mr33552043lfg.184.1638770798873;
+ Sun, 05 Dec 2021 22:06:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: Linux regressions report for mainline [2021-12-05]
-Content-Language: en-BS
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <163872839745.395685.15301798356990039860@leemhuis.info>
-In-Reply-To: <163872839745.395685.15301798356990039860@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1638730554;441a36bd;
-X-HE-SMSGID: 1mtwfw-00027y-6u
+References: <20211202150614.22440-1-mgorman@techsingularity.net>
+ <CALvZod6am_QrZCSf_de6eyzbOtKnWuL1CQZVn+srQVt20cnpFg@mail.gmail.com>
+ <20211202165220.GZ3366@techsingularity.net> <CALvZod5tiDgEz4JwxMHQvkzLxYeV0OtNGGsX5ZdT5mTQdUdUUA@mail.gmail.com>
+ <20211203090137.GA3366@techsingularity.net> <CALvZod46SFiNvUSLCJWEVccsXKx=NwT4=gk9wS6Nt8cZd0WOgg@mail.gmail.com>
+ <20211203190807.GE3366@techsingularity.net>
+In-Reply-To: <20211203190807.GE3366@techsingularity.net>
+From: Shakeel Butt <shakeelb@google.com>
+Date: Sun, 5 Dec 2021 22:06:27 -0800
+Message-ID: <CALvZod5BmFVdosG=e2NcEzeuzv0W9WifSBmeD48xnn1k+SNRKg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure to
+ make progress
+To: Mel Gorman <mgorman@techsingularity.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>, 
+	Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>, regressions@lists.linux.dev, 
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 05.12.21 19:21, Regzbot (on behalf of Thorsten Leemhuis) wrote:
-> Hi, this is regzbot, the Linux kernel regression tracking bot.
+On Fri, Dec 3, 2021 at 11:08 AM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+[...]
+> > I am in agreement with the motivation of the whole series. I am just
+> > making sure that the motivation of VMSCAN_THROTTLE_NOPROGRESS based
+> > throttle is more than just the congestion_wait of
+> > mem_cgroup_force_empty_write.
+> >
+>
+> The commit that primarily targets congestion_wait is 8cd7c588decf
+> ("mm/vmscan: throttle reclaim until some writeback completes if
+> congested"). The series recognises that there are other reasons why
+> reclaim can fail to make progress that is not directly writeback related.
+>
 
-A few quick comments and questions. Let's start with one of the latter:
-
-Does anyone want to see a category which lists "regressions fixed since
-the last report" in these weekly reports? Or do we consider this
-superfluous because they are fixed?
-
-> [...]
-> mm: LTP/memcg testcase regression induced by 8cd7c588decf..66ce520bb7c2 series
-> ------------------------------------------------------------------------------
-> https://linux-regtracking.leemhuis.info/regzbot/regression/99e779783d6c7fce96448a3402061b9dc1b3b602.camel@gmx.de/
-> https://lore.kernel.org/lkml/99e779783d6c7fce96448a3402061b9dc1b3b602.camel@gmx.de/
-> 
-> By Mike Galbraith, 14 days ago; 58 activities, latest 1 days ago.
-> Introduced in 8cd7c588decf..66ce520bb7c2 (v5.15..v5.16-rc1)
-> 
-> Recent activities from: Mel Gorman (16), Mike Galbraith (9), Alexey
->   Avramov (5), Shakeel Butt (3), Darrick J. Wong (2), kernel test
->   robot (2)
-
-FYI, this is new, I hope it makes it easier to see if well-known kernel
-developers are currently involved and working towards a fix. Sure, that
-requires one to know their names, but the report is mainly targeted
-towards people that will know such names anyway.
-
-The web interface links to the five latest activities instead and
-mentions date and author. I could do the same in the reports, but it
-would make them quite a bit longer and maybe too cluttered.
-
-> 10 patch postings are associated with this regression, the latest is this:
-
-TWIMC: I noticed a bug in regzbot right before sending the report I
-could not fix quickly: this patch...
-
-> * [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure to make progress
->   https://lore.kernel.org/lkml/20211202150614.22440-1-mgorman@techsingularity.net/
->   3 days ago, by Mel Gorman; thread monitored.
-
-...should also have been mentioned...
-
-> [...]
-> mm: reclaim_throttle leads to stall in near-OOM conditions
-> ----------------------------------------------------------
-> https://linux-regtracking.leemhuis.info/regzbot/regression/20211124011954.7cab9bb4@mail.inbox.lv/
-> https://lore.kernel.org/lkml/20211124011954.7cab9bb4@mail.inbox.lv/
-> 
-> By Alexey Avramov, 12 days ago; 12 activities, latest 7 days ago.
-> Introduced in v5.15..v5.16-rc1
-> 
-> 4 patch postings are associated with this regression, the latest is this:
-> * Re: mm: 5.16 regression: reclaim_throttle leads to stall in near-OOM conditions
->   https://lore.kernel.org/lkml/20211126162416.GK3366@techsingularity.net/
->   9 days ago, by Mel Gorman
-
-...here as well. I guess I already known how this happened and will fix
-this up.
-
-> [...]
-
-[quoting a bit out-of-order here]
-
-BTW: I'm a bit unsure how to handle the following regression. I think it
-might be one of those rare regressions that are unavoidable, but I still
-wonder if it should be made easier to people to deal with the situation.
-I asked developers for a statement a few days ago, but haven't got a
-reply yet. :-/ For details see:
-https://lore.kernel.org/regressions/96b3682d-71b3-ada0-6fc7-686e51609968@leemhuis.info/
-
-> net: wireless: ath10k: 5GHz channels are marked as No-IR
-> --------------------------------------------------------
-> https://linux-regtracking.leemhuis.info/regzbot/regression/1c160dfb-6ccc-b4d6-76f6-4364e0adb6dd@reox.at/
-> https://lore.kernel.org/ath10k/1c160dfb-6ccc-b4d6-76f6-4364e0adb6dd@reox.at/
-> 
-> By Sebastian Bachmann, 8 days ago; 19 activities, latest 4 days ago.
-> Introduced in 2dc016599cfa (v5.6-rc1)
-> 
-> Recent activities from: Thorsten Leemhuis (1)
-> 
-> Noteworthy links:
-> * Compex WLE600VX AP mode 5GHz doesn't work since kernel 5.6
->   https://lore.kernel.org/ath10k/5971a327-d11a-35e6-8295-8dfb8ae3a434@yandex.ru/
->   602 days ago, by svp; thread monitored.
-> * Re: Compex WLE600VX AP mode 5GHz doesn't work since kernel 5.6
->   https://lore.kernel.org/ath10k/CA+ASDXNNfG3-ra8C2ou457J=Vj5eE83VCXgGsFPQQOixTcu7YA@mail.gmail.com/
->   530 days ago, by Brian Norris
-> * [PATCH] Revert "ath: add support for special 0x0 regulatory domain"
->   https://lore.kernel.org/linux-wireless/20200730124923.271429-1-alsi@bang-olufsen.dk/
->   493 days ago, by Alvin Šipraga; thread monitored.
-> * [PATCH] Revert "ath: add support for special 0x0 regulatory domain"
->   https://lore.kernel.org/ath10k/20201022172113.GA1367233@capeo.gueux.org/
->   409 days ago, by Félix Sipma; thread monitored.
-> * Re: [PATCH] Revert "ath: add support for special 0x0 regulatory domain"
->   https://lore.kernel.org/ath10k/19e636c1-fdbe-7222-a055-d668e4617070@gmx.de/
->   349 days ago, by sparks71@gmx.de; thread monitored.
-> * https://bugs.debian.org/959821
-> * https://bbs.archlinux.org/viewtopic.php?id=254535
-
-The following regressions are all waiting for input from a
-non-developer, e.g. usually the reporter or someone else affected. Not
-totally sure yet, but I guess I'll add something like a "#regzbot
-needinfo: <reason>" for them. Then regzbot can sort them into their own
-category and place them at the end. Obviously I as regression tracker
-will watch when people use it to make sure it's not done to hide
-regressions. ;-)
-
-> drm/amd: AMD RX 6700 XT - Fails to resume after screen blank
-> ------------------------------------------------------------
-> https://linux-regtracking.leemhuis.info/regzbot/regression/99797fb7-76eb-9d86-ad2f-591243eca404@badpenguin.co.uk/
-> https://lore.kernel.org/regressions/99797fb7-76eb-9d86-ad2f-591243eca404@badpenguin.co.uk/
-> 
-> By Mark Boddington, 10 days ago; 3 activities, latest 9 days ago.
-> Introduced in 61d861cf4785 (v5.15-rc1)
-
-> [...]
-
-> Bug in Memory Layout of rx_desc for QCA6174
-> -------------------------------------------
-> https://linux-regtracking.leemhuis.info/regzbot/regression/CAH4F6usFu8-A6k5Z7rU9__iENcSC6Zr-NtRhh_aypR74UvN1uQ@mail.gmail.com/
-> https://lore.kernel.org/ath10k/CAH4F6usFu8-A6k5Z7rU9__iENcSC6Zr-NtRhh_aypR74UvN1uQ@mail.gmail.com/
-> 
-> By Francesco Magliocca, 170 days ago; 5 activities, latest 35 days ago.
-> Introduced in e3def6f7ddf8 (v4.16-rc1)
-> 
-> Noteworthy links:
-> * Bug in Memory Layout of rx_desc for QCA6174
->   https://lore.kernel.org/ath10k/CAH4F6uvX=xtTnBDaj1BVHSx_FDSUbpc4TRC2DGTHBmGJSD2oEA@mail.gmail.com/
->   37 days ago, by Francesco Magliocca; thread monitored.
-
-> [...]
-
-> idle power increased from ~20 to ~28 watts
-> ------------------------------------------
-> https://linux-regtracking.leemhuis.info/regzbot/regression/c11d94b4-1701-4e26-efd1-42038342c4aa@kaputniks.org/
-> https://lore.kernel.org/lkml/c11d94b4-1701-4e26-efd1-42038342c4aa@kaputniks.org/
-> 
-> By Idzibear, 34 days ago; 3 activities, latest 34 days ago.
-> Introduced in v5.14..v5.15
-
-That's it. Thx for your attention, have a nice day everyone and a safe
-flight with Linux kernel airlines.
-
-Ciao, Thorsten
+I agree with throttling for VMSCAN_THROTTLE_[WRITEBACK|ISOLATED]
+reasons. Please explain why we should throttle for
+VMSCAN_THROTTLE_NOPROGRESS? Also 69392a403f49 claims "Direct reclaim
+primarily is throttled in the page allocator if it is failing to make
+progress.", can you please explain how?
