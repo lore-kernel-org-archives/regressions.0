@@ -1,70 +1,102 @@
-Received: from mr85p00im-zteg06021901.me.com (mr85p00im-zteg06021901.me.com [17.58.23.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A671B2C9D
-	for <regressions@lists.linux.dev>; Mon,  6 Dec 2021 18:37:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
-	t=1638815868; bh=sqvjzgCXRetKbkjTCZ/X/6rGpI021b8PMdhVmZzAFGc=;
-	h=From:To:Subject:Date:Message-Id:MIME-Version;
-	b=rlATcOG7JcsaTfLaye6D4zGMCGyqQxH0uuN7K6yOwCexx3GsUmQGU3vLz2l4eWamx
-	 im6veWMrHVjJ38/oosW4ACqNyCRqNi8us/IO4QoPZga6K9S4s9ymg3Y2mQ6EgAPnmX
-	 Dd0fV74kpUx7g/GLfxcRbOwDyZ8/nHqKVSAnWesXbc1nuCYG8Y6+x1b0JtKx2OHrO5
-	 apKo7+mD65JMAjCckNXZnwTl9iCu/mYiu/yeO4nZQwzZ4K721/iKe+RvGf18SEj64g
-	 EHbfZp08tG3dkHlaV7/EjJ02YnF7v7zgllcDzya3EaYVCN0CZzgCsg8+gSURLUh595
-	 y0mX0/FSuf2Kw==
-Received: from hitch.danm.net (c-73-98-236-45.hsd1.ut.comcast.net [73.98.236.45])
-	by mr85p00im-zteg06021901.me.com (Postfix) with ESMTPSA id 6756B7200D2;
-	Mon,  6 Dec 2021 18:37:47 +0000 (UTC)
-From: Dan Moulding <dmoulding@me.com>
-To: regressions@leemhuis.info
-Cc: bskeggs@redhat.com,
-	christian.koenig@amd.com,
-	dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
-	regressions@lists.linux.dev,
-	sf@sfritsch.de
-Subject: Re: [Nouveau] Regression in 5.15 in nouveau
-Date: Mon,  6 Dec 2021 11:37:21 -0700
-Message-Id: <20211206183721.6495-1-dmoulding@me.com>
-X-Mailer: git-send-email 2.32.0
-In-Reply-To: <5dafba25-5424-3fe2-5046-ae1d4320f9c1@leemhuis.info>
-References: <5dafba25-5424-3fe2-5046-ae1d4320f9c1@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2352C9D
+	for <regressions@lists.linux.dev>; Tue,  7 Dec 2021 07:15:12 +0000 (UTC)
+Received: by mail-lj1-f180.google.com with SMTP id i63so25697077lji.3
+        for <regressions@lists.linux.dev>; Mon, 06 Dec 2021 23:15:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JeLlEalXSQHW4pH2trtzzJDx6YYnAF08ckO/i6n2PyA=;
+        b=SYj34d/hxJKfq8EbSGQE2cpAxSibC6df+us5qeCDougZMKek8E4/t6ldI2shF2MZnF
+         6UIphA+wzSY8hgwgCCx+mMA3w25N7z7n+oQyDpJZNdQcGSjsmHMCgcYOQ3j4mF/lfrCt
+         W7KKBRZUT1Ar3N0hizzhJr/8MleLpp4BXs+ikkCrJCiyaMrs5lhP3g+lBjvokFFdVO0D
+         zliqi/bBTOtRB5FRrsiF0rtcMzmG5/6skvbYHndDnafnzaybiBkG73gNYZVy9rBkIJYK
+         P4A+pVYqf6oZ4vnzOgoTmyellVvHpgzEV4i2Hod3I75Q9hjkKLPSRj3chdCa4hLVp6AT
+         La1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JeLlEalXSQHW4pH2trtzzJDx6YYnAF08ckO/i6n2PyA=;
+        b=ew6JK9fdS7Z5fgMeJlwarmOZQhvrVQlcUC+yIP96t75kYZCk4nAgBJNuPRH/pfP+as
+         fDfXBizqfn4NH1X/oT+HQhft1VwWNE8gHlxQ2zQNS7OHhoVp4Y1+u8JK2Xn4Kc9ofR8W
+         GbE3vDtGNVXOmVanYTRLbf6pBp+YIX8i7sGw+HgSU+d6nuFkIVr0qqIwzdlano4/0USZ
+         vI1LJGf0W/kgV+wB0Sy4VjF5wzr7j745muDTT9Qyk1RWCia0JjINmP6AX/aX+TrUKfdp
+         JsAvnS4n0+BQqhmnUSeOF5fAPm2qRmUQhbjDAmKhDeH8GbFZ7m+NmVcSVMqoajg653BX
+         xL0A==
+X-Gm-Message-State: AOAM533eRIXrLokZZwHZCxqxt/2nzsXt2fE1kbCcl7HWs80g8lk0ZUwM
+	2cOwuiMWOvIwuRzPwVWqoFMVSpaiR1zPqt7vXuE1iA==
+X-Google-Smtp-Source: ABdhPJwD7St5XCs0KtsZ7B4kQrin00YT33yrHoQP8SuXlTurcS6UiF5SVM2kIX/jVUXjXi6ZmXrY/VK8VWLJc333RG4=
+X-Received: by 2002:a05:651c:1790:: with SMTP id bn16mr40860622ljb.475.1638861310287;
+ Mon, 06 Dec 2021 23:15:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: =?UTF-8?Q?vendor=3Dfsecure_engine=3D1.1.170-22c6f66c430a71ce266a39bfe25bc?=
- =?UTF-8?Q?2903e8d5c8f:6.0.425,18.0.790,17.0.607.475.0000000_definitions?=
- =?UTF-8?Q?=3D2021-12-06=5F07:2021-12-06=5F02,2021-12-06=5F07,2020-04-07?=
- =?UTF-8?Q?=5F01_signatures=3D0?=
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 bulkscore=0 phishscore=0
- clxscore=1011 adultscore=0 spamscore=0 malwarescore=0 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2009150000 definitions=main-2112060111
+References: <20211202150614.22440-1-mgorman@techsingularity.net>
+ <CALvZod6am_QrZCSf_de6eyzbOtKnWuL1CQZVn+srQVt20cnpFg@mail.gmail.com>
+ <20211202165220.GZ3366@techsingularity.net> <CALvZod5tiDgEz4JwxMHQvkzLxYeV0OtNGGsX5ZdT5mTQdUdUUA@mail.gmail.com>
+ <20211203090137.GA3366@techsingularity.net> <CALvZod46SFiNvUSLCJWEVccsXKx=NwT4=gk9wS6Nt8cZd0WOgg@mail.gmail.com>
+ <20211203190807.GE3366@techsingularity.net> <CALvZod5BmFVdosG=e2NcEzeuzv0W9WifSBmeD48xnn1k+SNRKg@mail.gmail.com>
+ <20211206112545.GF3366@techsingularity.net>
+In-Reply-To: <20211206112545.GF3366@techsingularity.net>
+From: Shakeel Butt <shakeelb@google.com>
+Date: Mon, 6 Dec 2021 23:14:58 -0800
+Message-ID: <CALvZod6NPzzD=rzvmgLNsudCDVNJWgwviijB1LztRAhCX7jQBA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure to
+ make progress
+To: Mel Gorman <mgorman@techsingularity.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>, 
+	Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>, regressions@lists.linux.dev, 
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, 
+	LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 04.12.21 17:40, Stefan Fritsch wrote:
-> Hi,
-> 
-> when updating from 5.14 to 5.15 on a system with NVIDIA GP108 [GeForce
-> GT 1030] (NV138) and Ryzen 9 3900XT using kde/plasma on X (not wayland),
-> there is a regression: There is now some annoying black flickering in
-> some applications, for example thunderbird, firefox, or mpv. It mostly
-> happens when scrolling or when playing video. Only the window of the
-> application flickers, not the whole screen. But the flickering is not
-> limited to the scrolled area: for example in firefox the url and
-> bookmark bars flicker, too, not only the web site. I have bisected the
-> issue to this commit:
-> 
-> commit 3e1ad79bf66165bdb2baca3989f9227939241f11 (HEAD)
+On Mon, Dec 6, 2021 at 3:25 AM Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Sun, Dec 05, 2021 at 10:06:27PM -0800, Shakeel Butt wrote:
+> > On Fri, Dec 3, 2021 at 11:08 AM Mel Gorman <mgorman@techsingularity.net> wrote:
+> > >
+> > [...]
+> > > > I am in agreement with the motivation of the whole series. I am just
+> > > > making sure that the motivation of VMSCAN_THROTTLE_NOPROGRESS based
+> > > > throttle is more than just the congestion_wait of
+> > > > mem_cgroup_force_empty_write.
+> > > >
+> > >
+> > > The commit that primarily targets congestion_wait is 8cd7c588decf
+> > > ("mm/vmscan: throttle reclaim until some writeback completes if
+> > > congested"). The series recognises that there are other reasons why
+> > > reclaim can fail to make progress that is not directly writeback related.
+> > >
+> >
+> > I agree with throttling for VMSCAN_THROTTLE_[WRITEBACK|ISOLATED]
+> > reasons. Please explain why we should throttle for
+> > VMSCAN_THROTTLE_NOPROGRESS? Also 69392a403f49 claims "Direct reclaim
+> > primarily is throttled in the page allocator if it is failing to make
+> > progress.", can you please explain how?
+>
+> It could happen if the pages on the LRU are being reactivated continually
+> or holding an elevated reference count for some reason (e.g. gup,
+> page migration etc). The event is probably transient, hence the short
+> throttling.
+>
 
-I have been experiencing this same issue since switching to 5.15. I
-can confirm that reverting the above mentioned commit fixes the issue
-for me. I'm on GP104 hardware (GeForce GTX 1070), also running KDE
-Plasma on X.
+What's the worst that can happen if the kernel doesn't throttle at all
+for these transient scenarios? Premature oom-kills? The kernel already
+has some protection against such situations with retries i.e.
+consecutive 16 unsuccessful reclaim tries have to fail to give up the
+reclaim.
 
-Cheers,
+Anyways, I have shared my view which is 'no need to throttle at all
+for no-progress reclaims for now and course correct if there are
+complaints in future' but will not block the patch.
 
--- Dan
+thanks,
+Shakeel
