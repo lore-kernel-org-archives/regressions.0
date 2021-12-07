@@ -1,102 +1,115 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2352C9D
-	for <regressions@lists.linux.dev>; Tue,  7 Dec 2021 07:15:12 +0000 (UTC)
-Received: by mail-lj1-f180.google.com with SMTP id i63so25697077lji.3
-        for <regressions@lists.linux.dev>; Mon, 06 Dec 2021 23:15:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JeLlEalXSQHW4pH2trtzzJDx6YYnAF08ckO/i6n2PyA=;
-        b=SYj34d/hxJKfq8EbSGQE2cpAxSibC6df+us5qeCDougZMKek8E4/t6ldI2shF2MZnF
-         6UIphA+wzSY8hgwgCCx+mMA3w25N7z7n+oQyDpJZNdQcGSjsmHMCgcYOQ3j4mF/lfrCt
-         W7KKBRZUT1Ar3N0hizzhJr/8MleLpp4BXs+ikkCrJCiyaMrs5lhP3g+lBjvokFFdVO0D
-         zliqi/bBTOtRB5FRrsiF0rtcMzmG5/6skvbYHndDnafnzaybiBkG73gNYZVy9rBkIJYK
-         P4A+pVYqf6oZ4vnzOgoTmyellVvHpgzEV4i2Hod3I75Q9hjkKLPSRj3chdCa4hLVp6AT
-         La1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JeLlEalXSQHW4pH2trtzzJDx6YYnAF08ckO/i6n2PyA=;
-        b=ew6JK9fdS7Z5fgMeJlwarmOZQhvrVQlcUC+yIP96t75kYZCk4nAgBJNuPRH/pfP+as
-         fDfXBizqfn4NH1X/oT+HQhft1VwWNE8gHlxQ2zQNS7OHhoVp4Y1+u8JK2Xn4Kc9ofR8W
-         GbE3vDtGNVXOmVanYTRLbf6pBp+YIX8i7sGw+HgSU+d6nuFkIVr0qqIwzdlano4/0USZ
-         vI1LJGf0W/kgV+wB0Sy4VjF5wzr7j745muDTT9Qyk1RWCia0JjINmP6AX/aX+TrUKfdp
-         JsAvnS4n0+BQqhmnUSeOF5fAPm2qRmUQhbjDAmKhDeH8GbFZ7m+NmVcSVMqoajg653BX
-         xL0A==
-X-Gm-Message-State: AOAM533eRIXrLokZZwHZCxqxt/2nzsXt2fE1kbCcl7HWs80g8lk0ZUwM
-	2cOwuiMWOvIwuRzPwVWqoFMVSpaiR1zPqt7vXuE1iA==
-X-Google-Smtp-Source: ABdhPJwD7St5XCs0KtsZ7B4kQrin00YT33yrHoQP8SuXlTurcS6UiF5SVM2kIX/jVUXjXi6ZmXrY/VK8VWLJc333RG4=
-X-Received: by 2002:a05:651c:1790:: with SMTP id bn16mr40860622ljb.475.1638861310287;
- Mon, 06 Dec 2021 23:15:10 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C00FF2C9D
+	for <regressions@lists.linux.dev>; Tue,  7 Dec 2021 07:20:34 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1muUm7-00025d-IK; Tue, 07 Dec 2021 08:20:31 +0100
+Message-ID: <962fe0af-a080-fc0d-15f3-203166ff4584@leemhuis.info>
+Date: Tue, 7 Dec 2021 08:20:31 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20211202150614.22440-1-mgorman@techsingularity.net>
- <CALvZod6am_QrZCSf_de6eyzbOtKnWuL1CQZVn+srQVt20cnpFg@mail.gmail.com>
- <20211202165220.GZ3366@techsingularity.net> <CALvZod5tiDgEz4JwxMHQvkzLxYeV0OtNGGsX5ZdT5mTQdUdUUA@mail.gmail.com>
- <20211203090137.GA3366@techsingularity.net> <CALvZod46SFiNvUSLCJWEVccsXKx=NwT4=gk9wS6Nt8cZd0WOgg@mail.gmail.com>
- <20211203190807.GE3366@techsingularity.net> <CALvZod5BmFVdosG=e2NcEzeuzv0W9WifSBmeD48xnn1k+SNRKg@mail.gmail.com>
- <20211206112545.GF3366@techsingularity.net>
-In-Reply-To: <20211206112545.GF3366@techsingularity.net>
-From: Shakeel Butt <shakeelb@google.com>
-Date: Mon, 6 Dec 2021 23:14:58 -0800
-Message-ID: <CALvZod6NPzzD=rzvmgLNsudCDVNJWgwviijB1LztRAhCX7jQBA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure to
- make progress
-To: Mel Gorman <mgorman@techsingularity.net>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, 
-	Vlastimil Babka <vbabka@suse.cz>, Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>, 
-	Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>, regressions@lists.linux.dev, 
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, 
-	LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [Bug Report] Desktop monitor sleep regression
+Content-Language: en-BS
+To: Brandon Nielsen <nielsenb@jetfuse.net>, Imre Deak <imre.deak@intel.com>
+Cc: linux-fbdev@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ pjones@redhat.com, Daniel Vetter <daniel.vetter@ffwll.ch>,
+ dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org
+References: <8a27c986-4767-bd29-2073-6c4ffed49bba@jetfuse.net>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+In-Reply-To: <8a27c986-4767-bd29-2073-6c4ffed49bba@jetfuse.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1638861634;f42f8fad;
+X-HE-SMSGID: 1muUm7-00025d-IK
 
-On Mon, Dec 6, 2021 at 3:25 AM Mel Gorman <mgorman@techsingularity.net> wrote:
->
-> On Sun, Dec 05, 2021 at 10:06:27PM -0800, Shakeel Butt wrote:
-> > On Fri, Dec 3, 2021 at 11:08 AM Mel Gorman <mgorman@techsingularity.net> wrote:
-> > >
-> > [...]
-> > > > I am in agreement with the motivation of the whole series. I am just
-> > > > making sure that the motivation of VMSCAN_THROTTLE_NOPROGRESS based
-> > > > throttle is more than just the congestion_wait of
-> > > > mem_cgroup_force_empty_write.
-> > > >
-> > >
-> > > The commit that primarily targets congestion_wait is 8cd7c588decf
-> > > ("mm/vmscan: throttle reclaim until some writeback completes if
-> > > congested"). The series recognises that there are other reasons why
-> > > reclaim can fail to make progress that is not directly writeback related.
-> > >
-> >
-> > I agree with throttling for VMSCAN_THROTTLE_[WRITEBACK|ISOLATED]
-> > reasons. Please explain why we should throttle for
-> > VMSCAN_THROTTLE_NOPROGRESS? Also 69392a403f49 claims "Direct reclaim
-> > primarily is throttled in the page allocator if it is failing to make
-> > progress.", can you please explain how?
->
-> It could happen if the pages on the LRU are being reactivated continually
-> or holding an elevated reference count for some reason (e.g. gup,
-> page migration etc). The event is probably transient, hence the short
-> throttling.
->
 
-What's the worst that can happen if the kernel doesn't throttle at all
-for these transient scenarios? Premature oom-kills? The kernel already
-has some protection against such situations with retries i.e.
-consecutive 16 unsuccessful reclaim tries have to fail to give up the
-reclaim.
+[TLDR: adding this regression to regzbot; most of this mail is compiled
+from a few templates paragraphs some of you might have seen already.]
 
-Anyways, I have shared my view which is 'no need to throttle at all
-for no-progress reclaims for now and course correct if there are
-complaints in future' but will not block the patch.
+Hi, this is your Linux kernel regression tracker speaking.
 
-thanks,
-Shakeel
+Adding the regression mailing list to the list of recipients, as it
+should be in the loop for all regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+Also adding the authors and reviewers of the culprit and two appropriate
+mailing lists.
+
+On 07.12.21 01:21, Brandon Nielsen wrote:
+> Monitors no longer sleep properly on my system (dual monitor connected
+> via DP->DVI, amdgpu, x86_64). The monitors slept properly on 5.14, but
+> stopped during the 5.15 series. I have also filed this bug on the kernel
+> bugzilla[0] and downstream[1].
+> 
+> I have performed a bisect, first "bad" commit to master is
+> 55285e21f04517939480966164a33898c34b2af2[1], the same change made it
+> into the 5.15 branch as e3b39825ed0813f787cb3ebdc5ecaa5131623647.
+
+TWIMC: That was for 5.15.3
+
+> I have
+> verified the issue exists in latest master
+> (a51e3ac43ddbad891c2b1a4f3aa52371d6939570).
+> 
+> Steps to reproduce:
+> 
+>   1. Boot system (Fedora Workstation 35 in this case)
+>   2. Log in
+>   3. Lock screen (after a few seconds, monitors will enter power save
+> "sleep" state with backlight off)
+>   4. Wait (usually no more than 30 seconds, sometimes up to a few minutes)
+>   5. Observe monitor leaving "sleep" state (backlight comes back on),
+> but nothing is displayed
+> 
+> [0] - https://bugzilla.kernel.org/show_bug.cgi?id=215203
+> [1] - https://bugzilla.redhat.com/show_bug.cgi?id=2028613
+
+To be sure this issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced 55285e21f04517939480966164a33898c34b2af2
+#regzbot title fbdev/efifb: Monitors no longer sleep (amdgpu dual
+monitor setup)
+#regzbot ignore-activity
+
+Reminder: when fixing the issue, please add a 'Link:' tag with the URL
+to the report (the parent of this mail), then regzbot will automatically
+mark the regression as resolved once the fix lands in the appropriate
+tree. For more details about regzbot see footer.
+
+Sending this to everyone that got the initial report, to make all aware
+of the tracking. I also hope that messages like this motivate people to
+directly get at least the regression mailing list and ideally even
+regzbot involved when dealing with regressions, as messages like this
+wouldn't be needed then.
+
+Don't worry, I'll send further messages wrt to this regression just to
+the lists (with a tag in the subject so people can filter them away), as
+long as they are intended just for regzbot. With a bit of luck no such
+messages will be needed anyway.
+
+Ciao, Thorsten, your Linux kernel regression tracker.
+
+P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+on my table. I can only look briefly into most of them. Unfortunately
+therefore I sometimes will get things wrong or miss something important.
+I hope that's not the case here; if you think it is, don't hesitate to
+tell me about it in a public reply. That's in everyone's interest, as
+what I wrote above might be misleading to everyone reading this; any
+suggestion I gave they thus might sent someone reading this down the
+wrong rabbit hole, which none of us wants.
+
+BTW, I have no personal interest in this issue, which is tracked using
+regzbot, my Linux kernel regression tracking bot
+(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+this mail to get things rolling again and hence don't need to be CC on
+all further activities wrt to this regression.
