@@ -1,62 +1,97 @@
-Received: from manul.sfritsch.de (manul.sfritsch.de [138.201.64.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541DB2CB2
-	for <regressions@lists.linux.dev>; Wed,  8 Dec 2021 17:43:49 +0000 (UTC)
-Message-ID: <011690dd-ad46-c66b-7a8e-26ad3520f14d@sfritsch.de>
-Date: Wed, 8 Dec 2021 18:43:37 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A01C29CA
+	for <regressions@lists.linux.dev>; Thu,  9 Dec 2021 06:20:52 +0000 (UTC)
+Received: by mail-oi1-f179.google.com with SMTP id t23so7387049oiw.3
+        for <regressions@lists.linux.dev>; Wed, 08 Dec 2021 22:20:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=mQ7hWd5y/cX7pLN703rPlCh10s+JfDxjIeGD1iE5U+w=;
+        b=VVd/Vy0aUpLV0wPA3tkVRJTPDJumIspBWsIUMUZqp3ogZzhlejrhrOoacWWRRXOKBP
+         2z28YaLT09BCFeUkUE/GZKFsxieiuhxkBuJkE+L3PfEqi6CplG7A9tBKK2tZ2nLSC/6q
+         wo4Orp1r0FrIv0piod0w/ATkSOGZI6qnoK2WPNPZaZDH7WX+yhjXACOAR0KUkAurt+2p
+         9biAtg6Vd/vWcAq0ysww0v1zO26wH6ZyQheczyWkWibHPulj/VF0oVCtKY0YQCu7KiS9
+         0Dk+TskA4as/z/+0PbT8KezyiZFQcvOTAYWepspIEcuwflYWqs6aF8NF7mrtRAXIj6I+
+         44bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=mQ7hWd5y/cX7pLN703rPlCh10s+JfDxjIeGD1iE5U+w=;
+        b=WC+Ee6F6Queo+EhNt0uDAxmjTyn3BhvMqELMB+5pRl4bbN6YWiov2HUF5cyn8g/9wc
+         XeCeG0vtUGB9ZyL6FZQGAM74Ycrs6egChVe3hrLueskIqs+d3K1Z1oQYjwBs4jhqwrgC
+         Pv3GDsgJgmcB3Z/X1/UWknEr1+8YXQRElo0krbpp0guxNCl55dxkLMVN+hla1L/g8tZR
+         79m5PBIdZv8XuKzFO5xLKYyagsW+kNLWvsVPvpXejl9AknaUeLgIN6jxI/uA117pkFm7
+         hIoczIlbbAIuohHH+D9thow+ZTEjqbSEvvTi5YaS8UDM7pELVCfUYIMuN3bVCCNFowrA
+         J94g==
+X-Gm-Message-State: AOAM5331TTEMorLEeOAnSVOSlgTGuakj/kW5iu38876bsb2fgfgWp8uA
+	qr0vfylbFonTS3WCXo99ZDnLRg==
+X-Google-Smtp-Source: ABdhPJw9OPID56vDdJCFPIcuD4PvDWMFAxEx/AK93Z9FXNeZLG/dSHWRSGT0eS42J2loD9GXN3YCjA==
+X-Received: by 2002:aca:2207:: with SMTP id b7mr4219069oic.24.1639030851177;
+        Wed, 08 Dec 2021 22:20:51 -0800 (PST)
+Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id t14sm919606oth.81.2021.12.08.22.20.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Dec 2021 22:20:50 -0800 (PST)
+Date: Wed, 8 Dec 2021 22:20:47 -0800 (PST)
+From: Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@ripple.anvils
+To: Mel Gorman <mgorman@techsingularity.net>
+cc: Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, 
+    Vlastimil Babka <vbabka@suse.cz>, Alexey Avramov <hakavlad@inbox.lv>, 
+    Rik van Riel <riel@surriel.com>, Mike Galbraith <efault@gmx.de>, 
+    Darrick Wong <djwong@kernel.org>, Shakeel Butt <shakeelb@google.com>, 
+    regressions@lists.linux.dev, Linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
+    Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure
+ to make progress
+In-Reply-To: <20211202150614.22440-1-mgorman@techsingularity.net>
+Message-ID: <df896d80-9972-5be-55c2-c5b0c7135d4b@google.com>
+References: <20211202150614.22440-1-mgorman@techsingularity.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [Nouveau] Regression in 5.15 in nouveau
-Content-Language: de-DE
-To: Dan Moulding <dmoulding@me.com>
-Cc: bskeggs@redhat.com, christian.koenig@amd.com,
- dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
- regressions@leemhuis.info, regressions@lists.linux.dev
-References: <3bf72f52-0101-36e1-8c95-4bd983dd4f04@sfritsch.de>
- <20211207204528.6740-1-dmoulding@me.com>
-From: Stefan Fritsch <sf@sfritsch.de>
-In-Reply-To: <20211207204528.6740-1-dmoulding@me.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 
-On 07.12.21 21:45, Dan Moulding wrote:
->> There is a pretty obvious typo in there:
->>
->> --- a/drivers/gpu/drm/nouveau/nouveau_fence.c
->> +++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
->> @@ -359,7 +359,7 @@ nouveau_fence_sync(struct nouveau_bo *nvbo, struct
->> nouveau_channel *chan, bool e
->>                   fobj = dma_resv_shared_list(resv);
->>           }
->>
->> -       for (i = 0; (i < fobj ? fobj->shared_count : 0) && !ret; ++i) {
->> +       for (i = 0; i < (fobj ? fobj->shared_count : 0) && !ret; ++i) {
->>                   struct nouveau_channel *prev = NULL;
->>                   bool must_wait = true;
->>
->>
->> With that it works and I don't see the flickering in a short test. I
->> will do more testing, but maybe Dan can test, too.
->>
->> Cheers,
->> Stefan
-> 
-> After fixing the typo the patch is working for me, also. dmesg is also
-> clean. I will continue running the patched kernel. If I see any
-> issues, I will report back here.
+On Thu, 2 Dec 2021, Mel Gorman wrote:
+...
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+...
+> @@ -3478,14 +3520,18 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
+>  			/* need some check for avoid more shrink_zone() */
+>  		}
+>  
+> +		if (!first_pgdat)
+> +			first_pgdat = zone->zone_pgdat;
+> +
+>  		/* See comment about same check for global reclaim above */
+>  		if (zone->zone_pgdat == last_pgdat)
+>  			continue;
+>  		last_pgdat = zone->zone_pgdat;
+>  		shrink_node(zone->zone_pgdat, sc);
+> -		consider_reclaim_throttle(zone->zone_pgdat, sc);
+>  	}
+>  
+> +	consider_reclaim_throttle(first_pgdat, sc);
 
-OK, looks good: I have tested it on top of v5.15.5 for a day and no 
-black flickering and no other problems. I am not qualified to review the 
-patch, though.
+My tmpfs swapping load (tweaked to use huge pages more heavily than
+in real life) is far from being a realistic load: but it was notably
+slowed down by your throttling mods in 5.16-rc, and this patch makes
+it well again - thanks.
 
-Thanks for the quick responses to everyone.
+But: it very quickly hit NULL pointer until I changed that last line to
 
-Cheers,
-Stefan
+	if (first_pgdat)
+		consider_reclaim_throttle(first_pgdat, sc);
+
+I've given no thought as to whether that is the correct fix,
+or if first_pgdat should be set earlier in the loop above.
+
+Hugh
