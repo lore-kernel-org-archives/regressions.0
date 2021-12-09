@@ -1,97 +1,84 @@
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outbound-smtp08.blacknight.com (outbound-smtp08.blacknight.com [46.22.139.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A01C29CA
-	for <regressions@lists.linux.dev>; Thu,  9 Dec 2021 06:20:52 +0000 (UTC)
-Received: by mail-oi1-f179.google.com with SMTP id t23so7387049oiw.3
-        for <regressions@lists.linux.dev>; Wed, 08 Dec 2021 22:20:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :mime-version;
-        bh=mQ7hWd5y/cX7pLN703rPlCh10s+JfDxjIeGD1iE5U+w=;
-        b=VVd/Vy0aUpLV0wPA3tkVRJTPDJumIspBWsIUMUZqp3ogZzhlejrhrOoacWWRRXOKBP
-         2z28YaLT09BCFeUkUE/GZKFsxieiuhxkBuJkE+L3PfEqi6CplG7A9tBKK2tZ2nLSC/6q
-         wo4Orp1r0FrIv0piod0w/ATkSOGZI6qnoK2WPNPZaZDH7WX+yhjXACOAR0KUkAurt+2p
-         9biAtg6Vd/vWcAq0ysww0v1zO26wH6ZyQheczyWkWibHPulj/VF0oVCtKY0YQCu7KiS9
-         0Dk+TskA4as/z/+0PbT8KezyiZFQcvOTAYWepspIEcuwflYWqs6aF8NF7mrtRAXIj6I+
-         44bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:mime-version;
-        bh=mQ7hWd5y/cX7pLN703rPlCh10s+JfDxjIeGD1iE5U+w=;
-        b=WC+Ee6F6Queo+EhNt0uDAxmjTyn3BhvMqELMB+5pRl4bbN6YWiov2HUF5cyn8g/9wc
-         XeCeG0vtUGB9ZyL6FZQGAM74Ycrs6egChVe3hrLueskIqs+d3K1Z1oQYjwBs4jhqwrgC
-         Pv3GDsgJgmcB3Z/X1/UWknEr1+8YXQRElo0krbpp0guxNCl55dxkLMVN+hla1L/g8tZR
-         79m5PBIdZv8XuKzFO5xLKYyagsW+kNLWvsVPvpXejl9AknaUeLgIN6jxI/uA117pkFm7
-         hIoczIlbbAIuohHH+D9thow+ZTEjqbSEvvTi5YaS8UDM7pELVCfUYIMuN3bVCCNFowrA
-         J94g==
-X-Gm-Message-State: AOAM5331TTEMorLEeOAnSVOSlgTGuakj/kW5iu38876bsb2fgfgWp8uA
-	qr0vfylbFonTS3WCXo99ZDnLRg==
-X-Google-Smtp-Source: ABdhPJw9OPID56vDdJCFPIcuD4PvDWMFAxEx/AK93Z9FXNeZLG/dSHWRSGT0eS42J2loD9GXN3YCjA==
-X-Received: by 2002:aca:2207:: with SMTP id b7mr4219069oic.24.1639030851177;
-        Wed, 08 Dec 2021 22:20:51 -0800 (PST)
-Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id t14sm919606oth.81.2021.12.08.22.20.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 22:20:50 -0800 (PST)
-Date: Wed, 8 Dec 2021 22:20:47 -0800 (PST)
-From: Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@ripple.anvils
-To: Mel Gorman <mgorman@techsingularity.net>
-cc: Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, 
-    Vlastimil Babka <vbabka@suse.cz>, Alexey Avramov <hakavlad@inbox.lv>, 
-    Rik van Riel <riel@surriel.com>, Mike Galbraith <efault@gmx.de>, 
-    Darrick Wong <djwong@kernel.org>, Shakeel Butt <shakeelb@google.com>, 
-    regressions@lists.linux.dev, Linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-    Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure
- to make progress
-In-Reply-To: <20211202150614.22440-1-mgorman@techsingularity.net>
-Message-ID: <df896d80-9972-5be-55c2-c5b0c7135d4b@google.com>
-References: <20211202150614.22440-1-mgorman@techsingularity.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A142C9C
+	for <regressions@lists.linux.dev>; Thu,  9 Dec 2021 09:55:02 +0000 (UTC)
+Received: from mail.blacknight.com (pemlinmail03.blacknight.ie [81.17.254.16])
+	by outbound-smtp08.blacknight.com (Postfix) with ESMTPS id 6426D1C3B7B
+	for <regressions@lists.linux.dev>; Thu,  9 Dec 2021 09:54:55 +0000 (GMT)
+Received: (qmail 28472 invoked from network); 9 Dec 2021 09:54:55 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.197.169])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 9 Dec 2021 09:54:55 -0000
+Date: Thu, 9 Dec 2021 09:54:53 +0000
+From: Mel Gorman <mgorman@techsingularity.net>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Hugh Dickins <hughd@google.com>, Michal Hocko <mhocko@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>,
+	Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>,
+	Shakeel Butt <shakeelb@google.com>, regressions@lists.linux.dev,
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm: vmscan: reduce throttling due to a failure to make
+ progress -fix
+Message-ID: <20211209095453.GM3366@techsingularity.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Thu, 2 Dec 2021, Mel Gorman wrote:
-...
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-...
-> @@ -3478,14 +3520,18 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
->  			/* need some check for avoid more shrink_zone() */
->  		}
->  
-> +		if (!first_pgdat)
-> +			first_pgdat = zone->zone_pgdat;
-> +
->  		/* See comment about same check for global reclaim above */
->  		if (zone->zone_pgdat == last_pgdat)
->  			continue;
->  		last_pgdat = zone->zone_pgdat;
->  		shrink_node(zone->zone_pgdat, sc);
-> -		consider_reclaim_throttle(zone->zone_pgdat, sc);
->  	}
->  
-> +	consider_reclaim_throttle(first_pgdat, sc);
+Hugh Dickins reported the following
 
-My tmpfs swapping load (tweaked to use huge pages more heavily than
-in real life) is far from being a realistic load: but it was notably
-slowed down by your throttling mods in 5.16-rc, and this patch makes
-it well again - thanks.
+	My tmpfs swapping load (tweaked to use huge pages more heavily
+	than in real life) is far from being a realistic load: but it was
+	notably slowed down by your throttling mods in 5.16-rc, and this
+	patch makes it well again - thanks.
 
-But: it very quickly hit NULL pointer until I changed that last line to
+	But: it very quickly hit NULL pointer until I changed that last
+	line to
 
-	if (first_pgdat)
-		consider_reclaim_throttle(first_pgdat, sc);
+        if (first_pgdat)
+                consider_reclaim_throttle(first_pgdat, sc);
 
-I've given no thought as to whether that is the correct fix,
-or if first_pgdat should be set earlier in the loop above.
+The likely issue is that huge pages are a major component of the test
+workload. When this is the case, first_pgdat may never get set if
+compaction is ready to continue due to this check
 
-Hugh
+        if (IS_ENABLED(CONFIG_COMPACTION) &&
+            sc->order > PAGE_ALLOC_COSTLY_ORDER &&
+            compaction_ready(zone, sc)) {
+                sc->compaction_ready = true;
+                continue;
+        }
+
+If this was true for every zone in the zonelist, first_pgdat would never
+get set resulting in a NULL pointer exception.
+
+This is a fix to the mmotm patch
+mm-vmscan-reduce-throttling-due-to-a-failure-to-make-progress.patch
+
+Reported-by: Hugh Dickins <hughd@google.com>
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+---
+ mm/vmscan.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 4c4d5f6cd8a3..700434db5735 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -3530,7 +3530,8 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
+ 		shrink_node(zone->zone_pgdat, sc);
+ 	}
+ 
+-	consider_reclaim_throttle(first_pgdat, sc);
++	if (first_pgdat)
++		consider_reclaim_throttle(first_pgdat, sc);
+ 
+ 	/*
+ 	 * Restore to original mask to avoid the impact on the caller if we
