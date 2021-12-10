@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E057E2C80
-	for <regressions@lists.linux.dev>; Fri, 10 Dec 2021 09:16:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188E12C80
+	for <regressions@lists.linux.dev>; Fri, 10 Dec 2021 09:40:31 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mvc1K-0001df-T4; Fri, 10 Dec 2021 10:16:50 +0100
-Message-ID: <e3e7147e-dd4c-59a9-5dba-5ddcd2e3130f@leemhuis.info>
-Date: Fri, 10 Dec 2021 10:16:50 +0100
+	id 1mvcO8-0007uy-Py; Fri, 10 Dec 2021 10:40:24 +0100
+Message-ID: <063995d8-acf3-9f33-5667-f284233c94b4@leemhuis.info>
+Date: Fri, 10 Dec 2021 10:40:24 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,90 +16,51 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
+Subject: Re: [PATCH] igc: Avoid possible deadlock during suspend/resume
 Content-Language: en-BS
-To: "An, Tedd" <tedd.an@intel.com>,
- "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
- "andypalmadi@gmail.com" <andypalmadi@gmail.com>,
- "marcel@holtmann.org" <marcel@holtmann.org>,
- "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <CAJvGw+AJ5dHSb50RtJHnjbhMVQa+rJgYznFV4t-iaO0qx+W-jw@mail.gmail.com>
- <fbc36e8ebdd9222f84322d54d9114f58c225547e.camel@intel.com>
+To: Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+ Stefan Dietrich <roots@gmx.de>
+Cc: kuba@kernel.org, greg@kroah.com, netdev@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, regressions@lists.linux.dev
+References: <87r1awtdx3.fsf@intel.com>
+ <20211201185731.236130-1-vinicius.gomes@intel.com>
+ <5a4b31d43d9bf32e518188f3ef84c433df3a18b1.camel@gmx.de>
+ <87o85yljpu.fsf@intel.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [REGRESSION] Bluetooth not working on 5.15+ since "Bluetooth:
- Move shutdown callback before flushing tx and rx queue"
-In-Reply-To: <fbc36e8ebdd9222f84322d54d9114f58c225547e.camel@intel.com>
+In-Reply-To: <87o85yljpu.fsf@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639127814;4bd76da2;
-X-HE-SMSGID: 1mvc1K-0001df-T4
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639129232;52db4137;
+X-HE-SMSGID: 1mvcO8-0007uy-Py
 
 Hi, this is your Linux kernel regression tracker speaking.
 
-On 10.12.21 02:10, An, Tedd wrote:
-> On Fri, 2021-12-10 at 01:36 +0200, coldolt wrote:
->> After a restart, bluetooth doesn't work since commit 0ea53674d07f
->> "Bluetooth: Move shutdown callback before flushing tx and rx queue"
+On 02.12.21 23:34, Vinicius Costa Gomes wrote:
+> Hi Stefan,
+> 
+> Stefan Dietrich <roots@gmx.de> writes:
+> 
+>> Hi Vinicius,
 >>
->> bluetoothctl doesn't list any controllers and I get the following in
->> dmesg | grep -i bluetooth
+>> thanks for the patch - unfortunately it did not solve the issue and I
+>> am still getting reboots/lockups.
 >>
->> [    2.634812] Bluetooth: Core ver 2.22
->> [    2.634843] NET: Registered PF_BLUETOOTH protocol family
->> [    2.634845] Bluetooth: HCI device and connection manager initialized
->> [    2.634850] Bluetooth: HCI socket layer initialized
->> [    2.634853] Bluetooth: L2CAP socket layer initialized
->> [    2.634858] Bluetooth: SCO socket layer initialized
->> [    4.077788] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
->> [    4.077794] Bluetooth: BNEP filters: protocol multicast
->> [    4.077799] Bluetooth: BNEP socket layer initialized
->> [    4.078219] random: bluetoothd: uninitialized urandom read (4 bytes read)
->> [    4.852835] Bluetooth: hci0: Reading Intel version command failed (-110)
->> [    4.852838] Bluetooth: hci0: command 0xfc05 tx timeout
->>
->> However, it works after a cold start or after putting the computer to sleep.
->>
->> Before 83f2dafe2a62 "Bluetooth: btintel: Refactoring setup routine for
->> legacy ROM sku", it always works after a restart, but from that commit
->> up until before 0ea53674d07f it either works or doesn't work after a
->> restart depending on if before restart it was working or not, meaning
->> it stays working or stays not working.
->>
->> Also on the first restart from before 83f2dafe2a62 into 0ea53674d07f
->> or later it works, but then restarting again into 0ea53674d07f or
->> later it no longer works. So it seems that 0ea53674d07f and later puts
->> the bluetooth in a nonworking state if you restart from it, but before
->> 83f2dafe2a62 it puts it back into a working state at startup, and in
->> between it doesn't do either, i.e. it stays the way it was.
->>
->> I have a Dell Latitude E5550 laptop with an Intel 7265 wifi/bluetooth
->> card REV=0x210 firmware version 29.4063824552.0 7265D-29. I'm on Arch
->> Linux, the problem is still there on 5.16-rc4.
->>
->> Here is a thread on the Arch Linux forums with several people with the
->> same problem, for some of them it got fixed with a kernel update or by
->> reloading modules, but not for everybody, including me
->> https://bbs.archlinux.org/viewtopic.php?id=271459
->>
->> #regzbot introduced 0ea53674d07f
+> 
+> Thanks for the test. We learned something, not a lot, but something: the
+> problem you are facing is PTM related and it's not the same bug as that
+> PM deadlock.
+> 
+> I am still trying to understand what's going on.
+> 
+> Are you able to send me the 'dmesg' output for the two kernel configs
+> (CONFIG_PCIE_PTM enabled and disabled)? (no need to bring the network
+> interface up or down). Your kernel .config would be useful as well.
 
-Many thx for directly getting regzbot involved! :-D
+Stefan, could you provide the data Vinicius asked for? Or did you do
+that in private already? Or was progress made somewhere else and I
+simply missed this?
 
-> This issue is under investigation to find the root cause and proper solution.
-
-Only internally? Or are there any other related public discussions that
-are relevant to this and thus good to be aware of?
-
-> The downloaded firmware breaks the behavior though, we need to investigate
-> further to see if it can be fixed in firmware or fix in the driver.
-
-The answer from my point is simple: it needs to be fixed in the kernel,
-not just in the firmware, otherwise people that update the kernel
-without updating the firmware at the same time will run into a
-regression -- and that is not acceptable by kernel development standards.
-
-Ciao, Thorsten
+Ciao, Thorsten, your Linux kernel regression tracker.
 
 P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
 on my table. I can only look briefly into most of them. Unfortunately
@@ -115,3 +76,91 @@ regzbot, my Linux kernel regression tracking bot
 (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
 this mail to get things rolling again and hence don't need to be CC on
 all further activities wrt to this regression.
+
+#regzbot poke
+
+>> On Wed, 2021-12-01 at 10:57 -0800, Vinicius Costa Gomes wrote:
+>>> Inspired by:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=215129
+>>>
+>>> Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+>>> ---
+>>> Just to see if it's indeed the same problem as the bug report above.
+>>>
+>>>  drivers/net/ethernet/intel/igc/igc_main.c | 19 +++++++++++++------
+>>>  1 file changed, 13 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c
+>>> b/drivers/net/ethernet/intel/igc/igc_main.c
+>>> index 0e19b4d02e62..c58bf557a2a1 100644
+>>> --- a/drivers/net/ethernet/intel/igc/igc_main.c
+>>> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+>>> @@ -6619,7 +6619,7 @@ static void igc_deliver_wake_packet(struct
+>>> net_device *netdev)
+>>>  	netif_rx(skb);
+>>>  }
+>>>
+>>> -static int __maybe_unused igc_resume(struct device *dev)
+>>> +static int __maybe_unused __igc_resume(struct device *dev, bool rpm)
+>>>  {
+>>>  	struct pci_dev *pdev = to_pci_dev(dev);
+>>>  	struct net_device *netdev = pci_get_drvdata(pdev);
+>>> @@ -6661,20 +6661,27 @@ static int __maybe_unused igc_resume(struct
+>>> device *dev)
+>>>
+>>>  	wr32(IGC_WUS, ~0);
+>>>
+>>> -	rtnl_lock();
+>>> +	if (!rpm)
+>>> +		rtnl_lock();
+>>>  	if (!err && netif_running(netdev))
+>>>  		err = __igc_open(netdev, true);
+>>>
+>>>  	if (!err)
+>>>  		netif_device_attach(netdev);
+>>> -	rtnl_unlock();
+>>> +	if (!rpm)
+>>> +		rtnl_unlock();
+>>>
+>>>  	return err;
+>>>  }
+>>>
+>>>  static int __maybe_unused igc_runtime_resume(struct device *dev)
+>>>  {
+>>> -	return igc_resume(dev);
+>>> +	return __igc_resume(dev, true);
+>>> +}
+>>> +
+>>> +static int __maybe_unused igc_resume(struct device *dev)
+>>> +{
+>>> +	return __igc_resume(dev, false);
+>>>  }
+>>>
+>>>  static int __maybe_unused igc_suspend(struct device *dev)
+>>> @@ -6738,7 +6745,7 @@ static pci_ers_result_t
+>>> igc_io_error_detected(struct pci_dev *pdev,
+>>>   *  @pdev: Pointer to PCI device
+>>>   *
+>>>   *  Restart the card from scratch, as if from a cold-boot.
+>>> Implementation
+>>> - *  resembles the first-half of the igc_resume routine.
+>>> + *  resembles the first-half of the __igc_resume routine.
+>>>   **/
+>>>  static pci_ers_result_t igc_io_slot_reset(struct pci_dev *pdev)
+>>>  {
+>>> @@ -6777,7 +6784,7 @@ static pci_ers_result_t
+>>> igc_io_slot_reset(struct pci_dev *pdev)
+>>>   *
+>>>   *  This callback is called when the error recovery driver tells us
+>>> that
+>>>   *  its OK to resume normal operation. Implementation resembles the
+>>> - *  second-half of the igc_resume routine.
+>>> + *  second-half of the __igc_resume routine.
+>>>   */
+>>>  static void igc_io_resume(struct pci_dev *pdev)
+>>>  {
+>>
+> 
+> 
+> Cheers,
+> 
