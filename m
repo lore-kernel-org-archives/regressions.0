@@ -1,209 +1,166 @@
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE2E2C99
-	for <regressions@lists.linux.dev>; Fri, 10 Dec 2021 01:11:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639098667; x=1670634667;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=JKgElxJuzE4q7lptBVYs+2nHDtvi1gtw3rWybQekcRo=;
-  b=eZVVp9eVMXGgJm6+WxZUYcCAYrAeMSF4XhtZMEqTlF1JwtORqqR83nBY
-   OFDIhkYUH71xYH0EjLMuvuiqhLK4LwTeqrzdxfauY++tqzpOatwg/m9el
-   fqqJS0jrOb8Lx3iAfhwBkJgdnbN+1G76bSVES3aMzDv/E6sfK92OVBzuk
-   3rRkBPQZ6XgK3qWyVqdVgqXJw9rWCUlMV8ts2jHDcGD9A/pAP1kPJNp2v
-   I4lckx07v8/Wd3jcryFGz0QS7fwL1dr8DEQERr1INZzVCj57JVEZFiPfu
-   MGGVO6OAbMERnjYuFUykbm9PlFkqLINGrZthMwrPFMBdJ+wz9jsOfudC0
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10193"; a="218933042"
-X-IronPort-AV: E=Sophos;i="5.88,194,1635231600"; 
-   d="scan'208";a="218933042"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2021 17:10:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,194,1635231600"; 
-   d="scan'208";a="543799272"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga001.jf.intel.com with ESMTP; 09 Dec 2021 17:10:40 -0800
-Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 9 Dec 2021 17:10:40 -0800
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Thu, 9 Dec 2021 17:10:39 -0800
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20 via Frontend Transport; Thu, 9 Dec 2021 17:10:39 -0800
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.177)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.20; Thu, 9 Dec 2021 17:10:39 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QuHkUsa6bRgPG/G+lSAPEvKkvAEPGzat1ditRp3IlPcAAZ2+0LtF+hr/BVSDC2sdHDkFbsZYStEKKSY+S01fMpeP+cXHJMPYfreGe+UiemO+KBFJsu5zo7YoucfwJFG8sm9fImkuzGSK0vY4hVa2ROgSWnM/cCxbRI6OBJfUfKvNeHTvHfKnGS94wmNknf/H6Rbn0JM3gllY+67ase0url8lwpVq2eZCj4LDzJOTYQG/BihV01y49OnyIzDmtLnp2DTAXsTJalSrZ9/US+joGT4y+OGaER92n95IF5o2qL7ktwTpmZNMMY1Rql6RbIU4/Aaa2ivnjELHLBX37/zdTw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JKgElxJuzE4q7lptBVYs+2nHDtvi1gtw3rWybQekcRo=;
- b=G9jQ+CksRAlbbFcEcrQ6jewmXq1Q3lxkPZKYqqUMzLf3TNxSHt2ZZ4soLNZ0k/iv9G+LYcrwJVIw8u0Cni5t9DyQrDN0Z0wLmsjzt/n5/77lph6qRhJrsgEEjrs+xM+4EkofXkPgT8wncLTk79cMPfxgjAPqwmhCIChIIzCio5zegY8pnsZ/HeLzIQqum4659xs+I/Lkdz/FkV6eaXRSN3iPYIuxHA2HNOUlrVJX+TpiuPq83PF7aBfQR01bWxP+uDhoNE1Hpjl+QxKmG/qVZ/LueDTMD8aNFERjytJWTYbNWd03Nw/dgRFdJ8XiESr5uN6GIYb9BESeYBo5LSo87A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JKgElxJuzE4q7lptBVYs+2nHDtvi1gtw3rWybQekcRo=;
- b=Dhh1geBgm3+TsDQ3OfTS6Zqd9UZrzascTCOdUasBbuUD3tCI8NkJEnOEoFMlgXtrq+kq7odV0rpN7qHMUQCTFcnGRncg1m7UB6zEoWnyNyi0aPw4tKt+d9Z2ZSQqmPhsbYAe7yw3gw6ewHxrId6hI5v0b2fTQ8Fv6TXju7eXrgM=
-Received: from MW3PR11MB4748.namprd11.prod.outlook.com (2603:10b6:303:2e::9)
- by MW5PR11MB5906.namprd11.prod.outlook.com (2603:10b6:303:1a0::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.20; Fri, 10 Dec
- 2021 01:10:38 +0000
-Received: from MW3PR11MB4748.namprd11.prod.outlook.com
- ([fe80::e1e5:acdf:cecb:8c3b]) by MW3PR11MB4748.namprd11.prod.outlook.com
- ([fe80::e1e5:acdf:cecb:8c3b%8]) with mapi id 15.20.4778.013; Fri, 10 Dec 2021
- 01:10:38 +0000
-From: "An, Tedd" <tedd.an@intel.com>
-To: "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
-	"andypalmadi@gmail.com" <andypalmadi@gmail.com>, "marcel@holtmann.org"
-	<marcel@holtmann.org>, "linux-bluetooth@vger.kernel.org"
-	<linux-bluetooth@vger.kernel.org>
-CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] Bluetooth not working on 5.15+ since "Bluetooth:
- Move shutdown callback before flushing tx and rx queue"
-Thread-Topic: [REGRESSION] Bluetooth not working on 5.15+ since "Bluetooth:
- Move shutdown callback before flushing tx and rx queue"
-Thread-Index: AQHX7VWejAgZkHV2PUOgB+cWm9oKBKwq6tAA
-Date: Fri, 10 Dec 2021 01:10:38 +0000
-Message-ID: <fbc36e8ebdd9222f84322d54d9114f58c225547e.camel@intel.com>
-References: <CAJvGw+AJ5dHSb50RtJHnjbhMVQa+rJgYznFV4t-iaO0qx+W-jw@mail.gmail.com>
-In-Reply-To: <CAJvGw+AJ5dHSb50RtJHnjbhMVQa+rJgYznFV4t-iaO0qx+W-jw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.40.4 (3.40.4-1.fc34) 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3e75f897-4515-492c-2fd5-08d9bb79e0d8
-x-ms-traffictypediagnostic: MW5PR11MB5906:EE_
-x-microsoft-antispam-prvs: <MW5PR11MB5906CBD8DD57BBB14E8409BFFF719@MW5PR11MB5906.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 4V2BEkKWiIgWRAxs/l/cLaDBWNjjwj6j7eR64UZ/wHJFBbduYjC2uJBb6COlr9tDDyCn0YQKNSBYU65Gy7aL/2gbJubM5qsuhcdwTY25wfi+1hoMOKzF1UmDg9evA2ubKil+WfZPKSl/fUYOs99jZZIeZKwm+ja3zFnT4lEEMku09h1Nt/105s14I1fjd16aZkZ7yh3khRbJdL5MlnG4qtIQwVtmcKdf0R1YtQoqcqydt+dQGISkq7pKnCmAZLLykst1cmyK8fFVyXj3nk2xIo6eBkcEyKR7juz8FgsPyRcY/59qPaalYZguY9Oi7I30LpLZTToAd8A/7Cnw4O/PD9QWx6gcRyC72fmliwlBLM/8Yh7MmYGpvtDHtWRuU8sye2YDzIml7hW6eJAX5I7pjO/9o67LGjBHNGUaNVFjah8i8aYxGSNoFbUTBe2n2MIgCmhPrzcmdpfF83miN/NVHY1tz6YkPI130o/DZ0SDa1vow1doVnkuFOQ7+5Pv/QbvM4W6TqniqYDFYuA2DejmrhDbcyKzSQ5eAoeizG4ImkcSkjR8qBaAtEKPdOlXFIyqbhweV0wuWCgcHK8TwJaVwwxdUC6Thhguo4iZOM/VGgYyRdU8x9a1YMYIo8Cyr8IY8Wxh7BVu8cDgfQwJcXhKbmAk0CwzFkDnXrGgvYopnTSksat96QRjeIMwdWdt0s60DTQ0nuMf8cf4kUeWHqFm0yvMcdEb08dIrzctajU5WqiYjYyUXtei4AaYihrMKOq7J903kvJ3ivK/Fa7tpkp2QAlNastO1nYcfPqb+qurhTY=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR11MB4748.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(66476007)(66556008)(64756008)(66446008)(36756003)(2616005)(38070700005)(5660300002)(16799955002)(76116006)(71200400001)(66946007)(4326008)(6486002)(6512007)(2906002)(316002)(966005)(6506007)(508600001)(38100700002)(8676002)(54906003)(26005)(83380400001)(8936002)(82960400001)(186003)(4001150100001)(122000001)(86362001)(110136005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YlkvZC9oQ1grVHVVZUtxNncrOHNBeXR6TDQyQ2RTTS9ndURQNXo4Y0pGYUdS?=
- =?utf-8?B?K2ozOEd3ZlJlWmp3SVJNaHVhaUUzbEExbUY4Mzh4Z0FSZWV5Uk96N2JLbEdv?=
- =?utf-8?B?cmZXNG11MnJ1YURGNStnVzI5eG5Rc05PbnlYVFgvV1ZUa2U5Y1lNK1l2MHh5?=
- =?utf-8?B?a1lWNERWQjEzbTZSY0MzL2VTUFlWSjNPTWxrUjdVeHd6OWI5azluVnRSU3hw?=
- =?utf-8?B?RjZuUkV0b1Jway9oVS9VMnZRNDlPelpGSlNBUzNTSVVicVZBdEwzekErb2to?=
- =?utf-8?B?QWRyVDBCbUNTWkRrT3N5M0lhM2M2b0NFQXA3QWpDcGJnekordWhVQWhSQi9w?=
- =?utf-8?B?NGk4NXF0R015eE5xanhOV2FtOFlrOUx3djVKYXVBUDVnNlBZdFBCZ2JkOW1W?=
- =?utf-8?B?bkErWDZ4cnRmamQ4SC84UlRmUzNDbzZmVnpUVmZVVzdWbUJscG5YK0hsMDI2?=
- =?utf-8?B?QzBWZUtHYlNaSlYrR0w4eFdXcGlHQW5DeHRwUm9Kb2l5dUVJTzBZcVVFalNi?=
- =?utf-8?B?clN2QVVOYlJCNmhiSllpTmI1YUd5cHVZaU5jakxob0lYTE5kQjhFZ3MyYjQ4?=
- =?utf-8?B?bTJQcThOT2p4SHh3YUVUcWdYZHBzZzJMZDJGYlorZFFERUwvYVAxcHp3bldU?=
- =?utf-8?B?YlRsSHIzaElRK1ZXTDZ1azJJRG9EcVhrbUtvWVRVek1xczBmNSs5U0dxRXBx?=
- =?utf-8?B?MlB4ZFVsQTh4cFNIYWlSak1sdG82S0d1U0JQNENwZ05hbGtkMTFGQU9SNVoy?=
- =?utf-8?B?SWlSL3hTZXk4b2JHWkM0UlphT1hXWG9HdFNYNWVjSGNKNnp3T3QyekdMMmZh?=
- =?utf-8?B?bU9jN3FoamVYNkFXeTNVWm80K0hVaTJvUGVtWEVxVjhVdVFjY0RaV3NkaHla?=
- =?utf-8?B?eXE0QW8vV3dhdldRQkpMNGsxRll0MlZqbUZkTmJIM0hHbW5sYUhoY1hwN1Bw?=
- =?utf-8?B?eUtLNWttVmh5VXdKbTNBSXpVakxtWHVDNzFQUHIxME8yRjNzSHlIYXJlY1Zt?=
- =?utf-8?B?VmRibklxL3pEb2ErZEd0ekZmQXN6Y0Vnb1JLYU1kUHhhc3VucFpNMytuV3VT?=
- =?utf-8?B?bG5BN0liRm1jamdaanY4cjVaMDR3eE5oYzFBcmpUTGFXWGFUUG8wbGxyamJL?=
- =?utf-8?B?dTlrWkpzeFdsVy9GUk5OaGlNTnczSCtMdXFUUG5DNWxwUncvNE54NGUxVWJG?=
- =?utf-8?B?ZUpwVlZNU3lmWXN3eXdVS0ZKcWxpVmhlT1VsNXFYaW9kMDVVWUk3QXRteStl?=
- =?utf-8?B?WkkySHhjakZMMjhLb25wM0ZqZ2R5ZmpFSUxGZkZ2b05EdzFPSTNPdFY3aHhE?=
- =?utf-8?B?NFJacThkVVl6dUYwdyt2UDhlbTdaRVF3N0E0VlB2L2NvUjRRYkJHcWNmdlo5?=
- =?utf-8?B?K2tqdWFkRU1YM3JKYnlDZG95OFZjcDNMK2tEeDFQTU1yZC84N1FTTmdWbnVi?=
- =?utf-8?B?Q05Ca3ZLOU4wKytkcFQ3ajg3YVN4cHV4cndHVkl5SzVrSXIreW1ld29udFJa?=
- =?utf-8?B?U1RLVHBUZnZoMkV4RllaaWJYN3JDLzljUkpqSWQxWnhjOHEreTRtVkxxVmRK?=
- =?utf-8?B?V2Y5UXFlL3Nmcjd1WFJHaW1OVWNSSm5xbkl0cXByZ3k0ZHV3Z3hDV3Q2Mjhk?=
- =?utf-8?B?THlMRTJOSEZ2L290QzE0MTBZaUJHU0w2bXFsTGxUOUtESXB3SUdGS3FXWWZW?=
- =?utf-8?B?d04xZ3FOaENHSEo0bENtWWd0bXU2WG14enMyQVE1azZuamFzMWNEbGZQWSt1?=
- =?utf-8?B?UFZGa0puVm1vQkNCQkxBdUNqbmpwcUIzM0lZejNzT1VucXI4MkJkUDNZWGdO?=
- =?utf-8?B?WjV5UWZjYnZRakZ3RGxZQ1VWNW0rbkFFZElVOEtYZ1U0bUVlWmM4NVB5cVp2?=
- =?utf-8?B?ZFBSa0dzZEZnSGVHOVNkSzBUb0xOWDNNYjhRd25ldFF5VUtqS01DNHl2U0lB?=
- =?utf-8?B?bGFVQXRTdzBBVndacDJOazZpaTFLQmY4ZFZnTFV2dFhDNGFCN0x4SkZ2WHZm?=
- =?utf-8?B?MTlBaFA3L2pxVHFROWFkM2VQOCtnM2hwell3bUJpNnphazNlVjBqb29oZjlS?=
- =?utf-8?B?Q0QxUUp4WjJoQ0MrQXZIL2dNbnkrREVNWUJZWXNZVnh6NFJDMFA4U2VYaW5y?=
- =?utf-8?B?Q1ZHampqYjBpMHc1K3lCcnF5eG8yUElEb1FVVmEvLzdVT3crSDRLZitaY1ZO?=
- =?utf-8?Q?fJEPZeObzM4w6kGH1XJrJBGPqtvSuzoEVNn2XsXPaYwJ?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E1D6F8DCCBC24442B7449EDA80F8C83B@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2B82C80
+	for <regressions@lists.linux.dev>; Fri, 10 Dec 2021 09:00:33 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mvblV-0006nW-L4; Fri, 10 Dec 2021 10:00:30 +0100
+Message-ID: <cb51a8cc-7c43-745e-e075-398eee47b071@leemhuis.info>
+Date: Fri, 10 Dec 2021 10:00:28 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR11MB4748.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3e75f897-4515-492c-2fd5-08d9bb79e0d8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Dec 2021 01:10:38.6052
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xHhckYf9uPpdxypn4/ql1Uafaq4aOJh1IYLuITthXqcVodoWqDfQFaigRYwHcoOKNZLMjPs7UYc08xwL6hofgQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR11MB5906
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: Fw: [Bug 215129] New: Linux kernel hangs during power down
+ #forregzbot
+Content-Language: en-BS
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ netdev <netdev@vger.kernel.org>
+References: <20211124144505.31e15716@hermes.local>
+ <bca0a700-65ba-1b8d-c265-b1051423a7e2@leemhuis.info>
+ <93f23a8b-518d-d573-4b46-5883477eedfc@leemhuis.info>
+In-Reply-To: <93f23a8b-518d-d573-4b46-5883477eedfc@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639126833;05e2f11d;
+X-HE-SMSGID: 1mvblV-0006nW-L4
 
-SGksDQoNCk9uIEZyaSwgMjAyMS0xMi0xMCBhdCAwMTozNiArMDIwMCwgY29sZG9sdCB3cm90ZToN
-Cj4gQWZ0ZXIgYSByZXN0YXJ0LCBibHVldG9vdGggZG9lc24ndCB3b3JrIHNpbmNlIGNvbW1pdCAw
-ZWE1MzY3NGQwN2YNCj4gIkJsdWV0b290aDogTW92ZSBzaHV0ZG93biBjYWxsYmFjayBiZWZvcmUg
-Zmx1c2hpbmcgdHggYW5kIHJ4IHF1ZXVlIg0KPiANCj4gYmx1ZXRvb3RoY3RsIGRvZXNuJ3QgbGlz
-dCBhbnkgY29udHJvbGxlcnMgYW5kIEkgZ2V0IHRoZSBmb2xsb3dpbmcgaW4NCj4gZG1lc2cgfCBn
-cmVwIC1pIGJsdWV0b290aA0KPiANCj4gW8KgwqDCoCAyLjYzNDgxMl0gQmx1ZXRvb3RoOiBDb3Jl
-IHZlciAyLjIyDQo+IFvCoMKgwqAgMi42MzQ4NDNdIE5FVDogUmVnaXN0ZXJlZCBQRl9CTFVFVE9P
-VEggcHJvdG9jb2wgZmFtaWx5DQo+IFvCoMKgwqAgMi42MzQ4NDVdIEJsdWV0b290aDogSENJIGRl
-dmljZSBhbmQgY29ubmVjdGlvbiBtYW5hZ2VyIGluaXRpYWxpemVkDQo+IFvCoMKgwqAgMi42MzQ4
-NTBdIEJsdWV0b290aDogSENJIHNvY2tldCBsYXllciBpbml0aWFsaXplZA0KPiBbwqDCoMKgIDIu
-NjM0ODUzXSBCbHVldG9vdGg6IEwyQ0FQIHNvY2tldCBsYXllciBpbml0aWFsaXplZA0KPiBbwqDC
-oMKgIDIuNjM0ODU4XSBCbHVldG9vdGg6IFNDTyBzb2NrZXQgbGF5ZXIgaW5pdGlhbGl6ZWQNCj4g
-W8KgwqDCoCA0LjA3Nzc4OF0gQmx1ZXRvb3RoOiBCTkVQIChFdGhlcm5ldCBFbXVsYXRpb24pIHZl
-ciAxLjMNCj4gW8KgwqDCoCA0LjA3Nzc5NF0gQmx1ZXRvb3RoOiBCTkVQIGZpbHRlcnM6IHByb3Rv
-Y29sIG11bHRpY2FzdA0KPiBbwqDCoMKgIDQuMDc3Nzk5XSBCbHVldG9vdGg6IEJORVAgc29ja2V0
-IGxheWVyIGluaXRpYWxpemVkDQo+IFvCoMKgwqAgNC4wNzgyMTldIHJhbmRvbTogYmx1ZXRvb3Ro
-ZDogdW5pbml0aWFsaXplZCB1cmFuZG9tIHJlYWQgKDQgYnl0ZXMgcmVhZCkNCj4gW8KgwqDCoCA0
-Ljg1MjgzNV0gQmx1ZXRvb3RoOiBoY2kwOiBSZWFkaW5nIEludGVsIHZlcnNpb24gY29tbWFuZCBm
-YWlsZWQgKC0xMTApDQo+IFvCoMKgwqAgNC44NTI4MzhdIEJsdWV0b290aDogaGNpMDogY29tbWFu
-ZCAweGZjMDUgdHggdGltZW91dA0KPiANCj4gSG93ZXZlciwgaXQgd29ya3MgYWZ0ZXIgYSBjb2xk
-IHN0YXJ0IG9yIGFmdGVyIHB1dHRpbmcgdGhlIGNvbXB1dGVyIHRvIHNsZWVwLg0KPiANCj4gQmVm
-b3JlIDgzZjJkYWZlMmE2MiAiQmx1ZXRvb3RoOiBidGludGVsOiBSZWZhY3RvcmluZyBzZXR1cCBy
-b3V0aW5lIGZvcg0KPiBsZWdhY3kgUk9NIHNrdSIsIGl0IGFsd2F5cyB3b3JrcyBhZnRlciBhIHJl
-c3RhcnQsIGJ1dCBmcm9tIHRoYXQgY29tbWl0DQo+IHVwIHVudGlsIGJlZm9yZSAwZWE1MzY3NGQw
-N2YgaXQgZWl0aGVyIHdvcmtzIG9yIGRvZXNuJ3Qgd29yayBhZnRlciBhDQo+IHJlc3RhcnQgZGVw
-ZW5kaW5nIG9uIGlmIGJlZm9yZSByZXN0YXJ0IGl0IHdhcyB3b3JraW5nIG9yIG5vdCwgbWVhbmlu
-Zw0KPiBpdCBzdGF5cyB3b3JraW5nIG9yIHN0YXlzIG5vdCB3b3JraW5nLg0KPiANCj4gQWxzbyBv
-biB0aGUgZmlyc3QgcmVzdGFydCBmcm9tIGJlZm9yZSA4M2YyZGFmZTJhNjIgaW50byAwZWE1MzY3
-NGQwN2YNCj4gb3IgbGF0ZXIgaXQgd29ya3MsIGJ1dCB0aGVuIHJlc3RhcnRpbmcgYWdhaW4gaW50
-byAwZWE1MzY3NGQwN2Ygb3INCj4gbGF0ZXIgaXQgbm8gbG9uZ2VyIHdvcmtzLiBTbyBpdCBzZWVt
-cyB0aGF0IDBlYTUzNjc0ZDA3ZiBhbmQgbGF0ZXIgcHV0cw0KPiB0aGUgYmx1ZXRvb3RoIGluIGEg
-bm9ud29ya2luZyBzdGF0ZSBpZiB5b3UgcmVzdGFydCBmcm9tIGl0LCBidXQgYmVmb3JlDQo+IDgz
-ZjJkYWZlMmE2MiBpdCBwdXRzIGl0IGJhY2sgaW50byBhIHdvcmtpbmcgc3RhdGUgYXQgc3RhcnR1
-cCwgYW5kIGluDQo+IGJldHdlZW4gaXQgZG9lc24ndCBkbyBlaXRoZXIsIGkuZS4gaXQgc3RheXMg
-dGhlIHdheSBpdCB3YXMuDQo+IA0KPiBJIGhhdmUgYSBEZWxsIExhdGl0dWRlIEU1NTUwIGxhcHRv
-cCB3aXRoIGFuIEludGVsIDcyNjUgd2lmaS9ibHVldG9vdGgNCj4gY2FyZCBSRVY9MHgyMTAgZmly
-bXdhcmUgdmVyc2lvbiAyOS40MDYzODI0NTUyLjAgNzI2NUQtMjkuIEknbSBvbiBBcmNoDQo+IExp
-bnV4LCB0aGUgcHJvYmxlbSBpcyBzdGlsbCB0aGVyZSBvbiA1LjE2LXJjNC4NCj4gDQo+IEhlcmUg
-aXMgYSB0aHJlYWQgb24gdGhlIEFyY2ggTGludXggZm9ydW1zIHdpdGggc2V2ZXJhbCBwZW9wbGUg
-d2l0aCB0aGUNCj4gc2FtZSBwcm9ibGVtLCBmb3Igc29tZSBvZiB0aGVtIGl0IGdvdCBmaXhlZCB3
-aXRoIGEga2VybmVsIHVwZGF0ZSBvciBieQ0KPiByZWxvYWRpbmcgbW9kdWxlcywgYnV0IG5vdCBm
-b3IgZXZlcnlib2R5LCBpbmNsdWRpbmcgbWUNCj4gaHR0cHM6Ly9iYnMuYXJjaGxpbnV4Lm9yZy92
-aWV3dG9waWMucGhwP2lkPTI3MTQ1OQ0KPiANCj4gI3JlZ3pib3QgaW50cm9kdWNlZCAwZWE1MzY3
-NGQwN2YNCg0KVGhpcyBpc3N1ZSBpcyB1bmRlciBpbnZlc3RpZ2F0aW9uIHRvIGZpbmQgdGhlIHJv
-b3QgY2F1c2UgYW5kIHByb3BlciBzb2x1dGlvbi4NClRoZSBkb3dubG9hZGVkIGZpcm13YXJlIGJy
-ZWFrcyB0aGUgYmVoYXZpb3IgdGhvdWdoLCB3ZSBuZWVkIHRvIGludmVzdGlnYXRlDQpmdXJ0aGVy
-IHRvIHNlZSBpZiBpdCBjYW4gYmUgZml4ZWQgaW4gZmlybXdhcmUgb3IgZml4IGluIHRoZSBkcml2
-ZXIuDQoNClJlZ2FyZHMsDQpUZWRkDQoNCg==
+Hi, this is your Linux kernel regression tracker speaking.
+
+On 04.12.21 09:55, Thorsten Leemhuis wrote:
+> Top-posting for once, to make this easy accessible to everyone.
+
+Once again. The fix sadly didn't link to the mail with the report on the
+list, as it should (see https://git.kernel.org/linus/1f57bd42b77c ),
+otherwise this message wouldn't be needed. But whatever, for the record
+& regzbot:
+
+A fix was committed here:
+
+https://kernel.googlesource.com/pub/scm/linux/kernel/git/tnguy/net-queue/+/de98e3651464acb08a5bba6df9ad323c7e9cdc33
+
+Not yet in next and the commit-id is likely to different later, but I
+ignore that for now and tell regzbot about it nevertheless:
+
+#regzbot fixed-by: de98e3651464acb08a5bba6df9ad323c7e9cdc33
+
+Ciao, Thorsten
+
+
+> A fix is discussed here:
+> 
+> #regzbot link https://bugzilla.kernel.org/show_bug.cgi?id=215129
+> #regzbot monitor
+> https://lore.kernel.org/all/6bb28d2f-4884-7696-0582-c26c35534bae@gmail.com/
+> 
+> Ciao, Thorsten, your Linux kernel regression tracker.
+> 
+> TWIMC: this mail is primarily send for documentation purposes and for
+> regzbot, my Linux kernel regression tracking bot. These mails usually
+> contain '#forregzbot' in the subject, to make them easy to spot and filter.
+> 
+> P.S.: I guess I'll modify regzbot to automatically catch related
+> discussions if they links to the same bugzilla ticket (which I forgot to
+> tell regzbot about when I told it about the regression), then messages
+> like this wouldn't be needed.
+> 
+> 
+> On 25.11.21 12:17, Thorsten Leemhuis wrote:
+>> Hi, this is your Linux kernel regression tracker speaking.
+>>
+>> On 24.11.21 23:45, Stephen Hemminger wrote:
+>>>
+>>>
+>>> Begin forwarded message:
+>>>
+>>> Date: Wed, 24 Nov 2021 21:14:53 +0000
+>>> From: bugzilla-daemon@bugzilla.kernel.org
+>>> To: stephen@networkplumber.org
+>>> Subject: [Bug 215129] New: Linux kernel hangs during power down
+>>>
+>>>
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=215129
+>>>
+>>>             Bug ID: 215129
+>>>            Summary: Linux kernel hangs during power down
+>>>            Product: Networking
+>>>            Version: 2.5
+>>>     Kernel Version: 5.15
+>>>           Hardware: All
+>>>                 OS: Linux
+>>>               Tree: Mainline
+>>>             Status: NEW
+>>>           Severity: normal
+>>>           Priority: P1
+>>>          Component: Other
+>>>           Assignee: stephen@networkplumber.org
+>>>           Reporter: martin.stolpe@gmail.com
+>>>         Regression: No
+>>>
+>>> Created attachment 299703
+>>>   --> https://bugzilla.kernel.org/attachment.cgi?id=299703&action=edit  
+>>> Kernel log after timeout occured
+>>>
+>>> On my system the kernel is waiting for a task during shutdown which doesn't
+>>> complete.
+>>>
+>>> The commit which causes this behavior is:
+>>> [f32a213765739f2a1db319346799f130a3d08820] ethtool: runtime-resume netdev
+>>> parent before ethtool ioctl ops
+>>>
+>>> This bug causes also that the system gets unresponsive after starting Steam:
+>>> https://steamcommunity.com/app/221410/discussions/2/3194736442566303600/
+>>
+>> TWIMC: To be sure this issue doesn't fall through the cracks unnoticed,
+>> I'm adding it to regzbot, my Linux kernel regression tracking bot:
+>>
+>> #regzbot ^introduced f32a213765739f2a1db319346799f130a3d08820
+>> #regzbot title net: kernel hangs during power down
+>> #regzbot ignore-activity
+>>
+>> Ciao, Thorsten, your Linux kernel regression tracker.
+>>
+>> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+>> on my table. I can only look briefly into most of them. Unfortunately
+>> therefore I sometimes will get things wrong or miss something important.
+>> I hope that's not the case here; if you think it is, don't hesitate to
+>> tell me about it in a public reply. That's in everyone's interest, as
+>> what I wrote above might be misleading to everyone reading this; any
+>> suggestion I gave they thus might sent someone reading this down the
+>> wrong rabbit hole, which none of us wants.
+>>
+>> BTW, I have no personal interest in this issue, which is tracked using
+>> regzbot, my Linux kernel regression tracking bot
+>> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+>> this mail to get things rolling again and hence don't need to be CC on
+>> all further activities wrt to this regression.
+>>
+>> P.S.: If you want to know more about regzbot, check out its
+>> web-interface, the getting start guide, and/or the references documentation:
+>>
+>> https://linux-regtracking.leemhuis.info/regzbot/
+>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+>>
+>> The last two documents will explain how you can interact with regzbot
+>> yourself if your want to.
+>>
+>> Hint for the reporter: when reporting a regression it's in your interest
+>> to tell #regzbot about it in the report, as that will ensure the
+>> regression gets on the radar of regzbot and the regression tracker.
+>> That's in your interest, as they will make sure the report won't fall
+>> through the cracks unnoticed.
+>>
+>> Hint for developers: you normally don't need to care about regzbot, just
+>> fix the issue as you normally would. Just remember to include a 'Link:'
+>> tag to the report in the commit message, as explained in
+>> Documentation/process/submitting-patches.rst
+>> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+>> https://git.kernel.org/linus/1f57bd42b77c
+>>
