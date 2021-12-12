@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 931C329CA
-	for <regressions@lists.linux.dev>; Sun, 12 Dec 2021 09:48:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B2029CA
+	for <regressions@lists.linux.dev>; Sun, 12 Dec 2021 09:57:26 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mwLSp-00060o-1C; Sun, 12 Dec 2021 10:48:15 +0100
-Message-ID: <3bb113cd-fbf6-6898-6ae3-2f8cb8c64992@leemhuis.info>
-Date: Sun, 12 Dec 2021 10:48:14 +0100
+	id 1mwLbe-0000Rx-Hk; Sun, 12 Dec 2021 10:57:22 +0100
+Message-ID: <3472bee7-9974-ed13-1d56-79a08d4073f7@leemhuis.info>
+Date: Sun, 12 Dec 2021 10:57:21 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,42 +16,40 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
+Subject: Re: [bisected][regression] Applications that need amdgpu doesn't run
+ after waking up from suspend
 Content-Language: en-BS
-To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
- regressions@lists.linux.dev, Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Ludovic Desroches <ludovic.desroches@microchip.com>,
- linux-arm-kernel@lists.infradead.org,
- Cristian Birsan <cristian.birsan@microchip.com>, linux-usb@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Felipe Balbi <balbi@kernel.org>, Jonas Bonn <jonas@norrbonn.se>
-References: <20211211183650.12183-1-marcelo.jimenez@gmail.com>
+To: "Tareque Md.Hanif" <tarequemd.hanif@yahoo.com>,
+ "wsa@kernel.org" <wsa@kernel.org>
+Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <1295184560.182511.1639075777725.ref@mail.yahoo.com>
+ <1295184560.182511.1639075777725@mail.yahoo.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [PATCH] usb: gadget: atmel: Revert regression in USB Gadget
- (atmel_usba_udc)
-In-Reply-To: <20211211183650.12183-1-marcelo.jimenez@gmail.com>
+In-Reply-To: <1295184560.182511.1639075777725@mail.yahoo.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639302505;7845398a;
-X-HE-SMSGID: 1mwLSp-00060o-1C
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639303046;93c1c76d;
+X-HE-SMSGID: 1mwLbe-0000Rx-Hk
 
 [TLDR: adding this regression to regzbot; most of this mail is compiled
 from a few templates paragraphs some of you might have seen already.]
 
 Hi, this is your Linux kernel regression tracker speaking.
 
-Top-posting for once, to make this easy accessible to everyone.
+Thanks for the report.
 
-Thanks for the report. BTW, if anyone like me wonders what the included
-patch is about: it afaics is the revert of the patch causing the
-problem. Anyway:
+Adding the regression mailing list to the list of recipients, as it
+should be in the loop for all regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
 To be sure this issue doesn't fall through the cracks unnoticed, I'm
 adding it to regzbot, my Linux kernel regression tracking bot:
 
-#regzbot ^introduced 70a7f8be8598
-#regzbot title usb: gadget: atmel: ethernet over USB Gadget not
-recognized anymore after disconnect and reconnect
+#regzbot ^introduced 5a7b95fb993ec399c8a685552aa6a8fc995c40bd
+#regzbot title drm: amdgpu: apps that need amdgpu do not start after
+system is woken from suspend
 #regzbot ignore-activity
 
 Reminder: when fixing the issue, please add a 'Link:' tag with the URL
@@ -70,7 +68,7 @@ the lists (with a tag in the subject so people can filter them away), as
 long as they are intended just for regzbot. With a bit of luck no such
 messages will be needed anyway.
 
-Ciao, Thorsten
+Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
 
 P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
 on my table. I can only look briefly into most of them. Unfortunately
@@ -87,266 +85,41 @@ regzbot, my Linux kernel regression tracking bot
 this mail to get things rolling again and hence don't need to be CC on
 all further activities wrt to this regression.
 
-
-
-On 11.12.21 19:36, Marcelo Roberto Jimenez wrote:
-> The regression occurs on the second time a self powered gadget is
-> connected to the host. In this situation, the gadget no loger accepts
-> an address in the USB enumeration phase.
-> 
-> The regression has been introduced in
-> commit 70a7f8be8598 ("usb: gadget: atmel: support USB suspend")
-> 
-> Signed-off-by: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-> ---
-> 
+On 09.12.21 19:49, Tareque Md.Hanif wrote:
 > Hi,
+> I am getting some issues listed below when waking up from suspend on my
+> laptop.
 > 
-> I have been using an ACME Arietta board (Microchip AT91SAM9G25 MPU, ARM9@400Mhz) for some years, and from time to time I need to do a kernel upgrade to fix issues or introduce new required features.
+> Issues:
+> 1. After waking up from suspend in my laptop, anytime I open a game, the
+> window is just blank. But it works after reboot or if I don't suspend
+> the system.
+> 2. The system takes almost 7-8 seconds to wake up in 5.14 or later but
+> it's almost instant in 5.13 .
+> 3. If the laptop is connected with AC and then suspended and woken up,
+> there are no issues. This issue occurs if laptop is running on battery.
 > 
-> I have recently noticed a regression in the ethernet over USB Gadget. The system boots fine and when the device is first connected to a host it is recognized. But upon disconnection, the second time the device is connected to the host, it is no longer recognized. Of course, the gadget is self powered.
+> No issues in Kernel 5.13.13 and the issues exist in 5.14 to 5.15.7 . So
+> I bisected the bug with
+> git(https://kernel.googlesource.com/pub/scm/linux/kernel/git/torvalds/linux).
+> first bad commit: [5a7b95fb993ec399c8a685552aa6a8fc995c40bd] i2c: core:
+> support bus regulator controlling in adapter
 > 
-> I did a "git bisect" and found that the patch introducing the regression is this:
+> I have attached full journalctl output of starting the system, then
+> suspend, then wake up and then running `DRI_PRIME=1 glxgears` (which
+> make my monitor 1fps) and then shutdown. I have also attached lsmod and
+> lspci output.
 > 
-> commit 70a7f8be85986a3c2ffc7274c41b89552dfe2ad0
-> Author: Jonas Bonn <jonas@norrbonn.se>
-> Date:   Wed Feb 20 13:20:00 2019 +0100
->     usb: gadget: atmel: support USB suspend
->     This patch adds support for USB suspend to the Atmel UDC.
+> Kernel version: Linux version 5.15.7-arch1-1 (linux@archlinux) (gcc
+> (GCC) 11.1.0, GNU ld (GNU Binutils) 2.36.1) #1 SMP PREEMPT Wed, 08 Dec
+> 2021 14:33:16 +0000
 > 
-> I understand that supporting USB suspend state is important for power consumption, but something in this patch has broken the hardware behavior, so my suggestion is to revert it until we can figure out what is going wrong.
+> Device Information:
+> Laptop model: Dell Inspiron 15 5567
+> GPU 0: Intel HD Graphics 620
+> GPU 1: AMD ATI Radeon R7 M445
 > 
-> I have tested and confirm that reverting that patch makes the issue go away.
-> 
-> On the host side, I can see some log messages that indicate that the USB gadget is not accepting a new address in the enumeration phase. The following log shows the successful initial connection and disconnection, and then the failed second connection attempt:
-> 
-> usb 1-4.3: new high-speed USB device number 85 using xhci_hcd
-> usb 1-4.3: New USB device found, idVendor=0525, idProduct=a4a2, bcdDevice= 5.10
-> usb 1-4.3: New USB device strings: Mfr=1, Product=2, SerialNumber=0
-> usb 1-4.3: Product: RNDIS/Ethernet Gadget
-> usb 1-4.3: Manufacturer: Linux 5.10.80-linux4microchip-2021.10-rc2+ with atmel_usba_udc
-> cdc_subset: probe of 1-4.3:1.0 failed with error -22
-> cdc_ether 1-4.3:1.0 usb0: register 'cdc_ether' at usb-0000:00:14.0-4.3, CDC Ethernet Device, 4a:85:ff:68:fa:82
-> cdc_ether 1-4.3:1.0 enp0s20f0u4u3: renamed from usb0
-> usb 1-4.3: USB disconnect, device number 85
-> cdc_ether 1-4.3:1.0 enp0s20f0u4u3: unregister 'cdc_ether' usb-0000:00:14.0-4.3, CDC Ethernet Device
-> usb 1-4.3: new high-speed USB device number 86 using xhci_hcd
-> usb 1-4.3: device descriptor read/64, error -71
-> usb 1-4.3: device descriptor read/64, error -71
-> usb 1-4.3: new high-speed USB device number 87 using xhci_hcd
-> usb 1-4.3: device descriptor read/64, error -71
-> usb 1-4.3: device descriptor read/64, error -71
-> usb 1-4-port3: attempt power cycle
-> usb 1-4.3: new high-speed USB device number 88 using xhci_hcd
-> usb 1-4.3: Device not responding to setup address.
-> usb 1-4.3: Device not responding to setup address.
-> usb 1-4.3: device not accepting address 88, error -71
-> usb 1-4.3: new high-speed USB device number 89 using xhci_hcd
-> usb 1-4.3: Device not responding to setup address.
-> usb 1-4.3: Device not responding to setup address.
-> usb 1-4.3: device not accepting address 89, error -71
-> usb 1-4-port3: unable to enumerate USB device
-> 
-> The steps to reproduce are very easy:
-> 1. Have both the host and the gadget turned on.
-> 2. Connect the gadget to an USB port.
-> 3. Disconnect the gadget from the USB port.
-> 4. Reconnect the gadget to the USB port.
-> 5. The gadget is no longer recognized.
-> 
-> On a side note, the ACME Arietta board DTD does not use VBUS sensing by default, although the hardware diagram shows a provision to do that using the PB16 GPIO. I have tried to enable that via DTD, but there seems to be a hardware design flaw (assuming that the intention was to provide VBUS sensing) due to a connection with the processor SHDN pin, which is from the processor shutdown controller, and the 3.3 volts voltage regulator enable pin. The problem is that even when the USB is disconnected, the voltage never gets near enough zero to trigger the GPIO interrupt, which I could verify that would indeed happen by a temporary short of the (unconnected) USB VBUS pin to the ground. That was only to say that even without VBUS sensing, the device has always worked, and that enabling VBUS sensing is not a viable solution in the current project.
-> 
-> Best regards,
-> Marcelo.
-> 
-> 
->  drivers/usb/gadget/udc/atmel_usba_udc.c | 55 +++----------------------
->  drivers/usb/gadget/udc/atmel_usba_udc.h |  1 -
->  2 files changed, 6 insertions(+), 50 deletions(-)
-> 
-> diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.c b/drivers/usb/gadget/udc/atmel_usba_udc.c
-> index 2b893bceea45..54cdea5cc31c 100644
-> --- a/drivers/usb/gadget/udc/atmel_usba_udc.c
-> +++ b/drivers/usb/gadget/udc/atmel_usba_udc.c
-> @@ -1705,9 +1705,6 @@ static void usba_dma_irq(struct usba_udc *udc, struct usba_ep *ep)
->  	}
->  }
->  
-> -static int start_clock(struct usba_udc *udc);
-> -static void stop_clock(struct usba_udc *udc);
-> -
->  static irqreturn_t usba_udc_irq(int irq, void *devid)
->  {
->  	struct usba_udc *udc = devid;
-> @@ -1722,13 +1719,10 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
->  	DBG(DBG_INT, "irq, status=%#08x\n", status);
->  
->  	if (status & USBA_DET_SUSPEND) {
-> -		usba_writel(udc, INT_CLR, USBA_DET_SUSPEND|USBA_WAKE_UP);
-> -		usba_int_enb_set(udc, USBA_WAKE_UP);
-> -		usba_int_enb_clear(udc, USBA_DET_SUSPEND);
-> -		udc->suspended = true;
->  		toggle_bias(udc, 0);
-> +		usba_writel(udc, INT_CLR, USBA_DET_SUSPEND);
-> +		usba_int_enb_set(udc, USBA_WAKE_UP);
->  		udc->bias_pulse_needed = true;
-> -		stop_clock(udc);
->  		DBG(DBG_BUS, "Suspend detected\n");
->  		if (udc->gadget.speed != USB_SPEED_UNKNOWN
->  				&& udc->driver && udc->driver->suspend) {
-> @@ -1739,17 +1733,14 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
->  	}
->  
->  	if (status & USBA_WAKE_UP) {
-> -		start_clock(udc);
->  		toggle_bias(udc, 1);
->  		usba_writel(udc, INT_CLR, USBA_WAKE_UP);
-> +		usba_int_enb_clear(udc, USBA_WAKE_UP);
->  		DBG(DBG_BUS, "Wake Up CPU detected\n");
->  	}
->  
->  	if (status & USBA_END_OF_RESUME) {
-> -		udc->suspended = false;
->  		usba_writel(udc, INT_CLR, USBA_END_OF_RESUME);
-> -		usba_int_enb_clear(udc, USBA_WAKE_UP);
-> -		usba_int_enb_set(udc, USBA_DET_SUSPEND);
->  		generate_bias_pulse(udc);
->  		DBG(DBG_BUS, "Resume detected\n");
->  		if (udc->gadget.speed != USB_SPEED_UNKNOWN
-> @@ -1764,8 +1755,6 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
->  	if (dma_status) {
->  		int i;
->  
-> -		usba_int_enb_set(udc, USBA_DET_SUSPEND);
-> -
->  		for (i = 1; i <= USBA_NR_DMAS; i++)
->  			if (dma_status & (1 << i))
->  				usba_dma_irq(udc, &udc->usba_ep[i]);
-> @@ -1775,8 +1764,6 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
->  	if (ep_status) {
->  		int i;
->  
-> -		usba_int_enb_set(udc, USBA_DET_SUSPEND);
-> -
->  		for (i = 0; i < udc->num_ep; i++)
->  			if (ep_status & (1 << i)) {
->  				if (ep_is_control(&udc->usba_ep[i]))
-> @@ -1790,9 +1777,7 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
->  		struct usba_ep *ep0, *ep;
->  		int i;
->  
-> -		usba_writel(udc, INT_CLR,
-> -			USBA_END_OF_RESET|USBA_END_OF_RESUME
-> -			|USBA_DET_SUSPEND|USBA_WAKE_UP);
-> +		usba_writel(udc, INT_CLR, USBA_END_OF_RESET);
->  		generate_bias_pulse(udc);
->  		reset_all_endpoints(udc);
->  
-> @@ -1819,11 +1804,6 @@ static irqreturn_t usba_udc_irq(int irq, void *devid)
->  				| USBA_BF(BK_NUMBER, USBA_BK_NUMBER_ONE)));
->  		usba_ep_writel(ep0, CTL_ENB,
->  				USBA_EPT_ENABLE | USBA_RX_SETUP);
-> -
-> -		/* If we get reset while suspended... */
-> -		udc->suspended = false;
-> -		usba_int_enb_clear(udc, USBA_WAKE_UP);
-> -
->  		usba_int_enb_set(udc, USBA_BF(EPT_INT, 1) |
->  				      USBA_DET_SUSPEND | USBA_END_OF_RESUME);
->  
-> @@ -1896,19 +1876,9 @@ static int usba_start(struct usba_udc *udc)
->  	if (ret)
->  		return ret;
->  
-> -	if (udc->suspended)
-> -		return 0;
-> -
->  	spin_lock_irqsave(&udc->lock, flags);
->  	toggle_bias(udc, 1);
->  	usba_writel(udc, CTRL, USBA_ENABLE_MASK);
-> -	/* Clear all requested and pending interrupts... */
-> -	usba_writel(udc, INT_ENB, 0);
-> -	udc->int_enb_cache = 0;
-> -	usba_writel(udc, INT_CLR,
-> -		USBA_END_OF_RESET|USBA_END_OF_RESUME
-> -		|USBA_DET_SUSPEND|USBA_WAKE_UP);
-> -	/* ...and enable just 'reset' IRQ to get us started */
->  	usba_int_enb_set(udc, USBA_END_OF_RESET);
->  	spin_unlock_irqrestore(&udc->lock, flags);
->  
-> @@ -1919,9 +1889,6 @@ static void usba_stop(struct usba_udc *udc)
->  {
->  	unsigned long flags;
->  
-> -	if (udc->suspended)
-> -		return;
-> -
->  	spin_lock_irqsave(&udc->lock, flags);
->  	udc->gadget.speed = USB_SPEED_UNKNOWN;
->  	reset_all_endpoints(udc);
-> @@ -1949,7 +1916,6 @@ static irqreturn_t usba_vbus_irq_thread(int irq, void *devid)
->  		if (vbus) {
->  			usba_start(udc);
->  		} else {
-> -			udc->suspended = false;
->  			if (udc->driver->disconnect)
->  				udc->driver->disconnect(&udc->gadget);
->  
-> @@ -2028,7 +1994,6 @@ static int atmel_usba_stop(struct usb_gadget *gadget)
->  	if (udc->vbus_pin)
->  		disable_irq(gpiod_to_irq(udc->vbus_pin));
->  
-> -	udc->suspended = false;
->  	usba_stop(udc);
->  
->  	udc->driver = NULL;
-> @@ -2393,7 +2358,6 @@ static int usba_udc_suspend(struct device *dev)
->  	mutex_lock(&udc->vbus_mutex);
->  
->  	if (!device_may_wakeup(dev)) {
-> -		udc->suspended = false;
->  		usba_stop(udc);
->  		goto out;
->  	}
-> @@ -2403,13 +2367,10 @@ static int usba_udc_suspend(struct device *dev)
->  	 * to request vbus irq, assuming always on.
->  	 */
->  	if (udc->vbus_pin) {
-> -		/* FIXME: right to stop here...??? */
->  		usba_stop(udc);
->  		enable_irq_wake(gpiod_to_irq(udc->vbus_pin));
->  	}
->  
-> -	enable_irq_wake(udc->irq);
-> -
->  out:
->  	mutex_unlock(&udc->vbus_mutex);
->  	return 0;
-> @@ -2423,12 +2384,8 @@ static int usba_udc_resume(struct device *dev)
->  	if (!udc->driver)
->  		return 0;
->  
-> -	if (device_may_wakeup(dev)) {
-> -		if (udc->vbus_pin)
-> -			disable_irq_wake(gpiod_to_irq(udc->vbus_pin));
-> -
-> -		disable_irq_wake(udc->irq);
-> -	}
-> +	if (device_may_wakeup(dev) && udc->vbus_pin)
-> +		disable_irq_wake(gpiod_to_irq(udc->vbus_pin));
->  
->  	/* If Vbus is present, enable the controller and wait for reset */
->  	mutex_lock(&udc->vbus_mutex);
-> diff --git a/drivers/usb/gadget/udc/atmel_usba_udc.h b/drivers/usb/gadget/udc/atmel_usba_udc.h
-> index 620472f218bc..b44873148393 100644
-> --- a/drivers/usb/gadget/udc/atmel_usba_udc.h
-> +++ b/drivers/usb/gadget/udc/atmel_usba_udc.h
-> @@ -343,7 +343,6 @@ struct usba_udc {
->  	struct usba_ep *usba_ep;
->  	bool bias_pulse_needed;
->  	bool clocked;
-> -	bool suspended;
->  	bool ep_prealloc;
->  
->  	u16 devstatus;
-> 
+> Regards,
+> Tareque Md Hanif.
+>  
+
