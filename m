@@ -1,13 +1,44 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4E5173
-	for <regressions@lists.linux.dev>; Mon, 13 Dec 2021 06:04:17 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mweRa-0005tn-Sf; Mon, 13 Dec 2021 07:04:14 +0100
-Message-ID: <8e1abb43-664b-5882-7c02-ef517c14fc94@leemhuis.info>
-Date: Mon, 13 Dec 2021 07:04:14 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A7768
+	for <regressions@lists.linux.dev>; Mon, 13 Dec 2021 10:02:44 +0000 (UTC)
+Received: by mail-lf1-f45.google.com with SMTP id u3so29839935lfl.2
+        for <regressions@lists.linux.dev>; Mon, 13 Dec 2021 02:02:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=norrbonn-se.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :references:from:in-reply-to:content-transfer-encoding;
+        bh=z9Y+0MQBNJa7E1NUrpMrgnA/65sAH6lltqkX3sabL4Q=;
+        b=f89MwTghTJh9xbVPHJdv540k3aXAkGCfcioJ1cQnA5kHN9HtsbIyANxPgCctJx0mV7
+         g59KgJAqTfrchFS1X3VGigVI7/Cub26LytiqX54rR+XOvsBMZwUsPG9zzzgujpZc+m9I
+         I7S2iL9plaDH1oWB5ifL4Ti6TNj+FWOv9X3axEhWJqsGiC9+Ck/1SvWMdfZm/Ccb8gY1
+         3u+41v9b6rAP7bbtleLtZQj+AKktsFlUZntHXgGIfxKBO4bkxWvpNLhGsDZay8ekREn3
+         GPNTDuHkZFoEgYVZBzRWLSxLlvDIzghPxbVNLIRn5szpPTDggqF7ANBEz3TuLsD07cpZ
+         Zu0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=z9Y+0MQBNJa7E1NUrpMrgnA/65sAH6lltqkX3sabL4Q=;
+        b=qVdF5ejzqqX9kFiIcxbehmfWiYbhNnTDa4EmG/G8jfNL+bGvMZUGcWV9Pd72YF8uIx
+         MMy4/UtJo3kzN9RFOzYlHvcEFaaqvjqYacTEB4Y1g3uDf22h8+LbeYiUgzyU6nC7uTcP
+         Khk/lETgGHM0YtVnr5pZtMIpjbqrzO4uzYtKrbJVS/h6LmGVNqTOAfilXgVyJHGH9DD5
+         BnTiJQacJ48l5oUAgWOT32CgMCuNb9o6fIHNoXCBH5n+60tLTNaa41gZhuDSz+nLT7qD
+         TC1u6DPDiaOjMGQnfR2Qz7ZLH+amDxHfv1vCK0EeviKhI/WEVWlEBbZgtk3b7LsCVsz8
+         QL5g==
+X-Gm-Message-State: AOAM5339RDk6DDvoDfdNMjcNPPq9NM9czT2w0j41hib+zOB32Ag4CPds
+	FgQ3WbU27vvsoZroW0hCkrqNpg==
+X-Google-Smtp-Source: ABdhPJyRno5RK5s08wWaHd5Dlbpb6OS4BxDton/NtNfoeLI5iA0SZgJHiOiuiSplmDdwNz5rZ4xZXA==
+X-Received: by 2002:ac2:5a48:: with SMTP id r8mr27638822lfn.100.1639389762961;
+        Mon, 13 Dec 2021 02:02:42 -0800 (PST)
+Received: from [192.168.1.211] (h-81-170-137-65.A159.priv.bahnhof.se. [81.170.137.65])
+        by smtp.gmail.com with ESMTPSA id c2sm1394607lfb.270.2021.12.13.02.02.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Dec 2021 02:02:42 -0800 (PST)
+Message-ID: <d406fd08-39d9-42db-f01c-2eccf5b0be00@norrbonn.se>
+Date: Mon, 13 Dec 2021 11:02:41 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,140 +46,65 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [Bug 215315] New: [REGRESSION BISECTED] amdgpu crashes system
- suspend - NUC8i7HVKVA
-Content-Language: en-BS
-To: bugzilla-daemon@bugzilla.kernel.org, dri-devel@lists.freedesktop.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <bug-215315-2300@https.bugzilla.kernel.org/>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <bug-215315-2300@https.bugzilla.kernel.org/>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639375457;90c2d955;
-X-HE-SMSGID: 1mweRa-0005tn-Sf
+ Thunderbird/91.3.1
+Subject: Re: [PATCH] usb: gadget: atmel: Revert regression in USB Gadget
+ (atmel_usba_udc)
+Content-Language: en-US
+To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
+ regressions@lists.linux.dev, Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Ludovic Desroches <ludovic.desroches@microchip.com>,
+ linux-arm-kernel@lists.infradead.org,
+ Cristian Birsan <cristian.birsan@microchip.com>, linux-usb@vger.kernel.org,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Felipe Balbi <balbi@kernel.org>
+References: <20211211183650.12183-1-marcelo.jimenez@gmail.com>
+From: Jonas Bonn <jonas@norrbonn.se>
+In-Reply-To: <20211211183650.12183-1-marcelo.jimenez@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-[TLDR: adding this regression to regzbot; most of this mail is compiled
-from a few templates paragraphs some of you might have seen already.]
+Hi Marcelo,
 
-Hi, this is your Linux kernel regression tracker speaking.
-
-Top-posting for once, to make this easy accessible to everyone.
-
-Thanks for the report.
-
-Adding the regression mailing list to the list of recipients, as it
-should be in the loop for all regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-
-To be sure this issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
-
-#regzbot ^introduced f7d6779df642720e22bffd449e683bb8690bd3bf
-#regzbot title drm: amdgpu: NUC8i7HVKVA crashes during system suspend
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215315
-#regzbot ignore-activity
-
-Reminder: when fixing the issue, please add a 'Link:' tag with the URL
-to the report (the parent of this mail), then regzbot will automatically
-mark the regression as resolved once the fix lands in the appropriate
-tree. For more details about regzbot see footer.
-
-Sending this to everyone that got the initial report, to make all aware
-of the tracking. I also hope that messages like this motivate people to
-directly get at least the regression mailing list and ideally even
-regzbot involved when dealing with regressions, as messages like this
-wouldn't be needed then.
-
-Don't worry, I'll send further messages wrt to this regression just to
-the lists (with a tag in the subject so people can filter them away), as
-long as they are intended just for regzbot. With a bit of luck no such
-messages will be needed anyway.
-
-Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
-
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply. That's in everyone's interest, as
-what I wrote above might be misleading to everyone reading this; any
-suggestion I gave thus might sent someone reading this down the wrong
-rabbit hole, which none of us wants.
-
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
-
-
-On 13.12.21 00:08, bugzilla-daemon@bugzilla.kernel.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=215315
+On 11/12/2021 19:36, Marcelo Roberto Jimenez wrote:
+> The regression occurs on the second time a self powered gadget is
+> connected to the host. In this situation, the gadget no loger accepts
+> an address in the USB enumeration phase.
 > 
->             Bug ID: 215315
->            Summary: [REGRESSION BISECTED] amdgpu crashes system suspend -
->                     NUC8i7HVKVA
->            Product: Drivers
->            Version: 2.5
->     Kernel Version: 5.15-rc1, 5.15, 5.16-rc4
->           Hardware: x86-64
->                 OS: Linux
->               Tree: Mainline
->             Status: NEW
->           Severity: normal
->           Priority: P1
->          Component: Video(DRI - non Intel)
->           Assignee: drivers_video-dri@kernel-bugs.osdl.org
->           Reporter: lenb@kernel.org
->         Regression: No
+> The regression has been introduced in
+> commit 70a7f8be8598 ("usb: gadget: atmel: support USB suspend")
 > 
-> My Intel NUC8i7HVKVA has an AMD GPU.
+> Signed-off-by: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+> ---
 > 
-> Until 5.15-rc1, this machine was rock solid in suspend stress testing -- never
-> crashing after hundreds of hours of back-to-back suspend cycles.
+> Hi,
 > 
-> Until this patch went upstream:
+> I have been using an ACME Arietta board (Microchip AT91SAM9G25 MPU, ARM9@400Mhz) for some years, and from time to time I need to do a kernel upgrade to fix issues or introduce new required features.
 > 
-> commit f7d6779df642720e22bffd449e683bb8690bd3bf (refs/bisect/bad)
-> Author: Guchun Chen <guchun.chen@amd.com>
-> Date:   Fri Aug 27 18:31:41 2021 +0800
+> I have recently noticed a regression in the ethernet over USB Gadget. The system boots fine and when the device is first connected to a host it is recognized. But upon disconnection, the second time the device is connected to the host, it is no longer recognized. Of course, the gadget is self powered.
 > 
->     drm/amdgpu: stop scheduler when calling hw_fini (v2)
+> I did a "git bisect" and found that the patch introducing the regression is this:
 > 
->     This gurantees no more work on the ring can be submitted
->     to hardware in suspend/resume case, otherwise a potential
->     race will occur and the ring will get no chance to stay
->     empty before suspend.
-> 
->     v2: Call drm_sched_resubmit_job before drm_sched_start to
->     restart jobs from the pending list.
-> 
->     Suggested-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
->     Suggested-by: Christian König <christian.koenig@amd.com>
->     Signed-off-by: Guchun Chen <guchun.chen@amd.com>
->     Reviewed-by: Christian König <christian.koenig@amd.com>
->     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->     Cc: stable@vger.kernel.org
-> 
-> I bisected that the patch before this one was integrated can handle over 1,000
-> back-to-back "freeze" system suspend cycles.  Yet, when this patch is present,
-> the system may crash before it completes only 100 cycles, and at most lasts a
-> few hundred cycles.
-> 
-> This crash is present in all following upstream rc's, including 5.15-rc4.
-> 
-> When I revert this patch from 5.15-rc4, stability returns.
-> 
-> Usually, the crash is manifest by a black screen, and a system that does not
-> respond to ping, and will only respond to a long AC power button press to
-> remove power; and a subsequent cold reboot.
-> 
-> I have witnessed the crash occur, and the "ubuntu color themed" screen enters
-> some sort of reverse video mode.  In this weird color mode, I've seen a text
-> window oscillate between scrolling and un-scrolling for a line -- sort of like
-> it is going back in time, but then changes its mind.  There is no response to
-> keyboard, mouse, or network input.
-> 
+> commit 70a7f8be85986a3c2ffc7274c41b89552dfe2ad0
+> Author: Jonas Bonn <jonas@norrbonn.se>
+> Date:   Wed Feb 20 13:20:00 2019 +0100
+>      usb: gadget: atmel: support USB suspend
+>      This patch adds support for USB suspend to the Atmel UDC.
 
+Given that the patch that you want to revert is almost 3 years old, it's 
+a bit of a stretch to call this a regression.  I suspect that a cleaner 
+way forward is to introduce some kind of quirk for your board.
+
+I have a self-powered board where the USB suspend sequence works and 
+device add/remove works fine.  So fundamentally, I suspect that the 
+driver is ok.
+
+With all that said, I'm not immediately in a position to run tests on my 
+SAMA5D2 board right now and the kernel on that board is 5.2.  I'm not 
+sure when we we would notice that USB suspend stopped working because 
+there is no kernel maintenance planned for that board, as far as I know; 
+someday, however, that work might happen and the lack of working USB 
+suspend will be a regression in and of itself.
+
+Thanks,
+Jonas
