@@ -1,110 +1,138 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A7768
-	for <regressions@lists.linux.dev>; Mon, 13 Dec 2021 10:02:44 +0000 (UTC)
-Received: by mail-lf1-f45.google.com with SMTP id u3so29839935lfl.2
-        for <regressions@lists.linux.dev>; Mon, 13 Dec 2021 02:02:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=norrbonn-se.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :references:from:in-reply-to:content-transfer-encoding;
-        bh=z9Y+0MQBNJa7E1NUrpMrgnA/65sAH6lltqkX3sabL4Q=;
-        b=f89MwTghTJh9xbVPHJdv540k3aXAkGCfcioJ1cQnA5kHN9HtsbIyANxPgCctJx0mV7
-         g59KgJAqTfrchFS1X3VGigVI7/Cub26LytiqX54rR+XOvsBMZwUsPG9zzzgujpZc+m9I
-         I7S2iL9plaDH1oWB5ifL4Ti6TNj+FWOv9X3axEhWJqsGiC9+Ck/1SvWMdfZm/Ccb8gY1
-         3u+41v9b6rAP7bbtleLtZQj+AKktsFlUZntHXgGIfxKBO4bkxWvpNLhGsDZay8ekREn3
-         GPNTDuHkZFoEgYVZBzRWLSxLlvDIzghPxbVNLIRn5szpPTDggqF7ANBEz3TuLsD07cpZ
-         Zu0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=z9Y+0MQBNJa7E1NUrpMrgnA/65sAH6lltqkX3sabL4Q=;
-        b=qVdF5ejzqqX9kFiIcxbehmfWiYbhNnTDa4EmG/G8jfNL+bGvMZUGcWV9Pd72YF8uIx
-         MMy4/UtJo3kzN9RFOzYlHvcEFaaqvjqYacTEB4Y1g3uDf22h8+LbeYiUgzyU6nC7uTcP
-         Khk/lETgGHM0YtVnr5pZtMIpjbqrzO4uzYtKrbJVS/h6LmGVNqTOAfilXgVyJHGH9DD5
-         BnTiJQacJ48l5oUAgWOT32CgMCuNb9o6fIHNoXCBH5n+60tLTNaa41gZhuDSz+nLT7qD
-         TC1u6DPDiaOjMGQnfR2Qz7ZLH+amDxHfv1vCK0EeviKhI/WEVWlEBbZgtk3b7LsCVsz8
-         QL5g==
-X-Gm-Message-State: AOAM5339RDk6DDvoDfdNMjcNPPq9NM9czT2w0j41hib+zOB32Ag4CPds
-	FgQ3WbU27vvsoZroW0hCkrqNpg==
-X-Google-Smtp-Source: ABdhPJyRno5RK5s08wWaHd5Dlbpb6OS4BxDton/NtNfoeLI5iA0SZgJHiOiuiSplmDdwNz5rZ4xZXA==
-X-Received: by 2002:ac2:5a48:: with SMTP id r8mr27638822lfn.100.1639389762961;
-        Mon, 13 Dec 2021 02:02:42 -0800 (PST)
-Received: from [192.168.1.211] (h-81-170-137-65.A159.priv.bahnhof.se. [81.170.137.65])
-        by smtp.gmail.com with ESMTPSA id c2sm1394607lfb.270.2021.12.13.02.02.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Dec 2021 02:02:42 -0800 (PST)
-Message-ID: <d406fd08-39d9-42db-f01c-2eccf5b0be00@norrbonn.se>
-Date: Mon, 13 Dec 2021 11:02:41 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA9929CA
+	for <regressions@lists.linux.dev>; Mon, 13 Dec 2021 18:32:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1639420352; x=1670956352;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=rR5wDnxhbQ3N8e1axn4/M4hEIyEIJ9oj/UGYIs4GJVg=;
+  b=kb9QZLCxbSjTN3+Z/hUInYUjJM/tMxz2EvmTQ4DXOiJilaaLcjncOpOm
+   Q516wlHjamI9UIyiBq4BCPwHSFF4jtStFOfPTqlcnJP4ADBJKs41lDuu9
+   s8MOeFrrNtgARRK/D9GaZC30XAg+iXMZrblutcIouEQBLlg0496dytui9
+   Vn+IoHmqUqdSOsnRlW3g0xfl2bWMpepZXtfIbpbhpO9dqJqrJNN1hdvAE
+   /jgolXMaG8ualZynWExmu7+9Qg8xNkT1RJz/gTwGNz3Qrm67kq/HBe5Gh
+   RvPK5BmTtEk+tl2yCTa2aF2xXJZWwb0EPAmwTpVcEEQECYhzbRiTSCHrm
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10197"; a="238612343"
+X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
+   d="scan'208";a="238612343"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 10:32:21 -0800
+X-IronPort-AV: E=Sophos;i="5.88,203,1635231600"; 
+   d="scan'208";a="481612683"
+Received: from robertki-mobl1.amr.corp.intel.com (HELO vcostago-mobl3) ([10.251.4.188])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2021 10:32:20 -0800
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+To: Stefan Dietrich <roots@gmx.de>, Thorsten Leemhuis
+ <regressions@leemhuis.info>
+Cc: kuba@kernel.org, greg@kroah.com, netdev@vger.kernel.org,
+ intel-wired-lan@lists.osuosl.org, regressions@lists.linux.dev
+Subject: Re: [PATCH] igc: Avoid possible deadlock during suspend/resume
+In-Reply-To: <6bcce8e66fde064fd2879e802970bb4a8f382743.camel@gmx.de>
+References: <87r1awtdx3.fsf@intel.com>
+ <20211201185731.236130-1-vinicius.gomes@intel.com>
+ <5a4b31d43d9bf32e518188f3ef84c433df3a18b1.camel@gmx.de>
+ <87o85yljpu.fsf@intel.com>
+ <063995d8-acf3-9f33-5667-f284233c94b4@leemhuis.info>
+ <8e59b7d6b5d4674d5843bb45dde89e9881d0c741.camel@gmx.de>
+ <5c5b606a-4694-be1b-0d4b-80aad1999bd9@leemhuis.info>
+ <d4c9bb101aa79c5acaaa6dd7b42159fb0c91a341.camel@gmx.de>
+ <87h7bgrn0j.fsf@intel.com>
+ <6bcce8e66fde064fd2879e802970bb4a8f382743.camel@gmx.de>
+Date: Mon, 13 Dec 2021 10:32:19 -0800
+Message-ID: <87wnk8qrt8.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.1
-Subject: Re: [PATCH] usb: gadget: atmel: Revert regression in USB Gadget
- (atmel_usba_udc)
-Content-Language: en-US
-To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
- regressions@lists.linux.dev, Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Ludovic Desroches <ludovic.desroches@microchip.com>,
- linux-arm-kernel@lists.infradead.org,
- Cristian Birsan <cristian.birsan@microchip.com>, linux-usb@vger.kernel.org,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Felipe Balbi <balbi@kernel.org>
-References: <20211211183650.12183-1-marcelo.jimenez@gmail.com>
-From: Jonas Bonn <jonas@norrbonn.se>
-In-Reply-To: <20211211183650.12183-1-marcelo.jimenez@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-Hi Marcelo,
+Hi Stefan,
 
-On 11/12/2021 19:36, Marcelo Roberto Jimenez wrote:
-> The regression occurs on the second time a self powered gadget is
-> connected to the host. In this situation, the gadget no loger accepts
-> an address in the USB enumeration phase.
-> 
-> The regression has been introduced in
-> commit 70a7f8be8598 ("usb: gadget: atmel: support USB suspend")
-> 
-> Signed-off-by: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-> ---
-> 
-> Hi,
-> 
-> I have been using an ACME Arietta board (Microchip AT91SAM9G25 MPU, ARM9@400Mhz) for some years, and from time to time I need to do a kernel upgrade to fix issues or introduce new required features.
-> 
-> I have recently noticed a regression in the ethernet over USB Gadget. The system boots fine and when the device is first connected to a host it is recognized. But upon disconnection, the second time the device is connected to the host, it is no longer recognized. Of course, the gadget is self powered.
-> 
-> I did a "git bisect" and found that the patch introducing the regression is this:
-> 
-> commit 70a7f8be85986a3c2ffc7274c41b89552dfe2ad0
-> Author: Jonas Bonn <jonas@norrbonn.se>
-> Date:   Wed Feb 20 13:20:00 2019 +0100
->      usb: gadget: atmel: support USB suspend
->      This patch adds support for USB suspend to the Atmel UDC.
+Stefan Dietrich <roots@gmx.de> writes:
 
-Given that the patch that you want to revert is almost 3 years old, it's 
-a bit of a stretch to call this a regression.  I suspect that a cleaner 
-way forward is to introduce some kind of quirk for your board.
+> Hi Vinicius,
+>
+> thanks a lot - that patch fixed it! Both "normal" shutdown as well as
+> ifdown/ifup are working without issues now if CONFIG_PCIE_PTM is
+> enabled in the kernel config.
 
-I have a self-powered board where the USB suspend sequence works and 
-device add/remove works fine.  So fundamentally, I suspect that the 
-driver is ok.
+Great!
 
-With all that said, I'm not immediately in a position to run tests on my 
-SAMA5D2 board right now and the kernel on that board is 5.2.  I'm not 
-sure when we we would notice that USB suspend stopped working because 
-there is no kernel maintenance planned for that board, as far as I know; 
-someday, however, that work might happen and the lack of working USB 
-suspend will be a regression in and of itself.
+This patch is mostly to give us time to investigate, this seems to be an
+issue related to that specific i225 model. I have to track one down and
+perhaps talk to the hardware folks and see what I am doing wrong.
 
-Thanks,
-Jonas
+>
+> I've done a DSL download/upload speed comparison against my current
+> 5.14.0-19.2 and did not see any performance differences outside margin
+> of error. I currently have no other Linux machine I could use for iperf
+> but I will report if I encounter any issues.
+>
+
+I wasn't expecting any changes in performance, I was more asking if you
+had some use case for PCIe PTM, and something stopped working. It seems
+that the answer is no. That's good.
+
+> As I am not familiar with the kernel development procedure: can you
+> give a rough estimate when we may expect this patch in the stable
+> branch?
+
+I will write a useful commit message, take another closer look to see if
+I am still missing something and propose the patch upstream. From there
+until it's accepted in a stable tree, I guess it could take a few days,
+a week, perhaps.
+
+>
+>
+> Thanks again,
+> Stefan
+>
+>
+>
+> On Fri, 2021-12-10 at 16:41 -0800, Vinicius Costa Gomes wrote:
+>> Hi Stefan,
+>>
+>> Stefan Dietrich <roots@gmx.de> writes:
+>>
+>> > Agreed and thanks for the pointers; please see the log files and
+>> > .config attached as requested.
+>> >
+>>
+>> Thanks for the logs.
+>>
+>> Very interesting that the initialization of the device is fine, so
+>> it's
+>> something that happens later.
+>>
+>> Can you test the attached patch?
+>>
+>> If the patch works, I would also be interested if you notice any loss
+>> of
+>> functionality with your NIC. (I wouldn't think so, as far as I know,
+>> i225-V models have PTM support but don't have any PTP support).
+>>
+>> > Cheers,
+>> > Stefan
+>> >
+>> >
+>> > On Fri, 2021-12-10 at 15:01 +0100, Thorsten Leemhuis wrote:
+>> > > On 10.12.21 14:45, Stefan Dietrich wrote:
+>> > > > thanks for keeping an eye on the issue. I've sent the files in
+>> > > > private
+>> > > > because I did not want to spam the mailing lists with them.
+>> > > > Please
+>> > > > let
+>> > > > me know if this is the correct procedure.
+>>
+>> Cheers,
+>
+
+Cheers,
+-- 
+Vinicius
