@@ -1,170 +1,164 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E51168
-	for <regressions@lists.linux.dev>; Tue, 14 Dec 2021 06:40:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1639463994;
-	bh=AnY0FXth2uT3DootG1OkAz5YN7wfCnOeoOzAnGdj19g=;
-	h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=B3b8jHviVMGMjfE/xf4LSW3S8HdmyW1U1WtQOf57rTf0Z4oKgepiogq2Xiu1DgHj0
-	 fggO/+LFyyzHkRbPrHjxHXJqnxvFeombw5ATmRYNsWxwWqGeFM/14u0YaKVBJlAcVp
-	 uVYCxbJCcdbfnvTOJMuY8hOJxu5akUASuK6suIv4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from machineone.fritz.box ([84.190.129.90]) by mail.gmx.net
- (mrgmx105 [212.227.17.168]) with ESMTPSA (Nemesis) id
- 1MA7KU-1mmX4t3wQE-00BfUn; Tue, 14 Dec 2021 07:39:54 +0100
-Message-ID: <d1867ea068e57702bdd953668a3c992f3e205ded.camel@gmx.de>
-Subject: Re: [PATCH] igc: Avoid possible deadlock during suspend/resume
-From: Stefan Dietrich <roots@gmx.de>
-To: Vinicius Costa Gomes <vinicius.gomes@intel.com>, Thorsten Leemhuis
-	 <regressions@leemhuis.info>
-Cc: kuba@kernel.org, greg@kroah.com, netdev@vger.kernel.org, 
-	intel-wired-lan@lists.osuosl.org, regressions@lists.linux.dev
-Date: Tue, 14 Dec 2021 07:39:52 +0100
-In-Reply-To: <87wnk8qrt8.fsf@intel.com>
-References: <87r1awtdx3.fsf@intel.com>
-	 <20211201185731.236130-1-vinicius.gomes@intel.com>
-	 <5a4b31d43d9bf32e518188f3ef84c433df3a18b1.camel@gmx.de>
-	 <87o85yljpu.fsf@intel.com>
-	 <063995d8-acf3-9f33-5667-f284233c94b4@leemhuis.info>
-	 <8e59b7d6b5d4674d5843bb45dde89e9881d0c741.camel@gmx.de>
-	 <5c5b606a-4694-be1b-0d4b-80aad1999bd9@leemhuis.info>
-	 <d4c9bb101aa79c5acaaa6dd7b42159fb0c91a341.camel@gmx.de>
-	 <87h7bgrn0j.fsf@intel.com>
-	 <6bcce8e66fde064fd2879e802970bb4a8f382743.camel@gmx.de>
-	 <87wnk8qrt8.fsf@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78932C80
+	for <regressions@lists.linux.dev>; Tue, 14 Dec 2021 07:24:01 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mx2A6-00068d-LC; Tue, 14 Dec 2021 08:23:46 +0100
+Message-ID: <dff2abcc-5813-2f2c-35ba-f03cd1f35ac3@leemhuis.info>
+Date: Tue, 14 Dec 2021 08:23:45 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:RiWRIMtuWVXoDkIC7M8NSnDGO7Rp+EHeW6tydokhA9qJQYBrtT8
- G5ke373qJUrZ+XMLoOyTO1Omua7GunCbdokEm4xPCBsBSY08/wex9vx82NfNiVzDgy0Eblj
- b0EGdtraERvm8DlBDbhPVJoIOF/HNpu1TIFIAT3gMh96njRlUTUQ+jvy+q0GF9RxKE9KSUL
- WSvCy+YczVY6SfzCR7ZEg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:RI6SScsUaKY=:T3p6lPS1jMOTGse6jxNDI7
- yHkJ5dhYkJ71EI3Hj2V3YG6aaNVYRB3m0fOt+l+bOfO3vrqyrFRv4SfpasneEKilKMXdIOaSr
- xWuRhX6yyFQcJpnQDBCYrjrllUF+rwvb1WNYQw6R3lLPzFmqUnHmgZjUxGTDdFFReZnz193dv
- OsMwkvjNsyfRmcdfromy4ChOugP+RatLUIEtEx9VsZ5cgf6dD0YDMxy2E7GF6YdFsfVPKmqcL
- jEwoC33sijQZDX74qSR7eQQxpHA7GjmhsSF0eKVW6bUkb0T5OtLVpQbbeTAeckzX9ag3FqM23
- OiB6H4jeenILWbTpnJP7k1irX8OgRNxaEk42eK+4lZXBjM1ummgFNRQABwCItkAXicl8eVEOB
- QmqMUS5XCv2B+Rd6sH+3C5f+nDqdTU3ShwVtZwgj3ZBbSybYsT1AmeM2MDqXUSGYtyvvu+i78
- IbURMG85tFy+PBn94diG8qx2UARXc7TA+z1zffnp3ZedN8/ZXR9FFX48almAEgIVOvfmLl4//
- eETv5yDLu1/RWqbZ9ZNynrTOc178arr9p8EmMPo2Qbl36QjVR0SmPu+8IVjm/8LLwIm2/y2Xu
- LQykYIQhX3w5KPNBVrtXrQyD4xUfXWpucHtQcFHDRFFQGB+BjigNdE0eKwgAyNqUb4wVdMQyz
- 8Hmf7r9whTxxI88l/y/REIDIUrIzH2+rJOc/xHuO0w5T11RAQN2JDXnmzE2VuPlr8lrC8LcSP
- MS+JlqoSX002QytTrTq3K4mMlqzZPD5qes82wseJ/yZ7Qb/vWh4+nbwar3t7Vnd8D1yl5J84q
- 0ZMUyiEmuJNJNp7ZX5Akll9td+17Tq2e1odcGHVzLxz457RPhDjk11SehVCYIu0dtfe4pJ5zV
- Yitshd8LHRH2hnpWO8E9ZjbfHIz/o3QQzyZzSeZNwgmVDhOR2RNMGamosAq1BLOUt6fOY7WFt
- JBZfBntVst0wDhQqVV83K2Go/KBt1MpXRXMLSHM8oiQ85D47PSII9XfC9s9tZiYt3doGqxt9I
- zKENY9IIqNxwf84r5gU2hnU4z8qgGdHy6ZmryIca/e0IIHZ+dYHa9nJXfT9Y72YNeQ==
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [BUG] mtd: cfi_cmdset_0002: write regression since v4.17-rc1
+Content-Language: en-BS
+To: Ahmad Fatoum <a.fatoum@pengutronix.de>, linux-mtd@lists.infradead.org,
+ ikegami@allied-telesis.co.jp, Joakim.Tjernlund@infinera.com,
+ miquel.raynal@bootlin.com, vigneshr@ti.com, richard@nod.at,
+ ikegami.t@gmail.com,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>,
+ Brian Norris <computersforpeace@gmail.com>,
+ David Woodhouse <dwmw2@infradead.org>, marek.vasut@gmail.com,
+ cyrille.pitchen@wedev4u.fr,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ linuxppc-dev@lists.ozlabs.org, Shaohui.Xie@nxp.com
+References: <b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639466641;93434170;
+X-HE-SMSGID: 1mx2A6-00068d-LC
 
-Hi Vinicius,
+[TLDR: adding this regression to regzbot; most of this mail is compiled
+from a few templates paragraphs some of you might have seen already.]
 
-thanks for the info and you work on that issue.
+Hi, this is your Linux kernel regression tracker speaking.
 
+Top-posting for once, to make this easy accessible to everyone.
 
-Stefan
+Thanks for the report.
 
-On Mon, 2021-12-13 at 10:32 -0800, Vinicius Costa Gomes wrote:
-> Hi Stefan,
->
-> Stefan Dietrich <roots@gmx.de> writes:
->
-> > Hi Vinicius,
-> >
-> > thanks a lot - that patch fixed it! Both "normal" shutdown as well
-> > as
-> > ifdown/ifup are working without issues now if CONFIG_PCIE_PTM is
-> > enabled in the kernel config.
->
-> Great!
->
-> This patch is mostly to give us time to investigate, this seems to be
-> an
-> issue related to that specific i225 model. I have to track one down
-> and
-> perhaps talk to the hardware folks and see what I am doing wrong.
->
-> > I've done a DSL download/upload speed comparison against my current
-> > 5.14.0-19.2 and did not see any performance differences outside
-> > margin
-> > of error. I currently have no other Linux machine I could use for
-> > iperf
-> > but I will report if I encounter any issues.
-> >
->
-> I wasn't expecting any changes in performance, I was more asking if
-> you
-> had some use case for PCIe PTM, and something stopped working. It
-> seems
-> that the answer is no. That's good.
->
-> > As I am not familiar with the kernel development procedure: can you
-> > give a rough estimate when we may expect this patch in the stable
-> > branch?
->
-> I will write a useful commit message, take another closer look to see
-> if
-> I am still missing something and propose the patch upstream. From
-> there
-> until it's accepted in a stable tree, I guess it could take a few
-> days,
-> a week, perhaps.
->
-> >
-> > Thanks again,
-> > Stefan
-> >
-> >
-> >
-> > On Fri, 2021-12-10 at 16:41 -0800, Vinicius Costa Gomes wrote:
-> > > Hi Stefan,
-> > >
-> > > Stefan Dietrich <roots@gmx.de> writes:
-> > >
-> > > > Agreed and thanks for the pointers; please see the log files
-> > > > and
-> > > > .config attached as requested.
-> > > >
-> > >
-> > > Thanks for the logs.
-> > >
-> > > Very interesting that the initialization of the device is fine,
-> > > so
-> > > it's
-> > > something that happens later.
-> > >
-> > > Can you test the attached patch?
-> > >
-> > > If the patch works, I would also be interested if you notice any
-> > > loss
-> > > of
-> > > functionality with your NIC. (I wouldn't think so, as far as I
-> > > know,
-> > > i225-V models have PTM support but don't have any PTP support).
-> > >
-> > > > Cheers,
-> > > > Stefan
-> > > >
-> > > >
-> > > > On Fri, 2021-12-10 at 15:01 +0100, Thorsten Leemhuis wrote:
-> > > > > On 10.12.21 14:45, Stefan Dietrich wrote:
-> > > > > > thanks for keeping an eye on the issue. I've sent the files
-> > > > > > in
-> > > > > > private
-> > > > > > because I did not want to spam the mailing lists with them.
-> > > > > > Please
-> > > > > > let
-> > > > > > me know if this is the correct procedure.
-> > >
-> > > Cheers,
->
+Adding the regression mailing list to the list of recipients, as it
+should be in the loop for all regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+To be sure this issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced dfeae1073583
+#regzbot title mtd: cfi_cmdset_0002: flash write accesses on the
+hardware fail on a PowerPC MPC8313 to a 8-bit-parallel S29GL064N flash
+#regzbot ignore-activity
+
+Reminder: when fixing the issue, please add a 'Link:' tag with the URL
+to the report (the parent of this mail), then regzbot will automatically
+mark the regression as resolved once the fix lands in the appropriate
+tree. For more details about regzbot see footer.
+
+Sending this to everyone that got the initial report, to make all aware
+of the tracking. I also hope that messages like this motivate people to
+directly get at least the regression mailing list and ideally even
+regzbot involved when dealing with regressions, as messages like this
+wouldn't be needed then.
+
+Don't worry, I'll send further messages wrt to this regression just to
+the lists (with a tag in the subject so people can filter them away), as
+long as they are intended just for regzbot. With a bit of luck no such
+messages will be needed anyway.
+
+Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
+
+P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+on my table. I can only look briefly into most of them. Unfortunately
+therefore I sometimes will get things wrong or miss something important.
+I hope that's not the case here; if you think it is, don't hesitate to
+tell me about it in a public reply. That's in everyone's interest, as
+what I wrote above might be misleading to everyone reading this; any
+suggestion I gave thus might sent someone reading this down the wrong
+rabbit hole, which none of us wants.
+
+BTW, I have no personal interest in this issue, which is tracked using
+regzbot, my Linux kernel regression tracking bot
+(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+this mail to get things rolling again and hence don't need to be CC on
+all further activities wrt to this regression.
+
+On 13.12.21 14:24, Ahmad Fatoum wrote:
+> Hi,
+> 
+> I've been investigating a breakage on a PowerPC MPC8313: The SoC is connected
+> via the "Enhanced Local Bus Controller" to a 8-bit-parallel S29GL064N flash,
+> which is represented as a memory-mapped cfi-flash.
+> 
+> The regression began in v4.17-rc1 with
+> 
+>   dfeae1073583 ("mtd: cfi_cmdset_0002: Change write buffer to check correct value")
+> 
+> and causes all flash write accesses on the hardware to fail. Example output
+> after v5.1-rc2[1]:
+> 
+>   root@host:~# mount -t jffs2 /dev/mtdblock0 /mnt
+>   MTD do_write_buffer_wait(): software timeout, address:0x000c000b.
+>   jffs2: Write clean marker to block at 0x000c0000 failed: -5
+> 
+> This issue still persists with v5.16-rc. Reverting aforementioned patch fixes
+> it, but I am still looking for a change that keeps both Tokunori's and my
+> hardware happy.
+> 
+> What Tokunori's patch did is that it strengthened the success condition
+> for flash writes:
+> 
+>  - Prior to the patch, DQ polling was done until bits
+>    stopped toggling. This was taken as an indicator that the write succeeded
+>    and was reported up the stack. i.e. success condition is chip_ready()
+> 
+>  - After the patch, polling continues until the just written data is
+>    actually read back, i.e. success condition is chip_good()
+> 
+> This new condition never holds for me, when DQ stabilizes, it reads 0xFF,
+> never the just written data. The data is still written and can be read back
+> on subsequent reads, just not at that point of time in the poll loop.
+> 
+> We haven't had write issues for the years predating that patch. As the
+> regression has been mainline for a while, I am wondering what about my setup
+> that makes it pop up here, but not elsewhere?
+> 
+> I consulted the data sheet[2] and found Figure 27, which describes DQ polling
+> during embedded algorithms. DQ switches from status output to "True" (I assume
+> True == all bits set == 0xFF) until CS# is reasserted. 
+> 
+> I compared with another chip's datasheet, and it (Figure 8.4) doesn't describe
+> such an intermittent "True" state. In any case, the driver polls a few hundred
+> times, however, before giving up, so there should be enough CS# toggles.
+> 
+> 
+> Locally, I'll revert this patch for now. I think accepting 0xFF as a success
+> condition may be appropriate, but I don't yet have the rationale to back it up.
+> 
+> I am investigating this some more, probably with a logic trace, but I wanted
+> to report this in case someone has pointers and in case other people run into
+> the same issue.
+> 
+> 
 > Cheers,
+> Ahmad
+> 
+> [1] Prior to d9b8a67b3b95 ("mtd: cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer") 
+>     first included with v5.1-rc2, failing writes just hung indefinitely in kernel space.
+>     That's fixed, but the writes still fail.
+> 
+> [2]: 001-98525 Rev. *B, https://www.infineon.com/dgdl/Infineon-S29GL064N_S29GL032N_64_Mbit_32_Mbit_3_V_Page_Mode_MirrorBit_Flash-DataSheet-v03_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0ed556fd548b
+> 
+> [3]: https://www.mouser.com/datasheet/2/268/SST39VF1601C-SST39VF1602C-16-Mbit-x16-Multi-Purpos-709008.pdf
+>      Note that "true data" means valid data here, not all bits one.
+> 
 
