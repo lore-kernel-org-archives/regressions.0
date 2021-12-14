@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78932C80
-	for <regressions@lists.linux.dev>; Tue, 14 Dec 2021 07:24:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2FD68
+	for <regressions@lists.linux.dev>; Tue, 14 Dec 2021 09:10:02 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mx2A6-00068d-LC; Tue, 14 Dec 2021 08:23:46 +0100
-Message-ID: <dff2abcc-5813-2f2c-35ba-f03cd1f35ac3@leemhuis.info>
-Date: Tue, 14 Dec 2021 08:23:45 +0100
+	id 1mx3ou-000566-DO; Tue, 14 Dec 2021 10:10:00 +0100
+Message-ID: <7ac766c2-eb7b-3d4b-8c9f-40e9a7d3609e@leemhuis.info>
+Date: Tue, 14 Dec 2021 10:10:00 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,34 +16,33 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [BUG] mtd: cfi_cmdset_0002: write regression since v4.17-rc1
+Subject: Re: [Bug 215317] New: Unable to launch QEMU Linux guest VM - "Guest
+ has not initialized the display (yet)"
 Content-Language: en-BS
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>, linux-mtd@lists.infradead.org,
- ikegami@allied-telesis.co.jp, Joakim.Tjernlund@infinera.com,
- miquel.raynal@bootlin.com, vigneshr@ti.com, richard@nod.at,
- ikegami.t@gmail.com,
+To: bugzilla-daemon@bugzilla.kernel.org, kvm@vger.kernel.org,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>,
- Brian Norris <computersforpeace@gmail.com>,
- David Woodhouse <dwmw2@infradead.org>, marek.vasut@gmail.com,
- cyrille.pitchen@wedev4u.fr,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- linuxppc-dev@lists.ozlabs.org, Shaohui.Xie@nxp.com
-References: <b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de>
+References: <bug-215317-28872@https.bugzilla.kernel.org/>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de>
+In-Reply-To: <bug-215317-28872@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639466641;93434170;
-X-HE-SMSGID: 1mx2A6-00068d-LC
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639473002;68844e1f;
+X-HE-SMSGID: 1mx3ou-000566-DO
+
+Hi, this is your Linux kernel regression tracker speaking.
 
 [TLDR: adding this regression to regzbot; most of this mail is compiled
 from a few templates paragraphs some of you might have seen already.]
 
-Hi, this is your Linux kernel regression tracker speaking.
-
-Top-posting for once, to make this easy accessible to everyone.
+On 13.12.21 02:38, bugzilla-daemon@bugzilla.kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=215317
+> [...]
+> Something changed between kernel 5.16.0-rc3 and -rc4, and remains unfixed
+> between -rc4 and -rc5. Attempting to start a QEMU VM, the display is stuck at
+> "Guest has not initialized the display (yet)". The QEMU version I'm trying is
+> 6.2.0-rc4, but QEMU version 6.1.0 has also been tried. I noticed many changes
+> in the KVM code between Linux 5.16.0-rc3 and 5.16.0-rc4, and I apologize for
+> not being able to narrow it down.
 
 Thanks for the report.
 
@@ -54,10 +53,11 @@ https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 To be sure this issue doesn't fall through the cracks unnoticed, I'm
 adding it to regzbot, my Linux kernel regression tracking bot:
 
-#regzbot ^introduced dfeae1073583
-#regzbot title mtd: cfi_cmdset_0002: flash write accesses on the
-hardware fail on a PowerPC MPC8313 to a 8-bit-parallel S29GL064N flash
+#regzbot ^introduced v5.16-rc3..v5.16-rc4
+#regzbot title Unable to launch QEMU Linux guest VM - "Guest has not
+initialized the display (yet)"
 #regzbot ignore-activity
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215317
 
 Reminder: when fixing the issue, please add a 'Link:' tag with the URL
 to the report (the parent of this mail), then regzbot will automatically
@@ -91,74 +91,3 @@ regzbot, my Linux kernel regression tracking bot
 (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
 this mail to get things rolling again and hence don't need to be CC on
 all further activities wrt to this regression.
-
-On 13.12.21 14:24, Ahmad Fatoum wrote:
-> Hi,
-> 
-> I've been investigating a breakage on a PowerPC MPC8313: The SoC is connected
-> via the "Enhanced Local Bus Controller" to a 8-bit-parallel S29GL064N flash,
-> which is represented as a memory-mapped cfi-flash.
-> 
-> The regression began in v4.17-rc1 with
-> 
->   dfeae1073583 ("mtd: cfi_cmdset_0002: Change write buffer to check correct value")
-> 
-> and causes all flash write accesses on the hardware to fail. Example output
-> after v5.1-rc2[1]:
-> 
->   root@host:~# mount -t jffs2 /dev/mtdblock0 /mnt
->   MTD do_write_buffer_wait(): software timeout, address:0x000c000b.
->   jffs2: Write clean marker to block at 0x000c0000 failed: -5
-> 
-> This issue still persists with v5.16-rc. Reverting aforementioned patch fixes
-> it, but I am still looking for a change that keeps both Tokunori's and my
-> hardware happy.
-> 
-> What Tokunori's patch did is that it strengthened the success condition
-> for flash writes:
-> 
->  - Prior to the patch, DQ polling was done until bits
->    stopped toggling. This was taken as an indicator that the write succeeded
->    and was reported up the stack. i.e. success condition is chip_ready()
-> 
->  - After the patch, polling continues until the just written data is
->    actually read back, i.e. success condition is chip_good()
-> 
-> This new condition never holds for me, when DQ stabilizes, it reads 0xFF,
-> never the just written data. The data is still written and can be read back
-> on subsequent reads, just not at that point of time in the poll loop.
-> 
-> We haven't had write issues for the years predating that patch. As the
-> regression has been mainline for a while, I am wondering what about my setup
-> that makes it pop up here, but not elsewhere?
-> 
-> I consulted the data sheet[2] and found Figure 27, which describes DQ polling
-> during embedded algorithms. DQ switches from status output to "True" (I assume
-> True == all bits set == 0xFF) until CS# is reasserted. 
-> 
-> I compared with another chip's datasheet, and it (Figure 8.4) doesn't describe
-> such an intermittent "True" state. In any case, the driver polls a few hundred
-> times, however, before giving up, so there should be enough CS# toggles.
-> 
-> 
-> Locally, I'll revert this patch for now. I think accepting 0xFF as a success
-> condition may be appropriate, but I don't yet have the rationale to back it up.
-> 
-> I am investigating this some more, probably with a logic trace, but I wanted
-> to report this in case someone has pointers and in case other people run into
-> the same issue.
-> 
-> 
-> Cheers,
-> Ahmad
-> 
-> [1] Prior to d9b8a67b3b95 ("mtd: cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer") 
->     first included with v5.1-rc2, failing writes just hung indefinitely in kernel space.
->     That's fixed, but the writes still fail.
-> 
-> [2]: 001-98525 Rev. *B, https://www.infineon.com/dgdl/Infineon-S29GL064N_S29GL032N_64_Mbit_32_Mbit_3_V_Page_Mode_MirrorBit_Flash-DataSheet-v03_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0ed556fd548b
-> 
-> [3]: https://www.mouser.com/datasheet/2/268/SST39VF1601C-SST39VF1602C-16-Mbit-x16-Multi-Purpos-709008.pdf
->      Note that "true data" means valid data here, not all bits one.
-> 
-
