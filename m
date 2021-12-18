@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F1E7173
-	for <regressions@lists.linux.dev>; Sat, 18 Dec 2021 06:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49723173
+	for <regressions@lists.linux.dev>; Sat, 18 Dec 2021 06:28:45 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mySvZ-0008Ax-Kl; Sat, 18 Dec 2021 07:10:41 +0100
-Message-ID: <9cf971a2-1278-1438-5f72-fd7042668e6b@leemhuis.info>
-Date: Sat, 18 Dec 2021 07:10:41 +0100
+	id 1myTD0-0007w5-0u; Sat, 18 Dec 2021 07:28:42 +0100
+Message-ID: <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info>
+Date: Sat, 18 Dec 2021 07:28:41 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,55 +16,140 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [REGRESSION] 527139d738d7 ("PCI/sysfs: Convert "rom" to static
- attribute")
-Content-Language: en-BW
-To: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Oliver O'Halloran
- <oohall@gmail.com>, linux-pci@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <YbxqIyrkv3GhZVxx@intel.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+Content-Language: en-BS
+To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
+ stable@vger.kernel.org, regressions@lists.linux.dev,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+ Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>,
+ Will McVicker <willmcvicker@google.com>,
+ Sergio Tanzilli <tanzilli@acmesystems.it>
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <YbxqIyrkv3GhZVxx@intel.com>
+In-Reply-To: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639807847;d5974e1e;
-X-HE-SMSGID: 1mySvZ-0008Ax-Kl
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639808925;596d9f34;
+X-HE-SMSGID: 1myTD0-0007w5-0u
 
-On 17.12.21 11:44, Ville Syrjälä wrote:
+[TLDR: I'm adding this regression to regzbot, the Linux kernel
+regression tracking bot; most text you find below is compiled from a few
+templates paragraphs some of you might have seen already.]
+
+On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
+> Some GPIO lines have stopped working after the patch
+> commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
+> 
+> And this has supposedly been fixed in the following patches
+> commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
+> commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
+
+There seems to be a backstory here. Are there any entries and bug
+trackers or earlier discussions everyone that looks into this should be
+aware of?
+
+> But an erratic behavior where some GPIO lines work while others do not work
+> has been introduced.
+> 
+> This patch reverts those changes so that the sysfs-gpio interface works
+> properly again.
+> 
+> Signed-off-by: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+> ---
+> 
 > Hi,
 > 
-> The pci sysfs "rom" file has disappeared for VGA devices.
-> Looks to be a regression from commit 527139d738d7 ("PCI/sysfs:
-> Convert "rom" to static attribute").
+> My system is ARM926EJ-S rev 5 (v5l) (AT91SAM9G25), the board is an ACME Systems Arietta.
 > 
-> Some kind of ordering issue between the sysfs file creation 
-> vs. pci_fixup_video() perhaps?
-[TLDR: adding this regression to regzbot; most text you find below is
-compiled from a few templates paragraphs some of you might have seen
-already.]
+> The system used sysfs-gpio to manage a few gpio lines, and I have noticed that some have stopped working.
+> 
+> The test script is very simple:
+> 
+> 	#! /bin/bash
+> 
+> 	cd /sys/class/gpio/
+> 	echo 24 > export 
+> 
+> 	cd pioA24
+> 	echo out > direction
+> 
+> 	echo 0 > value
+> 	cat value
+> 	echo 1 > value
+> 	cat value
+> 	echo 0 > value
+> 	cat value
+> 	echo 1 > value
+> 	cat value
+> 
+> 	cd ..
+> 	echo 24 > unexport
+> 
+> In a "good" kernel, this script outputs 0, 1, 0, 1. In a bad kernel, the output result is 1, 1, 1, 1. Also it must be possible to run this script twice without errors, that was the issue with the gpiochip_generic_free() call that had been addressed in another patch.
+> 
+> In my system PINCTRL is automatically selected by 
+> SOC_AT91SAM9 [=y] && ARCH_AT91 [=y] && ARCH_MULTI_V5 [=y]
+> 
+> So it is not an option to disable it to make it work.
+> 
+> Best regards,
+> Marcelo.
+> 
+> 
+>  drivers/gpio/gpiolib.c | 10 ----------
+>  1 file changed, 10 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index af5bb8fedfea..ac69ec8fb37a 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1804,11 +1804,6 @@ static inline void gpiochip_irqchip_free_valid_mask(struct gpio_chip *gc)
+>   */
+>  int gpiochip_generic_request(struct gpio_chip *gc, unsigned offset)
+>  {
+> -#ifdef CONFIG_PINCTRL
+> -	if (list_empty(&gc->gpiodev->pin_ranges))
+> -		return 0;
+> -#endif
+> -
+>  	return pinctrl_gpio_request(gc->gpiodev->base + offset);
+>  }
+>  EXPORT_SYMBOL_GPL(gpiochip_generic_request);
+> @@ -1820,11 +1815,6 @@ EXPORT_SYMBOL_GPL(gpiochip_generic_request);
+>   */
+>  void gpiochip_generic_free(struct gpio_chip *gc, unsigned offset)
+>  {
+> -#ifdef CONFIG_PINCTRL
+> -	if (list_empty(&gc->gpiodev->pin_ranges))
+> -		return;
+> -#endif
+> -
+>  	pinctrl_gpio_free(gc->gpiodev->base + offset);
+>  }
+>  EXPORT_SYMBOL_GPL(gpiochip_generic_free);
+> 
 
 Hi, this is your Linux kernel regression tracker speaking.
 
 Thanks for the report.
 
-Adding the regression mailing list to the list of recipients, as it
-should be in the loop for all regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-
 To be sure this issue doesn't fall through the cracks unnoticed, I'm
 adding it to regzbot, my Linux kernel regression tracking bot:
 
-#regzbot ^introduced 527139d738d7
-#regzbot title pci: the pci sysfs "rom" file has disappeared for VGA devices
+#regzbot ^introduced 2ab73c6d8323f
+#regzbot title gpio: some GPIO lines have stopped working
 #regzbot ignore-activity
 
 Reminder: when fixing the issue, please add a 'Link:' tag with the URL
 to the report (the parent of this mail), as explained in
-'Documentaiton/process/submitting-patches.rst'. Regzbot then will
-automatically mark the regression as resolved once the fix lands in the
-appropriate tree. For more details about regzbot see footer.
+'Documentation/process/submitting-patches.rst' (reminder: you should use
+the kernel.org redirector). Regzbot then will automatically mark the
+regression as resolved once the fix lands in the appropriate tree. For
+more details about regzbot see footer.
 
 Sending this to everyone that got the initial report, to make all aware
 of the tracking. I also hope that messages like this motivate people to
