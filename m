@@ -1,160 +1,54 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from u12.atthost.pl (u12.atthost.pl [185.255.40.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E5929CA
-	for <regressions@lists.linux.dev>; Sat, 18 Dec 2021 07:02:34 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1myTjk-0006DT-5o; Sat, 18 Dec 2021 08:02:32 +0100
-Message-ID: <2f740617-29e4-2666-dc04-922357f96fda@leemhuis.info>
-Date: Sat, 18 Dec 2021 08:02:31 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFFC52C9C
+	for <regressions@lists.linux.dev>; Sat, 18 Dec 2021 20:45:04 +0000 (UTC)
+Received: from localhost (unknown [127.0.0.1])
+	by u12.atthost.pl (Postfix) with ESMTP id 8A59D634AC;
+	Sat, 18 Dec 2021 20:39:35 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at atthost.pl
+Received: from u12.atthost.pl ([185.255.40.32])
+	by localhost (atthost.pl [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id ANJuBeLBD5iv; Sat, 18 Dec 2021 21:39:27 +0100 (CET)
+Received: from dell.localnet (staticline-195-234-21-179.toya.net.pl [195.234.21.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: tomasz@cebula.eu.org)
+	by u12.atthost.pl (Postfix) with ESMTPSA id E19AE63809;
+	Sat, 18 Dec 2021 21:39:26 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 u12.atthost.pl E19AE63809
+From: "Tomasz C." <tlinux@cebula.eu.org>
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>, "stable@vger.kernel.org" <stable@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: tlinux@cebula.eu.org, linux-input@vger.kernel.org, "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: Re: FWD: Holtek mouse stopped working after kernel upgrade from 5.15.7 to 5.15.8
+Date: Sat, 18 Dec 2021 21:39:25 +0100
+Message-ID: <4366861.LvFx2qVVIh@dell>
+In-Reply-To: <fc7e6040-b760-02f1-57ef-71aa4b88aea6@leemhuis.info>
+References: <e4efbf13-bd8d-0370-629b-6c80c0044b15@leemhuis.info> <42903605-7e8b-4e84-fcd6-1b23169b8639@redhat.com> <fc7e6040-b760-02f1-57ef-71aa4b88aea6@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.0
-Subject: Re: [Bug Report] Desktop monitor sleep regression #forregzbot
-Content-Language: en-BS
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <8a27c986-4767-bd29-2073-6c4ffed49bba@jetfuse.net>
- <962fe0af-a080-fc0d-15f3-203166ff4584@leemhuis.info>
- <dca67eb4-d007-2fa0-e0c2-b21d124967f1@leemhuis.info>
- <20211217145202.GB1572087@ideak-desk.fi.intel.com>
- <2f27c760-7679-c8d6-15f0-da1423ee9eb8@leemhuis.info>
-In-Reply-To: <2f27c760-7679-c8d6-15f0-da1423ee9eb8@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639810954;6d3247c2;
-X-HE-SMSGID: 1myTjk-0006DT-5o
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 
-On 17.12.21 18:19, Thorsten Leemhuis wrote:
-> On 17.12.21 15:52, Imre Deak wrote:
->> On Fri, Dec 17, 2021 at 03:46:21PM +0100, Thorsten Leemhuis wrote:
->>> added some CCs Geert added in his reply
->>>
->>> On 07.12.21 08:20, Thorsten Leemhuis wrote:
->>>>
->>>> [TLDR: adding this regression to regzbot; most of this mail is compiled
->>>> from a few templates paragraphs some of you might have seen already.]
->>>>
->>>> Hi, this is your Linux kernel regression tracker speaking.
->>>
->>> /me again
->>>
->>> What's up here? We are getting close to rc6, but there afaics wasn't any
->>> reply of substance since the report ten days ago. Hence:
->>>
->>> Could anybody please comment on this? Imre Deak, the commit Brandon
->>> found in the bisection contains a patch of yours, do you maybe have an
->>> idea what's up here?
->>
->> Yes,
->> https://bugzilla.kernel.org/show_bug.cgi?id=215203
->>
->> based on which the problem is somehere in the AMD driver.
-> 
-> Ha, sorry for the noise then, I really feel stupid: I have no idea why I
-> didn't check the bug report for an update, as I do normally do. Much
-> have slipped through. Ohh well, hopefully we one day have have a central
-> place to handle these things.
+Hello,
 
-For the record without anyone else in CC:
+I haven't had time to test it yet. But I see that another ArchLinux user ha=
+s=20
+compiled kernel 5.15.10 with this patch and confirms that the mouse works.
+Details on:
+https://bugs.archlinux.org/task/73048#comment204441
 
-Ha, now I know why I missed that, I forgot to tell regzbot about the
-bugzilla tickets. To fix this:
+Is this enough for you as a test?
 
-#regzbot link: https://bugzilla.redhat.com/show_bug.cgi?id=2028613
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215203
+=2D-=20
+Tomasz Cebula
+Dnia pi=C4=85tek, 17 grudnia 2021 09:37:11 CET Thorsten Leemhuis pisze:
 
-Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
+> Tomasz, could you give it a try please?
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
->>> Ciao, Thorsten
->>>
->>> #regzbot poke
->>>
->>>> Adding the regression mailing list to the list of recipients, as it
->>>> should be in the loop for all regressions, as explained here:
->>>> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
->>>>
->>>> Also adding the authors and reviewers of the culprit and two appropriate
->>>> mailing lists.
->>>>
->>>> On 07.12.21 01:21, Brandon Nielsen wrote:
->>>>> Monitors no longer sleep properly on my system (dual monitor connected
->>>>> via DP->DVI, amdgpu, x86_64). The monitors slept properly on 5.14, but
->>>>> stopped during the 5.15 series. I have also filed this bug on the kernel
->>>>> bugzilla[0] and downstream[1].
->>>>>
->>>>> I have performed a bisect, first "bad" commit to master is
->>>>> 55285e21f04517939480966164a33898c34b2af2[1], the same change made it
->>>>> into the 5.15 branch as e3b39825ed0813f787cb3ebdc5ecaa5131623647.
->>>>
->>>> TWIMC: That was for 5.15.3
->>>>
->>>>> I have
->>>>> verified the issue exists in latest master
->>>>> (a51e3ac43ddbad891c2b1a4f3aa52371d6939570).
->>>>>
->>>>> Steps to reproduce:
->>>>>
->>>>>   1. Boot system (Fedora Workstation 35 in this case)
->>>>>   2. Log in
->>>>>   3. Lock screen (after a few seconds, monitors will enter power save
->>>>> "sleep" state with backlight off)
->>>>>   4. Wait (usually no more than 30 seconds, sometimes up to a few minutes)
->>>>>   5. Observe monitor leaving "sleep" state (backlight comes back on),
->>>>> but nothing is displayed
->>>>>
->>>>> [0] - https://bugzilla.kernel.org/show_bug.cgi?id=215203
->>>>> [1] - https://bugzilla.redhat.com/show_bug.cgi?id=2028613
->>>>
->>>> To be sure this issue doesn't fall through the cracks unnoticed, I'm
->>>> adding it to regzbot, my Linux kernel regression tracking bot:
->>>>
->>>> #regzbot ^introduced 55285e21f04517939480966164a33898c34b2af2
->>>> #regzbot title fbdev/efifb: Monitors no longer sleep (amdgpu dual
->>>> monitor setup)
->>>> #regzbot ignore-activity
->>>>
->>>> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
->>>> to the report (the parent of this mail), then regzbot will automatically
->>>> mark the regression as resolved once the fix lands in the appropriate
->>>> tree. For more details about regzbot see footer.
->>>>
->>>> Sending this to everyone that got the initial report, to make all aware
->>>> of the tracking. I also hope that messages like this motivate people to
->>>> directly get at least the regression mailing list and ideally even
->>>> regzbot involved when dealing with regressions, as messages like this
->>>> wouldn't be needed then.
->>>>
->>>> Don't worry, I'll send further messages wrt to this regression just to
->>>> the lists (with a tag in the subject so people can filter them away), as
->>>> long as they are intended just for regzbot. With a bit of luck no such
->>>> messages will be needed anyway.
->>>>
->>>> Ciao, Thorsten, your Linux kernel regression tracker.
->>>>
->>>> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
->>>> on my table. I can only look briefly into most of them. Unfortunately
->>>> therefore I sometimes will get things wrong or miss something important.
->>>> I hope that's not the case here; if you think it is, don't hesitate to
->>>> tell me about it in a public reply. That's in everyone's interest, as
->>>> what I wrote above might be misleading to everyone reading this; any
->>>> suggestion I gave they thus might sent someone reading this down the
->>>> wrong rabbit hole, which none of us wants.
->>>>
->>>> BTW, I have no personal interest in this issue, which is tracked using
->>>> regzbot, my Linux kernel regression tracking bot
->>>> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
->>>> this mail to get things rolling again and hence don't need to be CC on
->>>> all further activities wrt to this regression.
->>>>
->>
+
