@@ -1,13 +1,51 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39392CA0
-	for <regressions@lists.linux.dev>; Sun, 19 Dec 2021 05:09:20 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1myoRe-000266-Us; Sun, 19 Dec 2021 06:09:15 +0100
-Message-ID: <8bafab1e-e2c2-015a-efd9-46d6a77ecd8e@leemhuis.info>
-Date: Sun, 19 Dec 2021 06:09:14 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2430173
+	for <regressions@lists.linux.dev>; Sun, 19 Dec 2021 13:53:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1639921992;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6y4s59fRDhRXZ+MFWbqd48C+ut3PapB8I0wNJafkmy8=;
+	b=Dh6A97MN4jEPXiJoa7bWXbaDTJ5cX6mQjOpJqc5c+N3fL3Kk3sgurLrHiFAZJYqWkyKvI1
+	zZ5rrsBwDX4pZf8yUFJbndIcUZ38hYOcpbNMnC7gMtMapgNZ8JVPAVGFoB8E/Py+E2xzD+
+	RBZFIsLJ8CPTxZqtJHGFm7O0p/SpzH0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-588--cG8avzyMRed3EbO7a0arQ-1; Sun, 19 Dec 2021 08:53:11 -0500
+X-MC-Unique: -cG8avzyMRed3EbO7a0arQ-1
+Received: by mail-wr1-f72.google.com with SMTP id x20-20020adfbb54000000b001a0d044e20fso2599159wrg.11
+        for <regressions@lists.linux.dev>; Sun, 19 Dec 2021 05:53:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=6y4s59fRDhRXZ+MFWbqd48C+ut3PapB8I0wNJafkmy8=;
+        b=bNTuxOM6FdgAsCwAo6dE7J2YPu/bA8WNZtA9FB0iRpnIENCXHWsQil/gP++RJw80Tk
+         93UgO9dt8QAzunnM+cdGlbSdPHwpxP25Z9o+CaiP/VAiDT/UkrA30g8hDNyo//HeaeEL
+         5QsYuESoZpOnRyNwlqlLnHXCuVY4NW2+vH446DYqAAtaIJfMESnz1Pc6lGZywB72srwD
+         uDLdR6N6b3m2EQBEvxrGuI4CqFUdvbq/jTbAqrYf7sCf3QG9t/WweQnMA37tPTRDw6eR
+         cqnBg5cc1u6YmVDhQGazInsXw0AFiYNpcDgMjwu8WI2LZTihDZX3FjmwVnsylFsjCJ7Z
+         f5mQ==
+X-Gm-Message-State: AOAM5331esAXwcTb2B7adhVXiv3exgGRXM3FpphD+1nYBrySSc5UtCKH
+	cNkhzjF5Oiifj1WsLnS9b6fcsWSKoulKkfQxFS7zeh4ifZNGEKc+byDV9TtM/vX+BGz3nn6PHso
+	iZRdD9ufvXRKK233ki1Q2ojk=
+X-Received: by 2002:adf:9004:: with SMTP id h4mr9692862wrh.593.1639921990366;
+        Sun, 19 Dec 2021 05:53:10 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyypGLj1tKxFj+LSvvFpiaauxTLO+snS8pEJl5hCgc9MrMvK2mCfttd2iYEcvhftK55oUc5Fw==
+X-Received: by 2002:adf:9004:: with SMTP id h4mr9692849wrh.593.1639921990179;
+        Sun, 19 Dec 2021 05:53:10 -0800 (PST)
+Received: from [192.168.10.118] ([93.56.170.41])
+        by smtp.googlemail.com with ESMTPSA id w17sm14564116wmc.14.2021.12.19.05.53.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 19 Dec 2021 05:53:09 -0800 (PST)
+Message-ID: <54749944-d33d-8364-ad17-6297abf883f5@redhat.com>
+Date: Sun, 19 Dec 2021 14:49:52 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,127 +53,41 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH] matroxfb: set maxvram of vbG200eW to the same as vbG200
- to avoid black screen
-Content-Language: en-BS
-To: "Z. Liu" <liuzx@knownsec.com>
-Cc: linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20211218180035.200552-1-liuzx@knownsec.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20211218180035.200552-1-liuzx@knownsec.com>
-Content-Type: text/plain; charset=UTF-8
+ Thunderbird/91.2.0
+Subject: Re: [regression] kvm: Kernel OOPS in vmx.c when starting a kvm VM
+ since v5.15.7
+To: Thorsten Leemhuis <regressions@leemhuis.info>, kvm@vger.kernel.org,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: doc@lame.org
+References: <f1ea22d3-cff8-406a-ad6a-cb8e0124a9b4@leemhuis.info>
+From: Paolo Bonzini <pbonzini@redhat.com>
+In-Reply-To: <f1ea22d3-cff8-406a-ad6a-cb8e0124a9b4@leemhuis.info>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=pbonzini@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639890560;55acf36d;
-X-HE-SMSGID: 1myoRe-000266-Us
 
-On 18.12.21 19:00, Z. Liu wrote:
-> Start from commit 11be60bd66d54 "matroxfb: add Matrox MGA-G200eW board
-> support", when maxvram is 0x800000, monitor become black w/ error message
-> said: "The current input timing is not supported by the monitor display.
-> Please change your input timing to 1920x1080@60Hz ...".
+On 12/19/21 06:01, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
 > 
-> Fixes: 1be60bd66d54 ("matroxfb: add Matrox MGA-G200eW board support")
-> Cc: linux-fbdev@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Z. Liu <liuzx@knownsec.com>
-> ---
->  drivers/video/fbdev/matrox/matroxfb_base.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> TWIMC, I stumbled on a bug report from George Shearer about a KVM
+> problem I couldn't find any further discussions about, that's why I'm
+> forwarding it manually here.
 > 
-> diff --git a/drivers/video/fbdev/matrox/matroxfb_base.c b/drivers/video/fbdev/matrox/matroxfb_base.c
-> index 5c82611e93d9..236521b19daf 100644
-> --- a/drivers/video/fbdev/matrox/matroxfb_base.c
-> +++ b/drivers/video/fbdev/matrox/matroxfb_base.c
-> @@ -1377,7 +1377,7 @@ static struct video_board vbG200 = {
->  	.lowlevel = &matrox_G100
->  };
->  static struct video_board vbG200eW = {
-> -	.maxvram = 0x800000,
-> +	.maxvram = 0x100000,
->  	.maxdisplayable = 0x800000,
->  	.accelID = FB_ACCEL_MATROX_MGAG200,
->  	.lowlevel = &matrox_G100
+> https://bugzilla.kernel.org/show_bug.cgi?id=215351
+> 
+> George, BTW: if reverting the change you suspect doesn't help, please
+> consider doing a bisection to find the culprit.
 
-[TLDR: I'm adding this regression to regzbot, the Linux kernel
-regression tracking bot; most text you find below is compiled from a few
-templates paragraphs some of you might have seen already.]
+This should be fixed by commit e90e51d5f01d.  I'll send it to 
+stable@vger.kernel.org.
 
-Hi, this is your Linux kernel regression tracker speaking.
+Thanks,
 
-Thanks for the report.
-
-Adding the regression mailing list to the list of recipients, as it
-should be in the loop for all regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-
-To be sure this issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
-
-#regzbot ^introduced 11be60bd66d54
-#regzbot title fbdev: matroxfb: display black ans warns "the current
-input timing is not supported by the monitor display"
-#regzbot ignore-activity
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215355
-
-Reminder: when fixing the issue, please add a 'Link:' tag with the URL
-to the report (the parent of this mail) using the kernel.org redirector,
-as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
-then will automatically mark the regression as resolved once the fix
-lands in the appropriate tree. For more details about regzbot see footer.
-
-Sending this to everyone that got the initial report, to make all aware
-of the tracking. I also hope that messages like this motivate people to
-directly get at least the regression mailing list and ideally even
-regzbot involved when dealing with regressions, as messages like this
-wouldn't be needed then.
-
-Don't worry, I'll send further messages wrt to this regression just to
-the lists (with a tag in the subject so people can filter them away), as
-long as they are intended just for regzbot. With a bit of luck no such
-messages will be needed anyway.
-
-Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
-
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply. That's in everyone's interest, as
-what I wrote above might be misleading to everyone reading this; any
-suggestion I gave thus might sent someone reading this down the wrong
-rabbit hole, which none of us wants.
-
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
-
----
-Additional information about regzbot:
-
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and/or the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-tell #regzbot about it in the report, as that will ensure the regression
-gets on the radar of regzbot and the regression tracker. That's in your
-interest, as they will make sure the report won't fall through the
-cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include a 'Link:' tag to the report in the commit message, as explained
-in Documentation/process/submitting-patches.rst
-That aspect was recently was made more explicit in commit 1f57bd42b77c:
-https://git.kernel.org/linus/1f57bd42b77c
+Paolo
 
