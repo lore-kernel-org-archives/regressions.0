@@ -1,192 +1,136 @@
-Received: from nectar.eq.uc.pt (nectar.eq.uc.pt [193.137.214.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC4929CA
-	for <regressions@lists.linux.dev>; Mon, 20 Dec 2021 19:03:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=eq.uc.pt;
-	s=20171223; h=Message-ID:Subject:Cc:To:From:Date:Sender;
-	bh=VoJTWUayDMgarkxeP4MlPOUC4TgKQC/9Id50q3siqog=; b=dA7aTOEB3IDIfZeuzCJFD5ccwH
-	L1UUT+VoMBSeN30MmtQjlG4v5VBpKlnkSZxW3V3Ytx77Qwnlp6KWJKPG7vxYWiLq38+Zt6nm2GDU2
-	i5S6veGJK/DddLNPnTSRN/e6o5yhQrqprbpgPZdLOsuLEvERyNlHSEaVZqeDPRYaO1m5Kvg8lqjcj
-	tBHsvas7k8LaHirS6ijQyiN4TAOyzrjW0BGMX/NR6A3yBbTzh4vzZNZ4mycoSBw3XvysJUv281SHJ
-	ZPOR91sj4SShG9CYTx9QweRWiWyBvHK3IGeQZ/2peWRLmDP31wS8QYriC3ko9hXPAbdLNmy4yUjbZ
-	Y1MLb3bg==;
-Received: from neo.eq.uc.pt ([193.137.214.155] helo=neo)
-	by nectar.eq.uc.pt with esmtp (Exim 4.95)
-	(envelope-from <nuno@eq.uc.pt>)
-	id 1mzNRx-002IBC-5B;
-	Mon, 20 Dec 2021 18:31:56 +0000
-Received: from nuno by neo with local (Exim 4.95)
-	(envelope-from <nuno@eq.uc.pt>)
-	id 1mzNRx-007imO-2D;
-	Mon, 20 Dec 2021 18:31:53 +0000
-Date: Mon, 20 Dec 2021 18:31:53 +0000
-From: Nuno Oliveira <nuno@eq.uc.pt>
-To: Kalle Valo <kvalo@kernel.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Sebastian Bachmann <hello@reox.at>, wgong@codeaurora.org,
-	ath10k@lists.infradead.org,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: Compex WLE200NX: regdomain sanitized regression
-Message-ID: <YcDMGdpvINCX9VlX@eq.uc.pt>
-References: <1c160dfb-6ccc-b4d6-76f6-4364e0adb6dd@reox.at>
- <YaIix40KaVlxT+XG@eq.uc.pt>
- <96b3682d-71b3-ada0-6fc7-686e51609968@leemhuis.info>
- <87v8zja7em.fsf@codeaurora.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11ACA29CA
+	for <regressions@lists.linux.dev>; Mon, 20 Dec 2021 19:25:11 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id z5so42671823edd.3
+        for <regressions@lists.linux.dev>; Mon, 20 Dec 2021 11:25:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oJjZyoMEz6X8QZ+nRT7KOb+gfe1I0SKawSZhB5aruPE=;
+        b=su9Y/CkoSWxaKwldVUT3CtIth3TGerz4kcfFjRhC7bTsjdv4Abi95GgngqUTRyQLdg
+         Z6502yXJ4duoRlNaN8uoTwE6l6zTa3vLgV3eM+V1ZQE/FkGKMJzt41vqxTkdk+rAN1LE
+         e9H6bf3rdhQeD97x20QTm4H+qjCIIWKDxPFHgJ47w5ra+2M+7m/rFeAuF4xwfW4D3nFe
+         oOXR55YAuvcbrDNutAVFCaNTyWOWraWO6/tCcNCuUOXCk2ODkyIVBlsGQ8BYIJZAPHhX
+         SPFDyYwv8NUEqIFOlbhd7UzvT2En2xHriDsvMEnw7+5e9r8dEcMfqiVkzeFnfeFNeEn+
+         PS4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oJjZyoMEz6X8QZ+nRT7KOb+gfe1I0SKawSZhB5aruPE=;
+        b=HWNA6A/ylrRDGoO6xSXVsX7hsvKtar0bf+/ZWrWoykzZ/P9rzS/FxdNx4uuJhTJlTy
+         Hosh2KTcRg5R7QVXaKuAu/2Oz+G+r6Bb0OXJHF3zHgK1eq+ip6DCWuU67dOS5jD6LiZf
+         y0OolUnGRqajDTMWHO41ez+cVIQKTou/gOWb5hksW9DZqs0pH0+ceBqG0S4KqvH0Zimf
+         QL7AooqRkbpNkjI10+1ZB1/XE2/XF8KZ61kncKM2jMVv0IrdKmRK9Kx/v3eLlgrxs84k
+         5/XPXLv19VbBRtDrCWpb5hRCogAlcWt6okYAc+b0+BXKTmgV0OnMeJ8ZjePqb7NcVPXH
+         Ir7g==
+X-Gm-Message-State: AOAM532zqSQ/zU5GALidTUjMm5fhzRf1q7cO73Dgi5zQjxLBCMgz5t7e
+	5gGOoCinqMt9UJ1lTufhRMshiw3HRNi7Hm5XlSPGOg==
+X-Google-Smtp-Source: ABdhPJx187CSWNjhZ46xw6UV3rJD4dVrv+U4cX641iKcm/e2YLbtgl7O8tXfKBWjOem/Az6G1NnVK/BmC9zObylBPo4=
+X-Received: by 2002:a05:6402:3488:: with SMTP id v8mr17458750edc.398.1640028310148;
+ Mon, 20 Dec 2021 11:25:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87v8zja7em.fsf@codeaurora.org>
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info> <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
+ <CAMuHMdVp621B0DywkW6sx6wNcPFez9=3-=cfSo7UoRttJ6QXCg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVp621B0DywkW6sx6wNcPFez9=3-=cfSo7UoRttJ6QXCg@mail.gmail.com>
+From: Will McVicker <willmcvicker@google.com>
+Date: Mon, 20 Dec 2021 11:24:53 -0800
+Message-ID: <CABYd82b2i4Uuyi5+zLoTgiC-QMS1y=VkwmMznZqxLca0iP9qTQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>, 
+	Thorsten Leemhuis <regressions@leemhuis.info>, stable <stable@vger.kernel.org>, 
+	regressions@lists.linux.dev, Linus Walleij <linus.walleij@linaro.org>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, 
+	Vidya Sagar <vidyas@nvidia.com>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>, 
+	Sergio Tanzilli <tanzilli@acmesystems.it>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Kalle,
-
-Thanks for looking again into this.
-
-* Kalle Valo <kvalo@kernel.org> [2021-12-20 10:38]:
->Thorsten Leemhuis <regressions@leemhuis.info> writes:
+On Mon, Dec 20, 2021 at 7:14 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
->> Hi, this is your Linux kernel regression tracker speaking.
->>
->> On 27.11.21 13:21, Nuno Oliveira wrote:
->>> * Sebastian Bachmann <hello@reox.at> [2021-11-27 08:17]:
->>>
->>>> I recently upgraded my Debian based AP from buster to bullseye, just
->>>> to find out that hostapd does not work any more, because all 5GHz
->>>> channels are marked as No-IR. This regression was already discussed on
->>>> this ML here:
->>>> https://www.mail-archive.com/ath10k@lists.infradead.org/msg12018.html
->>>> and there is also an entry in Debian's bug tracker for the same issue:
->>>> https://bugs.debian.org/959821
->>>>
->>>> I have a slightly different card (branded Compex WLE200NX):
->>>> 04:00.0 Network controller: Qualcomm Atheros AR928X Wireless Network
->>>> Adapter (PCI-Express) (rev 01)
->>>>        Subsystem: Qualcomm Atheros AR928X Wireless Network Adapter
->>>> (PCI-Express)
->>>>        Kernel driver in use: ath9k
->>>>        Kernel modules: ath9k
->>>>
->>>> But as you can see, also the EEPROM gets sanitized:
->>>> [   15.461755] ath9k 0000:04:00.0: enabling device (0000 -> 0002)
->>>> [   15.911600] ath: EEPROM regdomain sanitized
->>>> [   15.911612] ath: EEPROM regdomain: 0x64
->>>> [   15.911615] ath: EEPROM indicates we should expect a direct regpair
->>>> map
->>>> [   15.911625] ath: Country alpha2 being used: 00
->>>> [   15.911628] ath: Regpair used: 0x64
->>>>
->>>> I read in the other thread, that this is a regression, but the actual
->>>> commit causing it was never reverted.
->>>> I tried to search for newer messages explaining the issue, however as
->>>> far as I can tell, the thread ends in June 2020 with no solution
->>>> available.
->>>>
->>>> Therefore, I kindly want to ask if there is any workaround available
->>>> to re-enable 5GHz channels in AP mode for my card? (expect sticking to
->>>> a pre-5.6 kernel or manually patching and recompiling ath)
->>>
->>> After June 2020 there were other users also affected by this change (see
->>> e.g.,
->>> https://lists.infradead.org/pipermail/ath10k/2021-August/012802.html).
->>> Users were complaining that this change was too restrictive since it
->>> meant that the intersection of restrictions for regdomains 0x00, 0x64,
->>> US, and their local domain, together with a cumulative mode of applying
->>> these constraints meant that, in practice, they would not be able to use
->>> their world domain cards anymore as APs in the 5GHz band, for certain
->>> regdomains where they were located.
->>>
->>> And several people pinpointed the exact source changes responsible for
->>> this. In my case, I ended up applying the attached patch, that just
->>> loads the parameters for the regdomain that I'm interested in
->>> (CTRY_PORTUGAL). I'm not in the US; and I care for their regulatory
->>> restrictions as much as they are interested in mine.
->>>
->>> So I think that you might be able to use the attached changes, with the
->>> specific CTRY_xxx parameter suitable for your case. And then recompile
->>> the respective Debian kernel package, which takes a lot of CPU if you
->>> just recompile the whole package. Let me know if you need instructions.
->>>
->>> A more robust option would be to go the OpenWRT way, and use their
->>> patches to make this country selection a parameter for the kernel
->>> module. This way, you would just reload the kernel module to change to a
->>> new regdomain, subject to the restrictions of your hardware / firmware.
->>> I have not looked into that. Please let me know if you isolate these
->>> patches.
->>>
->>> In any case it seems difficult to escape a kernel recompile, due to this
->>> small, entirely legitimate, yet remarkable decision by the driver
->>> maintainers.
->>
->> This is a regression due to 2dc016599cfa ("ath: add support for special
->> 0x0 regulatory domain") that seems to affect quite a few users, but
->> afaics was never properly addressed. I fully understand that this might
->> be a special case where Linus' "no regressions" rule can't be simply
->> applied.
+> On Mon, Dec 20, 2021 at 3:57 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > On Sat, Dec 18, 2021 at 7:28 AM Thorsten Leemhuis
+> > <regressions@leemhuis.info> wrote:
+> > > [TLDR: I'm adding this regression to regzbot, the Linux kernel
+> > > regression tracking bot; most text you find below is compiled from a few
+> > > templates paragraphs some of you might have seen already.]
+> > >
+> > > On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
+> > > > Some GPIO lines have stopped working after the patch
+> > > > commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
+> > > >
+> > > > And this has supposedly been fixed in the following patches
+> > > > commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
+> > > > commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
+> > >
+> > > There seems to be a backstory here. Are there any entries and bug
+> > > trackers or earlier discussions everyone that looks into this should be
+> > > aware of?
+> > >
+> >
+> > Agreed with Thorsten. I'd like to first try to determine what's wrong
+> > before reverting those, as they are correct in theory but maybe the
+> > implementation missed something.
+> >
+> > Have you tried tracing the execution on your platform in order to see
+> > what the driver is doing?
 >
->Yes, this is a tricky problem and I am taking a second look at this.
->Regulatory rules are complicated and we do not want to break them in any
->circumstance.
+> Looking at commits that have related Fixes tags:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=bf781869e5cf3e4ec1a47dad69b6f0df97629cbd
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/commit/?id=e8f24c58d1b69ecf410a673c22f546dc732bb879
 >
->I see two ways to workaround this:
+> Gr{oetje,eeting}s,
 >
->1) calibrate your board with a correct country code (which is impossible
->   for an average user)
+>                         Geert
 >
->2) use 2.4 GHz band
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 >
->> But isn't there some way to provide users with a solution that doesn't
->> force users to compile a module or a kernel? Like a module-parameter
->> that only works if the the regulatory domain code in the EEPROM is empty
->> (as apparently used by OpenWRT?). Yes, module parameters are normally a
->> bad idea, but this case it might be a situation where it's the best
->> solution.
->
->I don't think setting the country code via a module parameter would be
->acceptable for the authorities, more info here:
->
->https://wireless.wiki.kernel.org/en/developers/regulatory
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
-The issue involves finding a reasonable compromise between relative 
-inconveniences, given the perspectives of both developers and users. As 
-implemented currently, the restriction seems to affect both ath9k and 
-ath10k (and probably ath11k -- I have not tried it, and frankly with the 
-current status, I'm not eager to do it), but only when users try to run 
-a 5 GHz AP. This is still reasonable (and legal) use, although not 
-without many restrictions. Other drivers (e.g., iwlwifi) are much more 
-restrictive relative to this, but at least they genuinely have made it 
-completely clear from the beginning.
+Hi Marcelo,
 
-A common point of the previous messages was that, after these last 
-changes, the boards with the 0x00 domain in the EEPROM were successively 
-initialized with the 0x64 and later with UNITED_STATES domains by the 
-driver. In practice this prevented their use as an AP when, later in 
-userspace, the user tried to declare a 3rd local regdomain. My 
-suggestion here would be to avoid this double interpretation of what 
-default initialization would be appropriate. Either keep the old 
-behavior (UNITED_STATES) which limited but did not originally prevented 
-the AP usage, or replace it completely with the updated interpretation 
-of what's applicable to this case (0x64); but please don't do both by 
-default, or we will be in the current situation. Other users have asked 
-for this before, and this sort of clarification seems to be the minimum 
-to consider at this point, if anything is to be considered.
+Thanks for reporting this issue. I can give you a little context on
+why commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not
+defined") was created. We were seeing a refcounting issue on Pixel 6.
+In our kernel CONFIG_PINCTRL is defined. Basically, the camera kernel
+module requests for a GPIO on sensor enable (when the camera sensor is
+turned on) and releases that GPIO on sensor disable (when the camera
+sensor is turned off). Before commit 6dbbf84603961, if we constantly
+switched between the front and back camera eventually we would hit the
+below error in drivers/pinctrl/pinmux.c:pin_request():
 
-If this limiting double initialization is already achievable entirely 
-through user configuration of default distribution kernels, please 
-excuse my lack of knowledge. In this case, just documenting this better 
-could also help other users.
+    E samsung-pinctrl 10840000.pinctrl: could not increase module
+refcount for pin 134
 
-Besides this consistent "safe" initialization, for users with special 
-cases there's always the options of either providing alternative CRDAs 
-or patching and recompiling the driver. This is a matter of relative 
-inconveniences; as long as they remain feasible, it's always a weighting 
-issue.
+In our kernel the sensor GPIOs don't have pin_ranges defined. So you
+would get these call stacks:
 
-Thanks for your good work. Regards,
+Sensor Enable:
+  gpiochip_generic_request()
+  -> return 0
 
-Nuno.
+Sensor Disable:
+  gpiochip_generic_free()
+  -> pinctrl_gpio_free()
+
+This led to an imbalance of request vs free calls leading to the
+refcounting error. When we added commit 6dbbf84603961 ("gpiolib: Don't
+free if pin ranges are not defined"), this issue was resolved. My
+recommendation would be to drill down into your driver to figure out
+what happens in these functions to see why you're getting the results
+you reported.
+
+--Will
