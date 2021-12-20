@@ -1,424 +1,586 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BCD29CA
-	for <regressions@lists.linux.dev>; Sun, 19 Dec 2021 19:45:16 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1mz27N-0004uw-Vv; Sun, 19 Dec 2021 20:45:14 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2021-12-19]
-Date: Sun, 19 Dec 2021 19:45:13 +0000
-Message-Id: <163994301274.632569.11641612108460583135@leemhuis.info>
-X-Mailer: git-send-email 2.31.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF044173
+	for <regressions@lists.linux.dev>; Mon, 20 Dec 2021 09:54:52 +0000 (UTC)
+Received: by mail-yb1-f181.google.com with SMTP id f186so27040613ybg.2
+        for <regressions@lists.linux.dev>; Mon, 20 Dec 2021 01:54:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=DOEffxDiMPiZsrxjI4BpP5OXuT1IUxxWnfr4s9Dkx+o=;
+        b=fPsxKdpLk0KmPCBhXzk0Qtp1Dj0dpn1Q14V17QgxdoiVAmO6QRby+aeM+VV0Wt/r/e
+         4LfnAMDSdo1Y0pt/RcrAHNoQWS71KuyCAaxYRJMbr3qyMrd9lDP1XOhuYx/HykTR/Uwu
+         rZ22NCw3aL0u3DBsZMN+4+IQhWPfTiGZj55qASQmz3Mck3ni4L3Ckzghk5kluuAIwU2G
+         Q19Z6hcFC6haMh8Q8SosNldN1zf2XnBpr7dXZ1HbFzoIHcMjkkau+6wBze448qVJoLcv
+         QY/wjfD921nmO0ygzvQKAyGyDEUkfC4bVkMiA0uKcBkH0tuj9kRQgLqXTdnGRq/eGh8t
+         cZ2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=DOEffxDiMPiZsrxjI4BpP5OXuT1IUxxWnfr4s9Dkx+o=;
+        b=MAOLtGzXlndy1bv2EvVyn9RUr4AS03LaPE7TiGp+Z5KeeSRRbuiZZwznvYdVIDwYQw
+         z8Nl7S2M2I2A7sII+e8Ad4dTpjYvGkGL/9QzZX8ai0AvirVLP7mBSOmbvy+l3wERWNvE
+         jIMDDqcHNtz1rzZfpGhkl54XciU6BJRQAMesFseo6ZN4RKO2VgcadRMonDog/XZynw60
+         rzdS7eQ+QYOZsJcc+1I1bALqBnkdJj8JfLMVm6sP2oR/9oDTvIYR6JZSmBD0WoSHE7/d
+         Gtga0G/MQiC8ui1NKLf/6m4hz8GMrqQxxzmuQtCHrKLR1PwApt7YhxGZl+spsegztc+C
+         3hJg==
+X-Gm-Message-State: AOAM532yWvaDXMvebTnrjb58wpsd81z5lPWYePYu9YQbM4XBUn5AptA4
+	eCmIuwUgivMG/UXkpkooeENG2NKFI+Z/l/xYfyuT0A==
+X-Google-Smtp-Source: ABdhPJyUE10RPFvuUSmkQrnrlwpgUmOJ+X2l+vtOi3Wbw61xtukD8QUmv5O7h9+J8qlifYx75J3gMyWwsQk4yXFx6qA=
+X-Received: by 2002:a25:db0c:: with SMTP id g12mr21017924ybf.684.1639994091435;
+ Mon, 20 Dec 2021 01:54:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1639943116;389597f1;
-X-HE-SMSGID: 1mz27N-0004uw-Vv
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 24 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-========================================================
-current cycle (v5.15.. aka v5.16-rc), culprit identified
-========================================================
-
-
-fbdev/efifb: Monitors no longer sleep (amdgpu dual monitor setup)
------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/8a27c986-4767-bd29-2073-6c4ffed49bba@jetfuse.net/
-https://lore.kernel.org/linux-fbdev/8a27c986-4767-bd29-2073-6c4ffed49bba@jetfuse.net/
-
-By Brandon Nielsen, 12 days ago; 4 activities, latest 2 days ago.
-Introduced in 55285e21f045 (v5.16-rc1)
-
-Recent activities from: Thorsten Leemhuis (1), Imre Deak (1)
-
-Noteworthy links:
-* https://bugzilla.redhat.com/show_bug.cgi?id=2028613
-* https://bugzilla.kernel.org/show_bug.cgi?id=215203
-
-
-5-10% increase in IO latencies with nohz balance patch
-------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/YaUH5GFFoLiS4/3/@localhost.localdomain/
-https://lore.kernel.org/lkml/YaUH5GFFoLiS4%2F3%2F@localhost.localdomain/
-
-By Josef Bacik, 20 days ago; 10 activities, latest 10 days ago.
-Introduced in 7fd7a9e0caba (v5.16-rc1)
-
-
-====================================================
-current cycle (v5.15.. aka v5.16-rc), unkown culprit
-====================================================
-
-
-mm: reclaim_throttle leads to stall in near-OOM conditions
-----------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20211124011954.7cab9bb4@mail.inbox.lv/
-https://lore.kernel.org/lkml/20211124011954.7cab9bb4@mail.inbox.lv/
-
-By Alexey Avramov, 26 days ago; 18 activities, latest 2 days ago.
-Introduced in v5.15..v5.16-rc1
-
-Fix incoming:
-* mm: vmscan: reduce throttling due to a failure to make progress
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=7c4f5f83acfdc4ff5e10afb807aa080a5776771f
-
-
-mm: LTP/memcg testcase regression induced by 8cd7c588decf..66ce520bb7c2 series
-------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/99e779783d6c7fce96448a3402061b9dc1b3b602.camel@gmx.de/
-https://lore.kernel.org/lkml/99e779783d6c7fce96448a3402061b9dc1b3b602.camel@gmx.de/
-
-By Mike Galbraith, 28 days ago; 31 activities, latest 2 days ago.
-Introduced in 8cd7c588decf..66ce520bb7c2 (v5.15..v5.16-rc1)
-
-Fix incoming:
-* mm: vmscan: reduce throttling due to a failure to make progress
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=7c4f5f83acfdc4ff5e10afb807aa080a5776771f
-
-
-[ *NEW* ] usb: ucsi_acpi: kernel NULL pointer dereference
----------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bug-215117-208809@https.bugzilla.kernel.org//
-https://lore.kernel.org/linux-usb/bug-215117-208809@https.bugzilla.kernel.org%2F/
-
-By bugzilla-daemon@bugzilla.kernel.org, 26 days ago; 8 activities, latest 3 days ago.
-Introduced in v5.15..v5.16-rc1
-
-Recent activities from: bugzilla-daemon@bugzilla.kernel.org (5), Heikki
-  Krogerus (1), Thorsten Leemhuis (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* [Bug 215117] ucsi_acpi: kernel NULL pointer dereference
-  https://lore.kernel.org/linux-usb/bug-215117-208809-yxKkRosnB2@https.bugzilla.kernel.org%2F/
-  3 days ago, by bugzilla-daemon@bugzilla.kernel.org
-
-
-[ *NEW* ] Unable to launch QEMU Linux guest VM - "Guest has not initialized the display (yet)"
-----------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bug-215317-28872@https.bugzilla.kernel.org//
-https://lore.kernel.org/kvm/bug-215317-28872@https.bugzilla.kernel.org%2F/
-
-By bugzilla-daemon@bugzilla.kernel.org, 6 days ago; 2 activities, latest 5 days ago.
-Introduced in v5.16-rc3..v5.16-rc4
-
-Recent activities from: bugzilla-daemon@bugzilla.kernel.org (2)
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215317
-
-
-=========================================================================================
-previous cycle (v5.14..v5.15), culprit identified, with activity in the past three months
-=========================================================================================
-
-
-net: kernel hangs during power down
------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20211124144505.31e15716@hermes.local/
-https://lore.kernel.org/netdev/20211124144505.31e15716@hermes.local/
-
-By Stephen Hemminger, 24 days ago; 15 activities, latest 0 days ago.
-Introduced in f32a21376573 (v5.15-rc1)
-
-Fix incoming:
-* https://lore.kernel.org/regressions/cb51a8cc-7c43-745e-e075-398eee47b071@leemhuis.info/
-
-
-drm: nouveau: annoying black flickering in some applications with KDE Plasma with Xorg
---------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/da142fb9-07d7-24fe-4533-0247b8d16cdd@sfritsch.de/
-https://lore.kernel.org/dri-devel/da142fb9-07d7-24fe-4533-0247b8d16cdd@sfritsch.de/
-
-By Stefan Fritsch, 15 days ago; 15 activities, latest 3 days ago.
-Introduced in 3e1ad79bf661 (v5.15-rc1)
-
-Recent activities from: Ben Skeggs (1), Christian König (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* [PATCH] drm/nouveau: wait for the exclusive fence after the shared ones v2
-  https://lore.kernel.org/dri-devel/20211209102335.18321-1-christian.koenig@amd.com/
-  10 days ago, by Christian König; thread monitored.
-
-
-Kernel 5.15 reboots / freezes upon ifup/ifdown
-----------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/924175a188159f4e03bd69908a91e606b574139b.camel@gmx.de/
-https://lore.kernel.org/stable/924175a188159f4e03bd69908a91e606b574139b.camel@gmx.de/
-
-By Stefan Dietrich, 25 days ago; 25 activities, latest 5 days ago.
-Introduced in a90ec8483732 (v5.15-rc1)
-
-Recent activities from: Vinicius Costa Gomes (2), Stefan Dietrich (1),
-  Thorsten Leemhuis (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* [PATCH net v1] igc: Do not enable crosstimestamping for i225-V models
-  https://lore.kernel.org/netdev/20211214003949.666642-1-vinicius.gomes@intel.com/
-  5 days ago, by Vinicius Costa Gomes
-
-
-[ *NEW* ] drm: amdgpu: NUC8i7HVKVA crashes during system suspend
-----------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bug-215315-2300@https.bugzilla.kernel.org//
-https://lore.kernel.org/dri-devel/bug-215315-2300@https.bugzilla.kernel.org%2F/
-
-By bugzilla-daemon@bugzilla.kernel.org, 6 days ago; 1 activities, latest 6 days ago.
-Introduced in f7d6779df642 (v5.15-rc1)
-
-Recent activities from: bugzilla-daemon@bugzilla.kernel.org (1)
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215315
-
-
-Bluetooth not working on 5.15+ since "Bluetooth: Move shutdown callback before flushing tx and rx queue"
---------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAJvGw+AJ5dHSb50RtJHnjbhMVQa+rJgYznFV4t-iaO0qx+W-jw@mail.gmail.com/
-https://lore.kernel.org/lkml/CAJvGw%2BAJ5dHSb50RtJHnjbhMVQa%2BrJgYznFV4t-iaO0qx%2BW-jw@mail.gmail.com/
-
-By coldolt, 9 days ago; 3 activities, latest 9 days ago.
-Introduced in 0ea53674d07f (v5.15-rc1)
-
-
-==================================================================================
-older cycles (..v5.14), culprit identified, with activity in the past three months
-==================================================================================
-
-
-[ *NEW* ] fbdev: matroxfb: display black ans warns "the current input timing is not supported by the monitor display"
----------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20211218180035.200552-1-liuzx@knownsec.com/
-https://lore.kernel.org/lkml/20211218180035.200552-1-liuzx@knownsec.com/
-
-By Z. Liu, 1 days ago; 1 activities, latest 1 days ago.
-Introduced in 11be60bd66d5 (v5.7-rc1)
-
-Recent activities from: Z. Liu (1)
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215355
-
-
-[ *NEW* ] pci: the pci sysfs "rom" file has disappeared for VGA devices
------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/YbxqIyrkv3GhZVxx@intel.com/
-https://lore.kernel.org/linux-pci/YbxqIyrkv3GhZVxx@intel.com/
-
-By Ville Syrjälä, 2 days ago; 4 activities, latest 1 days ago.
-Introduced in 527139d738d7 (v5.13-rc1)
-
-Recent activities from: Ville Syrjälä (2), Krzysztof Wilczyński (1),
-  Bjorn Helgaas (1)
-
-
-btrfs: deadlocks in dedupe
---------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20211210183456.GP17148@hungrycats.org/
-https://lore.kernel.org/linux-btrfs/20211210183456.GP17148@hungrycats.org/
-
-By Zygo Blaxell, 9 days ago; 11 activities, latest 1 days ago.
-Introduced in 3078d85c9a10 (v5.11-rc1)
-
-Recent activities from: Zygo Blaxell (5), Nikolay Borisov (4), Josef
-  Bacik (1)
-
-
-[ *NEW* ] gpio: some GPIO lines have stopped working
-----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20211217153555.9413-1-marcelo.jimenez@gmail.com/
-https://lore.kernel.org/stable/20211217153555.9413-1-marcelo.jimenez@gmail.com/
-
-By Marcelo Roberto Jimenez, 2 days ago; 1 activities, latest 2 days ago.
-Introduced in 2ab73c6d8323 (v5.7-rc1)
-
-Recent activities from: Marcelo Roberto Jimenez (1)
-
-
-Bug in Memory Layout of rx_desc for QCA6174
--------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAH4F6usFu8-A6k5Z7rU9__iENcSC6Zr-NtRhh_aypR74UvN1uQ@mail.gmail.com/
-https://lore.kernel.org/ath10k/CAH4F6usFu8-A6k5Z7rU9__iENcSC6Zr-NtRhh_aypR74UvN1uQ@mail.gmail.com/
-
-By Francesco Magliocca, 184 days ago; 6 activities, latest 3 days ago.
-Introduced in e3def6f7ddf8 (v4.16-rc1)
-
-Recent activities from: Francesco Magliocca (1)
-
-One patch associated with this regression:
-* [PATCH v2] ath10k: abstract htt_rx_desc structure
-  https://lore.kernel.org/linux-wireless/20211216151823.68878-1-franciman12@gmail.com/
-  3 days ago, by Francesco Magliocca; thread monitored.
-
-Noteworthy links:
-* Bug in Memory Layout of rx_desc for QCA6174
-  https://lore.kernel.org/ath10k/CAH4F6uvX=xtTnBDaj1BVHSx_FDSUbpc4TRC2DGTHBmGJSD2oEA@mail.gmail.com/
-  51 days ago, by Francesco Magliocca; thread monitored.
-
-
-[ *NEW* ] mtd: cfi_cmdset_0002: flash write accesses on the hardware fail on a PowerPC MPC8313 to a 8-bit-parallel S29GL064N flash
-----------------------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de/
-https://lore.kernel.org/lkml/b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de/
-
-By Ahmad Fatoum, 6 days ago; 2 activities, latest 4 days ago.
-Introduced in dfeae1073583 (v4.18-rc1)
-
-Recent activities from: Tokunori Ikegami (1), Ahmad Fatoum (1)
-
-
-usb: gadget: atmel: ethernet over USB Gadget not recognized anymore after disconnect and reconnect
---------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20211211183650.12183-1-marcelo.jimenez@gmail.com/
-https://lore.kernel.org/regressions/20211211183650.12183-1-marcelo.jimenez@gmail.com/
-
-By Marcelo Roberto Jimenez, 8 days ago; 5 activities, latest 4 days ago.
-Introduced in 70a7f8be8598 (v5.2-rc1)
-
-Recent activities from: Marcelo Roberto Jimenez (2),
-  Cristian.Birsan@microchip.com (1), Jonas Bonn (1)
-
-
-drm: amdgpu: apps that need amdgpu do not start after system is woken from suspend
-----------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/1295184560.182511.1639075777725@mail.yahoo.com/
-https://lore.kernel.org/linux-i2c/1295184560.182511.1639075777725@mail.yahoo.com/
-
-By Tareque Md.Hanif, 10 days ago; 1 activities, latest 10 days ago.
-Introduced in 5a7b95fb993e (v5.14-rc1)
-
-
-bluetooth: "Query LE tx power on startup" broke Bluetooth on MacBookPro16,1
----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/4970a940-211b-25d6-edab-21a815313954@protonmail.com/
-https://lore.kernel.org/regressions/4970a940-211b-25d6-edab-21a815313954@protonmail.com/
-
-By Orlando Chamberlain, 81 days ago; 86 activities, latest 11 days ago.
-Introduced in 7c395ea521e6 (v5.11-rc1)
-
-Fix incoming:
-* Bluetooth: btbcm: disable read tx power for some Macs with the T2 Security chip
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=801b4c027b44a185292007d3cf7513999d644723
-
-
-net: wireless: ath10k: 5GHz channels are marked as No-IR
---------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/1c160dfb-6ccc-b4d6-76f6-4364e0adb6dd@reox.at/
-https://lore.kernel.org/ath10k/1c160dfb-6ccc-b4d6-76f6-4364e0adb6dd@reox.at/
-
-By Sebastian Bachmann, 22 days ago; 20 activities, latest 13 days ago.
-Introduced in 2dc016599cfa (v5.6-rc1)
-
-Noteworthy links:
-* Compex WLE600VX AP mode 5GHz doesn't work since kernel 5.6
-  https://lore.kernel.org/ath10k/5971a327-d11a-35e6-8295-8dfb8ae3a434@yandex.ru/
-  616 days ago, by svp; thread monitored.
-* Re: Compex WLE600VX AP mode 5GHz doesn't work since kernel 5.6
-  https://lore.kernel.org/ath10k/CA+ASDXNNfG3-ra8C2ou457J=Vj5eE83VCXgGsFPQQOixTcu7YA@mail.gmail.com/
-  544 days ago, by Brian Norris
-* [PATCH] Revert "ath: add support for special 0x0 regulatory domain"
-  https://lore.kernel.org/linux-wireless/20200730124923.271429-1-alsi@bang-olufsen.dk/
-  507 days ago, by Alvin Šipraga; thread monitored.
-* [PATCH] Revert "ath: add support for special 0x0 regulatory domain"
-  https://lore.kernel.org/ath10k/20201022172113.GA1367233@capeo.gueux.org/
-  423 days ago, by Félix Sipma; thread monitored.
-* Re: [PATCH] Revert "ath: add support for special 0x0 regulatory domain"
-  https://lore.kernel.org/ath10k/19e636c1-fdbe-7222-a055-d668e4617070@gmx.de/
-  363 days ago, by sparks71@gmx.de; thread monitored.
-* https://bugs.debian.org/959821
-* https://bbs.archlinux.org/viewtopic.php?id=254535
-
-
-usb: fsl_udc_core: corrupted request list leads to unrecoverable loop
----------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/MWHPR2201MB152074F47BF142189365627B91879@MWHPR2201MB1520.namprd22.prod.outlook.com/
-https://lore.kernel.org/linuxppc-dev/MWHPR2201MB152074F47BF142189365627B91879@MWHPR2201MB1520.namprd22.prod.outlook.com/
-
-By Eugene Bordenkircher, 51 days ago; 16 activities, latest 15 days ago.
-Introduced in f79a60b8785 (v3.4-rc4)
-
-Noteworthy links:
-* Re: bug: usb: gadget: FSL_UDC_CORE Corrupted request list leads to unrecoverable loop.
-  https://lore.kernel.org/all/CADRPPNSrhiwr8jmBb2h4cFYqHtuDKK8rL0i6Bkg7+xEyXJPATA@mail.gmail.com/
-  50 days ago, by Li Yang
-* Re: bug: usb: gadget: FSL_UDC_CORE Corrupted request list leads to unrecoverable loop.
-  https://lore.kernel.org/all/2c275adc278477e1e512ea6ecc0c1f4dcc46969d.camel@infinera.com/
-  50 days ago, by Joakim Tjernlund
-
-
-PCIe regression on APM Merlin (aarch64 dev platform) preventing NVME initialization
------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CA+enf=v9rY_xnZML01oEgKLmvY1NGBUUhnSJaETmXtDtXfaczA@mail.gmail.com/
-https://lore.kernel.org/linux-pci/CA%2Benf=v9rY_xnZML01oEgKLmvY1NGBUUhnSJaETmXtDtXfaczA@mail.gmail.com/
-
-By Stéphane Graber, 31 days ago; 9 activities, latest 17 days ago.
-Introduced in 6dce5aa59e0b (v5.5-rc1)
-
-Fix incoming:
-* PCI: xgene: Fix IB window setup
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=c7a75d07827a1f33d566e18e6098379cc2a0c2b2
-
-
-====================================================================
-all others with unkown culprit and activity in the past three months
-====================================================================
-
-
-idle power increased from ~20 to ~28 watts
-------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/c11d94b4-1701-4e26-efd1-42038342c4aa@kaputniks.org/
-https://lore.kernel.org/lkml/c11d94b4-1701-4e26-efd1-42038342c4aa@kaputniks.org/
-
-By Idzibear, 48 days ago; 3 activities, latest 48 days ago.
-Introduced in v5.14..v5.15
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/163933981285.486507.5806345036032364969@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 20 Dec 2021 15:24:40 +0530
+Message-ID: <CA+G9fYtyCY2m+C+Ee+eoehGjtfo+8-vcj3qgcmNh73hrKkaHXA@mail.gmail.com>
+Subject: [next] arm64: juno-r2: BUG: KASAN: use-after-free in __pci_enable_msi_range
+To: PCI <linux-pci@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Juergen Gross <jgross@suse.com>, Jason Gunthorpe <jgg@nvidia.com>, regressions@lists.linux.dev, 
+	lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+
+While booting Linux next 20211215 and next 20211217 on arm64 juno-r2 device
+the following kernel crash reported and several LTP syscalls test cases,
+
+Only noticed on juno-r2 whereas dragonboard-410c and hikey-hi6220 tests pass.
+
+Test case failure:
+add_key05.c:207: TBROK: Failed to open FILE
+'/proc/sys/kernel/keys/gc_delay' for writing: ENOENT (2)
+tst_taint.c:15: TBROK: Failed to open FILE '/proc/sys/kernel/tainted'
+for reading: ENOENT (2)
+tst_pid.c:43: TBROK: Failed to open FILE '/proc/sys/kernel/pid_max'
+for reading: ENOENT (2)
+
+arm64 juno-r2 kernel crash log while booting.
+
+Starting kernel ...
+
+[    0.000000] Booting Linux on physical CPU 0x0000000100 [0x410fd033]
+[    0.000000] Linux version 5.16.0-rc5-next-20211217
+(tuxmake@tuxmake) (aarch64-linux-gnu-gcc (Debian 11.2.0-9) 11.2.0, GNU
+ld (GNU Binutils for Debian) 2.37) #1 SMP PREEMPT @1639749733
+[    0.000000] Machine model: ARM Juno development board (r2)
+<trim>
+[    2.191774] hw perfevents: enabled with armv8_cortex_a72 PMU
+driver, 7 counters available
+[    2.201822] sysctl duplicate entry: /kernel//perf_user_access
+[    2.207718] CPU: 2 PID: 1 Comm: swapper/0 Not tainted
+5.16.0-rc5-next-20211217 #1
+[    2.215235] Hardware name: ARM Juno development board (r2) (DT)
+[    2.221175] Call trace:
+[    2.223629]  dump_backtrace+0x228/0x240
+[    2.227493]  show_stack+0x24/0x80
+[    2.230827]  dump_stack_lvl+0x8c/0xb8
+[    2.234515]  dump_stack+0x1c/0x38
+[    2.237851]  __register_sysctl_table+0x520/0xa30
+[    2.242499]  register_sysctl+0x2c/0x40
+[    2.246273]  armv8_a53_pmu_init+0x21c/0x264
+[    2.250481]  arm_pmu_device_probe+0x254/0x6e0
+[    2.254867]  armv8_pmu_device_probe+0x28/0x34
+[    2.259248]  platform_probe+0x98/0x120
+[    2.263018]  really_probe+0x11c/0x684
+[    2.266705]  __driver_probe_device+0x194/0x22c
+[    2.271177]  driver_probe_device+0x68/0x150
+[    2.275386]  __driver_attach+0x124/0x260
+[    2.279335]  bus_for_each_dev+0xf0/0x160
+[    2.283281]  driver_attach+0x40/0x50
+[    2.286880]  bus_add_driver+0x20c/0x300
+[    2.290739]  driver_register+0xf8/0x21c
+[    2.294601]  __platform_driver_register+0x50/0x60
+[    2.299328]  armv8_pmu_driver_init+0x40/0x60
+[    2.303623]  do_one_initcall+0xa8/0x3ec
+[    2.307480]  kernel_init_freeable+0x300/0x388
+[    2.311864]  kernel_init+0x30/0x15c
+[    2.315374]  ret_from_fork+0x10/0x20
+[    2.320928] hw perfevents: enabled with armv8_cortex_a53 PMU
+driver, 7 counters available
+[    2.329472] kvm [1]: IPA Size Limit: 40 bits
+[    2.342423] kvm [1]: vgic interrupt IRQ9
+[    2.347393] kvm [1]: Hyp mode initialized successfully
+[    2.362544] Initialise system trusted keyrings
+[    2.368278] workingset: timestamp_bits=42 max_order=21 bucket_order=0
+[    2.428029] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    2.439945] NFS: Registering the id_resolver key type
+[    2.445176] Key type id_resolver registered
+[    2.449411] Key type id_legacy registered
+[    2.454010] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[    2.460773] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver
+Registering...
+[    2.469105] 9p: Installing v9fs 9p2000 file system support
+[    2.515228] NET: Registered PF_ALG protocol family
+[    2.520108] Key type asymmetric registered
+[    2.524277] Asymmetric key parser 'x509' registered
+[    2.529923] Block layer SCSI generic (bsg) driver version 0.4
+loaded (major 244)
+[    2.537382] io scheduler mq-deadline registered
+[    2.541964] io scheduler kyber registered
+[    2.631942] pl061_gpio 1c1d0000.gpio: PL061 GPIO chip registered
+[    2.653688] pci-host-generic 40000000.pcie: host bridge
+/pcie@40000000 ranges:
+[    2.661162] pci-host-generic 40000000.pcie:       IO
+0x005f800000..0x005fffffff -> 0x0000000000
+[    2.670092] pci-host-generic 40000000.pcie:      MEM
+0x0050000000..0x0057ffffff -> 0x0050000000
+[    2.678953] pci-host-generic 40000000.pcie:      MEM
+0x4000000000..0x40ffffffff -> 0x4000000000
+[    2.687901] pci-host-generic 40000000.pcie:   IB MEM
+0x002c1c0000..0x002c1fffff -> 0x002c1c0000
+[    2.696819] pci-host-generic 40000000.pcie:   IB MEM
+0x0080000000..0x00ffffffff -> 0x0080000000
+[    2.705670] pci-host-generic 40000000.pcie:   IB MEM
+0x0800000000..0x09ffffffff -> 0x0800000000
+[    2.793723] pci-host-generic 40000000.pcie: ECAM at [mem
+0x40000000-0x4fffffff] for [bus 00-ff]
+[    2.803466] pci-host-generic 40000000.pcie: PCI host bridge to bus 0000:00
+[    2.810427] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    2.816008] pci_bus 0000:00: root bus resource [io  0x0000-0x7fffff]
+[    2.822435] pci_bus 0000:00: root bus resource [mem 0x50000000-0x57ffffff]
+[    2.829384] pci_bus 0000:00: root bus resource [mem
+0x4000000000-0x40ffffffff pref]
+[    2.837252] pci 0000:00:00.0: [1556:1100] type 01 class 0x060400
+[    2.843508] pci 0000:00:00.0: reg 0x10: [mem 0x00000000-0x00003fff
+64bit pref]
+[    2.851351] pci 0000:00:00.0: supports D1 D2
+[    2.855676] pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+[    2.868561] pci 0000:00:00.0: bridge configuration invalid ([bus
+00-00]), reconfiguring
+[    2.877468] pci 0000:01:00.0: [111d:8090] type 01 class 0x060400
+[    2.883811] pci 0000:01:00.0: enabling Extended Tags
+[    2.889300] pci 0000:01:00.0: PME# supported from D0 D3hot D3cold
+[    2.912035] pci 0000:01:00.0: bridge configuration invalid ([bus
+00-00]), reconfiguring
+[    2.921096] pci 0000:02:01.0: [111d:8090] type 01 class 0x060400
+[    2.927464] pci 0000:02:01.0: enabling Extended Tags
+[    2.933019] pci 0000:02:01.0: PME# supported from D0 D3hot D3cold
+[    2.940888] pci 0000:02:02.0: [111d:8090] type 01 class 0x060400
+[    2.947239] pci 0000:02:02.0: enabling Extended Tags
+[    2.952800] pci 0000:02:02.0: PME# supported from D0 D3hot D3cold
+[    2.960528] pci 0000:02:03.0: [111d:8090] type 01 class 0x060400
+[    2.966878] pci 0000:02:03.0: enabling Extended Tags
+[    2.972510] pci 0000:02:03.0: PME# supported from D0 D3hot D3cold
+[    2.981398] pci 0000:02:0c.0: [111d:8090] type 01 class 0x060400
+[    2.987748] pci 0000:02:0c.0: enabling Extended Tags
+[    2.993290] pci 0000:02:0c.0: PME# supported from D0 D3hot D3cold
+[    3.001459] pci 0000:02:10.0: [111d:8090] type 01 class 0x060400
+[    3.007800] pci 0000:02:10.0: enabling Extended Tags
+[    3.013328] pci 0000:02:10.0: PME# supported from D0 D3hot D3cold
+[    3.023092] pci 0000:02:1f.0: [111d:8090] type 01 class 0x060400
+[    3.029441] pci 0000:02:1f.0: enabling Extended Tags
+[    3.035006] pci 0000:02:1f.0: PME# supported from D0 D3hot D3cold
+[    3.042616] pci 0000:02:01.0: bridge configuration invalid ([bus
+00-00]), reconfiguring
+[    3.050758] pci 0000:02:02.0: bridge configuration invalid ([bus
+00-00]), reconfiguring
+[    3.058875] pci 0000:02:03.0: bridge configuration invalid ([bus
+00-00]), reconfiguring
+[    3.066990] pci 0000:02:0c.0: bridge configuration invalid ([bus
+00-00]), reconfiguring
+[    3.075105] pci 0000:02:10.0: bridge configuration invalid ([bus
+00-00]), reconfiguring
+[    3.083220] pci 0000:02:1f.0: bridge configuration invalid ([bus
+00-00]), reconfiguring
+[    3.092250] pci 0000:03:00.0: [1095:3132] type 00 class 0x018000
+[    3.098460] pci 0000:03:00.0: reg 0x10: [mem 0x00000000-0x0000007f 64bit]
+[    3.105387] pci 0000:03:00.0: reg 0x18: [mem 0x00000000-0x00003fff 64bit]
+[    3.112282] pci 0000:03:00.0: reg 0x20: [io  0x0000-0x007f]
+[    3.117995] pci 0000:03:00.0: reg 0x30: [mem 0x00000000-0x0007ffff pref]
+[    3.125153] pci 0000:03:00.0: supports D1 D2
+[    3.130712] pci 0000:03:00.0: disabling ASPM on pre-1.1 PCIe
+device.  You can enable it with 'pcie_aspm=force'
+[    3.145388] pci_bus 0000:03: busn_res: [bus 03-ff] end is updated to 03
+[    3.157318] pci_bus 0000:04: busn_res: [bus 04-ff] end is updated to 04
+[    3.169246] pci_bus 0000:05: busn_res: [bus 05-ff] end is updated to 05
+[    3.181213] pci_bus 0000:06: busn_res: [bus 06-ff] end is updated to 06
+[    3.193081] pci_bus 0000:07: busn_res: [bus 07-ff] end is updated to 07
+[    3.200561] pci 0000:08:00.0: [11ab:4380] type 00 class 0x020000
+[    3.206755] pci 0000:08:00.0: reg 0x10: [mem 0x00000000-0x00003fff 64bit]
+[    3.213669] pci 0000:08:00.0: reg 0x18: [io  0x0000-0x00ff]
+[    3.219884] pci 0000:08:00.0: supports D1 D2
+[    3.224209] pci 0000:08:00.0: PME# supported from D0 D1 D2 D3hot D3cold
+[    3.237040] pci_bus 0000:08: busn_res: [bus 08-ff] end is updated to 08
+[    3.243744] pci_bus 0000:02: busn_res: [bus 02-ff] end is updated to 08
+[    3.250445] pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to 08
+[    3.257237] pci 0000:00:00.0: BAR 14: assigned [mem 0x50000000-0x501fffff]
+[    3.264190] pci 0000:00:00.0: BAR 0: assigned [mem
+0x4000000000-0x4000003fff 64bit pref]
+[    3.272421] pci 0000:00:00.0: BAR 13: assigned [io  0x1000-0x2fff]
+[    3.278807] pci 0000:01:00.0: BAR 14: assigned [mem 0x50000000-0x501fffff]
+[    3.285768] pci 0000:01:00.0: BAR 13: assigned [io  0x1000-0x2fff]
+[    3.292159] pci 0000:02:01.0: BAR 14: assigned [mem 0x50000000-0x500fffff]
+[    3.299105] pci 0000:02:1f.0: BAR 14: assigned [mem 0x50100000-0x501fffff]
+[    3.306048] pci 0000:02:01.0: BAR 13: assigned [io  0x1000-0x1fff]
+[    3.312295] pci 0000:02:1f.0: BAR 13: assigned [io  0x2000-0x2fff]
+[    3.318657] pci 0000:03:00.0: BAR 6: assigned [mem
+0x50000000-0x5007ffff pref]
+[    3.325957] pci 0000:03:00.0: BAR 2: assigned [mem
+0x50080000-0x50083fff 64bit]
+[    3.333419] pci 0000:03:00.0: BAR 0: assigned [mem
+0x50084000-0x5008407f 64bit]
+[    3.340857] pci 0000:03:00.0: BAR 4: assigned [io  0x1000-0x107f]
+[    3.347089] pci 0000:02:01.0: PCI bridge to [bus 03]
+[    3.352118] pci 0000:02:01.0:   bridge window [io  0x1000-0x1fff]
+[    3.358296] pci 0000:02:01.0:   bridge window [mem 0x50000000-0x500fffff]
+[    3.365221] pci 0000:02:02.0: PCI bridge to [bus 04]
+[    3.370319] pci 0000:02:03.0: PCI bridge to [bus 05]
+[    3.375415] pci 0000:02:0c.0: PCI bridge to [bus 06]
+[    3.380514] pci 0000:02:10.0: PCI bridge to [bus 07]
+[    3.385703] pci 0000:08:00.0: BAR 0: assigned [mem
+0x50100000-0x50103fff 64bit]
+[    3.393160] pci 0000:08:00.0: BAR 2: assigned [io  0x2000-0x20ff]
+[    3.399426] pci 0000:02:1f.0: PCI bridge to [bus 08]
+[    3.404456] pci 0000:02:1f.0:   bridge window [io  0x2000-0x2fff]
+[    3.410634] pci 0000:02:1f.0:   bridge window [mem 0x50100000-0x501fffff]
+[    3.417533] pci 0000:01:00.0: PCI bridge to [bus 02-08]
+[    3.422824] pci 0000:01:00.0:   bridge window [io  0x1000-0x2fff]
+[    3.429001] pci 0000:01:00.0:   bridge window [mem 0x50000000-0x501fffff]
+[    3.435901] pci 0000:00:00.0: PCI bridge to [bus 01-08]
+[    3.441190] pci 0000:00:00.0:   bridge window [io  0x1000-0x2fff]
+[    3.447362] pci 0000:00:00.0:   bridge window [mem 0x50000000-0x501fffff]
+[    3.476228] EINJ: ACPI disabled.
+[    3.623896] Serial: 8250/16550 driver, 16 ports, IRQ sharing enabled
+[    3.665227] SuperH (H)SCI(F) driver initialized
+[    3.673416] msm_serial: driver initialized
+[    3.686482] arm-smmu 2b500000.iommu: probing hardware configuration...
+[    3.693103] arm-smmu 2b500000.iommu: SMMUv1 with:
+[    3.697866] arm-smmu 2b500000.iommu: stage 2 translation
+[    3.703321] arm-smmu 2b500000.iommu: coherent table walk
+[    3.708856] arm-smmu 2b500000.iommu: stream matching with 32 register groups
+[    3.716063] arm-smmu 2b500000.iommu: 4 context banks (4 stage-2 only)
+[    3.722660] arm-smmu 2b500000.iommu: Supported page sizes: 0x60211000
+[    3.729248] arm-smmu 2b500000.iommu: Stage-2: 40-bit IPA -> 40-bit PA
+[    3.739538] arm-smmu 7fb00000.iommu: probing hardware configuration...
+[    3.746128] arm-smmu 7fb00000.iommu: SMMUv1 with:
+[    3.750887] arm-smmu 7fb00000.iommu: stage 2 translation
+[    3.756361] arm-smmu 7fb00000.iommu: coherent table walk
+[    3.761824] arm-smmu 7fb00000.iommu: stream matching with 16 register groups
+[    3.769028] arm-smmu 7fb00000.iommu: 4 context banks (4 stage-2 only)
+[    3.775623] arm-smmu 7fb00000.iommu: Supported page sizes: 0x60211000
+[    3.782233] arm-smmu 7fb00000.iommu: Stage-2: 40-bit IPA -> 40-bit PA
+[    3.790366] arm-smmu 7fb10000.iommu: probing hardware configuration...
+[    3.796958] arm-smmu 7fb10000.iommu: SMMUv1 with:
+[    3.801717] arm-smmu 7fb10000.iommu: stage 2 translation
+[    3.807170] arm-smmu 7fb10000.iommu: non-coherent table walk
+[    3.812972] arm-smmu 7fb10000.iommu: (IDR0.CTTW overridden by FW
+configuration)
+[    3.820529] arm-smmu 7fb10000.iommu: stream matching with 2 register groups
+[    3.827647] arm-smmu 7fb10000.iommu: 1 context banks (1 stage-2 only)
+[    3.834326] arm-smmu 7fb10000.iommu: Supported page sizes: 0x60211000
+[    3.840917] arm-smmu 7fb10000.iommu: Stage-2: 40-bit IPA -> 40-bit PA
+[    3.849014] arm-smmu 7fb20000.iommu: probing hardware configuration...
+[    3.855605] arm-smmu 7fb20000.iommu: SMMUv1 with:
+[    3.860365] arm-smmu 7fb20000.iommu: stage 2 translation
+[    3.865818] arm-smmu 7fb20000.iommu: non-coherent table walk
+[    3.871620] arm-smmu 7fb20000.iommu: (IDR0.CTTW overridden by FW
+configuration)
+[    3.879099] arm-smmu 7fb20000.iommu: stream matching with 2 register groups
+[    3.886253] arm-smmu 7fb20000.iommu: 1 context banks (1 stage-2 only)
+[    3.892849] arm-smmu 7fb20000.iommu: Supported page sizes: 0x60211000
+[    3.899436] arm-smmu 7fb20000.iommu: Stage-2: 40-bit IPA -> 40-bit PA
+[    3.907530] arm-smmu 7fb30000.iommu: probing hardware configuration...
+[    3.914119] arm-smmu 7fb30000.iommu: SMMUv1 with:
+[    3.918878] arm-smmu 7fb30000.iommu: stage 2 translation
+[    3.924331] arm-smmu 7fb30000.iommu: coherent table walk
+[    3.929792] arm-smmu 7fb30000.iommu: stream matching with 2 register groups
+[    3.936908] arm-smmu 7fb30000.iommu: 1 context banks (1 stage-2 only)
+[    3.943523] arm-smmu 7fb30000.iommu: Supported page sizes: 0x60211000
+[    3.950111] arm-smmu 7fb30000.iommu: Stage-2: 40-bit IPA -> 40-bit PA
+[    4.004593] loop: module loaded
+[    4.016062] megasas: 07.719.03.00-rc1
+[    4.029694] sata_sil24 0000:03:00.0: Adding to iommu group 0
+[    4.037159] pci 0000:00:00.0: enabling device (0000 -> 0003)
+[    4.042945] pci 0000:01:00.0: enabling device (0000 -> 0003)
+[    4.048726] pci 0000:02:01.0: enabling device (0000 -> 0003)
+[    4.054489] sata_sil24 0000:03:00.0: enabling device (0000 -> 0003)
+[    4.069542] scsi host0: sata_sil24
+[    4.077595] scsi host1: sata_sil24
+[    4.082454] ata1: SATA max UDMA/100 host m128@0x50084000 port
+0x50080000 irq 53
+[    4.089834] ata2: SATA max UDMA/100 host m128@0x50084000 port
+0x50082000 irq 53
+[    4.127375] libphy: Fixed MDIO Bus: probed
+[    4.147584] thunder_xcv, ver 1.0
+[    4.151216] thunder_bgx, ver 1.0
+[    4.154892] nicpf, ver 1.0
+[    4.167502] hclge is initializing
+[    4.170980] hns3: Hisilicon Ethernet Network Driver for Hip08
+Family - version
+[    4.178262] hns3: Copyright (c) 2017 Huawei Corporation.
+[    4.184055] e1000: Intel(R) PRO/1000 Network Driver
+[    4.188985] e1000: Copyright (c) 1999-2006 Intel Corporation.
+[    4.195196] e1000e: Intel(R) PRO/1000 Network Driver
+[    4.200212] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+[    4.206602] igb: Intel(R) Gigabit Ethernet Network Driver
+[    4.212079] igb: Copyright (c) 2007-2014 Intel Corporation.
+[    4.218093] igbvf: Intel(R) Gigabit Virtual Function Network Driver
+[    4.224416] igbvf: Copyright (c) 2009 - 2012 Intel Corporation.
+[    4.232850] sky2: driver version 1.30
+[    4.238276] sky2 0000:08:00.0: Adding to iommu group 0
+[    4.244144] pci 0000:02:1f.0: enabling device (0000 -> 0003)
+[    4.249918] sky2 0000:08:00.0: enabling device (0000 -> 0003)
+[    4.256092] sky2 0000:08:00.0: Yukon-2 UL 2 chip revision 0
+[    4.261855] sky2 0000:08:00.0: Invalid MAC address, defaulting to random
+[    4.272572] sky2 0000:08:00.0 eth0: addr ba:6d:65:73:db:e5
+[    4.278606] QLogic FastLinQ 4xxxx Core Module qed
+[    4.283375] qede init: QLogic FastLinQ 4xxxx Ethernet Driver qede
+[    4.326539] libphy: smsc911x-mdio: probed
+[    4.333293] smsc911x 18000000.ethernet eth1: MAC Address: 00:02:f7:00:66:df
+[    4.344531] usbcore: registered new interface driver asix
+[    4.350213] usbcore: registered new interface driver ax88179_178a
+[    4.357666] VFIO - User Level meta-driver version: 0.3
+[    4.376743] ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+[    4.383410] ehci-pci: EHCI PCI platform driver
+[    4.388190] ehci-platform: EHCI generic platform driver
+[    4.395070] ehci-platform 7ffc0000.usb: Adding to iommu group 1
+[    4.402738] ehci-platform 7ffc0000.usb: EHCI Host Controller
+[    4.408554] ehci-platform 7ffc0000.usb: new USB bus registered,
+assigned bus number 1
+[    4.417545] ehci-platform 7ffc0000.usb: irq 44, io mem 0x7ffc0000
+[    4.439375] ehci-platform 7ffc0000.usb: USB 2.0 started, EHCI 1.00
+[    4.451188] hub 1-0:1.0: USB hub found
+[    4.455356] hub 1-0:1.0: 1 port detected
+[    4.462281] ehci-orion: EHCI orion driver
+[    4.467189] ehci-exynos: EHCI Exynos driver
+[    4.472157] ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+[    4.478454] ohci-pci: OHCI PCI platform driver
+[    4.483333] ohci-platform: OHCI generic platform driver
+[    4.490060] ohci-platform 7ffb0000.usb: Adding to iommu group 1
+[    4.496683] ohci-platform 7ffb0000.usb: Generic Platform OHCI controller
+[    4.503532] ohci-platform 7ffb0000.usb: new USB bus registered,
+assigned bus number 2
+[    4.512246] ohci-platform 7ffb0000.usb: irq 43, io mem 0x7ffb0000
+[    4.600271] hub 2-0:1.0: USB hub found
+[    4.604395] hub 2-0:1.0: 1 port detected
+[    4.611427] ohci-exynos: OHCI Exynos driver
+[    4.619443] usbcore: registered new interface driver usb-storage
+[    4.649441] rtc-pl031 1c170000.rtc: registered as rtc0
+[    4.654710] rtc-pl031 1c170000.rtc: setting system clock to
+2021-12-18T15:25:29 UTC (1639841129)
+[    4.668155] i2c_dev: i2c /dev entries driver
+[    4.705169] sp805-wdt 1c0f0000.watchdog: registration successful
+[    4.715487] usb 1-1: new high-speed USB device number 2 using ehci-platform
+[    4.739832] mmci-pl18x 1c050000.mmc: mmc0: PL180 manf 41 rev0 at
+0x1c050000 irq 17,0 (pio)
+[    4.775015] sdhci: Secure Digital Host Controller Interface driver
+[    4.781367] sdhci: Copyright(c) Pierre Ossman
+[    4.791511] Synopsys Designware Multimedia Card Interface Driver
+[    4.805011] sdhci-pltfm: SDHCI platform and OF driver helper
+[    4.822209] leds-syscon 1c010008.0.led: registered LED (null)
+[    4.829674] leds-syscon 1c010008.1.led: registered LED (null)
+[    4.836726] leds-syscon 1c010008.2.led: registered LED (null)
+[    4.843752] leds-syscon 1c010008.3.led: registered LED (null)
+[    4.850854] leds-syscon 1c010008.4.led: registered LED (null)
+[    4.858314] leds-syscon 1c010008.5.led: registered LED (null)
+[    4.865509] leds-syscon 1c010008.6.led: registered LED (null)
+[    4.872520] leds-syscon 1c010008.7.led: registered LED (null)
+[    4.882523] ledtrig-cpu: registered to indicate activity on CPUs
+[    4.891915] hub 1-1:1.0: USB hub found
+[    4.896529] hub 1-1:1.0: 4 ports detected
+[    4.906827] usbcore: registered new interface driver usbhid
+[    4.912467] usbhid: USB HID core driver
+[    4.920845] mhu 2b1f0000.mhu: ARM MHU Mailbox registered
+[    4.943934]  cs_system_cfg: CoreSight Configuration manager initialised
+[    4.981366] NET: Registered PF_INET6 protocol family
+[    4.995703] Segment Routing with IPv6
+[    4.999593] In-situ OAM (IOAM) with IPv6
+[    5.003834] NET: Registered PF_PACKET protocol family
+[    5.009800] 9pnet: Installing 9P2000 support
+[    5.014476] Key type dns_resolver registered
+[    5.026562] registered taskstats version 1
+[    5.030906] Loading compiled-in X.509 certificates
+[    5.233983] pcieport 0000:00:00.0: Adding to iommu group 0
+[    5.262137] sysfs: cannot create duplicate filename
+'/devices/platform/40000000.pcie/pci0000:00/0000:00:00.0/msi_irqs/57'
+[    5.273266] CPU: 0 PID: 81 Comm: kworker/u12:4 Not tainted
+5.16.0-rc5-next-20211217 #1
+[    5.281255] Hardware name: ARM Juno development board (r2) (DT)
+[    5.287225] Workqueue: events_unbound deferred_probe_work_func
+[    5.293171] Call trace:
+[    5.295646]  dump_backtrace+0x228/0x240
+[    5.299545]  show_stack+0x24/0x80
+[    5.302913]  dump_stack_lvl+0x8c/0xb8
+[    5.306650]  dump_stack+0x1c/0x38
+[    5.310032]  sysfs_warn_dup+0x7c/0xa0
+[    5.313765]  sysfs_add_file_mode_ns+0x1ac/0x1b4
+[    5.318369]  sysfs_add_file_to_group+0xf0/0x160
+[    5.322972]  __msi_domain_alloc_irqs+0x3f0/0x554
+[    5.327662]  msi_domain_alloc_irqs_descs_locked+0x78/0x130
+[    5.333225]  pci_msi_setup_msi_irqs+0x58/0x80
+[    5.337656]  __pci_enable_msi_range+0x428/0x5f0
+[    5.342257]  pci_alloc_irq_vectors_affinity+0x15c/0x1c0
+[    5.347559]  pcie_port_device_register+0x1e0/0x564
+[    5.352426]  pcie_portdrv_probe+0x5c/0x130
+[    5.356593]  local_pci_probe+0x84/0x10c
+[    5.360501]  pci_device_probe+0x284/0x300
+[    5.364584]  really_probe+0x11c/0x684
+[    5.368322]  __driver_probe_device+0x194/0x22c
+[    5.372845]  driver_probe_device+0x68/0x150
+[    5.377106]  __device_attach_driver+0xf8/0x180
+[    5.381631]  bus_for_each_drv+0xf8/0x160
+[    5.385625]  __device_attach+0x170/0x294
+[    5.389624]  device_initial_probe+0x20/0x30
+[    5.393886]  bus_probe_device+0xf4/0x104
+[    5.397882]  deferred_probe_work_func+0x108/0x160
+[    5.402667]  process_one_work+0x3c8/0x850
+[    5.406745]  worker_thread+0x3d8/0x734
+[    5.410559]  kthread+0x1fc/0x214
+[    5.413861]  ret_from_fork+0x10/0x20
+[    5.427632] ==================================================================
+[    5.434888] BUG: KASAN: use-after-free in __pci_enable_msi_range+0x208/0x5f0
+[    5.441983] Read of size 2 at addr ffff000826404554 by task kworker/u12:4/81
+[    5.449059]
+[    5.450557] CPU: 1 PID: 81 Comm: kworker/u12:4 Not tainted
+5.16.0-rc5-next-20211217 #1
+[    5.458507] Hardware name: ARM Juno development board (r2) (DT)
+[    5.464446] Workqueue: events_unbound deferred_probe_work_func
+[    5.470322] Call trace:
+[    5.472776]  dump_backtrace+0x228/0x240
+[    5.476635]  show_stack+0x24/0x80
+[    5.479967]  dump_stack_lvl+0x8c/0xb8
+[    5.483656]  print_address_description.constprop.0+0x74/0x2b8
+[    5.489433]  kasan_report+0x1e8/0x250
+[    5.493119]  __asan_load2+0x9c/0xc4
+[    5.496629]  __pci_enable_msi_range+0x208/0x5f0
+[    5.501184]  pci_alloc_irq_vectors_affinity+0x15c/0x1c0
+[    5.506438]  pcie_port_device_register+0x1e0/0x564
+[    5.511255]  pcie_portdrv_probe+0x5c/0x130
+[    5.515376]  local_pci_probe+0x84/0x10c
+[    5.519235]  pci_device_probe+0x284/0x300
+[    5.523270]  really_probe+0x11c/0x684
+[    5.526956]  __driver_probe_device+0x194/0x22c
+[    5.531427]  driver_probe_device+0x68/0x150
+[    5.535637]  __device_attach_driver+0xf8/0x180
+[    5.540108]  bus_for_each_drv+0xf8/0x160
+[    5.544054]  __device_attach+0x170/0x294
+[    5.548002]  device_initial_probe+0x20/0x30
+[    5.552212]  bus_probe_device+0xf4/0x104
+[    5.556159]  deferred_probe_work_func+0x108/0x160
+[    5.560890]  process_one_work+0x3c8/0x850
+[    5.564923]  worker_thread+0x3d8/0x734
+[    5.568693]  kthread+0x1fc/0x214
+[    5.571944]  ret_from_fork+0x10/0x20
+[    5.575543]
+[    5.577038] Allocated by task 81:
+[    5.580364]  kasan_save_stack+0x2c/0x54
+[    5.584223]  __kasan_kmalloc+0xac/0x10c
+[    5.588080]  kmem_cache_alloc_trace+0x220/0x3e0
+[    5.592633]  msi_add_msi_desc+0x64/0x1a0
+[    5.596577]  msi_setup_msi_desc+0x1b8/0x210
+[    5.600782]  __pci_enable_msi_range+0x3c8/0x5f0
+[    5.605337]  pci_alloc_irq_vectors_affinity+0x15c/0x1c0
+[    5.610588]  pcie_port_device_register+0x1e0/0x564
+[    5.615405]  pcie_portdrv_probe+0x5c/0x130
+[    5.619524]  local_pci_probe+0x84/0x10c
+[    5.623382]  pci_device_probe+0x284/0x300
+[    5.627415]  really_probe+0x11c/0x684
+[    5.631100]  __driver_probe_device+0x194/0x22c
+[    5.635571]  driver_probe_device+0x68/0x150
+[    5.639779]  __device_attach_driver+0xf8/0x180
+[    5.644249]  bus_for_each_drv+0xf8/0x160
+[    5.648194]  __device_attach+0x170/0x294
+[    5.652141]  device_initial_probe+0x20/0x30
+[    5.655485] atkbd serio0: keyboard reset failed on 1c060000.kmi
+[    5.656348]  bus_probe_device+0xf4/0x104
+[    5.666210]  deferred_probe_work_func+0x108/0x160
+[    5.670941]  process_one_work+0x3c8/0x850
+[    5.674971]  worker_thread+0x3d8/0x734
+[    5.678740]  kthread+0x1fc/0x214
+[    5.681991]  ret_from_fork+0x10/0x20
+[    5.685586]
+[    5.687081] Freed by task 81:
+[    5.690058]  kasan_save_stack+0x2c/0x54
+[    5.693915]  kasan_set_track+0x2c/0x40
+[    5.697684]  kasan_set_free_info+0x28/0x50
+[    5.701804]  __kasan_slab_free+0x108/0x15c
+[    5.705923]  slab_free_freelist_hook+0xc0/0x220
+[    5.710475]  kfree+0xe8/0x3e0
+[    5.713459]  msi_free_msi_descs_range+0x12c/0x1a0
+[    5.718186]  msi_domain_alloc_irqs_descs_locked+0xf0/0x130
+[    5.723700]  pci_msi_setup_msi_irqs+0x58/0x80
+[    5.728080]  __pci_enable_msi_range+0x428/0x5f0
+[    5.732634]  pci_alloc_irq_vectors_affinity+0x15c/0x1c0
+[    5.737885]  pcie_port_device_register+0x1e0/0x564
+[    5.742702]  pcie_portdrv_probe+0x5c/0x130
+[    5.746821]  local_pci_probe+0x84/0x10c
+[    5.750679]  pci_device_probe+0x284/0x300
+[    5.754712]  really_probe+0x11c/0x684
+[    5.758397]  __driver_probe_device+0x194/0x22c
+[    5.762867]  driver_probe_device+0x68/0x150
+[    5.767076]  __device_attach_driver+0xf8/0x180
+[    5.771545]  bus_for_each_drv+0xf8/0x160
+[    5.775491]  __device_attach+0x170/0x294
+[    5.779437]  device_initial_probe+0x20/0x30
+[    5.783646]  bus_probe_device+0xf4/0x104
+[    5.787592]  deferred_probe_work_func+0x108/0x160
+[    5.792323]  process_one_work+0x3c8/0x850
+[    5.796354]  worker_thread+0x3d8/0x734
+[    5.800123]  kthread+0x1fc/0x214
+[    5.803373]  ret_from_fork+0x10/0x20
+[    5.806968]
+[    5.808462] The buggy address belongs to the object at ffff000826404500
+[    5.808462]  which belongs to the cache kmalloc-128 of size 128
+[    5.821018] The buggy address is located 84 bytes inside of
+[    5.821018]  128-byte region [ffff000826404500, ffff000826404580)
+[    5.832708] The buggy address belongs to the page:
+[    5.837513] page:(____ptrval____) refcount:1 mapcount:0
+mapping:0000000000000000 index:0x0 pfn:0x8a6404
+[    5.846939] flags: 0xbfffc0000000200(slab|node=0|zone=2|lastcpupid=0xffff)
+[    5.853852] raw: 0bfffc0000000200 0000000000000000 dead000000000122
+ffff000800002300
+[    5.861625] raw: 0000000000000000 0000000000100010 00000001ffffffff
+0000000000000000
+[    5.869390] page dumped because: kasan: bad access detected
+[    5.874978]
+[    5.876472] Memory state around the buggy address:
+[    5.881279]  ffff000826404400: 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00
+[    5.888525]  ffff000826404480: fc fc fc fc fc fc fc fc fc fc fc fc
+fc fc fc fc
+[    5.895771] >ffff000826404500: fa fb fb fb fb fb fb fb fb fb fb fb
+fb fb fb fb
+[    5.903014]                                                  ^
+[    5.908866]  ffff000826404580: fc fc fc fc fc fc fc fc fc fc fc fc
+fc fc fc fc
+[    5.916112]  ffff000826404600: 00 00 00 00 00 00 00 00 00 00 00 00
+00 00 00 00
+[    5.923356] ==================================================================
+[    5.930596] Disabling lock debugging due to kernel taint
+
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Test log link,
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20211217/testrun/6919678/suite/ltp-syscalls-tests/test/add_key05/log
+
+Test results comparison:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20211217/testrun/6919678/suite/ltp-syscalls-tests/test/add_key05/history/
+
+
+meta data:
+-----------
+    git describe: next-20211215 and next-20211217
+    git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+    git_sha: 93bf6eee76c0e716f6b32de690b1c52991547bb4
+    git_short_log: 93bf6eee76c0 (\"Add linux-next specific files for 20211215\")
+    target_arch: arm64
+    toolchain: gcc-10
+    Kconfig: https://builds.tuxbuild.com/22LCvyVwJ8E7fRfLPA2BgPKnWiR/config
+    vmlinux: https://builds.tuxbuild.com/22PqZcj0pMjg0qWW8Ilyx0MhKOH/vmlinux.xz
+    System.map :
+https://builds.tuxbuild.com/22PqZcj0pMjg0qWW8Ilyx0MhKOH/System.map
+    build log: https://builds.tuxbuild.com/22LCvyVwJ8E7fRfLPA2BgPKnWiR/
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
