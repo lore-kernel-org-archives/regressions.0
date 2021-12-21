@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83447173
-	for <regressions@lists.linux.dev>; Tue, 21 Dec 2021 17:24:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCC97173
+	for <regressions@lists.linux.dev>; Tue, 21 Dec 2021 18:06:32 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mzisa-0005KY-Jg; Tue, 21 Dec 2021 18:24:48 +0100
-Message-ID: <297f26ea-fff8-f2f4-6e27-35bbbb87456e@leemhuis.info>
-Date: Tue, 21 Dec 2021 18:24:48 +0100
+	id 1mzjWx-0004Mh-1f; Tue, 21 Dec 2021 19:06:31 +0100
+Message-ID: <f74c422e-776a-46c5-4508-a7d15bb93c61@leemhuis.info>
+Date: Tue, 21 Dec 2021 19:06:30 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,56 +16,181 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: Regression in 5.15 in nouveau #forregzbot
+Subject: Re: [Bug 215117] New: ucsi_acpi: kernel NULL pointer dereference
+ #forregzbot
 Content-Language: en-BS
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <da142fb9-07d7-24fe-4533-0247b8d16cdd@sfritsch.de>
- <5dafba25-5424-3fe2-5046-ae1d4320f9c1@leemhuis.info>
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-In-Reply-To: <5dafba25-5424-3fe2-5046-ae1d4320f9c1@leemhuis.info>
+References: <bug-215117-208809@https.bugzilla.kernel.org/>
+ <eb34f98f-00ef-3238-2daa-80481116035d@leemhuis.info>
+In-Reply-To: <eb34f98f-00ef-3238-2daa-80481116035d@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640107491;de335367;
-X-HE-SMSGID: 1mzisa-0005KY-Jg
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640109992;fd4616d3;
+X-HE-SMSGID: 1mzjWx-0004Mh-1f
 
-Hi, this is your Linux kernel regression tracker speaking. For the record:
+Hi, this is your Linux kernel regression tracker speaking.
 
-https://cgit.freedesktop.org/drm/drm-misc/commit/?h=drm-misc-fixes&id=67f74302f45d5d862f22ced3297624e50ac352f0
+For the record:
 
-#regzbot fixed-by: 67f74302f45d5d862f22ced3297624e50ac352f0
+#regzbot fixed-by: 3f345e907a8e7c56fdebf7231cd67afc85d02aaa
 
-Ciao, Thorsten
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-linus&id=3f345e907a8e7c56fdebf7231cd67afc85d02aaa
 
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply. That's in everyone's interest, as
-what I wrote above might be misleading to everyone reading this; any
-suggestion I gave thus might sent someone reading this down the wrong
-rabbit hole, which none of us wants.
+Greg helpfully added a "Link:" tag to make regzbot happy, but he
+specified a reply to the report and not the report itself, as expected
+by regzbot (I'm taken back and forth for a while already if that's a
+good or bad idea). And that was not Greg's but my fault, as I had given
+him the wrong link here:
+https://lore.kernel.org/r/YcH2w9jmGnqUMWp4@kroah.com/
 
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
+Sigh.
 
+Ciao, Thorsten, your Linux kernel regression tracker.
 
 TWIMC: this mail is primarily send for documentation purposes and for
 regzbot, my Linux kernel regression tracking bot. These mails usually
 contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-Ciao, Thorsten, your Linux kernel regression tracker.
 
-On 06.12.21 14:19, Thorsten Leemhuis wrote:
-> [TLDR: adding this regression to regzbot; most of this mail is compiled
-> from a few templates paragraphs some of you will have seen aready.]
-> 
+On 16.12.21 10:22, Thorsten Leemhuis wrote:
 > Hi, this is your Linux kernel regression tracker speaking.
 > 
-> Top-posting for once, to make this easy accessible to everyone.
+> Parlty top-posting for once, to make this easy accessible to everyone.
+> 
+> Heikki, below bug sounds a awful lot like a regression. I'd be glad if
+> you could take a quick look at this, as the report seems have fallen
+> through the cracks; somebody else today confirmed the problem is still
+> happening with 5.16-rc3.
+> 
+> Chris or Manuel, could you please confirm v5.15.y worked fine?
+> 
+> On 23.11.21 04:51, bugzilla-daemon@bugzilla.kernel.org wrote:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=215117
+>>
+>>             Bug ID: 215117
+>>            Summary: ucsi_acpi: kernel NULL pointer dereference
+>>            Product: Drivers
+>>            Version: 2.5
+>>     Kernel Version: 5.16-rc2
+>>           Hardware: x86-64
+>>                 OS: Linux
+>>               Tree: Mainline
+>>             Status: NEW
+>>           Severity: normal
+>>           Priority: P1
+>>          Component: USB
+>>           Assignee: drivers_usb@kernel-bugs.kernel.org
+>>           Reporter: linux-kernel-bugs@hixontech.com
+>>         Regression: No
+>>
+>> Created attachment 299677
+>>   --> https://bugzilla.kernel.org/attachment.cgi?id=299677&action=edit
+>> journal and lshw
+>>
+>> The system fails to boot completely (or shutdown properly) after kernel oops,
+>> apparently in the ucsi_acpi module. It boots up fine with this module
+>> blacklisted. I first noticed the issue on 5.16-rc1; the problem continues with
+>> 5.16-rc2.
+>>
+>> HW: HP ENVY x360, AMD Ryzen 7 4700U with Radeon Graphics, Renoir
+>>
+>> Attached: full kernel journal log and output from lshw.
+>>
+>> OOPS:
+>>
+>> Nov 22 06:44:04 kernel: BUG: kernel NULL pointer dereference, address:
+>> 0000000000000058
+>> Nov 22 06:44:04 kernel: #PF: supervisor read access in kernel mode
+>> Nov 22 06:44:04 kernel: #PF: error_code(0x0000) - not-present page
+>> Nov 22 06:44:04 kernel: PGD 0 P4D 0 
+>> Nov 22 06:44:04 kernel: Oops: 0000 [#1] PREEMPT SMP NOPTI
+>> Nov 22 06:44:04 kernel: CPU: 0 PID: 394 Comm: kworker/0:2 Not tainted
+>> 5.16.0-rc2-1-mainline #1 4a5aa185cbfb8b63cd50dfec190bc41096ea30a5
+>> Nov 22 06:44:04 kernel: Hardware name: HP HP ENVY x360 Convertible
+>> 15-ds1xxx/87A9, BIOS F.07 03/18/2021
+>> Nov 22 06:44:04 kernel: Workqueue: events_long ucsi_init_work [typec_ucsi]
+>> Nov 22 06:44:04 kernel: RIP: 0010:typec_register_altmode+0x2e/0x3a0 [typec]
+>> Nov 22 06:44:04 kernel: Code: 00 41 57 41 56 41 55 41 54 49 89 f4 55 48 89 fd
+>> 48 8d bf 08 03 00 00 53 48 83 ec 28 65 48 8b 04 25 28 00 00 00 48 89 44 24 20
+>> <48> 8b 87 50 fd ff ff 48 3d e0 99 5b c0 74 18 48 8d 95 f8 02 00 00
+>> Nov 22 06:44:04 kernel: RSP: 0018:ffffa171c0f9fd30 EFLAGS: 00010286
+>> Nov 22 06:44:04 kernel: RAX: 8a5a9eb1bcae6600 RBX: ffff94994f1b7800 RCX:
+>> 0000000000000001
+>> Nov 22 06:44:04 kernel: RDX: 0000000000000000 RSI: ffffa171c0f9fdd0 RDI:
+>> 0000000000000308
+>> Nov 22 06:44:04 kernel: RBP: 0000000000000000 R08: 0000000000000000 R09:
+>> 0000000000000000
+>> Nov 22 06:44:04 kernel: R10: 0000000000000000 R11: 0000000000000000 R12:
+>> ffffa171c0f9fdd0
+>> Nov 22 06:44:04 kernel: R13: 0000000000000000 R14: 0000000000000000 R15:
+>> ffff94994f1b7800
+>> Nov 22 06:44:04 kernel: FS:  0000000000000000(0000) GS:ffff949c3f600000(0000)
+>> knlGS:0000000000000000
+>> Nov 22 06:44:04 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> Nov 22 06:44:04 kernel: CR2: 0000000000000058 CR3: 0000000103c3e000 CR4:
+>> 0000000000350ef0
+>> Nov 22 06:44:04 kernel: Call Trace:
+>> Nov 22 06:44:04 kernel:  <TASK>
+>> Nov 22 06:44:04 kernel:  ? ucsi_acpi_sync_write+0x4a/0x70 [ucsi_acpi
+>> 02bdd89c7010256e11856d8931a8362b48e4c3f7]
+>> Nov 22 06:44:04 kernel:  ucsi_register_altmode.constprop.0+0x1f0/0x250
+>> [typec_ucsi 5c5256aa8a0bedb6e8965681f3f36303c0e1b18d]
+>> Nov 22 06:44:04 kernel:  ucsi_register_altmodes+0x161/0x1c0 [typec_ucsi
+>> 5c5256aa8a0bedb6e8965681f3f36303c0e1b18d]
+>> Nov 22 06:44:04 kernel:  ucsi_check_altmodes+0x17/0x50 [typec_ucsi
+>> 5c5256aa8a0bedb6e8965681f3f36303c0e1b18d]
+>> Nov 22 06:44:04 kernel:  ucsi_init_work+0x6c7/0x720 [typec_ucsi
+>> 5c5256aa8a0bedb6e8965681f3f36303c0e1b18d]
+>> Nov 22 06:44:04 kernel:  process_one_work+0x1e8/0x3c0
+>> Nov 22 06:44:04 kernel:  worker_thread+0x50/0x3c0
+>> Nov 22 06:44:04 kernel:  ? rescuer_thread+0x390/0x390
+>> Nov 22 06:44:04 kernel:  kthread+0x15c/0x180
+>> Nov 22 06:44:04 kernel:  ? set_kthread_struct+0x50/0x50
+>> Nov 22 06:44:04 kernel:  ret_from_fork+0x22/0x30
+>> Nov 22 06:44:04 kernel:  </TASK>
+>> Nov 22 06:44:04 kernel: Modules linked in: snd_hda_codec_realtek(+) fjes(-)
+>> snd_hda_codec_generic ledtrig_audio snd_hda_codec_hdmi joydev iwlmvm(+)
+>> mousedev snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi mac80211
+>> nls_iso8859_1 snd_hda_codec btusb vfat amdgpu(+) libarc4 snd_hda_core btrtl fat
+>> snd_hwdep btbcm iwlwifi snd_pcm btintel snd_timer bluetooth snd_pci_acp5x
+>> snd_rn_pci_acp3x k10temp gpu_sched amd_sfh snd_pci_acp3x cfg80211 snd
+>> ecdh_generic ucsi_acpi drm_ttm_helper sp5100_tco soundcore rfkill typec_ucsi
+>> ttm i2c_piix4 typec mac_hid roles wmi video tpm_crb tpm_tis wireless_hotkey
+>> tpm_tis_core hp_accel acpi_cpufreq lis3lv02d amd_pmc acpi_tad 9pnet_virtio 9p
+>> 9pnet fscache netfs sg crypto_user fuse bpf_preload ip_tables x_tables ext4
+>> crc32c_generic crc16 mbcache jbd2 dm_crypt cbc encrypted_keys dm_mod trusted
+>> asn1_encoder tee tpm rtsx_pci_sdmmc mmc_core crct10dif_pclmul serio_raw
+>> crc32_pclmul crc32c_intel ghash_clmulni_intel atkbd aesni_intel libps2
+>> crypto_simd cryptd ccp xhci_pci
+>> Nov 22 06:44:04 kernel:  xhci_pci_renesas rng_core rtsx_pci i8042 serio
+>> hid_multitouch i2c_hid_acpi i2c_hid pinctrl_amd
+>> Nov 22 06:44:04 kernel: CR2: 0000000000000058
+>> Nov 22 06:44:04 kernel: ---[ end trace bdd82aa217da2b8a ]---
+>> Nov 22 06:44:04 kernel: RIP: 0010:typec_register_altmode+0x2e/0x3a0 [typec]
+>> Nov 22 06:44:04 kernel: Code: 00 41 57 41 56 41 55 41 54 49 89 f4 55 48 89 fd
+>> 48 8d bf 08 03 00 00 53 48 83 ec 28 65 48 8b 04 25 28 00 00 00 48 89 44 24 20
+>> <48> 8b 87 50 fd ff ff 48 3d e0 99 5b c0 74 18 48 8d 95 f8 02 00 00
+>> Nov 22 06:44:04 kernel: RSP: 0018:ffffa171c0f9fd30 EFLAGS: 00010286
+>> Nov 22 06:44:04 kernel: RAX: 8a5a9eb1bcae6600 RBX: ffff94994f1b7800 RCX:
+>> 0000000000000001
+>> Nov 22 06:44:04 kernel: RDX: 0000000000000000 RSI: ffffa171c0f9fdd0 RDI:
+>> 0000000000000308
+>> Nov 22 06:44:04 kernel: RBP: 0000000000000000 R08: 0000000000000000 R09:
+>> 0000000000000000
+>> Nov 22 06:44:04 kernel: R10: 0000000000000000 R11: 0000000000000000 R12:
+>> ffffa171c0f9fdd0
+>> Nov 22 06:44:04 kernel: R13: 0000000000000000 R14: 0000000000000000 R15:
+>> ffff94994f1b7800
+>> Nov 22 06:44:04 kernel: FS:  0000000000000000(0000) GS:ffff949c3f600000(0000)
+>> knlGS:0000000000000000
+>> Nov 22 06:44:04 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> Nov 22 06:44:04 kernel: CR2: 0000000000000058 CR3: 0000000103c3e000 CR4:
+>> 0000000000350ef0
+> 
+> [TLDR for the rest: adding this regression to regzbot; this mail is
+> partly compiled from a few templates paragraphs some of you might have
+> seen already.]
 > 
 > Adding the regression mailing list to the list of recipients, as it
 > should be in the loop for all regressions, as explained here:
@@ -74,10 +199,8 @@ On 06.12.21 14:19, Thorsten Leemhuis wrote:
 > To be sure this issue doesn't fall through the cracks unnoticed, I'm
 > adding it to regzbot, my Linux kernel regression tracking bot:
 > 
-> #regzbot ^introduced 3e1ad79bf66165bdb2baca3989f9227939241f11
-> #regzbot title drm: nouveau: annoying black flickering in some
-> applications with KDE Plasma with Xorg
-> #regzbot ignore-activity
+> #regzbot ^introduced v5.15..v5.16-rc1
+> #regzbot title usb: ucsi_acpi: kernel NULL pointer dereference
 > 
 > Reminder: when fixing the issue, please add a 'Link:' tag with the URL
 > to the report (the parent of this mail), then regzbot will automatically
@@ -95,7 +218,7 @@ On 06.12.21 14:19, Thorsten Leemhuis wrote:
 > long as they are intended just for regzbot. With a bit of luck no such
 > messages will be needed anyway.
 > 
-> Ciao, Thorsten, your Linux kernel regression tracker.
+> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
 > 
 > P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
 > on my table. I can only look briefly into most of them. Unfortunately
@@ -103,235 +226,11 @@ On 06.12.21 14:19, Thorsten Leemhuis wrote:
 > I hope that's not the case here; if you think it is, don't hesitate to
 > tell me about it in a public reply. That's in everyone's interest, as
 > what I wrote above might be misleading to everyone reading this; any
-> suggestion I gave they thus might sent someone reading this down the
-> wrong rabbit hole, which none of us wants.
+> suggestion I gave thus might sent someone reading this down the wrong
+> rabbit hole, which none of us wants.
 > 
 > BTW, I have no personal interest in this issue, which is tracked using
 > regzbot, my Linux kernel regression tracking bot
 > (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
 > this mail to get things rolling again and hence don't need to be CC on
 > all further activities wrt to this regression.
-> 
-> 
-> On 04.12.21 17:40, Stefan Fritsch wrote:
->> Hi,
->>
->> when updating from 5.14 to 5.15 on a system with NVIDIA GP108 [GeForce
->> GT 1030] (NV138) and Ryzen 9 3900XT using kde/plasma on X (not wayland),
->> there is a regression: There is now some annoying black flickering in
->> some applications, for example thunderbird, firefox, or mpv. It mostly
->> happens when scrolling or when playing video. Only the window of the
->> application flickers, not the whole screen. But the flickering is not
->> limited to the scrolled area: for example in firefox the url and
->> bookmark bars flicker, too, not only the web site. I have bisected the
->> issue to this commit:
->>
->> commit 3e1ad79bf66165bdb2baca3989f9227939241f11 (HEAD)
->> Author: Christian König <christian.koenig@amd.com>
->> Date:   Sun Jun 6 11:50:15 2021 +0200
->>
->>     drm/nouveau: always wait for the exclusive fence
->>
->>     Drivers also need to to sync to the exclusive fence when
->>     a shared one is present.
->>
->>     Signed-off-by: Christian König <christian.koenig@amd.com>
->>     Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
->>     Link:
->> https://patchwork.freedesktop.org/patch/msgid/20210702111642.17259-4-christian.koenig@amd.com
->>
->>
->>
->> This sounds like performance is impacted severely by that commit. Can
->> this be fixed somehow? A partial dmesg is below.
->>
->> Cheers,
->> Stefan
->>
->>
->> dmesg |grep -i -e drm -e dri -e nvidia -e nouveau -e fb
->> [    0.000000] BIOS-e820: [mem 0x00000000bc552000-0x00000000bc8fbfff]
->> reserved
->> [    0.004971] ACPI: XSDT 0x00000000BCFB0728 0000CC (v01 ALASKA A M I
->> 01072009 AMI  01000013)
->> [    0.010838] PM: hibernation: Registered nosave memory: [mem
->> 0xbc552000-0xbc8fbfff]
->> [    0.204873] Performance Events: Fam17h+ core perfctr, AMD PMU driver.
->> [    0.292761] Registering PCC driver as Mailbox controller
->> [    0.292761] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
->> [    0.518295] pci 0000:06:00.0: reg 0x10: [mem 0xfb000000-0xfbffffff]
->> [    0.519132] pci 0000:06:00.1: [10de:0fb8] type 00 class 0x040300
->> [    0.519653] pci 0000:00:03.1:   bridge window [mem
->> 0xfb000000-0xfc0fffff]
->> [    0.549101] pci 0000:00:03.1:   bridge window [mem
->> 0xfb000000-0xfc0fffff]
->> [    0.550994] pci_bus 0000:06: resource 1 [mem 0xfb000000-0xfc0fffff]
->> [    0.561285] Block layer SCSI generic (bsg) driver version 0.4 loaded
->> (major 250)
->> [    0.564152] shpchp: Standard Hot Plug PCI Controller Driver version: 0.4
->> [    0.570870] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
->> [    0.571531] AMD-Vi: AMD IOMMUv2 driver by Joerg Roedel <jroedel@suse.de>
->> [    0.988343] microcode: Microcode Update Driver: v2.2.
->> [    1.112435] ACPI: OSL: Resource conflict; ACPI support missing from
->> driver?
->> [    1.114174] usbcore: registered new interface driver usbfs
->> [    1.114331] usbcore: registered new interface driver hub
->> [    1.114599] usbcore: registered new device driver usb
->> [    2.373857] hid: raw HID events driver (C) Jiri Kosina
->> [    2.378553] usbcore: registered new interface driver usbhid
->> [    2.378641] usbhid: USB HID core driver
->> [    2.581069] ata3.00: supports DRM functions and may not be fully
->> accessible
->> [    2.582388] ata3.00: supports DRM functions and may not be fully
->> accessible
->> [    3.371574] ata5.00: supports DRM functions and may not be fully
->> accessible
->> [    3.396636] ata5.00: supports DRM functions and may not be fully
->> accessible
->> [    4.159005] sr 1:0:0:0: [sr0] scsi3-mmc drive: 48x/48x writer dvd-ram
->> cd/rw xa/form2 cdda tray
->> [    4.159120] cdrom: Uniform CD-ROM driver Revision: 3.20
->> [    5.936017] systemd[1]: Starting Load Kernel Module drm...
->> [    5.957038] systemd[1]: modprobe@drm.service: Deactivated successfully.
->> [    5.957238] systemd[1]: Finished Load Kernel Module drm.
->> [    6.104901] sp5100_tco: SP5100/SB800 TCO WatchDog Timer Driver
->> [    6.122007] usbcore: registered new device driver apple-mfi-fastcharge
->> [    6.213866] input: HDA NVidia HDMI/DP,pcm=3 as
->> /devices/pci0000:00/0000:00:03.1/0000:06:00.1/sound/card0/input8
->> [    6.236581] AMD64 EDAC driver v3.5.0
->> [    6.259473] input: HDA NVidia HDMI/DP,pcm=7 as
->> /devices/pci0000:00/0000:00:03.1/0000:06:00.1/sound/card0/input9
->> [    6.259631] input: HDA NVidia HDMI/DP,pcm=8 as
->> /devices/pci0000:00/0000:00:03.1/0000:06:00.1/sound/card0/input10
->> [    6.260559] input: HDA NVidia HDMI/DP,pcm=9 as
->> /devices/pci0000:00/0000:00:03.1/0000:06:00.1/sound/card0/input11
->> [    6.260913] input: HDA NVidia HDMI/DP,pcm=10 as
->> /devices/pci0000:00/0000:00:03.1/0000:06:00.1/sound/card0/input12
->> [    6.485220] nouveau 0000:06:00.0: vgaarb: deactivate vga console
->> [    6.486484] nouveau 0000:06:00.0: NVIDIA GP108 (138000a1)
->> [    6.612994] nouveau 0000:06:00.0: bios: version 86.08.24.00.23
->> [    6.617303] nouveau 0000:06:00.0: pmu: firmware unavailable
->> [    6.621410] nouveau 0000:06:00.0: fb: 2048 MiB GDDR5
->> [    6.653892] nouveau 0000:06:00.0: DRM: VRAM: 2048 MiB
->> [    6.653895] nouveau 0000:06:00.0: DRM: GART: 536870912 MiB
->> [    6.653897] nouveau 0000:06:00.0: DRM: BIT table 'A' not found
->> [    6.653899] nouveau 0000:06:00.0: DRM: BIT table 'L' not found
->> [    6.653900] nouveau 0000:06:00.0: DRM: TMDS table version 2.0
->> [    6.653902] nouveau 0000:06:00.0: DRM: DCB version 4.1
->> [    6.653904] nouveau 0000:06:00.0: DRM: DCB outp 00: 01800346 04600010
->> [    6.653906] nouveau 0000:06:00.0: DRM: DCB outp 01: 01000342 00020010
->> [    6.653908] nouveau 0000:06:00.0: DRM: DCB outp 02: 01011352 00020020
->> [    6.653909] nouveau 0000:06:00.0: DRM: DCB conn 00: 00001046
->> [    6.653911] nouveau 0000:06:00.0: DRM: DCB conn 01: 00002161
->> [    6.654295] nouveau 0000:06:00.0: DRM: MM: using COPY for buffer copies
->> [    6.655460] snd_hda_intel 0000:06:00.1: bound 0000:06:00.0 (ops
->> nv50_audio_component_bind_ops [nouveau])
->> [    6.828018] nouveau 0000:06:00.0: DRM: allocated 3840x2160 fb:
->> 0x200000, bo 000000001a41f1fe
->> [    6.828086] fbcon: nouveau (fb0) is primary device
->> [    6.915486] nouveau 0000:06:00.0: [drm] fb0: nouveau frame buffer device
->> [    6.939244] [drm] Initialized nouveau 1.3.1 20120801 for 0000:06:00.0
->> on minor 0
->> [   11.338075] audit: type=1400 audit(1638634273.245:6):
->> apparmor="STATUS" operation="profile_load" profile="unconfined"
->> name="nvidia_modprobe" pid=1354 comm="apparmor_parser"
->> [   11.338078] audit: type=1400 audit(1638634273.245:7):
->> apparmor="STATUS" operation="profile_load" profile="unconfined"
->> name="nvidia_modprobe//kmod" pid=1354 comm="apparmor_parser"
->> [   11.479123] RTL8226B_RTL8221B 2.5Gbps PHY r8169-500:00: attached PHY
->> driver (mii_bus:phy_addr=r8169-500:00, irq=MAC)
->> stf@k:~/comp/linux/linux$ sudo dmesg |less
->> stf@k:~/comp/linux/linux$ sudo dmesg |grep -i -e drm -e dri -e nvidia -e
->> nouveau -e fb
->> [    0.000000] BIOS-e820: [mem 0x00000000bc552000-0x00000000bc8fbfff]
->> reserved
->> [    0.004971] ACPI: XSDT 0x00000000BCFB0728 0000CC (v01 ALASKA A M I
->> 01072009 AMI  01000013)
->> [    0.010838] PM: hibernation: Registered nosave memory: [mem
->> 0xbc552000-0xbc8fbfff]
->> [    0.204873] Performance Events: Fam17h+ core perfctr, AMD PMU driver.
->> [    0.292761] Registering PCC driver as Mailbox controller
->> [    0.292761] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
->> [    0.518295] pci 0000:06:00.0: reg 0x10: [mem 0xfb000000-0xfbffffff]
->> [    0.519132] pci 0000:06:00.1: [10de:0fb8] type 00 class 0x040300
->> [    0.519653] pci 0000:00:03.1:   bridge window [mem
->> 0xfb000000-0xfc0fffff]
->> [    0.549101] pci 0000:00:03.1:   bridge window [mem
->> 0xfb000000-0xfc0fffff]
->> [    0.550994] pci_bus 0000:06: resource 1 [mem 0xfb000000-0xfc0fffff]
->> [    0.561285] Block layer SCSI generic (bsg) driver version 0.4 loaded
->> (major 250)
->> [    0.564152] shpchp: Standard Hot Plug PCI Controller Driver version: 0.4
->> [    0.570870] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
->> [    0.571531] AMD-Vi: AMD IOMMUv2 driver by Joerg Roedel <jroedel@suse.de>
->> [    0.988343] microcode: Microcode Update Driver: v2.2.
->> [    1.112435] ACPI: OSL: Resource conflict; ACPI support missing from
->> driver?
->> [    1.114174] usbcore: registered new interface driver usbfs
->> [    1.114331] usbcore: registered new interface driver hub
->> [    1.114599] usbcore: registered new device driver usb
->> [    2.373857] hid: raw HID events driver (C) Jiri Kosina
->> [    2.378553] usbcore: registered new interface driver usbhid
->> [    2.378641] usbhid: USB HID core driver
->> [    2.581069] ata3.00: supports DRM functions and may not be fully
->> accessible
->> [    2.582388] ata3.00: supports DRM functions and may not be fully
->> accessible
->> [    3.371574] ata5.00: supports DRM functions and may not be fully
->> accessible
->> [    3.396636] ata5.00: supports DRM functions and may not be fully
->> accessible
->> [    4.159005] sr 1:0:0:0: [sr0] scsi3-mmc drive: 48x/48x writer dvd-ram
->> cd/rw xa/form2 cdda tray
->> [    4.159120] cdrom: Uniform CD-ROM driver Revision: 3.20
->> [    5.936017] systemd[1]: Starting Load Kernel Module drm...
->> [    5.957038] systemd[1]: modprobe@drm.service: Deactivated successfully.
->> [    5.957238] systemd[1]: Finished Load Kernel Module drm.
->> [    6.104901] sp5100_tco: SP5100/SB800 TCO WatchDog Timer Driver
->> [    6.122007] usbcore: registered new device driver apple-mfi-fastcharge
->> [    6.213866] input: HDA NVidia HDMI/DP,pcm=3 as
->> /devices/pci0000:00/0000:00:03.1/0000:06:00.1/sound/card0/input8
->> [    6.236581] AMD64 EDAC driver v3.5.0
->> [    6.259473] input: HDA NVidia HDMI/DP,pcm=7 as
->> /devices/pci0000:00/0000:00:03.1/0000:06:00.1/sound/card0/input9
->> [    6.259631] input: HDA NVidia HDMI/DP,pcm=8 as
->> /devices/pci0000:00/0000:00:03.1/0000:06:00.1/sound/card0/input10
->> [    6.260559] input: HDA NVidia HDMI/DP,pcm=9 as
->> /devices/pci0000:00/0000:00:03.1/0000:06:00.1/sound/card0/input11
->> [    6.260913] input: HDA NVidia HDMI/DP,pcm=10 as
->> /devices/pci0000:00/0000:00:03.1/0000:06:00.1/sound/card0/input12
->> [    6.485220] nouveau 0000:06:00.0: vgaarb: deactivate vga console
->> [    6.486484] nouveau 0000:06:00.0: NVIDIA GP108 (138000a1)
->> [    6.612994] nouveau 0000:06:00.0: bios: version 86.08.24.00.23
->> [    6.617303] nouveau 0000:06:00.0: pmu: firmware unavailable
->> [    6.621410] nouveau 0000:06:00.0: fb: 2048 MiB GDDR5
->> [    6.653892] nouveau 0000:06:00.0: DRM: VRAM: 2048 MiB
->> [    6.653895] nouveau 0000:06:00.0: DRM: GART: 536870912 MiB
->> [    6.653897] nouveau 0000:06:00.0: DRM: BIT table 'A' not found
->> [    6.653899] nouveau 0000:06:00.0: DRM: BIT table 'L' not found
->> [    6.653900] nouveau 0000:06:00.0: DRM: TMDS table version 2.0
->> [    6.653902] nouveau 0000:06:00.0: DRM: DCB version 4.1
->> [    6.653904] nouveau 0000:06:00.0: DRM: DCB outp 00: 01800346 04600010
->> [    6.653906] nouveau 0000:06:00.0: DRM: DCB outp 01: 01000342 00020010
->> [    6.653908] nouveau 0000:06:00.0: DRM: DCB outp 02: 01011352 00020020
->> [    6.653909] nouveau 0000:06:00.0: DRM: DCB conn 00: 00001046
->> [    6.653911] nouveau 0000:06:00.0: DRM: DCB conn 01: 00002161
->> [    6.654295] nouveau 0000:06:00.0: DRM: MM: using COPY for buffer copies
->> [    6.655460] snd_hda_intel 0000:06:00.1: bound 0000:06:00.0 (ops
->> nv50_audio_component_bind_ops [nouveau])
->> [    6.828018] nouveau 0000:06:00.0: DRM: allocated 3840x2160 fb:
->> 0x200000, bo 000000001a41f1fe
->> [    6.828086] fbcon: nouveau (fb0) is primary device
->> [    6.915486] nouveau 0000:06:00.0: [drm] fb0: nouveau frame buffer device
->> [    6.939244] [drm] Initialized nouveau 1.3.1 20120801 for 0000:06:00.0
->> on minor 0
->> [   11.338075] audit: type=1400 audit(1638634273.245:6):
->> apparmor="STATUS" operation="profile_load" profile="unconfined"
->> name="nvidia_modprobe" pid=1354 comm="apparmor_parser"
->> [   11.338078] audit: type=1400 audit(1638634273.245:7):
->> apparmor="STATUS" operation="profile_load" profile="unconfined"
->> name="nvidia_modprobe//kmod" pid=1354 comm="apparmor_parser"
->> [   11.479123] RTL8226B_RTL8221B 2.5Gbps PHY r8169-500:00: attached PHY
->> driver (mii_bus:phy_addr=r8169-500:00, irq=MAC)
->>
-> 
