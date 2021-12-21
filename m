@@ -1,154 +1,103 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530122C9D
-	for <regressions@lists.linux.dev>; Mon, 20 Dec 2021 20:42:09 +0000 (UTC)
-Received: by mail-oo1-f54.google.com with SMTP id g11-20020a4a754b000000b002c679a02b18so3427522oof.3
-        for <regressions@lists.linux.dev>; Mon, 20 Dec 2021 12:42:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=86q6mGPUW4i0Ae9W5pTbC5IqFkYxCsVwOjM880qisKg=;
-        b=om8J+juci05U81DBgVnGqUJ2oUdCRZjDGd+lGjYueYFIttOeh20S3wNcK0h9moIAzk
-         IQxo/eyZJEFIB+q/HWK+qCJWRdWnVgsvqSrrgM5qExdMz63vG4tKPwWAboM/THwOTMGc
-         OPsWv6mJ2uXWixt3ujBgcjIXew/hxKA/u2qMU7Z/QvDg5E9YO8fyPF+hixeZ1pFjYT0x
-         egwkZiyzedSrtqeweQvnXlzg25nksNIyUH475e7v2L0c+PjfwRjuEhZPuGw47rtCCLc6
-         db4NOM5sK/A1RS0eDlZqXteuu8ayFKmc5mQ7bwmqgFl5JKIC2mmzRfT4RgYtGs4UFvyo
-         mDYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=86q6mGPUW4i0Ae9W5pTbC5IqFkYxCsVwOjM880qisKg=;
-        b=uwQ2AaNLfB9CCLtxdQMeHokklw52sUrMLL9u+J2fqgcIIjkSBlgyjaiMVuAcnBziSN
-         VQbL0wsSfs7w5cdA1TZqJoiQ3rTN4qYRQ2uqZA9EubJ9kRH1gbNKD7fp1G+QM4BkhyXz
-         gP/5FszZt5qbQa1Rwqb5msSNhdwJz5SVTUyzMCVbdyh112TyPSVris9wn9EBE1YRU+Ck
-         /9WATJzVdoJJNztzcfmghQlF3SjpIWFirS43PS8XhZQICD+cZk6E25eRlCMfjG7OrK8L
-         r0ez9x+6Q82r0651AIK7zQUHhLsd6Zugd9to+8J8hpsPMntPCArW1q/ZcP5c0cdNIsDf
-         CL/A==
-X-Gm-Message-State: AOAM533TSPl7yc3+s8kqSR+Q5cdr8hzdfOBnKO1ctRFeYAXT93IynLY3
-	xl/AQbpTQNzZJAboIVc6QOdDE4VZwlanc4Asteg=
-X-Google-Smtp-Source: ABdhPJyqqffSkXvODMEsCx/EpSsjjcIv17gUSuEsOTyhqF1IRS3Rg2WkKFZFauMLFilHPkk/OwChKQe91ycOPT/7fcg=
-X-Received: by 2002:a4a:9406:: with SMTP id h6mr11394881ooi.80.1640032928320;
- Mon, 20 Dec 2021 12:42:08 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F36542C9C
+	for <regressions@lists.linux.dev>; Tue, 21 Dec 2021 13:44:58 +0000 (UTC)
+Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1mzfRe-0000yG-Re; Tue, 21 Dec 2021 14:44:46 +0100
+Message-ID: <57cd1e60-f412-8439-2c5f-3f38824d9c74@leemhuis.info>
+Date: Tue, 21 Dec 2021 14:44:46 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info> <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
- <CAMuHMdVp621B0DywkW6sx6wNcPFez9=3-=cfSo7UoRttJ6QXCg@mail.gmail.com> <CABYd82b2i4Uuyi5+zLoTgiC-QMS1y=VkwmMznZqxLca0iP9qTQ@mail.gmail.com>
-In-Reply-To: <CABYd82b2i4Uuyi5+zLoTgiC-QMS1y=VkwmMznZqxLca0iP9qTQ@mail.gmail.com>
-From: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-Date: Mon, 20 Dec 2021 17:41:42 -0300
-Message-ID: <CACjc_5qQv_vWawtbA8O01EaiY6GqSXQYs0jgC8XLAGYuwtnUUg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-To: Will McVicker <willmcvicker@google.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, stable <stable@vger.kernel.org>, 
-	regressions@lists.linux.dev, Linus Walleij <linus.walleij@linaro.org>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, 
-	Vidya Sagar <vidyas@nvidia.com>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>, 
-	Sergio Tanzilli <tanzilli@acmesystems.it>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH v10 2/2] btbcm: disable read tx power for some Macs with
+ the T2 Security chip
+Content-Language: en-BS
+To: Marcel Holtmann <marcel@holtmann.org>, Aditya Garg <gargaditya08@live.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>,
+ Orlando Chamberlain <redecorating@protonmail.com>,
+ Daniel Winkler <danielwinkler@google.com>,
+ Johan Hedberg <johan.hedberg@intel.com>,
+ "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "sonnysasaka@chromium.org" <sonnysasaka@chromium.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <3B8E16FA-97BF-40E5-9149-BBC3E2A245FE@live.com>
+ <40550C00-4EE5-480F-AFD4-A2ACA01F9DBB@live.com>
+ <332a19f1-30f0-7058-ac18-c21cf78759bb@leemhuis.info>
+ <D9375D91-1062-4265-9DE9-C7CF2B705F3F@live.com>
+ <BC534C52-7FCF-4238-8933-C5706F494A11@live.com> <YaSCJg+Xkyx8w2M1@kroah.com>
+ <287DE71A-2BF2-402D-98C8-24A9AEEE55CB@live.com>
+ <42E2EC08-1D09-4DDE-B8B8-7855379C23C5@holtmann.org>
+ <6ABF3770-A9E8-4DAF-A22D-DA7113F444F3@live.com>
+ <92FBACD6-F4F2-4DE8-9000-2D30852770FC@live.com>
+ <3716D644-CD1B-4A5C-BC96-A51FF360E31D@live.com>
+ <9E6473A2-2ABE-4692-8DCF-D8F06BDEAE29@live.com>
+ <64E15BD0-665E-471F-94D9-991DFB87DEA0@live.com>
+ <A6DD9616-E669-4382-95A0-B9DBAF46712D@live.com>
+ <312202C7-C7BE-497D-8093-218C68176658@live.com>
+ <CDAA8BE2-F2B0-4020-AEB3-5C9DD4A6E08C@live.com>
+ <3F7CFEF0-10D6-4046-A3AE-33ECF81A2EB3@live.com>
+ <DCEC0C45-D974-4DC7-9E86-8F2D3D8F7E1D@live.com>
+ <51575680-E9C3-4962-A3C4-ADCBD6DBCA00@live.com>
+ <BF89065D-FE7B-4E57-BFEF-DEACC67C25AB@holtmann.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <BF89065D-FE7B-4E57-BFEF-DEACC67C25AB@holtmann.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640094299;41f67fb2;
+X-HE-SMSGID: 1mzfRe-0000yG-Re
 
-Hi Will,
+Hi, this once again is your Linux kernel regression tracker speaking.
 
-On Mon, Dec 20, 2021 at 4:25 PM Will McVicker <willmcvicker@google.com> wrote:
->
-> On Mon, Dec 20, 2021 at 7:14 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >
-> > On Mon, Dec 20, 2021 at 3:57 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > On Sat, Dec 18, 2021 at 7:28 AM Thorsten Leemhuis
-> > > <regressions@leemhuis.info> wrote:
-> > > > [TLDR: I'm adding this regression to regzbot, the Linux kernel
-> > > > regression tracking bot; most text you find below is compiled from a few
-> > > > templates paragraphs some of you might have seen already.]
-> > > >
-> > > > On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
-> > > > > Some GPIO lines have stopped working after the patch
-> > > > > commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
-> > > > >
-> > > > > And this has supposedly been fixed in the following patches
-> > > > > commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
-> > > > > commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
-> > > >
-> > > > There seems to be a backstory here. Are there any entries and bug
-> > > > trackers or earlier discussions everyone that looks into this should be
-> > > > aware of?
-> > > >
-> > >
-> > > Agreed with Thorsten. I'd like to first try to determine what's wrong
-> > > before reverting those, as they are correct in theory but maybe the
-> > > implementation missed something.
-> > >
-> > > Have you tried tracing the execution on your platform in order to see
-> > > what the driver is doing?
-> >
-> > Looking at commits that have related Fixes tags:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=bf781869e5cf3e4ec1a47dad69b6f0df97629cbd
-> > https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/commit/?id=e8f24c58d1b69ecf410a673c22f546dc732bb879
-> >
-> > Gr{oetje,eeting}s,
-> >
-> >                         Geert
-> >
-> > --
-> > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> >
-> > In personal conversations with technical people, I call myself a hacker. But
-> > when I'm talking to journalists I just say "programmer" or something like that.
-> >                                 -- Linus Torvalds
->
-> Hi Marcelo,
->
-> Thanks for reporting this issue. I can give you a little context on
-> why commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not
-> defined") was created. We were seeing a refcounting issue on Pixel 6.
-> In our kernel CONFIG_PINCTRL is defined. Basically, the camera kernel
-> module requests for a GPIO on sensor enable (when the camera sensor is
-> turned on) and releases that GPIO on sensor disable (when the camera
-> sensor is turned off). Before commit 6dbbf84603961, if we constantly
-> switched between the front and back camera eventually we would hit the
-> below error in drivers/pinctrl/pinmux.c:pin_request():
->
->     E samsung-pinctrl 10840000.pinctrl: could not increase module
-> refcount for pin 134
->
-> In our kernel the sensor GPIOs don't have pin_ranges defined. So you
-> would get these call stacks:
->
-> Sensor Enable:
->   gpiochip_generic_request()
->   -> return 0
->
-> Sensor Disable:
->   gpiochip_generic_free()
->   -> pinctrl_gpio_free()
->
-> This led to an imbalance of request vs free calls leading to the
-> refcounting error. When we added commit 6dbbf84603961 ("gpiolib: Don't
-> free if pin ranges are not defined"), this issue was resolved. My
-> recommendation would be to drill down into your driver to figure out
-> what happens in these functions to see why you're getting the results
-> you reported.
+On 03.12.21 22:28, Marcel Holtmann wrote:
 
-Thanks for your reply.
+>> Some Macs with the T2 security chip had Bluetooth not working.
+>> To fix it we add DMI based quirks to disable querying of LE Tx power.
+>>
+>> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+>> Reported-by: Orlando Chamberlain <redecorating@protonmail.com>
+>> Tested-by: Orlando Chamberlain <redecorating@protonmail.com>
+>> Link:
+>> https://lore.kernel.org/r/4970a940-211b-25d6-edab-21a815313954@protonmail.com
+>> Fixes: 7c395ea521e6 ("Bluetooth: Query LE tx power on startup")
 
-Commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not
-defined") is perfectly fine in the context and fixes a serious issue.
-But to revert the original patch we need to revert this patch too, for
-the same reason, i.e., in order to not generate a *_free() imbalance.
+If anyone wonders: this was for v5.11-rc1.
 
-In my case the imbalance causes problems as soon as the test script is
-run a second time.
+>> Cc: stable@vger.kernel.org
+>> ---
+>> v7 :- Removed unused variable and added Tested-by.
+>> v8 :- No change.
+>> v9 :- Add Cc: stable@vger.kernel.org
+>> v10 :- Fix gitlint
+>> drivers/bluetooth/btbcm.c | 39 +++++++++++++++++++++++++++++++++++++++
+>> 1 file changed, 39 insertions(+)
+> 
+> patch has been applied to bluetooth-next tree.
+And there are these two pages now for 19 days. What's the hold-up? Or do
+you consider the changes to dangerous to merge now?
 
->
-> --Will
+Sure, it's not a recent regression, so it might not look that urgent.
+But it OTOH affects everyone that can't go back to v5.10 (the newest
+Longterm kernel without the regression) -- for example if a user needs a
+post-v5.10 feature or upgrades to a distro with a newer kernel.
 
-Regards,
-Marcelo.
+That's why this fix (unless you considerer it to dangerous) IMHO should
+be merged rather sooner than later and and not wait for the merge window
+of v5.17. Another aspect against waiting for the next merge window: it
+contributes to piling up a large number of changes that need to be
+backported to stable and longterm kernels once v5.17-rc1 is out,
+resulting in stable and longterm releases with a huge pile of changes:
+https://lwn.net/Articles/863505/
+
+Ciao, Thorsten
+
+#regzbot poke
