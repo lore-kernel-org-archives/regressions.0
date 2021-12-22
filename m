@@ -1,85 +1,107 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C0322CA0
-	for <regressions@lists.linux.dev>; Wed, 22 Dec 2021 08:37:58 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1mzx8G-0002TL-An; Wed, 22 Dec 2021 09:37:56 +0100
-Message-ID: <3de36d9f-0579-f442-2bb2-b4b21ee990a2@leemhuis.info>
-Date: Wed, 22 Dec 2021 09:37:55 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE382CA0
+	for <regressions@lists.linux.dev>; Wed, 22 Dec 2021 09:02:31 +0000 (UTC)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+	by mailout.west.internal (Postfix) with ESMTP id B3A013200B8B;
+	Wed, 22 Dec 2021 04:02:30 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Wed, 22 Dec 2021 04:02:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=fm2; bh=44i3cKj4C+IU/gdPgbxbEeXUV0f
+	fKrBGDVKNTA7fXGU=; b=fQq+TdZyLeZWGjCMaMii6PIN7RrDc30nqQsgB5tWBNL
+	fpDqSfJKd+Okd3LTrU6MK8wUUZEaDFy0FwahzdCh0mRq/H4+cO90OcdDfK2xNXTs
+	tfD0g4LK/WwD35LZhevVSuVhjV92PCcYPxLUs87EbALF7CJT5ZiuK8iVHhpfB7Hr
+	KrF53fGVu/M19YjZNwbPASbsBVQRRoLj/cMfqmmxkdwEVkfPmJ+jrwb0dUIXUwTV
+	cM02cxxJduXQcRKbuALqIkkoUUERdcLWh0kfXwLFSMSxu5Jn4BtVgWK+q3psMYwp
+	11RID9Vc7NejYnPbyX7mJ32SPXFyRoRdEJ1DLwbo5nw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=44i3cK
+	j4C+IU/gdPgbxbEeXUV0ffKrBGDVKNTA7fXGU=; b=SRy2OUTZ9xXAQvFTGozkX3
+	4/qOGoeBo4sCDaltwnu+qPEYtAbuAEgDeIuGo38mbc78a6VJirTnTnDclonm5bE9
+	5ySnVjnlKEQKeGmhk4gcpbTeCF+uoFcnLo2OpHrkCgvI2hGtn3nvqlD0aUu6gWDX
+	K+0whu3AJ6LczA0hOdCSmYEVyzlHN7EBTtNgqnkKbH6REsex1XRsKhFGKoLFTfEU
+	0f44hIJGbujXzQcoIjdpnmFfh/32X0VtC/i7VJ+fzCkAr8dZZEo5LDfz1Q/k8sOx
+	1HA6RtRLmUcI4Jix8SQwt2HP66bFez3iN73o/s0HNgwb5hTl7JzKXrUOXdY2lCCg
+	==
+X-ME-Sender: <xms:penCYZDVSSVYYKf8TkgG42cz6wmOuIiYitW0awRM5OyuLhyAQ3bRKg>
+    <xme:penCYXhqBT-HiYh4b5bHZwkocQBLzdV9HmBDzGL9ioezzS7K76Ns841e5X3sPkRFp
+    iGRpLrNyx3P7g>
+X-ME-Received: <xmr:penCYUl99uAeJ8qZa2x-gm2tFHeI_2ib2h8AJ5rF4JDgFUb6U2sRtu_SBm1OP86a1PyVf9U6Qi-9zvNLzoK1CdH2qAOsG88A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddruddthedguddvkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehttd
+    ertddttddvnecuhfhrohhmpefirhgvghcumffjuceoghhrvghgsehkrhhorghhrdgtohhm
+    qeenucggtffrrghtthgvrhhnpeeuleeltdehkeeltefhleduuddvhfffuedvffduveeghe
+    ekgeeiffevheegfeetgfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhs
+    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorg
+    hhrdgtohhm
+X-ME-Proxy: <xmx:penCYTxask_A2qo6FpgOoQ3_cX7a-txhWXkIqbZmKMnQc1T2hNWrEQ>
+    <xmx:penCYeQXlp8CsuVK3WPp6n20Ws-92Ug-6yxAJZXA1R5ExWOXw5hyow>
+    <xmx:penCYWagdQvw-yfkvZo2bDTQDfsLUMtO1UHdZAd9KLI-DpTLEmio1Q>
+    <xmx:punCYZe97pefBWGhLvlYiEj_kc-tfhIK1WvNuR7fql3KfhyolZ2XYg>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 22 Dec 2021 04:02:29 -0500 (EST)
+Date: Wed, 22 Dec 2021 10:02:27 +0100
+From: Greg KH <greg@kroah.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [Bug 215117] New: ucsi_acpi: kernel NULL pointer dereference
+ #forregzbot
+Message-ID: <YcLpo5gKp4uPcVQL@kroah.com>
+References: <bug-215117-208809@https.bugzilla.kernel.org/>
+ <eb34f98f-00ef-3238-2daa-80481116035d@leemhuis.info>
+ <f74c422e-776a-46c5-4508-a7d15bb93c61@leemhuis.info>
+ <YcLGlrW06oddk9SE@kroah.com>
+ <3de36d9f-0579-f442-2bb2-b4b21ee990a2@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [Bug 215117] New: ucsi_acpi: kernel NULL pointer dereference
- #forregzbot
-Content-Language: en-BW
-To: Greg KH <greg@kroah.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <bug-215117-208809@https.bugzilla.kernel.org/>
- <eb34f98f-00ef-3238-2daa-80481116035d@leemhuis.info>
- <f74c422e-776a-46c5-4508-a7d15bb93c61@leemhuis.info>
- <YcLGlrW06oddk9SE@kroah.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <YcLGlrW06oddk9SE@kroah.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640162278;5dc1081b;
-X-HE-SMSGID: 1mzx8G-0002TL-An
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3de36d9f-0579-f442-2bb2-b4b21ee990a2@leemhuis.info>
 
-On 22.12.21 07:32, Greg KH wrote:
-> On Tue, Dec 21, 2021 at 07:06:30PM +0100, Thorsten Leemhuis wrote:
->> Hi, this is your Linux kernel regression tracker speaking.
->>
->> For the record:
->>
->> #regzbot fixed-by: 3f345e907a8e7c56fdebf7231cd67afc85d02aaa
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-linus&id=3f345e907a8e7c56fdebf7231cd67afc85d02aaa
->>
->> Greg helpfully added a "Link:" tag to make regzbot happy, but he
->> specified a reply to the report and not the report itself, as expected
->> by regzbot (I'm taken back and forth for a while already if that's a
->> good or bad idea). And that was not Greg's but my fault, as I had given
->> him the wrong link here:
->> https://lore.kernel.org/r/YcH2w9jmGnqUMWp4@kroah.com/
+On Wed, Dec 22, 2021 at 09:37:55AM +0100, Thorsten Leemhuis wrote:
+> My biggest problem is: many developers don't place the Link: tags. I
+> obviously expected that up to a point. But what I didn't expect: so much
+> opposition to place them, because quite a few developers think they are
+> reserved for maintainers, as they are only meant for linking to the
+> submission of the applied patch; a few also think others tags should be
+> needed for linking to bugs.
+
+Hah, I can't even get developers to add a Fixes: or a Cc: stable tag,
+trying to get them to add a Link: tag to a lore reference is going to be
+an uphill battle.
+
+Right now, the best thing we have is the git hook that auto-adds the
+Link: tag that points to the lore thread where the patch came from.
+Maintainers don't have the energy or time to add anything other than
+that, so I think you just might have to rely on Fixes: for a while.
+
+> My proposed "introduce the commit message tags 'Reported:' and
+> 'Posted:'" patch likely would have helped here, but didn't get any
+> traction :-/
+> https://lore.kernel.org/lkml/c6724c7fb534a46e095e6aef13d996ed9589e578.1639042966.git.linux@leemhuis.info/
 > 
-> Sorry about that, I tried!  :(
+> Maybe that was partly due to the stupid mixup in the subject of the
+> cover letter, but whatever. So I guess I'll drop the bold idea. I
+> consider proposing to create "Reported: <url>" while leaving ambiguous
+> Link: alone, which will help my case. Note sure if I also should propose
+> to drop "Reported-by" at the same time, which makes things easier for
+> developers, as that tag can only be set after asking the reporter.
 
-Many thx. And as mentioned: it was my fault :-/
+Nah, I add "Reported-by:" all the time without asking for explicit
+permission, relying on the public email instead.  If there was some way
+to automate the Reported: tag, maybe it could be used, but again, that's
+a lot of manual work to do, which is going to be a hard sell.
 
-> Keep up the great work,
+thanks,
 
-Will do, thx for saying this, there are sometimes tough days where
-things like this help. :-D
-
-> we'll get the workflow down yet.
-
-FWIW, regzbot in a few cases already completely worked as intended to.
-But yeah, things like this always take a while to get settled.
-
-My biggest problem is: many developers don't place the Link: tags. I
-obviously expected that up to a point. But what I didn't expect: so much
-opposition to place them, because quite a few developers think they are
-reserved for maintainers, as they are only meant for linking to the
-submission of the applied patch; a few also think others tags should be
-needed for linking to bugs.
-
-My proposed "introduce the commit message tags 'Reported:' and
-'Posted:'" patch likely would have helped here, but didn't get any
-traction :-/
-https://lore.kernel.org/lkml/c6724c7fb534a46e095e6aef13d996ed9589e578.1639042966.git.linux@leemhuis.info/
-
-Maybe that was partly due to the stupid mixup in the subject of the
-cover letter, but whatever. So I guess I'll drop the bold idea. I
-consider proposing to create "Reported: <url>" while leaving ambiguous
-Link: alone, which will help my case. Note sure if I also should propose
-to drop "Reported-by" at the same time, which makes things easier for
-developers, as that tag can only be set after asking the reporter.
-
-Ciao, Thorsten
+greg k-h
