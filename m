@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC782CAA
-	for <regressions@lists.linux.dev>; Thu, 23 Dec 2021 10:17:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D21173
+	for <regressions@lists.linux.dev>; Thu, 23 Dec 2021 10:48:52 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n0LA1-0004Sm-DO; Thu, 23 Dec 2021 11:17:21 +0100
-Message-ID: <e9c71d97-e35e-a8cb-5296-fc2398b532fa@leemhuis.info>
-Date: Thu, 23 Dec 2021 11:17:20 +0100
+	id 1n0LeV-0008IJ-A2; Thu, 23 Dec 2021 11:48:51 +0100
+Message-ID: <dce98c91-d28c-0f5a-b177-1f4275cf0f35@leemhuis.info>
+Date: Thu, 23 Dec 2021 11:48:51 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,47 +16,42 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [regression] kvm: Kernel OOPS in vmx.c when starting a kvm VM
- since v5.15.7 #forregzbot
 Content-Language: en-BS
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: doc@lame.org
-References: <f1ea22d3-cff8-406a-ad6a-cb8e0124a9b4@leemhuis.info>
- <54749944-d33d-8364-ad17-6297abf883f5@redhat.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <54749944-d33d-8364-ad17-6297abf883f5@redhat.com>
+Subject: cifs: unable to mount cifs 1.0 shares because support for NTLM and
+ weaker authentication algorithms was removed
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640254650;aac10d49;
-X-HE-SMSGID: 1n0LA1-0004Sm-DO
-
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640256533;28cab334;
+X-HE-SMSGID: 1n0LeV-0008IJ-A2
 
 Hi, this is your Linux kernel regression tracker speaking.
 
-On 19.12.21 14:49, Paolo Bonzini wrote:
-> On 12/19/21 06:01, Thorsten Leemhuis wrote:
->> Hi, this is your Linux kernel regression tracker speaking.
->>
->> TWIMC, I stumbled on a bug report from George Shearer about a KVM
->> problem I couldn't find any further discussions about, that's why I'm
->> forwarding it manually here.
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=215351
->>
->> George, BTW: if reverting the change you suspect doesn't help, please
->> consider doing a bisection to find the culprit.
+There is a regression discussed in bugzilla I'd like to see tracked, to
+ensure it's not forgotten. Quoting a few parts of the report:
+
+> After 5.15.0, I'm unable to mount a CIFS 1.0 share from a media player which I cannot update (vendor no longer provides updates).
 > 
-> This should be fixed by commit e90e51d5f01d.  I'll send it to
-> stable@vger.kernel.org.
+> Original issue is logged here: https://bugs.gentoo.org/821895, with the most interesting bits probably being:
 
-For the record and regzbot:
+> Ok, 2.5 hours of bisecting later and I can confirm that the culprit is
+> 
+> [76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c] cifs: remove support for NTLM and weaker authentication algorithms
+> 
+> The commit before works fine, this commit prevents me from mounting the smb shares on my mede8er 600x 3d.
 
-#regzbot fixed-by: 890c75c14b3d5d
+#regzbot introduced: 76a3c92ec9e0668e
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215375
+#regzbot link: https://bugs.gentoo.org/821895
 
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.15.y&id=6890c75c14b3d5dc8a1a355428457388cd830b82
+I'm not CCing any of the developers for now, looks like they are
+handling it in bugzilla.
 
-Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
+And yes, starting a extra thread for this is a hack hate myself, but I
+need some workaround for tracking due to the distributed nature of bug
+reporting with various different bug trackers in use (reminder:
+bugzilla.kernel.org is not the only one used by kernel developers).
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Ciao, Thorsten
+
