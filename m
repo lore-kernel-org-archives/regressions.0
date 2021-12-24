@@ -1,152 +1,147 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B28168
-	for <regressions@lists.linux.dev>; Thu, 23 Dec 2021 19:09:11 +0000 (UTC)
-Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n0TSf-0007y1-4I; Thu, 23 Dec 2021 20:09:09 +0100
-Message-ID: <4a9a2919-0085-2d0e-0a02-8f8b5371bd25@leemhuis.info>
-Date: Thu, 23 Dec 2021 20:09:08 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C0929CA
+	for <regressions@lists.linux.dev>; Fri, 24 Dec 2021 04:20:38 +0000 (UTC)
+Received: by mail-yb1-f180.google.com with SMTP id j83so1092241ybg.2
+        for <regressions@lists.linux.dev>; Thu, 23 Dec 2021 20:20:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=jYo6YkmVrLTkVANAZPQsd6sDnBee07nclp7YcfHkw2Q=;
+        b=ISMBhG2WYO0XFD/SK7m9lApvFe7IqI7+VQN/v/bq9HrF1/HDscB3xfEyopMCVqRHbu
+         wfYAXg60HgtNJDz+E1vIEA+QlBw8ZX8UV8zheW0+2/90Sy8aevgZYrl/pn2Sqvi16tTG
+         zbEEf5YFgPwn3MXzhOcjrc90BrI0QzVnHo7aeNqD/LLEF9Bo9ZtbLo3csvG1xOH5gM5K
+         v65zCl1ZWsnvAg9vfowIwxP5kKo0jjWy7t8Nt86NtkZ3s7mlzH9Clrtr1FJg7j2J0YQ4
+         S+LLoHJbEBapwwq/nv4S7VFuPfbk0cRPn1meYZA+cLyMvO+vGfqokCWPy0BLksqaNV9g
+         xG3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=jYo6YkmVrLTkVANAZPQsd6sDnBee07nclp7YcfHkw2Q=;
+        b=A/+Ve7cB7jAnLG9kuJxJeR9AlFaLYHATGHPhHbMmQLTveaoQSt7RpPxMQm/15Kfv06
+         fJ/QVeqgHxI+pA26tQPcsPvQUbo3Bm/mIBKSyqrZcX7riBFFAdeve32fgstQBK8lDZ9f
+         OMFiDiD56YYJuofkofLASrrW88n48RQd/QDO47oPFWgtecwc5uqiid+cdJKqHCP9C+KQ
+         x10bHTNj5LEYbu33mosXLdA+KCP3S1Utpp/Wt2yZSHRCeeh9VGGgBVkacgZmDgBxGakg
+         XNgNvAK+ehLXlhxX3UcPw/mAThOzNg/44/uq5KlGIIQ1u/8bI/TDsqtN22sqBALQvUW/
+         RUbw==
+X-Gm-Message-State: AOAM532i2JDuQ8Un6dSOnJkWbzJSi52DLk2JdzVv77DUOlEYvLRI/+st
+	zZy+0baDoL7PRMoYuPnjzEcVvrlNiU63e1rBlIVBFQ==
+X-Google-Smtp-Source: ABdhPJwn+QTa4c/Txxk/fnSeFaEwZN/JlL0o6VcTneifm/QJQ5n2iBGzBWyXNz+lf16D15CunaRgGxIhR3qpG8H3EkQ=
+X-Received: by 2002:a25:60a:: with SMTP id 10mr7211569ybg.704.1640319637270;
+ Thu, 23 Dec 2021 20:20:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: Fw: [Bug 215129] New: Linux kernel hangs during power down
- #forregzbot
-Content-Language: en-BS
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20211124144505.31e15716@hermes.local>
- <bca0a700-65ba-1b8d-c265-b1051423a7e2@leemhuis.info>
- <93f23a8b-518d-d573-4b46-5883477eedfc@leemhuis.info>
-In-Reply-To: <93f23a8b-518d-d573-4b46-5883477eedfc@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640286552;3c3f31c7;
-X-HE-SMSGID: 1n0TSf-0007y1-4I
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 24 Dec 2021 09:50:26 +0530
+Message-ID: <CA+G9fYvKSrW9PSZ2YmgL60v3Q4Po+WVKejughrmy_TpjdORx-w@mail.gmail.com>
+Subject: WARNING: CPU: 2 PID: 7 at drivers/reset/core.c:765 __reset_control_get_internal
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, regressions@lists.linux.dev, 
+	linux-usb@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Chen <peter.chen@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="UTF-8"
 
-For the record:
+While booting Linux next 20211220 on dragonboard 410c device
+the following kernel warning was noticed.
 
-#regzbot fixed-by: ac8c58f5b535d627
+[    0.000000] Linux version 5.16.0-rc5-next-20211220
+(tuxmake@tuxmake) (aarch64-linux-gnu-gcc (Debian 11.2.0-9) 11.2.0, GNU
+ld (GNU Binutils for Debian) 2.37) #1 SMP PREEMPT @1640001868
+[    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
+<>
+[    2.456354] ------------[ cut here ]------------
+[    2.456471] l12: Bringing 0uV into 1750000-1750000uV
+[    2.459881] WARNING: CPU: 2 PID: 7 at drivers/reset/core.c:765
+__reset_control_get_internal+0x70/0x170
+[    2.465553] l13: Bringing 0uV into 1750000-1750000uV
+[    2.469438] Modules linked in:
+[    2.469448] CPU: 2 PID: 7 Comm: kworker/u8:0 Not tainted
+5.16.0-rc5-next-20211220 #1
+[    2.469460] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    2.469467] Workqueue: events_unbound deferred_probe_work_func
+[    2.479645] l14: Bringing 0uV into 1750000-1750000uV
+[    2.483658]
+[    2.483663] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    2.483675] pc : __reset_control_get_internal+0x70/0x170
+[    2.487640] l15: Bringing 0uV into 1750000-1750000uV
+[    2.494430] lr : __of_reset_control_get+0x178/0x1e0
+[    2.494442] sp : ffff80000805b5c0
+[    2.494447] x29: ffff80000805b5c0 x28: 0000000000000000
+[    2.502681] l16: Bringing 0uV into 1750000-1750000uV
+[    2.506752]  x27: 0000000000000000
+[    2.506761] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000001
+[    2.506778] x23: 0000000000000000 x22: ffff000003838b90 x21: 0000000000000022
+[    2.513016] l17: Bringing 0uV into 3300000-3300000uV
+[    2.513353] x20: ffff000003838bb0 x19: ffff000003804980
+[    2.521207] l18: Bringing 0uV into 1750000-1750000uV
+[    2.525588]  x18: ffffffffffffffff
+[    2.525597] x17: 000000040044ffff x16: 00400032b5503510 x15: ffff000004b70a1c
+[    2.584795] x14: ffffffffffffffff x13: 0000000000000000 x12: 0101010101010101
+[    2.592001] x11: 0000000000000038 x10: 0101010101010101 x9 : ffff80000896e3a8
+[    2.599117] x8 : 7f7f7f7f7f7f7f7f x7 : ff726b6b64622c73 x6 : 0000000000000001
+[    2.606235] x5 : fffffbfffdc0a678 x4 : 0000000000000000 x3 : 0000000000000001
+[    2.613354] x2 : 0000000000000022 x1 : 0000000000000022 x0 : 0000000000000000
+[    2.620473] Call trace:
+[    2.627578]  __reset_control_get_internal+0x70/0x170
+[    2.629843]  __of_reset_control_get+0x178/0x1e0
+[    2.635048]  __reset_control_get+0x54/0x1e4
+[    2.639301]  __devm_reset_control_get+0x84/0xfc
+[    2.643469]  ci_hdrc_msm_probe+0xa4/0x410
+[    2.647983]  platform_probe+0x74/0xf0
+[    2.652148]  really_probe+0xc4/0x470
+[    2.655793]  __driver_probe_device+0x11c/0x190
+[    2.659441]  driver_probe_device+0x48/0x104
+[    2.663694]  __device_attach_driver+0xa4/0x140
+[    2.667774]  bus_for_each_drv+0x84/0xe0
+[    2.672287]  __device_attach+0xe4/0x1c0
+[    2.676020]  device_initial_probe+0x20/0x30
+[    2.679840]  bus_probe_device+0xa4/0xb0
+[    2.684005]  device_add+0x3c4/0x8d0
+[    2.687824]  platform_device_add+0x124/0x280
+[    2.691299]  ci_hdrc_add_device+0x4e0/0x600
+[    2.695812]  ci_hdrc_msm_probe+0x2fc/0x410
+[    2.699719]  platform_probe+0x74/0xf0
+[    2.703885]  really_probe+0xc4/0x470
+[    2.707616]  __driver_probe_device+0x11c/0x190
+[    2.711264]  driver_probe_device+0x48/0x104
+[    2.715516]  __device_attach_driver+0xa4/0x140
+[    2.719598]  bus_for_each_drv+0x84/0xe0
+[    2.724110]  __device_attach+0xe4/0x1c0
+[    2.727842]  device_initial_probe+0x20/0x30
+[    2.731663]  bus_probe_device+0xa4/0xb0
+[    2.735829]  deferred_probe_work_func+0xa8/0xfc
+[    2.739649]  process_one_work+0x1e0/0x48c
+[    2.744162]  worker_thread+0x2c8/0x470
+[    2.748330]  kthread+0x16c/0x180
+[    2.751974]  ret_from_fork+0x10/0x20
+[    2.755360] ---[ end trace 0000000000000000 ]---
+[    2.759144] msm_hsusb: probe of ci_hdrc.0 failed with error -16
 
-On 04.12.21 09:55, Thorsten Leemhuis wrote:
-> Top-posting for once, to make this easy accessible to everyone.
-> 
-> A fix is discussed here:
-> 
-> #regzbot link https://bugzilla.kernel.org/show_bug.cgi?id=215129
-> #regzbot monitor
-> https://lore.kernel.org/all/6bb28d2f-4884-7696-0582-c26c35534bae@gmail.com/
-> 
-> Ciao, Thorsten, your Linux kernel regression tracker.
-> 
-> TWIMC: this mail is primarily send for documentation purposes and for
-> regzbot, my Linux kernel regression tracking bot. These mails usually
-> contain '#forregzbot' in the subject, to make them easy to spot and filter.
-> 
-> P.S.: I guess I'll modify regzbot to automatically catch related
-> discussions if they links to the same bugzilla ticket (which I forgot to
-> tell regzbot about when I told it about the regression), then messages
-> like this wouldn't be needed.
-> 
-> 
-> On 25.11.21 12:17, Thorsten Leemhuis wrote:
->> Hi, this is your Linux kernel regression tracker speaking.
->>
->> On 24.11.21 23:45, Stephen Hemminger wrote:
->>>
->>>
->>> Begin forwarded message:
->>>
->>> Date: Wed, 24 Nov 2021 21:14:53 +0000
->>> From: bugzilla-daemon@bugzilla.kernel.org
->>> To: stephen@networkplumber.org
->>> Subject: [Bug 215129] New: Linux kernel hangs during power down
->>>
->>>
->>> https://bugzilla.kernel.org/show_bug.cgi?id=215129
->>>
->>>             Bug ID: 215129
->>>            Summary: Linux kernel hangs during power down
->>>            Product: Networking
->>>            Version: 2.5
->>>     Kernel Version: 5.15
->>>           Hardware: All
->>>                 OS: Linux
->>>               Tree: Mainline
->>>             Status: NEW
->>>           Severity: normal
->>>           Priority: P1
->>>          Component: Other
->>>           Assignee: stephen@networkplumber.org
->>>           Reporter: martin.stolpe@gmail.com
->>>         Regression: No
->>>
->>> Created attachment 299703
->>>   --> https://bugzilla.kernel.org/attachment.cgi?id=299703&action=edit  
->>> Kernel log after timeout occured
->>>
->>> On my system the kernel is waiting for a task during shutdown which doesn't
->>> complete.
->>>
->>> The commit which causes this behavior is:
->>> [f32a213765739f2a1db319346799f130a3d08820] ethtool: runtime-resume netdev
->>> parent before ethtool ioctl ops
->>>
->>> This bug causes also that the system gets unresponsive after starting Steam:
->>> https://steamcommunity.com/app/221410/discussions/2/3194736442566303600/
->>
->> TWIMC: To be sure this issue doesn't fall through the cracks unnoticed,
->> I'm adding it to regzbot, my Linux kernel regression tracking bot:
->>
->> #regzbot ^introduced f32a213765739f2a1db319346799f130a3d08820
->> #regzbot title net: kernel hangs during power down
->> #regzbot ignore-activity
->>
->> Ciao, Thorsten, your Linux kernel regression tracker.
->>
->> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
->> on my table. I can only look briefly into most of them. Unfortunately
->> therefore I sometimes will get things wrong or miss something important.
->> I hope that's not the case here; if you think it is, don't hesitate to
->> tell me about it in a public reply. That's in everyone's interest, as
->> what I wrote above might be misleading to everyone reading this; any
->> suggestion I gave they thus might sent someone reading this down the
->> wrong rabbit hole, which none of us wants.
->>
->> BTW, I have no personal interest in this issue, which is tracked using
->> regzbot, my Linux kernel regression tracking bot
->> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
->> this mail to get things rolling again and hence don't need to be CC on
->> all further activities wrt to this regression.
->>
->> P.S.: If you want to know more about regzbot, check out its
->> web-interface, the getting start guide, and/or the references documentation:
->>
->> https://linux-regtracking.leemhuis.info/regzbot/
->> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
->> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
->>
->> The last two documents will explain how you can interact with regzbot
->> yourself if your want to.
->>
->> Hint for the reporter: when reporting a regression it's in your interest
->> to tell #regzbot about it in the report, as that will ensure the
->> regression gets on the radar of regzbot and the regression tracker.
->> That's in your interest, as they will make sure the report won't fall
->> through the cracks unnoticed.
->>
->> Hint for developers: you normally don't need to care about regzbot, just
->> fix the issue as you normally would. Just remember to include a 'Link:'
->> tag to the report in the commit message, as explained in
->> Documentation/process/submitting-patches.rst
->> That aspect was recently was made more explicit in commit 1f57bd42b77c:
->> https://git.kernel.org/linus/1f57bd42b77c
->>
-> 
-> 
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+Test log link,
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20211220/testrun/6957084/suite/linux-log-parser/test/check-kernel-warning-4175814/log
+https://lkft.validation.linaro.org/scheduler/job/4175814#L2228
+
+
+metadata:
+  git branch: master
+  git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git commit: 07f8c60fe60f84977dc815ec8a6b1100827c34dd
+  git describe: next-20211220
+  make_kernelversion: 5.16.0-rc5
+  kernel-config: https://builds.tuxbuild.com/22Y5Y3VmXo40DO70QoRQ1izVM5p/config
+  build: https://builds.tuxbuild.com/22Y5Y3VmXo40DO70QoRQ1izVM5p/
+  vmlinux: https://builds.tuxbuild.com/22Y5Y3VmXo40DO70QoRQ1izVM5p/vmlinux.xz
+  System.map: https://builds.tuxbuild.com/22Y5Y3VmXo40DO70QoRQ1izVM5p/System.map
+
+--
+Linaro LKFT
+https://lkft.linaro.org
