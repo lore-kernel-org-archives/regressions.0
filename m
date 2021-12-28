@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95BE29CA
-	for <regressions@lists.linux.dev>; Tue, 28 Dec 2021 07:20:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4E729CA
+	for <regressions@lists.linux.dev>; Tue, 28 Dec 2021 07:29:43 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n26mc-0001nQ-DB; Tue, 28 Dec 2021 08:20:30 +0100
-Message-ID: <246bd180-4d8f-ae2b-1b51-90eaf194803c@leemhuis.info>
-Date: Tue, 28 Dec 2021 08:20:29 +0100
+	id 1n26vV-0003pA-3j; Tue, 28 Dec 2021 08:29:41 +0100
+Message-ID: <12b9a10a-626b-cafd-05d6-cf0a116aa39b@leemhuis.info>
+Date: Tue, 28 Dec 2021 08:29:40 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,56 +16,85 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [PATCH] fix 5.15 init regression for Intel Bluetooth
 Content-Language: en-BS
-To: =?UTF-8?Q?Ortwin_Gl=c3=bcck?= <ortwin.glueck@logobject.ch>,
- linux-kernel@vger.kernel.org
-Cc: linux-bluetooth@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <856c5dc7-9fb4-8438-3451-7b369832056a@odi.ch>
- <b0f6f66b-28aa-9d43-0aab-e6887ee0fda8@logobject.ch>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <b0f6f66b-28aa-9d43-0aab-e6887ee0fda8@logobject.ch>
+To: Jiri Kosina <jkosina@suse.cz>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ linux-input@vger.kernel.org
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ casteyde.christian@free.fr
+Subject: [regression] Touchpad is not working after suspend to RAM since
+ kernel 5.14 (fwd from b.k.o bug 214667)
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640676039;93dc93e5;
-X-HE-SMSGID: 1n26mc-0001nQ-DB
-
-[TLDR: I'm adding this regression to regzbot, the Linux kernel
-regression tracking bot; most text you find below is compiled from a few
-templates paragraphs some of you might have seen already.]
-
-On 27.12.21 11:26, Ortwin Glück wrote:
-> 
-> On all 5.15 kernels the Intel Bluetooth no longer works. All was fine in
-> 5.14.
-> Apparently the quirk is needed for this device.
-> 
-> vanilla 5.15.5:
->    Bluetooth: hci0: Reading Intel version command failed (-110)
->    Bluetooth: hci0: command tx timeout
-> 
-> with patch:
->    Bluetooth: hci0: Legacy ROM 2.5 revision 1.0 build 3 week 17 2014
->    Bluetooth: hci0: Intel device is already patched. patch num: 32
-> 
-> Please apply to stable too.
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640676583;dfa87dad;
+X-HE-SMSGID: 1n26vV-0003pA-3j
 
 Hi, this is your Linux kernel regression tracker speaking.
 
-Thanks for the report.
+Forwarding a regression reported by Christian Casteyde (CCed) in
+bugzilla.kernel.org which apparently has fallen through the cracks.
 
-Adding the regression mailing list to the list of recipients, as it
-should be in the loop for all regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+https://bugzilla.kernel.org/show_bug.cgi?id=214667
 
-To be sure this issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
+A few quotes from comments in the ticket:
 
-#regzbot ^introduced v5.14..v5.15
-#regzbot title bluetooth: Intel Bluetooth no longer works
+> Since Kernel 5.14 (probably 5.14-rc5 indeed) the touchpad does not
+> work anymore after resume from suspend to RAM. Was working with 5.13
+> kernel.
+> 
+> I've bisected the bug, first bad commit is: 
+> b3e29642548258c7cd2cb3326a776fff84cd6b69 is the first bad commit
+> 
+> SC[33mcommit b3e29642548258c7cd2cb3326a776fff84cd6b69ESC[m Merge:
+> 8f4ef88 498d0dd Author: Jiri Kosina <jkosina@suse.cz> Date:   Wed Jun
+> 30 09:15:15 2021 +0200
+> 
+> Merge branch 'for-5.14/multitouch' into for-linus
+> 
+> - patch series that ensures that hid-multitouch driver disables touch
+> and button-press reporting on hid-mt devices during suspend when the
+> device is not configured as a wakeup-source, from Hans de Goede
+> 
+> Seem to be related with the observed behaviour.
+
+Yes, that's a merge, but it contains code changes, maybe something went
+wrong there.
+
+> Update with kernel 5.15-rc7
+> 
+> Still present. However, I noticed dmesg ouput interesting messages
+> telling there is a transfer from the ELAN touchpad while suspended,
+> it failed to suspend, then failed to resume. The interesting thing is
+> if I try to suspend a second time, at resume the touchpad manages to
+> resume. Appending dmesg output for reference.
+
+
+> The problem is still present in 5.16-rc7, but indeed it got worse
+> (and indeed is now critical). a) After the first "suspend" tentative
+> (closing the lid), the laptop doesn't suspend (only the screen is
+> blanked) b) When I reopen the lid, the touchpad stays disabled c)
+> When I try to suspend a second time (closing the lid), the system
+> totally freeze (without any info in dmesg) and I need to reset it
+> totally. I'll open a separate bug report for this one, when bisected,
+> and will try to post it to the suspend maintainer together with the
+> mailing list (I'm not accustomed to mailing lists).
+
+FWIW, Christian did this here:
+https://lore.kernel.org/all/256689953.114854578.1640622738334.JavaMail.root@zimbra40-e7.priv.proxad.net/
+
+> FYI, if I remember well, reverting this single commit fixed the issue
+> and the diff was making sense (try to disable the touchpad before
+> going to sleep to prevent unexpected event from it while
+> suspending... if I understood well the code).
+
+To be sure this issue doesn't again fall through the cracks unnoticed,
+I'm adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot introduced b3e29642548258c7cd2cb3326a776fff84cd6b69ESC
+#regzbot title hid: touchpad is not working after suspend to RAM
+#regzbot from: Christian Casteyde <casteyde.christian@free.fr>
 #regzbot ignore-activity
 
 Reminder: when fixing the issue, please add a 'Link:' tag with the URL
@@ -84,6 +113,8 @@ Don't worry, I'll send further messages wrt to this regression just to
 the lists (with a tag in the subject so people can filter them away), as
 long as they are intended just for regzbot. With a bit of luck no such
 messages will be needed anyway.
+
+
 
 Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
 
@@ -127,4 +158,3 @@ include a 'Link:' tag to the report in the commit message, as explained
 in Documentation/process/submitting-patches.rst
 That aspect was recently was made more explicit in commit 1f57bd42b77c:
 https://git.kernel.org/linus/1f57bd42b77c
-
