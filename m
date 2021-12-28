@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4E729CA
-	for <regressions@lists.linux.dev>; Tue, 28 Dec 2021 07:29:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC16429CA
+	for <regressions@lists.linux.dev>; Tue, 28 Dec 2021 07:37:23 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n26vV-0003pA-3j; Tue, 28 Dec 2021 08:29:41 +0100
-Message-ID: <12b9a10a-626b-cafd-05d6-cf0a116aa39b@leemhuis.info>
-Date: Tue, 28 Dec 2021 08:29:40 +0100
+	id 1n272v-0004lg-Nx; Tue, 28 Dec 2021 08:37:21 +0100
+Message-ID: <6d260e9b-14cf-1aa5-ff28-464e85802af3@leemhuis.info>
+Date: Tue, 28 Dec 2021 08:37:21 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,85 +16,137 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
+Subject: Re: Regression report on laptop suspend
 Content-Language: en-BS
+To: casteyde.christian@free.fr, rafael@kernel.org
+Cc: linux-pm@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <256689953.114854578.1640622738334.JavaMail.root@zimbra40-e7.priv.proxad.net>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Jiri Kosina <jkosina@suse.cz>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- linux-input@vger.kernel.org
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- casteyde.christian@free.fr
-Subject: [regression] Touchpad is not working after suspend to RAM since
- kernel 5.14 (fwd from b.k.o bug 214667)
+In-Reply-To: <256689953.114854578.1640622738334.JavaMail.root@zimbra40-e7.priv.proxad.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640676583;dfa87dad;
-X-HE-SMSGID: 1n26vV-0003pA-3j
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640677043;907b3387;
+X-HE-SMSGID: 1n272v-0004lg-Nx
+
 
 Hi, this is your Linux kernel regression tracker speaking.
 
-Forwarding a regression reported by Christian Casteyde (CCed) in
-bugzilla.kernel.org which apparently has fallen through the cracks.
+TWIMC: seems Christian system is affected by another issue (Touchpad is
+not working anymore after suspend to RAM since kernel 5.14) that might
+interfere:
 
 https://bugzilla.kernel.org/show_bug.cgi?id=214667
+https://lore.kernel.org/regressions/12b9a10a-626b-cafd-05d6-cf0a116aa39b@leemhuis.info/
 
-A few quotes from comments in the ticket:
+Anyway, for the rest of this mail:
 
-> Since Kernel 5.14 (probably 5.14-rc5 indeed) the touchpad does not
-> work anymore after resume from suspend to RAM. Was working with 5.13
-> kernel.
+[TLDR: I'm adding this regression to regzbot, the Linux kernel
+regression tracking bot; most text you find below is compiled from a few
+templates paragraphs some of you might have seen already.]
+
+On 27.12.21 17:32, casteyde.christian@free.fr wrote:
+> Hello
 > 
-> I've bisected the bug, first bad commit is: 
-> b3e29642548258c7cd2cb3326a776fff84cd6b69 is the first bad commit
+> I've noticed my laptop totally freeze when going to hibernation.
+> The git bisect log is appended below.
+> Please note however that even the previous good commit was "good" (ie : laptop managed to suspend and resume), the system was unstable and froze few minutes later.
 > 
-> SC[33mcommit b3e29642548258c7cd2cb3326a776fff84cd6b69ESC[m Merge:
-> 8f4ef88 498d0dd Author: Jiri Kosina <jkosina@suse.cz> Date:   Wed Jun
-> 30 09:15:15 2021 +0200
+> Hardware specs: AMD Ryzen 5 4600H with Vega graphics + Nvidia 1650Ti (unused)
+> Software: Slackware 14.2 / X.org.
 > 
-> Merge branch 'for-5.14/multitouch' into for-linus
+> Seems to be related to drm stuff.
+> I've issued bugzilla https://bugzilla.kernel.org/show_bug.cgi?id=215427
 > 
-> - patch series that ensures that hid-multitouch driver disables touch
-> and button-press reporting on hid-mt devices during suspend when the
-> device is not configured as a wakeup-source, from Hans de Goede
+> Thanks
 > 
-> Seem to be related with the observed behaviour.
+> git bisect start
+> # good: [8bb7eca972ad531c9b149c0a51ab43a417385813] Linux 5.15
+> git bisect good 8bb7eca972ad531c9b149c0a51ab43a417385813
+> # bad: [a7904a538933c525096ca2ccde1e60d0ee62c08e] Linux 5.16-rc6
+> git bisect bad a7904a538933c525096ca2ccde1e60d0ee62c08e
+> # bad: [43e1b12927276cde8052122a24ff796649f09d60] Merge tag 'for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost
+> git bisect bad 43e1b12927276cde8052122a24ff796649f09d60
+> # good: [fc02cb2b37fe2cbf1d3334b9f0f0eab9431766c4] Merge tag 'net-next-for-5.16' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
+> git bisect good fc02cb2b37fe2cbf1d3334b9f0f0eab9431766c4
+> # bad: [d9bd054177fbd2c4762546aec40fc3071bfe4cc0] Merge tag 'amd-drm-next-5.16-2021-10-29' of https://gitlab.freedesktop.org/agd5f/linux into drm-next
+> git bisect bad d9bd054177fbd2c4762546aec40fc3071bfe4cc0
+> # skip: [797d72ce8e0f8fa8a808cb189b5411046432cfd3] Merge tag 'drm-misc-next-2021-10-06' of git://anongit.freedesktop.org/drm/drm-misc into drm-next
+> git bisect skip 797d72ce8e0f8fa8a808cb189b5411046432cfd3
+> # skip: [bf72ca73aaa6629568cb9b0761be6efdd02a2591] drm/amd/display: [FW Promotion] Release 0.0.85
+> git bisect skip bf72ca73aaa6629568cb9b0761be6efdd02a2591
+> # good: [bc41f059a080e487c235b539f1e5cdbf605aba9f] drm/i915/dp: fix DG1 and RKL max source rates
+> git bisect good bc41f059a080e487c235b539f1e5cdbf605aba9f
+> # skip: [58144d283712c9e80e528e001af6ac5aeee71af2] drm/amdgpu: unify BO evicting method in amdgpu_ttm
+> git bisect skip 58144d283712c9e80e528e001af6ac5aeee71af2
+> # skip: [a5b51a9f8523a0b88ce7e8e8059f75a43c34c57f] drm/i915/gt: add asm/cacheflush.h for use of clflush()
+> git bisect skip a5b51a9f8523a0b88ce7e8e8059f75a43c34c57f
+> # skip: [40348baedfbc6500e7a090c7da1d55b6c94c334f] drm/amd/display: fix duplicated inclusion
+> git bisect skip 40348baedfbc6500e7a090c7da1d55b6c94c334f
+> # skip: [7547675b84bf452542463db29adb113cadb7dd6d] drm/virtio: implement context init: track {ring_idx, emit_fence_info} in virtio_gpu_fence
+> git bisect skip 7547675b84bf452542463db29adb113cadb7dd6d
+> # good: [f01ee019586220c86f238263a4fbde6e72085e11] drm/amd/display: Add DP 2.0 SST DC Support
+> git bisect good f01ee019586220c86f238263a4fbde6e72085e11
+> # good: [f3ede209d44d71636890a78fa89c5b1c83340320] drm/i915/pci: rename functions to have i915_pci prefix
+> git bisect good f3ede209d44d71636890a78fa89c5b1c83340320
+> # skip: [4fb530e5caf7cb666948db65f245b350ce520436] drm/virtio: implement context init: support init ioctl
+> git bisect skip 4fb530e5caf7cb666948db65f245b350ce520436
+> # good: [c7c4dfb6fe704ae3cce1a8f438db75b1a0a9061f] drm/i915/display: Some code improvements and code style fixes for DRRS
+> git bisect good c7c4dfb6fe704ae3cce1a8f438db75b1a0a9061f
+> # skip: [7a28bee067d524c1b8770aa72a82263eb9fc53f0] drm/amd/display: Disable dpp root clock when not being used
+> git bisect skip 7a28bee067d524c1b8770aa72a82263eb9fc53f0
+> # good: [5b116c17e6babc6de2e26714bc66228c74038b71] drm/i915/guc: Drop pin count check trick between sched_disable and re-pin
+> git bisect good 5b116c17e6babc6de2e26714bc66228c74038b71
+> # skip: [9878844094703fbae1c3b301c9bb71253a30efe7] drm/amdgpu: drive all vega asics from the IP discovery table
+> git bisect skip 9878844094703fbae1c3b301c9bb71253a30efe7
+> # skip: [7194dc998dfffca096c30b3cd39625158608992d] drm/i915/tc: Fix TypeC port init/resume time sanitization
+> git bisect skip 7194dc998dfffca096c30b3cd39625158608992d
+> # skip: [5c3720be7d46581181782f5cf9585b532feed947] drm/amdgpu: get VCN and SDMA instances from IP discovery table
+> git bisect skip 5c3720be7d46581181782f5cf9585b532feed947
+> # skip: [a53f2c035e9832d20775d2c66c71495f2dc27699] drm/panfrost: Calculate lock region size correctly
+> git bisect skip a53f2c035e9832d20775d2c66c71495f2dc27699
+> # skip: [d04287d062a4198ec0bf0112db03618f65d7428a] drm/amdgpu: During s0ix don't wait to signal GFXOFF
+> git bisect skip d04287d062a4198ec0bf0112db03618f65d7428a
+> # skip: [9ced12182d0d8401d821e9602e56e276459900fc] drm/i915: Catch yet another unconditioal clflush
+> git bisect skip 9ced12182d0d8401d821e9602e56e276459900fc
+> # skip: [dac3c405b9aedee301d0634b4e275b81f0d74363] drm/amd/display: [FW Promotion] Release 0.0.87
+> git bisect skip dac3c405b9aedee301d0634b4e275b81f0d74363
+> # skip: [9f620f1dde3e3e984837163d7930dc4b2abffe82] drm/i915: Call intel_ddi_init_dp_buf_reg() earlier
+> git bisect skip 9f620f1dde3e3e984837163d7930dc4b2abffe82
+> # skip: [178fbb6d552f294037291bf62d41b31d30186f31] drm/amd/display: Implement DPIA training loop
+> git bisect skip 178fbb6d552f294037291bf62d41b31d30186f31
+> # good: [253a55918ce128f15a3be66db5e2072665143554] drm/amd/display: Fix issue with dynamic bpp change for DCN3x
+> git bisect good 253a55918ce128f15a3be66db5e2072665143554
+> # skip: [50638f7dbd0b3969b47d2772c4db02ed92b6c47b] drm/amdgpu/pm/amdgpu_smu: convert more IP version checking
+> git bisect skip 50638f7dbd0b3969b47d2772c4db02ed92b6c47b
+> # bad: [3605eacc8ae055d699f7fa3adb9123c4c36ecd82] drm/panfrost: Make use of the helper function devm_platform_ioremap_resource()
+> git bisect bad 3605eacc8ae055d699f7fa3adb9123c4c36ecd82
+> # bad: [47ddb72f789333a8ccb792b0fd6d6fe8a7906694] drm: zte: remove obsolete DRM Support for ZTE SoCs
+> git bisect bad 47ddb72f789333a8ccb792b0fd6d6fe8a7906694
+> # bad: [072e70d52372c44df90b44fb4cd949a709bb5bef] drm: panel-orientation-quirks: Add quirk for the Chuwi Hi10 Pro
+> git bisect bad 072e70d52372c44df90b44fb4cd949a709bb5bef
+> # bad: [82ade934dde45b9d9008954b297f7727233e37af] drm/arm: malidp: Use fourcc_mod_is_vendor() helper
+> git bisect bad 82ade934dde45b9d9008954b297f7727233e37af
+> # bad: [8b4e02c70fca482c5b947d8ba92b45093b4390e7] drm/panel: Add DT bindings for Samsung S6D27A1 display panel
+> git bisect bad 8b4e02c70fca482c5b947d8ba92b45093b4390e7
+> # bad: [804b6e5ee613b019b942ba6be52cccecd9d33655] drm/shmem-helpers: Allocate wc pages on x86
+> git bisect bad 804b6e5ee613b019b942ba6be52cccecd9d33655
+> # good: [8b93d1d7dbd578fd296e70008b29c0f62d09d7cb] drm/shmem-helper: Switch to vmf_insert_pfn
+> git bisect good 8b93d1d7dbd578fd296e70008b29c0f62d09d7cb
+> # first bad commit: [804b6e5ee613b019b942ba6be52cccecd9d33655] drm/shmem-helpers: Allocate wc pages on x86
 
-Yes, that's a merge, but it contains code changes, maybe something went
-wrong there.
+Thanks for the report.
 
-> Update with kernel 5.15-rc7
-> 
-> Still present. However, I noticed dmesg ouput interesting messages
-> telling there is a transfer from the ELAN touchpad while suspended,
-> it failed to suspend, then failed to resume. The interesting thing is
-> if I try to suspend a second time, at resume the touchpad manages to
-> resume. Appending dmesg output for reference.
+Adding the regression mailing list to the list of recipients, as it
+should be in the loop for all regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
+To be sure this issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
 
-> The problem is still present in 5.16-rc7, but indeed it got worse
-> (and indeed is now critical). a) After the first "suspend" tentative
-> (closing the lid), the laptop doesn't suspend (only the screen is
-> blanked) b) When I reopen the lid, the touchpad stays disabled c)
-> When I try to suspend a second time (closing the lid), the system
-> totally freeze (without any info in dmesg) and I need to reset it
-> totally. I'll open a separate bug report for this one, when bisected,
-> and will try to post it to the suspend maintainer together with the
-> mailing list (I'm not accustomed to mailing lists).
-
-FWIW, Christian did this here:
-https://lore.kernel.org/all/256689953.114854578.1640622738334.JavaMail.root@zimbra40-e7.priv.proxad.net/
-
-> FYI, if I remember well, reverting this single commit fixed the issue
-> and the diff was making sense (try to disable the touchpad before
-> going to sleep to prevent unexpected event from it while
-> suspending... if I understood well the code).
-
-To be sure this issue doesn't again fall through the cracks unnoticed,
-I'm adding it to regzbot, my Linux kernel regression tracking bot:
-
-#regzbot introduced b3e29642548258c7cd2cb3326a776fff84cd6b69ESC
-#regzbot title hid: touchpad is not working after suspend to RAM
-#regzbot from: Christian Casteyde <casteyde.christian@free.fr>
+#regzbot ^introduced 804b6e5ee613b019b942ba6be52cccecd9d33655
+#regzbot title pm: laptop totally freezes when going to hibernation
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215427
 #regzbot ignore-activity
 
 Reminder: when fixing the issue, please add a 'Link:' tag with the URL
@@ -113,8 +165,6 @@ Don't worry, I'll send further messages wrt to this regression just to
 the lists (with a tag in the subject so people can filter them away), as
 long as they are intended just for regzbot. With a bit of luck no such
 messages will be needed anyway.
-
-
 
 Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
 
