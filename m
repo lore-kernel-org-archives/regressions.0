@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC61D168
-	for <regressions@lists.linux.dev>; Tue, 28 Dec 2021 10:04:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79208173
+	for <regressions@lists.linux.dev>; Tue, 28 Dec 2021 12:43:35 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n29L9-0002M2-F7; Tue, 28 Dec 2021 11:04:19 +0100
-Message-ID: <caf247ab-f6fe-a3b9-c4b5-7ce17d1d5e43@leemhuis.info>
-Date: Tue, 28 Dec 2021 11:04:18 +0100
+	id 1n2BpE-0004Xr-2K; Tue, 28 Dec 2021 13:43:32 +0100
+Message-ID: <d9f53ef1-c15b-0f32-0233-88ff1b33a490@leemhuis.info>
+Date: Tue, 28 Dec 2021 13:43:31 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,40 +16,106 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure to
- make progress
+Subject: Re: [PATCH] Bluetooth: Apply initial command workaround for more
+ Intel chips
 Content-Language: en-BS
-To: Mel Gorman <mgorman@techsingularity.net>,
- Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>
-Cc: Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
- Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>,
- Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>,
- regressions@lists.linux.dev, Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20211202150614.22440-1-mgorman@techsingularity.net>
+To: linux-bluetooth@vger.kernel.org, Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Tedd Ho-Jeong An <tedd.an@intel.com>, linux-kernel@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Fernando Ramos <greenfoo@u92.eu>, Paul Menzel <pmenzel@molgen.mpg.de>,
+ Takashi Iwai <tiwai@suse.de>
+References: <20211202162256.31837-1-tiwai@suse.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20211202150614.22440-1-mgorman@techsingularity.net>
+In-Reply-To: <20211202162256.31837-1-tiwai@suse.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640685865;322d427a;
-X-HE-SMSGID: 1n29L9-0002M2-F7
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640695415;7ddd0cbf;
+X-HE-SMSGID: 1n2BpE-0004Xr-2K
 
 Hi, this is your Linux kernel regression tracker speaking.
 
-On 02.12.21 16:06, Mel Gorman wrote:
-> Mike Galbraith, Alexey Avramov and Darrick Wong all reported similar
-> problems due to reclaim throttling for excessive lengths of time.
-> In Alexey's case, a memory hog that should go OOM quickly stalls for
-> several minutes before stalling. In Mike and Darrick's cases, a small
-> memcg environment stalled excessively even though the system had enough
-> memory overall.
+Hey bluetooth maintainers, what's the status here? It looks like the
+issue was discussed quite a bit, but then nothing happened anymore. Or
+am I missing something?
 
-Just wondering: this patch afaics is now in -mm and  Linux next for
-nearly two weeks. Is that intentional? I had expected it to be mainlined
-with the batch of patches Andrew mailed to Linus last week, but it
-wasn't among them.
+Other users seem to still run into the issue, see for example this report:
+https://lore.kernel.org/all/b0f6f66b-28aa-9d43-0aab-e6887ee0fda8@logobject.ch/
 
-Or am I missing something?
+For the rest of the mail:
+
+[TLDR: I'm adding this regression to regzbot, the Linux kernel
+regression tracking bot; most text you find below is compiled from a few
+templates paragraphs some of you might have seen already.]
+
+On 02.12.21 17:22, Takashi Iwai wrote:
+> It seems that a few more Intel chips require the workaround for the
+> broken initial command.  At least, per openSUSE Bugzilla reports,
+> 8087:0a2a and 8087:0026 need BTUSB_INTEL_BROKEN_INITIAL_NCMD flag.
+> 
+> Fixes: 83f2dafe2a62 ("Bluetooth: btintel: Refactoring setup routine for legacy ROM sku")
+> Buglink: https://bugzilla.opensuse.org/show_bug.cgi?id=1193124
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> 
+> ---
+>  drivers/bluetooth/btusb.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index 75c83768c257..b26989b2df23 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -359,14 +359,16 @@ static const struct usb_device_id blacklist_table[] = {
+>  
+>  	/* Intel Bluetooth devices */
+>  	{ USB_DEVICE(0x8087, 0x0025), .driver_info = BTUSB_INTEL_COMBINED },
+> -	{ USB_DEVICE(0x8087, 0x0026), .driver_info = BTUSB_INTEL_COMBINED },
+> +	{ USB_DEVICE(0x8087, 0x0026), .driver_info = BTUSB_INTEL_COMBINED |
+> +						     BTUSB_INTEL_BROKEN_INITIAL_NCMD },
+>  	{ USB_DEVICE(0x8087, 0x0029), .driver_info = BTUSB_INTEL_COMBINED },
+>  	{ USB_DEVICE(0x8087, 0x0032), .driver_info = BTUSB_INTEL_COMBINED },
+>  	{ USB_DEVICE(0x8087, 0x0033), .driver_info = BTUSB_INTEL_COMBINED },
+>  	{ USB_DEVICE(0x8087, 0x07da), .driver_info = BTUSB_CSR },
+>  	{ USB_DEVICE(0x8087, 0x07dc), .driver_info = BTUSB_INTEL_COMBINED |
+>  						     BTUSB_INTEL_BROKEN_INITIAL_NCMD },
+> -	{ USB_DEVICE(0x8087, 0x0a2a), .driver_info = BTUSB_INTEL_COMBINED },
+> +	{ USB_DEVICE(0x8087, 0x0a2a), .driver_info = BTUSB_INTEL_COMBINED |
+> +						     BTUSB_INTEL_BROKEN_INITIAL_NCMD },
+>  	{ USB_DEVICE(0x8087, 0x0a2b), .driver_info = BTUSB_INTEL_COMBINED },
+>  	{ USB_DEVICE(0x8087, 0x0aa7), .driver_info = BTUSB_INTEL_COMBINED },
+>  	{ USB_DEVICE(0x8087, 0x0aaa), .driver_info = BTUSB_INTEL_COMBINED },
+
+Adding the regression mailing list to the list of recipients, as it
+should be in the loop for all regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+To be sure this issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced 83f2dafe2a62
+#regzbot title bluetooth: more Intel chips require the workaround for
+the broken initial command
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215167
+#regzbot link: https://bugzilla.opensuse.org/show_bug.cgi?id=1193124
+#regzbot ignore-activity
+
+Reminder: when fixing the issue, please add a 'Link:' tag with the URL
+to the report (the parent of this mail) using the kernel.org redirector,
+as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
+then will automatically mark the regression as resolved once the fix
+lands in the appropriate tree. For more details about regzbot see footer.
+
+Sending this to everyone that got the initial report, to make all aware
+of the tracking. I also hope that messages like this motivate people to
+directly get at least the regression mailing list and ideally even
+regzbot involved when dealing with regressions, as messages like this
+wouldn't be needed then.
+
+Don't worry, I'll send further messages wrt to this regression just to
+the lists (with a tag in the subject so people can filter them away), as
+long as they are intended just for regzbot. With a bit of luck no such
+messages will be needed anyway.
 
 Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
 
@@ -65,202 +131,28 @@ regzbot, my Linux kernel regression tracking bot
 this mail to get things rolling again and hence don't need to be CC on
 all further activities wrt to this regression.
 
+---
+Additional information about regzbot:
 
-> Commit 69392a403f49 ("mm/vmscan: throttle reclaim when no progress is being
-> made") introduced the problem although commit a19594ca4a8b ("mm/vmscan:
-> increase the timeout if page reclaim is not making progress") made it
-> worse. Systems at or near an OOM state that cannot be recovered must
-> reach OOM quickly and memcg should kill tasks if a memcg is near OOM.
-> 
-> To address this, only stall for the first zone in the zonelist, reduce
-> the timeout to 1 tick for VMSCAN_THROTTLE_NOPROGRESS and only stall if
-> the scan control nr_reclaimed is 0, kswapd is still active and there were
-> excessive pages pending for writeback. If kswapd has stopped reclaiming due
-> to excessive failures, do not stall at all so that OOM triggers relatively
-> quickly. Similarly, if an LRU is simply congested, only lightly throttle
-> similar to NOPROGRESS.
-> 
-> Alexey's original case was the most straight forward
-> 
-> 	for i in {1..3}; do tail /dev/zero; done
-> 
-> On vanilla 5.16-rc1, this test stalled heavily, after the patch the test
-> completes in a few seconds similar to 5.15.
-> 
-> Alexey's second test case added watching a youtube video while tail runs
-> 10 times. On 5.15, playback only jitters slightly, 5.16-rc1 stalls a lot
-> with lots of frames missing and numerous audio glitches. With this patch
-> applies, the video plays similarly to 5.15.
-> 
-> Link: https://lore.kernel.org/r/99e779783d6c7fce96448a3402061b9dc1b3b602.camel@gmx.de
-> Link: https://lore.kernel.org/r/20211124011954.7cab9bb4@mail.inbox.lv
-> Link: https://lore.kernel.org/r/20211022144651.19914-1-mgorman@techsingularity.net
-> 
-> [lkp@intel.com: Fix W=1 build warning]
-> Reported-and-tested-by: Alexey Avramov <hakavlad@inbox.lv>
-> Reported-and-tested-by: Mike Galbraith <efault@gmx.de>
-> Reported-and-tested-by: Darrick J. Wong <djwong@kernel.org>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Fixes: 69392a403f49 ("mm/vmscan: throttle reclaim when no progress is being made")
-> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-> ---
->  include/linux/mmzone.h        |  1 +
->  include/trace/events/vmscan.h |  4 ++-
->  mm/vmscan.c                   | 64 ++++++++++++++++++++++++++++++-----
->  3 files changed, 59 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 58e744b78c2c..936dc0b6c226 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -277,6 +277,7 @@ enum vmscan_throttle_state {
->  	VMSCAN_THROTTLE_WRITEBACK,
->  	VMSCAN_THROTTLE_ISOLATED,
->  	VMSCAN_THROTTLE_NOPROGRESS,
-> +	VMSCAN_THROTTLE_CONGESTED,
->  	NR_VMSCAN_THROTTLE,
->  };
->  
-> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
-> index f25a6149d3ba..ca2e9009a651 100644
-> --- a/include/trace/events/vmscan.h
-> +++ b/include/trace/events/vmscan.h
-> @@ -30,12 +30,14 @@
->  #define _VMSCAN_THROTTLE_WRITEBACK	(1 << VMSCAN_THROTTLE_WRITEBACK)
->  #define _VMSCAN_THROTTLE_ISOLATED	(1 << VMSCAN_THROTTLE_ISOLATED)
->  #define _VMSCAN_THROTTLE_NOPROGRESS	(1 << VMSCAN_THROTTLE_NOPROGRESS)
-> +#define _VMSCAN_THROTTLE_CONGESTED	(1 << VMSCAN_THROTTLE_CONGESTED)
->  
->  #define show_throttle_flags(flags)						\
->  	(flags) ? __print_flags(flags, "|",					\
->  		{_VMSCAN_THROTTLE_WRITEBACK,	"VMSCAN_THROTTLE_WRITEBACK"},	\
->  		{_VMSCAN_THROTTLE_ISOLATED,	"VMSCAN_THROTTLE_ISOLATED"},	\
-> -		{_VMSCAN_THROTTLE_NOPROGRESS,	"VMSCAN_THROTTLE_NOPROGRESS"}	\
-> +		{_VMSCAN_THROTTLE_NOPROGRESS,	"VMSCAN_THROTTLE_NOPROGRESS"},	\
-> +		{_VMSCAN_THROTTLE_CONGESTED,	"VMSCAN_THROTTLE_CONGESTED"}	\
->  		) : "VMSCAN_THROTTLE_NONE"
->  
->  
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index fb9584641ac7..4c4d5f6cd8a3 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -1021,6 +1021,39 @@ static void handle_write_error(struct address_space *mapping,
->  	unlock_page(page);
->  }
->  
-> +static bool skip_throttle_noprogress(pg_data_t *pgdat)
-> +{
-> +	int reclaimable = 0, write_pending = 0;
-> +	int i;
-> +
-> +	/*
-> +	 * If kswapd is disabled, reschedule if necessary but do not
-> +	 * throttle as the system is likely near OOM.
-> +	 */
-> +	if (pgdat->kswapd_failures >= MAX_RECLAIM_RETRIES)
-> +		return true;
-> +
-> +	/*
-> +	 * If there are a lot of dirty/writeback pages then do not
-> +	 * throttle as throttling will occur when the pages cycle
-> +	 * towards the end of the LRU if still under writeback.
-> +	 */
-> +	for (i = 0; i < MAX_NR_ZONES; i++) {
-> +		struct zone *zone = pgdat->node_zones + i;
-> +
-> +		if (!populated_zone(zone))
-> +			continue;
-> +
-> +		reclaimable += zone_reclaimable_pages(zone);
-> +		write_pending += zone_page_state_snapshot(zone,
-> +						  NR_ZONE_WRITE_PENDING);
-> +	}
-> +	if (2 * write_pending <= reclaimable)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
->  void reclaim_throttle(pg_data_t *pgdat, enum vmscan_throttle_state reason)
->  {
->  	wait_queue_head_t *wqh = &pgdat->reclaim_wait[reason];
-> @@ -1056,8 +1089,16 @@ void reclaim_throttle(pg_data_t *pgdat, enum vmscan_throttle_state reason)
->  		}
->  
->  		break;
-> +	case VMSCAN_THROTTLE_CONGESTED:
-> +		fallthrough;
->  	case VMSCAN_THROTTLE_NOPROGRESS:
-> -		timeout = HZ/2;
-> +		if (skip_throttle_noprogress(pgdat)) {
-> +			cond_resched();
-> +			return;
-> +		}
-> +
-> +		timeout = 1;
-> +
->  		break;
->  	case VMSCAN_THROTTLE_ISOLATED:
->  		timeout = HZ/50;
-> @@ -3321,7 +3362,7 @@ static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
->  	if (!current_is_kswapd() && current_may_throttle() &&
->  	    !sc->hibernation_mode &&
->  	    test_bit(LRUVEC_CONGESTED, &target_lruvec->flags))
-> -		reclaim_throttle(pgdat, VMSCAN_THROTTLE_WRITEBACK);
-> +		reclaim_throttle(pgdat, VMSCAN_THROTTLE_CONGESTED);
->  
->  	if (should_continue_reclaim(pgdat, sc->nr_reclaimed - nr_reclaimed,
->  				    sc))
-> @@ -3386,16 +3427,16 @@ static void consider_reclaim_throttle(pg_data_t *pgdat, struct scan_control *sc)
->  	}
->  
->  	/*
-> -	 * Do not throttle kswapd on NOPROGRESS as it will throttle on
-> -	 * VMSCAN_THROTTLE_WRITEBACK if there are too many pages under
-> -	 * writeback and marked for immediate reclaim at the tail of
-> -	 * the LRU.
-> +	 * Do not throttle kswapd or cgroup reclaim on NOPROGRESS as it will
-> +	 * throttle on VMSCAN_THROTTLE_WRITEBACK if there are too many pages
-> +	 * under writeback and marked for immediate reclaim at the tail of the
-> +	 * LRU.
->  	 */
-> -	if (current_is_kswapd())
-> +	if (current_is_kswapd() || cgroup_reclaim(sc))
->  		return;
->  
->  	/* Throttle if making no progress at high prioities. */
-> -	if (sc->priority < DEF_PRIORITY - 2)
-> +	if (sc->priority == 1 && !sc->nr_reclaimed)
->  		reclaim_throttle(pgdat, VMSCAN_THROTTLE_NOPROGRESS);
->  }
->  
-> @@ -3415,6 +3456,7 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
->  	unsigned long nr_soft_scanned;
->  	gfp_t orig_mask;
->  	pg_data_t *last_pgdat = NULL;
-> +	pg_data_t *first_pgdat = NULL;
->  
->  	/*
->  	 * If the number of buffer_heads in the machine exceeds the maximum
-> @@ -3478,14 +3520,18 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
->  			/* need some check for avoid more shrink_zone() */
->  		}
->  
-> +		if (!first_pgdat)
-> +			first_pgdat = zone->zone_pgdat;
-> +
->  		/* See comment about same check for global reclaim above */
->  		if (zone->zone_pgdat == last_pgdat)
->  			continue;
->  		last_pgdat = zone->zone_pgdat;
->  		shrink_node(zone->zone_pgdat, sc);
-> -		consider_reclaim_throttle(zone->zone_pgdat, sc);
->  	}
->  
-> +	consider_reclaim_throttle(first_pgdat, sc);
-> +
->  	/*
->  	 * Restore to original mask to avoid the impact on the caller if we
->  	 * promoted it to __GFP_HIGHMEM.
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and/or the references documentation:
 
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+tell #regzbot about it in the report, as that will ensure the regression
+gets on the radar of regzbot and the regression tracker. That's in your
+interest, as they will make sure the report won't fall through the
+cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include a 'Link:' tag to the report in the commit message, as explained
+in Documentation/process/submitting-patches.rst
+That aspect was recently was made more explicit in commit 1f57bd42b77c:
+https://git.kernel.org/linus/1f57bd42b77c
