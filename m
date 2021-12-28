@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC16429CA
-	for <regressions@lists.linux.dev>; Tue, 28 Dec 2021 07:37:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC61D168
+	for <regressions@lists.linux.dev>; Tue, 28 Dec 2021 10:04:25 +0000 (UTC)
 Received: from ip4d173d4a.dynamic.kabel-deutschland.de ([77.23.61.74] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n272v-0004lg-Nx; Tue, 28 Dec 2021 08:37:21 +0100
-Message-ID: <6d260e9b-14cf-1aa5-ff28-464e85802af3@leemhuis.info>
-Date: Tue, 28 Dec 2021 08:37:21 +0100
+	id 1n29L9-0002M2-F7; Tue, 28 Dec 2021 11:04:19 +0100
+Message-ID: <caf247ab-f6fe-a3b9-c4b5-7ce17d1d5e43@leemhuis.info>
+Date: Tue, 28 Dec 2021 11:04:18 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,166 +16,48 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: Regression report on laptop suspend
+Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure to
+ make progress
 Content-Language: en-BS
-To: casteyde.christian@free.fr, rafael@kernel.org
-Cc: linux-pm@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <256689953.114854578.1640622738334.JavaMail.root@zimbra40-e7.priv.proxad.net>
+To: Mel Gorman <mgorman@techsingularity.net>,
+ Andrew Morton <akpm@linux-foundation.org>, Mark Brown <broonie@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>,
+ Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>,
+ regressions@lists.linux.dev, Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+ Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20211202150614.22440-1-mgorman@techsingularity.net>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <256689953.114854578.1640622738334.JavaMail.root@zimbra40-e7.priv.proxad.net>
+In-Reply-To: <20211202150614.22440-1-mgorman@techsingularity.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640677043;907b3387;
-X-HE-SMSGID: 1n272v-0004lg-Nx
-
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1640685865;322d427a;
+X-HE-SMSGID: 1n29L9-0002M2-F7
 
 Hi, this is your Linux kernel regression tracker speaking.
 
-TWIMC: seems Christian system is affected by another issue (Touchpad is
-not working anymore after suspend to RAM since kernel 5.14) that might
-interfere:
+On 02.12.21 16:06, Mel Gorman wrote:
+> Mike Galbraith, Alexey Avramov and Darrick Wong all reported similar
+> problems due to reclaim throttling for excessive lengths of time.
+> In Alexey's case, a memory hog that should go OOM quickly stalls for
+> several minutes before stalling. In Mike and Darrick's cases, a small
+> memcg environment stalled excessively even though the system had enough
+> memory overall.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=214667
-https://lore.kernel.org/regressions/12b9a10a-626b-cafd-05d6-cf0a116aa39b@leemhuis.info/
+Just wondering: this patch afaics is now in -mm and  Linux next for
+nearly two weeks. Is that intentional? I had expected it to be mainlined
+with the batch of patches Andrew mailed to Linus last week, but it
+wasn't among them.
 
-Anyway, for the rest of this mail:
+Or am I missing something?
 
-[TLDR: I'm adding this regression to regzbot, the Linux kernel
-regression tracking bot; most text you find below is compiled from a few
-templates paragraphs some of you might have seen already.]
-
-On 27.12.21 17:32, casteyde.christian@free.fr wrote:
-> Hello
-> 
-> I've noticed my laptop totally freeze when going to hibernation.
-> The git bisect log is appended below.
-> Please note however that even the previous good commit was "good" (ie : laptop managed to suspend and resume), the system was unstable and froze few minutes later.
-> 
-> Hardware specs: AMD Ryzen 5 4600H with Vega graphics + Nvidia 1650Ti (unused)
-> Software: Slackware 14.2 / X.org.
-> 
-> Seems to be related to drm stuff.
-> I've issued bugzilla https://bugzilla.kernel.org/show_bug.cgi?id=215427
-> 
-> Thanks
-> 
-> git bisect start
-> # good: [8bb7eca972ad531c9b149c0a51ab43a417385813] Linux 5.15
-> git bisect good 8bb7eca972ad531c9b149c0a51ab43a417385813
-> # bad: [a7904a538933c525096ca2ccde1e60d0ee62c08e] Linux 5.16-rc6
-> git bisect bad a7904a538933c525096ca2ccde1e60d0ee62c08e
-> # bad: [43e1b12927276cde8052122a24ff796649f09d60] Merge tag 'for_linus' of git://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost
-> git bisect bad 43e1b12927276cde8052122a24ff796649f09d60
-> # good: [fc02cb2b37fe2cbf1d3334b9f0f0eab9431766c4] Merge tag 'net-next-for-5.16' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
-> git bisect good fc02cb2b37fe2cbf1d3334b9f0f0eab9431766c4
-> # bad: [d9bd054177fbd2c4762546aec40fc3071bfe4cc0] Merge tag 'amd-drm-next-5.16-2021-10-29' of https://gitlab.freedesktop.org/agd5f/linux into drm-next
-> git bisect bad d9bd054177fbd2c4762546aec40fc3071bfe4cc0
-> # skip: [797d72ce8e0f8fa8a808cb189b5411046432cfd3] Merge tag 'drm-misc-next-2021-10-06' of git://anongit.freedesktop.org/drm/drm-misc into drm-next
-> git bisect skip 797d72ce8e0f8fa8a808cb189b5411046432cfd3
-> # skip: [bf72ca73aaa6629568cb9b0761be6efdd02a2591] drm/amd/display: [FW Promotion] Release 0.0.85
-> git bisect skip bf72ca73aaa6629568cb9b0761be6efdd02a2591
-> # good: [bc41f059a080e487c235b539f1e5cdbf605aba9f] drm/i915/dp: fix DG1 and RKL max source rates
-> git bisect good bc41f059a080e487c235b539f1e5cdbf605aba9f
-> # skip: [58144d283712c9e80e528e001af6ac5aeee71af2] drm/amdgpu: unify BO evicting method in amdgpu_ttm
-> git bisect skip 58144d283712c9e80e528e001af6ac5aeee71af2
-> # skip: [a5b51a9f8523a0b88ce7e8e8059f75a43c34c57f] drm/i915/gt: add asm/cacheflush.h for use of clflush()
-> git bisect skip a5b51a9f8523a0b88ce7e8e8059f75a43c34c57f
-> # skip: [40348baedfbc6500e7a090c7da1d55b6c94c334f] drm/amd/display: fix duplicated inclusion
-> git bisect skip 40348baedfbc6500e7a090c7da1d55b6c94c334f
-> # skip: [7547675b84bf452542463db29adb113cadb7dd6d] drm/virtio: implement context init: track {ring_idx, emit_fence_info} in virtio_gpu_fence
-> git bisect skip 7547675b84bf452542463db29adb113cadb7dd6d
-> # good: [f01ee019586220c86f238263a4fbde6e72085e11] drm/amd/display: Add DP 2.0 SST DC Support
-> git bisect good f01ee019586220c86f238263a4fbde6e72085e11
-> # good: [f3ede209d44d71636890a78fa89c5b1c83340320] drm/i915/pci: rename functions to have i915_pci prefix
-> git bisect good f3ede209d44d71636890a78fa89c5b1c83340320
-> # skip: [4fb530e5caf7cb666948db65f245b350ce520436] drm/virtio: implement context init: support init ioctl
-> git bisect skip 4fb530e5caf7cb666948db65f245b350ce520436
-> # good: [c7c4dfb6fe704ae3cce1a8f438db75b1a0a9061f] drm/i915/display: Some code improvements and code style fixes for DRRS
-> git bisect good c7c4dfb6fe704ae3cce1a8f438db75b1a0a9061f
-> # skip: [7a28bee067d524c1b8770aa72a82263eb9fc53f0] drm/amd/display: Disable dpp root clock when not being used
-> git bisect skip 7a28bee067d524c1b8770aa72a82263eb9fc53f0
-> # good: [5b116c17e6babc6de2e26714bc66228c74038b71] drm/i915/guc: Drop pin count check trick between sched_disable and re-pin
-> git bisect good 5b116c17e6babc6de2e26714bc66228c74038b71
-> # skip: [9878844094703fbae1c3b301c9bb71253a30efe7] drm/amdgpu: drive all vega asics from the IP discovery table
-> git bisect skip 9878844094703fbae1c3b301c9bb71253a30efe7
-> # skip: [7194dc998dfffca096c30b3cd39625158608992d] drm/i915/tc: Fix TypeC port init/resume time sanitization
-> git bisect skip 7194dc998dfffca096c30b3cd39625158608992d
-> # skip: [5c3720be7d46581181782f5cf9585b532feed947] drm/amdgpu: get VCN and SDMA instances from IP discovery table
-> git bisect skip 5c3720be7d46581181782f5cf9585b532feed947
-> # skip: [a53f2c035e9832d20775d2c66c71495f2dc27699] drm/panfrost: Calculate lock region size correctly
-> git bisect skip a53f2c035e9832d20775d2c66c71495f2dc27699
-> # skip: [d04287d062a4198ec0bf0112db03618f65d7428a] drm/amdgpu: During s0ix don't wait to signal GFXOFF
-> git bisect skip d04287d062a4198ec0bf0112db03618f65d7428a
-> # skip: [9ced12182d0d8401d821e9602e56e276459900fc] drm/i915: Catch yet another unconditioal clflush
-> git bisect skip 9ced12182d0d8401d821e9602e56e276459900fc
-> # skip: [dac3c405b9aedee301d0634b4e275b81f0d74363] drm/amd/display: [FW Promotion] Release 0.0.87
-> git bisect skip dac3c405b9aedee301d0634b4e275b81f0d74363
-> # skip: [9f620f1dde3e3e984837163d7930dc4b2abffe82] drm/i915: Call intel_ddi_init_dp_buf_reg() earlier
-> git bisect skip 9f620f1dde3e3e984837163d7930dc4b2abffe82
-> # skip: [178fbb6d552f294037291bf62d41b31d30186f31] drm/amd/display: Implement DPIA training loop
-> git bisect skip 178fbb6d552f294037291bf62d41b31d30186f31
-> # good: [253a55918ce128f15a3be66db5e2072665143554] drm/amd/display: Fix issue with dynamic bpp change for DCN3x
-> git bisect good 253a55918ce128f15a3be66db5e2072665143554
-> # skip: [50638f7dbd0b3969b47d2772c4db02ed92b6c47b] drm/amdgpu/pm/amdgpu_smu: convert more IP version checking
-> git bisect skip 50638f7dbd0b3969b47d2772c4db02ed92b6c47b
-> # bad: [3605eacc8ae055d699f7fa3adb9123c4c36ecd82] drm/panfrost: Make use of the helper function devm_platform_ioremap_resource()
-> git bisect bad 3605eacc8ae055d699f7fa3adb9123c4c36ecd82
-> # bad: [47ddb72f789333a8ccb792b0fd6d6fe8a7906694] drm: zte: remove obsolete DRM Support for ZTE SoCs
-> git bisect bad 47ddb72f789333a8ccb792b0fd6d6fe8a7906694
-> # bad: [072e70d52372c44df90b44fb4cd949a709bb5bef] drm: panel-orientation-quirks: Add quirk for the Chuwi Hi10 Pro
-> git bisect bad 072e70d52372c44df90b44fb4cd949a709bb5bef
-> # bad: [82ade934dde45b9d9008954b297f7727233e37af] drm/arm: malidp: Use fourcc_mod_is_vendor() helper
-> git bisect bad 82ade934dde45b9d9008954b297f7727233e37af
-> # bad: [8b4e02c70fca482c5b947d8ba92b45093b4390e7] drm/panel: Add DT bindings for Samsung S6D27A1 display panel
-> git bisect bad 8b4e02c70fca482c5b947d8ba92b45093b4390e7
-> # bad: [804b6e5ee613b019b942ba6be52cccecd9d33655] drm/shmem-helpers: Allocate wc pages on x86
-> git bisect bad 804b6e5ee613b019b942ba6be52cccecd9d33655
-> # good: [8b93d1d7dbd578fd296e70008b29c0f62d09d7cb] drm/shmem-helper: Switch to vmf_insert_pfn
-> git bisect good 8b93d1d7dbd578fd296e70008b29c0f62d09d7cb
-> # first bad commit: [804b6e5ee613b019b942ba6be52cccecd9d33655] drm/shmem-helpers: Allocate wc pages on x86
-
-Thanks for the report.
-
-Adding the regression mailing list to the list of recipients, as it
-should be in the loop for all regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-
-To be sure this issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
-
-#regzbot ^introduced 804b6e5ee613b019b942ba6be52cccecd9d33655
-#regzbot title pm: laptop totally freezes when going to hibernation
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215427
-#regzbot ignore-activity
-
-Reminder: when fixing the issue, please add a 'Link:' tag with the URL
-to the report (the parent of this mail) using the kernel.org redirector,
-as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
-then will automatically mark the regression as resolved once the fix
-lands in the appropriate tree. For more details about regzbot see footer.
-
-Sending this to everyone that got the initial report, to make all aware
-of the tracking. I also hope that messages like this motivate people to
-directly get at least the regression mailing list and ideally even
-regzbot involved when dealing with regressions, as messages like this
-wouldn't be needed then.
-
-Don't worry, I'll send further messages wrt to this regression just to
-the lists (with a tag in the subject so people can filter them away), as
-long as they are intended just for regzbot. With a bit of luck no such
-messages will be needed anyway.
-
-Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
+Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
 
 P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
 on my table. I can only look briefly into most of them. Unfortunately
 therefore I sometimes will get things wrong or miss something important.
 I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply. That's in everyone's interest, as
-what I wrote above might be misleading to everyone reading this; any
-suggestion I gave thus might sent someone reading this down the wrong
-rabbit hole, which none of us wants.
+tell me about it in a public reply, that's in everyone's interest.
 
 BTW, I have no personal interest in this issue, which is tracked using
 regzbot, my Linux kernel regression tracking bot
@@ -183,28 +65,202 @@ regzbot, my Linux kernel regression tracking bot
 this mail to get things rolling again and hence don't need to be CC on
 all further activities wrt to this regression.
 
----
-Additional information about regzbot:
 
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and/or the references documentation:
+> Commit 69392a403f49 ("mm/vmscan: throttle reclaim when no progress is being
+> made") introduced the problem although commit a19594ca4a8b ("mm/vmscan:
+> increase the timeout if page reclaim is not making progress") made it
+> worse. Systems at or near an OOM state that cannot be recovered must
+> reach OOM quickly and memcg should kill tasks if a memcg is near OOM.
+> 
+> To address this, only stall for the first zone in the zonelist, reduce
+> the timeout to 1 tick for VMSCAN_THROTTLE_NOPROGRESS and only stall if
+> the scan control nr_reclaimed is 0, kswapd is still active and there were
+> excessive pages pending for writeback. If kswapd has stopped reclaiming due
+> to excessive failures, do not stall at all so that OOM triggers relatively
+> quickly. Similarly, if an LRU is simply congested, only lightly throttle
+> similar to NOPROGRESS.
+> 
+> Alexey's original case was the most straight forward
+> 
+> 	for i in {1..3}; do tail /dev/zero; done
+> 
+> On vanilla 5.16-rc1, this test stalled heavily, after the patch the test
+> completes in a few seconds similar to 5.15.
+> 
+> Alexey's second test case added watching a youtube video while tail runs
+> 10 times. On 5.15, playback only jitters slightly, 5.16-rc1 stalls a lot
+> with lots of frames missing and numerous audio glitches. With this patch
+> applies, the video plays similarly to 5.15.
+> 
+> Link: https://lore.kernel.org/r/99e779783d6c7fce96448a3402061b9dc1b3b602.camel@gmx.de
+> Link: https://lore.kernel.org/r/20211124011954.7cab9bb4@mail.inbox.lv
+> Link: https://lore.kernel.org/r/20211022144651.19914-1-mgorman@techsingularity.net
+> 
+> [lkp@intel.com: Fix W=1 build warning]
+> Reported-and-tested-by: Alexey Avramov <hakavlad@inbox.lv>
+> Reported-and-tested-by: Mike Galbraith <efault@gmx.de>
+> Reported-and-tested-by: Darrick J. Wong <djwong@kernel.org>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Fixes: 69392a403f49 ("mm/vmscan: throttle reclaim when no progress is being made")
+> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> ---
+>  include/linux/mmzone.h        |  1 +
+>  include/trace/events/vmscan.h |  4 ++-
+>  mm/vmscan.c                   | 64 ++++++++++++++++++++++++++++++-----
+>  3 files changed, 59 insertions(+), 10 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 58e744b78c2c..936dc0b6c226 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -277,6 +277,7 @@ enum vmscan_throttle_state {
+>  	VMSCAN_THROTTLE_WRITEBACK,
+>  	VMSCAN_THROTTLE_ISOLATED,
+>  	VMSCAN_THROTTLE_NOPROGRESS,
+> +	VMSCAN_THROTTLE_CONGESTED,
+>  	NR_VMSCAN_THROTTLE,
+>  };
+>  
+> diff --git a/include/trace/events/vmscan.h b/include/trace/events/vmscan.h
+> index f25a6149d3ba..ca2e9009a651 100644
+> --- a/include/trace/events/vmscan.h
+> +++ b/include/trace/events/vmscan.h
+> @@ -30,12 +30,14 @@
+>  #define _VMSCAN_THROTTLE_WRITEBACK	(1 << VMSCAN_THROTTLE_WRITEBACK)
+>  #define _VMSCAN_THROTTLE_ISOLATED	(1 << VMSCAN_THROTTLE_ISOLATED)
+>  #define _VMSCAN_THROTTLE_NOPROGRESS	(1 << VMSCAN_THROTTLE_NOPROGRESS)
+> +#define _VMSCAN_THROTTLE_CONGESTED	(1 << VMSCAN_THROTTLE_CONGESTED)
+>  
+>  #define show_throttle_flags(flags)						\
+>  	(flags) ? __print_flags(flags, "|",					\
+>  		{_VMSCAN_THROTTLE_WRITEBACK,	"VMSCAN_THROTTLE_WRITEBACK"},	\
+>  		{_VMSCAN_THROTTLE_ISOLATED,	"VMSCAN_THROTTLE_ISOLATED"},	\
+> -		{_VMSCAN_THROTTLE_NOPROGRESS,	"VMSCAN_THROTTLE_NOPROGRESS"}	\
+> +		{_VMSCAN_THROTTLE_NOPROGRESS,	"VMSCAN_THROTTLE_NOPROGRESS"},	\
+> +		{_VMSCAN_THROTTLE_CONGESTED,	"VMSCAN_THROTTLE_CONGESTED"}	\
+>  		) : "VMSCAN_THROTTLE_NONE"
+>  
+>  
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index fb9584641ac7..4c4d5f6cd8a3 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1021,6 +1021,39 @@ static void handle_write_error(struct address_space *mapping,
+>  	unlock_page(page);
+>  }
+>  
+> +static bool skip_throttle_noprogress(pg_data_t *pgdat)
+> +{
+> +	int reclaimable = 0, write_pending = 0;
+> +	int i;
+> +
+> +	/*
+> +	 * If kswapd is disabled, reschedule if necessary but do not
+> +	 * throttle as the system is likely near OOM.
+> +	 */
+> +	if (pgdat->kswapd_failures >= MAX_RECLAIM_RETRIES)
+> +		return true;
+> +
+> +	/*
+> +	 * If there are a lot of dirty/writeback pages then do not
+> +	 * throttle as throttling will occur when the pages cycle
+> +	 * towards the end of the LRU if still under writeback.
+> +	 */
+> +	for (i = 0; i < MAX_NR_ZONES; i++) {
+> +		struct zone *zone = pgdat->node_zones + i;
+> +
+> +		if (!populated_zone(zone))
+> +			continue;
+> +
+> +		reclaimable += zone_reclaimable_pages(zone);
+> +		write_pending += zone_page_state_snapshot(zone,
+> +						  NR_ZONE_WRITE_PENDING);
+> +	}
+> +	if (2 * write_pending <= reclaimable)
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+>  void reclaim_throttle(pg_data_t *pgdat, enum vmscan_throttle_state reason)
+>  {
+>  	wait_queue_head_t *wqh = &pgdat->reclaim_wait[reason];
+> @@ -1056,8 +1089,16 @@ void reclaim_throttle(pg_data_t *pgdat, enum vmscan_throttle_state reason)
+>  		}
+>  
+>  		break;
+> +	case VMSCAN_THROTTLE_CONGESTED:
+> +		fallthrough;
+>  	case VMSCAN_THROTTLE_NOPROGRESS:
+> -		timeout = HZ/2;
+> +		if (skip_throttle_noprogress(pgdat)) {
+> +			cond_resched();
+> +			return;
+> +		}
+> +
+> +		timeout = 1;
+> +
+>  		break;
+>  	case VMSCAN_THROTTLE_ISOLATED:
+>  		timeout = HZ/50;
+> @@ -3321,7 +3362,7 @@ static void shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+>  	if (!current_is_kswapd() && current_may_throttle() &&
+>  	    !sc->hibernation_mode &&
+>  	    test_bit(LRUVEC_CONGESTED, &target_lruvec->flags))
+> -		reclaim_throttle(pgdat, VMSCAN_THROTTLE_WRITEBACK);
+> +		reclaim_throttle(pgdat, VMSCAN_THROTTLE_CONGESTED);
+>  
+>  	if (should_continue_reclaim(pgdat, sc->nr_reclaimed - nr_reclaimed,
+>  				    sc))
+> @@ -3386,16 +3427,16 @@ static void consider_reclaim_throttle(pg_data_t *pgdat, struct scan_control *sc)
+>  	}
+>  
+>  	/*
+> -	 * Do not throttle kswapd on NOPROGRESS as it will throttle on
+> -	 * VMSCAN_THROTTLE_WRITEBACK if there are too many pages under
+> -	 * writeback and marked for immediate reclaim at the tail of
+> -	 * the LRU.
+> +	 * Do not throttle kswapd or cgroup reclaim on NOPROGRESS as it will
+> +	 * throttle on VMSCAN_THROTTLE_WRITEBACK if there are too many pages
+> +	 * under writeback and marked for immediate reclaim at the tail of the
+> +	 * LRU.
+>  	 */
+> -	if (current_is_kswapd())
+> +	if (current_is_kswapd() || cgroup_reclaim(sc))
+>  		return;
+>  
+>  	/* Throttle if making no progress at high prioities. */
+> -	if (sc->priority < DEF_PRIORITY - 2)
+> +	if (sc->priority == 1 && !sc->nr_reclaimed)
+>  		reclaim_throttle(pgdat, VMSCAN_THROTTLE_NOPROGRESS);
+>  }
+>  
+> @@ -3415,6 +3456,7 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
+>  	unsigned long nr_soft_scanned;
+>  	gfp_t orig_mask;
+>  	pg_data_t *last_pgdat = NULL;
+> +	pg_data_t *first_pgdat = NULL;
+>  
+>  	/*
+>  	 * If the number of buffer_heads in the machine exceeds the maximum
+> @@ -3478,14 +3520,18 @@ static void shrink_zones(struct zonelist *zonelist, struct scan_control *sc)
+>  			/* need some check for avoid more shrink_zone() */
+>  		}
+>  
+> +		if (!first_pgdat)
+> +			first_pgdat = zone->zone_pgdat;
+> +
+>  		/* See comment about same check for global reclaim above */
+>  		if (zone->zone_pgdat == last_pgdat)
+>  			continue;
+>  		last_pgdat = zone->zone_pgdat;
+>  		shrink_node(zone->zone_pgdat, sc);
+> -		consider_reclaim_throttle(zone->zone_pgdat, sc);
+>  	}
+>  
+> +	consider_reclaim_throttle(first_pgdat, sc);
+> +
+>  	/*
+>  	 * Restore to original mask to avoid the impact on the caller if we
+>  	 * promoted it to __GFP_HIGHMEM.
 
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-tell #regzbot about it in the report, as that will ensure the regression
-gets on the radar of regzbot and the regression tracker. That's in your
-interest, as they will make sure the report won't fall through the
-cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include a 'Link:' tag to the report in the commit message, as explained
-in Documentation/process/submitting-patches.rst
-That aspect was recently was made more explicit in commit 1f57bd42b77c:
-https://git.kernel.org/linus/1f57bd42b77c
