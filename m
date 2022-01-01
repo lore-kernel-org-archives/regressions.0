@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4BE8168
-	for <regressions@lists.linux.dev>; Sat,  1 Jan 2022 10:22:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD0C29CA
+	for <regressions@lists.linux.dev>; Sat,  1 Jan 2022 10:52:22 +0000 (UTC)
 Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n3bXN-0005Me-NN; Sat, 01 Jan 2022 11:22:57 +0100
-Message-ID: <f3aa1e12-c65f-8668-772c-b25dca79b642@leemhuis.info>
-Date: Sat, 1 Jan 2022 11:22:56 +0100
+	id 1n3bzk-0005yW-5C; Sat, 01 Jan 2022 11:52:16 +0100
+Message-ID: <0bdf0a46-bd10-6b14-d569-a18e6bb73836@leemhuis.info>
+Date: Sat, 1 Jan 2022 11:52:15 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,68 +16,69 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
+Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure to
+ make progress
 Content-Language: en-BS
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Mel Gorman <mgorman@techsingularity.net>, Mark Brown <broonie@kernel.org>,
+ Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Alexey Avramov <hakavlad@inbox.lv>, Rik van Riel <riel@surriel.com>,
+ Mike Galbraith <efault@gmx.de>, Darrick Wong <djwong@kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Linux-fsdevel <linux-fsdevel@vger.kernel.org>, Linux-MM
+ <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20211202150614.22440-1-mgorman@techsingularity.net>
+ <caf247ab-f6fe-a3b9-c4b5-7ce17d1d5e43@leemhuis.info>
+ <20211229154553.09dd5bb657bc19d45c3de8dd@linux-foundation.org>
+ <5c9d7c6b-05cd-4d17-b941-a93d90197cd3@leemhuis.info>
+ <CAHk-=wi3z_aFJ7kkJb+GDLzUMAzxYMRpVzuMRh5QFaFJnhGydA@mail.gmail.com>
+ <CAHk-=whj9ZWJ2Fmv2vY-NAB_nR-KgpzpRx6Oxs=ayyTEN7E8zw@mail.gmail.com>
+ <CAHk-=wjKNjx1EApBoaqB0kZ8BB5r+YReOELA5uwRhwMi17S=qg@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: drm: amdgpu: s0ix suspend stopped working
+In-Reply-To: <CAHk-=wjKNjx1EApBoaqB0kZ8BB5r+YReOELA5uwRhwMi17S=qg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1641032580;5491dab9;
-X-HE-SMSGID: 1n3bXN-0005Me-NN
-
-Hi, this is your Linux kernel regression tracker speaking.
-
-There are two reports about s2idle regression on AMD systems. They are
-already being worked on.
-
-I'm writing this mail just for getting it tracked by regzbot and to make
-it easier for people to find the issue.
-
-#regzbot ^introduced 2a50edbf10c8c56e930bfb53d8f9f00a33fd837e
-#regzbot title drm: amdgpu: s0ix suspend stopped working
-#regzbot Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1821
-#regzbot Link: https://bugzilla.kernel.org/show_bug.cgi?id=215436
-
-Ciao, Thorsten
-
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply, that's in everyone's interest.
-
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
-
----
-Additional information about regzbot:
-
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and/or the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-tell #regzbot about it in the report, as that will ensure the regression
-gets on the radar of regzbot and the regression tracker. That's in your
-interest, as they will make sure the report won't fall through the
-cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include a 'Link:' tag to the report in the commit message, as explained
-in Documentation/process/submitting-patches.rst
-That aspect was recently was made more explicit in commit 1f57bd42b77c:
-https://git.kernel.org/linus/1f57bd42b77c
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1641034342;ebd7495d;
+X-HE-SMSGID: 1n3bzk-0005yW-5C
 
 
+On 31.12.21 20:22, Linus Torvalds wrote:
+> On Fri, Dec 31, 2021 at 11:21 AM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>
+>> Pushed out as 1b4e3f26f9f7 ("mm: vmscan: Reduce throttling due to a
+>> failure to make progress")
 
+Thx.
 
+> .. and I _think_ this empties the regzbot queue for this release, Thorsten. No?
+
+Well, it was the regression that bothered me most. But there are still a
+few out there that got introduced this cycle.
+
+There is a regression in RDMA/mlx5 introduced in v5.16-rc5:
+https://lore.kernel.org/lkml/f298db4ec5fdf7a2d1d166ca2f66020fd9397e5c.1640079962.git.leonro@nvidia.com/
+https://lore.kernel.org/all/EEBA2D1C-F29C-4237-901C-587B60CEE113@oracle.com/
+A fix is available, but got stuck afaics:
+https://lore.kernel.org/lkml/f298db4ec5fdf7a2d1d166ca2f66020fd9397e5c.1640079962.git.leonro@nvidia.com/
+And I only noticed just now: a revert was also discussed, but not performed:
+https://lore.kernel.org/all/20211222101312.1358616-1-maorg@nvidia.com/
+Will let Greg know, seems the commit got backported to 5.15.
+
+s0ix suspend broke for some AMD machines, Alex and Mario are busy
+looking into it:
+https://gitlab.freedesktop.org/drm/amd/-/issues/1821
+https://bugzilla.kernel.org/show_bug.cgi?id=215436
+
+Alex is also dealing with another issue where the screen contents now
+get restored after some input events:
+https://bugzilla.kernel.org/show_bug.cgi?id=215203
+
+There still seems to be a performance regression that Josef and Valentin
+try hard to pin down without much success for weeks now:
+https://lore.kernel.org/lkml/87tuf07hdk.mognet@arm.com/
+
+And there one more report, but it might be a follow-up error due to
+another regression:
+https://lore.kernel.org/linux-pm/52933493.dBzk7ret6Y@geek500/
