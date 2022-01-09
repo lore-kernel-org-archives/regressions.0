@@ -1,92 +1,65 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E882C80
-	for <regressions@lists.linux.dev>; Sun,  9 Jan 2022 19:46:28 +0000 (UTC)
-Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n6e93-0000ko-HL; Sun, 09 Jan 2022 20:46:25 +0100
-Message-ID: <5fa1a2ba-f9f3-7f27-6909-1c4c38f6f331@leemhuis.info>
-Date: Sun, 9 Jan 2022 20:46:25 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2859B29CA
+	for <regressions@lists.linux.dev>; Sun,  9 Jan 2022 21:20:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98CE9C36AE5;
+	Sun,  9 Jan 2022 21:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1641763239;
+	bh=Fw2ZSnJI+rXcbS3/Wr8CkxNQc+pIPx3R0OoQAJv5CKs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=vMDxasgGDQX9VRoEWtBcWot2wz6pn1WUdGACygWjueohayCZgI+l/VqAXsgJtpWqc
+	 4uGtj1bRE353ezc1F2Vf1AuuVcEN4hZD7Zw0m8oeJ8Hm5RvN+nmwqkUfzj2qas2UK/
+	 xmjjf7nl2T82f486Au7vHM495NzUbCdqE6zN4ZwqHSRm7ZzB5xbl0g0uhwAzT31Wck
+	 Aixk5ebxOBPAbHgNPgUaesJBUoPoG4/180ymssz8yUn2xgY02JjC8ct7vZE1kGCA8F
+	 fbzu3/d8Ed9pYDTCNsC8SZgGd5+NmYo8EblTJnL/23XcwjIHstXRMD2Qyoooq8Im2y
+	 +IZC9bdCSsIFA==
+Date: Sun, 9 Jan 2022 13:20:38 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: Rao Shoaib <rao.shoaib@oracle.com>, "David S. Miller"
+ <davem@davemloft.net>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, Sudip
+ Mukherjee <sudip.mukherjee@codethink.co.uk>, regressions@lists.linux.dev
+Subject: Re: Observation of a memory leak with commit 314001f0bf92
+ ("af_unix: Add OOB support")
+Message-ID: <20220109132038.38f8ae4f@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+In-Reply-To: <CAKXUXMzZkQvHJ35nwVhcJe+DrtEXGw+eKGVD04=xRJkVUC2sPA@mail.gmail.com>
+References: <CAKXUXMzZkQvHJ35nwVhcJe+DrtEXGw+eKGVD04=xRJkVUC2sPA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: Linux regressions report for mainline [2022-01-09]
-Content-Language: en-BS
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <164175418046.1037107.9730034714816887497@leemhuis.info>
- <CAHk-=wi8gSsM7-+fx-iSoKGHtgrgN==NcQtRikYfiFmv8gjbnQ@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAHk-=wi8gSsM7-+fx-iSoKGHtgrgN==NcQtRikYfiFmv8gjbnQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1641757588;b429a5f1;
-X-HE-SMSGID: 1n6e93-0000ko-HL
 
-
-
-On 09.01.22 20:20, Linus Torvalds wrote:
-> On Sun, Jan 9, 2022 at 10:51 AM Regzbot (on behalf of Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> 5-10% increase in IO latencies with nohz balance patch
+On Fri, 7 Jan 2022 07:48:46 +0100 Lukas Bulwahn wrote:
+> Dear Rao and David,
 > 
-> This one is clearly not rootcaused, but even the reporter isn't sure
-> what triggered it.  It was bisected to that mentioned patch, but even
-> that bisection result isn't really entirely certain.
 > 
-> So this one will remain pending, I'm afraid.
-
-Yeah. I'm a bit unsure how to handle such cases better in regzbot. I
-consider marking them manually as "needinfo", "blurry", "ambiguous", or
-something like that. Then regzbot can put them into a separate section
-or mark them somehow.
-
->> pm: laptop totally freezes when going to hibernation
-
-This is one I'd for now consider "ambiguous" for now.
-
->> drm: amdgpu: s0ix suspend stopped working
+> In our syzkaller instance running on linux-next,
+> https://elisa-builder-00.iol.unh.edu/syzkaller-next/, we have been
+> observing a memory leak in prepare_creds,
+> https://elisa-builder-00.iol.unh.edu/syzkaller-next/report?id=1dcac8539d69ad9eb94ab2c8c0d99c11a0b516a3,
+> for quite some time.
 > 
-> Something clearly not great in amdgpu suspend/resume land. The reports
-> are not fully clear, with even the bisection being questionable.
-
-This afaics should help soon for the second case:
-
-https://lore.kernel.org/all/BL1PR12MB5157F21C23A020052FF5C13BE24C9@BL1PR12MB5157.namprd12.prod.outlook.com/
-https://lore.kernel.org/all/20220106163054.13781-3-mario.limonciello@amd.com/
-
-Regzbot didn't pick up this patch automatically (and I forgot to point
-it towards it...), as support for tracking regressions mainly handled in
-bug trackers is still missing. It's pretty high on my todo list, but
-nevertheless it might take a few weeks before I get to that, as real
-world forces me to focus on a few other things first (some regzbot
-related, some not). That's why I have not much time left currently to
-work on regzbot's code. :-/
-
-> But from the previous cycle reports:
+> It is reproducible on v5.15-rc1, v5.15, v5.16-rc8 and next-20220104.
+> So, it is in mainline, was released and has not been fixed in
+> linux-next yet.
 > 
->> =========================================================================================
->> previous cycle (v5.14..v5.15), culprit identified, with activity in the past three months
->> =========================================================================================
->>
->> drm: amdgpu: NUC8i7HVKVA crashes during system suspend
+> As syzkaller also provides a reproducer, we bisected this memory leak
+> to be introduced with  commit 314001f0bf92 ("af_unix: Add OOB
+> support").
 > 
-> This one isn't questionable, and Len sent me the revert he's been
-> using on his system for a long time. So I applied it.
+> We also tested that reverting this commit on torvalds' current tree
+> made the memory leak with the reproducer go away.
 > 
-> Maybe it's related, maybe it's not.
+> Could you please have a look how your commit introduces this memory
+> leak? We will gladly support testing your fix in case help is needed.
 
-Thx for letting me know. This was a issue mainly discussed in
-bugzilla.kernel.org and another area where regzbot is missing a feature:
-to detect activity and patches there. On my todo list, too. But one step
-at a time...
+Let's test the regression/bug report tracking bot :)
 
-Ciao, Thorsten
+#regzbot introduced: 314001f0bf92
