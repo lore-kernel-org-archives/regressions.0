@@ -1,238 +1,72 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15A22C9C
-	for <regressions@lists.linux.dev>; Mon, 10 Jan 2022 14:54:34 +0000 (UTC)
-Received: by mail-yb1-f181.google.com with SMTP id d1so38675107ybh.6
-        for <regressions@lists.linux.dev>; Mon, 10 Jan 2022 06:54:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qal2CCc/ypCVLgFanrL2Ijt2N1JQDQJXt0zzH2smX8U=;
-        b=bfys7VfoZ2kYE4HvWhWS5QBhMLldlaZEkUrkA3joxoR7BZ7uDdFoe9balYP72kzA2g
-         JREYMKhr8s9s3SV9WJZ3YS5regvuJTHo0wNbedfMo0rNE8HEQQDaNCrtZMtjGaEZD+Px
-         e7kdPZPsAEOJCIidXDccN6RH98emPdC8ayeWMbIoYYqZeJYIX53IX8J7VzlOaMNeZQEj
-         VLPAGv8isDbK/EX8AKKgdOUVCmnMOdfKRT4wBI1FHDwAUPmmVhqBQuj15lAkdc3vMNYj
-         vWK0l4beovTjUmIWCBsNKgDsqSpTh6rsqYL9mzfDfwmEjIx4QukhNi6YoLF6ywx/BpPD
-         QXsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qal2CCc/ypCVLgFanrL2Ijt2N1JQDQJXt0zzH2smX8U=;
-        b=zdLgnuRpPBXtOQHj6KX06WRlr6LKogoRFzhscyKZEWlcNQhUSwB1OAgW6jY3vopNFF
-         jZU8n3nKb0cPxUYPdkZNtk7JWvWpbj0Op3243JsbDMQ/0Mae0o90mMthXAg3lKKgk9N5
-         3dDR8EL582DGgP5nUTg+uqc34DFVLXoqr3nli/8DuIVaQ6u9EAwLyUGuDOMG5qLFYJOA
-         OkrfD3OkdvpbHVtHGDwrcZ4vj2v/DJ0Edtt0/fy9BA19VUzATuFB1xvaBReULyXgyenx
-         XxV9NRWp/1N03+Vff5DX9Q1dVQf1ZlGhUnrbsZKgbq1IDz6Ffp7+7FJ5E9bVw1iPvHE6
-         jFcg==
-X-Gm-Message-State: AOAM532TaI9Kq18t4nTNuGW0Itj/YxGW7x5dOygnlaFvDIdpuHnXJRrj
-	ER/mopOWDUP4OJq3TSz/ctHaPeOk//a/g2QYjgU=
-X-Google-Smtp-Source: ABdhPJwHL6r/hZbeRNWAhqgiNbgrT6Rb29y0thLUuqwEUUzfci0xWdErJIywfhnM0twqWyGEifwLuyUkDjCri07QK08=
-X-Received: by 2002:a25:77ca:: with SMTP id s193mr1268164ybc.510.1641826472447;
- Mon, 10 Jan 2022 06:54:32 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0C92C9C
+	for <regressions@lists.linux.dev>; Mon, 10 Jan 2022 14:57:04 +0000 (UTC)
+Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1n6w6Y-0003MW-4Q; Mon, 10 Jan 2022 15:57:02 +0100
+Message-ID: <4f8b62ce-8d4a-9bf6-e75c-acb039ebec10@leemhuis.info>
+Date: Mon, 10 Jan 2022 15:57:01 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAKXUXMzZkQvHJ35nwVhcJe+DrtEXGw+eKGVD04=xRJkVUC2sPA@mail.gmail.com>
- <20220109132038.38f8ae4f@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <20220109132038.38f8ae4f@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Date: Mon, 10 Jan 2022 15:54:21 +0100
-Message-ID: <CAKXUXMwr9NaJ4eN+eNWrD-Pkq4WLPzfVRPBJPCdwWE8C3-eMbg@mail.gmail.com>
-Subject: Re: Observation of a memory leak with commit 314001f0bf92 ("af_unix:
- Add OOB support")
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Rao Shoaib <rao.shoaib@oracle.com>, "David S. Miller" <davem@davemloft.net>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, 
-	Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-
-On Sun, Jan 9, 2022 at 10:20 PM Jakub Kicinski <kuba@kernel.org> wrote:
->
-> On Fri, 7 Jan 2022 07:48:46 +0100 Lukas Bulwahn wrote:
-> > Dear Rao and David,
-> >
-> >
-> > In our syzkaller instance running on linux-next,
-> > https://elisa-builder-00.iol.unh.edu/syzkaller-next/, we have been
-> > observing a memory leak in prepare_creds,
-> > https://elisa-builder-00.iol.unh.edu/syzkaller-next/report?id=1dcac8539d69ad9eb94ab2c8c0d99c11a0b516a3,
-> > for quite some time.
-> >
-> > It is reproducible on v5.15-rc1, v5.15, v5.16-rc8 and next-20220104.
-> > So, it is in mainline, was released and has not been fixed in
-> > linux-next yet.
-> >
-> > As syzkaller also provides a reproducer, we bisected this memory leak
-> > to be introduced with  commit 314001f0bf92 ("af_unix: Add OOB
-> > support").
-> >
-> > We also tested that reverting this commit on torvalds' current tree
-> > made the memory leak with the reproducer go away.
-> >
-> > Could you please have a look how your commit introduces this memory
-> > leak? We will gladly support testing your fix in case help is needed.
->
-> Let's test the regression/bug report tracking bot :)
->
-> #regzbot introduced: 314001f0bf92
-
-Here is all relevant information:
-
-We have a reproducer program and this reproducer setup:
-
-
-Kernel Build:
-
-make mrproper && make defconfig && make kvm_guest.config &&
-scripts/config -e KCOV -e KCOV_INSTRUMENT_ALL -e
-KCOV_ENABLE_COMPARISONS -e DEBUG_FS -e DEBUG_KMEMLEAK -e DEBUG_INFO -e
-KALLSYMS -e KALLSYMS_ALL -e NAMESPACES -e UTS_NS -e IPC_NS -e PID_NS
--e NET_NS -e CGROUP_PIDS -e MEMCG -e USER_NS -e CONFIGFS_FS -e
-SECURITYFS -e FAULT_INJECTION -e FAULT_INJECTION_DEBUG_FS -e
-FAULT_INJECTION_USERCOPY -e FAILSLAB -e FAIL_PAGE_ALLOC -e
-FAIL_MAKE_REQUEST -e FAIL_IO_TIMEOUT -e FAIL_FUTEX -e LOCKDEP -e
-PROVE_LOCKING -e DEBUG_ATOMIC_SLEEP -e PROVE_RCU -e DEBUG_VM -e
-REFCOUNT_FULL -e FORTIFY_SOURCE -e HARDENED_USERCOPY -e
-LOCKUP_DETECTOR -e SOFTLOCKUP_DETECTOR -e HARDLOCKUP_DETECTOR -e
-BOOTPARAM_HARDLOCKUP_PANIC -e DETECT_HUNG_TASK -e WQ_WATCHDOG -e
-USB_GADGET -e USB_RAW_GADGET -e TUN -e KCSAN -d RANDOMIZE_BASE -e
-MAC80211_HWSIM -e IEEE802154 -e MAC802154 -e IEEE802154_DRIVERS -e
-IEEE802154_HWSIM -e BT -e BT_HCIVHCI && make olddefconfig && make -j
-24
-
-(This is not a minimal config for the reproducer.)
-
-
-QEMU Command:
-
-qemu-system-x86_64 -m 2048 -smp 2 -chardev
-socket,id=SOCKSYZ,server,nowait,host=localhost,port=46514 -mon
-chardev=SOCKSYZ,mode=control -display none -serial stdio -no-reboot
--name VM-test -device virtio-rng-pci -enable-kvm -cpu
-host,migratable=off -device e1000,netdev=net0 -netdev
-user,id=net0,restrict=on,hostfwd=tcp:127.0.0.1:28993-:22 -hda
-bullseye.img -snapshot -kernel bzImage -append "root=/dev/sda
-console=ttyS0"
-
-Reproducer: see C program at the bottom of
-https://elisa-builder-00.iol.unh.edu/syzkaller-next/report?id=1dcac8539d69ad9eb94ab2c8c0d99c11a0b516a3
-
-Trigger in QEMU: compile reproducer with gcc and run it
-
-We observe the memory leak output below on next-20220110 with the setup above.
-We do NOT observe the memory leak output below on next-20220110, when
-disabling AF_UNIX_OOB.
-
-So, no memory leak for a kernel build with this diff in the repository
-and everything else same as above. That is also why the bisection
-identified commit 314001f0bf92 to introduce this memory leak.
-
-diff --git a/net/unix/Kconfig b/net/unix/Kconfig
-index b7f811216820..e4175feb1809 100644
---- a/net/unix/Kconfig
-+++ b/net/unix/Kconfig
-@@ -28,7 +28,7 @@ config UNIX_SCM
- config AF_UNIX_OOB
-        bool
-        depends on UNIX
--       default y
-+       default n
-
- config UNIX_DIAG
-        tristate "UNIX: socket monitoring interface"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: cifs: unable to mount cifs 1.0 shares because support for NTLM
+ and weaker authentication algorithms was removed #forregzbot
+Content-Language: en-BS
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <dce98c91-d28c-0f5a-b177-1f4275cf0f35@leemhuis.info>
+In-Reply-To: <dce98c91-d28c-0f5a-b177-1f4275cf0f35@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1641826624;f29b38fc;
+X-HE-SMSGID: 1n6w6Y-0003MW-4Q
 
 
 
-memory leak output:
 
-BUG: memory leak
-unreferenced object 0xffff888012fd0240 (size 192):
-  comm "a.out", pid 250, jiffies 4294908743 (age 13.529s)
-  hex dump (first 32 bytes):
-    02 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000a3bddd5a>] kmem_cache_alloc+0x133/0x2d0
-    [<00000000587efbf5>] prepare_creds+0x27/0x420
-    [<0000000095b9beb6>] copy_creds+0x3a/0x600
-    [<000000004e59ddd9>] copy_process+0x830/0x2b80
-    [<000000005840a46d>] kernel_clone+0x89/0xbf0
-    [<0000000070c730ab>] __do_sys_clone+0x88/0xb0
-    [<00000000f5b1c158>] do_syscall_64+0x3a/0x80
-    [<000000004a0e7245>] entry_SYSCALL_64_after_hwframe+0x44/0xae
+On 23.12.21 11:48, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> There is a regression discussed in bugzilla I'd like to see tracked, to
+> ensure it's not forgotten. Quoting a few parts of the report:
+> 
+>> After 5.15.0, I'm unable to mount a CIFS 1.0 share from a media player which I cannot update (vendor no longer provides updates).
+>>
+>> Original issue is logged here: https://bugs.gentoo.org/821895, with the most interesting bits probably being:
+> 
+>> Ok, 2.5 hours of bisecting later and I can confirm that the culprit is
+>>
+>> [76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c] cifs: remove support for NTLM and weaker authentication algorithms
+>>
+>> The commit before works fine, this commit prevents me from mounting the smb shares on my mede8er 600x 3d.
+> 
+> #regzbot introduced: 76a3c92ec9e0668e
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215375
+> #regzbot link: https://bugs.gentoo.org/821895
+> 
+> I'm not CCing any of the developers for now, looks like they are
+> handling it in bugzilla.
+> 
+> And yes, starting a extra thread for this is a hack hate myself, but I
+> need some workaround for tracking due to the distributed nature of bug
+> reporting with various different bug trackers in use (reminder:
+> bugzilla.kernel.org is not the only one used by kernel developers).
+> 
+> Ciao, Thorsten
+> 
 
-BUG: memory leak
-unreferenced object 0xffff88800536dba0 (size 32):
-  comm "a.out", pid 250, jiffies 4294908743 (age 13.529s)
-  hex dump (first 32 bytes):
-    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000e0ec3d82>] __kmalloc+0x161/0x270
-    [<000000006e2dab2d>] security_prepare_creds+0xa3/0xd0
-    [<0000000090cfc7fd>] prepare_creds+0x2d6/0x420
-    [<0000000095b9beb6>] copy_creds+0x3a/0x600
-    [<000000004e59ddd9>] copy_process+0x830/0x2b80
-    [<000000005840a46d>] kernel_clone+0x89/0xbf0
-    [<0000000070c730ab>] __do_sys_clone+0x88/0xb0
-    [<00000000f5b1c158>] do_syscall_64+0x3a/0x80
-    [<000000004a0e7245>] entry_SYSCALL_64_after_hwframe+0x44/0xae
+There is a proper report now tracked by regzbot:
 
-BUG: memory leak
-unreferenced object 0xffff88800dba5c00 (size 232):
-  comm "a.out", pid 250, jiffies 4294908743 (age 13.529s)
-  hex dump (first 32 bytes):
-    02 00 00 00 00 00 00 00 00 00 00 00 ad 4e ad de  .............N..
-    ff ff ff ff 00 00 00 00 ff ff ff ff ff ff ff ff  ................
-  backtrace:
-    [<00000000a3bddd5a>] kmem_cache_alloc+0x133/0x2d0
-    [<0000000069a36692>] alloc_pid+0x6d/0x670
-    [<000000006f39f82c>] copy_process+0x1a95/0x2b80
-    [<000000005840a46d>] kernel_clone+0x89/0xbf0
-    [<0000000070c730ab>] __do_sys_clone+0x88/0xb0
-    [<00000000f5b1c158>] do_syscall_64+0x3a/0x80
-    [<000000004a0e7245>] entry_SYSCALL_64_after_hwframe+0x44/0xae
+#regzbot dup-of:
+https://lore.kernel.org/lkml/CAJjP=Bt52AW_w2sKnM=MbckPkH1hevPMJVWm_Wf%2BwThmR72YTg@mail.gmail.com/
 
-BUG: memory leak
-unreferenced object 0xffff888014438e80 (size 1856):
-  comm "a.out", pid 251, jiffies 4294908743 (age 13.529s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 58 01 00 00 00 00 00 00  ........X.......
-    01 00 07 40 00 00 00 00 00 00 00 00 00 00 00 00  ...@............
-  backtrace:
-    [<00000000a3bddd5a>] kmem_cache_alloc+0x133/0x2d0
-    [<000000004c97eff8>] sk_prot_alloc+0x3e/0x1b0
-    [<0000000034d397b2>] sk_alloc+0x34/0x320
-    [<0000000046549569>] unix_create1+0x84/0x260
-    [<00000000e72cbd15>] unix_create+0x90/0x120
-    [<000000000d82ff9e>] __sock_create+0x285/0x520
-    [<00000000087d9b40>] __sys_socketpair+0x142/0x380
-    [<00000000f7586b33>] __x64_sys_socketpair+0x1e/0x30
-    [<00000000f5b1c158>] do_syscall_64+0x3a/0x80
-    [<000000004a0e7245>] entry_SYSCALL_64_after_hwframe+0x44/0xae
-
-BUG: memory leak
-unreferenced object 0xffff8880135311c0 (size 32):
-  comm "a.out", pid 251, jiffies 4294908743 (age 13.529s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    01 00 00 00 01 00 00 00 18 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000b535b6cd>] kmem_cache_alloc_trace+0x144/0x220
-    [<000000008c20c9fd>] selinux_sk_alloc_security+0x52/0xf0
-    [<00000000cdf964c1>] security_sk_alloc+0x39/0x70
-    [<0000000005d51b11>] sk_prot_alloc+0x89/0x1b0
-    [<0000000034d397b2>] sk_alloc+0x34/0x320
-    [<0000000046549569>] unix_create1+0x84/0x260
-    [<00000000e72cbd15>] unix_create+0x90/0x120
-    [<000000000d82ff9e>] __sock_create+0x285/0x520
-    [<00000000087d9b40>] __sys_socketpair+0x142/0x380
-    [<00000000f7586b33>] __x64_sys_socketpair+0x1e/0x30
-    [<00000000f5b1c158>] do_syscall_64+0x3a/0x80
-    [<000000004a0e7245>] entry_SYSCALL_64_after_hwframe+0x44/0xae
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
