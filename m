@@ -1,17 +1,13 @@
-Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFDB168
-	for <regressions@lists.linux.dev>; Mon, 10 Jan 2022 11:37:20 +0000 (UTC)
-Received: from [192.168.0.5] (ip5f5aece2.dynamic.kabel-deutschland.de [95.90.236.226])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 879DE61E5FE02;
-	Mon, 10 Jan 2022 12:29:44 +0100 (CET)
-Message-ID: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
-Date: Mon, 10 Jan 2022 12:29:44 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE48168
+	for <regressions@lists.linux.dev>; Mon, 10 Jan 2022 12:02:44 +0000 (UTC)
+Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1n6tNq-0001y7-Pc; Mon, 10 Jan 2022 13:02:42 +0100
+Message-ID: <f0103811-bca2-e439-ca73-2132fd6e9871@leemhuis.info>
+Date: Mon, 10 Jan 2022 13:02:42 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -19,91 +15,151 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.1
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Subject: 100 ms boot time increase regression in acpi_init()/acpi_scan_bus()
-Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
- regressions@lists.linux.dev
-To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ Thunderbird/91.4.0
+Subject: Re: [Bug 215315] New: [REGRESSION BISECTED] amdgpu crashes system
+ suspend - NUC8i7HVKVA #forregzbot
+Content-Language: en-BS
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <bug-215315-2300@https.bugzilla.kernel.org/>
+ <8e1abb43-664b-5882-7c02-ef517c14fc94@leemhuis.info>
+In-Reply-To: <8e1abb43-664b-5882-7c02-ef517c14fc94@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1641816164;d7a0aab9;
+X-HE-SMSGID: 1n6tNq-0001y7-Pc
 
-#regzbot introduced: v5.13..v5.14-rc1
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215419
+For the record, the culprit was reverted:
 
+https://git.kernel.org/torvalds/c/df5bc0aa7ff6e2e14cb75182b4eda20253c711d4
 
-Dear Linux folks,
+#regzbot fixed-by: df5bc0aa7ff6e2e14cb75182b4eda20253c711d4
 
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-On the Intel T4500 laptop Acer TravelMate 5735Z with Debian 
-sid/unstable, there is a 100 ms introduced between Linux 5.10.46 and 
-5.13.9, and is still present in Linux 5.15.5.
-
-     [    0.000000] microcode: microcode updated early to revision 
-0xa0b, date = 2010-09-28
-     [    0.000000] Linux version 5.15.0-2-amd64 
-(debian-kernel@lists.debian.org) (gcc-11 (Debian 11.2.0-13) 11.2.0, GNU 
-ld (GNU Binutils for Debian) 2.37) #1 SMP Debian 5.15.5-2 (2021-12-18)
-     [    0.000000] Command line: 
-BOOT_IMAGE=/boot/vmlinuz-5.15.0-2-amd64 
-root=UUID=e17cec4f-d2b8-4cc3-bd39-39a10ed422f4 ro quiet noisapnp 
-cryptomgr.notests random.trust_cpu=on initcall_debug log_buf_len=4M
-     […]
-     [    0.262243] calling  acpi_init+0x0/0x487 @ 1
-     […]
-     [    0.281655] ACPI: Enabled 15 GPEs in block 00 to 3F
-     [    0.394855] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
-     […]
-     [    0.570908] initcall acpi_init+0x0/0x487 returned 0 after 300781 
-usecs
-
-I attached all the log files to the Kernel.org Bugzilla bug report 
-#215419 [1].
-
-Unfortunately, I am unable to bisect the issue, as it’s not my machine, 
-and I do not have a lot of access to it.
-
-Using ftrace, unfortunately, I didn’t save all of them, I think the path is
-
-     acpi_init() → acpi_scan_init() → acpi_bus_scan(ACPI_ROOT_OBJECT)
-
-But this path hasn’t changed as far as I can see. Anyway, from that 
-path, somehow
-
-     acpi_bus_check_add_1() → acpi_bus_check_add() → … → 
-acpi_bus_check_add() → acpi_add_single_object() → acpi_bus_get_status()
-
-is called, and the `acpi_bus_get_status()` call takes 100 ms on the 
-system – also the cause for bug #208705 [2] –, but that code path wasn’t 
-taken before.
-
-Do you know from the top of your head, what changed? I am going to have 
-short access to the system every two weeks or so, so debugging is 
-unfortunately quite hard.
-
-What is already on my to-do list:
-
-1.  Use dynamic debug `drivers/acpi/scan.c`
-2.  Trace older Linux kernel (5.10.46) to see the differences
-3.  Booting some GNU/Linux system to test 5.11 (Ubuntu 20.10) and 5.12
-4.  Unrelated to the regression, but trace `acpi_bus_get_status()` to 
-understand the 100 ms delay to solve bug #208705 [2]
-
-
-Kind regards,
-
-Paul
-
-
-PS: Do you know of GNU/Linux live systems that are available for all 
-Linux kernel releases and have an initrd, that just stores/uploads the 
-output of `dmesg`?
-
-
-[1]: https://bugzilla.kernel.org/show_bug.cgi?id=215419
-      "100 ms regression in boottime before `ACPI: PCI Root Bridge [PCI0]"
-[2]: https://bugzilla.kernel.org/show_bug.cgi?id=208705
-      "boot performance: 100 ms delay in PCI initialization - Acer 
-TravelMate 5735Z"
+On 13.12.21 07:04, Thorsten Leemhuis wrote:
+> [TLDR: adding this regression to regzbot; most of this mail is compiled
+> from a few templates paragraphs some of you might have seen already.]
+> 
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> Top-posting for once, to make this easy accessible to everyone.
+> 
+> Thanks for the report.
+> 
+> Adding the regression mailing list to the list of recipients, as it
+> should be in the loop for all regressions, as explained here:
+> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+> 
+> To be sure this issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, my Linux kernel regression tracking bot:
+> 
+> #regzbot ^introduced f7d6779df642720e22bffd449e683bb8690bd3bf
+> #regzbot title drm: amdgpu: NUC8i7HVKVA crashes during system suspend
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215315
+> #regzbot ignore-activity
+> 
+> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
+> to the report (the parent of this mail), then regzbot will automatically
+> mark the regression as resolved once the fix lands in the appropriate
+> tree. For more details about regzbot see footer.
+> 
+> Sending this to everyone that got the initial report, to make all aware
+> of the tracking. I also hope that messages like this motivate people to
+> directly get at least the regression mailing list and ideally even
+> regzbot involved when dealing with regressions, as messages like this
+> wouldn't be needed then.
+> 
+> Don't worry, I'll send further messages wrt to this regression just to
+> the lists (with a tag in the subject so people can filter them away), as
+> long as they are intended just for regzbot. With a bit of luck no such
+> messages will be needed anyway.
+> 
+> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
+> 
+> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+> on my table. I can only look briefly into most of them. Unfortunately
+> therefore I sometimes will get things wrong or miss something important.
+> I hope that's not the case here; if you think it is, don't hesitate to
+> tell me about it in a public reply. That's in everyone's interest, as
+> what I wrote above might be misleading to everyone reading this; any
+> suggestion I gave thus might sent someone reading this down the wrong
+> rabbit hole, which none of us wants.
+> 
+> BTW, I have no personal interest in this issue, which is tracked using
+> regzbot, my Linux kernel regression tracking bot
+> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+> this mail to get things rolling again and hence don't need to be CC on
+> all further activities wrt to this regression.
+> 
+> 
+> On 13.12.21 00:08, bugzilla-daemon@bugzilla.kernel.org wrote:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=215315
+>>
+>>             Bug ID: 215315
+>>            Summary: [REGRESSION BISECTED] amdgpu crashes system suspend -
+>>                     NUC8i7HVKVA
+>>            Product: Drivers
+>>            Version: 2.5
+>>     Kernel Version: 5.15-rc1, 5.15, 5.16-rc4
+>>           Hardware: x86-64
+>>                 OS: Linux
+>>               Tree: Mainline
+>>             Status: NEW
+>>           Severity: normal
+>>           Priority: P1
+>>          Component: Video(DRI - non Intel)
+>>           Assignee: drivers_video-dri@kernel-bugs.osdl.org
+>>           Reporter: lenb@kernel.org
+>>         Regression: No
+>>
+>> My Intel NUC8i7HVKVA has an AMD GPU.
+>>
+>> Until 5.15-rc1, this machine was rock solid in suspend stress testing -- never
+>> crashing after hundreds of hours of back-to-back suspend cycles.
+>>
+>> Until this patch went upstream:
+>>
+>> commit f7d6779df642720e22bffd449e683bb8690bd3bf (refs/bisect/bad)
+>> Author: Guchun Chen <guchun.chen@amd.com>
+>> Date:   Fri Aug 27 18:31:41 2021 +0800
+>>
+>>     drm/amdgpu: stop scheduler when calling hw_fini (v2)
+>>
+>>     This gurantees no more work on the ring can be submitted
+>>     to hardware in suspend/resume case, otherwise a potential
+>>     race will occur and the ring will get no chance to stay
+>>     empty before suspend.
+>>
+>>     v2: Call drm_sched_resubmit_job before drm_sched_start to
+>>     restart jobs from the pending list.
+>>
+>>     Suggested-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
+>>     Suggested-by: Christian König <christian.koenig@amd.com>
+>>     Signed-off-by: Guchun Chen <guchun.chen@amd.com>
+>>     Reviewed-by: Christian König <christian.koenig@amd.com>
+>>     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+>>     Cc: stable@vger.kernel.org
+>>
+>> I bisected that the patch before this one was integrated can handle over 1,000
+>> back-to-back "freeze" system suspend cycles.  Yet, when this patch is present,
+>> the system may crash before it completes only 100 cycles, and at most lasts a
+>> few hundred cycles.
+>>
+>> This crash is present in all following upstream rc's, including 5.15-rc4.
+>>
+>> When I revert this patch from 5.15-rc4, stability returns.
+>>
+>> Usually, the crash is manifest by a black screen, and a system that does not
+>> respond to ping, and will only respond to a long AC power button press to
+>> remove power; and a subsequent cold reboot.
+>>
+>> I have witnessed the crash occur, and the "ubuntu color themed" screen enters
+>> some sort of reverse video mode.  In this weird color mode, I've seen a text
+>> window oscillate between scrolling and un-scrolling for a line -- sort of like
+>> it is going back in time, but then changes its mind.  There is no response to
+>> keyboard, mouse, or network input.
+>>
+> 
