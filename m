@@ -1,13 +1,17 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5182C80
-	for <regressions@lists.linux.dev>; Mon, 10 Jan 2022 07:02:17 +0000 (UTC)
-Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n6oh3-00076n-RO; Mon, 10 Jan 2022 08:02:14 +0100
-Message-ID: <37d074c7-b264-acac-4bf6-65caa4dbab1a@leemhuis.info>
-Date: Mon, 10 Jan 2022 08:02:12 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFDB168
+	for <regressions@lists.linux.dev>; Mon, 10 Jan 2022 11:37:20 +0000 (UTC)
+Received: from [192.168.0.5] (ip5f5aece2.dynamic.kabel-deutschland.de [95.90.236.226])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 879DE61E5FE02;
+	Mon, 10 Jan 2022 12:29:44 +0100 (CET)
+Message-ID: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
+Date: Mon, 10 Jan 2022 12:29:44 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,92 +19,91 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-Content-Language: en-BS
-To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
- Linus Walleij <linus.walleij@linaro.org>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>,
- Will McVicker <willmcvicker@google.com>,
- Sergio Tanzilli <tanzilli@acmesystems.it>
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info>
- <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
- <CACjc_5puGpg85XseEjKxnwE2R_XoH8EWvdwp4g2WKNBmW7pX+w@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CACjc_5puGpg85XseEjKxnwE2R_XoH8EWvdwp4g2WKNBmW7pX+w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1641798137;5d3cb544;
-X-HE-SMSGID: 1n6oh3-00076n-RO
+ Thunderbird/91.4.1
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: 100 ms boot time increase regression in acpi_init()/acpi_scan_bus()
+Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+ regressions@lists.linux.dev
+To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi, this is your Linux kernel regression tracker speaking.
+#regzbot introduced: v5.13..v5.14-rc1
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215419
 
-On 20.12.21 21:41, Marcelo Roberto Jimenez wrote:
-> On Mon, Dec 20, 2021 at 11:57 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->> On Sat, Dec 18, 2021 at 7:28 AM Thorsten Leemhuis
->> <regressions@leemhuis.info> wrote:
->>>
->>> [TLDR: I'm adding this regression to regzbot, the Linux kernel
->>> regression tracking bot; most text you find below is compiled from a few
->>> templates paragraphs some of you might have seen already.]
->>>
->>> On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
->>>> Some GPIO lines have stopped working after the patch
->>>> commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
->>>>
->>>> And this has supposedly been fixed in the following patches
->>>> commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
->>>> commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
->>>
->>> There seems to be a backstory here. Are there any entries and bug
->>> trackers or earlier discussions everyone that looks into this should be
->>> aware of?
->>
->> Agreed with Thorsten. I'd like to first try to determine what's wrong
->> before reverting those, as they are correct in theory but maybe the
->> implementation missed something.
->>
->> Have you tried tracing the execution on your platform in order to see
->> what the driver is doing?
-> 
-> Yes. The problem is that there is no list defined for the sysfs-gpio
-> interface. The driver will not perform pinctrl_gpio_request() and will
-> return zero (failure).
-> 
-> I don't know if this is the case to add something to a global DTD or
-> to fix it in the sysfs-gpio code.
 
-Out of interest, has any progress been made on this front?
+Dear Linux folks,
 
-BTW, there was a last-minute commit for 5.16 yesterday that referenced
-the culprit Marcelo specified:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=master&id=c8013355ead68dce152cf426686f8a5f80d88b40
+On the Intel T4500 laptop Acer TravelMate 5735Z with Debian 
+sid/unstable, there is a 100 ms introduced between Linux 5.10.46 and 
+5.13.9, and is still present in Linux 5.15.5.
 
-This was for a BCM283x and BCM2711 devices, so I assume it won't help.
-Wild guess (I don't know anything about this area of the kernel):
-Marcelo, do the dts files for your hardware maybe need a similar fix?
+     [    0.000000] microcode: microcode updated early to revision 
+0xa0b, date = 2010-09-28
+     [    0.000000] Linux version 5.15.0-2-amd64 
+(debian-kernel@lists.debian.org) (gcc-11 (Debian 11.2.0-13) 11.2.0, GNU 
+ld (GNU Binutils for Debian) 2.37) #1 SMP Debian 5.15.5-2 (2021-12-18)
+     [    0.000000] Command line: 
+BOOT_IMAGE=/boot/vmlinuz-5.15.0-2-amd64 
+root=UUID=e17cec4f-d2b8-4cc3-bd39-39a10ed422f4 ro quiet noisapnp 
+cryptomgr.notests random.trust_cpu=on initcall_debug log_buf_len=4M
+     […]
+     [    0.262243] calling  acpi_init+0x0/0x487 @ 1
+     […]
+     [    0.281655] ACPI: Enabled 15 GPEs in block 00 to 3F
+     [    0.394855] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+     […]
+     [    0.570908] initcall acpi_init+0x0/0x487 returned 0 after 300781 
+usecs
 
-Ciao, Thorsten
+I attached all the log files to the Kernel.org Bugzilla bug report 
+#215419 [1].
 
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply, that's in everyone's interest.
+Unfortunately, I am unable to bisect the issue, as it’s not my machine, 
+and I do not have a lot of access to it.
 
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
+Using ftrace, unfortunately, I didn’t save all of them, I think the path is
 
-#regzbot poke
+     acpi_init() → acpi_scan_init() → acpi_bus_scan(ACPI_ROOT_OBJECT)
 
+But this path hasn’t changed as far as I can see. Anyway, from that 
+path, somehow
+
+     acpi_bus_check_add_1() → acpi_bus_check_add() → … → 
+acpi_bus_check_add() → acpi_add_single_object() → acpi_bus_get_status()
+
+is called, and the `acpi_bus_get_status()` call takes 100 ms on the 
+system – also the cause for bug #208705 [2] –, but that code path wasn’t 
+taken before.
+
+Do you know from the top of your head, what changed? I am going to have 
+short access to the system every two weeks or so, so debugging is 
+unfortunately quite hard.
+
+What is already on my to-do list:
+
+1.  Use dynamic debug `drivers/acpi/scan.c`
+2.  Trace older Linux kernel (5.10.46) to see the differences
+3.  Booting some GNU/Linux system to test 5.11 (Ubuntu 20.10) and 5.12
+4.  Unrelated to the regression, but trace `acpi_bus_get_status()` to 
+understand the 100 ms delay to solve bug #208705 [2]
+
+
+Kind regards,
+
+Paul
+
+
+PS: Do you know of GNU/Linux live systems that are available for all 
+Linux kernel releases and have an initrd, that just stores/uploads the 
+output of `dmesg`?
+
+
+[1]: https://bugzilla.kernel.org/show_bug.cgi?id=215419
+      "100 ms regression in boottime before `ACPI: PCI Root Bridge [PCI0]"
+[2]: https://bugzilla.kernel.org/show_bug.cgi?id=208705
+      "boot performance: 100 ms delay in PCI initialization - Acer 
+TravelMate 5735Z"
