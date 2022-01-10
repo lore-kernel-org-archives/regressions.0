@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE48168
-	for <regressions@lists.linux.dev>; Mon, 10 Jan 2022 12:02:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84C5168
+	for <regressions@lists.linux.dev>; Mon, 10 Jan 2022 12:15:06 +0000 (UTC)
 Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n6tNq-0001y7-Pc; Mon, 10 Jan 2022 13:02:42 +0100
-Message-ID: <f0103811-bca2-e439-ca73-2132fd6e9871@leemhuis.info>
-Date: Mon, 10 Jan 2022 13:02:42 +0100
+	id 1n6tZn-0008Q4-Rw; Mon, 10 Jan 2022 13:15:04 +0100
+Message-ID: <ff982786-4033-7450-c10c-8ce71c28d6eb@leemhuis.info>
+Date: Mon, 10 Jan 2022 13:15:02 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,150 +16,74 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [Bug 215315] New: [REGRESSION BISECTED] amdgpu crashes system
- suspend - NUC8i7HVKVA #forregzbot
+Subject: Re: Possible regression: unable to mount CIFS 1.0 shares from older
+ machines since 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
 Content-Language: en-BS
+To: Davyd McColl <davydm@gmail.com>, "lsahlber@redhat.com"
+ <lsahlber@redhat.com>, "stfrench@microsoft.com" <stfrench@microsoft.com>
+Cc: "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <D58238A4-F04E-458E-AB05-4A74235B2C65@getmailspring.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <bug-215315-2300@https.bugzilla.kernel.org/>
- <8e1abb43-664b-5882-7c02-ef517c14fc94@leemhuis.info>
-In-Reply-To: <8e1abb43-664b-5882-7c02-ef517c14fc94@leemhuis.info>
+In-Reply-To: <D58238A4-F04E-458E-AB05-4A74235B2C65@getmailspring.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1641816164;d7a0aab9;
-X-HE-SMSGID: 1n6tNq-0001y7-Pc
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1641816906;2f31c2aa;
+X-HE-SMSGID: 1n6tZn-0008Q4-Rw
 
-For the record, the culprit was reverted:
+Hi, this is your Linux kernel regression tracker speaking.
 
-https://git.kernel.org/torvalds/c/df5bc0aa7ff6e2e14cb75182b4eda20253c711d4
+On 10.01.22 06:53, Davyd McColl wrote:
+> 
+> I'm following advice from the thread at
+> https://bugzilla.kernel.org/show_bug.cgi?id=215375
+> <https://bugzilla.kernel.org/show_bug.cgi?id=215375> as to how to report
+> this, so please bear with me and redirect me as necessary.
+> 
+> Since commit 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c,
 
-#regzbot fixed-by: df5bc0aa7ff6e2e14cb75182b4eda20253c711d4
+FWIW, that is "cifs: remove support for NTLM and weaker authentication
+algorithms"
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+> I'm unable to
+> mount a CIFS 1.0 share ( from a media player: mede8er med600x3d, which
+> runs some older linux). Apparently I'm not the only one, according to
+> that thread, though the other affected party there is windows-based.
+> 
+> I first logged this in the Gentoo bugtracker
+> (https://bugs.gentoo.org/821895 <https://bugs.gentoo.org/821895>) and a
+> reversion patch is available there for the time being.
+> 
+> I understand that some of the encryption methods upon which the original
+> feature relied are to be removed and, as such, the ability to mount
+> these older shares was removed. This is sure to affect anyone running
+> older Windows virtual machines (or older, internally-visible windows
+> hosts) in addition to anyone attempting to connect to shares from
+> esoteric devices like mine.
 
-On 13.12.21 07:04, Thorsten Leemhuis wrote:
-> [TLDR: adding this regression to regzbot; most of this mail is compiled
-> from a few templates paragraphs some of you might have seen already.]
-> 
-> Hi, this is your Linux kernel regression tracker speaking.
-> 
-> Top-posting for once, to make this easy accessible to everyone.
-> 
-> Thanks for the report.
-> 
-> Adding the regression mailing list to the list of recipients, as it
-> should be in the loop for all regressions, as explained here:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-> 
-> To be sure this issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, my Linux kernel regression tracking bot:
-> 
-> #regzbot ^introduced f7d6779df642720e22bffd449e683bb8690bd3bf
-> #regzbot title drm: amdgpu: NUC8i7HVKVA crashes during system suspend
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215315
-> #regzbot ignore-activity
-> 
-> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
-> to the report (the parent of this mail), then regzbot will automatically
-> mark the regression as resolved once the fix lands in the appropriate
-> tree. For more details about regzbot see footer.
-> 
-> Sending this to everyone that got the initial report, to make all aware
-> of the tracking. I also hope that messages like this motivate people to
-> directly get at least the regression mailing list and ideally even
-> regzbot involved when dealing with regressions, as messages like this
-> wouldn't be needed then.
-> 
-> Don't worry, I'll send further messages wrt to this regression just to
-> the lists (with a tag in the subject so people can filter them away), as
-> long as they are intended just for regzbot. With a bit of luck no such
-> messages will be needed anyway.
-> 
-> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
-> 
-> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-> on my table. I can only look briefly into most of them. Unfortunately
-> therefore I sometimes will get things wrong or miss something important.
-> I hope that's not the case here; if you think it is, don't hesitate to
-> tell me about it in a public reply. That's in everyone's interest, as
-> what I wrote above might be misleading to everyone reading this; any
-> suggestion I gave thus might sent someone reading this down the wrong
-> rabbit hole, which none of us wants.
-> 
-> BTW, I have no personal interest in this issue, which is tracked using
-> regzbot, my Linux kernel regression tracking bot
-> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> this mail to get things rolling again and hence don't need to be CC on
-> all further activities wrt to this regression.
-> 
-> 
-> On 13.12.21 00:08, bugzilla-daemon@bugzilla.kernel.org wrote:
->> https://bugzilla.kernel.org/show_bug.cgi?id=215315
->>
->>             Bug ID: 215315
->>            Summary: [REGRESSION BISECTED] amdgpu crashes system suspend -
->>                     NUC8i7HVKVA
->>            Product: Drivers
->>            Version: 2.5
->>     Kernel Version: 5.15-rc1, 5.15, 5.16-rc4
->>           Hardware: x86-64
->>                 OS: Linux
->>               Tree: Mainline
->>             Status: NEW
->>           Severity: normal
->>           Priority: P1
->>          Component: Video(DRI - non Intel)
->>           Assignee: drivers_video-dri@kernel-bugs.osdl.org
->>           Reporter: lenb@kernel.org
->>         Regression: No
->>
->> My Intel NUC8i7HVKVA has an AMD GPU.
->>
->> Until 5.15-rc1, this machine was rock solid in suspend stress testing -- never
->> crashing after hundreds of hours of back-to-back suspend cycles.
->>
->> Until this patch went upstream:
->>
->> commit f7d6779df642720e22bffd449e683bb8690bd3bf (refs/bisect/bad)
->> Author: Guchun Chen <guchun.chen@amd.com>
->> Date:   Fri Aug 27 18:31:41 2021 +0800
->>
->>     drm/amdgpu: stop scheduler when calling hw_fini (v2)
->>
->>     This gurantees no more work on the ring can be submitted
->>     to hardware in suspend/resume case, otherwise a potential
->>     race will occur and the ring will get no chance to stay
->>     empty before suspend.
->>
->>     v2: Call drm_sched_resubmit_job before drm_sched_start to
->>     restart jobs from the pending list.
->>
->>     Suggested-by: Andrey Grodzovsky <andrey.grodzovsky@amd.com>
->>     Suggested-by: Christian König <christian.koenig@amd.com>
->>     Signed-off-by: Guchun Chen <guchun.chen@amd.com>
->>     Reviewed-by: Christian König <christian.koenig@amd.com>
->>     Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
->>     Cc: stable@vger.kernel.org
->>
->> I bisected that the patch before this one was integrated can handle over 1,000
->> back-to-back "freeze" system suspend cycles.  Yet, when this patch is present,
->> the system may crash before it completes only 100 cycles, and at most lasts a
->> few hundred cycles.
->>
->> This crash is present in all following upstream rc's, including 5.15-rc4.
->>
->> When I revert this patch from 5.15-rc4, stability returns.
->>
->> Usually, the crash is manifest by a black screen, and a system that does not
->> respond to ping, and will only respond to a long AC power button press to
->> remove power; and a subsequent cold reboot.
->>
->> I have witnessed the crash occur, and the "ubuntu color themed" screen enters
->> some sort of reverse video mode.  In this weird color mode, I've seen a text
->> window oscillate between scrolling and un-scrolling for a line -- sort of like
->> it is going back in time, but then changes its mind.  There is no response to
->> keyboard, mouse, or network input.
->>
-> 
+> Whilst I understand the desire to clean up code and remove dead
+> branches, I'd really appreciate it if this particular feature remains
+> available either by kernel configuration (which suits me fine, but is
+> likely to be a hassle for anyone running a binary distribution) or via
+> boot parameters. In the mean-time, I'm updating my own sync software to
+> support this older device because if I can't sync media to the player,
+> the device is not very useful to me.
+
+From my point of view this afaics looks like one of those issues where
+the "no regressions" rule gets tricky. But I told Davyd to bring it
+forward here to get it discussed in the open. I also wonder if some
+middle-ground solution could be found in this particular case -- e.g.
+one where the commit stated above gets reverted and the code then
+slightly changed to only allow weaker authentication if the user
+manually requests in somehow, for example using a module parameter or
+something in /proc or /sys.
+
+Ciao, Thorsten
+
+P.S.: Anyway, getting this tracked:
+
+#regzbot ^introduced 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
+#regzbot title cifs: unable to shares that require NTLM or weaker
+authentication algorithms
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215375
