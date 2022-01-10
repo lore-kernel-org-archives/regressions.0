@@ -1,65 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2859B29CA
-	for <regressions@lists.linux.dev>; Sun,  9 Jan 2022 21:20:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98CE9C36AE5;
-	Sun,  9 Jan 2022 21:20:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1641763239;
-	bh=Fw2ZSnJI+rXcbS3/Wr8CkxNQc+pIPx3R0OoQAJv5CKs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=vMDxasgGDQX9VRoEWtBcWot2wz6pn1WUdGACygWjueohayCZgI+l/VqAXsgJtpWqc
-	 4uGtj1bRE353ezc1F2Vf1AuuVcEN4hZD7Zw0m8oeJ8Hm5RvN+nmwqkUfzj2qas2UK/
-	 xmjjf7nl2T82f486Au7vHM495NzUbCdqE6zN4ZwqHSRm7ZzB5xbl0g0uhwAzT31Wck
-	 Aixk5ebxOBPAbHgNPgUaesJBUoPoG4/180ymssz8yUn2xgY02JjC8ct7vZE1kGCA8F
-	 fbzu3/d8Ed9pYDTCNsC8SZgGd5+NmYo8EblTJnL/23XcwjIHstXRMD2Qyoooq8Im2y
-	 +IZC9bdCSsIFA==
-Date: Sun, 9 Jan 2022 13:20:38 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: Rao Shoaib <rao.shoaib@oracle.com>, "David S. Miller"
- <davem@davemloft.net>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, Sudip
- Mukherjee <sudip.mukherjee@codethink.co.uk>, regressions@lists.linux.dev
-Subject: Re: Observation of a memory leak with commit 314001f0bf92
- ("af_unix: Add OOB support")
-Message-ID: <20220109132038.38f8ae4f@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <CAKXUXMzZkQvHJ35nwVhcJe+DrtEXGw+eKGVD04=xRJkVUC2sPA@mail.gmail.com>
-References: <CAKXUXMzZkQvHJ35nwVhcJe+DrtEXGw+eKGVD04=xRJkVUC2sPA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D5182C80
+	for <regressions@lists.linux.dev>; Mon, 10 Jan 2022 07:02:17 +0000 (UTC)
+Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1n6oh3-00076n-RO; Mon, 10 Jan 2022 08:02:14 +0100
+Message-ID: <37d074c7-b264-acac-4bf6-65caa4dbab1a@leemhuis.info>
+Date: Mon, 10 Jan 2022 08:02:12 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+Content-Language: en-BS
+To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
+ Linus Walleij <linus.walleij@linaro.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>,
+ Will McVicker <willmcvicker@google.com>,
+ Sergio Tanzilli <tanzilli@acmesystems.it>
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info>
+ <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
+ <CACjc_5puGpg85XseEjKxnwE2R_XoH8EWvdwp4g2WKNBmW7pX+w@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CACjc_5puGpg85XseEjKxnwE2R_XoH8EWvdwp4g2WKNBmW7pX+w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1641798137;5d3cb544;
+X-HE-SMSGID: 1n6oh3-00076n-RO
 
-On Fri, 7 Jan 2022 07:48:46 +0100 Lukas Bulwahn wrote:
-> Dear Rao and David,
-> 
-> 
-> In our syzkaller instance running on linux-next,
-> https://elisa-builder-00.iol.unh.edu/syzkaller-next/, we have been
-> observing a memory leak in prepare_creds,
-> https://elisa-builder-00.iol.unh.edu/syzkaller-next/report?id=1dcac8539d69ad9eb94ab2c8c0d99c11a0b516a3,
-> for quite some time.
-> 
-> It is reproducible on v5.15-rc1, v5.15, v5.16-rc8 and next-20220104.
-> So, it is in mainline, was released and has not been fixed in
-> linux-next yet.
-> 
-> As syzkaller also provides a reproducer, we bisected this memory leak
-> to be introduced with  commit 314001f0bf92 ("af_unix: Add OOB
-> support").
-> 
-> We also tested that reverting this commit on torvalds' current tree
-> made the memory leak with the reproducer go away.
-> 
-> Could you please have a look how your commit introduces this memory
-> leak? We will gladly support testing your fix in case help is needed.
+Hi, this is your Linux kernel regression tracker speaking.
 
-Let's test the regression/bug report tracking bot :)
+On 20.12.21 21:41, Marcelo Roberto Jimenez wrote:
+> On Mon, Dec 20, 2021 at 11:57 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>> On Sat, Dec 18, 2021 at 7:28 AM Thorsten Leemhuis
+>> <regressions@leemhuis.info> wrote:
+>>>
+>>> [TLDR: I'm adding this regression to regzbot, the Linux kernel
+>>> regression tracking bot; most text you find below is compiled from a few
+>>> templates paragraphs some of you might have seen already.]
+>>>
+>>> On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
+>>>> Some GPIO lines have stopped working after the patch
+>>>> commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
+>>>>
+>>>> And this has supposedly been fixed in the following patches
+>>>> commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
+>>>> commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
+>>>
+>>> There seems to be a backstory here. Are there any entries and bug
+>>> trackers or earlier discussions everyone that looks into this should be
+>>> aware of?
+>>
+>> Agreed with Thorsten. I'd like to first try to determine what's wrong
+>> before reverting those, as they are correct in theory but maybe the
+>> implementation missed something.
+>>
+>> Have you tried tracing the execution on your platform in order to see
+>> what the driver is doing?
+> 
+> Yes. The problem is that there is no list defined for the sysfs-gpio
+> interface. The driver will not perform pinctrl_gpio_request() and will
+> return zero (failure).
+> 
+> I don't know if this is the case to add something to a global DTD or
+> to fix it in the sysfs-gpio code.
 
-#regzbot introduced: 314001f0bf92
+Out of interest, has any progress been made on this front?
+
+BTW, there was a last-minute commit for 5.16 yesterday that referenced
+the culprit Marcelo specified:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=master&id=c8013355ead68dce152cf426686f8a5f80d88b40
+
+This was for a BCM283x and BCM2711 devices, so I assume it won't help.
+Wild guess (I don't know anything about this area of the kernel):
+Marcelo, do the dts files for your hardware maybe need a similar fix?
+
+Ciao, Thorsten
+
+P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+on my table. I can only look briefly into most of them. Unfortunately
+therefore I sometimes will get things wrong or miss something important.
+I hope that's not the case here; if you think it is, don't hesitate to
+tell me about it in a public reply, that's in everyone's interest.
+
+BTW, I have no personal interest in this issue, which is tracked using
+regzbot, my Linux kernel regression tracking bot
+(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+this mail to get things rolling again and hence don't need to be CC on
+all further activities wrt to this regression.
+
+#regzbot poke
+
