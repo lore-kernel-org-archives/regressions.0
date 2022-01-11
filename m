@@ -1,93 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13BF2C9C
-	for <regressions@lists.linux.dev>; Mon, 10 Jan 2022 16:29:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47D1FC36AE3;
-	Mon, 10 Jan 2022 16:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1641832190;
-	bh=fQExllmMl+dj2jTx2YMZ1O6mpZuoE8POpJVdkmjVsxg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ilYOMpIgLD+9OxTa8dbe43JdsXgf+Dbdn5x4LowsmAyEse7F2sH9hhuYESf2pcRVA
-	 LeMbupc1+563Tej1CHOi9Z8e50PhY4k/642DEm8E7b9sbsiPSZlJgL+q8cioKBQ1P2
-	 XRvloaF69nxoF9vfheyz3WJXaKxBBfXJk83rGykNY9DUJRZ6esExe8WUMdCP/f6HBs
-	 cxwrd7J4nP8zvLpJgwHfX9y3GMxAiDHVU0Jykzin+kGLtt22Xat69FViPX/gP02ACL
-	 od7dSmcaKf+YCPrAy6iYN0s5TgDQqiNNSAJFlV1hUfxHmhKAaTKffvhur+plBDTRHU
-	 jioOaRkvvLNew==
-Date: Mon, 10 Jan 2022 08:29:49 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Rao Shoaib
- <rao.shoaib@oracle.com>, "David S. Miller" <davem@davemloft.net>, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>, Netdev
- <netdev@vger.kernel.org>, Sudip Mukherjee
- <sudip.mukherjee@codethink.co.uk>, regressions@lists.linux.dev
-Subject: Re: Observation of a memory leak with commit 314001f0bf92
- ("af_unix: Add OOB support")
-Message-ID: <20220110082949.3a14a738@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-In-Reply-To: <CAKXUXMygcVJ2v5enu-KY9_2reC6+aAk8F9q5RiwwNp4wO-prug@mail.gmail.com>
-References: <CAKXUXMzZkQvHJ35nwVhcJe+DrtEXGw+eKGVD04=xRJkVUC2sPA@mail.gmail.com>
-	<20220109132038.38f8ae4f@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
-	<a754b7d0-8a20-9730-c439-1660994005d0@leemhuis.info>
-	<CAKXUXMygcVJ2v5enu-KY9_2reC6+aAk8F9q5RiwwNp4wO-prug@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8476B2C80
+	for <regressions@lists.linux.dev>; Tue, 11 Jan 2022 03:16:17 +0000 (UTC)
+Received: by mail-lf1-f53.google.com with SMTP id s30so23669114lfo.7
+        for <regressions@lists.linux.dev>; Mon, 10 Jan 2022 19:16:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tnWatjEgyJ9FaJC0eKyvOWSFHkKwoNBRdfNz32BOWbE=;
+        b=pvQgk6WPtiBTpIIyj88Tt/GisS81oFMofetcLKN3sOU6bPpnu0GDVyxIytbhDGZOkN
+         eRKNihQzDJUElKaZ4vTc+dQw6CLObT2uqdDjw5srFd7RMIe37sXcGDvjADJiCdi1oeOT
+         ssJqESC0Ww4m0+P+evVF5e3MVETSy/0TfrolckyYCiYVcT87vr6myAaFMvHFpL1LhZWh
+         NMEP3ja4iIVCAPAOSEZhi8hEtbZ4bvicmK4XxV6/U59gh+cLpmSOxHg3rU+yP8YJWzjM
+         T4gBySONopcqtbPh25Sa1xDlOOSbSs5MsuL5A3fKLEE0E4kPyVtf9wxNMkcS64L8bZzR
+         yZlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tnWatjEgyJ9FaJC0eKyvOWSFHkKwoNBRdfNz32BOWbE=;
+        b=QEVq6wAWmXFJQGLuvgXew/9p/I5zsxqyRGQFpqUDsAO7E8lZKdGVnNkK8DSA4buBHD
+         WA8qISAojjnyXYFPOFM4FuYizOejyuc5oI23Nzvu2wNQS8UhsMRKwPsjD5/wmMnhs3Uh
+         VKEW1MVbdCvMRbLenR87s3gPOcaBuUWz/9zgyiEaEKppjHAbiivcDt0TkZ0ao3zuO7AJ
+         /c2IEJtyHqS9gp0tz9+CiGFTCOFJzN4LRxlF390t+trVBJNIk5uaqKes//oxX6MMkcji
+         L774WuwxSAFKgBVa4CjohgecmhPZcRI7XSDOqBJeWGeuj+9SSFyuape1bSSYEsq+GZxB
+         tWKw==
+X-Gm-Message-State: AOAM530zzE0N5XtZhTJeAhsfAsN5kobuN2OcTp4D9/M+Pnx5MvrbE0qU
+	G4LKu/ZX7iOOoMUDq+0JKixym/6X9/daWBqU5xk=
+X-Google-Smtp-Source: ABdhPJz0pfbIUNFY/jTTUD+wPeqdHZIzltUsCUeAh/QExyS0hTGeCDFj1To+Ow5RM7SA564uZgvAiNV97+dt9BvaT5w=
+X-Received: by 2002:a19:8c4a:: with SMTP id i10mr1885122lfj.537.1641870975462;
+ Mon, 10 Jan 2022 19:16:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <D58238A4-F04E-458E-AB05-4A74235B2C65@getmailspring.com> <ff982786-4033-7450-c10c-8ce71c28d6eb@leemhuis.info>
+In-Reply-To: <ff982786-4033-7450-c10c-8ce71c28d6eb@leemhuis.info>
+From: Steve French <smfrench@gmail.com>
+Date: Mon, 10 Jan 2022 21:16:04 -0600
+Message-ID: <CAH2r5mtE-EjNbF3OhCLmbGQFMbJgRZphQHS+hHLBiWRJPEBqKA@mail.gmail.com>
+Subject: Re: Possible regression: unable to mount CIFS 1.0 shares from older
+ machines since 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Davyd McColl <davydm@gmail.com>, "lsahlber@redhat.com" <lsahlber@redhat.com>, 
+	"stfrench@microsoft.com" <stfrench@microsoft.com>, 
+	"linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 10 Jan 2022 17:19:56 +0100 Lukas Bulwahn wrote:
-> It's a regression if some application or practical use case running fine on one
-> Linux kernel works worse or not at all with a newer version compiled using a
-> similar configuration.
-> 
-> The af_unix functionality without oob support works before
-> 314001f0bf92 ("af_unix: Add OOB support").
-> The af_unix functionality without oob support works after 314001f0bf92
-> ("af_unix: Add OOB support").
-> The af_unix with oob support after the new feature with 314001f0bf92
-> ("af_unix: Add OOB support") makes a memory leak visible; we do not
-> know if this feature even triggers it or just makes it visible.
-> 
-> Now, if we disable oob support we get a kernel without an observable
-> memory leak. However, oob support is added by default, and this makes
-> this memory leak visible. So, if oob support is turned into a
-> non-default option or nobody ever made use of the oob support before,
-> it really does not count as regression at all. The oob support did not
-> work before and now it works but just leaks a bit of memory---it is
-> potentially a bug, but not a regression. Of course, maybe oob support
-> is also just intended to make this memory leak observable, who knows?
-> Then, it is not even a bug, but a feature.
+We do still need a little more data from the users affected to ensure
+that it isn't something more subtle.  One user noted Windows 11 worked
+as a client, but not Linux which would imply that it is probably
+something other than NTLM (NTLM has been strongly discouraged if not
+disabled for more than 20 years).
 
-I see, thanks for the explanation. It wasn't clear from the "does not
-repro on 5.15, does repro on net-next" type of wording that the repro
-actually uses the new functionality.
+On Mon, Jan 10, 2022 at 9:07 PM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> Hi, this is your Linux kernel regression tracker speaking.
+>
+> On 10.01.22 06:53, Davyd McColl wrote:
+> >
+> > I'm following advice from the thread at
+> > https://bugzilla.kernel.org/show_bug.cgi?id=215375
+> > <https://bugzilla.kernel.org/show_bug.cgi?id=215375> as to how to report
+> > this, so please bear with me and redirect me as necessary.
+> >
+> > Since commit 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c,
+>
+> FWIW, that is "cifs: remove support for NTLM and weaker authentication
+> algorithms"
+>
+> > I'm unable to
+> > mount a CIFS 1.0 share ( from a media player: mede8er med600x3d, which
+> > runs some older linux). Apparently I'm not the only one, according to
+> > that thread, though the other affected party there is windows-based.
+> >
+> > I first logged this in the Gentoo bugtracker
+> > (https://bugs.gentoo.org/821895 <https://bugs.gentoo.org/821895>) and a
+> > reversion patch is available there for the time being.
+> >
+> > I understand that some of the encryption methods upon which the original
+> > feature relied are to be removed and, as such, the ability to mount
+> > these older shares was removed. This is sure to affect anyone running
+> > older Windows virtual machines (or older, internally-visible windows
+> > hosts) in addition to anyone attempting to connect to shares from
+> > esoteric devices like mine.
+>
+> > Whilst I understand the desire to clean up code and remove dead
+> > branches, I'd really appreciate it if this particular feature remains
+> > available either by kernel configuration (which suits me fine, but is
+> > likely to be a hassle for anyone running a binary distribution) or via
+> > boot parameters. In the mean-time, I'm updating my own sync software to
+> > support this older device because if I can't sync media to the player,
+> > the device is not very useful to me.
+>
+> From my point of view this afaics looks like one of those issues where
+> the "no regressions" rule gets tricky. But I told Davyd to bring it
+> forward here to get it discussed in the open. I also wonder if some
+> middle-ground solution could be found in this particular case -- e.g.
+> one where the commit stated above gets reverted and the code then
+> slightly changed to only allow weaker authentication if the user
+> manually requests in somehow, for example using a module parameter or
+> something in /proc or /sys.
+>
+> Ciao, Thorsten
+>
+> P.S.: Anyway, getting this tracked:
+>
+> #regzbot ^introduced 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
+> #regzbot title cifs: unable to shares that require NTLM or weaker
+> authentication algorithms
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215375
 
-> Thorsten's database is still quite empty, so let us keep tracking the
-> progress with regzbot. I guess we cannot mark "issues" in regzbot as a
-> true regression or as a bug (an issue that appears with a new
-> feature).
-> 
-> Also, this reproducer is automatically generated, so it barely
-> qualifies as "some application or practical use case", but at best as
-> some derived "stress test program" or "micro benchmark".
-> 
-> The syzbot CI and kernel CI database are also planning to track such
-> things (once all databases and all the interfaces all work smoothly),
-> so in the long term, such issues as this one would not qualify for
-> regzbot. For now, many things in these pipelines are still manual and
-> hence, triggering and investigation is manual effort, as well as
-> manually informing the involved developers, which also means that
-> tracking remains manual effort, for which regzbot is probably the
-> right new tool for now.
 
-Right, that was my thinking.
 
-> We will learn what should go into regzbot's tracker and what should
-> not---as we move on in the community: various information from other
-> systems (syzbot, kernel CI, kernel test robot etc.) and their reports
-> are also still difficult to add, find, track, bisect etc.
+-- 
+Thanks,
+
+Steve
