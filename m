@@ -1,111 +1,87 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535872C9D
-	for <regressions@lists.linux.dev>; Wed, 12 Jan 2022 11:45:49 +0000 (UTC)
-Received: by mail-yb1-f182.google.com with SMTP id g14so5525891ybs.8
-        for <regressions@lists.linux.dev>; Wed, 12 Jan 2022 03:45:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=1oAWQHZqJjxGspd66xUUwdpCocjq4RF4bRYfPMa0RgM=;
-        b=LCxuNDTBSrsTxNHCIoEpEJhzykzI1PqU0Qu7+y1h/2eirkEaNcUWcRKGGAWaV79ru6
-         Xv6at+0+iUtpOEe63PUlXlbArXuMTPWdZ+/I9QGm1/Tn/3qseWRDveOL4FnagSPN1A/T
-         WQA5lRrrNPqlTtbO2930mHMbqr0IbKawgZZJX2ACEHAPmOPO0eKb5zSkXu2527bDe22H
-         qZSNnQTvKG1BZvNckxJgIPiclQ2QGrvZHaHYpAF4Yj1u61rLGVSA/EQd1E9Vbu/Wv0mM
-         76FeBD8ggDrgJZACy1k8ttE1LmolWjhAvrPauqbZAqe0sJtrtel+dc7OKUTio8KPUJJT
-         BrjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=1oAWQHZqJjxGspd66xUUwdpCocjq4RF4bRYfPMa0RgM=;
-        b=FtRzdMUNzQZpJKc1Vg82cp/0zsuzu+v7MwzdWaS+oc/vOAQMKV+24SuH2Zxr6clcvY
-         7yiMOFssl8eHGYzRbNC5grEVnWUfErnIucAJfZlzFqaW91TgbRdLn7kpmlHRKe0ibaIH
-         J12/OfVC/RzzprT2Y7LgtQ4MubXA3GUx8DzshAXFpakqD+VIKn1zgbGOuCDnWmoG4AO7
-         OTqsoJiL38nCzF0Nba9Rncz2K2H7r161QQZbQUuswUFlzObO6syOYZRyBVfMvoepsdZM
-         Oqhzb+90Woczzp7gm4N+sCvC5OMhDEHJIW0L+AIo5kjbznXD1QXU8x3ZZCQ+Odq7tEMS
-         Zyug==
-X-Gm-Message-State: AOAM532C+TTiM+VMJ3Tf4RyeiPPy+pPw/YIifoR9FAruJsinPW/mePq9
-	tWd2TepED/XUHqiZ0R0hskLH01oVvqlNqzxeigk0Aw==
-X-Google-Smtp-Source: ABdhPJy833HxrFP8l/AcVNmiqInufp1tn6sOo1ri3JhrVF4Lbfk3FqLKPmb8gT8eZ0+nFbb7F4rgAXM2QRTArxbTsF4=
-X-Received: by 2002:a5b:d09:: with SMTP id y9mr7287068ybp.146.1641987948106;
- Wed, 12 Jan 2022 03:45:48 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB6A29CA;
+	Wed, 12 Jan 2022 13:18:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76006C36AEF;
+	Wed, 12 Jan 2022 13:18:41 +0000 (UTC)
+Date: Wed, 12 Jan 2022 14:18:37 +0100
+From: Christian Brauner <christian.brauner@ubuntu.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>,
+	Linux-Next Mailing List <linux-next@vger.kernel.org>,
+	lkft-triage@lists.linaro.org, LTP List <ltp@lists.linux.it>,
+	linux-fsdevel@vger.kernel.org, regressions@lists.linux.dev,
+	containers@lists.linux.dev, Alexey Gladkov <legion@kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [next]: LTP: getxattr05.c:97: TFAIL: unshare(CLONE_NEWUSER)
+ failed: ENOSPC (28)
+Message-ID: <20220112131837.igsjkkttqskw4eix@wittgenstein>
+References: <CA+G9fYsMHhXJCgO-ykR0oO1kVdusGnthgj6ifxEKaGPHZJ-ZCw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 12 Jan 2022 17:15:37 +0530
-Message-ID: <CA+G9fYsMHhXJCgO-ykR0oO1kVdusGnthgj6ifxEKaGPHZJ-ZCw@mail.gmail.com>
-Subject: [next]: LTP: getxattr05.c:97: TFAIL: unshare(CLONE_NEWUSER) failed:
- ENOSPC (28)
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	LTP List <ltp@lists.linux.it>, linux-fsdevel@vger.kernel.org, 
-	regressions@lists.linux.dev
-Cc: Alexey Gladkov <legion@kernel.org>, Sven Schnelle <svens@linux.ibm.com>, 
-	"Eric W. Biederman" <ebiederm@xmission.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYsMHhXJCgO-ykR0oO1kVdusGnthgj6ifxEKaGPHZJ-ZCw@mail.gmail.com>
 
-While testing LTP syscalls with Linux next 20220110 (and till date 20220112)
-on x86_64, i386, arm and arm64 the following tests failed.
+On Wed, Jan 12, 2022 at 05:15:37PM +0530, Naresh Kamboju wrote:
+> While testing LTP syscalls with Linux next 20220110 (and till date 20220112)
+> on x86_64, i386, arm and arm64 the following tests failed.
+> 
+> tst_test.c:1365: TINFO: Timeout per run is 0h 15m 00s
+> getxattr05.c:87: TPASS: Got same data when acquiring the value of
+> system.posix_acl_access twice
+> getxattr05.c:97: TFAIL: unshare(CLONE_NEWUSER) failed: ENOSPC (28)
+> tst_test.c:391: TBROK: Invalid child (13545) exit value 1
+> 
+> fanotify17.c:176: TINFO: Test #1: Global groups limit in privileged user ns
+> fanotify17.c:155: TFAIL: unshare(CLONE_NEWUSER) failed: ENOSPC (28)
+> tst_test.c:391: TBROK: Invalid child (14739) exit value 1
+> 
+> sendto03.c:48: TBROK: unshare(268435456) failed: ENOSPC (28)
+> 
+> setsockopt05.c:45: TBROK: unshare(268435456) failed: ENOSPC (28)
+> 
+> strace output:
+> --------------
+> [pid   481] wait4(-1, 0x7fff52f5ae8c, 0, NULL) = -1 ECHILD (No child processes)
+> [pid   481] clone(child_stack=NULL,
+> flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD,
+> child_tidptr=0x7f3af0fa7a10) = 483
+> strace: Process 483 attached
+> [pid   481] wait4(-1,  <unfinished ...>
+> [pid   483] unshare(CLONE_NEWUSER)      = -1 ENOSPC (No space left on device)
 
-tst_test.c:1365: TINFO: Timeout per run is 0h 15m 00s
-getxattr05.c:87: TPASS: Got same data when acquiring the value of
-system.posix_acl_access twice
-getxattr05.c:97: TFAIL: unshare(CLONE_NEWUSER) failed: ENOSPC (28)
-tst_test.c:391: TBROK: Invalid child (13545) exit value 1
+This looks like another regression in the ucount code. Reverting the
+following commit fixes it and makes the getxattr05 test work again:
 
-fanotify17.c:176: TINFO: Test #1: Global groups limit in privileged user ns
-fanotify17.c:155: TFAIL: unshare(CLONE_NEWUSER) failed: ENOSPC (28)
-tst_test.c:391: TBROK: Invalid child (14739) exit value 1
+commit 0315b634f933b0f12cfa82660322f6186c1aa0f4
+Author: Alexey Gladkov <legion@kernel.org>
+Date:   Fri Dec 17 15:48:23 2021 +0100
 
-sendto03.c:48: TBROK: unshare(268435456) failed: ENOSPC (28)
+    ucounts: Split rlimit and ucount values and max values
 
-setsockopt05.c:45: TBROK: unshare(268435456) failed: ENOSPC (28)
+    Since the semantics of maximum rlimit values are different, it would be
+    better not to mix ucount and rlimit values. This will prevent the error
+    of using inc_count/dec_ucount for rlimit parameters.
 
-strace output:
---------------
-[pid   481] wait4(-1, 0x7fff52f5ae8c, 0, NULL) = -1 ECHILD (No child processes)
-[pid   481] clone(child_stack=NULL,
-flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD,
-child_tidptr=0x7f3af0fa7a10) = 483
-strace: Process 483 attached
-[pid   481] wait4(-1,  <unfinished ...>
-[pid   483] unshare(CLONE_NEWUSER)      = -1 ENOSPC (No space left on device)
+    This patch also renames the functions to emphasize the lack of
+    connection between rlimit and ucount.
 
-metadata:
-  git branch: master
-  git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git commit: 57c149e506d5bec1b845ad1a8a631063fcac1f6e
-  git describe: next-20220110
-  arch: x86
-  toolchain: gcc-11
+    v2:
+    - Fix the array-index-out-of-bounds that was found by the lkp project.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+    Reported-by: kernel test robot <oliver.sang@intel.com>
+    Signed-off-by: Alexey Gladkov <legion@kernel.org>
+    Link: https://lkml.kernel.org/r/73ea569042babda5cee2092423da85027ceb471f.1639752364.git.legion@kernel.org
+    Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
 
-GOOD: next-20220107
- BAD:    next-20220110
-
-Test logs:
-https://lkft.validation.linaro.org/scheduler/job/4301888#L1474
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20220110/testrun/7253656/suite/ltp-syscalls-tests/test/getxattr05/log
-
-compare test history:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20220112/testrun/7277164/suite/ltp-syscalls-tests/test/getxattr05/history/
-
-kernel-config:
-https://builds.tuxbuild.com/23V6AwGvHW7H3kr6WxZZwueajVS/config
-
-We are investigating this regression.
-
-Steps to reproduce:
-   # cd /opt/ltp
-   # ./runltp -s getxattr05
-
---
-Linaro LKFT
-https://lkft.linaro.org
+The issue only surfaces if /proc/sys/user/max_user_namespaces is
+actually written to.
