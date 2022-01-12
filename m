@@ -1,60 +1,111 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391F3168
-	for <regressions@lists.linux.dev>; Wed, 12 Jan 2022 07:15:32 +0000 (UTC)
-Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n7Xqu-0007Ja-A9; Wed, 12 Jan 2022 08:15:24 +0100
-Message-ID: <fbfbdedd-21b5-5b6f-c03c-80027acbe2f5@leemhuis.info>
-Date: Wed, 12 Jan 2022 08:15:23 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535872C9D
+	for <regressions@lists.linux.dev>; Wed, 12 Jan 2022 11:45:49 +0000 (UTC)
+Received: by mail-yb1-f182.google.com with SMTP id g14so5525891ybs.8
+        for <regressions@lists.linux.dev>; Wed, 12 Jan 2022 03:45:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=1oAWQHZqJjxGspd66xUUwdpCocjq4RF4bRYfPMa0RgM=;
+        b=LCxuNDTBSrsTxNHCIoEpEJhzykzI1PqU0Qu7+y1h/2eirkEaNcUWcRKGGAWaV79ru6
+         Xv6at+0+iUtpOEe63PUlXlbArXuMTPWdZ+/I9QGm1/Tn/3qseWRDveOL4FnagSPN1A/T
+         WQA5lRrrNPqlTtbO2930mHMbqr0IbKawgZZJX2ACEHAPmOPO0eKb5zSkXu2527bDe22H
+         qZSNnQTvKG1BZvNckxJgIPiclQ2QGrvZHaHYpAF4Yj1u61rLGVSA/EQd1E9Vbu/Wv0mM
+         76FeBD8ggDrgJZACy1k8ttE1LmolWjhAvrPauqbZAqe0sJtrtel+dc7OKUTio8KPUJJT
+         BrjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=1oAWQHZqJjxGspd66xUUwdpCocjq4RF4bRYfPMa0RgM=;
+        b=FtRzdMUNzQZpJKc1Vg82cp/0zsuzu+v7MwzdWaS+oc/vOAQMKV+24SuH2Zxr6clcvY
+         7yiMOFssl8eHGYzRbNC5grEVnWUfErnIucAJfZlzFqaW91TgbRdLn7kpmlHRKe0ibaIH
+         J12/OfVC/RzzprT2Y7LgtQ4MubXA3GUx8DzshAXFpakqD+VIKn1zgbGOuCDnWmoG4AO7
+         OTqsoJiL38nCzF0Nba9Rncz2K2H7r161QQZbQUuswUFlzObO6syOYZRyBVfMvoepsdZM
+         Oqhzb+90Woczzp7gm4N+sCvC5OMhDEHJIW0L+AIo5kjbznXD1QXU8x3ZZCQ+Odq7tEMS
+         Zyug==
+X-Gm-Message-State: AOAM532C+TTiM+VMJ3Tf4RyeiPPy+pPw/YIifoR9FAruJsinPW/mePq9
+	tWd2TepED/XUHqiZ0R0hskLH01oVvqlNqzxeigk0Aw==
+X-Google-Smtp-Source: ABdhPJy833HxrFP8l/AcVNmiqInufp1tn6sOo1ri3JhrVF4Lbfk3FqLKPmb8gT8eZ0+nFbb7F4rgAXM2QRTArxbTsF4=
+X-Received: by 2002:a5b:d09:: with SMTP id y9mr7287068ybp.146.1641987948106;
+ Wed, 12 Jan 2022 03:45:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Content-Language: en-BS
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: [regression] Headphone output gets unproperly powered down - Mi
- Notebook Pro 2020 (ALC256) (fwd of b.k.o bug #215484; starting with 5.14.14)
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: itsbytebites@tutanota.com, alsa-devel@alsa-project.org
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1641971732;dc618dbb;
-X-HE-SMSGID: 1n7Xqu-0007Ja-A9
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 12 Jan 2022 17:15:37 +0530
+Message-ID: <CA+G9fYsMHhXJCgO-ykR0oO1kVdusGnthgj6ifxEKaGPHZJ-ZCw@mail.gmail.com>
+Subject: [next]: LTP: getxattr05.c:97: TFAIL: unshare(CLONE_NEWUSER) failed:
+ ENOSPC (28)
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	LTP List <ltp@lists.linux.it>, linux-fsdevel@vger.kernel.org, 
+	regressions@lists.linux.dev
+Cc: Alexey Gladkov <legion@kernel.org>, Sven Schnelle <svens@linux.ibm.com>, 
+	"Eric W. Biederman" <ebiederm@xmission.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 
+While testing LTP syscalls with Linux next 20220110 (and till date 20220112)
+on x86_64, i386, arm and arm64 the following tests failed.
 
-Hi, this is your Linux kernel regression tracker speaking.
+tst_test.c:1365: TINFO: Timeout per run is 0h 15m 00s
+getxattr05.c:87: TPASS: Got same data when acquiring the value of
+system.posix_acl_access twice
+getxattr05.c:97: TFAIL: unshare(CLONE_NEWUSER) failed: ENOSPC (28)
+tst_test.c:391: TBROK: Invalid child (13545) exit value 1
 
-I'm forwarding a regression reported in bugzilla.kernel.org to the list,
-to make sure all parties interested in this are aware of it. The
-reporter is CCed. Not CCing the stable list in this case, as 5.14 is EOL
-already.
+fanotify17.c:176: TINFO: Test #1: Global groups limit in privileged user ns
+fanotify17.c:155: TFAIL: unshare(CLONE_NEWUSER) failed: ENOSPC (28)
+tst_test.c:391: TBROK: Invalid child (14739) exit value 1
 
-https://bugzilla.kernel.org/show_bug.cgi?id=215484
+sendto03.c:48: TBROK: unshare(268435456) failed: ENOSPC (28)
 
-> With headphones (or an auxiliary jack) plugged in, the audio output
-> is fine when anything is playing, but when that's stopped a loud pop
-> can be heard after some seconds and if the jack is connected to an
-> external amplifier it gets really noisy. Everything gets back to
-> normal whenever audio playback is resumed, although with another loud
-> pop at the start.
-> 
-> This has been happening since kernel 5.14.14, whereas 5.14.13 is
-> fine. I suspect it has to do with the ALC256 mute logic implemented
-> in that version
-> (https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/diff/sound/pci/hda/patch_realtek.c?id=v5.14.14&id2=v5.14.13)
-> 
-> OS: Fedora Linux 35 Kernel: 5.16.0-60 Vanilla Hardware: Xiaomi Mi
-> Notebook Pro Enhanced 2020 (i7 10510U, ALC256)
+setsockopt05.c:45: TBROK: unshare(268435456) failed: ENOSPC (28)
 
-Ciao, Thorsten
+strace output:
+--------------
+[pid   481] wait4(-1, 0x7fff52f5ae8c, 0, NULL) = -1 ECHILD (No child processes)
+[pid   481] clone(child_stack=NULL,
+flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD,
+child_tidptr=0x7f3af0fa7a10) = 483
+strace: Process 483 attached
+[pid   481] wait4(-1,  <unfinished ...>
+[pid   483] unshare(CLONE_NEWUSER)      = -1 ENOSPC (No space left on device)
 
-#regzbot introduced v5.14.13..v5.14.14
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215484
-#regzbot from: Emanuele Melzi <itsbytebites@tutanota.com>
+metadata:
+  git branch: master
+  git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git commit: 57c149e506d5bec1b845ad1a8a631063fcac1f6e
+  git describe: next-20220110
+  arch: x86
+  toolchain: gcc-11
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+GOOD: next-20220107
+ BAD:    next-20220110
+
+Test logs:
+https://lkft.validation.linaro.org/scheduler/job/4301888#L1474
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20220110/testrun/7253656/suite/ltp-syscalls-tests/test/getxattr05/log
+
+compare test history:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20220112/testrun/7277164/suite/ltp-syscalls-tests/test/getxattr05/history/
+
+kernel-config:
+https://builds.tuxbuild.com/23V6AwGvHW7H3kr6WxZZwueajVS/config
+
+We are investigating this regression.
+
+Steps to reproduce:
+   # cd /opt/ltp
+   # ./runltp -s getxattr05
+
+--
+Linaro LKFT
+https://lkft.linaro.org
