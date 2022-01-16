@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D8E29CA
-	for <regressions@lists.linux.dev>; Sun, 16 Jan 2022 07:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CF61173
+	for <regressions@lists.linux.dev>; Sun, 16 Jan 2022 09:33:19 +0000 (UTC)
 Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n9046-0002E0-7z; Sun, 16 Jan 2022 08:35:02 +0100
-Message-ID: <3fbb3ac9-fcb5-372c-b8e5-b8b1c34b3079@leemhuis.info>
-Date: Sun, 16 Jan 2022 08:35:01 +0100
+	id 1n91uX-0003Hv-8G; Sun, 16 Jan 2022 10:33:17 +0100
+Message-ID: <43a7c1df-d20c-e975-1312-3561c18228f8@leemhuis.info>
+Date: Sun, 16 Jan 2022 10:33:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,106 +16,55 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: drm: amdgpu: s0ix suspend stopped working #forregzbot
+Subject: Re: [regression] Headphone output gets unproperly powered down - Mi
+ Notebook Pro 2020 (ALC256) (fwd of b.k.o bug #215484; starting with 5.14.14)
+ #forregzbot
 Content-Language: en-BS
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <f3aa1e12-c65f-8668-772c-b25dca79b642@leemhuis.info>
-In-Reply-To: <f3aa1e12-c65f-8668-772c-b25dca79b642@leemhuis.info>
+References: <fbfbdedd-21b5-5b6f-c03c-80027acbe2f5@leemhuis.info>
+In-Reply-To: <fbfbdedd-21b5-5b6f-c03c-80027acbe2f5@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1642318504;23f34de6;
-X-HE-SMSGID: 1n9046-0002E0-7z
-
-Hi, this is your Linux kernel regression tracker speaking.
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1642325599;ef926a12;
+X-HE-SMSGID: 1n91uX-0003Hv-8G
 
 For the record:
 
-#regzbot fixed-by: e8521d0cd984897
-
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=e8521d0cd984897b4fa58e7837afebd04e44f0b3
-
-> drm/amd/display: Revert W/A for hard hangs on DCN20/DCN21
-> The WA from commit 2a50edbf10c8 ("drm/amd/display: Apply w/a for hard hang
-> on HPD") and commit 1bd3bc745e7f ("drm/amd/display: Extend w/a for hard
-> hang on HPD to dcn20") causes a regression in s0ix where the system will
-> fail to resume properly on many laptops.  Pull the workarounds out to
-> avoid that s0ix regression in the common case.  This HPD hang happens with
-> an external device in special circumstances and a new W/A will need to be
-> developed for this in the future.
-> 
-> Cc: Qingqing Zhuo <qingqing.zhuo@amd.com>
-> Reported-by: Scott Bruce <smbruce@gmail.com>
-> Reported-by: Chris Hixon <linux-kernel-bugs@hixontech.com>
-> Reported-by: spasswolf@web.de
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215436
-> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1821
-> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1852
-> Fixes: 2a50edbf10c8 ("drm/amd/display: Apply w/a for hard hang on HPD")
-> Fixes: 1bd3bc745e7f ("drm/amd/display: Extend w/a for hard hang on HPD to dcn20")
-> Reviewed-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-
+#regzbot introduced f8d3c17e1c3720a1497b5c5db514a832834610d1
 
 TWIMC: this mail is primarily send for documentation purposes and for
 regzbot, my Linux kernel regression tracking bot. These mails usually
 contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-On 01.01.22 11:22, Thorsten Leemhuis wrote:
+On 12.01.22 08:15, Thorsten Leemhuis wrote:
+> 
 > Hi, this is your Linux kernel regression tracker speaking.
 > 
-> There are two reports about s2idle regression on AMD systems. They are
-> already being worked on.
+> I'm forwarding a regression reported in bugzilla.kernel.org to the list,
+> to make sure all parties interested in this are aware of it. The
+> reporter is CCed. Not CCing the stable list in this case, as 5.14 is EOL
+> already.
 > 
-> I'm writing this mail just for getting it tracked by regzbot and to make
-> it easier for people to find the issue.
+> https://bugzilla.kernel.org/show_bug.cgi?id=215484
 > 
-> #regzbot ^introduced 2a50edbf10c8c56e930bfb53d8f9f00a33fd837e
-> #regzbot title drm: amdgpu: s0ix suspend stopped working
-> #regzbot Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1821
-> #regzbot Link: https://bugzilla.kernel.org/show_bug.cgi?id=215436
+>> With headphones (or an auxiliary jack) plugged in, the audio output
+>> is fine when anything is playing, but when that's stopped a loud pop
+>> can be heard after some seconds and if the jack is connected to an
+>> external amplifier it gets really noisy. Everything gets back to
+>> normal whenever audio playback is resumed, although with another loud
+>> pop at the start.
+>>
+>> This has been happening since kernel 5.14.14, whereas 5.14.13 is
+>> fine. I suspect it has to do with the ALC256 mute logic implemented
+>> in that version
+>> (https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/diff/sound/pci/hda/patch_realtek.c?id=v5.14.14&id2=v5.14.13)
+>>
+>> OS: Fedora Linux 35 Kernel: 5.16.0-60 Vanilla Hardware: Xiaomi Mi
+>> Notebook Pro Enhanced 2020 (i7 10510U, ALC256)
 > 
 > Ciao, Thorsten
 > 
-> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-> on my table. I can only look briefly into most of them. Unfortunately
-> therefore I sometimes will get things wrong or miss something important.
-> I hope that's not the case here; if you think it is, don't hesitate to
-> tell me about it in a public reply, that's in everyone's interest.
-> 
-> BTW, I have no personal interest in this issue, which is tracked using
-> regzbot, my Linux kernel regression tracking bot
-> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> this mail to get things rolling again and hence don't need to be CC on
-> all further activities wrt to this regression.
-> 
-> ---
-> Additional information about regzbot:
-> 
-> If you want to know more about regzbot, check out its web-interface, the
-> getting start guide, and/or the references documentation:
-> 
-> https://linux-regtracking.leemhuis.info/regzbot/
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-> 
-> The last two documents will explain how you can interact with regzbot
-> yourself if your want to.
-> 
-> Hint for reporters: when reporting a regression it's in your interest to
-> tell #regzbot about it in the report, as that will ensure the regression
-> gets on the radar of regzbot and the regression tracker. That's in your
-> interest, as they will make sure the report won't fall through the
-> cracks unnoticed.
-> 
-> Hint for developers: you normally don't need to care about regzbot once
-> it's involved. Fix the issue as you normally would, just remember to
-> include a 'Link:' tag to the report in the commit message, as explained
-> in Documentation/process/submitting-patches.rst
-> That aspect was recently was made more explicit in commit 1f57bd42b77c:
-> https://git.kernel.org/linus/1f57bd42b77c
-> 
-> 
-> 
-> 
+> #regzbot introduced v5.14.13..v5.14.14
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215484
+> #regzbot from: Emanuele Melzi <itsbytebites@tutanota.com>
