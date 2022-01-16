@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0965E173
-	for <regressions@lists.linux.dev>; Sun, 16 Jan 2022 10:18:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64E69173
+	for <regressions@lists.linux.dev>; Sun, 16 Jan 2022 10:21:27 +0000 (UTC)
 Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n92cf-0002Co-0Q; Sun, 16 Jan 2022 11:18:53 +0100
-Message-ID: <221e1da9-e1c4-10ee-332a-117dee0d913d@leemhuis.info>
-Date: Sun, 16 Jan 2022 11:18:52 +0100
+	id 1n92f6-0005Dc-NR; Sun, 16 Jan 2022 11:21:24 +0100
+Message-ID: <5bd2dba7-c56f-4d8c-2f28-f2428afdcead@leemhuis.info>
+Date: Sun, 16 Jan 2022 11:21:24 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,74 +16,45 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: xfrm regression: TCP MSS calculation broken by commit b515d263,
- results in TCP stall
-Content-Language: en-BW
-To: Jiri Bohac <jbohac@suse.cz>, Sabrina Dubroca <sd@queasysnail.net>,
- Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>
-Cc: Mike Maloney <maloneykernel@gmail.com>,
- Eric Dumazet <eric.dumazet@gmail.com>, netdev@vger.kernel.org,
+Subject: Re: ChipIdea USB regression
+Content-Language: en-BS
+To: Charles Keepax <ckeepax@opensource.cirrus.com>, robh@kernel.org
+Cc: peter.chen@kernel.org, gregkh@linuxfoundation.org,
+ linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220114173133.tzmdm2hy4flhblo3@dwarf.suse.cz>
+References: <20220114105620.GK18506@ediswmail.ad.cirrus.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20220114173133.tzmdm2hy4flhblo3@dwarf.suse.cz>
+In-Reply-To: <20220114105620.GK18506@ediswmail.ad.cirrus.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1642328339;ece3b455;
-X-HE-SMSGID: 1n92cf-0002Co-0Q
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1642328487;f7364ee0;
+X-HE-SMSGID: 1n92f6-0005Dc-NR
 
 [TLDR: I'm adding this regression to regzbot, the Linux kernel
 regression tracking bot; most text you find below is compiled from a few
 templates paragraphs some of you might have seen already.]
 
-Top-posting for once, to make this easy accessible to everyone.
+Hi, this is your Linux kernel regression tracker speaking.
 
-On 14.01.22 18:31, Jiri Bohac wrote:
+Adding the regression mailing list to the list of recipients, as it
+should be in the loop for all regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+On 14.01.22 11:56, Charles Keepax wrote:
+> Hi guys,
 > 
-> our customer found that commit
-> b515d2637276a3810d6595e10ab02c13bfd0b63a ("xfrm: xfrm_state_mtu
-> should return at least 1280 for ipv6") in v5.14 breaks the TCP
-> MSS calculation in ipsec transport mode, resulting complete
-> stalls of TCP connections. This happens when the (P)MTU is 1280
-> or slighly larger.
+> My Zynq based board stopped booting today, a bisect points to this
+> patch:
 > 
-> The desired formula for the MSS is:
-> 	MSS = (MTU - ESP_overhead) - IP header - TCP header
-> 
-> However, the above patch clamps the (MTU - ESP_overhead) to a
-> minimum of 1280, turning the formula into
-> 	MSS = max(MTU - ESP overhead, 1280) -  IP header - TCP header
-> 
-> With the (P)MTU near 1280, the calculated MSS is too large and
-> the resulting TCP packets never make it to the destination
-> because they are over the actual PMTU.
-> 
-> Trying to fix the exact same problem as the broken patch, which I
-> was unaware of, I sent an alternative patch in this thread of
-> April 2021:
-> https://lore.kernel.org/netdev/20210429170254.5grfgsz2hgy2qjhk@dwarf.suse.cz/
-> (note the v1 is broken and followed by v2!)
-> 
-> In that thread I also found other problems with
-> b515d2637276a3810d6595e10ab02c13bfd0b63a - in tunnel mode it
-> causes suboptimal double fragmentation:
-> https://lore.kernel.org/netdev/20210429202529.codhwpc7w6kbudug@dwarf.suse.cz/
-> 
-> I therefore propose to revert
-> b515d2637276a3810d6595e10ab02c13bfd0b63a and
-> apply the v2 version of my patch, which I'll re-send in reply to
-> this e-mail.
+> commit 0f153a1b8193 ("usb: chipidea: Set the DT node on the child device")
 
 Thanks for the report.
 
 To be sure this issue doesn't fall through the cracks unnoticed, I'm
 adding it to regzbot, my Linux kernel regression tracking bot:
 
-#regzbot ^introduced b515d2637276a3810d6595e10ab02c13bfd0b63a
-#regzbot title xfrm: TCP MSS calculation broken by commit b515d263,
-results in TCP stall
+#regzbot ^introduced 0f153a1b8193
+#regzbot title usb: chipidea: Zynq based board stopped booting today
 #regzbot ignore-activity
 
 Reminder: when fixing the issue, please add a 'Link:' tag with the URL
@@ -103,6 +74,7 @@ the lists (with a tag in the subject so people can filter them away), as
 long as they are intended just for regzbot. With a bit of luck no such
 messages will be needed anyway.
 
+
 Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
 
 P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
@@ -116,6 +88,71 @@ regzbot, my Linux kernel regression tracking bot
 (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
 this mail to get things rolling again and hence don't need to be CC on
 all further activities wrt to this regression.
+
+
+
+> It looks like it gets stuck in some sort of boot loop of doom:
+> 
+> 48 locks held by swapper/0/1:
+> #0: 42a2c0d8 (&dev->mutex){....}-{3:3}, at: __driver_attach+0x12c/0x15c
+> #1: 42a41cd8 (&dev->mutex){....}-{3:3}, at: __device_attach+0x2c/0x164
+> #2: 42abdcd8 (&dev->mutex){....}-{3:3}, at: __device_attach+0x2c/0x164
+> #3: 42abd8d8 (&dev->mutex){....}-{3:3}, at: __device_attach+0x2c/0x164
+> #4: 42abd4d8 (&dev->mutex){....}-{3:3}, at: __device_attach+0x2c/0x164
+> #5: 42abd0d8 (&dev->mutex){....}-{3:3}, at: __device_attach+0x2c/0x164
+> #6: 42b00cd8 (&dev->mutex){....}-{3:3}, at: __device_attach+0x2c/0x164
+> #7: 42b008d8 (&dev->mutex){....}-{3:3}, at: __device_attach+0x2c/0x164
+> <snip>
+> [<40100af4>] (__irq_svc) from [<40920270>] (_raw_spin_unlock_irqrestore+0x30/0x5c)
+> [<40920270>] (_raw_spin_unlock_irqrestore) from [<40433238>] (klist_next+0x84/0xac)
+> [<40433238>] (klist_next) from [<40503a5c>] (bus_for_each_drv+0x60/0xbc)
+> [<40503a5c>] (bus_for_each_drv) from [<40505ea8>] (__device_attach+0xc4/0x164)
+> [<40505ea8>] (__device_attach) from [<405047e0>] (bus_probe_device+0x28/0x84)
+> [<405047e0>] (bus_probe_device) from [<405022b8>] (device_add+0x590/0x7c4)
+> [<405022b8>] (device_add) from [<4050835c>] (platform_device_add+0xa8/0x1f0)
+> [<4050835c>] (platform_device_add) from [<405f329c>] (ci_hdrc_add_device+0x3b4/0x434)
+> [<405f329c>] (ci_hdrc_add_device) from [<405f5f0c>] (ci_hdrc_usb2_probe+0x130/0x180)
+> [<405f5f0c>] (ci_hdrc_usb2_probe) from [<40507e60>] (platform_probe+0x58/0xa8)
+> [<40507e60>] (platform_probe) from [<4050584c>] (really_probe+0x1d8/0x418)
+> [<4050584c>] (really_probe) from [<40505c44>] (__driver_probe_device+0x1b8/0x1f0)
+> [<40505c44>] (__driver_probe_device) from [<40505ca0>] (driver_probe_device+0x24/0xa4)
+> [<40505ca0>] (driver_probe_device) from [<405060b0>] (__device_attach_driver+0xbc/0x110)
+> [<405060b0>] (__device_attach_driver) from [<40503aa4>] (bus_for_each_drv+0xa8/0xbc)
+> [<40503aa4>] (bus_for_each_drv) from [<40505ea8>] (__device_attach+0xc4/0x164)
+> [<40505ea8>] (__device_attach) from [<405047e0>] (bus_probe_device+0x28/0x84)
+> [<405047e0>] (bus_probe_device) from [<405022b8>] (device_add+0x590/0x7c4)
+> [<405022b8>] (device_add) from [<4050835c>] (platform_device_add+0xa8/0x1f0)
+> [<4050835c>] (platform_device_add) from [<405f329c>] (ci_hdrc_add_device+0x3b4/0x434)
+> [<405f329c>] (ci_hdrc_add_device) from [<405f5f0c>] (ci_hdrc_usb2_probe+0x130/0x180)
+> [<405f5f0c>] (ci_hdrc_usb2_probe) from [<40507e60>] (platform_probe+0x58/0xa8)
+> [<40507e60>] (platform_probe) from [<4050584c>] (really_probe+0x1d8/0x418)
+> [<4050584c>] (really_probe) from [<40505c44>] (__driver_probe_device+0x1b8/0x1f0)
+> [<40505c44>] (__driver_probe_device) from [<40505ca0>] (driver_probe_device+0x24/0xa4)
+> [<40505ca0>] (driver_probe_device) from [<405060b0>] (__device_attach_driver+0xbc/0x110)
+> [<405060b0>] (__device_attach_driver) from [<40503aa4>] (bus_for_each_drv+0xa8/0xbc)
+> [<40503aa4>] (bus_for_each_drv) from [<40505ea8>] (__device_attach+0xc4/0x164)
+> [<40505ea8>] (__device_attach) from [<405047e0>] (bus_probe_device+0x28/0x84)
+> [<405047e0>] (bus_probe_device) from [<405022b8>] (device_add+0x590/0x7c4)
+> [<405022b8>] (device_add) from [<4050835c>] (platform_device_add+0xa8/0x1f0)
+> [<4050835c>] (platform_device_add) from [<405f329c>] (ci_hdrc_add_device+0x3b4/0x434)
+> [<405f329c>] (ci_hdrc_add_device) from [<405f5f0c>] (ci_hdrc_usb2_probe+0x130/0x180)
+> [<405f5f0c>] (ci_hdrc_usb2_probe) from [<40507e60>] (platform_probe+0x58/0xa8)
+> [<40507e60>] (platform_probe) from [<4050584c>] (really_probe+0x1d8/0x418)
+> [<4050584c>] (really_probe) from [<40505c44>] (__driver_probe_device+0x1b8/0x1f0)
+> [<40505c44>] (__driver_probe_device) from [<40505ca0>] (driver_probe_device+0x24/0xa4)
+> [<40505ca0>] (driver_probe_device) from [<405060b0>] (__device_attach_driver+0xbc/0x110)
+> [<405060b0>] (__device_attach_driver) from [<40503aa4>] (bus_for_each_drv+0xa8/0xbc)
+> [<40503aa4>] (bus_for_each_drv) from [<40505ea8>] (__device_attach+0xc4/0x164)
+> [<40505ea8>] (__device_attach) from [<405047e0>] (bus_probe_device+0x28/0x84)
+> [<405047e0>] (bus_probe_device) from [<405022b8>] (device_add+0x590/0x7c4)
+> 
+> I will keep poking it today to see if I can figure out more of
+> what is actually going wrong, but if any of you guys had any
+> thoughts/suggestions or if you want me to provide any additional
+> info all of those would be greatly appreciated.
+> 
+> Thanks,
+> Charles
 
 ---
 Additional information about regzbot:
@@ -142,4 +179,3 @@ include a 'Link:' tag to the report in the commit message, as explained
 in Documentation/process/submitting-patches.rst
 That aspect was recently was made more explicit in commit 1f57bd42b77c:
 https://git.kernel.org/linus/1f57bd42b77c
-
