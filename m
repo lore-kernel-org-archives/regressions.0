@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012E0173
-	for <regressions@lists.linux.dev>; Sun, 16 Jan 2022 10:16:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0965E173
+	for <regressions@lists.linux.dev>; Sun, 16 Jan 2022 10:18:58 +0000 (UTC)
 Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1n92aU-0007Wm-G5; Sun, 16 Jan 2022 11:16:39 +0100
-Message-ID: <c99a1e4b-f1d6-4c49-1b96-c767f712c137@leemhuis.info>
-Date: Sun, 16 Jan 2022 11:16:38 +0100
+	id 1n92cf-0002Co-0Q; Sun, 16 Jan 2022 11:18:53 +0100
+Message-ID: <221e1da9-e1c4-10ee-332a-117dee0d913d@leemhuis.info>
+Date: Sun, 16 Jan 2022 11:18:52 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,61 +16,74 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: Potential regression after fsnotify_nameremove() rework in 5.3
-Content-Language: en-BS
-To: Ivan Delalande <colona@arista.com>, Amir Goldstein <amir73il@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, Jan Kara <jack@suse.cz>,
+Subject: Re: xfrm regression: TCP MSS calculation broken by commit b515d263,
+ results in TCP stall
+Content-Language: en-BW
+To: Jiri Bohac <jbohac@suse.cz>, Sabrina Dubroca <sd@queasysnail.net>,
+ Steffen Klassert <steffen.klassert@secunet.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>
+Cc: Mike Maloney <maloneykernel@gmail.com>,
+ Eric Dumazet <eric.dumazet@gmail.com>, netdev@vger.kernel.org,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <YeI7duagtzCtKMbM@visor>
+References: <20220114173133.tzmdm2hy4flhblo3@dwarf.suse.cz>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <YeI7duagtzCtKMbM@visor>
+In-Reply-To: <20220114173133.tzmdm2hy4flhblo3@dwarf.suse.cz>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1642328203;c3cda141;
-X-HE-SMSGID: 1n92aU-0007Wm-G5
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1642328339;ece3b455;
+X-HE-SMSGID: 1n92cf-0002Co-0Q
 
 [TLDR: I'm adding this regression to regzbot, the Linux kernel
 regression tracking bot; most text you find below is compiled from a few
 templates paragraphs some of you might have seen already.]
 
-Hi, this is your Linux kernel regression tracker speaking.
+Top-posting for once, to make this easy accessible to everyone.
 
-Adding the regression mailing list to the list of recipients, as it
-should be in the loop for all regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-
-On 15.01.22 04:11, Ivan Delalande wrote:
-> Hi,
+On 14.01.22 18:31, Jiri Bohac wrote:
 > 
-> Sorry to bring this up so late but we might have found a regression
-> introduced by your "Sort out fsnotify_nameremove() mess" patch series
-> merged in 5.3 (116b9731ad76..7377f5bec133), and that can still be
-> reproduced on v5.16.
+> our customer found that commit
+> b515d2637276a3810d6595e10ab02c13bfd0b63a ("xfrm: xfrm_state_mtu
+> should return at least 1280 for ipv6") in v5.14 breaks the TCP
+> MSS calculation in ipsec transport mode, resulting complete
+> stalls of TCP connections. This happens when the (P)MTU is 1280
+> or slighly larger.
 > 
-> Some of our processes use inotify to watch for IN_DELETE events (for
-> files on tmpfs mostly), and relied on the fact that once such events are
-> received, the files they refer to have actually been unlinked and can't
-> be open/read. So if and once open() succeeds then it is a new version of
-> the file that has been recreated with new content.
+> The desired formula for the MSS is:
+> 	MSS = (MTU - ESP_overhead) - IP header - TCP header
 > 
-> This was true and working reliably before 5.3, but changed after
-> 49246466a989 ("fsnotify: move fsnotify_nameremove() hook out of
-> d_delete()") specifically. There is now a time window where a process
-> receiving one of those IN_DELETE events may still be able to open the
-> file and read its old content before it's really unlinked from the FS.
+> However, the above patch clamps the (MTU - ESP_overhead) to a
+> minimum of 1280, turning the formula into
+> 	MSS = max(MTU - ESP overhead, 1280) -  IP header - TCP header
 > 
-> I'm not very familiar with the VFS and fsnotify internals, would you
-> consider this a regression, or was there never any intentional guarantee
-> for that behavior and it's best we work around this change in userspace?
+> With the (P)MTU near 1280, the calculated MSS is too large and
+> the resulting TCP packets never make it to the destination
+> because they are over the actual PMTU.
+> 
+> Trying to fix the exact same problem as the broken patch, which I
+> was unaware of, I sent an alternative patch in this thread of
+> April 2021:
+> https://lore.kernel.org/netdev/20210429170254.5grfgsz2hgy2qjhk@dwarf.suse.cz/
+> (note the v1 is broken and followed by v2!)
+> 
+> In that thread I also found other problems with
+> b515d2637276a3810d6595e10ab02c13bfd0b63a - in tunnel mode it
+> causes suboptimal double fragmentation:
+> https://lore.kernel.org/netdev/20210429202529.codhwpc7w6kbudug@dwarf.suse.cz/
+> 
+> I therefore propose to revert
+> b515d2637276a3810d6595e10ab02c13bfd0b63a and
+> apply the v2 version of my patch, which I'll re-send in reply to
+> this e-mail.
 
 Thanks for the report.
 
 To be sure this issue doesn't fall through the cracks unnoticed, I'm
 adding it to regzbot, my Linux kernel regression tracking bot:
 
-#regzbot ^introduced 116b9731ad76..7377f5bec133
-#regzbot title fsnotify: regression due to the fsnotify_nameremove()
-rework in 5.3
+#regzbot ^introduced b515d2637276a3810d6595e10ab02c13bfd0b63a
+#regzbot title xfrm: TCP MSS calculation broken by commit b515d263,
+results in TCP stall
 #regzbot ignore-activity
 
 Reminder: when fixing the issue, please add a 'Link:' tag with the URL
