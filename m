@@ -1,128 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C792C82
-	for <regressions@lists.linux.dev>; Tue, 18 Jan 2022 18:37:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E491C340E6
-	for <regressions@lists.linux.dev>; Tue, 18 Jan 2022 18:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1642531057;
-	bh=2tKT2LkkSw7F1pcMD5R/BU1/Sa9Qs105/gaBZjyvCHk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=C1e7ptTAiQs29o0U7mXPHIJZ6gO/fvMYPlMLkKf3TYB3Jrbx3nFKNUOJV7aGNHoIt
-	 53A0kLQ91GtbPr+i7hPxh3pCyYPsZjkBtysF+cqxMgK85endvY7uBwwbiQinWZJKaJ
-	 23DC8TQZ9wh1nJCsH11GXXLF/Wk0rRNc4RKb8UjormQLU7b1E/AZXWhZrbtccBOQxj
-	 /7+mdwUrP0o+zcrqc0ZNfo/wv7GssOrITR26dq/JUDXbULS7Fi5/0JDLGUqXDljlAa
-	 zVAtwmQuF6YGXc5ApFDPy9oVnu5/c10YdI3rKABTHv6Wyf7Ga8PLnUIHvn6cgCaiJb
-	 tIgR/qR9o5Gww==
-Received: by mail-ed1-f44.google.com with SMTP id 30so83683383edv.3
-        for <regressions@lists.linux.dev>; Tue, 18 Jan 2022 10:37:37 -0800 (PST)
-X-Gm-Message-State: AOAM531akudS7yB4xDh4no2Rb8GR/BmnIGyvBRz3UxC+07okC0GolJVf
-	nPsFe0VXnEPIweg0HDitIrsx5p9McAmSgiTGnA==
-X-Google-Smtp-Source: ABdhPJxo3mZozVtV4I4Y2c/YrH36dX/A++g5u12oIgnT/QjoF3/dV6tPlV2CLl2cYfKHczrqCDPMtB0IsYYCJ5lI3xc=
-X-Received: by 2002:a17:906:1604:: with SMTP id m4mr14849598ejd.325.1642531055560;
- Tue, 18 Jan 2022 10:37:35 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB01429CA
+	for <regressions@lists.linux.dev>; Thu, 20 Jan 2022 08:17:45 +0000 (UTC)
+Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nASdV-0004AY-R7; Thu, 20 Jan 2022 09:17:37 +0100
+Message-ID: <5d023b0d-d9b3-c18f-4729-82c1090edbb8@leemhuis.info>
+Date: Thu, 20 Jan 2022 09:17:37 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220114105620.GK18506@ediswmail.ad.cirrus.com>
- <5bd2dba7-c56f-4d8c-2f28-f2428afdcead@leemhuis.info> <CAL_JsqKH90fgSPjKqALweEmZDfxy88jAiRZ4uRKE3+-OZv1ZXQ@mail.gmail.com>
- <2f55b629-2e5b-bd45-e0ea-4e476f603dc8@leemhuis.info>
-In-Reply-To: <2f55b629-2e5b-bd45-e0ea-4e476f603dc8@leemhuis.info>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 18 Jan 2022 12:37:24 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLQnPc=eSz_OD4HaK-MqXmmnfQkRNbHHLXpRH--w=dBNQ@mail.gmail.com>
-Message-ID: <CAL_JsqLQnPc=eSz_OD4HaK-MqXmmnfQkRNbHHLXpRH--w=dBNQ@mail.gmail.com>
-Subject: Re: ChipIdea USB regression
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, Peter Chen <peter.chen@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux USB List <linux-usb@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [regression] Touchpad is not working after suspend to RAM since
+ kernel 5.14 (fwd from b.k.o bug 214667) #forregzbot
+Content-Language: en-BS
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <12b9a10a-626b-cafd-05d6-cf0a116aa39b@leemhuis.info>
+In-Reply-To: <12b9a10a-626b-cafd-05d6-cf0a116aa39b@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1642666665;bad01105;
+X-HE-SMSGID: 1nASdV-0004AY-R7
 
-On Tue, Jan 18, 2022 at 11:34 AM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> On 18.01.22 17:53, Rob Herring wrote:
-> > On Sun, Jan 16, 2022 at 4:21 AM Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> >>
-> >> [TLDR: I'm adding this regression to regzbot, the Linux kernel
-> >> regression tracking bot; most text you find below is compiled from a few
-> >> templates paragraphs some of you might have seen already.]
-> >>
-> >> Hi, this is your Linux kernel regression tracker speaking.
-> >>
-> >> Adding the regression mailing list to the list of recipients, as it
-> >> should be in the loop for all regressions, as explained here:
-> >> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-> >>
-> >> On 14.01.22 11:56, Charles Keepax wrote:
-> >>> Hi guys,
-> >>>
-> >>> My Zynq based board stopped booting today, a bisect points to this
-> >>> patch:
-> >>>
-> >>> commit 0f153a1b8193 ("usb: chipidea: Set the DT node on the child device")
-> >>
-> >> Thanks for the report.
-> >>
-> >> To be sure this issue doesn't fall through the cracks unnoticed, I'm
-> >> adding it to regzbot, my Linux kernel regression tracking bot:
-> >>
-> >> #regzbot ^introduced 0f153a1b8193
-> >> #regzbot title usb: chipidea: Zynq based board stopped booting today
-> >> #regzbot ignore-activity
-> >>
-> >> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
-> >> to the report (the parent of this mail) using the kernel.org redirector,
-> >
-> > 'kernel.org redirector' is lore.kernel.org? It would be clearer to
-> > just say that.
->
-> Yes/No it's lore.kernel.org/r/ (and not lore.kernel.org/list-foo/).
-> You're right I'll rephrase next time.
+On 28.12.21 08:29, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> Forwarding a regression reported by Christian Casteyde (CCed) in
+> bugzilla.kernel.org which apparently has fallen through the cracks.
+> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=214667
+> 
+> A few quotes from comments in the ticket:
 
-Or now lore.kernel.org/all/...
+A quote from https://bugzilla.kernel.org/show_bug.cgi?id=214667#c13
 
-> >> as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
-> >> then will automatically mark the regression as resolved once the fix
-> >> lands in the appropriate tree. For more details about regzbot see footer.
-> >
-> > Would it be possible for you to provide the exact link tag in your
-> > reports? That would be easier and less error prone than describing
-> > what to do in prose.
->
-> Hmm. The webui already provides this (and other things you likely want
-> to add) when you show the details for a tracked regression or visit its
-> individual page:
->
-> https://linux-regtracking.leemhuis.info/regzbot/mainline/
-> https://linux-regtracking.leemhuis.info/regzbot/regression/20220114105620.GK18506@ediswmail.ad.cirrus.com/
+```
+> I confirm reverting this commit on kernel 5.15.14 fixes the issue:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=498d0ddc6ae931e4e79a57c56b6dd4576aa435b6
+```
+So for the record update the culprit in regzbot:
 
-That is the link I was originally expecting for when I went back to this thread.
+#regzbot introduced 498d0ddc6ae931e4
 
-> I see that it would be convenient for developers and less error prone if
-> I could mention the proper Link: tag in mails like the one you quoted,
-> that's why I considered that already. But it would make the regression
-> tracker's job (aka my "job", which I'm kinda doing in my spare time) yet
-> again somewhat harder, as I see no easy solution to automate that when
-> writing these mails (which I do with thunderbird, currently). That's why
-> I decided to not do that for now, as that job is already hard enough and
-> I don't want to get burned out by this a second time; and those link
-> tags are something that were expected from developers even before I came
-> with regzbot.
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-Fair enough, I thought this was more automated than it is. I have some
-scripts for writing replies[1] if that helps. I wrote them because I
-couldn't find any that would quote emails. (Maybe because it's a pain
-dealing with all the encodings). They are geared toward patches in
-terms of trimming the email, but shouldn't be too hard to adapt.
-
-Rob
-
-[1] https://gitlab.com/robherring/pw-utils
+>> Since Kernel 5.14 (probably 5.14-rc5 indeed) the touchpad does not
+>> work anymore after resume from suspend to RAM. Was working with 5.13
+>> kernel.
+>>
+>> I've bisected the bug, first bad commit is: 
+>> b3e29642548258c7cd2cb3326a776fff84cd6b69 is the first bad commit
+>>
+>> SC[33mcommit b3e29642548258c7cd2cb3326a776fff84cd6b69ESC[m Merge:
+>> 8f4ef88 498d0dd Author: Jiri Kosina <jkosina@suse.cz> Date:   Wed Jun
+>> 30 09:15:15 2021 +0200
+>>
+>> Merge branch 'for-5.14/multitouch' into for-linus
+>>
+>> - patch series that ensures that hid-multitouch driver disables touch
+>> and button-press reporting on hid-mt devices during suspend when the
+>> device is not configured as a wakeup-source, from Hans de Goede
+>>
+>> Seem to be related with the observed behaviour.
+> 
+> Yes, that's a merge, but it contains code changes, maybe something went
+> wrong there.
+> 
+>> Update with kernel 5.15-rc7
+>>
+>> Still present. However, I noticed dmesg ouput interesting messages
+>> telling there is a transfer from the ELAN touchpad while suspended,
+>> it failed to suspend, then failed to resume. The interesting thing is
+>> if I try to suspend a second time, at resume the touchpad manages to
+>> resume. Appending dmesg output for reference.
+> 
+> 
+>> The problem is still present in 5.16-rc7, but indeed it got worse
+>> (and indeed is now critical). a) After the first "suspend" tentative
+>> (closing the lid), the laptop doesn't suspend (only the screen is
+>> blanked) b) When I reopen the lid, the touchpad stays disabled c)
+>> When I try to suspend a second time (closing the lid), the system
+>> totally freeze (without any info in dmesg) and I need to reset it
+>> totally. I'll open a separate bug report for this one, when bisected,
+>> and will try to post it to the suspend maintainer together with the
+>> mailing list (I'm not accustomed to mailing lists).
+> 
+> FWIW, Christian did this here:
+> https://lore.kernel.org/all/256689953.114854578.1640622738334.JavaMail.root@zimbra40-e7.priv.proxad.net/
+> 
+>> FYI, if I remember well, reverting this single commit fixed the issue
+>> and the diff was making sense (try to disable the touchpad before
+>> going to sleep to prevent unexpected event from it while
+>> suspending... if I understood well the code).
+> 
+> To be sure this issue doesn't again fall through the cracks unnoticed,
+> I'm adding it to regzbot, my Linux kernel regression tracking bot:
+> 
+> #regzbot introduced b3e29642548258c7cd2cb3326a776fff84cd6b69ESC
+> #regzbot title hid: touchpad is not working after suspend to RAM
+> #regzbot from: Christian Casteyde <casteyde.christian@free.fr>
+> #regzbot ignore-activity
+> 
+> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
+> to the report (the parent of this mail) using the kernel.org redirector,
+> as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
+> then will automatically mark the regression as resolved once the fix
+> lands in the appropriate tree. For more details about regzbot see footer.
+> 
+> Sending this to everyone that got the initial report, to make all aware
+> of the tracking. I also hope that messages like this motivate people to
+> directly get at least the regression mailing list and ideally even
+> regzbot involved when dealing with regressions, as messages like this
+> wouldn't be needed then.
+> 
+> Don't worry, I'll send further messages wrt to this regression just to
+> the lists (with a tag in the subject so people can filter them away), as
+> long as they are intended just for regzbot. With a bit of luck no such
+> messages will be needed anyway.
+> 
+> 
+> 
+> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
+> 
+> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+> on my table. I can only look briefly into most of them. Unfortunately
+> therefore I sometimes will get things wrong or miss something important.
+> I hope that's not the case here; if you think it is, don't hesitate to
+> tell me about it in a public reply. That's in everyone's interest, as
+> what I wrote above might be misleading to everyone reading this; any
+> suggestion I gave thus might sent someone reading this down the wrong
+> rabbit hole, which none of us wants.
+> 
+> BTW, I have no personal interest in this issue, which is tracked using
+> regzbot, my Linux kernel regression tracking bot
+> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+> this mail to get things rolling again and hence don't need to be CC on
+> all further activities wrt to this regression.
+> 
+> ---
+> Additional information about regzbot:
+> 
+> If you want to know more about regzbot, check out its web-interface, the
+> getting start guide, and/or the references documentation:
+> 
+> https://linux-regtracking.leemhuis.info/regzbot/
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> 
+> The last two documents will explain how you can interact with regzbot
+> yourself if your want to.
+> 
+> Hint for reporters: when reporting a regression it's in your interest to
+> tell #regzbot about it in the report, as that will ensure the regression
+> gets on the radar of regzbot and the regression tracker. That's in your
+> interest, as they will make sure the report won't fall through the
+> cracks unnoticed.
+> 
+> Hint for developers: you normally don't need to care about regzbot once
+> it's involved. Fix the issue as you normally would, just remember to
+> include a 'Link:' tag to the report in the commit message, as explained
+> in Documentation/process/submitting-patches.rst
+> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+> https://git.kernel.org/linus/1f57bd42b77c
