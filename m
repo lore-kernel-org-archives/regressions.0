@@ -1,43 +1,43 @@
-Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237F6173
-	for <regressions@lists.linux.dev>; Fri, 21 Jan 2022 09:18:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320E8173
+	for <regressions@lists.linux.dev>; Fri, 21 Jan 2022 09:28:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1642756704; x=1674292704;
+  t=1642757328; x=1674293328;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=DDt33//J7HC81vPepGQWceRVhDsuFSNWZ9d7bVsT2sk=;
-  b=HMNZJ218uwcxGHRmkw5Ig8O6HxSbimjebs0cum6cfLi4erMPfrGRwm/0
-   ONsFPQRaxAkdVNKcJDoya0hxDhJ2E7mtxFyXC5iyw0jysenDqewn+GTI3
-   R6gsFcD9Mzh170McPJfsjMaEQtyZi9j5Kqsw3sef/AvufEQbox7P1TDXB
-   u46i69TNk8Vf14HBNEs1amDtzPkvSHH84dGeV8AgLEGqN3Mx8WxwSA3Bi
-   2HjQhTOTWoX1GQT39ysW6D1I579CCmYjvBpGyR/lgu96d/K0o+94jSXfo
-   DAGnxhBPkluDwnH6krl/v1WTfjsMVsn4xwbBp78i0JIo5Qc/0eekmpRlM
-   g==;
+  bh=wvAGSSkbD8sKVKozj06LSLUZ8DGhuMSqNCuuyy1l4Tg=;
+  b=KKePWTUoMJCdNR2xVJ6dGAqFUjAQZXGeRjETUEGvpghRZBpcSsRzTNQ5
+   6Rp6m3+mt7hy5OXDU25CRO2wTN1RoBFJQFyAJqsCyZ4dtHcTvAys0KD0i
+   +lNjOFmYJhOsKDqs1rKBPXs31WkfVKuoDirqPtlreLdMO3EfgbRT53WOm
+   p1M7dcZXGK8ujCy2Uelck8w84M84Dp3NdithR9chenQrxyS5SoOqbW4Vw
+   9Oms50M6S/oW0pTQ9mfGeKh/wOiq/Zqa0gOKjOyiAxjo54NiMafNV21tJ
+   FQYR5y3/q4GXQzRv7TspDTznnHzTQauK2qiO+nIDUZ58GB5TOHIpdhF5x
+   Q==;
 X-IronPort-AV: E=Sophos;i="5.88,304,1635177600"; 
-   d="scan'208";a="195827192"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 21 Jan 2022 17:17:16 +0800
-IronPort-SDR: BTZAUKGlCXBUdSoLoIfpYTpquJNgnXC/+Tt2NBkQ21iiN0N+iNzgUrZ6x1tCVueY/onziR15us
- 4CliLkRiZnYXFNbvazNjadIXL0PUGDh6ooAQS/xWDUTM/f0chLFtcRGcz0ZMatZA450n6O7iSB
- hsq4LWjN0oHylXRQ/U2GZQxI8U7bGXtfNlZNrEnAPPB4lplWnxwCz2rS6irqBln09/L07LycPA
- NjxF3Sn48+I6XN6xbViC1Su0CJo9W9rD7ssZhpQ9Bn+RbCmw0X5tKWPrI1QQt368c0e8gDKZXR
- z+vPW65sce3Yy7lNZG6HmS19
+   d="scan'208";a="192040169"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 21 Jan 2022 17:27:39 +0800
+IronPort-SDR: A7FxDOg84gT4YhQT3iKA+kpBn838fQPlV79m6fjKy6D9nGL4jpt6Vb90Sg4GSa/vKWk7g5ULaj
+ /dkbf7iTnAU8TOA4/sSaGWZqXlMVo8CHaOvVw3QlLzfYJfWH7v50eGmGsubAw/PmtIW0AsQA1m
+ SG9Doc+HAQ0VlegFEn3NiebxltZTEfjaWtLlCbD+OdiAmcDBRRJh7FdsbUqUDn/JprwuhV3pND
+ qSmmO7DzpgBRDaplzU1dVDN22iExdgC/zZRCh3CnEH70VEsGy5oYil+1o6lSCmoCPaBr+6sqj/
+ ikY3boDOg0goJJWIeI+BcjPG
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2022 00:49:28 -0800
-IronPort-SDR: Kz/DWvVVraWgk+PAkUV1yNWwgMQFYH8/AYNEkhL8tgUEEeVoev/XNI7MnStetjzxgp/HETi9+3
- eaj4KqhC3ZzOwtfDJNdC5ILK6GYP8ZQVXUiO9bzNLVUOTCjrgr7rY76hZ0MOM2/C5r3g+DQhc+
- kX+/uB9e29WL19LWOu3RNSG1LZm1RnX/IYGgTvIrS2e3yo3hsSTiskG0uoe5MGyeBz7E3Aqook
- lDVb82wXewSxYV8CeF5VVV4EU1zEZm9hF0ri72TfthjVefaOedEjTGt28U1e5Fi7elVzbJE6TN
- Ya0=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2022 01:01:06 -0800
+IronPort-SDR: tlMzTLfeqzCv20bDmNrW8bXDNtDCwhItJCg+uH5LDtu9xMguEgxoU392m/qAV5ANpn1B7PBzDL
+ +bns/ch4+7Z7FQbBW+TP7J0OLPj+3vAaon/mcgBeKbORFTKXp7o4JssplWv9DjRxzFtC+FZJtz
+ gbnG57hPwt5e8XHpWv4+BsneDs0+7XdTdWS2V62LJP/qCUqL+OQBWj+ncSJzgVd2hbUQsFOaZR
+ R1k2R0H6fHHDH+gonmfSGSIc3kOICO7gwpiN5KH/CI2rx4jF0/MHFP+5c1EgeyeIG9HtExCUZ9
+ Wtk=
 WDCIronportException: Internal
 Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2022 01:17:17 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2022 01:27:39 -0800
 Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-	by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4JgDKm5yVjz1SVp6
-	for <regressions@lists.linux.dev>; Fri, 21 Jan 2022 01:17:16 -0800 (PST)
+	by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4JgDYk42fpz1SVp8
+	for <regressions@lists.linux.dev>; Fri, 21 Jan 2022 01:27:38 -0800 (PST)
 Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
 	reason="pass (just generated, assumed good)"
 	header.d=opensource.wdc.com
@@ -45,31 +45,31 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
 	opensource.wdc.com; h=content-transfer-encoding:content-type
 	:in-reply-to:organization:from:references:to:content-language
 	:subject:user-agent:mime-version:date:message-id; s=dkim; t=
-	1642756636; x=1645348637; bh=DDt33//J7HC81vPepGQWceRVhDsuFSNWZ9d
-	7bVsT2sk=; b=o1QBeAXEDOCEulPdCiKVw1rIswd9ZPRTg2QvWZcBmaRRidXGKSA
-	RDIqoeIiLJ4GzsOG67O8MKe20oCR1zbbre3pC+9UL16bKRa8av8Easy/BzusnDoC
-	yOG/Ttnx7WcaJFB/5duCGuwTEjuyZEvZ9Jcap/L6gWssL+FJzgDT49d6L61zt0a2
-	gRCtLqvlu0kPpTDtBXhaVjak91XaKw7LZ4nBAn4mhufbNwqVoSeaxHQLZFKSce/y
-	TH8W13pkYiJd031St13DjoVTx5t+XJ6dXWEdCn1yNg9nckqTJHdI5wc5PJ2lC7vE
-	sMdc80M4ARDeyr3OJHp311pCaFhWh47a2Ag==
+	1642757257; x=1645349258; bh=wvAGSSkbD8sKVKozj06LSLUZ8DGhuMSqNCu
+	uyy1l4Tg=; b=eH3Z965uTxH9B+Ybb9izm7AvFS75V8fAtbih7EcrBmg7M/fwcUl
+	zPO5DnBIzdU5y2lrgu4Toooa2iwJ80SvIeOybdNsW2ZCtiztoVPnkBiW+WGnXsCF
+	rt1FhRMpYD88Dj5WRfDmAFbslsE3tgUxc+Fr6VJqVCN/9qbFUeTGceLrudBjI1aU
+	sdvxSCmFi568o65dcF8bo1LwSeDImocsGkIEbnuHw/Bhtj6dZWRDbB2WM2DNWD+s
+	SKh0qfGhm1+18rMesxGU5cTyK4ESN8u4o6fAtuD88a3tw8r8IrnAfIzUWnSImuKi
+	xsfnz+gHr8NdGnoX1OkyQGMOLelsLgwoJCQ==
 X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
 Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
 	by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Tev6WGJGH4SN for <regressions@lists.linux.dev>;
-	Fri, 21 Jan 2022 01:17:16 -0800 (PST)
-Received: from [10.225.54.48] (unknown [10.225.54.48])
-	by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4JgDKk0DRvz1RvlN;
-	Fri, 21 Jan 2022 01:17:13 -0800 (PST)
-Message-ID: <350720e8-9b78-bd24-5c60-602076610bf4@opensource.wdc.com>
-Date: Fri, 21 Jan 2022 18:17:12 +0900
+	with ESMTP id 15RYfLPy1R1C for <regressions@lists.linux.dev>;
+	Fri, 21 Jan 2022 01:27:37 -0800 (PST)
+Received: from [10.225.163.53] (unknown [10.225.163.53])
+	by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4JgDYg5LFjz1RvlN;
+	Fri, 21 Jan 2022 01:27:35 -0800 (PST)
+Message-ID: <11ec9f44-5e1c-c4cd-8d63-93d7538a12c8@opensource.wdc.com>
+Date: Fri, 21 Jan 2022 18:27:34 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.5.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
 Subject: Re: [next] mips: cavium_octeon_defconfig: pata_octeon_cf.c:598:23:
  error: passing argument 1 of 'trace_ata_bmdma_stop' from incompatible pointer
  type
@@ -87,22 +87,17 @@ References: <CA+G9fYtq0wzSeG8YG-a+=KrbdWqHJMXk1hvq0FKeAvj9sZAK2g@mail.gmail.com>
  <6249735f-e6b7-1331-eb2b-361bb17d6115@opensource.wdc.com>
  <CA+G9fYu__OOvk-ESXoOqbd-Lk+CmO8CSQ8chEFf3MyeTjKtp9g@mail.gmail.com>
 From: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital
+Organization: Western Digital Research
 In-Reply-To: <CA+G9fYu__OOvk-ESXoOqbd-Lk+CmO8CSQ8chEFf3MyeTjKtp9g@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2022/01/21 17:58, Naresh Kamboju wrote:
+On 1/21/22 17:58, Naresh Kamboju wrote:
 >> I just posted a fix. As I do not have the environment to compile test
 >> mips, could someone test please ? I will send the fix to Linus asap
 >> after confirmation that it is OK.
 > 
 > Please share your patch / patch link. I will test it with tuxmake.
-
-I posted on linux-ide and CC-ed linux-mips:
-
-https://marc.info/?l=linux-ide&m=164275458614058&w=2
-
 > 
 > you may also give a try with these easy steps.
 > 
@@ -115,7 +110,7 @@ https://marc.info/?l=linux-ide&m=164275458614058&w=2
 >  tuxmake --runtime podman --target-arch mips --toolchain gcc-10
 > --kconfig cavium_octeon_defconfig
 
-I saw this in the compilation error report. Will try this.
+Just tried this and it all passes for me.
 
 > 
 > - Naresh
