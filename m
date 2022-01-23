@@ -1,194 +1,154 @@
-Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA9BB2C82
-	for <regressions@lists.linux.dev>; Sat, 22 Jan 2022 21:38:52 +0000 (UTC)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailnew.nyi.internal (Postfix) with ESMTP id B31AA5802A6;
-	Sat, 22 Jan 2022 16:38:51 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sat, 22 Jan 2022 16:38:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=turner.link; h=
-	cc:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm1; bh=MsViZzLF8Kq6HOdr8iHnwG72oVaccjfy8JbG24
-	/A8XM=; b=BaVO64CFNCl14UaN1iXZ5HD7QFcdTRYaBRpbTDciSr3gyP7ujk9Vmx
-	B6MFRCT6GKfuvsr1QiJ1eMtFE6ZW/uNTPhsiZPKd3IY0ElAcB0ubjGQ7IEIymtQh
-	n+1xCJy1RqQljRrRi1yK2mwhbu2P2Vb+1VCIRe2ROLWAgPrMffBYfTFyFIxX/oNw
-	/uAfakYLKqROBYc/XHjL3PwjpignZkAao/QvG7DrQV6WpBTgJj0y0HdFbK/PjNOo
-	oQiDUtXYZ/wmIaSShFoZ0AR078ztRtk7kGnKTYH3LsNlaqUFjgL9TzbWdfXDlHQf
-	4+3rMHNmnPmPwR9PQV5kyZdSm8pAcUOw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=MsViZzLF8Kq6HOdr8
-	iHnwG72oVaccjfy8JbG24/A8XM=; b=KFEkrIVKNzlC5WO9zT68QI+pffxmYHKRl
-	+TcDFrUZh+xL1dRc/ucNnZwGca1Y8k2XKK7IWMwvBAQurhqBlfjBAtJHX03pkC0h
-	3Qckz2ghniY4pisdXEjke+rB4D6PB6TX5rHFTlEgniQzN4UTrV0NDDJospwgetE7
-	2IVmniPay70zbZZxGotOff1f/NqNYNWBeVeO/wRqIgxzPVd/V0qTKq/eQWJjw5Vc
-	Ilnakbupl0/9zqz3UneLsDrJu3rPi+BciK/ssHG+c3rgjInUNKHj0kAE/F4JkbbQ
-	fQu3Z1QpA7n54ldPxk2wihngZVnCW8R71TGb8ndikvw5EWK1YRQEw==
-X-ME-Sender: <xms:a3nsYRcAVeLoznYBFOIN9rAomBHI__VSU3Q9KBKlCzAfhPJ3UP7uCg>
-    <xme:a3nsYfPPbwuqtLAxyO89nP-9SbFv8pVsJ4YEFomX08lU8Ocd97NYJqgObR0gHbAcq
-    dmx9JdtHiVc4BRs7Q>
-X-ME-Received: <xmr:a3nsYag01LgO-MrezA50wVPoMpLgXXcd4u71q_Gml9S5iRZwpWiG0tH0GnHw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrvddvgdduhedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfhfhvffuffgjkfggtgesthdtredttddttdenucfhrhhomheplfgrmhgvshcu
-    vfhurhhnvghruceolhhinhhugihkvghrnhgvlhdrfhhoshhssegumhgrrhgtqdhnohhnvg
-    drthhurhhnvghrrdhlihhnkheqnecuggftrfgrthhtvghrnheptedvfeduheeiueefgffh
-    vdetiedttdevhfeiteeuhfelveduvedttdffgffggfetnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheplhhinhhugihkvghrnhgvlhdrfhhoshhs
-    segumhgrrhgtqdhnohhnvgdrthhurhhnvghrrdhlihhnkh
-X-ME-Proxy: <xmx:a3nsYa_HbNlh01OToipZGyFTiZrDRc15AEX9OKOAv4UqcdFsrSfvIg>
-    <xmx:a3nsYdsDUGLZZHE5gStW8bNSqOmEeoYU0FvXNgdVn-7KaU1MwdaS7g>
-    <xmx:a3nsYZECU7jeWJJqxgXEsSeqAXlz6MNXqWMSCQBZG4LLivcwQBjRSQ>
-    <xmx:a3nsYeOYkJCmJ45IwgFYSH84jAHm5CKnMkMX9QQqZC7a3hdeigzGww>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 22 Jan 2022 16:38:51 -0500 (EST)
-References: <87ee57c8fu.fsf@turner.link>
- <acd2fd5e-d622-948c-82ef-629a8030c9d8@leemhuis.info>
- <87a6ftk9qy.fsf@dmarc-none.turner.link> <87zgnp96a4.fsf@turner.link>
- <fc2b7593-db8f-091c-67a0-ae5ffce71700@leemhuis.info>
- <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
- <87czkk1pmt.fsf@dmarc-none.turner.link>
- <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
-From: James Turner <linuxkernel.foss@dmarc-none.turner.link>
-To: "Lazar, Lijo" <Lijo.Lazar@amd.com>
-Cc: Alex Deucher <alexdeucher@gmail.com>, Thorsten Leemhuis
- <regressions@leemhuis.info>, "Deucher, Alexander"
- <Alexander.Deucher@amd.com>, "regressions@lists.linux.dev"
- <regressions@lists.linux.dev>, "kvm@vger.kernel.org"
- <kvm@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, "Pan, Xinhui"
- <Xinhui.Pan@amd.com>, LKML <linux-kernel@vger.kernel.org>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, Alex
- Williamson <alex.williamson@redhat.com>, "Koenig, Christian"
- <Christian.Koenig@amd.com>
-Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
- PCI-passed-through to Windows VM
-Date: Sat, 22 Jan 2022 16:11:13 -0500
-In-reply-to: <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
-Message-ID: <87sftfqwlx.fsf@dmarc-none.turner.link>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF72173
+	for <regressions@lists.linux.dev>; Sun, 23 Jan 2022 09:28:33 +0000 (UTC)
+Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nBZAc-0002u8-K7; Sun, 23 Jan 2022 10:28:22 +0100
+Message-ID: <7672718f-b34e-225d-ff53-1199026728b7@leemhuis.info>
+Date: Sun, 23 Jan 2022 10:28:21 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [REGRESSION] Bluetooth not working on 5.15+ since "Bluetooth:
+ Move shutdown callback before flushing tx and rx queue"
+Content-Language: en-BS
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "An, Tedd" <tedd.an@intel.com>,
+ "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
+ "andypalmadi@gmail.com" <andypalmadi@gmail.com>,
+ "marcel@holtmann.org" <marcel@holtmann.org>,
+ "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CAJvGw+AJ5dHSb50RtJHnjbhMVQa+rJgYznFV4t-iaO0qx+W-jw@mail.gmail.com>
+ <fbc36e8ebdd9222f84322d54d9114f58c225547e.camel@intel.com>
+ <e3e7147e-dd4c-59a9-5dba-5ddcd2e3130f@leemhuis.info>
+ <38b569e4-2e9f-0155-4a5c-52876e8ca38a@leemhuis.info>
+In-Reply-To: <38b569e4-2e9f-0155-4a5c-52876e8ca38a@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1642930113;fad0972c;
+X-HE-SMSGID: 1nBZAc-0002u8-K7
 
-Hi Lijo,
+Top-posting for once, to make this easy accessible to everyone.
 
-> Could you provide the pp_dpm_* values in sysfs with and without the
-> patch? Also, could you try forcing PCIE to gen3 (through pp_dpm_pcie)
-> if it's not in gen3 when the issue happens?
+Coldolt, could you please check if this regression is still in 5.17-rc1
+or 5.16.2? I wonder if this patch fixed things:
 
-AFAICT, I can't access those values while the AMD GPU PCI devices are
-bound to `vfio-pci`. However, I can at least access the link speed and
-width elsewhere in sysfs. So, I gathered what information I could for
-two different cases:
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.16.y&id=8e8cae520210139aab4b701a822bbefb13b8f007
 
-- With the PCI devices bound to `vfio-pci`. With this configuration, I
-  can start the VM, but the `pp_dpm_*` values are not available since
-  the devices are bound to `vfio-pci` instead of `amdgpu`.
+Ciao, Thorsten
 
-- Without the PCI devices bound to `vfio-pci` (i.e. after removing the
-  `vfio-pci.ids=...` kernel command line argument). With this
-  configuration, I can access the `pp_dpm_*` values, since the PCI
-  devices are bound to `amdgpu`. However, I cannot use the VM. If I try
-  to start the VM, the display (both the external monitors attached to
-  the AMD GPU and the built-in laptop display attached to the Intel
-  iGPU) completely freezes.
+#regzbot poke
 
-The output shown below was identical for both the good commit:
-f1688bd69ec4 ("drm/amd/amdgpu:save psp ring wptr to avoid attack")
-and the commit which introduced the issue:
-f9b7f3703ff9 ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)")
-
-Note that the PCI link speed increased to 8.0 GT/s when the GPU was
-under heavy load for both versions, but the clock speeds of the GPU were
-different under load. (For the good commit, it was 1295 MHz; for the bad
-commit, it was 501 MHz.)
-
-
-# With the PCI devices bound to `vfio-pci`
-
-## Before starting the VM
-
-% ls /sys/module/amdgpu/drivers/pci:amdgpu
-module  bind  new_id  remove_id  uevent  unbind
-
-% find /sys/bus/pci/devices/0000:01:00.0/ -type f -name 'current_link*' -print -exec cat {} \;
-/sys/bus/pci/devices/0000:01:00.0/current_link_width
-8
-/sys/bus/pci/devices/0000:01:00.0/current_link_speed
-8.0 GT/s PCIe
-
-## While running the VM, before placing the AMD GPU under heavy load
-
-% find /sys/bus/pci/devices/0000:01:00.0/ -type f -name 'current_link*' -print -exec cat {} \;
-/sys/bus/pci/devices/0000:01:00.0/current_link_width
-8
-/sys/bus/pci/devices/0000:01:00.0/current_link_speed
-2.5 GT/s PCIe
-
-## While running the VM, with the AMD GPU under heavy load
-
-% find /sys/bus/pci/devices/0000:01:00.0/ -type f -name 'current_link*' -print -exec cat {} \;
-/sys/bus/pci/devices/0000:01:00.0/current_link_width
-8
-/sys/bus/pci/devices/0000:01:00.0/current_link_speed
-8.0 GT/s PCIe
-
-## While running the VM, after stopping the heavy load on the AMD GPU
-
-% find /sys/bus/pci/devices/0000:01:00.0/ -type f -name 'current_link*' -print -exec cat {} \;
-/sys/bus/pci/devices/0000:01:00.0/current_link_width
-8
-/sys/bus/pci/devices/0000:01:00.0/current_link_speed
-2.5 GT/s PCIe
-
-## After stopping the VM
-
-% find /sys/bus/pci/devices/0000:01:00.0/ -type f -name 'current_link*' -print -exec cat {} \;
-/sys/bus/pci/devices/0000:01:00.0/current_link_width
-8
-/sys/bus/pci/devices/0000:01:00.0/current_link_speed
-2.5 GT/s PCIe
-
-
-# Without the PCI devices bound to `vfio-pci`
-
-% ls /sys/module/amdgpu/drivers/pci:amdgpu
-0000:01:00.0  module  bind  new_id  remove_id  uevent  unbind
-
-% for f in /sys/module/amdgpu/drivers/pci:amdgpu/*/pp_dpm_*; do echo "$f"; cat "$f"; echo; done
-/sys/module/amdgpu/drivers/pci:amdgpu/0000:01:00.0/pp_dpm_mclk
-0: 300Mhz
-1: 625Mhz
-2: 1500Mhz *
-
-/sys/module/amdgpu/drivers/pci:amdgpu/0000:01:00.0/pp_dpm_pcie
-0: 2.5GT/s, x8
-1: 8.0GT/s, x16 *
-
-/sys/module/amdgpu/drivers/pci:amdgpu/0000:01:00.0/pp_dpm_sclk
-0: 214Mhz
-1: 501Mhz
-2: 850Mhz
-3: 1034Mhz
-4: 1144Mhz
-5: 1228Mhz
-6: 1275Mhz
-7: 1295Mhz *
-
-% find /sys/bus/pci/devices/0000:01:00.0/ -type f -name 'current_link*' -print -exec cat {} \;
-/sys/bus/pci/devices/0000:01:00.0/current_link_width
-8
-/sys/bus/pci/devices/0000:01:00.0/current_link_speed
-8.0 GT/s PCIe
-
-
-James
+On 20.01.22 14:08, Thorsten Leemhuis wrote:
+> On 10.12.21 10:16, Thorsten Leemhuis wrote:
+>> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> /me again
+> 
+>> On 10.12.21 02:10, An, Tedd wrote:
+>>> On Fri, 2021-12-10 at 01:36 +0200, coldolt wrote:
+>>>> After a restart, bluetooth doesn't work since commit 0ea53674d07f
+>>>> "Bluetooth: Move shutdown callback before flushing tx and rx queue"
+>>>>
+>>>> bluetoothctl doesn't list any controllers and I get the following in
+>>>> dmesg | grep -i bluetooth
+>>>>
+>>>> [    2.634812] Bluetooth: Core ver 2.22
+>>>> [    2.634843] NET: Registered PF_BLUETOOTH protocol family
+>>>> [    2.634845] Bluetooth: HCI device and connection manager initialized
+>>>> [    2.634850] Bluetooth: HCI socket layer initialized
+>>>> [    2.634853] Bluetooth: L2CAP socket layer initialized
+>>>> [    2.634858] Bluetooth: SCO socket layer initialized
+>>>> [    4.077788] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+>>>> [    4.077794] Bluetooth: BNEP filters: protocol multicast
+>>>> [    4.077799] Bluetooth: BNEP socket layer initialized
+>>>> [    4.078219] random: bluetoothd: uninitialized urandom read (4 bytes read)
+>>>> [    4.852835] Bluetooth: hci0: Reading Intel version command failed (-110)
+>>>> [    4.852838] Bluetooth: hci0: command 0xfc05 tx timeout
+>>>>
+>>>> However, it works after a cold start or after putting the computer to sleep.
+>>>>
+>>>> Before 83f2dafe2a62 "Bluetooth: btintel: Refactoring setup routine for
+>>>> legacy ROM sku", it always works after a restart, but from that commit
+>>>> up until before 0ea53674d07f it either works or doesn't work after a
+>>>> restart depending on if before restart it was working or not, meaning
+>>>> it stays working or stays not working.
+>>>>
+>>>> Also on the first restart from before 83f2dafe2a62 into 0ea53674d07f
+>>>> or later it works, but then restarting again into 0ea53674d07f or
+>>>> later it no longer works. So it seems that 0ea53674d07f and later puts
+>>>> the bluetooth in a nonworking state if you restart from it, but before
+>>>> 83f2dafe2a62 it puts it back into a working state at startup, and in
+>>>> between it doesn't do either, i.e. it stays the way it was.
+>>>>
+>>>> I have a Dell Latitude E5550 laptop with an Intel 7265 wifi/bluetooth
+>>>> card REV=0x210 firmware version 29.4063824552.0 7265D-29. I'm on Arch
+>>>> Linux, the problem is still there on 5.16-rc4.
+>>>>
+>>>> Here is a thread on the Arch Linux forums with several people with the
+>>>> same problem, for some of them it got fixed with a kernel update or by
+>>>> reloading modules, but not for everybody, including me
+>>>> https://bbs.archlinux.org/viewtopic.php?id=271459
+>>>>
+>>>> #regzbot introduced 0ea53674d07f
+>>
+>> Many thx for directly getting regzbot involved! :-D
+>>
+>>> This issue is under investigation to find the root cause and proper solution.
+>>
+>> Only internally? Or are there any other related public discussions that
+>> are relevant to this and thus good to be aware of?
+> 
+> What's the status here? It looks like there was no progress since 41
+> days, which is awfully long even with the festive season in between.
+> Could anyone provide a status update please?
+> 
+> Ciao, Thorsten
+> 
+> #regzbot poke
+> 
+> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+> on my table. I can only look briefly into most of them. Unfortunately
+> therefore I sometimes will get things wrong or miss something important.
+> I hope that's not the case here; if you think it is, don't hesitate to
+> tell me about it in a public reply, that's in everyone's interest.
+> 
+> BTW, I have no personal interest in this issue, which is tracked using
+> regzbot, my Linux kernel regression tracking bot
+> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+> this mail to get things rolling again and hence don't need to be CC on
+> all further activities wrt to this regression.
+> 
+>>> The downloaded firmware breaks the behavior though, we need to investigate
+>>> further to see if it can be fixed in firmware or fix in the driver.
+>>
+>> The answer from my point is simple: it needs to be fixed in the kernel,
+>> not just in the firmware, otherwise people that update the kernel
+>> without updating the firmware at the same time will run into a
+>> regression -- and that is not acceptable by kernel development standards.
+>>
+>> Ciao, Thorsten
+>>
+>> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+>> on my table. I can only look briefly into most of them. Unfortunately
+>> therefore I sometimes will get things wrong or miss something important.
+>> I hope that's not the case here; if you think it is, don't hesitate to
+>> tell me about it in a public reply. That's in everyone's interest, as
+>> what I wrote above might be misleading to everyone reading this; any
+>> suggestion I gave they thus might sent someone reading this down the
+>> wrong rabbit hole, which none of us wants.
+>>
+>> BTW, I have no personal interest in this issue, which is tracked using
+>> regzbot, my Linux kernel regression tracking bot
+>> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+>> this mail to get things rolling again and hence don't need to be CC on
+>> all further activities wrt to this regression.
