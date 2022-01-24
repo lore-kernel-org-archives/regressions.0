@@ -1,142 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AD7F173
-	for <regressions@lists.linux.dev>; Mon, 24 Jan 2022 17:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1643045453;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dgmheP820PSeiT2ULGO4Onqs77vyCkC2g7OOa3oPHLc=;
-	b=NhTS1YswEsrD34u7lozDjjXt3XS25arLkhk/wQuIH2hWZ7gYXruevf4e/SSxJcj/hooTUm
-	kv5uF262WjAyGfLEk80r0LzUMheiZXS4BrAoVaNf+f+vW7SSuaW/HOkcTyGiKw/bZClAjt
-	3gDLm4MHDYBG3h3CAVw0qEHslQD9sgI=
-Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
- [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-553-yJNveLZYNi6gyxHNpDsg6Q-1; Mon, 24 Jan 2022 12:30:52 -0500
-X-MC-Unique: yJNveLZYNi6gyxHNpDsg6Q-1
-Received: by mail-ot1-f70.google.com with SMTP id c3-20020a9d6c83000000b00591cba30d03so11746820otr.7
-        for <regressions@lists.linux.dev>; Mon, 24 Jan 2022 09:30:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=dgmheP820PSeiT2ULGO4Onqs77vyCkC2g7OOa3oPHLc=;
-        b=DIn2dxsYc5Jw5r5XvtHMP2NXtfD5ls7H7n3hN4aDuhm0NfGEGdwHqd0/PNk77gnS/c
-         cTTJIop3zE9CGfiR1oPaBCMw0BkZ10sWDsoLk1s4/aB1nzIX/O4Xs/gWBvCHlPd4O12S
-         nPbvjTsoYhFBtjYbTVyqs/QasV8uyliVDsw128dQusuWVCIUdrAcOHL6qWSTMHD7GIGd
-         eyysdVtHnA8OxA5EyYOClvPiH5xaUrWoezE0Jy4qUiVEC/RCKUaSS/yECBoi9hz6+hPU
-         aZ58s9Db+ZT6L3zDwuAhpzss6dK/qbS1fbrbF9ujobLggD8DEAdx/1oWtFifakPdCTl7
-         vWtg==
-X-Gm-Message-State: AOAM5315f1KZnR2dZYY4NzeK2CTAXnH1347bJ59XPqVYoESgLHZvHvil
-	4yGlYrgsG40fE16wLvwbxywGerWVUzn5wEEZzPR0KDN4x/VkGNO8j77JBCyNMeSgllTsT4MtzRS
-	7y3Hu5pVvuKYZUVSKv/Oz8j0=
-X-Received: by 2002:a05:6830:1e89:: with SMTP id n9mr9311778otr.304.1643045451898;
-        Mon, 24 Jan 2022 09:30:51 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyNbG8a1p/Pz9Hx4D54aH1sfIRemdv4XTKC6BeBEnOC4SSSFVBa1s73P8JKhNP8tqDgM4SGJw==
-X-Received: by 2002:a05:6830:1e89:: with SMTP id n9mr9311753otr.304.1643045451658;
-        Mon, 24 Jan 2022 09:30:51 -0800 (PST)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id bj19sm6167338oib.9.2022.01.24.09.30.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jan 2022 09:30:51 -0800 (PST)
-Date: Mon, 24 Jan 2022 10:30:50 -0700
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: James Turner <linuxkernel.foss@dmarc-none.turner.link>, "Lazar, Lijo"
- <Lijo.Lazar@amd.com>, Thorsten Leemhuis <regressions@leemhuis.info>,
- "Deucher, Alexander" <Alexander.Deucher@amd.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Greg KH
- <gregkh@linuxfoundation.org>, "Pan, Xinhui" <Xinhui.Pan@amd.com>, LKML
- <linux-kernel@vger.kernel.org>, "amd-gfx@lists.freedesktop.org"
- <amd-gfx@lists.freedesktop.org>, "Koenig, Christian"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43D6173
+	for <regressions@lists.linux.dev>; Tue, 25 Jan 2022 00:44:49 +0000 (UTC)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailnew.nyi.internal (Postfix) with ESMTP id 8BAC1580389;
+	Mon, 24 Jan 2022 19:44:48 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Mon, 24 Jan 2022 19:44:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=turner.link; h=
+	cc:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm1; bh=Hg+/kJzRpMwyU8RBBG9lM29Q4G3SCNyE5PQExK
+	Qjrjg=; b=BqhV2/LX+jA/ib0C3suNSFwh8doiJauUSvPVxk+uBbNEorrAZbP1iR
+	5gNpFk2LgQ7cLfef4t7YtlVJSeAE1tg7pNCtVRYvd5IfU96XR2wTMxWkt5EgqN5O
+	xbZYT20AVlZSDY6PPGchtxHvVVZxZh+6cPw4ahe/8gK2gmshQA7Rb5oAruoy5iD9
+	0lpJlFpQzx8xBboXOi81OZfCQl5D2CoNFJMi4EUzEbEORp5XHpGY1Ae0zEJQFMcG
+	irXojU99SQzfbYshiyxeHeKgyKApQLq43HdA+0p7iRoIL+aYSMhIDLLINo475C4T
+	JiMKE71bQGkV8LTe7hWUbRgrjFnaiyOg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Hg+/kJzRpMwyU8RBB
+	G9lM29Q4G3SCNyE5PQExKQjrjg=; b=NnF9YKvTgV+/CzqonPrhH6bqt2WlJ4u/V
+	0e5EIJr4hxAwC9+fPKCyjMjLQFL7qrbjxjXFIPrdrUTGfM7J6s3SHwnq67rYY35f
+	AAdyTDYdeqWTj4LCnd+TZ70KSgKLAVdSglmbXgwa+ajA6n/uUMX1EpFmSlYkwj/D
+	w8Xjd3ybbGdoY1DGBiQn2dxoQV8DpbD0T3IQ2uw6cxeFgp9p/TCwyaO+BhzpE0mF
+	LxR/XD6IxXdjTGUUAozzYQknbIZf0gvWcm4ExzybZRggNr/xbIys/rnbBcng0jOh
+	pyPxkrjIS0E8x1ywdW+MBOVpvlDmppAIOE3MijQ16LRpMyXnYn9Yw==
+X-ME-Sender: <xms:_0fvYQ-EfYy1x8ckLKQOASpfF1f8VG1P-YWrZzzpxTHBK9WYhNxFsA>
+    <xme:_0fvYYvQ4J3beV2uRjLa31Bh_ODGeg6dL4-lMaqx4Up28gOo3QlSTswv6YiD-Vtpg
+    IJHUY5k-MA4iSAy4w>
+X-ME-Received: <xmr:_0fvYWAFmvUzQxh0iBiGiqD4fBbfMq3-4nNy1vMXlMHn1BXiEot-KL-OXqPk>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrvdekgddvhecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpehfhffvufffjgfkgggtsehttdertddttddtnecuhfhrohhmpeflrghmvghsucfv
+    uhhrnhgvrhcuoehlihhnuhigkhgvrhhnvghlrdhfohhsshesughmrghrtgdqnhhonhgvrd
+    htuhhrnhgvrhdrlhhinhhkqeenucggtffrrghtthgvrhhnpeetvdefudehieeufefghfdv
+    teeitddtvefhieetuefhleevudevtddtfffggffgteenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehlihhnuhigkhgvrhhnvghlrdhfohhsshes
+    ughmrghrtgdqnhhonhgvrdhtuhhrnhgvrhdrlhhinhhk
+X-ME-Proxy: <xmx:AEjvYQf2y2zGcFgoCWUciNn9b9e2Ec0Y-WL5xhNm2ABYSv_7GMV4IA>
+    <xmx:AEjvYVPPma5oQKL6quJ8Jk66URimEX_lrvguofqERLdCMTYsPQQsZQ>
+    <xmx:AEjvYal0LCNI_T_XPDgs4DgaDQO3NOORXHUTsx1RGMbZkpFy197sug>
+    <xmx:AEjvYbv6u5vmUwQ8EAKjckw9E1-Hpdolaz4WyHTPJldFQw-3yZxqSQ>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 24 Jan 2022 19:44:47 -0500 (EST)
+References: <87ee57c8fu.fsf@turner.link>
+ <acd2fd5e-d622-948c-82ef-629a8030c9d8@leemhuis.info>
+ <87a6ftk9qy.fsf@dmarc-none.turner.link> <87zgnp96a4.fsf@turner.link>
+ <fc2b7593-db8f-091c-67a0-ae5ffce71700@leemhuis.info>
+ <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
+ <87czkk1pmt.fsf@dmarc-none.turner.link>
+ <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
+ <87sftfqwlx.fsf@dmarc-none.turner.link>
+ <BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
+From: James Turner <linuxkernel.foss@dmarc-none.turner.link>
+To: "Lazar, Lijo" <Lijo.Lazar@amd.com>
+Cc: Alex Deucher <alexdeucher@gmail.com>, Thorsten Leemhuis
+ <regressions@leemhuis.info>, "Deucher, Alexander"
+ <Alexander.Deucher@amd.com>, "regressions@lists.linux.dev"
+ <regressions@lists.linux.dev>, "kvm@vger.kernel.org"
+ <kvm@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, "Pan, Xinhui"
+ <Xinhui.Pan@amd.com>, LKML <linux-kernel@vger.kernel.org>,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, Alex
+ Williamson <alex.williamson@redhat.com>, "Koenig, Christian"
  <Christian.Koenig@amd.com>
 Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
  PCI-passed-through to Windows VM
-Message-ID: <20220124103050.0229ae92.alex.williamson@redhat.com>
-In-Reply-To: <CADnq5_P5RAJxKWCQBmJae8eWjJ5_wPG01uJYOpXMGsieWqUDvw@mail.gmail.com>
-References: <87ee57c8fu.fsf@turner.link>
-	<acd2fd5e-d622-948c-82ef-629a8030c9d8@leemhuis.info>
-	<87a6ftk9qy.fsf@dmarc-none.turner.link>
-	<87zgnp96a4.fsf@turner.link>
-	<fc2b7593-db8f-091c-67a0-ae5ffce71700@leemhuis.info>
-	<CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
-	<87czkk1pmt.fsf@dmarc-none.turner.link>
-	<BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
-	<87sftfqwlx.fsf@dmarc-none.turner.link>
-	<CADnq5_P5RAJxKWCQBmJae8eWjJ5_wPG01uJYOpXMGsieWqUDvw@mail.gmail.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-redhat-linux-gnu)
+Date: Mon, 24 Jan 2022 18:58:10 -0500
+In-reply-to: <BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
+Message-ID: <87ee4wprsx.fsf@turner.link>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=alex.williamson@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On Mon, 24 Jan 2022 12:04:18 -0500
-Alex Deucher <alexdeucher@gmail.com> wrote:
+Hi Lijo,
 
-> On Sat, Jan 22, 2022 at 4:38 PM James Turner
-> <linuxkernel.foss@dmarc-none.turner.link> wrote:
-> >
-> > Hi Lijo,
-> >  
-> > > Could you provide the pp_dpm_* values in sysfs with and without the
-> > > patch? Also, could you try forcing PCIE to gen3 (through pp_dpm_pcie)
-> > > if it's not in gen3 when the issue happens?  
-> >
-> > AFAICT, I can't access those values while the AMD GPU PCI devices are
-> > bound to `vfio-pci`. However, I can at least access the link speed and
-> > width elsewhere in sysfs. So, I gathered what information I could for
-> > two different cases:
-> >
-> > - With the PCI devices bound to `vfio-pci`. With this configuration, I
-> >   can start the VM, but the `pp_dpm_*` values are not available since
-> >   the devices are bound to `vfio-pci` instead of `amdgpu`.
-> >
-> > - Without the PCI devices bound to `vfio-pci` (i.e. after removing the
-> >   `vfio-pci.ids=...` kernel command line argument). With this
-> >   configuration, I can access the `pp_dpm_*` values, since the PCI
-> >   devices are bound to `amdgpu`. However, I cannot use the VM. If I try
-> >   to start the VM, the display (both the external monitors attached to
-> >   the AMD GPU and the built-in laptop display attached to the Intel
-> >   iGPU) completely freezes.
-> >
-> > The output shown below was identical for both the good commit:
-> > f1688bd69ec4 ("drm/amd/amdgpu:save psp ring wptr to avoid attack")
-> > and the commit which introduced the issue:
-> > f9b7f3703ff9 ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)")
-> >
-> > Note that the PCI link speed increased to 8.0 GT/s when the GPU was
-> > under heavy load for both versions, but the clock speeds of the GPU were
-> > different under load. (For the good commit, it was 1295 MHz; for the bad
-> > commit, it was 501 MHz.)
-> >  
-> 
-> Are the ATIF and ATCS ACPI methods available in the guest VM?  They
-> are required for this platform to work correctly from a power
-> standpoint.  One thing that f9b7f3703ff9 did was to get those ACPI
-> methods executed on certain platforms where they had not been
-> previously due to a bug in the original implementation.  If the
-> windows driver doesn't interact with them, it could cause performance
-> issues.  It may have worked by accident before because the ACPI
-> interfaces may not have been called, leading the windows driver to
-> believe this was a standalone dGPU rather than one integrated into a
-> power/thermal limited platform.
+> Not able to relate to how it affects gfx/mem DPM alone. Unless Alex
+> has other ideas, would you be able to enable drm debug messages and
+> share the log?
 
-None of the host ACPI interfaces are available to or accessible by the
-guest when assigning a PCI device.  Likewise the guest does not have
-access to the parent downstream ports of the PCIe link.  Thanks,
+Sure, I'm happy to provide drm debug messages. Enabling everything
+(0x1ff) generates *a lot* of log messages, though. Is there a smaller
+subset that would be useful? Fwiw, I don't see much in the full drm logs
+about the AMD GPU anyway; it's mostly about the Intel GPU.
 
-Alex
+All the messages in the system log containing "01:00" or "1002:6981" are
+identical between the two versions.
 
+I've posted below the only places in the logs which contain "amd". The
+commit with the issue (f9b7f3703ff9) has a few drm log messages from
+amdgpu which are not present in the logs for f1688bd69ec4.
+
+
+# f1688bd69ec4 ("drm/amd/amdgpu:save psp ring wptr to avoid attack")
+
+[drm] amdgpu kernel modesetting enabled.
+vga_switcheroo: detected switching method \_SB_.PCI0.GFX0.ATPX handle
+ATPX version 1, functions 0x00000033
+amdgpu: CRAT table not found
+amdgpu: Virtual CRAT table created for CPU
+amdgpu: Topology: Add CPU node
+
+
+# f9b7f3703ff9 ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)")
+
+[drm] amdgpu kernel modesetting enabled.
+vga_switcheroo: detected switching method \_SB_.PCI0.GFX0.ATPX handle
+ATPX version 1, functions 0x00000033
+[drm:amdgpu_atif_pci_probe_handle.isra.0 [amdgpu]] Found ATIF handle \_SB_.PCI0.GFX0.ATIF
+[drm:amdgpu_atif_pci_probe_handle.isra.0 [amdgpu]] ATIF version 1
+[drm:amdgpu_acpi_detect [amdgpu]] SYSTEM_PARAMS: mask = 0x6, flags = 0x7
+[drm:amdgpu_acpi_detect [amdgpu]] Notification enabled, command code = 0xd9
+amdgpu: CRAT table not found
+amdgpu: Virtual CRAT table created for CPU
+amdgpu: Topology: Add CPU node
+
+
+Other things I'm willing to try if they'd be useful:
+
+- I could update to the 21.Q4 Radeon Pro driver in the Windows VM. (The
+  21.Q3 driver is currently installed.)
+
+- I could set up a Linux guest VM with PCI passthrough to compare to the
+  Windows VM and obtain more debugging information.
+
+- I could build a kernel with a patch applied, e.g. to disable some of
+  the changes in f9b7f3703ff9.
+
+James
