@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA86C2CA3
-	for <regressions@lists.linux.dev>; Wed, 26 Jan 2022 07:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A75E29CA
+	for <regressions@lists.linux.dev>; Wed, 26 Jan 2022 07:42:23 +0000 (UTC)
 Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nCcuF-000692-A8; Wed, 26 Jan 2022 08:39:51 +0100
-Message-ID: <80bed7f8-525e-9324-b544-f5f5da8ef2e7@leemhuis.info>
-Date: Wed, 26 Jan 2022 08:39:51 +0100
+	id 1nCcwf-0007ms-W3; Wed, 26 Jan 2022 08:42:22 +0100
+Message-ID: <46a28c62-4610-00df-610c-ca3cc8861265@leemhuis.info>
+Date: Wed, 26 Jan 2022 08:42:21 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -19,37 +19,44 @@ User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
 Content-Language: en-BS
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Unable to set $xmm2-9 registers but able to set $xmm0-1,10-15 with
- ptrace syscall (fwd from bugzilla)
+Subject: nfs: noresvport + nfsv4 no longer working as expected (fwd from
+ bugzilla)
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643182793;9277843f;
-X-HE-SMSGID: 1nCcuF-000692-A8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643182943;aa6d64c5;
+X-HE-SMSGID: 1nCcwf-0007ms-W3
 
 Hi, this is your Linux kernel regression tracker speaking.
 
 There is a regression dealt with in bugzilla I'd like to add to the
 tracking:
 
-#regzbot introduced: 6164331d15f7d912fb9369245368e9564ea49813
-#regzbot from: Luís Ferreira <contact@lsferreira.net>
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215524
+#regzbot introduced: v5.11.11..v5.12.19
+#regzbot from: Daire Byrne <daire@dneg.com>
+#regzbot title: nfs: noresvport + nfsv4 no longer working as expected
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215526
 
 Quote:
 
-> Writing some XMM registers on a process with `ptrace` syscall with `PTRACE_SETREGSET` request and using `NT_FPREGSET` is broken. Although, when using `NT_X86_XSTATE` works just fine. Also, getting the registers with `PTRACE_GETREGSET` is fine too.
+> When mounting with "-o vers=4.2,noresvport", it seems to be ignored such that the client still uses a reserved port (or ports with nconnect).
 > 
-> This can be considered a blocker for old hardware that lacks AVX extensions and simply fail to call ptrace with `NT_X86_XSTATE`. This particularly failed the testsuite of LLDB on my server.
+> It still works as expected when doing "-o vers=3,noresvport".
 > 
-> I've tested this on Linux 5.16.2, Linux LTS 5.15.16 and Linux LTS 5.10.93. Only the last one (5.10.93) succeeded with `NT_FPREGSET`. I tested this in a clean installation of Arch Linux with the official packages and backported version of Linux LTS, available in AUR repository.
+> A very quick test of some kernels I had prebuilt suggests this stopped working somewhere between 5.11.11 and 5.12.19. That might make it one of:
 > 
-> Note: I didn't test `NT_FPREGSET` on recent hardware (hardware with AVX).
+>     * tag 'nfs-for-5.12-2' of git://git.linux-nfs.org/projects/anna/linux-nfs:
+>       nfs: we don't support removing system.nfs4_acl
+>       NFSv4.2: fix return value of _nfs4_get_security_label()
+>       NFS: Fix open coded versions of nfs_set_cache_invalid() in NFSv4
+>       NFS: Fix open coded versions of nfs_set_cache_invalid()
+>       NFS: Clean up function nfs_mark_dir_for_revalidate()
+>       NFS: Don't gratuitously clear the inode cache when lookup failed
+>       NFS: Don't revalidate the directory permissions on a lookup failure
+>       SUNRPC: Set memalloc_nofs_save() for sync tasks
+>       NFS: Correct size calculation for create reply length
+>       nfs: fix PNFS_FLEXFILE_LAYOUT Kconfig default
 > 
-> From my investigation on the issue and the kernel source code inspection, I believe that this was introduced here: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/x86/kernel/fpu/regset.c?id=6164331d15f7d912fb9369245368e9564ea49813
-> 
-> I'm going to leave a reference to some issues/patches on GDB and LLDB debuggers to either reproduce the issue and see some logs I created with strace:
-> - https://reviews.llvm.org/D117928
-> - https://sourceware.org/bugzilla/show_bug.cgi?id=28803
+> I will try and get a bisect done this week.
 
 Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
 
