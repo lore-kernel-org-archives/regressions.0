@@ -1,84 +1,73 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECA529CA
-	for <regressions@lists.linux.dev>; Wed, 26 Jan 2022 14:28:34 +0000 (UTC)
-Received: by mail-ua1-f51.google.com with SMTP id w21so43137247uan.7
-        for <regressions@lists.linux.dev>; Wed, 26 Jan 2022 06:28:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fHOCyGn2OpYXHR2TSZ46or0oGciq1pUeUpvpqS2jqZ4=;
-        b=7Wn2R7dec5CzTA04lXwUHpi9EXtK0wTJrSI/bL2MZp2+EhjxTPqJp8Tcm9XaPp/pEA
-         NxXKblDjUCO7NERzKzwKCsEMVCZGB4M8CRumXI0tnIqUde/EXDLMBQdup7YyDFBWFg7U
-         W+28M74U3knEEAydzWlks+OLfT4oaO20lElXk0HyKPkWbj+HyN4eDyjG33vjmFK3ov6G
-         XYqO045dEiEQSw5T1ufV1tuXwNc5Afg31ndI1HXbAsImj3k0OCmiaP0fCCToMyNSmqA5
-         o5/T4zEwrVVigl8YmYsLAnUYQVmUMMZ7bgu26qcVI5+wNN/XQJUbUYS/pcDyGFrUE8Z+
-         Ntpg==
-X-Gm-Message-State: AOAM530ocC2dLIFwYdMf61rAIyrJZuX29w9i4/W40PmdOOMtAvCWQm+A
-	wsF+I7s90MfEXd/1SrRLgJNWu6WNLcHRByhS
-X-Google-Smtp-Source: ABdhPJxdAc4Vnxv0/VzpEe+JIo8NOkObBEsMlkweClW9gAwuIwlhTDxlZJ4Wqb3iUt0NLVvQkYxWWw==
-X-Received: by 2002:ab0:59ea:: with SMTP id k39mr9473446uad.71.1643207313000;
-        Wed, 26 Jan 2022 06:28:33 -0800 (PST)
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com. [209.85.222.48])
-        by smtp.gmail.com with ESMTPSA id b191sm3961113vkb.32.2022.01.26.06.28.32
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jan 2022 06:28:32 -0800 (PST)
-Received: by mail-ua1-f48.google.com with SMTP id u6so43274536uaq.0
-        for <regressions@lists.linux.dev>; Wed, 26 Jan 2022 06:28:32 -0800 (PST)
-X-Received: by 2002:a05:6102:34e:: with SMTP id e14mr2620287vsa.68.1643207311974;
- Wed, 26 Jan 2022 06:28:31 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CF22168
+	for <regressions@lists.linux.dev>; Wed, 26 Jan 2022 17:38:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=PDDX1wKG5hFVTVEzfMRB1AeOYAj6/ey3grH/4rL5ik0=; b=sSbgNeYjQBj/LEhgZMY+qH+KfT
+	LFVskorPuMD84FiJUAYKagOUAU7ns0eQ0u2LEGiTHxckzt0SvzVZfdaOMtOPIDy92ItR1LAXsoTwi
+	clBZtmRILDvBP/Ys3ae8MiPZ7QNjMfEVG3/LcI0lYKLN8rAl0hphDYmw6zJfJ72eoZMV3K5+LYANd
+	DZJ7zb/Hv1Zyh2OEbaL7CdT/nhyLh5YmTIVLhrleSXwUr4xXF94Zj0oDq3cPbo4qqmyu8DFzLyQ4u
+	Od99gfIfh5RJOuGe8ivWfiUK48vnJtRX7eU4RfXA9eO51LBRWLxByVmh571Md/fYJG24BlImx0clf
+	sW4E9YDA==;
+Received: from [2601:1c0:6280:3f0::aa0b]
+	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1nClua-004Fb5-Ql; Wed, 26 Jan 2022 17:16:49 +0000
+Message-ID: <4b433d55-95de-963b-7351-6db79855824b@infradead.org>
+Date: Wed, 26 Jan 2022 09:16:43 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <cover.1643110442.git.linux@leemhuis.info> <f97738d6250050bc982bf2947587f1c73f37446f.1643110442.git.linux@leemhuis.info>
-In-Reply-To: <f97738d6250050bc982bf2947587f1c73f37446f.1643110442.git.linux@leemhuis.info>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 26 Jan 2022 15:28:20 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXRoVt_zRBNvugJjYhJnyYbABeCWv9fFRM0r_=s7FYvJQ@mail.gmail.com>
-Message-ID: <CAMuHMdXRoVt_zRBNvugJjYhJnyYbABeCWv9fFRM0r_=s7FYvJQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
 Subject: Re: [PATCH v3 1/2] docs: add a document about regression handling
-To: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, workflows@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Randy Dunlap <rdunlap@infradead.org>, regressions@lists.linux.dev, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
+To: Thorsten Leemhuis <linux@leemhuis.info>, Jonathan Corbet
+ <corbet@lwn.net>, linux-doc@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: workflows@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ regressions@lists.linux.dev, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
+References: <cover.1643110442.git.linux@leemhuis.info>
+ <f97738d6250050bc982bf2947587f1c73f37446f.1643110442.git.linux@leemhuis.info>
+ <87sftbwemg.fsf@meer.lwn.net>
+ <c8d7228a-2df5-df92-6d53-c3e940274dad@leemhuis.info>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <c8d7228a-2df5-df92-6d53-c3e940274dad@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Thorsten,
 
-On Tue, Jan 25, 2022 at 5:45 PM Thorsten Leemhuis <linux@leemhuis.info> wrote:
-> +How to create a configuration similar to the one of an older kernel?
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +Start a known-good kernel and configure the newer Linux version with ``make
-> +olddefconfig``. This makes the kernel's build scripts pick up the configuration
-> +file (the `.config` file) from the running kernel as base for the new one you
-> +are about to compile; afterwards they set all new configuration options to their
-> +default value, which should disable new features that might cause regressions.
 
-Doing so may actually cause mutations to appear in your .config
-when going back and forth (i.e. when bisecting), interfering with
-the bisection process.
+On 1/26/22 06:10, Thorsten Leemhuis wrote:
+>>> +The important bits for people affected by regressions
+>>> +=====================================================
+>>> +
+>>> +It's a regression if something running fine with one Linux kernel works worse or
+>>> +not at all with a newer version. Note, the newer kernel has to be compiled using
+>>> +a similar configuration -- for this and other fine print, check out below
+>>> +section "What is a 'regression' and what is the 'no regressions rule'?".
+>> Can we be consistent with either single or double quotes?  I'd suggest
+>> "double quotes" but won't make a fuss about that.
+> Changed to "double quotes" everywhere in the text. But just to make sure
+> I get things right: in this particular case this will result in
+> 
+> ...section "What is a "regression" and what is the "no regressions rule"?".
+> 
+> This looks a bit strange to me. Something in me really would like to
+> quote the section's header in single quotes, but I guess grammar rules
+> do not allow that, so whatever. :-D
+> 
 
-To avoid that, I usually start bisecting with
-"cp .config <src>/arch/<arch>/configs/bisect_defconfig", and use
-"make bisect_defconfig" in every bisection step. That way all steps
-are reproducible, and unaffected by config mutations.
+I think that it was correct with the mixed quotes. Using all double
+quotes here is confusing.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+~Randy
