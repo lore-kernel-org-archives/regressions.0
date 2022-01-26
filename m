@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C76D29CA
-	for <regressions@lists.linux.dev>; Wed, 26 Jan 2022 07:32:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA86C2CA3
+	for <regressions@lists.linux.dev>; Wed, 26 Jan 2022 07:39:52 +0000 (UTC)
 Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nCcmX-0005nl-FZ; Wed, 26 Jan 2022 08:31:53 +0100
-Message-ID: <f6220c47-0593-abc8-6faa-28e8b719fa77@leemhuis.info>
-Date: Wed, 26 Jan 2022 08:31:52 +0100
+	id 1nCcuF-000692-A8; Wed, 26 Jan 2022 08:39:51 +0100
+Message-ID: <80bed7f8-525e-9324-b544-f5f5da8ef2e7@leemhuis.info>
+Date: Wed, 26 Jan 2022 08:39:51 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,120 +16,40 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.4.0
-Subject: Re: [Bug 215525] New: HotPlug does not work on upstream kernel
- 5.17.0-rc1
 Content-Language: en-BS
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: Blazej Kucman <blazej.kucman@intel.com>,
- Hans de Goede <hdegoede@redhat.com>, Lukas Wunner <lukas@wunner.de>,
- Naveen Naidu <naveennaidu479@gmail.com>, Keith Busch <kbusch@kernel.org>,
- Nirmal Patel <nirmal.patel@linux.intel.com>,
- Jonathan Derrick <jonathan.derrick@linux.dev>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220124214635.GA1553164@bhelgaas>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20220124214635.GA1553164@bhelgaas>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Unable to set $xmm2-9 registers but able to set $xmm0-1,10-15 with
+ ptrace syscall (fwd from bugzilla)
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643182322;60fb9da7;
-X-HE-SMSGID: 1nCcmX-0005nl-FZ
-
-
-[TLDR: I'm adding this regression to regzbot, the Linux kernel
-regression tracking bot; most text you find below is compiled from a few
-templates paragraphs some of you might have seen already.]
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643182793;9277843f;
+X-HE-SMSGID: 1nCcuF-000692-A8
 
 Hi, this is your Linux kernel regression tracker speaking.
 
-Adding the regression mailing list to the list of recipients, as it
-should be in the loop for all regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+There is a regression dealt with in bugzilla I'd like to add to the
+tracking:
 
-On 24.01.22 22:46, Bjorn Helgaas wrote:
-> [+cc linux-pci, Hans, Lukas, Naveen, Keith, Nirmal, Jonathan]
-> 
-> On Mon, Jan 24, 2022 at 11:46:14AM +0000, bugzilla-daemon@bugzilla.kernel.org wrote:
->> https://bugzilla.kernel.org/show_bug.cgi?id=215525
->>
->>             Bug ID: 215525
->>            Summary: HotPlug does not work on upstream kernel 5.17.0-rc1
->>            Product: Drivers
->>            Version: 2.5
->>     Kernel Version: 5.17.0-rc1 upstream
->>           Hardware: x86-64
->>                 OS: Linux
->>               Tree: Mainline
->>             Status: NEW
->>           Severity: normal
->>           Priority: P1
->>          Component: PCI
->>           Assignee: drivers_pci@kernel-bugs.osdl.org
->>           Reporter: blazej.kucman@intel.com
->>         Regression: No
->>
->> Created attachment 300308
->>   --> https://bugzilla.kernel.org/attachment.cgi?id=300308&action=edit
->> dmesg
->>
->> While testing on latest upstream
->> kernel(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/) we
->> noticed that with the merge commit
->> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d0a231f01e5b25bacd23e6edc7c979a18a517b2b)
->> hotplug and hotunplug of nvme drives stopped working.
->>
->> Rescan PCI does not help.
->> echo "1" > /sys/bus/pci/rescan
->>
->> Issue does not reproduce on a kernel built on an antecedent
->> commit(88db8458086b1dcf20b56682504bdb34d2bca0e2).
->>
->>
->> During hot-remove device does not disappear, however when we try to do I/O on
->> the disk then there is an I/O error, and the device disappears.
->>
->> Before I/O no logs regarding the disk appeared in the dmesg, only after I/O the
->> entries appeared like below:
->> [  177.943703] nvme nvme5: controller is down; will reset: CSTS=0xffffffff,
->> PCI_STATUS=0xffff
->> [  177.971661] nvme 10000:0b:00.0: can't change power state from D3cold to D0
->> (config space inaccessible)
->> [  177.981121] pcieport 10000:00:02.0: can't derive routing for PCI INT A
->> [  177.987749] nvme 10000:0b:00.0: PCI INT A: no GSI
->> [  177.992633] nvme nvme5: Removing after probe failure status: -19
->> [  178.004633] nvme5n1: detected capacity change from 83984375 to 0
->> [  178.004677] I/O error, dev nvme5n1, sector 0 op 0x0:(READ) flags 0x0
->> phys_seg 1 prio class 0
->>
->>
->> OS: RHEL 8.4 GA
->> Platform: Intel Purley
->>
->> The logs are collected on a non-recent upstream kernel, but a issue also occurs
->> on the newest upstream kernel(dd81e1c7d5fb126e5fbc5c9e334d7b3ec29a16a0)
-> 
-> Apparently worked immediately before merging the PCI changes for
-> v5.17 and failed immediately after:
-> 
->   good: 88db8458086b ("Merge tag 'exfat-for-5.17-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat")
->   bad:  d0a231f01e5b ("Merge tag 'pci-v5.17-changes' of git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci")
-> 
-> Only three commits touch pciehp:
-> 
->   085a9f43433f ("PCI: pciehp: Use down_read/write_nested(reset_lock) to fix lockdep errors")
->   23584c1ed3e1 ("PCI: pciehp: Fix infinite loop in IRQ handler upon power fault")
->   a3b0f10db148 ("PCI: pciehp: Use PCI_POSSIBLE_ERROR() to check config reads")
-> 
-> None seems obviously related to me.  Blazej, could you try setting
-> CONFIG_DYNAMIC_DEBUG=y and booting with 'dyndbg="file pciehp* +p"' to
-> enable more debug messages?
+#regzbot introduced: 6164331d15f7d912fb9369245368e9564ea49813
+#regzbot from: Luís Ferreira <contact@lsferreira.net>
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215524
 
-To be sure this issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
+Quote:
 
-#regzbot ^introduced: d0a231f01e5b25bacd23e
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215525
-#regzbot from: blazej.kucman@intel.com
-#regzbot title: pci: HotPlug does not work on upstream kernel 5.17.0-rc1
+> Writing some XMM registers on a process with `ptrace` syscall with `PTRACE_SETREGSET` request and using `NT_FPREGSET` is broken. Although, when using `NT_X86_XSTATE` works just fine. Also, getting the registers with `PTRACE_GETREGSET` is fine too.
+> 
+> This can be considered a blocker for old hardware that lacks AVX extensions and simply fail to call ptrace with `NT_X86_XSTATE`. This particularly failed the testsuite of LLDB on my server.
+> 
+> I've tested this on Linux 5.16.2, Linux LTS 5.15.16 and Linux LTS 5.10.93. Only the last one (5.10.93) succeeded with `NT_FPREGSET`. I tested this in a clean installation of Arch Linux with the official packages and backported version of Linux LTS, available in AUR repository.
+> 
+> Note: I didn't test `NT_FPREGSET` on recent hardware (hardware with AVX).
+> 
+> From my investigation on the issue and the kernel source code inspection, I believe that this was introduced here: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/x86/kernel/fpu/regset.c?id=6164331d15f7d912fb9369245368e9564ea49813
+> 
+> I'm going to leave a reference to some issues/patches on GDB and LLDB debuggers to either reproduce the issue and see some logs I created with strace:
+> - https://reviews.llvm.org/D117928
+> - https://sourceware.org/bugzilla/show_bug.cgi?id=28803
 
 Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
 
