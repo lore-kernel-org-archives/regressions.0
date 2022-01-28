@@ -1,140 +1,103 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D4A2C9D
-	for <regressions@lists.linux.dev>; Fri, 28 Jan 2022 14:09:57 +0000 (UTC)
-Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nDRwp-0001xo-Su; Fri, 28 Jan 2022 15:09:55 +0100
-Message-ID: <61e3ca12-54c5-25c7-bb91-bef40ea80232@leemhuis.info>
-Date: Fri, 28 Jan 2022 15:09:55 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DD12CA1
+	for <regressions@lists.linux.dev>; Fri, 28 Jan 2022 15:22:05 +0000 (UTC)
+Received: by mail-yb1-f179.google.com with SMTP id m6so19405012ybc.9
+        for <regressions@lists.linux.dev>; Fri, 28 Jan 2022 07:22:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=c0bMUQoFH3ZTxFaTaemDlxzYbHvdAzHC2nzZEJKopYc=;
+        b=vOtjAj3afwTNgPbxyhcR3Hfa+GiQ6QAsRxL8xr40RJ9lRbkH/grIlYw1SelsmfpJ/b
+         vgkR2VWtRWHZZ6a2Y6Bw1Qc7Q8Aj8FvQerJai8zazSoDMWrYkCVlgnh/xESHKdmbV603
+         gtV3LTBuUGk5k+n14VWKg+sm/piMtA6rXQTdEYbcZ/cIAwb9EJ/+e/hrGxxvHiCc7dRx
+         C9jQsgLwi90iBnAvP81FuVXUTsYKv5cHk1sHLThjG4goI8z77BFIpdxakkSfoFDz8Gv5
+         wbkiW2nGzCJ5q/yCHz6/OSuuPS2VF+hCwgsN5PrmhlfCzljhhppEPOQ+WST7M+J2+aAj
+         or/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=c0bMUQoFH3ZTxFaTaemDlxzYbHvdAzHC2nzZEJKopYc=;
+        b=ZVSC1tigj2bSLXlS7i5xT7c3/CJTYLZ4itj9xy1ILY0zQ+8I6GraBVf5YVxmTJNJvi
+         s6wHoDdlE7JiPOmr9LeMP2BlKaCEB4WUcfN3zzcvCA4cG/z3Qy/b3MsAkwC2eWuRep2p
+         Dyvp9FXlR8HjuAI6eGnNZ/NWwrWChhA3qtRC37Gk7rWLlgArPYSailaUS6xM4mTKotjL
+         L6Ht7lpMmZZbJ1t81QcjUcYgHMiPkE8FsYo8G+gzucqsUneJ2J7t1yVb/ptQLgOIUvrr
+         ZX/Vw5pa/tAmFrSMVajdEBI21Wr+mRDYAwCx/pyG7mOQY7j6TlCDySlDMxU/Y9jNin0f
+         ASYQ==
+X-Gm-Message-State: AOAM5322p4zsd3mlhtN0E3/DmZn+UfInllw5fc8LT/FJA/ekbDE/SXR5
+	oxKNz/l6SgkxzxWLMOQRbsnI0q+/BdVpF/TiYWG3jQ==
+X-Google-Smtp-Source: ABdhPJyphE2C6kSYX+SJNpMHAuwxAeeAyukV8u13NW0rzBM5OZMDKVkzogZfLgT1QJ8jq3/Djm6d7uzMgiDcMawR6YU=
+X-Received: by 2002:a25:5143:: with SMTP id f64mr14250846ybb.520.1643383324177;
+ Fri, 28 Jan 2022 07:22:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: Potential regression after fsnotify_nameremove() rework in 5.3
- #forregzbot
-Content-Language: en-BS
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <YeI7duagtzCtKMbM@visor>
- <c99a1e4b-f1d6-4c49-1b96-c767f712c137@leemhuis.info>
-In-Reply-To: <c99a1e4b-f1d6-4c49-1b96-c767f712c137@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643378997;26a3dbc0;
-X-HE-SMSGID: 1nDRwp-0001xo-Su
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 28 Jan 2022 20:51:53 +0530
+Message-ID: <CA+G9fYvxxc4o5UjRfHVgmcaTN1ijxXX8e=OTP4t7PbRENmVBsQ@mail.gmail.com>
+Subject: [next] arch/arm/kernel/setup.c:1028:63: error: 'SECTION_SIZE' undeclared
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, rmk+kernel@armlinux.org.uk, 
+	Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Russell King <linux@armlinux.org.uk>, 
+	Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-#regzbot monitor:
-https://lore.kernel.org/all/20220120215305.282577-1-amir73il@gmail.com/
+Following build errors noticed on Linux next 20220128 arm with tinyconfig.
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+make --silent --keep-going --jobs=8 \
+   ARCH=arm \
+   CROSS_COMPILE=arm-linux-gnueabihf- \
+   'CC=sccache arm-linux-gnueabihf-gcc' \
+   'HOSTCC=sccache gcc'
 
-On 16.01.22 11:16, Thorsten Leemhuis wrote:
-> [TLDR: I'm adding this regression to regzbot, the Linux kernel
-> regression tracking bot; most text you find below is compiled from a few
-> templates paragraphs some of you might have seen already.]
-> 
-> Hi, this is your Linux kernel regression tracker speaking.
-> 
-> Adding the regression mailing list to the list of recipients, as it
-> should be in the loop for all regressions, as explained here:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-> 
-> On 15.01.22 04:11, Ivan Delalande wrote:
->> Hi,
->>
->> Sorry to bring this up so late but we might have found a regression
->> introduced by your "Sort out fsnotify_nameremove() mess" patch series
->> merged in 5.3 (116b9731ad76..7377f5bec133), and that can still be
->> reproduced on v5.16.
->>
->> Some of our processes use inotify to watch for IN_DELETE events (for
->> files on tmpfs mostly), and relied on the fact that once such events are
->> received, the files they refer to have actually been unlinked and can't
->> be open/read. So if and once open() succeeds then it is a new version of
->> the file that has been recreated with new content.
->>
->> This was true and working reliably before 5.3, but changed after
->> 49246466a989 ("fsnotify: move fsnotify_nameremove() hook out of
->> d_delete()") specifically. There is now a time window where a process
->> receiving one of those IN_DELETE events may still be able to open the
->> file and read its old content before it's really unlinked from the FS.
->>
->> I'm not very familiar with the VFS and fsnotify internals, would you
->> consider this a regression, or was there never any intentional guarantee
->> for that behavior and it's best we work around this change in userspace?
-> 
-> Thanks for the report.
-> 
-> To be sure this issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, my Linux kernel regression tracking bot:
-> 
-> #regzbot ^introduced 116b9731ad76..7377f5bec133
-> #regzbot title fsnotify: regression due to the fsnotify_nameremove()
-> rework in 5.3
-> #regzbot ignore-activity
-> 
-> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
-> to the report (the parent of this mail) using the kernel.org redirector,
-> as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
-> then will automatically mark the regression as resolved once the fix
-> lands in the appropriate tree. For more details about regzbot see footer.
-> 
-> Sending this to everyone that got the initial report, to make all aware
-> of the tracking. I also hope that messages like this motivate people to
-> directly get at least the regression mailing list and ideally even
-> regzbot involved when dealing with regressions, as messages like this
-> wouldn't be needed then.
-> 
-> Don't worry, I'll send further messages wrt to this regression just to
-> the lists (with a tag in the subject so people can filter them away), as
-> long as they are intended just for regzbot. With a bit of luck no such
-> messages will be needed anyway.
-> 
-> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
-> 
-> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-> on my table. I can only look briefly into most of them. Unfortunately
-> therefore I sometimes will get things wrong or miss something important.
-> I hope that's not the case here; if you think it is, don't hesitate to
-> tell me about it in a public reply, that's in everyone's interest.
-> 
-> BTW, I have no personal interest in this issue, which is tracked using
-> regzbot, my Linux kernel regression tracking bot
-> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> this mail to get things rolling again and hence don't need to be CC on
-> all further activities wrt to this regression.
-> 
-> ---
-> Additional information about regzbot:
-> 
-> If you want to know more about regzbot, check out its web-interface, the
-> getting start guide, and/or the references documentation:
-> 
-> https://linux-regtracking.leemhuis.info/regzbot/
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-> 
-> The last two documents will explain how you can interact with regzbot
-> yourself if your want to.
-> 
-> Hint for reporters: when reporting a regression it's in your interest to
-> tell #regzbot about it in the report, as that will ensure the regression
-> gets on the radar of regzbot and the regression tracker. That's in your
-> interest, as they will make sure the report won't fall through the
-> cracks unnoticed.
-> 
-> Hint for developers: you normally don't need to care about regzbot once
-> it's involved. Fix the issue as you normally would, just remember to
-> include a 'Link:' tag to the report in the commit message, as explained
-> in Documentation/process/submitting-patches.rst
-> That aspect was recently was made more explicit in commit 1f57bd42b77c:
-> https://git.kernel.org/linus/1f57bd42b77c
-> 
+arch/arm/kernel/setup.c: In function 'reserve_crashkernel':
+arch/arm/kernel/setup.c:1028:63: error: 'SECTION_SIZE' undeclared
+(first use in this function); did you mean 'SECTIONS_SHIFT'?
+ 1028 |                 start = memblock_phys_alloc_range(crash_size,
+SECTION_SIZE,
+      |
+^~~~~~~~~~~~
+      |
+SECTIONS_SHIFT
+arch/arm/kernel/setup.c:1028:63: note: each undeclared identifier is
+reported only once for each function it appears in
+make[3]: *** [scripts/Makefile.build:289: arch/arm/kernel/setup.o] Error 1
+
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+meta data:
+-----------
+    git describe: next-20220128
+    git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+    git_sha: b605fdc54c2b28c30ef06d9db99282d8a32ae4be
+    target_arch: arm
+    kconfig: tinyconfig
+    toolchain: gcc-11
+
+Build log:
+-------------
+https://builds.tuxbuild.com/24JPvTrXx7HvkQtxoIXqZtZoZkA/
+
+Steps to reproduce:
+--------------------
+# To install tuxmake on your system globally:
+# sudo pip3 install -U tuxmake
+#
+# See https://docs.tuxmake.org/ for complete documentation.
+# Original tuxmake command with fragments listed below.
+
+tuxmake --runtime podman --target-arch arm --toolchain gcc-11
+--kconfig tinyconfig
+
+--
+Linaro LKFT
+https://lkft.linaro.org
