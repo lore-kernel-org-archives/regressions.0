@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01B92C9D
-	for <regressions@lists.linux.dev>; Fri, 28 Jan 2022 13:17:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C253E2C9D
+	for <regressions@lists.linux.dev>; Fri, 28 Jan 2022 13:35:25 +0000 (UTC)
 Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nDR8H-0000Yc-Jl; Fri, 28 Jan 2022 14:17:41 +0100
-Message-ID: <afaa879e-c888-100e-ff2e-429a2457a014@leemhuis.info>
-Date: Fri, 28 Jan 2022 14:17:41 +0100
+	id 1nDRPP-0001tw-8q; Fri, 28 Jan 2022 14:35:23 +0100
+Message-ID: <352ecb6c-7bd8-069c-498b-66b0d236dc89@leemhuis.info>
+Date: Fri, 28 Jan 2022 14:35:22 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,81 +16,50 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: Observation of a memory leak with commit 314001f0bf92 ("af_unix:
- Add OOB support")
-Content-Language: en-BW
-To: Jakub Kicinski <kuba@kernel.org>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: Rao Shoaib <rao.shoaib@oracle.com>, "David S. Miller"
- <davem@davemloft.net>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Netdev <netdev@vger.kernel.org>,
- Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>,
- regressions@lists.linux.dev
-References: <CAKXUXMzZkQvHJ35nwVhcJe+DrtEXGw+eKGVD04=xRJkVUC2sPA@mail.gmail.com>
- <20220109132038.38f8ae4f@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
- <a754b7d0-8a20-9730-c439-1660994005d0@leemhuis.info>
- <CAKXUXMygcVJ2v5enu-KY9_2reC6+aAk8F9q5RiwwNp4wO-prug@mail.gmail.com>
- <20220110082949.3a14a738@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+Subject: Re: Intel TGL notebook no longer enters power states deeper than PC2
+ (fwd from bugzilla) #forregzbot
+Content-Language: en-BS
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20220110082949.3a14a738@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <34eb9d46-d937-fc29-02b1-7cfb9162f9b8@leemhuis.info>
+In-Reply-To: <34eb9d46-d937-fc29-02b1-7cfb9162f9b8@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643375868;7f046b9a;
-X-HE-SMSGID: 1nDR8H-0000Yc-Jl
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643376925;9622c4ca;
+X-HE-SMSGID: 1nDRPP-0001tw-8q
 
-On 10.01.22 17:29, Jakub Kicinski wrote:
-> On Mon, 10 Jan 2022 17:19:56 +0100 Lukas Bulwahn wrote:
->> It's a regression if some application or practical use case running fine on one
->> Linux kernel works worse or not at all with a newer version compiled using a
->> similar configuration.
+#regzbot monitor:
+https://lore.kernel.org/all/CAJZ5v0hvvYedSn5u-i7sjpoEHU4P65t7i1b2pVn=S1q0nHWgqQ@mail.gmail.com/
+
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
+
+On 20.01.22 15:56, Thorsten Leemhuis wrote:
+> Lo! There is a regression dealt with in bugzilla I'd like to add to the
+> tracking:
+> 
+> #regzbot introduced: e5ad96f388b765fe6b52f64f37e910c0ba4f3de7
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215467
+> #regzbot from: MarcelHB <m.heingbecker@googlemail.com>
+> #regzbot title: Intel TGL notebook no longer enters power states deeper
+> than PC2
+> 
+>> Summary:
 >>
->> The af_unix functionality without oob support works before
->> 314001f0bf92 ("af_unix: Add OOB support").
->> The af_unix functionality without oob support works after 314001f0bf92
->> ("af_unix: Add OOB support").
->> The af_unix with oob support after the new feature with 314001f0bf92
->> ("af_unix: Add OOB support") makes a memory leak visible; we do not
->> know if this feature even triggers it or just makes it visible.
+>> Starting with Kernel 5.15, my Intel TGL notebook no longer enters power
+>> states deeper than PC2. Previous kernels did so.
 >>
->> Now, if we disable oob support we get a kernel without an observable
->> memory leak. However, oob support is added by default, and this makes
->> this memory leak visible. So, if oob support is turned into a
->> non-default option or nobody ever made use of the oob support before,
->> it really does not count as regression at all. The oob support did not
->> work before and now it works but just leaks a bit of memory---it is
->> potentially a bug, but not a regression. Of course, maybe oob support
->> is also just intended to make this memory leak observable, who knows?
->> Then, it is not even a bug, but a feature.
-> I see, thanks for the explanation. It wasn't clear from the "does not
-> repro on 5.15, does repro on net-next" type of wording that the repro
-> actually uses the new functionality.
-
-Thx from my side, too.
-
->> Thorsten's database is still quite empty, so let us keep tracking the
->> progress with regzbot. I guess we cannot mark "issues" in regzbot as a
->> true regression or as a bug (an issue that appears with a new
->> feature).
-
-Yeah, I definitely don't want regzbot to be used to track ordinary
-issues, but sometimes it's hard to find clear boundaries between issue
-and regression. This is one, but I tend to say it's an issue, as users s
-won't notice the leak in practice afaics. But there are other areas that
-are greyish; an kernel Oops/Warning/BUG or a hang sometimes might also
-not strictly be a regression, but I guess tracking them might be a good
-idea, so I'm open to those.
-
-Anyway:
-
->> Also, this reproducer is automatically generated, so it barely
->> qualifies as "some application or practical use case", but at best as
->> some derived "stress test program" or "micro benchmark".
-
-I left it tracked until now, but after Jakub's reply nothing to actually
-address the issue seem to have happened. I guess in that case it's not
-that important and it's time to remove it from the list of open
-regressions tracked by regzbot, if that is okay for everyone:
-
-#regzbot invalid: not strictly a regression
-
-Ciao, Thorsten
+>> Explanation:
+>>
+>> On my notebook, I recently started to observed that the battery drained
+>> quickly while in a presumed suspend mode. In the past, there was no such
+>> problem.
+>>
+>> I was able to bisect the problem on a tag-basis, analyzing deeper
+>> information on what looks good and what does not.
+>>
+>> In the short: From somewhere at least v5.11.x until v5.14.21, the
+>> system operates as expected when closing the lid. Starting with 5.15.0, I observed the anomalies as reported below.
+> 
+> Ciao, Thorsten
