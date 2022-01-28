@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC79168
-	for <regressions@lists.linux.dev>; Fri, 28 Jan 2022 10:22:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD75D2C9E
+	for <regressions@lists.linux.dev>; Fri, 28 Jan 2022 10:37:01 +0000 (UTC)
 Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nDOOq-0002DE-6X; Fri, 28 Jan 2022 11:22:36 +0100
-Message-ID: <8c06116a-7901-a82b-1d89-7a4317e5c7a9@leemhuis.info>
-Date: Fri, 28 Jan 2022 11:22:35 +0100
+	id 1nDOcl-0007kO-ER; Fri, 28 Jan 2022 11:36:59 +0100
+Message-ID: <371027df-7f32-edab-208d-d4cdd2202ba6@leemhuis.info>
+Date: Fri, 28 Jan 2022 11:36:58 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,127 +16,263 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: usb: Oops in typec code (fwd from bugzilla) #forregzbot
 Content-Language: en-BS
+To: Paul Menzel <pmenzel@molgen.mpg.de>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
+ Takashi Iwai <tiwai@suse.com>
+References: <eb6d86eb-d156-d7ac-0965-181719023d51@molgen.mpg.de>
+ <CABBYNZLENxvXMCh6XbBSnu0jasV1F0QestEK5v2mnNUpJdw3Vw@mail.gmail.com>
+ <cf71bdea-ec22-e4c9-016c-69e94a130607@molgen.mpg.de>
+ <a93c0fa7-7b84-6aea-265b-c913e0c84678@molgen.mpg.de>
+ <d7206e12-1b99-c3be-84f4-df22af427ef5@molgen.mpg.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <fe213beb-4de2-982e-a7a0-0a9bae76ced3@leemhuis.info>
-In-Reply-To: <fe213beb-4de2-982e-a7a0-0a9bae76ced3@leemhuis.info>
+Subject: Re: Unable to transfer big files to Nokia N9
+In-Reply-To: <d7206e12-1b99-c3be-84f4-df22af427ef5@molgen.mpg.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643365358;7120292f;
-X-HE-SMSGID: 1nDOOq-0002DE-6X
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643366221;1a949301;
+X-HE-SMSGID: 1nDOcl-0007kO-ER
 
-For the record:
+Hi, this is your Linux kernel regression tracker speaking.
 
-#regzbot fixed-by: 147ab5376f18045da9f22a826
+On 16.01.22 14:27, Paul Menzel wrote:
+> #regzbot introduced: 81be03e026dc0c16dc1c64e088b2a53b73caa895
 
-https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-linus&id=147ab5376f18045da9f22a8262185707745bbf77
-https://lore.kernel.org/linux-usb/20220124090228.41396-3-heikki.krogerus@linux.intel.com/
+thx for getting regzbot involved, much appreciated!
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
-
-On 26.01.22 10:10, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker speaking.
+> Dear Luiz,
 > 
-> There is a regression in bugzilla.kernel.org I'd like to add to the
-> tracking:
+> It turns out there was a regression in Linux 5.16-rc1.
+
+@bt-maintaners, what's the status here? Paul reported that over ten days
+ago and there wasn't a single reply. Or did the discussion move
+somewhere else?
+
+@Paul: just wondering, did you give 5.17-rc1 a try? Might be worth a
+shot, if only to confirm the issue is still present.
+
+Ciao, Thorsten
+
+> Am 20.12.21 um 22:31 schrieb Paul Menzel:
 > 
-> #regzbot introduced: v5.16..v5.17-rc1
-> #regzbot from:  neoe <hi2@n101n.xyz>
-> #regzbot title: usb: Oops in typec code
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215530
-> 
-> Quote:
-> 
->> almost same config for working v5.16 build. but fail on v5.17-rc1
->> dmesg:
+>> Am 01.12.21 um 23:07 schrieb Paul Menzel:
 >>
+>>> Am 01.12.21 um 19:29 schrieb Luiz Augusto von Dentz:
+>>>
+>>>> On Wed, Dec 1, 2021 at 9:39 AM Paul Menzel <pmenzel@molgen.mpg.de>
+>>>> wrote:
+>>>
+>>>>> For the first time, I wanted to transfer a 2 MB PDF file from a Dell
+>>>>> Latitude E7250 with Debian sid/unstable with Linux 5.16-rc1 to a Nokia
+>>>>> N9 (MeeGo/Harmattan). Using the package *bluez-obexd* 5.61-1 and GNOME
+>>>>> 41, the device was found, and paired fine. Then I selected to transfer
+>>>>> the 2 MB file, and after starting for a second, it timed out after the
+>>>>> progress bar moves forward ones and failed.
+>>>>>
+>>>>> The systemd journal contains:
+>>>>>
+>>>>>       obexd[21139]: Transfer(0x56243fe4f790) Error: Timed out
+>>>>> waiting for response
+>>>>>
+>>>>> Testing with a a 5 byte test text file, worked fine. Also testing
+>>>>> with a
+>>>>> Galaly M32, both files were transferred without problems (though
+>>>>> slowly
+>>>>> with 32 KB/s.)
+>>>>>
+>>>>> Trying to connect to the device with bluetoothctl failed for me,
+>>>>> and the
+>>>>> journal contained, it failed.
+>>>>>
+>>>>>       $ bluetoothctl
+>>>>>       Agent registered
+>>>>>       [bluetooth]# connect 40:98:4E:5B:CE:XX
+>>>>>       Attempting to connect to 40:98:4E:5B:CE:XX
+>>>>>       Failed to connect: org.bluez.Error.Failed
+>>>>>
+>>>>>       bluetoothd[21104]: src/service.c:btd_service_connect()
+>>>>> a2dp-source profile connect failed for 40:98:4E:5B:CE:B3: Protocol
+>>>>> not available
+>>>>>
+>>>>> As the Nokia N9 was once pretty popular in the Linux community, I am
+>>>>> pretty sure, it used to work fine in the past, and there is some
+>>>>> regression. It’d be great, if you could give me some hints how to
+>>>>> further debug the issue.
+>>>>
+>>>> We will need some logs, obexd and btmon, if possible.
+>>>
+>>> I only managed to get the btmon trace [1]. I did `sudo modprobe -r
+>>> btusb` and `sudo btmon -w /dev/shm/trace.log`.
+>>>
+>>> Linux messages:
+>>>
+>>>      [29880.100381] calling  btusb_driver_init+0x0/0x1000 [btusb] @
+>>> 28716
+>>>      [29880.239603] usbcore: registered new interface driver btusb
+>>>      [29880.239608] initcall btusb_driver_init+0x0/0x1000 [btusb]
+>>> returned 0 after 135952 usecs
+>>>      [29880.240706] Bluetooth: hci0: unexpected event for opcode 0x0500
+>>>      [29880.241598] Bluetooth: hci0: Legacy ROM 2.5 revision 1.0
+>>> build 3 week 17 2014
+>>>      [29880.241605] Bluetooth: hci0: Intel device is already patched.
+>>> patch num: 32
+>>>
+>>>  From the system journal:
+>>>
+>>>      Dez 01 22:52:19 ersatz obexd[21139]: Transfer(0x56243fe53dd0)
+>>> Error: Timed out waiting for response
 >>
->> [    7.967005] Oops: 0000 [#1] PREEMPT SMP NOPTI
->> [    7.967694] CPU: 3 PID: 265 Comm: kworker/3:2 Not tainted 5.17.0-rc1-gs #1
->> [    7.968374] Hardware name: ASUS System Product Name/PRIME B550M-A (WI-FI), BIOS 2423 08/09/2021
->> [    7.969043] Workqueue: events_long ucsi_init_work [typec_ucsi]
->> [    7.969714] RIP: 0010:typec_port_match+0x4b/0x90 [typec]
->> [    7.970382] Code: 8b 98 90 02 00 00 48 89 df 48 83 eb 10 e8 dd 59 c1 c0 84 c0 b8 00 00 00 00 48 0f 44 d8 4c 39 eb 74 0c 41 8b 84 24 70 fd ff ff <39> 03 74 0b 5b 31 c0 41 5c 41 5d 41 5e 5d c3 49 8b 3e 49 8d 76 08
->> [    7.971099] RSP: 0018:ffffacf640ffbd48 EFLAGS: 00010207
->> [    7.971810] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
->> [    7.972525] RDX: 0000000000000001 RSI: ffffacf640ffbdb8 RDI: 0000000000000000
->> [    7.973238] RBP: ffffacf640ffbd68 R08: ffff9a62003d96a0 R09: ffffacf640ffbc08
->> [    7.973955] R10: ffff9a6225f36000 R11: 0000000000000000 R12: ffff9a62016e7a90
->> [    7.974679] R13: ffff9a62016e7800 R14: ffffacf640ffbdb8 R15: ffff9a6200c96c08
->> [    7.975405] FS:  0000000000000000(0000) GS:ffff9a80ae8c0000(0000) knlGS:0000000000000000
->> [    7.976128] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [    7.976844] CR2: 0000000000000000 CR3: 0000000121dfa000 CR4: 0000000000350ee0
->> [    7.977561] Call Trace:
->> [    7.978272]  
->> [    7.978979]  ? typec_port_compare+0x10/0x10 [typec]
->> [    7.979694]  bus_for_each_dev+0x7e/0xc0
->> [    7.980408]  typec_link_ports+0x45/0x80 [typec]
->> [    7.981110]  typec_register_port+0x1d4/0x2d0 [typec]
->> [    7.981808]  ucsi_init_work+0x401/0x720 [typec_ucsi]
->> [    7.982508]  process_one_work+0x21d/0x3f0
->> [    7.983202]  worker_thread+0x50/0x3d0
->> [    7.983887]  ? rescuer_thread+0x380/0x380
->> [    7.984571]  kthread+0xff/0x130
->> [    7.985246]  ? kthread_complete_and_exit+0x20/0x20
->> [    7.985927]  ret_from_fork+0x22/0x30
->> [    7.986608]  
->> [    7.987282] Modules linked in: snd_hda_codec_realtek snd_hda_codec_generic kvm_amd ledtrig_audio iwlmvm(+) kvm snd_hda_codec_hdmi crct10dif_pclmul mac80211 ghash_clmulni_intel libarc4 snd_hda_intel btusb snd_intel_dspcfg snd_intel_sdw_acpi aesni_intel btrtl snd_hda_codec btbcm iwlwifi crypto_simd btintel asus_wmi snd_hda_core cryptd platform_profile btmtk sparse_keymap snd_hwdep input_leds rapl wmi_bmof video bluetooth ucsi_ccg cfg80211 snd_pcm efi_pstore typec_ucsi snd_timer ecdh_generic k10temp typec snd sp5100_tco ccp ecc soundcore mac_hid amdgpu iommu_v2 gpu_sched drm_ttm_helper ttm drm_kms_helper cec drm i2c_algo_bit fb_sys_fops syscopyarea sysfillrect sysimgblt hid_generic crc32_pclmul i2c_piix4 r8169 usbhid i2c_designware_pci realtek hid wmi gpio_amdpt gpio_generic
->> [    7.990356] CR2: 0000000000000000
->> [    7.991132] ---[ end trace 0000000000000000 ]---
->> [    8.060078] iwlwifi 0000:09:00.0: Detected RF HR B3, rfid=0x10a100
->> [    8.129116] RIP: 0010:typec_port_match+0x4b/0x90 [typec]
->> [    8.130024] Code: 8b 98 90 02 00 00 48 89 df 48 83 eb 10 e8 dd 59 c1 c0 84 c0 b8 00 00 00 00 48 0f 44 d8 4c 39 eb 74 0c 41 8b 84 24 70 fd ff ff <39> 03 74 0b 5b 31 c0 41 5c 41 5d 41 5e 5d c3 49 8b 3e 49 8d 76 08
->> [    8.130919] RSP: 0018:ffffacf640ffbd48 EFLAGS: 00010207
->> [    8.131763] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
->> [    8.132462] iwlwifi 0000:09:00.0: base HW address: 08:5b:d6:51:40:96
->> [    8.132598] RDX: 0000000000000001 RSI: ffffacf640ffbdb8 RDI: 0000000000000000
->> [    8.134511] RBP: ffffacf640ffbd68 R08: ffff9a62003d96a0 R09: ffffacf640ffbc08
->> [    8.135417] R10: ffff9a6225f36000 R11: 0000000000000000 R12: ffff9a62016e7a90
->> [    8.136317] R13: ffff9a62016e7800 R14: ffffacf640ffbdb8 R15: ffff9a6200c96c08
->> [    8.137190] FS:  0000000000000000(0000) GS:ffff9a80ae8c0000(0000) knlGS:0000000000000000
->> [    8.138035] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [    8.138869] CR2: 0000000000000000 CR3: 0000000121dfa000 CR4: 0000000000350ee0
+>> Were you able to see anything in the attached logs? If the obexd logs
+>> are missing, can you please tell how I should capture them?
+>>
+>> I also tested with Ubuntu 20.04 (*linux-image-5.11.0-27-generic*) and
+>> 21.10 (*linux-image-5.13.0-19-generic*) live systems booted from a USB
+>> storage device, and transferring `/usr/bin/systemctl`
+>> (`/lib/systemd/systemd`) with size of 1.8 MB worked fine.
+>>
+>> Could there be a regression in that area? Unfortunately, it’s not easy
+>> for me to do a bisection on the device at hand.
+>>
+>> (Would it be possible to do with QEMU and USB controller and Bluetooth
+>> device passthrough? How can I transfer the file on the command line so
+>> I wouldn’t need to install a desktop environment?)
 > 
-> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+> Turns out, that is indeed possible [2], but turned out to be cumbersome,
+> as I hit the regression [3], which seems to have been fixed by commit
+> 95655456e7ce (Bluetooth: btintel: Fix broken LED quirk for legacy ROM
+> devices) merged in the current Linux 5.17 cycle this week.
 > 
-> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-> on my table. I can only look briefly into most of them. Unfortunately
-> therefore I sometimes will get things wrong or miss something important.
-> I hope that's not the case here; if you think it is, don't hesitate to
-> tell me about it in a public reply, that's in everyone's interest.
+> As a work around, I applied a hunk from Takashi’s patch.
 > 
-> BTW, I have no personal interest in this issue, which is tracked using
-> regzbot, my Linux kernel regression tracking bot
-> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> this mail to get things rolling again and hence don't need to be CC on
-> all further activities wrt to this regression.
+> -       { USB_DEVICE(0x8087, 0x0a2a), .driver_info =
+> BTUSB_INTEL_COMBINED },
+> +       { USB_DEVICE(0x8087, 0x0a2a), .driver_info = BTUSB_INTEL_COMBINED |
+> + BTUSB_INTEL_BROKEN_INITIAL_NCMD },
 > 
-> ---
-> Additional information about regzbot:
+> My problem with the Nokia N9 is still present in Linus’ master branch.
 > 
-> If you want to know more about regzbot, check out its web-interface, the
-> getting start guide, and/or the references documentation:
+> Then I built a minimal Linux kernel for QEMU, and ran:
 > 
-> https://linux-regtracking.leemhuis.info/regzbot/
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+>     qemu-system-x86_64 -cpu host -m 2G -enable-kvm \
+>       -usb -device usb-host,vendorid=0x8087,productid=0x0a2a \
+>       -drive file=/dev/shm/debian-64.img,format=raw,if=virtio \
+>       -net nic -net user,hostfwd=tcp::22223-:22 \
+>       -kernel /dev/shm/bzImage -append "root=/dev/vda1 rw quiet"
 > 
-> The last two documents will explain how you can interact with regzbot
-> yourself if your want to.
+> In the Debian sid/unstable VM, I used
 > 
-> Hint for reporters: when reporting a regression it's in your interest to
-> tell #regzbot about it in the report, as that will ensure the regression
-> gets on the radar of regzbot and the regression tracker. That's in your
-> interest, as they will make sure the report won't fall through the
-> cracks unnoticed.
+>     ssh root@localhost -p 22223
 > 
-> Hint for developers: you normally don't need to care about regzbot once
-> it's involved. Fix the issue as you normally would, just remember to
-> include a 'Link:' tag to the report in the commit message, as explained
-> in Documentation/process/submitting-patches.rst
-> That aspect was recently was made more explicit in commit 1f57bd42b77c:
-> https://git.kernel.org/linus/1f57bd42b77c
+> I once had to pair the VM with the Nokia N9 in bluetoothctl, and then
+> started `/usr/libexec/bluetooth/obexd`, and ran `obexctl`, and connected
+> first with `connect`, and then ran `send /lib/systemd/systemd` to
+> transfer the file. In the problematic cases it stopped/hung after the
+> first progress message.
+> 
+>     # obexctl
+>     [NEW] Client /org/bluez/obex
+>     [obex]# connect 40:98:4E:5B:CE:XX
+>     Attempting to connect to 40:98:4E:5B:CE:XX
+>     [NEW] Session /org/bluez/obex/client/session0 [default]
+>     [NEW] ObjectPush /org/bluez/obex/client/session0
+>     Connection successful
+>     [40:98:4E:5B:CE:XX]# send /lib/systemd/systemd
+>     Attempting to send /lib/systemd/systemd to
+> /org/bluez/obex/client/session0
+>     [NEW] Transfer /org/bluez/obex/client/session0/transfer0
+>     Transfer /org/bluez/obex/client/session0/transfer0
+>         Status: queued
+>         Name: systemd
+>         Size: 1841712
+>         Filename: /lib/systemd/systemd
+>         Session: /org/bluez/obex/client/session0
+>     [CHG] Transfer /org/bluez/obex/client/session0/transfer0 Status: active
+>     [CHG] Transfer /org/bluez/obex/client/session0/transfer0
+> Transferred: 32737 (@32KB/s 00:55)
+>     [CHG] Transfer /org/bluez/obex/client/session0/transfer0 Status: error
+>     [DEL] Transfer /org/bluez/obex/client/session0/transfer0
+> 
+> Some manual bisection of Linux releases, verified, that the regression
+> was introduced in Linux 5.16-rc1. (Lucky me, I started using Bluetooth
+> with the Nokia with Linux 5.16-rc1.) Then I verified it was introduced
+> by the Bluetooth pull request for Linux 5.16. Then I picked commit
+> 81be03e026dc0c16dc1c64e088b2a53b73caa895 due to the commit message, and
+> bisected from there, and it turns out, that this commit is actually
+> introducing the regression.
+> 
+>     $ git bisect good
+>     81be03e026dc0c16dc1c64e088b2a53b73caa895 is the first bad commit
+>     commit 81be03e026dc0c16dc1c64e088b2a53b73caa895
+>     Author: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+>     Date:   Fri Sep 3 15:27:32 2021 -0700
+> 
+>         Bluetooth: RFCOMM: Replace use of memcpy_from_msg with
+> bt_skb_sendmmsg
+> 
+>         This makes use of bt_skb_sendmmsg instead using memcpy_from_msg
+> which
+>         is not considered safe to be used when lock_sock is held.
+> 
+>         Also make rfcomm_dlc_send handle skb with fragments and queue
+> them all
+>         atomically.
+> 
+>         Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+>         Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+> 
+>      net/bluetooth/rfcomm/core.c | 50
+> ++++++++++++++++++++++++++++++++++++++-------
+>      net/bluetooth/rfcomm/sock.c | 46
+> +++++++++--------------------------------
+>      2 files changed, 53 insertions(+), 43 deletions(-)
+> 
+> Unfortunately, the patch does not cleanly revert, so users have to wait
+> until an expert can take a look, and come up with a fix.
+> 
+> 
+> Kind regards,
+> 
+> Paul
+> 
+> 
+> PS: For the records:
+> 
+>     $ git bisect log
+>     # bad: [81be03e026dc0c16dc1c64e088b2a53b73caa895] Bluetooth: RFCOMM:
+> Replace use of memcpy_from_msg with bt_skb_sendmmsg
+>     # good: [49d8a5606428ca0962d09050a5af81461ff90fbb] Bluetooth: fix
+> init and cleanup of sco_conn.timeout_work
+>     git bisect start '81be03e026dc0' 'HEAD^'
+>     # good: [904c139a2517191e48f9cb1bb2d611ae59434009] Bluetooth: Add
+> support for msbc coding format
+>     git bisect good 904c139a2517191e48f9cb1bb2d611ae59434009
+>     # good: [8bba13b1d08d42e2e8308924fa5c1551a7b2b011] Bluetooth:
+> btintel: Fix incorrect out of memory check
+>     git bisect good 8bba13b1d08d42e2e8308924fa5c1551a7b2b011
+>     # good: [38f64f650dc0e44c146ff88d15a7339efa325918] Bluetooth: Add
+> bt_skb_sendmsg helper
+>     git bisect good 38f64f650dc0e44c146ff88d15a7339efa325918
+>     # good: [0771cbb3b97d3c1d68eecd7f00055f599954c34e] Bluetooth: SCO:
+> Replace use of memcpy_from_msg with bt_skb_sendmsg
+>     git bisect good 0771cbb3b97d3c1d68eecd7f00055f599954c34e
+>     # first bad commit: [81be03e026dc0c16dc1c64e088b2a53b73caa895]
+> Bluetooth: RFCOMM: Replace use of memcpy_from_msg with bt_skb_sendmmsg
+> 
+> 
+> Kind regards,
+> 
+> Paul
+> 
+> 
+>>> [1]: https://owww.molgen.mpg.de/~pmenzel/trace.log.7z
+> [2]:
+> https://lore.kernel.org/linux-bluetooth/5891f0d5-8d51-9da5-7663-718f301490b1@molgen.mpg.de/T/#u
+> 
+> [3]:
+> https://lore.kernel.org/linux-bluetooth/20211202162256.31837-1-tiwai@suse.de/
+> 
+> 
+> 
