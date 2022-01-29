@@ -1,139 +1,226 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0602CA6
-	for <regressions@lists.linux.dev>; Sat, 29 Jan 2022 03:14:45 +0000 (UTC)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Jlzl335ggz4xcV;
-	Sat, 29 Jan 2022 14:07:11 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1643425634;
-	bh=KWFwd9+aipIw2fDacQM/exJ32sgn8MY4BtMeE5pYf+8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=SaT6a+RhzhazLOeZADmAr6MIZoFi77Y2DynN9rNC0RCFxE4e5zaDMFRNzd/fZ0x5O
-	 EqK6t6UnQveAqFd/rD6FFx8t7Qrh49bzI5yZ5h0hSMUvwAG376kQ76z7hT/bPzsN8d
-	 3oLACVi7dCdTnW/O9736s0ocPMf12M5kd+bA5i87yNglsHnKaqygtFIwpbcV9zC81X
-	 dZWGgHaXbLUJjZnx9/NsQ+N6pVbD7Tx0sNt9wOlLQ6PQo2dL8umsGJpQpfw+6xv0vE
-	 Y7kQqxXMhcmVN8W7jtQ91t99/Mmae8Lx6/bJVOSoPuUUhKfW2U4MlY0wxzMdkEq9s0
-	 MrVrcMQlffycg==
-Date: Sat, 29 Jan 2022 14:07:10 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, Linux-Next Mailing List
- <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org,
- regressions@lists.linux.dev, Linux ARM
- <linux-arm-kernel@lists.infradead.org>, rmk+kernel@armlinux.org.uk,
- Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Russell King
- <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon
- <will@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Jisheng Zhang
- <jszhang@kernel.org>
-Subject: Re: [next] arch/arm/kernel/setup.c:1028:63: error: 'SECTION_SIZE'
- undeclared
-Message-ID: <20220129140710.1ef9f9a5@canb.auug.org.au>
-In-Reply-To: <CA+G9fYvxxc4o5UjRfHVgmcaTN1ijxXX8e=OTP4t7PbRENmVBsQ@mail.gmail.com>
-References: <CA+G9fYvxxc4o5UjRfHVgmcaTN1ijxXX8e=OTP4t7PbRENmVBsQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1BD2CA1
+	for <regressions@lists.linux.dev>; Sat, 29 Jan 2022 18:01:58 +0000 (UTC)
+Received: by mail-pl1-f173.google.com with SMTP id c3so8978523pls.5
+        for <regressions@lists.linux.dev>; Sat, 29 Jan 2022 10:01:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=ocx6uLSE9SZhQHL4f62tymlhjTdr8qnlDcb3gjUZzVI=;
+        b=kFDbs2pdduz5Cagog17WvOBs2KSu01Er9gWb6vWwdvJWPYR7NnYWocW0oPqXCW/Z5u
+         NsNpC5IpTTnMLq3GgUOmemXhE7bsIj2DagGLJIcaBY3qwuOtRwLW+52AkqOSEyJORYCa
+         yy2nKDRtKsWAtIB6QTcPQ1bS52svibqGi21cxks2xPg+dUe3eWoc8fsXx3SivhMeRWTk
+         7wQj1Stpt3gjAF2Qtcc+J6NfWe14UqtxrTESznqwdD08qceUa2TwiYYsnnmZ7en4pAmY
+         +CwJKrU9c3BSQARPIpXWHdzH4yKl45jt6kvuv6R3GUGQpfNThWv6jBGsGvEbDzlkr4sL
+         PHZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=ocx6uLSE9SZhQHL4f62tymlhjTdr8qnlDcb3gjUZzVI=;
+        b=HRqrYnmoVZD25WcsjxEikF7eSmdXAV0/TzlaWfcrSS5vQ8f5f2fHOqtWy0Q0uFzfZc
+         H0bp6M8bNT5Wd1xW4fHwWfDuKbgDZ9hf0teyy7SfZhMyVRfvSRBQlAci37i1FuaRHQN7
+         QbKK6io9iPlBERddq02eBugJ/3J4dQfvkinT6DNq3VueOpjdwPTd8CZ/uOmopr4qPpoH
+         MCZJF93q2cmUq+/fiXFej0zIjbMM8xaKp5APnWQ7Adg5Vg8zh/PWKSLURixzSxutYYX+
+         FoIVwUXUe902+Mwa4AtGZh+MhttY0ugUsQ4o6/kcCmgJCXu1gBobBUp+71E4WqY0M7GS
+         qwiw==
+X-Gm-Message-State: AOAM532tlv/WlJfTaMgdZLwA22w76pZZQZ2rwHtrTV/bCVNWxslzWWbL
+	frumZmnXTFKRy4LR0DXQXYU=
+X-Google-Smtp-Source: ABdhPJxGsvxhGzjVP0O6TjC9lEzfQMoYub87JkBduaepMi6Z39kaOucmpcjys0bXfaOntDjHHk9ZKA==
+X-Received: by 2002:a17:90a:c08d:: with SMTP id o13mr15970283pjs.187.1643479317756;
+        Sat, 29 Jan 2022 10:01:57 -0800 (PST)
+Received: from [192.168.122.100] (133-175-21-116.tokyo.ap.gmo-isp.jp. [133.175.21.116])
+        by smtp.gmail.com with ESMTPSA id oo9sm6445748pjb.15.2022.01.29.10.01.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 29 Jan 2022 10:01:57 -0800 (PST)
+Message-ID: <0f2cfcac-83ca-51a9-f92c-ff6495dca1d7@gmail.com>
+Date: Sun, 30 Jan 2022 03:01:51 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/WBFXjOTRkeblc9BBHNdrSIU";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [BUG] mtd: cfi_cmdset_0002: write regression since v4.17-rc1
+Content-Language: en-US
+To: Ahmad Fatoum <a.fatoum@pengutronix.de>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ linux-mtd@lists.infradead.org, Joakim.Tjernlund@infinera.com,
+ miquel.raynal@bootlin.com, vigneshr@ti.com, richard@nod.at,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>,
+ Brian Norris <computersforpeace@gmail.com>,
+ David Woodhouse <dwmw2@infradead.org>, marek.vasut@gmail.com,
+ cyrille.pitchen@wedev4u.fr,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ linuxppc-dev@lists.ozlabs.org
+References: <b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de>
+ <dff2abcc-5813-2f2c-35ba-f03cd1f35ac3@leemhuis.info>
+ <e11b76dc-5539-fb7e-da1c-a5005713d6b0@gmail.com>
+ <3dbbcee5-81fc-cdf5-9f8b-b6ccb95beddc@pengutronix.de>
+From: Tokunori Ikegami <ikegami.t@gmail.com>
+In-Reply-To: <3dbbcee5-81fc-cdf5-9f8b-b6ccb95beddc@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
---Sig_/WBFXjOTRkeblc9BBHNdrSIU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Ahmad-san,
 
-Hi all,
+Thanks for your investigation.
 
-On Fri, 28 Jan 2022 20:51:53 +0530 Naresh Kamboju <naresh.kamboju@linaro.or=
-g> wrote:
+> The issue is still there with #define FORCE_WORD_WRITE 1:
 >
-> Following build errors noticed on Linux next 20220128 arm with tinyconfig.
->=20
-> make --silent --keep-going --jobs=3D8 \
->    ARCH=3Darm \
->    CROSS_COMPILE=3Darm-linux-gnueabihf- \
->    'CC=3Dsccache arm-linux-gnueabihf-gcc' \
->    'HOSTCC=3Dsccache gcc'
->=20
-> arch/arm/kernel/setup.c: In function 'reserve_crashkernel':
-> arch/arm/kernel/setup.c:1028:63: error: 'SECTION_SIZE' undeclared
-> (first use in this function); did you mean 'SECTIONS_SHIFT'?
->  1028 |                 start =3D memblock_phys_alloc_range(crash_size,
-> SECTION_SIZE,
->       |
-> ^~~~~~~~~~~~
->       |
-> SECTIONS_SHIFT
-> arch/arm/kernel/setup.c:1028:63: note: each undeclared identifier is
-> reported only once for each function it appears in
-> make[3]: *** [scripts/Makefile.build:289: arch/arm/kernel/setup.o] Error 1
->=20
->=20
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->=20
-> meta data:
-> -----------
->     git describe: next-20220128
->     git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-=
-next.git
->     git_sha: b605fdc54c2b28c30ef06d9db99282d8a32ae4be
->     target_arch: arm
->     kconfig: tinyconfig
->     toolchain: gcc-11
->=20
-> Build log:
-> -------------
-> https://builds.tuxbuild.com/24JPvTrXx7HvkQtxoIXqZtZoZkA/
->=20
-> Steps to reproduce:
-> --------------------
-> # To install tuxmake on your system globally:
-> # sudo pip3 install -U tuxmake
-> #
-> # See https://docs.tuxmake.org/ for complete documentation.
-> # Original tuxmake command with fragments listed below.
->=20
-> tuxmake --runtime podman --target-arch arm --toolchain gcc-11
-> --kconfig tinyconfig
->=20
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+>    jffs2: Write clean marker to block at 0x000a0000 failed: -5
+>    MTD do_write_oneword_once(): software timeout
+Which kernel version has been tested about this?
+Since the buffered writes disabled by 7e4404113686 for S29GL256N and 
+tested on kernel 5.10.16.
+So I would like to confirm if the issue depended on the CPU or kernel 
+version, etc.
+Note: The chips S29GL064N and S29GL256N seem different the flash Mb size 
+basically.
+> Doesn't seem to be a buffered write issue here though as the writes
+> did work fine before dfeae1073583. Any other ideas?
+At first I thought the issue is possible to be resolved by using the 
+word write instead of the buffered writes.
+Now I am thinking to disable the changes dfeae1073583 partially with any 
+condition if possible.
+By the way could you please let me know the chip information for more 
+detail? (For example model number, cycle and device ID, etc.)
 
-Caused by commit
+Regards,
+Ikegami
 
-  35f56ebeffca ("arm: use IS_ENABLED(CONFIG_KEXEC_CORE) instead of #ifdef")
 
-from Andrew's patch series.
+On 2021/12/14 16:23, Thorsten Leemhuis wrote:
 
-I assume CONFIG_MMU is not set in tinyconfig for arm (so neither of
-asm/pgtable-[23]level.h are included by asm/pgtable.h)?  CONFIG_KEXEC
-depends on CONFIG_MMU.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/WBFXjOTRkeblc9BBHNdrSIU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmH0r14ACgkQAVBC80lX
-0Gwv/Af9Fp1HS7K7aV2ileoeVzjQy3Dx2RbhkWSDvloO7Aa3mIbiCEbvNp+f5fA6
-mMWcxQFnpwzAZ5iLv1pcJh0LuRiuSK9pCCVfgEWuGj4hT7S8DM5eA+yCqtJ7JBS1
-DX8iKlVzA3VkcUwApU7Ewvr3IJ/U4ZurljHdXQmSDKvZKjXAT351FhSEUEOQxPzN
-OOu6hjBE6F9NaHuhNxd7Mih4gMfJPcuEW9DJaGOkhu8vkpLUC1kTtE7pvn3GMkqP
-UZAB60qQVRtc+rG1Buo+wmlqj5LWVH/uq14G/Ey7odEGTTcBRWfDqJaFlBrl6aKy
-iuwT0rZZVeZfb509CbE9rw5nJqrN+Q==
-=MdCu
------END PGP SIGNATURE-----
-
---Sig_/WBFXjOTRkeblc9BBHNdrSIU--
+>>> [TLDR: adding this regression to regzbot; most of this mail is compiled
+>>> from a few templates paragraphs some of you might have seen already.]
+>>>
+>>> Hi, this is your Linux kernel regression tracker speaking.
+>>>
+>>> Top-posting for once, to make this easy accessible to everyone.
+>>>
+>>> Thanks for the report.
+>>>
+>>> Adding the regression mailing list to the list of recipients, as it
+>>> should be in the loop for all regressions, as explained here:
+>>> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+>>>
+>>> To be sure this issue doesn't fall through the cracks unnoticed, I'm
+>>> adding it to regzbot, my Linux kernel regression tracking bot:
+>>>
+>>> #regzbot ^introduced dfeae1073583
+>>> #regzbot title mtd: cfi_cmdset_0002: flash write accesses on the
+>>> hardware fail on a PowerPC MPC8313 to a 8-bit-parallel S29GL064N flash
+>>> #regzbot ignore-activity
+>>>
+>>> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
+>>> to the report (the parent of this mail), then regzbot will automatically
+>>> mark the regression as resolved once the fix lands in the appropriate
+>>> tree. For more details about regzbot see footer.
+>>>
+>>> Sending this to everyone that got the initial report, to make all aware
+>>> of the tracking. I also hope that messages like this motivate people to
+>>> directly get at least the regression mailing list and ideally even
+>>> regzbot involved when dealing with regressions, as messages like this
+>>> wouldn't be needed then.
+>>>
+>>> Don't worry, I'll send further messages wrt to this regression just to
+>>> the lists (with a tag in the subject so people can filter them away), as
+>>> long as they are intended just for regzbot. With a bit of luck no such
+>>> messages will be needed anyway.
+>>>
+>>> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
+>>>
+>>> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+>>> on my table. I can only look briefly into most of them. Unfortunately
+>>> therefore I sometimes will get things wrong or miss something important.
+>>> I hope that's not the case here; if you think it is, don't hesitate to
+>>> tell me about it in a public reply. That's in everyone's interest, as
+>>> what I wrote above might be misleading to everyone reading this; any
+>>> suggestion I gave thus might sent someone reading this down the wrong
+>>> rabbit hole, which none of us wants.
+>>>
+>>> BTW, I have no personal interest in this issue, which is tracked using
+>>> regzbot, my Linux kernel regression tracking bot
+>>> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+>>> this mail to get things rolling again and hence don't need to be CC on
+>>> all further activities wrt to this regression.
+>>>
+>>> On 13.12.21 14:24, Ahmad Fatoum wrote:
+>>>> Hi,
+>>>>
+>>>> I've been investigating a breakage on a PowerPC MPC8313: The SoC is connected
+>>>> via the "Enhanced Local Bus Controller" to a 8-bit-parallel S29GL064N flash,
+>>>> which is represented as a memory-mapped cfi-flash.
+>>>>
+>>>> The regression began in v4.17-rc1 with
+>>>>
+>>>>     dfeae1073583 ("mtd: cfi_cmdset_0002: Change write buffer to check correct value")
+>>>>
+>>>> and causes all flash write accesses on the hardware to fail. Example output
+>>>> after v5.1-rc2[1]:
+>>>>
+>>>>     root@host:~# mount -t jffs2 /dev/mtdblock0 /mnt
+>>>>     MTD do_write_buffer_wait(): software timeout, address:0x000c000b.
+>>>>     jffs2: Write clean marker to block at 0x000c0000 failed: -5
+>>>>
+>>>> This issue still persists with v5.16-rc. Reverting aforementioned patch fixes
+>>>> it, but I am still looking for a change that keeps both Tokunori's and my
+>>>> hardware happy.
+>>>>
+>>>> What Tokunori's patch did is that it strengthened the success condition
+>>>> for flash writes:
+>>>>
+>>>>    - Prior to the patch, DQ polling was done until bits
+>>>>      stopped toggling. This was taken as an indicator that the write succeeded
+>>>>      and was reported up the stack. i.e. success condition is chip_ready()
+>>>>
+>>>>    - After the patch, polling continues until the just written data is
+>>>>      actually read back, i.e. success condition is chip_good()
+>>>>
+>>>> This new condition never holds for me, when DQ stabilizes, it reads 0xFF,
+>>>> never the just written data. The data is still written and can be read back
+>>>> on subsequent reads, just not at that point of time in the poll loop.
+>>>>
+>>>> We haven't had write issues for the years predating that patch. As the
+>>>> regression has been mainline for a while, I am wondering what about my setup
+>>>> that makes it pop up here, but not elsewhere?
+>>>>
+>>>> I consulted the data sheet[2] and found Figure 27, which describes DQ polling
+>>>> during embedded algorithms. DQ switches from status output to "True" (I assume
+>>>> True == all bits set == 0xFF) until CS# is reasserted.
+>>>>
+>>>> I compared with another chip's datasheet, and it (Figure 8.4) doesn't describe
+>>>> such an intermittent "True" state. In any case, the driver polls a few hundred
+>>>> times, however, before giving up, so there should be enough CS# toggles.
+>>>>
+>>>>
+>>>> Locally, I'll revert this patch for now. I think accepting 0xFF as a success
+>>>> condition may be appropriate, but I don't yet have the rationale to back it up.
+>>>>
+>>>> I am investigating this some more, probably with a logic trace, but I wanted
+>>>> to report this in case someone has pointers and in case other people run into
+>>>> the same issue.
+>>>>
+>>>>
+>>>> Cheers,
+>>>> Ahmad
+>>>>
+>>>> [1] Prior to d9b8a67b3b95 ("mtd: cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer")
+>>>>       first included with v5.1-rc2, failing writes just hung indefinitely in kernel space.
+>>>>       That's fixed, but the writes still fail.
+>>>>
+>>>> [2]: 001-98525 Rev. *B, https://www.infineon.com/dgdl/Infineon-S29GL064N_S29GL032N_64_Mbit_32_Mbit_3_V_Page_Mode_MirrorBit_Flash-DataSheet-v03_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0ed556fd548b
+>>>>
+>>>> [3]: https://www.mouser.com/datasheet/2/268/SST39VF1601C-SST39VF1602C-16-Mbit-x16-Multi-Purpos-709008.pdf
+>>>>        Note that "true data" means valid data here, not all bits one.
+>>>>
+>
