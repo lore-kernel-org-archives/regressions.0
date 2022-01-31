@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D56372CA2
-	for <regressions@lists.linux.dev>; Mon, 31 Jan 2022 07:36:50 +0000 (UTC)
-Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F34C829CA
+	for <regressions@lists.linux.dev>; Mon, 31 Jan 2022 14:22:32 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nERF0-0003mt-Ng; Mon, 31 Jan 2022 08:36:47 +0100
-Message-ID: <95bf594b-250c-5a6d-aa3b-d428dbf9c203@leemhuis.info>
-Date: Mon, 31 Jan 2022 08:36:46 +0100
+	id 1nEXZX-00074h-C5; Mon, 31 Jan 2022 15:22:23 +0100
+Message-ID: <00f73105-da64-f62b-866c-00828d8701ba@leemhuis.info>
+Date: Mon, 31 Jan 2022 15:22:22 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,121 +17,140 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
 Content-Language: en-BS
-To: Paul Menzel <pmenzel@molgen.mpg.de>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
- regressions@lists.linux.dev
-References: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: 100 ms boot time increase regression in
- acpi_init()/acpi_scan_bus()
-In-Reply-To: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: workflows@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Randy Dunlap <rdunlap@infradead.org>, regressions@lists.linux.dev,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>
+References: <cover.1643110442.git.linux@leemhuis.info>
+ <f97738d6250050bc982bf2947587f1c73f37446f.1643110442.git.linux@leemhuis.info>
+ <87sftbwemg.fsf@meer.lwn.net>
+ <c8d7228a-2df5-df92-6d53-c3e940274dad@leemhuis.info>
+Subject: Re: [PATCH v3 1/2] docs: add a document about regression handling
+In-Reply-To: <c8d7228a-2df5-df92-6d53-c3e940274dad@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643614610;7995cc82;
-X-HE-SMSGID: 1nERF0-0003mt-Ng
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1643638953;fa39e650;
+X-HE-SMSGID: 1nEXZX-00074h-C5
 
-Hi, this is your Linux kernel regression tracker speaking.
+On 26.01.22 15:10, Thorsten Leemhuis wrote:
+> 
+> On 26.01.22 00:59, Jonathan Corbet wrote:
+>> Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-On 10.01.22 12:29, Paul Menzel wrote:
-> #regzbot introduced: v5.13..v5.14-rc1
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215419
+>>> +   Note: Only the content of this RST file as found in the Linux kernel sources
+>>> +   is available under CC-BY-4.0, as versions of this text that were processed
+>>> +   (for example by the kernel's build system) might contain content taken from
+>>> +   files which use a more restrictive license.
+>>
+>> I wonder if we could put this boilerplate at the bottom, with a single
+>> "see the bottom for redistribution information" line here?  Most readers
+>> won't care about this stuff and shouldn't have to slog through it to get
+>> to what they want to read.
+> 
+> Totally fine with me. When I touch reporting-issues.rst the next time
+> I'll move it downwards as well.
 
-Thx for getting regzbot involved!
+V4 will do that, as I added a patch to point from reporting-issues.rst
+to one of the two new documents.
 
-Nothing happened since you reported the issue three weeks ago; sure,
-it's not a pressing issue, but I wonder what the status is.
+>>> +The important bits for people affected by regressions
+>>> +=====================================================
+>>> +
+>>> +It's a regression if something running fine with one Linux kernel works worse or
+>>> +not at all with a newer version. Note, the newer kernel has to be compiled using
+>>> +a similar configuration -- for this and other fine print, check out below
+>>> +section "What is a 'regression' and what is the 'no regressions rule'?".
+>> Can we be consistent with either single or double quotes?  I'd suggest
+>> "double quotes" but won't make a fuss about that.
+> 
+> Changed to "double quotes" everywhere in the text. But just to make sure
+> I get things right: in this particular case this will result in
+> 
+> ...section "What is a "regression" and what is the "no regressions rule"?".
+> 
+> This looks a bit strange to me. Something in me really would like to
+> quote the section's header in single quotes, but I guess grammar rules
+> do not allow that, so whatever. :-D
 
-@pm people: isn't this at least worth a reply?
-@paul: did you perform any additional checks?
+I changed something and now simply don't mentioned the section names to
+avoid this problem. After the split that's not strictly needed afaics.
 
-Or did anything happen somewhere else and I just missed it?
+>>> +Report your regression as outlined in
+>>> +`Documentation/admin-guide/reporting-issues.rst`, it already covers all aspects
+>> No need to quote the file name.
+> Okay, I thought I had seen some commit or instructions that it's better
+> to use them in this case, but my brain must have imagined it.
 
-#regzbot poke
+I noticed I quoted internal references in reporting-issues.rst quite
+often. IMHO it improves readability sometimes (it depends a lot on the
+title of the target document), as can be seen in this example:
 
-Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+```
+If your kernel is tainted, study
+'Documentation/admin-guide/tainted-kernels.rst' to find out why.
+[...]
+To find the change there is a process called 'bisection' which the document
+'Documentation/admin-guide/bug-bisect.rst' describes in detail.
+```
 
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply, that's in everyone's interest.
+after processing to HTML looks like this:
 
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
+```
+If your kernel is tainted, study 'Tainted kernels' to find out why.
+[...]
+To find the change there is a process called ‘bisection’ which the
+document ‘Bisecting a bug’ describes in detail.
+```
 
-> On the Intel T4500 laptop Acer TravelMate 5735Z with Debian
-> sid/unstable, there is a 100 ms introduced between Linux 5.10.46 and
-> 5.13.9, and is still present in Linux 5.15.5.
-> 
->     [    0.000000] microcode: microcode updated early to revision 0xa0b,
-> date = 2010-09-28
->     [    0.000000] Linux version 5.15.0-2-amd64
-> (debian-kernel@lists.debian.org) (gcc-11 (Debian 11.2.0-13) 11.2.0, GNU
-> ld (GNU Binutils for Debian) 2.37) #1 SMP Debian 5.15.5-2 (2021-12-18)
->     [    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-2-amd64
-> root=UUID=e17cec4f-d2b8-4cc3-bd39-39a10ed422f4 ro quiet noisapnp
-> cryptomgr.notests random.trust_cpu=on initcall_debug log_buf_len=4M
->     […]
->     [    0.262243] calling  acpi_init+0x0/0x487 @ 1
->     […]
->     [    0.281655] ACPI: Enabled 15 GPEs in block 00 to 3F
->     [    0.394855] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
->     […]
->     [    0.570908] initcall acpi_init+0x0/0x487 returned 0 after 300781
-> usecs
-> 
-> I attached all the log files to the Kernel.org Bugzilla bug report
-> #215419 [1].
-> 
-> Unfortunately, I am unable to bisect the issue, as it’s not my machine,
-> and I do not have a lot of access to it.
-> 
-> Using ftrace, unfortunately, I didn’t save all of them, I think the path is
-> 
->     acpi_init() → acpi_scan_init() → acpi_bus_scan(ACPI_ROOT_OBJECT)
-> 
-> But this path hasn’t changed as far as I can see. Anyway, from that
-> path, somehow
-> 
->     acpi_bus_check_add_1() → acpi_bus_check_add() → … →
-> acpi_bus_check_add() → acpi_add_single_object() → acpi_bus_get_status()
-> 
-> is called, and the `acpi_bus_get_status()` call takes 100 ms on the
-> system – also the cause for bug #208705 [2] –, but that code path wasn’t
-> taken before.
-> 
-> Do you know from the top of your head, what changed? I am going to have
-> short access to the system every two weeks or so, so debugging is
-> unfortunately quite hard.
-> 
-> What is already on my to-do list:
-> 
-> 1.  Use dynamic debug `drivers/acpi/scan.c`
-> 2.  Trace older Linux kernel (5.10.46) to see the differences
-> 3.  Booting some GNU/Linux system to test 5.11 (Ubuntu 20.10) and 5.12
-> 4.  Unrelated to the regression, but trace `acpi_bus_get_status()` to
-> understand the 100 ms delay to solve bug #208705 [2]
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> PS: Do you know of GNU/Linux live systems that are available for all
-> Linux kernel releases and have an initrd, that just stores/uploads the
-> output of `dmesg`?
-> 
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=215419
->      "100 ms regression in boottime before `ACPI: PCI Root Bridge [PCI0]"
-> [2]: https://bugzilla.kernel.org/show_bug.cgi?id=208705
->      "boot performance: 100 ms delay in PCI initialization - Acer
-> TravelMate 5735Z"
-> 
+Sure, "Tainted kernels" and "Bisecting a bug" are links and hence
+displayed differently by the browser, but I think the quotes help. But YMMV.
 
+I sooner or later hope to improve and fix a few things in
+reporting-issues.rst anyway. Let me know if I should take the
+opportunity to remove the single quotes then.
+
+>>> +Who needs to find the commit causing a regression?
+>>> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>> +
+>>> +It's the reporter's duty to find the culprit, but developers of the affected
+>>> +subsystem should offer advice and reasonably help where they can.
+>>
+>> Is it really our policy that *reporters* need to find the offending
+>> commit?  That's certainly not my view of things, anyway?
+
+BTW, I noticed reporting-issues.rst covers it like this:
+
+Normally it's up to the reporter to track down the culprit, as
+maintainers often won't have the time or setup at hand to reproduce it
+themselves.
+
+> Well, do we have something on that written down somewhere or a few
+> quotes from Linus that might help to clarify things?
+> 
+> Anyway: I was not totally happy with it either, as I found the first
+> part of the sentence to strong, and the second to soft. But I had
+> trouble finding something better, maybe a native speaker could help out
+> here. Maybe something along these lines?
+
+I plan to go with this now:
+```
+Who needs to find the root cause of a regression?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Developers of the affected code area should try to locate the culprit on
+their own. But for them that's often impossible to do with reasonable
+effort, as quite a lot of issues only occur in a particular environment
+outside the developer's reach -- for example, a specific hardware
+platform, firmware, Linux distro, system's configuration, or
+application. That's why in the end it's often up to the reporter to
+locate the culprit commit; sometimes users might even need to run
+additional tests afterwards to pinpoint the exact root cause. Developers
+should offer advice and reasonably help where they can, to make this
+process relatively easy and achievable for typical users.
+```
+
+Ciao, Thorsten
