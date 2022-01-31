@@ -1,90 +1,286 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAE12CA2
-	for <regressions@lists.linux.dev>; Mon, 31 Jan 2022 06:44:21 +0000 (UTC)
-Received: from ip4d173d02.dynamic.kabel-deutschland.de ([77.23.61.2] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nEQQF-0006iK-RJ; Mon, 31 Jan 2022 07:44:19 +0100
-Message-ID: <8b1d3d5b-5a56-2064-4d3b-c00f5e0d8e5b@leemhuis.info>
-Date: Mon, 31 Jan 2022 07:44:19 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B9C2CA2
+	for <regressions@lists.linux.dev>; Mon, 31 Jan 2022 07:32:49 +0000 (UTC)
+Received: by mail-yb1-f172.google.com with SMTP id v186so37801411ybg.1
+        for <regressions@lists.linux.dev>; Sun, 30 Jan 2022 23:32:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=TGUXorpSDAKgj0QsOiF2A9Dkgmv8D/UrY5CjKLgD/kA=;
+        b=PhjzCwvHcmYXp6njfB6W+ohC4edEQdVQGgFYuJx/9gDRmzmuB+axox3UttISgp4Np9
+         4ppBzzrcfGZcXJw2GlBJSUFBYaytsPPW1la6fD4K256PgZMR2BOrdnlIsQaMjq19Ykcv
+         +rH7UjL4iwTXDNlBTmGl4Y2gTiyfqNUG1WFwaOI73H//vqDWw7RsqRTnDalHYroYcS3o
+         F9nteZLTVHUbf/BJrMVdmnFfZWudeTl/0C/BkGtqE7QCdvt26A0mc1OPhEWD5XdrNzG3
+         IJxuUWfT4UbwvnBq5ckclF8+kcaA6WfNVngDNiqe0TGjFg8ofalYcOtLtmqXWA/cWbTL
+         A+Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=TGUXorpSDAKgj0QsOiF2A9Dkgmv8D/UrY5CjKLgD/kA=;
+        b=mvZvaBzMoLzzi3NdPkjw6V6I6TaAKiDSI+xqzVvIox28DJX4aaBFzBhFgN32EkNg3x
+         x2k0iQNtqs61LT8Mmo091YMd35ljTgCiQiVuKSMwhzw+suqVYlaNDvbthAepamAMHf4m
+         CS9dFbB1vStpyyu907CBwDXf4QsejEV4lkpmtA8pii7dnNAiPSKnrbvj+4mhS8+AoKat
+         6x+SmxvYzuy1VS3eeWxwOfgHooUBn7retBOKAu7zAjtOzzxl6NTlsXbA3MihIU+dSxZZ
+         opC2w1YFsqZIMlJl0kNy+f5G56cNiD8UMYVwXHGXvHzFVGYqNOgeZQbqmMrNxc2jw18e
+         FZKQ==
+X-Gm-Message-State: AOAM530JhiL4bDEOLMn0s5EbxqHO11hqzXrzB3n/8ecqrj8uNuXtE6fN
+	wm1ogxdqnJKChPu1Wuaq+ETTFWC6J+qvWM/ClU8mcQ==
+X-Google-Smtp-Source: ABdhPJyl2aP+0wY4wB+SmxvfCUrtBeMO9Ao11MdNpzPUCnLAZg/hzDhtnWtrflFHBxJnUwjqSz5dqOZ8+puYdLfJJI0=
+X-Received: by 2002:a25:97c4:: with SMTP id j4mr29211965ybo.108.1643614368772;
+ Sun, 30 Jan 2022 23:32:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: High IRQ 16 CPU usage (fwd from bugzilla)
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643611461;09073d50;
-X-HE-SMSGID: 1nEQQF-0006iK-RJ
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 31 Jan 2022 13:02:37 +0530
+Message-ID: <CA+G9fYt4JnOkZeRu9ASXbgbDE+C8AYua+UzBuvWi9sUtEXd7Lw@mail.gmail.com>
+Subject: [next] mips: cavium-octeon/octeon-memcpy.o] Error 1
+To: linux-mips@vger.kernel.org, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	regressions@lists.linux.dev, lkft-triage@lists.linaro.org
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, this is your Linux kernel regression tracker speaking.
+Following build errors noticed on Linux next 20220131 mips with
+cavium_octeon_defconfig
+  - mips  cavium_octeon_defconfig gcc-8 - FAILED
+  - mips  cavium_octeon_defconfig gcc-10 - FAILED
 
-There is a regression in bugzilla.kernel.org I'd like to add to the
-tracking:
+make --silent --keep-going --jobs=8
+O=/home/tuxbuild/.cache/tuxmake/builds/current ARCH=mips
+CROSS_COMPILE=mips-linux-gnu- 'CC=sccache mips-linux-gnu-gcc'
+'HOSTCC=sccache gcc' cavium_octeon_defconfig
+make --silent --keep-going --jobs=8
+O=/home/tuxbuild/.cache/tuxmake/builds/current ARCH=mips
+CROSS_COMPILE=mips-linux-gnu- 'CC=sccache mips-linux-gnu-gcc'
+'HOSTCC=sccache gcc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S: Assembler messages:
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:187: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:188: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:189: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:190: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:192: Error:
+unrecognized opcode `ptr 9b,s_exc_p16u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:193: Error:
+unrecognized opcode `ptr 9b,s_exc_p15u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:194: Error:
+unrecognized opcode `ptr 9b,s_exc_p14u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:195: Error:
+unrecognized opcode `ptr 9b,s_exc_p13u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:196: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:197: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:198: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:199: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:200: Error:
+unrecognized opcode `ptr 9b,s_exc_p12u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:201: Error:
+unrecognized opcode `ptr 9b,s_exc_p11u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:202: Error:
+unrecognized opcode `ptr 9b,s_exc_p10u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:204: Error:
+unrecognized opcode `ptr 9b,s_exc_p9u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:206: Error:
+unrecognized opcode `ptr 9b,l_exc_copy_rewind16'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:207: Error:
+unrecognized opcode `ptr 9b,l_exc_copy_rewind16'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:208: Error:
+unrecognized opcode `ptr 9b,l_exc_copy_rewind16'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:209: Error:
+unrecognized opcode `ptr 9b,l_exc_copy_rewind16'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:210: Error:
+unrecognized opcode `ptr 9b,s_exc_p8u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:211: Error:
+unrecognized opcode `ptr 9b,s_exc_p7u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:212: Error:
+unrecognized opcode `ptr 9b,s_exc_p6u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:213: Error:
+unrecognized opcode `ptr 9b,s_exc_p5u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:214: Error:
+unrecognized opcode `ptr 9b,l_exc_copy_rewind16'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:215: Error:
+unrecognized opcode `ptr 9b,l_exc_copy_rewind16'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:216: Error:
+unrecognized opcode `ptr 9b,l_exc_copy_rewind16'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:217: Error:
+unrecognized opcode `ptr 9b,l_exc_copy_rewind16'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:218: Error:
+unrecognized opcode `ptr 9b,s_exc_p4u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:219: Error:
+unrecognized opcode `ptr 9b,s_exc_p3u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:220: Error:
+unrecognized opcode `ptr 9b,s_exc_p2u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:221: Error:
+unrecognized opcode `ptr 9b,s_exc_p1u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:235: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:236: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:237: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:238: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:240: Error:
+unrecognized opcode `ptr 9b,s_exc_p8u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:241: Error:
+unrecognized opcode `ptr 9b,s_exc_p7u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:242: Error:
+unrecognized opcode `ptr 9b,s_exc_p6u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:243: Error:
+unrecognized opcode `ptr 9b,s_exc_p5u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:244: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:245: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:246: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:247: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:248: Error:
+unrecognized opcode `ptr 9b,s_exc_p4u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:249: Error:
+unrecognized opcode `ptr 9b,s_exc_p3u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:250: Error:
+unrecognized opcode `ptr 9b,s_exc_p2u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:251: Error:
+unrecognized opcode `ptr 9b,s_exc_p1u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:262: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:263: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:264: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:265: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:267: Error:
+unrecognized opcode `ptr 9b,s_exc_p4u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:268: Error:
+unrecognized opcode `ptr 9b,s_exc_p3u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:269: Error:
+unrecognized opcode `ptr 9b,s_exc_p2u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:270: Error:
+unrecognized opcode `ptr 9b,s_exc_p1u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:285: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:288: Error:
+unrecognized opcode `ptr 9b,s_exc_p1u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:295: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:298: Error:
+unrecognized opcode `ptr 9b,s_exc_p1u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:305: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:310: Error:
+unrecognized opcode `ptr 9b,s_exc_p1u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:324: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:325: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:327: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:328: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:329: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:330: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:331: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:332: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:334: Error:
+unrecognized opcode `ptr 9b,s_exc_p4u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:335: Error:
+unrecognized opcode `ptr 9b,s_exc_p3u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:336: Error:
+unrecognized opcode `ptr 9b,s_exc_p2u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:337: Error:
+unrecognized opcode `ptr 9b,s_exc_p1u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:347: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:348: Error:
+unrecognized opcode `ptr 9b,l_exc_copy'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:350: Error:
+unrecognized opcode `ptr 9b,s_exc_p1u'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:366: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:366: Error:
+unrecognized opcode `ptr 9b,s_exc_p1'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:367: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:367: Error:
+unrecognized opcode `ptr 9b,s_exc_p1'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:368: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:368: Error:
+unrecognized opcode `ptr 9b,s_exc_p1'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:369: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:369: Error:
+unrecognized opcode `ptr 9b,s_exc_p1'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:370: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:370: Error:
+unrecognized opcode `ptr 9b,s_exc_p1'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:371: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:371: Error:
+unrecognized opcode `ptr 9b,s_exc_p1'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:372: Error:
+unrecognized opcode `ptr 9b,l_exc'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:375: Error:
+unrecognized opcode `ptr 9b,s_exc_p1'
+/builds/linux/arch/mips/cavium-octeon/octeon-memcpy.S:399: Error:
+unrecognized opcode `ptr 9b,l_exc'
+make[3]: *** [/builds/linux/scripts/Makefile.build:411:
+arch/mips/cavium-octeon/octeon-memcpy.o] Error 1
+make[3]: Target '__build' not remade because of errors.
+make[2]: *** [/builds/linux/scripts/Makefile.build:572:
+arch/mips/cavium-octeon] Error 2
+make[2]: Target '__build' not remade because of errors.
+make[1]: *** [/builds/linux/Makefile:1965: arch/mips] Error 2
 
-#regzbot introduced: 357cf0cdddceea974a7d32668a0df0d9f77055cb
-#regzbot from: David Spencer <dspencer577@gmail.com>
-#regzbot title: pci: High IRQ 16 CPU usage
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215546
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Quote:
+meta data:
+-----------
+    git describe: next-20220131
+    git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+    git_sha: 887a333c44eb67973622e530e43cd5e4cf9af927
+    target_arch: mips
+    kconfig: cavium_octeon_defconfig
+    toolchain: gcc-10
 
-> 
-> On 5.15 and 5.16 kernels, if my laptop is plugged in prior to booting or is plugged in at any time after booting I see high CPU usage (80-100% of a core) by IRQ 16, with a constant 15k+ IRQ events per second, whether the system is in use or not. Unplugging the laptop does not make the events stop. If I boot the system without it being plugged in the issue does not occur until I plug it in. Downgrading to 5.14 fixes the issue completely, with only 3 total IRQ 16 interrupts after the system as been running for > 20 minutes. I do not see IRQ16 interrupts increase by using the touch pad, keyboard, or touch screen. I believe I was able to bisect the introduction of the issue to commit 357cf0cdddceea974a7d32668a0df0d9f77055cb, but this was the first time I've done kernel bisects before, so I may be incorrect. I tested with 5.17 RC1 and the issue was still present.
-> 
-> I've attached dmesg output and the contents of lspci -vvvv, as well as included IRQ 16 info from /proc/interrupts. Please let me know if I can provide anything else.
-> 
-> /proc/interrupts:
->   16:          0          0    7513443          0          0          0          0          0  IR-IO-APIC   16-fasteoi   idma64.0, i801_smbus, i2c_designware.0
+Build log:
+-------------
+https://builds.tuxbuild.com/24RxfqNGrh0Y5VPGCY9Ixeo6ejf/
 
-> I think I was incorrect when I said it was in kernel 5.15, when I was bisecting to find the issue the Makefile release information said 5.15-rc2 so I assumed it was in 5.15, but that looks like I was incorrect. I'll test on 5.15 and verify whether it is present there.
+Steps to reproduce:
+--------------------
+# To install tuxmake on your system globally:
+# sudo pip3 install -U tuxmake
+#
+# See https://docs.tuxmake.org/ for complete documentation.
+# Original tuxmake command with fragments listed below.
 
-> I've confirmed that I do not see the issue on kernel 5.15, only on 5.16.
+tuxmake --runtime podman --target-arch mips --toolchain gcc-10
+--kconfig cavium_octeon_defconfig
 
-Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
 
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply, that's in everyone's interest.
-
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
-
----
-Additional information about regzbot:
-
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and/or the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-tell #regzbot about it in the report, as that will ensure the regression
-gets on the radar of regzbot and the regression tracker. That's in your
-interest, as they will make sure the report won't fall through the
-cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include a 'Link:' tag to the report in the commit message, as explained
-in Documentation/process/submitting-patches.rst
-That aspect was recently was made more explicit in commit 1f57bd42b77c:
-https://git.kernel.org/linus/1f57bd42b77c
+--
+Linaro LKFT
+https://lkft.linaro.org
