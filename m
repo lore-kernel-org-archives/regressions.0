@@ -1,23 +1,23 @@
 Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F612F26
-	for <regressions@lists.linux.dev>; Tue,  1 Feb 2022 23:20:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1758829CA
+	for <regressions@lists.linux.dev>; Tue,  1 Feb 2022 23:23:24 +0000 (UTC)
 Received: from localhost (unknown [IPv6:2601:281:8300:104d::5f6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id EEA366121;
-	Tue,  1 Feb 2022 23:20:45 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net EEA366121
+	by ms.lwn.net (Postfix) with ESMTPSA id 615AC6121;
+	Tue,  1 Feb 2022 23:23:24 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 615AC6121
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1643757646; bh=NgAdi5heU5kZAdBEe4lZxyjTcHSSB4h90VkQt9pBRAk=;
+	t=1643757804; bh=VvGRRIPndm2N7PsaIeDcTYf2h9W/LL2RsOe4MKKSjcc=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=mb7uLlGroOUqSOG4F0TOWsvNmH/Nd/UeZ3MIWvZLWL/9RGeIEdto5gPLkCoigX++e
-	 ULIcoQA4qI1C9v70r8l8NJcXl7b7PuBIA5lM93KU/46rlxuCfj76S07+vRirN91XAJ
-	 P3n0DNjlrS+FYek3Oc/N/US6F3lHMD08NF+PYTT33Q2gq6mEBDt7XB876LNDIqjHai
-	 E5m3flOye8V1QR+FpKRGcdiWv52NSBIpGY2zB2P25SdV2GKoUA0OyK4gToTSCYa6CL
-	 Na6pDcvBbalmbu2wHT12iz60OZ+5clcBP2G+4V/0y8RyoceoClnKzpVmJ9RYdDHqSQ
-	 3OgxXq6Ck8f5w==
+	b=rId22cr2qmfBMlQDc2ZGMs+si+cyc36hqX36GeuI+Y+e72cAyqRCRPyyRsTtkOzON
+	 xKPZy9L7H88BfSOHOmF1niEMeDTWDTfN3NwCRgPm7m9lozjy3Eq5fgVIz+UCVNQZAL
+	 +drEZr8IMnCnUDhTzs7Je0crwRtUv5p9rUpB8Y7DZSeSHn0lYsUt/YjxQ7e3BvJV3I
+	 oPXNjWYYOMLNMsSkO4IELxLc8pesi7WNyRIwswD+/CgeW29UZ9RQ6GNAvowrcUYZAC
+	 5iFLtgWiedYeciq2/a5OwZX8A3HiIkBxyjPPAs1gIx3lYaXYeHdx9t3RYVEwxXsT4G
+	 aQNhxnzy8theA==
 From: Jonathan Corbet <corbet@lwn.net>
 To: Thorsten Leemhuis <linux@leemhuis.info>, linux-doc@vger.kernel.org,
  Linus Torvalds <torvalds@linux-foundation.org>
@@ -25,13 +25,13 @@ Cc: workflows@vger.kernel.org, Linux Kernel Mailing List
  <linux-kernel@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
  regressions@lists.linux.dev, Greg Kroah-Hartman
  <gregkh@linuxfoundation.org>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: Re: [PATCH v4 2/3] docs: regressions*rst: rules of thumb for
- handling regressions
-In-Reply-To: <e655527632dc4324cc7584cb3a73880d9c733df5.1643710947.git.linux@leemhuis.info>
+Subject: Re: [PATCH v4 3/3] docs: reporting-issues.rst: link new document
+ about regressions
+In-Reply-To: <978ad91647e93b20b7fe12c3f237f6de8f9eaca1.1643710947.git.linux@leemhuis.info>
 References: <cover.1643710947.git.linux@leemhuis.info>
- <e655527632dc4324cc7584cb3a73880d9c733df5.1643710947.git.linux@leemhuis.info>
-Date: Tue, 01 Feb 2022 16:21:19 -0700
-Message-ID: <87fsp25g28.fsf@meer.lwn.net>
+ <978ad91647e93b20b7fe12c3f237f6de8f9eaca1.1643710947.git.linux@leemhuis.info>
+Date: Tue, 01 Feb 2022 16:23:57 -0700
+Message-ID: <87bkzq5fxu.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,38 +42,28 @@ Content-Type: text/plain
 
 Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-One thing that caught my eye this time around...
+> Make Documentation/admin-guide/reporting-issues.rst point to the newly
+> created document about regressions
+> (Documentation/admin-guide/regressions-users.rst). This allows to
+> shorten a few explanations the new document describes better and in more
+> detail.
+>
+> While at it move the copyright hint to the end of the file, as suggested
+> during review of the new documents about regressions.
+>
+> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+> ---
+>  .../admin-guide/reporting-issues.rst          | 60 +++++++++----------
+>  1 file changed, 29 insertions(+), 31 deletions(-)
 
-> + * Address regressions in stable, longterm, or proper mainline releases with
-> +   more urgency than regressions in mainline pre-releases. That changes after
-> +   the release of the fifth pre-release, aka "-rc5": mainline then becomes as
-> +   important, to ensure all the improvements and fixes are ideally tested
-> +   together for at least one week before Linus releases a new mainline version.
+[...]
 
-Is that really what we want to suggest?  I ask because (1) fixes for
-stable releases need to show up in mainline first anyway, and (2) Greg
-has often stated that the stable releases shouldn't be something that
-most maintainers need to worry about.  So if the bug is in mainline,
-that has to get fixed first, and if it's something special to a stable
-release, well, then the stable folks should fix it :)
+> +You deal with a regression if some application or practical use case running
+> +fine with one Linux kernel works worse or not at all with a newer version
+> +compiled using a similar configuration. The document
+> +'Documentation/admin-guide/regressions-users.rst' explains this in more detail.
 
-> + * Fix regressions within two or three days, if they are critical for some
-> +   reason -- for example, if the issue is likely to affect many users of the
-> +   kernel series in question on all or certain architectures. Note, this
-> +   includes mainline, as issues like compile errors otherwise might prevent many
-> +   testers or continuous integration systems from testing the series.
-> +
-> + * Aim to merge regression fixes into mainline within one week after the culprit
-> +   was identified, if the regression was introduced in a stable/longterm release
-> +   or the development cycle for the latest mainline release (say v5.14). If
-> +   possible, try to address the issue even quicker, if the previous stable
-> +   series (v5.13.y) will be abandoned soon or already was stamped "End-of-Life"
-> +   (EOL) -- this usually happens about three to four weeks after a new mainline
-> +   release.
-
-How much do we really think developers should worry about nearly-dead
-stable kernels?  We're about to tell users they shouldn't be running the
-kernel anyway...
+Some of those quotes around file names are still sneaking in.
 
 Thanks,
 
