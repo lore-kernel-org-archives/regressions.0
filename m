@@ -1,49 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063E13FE3
-	for <regressions@lists.linux.dev>; Mon, 31 Jan 2022 22:39:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67F33C340E8;
-	Mon, 31 Jan 2022 22:39:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1643668755;
-	bh=Q2ZEQqdLwRPhSxsGyaxZ+JOpmXVNnMzJAHIcJOnnDLU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kzue/aCCq9ObTiYIuAjwKTLXibXh5MxhcCj2FpkIONcBP+jWsczIf6y29zwyW1xU+
-	 RMDnDd+FKFwR5i+54r0oEVsnZ/ss2R42UaDhWCK489xnzu+Vgg2FLlryWI3v5JZ5eN
-	 GkPe5G+qMV8iMgfppVXqjX9H2FQKqjxgLMf9c0jI=
-Date: Mon, 31 Jan 2022 14:39:14 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Chen Wandun <chenwandun@huawei.com>, Vlastimil Babka <vbabka@suse.cz>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- guillaume.tucker@collabora.com, regressions@lists.linux.dev, Oscar Salvador
- <osalvador@suse.de>
-Subject: Re: [PATCH] Revert
- "mm/page_isolation: unset migratetype directly for non Buddy page"
-Message-Id: <20220131143914.4cce43a15c2d9a7d53582659@linux-foundation.org>
-In-Reply-To: <338bde65-5e1c-4e23-b4f2-671819c637cc@leemhuis.info>
-References: <20220117142712.3967624-1-chenwandun@huawei.com>
-	<b1966d11-e874-c71e-d14f-c0c88ace297e@suse.cz>
-	<c0b74f54-c39a-51f7-08f8-701e9af94e56@huawei.com>
-	<338bde65-5e1c-4e23-b4f2-671819c637cc@leemhuis.info>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536412C9E
+	for <regressions@lists.linux.dev>; Tue,  1 Feb 2022 06:29:41 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nEmfa-0001LX-R5; Tue, 01 Feb 2022 07:29:38 +0100
+Message-ID: <86bc8de7-5ce8-5a29-3703-df414e028421@leemhuis.info>
+Date: Tue, 1 Feb 2022 07:29:38 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: High IRQ 16 CPU usage (fwd from bugzilla) #forregzbot
+Content-Language: en-BS
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <8b1d3d5b-5a56-2064-4d3b-c00f5e0d8e5b@leemhuis.info>
+In-Reply-To: <8b1d3d5b-5a56-2064-4d3b-c00f5e0d8e5b@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643696981;85996967;
+X-HE-SMSGID: 1nEmfa-0001LX-R5
 
-On Sun, 30 Jan 2022 10:24:43 +0100 Thorsten Leemhuis <regressions@leemhuis.info> wrote:
 
-> Andrew, I don't see this patch in the list of changes you sent to Linus
-> yesterday. Shouldn't it be in there due to above reason alone? And there
-> is another reason: it seems to be an issue people actually hit, as
-> Guenter mentioned in this thread. It thus complicates things for those
-> that want to help testing pre-releases.
 
-I prefer to give fixes some time in linux-next before upstreaming them.
-At least a day, worst case.  So I have this patch in this week's pile.
+On 31.01.22 07:44, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> There is a regression in bugzilla.kernel.org I'd like to add to the
+> tracking:
+> 
+> #regzbot introduced: 357cf0cdddceea974a7d32668a0df0d9f77055cb
+> #regzbot from: David Spencer <dspencer577@gmail.com>
+> #regzbot title: pci: High IRQ 16 CPU usage
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215546
+
+#regzbot dup-of:
+https://lore.kernel.org/regressions/8fdd5bf8-afe8-d493-e617-a47f7b8e2e0e@leemhuis.info/
+
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
+
+>> On 5.15 and 5.16 kernels, if my laptop is plugged in prior to booting or is plugged in at any time after booting I see high CPU usage (80-100% of a core) by IRQ 16, with a constant 15k+ IRQ events per second, whether the system is in use or not. Unplugging the laptop does not make the events stop. If I boot the system without it being plugged in the issue does not occur until I plug it in. Downgrading to 5.14 fixes the issue completely, with only 3 total IRQ 16 interrupts after the system as been running for > 20 minutes. I do not see IRQ16 interrupts increase by using the touch pad, keyboard, or touch screen. I believe I was able to bisect the introduction of the issue to commit 357cf0cdddceea974a7d32668a0df0d9f77055cb, but this was the first time I've done kernel bisects before, so I may be incorrect. I tested with 5.17 RC1 and the issue was still present.
+>>
+>> I've attached dmesg output and the contents of lspci -vvvv, as well as included IRQ 16 info from /proc/interrupts. Please let me know if I can provide anything else.
+>>
+>> /proc/interrupts:
+>>   16:          0          0    7513443          0          0          0          0          0  IR-IO-APIC   16-fasteoi   idma64.0, i801_smbus, i2c_designware.0
+> 
+>> I think I was incorrect when I said it was in kernel 5.15, when I was bisecting to find the issue the Makefile release information said 5.15-rc2 so I assumed it was in 5.15, but that looks like I was incorrect. I'll test on 5.15 and verify whether it is present there.
+> 
+>> I've confirmed that I do not see the issue on kernel 5.15, only on 5.16.
+> 
+> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+> 
+> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+> on my table. I can only look briefly into most of them. Unfortunately
+> therefore I sometimes will get things wrong or miss something important.
+> I hope that's not the case here; if you think it is, don't hesitate to
+> tell me about it in a public reply, that's in everyone's interest.
+> 
+> BTW, I have no personal interest in this issue, which is tracked using
+> regzbot, my Linux kernel regression tracking bot
+> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+> this mail to get things rolling again and hence don't need to be CC on
+> all further activities wrt to this regression.
+> 
+> ---
+> Additional information about regzbot:
+> 
+> If you want to know more about regzbot, check out its web-interface, the
+> getting start guide, and/or the references documentation:
+> 
+> https://linux-regtracking.leemhuis.info/regzbot/
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> 
+> The last two documents will explain how you can interact with regzbot
+> yourself if your want to.
+> 
+> Hint for reporters: when reporting a regression it's in your interest to
+> tell #regzbot about it in the report, as that will ensure the regression
+> gets on the radar of regzbot and the regression tracker. That's in your
+> interest, as they will make sure the report won't fall through the
+> cracks unnoticed.
+> 
+> Hint for developers: you normally don't need to care about regzbot once
+> it's involved. Fix the issue as you normally would, just remember to
+> include a 'Link:' tag to the report in the commit message, as explained
+> in Documentation/process/submitting-patches.rst
+> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+> https://git.kernel.org/linus/1f57bd42b77c
