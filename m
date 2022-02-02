@@ -1,70 +1,130 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1758829CA
-	for <regressions@lists.linux.dev>; Tue,  1 Feb 2022 23:23:24 +0000 (UTC)
-Received: from localhost (unknown [IPv6:2601:281:8300:104d::5f6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 615AC6121;
-	Tue,  1 Feb 2022 23:23:24 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 615AC6121
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1643757804; bh=VvGRRIPndm2N7PsaIeDcTYf2h9W/LL2RsOe4MKKSjcc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=rId22cr2qmfBMlQDc2ZGMs+si+cyc36hqX36GeuI+Y+e72cAyqRCRPyyRsTtkOzON
-	 xKPZy9L7H88BfSOHOmF1niEMeDTWDTfN3NwCRgPm7m9lozjy3Eq5fgVIz+UCVNQZAL
-	 +drEZr8IMnCnUDhTzs7Je0crwRtUv5p9rUpB8Y7DZSeSHn0lYsUt/YjxQ7e3BvJV3I
-	 oPXNjWYYOMLNMsSkO4IELxLc8pesi7WNyRIwswD+/CgeW29UZ9RQ6GNAvowrcUYZAC
-	 5iFLtgWiedYeciq2/a5OwZX8A3HiIkBxyjPPAs1gIx3lYaXYeHdx9t3RYVEwxXsT4G
-	 aQNhxnzy8theA==
-From: Jonathan Corbet <corbet@lwn.net>
-To: Thorsten Leemhuis <linux@leemhuis.info>, linux-doc@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: workflows@vger.kernel.org, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
- regressions@lists.linux.dev, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: Re: [PATCH v4 3/3] docs: reporting-issues.rst: link new document
- about regressions
-In-Reply-To: <978ad91647e93b20b7fe12c3f237f6de8f9eaca1.1643710947.git.linux@leemhuis.info>
-References: <cover.1643710947.git.linux@leemhuis.info>
- <978ad91647e93b20b7fe12c3f237f6de8f9eaca1.1643710947.git.linux@leemhuis.info>
-Date: Tue, 01 Feb 2022 16:23:57 -0700
-Message-ID: <87bkzq5fxu.fsf@meer.lwn.net>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2122F21
+	for <regressions@lists.linux.dev>; Wed,  2 Feb 2022 06:08:34 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nF8oW-0002ui-WD; Wed, 02 Feb 2022 07:08:21 +0100
+Message-ID: <7a1e66cc-a1c5-54c7-ca7d-04a389beb8b2@leemhuis.info>
+Date: Wed, 2 Feb 2022 07:08:20 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-BS
+To: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: workflows@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Randy Dunlap <rdunlap@infradead.org>, regressions@lists.linux.dev,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>
+References: <cover.1643710947.git.linux@leemhuis.info>
+ <978ad91647e93b20b7fe12c3f237f6de8f9eaca1.1643710947.git.linux@leemhuis.info>
+ <87bkzq5fxu.fsf@meer.lwn.net>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [PATCH v4 3/3] docs: reporting-issues.rst: link new document
+ about regressions
+In-Reply-To: <87bkzq5fxu.fsf@meer.lwn.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1643782114;766adc47;
+X-HE-SMSGID: 1nF8oW-0002ui-WD
 
-Thorsten Leemhuis <linux@leemhuis.info> writes:
+On 02.02.22 00:23, Jonathan Corbet wrote:
+> Thorsten Leemhuis <linux@leemhuis.info> writes:
+> 
+>> Make Documentation/admin-guide/reporting-issues.rst point to the newly
+>> created document about regressions
+>> (Documentation/admin-guide/regressions-users.rst). This allows to
+>> shorten a few explanations the new document describes better and in more
+>> detail.
+>>
+>> While at it move the copyright hint to the end of the file, as suggested
+>> during review of the new documents about regressions.
+>>
+>> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
+>> ---
+>>  .../admin-guide/reporting-issues.rst          | 60 +++++++++----------
+>>  1 file changed, 29 insertions(+), 31 deletions(-)
+> 
+> [...]
+> 
+>> +You deal with a regression if some application or practical use case running
+>> +fine with one Linux kernel works worse or not at all with a newer version
+>> +compiled using a similar configuration. The document
+>> +'Documentation/admin-guide/regressions-users.rst' explains this in more detail.
+> 
+> Some of those quotes around file names are still sneaking in.
 
-> Make Documentation/admin-guide/reporting-issues.rst point to the newly
-> created document about regressions
-> (Documentation/admin-guide/regressions-users.rst). This allows to
-> shorten a few explanations the new document describes better and in more
-> detail.
->
-> While at it move the copyright hint to the end of the file, as suggested
-> during review of the new documents about regressions.
->
-> Signed-off-by: Thorsten Leemhuis <linux@leemhuis.info>
-> ---
->  .../admin-guide/reporting-issues.rst          | 60 +++++++++----------
->  1 file changed, 29 insertions(+), 31 deletions(-)
+I did that on purpose here, as the file right now uses single quotes for
+doc references almost everywhere and I thought I better stick to its
+style -- especially as one such a quoted references is pretty close by
+in this case, so it would look odd to quote one but not the other:
 
+```
+[...] compiled using a similar configuration. The document
+ 'Documentation/admin-guide/regressions-users.rst' explains this in more
+detail.
+ It also provides a good deal of other information about regressions you
+might
+ want to be aware of; it for example explains how to add your issue to
+the list
+ of tracked regressions, to ensure it won't fall through the cracks.
+
+
+
+What qualifies as security issue is left to your judgment. Consider reading
+ 'Documentation/admin-guide/security-bugs.rst' before proceeding, as it
+ [...]
+```
+
+Stupid me just forgot to use single quotes for the second link to
+Documentation/admin-guide/regressions-users.rst. Will fix this up :-/
+
+That being said: in a mail on Monday I already raised the issue like
+this (slightly reworded):
+
+----
+I noticed I quoted internal references in reporting-issues.rst quite
+often. IMHO it improves readability sometimes (it depends a lot on the
+title of the target document), as can be seen in this example.
+
+The source text looks like this:
+
+```
+If your kernel is tainted, study
+'Documentation/admin-guide/tainted-kernels.rst' to find out why.
 [...]
+To find the change there is a process called 'bisection' which the
+document 'Documentation/admin-guide/bug-bisect.rst' describes in detail.
+```
 
-> +You deal with a regression if some application or practical use case running
-> +fine with one Linux kernel works worse or not at all with a newer version
-> +compiled using a similar configuration. The document
-> +'Documentation/admin-guide/regressions-users.rst' explains this in more detail.
+After processing to HTML the text looks like this:
 
-Some of those quotes around file names are still sneaking in.
+```
+If your kernel is tainted, study ‘Tainted kernels‘ to find out why.
+[...]
+To find the change there is a process called ‘bisection’ which the
+document ‘Bisecting a bug’ describes in detail.
+```
 
-Thanks,
+Sure, "Tainted kernels" and "Bisecting a bug" are links and hence
+displayed differently by the browser, but I think the quotes help. But YMMV.
 
-jon
+I sooner or later hope to improve and fix a few things in
+reporting-issues.rst anyway. Let me know if I should take the
+opportunity to remove the single quotes then.
+----
+
+So I'd say: I add two more quoted doc links to the file now and fix this
+up later, if you still think removing the quotes is a good idea. Or do
+you want me to remove the single quotes now in that patch (or a separate
+one?)? It's not a big deal, there are only about 10 docs references.
+
+Ciao, Thorsten
