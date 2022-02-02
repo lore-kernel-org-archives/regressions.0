@@ -1,76 +1,184 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F332F24
-	for <regressions@lists.linux.dev>; Wed,  2 Feb 2022 11:46:32 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nFE5k-0006et-9U; Wed, 02 Feb 2022 12:46:28 +0100
-Message-ID: <12e09497-a848-b767-88f4-7dabd8360c5e@leemhuis.info>
-Date: Wed, 2 Feb 2022 12:46:27 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5762CA1
+	for <regressions@lists.linux.dev>; Wed,  2 Feb 2022 15:38:02 +0000 (UTC)
+Received: by mail-io1-f45.google.com with SMTP id d188so25900235iof.7
+        for <regressions@lists.linux.dev>; Wed, 02 Feb 2022 07:38:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LXZjdBVUtQGV4jUy/sSg/c0o5bKUeLjM4SJrys+RBDA=;
+        b=EwQJWxpGepkosxid+haDZbAtfhCXdkymdOi2U11KFVv5IkJFH9hjEIv9LmMM22rxv5
+         v0I/0YeesBXynB/GV98KKdIvjPbMkrre483WJBHQ2pSjJusq75/gVpwWfVoYpwOw7lC6
+         VWBPjYC3pu+IRCuYMYnjuZXTTX3frS9b+Vdqw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LXZjdBVUtQGV4jUy/sSg/c0o5bKUeLjM4SJrys+RBDA=;
+        b=zdBq6VmureeImx1YbBMjGo4YVP6rMkzDtDEVrB+sdQ8K+NlYiGUCeCw03eUUHq2aKb
+         NFyeYH2lFJcY8uXxln4CZBNJBA4O0a/eMFkysK4A1A8zphwlD9QGVbApe3gRGTT500us
+         mdCM9No07zAv0UIVloMeOZJ3Lqj/3+R0RuL2nyx1UFTZ4RMhDh5K+1+SGplaLkhafn62
+         +OyduuCEB7x+LbJNni0QL54uhqShL8O8cdAy6m90uY9GEvyp2cHeCIhpyqtXH1ir5p/Q
+         QfQT9nJJMffuc4B9otjorTAHyGmx4yUheX4eV813iSRtFZTP1OleRD/c6l6yG8hOL3eT
+         tCIA==
+X-Gm-Message-State: AOAM5323vcSza4tgIuxPLu/6ey1CAAfL7VPvGp2W7B+muR8FQQRCvbPm
+	aq7Rsu6cFl9l7R1egIXK7hbJ4MyhFnQNJg==
+X-Google-Smtp-Source: ABdhPJzyMUGVtC/ASG3nY7O7gFx26cQRSPNWzVsxT9UtYxV0skCi+mi+zSCNGggwGHtf0LS3bGATwQ==
+X-Received: by 2002:a6b:f710:: with SMTP id k16mr16751502iog.33.1643816281728;
+        Wed, 02 Feb 2022 07:38:01 -0800 (PST)
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com. [209.85.166.175])
+        by smtp.gmail.com with ESMTPSA id k8sm13834018ilo.45.2022.02.02.07.37.59
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 02 Feb 2022 07:37:59 -0800 (PST)
+Received: by mail-il1-f175.google.com with SMTP id w5so17375344ilo.2
+        for <regressions@lists.linux.dev>; Wed, 02 Feb 2022 07:37:59 -0800 (PST)
+X-Received: by 2002:a92:c011:: with SMTP id q17mr16748310ild.165.1643816278744;
+ Wed, 02 Feb 2022 07:37:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-BS
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, workflows@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Jonathan Corbet <corbet@lwn.net>, Randy Dunlap <rdunlap@infradead.org>,
- regressions@lists.linux.dev, Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
-References: <cover.1643110442.git.linux@leemhuis.info>
- <f97738d6250050bc982bf2947587f1c73f37446f.1643110442.git.linux@leemhuis.info>
- <CAMuHMdXRoVt_zRBNvugJjYhJnyYbABeCWv9fFRM0r_=s7FYvJQ@mail.gmail.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH v3 1/2] docs: add a document about regression handling
-In-Reply-To: <CAMuHMdXRoVt_zRBNvugJjYhJnyYbABeCWv9fFRM0r_=s7FYvJQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1643802392;3259a138;
-X-HE-SMSGID: 1nFE5k-0006et-9U
+References: <CA+G9fYvN0NyaVkRQmA1O6rX7H8PPaZrUAD7=RDy33QY9rUU-9g@mail.gmail.com>
+ <76ff2848-3af4-6758-6e98-91a4c9ad26d8@suse.de> <CAMj1kXE6Q9uW45Q5A-TuPDiXTPOGrGjUn_8FUBKNGQ1g9bd3Rg@mail.gmail.com>
+ <a1dd9d31-3ad0-b58f-c67b-5896048281ed@suse.de>
+In-Reply-To: <a1dd9d31-3ad0-b58f-c67b-5896048281ed@suse.de>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 2 Feb 2022 07:37:47 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=UzVczyMKiCt9tkMBveGqWFbACMF_Z1GRWypz+awSO06Q@mail.gmail.com>
+Message-ID: <CAD=FV=UzVczyMKiCt9tkMBveGqWFbACMF_Z1GRWypz+awSO06Q@mail.gmail.com>
+Subject: Re: [next] arm: panel-edp.c:(.text+0xb74): undefined reference to `drm_panel_dp_aux_backlight'
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Ard Biesheuvel <ardb@kernel.org>, Marek Vasut <marex@denx.de>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, regressions@lists.linux.dev, 
+	Arnd Bergmann <arnd@arndb.de>, Yunlong Jia <yunlong.jia@ecs.corp-partner.google.com>, 
+	David Airlie <airlied@linux.ie>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	open list <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	lkft-triage@lists.linaro.org, Grace Mi <grace.mi@ecs.corp-partner.google.com>, 
+	Sam Ravnborg <sam@ravnborg.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Randy Dunlap <rdunlap@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi! I noticed I forgot to reply here:
+Hi,
 
-On 26.01.22 15:28, Geert Uytterhoeven wrote:
-> On Tue, Jan 25, 2022 at 5:45 PM Thorsten Leemhuis <linux@leemhuis.info> wrote:
->> +How to create a configuration similar to the one of an older kernel?
->> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->> +
->> +Start a known-good kernel and configure the newer Linux version with ``make
->> +olddefconfig``. This makes the kernel's build scripts pick up the configuration
->> +file (the `.config` file) from the running kernel as base for the new one you
->> +are about to compile; afterwards they set all new configuration options to their
->> +default value, which should disable new features that might cause regressions.
-> 
-> Doing so may actually cause mutations to appear in your .config
-> when going back and forth (i.e. when bisecting), interfering with
-> the bisection process.
+On Wed, Feb 2, 2022 at 2:25 AM Thomas Zimmermann <tzimmermann@suse.de> wrote:
+>
+> Hi
+>
+> Am 02.02.22 um 10:28 schrieb Ard Biesheuvel:
+> > On Wed, 2 Feb 2022 at 10:08, Thomas Zimmermann <tzimmermann@suse.de> wrote:
+> >>
+> >> Hi
+> >>
+> >> Am 02.02.22 um 10:02 schrieb Naresh Kamboju:
+> >>> Following builds failed on Linux next 20220202 arm architecture.
+> >>>     - arm-gcc-10-omap2plus_defconfig
+> >>>     - arm-clang-nightly-shmobile_defconfig
+> >>>     - arm-gcc-8-lpc32xx_defconfig
+> >>>     - arm-clang-13-shmobile_defconfig
+> >>>     - arm-gcc-10-shmobile_defconfig
+> >>>     - arm-clang-11-shmobile_defconfig
+> >>>     - arm-clang-11-omap2plus_defconfig
+> >>>     - arm-clang-13-omap2plus_defconfig
+> >>>     - arm-clang-11-lpc32xx_defconfig
+> >>>     - arm-gcc-8-omap2plus_defconfig
+> >>>     - arm-gcc-9-vexpress_defconfig
+> >>>     - arm-clang-nightly-lpc32xx_defconfig
+> >>>     - arm-gcc-9-shmobile_defconfig
+> >>>     - arm-clang-13-lpc32xx_defconfig
+> >>>     - arm-gcc-10-sama5_defconfig
+> >>>     - arm-clang-11-vexpress_defconfig
+> >>>     - arm-clang-11-sama5_defconfig
+> >>>     - arm-gcc-9-omap2plus_defconfig
+> >>>     - arm-clang-nightly-sama5_defconfig
+> >>>     - arm-clang-13-vexpress_defconfig
+> >>>     - arm-clang-nightly-vexpress_defconfig
+> >>>     - arm-gcc-9-lpc32xx_defconfig
+> >>>     - arm-clang-12-vexpress_defconfig
+> >>>     - arm-gcc-10-vexpress_defconfig
+> >>>     - arm-clang-12-shmobile_defconfig
+> >>>     - arm-gcc-11-omap2plus_defconfig
+> >>>     - arm-gcc-9-sama5_defconfig
+> >>>     - arm-gcc-8-shmobile_defconfig
+> >>>     - arm-gcc-10-lpc32xx_defconfig
+> >>>     - arm-clang-12-omap2plus_defconfig
+> >>>     - arm-gcc-8-vexpress_defconfig
+> >>>     - arm-clang-12-sama5_defconfig
+> >>>     - arm-clang-nightly-omap2plus_defconfig
+> >>>     - arm-gcc-11-lpc32xx_defconfig
+> >>>     - arm-gcc-11-sama5_defconfig
+> >>>     - arm-gcc-11-shmobile_defconfig
+> >>>     - arm-gcc-11-vexpress_defconfig
+> >>>     - arm-gcc-8-sama5_defconfig
+> >>>     - arm-clang-13-sama5_defconfig
+> >>>     - arm-clang-12-lpc32xx_defconfig
+> >>>
+> >>>
+> >>> make --silent --keep-going --jobs=8  ARCH=arm
+> >>> CROSS_COMPILE=arm-linux-gnueabihf- 'CC=sccache
+> >>> arm-linux-gnueabihf-gcc' 'HOSTCC=sccache gcc' vexpress_defconfig
+> >>> make --silent --keep-going --jobs=8  ARCH=arm
+> >>> CROSS_COMPILE=arm-linux-gnueabihf- 'CC=sccache
+> >>> arm-linux-gnueabihf-gcc' 'HOSTCC=sccache gcc'
+> >>> arm-linux-gnueabihf-ld: drivers/gpu/drm/panel/panel-edp.o: in function
+> >>> `panel_edp_probe':
+> >>> panel-edp.c:(.text+0xb74): undefined reference to `drm_panel_dp_aux_backlight'
+> >>> make[1]: *** [/builds/linux/Makefile:1222: vmlinux] Error 1
+> >>>
+> >>>
+> >>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >>>
+> >>> meta data:
+> >>> -----------
+> >>>       git describe: next-20220202
+> >>>       git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> >>>       target_arch: arm
+> >>>       kconfig: vexpress_defconfig
+> >>>       toolchain: gcc-11
+> >>>
+> >>> Build log:
+> >>> -------------
+> >>> https://builds.tuxbuild.com/24XRim72vFXix6l6MdAJNENy6je/
+> >>>
+> >>> Steps to reproduce:
+> >>> --------------------
+> >>> # To install tuxmake on your system globally:
+> >>> # sudo pip3 install -U tuxmake
+> >>> #
+> >>> # See https://docs.tuxmake.org/ for complete documentation.
+> >>> # Original tuxmake command with fragments listed below.
+> >>>
+> >>> tuxmake --runtime podman --target-arch arm --toolchain gcc-11
+> >>> --kconfig vexpress_defconfig
+> >>>
+> >>> tuxmake --runtime podman --target-arch arm --toolchain gcc-11
+> >>> --kconfig https://builds.tuxbuild.com/24XRim72vFXix6l6MdAJNENy6je/config
+> >>
+> >> You'll now need
+> >>
+> >>     CONFIG_DRM_DP_HELPER=y
+> >>
+> >> in your config.
+> >>
+> >
+> > That should never be the solution for linker errors such as this one.
+> >
+> > If CONFIG_DRM_PANEL_EDP relies on something provided by
+> > CONFIG_DRM_DP_HELPER, it should select it or depend on it in Kconfig.
+>
+> Of course, we'll provide a patch for the Kconfig files.
 
-Good point, I knew about this, but hadn't thought of this when writing
-the text.
+There was discussion about this last November but I guess nothing came of it?
 
-> To avoid that, I usually start bisecting with
-> "cp .config <src>/arch/<arch>/configs/bisect_defconfig", and use
-> "make bisect_defconfig" in every bisection step. That way all steps
-> are reproducible, and unaffected by config mutations.
+https://lore.kernel.org/r/20211117062704.14671-1-rdunlap@infradead.org/
 
-That's a really cool trick, thx for mentioning it. But I think it's not
-needed in the text about regressions and instead better be mentioned in
-Documentation/admin-guide/bug-bisect.rst. I hope to sooner or later
-improve (rewrite?) that document anyway and will make sure to keep it in
-mind for that time.
+In there Arnd provided a proposed patch. If everyone likes that and it
+fixes things then we can apply it...
 
-I wonder if there is a way to make this work without messing in the
-source tree? Took a quick look at the sources. It seems to me that it's
-possible to "cp .config ~/working.config" and then using "make
-KBUILD_DEFCONFIG=~/working.config defconfig" at every bisection step. It
-seems to do the trick as well -- but I only tried briefly, so maybe I
-might have missed something.
-
-Ciao, Thorsten
+-Doug
