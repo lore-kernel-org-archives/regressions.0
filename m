@@ -1,134 +1,234 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9892F21
-	for <regressions@lists.linux.dev>; Thu,  3 Feb 2022 15:03:39 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nFde5-0000EZ-Kv; Thu, 03 Feb 2022 16:03:37 +0100
-Message-ID: <062f4a59-2d41-9a6f-8c7c-42fc5773e282@leemhuis.info>
-Date: Thu, 3 Feb 2022 16:03:37 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461202F21
+	for <regressions@lists.linux.dev>; Thu,  3 Feb 2022 15:08:22 +0000 (UTC)
+Received: by mail-yb1-f172.google.com with SMTP id p5so9728547ybd.13
+        for <regressions@lists.linux.dev>; Thu, 03 Feb 2022 07:08:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=E1ZrT3nLPqfEfRCxZGg+hZozRugpSOUTLsqqU6sZy4k=;
+        b=DU0T67twNivLwY8tdXhMQ2+JrQXVanp4KlD6gz7ipbcMPHzdAM7npObfjKvkcEAx34
+         Tne9URm4gbEolgcRiMstOXMSWjHSHzjsv2WHez5VmP/ne/JhFkeZIUQ9LHN6x3TnioWV
+         yStSX4A8S7JBgAiZSCEsHU8b+x3Abjjh6kg15ucrRMsNHtutUkoscziQWGJpDjsaa0N6
+         PV24XGUxzHhYe28+DFoL9izQLrRNn07n0NzGMvn8zH/11/CrVWYm0pzuju6FXIJ0KGIR
+         Oy5y68/Ej5RNMwWGvMvxJRMI4u6iQpd8T4+SrI/3W+bGI/Rx+EeHYL+5olOOYzg00uRv
+         oaPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=E1ZrT3nLPqfEfRCxZGg+hZozRugpSOUTLsqqU6sZy4k=;
+        b=A56IXm3TWZs/QiLcffT8aYtkybeeNmPI3ihxhLQqQtwTjZ022fAaSjdaeI1FncrqpD
+         fZ921LA/UEs+S4zmpeY/M1UVJe6VHqjt5glHDy4SPpn4wZgbCfNKgG67DoL7hfALqbxC
+         2UT9jGVm656WKqDGGKakkKU5eONchizwOqQldhp58lF+wsn4hqVdVMX2a5fFnSpMIf5T
+         Caqx1S277TvxJwnoZNFNzDIP3YvW12rfc7Pv0mHC7IfgMzyEtzyl2G8W7QptKA4rAc7o
+         +jaAaZs0iN77nuBj4esjTD6aBXqhCowxKddrE9QRr3DD9ocTxIhL8USq+VjsYFqhu//h
+         dvyw==
+X-Gm-Message-State: AOAM531yViSDk0IZE4S23WqTQqP5JpOn8ZCS6GmQ5+nU843gNiVpU4Ez
+	IhxB0+YRdYcIYODOJUr2oxUredfakfjfOTO6KiHleQ==
+X-Google-Smtp-Source: ABdhPJwrISjiWx5NrKsp+xwk0y09S4cihgDnrFrGi7IZHTd7ny6cO3vVk2wUU6GgYiSPGofKfX8zKlg3LxBEdjgYwu0=
+X-Received: by 2002:a25:97c4:: with SMTP id j4mr48866296ybo.108.1643900900938;
+ Thu, 03 Feb 2022 07:08:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Bug 215562 - BUG: unable to handle page fault in cache_reap (fwd from
- bugzilla)
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643900619;43c1d0bf;
-X-HE-SMSGID: 1nFde5-0000EZ-Kv
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 3 Feb 2022 20:38:09 +0530
+Message-ID: <CA+G9fYtWKVPA_hGR6xyusf34=2vYE7qj4=739dOJDVUYJdkG8w@mail.gmail.com>
+Subject: [next] qemu-arm: kasan: Unable to handle kernel NULL pointer
+ dereference at virtual address 00000002
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, this is your Linux kernel regression tracker speaking.
+While booting linux next 20220203 on qemu-arm the following
+kernel crash was noticed with
 
-There is a regression in bugzilla.kernel.org I'd like to add to the
-tracking:
+CONFIG_KASAN=y
 
-#regzbot introduced: v5.10.80..v5.10.90
-#regzbot from: Patrick Schaaf <kernelorg@bof.de>
-#regzbot title: mm: unable to handle page fault in cache_reap
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215562
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Quote:
+metadata:
+  git branch: master
+  git repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git commit: 2d3d8c7643a56bfe2e808f97d5a4360d49f3b45b
+  git describe: next-20220203
+  make_kernelversion: 5.17.0-rc2
+  kernel-config: https://builds.tuxbuild.com/24aNqQLzNsoEZKVK35BoE32uqLM/config
 
-> We've been running self-built 5.10.x kernels on DL380 hosts for quite a while, also inside the VMs there.
-> 
-> With I think 5.10.90 three weeks or so back, we experienced a lockup upon umounting a larger, dirty filesystem on the host side, unfortunately without capturing a backtrace back then.
-> 
-> Today something feeling similar, happened again, on a machine running 5.10.93 both on the host and inside its 10 various VMs.
-> 
-> Problem showed shortly (minutes) after shutting down one of the VMs (few hundred GB memory / dataset, VM shutdown was complete already; direct I/O), and then some LVM volume renames, a quick short outside ext4 mount followed by an umount (8 GB volume, probably a few hundred megabyte only to write). Actually monitoring suggests that disk writes were already done about a minute before the onset.
-> 
-> What we then experienced, was the following BUG:, followed by one after the other CPU saying goodbye with soft lockup messages over the course of a few minutes; meanwhile there was no more pinging the box, logging in on console, etc. We hard powercycled and it recovered fully.
-> 
-> here's the BUG that was logged; if it is useful for someone to see the followup soft lockup messages, tell me + I'll add them.
-> 
-> Feb 02 15:22:27 kvm3j kernel: BUG: unable to handle page fault for address: ffffebde00000008
-> Feb 02 15:22:27 kvm3j kernel: #PF: supervisor read access in kernel mode
-> Feb 02 15:22:27 kvm3j kernel: #PF: error_code(0x0000) - not-present page
-> Feb 02 15:22:27 kvm3j kernel: Oops: 0000 [#1] SMP PTI
-> Feb 02 15:22:27 kvm3j kernel: CPU: 7 PID: 39833 Comm: kworker/7:0 Tainted: G          I       5.10.93-kvm #1
-> Feb 02 15:22:27 kvm3j kernel: Hardware name: HP ProLiant DL380p Gen8, BIOS P70 12/20/2013
-> Feb 02 15:22:27 kvm3j kernel: Workqueue: events cache_reap
-> Feb 02 15:22:27 kvm3j kernel: RIP: 0010:free_block.constprop.0+0xc0/0x1f0
-> Feb 02 15:22:27 kvm3j kernel: Code: 4c 8b 16 4c 89 d0 48 01 e8 0f 82 32 01 00 00 4c 89 f2 48 bb 00 00 00 00 00 ea ff ff 48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 01 d8 <48> 8b 50 08 48 8d 4a ff 83 e2 01 48 >
-> Feb 02 15:22:27 kvm3j kernel: RSP: 0018:ffffc9000252bdc8 EFLAGS: 00010086
-> Feb 02 15:22:27 kvm3j kernel: RAX: ffffebde00000000 RBX: ffffea0000000000 RCX: ffff888889141b00
-> Feb 02 15:22:27 kvm3j kernel: RDX: 0000777f80000000 RSI: ffff893d3edf3400 RDI: ffff8881000403c0
-> Feb 02 15:22:27 kvm3j kernel: RBP: 0000000080000000 R08: ffff888100041300 R09: 0000000000000003
-> Feb 02 15:22:27 kvm3j kernel: R10: 0000000000000000 R11: ffff888100041308 R12: dead000000000122
-> Feb 02 15:22:27 kvm3j kernel: R13: dead000000000100 R14: 0000777f80000000 R15: ffff893ed8780d60
-> Feb 02 15:22:27 kvm3j kernel: FS:  0000000000000000(0000) GS:ffff893d3edc0000(0000) knlGS:0000000000000000
-> Feb 02 15:22:27 kvm3j kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> Feb 02 15:22:27 kvm3j kernel: CR2: ffffebde00000008 CR3: 000000048c4aa002 CR4: 00000000001726e0
-> Feb 02 15:22:27 kvm3j kernel: Call Trace:
-> Feb 02 15:22:27 kvm3j kernel:  drain_array_locked.constprop.0+0x2e/0x80
-> Feb 02 15:22:27 kvm3j kernel:  drain_array.constprop.0+0x54/0x70
-> Feb 02 15:22:27 kvm3j kernel:  cache_reap+0x6c/0x100
-> Feb 02 15:22:27 kvm3j kernel:  process_one_work+0x1cf/0x360
-> Feb 02 15:22:27 kvm3j kernel:  worker_thread+0x45/0x3a0
-> Feb 02 15:22:27 kvm3j kernel:  ? process_one_work+0x360/0x360
-> Feb 02 15:22:27 kvm3j kernel:  kthread+0x116/0x130
-> Feb 02 15:22:27 kvm3j kernel:  ? kthread_create_worker_on_cpu+0x40/0x40
-> Feb 02 15:22:27 kvm3j kernel:  ret_from_fork+0x22/0x30
-> Feb 02 15:22:27 kvm3j kernel: Modules linked in: hpilo
-> Feb 02 15:22:27 kvm3j kernel: CR2: ffffebde00000008
-> Feb 02 15:22:27 kvm3j kernel: ---[ end trace ded3153d86a92898 ]---
-> Feb 02 15:22:27 kvm3j kernel: RIP: 0010:free_block.constprop.0+0xc0/0x1f0
-> Feb 02 15:22:27 kvm3j kernel: Code: 4c 8b 16 4c 89 d0 48 01 e8 0f 82 32 01 00 00 4c 89 f2 48 bb 00 00 00 00 00 ea ff ff 48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 01 d8 <48> 8b 50 08 48 8d 4a ff 83 e2 01 48 >
-> Feb 02 15:22:27 kvm3j kernel: RSP: 0018:ffffc9000252bdc8 EFLAGS: 00010086
-> Feb 02 15:22:27 kvm3j kernel: RAX: ffffebde00000000 RBX: ffffea0000000000 RCX: ffff888889141b00
-> Feb 02 15:22:27 kvm3j kernel: RDX: 0000777f80000000 RSI: ffff893d3edf3400 RDI: ffff8881000403c0
-> Feb 02 15:22:27 kvm3j kernel: RBP: 0000000080000000 R08: ffff888100041300 R09: 0000000000000003
-> Feb 02 15:22:27 kvm3j kernel: R10: 0000000000000000 R11: ffff888100041308 R12: dead000000000122
-> Feb 02 15:22:27 kvm3j kernel: R13: dead000000000100 R14: 0000777f80000000 R15: ffff893ed8780d60
-> Feb 02 15:22:27 kvm3j kernel: FS:  0000000000000000(0000) GS:ffff893d3edc0000(0000) knlGS:0000000000000000
-> Feb 02 15:22:27 kvm3j kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> Feb 02 15:22:27 kvm3j kernel: CR2: ffffebde00000008 CR3: 000000048c4aa002 CR4: 00000000001726e0
 
-Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+# crash log
+ Failed to start Load Kernel Modules.
+See 'systemctl status systemd-modules-load.service' for details.
+         Starting Apply Kernel Variables...
+         Mounting Kernel Configuration File System...
+[    3.383096] EXT4-fs (vda): re-mounted. Quota mode: disabled.
+[    3.434068] 8<--- cut here ---
+[    3.435503] Unable to handle kernel NULL pointer dereference at
+virtual address 00000002
+[    3.439760] [00000002] *pgd=00000000
+[    3.441612] Internal error: Oops: 5 [#1] SMP ARM
+[    3.443779] Modules linked in:
+[    3.445175] CPU: 0 PID: 157 Comm: systemd-journal Not tainted
+5.17.0-rc2-next-20220203 #1
+[    3.449337] Hardware name: Generic DT based system
+[    3.452222] PC is at __read_once_word_nocheck+0x0/0x8
+[    3.453068] 8<--- cut here ---
+[    3.455077] LR is at unwind_frame+0x64c/0xa70
+[    3.456562] Unable to handle kernel NULL pointer dereference at
+virtual address 00000002
+[    3.459046] pc : [<c0313ffc>]    lr : [<c03147f8>]    psr: 600d0013
+[    3.459068] sp : c73e39e8  ip : c34d61e0  fp : 00000000
+[    3.459087] r10: c73e3a70  r9 : 00000000  r8 : c73e3b00
+[    3.459108] r7 : 809b47af  r6 : c28fa258  r5 : 00000002  r4 : 00000022
+[    3.462628] [00000002] *pgd=00000000
+[    3.466034] r3 : 00000022  r2 : 00000007  r1 : 00000000  r0 : 00000002
+[    3.468728]
+[    3.471490] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+[    3.484888] Control: 10c5383d  Table: 4764c06a  DAC: 00000051
+[    3.488137] Register r0 information: non-paged memory
+[    3.491155] Register r1 information: NULL pointer
+[    3.493582] Register r2 information: non-paged memory
+[    3.496629] Register r3 information: non-paged memory
+[    3.499303] Register r4 information: non-paged memory
+[    3.502290] Register r5 information: non-paged memory
+[    3.504797] Register r6 information: non-slab/vmalloc memory
+[    3.507951] Register r7 information: non-paged memory
+[    3.510684] Register r8 information: non-slab/vmalloc memory
+[    3.513940] Register r9 information: NULL pointer
+[    3.516434] Register r10 information: non-slab/vmalloc memory
+[    3.519805] Register r11 information: NULL pointer
+[    3.522486] Register r12 information: non-slab/vmalloc memory
+[    3.525701] Process systemd-journal (pid: 157, stack limit = 0x(ptrval))
+[    3.529238] Stack: (0xc73e39e8 to 0xc73e4000)
+[    3.531416] 39e0:                   c4084bb8 c73e3cb0 00000001
+c59c5e80 c34d61e0 00004000
+[    3.536285] 3a00: 00000002 c73e3b40 c73e3b4c c73e3b44 b7e7c748
+c59c5e80 c73e3b48 c28fa258
+[    3.540834] 3a20: 00000003 00000022 c73e3d90 c73e3ba0 c59c5e80
+c0385928 c040c734 c288f4e0
+[    3.545456] 3a40: 41b58ab3 c2772e74 c03141ac c59c65e4 c415dc90
+c0570d00 c34d61e0 c73e4000
+[    3.549942] 3a60: c73e3c28 c73e3ba0 c73e3bac c73e3ba4 e82aaa80
+c5762030 c5762000 c59c7380
+[    3.554343] 3a80: c6582a00 00000000 00000000 00000022 c4084cd0
+00000002 c0394274 00000000
+[    3.558939] 3aa0: 41b58ab3 c2772e74 c03141ac 00000064 000d000d
+0000000e 000d000d 0000000d
+[    3.563299] 3ac0: 0000000d c08c9c9c c4084c80 c4084cd0 00000001
+c59c5e80 c098f0ac 00000cc0
+[    3.567948] 3ae0: 00000000 c05610b4 c73e3bc0 c73e3bc4 c8d2b708
+c73e3c28 c73e3d90 c73e3d90
+[    3.572250] 3b00: 00000000 3d17bd2a c8d2b700 c59c5e80 b7e7c770
+c59c5e80 00000000 c0394274
+[    3.576874] 3b20: c5762000 c288f4e0 c73e3b64 c030da48 00000103
+c73e3ba0 00000000 00000000
+[    3.581392] 3b40: 00000022 c73e3d68 c0394274 c0394274 c73e3d38
+3d17bd2a 00000000 c73e3be0
+[    3.585961] 3b60: c73e3db4 c040c734 c03cd130 c59c5e80 b7e7c77c
+c59c5e80 00000000 c0535938
+[    3.590620] 3b80: 41b58ab3 c2784b1c c040c6b0 c030da48 c73e3cc0
+c73e3c00 00000000 00000000
+[    3.594827] 3ba0: 00000005 00000040 c73e3c00 00000001 c73e3b90
+3d17bd2a 00600004 c73e3c40
+[    3.599437] 3bc0: c412c938 c040c734 c03141ac c6427f84 00000001
+3d17bd2a c0552084 3d17bd2a
+[    3.603873] 3be0: c7653000 3d17bd2a c388eb80 c5762004 00000800
+00000000 00000000 c0518a34
+[    3.608502] 3c00: c04f13c4 c04cb360 c0518e38 c05175a0 c0394274
+00000001 00000000 c59c5e80
+[    3.613124] 3c20: b7e7c788 c388ec00 c73e3ca0 c0570d00 00000000
+3d17bd2a 00000000 c8e74404
+[    3.617461] 3c40: 41b58ab3 c278184c c03a784c c044e998 c8e74400
+c288f4e0 c412c938 c04f13c4
+[    3.622051] 3c60: 00000000 eff49240 e82ae5f8 25707000 00020d78
+600f0093 c59c6154 c04f13c4
+[    3.626495] 3c80: 00000002 ee5d5774 e82ae5ac 25707000 00020d78
+00000000 eff49260 00000000
+[    3.631247] 3ca0: 41b58ab3 c278c79c c04f1260 00000000 c3541780
+c356f9e0 00000004 00000000
+[    3.635850] 3cc0: 00000000 c0518b08 ee5d5c80 00000002 00000004
+c04efd50 ffc00000 00000000
+[    3.640440] 3ce0: 00000000 ee5d5c80 00000002 c3541780 00000022
+c04cb360 c5762000 c3840400
+[    3.645112] 3d00: ee5bd9c8 c5762000 c3840400 c051a320 c5762000
+c0518e38 c5762000 c3840400
+[    3.649694] 3d20: c0394274 000c49c8 ee5bd9c8 c3541240 c288f4e0
+c05175a0 c1945ec0 00000000
+[    3.654103] 3d40: 00000000 c0352894 e82aaa80 c5762030 c5762000
+c59c7380 c6582a00 00000000
+[    3.658541] 3d60: 00000000 c0394274 c3840900 c051a320 c8e74400
+c0518e38 c8e74400 25707000
+[    3.662916] 3d80: 00000080 c5762000 c59c7380 c59c5e80 ffffffff
+c2ba0044 c388e900 c59c5e80
+[    3.667693] 3da0: 25707000 c6582a00 00000000 c59c5e80 c73e3e9c
+c18217a0 c8d2b700 00000020
+[    3.672253] 3dc0: c4084c80 c0535938 00000000 c1822120 25707000
+c2ba3a80 00000000 00000000
+[    3.676873] 3de0: c59c6098 c59c5e88 b7e7c7c0 00000000 c73e3e60
+e82ab0ac c73e3e60 c35110e0
+[    3.681265] 3e00: 41b58ab3 c27811ac c1821204 c0996fe0 c2c669c0
+b7e7c7c8 c73e3ea0 c59c5e80
+[    3.685720] 3e20: 41b58ab3 00000000 c08c1660 00000000 00000000
+c051a0dc c2ce47c0 c424bf40
+[    3.690320] 3e40: 41b58ab3 c2780f04 c03904d4 c6427f90 00200004
+c052cb64 00000011 c8e74400
+[    3.694985] 3e60: 3d17bd2a 00000000 b7e7c7d8 c73e3f30 c59c5e80
+3d17bd2a 005009c9 c59c5e80
+[    3.699645] 3e80: c59c60a4 c03002c4 00000002 5ac3c35a c59c5e80
+c73e3fb0 c73e3eac c1822120
+[    3.704065] 3ea0: c59c5e80 c73e3ff0 b7e7c7dc c030d1c0 c73e3f80
+c59c662c 5ac3c35a 00000000
+[    3.708666] 3ec0: 41b58ab3 c278fa34 c0535ee8 c73e3f80 c73e3f40
+00000000 ffffff9c c0532cc0
+[    3.713135] 3ee0: 41b58ab3 c27725c0 c030d124 00000000 00000000
+00000000 c7690840 b7e7c7e4
+[    3.717788] 3f00: 41b58ab3 c279002c c0541f58 00000000 00000000
+00000000 00000000 00000000
+[    3.722331] 3f20: 00288000 00000000 00000000 00000000 00000000
+00000000 c3510ba0 c03923e0
+[    3.726739] 3f40: c642b010 c424bed8 c8d2b400 c59c5e80 c3510ba0
+00000001 b68cc4ec c03855cc
+[    3.731331] 3f60: c8d2b400 c59c5e80 00000001 00000006 c03002c4
+c59c5e80 00000006 3d17bd2a
+[    3.735933] 3f80: c8d2b400 3d17bd2a b68cb4f0 004fc3f4 005009c8
+005009c9 00000142 c03002c4
+[    3.740521] 3fa0: c59c5e80 00000142 b68ca36c c030012c 00000011
+005009c9 002a8000 00000000
+[    3.744964] 3fc0: 004fc3f4 005009c8 005009c9 00000142 00000000
+00000000 00000010 b68ca36c
+[    3.749357] 3fe0: 00000000 b68ca210 aeb3b000 aeabda08 600f0010
+00000010 00000000 00000000
+[    3.753837]  __read_once_word_nocheck from unwind_frame+0x64c/0xa70
+[    3.757514]  unwind_frame from __save_stack_trace+0x70/0x94
+[    3.760647]  __save_stack_trace from stack_trace_save+0x84/0xac
+[    3.763890]  stack_trace_save from kasan_set_track+0x2c/0x4c
+[    3.767299]  kasan_set_track from kasan_set_free_info+0x20/0x34
+[    3.770511]  kasan_set_free_info from __kasan_slab_free+0xf8/0x12c
+[    3.773754]  __kasan_slab_free from kmem_cache_free+0xb0/0x45c
+[    3.777330]  kmem_cache_free from finish_task_switch+0x22c/0x3b4
+[    3.780783]  finish_task_switch from __schedule+0x59c/0xeb4
+[    3.783925]  __schedule from schedule+0x68/0xe0
+[    3.786596]  schedule from do_work_pending+0x9c/0x6f8
+[    3.789592]  do_work_pending from slow_work_pending+0xc/0x20
+[    3.792690] Code: e8bd8070 eec11e10 e3a00000 e12fff1e (e5900000)
+[    3.795729] Internal error: Oops: 5 [#2] SMP ARM
+[    3.795842] ---[ end trace 0000000000000000 ]---
+[    3.798610] Modules linked in:
 
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply, that's in everyone's interest.
 
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
+full test log link,
+https://lkft.validation.linaro.org/scheduler/job/4461318#L535
 
----
-Additional information about regzbot:
-
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and/or the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-tell #regzbot about it in the report, as that will ensure the regression
-gets on the radar of regzbot and the regression tracker. That's in your
-interest, as they will make sure the report won't fall through the
-cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include a 'Link:' tag to the report in the commit message, as explained
-in Documentation/process/submitting-patches.rst
-That aspect was recently was made more explicit in commit 1f57bd42b77c:
-https://git.kernel.org/linus/1f57bd42b77c
+-- 
+Linaro LKFT
+https://lkft.linaro.org
