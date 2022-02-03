@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DDA2F21
-	for <regressions@lists.linux.dev>; Thu,  3 Feb 2022 14:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C9892F21
+	for <regressions@lists.linux.dev>; Thu,  3 Feb 2022 15:03:39 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nFdaW-00059r-0l; Thu, 03 Feb 2022 15:59:56 +0100
-Message-ID: <a8100c3d-007e-3207-7dc1-92849f638d71@leemhuis.info>
-Date: Thu, 3 Feb 2022 15:59:55 +0100
+	id 1nFde5-0000EZ-Kv; Thu, 03 Feb 2022 16:03:37 +0100
+Message-ID: <062f4a59-2d41-9a6f-8c7c-42fc5773e282@leemhuis.info>
+Date: Thu, 3 Feb 2022 16:03:37 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,63 +16,82 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Content-Language: en-BS
+Content-Language: en-US
 From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Bug 215562 - BUG: unable to handle page fault in cache_reap (fwd from
+ bugzilla)
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Bug 215561 - snd-usb-audio:reset_resume error -22 after suspend (fwd
- from bugzilla)
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643900398;8a030bdc;
-X-HE-SMSGID: 1nFdaW-00059r-0l
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643900619;43c1d0bf;
+X-HE-SMSGID: 1nFde5-0000EZ-Kv
 
 Hi, this is your Linux kernel regression tracker speaking.
 
 There is a regression in bugzilla.kernel.org I'd like to add to the
 tracking:
 
-#regzbot introduced: v5.15..v5.16
-#regzbot from: antifermion@protonmail.com <antifermion@protonmail.com>
-#regzbot title: snd: usb: snd-usb-audio:reset_resume error -22 after suspen
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215561
+#regzbot introduced: v5.10.80..v5.10.90
+#regzbot from: Patrick Schaaf <kernelorg@bof.de>
+#regzbot title: mm: unable to handle page fault in cache_reap
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215562
 
 Quote:
 
-> If I use the microphone, then suspend and wake up again, I get the error
+> We've been running self-built 5.10.x kernels on DL380 hosts for quite a while, also inside the VMs there.
 > 
-> ```
-> snd-usb-audio 1-5:1.0: reset_resume error -22
-> ```
+> With I think 5.10.90 three weeks or so back, we experienced a lockup upon umounting a larger, dirty filesystem on the host side, unfortunately without capturing a backtrace back then.
 > 
-> Aftewards, audio stops working completely. Both pipewire and pulseaudio (tried both; not at the same time) freeze.
+> Today something feeling similar, happened again, on a machine running 5.10.93 both on the host and inside its 10 various VMs.
 > 
-> After running
+> Problem showed shortly (minutes) after shutting down one of the VMs (few hundred GB memory / dataset, VM shutdown was complete already; direct I/O), and then some LVM volume renames, a quick short outside ext4 mount followed by an umount (8 GB volume, probably a few hundred megabyte only to write). Actually monitoring suggests that disk writes were already done about a minute before the onset.
 > 
-> ```
-> rmmod -f snd_usb_audio
-> ```
+> What we then experienced, was the following BUG:, followed by one after the other CPU saying goodbye with soft lockup messages over the course of a few minutes; meanwhile there was no more pinging the box, logging in on console, etc. We hard powercycled and it recovered fully.
 > 
-> and replugging the microphone, audio works again.
-> Here is the relevant log:
+> here's the BUG that was logged; if it is useful for someone to see the followup soft lockup messages, tell me + I'll add them.
 > 
-> ```
-> [  157.791937] usbcore: deregistering interface driver snd-usb-audio
-> [  228.517855] usb 1-5: USB disconnect, device number 2
-> [  236.464334] usb 1-5: new high-speed USB device number 3 using xhci_hcd
-> [  236.798863] usb 1-5: New USB device found, idVendor=0d8c, idProduct=0171, bcdDevice= 1.04
-> [  236.798867] usb 1-5: New USB device strings: Mfr=3, Product=1, SerialNumber=0
-> [  236.798869] usb 1-5: Product: USB 2.0 HD Audio
-> [  236.798871] usb 1-5: Manufacturer: C-Media Electronics Inc.
-> [  236.826966] input: C-Media Electronics Inc. USB 2.0 HD Audio Consumer Control as /devices/pci0000:00/0000:00:01.3/0000:02:00.0/usb1/1-5/1-5:1.3/0003:0D8C:0171.000B/input/input40
-> [  236.878380] input: C-Media Electronics Inc. USB 2.0 HD Audio as /devices/pci0000:00/0000:00:01.3/0000:02:00.0/usb1/1-5/1-5:1.3/0003:0D8C:0171.000B/input/input41
-> [  236.878447] hid-generic 0003:0D8C:0171.000B: input,hiddev96,hidraw2: USB HID v1.11 Device [C-Media Electronics Inc. USB 2.0 HD Audio] on usb-0000:02:00.0-5/input3
-> [  242.306593] usbcore: registered new interface driver snd-usb-audio
-> 
-> ```
-> 
-> I'm running Arch Linux (5.16.4.arch1-1). The linux-lts kernel (5.15.18-1) works fine.
-> 
-> Other uses report the same error: https://bbs.archlinux.org/viewtopic.php?id=273469
+> Feb 02 15:22:27 kvm3j kernel: BUG: unable to handle page fault for address: ffffebde00000008
+> Feb 02 15:22:27 kvm3j kernel: #PF: supervisor read access in kernel mode
+> Feb 02 15:22:27 kvm3j kernel: #PF: error_code(0x0000) - not-present page
+> Feb 02 15:22:27 kvm3j kernel: Oops: 0000 [#1] SMP PTI
+> Feb 02 15:22:27 kvm3j kernel: CPU: 7 PID: 39833 Comm: kworker/7:0 Tainted: G          I       5.10.93-kvm #1
+> Feb 02 15:22:27 kvm3j kernel: Hardware name: HP ProLiant DL380p Gen8, BIOS P70 12/20/2013
+> Feb 02 15:22:27 kvm3j kernel: Workqueue: events cache_reap
+> Feb 02 15:22:27 kvm3j kernel: RIP: 0010:free_block.constprop.0+0xc0/0x1f0
+> Feb 02 15:22:27 kvm3j kernel: Code: 4c 8b 16 4c 89 d0 48 01 e8 0f 82 32 01 00 00 4c 89 f2 48 bb 00 00 00 00 00 ea ff ff 48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 01 d8 <48> 8b 50 08 48 8d 4a ff 83 e2 01 48 >
+> Feb 02 15:22:27 kvm3j kernel: RSP: 0018:ffffc9000252bdc8 EFLAGS: 00010086
+> Feb 02 15:22:27 kvm3j kernel: RAX: ffffebde00000000 RBX: ffffea0000000000 RCX: ffff888889141b00
+> Feb 02 15:22:27 kvm3j kernel: RDX: 0000777f80000000 RSI: ffff893d3edf3400 RDI: ffff8881000403c0
+> Feb 02 15:22:27 kvm3j kernel: RBP: 0000000080000000 R08: ffff888100041300 R09: 0000000000000003
+> Feb 02 15:22:27 kvm3j kernel: R10: 0000000000000000 R11: ffff888100041308 R12: dead000000000122
+> Feb 02 15:22:27 kvm3j kernel: R13: dead000000000100 R14: 0000777f80000000 R15: ffff893ed8780d60
+> Feb 02 15:22:27 kvm3j kernel: FS:  0000000000000000(0000) GS:ffff893d3edc0000(0000) knlGS:0000000000000000
+> Feb 02 15:22:27 kvm3j kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Feb 02 15:22:27 kvm3j kernel: CR2: ffffebde00000008 CR3: 000000048c4aa002 CR4: 00000000001726e0
+> Feb 02 15:22:27 kvm3j kernel: Call Trace:
+> Feb 02 15:22:27 kvm3j kernel:  drain_array_locked.constprop.0+0x2e/0x80
+> Feb 02 15:22:27 kvm3j kernel:  drain_array.constprop.0+0x54/0x70
+> Feb 02 15:22:27 kvm3j kernel:  cache_reap+0x6c/0x100
+> Feb 02 15:22:27 kvm3j kernel:  process_one_work+0x1cf/0x360
+> Feb 02 15:22:27 kvm3j kernel:  worker_thread+0x45/0x3a0
+> Feb 02 15:22:27 kvm3j kernel:  ? process_one_work+0x360/0x360
+> Feb 02 15:22:27 kvm3j kernel:  kthread+0x116/0x130
+> Feb 02 15:22:27 kvm3j kernel:  ? kthread_create_worker_on_cpu+0x40/0x40
+> Feb 02 15:22:27 kvm3j kernel:  ret_from_fork+0x22/0x30
+> Feb 02 15:22:27 kvm3j kernel: Modules linked in: hpilo
+> Feb 02 15:22:27 kvm3j kernel: CR2: ffffebde00000008
+> Feb 02 15:22:27 kvm3j kernel: ---[ end trace ded3153d86a92898 ]---
+> Feb 02 15:22:27 kvm3j kernel: RIP: 0010:free_block.constprop.0+0xc0/0x1f0
+> Feb 02 15:22:27 kvm3j kernel: Code: 4c 8b 16 4c 89 d0 48 01 e8 0f 82 32 01 00 00 4c 89 f2 48 bb 00 00 00 00 00 ea ff ff 48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 01 d8 <48> 8b 50 08 48 8d 4a ff 83 e2 01 48 >
+> Feb 02 15:22:27 kvm3j kernel: RSP: 0018:ffffc9000252bdc8 EFLAGS: 00010086
+> Feb 02 15:22:27 kvm3j kernel: RAX: ffffebde00000000 RBX: ffffea0000000000 RCX: ffff888889141b00
+> Feb 02 15:22:27 kvm3j kernel: RDX: 0000777f80000000 RSI: ffff893d3edf3400 RDI: ffff8881000403c0
+> Feb 02 15:22:27 kvm3j kernel: RBP: 0000000080000000 R08: ffff888100041300 R09: 0000000000000003
+> Feb 02 15:22:27 kvm3j kernel: R10: 0000000000000000 R11: ffff888100041308 R12: dead000000000122
+> Feb 02 15:22:27 kvm3j kernel: R13: dead000000000100 R14: 0000777f80000000 R15: ffff893ed8780d60
+> Feb 02 15:22:27 kvm3j kernel: FS:  0000000000000000(0000) GS:ffff893d3edc0000(0000) knlGS:0000000000000000
+> Feb 02 15:22:27 kvm3j kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Feb 02 15:22:27 kvm3j kernel: CR2: ffffebde00000008 CR3: 000000048c4aa002 CR4: 00000000001726e0
 
 Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
 
