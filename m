@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921372F26
-	for <regressions@lists.linux.dev>; Fri,  4 Feb 2022 08:48:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0642F26
+	for <regressions@lists.linux.dev>; Fri,  4 Feb 2022 08:59:15 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nFuGW-0006hE-PR; Fri, 04 Feb 2022 09:48:24 +0100
-Message-ID: <f0e5b970-5982-313b-8c75-b839086ce100@leemhuis.info>
-Date: Fri, 4 Feb 2022 09:48:24 +0100
+	id 1nFuQz-0004Hm-Ts; Fri, 04 Feb 2022 09:59:13 +0100
+Message-ID: <f957038d-a5fe-7507-402a-850a38d43094@leemhuis.info>
+Date: Fri, 4 Feb 2022 09:59:12 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,124 +16,166 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: Regression/boot failure on 5.16.3
+Subject: Re: xfrm regression: TCP MSS calculation broken by commit b515d263,
+ results in TCP stall #forregzbot
 Content-Language: en-BS
-To: Jason Self <jason@bluehome.net>, stable@vger.kernel.org
-References: <20220203161959.3edf1d6e@valencia>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-In-Reply-To: <20220203161959.3edf1d6e@valencia>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220114173133.tzmdm2hy4flhblo3@dwarf.suse.cz>
+ <221e1da9-e1c4-10ee-332a-117dee0d913d@leemhuis.info>
+In-Reply-To: <221e1da9-e1c4-10ee-332a-117dee0d913d@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1643964506;a12ca4d1;
-X-HE-SMSGID: 1nFuGW-0006hE-PR
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1643965155;f189eb86;
+X-HE-SMSGID: 1nFuQz-0004Hm-Ts
 
-[TLDR: I'm adding this regression to regzbot, the Linux kernel
-regression tracking bot; most text you find below is compiled from a few
-templates paragraphs some of you might have seen already.]
+For the record:
 
-Hi, this is your Linux kernel regression tracker speaking.
+#regzbot fixed-by: a6d95c5a628a09be
 
-Adding the regression mailing list to the list of recipients, as it
-should be in the loop for all regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=a6d95c5a628a09be129f25d5663a7e9db8261f51
 
-On 04.02.22 01:19, Jason Self wrote:
-> The computer (amd64) fails to boot. The init was stuck at the
-> synchronization of the time through the network. This began between
-> 5.16.2 (good) and 5.16.3 (bad.) This continues on 5.16.4 and 5.16.5.
-> Git bisect revealed the following. In this case the nonfree firmwre is
-> not present on the system. Blacklisting the iwflwifi module works as a
-> workaround for now.
+> Revert "xfrm: xfrm_state_mtu should return at least 1280 for ipv6"
+> This reverts commit b515d2637276a3810d6595e10ab02c13bfd0b63a.
 > 
-> 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1 is the first bad commit
-> commit 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
-> Author: Johannes Berg <johannes.berg@intel.com>
-> Date:   Fri Dec 10 11:12:42 2021 +0200
-
-To be sure this issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
-
-#regzbot ^introduced 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
-#regzbot title net: iwlwifi: system fails to boot since 5.16.3
-#regzbot ignore-activity
-
-Reminder: when fixing the issue, please add a 'Link:' tag with the URL
-to the report (the parent of this mail) using the kernel.org redirector,
-as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
-then will automatically mark the regression as resolved once the fix
-lands in the appropriate tree. For more details about regzbot see footer.
-
-Sending this to everyone that got the initial report, to make all aware
-of the tracking. I also hope that messages like this motivate people to
-directly get at least the regression mailing list and ideally even
-regzbot involved when dealing with regressions, as messages like this
-wouldn't be needed then.
-
-Don't worry, I'll send further messages wrt to this regression just to
-the lists (with a tag in the subject so people can filter them away), as
-long as they are intended just for regzbot. With a bit of luck no such
-messages will be needed anyway.
-
-Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
-
-P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-on my table. I can only look briefly into most of them. Unfortunately
-therefore I sometimes will get things wrong or miss something important.
-I hope that's not the case here; if you think it is, don't hesitate to
-tell me about it in a public reply, that's in everyone's interest.
-
-BTW, I have no personal interest in this issue, which is tracked using
-regzbot, my Linux kernel regression tracking bot
-(https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-this mail to get things rolling again and hence don't need to be CC on
-all further activities wrt to this regression.
-
-
->     iwlwifi: fix leaks/bad data after failed firmware load
->     
->     [ Upstream commit ab07506b0454bea606095951e19e72c282bfbb42 ]
->     
->     If firmware load fails after having loaded some parts of the
->     firmware, e.g. the IML image, then this would leak. For the
->     host command list we'd end up running into a WARN on the next
->     attempt to load another firmware image.
->     
->     Fix this by calling iwl_dealloc_ucode() on failures, and make
->     that also clear the data so we start fresh on the next round.
->     
->     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
->     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
->     Link:
->     https://lore.kernel.org/r/iwlwifi.20211210110539.1f742f0eb58a.I1315f22f6aa632d94ae2069f85e1bca5e734dce0@changeid
->     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
->     Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Commit b515d2637276a3810d6595e10ab02c13bfd0b63a ("xfrm: xfrm_state_mtu
+> should return at least 1280 for ipv6") in v5.14 breaks the TCP MSS
+> calculation in ipsec transport mode, resulting complete stalls of TCP
+> connections. This happens when the (P)MTU is 1280 or slighly larger.
 > 
->  drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> The desired formula for the MSS is:
+> MSS = (MTU - ESP_overhead) - IP header - TCP header
+> 
+> However, the above commit clamps the (MTU - ESP_overhead) to a
+> minimum of 1280, turning the formula into
+> MSS = max(MTU - ESP overhead, 1280) -  IP header - TCP header
+> 
+> With the (P)MTU near 1280, the calculated MSS is too large and the
+> resulting TCP packets never make it to the destination because they
+> are over the actual PMTU.
+> 
+> The above commit also causes suboptimal double fragmentation in
+> xfrm tunnel mode, as described in
+> https://lore.kernel.org/netdev/20210429202529.codhwpc7w6kbudug@dwarf.suse.cz/
+> 
+> The original problem the above commit was trying to fix is now fixed
+> by commit 6596a0229541270fb8d38d989f91b78838e5e9da ("xfrm: fix MTU
+> regression").
+> 
+> Signed-off-by: Jiri Bohac <jbohac@suse.cz>
+> Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 
----
-Additional information about regzbot:
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and/or the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-tell #regzbot about it in the report, as that will ensure the regression
-gets on the radar of regzbot and the regression tracker. That's in your
-interest, as they will make sure the report won't fall through the
-cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include a 'Link:' tag to the report in the commit message, as explained
-in Documentation/process/submitting-patches.rst
-That aspect was recently was made more explicit in commit 1f57bd42b77c:
-https://git.kernel.org/linus/1f57bd42b77c
+On 16.01.22 11:18, Thorsten Leemhuis wrote:
+> [TLDR: I'm adding this regression to regzbot, the Linux kernel
+> regression tracking bot; most text you find below is compiled from a few
+> templates paragraphs some of you might have seen already.]
+> 
+> Top-posting for once, to make this easy accessible to everyone.
+> 
+> On 14.01.22 18:31, Jiri Bohac wrote:
+>>
+>> our customer found that commit
+>> b515d2637276a3810d6595e10ab02c13bfd0b63a ("xfrm: xfrm_state_mtu
+>> should return at least 1280 for ipv6") in v5.14 breaks the TCP
+>> MSS calculation in ipsec transport mode, resulting complete
+>> stalls of TCP connections. This happens when the (P)MTU is 1280
+>> or slighly larger.
+>>
+>> The desired formula for the MSS is:
+>> 	MSS = (MTU - ESP_overhead) - IP header - TCP header
+>>
+>> However, the above patch clamps the (MTU - ESP_overhead) to a
+>> minimum of 1280, turning the formula into
+>> 	MSS = max(MTU - ESP overhead, 1280) -  IP header - TCP header
+>>
+>> With the (P)MTU near 1280, the calculated MSS is too large and
+>> the resulting TCP packets never make it to the destination
+>> because they are over the actual PMTU.
+>>
+>> Trying to fix the exact same problem as the broken patch, which I
+>> was unaware of, I sent an alternative patch in this thread of
+>> April 2021:
+>> https://lore.kernel.org/netdev/20210429170254.5grfgsz2hgy2qjhk@dwarf.suse.cz/
+>> (note the v1 is broken and followed by v2!)
+>>
+>> In that thread I also found other problems with
+>> b515d2637276a3810d6595e10ab02c13bfd0b63a - in tunnel mode it
+>> causes suboptimal double fragmentation:
+>> https://lore.kernel.org/netdev/20210429202529.codhwpc7w6kbudug@dwarf.suse.cz/
+>>
+>> I therefore propose to revert
+>> b515d2637276a3810d6595e10ab02c13bfd0b63a and
+>> apply the v2 version of my patch, which I'll re-send in reply to
+>> this e-mail.
+> 
+> Thanks for the report.
+> 
+> To be sure this issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, my Linux kernel regression tracking bot:
+> 
+> #regzbot ^introduced b515d2637276a3810d6595e10ab02c13bfd0b63a
+> #regzbot title xfrm: TCP MSS calculation broken by commit b515d263,
+> results in TCP stall
+> #regzbot ignore-activity
+> 
+> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
+> to the report (the parent of this mail) using the kernel.org redirector,
+> as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
+> then will automatically mark the regression as resolved once the fix
+> lands in the appropriate tree. For more details about regzbot see footer.
+> 
+> Sending this to everyone that got the initial report, to make all aware
+> of the tracking. I also hope that messages like this motivate people to
+> directly get at least the regression mailing list and ideally even
+> regzbot involved when dealing with regressions, as messages like this
+> wouldn't be needed then.
+> 
+> Don't worry, I'll send further messages wrt to this regression just to
+> the lists (with a tag in the subject so people can filter them away), as
+> long as they are intended just for regzbot. With a bit of luck no such
+> messages will be needed anyway.
+> 
+> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+> 
+> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+> on my table. I can only look briefly into most of them. Unfortunately
+> therefore I sometimes will get things wrong or miss something important.
+> I hope that's not the case here; if you think it is, don't hesitate to
+> tell me about it in a public reply, that's in everyone's interest.
+> 
+> BTW, I have no personal interest in this issue, which is tracked using
+> regzbot, my Linux kernel regression tracking bot
+> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+> this mail to get things rolling again and hence don't need to be CC on
+> all further activities wrt to this regression.
+> 
+> ---
+> Additional information about regzbot:
+> 
+> If you want to know more about regzbot, check out its web-interface, the
+> getting start guide, and/or the references documentation:
+> 
+> https://linux-regtracking.leemhuis.info/regzbot/
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> 
+> The last two documents will explain how you can interact with regzbot
+> yourself if your want to.
+> 
+> Hint for reporters: when reporting a regression it's in your interest to
+> tell #regzbot about it in the report, as that will ensure the regression
+> gets on the radar of regzbot and the regression tracker. That's in your
+> interest, as they will make sure the report won't fall through the
+> cracks unnoticed.
+> 
+> Hint for developers: you normally don't need to care about regzbot once
+> it's involved. Fix the issue as you normally would, just remember to
+> include a 'Link:' tag to the report in the commit message, as explained
+> in Documentation/process/submitting-patches.rst
+> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+> https://git.kernel.org/linus/1f57bd42b77c
+> 
