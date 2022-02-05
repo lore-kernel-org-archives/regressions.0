@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A1342F21
-	for <regressions@lists.linux.dev>; Sat,  5 Feb 2022 05:17:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CBE2F26
+	for <regressions@lists.linux.dev>; Sat,  5 Feb 2022 08:04:25 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nGDS0-0007CA-TU; Sat, 05 Feb 2022 06:17:32 +0100
-Message-ID: <33f5aac4-85ee-faae-15a7-ae90d78ed1c0@leemhuis.info>
-Date: Sat, 5 Feb 2022 06:17:32 +0100
+	id 1nGG3T-0006lw-Av; Sat, 05 Feb 2022 09:04:23 +0100
+Message-ID: <c75f77de-634e-a059-1165-8dcb68385dc7@leemhuis.info>
+Date: Sat, 5 Feb 2022 09:04:22 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,111 +16,134 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH v5 2/5] acpi: Store CRC-32 hash of the _PLD in struct
- acpi_device #forregzbot
+Subject: Re: Regression/boot failure on 5.16.3 #forregzbot
 Content-Language: en-BS
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20211223081620.45479-1-heikki.krogerus@linux.intel.com>
- <20211223081620.45479-3-heikki.krogerus@linux.intel.com>
- <20220130164126.GA2942650@roeck-us.net>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20220130164126.GA2942650@roeck-us.net>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220203161959.3edf1d6e@valencia>
+ <f0e5b970-5982-313b-8c75-b839086ce100@leemhuis.info>
+In-Reply-To: <f0e5b970-5982-313b-8c75-b839086ce100@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644038254;d2de4205;
-X-HE-SMSGID: 1nGDS0-0007CA-TU
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644048265;15e56133;
+X-HE-SMSGID: 1nGG3T-0006lw-Av
 
 For the record:
 
-#regzbot fixed-by: 04662bac0067e2fd7f243d6abaa4d779bce14114
+#regzbot monitor
+https://lore.kernel.org/all/20220204061104.5851831a@valencia/
 
 TWIMC: this mail is primarily send for documentation purposes and for
 regzbot, my Linux kernel regression tracking bot. These mails usually
 contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-On 30.01.22 17:41, Guenter Roeck wrote:
-> On Thu, Dec 23, 2021 at 11:16:17AM +0300, Heikki Krogerus wrote:
->> Storing CRC-32 hash of the Physical Location of Device
->> object (_PLD) with devices that have it. The hash is stored
->> to a new struct acpi_device member "pld_crc".
+On 04.02.22 09:48, Thorsten Leemhuis wrote:
+> [TLDR: I'm adding this regression to regzbot, the Linux kernel
+> regression tracking bot; most text you find below is compiled from a few
+> templates paragraphs some of you might have seen already.]
+> 
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> Adding the regression mailing list to the list of recipients, as it
+> should be in the loop for all regressions, as explained here:
+> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+> 
+> On 04.02.22 01:19, Jason Self wrote:
+>> The computer (amd64) fails to boot. The init was stuck at the
+>> synchronization of the time through the network. This began between
+>> 5.16.2 (good) and 5.16.3 (bad.) This continues on 5.16.4 and 5.16.5.
+>> Git bisect revealed the following. In this case the nonfree firmwre is
+>> not present on the system. Blacklisting the iwflwifi module works as a
+>> workaround for now.
 >>
->> The hash makes it easier to find devices that share a
->> location, as there is no need to evaluate the entire object
->> every time. Knowledge about devices that share a location
->> can be used in device drivers that need to know the
->> connections to other components inside a system. USB3 ports
->> will for example always share their location with a USB2
->> port.
+>> 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1 is the first bad commit
+>> commit 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
+>> Author: Johannes Berg <johannes.berg@intel.com>
+>> Date:   Fri Dec 10 11:12:42 2021 +0200
+> 
+> To be sure this issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, my Linux kernel regression tracking bot:
+> 
+> #regzbot ^introduced 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
+> #regzbot title net: iwlwifi: system fails to boot since 5.16.3
+> #regzbot ignore-activity
+> 
+> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
+> to the report (the parent of this mail) using the kernel.org redirector,
+> as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
+> then will automatically mark the regression as resolved once the fix
+> lands in the appropriate tree. For more details about regzbot see footer.
+> 
+> Sending this to everyone that got the initial report, to make all aware
+> of the tracking. I also hope that messages like this motivate people to
+> directly get at least the regression mailing list and ideally even
+> regzbot involved when dealing with regressions, as messages like this
+> wouldn't be needed then.
+> 
+> Don't worry, I'll send further messages wrt to this regression just to
+> the lists (with a tag in the subject so people can filter them away), as
+> long as they are intended just for regzbot. With a bit of luck no such
+> messages will be needed anyway.
+> 
+> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+> 
+> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+> on my table. I can only look briefly into most of them. Unfortunately
+> therefore I sometimes will get things wrong or miss something important.
+> I hope that's not the case here; if you think it is, don't hesitate to
+> tell me about it in a public reply, that's in everyone's interest.
+> 
+> BTW, I have no personal interest in this issue, which is tracked using
+> regzbot, my Linux kernel regression tracking bot
+> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+> this mail to get things rolling again and hence don't need to be CC on
+> all further activities wrt to this regression.
+> 
+> 
+>>     iwlwifi: fix leaks/bad data after failed firmware load
+>>     
+>>     [ Upstream commit ab07506b0454bea606095951e19e72c282bfbb42 ]
+>>     
+>>     If firmware load fails after having loaded some parts of the
+>>     firmware, e.g. the IML image, then this would leak. For the
+>>     host command list we'd end up running into a WARN on the next
+>>     attempt to load another firmware image.
+>>     
+>>     Fix this by calling iwl_dealloc_ucode() on failures, and make
+>>     that also clear the data so we start fresh on the next round.
+>>     
+>>     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+>>     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+>>     Link:
+>>     https://lore.kernel.org/r/iwlwifi.20211210110539.1f742f0eb58a.I1315f22f6aa632d94ae2069f85e1bca5e734dce0@changeid
+>>     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+>>     Signed-off-by: Sasha Levin <sashal@kernel.org>
 >>
->> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>>  drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
 > 
-> Building ia64:tinyconfig ... failed
+> ---
+> Additional information about regzbot:
 > 
-> ia64-linux-ld: drivers/acpi/scan.o: in function `__acpi_device_add':
-> scan.c:(.text+0x27e2): undefined reference to `crc32_le'
+> If you want to know more about regzbot, check out its web-interface, the
+> getting start guide, and/or the references documentation:
 > 
-> ACPI now depends on CRC32.
+> https://linux-regtracking.leemhuis.info/regzbot/
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
 > 
-> #regzbot introduced: 882c982dada4d5
+> The last two documents will explain how you can interact with regzbot
+> yourself if your want to.
 > 
-> Guenter
+> Hint for reporters: when reporting a regression it's in your interest to
+> tell #regzbot about it in the report, as that will ensure the regression
+> gets on the radar of regzbot and the regression tracker. That's in your
+> interest, as they will make sure the report won't fall through the
+> cracks unnoticed.
 > 
->> ---
->>  drivers/acpi/scan.c     | 16 ++++++++++++++++
->>  include/acpi/acpi_bus.h |  1 +
->>  2 files changed, 17 insertions(+)
->>
->> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
->> index 7ff55a197a583..113414c46b713 100644
->> --- a/drivers/acpi/scan.c
->> +++ b/drivers/acpi/scan.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/dma-map-ops.h>
->>  #include <linux/platform_data/x86/apple.h>
->>  #include <linux/pgtable.h>
->> +#include <linux/crc32.h>
->>  
->>  #include "internal.h"
->>  
->> @@ -667,6 +668,19 @@ static int acpi_tie_acpi_dev(struct acpi_device *adev)
->>  	return 0;
->>  }
->>  
->> +static void acpi_store_pld_crc(struct acpi_device *adev)
->> +{
->> +	struct acpi_pld_info *pld;
->> +	acpi_status status;
->> +
->> +	status = acpi_get_physical_device_location(adev->handle, &pld);
->> +	if (ACPI_FAILURE(status))
->> +		return;
->> +
->> +	adev->pld_crc = crc32(~0, pld, sizeof(*pld));
->> +	ACPI_FREE(pld);
->> +}
->> +
->>  static int __acpi_device_add(struct acpi_device *device,
->>  			     void (*release)(struct device *))
->>  {
->> @@ -725,6 +739,8 @@ static int __acpi_device_add(struct acpi_device *device,
->>  	if (device->wakeup.flags.valid)
->>  		list_add_tail(&device->wakeup_list, &acpi_wakeup_device_list);
->>  
->> +	acpi_store_pld_crc(device);
->> +
->>  	mutex_unlock(&acpi_device_lock);
->>  
->>  	if (device->parent)
->> diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
->> index 8e87ead2af341..f8c945418df23 100644
->> --- a/include/acpi/acpi_bus.h
->> +++ b/include/acpi/acpi_bus.h
->> @@ -360,6 +360,7 @@ struct acpi_gpio_mapping;
->>  
->>  /* Device */
->>  struct acpi_device {
->> +	u32 pld_crc;
->>  	int device_type;
->>  	acpi_handle handle;		/* no handle for fixed hardware */
->>  	struct fwnode_handle fwnode;
-
+> Hint for developers: you normally don't need to care about regzbot once
+> it's involved. Fix the issue as you normally would, just remember to
+> include a 'Link:' tag to the report in the commit message, as explained
+> in Documentation/process/submitting-patches.rst
+> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+> https://git.kernel.org/linus/1f57bd42b77c
