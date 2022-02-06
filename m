@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61CBE2F26
-	for <regressions@lists.linux.dev>; Sat,  5 Feb 2022 08:04:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675722F24
+	for <regressions@lists.linux.dev>; Sun,  6 Feb 2022 09:52:16 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nGG3T-0006lw-Av; Sat, 05 Feb 2022 09:04:23 +0100
-Message-ID: <c75f77de-634e-a059-1165-8dcb68385dc7@leemhuis.info>
-Date: Sat, 5 Feb 2022 09:04:22 +0100
+	id 1nGeDE-0005xC-Nn; Sun, 06 Feb 2022 10:52:04 +0100
+Message-ID: <74cf71d9-8c9f-6b3d-8019-2d7f4e9d0d2d@leemhuis.info>
+Date: Sun, 6 Feb 2022 10:52:04 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,134 +16,136 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: Regression/boot failure on 5.16.3 #forregzbot
+Subject: Re: [PATCH] PCI: xgene: Fix IB window setup
 Content-Language: en-BS
+To: dann frazier <dann.frazier@canonical.com>, Rob Herring <robh@kernel.org>
+Cc: Toan Le <toan@os.amperecomputing.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Andrew Murray <amurray@thegoodpenguin.co.uk>,
+ =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>,
+ stable@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20211129173637.303201-1-robh@kernel.org>
+ <Yf2wTLjmcRj+AbDv@xps13.dannf>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220203161959.3edf1d6e@valencia>
- <f0e5b970-5982-313b-8c75-b839086ce100@leemhuis.info>
-In-Reply-To: <f0e5b970-5982-313b-8c75-b839086ce100@leemhuis.info>
+In-Reply-To: <Yf2wTLjmcRj+AbDv@xps13.dannf>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644048265;15e56133;
-X-HE-SMSGID: 1nGG3T-0006lw-Av
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644141136;ad7da6aa;
+X-HE-SMSGID: 1nGeDE-0005xC-Nn
 
-For the record:
+[TLDR: I'm adding the regression report below to regzbot, the Linux
+kernel regression tracking bot; nearly all text you find below is
+compiled from a few templates paragraphs you likely have encountered
+already already from mails similar to this one.]
 
-#regzbot monitor
-https://lore.kernel.org/all/20220204061104.5851831a@valencia/
+Hi, this is your Linux kernel regression tracker speaking.
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
-On 04.02.22 09:48, Thorsten Leemhuis wrote:
-> [TLDR: I'm adding this regression to regzbot, the Linux kernel
-> regression tracking bot; most text you find below is compiled from a few
-> templates paragraphs some of you might have seen already.]
+On 05.02.22 00:01, dann frazier wrote:
+> On Mon, Nov 29, 2021 at 11:36:37AM -0600, Rob Herring wrote:
+>> Commit 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup")
+>> broke PCI support on XGene. The cause is the IB resources are now sorted
+>> in address order instead of being in DT dma-ranges order. The result is
+>> which inbound registers are used for each region are swapped. I don't
+>> know the details about this h/w, but it appears that IB region 0
+>> registers can't handle a size greater than 4GB. In any case, limiting
+>> the size for region 0 is enough to get back to the original assignment
+>> of dma-ranges to regions.
 > 
-> Hi, this is your Linux kernel regression tracker speaking.
+> hey Rob!
 > 
-> Adding the regression mailing list to the list of recipients, as it
-> should be in the loop for all regressions, as explained here:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+> I've been seeing a panic on HP Moonshoot m400 cartridges (X-Gene1) -
+> only during network installs - that I also bisected down to commit
+> 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup"). I was
+> hoping that this patch that fixed the issue on Stéphane's X-Gene2
+> system would also fix my issue, but no luck. In fact, it seems to just
+> makes it fail differently. Reverting both patches is required to get a
+> v5.17-rc kernel to boot.
 > 
-> On 04.02.22 01:19, Jason Self wrote:
->> The computer (amd64) fails to boot. The init was stuck at the
->> synchronization of the time through the network. This began between
->> 5.16.2 (good) and 5.16.3 (bad.) This continues on 5.16.4 and 5.16.5.
->> Git bisect revealed the following. In this case the nonfree firmwre is
->> not present on the system. Blacklisting the iwflwifi module works as a
->> workaround for now.
->>
->> 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1 is the first bad commit
->> commit 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
->> Author: Johannes Berg <johannes.berg@intel.com>
->> Date:   Fri Dec 10 11:12:42 2021 +0200
+> I've collected the following logs - let me know if anything else would
+> be useful.
 > 
-> To be sure this issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, my Linux kernel regression tracking bot:
+> 1) v5.17-rc2+ (unmodified):
+>    http://dannf.org/bugs/m400-no-reverts.log
+>    Note that the mlx4 driver fails initialization.
 > 
-> #regzbot ^introduced 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
-> #regzbot title net: iwlwifi: system fails to boot since 5.16.3
-> #regzbot ignore-activity
+> 2) v5.17-rc2+, w/o the commit that fixed Stéphane's system:
+>    http://dannf.org/bugs/m400-xgene2-fix-reverted.log
+>    Note the mlx4 MSI-X timeout, and later panic.
 > 
-> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
-> to the report (the parent of this mail) using the kernel.org redirector,
-> as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
-> then will automatically mark the regression as resolved once the fix
-> lands in the appropriate tree. For more details about regzbot see footer.
-> 
-> Sending this to everyone that got the initial report, to make all aware
-> of the tracking. I also hope that messages like this motivate people to
-> directly get at least the regression mailing list and ideally even
-> regzbot involved when dealing with regressions, as messages like this
-> wouldn't be needed then.
-> 
-> Don't worry, I'll send further messages wrt to this regression just to
-> the lists (with a tag in the subject so people can filter them away), as
-> long as they are intended just for regzbot. With a bit of luck no such
-> messages will be needed anyway.
-> 
-> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
-> 
-> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-> on my table. I can only look briefly into most of them. Unfortunately
-> therefore I sometimes will get things wrong or miss something important.
-> I hope that's not the case here; if you think it is, don't hesitate to
-> tell me about it in a public reply, that's in everyone's interest.
-> 
-> BTW, I have no personal interest in this issue, which is tracked using
-> regzbot, my Linux kernel regression tracking bot
-> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> this mail to get things rolling again and hence don't need to be CC on
-> all further activities wrt to this regression.
-> 
-> 
->>     iwlwifi: fix leaks/bad data after failed firmware load
->>     
->>     [ Upstream commit ab07506b0454bea606095951e19e72c282bfbb42 ]
->>     
->>     If firmware load fails after having loaded some parts of the
->>     firmware, e.g. the IML image, then this would leak. For the
->>     host command list we'd end up running into a WARN on the next
->>     attempt to load another firmware image.
->>     
->>     Fix this by calling iwl_dealloc_ucode() on failures, and make
->>     that also clear the data so we start fresh on the next round.
->>     
->>     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
->>     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
->>     Link:
->>     https://lore.kernel.org/r/iwlwifi.20211210110539.1f742f0eb58a.I1315f22f6aa632d94ae2069f85e1bca5e734dce0@changeid
->>     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
->>     Signed-off-by: Sasha Levin <sashal@kernel.org>
->>
->>  drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 8 ++++++++
->>  1 file changed, 8 insertions(+)
-> 
-> ---
-> Additional information about regzbot:
-> 
-> If you want to know more about regzbot, check out its web-interface, the
-> getting start guide, and/or the references documentation:
-> 
-> https://linux-regtracking.leemhuis.info/regzbot/
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-> 
-> The last two documents will explain how you can interact with regzbot
-> yourself if your want to.
-> 
-> Hint for reporters: when reporting a regression it's in your interest to
-> tell #regzbot about it in the report, as that will ensure the regression
-> gets on the radar of regzbot and the regression tracker. That's in your
-> interest, as they will make sure the report won't fall through the
-> cracks unnoticed.
-> 
-> Hint for developers: you normally don't need to care about regzbot once
-> it's involved. Fix the issue as you normally would, just remember to
-> include a 'Link:' tag to the report in the commit message, as explained
-> in Documentation/process/submitting-patches.rst
-> That aspect was recently was made more explicit in commit 1f57bd42b77c:
-> https://git.kernel.org/linus/1f57bd42b77c
+> 3) v5.17-rc2+, w/ both commits reverted (works)
+>    http://dannf.org/bugs/m400-both-reverted.log
+
+Thanks for the report.
+
+To be sure this issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced c7a75d07827a1f33d
+#regzbot title Follow-up error for the commit fixing "PCIe regression on
+APM Merlin (aarch64 dev platform) preventing NVME initialization"
+#regzbot ignore-activity
+
+Reminder for developers: when fixing the issue, please add a 'Link:'
+tags pointing to the report (the mail quoted above) using the
+lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst', as this allows the bot to assign
+any fixes posted or commited with the report to always show the current
+status of things and automatically close the issue when the fix hits the
+right tree.
+
+I'm sending this to everyone that got the initial report, to make them
+aware of the tracking. I also hope that messages like this motivate
+people to directly get at least the regression mailing list and ideally
+even regzbot involved when dealing with regressions, as messages like
+this wouldn't be needed then.
+
+Don't worry, I'll send further messages wrt to this regression just to
+the lists (with a tag in the subject so people can filter them away), if
+they are relevant just for regzbot. With a bit of luck no such messages
+will be needed anyway.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
