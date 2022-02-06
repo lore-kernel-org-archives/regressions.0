@@ -1,151 +1,144 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 675722F24
-	for <regressions@lists.linux.dev>; Sun,  6 Feb 2022 09:52:16 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nGeDE-0005xC-Nn; Sun, 06 Feb 2022 10:52:04 +0100
-Message-ID: <74cf71d9-8c9f-6b3d-8019-2d7f4e9d0d2d@leemhuis.info>
-Date: Sun, 6 Feb 2022 10:52:04 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF3A2F25
+	for <regressions@lists.linux.dev>; Sun,  6 Feb 2022 14:57:17 +0000 (UTC)
+Received: by mail-qk1-f174.google.com with SMTP id m25so8978030qka.9
+        for <regressions@lists.linux.dev>; Sun, 06 Feb 2022 06:57:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:content-language:to:cc:from
+         :subject:content-transfer-encoding;
+        bh=6C7rbUEg2uQL4Nc+cT/M+bAdu9A/znrgfhwH+AQ1S78=;
+        b=js+9iQQp99xPsgADdT8wY0caIMG3/42oheJMmMId14muj/DKyEIqCdJIOb1/1TbjHw
+         jQEuJjSO8QFi3JOpLAb6iXUTNpgWQEF2cCLY/LwJi55y0+gTM/Bf1z8U9OTX4cWbRdry
+         34d6R8Zu0zyobyXeCVknIk4gN0IL5oRFIJBgWenJjvzbhgienMclu1HKaGQ3ewp6o1ZY
+         S+F14Ux/RloNk/Vb8W56MJQbKhF3aBImPXt3Uxca5Yk2Rjn5DvLZKixJYQW9Rj3s5KLh
+         t0x3IiWvXLnVy/0b01pAJ9mMKk5X5jSYEPmm4//W3JDOmPE6FzxLicugSaA+6MU0bMNx
+         7yCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:from:subject:content-transfer-encoding;
+        bh=6C7rbUEg2uQL4Nc+cT/M+bAdu9A/znrgfhwH+AQ1S78=;
+        b=Z/dNmO+FDo99Q7307mX7Nba1Mdm/M2UQLboMvOeKubFmegaJfSWgRIH73ONrV42ZsK
+         Nn9iQoOHEjlK8Kp17zkiNobV/G1uaX4dH2dZUQekE2KA+XRgM3Om4yrCeCIeTmGWi/o3
+         e8tsDdyzjNXClkYv0RajTlO2Bt7q1IYPsOM/GIa80JaZw08HPu9xJUKVh75HNjQUa/6e
+         RhJP/bG4VrCrOY70fc0OPJzxKIfPJo/fcpxXjilBONDDPL+aOSZ9uTUA8mW+cugLkcYU
+         PkuR0X4GjT1Fe6qkJ/0+u5ZxykWTwR3pG/CsVNWmORMq5sRgX1+SXJHZhkL+ggT72qm+
+         bQeg==
+X-Gm-Message-State: AOAM533ndFyU2IN7v9SWs3ZSQ5EL2tl4tY/jER4ZEQjVCrBoVw8uhy5G
+	GUL75Bpr+mDpqLEgLoJemPWSC2cf/g==
+X-Google-Smtp-Source: ABdhPJxLODizMUYIz9OLmczZzSGH73EUmKsUh3vN3LxBo6Y9R4Oe22U8PchvV9LhoxT2EtIMyMNmRA==
+X-Received: by 2002:a05:620a:40c5:: with SMTP id g5mr4235977qko.71.1644159436715;
+        Sun, 06 Feb 2022 06:57:16 -0800 (PST)
+Received: from [10.1.1.242] (207-38-182-214.s3007.c3-0.wsd-cbr1.qens-wsd.ny.cable.rcncustomer.com. [207.38.182.214])
+        by smtp.gmail.com with ESMTPSA id s4sm4158402qko.113.2022.02.06.06.57.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Feb 2022 06:57:16 -0800 (PST)
+Message-ID: <4f5dccba-ab28-8007-bed8-f2594498c8c1@gmail.com>
+Date: Sun, 6 Feb 2022 09:57:15 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH] PCI: xgene: Fix IB window setup
-Content-Language: en-BS
-To: dann frazier <dann.frazier@canonical.com>, Rob Herring <robh@kernel.org>
-Cc: Toan Le <toan@os.amperecomputing.com>,
- Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Andrew Murray <amurray@thegoodpenguin.co.uk>,
- =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>,
- stable@vger.kernel.org, linux-pci@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20211129173637.303201-1-robh@kernel.org>
- <Yf2wTLjmcRj+AbDv@xps13.dannf>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <Yf2wTLjmcRj+AbDv@xps13.dannf>
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Content-Language: en-US
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, tech.support@broadcom.com
+From: MP <fromschoollaptop@gmail.com>
+Subject: Asus Router Kernel Panics
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644141136;ad7da6aa;
-X-HE-SMSGID: 1nGeDE-0005xC-Nn
 
-[TLDR: I'm adding the regression report below to regzbot, the Linux
-kernel regression tracking bot; nearly all text you find below is
-compiled from a few templates paragraphs you likely have encountered
-already already from mails similar to this one.]
 
-Hi, this is your Linux kernel regression tracker speaking.
+Hello all,
 
-CCing the regression mailing list, as it should be in the loop for all
-regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+  Just looking for a bit of guidance here and a suggestion on proper 
+next steps. I think there may be an issue within the below broadcom nand 
+driver implementation.
 
-On 05.02.22 00:01, dann frazier wrote:
-> On Mon, Nov 29, 2021 at 11:36:37AM -0600, Rob Herring wrote:
->> Commit 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup")
->> broke PCI support on XGene. The cause is the IB resources are now sorted
->> in address order instead of being in DT dma-ranges order. The result is
->> which inbound registers are used for each region are swapped. I don't
->> know the details about this h/w, but it appears that IB region 0
->> registers can't handle a size greater than 4GB. In any case, limiting
->> the size for region 0 is enough to get back to the original assignment
->> of dma-ranges to regions.
-> 
-> hey Rob!
-> 
-> I've been seeing a panic on HP Moonshoot m400 cartridges (X-Gene1) -
-> only during network installs - that I also bisected down to commit
-> 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup"). I was
-> hoping that this patch that fixed the issue on Stéphane's X-Gene2
-> system would also fix my issue, but no luck. In fact, it seems to just
-> makes it fail differently. Reverting both patches is required to get a
-> v5.17-rc kernel to boot.
-> 
-> I've collected the following logs - let me know if anything else would
-> be useful.
-> 
-> 1) v5.17-rc2+ (unmodified):
->    http://dannf.org/bugs/m400-no-reverts.log
->    Note that the mlx4 driver fails initialization.
-> 
-> 2) v5.17-rc2+, w/o the commit that fixed Stéphane's system:
->    http://dannf.org/bugs/m400-xgene2-fix-reverted.log
->    Note the mlx4 MSI-X timeout, and later panic.
-> 
-> 3) v5.17-rc2+, w/ both commits reverted (works)
->    http://dannf.org/bugs/m400-both-reverted.log
+I have an Asus GTE-AX11000 and it reboots\crashes multiple times a week, 
+upon inspection of snmp logging you can see the below entries, when the 
+kernel panic occurs the entire router locks up, and sometimes reboots. 
+Sometimes it doesn't reboot and the router hangs completely and drops 
+all network devices, and removes wireless SSIDs and all of your devices 
+lose their connection.
 
-Thanks for the report.
+Not sure who to turn to but Asus support has not grasped the gravity of 
+this problem and I am thinking this can only really be resolved with a 
+firmware\driver\linux update, so just hoping for some additional help or 
+guidance from this group.
 
-To be sure this issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
 
-#regzbot ^introduced c7a75d07827a1f33d
-#regzbot title Follow-up error for the commit fixing "PCIe regression on
-APM Merlin (aarch64 dev platform) preventing NVME initialization"
-#regzbot ignore-activity
+Thanks much.
 
-Reminder for developers: when fixing the issue, please add a 'Link:'
-tags pointing to the report (the mail quoted above) using the
-lore.kernel.org/r/, as explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst', as this allows the bot to assign
-any fixes posted or commited with the report to always show the current
-status of things and automatically close the issue when the fix hits the
-right tree.
+https://github.com/torvalds/linux/blob/master/drivers/mtd/nand/raw/brcmnand/brcmnand.c
 
-I'm sending this to everyone that got the initial report, to make them
-aware of the tracking. I also hope that messages like this motivate
-people to directly get at least the regression mailing list and ideally
-even regzbot involved when dealing with regressions, as messages like
-this wouldn't be needed then.
 
-Don't worry, I'll send further messages wrt to this regression just to
-the lists (with a tag in the subject so people can filter them away), if
-they are relevant just for regzbot. With a bit of luck no such messages
-will be needed anyway.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
-
--- 
-Additional information about regzbot:
-
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-CC the regression list and tell regzbot about the issue, as that ensures
-the regression makes it onto the radar of the Linux kernel's regression
-tracker -- that's in your interest, as it ensures your report won't fall
-through the cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include 'Link:' tag in the patch descriptions pointing to all reports
-about the issue. This has been expected from developers even before
-regzbot showed up for reasons explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'.
+022-02-06 09:00:18,User.Error,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: bcm63xx_nand ff801800.nand: timeout waiting for command 0x1
+2022-02-06 09:00:18,User.Error,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: bcm63xx_nand ff801800.nand: intfc status 700000e0
+*2022-02-06 09:00:18,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: BUG: failure at 
+drivers/mtd/nand/brcmnand/brcmnand.c:1339/brcmnand_send_cmd()!*
+2022-02-06 09:00:19,User.Emerg,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: Kernel panic - not syncing: BUG!
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: CPU: 2 PID: 24207 Comm: TrafficAnalyzer Tainted: P O    4.1.52 #2
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: Hardware name: Broadcom-v8A (DT)
+2022-02-06 09:00:19,User.Emerg,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: Call trace:
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc000087398>] dump_backtrace+0x0/0x150
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc0000874fc>] show_stack+0x14/0x20
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc00057d6b0>] dump_stack+0x90/0xb0
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc00057b374>] panic+0xd8/0x220
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc000344cac>] brcmnand_send_cmd+0x134/0x140
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc000344ea0>] brcmnand_read_by_pio+0xc8/0x318
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc0003451a8>] brcmnand_read+0xb8/0x458
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc0003456cc>] brcmnand_read_page+0x2c/0x38
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc000340e84>] nand_do_read_ops+0x1b4/0x640
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc00034163c>] nand_read+0x5c/0x88
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc000336f74>] part_read+0x34/0x90
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc000334890>] mtd_read+0x48/0x80
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc000208718>] jffs2_flash_read+0x58/0x198
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc00057c1e8>] jffs2_garbage_collect_pristine+0xa4/0x3bc
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc00057c9f0>] jffs2_garbage_collect_live+0x37c/0xec8
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc000203ab8>] jffs2_garbage_collect_pass+0x408/0x830
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc000208094>] jffs2_flush_wbuf_gc+0xac/0x150
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc0001fc0ac>] jffs2_fsync+0x44/0x60
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc00016b064>] vfs_fsync_range+0x44/0xc0
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc00016b138>] do_fsync+0x38/0x68
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: [<ffffffc00016b408>] SyS_fdatasync+0x10/0x20
+2022-02-06 09:00:19,User.Critical,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: CPU1: stopping
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: CPU: 1 PID: 0 Comm: swapper/1 Tainted: P           O 4.1.52 #2
+2022-02-06 09:00:19,User.Warning,10.1.1.1,Feb  6 09:00:18 -25F7EE8-C 
+kernel: Hardware name: Broadcom-v8A (DT)
