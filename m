@@ -1,402 +1,293 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221742F23
-	for <regressions@lists.linux.dev>; Sun,  6 Feb 2022 20:21:43 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1nGo2V-0001NV-SL; Sun, 06 Feb 2022 21:21:40 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2022-02-06]
-Date: Sun,  6 Feb 2022 20:21:39 +0000
-Message-Id: <164417878250.37935.12983723607063220199@leemhuis.info>
-X-Mailer: git-send-email 2.34.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D543B2F28
+	for <regressions@lists.linux.dev>; Mon,  7 Feb 2022 13:19:51 +0000 (UTC)
+Received: from [192.168.0.7] (ip5f5aee58.dynamic.kabel-deutschland.de [95.90.238.88])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 70ABB61E64846;
+	Mon,  7 Feb 2022 14:14:21 +0100 (CET)
+Message-ID: <d41d8b41-c347-47e7-e52b-39d7211c8952@molgen.mpg.de>
+Date: Mon, 7 Feb 2022 14:14:20 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: Unable to transfer big files to Nokia N9
+Content-Language: en-US
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
+ Takashi Iwai <tiwai@suse.com>
+References: <eb6d86eb-d156-d7ac-0965-181719023d51@molgen.mpg.de>
+ <CABBYNZLENxvXMCh6XbBSnu0jasV1F0QestEK5v2mnNUpJdw3Vw@mail.gmail.com>
+ <cf71bdea-ec22-e4c9-016c-69e94a130607@molgen.mpg.de>
+ <a93c0fa7-7b84-6aea-265b-c913e0c84678@molgen.mpg.de>
+ <d7206e12-1b99-c3be-84f4-df22af427ef5@molgen.mpg.de>
+ <371027df-7f32-edab-208d-d4cdd2202ba6@leemhuis.info>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <371027df-7f32-edab-208d-d4cdd2202ba6@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644178903;4530a854;
-X-HE-SMSGID: 1nGo2V-0001NV-SL
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 24 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-========================================================
-current cycle (v5.16.. aka v5.17-rc), culprit identified
-========================================================
-
-
-[ *NEW* ] Follow-up error for the commit fixing "PCIe regression on APM Merlin (aarch64 dev platform) preventing NVME initialization"
--------------------------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/Yf2wTLjmcRj+AbDv@xps13.dannf/
-https://lore.kernel.org/stable/Yf2wTLjmcRj%2BAbDv@xps13.dannf/
-
-By dann frazier, 1 days ago; 3 activities, latest 0 days ago.
-Introduced in c7a75d07827a (v5.17-rc1)
-
-Recent activities from: dann frazier (2), Rob Herring (1)
-
-
-=========================================================================================
-previous cycle (v5.15..v5.16), culprit identified, with activity in the past three months
-=========================================================================================
-
-
-pci: UI becomes unresponsive every couple of seconds
-----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/8fdd5bf8-afe8-d493-e617-a47f7b8e2e0e@leemhuis.info/
-https://lore.kernel.org/regressions/8fdd5bf8-afe8-d493-e617-a47f7b8e2e0e@leemhuis.info/
-
-By , 11 days ago; 2 activities, latest 5 days ago.
-Introduced in 0e8ae5a6ff59 (v5.16-rc1)
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215533
-
-
-net: wireless: rtl8723bs (SDIO) - Access point mode causes a kernel panic
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/d58625ad-6f3e-a7d7-b5b4-d18eb16f4082@leemhuis.info/
-https://lore.kernel.org/regressions/d58625ad-6f3e-a7d7-b5b4-d18eb16f4082@leemhuis.info/
-
-By José Ángel Pastrana, 7 days ago; 1 activities, latest 7 days ago.
-Introduced in 54659ca026e5 (v5.16-rc1)
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215542
-
-
-Re: Unable to transfer big files to Nokia N9
---------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/d7206e12-1b99-c3be-84f4-df22af427ef5@molgen.mpg.de/
-https://lore.kernel.org/lkml/d7206e12-1b99-c3be-84f4-df22af427ef5@molgen.mpg.de/
-
-By Paul Menzel, 21 days ago; 1 activities, latest 21 days ago.
-Introduced in 81be03e026dc (v5.16-rc1)
-
-
-==================================================================================
-older cycles (..v5.15), culprit identified, with activity in the past three months
-==================================================================================
-
-
-xfrm: TCP MSS calculation broken by commit b515d263, results in TCP stall
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20220114173133.tzmdm2hy4flhblo3@dwarf.suse.cz/
-https://lore.kernel.org/netdev/20220114173133.tzmdm2hy4flhblo3@dwarf.suse.cz/
-
-By Jiri Bohac, 23 days ago; 12 activities, latest 2 days ago.
-Introduced in b515d2637276 (v5.14-rc1)
-
-Fix incoming:
-* Revert "xfrm: xfrm_state_mtu should return at least 1280 for ipv6"
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=a6d95c5a628a09be129f25d5663a7e9db8261f51
-
-
-Bug in Memory Layout of rx_desc for QCA6174
--------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAH4F6usFu8-A6k5Z7rU9__iENcSC6Zr-NtRhh_aypR74UvN1uQ@mail.gmail.com/
-https://lore.kernel.org/ath10k/CAH4F6usFu8-A6k5Z7rU9__iENcSC6Zr-NtRhh_aypR74UvN1uQ@mail.gmail.com/
-
-By Francesco Magliocca, 233 days ago; 10 activities, latest 6 days ago.
-Introduced in e3def6f7ddf8 (v4.16-rc1)
-
-Fix incoming:
-* ath10k: abstract htt_rx_desc structure
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=6bae9de622d3ef4805aba40e763eb4b0975c4f6d
-
-
-drm: amdgpu: Too-low frequency limit for AMD GPU PCI-passed-through to Windows VM
----------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/87ee57c8fu.fsf@turner.link/
-https://lore.kernel.org/lkml/87ee57c8fu.fsf@turner.link/
-
-By James D. Turner, 20 days ago; 15 activities, latest 7 days ago.
-Introduced in f9b7f3703ff9 (v5.14-rc1)
-
-
-mtd: cfi_cmdset_0002: flash write accesses on the hardware fail on a PowerPC MPC8313 to a 8-bit-parallel S29GL064N flash
-------------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de/
-https://lore.kernel.org/lkml/b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de/
-
-By Ahmad Fatoum, 55 days ago; 4 activities, latest 8 days ago.
-Introduced in dfeae1073583 (v4.18-rc1)
-
-
-sched: DMA Engine regression because of sched/fair changes
-----------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20220112152609.gg2boujeh5vv5cns@yadro.com/
-https://lore.kernel.org/lkml/20220112152609.gg2boujeh5vv5cns@yadro.com/
-
-By Alexander Fomichev, 25 days ago; 9 activities, latest 9 days ago.
-Introduced in 7332dec055f2 (v4.16-rc1)
-
-
-cifs: unable to shares that require NTLM or weaker authentication algorithms
-----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAJjP=Bt52AW_w2sKnM=MbckPkH1hevPMJVWm_Wf+wThmR72YTg@mail.gmail.com/
-https://lore.kernel.org/lkml/CAJjP=Bt52AW_w2sKnM=MbckPkH1hevPMJVWm_Wf%2BwThmR72YTg@mail.gmail.com/
-
-By Davyd McColl, 27 days ago; 17 activities, latest 9 days ago.
-Introduced in 76a3c92ec9e0 (v5.15-rc1)
-
-Noteworthy links:
-* Re: Possible regression: unable to mount CIFS 1.0 shares from older machines since 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
-  https://lore.kernel.org/lkml/ff982786-4033-7450-c10c-8ce71c28d6eb@leemhuis.info/
-  27 days ago, by Thorsten Leemhuis; thread monitored.
-* https://bugzilla.kernel.org/show_bug.cgi?id=215375
-
-
-Intel TGL notebook no longer enters power states deeper than PC2
-----------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/34eb9d46-d937-fc29-02b1-7cfb9162f9b8@leemhuis.info/
-https://lore.kernel.org/regressions/34eb9d46-d937-fc29-02b1-7cfb9162f9b8@leemhuis.info/
-
-By MarcelHB, 17 days ago; 6 activities, latest 10 days ago.
-Introduced in e5ad96f388b7 (v5.15-rc1)
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215467
-* [Bug] nvme blocks PC10 since v5.15 - bisected
-  https://lore.kernel.org/lkml/CAJZ5v0hvvYedSn5u-i7sjpoEHU4P65t7i1b2pVn=S1q0nHWgqQ@mail.gmail.com/
-  16 days ago, by Rafael J. Wysocki; thread monitored.
-
-
-gpio: some GPIO lines have stopped working
-------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20211217153555.9413-1-marcelo.jimenez@gmail.com/
-https://lore.kernel.org/stable/20211217153555.9413-1-marcelo.jimenez@gmail.com/
-
-By Marcelo Roberto Jimenez, 51 days ago; 12 activities, latest 10 days ago.
-Introduced in 2ab73c6d8323 (v5.7-rc1)
-
-One patch associated with this regression:
-* Patch "ARM: dts: gpio-ranges property is now required" has been added to the 5.4-stable tree
-  https://lore.kernel.org/linux-arm-kernel/16432993096685@kroah.com/
-  10 days ago, by gregkh@linuxfoundation.org
-
-
-Unable to set $xmm2-9 registers but able to set $xmm0-1,10-15 with ptrace syscall (fwd from bugzilla)
------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/80bed7f8-525e-9324-b544-f5f5da8ef2e7@leemhuis.info/
-https://lore.kernel.org/regressions/80bed7f8-525e-9324-b544-f5f5da8ef2e7@leemhuis.info/
-
-By Luís Ferreira, 11 days ago; 1 activities, latest 11 days ago.
-Introduced in 6164331d15f7 (v5.14-rc1)
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215524
-
-
-btrfs: deadlocks in dedupe
---------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20211210183456.GP17148@hungrycats.org/
-https://lore.kernel.org/linux-btrfs/20211210183456.GP17148@hungrycats.org/
-
-By Zygo Blaxell, 58 days ago; 13 activities, latest 16 days ago.
-Introduced in 3078d85c9a10 (v5.11-rc1)
-
-
-fbdev: matroxfb: display black ans warns "the current input timing is not supported by the monitor display"
------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20211218180035.200552-1-liuzx@knownsec.com/
-https://lore.kernel.org/lkml/20211218180035.200552-1-liuzx@knownsec.com/
-
-By Z. Liu, 50 days ago; 4 activities, latest 19 days ago.
-Introduced in 11be60bd66d5 (v5.7-rc1)
-
-Fix incoming:
-* matroxfb: set maxvram of vbG200eW to the same as vbG200 to avoid black screen
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=0c248dc26e9031841a0beb96e3f820c50d56e5b4
-
-
-net: wireless: ath10k: 5GHz channels are marked as No-IR
---------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/1c160dfb-6ccc-b4d6-76f6-4364e0adb6dd@reox.at/
-https://lore.kernel.org/ath10k/1c160dfb-6ccc-b4d6-76f6-4364e0adb6dd@reox.at/
-
-By Sebastian Bachmann, 71 days ago; 22 activities, latest 48 days ago.
-Introduced in 2dc016599cfa (v5.6-rc1)
-
-Noteworthy links:
-* Compex WLE600VX AP mode 5GHz doesn't work since kernel 5.6
-  https://lore.kernel.org/ath10k/5971a327-d11a-35e6-8295-8dfb8ae3a434@yandex.ru/
-  665 days ago, by svp; thread monitored.
-* Re: Compex WLE600VX AP mode 5GHz doesn't work since kernel 5.6
-  https://lore.kernel.org/ath10k/CA+ASDXNNfG3-ra8C2ou457J=Vj5eE83VCXgGsFPQQOixTcu7YA@mail.gmail.com/
-  593 days ago, by Brian Norris
-* [PATCH] Revert "ath: add support for special 0x0 regulatory domain"
-  https://lore.kernel.org/linux-wireless/20200730124923.271429-1-alsi@bang-olufsen.dk/
-  556 days ago, by Alvin Šipraga; thread monitored.
-* [PATCH] Revert "ath: add support for special 0x0 regulatory domain"
-  https://lore.kernel.org/ath10k/20201022172113.GA1367233@capeo.gueux.org/
-  472 days ago, by Félix Sipma; thread monitored.
-* Re: [PATCH] Revert "ath: add support for special 0x0 regulatory domain"
-  https://lore.kernel.org/ath10k/19e636c1-fdbe-7222-a055-d668e4617070@gmx.de/
-  412 days ago, by sparks71@gmx.de; thread monitored.
-* https://bugs.debian.org/959821
-* https://bbs.archlinux.org/viewtopic.php?id=254535
-
-
-usb: fsl_udc_core: corrupted request list leads to unrecoverable loop
----------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/MWHPR2201MB152074F47BF142189365627B91879@MWHPR2201MB1520.namprd22.prod.outlook.com/
-https://lore.kernel.org/linuxppc-dev/MWHPR2201MB152074F47BF142189365627B91879@MWHPR2201MB1520.namprd22.prod.outlook.com/
-
-By Eugene Bordenkircher, 100 days ago; 16 activities, latest 64 days ago.
-Introduced in f79a60b8785 (v3.4-rc4)
-
-Noteworthy links:
-* Re: bug: usb: gadget: FSL_UDC_CORE Corrupted request list leads to unrecoverable loop.
-  https://lore.kernel.org/all/CADRPPNSrhiwr8jmBb2h4cFYqHtuDKK8rL0i6Bkg7+xEyXJPATA@mail.gmail.com/
-  99 days ago, by Li Yang
-* Re: bug: usb: gadget: FSL_UDC_CORE Corrupted request list leads to unrecoverable loop.
-  https://lore.kernel.org/all/2c275adc278477e1e512ea6ecc0c1f4dcc46969d.camel@infinera.com/
-  99 days ago, by Joakim Tjernlund
-
-
-====================================================================================
-previous cycle (v5.15..v5.16), unkown culprit, with activity in the past three weeks
-====================================================================================
-
-
-net: iwlwifi: ax200: Firmware crashes on startup
-------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/6beced27-403e-7e8c-5c64-ec0feddd3331@leemhuis.info/
-https://lore.kernel.org/regressions/6beced27-403e-7e8c-5c64-ec0feddd3331@leemhuis.info/
-
-By Bernhard Rosenkränzer, 17 days ago; 8 activities, latest 2 days ago.
-Introduced in v5.15..v5.16
-
-Fix incoming:
-* iwlwifi: remove deprecated broadcast filtering feature
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=92883a524ae918736a7b8acef98698075507b8c1
-
-
-[ *NEW* ] snd: usb: snd-usb-audio:reset_resume error -22 after suspen
----------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/a8100c3d-007e-3207-7dc1-92849f638d71@leemhuis.info/
-https://lore.kernel.org/regressions/a8100c3d-007e-3207-7dc1-92849f638d71@leemhuis.info/
-
-By , 3 days ago; 1 activities, latest 3 days ago.
-Introduced in v5.15..v5.16
-
-Recent activities from: Thorsten Leemhuis (1)
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215561
-
-
-=============================================================================
-older cycles (..v5.15), unkown culprit, with activity in the past three weeks
-=============================================================================
-
-
-100 ms boot time increase regression in acpi_init()/acpi_scan_bus()
--------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de/
-https://lore.kernel.org/lkml/b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de/
-
-By Paul Menzel, 27 days ago; 2 activities, latest 5 days ago.
-Introduced in v5.13..v5.14-rc1
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215419
-
-
-backlight: Intel_backlight does not work after updating from 5.10.89 to latest 5.15.17
---------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/74ee2216-a295-c2b6-328b-3e6d0cc1847e@leemhuis.info/
-https://lore.kernel.org/regressions/74ee2216-a295-c2b6-328b-3e6d0cc1847e@leemhuis.info/
-
-By Filippo Falezza, 6 days ago; 1 activities, latest 6 days ago.
-Introduced in v5.10.89..v5.15.17
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215553
-
-
-block: bfq: oops/random freeze in bfq_put_idle_entity / bfq_exit_icq_bfqq
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/d51611e5-2e39-49b5-b300-917a9b024c59@leemhuis.info/
-https://lore.kernel.org/regressions/d51611e5-2e39-49b5-b300-917a9b024c59@leemhuis.info/
-
-By Bernd Buschinski, 11 days ago; 1 activities, latest 11 days ago.
-Introduced in v5.14..v5.15
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215527
-
-
-nfs: noresvport + nfsv4 no longer working as expected
------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/46a28c62-4610-00df-610c-ca3cc8861265@leemhuis.info/
-https://lore.kernel.org/regressions/46a28c62-4610-00df-610c-ca3cc8861265@leemhuis.info/
-
-By Daire Byrne, 11 days ago; 1 activities, latest 11 days ago.
-Introduced in v5.11.11..v5.12.19
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215526
-
-
-====================================================================
-all others with unkown culprit and activity in the past three months
-====================================================================
-
-
-5-10% increase in IO latencies with nohz balance patch
-------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/YaUH5GFFoLiS4/3/@localhost.localdomain/
-https://lore.kernel.org/lkml/YaUH5GFFoLiS4%2F3%2F@localhost.localdomain/
-
-By Josef Bacik, 69 days ago; 14 activities, latest 24 days ago.
-Introduced in v5.15..v5.16-rc1
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/164371304929.1634350.16427081736188154002@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+Dear Thorsten, dear Luiz,
+
+
+Am 28.01.22 um 11:36 schrieb Thorsten Leemhuis:
+> Hi, this is your Linux kernel regression tracker speaking.
+
+Thorsten, thank you for following up on this.
+
+> On 16.01.22 14:27, Paul Menzel wrote:
+>> #regzbot introduced: 81be03e026dc0c16dc1c64e088b2a53b73caa895
+> 
+> thx for getting regzbot involved, much appreciated!
+> 
+>> Dear Luiz,
+>>
+>> It turns out there was a regression in Linux 5.16-rc1.
+> 
+> @bt-maintaners, what's the status here? Paul reported that over ten days
+> ago and there wasn't a single reply. Or did the discussion move
+> somewhere else?
+> 
+> @Paul: just wondering, did you give 5.17-rc1 a try? Might be worth a
+> shot, if only to confirm the issue is still present.
+
+I just tried with 5.17-rc3, and the issue is still present.
+
+
+Kind regards,
+
+Paul
+
+
+>> Am 20.12.21 um 22:31 schrieb Paul Menzel:
+>>
+>>> Am 01.12.21 um 23:07 schrieb Paul Menzel:
+>>>
+>>>> Am 01.12.21 um 19:29 schrieb Luiz Augusto von Dentz:
+>>>>
+>>>>> On Wed, Dec 1, 2021 at 9:39 AM Paul Menzel <pmenzel@molgen.mpg.de>
+>>>>> wrote:
+>>>>
+>>>>>> For the first time, I wanted to transfer a 2 MB PDF file from a Dell
+>>>>>> Latitude E7250 with Debian sid/unstable with Linux 5.16-rc1 to a Nokia
+>>>>>> N9 (MeeGo/Harmattan). Using the package *bluez-obexd* 5.61-1 and GNOME
+>>>>>> 41, the device was found, and paired fine. Then I selected to transfer
+>>>>>> the 2 MB file, and after starting for a second, it timed out after the
+>>>>>> progress bar moves forward ones and failed.
+>>>>>>
+>>>>>> The systemd journal contains:
+>>>>>>
+>>>>>>        obexd[21139]: Transfer(0x56243fe4f790) Error: Timed out
+>>>>>> waiting for response
+>>>>>>
+>>>>>> Testing with a a 5 byte test text file, worked fine. Also testing
+>>>>>> with a
+>>>>>> Galaly M32, both files were transferred without problems (though
+>>>>>> slowly
+>>>>>> with 32 KB/s.)
+>>>>>>
+>>>>>> Trying to connect to the device with bluetoothctl failed for me,
+>>>>>> and the
+>>>>>> journal contained, it failed.
+>>>>>>
+>>>>>>        $ bluetoothctl
+>>>>>>        Agent registered
+>>>>>>        [bluetooth]# connect 40:98:4E:5B:CE:XX
+>>>>>>        Attempting to connect to 40:98:4E:5B:CE:XX
+>>>>>>        Failed to connect: org.bluez.Error.Failed
+>>>>>>
+>>>>>>        bluetoothd[21104]: src/service.c:btd_service_connect()
+>>>>>> a2dp-source profile connect failed for 40:98:4E:5B:CE:B3: Protocol
+>>>>>> not available
+>>>>>>
+>>>>>> As the Nokia N9 was once pretty popular in the Linux community, I am
+>>>>>> pretty sure, it used to work fine in the past, and there is some
+>>>>>> regression. It’d be great, if you could give me some hints how to
+>>>>>> further debug the issue.
+>>>>>
+>>>>> We will need some logs, obexd and btmon, if possible.
+>>>>
+>>>> I only managed to get the btmon trace [1]. I did `sudo modprobe -r
+>>>> btusb` and `sudo btmon -w /dev/shm/trace.log`.
+>>>>
+>>>> Linux messages:
+>>>>
+>>>>       [29880.100381] calling  btusb_driver_init+0x0/0x1000 [btusb] @
+>>>> 28716
+>>>>       [29880.239603] usbcore: registered new interface driver btusb
+>>>>       [29880.239608] initcall btusb_driver_init+0x0/0x1000 [btusb]
+>>>> returned 0 after 135952 usecs
+>>>>       [29880.240706] Bluetooth: hci0: unexpected event for opcode 0x0500
+>>>>       [29880.241598] Bluetooth: hci0: Legacy ROM 2.5 revision 1.0
+>>>> build 3 week 17 2014
+>>>>       [29880.241605] Bluetooth: hci0: Intel device is already patched.
+>>>> patch num: 32
+>>>>
+>>>>   From the system journal:
+>>>>
+>>>>       Dez 01 22:52:19 ersatz obexd[21139]: Transfer(0x56243fe53dd0)
+>>>> Error: Timed out waiting for response
+>>>
+>>> Were you able to see anything in the attached logs? If the obexd logs
+>>> are missing, can you please tell how I should capture them?
+>>>
+>>> I also tested with Ubuntu 20.04 (*linux-image-5.11.0-27-generic*) and
+>>> 21.10 (*linux-image-5.13.0-19-generic*) live systems booted from a USB
+>>> storage device, and transferring `/usr/bin/systemctl`
+>>> (`/lib/systemd/systemd`) with size of 1.8 MB worked fine.
+>>>
+>>> Could there be a regression in that area? Unfortunately, it’s not easy
+>>> for me to do a bisection on the device at hand.
+>>>
+>>> (Would it be possible to do with QEMU and USB controller and Bluetooth
+>>> device passthrough? How can I transfer the file on the command line so
+>>> I wouldn’t need to install a desktop environment?)
+>>
+>> Turns out, that is indeed possible [2], but turned out to be cumbersome,
+>> as I hit the regression [3], which seems to have been fixed by commit
+>> 95655456e7ce (Bluetooth: btintel: Fix broken LED quirk for legacy ROM
+>> devices) merged in the current Linux 5.17 cycle this week.
+>>
+>> As a work around, I applied a hunk from Takashi’s patch.
+>>
+>> -       { USB_DEVICE(0x8087, 0x0a2a), .driver_info =
+>> BTUSB_INTEL_COMBINED },
+>> +       { USB_DEVICE(0x8087, 0x0a2a), .driver_info = BTUSB_INTEL_COMBINED |
+>> + BTUSB_INTEL_BROKEN_INITIAL_NCMD },
+>>
+>> My problem with the Nokia N9 is still present in Linus’ master branch.
+>>
+>> Then I built a minimal Linux kernel for QEMU, and ran:
+>>
+>>      qemu-system-x86_64 -cpu host -m 2G -enable-kvm \
+>>        -usb -device usb-host,vendorid=0x8087,productid=0x0a2a \
+>>        -drive file=/dev/shm/debian-64.img,format=raw,if=virtio \
+>>        -net nic -net user,hostfwd=tcp::22223-:22 \
+>>        -kernel /dev/shm/bzImage -append "root=/dev/vda1 rw quiet"
+>>
+>> In the Debian sid/unstable VM, I used
+>>
+>>      ssh root@localhost -p 22223
+>>
+>> I once had to pair the VM with the Nokia N9 in bluetoothctl, and then
+>> started `/usr/libexec/bluetooth/obexd`, and ran `obexctl`, and connected
+>> first with `connect`, and then ran `send /lib/systemd/systemd` to
+>> transfer the file. In the problematic cases it stopped/hung after the
+>> first progress message.
+>>
+>>      # obexctl
+>>      [NEW] Client /org/bluez/obex
+>>      [obex]# connect 40:98:4E:5B:CE:XX
+>>      Attempting to connect to 40:98:4E:5B:CE:XX
+>>      [NEW] Session /org/bluez/obex/client/session0 [default]
+>>      [NEW] ObjectPush /org/bluez/obex/client/session0
+>>      Connection successful
+>>      [40:98:4E:5B:CE:XX]# send /lib/systemd/systemd
+>>      Attempting to send /lib/systemd/systemd to
+>> /org/bluez/obex/client/session0
+>>      [NEW] Transfer /org/bluez/obex/client/session0/transfer0
+>>      Transfer /org/bluez/obex/client/session0/transfer0
+>>          Status: queued
+>>          Name: systemd
+>>          Size: 1841712
+>>          Filename: /lib/systemd/systemd
+>>          Session: /org/bluez/obex/client/session0
+>>      [CHG] Transfer /org/bluez/obex/client/session0/transfer0 Status: active
+>>      [CHG] Transfer /org/bluez/obex/client/session0/transfer0
+>> Transferred: 32737 (@32KB/s 00:55)
+>>      [CHG] Transfer /org/bluez/obex/client/session0/transfer0 Status: error
+>>      [DEL] Transfer /org/bluez/obex/client/session0/transfer0
+>>
+>> Some manual bisection of Linux releases, verified, that the regression
+>> was introduced in Linux 5.16-rc1. (Lucky me, I started using Bluetooth
+>> with the Nokia with Linux 5.16-rc1.) Then I verified it was introduced
+>> by the Bluetooth pull request for Linux 5.16. Then I picked commit
+>> 81be03e026dc0c16dc1c64e088b2a53b73caa895 due to the commit message, and
+>> bisected from there, and it turns out, that this commit is actually
+>> introducing the regression.
+>>
+>>      $ git bisect good
+>>      81be03e026dc0c16dc1c64e088b2a53b73caa895 is the first bad commit
+>>      commit 81be03e026dc0c16dc1c64e088b2a53b73caa895
+>>      Author: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+>>      Date:   Fri Sep 3 15:27:32 2021 -0700
+>>
+>>          Bluetooth: RFCOMM: Replace use of memcpy_from_msg with
+>> bt_skb_sendmmsg
+>>
+>>          This makes use of bt_skb_sendmmsg instead using memcpy_from_msg
+>> which
+>>          is not considered safe to be used when lock_sock is held.
+>>
+>>          Also make rfcomm_dlc_send handle skb with fragments and queue
+>> them all
+>>          atomically.
+>>
+>>          Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+>>          Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+>>
+>>       net/bluetooth/rfcomm/core.c | 50
+>> ++++++++++++++++++++++++++++++++++++++-------
+>>       net/bluetooth/rfcomm/sock.c | 46
+>> +++++++++--------------------------------
+>>       2 files changed, 53 insertions(+), 43 deletions(-)
+>>
+>> Unfortunately, the patch does not cleanly revert, so users have to wait
+>> until an expert can take a look, and come up with a fix.
+>>
+>>
+>> Kind regards,
+>>
+>> Paul
+>>
+>>
+>> PS: For the records:
+>>
+>>      $ git bisect log
+>>      # bad: [81be03e026dc0c16dc1c64e088b2a53b73caa895] Bluetooth: RFCOMM:
+>> Replace use of memcpy_from_msg with bt_skb_sendmmsg
+>>      # good: [49d8a5606428ca0962d09050a5af81461ff90fbb] Bluetooth: fix
+>> init and cleanup of sco_conn.timeout_work
+>>      git bisect start '81be03e026dc0' 'HEAD^'
+>>      # good: [904c139a2517191e48f9cb1bb2d611ae59434009] Bluetooth: Add
+>> support for msbc coding format
+>>      git bisect good 904c139a2517191e48f9cb1bb2d611ae59434009
+>>      # good: [8bba13b1d08d42e2e8308924fa5c1551a7b2b011] Bluetooth:
+>> btintel: Fix incorrect out of memory check
+>>      git bisect good 8bba13b1d08d42e2e8308924fa5c1551a7b2b011
+>>      # good: [38f64f650dc0e44c146ff88d15a7339efa325918] Bluetooth: Add
+>> bt_skb_sendmsg helper
+>>      git bisect good 38f64f650dc0e44c146ff88d15a7339efa325918
+>>      # good: [0771cbb3b97d3c1d68eecd7f00055f599954c34e] Bluetooth: SCO:
+>> Replace use of memcpy_from_msg with bt_skb_sendmsg
+>>      git bisect good 0771cbb3b97d3c1d68eecd7f00055f599954c34e
+>>      # first bad commit: [81be03e026dc0c16dc1c64e088b2a53b73caa895]
+>> Bluetooth: RFCOMM: Replace use of memcpy_from_msg with bt_skb_sendmmsg
+>>
+>>
+>> Kind regards,
+>>
+>> Paul
+>>
+>>
+>>>> [1]: https://owww.molgen.mpg.de/~pmenzel/trace.log.7z
+>> [2]:
+>> https://lore.kernel.org/linux-bluetooth/5891f0d5-8d51-9da5-7663-718f301490b1@molgen.mpg.de/T/#u
+>>
+>> [3]:
+>> https://lore.kernel.org/linux-bluetooth/20211202162256.31837-1-tiwai@suse.de/
+>>
+>>
+>>
