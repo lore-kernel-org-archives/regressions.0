@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034D82F25
-	for <regressions@lists.linux.dev>; Tue,  8 Feb 2022 12:24:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 356292F23
+	for <regressions@lists.linux.dev>; Tue,  8 Feb 2022 13:28:21 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nHPXq-0006Dt-4I; Tue, 08 Feb 2022 13:24:31 +0100
-Message-ID: <c674269f-5dfe-ac61-01ac-20c393c56f48@leemhuis.info>
-Date: Tue, 8 Feb 2022 13:24:29 +0100
+	id 1nHQXa-0006lv-Fi; Tue, 08 Feb 2022 14:28:19 +0100
+Message-ID: <08b18de5-c1b8-0205-8cc2-a09f45ecd0e6@leemhuis.info>
+Date: Tue, 8 Feb 2022 14:28:18 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,154 +16,57 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+Subject: Re: Intel TGL notebook no longer enters power states deeper than PC2
+ (fwd from bugzilla) #forregzbot
 Content-Language: en-BS
-To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, stable <stable@vger.kernel.org>,
- regressions@lists.linux.dev, Linus Walleij <linus.walleij@linaro.org>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>,
- Will McVicker <willmcvicker@google.com>,
- Sergio Tanzilli <tanzilli@acmesystems.it>
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info>
- <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
- <CACjc_5puGpg85XseEjKxnwE2R_XoH8EWvdwp4g2WKNBmW7pX+w@mail.gmail.com>
- <37d074c7-b264-acac-4bf6-65caa4dbab1a@leemhuis.info>
- <CACjc_5o4n9CNXoER5Va6u0fQhuE9osnUSUwSbHPx0K1yiPUj8g@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CACjc_5o4n9CNXoER5Va6u0fQhuE9osnUSUwSbHPx0K1yiPUj8g@mail.gmail.com>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <34eb9d46-d937-fc29-02b1-7cfb9162f9b8@leemhuis.info>
+ <352ecb6c-7bd8-069c-498b-66b0d236dc89@leemhuis.info>
+In-Reply-To: <352ecb6c-7bd8-069c-498b-66b0d236dc89@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644323075;8f0c81af;
-X-HE-SMSGID: 1nHPXq-0006Dt-4I
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644326901;42daa2da;
+X-HE-SMSGID: 1nHQXa-0006lv-Fi
 
-Hi, this is your Linux kernel regression tracker speaking.
+#regzbot monitor:
+https://lore.kernel.org/all/20220201165006.3074615-1-kbusch@kernel.org/
 
-Top-posting for once, to make this easy accessible to everyone.
-
-GPIO Maintainers and developers, what the status of this regression and
-getting it fixed? It looks like there was no progress for quite a while.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
-
-#regzbot poke
-
-On 12.01.22 01:09, Marcelo Roberto Jimenez wrote:
-> Hi,
+On 28.01.22 14:35, Thorsten Leemhuis wrote:
+> #regzbot monitor:
+> https://lore.kernel.org/all/CAJZ5v0hvvYedSn5u-i7sjpoEHU4P65t7i1b2pVn=S1q0nHWgqQ@mail.gmail.com/
 > 
-> On Mon, Jan 10, 2022 at 4:02 AM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
+> TWIMC: this mail is primarily send for documentation purposes and for
+> regzbot, my Linux kernel regression tracking bot. These mails usually
+> contain '#forregzbot' in the subject, to make them easy to spot and filter.
+> 
+> On 20.01.22 15:56, Thorsten Leemhuis wrote:
+>> Lo! There is a regression dealt with in bugzilla I'd like to add to the
+>> tracking:
 >>
->> Hi, this is your Linux kernel regression tracker speaking.
+>> #regzbot introduced: e5ad96f388b765fe6b52f64f37e910c0ba4f3de7
+>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215467
+>> #regzbot from: MarcelHB <m.heingbecker@googlemail.com>
+>> #regzbot title: Intel TGL notebook no longer enters power states deeper
+>> than PC2
 >>
->> On 20.12.21 21:41, Marcelo Roberto Jimenez wrote:
->>> On Mon, Dec 20, 2021 at 11:57 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->>>> On Sat, Dec 18, 2021 at 7:28 AM Thorsten Leemhuis
->>>> <regressions@leemhuis.info> wrote:
->>>>>
->>>>> [TLDR: I'm adding this regression to regzbot, the Linux kernel
->>>>> regression tracking bot; most text you find below is compiled from a few
->>>>> templates paragraphs some of you might have seen already.]
->>>>>
->>>>> On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
->>>>>> Some GPIO lines have stopped working after the patch
->>>>>> commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
->>>>>>
->>>>>> And this has supposedly been fixed in the following patches
->>>>>> commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
->>>>>> commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
->>>>>
->>>>> There seems to be a backstory here. Are there any entries and bug
->>>>> trackers or earlier discussions everyone that looks into this should be
->>>>> aware of?
->>>>
->>>> Agreed with Thorsten. I'd like to first try to determine what's wrong
->>>> before reverting those, as they are correct in theory but maybe the
->>>> implementation missed something.
->>>>
->>>> Have you tried tracing the execution on your platform in order to see
->>>> what the driver is doing?
+>>> Summary:
 >>>
->>> Yes. The problem is that there is no list defined for the sysfs-gpio
->>> interface. The driver will not perform pinctrl_gpio_request() and will
->>> return zero (failure).
+>>> Starting with Kernel 5.15, my Intel TGL notebook no longer enters power
+>>> states deeper than PC2. Previous kernels did so.
 >>>
->>> I don't know if this is the case to add something to a global DTD or
->>> to fix it in the sysfs-gpio code.
->>
->> Out of interest, has any progress been made on this front?
->>
->> BTW, there was a last-minute commit for 5.16 yesterday that referenced
->> the culprit Marcelo specified:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=master&id=c8013355ead68dce152cf426686f8a5f80d88b40
->>
->> This was for a BCM283x and BCM2711 devices, so I assume it won't help.
->> Wild guess (I don't know anything about this area of the kernel):
->> Marcelo, do the dts files for your hardware maybe need a similar fix?
-> 
-> I have tried to add "gpio-ranges" to the gpio-controllers in
-> at91sam9x5.dtsi, but the system deadlocks, because in pinctrl-at91.c,
-> function at91_pinctrl_probe() we have:
-> 
-> /*
-> * We need all the GPIO drivers to probe FIRST, or we will not be able
-> * to obtain references to the struct gpio_chip * for them, and we
-> * need this to proceed.
-> */
-> for (i = 0; i < gpio_banks; i++)
->         if (gpio_chips[i])
->                 ngpio_chips_enabled++;
-> 
->         if (ngpio_chips_enabled < info->nactive_banks) {
->                 dev_warn(&pdev->dev,
->                       "All GPIO chips are not registered yet (%d/%d)\n",
->                       ngpio_chips_enabled, info->nactive_banks);
->                devm_kfree(&pdev->dev, info);
->                 return -EPROBE_DEFER;
->         }
-> 
-> On the other hand, in gpiolib-of.c, function
-> of_gpiochip_add_pin_range() we have:
-> 
-> if (!pctldev)
->         return -EPROBE_DEFER;
-> 
-> In other words, the pinctrl needs all the gpio-controllers, and the
-> gpio-controllers need the pinctrl. Each returns -EPROBE_DEFER and the
-> system deadlocks.
-> 
+>>> Explanation:
+>>>
+>>> On my notebook, I recently started to observed that the battery drained
+>>> quickly while in a presumed suspend mode. In the past, there was no such
+>>> problem.
+>>>
+>>> I was able to bisect the problem on a tag-basis, analyzing deeper
+>>> information on what looks good and what does not.
+>>>
+>>> In the short: From somewhere at least v5.11.x until v5.14.21, the
+>>> system operates as expected when closing the lid. Starting with 5.15.0, I observed the anomalies as reported below.
 >>
 >> Ciao, Thorsten
->>
->> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
->> on my table. I can only look briefly into most of them. Unfortunately
->> therefore I sometimes will get things wrong or miss something important.
->> I hope that's not the case here; if you think it is, don't hesitate to
->> tell me about it in a public reply, that's in everyone's interest.
->>
->> BTW, I have no personal interest in this issue, which is tracked using
->> regzbot, my Linux kernel regression tracking bot
->> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
->> this mail to get things rolling again and hence don't need to be CC on
->> all further activities wrt to this regression.
->>
->> #regzbot poke
->>
-> 
-> Regards,
-> Marcelo.
 > 
 > 
