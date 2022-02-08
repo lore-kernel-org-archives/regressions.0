@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DA02F25
-	for <regressions@lists.linux.dev>; Tue,  8 Feb 2022 12:03:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DB22C9C
+	for <regressions@lists.linux.dev>; Tue,  8 Feb 2022 12:14:45 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nHPDo-00048U-9h; Tue, 08 Feb 2022 13:03:48 +0100
-Message-ID: <31603144-edec-df2d-fb46-283692c67420@leemhuis.info>
-Date: Tue, 8 Feb 2022 13:03:47 +0100
+	id 1nHPON-00026R-MF; Tue, 08 Feb 2022 13:14:43 +0100
+Message-ID: <e4d45921-ebe2-a06a-5f86-eac981d75e8d@leemhuis.info>
+Date: Tue, 8 Feb 2022 13:14:43 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,29 +16,30 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
+Subject: Re: Bug 215561 - snd-usb-audio:reset_resume error -22 after suspend
+ (fwd from bugzilla)
 Content-Language: en-BS
-To: Paul Menzel <pmenzel@molgen.mpg.de>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
- regressions@lists.linux.dev
-References: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: 100 ms boot time increase regression in
- acpi_init()/acpi_scan_bus()
-In-Reply-To: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
+To: Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <a8100c3d-007e-3207-7dc1-92849f638d71@leemhuis.info>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ alsa-devel@alsa-project.org, linux-usb@vger.kernel.org
+In-Reply-To: <a8100c3d-007e-3207-7dc1-92849f638d71@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644321831;57ba252d;
-X-HE-SMSGID: 1nHPDo-00048U-9h
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644322485;73080506;
+X-HE-SMSGID: 1nHPON-00026R-MF
 
 Hi, this is your Linux kernel regression tracker speaking.
 
 Top-posting for once, to make this easy accessible to everyone.
 
-@Rafael or any other @acpi/@pm developer: what's the status here?
-Neither in this thread nor in the bug ticket anything happened afaics.
-Or is a 100ms boot time increase considered "not a regression"?
+Below issue is one of those those reports that seem to get stranded in
+bugzilla.kernel.org
+
+Greg, Jaroslav, Takashi, could one of you please take a look? The
+reporter submitted it as USB bug, but maybe that wasn't a wise choice.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -52,82 +53,91 @@ straight.
 
 #regzbot poke
 
-On 10.01.22 12:29, Paul Menzel wrote:
-> #regzbot introduced: v5.13..v5.14-rc1
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215419
+On 03.02.22 15:59, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
 > 
+> There is a regression in bugzilla.kernel.org I'd like to add to the
+> tracking:
 > 
-> Dear Linux folks,
+> #regzbot introduced: v5.15..v5.16
+> #regzbot from: antifermion@protonmail.com <antifermion@protonmail.com>
+> #regzbot title: snd: usb: snd-usb-audio:reset_resume error -22 after suspen
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215561
 > 
+> Quote:
 > 
-> On the Intel T4500 laptop Acer TravelMate 5735Z with Debian
-> sid/unstable, there is a 100 ms introduced between Linux 5.10.46 and
-> 5.13.9, and is still present in Linux 5.15.5.
+>> If I use the microphone, then suspend and wake up again, I get the error
+>>
+>> ```
+>> snd-usb-audio 1-5:1.0: reset_resume error -22
+>> ```
+>>
+>> Aftewards, audio stops working completely. Both pipewire and pulseaudio (tried both; not at the same time) freeze.
+>>
+>> After running
+>>
+>> ```
+>> rmmod -f snd_usb_audio
+>> ```
+>>
+>> and replugging the microphone, audio works again.
+>> Here is the relevant log:
+>>
+>> ```
+>> [  157.791937] usbcore: deregistering interface driver snd-usb-audio
+>> [  228.517855] usb 1-5: USB disconnect, device number 2
+>> [  236.464334] usb 1-5: new high-speed USB device number 3 using xhci_hcd
+>> [  236.798863] usb 1-5: New USB device found, idVendor=0d8c, idProduct=0171, bcdDevice= 1.04
+>> [  236.798867] usb 1-5: New USB device strings: Mfr=3, Product=1, SerialNumber=0
+>> [  236.798869] usb 1-5: Product: USB 2.0 HD Audio
+>> [  236.798871] usb 1-5: Manufacturer: C-Media Electronics Inc.
+>> [  236.826966] input: C-Media Electronics Inc. USB 2.0 HD Audio Consumer Control as /devices/pci0000:00/0000:00:01.3/0000:02:00.0/usb1/1-5/1-5:1.3/0003:0D8C:0171.000B/input/input40
+>> [  236.878380] input: C-Media Electronics Inc. USB 2.0 HD Audio as /devices/pci0000:00/0000:00:01.3/0000:02:00.0/usb1/1-5/1-5:1.3/0003:0D8C:0171.000B/input/input41
+>> [  236.878447] hid-generic 0003:0D8C:0171.000B: input,hiddev96,hidraw2: USB HID v1.11 Device [C-Media Electronics Inc. USB 2.0 HD Audio] on usb-0000:02:00.0-5/input3
+>> [  242.306593] usbcore: registered new interface driver snd-usb-audio
+>>
+>> ```
+>>
+>> I'm running Arch Linux (5.16.4.arch1-1). The linux-lts kernel (5.15.18-1) works fine.
+>>
+>> Other uses report the same error: https://bbs.archlinux.org/viewtopic.php?id=273469
 > 
->     [    0.000000] microcode: microcode updated early to revision 0xa0b,
-> date = 2010-09-28
->     [    0.000000] Linux version 5.15.0-2-amd64
-> (debian-kernel@lists.debian.org) (gcc-11 (Debian 11.2.0-13) 11.2.0, GNU
-> ld (GNU Binutils for Debian) 2.37) #1 SMP Debian 5.15.5-2 (2021-12-18)
->     [    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-2-amd64
-> root=UUID=e17cec4f-d2b8-4cc3-bd39-39a10ed422f4 ro quiet noisapnp
-> cryptomgr.notests random.trust_cpu=on initcall_debug log_buf_len=4M
->     […]
->     [    0.262243] calling  acpi_init+0x0/0x487 @ 1
->     […]
->     [    0.281655] ACPI: Enabled 15 GPEs in block 00 to 3F
->     [    0.394855] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
->     […]
->     [    0.570908] initcall acpi_init+0x0/0x487 returned 0 after 300781
-> usecs
+> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
 > 
-> I attached all the log files to the Kernel.org Bugzilla bug report
-> #215419 [1].
+> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+> on my table. I can only look briefly into most of them. Unfortunately
+> therefore I sometimes will get things wrong or miss something important.
+> I hope that's not the case here; if you think it is, don't hesitate to
+> tell me about it in a public reply, that's in everyone's interest.
 > 
-> Unfortunately, I am unable to bisect the issue, as it’s not my machine,
-> and I do not have a lot of access to it.
+> BTW, I have no personal interest in this issue, which is tracked using
+> regzbot, my Linux kernel regression tracking bot
+> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+> this mail to get things rolling again and hence don't need to be CC on
+> all further activities wrt to this regression.
 > 
-> Using ftrace, unfortunately, I didn’t save all of them, I think the path is
+> ---
+> Additional information about regzbot:
 > 
->     acpi_init() → acpi_scan_init() → acpi_bus_scan(ACPI_ROOT_OBJECT)
+> If you want to know more about regzbot, check out its web-interface, the
+> getting start guide, and/or the references documentation:
 > 
-> But this path hasn’t changed as far as I can see. Anyway, from that
-> path, somehow
+> https://linux-regtracking.leemhuis.info/regzbot/
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
 > 
->     acpi_bus_check_add_1() → acpi_bus_check_add() → … →
-> acpi_bus_check_add() → acpi_add_single_object() → acpi_bus_get_status()
+> The last two documents will explain how you can interact with regzbot
+> yourself if your want to.
 > 
-> is called, and the `acpi_bus_get_status()` call takes 100 ms on the
-> system – also the cause for bug #208705 [2] –, but that code path wasn’t
-> taken before.
+> Hint for reporters: when reporting a regression it's in your interest to
+> tell #regzbot about it in the report, as that will ensure the regression
+> gets on the radar of regzbot and the regression tracker. That's in your
+> interest, as they will make sure the report won't fall through the
+> cracks unnoticed.
 > 
-> Do you know from the top of your head, what changed? I am going to have
-> short access to the system every two weeks or so, so debugging is
-> unfortunately quite hard.
-> 
-> What is already on my to-do list:
-> 
-> 1.  Use dynamic debug `drivers/acpi/scan.c`
-> 2.  Trace older Linux kernel (5.10.46) to see the differences
-> 3.  Booting some GNU/Linux system to test 5.11 (Ubuntu 20.10) and 5.12
-> 4.  Unrelated to the regression, but trace `acpi_bus_get_status()` to
-> understand the 100 ms delay to solve bug #208705 [2]
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
-> PS: Do you know of GNU/Linux live systems that are available for all
-> Linux kernel releases and have an initrd, that just stores/uploads the
-> output of `dmesg`?
-> 
-> 
-> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=215419
->      "100 ms regression in boottime before `ACPI: PCI Root Bridge [PCI0]"
-> [2]: https://bugzilla.kernel.org/show_bug.cgi?id=208705
->      "boot performance: 100 ms delay in PCI initialization - Acer
-> TravelMate 5735Z"
-> 
-> 
+> Hint for developers: you normally don't need to care about regzbot once
+> it's involved. Fix the issue as you normally would, just remember to
+> include a 'Link:' tag to the report in the commit message, as explained
+> in Documentation/process/submitting-patches.rst
+> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+> https://git.kernel.org/linus/1f57bd42b77c
