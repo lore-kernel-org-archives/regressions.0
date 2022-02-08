@@ -1,14 +1,13 @@
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8595E2F24
-	for <regressions@lists.linux.dev>; Mon,  7 Feb 2022 14:45:36 +0000 (UTC)
-Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[127.0.0.1])
-	by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1nH507-0005mA-VU; Mon, 07 Feb 2022 15:28:19 +0100
-Message-ID: <b231b498-c8d2-28af-ce66-db8c168047f7@pengutronix.de>
-Date: Mon, 7 Feb 2022 15:28:10 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C792C9C
+	for <regressions@lists.linux.dev>; Tue,  8 Feb 2022 06:47:26 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nHKGn-0001c4-RJ; Tue, 08 Feb 2022 07:46:34 +0100
+Message-ID: <4be9dede-c1b8-8532-b576-f9c787157931@leemhuis.info>
+Date: Tue, 8 Feb 2022 07:46:31 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,220 +16,127 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Subject: Re: [BUG] mtd: cfi_cmdset_0002: write regression since v4.17-rc1
-To: Tokunori Ikegami <ikegami.t@gmail.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- linux-mtd@lists.infradead.org, Joakim.Tjernlund@infinera.com,
- miquel.raynal@bootlin.com, vigneshr@ti.com, richard@nod.at,
+Subject: Re: [PATCH] Fix regression due to "fs: move binfmt_misc sysctl to its
+ own file"
+Content-Language: en-BS
+To: Domenico Andreoli <domenico.andreoli@linux.com>, airlied@linux.ie,
+ akpm@linux-foundation.org, amir73il@gmail.com,
+ andriy.shevchenko@linux.intel.com, arnd@arndb.de, bcrl@kvack.org,
+ benh@kernel.crashing.org, clemens@ladisch.de, crope@iki.fi,
+ dgilbert@interlog.com, ebiederm@xmission.com, gregkh@linuxfoundation.org,
+ jack@suse.cz, jani.nikula@intel.com, jani.nikula@linux.intel.com,
+ jejb@linux.ibm.com, jlbec@evilplan.org, john.ogness@linutronix.de,
+ joonas.lahtinen@linux.intel.com, joseph.qi@linux.alibaba.com,
+ julia.lawall@inria.fr, keescook@chromium.org, kernel@tuxforce.de,
+ linux-mm@kvack.org, mark@fasheh.com, martin.petersen@oracle.com,
+ mcgrof@kernel.org, mm-commits@vger.kernel.org, nixiaoming@huawei.com,
+ penguin-kernel@i-love.sakura.ne.jp, peterz@infradead.org,
+ phil@philpotter.co.uk, pjt@google.com, pmladek@suse.com, rafael@kernel.org,
+ rodrigo.vivi@intel.com, rostedt@goodmis.org, senozhatsky@chromium.org,
+ sre@kernel.org, steve@sk2.org, surenb@google.com,
+ torvalds@linux-foundation.org, tytso@mit.edu, viro@zeniv.linux.org.uk,
+ wangqing@vivo.com, yzaikin@google.com
+Cc: linux-kernel@vger.kernel.org,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>,
- Brian Norris <computersforpeace@gmail.com>,
- David Woodhouse <dwmw2@infradead.org>, marek.vasut@gmail.com,
- cyrille.pitchen@wedev4u.fr,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- linuxppc-dev@lists.ozlabs.org
-References: <b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de>
- <dff2abcc-5813-2f2c-35ba-f03cd1f35ac3@leemhuis.info>
- <e11b76dc-5539-fb7e-da1c-a5005713d6b0@gmail.com>
- <3dbbcee5-81fc-cdf5-9f8b-b6ccb95beddc@pengutronix.de>
- <0f2cfcac-83ca-51a9-f92c-ff6495dca1d7@gmail.com>
-Content-Language: en-US
-In-Reply-To: <0f2cfcac-83ca-51a9-f92c-ff6495dca1d7@gmail.com>
+References: <20220121221021.60533b009c357d660791476e@linux-foundation.org>
+ <20220122061228.nmuo75sDn%akpm@linux-foundation.org> <YgEeQNdgBuHRyEWl@dumbo>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <YgEeQNdgBuHRyEWl@dumbo>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: regressions@lists.linux.dev
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644302846;4b7273e4;
+X-HE-SMSGID: 1nHKGn-0001c4-RJ
 
-Hello Tokunori-san,
 
-On 29.01.22 19:01, Tokunori Ikegami wrote:
-> Hi Ahmad-san,
+[TLDR: I'm adding the regression report below to regzbot, the Linux
+kernel regression tracking bot; all text you find below is compiled from
+a few templates paragraphs you might have encountered already already
+from similar mails.]
+
+Hi, this is your Linux kernel regression tracker speaking.
+
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+On 07.02.22 14:27, Domenico Andreoli wrote:
+> Commit 3ba442d5331f did not go unnoticed, binfmt-support stopped to
+> work on my Debian system since v5.17-rc2 (did not check with -rc1).
 > 
-> Thanks for your investigation.
+> The existance of /proc/sys/fs/binfmt_misc is a precondition for
+> attempting to mount the binfmt_misc fs, which in turn triggers the
+> autoload of the binfmt_misc module. Without it, no module is loaded
+> and no binfmt is available at boot.
 > 
->> The issue is still there with #define FORCE_WORD_WRITE 1:
->>
->>    jffs2: Write clean marker to block at 0x000a0000 failed: -5
->>    MTD do_write_oneword_once(): software timeout
-> Which kernel version has been tested about this?
-
-I last tested with v5.10.30, but I had briefly tried v5.16-rc as well
-when first debugging this issue.
-
-I have rebased onto v5.17-rc2 now and will use that for further tests.
-The same issue with word write forcing is reproducible there as well.
-
-> Since the buffered writes disabled by 7e4404113686 for S29GL256N and tested on kernel 5.10.16.
-> So I would like to confirm if the issue depended on the CPU or kernel version, etc.
-> Note: The chips S29GL064N and S29GL256N seem different the flash Mb size basically.
-
-I see. To be extra sure, I have replaced 0x2201 with 0x0c01 to hit
-the same code paths, but no improvement.
-
->> Doesn't seem to be a buffered write issue here though as the writes
->> did work fine before dfeae1073583. Any other ideas?
-> At first I thought the issue is possible to be resolved by using the word write instead of the buffered writes.
-> Now I am thinking to disable the changes dfeae1073583 partially with any condition if possible.
-
-What seems to work for me is checking if chip_good or chip_ready
-and map_word is equal to 0xFF. I can't justify why this is ok though.
-(Worst case bus is floating at this point of time and Hi-Z is read
-as 0xff on CPU data lines...)
-
-> By the way could you please let me know the chip information for more detail? (For example model number, cycle and device ID, etc.)
-
-I can't read it off the chip, but vendor uses S29GL064N90FFI02 or S29GL964N11FFI02.
-Kernel reports it with:
-ff800000.flash: Found 1 x16 devices at 0x0 in 8-bit bank. Manufacturer ID 0x000001 Chip ID 0x000c01
-
-I am not sure what you mean with cycle. If you tell me what
-command to run, I can paste the output.
-
-Thanks,
-Ahmad
-
-
-
+> Building as built-in or manually loading the module and mounting the fs
+> works fine, it's therefore only a matter of interaction with user-space.
 > 
-> Regards,
-> Ikegami
+> I could try to improve the Debian systemd configuration but I can't
+> say anything about the other distributions.
 > 
-> 
-> On 2021/12/14 16:23, Thorsten Leemhuis wrote:
-> 
->>>> [TLDR: adding this regression to regzbot; most of this mail is compiled
->>>> from a few templates paragraphs some of you might have seen already.]
->>>>
->>>> Hi, this is your Linux kernel regression tracker speaking.
->>>>
->>>> Top-posting for once, to make this easy accessible to everyone.
->>>>
->>>> Thanks for the report.
->>>>
->>>> Adding the regression mailing list to the list of recipients, as it
->>>> should be in the loop for all regressions, as explained here:
->>>> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
->>>>
->>>> To be sure this issue doesn't fall through the cracks unnoticed, I'm
->>>> adding it to regzbot, my Linux kernel regression tracking bot:
->>>>
->>>> #regzbot ^introduced dfeae1073583
->>>> #regzbot title mtd: cfi_cmdset_0002: flash write accesses on the
->>>> hardware fail on a PowerPC MPC8313 to a 8-bit-parallel S29GL064N flash
->>>> #regzbot ignore-activity
->>>>
->>>> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
->>>> to the report (the parent of this mail), then regzbot will automatically
->>>> mark the regression as resolved once the fix lands in the appropriate
->>>> tree. For more details about regzbot see footer.
->>>>
->>>> Sending this to everyone that got the initial report, to make all aware
->>>> of the tracking. I also hope that messages like this motivate people to
->>>> directly get at least the regression mailing list and ideally even
->>>> regzbot involved when dealing with regressions, as messages like this
->>>> wouldn't be needed then.
->>>>
->>>> Don't worry, I'll send further messages wrt to this regression just to
->>>> the lists (with a tag in the subject so people can filter them away), as
->>>> long as they are intended just for regzbot. With a bit of luck no such
->>>> messages will be needed anyway.
->>>>
->>>> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat).
->>>>
->>>> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
->>>> on my table. I can only look briefly into most of them. Unfortunately
->>>> therefore I sometimes will get things wrong or miss something important.
->>>> I hope that's not the case here; if you think it is, don't hesitate to
->>>> tell me about it in a public reply. That's in everyone's interest, as
->>>> what I wrote above might be misleading to everyone reading this; any
->>>> suggestion I gave thus might sent someone reading this down the wrong
->>>> rabbit hole, which none of us wants.
->>>>
->>>> BTW, I have no personal interest in this issue, which is tracked using
->>>> regzbot, my Linux kernel regression tracking bot
->>>> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
->>>> this mail to get things rolling again and hence don't need to be CC on
->>>> all further activities wrt to this regression.
->>>>
->>>> On 13.12.21 14:24, Ahmad Fatoum wrote:
->>>>> Hi,
->>>>>
->>>>> I've been investigating a breakage on a PowerPC MPC8313: The SoC is connected
->>>>> via the "Enhanced Local Bus Controller" to a 8-bit-parallel S29GL064N flash,
->>>>> which is represented as a memory-mapped cfi-flash.
->>>>>
->>>>> The regression began in v4.17-rc1 with
->>>>>
->>>>>     dfeae1073583 ("mtd: cfi_cmdset_0002: Change write buffer to check correct value")
->>>>>
->>>>> and causes all flash write accesses on the hardware to fail. Example output
->>>>> after v5.1-rc2[1]:
->>>>>
->>>>>     root@host:~# mount -t jffs2 /dev/mtdblock0 /mnt
->>>>>     MTD do_write_buffer_wait(): software timeout, address:0x000c000b.
->>>>>     jffs2: Write clean marker to block at 0x000c0000 failed: -5
->>>>>
->>>>> This issue still persists with v5.16-rc. Reverting aforementioned patch fixes
->>>>> it, but I am still looking for a change that keeps both Tokunori's and my
->>>>> hardware happy.
->>>>>
->>>>> What Tokunori's patch did is that it strengthened the success condition
->>>>> for flash writes:
->>>>>
->>>>>    - Prior to the patch, DQ polling was done until bits
->>>>>      stopped toggling. This was taken as an indicator that the write succeeded
->>>>>      and was reported up the stack. i.e. success condition is chip_ready()
->>>>>
->>>>>    - After the patch, polling continues until the just written data is
->>>>>      actually read back, i.e. success condition is chip_good()
->>>>>
->>>>> This new condition never holds for me, when DQ stabilizes, it reads 0xFF,
->>>>> never the just written data. The data is still written and can be read back
->>>>> on subsequent reads, just not at that point of time in the poll loop.
->>>>>
->>>>> We haven't had write issues for the years predating that patch. As the
->>>>> regression has been mainline for a while, I am wondering what about my setup
->>>>> that makes it pop up here, but not elsewhere?
->>>>>
->>>>> I consulted the data sheet[2] and found Figure 27, which describes DQ polling
->>>>> during embedded algorithms. DQ switches from status output to "True" (I assume
->>>>> True == all bits set == 0xFF) until CS# is reasserted.
->>>>>
->>>>> I compared with another chip's datasheet, and it (Figure 8.4) doesn't describe
->>>>> such an intermittent "True" state. In any case, the driver polls a few hundred
->>>>> times, however, before giving up, so there should be enough CS# toggles.
->>>>>
->>>>>
->>>>> Locally, I'll revert this patch for now. I think accepting 0xFF as a success
->>>>> condition may be appropriate, but I don't yet have the rationale to back it up.
->>>>>
->>>>> I am investigating this some more, probably with a logic trace, but I wanted
->>>>> to report this in case someone has pointers and in case other people run into
->>>>> the same issue.
->>>>>
->>>>>
->>>>> Cheers,
->>>>> Ahmad
->>>>>
->>>>> [1] Prior to d9b8a67b3b95 ("mtd: cfi: fix deadloop in cfi_cmdset_0002.c do_write_buffer")
->>>>>       first included with v5.1-rc2, failing writes just hung indefinitely in kernel space.
->>>>>       That's fixed, but the writes still fail.
->>>>>
->>>>> [2]: 001-98525 Rev. *B, https://www.infineon.com/dgdl/Infineon-S29GL064N_S29GL032N_64_Mbit_32_Mbit_3_V_Page_Mode_MirrorBit_Flash-DataSheet-v03_00-EN.pdf?fileId=8ac78c8c7d0d8da4017d0ed556fd548b
->>>>>
->>>>> [3]: https://www.mouser.com/datasheet/2/268/SST39VF1601C-SST39VF1602C-16-Mbit-x16-Multi-Purpos-709008.pdf
->>>>>        Note that "true data" means valid data here, not all bits one.
->>>>>
->>
-> 
+> In the meanwhile this patch restores a working system right after boot.
+> [...]
 
+To be sure this issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced 3ba442d5331f
+#regzbot title  binfmt-support stopped to work
+#regzbot ignore-activity
+
+Reminder for developers: when fixing the issue, please add a 'Link:'
+tags pointing to the report (the mail quoted above) using
+lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'. This allows the bot to connect
+the report with any patches posted or committed to fix the issue; this
+again allows the bot to show the current status of regressions and
+automatically resolve the issue when the fix hits the right tree.
+
+I'm sending this to everyone that got the initial report, to make them
+aware of the tracking. I also hope that messages like this motivate
+people to directly get at least the regression mailing list and ideally
+even regzbot involved when dealing with regressions, as messages like
+this wouldn't be needed then.
+
+Don't worry, I'll send further messages wrt to this regression just to
+the lists (with a tag in the subject so people can filter them away), if
+they are relevant just for regzbot. With a bit of luck no such messages
+will be needed anyway.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
 
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
