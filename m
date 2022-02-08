@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94DB22C9C
-	for <regressions@lists.linux.dev>; Tue,  8 Feb 2022 12:14:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 034D82F25
+	for <regressions@lists.linux.dev>; Tue,  8 Feb 2022 12:24:34 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nHPON-00026R-MF; Tue, 08 Feb 2022 13:14:43 +0100
-Message-ID: <e4d45921-ebe2-a06a-5f86-eac981d75e8d@leemhuis.info>
-Date: Tue, 8 Feb 2022 13:14:43 +0100
+	id 1nHPXq-0006Dt-4I; Tue, 08 Feb 2022 13:24:31 +0100
+Message-ID: <c674269f-5dfe-ac61-01ac-20c393c56f48@leemhuis.info>
+Date: Tue, 8 Feb 2022 13:24:29 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,30 +16,37 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: Bug 215561 - snd-usb-audio:reset_resume error -22 after suspend
- (fwd from bugzilla)
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
 Content-Language: en-BS
+To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, stable <stable@vger.kernel.org>,
+ regressions@lists.linux.dev, Linus Walleij <linus.walleij@linaro.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>,
+ Will McVicker <willmcvicker@google.com>,
+ Sergio Tanzilli <tanzilli@acmesystems.it>
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info>
+ <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
+ <CACjc_5puGpg85XseEjKxnwE2R_XoH8EWvdwp4g2WKNBmW7pX+w@mail.gmail.com>
+ <37d074c7-b264-acac-4bf6-65caa4dbab1a@leemhuis.info>
+ <CACjc_5o4n9CNXoER5Va6u0fQhuE9osnUSUwSbHPx0K1yiPUj8g@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <a8100c3d-007e-3207-7dc1-92849f638d71@leemhuis.info>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- alsa-devel@alsa-project.org, linux-usb@vger.kernel.org
-In-Reply-To: <a8100c3d-007e-3207-7dc1-92849f638d71@leemhuis.info>
+In-Reply-To: <CACjc_5o4n9CNXoER5Va6u0fQhuE9osnUSUwSbHPx0K1yiPUj8g@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644322485;73080506;
-X-HE-SMSGID: 1nHPON-00026R-MF
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644323075;8f0c81af;
+X-HE-SMSGID: 1nHPXq-0006Dt-4I
 
 Hi, this is your Linux kernel regression tracker speaking.
 
 Top-posting for once, to make this easy accessible to everyone.
 
-Below issue is one of those those reports that seem to get stranded in
-bugzilla.kernel.org
-
-Greg, Jaroslav, Takashi, could one of you please take a look? The
-reporter submitted it as USB bug, but maybe that wasn't a wise choice.
+GPIO Maintainers and developers, what the status of this regression and
+getting it fixed? It looks like there was no progress for quite a while.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -53,91 +60,110 @@ straight.
 
 #regzbot poke
 
-On 03.02.22 15:59, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker speaking.
+On 12.01.22 01:09, Marcelo Roberto Jimenez wrote:
+> Hi,
 > 
-> There is a regression in bugzilla.kernel.org I'd like to add to the
-> tracking:
-> 
-> #regzbot introduced: v5.15..v5.16
-> #regzbot from: antifermion@protonmail.com <antifermion@protonmail.com>
-> #regzbot title: snd: usb: snd-usb-audio:reset_resume error -22 after suspen
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215561
-> 
-> Quote:
-> 
->> If I use the microphone, then suspend and wake up again, I get the error
+> On Mon, Jan 10, 2022 at 4:02 AM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
 >>
->> ```
->> snd-usb-audio 1-5:1.0: reset_resume error -22
->> ```
+>> Hi, this is your Linux kernel regression tracker speaking.
 >>
->> Aftewards, audio stops working completely. Both pipewire and pulseaudio (tried both; not at the same time) freeze.
+>> On 20.12.21 21:41, Marcelo Roberto Jimenez wrote:
+>>> On Mon, Dec 20, 2021 at 11:57 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>>>> On Sat, Dec 18, 2021 at 7:28 AM Thorsten Leemhuis
+>>>> <regressions@leemhuis.info> wrote:
+>>>>>
+>>>>> [TLDR: I'm adding this regression to regzbot, the Linux kernel
+>>>>> regression tracking bot; most text you find below is compiled from a few
+>>>>> templates paragraphs some of you might have seen already.]
+>>>>>
+>>>>> On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
+>>>>>> Some GPIO lines have stopped working after the patch
+>>>>>> commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
+>>>>>>
+>>>>>> And this has supposedly been fixed in the following patches
+>>>>>> commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
+>>>>>> commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
+>>>>>
+>>>>> There seems to be a backstory here. Are there any entries and bug
+>>>>> trackers or earlier discussions everyone that looks into this should be
+>>>>> aware of?
+>>>>
+>>>> Agreed with Thorsten. I'd like to first try to determine what's wrong
+>>>> before reverting those, as they are correct in theory but maybe the
+>>>> implementation missed something.
+>>>>
+>>>> Have you tried tracing the execution on your platform in order to see
+>>>> what the driver is doing?
+>>>
+>>> Yes. The problem is that there is no list defined for the sysfs-gpio
+>>> interface. The driver will not perform pinctrl_gpio_request() and will
+>>> return zero (failure).
+>>>
+>>> I don't know if this is the case to add something to a global DTD or
+>>> to fix it in the sysfs-gpio code.
 >>
->> After running
+>> Out of interest, has any progress been made on this front?
 >>
->> ```
->> rmmod -f snd_usb_audio
->> ```
+>> BTW, there was a last-minute commit for 5.16 yesterday that referenced
+>> the culprit Marcelo specified:
 >>
->> and replugging the microphone, audio works again.
->> Here is the relevant log:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=master&id=c8013355ead68dce152cf426686f8a5f80d88b40
 >>
->> ```
->> [  157.791937] usbcore: deregistering interface driver snd-usb-audio
->> [  228.517855] usb 1-5: USB disconnect, device number 2
->> [  236.464334] usb 1-5: new high-speed USB device number 3 using xhci_hcd
->> [  236.798863] usb 1-5: New USB device found, idVendor=0d8c, idProduct=0171, bcdDevice= 1.04
->> [  236.798867] usb 1-5: New USB device strings: Mfr=3, Product=1, SerialNumber=0
->> [  236.798869] usb 1-5: Product: USB 2.0 HD Audio
->> [  236.798871] usb 1-5: Manufacturer: C-Media Electronics Inc.
->> [  236.826966] input: C-Media Electronics Inc. USB 2.0 HD Audio Consumer Control as /devices/pci0000:00/0000:00:01.3/0000:02:00.0/usb1/1-5/1-5:1.3/0003:0D8C:0171.000B/input/input40
->> [  236.878380] input: C-Media Electronics Inc. USB 2.0 HD Audio as /devices/pci0000:00/0000:00:01.3/0000:02:00.0/usb1/1-5/1-5:1.3/0003:0D8C:0171.000B/input/input41
->> [  236.878447] hid-generic 0003:0D8C:0171.000B: input,hiddev96,hidraw2: USB HID v1.11 Device [C-Media Electronics Inc. USB 2.0 HD Audio] on usb-0000:02:00.0-5/input3
->> [  242.306593] usbcore: registered new interface driver snd-usb-audio
+>> This was for a BCM283x and BCM2711 devices, so I assume it won't help.
+>> Wild guess (I don't know anything about this area of the kernel):
+>> Marcelo, do the dts files for your hardware maybe need a similar fix?
+> 
+> I have tried to add "gpio-ranges" to the gpio-controllers in
+> at91sam9x5.dtsi, but the system deadlocks, because in pinctrl-at91.c,
+> function at91_pinctrl_probe() we have:
+> 
+> /*
+> * We need all the GPIO drivers to probe FIRST, or we will not be able
+> * to obtain references to the struct gpio_chip * for them, and we
+> * need this to proceed.
+> */
+> for (i = 0; i < gpio_banks; i++)
+>         if (gpio_chips[i])
+>                 ngpio_chips_enabled++;
+> 
+>         if (ngpio_chips_enabled < info->nactive_banks) {
+>                 dev_warn(&pdev->dev,
+>                       "All GPIO chips are not registered yet (%d/%d)\n",
+>                       ngpio_chips_enabled, info->nactive_banks);
+>                devm_kfree(&pdev->dev, info);
+>                 return -EPROBE_DEFER;
+>         }
+> 
+> On the other hand, in gpiolib-of.c, function
+> of_gpiochip_add_pin_range() we have:
+> 
+> if (!pctldev)
+>         return -EPROBE_DEFER;
+> 
+> In other words, the pinctrl needs all the gpio-controllers, and the
+> gpio-controllers need the pinctrl. Each returns -EPROBE_DEFER and the
+> system deadlocks.
+> 
 >>
->> ```
+>> Ciao, Thorsten
 >>
->> I'm running Arch Linux (5.16.4.arch1-1). The linux-lts kernel (5.15.18-1) works fine.
+>> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+>> on my table. I can only look briefly into most of them. Unfortunately
+>> therefore I sometimes will get things wrong or miss something important.
+>> I hope that's not the case here; if you think it is, don't hesitate to
+>> tell me about it in a public reply, that's in everyone's interest.
 >>
->> Other uses report the same error: https://bbs.archlinux.org/viewtopic.php?id=273469
+>> BTW, I have no personal interest in this issue, which is tracked using
+>> regzbot, my Linux kernel regression tracking bot
+>> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+>> this mail to get things rolling again and hence don't need to be CC on
+>> all further activities wrt to this regression.
+>>
+>> #regzbot poke
+>>
 > 
-> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+> Regards,
+> Marcelo.
 > 
-> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-> on my table. I can only look briefly into most of them. Unfortunately
-> therefore I sometimes will get things wrong or miss something important.
-> I hope that's not the case here; if you think it is, don't hesitate to
-> tell me about it in a public reply, that's in everyone's interest.
 > 
-> BTW, I have no personal interest in this issue, which is tracked using
-> regzbot, my Linux kernel regression tracking bot
-> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> this mail to get things rolling again and hence don't need to be CC on
-> all further activities wrt to this regression.
-> 
-> ---
-> Additional information about regzbot:
-> 
-> If you want to know more about regzbot, check out its web-interface, the
-> getting start guide, and/or the references documentation:
-> 
-> https://linux-regtracking.leemhuis.info/regzbot/
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-> 
-> The last two documents will explain how you can interact with regzbot
-> yourself if your want to.
-> 
-> Hint for reporters: when reporting a regression it's in your interest to
-> tell #regzbot about it in the report, as that will ensure the regression
-> gets on the radar of regzbot and the regression tracker. That's in your
-> interest, as they will make sure the report won't fall through the
-> cracks unnoticed.
-> 
-> Hint for developers: you normally don't need to care about regzbot once
-> it's involved. Fix the issue as you normally would, just remember to
-> include a 'Link:' tag to the report in the commit message, as explained
-> in Documentation/process/submitting-patches.rst
-> That aspect was recently was made more explicit in commit 1f57bd42b77c:
-> https://git.kernel.org/linus/1f57bd42b77c
