@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C792C9C
-	for <regressions@lists.linux.dev>; Tue,  8 Feb 2022 06:47:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE892F24
+	for <regressions@lists.linux.dev>; Tue,  8 Feb 2022 06:49:48 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nHKGn-0001c4-RJ; Tue, 08 Feb 2022 07:46:34 +0100
-Message-ID: <4be9dede-c1b8-8532-b576-f9c787157931@leemhuis.info>
-Date: Tue, 8 Feb 2022 07:46:31 +0100
+	id 1nHKJu-0004ue-HD; Tue, 08 Feb 2022 07:49:46 +0100
+Message-ID: <d565674e-b12c-2444-6efc-65c1e6e540d1@leemhuis.info>
+Date: Tue, 8 Feb 2022 07:49:46 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,37 +16,17 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH] Fix regression due to "fs: move binfmt_misc sysctl to its
- own file"
+Subject: Re: [Bug 215576] New: HSP/HFP mSBC profile broken with QCA6174
 Content-Language: en-BS
-To: Domenico Andreoli <domenico.andreoli@linux.com>, airlied@linux.ie,
- akpm@linux-foundation.org, amir73il@gmail.com,
- andriy.shevchenko@linux.intel.com, arnd@arndb.de, bcrl@kvack.org,
- benh@kernel.crashing.org, clemens@ladisch.de, crope@iki.fi,
- dgilbert@interlog.com, ebiederm@xmission.com, gregkh@linuxfoundation.org,
- jack@suse.cz, jani.nikula@intel.com, jani.nikula@linux.intel.com,
- jejb@linux.ibm.com, jlbec@evilplan.org, john.ogness@linutronix.de,
- joonas.lahtinen@linux.intel.com, joseph.qi@linux.alibaba.com,
- julia.lawall@inria.fr, keescook@chromium.org, kernel@tuxforce.de,
- linux-mm@kvack.org, mark@fasheh.com, martin.petersen@oracle.com,
- mcgrof@kernel.org, mm-commits@vger.kernel.org, nixiaoming@huawei.com,
- penguin-kernel@i-love.sakura.ne.jp, peterz@infradead.org,
- phil@philpotter.co.uk, pjt@google.com, pmladek@suse.com, rafael@kernel.org,
- rodrigo.vivi@intel.com, rostedt@goodmis.org, senozhatsky@chromium.org,
- sre@kernel.org, steve@sk2.org, surenb@google.com,
- torvalds@linux-foundation.org, tytso@mit.edu, viro@zeniv.linux.org.uk,
- wangqing@vivo.com, yzaikin@google.com
-Cc: linux-kernel@vger.kernel.org,
+To: bugzilla-daemon@kernel.org, linux-bluetooth@vger.kernel.org,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220121221021.60533b009c357d660791476e@linux-foundation.org>
- <20220122061228.nmuo75sDn%akpm@linux-foundation.org> <YgEeQNdgBuHRyEWl@dumbo>
+References: <bug-215576-62941@https.bugzilla.kernel.org/>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <YgEeQNdgBuHRyEWl@dumbo>
+In-Reply-To: <bug-215576-62941@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644302846;4b7273e4;
-X-HE-SMSGID: 1nHKGn-0001c4-RJ
-
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644302988;921d95a5;
+X-HE-SMSGID: 1nHKJu-0004ue-HD
 
 [TLDR: I'm adding the regression report below to regzbot, the Linux
 kernel regression tracking bot; all text you find below is compiled from
@@ -59,30 +39,54 @@ CCing the regression mailing list, as it should be in the loop for all
 regressions, as explained here:
 https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
-On 07.02.22 14:27, Domenico Andreoli wrote:
-> Commit 3ba442d5331f did not go unnoticed, binfmt-support stopped to
-> work on my Debian system since v5.17-rc2 (did not check with -rc1).
+On 07.02.22 19:00, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=215576
 > 
-> The existance of /proc/sys/fs/binfmt_misc is a precondition for
-> attempting to mount the binfmt_misc fs, which in turn triggers the
-> autoload of the binfmt_misc module. Without it, no module is loaded
-> and no binfmt is available at boot.
+>             Bug ID: 215576
+>            Summary: HSP/HFP mSBC profile broken with QCA6174
+>            Product: Drivers
+>            Version: 2.5
+>     Kernel Version: 5.16.7
+>           Hardware: x86-64
+>                 OS: Linux
+>               Tree: Mainline
+>             Status: NEW
+>           Severity: normal
+>           Priority: P1
+>          Component: Bluetooth
+>           Assignee: linux-bluetooth@vger.kernel.org
+>           Reporter: mike@mjones.io
+>         Regression: No
 > 
-> Building as built-in or manually loading the module and mounting the fs
-> works fine, it's therefore only a matter of interaction with user-space.
+> Created attachment 300405
+>   --> https://bugzilla.kernel.org/attachment.cgi?id=300405&action=edit
+> dmesg with 5.16.7
 > 
-> I could try to improve the Debian systemd configuration but I can't
-> say anything about the other distributions.
+> Between v5.15 and v5.16, mSBC via pipewire stopped working with the QCA6174
+> adapter.
 > 
-> In the meanwhile this patch restores a working system right after boot.
-> [...]
+> Switching to the HSP/HFP profile with mSBC codec in pipewire produces a loud
+> buzzing sound, and the microphone does not function. When using PulseAudio
+> instead of pipewire, the buzzing is absent but audio input/output also don't
+> work.
+> 
+> Other users are reporting the same issue at [1].
+> 
+> I ran a git bisect between these two versions and the issue seems to have been
+> caused by this commit:
+> 
+> [b2af264ad3af437238c9500aa830ebcafb180e05] Bluetooth: Add support for
+> HCI_Enhanced_Setup_Synchronous_Connection command
+> 
+> [1] https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2019
 
 To be sure this issue doesn't fall through the cracks unnoticed, I'm
 adding it to regzbot, my Linux kernel regression tracking bot:
 
-#regzbot ^introduced 3ba442d5331f
-#regzbot title  binfmt-support stopped to work
+#regzbot ^introduced b2af264ad3af437238c9500aa830ebcafb180e05
+#regzbot title bluetooth: HSP/HFP mSBC profile broken with QCA6174
 #regzbot ignore-activity
+#regzbot link https://bugzilla.kernel.org/show_bug.cgi?id=215576
 
 Reminder for developers: when fixing the issue, please add a 'Link:'
 tags pointing to the report (the mail quoted above) using
@@ -140,3 +144,4 @@ about the issue. This has been expected from developers even before
 regzbot showed up for reasons explained in
 'Documentation/process/submitting-patches.rst' and
 'Documentation/process/5.Posting.rst'.
+
