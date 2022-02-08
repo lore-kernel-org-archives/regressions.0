@@ -1,86 +1,133 @@
-Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41CDE2F26
-	for <regressions@lists.linux.dev>; Tue,  8 Feb 2022 08:57:46 +0000 (UTC)
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-	by mail.kmu-office.ch (Postfix) with ESMTPSA id 4642F5C1D10;
-	Tue,  8 Feb 2022 09:50:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-	t=1644310259;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jdbAvq7z9eTXY5eg8HuXoMcDIWe+qtaUrY5jz0a9as0=;
-	b=ruHoVnCHu83SL64ZG8dQ0vlZHaDEy0F4DPhonRJmt+UYDYSHEZJ/P+5I0fU4TybtQxq1yf
-	B8wKMcJCn6PWRRvtL/NwQoxiE10x3AYsYag4chdsAtrFa+W5BPdeWOmaV60k3lwvE9uhr3
-	C9RaadyqT2rpoNI41gJE3v1nS6dpInQ=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DA02F25
+	for <regressions@lists.linux.dev>; Tue,  8 Feb 2022 12:03:51 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nHPDo-00048U-9h; Tue, 08 Feb 2022 13:03:48 +0100
+Message-ID: <31603144-edec-df2d-fb46-283692c67420@leemhuis.info>
+Date: Tue, 8 Feb 2022 13:03:47 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Tue, 08 Feb 2022 09:50:59 +0100
-From: Stefan Agner <stefan@agner.ch>
-To: Jason Self <jason@bluehome.net>, Greg KH <gregkh@linuxfoundation.org>,
- Johannes Berg <johannes.berg@intel.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: Regression/boot failure on 5.16.3
-In-Reply-To: <20220203161959.3edf1d6e@valencia>
-References: <20220203161959.3edf1d6e@valencia>
-User-Agent: Roundcube Webmail/1.4.9
-Message-ID: <00b41f5de94fca5ef995ab2c95def4aa@agner.ch>
-X-Sender: stefan@agner.ch
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-BS
+To: Paul Menzel <pmenzel@molgen.mpg.de>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
+ regressions@lists.linux.dev
+References: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: 100 ms boot time increase regression in
+ acpi_init()/acpi_scan_bus()
+In-Reply-To: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644321831;57ba252d;
+X-HE-SMSGID: 1nHPDo-00048U-9h
 
-On 2022-02-04 01:19, Jason Self wrote:
-> The computer (amd64) fails to boot. The init was stuck at the
-> synchronization of the time through the network. This began between
-> 5.16.2 (good) and 5.16.3 (bad.) This continues on 5.16.4 and 5.16.5.
-> Git bisect revealed the following. In this case the nonfree firmwre is
-> not present on the system. Blacklisting the iwflwifi module works as a
-> workaround for now.
+Hi, this is your Linux kernel regression tracker speaking.
 
-I have several reports of Intel NUC 10th/11th gen not booting/crashing
-during boot after updating to 5.10.96 (from 5.10.91). At least one stack
-trace shows iwl_dealloc_ucode in the call path. The below commit is part
-of 5.10.96 So this regression seems to not only affect 5.16 series.
+Top-posting for once, to make this easy accessible to everyone.
 
-Link:
-https://github.com/home-assistant/operating-system/issues/1739#issuecomment-1032013069
+@Rafael or any other @acpi/@pm developer: what's the status here?
+Neither in this thread nor in the bug ticket anything happened afaics.
+Or is a 100ms boot time increase considered "not a regression"?
 
---
-Stefan
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
 
+#regzbot poke
+
+On 10.01.22 12:29, Paul Menzel wrote:
+> #regzbot introduced: v5.13..v5.14-rc1
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215419
 > 
-> 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1 is the first bad commit
-> commit 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
-> Author: Johannes Berg <johannes.berg@intel.com>
-> Date:   Fri Dec 10 11:12:42 2021 +0200
 > 
->     iwlwifi: fix leaks/bad data after failed firmware load
->     
->     [ Upstream commit ab07506b0454bea606095951e19e72c282bfbb42 ]
->     
->     If firmware load fails after having loaded some parts of the
->     firmware, e.g. the IML image, then this would leak. For the
->     host command list we'd end up running into a WARN on the next
->     attempt to load another firmware image.
->     
->     Fix this by calling iwl_dealloc_ucode() on failures, and make
->     that also clear the data so we start fresh on the next round.
->     
->     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
->     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
->     Link:
->    
-> https://lore.kernel.org/r/iwlwifi.20211210110539.1f742f0eb58a.I1315f22f6aa632d94ae2069f85e1bca5e734dce0@changeid
->     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
->     Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Dear Linux folks,
 > 
->  drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> 
+> On the Intel T4500 laptop Acer TravelMate 5735Z with Debian
+> sid/unstable, there is a 100 ms introduced between Linux 5.10.46 and
+> 5.13.9, and is still present in Linux 5.15.5.
+> 
+>     [    0.000000] microcode: microcode updated early to revision 0xa0b,
+> date = 2010-09-28
+>     [    0.000000] Linux version 5.15.0-2-amd64
+> (debian-kernel@lists.debian.org) (gcc-11 (Debian 11.2.0-13) 11.2.0, GNU
+> ld (GNU Binutils for Debian) 2.37) #1 SMP Debian 5.15.5-2 (2021-12-18)
+>     [    0.000000] Command line: BOOT_IMAGE=/boot/vmlinuz-5.15.0-2-amd64
+> root=UUID=e17cec4f-d2b8-4cc3-bd39-39a10ed422f4 ro quiet noisapnp
+> cryptomgr.notests random.trust_cpu=on initcall_debug log_buf_len=4M
+>     […]
+>     [    0.262243] calling  acpi_init+0x0/0x487 @ 1
+>     […]
+>     [    0.281655] ACPI: Enabled 15 GPEs in block 00 to 3F
+>     [    0.394855] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+>     […]
+>     [    0.570908] initcall acpi_init+0x0/0x487 returned 0 after 300781
+> usecs
+> 
+> I attached all the log files to the Kernel.org Bugzilla bug report
+> #215419 [1].
+> 
+> Unfortunately, I am unable to bisect the issue, as it’s not my machine,
+> and I do not have a lot of access to it.
+> 
+> Using ftrace, unfortunately, I didn’t save all of them, I think the path is
+> 
+>     acpi_init() → acpi_scan_init() → acpi_bus_scan(ACPI_ROOT_OBJECT)
+> 
+> But this path hasn’t changed as far as I can see. Anyway, from that
+> path, somehow
+> 
+>     acpi_bus_check_add_1() → acpi_bus_check_add() → … →
+> acpi_bus_check_add() → acpi_add_single_object() → acpi_bus_get_status()
+> 
+> is called, and the `acpi_bus_get_status()` call takes 100 ms on the
+> system – also the cause for bug #208705 [2] –, but that code path wasn’t
+> taken before.
+> 
+> Do you know from the top of your head, what changed? I am going to have
+> short access to the system every two weeks or so, so debugging is
+> unfortunately quite hard.
+> 
+> What is already on my to-do list:
+> 
+> 1.  Use dynamic debug `drivers/acpi/scan.c`
+> 2.  Trace older Linux kernel (5.10.46) to see the differences
+> 3.  Booting some GNU/Linux system to test 5.11 (Ubuntu 20.10) and 5.12
+> 4.  Unrelated to the regression, but trace `acpi_bus_get_status()` to
+> understand the 100 ms delay to solve bug #208705 [2]
+> 
+> 
+> Kind regards,
+> 
+> Paul
+> 
+> 
+> PS: Do you know of GNU/Linux live systems that are available for all
+> Linux kernel releases and have an initrd, that just stores/uploads the
+> output of `dmesg`?
+> 
+> 
+> [1]: https://bugzilla.kernel.org/show_bug.cgi?id=215419
+>      "100 ms regression in boottime before `ACPI: PCI Root Bridge [PCI0]"
+> [2]: https://bugzilla.kernel.org/show_bug.cgi?id=208705
+>      "boot performance: 100 ms delay in PCI initialization - Acer
+> TravelMate 5735Z"
+> 
+> 
