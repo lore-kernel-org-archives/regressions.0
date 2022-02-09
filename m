@@ -1,68 +1,197 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9EC2F2C
-	for <regressions@lists.linux.dev>; Tue,  8 Feb 2022 18:22:30 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nHV8E-0006rv-9m; Tue, 08 Feb 2022 19:22:26 +0100
-Message-ID: <df18cc2e-fa46-b088-85c6-959d8b6ea4ea@leemhuis.info>
-Date: Tue, 8 Feb 2022 19:22:25 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C59162F2E
+	for <regressions@lists.linux.dev>; Wed,  9 Feb 2022 07:49:24 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id b13so3511449edn.0
+        for <regressions@lists.linux.dev>; Tue, 08 Feb 2022 23:49:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LUzGldKtZC3jOl6Fq1nfXnQKprYL3pMs6oURDAZ0EmE=;
+        b=KOvrX9K5oGQAb0XaO6VlNj0WKjC9bavJrqO6YBN2wMeYSLTNMMq4OUNbxxQtCKhHDd
+         iu25luITlcqZYE2ZMl8jsIxUQcGUjf1t8MvTEu7cO0V8NYRhxcGzsEpD1e6wWB6KCcEH
+         0rpvH33A61Wk0zcJSRuAlliDXLG6zwTrSJx00FL4JwfzkkJ/qHVrYtTj2wAsdgoV7TMB
+         hwCCfDzPd1GoWbg0oaynvhMWtw4g/aAxwnqQBwBsnpb/TEI5Xq9aU0rd7fKr1uiirDCK
+         jCmdSG28ZM5umxg0NiSDA5adQqe+DSKSQyEyk5V5cf7WFwgJa3VnWxM/pbluedefgbiC
+         W5bA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=LUzGldKtZC3jOl6Fq1nfXnQKprYL3pMs6oURDAZ0EmE=;
+        b=ZBeftCTCS6B1o/cUEoTTaPcQ9oHdn26DZrI0hcAShyi5ijgOF8dEdIj1duxj6Df2hs
+         +86NbXdM5B31NUNAAT9c7HtfdaxXnCvgyaxCDe5DvtrDGJXSA9ak34+odDX09wCypvMq
+         hkuLwV3JOBmB2EnElRnrmMCcSERPKf/8wXuIDxQXG5DVH8FOJ6x6mS5+/G6+HPbuWQ3w
+         T0osKbVSUPDTGDQk69JYfpxDDaHrYf0xpiQoImYTmCg2R8Rcqos2cYKrJd6Xtb4LEB7r
+         gfLF5USik7OcankQSpUv1MjqgqoURjwhKL4K/gZGbGrQ9Z31aECK1I0qkuriLpWzlY6E
+         UrCg==
+X-Gm-Message-State: AOAM531/yw7hVYxoGemzPV4bNk94fs8ts2SeMRBugRFwTuspbA3G7QD5
+	2jw5bZLhCfpVrYA8Agz+AnA=
+X-Google-Smtp-Source: ABdhPJy7j/jOKxsaAV2/AtzcWda7tM3HPoh6bV/FquZcserdfo9YfUiMeSpCU161wWXwVjfQXLLUEA==
+X-Received: by 2002:a05:6402:51cd:: with SMTP id r13mr1079014edd.381.1644392962839;
+        Tue, 08 Feb 2022 23:49:22 -0800 (PST)
+Received: from dumbo ([185.220.101.84])
+        by smtp.gmail.com with ESMTPSA id l1sm5690964ejb.81.2022.02.08.23.49.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Feb 2022 23:49:22 -0800 (PST)
+Sender: Domenico Andreoli <domenico.andreoli.it@gmail.com>
+Received: from cavok by dumbo with local (Exim 4.94.2)
+	(envelope-from <cavok@dumbo>)
+	id 1nHhj6-0002av-MX; Wed, 09 Feb 2022 08:49:20 +0100
+Date: Wed, 9 Feb 2022 08:49:20 +0100
+From: Domenico Andreoli <domenico.andreoli@linux.com>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Tong Zhang <ztong0001@gmail.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	David Airlie <airlied@linux.ie>,
+	Andrew Morton <akpm@linux-foundation.org>, amir73il@gmail.com,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, bcrl@kvack.org,
+	benh@kernel.crashing.org, clemens@ladisch.de, crope@iki.fi,
+	dgilbert@interlog.com, Greg KH <gregkh@linuxfoundation.org>,
+	jack@suse.cz, jani.nikula@intel.com, jani.nikula@linux.intel.com,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>, jlbec@evilplan.org,
+	john.ogness@linutronix.de, joonas.lahtinen@linux.intel.com,
+	Joseph Qi <joseph.qi@linux.alibaba.com>, julia.lawall@inria.fr,
+	Kees Cook <keescook@chromium.org>, kernel@tuxforce.de,
+	Linux Memory Management List <linux-mm@kvack.org>, mark@fasheh.com,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	mm-commits@vger.kernel.org, nixiaoming@huawei.com,
+	penguin-kernel@i-love.sakura.ne.jp, peterz@infradead.org,
+	phil@philpotter.co.uk, pjt@google.com, pmladek@suse.com,
+	rafael@kernel.org, rodrigo.vivi@intel.com, rostedt@goodmis.org,
+	senozhatsky@chromium.org, sre@kernel.org, steve@sk2.org,
+	surenb@google.com, torvalds@linux-foundation.org, tytso@mit.edu,
+	Al Viro <viro@zeniv.linux.org.uk>, wangqing@vivo.com,
+	Iurii Zaikin <yzaikin@google.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	regressions@lists.linux.dev
+Subject: [PATCH v2] Fix regression due to "fs: move binfmt_misc sysctl to its
+ own file"
+Message-ID: <YgNyAC8VMeuOD/uQ@dumbo>
+References: <20220121221021.60533b009c357d660791476e@linux-foundation.org>
+ <20220122061228.nmuo75sDn%akpm@linux-foundation.org>
+ <YgEeQNdgBuHRyEWl@dumbo>
+ <YgGTSR628xhRvCjB@bombadil.infradead.org>
+ <CAA5qM4BGmrkwatyO_h3F=ErDZ9t5swuttbt6NkQU-1KDGDiD4g@mail.gmail.com>
+ <YgKmaggsipzzCGCg@bombadil.infradead.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-BS
-To: Jason Self <jason@bluehome.net>, Stefan Agner <stefan@agner.ch>,
- Greg KH <gregkh@linuxfoundation.org>, Johannes Berg
- <johannes.berg@intel.com>, stable@vger.kernel.org,
- regressions@lists.linux.dev
-References: <20220203161959.3edf1d6e@valencia>
- <00b41f5de94fca5ef995ab2c95def4aa@agner.ch>
- <20220208100529.41d1b4d7@valencia>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Regression/boot failure on 5.16.3
-In-Reply-To: <20220208100529.41d1b4d7@valencia>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644344550;3afbab59;
-X-HE-SMSGID: 1nHV8E-0006rv-9m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YgKmaggsipzzCGCg@bombadil.infradead.org>
 
-On 08.02.22 19:05, Jason Self wrote:
-> On Tue, 08 Feb 2022 09:50:59 +0100
-> Stefan Agner <stefan@agner.ch> wrote:
-> 
->> On 2022-02-04 01:19, Jason Self wrote:
->>  [...]  
->>
->> I have several reports of Intel NUC 10th/11th gen not booting/crashing
->> during boot after updating to 5.10.96 (from 5.10.91). At least one
->> stack trace shows iwl_dealloc_ucode in the call path. The below
->> commit is part of 5.10.96 So this regression seems to not only affect
->> 5.16 series.
->>
->> Link:
->> https://github.com/home-assistant/operating-system/issues/1739#issuecomment-1032013069
-> 
-> Yes, it does appear to affect multiple versions; at least 5.17-rc2,
-> 5.16, 5.15, and as you say 5.10.
-> 
-> I can confirm that this patch addresses it on 5.16:
-> https://lore.kernel.org/stable/YgJSEEmRDKKG+3lT@mail-itl/T/#t
+Commit 3ba442d5331f did not go unnoticed, binfmt-support stopped to
+work on my Debian system since v5.17-rc2 (did not check with -rc1).
 
-Thx for pointing to the thread!
+The existance of the /proc/sys/fs/binfmt_misc is a precondition for
+attempting to mount the binfmt_misc fs, which in turn triggers the
+autoload of the binfmt_misc module. Without it, no module is loaded
+and no binfmt is available at boot.
 
-#regzbot monitor: https://lore.kernel.org/stable/YgJSEEmRDKKG+3lT@mail-itl/
+Building as built-in or manually loading the module and mounting the fs
+works fine, it's therefore only a matter of interaction with user-space.
+I could try to improve the Debian systemd configuration but I can't
+say anything about the other distributions.
 
-> It appears desirable to apply the patch to all of the stable versions
-> that need it, after it's gone into Linus's tree to also address the
-> matter with the upcoming 5.17 series.
+This patch restores a working system right after boot.
 
-FWIW, the patch is marked for backporting already, it just needs to get
-merged to mainline first.
+v2:
+- move creation of fs/binfmt_misc to fs/file_table.c
+- use IS_ENABLED() to conditionally create it
 
-Ciao, Thorsten
+Fixes: 3ba442d5331f ("fs: move binfmt_misc sysctl to its own file")
+Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Antti Palosaari <crope@iki.fi>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Benjamin LaHaise <bcrl@kvack.org>
+Cc: Clemens Ladisch <clemens@ladisch.de>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Douglas Gilbert <dgilbert@interlog.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Iurii Zaikin <yzaikin@google.com>
+Cc: James E.J. Bottomley <jejb@linux.ibm.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Jani Nikula <jani.nikula@intel.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: John Ogness <john.ogness@linutronix.de>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Julia Lawall <julia.lawall@inria.fr>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Lukas Middendorf <kernel@tuxforce.de>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Paul Turner <pjt@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Phillip Potter <phil@philpotter.co.uk>
+Cc: Qing Wang <wangqing@vivo.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Stephen Kitt <steve@sk2.org>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Suren Baghdasaryan <surenb@google.com>
+Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: "Theodore Ts'o" <tytso@mit.edu>
+Cc: Xiaoming Ni <nixiaoming@huawei.com>
+
+---
+ fs/binfmt_misc.c |    6 +-----
+ fs/file_table.c  |    2 ++
+ 2 files changed, 3 insertions(+), 5 deletions(-)
+
+Index: b/fs/binfmt_misc.c
+===================================================================
+--- a/fs/binfmt_misc.c
++++ b/fs/binfmt_misc.c
+@@ -817,20 +817,16 @@ static struct file_system_type bm_fs_typ
+ };
+ MODULE_ALIAS_FS("binfmt_misc");
+ 
+-static struct ctl_table_header *binfmt_misc_header;
+-
+ static int __init init_misc_binfmt(void)
+ {
+ 	int err = register_filesystem(&bm_fs_type);
+ 	if (!err)
+ 		insert_binfmt(&misc_format);
+-	binfmt_misc_header = register_sysctl_mount_point("fs/binfmt_misc");
+-	return 0;
++	return err;
+ }
+ 
+ static void __exit exit_misc_binfmt(void)
+ {
+-	unregister_sysctl_table(binfmt_misc_header);
+ 	unregister_binfmt(&misc_format);
+ 	unregister_filesystem(&bm_fs_type);
+ }
+Index: b/fs/file_table.c
+===================================================================
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -119,6 +119,8 @@ static struct ctl_table fs_stat_sysctls[
+ static int __init init_fs_stat_sysctls(void)
+ {
+ 	register_sysctl_init("fs", fs_stat_sysctls);
++	if (IS_ENABLED(CONFIG_BINFMT_MISC))
++		register_sysctl_mount_point("fs/binfmt_misc");
+ 	return 0;
+ }
+ fs_initcall(init_fs_stat_sysctls);
