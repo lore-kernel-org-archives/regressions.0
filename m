@@ -1,188 +1,182 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0BCB2F2E
-	for <regressions@lists.linux.dev>; Wed,  9 Feb 2022 07:55:16 +0000 (UTC)
-Received: by mail-yb1-f180.google.com with SMTP id y6so3653022ybc.5
-        for <regressions@lists.linux.dev>; Tue, 08 Feb 2022 23:55:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eV794YHbVHS12HmSAomi+0BDrCTJ09pCtyoRkv+rxS4=;
-        b=IaqQH2L1wqV8U/xN3pp1SpF/OBUrJpDXSlrwH7ehrNLbySHv9Wu27FnQCLrzuLW/9H
-         0aEUMxpKbcOuYT3UfYeXlElDk4AtxnL1fiDwxlR9fidIi+pymWn+be3W4iP+LrhR1HIZ
-         t3k30fqsdNDFaaxi8YXi/rO7TvALjKbenZuYkWpXm1YywZngNy7K1Hma2dRZV8dzNooF
-         VVo+ma88TWMFfxjPhMjY4hJ5xBAc0GFFL6u5Rhn0e5HBKHTWYwQagu8p1JQ8+QopwgIM
-         lyYnjdMQIW2Jyo/BUaUtMNebOs0Rb8aHZrdgvCb+UB1WLg2FOSn+lytIsJNPg367umDb
-         IgRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eV794YHbVHS12HmSAomi+0BDrCTJ09pCtyoRkv+rxS4=;
-        b=avZlolxN4Lwl5hUds67IXnSQOutbydcpA6jBDsTKJBliEGsMvwo5tzOx/WDFvJYoHO
-         JVWZGNqE656p6EFZX1fbPZazb6ScjG/ubyfTRy6D8DX/3F8RaItKZBW8cKSD/mAENwrt
-         EacemS0g59xiv3AqAdHjvniU1CjvEf8RUVEhNkQVMtuYKGMfEkWCDEABkaSILsbEkhDt
-         U8TxBkp/pIt9ByNTDfmGw7RD7tWqLZnASCzV7BcR3JKforCx4D2rJUAlPgVqbGvqN5jn
-         i0dc7PYoCDw1Tr5lfz2mojI/NvzryOchFAIc6zFs+jQWq7pJkiX9FuJbtB41dmgHCn8T
-         zYaQ==
-X-Gm-Message-State: AOAM5307H+GU9aZsDhyC3zwjqRTtwySx8CwzOTXRLIlOaVmSaFn5Agxl
-	J5WKP2f78+DSozXju6kX9kdpobaIKs+7w5jXP4s=
-X-Google-Smtp-Source: ABdhPJyYT4RXELVDsNxwkCYFgUOkQSg0SKPK6EQFP3US4fA/3rH2ApxDKrTuSpdjytjxSGybeJS7lxyFXdGT7d71NZg=
-X-Received: by 2002:a05:6902:4c2:: with SMTP id v2mr1053884ybs.429.1644393315563;
- Tue, 08 Feb 2022 23:55:15 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B352F25
+	for <regressions@lists.linux.dev>; Wed,  9 Feb 2022 09:13:42 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nHj2Q-0001iT-6y; Wed, 09 Feb 2022 10:13:22 +0100
+Message-ID: <d2b054b6-0c32-ef04-134d-51f116d3e1d3@leemhuis.info>
+Date: Wed, 9 Feb 2022 10:13:21 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220121221021.60533b009c357d660791476e@linux-foundation.org>
- <20220122061228.nmuo75sDn%akpm@linux-foundation.org> <YgEeQNdgBuHRyEWl@dumbo>
- <YgGTSR628xhRvCjB@bombadil.infradead.org> <CAA5qM4BGmrkwatyO_h3F=ErDZ9t5swuttbt6NkQU-1KDGDiD4g@mail.gmail.com>
- <YgKmaggsipzzCGCg@bombadil.infradead.org> <YgNyAC8VMeuOD/uQ@dumbo>
-In-Reply-To: <YgNyAC8VMeuOD/uQ@dumbo>
-From: Tong Zhang <ztong0001@gmail.com>
-Date: Tue, 8 Feb 2022 23:55:04 -0800
-Message-ID: <CAA5qM4AkaYLxesaiy_X+ceEx0R9cXHdiLJE38v08bCjKXhxcMA@mail.gmail.com>
-Subject: Re: [PATCH v2] Fix regression due to "fs: move binfmt_misc sysctl to
- its own file"
-To: Domenico Andreoli <domenico.andreoli@linux.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, 
-	David Airlie <airlied@linux.ie>, Andrew Morton <akpm@linux-foundation.org>, amir73il@gmail.com, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, bcrl@kvack.org, 
-	benh@kernel.crashing.org, clemens@ladisch.de, crope@iki.fi, 
-	dgilbert@interlog.com, Greg KH <gregkh@linuxfoundation.org>, jack@suse.cz, 
-	jani.nikula@intel.com, jani.nikula@linux.intel.com, 
-	"James E.J. Bottomley" <jejb@linux.ibm.com>, jlbec@evilplan.org, john.ogness@linutronix.de, 
-	joonas.lahtinen@linux.intel.com, Joseph Qi <joseph.qi@linux.alibaba.com>, 
-	julia.lawall@inria.fr, Kees Cook <keescook@chromium.org>, kernel@tuxforce.de, 
-	Linux Memory Management List <linux-mm@kvack.org>, Mark Fasheh <mark@fasheh.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, mm-commits@vger.kernel.org, 
-	nixiaoming@huawei.com, penguin-kernel@i-love.sakura.ne.jp, 
-	peterz@infradead.org, Phillip Potter <phil@philpotter.co.uk>, Paul Turner <pjt@google.com>, 
-	pmladek@suse.com, rafael@kernel.org, rodrigo.vivi@intel.com, 
-	rostedt@goodmis.org, senozhatsky@chromium.org, sre@kernel.org, steve@sk2.org, 
-	Suren Baghdasaryan <surenb@google.com>, torvalds@linux-foundation.org, tytso@mit.edu, 
-	Al Viro <viro@zeniv.linux.org.uk>, wangqing@vivo.com, 
-	Iurii Zaikin <yzaikin@google.com>, open list <linux-kernel@vger.kernel.org>, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [5.17 regression] "x86/PCI: Ignore E820 reservations for bridge
+ windows on newer systems" breaks suspend/resume
+Content-Language: en-BS
+To: Hans de Goede <hdegoede@redhat.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+ Myron Stowe <myron.stowe@redhat.com>,
+ Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ linux-acpi <linux-acpi@vger.kernel.org>,
+ Linux PCI <linux-pci@vger.kernel.org>, x86@kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ =?UTF-8?Q?Benoit_Gr=c3=a9goire?= <benoitg@coeus.ca>,
+ Hui Wang <hui.wang@canonical.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <a7ad05fe-c2ab-a6d9-b66e-68e8c5688420@redhat.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <a7ad05fe-c2ab-a6d9-b66e-68e8c5688420@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644398022;31c07881;
+X-HE-SMSGID: 1nHj2Q-0001iT-6y
 
-On Tue, Feb 8, 2022 at 11:49 PM Domenico Andreoli
-<domenico.andreoli@linux.com> wrote:
->
-> Commit 3ba442d5331f did not go unnoticed, binfmt-support stopped to
-> work on my Debian system since v5.17-rc2 (did not check with -rc1).
->
-> The existance of the /proc/sys/fs/binfmt_misc is a precondition for
-> attempting to mount the binfmt_misc fs, which in turn triggers the
-> autoload of the binfmt_misc module. Without it, no module is loaded
-> and no binfmt is available at boot.
->
-> Building as built-in or manually loading the module and mounting the fs
-> works fine, it's therefore only a matter of interaction with user-space.
-> I could try to improve the Debian systemd configuration but I can't
-> say anything about the other distributions.
->
-> This patch restores a working system right after boot.
->
-> v2:
-> - move creation of fs/binfmt_misc to fs/file_table.c
-> - use IS_ENABLED() to conditionally create it
->
-> Fixes: 3ba442d5331f ("fs: move binfmt_misc sysctl to its own file")
-> Signed-off-by: Domenico Andreoli <domenico.andreoli@linux.com>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Amir Goldstein <amir73il@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Antti Palosaari <crope@iki.fi>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Benjamin LaHaise <bcrl@kvack.org>
-> Cc: Clemens Ladisch <clemens@ladisch.de>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Douglas Gilbert <dgilbert@interlog.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Iurii Zaikin <yzaikin@google.com>
-> Cc: James E.J. Bottomley <jejb@linux.ibm.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Jani Nikula <jani.nikula@intel.com>
-> Cc: Jani Nikula <jani.nikula@linux.intel.com>
-> Cc: Joel Becker <jlbec@evilplan.org>
-> Cc: John Ogness <john.ogness@linutronix.de>
-> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-> Cc: Joseph Qi <joseph.qi@linux.alibaba.com>
-> Cc: Julia Lawall <julia.lawall@inria.fr>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Lukas Middendorf <kernel@tuxforce.de>
-> Cc: Mark Fasheh <mark@fasheh.com>
-> Cc: Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: Paul Turner <pjt@google.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Petr Mladek <pmladek@suse.com>
-> Cc: Phillip Potter <phil@philpotter.co.uk>
-> Cc: Qing Wang <wangqing@vivo.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Cc: Stephen Kitt <steve@sk2.org>
-> Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> Cc: Suren Baghdasaryan <surenb@google.com>
-> Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Cc: "Theodore Ts'o" <tytso@mit.edu>
-> Cc: Xiaoming Ni <nixiaoming@huawei.com>
->
-> ---
->  fs/binfmt_misc.c |    6 +-----
->  fs/file_table.c  |    2 ++
->  2 files changed, 3 insertions(+), 5 deletions(-)
->
-> Index: b/fs/binfmt_misc.c
-> ===================================================================
-> --- a/fs/binfmt_misc.c
-> +++ b/fs/binfmt_misc.c
-> @@ -817,20 +817,16 @@ static struct file_system_type bm_fs_typ
->  };
->  MODULE_ALIAS_FS("binfmt_misc");
->
-> -static struct ctl_table_header *binfmt_misc_header;
-> -
->  static int __init init_misc_binfmt(void)
->  {
->         int err = register_filesystem(&bm_fs_type);
->         if (!err)
->                 insert_binfmt(&misc_format);
-> -       binfmt_misc_header = register_sysctl_mount_point("fs/binfmt_misc");
-> -       return 0;
-> +       return err;
->  }
->
->  static void __exit exit_misc_binfmt(void)
->  {
-> -       unregister_sysctl_table(binfmt_misc_header);
->         unregister_binfmt(&misc_format);
->         unregister_filesystem(&bm_fs_type);
->  }
-> Index: b/fs/file_table.c
-> ===================================================================
-> --- a/fs/file_table.c
-> +++ b/fs/file_table.c
-> @@ -119,6 +119,8 @@ static struct ctl_table fs_stat_sysctls[
->  static int __init init_fs_stat_sysctls(void)
->  {
->         register_sysctl_init("fs", fs_stat_sysctls);
-> +       if (IS_ENABLED(CONFIG_BINFMT_MISC))
-> +               register_sysctl_mount_point("fs/binfmt_misc");
->         return 0;
->  }
->  fs_initcall(init_fs_stat_sysctls);
+[TLDR: I'm adding the regression report below to regzbot, the Linux
+kernel regression tracking bot; all text you find below is compiled from
+a few templates paragraphs you might have encountered already already
+from similar mails.]
 
-Looks good
-Thanks!
+Hi, this is your Linux kernel regression tracker speaking.
 
-Reviewed-by: Tong Zhang <ztong0001@gmail.com>
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+To be sure this issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced 7f7b4236f204
+#regzbot title x86/PCI: "x86/PCI: Ignore E820 reservations for bridge
+windows on newer systems" breaks suspend/resume
+#regzbot ignore-activity
+
+Reminder for developers: when fixing the issue, please add a 'Link:'
+tags pointing to the report (the mail quoted above) using
+lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'. This allows the bot to connect
+the report with any patches posted or committed to fix the issue; this
+again allows the bot to show the current status of regressions and
+automatically resolve the issue when the fix hits the right tree.
+
+I'm sending this to everyone that got the initial report, to make them
+aware of the tracking. I also hope that messages like this motivate
+people to directly get at least the regression mailing list and ideally
+even regzbot involved when dealing with regressions, as messages like
+this wouldn't be needed then.
+
+Don't worry, I'll send further messages wrt to this regression just to
+the lists (with a tag in the subject so people can filter them away), if
+they are relevant just for regzbot. With a bit of luck no such messages
+will be needed anyway.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+On 08.02.22 16:25, Hans de Goede wrote:
+> Hi All,
+> 
+> Unfortunately I've just learned that commit 7f7b4236f204 ("x86/PCI:
+> Ignore E820 reservations for bridge windows on newer systems"):
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7f7b4236f2040d19df1ddaf30047128b41e78de7
+> 
+> breaks suspend/resume on at least one laptop model, the Lenovo ThinkPad
+> X1 gen 2, see:
+> https://bugzilla.redhat.com/show_bug.cgi?id=2029207
+> 
+> This regression was actually caught be Fedora already carrying this
+> patch for a while now and as such it has been reproduced with 5.15
+> with an older version of the patch which still allowed turning the
+> new behavior of by adding "pci=use_e820". Dmesg output with and
+> without the option has just been attached to the bug, I've not
+> analyzed this any further yet.
+> 
+> I guess that for now this means that we need to revert commit
+> 7f7b4236f204. Rafael, I'll send you a revert with a commit msg
+> explaining why this needs to be reverted tomorrow.
+> 
+> More interesting IMHO is finding out another solution. Both the touchpad
+> problem which got me looking into this:
+> https://bugzilla.redhat.com/show_bug.cgi?id=1868899
+> 
+> As well as the thunderbolt hotplug issue Mika was looking at:
+> https://bugzilla.kernel.org/show_bug.cgi?id=206459
+> 
+> both are cases where we fail to find a memory-window for a
+> BAR which has not been setup yet.
+> 
+> So I see a couple of options here:
+> 
+> 1. Detect that the e820 reservations fully cover (one of)
+> the PCI bridge main 32 bit memory windows and if that happens
+> ignore them. This actually was my first plan when I started
+> working on this. In the end I choose the other option
+> because Bjorn indicated that in hindsight honoring the e820
+> reservations might have been a mistake and maybe we should
+> get rid of honoring them all together.
+> 
+> 2. Have a flag which, when we fail to alloc a 32 bit
+> (or 64 bit) memory PCI BAR, is set if not already set
+> and then retry the alloc. And make the e820 reservation
+> carve-out get skipped in this case.
+> 
+> 3. When booting with pci=nocrs as a workaround for
+> the touchpad case a 64 but memory window ends up getting
+> used. There already is some special handling for some
+> AMD bridges where if there are no 64 bit memory Windows
+> in the _CRS for the bridge, one gets added. Maybe we need
+> to do the same for Intel bridges ?
+> 
+> Please let me know which of these options you think I should
+> try to implement next; of course alternative ideas for fixing
+> this are also welcome.
+> 
+> Regards,
+> 
+> Hans
+> 
+
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
