@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DBE2F28
-	for <regressions@lists.linux.dev>; Thu, 10 Feb 2022 09:50:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446A92F28
+	for <regressions@lists.linux.dev>; Thu, 10 Feb 2022 09:56:15 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nI66C-0001DK-JB; Thu, 10 Feb 2022 10:50:48 +0100
-Message-ID: <62338592-544d-0f90-ee1b-60a8330fa740@leemhuis.info>
-Date: Thu, 10 Feb 2022 10:50:48 +0100
+	id 1nI6BR-0006Ct-FT; Thu, 10 Feb 2022 10:56:13 +0100
+Message-ID: <adf5ac57-cd60-a004-a05d-6d7c3ad7efa7@leemhuis.info>
+Date: Thu, 10 Feb 2022 10:56:13 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,111 +16,102 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH] Fix regression due to "fs: move binfmt_misc sysctl to its
- own file" #forregzbot
 Content-Language: en-BS
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Domenico Andreoli <domenico.andreoli@linux.com>
-References: <20220121221021.60533b009c357d660791476e@linux-foundation.org>
- <20220122061228.nmuo75sDn%akpm@linux-foundation.org> <YgEeQNdgBuHRyEWl@dumbo>
- <4be9dede-c1b8-8532-b576-f9c787157931@leemhuis.info>
-In-Reply-To: <4be9dede-c1b8-8532-b576-f9c787157931@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Bug 215523 - Firmware crash with 66.f1c864e0.0 (cc-a0-66.ucode) and
+ 68.01d30b0c (cc-a0-68.ucode)
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644486657;9f0f4c44;
-X-HE-SMSGID: 1nI66C-0001DK-JB
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644486975;9b506d71;
+X-HE-SMSGID: 1nI6BR-0006Ct-FT
 
-For the record:
+Hi, this is your Linux kernel regression tracker speaking.
 
-Sadly the fix for below regression didn't link to the report, as
-explained by 'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'. So I have to tell regzbot about
-the fix manually:
+There is a regression in bugzilla.kernel.org I'd like to add to the
+tracking:
 
-#regzbot fixed-by: b42bc9a3c5115c
+#regzbot introduced: v5.16..v5.17-rc1
+#regzbot from: Udo Steinberg <udo@hypervisor.org>
+#regzbot title: iwlwifi: Firmware crash with 66.f1c864e0.0
+(cc-a0-66.ucode) and 68.01d30b0c (cc-a0-68.ucode)
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215523
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=master&id=b42bc9a3c5115c3102a4923776bbeed3b191f2db
+Quote:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> Seeing the following firmware crash frequently with
+> firmware-version: 66.f1c864e0.0 cc-a0-66.ucode
+> 
+> [14699.974055] iwlwifi 0000:03:00.0: Microcode SW error detected. Restarting 0x0.
+> [14699.974484] iwlwifi 0000:03:00.0: Start IWL Error Log Dump:
+> [14699.974496] iwlwifi 0000:03:00.0: Transport status: 0x0000004A, valid: 6
+> [14699.974509] iwlwifi 0000:03:00.0: Loaded firmware version: 66.f1c864e0.0 cc-a0-66.ucode
+> [14699.974521] iwlwifi 0000:03:00.0: 0x00000071 | NMI_INTERRUPT_UMAC_FATAL    
+> [14699.974532] iwlwifi 0000:03:00.0: 0x000022F0 | trm_hw_status0
+> [14699.974541] iwlwifi 0000:03:00.0: 0x00000000 | trm_hw_status1
+> [14699.974549] iwlwifi 0000:03:00.0: 0x004FAA46 | branchlink2
+> [14699.974557] iwlwifi 0000:03:00.0: 0x004F13DE | interruptlink1
+> [14699.974565] iwlwifi 0000:03:00.0: 0x004F13DE | interruptlink2
+> [14699.974573] iwlwifi 0000:03:00.0: 0x00005D04 | data1
+> [14699.974581] iwlwifi 0000:03:00.0: 0x00001000 | data2
+> [14699.974588] iwlwifi 0000:03:00.0: 0x00000000 | data3
+> [14699.974596] iwlwifi 0000:03:00.0: 0x5F80B98E | beacon time
+> [14699.974604] iwlwifi 0000:03:00.0: 0xDA80E7BE | tsf low
+> [14699.974612] iwlwifi 0000:03:00.0: 0x000001D9 | tsf hi
+> [14699.974621] iwlwifi 0000:03:00.0: 0x00000000 | time gp1
+> [14699.974629] iwlwifi 0000:03:00.0: 0x1622E64D | time gp2
+> [14699.974636] iwlwifi 0000:03:00.0: 0x00000001 | uCode revision type
+> [14699.974645] iwlwifi 0000:03:00.0: 0x00000042 | uCode version major
+> [14699.974652] iwlwifi 0000:03:00.0: 0xF1C864E0 | uCode version minor
+> [14699.974662] iwlwifi 0000:03:00.0: 0x00000340 | hw version
+> [14699.974668] iwlwifi 0000:03:00.0: 0x00C89000 | board version
+> [14699.974675] iwlwifi 0000:03:00.0: 0x800EFC03 | hcmd
+> [14699.974682] iwlwifi 0000:03:00.0: 0x00020000 | isr0
+> [14699.974689] iwlwifi 0000:03:00.0: 0x00400000 | isr1
+> [14699.974695] iwlwifi 0000:03:00.0: 0x08F04802 | isr2
+> [14699.974702] iwlwifi 0000:03:00.0: 0x00C3780C | isr3
+> [14699.974710] iwlwifi 0000:03:00.0: 0x00000000 | isr4
+> [14699.974718] iwlwifi 0000:03:00.0: 0x0510001C | last cmd Id
+> [14699.974725] iwlwifi 0000:03:00.0: 0x00005D04 | wait_event
+> [14699.974733] iwlwifi 0000:03:00.0: 0x00000054 | l2p_control
+> [14699.974740] iwlwifi 0000:03:00.0: 0x00000000 | l2p_duration
+> [14699.974746] iwlwifi 0000:03:00.0: 0x0000000F | l2p_mhvalid
+> [14699.974754] iwlwifi 0000:03:00.0: 0x000000C7 | l2p_addr_match
+> [14699.974761] iwlwifi 0000:03:00.0: 0x00000008 | lmpm_pmg_sel
+> [14699.974768] iwlwifi 0000:03:00.0: 0x00000000 | timestamp
+> [14699.974776] iwlwifi 0000:03:00.0: 0x00004890 | flow_handler
+> [14699.974923] iwlwifi 0000:03:00.0: Start IWL Error Log Dump:
+> [14699.974933] iwlwifi 0000:03:00.0: Transport status: 0x0000004A, valid: 7
+> [14699.974945] iwlwifi 0000:03:00.0: 0x20003463 | ADVANCED_SYSASSERT
+> [14699.974953] iwlwifi 0000:03:00.0: 0x00000000 | umac branchlink1
+> [14699.974961] iwlwifi 0000:03:00.0: 0x80455A96 | umac branchlink2
+> [14699.974969] iwlwifi 0000:03:00.0: 0xC00811A4 | umac interruptlink1
+> [14699.974976] iwlwifi 0000:03:00.0: 0x00000000 | umac interruptlink2
+> [14699.974983] iwlwifi 0000:03:00.0: 0xDA80E7B1 | umac data1
+> [14699.974992] iwlwifi 0000:03:00.0: 0x1622E63F | umac data2
+> [14699.974999] iwlwifi 0000:03:00.0: 0xC5490101 | umac data3
+> [14699.975006] iwlwifi 0000:03:00.0: 0x00000042 | umac major
+> [14699.975013] iwlwifi 0000:03:00.0: 0xF1C864E0 | umac minor
+> [14699.975020] iwlwifi 0000:03:00.0: 0x1622E647 | frame pointer
+> [14699.975027] iwlwifi 0000:03:00.0: 0xC0885E08 | stack pointer
+> [14699.975035] iwlwifi 0000:03:00.0: 0x00AB010C | last host cmd
+> [14699.975042] iwlwifi 0000:03:00.0: 0x00000000 | isr status reg
+> [14699.975089] iwlwifi 0000:03:00.0: IML/ROM dump:
+> [14699.975096] iwlwifi 0000:03:00.0: 0x00000003 | IML/ROM error/state
+> [14699.975135] iwlwifi 0000:03:00.0: 0x00005A9A | IML/ROM data1
+> [14699.975170] iwlwifi 0000:03:00.0: 0x00000080 | IML/ROM WFPM_AUTH_KEY_0
+> [14699.975249] iwlwifi 0000:03:00.0: Fseq Registers:
+> [14699.975269] iwlwifi 0000:03:00.0: 0x60000000 | FSEQ_ERROR_CODE
+> [14699.975288] iwlwifi 0000:03:00.0: 0x80290021 | FSEQ_TOP_INIT_VERSION
+> [14699.975308] iwlwifi 0000:03:00.0: 0x00050008 | FSEQ_CNVIO_INIT_VERSION
+> [14699.975328] iwlwifi 0000:03:00.0: 0x0000A503 | FSEQ_OTP_VERSION
+> [14699.975348] iwlwifi 0000:03:00.0: 0x80000003 | FSEQ_TOP_CONTENT_VERSION
+> [14699.975368] iwlwifi 0000:03:00.0: 0x4552414E | FSEQ_ALIVE_TOKEN
+> [14699.975388] iwlwifi 0000:03:00.0: 0x00100530 | FSEQ_CNVI_ID
+> [14699.975407] iwlwifi 0000:03:00.0: 0x00000532 | FSEQ_CNVR_ID
+> [14699.975428] iwlwifi 0000:03:00.0: 0x00100530 | CNVI_AUX_MISC_CHIP
+> [14699.975450] iwlwifi 0000:03:00.0: 0x00000532 | CNVR_AUX_MISC_CHIP
+> [14699.975472] iwlwifi 0000:03:00.0: 0x05B0905B | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+> [14699.975494] iwlwifi 0000:03:00.0: 0x0000025B | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+> [14699.975970] iwlwifi 0000:03:00.0: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
 
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
-
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
-
-On 08.02.22 07:46, Thorsten Leemhuis wrote:
-> 
-> [TLDR: I'm adding the regression report below to regzbot, the Linux
-> kernel regression tracking bot; all text you find below is compiled from
-> a few templates paragraphs you might have encountered already already
-> from similar mails.]
-> 
-> Hi, this is your Linux kernel regression tracker speaking.
-> 
-> CCing the regression mailing list, as it should be in the loop for all
-> regressions, as explained here:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-> 
-> On 07.02.22 14:27, Domenico Andreoli wrote:
->> Commit 3ba442d5331f did not go unnoticed, binfmt-support stopped to
->> work on my Debian system since v5.17-rc2 (did not check with -rc1).
->>
->> The existance of /proc/sys/fs/binfmt_misc is a precondition for
->> attempting to mount the binfmt_misc fs, which in turn triggers the
->> autoload of the binfmt_misc module. Without it, no module is loaded
->> and no binfmt is available at boot.
->>
->> Building as built-in or manually loading the module and mounting the fs
->> works fine, it's therefore only a matter of interaction with user-space.
->>
->> I could try to improve the Debian systemd configuration but I can't
->> say anything about the other distributions.
->>
->> In the meanwhile this patch restores a working system right after boot.
->> [...]
-> 
-> To be sure this issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, my Linux kernel regression tracking bot:
-> 
-> #regzbot ^introduced 3ba442d5331f
-> #regzbot title  binfmt-support stopped to work
-> #regzbot ignore-activity
-> 
-> Reminder for developers: when fixing the issue, please add a 'Link:'
-> tags pointing to the report (the mail quoted above) using
-> lore.kernel.org/r/, as explained in
-> 'Documentation/process/submitting-patches.rst' and
-> 'Documentation/process/5.Posting.rst'. This allows the bot to connect
-> the report with any patches posted or committed to fix the issue; this
-> again allows the bot to show the current status of regressions and
-> automatically resolve the issue when the fix hits the right tree.
-> 
-> I'm sending this to everyone that got the initial report, to make them
-> aware of the tracking. I also hope that messages like this motivate
-> people to directly get at least the regression mailing list and ideally
-> even regzbot involved when dealing with regressions, as messages like
-> this wouldn't be needed then.
-> 
-> Don't worry, I'll send further messages wrt to this regression just to
-> the lists (with a tag in the subject so people can filter them away), if
-> they are relevant just for regzbot. With a bit of luck no such messages
-> will be needed anyway.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
-> 
