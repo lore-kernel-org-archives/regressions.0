@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F93A2F21
-	for <regressions@lists.linux.dev>; Thu, 10 Feb 2022 10:36:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DFA2F21
+	for <regressions@lists.linux.dev>; Thu, 10 Feb 2022 10:50:34 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nI6oq-0002ax-0m; Thu, 10 Feb 2022 11:36:56 +0100
-Message-ID: <9cb4b1ae-760f-f8ec-b3fe-a5d0be0dba25@leemhuis.info>
-Date: Thu, 10 Feb 2022 11:36:55 +0100
+	id 1nI71x-0004vH-Qn; Thu, 10 Feb 2022 11:50:30 +0100
+Message-ID: <85b53b4f-5b0b-cdad-2c3a-6dcfaf402017@leemhuis.info>
+Date: Thu, 10 Feb 2022 11:50:29 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,39 +16,32 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: Unable to transfer big files to Nokia N9
+Subject: Re: [5.17 regression] "x86/PCI: Ignore E820 reservations for bridge
+ windows on newer systems" breaks suspend/resume #forregzbot
 Content-Language: en-BS
-To: Paul Menzel <pmenzel@molgen.mpg.de>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
- Takashi Iwai <tiwai@suse.com>
-References: <eb6d86eb-d156-d7ac-0965-181719023d51@molgen.mpg.de>
- <CABBYNZLENxvXMCh6XbBSnu0jasV1F0QestEK5v2mnNUpJdw3Vw@mail.gmail.com>
- <cf71bdea-ec22-e4c9-016c-69e94a130607@molgen.mpg.de>
- <a93c0fa7-7b84-6aea-265b-c913e0c84678@molgen.mpg.de>
- <d7206e12-1b99-c3be-84f4-df22af427ef5@molgen.mpg.de>
- <371027df-7f32-edab-208d-d4cdd2202ba6@leemhuis.info>
- <d41d8b41-c347-47e7-e52b-39d7211c8952@molgen.mpg.de>
- <aa3ee7ac-6c52-3861-1798-3cc1a37f6ebf@molgen.mpg.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <aa3ee7ac-6c52-3861-1798-3cc1a37f6ebf@molgen.mpg.de>
+To: Hans de Goede <hdegoede@redhat.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <a7ad05fe-c2ab-a6d9-b66e-68e8c5688420@redhat.com>
+ <d2b054b6-0c32-ef04-134d-51f116d3e1d3@leemhuis.info>
+In-Reply-To: <d2b054b6-0c32-ef04-134d-51f116d3e1d3@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644489419;286a29b4;
-X-HE-SMSGID: 1nI6oq-0002ax-0m
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644490234;c57de559;
+X-HE-SMSGID: 1nI71x-0004vH-Qn
 
 Hi, this is your Linux kernel regression tracker speaking. Top-posting
 for once, to make this easy accessible to everyone.
 
-Hey bluetooth-maintainers, what's the status here? I already asked for a
-status update more that a week ago and didn't get a reply. Paul also
-confirmed recently the issue is still present and no reply either. IOW:
-this is talking way to long for a issue that was bisected?
+Thx for fixing this. Sadly the fix for the regression discussed didn't
+in this thread link to the report (e.g. the mail that started this
+thread), as 'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst' demand. So I have to tell regzbot
+about the fix manually now:
 
-Could you please comment on this? What can be done to get this rolling?
-Or do I have to ask upstream maintainers to revert the culprit?
+#regzbot fixed-by: 3eb616b26408ac81
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -60,278 +53,119 @@ that's not the case here; if you think it is, don't hesitate to tell me
 in a public reply, it's in everyone's interest to set the public record
 straight.
 
-#regzbot poke
 
-On 08.02.22 08:49, Paul Menzel wrote:
-> Dear Thorsten, dear Luiz,
+
+On 09.02.22 10:13, Thorsten Leemhuis wrote:
+> [TLDR: I'm adding the regression report below to regzbot, the Linux
+> kernel regression tracking bot; all text you find below is compiled from
+> a few templates paragraphs you might have encountered already already
+> from similar mails.]
 > 
+> Hi, this is your Linux kernel regression tracker speaking.
 > 
-> Am 07.02.22 um 14:14 schrieb Paul Menzel:
+> CCing the regression mailing list, as it should be in the loop for all
+> regressions, as explained here:
+> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 > 
->> Am 28.01.22 um 11:36 schrieb Thorsten Leemhuis:
->>> Hi, this is your Linux kernel regression tracker speaking.
+> To be sure this issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, my Linux kernel regression tracking bot:
+> 
+> #regzbot ^introduced 7f7b4236f204
+> #regzbot title x86/PCI: "x86/PCI: Ignore E820 reservations for bridge
+> windows on newer systems" breaks suspend/resume
+> #regzbot ignore-activity
+> 
+> Reminder for developers: when fixing the issue, please add a 'Link:'
+> tags pointing to the report (the mail quoted above) using
+> lore.kernel.org/r/, as explained in
+> 'Documentation/process/submitting-patches.rst' and
+> 'Documentation/process/5.Posting.rst'. This allows the bot to connect
+> the report with any patches posted or committed to fix the issue; this
+> again allows the bot to show the current status of regressions and
+> automatically resolve the issue when the fix hits the right tree.
+> 
+> I'm sending this to everyone that got the initial report, to make them
+> aware of the tracking. I also hope that messages like this motivate
+> people to directly get at least the regression mailing list and ideally
+> even regzbot involved when dealing with regressions, as messages like
+> this wouldn't be needed then.
+> 
+> Don't worry, I'll send further messages wrt to this regression just to
+> the lists (with a tag in the subject so people can filter them away), if
+> they are relevant just for regzbot. With a bit of luck no such messages
+> will be needed anyway.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> 
+> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> reports on my table. I can only look briefly into most of them and lack
+> knowledge about most of the areas they concern. I thus unfortunately
+> will sometimes get things wrong or miss something important. I hope
+> that's not the case here; if you think it is, don't hesitate to tell me
+> in a public reply, it's in everyone's interest to set the public record
+> straight.
+> 
+> On 08.02.22 16:25, Hans de Goede wrote:
+>> Hi All,
 >>
->> Thorsten, thank you for following up on this.
+>> Unfortunately I've just learned that commit 7f7b4236f204 ("x86/PCI:
+>> Ignore E820 reservations for bridge windows on newer systems"):
 >>
->>> On 16.01.22 14:27, Paul Menzel wrote:
->>>> #regzbot introduced: 81be03e026dc0c16dc1c64e088b2a53b73caa895
->>>
->>> thx for getting regzbot involved, much appreciated!
->>>
->>>> Dear Luiz,
->>>>
->>>> It turns out there was a regression in Linux 5.16-rc1.
->>>
->>> @bt-maintaners, what's the status here? Paul reported that over ten days
->>> ago and there wasn't a single reply. Or did the discussion move
->>> somewhere else?
->>>
->>> @Paul: just wondering, did you give 5.17-rc1 a try? Might be worth a
->>> shot, if only to confirm the issue is still present.
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7f7b4236f2040d19df1ddaf30047128b41e78de7
 >>
->> I just tried with 5.17-rc3, and the issue is still present.
-> 
-> Merging 4840aa67576b (Bluetooth: hci_core: Fix leaking sent_cmd skb) from
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git
-> 
-> 
-> into Linux 5.17-rc3, the resulting Linux kernel also has the problem.
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
->>>> Am 20.12.21 um 22:31 schrieb Paul Menzel:
->>>>
->>>>> Am 01.12.21 um 23:07 schrieb Paul Menzel:
->>>>>
->>>>>> Am 01.12.21 um 19:29 schrieb Luiz Augusto von Dentz:
->>>>>>
->>>>>>> On Wed, Dec 1, 2021 at 9:39 AM Paul Menzel <pmenzel@molgen.mpg.de>
->>>>>>> wrote:
->>>>>>
->>>>>>>> For the first time, I wanted to transfer a 2 MB PDF file from a
->>>>>>>> Dell
->>>>>>>> Latitude E7250 with Debian sid/unstable with Linux 5.16-rc1 to a
->>>>>>>> Nokia
->>>>>>>> N9 (MeeGo/Harmattan). Using the package *bluez-obexd* 5.61-1 and
->>>>>>>> GNOME
->>>>>>>> 41, the device was found, and paired fine. Then I selected to
->>>>>>>> transfer
->>>>>>>> the 2 MB file, and after starting for a second, it timed out
->>>>>>>> after the
->>>>>>>> progress bar moves forward ones and failed.
->>>>>>>>
->>>>>>>> The systemd journal contains:
->>>>>>>>
->>>>>>>>        obexd[21139]: Transfer(0x56243fe4f790) Error: Timed out
->>>>>>>> waiting for response
->>>>>>>>
->>>>>>>> Testing with a a 5 byte test text file, worked fine. Also
->>>>>>>> testing with a
->>>>>>>> Galaly M32, both files were transferred without problems (though
->>>>>>>> slowly
->>>>>>>> with 32 KB/s.)
->>>>>>>>
->>>>>>>> Trying to connect to the device with bluetoothctl failed for me,
->>>>>>>> and the journal contained, it failed.
->>>>>>>>
->>>>>>>>        $ bluetoothctl
->>>>>>>>        Agent registered
->>>>>>>>        [bluetooth]# connect 40:98:4E:5B:CE:XX
->>>>>>>>        Attempting to connect to 40:98:4E:5B:CE:XX
->>>>>>>>        Failed to connect: org.bluez.Error.Failed
->>>>>>>>
->>>>>>>>        bluetoothd[21104]: src/service.c:btd_service_connect()
->>>>>>>> a2dp-source profile connect failed for 40:98:4E:5B:CE:B3:
->>>>>>>> Protocol not 
-> available
->>>>>>>>
->>>>>>>> As the Nokia N9 was once pretty popular in the Linux community,
->>>>>>>> I am
->>>>>>>> pretty sure, it used to work fine in the past, and there is some
->>>>>>>> regression. It’d be great, if you could give me some hints how to
->>>>>>>> further debug the issue.
->>>>>>>
->>>>>>> We will need some logs, obexd and btmon, if possible.
->>>>>>
->>>>>> I only managed to get the btmon trace [1]. I did `sudo modprobe -r
->>>>>> btusb` and `sudo btmon -w /dev/shm/trace.log`.
->>>>>>
->>>>>> Linux messages:
->>>>>>
->>>>>>       [29880.100381] calling  btusb_driver_init+0x0/0x1000 [btusb]
->>>>>> @28716
->>>>>>       [29880.239603] usbcore: registered new interface driver btusb
->>>>>>       [29880.239608] initcall btusb_driver_init+0x0/0x1000 [btusb]
->>>>>> returned 0 after 135952 usecs
->>>>>>       [29880.240706] Bluetooth: hci0: unexpected event for opcode
->>>>>> 0x0500
->>>>>>       [29880.241598] Bluetooth: hci0: Legacy ROM 2.5 revision 1.0
->>>>>> build 3 week 17 2014
->>>>>>       [29880.241605] Bluetooth: hci0: Intel device is already
->>>>>> patched. patch num: 32
->>>>>>
->>>>>>   From the system journal:
->>>>>>
->>>>>>       Dez 01 22:52:19 ersatz obexd[21139]:
->>>>>> Transfer(0x56243fe53dd0) Error: Timed out waiting for response
->>>>>
->>>>> Were you able to see anything in the attached logs? If the obexd logs
->>>>> are missing, can you please tell how I should capture them?
->>>>>
->>>>> I also tested with Ubuntu 20.04 (*linux-image-5.11.0-27-generic*) and
->>>>> 21.10 (*linux-image-5.13.0-19-generic*) live systems booted from a USB
->>>>> storage device, and transferring `/usr/bin/systemctl`
->>>>> (`/lib/systemd/systemd`) with size of 1.8 MB worked fine.
->>>>>
->>>>> Could there be a regression in that area? Unfortunately, it’s not easy
->>>>> for me to do a bisection on the device at hand.
->>>>>
->>>>> (Would it be possible to do with QEMU and USB controller and Bluetooth
->>>>> device passthrough? How can I transfer the file on the command line so
->>>>> I wouldn’t need to install a desktop environment?)
->>>>
->>>> Turns out, that is indeed possible [2], but turned out to be
->>>> cumbersome,
->>>> as I hit the regression [3], which seems to have been fixed by commit
->>>> 95655456e7ce (Bluetooth: btintel: Fix broken LED quirk for legacy ROM
->>>> devices) merged in the current Linux 5.17 cycle this week.
->>>>
->>>> As a work around, I applied a hunk from Takashi’s patch.
->>>>
->>>> -       { USB_DEVICE(0x8087, 0x0a2a), .driver_info =
->>>> BTUSB_INTEL_COMBINED },
->>>> +       { USB_DEVICE(0x8087, 0x0a2a), .driver_info = 
->>>> BTUSB_INTEL_COMBINED |
->>>> + BTUSB_INTEL_BROKEN_INITIAL_NCMD },
->>>>
->>>> My problem with the Nokia N9 is still present in Linus’ master branch.
->>>>
->>>> Then I built a minimal Linux kernel for QEMU, and ran:
->>>>
->>>>      qemu-system-x86_64 -cpu host -m 2G -enable-kvm \
->>>>        -usb -device usb-host,vendorid=0x8087,productid=0x0a2a \
->>>>        -drive file=/dev/shm/debian-64.img,format=raw,if=virtio \
->>>>        -net nic -net user,hostfwd=tcp::22223-:22 \
->>>>        -kernel /dev/shm/bzImage -append "root=/dev/vda1 rw quiet"
->>>>
->>>> In the Debian sid/unstable VM, I used
->>>>
->>>>      ssh root@localhost -p 22223
->>>>
->>>> I once had to pair the VM with the Nokia N9 in bluetoothctl, and then
->>>> started `/usr/libexec/bluetooth/obexd`, and ran `obexctl`, and
->>>> connected
->>>> first with `connect`, and then ran `send /lib/systemd/systemd` to
->>>> transfer the file. In the problematic cases it stopped/hung after the
->>>> first progress message.
->>>>
->>>>      # obexctl
->>>>      [NEW] Client /org/bluez/obex
->>>>      [obex]# connect 40:98:4E:5B:CE:XX
->>>>      Attempting to connect to 40:98:4E:5B:CE:XX
->>>>      [NEW] Session /org/bluez/obex/client/session0 [default]
->>>>      [NEW] ObjectPush /org/bluez/obex/client/session0
->>>>      Connection successful
->>>>      [40:98:4E:5B:CE:XX]# send /lib/systemd/systemd
->>>>      Attempting to send /lib/systemd/systemd to
->>>> /org/bluez/obex/client/session0
->>>>      [NEW] Transfer /org/bluez/obex/client/session0/transfer0
->>>>      Transfer /org/bluez/obex/client/session0/transfer0
->>>>          Status: queued
->>>>          Name: systemd
->>>>          Size: 1841712
->>>>          Filename: /lib/systemd/systemd
->>>>          Session: /org/bluez/obex/client/session0
->>>>      [CHG] Transfer /org/bluez/obex/client/session0/transfer0
->>>> Status: active
->>>>      [CHG] Transfer /org/bluez/obex/client/session0/transfer0
->>>> Transferred: 32737 (@32KB/s 00:55)
->>>>      [CHG] Transfer /org/bluez/obex/client/session0/transfer0
->>>> Status: error
->>>>      [DEL] Transfer /org/bluez/obex/client/session0/transfer0
->>>>
->>>> Some manual bisection of Linux releases, verified, that the regression
->>>> was introduced in Linux 5.16-rc1. (Lucky me, I started using Bluetooth
->>>> with the Nokia with Linux 5.16-rc1.) Then I verified it was introduced
->>>> by the Bluetooth pull request for Linux 5.16. Then I picked commit
->>>> 81be03e026dc0c16dc1c64e088b2a53b73caa895 due to the commit message, and
->>>> bisected from there, and it turns out, that this commit is actually
->>>> introducing the regression.
->>>>
->>>>      $ git bisect good
->>>>      81be03e026dc0c16dc1c64e088b2a53b73caa895 is the first bad commit
->>>>      commit 81be03e026dc0c16dc1c64e088b2a53b73caa895
->>>>      Author: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
->>>>      Date:   Fri Sep 3 15:27:32 2021 -0700
->>>>
->>>>          Bluetooth: RFCOMM: Replace use of memcpy_from_msg with
->>>> bt_skb_sendmmsg
->>>>
->>>>          This makes use of bt_skb_sendmmsg instead using
->>>> memcpy_from_msg which
->>>>          is not considered safe to be used when lock_sock is held.
->>>>
->>>>          Also make rfcomm_dlc_send handle skb with fragments and
->>>> queue them all
->>>>          atomically.
->>>>
->>>>          Signed-off-by: Luiz Augusto von Dentz
->>>> <luiz.von.dentz@intel.com>
->>>>          Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
->>>>
->>>>       net/bluetooth/rfcomm/core.c | 50
->>>> ++++++++++++++++++++++++++++++++++++++-------
->>>>       net/bluetooth/rfcomm/sock.c | 46
->>>> +++++++++--------------------------------
->>>>       2 files changed, 53 insertions(+), 43 deletions(-)
->>>>
->>>> Unfortunately, the patch does not cleanly revert, so users have to wait
->>>> until an expert can take a look, and come up with a fix.
->>>>
->>>>
->>>> Kind regards,
->>>>
->>>> Paul
->>>>
->>>>
->>>> PS: For the records:
->>>>
->>>>      $ git bisect log
->>>>      # bad: [81be03e026dc0c16dc1c64e088b2a53b73caa895] Bluetooth:
->>>> RFCOMM: Replace use of memcpy_from_msg with bt_skb_sendmmsg
->>>>      # good: [49d8a5606428ca0962d09050a5af81461ff90fbb] Bluetooth:
->>>> fix init and cleanup of sco_conn.timeout_work
->>>>      git bisect start '81be03e026dc0' 'HEAD^'
->>>>      # good: [904c139a2517191e48f9cb1bb2d611ae59434009] Bluetooth:
->>>> Add support for msbc coding format
->>>>      git bisect good 904c139a2517191e48f9cb1bb2d611ae59434009
->>>>      # good: [8bba13b1d08d42e2e8308924fa5c1551a7b2b011] Bluetooth:
->>>> btintel: Fix incorrect out of memory check
->>>>      git bisect good 8bba13b1d08d42e2e8308924fa5c1551a7b2b011
->>>>      # good: [38f64f650dc0e44c146ff88d15a7339efa325918] Bluetooth:
->>>> Add bt_skb_sendmsg helper
->>>>      git bisect good 38f64f650dc0e44c146ff88d15a7339efa325918
->>>>      # good: [0771cbb3b97d3c1d68eecd7f00055f599954c34e] Bluetooth:
->>>> SCO: Replace use of memcpy_from_msg with bt_skb_sendmsg
->>>>      git bisect good 0771cbb3b97d3c1d68eecd7f00055f599954c34e
->>>>      # first bad commit: [81be03e026dc0c16dc1c64e088b2a53b73caa895]
->>>> Bluetooth: RFCOMM: Replace use of memcpy_from_msg with bt_skb_sendmmsg
->>>>
->>>>
->>>> Kind regards,
->>>>
->>>> Paul
->>>>
->>>>
->>>>>> [1]: https://owww.molgen.mpg.de/~pmenzel/trace.log.7z
->>>> [2]:
->>>> https://lore.kernel.org/linux-bluetooth/5891f0d5-8d51-9da5-7663-718f301490b1@molgen.mpg.de/T/#u
->>>> [3]:
->>>> https://lore.kernel.org/linux-bluetooth/20211202162256.31837-1-tiwai@suse.de/
->>>>
+>> breaks suspend/resume on at least one laptop model, the Lenovo ThinkPad
+>> X1 gen 2, see:
+>> https://bugzilla.redhat.com/show_bug.cgi?id=2029207
+>>
+>> This regression was actually caught be Fedora already carrying this
+>> patch for a while now and as such it has been reproduced with 5.15
+>> with an older version of the patch which still allowed turning the
+>> new behavior of by adding "pci=use_e820". Dmesg output with and
+>> without the option has just been attached to the bug, I've not
+>> analyzed this any further yet.
+>>
+>> I guess that for now this means that we need to revert commit
+>> 7f7b4236f204. Rafael, I'll send you a revert with a commit msg
+>> explaining why this needs to be reverted tomorrow.
+>>
+>> More interesting IMHO is finding out another solution. Both the touchpad
+>> problem which got me looking into this:
+>> https://bugzilla.redhat.com/show_bug.cgi?id=1868899
+>>
+>> As well as the thunderbolt hotplug issue Mika was looking at:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=206459
+>>
+>> both are cases where we fail to find a memory-window for a
+>> BAR which has not been setup yet.
+>>
+>> So I see a couple of options here:
+>>
+>> 1. Detect that the e820 reservations fully cover (one of)
+>> the PCI bridge main 32 bit memory windows and if that happens
+>> ignore them. This actually was my first plan when I started
+>> working on this. In the end I choose the other option
+>> because Bjorn indicated that in hindsight honoring the e820
+>> reservations might have been a mistake and maybe we should
+>> get rid of honoring them all together.
+>>
+>> 2. Have a flag which, when we fail to alloc a 32 bit
+>> (or 64 bit) memory PCI BAR, is set if not already set
+>> and then retry the alloc. And make the e820 reservation
+>> carve-out get skipped in this case.
+>>
+>> 3. When booting with pci=nocrs as a workaround for
+>> the touchpad case a 64 but memory window ends up getting
+>> used. There already is some special handling for some
+>> AMD bridges where if there are no 64 bit memory Windows
+>> in the _CRS for the bridge, one gets added. Maybe we need
+>> to do the same for Intel bridges ?
+>>
+>> Please let me know which of these options you think I should
+>> try to implement next; of course alternative ideas for fixing
+>> this are also welcome.
+>>
+>> Regards,
+>>
+>> Hans
+>>
 > 
