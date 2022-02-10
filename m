@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446A92F28
-	for <regressions@lists.linux.dev>; Thu, 10 Feb 2022 09:56:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F93A2F21
+	for <regressions@lists.linux.dev>; Thu, 10 Feb 2022 10:36:58 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nI6BR-0006Ct-FT; Thu, 10 Feb 2022 10:56:13 +0100
-Message-ID: <adf5ac57-cd60-a004-a05d-6d7c3ad7efa7@leemhuis.info>
-Date: Thu, 10 Feb 2022 10:56:13 +0100
+	id 1nI6oq-0002ax-0m; Thu, 10 Feb 2022 11:36:56 +0100
+Message-ID: <9cb4b1ae-760f-f8ec-b3fe-a5d0be0dba25@leemhuis.info>
+Date: Thu, 10 Feb 2022 11:36:55 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,102 +16,322 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
+Subject: Re: Unable to transfer big files to Nokia N9
 Content-Language: en-BS
+To: Paul Menzel <pmenzel@molgen.mpg.de>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
+ Takashi Iwai <tiwai@suse.com>
+References: <eb6d86eb-d156-d7ac-0965-181719023d51@molgen.mpg.de>
+ <CABBYNZLENxvXMCh6XbBSnu0jasV1F0QestEK5v2mnNUpJdw3Vw@mail.gmail.com>
+ <cf71bdea-ec22-e4c9-016c-69e94a130607@molgen.mpg.de>
+ <a93c0fa7-7b84-6aea-265b-c913e0c84678@molgen.mpg.de>
+ <d7206e12-1b99-c3be-84f4-df22af427ef5@molgen.mpg.de>
+ <371027df-7f32-edab-208d-d4cdd2202ba6@leemhuis.info>
+ <d41d8b41-c347-47e7-e52b-39d7211c8952@molgen.mpg.de>
+ <aa3ee7ac-6c52-3861-1798-3cc1a37f6ebf@molgen.mpg.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Bug 215523 - Firmware crash with 66.f1c864e0.0 (cc-a0-66.ucode) and
- 68.01d30b0c (cc-a0-68.ucode)
+In-Reply-To: <aa3ee7ac-6c52-3861-1798-3cc1a37f6ebf@molgen.mpg.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644486975;9b506d71;
-X-HE-SMSGID: 1nI6BR-0006Ct-FT
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644489419;286a29b4;
+X-HE-SMSGID: 1nI6oq-0002ax-0m
 
-Hi, this is your Linux kernel regression tracker speaking.
+Hi, this is your Linux kernel regression tracker speaking. Top-posting
+for once, to make this easy accessible to everyone.
 
-There is a regression in bugzilla.kernel.org I'd like to add to the
-tracking:
+Hey bluetooth-maintainers, what's the status here? I already asked for a
+status update more that a week ago and didn't get a reply. Paul also
+confirmed recently the issue is still present and no reply either. IOW:
+this is talking way to long for a issue that was bisected?
 
-#regzbot introduced: v5.16..v5.17-rc1
-#regzbot from: Udo Steinberg <udo@hypervisor.org>
-#regzbot title: iwlwifi: Firmware crash with 66.f1c864e0.0
-(cc-a0-66.ucode) and 68.01d30b0c (cc-a0-68.ucode)
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215523
+Could you please comment on this? What can be done to get this rolling?
+Or do I have to ask upstream maintainers to revert the culprit?
 
-Quote:
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-> Seeing the following firmware crash frequently with
-> firmware-version: 66.f1c864e0.0 cc-a0-66.ucode
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+#regzbot poke
+
+On 08.02.22 08:49, Paul Menzel wrote:
+> Dear Thorsten, dear Luiz,
 > 
-> [14699.974055] iwlwifi 0000:03:00.0: Microcode SW error detected. Restarting 0x0.
-> [14699.974484] iwlwifi 0000:03:00.0: Start IWL Error Log Dump:
-> [14699.974496] iwlwifi 0000:03:00.0: Transport status: 0x0000004A, valid: 6
-> [14699.974509] iwlwifi 0000:03:00.0: Loaded firmware version: 66.f1c864e0.0 cc-a0-66.ucode
-> [14699.974521] iwlwifi 0000:03:00.0: 0x00000071 | NMI_INTERRUPT_UMAC_FATAL    
-> [14699.974532] iwlwifi 0000:03:00.0: 0x000022F0 | trm_hw_status0
-> [14699.974541] iwlwifi 0000:03:00.0: 0x00000000 | trm_hw_status1
-> [14699.974549] iwlwifi 0000:03:00.0: 0x004FAA46 | branchlink2
-> [14699.974557] iwlwifi 0000:03:00.0: 0x004F13DE | interruptlink1
-> [14699.974565] iwlwifi 0000:03:00.0: 0x004F13DE | interruptlink2
-> [14699.974573] iwlwifi 0000:03:00.0: 0x00005D04 | data1
-> [14699.974581] iwlwifi 0000:03:00.0: 0x00001000 | data2
-> [14699.974588] iwlwifi 0000:03:00.0: 0x00000000 | data3
-> [14699.974596] iwlwifi 0000:03:00.0: 0x5F80B98E | beacon time
-> [14699.974604] iwlwifi 0000:03:00.0: 0xDA80E7BE | tsf low
-> [14699.974612] iwlwifi 0000:03:00.0: 0x000001D9 | tsf hi
-> [14699.974621] iwlwifi 0000:03:00.0: 0x00000000 | time gp1
-> [14699.974629] iwlwifi 0000:03:00.0: 0x1622E64D | time gp2
-> [14699.974636] iwlwifi 0000:03:00.0: 0x00000001 | uCode revision type
-> [14699.974645] iwlwifi 0000:03:00.0: 0x00000042 | uCode version major
-> [14699.974652] iwlwifi 0000:03:00.0: 0xF1C864E0 | uCode version minor
-> [14699.974662] iwlwifi 0000:03:00.0: 0x00000340 | hw version
-> [14699.974668] iwlwifi 0000:03:00.0: 0x00C89000 | board version
-> [14699.974675] iwlwifi 0000:03:00.0: 0x800EFC03 | hcmd
-> [14699.974682] iwlwifi 0000:03:00.0: 0x00020000 | isr0
-> [14699.974689] iwlwifi 0000:03:00.0: 0x00400000 | isr1
-> [14699.974695] iwlwifi 0000:03:00.0: 0x08F04802 | isr2
-> [14699.974702] iwlwifi 0000:03:00.0: 0x00C3780C | isr3
-> [14699.974710] iwlwifi 0000:03:00.0: 0x00000000 | isr4
-> [14699.974718] iwlwifi 0000:03:00.0: 0x0510001C | last cmd Id
-> [14699.974725] iwlwifi 0000:03:00.0: 0x00005D04 | wait_event
-> [14699.974733] iwlwifi 0000:03:00.0: 0x00000054 | l2p_control
-> [14699.974740] iwlwifi 0000:03:00.0: 0x00000000 | l2p_duration
-> [14699.974746] iwlwifi 0000:03:00.0: 0x0000000F | l2p_mhvalid
-> [14699.974754] iwlwifi 0000:03:00.0: 0x000000C7 | l2p_addr_match
-> [14699.974761] iwlwifi 0000:03:00.0: 0x00000008 | lmpm_pmg_sel
-> [14699.974768] iwlwifi 0000:03:00.0: 0x00000000 | timestamp
-> [14699.974776] iwlwifi 0000:03:00.0: 0x00004890 | flow_handler
-> [14699.974923] iwlwifi 0000:03:00.0: Start IWL Error Log Dump:
-> [14699.974933] iwlwifi 0000:03:00.0: Transport status: 0x0000004A, valid: 7
-> [14699.974945] iwlwifi 0000:03:00.0: 0x20003463 | ADVANCED_SYSASSERT
-> [14699.974953] iwlwifi 0000:03:00.0: 0x00000000 | umac branchlink1
-> [14699.974961] iwlwifi 0000:03:00.0: 0x80455A96 | umac branchlink2
-> [14699.974969] iwlwifi 0000:03:00.0: 0xC00811A4 | umac interruptlink1
-> [14699.974976] iwlwifi 0000:03:00.0: 0x00000000 | umac interruptlink2
-> [14699.974983] iwlwifi 0000:03:00.0: 0xDA80E7B1 | umac data1
-> [14699.974992] iwlwifi 0000:03:00.0: 0x1622E63F | umac data2
-> [14699.974999] iwlwifi 0000:03:00.0: 0xC5490101 | umac data3
-> [14699.975006] iwlwifi 0000:03:00.0: 0x00000042 | umac major
-> [14699.975013] iwlwifi 0000:03:00.0: 0xF1C864E0 | umac minor
-> [14699.975020] iwlwifi 0000:03:00.0: 0x1622E647 | frame pointer
-> [14699.975027] iwlwifi 0000:03:00.0: 0xC0885E08 | stack pointer
-> [14699.975035] iwlwifi 0000:03:00.0: 0x00AB010C | last host cmd
-> [14699.975042] iwlwifi 0000:03:00.0: 0x00000000 | isr status reg
-> [14699.975089] iwlwifi 0000:03:00.0: IML/ROM dump:
-> [14699.975096] iwlwifi 0000:03:00.0: 0x00000003 | IML/ROM error/state
-> [14699.975135] iwlwifi 0000:03:00.0: 0x00005A9A | IML/ROM data1
-> [14699.975170] iwlwifi 0000:03:00.0: 0x00000080 | IML/ROM WFPM_AUTH_KEY_0
-> [14699.975249] iwlwifi 0000:03:00.0: Fseq Registers:
-> [14699.975269] iwlwifi 0000:03:00.0: 0x60000000 | FSEQ_ERROR_CODE
-> [14699.975288] iwlwifi 0000:03:00.0: 0x80290021 | FSEQ_TOP_INIT_VERSION
-> [14699.975308] iwlwifi 0000:03:00.0: 0x00050008 | FSEQ_CNVIO_INIT_VERSION
-> [14699.975328] iwlwifi 0000:03:00.0: 0x0000A503 | FSEQ_OTP_VERSION
-> [14699.975348] iwlwifi 0000:03:00.0: 0x80000003 | FSEQ_TOP_CONTENT_VERSION
-> [14699.975368] iwlwifi 0000:03:00.0: 0x4552414E | FSEQ_ALIVE_TOKEN
-> [14699.975388] iwlwifi 0000:03:00.0: 0x00100530 | FSEQ_CNVI_ID
-> [14699.975407] iwlwifi 0000:03:00.0: 0x00000532 | FSEQ_CNVR_ID
-> [14699.975428] iwlwifi 0000:03:00.0: 0x00100530 | CNVI_AUX_MISC_CHIP
-> [14699.975450] iwlwifi 0000:03:00.0: 0x00000532 | CNVR_AUX_MISC_CHIP
-> [14699.975472] iwlwifi 0000:03:00.0: 0x05B0905B | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
-> [14699.975494] iwlwifi 0000:03:00.0: 0x0000025B | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
-> [14699.975970] iwlwifi 0000:03:00.0: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
-
+> 
+> Am 07.02.22 um 14:14 schrieb Paul Menzel:
+> 
+>> Am 28.01.22 um 11:36 schrieb Thorsten Leemhuis:
+>>> Hi, this is your Linux kernel regression tracker speaking.
+>>
+>> Thorsten, thank you for following up on this.
+>>
+>>> On 16.01.22 14:27, Paul Menzel wrote:
+>>>> #regzbot introduced: 81be03e026dc0c16dc1c64e088b2a53b73caa895
+>>>
+>>> thx for getting regzbot involved, much appreciated!
+>>>
+>>>> Dear Luiz,
+>>>>
+>>>> It turns out there was a regression in Linux 5.16-rc1.
+>>>
+>>> @bt-maintaners, what's the status here? Paul reported that over ten days
+>>> ago and there wasn't a single reply. Or did the discussion move
+>>> somewhere else?
+>>>
+>>> @Paul: just wondering, did you give 5.17-rc1 a try? Might be worth a
+>>> shot, if only to confirm the issue is still present.
+>>
+>> I just tried with 5.17-rc3, and the issue is still present.
+> 
+> Merging 4840aa67576b (Bluetooth: hci_core: Fix leaking sent_cmd skb) from
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git
+> 
+> 
+> into Linux 5.17-rc3, the resulting Linux kernel also has the problem.
+> 
+> 
+> Kind regards,
+> 
+> Paul
+> 
+> 
+>>>> Am 20.12.21 um 22:31 schrieb Paul Menzel:
+>>>>
+>>>>> Am 01.12.21 um 23:07 schrieb Paul Menzel:
+>>>>>
+>>>>>> Am 01.12.21 um 19:29 schrieb Luiz Augusto von Dentz:
+>>>>>>
+>>>>>>> On Wed, Dec 1, 2021 at 9:39 AM Paul Menzel <pmenzel@molgen.mpg.de>
+>>>>>>> wrote:
+>>>>>>
+>>>>>>>> For the first time, I wanted to transfer a 2 MB PDF file from a
+>>>>>>>> Dell
+>>>>>>>> Latitude E7250 with Debian sid/unstable with Linux 5.16-rc1 to a
+>>>>>>>> Nokia
+>>>>>>>> N9 (MeeGo/Harmattan). Using the package *bluez-obexd* 5.61-1 and
+>>>>>>>> GNOME
+>>>>>>>> 41, the device was found, and paired fine. Then I selected to
+>>>>>>>> transfer
+>>>>>>>> the 2 MB file, and after starting for a second, it timed out
+>>>>>>>> after the
+>>>>>>>> progress bar moves forward ones and failed.
+>>>>>>>>
+>>>>>>>> The systemd journal contains:
+>>>>>>>>
+>>>>>>>>        obexd[21139]: Transfer(0x56243fe4f790) Error: Timed out
+>>>>>>>> waiting for response
+>>>>>>>>
+>>>>>>>> Testing with a a 5 byte test text file, worked fine. Also
+>>>>>>>> testing with a
+>>>>>>>> Galaly M32, both files were transferred without problems (though
+>>>>>>>> slowly
+>>>>>>>> with 32 KB/s.)
+>>>>>>>>
+>>>>>>>> Trying to connect to the device with bluetoothctl failed for me,
+>>>>>>>> and the journal contained, it failed.
+>>>>>>>>
+>>>>>>>>        $ bluetoothctl
+>>>>>>>>        Agent registered
+>>>>>>>>        [bluetooth]# connect 40:98:4E:5B:CE:XX
+>>>>>>>>        Attempting to connect to 40:98:4E:5B:CE:XX
+>>>>>>>>        Failed to connect: org.bluez.Error.Failed
+>>>>>>>>
+>>>>>>>>        bluetoothd[21104]: src/service.c:btd_service_connect()
+>>>>>>>> a2dp-source profile connect failed for 40:98:4E:5B:CE:B3:
+>>>>>>>> Protocol not 
+> available
+>>>>>>>>
+>>>>>>>> As the Nokia N9 was once pretty popular in the Linux community,
+>>>>>>>> I am
+>>>>>>>> pretty sure, it used to work fine in the past, and there is some
+>>>>>>>> regression. It’d be great, if you could give me some hints how to
+>>>>>>>> further debug the issue.
+>>>>>>>
+>>>>>>> We will need some logs, obexd and btmon, if possible.
+>>>>>>
+>>>>>> I only managed to get the btmon trace [1]. I did `sudo modprobe -r
+>>>>>> btusb` and `sudo btmon -w /dev/shm/trace.log`.
+>>>>>>
+>>>>>> Linux messages:
+>>>>>>
+>>>>>>       [29880.100381] calling  btusb_driver_init+0x0/0x1000 [btusb]
+>>>>>> @28716
+>>>>>>       [29880.239603] usbcore: registered new interface driver btusb
+>>>>>>       [29880.239608] initcall btusb_driver_init+0x0/0x1000 [btusb]
+>>>>>> returned 0 after 135952 usecs
+>>>>>>       [29880.240706] Bluetooth: hci0: unexpected event for opcode
+>>>>>> 0x0500
+>>>>>>       [29880.241598] Bluetooth: hci0: Legacy ROM 2.5 revision 1.0
+>>>>>> build 3 week 17 2014
+>>>>>>       [29880.241605] Bluetooth: hci0: Intel device is already
+>>>>>> patched. patch num: 32
+>>>>>>
+>>>>>>   From the system journal:
+>>>>>>
+>>>>>>       Dez 01 22:52:19 ersatz obexd[21139]:
+>>>>>> Transfer(0x56243fe53dd0) Error: Timed out waiting for response
+>>>>>
+>>>>> Were you able to see anything in the attached logs? If the obexd logs
+>>>>> are missing, can you please tell how I should capture them?
+>>>>>
+>>>>> I also tested with Ubuntu 20.04 (*linux-image-5.11.0-27-generic*) and
+>>>>> 21.10 (*linux-image-5.13.0-19-generic*) live systems booted from a USB
+>>>>> storage device, and transferring `/usr/bin/systemctl`
+>>>>> (`/lib/systemd/systemd`) with size of 1.8 MB worked fine.
+>>>>>
+>>>>> Could there be a regression in that area? Unfortunately, it’s not easy
+>>>>> for me to do a bisection on the device at hand.
+>>>>>
+>>>>> (Would it be possible to do with QEMU and USB controller and Bluetooth
+>>>>> device passthrough? How can I transfer the file on the command line so
+>>>>> I wouldn’t need to install a desktop environment?)
+>>>>
+>>>> Turns out, that is indeed possible [2], but turned out to be
+>>>> cumbersome,
+>>>> as I hit the regression [3], which seems to have been fixed by commit
+>>>> 95655456e7ce (Bluetooth: btintel: Fix broken LED quirk for legacy ROM
+>>>> devices) merged in the current Linux 5.17 cycle this week.
+>>>>
+>>>> As a work around, I applied a hunk from Takashi’s patch.
+>>>>
+>>>> -       { USB_DEVICE(0x8087, 0x0a2a), .driver_info =
+>>>> BTUSB_INTEL_COMBINED },
+>>>> +       { USB_DEVICE(0x8087, 0x0a2a), .driver_info = 
+>>>> BTUSB_INTEL_COMBINED |
+>>>> + BTUSB_INTEL_BROKEN_INITIAL_NCMD },
+>>>>
+>>>> My problem with the Nokia N9 is still present in Linus’ master branch.
+>>>>
+>>>> Then I built a minimal Linux kernel for QEMU, and ran:
+>>>>
+>>>>      qemu-system-x86_64 -cpu host -m 2G -enable-kvm \
+>>>>        -usb -device usb-host,vendorid=0x8087,productid=0x0a2a \
+>>>>        -drive file=/dev/shm/debian-64.img,format=raw,if=virtio \
+>>>>        -net nic -net user,hostfwd=tcp::22223-:22 \
+>>>>        -kernel /dev/shm/bzImage -append "root=/dev/vda1 rw quiet"
+>>>>
+>>>> In the Debian sid/unstable VM, I used
+>>>>
+>>>>      ssh root@localhost -p 22223
+>>>>
+>>>> I once had to pair the VM with the Nokia N9 in bluetoothctl, and then
+>>>> started `/usr/libexec/bluetooth/obexd`, and ran `obexctl`, and
+>>>> connected
+>>>> first with `connect`, and then ran `send /lib/systemd/systemd` to
+>>>> transfer the file. In the problematic cases it stopped/hung after the
+>>>> first progress message.
+>>>>
+>>>>      # obexctl
+>>>>      [NEW] Client /org/bluez/obex
+>>>>      [obex]# connect 40:98:4E:5B:CE:XX
+>>>>      Attempting to connect to 40:98:4E:5B:CE:XX
+>>>>      [NEW] Session /org/bluez/obex/client/session0 [default]
+>>>>      [NEW] ObjectPush /org/bluez/obex/client/session0
+>>>>      Connection successful
+>>>>      [40:98:4E:5B:CE:XX]# send /lib/systemd/systemd
+>>>>      Attempting to send /lib/systemd/systemd to
+>>>> /org/bluez/obex/client/session0
+>>>>      [NEW] Transfer /org/bluez/obex/client/session0/transfer0
+>>>>      Transfer /org/bluez/obex/client/session0/transfer0
+>>>>          Status: queued
+>>>>          Name: systemd
+>>>>          Size: 1841712
+>>>>          Filename: /lib/systemd/systemd
+>>>>          Session: /org/bluez/obex/client/session0
+>>>>      [CHG] Transfer /org/bluez/obex/client/session0/transfer0
+>>>> Status: active
+>>>>      [CHG] Transfer /org/bluez/obex/client/session0/transfer0
+>>>> Transferred: 32737 (@32KB/s 00:55)
+>>>>      [CHG] Transfer /org/bluez/obex/client/session0/transfer0
+>>>> Status: error
+>>>>      [DEL] Transfer /org/bluez/obex/client/session0/transfer0
+>>>>
+>>>> Some manual bisection of Linux releases, verified, that the regression
+>>>> was introduced in Linux 5.16-rc1. (Lucky me, I started using Bluetooth
+>>>> with the Nokia with Linux 5.16-rc1.) Then I verified it was introduced
+>>>> by the Bluetooth pull request for Linux 5.16. Then I picked commit
+>>>> 81be03e026dc0c16dc1c64e088b2a53b73caa895 due to the commit message, and
+>>>> bisected from there, and it turns out, that this commit is actually
+>>>> introducing the regression.
+>>>>
+>>>>      $ git bisect good
+>>>>      81be03e026dc0c16dc1c64e088b2a53b73caa895 is the first bad commit
+>>>>      commit 81be03e026dc0c16dc1c64e088b2a53b73caa895
+>>>>      Author: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+>>>>      Date:   Fri Sep 3 15:27:32 2021 -0700
+>>>>
+>>>>          Bluetooth: RFCOMM: Replace use of memcpy_from_msg with
+>>>> bt_skb_sendmmsg
+>>>>
+>>>>          This makes use of bt_skb_sendmmsg instead using
+>>>> memcpy_from_msg which
+>>>>          is not considered safe to be used when lock_sock is held.
+>>>>
+>>>>          Also make rfcomm_dlc_send handle skb with fragments and
+>>>> queue them all
+>>>>          atomically.
+>>>>
+>>>>          Signed-off-by: Luiz Augusto von Dentz
+>>>> <luiz.von.dentz@intel.com>
+>>>>          Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+>>>>
+>>>>       net/bluetooth/rfcomm/core.c | 50
+>>>> ++++++++++++++++++++++++++++++++++++++-------
+>>>>       net/bluetooth/rfcomm/sock.c | 46
+>>>> +++++++++--------------------------------
+>>>>       2 files changed, 53 insertions(+), 43 deletions(-)
+>>>>
+>>>> Unfortunately, the patch does not cleanly revert, so users have to wait
+>>>> until an expert can take a look, and come up with a fix.
+>>>>
+>>>>
+>>>> Kind regards,
+>>>>
+>>>> Paul
+>>>>
+>>>>
+>>>> PS: For the records:
+>>>>
+>>>>      $ git bisect log
+>>>>      # bad: [81be03e026dc0c16dc1c64e088b2a53b73caa895] Bluetooth:
+>>>> RFCOMM: Replace use of memcpy_from_msg with bt_skb_sendmmsg
+>>>>      # good: [49d8a5606428ca0962d09050a5af81461ff90fbb] Bluetooth:
+>>>> fix init and cleanup of sco_conn.timeout_work
+>>>>      git bisect start '81be03e026dc0' 'HEAD^'
+>>>>      # good: [904c139a2517191e48f9cb1bb2d611ae59434009] Bluetooth:
+>>>> Add support for msbc coding format
+>>>>      git bisect good 904c139a2517191e48f9cb1bb2d611ae59434009
+>>>>      # good: [8bba13b1d08d42e2e8308924fa5c1551a7b2b011] Bluetooth:
+>>>> btintel: Fix incorrect out of memory check
+>>>>      git bisect good 8bba13b1d08d42e2e8308924fa5c1551a7b2b011
+>>>>      # good: [38f64f650dc0e44c146ff88d15a7339efa325918] Bluetooth:
+>>>> Add bt_skb_sendmsg helper
+>>>>      git bisect good 38f64f650dc0e44c146ff88d15a7339efa325918
+>>>>      # good: [0771cbb3b97d3c1d68eecd7f00055f599954c34e] Bluetooth:
+>>>> SCO: Replace use of memcpy_from_msg with bt_skb_sendmsg
+>>>>      git bisect good 0771cbb3b97d3c1d68eecd7f00055f599954c34e
+>>>>      # first bad commit: [81be03e026dc0c16dc1c64e088b2a53b73caa895]
+>>>> Bluetooth: RFCOMM: Replace use of memcpy_from_msg with bt_skb_sendmmsg
+>>>>
+>>>>
+>>>> Kind regards,
+>>>>
+>>>> Paul
+>>>>
+>>>>
+>>>>>> [1]: https://owww.molgen.mpg.de/~pmenzel/trace.log.7z
+>>>> [2]:
+>>>> https://lore.kernel.org/linux-bluetooth/5891f0d5-8d51-9da5-7663-718f301490b1@molgen.mpg.de/T/#u
+>>>> [3]:
+>>>> https://lore.kernel.org/linux-bluetooth/20211202162256.31837-1-tiwai@suse.de/
+>>>>
+> 
