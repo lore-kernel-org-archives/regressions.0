@@ -1,122 +1,65 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5012F21;
-	Thu, 10 Feb 2022 10:58:00 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nI79B-0002sd-T1; Thu, 10 Feb 2022 11:57:57 +0100
-Message-ID: <9ee89248-523e-1b4f-8401-03e1f2e7a2a1@leemhuis.info>
-Date: Thu, 10 Feb 2022 11:57:57 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E5F2C9C
+	for <regressions@lists.linux.dev>; Fri, 11 Feb 2022 00:02:24 +0000 (UTC)
+Received: by mail-yb1-f182.google.com with SMTP id c6so20234282ybk.3
+        for <regressions@lists.linux.dev>; Thu, 10 Feb 2022 16:02:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6amdZdKfUfxoy5toKt49P0SHUxAj1DnsrZFrMaxvyJI=;
+        b=D7RIFrpCEJQ0wQuEprUdX1acbuAgEexUqcq/lvB14jnOS5ogi4JDn/yVt37yPAdUMv
+         cdG+nJNyOiGBDs3Q7oBoxOk7+iJSjIOlc6+IK2Bo0YF1NfrU7itoVPmXEYUvDhcqcaYB
+         hN3zRzKzMppQgi6wfwPJ1m5WBsBSndmRbAyqYA6MlnovRWIZxiveV6bMATOtuXsQHLVV
+         W8L3zrILKJNEnsKWMLf7ddGjcvQycJkut3j1TnkMzJUBHpWRzZgrreAbRmWW+jFZjIXv
+         jBuuvqDKDT8EzktRiQkPY1LS+so+kqF8V0hVR+kwNWdVS4zgqM+IL37eryTfYMXXMUKG
+         duqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6amdZdKfUfxoy5toKt49P0SHUxAj1DnsrZFrMaxvyJI=;
+        b=tKySt9ed2XNH/aWMpre64z5e5T04X8na3ilrcqke0i1lRud0jxxRel68llw/Bv4QZH
+         PtfgsiO8aqWysJ0I/ELizxPlqPtbG71LlUtdzSdtCEI8tHDWNYE4g3z6CpcubVlGhtjh
+         piDb3EyvJq0nfEgqcwnZUMEPsh9Qi42DQL/CLPY7NsqT8qXsyrz1N6xxGp8ZwO+mDAuH
+         NNDLNkQBNXGpTUyWcvY6LLxM8817tipi2ZYwvSrcfAjsN4EOomZFM6v3iC8dtu+yfPT/
+         ZlawrGhsES8R3aKYrTgF3wT7OqxfClPaYMpdQ9Bh/OqkzZsJb9ACnwoqyeKCAq2SY8od
+         jHeA==
+X-Gm-Message-State: AOAM532aNuWpxUUAlgp+KqveMuhEGMslS3LcTAx/RwGrWMg13t553S1F
+	4bJDyqX8un6OtgwpVD2IT88rbcPhfmZg9w9dqQ9E+Q==
+X-Google-Smtp-Source: ABdhPJz8e25o2s6cN31+acUzC45sbRdhVmC27Ml34E9Ew1Pqg581u0yFka+g4I69kuUy5l+0FIhMy3qtizaDRqxhAvA=
+X-Received: by 2002:a25:684a:: with SMTP id d71mr9513602ybc.284.1644537743422;
+ Thu, 10 Feb 2022 16:02:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: rtl8723bs (SDIO) - Access point mode causes a kernel panic (fwd
- from bugzilla)
-Content-Language: en-BS
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Larry Finger <Larry.Finger@lwfinger.net>, Hans de Goede
- <hdegoede@redhat.com>, Fabio Aiuto <fabioaiuto83@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <d58625ad-6f3e-a7d7-b5b4-d18eb16f4082@leemhuis.info>
-Cc: linux-staging@lists.linux.dev
-In-Reply-To: <d58625ad-6f3e-a7d7-b5b4-d18eb16f4082@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644490680;3eb1f84e;
-X-HE-SMSGID: 1nI79B-0002sd-T1
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+In-Reply-To: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 11 Feb 2022 01:02:12 +0100
+Message-ID: <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
+	Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>, 
+	Will McVicker <willmcvicker@google.com>, Sergio Tanzilli <tanzilli@acmesystems.it>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, this is your Linux kernel regression tracker speaking
+On Fri, Dec 17, 2021 at 4:36 PM Marcelo Roberto Jimenez
+<marcelo.jimenez@gmail.com> wrote:
 
-Seems below issue is one that got stranded in bugzilla, so I'm adding
-everyone involved to the CC list of this mail now and hope this gets the
-ball running.
+> My system is ARM926EJ-S rev 5 (v5l) (AT91SAM9G25), the board is an ACME Systems Arietta.
 
-If anyone wonders why I didn't do that when writing below mail, see:
-https://lore.kernel.org/regressions/3ee8c6c9-52d1-9570-f3bf-490365c9f6fe@leemhuis.info/
+Which devicetree or boardfile in the upstream Linux kernel is this system
+using?
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
-
-
-On 30.01.22 10:28, Thorsten Leemhuis wrote:
-> 
-> Hi, this is your Linux kernel regression tracker speaking.
-> 
-> There is a regression in bugzilla.kernel.org I'd like to add to the
-> tracking:
-> 
-> #regzbot introduced: 54659ca026e586bbb33a7e60daa6443a3ac6b5df
-> #regzbot from: José Ángel Pastrana <japp.debian@gmail.com>
-> #regzbot title: net: wireless: rtl8723bs (SDIO) - Access point mode
-> causes a kernel panic
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215542
-> 
-> Quote:
-> 
->> Created attachment 300343 [details]
->> kernel panic
->>
->> When I use r8723bs (sdio) as access point and a client begins a intensive download or speed test, a kernel panic ocurrs (see attachment). I can reproduce this bug consistently.
->>
->> Also, I have bisected the kernel source code and happens for first time with the following commit:
->>
->> commit 54659ca026e586bbb33a7e60daa6443a3ac6b5df
->> Author: Fabio Aiuto <fabioaiuto83@gmail.com>
->> Date:   Mon Sep 20 16:55:00 2021 +0200
->>
->>     staging: rtl8723bs: remove possible deadlock when disconnect (v2)
-> 
-> 
-> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
-> 
-> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-> on my table. I can only look briefly into most of them. Unfortunately
-> therefore I sometimes will get things wrong or miss something important.
-> I hope that's not the case here; if you think it is, don't hesitate to
-> tell me about it in a public reply, that's in everyone's interest.
-> 
-> BTW, I have no personal interest in this issue, which is tracked using
-> regzbot, my Linux kernel regression tracking bot
-> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> this mail to get things rolling again and hence don't need to be CC on
-> all further activities wrt to this regression.
-> 
-> ---
-> Additional information about regzbot:
-> 
-> If you want to know more about regzbot, check out its web-interface, the
-> getting start guide, and/or the references documentation:
-> 
-> https://linux-regtracking.leemhuis.info/regzbot/
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-> 
-> The last two documents will explain how you can interact with regzbot
-> yourself if your want to.
-> 
-> Hint for reporters: when reporting a regression it's in your interest to
-> tell #regzbot about it in the report, as that will ensure the regression
-> gets on the radar of regzbot and the regression tracker. That's in your
-> interest, as they will make sure the report won't fall through the
-> cracks unnoticed.
-> 
-> Hint for developers: you normally don't need to care about regzbot once
-> it's involved. Fix the issue as you normally would, just remember to
-> include a 'Link:' tag to the report in the commit message, as explained
-> in Documentation/process/submitting-patches.rst
-> That aspect was recently was made more explicit in commit 1f57bd42b77c:
-> https://git.kernel.org/linus/1f57bd42b77c
+Yours,
+Linus Walleij
