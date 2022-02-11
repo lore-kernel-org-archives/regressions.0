@@ -1,123 +1,84 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601AE2F26
-	for <regressions@lists.linux.dev>; Fri, 11 Feb 2022 11:40:19 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nIUHY-0000YI-63; Fri, 11 Feb 2022 12:40:08 +0100
-Message-ID: <f7a7d0e1-41ab-f648-97a3-9fd92e0e2eb2@leemhuis.info>
-Date: Fri, 11 Feb 2022 12:40:07 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADD17F
+	for <regressions@lists.linux.dev>; Fri, 11 Feb 2022 22:36:35 +0000 (UTC)
+Received: by mail-ot1-f54.google.com with SMTP id o9-20020a9d7189000000b0059ee49b4f0fso7101256otj.2
+        for <regressions@lists.linux.dev>; Fri, 11 Feb 2022 14:36:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WrQU9kPhTmMT0JRjFGnOOsQus5ycZcO8eaHkc9H/feM=;
+        b=jMgkG8SOtXPubi3dkZAAOA5uWohAGoFh5fwlc18aVLdpeQqoEwONp+sRhN/luGJeQf
+         ylbfLxnl4BUo4RuBiEDOEiTru3K9aMVoe/nEtFSpxjsfZwSqTNUXQwhkdt75URLdjBgW
+         X7SdrH7Ta+8hIXpU5+Ql/0YYw0O+RvLhegQv/jzK0JgTtP6iJ9WEmpB4Yo4o1h0nw35U
+         2kRVFXhZkLU7FClnHgvgY9Kn19AfQdZUZU/J8QQqaSmp5FdjYXDSlevlzvcJjoNtYxQr
+         eJtrcHieWSZZMalajbenSKec6V97OKF/GzS8iocps/YkQfi6Ff4qzoQEc2vTOuZdj0SM
+         S4yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WrQU9kPhTmMT0JRjFGnOOsQus5ycZcO8eaHkc9H/feM=;
+        b=Y3MtKy7qvVAkYsBX+CcignhJYfyy4iWPoDAhuH+P8mB/cVH3hsWn1hBG7N+uyR0GyD
+         3JY97bXpQyiieLMA7O4cPsPF357HCzlY57rojK1ckZAMQoPtZHzoosRjb6EK8LGmYLCI
+         Mp3znzrqiZ6tS8vVEFjjtv+ba5xm4RrJI28a+7TrP6CudBkTHZvVuS368p3SM0yLoVti
+         PyEKCRfidVbuRSnf6njLvaenPihfelg/ezPsZhjE5oDyoEwAgihhMXLGf8JNU+d6tA2t
+         9JHv+vMAyfYd0RmP5oy+qX1VEQ6sPuno1zYcFGYh9FPsAIXvfzGDGG487Aom8vwtRyaG
+         feNw==
+X-Gm-Message-State: AOAM533fO8PhxVDsb3wmJ7u25hw6E0LH7Y1hw9OL/FPYqXUTtO8qB7KS
+	VVvd26P1lEKTtLyA1z1DpVJt1vNF+AHZlOcaRhU=
+X-Google-Smtp-Source: ABdhPJyOhyYlzGFY9SbnMJlo6NVxz1wof4C0E0HUqAqA26wcjYkxPW1erEqe97d0n/2oKUEN1N0XjmaIVwiLs9bp84M=
+X-Received: by 2002:a05:6830:4422:: with SMTP id q34mr1370577otv.312.1644618994685;
+ Fri, 11 Feb 2022 14:36:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-BS
-To: Paul Menzel <pmenzel@molgen.mpg.de>,
- Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: linux-nfs@vger.kernel.org, it+linux-nfs@molgen.mpg.de,
- Anna Schumaker <Anna.Schumaker@netapp.com>, regressions@lists.linux.dev
-References: <20220208183823.1391397-1-trondmy@kernel.org>
- <d16aac1e-a3aa-309a-0130-c60147c980d1@molgen.mpg.de>
- <82dffa3e-1b14-e590-aaf6-f9f8570e616c@molgen.mpg.de>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH] NFS: LOOKUP_DIRECTORY is also ok with symlinks
-In-Reply-To: <82dffa3e-1b14-e590-aaf6-f9f8570e616c@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1644579619;ce530042;
-X-HE-SMSGID: 1nIUHY-0000YI-63
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com> <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+In-Reply-To: <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+From: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date: Fri, 11 Feb 2022 19:36:08 -0300
+Message-ID: <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: stable <stable@vger.kernel.org>, regressions@lists.linux.dev, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
+	Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>, 
+	Will McVicker <willmcvicker@google.com>, Sergio Tanzilli <tanzilli@acmesystems.it>
+Content-Type: text/plain; charset="UTF-8"
 
-On 11.02.22 11:55, Paul Menzel wrote:
-> #regzbot monitor:
-> https://lore.kernel.org/linux-nfs/20220208183823.1391397-1-trondmy@kernel.org/
+On Thu, Feb 10, 2022 at 9:02 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Fri, Dec 17, 2021 at 4:36 PM Marcelo Roberto Jimenez
+> <marcelo.jimenez@gmail.com> wrote:
+>
+> > My system is ARM926EJ-S rev 5 (v5l) (AT91SAM9G25), the board is an ACME Systems Arietta.
+>
+> Which devicetree or boardfile in the upstream Linux kernel is this system
+> using?
 
-Thx for trying, but that failed (as is unneeded, see below): regzbot
-can't determine which of the tracked regression might be meant here, so
-it can't associate it with your report.
+arch/arm/boot/dts/at91-ariettag25.dts
 
-> Am 09.02.22 um 23:02 schrieb Paul Menzel:
-> 
->> Am 08.02.22 um 19:38 schrieb trondmy@kernel.org:
->>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->>>
->>> Commit ac795161c936 (NFSv4: Handle case where the lookup of a directory
->>> fails) [1], part of Linux since 5.17-rc2, introduced a regression, where
->>> a symbolic link on an NFS mount to a directory on another NFS does not
->>> resolve(?) the first time it is accessed:
->>>
->>> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
->>> Fixes: ac795161c936 ("NFSv4: Handle case where the lookup of a
->>> directory fails")
->>> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
->>
->> Thank you for fixing it so quickly. My colleague verified, that it
->> fixes our issue.
->>
->> Tested-by: Donald Buczek <buczek@molgen.mpg.de>
-> 
-> Also for regzbot:
-> 
-> Link:
-> https://lore.kernel.org/linux-nfs/0235e04a-18aa-ccbf-f520-38a2d55e8b54@molgen.mpg.de/
+But it is worth noting that the first lines in this file are:
+/*
+ * Device Tree file for Arietta G25
+ * This device tree is minimal, to activate more peripherals, see:
+ * http://dts.acmesystems.it/arietta/
+ */
 
-Hmmm, regzbot from this could in theory be modified to determine which
-regression was meant, but right now regzbot processes commands
-sequentially, so in this order it wouldn't work anyway.
+And also that the URL in the comment above is old and now it should
+read: http://linux.tanzilli.com/
 
-But there is a bigger problem: that link points to a reply to your
-report, not the report. I guess I can modify regzbot to handle such
-cases, but I have more pressing issue right now, sorry. But I'll keep it
-in mind.
+In any case, the upstream file should be enough to test the issue reported here.
 
-The right link tag one would have been:
+> Yours,
+> Linus Walleij
 
-Link:
-https://lore.kernel.org/r/bd2075f0-2343-5bfa-83bf-0e916303727d@molgen.mpg.de/
-
-(s!/r/!/linux-nfs/! would have worked for regzbot as well)
-
-Trond, can you please add this tag to your patch in case you respin it,
-as explained, as explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'.
-
-BTW, paul: Regzbot will monitor every subthread with a proper link tag
-(like I gave above), so there is no need for a "#regzbot monitor" in
-anyway if developers would just place the tags as the documentation states.
-
-Ciao, Thorsten
-
-
->>> ---
->>>   fs/nfs/dir.c | 4 ++--
->>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
->>> index e128503728f2..6dee4e12d381 100644
->>> --- a/fs/nfs/dir.c
->>> +++ b/fs/nfs/dir.c
->>> @@ -2051,14 +2051,14 @@ int nfs_atomic_open(struct inode *dir, struct
->>> dentry *dentry,
->>>       if (!res) {
->>>           inode = d_inode(dentry);
->>>           if ((lookup_flags & LOOKUP_DIRECTORY) && inode &&
->>> -            !S_ISDIR(inode->i_mode))
->>> +            !(S_ISDIR(inode->i_mode) || S_ISLNK(inode->i_mode)))
->>>               res = ERR_PTR(-ENOTDIR);
->>>           else if (inode && S_ISREG(inode->i_mode))
->>>               res = ERR_PTR(-EOPENSTALE);
->>>       } else if (!IS_ERR(res)) {
->>>           inode = d_inode(res);
->>>           if ((lookup_flags & LOOKUP_DIRECTORY) && inode &&
->>> -            !S_ISDIR(inode->i_mode)) {
->>> +            !(S_ISDIR(inode->i_mode) || S_ISLNK(inode->i_mode))) {
->>>               dput(res);
->>>               res = ERR_PTR(-ENOTDIR);
->>>           } else if (inode && S_ISREG(inode->i_mode)) {
-> 
-> 
+Regards,
+Marcelo.
