@@ -1,65 +1,74 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E5F2C9C
-	for <regressions@lists.linux.dev>; Fri, 11 Feb 2022 00:02:24 +0000 (UTC)
-Received: by mail-yb1-f182.google.com with SMTP id c6so20234282ybk.3
-        for <regressions@lists.linux.dev>; Thu, 10 Feb 2022 16:02:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6amdZdKfUfxoy5toKt49P0SHUxAj1DnsrZFrMaxvyJI=;
-        b=D7RIFrpCEJQ0wQuEprUdX1acbuAgEexUqcq/lvB14jnOS5ogi4JDn/yVt37yPAdUMv
-         cdG+nJNyOiGBDs3Q7oBoxOk7+iJSjIOlc6+IK2Bo0YF1NfrU7itoVPmXEYUvDhcqcaYB
-         hN3zRzKzMppQgi6wfwPJ1m5WBsBSndmRbAyqYA6MlnovRWIZxiveV6bMATOtuXsQHLVV
-         W8L3zrILKJNEnsKWMLf7ddGjcvQycJkut3j1TnkMzJUBHpWRzZgrreAbRmWW+jFZjIXv
-         jBuuvqDKDT8EzktRiQkPY1LS+so+kqF8V0hVR+kwNWdVS4zgqM+IL37eryTfYMXXMUKG
-         duqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6amdZdKfUfxoy5toKt49P0SHUxAj1DnsrZFrMaxvyJI=;
-        b=tKySt9ed2XNH/aWMpre64z5e5T04X8na3ilrcqke0i1lRud0jxxRel68llw/Bv4QZH
-         PtfgsiO8aqWysJ0I/ELizxPlqPtbG71LlUtdzSdtCEI8tHDWNYE4g3z6CpcubVlGhtjh
-         piDb3EyvJq0nfEgqcwnZUMEPsh9Qi42DQL/CLPY7NsqT8qXsyrz1N6xxGp8ZwO+mDAuH
-         NNDLNkQBNXGpTUyWcvY6LLxM8817tipi2ZYwvSrcfAjsN4EOomZFM6v3iC8dtu+yfPT/
-         ZlawrGhsES8R3aKYrTgF3wT7OqxfClPaYMpdQ9Bh/OqkzZsJb9ACnwoqyeKCAq2SY8od
-         jHeA==
-X-Gm-Message-State: AOAM532aNuWpxUUAlgp+KqveMuhEGMslS3LcTAx/RwGrWMg13t553S1F
-	4bJDyqX8un6OtgwpVD2IT88rbcPhfmZg9w9dqQ9E+Q==
-X-Google-Smtp-Source: ABdhPJz8e25o2s6cN31+acUzC45sbRdhVmC27Ml34E9Ew1Pqg581u0yFka+g4I69kuUy5l+0FIhMy3qtizaDRqxhAvA=
-X-Received: by 2002:a25:684a:: with SMTP id d71mr9513602ybc.284.1644537743422;
- Thu, 10 Feb 2022 16:02:23 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C67C42C9C
+	for <regressions@lists.linux.dev>; Fri, 11 Feb 2022 08:29:50 +0000 (UTC)
+Received: from [192.168.0.2] (ip5f5aebe1.dynamic.kabel-deutschland.de [95.90.235.225])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id A9EC261EA1926;
+	Fri, 11 Feb 2022 09:29:41 +0100 (CET)
+Message-ID: <1c1e4143-0750-3dc5-eb63-2e8f52699e7c@molgen.mpg.de>
+Date: Fri, 11 Feb 2022 09:29:41 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
-In-Reply-To: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 11 Feb 2022 01:02:12 +0100
-Message-ID: <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
-	Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>, 
-	Will McVicker <willmcvicker@google.com>, Sergio Tanzilli <tanzilli@acmesystems.it>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.1
+Subject: Re: Unable to transfer big files to Nokia N9
+Content-Language: en-US
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
+ Takashi Iwai <tiwai@suse.com>
+References: <eb6d86eb-d156-d7ac-0965-181719023d51@molgen.mpg.de>
+ <CABBYNZLENxvXMCh6XbBSnu0jasV1F0QestEK5v2mnNUpJdw3Vw@mail.gmail.com>
+ <cf71bdea-ec22-e4c9-016c-69e94a130607@molgen.mpg.de>
+ <a93c0fa7-7b84-6aea-265b-c913e0c84678@molgen.mpg.de>
+ <d7206e12-1b99-c3be-84f4-df22af427ef5@molgen.mpg.de>
+ <371027df-7f32-edab-208d-d4cdd2202ba6@leemhuis.info>
+ <d41d8b41-c347-47e7-e52b-39d7211c8952@molgen.mpg.de>
+ <aa3ee7ac-6c52-3861-1798-3cc1a37f6ebf@molgen.mpg.de>
+ <9cb4b1ae-760f-f8ec-b3fe-a5d0be0dba25@leemhuis.info>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <9cb4b1ae-760f-f8ec-b3fe-a5d0be0dba25@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 17, 2021 at 4:36 PM Marcelo Roberto Jimenez
-<marcelo.jimenez@gmail.com> wrote:
+Dear Thorsten,
 
-> My system is ARM926EJ-S rev 5 (v5l) (AT91SAM9G25), the board is an ACME Systems Arietta.
 
-Which devicetree or boardfile in the upstream Linux kernel is this system
-using?
+Am 10.02.22 um 11:36 schrieb Thorsten Leemhuis:
+> Hi, this is your Linux kernel regression tracker speaking. Top-posting
+> for once, to make this easy accessible to everyone.
+> 
+> Hey bluetooth-maintainers, what's the status here? I already asked for a
+> status update more that a week ago and didn't get a reply. Paul also
+> confirmed recently the issue is still present and no reply either. IOW:
+> this is talking way to long for a issue that was bisected?
+> 
+> Could you please comment on this? What can be done to get this rolling?
+> Or do I have to ask upstream maintainers to revert the culprit?
 
-Yours,
-Linus Walleij
+I sent two reverts [1], and probably forgot to add a tag to reference 
+this discussion.
+
+Luiz asked me two provide more logs. Hopefully, I am going to come 
+around to that today, but maybe it’s better to revert so that Linux 5.16 
+can also be fixed.
+
+
+Kind regards,
+
+Paul
+
+
+[1]: 
+https://lore.kernel.org/linux-bluetooth/20220208221911.57058-1-pmenzel@molgen.mpg.de/T/
