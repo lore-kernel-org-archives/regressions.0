@@ -1,50 +1,51 @@
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADD17F
-	for <regressions@lists.linux.dev>; Fri, 11 Feb 2022 22:36:35 +0000 (UTC)
-Received: by mail-ot1-f54.google.com with SMTP id o9-20020a9d7189000000b0059ee49b4f0fso7101256otj.2
-        for <regressions@lists.linux.dev>; Fri, 11 Feb 2022 14:36:35 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610BF7C
+	for <regressions@lists.linux.dev>; Sat, 12 Feb 2022 16:55:01 +0000 (UTC)
+Received: by mail-yb1-f178.google.com with SMTP id l125so829492ybl.4
+        for <regressions@lists.linux.dev>; Sat, 12 Feb 2022 08:55:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=WrQU9kPhTmMT0JRjFGnOOsQus5ycZcO8eaHkc9H/feM=;
-        b=jMgkG8SOtXPubi3dkZAAOA5uWohAGoFh5fwlc18aVLdpeQqoEwONp+sRhN/luGJeQf
-         ylbfLxnl4BUo4RuBiEDOEiTru3K9aMVoe/nEtFSpxjsfZwSqTNUXQwhkdt75URLdjBgW
-         X7SdrH7Ta+8hIXpU5+Ql/0YYw0O+RvLhegQv/jzK0JgTtP6iJ9WEmpB4Yo4o1h0nw35U
-         2kRVFXhZkLU7FClnHgvgY9Kn19AfQdZUZU/J8QQqaSmp5FdjYXDSlevlzvcJjoNtYxQr
-         eJtrcHieWSZZMalajbenSKec6V97OKF/GzS8iocps/YkQfi6Ff4qzoQEc2vTOuZdj0SM
-         S4yQ==
+        bh=biysQ3IsY2w+NMb+t1WSQWW4AmDXHDFl1wRiCvR4z4A=;
+        b=Mz/hHNUOtjKmsHGh20Qo0guG/Qg2wiAB4AvUgN+QYwQlsg/MI+Gk1tdkNMVhkz7FvF
+         uLUlG6rpT/QCxyF24eGIFwno1CC0xAft6LNiQuINyo4fUf71zRpz5OZMNwxjg+C3kWbl
+         kBmd9gngoENaGRXCIMowhfp3a0hSjrETIBQAcr/yZidmjucqfrUExAjhb1g/bRr8k4H2
+         2NeuWZrgGZipVP0AVBBafdQ+G0lKITdtiyw1in/MoS0XBe1dxm7NavR4O8t5YNxfka4G
+         vjGjPYHYgCemAYBBS/Q6VUSUVq2b0FTVHhcwjcctT0TNO7x3G3bMtzbCQaB6swrbAP2Z
+         Uuyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WrQU9kPhTmMT0JRjFGnOOsQus5ycZcO8eaHkc9H/feM=;
-        b=Y3MtKy7qvVAkYsBX+CcignhJYfyy4iWPoDAhuH+P8mB/cVH3hsWn1hBG7N+uyR0GyD
-         3JY97bXpQyiieLMA7O4cPsPF357HCzlY57rojK1ckZAMQoPtZHzoosRjb6EK8LGmYLCI
-         Mp3znzrqiZ6tS8vVEFjjtv+ba5xm4RrJI28a+7TrP6CudBkTHZvVuS368p3SM0yLoVti
-         PyEKCRfidVbuRSnf6njLvaenPihfelg/ezPsZhjE5oDyoEwAgihhMXLGf8JNU+d6tA2t
-         9JHv+vMAyfYd0RmP5oy+qX1VEQ6sPuno1zYcFGYh9FPsAIXvfzGDGG487Aom8vwtRyaG
-         feNw==
-X-Gm-Message-State: AOAM533fO8PhxVDsb3wmJ7u25hw6E0LH7Y1hw9OL/FPYqXUTtO8qB7KS
-	VVvd26P1lEKTtLyA1z1DpVJt1vNF+AHZlOcaRhU=
-X-Google-Smtp-Source: ABdhPJyOhyYlzGFY9SbnMJlo6NVxz1wof4C0E0HUqAqA26wcjYkxPW1erEqe97d0n/2oKUEN1N0XjmaIVwiLs9bp84M=
-X-Received: by 2002:a05:6830:4422:: with SMTP id q34mr1370577otv.312.1644618994685;
- Fri, 11 Feb 2022 14:36:34 -0800 (PST)
+        bh=biysQ3IsY2w+NMb+t1WSQWW4AmDXHDFl1wRiCvR4z4A=;
+        b=6B+g3/NzmXFDEluxK1yTiGuwy+FQe9daVo+WNTJ+tDm7s+B9Ih2/T4sxOrauu/ttYF
+         F8fTl3tGpJspGDbGBx2Nfem/RbJuebEn5Huck7DOwZTdZ/tJo/5HgOYJt/49l+k7mKaG
+         fyq6ewkLxt1Vs9QsPQdYH2K6pX8ikUUg5vNHWMtPO+R+gNt42wQwi8srLpui2O4yrUqg
+         nSdIU03otHYLjnLyvi2YfvaMu0WfbbDq0MrvMBCRlyfkRx8tpPnGcocXif8gYEPTyHWO
+         8Dkt1yDTtst21F9gP0fexZTq6E+4l4eiQkTc23sZR2LdvSUtnte8SAUk2yMdCD09zEGb
+         yZMA==
+X-Gm-Message-State: AOAM531ytRmDhMvw5tiMhzaSLrf0muOp8qqi6jP1xV0FPe4sSRJommyj
+	fXha4o/iOMZKud7nJaOMnVI6LfLscbjhKxFAaryP6w==
+X-Google-Smtp-Source: ABdhPJxY7wL1B0Tp9SS789YZZRkRDCVX/nCvjhJ9T1/d7umwF8iHCoCHKWI/kl7Ai8sZPm2pZ8xwp5LVQvKKElkeXTw=
+X-Received: by 2002:a5b:f4b:: with SMTP id y11mr5781546ybr.634.1644684900080;
+ Sat, 12 Feb 2022 08:55:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com> <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
-In-Reply-To: <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
-From: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-Date: Fri, 11 Feb 2022 19:36:08 -0300
-Message-ID: <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com> <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
+In-Reply-To: <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sat, 12 Feb 2022 17:54:48 +0100
+Message-ID: <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
 Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-To: Linus Walleij <linus.walleij@linaro.org>
+To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
 Cc: stable <stable@vger.kernel.org>, regressions@lists.linux.dev, 
 	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
 	Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, 
@@ -53,32 +54,54 @@ Cc: stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
 	Will McVicker <willmcvicker@google.com>, Sergio Tanzilli <tanzilli@acmesystems.it>
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 10, 2022 at 9:02 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Fri, Feb 11, 2022 at 11:36 PM Marcelo Roberto Jimenez
+<marcelo.jimenez@gmail.com> wrote:
+
+> > Which devicetree or boardfile in the upstream Linux kernel is this system
+> > using?
 >
-> On Fri, Dec 17, 2021 at 4:36 PM Marcelo Roberto Jimenez
-> <marcelo.jimenez@gmail.com> wrote:
->
-> > My system is ARM926EJ-S rev 5 (v5l) (AT91SAM9G25), the board is an ACME Systems Arietta.
->
-> Which devicetree or boardfile in the upstream Linux kernel is this system
-> using?
+> arch/arm/boot/dts/at91-ariettag25.dts
 
-arch/arm/boot/dts/at91-ariettag25.dts
+So this system was added in 2015 which is the same year that
+we marked the GPIO sysfs ABI obsolete:
 
-But it is worth noting that the first lines in this file are:
-/*
- * Device Tree file for Arietta G25
- * This device tree is minimal, to activate more peripherals, see:
- * http://dts.acmesystems.it/arietta/
- */
+commit fe95046e960b4b76e73dc1486955d93f47276134
+Author: Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu Oct 22 09:58:34 2015 +0200
 
-And also that the URL in the comment above is old and now it should
-read: http://linux.tanzilli.com/
+    gpio: ABI: mark the sysfs ABI as obsolete
 
-In any case, the upstream file should be enough to test the issue reported here.
+Why is this system which was clearly developed while we deprecated
+the sysfs ABI so dependent on it?
 
-> Yours,
-> Linus Walleij
+I am curious about the usecases and how deeply you have built
+yourselves into this.
 
-Regards,
-Marcelo.
+> In any case, the upstream file should be enough to test the issue reported here.
+
+The thing is that upstream isn't super happy that you have been
+making yourselves dependent on features that we are actively
+discouraging and then demanding that we support these features.
+
+Anyway, what is wrong with using the GPIO character device and libgpiod
+on this system? What kind of userspace are you creating that
+absolutely requires that you use sysfs?
+
+I hope not one of these?
+https://docs.kernel.org/driver-api/gpio/drivers-on-gpio.html
+
+Here is some info about what we have been doing with the GPIO
+character device:
+
+https://docs.kernel.org/driver-api/gpio/using-gpio.html
+https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/
+
+Here is Bartosz presenting it:
+https://www.youtube.com/watch?v=BK6gOLVRKuU
+
+Since I patched the kernel such that you cannot activate the sysfs
+ABI without also activating the character device I *know* that you
+have it on your system.
+
+Yours,
+Linus Walleij
