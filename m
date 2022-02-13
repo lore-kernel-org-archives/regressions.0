@@ -1,146 +1,158 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0448C7C
-	for <regressions@lists.linux.dev>; Sun, 13 Feb 2022 21:10:53 +0000 (UTC)
-Received: by mail-yb1-f180.google.com with SMTP id j2so40818663ybu.0
-        for <regressions@lists.linux.dev>; Sun, 13 Feb 2022 13:10:53 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2A3642
+	for <regressions@lists.linux.dev>; Sun, 13 Feb 2022 23:24:14 +0000 (UTC)
+Received: by mail-oi1-f172.google.com with SMTP id ay7so15732079oib.8
+        for <regressions@lists.linux.dev>; Sun, 13 Feb 2022 15:24:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=KnKCC7oMagFCvCCjM7qG97XmzNcP6hM32qMyVum/dto=;
-        b=MBIsTxnulA1MrNZ+IsfyQOaRrtwl2q4GUdFP2YSW/j/CQ7Uo5Oyds++JXr0KB6K9x+
-         VvreKfnZ4OI7eVME/n17ninBX9E56yUSQQ2R5qj1lIXf8yPQQYP0ERc5X1WpaRPHcP6q
-         QBrvTrlTGLyZ33s8yg3ouAySmVx67aNQvEXNDL9nOKXi0E+hnuwldGSabx914lYBnHX/
-         z3iO9qpTjoXA7zxlL3mje/Z58DspXjcEz6W1Er/cCM6QtpZm7+Fqnit3iBgWOcMGkzpT
-         3G/s1CZFbveKF+K2Tz9XNltXXoekdReLddn9QZCT9+yQ8vWU3HTdGuaU+22FP9LRB0Wd
-         ZMIQ==
+        bh=Kk7Rmg8nqT4IcEIalup+DUtrBMcg7tfuC0IrV7wEnqk=;
+        b=fOdFbIH0D7nEcaTmk+kknKW/VVNYGwb7oUjcWM0HpKuxkn2NQe91uopM1W7wPUXA65
+         2laklQ86r0rgKAOY7ooERQ1dsd7SQ4hiKkMM2w6QOUuRS2riyYDK+EhVgZNfKYr4zsjp
+         hlMmfQ2wCN+OVU2isjLc7+TUZkVYy/oRjZZCJihQUHcwoubQDA9ErR8aW25JL8Ir4ZA7
+         9590C5iAlU074UgKWwYNTItP25owj/inU2WcfvuXoF+GPtApkmgbuf9vylSFFpseAtYp
+         JcFfCljX3q7jsguBBEQ4EscWEtECbret7hJ8hQOSWR++LsZot7zOa3n5XmXXxfmndGiD
+         r0/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=KnKCC7oMagFCvCCjM7qG97XmzNcP6hM32qMyVum/dto=;
-        b=5RMWL1aICPbRtF4ZTj5NjOOVKk9Gk1gzrfjC2p8+lAJY9M6oDjqi4oZmdGl4QJ90Wk
-         YFhoi3p6oiPwv4AhilArCLH0J0U0W2uWRcfa8hv5quas4p0sqp6Ob+GCHG677wH7n5aw
-         l88QrqEVqzxjyFCNxokzWiqkkBpS7G182ISxQROAbCkqWxpoVz8qTlUk6LL0R21bnuGa
-         9boOMCsl0mQx8XngrhwQu7LcBsguJFN1weMUQ+/udrG8eOEVNQqtwZuPzEnJiz11Mtba
-         4RkDedJqQLW+GEISQosDzj6v7U2rdRN66/630wagHX7kZwMWIMsRf87XjfV4qfwmukKC
-         l0GA==
-X-Gm-Message-State: AOAM530KR4eDRI2PvfjP7XCJzzFZddoZ/XipYxxgsL3sUhtazh05r6q2
-	eaKYQMVcx3lPmDWwMFs5e34yu0d4AY1cZFQSf24=
-X-Google-Smtp-Source: ABdhPJxsBiwJdcvDK4XS9bg3KFwCrZ2nWejzoPKdiLINBF5sJzAhBkiYNgJAgG2bJBMKOIu1ap5H/J3qK03vAQhcyqc=
-X-Received: by 2002:a05:6902:124f:: with SMTP id t15mr11084809ybu.640.1644786652734;
- Sun, 13 Feb 2022 13:10:52 -0800 (PST)
+        bh=Kk7Rmg8nqT4IcEIalup+DUtrBMcg7tfuC0IrV7wEnqk=;
+        b=HtzNkScV14hXJSBSaLsHKfZbQnsdN9dIlQi4z3cC7X+UzsQt6Az8Opl+MFUO2dWkL6
+         k8FfDxl9Ssa+SAd8BL0HGbomp9+ymcrgCizzOd/axIRNaeFKV7Gwgvwh+6vWBLOPWRg/
+         ajr8VU4sqzuBUbTBpYE3shb6swkphfHw6uNrv2EmkV9dTEPf347KLXzAinVc0hZofWse
+         oARyFEwNMn/yiz/A2aHJg1zadImolfWNzuYU8Wrh5KkZRKh1mc5UBGTFEBDC17D4J1El
+         dq9SV+GO22qwoYn3quW5UarYE1JOkJ9qGdjZJBJ0bBWLTYToT+wX3QpXdrlpccXNuh0v
+         uxRg==
+X-Gm-Message-State: AOAM531sq0ycSPJ4IaORNM2asYiYwgICaKQyESIBSuxXT1Oazxu3Zh5X
+	itCkFuUZF1aFwqntDdAbywUvHK/cPRjjzcy+bkE=
+X-Google-Smtp-Source: ABdhPJyKaZCHj1DcYFNBWwetxaE4vgHgo50CiBIHKIzEpvAIA10tVYsCc/97NkZhqeozqxxmygdoR/UNkCGxboO7hHc=
+X-Received: by 2002:a05:6808:a96:: with SMTP id q22mr4631276oij.276.1644794653926;
+ Sun, 13 Feb 2022 15:24:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220121221021.60533b009c357d660791476e@linux-foundation.org>
- <20220122061228.nmuo75sDn%akpm@linux-foundation.org> <YgEeQNdgBuHRyEWl@dumbo>
- <YgGTSR628xhRvCjB@bombadil.infradead.org> <CAA5qM4BGmrkwatyO_h3F=ErDZ9t5swuttbt6NkQU-1KDGDiD4g@mail.gmail.com>
- <YgKmaggsipzzCGCg@bombadil.infradead.org> <YgNyAC8VMeuOD/uQ@dumbo> <YgklDvNecca1/8in@shredder>
-In-Reply-To: <YgklDvNecca1/8in@shredder>
-From: Tong Zhang <ztong0001@gmail.com>
-Date: Sun, 13 Feb 2022 13:10:42 -0800
-Message-ID: <CAA5qM4AP=pOi1dFFgELJ97nSwTBqrruseGmTF-qab=xj2==_Xg@mail.gmail.com>
-Subject: Re: [PATCH v2] Fix regression due to "fs: move binfmt_misc sysctl to
- its own file"
-To: Ido Schimmel <idosch@idosch.org>
-Cc: Domenico Andreoli <domenico.andreoli@linux.com>, Luis Chamberlain <mcgrof@kernel.org>, 
-	"Eric W. Biederman" <ebiederm@xmission.com>, David Airlie <airlied@linux.ie>, 
-	Andrew Morton <akpm@linux-foundation.org>, amir73il@gmail.com, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, bcrl@kvack.org, 
-	benh@kernel.crashing.org, clemens@ladisch.de, crope@iki.fi, 
-	dgilbert@interlog.com, Greg KH <gregkh@linuxfoundation.org>, jack@suse.cz, 
-	jani.nikula@intel.com, Jani Nikula <jani.nikula@linux.intel.com>, 
-	"James E.J. Bottomley" <jejb@linux.ibm.com>, jlbec@evilplan.org, john.ogness@linutronix.de, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
-	julia.lawall@inria.fr, Kees Cook <keescook@chromium.org>, kernel@tuxforce.de, 
-	Linux Memory Management List <linux-mm@kvack.org>, Mark Fasheh <mark@fasheh.com>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, mm-commits@vger.kernel.org, 
-	nixiaoming@huawei.com, penguin-kernel@i-love.sakura.ne.jp, 
-	peterz@infradead.org, Phillip Potter <phil@philpotter.co.uk>, Paul Turner <pjt@google.com>, 
-	pmladek@suse.com, rafael@kernel.org, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	rostedt@goodmis.org, senozhatsky@chromium.org, sre@kernel.org, steve@sk2.org, 
-	Suren Baghdasaryan <surenb@google.com>, Linus Torvalds <torvalds@linux-foundation.org>, tytso@mit.edu, 
-	Al Viro <viro@zeniv.linux.org.uk>, wangqing@vivo.com, 
-	Iurii Zaikin <yzaikin@google.com>, open list <linux-kernel@vger.kernel.org>, 
-	regressions@lists.linux.dev
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+ <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com> <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
+In-Reply-To: <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
+From: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
+Date: Sun, 13 Feb 2022 20:23:47 -0300
+Message-ID: <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: stable <stable@vger.kernel.org>, regressions@lists.linux.dev, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
+	Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>, 
+	Will McVicker <willmcvicker@google.com>, Sergio Tanzilli <tanzilli@acmesystems.it>
 Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Feb 13, 2022 at 7:34 AM Ido Schimmel <idosch@idosch.org> wrote:
+On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 >
-> On Wed, Feb 09, 2022 at 08:49:20AM +0100, Domenico Andreoli wrote:
-> >  fs/binfmt_misc.c |    6 +-----
-> >  fs/file_table.c  |    2 ++
-> >  2 files changed, 3 insertions(+), 5 deletions(-)
+> On Fri, Feb 11, 2022 at 11:36 PM Marcelo Roberto Jimenez
+> <marcelo.jimenez@gmail.com> wrote:
+>
+> > > Which devicetree or boardfile in the upstream Linux kernel is this system
+> > > using?
 > >
-> > Index: b/fs/binfmt_misc.c
-> > ===================================================================
-> > --- a/fs/binfmt_misc.c
-> > +++ b/fs/binfmt_misc.c
-> > @@ -817,20 +817,16 @@ static struct file_system_type bm_fs_typ
-> >  };
-> >  MODULE_ALIAS_FS("binfmt_misc");
-> >
-> > -static struct ctl_table_header *binfmt_misc_header;
-> > -
-> >  static int __init init_misc_binfmt(void)
-> >  {
-> >       int err = register_filesystem(&bm_fs_type);
-> >       if (!err)
-> >               insert_binfmt(&misc_format);
-> > -     binfmt_misc_header = register_sysctl_mount_point("fs/binfmt_misc");
-> > -     return 0;
-> > +     return err;
-> >  }
-> >
-> >  static void __exit exit_misc_binfmt(void)
-> >  {
-> > -     unregister_sysctl_table(binfmt_misc_header);
-> >       unregister_binfmt(&misc_format);
-> >       unregister_filesystem(&bm_fs_type);
-> >  }
-> > Index: b/fs/file_table.c
-> > ===================================================================
-> > --- a/fs/file_table.c
-> > +++ b/fs/file_table.c
-> > @@ -119,6 +119,8 @@ static struct ctl_table fs_stat_sysctls[
-> >  static int __init init_fs_stat_sysctls(void)
-> >  {
-> >       register_sysctl_init("fs", fs_stat_sysctls);
-> > +     if (IS_ENABLED(CONFIG_BINFMT_MISC))
-> > +             register_sysctl_mount_point("fs/binfmt_misc");
+> > arch/arm/boot/dts/at91-ariettag25.dts
 >
-> Hi,
+> So this system was added in 2015 which is the same year that
+> we marked the GPIO sysfs ABI obsolete:
 >
-> kmemleak complains about this:
+> commit fe95046e960b4b76e73dc1486955d93f47276134
+> Author: Linus Walleij <linus.walleij@linaro.org>
+> Date:   Thu Oct 22 09:58:34 2015 +0200
 >
-> # cat /sys/kernel/debug/kmemleak
-> unreferenced object 0xffff8881045fea88 (size 96):
->   comm "swapper/0", pid 1, jiffies 4294669355 (age 167.804s)
->   hex dump (first 32 bytes):
->     e0 c8 07 88 ff ff ff ff 00 00 00 00 01 00 00 00  ................
->     01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->   backtrace:
->     [<ffffffff81d11637>] __register_sysctl_table+0x117/0x1150
->     [<ffffffff86c3600f>] init_fs_stat_sysctls+0x30/0x33
->     [<ffffffff81002558>] do_one_initcall+0x108/0x690
->     [<ffffffff86bca8bd>] kernel_init_freeable+0x45a/0x4de
->     [<ffffffff83e0757f>] kernel_init+0x1f/0x220
->     [<ffffffff810048cf>] ret_from_fork+0x1f/0x30
+>     gpio: ABI: mark the sysfs ABI as obsolete
 >
-> >       return 0;
-> >  }
-> >  fs_initcall(init_fs_stat_sysctls);
-> >
+> Why is this system which was clearly developed while we deprecated
+> the sysfs ABI so dependent on it?
 
-Hi Ido,
-Thanks for the report. This is a known issue. The fix is proposed here.
-https://lore.kernel.org/all/YgRbEG21AUrLSFKX@bombadil.infradead.org/
+The date when the device tree file was committed upstream is not the
+same date when the product has been released. The product was
+originally released in about January, 2014, as can be seen, e.g, from
+a post here from January 30, 2014:
+https://www.open-electronics.org/acme-system-launched-arietta-g25-a-new-micro-linux-board/
+This is almost two years before the API has been marked obsolete.
 
-Thanks,
-- Tong
+The company that produces the board (which I am not affiliated to)
+gave their users access to a different device tree file.
+
+> I am curious about the usecases and how deeply you have built
+> yourselves into this.
+
+I don't know if I understand what you mean, sorry.
+
+> > In any case, the upstream file should be enough to test the issue reported here.
+>
+> The thing is that upstream isn't super happy that you have been
+> making yourselves dependent on features that we are actively
+> discouraging and then demanding that we support these features.
+
+Hum, demanding seems to be a strong word for what I am doing here.
+
+Deprecated should not mean broken. My point is: the API seems to be
+currently broken. User space apps got broken, that's a fact. I even
+took the time to bisect the kernel and show you which commit broke it.
+So, no, I am not demanding. More like reporting and providing a
+temporary solution to those with a similar problem.
+
+Maybe it is time to remove the API, but this is up to "upstream".
+Leaving the API broken seems pointless and unproductive.
+
+Sorry for the "not super happiness of upstream", but maybe upstream
+got me wrong.
+
+We are not "making ourselves dependent on features ...". The API was
+there. We used it. Now it is deprecated, ok, we should move on. I got
+the message.
+
+> Anyway, what is wrong with using the GPIO character device and libgpiod
+> on this system? What kind of userspace are you creating that
+> absolutely requires that you use sysfs?
+
+There is nothing wrong, except for a matter of causality that seems to
+have been inverted here and has been explained above.
+
+> I hope not one of these?
+> https://docs.kernel.org/driver-api/gpio/drivers-on-gpio.html
+>
+> Here is some info about what we have been doing with the GPIO
+> character device:
+>
+> https://docs.kernel.org/driver-api/gpio/using-gpio.html
+> https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/
+>
+> Here is Bartosz presenting it:
+> https://www.youtube.com/watch?v=BK6gOLVRKuU
+
+Please, don't get me wrong. I find the work done in GPIO amazing.
+
+Thanks for all the valuable information, I sincerely appreciate it and
+will read it all carefully.
+
+And I will also tell the dev team that they must use the GPIO char dev
+and libgpiod from now on and must port everything to it. And we will
+likely have another group of people who are not super happy, but
+that's life... :)
+
+> Since I patched the kernel such that you cannot activate the sysfs
+> ABI without also activating the character device I *know* that you
+> have it on your system.
+
+Smart move!
+
+> Yours,
+> Linus Walleij
+
+Best regards,
+Marcelo.
