@@ -1,107 +1,150 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from new2-smtp.messagingengine.com (new2-smtp.messagingengine.com [66.111.4.224])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610BF7C
-	for <regressions@lists.linux.dev>; Sat, 12 Feb 2022 16:55:01 +0000 (UTC)
-Received: by mail-yb1-f178.google.com with SMTP id l125so829492ybl.4
-        for <regressions@lists.linux.dev>; Sat, 12 Feb 2022 08:55:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=biysQ3IsY2w+NMb+t1WSQWW4AmDXHDFl1wRiCvR4z4A=;
-        b=Mz/hHNUOtjKmsHGh20Qo0guG/Qg2wiAB4AvUgN+QYwQlsg/MI+Gk1tdkNMVhkz7FvF
-         uLUlG6rpT/QCxyF24eGIFwno1CC0xAft6LNiQuINyo4fUf71zRpz5OZMNwxjg+C3kWbl
-         kBmd9gngoENaGRXCIMowhfp3a0hSjrETIBQAcr/yZidmjucqfrUExAjhb1g/bRr8k4H2
-         2NeuWZrgGZipVP0AVBBafdQ+G0lKITdtiyw1in/MoS0XBe1dxm7NavR4O8t5YNxfka4G
-         vjGjPYHYgCemAYBBS/Q6VUSUVq2b0FTVHhcwjcctT0TNO7x3G3bMtzbCQaB6swrbAP2Z
-         Uuyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=biysQ3IsY2w+NMb+t1WSQWW4AmDXHDFl1wRiCvR4z4A=;
-        b=6B+g3/NzmXFDEluxK1yTiGuwy+FQe9daVo+WNTJ+tDm7s+B9Ih2/T4sxOrauu/ttYF
-         F8fTl3tGpJspGDbGBx2Nfem/RbJuebEn5Huck7DOwZTdZ/tJo/5HgOYJt/49l+k7mKaG
-         fyq6ewkLxt1Vs9QsPQdYH2K6pX8ikUUg5vNHWMtPO+R+gNt42wQwi8srLpui2O4yrUqg
-         nSdIU03otHYLjnLyvi2YfvaMu0WfbbDq0MrvMBCRlyfkRx8tpPnGcocXif8gYEPTyHWO
-         8Dkt1yDTtst21F9gP0fexZTq6E+4l4eiQkTc23sZR2LdvSUtnte8SAUk2yMdCD09zEGb
-         yZMA==
-X-Gm-Message-State: AOAM531ytRmDhMvw5tiMhzaSLrf0muOp8qqi6jP1xV0FPe4sSRJommyj
-	fXha4o/iOMZKud7nJaOMnVI6LfLscbjhKxFAaryP6w==
-X-Google-Smtp-Source: ABdhPJxY7wL1B0Tp9SS789YZZRkRDCVX/nCvjhJ9T1/d7umwF8iHCoCHKWI/kl7Ai8sZPm2pZ8xwp5LVQvKKElkeXTw=
-X-Received: by 2002:a5b:f4b:: with SMTP id y11mr5781546ybr.634.1644684900080;
- Sat, 12 Feb 2022 08:55:00 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2EA373
+	for <regressions@lists.linux.dev>; Sun, 13 Feb 2022 15:34:48 +0000 (UTC)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailnew.nyi.internal (Postfix) with ESMTP id 21C5E58012C;
+	Sun, 13 Feb 2022 10:34:47 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Sun, 13 Feb 2022 10:34:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=UA8T6JiS2f3ocAFcD
+	gjHyjxICxgUmp2Ip3lgkBm5b9k=; b=ahRWvieaYNmVdj3m2nCPuqkay7sl2L4ut
+	BuMLw7cTlreuR8lIZh7gi4o/Fmre4X8afwjL79FXQdgh67v+JJYY+blDijP1fZsT
+	PELmblx7syqCsp281VitTT0I5Lv/GtxiJJFgBjgkv43tJzDzznDxg954cJf/aRI6
+	P930bt4poGLa+M0D8ioQT0wb8fDLA3ZAaUy6F4wnoffegOe9q9IGK3sn3cBFdm8q
+	BfV43tR3WENkOWn4I5Nh8WFd58Ikn/O+o429UdrsG5zrh/CzZEIizHhFUO3tIK3b
+	rePocJilix9hHlmqoijz1XesiGLMpZt6xchTOJDSJCpCOuAms/gwg==
+X-ME-Sender: <xms:FCUJYvVWD523C5yxVO7jdLtY-OX7nBPv3HvHAdtGM60X7NzHurnTJw>
+    <xme:FCUJYnlAeo9Ew5sUKf62pWHuDnChnKrHRjQOT4oO69ImfUmH3sdJYiArzyvoFUlvX
+    QMUlyuLAXzbK8k>
+X-ME-Received: <xmr:FCUJYraB5kFtZjdh-RDZQ3RBSscTSGnjU30IVALmi8z9skluvybwKVmtZY6nZW10koTA9mSbG8ETiH547puW-7ZZpeXqbQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrjedtgdejfecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepkfguohcuufgt
+    hhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecuggftrfgrthhtvg
+    hrnheptdffkeekfeduffevgeeujeffjefhtefgueeugfevtdeiheduueeukefhudehleet
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepihguoh
+    hstghhsehiughoshgthhdrohhrgh
+X-ME-Proxy: <xmx:FCUJYqUqWtSq8yN47UI41vHediP7TWziXt8gjR4lKUOmyu7E9whw1A>
+    <xmx:FCUJYpkqFA8pd60dBGBDfXh-3YZeg7WD3sV08Vz2pfTMjFnY3iUpPQ>
+    <xmx:FCUJYnc1zv3SmapGD31m0pXeZw8SN8DfsgTX7vfNKKtOUqug4d30Rw>
+    <xmx:FyUJYp-0Bhr6JGHzk6NiYIcM9J8x86sDxavsbuuJEc6v6G5v4nCgLw>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 13 Feb 2022 10:34:42 -0500 (EST)
+Date: Sun, 13 Feb 2022 17:34:38 +0200
+From: Ido Schimmel <idosch@idosch.org>
+To: Domenico Andreoli <domenico.andreoli@linux.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>, Tong Zhang <ztong0001@gmail.com>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	David Airlie <airlied@linux.ie>,
+	Andrew Morton <akpm@linux-foundation.org>, amir73il@gmail.com,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Arnd Bergmann <arnd@arndb.de>, bcrl@kvack.org,	benh@kernel.crashing.org,
+ clemens@ladisch.de, crope@iki.fi,	dgilbert@interlog.com,
+ Greg KH <gregkh@linuxfoundation.org>,	jack@suse.cz,
+ jani.nikula@intel.com, jani.nikula@linux.intel.com,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>, jlbec@evilplan.org,
+	john.ogness@linutronix.de, joonas.lahtinen@linux.intel.com,
+	Joseph Qi <joseph.qi@linux.alibaba.com>, julia.lawall@inria.fr,
+	Kees Cook <keescook@chromium.org>, kernel@tuxforce.de,
+	Linux Memory Management List <linux-mm@kvack.org>, mark@fasheh.com,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	mm-commits@vger.kernel.org, nixiaoming@huawei.com,
+	penguin-kernel@i-love.sakura.ne.jp, peterz@infradead.org,
+	phil@philpotter.co.uk, pjt@google.com, pmladek@suse.com,
+	rafael@kernel.org, rodrigo.vivi@intel.com, rostedt@goodmis.org,
+	senozhatsky@chromium.org, sre@kernel.org, steve@sk2.org,
+	surenb@google.com, torvalds@linux-foundation.org, tytso@mit.edu,
+	Al Viro <viro@zeniv.linux.org.uk>, wangqing@vivo.com,
+	Iurii Zaikin <yzaikin@google.com>,
+	open list <linux-kernel@vger.kernel.org>,	regressions@lists.linux.dev
+Subject: Re: [PATCH v2] Fix regression due to "fs: move binfmt_misc sysctl to
+ its own file"
+Message-ID: <YgklDvNecca1/8in@shredder>
+References: <20220121221021.60533b009c357d660791476e@linux-foundation.org>
+ <20220122061228.nmuo75sDn%akpm@linux-foundation.org>
+ <YgEeQNdgBuHRyEWl@dumbo>
+ <YgGTSR628xhRvCjB@bombadil.infradead.org>
+ <CAA5qM4BGmrkwatyO_h3F=ErDZ9t5swuttbt6NkQU-1KDGDiD4g@mail.gmail.com>
+ <YgKmaggsipzzCGCg@bombadil.infradead.org>
+ <YgNyAC8VMeuOD/uQ@dumbo>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com> <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
-In-Reply-To: <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 12 Feb 2022 17:54:48 +0100
-Message-ID: <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-Cc: stable <stable@vger.kernel.org>, regressions@lists.linux.dev, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>, 
-	Will McVicker <willmcvicker@google.com>, Sergio Tanzilli <tanzilli@acmesystems.it>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YgNyAC8VMeuOD/uQ@dumbo>
 
-On Fri, Feb 11, 2022 at 11:36 PM Marcelo Roberto Jimenez
-<marcelo.jimenez@gmail.com> wrote:
+On Wed, Feb 09, 2022 at 08:49:20AM +0100, Domenico Andreoli wrote:
+>  fs/binfmt_misc.c |    6 +-----
+>  fs/file_table.c  |    2 ++
+>  2 files changed, 3 insertions(+), 5 deletions(-)
+> 
+> Index: b/fs/binfmt_misc.c
+> ===================================================================
+> --- a/fs/binfmt_misc.c
+> +++ b/fs/binfmt_misc.c
+> @@ -817,20 +817,16 @@ static struct file_system_type bm_fs_typ
+>  };
+>  MODULE_ALIAS_FS("binfmt_misc");
+>  
+> -static struct ctl_table_header *binfmt_misc_header;
+> -
+>  static int __init init_misc_binfmt(void)
+>  {
+>  	int err = register_filesystem(&bm_fs_type);
+>  	if (!err)
+>  		insert_binfmt(&misc_format);
+> -	binfmt_misc_header = register_sysctl_mount_point("fs/binfmt_misc");
+> -	return 0;
+> +	return err;
+>  }
+>  
+>  static void __exit exit_misc_binfmt(void)
+>  {
+> -	unregister_sysctl_table(binfmt_misc_header);
+>  	unregister_binfmt(&misc_format);
+>  	unregister_filesystem(&bm_fs_type);
+>  }
+> Index: b/fs/file_table.c
+> ===================================================================
+> --- a/fs/file_table.c
+> +++ b/fs/file_table.c
+> @@ -119,6 +119,8 @@ static struct ctl_table fs_stat_sysctls[
+>  static int __init init_fs_stat_sysctls(void)
+>  {
+>  	register_sysctl_init("fs", fs_stat_sysctls);
+> +	if (IS_ENABLED(CONFIG_BINFMT_MISC))
+> +		register_sysctl_mount_point("fs/binfmt_misc");
 
-> > Which devicetree or boardfile in the upstream Linux kernel is this system
-> > using?
->
-> arch/arm/boot/dts/at91-ariettag25.dts
+Hi,
 
-So this system was added in 2015 which is the same year that
-we marked the GPIO sysfs ABI obsolete:
+kmemleak complains about this:
 
-commit fe95046e960b4b76e73dc1486955d93f47276134
-Author: Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu Oct 22 09:58:34 2015 +0200
+# cat /sys/kernel/debug/kmemleak
+unreferenced object 0xffff8881045fea88 (size 96):
+  comm "swapper/0", pid 1, jiffies 4294669355 (age 167.804s)
+  hex dump (first 32 bytes):
+    e0 c8 07 88 ff ff ff ff 00 00 00 00 01 00 00 00  ................
+    01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<ffffffff81d11637>] __register_sysctl_table+0x117/0x1150
+    [<ffffffff86c3600f>] init_fs_stat_sysctls+0x30/0x33
+    [<ffffffff81002558>] do_one_initcall+0x108/0x690
+    [<ffffffff86bca8bd>] kernel_init_freeable+0x45a/0x4de
+    [<ffffffff83e0757f>] kernel_init+0x1f/0x220
+    [<ffffffff810048cf>] ret_from_fork+0x1f/0x30
 
-    gpio: ABI: mark the sysfs ABI as obsolete
-
-Why is this system which was clearly developed while we deprecated
-the sysfs ABI so dependent on it?
-
-I am curious about the usecases and how deeply you have built
-yourselves into this.
-
-> In any case, the upstream file should be enough to test the issue reported here.
-
-The thing is that upstream isn't super happy that you have been
-making yourselves dependent on features that we are actively
-discouraging and then demanding that we support these features.
-
-Anyway, what is wrong with using the GPIO character device and libgpiod
-on this system? What kind of userspace are you creating that
-absolutely requires that you use sysfs?
-
-I hope not one of these?
-https://docs.kernel.org/driver-api/gpio/drivers-on-gpio.html
-
-Here is some info about what we have been doing with the GPIO
-character device:
-
-https://docs.kernel.org/driver-api/gpio/using-gpio.html
-https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/tree/
-
-Here is Bartosz presenting it:
-https://www.youtube.com/watch?v=BK6gOLVRKuU
-
-Since I patched the kernel such that you cannot activate the sysfs
-ABI without also activating the character device I *know* that you
-have it on your system.
-
-Yours,
-Linus Walleij
+>  	return 0;
+>  }
+>  fs_initcall(init_fs_stat_sysctls);
+> 
