@@ -1,99 +1,158 @@
-Received: from new1-smtp.messagingengine.com (new1-smtp.messagingengine.com [66.111.4.221])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5977A
-	for <regressions@lists.linux.dev>; Mon, 14 Feb 2022 07:47:42 +0000 (UTC)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-	by mailnew.nyi.internal (Postfix) with ESMTP id 4022E580307;
-	Mon, 14 Feb 2022 02:47:41 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Mon, 14 Feb 2022 02:47:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=hAXX3YSLYKv5f+3SJ
-	iOjChLyf8mfaVkznY08o7XQW04=; b=AEFHuuBiG5Rx7IwbFz2PZNrjBSV+zjWCk
-	INbNRR9KxljQlpP+7uStHn16q1SnXUgQf7tclU2wVvllgh5tuZZteV08hVSPAJqn
-	9Dic8MUa/tISNShO0PY2vQlE6RBggjfTqJALeJk0HkyFi7qFfQm8fWpkfKFy2Iw4
-	7awm3Y5s4ZdYB7d/0kAyKb3FzGmCRjb6eGaGimjxXR9AIa3uivhRSmaiugigOgeI
-	KvjnXEfI5H/hDwTDfiKQC3unegasIQdS/CjSXcf5PR8Ls3BL+rKYUWurXiMxGLYG
-	O7XdsbMSqUP4LJL/wHVQfxSqc0ou6NB5jo5ZSTvXYgzM1nCLOLKeA==
-X-ME-Sender: <xms:GAkKYo-6CdMYwzh8ssqo1lS500yoCiLZOGwg1o_rB9fbb_uecxnVtA>
-    <xme:GAkKYgsFi97jM0nScOUwioPd_y_TW45suu8GOYokal6312azFy6Mbjv-PhAQjj6zH
-    D211jMdhq3umC8>
-X-ME-Received: <xmr:GAkKYuBfPc-GAIVk99c2_Pwnu1OMfogOOt8ce0GqRiNJXcnoM-pMKzUqs4oGkDBRp7VIrgP2fAF9bQtDRwUgrQHIhG8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrjedugdduudduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefkughoucfu
-    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucggtffrrghtth
-    gvrhhnpefgvefgveeuudeuffeiffehieffgfejleevtdetueetueffkeevgffgtddugfek
-    veenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-    enucfrrghrrghmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrgh
-X-ME-Proxy: <xmx:GAkKYod-qEiQCIdV_VZvmD-bunUy86Dfw0UqUWJRnHK4DV07pTOpkQ>
-    <xmx:GAkKYtPtIkRxnipq1gT07lMIbcVsFr7qGcWlHCa5oTTH-p3MX-0zWw>
-    <xmx:GAkKYilx9R30KFjPp136qCE2IlJnh8Xa8Oy3L58ihexHTPalDixoPA>
-    <xmx:HQkKYvGitqYU94RhMQeTbk4UKrJg1g2I0w1F2J0fsk-EUyVkzI_D8A>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 14 Feb 2022 02:47:35 -0500 (EST)
-Date: Mon, 14 Feb 2022 09:47:32 +0200
-From: Ido Schimmel <idosch@idosch.org>
-To: Tong Zhang <ztong0001@gmail.com>
-Cc: Domenico Andreoli <domenico.andreoli@linux.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	"Eric W. Biederman" <ebiederm@xmission.com>,
-	David Airlie <airlied@linux.ie>,
-	Andrew Morton <akpm@linux-foundation.org>, amir73il@gmail.com,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Arnd Bergmann <arnd@arndb.de>, bcrl@kvack.org,	benh@kernel.crashing.org,
- clemens@ladisch.de, crope@iki.fi,	dgilbert@interlog.com,
- Greg KH <gregkh@linuxfoundation.org>,	jack@suse.cz,
- jani.nikula@intel.com,	Jani Nikula <jani.nikula@linux.intel.com>,
-	"James E.J. Bottomley" <jejb@linux.ibm.com>, jlbec@evilplan.org,
-	john.ogness@linutronix.de,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>, julia.lawall@inria.fr,
-	Kees Cook <keescook@chromium.org>, kernel@tuxforce.de,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	Mark Fasheh <mark@fasheh.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	mm-commits@vger.kernel.org, nixiaoming@huawei.com,
-	penguin-kernel@i-love.sakura.ne.jp, peterz@infradead.org,
-	Phillip Potter <phil@philpotter.co.uk>,	Paul Turner <pjt@google.com>,
- pmladek@suse.com, rafael@kernel.org,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, rostedt@goodmis.org,
-	senozhatsky@chromium.org, sre@kernel.org, steve@sk2.org,
-	Suren Baghdasaryan <surenb@google.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>, tytso@mit.edu,
-	Al Viro <viro@zeniv.linux.org.uk>, wangqing@vivo.com,
-	Iurii Zaikin <yzaikin@google.com>,
-	open list <linux-kernel@vger.kernel.org>,	regressions@lists.linux.dev
-Subject: Re: [PATCH v2] Fix regression due to "fs: move binfmt_misc sysctl to
- its own file"
-Message-ID: <YgoJFAltbyqTT6Kz@shredder>
-References: <20220121221021.60533b009c357d660791476e@linux-foundation.org>
- <20220122061228.nmuo75sDn%akpm@linux-foundation.org>
- <YgEeQNdgBuHRyEWl@dumbo>
- <YgGTSR628xhRvCjB@bombadil.infradead.org>
- <CAA5qM4BGmrkwatyO_h3F=ErDZ9t5swuttbt6NkQU-1KDGDiD4g@mail.gmail.com>
- <YgKmaggsipzzCGCg@bombadil.infradead.org>
- <YgNyAC8VMeuOD/uQ@dumbo>
- <YgklDvNecca1/8in@shredder>
- <CAA5qM4AP=pOi1dFFgELJ97nSwTBqrruseGmTF-qab=xj2==_Xg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C521F7C
+	for <regressions@lists.linux.dev>; Mon, 14 Feb 2022 12:17:47 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nJaIN-0007Q1-BJ; Mon, 14 Feb 2022 13:17:31 +0100
+Message-ID: <73e05c99-eece-12ff-1755-98c6f3fc6564@leemhuis.info>
+Date: Mon, 14 Feb 2022 13:17:29 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAA5qM4AP=pOi1dFFgELJ97nSwTBqrruseGmTF-qab=xj2==_Xg@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: Regression from 3c196f056666 ("drm/amdgpu: always reset the asic
+ in suspend (v2)") on suspend?
+Content-Language: en-US
+To: Salvatore Bonaccorso <carnil@debian.org>,
+ Alex Deucher <alexander.deucher@amd.com>
+Cc: Dominique Dumont <dod@debian.org>, 1005005@bugs.debian.org,
+ Luben Tuikov <luben.tuikov@amd.com>, Evan Quan <evan.quan@amd.com>,
+ Sasha Levin <sashal@kernel.org>, =?UTF-8?Q?Christian_K=c3=b6nig?=
+ <christian.koenig@amd.com>, "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+ David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+ amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <Ygf7KuWyc0d4HIFu@eldamar.lan>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <Ygf7KuWyc0d4HIFu@eldamar.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644841067;eb08e3db;
+X-HE-SMSGID: 1nJaIN-0007Q1-BJ
 
-On Sun, Feb 13, 2022 at 01:10:42PM -0800, Tong Zhang wrote:
-> Hi Ido,
-> Thanks for the report. This is a known issue. The fix is proposed here.
-> https://lore.kernel.org/all/YgRbEG21AUrLSFKX@bombadil.infradead.org/
 
-Great, thanks for letting me know
+[TLDR: I'm adding the regression report below to regzbot, the Linux
+kernel regression tracking bot; all text you find below is compiled from
+a few templates paragraphs you might have encountered already already
+from similar mails.]
+
+Hi, this is your Linux kernel regression tracker speaking.
+
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+To be sure this issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced 3c196f056666
+#regzbot title amdgfx: suspend stopped working
+#regzbot ignore-activity
+#regzbot link: https://bugs.debian.org/1005005
+
+Reminder for developers: when fixing the issue, please add a 'Link:'
+tags pointing to the report (the mail quoted above) using
+lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'. This allows the bot to connect
+the report with any patches posted or committed to fix the issue; this
+again allows the bot to show the current status of regressions and
+automatically resolve the issue when the fix hits the right tree.
+
+I'm sending this to everyone that got the initial report, to make them
+aware of the tracking. I also hope that messages like this motivate
+people to directly get at least the regression mailing list and ideally
+even regzbot involved when dealing with regressions, as messages like
+this wouldn't be needed then.
+
+Don't worry, I'll send further messages wrt to this regression just to
+the lists (with a tag in the subject so people can filter them away), if
+they are relevant just for regzbot. With a bit of luck no such messages
+will be needed anyway.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+
+On 12.02.22 19:23, Salvatore Bonaccorso wrote:
+> Hi Alex, hi all
+> 
+> In Debian we got a regression report from Dominique Dumont, CC'ed in
+> https://bugs.debian.org/1005005 that afer an update to 5.15.15 based
+> kernel, his machine noe longer suspends correctly, after screen going
+> black as usual it comes back. The Debian bug above contians a trace.
+> 
+> Dominique confirmed that this issue persisted after updating to 5.16.7
+> furthermore he bisected the issue and found 
+> 
+> 	3c196f05666610912645c7c5d9107706003f67c3 is the first bad commit
+> 	commit 3c196f05666610912645c7c5d9107706003f67c3
+> 	Author: Alex Deucher <alexander.deucher@amd.com>
+> 	Date:   Fri Nov 12 11:25:30 2021 -0500
+> 
+> 	    drm/amdgpu: always reset the asic in suspend (v2)
+> 
+> 	    [ Upstream commit daf8de0874ab5b74b38a38726fdd3d07ef98a7ee ]
+> 
+> 	    If the platform suspend happens to fail and the power rail
+> 	    is not turned off, the GPU will be in an unknown state on
+> 	    resume, so reset the asic so that it will be in a known
+> 	    good state on resume even if the platform suspend failed.
+> 
+> 	    v2: handle s0ix
+> 
+> 	    Acked-by: Luben Tuikov <luben.tuikov@amd.com>
+> 	    Acked-by: Evan Quan <evan.quan@amd.com>
+> 	    Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> 	    Signed-off-by: Sasha Levin <sashal@kernel.org>
+> 
+> 	 drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 5 ++++-
+> 	 1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> to be the first bad commit, see https://bugs.debian.org/1005005#34 .
+> 
+> Does this ring any bell? Any idea on the problem?
+> 
+> Regards,
+> Salvatore
+
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
