@@ -1,13 +1,14 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C521F7C
-	for <regressions@lists.linux.dev>; Mon, 14 Feb 2022 12:17:47 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nJaIN-0007Q1-BJ; Mon, 14 Feb 2022 13:17:31 +0100
-Message-ID: <73e05c99-eece-12ff-1755-98c6f3fc6564@leemhuis.info>
-Date: Mon, 14 Feb 2022 13:17:29 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7E1A28
+	for <regressions@lists.linux.dev>; Mon, 14 Feb 2022 16:23:01 +0000 (UTC)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=[127.0.0.1])
+	by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1nJe7f-0008Lp-1r; Mon, 14 Feb 2022 17:22:43 +0100
+Message-ID: <579eab10-594c-d6b2-0ddb-ea6ab8e02856@pengutronix.de>
+Date: Mon, 14 Feb 2022 17:22:34 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,143 +17,72 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: Regression from 3c196f056666 ("drm/amdgpu: always reset the asic
- in suspend (v2)") on suspend?
+Subject: Re: [BUG] mtd: cfi_cmdset_0002: write regression since v4.17-rc1
 Content-Language: en-US
-To: Salvatore Bonaccorso <carnil@debian.org>,
- Alex Deucher <alexander.deucher@amd.com>
-Cc: Dominique Dumont <dod@debian.org>, 1005005@bugs.debian.org,
- Luben Tuikov <luben.tuikov@amd.com>, Evan Quan <evan.quan@amd.com>,
- Sasha Levin <sashal@kernel.org>, =?UTF-8?Q?Christian_K=c3=b6nig?=
- <christian.koenig@amd.com>, "Pan, Xinhui" <Xinhui.Pan@amd.com>,
- David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org,
+To: Tokunori Ikegami <ikegami.t@gmail.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ linux-mtd@lists.infradead.org, Joakim.Tjernlund@infinera.com,
+ miquel.raynal@bootlin.com, vigneshr@ti.com, richard@nod.at,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <Ygf7KuWyc0d4HIFu@eldamar.lan>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <Ygf7KuWyc0d4HIFu@eldamar.lan>
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>,
+ Brian Norris <computersforpeace@gmail.com>,
+ David Woodhouse <dwmw2@infradead.org>, marek.vasut@gmail.com,
+ cyrille.pitchen@wedev4u.fr,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ linuxppc-dev@lists.ozlabs.org
+References: <b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de>
+ <dff2abcc-5813-2f2c-35ba-f03cd1f35ac3@leemhuis.info>
+ <e11b76dc-5539-fb7e-da1c-a5005713d6b0@gmail.com>
+ <3dbbcee5-81fc-cdf5-9f8b-b6ccb95beddc@pengutronix.de>
+ <0f2cfcac-83ca-51a9-f92c-ff6495dca1d7@gmail.com>
+ <b231b498-c8d2-28af-ce66-db8c168047f7@pengutronix.de>
+ <66ee55d9-4f20-6722-6097-e53c2108ea07@gmail.com>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <66ee55d9-4f20-6722-6097-e53c2108ea07@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644841067;eb08e3db;
-X-HE-SMSGID: 1nJaIN-0007Q1-BJ
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
+Hello Tokunori-san,
 
-[TLDR: I'm adding the regression report below to regzbot, the Linux
-kernel regression tracking bot; all text you find below is compiled from
-a few templates paragraphs you might have encountered already already
-from similar mails.]
-
-Hi, this is your Linux kernel regression tracker speaking.
-
-CCing the regression mailing list, as it should be in the loop for all
-regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-
-To be sure this issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
-
-#regzbot ^introduced 3c196f056666
-#regzbot title amdgfx: suspend stopped working
-#regzbot ignore-activity
-#regzbot link: https://bugs.debian.org/1005005
-
-Reminder for developers: when fixing the issue, please add a 'Link:'
-tags pointing to the report (the mail quoted above) using
-lore.kernel.org/r/, as explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'. This allows the bot to connect
-the report with any patches posted or committed to fix the issue; this
-again allows the bot to show the current status of regressions and
-automatically resolve the issue when the fix hits the right tree.
-
-I'm sending this to everyone that got the initial report, to make them
-aware of the tracking. I also hope that messages like this motivate
-people to directly get at least the regression mailing list and ideally
-even regzbot involved when dealing with regressions, as messages like
-this wouldn't be needed then.
-
-Don't worry, I'll send further messages wrt to this regression just to
-the lists (with a tag in the subject so people can filter them away), if
-they are relevant just for regzbot. With a bit of luck no such messages
-will be needed anyway.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
-
-
-On 12.02.22 19:23, Salvatore Bonaccorso wrote:
-> Hi Alex, hi all
+On 13.02.22 17:47, Tokunori Ikegami wrote:
+> Hi Ahmad-san,
 > 
-> In Debian we got a regression report from Dominique Dumont, CC'ed in
-> https://bugs.debian.org/1005005 that afer an update to 5.15.15 based
-> kernel, his machine noe longer suspends correctly, after screen going
-> black as usual it comes back. The Debian bug above contians a trace.
+> Thanks for your confirmations. Sorry for late to reply.
+
+No worries. I appreciate you taking the time.
+
+> Could you please try the patch attached to disable the chip_good() change as before?
+> I think this should work for S29GL964N since the chip_ready() is used and works as mentioned.
+
+yes, this resolves my issue:
+Tested-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+
+>>>> Doesn't seem to be a buffered write issue here though as the writes
+>>>> did work fine before dfeae1073583. Any other ideas?
+>>> At first I thought the issue is possible to be resolved by using the word write instead of the buffered writes.
+>>> Now I am thinking to disable the changes dfeae1073583 partially with any condition if possible.
+>> What seems to work for me is checking if chip_good or chip_ready
+>> and map_word is equal to 0xFF. I can't justify why this is ok though.
+>> (Worst case bus is floating at this point of time and Hi-Z is read
+>> as 0xff on CPU data lines...)
 > 
-> Dominique confirmed that this issue persisted after updating to 5.16.7
-> furthermore he bisected the issue and found 
-> 
-> 	3c196f05666610912645c7c5d9107706003f67c3 is the first bad commit
-> 	commit 3c196f05666610912645c7c5d9107706003f67c3
-> 	Author: Alex Deucher <alexander.deucher@amd.com>
-> 	Date:   Fri Nov 12 11:25:30 2021 -0500
-> 
-> 	    drm/amdgpu: always reset the asic in suspend (v2)
-> 
-> 	    [ Upstream commit daf8de0874ab5b74b38a38726fdd3d07ef98a7ee ]
-> 
-> 	    If the platform suspend happens to fail and the power rail
-> 	    is not turned off, the GPU will be in an unknown state on
-> 	    resume, so reset the asic so that it will be in a known
-> 	    good state on resume even if the platform suspend failed.
-> 
-> 	    v2: handle s0ix
-> 
-> 	    Acked-by: Luben Tuikov <luben.tuikov@amd.com>
-> 	    Acked-by: Evan Quan <evan.quan@amd.com>
-> 	    Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> 	    Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> 	 drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 5 ++++-
-> 	 1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> to be the first bad commit, see https://bugs.debian.org/1005005#34 .
-> 
-> Does this ring any bell? Any idea on the problem?
-> 
-> Regards,
-> Salvatore
+> Sorry I am not sure about this.
+> I thought the chip_ready() itself is correct as implemented as the data sheet in the past.
+> But it did not work correctly so changed to use chip_good() instead as it is also correct.
+
+What exactly in the datasheet makes you believe chip_good is not appropriate?
+
+Cheers,
+Ahmad
+
 
 -- 
-Additional information about regzbot:
-
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-CC the regression list and tell regzbot about the issue, as that ensures
-the regression makes it onto the radar of the Linux kernel's regression
-tracker -- that's in your interest, as it ensures your report won't fall
-through the cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include 'Link:' tag in the patch descriptions pointing to all reports
-about the issue. This has been expected from developers even before
-regzbot showed up for reasons explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'.
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
