@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 416511578
-	for <regressions@lists.linux.dev>; Tue, 15 Feb 2022 14:57:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 655FE1578
+	for <regressions@lists.linux.dev>; Tue, 15 Feb 2022 14:59:46 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nJzGD-0005P7-Tf; Tue, 15 Feb 2022 15:56:57 +0100
-Message-ID: <5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
-Date: Tue, 15 Feb 2022 15:56:56 +0100
+	id 1nJzIp-0007mL-Fd; Tue, 15 Feb 2022 15:59:39 +0100
+Message-ID: <6da289bf-86a5-44ce-cd19-85529ec1bfe5@leemhuis.info>
+Date: Tue, 15 Feb 2022 15:59:38 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,42 +16,44 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
- PCI-passed-through to Windows VM
-Content-Language: en-BS
-To: Jim Turner <linuxkernel.foss@dmarc-none.turner.link>,
- "Lazar, Lijo" <lijo.lazar@amd.com>
-Cc: Alex Deucher <alexdeucher@gmail.com>,
- "Deucher, Alexander" <Alexander.Deucher@amd.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
- Greg KH <gregkh@linuxfoundation.org>, "Pan, Xinhui" <Xinhui.Pan@amd.com>,
- LKML <linux-kernel@vger.kernel.org>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- Alex Williamson <alex.williamson@redhat.com>,
- "Koenig, Christian" <Christian.Koenig@amd.com>
-References: <87ee57c8fu.fsf@turner.link>
- <acd2fd5e-d622-948c-82ef-629a8030c9d8@leemhuis.info>
- <87a6ftk9qy.fsf@dmarc-none.turner.link> <87zgnp96a4.fsf@turner.link>
- <fc2b7593-db8f-091c-67a0-ae5ffce71700@leemhuis.info>
- <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
- <87czkk1pmt.fsf@dmarc-none.turner.link>
- <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
- <87sftfqwlx.fsf@dmarc-none.turner.link>
- <BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
- <87ee4wprsx.fsf@turner.link> <4b3ed7f6-d2b6-443c-970e-d963066ebfe3@amd.com>
- <87pmo8r6ob.fsf@turner.link>
+Subject: Re: [PATCH] Revert "xfrm: xfrm_state_mtu should return at least 1280
+ for ipv6"
+Content-Language: en-BW
+To: Steffen Klassert <steffen.klassert@secunet.com>,
+ Jiri Bohac <jbohac@suse.cz>
+Cc: Sabrina Dubroca <sd@queasysnail.net>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ "David S. Miller" <davem@davemloft.net>,
+ Mike Maloney <maloneykernel@gmail.com>, Eric Dumazet
+ <eric.dumazet@gmail.com>, netdev@vger.kernel.org,
+ Jakub Kicinski <kuba@kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220114173133.tzmdm2hy4flhblo3@dwarf.suse.cz>
+ <20220114174058.rqhtuwpfhq6czldn@dwarf.suse.cz>
+ <20220119073519.GJ1223722@gauss3.secunet.de>
+ <20220119091233.pzqdlzpcyicjavk5@dwarf.suse.cz>
+ <20220124154531.GM1223722@gauss3.secunet.de>
+ <20220125094102.ju7bhuplcxnkyv4x@dwarf.suse.cz>
+ <20220126064214.GO1223722@gauss3.secunet.de>
+ <20220126150018.7cdfxtkq2nfkqj4j@dwarf.suse.cz>
+ <20220201064639.GS1223722@gauss3.secunet.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <87pmo8r6ob.fsf@turner.link>
+In-Reply-To: <20220201064639.GS1223722@gauss3.secunet.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644937020;d09888f8;
-X-HE-SMSGID: 1nJzGD-0005P7-Tf
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1644937186;48b86126;
+X-HE-SMSGID: 1nJzIp-0007mL-Fd
 
-Top-posting for once, to make this easy accessible to everyone.
+Hi, this is your Linux kernel regression tracker speaking.
 
-Nothing happened here for two weeks now afaics. Was the discussion moved
-elsewhere or did it fall through the cracks?
+The patch discussed below is now in linux-next for about 11 days, but
+not yet in the net tree afaics. Will it be merged this week? And
+shouldn't this patch have these stables tags?
+
+Cc: <stable@vger.kernel.org> # 5.14: 6596a0229541 xfrm: fix MTU regression
+Cc: <stable@vger.kernel.org> # 5.14
+
+And maybe a fixes tag, too?
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -63,34 +65,36 @@ that's not the case here; if you think it is, don't hesitate to tell me
 in a public reply, it's in everyone's interest to set the public record
 straight.
 
-On 30.01.22 01:25, Jim Turner wrote:
-> Hi Lijo,
-> 
->> Specifically, I was looking for any events happening at these two
->> places because of the patch-
+#regzbot poke
+
+On 01.02.22 07:46, Steffen Klassert wrote:
+> On Wed, Jan 26, 2022 at 04:00:18PM +0100, Jiri Bohac wrote:
+>> This reverts commit b515d2637276a3810d6595e10ab02c13bfd0b63a.
 >>
->> https://elixir.bootlin.com/linux/v5.16/source/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c#L411
+>> Commit b515d2637276a3810d6595e10ab02c13bfd0b63a ("xfrm: xfrm_state_mtu
+>> should return at least 1280 for ipv6") in v5.14 breaks the TCP MSS
+>> calculation in ipsec transport mode, resulting complete stalls of TCP
+>> connections. This happens when the (P)MTU is 1280 or slighly larger.
 >>
->> https://elixir.bootlin.com/linux/v5.16/source/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c#L653
+>> The desired formula for the MSS is:
+>> MSS = (MTU - ESP_overhead) - IP header - TCP header
+>>
+>> However, the above commit clamps the (MTU - ESP_overhead) to a
+>> minimum of 1280, turning the formula into
+>> MSS = max(MTU - ESP overhead, 1280) -  IP header - TCP header
+>>
+>> With the (P)MTU near 1280, the calculated MSS is too large and the
+>> resulting TCP packets never make it to the destination because they
+>> are over the actual PMTU.
+>>
+>> The above commit also causes suboptimal double fragmentation in
+>> xfrm tunnel mode, as described in
+>> https://lore.kernel.org/netdev/20210429202529.codhwpc7w6kbudug@dwarf.suse.cz/
+>>
+>> The original problem the above commit was trying to fix is now fixed
+>> by commit 6596a0229541270fb8d38d989f91b78838e5e9da ("xfrm: fix MTU
+>> regression").
+>>
+>> Signed-off-by: Jiri Bohac <jbohac@suse.cz>
 > 
-> I searched the logs generated with all drm debug messages enabled
-> (drm.debug=0x1ff) for "device_class", "ATCS", "atcs", "ATIF", and
-> "atif", for both f1688bd69ec4 and f9b7f3703ff9. Other than the few lines
-> mentioning ATIF from my previous email, there weren't any matches.
-> 
-> Since "device_class" didn't appear in the logs, we know that
-> `amdgpu_atif_handler` was not called for either version.
-> 
-> I also patched f9b7f3703ff9 to add the line
-> 
->   DRM_DEBUG_DRIVER("Entered amdgpu_acpi_pcie_performance_request");
-> 
-> at the top (below the variable declarations) of
-> `amdgpu_acpi_pcie_performance_request`, and then tested again with all
-> drm debug messages enabled (0x1ff). That debug message didn't show up.
-> 
-> So, `amdgpu_acpi_pcie_performance_request` was not called either, at
-> least with f9b7f3703ff9. (I didn't try adding this patch to
-> f1688bd69ec4.)
-> 
-> Would anything else be helpful?
+> Applied, thanks Jiri!
