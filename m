@@ -1,123 +1,87 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575271578
-	for <regressions@lists.linux.dev>; Tue, 15 Feb 2022 15:11:23 +0000 (UTC)
-Received: by mail-oi1-f175.google.com with SMTP id ay7so21013450oib.8
-        for <regressions@lists.linux.dev>; Tue, 15 Feb 2022 07:11:23 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D365D1578
+	for <regressions@lists.linux.dev>; Tue, 15 Feb 2022 16:22:09 +0000 (UTC)
+Received: by mail-pl1-f182.google.com with SMTP id x4so13474209plb.4
+        for <regressions@lists.linux.dev>; Tue, 15 Feb 2022 08:22:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=intel-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9YQRPAi4k/iFjTnhkOawdeChc8Jxz+KtVVHsEeQvPMQ=;
-        b=ItzxVkfaKBUjyxO1uXh4xj2ZwGdGbaMqtSSDmZKvHib4DjOgVEsnYIqCbEEP+wxBFA
-         JXLO3d9McDhcBXrgFSS5V/8+4lykw9HBX8kcTTrcWJkub8etDfmsiFX7agAzxhQZETNr
-         NzSIkTzwbgcOvEBOXn07JgFBCpH00zFCdopLIkWsLxVht/JMhEDhtbEeMYngAL5mmyfp
-         BvGiJEtTlZTUZTWoAYoKj/Z0mzUnwayL6UcHRgCGbBaDlkyV8hYTLOipZFD2vwr3X+FR
-         TXCuNH+kXET33NKYsZ8Aswh7D15Nk8vadbJlWp4zLMQfQY56rKvZ0b8G5YXdQg1JCyNK
-         aT6g==
+        bh=aL1Ai2InGicb7ahZQpdv5e9x/ONiZjtIAS2dF1D0S2o=;
+        b=vNb54qajFSiKeRJfRAser6tmq4YROi3TaW6ql4v5+lZ8250zTZTJH1ttBk7phLtJE/
+         8X1xJ+aPM3gWHECS563y21SvX9Rb3Whn9VDu4xQqfZimFge8tVLTHWpcjfudVT/+xSBt
+         8IJLGbV1EzmvVRGWG1e5Loyjws1+uPfMdm116IGe1i+zsMKsxVCWtIalTFgUB7oct0lF
+         MuOPY3rMbsSUfKYcxS+iakLKgNb9dwlSZ87PA4NY2RqCylJGKpnIAotIGx0GuS7VLpnJ
+         JQm0c9L6L1JUKc9600lOKO4VcrpWaIkoCrIbss4X4+YQQR/UpMGs55jhnNOVQDUDnF39
+         YY1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9YQRPAi4k/iFjTnhkOawdeChc8Jxz+KtVVHsEeQvPMQ=;
-        b=B6OrHYK0X2E1RNHLdZMSVy9L0hA1r7hhgrWT7Sk5KXrYS6Th4jCg1zTL19pWJ99n3T
-         fveczj0uzAFjt8RzpkWjkR6WW+DwQ9VPDASxBcZDA+fNrY/cOCZSj+kdjsClhL8GOh4W
-         euZfzNuQj2fAMSsz3BhzJPxn3acJIBAgFCQCrpMaszvVSggFxb0nLA7vPnag4QC+lyNT
-         Tu2coj+5DwZpGWDC93T1Yx1ZKTqAOZRKSZWqlfnKzS2GxbX65PCuJbSWHVnDKUDhfRZn
-         0osRaEzg9+62WHMG4+0pEaY0XOBa3F2wFkEIY7BLmTkcfWb9jyiLqi7y3OlMmtlWdoE8
-         xL9g==
-X-Gm-Message-State: AOAM532cg7+TmchygIqAOaB/lvy3bB/nl+01R4TW/fzdbd67OzGO5TvA
-	4Wv2PerKi9UcJZNld6J5ofLHvFMY9mrjodTj9yo=
-X-Google-Smtp-Source: ABdhPJyTkQ7L05Us3pEKuyDWpDaje9Z1g8L7k7y80BfzAg2eZQf7tfrTiiSg8A2hv++XjSXxX5yiR/GrtzAmf4TmyKQ=
-X-Received: by 2002:a05:6808:159e:: with SMTP id t30mr1758096oiw.132.1644937882381;
- Tue, 15 Feb 2022 07:11:22 -0800 (PST)
+        bh=aL1Ai2InGicb7ahZQpdv5e9x/ONiZjtIAS2dF1D0S2o=;
+        b=xlYUq7lMUMW2XZl0ykFOE8cwl8pLKBGmNDgbvNvr4PS/dWFwX3wIY+CHl125T2DxLH
+         uQhcqMXaSVivmY1ZOFMpeRUwEN4+fLkwDXLXGoE9c6myN/ZbZcJ0r0RwBttyyBXqYdYN
+         2EkTh3HbBuq93gl6kSv9R0aLT2bjNgA6FyMTN7McEz9xueiwWQanQExhptL9YDuIu/8t
+         Ssjyx7gXReE4Ty9TO2XZDFWdrXBobyXhasksSGqCwNd7OPp9xzqHX15+OBhdE/58kkvh
+         q8tTne6QW4t7e/WPvZgSk+roGbVpyAf+xPQyriCFtZSPLCpbNubh9+XfYaQwV1Yhqylq
+         2Dbg==
+X-Gm-Message-State: AOAM531SJTyJgIUmHp15pIZOcwJp1x+qdHRvY/p6Wg+AWFjmgQ10Reuw
+	/Ld/Ajza1pgLvUHKBV8B+rN1qhFjF6XFX2ryiCtRZA==
+X-Google-Smtp-Source: ABdhPJycTIiQcI++KSnaRXdKC1+/Za2TF78mUkZ2Pq3jl1G9S9TZeJkyWRyx3RI9dH9/htg5W9HUadriJMCICjLWGTY=
+X-Received: by 2002:a17:902:ce12:: with SMTP id k18mr4872669plg.34.1644942129125;
+ Tue, 15 Feb 2022 08:22:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <87ee57c8fu.fsf@turner.link> <acd2fd5e-d622-948c-82ef-629a8030c9d8@leemhuis.info>
- <87a6ftk9qy.fsf@dmarc-none.turner.link> <87zgnp96a4.fsf@turner.link>
- <fc2b7593-db8f-091c-67a0-ae5ffce71700@leemhuis.info> <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
- <87czkk1pmt.fsf@dmarc-none.turner.link> <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
- <87sftfqwlx.fsf@dmarc-none.turner.link> <BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
- <87ee4wprsx.fsf@turner.link> <4b3ed7f6-d2b6-443c-970e-d963066ebfe3@amd.com>
- <87pmo8r6ob.fsf@turner.link> <5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
-In-Reply-To: <5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Tue, 15 Feb 2022 10:11:11 -0500
-Message-ID: <CADnq5_MCKTLOfWKWvi94Q9-d5CGdWBoWVxEYL3YXOpMiPnLOyg@mail.gmail.com>
-Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
- PCI-passed-through to Windows VM
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Jim Turner <linuxkernel.foss@dmarc-none.turner.link>, 
-	"Lazar, Lijo" <lijo.lazar@amd.com>, "Deucher, Alexander" <Alexander.Deucher@amd.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	Greg KH <gregkh@linuxfoundation.org>, "Pan, Xinhui" <Xinhui.Pan@amd.com>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
-	Alex Williamson <alex.williamson@redhat.com>, "Koenig, Christian" <Christian.Koenig@amd.com>
+References: <55f5c077-061c-7e53-b02d-53dde1dd654f@molgen.mpg.de>
+In-Reply-To: <55f5c077-061c-7e53-b02d-53dde1dd654f@molgen.mpg.de>
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Tue, 15 Feb 2022 08:22:02 -0800
+Message-ID: <CAPcyv4jSP4PTehMdkcpZfpDcz1HZ0ekjx+WztOiqpwGFU-1iBg@mail.gmail.com>
+Subject: Re: New warning: ACPI: CEDT not present
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Linux ACPI <linux-acpi@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 15, 2022 at 9:56 AM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
+On Mon, Feb 14, 2022 at 11:52 PM Paul Menzel <pmenzel@molgen.mpg.de> wrote:
 >
-> Top-posting for once, to make this easy accessible to everyone.
+> #regzbot introduced: 2d03e46a4bad20191d07b83ec1242d5f002577be
 >
-> Nothing happened here for two weeks now afaics. Was the discussion moved
-> elsewhere or did it fall through the cracks?
+> Dear Dan,
 >
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 >
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
+> On the Dell Latitude E7250, Linux 5.17-rc3 logs the warning below
+> (`dmesg --level=warn`):
 >
-> On 30.01.22 01:25, Jim Turner wrote:
-> > Hi Lijo,
-> >
-> >> Specifically, I was looking for any events happening at these two
-> >> places because of the patch-
-> >>
-> >> https://elixir.bootlin.com/linux/v5.16/source/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c#L411
-> >>
-> >> https://elixir.bootlin.com/linux/v5.16/source/drivers/gpu/drm/amd/amdgpu/amdgpu_acpi.c#L653
-> >
-> > I searched the logs generated with all drm debug messages enabled
-> > (drm.debug=0x1ff) for "device_class", "ATCS", "atcs", "ATIF", and
-> > "atif", for both f1688bd69ec4 and f9b7f3703ff9. Other than the few lines
-> > mentioning ATIF from my previous email, there weren't any matches.
-> >
-> > Since "device_class" didn't appear in the logs, we know that
-> > `amdgpu_atif_handler` was not called for either version.
-> >
-> > I also patched f9b7f3703ff9 to add the line
-> >
-> >   DRM_DEBUG_DRIVER("Entered amdgpu_acpi_pcie_performance_request");
-> >
-> > at the top (below the variable declarations) of
-> > `amdgpu_acpi_pcie_performance_request`, and then tested again with all
-> > drm debug messages enabled (0x1ff). That debug message didn't show up.
-> >
-> > So, `amdgpu_acpi_pcie_performance_request` was not called either, at
-> > least with f9b7f3703ff9. (I didn't try adding this patch to
-> > f1688bd69ec4.)
-> >
-> > Would anything else be helpful?
+>      ACPI: CEDT not present
+>
+> I think commit 2d03e46a4bad (ACPI: Add a context argument for table
+> parsing handlers), part of Linux since 5.17-rc1, is the reason.
+>
+> If I understand it correctly, CEDT is not to be expected on older
+> devices, so the warning is not justified. Can something be done about it?
 
-I guess just querying the ATIF method does something that negatively
-influences the windows driver in the guest.  Perhaps the platform
-thinks the driver has been loaded since the method has been called so
-it enables certain behaviors that require ATIF interaction that never
-happen because the ACPI methods are not available in the guest.  I
-don't really have a good workaround other than blacklisting the driver
-since on bare metal the driver needs to use this interface for
-platform interactions.
+Rafael,
 
-Alex
+I'm inclined to just delete the warning altogether, but special casing
+is also an option. Any preference?
+
+diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
+index 0741a4933f62..fb2e4a216154 100644
+--- a/drivers/acpi/tables.c
++++ b/drivers/acpi/tables.c
+@@ -399,7 +399,7 @@ int __init_or_acpilib acpi_table_parse_entries_array(
+                instance = acpi_apic_instance;
+
+        acpi_get_table(id, instance, &table_header);
+-       if (!table_header) {
++       if (!table_header && strcmp(id, ACPI_SIG_CEDT) != 0) {
+                pr_warn("%4.4s not present\n", id);
+                return -ENODEV;
+        }
