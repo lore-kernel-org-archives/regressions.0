@@ -1,142 +1,111 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-oo1-f53.google.com (mail-oo1-f53.google.com [209.85.161.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84142905
-	for <regressions@lists.linux.dev>; Wed, 16 Feb 2022 14:40:44 +0000 (UTC)
-Received: by mail-ed1-f41.google.com with SMTP id u18so4272021edt.6
-        for <regressions@lists.linux.dev>; Wed, 16 Feb 2022 06:40:44 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1F6187D
+	for <regressions@lists.linux.dev>; Wed, 16 Feb 2022 16:37:19 +0000 (UTC)
+Received: by mail-oo1-f53.google.com with SMTP id f11-20020a4abb0b000000b002e9abf6bcbcso3130344oop.0
+        for <regressions@lists.linux.dev>; Wed, 16 Feb 2022 08:37:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jwCOPh0vRYc0rMMINwUc1NnDsZj7q4kEpI6uYr3S44w=;
-        b=ZxEdZA1qN1/D+uanHD1nOwRY1fjdnFNilLiq3Az4CxUoOImnImATPgyQJK5MLdNwVu
-         T820pMXYvYBR4unh3scc2DzLbJCnWi+Klwa8nKTsuFgobjtOuH1RmMyZ54oVKR0tWg37
-         3E1H6tNypf4SCf5jMu0PWDitey3D1xJovQWBgIstmxvEbtO2WmtXBvx/jYDLrruvHFXN
-         XRfDM1/Zs0x/fJzrkmuNYHaOTYq3AqBYFhiUNw1UIo0p5Ua6Nz0L0WY8yXRjSfp/vS/t
-         fwrCsP3HpVZKqdp7BDlP7A/Funrb4gdyMGEQlv9eJyezwn29MKErNtlNNnmbkQMARhQl
-         LNyA==
+        bh=QVJo0VFJhyQRasFCmFQo5AdI87REHk9Jchlt43vXjKo=;
+        b=o9aG/mtta5HuiQWh325l/DM5Yl1sisnMB3rpsfvhVienTy3bsmwDxOjcDeZQoRuuWl
+         VIGNhuDHr8823gONBly/lVupj6Ylp5mNoKXZhiq6GtPQwO/8p2SrawX3HKrvNS+SFU03
+         g1P+vRDQvAozJdFedV2PvSDq9mcgsUDfpe1YzEW0FeiJThALWya4GlnuaOyT0MM7Bnj7
+         Gsa9S+ydNYpi/XS9X6F1tnglTRIq29AMtX3g2JNP8O+/FVa+r4BuOzO5Izsk0ZmC1zQt
+         aVMP7oF6vq5R3JES2jNtFbjyyjiVI2mqQNE8NwvGH/8Rl9aQ3+92iqn66PKMS305SwTH
+         GGyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jwCOPh0vRYc0rMMINwUc1NnDsZj7q4kEpI6uYr3S44w=;
-        b=jkVVabDQp+kT/XSyawRPkCJGcCm9eD+uCE1K9QPiju1K9ID0pb1UOarfMOy3QXiqdk
-         jZxOk1N+KSs1YnzZDda8WjaiAkd6JzHBpMLVCbF29aPNks1VEtepcgphH60zr4FqwSqO
-         8kEGpgkC3lH08bXwmOI1+5WOnnqNRetTIL5rjTsyu/cOHw7DGCLshz17AFBRuyaBwg20
-         yv1j269ua3iEeq/G65VpruiTDX0F8QJNUMsNwJ4v5RmHIehYVbvxLxR5AHTrcujHWz+g
-         ilF8z5Ds/TQidQB/71Zrk4Rl+HwlcbeihL1nqAPg2LL6Kn+g6S4lFW2RAfNyLjfwFkZX
-         Kx9Q==
-X-Gm-Message-State: AOAM5325wlrZbvmbP10Om9W0KZTZaSGTrWMFM4E1pAwfFLH0UXJnd3gm
-	xeHCe9tLFGWh0/sXI45bgPyR7mplpU2hYkuQtjn2Rg==
-X-Google-Smtp-Source: ABdhPJxkkCo2WKdfCWHk8mNzhrjwtKZpMi6oKRXESBDBJAJ5jIQfE8MBX1Wwhu/L4VqMuHCiMjQdEOrhBapf0MBbar0=
-X-Received: by 2002:a50:fc81:0:b0:408:4c2d:bf69 with SMTP id
- f1-20020a50fc81000000b004084c2dbf69mr3321789edq.229.1645022442889; Wed, 16
- Feb 2022 06:40:42 -0800 (PST)
+        bh=QVJo0VFJhyQRasFCmFQo5AdI87REHk9Jchlt43vXjKo=;
+        b=WNMhKuBTU+CamegoLJUVSxHsssmvv5m/ZIDONKSKiC9i6m1pajdKW7qEybIiFJ3Nqi
+         DSZJJTJ3eGD5K3klSKYx4w97NDq64h8JSiXiCXvz/tZ59ECoEpb8y7KRcGox6EiRSNdx
+         6CLa0qMO9vAhslmt35Sl6+hASh/6Mkzm7SAT1GoB9THD84LOiRKAFb2FbUCQSdjYPJgk
+         83VW9DZJIR8lgfnsocqk+l9GAtSm9o/BviXq9KMX7v0jPCRzAr6WmrnvQCBXj2SmJBUa
+         6k+SJr/2K6s0P+A36v9nb8CWvqckbJl0Os8UEOpbwA+pfbyB7vnxATT6XHRACJp8FqHE
+         4kfQ==
+X-Gm-Message-State: AOAM530lr7KUb4/yDZ5WB9uVtiFKliWxPX0xcA7QTHjwI+sjpIj6qlVg
+	LRC84lMFvAGE3helvqoAyjFerCzEffPkbuLUgCw=
+X-Google-Smtp-Source: ABdhPJycQHkXN1b0MoHaobK4fp+okKEzXqgNVm8W8ErlXKTvwdyKfZ9ma3ncW2ari5hRNoahvFdsiOlXkDZ5yGF7YSg=
+X-Received: by 2002:a05:6870:912c:b0:d3:44be:7256 with SMTP id
+ o44-20020a056870912c00b000d344be7256mr847903oae.73.1645029439081; Wed, 16 Feb
+ 2022 08:37:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
- <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
- <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
- <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com> <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
-In-Reply-To: <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 16 Feb 2022 15:40:32 +0100
-Message-ID: <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>, stable <stable@vger.kernel.org>, 
-	regressions@lists.linux.dev, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, 
-	Vidya Sagar <vidyas@nvidia.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Edmond Chung <edmondchung@google.com>, 
-	Andrew Chant <achant@google.com>, Will McVicker <willmcvicker@google.com>, 
-	Sergio Tanzilli <tanzilli@acmesystems.it>
+References: <87ee57c8fu.fsf@turner.link> <acd2fd5e-d622-948c-82ef-629a8030c9d8@leemhuis.info>
+ <87a6ftk9qy.fsf@dmarc-none.turner.link> <87zgnp96a4.fsf@turner.link>
+ <fc2b7593-db8f-091c-67a0-ae5ffce71700@leemhuis.info> <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
+ <87czkk1pmt.fsf@dmarc-none.turner.link> <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
+ <87sftfqwlx.fsf@dmarc-none.turner.link> <BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
+ <87ee4wprsx.fsf@turner.link> <4b3ed7f6-d2b6-443c-970e-d963066ebfe3@amd.com>
+ <87pmo8r6ob.fsf@turner.link> <5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
+ <CADnq5_MCKTLOfWKWvi94Q9-d5CGdWBoWVxEYL3YXOpMiPnLOyg@mail.gmail.com> <87pmnnpmh5.fsf@dmarc-none.turner.link>
+In-Reply-To: <87pmnnpmh5.fsf@dmarc-none.turner.link>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Wed, 16 Feb 2022 11:37:07 -0500
+Message-ID: <CADnq5_NG_dQCYwqHM0umjTMg5Uud6zC4=MiscH91Y9v7mW9bJA@mail.gmail.com>
+Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
+ PCI-passed-through to Windows VM
+To: "James D. Turner" <linuxkernel.foss@dmarc-none.turner.link>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, "Lazar, Lijo" <lijo.lazar@amd.com>, 
+	"Deucher, Alexander" <Alexander.Deucher@amd.com>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	Greg KH <gregkh@linuxfoundation.org>, "Pan, Xinhui" <Xinhui.Pan@amd.com>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>, 
+	Alex Williamson <alex.williamson@redhat.com>, "Koenig, Christian" <Christian.Koenig@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Tue, Feb 15, 2022 at 9:35 PM James D. Turner
+<linuxkernel.foss@dmarc-none.turner.link> wrote:
 >
-> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
-> <marcelo.jimenez@gmail.com> wrote:
-> > On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> Hi Alex,
 >
-> > > I am curious about the usecases and how deeply you have built
-> > > yourselves into this.
-> >
-> > I don't know if I understand what you mean, sorry.
+> > I guess just querying the ATIF method does something that negatively
+> > influences the windows driver in the guest. Perhaps the platform
+> > thinks the driver has been loaded since the method has been called so
+> > it enables certain behaviors that require ATIF interaction that never
+> > happen because the ACPI methods are not available in the guest.
 >
-> Why does the user need the sysfs ABI? What is it used for?
->
-> I.e what is the actual use case?
->
-> > > > In any case, the upstream file should be enough to test the issue reported here.
-> > >
-> > > The thing is that upstream isn't super happy that you have been
-> > > making yourselves dependent on features that we are actively
-> > > discouraging and then demanding that we support these features.
-> >
-> > Hum, demanding seems to be a strong word for what I am doing here.
-> >
-> > Deprecated should not mean broken. My point is: the API seems to be
-> > currently broken. User space apps got broken, that's a fact. I even
-> > took the time to bisect the kernel and show you which commit broke it.
-> > So, no, I am not demanding. More like reporting and providing a
-> > temporary solution to those with a similar problem.
-> >
-> > Maybe it is time to remove the API, but this is up to "upstream".
-> > Leaving the API broken seems pointless and unproductive.
-> >
-> > Sorry for the "not super happiness of upstream", but maybe upstream
-> > got me wrong.
-> >
-> > We are not "making ourselves dependent on features ...". The API was
-> > there. We used it. Now it is deprecated, ok, we should move on. I got
-> > the message.
->
-> Ouch I deserved some slamming for this.
->
-> I'm sorry if I came across as harsh :(
->
-> I just don't know how to properly push for this.
->
-> I have even pushed the option of the deprecated sysfs ABI
-> behind the CONFIG_EXPERT option, which should mean that
-> the kernel config has been made by someone who has checked
-> the option "yes I am an expert I know what I am doing"
-> yet failed to observe that this ABI is obsoleted since 5 years
-> and hence failed to be an expert.
->
-> Of course the ABI (not API really) needs to be fixed if we can find the
-> problem. It's frustrating that fixing it seems to fix broken other
-> features which are not deprecated, hence the annoyance on my
-> part.
->
+> Do you mean the `amdgpu_atif_pci_probe_handle` function? If it would be
+> helpful, I could try disabling that function and testing again.
 
-I'm afraid we'll earn ourselves a good old LinusRant if we keep
-pushing the character device as a solution to the problem here.
-Marcelo is right after all: he used an existing user interface, the
-interface broke, it must be fixed.
+Correct.
 
-I would prefer to find a solution that fixes Marcelo's issue while
-keeping the offending patches in tree but it seems like the issue is
-more complicated and will require some rework of the sysfs interface.
-
-In which case unless there are objections I lean towards reverting the
-relevant commits.
-
-Bart
-
-> > And I will also tell the dev team that they must use the GPIO char dev
-> > and libgpiod from now on and must port everything to it. And we will
-> > likely have another group of people who are not super happy, but
-> > that's life... :)
 >
-> I'm happy to hear this!
+> > I don't really have a good workaround other than blacklisting the
+> > driver since on bare metal the driver needs to use this interface for
+> > platform interactions.
 >
-> Yours,
-> Linus Walleij
+> I'm not familiar with ATIF, but should `amdgpu_atif_pci_probe_handle`
+> really be called for PCI devices which are bound to vfio-pci? I'd expect
+> amdgpu to ignore such devices.
+>
+> As I understand it, starting with
+> f9b7f3703ff9 ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)"),
+> the `amdgpu_acpi_detect` function loops over all PCI devices in the
+> `PCI_CLASS_DISPLAY_VGA` and `PCI_CLASS_DISPLAY_OTHER` classes to find
+> the ATIF and ATCS handles. Maybe skipping over any PCI devices bound to
+> vfio-pci would fix the issue? On a related note, shouldn't it also skip
+> over any PCI devices with non-AMD vendor IDs?
+
+The ACPI methods are global.  There's only one instance of each per
+system and they are relevant to add GPUs on the platform.  That's why
+they are a global resource in the driver.  They can be hung off of the
+dGPU or APU ACPI namespace, depending on the platform which is why we
+check all of the display devices.  Skipping them would prevent them
+from being available if you later bound the amdgpu driver to the GPU
+device(s) I think.
+
+Alex
+
+>
+> Regards,
+> James
