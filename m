@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA6923BC
-	for <regressions@lists.linux.dev>; Wed, 16 Feb 2022 08:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315F923C1
+	for <regressions@lists.linux.dev>; Wed, 16 Feb 2022 09:34:43 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nKFv4-00018D-Q4; Wed, 16 Feb 2022 09:44:14 +0100
-Message-ID: <d45e38db-205f-3400-af09-aa0bb1624975@leemhuis.info>
-Date: Wed, 16 Feb 2022 09:44:14 +0100
+	id 1nKGht-0005cV-Dy; Wed, 16 Feb 2022 10:34:41 +0100
+Message-ID: <6be286ae-5fdd-5545-c35c-3443e07f76c5@leemhuis.info>
+Date: Wed, 16 Feb 2022 10:34:41 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,139 +16,100 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: [regression, stable] Re: Bug 215562 - BUG: unable to handle page
- fault in cache_reap (fwd from bugzilla)
+Subject: Re: [Regression 5.17-rc2] Symlink on NFS mount to directory on other
+ NFS mount not resolved on first access #forregzbot
 Content-Language: en-BS
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <bd2075f0-2343-5bfa-83bf-0e916303727d@molgen.mpg.de>
+ <0235e04a-18aa-ccbf-f520-38a2d55e8b54@molgen.mpg.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Linux-MM <linux-mm@kvack.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <062f4a59-2d41-9a6f-8c7c-42fc5773e282@leemhuis.info>
-In-Reply-To: <062f4a59-2d41-9a6f-8c7c-42fc5773e282@leemhuis.info>
+In-Reply-To: <0235e04a-18aa-ccbf-f520-38a2d55e8b54@molgen.mpg.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645001057;3fd313f4;
-X-HE-SMSGID: 1nKFv4-00018D-Q4
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645004083;99605a11;
+X-HE-SMSGID: 1nKGht-0005cV-Dy
 
-Hi, this is your Linux kernel regression tracker speaking. Top-posting
-for once, to make this easy accessible to everyone.
+for the record:
 
-Below issue that started to happen between v5.10.80..v5.10.90 was
-recently reported to bugzilla, but the reporter didn't even get a single
-reply afaics. Could somebody maybe take a look? Bisection is likely no
-easy in this case, so a few tips to narrow down the area to search might
-help a lot here.
+#regzbot fixed-by: e0caaf75d443e02e55e146fd75fe2efc8aed5540
 
-https://bugzilla.kernel.org/show_bug.cgi?id=215562
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=e0caaf75d443e02e55e146fd75fe2efc8aed5540
 
-Ciao, Thorsten
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-
-On 03.02.22 16:03, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker speaking.
+On 08.02.22 19:13, Paul Menzel wrote:
+> Dear Linux folks,
 > 
-> There is a regression in bugzilla.kernel.org I'd like to add to the
-> tracking:
 > 
-> #regzbot introduced: v5.10.80..v5.10.90
-> #regzbot from: Patrick Schaaf <kernelorg@bof.de>
-> #regzbot title: mm: unable to handle page fault in cache_reap
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215562
+> Am 08.02.22 um 15:36 schrieb Paul Menzel:
+>> #regzbot introduced: ac795161c93699d600db16c1a8cc23a65a1eceaf
 > 
-> Quote:
 > 
->> We've been running self-built 5.10.x kernels on DL380 hosts for quite a while, also inside the VMs there.
+>> Commit ac795161c936 (NFSv4: Handle case where the lookup of a
+>> directory fails) [1], part of Linux since 5.17-rc2, introduced a
+>> regression, where a symbolic link on an NFS mount to a directory on
+>> another NFS does not resolve(?) the first time it is accessed:
+> 
+> I forgot to include, that we are using autofs/automount for these
+> directories.
+> 
+>> ```
+>> $ ls -dl /src/mariux/beeroot/build-archives
+>> lrwxrwxrwx 1 root root 39 May  5  2021
+>> /src/mariux/beeroot/build-archives ->
+>> /src/mariux_data/beeroot/build-archives
+>> $ df /src/mariux{,_data}
+>> Filesystem                                           1K-blocks Used  
+>> Available Use% Mounted on
+>> macheteinfach:/amd/macheteinfach/1/src/mariux      17575970816
+>> 2930189312 14645781504  17% /src/mariux
+>> macheteinfach:/amd/macheteinfach/1/src/mariux_data 17575970816
+>> 2930189312 14645781504  17% /src/mariux_data
 >>
->> With I think 5.10.90 three weeks or so back, we experienced a lockup upon umounting a larger, dirty filesystem on the host side, unfortunately without capturing a backtrace back then.
+>> $ sudo umount /src/mariux /src/mariux_data
+>> $ echo /src/mariux/beeroot/build-archives/*5.17*
+>> /src/mariux/beeroot/build-archives/*5.17*
+>> $ strace -e openat echo /src/mariux/beeroot/build-archives/*5.17*
+>> openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+>> openat(AT_FDCWD, "/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+>> openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC)
+>> = 3
+>> /src/mariux/beeroot/build-archives/*5.17*
+>> +++ exited with 0 +++
+>> $ echo /src/mariux/beeroot/build-archives/*5.17*
+>> /src/mariux/beeroot/build-archives/linux-5.17_rc1-423.x86_64.beebuild.tar.bz2
+>> /src/mariux/beeroot/build-archives/linux-5.17_rc2-424.x86_64.beebuild.tar.bz2
+>> /src/mariux/beeroot/build-archives/linux-5.17_rc3-426.x86_64.beebuild.tar.bz2
+>> /src/mariux/beeroot/build-archives/mariux64-caret_R-3.0.2-5.17_7-0.x86_64.beebuild.tar.bz2
 >>
->> Today something feeling similar, happened again, on a machine running 5.10.93 both on the host and inside its 10 various VMs.
 >>
->> Problem showed shortly (minutes) after shutting down one of the VMs (few hundred GB memory / dataset, VM shutdown was complete already; direct I/O), and then some LVM volume renames, a quick short outside ext4 mount followed by an umount (8 GB volume, probably a few hundred megabyte only to write). Actually monitoring suggests that disk writes were already done about a minute before the onset.
+>> Using a dot in the path works around the issue:
 >>
->> What we then experienced, was the following BUG:, followed by one after the other CPU saying goodbye with soft lockup messages over the course of a few minutes; meanwhile there was no more pinging the box, logging in on console, etc. We hard powercycled and it recovered fully.
+>> ```
+>> $ sudo umount /src/mariux /src/mariux_data
+>> $ strace -e openat echo /src/mariux/beeroot/build-archives/./*5.17*
+>> openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+>> openat(AT_FDCWD, "/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+>> openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC)
+>> = 3
+>> /src/mariux/beeroot/build-archives/./linux-5.17_rc1-423.x86_64.beebuild.tar.bz2
+>> /src/mariux/beeroot/build-archives/./linux-5.17_rc2-424.x86_64.beebuild.tar.bz2
+>> /src/mariux/beeroot/build-archives/./linux-5.17_rc3-426.x86_64.beebuild.tar.bz2
+>> /src/mariux/beeroot/build-archives/./mariux64-caret_R-3.0.2-5.17_7-0.x86_64.beebuild.tar.bz2
 >>
->> here's the BUG that was logged; if it is useful for someone to see the followup soft lockup messages, tell me + I'll add them.
->>
->> Feb 02 15:22:27 kvm3j kernel: BUG: unable to handle page fault for address: ffffebde00000008
->> Feb 02 15:22:27 kvm3j kernel: #PF: supervisor read access in kernel mode
->> Feb 02 15:22:27 kvm3j kernel: #PF: error_code(0x0000) - not-present page
->> Feb 02 15:22:27 kvm3j kernel: Oops: 0000 [#1] SMP PTI
->> Feb 02 15:22:27 kvm3j kernel: CPU: 7 PID: 39833 Comm: kworker/7:0 Tainted: G          I       5.10.93-kvm #1
->> Feb 02 15:22:27 kvm3j kernel: Hardware name: HP ProLiant DL380p Gen8, BIOS P70 12/20/2013
->> Feb 02 15:22:27 kvm3j kernel: Workqueue: events cache_reap
->> Feb 02 15:22:27 kvm3j kernel: RIP: 0010:free_block.constprop.0+0xc0/0x1f0
->> Feb 02 15:22:27 kvm3j kernel: Code: 4c 8b 16 4c 89 d0 48 01 e8 0f 82 32 01 00 00 4c 89 f2 48 bb 00 00 00 00 00 ea ff ff 48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 01 d8 <48> 8b 50 08 48 8d 4a ff 83 e2 01 48 >
->> Feb 02 15:22:27 kvm3j kernel: RSP: 0018:ffffc9000252bdc8 EFLAGS: 00010086
->> Feb 02 15:22:27 kvm3j kernel: RAX: ffffebde00000000 RBX: ffffea0000000000 RCX: ffff888889141b00
->> Feb 02 15:22:27 kvm3j kernel: RDX: 0000777f80000000 RSI: ffff893d3edf3400 RDI: ffff8881000403c0
->> Feb 02 15:22:27 kvm3j kernel: RBP: 0000000080000000 R08: ffff888100041300 R09: 0000000000000003
->> Feb 02 15:22:27 kvm3j kernel: R10: 0000000000000000 R11: ffff888100041308 R12: dead000000000122
->> Feb 02 15:22:27 kvm3j kernel: R13: dead000000000100 R14: 0000777f80000000 R15: ffff893ed8780d60
->> Feb 02 15:22:27 kvm3j kernel: FS:  0000000000000000(0000) GS:ffff893d3edc0000(0000) knlGS:0000000000000000
->> Feb 02 15:22:27 kvm3j kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> Feb 02 15:22:27 kvm3j kernel: CR2: ffffebde00000008 CR3: 000000048c4aa002 CR4: 00000000001726e0
->> Feb 02 15:22:27 kvm3j kernel: Call Trace:
->> Feb 02 15:22:27 kvm3j kernel:  drain_array_locked.constprop.0+0x2e/0x80
->> Feb 02 15:22:27 kvm3j kernel:  drain_array.constprop.0+0x54/0x70
->> Feb 02 15:22:27 kvm3j kernel:  cache_reap+0x6c/0x100
->> Feb 02 15:22:27 kvm3j kernel:  process_one_work+0x1cf/0x360
->> Feb 02 15:22:27 kvm3j kernel:  worker_thread+0x45/0x3a0
->> Feb 02 15:22:27 kvm3j kernel:  ? process_one_work+0x360/0x360
->> Feb 02 15:22:27 kvm3j kernel:  kthread+0x116/0x130
->> Feb 02 15:22:27 kvm3j kernel:  ? kthread_create_worker_on_cpu+0x40/0x40
->> Feb 02 15:22:27 kvm3j kernel:  ret_from_fork+0x22/0x30
->> Feb 02 15:22:27 kvm3j kernel: Modules linked in: hpilo
->> Feb 02 15:22:27 kvm3j kernel: CR2: ffffebde00000008
->> Feb 02 15:22:27 kvm3j kernel: ---[ end trace ded3153d86a92898 ]---
->> Feb 02 15:22:27 kvm3j kernel: RIP: 0010:free_block.constprop.0+0xc0/0x1f0
->> Feb 02 15:22:27 kvm3j kernel: Code: 4c 8b 16 4c 89 d0 48 01 e8 0f 82 32 01 00 00 4c 89 f2 48 bb 00 00 00 00 00 ea ff ff 48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 01 d8 <48> 8b 50 08 48 8d 4a ff 83 e2 01 48 >
->> Feb 02 15:22:27 kvm3j kernel: RSP: 0018:ffffc9000252bdc8 EFLAGS: 00010086
->> Feb 02 15:22:27 kvm3j kernel: RAX: ffffebde00000000 RBX: ffffea0000000000 RCX: ffff888889141b00
->> Feb 02 15:22:27 kvm3j kernel: RDX: 0000777f80000000 RSI: ffff893d3edf3400 RDI: ffff8881000403c0
->> Feb 02 15:22:27 kvm3j kernel: RBP: 0000000080000000 R08: ffff888100041300 R09: 0000000000000003
->> Feb 02 15:22:27 kvm3j kernel: R10: 0000000000000000 R11: ffff888100041308 R12: dead000000000122
->> Feb 02 15:22:27 kvm3j kernel: R13: dead000000000100 R14: 0000777f80000000 R15: ffff893ed8780d60
->> Feb 02 15:22:27 kvm3j kernel: FS:  0000000000000000(0000) GS:ffff893d3edc0000(0000) knlGS:0000000000000000
->> Feb 02 15:22:27 kvm3j kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> Feb 02 15:22:27 kvm3j kernel: CR2: ffffebde00000008 CR3: 000000048c4aa002 CR4: 00000000001726e0
+>> +++ exited with 0 +++
+>> ```
 > 
-> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
 > 
-> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-> on my table. I can only look briefly into most of them. Unfortunately
-> therefore I sometimes will get things wrong or miss something important.
-> I hope that's not the case here; if you think it is, don't hesitate to
-> tell me about it in a public reply, that's in everyone's interest.
+> Kind regards,
 > 
-> BTW, I have no personal interest in this issue, which is tracked using
-> regzbot, my Linux kernel regression tracking bot
-> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> this mail to get things rolling again and hence don't need to be CC on
-> all further activities wrt to this regression.
+> Paul
 > 
-> ---
-> Additional information about regzbot:
 > 
-> If you want to know more about regzbot, check out its web-interface, the
-> getting start guide, and/or the references documentation:
+>> [1]:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ac795161c93699d600db16c1a8cc23a65a1eceaf
 > 
-> https://linux-regtracking.leemhuis.info/regzbot/
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
 > 
-> The last two documents will explain how you can interact with regzbot
-> yourself if your want to.
 > 
-> Hint for reporters: when reporting a regression it's in your interest to
-> tell #regzbot about it in the report, as that will ensure the regression
-> gets on the radar of regzbot and the regression tracker. That's in your
-> interest, as they will make sure the report won't fall through the
-> cracks unnoticed.
-> 
-> Hint for developers: you normally don't need to care about regzbot once
-> it's involved. Fix the issue as you normally would, just remember to
-> include a 'Link:' tag to the report in the commit message, as explained
-> in Documentation/process/submitting-patches.rst
-> That aspect was recently was made more explicit in commit 1f57bd42b77c:
-> https://git.kernel.org/linus/1f57bd42b77c
