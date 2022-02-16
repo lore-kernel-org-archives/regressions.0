@@ -1,115 +1,73 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315F923C1
-	for <regressions@lists.linux.dev>; Wed, 16 Feb 2022 09:34:43 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nKGht-0005cV-Dy; Wed, 16 Feb 2022 10:34:41 +0100
-Message-ID: <6be286ae-5fdd-5545-c35c-3443e07f76c5@leemhuis.info>
-Date: Wed, 16 Feb 2022 10:34:41 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778C27C
+	for <regressions@lists.linux.dev>; Wed, 16 Feb 2022 11:11:20 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by a.mx.secunet.com (Postfix) with ESMTP id 9BD8F205FC;
+	Wed, 16 Feb 2022 12:02:54 +0100 (CET)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id t3BnLERVqsbf; Wed, 16 Feb 2022 12:02:54 +0100 (CET)
+Received: from mailout2.secunet.com (mailout2.secunet.com [62.96.220.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by a.mx.secunet.com (Postfix) with ESMTPS id 308A2205CF;
+	Wed, 16 Feb 2022 12:02:54 +0100 (CET)
+Received: from cas-essen-02.secunet.de (unknown [10.53.40.202])
+	by mailout2.secunet.com (Postfix) with ESMTP id 2A64C80004A;
+	Wed, 16 Feb 2022 12:02:54 +0100 (CET)
+Received: from mbx-essen-01.secunet.de (10.53.40.197) by
+ cas-essen-02.secunet.de (10.53.40.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.18; Wed, 16 Feb 2022 12:02:53 +0100
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-01.secunet.de
+ (10.53.40.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.18; Wed, 16 Feb
+ 2022 12:02:53 +0100
+Received: by gauss2.secunet.de (Postfix, from userid 1000)
+	id 2A2D73180EF6; Wed, 16 Feb 2022 12:02:53 +0100 (CET)
+Date: Wed, 16 Feb 2022 12:02:52 +0100
+From: Steffen Klassert <steffen.klassert@secunet.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+CC: Jiri Bohac <jbohac@suse.cz>, Sabrina Dubroca <sd@queasysnail.net>,
+	"Herbert Xu" <herbert@gondor.apana.org.au>, "David S. Miller"
+	<davem@davemloft.net>, Mike Maloney <maloneykernel@gmail.com>, Eric Dumazet
+	<eric.dumazet@gmail.com>, <netdev@vger.kernel.org>, Jakub Kicinski
+	<kuba@kernel.org>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>
+Subject: Re: [PATCH] Revert "xfrm: xfrm_state_mtu should return at least 1280
+ for ipv6"
+Message-ID: <20220216110252.GJ17351@gauss3.secunet.de>
+References: <20220114173133.tzmdm2hy4flhblo3@dwarf.suse.cz>
+ <20220114174058.rqhtuwpfhq6czldn@dwarf.suse.cz>
+ <20220119073519.GJ1223722@gauss3.secunet.de>
+ <20220119091233.pzqdlzpcyicjavk5@dwarf.suse.cz>
+ <20220124154531.GM1223722@gauss3.secunet.de>
+ <20220125094102.ju7bhuplcxnkyv4x@dwarf.suse.cz>
+ <20220126064214.GO1223722@gauss3.secunet.de>
+ <20220126150018.7cdfxtkq2nfkqj4j@dwarf.suse.cz>
+ <20220201064639.GS1223722@gauss3.secunet.de>
+ <6da289bf-86a5-44ce-cd19-85529ec1bfe5@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [Regression 5.17-rc2] Symlink on NFS mount to directory on other
- NFS mount not resolved on first access #forregzbot
-Content-Language: en-BS
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <bd2075f0-2343-5bfa-83bf-0e916303727d@molgen.mpg.de>
- <0235e04a-18aa-ccbf-f520-38a2d55e8b54@molgen.mpg.de>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <0235e04a-18aa-ccbf-f520-38a2d55e8b54@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645004083;99605a11;
-X-HE-SMSGID: 1nKGht-0005cV-Dy
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <6da289bf-86a5-44ce-cd19-85529ec1bfe5@leemhuis.info>
+X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
+ mbx-essen-01.secunet.de (10.53.40.197)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 
-for the record:
+On Tue, Feb 15, 2022 at 03:59:38PM +0100, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> The patch discussed below is now in linux-next for about 11 days, but
+> not yet in the net tree afaics. Will it be merged this week? And
 
-#regzbot fixed-by: e0caaf75d443e02e55e146fd75fe2efc8aed5540
-
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=e0caaf75d443e02e55e146fd75fe2efc8aed5540
-
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
-
-On 08.02.22 19:13, Paul Menzel wrote:
-> Dear Linux folks,
-> 
-> 
-> Am 08.02.22 um 15:36 schrieb Paul Menzel:
->> #regzbot introduced: ac795161c93699d600db16c1a8cc23a65a1eceaf
-> 
-> 
->> Commit ac795161c936 (NFSv4: Handle case where the lookup of a
->> directory fails) [1], part of Linux since 5.17-rc2, introduced a
->> regression, where a symbolic link on an NFS mount to a directory on
->> another NFS does not resolve(?) the first time it is accessed:
-> 
-> I forgot to include, that we are using autofs/automount for these
-> directories.
-> 
->> ```
->> $ ls -dl /src/mariux/beeroot/build-archives
->> lrwxrwxrwx 1 root root 39 May  5  2021
->> /src/mariux/beeroot/build-archives ->
->> /src/mariux_data/beeroot/build-archives
->> $ df /src/mariux{,_data}
->> Filesystem                                           1K-blocks Used  
->> Available Use% Mounted on
->> macheteinfach:/amd/macheteinfach/1/src/mariux      17575970816
->> 2930189312 14645781504  17% /src/mariux
->> macheteinfach:/amd/macheteinfach/1/src/mariux_data 17575970816
->> 2930189312 14645781504  17% /src/mariux_data
->>
->> $ sudo umount /src/mariux /src/mariux_data
->> $ echo /src/mariux/beeroot/build-archives/*5.17*
->> /src/mariux/beeroot/build-archives/*5.17*
->> $ strace -e openat echo /src/mariux/beeroot/build-archives/*5.17*
->> openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
->> openat(AT_FDCWD, "/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
->> openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC)
->> = 3
->> /src/mariux/beeroot/build-archives/*5.17*
->> +++ exited with 0 +++
->> $ echo /src/mariux/beeroot/build-archives/*5.17*
->> /src/mariux/beeroot/build-archives/linux-5.17_rc1-423.x86_64.beebuild.tar.bz2
->> /src/mariux/beeroot/build-archives/linux-5.17_rc2-424.x86_64.beebuild.tar.bz2
->> /src/mariux/beeroot/build-archives/linux-5.17_rc3-426.x86_64.beebuild.tar.bz2
->> /src/mariux/beeroot/build-archives/mariux64-caret_R-3.0.2-5.17_7-0.x86_64.beebuild.tar.bz2
->>
->>
->> Using a dot in the path works around the issue:
->>
->> ```
->> $ sudo umount /src/mariux /src/mariux_data
->> $ strace -e openat echo /src/mariux/beeroot/build-archives/./*5.17*
->> openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
->> openat(AT_FDCWD, "/lib/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
->> openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC)
->> = 3
->> /src/mariux/beeroot/build-archives/./linux-5.17_rc1-423.x86_64.beebuild.tar.bz2
->> /src/mariux/beeroot/build-archives/./linux-5.17_rc2-424.x86_64.beebuild.tar.bz2
->> /src/mariux/beeroot/build-archives/./linux-5.17_rc3-426.x86_64.beebuild.tar.bz2
->> /src/mariux/beeroot/build-archives/./mariux64-caret_R-3.0.2-5.17_7-0.x86_64.beebuild.tar.bz2
->>
->> +++ exited with 0 +++
->> ```
-> 
-> 
-> Kind regards,
-> 
-> Paul
-> 
-> 
->> [1]:
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=ac795161c93699d600db16c1a8cc23a65a1eceaf
-> 
-> 
-> 
+It will be merged with the next pull request for the ipsec tree
+that will happen likely next week.
