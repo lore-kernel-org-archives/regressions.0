@@ -1,74 +1,142 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831D42904
-	for <regressions@lists.linux.dev>; Wed, 16 Feb 2022 14:33:13 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nKLMl-0002zq-Dx; Wed, 16 Feb 2022 15:33:11 +0100
-Message-ID: <0db6e3b0-aefb-2896-17d5-fe7aee8d91e6@leemhuis.info>
-Date: Wed, 16 Feb 2022 15:33:11 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B84142905
+	for <regressions@lists.linux.dev>; Wed, 16 Feb 2022 14:40:44 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id u18so4272021edt.6
+        for <regressions@lists.linux.dev>; Wed, 16 Feb 2022 06:40:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jwCOPh0vRYc0rMMINwUc1NnDsZj7q4kEpI6uYr3S44w=;
+        b=ZxEdZA1qN1/D+uanHD1nOwRY1fjdnFNilLiq3Az4CxUoOImnImATPgyQJK5MLdNwVu
+         T820pMXYvYBR4unh3scc2DzLbJCnWi+Klwa8nKTsuFgobjtOuH1RmMyZ54oVKR0tWg37
+         3E1H6tNypf4SCf5jMu0PWDitey3D1xJovQWBgIstmxvEbtO2WmtXBvx/jYDLrruvHFXN
+         XRfDM1/Zs0x/fJzrkmuNYHaOTYq3AqBYFhiUNw1UIo0p5Ua6Nz0L0WY8yXRjSfp/vS/t
+         fwrCsP3HpVZKqdp7BDlP7A/Funrb4gdyMGEQlv9eJyezwn29MKErNtlNNnmbkQMARhQl
+         LNyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jwCOPh0vRYc0rMMINwUc1NnDsZj7q4kEpI6uYr3S44w=;
+        b=jkVVabDQp+kT/XSyawRPkCJGcCm9eD+uCE1K9QPiju1K9ID0pb1UOarfMOy3QXiqdk
+         jZxOk1N+KSs1YnzZDda8WjaiAkd6JzHBpMLVCbF29aPNks1VEtepcgphH60zr4FqwSqO
+         8kEGpgkC3lH08bXwmOI1+5WOnnqNRetTIL5rjTsyu/cOHw7DGCLshz17AFBRuyaBwg20
+         yv1j269ua3iEeq/G65VpruiTDX0F8QJNUMsNwJ4v5RmHIehYVbvxLxR5AHTrcujHWz+g
+         ilF8z5Ds/TQidQB/71Zrk4Rl+HwlcbeihL1nqAPg2LL6Kn+g6S4lFW2RAfNyLjfwFkZX
+         Kx9Q==
+X-Gm-Message-State: AOAM5325wlrZbvmbP10Om9W0KZTZaSGTrWMFM4E1pAwfFLH0UXJnd3gm
+	xeHCe9tLFGWh0/sXI45bgPyR7mplpU2hYkuQtjn2Rg==
+X-Google-Smtp-Source: ABdhPJxkkCo2WKdfCWHk8mNzhrjwtKZpMi6oKRXESBDBJAJ5jIQfE8MBX1Wwhu/L4VqMuHCiMjQdEOrhBapf0MBbar0=
+X-Received: by 2002:a50:fc81:0:b0:408:4c2d:bf69 with SMTP id
+ f1-20020a50fc81000000b004084c2dbf69mr3321789edq.229.1645022442889; Wed, 16
+ Feb 2022 06:40:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: Dual monitor with amd 5700 causes system to,hang at startup (fwd
- from bugzilla) #forregzbot
-Content-Language: en-BS
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <99dc2b1f-2c46-04fb-86ea-92a748e495de@leemhuis.info>
-In-Reply-To: <99dc2b1f-2c46-04fb-86ea-92a748e495de@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645021993;2b056f37;
-X-HE-SMSGID: 1nKLMl-0002zq-Dx
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+ <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
+ <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
+ <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com> <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
+In-Reply-To: <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 16 Feb 2022 15:40:32 +0100
+Message-ID: <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>, stable <stable@vger.kernel.org>, 
+	regressions@lists.linux.dev, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, 
+	Vidya Sagar <vidyas@nvidia.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Edmond Chung <edmondchung@google.com>, 
+	Andrew Chant <achant@google.com>, Will McVicker <willmcvicker@google.com>, 
+	Sergio Tanzilli <tanzilli@acmesystems.it>
+Content-Type: text/plain; charset="UTF-8"
 
-#regzbot fixed-by: c1af59449d80a4f64
+On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
+> <marcelo.jimenez@gmail.com> wrote:
+> > On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> > > I am curious about the usecases and how deeply you have built
+> > > yourselves into this.
+> >
+> > I don't know if I understand what you mean, sorry.
+>
+> Why does the user need the sysfs ABI? What is it used for?
+>
+> I.e what is the actual use case?
+>
+> > > > In any case, the upstream file should be enough to test the issue reported here.
+> > >
+> > > The thing is that upstream isn't super happy that you have been
+> > > making yourselves dependent on features that we are actively
+> > > discouraging and then demanding that we support these features.
+> >
+> > Hum, demanding seems to be a strong word for what I am doing here.
+> >
+> > Deprecated should not mean broken. My point is: the API seems to be
+> > currently broken. User space apps got broken, that's a fact. I even
+> > took the time to bisect the kernel and show you which commit broke it.
+> > So, no, I am not demanding. More like reporting and providing a
+> > temporary solution to those with a similar problem.
+> >
+> > Maybe it is time to remove the API, but this is up to "upstream".
+> > Leaving the API broken seems pointless and unproductive.
+> >
+> > Sorry for the "not super happiness of upstream", but maybe upstream
+> > got me wrong.
+> >
+> > We are not "making ourselves dependent on features ...". The API was
+> > there. We used it. Now it is deprecated, ok, we should move on. I got
+> > the message.
+>
+> Ouch I deserved some slamming for this.
+>
+> I'm sorry if I came across as harsh :(
+>
+> I just don't know how to properly push for this.
+>
+> I have even pushed the option of the deprecated sysfs ABI
+> behind the CONFIG_EXPERT option, which should mean that
+> the kernel config has been made by someone who has checked
+> the option "yes I am an expert I know what I am doing"
+> yet failed to observe that this ABI is obsoleted since 5 years
+> and hence failed to be an expert.
+>
+> Of course the ABI (not API really) needs to be fixed if we can find the
+> problem. It's frustrating that fixing it seems to fix broken other
+> features which are not deprecated, hence the annoyance on my
+> part.
+>
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+I'm afraid we'll earn ourselves a good old LinusRant if we keep
+pushing the character device as a solution to the problem here.
+Marcelo is right after all: he used an existing user interface, the
+interface broke, it must be fixed.
 
-On 22.01.22 09:56, Thorsten Leemhuis wrote:
-> Lo! There is a regression dealt with in bugzilla I'd like to add to the
-> tracking:
-> 
-> #regzbot introduced: v5.15.8..v5.15.13
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215511
-> #regzbot from: Jose Mestre <pmestre@gmail.com>
-> #regzbot title: drm: amdgpu: Dual monitor with amd 5700 causes system to
-> hang at startup.
-> 
-> Note: also present in 5.16.1
-> 
-> Quote:
-> 
->> Hello, system mostly crashes (sometimes in different ways) when i
->> start with more than one monitor attached.
->>
->> If i switch off one monitor then system boots correctly (i don't need
->> to detach the displayport cable, just to switch off the monitor).
->>
->>
->> When both monitors are connected, most of the times it just crashes
->> as the attached log, sometimes it boots but screen is flickering and
->> with artifacts.
->>
->> This happened with kernel 5.10 and 5.11, it was fixed i don't
->> remember exactly when, and is happening again. For me it worked with
->> kernel 5.15.8 and failed with 5.15.13. It is still failing with
->> 5.16.1.
->>
->> Kind regards and many thanks for your work in the most crucial
->> open-source project.
-> 
-> Ciao, Thorsten
-> 
-> TWIMC: this mail is primarily send for documentation purposes and for
-> regzbot, my Linux kernel regression tracking bot. These mails usually
-> contain '#forregzbot' in the subject, to make them easy to spot and filter.
+I would prefer to find a solution that fixes Marcelo's issue while
+keeping the offending patches in tree but it seems like the issue is
+more complicated and will require some rework of the sysfs interface.
+
+In which case unless there are objections I lean towards reverting the
+relevant commits.
+
+Bart
+
+> > And I will also tell the dev team that they must use the GPIO char dev
+> > and libgpiod from now on and must port everything to it. And we will
+> > likely have another group of people who are not super happy, but
+> > that's life... :)
+>
+> I'm happy to hear this!
+>
+> Yours,
+> Linus Walleij
