@@ -1,122 +1,117 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055F31876
-	for <regressions@lists.linux.dev>; Tue, 15 Feb 2022 21:56:14 +0000 (UTC)
-Received: by mail-yb1-f172.google.com with SMTP id j12so216970ybh.8
-        for <regressions@lists.linux.dev>; Tue, 15 Feb 2022 13:56:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EZ5q++YgykAGpmunP4misegIALHkWjqPtYqC2VXU0d0=;
-        b=EJtxPtg7dBta1ocWaVmXeFyVO/Fb3XKx+YPBWIpfdoG8+4qvhGacxIFYFnoRVa9ihX
-         48TG7nxBsmcmuQE75OzQjZInI0jpBDR78nEmbdu6u/Sxj4qmDpL9hbigkZrjgCCHEo2t
-         Dw6pFYQn/jWQu3DqqkFE8L9+/5vJQmAmY/K4SJZE0CbMp1xHthRZ8srcDLxnBELwWvYp
-         6HzczCqa3wRWxfxW/dMldH4MBzMGWaW23FWBO/HqUCJO2HFh1KMEG3sJ/iuSdjc5FScg
-         zL7Yd65Rj13CIDMQ0F/CESvlPi5/+XFBpvq3HV1ZBAHmiS5bnFTzUKu+Wu+a7HY1TzgA
-         PrmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EZ5q++YgykAGpmunP4misegIALHkWjqPtYqC2VXU0d0=;
-        b=BX/8mDt9mky0xcrRqktzcD+nr3WhrSL04T8yvXoM+UJAHPKlzirdBrNUK33ybnMdex
-         CS7T1SCakdBmhp4TLYVmqGX1aj1qSvYLkF3t9u4mtYDRkz4ofvwMwzL4HUkJmWDeZj++
-         VyeAxdQKlQps2EV1Cc42EJiphXoQERojSJmGdMsoeWHNfvpUGqKlfFKA1WsMfMxNRF+y
-         nUQ4Eq70nYkoMUTJFmCrcI4r5fb7Bzdum1VKqc2YRp9JeoP/v8IIEe/DaE+qL55uoQLh
-         ZngSM2D4r5NtX6EVa8L6Xhj6jP9iINo66oX4hgNexXdyOm2sEI44Uh9hjXI0SPPnwGFJ
-         +/IA==
-X-Gm-Message-State: AOAM533l7QUGTHBe5HC6JMIra/CKyaKmoj6kYDSftV0sHem8ncXMwiiy
-	Lj7n2x2FUxFLWzvzG88Jfr5N/O03icKf+WA0UqRn6A==
-X-Google-Smtp-Source: ABdhPJzG0B+DhMonvyx1eAizm9Pr/8IzyJW1KRh1R1rK2yw6uE2Ix/pSISU0TKx7BOD9f6MfvQqvqmB2Bqzfyfuor6U=
-X-Received: by 2002:a5b:f4b:: with SMTP id y11mr866089ybr.634.1644962173974;
- Tue, 15 Feb 2022 13:56:13 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B79271844
+	for <regressions@lists.linux.dev>; Wed, 16 Feb 2022 02:35:37 +0000 (UTC)
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailnew.nyi.internal (Postfix) with ESMTP id 9F8F85807BE;
+	Tue, 15 Feb 2022 21:35:36 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 15 Feb 2022 21:35:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=turner.link; h=
+	cc:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm2; bh=TpzoZfj+lZpZb5YGW+c6JSSTWLLq+cAVLwcjig
+	xN9pY=; b=jiY6nB/NMb6omuUrZ2iOKgx4BbWJggRnkdloVQUzEadTZD6Y3BR7Jk
+	EZTCBJ4BDhiLiWb18ZMU5KT9xwNe8xuCvZEKDxztTdd105SjxyPLXxiZc0SJBMuG
+	c8iRyD9HeafaZyHvEmEpvh3gRBibrxf9++GUFfO6jzIvSNhZQqVNk7FakBL0/nWv
+	ANql/suOXiiUpqutrz1iLxyICCGG91Itt4Z4g1TBAzrim1exHR8N8e/sgMhzx8Zl
+	eYd09z3r0CjAJhsVc7k6gbnARAB3VXOBb6KQnarMlwKmXc4crpvCjsI7v+09LWOu
+	zxoykbDKpDLzcxAEg5g2uye4uSMAop4w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=TpzoZfj+lZpZb5YGW
+	+c6JSSTWLLq+cAVLwcjigxN9pY=; b=h0KErPn8bm9yjFrMk5wE+nKKL/iyvwXec
+	tymAVZw6TaLuzEl7K7QASX8htJQl9wZYj+T7CK1MLW9cHAGfwetvWJ9YcHPdGFiT
+	+eMKUPMX+VVOwjA6t3fvaj6UKa7bbohA7KYJYsQnnXNA8lPpZr9dSs7UAPqb7UYM
+	k7x9FxLj4NUB8P0zw63F6mDvvqUYSmGNUeWT4LElt/7ok6if8OJFIIGO/ucud868
+	q9MGxnNxnIGGk2zWk7/WLmkfd25vdBRpEfzRGoiU0ukiIUUJ71aKHkaBWLJNB+RB
+	VREzWzdcCwCn9Th5o8CZwQ4VGRIhL1jTiQA4glsTiFaXnENq54Opw==
+X-ME-Sender: <xms:-GIMYofFCTNIFq1AeLdSRz6qqWwjIOA1HWmQ0CB5iHvdTE1eAMDrwQ>
+    <xme:-GIMYqOACvUOsMDdVAoKAcyo3sQSQXBQq8zVXPQAXp_7qeOkHMo4-pbrBdsqO01Em
+    7_HDZryHMCR3Z2KdQ>
+X-ME-Received: <xmr:-GIMYpiPr6y8rkkCkM5IKlHorXFG1D_RG5eYtMp9_GM9F55NGBCXd-snTl3V>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrjeehgdegjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpehfhffvufffjgfkgggtsehttdertddttddtnecuhfhrohhmpeflrghmvghsucff
+    rdcuvfhurhhnvghruceolhhinhhugihkvghrnhgvlhdrfhhoshhssegumhgrrhgtqdhnoh
+    hnvgdrthhurhhnvghrrdhlihhnkheqnecuggftrfgrthhtvghrnhepudfhgedvtdduieek
+    tdegieetfefhteeukedvieefteelheevveffgeeutddvkeegnecuvehluhhsthgvrhfuih
+    iivgeptdenucfrrghrrghmpehmrghilhhfrhhomheplhhinhhugihkvghrnhgvlhdrfhho
+    shhssegumhgrrhgtqdhnohhnvgdrthhurhhnvghrrdhlihhnkh
+X-ME-Proxy: <xmx:-GIMYt8fxrYSfpsig9tl3ceOYL_nX_EwxiEMadaX5Wj3xVE4PNpatQ>
+    <xmx:-GIMYkuw1dIcVVUcyvoloB0hbDK4Fuz78dNlZ-BUxFw4N-KulLiIiw>
+    <xmx:-GIMYkEOatGXYXzOwmzkLXts25_mEsiRyt4H6QfyxZaH7P4rMyoMNg>
+    <xmx:-GIMYhNwugAdty2yJUPqUEt1xabyBMcWe0cMxwrZ66jWILoRePewcw>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 15 Feb 2022 21:35:36 -0500 (EST)
+References: <87ee57c8fu.fsf@turner.link>
+ <acd2fd5e-d622-948c-82ef-629a8030c9d8@leemhuis.info>
+ <87a6ftk9qy.fsf@dmarc-none.turner.link> <87zgnp96a4.fsf@turner.link>
+ <fc2b7593-db8f-091c-67a0-ae5ffce71700@leemhuis.info>
+ <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
+ <87czkk1pmt.fsf@dmarc-none.turner.link>
+ <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
+ <87sftfqwlx.fsf@dmarc-none.turner.link>
+ <BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
+ <87ee4wprsx.fsf@turner.link>
+ <4b3ed7f6-d2b6-443c-970e-d963066ebfe3@amd.com>
+ <87pmo8r6ob.fsf@turner.link>
+ <5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
+ <CADnq5_MCKTLOfWKWvi94Q9-d5CGdWBoWVxEYL3YXOpMiPnLOyg@mail.gmail.com>
+From: James D. Turner <linuxkernel.foss@dmarc-none.turner.link>
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, "Lazar, Lijo"
+ <lijo.lazar@amd.com>, "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Greg KH
+ <gregkh@linuxfoundation.org>, "Pan, Xinhui" <Xinhui.Pan@amd.com>, LKML
+ <linux-kernel@vger.kernel.org>, "amd-gfx@lists.freedesktop.org"
+ <amd-gfx@lists.freedesktop.org>, Alex Williamson
+ <alex.williamson@redhat.com>, "Koenig, Christian"
+ <Christian.Koenig@amd.com>
+Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
+ PCI-passed-through to Windows VM
+Date: Tue, 15 Feb 2022 19:25:31 -0500
+In-reply-to: <CADnq5_MCKTLOfWKWvi94Q9-d5CGdWBoWVxEYL3YXOpMiPnLOyg@mail.gmail.com>
+Message-ID: <87pmnnpmh5.fsf@dmarc-none.turner.link>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
- <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
- <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com> <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
-In-Reply-To: <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 15 Feb 2022 22:56:01 +0100
-Message-ID: <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-Cc: stable <stable@vger.kernel.org>, regressions@lists.linux.dev, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>, 
-	Will McVicker <willmcvicker@google.com>, Sergio Tanzilli <tanzilli@acmesystems.it>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 
-On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
-<marcelo.jimenez@gmail.com> wrote:
-> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+Hi Alex,
 
-> > I am curious about the usecases and how deeply you have built
-> > yourselves into this.
->
-> I don't know if I understand what you mean, sorry.
+> I guess just querying the ATIF method does something that negatively
+> influences the windows driver in the guest. Perhaps the platform
+> thinks the driver has been loaded since the method has been called so
+> it enables certain behaviors that require ATIF interaction that never
+> happen because the ACPI methods are not available in the guest.
 
-Why does the user need the sysfs ABI? What is it used for?
+Do you mean the `amdgpu_atif_pci_probe_handle` function? If it would be
+helpful, I could try disabling that function and testing again.
 
-I.e what is the actual use case?
+> I don't really have a good workaround other than blacklisting the
+> driver since on bare metal the driver needs to use this interface for
+> platform interactions.
 
-> > > In any case, the upstream file should be enough to test the issue reported here.
-> >
-> > The thing is that upstream isn't super happy that you have been
-> > making yourselves dependent on features that we are actively
-> > discouraging and then demanding that we support these features.
->
-> Hum, demanding seems to be a strong word for what I am doing here.
->
-> Deprecated should not mean broken. My point is: the API seems to be
-> currently broken. User space apps got broken, that's a fact. I even
-> took the time to bisect the kernel and show you which commit broke it.
-> So, no, I am not demanding. More like reporting and providing a
-> temporary solution to those with a similar problem.
->
-> Maybe it is time to remove the API, but this is up to "upstream".
-> Leaving the API broken seems pointless and unproductive.
->
-> Sorry for the "not super happiness of upstream", but maybe upstream
-> got me wrong.
->
-> We are not "making ourselves dependent on features ...". The API was
-> there. We used it. Now it is deprecated, ok, we should move on. I got
-> the message.
+I'm not familiar with ATIF, but should `amdgpu_atif_pci_probe_handle`
+really be called for PCI devices which are bound to vfio-pci? I'd expect
+amdgpu to ignore such devices.
 
-Ouch I deserved some slamming for this.
+As I understand it, starting with
+f9b7f3703ff9 ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)"),
+the `amdgpu_acpi_detect` function loops over all PCI devices in the
+`PCI_CLASS_DISPLAY_VGA` and `PCI_CLASS_DISPLAY_OTHER` classes to find
+the ATIF and ATCS handles. Maybe skipping over any PCI devices bound to
+vfio-pci would fix the issue? On a related note, shouldn't it also skip
+over any PCI devices with non-AMD vendor IDs?
 
-I'm sorry if I came across as harsh :(
-
-I just don't know how to properly push for this.
-
-I have even pushed the option of the deprecated sysfs ABI
-behind the CONFIG_EXPERT option, which should mean that
-the kernel config has been made by someone who has checked
-the option "yes I am an expert I know what I am doing"
-yet failed to observe that this ABI is obsoleted since 5 years
-and hence failed to be an expert.
-
-Of course the ABI (not API really) needs to be fixed if we can find the
-problem. It's frustrating that fixing it seems to fix broken other
-features which are not deprecated, hence the annoyance on my
-part.
-
-> And I will also tell the dev team that they must use the GPIO char dev
-> and libgpiod from now on and must port everything to it. And we will
-> likely have another group of people who are not super happy, but
-> that's life... :)
-
-I'm happy to hear this!
-
-Yours,
-Linus Walleij
+Regards,
+James
