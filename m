@@ -1,287 +1,157 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9A83D6A
-	for <regressions@lists.linux.dev>; Thu, 17 Feb 2022 19:11:51 +0000 (UTC)
-Received: by mail-ed1-f41.google.com with SMTP id z22so11435412edd.1
-        for <regressions@lists.linux.dev>; Thu, 17 Feb 2022 11:11:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TX+i2rJBhVc8Ji7AAyvRVaOO70R/bzYPwOxKs7xg62w=;
-        b=XuawKnlBh9ZCJ+/jSG/NmLWLfKvrlKONWf70+KQwzmXzTZ2IiaBi0izw7w3kCKkc2n
-         eCGgDISqvfgoNj/HOKjgfe/Mb1KkWmnjX62PqSYTBONxTlgthvFqcq/jAK2O4Y3UPjmz
-         +LbeRlYTw2aeUXBMOVke4YJBwzE9oDv93Pdn1OHFfaiWjaNSYVRYpe8FtKT6zw61SOAd
-         2gO1KSjWZT407pLBXnL7BIu3D+B+kXToO2W9E7bTTLWvankXsWSi8W6ogFG/GEH6XKSr
-         MMU3Xul1Bli3MCHzAj/01K8M63L7VLQG4/5DEqJuSuIDDUToGAvQJdYVK4c3a3mkafhM
-         gHPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TX+i2rJBhVc8Ji7AAyvRVaOO70R/bzYPwOxKs7xg62w=;
-        b=aAJi3ksjUeO9B1uEVlsJAj0D5pmnT52/Kla1hNI8KMWEDyx4MbM3Or0aCac4aqdy1F
-         jzpz0PU3jk8POp81D0hG+5j52euO/WauyRm/EyQI2BL2TL7pOlTiu6phxf6adnMqJOxI
-         QVfd1EIpZbicL5fkvo/mUEGmNskQ8TdjGNCZcAYS2iEODkOWUX+lum30w+dcylmFTDbP
-         sfYTuhnwekgzNdbOCQlaU0I+68SjfIlSKD5wHYnnlqWTZMXwDbom2cRbwIg6obGb7Ntl
-         Ez768jthwxB1vKap2fcjCegQ20Fnjov0d1LrHlTTi0aiF+IiTyf67GMVJjarLoJEygxY
-         6KCw==
-X-Gm-Message-State: AOAM533jnK74tCrDFJ8iWZoDFmSAHsHBIsFwwFvBpnDqa3VcR+gG9In2
-	2gj/5rtTy1hd5Lw86etcQzdYt278b5Y=
-X-Google-Smtp-Source: ABdhPJxgH2DgWizKKJzC29G3LV6F67vPpe3/78sEqblc64FXeRk4FNLfrXuSd0akFhntK9lUPN7tPQ==
-X-Received: by 2002:a50:8d4e:0:b0:408:3655:812f with SMTP id t14-20020a508d4e000000b004083655812fmr4289538edt.108.1645125109242;
-        Thu, 17 Feb 2022 11:11:49 -0800 (PST)
-Received: from orome (p200300e41f0a6900000000000000043a.dip0.t-ipconnect.de. [2003:e4:1f0a:6900::43a])
-        by smtp.gmail.com with ESMTPSA id kw5sm1501435ejc.140.2022.02.17.11.11.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Feb 2022 11:11:47 -0800 (PST)
-Date: Thu, 17 Feb 2022 20:11:45 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
-	Linus Walleij <linus.walleij@linaro.org>,
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-	Thierry Reding <treding@nvidia.com>,
-	Vidya Sagar <vidyas@nvidia.com>,
-	Geert Uytterhoeven <geert@linux-m68k.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Edmond Chung <edmondchung@google.com>,
-	Andrew Chant <achant@google.com>,
-	Will McVicker <willmcvicker@google.com>,
-	Sergio Tanzilli <tanzilli@acmesystems.it>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-Message-ID: <Yg6d8aWACA0jrnD0@orome>
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <a7fbb773-eb85-ccc7-8bfb-0bfab062ffe1@leemhuis.info>
- <CAMRc=MfAxzmAfATV2NwfTgpfmyxFx8bgTbaAfWxSi9zmBecPng@mail.gmail.com>
- <CACjc_5puGpg85XseEjKxnwE2R_XoH8EWvdwp4g2WKNBmW7pX+w@mail.gmail.com>
- <37d074c7-b264-acac-4bf6-65caa4dbab1a@leemhuis.info>
- <CACjc_5o4n9CNXoER5Va6u0fQhuE9osnUSUwSbHPx0K1yiPUj8g@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD99321D
+	for <regressions@lists.linux.dev>; Fri, 18 Feb 2022 06:01:52 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nKwKv-0006IA-DI; Fri, 18 Feb 2022 07:01:45 +0100
+Message-ID: <7c7a57aa-326a-0331-7132-78704bcc5d88@leemhuis.info>
+Date: Fri, 18 Feb 2022 07:01:44 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dfwSPnWJeF4AJFKm"
-Content-Disposition: inline
-In-Reply-To: <CACjc_5o4n9CNXoER5Va6u0fQhuE9osnUSUwSbHPx0K1yiPUj8g@mail.gmail.com>
-User-Agent: Mutt/2.2 (7160e05a) (2022-02-12)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: Regression/boot failure on 5.16.3 #forregzbot
+Content-Language: en-BS
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220203161959.3edf1d6e@valencia>
+ <f0e5b970-5982-313b-8c75-b839086ce100@leemhuis.info>
+ <c75f77de-634e-a059-1165-8dcb68385dc7@leemhuis.info>
+In-Reply-To: <c75f77de-634e-a059-1165-8dcb68385dc7@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645164113;82b117ea;
+X-HE-SMSGID: 1nKwKv-0006IA-DI
 
+For the record:
 
---dfwSPnWJeF4AJFKm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+#regzbot fixed-by: bea2662e7818e15d7607d17d57912ac984275d94
 
-On Tue, Jan 11, 2022 at 09:09:15PM -0300, Marcelo Roberto Jimenez wrote:
-> Hi,
->=20
-> On Mon, Jan 10, 2022 at 4:02 AM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
-> >
-> > Hi, this is your Linux kernel regression tracker speaking.
-> >
-> > On 20.12.21 21:41, Marcelo Roberto Jimenez wrote:
-> > > On Mon, Dec 20, 2021 at 11:57 AM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
-> > >> On Sat, Dec 18, 2021 at 7:28 AM Thorsten Leemhuis
-> > >> <regressions@leemhuis.info> wrote:
-> > >>>
-> > >>> [TLDR: I'm adding this regression to regzbot, the Linux kernel
-> > >>> regression tracking bot; most text you find below is compiled from =
-a few
-> > >>> templates paragraphs some of you might have seen already.]
-> > >>>
-> > >>> On 17.12.21 16:35, Marcelo Roberto Jimenez wrote:
-> > >>>> Some GPIO lines have stopped working after the patch
-> > >>>> commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-=
-ranges")
-> > >>>>
-> > >>>> And this has supposedly been fixed in the following patches
-> > >>>> commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
-> > >>>> commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not d=
-efined")
-> > >>>
-> > >>> There seems to be a backstory here. Are there any entries and bug
-> > >>> trackers or earlier discussions everyone that looks into this shoul=
-d be
-> > >>> aware of?
-> > >>
-> > >> Agreed with Thorsten. I'd like to first try to determine what's wrong
-> > >> before reverting those, as they are correct in theory but maybe the
-> > >> implementation missed something.
-> > >>
-> > >> Have you tried tracing the execution on your platform in order to see
-> > >> what the driver is doing?
-> > >
-> > > Yes. The problem is that there is no list defined for the sysfs-gpio
-> > > interface. The driver will not perform pinctrl_gpio_request() and will
-> > > return zero (failure).
-> > >
-> > > I don't know if this is the case to add something to a global DTD or
-> > > to fix it in the sysfs-gpio code.
-> >
-> > Out of interest, has any progress been made on this front?
-> >
-> > BTW, there was a last-minute commit for 5.16 yesterday that referenced
-> > the culprit Marcelo specified:
-> >
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
-it/?h=3Dmaster&id=3Dc8013355ead68dce152cf426686f8a5f80d88b40
-> >
-> > This was for a BCM283x and BCM2711 devices, so I assume it won't help.
-> > Wild guess (I don't know anything about this area of the kernel):
-> > Marcelo, do the dts files for your hardware maybe need a similar fix?
->=20
-> I have tried to add "gpio-ranges" to the gpio-controllers in
-> at91sam9x5.dtsi, but the system deadlocks, because in pinctrl-at91.c,
-> function at91_pinctrl_probe() we have:
->=20
-> /*
-> * We need all the GPIO drivers to probe FIRST, or we will not be able
-> * to obtain references to the struct gpio_chip * for them, and we
-> * need this to proceed.
-> */
-> for (i =3D 0; i < gpio_banks; i++)
->         if (gpio_chips[i])
->                 ngpio_chips_enabled++;
->=20
->         if (ngpio_chips_enabled < info->nactive_banks) {
->                 dev_warn(&pdev->dev,
->                       "All GPIO chips are not registered yet (%d/%d)\n",
->                       ngpio_chips_enabled, info->nactive_banks);
->                devm_kfree(&pdev->dev, info);
->                 return -EPROBE_DEFER;
->         }
->=20
-> On the other hand, in gpiolib-of.c, function
-> of_gpiochip_add_pin_range() we have:
->=20
-> if (!pctldev)
->         return -EPROBE_DEFER;
->=20
-> In other words, the pinctrl needs all the gpio-controllers, and the
-> gpio-controllers need the pinctrl. Each returns -EPROBE_DEFER and the
-> system deadlocks.
+https://git.kernel.org/torvalds/c/bea2662e7818e15d7607d17d57912ac984275d94
 
-Ugh, yeah, this sounds like a really bad idea. Conceptually GPIO drivers
-are consumers of a pinctrl device and by now making the pinctrl device
-depend on GPIO chips you make the dependency recursive, which is exactly
-what you're observing here. And it's honestly not a surprise that this
-breaks. It is rather surprising that this has worked before in the first
-place.
-
-Now, looking through some of the pin control documentation, I see that
-this kind of setup is actually encouraged (see "Interaction with the
-GPIO subsystem" in Documentation/driver-api/pin-control.rst). This may
-make sense for cases where the GPIO chips can be hard-coded, but I don't
-see how that would work in practice.
-
-Looking at a random sampling of drivers, I see a lot of those that are
-calling pinctrl_add_gpio_range() are setting the .gc field to point at a
-GPIO controller. However, in the cases that I've seen, they are all very
-tightly integrated with the pinctrl such that they don't have to do that
-same dance that AT91 does (where pinctrl and GPIO drivers are separate),
-so they avoid the circular dependency. A couple of examples are here:
-
-	- bcm/pinctrl-bcm2835.c
-	- pinctrl-starfive.c
-	- pinctrl-st.c
-	- renesas/pinctrl-rza1.c
-	- renesas/pinctrl-rza2.c
-	- samsung/pinctrl-samsung.c
-	- stm32/pinctrl-stm32.c
-
-pinctrl-xway.c is another, slightly different variant that references a
-file-scoped struct gpio_chip, so it's again in that "tightly coupled"
-category.
-
-tegra/pinctrl-tegra.c gets away without setting the .gc field and
-instead uses a hard-coded number of GPIO lines in the range. The same
-goes for mvebu/pinctrl-mvebu.c which uses platform data to pass GPIO
-ranges information.
-
-Given all of the above, it sounds to me like the right way to fix this
-would be to do two things:
-
-	1) avoid the circular dependency by not waiting for all GPIO
-	   chips to get probed within the pinctrl driver's ->probe()
-
-	2) use the standard, DT-based mechanism to register GPIO ranges
-	   with the pinctrl
-
-Typically 2) would involve adding the gpio-ranges properties to the GPIO
-controllers' DT nodes. However, it looks like it might also be possible
-to avoid this in the AT91 driver by making it register the GPIO ranges
-=66rom the GPIO driver's ->probe() function. That would typically be
-slightly tricky because you don't typically have a back-reference to the
-pinctrl device from the GPIO chip. *However*, it looks like on AT91-
-based platforms the GPIO controllers are actually children of the pin
-controller, which would nicely solve that problem (you can get the
-reference to the pin controller via the GPIO controllers' parent). I
-have not checked exhaustively if that's always the case, just for a
-couple of AT91-based DTS files, but I suspect that this is a common
-scheme for this type of device.
-
-Note that the fact that GPIO controllers are children of the pin
-controller is another indicator for why the circular dependency is a bad
-idea. After all you can't have children without a parent. Parents need
-to be "fully initialized" before they can procreate.
-
-If you wanted to make this really complicated you could perhaps achieve
-what that driver is currently trying by using the component driver
-infrastructure. That would basically involve initializing the pin
-controller fully so that it's ready to be used by the GPIO controllers
-and then once all GPIO controllers have been added, a special callback
-will be called, allowing you to complete the initialization of all the
-components (which could then be used to add the GPIO ranges). I don't
-think that's necessary in this case, though.
-
-Thierry
-
-> > Ciao, Thorsten
-> >
-> > P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-> > on my table. I can only look briefly into most of them. Unfortunately
-> > therefore I sometimes will get things wrong or miss something important.
-> > I hope that's not the case here; if you think it is, don't hesitate to
-> > tell me about it in a public reply, that's in everyone's interest.
-> >
-> > BTW, I have no personal interest in this issue, which is tracked using
-> > regzbot, my Linux kernel regression tracking bot
-> > (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> > this mail to get things rolling again and hence don't need to be CC on
-> > all further activities wrt to this regression.
-> >
-> > #regzbot poke
-> >
->=20
-> Regards,
-> Marcelo.
-
---dfwSPnWJeF4AJFKm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmIOne4ACgkQ3SOs138+
-s6EN6w//YZq2fScOKNwqbRJk9mkrI383ip0TkB37cTwnY00r7y74mI1UtcZzJlPD
-uGSsnnZP09bym6Yr1+NLYE1KaFozr0uaGoLl6w9d1++LlAq4L1uuPyVa5uqMcIde
-3f1ML5OHnpWcn7aPgbS1ft8CAsRvEkBE7yg6sD1hgb3MjRVLMaFI+gbFA+ZfuIKg
-GMentcJRL8Z+BqpJ3cg+hgWGFI1LXKGqdj0vXR5SdneoryyepyTJaEjTn0faKoW0
-XrsUuGSp8kkbUsXBJLqD7whdewnNksH1hEa0R1B5ty/lD5C7Ao2lc783U0suOJCi
-N4W2QBv91r7Zk2Ml0ik3qQm14KOdijAc3ANgsuY8eSB1c2XfwSdYSeDtitKuXrG8
-p4Vm5GxtI9YKTboBBle0PXUiq8/2VwrBo9qhvIx4zl/vD/GX8D1qsaQI57/sHlg8
-q7qHDi1nuKLWsDN9iGq5mU4Ys4xBau3cfk9gKXW4GPGRhTvpUY7ZOCJZVymO2rK6
-hao7kU/mrfxgSgoRWHmYS3JB7yk5irsiukAnGf9+EtkC+oDp7An8Pa+JT77Xv7wh
-B3daRb7B+LzK5zyy/2h7b2U3dxJPU/f+CUQ1XenPECjnbZmwsukCpcaSKbQaLqty
-A1n1X3xoMJeT7OZXMShl7wrakAzP+08HWJJk5k39pWAp9cPTkq8=
-=0pmC
------END PGP SIGNATURE-----
-
---dfwSPnWJeF4AJFKm--
+On 05.02.22 09:04, Thorsten Leemhuis wrote:
+> For the record:
+> 
+> #regzbot monitor
+> https://lore.kernel.org/all/20220204061104.5851831a@valencia/
+> 
+> TWIMC: this mail is primarily send for documentation purposes and for
+> regzbot, my Linux kernel regression tracking bot. These mails usually
+> contain '#forregzbot' in the subject, to make them easy to spot and filter.
+> 
+> On 04.02.22 09:48, Thorsten Leemhuis wrote:
+>> [TLDR: I'm adding this regression to regzbot, the Linux kernel
+>> regression tracking bot; most text you find below is compiled from a few
+>> templates paragraphs some of you might have seen already.]
+>>
+>> Hi, this is your Linux kernel regression tracker speaking.
+>>
+>> Adding the regression mailing list to the list of recipients, as it
+>> should be in the loop for all regressions, as explained here:
+>> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+>>
+>> On 04.02.22 01:19, Jason Self wrote:
+>>> The computer (amd64) fails to boot. The init was stuck at the
+>>> synchronization of the time through the network. This began between
+>>> 5.16.2 (good) and 5.16.3 (bad.) This continues on 5.16.4 and 5.16.5.
+>>> Git bisect revealed the following. In this case the nonfree firmwre is
+>>> not present on the system. Blacklisting the iwflwifi module works as a
+>>> workaround for now.
+>>>
+>>> 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1 is the first bad commit
+>>> commit 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
+>>> Author: Johannes Berg <johannes.berg@intel.com>
+>>> Date:   Fri Dec 10 11:12:42 2021 +0200
+>>
+>> To be sure this issue doesn't fall through the cracks unnoticed, I'm
+>> adding it to regzbot, my Linux kernel regression tracking bot:
+>>
+>> #regzbot ^introduced 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
+>> #regzbot title net: iwlwifi: system fails to boot since 5.16.3
+>> #regzbot ignore-activity
+>>
+>> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
+>> to the report (the parent of this mail) using the kernel.org redirector,
+>> as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
+>> then will automatically mark the regression as resolved once the fix
+>> lands in the appropriate tree. For more details about regzbot see footer.
+>>
+>> Sending this to everyone that got the initial report, to make all aware
+>> of the tracking. I also hope that messages like this motivate people to
+>> directly get at least the regression mailing list and ideally even
+>> regzbot involved when dealing with regressions, as messages like this
+>> wouldn't be needed then.
+>>
+>> Don't worry, I'll send further messages wrt to this regression just to
+>> the lists (with a tag in the subject so people can filter them away), as
+>> long as they are intended just for regzbot. With a bit of luck no such
+>> messages will be needed anyway.
+>>
+>> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+>>
+>> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+>> on my table. I can only look briefly into most of them. Unfortunately
+>> therefore I sometimes will get things wrong or miss something important.
+>> I hope that's not the case here; if you think it is, don't hesitate to
+>> tell me about it in a public reply, that's in everyone's interest.
+>>
+>> BTW, I have no personal interest in this issue, which is tracked using
+>> regzbot, my Linux kernel regression tracking bot
+>> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+>> this mail to get things rolling again and hence don't need to be CC on
+>> all further activities wrt to this regression.
+>>
+>>
+>>>     iwlwifi: fix leaks/bad data after failed firmware load
+>>>     
+>>>     [ Upstream commit ab07506b0454bea606095951e19e72c282bfbb42 ]
+>>>     
+>>>     If firmware load fails after having loaded some parts of the
+>>>     firmware, e.g. the IML image, then this would leak. For the
+>>>     host command list we'd end up running into a WARN on the next
+>>>     attempt to load another firmware image.
+>>>     
+>>>     Fix this by calling iwl_dealloc_ucode() on failures, and make
+>>>     that also clear the data so we start fresh on the next round.
+>>>     
+>>>     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+>>>     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+>>>     Link:
+>>>     https://lore.kernel.org/r/iwlwifi.20211210110539.1f742f0eb58a.I1315f22f6aa632d94ae2069f85e1bca5e734dce0@changeid
+>>>     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+>>>     Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>>
+>>>  drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 8 ++++++++
+>>>  1 file changed, 8 insertions(+)
+>>
+>> ---
+>> Additional information about regzbot:
+>>
+>> If you want to know more about regzbot, check out its web-interface, the
+>> getting start guide, and/or the references documentation:
+>>
+>> https://linux-regtracking.leemhuis.info/regzbot/
+>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+>>
+>> The last two documents will explain how you can interact with regzbot
+>> yourself if your want to.
+>>
+>> Hint for reporters: when reporting a regression it's in your interest to
+>> tell #regzbot about it in the report, as that will ensure the regression
+>> gets on the radar of regzbot and the regression tracker. That's in your
+>> interest, as they will make sure the report won't fall through the
+>> cracks unnoticed.
+>>
+>> Hint for developers: you normally don't need to care about regzbot once
+>> it's involved. Fix the issue as you normally would, just remember to
+>> include a 'Link:' tag to the report in the commit message, as explained
+>> in Documentation/process/submitting-patches.rst
+>> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+>> https://git.kernel.org/linus/1f57bd42b77c
