@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD99321D
-	for <regressions@lists.linux.dev>; Fri, 18 Feb 2022 06:01:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78402F32
+	for <regressions@lists.linux.dev>; Fri, 18 Feb 2022 11:10:37 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nKwKv-0006IA-DI; Fri, 18 Feb 2022 07:01:45 +0100
-Message-ID: <7c7a57aa-326a-0331-7132-78704bcc5d88@leemhuis.info>
-Date: Fri, 18 Feb 2022 07:01:44 +0100
+	id 1nL19n-0004lq-PU; Fri, 18 Feb 2022 12:10:35 +0100
+Message-ID: <cc6298ff-15f2-4a74-506b-d9ba0ddb1273@leemhuis.info>
+Date: Fri, 18 Feb 2022 12:10:35 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,142 +16,91 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: Regression/boot failure on 5.16.3 #forregzbot
+Subject: Re: Unable to set $xmm2-9 registers but able to set $xmm0-1,10-15
+ with ptrace syscall (fwd from bugzilla) #forregzbot
 Content-Language: en-BS
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220203161959.3edf1d6e@valencia>
- <f0e5b970-5982-313b-8c75-b839086ce100@leemhuis.info>
- <c75f77de-634e-a059-1165-8dcb68385dc7@leemhuis.info>
-In-Reply-To: <c75f77de-634e-a059-1165-8dcb68385dc7@leemhuis.info>
+References: <80bed7f8-525e-9324-b544-f5f5da8ef2e7@leemhuis.info>
+In-Reply-To: <80bed7f8-525e-9324-b544-f5f5da8ef2e7@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645164113;82b117ea;
-X-HE-SMSGID: 1nKwKv-0006IA-DI
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645182637;9f625749;
+X-HE-SMSGID: 1nL19n-0004lq-PU
 
 For the record:
 
-#regzbot fixed-by: bea2662e7818e15d7607d17d57912ac984275d94
+#regzbot fixed-by 44cad52cc14ae10062f142e
+#regzbot ignore-activity
 
-https://git.kernel.org/torvalds/c/bea2662e7818e15d7607d17d57912ac984275d94
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?id=44cad52cc14ae10062f142ec16ede489bccf4469
 
-On 05.02.22 09:04, Thorsten Leemhuis wrote:
-> For the record:
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
+
+On 26.01.22 08:39, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
 > 
-> #regzbot monitor
-> https://lore.kernel.org/all/20220204061104.5851831a@valencia/
+> There is a regression dealt with in bugzilla I'd like to add to the
+> tracking:
 > 
-> TWIMC: this mail is primarily send for documentation purposes and for
-> regzbot, my Linux kernel regression tracking bot. These mails usually
-> contain '#forregzbot' in the subject, to make them easy to spot and filter.
+> #regzbot introduced: 6164331d15f7d912fb9369245368e9564ea49813
+> #regzbot from: Luís Ferreira <contact@lsferreira.net>
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215524
 > 
-> On 04.02.22 09:48, Thorsten Leemhuis wrote:
->> [TLDR: I'm adding this regression to regzbot, the Linux kernel
->> regression tracking bot; most text you find below is compiled from a few
->> templates paragraphs some of you might have seen already.]
+> Quote:
+> 
+>> Writing some XMM registers on a process with `ptrace` syscall with `PTRACE_SETREGSET` request and using `NT_FPREGSET` is broken. Although, when using `NT_X86_XSTATE` works just fine. Also, getting the registers with `PTRACE_GETREGSET` is fine too.
 >>
->> Hi, this is your Linux kernel regression tracker speaking.
+>> This can be considered a blocker for old hardware that lacks AVX extensions and simply fail to call ptrace with `NT_X86_XSTATE`. This particularly failed the testsuite of LLDB on my server.
 >>
->> Adding the regression mailing list to the list of recipients, as it
->> should be in the loop for all regressions, as explained here:
->> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+>> I've tested this on Linux 5.16.2, Linux LTS 5.15.16 and Linux LTS 5.10.93. Only the last one (5.10.93) succeeded with `NT_FPREGSET`. I tested this in a clean installation of Arch Linux with the official packages and backported version of Linux LTS, available in AUR repository.
 >>
->> On 04.02.22 01:19, Jason Self wrote:
->>> The computer (amd64) fails to boot. The init was stuck at the
->>> synchronization of the time through the network. This began between
->>> 5.16.2 (good) and 5.16.3 (bad.) This continues on 5.16.4 and 5.16.5.
->>> Git bisect revealed the following. In this case the nonfree firmwre is
->>> not present on the system. Blacklisting the iwflwifi module works as a
->>> workaround for now.
->>>
->>> 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1 is the first bad commit
->>> commit 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
->>> Author: Johannes Berg <johannes.berg@intel.com>
->>> Date:   Fri Dec 10 11:12:42 2021 +0200
+>> Note: I didn't test `NT_FPREGSET` on recent hardware (hardware with AVX).
 >>
->> To be sure this issue doesn't fall through the cracks unnoticed, I'm
->> adding it to regzbot, my Linux kernel regression tracking bot:
+>> From my investigation on the issue and the kernel source code inspection, I believe that this was introduced here: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/arch/x86/kernel/fpu/regset.c?id=6164331d15f7d912fb9369245368e9564ea49813
 >>
->> #regzbot ^introduced 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
->> #regzbot title net: iwlwifi: system fails to boot since 5.16.3
->> #regzbot ignore-activity
->>
->> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
->> to the report (the parent of this mail) using the kernel.org redirector,
->> as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
->> then will automatically mark the regression as resolved once the fix
->> lands in the appropriate tree. For more details about regzbot see footer.
->>
->> Sending this to everyone that got the initial report, to make all aware
->> of the tracking. I also hope that messages like this motivate people to
->> directly get at least the regression mailing list and ideally even
->> regzbot involved when dealing with regressions, as messages like this
->> wouldn't be needed then.
->>
->> Don't worry, I'll send further messages wrt to this regression just to
->> the lists (with a tag in the subject so people can filter them away), as
->> long as they are intended just for regzbot. With a bit of luck no such
->> messages will be needed anyway.
->>
->> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
->>
->> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
->> on my table. I can only look briefly into most of them. Unfortunately
->> therefore I sometimes will get things wrong or miss something important.
->> I hope that's not the case here; if you think it is, don't hesitate to
->> tell me about it in a public reply, that's in everyone's interest.
->>
->> BTW, I have no personal interest in this issue, which is tracked using
->> regzbot, my Linux kernel regression tracking bot
->> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
->> this mail to get things rolling again and hence don't need to be CC on
->> all further activities wrt to this regression.
->>
->>
->>>     iwlwifi: fix leaks/bad data after failed firmware load
->>>     
->>>     [ Upstream commit ab07506b0454bea606095951e19e72c282bfbb42 ]
->>>     
->>>     If firmware load fails after having loaded some parts of the
->>>     firmware, e.g. the IML image, then this would leak. For the
->>>     host command list we'd end up running into a WARN on the next
->>>     attempt to load another firmware image.
->>>     
->>>     Fix this by calling iwl_dealloc_ucode() on failures, and make
->>>     that also clear the data so we start fresh on the next round.
->>>     
->>>     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
->>>     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
->>>     Link:
->>>     https://lore.kernel.org/r/iwlwifi.20211210110539.1f742f0eb58a.I1315f22f6aa632d94ae2069f85e1bca5e734dce0@changeid
->>>     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
->>>     Signed-off-by: Sasha Levin <sashal@kernel.org>
->>>
->>>  drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 8 ++++++++
->>>  1 file changed, 8 insertions(+)
->>
->> ---
->> Additional information about regzbot:
->>
->> If you want to know more about regzbot, check out its web-interface, the
->> getting start guide, and/or the references documentation:
->>
->> https://linux-regtracking.leemhuis.info/regzbot/
->> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
->> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
->>
->> The last two documents will explain how you can interact with regzbot
->> yourself if your want to.
->>
->> Hint for reporters: when reporting a regression it's in your interest to
->> tell #regzbot about it in the report, as that will ensure the regression
->> gets on the radar of regzbot and the regression tracker. That's in your
->> interest, as they will make sure the report won't fall through the
->> cracks unnoticed.
->>
->> Hint for developers: you normally don't need to care about regzbot once
->> it's involved. Fix the issue as you normally would, just remember to
->> include a 'Link:' tag to the report in the commit message, as explained
->> in Documentation/process/submitting-patches.rst
->> That aspect was recently was made more explicit in commit 1f57bd42b77c:
->> https://git.kernel.org/linus/1f57bd42b77c
+>> I'm going to leave a reference to some issues/patches on GDB and LLDB debuggers to either reproduce the issue and see some logs I created with strace:
+>> - https://reviews.llvm.org/D117928
+>> - https://sourceware.org/bugzilla/show_bug.cgi?id=28803
+> 
+> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+> 
+> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+> on my table. I can only look briefly into most of them. Unfortunately
+> therefore I sometimes will get things wrong or miss something important.
+> I hope that's not the case here; if you think it is, don't hesitate to
+> tell me about it in a public reply, that's in everyone's interest.
+> 
+> BTW, I have no personal interest in this issue, which is tracked using
+> regzbot, my Linux kernel regression tracking bot
+> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+> this mail to get things rolling again and hence don't need to be CC on
+> all further activities wrt to this regression.
+> 
+> ---
+> Additional information about regzbot:
+> 
+> If you want to know more about regzbot, check out its web-interface, the
+> getting start guide, and/or the references documentation:
+> 
+> https://linux-regtracking.leemhuis.info/regzbot/
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> 
+> The last two documents will explain how you can interact with regzbot
+> yourself if your want to.
+> 
+> Hint for reporters: when reporting a regression it's in your interest to
+> tell #regzbot about it in the report, as that will ensure the regression
+> gets on the radar of regzbot and the regression tracker. That's in your
+> interest, as they will make sure the report won't fall through the
+> cracks unnoticed.
+> 
+> Hint for developers: you normally don't need to care about regzbot once
+> it's involved. Fix the issue as you normally would, just remember to
+> include a 'Link:' tag to the report in the commit message, as explained
+> in Documentation/process/submitting-patches.rst
+> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+> https://git.kernel.org/linus/1f57bd42b77c
