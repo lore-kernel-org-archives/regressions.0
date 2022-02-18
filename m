@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F4048CE
-	for <regressions@lists.linux.dev>; Fri, 18 Feb 2022 11:40:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24A348D0
+	for <regressions@lists.linux.dev>; Fri, 18 Feb 2022 11:47:35 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nL1ch-0005yN-0c; Fri, 18 Feb 2022 12:40:27 +0100
-Message-ID: <b0f689b0-38cb-9080-bf90-27e8d661b07c@leemhuis.info>
-Date: Fri, 18 Feb 2022 12:40:26 +0100
+	id 1nL1jV-0002w0-4r; Fri, 18 Feb 2022 12:47:29 +0100
+Message-ID: <625a51ed-8185-6fdb-bd7d-cfb0a913c7a4@leemhuis.info>
+Date: Fri, 18 Feb 2022 12:47:27 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,29 +16,36 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: Bug 215561 - snd-usb-audio:reset_resume error -22 after suspend
- (fwd from bugzilla) #forregzbot
+Subject: Re: Compex WLE200NX: regdomain sanitized regression
 Content-Language: en-BS
+To: Nuno Oliveira <nuno@eq.uc.pt>, Kalle Valo <kvalo@kernel.org>
+Cc: Sebastian Bachmann <hello@reox.at>, wgong@codeaurora.org,
+ ath10k@lists.infradead.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <1c160dfb-6ccc-b4d6-76f6-4364e0adb6dd@reox.at>
+ <YaIix40KaVlxT+XG@eq.uc.pt>
+ <96b3682d-71b3-ada0-6fc7-686e51609968@leemhuis.info>
+ <87v8zja7em.fsf@codeaurora.org> <YcDMGdpvINCX9VlX@eq.uc.pt>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <a8100c3d-007e-3207-7dc1-92849f638d71@leemhuis.info>
-In-Reply-To: <a8100c3d-007e-3207-7dc1-92849f638d71@leemhuis.info>
+In-Reply-To: <YcDMGdpvINCX9VlX@eq.uc.pt>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645184428;3cf4aa12;
-X-HE-SMSGID: 1nL1ch-0005yN-0c
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645184856;c62d3d12;
+X-HE-SMSGID: 1nL1jV-0002w0-4r
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Hi, this is your Linux kernel regression tracker speaking. Top-posting
+for once, to make this easy accessible to everyone.
 
-This was one of those issues that looked kinda forgotten in bugzilla,
-but seem thx to a poke of yours truly things got rolling.
+Kalle, thx for looking into this, I'm well aware this is kinda tricky.
+This is a gently reminder about the issue to ensure it doesn't fall
+through the cracks. At the same time I know that it's not urgent, that
+why I'm not putting it on backburner in regzbot now:
 
-#regzbot introduced: b96681bd5827
-#regzbot fixed-by: 9a5adeb28b77416446658e7
+#regzbot backburner: tricky situation and around for a while, hence not
+that urgent
+#regzbot poke
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=9a5adeb28b77416446658e75bdef3bbe5fb92a83
+I'll likely sent another gentle reminder after the next merge-window.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -50,93 +57,156 @@ that's not the case here; if you think it is, don't hesitate to tell me
 in a public reply, it's in everyone's interest to set the public record
 straight.
 
-
-
-On 03.02.22 15:59, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker speaking.
+On 20.12.21 19:31, Nuno Oliveira wrote:
+> Hi Kalle,
 > 
-> There is a regression in bugzilla.kernel.org I'd like to add to the
-> tracking:
+> Thanks for looking again into this.
 > 
-> #regzbot introduced: v5.15..v5.16
-> #regzbot from: antifermion@protonmail.com <antifermion@protonmail.com>
-> #regzbot title: snd: usb: snd-usb-audio:reset_resume error -22 after suspen
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215561
-> 
-> Quote:
-> 
->> If I use the microphone, then suspend and wake up again, I get the error
+> * Kalle Valo <kvalo@kernel.org> [2021-12-20 10:38]:
+>> Thorsten Leemhuis <regressions@leemhuis.info> writes:
 >>
->> ```
->> snd-usb-audio 1-5:1.0: reset_resume error -22
->> ```
+>>> Hi, this is your Linux kernel regression tracker speaking.
+>>>
+>>> On 27.11.21 13:21, Nuno Oliveira wrote:
+>>>> * Sebastian Bachmann <hello@reox.at> [2021-11-27 08:17]:
+>>>>
+>>>>> I recently upgraded my Debian based AP from buster to bullseye, just
+>>>>> to find out that hostapd does not work any more, because all 5GHz
+>>>>> channels are marked as No-IR. This regression was already discussed on
+>>>>> this ML here:
+>>>>> https://www.mail-archive.com/ath10k@lists.infradead.org/msg12018.html
+>>>>> and there is also an entry in Debian's bug tracker for the same issue:
+>>>>> https://bugs.debian.org/959821
+>>>>>
+>>>>> I have a slightly different card (branded Compex WLE200NX):
+>>>>> 04:00.0 Network controller: Qualcomm Atheros AR928X Wireless Network
+>>>>> Adapter (PCI-Express) (rev 01)
+>>>>>        Subsystem: Qualcomm Atheros AR928X Wireless Network Adapter
+>>>>> (PCI-Express)
+>>>>>        Kernel driver in use: ath9k
+>>>>>        Kernel modules: ath9k
+>>>>>
+>>>>> But as you can see, also the EEPROM gets sanitized:
+>>>>> [   15.461755] ath9k 0000:04:00.0: enabling device (0000 -> 0002)
+>>>>> [   15.911600] ath: EEPROM regdomain sanitized
+>>>>> [   15.911612] ath: EEPROM regdomain: 0x64
+>>>>> [   15.911615] ath: EEPROM indicates we should expect a direct regpair
+>>>>> map
+>>>>> [   15.911625] ath: Country alpha2 being used: 00
+>>>>> [   15.911628] ath: Regpair used: 0x64
+>>>>>
+>>>>> I read in the other thread, that this is a regression, but the actual
+>>>>> commit causing it was never reverted.
+>>>>> I tried to search for newer messages explaining the issue, however as
+>>>>> far as I can tell, the thread ends in June 2020 with no solution
+>>>>> available.
+>>>>>
+>>>>> Therefore, I kindly want to ask if there is any workaround available
+>>>>> to re-enable 5GHz channels in AP mode for my card? (expect sticking to
+>>>>> a pre-5.6 kernel or manually patching and recompiling ath)
+>>>>
+>>>> After June 2020 there were other users also affected by this change
+>>>> (see
+>>>> e.g.,
+>>>> https://lists.infradead.org/pipermail/ath10k/2021-August/012802.html).
+>>>> Users were complaining that this change was too restrictive since it
+>>>> meant that the intersection of restrictions for regdomains 0x00, 0x64,
+>>>> US, and their local domain, together with a cumulative mode of applying
+>>>> these constraints meant that, in practice, they would not be able to
+>>>> use
+>>>> their world domain cards anymore as APs in the 5GHz band, for certain
+>>>> regdomains where they were located.
+>>>>
+>>>> And several people pinpointed the exact source changes responsible for
+>>>> this. In my case, I ended up applying the attached patch, that just
+>>>> loads the parameters for the regdomain that I'm interested in
+>>>> (CTRY_PORTUGAL). I'm not in the US; and I care for their regulatory
+>>>> restrictions as much as they are interested in mine.
+>>>>
+>>>> So I think that you might be able to use the attached changes, with the
+>>>> specific CTRY_xxx parameter suitable for your case. And then recompile
+>>>> the respective Debian kernel package, which takes a lot of CPU if you
+>>>> just recompile the whole package. Let me know if you need instructions.
+>>>>
+>>>> A more robust option would be to go the OpenWRT way, and use their
+>>>> patches to make this country selection a parameter for the kernel
+>>>> module. This way, you would just reload the kernel module to change
+>>>> to a
+>>>> new regdomain, subject to the restrictions of your hardware / firmware.
+>>>> I have not looked into that. Please let me know if you isolate these
+>>>> patches.
+>>>>
+>>>> In any case it seems difficult to escape a kernel recompile, due to
+>>>> this
+>>>> small, entirely legitimate, yet remarkable decision by the driver
+>>>> maintainers.
+>>>
+>>> This is a regression due to 2dc016599cfa ("ath: add support for special
+>>> 0x0 regulatory domain") that seems to affect quite a few users, but
+>>> afaics was never properly addressed. I fully understand that this might
+>>> be a special case where Linus' "no regressions" rule can't be simply
+>>> applied.
 >>
->> Aftewards, audio stops working completely. Both pipewire and pulseaudio (tried both; not at the same time) freeze.
+>> Yes, this is a tricky problem and I am taking a second look at this.
+>> Regulatory rules are complicated and we do not want to break them in any
+>> circumstance.
 >>
->> After running
+>> I see two ways to workaround this:
 >>
->> ```
->> rmmod -f snd_usb_audio
->> ```
+>> 1) calibrate your board with a correct country code (which is impossible
+>>   for an average user)
 >>
->> and replugging the microphone, audio works again.
->> Here is the relevant log:
+>> 2) use 2.4 GHz band
 >>
->> ```
->> [  157.791937] usbcore: deregistering interface driver snd-usb-audio
->> [  228.517855] usb 1-5: USB disconnect, device number 2
->> [  236.464334] usb 1-5: new high-speed USB device number 3 using xhci_hcd
->> [  236.798863] usb 1-5: New USB device found, idVendor=0d8c, idProduct=0171, bcdDevice= 1.04
->> [  236.798867] usb 1-5: New USB device strings: Mfr=3, Product=1, SerialNumber=0
->> [  236.798869] usb 1-5: Product: USB 2.0 HD Audio
->> [  236.798871] usb 1-5: Manufacturer: C-Media Electronics Inc.
->> [  236.826966] input: C-Media Electronics Inc. USB 2.0 HD Audio Consumer Control as /devices/pci0000:00/0000:00:01.3/0000:02:00.0/usb1/1-5/1-5:1.3/0003:0D8C:0171.000B/input/input40
->> [  236.878380] input: C-Media Electronics Inc. USB 2.0 HD Audio as /devices/pci0000:00/0000:00:01.3/0000:02:00.0/usb1/1-5/1-5:1.3/0003:0D8C:0171.000B/input/input41
->> [  236.878447] hid-generic 0003:0D8C:0171.000B: input,hiddev96,hidraw2: USB HID v1.11 Device [C-Media Electronics Inc. USB 2.0 HD Audio] on usb-0000:02:00.0-5/input3
->> [  242.306593] usbcore: registered new interface driver snd-usb-audio
+>>> But isn't there some way to provide users with a solution that doesn't
+>>> force users to compile a module or a kernel? Like a module-parameter
+>>> that only works if the the regulatory domain code in the EEPROM is empty
+>>> (as apparently used by OpenWRT?). Yes, module parameters are normally a
+>>> bad idea, but this case it might be a situation where it's the best
+>>> solution.
 >>
->> ```
+>> I don't think setting the country code via a module parameter would be
+>> acceptable for the authorities, more info here:
 >>
->> I'm running Arch Linux (5.16.4.arch1-1). The linux-lts kernel (5.15.18-1) works fine.
->>
->> Other uses report the same error: https://bbs.archlinux.org/viewtopic.php?id=273469
+>> https://wireless.wiki.kernel.org/en/developers/regulatory
 > 
-> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+> The issue involves finding a reasonable compromise between relative
+> inconveniences, given the perspectives of both developers and users. As
+> implemented currently, the restriction seems to affect both ath9k and
+> ath10k (and probably ath11k -- I have not tried it, and frankly with the
+> current status, I'm not eager to do it), but only when users try to run
+> a 5 GHz AP. This is still reasonable (and legal) use, although not
+> without many restrictions. Other drivers (e.g., iwlwifi) are much more
+> restrictive relative to this, but at least they genuinely have made it
+> completely clear from the beginning.
 > 
-> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-> on my table. I can only look briefly into most of them. Unfortunately
-> therefore I sometimes will get things wrong or miss something important.
-> I hope that's not the case here; if you think it is, don't hesitate to
-> tell me about it in a public reply, that's in everyone's interest.
+> A common point of the previous messages was that, after these last
+> changes, the boards with the 0x00 domain in the EEPROM were successively
+> initialized with the 0x64 and later with UNITED_STATES domains by the
+> driver. In practice this prevented their use as an AP when, later in
+> userspace, the user tried to declare a 3rd local regdomain. My
+> suggestion here would be to avoid this double interpretation of what
+> default initialization would be appropriate. Either keep the old
+> behavior (UNITED_STATES) which limited but did not originally prevented
+> the AP usage, or replace it completely with the updated interpretation
+> of what's applicable to this case (0x64); but please don't do both by
+> default, or we will be in the current situation. Other users have asked
+> for this before, and this sort of clarification seems to be the minimum
+> to consider at this point, if anything is to be considered.
 > 
-> BTW, I have no personal interest in this issue, which is tracked using
-> regzbot, my Linux kernel regression tracking bot
-> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> this mail to get things rolling again and hence don't need to be CC on
-> all further activities wrt to this regression.
+> If this limiting double initialization is already achievable entirely
+> through user configuration of default distribution kernels, please
+> excuse my lack of knowledge. In this case, just documenting this better
+> could also help other users.
 > 
-> ---
-> Additional information about regzbot:
+> Besides this consistent "safe" initialization, for users with special
+> cases there's always the options of either providing alternative CRDAs
+> or patching and recompiling the driver. This is a matter of relative
+> inconveniences; as long as they remain feasible, it's always a weighting
+> issue.
 > 
-> If you want to know more about regzbot, check out its web-interface, the
-> getting start guide, and/or the references documentation:
+> Thanks for your good work. Regards,
 > 
-> https://linux-regtracking.leemhuis.info/regzbot/
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> Nuno.
 > 
-> The last two documents will explain how you can interact with regzbot
-> yourself if your want to.
 > 
-> Hint for reporters: when reporting a regression it's in your interest to
-> tell #regzbot about it in the report, as that will ensure the regression
-> gets on the radar of regzbot and the regression tracker. That's in your
-> interest, as they will make sure the report won't fall through the
-> cracks unnoticed.
-> 
-> Hint for developers: you normally don't need to care about regzbot once
-> it's involved. Fix the issue as you normally would, just remember to
-> include a 'Link:' tag to the report in the commit message, as explained
-> in Documentation/process/submitting-patches.rst
-> That aspect was recently was made more explicit in commit 1f57bd42b77c:
-> https://git.kernel.org/linus/1f57bd42b77c
