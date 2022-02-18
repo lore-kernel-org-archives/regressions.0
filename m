@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA95F48CA
-	for <regressions@lists.linux.dev>; Fri, 18 Feb 2022 11:23:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B893348CC
+	for <regressions@lists.linux.dev>; Fri, 18 Feb 2022 11:30:35 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nL1MY-0007dO-54; Fri, 18 Feb 2022 12:23:46 +0100
-Message-ID: <0debe946-9418-c8aa-9ba4-ecc77f8dac53@leemhuis.info>
-Date: Fri, 18 Feb 2022 12:23:45 +0100
+	id 1nL1T8-0004qb-05; Fri, 18 Feb 2022 12:30:34 +0100
+Message-ID: <63c0716f-5fdd-e6c4-8b0a-89fda34358b8@leemhuis.info>
+Date: Fri, 18 Feb 2022 12:30:33 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,58 +16,93 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: 100 ms boot time increase regression in
- acpi_init()/acpi_scan_bus() #forregzbot
+Subject: Re: nfs: noresvport + nfsv4 no longer working as expected (fwd from
+ bugzilla) #forregzbot
 Content-Language: en-BS
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>
-References: <b177cb21-aa01-2408-9b26-164c028b6593@molgen.mpg.de>
- <31603144-edec-df2d-fb46-283692c67420@leemhuis.info>
- <CAJZ5v0hyp1nR5id02abZh4cjw=sT0J_nf9spbUHfuwzjdJb5KA@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: regressions@lists.linux.dev
-In-Reply-To: <CAJZ5v0hyp1nR5id02abZh4cjw=sT0J_nf9spbUHfuwzjdJb5KA@mail.gmail.com>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <46a28c62-4610-00df-610c-ca3cc8861265@leemhuis.info>
+In-Reply-To: <46a28c62-4610-00df-610c-ca3cc8861265@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645183428;6e61cc85;
-X-HE-SMSGID: 1nL1MY-0007dO-54
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645183835;d9d12dfe;
+X-HE-SMSGID: 1nL1T8-0004qb-05
 
 TWIMC: this mail is primarily send for documentation purposes and for
 regzbot, my Linux kernel regression tracking bot. These mails usually
 contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-On 08.02.22 18:59, Rafael J. Wysocki wrote:
-> On Tue, Feb 8, 2022 at 1:03 PM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
->>
->> Hi, this is your Linux kernel regression tracker speaking.
->>
->> Top-posting for once, to make this easy accessible to everyone.
->>
->> @Rafael or any other @acpi/@pm developer: what's the status here?
->> Neither in this thread nor in the bug ticket anything happened afaics.
->> Or is a 100ms boot time increase considered "not a regression"?
+#regzbot fixed-by: 468d126dab45718feeb7283
+
+On 26.01.22 08:42, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
 > 
-> It is on my list of things to look into, because it used to work
-> faster, so depending on what change made it work slower, it may be
-> possible to restore the previous performance without sacrificing too
-> much.
+> There is a regression dealt with in bugzilla I'd like to add to the
+> tracking:
 > 
-> I honestly don't think that it is a noticeable issue for users in the
-> field, though.
-
-Great. FWIW, I'm putting this in regzbot on "backburner", as it's
-something that shouldn't be forgotten, but is less urgent then other
-regressions
-
-#regzbot backburner: not that urgent, still on the developers's todo list
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
+> #regzbot introduced: v5.11.11..v5.12.19
+> #regzbot from: Daire Byrne <daire@dneg.com>
+> #regzbot title: nfs: noresvport + nfsv4 no longer working as expected
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215526
+> 
+> Quote:
+> 
+>> When mounting with "-o vers=4.2,noresvport", it seems to be ignored such that the client still uses a reserved port (or ports with nconnect).
+>>
+>> It still works as expected when doing "-o vers=3,noresvport".
+>>
+>> A very quick test of some kernels I had prebuilt suggests this stopped working somewhere between 5.11.11 and 5.12.19. That might make it one of:
+>>
+>>     * tag 'nfs-for-5.12-2' of git://git.linux-nfs.org/projects/anna/linux-nfs:
+>>       nfs: we don't support removing system.nfs4_acl
+>>       NFSv4.2: fix return value of _nfs4_get_security_label()
+>>       NFS: Fix open coded versions of nfs_set_cache_invalid() in NFSv4
+>>       NFS: Fix open coded versions of nfs_set_cache_invalid()
+>>       NFS: Clean up function nfs_mark_dir_for_revalidate()
+>>       NFS: Don't gratuitously clear the inode cache when lookup failed
+>>       NFS: Don't revalidate the directory permissions on a lookup failure
+>>       SUNRPC: Set memalloc_nofs_save() for sync tasks
+>>       NFS: Correct size calculation for create reply length
+>>       nfs: fix PNFS_FLEXFILE_LAYOUT Kconfig default
+>>
+>> I will try and get a bisect done this week.
+> 
+> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+> 
+> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+> on my table. I can only look briefly into most of them. Unfortunately
+> therefore I sometimes will get things wrong or miss something important.
+> I hope that's not the case here; if you think it is, don't hesitate to
+> tell me about it in a public reply, that's in everyone's interest.
+> 
+> BTW, I have no personal interest in this issue, which is tracked using
+> regzbot, my Linux kernel regression tracking bot
+> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+> this mail to get things rolling again and hence don't need to be CC on
+> all further activities wrt to this regression.
+> 
+> ---
+> Additional information about regzbot:
+> 
+> If you want to know more about regzbot, check out its web-interface, the
+> getting start guide, and/or the references documentation:
+> 
+> https://linux-regtracking.leemhuis.info/regzbot/
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> 
+> The last two documents will explain how you can interact with regzbot
+> yourself if your want to.
+> 
+> Hint for reporters: when reporting a regression it's in your interest to
+> tell #regzbot about it in the report, as that will ensure the regression
+> gets on the radar of regzbot and the regression tracker. That's in your
+> interest, as they will make sure the report won't fall through the
+> cracks unnoticed.
+> 
+> Hint for developers: you normally don't need to care about regzbot once
+> it's involved. Fix the issue as you normally would, just remember to
+> include a 'Link:' tag to the report in the commit message, as explained
+> in Documentation/process/submitting-patches.rst
+> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+> https://git.kernel.org/linus/1f57bd42b77c
