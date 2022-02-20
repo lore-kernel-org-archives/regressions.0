@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF965EAA
-	for <regressions@lists.linux.dev>; Sun, 20 Feb 2022 17:26:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 446B05EA4
+	for <regressions@lists.linux.dev>; Sun, 20 Feb 2022 17:33:55 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nLpya-0001jt-F4; Sun, 20 Feb 2022 18:26:24 +0100
-Message-ID: <52d494d1-6133-d7ac-932b-1b70c136096c@leemhuis.info>
-Date: Sun, 20 Feb 2022 18:26:24 +0100
+	id 1nLq5p-0007yD-E6; Sun, 20 Feb 2022 18:33:53 +0100
+Message-ID: <978944b7-4e71-475a-2fe6-c414d3e8f64e@leemhuis.info>
+Date: Sun, 20 Feb 2022 18:33:52 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,63 +18,58 @@ User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
 Content-Language: en-BS
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Bug 215596 - Commit 59ec715 breaks systemd LimitNPROC with
- PrivateUsers
+To: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+ "Pan, Xinhui" <Xinhui.Pan@amd.com>
+Cc: "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Bug 215600 - Radeon - *ERROR* Failed waiting for UVD message
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645377986;f8248152;
-X-HE-SMSGID: 1nLpya-0001jt-F4
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645378435;10777078;
+X-HE-SMSGID: 1nLq5p-0007yD-E6
 
-Hi, this is your Linux kernel regression tracker speaking.
+Hi, this is your Linux kernel regression tracker.
 
-About a week ago a regression was reported to bugzilla.kernel.org that
-seems to be handled there already, nevertheless I'd like to add to the
-tracking to ensure it's not forgotten.
+I noticed a regression report in bugzilla.kernel.org that afaics nobody
+acted upon since it was reported about a week ago, that's why I decided
+to forward it to the lists and all the relevant people. To quote
+https://bugzilla.kernel.org/show_bug.cgi?id=215600 :
 
-#regzbot introduced: 59ec71575ab4
-#regzbot from: Etienne Dechamps <etienne@edechamps.fr>
-#regzbot title: Commit 59ec715 breaks systemd LimitNPROC with PrivateUsers
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215596
+>  Richard Herbert 2022-02-12 22:13:07 UTC
+> 
+> Created attachment 300445 [details]
+> Details
+> 
+> When attempting to play some types of videos with VLC 3.0.16 (eg. *.flv, *.mp4), when running kernels 5.17-rc1 to 5.17-rc3, only the audio portion is heard and the VLC video screen remains black. Meanwhile, many of these entries are written per second to /var/log/syslog:
+> 
+> 2/12/22 3:41 PM	starbug	kernel	[drm:radeon_uvd_cs_parse [radeon]] *ERROR* Failed waiting for UVD message (-1)!
+> 2/12/22 3:41 PM	starbug	kernel	[drm:radeon_cs_ioctl [radeon]] *ERROR* Invalid command stream !
+> 2/12/22 3:41 PM	starbug	kernel	[drm:radeon_uvd_cs_parse [radeon]] *ERROR* Failed waiting for UVD message (-1)!
+> 2/12/22 3:41 PM	starbug	kernel	[drm:radeon_cs_ioctl [radeon]] *ERROR* Invalid command stream !
+> 2/12/22 3:41 PM	starbug	kernel	[drm:radeon_uvd_cs_parse [radeon]] *ERROR* Failed waiting for UVD message (-1)!
+> 2/12/22 3:41 PM	starbug	kernel	[drm:radeon_cs_ioctl [radeon]] *ERROR* Invalid command stream !
+> 
+> 
+> The problem doesn't occur in kernels of the 5.16 series.  It may have been introduced here:
+> 
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/diff/drivers/gpu/drm/radeon/radeon_uvd.c?id=v5.16&id2=v5.17-rc1
+> 
+> 
+> Thanks!
 
-Quote:
+Could somebody take a look into this? Or was this discussed somewhere
+else already? Or even fixed?
 
-> Commit 59ec715 "ucounts: Fix rlimit max values check", first included in Linux 5.15.12, breaks systemd "LimitNPROC" (RLIMIT_NPROC) when combined with "PrivateUsers" (user namespacing).
-> 
-> This can be reproduced with a trivial systemd service file:
-> 
-> [Service]
-> User=nobody
-> PrivateUsers=yes
-> LimitNPROC=4
-> Type=oneshot
-> ExecStart=/bin/true
-> 
-> Which, on 59ec715, fails with:
-> 
-> Failed to execute /bin/true: Resource temporarily unavailable
-> Failed at step EXEC spawning /bin/true: Resource temporarily unavailable
-> Main process exited, code=exited, status=203/EXEC
-> 
-> (Even though user `nobody` has no running processes besides this one)
-> 
-> A strace on PID 1 reveals the following sequence of calls (excerpt):
-> 
-> clone(child_stack=NULL, flags=CLONE_CHILD_CLEARTID|CLONE_CHILD_SETTID|SIGCHLD, child_tidptr=0x40e60150) = 129
-> [pid   129] prlimit64(0, RLIMIT_NPROC, {rlim_cur=4, rlim_max=4}, NULL) = 0
-> [pid   129] unshare(CLONE_NEWUSER)      = 0
-> [pid   129] setresuid(65534, 65534, 65534) = 0
-> [pid   129] execve("/bin/true", ["/bin/true"], 0x552ad950a0 /* 7 vars */) = -1 EAGAIN (Resource temporarily unavailable)
-> 
-> On the parent commit of 59ec715 the service starts successfully.
-> 
-> This is still reproducible on current master (83e3966).
-> 
-> Relevant patch discussion: https://lore.kernel.org/lkml/87lf0g9xq7.fsf@email.froward.int.ebiederm.org/T/#m0a39edf27bc5aabca58b2c2a3d81704818d2c6fe
-> 
-> This more recent thread also seems highly relevant: https://lore.kernel.org/lkml/20220207121800.5079-1-mkoutny@suse.com/
+Anyway, to get this tracked:
 
-See the ticket for details, there were a few replies already.
+#regzbot introduced: v5.16..v5.17-rc1
+#regzbot from:  Richard Herbert <rherbert@sympatico.ca>
+#regzbot title: drm: radeon: no sound on video, *ERROR* Failed waiting
+for UVD message
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215600
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
