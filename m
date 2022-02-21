@@ -1,124 +1,229 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737027B
-	for <regressions@lists.linux.dev>; Mon, 21 Feb 2022 07:42:18 +0000 (UTC)
-Received: by mail-pl1-f180.google.com with SMTP id w20so12195104plq.12
-        for <regressions@lists.linux.dev>; Sun, 20 Feb 2022 23:42:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:user-agent:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=dLxIZoeQL5QeHlz0THvMUsIZQRWOGlgrKYRsHiIufA8=;
-        b=AjM75lU/aJ1KzHzY1OS7/JQ/sF6o/a954sUrCH7fUe8N7WKDbLF0YdiJuqaRxLWcim
-         HsldS2aEtNBpR5e1vpE3ApFGp4TIIpvOj1wYgmHqw55raD7mj6lrXiB0EaQqVkl/hkd3
-         Wl0jhAwl/LTQRojnDaDsNCFX5x2JLCtvT8MGg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:user-agent:in-reply-to
-         :references:message-id:mime-version:content-transfer-encoding;
-        bh=dLxIZoeQL5QeHlz0THvMUsIZQRWOGlgrKYRsHiIufA8=;
-        b=Q9IxYgdDoawd5igZ5H45jaZm3cyiUbhElMznotSh1+Oi+m2m7mJZ07lvz99rAzkJnQ
-         ZlPb4xnMbqKlyUSbmcb9+ayvHKggwpdG9fioyf3Qm2x/NWLlvjSjibtrSom5FaX9vMtk
-         +LAidCCXpjkOSwn0zE93MmxCQ5S1nKMjdinvgBH4X+qwhhsWLO57cbo8Ub5x8OYlV/MS
-         mth/i0cYsJ1nx2OnI81HDgQ4gsbTo3L2NSKfDz+pGfktpfiqw7c7eHqw8n6gKiaIg3ty
-         5Yn2ePHTF+CpX+eRzQ3T8KvyrWbbOZImHZkkJ3yyYWCw9kYV76ZlTMWRwIDPJ8A1ZDLo
-         mcvg==
-X-Gm-Message-State: AOAM531FAMm5Ll2DbvJYs3W1QeSiwBwcnzYX7R5oClg4FX7WUJpfxwkO
-	u5d4jW7wU8fzjGO8ON0bYYT0EA==
-X-Google-Smtp-Source: ABdhPJw3sMUzvqOO9UfAnEOtXQLPiJFMTKPdJbS/nuB2oWposPJlERR9b9/rEuIUH27bdiXzpxACgg==
-X-Received: by 2002:a17:90b:30cb:b0:1bb:fa5e:68a with SMTP id hi11-20020a17090b30cb00b001bbfa5e068amr9639855pjb.5.1645429337899;
-        Sun, 20 Feb 2022 23:42:17 -0800 (PST)
-Received: from ?IPv6:::1? ([2600:6c55:6300:7238:34b8:edf8:24ec:9845])
-        by smtp.gmail.com with ESMTPSA id l17sm11871636pfu.61.2022.02.20.23.42.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 20 Feb 2022 23:42:17 -0800 (PST)
-Date: Sun, 20 Feb 2022 23:42:13 -0800
-From: Kees Cook <keescook@chromium.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Anthony Yznaga <anthony.yznaga@oracle.com>
-CC: matoro_bugzilla_kernel@matoro.tk, Andrew Morton <akpm@linux-foundation.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- linux-ia64@vger.kernel.org, Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: regression: Bug 215601 - gcc segv at startup on ia64
-User-Agent: K-9 Mail for Android
-In-Reply-To: <823f70be-7661-0195-7c97-65673dc7c12a@leemhuis.info>
-References: <a3edd529-c42d-3b09-135c-7e98a15b150f@leemhuis.info> <823f70be-7661-0195-7c97-65673dc7c12a@leemhuis.info>
-Message-ID: <03497313-A472-4152-BD28-41C35E4E824E@chromium.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7A22581
+	for <regressions@lists.linux.dev>; Mon, 21 Feb 2022 11:50:41 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nM7DA-0004w3-Ce; Mon, 21 Feb 2022 12:50:36 +0100
+Message-ID: <72b499e9-4f23-bbf8-f026-4d4e074df268@leemhuis.info>
+Date: Mon, 21 Feb 2022 12:50:35 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [PATCH] PCI: xgene: Fix IB window setup
+To: dann frazier <dann.frazier@canonical.com>, Rob Herring <robh@kernel.org>
+Cc: Toan Le <toan@os.amperecomputing.com>,
+ Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ Andrew Murray <amurray@thegoodpenguin.co.uk>,
+ =?UTF-8?Q?St=c3=a9phane_Graber?= <stgraber@ubuntu.com>,
+ stable <stable@vger.kernel.org>, PCI <linux-pci@vger.kernel.org>,
+ linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20211129173637.303201-1-robh@kernel.org>
+ <Yf2wTLjmcRj+AbDv@xps13.dannf>
+ <CAL_Jsq+4b4Yy8rJGJv9j9j_TCm6mTAkW5fzcDuuW-jOoiZ2GLg@mail.gmail.com>
+ <CALdTtnuK+D7gNbEDgHbrc29pFFCR3XYAHqrK3=X_hQxUx-Seow@mail.gmail.com>
+ <CAL_JsqJUmjG-SiuR9T7f=5nGcSjTLhuF_382EQDf74kcqdAq_w@mail.gmail.com>
+ <YgHFFIRT6E0j9TlX@xps13.dannf>
+ <CAL_JsqJLTkDm_ZbFWSKwKvVAh0KpxiS9y6LEwmhQ-kejTcLq7A@mail.gmail.com>
+ <YgXG838iMrS1l8SC@xps13.dannf>
+Content-Language: en-BS
+In-Reply-To: <YgXG838iMrS1l8SC@xps13.dannf>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645444241;627a70cd;
+X-HE-SMSGID: 1nM7DA-0004w3-Ce
+
+Hi, this is your Linux kernel regression tracker speaking. Top-posting
+for once, to make this easy accessible to everyone.
+
+What's the status of this regression and getting it fixed? It looks like
+there was quite some progress for a while, but then things seem to have
+come to a halt ten days ago. Could anyone please provide a status
+update, please?
+
+Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+
+P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+on my table. I can only look briefly into most of them. Unfortunately
+therefore I sometimes will get things wrong or miss something important.
+I hope that's not the case here; if you think it is, don't hesitate to
+tell me about it in a public reply, that's in everyone's interest.
+
+#regzbot poke
 
 
-
-On February 20, 2022 9:19:46 AM PST, Thorsten Leemhuis <regressions@leemhu=
-is=2Einfo> wrote:
->[reply to get Anthony on board, I screwed up when copy and pasting his
->email address when sending below mail; sorry for the noise!]
->
->On 20=2E02=2E22 18:12, Thorsten Leemhuis wrote:
->> Hi, this is your Linux kernel regression tracker=2E
->>=20
->> I noticed a regression report in bugzilla=2Ekernel=2Eorg that afaics no=
-body
->> acted upon since it was reported about a week ago, that's why I'm hereb=
-y
->> forwarding it to the lists and the relevant people=2E To quote
->> https://bugzilla=2Ekernel=2Eorg/show_bug=2Ecgi?id=3D215601 :
->>=20
->>> On ia64, after 5f501d555653f8968011a1e65ebb121c8b43c144, the gcc
->>> binary crashes with SIGSEGV at startup (i=2Ee=2E, during ELF loading)=
-=2E
->>> Only gcc exhibits the crash (including g++, etc), other toolchain
->>> components (such as ld, ldd, etc) do not, and neither does any other
->>> binary from what I can tell=2E  I also haven't observed the issue on
->>> any other architecture=2E
+On 11.02.22 03:16, dann frazier wrote:
+> On Tue, Feb 08, 2022 at 08:34:45AM -0600, Rob Herring wrote:
+>> On Mon, Feb 7, 2022 at 7:19 PM dann frazier <dann.frazier@canonical.com> wrote:
 >>>
->>> Reverting this commit resolves the issue up to and including git tip,
->>> with no (visible) issues=2E
+>>> On Mon, Feb 07, 2022 at 10:09:31AM -0600, Rob Herring wrote:
+>>>> On Sat, Feb 5, 2022 at 3:13 PM dann frazier <dann.frazier@canonical.com> wrote:
+>>>>>
+>>>>> On Sat, Feb 5, 2022 at 9:05 AM Rob Herring <robh@kernel.org> wrote:
+>>>>>>
+>>>>>> On Fri, Feb 4, 2022 at 5:01 PM dann frazier <dann.frazier@canonical.com> wrote:
+>>>>>>>
+>>>>>>> On Mon, Nov 29, 2021 at 11:36:37AM -0600, Rob Herring wrote:
+>>>>>>>> Commit 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup")
+>>>>>>>> broke PCI support on XGene. The cause is the IB resources are now sorted
+>>>>>>>> in address order instead of being in DT dma-ranges order. The result is
+>>>>>>>> which inbound registers are used for each region are swapped. I don't
+>>>>>>>> know the details about this h/w, but it appears that IB region 0
+>>>>>>>> registers can't handle a size greater than 4GB. In any case, limiting
+>>>>>>>> the size for region 0 is enough to get back to the original assignment
+>>>>>>>> of dma-ranges to regions.
+>>>>>>>
+>>>>>>> hey Rob!
+>>>>>>>
+>>>>>>> I've been seeing a panic on HP Moonshoot m400 cartridges (X-Gene1) -
+>>>>>>> only during network installs - that I also bisected down to commit
+>>>>>>> 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup"). I was
+>>>>>>> hoping that this patch that fixed the issue on Stéphane's X-Gene2
+>>>>>>> system would also fix my issue, but no luck. In fact, it seems to just
+>>>>>>> makes it fail differently. Reverting both patches is required to get a
+>>>>>>> v5.17-rc kernel to boot.
+>>>>>>>
+>>>>>>> I've collected the following logs - let me know if anything else would
+>>>>>>> be useful.
+>>>>>>>
+>>>>>>> 1) v5.17-rc2+ (unmodified):
+>>>>>>>    http://dannf.org/bugs/m400-no-reverts.log
+>>>>>>>    Note that the mlx4 driver fails initialization.
+>>>>>>>
+>>>>>>> 2) v5.17-rc2+, w/o the commit that fixed Stéphane's system:
+>>>>>>>    http://dannf.org/bugs/m400-xgene2-fix-reverted.log
+>>>>>>>    Note the mlx4 MSI-X timeout, and later panic.
+>>>>>>>
+>>>>>>> 3) v5.17-rc2+, w/ both commits reverted (works)
+>>>>>>>    http://dannf.org/bugs/m400-both-reverted.log
+>>>>>>
+>>>>>> The ranges and dma-ranges addresses don't appear to match up with any
+>>>>>> upstream dts files. Can you send me the DT?
+>>>>>
+>>>>> Sure: http://dannf.org/bugs/fdt
+>>>>
+>>>> The first fix certainly is a problem. It's going to need something
+>>>> besides size to key off of (originally it was dependent on order of
+>>>> dma-ranges entries).
+>>>>
+>>>> The 2nd issue is the 'dma-ranges' has a second entry that is now ignored:
+>>>>
+>>>> dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00>, <0x00
+>>>> 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>>>
+>>>> Based on the flags (3rd addr cell: 0x0), we have an inbound config
+>>>> space which the kernel now ignores because inbound config space
+>>>> accesses make no sense. But clearly some setup is needed. Upstream, in
+>>>> contrast, sets up a memory range that includes this region, so the
+>>>> setup does happen:
+>>>>
+>>>> <0x42000000 0x00 0x00000000 0x00 0x00000000 0x80 0x00000000>
+>>>>
+>>>> Minimally, I suspect it will work if you change dma-ranges 2nd entry to:
+>>>>
+>>>> <0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>
 >>>
->>> Hardware:  HP Integrity rx2800 i2 Kernel config attached=2E
->>=20
->> Could somebody take a look into this? Or was this discussed somewhere
->> else already? Or even fixed?
->>=20
->> Anyway, to get this tracked:
->>=20
->> #regzbot introduced: 5f501d555653f8968011a1e65ebb121c8b43c144
->> #regzbot from: matoro <matoro_bugzilla_kernel@matoro=2Etk>
->> #regzbot title: gcc segv at startup on ia64
->> #regzbot link: https://bugzilla=2Ekernel=2Eorg/show_bug=2Ecgi?id=3D2156=
-01
+>>> Thanks for looking into this Rob. I tried to test that theory, but it
+>>> didn't seem to work. This is what I tried:
+>>>
+>>> --- m400.dts    2022-02-07 20:16:44.840475323 +0000
+>>> +++ m400.dts.dmaonly    2022-02-08 00:17:54.097132000 +0000
+>>> @@ -446,7 +446,7 @@
+>>>                         reg = <0x00 0x1f2b0000 0x00 0x10000 0xe0 0xd0000000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         reg-names = "csr\0cfg\0msi_gen\0msi_term";
+>>>                         ranges = <0x1000000 0x00 0x00 0xe0 0x10000000 0x00 0x10000 0x2000000 0x00 0x30000000 0xe1 0x30000000 0x00 0x80000000>;
+>>> -                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>> +                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         ib-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         ib-ranges-ep = <0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x79000000 0x00 0x79000000 0x00 0x100000>;
+>>>                         interrupts = <0x00 0x10 0x04>;
+>>> @@ -471,7 +471,7 @@
+>>>                         reg = <0x00 0x1f2c0000 0x00 0x10000 0xd0 0xd0000000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         reg-names = "csr\0cfg\0msi_gen\0msi_term";
+>>>                         ranges = <0x1000000 0x00 0x00 0xd0 0x10000000 0x00 0x10000 0x2000000 0x00 0x30000000 0xd1 0x30000000 0x00 0x80000000>;
+>>> -                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>> +                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         ib-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         ib-ranges-ep = <0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x79000000 0x00 0x79000000 0x00 0x100000>;
+>>>                         interrupts = <0x00 0x10 0x04>;
+>>> @@ -496,7 +496,7 @@
+>>>                         reg = <0x00 0x1f2d0000 0x00 0x10000 0x90 0xd0000000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         reg-names = "csr\0cfg\0msi_gen\0msi_term";
+>>>                         ranges = <0x1000000 0x00 0x00 0x90 0x10000000 0x00 0x10000 0x2000000 0x00 0x30000000 0x91 0x30000000 0x00 0x80000000>;
+>>> -                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>> +                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         ib-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         ib-ranges-ep = <0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x79000000 0x00 0x79000000 0x00 0x100000>;
+>>>                         interrupts = <0x00 0x10 0x04>;
+>>> @@ -522,7 +522,7 @@
+>>>                         reg = <0x00 0x1f500000 0x00 0x10000 0xa0 0xd0000000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         reg-names = "csr\0cfg\0msi_gen\0msi_term";
+>>>                         ranges = <0x2000000 0x00 0x30000000 0xa1 0x30000000 0x00 0x80000000>;
+>>> -                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>> +                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         ib-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         ib-ranges-ep = <0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x79000000 0x00 0x79000000 0x00 0x100000>;
+>>>                         interrupts = <0x00 0x10 0x04>;
+>>> @@ -547,7 +547,7 @@
+>>>                         reg = <0x00 0x1f510000 0x00 0x10000 0xc0 0xd0000000 0x00 0x200000 0x00 0x79e00000 0x00 0x2000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         reg-names = "csr\0cfg\0msi_gen\0msi_term";
+>>>                         ranges = <0x1000000 0x00 0x00 0xc0 0x10000000 0x00 0x10000 0x2000000 0x00 0x30000000 0xc1 0x30000000 0x00 0x80000000>;
+>>> -                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>> +                       dma-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x42000000 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         ib-ranges = <0x42000000 0x40 0x00 0x40 0x00 0x40 0x00 0x00 0x00 0x79000000 0x00 0x79000000 0x00 0x800000>;
+>>>                         ib-ranges-ep = <0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x00 0x00 0x00 0x00 0x400000 0x2000000 0x00 0x79000000 0x00 0x79000000 0x00 0x100000>;
+>>>                         interrupts = <0x00 0x10 0x04>;
+>>>
+>>> And that failed to boot with a 5.17-rc3. Since dma-ranges was
+>>> previously identical to ib-ranges, I also tried making the same change
+>>> to ib-ranges, but with no success.
+>>
+>> Failed to boot at all or just PCIe still didn't work causing boot to
+>> eventually fail?
+> 
+> Sorry, I mean PCIe still didn't work, here's the log:
+>  http://dannf.org/bugs/m400-tweaked_dtb.log
+> (unmodified kernel source w/ above dtb change)
+> 
+>> 'ib-ranges' is unknown to the kernel, so the firmware
+>> is using it somehow?
+>>
+>> You also need to revert the first fix for PCIe to work.
+> 
+> Oh, OK. I misunderstood. I tried reverting commit 6dce5aa59e0b "PCI:
+> xgene: Use inbound resources for setup" along with a dtb with the
+> dma-ranges change in the diff above, but PCIe still didn't
+> work. Here's the log:
+> 
+> http://dannf.org/bugs/m400-6dce5aa5_reverted+tweaked_dtb.log
+> 
+>   -dann
+>   
+>>
+>>>> While we shouldn't break existing DTs, the moonshot DT doesn't use
+>>>> what's documented upstream. There are multiple differences compared to
+>>>> what's documented. Is upstream supposed to support upstream DTs,
+>>>> downstream DTs, and ACPI for XGene which is an abandoned platform with
+>>>> only a handful of users?
+>>>
+>>> That's a fair question, though it's one of a policy, and I feel I'd be
+>>> overstepping by weighing in. I suppose one option I have is to try
+>>> and create and upstream a dts for these systems and modify our
+>>> boot.scr to always load that over the one provided by firmware. While
+>>> we do have some of these systems in production, they are being retired
+>>> and replaced with newer kit over time, and it's possible we'll never
+>>> need to upgrade them to a modern kernel.
+>>>
+>>>   -dann
 
-Does this fix it?
-
-https://www=2Eozlabs=2Eorg/~akpm/mmotm/broken-out/elf-fix-overflow-in-tota=
-l-mapping-size-calculation=2Epatch
-
--Kees
-
-
->>=20
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat=
-)
->>=20
->> P=2ES=2E: As the Linux kernel's regression tracker I'm getting a lot of
->> reports on my table=2E I can only look briefly into most of them and la=
-ck
->> knowledge about most of the areas they concern=2E I thus unfortunately
->> will sometimes get things wrong or miss something important=2E I hope
->> that's not the case here; if you think it is, don't hesitate to tell me
->> in a public reply, it's in everyone's interest to set the public record
->> straight=2E
->>=20
-
---=20
-Kees Cook
