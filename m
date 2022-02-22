@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F228E625
-	for <regressions@lists.linux.dev>; Tue, 22 Feb 2022 06:27:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B066356
+	for <regressions@lists.linux.dev>; Tue, 22 Feb 2022 08:59:07 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nMOdr-0003pO-Jz; Tue, 22 Feb 2022 07:27:19 +0100
-Message-ID: <a13178af-2f2b-1b61-387c-f9b268b80b38@leemhuis.info>
-Date: Tue, 22 Feb 2022 07:27:18 +0100
+	id 1nMR0j-0001ih-2c; Tue, 22 Feb 2022 09:59:05 +0100
+Message-ID: <53e7de78-4d27-5089-f159-0d443b354666@leemhuis.info>
+Date: Tue, 22 Feb 2022 09:59:04 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,80 +16,333 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: Since commit e8907f76544ffe225ab95d70f7313267b1d0c76d bluetooth
- scanning stopped working on my system
 Content-Language: en-BS
-To: Maxim Levitsky <mlevitsk@redhat.com>,
- Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>, linux-bluetooth@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <f648f2e11bb3c2974c32e605a85ac3a9fac944f1.camel@redhat.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <f648f2e11bb3c2974c32e605a85ac3a9fac944f1.camel@redhat.com>
+Subject: Bug 215605 - [5.14 regression] BUG: unable to handle page fault while
+ running badblocks (fsck.ext4 -c) on a raid5 md array
+To: Song Liu <song@kernel.org>, linux-raid@vger.kernel.org
+Cc: Dominik Mierzejewski <dominik@greysector.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645511250;235d1b51;
-X-HE-SMSGID: 1nMOdr-0003pO-Jz
+Content-Transfer-Encoding: quoted-printable
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645520347;37108502;
+X-HE-SMSGID: 1nMR0j-0001ih-2c
 
+Hi, this is your Linux kernel regression tracker.
 
-[TLDR: I'm adding the regression report below to regzbot, the Linux
-kernel regression tracking bot; all text you find below is compiled from
-a few templates paragraphs you might have encountered already already
-from similar mails.]
+I noticed a regression report in bugzilla.kernel.org that afaics nobody
+acted upon since it was reported about a week ago, that's why I decided
+to forward it to the lists and add a few relevant people to the CC. To
+quote from https://bugzilla.kernel.org/show_bug.cgi?id=3D215605
 
-Hi, this is your Linux kernel regression tracker speaking.
+>  Dominik Mierzejewski 2022-02-14 10:36:36 UTC
+>=20
+> Created attachment 300450 [details]
+> kernel-5.16.8 dmesg with crash
+>=20
+> I'm experiencing kernel crash when running badblocks (fsck.ext4 -c) on =
+a raid5 md array in my Intel Atom-based NAS box (Thecus N5550):
+> [  720.911993] kernel: BUG: unable to handle page fault for address: ff=
+ffdbc681023bc8
+> [  720.912073] kernel: #PF: supervisor read access in kernel mode
+> [  720.912120] kernel: #PF: error_code(0x0000) - not-present page
+> [  720.912166] kernel: PGD 11ffc6067 P4D 11ffc6067 PUD 0=20
+> [  720.912213] kernel: Oops: 0000 [#1] PREEMPT SMP NOPTI
+> [  720.912256] kernel: CPU: 1 PID: 1406 Comm: badblocks Not tainted 5.1=
+6.8-200.fc35.x86_64 #1
+> [  720.912321] kernel: Hardware name: Intel Corporation Milstead Platfo=
+rm/Granite Well, BIOS CDV W Series 05 08/27/2015
+> [  720.912400] kernel: RIP: 0010:kfree+0x58/0x3e0
+> [  720.912449] kernel: Code: 80 4c 01 e5 0f 82 84 03 00 00 48 c7 c0 00 =
+00 00 80 48 2b 05 4a 96 3b 01 48 01 c5 48 c1 ed 0c 48 c1 e5 06 48 03 2d 2=
+8 96 3b 01 <48> 8b 45 08 48 8d 50 ff a8 01 48 0f 45 ea 4
+> 8 8b 55 08 48 8d 42 ff
+> [  720.912598] kernel: RSP: 0018:ffff9db4008efaf8 EFLAGS: 00010286
+> [  720.912648] kernel: RAX: 00006d7bc0000000 RBX: ffff9284c5214800 RCX:=
+ ffff9284c3758ff8
+> [  720.912708] kernel: RDX: ffff9283c1102740 RSI: ffffffffc07af091 RDI:=
+ ffff9db4008efd58
+> [  720.912767] kernel: RBP: ffffdbc681023bc0 R08: ffff9db4008efb88 R09:=
+ ffff9284c3759000
+> [  720.912826] kernel: R10: 0000000000000028 R11: ffff9284c213db48 R12:=
+ ffff9db4008efd58
+> [  720.912885] kernel: R13: ffff9284c213da00 R14: ffff9284c375f000 R15:=
+ ffff9db4008efd58
+> [  720.912945] kernel: FS:  00007f73e6669740(0000) GS:ffff9284dbc80000(=
+0000) knlGS:0000000000000000
+> [  720.913012] kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 000000008005003=
+3
+> [  720.913062] kernel: CR2: ffffdbc681023bc8 CR3: 000000005c2cc000 CR4:=
+ 00000000000006e0
+> [  720.913122] kernel: Call Trace:
+> [  720.913150] kernel:  <TASK>
+> [  720.913179] kernel:  raid5_make_request+0xb31/0xb90 [raid456]
+> [  720.913247] kernel:  ? do_wait_intr_irq+0xa0/0xa0
+> [  720.913292] kernel:  ? __blk_queue_split+0x30a/0x470
+> [  720.913339] kernel:  md_handle_request+0x119/0x180
+> [  720.913386] kernel:  md_submit_bio+0x67/0xa0
+> [  720.913425] kernel:  __submit_bio_fops+0x91/0x160
+> [  720.913468] kernel:  submit_bio_noacct+0xd7/0x2c0
+> [  720.913510] kernel:  __blkdev_direct_IO_simple+0x198/0x290
+> [  720.913576] kernel:  ? __fpu_restore_sig+0x193/0x570
+> [  720.913623] kernel:  ? sysvec_apic_timer_interrupt+0xaf/0xd0
+> [  720.913676] kernel:  ? __blkdev_direct_IO_simple+0x290/0x290
+> [  720.913728] kernel:  generic_file_read_iter+0x9b/0x160
+> [  720.913775] kernel:  new_sync_read+0x105/0x180
+> [  720.913820] kernel:  vfs_read+0xf1/0x190
+> [  720.913858] kernel:  ksys_read+0x4f/0xc0
+> [  720.913896] kernel:  do_syscall_64+0x38/0x90
+> [  720.913936] kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> [  720.913985] kernel: RIP: 0033:0x7f73e676d772
+> [  720.914024] kernel: Code: c0 e9 b2 fe ff ff 50 48 8d 3d da 2e 0c 00 =
+e8 b5 f9 01 00 0f 1f 44 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 7=
+5 10 0f 05 <48> 3d 00 f0 ff ff 77 56 c3 0f 1f 44 00 00 48 83 ec 28 48 89 =
+54 24
+> [  720.914166] kernel: RSP: 002b:00007fff1b8fcbb8 EFLAGS: 00000246 ORIG=
+_RAX: 0000000000000000
+> [  720.914231] kernel: RAX: ffffffffffffffda RBX: 0000000000000040 RCX:=
+ 00007f73e676d772
+> [  720.917149] kernel: RDX: 0000000000040000 RSI: 00007f73e65d3000 RDI:=
+ 0000000000000004
+> [  720.920078] kernel: RBP: 0000000000001000 R08: 00000000015105c0 R09:=
+ 0000000000000080
+> [  720.922980] kernel: R10: 00007fff1b8fca00 R11: 0000000000000246 R12:=
+ 00000015105c0000
+> [  720.925875] kernel: R13: 0000000000000004 R14: 00007f73e65d3000 R15:=
+ 0000000000040000
+> [  720.928795] kernel:  </TASK>
+> [  720.931704] kernel: Modules linked in: sctp ip6_udp_tunnel udp_tunne=
+l rpcrdma rdma_cm iw_cm ib_cm ib_core sit tunnel4 ip_tunnel rfkill ipt_RE=
+JECT nf_reject_ipv4 iptable_filter xt_nat iptable_nat nf_nat iptable_mang=
+le nf_conntrack_pptp xt_CT iptable_raw xt_multiport xt_set ip6t_REJECT nf=
+_reject_ipv6 xt_LOG nf_log_syslog xt_limit xt_state xt_conntrack nf_connt=
+rack nf_defrag_ipv6 nf_defrag_ipv4 ip6table_filter ip6_tables ip_set_hash=
+_netport ip_set_hash_net ip_set drivetemp it87 nfnetlink hwmon_vid vfat f=
+at iTCO_wdt intel_pmc_bxt iTCO_vendor_support at24 raid456 async_raid6_re=
+cov async_memcpy async_pq async_xor async_tx intel_powerclamp raid1 coret=
+emp snd_hda_codec_realtek snd_hda_codec_generic ledtrig_audio snd_hda_cod=
+ec_hdmi snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec s=
+nd_hda_core snd_usb_audio i2c_i801 gma500_gfx i2c_smbus snd_usbmidi_lib j=
+oydev snd_hwdep snd_rawmidi snd_seq_device mc snd_pcm lpc_ich i2c_algo_bi=
+t snd_timer drm_kms_helper snd cec soundcore nfsd auth_rpcgss
+> [  720.931885] kernel:  nfs_acl lockd grace drm fuse sunrpc zram ip_tab=
+les hid_logitech_hidpp serio_raw r8152 sata_sil24 video mii hid_jabra e10=
+00e hid_logitech_dj
+> [  720.952122] kernel: CR2: ffffdbc681023bc8
+> [  720.955651] kernel: ---[ end trace de2c3d5b971ae71d ]---
+> [  720.959186] kernel: RIP: 0010:kfree+0x58/0x3e0
+> [  720.962723] kernel: Code: 80 4c 01 e5 0f 82 84 03 00 00 48 c7 c0 00 =
+00 00 80 48 2b 05 4a 96 3b 01 48 01 c5 48 c1 ed 0c 48 c1 e5 06 48 03 2d 2=
+8 96 3b 01 <48> 8b 45 08 48 8d 50 ff a8 01 48 0f 45 ea 48 8b 55 08 48 8d =
+42 ff
+> [  720.966472] kernel: RSP: 0018:ffff9db4008efaf8 EFLAGS: 00010286
+> [  720.970238] kernel: RAX: 00006d7bc0000000 RBX: ffff9284c5214800 RCX:=
+ ffff9284c3758ff8
+> [  720.973993] kernel: RDX: ffff9283c1102740 RSI: ffffffffc07af091 RDI:=
+ ffff9db4008efd58
+> [  720.977723] kernel: RBP: ffffdbc681023bc0 R08: ffff9db4008efb88 R09:=
+ ffff9284c3759000
+> [  720.981464] kernel: R10: 0000000000000028 R11: ffff9284c213db48 R12:=
+ ffff9db4008efd58
+> [  720.985228] kernel: R13: ffff9284c213da00 R14: ffff9284c375f000 R15:=
+ ffff9db4008efd58
+> [  720.988995] kernel: FS:  00007f73e6669740(0000) GS:ffff9284dbc80000(=
+0000) knlGS:0000000000000000
+> [  720.992774] kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 000000008005003=
+3
+> [  720.996535] kernel: CR2: ffffdbc681023bc8 CR3: 000000005c2cc000 CR4:=
+ 00000000000006e0
+>=20
+> There was a crash earlier which caused the array to become degraded, bu=
+t I wasn't able to capture the backtrace due to journal corruption. After=
+ resyncing the array I tried running fsck on the filesystem and it's caus=
+ing a kernel crash each time.
+>=20
+> I've reproduced the crash with the following kernels:
+> 5.16.8-200.fc35.x86_64
+> 5.15.18-200.fc35.x86_64
+> 5.14.10-300.fc35.x86_64
+>=20
+> It doesn't happen with 5.13 kernels. I've been running fsck.ext4 -c on =
+the array for the last 10 hours without a crash. It found 27 read errors =
+which it corrected.
+>=20
+> Steps to reproduce:
+> 1. fsck.ext4 -c -v /dev/md126
+> 2. crash
+>=20
+> The array was degraded as a result of a previous crash, but it recovere=
+d itself with no errors reported. Obviously, there remained some read err=
+ors which badblocks found and which the kernel tripped over.
+>=20
+> Crash with 5.14.10 looks different:
+> Feb 13 17:55:06 kernel: general protection fault, probably for non-cano=
+nical address 0xef6dfcf53c7d6fc3: 0000 [#1] SMP NOPTI
+> Feb 13 17:55:06 kernel: CPU: 2 PID: 831 Comm: md126_raid5 Not tainted 5=
+=2E14.10-300.fc35.x86_64 #1
+> Feb 13 17:55:06 kernel: Hardware name: Intel Corporation Milstead Platf=
+orm/Granite Well, BIOS CDV W Series 05 08/27/2015
+> Feb 13 17:55:06 kernel: RIP: 0010:bio_endio+0x87/0x130
+> Feb 13 17:55:06 kernel: Code: 02 00 48 8b 45 08 48 85 c0 74 09 0f b7 55=
+ 14 f6 c6 01 75 2f 48 81 7d 38 50 48 5e bb 75 38 0f b6 45 1a 48 8b 5d 40 =
+84 c0 74 09 <80> 7b 1a 00 75 03 88 43 1a 48 89 ef 48 89 dd e8 d5 fe ff ff=
+ e9 6a
+> Feb 13 17:55:06 kernel: RSP: 0000:ffffa5bb80597b48 EFLAGS: 00010206
+> Feb 13 17:55:06 kernel: RAX: 000000000000000a RBX: ef6dfcf53c7d6fa9 RCX=
+: ffff92b840865b50
+> Feb 13 17:55:06 kernel: RDX: 0000000000000082 RSI: ffff92b8497f46c0 RDI=
+: ffff92b84881f180
+> Feb 13 17:55:06 kernel: RBP: ffff92b8497f46c0 R08: 0000000000000001 R09=
+: 0000000000000000
+> Feb 13 17:55:06 kernel: R10: ffff92b74a722c01 R11: 0000000000000001 R12=
+: 0000000000000000
+> Feb 13 17:55:06 kernel: R13: 0000000000000000 R14: ffff92b74a722cd0 R15=
+: ffff92b844748860
+> Feb 13 17:55:06 kernel: FS:  0000000000000000(0000) GS:ffff92b85bd00000=
+(0000) knlGS:0000000000000000
+> Feb 13 17:55:06 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 00000000800500=
+33
+> Feb 13 17:55:06 kernel: CR2: 0000557d787a2028 CR3: 000000003c194000 CR4=
+: 00000000000006e0
+> Feb 13 17:55:06 kernel: Call Trace:
+> Feb 13 17:55:06 kernel:  ops_complete_biofill+0x98/0xe0 [raid456]
+> Feb 13 17:55:06 kernel:  async_trigger_callback+0x7d/0xc1 [async_tx]
+> Feb 13 17:55:06 kernel:  raid_run_ops+0x98c/0x15b0 [raid456]
+> Feb 13 17:55:06 kernel:  ? handle_stripe_clean_event+0x400/0x400 [raid4=
+56]
+> Feb 13 17:55:06 kernel:  handle_stripe+0xe91/0x1dc0 [raid456]
+> Feb 13 17:55:06 kernel:  handle_active_stripes.constprop.0+0x390/0x560 =
+[raid456]
+> Feb 13 17:55:06 kernel:  raid5d+0x39d/0x5d0 [raid456]
+> Feb 13 17:55:06 kernel:  ? prepare_to_wait_event+0x5d/0x170
+> Feb 13 17:55:06 kernel:  md_thread+0x98/0x140
+> Feb 13 17:55:06 kernel:  ? finish_wait+0x80/0x80
+> Feb 13 17:55:06 kernel:  ? md_write_inc+0x50/0x50
+> Feb 13 17:55:06 kernel:  kthread+0x124/0x150
+> Feb 13 17:55:06 kernel:  ? set_kthread_struct+0x40/0x40
+> Feb 13 17:55:06 kernel:  ret_from_fork+0x1f/0x30
+> Feb 13 17:55:06 kernel: Modules linked in: rpcrdma rdma_cm iw_cm ib_cm =
+ib_core rfkill ip6t_REJECT nf_reject_ipv6 ip6table_filter ip6_tables xt_s=
+et ipt_REJECT nf_reject_ipv4 xt_LOG nf_log_syslog xt_limit xt_multiport x=
+t_state xt_conntrack iptable_filter xt_nat iptable_nat nf_nat iptable_man=
+gle nf_conntrack_pptp xt_CT nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip=
+table_raw ip_set_hash_netport ip_set_hash_net ip_set drivetemp it87 nfnet=
+link hwmon_vid vfat fat snd_hda_codec_realtek snd_hda_codec_generic ledtr=
+ig_audio snd_hda_codec_hdmi iTCO_wdt snd_hda_intel intel_pmc_bxt snd_inte=
+l_dspcfg iTCO_vendor_support raid456 snd_intel_sdw_acpi snd_hda_codec asy=
+nc_raid6_recov at24 async_memcpy async_pq async_xor async_tx snd_hda_core=
+ gma500_gfx snd_hwdep i2c_algo_bit drm_kms_helper snd_pcm intel_powerclam=
+p i2c_i801 snd_timer coretemp i2c_smbus snd cec soundcore lpc_ich nfsd au=
+th_rpcgss nfs_acl lockd drm grace fuse sunrpc ip_tables raid1 serio_raw v=
+ideo sata_sil24 e1000e
+> Feb 13 17:55:06 kernel: ---[ end trace 97447bed31e596e0 ]---
+> Feb 13 17:55:06 kernel: RIP: 0010:bio_endio+0x87/0x130
+> Feb 13 17:55:06 kernel: Code: 02 00 48 8b 45 08 48 85 c0 74 09 0f b7 55=
+ 14 f6 c6 01 75 2f 48 81 7d 38 50 48 5e bb 75 38 0f b6 45 1a 48 8b 5d 40 =
+84 c0 74 09 <80> 7b 1a 00 75 03 88 43 1a 48 89 ef 48 89 dd e8 d5 fe ff ff=
+ e9 6a
+> Feb 13 17:55:06 kernel: RSP: 0000:ffffa5bb80597b48 EFLAGS: 00010206
+> Feb 13 17:55:06 kernel: RAX: 000000000000000a RBX: ef6dfcf53c7d6fa9 RCX=
+: ffff92b840865b50
+> Feb 13 17:55:06 kernel: RDX: 0000000000000082 RSI: ffff92b8497f46c0 RDI=
+: ffff92b84881f180
+> Feb 13 17:55:06 kernel: RBP: ffff92b8497f46c0 R08: 0000000000000001 R09=
+: 0000000000000000
+> Feb 13 17:55:06 kernel: R10: ffff92b74a722c01 R11: 0000000000000001 R12=
+: 0000000000000000
+> Feb 13 17:55:06 kernel: R13: 0000000000000000 R14: ffff92b74a722cd0 R15=
+: ffff92b844748860
+> Feb 13 17:55:06 kernel: FS:  0000000000000000(0000) GS:ffff92b85bd00000=
+(0000) knlGS:0000000000000000
+> Feb 13 17:55:06 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 00000000800500=
+33
+> Feb 13 17:55:06 kernel: CR2: 0000557d787a2028 CR3: 000000003c194000 CR4=
+: 00000000000006e0
+> Feb 13 17:55:06 kernel: ------------[ cut here ]------------
+> Feb 13 17:55:06 kernel: WARNING: CPU: 2 PID: 831 at kernel/exit.c:739 d=
+o_exit+0x37/0xa90
+> Feb 13 17:55:06 kernel: Modules linked in: rpcrdma rdma_cm iw_cm ib_cm =
+ib_core rfkill ip6t_REJECT nf_reject_ipv6 ip6table_filter ip6_tables xt_s=
+et ipt_REJECT nf_reject_ipv4 xt_LOG nf_log_syslog xt_limit xt_multiport x=
+t_state xt_conntrack iptable_filter xt_nat iptable_nat nf_nat iptable_man=
+gle nf_conntrack_pptp xt_CT nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip=
+table_raw ip_set_hash_netport ip_set_hash_net ip_set drivetemp it87 nfnet=
+link hwmon_vid vfat fat snd_hda_codec_realtek snd_hda_codec_generic ledtr=
+ig_audio snd_hda_codec_hdmi iTCO_wdt snd_hda_intel intel_pmc_bxt snd_inte=
+l_dspcfg iTCO_vendor_support raid456 snd_intel_sdw_acpi snd_hda_codec asy=
+nc_raid6_recov at24 async_memcpy async_pq async_xor async_tx snd_hda_core=
+ gma500_gfx snd_hwdep i2c_algo_bit drm_kms_helper snd_pcm intel_powerclam=
+p i2c_i801 snd_timer coretemp i2c_smbus snd cec soundcore lpc_ich nfsd au=
+th_rpcgss nfs_acl lockd drm grace fuse sunrpc ip_tables raid1 serio_raw v=
+ideo sata_sil24 e1000e
+> Feb 13 17:55:06 kernel: CPU: 2 PID: 831 Comm: md126_raid5 Tainted: G   =
+   D           5.14.10-300.fc35.x86_64 #1
+> Feb 13 17:55:06 kernel: Hardware name: Intel Corporation Milstead Platf=
+orm/Granite Well, BIOS CDV W Series 05 08/27/2015
+> Feb 13 17:55:06 kernel: RIP: 0010:do_exit+0x37/0xa90
+> Feb 13 17:55:06 kernel: Code: 55 48 89 fd 53 65 48 8b 1c 25 c0 7b 01 00=
+ 48 83 ec 28 48 8b 83 a8 0c 00 00 48 85 c0 74 0e 48 8b 10 48 39 d0 0f 84 =
+56 04 00 00 <0f> 0b 65 8b 0d a0 2c f3 44 89 c8 25 00 ff ff 00 89 44 24 0c=
+ 0f 85
+> Feb 13 17:55:06 kernel: RSP: 0000:ffffa5bb80597ef8 EFLAGS: 00010212
+> Feb 13 17:55:06 kernel: RAX: ffffa5bb80597e50 RBX: ffff92b8437d8000 RCX=
+: 0000000000000000
+> Feb 13 17:55:06 kernel: RDX: ffff92b844217548 RSI: ffff92b85bd18a00 RDI=
+: 000000000000000b
+> Feb 13 17:55:06 kernel: RBP: 000000000000000b R08: 0000000000000000 R09=
+: ffffa5bb805977a0
+> Feb 13 17:55:06 kernel: R10: ffffa5bb80597798 R11: ffffffffbcf47468 R12=
+: 000000000000000b
+> Feb 13 17:55:06 kernel: R13: 0000000000000000 R14: ffff92b8437d8000 R15=
+: 0000000000000000
+> Feb 13 17:55:06 kernel: FS:  0000000000000000(0000) GS:ffff92b85bd00000=
+(0000) knlGS:0000000000000000
+> Feb 13 17:55:06 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 00000000800500=
+33
+> Feb 13 17:55:06 kernel: CR2: 0000557d787a2028 CR3: 000000003c194000 CR4=
+: 00000000000006e0
+> Feb 13 17:55:06 kernel: Call Trace:
+> Feb 13 17:55:06 kernel:  ? kthread+0x124/0x150
+> Feb 13 17:55:06 kernel:  rewind_stack_do_exit+0x17/0x20
+> Feb 13 17:55:06 kernel: RIP: 0000:0x0
+> Feb 13 17:55:06 kernel: Code: Unable to access opcode bytes at RIP 0xff=
+ffffffffffffd6.
+> Feb 13 17:55:06 kernel: RSP: 0000:0000000000000000 EFLAGS: 00000000 ORI=
+G_RAX: 0000000000000000
+> Feb 13 17:55:06 kernel: RAX: 0000000000000000 RBX: 0000000000000000 RCX=
+: 0000000000000000
+> Feb 13 17:55:06 kernel: RDX: 0000000000000000 RSI: 0000000000000000 RDI=
+: 0000000000000000
+> Feb 13 17:55:06 kernel: RBP: 0000000000000000 R08: 0000000000000000 R09=
+: 0000000000000000
+> Feb 13 17:55:06 kernel: R10: 0000000000000000 R11: 0000000000000000 R12=
+: 0000000000000000
+> Feb 13 17:55:06 kernel: R13: 0000000000000000 R14: 0000000000000000 R15=
+: 0000000000000000
+> Feb 13 17:55:06 kernel: ---[ end trace 97447bed31e596e1 ]---
+>=20
+> Downstream bug report: https://bugzilla.redhat.com/show_bug.cgi?id=3D20=
+53936 .
 
-CCing the regression mailing list, as it should be in the loop for all
-regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+Could somebody take a look into this? Or was this discussed somewhere
+else already? Or even fixed?
 
-On 21.02.22 23:37, Maxim Levitsky wrote:
-> Today I updated to a new kernel and I am bisecting few regressions:
-> 
-> I noticed that if I open GNOME's bluetooth setting, it hangs for like minute or so,
-> and then shows only the paired devices and no scan results.
-> 
-> I bisected this to this commit.
-> 
-> For reference I am running fairly old fedora 32 on this machine, and thus I have
-> bluez 5.55 and stock GNOME from fedora 32.
-> 
-> I can provide any more info on anything if required and/or test patches.
-> 
-> I wasn't able tor revert this commit as it is part of a bigger rewrite of scanning
-> which makes sense.
-> 
-> I tried merging bluetooth-next master as of today,
-> into my kernel but no noticeable improvement.
+FWIW, I searched the list and wondered if these might be related, but I
+was unable to tell for sure:
 
-Thanks for the report.
+https://lore.kernel.org/all/164244747275.86917.2623783912687807916@richar=
+div.omgwallhack.org/
+https://lore.kernel.org/all/20211216145222.15370-4-mariusz.tkaczyk@linux.=
+intel.com/
 
-To be sure this issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
+Anyway, to get this tracked:
 
-#regzbot ^introduced e8907f76544ffe225ab95d70f73
-#regzbot title bluetooth: scanning stopped working
-#regzbot ignore-activity
-
-Reminder for developers: when fixing the issue, please add a 'Link:'
-tags pointing to the report (the mail quoted above) using
-lore.kernel.org/r/, as explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'. This allows the bot to connect
-the report with any patches posted or committed to fix the issue; this
-again allows the bot to show the current status of regressions and
-automatically resolve the issue when the fix hits the right tree.
-
-I'm sending this to everyone that got the initial report, to make them
-aware of the tracking. I also hope that messages like this motivate
-people to directly get at least the regression mailing list and ideally
-even regzbot involved when dealing with regressions, as messages like
-this wouldn't be needed then.
-
-Don't worry, I'll send further messages wrt to this regression just to
-the lists (with a tag in the subject so people can filter them away), if
-they are relevant just for regzbot. With a bit of luck no such messages
-will be needed anyway.
+#regzbot introduced: v5.13..v5.14.10
+#regzbot from: Dominik Mierzejewski <dominik@greysector.net>
+#regzbot title: md: unable to handle page fault while running badblocks
+(fsck.ext4 -c) on a raid5 md array
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D215605
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -101,7 +354,7 @@ that's not the case here; if you think it is, don't hesitate to tell me
 in a public reply, it's in everyone's interest to set the public record
 straight.
 
--- 
+--=20
 Additional information about regzbot:
 
 If you want to know more about regzbot, check out its web-interface, the
