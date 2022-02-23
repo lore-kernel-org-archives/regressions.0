@@ -1,72 +1,143 @@
-Received: from outbound-smtp42.blacknight.com (outbound-smtp42.blacknight.com [46.22.139.226])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6ABC6A
-	for <regressions@lists.linux.dev>; Wed, 23 Feb 2022 12:56:58 +0000 (UTC)
-Received: from mail.blacknight.com (pemlinmail05.blacknight.ie [81.17.254.26])
-	by outbound-smtp42.blacknight.com (Postfix) with ESMTPS id 2E2351D25
-	for <regressions@lists.linux.dev>; Wed, 23 Feb 2022 12:50:05 +0000 (GMT)
-Received: (qmail 528 invoked from network); 23 Feb 2022 12:50:04 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.17.223])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 23 Feb 2022 12:50:04 -0000
-Date: Wed, 23 Feb 2022 12:50:02 +0000
-From: Mel Gorman <mgorman@techsingularity.net>
-To: Shuang Zhai <szhai2@cs.rochester.edu>
-Cc: akpm@linux-foundation.org, djwong@kernel.org, efault@gmx.de,
-	hakavlad@inbox.lv, linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@suse.com,
-	regressions@lists.linux.dev, riel@surriel.com, vbabka@suse.cz
-Subject: Re: [PATCH v4 1/1] mm: vmscan: Reduce throttling due to a failure to
- make progress'
-Message-ID: <20220223125002.GE4423@techsingularity.net>
-References: <20220215144924.GS3366@techsingularity.net>
- <20220222172731.31949-1-szhai2@cs.rochester.edu>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE3C818
+	for <regressions@lists.linux.dev>; Wed, 23 Feb 2022 15:12:11 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nMtJD-0006G6-NM; Wed, 23 Feb 2022 16:12:03 +0100
+Message-ID: <84fe6020-4331-30a4-957f-e2816e70afa2@leemhuis.info>
+Date: Wed, 23 Feb 2022 16:12:00 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20220222172731.31949-1-szhai2@cs.rochester.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: Bug 215600 - Radeon - *ERROR* Failed waiting for UVD message
+ #forregzbot
+Content-Language: en-BS
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <978944b7-4e71-475a-2fe6-c414d3e8f64e@leemhuis.info>
+ <CADnq5_OS2jT1eRjjMf_c1OkeEEd1CJa7_T+yBoOtNKrLnWduZw@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CADnq5_OS2jT1eRjjMf_c1OkeEEd1CJa7_T+yBoOtNKrLnWduZw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645629132;ccdc0607;
+X-HE-SMSGID: 1nMtJD-0006G6-NM
 
-On Tue, Feb 22, 2022 at 12:27:31PM -0500, Shuang Zhai wrote:
-> Mel Gorman wrote:
-> > On Mon, Feb 14, 2022 at 04:10:50PM -0500, Shuang Zhai wrote:
-> > > Hi Mel,
-> > > 
-> > > Mel Gorman wrote:
-> > > >
-> > > > Mike Galbraith, Alexey Avramov and Darrick Wong all reported similar
-> > > > problems due to reclaim throttling for excessive lengths of time.
-> > > > In Alexey's case, a memory hog that should go OOM quickly stalls for
-> > > > several minutes before stalling. In Mike and Darrick's cases, a small
-> > > > memcg environment stalled excessively even though the system had enough
-> > > > memory overall.
-> > > >
-> > > 
-> > > I recently found a regression when I tested MGLRU with fio on Linux
-> > > 5.16-rc6 [1]. After this patch was applied, I re-ran the test with Linux
-> > > 5.16, but the regression has not been fixed yet. 
-> > > 
-> > 
-> > Am I correct in thinging that this only happens with MGLRU?
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
+
+Nothing happened in the first seven days after the bug was submitted,
+but seems forwarding this issue to the lists did the trick, as just a
+few hours later Christian came up with a patch that is now slowly
+heading towards mainline:
+
+#regzbot fixed-by: d9835eaa3e9fb4770745294fef3f8416446178c0
+
+https://cgit.freedesktop.org/drm/drm-misc/commit/?h=drm-misc-fixes&id=f762ce78897d734a08f52e39a353359b7d417578
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+
+On 21.02.22 16:10, Alex Deucher wrote:
+> On Mon, Feb 21, 2022 at 3:30 AM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+>>
+>> Hi, this is your Linux kernel regression tracker.
+>>
+>> I noticed a regression report in bugzilla.kernel.org that afaics nobody
+>> acted upon since it was reported about a week ago, that's why I decided
+>> to forward it to the lists and all the relevant people. To quote
+>> https://bugzilla.kernel.org/show_bug.cgi?id=215600 :
+>>
+>>>  Richard Herbert 2022-02-12 22:13:07 UTC
+>>>
+>>> Created attachment 300445 [details]
+>>> Details
+>>>
+>>> When attempting to play some types of videos with VLC 3.0.16 (eg. *.flv, *.mp4), when running kernels 5.17-rc1 to 5.17-rc3, only the audio portion is heard and the VLC video screen remains black. Meanwhile, many of these entries are written per second to /var/log/syslog:
+>>>
+>>> 2/12/22 3:41 PM       starbug kernel  [drm:radeon_uvd_cs_parse [radeon]] *ERROR* Failed waiting for UVD message (-1)!
+>>> 2/12/22 3:41 PM       starbug kernel  [drm:radeon_cs_ioctl [radeon]] *ERROR* Invalid command stream !
+>>> 2/12/22 3:41 PM       starbug kernel  [drm:radeon_uvd_cs_parse [radeon]] *ERROR* Failed waiting for UVD message (-1)!
+>>> 2/12/22 3:41 PM       starbug kernel  [drm:radeon_cs_ioctl [radeon]] *ERROR* Invalid command stream !
+>>> 2/12/22 3:41 PM       starbug kernel  [drm:radeon_uvd_cs_parse [radeon]] *ERROR* Failed waiting for UVD message (-1)!
+>>> 2/12/22 3:41 PM       starbug kernel  [drm:radeon_cs_ioctl [radeon]] *ERROR* Invalid command stream !
+>>>
+>>>
+>>> The problem doesn't occur in kernels of the 5.16 series.  It may have been introduced here:
+>>>
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/diff/drivers/gpu/drm/radeon/radeon_uvd.c?id=v5.16&id2=v5.17-rc1
+>>>
+>>>
+>>> Thanks!
+>>
+>> Could somebody take a look into this? Or was this discussed somewhere
+>> else already? Or even fixed?
 > 
-> Sorry about the confusion and let me clarify on this. The regression happens
-> on upstream Linux with the default page replacement mechanism.
-
-Ok, the fio command for me simply exits with an error and even if it didn't
-the test machine I have with persistent memory does not have enough pmem
-to trigger memory reclaim issues with fio. Can you do the following please?
-
-# echo 1 > vmscan/mm_vmscan_throttled/enable
-# cat /sys/kernel/debug/tracing/trace_pipe > trace.out
-
-and run the test? Compress trace.out with xz and send it to me by mail.
-If the trace is too large, send as much as you can.
-
--- 
-Mel Gorman
-SUSE Labs
+> This is a fix on the bug report.
+> 
+> Alex
+> 
+> 
+>>
+>> Anyway, to get this tracked:
+>>
+>> #regzbot introduced: v5.16..v5.17-rc1
+>> #regzbot from:  Richard Herbert <rherbert@sympatico.ca>
+>> #regzbot title: drm: radeon: no sound on video, *ERROR* Failed waiting
+>> for UVD message
+>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215600
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>
+>> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+>> reports on my table. I can only look briefly into most of them and lack
+>> knowledge about most of the areas they concern. I thus unfortunately
+>> will sometimes get things wrong or miss something important. I hope
+>> that's not the case here; if you think it is, don't hesitate to tell me
+>> in a public reply, it's in everyone's interest to set the public record
+>> straight.
+>>
+>> --
+>> Additional information about regzbot:
+>>
+>> If you want to know more about regzbot, check out its web-interface, the
+>> getting start guide, and the references documentation:
+>>
+>> https://linux-regtracking.leemhuis.info/regzbot/
+>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+>>
+>> The last two documents will explain how you can interact with regzbot
+>> yourself if your want to.
+>>
+>> Hint for reporters: when reporting a regression it's in your interest to
+>> CC the regression list and tell regzbot about the issue, as that ensures
+>> the regression makes it onto the radar of the Linux kernel's regression
+>> tracker -- that's in your interest, as it ensures your report won't fall
+>> through the cracks unnoticed.
+>>
+>> Hint for developers: you normally don't need to care about regzbot once
+>> it's involved. Fix the issue as you normally would, just remember to
+>> include 'Link:' tag in the patch descriptions pointing to all reports
+>> about the issue. This has been expected from developers even before
+>> regzbot showed up for reasons explained in
+>> 'Documentation/process/submitting-patches.rst' and
+>> 'Documentation/process/5.Posting.rst'.
+> 
