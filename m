@@ -1,71 +1,66 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265B17A
-	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 16:18:10 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nNGod-0006Ot-5w; Thu, 24 Feb 2022 17:18:03 +0100
-Message-ID: <a0ec4d70-35d7-ab32-4561-df77bcc6d0fd@leemhuis.info>
-Date: Thu, 24 Feb 2022 17:18:02 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E257A
+	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 16:22:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8E3DC340EC;
+	Thu, 24 Feb 2022 16:22:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1645719758;
+	bh=6AQaEZoBxwC8P5SMcS4qxA+oPXeSFFhe6lK0QQyH+5s=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=jww66/64Qu0L+xMCF6MZCXI8XrWI/fo59hOLHVDpgYQKIBhm2uBNf/bjxkHe3xLAz
+	 nA8Cg9z6DylS8z24BojPywd2j88zQeje6hxpBQjFVYSFcUz0ooR4d2aM5vPcvUX/1g
+	 K093QGZVPUuJLovwTEZe/e6qdB9bw1F6SC+xlBEGS/1dV2mSQSQea78SL/VewebDz3
+	 uz2dyyxvuM0fuiW+dlspweQfCOMr6K59kCRYc073s5x1bRdPB3bMfZYkR9w1CUMg7M
+	 YUFIw4ugWuXaVpFHqB+sOptLOsAXvKINvQQksN5jtyUCOquDBKu355w43HRM4Mmp37
+	 JXtG27frgSBlw==
+From: Kalle Valo <kvalo@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Nuno Oliveira <nuno@eq.uc.pt>,  Sebastian Bachmann <hello@reox.at>,  wgong@codeaurora.org,  ath10k@lists.infradead.org,  "regressions\@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: Compex WLE200NX: regdomain sanitized regression
+References: <1c160dfb-6ccc-b4d6-76f6-4364e0adb6dd@reox.at>
+	<YaIix40KaVlxT+XG@eq.uc.pt>
+	<96b3682d-71b3-ada0-6fc7-686e51609968@leemhuis.info>
+	<87v8zja7em.fsf@codeaurora.org> <YcDMGdpvINCX9VlX@eq.uc.pt>
+	<625a51ed-8185-6fdb-bd7d-cfb0a913c7a4@leemhuis.info>
+Date: Thu, 24 Feb 2022 18:22:29 +0200
+In-Reply-To: <625a51ed-8185-6fdb-bd7d-cfb0a913c7a4@leemhuis.info> (Thorsten
+	Leemhuis's message of "Fri, 18 Feb 2022 12:47:27 +0100")
+Message-ID: <87v8x4tet6.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-BW
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Chris Clayton <chris2553@googlemail.com>
-Cc: Chris Murphy <lists@colorremedies.com>,
- Bluetooth <linux-bluetooth@vger.kernel.org>, regressions@lists.linux.dev
-References: <CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i+RE+L2FTXSA@mail.gmail.com>
- <CABBYNZKTSe83iP4tm36we4cpAbeGUbEw9frZD1wCM9yo1zry5w@mail.gmail.com>
- <CAJCQCtTpHQe2co3fLNs5csKQchmwH=3YwQOvFnuc2nhjRseVnw@mail.gmail.com>
- <9ad505e1-7b59-7ebf-378b-23a6c0e25802@googlemail.com>
- <CABBYNZ+9tUKgLyUWM5vkMW8vHxYsXv6DEaDWdHt8xTTs6puGQA@mail.gmail.com>
- <aaeb4131-d177-d41e-617b-b0060cd83c92@googlemail.com>
- <CABBYNZLB+8UzhzttMrKbHW_+-A1EsY9iT5Y55VuOOEPuD4kAHQ@mail.gmail.com>
- <b1a4a920-dbba-58be-72b4-2c95b9b79283@googlemail.com>
- <82216882-463a-8976-e6bc-4a8919107a31@googlemail.com>
- <CABBYNZ+mO1gQgfwhemY9cqbi8vNLm_60A9c1vPYT2tH4rhgFww@mail.gmail.com>
- <a35b4b75-bb64-89c8-bacd-d58ed8576272@googlemail.com>
- <2ce6175c-74ec-8469-80a5-374bd1429542@googlemail.com>
- <CABBYNZJNTOT-mEQe2cfZiEX6A2pR7+sacBqtBRPRZY69YmgtvA@mail.gmail.com>
- <17f2bf7e-1d6b-e090-8926-21a408f2b496@googlemail.com>
- <CABBYNZ+cL4f8xvTJFQGLgqPueE=-UsOtvcPQez0BEsJ5xGppfQ@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: bug kernel 5.17, qualcom and intel adapters, unable to reliably
- connect to bluetooth devices
-In-Reply-To: <CABBYNZ+cL4f8xvTJFQGLgqPueE=-UsOtvcPQez0BEsJ5xGppfQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645719491;e169cfb4;
-X-HE-SMSGID: 1nNGod-0006Ot-5w
+Content-Type: text/plain
 
-On 24.02.22 16:16, Luiz Augusto von Dentz wrote:
-> On Thu, Feb 24, 2022 at 2:08 AM Chris Clayton <chris2553@googlemail.com> wrote:
->> On 24/02/2022 08:16, Luiz Augusto von Dentz wrote:
->>> On Wed, Feb 23, 2022 at 9:59 PM Chris Clayton <chris2553@googlemail.com> wrote:
->>>> On 23/02/2022 22:42, Chris Clayton wrote:
-> [...]
->> In the meantime I've copied this email to regressions@lists.linux.dev, so they can track this.
+Thorsten Leemhuis <regressions@leemhuis.info> writes:
 
-Many thx for this, much appreciated.
+> Hi, this is your Linux kernel regression tracker speaking. Top-posting
+> for once, to make this easy accessible to everyone.
+>
+> Kalle, thx for looking into this, I'm well aware this is kinda tricky.
+> This is a gently reminder about the issue to ensure it doesn't fall
+> through the cracks. At the same time I know that it's not urgent, that
+> why I'm not putting it on backburner in regzbot now:
+>
+> #regzbot backburner: tricky situation and around for a while, hence not
+> that urgent
+> #regzbot poke
+>
+> I'll likely sent another gentle reminder after the next merge-window.
 
-> Hmm, is that really necessary? 5.17 has not been release tagged yet
-> and you are already considering it a regression?
+I now queued the revert to my pending branch:
 
-Sure it's a regression, just one that didn't make it into a release yet.
-But tracking regressions in mainline is just as important as tracking
-them in stable trees, as it allows Linus to take a look at the known
-regressions when he needs to decide between "release another rc" and
-"call this finished and release the final". That's why mainline in the
-past often was the main focus of regression tracking or the only tree
-for which is was performed!
+https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=dfc438d224e4ad756b276d79e5771c45b523156d
 
-> [...]
+Thorsten, can you please check that the Link tag is correct so that
+regzbot can automatically detect the fix?
 
-Ciao, Thorsten
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
