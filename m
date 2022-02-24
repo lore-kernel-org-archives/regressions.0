@@ -1,161 +1,109 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DCE1878
-	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 13:28:23 +0000 (UTC)
-Received: by mail-yb1-f171.google.com with SMTP id j12so3785933ybh.8
-        for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 05:28:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=PWoHM5P/pAPHOuW7BhTY/a4Hu1y7CT5eN63sjuNRDM0=;
-        b=T6kRQLU5OYXCLAAhR3IDKqlM5/MBIPB0MlSNrYg1ST0xzKd67NFMMi1h1rfacr2EEK
-         JmvSBDZQeHGT0VuDaEecgoXv1jcHtywHilkZdgncE5r8pY3dnIzpzeP2clkuaf75SBac
-         AC4pPjWSD//SJh4bI8800iyNd/Lbq5HMFH9W5Fl42JvBa12dHgMhsIz47fIX/unGZhTb
-         1nZtiuEpXCTa8SvJcvayYbSUjZl6zV7V2lYxe4lpRzHEFVMQM9hCAygqY4yuNtuf/i10
-         9RwgEgYTkVh4srczR+kAQlRLepmfi17b6Fh0croahgB+qkdqFZZjhcGEc5EYuzj315VH
-         f7+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=PWoHM5P/pAPHOuW7BhTY/a4Hu1y7CT5eN63sjuNRDM0=;
-        b=qr6BdGN93t9RGg6AL1S2f4vfelW9YbNGuermLqGQC3FD/6ffcUdu3vyFkQqG0cq61n
-         8VogdevIg3Kh1wk9IWdeHQkrlgxNUtrKtfbnrN9QtojnX6XhXzCQWvKbta03Z/0clheq
-         d5YAiNUFtrLESaew+ynthfv65HKYbdhFalixQEXq38K68MHwBLITmM5Qu9sX/kuhpIki
-         qrzrnuw7vycC/55QBLWz1wKweP7FFQ/5yM7EZUU2Qr1JZcfsp5gzG6RLeabvjtrBh9oO
-         d+BI9pg3kLXb10JvoyyUTrnCajZrEzJ+lWwpbI2H06ZlU4K5LM6bUBGr2W3Gnt4RvUtS
-         ouYQ==
-X-Gm-Message-State: AOAM530VBafVW3949HTojg9Y7KkzmiV3Zi4E6KZexyp15g7DoUhgbE+j
-	f+aVGLzz2OX6ZxWeIgTcj77atI1ZMDzFVXlA/J4jIw==
-X-Google-Smtp-Source: ABdhPJxnnQg82+iGZ9tQJY/owmawEKGz4l4bYRutG1NcymM1wcsYLniNeRuWFOrxo49epnA8AM9EVI4jsl0UEGopAjU=
-X-Received: by 2002:a25:6993:0:b0:624:55af:336c with SMTP id
- e141-20020a256993000000b0062455af336cmr2381922ybc.412.1645709301901; Thu, 24
- Feb 2022 05:28:21 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FDE1B62
+	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 14:09:19 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nNEnw-0003dI-Iq; Thu, 24 Feb 2022 15:09:12 +0100
+Message-ID: <db329421-ff6c-50c9-69f6-ae8e1b9e9063@leemhuis.info>
+Date: Thu, 24 Feb 2022 15:09:11 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 24 Feb 2022 18:58:10 +0530
-Message-ID: <CA+G9fYtzLr+9T9Z1N8QLznW6DqTOU8iSHvgMftdhe2XkEf8F8g@mail.gmail.com>
-Subject: [next] next-20220223 kernel crash
-To: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
-	open list <linux-kernel@vger.kernel.org>, Lai Jiangshan <laijs@linux.alibaba.com>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, regressions@lists.linux.dev, lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-BW
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Johan Hedberg <johan.hedberg@gmail.com>
+Cc: linux-bluetooth@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220215015938.1950978-1-luiz.dentz@gmail.com>
+ <E428782F-C1D1-43FB-8CB3-009BD97A2D14@holtmann.org>
+ <c418c95d-339c-5b8a-5349-26078424abe4@leemhuis.info>
+Subject: Re: [PATCH] Bluetooth: Fix bt_skb_sendmmsg not allocating partial
+ chunks
+In-Reply-To: <c418c95d-339c-5b8a-5349-26078424abe4@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1645711760;a68f3dbf;
+X-HE-SMSGID: 1nNEnw-0003dI-Iq
 
-Linux next-20220223 boot failed due to the kernel crash on all devices.
+Hi, this is your Linux kernel regression tracker again. Top-posting for
+once, to make this easily accessible for everyone.
 
-metadata:
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: d4a0ae62a277377de396850ed4b709b6bd9b7326
-  git_describe: next-20220223
-  kernel-config: https://builds.tuxbuild.com/25XO3ffPO3RLpbE3aNxffMu4nEf/config
+I sent below inquiry on Saturday and didn't get a reply; and I didn't
+notice any other activity to get this regression fix mainlined soon.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Bluetooth maintainers, what's up here? I'd like to avoid getting Linus
+involved, but I guess I'm out of options if this mail doesn't get things
+rolling -- or alternatively an answer why this fix might better wait for
+the next merge window to get merged.
 
-crash log on x86_64 machine [1]:
-[    5.326681] Please do not flush events WQ.
-[    5.327480] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-5.17.0-rc5-next-20220223 #1
-[    5.327480] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.0b 07/27/2017
-[    5.327480] Call Trace:
-[    5.327480]  <TASK>
-[    5.327480]  dump_stack_lvl+0x49/0x5e
-[    5.327480]  dump_stack+0x10/0x12
-[    5.327480]  check_flush_dependency.cold+0x19/0x2e
-[    5.327480]  __flush_work.isra.0+0x186/0x400
-[    5.327480]  ? alloc_unbound_pwq+0x600/0x600
-[    5.327480]  ? preempt_count_sub+0xd2/0x120
-[    5.327480]  ? __rcu_read_unlock+0x53/0x70
-[    5.327480]  ? __queue_work+0x33e/0x680
-[    5.327480]  ? queue_work_on+0x4e/0x80
-[    5.327480]  ? work_on_cpu+0xb5/0xf0
-[    5.327480]  ? trace_hardirqs_on+0x38/0x120
-[    5.327480]  work_on_cpu+0xc1/0xf0
-[    5.327480]  ? queue_work_on+0x80/0x80
-[    5.327480]  ? __traceiter_workqueue_execute_end+0x70/0x70
-[    5.327480]  ? acpi_processor_power_init_bm_check+0x1a0/0x1a0
-[    5.327480]  ? acpi_os_allocate_zeroed+0x2a/0x2a
-[    5.327480]  acpi_processor_ffh_cstate_probe+0x105/0x1f0
-[    5.327480]  acpi_processor_evaluate_cst+0x553/0x670
-[    5.327480]  ? acpi_processor_claim_cst_control+0x80/0x80
-[    5.327480]  ? __kasan_check_write+0x14/0x20
-[    5.327480]  ? up_write+0x3f/0x70
-[    5.327480]  acpi_processor_get_power_info+0x87/0x850
-[    5.327480]  acpi_processor_power_init+0x113/0x260
-[    5.327480]  __acpi_processor_start+0x205/0x270
-[    5.327480]  acpi_processor_start+0x41/0x60
-[    5.327480]  really_probe+0x138/0x5d0
-[    5.327480]  ? __kasan_check_write+0x14/0x20
-[    5.327480]  __driver_probe_device+0x19e/0x230
-[    5.327480]  driver_probe_device+0x4e/0xf0
-[    5.327480]  __driver_attach+0xfc/0x260
-[    5.327480]  ? __device_attach_driver+0x130/0x130
-[    5.327480]  bus_for_each_dev+0xfb/0x150
-[    5.327480]  ? subsys_dev_iter_exit+0x10/0x10
-[    5.327480]  ? preempt_count_sub+0xd2/0x120
-[    5.327480]  ? _raw_spin_unlock+0x1f/0x40
-[    5.327480]  driver_attach+0x2d/0x40
-[    5.327480]  bus_add_driver+0x23f/0x300
-[    5.327480]  driver_register+0x119/0x1a0
-[    5.327480]  ? acpi_video_init+0x142/0x142
-[    5.327480]  acpi_processor_driver_init+0x33/0xc8
-[    5.327480]  do_one_initcall+0x99/0x2c0
-[    5.327480]  ? trace_event_raw_event_initcall_finish+0x160/0x160
-[    5.327480]  ? parameqn+0x40/0xa0
-[    5.327480]  ? __kmalloc+0x1cf/0x390
-[    5.327480]  kernel_init_freeable+0x2d2/0x330
-[    5.327480]  ? rest_init+0xf0/0xf0
-[    5.327480]  kernel_init+0x1e/0x140
-[    5.327480]  ret_from_fork+0x22/0x30
-[    5.327480]  </TASK>
+Ciao, Thorsten
 
-crash log on qemu [2]:
-
-[    9.766144] Please do not flush events_unbound WQ.
-[    9.766938] CPU: 1 PID: 1 Comm: swapper/0 Not tainted
-5.17.0-rc5-next-20220223 #1
-[    9.766938] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[    9.766938] Call Trace:
-[    9.766938]  <TASK>
-[    9.766938]  dump_stack_lvl+0x49/0x5e
-[    9.766938]  dump_stack+0x10/0x12
-[    9.766938]  check_flush_dependency.cold+0x19/0x2e
-[    9.766938]  __flush_work.isra.0+0x186/0x400
-[    9.766938]  ? __queue_work+0x339/0x680
-[    9.766938]  ? alloc_unbound_pwq+0x600/0x600
-[    9.766938]  ? __queue_work+0x33e/0x680
-[    9.766938]  ? queue_work_on+0x4e/0x80
-[    9.766938]  ? driver_deferred_probe_trigger.part.0+0xcb/0xe0
-[    9.766938]  ? trace_hardirqs_on+0x38/0x120
-[    9.766938]  ? queue_work_on+0x4e/0x80
-[    9.766938]  ? driver_deferred_probe_add.part.0+0xe0/0xe0
-[    9.766938]  flush_work+0xe/0x10
-[    9.766938]  deferred_probe_initcall+0x3e/0xa0
-[    9.766938]  do_one_initcall+0x99/0x2c0
-[    9.766938]  ? trace_event_raw_event_initcall_finish+0x160/0x160
-[    9.766938]  ? parameqn+0x40/0xa0
-[    9.766938]  ? __kmalloc+0x1cf/0x390
-[    9.766938]  kernel_init_freeable+0x2d2/0x330
-[    9.766938]  ? rest_init+0xf0/0xf0
-[    9.766938]  kernel_init+0x1e/0x140
-[    9.766938]  ret_from_fork+0x22/0x30
-[    9.766938]  </TASK>
-[    9.786217] PM:   Magic number: 10:124:564
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
-
-
-[1] https://lkft.validation.linaro.org/scheduler/job/4617047#L840
-[2] https://lkft.validation.linaro.org/scheduler/job/4617053#L661
+On 19.02.22 10:18, Thorsten Leemhuis wrote:
+> 
+> [CCing Johan, Jakub and Dave]
+> 
+> Hi Bluetooth maintainers!
+> 
+> On 16.02.22 11:26, Marcel Holtmann wrote:
+>>
+>>> Since bt_skb_sendmmsg can be used with the likes of SOCK_STREAM it
+>>> shall return the partial chunks it could allocate instead of freeing
+>>> everything as otherwise it can cause problems like bellow.
+>>>
+>>> Link: https://lore.kernel.org/linux-bluetooth/aa3ee7ac-6c52-3861-1798-3cc1a37f6ebf@molgen.mpg.de/T/#m1f9673e4ab0d55a7dccf87905337ab2e67d689f1
+>>> Fixes: 81be03e026dc ("Bluetooth: RFCOMM: Replace use of memcpy_from_msg with bt_skb_sendmmsg")
+>>> Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+>>> ---
+>>> include/net/bluetooth/bluetooth.h | 3 +--
+>>> 1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> patch has been applied to bluetooth-next tree.
+> 
+> Luiz, Marcel, thx for fixing this 5.16 regression and picking the patch
+> up for merging. But I have to wonder: why was this simple fix put into a
+> tree that apparently is meant to only get merged to mainline during the
+> the next merge window? That will mean this regression will bother people
+> (maybe Paul is not the only one that is affected by this) for weeks to
+> come and even make it into 5.17, before it gets fixed for 5.18-rc1.
+> Despite the lack of a "Cc: <stable@vger.kernel.org>" tag it likely will
+> get backporting to 5.17.y and 5.16.y afterwards, but the latter soon
+> after will be EOLed anyway.
+> 
+> Correct me if I'm wrong, but that afaik is not how the Linux development
+> process is meant to handle such regressions. This approach also
+> contributes to the huge stable and longterm releases after the end of
+> each merge window, which some people see as a problem.
+> 
+> I bring this up because there were other regression fixes in the last
+> few weeks that took such a slow path towards mainline. I also checked
+> MAINTAINERS and noticed you even have a tree that could feed fixes like
+> this to Linus via the regular net tree, but apparently you haven't used
+> it in quite a while:
+> https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git
+> I rechecked and noticed not a single bluetooth fix was merged between
+> v5.16-rc1..v5.16. I doubt Jakub or Dave are the reason, as they merge
+> fixes from downstream trees every week and send them to Linus shortly
+> after that.
+> 
+> So why are things like that? Or is there something wrong with my look on
+> things?
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> 
+> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> reports on my table. I can only look briefly into most of them and lack
+> knowledge about most of the areas they concern. I thus unfortunately
+> will sometimes get things wrong or miss something important. I hope
+> that's not the case here; if you think it is, don't hesitate to tell me
+> in a public reply, it's in everyone's interest to set the public record
+> straight.
