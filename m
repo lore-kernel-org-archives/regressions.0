@@ -1,169 +1,138 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B497A
-	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 15:16:55 +0000 (UTC)
-Received: by mail-il1-f177.google.com with SMTP id f2so1974695ilq.1
-        for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 07:16:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3034E7A
+	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 15:25:38 +0000 (UTC)
+Received: by mail-il1-f170.google.com with SMTP id v5so1955002ilm.9
+        for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 07:25:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=VUZ6Pub5f0T9fxmfVosX16sXl17Z0g2lbUvkIpOliqw=;
-        b=EqaUmwz1/C4vlckRx5cf+joOkAe6Ta8p54V+oehnpSkIMWDZ9nAWmSmKujot5aDU6c
-         CU1RPA4jppfPvRC3MIH/mi0YKKwlrIYpOvsFdlYI3sOwtZWfeR/4WW+i0lEATRZ5Ga5l
-         z4ZqSta51QsMm20sTGvLPArnqzSYZ48432DyQmEmEPjRLuu5GF6JdLFx2OsHjN/IbDoE
-         iiaWzPtBEA2x16dAL3bDyXlJYZmcoQduAgcuFQIOUfQrPhP2PcJQio7GFLRlTNX7QB1t
-         og5dzcRE9FUKCFKTo2sGmutcBJUF52uZclX2DKLHUxK7tXX4mSluDz8tTdMuGh8gVgmP
-         VAfw==
+        bh=eBxrN36oywWw3XK2F0WmZKoM52lc2gAS0BisdshERCo=;
+        b=ISQvkIqirnnDBdYOcW1sR7vpDwLACRfUWPqiEKfurONysgRKTpFGRA0q2sitDsnnhp
+         ja7vW1Z9sPbDeqIkBuczTI07o7vn7quK3PEXmS2XgtzGfVYhdNpP75pmJ2AW8DsQ+AyG
+         kUGa8KRPghqTCxuH+NMqsRFOFRe4RfzRsgeyfzh/gmco9MvWaZpMqAxUxyW6ShQVdR/P
+         0nBUsnMqDJ1pM63paXqN6ybtvLiTBo+Y0dvkZgic75ADpxNemRzMXMaY/0z7dL+Lv8uy
+         HlO9TsMrJHf/QNkLL0b4Nf3XNEk4xmjC12UoSbYZ46TbePCl3GQAm+od2SRCdUN6umOM
+         QPKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VUZ6Pub5f0T9fxmfVosX16sXl17Z0g2lbUvkIpOliqw=;
-        b=PE/GWujZCdVlmkEKoaEPFupsVxQdWeAditZqAYqinQVo1fDSQMi1CQmYBmHqnLmHuA
-         oaLmT82J0t7iQiUWJumUP1rZk4Hzcox0EiJ4Ye/7vFp5bEKa1zMtDHVmtSgs7vCd7BIR
-         y4qjmZLGi65EEdmiizeh5j1zn7UcgzYd+Y1lyVk5nMD5NMxlYmS2wFIEhV6QhZ4a0Mfr
-         gNQgewN6JMMhZEZVAAkLn+MZyrA02t8GtOz9IOba0lJu0tkH+vcrLO88jGFiJWJMewJK
-         rMjtUCe5Ft+9DkLrGIMGxq1Meuaa8Ymm3/zIZUkByyMwjhtyKZeXkt4mTh6kMJOuYdyJ
-         RLww==
-X-Gm-Message-State: AOAM531BBhpnYYtsxOyhbunyOzD2zWvMYVFT0Rdbe4sbofM7YeLEFWvc
-	hIshxx95LgUlY1uoJO5gnh3Jf94GhgJVSZm9Js8=
-X-Google-Smtp-Source: ABdhPJweM8K37WMx269tP7Mlg4RYl4PBL+vV3U1T1iOBFoknlQoa2qByrcCp9Eohs4ZYVUdzwvPQyxg9EBXLB240oXI=
+        bh=eBxrN36oywWw3XK2F0WmZKoM52lc2gAS0BisdshERCo=;
+        b=psMPajeJaVXAuITjH0htcnkEnCSjrzACoDsx+fiVq77qOG6Dz18Dbwyc2wBXQgPa8u
+         FFQH/+ZQgka92DF9XpUNJbFnqAofirVvvzCzpqpXP0zmjJvqyKKyzW9+k1AJvs0ncfro
+         8ig79Uy9IjpewwdJUNR/nu7oNl4EchLGKMjok7pN7fGivuRD55a5mghzBnmxjorOCL4o
+         Zl7l/k9L5v1GGkt5f6Yf0uUYt2uTM6RHzANbMLK2skGswj52zLiGNg+qGRIgzRD3rKud
+         Ro+KbLQhuEYRmN66ebiAdca8hgwYplmvz6NB4v0B1e7XajctLSvLrRCvAAPwqjRE5EOU
+         X/hA==
+X-Gm-Message-State: AOAM530lFfHyDeI9FaL05hd5xP+eqXYsSnfr3qqnoeIQTTdmcgoYLtC7
+	Zw8neL3KlrGzjZurCQrfuFUBGLznwE78WPsVppA=
+X-Google-Smtp-Source: ABdhPJwl/Ukc+0maSEFnue6gpJb6B4T0JPXtTePtU1QcrUbmmmWcjZOQz+LTTENg1oZs33TJPzack3zs0vQY2p3hRis=
 X-Received: by 2002:a92:c243:0:b0:2c1:c5f5:bf5f with SMTP id
- k3-20020a92c243000000b002c1c5f5bf5fmr2684989ilo.243.1645715814833; Thu, 24
- Feb 2022 07:16:54 -0800 (PST)
+ k3-20020a92c243000000b002c1c5f5bf5fmr2712323ilo.243.1645716337167; Thu, 24
+ Feb 2022 07:25:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i+RE+L2FTXSA@mail.gmail.com>
- <CAJCQCtRiTQ1BTEHugxhS-zmXFG4qi4WLxsRyZsG9-_Q0isM+7Q@mail.gmail.com>
- <CAJCQCtS35JeABLDBaNpfgxjq+ZJ9rZgwtRnSYLNm8tMwtdYGMw@mail.gmail.com>
- <CABBYNZKTSe83iP4tm36we4cpAbeGUbEw9frZD1wCM9yo1zry5w@mail.gmail.com>
- <CAJCQCtTpHQe2co3fLNs5csKQchmwH=3YwQOvFnuc2nhjRseVnw@mail.gmail.com>
- <9ad505e1-7b59-7ebf-378b-23a6c0e25802@googlemail.com> <CABBYNZ+9tUKgLyUWM5vkMW8vHxYsXv6DEaDWdHt8xTTs6puGQA@mail.gmail.com>
- <aaeb4131-d177-d41e-617b-b0060cd83c92@googlemail.com> <CABBYNZLB+8UzhzttMrKbHW_+-A1EsY9iT5Y55VuOOEPuD4kAHQ@mail.gmail.com>
- <b1a4a920-dbba-58be-72b4-2c95b9b79283@googlemail.com> <82216882-463a-8976-e6bc-4a8919107a31@googlemail.com>
- <CABBYNZ+mO1gQgfwhemY9cqbi8vNLm_60A9c1vPYT2tH4rhgFww@mail.gmail.com>
- <a35b4b75-bb64-89c8-bacd-d58ed8576272@googlemail.com> <2ce6175c-74ec-8469-80a5-374bd1429542@googlemail.com>
- <CABBYNZJNTOT-mEQe2cfZiEX6A2pR7+sacBqtBRPRZY69YmgtvA@mail.gmail.com> <17f2bf7e-1d6b-e090-8926-21a408f2b496@googlemail.com>
-In-Reply-To: <17f2bf7e-1d6b-e090-8926-21a408f2b496@googlemail.com>
+References: <20220215015938.1950978-1-luiz.dentz@gmail.com>
+ <E428782F-C1D1-43FB-8CB3-009BD97A2D14@holtmann.org> <c418c95d-339c-5b8a-5349-26078424abe4@leemhuis.info>
+ <db329421-ff6c-50c9-69f6-ae8e1b9e9063@leemhuis.info>
+In-Reply-To: <db329421-ff6c-50c9-69f6-ae8e1b9e9063@leemhuis.info>
 From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Thu, 24 Feb 2022 07:16:43 -0800
-Message-ID: <CABBYNZ+cL4f8xvTJFQGLgqPueE=-UsOtvcPQez0BEsJ5xGppfQ@mail.gmail.com>
-Subject: Re: bug kernel 5.17, qualcom and intel adapters, unable to reliably
- connect to bluetooth devices
-To: Chris Clayton <chris2553@googlemail.com>
-Cc: Chris Murphy <lists@colorremedies.com>, Bluetooth <linux-bluetooth@vger.kernel.org>, 
-	regressions@lists.linux.dev
+Date: Thu, 24 Feb 2022 07:25:26 -0800
+Message-ID: <CABBYNZKT5fFoEscWuHqLtkHjJJgwwqePHSQy8Q3-dEgWFT5AWA@mail.gmail.com>
+Subject: Re: [PATCH] Bluetooth: Fix bt_skb_sendmmsg not allocating partial chunks
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, 
+	"linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Content-Type: text/plain; charset="UTF-8"
 
-Hi Chris,
+Hi Thorsten,
 
-On Thu, Feb 24, 2022 at 2:08 AM Chris Clayton <chris2553@googlemail.com> wrote:
+On Thu, Feb 24, 2022 at 6:09 AM Thorsten Leemhuis <linux@leemhuis.info> wrote:
 >
-> Hi Luiz,
+> Hi, this is your Linux kernel regression tracker again. Top-posting for
+> once, to make this easily accessible for everyone.
 >
-> On 24/02/2022 08:16, Luiz Augusto von Dentz wrote:
-> > Hi Chris,
-> >
-> > On Wed, Feb 23, 2022 at 9:59 PM Chris Clayton <chris2553@googlemail.com> wrote:
-> >>
-> >>
-> >>
-> >> On 23/02/2022 22:42, Chris Clayton wrote:
-> >>> Hi.
-> >>>
-> >>> <snip>
-> >>>
-> >>>>
-> >>>> We are starting to suspect this is not a new issue, it just become
-> >>>> easier to reproduce with newer kernels since the mgmt commands are now
-> >>>> handled by a different work/thread which probably takes longer to
-> >>>> respond hitting problems such as:
-> >>>>
-> >>>> https://github.com/bluez/bluez/issues/275#issuecomment-1020608282
-> >>>>
-> >>>> This has been fixed by:
-> >>>>
-> >>>> https://github.com/bluez/bluez/commit/faad125c5505b941f06c54525616e192a6369208
-> >>>> https://github.com/bluez/bluez/commit/5f378404bff6bbfea3f20e36535c494efa5066a5
-> >>>>
-> >>>
-> >>> I cloned bluez, but that FTBFS, so I applied the two patches by hand.
-> >>>
-> >>> After the first boot, my bluetooth devices connected fine. But after a poweroff and boot, they didn't. Nor did they on
-> >>> the third and fourth boots, so the patches don't seem to be the answer. (They couldn't really be anyway because changes
-> >>> to the kernel have broken user-space which I understand is a big no no unless there is a really compelling reason.)
-> >>>
-> >>> I've gathered some diagnostics today and they are attached. They consist of 6 files containing the output from btmon and
-> >>> dmesg and the log file for the system daemons, which, of course, includes bluetoothd. There are 2 sets of these files -
-> >>> one from a boot that resulted in a system where my devices would not connect and another from a boot where they could
-> >>
-> >> s/would not connect and another/would connect and another/
-> >>
-> >>> not connect. You'll note that the btmon log is empty for a failed connection.
-> >>>
-> >>> I also tried a bisection with v5.16 as good and v5.17-rc1 as bad. Unfortunately, I found several steps resulted in a
-> >>> kernel where bluetooth seemed to be substantially borked - to the extent that blueman was non-functional and clicking on
-> >>> the tray icon did not start up the blueman-manager application.
-> >
-> > Running with 5.17.0-0.rc5.102.fc37.x86_64 there doesn't seem to be any
-> > problems, well apart from LE device with Privacy/RPA:
-> >
-> > https://gist.github.com/Vudentz/5792f4989198c7f2994af2e31eb973af
-> >
-> > Ive tried suspend/resume a couple of times just to see if there is
-> > something odd going own, anyway I'm running with the latest userspace
-> > so perhaps I really need some old userspace to reproduce this. There
+> I sent below inquiry on Saturday and didn't get a reply; and I didn't
+> notice any other activity to get this regression fix mainlined soon.
 >
-> I don't have an old userspace. I built my system from source about four years ago using the methods from Linux From
-> Scratch and Beyond Linux From Scratch. I have been updating the packages since then as and when they are released. In a
-> way, you could equate my system to one of the rolling releases. It is very up-to-date but at the same time very stable.
->
-> This morning I updated to the latest releases of the 5.15 and 5.16 stable series. I've also built and installed the
-> latest in the 5.4 and 5.10 stable series. (All four had new releases yesterday.) Bluetooth works as expected on all 4 of
-> those kernels. It has also worked on every kernel released by Linus and every stables series kernel in the last four
-> years. I usually start trying out a development kernel when rc3, 4 or 5 is released, depending on time available. If I
-> find any problems I report them and provide any diagnostics required and test patches.
->
-> Bluetooth is unreliable on my system when I boot 5.17-rc kernels. There is little doubt in my mind that something that
-> has changed in 5.17 is at the root of this. Whether it is actually a bug in userspace doesn't change the fact that there
-> is a regression because of one or more changes in the kernel. As I said yesterday, my understanding is that such
-> regressions are frowned upon.
->
-> I'll try another bisection today, but limit its range to changes made in the net/bluetooth directory.
+> Bluetooth maintainers, what's up here? I'd like to avoid getting Linus
+> involved, but I guess I'm out of options if this mail doesn't get things
+> rolling -- or alternatively an answer why this fix might better wait for
+> the next merge window to get merged.
 
-Please record the HCI with btmon, it must be producing something since
-it records even the mgmt commands.
+As you probably noticed we have some other regression going on, we are
+planning to have a pull request to net.git once they are resolved.
 
-> In the meantime I've copied this email to regressions@lists.linux.dev, so they can track this.
-
-Hmm, is that really necessary? 5.17 has not been release tagged yet
-and you are already considering it a regression?
-
-> Chris
+> Ciao, Thorsten
 >
-> > might be something with name resolving though, it appears gnome don't
-> > show devices if they don't have a proper name (that is not their
-> > address) so perhaps that gives the impression there is nothing going
-> > on when in fact that all normal, well apart from the fact that names
-> > takes way too long to be resolved.
+> On 19.02.22 10:18, Thorsten Leemhuis wrote:
 > >
-> >>> I also booted into a 5.16.10 kernel and connecting bluetooth devices worked flawlessly. (This was with the unpatched
-> >>> bluez daemon)
+> > [CCing Johan, Jakub and Dave]
+> >
+> > Hi Bluetooth maintainers!
+> >
+> > On 16.02.22 11:26, Marcel Holtmann wrote:
+> >>
+> >>> Since bt_skb_sendmmsg can be used with the likes of SOCK_STREAM it
+> >>> shall return the partial chunks it could allocate instead of freeing
+> >>> everything as otherwise it can cause problems like bellow.
 > >>>
-> >>> Chris
-> >>>> So the timer doesn't start until the request is sent. but obvoiusly
-> >>>> older versions of userspace don't have that fix so they end up
-> >>>> cancelling the loading of LTKs, this would explain why reloading the
-> >>>> daemon would make it work again.
+> >>> Link: https://lore.kernel.org/linux-bluetooth/aa3ee7ac-6c52-3861-1798-3cc1a37f6ebf@molgen.mpg.de/T/#m1f9673e4ab0d55a7dccf87905337ab2e67d689f1
+> >>> Fixes: 81be03e026dc ("Bluetooth: RFCOMM: Replace use of memcpy_from_msg with bt_skb_sendmmsg")
+> >>> Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
+> >>> ---
+> >>> include/net/bluetooth/bluetooth.h | 3 +--
+> >>> 1 file changed, 1 insertion(+), 2 deletions(-)
+> >>
+> >> patch has been applied to bluetooth-next tree.
 > >
+> > Luiz, Marcel, thx for fixing this 5.16 regression and picking the patch
+> > up for merging. But I have to wonder: why was this simple fix put into a
+> > tree that apparently is meant to only get merged to mainline during the
+> > the next merge window? That will mean this regression will bother people
+> > (maybe Paul is not the only one that is affected by this) for weeks to
+> > come and even make it into 5.17, before it gets fixed for 5.18-rc1.
+> > Despite the lack of a "Cc: <stable@vger.kernel.org>" tag it likely will
+> > get backporting to 5.17.y and 5.16.y afterwards, but the latter soon
+> > after will be EOLed anyway.
 > >
+> > Correct me if I'm wrong, but that afaik is not how the Linux development
+> > process is meant to handle such regressions. This approach also
+> > contributes to the huge stable and longterm releases after the end of
+> > each merge window, which some people see as a problem.
 > >
+> > I bring this up because there were other regression fixes in the last
+> > few weeks that took such a slow path towards mainline. I also checked
+> > MAINTAINERS and noticed you even have a tree that could feed fixes like
+> > this to Linus via the regular net tree, but apparently you haven't used
+> > it in quite a while:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git
+> > I rechecked and noticed not a single bluetooth fix was merged between
+> > v5.16-rc1..v5.16. I doubt Jakub or Dave are the reason, as they merge
+> > fixes from downstream trees every week and send them to Linus shortly
+> > after that.
+> >
+> > So why are things like that? Or is there something wrong with my look on
+> > things?
+> >
+> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> >
+> > P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> > reports on my table. I can only look briefly into most of them and lack
+> > knowledge about most of the areas they concern. I thus unfortunately
+> > will sometimes get things wrong or miss something important. I hope
+> > that's not the case here; if you think it is, don't hesitate to tell me
+> > in a public reply, it's in everyone's interest to set the public record
+> > straight.
 
 
 
