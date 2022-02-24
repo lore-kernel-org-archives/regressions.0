@@ -1,155 +1,90 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E57CC8A
-	for <regressions@lists.linux.dev>; Wed, 23 Feb 2022 15:32:59 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nMtdR-0008GG-F7; Wed, 23 Feb 2022 16:32:57 +0100
-Message-ID: <abab0198-790c-39df-5e56-f637d7963468@leemhuis.info>
-Date: Wed, 23 Feb 2022 16:32:57 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3C91360
+	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 03:59:00 +0000 (UTC)
+Received: by mail-pl1-f170.google.com with SMTP id m11so623302pls.5
+        for <regressions@lists.linux.dev>; Wed, 23 Feb 2022 19:59:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ipcMbOhFS/2FiJEFtsW19b67QSx/DKh4wGATjCAKrkY=;
+        b=ZnawhkpDqU+rZlOg1P0cBGB0T65BAaTadLRW1leM/SrFFGbp0E9ZJ3/bJH3dhqPAcm
+         pQpEqo/A7vpTuh9ApxtdE0+Q4YuYDWgqFar+s/Iao8+jjt3Uuz5ySEP3Sv8h8VmG/zcc
+         1ARH9+FZTnmavgiFljrm2KxQ8Wy3OsIlx+FLM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ipcMbOhFS/2FiJEFtsW19b67QSx/DKh4wGATjCAKrkY=;
+        b=zhAPp11ou9CgIjEWKtPoef/EHtLMwX8YvOg+GV7vhhGakDvJQwRu8l1KjgAMGLr2Ef
+         d35YvihwD0IwLwB7F/ga21l5QGI2oWrJrpstYhsMDSfEoS+TNix+ZvLlnJMCsJ8EPjW1
+         lkqW7hxrsVdtS4WBZlVwnMnj/Xn7A4YcfP1zUEoy3Li/9Xa1yQoKlV8hQtC+x53axO2d
+         XhC0GJR95GTX1Jm++z4HtyQnauUdlXXPdxwpaG0IHGU55WmTRB6uVK8mCfpjH4GmiwgO
+         YoH1jyIQkqxxtMG2rSDuStg/sGyGgx/tblU3+BzQ4jcs403xQgY3lemhEtSOjQPhN+eo
+         jwGw==
+X-Gm-Message-State: AOAM531RKcvOp3/Nqrz4hDWItbV7Dk1wugiJqxzrviX0NcHJ6+adO2er
+	i6EIOJD7UHvVvByexzvN7DsLUdBwsof08Q==
+X-Google-Smtp-Source: ABdhPJzn1uMQcYSD5vqES/uqQG8fcX1txbzlrszEOeO34PcIjg+0QC/31asHtN0y0pT/5plGU0HyDA==
+X-Received: by 2002:a17:902:f606:b0:14b:4c2d:e1fa with SMTP id n6-20020a170902f60600b0014b4c2de1famr889815plg.24.1645675139788;
+        Wed, 23 Feb 2022 19:58:59 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z13sm1146016pfe.20.2022.02.23.19.58.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Feb 2022 19:58:59 -0800 (PST)
+Date: Wed, 23 Feb 2022 19:58:58 -0800
+From: Kees Cook <keescook@chromium.org>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Anthony Yznaga <anthony.yznaga@oracle.com>,
+	matoro_bugzilla_kernel@matoro.tk,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	linux-ia64@vger.kernel.org,
+	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: regression: Bug 215601 - gcc segv at startup on ia64
+Message-ID: <202202231957.801F1780@keescook>
+References: <a3edd529-c42d-3b09-135c-7e98a15b150f@leemhuis.info>
+ <823f70be-7661-0195-7c97-65673dc7c12a@leemhuis.info>
+ <03497313-A472-4152-BD28-41C35E4E824E@chromium.org>
+ <94c3be49-0262-c613-e5f5-49b536985dde@physik.fu-berlin.de>
+ <9A1F30F8-3DE2-4075-B103-81D891773246@chromium.org>
+ <4e42e754-d87e-5f6b-90db-39b4700ee0f1@physik.fu-berlin.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: Bug 215600 - Radeon - *ERROR* Failed waiting for UVD message
- #forregzbot
-Content-Language: en-BS
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <978944b7-4e71-475a-2fe6-c414d3e8f64e@leemhuis.info>
- <CADnq5_OS2jT1eRjjMf_c1OkeEEd1CJa7_T+yBoOtNKrLnWduZw@mail.gmail.com>
- <84fe6020-4331-30a4-957f-e2816e70afa2@leemhuis.info>
-In-Reply-To: <84fe6020-4331-30a4-957f-e2816e70afa2@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645630379;45f4122e;
-X-HE-SMSGID: 1nMtdR-0008GG-F7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4e42e754-d87e-5f6b-90db-39b4700ee0f1@physik.fu-berlin.de>
 
+On Mon, Feb 21, 2022 at 10:57:01PM +0100, John Paul Adrian Glaubitz wrote:
+> Hi Kees!
+> 
+> On 2/21/22 21:58, Kees Cook wrote:
+> >> I have applied this patch on top of 038101e6b2cd5c55f888f85db42ea2ad3aecb4b6 and it doesn't
+> >> fix the problem for me. Reverting 5f501d555653f8968011a1e65ebb121c8b43c144, however, fixes
+> >> the problem.
+> >>
+> >> FWIW, this problem doesn't just affect GCC but systemd keeps segfaulting with this change as well.
+> > 
+> > Very weird! Can you attached either of those binaries to bugzilla (or a URL I can fetch it from)? I can try to figure out where it is going weird...
+> 
+> Here's the initrd of that particular machine:
+> 
+> > https://people.debian.org/~glaubitz/initrd.img-5.17.0-rc5+
+> 
+> You should be able to extract the binaries from this initrd image and the "mount" command,
+> for example, should be one of the affected binaries.
 
+I don't see anything immediately obvious here, but I'll keep looking. Is
+there any way to emulate ia64? I don't see anything that'll work under
+QEMU...
 
-On 23.02.22 16:12, Thorsten Leemhuis wrote:
-> TWIMC: this mail is primarily send for documentation purposes and for
-> regzbot, my Linux kernel regression tracking bot. These mails usually
-> contain '#forregzbot' in the subject, to make them easy to spot and filter.
-> 
-> Nothing happened in the first seven days after the bug was submitted,
-> but seems forwarding this issue to the lists did the trick, as just a
-> few hours later Christian came up with a patch that is now slowly
-> heading towards mainline:
-> 
-> #regzbot fixed-by: d9835eaa3e9fb4770745294fef3f8416446178c0
-
-trying this again, this time with the right commit id:
-
-#regzbot fixed-by: f762ce78897d734a08f52e39a353359b7d417578
-
-sorry for the noise
-
-> https://cgit.freedesktop.org/drm/drm-misc/commit/?h=drm-misc-fixes&id=f762ce78897d734a08f52e39a353359b7d417578
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
-> 
-> 
-> On 21.02.22 16:10, Alex Deucher wrote:
->> On Mon, Feb 21, 2022 at 3:30 AM Thorsten Leemhuis
->> <regressions@leemhuis.info> wrote:
->>>
->>> Hi, this is your Linux kernel regression tracker.
->>>
->>> I noticed a regression report in bugzilla.kernel.org that afaics nobody
->>> acted upon since it was reported about a week ago, that's why I decided
->>> to forward it to the lists and all the relevant people. To quote
->>> https://bugzilla.kernel.org/show_bug.cgi?id=215600 :
->>>
->>>>  Richard Herbert 2022-02-12 22:13:07 UTC
->>>>
->>>> Created attachment 300445 [details]
->>>> Details
->>>>
->>>> When attempting to play some types of videos with VLC 3.0.16 (eg. *.flv, *.mp4), when running kernels 5.17-rc1 to 5.17-rc3, only the audio portion is heard and the VLC video screen remains black. Meanwhile, many of these entries are written per second to /var/log/syslog:
->>>>
->>>> 2/12/22 3:41 PM       starbug kernel  [drm:radeon_uvd_cs_parse [radeon]] *ERROR* Failed waiting for UVD message (-1)!
->>>> 2/12/22 3:41 PM       starbug kernel  [drm:radeon_cs_ioctl [radeon]] *ERROR* Invalid command stream !
->>>> 2/12/22 3:41 PM       starbug kernel  [drm:radeon_uvd_cs_parse [radeon]] *ERROR* Failed waiting for UVD message (-1)!
->>>> 2/12/22 3:41 PM       starbug kernel  [drm:radeon_cs_ioctl [radeon]] *ERROR* Invalid command stream !
->>>> 2/12/22 3:41 PM       starbug kernel  [drm:radeon_uvd_cs_parse [radeon]] *ERROR* Failed waiting for UVD message (-1)!
->>>> 2/12/22 3:41 PM       starbug kernel  [drm:radeon_cs_ioctl [radeon]] *ERROR* Invalid command stream !
->>>>
->>>>
->>>> The problem doesn't occur in kernels of the 5.16 series.  It may have been introduced here:
->>>>
->>>>
->>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/diff/drivers/gpu/drm/radeon/radeon_uvd.c?id=v5.16&id2=v5.17-rc1
->>>>
->>>>
->>>> Thanks!
->>>
->>> Could somebody take a look into this? Or was this discussed somewhere
->>> else already? Or even fixed?
->>
->> This is a fix on the bug report.
->>
->> Alex
->>
->>
->>>
->>> Anyway, to get this tracked:
->>>
->>> #regzbot introduced: v5.16..v5.17-rc1
->>> #regzbot from:  Richard Herbert <rherbert@sympatico.ca>
->>> #regzbot title: drm: radeon: no sound on video, *ERROR* Failed waiting
->>> for UVD message
->>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215600
->>>
->>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>
->>> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
->>> reports on my table. I can only look briefly into most of them and lack
->>> knowledge about most of the areas they concern. I thus unfortunately
->>> will sometimes get things wrong or miss something important. I hope
->>> that's not the case here; if you think it is, don't hesitate to tell me
->>> in a public reply, it's in everyone's interest to set the public record
->>> straight.
->>>
->>> --
->>> Additional information about regzbot:
->>>
->>> If you want to know more about regzbot, check out its web-interface, the
->>> getting start guide, and the references documentation:
->>>
->>> https://linux-regtracking.leemhuis.info/regzbot/
->>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
->>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
->>>
->>> The last two documents will explain how you can interact with regzbot
->>> yourself if your want to.
->>>
->>> Hint for reporters: when reporting a regression it's in your interest to
->>> CC the regression list and tell regzbot about the issue, as that ensures
->>> the regression makes it onto the radar of the Linux kernel's regression
->>> tracker -- that's in your interest, as it ensures your report won't fall
->>> through the cracks unnoticed.
->>>
->>> Hint for developers: you normally don't need to care about regzbot once
->>> it's involved. Fix the issue as you normally would, just remember to
->>> include 'Link:' tag in the patch descriptions pointing to all reports
->>> about the issue. This has been expected from developers even before
->>> regzbot showed up for reasons explained in
->>> 'Documentation/process/submitting-patches.rst' and
->>> 'Documentation/process/5.Posting.rst'.
->>
-> 
-> 
+-- 
+Kees Cook
