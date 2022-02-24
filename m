@@ -1,168 +1,161 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED45184D
-	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 10:08:05 +0000 (UTC)
-Received: by mail-wm1-f53.google.com with SMTP id r187-20020a1c2bc4000000b003810e6b192aso718406wmr.1
-        for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 02:08:05 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29DCE1878
+	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 13:28:23 +0000 (UTC)
+Received: by mail-yb1-f171.google.com with SMTP id j12so3785933ybh.8
+        for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 05:28:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=QE4r6AuFe3dQO6495+hzl0XpmaeVwKTjdWPNhBsedTc=;
-        b=M9u7cPCyL7O0+feYRb+u1mwqCaRAByRwJxx7DK8vJaCVWkWCioNcsdWCp1y7l8dV04
-         +JF2gRPloGWInxs2MrUk+wz4POQcUbgJqxT23p34ovsBTU7ELQLpmqjW0LjREVYkUuAj
-         leRVT3cVtc8BWki4kto63PmbA0gwirABGE+SRg9YeRo8w2tWVRfgiZ4i48G0kwaYn/M6
-         tzrour0elPLSchtfRAECjvSS9a90qPQnaKzDs9w0K26tgF4mKa+nsYtTHTuxOeeaHRZz
-         q5dJyLw+qYtRCkKz0bVDmqC0WxmQk5gjxICIip96XOY/5F0Rgyy17DYRd0/taqbyMI8R
-         38aA==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=PWoHM5P/pAPHOuW7BhTY/a4Hu1y7CT5eN63sjuNRDM0=;
+        b=T6kRQLU5OYXCLAAhR3IDKqlM5/MBIPB0MlSNrYg1ST0xzKd67NFMMi1h1rfacr2EEK
+         JmvSBDZQeHGT0VuDaEecgoXv1jcHtywHilkZdgncE5r8pY3dnIzpzeP2clkuaf75SBac
+         AC4pPjWSD//SJh4bI8800iyNd/Lbq5HMFH9W5Fl42JvBa12dHgMhsIz47fIX/unGZhTb
+         1nZtiuEpXCTa8SvJcvayYbSUjZl6zV7V2lYxe4lpRzHEFVMQM9hCAygqY4yuNtuf/i10
+         9RwgEgYTkVh4srczR+kAQlRLepmfi17b6Fh0croahgB+qkdqFZZjhcGEc5EYuzj315VH
+         f7+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=QE4r6AuFe3dQO6495+hzl0XpmaeVwKTjdWPNhBsedTc=;
-        b=cxye0FpR8crLP6lGS5GIY4hvCDiAIW5D2dRvnt5T8MZaIXcDqOYY4lgLNr38nzXGEe
-         NY7nT9ja37DaPtz+3+acAl5LAsKMILP40mYxCan9gkt7ZwHzviVfB3Dsmt0MYjzwjiYr
-         y9jaHSCVwifnKcjKXVuC3IpEkw5+0k2Q26RFXEtQsAa3BiulaRb2BtsUTWnhOMBRK+/s
-         xjgbonuOFy2HvJ9KTj9BtHCMQEvQaXF59Sq+VFnbau0O0NnMwE5gp/dffhTJxFroakJy
-         468KX9p2q80FcLKvS/xQGN/i5B+J7aSVgwNIZ5ur6KLvrttOjY1POAp9s6zoZGWHtVNT
-         TjCw==
-X-Gm-Message-State: AOAM531QeOgPJxzvhSPWeTlfK9zysZy0MCtyMcw1AmxsBiaV8PCT/8/C
-	OMqEcCuNHrukntBvRsmKr30=
-X-Google-Smtp-Source: ABdhPJzLKkSsXDqcmoAonTrWGo4YN0iInFwWxQJN6QFoSIEIp5MLI+EQzMwHcwsX3+m6ijk/MtWtyQ==
-X-Received: by 2002:a05:600c:1f16:b0:37b:c7f2:fbb4 with SMTP id bd22-20020a05600c1f1600b0037bc7f2fbb4mr10655478wmb.47.1645697283951;
-        Thu, 24 Feb 2022 02:08:03 -0800 (PST)
-Received: from [192.168.1.10] (4e691f2a.skybroadband.com. [78.105.31.42])
-        by smtp.googlemail.com with ESMTPSA id u7sm2152961wrq.112.2022.02.24.02.08.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 24 Feb 2022 02:08:03 -0800 (PST)
-Message-ID: <17f2bf7e-1d6b-e090-8926-21a408f2b496@googlemail.com>
-Date: Thu, 24 Feb 2022 10:08:00 +0000
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=PWoHM5P/pAPHOuW7BhTY/a4Hu1y7CT5eN63sjuNRDM0=;
+        b=qr6BdGN93t9RGg6AL1S2f4vfelW9YbNGuermLqGQC3FD/6ffcUdu3vyFkQqG0cq61n
+         8VogdevIg3Kh1wk9IWdeHQkrlgxNUtrKtfbnrN9QtojnX6XhXzCQWvKbta03Z/0clheq
+         d5YAiNUFtrLESaew+ynthfv65HKYbdhFalixQEXq38K68MHwBLITmM5Qu9sX/kuhpIki
+         qrzrnuw7vycC/55QBLWz1wKweP7FFQ/5yM7EZUU2Qr1JZcfsp5gzG6RLeabvjtrBh9oO
+         d+BI9pg3kLXb10JvoyyUTrnCajZrEzJ+lWwpbI2H06ZlU4K5LM6bUBGr2W3Gnt4RvUtS
+         ouYQ==
+X-Gm-Message-State: AOAM530VBafVW3949HTojg9Y7KkzmiV3Zi4E6KZexyp15g7DoUhgbE+j
+	f+aVGLzz2OX6ZxWeIgTcj77atI1ZMDzFVXlA/J4jIw==
+X-Google-Smtp-Source: ABdhPJxnnQg82+iGZ9tQJY/owmawEKGz4l4bYRutG1NcymM1wcsYLniNeRuWFOrxo49epnA8AM9EVI4jsl0UEGopAjU=
+X-Received: by 2002:a25:6993:0:b0:624:55af:336c with SMTP id
+ e141-20020a256993000000b0062455af336cmr2381922ybc.412.1645709301901; Thu, 24
+ Feb 2022 05:28:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: bug kernel 5.17, qualcom and intel adapters, unable to reliably
- connect to bluetooth devices
-Content-Language: en-GB
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Chris Murphy <lists@colorremedies.com>,
- Bluetooth <linux-bluetooth@vger.kernel.org>, regressions@lists.linux.dev
-References: <CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i+RE+L2FTXSA@mail.gmail.com>
- <CAJCQCtRiTQ1BTEHugxhS-zmXFG4qi4WLxsRyZsG9-_Q0isM+7Q@mail.gmail.com>
- <CAJCQCtS35JeABLDBaNpfgxjq+ZJ9rZgwtRnSYLNm8tMwtdYGMw@mail.gmail.com>
- <CABBYNZKTSe83iP4tm36we4cpAbeGUbEw9frZD1wCM9yo1zry5w@mail.gmail.com>
- <CAJCQCtTpHQe2co3fLNs5csKQchmwH=3YwQOvFnuc2nhjRseVnw@mail.gmail.com>
- <9ad505e1-7b59-7ebf-378b-23a6c0e25802@googlemail.com>
- <CABBYNZ+9tUKgLyUWM5vkMW8vHxYsXv6DEaDWdHt8xTTs6puGQA@mail.gmail.com>
- <aaeb4131-d177-d41e-617b-b0060cd83c92@googlemail.com>
- <CABBYNZLB+8UzhzttMrKbHW_+-A1EsY9iT5Y55VuOOEPuD4kAHQ@mail.gmail.com>
- <b1a4a920-dbba-58be-72b4-2c95b9b79283@googlemail.com>
- <82216882-463a-8976-e6bc-4a8919107a31@googlemail.com>
- <CABBYNZ+mO1gQgfwhemY9cqbi8vNLm_60A9c1vPYT2tH4rhgFww@mail.gmail.com>
- <a35b4b75-bb64-89c8-bacd-d58ed8576272@googlemail.com>
- <2ce6175c-74ec-8469-80a5-374bd1429542@googlemail.com>
- <CABBYNZJNTOT-mEQe2cfZiEX6A2pR7+sacBqtBRPRZY69YmgtvA@mail.gmail.com>
-From: Chris Clayton <chris2553@googlemail.com>
-In-Reply-To: <CABBYNZJNTOT-mEQe2cfZiEX6A2pR7+sacBqtBRPRZY69YmgtvA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 24 Feb 2022 18:58:10 +0530
+Message-ID: <CA+G9fYtzLr+9T9Z1N8QLznW6DqTOU8iSHvgMftdhe2XkEf8F8g@mail.gmail.com>
+Subject: [next] next-20220223 kernel crash
+To: Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	open list <linux-kernel@vger.kernel.org>, Lai Jiangshan <laijs@linux.alibaba.com>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, "Paul E. McKenney" <paulmck@kernel.org>, 
+	Arnd Bergmann <arnd@arndb.de>, regressions@lists.linux.dev, lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Luiz,
+Linux next-20220223 boot failed due to the kernel crash on all devices.
 
-On 24/02/2022 08:16, Luiz Augusto von Dentz wrote:
-> Hi Chris,
-> 
-> On Wed, Feb 23, 2022 at 9:59 PM Chris Clayton <chris2553@googlemail.com> wrote:
->>
->>
->>
->> On 23/02/2022 22:42, Chris Clayton wrote:
->>> Hi.
->>>
->>> <snip>
->>>
->>>>
->>>> We are starting to suspect this is not a new issue, it just become
->>>> easier to reproduce with newer kernels since the mgmt commands are now
->>>> handled by a different work/thread which probably takes longer to
->>>> respond hitting problems such as:
->>>>
->>>> https://github.com/bluez/bluez/issues/275#issuecomment-1020608282
->>>>
->>>> This has been fixed by:
->>>>
->>>> https://github.com/bluez/bluez/commit/faad125c5505b941f06c54525616e192a6369208
->>>> https://github.com/bluez/bluez/commit/5f378404bff6bbfea3f20e36535c494efa5066a5
->>>>
->>>
->>> I cloned bluez, but that FTBFS, so I applied the two patches by hand.
->>>
->>> After the first boot, my bluetooth devices connected fine. But after a poweroff and boot, they didn't. Nor did they on
->>> the third and fourth boots, so the patches don't seem to be the answer. (They couldn't really be anyway because changes
->>> to the kernel have broken user-space which I understand is a big no no unless there is a really compelling reason.)
->>>
->>> I've gathered some diagnostics today and they are attached. They consist of 6 files containing the output from btmon and
->>> dmesg and the log file for the system daemons, which, of course, includes bluetoothd. There are 2 sets of these files -
->>> one from a boot that resulted in a system where my devices would not connect and another from a boot where they could
->>
->> s/would not connect and another/would connect and another/
->>
->>> not connect. You'll note that the btmon log is empty for a failed connection.
->>>
->>> I also tried a bisection with v5.16 as good and v5.17-rc1 as bad. Unfortunately, I found several steps resulted in a
->>> kernel where bluetooth seemed to be substantially borked - to the extent that blueman was non-functional and clicking on
->>> the tray icon did not start up the blueman-manager application.
-> 
-> Running with 5.17.0-0.rc5.102.fc37.x86_64 there doesn't seem to be any
-> problems, well apart from LE device with Privacy/RPA:
-> 
-> https://gist.github.com/Vudentz/5792f4989198c7f2994af2e31eb973af
->
-> Ive tried suspend/resume a couple of times just to see if there is
-> something odd going own, anyway I'm running with the latest userspace
-> so perhaps I really need some old userspace to reproduce this. There
+metadata:
+  git_ref: master
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: d4a0ae62a277377de396850ed4b709b6bd9b7326
+  git_describe: next-20220223
+  kernel-config: https://builds.tuxbuild.com/25XO3ffPO3RLpbE3aNxffMu4nEf/config
 
-I don't have an old userspace. I built my system from source about four years ago using the methods from Linux From
-Scratch and Beyond Linux From Scratch. I have been updating the packages since then as and when they are released. In a
-way, you could equate my system to one of the rolling releases. It is very up-to-date but at the same time very stable.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-This morning I updated to the latest releases of the 5.15 and 5.16 stable series. I've also built and installed the
-latest in the 5.4 and 5.10 stable series. (All four had new releases yesterday.) Bluetooth works as expected on all 4 of
-those kernels. It has also worked on every kernel released by Linus and every stables series kernel in the last four
-years. I usually start trying out a development kernel when rc3, 4 or 5 is released, depending on time available. If I
-find any problems I report them and provide any diagnostics required and test patches.
+crash log on x86_64 machine [1]:
+[    5.326681] Please do not flush events WQ.
+[    5.327480] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+5.17.0-rc5-next-20220223 #1
+[    5.327480] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+2.0b 07/27/2017
+[    5.327480] Call Trace:
+[    5.327480]  <TASK>
+[    5.327480]  dump_stack_lvl+0x49/0x5e
+[    5.327480]  dump_stack+0x10/0x12
+[    5.327480]  check_flush_dependency.cold+0x19/0x2e
+[    5.327480]  __flush_work.isra.0+0x186/0x400
+[    5.327480]  ? alloc_unbound_pwq+0x600/0x600
+[    5.327480]  ? preempt_count_sub+0xd2/0x120
+[    5.327480]  ? __rcu_read_unlock+0x53/0x70
+[    5.327480]  ? __queue_work+0x33e/0x680
+[    5.327480]  ? queue_work_on+0x4e/0x80
+[    5.327480]  ? work_on_cpu+0xb5/0xf0
+[    5.327480]  ? trace_hardirqs_on+0x38/0x120
+[    5.327480]  work_on_cpu+0xc1/0xf0
+[    5.327480]  ? queue_work_on+0x80/0x80
+[    5.327480]  ? __traceiter_workqueue_execute_end+0x70/0x70
+[    5.327480]  ? acpi_processor_power_init_bm_check+0x1a0/0x1a0
+[    5.327480]  ? acpi_os_allocate_zeroed+0x2a/0x2a
+[    5.327480]  acpi_processor_ffh_cstate_probe+0x105/0x1f0
+[    5.327480]  acpi_processor_evaluate_cst+0x553/0x670
+[    5.327480]  ? acpi_processor_claim_cst_control+0x80/0x80
+[    5.327480]  ? __kasan_check_write+0x14/0x20
+[    5.327480]  ? up_write+0x3f/0x70
+[    5.327480]  acpi_processor_get_power_info+0x87/0x850
+[    5.327480]  acpi_processor_power_init+0x113/0x260
+[    5.327480]  __acpi_processor_start+0x205/0x270
+[    5.327480]  acpi_processor_start+0x41/0x60
+[    5.327480]  really_probe+0x138/0x5d0
+[    5.327480]  ? __kasan_check_write+0x14/0x20
+[    5.327480]  __driver_probe_device+0x19e/0x230
+[    5.327480]  driver_probe_device+0x4e/0xf0
+[    5.327480]  __driver_attach+0xfc/0x260
+[    5.327480]  ? __device_attach_driver+0x130/0x130
+[    5.327480]  bus_for_each_dev+0xfb/0x150
+[    5.327480]  ? subsys_dev_iter_exit+0x10/0x10
+[    5.327480]  ? preempt_count_sub+0xd2/0x120
+[    5.327480]  ? _raw_spin_unlock+0x1f/0x40
+[    5.327480]  driver_attach+0x2d/0x40
+[    5.327480]  bus_add_driver+0x23f/0x300
+[    5.327480]  driver_register+0x119/0x1a0
+[    5.327480]  ? acpi_video_init+0x142/0x142
+[    5.327480]  acpi_processor_driver_init+0x33/0xc8
+[    5.327480]  do_one_initcall+0x99/0x2c0
+[    5.327480]  ? trace_event_raw_event_initcall_finish+0x160/0x160
+[    5.327480]  ? parameqn+0x40/0xa0
+[    5.327480]  ? __kmalloc+0x1cf/0x390
+[    5.327480]  kernel_init_freeable+0x2d2/0x330
+[    5.327480]  ? rest_init+0xf0/0xf0
+[    5.327480]  kernel_init+0x1e/0x140
+[    5.327480]  ret_from_fork+0x22/0x30
+[    5.327480]  </TASK>
 
-Bluetooth is unreliable on my system when I boot 5.17-rc kernels. There is little doubt in my mind that something that
-has changed in 5.17 is at the root of this. Whether it is actually a bug in userspace doesn't change the fact that there
-is a regression because of one or more changes in the kernel. As I said yesterday, my understanding is that such
-regressions are frowned upon.
+crash log on qemu [2]:
 
-I'll try another bisection today, but limit its range to changes made in the net/bluetooth directory.
+[    9.766144] Please do not flush events_unbound WQ.
+[    9.766938] CPU: 1 PID: 1 Comm: swapper/0 Not tainted
+5.17.0-rc5-next-20220223 #1
+[    9.766938] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.12.0-1 04/01/2014
+[    9.766938] Call Trace:
+[    9.766938]  <TASK>
+[    9.766938]  dump_stack_lvl+0x49/0x5e
+[    9.766938]  dump_stack+0x10/0x12
+[    9.766938]  check_flush_dependency.cold+0x19/0x2e
+[    9.766938]  __flush_work.isra.0+0x186/0x400
+[    9.766938]  ? __queue_work+0x339/0x680
+[    9.766938]  ? alloc_unbound_pwq+0x600/0x600
+[    9.766938]  ? __queue_work+0x33e/0x680
+[    9.766938]  ? queue_work_on+0x4e/0x80
+[    9.766938]  ? driver_deferred_probe_trigger.part.0+0xcb/0xe0
+[    9.766938]  ? trace_hardirqs_on+0x38/0x120
+[    9.766938]  ? queue_work_on+0x4e/0x80
+[    9.766938]  ? driver_deferred_probe_add.part.0+0xe0/0xe0
+[    9.766938]  flush_work+0xe/0x10
+[    9.766938]  deferred_probe_initcall+0x3e/0xa0
+[    9.766938]  do_one_initcall+0x99/0x2c0
+[    9.766938]  ? trace_event_raw_event_initcall_finish+0x160/0x160
+[    9.766938]  ? parameqn+0x40/0xa0
+[    9.766938]  ? __kmalloc+0x1cf/0x390
+[    9.766938]  kernel_init_freeable+0x2d2/0x330
+[    9.766938]  ? rest_init+0xf0/0xf0
+[    9.766938]  kernel_init+0x1e/0x140
+[    9.766938]  ret_from_fork+0x22/0x30
+[    9.766938]  </TASK>
+[    9.786217] PM:   Magic number: 10:124:564
 
-In the meantime I've copied this email to regressions@lists.linux.dev, so they can track this.
 
-Chris
+--
+Linaro LKFT
+https://lkft.linaro.org
 
-> might be something with name resolving though, it appears gnome don't
-> show devices if they don't have a proper name (that is not their
-> address) so perhaps that gives the impression there is nothing going
-> on when in fact that all normal, well apart from the fact that names
-> takes way too long to be resolved.
-> 
->>> I also booted into a 5.16.10 kernel and connecting bluetooth devices worked flawlessly. (This was with the unpatched
->>> bluez daemon)
->>>
->>> Chris
->>>> So the timer doesn't start until the request is sent. but obvoiusly
->>>> older versions of userspace don't have that fix so they end up
->>>> cancelling the loading of LTKs, this would explain why reloading the
->>>> daemon would make it work again.
-> 
-> 
-> 
+
+[1] https://lkft.validation.linaro.org/scheduler/job/4617047#L840
+[2] https://lkft.validation.linaro.org/scheduler/job/4617053#L661
