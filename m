@@ -1,83 +1,72 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AE67B
-	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 16:33:45 +0000 (UTC)
-Received: by mail-pj1-f42.google.com with SMTP id j10-20020a17090a94ca00b001bc2a9596f6so2461793pjw.5
-        for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 08:33:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hicd0tEo/b5LFaXhDInEJPUGfqEVOu+qbFlSudecvJ0=;
-        b=fS9MOKL7PnyGYGUrEHm1W+CpwJy2baJ8/5LJyKMcAWjsJZogmHWVaUfDGQuZCkd8vP
-         VK4ExEycU276xQ5S+kmUK8IVGZL9LtAPjVeyyI9yS6uqvs2uoRZiC/eOJqe8Vq9b+uvP
-         xc4ZlO8+so2JceflzyF2iPU8/gIQZX3lFz5Ts=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hicd0tEo/b5LFaXhDInEJPUGfqEVOu+qbFlSudecvJ0=;
-        b=M77M97q24mOZl3M+Yk0CC3yELpVqZn3o7Xeh8b6xPJBT10ymxKWVs3vbuoNkOXj/rr
-         L/w0buzaHvk7zADv1PUil6/z3g7trDlzNDyauLtM9PFf+Pcm5rSgEAIRXYQ+2pEulE92
-         GvgrdNLBa5Bq9VrEt0/E7GXR1fouy9o6SNgXDa+RjOQp0itKgwcgJVfvmcU+sqwUdfXc
-         qBUv1jRU39HrjdQBBzcJiCHBPWS5Os/gngr9dMaJZnwiSOJpWedKTvjWm4fS29YBF2vs
-         UYGtGLZKz9qXWpGGQIDh6omyCOcciygge3YAHlVc1f/rfHtB3pctt183DDHaUOHvzMYC
-         VvVw==
-X-Gm-Message-State: AOAM530Xd/zw2L5LlxcjGvgwMmGLXCr/ksfnXUVqXgdYcQ8GyXbbr2B4
-	2YXKtO/03wsKang5sfl1a/WMNw==
-X-Google-Smtp-Source: ABdhPJyWX2X03NpVP7OG9tb3/bOJYzu9SCAwlXij7cTFtfwKtKMcQhac3eTOvjUxx32AVPETPTB7Vw==
-X-Received: by 2002:a17:902:e80c:b0:14f:f95c:41ee with SMTP id u12-20020a170902e80c00b0014ff95c41eemr3140315plg.31.1645720424809;
-        Thu, 24 Feb 2022 08:33:44 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 19sm3998951pfz.153.2022.02.24.08.33.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 08:33:44 -0800 (PST)
-Date: Thu, 24 Feb 2022 08:33:43 -0800
-From: Kees Cook <keescook@chromium.org>
-To: matoro <matoro_mailinglist_kernel@matoro.tk>
-Cc: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	matoro_bugzilla_kernel@matoro.tk,
-	Andrew Morton <akpm@linux-foundation.org>,
-	regressions@lists.linux.dev, linux-ia64@vger.kernel.org,
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: regression: Bug 215601 - gcc segv at startup on ia64
-Message-ID: <202202240832.F40AEB20@keescook>
-References: <a3edd529-c42d-3b09-135c-7e98a15b150f@leemhuis.info>
- <823f70be-7661-0195-7c97-65673dc7c12a@leemhuis.info>
- <03497313-A472-4152-BD28-41C35E4E824E@chromium.org>
- <94c3be49-0262-c613-e5f5-49b536985dde@physik.fu-berlin.de>
- <9A1F30F8-3DE2-4075-B103-81D891773246@chromium.org>
- <4e42e754-d87e-5f6b-90db-39b4700ee0f1@physik.fu-berlin.de>
- <202202232030.B408F0E895@keescook>
- <7e3a93e7-1300-8460-30fb-789180a745eb@physik.fu-berlin.de>
- <65ed8ab4fad779fadf572fb737dfb789@matoro.tk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDFD7B
+	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 16:38:19 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nNH87-0000rL-JG; Thu, 24 Feb 2022 17:38:11 +0100
+Message-ID: <cf56111a-e6f6-249b-4953-25159420e99d@leemhuis.info>
+Date: Thu, 24 Feb 2022 17:38:10 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <65ed8ab4fad779fadf572fb737dfb789@matoro.tk>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: Compex WLE200NX: regdomain sanitized regression
+Content-Language: en-BS
+To: Kalle Valo <kvalo@kernel.org>
+Cc: Nuno Oliveira <nuno@eq.uc.pt>, Sebastian Bachmann <hello@reox.at>,
+ wgong@codeaurora.org, ath10k@lists.infradead.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <1c160dfb-6ccc-b4d6-76f6-4364e0adb6dd@reox.at>
+ <YaIix40KaVlxT+XG@eq.uc.pt>
+ <96b3682d-71b3-ada0-6fc7-686e51609968@leemhuis.info>
+ <87v8zja7em.fsf@codeaurora.org> <YcDMGdpvINCX9VlX@eq.uc.pt>
+ <625a51ed-8185-6fdb-bd7d-cfb0a913c7a4@leemhuis.info>
+ <87v8x4tet6.fsf@kernel.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <87v8x4tet6.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645720699;a9734271;
+X-HE-SMSGID: 1nNH87-0000rL-JG
 
-On Thu, Feb 24, 2022 at 09:22:04AM -0500, matoro wrote:
-> Hi Kees, I can provide live ssh access to my system exhibiting the issue.
-> My system is a lot more stable due to using openrc rather than systemd, for
-> me GCC seems to be the only binary affected.  Would that be helpful?
+On 24.02.22 17:22, Kalle Valo wrote:
+> Thorsten Leemhuis <regressions@leemhuis.info> writes:
+> 
+>> Hi, this is your Linux kernel regression tracker speaking. Top-posting
+>> for once, to make this easy accessible to everyone.
+>>
+>> Kalle, thx for looking into this, I'm well aware this is kinda tricky.
+>> This is a gently reminder about the issue to ensure it doesn't fall
+>> through the cracks. At the same time I know that it's not urgent, that
+>> why I'm not putting it on backburner in regzbot now:
+>>
+>> #regzbot backburner: tricky situation and around for a while, hence not
+>> that urgent
+>> #regzbot poke
+>>
+>> I'll likely sent another gentle reminder after the next merge-window.
+> 
+> I now queued the revert to my pending branch:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=dfc438d224e4ad756b276d79e5771c45b523156d
 
-Yeah, that might be helpful. I have access to a Debian ia64 porter box,
-but it's not running the broken kernel, so I can only examine "normal"
-behavior.
+Ohh, great, many thx!
 
-I'll switch to off-list email...
+> Thorsten, can you please check that the Link tag is correct so that
+> regzbot can automatically detect the fix?
 
--Kees
+Yeah, it will, thx to the "Link:
+https://lore.kernel.org/all/1c160dfb-6ccc-b4d6-76f6-4364e0adb6dd@reox.at/".
 
--- 
-Kees Cook
+The kernel's docs say the redirector should be used in such cases (so
+"/r/" instead of "/all/"), but regzbot doesn't care about it -- and I
+wonder if that detail is actually important anyway now that we have
+lore.kernel.org/all/.
+
+Ciao, Thorsten
