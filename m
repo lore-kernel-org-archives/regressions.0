@@ -1,95 +1,177 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940371373
-	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 05:16:07 +0000 (UTC)
-Received: by mail-pg1-f175.google.com with SMTP id 139so835585pge.1
-        for <regressions@lists.linux.dev>; Wed, 23 Feb 2022 21:16:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=srYPL04OWay1dcY8e70dNGhHS9ZwVWkaxq0mw17kle0=;
-        b=E+AaIZP0v7bVUhbtnlfQdm0GewhlDSLyFsa4Gc9ttCYc4Wugq3ehabUEmagg6S/HG5
-         ZIBO/6RSxYufDXorILKqvIXx/WRBvOtOllmU7CIO+HDmGlm+E2pJTWQQR9ntIuP4IqTi
-         SE2nH8yGt6EOujARktNsaPIbSukKsuSizLpvc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=srYPL04OWay1dcY8e70dNGhHS9ZwVWkaxq0mw17kle0=;
-        b=jB9je7T8GU878dMSj6zJ9qdbPPgZ/Cc6IqvKqSFVmmZv3ND/xKHFPKq8zx1j+rLv0w
-         lLLwJHxtH5xY9cW7Ptjfga/B4wdZbKXaQ4WHxzqQM5zcfWaQe40hgWgqvqkH14zWB1Nx
-         cS+cPNdfpAeKD8ggWVeX9JBlKQUJ1XsoepyGCblblrAMnC17/IbYB21rG2/aVwp3YOdJ
-         25S7V9uIuk8JrOROeOPR28XDuwDUr9Sw6Ds0bx1QFlPg0eFkSUzPMcKv8qQ5Wv58itZq
-         S13Y+E5rgbECPE/VNuEz3fQ6OihE/LRI1HXLKZyMHnoBXxQLfn5sHI6iGCmVtsBTUCUv
-         Mf2A==
-X-Gm-Message-State: AOAM532Tx2VdSVkWKOmNCuktI039D0+V76pnTAJT/AKiCKaLIi/rW91l
-	48WlGcq3uN9Desuep3pd/5OIpQ==
-X-Google-Smtp-Source: ABdhPJyY08KTJaKQ5zKGQ1yFLiRI1Pv8/UxZIiAHPJqb0gnMTYA9nhd/ZhDBm4UZolLnsVTN1dDpkA==
-X-Received: by 2002:a05:6a00:23c6:b0:4cf:1e1e:ff4f with SMTP id g6-20020a056a0023c600b004cf1e1eff4fmr1200901pfc.80.1645679767050;
-        Wed, 23 Feb 2022 21:16:07 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m11-20020a17090a3f8b00b001bc299e0aefsm4595800pjc.56.2022.02.23.21.16.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 21:16:06 -0800 (PST)
-Date: Wed, 23 Feb 2022 21:16:05 -0800
-From: Kees Cook <keescook@chromium.org>
-To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	matoro_bugzilla_kernel@matoro.tk,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	linux-ia64@vger.kernel.org,
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: regression: Bug 215601 - gcc segv at startup on ia64
-Message-ID: <202202232030.B408F0E895@keescook>
-References: <a3edd529-c42d-3b09-135c-7e98a15b150f@leemhuis.info>
- <823f70be-7661-0195-7c97-65673dc7c12a@leemhuis.info>
- <03497313-A472-4152-BD28-41C35E4E824E@chromium.org>
- <94c3be49-0262-c613-e5f5-49b536985dde@physik.fu-berlin.de>
- <9A1F30F8-3DE2-4075-B103-81D891773246@chromium.org>
- <4e42e754-d87e-5f6b-90db-39b4700ee0f1@physik.fu-berlin.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1863D184D
+	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 09:22:50 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nNAKe-0004Is-D8; Thu, 24 Feb 2022 10:22:40 +0100
+Message-ID: <fd550b0f-5733-48b7-756f-5fb2af3ab172@leemhuis.info>
+Date: Thu, 24 Feb 2022 10:22:39 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4e42e754-d87e-5f6b-90db-39b4700ee0f1@physik.fu-berlin.de>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: Regression in workingset_refault latency on 5.15
+Content-Language: en-BS
+To: Daniel Dao <dqminh@cloudflare.com>, shakeelb@google.com
+Cc: kernel-team <kernel-team@cloudflare.com>, linux-mm@kvack.org,
+ hannes@cmpxchg.org, guro@fb.com, feng.tang@intel.com, mhocko@kernel.org,
+ hdanton@sina.com, mkoutny@suse.com, akpm@linux-foundation.org,
+ torvalds@linux-foundation.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CA+wXwBSyO87ZX5PVwdHm-=dBjZYECGmfnydUicUyrQqndgX2MQ@mail.gmail.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+In-Reply-To: <CA+wXwBSyO87ZX5PVwdHm-=dBjZYECGmfnydUicUyrQqndgX2MQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1645694571;ce2023b8;
+X-HE-SMSGID: 1nNAKe-0004Is-D8
 
-On Mon, Feb 21, 2022 at 10:57:01PM +0100, John Paul Adrian Glaubitz wrote:
-> Hi Kees!
-> 
-> On 2/21/22 21:58, Kees Cook wrote:
-> >> I have applied this patch on top of 038101e6b2cd5c55f888f85db42ea2ad3aecb4b6 and it doesn't
-> >> fix the problem for me. Reverting 5f501d555653f8968011a1e65ebb121c8b43c144, however, fixes
-> >> the problem.
-> >>
-> >> FWIW, this problem doesn't just affect GCC but systemd keeps segfaulting with this change as well.
-> > 
-> > Very weird! Can you attached either of those binaries to bugzilla (or a URL I can fetch it from)? I can try to figure out where it is going weird...
-> 
-> Here's the initrd of that particular machine:
-> 
-> > https://people.debian.org/~glaubitz/initrd.img-5.17.0-rc5+
-> 
-> You should be able to extract the binaries from this initrd image and the "mount" command,
-> for example, should be one of the affected binaries.
+[TLDR: I'm adding below regression report below to regzbot, the Linux
+kernel regression tracking bot; all text you find below is compiled from
+a few templates paragraphs you might have encountered already already
+from similar mails.]
 
-In dmesg, do you see any of these reports?
+Hi, this is your Linux kernel regression tracker speaking.
 
-                pr_info("%d (%s): Uhuuh, elf segment at %px requested but the memory is mapped already\n",
-                        task_pid_nr(current), current->comm, (void *)addr);
+Thanks for the report. CCing the regression mailing list, as it should
+be in the loop for all regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
-I don't see anything out of order in the "mount" binary from the above
-initrd. What does "readelf -lW" show for the GCC you're seeing failures
-on?
+To be sure this issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced v3.0..v5.15.19
+#regzbot ignore-activity
+
+Reminder for developers: when fixing the issue, please add a 'Link:'
+tags pointing to the report (the mail quoted below) using
+lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'. This allows the bot to connect
+the report with any patches posted or committed to fix the issue; this
+again allows the bot to show the current status of regressions and
+automatically resolve the issue when the fix hits the right tree.
+
+I'm sending this to everyone that got the initial report, to make them
+aware of the tracking. I also hope that messages like this motivate
+people to directly get at least the regression mailing list and ideally
+even regzbot involved when dealing with regressions, as messages like
+this wouldn't be needed then.
+
+Don't worry, I'll send further messages wrt to this regression just to
+the lists (with a tag in the subject so people can filter them away), if
+they are relevant just for regzbot. With a bit of luck no such messages
+will be needed anyway.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+On 23.02.22 14:51, Daniel Dao wrote:
+> Hi all,
+> 
+> We are observing some regressions in workingset_refault on our newly upgraded
+> 5.15.19 nodes with zram as swap. This manifests in several ways:
+> 
+> 1) Regression of workingset_refault duration observed in flamegraph
+> 
+> We regularly collect flamegraphs for running services on the node. Since upgrade
+> to 5.15.19, we see that workingset_refault occupied a more significant part of
+> the service flamegraph (13%) with the following call trace
+> 
+>   workingset_refault+0x128
+>   add_to_page_cache_lru+0x9f
+>   page_cache_ra_unbounded+0x154
+>   force_page_cache_ra+0xe2
+>   filemap_get_pages+0xe9
+>   filemap_read+0xa4
+>   xfs_file_buffered_read+0x98
+>   xfs_file_read_iter+0x6a
+>   new_sync_read+0x118
+>   vfs_read+0xf2
+>   __x64_sys_pread64+0x89
+>   do_syscall_64+0x3b
+>   entry_SYSCALL_64_after_hwframe+0x44
+> 
+> 2) Regression of userspace performance sensitive code
+> 
+> We have some performance sensentive code running in userspace that have their
+> runtime measured by CLOCK_THREAD_CPUTIME_ID. They look roughly as:
+> 
+>   now = clock_gettime(CLOCK_THREAD_CPUTIME_ID)
+>   func()
+>   elapsed = clock_gettime(CLOCK_THREAD_CPUTIME_ID) - now
+> 
+> Since 5.15 upgrade, we observed long `elapsed` in the range of 4-10ms much more
+> frequently than before.  This went away after we disabled swap for the service
+> using `memory.swap.max=0` memcg configuration.
+> 
+> The new thing in 5.15 workingset_refault seems to be introduction of
+> mem_cgroup_flush_stats()
+> by commit 1f828223b7991a228bc2aef837b78737946d44b2 (memcg: flush
+> lruvec stats in the
+> refault).
+> 
+> Given that mem_cgroup_flush_stats can take quite a long time for us on the
+> standard systemd cgroupv2 hierrachy ( root / system.slice / workload.service )
+> 
+>   sudo /usr/share/bcc/tools/funcslower -m 10 -t mem_cgroup_flush_stats
+>   Tracing function calls slower than 10 ms... Ctrl+C to quit.
+>   TIME       COMM           PID    LAT(ms)             RVAL FUNC
+>   0.000000   <redacted>     804776   11.50              200
+> mem_cgroup_flush_stats
+>   0.343383   <redacted>     647496   10.58              200
+> mem_cgroup_flush_stats
+>   0.604309   <redacted>     804776   10.50              200
+> mem_cgroup_flush_stats
+>   1.230416   <redacted>     803293   10.01              200
+> mem_cgroup_flush_stats
+>   1.248442   <redacted>     646400   11.02              200
+> mem_cgroup_flush_stats
+> 
+> could it be possible that workingset_refault in some unfortunate case can take
+> much longer than before such that it increases the time observed by
+> CLOCK_THREAD_CPUTIME_ID from userspace, or overall duration of
+> workingset_refault
+> observed by perf ?
+> 
+
 
 -- 
-Kees Cook
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
