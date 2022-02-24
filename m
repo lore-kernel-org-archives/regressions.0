@@ -1,39 +1,39 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3C91360
-	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 03:59:00 +0000 (UTC)
-Received: by mail-pl1-f170.google.com with SMTP id m11so623302pls.5
-        for <regressions@lists.linux.dev>; Wed, 23 Feb 2022 19:59:00 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940371373
+	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 05:16:07 +0000 (UTC)
+Received: by mail-pg1-f175.google.com with SMTP id 139so835585pge.1
+        for <regressions@lists.linux.dev>; Wed, 23 Feb 2022 21:16:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ipcMbOhFS/2FiJEFtsW19b67QSx/DKh4wGATjCAKrkY=;
-        b=ZnawhkpDqU+rZlOg1P0cBGB0T65BAaTadLRW1leM/SrFFGbp0E9ZJ3/bJH3dhqPAcm
-         pQpEqo/A7vpTuh9ApxtdE0+Q4YuYDWgqFar+s/Iao8+jjt3Uuz5ySEP3Sv8h8VmG/zcc
-         1ARH9+FZTnmavgiFljrm2KxQ8Wy3OsIlx+FLM=
+        bh=srYPL04OWay1dcY8e70dNGhHS9ZwVWkaxq0mw17kle0=;
+        b=E+AaIZP0v7bVUhbtnlfQdm0GewhlDSLyFsa4Gc9ttCYc4Wugq3ehabUEmagg6S/HG5
+         ZIBO/6RSxYufDXorILKqvIXx/WRBvOtOllmU7CIO+HDmGlm+E2pJTWQQR9ntIuP4IqTi
+         SE2nH8yGt6EOujARktNsaPIbSukKsuSizLpvc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=ipcMbOhFS/2FiJEFtsW19b67QSx/DKh4wGATjCAKrkY=;
-        b=zhAPp11ou9CgIjEWKtPoef/EHtLMwX8YvOg+GV7vhhGakDvJQwRu8l1KjgAMGLr2Ef
-         d35YvihwD0IwLwB7F/ga21l5QGI2oWrJrpstYhsMDSfEoS+TNix+ZvLlnJMCsJ8EPjW1
-         lkqW7hxrsVdtS4WBZlVwnMnj/Xn7A4YcfP1zUEoy3Li/9Xa1yQoKlV8hQtC+x53axO2d
-         XhC0GJR95GTX1Jm++z4HtyQnauUdlXXPdxwpaG0IHGU55WmTRB6uVK8mCfpjH4GmiwgO
-         YoH1jyIQkqxxtMG2rSDuStg/sGyGgx/tblU3+BzQ4jcs403xQgY3lemhEtSOjQPhN+eo
-         jwGw==
-X-Gm-Message-State: AOAM531RKcvOp3/Nqrz4hDWItbV7Dk1wugiJqxzrviX0NcHJ6+adO2er
-	i6EIOJD7UHvVvByexzvN7DsLUdBwsof08Q==
-X-Google-Smtp-Source: ABdhPJzn1uMQcYSD5vqES/uqQG8fcX1txbzlrszEOeO34PcIjg+0QC/31asHtN0y0pT/5plGU0HyDA==
-X-Received: by 2002:a17:902:f606:b0:14b:4c2d:e1fa with SMTP id n6-20020a170902f60600b0014b4c2de1famr889815plg.24.1645675139788;
-        Wed, 23 Feb 2022 19:58:59 -0800 (PST)
+        bh=srYPL04OWay1dcY8e70dNGhHS9ZwVWkaxq0mw17kle0=;
+        b=jB9je7T8GU878dMSj6zJ9qdbPPgZ/Cc6IqvKqSFVmmZv3ND/xKHFPKq8zx1j+rLv0w
+         lLLwJHxtH5xY9cW7Ptjfga/B4wdZbKXaQ4WHxzqQM5zcfWaQe40hgWgqvqkH14zWB1Nx
+         cS+cPNdfpAeKD8ggWVeX9JBlKQUJ1XsoepyGCblblrAMnC17/IbYB21rG2/aVwp3YOdJ
+         25S7V9uIuk8JrOROeOPR28XDuwDUr9Sw6Ds0bx1QFlPg0eFkSUzPMcKv8qQ5Wv58itZq
+         S13Y+E5rgbECPE/VNuEz3fQ6OihE/LRI1HXLKZyMHnoBXxQLfn5sHI6iGCmVtsBTUCUv
+         Mf2A==
+X-Gm-Message-State: AOAM532Tx2VdSVkWKOmNCuktI039D0+V76pnTAJT/AKiCKaLIi/rW91l
+	48WlGcq3uN9Desuep3pd/5OIpQ==
+X-Google-Smtp-Source: ABdhPJyY08KTJaKQ5zKGQ1yFLiRI1Pv8/UxZIiAHPJqb0gnMTYA9nhd/ZhDBm4UZolLnsVTN1dDpkA==
+X-Received: by 2002:a05:6a00:23c6:b0:4cf:1e1e:ff4f with SMTP id g6-20020a056a0023c600b004cf1e1eff4fmr1200901pfc.80.1645679767050;
+        Wed, 23 Feb 2022 21:16:07 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id z13sm1146016pfe.20.2022.02.23.19.58.59
+        by smtp.gmail.com with ESMTPSA id m11-20020a17090a3f8b00b001bc299e0aefsm4595800pjc.56.2022.02.23.21.16.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Feb 2022 19:58:59 -0800 (PST)
-Date: Wed, 23 Feb 2022 19:58:58 -0800
+        Wed, 23 Feb 2022 21:16:06 -0800 (PST)
+Date: Wed, 23 Feb 2022 21:16:05 -0800
 From: Kees Cook <keescook@chromium.org>
 To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
@@ -46,7 +46,7 @@ Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
 	Alexander Viro <viro@zeniv.linux.org.uk>
 Subject: Re: regression: Bug 215601 - gcc segv at startup on ia64
-Message-ID: <202202231957.801F1780@keescook>
+Message-ID: <202202232030.B408F0E895@keescook>
 References: <a3edd529-c42d-3b09-135c-7e98a15b150f@leemhuis.info>
  <823f70be-7661-0195-7c97-65673dc7c12a@leemhuis.info>
  <03497313-A472-4152-BD28-41C35E4E824E@chromium.org>
@@ -82,9 +82,14 @@ On Mon, Feb 21, 2022 at 10:57:01PM +0100, John Paul Adrian Glaubitz wrote:
 > You should be able to extract the binaries from this initrd image and the "mount" command,
 > for example, should be one of the affected binaries.
 
-I don't see anything immediately obvious here, but I'll keep looking. Is
-there any way to emulate ia64? I don't see anything that'll work under
-QEMU...
+In dmesg, do you see any of these reports?
+
+                pr_info("%d (%s): Uhuuh, elf segment at %px requested but the memory is mapped already\n",
+                        task_pid_nr(current), current->comm, (void *)addr);
+
+I don't see anything out of order in the "mount" binary from the above
+initrd. What does "readelf -lW" show for the GCC you're seeing failures
+on?
 
 -- 
 Kees Cook
