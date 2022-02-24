@@ -1,60 +1,55 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 214A21B85
-	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 19:41:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=GrbBLAbtvC4chaYdzgUK1w1hf9+xtC4k6cVzY/iVx3U=; b=pUaNsZxVGnEHGlDh9Mk+nY4Puc
-	WDK2PKuOlt4p0TsbO6ETD2kRFFIDMPq93CdkJa9Iab0H00mjKKQLei1dPnXOHapqa58yCw72eYM4E
-	jlgrtc0l94HKpO/qSd6rRHBtIBI62VoEfbYdqDPC3hfIVl7cAWxyarEfP5GMPxxrivrWd2tj/QTtX
-	vMrA9PdF5ZHtwmXXUbcDoAk3PZumDSG6NW/yIway8XVyvJu28V5/hlFS4SmLWB4bDAglam6GIOtPg
-	EIakVt52CXxk2k40RN34UYCk8ko1gF5NiN2m5ieGbD1Qldb3mOTj2Ip+6w3fCOaQJD8L54/o+c8zk
-	OLAW9wCw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nNJyt-0054y2-Hj; Thu, 24 Feb 2022 19:40:51 +0000
-Date: Thu, 24 Feb 2022 19:40:51 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: LTP List <ltp@lists.linux.it>, open list <linux-kernel@vger.kernel.org>,
-	linux-fsdevel@vger.kernel.org, regressions@lists.linux.dev,
-	lkft-triage@lists.linaro.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Kees Cook <keescook@chromium.org>,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Muchun Song <songmuchun@bytedance.com>,
-	Peter Xu <peterx@redhat.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [next] LTP: readahead02.c:295: TFAIL: readahead failed to save
- any I/O
-Message-ID: <YhffQ6XStJycOmK1@casper.infradead.org>
-References: <CA+G9fYs_8ww=Mi4o4XXjQxL2XJiTiAUbMd1WF08zL+FoiA7GRw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAB21B85
+	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 20:05:40 +0000 (UTC)
+Received: from localhost (unknown [IPv6:2601:281:8300:104d::5f6])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id 809255BF;
+	Thu, 24 Feb 2022 19:58:04 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 809255BF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1645732684; bh=HVw2UezRrT65n15xUbRuzSJs4qGya2Y7XVmPXK4ePUs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=J24vHSoqtKXTkX0XKHbreOJXX8M6T4R5iQaMTNdBXNZInKPXCq81/TLB5bQyIEdQa
+	 8C3depVw8nYGm9nvvfdklL2yqoOmsC4wnKxah01KJLoPyiJOkAqktCzEKVJtQQjanX
+	 D4jFNafOnvg21idha2Jfi86MrJnGYrqduUE85BfKHvJ1JQtgTWn3vQdK1HF4pXPSB1
+	 lwkEm6OAC9J2XxFXTnjpl0rto1DYPTNaKCEWqzm9EkBIbRYYocha37oSv/x2YweUlm
+	 5vaTf8szj9YR5t9j5VjAFmbUyHIm8Rd2rQU5Lo6lKQqVwl/XNC2EzjeuuoeGGUFPqK
+	 bIxBCtRJha47Q==
+From: Jonathan Corbet <corbet@lwn.net>
+To: Thorsten Leemhuis <linux@leemhuis.info>, linux-doc@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>
+Cc: workflows@vger.kernel.org, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>,
+ regressions@lists.linux.dev, Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: Re: [PATCH v5 0/3] docs: add two texts covering regressions
+In-Reply-To: <cover.1644994117.git.linux@leemhuis.info>
+References: <cover.1644994117.git.linux@leemhuis.info>
+Date: Thu, 24 Feb 2022 12:58:03 -0700
+Message-ID: <871qzskpf8.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYs_8ww=Mi4o4XXjQxL2XJiTiAUbMd1WF08zL+FoiA7GRw@mail.gmail.com>
+Content-Type: text/plain
 
-On Thu, Feb 24, 2022 at 02:57:59PM +0530, Naresh Kamboju wrote:
-> On Linux next 20220222 tag LTP syscalls test case readahead02 failed.
-> Please find detail test output on below link [1]
-> 
-> test failed log:
-> --------------------
-> readahead02.c:181: TPASS: offset is still at 0 as expected
-> readahead02.c:285: TINFO: read_testfile(0) took: 37567 usec
-> readahead02.c:286: TINFO: read_testfile(1) took: 37263 usec
-> readahead02.c:288: TINFO: read_testfile(0) read: 0 bytes
-> readahead02.c:290: TINFO: read_testfile(1) read: 0 bytes
-> readahead02.c:295: TFAIL: readahead failed to save any I/O
+Thorsten Leemhuis <linux@leemhuis.info> writes:
 
-Confirmed, I can reproduce this with the folio tree.  Will work on
-this once I've disposed of the other bug I'm looking at right now.
+> "We don't cause regressions" might be the first rule of Linux kernel
+> development, but it and other aspects of regressions nevertheless are hardly
+> described in the Linux kernel's documentation. The following patches change
+> this by creating two documents dedicated to the topic.
+>
+> The second patch could easily be folded into the first one, but was kept
+> separate, as it might be a bit controversial. This also allows the patch
+> description to explain some backgrounds for this part of the document.
+> Additionally, ACKs and Reviewed-by tags can be collected separately this way.
+
+Hearing no objections, I have applied this set, thanks.
+
+jon
