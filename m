@@ -1,109 +1,88 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from matoro.tk (matoro.tk [104.188.251.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FDE1B62
-	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 14:09:19 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nNEnw-0003dI-Iq; Thu, 24 Feb 2022 15:09:12 +0100
-Message-ID: <db329421-ff6c-50c9-69f6-ae8e1b9e9063@leemhuis.info>
-Date: Thu, 24 Feb 2022 15:09:11 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06E57A
+	for <regressions@lists.linux.dev>; Thu, 24 Feb 2022 14:37:41 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; bh=U1Serj9HWMW/oXYgmC1Rsp6t8gZrl/v31HBeiGDPdW4=;
+ c=relaxed/relaxed; d=matoro.tk;
+ h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:In-Reply-To:Message-Id:Message-Id:References:References:Autocrypt:Openpgp;
+ i=@matoro.tk; s=20220111215046; t=1645712524; v=1; x=1646144524;
+ b=OYghG0ZP+iuW2kkTQeOuixHFPq878+wQ3HhdKX/+sGY09GTDTQFDIubVowj2KCUAMa6hGg5z
+ emJxwo7k7iwM+JXu+3yE3DQsx9HG4ZBJFjS7BSFq9MSKfoo49MhkWqwuAJEne4d1p2n+MK3w3H8
+ nhuIW5JuvEJLWhiNLUwOESPgCTRpscLtEwNsfWc0aDp2LixMpHlSmIO3VnR7RTqooKC9CJ452ta
+ UM/qxfqM6Nlt5xE5jAS8lL/ueEDBCRO0qXA1nFOqZlgmtbsnnC34+1V9rWsHe+kOSZvMMUBiJFB
+ K4HJAmTDISfkfJWq4HoGTEVo0ctw8pdW/tc5RR+gFhe9y5izzW0GcfFP8gvPREsJRbIYTHEZveH
+ NJIUWtL5448BOMyUyVZJd8eXKj7O6wIfQYM5zT+W6lbbIGrxx6rNVZYEZmPnkite3l2zZVqeykW
+ dCiw9yfIpH+X2yA4GZY9Gcn3xQzZozeYYlW/Q97jERXi6XkljbaZD4a3xtRGCiHv3oNAuM+Dq7w
+ wbitZLVe9+B/0pgWjr3tva2lqhvnaBM4DX13iSpzOlTQPjc59ofE0WA1pB734Psd/WzIez+xhhJ
+ 5uI3scCkVBLSXtxRDzqLthxm5AUzUYmDZ28l+DVLASRcTR9KsEqNWlrE/Qss9Etj2UT9EQdVjTg
+ RrbyoJjcB0U=
+Received: by matoro.tk (envelope-sender
+ <matoro_mailinglist_kernel@matoro.tk>) with ESMTPS id f168343e; Thu, 24 Feb
+ 2022 09:22:04 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-BW
-From: Thorsten Leemhuis <linux@leemhuis.info>
-To: Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Johan Hedberg <johan.hedberg@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org, Paul Menzel <pmenzel@molgen.mpg.de>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220215015938.1950978-1-luiz.dentz@gmail.com>
- <E428782F-C1D1-43FB-8CB3-009BD97A2D14@holtmann.org>
- <c418c95d-339c-5b8a-5349-26078424abe4@leemhuis.info>
-Subject: Re: [PATCH] Bluetooth: Fix bt_skb_sendmmsg not allocating partial
- chunks
-In-Reply-To: <c418c95d-339c-5b8a-5349-26078424abe4@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
+Date: Thu, 24 Feb 2022 09:22:04 -0500
+From: matoro <matoro_mailinglist_kernel@matoro.tk>
+To: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc: Kees Cook <keescook@chromium.org>, Thorsten Leemhuis
+ <regressions@leemhuis.info>, Anthony Yznaga <anthony.yznaga@oracle.com>,
+ matoro_bugzilla_kernel@matoro.tk, Andrew Morton <akpm@linux-foundation.org>,
+ regressions@lists.linux.dev, linux-ia64@vger.kernel.org, Linux-fsdevel
+ <linux-fsdevel@vger.kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: regression: Bug 215601 - gcc segv at startup on ia64
+In-Reply-To: <7e3a93e7-1300-8460-30fb-789180a745eb@physik.fu-berlin.de>
+References: <a3edd529-c42d-3b09-135c-7e98a15b150f@leemhuis.info>
+ <823f70be-7661-0195-7c97-65673dc7c12a@leemhuis.info>
+ <03497313-A472-4152-BD28-41C35E4E824E@chromium.org>
+ <94c3be49-0262-c613-e5f5-49b536985dde@physik.fu-berlin.de>
+ <9A1F30F8-3DE2-4075-B103-81D891773246@chromium.org>
+ <4e42e754-d87e-5f6b-90db-39b4700ee0f1@physik.fu-berlin.de>
+ <202202232030.B408F0E895@keescook>
+ <7e3a93e7-1300-8460-30fb-789180a745eb@physik.fu-berlin.de>
+Message-ID: <65ed8ab4fad779fadf572fb737dfb789@matoro.tk>
+X-Sender: matoro_mailinglist_kernel@matoro.tk
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1645711760;a68f3dbf;
-X-HE-SMSGID: 1nNEnw-0003dI-Iq
 
-Hi, this is your Linux kernel regression tracker again. Top-posting for
-once, to make this easily accessible for everyone.
+Hi Kees, I can provide live ssh access to my system exhibiting the 
+issue.  My system is a lot more stable due to using openrc rather than 
+systemd, for me GCC seems to be the only binary affected.  Would that be 
+helpful?
 
-I sent below inquiry on Saturday and didn't get a reply; and I didn't
-notice any other activity to get this regression fix mainlined soon.
-
-Bluetooth maintainers, what's up here? I'd like to avoid getting Linus
-involved, but I guess I'm out of options if this mail doesn't get things
-rolling -- or alternatively an answer why this fix might better wait for
-the next merge window to get merged.
-
-Ciao, Thorsten
-
-On 19.02.22 10:18, Thorsten Leemhuis wrote:
+On 2022-02-24 04:33, John Paul Adrian Glaubitz wrote:
+> Hi Kees!
 > 
-> [CCing Johan, Jakub and Dave]
+> On 2/24/22 06:16, Kees Cook wrote:
+>>> You should be able to extract the binaries from this initrd image and 
+>>> the "mount" command,
+>>> for example, should be one of the affected binaries.
+>> 
+>> In dmesg, do you see any of these reports?
+>> 
+>>                 pr_info("%d (%s): Uhuuh, elf segment at %px requested 
+>> but the memory is mapped already\n",
+>>                         task_pid_nr(current), current->comm, (void 
+>> *)addr);
 > 
-> Hi Bluetooth maintainers!
+> I'll check that.
 > 
-> On 16.02.22 11:26, Marcel Holtmann wrote:
->>
->>> Since bt_skb_sendmmsg can be used with the likes of SOCK_STREAM it
->>> shall return the partial chunks it could allocate instead of freeing
->>> everything as otherwise it can cause problems like bellow.
->>>
->>> Link: https://lore.kernel.org/linux-bluetooth/aa3ee7ac-6c52-3861-1798-3cc1a37f6ebf@molgen.mpg.de/T/#m1f9673e4ab0d55a7dccf87905337ab2e67d689f1
->>> Fixes: 81be03e026dc ("Bluetooth: RFCOMM: Replace use of memcpy_from_msg with bt_skb_sendmmsg")
->>> Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
->>> ---
->>> include/net/bluetooth/bluetooth.h | 3 +--
->>> 1 file changed, 1 insertion(+), 2 deletions(-)
->>
->> patch has been applied to bluetooth-next tree.
+>> I don't see anything out of order in the "mount" binary from the above
+>> initrd. What does "readelf -lW" show for the GCC you're seeing 
+>> failures
+>> on?
 > 
-> Luiz, Marcel, thx for fixing this 5.16 regression and picking the patch
-> up for merging. But I have to wonder: why was this simple fix put into a
-> tree that apparently is meant to only get merged to mainline during the
-> the next merge window? That will mean this regression will bother people
-> (maybe Paul is not the only one that is affected by this) for weeks to
-> come and even make it into 5.17, before it gets fixed for 5.18-rc1.
-> Despite the lack of a "Cc: <stable@vger.kernel.org>" tag it likely will
-> get backporting to 5.17.y and 5.16.y afterwards, but the latter soon
-> after will be EOLed anyway.
+> I'm not 100% sure whether it's the mount binary that is affected. What
+> happens is that once init takes over,
+> I'm seeing multiple "Segmentation Fault" message on the console until
+> I'm dropped to the initrd shell.
 > 
-> Correct me if I'm wrong, but that afaik is not how the Linux development
-> process is meant to handle such regressions. This approach also
-> contributes to the huge stable and longterm releases after the end of
-> each merge window, which some people see as a problem.
+> I can check what dmesg says.
 > 
-> I bring this up because there were other regression fixes in the last
-> few weeks that took such a slow path towards mainline. I also checked
-> MAINTAINERS and noticed you even have a tree that could feed fixes like
-> this to Linus via the regular net tree, but apparently you haven't used
-> it in quite a while:
-> https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git
-> I rechecked and noticed not a single bluetooth fix was merged between
-> v5.16-rc1..v5.16. I doubt Jakub or Dave are the reason, as they merge
-> fixes from downstream trees every week and send them to Linus shortly
-> after that.
-> 
-> So why are things like that? Or is there something wrong with my look on
-> things?
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
+> Adrian
