@@ -1,54 +1,109 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8875D1FBD
-	for <regressions@lists.linux.dev>; Fri, 25 Feb 2022 11:56:28 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nNZCy-0002tQ-Pf; Fri, 25 Feb 2022 12:56:24 +0100
-Message-ID: <32ae6671-510c-9a9f-3e01-93a8f45ede7a@leemhuis.info>
-Date: Fri, 25 Feb 2022 12:56:23 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B8F1FBD
+	for <regressions@lists.linux.dev>; Fri, 25 Feb 2022 12:22:59 +0000 (UTC)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 21PBMmcS033280;
+	Fri, 25 Feb 2022 12:22:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=psUjqUDIXrQuDk/0U0G6bTiHSZGQTDTjSpKnanVkLOU=;
+ b=C9VXNBfrBDhDc8KObk6NsCnVFIFb8LpS7RxunFyXY51/VhKLVTZz3iRXBc34CT4dHcvT
+ GZZ6KWKZKpFWHcmralHqPLGOkoDTgYTVkEfYtal6M+jF1CI0oaE+/4zERNu3LmmsUwJC
+ /0mv3GSl02qg2qKaWcyuT96FO7QI00bpvtXhx24+0IATu4ws7bLeeRgTWOCzotp8qOdk
+ 0TWZunph8PM5ua4RLs9F1bBPdjiflcVBXwBFz/JQwnGUdNieLIdXaeS0803Hf8Pg7Ycr
+ 0QNVAQVA6jnfsq4l1VdvAjcSYVdIqEl0l2/B0JHGZvvmngiEuapSBcYtdYcJFhoHp0KZ VQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com with ESMTP id 3eewpn291c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Feb 2022 12:22:41 +0000
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+	by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 21PBQta4004716;
+	Fri, 25 Feb 2022 12:22:40 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+	by mx0a-001b2d01.pphosted.com with ESMTP id 3eewpn290a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Feb 2022 12:22:40 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+	by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 21PCIwCq030560;
+	Fri, 25 Feb 2022 12:22:38 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+	by ppma03ams.nl.ibm.com with ESMTP id 3ear69rf5v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 25 Feb 2022 12:22:38 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+	by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 21PCBqMg14745858
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 25 Feb 2022 12:11:52 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D912B52054;
+	Fri, 25 Feb 2022 12:22:35 +0000 (GMT)
+Received: from [9.145.163.29] (unknown [9.145.163.29])
+	by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3FB7952059;
+	Fri, 25 Feb 2022 12:22:35 +0000 (GMT)
+Message-ID: <65d40e00-d7a4-0210-5253-d5d1744f0343@linux.ibm.com>
+Date: Fri, 25 Feb 2022 13:22:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
+Subject: Re: [next] next-20220223 kernel crash
+Content-Language: en-US
+To: Naresh Kamboju <naresh.kamboju@linaro.org>, Tejun Heo <tj@kernel.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Lai Jiangshan <laijs@linux.alibaba.com>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Paul E. McKenney" <paulmck@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        regressions@lists.linux.dev, lkft-triage@lists.linaro.org
+References: <CA+G9fYtzLr+9T9Z1N8QLznW6DqTOU8iSHvgMftdhe2XkEf8F8g@mail.gmail.com>
+From: Steffen Maier <maier@linux.ibm.com>
+In-Reply-To: <CA+G9fYtzLr+9T9Z1N8QLznW6DqTOU8iSHvgMftdhe2XkEf8F8g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 8iR0yfi5CRn2OiGcAc3R2PeQ1PHYEQN4
+X-Proofpoint-ORIG-GUID: jXsduC_UmntOMfiR-ERJZIlWIGPVZ4ni
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [PATCH v5 0/3] docs: add two texts covering regressions
-Content-Language: en-BS
-To: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: workflows@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Randy Dunlap <rdunlap@infradead.org>, regressions@lists.linux.dev,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>
-References: <cover.1644994117.git.linux@leemhuis.info>
- <871qzskpf8.fsf@meer.lwn.net>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-In-Reply-To: <871qzskpf8.fsf@meer.lwn.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1645790188;98cac13c;
-X-HE-SMSGID: 1nNZCy-0002tQ-Pf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-02-25_07,2022-02-25_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0 spamscore=0
+ clxscore=1011 mlxscore=0 adultscore=0 malwarescore=0 bulkscore=0
+ mlxlogscore=966 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2201110000 definitions=main-2202250066
 
-On 24.02.22 20:58, Jonathan Corbet wrote:
-> Thorsten Leemhuis <linux@leemhuis.info> writes:
+On 2/24/22 14:28, Naresh Kamboju wrote:
+> Linux next-20220223 boot failed due to the kernel crash on all devices.
+
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 > 
->> "We don't cause regressions" might be the first rule of Linux kernel
->> development, but it and other aspects of regressions nevertheless are hardly
->> described in the Linux kernel's documentation. The following patches change
->> this by creating two documents dedicated to the topic.
->>
->> The second patch could easily be folded into the first one, but was kept
->> separate, as it might be a bit controversial. This also allows the patch
->> description to explain some backgrounds for this part of the document.
->> Additionally, ACKs and Reviewed-by tags can be collected separately this way.
-> 
-> Hearing no objections, I have applied this set, thanks.
+> crash log on x86_64 machine [1]:
+> [    5.326681] Please do not flush events WQ.
+> [    5.327480] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+> 5.17.0-rc5-next-20220223 #1
 
-Great, thx!
+Is this related?:
+https://lore.kernel.org/all/4e5fe60d-abbb-6e73-b8cc-c3e1a314fbce@samsung.com/T/#u
 
-Ciao, Thorsten
+
+-- 
+Mit freundlichen Gruessen / Kind regards
+Steffen Maier
+
+Linux on IBM Z and LinuxONE
+
+https://www.ibm.com/privacy/us/en/
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschaeftsfuehrung: David Faller
+Sitz der Gesellschaft: Boeblingen
+Registergericht: Amtsgericht Stuttgart, HRB 243294
