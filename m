@@ -1,109 +1,148 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B8F1FBD
-	for <regressions@lists.linux.dev>; Fri, 25 Feb 2022 12:22:59 +0000 (UTC)
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 21PBMmcS033280;
-	Fri, 25 Feb 2022 12:22:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=psUjqUDIXrQuDk/0U0G6bTiHSZGQTDTjSpKnanVkLOU=;
- b=C9VXNBfrBDhDc8KObk6NsCnVFIFb8LpS7RxunFyXY51/VhKLVTZz3iRXBc34CT4dHcvT
- GZZ6KWKZKpFWHcmralHqPLGOkoDTgYTVkEfYtal6M+jF1CI0oaE+/4zERNu3LmmsUwJC
- /0mv3GSl02qg2qKaWcyuT96FO7QI00bpvtXhx24+0IATu4ws7bLeeRgTWOCzotp8qOdk
- 0TWZunph8PM5ua4RLs9F1bBPdjiflcVBXwBFz/JQwnGUdNieLIdXaeS0803Hf8Pg7Ycr
- 0QNVAQVA6jnfsq4l1VdvAjcSYVdIqEl0l2/B0JHGZvvmngiEuapSBcYtdYcJFhoHp0KZ VQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com with ESMTP id 3eewpn291c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Feb 2022 12:22:41 +0000
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-	by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 21PBQta4004716;
-	Fri, 25 Feb 2022 12:22:40 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-	by mx0a-001b2d01.pphosted.com with ESMTP id 3eewpn290a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Feb 2022 12:22:40 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-	by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 21PCIwCq030560;
-	Fri, 25 Feb 2022 12:22:38 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-	by ppma03ams.nl.ibm.com with ESMTP id 3ear69rf5v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 25 Feb 2022 12:22:38 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-	by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 21PCBqMg14745858
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 25 Feb 2022 12:11:52 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D912B52054;
-	Fri, 25 Feb 2022 12:22:35 +0000 (GMT)
-Received: from [9.145.163.29] (unknown [9.145.163.29])
-	by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3FB7952059;
-	Fri, 25 Feb 2022 12:22:35 +0000 (GMT)
-Message-ID: <65d40e00-d7a4-0210-5253-d5d1744f0343@linux.ibm.com>
-Date: Fri, 25 Feb 2022 13:22:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [next] next-20220223 kernel crash
-Content-Language: en-US
-To: Naresh Kamboju <naresh.kamboju@linaro.org>, Tejun Heo <tj@kernel.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-        "Paul E. McKenney" <paulmck@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        regressions@lists.linux.dev, lkft-triage@lists.linaro.org
-References: <CA+G9fYtzLr+9T9Z1N8QLznW6DqTOU8iSHvgMftdhe2XkEf8F8g@mail.gmail.com>
-From: Steffen Maier <maier@linux.ibm.com>
-In-Reply-To: <CA+G9fYtzLr+9T9Z1N8QLznW6DqTOU8iSHvgMftdhe2XkEf8F8g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 8iR0yfi5CRn2OiGcAc3R2PeQ1PHYEQN4
-X-Proofpoint-ORIG-GUID: jXsduC_UmntOMfiR-ERJZIlWIGPVZ4ni
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 512997C
+	for <regressions@lists.linux.dev>; Fri, 25 Feb 2022 15:10:59 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nNcFE-0001dZ-2P; Fri, 25 Feb 2022 16:10:56 +0100
+Message-ID: <4da43e43-c2f3-1f5a-a00f-f1be65668e60@leemhuis.info>
+Date: Fri, 25 Feb 2022 16:10:55 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.816,Hydra:6.0.425,FMLib:17.11.64.514
- definitions=2022-02-25_07,2022-02-25_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 suspectscore=0 phishscore=0 spamscore=0
- clxscore=1011 mlxscore=0 adultscore=0 malwarescore=0 bulkscore=0
- mlxlogscore=966 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2202250066
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: Bug 215523 - Firmware crash with 66.f1c864e0.0 (cc-a0-66.ucode)
+ and 68.01d30b0c (cc-a0-68.ucode)
+Content-Language: en-BS
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Luca Coelho <luciano.coelho@intel.com>
+References: <adf5ac57-cd60-a004-a05d-6d7c3ad7efa7@leemhuis.info>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ golan.ben.ami@intel.com
+In-Reply-To: <adf5ac57-cd60-a004-a05d-6d7c3ad7efa7@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645801859;55d822dc;
+X-HE-SMSGID: 1nNcFE-0001dZ-2P
 
-On 2/24/22 14:28, Naresh Kamboju wrote:
-> Linux next-20220223 boot failed due to the kernel crash on all devices.
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easy accessible to everyone.
 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Luca, can you help me out please? Below regression was reported a while
+ago in https://bugzilla.kernel.org/show_bug.cgi?id=215523
+
+Goan about two weeks ago came up with a rough patch that helped:
+https://bugzilla.kernel.org/show_bug.cgi?id=215523#c13
+
+What the status of that fix? I couldn't find a similar fix in the
+archives and no commit that linked to the ticket. I already asked Goan
+for a update in the ticket about a week ago, but I didn't get an answer.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+#regzbot poke
+
+On 10.02.22 10:56, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
 > 
-> crash log on x86_64 machine [1]:
-> [    5.326681] Please do not flush events WQ.
-> [    5.327480] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-> 5.17.0-rc5-next-20220223 #1
-
-Is this related?:
-https://lore.kernel.org/all/4e5fe60d-abbb-6e73-b8cc-c3e1a314fbce@samsung.com/T/#u
-
-
--- 
-Mit freundlichen Gruessen / Kind regards
-Steffen Maier
-
-Linux on IBM Z and LinuxONE
-
-https://www.ibm.com/privacy/us/en/
-IBM Deutschland Research & Development GmbH
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschaeftsfuehrung: David Faller
-Sitz der Gesellschaft: Boeblingen
-Registergericht: Amtsgericht Stuttgart, HRB 243294
+> There is a regression in bugzilla.kernel.org I'd like to add to the
+> tracking:
+> 
+> #regzbot introduced: v5.16..v5.17-rc1
+> #regzbot from: Udo Steinberg <udo@hypervisor.org>
+> #regzbot title: iwlwifi: Firmware crash with 66.f1c864e0.0
+> (cc-a0-66.ucode) and 68.01d30b0c (cc-a0-68.ucode)
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215523
+> 
+> Quote:
+> 
+>> Seeing the following firmware crash frequently with
+>> firmware-version: 66.f1c864e0.0 cc-a0-66.ucode
+>>
+>> [14699.974055] iwlwifi 0000:03:00.0: Microcode SW error detected. Restarting 0x0.
+>> [14699.974484] iwlwifi 0000:03:00.0: Start IWL Error Log Dump:
+>> [14699.974496] iwlwifi 0000:03:00.0: Transport status: 0x0000004A, valid: 6
+>> [14699.974509] iwlwifi 0000:03:00.0: Loaded firmware version: 66.f1c864e0.0 cc-a0-66.ucode
+>> [14699.974521] iwlwifi 0000:03:00.0: 0x00000071 | NMI_INTERRUPT_UMAC_FATAL    
+>> [14699.974532] iwlwifi 0000:03:00.0: 0x000022F0 | trm_hw_status0
+>> [14699.974541] iwlwifi 0000:03:00.0: 0x00000000 | trm_hw_status1
+>> [14699.974549] iwlwifi 0000:03:00.0: 0x004FAA46 | branchlink2
+>> [14699.974557] iwlwifi 0000:03:00.0: 0x004F13DE | interruptlink1
+>> [14699.974565] iwlwifi 0000:03:00.0: 0x004F13DE | interruptlink2
+>> [14699.974573] iwlwifi 0000:03:00.0: 0x00005D04 | data1
+>> [14699.974581] iwlwifi 0000:03:00.0: 0x00001000 | data2
+>> [14699.974588] iwlwifi 0000:03:00.0: 0x00000000 | data3
+>> [14699.974596] iwlwifi 0000:03:00.0: 0x5F80B98E | beacon time
+>> [14699.974604] iwlwifi 0000:03:00.0: 0xDA80E7BE | tsf low
+>> [14699.974612] iwlwifi 0000:03:00.0: 0x000001D9 | tsf hi
+>> [14699.974621] iwlwifi 0000:03:00.0: 0x00000000 | time gp1
+>> [14699.974629] iwlwifi 0000:03:00.0: 0x1622E64D | time gp2
+>> [14699.974636] iwlwifi 0000:03:00.0: 0x00000001 | uCode revision type
+>> [14699.974645] iwlwifi 0000:03:00.0: 0x00000042 | uCode version major
+>> [14699.974652] iwlwifi 0000:03:00.0: 0xF1C864E0 | uCode version minor
+>> [14699.974662] iwlwifi 0000:03:00.0: 0x00000340 | hw version
+>> [14699.974668] iwlwifi 0000:03:00.0: 0x00C89000 | board version
+>> [14699.974675] iwlwifi 0000:03:00.0: 0x800EFC03 | hcmd
+>> [14699.974682] iwlwifi 0000:03:00.0: 0x00020000 | isr0
+>> [14699.974689] iwlwifi 0000:03:00.0: 0x00400000 | isr1
+>> [14699.974695] iwlwifi 0000:03:00.0: 0x08F04802 | isr2
+>> [14699.974702] iwlwifi 0000:03:00.0: 0x00C3780C | isr3
+>> [14699.974710] iwlwifi 0000:03:00.0: 0x00000000 | isr4
+>> [14699.974718] iwlwifi 0000:03:00.0: 0x0510001C | last cmd Id
+>> [14699.974725] iwlwifi 0000:03:00.0: 0x00005D04 | wait_event
+>> [14699.974733] iwlwifi 0000:03:00.0: 0x00000054 | l2p_control
+>> [14699.974740] iwlwifi 0000:03:00.0: 0x00000000 | l2p_duration
+>> [14699.974746] iwlwifi 0000:03:00.0: 0x0000000F | l2p_mhvalid
+>> [14699.974754] iwlwifi 0000:03:00.0: 0x000000C7 | l2p_addr_match
+>> [14699.974761] iwlwifi 0000:03:00.0: 0x00000008 | lmpm_pmg_sel
+>> [14699.974768] iwlwifi 0000:03:00.0: 0x00000000 | timestamp
+>> [14699.974776] iwlwifi 0000:03:00.0: 0x00004890 | flow_handler
+>> [14699.974923] iwlwifi 0000:03:00.0: Start IWL Error Log Dump:
+>> [14699.974933] iwlwifi 0000:03:00.0: Transport status: 0x0000004A, valid: 7
+>> [14699.974945] iwlwifi 0000:03:00.0: 0x20003463 | ADVANCED_SYSASSERT
+>> [14699.974953] iwlwifi 0000:03:00.0: 0x00000000 | umac branchlink1
+>> [14699.974961] iwlwifi 0000:03:00.0: 0x80455A96 | umac branchlink2
+>> [14699.974969] iwlwifi 0000:03:00.0: 0xC00811A4 | umac interruptlink1
+>> [14699.974976] iwlwifi 0000:03:00.0: 0x00000000 | umac interruptlink2
+>> [14699.974983] iwlwifi 0000:03:00.0: 0xDA80E7B1 | umac data1
+>> [14699.974992] iwlwifi 0000:03:00.0: 0x1622E63F | umac data2
+>> [14699.974999] iwlwifi 0000:03:00.0: 0xC5490101 | umac data3
+>> [14699.975006] iwlwifi 0000:03:00.0: 0x00000042 | umac major
+>> [14699.975013] iwlwifi 0000:03:00.0: 0xF1C864E0 | umac minor
+>> [14699.975020] iwlwifi 0000:03:00.0: 0x1622E647 | frame pointer
+>> [14699.975027] iwlwifi 0000:03:00.0: 0xC0885E08 | stack pointer
+>> [14699.975035] iwlwifi 0000:03:00.0: 0x00AB010C | last host cmd
+>> [14699.975042] iwlwifi 0000:03:00.0: 0x00000000 | isr status reg
+>> [14699.975089] iwlwifi 0000:03:00.0: IML/ROM dump:
+>> [14699.975096] iwlwifi 0000:03:00.0: 0x00000003 | IML/ROM error/state
+>> [14699.975135] iwlwifi 0000:03:00.0: 0x00005A9A | IML/ROM data1
+>> [14699.975170] iwlwifi 0000:03:00.0: 0x00000080 | IML/ROM WFPM_AUTH_KEY_0
+>> [14699.975249] iwlwifi 0000:03:00.0: Fseq Registers:
+>> [14699.975269] iwlwifi 0000:03:00.0: 0x60000000 | FSEQ_ERROR_CODE
+>> [14699.975288] iwlwifi 0000:03:00.0: 0x80290021 | FSEQ_TOP_INIT_VERSION
+>> [14699.975308] iwlwifi 0000:03:00.0: 0x00050008 | FSEQ_CNVIO_INIT_VERSION
+>> [14699.975328] iwlwifi 0000:03:00.0: 0x0000A503 | FSEQ_OTP_VERSION
+>> [14699.975348] iwlwifi 0000:03:00.0: 0x80000003 | FSEQ_TOP_CONTENT_VERSION
+>> [14699.975368] iwlwifi 0000:03:00.0: 0x4552414E | FSEQ_ALIVE_TOKEN
+>> [14699.975388] iwlwifi 0000:03:00.0: 0x00100530 | FSEQ_CNVI_ID
+>> [14699.975407] iwlwifi 0000:03:00.0: 0x00000532 | FSEQ_CNVR_ID
+>> [14699.975428] iwlwifi 0000:03:00.0: 0x00100530 | CNVI_AUX_MISC_CHIP
+>> [14699.975450] iwlwifi 0000:03:00.0: 0x00000532 | CNVR_AUX_MISC_CHIP
+>> [14699.975472] iwlwifi 0000:03:00.0: 0x05B0905B | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+>> [14699.975494] iwlwifi 0000:03:00.0: 0x0000025B | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+>> [14699.975970] iwlwifi 0000:03:00.0: WRT: Collecting data: ini trigger 4 fired (delay=0ms).
+> 
