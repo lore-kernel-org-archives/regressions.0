@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69AB3FF5
-	for <regressions@lists.linux.dev>; Sun, 27 Feb 2022 08:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821992F29
+	for <regressions@lists.linux.dev>; Sun, 27 Feb 2022 08:37:18 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nOEv3-0002s9-Qx; Sun, 27 Feb 2022 09:28:41 +0100
-Message-ID: <79949bb0-0b7c-5e70-f554-45f40256e325@leemhuis.info>
-Date: Sun, 27 Feb 2022 09:28:41 +0100
+	id 1nOF3M-0004DT-C7; Sun, 27 Feb 2022 09:37:16 +0100
+Message-ID: <eae5c0cc-55d1-f8db-aba0-57cee7f10332@leemhuis.info>
+Date: Sun, 27 Feb 2022 09:37:15 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,23 +16,18 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: regression: Build failure of mainline kernel with qcom_defconfig
+Subject: Re: Failure to access cifs mount of samba share after resume from
+ sleep with 5.17-rc5
 Content-Language: en-BS
-To: Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
- Arnd Bergmann <arnd@arndb.de>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>,
- Javier Martinez Canillas <javierm@redhat.com>,
- Jani Nikula <jani.nikula@intel.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <YhofdlzadzRmy7tj@debian>
+To: Satadru Pramanik <satadru@gmail.com>, linux-cifs@vger.kernel.org
+References: <CAFrh3J9soC36+BVuwHB=g9z_KB5Og2+p2_W+BBoBOZveErz14w@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <YhofdlzadzRmy7tj@debian>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+In-Reply-To: <CAFrh3J9soC36+BVuwHB=g9z_KB5Og2+p2_W+BBoBOZveErz14w@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645950531;85dd8052;
-X-HE-SMSGID: 1nOEv3-0002s9-Qx
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1645951038;d7b24e9e;
+X-HE-SMSGID: 1nOF3M-0004DT-C7
 
 [TLDR: I'm adding the regression report below to regzbot, the Linux
 kernel regression tracking bot; all text you find below is compiled from
@@ -40,16 +35,18 @@ a few templates paragraphs you might have encountered already already
 from similar mails.]
 
 Hi, this is your Linux kernel regression tracker. Top-posting for once,
-to make this easy accessible to everyone.
+to make this easily accessible to everyone.
 
-Thanks for the report.
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
 To be sure below issue doesn't fall through the cracks unnoticed, I'm
 adding it to regzbot, my Linux kernel regression tracking bot:
 
-#regzbot ^introduced 9d6366e743f37d36ef69347924ead7bcc596076e
-#regzbot title drm: fb_helper:  Build failure of mainline kernel with
-qcom_defconfig
+#regzbot ^introduced v5.16.11..v5.17-rc5
+#regzbot title cifs: Failure to access cifs mount of samba share after
+resume from sleep
 #regzbot ignore-activity
 
 Reminder for developers: when fixing the issue, please add a 'Link:'
@@ -81,58 +78,28 @@ that's not the case here; if you think it is, don't hesitate to tell me
 in a public reply, it's in everyone's interest to set the public record
 straight.
 
-On 26.02.22 13:39, Sudip Mukherjee wrote:
-> Hi Arnd, All,
+
+On 27.02.22 03:36, Satadru Pramanik wrote:
+> I'm on a x86_64 ubuntu 22.04 system accessing a similar system running
+> samba Version 4.13.14-Ubuntu. Both systems are on ubuntu mainline
+> kernel 5.17-rc5.
 > 
-> We recently noticed that arm "qcom_defconfig" failed to build with the error:
+> I have a samba share mounted from my fstab, and file access works fine.
+> Upon suspending my system and resuming though, the mounted samba share
+> is inaccessible, and my dmesg has many "CIFS: VFS: cifs_tree_connect:
+> could not find superblock: -22" messages.
 > 
-> arm-linux-gnueabi-ld: drivers/gpu/drm/panel/panel-edp.o: in function `panel_edp_probe':
-> drivers/gpu/drm/panel/panel-edp.c:843: undefined reference to `drm_panel_dp_aux_backlight'
+> Unmounting and remounting the share restores access.
 > 
-> I have done a bisect and it points to:
-> 9d6366e743f3 ("drm: fb_helper: improve CONFIG_FB dependency")
+> When I boot into kernel 5.16.11, I do not have this issue. The cifs
+> share is accessible just fine after a suspend/resume cycle.
 > 
-> Here is the complete bisect log:
+> I assume this is a regression with 5.17? Is there any information
+> worth providing which might help debug and fix this issue?
 > 
-> # bad: [df0cc57e057f18e44dac8e6c18aba47ab53202f9] Linux 5.16
-> # good: [8bb7eca972ad531c9b149c0a51ab43a417385813] Linux 5.15
-> git bisect start 'v5.16' 'v5.15'
-> # good: [2219b0ceefe835b92a8a74a73fe964aa052742a2] Merge tag 'soc-5.16' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-> git bisect good 2219b0ceefe835b92a8a74a73fe964aa052742a2
-> # good: [206825f50f908771934e1fba2bfc2e1f1138b36a] Merge tag 'mtd/for-5.16' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux
-> git bisect good 206825f50f908771934e1fba2bfc2e1f1138b36a
-> # bad: [4e1fddc98d2585ddd4792b5e44433dcee7ece001] tcp_cubic: fix spurious Hystart ACK train detections for not-cwnd-limited flows
-> git bisect bad 4e1fddc98d2585ddd4792b5e44433dcee7ece001
-> # good: [dbf49896187fd58c577fa1574a338e4f3672b4b2] Merge branch 'akpm' (patches from Andrew)
-> git bisect good dbf49896187fd58c577fa1574a338e4f3672b4b2
-> # bad: [0ecca62beb12eeb13965ed602905c8bf53ac93d0] Merge tag 'ceph-for-5.16-rc1' of git://github.com/ceph/ceph-client
-> git bisect bad 0ecca62beb12eeb13965ed602905c8bf53ac93d0
-> # bad: [304ac8032d3fa2d37750969cd4b8d5736a1829d9] Merge tag 'drm-next-2021-11-12' of git://anongit.freedesktop.org/drm/drm
-> git bisect bad 304ac8032d3fa2d37750969cd4b8d5736a1829d9
-> # good: [f78e9de80f5ad15719a069a4e6c11e2777122188] Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
-> git bisect good f78e9de80f5ad15719a069a4e6c11e2777122188
-> # good: [806acd381960008700c15c3dc616d578e9558853] Merge tag 'amd-drm-fixes-5.16-2021-11-03' of https://gitlab.freedesktop.org/agd5f/linux into drm-next
-> git bisect good 806acd381960008700c15c3dc616d578e9558853
-> # bad: [f8ca7b74192b2e64bdfb89fb63c1d33b92bc899d] Merge tag 'drm-misc-next-fixes-2021-11-10' of git://anongit.freedesktop.org/drm/drm-misc into drm-next
-> git bisect bad f8ca7b74192b2e64bdfb89fb63c1d33b92bc899d
-> # good: [cecbc0c7eba7983965cac94f88d2db00b913253b] drm/i915/hdmi: Turn DP++ TMDS output buffers back on in encoder->shutdown()
-> git bisect good cecbc0c7eba7983965cac94f88d2db00b913253b
-> # bad: [14d9a37c952588930d7226953359fea3ab956d39] Revert "drm/imx: Annotate dma-fence critical section in commit path"
-> git bisect bad 14d9a37c952588930d7226953359fea3ab956d39
-> # good: [5591c8f79db1729d9c5ac7f5b4d3a5c26e262d93] drm/udl: fix control-message timeout
-> git bisect good 5591c8f79db1729d9c5ac7f5b4d3a5c26e262d93
-> # bad: [9d6366e743f37d36ef69347924ead7bcc596076e] drm: fb_helper: improve CONFIG_FB dependency
-> git bisect bad 9d6366e743f37d36ef69347924ead7bcc596076e
-> # good: [e0e6d1ea18c804de51b47fa65092c4cf2000604c] MAINTAINERS: dri-devel is for all of drivers/gpu
-> git bisect good e0e6d1ea18c804de51b47fa65092c4cf2000604c
-> # first bad commit: [9d6366e743f37d36ef69347924ead7bcc596076e] drm: fb_helper: improve CONFIG_FB dependency
+> Regards,
 > 
-> 
-> And, indeed reverting "9d6366e743f37d36ef69347924ead7bcc596076e" on top of
-> 9137eda53752 ("Merge tag 'configfs-5.17-2022-02-25' of git://git.infradead.org/users/hch/configfs")
-> fixes the build.
-> 
-> I will be happy to test any patch fxing this issue.
+> Satadru Pramanik
 
 -- 
 Additional information about regzbot:
@@ -160,4 +127,3 @@ about the issue. This has been expected from developers even before
 regzbot showed up for reasons explained in
 'Documentation/process/submitting-patches.rst' and
 'Documentation/process/5.Posting.rst'.
-
