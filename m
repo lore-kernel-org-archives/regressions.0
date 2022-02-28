@@ -1,171 +1,144 @@
-Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+Received: from matoro.tk (matoro.tk [104.188.251.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630B217C1
-	for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 22:07:09 +0000 (UTC)
-Received: by mail-oo1-f48.google.com with SMTP id s203-20020a4a3bd4000000b003191c2dcbe8so20397195oos.9
-        for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 14:07:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=lqrs3hc5E1oPO593OVEkpPHVfvLkTVtgYaVF90Tj6Ew=;
-        b=ZAs00VTUMyL7Luc3LHCeb6WNqjafTPXy8jfUAi3jIunIs1ldWIfFSfBPvqtctpDSoG
-         YZpY1Gt5JwZf7nTDuPZBXZbRv4k7GF4tONoJTdgYZ8+/hIDuT4gjd3CdssJQ1Cl2l0Dm
-         z3ZkJtBQhg2qbj4NMfnWTPCreXynu2hBwsCdpGpfIvlrKdAPNNCspttCbFx7HFK0dcO3
-         y++xVIevpo/7KsVotrip2gI99SFFkqgrSEiS2VDGInH1by1KoMYUqwN9h60cAkR75e73
-         OL77/3v8ehNjWSl4sHsauw/5Z5S6FQh/UdXo7XrWS5FqKTUlL5ZaxMeLOW6OCrSJr7vF
-         thnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :subject:content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=lqrs3hc5E1oPO593OVEkpPHVfvLkTVtgYaVF90Tj6Ew=;
-        b=5nQRpGqJzIiyeeRyWvdIm8xa542dTy2lJbOxXVGXzbGMt1gbW8u8x/OtHRUq6MIGXq
-         VDOqpebzyv8oo7Uy7ye9aMi4uwQbQUKiGuzup2TCfaIQgVjaVJvcxFmtOsVShUdz5L+z
-         JOKZEmsOxAJlTQ0jvePluAweYt9sZI8T18g4IhrdMPE8YJTgRLeChGqHJxPh+6ZrbOpg
-         W3eSS7Ikzo7TYA5qd0b1qnfjFRpzLXe+P9eZlF5FuVVHAxts2quOVfYv/aoG7A5QJqAR
-         jNg5/XaHjZe0cJwklj+TU8VLlsz1lyzOkuw4gAmUsDheRppBFW/MR7cw4T2jgjuZ1bTI
-         9sZg==
-X-Gm-Message-State: AOAM531oaSB4dhls3fMpfKh1dazmz6tXMSCMOGtVQOswFVZdx0XipWke
-	TUheurLfiVGYNvpcK0joRMU=
-X-Google-Smtp-Source: ABdhPJybhAgLju3HSxnTIenKyE7qQaZsc+osuWy48r/F00Z7fgi2MehKAovzXYF/g0zrbIDERyDW1A==
-X-Received: by 2002:a05:6870:c43:b0:d7:4c7:5afc with SMTP id lf3-20020a0568700c4300b000d704c75afcmr6554453oab.139.1646086026943;
-        Mon, 28 Feb 2022 14:07:06 -0800 (PST)
-Received: from ?IPV6:2603:8090:2005:39b3::1064? (2603-8090-2005-39b3-0000-0000-0000-1064.res6.spectrum.com. [2603:8090:2005:39b3::1064])
-        by smtp.gmail.com with ESMTPSA id k22-20020a056870959600b000d277c48d18sm5398285oao.3.2022.02.28.14.07.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 28 Feb 2022 14:07:05 -0800 (PST)
-Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <236d45a6-8b88-c02e-a61d-ce1773fdb0ef@lwfinger.net>
-Date: Mon, 28 Feb 2022 16:07:04 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCEBB17C1
+	for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 22:15:06 +0000 (UTC)
+DKIM-Signature: a=rsa-sha256; bh=CMg65jXpaFZltUQYgNoVUODmgfV4a5Gt/jgOwLpN2Vk=;
+ c=relaxed/relaxed; d=matoro.tk;
+ h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:In-Reply-To:Message-Id:Message-Id:References:References:Autocrypt:Openpgp;
+ i=@matoro.tk; s=20220111215046; t=1646086466; v=1; x=1646518466;
+ b=liCwhzLM5gcBk9AbRejqNqqD03KZZjvsbftjT52rBX+PyrAJWiCo0hlshB3hxd8NANeQVI4A
+ KsG/n++GPEZcsWueUArKoi6tgLgbTt/G+1dlldQkow2gkTIetZjX6dYInMravLdk5Kqg5uQjCHo
+ y2wQLkaLEqLYxr4q0h1IG1RVwOmRV/Psn0BnJQekN8/VUILqebObj32oAMawLxij3MDZdh07jA7
+ 7+EQ7Roj3ZNECHml9j8VErF+h0Ns/v//HiUoGn3GRQu/GVGPVxdt4o7jeodJjQ/LKFZWIgeb/4y
+ q+I98cGOqpJa0ZOZT8w1zTU2o2SWft3lxpNUhmWFkzgQ4GcFN0OrDc+KW8OTZD48lnC+1GZyD0n
+ z0zjonAnVjmxiychDM41eK5O1awo4cilKOosIrPUiZafcJDZAjPRVkmj0fbgcPx6dsM/0/iZIyj
+ z3y7twdwch0hg73Gh7ZkXBIIYhq+vaV0X7/qsQSVywp3ZWiPYsJ5r18p+TbEkOq/CHjnnepoPux
+ Fp7PfuqEE9RKIIN510H0kPblNbd7aAXfDB3NvqqL1EQC5ipfWpAXdJ+T5jhtZYcxrjGWl4v1EKO
+ nrDF/NGjXsM7QANPbbDxYAf70VhbgY8AhE9ch0LuKvXTQ54M9Rgbogx6wFw0X6HR6QGm96WdjHP
+ Bu2xll2bPis=
+Received: by matoro.tk (envelope-sender
+ <matoro_mailinglist_kernel@matoro.tk>) with ESMTPS id 516b5765; Mon, 28 Feb
+ 2022 17:14:26 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: rtw_8822ce wifi regression after kernel update from 5.15 to 5.16
-Content-Language: en-US
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Nico Sneck <snecknico@gmail.com>, Yan-Hsuan Chuang <tony0620emma@gmail.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- linux-wireless@vger.kernel.org
-References: <CAO_iuKEL8tHnovpGiQGUxg7JUpZFxHpxhOHbqAMgbt5R4Eftgg@mail.gmail.com>
- <2d1c129b-d473-39e3-69b7-6f36dc1682a6@leemhuis.info>
- <9312eb18-840f-9a1f-bcb0-8e3a43e45239@leemhuis.info>
-From: Larry Finger <Larry.Finger@lwfinger.net>
-In-Reply-To: <9312eb18-840f-9a1f-bcb0-8e3a43e45239@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Date: Mon, 28 Feb 2022 17:14:26 -0500
+From: matoro <matoro_mailinglist_kernel@matoro.tk>
+To: Kees Cook <keescook@chromium.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Eric Biederman
+ <ebiederm@xmission.com>, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ stable@vger.kernel.org, =?UTF-8?Q?Magnus_Gro=C3=9F?=
+ <magnus.gross@rwth-aachen.de>, Thorsten Leemhuis
+ <regressions@leemhuis.info>, Anthony Yznaga <anthony.yznaga@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>, regressions@lists.linux.dev,
+ linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 5.16 v2] binfmt_elf: Avoid total_mapping_size for ET_EXEC
+In-Reply-To: <20220228205518.1265798-1-keescook@chromium.org>
+References: <20220228205518.1265798-1-keescook@chromium.org>
+Message-ID: <ce8af9c13bcea9230c7689f3c1e0e2cd@matoro.tk>
+X-Sender: matoro_mailinglist_kernel@matoro.tk
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 2/28/22 08:30, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker. Top-posting for once,
-> to make this easily accessible to everyone.
+On 2022-02-28 15:55, Kees Cook wrote:
+> Partially revert commit 5f501d555653 ("binfmt_elf: reintroduce using
+> MAP_FIXED_NOREPLACE").
 > 
-> Yan-Hsuan Chuang, sorry, I failed to notice that you didn't get the
-> regression report below. Could you take a look what's wrong there?
+> At least ia64 has ET_EXEC PT_LOAD segments that are not virtual-address
+> contiguous (but _are_ file-offset contiguous). This would result in
+> giant mapping attempts to cover the entire span, including the virtual
+> address range hole. Disable total_mapping_size for ET_EXEC, which
+> reduces the MAP_FIXED_NOREPLACE coverage to only the first PT_LOAD:
 > 
-> BTW: Nico, did you try another bisection? And is the problem still
-> happening? Did you maybe give 5.17-rc a shot to check if the problem
-> still happens there?
+> $ readelf -lW /usr/bin/gcc
+> ...
+> Program Headers:
+>   Type Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   
+> ...
+> ...
+>   LOAD 0x000000 0x4000000000000000 0x4000000000000000 0x00b5a0 0x00b5a0 
+> ...
+>   LOAD 0x00b5a0 0x600000000000b5a0 0x600000000000b5a0 0x0005ac 0x000710 
+> ...
+> ...
+>        ^^^^^^^^ ^^^^^^^^^^^^^^^^^^                    ^^^^^^^^ ^^^^^^^^
 > 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> File offset range     : 0x000000-0x00bb4c
+> 			0x00bb4c bytes
 > 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
+> Virtual address range : 0x4000000000000000-0x600000000000bcb0
+> 			0x200000000000bcb0 bytes
 > 
-> #regzbot poke
+> Ironically, this is the reverse of the problem that originally caused
+> problems with ET_EXEC and MAP_FIXED_NOREPLACE: overlaps. This problem 
+> is
+> with holes. Future work could restore full coverage if 
+> load_elf_binary()
+> were to perform mappings in a separate phase from the loading (where
+> it could resolve both overlaps and holes).
 > 
-> On 15.02.22 09:25, Thorsten Leemhuis wrote:
->> [...]
->> On 14.02.22 20:25, Nico Sneck wrote:
->>> Hi,
->>>
->>> I'm running Fedora 35 on a Huawei Matestation S (HUAWEI PUM-WDX9), AMD
->>> Renoir with Realtek rtw_8822ce handling wifi stuff.
->>>
->>> Ever since the kernel update from 5.15.13-200.fc35 to 5.16.8-200.fc35
->>> (which I performed Feb 12th), I noticed that my Wifi connection
->>> doesn't really work anymore. I'm connecting to a Zyxel VMG3927-B50A,
->>> and it appears to be using 5 GHz connection always. I also tested that
->>> 5.17-rc4 also suffers from this issue.
->>>
->>> The issue is that even trying to ping my routers gateway address will
->>> result in connection timeouts, and ping times are in the thousands to
->>> tens of thousands of milliseconds (normally peak ping times are ~3-6
->>> ms), making wireless unusable with 5.16+.
->>> I can also see that in dmesg logs there are two types of rtw_8822ce
->>> driver warnings flooding the logs, which I didn't see with 5.15:
->>>
->>> "helmi 13 18:20:03 fedora kernel: rtw_8822ce 0000:06:00.0: timed out
->>> to flush queue {1,2}"
->>> "helmi 13 18:16:23 fedora kernel: rtw_8822ce 0000:06:00.0: failed to
->>> get tx report from firmware"
->>>
->>> Some stats:
->>> On kernel 5.15.13-200.fc35 running for 29 days:
->>> [nico@fedora ~]$ journalctl -k -b -18 | grep 'timed out to flush queue' | wc -l
->>> 0
->>>
->>> [nico@fedora ~]$ journalctl -k -b -18 | grep 'failed to get tx report
->>> from firmware' | wc -l
->>> 0
->>>
->>> On kernel 5.16.8-200.fc35 running for 4 hours:
->>> [nico@fedora ~]$ journalctl -k -b -17 | grep 'timed out to flush queue' | wc -l
->>> 45370
->>>
->>> [nico@fedora ~]$ journalctl -k -b -17 | grep 'failed to get tx report
->>> from firmware' | wc -l
->>> 502
->>>
->>> I tried bisecting which commit introduced this regression, but after
->>> some 12 hours of recompiling and testing, it seems like I failed
->>> somehow. I tried a bisect with first known good revision as
->>> 8bb7eca972ad (5.15 release commit), and first known bad revision as
->>> df0cc57e057f (5.16 release commit). I managed to identify that
->>> revision
->>> fc02cb2b37fe Merge tag 'net-next-for-5.16' of
->>> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
->>> is bad, but then all other revisions were good apart from
->>> 8a33dcc2f6d5 (refs/bisect/bad) Merge
->>> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
->>> which was also bad.
->>> But here's the baffling part, commit 6b278c0cb378 was good, and it's
->>> the last commit in the merge (8a33dcc2f6d5) which appeared bad.
->>> Now I retested with 8a33dcc2f6d5, and I don't see the issues anymore,
->>> so I guess I tested a wrong kernel version at that point or something.
->>> shrug.
->>>
->>> So I can only assume that the regression came in one of the commits inside
->>> fc02cb2b37fe Merge tag 'net-next-for-5.16' of
->>> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
->>> but it'll take me a while to be try bisecting the commits in that merge again.
->>>
->>> If anyone has any idea about what could cause these issues I'm seeing,
->>> I can try out patches / test different things. But I'll try
->>> rebisecting this again soon.
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Reported-by: matoro <matoro_mailinglist_kernel@matoro.tk>
+> Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+> Fixes: 5f501d555653 ("binfmt_elf: reintroduce using 
+> MAP_FIXED_NOREPLACE")
+> Link:
+> https://lore.kernel.org/r/a3edd529-c42d-3b09-135c-7e98a15b150f@leemhuis.info
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> ---
+> Here's the v5.16 backport.
+> ---
+>  fs/binfmt_elf.c | 25 ++++++++++++++++++-------
+>  1 file changed, 18 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+> index f8c7f26f1fbb..911a9e7044f4 100644
+> --- a/fs/binfmt_elf.c
+> +++ b/fs/binfmt_elf.c
+> @@ -1135,14 +1135,25 @@ static int load_elf_binary(struct linux_binprm 
+> *bprm)
+>  			 * is then page aligned.
+>  			 */
+>  			load_bias = ELF_PAGESTART(load_bias - vaddr);
+> -		}
+> 
+> -		/*
+> -		 * Calculate the entire size of the ELF mapping (total_size).
+> -		 * (Note that load_addr_set is set to true later once the
+> -		 * initial mapping is performed.)
+> -		 */
+> -		if (!load_addr_set) {
+> +			/*
+> +			 * Calculate the entire size of the ELF mapping
+> +			 * (total_size), used for the initial mapping,
+> +			 * due to first_pt_load which is set to false later
+> +			 * once the initial mapping is performed.
+> +			 *
+> +			 * Note that this is only sensible when the LOAD
+> +			 * segments are contiguous (or overlapping). If
+> +			 * used for LOADs that are far apart, this would
+> +			 * cause the holes between LOADs to be mapped,
+> +			 * running the risk of having the mapping fail,
+> +			 * as it would be larger than the ELF file itself.
+> +			 *
+> +			 * As a result, only ET_DYN does this, since
+> +			 * some ET_EXEC (e.g. ia64) may have virtual
+> +			 * memory holes between LOADs.
+> +			 *
+> +			 */
+>  			total_size = total_mapping_size(elf_phdata,
+>  							elf_ex->e_phnum);
+>  			if (!total_size) {
 
-Nico,
-
-Your use of rtw_8822ce in the title finally registered on me. With that driver 
-in use, that means that you are using my GitHub repo; however, newer kernels 
-have the driver built in, but with names such as rtw88_8822ce. The difference in 
-the name is deliberate. If you want to use the GitHub version, you must 
-blacklist the ones from the kernel.
-
-To check this, run 'lsmod | grep 88'. If you see a mixture of rtw_xxx and 
-rtw88_xxx, then this is your problem.
-
-Larry
-
+This does the trick!  Thank you so much!!
