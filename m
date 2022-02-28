@@ -1,127 +1,264 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADE37C
-	for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 14:30:34 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nOh2m-00046m-GZ; Mon, 28 Feb 2022 15:30:32 +0100
-Message-ID: <9312eb18-840f-9a1f-bcb0-8e3a43e45239@leemhuis.info>
-Date: Mon, 28 Feb 2022 15:30:31 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2DA7C
+	for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 14:31:29 +0000 (UTC)
+Received: by mail-lj1-f182.google.com with SMTP id 29so17619876ljv.10
+        for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 06:31:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ntc9seo0A3RX5KrrXCFx1lO6b6C66mKnQQJGA6andFI=;
+        b=jYk2Sxn/dysHMzKAA5X+R5TkhRdvjadUgAm6lYcvUldU6Jsi0TYu+Ry4TSQ/ZztYrX
+         evXjiug6X+Y/C7BzIlC1GhvT0zL1LOYuFP10vRTpngSsZPMLB6zSOLz0YGiNsdxAEsVj
+         dDw3DlZCD8IsYzirsmIc1hW4uf7S6sHKh6dvSRsqIohKDsU3HH1nvENksQ6nQrJuppZl
+         I5tSabosG9iIUDFuPw95bSb2xAx9/G4nWYX50ri8x6J+phmEAzKQVUH19TDzbTPvaV2B
+         zCI4YuF5qJe7TxJyzv+7Twzjhw7jEy8ZTih9JvSeCQojBCHO1cgNi/F0WL7jThZswSWW
+         WDOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ntc9seo0A3RX5KrrXCFx1lO6b6C66mKnQQJGA6andFI=;
+        b=8Da3FPyUVc/hG0Lts49Bh9Yobrt2oYqvgbeD1KgVmwbNFzVvckMIQSCBo71tibqcBc
+         D7fnYXu+brBmMqYXz4CuQiOCl494emDnl7y2JqYk3GE2bkf4m4cgs1pS2iudCBmFHu6I
+         Jm/lN8ts3BA6GscjBXh0DMAAzWNk9urBhKjahTLQkDwaA/hviFvZAuqlPWI1rRPw5n9p
+         C7RocjfgCPNW5A6FylgGbuUBmMoEV9DmOy/eF5W2MUrX4BDkV/KAGk5QkbmM+Gfx87K0
+         ZQFBEgKZ2Mi61hITEiGWOJmhQ2ZfPyjCvJmb6zw/bXjyDqnnzv2BbbCO7FSjkygeDm73
+         lDKA==
+X-Gm-Message-State: AOAM533TB3n9zdPHLkBrO/CiuxbyFAea7OxVF7rZdQ9N81LyX4DabKPh
+	1VlgL2wRLV1dh1sLG0D4sExo46mcbBvszEo6MBo=
+X-Google-Smtp-Source: ABdhPJwZTCEN1N2VWSYxCOFyLrzSyJxgzLfeJZRVgIZVTWIdrR1RsUooJ/xtK55MS9L/O+Swl+7GaE49WM2EvXjbqH4=
+X-Received: by 2002:a05:651c:12c5:b0:23e:1f55:35b4 with SMTP id
+ 5-20020a05651c12c500b0023e1f5535b4mr14033066lje.58.1646058686794; Mon, 28 Feb
+ 2022 06:31:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: rtw_8822ce wifi regression after kernel update from 5.15 to 5.16
-Content-Language: en-BS
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Nico Sneck <snecknico@gmail.com>,
- Yan-Hsuan Chuang <tony0620emma@gmail.com>
-References: <CAO_iuKEL8tHnovpGiQGUxg7JUpZFxHpxhOHbqAMgbt5R4Eftgg@mail.gmail.com>
- <2d1c129b-d473-39e3-69b7-6f36dc1682a6@leemhuis.info>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- linux-wireless@vger.kernel.org
-In-Reply-To: <2d1c129b-d473-39e3-69b7-6f36dc1682a6@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646058634;42b7ba50;
-X-HE-SMSGID: 1nOh2m-00046m-GZ
+References: <CAFrh3J9soC36+BVuwHB=g9z_KB5Og2+p2_W+BBoBOZveErz14w@mail.gmail.com>
+ <eae5c0cc-55d1-f8db-aba0-57cee7f10332@leemhuis.info> <CAH2r5msUiBuZ74_nPVyzn=k=g0ELpcMnoTm_z30zrMSxF4sn1A@mail.gmail.com>
+In-Reply-To: <CAH2r5msUiBuZ74_nPVyzn=k=g0ELpcMnoTm_z30zrMSxF4sn1A@mail.gmail.com>
+From: Satadru Pramanik <satadru@gmail.com>
+Date: Mon, 28 Feb 2022 09:31:15 -0500
+Message-ID: <CAFrh3J-oOR1FxPrpzKsQQvronyk9fhDSqD2CY5DNsYO5Lt0ydg@mail.gmail.com>
+Subject: Re: Failure to access cifs mount of samba share after resume from
+ sleep with 5.17-rc5
+To: Steve French <smfrench@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, CIFS <linux-cifs@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: multipart/mixed; boundary="0000000000004e727f05d914e7e4"
 
-Hi, this is your Linux kernel regression tracker. Top-posting for once,
-to make this easily accessible to everyone.
+--0000000000004e727f05d914e7e4
+Content-Type: text/plain; charset="UTF-8"
 
-Yan-Hsuan Chuang, sorry, I failed to notice that you didn't get the
-regression report below. Could you take a look what's wrong there?
+Here is the DebugData from before and after from the system with the
+failed mount.
+Both systems are now running 5.17-rc6.
 
-BTW: Nico, did you try another bisection? And is the problem still
-happening? Did you maybe give 5.17-rc a shot to check if the problem
-still happens there?
+Working on the trace-cmd now.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+On Sun, Feb 27, 2022 at 9:37 PM Steve French <smfrench@gmail.com> wrote:
+>
+> I would like to see the output of:
+>
+> /proc/fs/cifs/DebugData before and after the failure if possible.
+>
+> In addition, there would be some value in seeing trace information
+> (e.g start tracing by
+> "trace-cmd record -e cifs" before the failure and then forward the
+> debug information displayed by "trace-cmd show" after the failure)
+>
+> On Sun, Feb 27, 2022 at 7:55 AM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+> >
+> > [TLDR: I'm adding the regression report below to regzbot, the Linux
+> > kernel regression tracking bot; all text you find below is compiled from
+> > a few templates paragraphs you might have encountered already already
+> > from similar mails.]
+> >
+> > Hi, this is your Linux kernel regression tracker. Top-posting for once,
+> > to make this easily accessible to everyone.
+> >
+> > CCing the regression mailing list, as it should be in the loop for all
+> > regressions, as explained here:
+> > https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+> >
+> > To be sure below issue doesn't fall through the cracks unnoticed, I'm
+> > adding it to regzbot, my Linux kernel regression tracking bot:
+> >
+> > #regzbot ^introduced v5.16.11..v5.17-rc5
+> > #regzbot title cifs: Failure to access cifs mount of samba share after
+> > resume from sleep
+> > #regzbot ignore-activity
+> >
+> > Reminder for developers: when fixing the issue, please add a 'Link:'
+> > tags pointing to the report (the mail quoted above) using
+> > lore.kernel.org/r/, as explained in
+> > 'Documentation/process/submitting-patches.rst' and
+> > 'Documentation/process/5.Posting.rst'. This allows the bot to connect
+> > the report with any patches posted or committed to fix the issue; this
+> > again allows the bot to show the current status of regressions and
+> > automatically resolve the issue when the fix hits the right tree.
+> >
+> > I'm sending this to everyone that got the initial report, to make them
+> > aware of the tracking. I also hope that messages like this motivate
+> > people to directly get at least the regression mailing list and ideally
+> > even regzbot involved when dealing with regressions, as messages like
+> > this wouldn't be needed then. And don't worry, if I need to send other
+> > mails regarding this regression only relevant for regzbot I'll send them
+> > to the regressions lists only (with a tag in the subject so people can
+> > filter them away). With a bit of luck no such messages will be needed
+> > anyway.
+> >
+> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> >
+> > P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> > reports on my table. I can only look briefly into most of them and lack
+> > knowledge about most of the areas they concern. I thus unfortunately
+> > will sometimes get things wrong or miss something important. I hope
+> > that's not the case here; if you think it is, don't hesitate to tell me
+> > in a public reply, it's in everyone's interest to set the public record
+> > straight.
+> >
+> >
+> > On 27.02.22 03:36, Satadru Pramanik wrote:
+> > > I'm on a x86_64 ubuntu 22.04 system accessing a similar system running
+> > > samba Version 4.13.14-Ubuntu. Both systems are on ubuntu mainline
+> > > kernel 5.17-rc5.
+> > >
+> > > I have a samba share mounted from my fstab, and file access works fine.
+> > > Upon suspending my system and resuming though, the mounted samba share
+> > > is inaccessible, and my dmesg has many "CIFS: VFS: cifs_tree_connect:
+> > > could not find superblock: -22" messages.
+> > >
+> > > Unmounting and remounting the share restores access.
+> > >
+> > > When I boot into kernel 5.16.11, I do not have this issue. The cifs
+> > > share is accessible just fine after a suspend/resume cycle.
+> > >
+> > > I assume this is a regression with 5.17? Is there any information
+> > > worth providing which might help debug and fix this issue?
+> > >
+> > > Regards,
+> > >
+> > > Satadru Pramanik
+> >
+> > --
+> > Additional information about regzbot:
+> >
+> > If you want to know more about regzbot, check out its web-interface, the
+> > getting start guide, and the references documentation:
+> >
+> > https://linux-regtracking.leemhuis.info/regzbot/
+> > https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+> > https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> >
+> > The last two documents will explain how you can interact with regzbot
+> > yourself if your want to.
+> >
+> > Hint for reporters: when reporting a regression it's in your interest to
+> > CC the regression list and tell regzbot about the issue, as that ensures
+> > the regression makes it onto the radar of the Linux kernel's regression
+> > tracker -- that's in your interest, as it ensures your report won't fall
+> > through the cracks unnoticed.
+> >
+> > Hint for developers: you normally don't need to care about regzbot once
+> > it's involved. Fix the issue as you normally would, just remember to
+> > include 'Link:' tag in the patch descriptions pointing to all reports
+> > about the issue. This has been expected from developers even before
+> > regzbot showed up for reasons explained in
+> > 'Documentation/process/submitting-patches.rst' and
+> > 'Documentation/process/5.Posting.rst'.
+>
+>
+>
+> --
+> Thanks,
+>
+> Steve
 
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
+--0000000000004e727f05d914e7e4
+Content-Type: text/plain; charset="US-ASCII"; name="DebugData.before.txt"
+Content-Disposition: attachment; filename="DebugData.before.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_l06soghx0>
+X-Attachment-Id: f_l06soghx0
 
-#regzbot poke
+RGlzcGxheSBJbnRlcm5hbCBDSUZTIERhdGEgU3RydWN0dXJlcyBmb3IgRGVidWdnaW5nCi0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpDSUZTIFZlcnNp
+b24gMi4zNQpGZWF0dXJlczogREZTLEZTQ0FDSEUsU1RBVFMsREVCVUcsQUxMT1dfSU5TRUNVUkVf
+TEVHQUNZLENJRlNfUE9TSVgsVVBDQUxMKFNQTkVHTyksWEFUVFIsQUNMLFdJVE5FU1MKQ0lGU01h
+eEJ1ZlNpemU6IDE2Mzg0CkFjdGl2ZSBWRlMgUmVxdWVzdHM6IDAKClNlcnZlcnM6IAoxKSBDb25u
+ZWN0aW9uSWQ6IDB4MSBIb3N0bmFtZTogY2hlZWtvbiAKTnVtYmVyIG9mIGNyZWRpdHM6IDYwODUg
+RGlhbGVjdCAweDMxMQpUQ1Agc3RhdHVzOiAxIEluc3RhbmNlOiAxCkxvY2FsIFVzZXJzIFRvIFNl
+cnZlcjogMSBTZWNNb2RlOiAweDEgUmVxIE9uIFdpcmU6IDAKSW4gU2VuZDogMCBJbiBNYXhSZXEg
+V2FpdDogMAoKCVNlc3Npb25zOiAKCTEpIEFkZHJlc3M6IDE5Mi4xNjguMC4yMCBVc2VzOiAxIENh
+cGFiaWxpdHk6IDB4MzAwMDQ2CVNlc3Npb24gU3RhdHVzOiAxIAoJU2VjdXJpdHkgdHlwZTogUmF3
+TlRMTVNTUCAgU2Vzc2lvbklkOiAweDM4MzZjOWE5IGVuY3J5cHRlZAoJVXNlcjogMTAwMCBDcmVk
+IFVzZXI6IDAKCglTaGFyZXM6IAoJMCkgSVBDOiBcXGNoZWVrb25cSVBDJCBNb3VudHM6IDEgRGV2
+SW5mbzogMHgwIEF0dHJpYnV0ZXM6IDB4MAoJUGF0aENvbXBvbmVudE1heDogMCBTdGF0dXM6IDAg
+dHlwZTogMCBTZXJpYWwgTnVtYmVyOiAweDAgRW5jcnlwdGVkCglTaGFyZSBDYXBhYmlsaXRpZXM6
+IE5vbmUJU2hhcmUgRmxhZ3M6IDB4ODAwMAoJdGlkOiAweGVjNTA2ZjcwCU1heGltYWwgQWNjZXNz
+OiAweDFmMDBhOQoKCTEpIFxcY2hlZWtvblxsb2NhbG5ldCBNb3VudHM6IDEgRGV2SW5mbzogMHgy
+MCBBdHRyaWJ1dGVzOiAweDUwMDZmCglQYXRoQ29tcG9uZW50TWF4OiAyNTUgU3RhdHVzOiAwIHR5
+cGU6IERJU0sgU2VyaWFsIE51bWJlcjogMHhiODQ0M2E2MiBFbmNyeXB0ZWQKCVNoYXJlIENhcGFi
+aWxpdGllczogTm9uZSBBbGlnbmVkLCBQYXJ0aXRpb24gQWxpZ25lZCwJU2hhcmUgRmxhZ3M6IDB4
+ODAwMAoJdGlkOiAweDMzZjQ1YmFmCU9wdGltYWwgc2VjdG9yIHNpemU6IDB4MjAwCU1heGltYWwg
+QWNjZXNzOiAweDFmMDFmZgoKCglTZXJ2ZXIgaW50ZXJmYWNlczogNwoJMSkJU3BlZWQ6IDEwMDAw
+MDAwMDAwIGJwcwoJCUNhcGFiaWxpdGllczogcnNzIAoJCUlQdjY6IGZkNDA6MWVlZjo1MTc0OjAw
+MDA6ZDdjYTpkNjg4Ojg1MjU6NzgyNQoKCTIpCVNwZWVkOiAxMDAwMDAwMDAwMCBicHMKCQlDYXBh
+YmlsaXRpZXM6IHJzcyAKCQlJUHY0OiAxOTIuMTY4LjAuMjAKCQlbQ09OTkVDVEVEXQoKCTMpCVNw
+ZWVkOiAxMDAwMDAwMDAwMCBicHMKCQlDYXBhYmlsaXRpZXM6IHJzcyAKCQlJUHY2OiAyMDAxOjA0
+NzA6ZTFmMzowMDAwOjdhOWE6NmE2MDo1MWQ3OjcwMGUKCgk0KQlTcGVlZDogMTAwMDAwMDAwMDAg
+YnBzCgkJQ2FwYWJpbGl0aWVzOiByc3MgCgkJSVB2NjogMjAwMTowNDcwOmUxZjM6MDAwMDoxMWM4
+Ojk5MjM6YzI1MDoxZDBlCgoJNSkJU3BlZWQ6IDEwMDAwMDAwMDAwIGJwcwoJCUNhcGFiaWxpdGll
+czogcnNzIAoJCUlQdjY6IGZkNDA6MWVlZjo1MTc0OjAwMDA6N2Y5MDpjN2ZiOmZmYTc6YThkZAoK
+CTYpCVNwZWVkOiAxMDAwMDAwMDAwIGJwcwoJCUNhcGFiaWxpdGllczogCgkJSVB2NjogMDAwMDow
+MDAwOjAwMDA6MDAwMDowMDAwOjAwMDA6MDAwMDowMDAxCgoJNykJU3BlZWQ6IDEwMDAwMDAwMDAg
+YnBzCgkJQ2FwYWJpbGl0aWVzOiAKCQlJUHY0OiAxMjcuMC4wLjEKCgoJTUlEczogCi0tCgpXaXRu
+ZXNzIHJlZ2lzdHJhdGlvbnM6Cg==
+--0000000000004e727f05d914e7e4
+Content-Type: text/plain; charset="US-ASCII"; name="DebugData.after.txt"
+Content-Disposition: attachment; filename="DebugData.after.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_l06sokm21>
+X-Attachment-Id: f_l06sokm21
 
-On 15.02.22 09:25, Thorsten Leemhuis wrote:
-> [...]
-> On 14.02.22 20:25, Nico Sneck wrote:
->> Hi,
->>
->> I'm running Fedora 35 on a Huawei Matestation S (HUAWEI PUM-WDX9), AMD
->> Renoir with Realtek rtw_8822ce handling wifi stuff.
->>
->> Ever since the kernel update from 5.15.13-200.fc35 to 5.16.8-200.fc35
->> (which I performed Feb 12th), I noticed that my Wifi connection
->> doesn't really work anymore. I'm connecting to a Zyxel VMG3927-B50A,
->> and it appears to be using 5 GHz connection always. I also tested that
->> 5.17-rc4 also suffers from this issue.
->>
->> The issue is that even trying to ping my routers gateway address will
->> result in connection timeouts, and ping times are in the thousands to
->> tens of thousands of milliseconds (normally peak ping times are ~3-6
->> ms), making wireless unusable with 5.16+.
->> I can also see that in dmesg logs there are two types of rtw_8822ce
->> driver warnings flooding the logs, which I didn't see with 5.15:
->>
->> "helmi 13 18:20:03 fedora kernel: rtw_8822ce 0000:06:00.0: timed out
->> to flush queue {1,2}"
->> "helmi 13 18:16:23 fedora kernel: rtw_8822ce 0000:06:00.0: failed to
->> get tx report from firmware"
->>
->> Some stats:
->> On kernel 5.15.13-200.fc35 running for 29 days:
->> [nico@fedora ~]$ journalctl -k -b -18 | grep 'timed out to flush queue' | wc -l
->> 0
->>
->> [nico@fedora ~]$ journalctl -k -b -18 | grep 'failed to get tx report
->> from firmware' | wc -l
->> 0
->>
->> On kernel 5.16.8-200.fc35 running for 4 hours:
->> [nico@fedora ~]$ journalctl -k -b -17 | grep 'timed out to flush queue' | wc -l
->> 45370
->>
->> [nico@fedora ~]$ journalctl -k -b -17 | grep 'failed to get tx report
->> from firmware' | wc -l
->> 502
->>
->> I tried bisecting which commit introduced this regression, but after
->> some 12 hours of recompiling and testing, it seems like I failed
->> somehow. I tried a bisect with first known good revision as
->> 8bb7eca972ad (5.15 release commit), and first known bad revision as
->> df0cc57e057f (5.16 release commit). I managed to identify that
->> revision
->> fc02cb2b37fe Merge tag 'net-next-for-5.16' of
->> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
->> is bad, but then all other revisions were good apart from
->> 8a33dcc2f6d5 (refs/bisect/bad) Merge
->> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
->> which was also bad.
->> But here's the baffling part, commit 6b278c0cb378 was good, and it's
->> the last commit in the merge (8a33dcc2f6d5) which appeared bad.
->> Now I retested with 8a33dcc2f6d5, and I don't see the issues anymore,
->> so I guess I tested a wrong kernel version at that point or something.
->> shrug.
->>
->> So I can only assume that the regression came in one of the commits inside
->> fc02cb2b37fe Merge tag 'net-next-for-5.16' of
->> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next
->> but it'll take me a while to be try bisecting the commits in that merge again.
->>
->> If anyone has any idea about what could cause these issues I'm seeing,
->> I can try out patches / test different things. But I'll try
->> rebisecting this again soon.
->>
->> - Nico
-> 
+RGlzcGxheSBJbnRlcm5hbCBDSUZTIERhdGEgU3RydWN0dXJlcyBmb3IgRGVidWdnaW5nCi0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpDSUZTIFZlcnNp
+b24gMi4zNQpGZWF0dXJlczogREZTLEZTQ0FDSEUsU1RBVFMsREVCVUcsQUxMT1dfSU5TRUNVUkVf
+TEVHQUNZLENJRlNfUE9TSVgsVVBDQUxMKFNQTkVHTyksWEFUVFIsQUNMLFdJVE5FU1MKQ0lGU01h
+eEJ1ZlNpemU6IDE2Mzg0CkFjdGl2ZSBWRlMgUmVxdWVzdHM6IDAKClNlcnZlcnM6IAoxKSBDb25u
+ZWN0aW9uSWQ6IDB4MSBIb3N0bmFtZTogY2hlZWtvbiAKTnVtYmVyIG9mIGNyZWRpdHM6IDE5MyBE
+aWFsZWN0IDB4MzExClRDUCBzdGF0dXM6IDEgSW5zdGFuY2U6IDIKTG9jYWwgVXNlcnMgVG8gU2Vy
+dmVyOiAxIFNlY01vZGU6IDB4MSBSZXEgT24gV2lyZTogMApJbiBTZW5kOiAwIEluIE1heFJlcSBX
+YWl0OiAwCgoJU2Vzc2lvbnM6IAoJMSkgQWRkcmVzczogMTkyLjE2OC4wLjIwIFVzZXM6IDEgQ2Fw
+YWJpbGl0eTogMHgzMDAwNDYJU2Vzc2lvbiBTdGF0dXM6IDEgCglTZWN1cml0eSB0eXBlOiBSYXdO
+VExNU1NQICBTZXNzaW9uSWQ6IDB4YzA1YmRjNGQgZW5jcnlwdGVkCglVc2VyOiAxMDAwIENyZWQg
+VXNlcjogMAoKCVNoYXJlczogCgkwKSBJUEM6IFxcY2hlZWtvblxJUEMkIE1vdW50czogMSBEZXZJ
+bmZvOiAweDAgQXR0cmlidXRlczogMHgwCglQYXRoQ29tcG9uZW50TWF4OiAwIFN0YXR1czogMSB0
+eXBlOiAwIFNlcmlhbCBOdW1iZXI6IDB4MCBFbmNyeXB0ZWQKCVNoYXJlIENhcGFiaWxpdGllczog
+Tm9uZQlTaGFyZSBGbGFnczogMHg4MDAwCgl0aWQ6IDB4OGY2YWM2YmMJTWF4aW1hbCBBY2Nlc3M6
+IDB4MWYwMGE5CgoJMSkgXFxjaGVla29uXGxvY2FsbmV0IE1vdW50czogMSBEZXZJbmZvOiAweDIw
+IEF0dHJpYnV0ZXM6IDB4NTAwNmYKCVBhdGhDb21wb25lbnRNYXg6IDI1NSBTdGF0dXM6IDggdHlw
+ZTogRElTSyBTZXJpYWwgTnVtYmVyOiAweGI4NDQzYTYyIEVuY3J5cHRlZAoJU2hhcmUgQ2FwYWJp
+bGl0aWVzOiBOb25lIEFsaWduZWQsIFBhcnRpdGlvbiBBbGlnbmVkLAlTaGFyZSBGbGFnczogMHg4
+MDAwCgl0aWQ6IDB4MzNmNDViYWYJT3B0aW1hbCBzZWN0b3Igc2l6ZTogMHgyMDAJTWF4aW1hbCBB
+Y2Nlc3M6IDB4MWYwMWZmCURJU0NPTk5FQ1RFRCAKCgoJU2VydmVyIGludGVyZmFjZXM6IDcKCTEp
+CVNwZWVkOiAxMDAwMDAwMDAwMCBicHMKCQlDYXBhYmlsaXRpZXM6IHJzcyAKCQlJUHY2OiBmZDQw
+OjFlZWY6NTE3NDowMDAwOmQ3Y2E6ZDY4ODo4NTI1Ojc4MjUKCgkyKQlTcGVlZDogMTAwMDAwMDAw
+MDAgYnBzCgkJQ2FwYWJpbGl0aWVzOiByc3MgCgkJSVB2NDogMTkyLjE2OC4wLjIwCgkJW0NPTk5F
+Q1RFRF0KCgkzKQlTcGVlZDogMTAwMDAwMDAwMDAgYnBzCgkJQ2FwYWJpbGl0aWVzOiByc3MgCgkJ
+SVB2NjogMjAwMTowNDcwOmUxZjM6MDAwMDo3YTlhOjZhNjA6NTFkNzo3MDBlCgoJNCkJU3BlZWQ6
+IDEwMDAwMDAwMDAwIGJwcwoJCUNhcGFiaWxpdGllczogcnNzIAoJCUlQdjY6IDIwMDE6MDQ3MDpl
+MWYzOjAwMDA6MTFjODo5OTIzOmMyNTA6MWQwZQoKCTUpCVNwZWVkOiAxMDAwMDAwMDAwMCBicHMK
+CQlDYXBhYmlsaXRpZXM6IHJzcyAKCQlJUHY2OiBmZDQwOjFlZWY6NTE3NDowMDAwOjdmOTA6Yzdm
+YjpmZmE3OmE4ZGQKCgk2KQlTcGVlZDogMTAwMDAwMDAwMCBicHMKCQlDYXBhYmlsaXRpZXM6IAoJ
+CUlQdjY6IDAwMDA6MDAwMDowMDAwOjAwMDA6MDAwMDowMDAwOjAwMDA6MDAwMQoKCTcpCVNwZWVk
+OiAxMDAwMDAwMDAwIGJwcwoJCUNhcGFiaWxpdGllczogCgkJSVB2NDogMTI3LjAuMC4xCgoKCU1J
+RHM6IAotLQoKV2l0bmVzcyByZWdpc3RyYXRpb25zOgo=
+--0000000000004e727f05d914e7e4--
