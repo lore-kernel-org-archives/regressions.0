@@ -1,153 +1,137 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5408615BF
-	for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 20:55:21 +0000 (UTC)
-Received: by mail-pl1-f174.google.com with SMTP id p17so11755159plo.9
-        for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 12:55:21 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2AED4C63
+	for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 21:02:24 +0000 (UTC)
+Received: by mail-wr1-f49.google.com with SMTP id d17so17340195wrc.9
+        for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 13:02:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2qwFbvKJjNJ9kpfcP7L3gRz+/TG5jg+66rcMLtLBvv4=;
-        b=ff9E0q28t0GzeZEuRCp0VtckplJiu7j4uIeaV6bdOm7ghaJm89mJIZPnzNMj8fovBy
-         otsh61Z9SR8BIRgs9KuTz6MNqME9md3OHpgAwbBqdRaGk51ZfOWyGw4qAVRoreXK4Waw
-         +FbcreXgduArlgwr4unBjONh3KsjkahFYGetE=
+        d=googlemail.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=eDK54Mi47ux+H8/Fc/yYFMHxLB+WNQmcSJ3zj0ycUOs=;
+        b=Nao/xJaZSChztmqL9RGX7AvqUh5RbQsrizqO0XgzO06WkVKwA0gLVz2uVNNNw+xn1e
+         oM7wtSQNqCx+9Kd55UqqLJ4XbzJ65aHtT1DPi9hCndP1RBaI/WtKCzGxem8kZPcjIVDU
+         jdePWG6iNQiMG5b8N29+esQFWAqgVyAha7mYlfw7ZxEfoQ2jdc8vNs3DzC8iVip5zPrA
+         048RzUYVKJXZlCTFk77Gw/HkBSMSEkMtwlVExwFvAGTNuKRJ5m4SeEiQNjzVQgMRxlsk
+         qI/EU4OwM/+GKyETJyncvpnfRHkqUJwE0GLwLN8TtZ1/MpnmNKAoCv6negojr3ftJXQE
+         ukGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=2qwFbvKJjNJ9kpfcP7L3gRz+/TG5jg+66rcMLtLBvv4=;
-        b=PzXbBWhlPZcMEYOPHK2Kc2GPmn9XVLp/LFncypggtTK01qs+ZpKwQ/nujKLbd/Qq8r
-         q1bUBb4uxe9p92WLJPv0l/qCDC1mqAfWI+ZNSJfBJT6hFHi42H7Nz51CknJ1GdbGEDBr
-         PE58BYeyos7O1cJmpI2p+pfUvTJd3yqMNkS2EPwyA3XOfBPEml/jXf60mTwx4JmIpJ/4
-         2E7SuMZq7hLesz2urLbeZ0rTOn5Q9ra4ON7E/vSvpiizppNxvKdpzhVRGodrMOHEGhSr
-         pmgrxmaVIKVtfXZPgac2JCny2Or9tv/CVcEpZMVUq55fpF+vER/aQXj85WUCLjGF0iYC
-         ES0A==
-X-Gm-Message-State: AOAM530hnSxcS59UdNBsJKNl/Q67vhd4a/oT3GGd5uqp5NnIHH9ZSIPn
-	PnBaybx/1PAwTSxeTKTjvO+ihg==
-X-Google-Smtp-Source: ABdhPJxImix0fJRbyysJc7Nx9/ba9NG3PQGtuWbbtO1AUoABEsbpBwa0o41DdoV+qBjNjFIhgFL7lA==
-X-Received: by 2002:a17:902:7e08:b0:151:65dd:a2d1 with SMTP id b8-20020a1709027e0800b0015165dda2d1mr7402370plm.66.1646081720781;
-        Mon, 28 Feb 2022 12:55:20 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g5-20020a056a001a0500b004def10341e5sm14210537pfv.22.2022.02.28.12.55.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Feb 2022 12:55:20 -0800 (PST)
-From: Kees Cook <keescook@chromium.org>
-To: matoro <matoro_mailinglist_kernel@matoro.tk>
-Cc: Kees Cook <keescook@chromium.org>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Eric Biederman <ebiederm@xmission.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	stable@vger.kernel.org,
-	=?UTF-8?q?Magnus=20Gro=C3=9F?= <magnus.gross@rwth-aachen.de>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Anthony Yznaga <anthony.yznaga@oracle.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	regressions@lists.linux.dev,
-	linux-ia64@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 5.16 v2] binfmt_elf: Avoid total_mapping_size for ET_EXEC
-Date: Mon, 28 Feb 2022 12:55:18 -0800
-Message-Id: <20220228205518.1265798-1-keescook@chromium.org>
-X-Mailer: git-send-email 2.32.0
+        bh=eDK54Mi47ux+H8/Fc/yYFMHxLB+WNQmcSJ3zj0ycUOs=;
+        b=ZyYk2q/SANp+y1NnG0gkQbfQ2PLEioWodBkqmD2KjBXzmvLDG746+PCy5QES2Lrh+F
+         S+NnSBcbaLiqORq5moBr/8AljPMTopyusOlIRa/rSu2VVDUcet5CkdzKmHBhZ8ORh/to
+         za4rOuduBOUBN5N4MdcEgzJjOvXC4iRZIePvdbDGljtUGyvu3Lc6UDErtQ0cyOL4XtWM
+         yVjL5QeRj98xEksW7MHe0LUv41FOff0pOt6BLxgSSJeTQiGoP4tMfB/jbEbMghmHUpxJ
+         KB4HjQq8ucFWtFb2yTKQPjEDZ8RsbuILLAfFktgwMPPJKr5MGVwA1pkO7FGA4cD2fSDY
+         fqrQ==
+X-Gm-Message-State: AOAM530/OaX9PY0J5injbl/hCgbrFvXcVcue/B2Th1hMM2gbqaLqBwOT
+	z9xY6iDqJv/7qulg9vvTfEA=
+X-Google-Smtp-Source: ABdhPJwoNrHa3wHYLr1Nwhc0H28rkR6weh2g6+kZp6mUAlNgMQkZGkW8boEOIe1YXeft3Hho6D7iAw==
+X-Received: by 2002:adf:f406:0:b0:1ef:879c:3228 with SMTP id g6-20020adff406000000b001ef879c3228mr9614804wro.287.1646082142799;
+        Mon, 28 Feb 2022 13:02:22 -0800 (PST)
+Received: from [192.168.1.10] (4e691f2a.skybroadband.com. [78.105.31.42])
+        by smtp.googlemail.com with ESMTPSA id n15-20020a5d4c4f000000b001f0052c712bsm335917wrt.102.2022.02.28.13.02.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 28 Feb 2022 13:02:21 -0800 (PST)
+Message-ID: <6b17bdb5-dddb-e7c7-86f6-2240c6523a81@googlemail.com>
+Date: Mon, 28 Feb 2022 21:02:18 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3305; h=from:subject; bh=nRNo15K3hJuAVDiGF83XkTVmsLJsCzBX2BzA2FzRxm0=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBiHTa1ANO98FNtLPs7aIRDGx95+p/oXmw8ZVB+kZiA 8jGqVTCJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCYh02tQAKCRCJcvTf3G3AJrcxEA CdH3+/jXtdsBD+3LBqGP8b+KEE/9CwpSUu2UNa3iYKWULsI0FjASo9KlrMoIXHvpJk/ciiZpqeenE4 6afM+9NLoZiUVY5x661OtJozMCC5jjJK3B/JAMB+tK279DQorn9+DmGqe35UmQCUupmw2AjuyxNfCH OoviSdY0NjhqPn5jnI4zfpmj2qdLiMhMcYmAv2sGzGv8pA7KRts3V5mDSi587rmpKghWPkSZENAe6n O1AjtQTxJqUf5QT7Td9rhxEhlaNEW0AL3HOYI27+ZV66EjDf7NyFVt4cFwmqVtSW2ypXgsxDRQAX2k 4JS5ZuHSKnM40nKdWWyg4oO/esdlW3g53RrEkaHS4Tc/jrjbDB3+ZpwWaucIehOIBKm/zWd7FE+fLR KgXsutjfAeLcGrB65/jKeJ4Iv0AXcY0XbEC7tc7nBesY7ZPxqzP+2ULDWb3Jakzl7oD/ZuGtK2MkxZ aK6lbPLb8pg1vKIvQkyS9u6LXfMUkzE/VBvIGlEHdrcUlTZcpURWqU+E8JfM29BoPwbfyos4+3290j B9pi6+etW9ID/dMsnLfKCGCdSVYYpAAgJIWQHRF6El35GzxPHGIFQ9ZvlRIrTPtPcqVO7LOCA/PCER 2Wx2LSHlWBDy8VaB0x5yPa5O6X9BHvWXrxPMMSsH9B+GIfX/vVm2ob9q/7CQ==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: bug kernel 5.17, qualcom and intel adapters, unable to reliably
+ connect to bluetooth devices
+Content-Language: en-GB
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Chris Murphy <lists@colorremedies.com>,
+ Bluetooth <linux-bluetooth@vger.kernel.org>, regressions@lists.linux.dev
+References: <CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i+RE+L2FTXSA@mail.gmail.com>
+ <CAJCQCtTpHQe2co3fLNs5csKQchmwH=3YwQOvFnuc2nhjRseVnw@mail.gmail.com>
+ <9ad505e1-7b59-7ebf-378b-23a6c0e25802@googlemail.com>
+ <CABBYNZ+9tUKgLyUWM5vkMW8vHxYsXv6DEaDWdHt8xTTs6puGQA@mail.gmail.com>
+ <aaeb4131-d177-d41e-617b-b0060cd83c92@googlemail.com>
+ <CABBYNZLB+8UzhzttMrKbHW_+-A1EsY9iT5Y55VuOOEPuD4kAHQ@mail.gmail.com>
+ <b1a4a920-dbba-58be-72b4-2c95b9b79283@googlemail.com>
+ <82216882-463a-8976-e6bc-4a8919107a31@googlemail.com>
+ <CABBYNZ+mO1gQgfwhemY9cqbi8vNLm_60A9c1vPYT2tH4rhgFww@mail.gmail.com>
+ <a35b4b75-bb64-89c8-bacd-d58ed8576272@googlemail.com>
+ <2ce6175c-74ec-8469-80a5-374bd1429542@googlemail.com>
+ <CABBYNZJNTOT-mEQe2cfZiEX6A2pR7+sacBqtBRPRZY69YmgtvA@mail.gmail.com>
+ <17f2bf7e-1d6b-e090-8926-21a408f2b496@googlemail.com>
+ <CABBYNZ+cL4f8xvTJFQGLgqPueE=-UsOtvcPQez0BEsJ5xGppfQ@mail.gmail.com>
+ <16cac2c8-c1ca-c8d7-e3d9-5f00be511614@googlemail.com>
+ <CABBYNZJQOSZ1fecTRQOX+w8crdiLdr0_tVstgbnyEVq3NaxscQ@mail.gmail.com>
+From: Chris Clayton <chris2553@googlemail.com>
+In-Reply-To: <CABBYNZJQOSZ1fecTRQOX+w8crdiLdr0_tVstgbnyEVq3NaxscQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Partially revert commit 5f501d555653 ("binfmt_elf: reintroduce using
-MAP_FIXED_NOREPLACE").
+Hi Luiz,
 
-At least ia64 has ET_EXEC PT_LOAD segments that are not virtual-address
-contiguous (but _are_ file-offset contiguous). This would result in
-giant mapping attempts to cover the entire span, including the virtual
-address range hole. Disable total_mapping_size for ET_EXEC, which
-reduces the MAP_FIXED_NOREPLACE coverage to only the first PT_LOAD:
+On 28/02/2022 19:34, Luiz Augusto von Dentz wrote:
+> Hi Chris,
+> 
+> On Sat, Feb 26, 2022 at 12:04 AM Chris Clayton <chris2553@googlemail.com> wrote:
+>>
+>> Hi,
+>>
+>> On 24/02/2022 15:16, Luiz Augusto von Dentz wrote:
+>>>> I'll try another bisection today, but limit its range to changes made in the net/bluetooth directory.
+>>
+>> That  bisection has proved very difficult because the bluetooth "service" in kernels at some steps of the bisection were
+>> completely borked to the extent that blueman's device-manager application wouldn't start and emitted the messages:
+>>
+>> blueman-manager 12.00.37 ERROR    Manager:137 on_dbus_name_appeared: Default adapter not found, trying first available.
+>> blueman-manager 12.00.37 ERROR    Manager:141 on_dbus_name_appeared: No adapter(s) found, exiting
+>>
+>> Obviously, I don't know whether the problem I am trying to pinpoint is hiding behind this more fundamental problem with
+>> the bluetooth "service", so being unable to say whether that kernel was good or bad, I had to skip. There seems to be a
+>> batch of commits that mean that, whilst the kernel builds okay, hunting down a bluetooth-related problem is not
+>> possible. Eventually and I cursed and gave up. Whatever was causing this breakage has obviously been fixed.
+>>
+>>> Please record the HCI with btmon, it must be producing something since
+>>> it records even the mgmt commands.
+>>>
+>>
+>> Refreshed by a good night's sleep, I started another bisection (between 5.16 and 5.17-rc1) yesterday morning but this
+>> time did not limit it to net/bluetooth.  That was going okay until I ran into what I assume is the same batch of borked
+>> kernels. I've been more persistent this time but have just had a run of 16 steps in which the bluetooth support in the
+>> kernel is broken so badly that testing bluetooth is not possible. I will push on today, but I've suspended that activity
+>> to get the hci trace that Luiz has asked for.
+>>
+>> Using information from the bisect, I built a kernel that had tested as bad (but not borked). The commit is
+>> f2b551fad8d8f2ac5e1f810ad595298381e0b0c5. As I've mentioned before, the problem with devices not connecting is
+>> intermittent - for a given kernel, sometimes a connection works and other times it doesn't. On the first boot of this
+>> kernel, my bluetooth devices could connect, Attached are 4 files related to this - the output from btmon, and the
+>> related portions of daemon.log, kern.log and sys.log from /var/log/. Each of the these files is suffixed with ".good".
+>>
+>> I then powered down the laptop and booted into the same kernel. This time the bluetooth devices could not connect. Four
+>> more files are attached for this boot and are suffixed with ".bad". I said in an earlier email that when connection
+>> fails, there is no output from btmon, so that log is empty. That's still the case, but I guess that fact itself is a
+>> clue to what the problem might be. What I can add, however, is that if, in that same bad kernel, I unload and then
+>> reload the btusb module, connections start to work. Maybe that too is a clue. The same unload/load process revives
+>> bluetooth on a kernel built after a pull of Linus' latest and greatest this morning.
+>>
+>> Since I now have a workround, I'm going stop the current bisection that I was doing.  I've done another couple of steps
+>> this morning and both produced kernels on which I could not test bluetooth and had to tell git bisect to skip. If
+>> however, I can provide any other diagnostics, please let me know.
+>>
+>> Chris
+> 
+> Can you try with the following patch:
+> 
+> https://patchwork.kernel.org/project/bluetooth/patch/20220228173918.524733-1-brian.gix@intel.com/
+> 
+> 
+Sorry, that patch has made no difference. After the first boot my headphones connected okay, but after a power-down and
+reboot they would not connect without an unload and reload of the btusb module.
 
-$ readelf -lW /usr/bin/gcc
-...
-Program Headers:
-  Type Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   ...
-...
-  LOAD 0x000000 0x4000000000000000 0x4000000000000000 0x00b5a0 0x00b5a0 ...
-  LOAD 0x00b5a0 0x600000000000b5a0 0x600000000000b5a0 0x0005ac 0x000710 ...
-...
-       ^^^^^^^^ ^^^^^^^^^^^^^^^^^^                    ^^^^^^^^ ^^^^^^^^
-
-File offset range     : 0x000000-0x00bb4c
-			0x00bb4c bytes
-
-Virtual address range : 0x4000000000000000-0x600000000000bcb0
-			0x200000000000bcb0 bytes
-
-Ironically, this is the reverse of the problem that originally caused
-problems with ET_EXEC and MAP_FIXED_NOREPLACE: overlaps. This problem is
-with holes. Future work could restore full coverage if load_elf_binary()
-were to perform mappings in a separate phase from the loading (where
-it could resolve both overlaps and holes).
-
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Reported-by: matoro <matoro_mailinglist_kernel@matoro.tk>
-Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Fixes: 5f501d555653 ("binfmt_elf: reintroduce using MAP_FIXED_NOREPLACE")
-Link: https://lore.kernel.org/r/a3edd529-c42d-3b09-135c-7e98a15b150f@leemhuis.info
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Here's the v5.16 backport.
----
- fs/binfmt_elf.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
-
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index f8c7f26f1fbb..911a9e7044f4 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1135,14 +1135,25 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			 * is then page aligned.
- 			 */
- 			load_bias = ELF_PAGESTART(load_bias - vaddr);
--		}
- 
--		/*
--		 * Calculate the entire size of the ELF mapping (total_size).
--		 * (Note that load_addr_set is set to true later once the
--		 * initial mapping is performed.)
--		 */
--		if (!load_addr_set) {
-+			/*
-+			 * Calculate the entire size of the ELF mapping
-+			 * (total_size), used for the initial mapping,
-+			 * due to first_pt_load which is set to false later
-+			 * once the initial mapping is performed.
-+			 *
-+			 * Note that this is only sensible when the LOAD
-+			 * segments are contiguous (or overlapping). If
-+			 * used for LOADs that are far apart, this would
-+			 * cause the holes between LOADs to be mapped,
-+			 * running the risk of having the mapping fail,
-+			 * as it would be larger than the ELF file itself.
-+			 *
-+			 * As a result, only ET_DYN does this, since
-+			 * some ET_EXEC (e.g. ia64) may have virtual
-+			 * memory holes between LOADs.
-+			 *
-+			 */
- 			total_size = total_mapping_size(elf_phdata,
- 							elf_ex->e_phnum);
- 			if (!total_size) {
--- 
-2.32.0
-
+Chris
