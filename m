@@ -1,145 +1,81 @@
-Received: from matoro.tk (matoro.tk [104.188.251.153])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55EC015BF
-	for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 20:32:08 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=3Z50+tLC8/CEOc9W5FMuZ/YfLz0LpCHJGNIb1bHqn70=;
- c=relaxed/relaxed; d=matoro.tk;
- h=Subject:Subject:Sender:To:To:Cc:Cc:From:From:Date:Date:MIME-Version:MIME-Version:Content-Type:Content-Type:Content-Transfer-Encoding:Content-Transfer-Encoding:Reply-To:In-Reply-To:In-Reply-To:Message-Id:Message-Id:References:References:Autocrypt:Openpgp;
- i=@matoro.tk; s=20220111215046; t=1646080260; v=1; x=1646512260;
- b=crJzFMOR6tc9squcx92hLTuFtuCfhgO+BgNnioUeH7k69a4pSO7joK45Wfxj0yH7NEIwX6uZ
- ovLhBNmzxYd5GCzchaGc5QbNkiNzNti5/PIEBt0QyXPX2BToy9B41BFvKbxTGv5xjhVv6kKb/oN
- OVkZTwV0VQF/Nh/w2UdBttHf7cNJH02zmF8O3u9kFIu3JIdWVoXI6KSpQYEr2yd92EMtlkBySjK
- VOka02DgQS/aFvpvPOaq3GW48LdBEpQclkOgPyVi61JJq9bq0ylXW5ZtUxY/5ix8dkvcSA0wnHK
- hZIf4rgSu0P5LiEbYccNCW91mbHc6sUp8HfDA43bsiNAQ9+GWbtWDncUnxcuu2PkY3etBd2b/9G
- zdLjv5VqebunO676QNsGrJRRkEHk7kWB9gid1XivUpxHo3AY+X+T79AbzN/MnHDtxFJuvGoQILr
- LZE/kxHolAH+o3gf/wpTQC5IMskejWDD2C2ITZi4ryHpV/NAEiuQRV1F03SdJI9r5ngOfcA4QqP
- BXYRWYXIYIWbrFE3aw7SFY2xkXoyStoakRiewxY3x02/MgRjFkWvAgznd0fbt0DqESFJ7M35xec
- OEU6V3m+Q53l8JgSfk6YfDSdMAftMhfkYyPj9J1iZNlN4YHvvi7OXXQBftKtjSF8jHYEKGmPGIb
- 3Al+HFYYAy8=
-Received: by matoro.tk (envelope-sender
- <matoro_mailinglist_kernel@matoro.tk>) with ESMTPS id 51b43b45; Mon, 28 Feb
- 2022 15:31:00 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBB215BF
+	for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 20:41:49 +0000 (UTC)
+Received: by mail-pl1-f172.google.com with SMTP id l9so11301153pls.6
+        for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 12:41:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=wer/Oz2nOAI419q72n4sbW/GCj0W5Nx8xz2+Rlt0xdI=;
+        b=EPfWBDQTZQfFwTLJ9+iWGHrZjstF+IJdDCO2XmrpedQZl8eoQHqJA+/JViu23cwxXh
+         4cMj/vzH9luSjFoMSUEnTyFggS72ppUy5QkoOhB1ZLmlYGZVjojhreHYu2ecNsLh0VEG
+         gCNAXqAhIEMo9kYwHuvCozq3SDVVbHt3LuY2o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=wer/Oz2nOAI419q72n4sbW/GCj0W5Nx8xz2+Rlt0xdI=;
+        b=PTnFI2dDh336oKLZ2T/jxRIjrXeJn6tzFm+QatHt4iA6uegUc8dWxHhncWoBTz3tFy
+         0V23i6m/o5cEUiNrT2bJMl2eLDcDKPW1HTd7LoCWwHaTUobnN4BpoMAxniSCTcIZg1jv
+         vdC9JIyj/EUqIHrLsh673SkgTzxw2FFEVCHz+1ygIt+4OVORTFFdYm8q1rdHIcijYnAS
+         JvkDle40ffh4ap9cMdxOKIiMR/3J1R8WY25RasYznkVslzYxTr/XM+eHeLWu3FNLHJ3T
+         SXc4qUT6YtQ7ZQdi58LdcVZAf6K0Q7+FxANLY7T9pMj59HUj5sgcBhLV13WPKVA1yC+D
+         i4RA==
+X-Gm-Message-State: AOAM5302Fsj51X/i9FJ8wkEyIvVHQSExE1UaTPI4wTHZ0B34Vrx2Qf9p
+	EgsXWBBYMTim1R4+/dv9oqTUtQ==
+X-Google-Smtp-Source: ABdhPJy3Ync6bess6WVePu+xmx/XAAZ+UJXR4GrnPlEoCAlv3kx6LFgNA1dRDLp+plPQLZbHhc+glA==
+X-Received: by 2002:a17:903:2482:b0:150:15ed:3cd3 with SMTP id p2-20020a170903248200b0015015ed3cd3mr21772341plw.147.1646080908566;
+        Mon, 28 Feb 2022 12:41:48 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t38-20020a056a0013a600b004e1a0c14000sm15037898pfg.209.2022.02.28.12.41.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Feb 2022 12:41:48 -0800 (PST)
+Date: Mon, 28 Feb 2022 12:41:47 -0800
+From: Kees Cook <keescook@chromium.org>
+To: Magnus =?iso-8859-1?Q?Gro=DF?= <magnus.gross@rwth-aachen.de>
+Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com,
+	glaubitz@physik.fu-berlin.de, linux-fsdevel@vger.kernel.org,
+	linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+	matoro_bugzilla_kernel@matoro.tk,
+	matoro_mailinglist_kernel@matoro.tk, regressions@leemhuis.info,
+	regressions@lists.linux.dev, viro@zeniv.linux.org.uk
+Subject: Re: regression: Bug 215601 - gcc segv at startup on ia64
+Message-ID: <202202281240.8BCFBB47ED@keescook>
+References: <202202260344.63C15C3356@keescook>
+ <Yhyn9cjDV8XfXLHm@fractal.localdomain>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Mon, 28 Feb 2022 15:31:00 -0500
-From: matoro <matoro_mailinglist_kernel@matoro.tk>
-To: Kees Cook <keescook@chromium.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Eric Biederman
- <ebiederm@xmission.com>, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- stable@vger.kernel.org, Thorsten Leemhuis <regressions@leemhuis.info>,
- Anthony Yznaga <anthony.yznaga@oracle.com>, Andrew Morton
- <akpm@linux-foundation.org>, regressions@lists.linux.dev,
- linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] binfmt_elf: Avoid total_mapping_size for ET_EXEC
-In-Reply-To: <20220228194613.1149432-1-keescook@chromium.org>
-References: <20220228194613.1149432-1-keescook@chromium.org>
-Message-ID: <5d44f028b2d739395c92e4b3036e2bbf@matoro.tk>
-X-Sender: matoro_mailinglist_kernel@matoro.tk
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Yhyn9cjDV8XfXLHm@fractal.localdomain>
 
-On 2022-02-28 14:46, Kees Cook wrote:
-> Partially revert commit 5f501d555653 ("binfmt_elf: reintroduce using
-> MAP_FIXED_NOREPLACE").
+On Mon, Feb 28, 2022 at 11:46:13AM +0100, Magnus Groß wrote:
+> > When the kernel tries to map these with a combined allocation, it asks
+> > for a giant mmap of the file, but the file is, of course, not at all
+> > that large, and the mapping is rejected.
 > 
-> At least ia64 has ET_EXEC PT_LOAD segments that are not virtual-address
-> contiguous (but _are_ file-offset contiguous). This would result in
-> giant mapping attempts to cover the entire span, including the virtual
-> address range hole. Disable total_mapping_size for ET_EXEC, which
-> reduces the MAP_FIXED_NOREPLACE coverage to only the first PT_LOAD:
+> > So... I'm trying to think about how best to deal with this. If I or
+> > anyone else can't think of an elegant solution, I'll send a revert for
+> > the offending patch next week.
 > 
-> $ readelf -lW /usr/bin/gcc
-> ...
-> Program Headers:
->   Type Offset   VirtAddr           PhysAddr           FileSiz  MemSiz   
-> ...
-> ...
->   LOAD 0x000000 0x4000000000000000 0x4000000000000000 0x00b5a0 0x00b5a0 
-> ...
->   LOAD 0x00b5a0 0x600000000000b5a0 0x600000000000b5a0 0x0005ac 0x000710 
-> ...
-> ...
->        ^^^^^^^^ ^^^^^^^^^^^^^^^^^^                    ^^^^^^^^ ^^^^^^^^
-> 
-> File offset range     : 0x000000-0x00bb4c
-> 			0x00bb4c bytes
-> 
-> Virtual address range : 0x4000000000000000-0x600000000000bcb0
-> 			0x200000000000bcb0 bytes
-> 
-> Ironically, this is the reverse of the problem that originally caused
-> problems with ET_EXEC and MAP_FIXED_NOREPLACE: overlaps. This problem 
-> is
-> with holes. Future work could restore full coverage if 
-> load_elf_binary()
-> were to perform mappings in a separate phase from the loading (where
-> it could resolve both overlaps and holes).
-> 
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Reported-by: matoro <matoro_mailinglist_kernel@matoro.tk>
-> Reported-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-> Fixes: 5f501d555653 ("binfmt_elf: reintroduce using 
-> MAP_FIXED_NOREPLACE")
-> Link:
-> https://lore.kernel.org/r/a3edd529-c42d-3b09-135c-7e98a15b150f@leemhuis.info
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> matoro (or anyone else) can you please test this?
-> ---
->  fs/binfmt_elf.c | 25 ++++++++++++++++++-------
->  1 file changed, 18 insertions(+), 7 deletions(-)
-> 
-> diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> index 9bea703ed1c2..474b44032c65 100644
-> --- a/fs/binfmt_elf.c
-> +++ b/fs/binfmt_elf.c
-> @@ -1136,14 +1136,25 @@ static int load_elf_binary(struct linux_binprm 
-> *bprm)
->  			 * is then page aligned.
->  			 */
->  			load_bias = ELF_PAGESTART(load_bias - vaddr);
-> -		}
-> 
-> -		/*
-> -		 * Calculate the entire size of the ELF mapping (total_size).
-> -		 * (Note that first_pt_load is set to false later once the
-> -		 * initial mapping is performed.)
-> -		 */
-> -		if (first_pt_load) {
-> +			/*
-> +			 * Calculate the entire size of the ELF mapping
-> +			 * (total_size), used for the initial mapping,
-> +			 * due to first_pt_load which is set to false later
-> +			 * once the initial mapping is performed.
-> +			 *
-> +			 * Note that this is only sensible when the LOAD
-> +			 * segments are contiguous (or overlapping). If
-> +			 * used for LOADs that are far apart, this would
-> +			 * cause the holes between LOADs to be mapped,
-> +			 * running the risk of having the mapping fail,
-> +			 * as it would be larger than the ELF file itself.
-> +			 *
-> +			 * As a result, only ET_DYN does this, since
-> +			 * some ET_EXEC (e.g. ia64) may have virtual
-> +			 * memory holes between LOADs.
-> +			 *
-> +			 */
->  			total_size = total_mapping_size(elf_phdata,
->  							elf_ex->e_phnum);
->  			if (!total_size) {
+> Shouldn't we just be able to patch total_mapping_size() again to instead
+> sum up all p_memsz fields, instead of comparing minimum and maximum
+> p_vaddr?
 
-This does not apply for me, I'm looking around and can't find any 
-reference to the first_pt_load variable you're removing there?  What 
-commit/tag are you applying this on top of?
+I don't think so, and I need to have a "minimal change" to fix this so
+it's more obviously correct.
+
+And, apologies, I failed to Cc you on this patch:
+https://lore.kernel.org/linux-hardening/20220228194613.1149432-1-keescook@chromium.org/
+
+-- 
+Kees Cook
