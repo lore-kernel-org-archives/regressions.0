@@ -1,170 +1,391 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9585448D5
-	for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 02:37:13 +0000 (UTC)
-Received: by mail-lj1-f173.google.com with SMTP id s25so15430137lji.5
-        for <regressions@lists.linux.dev>; Sun, 27 Feb 2022 18:37:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ob3GDnxv9BI+m8mH7EQ3OIL8NRbXgnB9x++oQzEgJ40=;
-        b=L/tF6gqEPZmweG1DqdYI/OSl5aIBRFCt5ZIVRYRosqWXSgDaYI2PSkrYC7wT6cIRU3
-         G0vYlT4LXrV+IFgin1/25pbLJzMVQLDQXyJcUtmKIBDvUVotsSfJlcM3qGd2uqKWK3WZ
-         LlkylEA7w+3PGcyrmdjNUboxUoC08LHeUqgOeh5SA1A+KyJL4OmlX+NHY8gl4i9pHlPV
-         GPYGKNELC7LM3KoiWGjG7OZ8bdBhRnJBpMPHHPl4ysvFI2Ckcn9TmidZVSKMtCTK6v6l
-         Qh34nZgbXxi6vZfqrNtzNz+p/3R8SZmFU9DVbMjsLATSirmFOwcMC9Guug3Cd6yabupf
-         Fxnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ob3GDnxv9BI+m8mH7EQ3OIL8NRbXgnB9x++oQzEgJ40=;
-        b=PjIp9QF+K+SFREnnAeNDyK2WQABhi4b+unoljkoySuwjaiinfbgWjXOGgqFOEXeY7v
-         8Wu6ZUtqqDSVdkwLBozj2JYzf5T32YBUUUi83mLf6WLwjfBaljXW67aJgXOH9ZOS4jSB
-         3Z+TDD5aZQSoN4h6nFEh5g0HLbpNsSGljbydwZLz/WLaix7IyO1+ZP2/r94YXFvL8V/k
-         Ok7lNRFYNN45Aa3TdRcnBHgVCyi8nmMVH504a5uV6LPJYLl1N4IQpG/bx+wyInwai14N
-         DwzctUecp4OSnAavN6Ez2RVK6iF13/okkHgqH2aZy+R3A0/tljKqKJ8UKej/ad6tn9pX
-         rhHg==
-X-Gm-Message-State: AOAM532xBZEbytWTNsC0XiTQ9V4b4eB6MFio0/TyUxzZhT/AurOeeJgk
-	ERm12CBvHWZ1J2QsGOEiLfLmUISifyauoAQp/1A=
-X-Google-Smtp-Source: ABdhPJyzVvI3fvpgOD0SJ03iWrScXDCudjbSnv61oy+N2uj4yaKknGR3VXdKhzv/RxVgAGrChN1dSHfqvHkLL9bSeJo=
-X-Received: by 2002:a2e:b014:0:b0:23c:9593:f7 with SMTP id y20-20020a2eb014000000b0023c959300f7mr12658935ljk.209.1646015831388;
- Sun, 27 Feb 2022 18:37:11 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D6F48CD
+	for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 09:43:39 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nOcZ2-0007D9-Bx; Mon, 28 Feb 2022 10:43:32 +0100
+Message-ID: <35bafd68-b340-dfaa-dd5f-d45843104f91@leemhuis.info>
+Date: Mon, 28 Feb 2022 10:43:31 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAFrh3J9soC36+BVuwHB=g9z_KB5Og2+p2_W+BBoBOZveErz14w@mail.gmail.com>
- <eae5c0cc-55d1-f8db-aba0-57cee7f10332@leemhuis.info>
-In-Reply-To: <eae5c0cc-55d1-f8db-aba0-57cee7f10332@leemhuis.info>
-From: Steve French <smfrench@gmail.com>
-Date: Sun, 27 Feb 2022 20:37:00 -0600
-Message-ID: <CAH2r5msUiBuZ74_nPVyzn=k=g0ELpcMnoTm_z30zrMSxF4sn1A@mail.gmail.com>
-Subject: Re: Failure to access cifs mount of samba share after resume from
- sleep with 5.17-rc5
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Satadru Pramanik <satadru@gmail.com>, CIFS <linux-cifs@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: Bug 215605 - [5.14 regression] BUG: unable to handle page fault
+ while running badblocks (fsck.ext4 -c) on a raid5 md array
+Content-Language: en-BS
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Song Liu <song@kernel.org>, linux-raid@vger.kernel.org
+Cc: Dominik Mierzejewski <dominik@greysector.net>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Jens Axboe <axboe@kernel.dk>
+References: <53e7de78-4d27-5089-f159-0d443b354666@leemhuis.info>
+In-Reply-To: <53e7de78-4d27-5089-f159-0d443b354666@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646041419;11b03752;
+X-HE-SMSGID: 1nOcZ2-0007D9-Bx
 
-I would like to see the output of:
+[CCing Jens]
 
-/proc/fs/cifs/DebugData before and after the failure if possible.
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easily accessible to everyone.
 
-In addition, there would be some value in seeing trace information
-(e.g start tracing by
-"trace-cmd record -e cifs" before the failure and then forward the
-debug information displayed by "trace-cmd show" after the failure)
+What's up here? Below regression was reported two weeks ago and I
+forwarded it nearly a week ago, nevertheless the reporter afaics didn't
+get a single reply. Is the issue discussed somewhere else and I just
+missed it? Is the report not accurate for some reason or missing
+something important? Or did the report fall throug the cracks?
 
-On Sun, Feb 27, 2022 at 7:55 AM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> [TLDR: I'm adding the regression report below to regzbot, the Linux
-> kernel regression tracking bot; all text you find below is compiled from
-> a few templates paragraphs you might have encountered already already
-> from similar mails.]
->
-> Hi, this is your Linux kernel regression tracker. Top-posting for once,
-> to make this easily accessible to everyone.
->
-> CCing the regression mailing list, as it should be in the loop for all
-> regressions, as explained here:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
->
-> To be sure below issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, my Linux kernel regression tracking bot:
->
-> #regzbot ^introduced v5.16.11..v5.17-rc5
-> #regzbot title cifs: Failure to access cifs mount of samba share after
-> resume from sleep
-> #regzbot ignore-activity
->
-> Reminder for developers: when fixing the issue, please add a 'Link:'
-> tags pointing to the report (the mail quoted above) using
-> lore.kernel.org/r/, as explained in
-> 'Documentation/process/submitting-patches.rst' and
-> 'Documentation/process/5.Posting.rst'. This allows the bot to connect
-> the report with any patches posted or committed to fix the issue; this
-> again allows the bot to show the current status of regressions and
-> automatically resolve the issue when the fix hits the right tree.
->
-> I'm sending this to everyone that got the initial report, to make them
-> aware of the tracking. I also hope that messages like this motivate
-> people to directly get at least the regression mailing list and ideally
-> even regzbot involved when dealing with regressions, as messages like
-> this wouldn't be needed then. And don't worry, if I need to send other
-> mails regarding this regression only relevant for regzbot I'll send them
-> to the regressions lists only (with a tag in the subject so people can
-> filter them away). With a bit of luck no such messages will be needed
-> anyway.
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+#regzbot poke
+
+On 22.02.22 09:59, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker.
+>=20
+> I noticed a regression report in bugzilla.kernel.org that afaics nobody=
+
+> acted upon since it was reported about a week ago, that's why I decided=
+
+> to forward it to the lists and add a few relevant people to the CC. To
+> quote from https://bugzilla.kernel.org/show_bug.cgi?id=3D215605
+>=20
+>>  Dominik Mierzejewski 2022-02-14 10:36:36 UTC
+>>
+>> Created attachment 300450 [details]
+>> kernel-5.16.8 dmesg with crash
+>>
+>> I'm experiencing kernel crash when running badblocks (fsck.ext4 -c) on=
+ a raid5 md array in my Intel Atom-based NAS box (Thecus N5550):
+>> [  720.911993] kernel: BUG: unable to handle page fault for address: f=
+fffdbc681023bc8
+>> [  720.912073] kernel: #PF: supervisor read access in kernel mode
+>> [  720.912120] kernel: #PF: error_code(0x0000) - not-present page
+>> [  720.912166] kernel: PGD 11ffc6067 P4D 11ffc6067 PUD 0=20
+>> [  720.912213] kernel: Oops: 0000 [#1] PREEMPT SMP NOPTI
+>> [  720.912256] kernel: CPU: 1 PID: 1406 Comm: badblocks Not tainted 5.=
+16.8-200.fc35.x86_64 #1
+>> [  720.912321] kernel: Hardware name: Intel Corporation Milstead Platf=
+orm/Granite Well, BIOS CDV W Series 05 08/27/2015
+>> [  720.912400] kernel: RIP: 0010:kfree+0x58/0x3e0
+>> [  720.912449] kernel: Code: 80 4c 01 e5 0f 82 84 03 00 00 48 c7 c0 00=
+ 00 00 80 48 2b 05 4a 96 3b 01 48 01 c5 48 c1 ed 0c 48 c1 e5 06 48 03 2d =
+28 96 3b 01 <48> 8b 45 08 48 8d 50 ff a8 01 48 0f 45 ea 4
+>> 8 8b 55 08 48 8d 42 ff
+>> [  720.912598] kernel: RSP: 0018:ffff9db4008efaf8 EFLAGS: 00010286
+>> [  720.912648] kernel: RAX: 00006d7bc0000000 RBX: ffff9284c5214800 RCX=
+: ffff9284c3758ff8
+>> [  720.912708] kernel: RDX: ffff9283c1102740 RSI: ffffffffc07af091 RDI=
+: ffff9db4008efd58
+>> [  720.912767] kernel: RBP: ffffdbc681023bc0 R08: ffff9db4008efb88 R09=
+: ffff9284c3759000
+>> [  720.912826] kernel: R10: 0000000000000028 R11: ffff9284c213db48 R12=
+: ffff9db4008efd58
+>> [  720.912885] kernel: R13: ffff9284c213da00 R14: ffff9284c375f000 R15=
+: ffff9db4008efd58
+>> [  720.912945] kernel: FS:  00007f73e6669740(0000) GS:ffff9284dbc80000=
+(0000) knlGS:0000000000000000
+>> [  720.913012] kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 00000000800500=
+33
+>> [  720.913062] kernel: CR2: ffffdbc681023bc8 CR3: 000000005c2cc000 CR4=
+: 00000000000006e0
+>> [  720.913122] kernel: Call Trace:
+>> [  720.913150] kernel:  <TASK>
+>> [  720.913179] kernel:  raid5_make_request+0xb31/0xb90 [raid456]
+>> [  720.913247] kernel:  ? do_wait_intr_irq+0xa0/0xa0
+>> [  720.913292] kernel:  ? __blk_queue_split+0x30a/0x470
+>> [  720.913339] kernel:  md_handle_request+0x119/0x180
+>> [  720.913386] kernel:  md_submit_bio+0x67/0xa0
+>> [  720.913425] kernel:  __submit_bio_fops+0x91/0x160
+>> [  720.913468] kernel:  submit_bio_noacct+0xd7/0x2c0
+>> [  720.913510] kernel:  __blkdev_direct_IO_simple+0x198/0x290
+>> [  720.913576] kernel:  ? __fpu_restore_sig+0x193/0x570
+>> [  720.913623] kernel:  ? sysvec_apic_timer_interrupt+0xaf/0xd0
+>> [  720.913676] kernel:  ? __blkdev_direct_IO_simple+0x290/0x290
+>> [  720.913728] kernel:  generic_file_read_iter+0x9b/0x160
+>> [  720.913775] kernel:  new_sync_read+0x105/0x180
+>> [  720.913820] kernel:  vfs_read+0xf1/0x190
+>> [  720.913858] kernel:  ksys_read+0x4f/0xc0
+>> [  720.913896] kernel:  do_syscall_64+0x38/0x90
+>> [  720.913936] kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xae
+>> [  720.913985] kernel: RIP: 0033:0x7f73e676d772
+>> [  720.914024] kernel: Code: c0 e9 b2 fe ff ff 50 48 8d 3d da 2e 0c 00=
+ e8 b5 f9 01 00 0f 1f 44 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 =
+75 10 0f 05 <48> 3d 00 f0 ff ff 77 56 c3 0f 1f 44 00 00 48 83 ec 28 48 89=
+ 54 24
+>> [  720.914166] kernel: RSP: 002b:00007fff1b8fcbb8 EFLAGS: 00000246 ORI=
+G_RAX: 0000000000000000
+>> [  720.914231] kernel: RAX: ffffffffffffffda RBX: 0000000000000040 RCX=
+: 00007f73e676d772
+>> [  720.917149] kernel: RDX: 0000000000040000 RSI: 00007f73e65d3000 RDI=
+: 0000000000000004
+>> [  720.920078] kernel: RBP: 0000000000001000 R08: 00000000015105c0 R09=
+: 0000000000000080
+>> [  720.922980] kernel: R10: 00007fff1b8fca00 R11: 0000000000000246 R12=
+: 00000015105c0000
+>> [  720.925875] kernel: R13: 0000000000000004 R14: 00007f73e65d3000 R15=
+: 0000000000040000
+>> [  720.928795] kernel:  </TASK>
+>> [  720.931704] kernel: Modules linked in: sctp ip6_udp_tunnel udp_tunn=
+el rpcrdma rdma_cm iw_cm ib_cm ib_core sit tunnel4 ip_tunnel rfkill ipt_R=
+EJECT nf_reject_ipv4 iptable_filter xt_nat iptable_nat nf_nat iptable_man=
+gle nf_conntrack_pptp xt_CT iptable_raw xt_multiport xt_set ip6t_REJECT n=
+f_reject_ipv6 xt_LOG nf_log_syslog xt_limit xt_state xt_conntrack nf_conn=
+track nf_defrag_ipv6 nf_defrag_ipv4 ip6table_filter ip6_tables ip_set_has=
+h_netport ip_set_hash_net ip_set drivetemp it87 nfnetlink hwmon_vid vfat =
+fat iTCO_wdt intel_pmc_bxt iTCO_vendor_support at24 raid456 async_raid6_r=
+ecov async_memcpy async_pq async_xor async_tx intel_powerclamp raid1 core=
+temp snd_hda_codec_realtek snd_hda_codec_generic ledtrig_audio snd_hda_co=
+dec_hdmi snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec =
+snd_hda_core snd_usb_audio i2c_i801 gma500_gfx i2c_smbus snd_usbmidi_lib =
+joydev snd_hwdep snd_rawmidi snd_seq_device mc snd_pcm lpc_ich i2c_algo_b=
+it snd_timer drm_kms_helper snd cec soundcore nfsd auth_rpcgss
+>> [  720.931885] kernel:  nfs_acl lockd grace drm fuse sunrpc zram ip_ta=
+bles hid_logitech_hidpp serio_raw r8152 sata_sil24 video mii hid_jabra e1=
+000e hid_logitech_dj
+>> [  720.952122] kernel: CR2: ffffdbc681023bc8
+>> [  720.955651] kernel: ---[ end trace de2c3d5b971ae71d ]---
+>> [  720.959186] kernel: RIP: 0010:kfree+0x58/0x3e0
+>> [  720.962723] kernel: Code: 80 4c 01 e5 0f 82 84 03 00 00 48 c7 c0 00=
+ 00 00 80 48 2b 05 4a 96 3b 01 48 01 c5 48 c1 ed 0c 48 c1 e5 06 48 03 2d =
+28 96 3b 01 <48> 8b 45 08 48 8d 50 ff a8 01 48 0f 45 ea 48 8b 55 08 48 8d=
+ 42 ff
+>> [  720.966472] kernel: RSP: 0018:ffff9db4008efaf8 EFLAGS: 00010286
+>> [  720.970238] kernel: RAX: 00006d7bc0000000 RBX: ffff9284c5214800 RCX=
+: ffff9284c3758ff8
+>> [  720.973993] kernel: RDX: ffff9283c1102740 RSI: ffffffffc07af091 RDI=
+: ffff9db4008efd58
+>> [  720.977723] kernel: RBP: ffffdbc681023bc0 R08: ffff9db4008efb88 R09=
+: ffff9284c3759000
+>> [  720.981464] kernel: R10: 0000000000000028 R11: ffff9284c213db48 R12=
+: ffff9db4008efd58
+>> [  720.985228] kernel: R13: ffff9284c213da00 R14: ffff9284c375f000 R15=
+: ffff9db4008efd58
+>> [  720.988995] kernel: FS:  00007f73e6669740(0000) GS:ffff9284dbc80000=
+(0000) knlGS:0000000000000000
+>> [  720.992774] kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 00000000800500=
+33
+>> [  720.996535] kernel: CR2: ffffdbc681023bc8 CR3: 000000005c2cc000 CR4=
+: 00000000000006e0
+>>
+>> There was a crash earlier which caused the array to become degraded, b=
+ut I wasn't able to capture the backtrace due to journal corruption. Afte=
+r resyncing the array I tried running fsck on the filesystem and it's cau=
+sing a kernel crash each time.
+>>
+>> I've reproduced the crash with the following kernels:
+>> 5.16.8-200.fc35.x86_64
+>> 5.15.18-200.fc35.x86_64
+>> 5.14.10-300.fc35.x86_64
+>>
+>> It doesn't happen with 5.13 kernels. I've been running fsck.ext4 -c on=
+ the array for the last 10 hours without a crash. It found 27 read errors=
+ which it corrected.
+>>
+>> Steps to reproduce:
+>> 1. fsck.ext4 -c -v /dev/md126
+>> 2. crash
+>>
+>> The array was degraded as a result of a previous crash, but it recover=
+ed itself with no errors reported. Obviously, there remained some read er=
+rors which badblocks found and which the kernel tripped over.
+>>
+>> Crash with 5.14.10 looks different:
+>> Feb 13 17:55:06 kernel: general protection fault, probably for non-can=
+onical address 0xef6dfcf53c7d6fc3: 0000 [#1] SMP NOPTI
+>> Feb 13 17:55:06 kernel: CPU: 2 PID: 831 Comm: md126_raid5 Not tainted =
+5.14.10-300.fc35.x86_64 #1
+>> Feb 13 17:55:06 kernel: Hardware name: Intel Corporation Milstead Plat=
+form/Granite Well, BIOS CDV W Series 05 08/27/2015
+>> Feb 13 17:55:06 kernel: RIP: 0010:bio_endio+0x87/0x130
+>> Feb 13 17:55:06 kernel: Code: 02 00 48 8b 45 08 48 85 c0 74 09 0f b7 5=
+5 14 f6 c6 01 75 2f 48 81 7d 38 50 48 5e bb 75 38 0f b6 45 1a 48 8b 5d 40=
+ 84 c0 74 09 <80> 7b 1a 00 75 03 88 43 1a 48 89 ef 48 89 dd e8 d5 fe ff f=
+f e9 6a
+>> Feb 13 17:55:06 kernel: RSP: 0000:ffffa5bb80597b48 EFLAGS: 00010206
+>> Feb 13 17:55:06 kernel: RAX: 000000000000000a RBX: ef6dfcf53c7d6fa9 RC=
+X: ffff92b840865b50
+>> Feb 13 17:55:06 kernel: RDX: 0000000000000082 RSI: ffff92b8497f46c0 RD=
+I: ffff92b84881f180
+>> Feb 13 17:55:06 kernel: RBP: ffff92b8497f46c0 R08: 0000000000000001 R0=
+9: 0000000000000000
+>> Feb 13 17:55:06 kernel: R10: ffff92b74a722c01 R11: 0000000000000001 R1=
+2: 0000000000000000
+>> Feb 13 17:55:06 kernel: R13: 0000000000000000 R14: ffff92b74a722cd0 R1=
+5: ffff92b844748860
+>> Feb 13 17:55:06 kernel: FS:  0000000000000000(0000) GS:ffff92b85bd0000=
+0(0000) knlGS:0000000000000000
+>> Feb 13 17:55:06 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050=
+033
+>> Feb 13 17:55:06 kernel: CR2: 0000557d787a2028 CR3: 000000003c194000 CR=
+4: 00000000000006e0
+>> Feb 13 17:55:06 kernel: Call Trace:
+>> Feb 13 17:55:06 kernel:  ops_complete_biofill+0x98/0xe0 [raid456]
+>> Feb 13 17:55:06 kernel:  async_trigger_callback+0x7d/0xc1 [async_tx]
+>> Feb 13 17:55:06 kernel:  raid_run_ops+0x98c/0x15b0 [raid456]
+>> Feb 13 17:55:06 kernel:  ? handle_stripe_clean_event+0x400/0x400 [raid=
+456]
+>> Feb 13 17:55:06 kernel:  handle_stripe+0xe91/0x1dc0 [raid456]
+>> Feb 13 17:55:06 kernel:  handle_active_stripes.constprop.0+0x390/0x560=
+ [raid456]
+>> Feb 13 17:55:06 kernel:  raid5d+0x39d/0x5d0 [raid456]
+>> Feb 13 17:55:06 kernel:  ? prepare_to_wait_event+0x5d/0x170
+>> Feb 13 17:55:06 kernel:  md_thread+0x98/0x140
+>> Feb 13 17:55:06 kernel:  ? finish_wait+0x80/0x80
+>> Feb 13 17:55:06 kernel:  ? md_write_inc+0x50/0x50
+>> Feb 13 17:55:06 kernel:  kthread+0x124/0x150
+>> Feb 13 17:55:06 kernel:  ? set_kthread_struct+0x40/0x40
+>> Feb 13 17:55:06 kernel:  ret_from_fork+0x1f/0x30
+>> Feb 13 17:55:06 kernel: Modules linked in: rpcrdma rdma_cm iw_cm ib_cm=
+ ib_core rfkill ip6t_REJECT nf_reject_ipv6 ip6table_filter ip6_tables xt_=
+set ipt_REJECT nf_reject_ipv4 xt_LOG nf_log_syslog xt_limit xt_multiport =
+xt_state xt_conntrack iptable_filter xt_nat iptable_nat nf_nat iptable_ma=
+ngle nf_conntrack_pptp xt_CT nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 i=
+ptable_raw ip_set_hash_netport ip_set_hash_net ip_set drivetemp it87 nfne=
+tlink hwmon_vid vfat fat snd_hda_codec_realtek snd_hda_codec_generic ledt=
+rig_audio snd_hda_codec_hdmi iTCO_wdt snd_hda_intel intel_pmc_bxt snd_int=
+el_dspcfg iTCO_vendor_support raid456 snd_intel_sdw_acpi snd_hda_codec as=
+ync_raid6_recov at24 async_memcpy async_pq async_xor async_tx snd_hda_cor=
+e gma500_gfx snd_hwdep i2c_algo_bit drm_kms_helper snd_pcm intel_powercla=
+mp i2c_i801 snd_timer coretemp i2c_smbus snd cec soundcore lpc_ich nfsd a=
+uth_rpcgss nfs_acl lockd drm grace fuse sunrpc ip_tables raid1 serio_raw =
+video sata_sil24 e1000e
+>> Feb 13 17:55:06 kernel: ---[ end trace 97447bed31e596e0 ]---
+>> Feb 13 17:55:06 kernel: RIP: 0010:bio_endio+0x87/0x130
+>> Feb 13 17:55:06 kernel: Code: 02 00 48 8b 45 08 48 85 c0 74 09 0f b7 5=
+5 14 f6 c6 01 75 2f 48 81 7d 38 50 48 5e bb 75 38 0f b6 45 1a 48 8b 5d 40=
+ 84 c0 74 09 <80> 7b 1a 00 75 03 88 43 1a 48 89 ef 48 89 dd e8 d5 fe ff f=
+f e9 6a
+>> Feb 13 17:55:06 kernel: RSP: 0000:ffffa5bb80597b48 EFLAGS: 00010206
+>> Feb 13 17:55:06 kernel: RAX: 000000000000000a RBX: ef6dfcf53c7d6fa9 RC=
+X: ffff92b840865b50
+>> Feb 13 17:55:06 kernel: RDX: 0000000000000082 RSI: ffff92b8497f46c0 RD=
+I: ffff92b84881f180
+>> Feb 13 17:55:06 kernel: RBP: ffff92b8497f46c0 R08: 0000000000000001 R0=
+9: 0000000000000000
+>> Feb 13 17:55:06 kernel: R10: ffff92b74a722c01 R11: 0000000000000001 R1=
+2: 0000000000000000
+>> Feb 13 17:55:06 kernel: R13: 0000000000000000 R14: ffff92b74a722cd0 R1=
+5: ffff92b844748860
+>> Feb 13 17:55:06 kernel: FS:  0000000000000000(0000) GS:ffff92b85bd0000=
+0(0000) knlGS:0000000000000000
+>> Feb 13 17:55:06 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050=
+033
+>> Feb 13 17:55:06 kernel: CR2: 0000557d787a2028 CR3: 000000003c194000 CR=
+4: 00000000000006e0
+>> Feb 13 17:55:06 kernel: ------------[ cut here ]------------
+>> Feb 13 17:55:06 kernel: WARNING: CPU: 2 PID: 831 at kernel/exit.c:739 =
+do_exit+0x37/0xa90
+>> Feb 13 17:55:06 kernel: Modules linked in: rpcrdma rdma_cm iw_cm ib_cm=
+ ib_core rfkill ip6t_REJECT nf_reject_ipv6 ip6table_filter ip6_tables xt_=
+set ipt_REJECT nf_reject_ipv4 xt_LOG nf_log_syslog xt_limit xt_multiport =
+xt_state xt_conntrack iptable_filter xt_nat iptable_nat nf_nat iptable_ma=
+ngle nf_conntrack_pptp xt_CT nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 i=
+ptable_raw ip_set_hash_netport ip_set_hash_net ip_set drivetemp it87 nfne=
+tlink hwmon_vid vfat fat snd_hda_codec_realtek snd_hda_codec_generic ledt=
+rig_audio snd_hda_codec_hdmi iTCO_wdt snd_hda_intel intel_pmc_bxt snd_int=
+el_dspcfg iTCO_vendor_support raid456 snd_intel_sdw_acpi snd_hda_codec as=
+ync_raid6_recov at24 async_memcpy async_pq async_xor async_tx snd_hda_cor=
+e gma500_gfx snd_hwdep i2c_algo_bit drm_kms_helper snd_pcm intel_powercla=
+mp i2c_i801 snd_timer coretemp i2c_smbus snd cec soundcore lpc_ich nfsd a=
+uth_rpcgss nfs_acl lockd drm grace fuse sunrpc ip_tables raid1 serio_raw =
+video sata_sil24 e1000e
+>> Feb 13 17:55:06 kernel: CPU: 2 PID: 831 Comm: md126_raid5 Tainted: G  =
+    D           5.14.10-300.fc35.x86_64 #1
+>> Feb 13 17:55:06 kernel: Hardware name: Intel Corporation Milstead Plat=
+form/Granite Well, BIOS CDV W Series 05 08/27/2015
+>> Feb 13 17:55:06 kernel: RIP: 0010:do_exit+0x37/0xa90
+>> Feb 13 17:55:06 kernel: Code: 55 48 89 fd 53 65 48 8b 1c 25 c0 7b 01 0=
+0 48 83 ec 28 48 8b 83 a8 0c 00 00 48 85 c0 74 0e 48 8b 10 48 39 d0 0f 84=
+ 56 04 00 00 <0f> 0b 65 8b 0d a0 2c f3 44 89 c8 25 00 ff ff 00 89 44 24 0=
+c 0f 85
+>> Feb 13 17:55:06 kernel: RSP: 0000:ffffa5bb80597ef8 EFLAGS: 00010212
+>> Feb 13 17:55:06 kernel: RAX: ffffa5bb80597e50 RBX: ffff92b8437d8000 RC=
+X: 0000000000000000
+>> Feb 13 17:55:06 kernel: RDX: ffff92b844217548 RSI: ffff92b85bd18a00 RD=
+I: 000000000000000b
+>> Feb 13 17:55:06 kernel: RBP: 000000000000000b R08: 0000000000000000 R0=
+9: ffffa5bb805977a0
+>> Feb 13 17:55:06 kernel: R10: ffffa5bb80597798 R11: ffffffffbcf47468 R1=
+2: 000000000000000b
+>> Feb 13 17:55:06 kernel: R13: 0000000000000000 R14: ffff92b8437d8000 R1=
+5: 0000000000000000
+>> Feb 13 17:55:06 kernel: FS:  0000000000000000(0000) GS:ffff92b85bd0000=
+0(0000) knlGS:0000000000000000
+>> Feb 13 17:55:06 kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050=
+033
+>> Feb 13 17:55:06 kernel: CR2: 0000557d787a2028 CR3: 000000003c194000 CR=
+4: 00000000000006e0
+>> Feb 13 17:55:06 kernel: Call Trace:
+>> Feb 13 17:55:06 kernel:  ? kthread+0x124/0x150
+>> Feb 13 17:55:06 kernel:  rewind_stack_do_exit+0x17/0x20
+>> Feb 13 17:55:06 kernel: RIP: 0000:0x0
+>> Feb 13 17:55:06 kernel: Code: Unable to access opcode bytes at RIP 0xf=
+fffffffffffffd6.
+>> Feb 13 17:55:06 kernel: RSP: 0000:0000000000000000 EFLAGS: 00000000 OR=
+IG_RAX: 0000000000000000
+>> Feb 13 17:55:06 kernel: RAX: 0000000000000000 RBX: 0000000000000000 RC=
+X: 0000000000000000
+>> Feb 13 17:55:06 kernel: RDX: 0000000000000000 RSI: 0000000000000000 RD=
+I: 0000000000000000
+>> Feb 13 17:55:06 kernel: RBP: 0000000000000000 R08: 0000000000000000 R0=
+9: 0000000000000000
+>> Feb 13 17:55:06 kernel: R10: 0000000000000000 R11: 0000000000000000 R1=
+2: 0000000000000000
+>> Feb 13 17:55:06 kernel: R13: 0000000000000000 R14: 0000000000000000 R1=
+5: 0000000000000000
+>> Feb 13 17:55:06 kernel: ---[ end trace 97447bed31e596e1 ]---
+>>
+>> Downstream bug report: https://bugzilla.redhat.com/show_bug.cgi?id=3D2=
+053936 .
+>=20
+> Could somebody take a look into this? Or was this discussed somewhere
+> else already? Or even fixed?
+>=20
+> FWIW, I searched the list and wondered if these might be related, but I=
+
+> was unable to tell for sure:
+>=20
+> https://lore.kernel.org/all/164244747275.86917.2623783912687807916@rich=
+ardiv.omgwallhack.org/
+> https://lore.kernel.org/all/20211216145222.15370-4-mariusz.tkaczyk@linu=
+x.intel.com/
+>=20
+> Anyway, to get this tracked:
+>=20
+> #regzbot introduced: v5.13..v5.14.10
+> #regzbot from: Dominik Mierzejewski <dominik@greysector.net>
+> #regzbot title: md: unable to handle page fault while running badblocks=
+
+> (fsck.ext4 -c) on a raid5 md array
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D215605
+>=20
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat=
+)
+>=20
 > P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
+> reports on my table. I can only look briefly into most of them and lack=
+
 > knowledge about most of the areas they concern. I thus unfortunately
 > will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
+> that's not the case here; if you think it is, don't hesitate to tell me=
+
+> in a public reply, it's in everyone's interest to set the public record=
+
 > straight.
->
->
-> On 27.02.22 03:36, Satadru Pramanik wrote:
-> > I'm on a x86_64 ubuntu 22.04 system accessing a similar system running
-> > samba Version 4.13.14-Ubuntu. Both systems are on ubuntu mainline
-> > kernel 5.17-rc5.
-> >
-> > I have a samba share mounted from my fstab, and file access works fine.
-> > Upon suspending my system and resuming though, the mounted samba share
-> > is inaccessible, and my dmesg has many "CIFS: VFS: cifs_tree_connect:
-> > could not find superblock: -22" messages.
-> >
-> > Unmounting and remounting the share restores access.
-> >
-> > When I boot into kernel 5.16.11, I do not have this issue. The cifs
-> > share is accessible just fine after a suspend/resume cycle.
-> >
-> > I assume this is a regression with 5.17? Is there any information
-> > worth providing which might help debug and fix this issue?
-> >
-> > Regards,
-> >
-> > Satadru Pramanik
->
-> --
-> Additional information about regzbot:
->
-> If you want to know more about regzbot, check out its web-interface, the
-> getting start guide, and the references documentation:
->
-> https://linux-regtracking.leemhuis.info/regzbot/
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
->
-> The last two documents will explain how you can interact with regzbot
-> yourself if your want to.
->
-> Hint for reporters: when reporting a regression it's in your interest to
-> CC the regression list and tell regzbot about the issue, as that ensures
-> the regression makes it onto the radar of the Linux kernel's regression
-> tracker -- that's in your interest, as it ensures your report won't fall
-> through the cracks unnoticed.
->
-> Hint for developers: you normally don't need to care about regzbot once
-> it's involved. Fix the issue as you normally would, just remember to
-> include 'Link:' tag in the patch descriptions pointing to all reports
-> about the issue. This has been expected from developers even before
-> regzbot showed up for reasons explained in
-> 'Documentation/process/submitting-patches.rst' and
-> 'Documentation/process/5.Posting.rst'.
-
-
-
--- 
-Thanks,
-
-Steve
+>=20
