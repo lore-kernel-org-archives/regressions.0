@@ -1,85 +1,82 @@
-Received: from mail-out-2a.itc.rwth-aachen.de (mail-out-2a.itc.rwth-aachen.de [134.130.5.45])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 141B848B7
-	for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 10:47:26 +0000 (UTC)
-X-IPAS-Result: =?us-ascii?q?A2AcBQBcpxxi/6QagoZaHgEBCxIMQIspkHkhhBSaQwsBA?=
- =?us-ascii?q?QEBAQEBAQEIAUEEAQGFBwKEECc4EwECBAEBAQEDAgMBAQEBAQEDAQEGAQEBA?=
- =?us-ascii?q?QEBBQSBHIUvRoZDAQEBAgEjVgUWGgImAhI3EAYOIIVfrleBMYEBiFSBJwkBg?=
- =?us-ascii?q?QYshzOHEYJQhA8wPoEFAYQMgkuCZQSUR4FwgWB+kiVVgmFGjVycYgeCEVRmo?=
- =?us-ascii?q?BuWQwKRYIcXjzumTAIEAgQFAhaBeIF+Mz6DOVAXAg+ON446gSwCBgsBAQMJg?=
- =?us-ascii?q?jqQUwEB?=
-IronPort-Data: A9a23:Ct1+J6rSGyfF9vGdYIms0fXQchleBmJCZRIvgKrLsJaIsI4StFCzt
- garIBnQMvbYNzT3L9x1bIyw9E8B75KEnIdmHgdtrSFmRSkU+ePIVI+TRqvS04J+DeWeFh49v
- 5VGAjXkBJppJpMJjk71atANlVEliefQAOOU5NfsYkidfyc9IMsaoU8lyrZRbrJA24DjWVvX4
- 4yq+aUzBXf8s9JKGjNMg068gE431BjCkGtwUosWPK0jUPf2zhH5PbpHTU2DByKQrrp8QoZWc
- 93+IISRpQs1yT9wUI//wuajGqE9auW60QCm0hK6UkU56/RIjnRaPq0TbJLwZarL4tmEt4gZ9
- TlDiXC/YQV3I4Ltw88MaiECPTB6Y+5o17bbEEHq5KR/z2WeG5ft6+9xEEE7LcgDpqN+R3tR6
- fxdITxLYh3ra+CemennDLA33oJ5co+yYt93VnJIlFk1Cd4jSJ/FXr6M6sVfxywYnN9SHbPXb
- sEZZDwpYBmojxhnYQ9OUc5hzI9EgFGnfS9Vi13EoZEJ2DLsjw02wJaqFcX8L4niqcJ92xzwS
- nj912f0DwoRM9uc4TGF6HWph/LK2yThV+o6Hb6g89ZugVuO1ikdDwAQWVKnoP6/zEmkVLp3I
- koI+i0ovO4j5kqiQdDVWAexq3qJ+BUbXrJ4HOkz9QuM1rj8+waIHWkHCDBcLdYrrss3Q3om2
- zehm9LvGCwqvqaZRGyQ8p+Koj6ofysYN2kPYWkDVwRty93ippwjyxPGEIpLDqG4lJv2FCv2z
- jTMqzIx750XjMgWx+C48ErBjjaEuJfEVEg26x/RU2bj6Rl2DKagbpCv81/s5+tPPoedSlC2v
- 3UencWaxOUHEZaXk2qRQ40lGbi14OyCBzjVgFpuGZYl9i+xzH2uZ4Zd5Bl7LVtuKMFCZTyBS
- FXethlc/4RSO32xRat6boexFsUxi6nmG9ONfurZYcBDeYNwcwmc1CVvflKLmWTsllU8160yJ
- /+zb8e2Cl4IBKJm0nyyRuEAwfks3C942GC7eHzg5w64zbqTdDuOFfIMdkGRcuB85a/CrAi9H
- 8tjCvZmAi53CIXWChQ7O6ZKRbzWBRDX3azLlvE=
-IronPort-HdrOrdr: A9a23:OoMEaKNht6N59sBcTsSjsMiBIKoaSvp037Eqv3ofdfVwSL37qy
- nOpoV56faaslwssR0b9OxofZPwJE80lqQU3WByB9aftWDd0QPCEGgL1/qH/9SKIUPDH4BmuZ
- uJJMNFebvN5A9B/KHH3DU=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="5.90,142,1643670000"; 
-   d="scan'208";a="3011478"
-Received: from rwthex-s4-a.rwth-ad.de ([134.130.26.164])
-  by mail-in-2a.itc.rwth-aachen.de with ESMTP; 28 Feb 2022 11:46:15 +0100
-Received: from localhost (2a02:908:1069:2f00:f9fe:b87e:4b4b:c4ea) by
- rwthex-s4-a.rwth-ad.de (2a00:8a60:1:e500::26:164) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.15; Mon, 28 Feb 2022 11:46:14 +0100
-Date: Mon, 28 Feb 2022 11:46:13 +0100
-From: Magnus =?utf-8?B?R3Jvw58=?= <magnus.gross@rwth-aachen.de>
-To: <keescook@chromium.org>
-CC: <akpm@linux-foundation.org>, <anthony.yznaga@oracle.com>,
-	<glaubitz@physik.fu-berlin.de>, <linux-fsdevel@vger.kernel.org>,
-	<linux-ia64@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<matoro_bugzilla_kernel@matoro.tk>, <matoro_mailinglist_kernel@matoro.tk>,
-	<regressions@leemhuis.info>, <regressions@lists.linux.dev>,
-	<viro@zeniv.linux.org.uk>
-Subject: Re: regression: Bug 215601 - gcc segv at startup on ia64
-Message-ID: <Yhyn9cjDV8XfXLHm@fractal.localdomain>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF6B559D
+	for <regressions@lists.linux.dev>; Mon, 28 Feb 2022 13:45:52 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nOgLW-0004bS-4O; Mon, 28 Feb 2022 14:45:50 +0100
+Message-ID: <37349299-c47b-1f67-2229-78ae9b9b4488@leemhuis.info>
+Date: Mon, 28 Feb 2022 14:45:47 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <202202260344.63C15C3356@keescook>
-X-Originating-IP: [2a02:908:1069:2f00:f9fe:b87e:4b4b:c4ea]
-X-ClientProxiedBy: rwthex-s1-a.rwth-ad.de (2a00:8a60:1:e500::26:152) To
- rwthex-s4-a.rwth-ad.de (2a00:8a60:1:e500::26:164)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Content-Language: en-BW
+To: David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>
+Cc: netdev <netdev@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Regression are sometimes merged slowly, maybe optimize the downstream
+ interaction?
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646055952;c85c1669;
+X-HE-SMSGID: 1nOgLW-0004bS-4O
 
-> When the kernel tries to map these with a combined allocation, it asks
-> for a giant mmap of the file, but the file is, of course, not at all
-> that large, and the mapping is rejected.
 
-> So... I'm trying to think about how best to deal with this. If I or
-> anyone else can't think of an elegant solution, I'll send a revert for
-> the offending patch next week.
+Hi Jakub, Hi Dave!
 
-Shouldn't we just be able to patch total_mapping_size() again to instead
-sum up all p_memsz fields, instead of comparing minimum and maximum
-p_vaddr?
+I was wondering if you and your downstream maintainers could consider
+slightly optimizing your working habits to get regression fixes from
+downstream git repos a bit quicker into mainline. A slightly different
+timing afaics might already help a lot; or some timing optimizations in
+the interaction with downstream maintainers.
 
-Runtime complexity would be the same as we are iterating through all
-segments already anyway. And I would also argue that is the behaviour
-that one wanted to see in that function anyway.
+I ask, because in my regression tracking work I noticed that quite a few
+regression fixes take a long time towards mainline when they need to go
+through net.git; that imho is especially bad for regressions caused by
+commits in earlier development cycles, as they can only be fixed in new
+stable releases after the fix was mainlined.
 
-If you agree with this, I can post a patch, but I would need to know
-what tree to base it on to avoid merge conflicts with the just merged
-patch from Alexey.
+Often the fixes progress slowly due to the habits of the downstream
+maintainers -- some for example are imho not asking you often enough to
+pull fixes. I guess that might need to be discussed down the road as
+well, but there is something else that imho needs to be addressed first.
 
---
-Magnus
+At least from the outside it often looks like bad timing is the reason
+why some fixes take quite long journey to mainline. Take for example the
+latest pull requests for bluetooth and ipsec:
+
+https://lore.kernel.org/netdev/20220224210838.197787-1-luiz.dentz@gmail.com/
+https://lore.kernel.org/netdev/20220225074733.118664-1-steffen.klassert@secunet.com/
+
+One is from Thursday, the other from early Friday; both contain fixes
+for regressions in earlier mainline releases that afaics need to get
+backported to stable and longterm releases to finally get the regression
+erased from this world. The ipsec fix has been in -next already for a
+while, the bluetooth fix afaics wasn't.
+
+Sadly, both patch sets missed rc6 as Jakub already had sent his pull
+request to Linus on Thursday:
+https://lore.kernel.org/all/20220224195305.1584666-1-kuba@kernel.org/
+
+This is not the first time I noticed such bad timing. That made me
+wonder: would it be possible for you to optimize the workflow here?
+Maybe a simple advice to downstream maintainers could do the trick, e.g.
+"ideally sent pull request by Friday morning[some timezone] at the
+latest, as then the net maintainers can review, merge, and sent them
+onwards to Linus in a pull request later that day".
+
+FWIW, I don't know anything about the inner working of your subsystem,
+if you need more time to review or process merge requests from
+downstream maintainers the "Friday morning" obviously needs to be adjusted.
+
+Or is there something like that already and the timing just has been bad
+a few times when I looked closer?
+
+Ciao, Thorsten
