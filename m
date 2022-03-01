@@ -1,44 +1,13 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB3717E
-	for <regressions@lists.linux.dev>; Tue,  1 Mar 2022 09:26:51 +0000 (UTC)
-Received: by mail-wm1-f54.google.com with SMTP id bg31-20020a05600c3c9f00b00381590dbb33so973228wmb.3
-        for <regressions@lists.linux.dev>; Tue, 01 Mar 2022 01:26:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=CwNOw25w0eCSLAjn+MQUqKV4n92Sac60MXlwSsCxNSA=;
-        b=h5wOaRjHIpwmj59SB2wHFf1rVVOaDJe3tICAMnOKVIbHFxUDWTgNrMZlnA9sTyrvGX
-         UlQVRY5omsB7JXlYr8mtWioFzrHHCqdKghkXNVuoY+4eDzCT75XBZpRz2xH5whyAElhx
-         MmF9j3/izHtCvW8uaMIfGDHmdXtsAHQKHgf8CT0n2p4zSKwacU+K6KbUJqxBG/oy5Vgw
-         eaeDukrtxBGypEgkbFetWa979Ykxp3Wp6xw2J8NaDtrWpAweiWpxH1YtKU19H/LK7/QW
-         gT15MRbdisxbdh+GIJ5E1TFTr70NP3MubsT5xMsIzSPS/NqErQn0GIUU/YnaV00EhnAT
-         vcHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=CwNOw25w0eCSLAjn+MQUqKV4n92Sac60MXlwSsCxNSA=;
-        b=ugJ/w05jHnOTubAE1sMTZT4Pw/FiT+hQgscdtRueqqKhYdLB903UgOTNvVqv/pCL3w
-         of8Wdesyc8mjCE5XXLcvrjZHNb28VedSLewRPM+rQpvtM60YXcX5hvMJV/9SEzPaGk9v
-         +L7Jfs3b96qMEZtfQLkcxVOAh8/7wQHSsOdnDDDS0IfS8i621kmrQ2eB3FMVigCFeciW
-         j0jTKtCGLjG6WL9mt7EZRUK70AR7bslHZJN+y1+GJUuyWduqGdnHTz0D4MziWIfBLvGd
-         CG2HWwqN1v1JRa96lGsUj6yWZWXXojoQW9ZUgNbwpD2r5i48yDNL48KKYCIQcoEhTFAy
-         q3Ug==
-X-Gm-Message-State: AOAM530rzOXkCNxdWW+eVcsD8xOmnG2GwzxpjZr+z/sGwCU9W08oomGR
-	7wI2/g5erH3rJM+G2yuHPnL8u0vFCtw=
-X-Google-Smtp-Source: ABdhPJyIEARYWYlbrONEVEY9g2r1DrqFjOLNd2HMdS+hmkdDffEH7IARrZdxvmJ/pV2syof2ZjiJRA==
-X-Received: by 2002:a05:600c:3486:b0:381:65ec:f8ed with SMTP id a6-20020a05600c348600b0038165ecf8edmr7322722wmq.68.1646126809509;
-        Tue, 01 Mar 2022 01:26:49 -0800 (PST)
-Received: from [192.168.1.10] (4e691f2a.skybroadband.com. [78.105.31.42])
-        by smtp.googlemail.com with ESMTPSA id q17-20020adfea11000000b001e308004bffsm13426873wrm.8.2022.03.01.01.26.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Mar 2022 01:26:48 -0800 (PST)
-Message-ID: <cdfed116-a5ea-0313-ba87-da429a0ac089@googlemail.com>
-Date: Tue, 1 Mar 2022 09:26:45 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14275A03
+	for <regressions@lists.linux.dev>; Tue,  1 Mar 2022 10:06:23 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nOzOZ-00059h-BW; Tue, 01 Mar 2022 11:06:15 +0100
+Message-ID: <792b4bc3-af13-483f-0886-ea56da862172@leemhuis.info>
+Date: Tue, 1 Mar 2022 11:06:14 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -46,123 +15,262 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: bug kernel 5.17, qualcom and intel adapters, unable to reliably
- connect to bluetooth devices
-Content-Language: en-GB
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Chris Murphy <lists@colorremedies.com>,
- Bluetooth <linux-bluetooth@vger.kernel.org>, regressions@lists.linux.dev
-References: <CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i+RE+L2FTXSA@mail.gmail.com>
- <CABBYNZ+9tUKgLyUWM5vkMW8vHxYsXv6DEaDWdHt8xTTs6puGQA@mail.gmail.com>
- <aaeb4131-d177-d41e-617b-b0060cd83c92@googlemail.com>
- <CABBYNZLB+8UzhzttMrKbHW_+-A1EsY9iT5Y55VuOOEPuD4kAHQ@mail.gmail.com>
- <b1a4a920-dbba-58be-72b4-2c95b9b79283@googlemail.com>
- <82216882-463a-8976-e6bc-4a8919107a31@googlemail.com>
- <CABBYNZ+mO1gQgfwhemY9cqbi8vNLm_60A9c1vPYT2tH4rhgFww@mail.gmail.com>
- <a35b4b75-bb64-89c8-bacd-d58ed8576272@googlemail.com>
- <2ce6175c-74ec-8469-80a5-374bd1429542@googlemail.com>
- <CABBYNZJNTOT-mEQe2cfZiEX6A2pR7+sacBqtBRPRZY69YmgtvA@mail.gmail.com>
- <17f2bf7e-1d6b-e090-8926-21a408f2b496@googlemail.com>
- <CABBYNZ+cL4f8xvTJFQGLgqPueE=-UsOtvcPQez0BEsJ5xGppfQ@mail.gmail.com>
- <16cac2c8-c1ca-c8d7-e3d9-5f00be511614@googlemail.com>
- <CABBYNZJQOSZ1fecTRQOX+w8crdiLdr0_tVstgbnyEVq3NaxscQ@mail.gmail.com>
- <6b17bdb5-dddb-e7c7-86f6-2240c6523a81@googlemail.com>
- <CABBYNZ+2Dg+AdnJqpR=wS0juektNapwHcPHBWdZyvSGFT1dVLQ@mail.gmail.com>
-From: Chris Clayton <chris2553@googlemail.com>
-In-Reply-To: <CABBYNZ+2Dg+AdnJqpR=wS0juektNapwHcPHBWdZyvSGFT1dVLQ@mail.gmail.com>
+ Thunderbird/91.5.0
+Subject: Re: Regression are sometimes merged slowly, maybe optimize the
+ downstream interaction?
+Content-Language: en-US
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Steffen Klassert <steffen.klassert@secunet.com>
+References: <37349299-c47b-1f67-2229-78ae9b9b4488@leemhuis.info>
+ <20220228094626.7e116e2c@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20220228094626.7e116e2c@kicinski-fedora-PC1C0HJN.hsd1.ca.comcast.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646129183;a4fbf62c;
+X-HE-SMSGID: 1nOzOZ-00059h-BW
 
-Hi Luiz,
-
-I guess you are hoping for PEBKAC :-)
-
-On 28/02/2022 21:20, Luiz Augusto von Dentz wrote:
-> Hi Chris,
-> 
-> On Mon, Feb 28, 2022 at 1:02 PM Chris Clayton <chris2553@googlemail.com> wrote:
+On 28.02.22 18:46, Jakub Kicinski wrote:
+> On Mon, 28 Feb 2022 14:45:47 +0100 Thorsten Leemhuis wrote:
+>> I was wondering if you and your downstream maintainers could consider
+>> slightly optimizing your working habits to get regression fixes from
+>> downstream git repos a bit quicker into mainline. A slightly different
+>> timing afaics might already help a lot; or some timing optimizations in
+>> the interaction with downstream maintainers.
 >>
->> Hi Luiz,
+>> I ask, because in my regression tracking work I noticed that quite a few
+>> regression fixes take a long time towards mainline when they need to go
+>> through net.git; that imho is especially bad for regressions caused by
+>> commits in earlier development cycles, as they can only be fixed in new
+>> stable releases after the fix was mainlined.
 >>
->> On 28/02/2022 19:34, Luiz Augusto von Dentz wrote:
->>> Hi Chris,
->>>
->>> On Sat, Feb 26, 2022 at 12:04 AM Chris Clayton <chris2553@googlemail.com> wrote:
->>>>
->>>> Hi,
->>>>
->>>> On 24/02/2022 15:16, Luiz Augusto von Dentz wrote:
->>>>>> I'll try another bisection today, but limit its range to changes made in the net/bluetooth directory.
->>>>
->>>> That  bisection has proved very difficult because the bluetooth "service" in kernels at some steps of the bisection were
->>>> completely borked to the extent that blueman's device-manager application wouldn't start and emitted the messages:
->>>>
->>>> blueman-manager 12.00.37 ERROR    Manager:137 on_dbus_name_appeared: Default adapter not found, trying first available.
->>>> blueman-manager 12.00.37 ERROR    Manager:141 on_dbus_name_appeared: No adapter(s) found, exiting
->>>>
->>>> Obviously, I don't know whether the problem I am trying to pinpoint is hiding behind this more fundamental problem with
->>>> the bluetooth "service", so being unable to say whether that kernel was good or bad, I had to skip. There seems to be a
->>>> batch of commits that mean that, whilst the kernel builds okay, hunting down a bluetooth-related problem is not
->>>> possible. Eventually and I cursed and gave up. Whatever was causing this breakage has obviously been fixed.
->>>>
->>>>> Please record the HCI with btmon, it must be producing something since
->>>>> it records even the mgmt commands.
->>>>>
->>>>
->>>> Refreshed by a good night's sleep, I started another bisection (between 5.16 and 5.17-rc1) yesterday morning but this
->>>> time did not limit it to net/bluetooth.  That was going okay until I ran into what I assume is the same batch of borked
->>>> kernels. I've been more persistent this time but have just had a run of 16 steps in which the bluetooth support in the
->>>> kernel is broken so badly that testing bluetooth is not possible. I will push on today, but I've suspended that activity
->>>> to get the hci trace that Luiz has asked for.
->>>>
->>>> Using information from the bisect, I built a kernel that had tested as bad (but not borked). The commit is
->>>> f2b551fad8d8f2ac5e1f810ad595298381e0b0c5. As I've mentioned before, the problem with devices not connecting is
->>>> intermittent - for a given kernel, sometimes a connection works and other times it doesn't. On the first boot of this
->>>> kernel, my bluetooth devices could connect, Attached are 4 files related to this - the output from btmon, and the
->>>> related portions of daemon.log, kern.log and sys.log from /var/log/. Each of the these files is suffixed with ".good".
->>>>
->>>> I then powered down the laptop and booted into the same kernel. This time the bluetooth devices could not connect. Four
->>>> more files are attached for this boot and are suffixed with ".bad". I said in an earlier email that when connection
->>>> fails, there is no output from btmon, so that log is empty. That's still the case, but I guess that fact itself is a
->>>> clue to what the problem might be. What I can add, however, is that if, in that same bad kernel, I unload and then
->>>> reload the btusb module, connections start to work. Maybe that too is a clue. The same unload/load process revives
->>>> bluetooth on a kernel built after a pull of Linus' latest and greatest this morning.
->>>>
->>>> Since I now have a workround, I'm going stop the current bisection that I was doing.  I've done another couple of steps
->>>> this morning and both produced kernels on which I could not test bluetooth and had to tell git bisect to skip. If
->>>> however, I can provide any other diagnostics, please let me know.
->>>>
->>>> Chris
->>>
->>> Can you try with the following patch:
->>>
->>> https://patchwork.kernel.org/project/bluetooth/patch/20220228173918.524733-1-brian.gix@intel.com/
->>>
->>>
->> Sorry, that patch has made no difference. After the first boot my headphones connected okay, but after a power-down and
->> reboot they would not connect without an unload and reload of the btusb module.
+>> Often the fixes progress slowly due to the habits of the downstream
+>> maintainers -- some for example are imho not asking you often enough to
+>> pull fixes. I guess that might need to be discussed down the road as
+>> well, but there is something else that imho needs to be addressed first.
+>>
+>> At least from the outside it often looks like bad timing is the reason
+>> why some fixes take quite long journey to mainline. Take for example the
+>> latest pull requests for bluetooth and ipsec:
+>>
+>> https://lore.kernel.org/netdev/20220224210838.197787-1-luiz.dentz@gmail.com/
+>> https://lore.kernel.org/netdev/20220225074733.118664-1-steffen.klassert@secunet.com/
 > 
-> Can you tell us exactly what steps you are using? Are you applying on
-> top of what, rc6?
+> Yeah, we also narrowly missed the BPF pr a week back :/
+> Or should I say BPF pr missed the net pr..
+
+:-D
+
+I guess things like that will always happen and that is nothing to loose
+sleep over -- but maybe with some optimizations we can reduce the number
+of times they happen.
+
+>> One is from Thursday, the other from early Friday; both contain fixes
+>> for regressions in earlier mainline releases that afaics need to get
+>> backported to stable and longterm releases to finally get the regression
+>> erased from this world. The ipsec fix has been in -next already for a
+>> while, the bluetooth fix afaics wasn't.
+>>
+>> Sadly, both patch sets missed rc6 as Jakub already had sent his pull
+>> request to Linus on Thursday:
+>> https://lore.kernel.org/all/20220224195305.1584666-1-kuba@kernel.org/
+>>
+>> This is not the first time I noticed such bad timing. That made me
+>> wonder: would it be possible for you to optimize the workflow here?
+>> Maybe a simple advice to downstream maintainers could do the trick, e.g.
+>> "ideally sent pull request by Friday morning[some timezone] at the
+>> latest, as then the net maintainers can review, merge, and sent them
+>> onwards to Linus in a pull request later that day".
+>
+> These are fair complaints. We've been sending PRs with fixes every
+> Thursday for, I'd say, a year or so now. If the sub-tree PR is posted 
+> by Wednesday it will definitely make the cut. Either folks don't know 
+> this or they want changes to sit in the networking tree for a couple
+> of days? Hm.
+
+Just wondering: some (most?) of those sub-trees afaics have a stable
+branch included in -next, so would sitting in the networking tree
+actually make much of a difference for them?
+
+>> FWIW, I don't know anything about the inner working of your subsystem,
+>> if you need more time to review or process merge requests from
+>> downstream maintainers the "Friday morning" obviously needs to be adjusted.
+>>
+>> Or is there something like that already and the timing just has been bad
+>> a few times when I looked closer?
 > 
+> I think it's a particularly unfortunate time with a few "missed prs"
+> in a short span of time. When Dave was handling all the prs he used
+> to decide the timing based on contents of the tree, maybe that's 
+> a better model for prioritizing fixes getting to Linus, but I lack 
+> the skills necessary to make such calls.
+> 
+> I'll try to advertise the Wednesday rule more, 
 
-Until I got your patch yesterday, I was using a clone of
-git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git which I update frequently and have been doing so for as
-long as I can remember. Just in case there was a hidden flaw in that tree, I took a new clone yesterday, (so yes, the
-patch was tested on top of rc6) copied over the .config file and applied the patch. Then I built and installed the
-kernel, updated grub, powered off the laptop and booted into the new kernel. Once the laptop had booted and logged in to
-my LXQt desktop, I powered on my headphones and a connection was establisehed almost straight away. I powered the
-headphones off and the disconnection worked fine.
+Thx
 
-Knowing that the problem crops up intermittently, I then rebooted the laptop. When the boot was complete, I then powered
-on my bluetooth headphones an waited for them to connect to the laptop. After about 20 seconds, a connection had not
-been established. I powered off the headphones, used modprobe to unload and then reload the btusb module. When I powered
-on the headphones, a connectiin was established within 2 or 3 seconds.
+> although creating
+> deadlines has proven to lead to rushed work. Which IMHO is much 
+> worse :(
 
-I've booted this laptop countless times over the last few days. Doing the bisect, I didn't mark a commit as good until I
-had done five boots and been able to connect my headphones on each boot. What I can say from that work is that two
-consecutive boots into a working kernel are very rare. I can't remeber an occasion when it took more than two boots to
-establish that a kernel was bad.
+Don't call it a deadline then. :-D But joking aside, I know what you
+mean, and yes, that is a reasonable concern.
 
-Chris
+Maybe one thing could help in here sometimes: if sub-tree maintainers
+with your permission ask Linus to pick up a single patch directly from a
+repo or a list, *if* there is a good reason to get a fix quickly merged.
+
+> [...]
+> Anyway, thanks for raising the issue, and please keep us posted on how
+> things look from your perspective. It's a balancing act, it'd be great
+> if we can improve things over time without sudden changes.
+
+Yeah, it's definitely a balancing act.
+
+And as you asked for how things look from here, let me get back to the
+one issue I already briefly in my mail. To repeat a quote from above:
+
+>> Often the fixes progress slowly due to the habits of the downstream
+>> maintainers -- some for example are imho not asking you often enough to
+>> pull fixes. I guess that might need to be discussed down the road as
+>> well, but there is something else that imho needs to be addressed first.
+
+To give an example, but fwiw: that is in no way special, I've seen
+similar turn of events for a few other regressions fixes in sub-tree of
+net, so it really is just meant as an example for a general issue (sorry
+Steffen).
+
+See this fix:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=a6d95c5a628a09be129f25d5663a7e9db8261f51
+
+The regression was introduced in 5.14-rc1 and the fix was posted on
+2022-01-14, so 46 days ago.
+
+Jiri, who provided the patch, actually wrote "being a regression maybe
+we want the fastest track possible" here:
+https://lore.kernel.org/netdev/20220119091233.pzqdlzpcyicjavk5@dwarf.suse.cz/
+
+Steffen applied the fix 27 days ago:
+https://lore.kernel.org/netdev/20220201064639.GS1223722@gauss3.secunet.de/
+
+Three days later it was in -next. After some time I asked when it will
+get merged, to which Steffen replied "It will be merged with the next
+pull request for the ipsec tree that will happen likely next week."
+https://lore.kernel.org/regressions/20220216110252.GJ17351@gauss3.secunet.de/
+
+He sent that PR on Friday, so the fix will finally be merged to mainline
+on Thursday. If Greg immediately picks it up after -rc7 the issue can
+finally get fixed in 5.15.y and 5.16.y mid next week -- more than 50
+days after the patch for the regression was posted.
+
+Again: I had similar issues with the bluetooth maintainers and the
+wireless maintainers (the latter already seem to have slightly changed
+their workflow to improve things).
+
+Anyway: sure, reviewing takes time and ideally every fix is in -next for
+a while, but I think 50 days is way too long.
+
+Maybe sub-tree maintainers should send PRs more often? Or just tell you
+to directly pick up a fix once they reviewed them to avoid the sub-tree
+and a merge commits that brings in just one patch?
+
+Fwiw, situations like that in the end let to the creation of a docs
+patch that is en-route to 5.18:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=d2b40ba2cce207ecea8a740f71e113f03cc75fd5
+
+To quote:
+
+> +Prioritize work on fixing regressions
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +You should fix any reported regression as quickly as possible, to provide
+> +affected users with a solution in a timely manner and prevent more users from
+> +running into the issue; nevertheless developers need to take enough time and
+> +care to ensure regression fixes do not cause additional damage.
+> +
+> +In the end though, developers should give their best to prevent users from
+> +running into situations where a regression leaves them only three options: "run
+> +a kernel with a regression that seriously impacts usage", "continue running an
+> +outdated and thus potentially insecure kernel version for more than two weeks
+> +after a regression's culprit was identified", and "downgrade to a still
+> +supported kernel series that lack required features".
+> +
+> +How to realize this depends a lot on the situation. Here are a few rules of
+> +thumb for you, in order or importance:
+> +
+> + * Prioritize work on handling regression reports and fixing regression over all
+> +   other Linux kernel work, unless the latter concerns acute security issues or
+> +   bugs causing data loss or damage.
+> +
+> + * Always consider reverting the culprit commits and reapplying them later
+> +   together with necessary fixes, as this might be the least dangerous and
+> +   quickest way to fix a regression.
+> +
+> + * Developers should handle regressions in all supported kernel series, but are
+> +   free to delegate the work to the stable team, if the issue probably at no
+> +   point in time occurred with mainline.
+> +
+> + * Try to resolve any regressions introduced in the current development before
+> +   its end. If you fear a fix might be too risky to apply only days before a new
+> +   mainline release, let Linus decide: submit the fix separately to him as soon
+> +   as possible with the explanation of the situation. He then can make a call
+> +   and postpone the release if necessary, for example if multiple such changes
+> +   show up in his inbox.
+> +
+> + * Address regressions in stable, longterm, or proper mainline releases with
+> +   more urgency than regressions in mainline pre-releases. That changes after
+> +   the release of the fifth pre-release, aka "-rc5": mainline then becomes as
+> +   important, to ensure all the improvements and fixes are ideally tested
+> +   together for at least one week before Linus releases a new mainline version.
+> +
+> + * Fix regressions within two or three days, if they are critical for some
+> +   reason -- for example, if the issue is likely to affect many users of the
+> +   kernel series in question on all or certain architectures. Note, this
+> +   includes mainline, as issues like compile errors otherwise might prevent many
+> +   testers or continuous integration systems from testing the series.
+> +
+> + * Aim to fix regressions within one week after the culprit was identified, if
+> +   the issue was introduced in either:
+> +
+> +    * a recent stable/longterm release
+> +
+> +    * the development cycle of the latest proper mainline release
+> +
+> +   In the latter case (say Linux v5.14), try to address regressions even
+> +   quicker, if the stable series for the predecessor (v5.13) will be abandoned
+> +   soon or already was stamped "End-of-Life" (EOL) -- this usually happens about
+> +   three to four weeks after a new mainline release.
+> +
+> + * Try to fix all other regressions within two weeks after the culprit was
+> +   found. Two or three additional weeks are acceptable for performance
+> +   regressions and other issues which are annoying, but don't prevent anyone
+> +   from running Linux (unless it's an issue in the current development cycle,
+> +   as those should ideally be addressed before the release). A few weeks in
+> +   total are acceptable if a regression can only be fixed with a risky change
+> +   and at the same time is affecting only a few users; as much time is
+> +   also okay if the regression is already present in the second newest longterm
+> +   kernel series.
+> +
+> +Note: The aforementioned time frames for resolving regressions are meant to
+> +include getting the fix tested, reviewed, and merged into mainline, ideally with
+> +the fix being in linux-next at least briefly. This leads to delays you need to
+> +account for.
+> +
+> +Subsystem maintainers are expected to assist in reaching those periods by doing
+> +timely reviews and quick handling of accepted patches. They thus might have to
+> +send git-pull requests earlier or more often than usual; depending on the fix,
+> +it might even be acceptable to skip testing in linux-next. Especially fixes for
+> +regressions in stable and longterm kernels need to be handled quickly, as fixes
+> +need to be merged in mainline before they can be backported to older series.
+> +
+
+The patch description explains some of the reasons for this. Linus was
+CCed on this, sadly didn't state if this is actually what he expects. So
+it still needs to be proven if this holds in the field.
+
+Ciao, Thorsten
