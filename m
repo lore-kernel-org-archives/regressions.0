@@ -1,417 +1,415 @@
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from arashi.greysector.net (arashi.greysector.net [51.68.141.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBADE3FE3
-	for <regressions@lists.linux.dev>; Wed,  2 Mar 2022 17:29:10 +0000 (UTC)
-Received: by mail-vs1-f48.google.com with SMTP id g20so2666874vsb.9
-        for <regressions@lists.linux.dev>; Wed, 02 Mar 2022 09:29:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Rbk0G/1jWtX934ECQnlujvTwdUaSGJqLlpRZKU6guZY=;
-        b=pXlXOeFsQFNRTFIcEGfNzrZX+krnVBaht97V9+Z863nQm1CAAodGxOmDvlOKxE/8vv
-         bmZjTDvCmb/1eR0MIKRlyq7O+Edhzcgy4QzGkYboPP+hcXJSc2DxpNHty4no/86NflXY
-         bpQqF7Os6xeumz2NAGOsDS76QIvnWwsyN8nSd8+HvTo/8Yo9mcXHML/JbB2S1fI77smG
-         bLNCzgMiViI/rjN9Y7DwsyKIg47gdKRoE8EAyZlNQ2TLYQcNGoJQvSEnCABBwmZrJviP
-         bF4q+jIc0+CfaOHasxNPjznZne9DCJySRHEjQITgrcVuaEstnKnzCa/kCn06aaFLquzk
-         z8cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Rbk0G/1jWtX934ECQnlujvTwdUaSGJqLlpRZKU6guZY=;
-        b=l4QAL+Nf//kcwK8LQnxaQ8ckoMcw7Go9PJBUj+NHzd0jPdWs7zrlUgLA0FOPubqBxi
-         P5QGi7vXYrajIkp/piJB5CxlAfeYZLOMMqoqZrbc4KeFR9PIn8EiPMJkSWPkfeKAx2oj
-         WdwAKVhJjHnMJ5qaCZNe6/KKPhGCVrHQR57wRPoWC7EXb1oSi554/FHQIsronTyXeLVS
-         P/4Fr2vZC7FKbczpGw5/9T5mzFoqJRcc2EqMjvehK0ZrzeUL/LXoYVrUmryC3vXutLv8
-         CsYAWL4fBkRKmm89W2fJl9FSNKq2k395lCjgMkgcm429SGfTCm0u/8FZo1b+ihzj5Pe8
-         je2A==
-X-Gm-Message-State: AOAM532BmjdY98QTZTHJCNKDYJ4B1ye+I2XtUJIPm8hBafxXAT/cdGEN
-	mVk0JHwMWEdyQb+A9ylOM7seRkIxugN+BoJEr4A=
-X-Google-Smtp-Source: ABdhPJw+YVD2un2qSpmxzuzYyaTDNFauWAhLcCA6SI9JzhBnW2JykkZH2msdYMYGJ786HwHSXN+rrzTG7F02/7caD8E=
-X-Received: by 2002:a67:6285:0:b0:31e:d5ee:9d78 with SMTP id
- w127-20020a676285000000b0031ed5ee9d78mr1625546vsb.43.1646242149239; Wed, 02
- Mar 2022 09:29:09 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 990A76136
+	for <regressions@lists.linux.dev>; Wed,  2 Mar 2022 22:01:35 +0000 (UTC)
+Received: from sakura.greysector.net (37.30.40.30.nat.umts.dynamic.t-mobile.pl [37.30.40.30])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by arashi.greysector.net (Postfix) with ESMTPSA id AF61A138D;
+	Wed,  2 Mar 2022 22:53:51 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 arashi.greysector.net AF61A138D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=greysector.net;
+	s=default; t=1646258032;
+	bh=+6+RkQe0MbTJpTJIkhDXme85iXcXoTeHCmwWM/geZs0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cDlbIZisp0syaJrp1y3e6Dq1/NN9jfTlDd1EBbl0Dkfoy54wJac3QCN0rK0tu+xdr
+	 H690dWwottkioWtg3OwoUmmiDGiMSJIocVD2ehYFde341AiE2IJggBvDdRnOIrv4tG
+	 OUKZiV6j6eatDggjEz+q82YbrpHp9hw1L8qoN+r4=
+Date: Wed, 2 Mar 2022 22:53:49 +0100
+From: Dominik Mierzejewski <dominik@greysector.net>
+To: Song Liu <song@kernel.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	linux-raid <linux-raid@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Jens Axboe <axboe@kernel.dk>
+Subject: Re: Bug 215605 - [5.14 regression] BUG: unable to handle page fault
+ while running badblocks (fsck.ext4 -c) on a raid5 md array
+Message-ID: <Yh/nbZYmYD6SpZV9@sakura.greysector.net>
+References: <53e7de78-4d27-5089-f159-0d443b354666@leemhuis.info>
+ <35bafd68-b340-dfaa-dd5f-d45843104f91@leemhuis.info>
+ <CAPhsuW44tX0rBpy5c63HgTtRSF=UAAsgv8ZuYE_QTLhi6syXaA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAJjP=Bt52AW_w2sKnM=MbckPkH1hevPMJVWm_Wf+wThmR72YTg@mail.gmail.com>
- <CAH2r5mt_2f==5reyc0HmMLvYJVmP4Enykwauo+LQoFGFbVFeRQ@mail.gmail.com>
- <CAJjP=BvNVOj3KRnhFgk6xiwnxVhxE-sN98-pr6e1Kzc5Xg5EvQ@mail.gmail.com>
- <CAH2r5mvsetx5G+c=8ePh+X8ng7FvMrnuM9+FJ4Sid4b3E+T41Q@mail.gmail.com>
- <CAJjP=BvqZUnJPq=C0OUKbXr=mbJd7a6YDSJC-sNY1j_33_e-uw@mail.gmail.com>
- <CAN05THSGwCKckQoeB6D91iBv0Sed+ethK7tde7GSc1UzS-0OYg@mail.gmail.com>
- <CAJjP=BvcWrF-k_sFxak1mgHAHVVS7_JZow+h_47XB1VzG2+Drw@mail.gmail.com>
- <ebf8c487-0377-834e-fbb7-725cceae1fbb@leemhuis.info> <CAN05THRJJj48ueb34t18Yj=JYuhiwZ8hTvOssX4D6XhNpjx-bg@mail.gmail.com>
- <f7eb4a3e-9799-3fe4-d464-d84dd9e64510@leemhuis.info> <CAJjP=Bus1_ce4vbHXpiou1WrSe8a61U1NzGm4XvN5fYCPGNikA@mail.gmail.com>
- <fe156bb6-c6d2-57da-7f62-57d2972bf1ae@leemhuis.info>
-In-Reply-To: <fe156bb6-c6d2-57da-7f62-57d2972bf1ae@leemhuis.info>
-From: Davyd McColl <davydm@gmail.com>
-Date: Wed, 2 Mar 2022 19:28:57 +0200
-Message-ID: <CAJjP=Btuy5t+kDr1cVgDVtaMP3UPgfqfqDouZknTUVitB+p8qA@mail.gmail.com>
-Subject: Re: Possible regression: unable to mount CIFS 1.0 shares from older
- machines since 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Steve French <smfrench@gmail.com>, ronnie sahlberg <ronniesahlberg@gmail.com>, 
-	CIFS <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAPhsuW44tX0rBpy5c63HgTtRSF=UAAsgv8ZuYE_QTLhi6syXaA@mail.gmail.com>
 
-Hi Thorsten
+Hello!
 
-I can check out and build torvalds/linux at tag 5.17-rc6 without
-reverting, but if I revert 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
-then the build fails with:
-
-fs/cifs/sess.c: In function 'sess_auth_ntlm':
-fs/cifs/sess.c:1287:45: error: passing argument 2 of 'cifs_ssetup_hdr'
-from incompatible pointer type [-Werror=incompatible-pointer-types]
- 1287 |         capabilities = cifs_ssetup_hdr(ses, pSMB);
-      |                                             ^~~~
-      |                                             |
-      |                                             SESSION_SETUP_ANDX
-* {aka union smb_com_session_setup_andx *}
-fs/cifs/sess.c:373:54: note: expected 'struct TCP_Server_Info *' but
-argument is of type 'SESSION_SETUP_ANDX *' {aka 'union
-smb_com_session_setup_andx *'}
-  373 |                              struct TCP_Server_Info *server,
-      |                              ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
-fs/cifs/sess.c:1287:24: error: too few arguments to function 'cifs_ssetup_hdr'
- 1287 |         capabilities = cifs_ssetup_hdr(ses, pSMB);
-      |                        ^~~~~~~~~~~~~~~
-fs/cifs/sess.c:372:14: note: declared here
-  372 | static __u32 cifs_ssetup_hdr(struct cifs_ses *ses,
-      |              ^~~~~~~~~~~~~~~
-
-So this commit doesn't appear to revert easily right now - things have moved ):
-
-The patch I've been using against gentoo-sources also fails to apply
-to v5.17-rc6 ):
-
--d
-
-On Wed, 2 Mar 2022 at 08:58, Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> Hi, this is your Linux kernel regression tracker, once again...
->
-> On 18.02.22 14:30, Davyd McColl wrote:
-> > Apologies for the late response - I didn't see the last bit of the
-> > mail asking for more info.
+On Tuesday, 01 March 2022 at 01:24, Song Liu wrote:
+> On Mon, Feb 28, 2022 at 1:43 AM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
 > >
-> > Thorsten: the only group policy modification I have on my win11
-> > machine (which was
-> > loaded fresh not too long ago) is to enable insecure guest logins,
-> > which is obviously
-> > required for samba shares where the share allows a guest login without
-> > any password.
-> > I have to enable this to browse the shares on my Gentoo machine from the win11
-> > machine anyway.
->
-> Thx for the update. I pointed Linus towards this thread two times now,
-> but he didn't comment on it afaics. CCing him now, maybe that will to
-> the trick. If not, it'll leave me with two options:
->
-> a) give up
-> b) submit a revert for 5.18 to force a discussion of the issue
->
-> I currently tend to do the latter due to the fact that it's something
-> that still works on Win11 with a simple change in the registry. But
-> before that:
->
-> @Steve: what's your option on this? Do you basically agree with what
-> Ronnie stated in
-> https://lore.kernel.org/lkml/CAN05THQbR4d55kx6MEHGcn-iLZKJG1C0vhq19wfo=NrB6q1Apg@mail.gmail.com/
-> To quote:
-> ```
-> > Right now you can likely just revert it. Maybe in the next kernel too.
-> > But in a kernel not too far into the future some of the crypto primitives that
-> > this depended on will simply not exist any more in the linux kernel
-> > and will not be
-> > available through the standard api.
+> > [CCing Jens]
 > >
-> > At that point it is no longer a matter of just reverting the patch but
-> > a matter of
-> > re-importing an equivalent crypto replacement and port cifs.ko to its new api.
+> > Hi, this is your Linux kernel regression tracker. Top-posting for once,
+> > to make this easily accessible to everyone.
 > >
-> > That is a lot of work and maintenance for something that is obsolete.
-> ```
->
-> And Davyd: if you have a minute, could you maybe try running 5.17-rc6
-> (or Linus mainline from git) with
-> 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c reverted and check if
-> everything wrt to cifs continues to work?
->
-> Ciao, Thorsten
->
-> > On Fri, 28 Jan 2022 at 16:02, Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> >>
-> >> On 28.01.22 14:50, ronnie sahlberg wrote:
-> >>> On Fri, Jan 28, 2022 at 11:30 PM Thorsten Leemhuis
-> >>> <regressions@leemhuis.info> wrote:
-> >>>>
-> >>>> Hi, this is your Linux kernel regression tracker speaking.
-> >>>>
-> >>>> Top-posting for once, to make this easy accessible to everyone.
-> >>>>
-> >>>> Davyd, Ronnie, and/or Steve: What the status here? It seems after some
-> >>>> productive debugging back and forth it seems everyone forgot about this.
-> >>>> Or was progress made somewhere and I just missed it?
-> >>>
-> >>> I tried but can not find a system old enough to reproduce.
-> >>> Remember, this is an authentication mechanism that Microsoft begged
-> >>> people to stop using and migrate away from over 20 years ago.
-> >>> Win2k works just fine, as does samba3.0.
-> >>> I have no idea if Samba 2.0 works with current cifs.ko   but then
-> >>> again  I seriously doubt you can even get samba 2.0 to even compile on
-> >>> a modern
-> >>> machine as so many APIs have changed or just gone away since the late 90s.
-> >>>
-> >>> I tried, but there is just so much time you can spend on something
-> >>> that was declared obsolete 20 years ago.
-> >>
-> >> I can fully understand that -- otoh then I'd normally say "well, then
-> >> let's just revert the commit that causes this". But in this case I can
-> >> understand that it might not be wise.
-> >>
-> >> There is one thing that would help me to judge this situation better:
-> >>
-> >> Davyd, did a default Win11 install connect fine with standard settings
-> >> or did you have to modify something in the registry to make it work
-> >> there (which you might have done years ago in case you updated the
-> >> machine!), as Ronnie suspected? Or was this already clarified in this
-> >> thread somewhere and I just missed that (in that case: sorry!)?
-> >>
-> >> Ciao, Thorsten
-> >>
-> >>>> Ciao, Thorsten
-> >>>>
-> >>>> #regzbot poke
-> >>>>
-> >>>>
-> >>>> On 12.01.22 06:49, Davyd McColl wrote:
-> >>>>> Hi Ronnie
-> >>>>>
-> >>>>> The regular fstab line for this mount is:
-> >>>>>
-> >>>>> //mede8er/mede8er  /mnt/mede8er-smb  cifs
-> >>>>> noauto,guest,users,uid=daf,gid=daf,iocharset=utf8,vers=1.0,nobrl,sec=none
-> >>>>>  0  0
-> >>>>>
-> >>>>> Altering the end of the options from "sec=none" to
-> >>>>> "username=guest,sec=ntlmssp" or "guest,sec=ntlmssp" results in failure
-> >>>>> to mount
-> >>>>> (tested on my patched kernel, which still supports the original fstab
-> >>>>> line), with dmesg containing:
-> >>>>>
-> >>>>> [45753.525219] CIFS: VFS: Use of the less secure dialect vers=1.0 is
-> >>>>> not recommended unless required for acc
-> >>>>> ess to very old servers
-> >>>>> [45753.525222] CIFS: Attempting to mount \\mede8er\mede8er
-> >>>>> [45756.861351] CIFS: VFS: Unable to select appropriate authentication method!
-> >>>>> [45756.861361] CIFS: VFS: \\mede8er Send error in SessSetup = -22
-> >>>>> [45756.861395] CIFS: VFS: cifs_mount failed w/return code = -22
-> >>>>>
-> >>>>> There is no way that I know of to set up users for smb auth on this
-> >>>>> device - it only supports guest connections.
-> >>>>>
-> >>>>> -d
-> >>>>>
-> >>>>>
-> >>>>> On Wed, 12 Jan 2022 at 04:32, ronnie sahlberg <ronniesahlberg@gmail.com> wrote:
-> >>>>>>
-> >>>>>> Thanks for the network traces.
-> >>>>>>
-> >>>>>> In the traces, both win11 and linux are not using even NTLM but the
-> >>>>>> even older "share password" authentication mode where you specify a
-> >>>>>> password for the share in the TreeConnect command.
-> >>>>>> That is something I think we should not support at all.
-> >>>>>>
-> >>>>>> What is the exact mount command line you use?
-> >>>>>> Can you try mounting the share using a username and ntlmssp ?
-> >>>>>> I.e. username=your-user,sec=ntlmssp  on the mount command
-> >>>>>>
-> >>>>>> regards
-> >>>>>> ronnie sahlberg
-> >>>>>>
-> >>>>>> On Wed, Jan 12, 2022 at 6:57 AM Davyd McColl <davydm@gmail.com> wrote:
-> >>>>>>>
-> >>>>>>> Hi Steve
-> >>>>>>>
-> >>>>>>> As requested, wireshark captures to the device in question, as well as
-> >>>>>>> the fstab entry I have for the device:
-> >>>>>>> - win11, browsing with explorer
-> >>>>>>> - win11, net use
-> >>>>>>> - unpatched linux 5.16.0 attempt to mount
-> >>>>>>> - patched linux 5.16.0 successful mount
-> >>>>>>> - fstab entry - note that I have to specify samba version 1.0 as the
-> >>>>>>> default has changed and the mount fails otherwise. Explicitly
-> >>>>>>> specifying 2.0 errors and suggests that I should select a different
-> >>>>>>> version.
-> >>>>>>>
-> >>>>>>> -d
-> >>>>>>>
-> >>>>>>> On Tue, 11 Jan 2022 at 00:13, Steve French <smfrench@gmail.com> wrote:
-> >>>>>>>>
-> >>>>>>>> I would be surprised if Windows 11 still negotiates (with default
-> >>>>>>>> registry settings) SMB1 much less NTLMv1 in SMB1, but I have not tried
-> >>>>>>>> Windows 11 with an NTLMv1 only server (they are hard to find - I may
-> >>>>>>>> have an original NT4 and an NT3.5 CD somewhere - might be possible to
-> >>>>>>>> install a VM with NT3.5 but that is really really old and not sure I
-> >>>>>>>> can find those CDs).
-> >>>>>>>>
-> >>>>>>>> Is it possible to send me the wireshark trace (or other network trace)
-> >>>>>>>> of the failing mount from Linux and also the one with the succeeding
-> >>>>>>>> NET USE from Windows 11 to the same server?
-> >>>>>>>>
-> >>>>>>>> Hopefully it is something unrelated to NTLMv1, there has been a LOT of
-> >>>>>>>> pushback across the world, across products in making sure no one uses
-> >>>>>>>> SMB1 anymore.  See e.g.
-> >>>>>>>> https://techcommunity.microsoft.com/t5/storage-at-microsoft/stop-using-smb1/ba-p/425858
-> >>>>>>>> and https://twitter.com/nerdpyle/status/776900804712148993
-> >>>>>>>>
-> >>>>>>>> On Mon, Jan 10, 2022 at 2:30 PM Davyd McColl <davydm@gmail.com> wrote:
-> >>>>>>>>>
-> >>>>>>>>> I don't understand. I tracked down the exact commit where the issue
-> >>>>>>>>> occurs with a 2 hour git bisect. This was after first confirming that
-> >>>>>>>>> my older 5.14 kernel did not display the symptoms. I can still connect
-> >>>>>>>>> to the share via windows 11 explorer. I don't know what else I need to
-> >>>>>>>>> do here to show where the issue was introduced?
-> >>>>>>>>>
-> >>>>>>>>> Apologies for bouncing mails - literally no email client I have seems
-> >>>>>>>>> to be capable of plaintext emails, so every time I forget, I have to
-> >>>>>>>>> find a browser with the gmail web interface to reply.
-> >>>>>>>>>
-> >>>>>>>>> -d
-> >>>>>>>>>
-> >>>>>>>>> On Mon, 10 Jan 2022 at 19:31, Steve French <smfrench@gmail.com> wrote:
-> >>>>>>>>>>
-> >>>>>>>>>> I want to make sure that we don't have an unrelated regression
-> >>>>>>>>>> involved here since NTLMv2 replaced NTLMv1 over 20 years ago (googling
-> >>>>>>>>>> this e.g. I see "NTLMv2, introduced in Windows NT 4.0 SP4 and natively
-> >>>>>>>>>> supported in Windows 2000")  and should be the default for Windows
-> >>>>>>>>>> NT4, Windows 2000 etc. as well as any version of Samba from the last
-> >>>>>>>>>> 15 years+.  I have significant concerns with adding mechanisms that
-> >>>>>>>>>> were asked to be disabled ~19 years ago e.g. see
-> >>>>>>>>>> https://support.microsoft.com/en-us/topic/security-guidance-for-ntlmv1-and-lm-network-authentication-da2168b6-4a31-0088-fb03-f081acde6e73
-> >>>>>>>>>> due to security concerns.
-> >>>>>>>>>>
-> >>>>>>>>>> Can we double check that there are not other issues involved in your example?
-> >>>>>>>>>>
-> >>>>>>>>>> The concerns about NTLMv1 security concerns (and why it should never
-> >>>>>>>>>> be used) are very persuasive e.g. many articles like
-> >>>>>>>>>> https://miriamxyra.com/2017/11/08/stop-using-lan-manager-and-ntlmv1/
-> >>>>>>>>>>
-> >>>>>>>>>> On Mon, Jan 10, 2022 at 7:48 AM Davyd McColl <davydm@gmail.com> wrote:
-> >>>>>>>>>>>
-> >>>>>>>>>>> Good day
-> >>>>>>>>>>>
-> >>>>>>>>>>> I'm following advice from the thread at
-> >>>>>>>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=215375 as to how to report
-> >>>>>>>>>>> this, so please bear with me and redirect me as necessary.
-> >>>>>>>>>>>
-> >>>>>>>>>>> Since commit 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c, I'm unable to
-> >>>>>>>>>>> mount a CIFS 1.0 share ( from a media player: mede8er med600x3d, which
-> >>>>>>>>>>> runs some older linux). Apparently I'm not the only one, according to
-> >>>>>>>>>>> that thread, though the other affected party there is windows-based.
-> >>>>>>>>>>>
-> >>>>>>>>>>> I first logged this in the Gentoo bugtracker
-> >>>>>>>>>>> (https://bugs.gentoo.org/821895) and a reversion patch is available
-> >>>>>>>>>>> there for the time being.
-> >>>>>>>>>>>
-> >>>>>>>>>>> I understand that some of the encryption methods upon which the
-> >>>>>>>>>>> original feature relied are to be removed and, as such, the ability to
-> >>>>>>>>>>> mount these older shares was removed. This is sure to affect anyone
-> >>>>>>>>>>> running older Windows virtual machines (or older, internally-visible
-> >>>>>>>>>>> windows hosts) in addition to anyone attempting to connect to shares
-> >>>>>>>>>>> from esoteric devices like mine.
-> >>>>>>>>>>>
-> >>>>>>>>>>> Whilst I understand the desire to clean up code and remove dead
-> >>>>>>>>>>> branches, I'd really appreciate it if this particular feature remains
-> >>>>>>>>>>> available either by kernel configuration (which suits me fine, but is
-> >>>>>>>>>>> likely to be a hassle for anyone running a binary distribution) or via
-> >>>>>>>>>>> boot parameters. In the mean-time, I'm updating my own sync software
-> >>>>>>>>>>> to support this older device because if I can't sync media to the
-> >>>>>>>>>>> player, the device is not very useful to me.
-> >>>>>>>>>>>
-> >>>>>>>>>>> Thanks
-> >>>>>>>>>>> -d
-> >>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>>
-> >>>>>>>>>> --
-> >>>>>>>>>> Thanks,
-> >>>>>>>>>>
-> >>>>>>>>>> Steve
-> >>>>>>>>>
-> >>>>>>>>>
-> >>>>>>>>>
-> >>>>>>>>> --
-> >>>>>>>>> -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> >>>>>>>>> If you say that getting the money is the most important thing
-> >>>>>>>>> You will spend your life completely wasting your time
-> >>>>>>>>> You will be doing things you don't like doing
-> >>>>>>>>> In order to go on living
-> >>>>>>>>> That is, to go on doing things you don't like doing
-> >>>>>>>>>
-> >>>>>>>>> Which is stupid.
-> >>>>>>>>>
-> >>>>>>>>> - Alan Watts
-> >>>>>>>>> https://www.youtube.com/watch?v=-gXTZM_uPMY
-> >>>>>>>>>
-> >>>>>>>>> Quidquid latine dictum sit, altum sonatur.
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>>
-> >>>>>>>> --
-> >>>>>>>> Thanks,
-> >>>>>>>>
-> >>>>>>>> Steve
-> >>>>>>>
-> >>>>>>>
-> >>>>>>>
-> >>>>>>> --
-> >>>>>>> -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> >>>>>>> If you say that getting the money is the most important thing
-> >>>>>>> You will spend your life completely wasting your time
-> >>>>>>> You will be doing things you don't like doing
-> >>>>>>> In order to go on living
-> >>>>>>> That is, to go on doing things you don't like doing
-> >>>>>>>
-> >>>>>>> Which is stupid.
-> >>>>>>>
-> >>>>>>> - Alan Watts
-> >>>>>>> https://www.youtube.com/watch?v=-gXTZM_uPMY
-> >>>>>>>
-> >>>>>>> Quidquid latine dictum sit, altum sonatur.
-> >>>>>
-> >>>>>
-> >>>>>
-> >>>>
-> >>>
-> >
-> >
-> >
->
+> > What's up here? Below regression was reported two weeks ago and I
+> > forwarded it nearly a week ago, nevertheless the reporter afaics didn't
+> > get a single reply. Is the issue discussed somewhere else and I just
+> > missed it? Is the report not accurate for some reason or missing
+> > something important? Or did the report fall throug the cracks?
+>=20
+> Sorry for the late reply. I was on vacation last week.
+
+No problem, thanks for responding.
+
+[...]
+> > On 22.02.22 09:59, Thorsten Leemhuis wrote:
+> > > Hi, this is your Linux kernel regression tracker.
+> > >
+> > > I noticed a regression report in bugzilla.kernel.org that afaics nobo=
+dy
+> > > acted upon since it was reported about a week ago, that's why I decid=
+ed
+> > > to forward it to the lists and add a few relevant people to the CC. To
+> > > quote from https://bugzilla.kernel.org/show_bug.cgi?id=3D215605
+> > >
+> > >>  Dominik Mierzejewski 2022-02-14 10:36:36 UTC
+> > >>
+> > >> Created attachment 300450 [details]
+> > >> kernel-5.16.8 dmesg with crash
+> > >>
+> > >> I'm experiencing kernel crash when running badblocks (fsck.ext4 -c) =
+on a raid5 md array in my Intel Atom-based NAS box (Thecus N5550):
+> > >> [  720.911993] kernel: BUG: unable to handle page fault for address:=
+ ffffdbc681023bc8
+> > >> [  720.912073] kernel: #PF: supervisor read access in kernel mode
+> > >> [  720.912120] kernel: #PF: error_code(0x0000) - not-present page
+> > >> [  720.912166] kernel: PGD 11ffc6067 P4D 11ffc6067 PUD 0
+> > >> [  720.912213] kernel: Oops: 0000 [#1] PREEMPT SMP NOPTI
+> > >> [  720.912256] kernel: CPU: 1 PID: 1406 Comm: badblocks Not tainted =
+5.16.8-200.fc35.x86_64 #1
+> > >> [  720.912321] kernel: Hardware name: Intel Corporation Milstead Pla=
+tform/Granite Well, BIOS CDV W Series 05 08/27/2015
+> > >> [  720.912400] kernel: RIP: 0010:kfree+0x58/0x3e0
+> > >> [  720.912449] kernel: Code: 80 4c 01 e5 0f 82 84 03 00 00 48 c7 c0 =
+00 00 00 80 48 2b 05 4a 96 3b 01 48 01 c5 48 c1 ed 0c 48 c1 e5 06 48 03 2d =
+28 96 3b 01 <48> 8b 45 08 48 8d 50 ff a8 01 48 0f 45 ea 4
+> > >> 8 8b 55 08 48 8d 42 ff
+> > >> [  720.912598] kernel: RSP: 0018:ffff9db4008efaf8 EFLAGS: 00010286
+> > >> [  720.912648] kernel: RAX: 00006d7bc0000000 RBX: ffff9284c5214800 R=
+CX: ffff9284c3758ff8
+> > >> [  720.912708] kernel: RDX: ffff9283c1102740 RSI: ffffffffc07af091 R=
+DI: ffff9db4008efd58
+> > >> [  720.912767] kernel: RBP: ffffdbc681023bc0 R08: ffff9db4008efb88 R=
+09: ffff9284c3759000
+> > >> [  720.912826] kernel: R10: 0000000000000028 R11: ffff9284c213db48 R=
+12: ffff9db4008efd58
+> > >> [  720.912885] kernel: R13: ffff9284c213da00 R14: ffff9284c375f000 R=
+15: ffff9db4008efd58
+> > >> [  720.912945] kernel: FS:  00007f73e6669740(0000) GS:ffff9284dbc800=
+00(0000) knlGS:0000000000000000
+> > >> [  720.913012] kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 000000008005=
+0033
+> > >> [  720.913062] kernel: CR2: ffffdbc681023bc8 CR3: 000000005c2cc000 C=
+R4: 00000000000006e0
+> > >> [  720.913122] kernel: Call Trace:
+> > >> [  720.913150] kernel:  <TASK>
+> > >> [  720.913179] kernel:  raid5_make_request+0xb31/0xb90 [raid456]
+> > >> [  720.913247] kernel:  ? do_wait_intr_irq+0xa0/0xa0
+> > >> [  720.913292] kernel:  ? __blk_queue_split+0x30a/0x470
+> > >> [  720.913339] kernel:  md_handle_request+0x119/0x180
+> > >> [  720.913386] kernel:  md_submit_bio+0x67/0xa0
+> > >> [  720.913425] kernel:  __submit_bio_fops+0x91/0x160
+> > >> [  720.913468] kernel:  submit_bio_noacct+0xd7/0x2c0
+> > >> [  720.913510] kernel:  __blkdev_direct_IO_simple+0x198/0x290
+> > >> [  720.913576] kernel:  ? __fpu_restore_sig+0x193/0x570
+> > >> [  720.913623] kernel:  ? sysvec_apic_timer_interrupt+0xaf/0xd0
+> > >> [  720.913676] kernel:  ? __blkdev_direct_IO_simple+0x290/0x290
+> > >> [  720.913728] kernel:  generic_file_read_iter+0x9b/0x160
+> > >> [  720.913775] kernel:  new_sync_read+0x105/0x180
+> > >> [  720.913820] kernel:  vfs_read+0xf1/0x190
+> > >> [  720.913858] kernel:  ksys_read+0x4f/0xc0
+> > >> [  720.913896] kernel:  do_syscall_64+0x38/0x90
+> > >> [  720.913936] kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> > >> [  720.913985] kernel: RIP: 0033:0x7f73e676d772
+> > >> [  720.914024] kernel: Code: c0 e9 b2 fe ff ff 50 48 8d 3d da 2e 0c =
+00 e8 b5 f9 01 00 0f 1f 44 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 =
+75 10 0f 05 <48> 3d 00 f0 ff ff 77 56 c3 0f 1f 44 00 00 48 83 ec 28 48 89 5=
+4 24
+> > >> [  720.914166] kernel: RSP: 002b:00007fff1b8fcbb8 EFLAGS: 00000246 O=
+RIG_RAX: 0000000000000000
+> > >> [  720.914231] kernel: RAX: ffffffffffffffda RBX: 0000000000000040 R=
+CX: 00007f73e676d772
+> > >> [  720.917149] kernel: RDX: 0000000000040000 RSI: 00007f73e65d3000 R=
+DI: 0000000000000004
+> > >> [  720.920078] kernel: RBP: 0000000000001000 R08: 00000000015105c0 R=
+09: 0000000000000080
+> > >> [  720.922980] kernel: R10: 00007fff1b8fca00 R11: 0000000000000246 R=
+12: 00000015105c0000
+> > >> [  720.925875] kernel: R13: 0000000000000004 R14: 00007f73e65d3000 R=
+15: 0000000000040000
+> > >> [  720.928795] kernel:  </TASK>
+> > >> [  720.931704] kernel: Modules linked in: sctp ip6_udp_tunnel udp_tu=
+nnel rpcrdma rdma_cm iw_cm ib_cm ib_core sit tunnel4 ip_tunnel rfkill ipt_R=
+EJECT nf_reject_ipv4 iptable_filter xt_nat iptable_nat nf_nat iptable_mangl=
+e nf_conntrack_pptp xt_CT iptable_raw xt_multiport xt_set ip6t_REJECT nf_re=
+ject_ipv6 xt_LOG nf_log_syslog xt_limit xt_state xt_conntrack nf_conntrack =
+nf_defrag_ipv6 nf_defrag_ipv4 ip6table_filter ip6_tables ip_set_hash_netpor=
+t ip_set_hash_net ip_set drivetemp it87 nfnetlink hwmon_vid vfat fat iTCO_w=
+dt intel_pmc_bxt iTCO_vendor_support at24 raid456 async_raid6_recov async_m=
+emcpy async_pq async_xor async_tx intel_powerclamp raid1 coretemp snd_hda_c=
+odec_realtek snd_hda_codec_generic ledtrig_audio snd_hda_codec_hdmi snd_hda=
+_intel snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_codec snd_hda_core snd_u=
+sb_audio i2c_i801 gma500_gfx i2c_smbus snd_usbmidi_lib joydev snd_hwdep snd=
+_rawmidi snd_seq_device mc snd_pcm lpc_ich i2c_algo_bit snd_timer drm_kms_h=
+elper snd cec soundcore nfsd auth_rpcgss
+> > >> [  720.931885] kernel:  nfs_acl lockd grace drm fuse sunrpc zram ip_=
+tables hid_logitech_hidpp serio_raw r8152 sata_sil24 video mii hid_jabra e1=
+000e hid_logitech_dj
+> > >> [  720.952122] kernel: CR2: ffffdbc681023bc8
+> > >> [  720.955651] kernel: ---[ end trace de2c3d5b971ae71d ]---
+> > >> [  720.959186] kernel: RIP: 0010:kfree+0x58/0x3e0
+> > >> [  720.962723] kernel: Code: 80 4c 01 e5 0f 82 84 03 00 00 48 c7 c0 =
+00 00 00 80 48 2b 05 4a 96 3b 01 48 01 c5 48 c1 ed 0c 48 c1 e5 06 48 03 2d =
+28 96 3b 01 <48> 8b 45 08 48 8d 50 ff a8 01 48 0f 45 ea 48 8b 55 08 48 8d 4=
+2 ff
+> > >> [  720.966472] kernel: RSP: 0018:ffff9db4008efaf8 EFLAGS: 00010286
+> > >> [  720.970238] kernel: RAX: 00006d7bc0000000 RBX: ffff9284c5214800 R=
+CX: ffff9284c3758ff8
+> > >> [  720.973993] kernel: RDX: ffff9283c1102740 RSI: ffffffffc07af091 R=
+DI: ffff9db4008efd58
+> > >> [  720.977723] kernel: RBP: ffffdbc681023bc0 R08: ffff9db4008efb88 R=
+09: ffff9284c3759000
+> > >> [  720.981464] kernel: R10: 0000000000000028 R11: ffff9284c213db48 R=
+12: ffff9db4008efd58
+> > >> [  720.985228] kernel: R13: ffff9284c213da00 R14: ffff9284c375f000 R=
+15: ffff9db4008efd58
+> > >> [  720.988995] kernel: FS:  00007f73e6669740(0000) GS:ffff9284dbc800=
+00(0000) knlGS:0000000000000000
+> > >> [  720.992774] kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 000000008005=
+0033
+> > >> [  720.996535] kernel: CR2: ffffdbc681023bc8 CR3: 000000005c2cc000 C=
+R4: 00000000000006e0
+>=20
+> I tried a few things (injecting badblocks, etc.) but still could not
+> reproduce this issue.
+>=20
+> Hi Dominik,
+>=20
+> Could you please share more information about the array?
+
+Please note that I repaired the array by stopping it and reassembling
+without badblocks maps:
+# mdadm --assemble -U force-no-bbl /dev/md126 /dev/sdb1 /dev/sdc1 /dev/sdd1=
+ /dev/sde1 /dev/sdf1
+
+I ran fsck on it and repaired multiple-owned blocks. It's been running
+smoothly since then, even under kernel 5.16.9. I'm not sure the
+following information will be useful now.
+
+>    mdadm --detail /dev/mdXXX
+
+# mdadm --detail /dev/md126
+/dev/md126:
+           Version : 1.2
+     Creation Time : Sat Oct 19 22:39:14 2019
+        Raid Level : raid5
+        Array Size : 11720531968 (10.92 TiB 12.00 TB)
+     Used Dev Size : 2930132992 (2.73 TiB 3.00 TB)
+      Raid Devices : 5
+     Total Devices : 5
+       Persistence : Superblock is persistent
+
+     Intent Bitmap : Internal
+
+       Update Time : Wed Mar  2 22:29:09 2022
+             State : clean=20
+    Active Devices : 5
+   Working Devices : 5
+    Failed Devices : 0
+     Spare Devices : 0
+
+            Layout : left-symmetric
+        Chunk Size : 512K
+
+Consistency Policy : bitmap
+
+              Name : any:nas
+              UUID : 4fef0683:8f39a12d:eb69f742:b501ef53
+            Events : 71011
+
+    Number   Major   Minor   RaidDevice State
+       6       8       17        0      active sync   /dev/sdb1
+       1       8       33        1      active sync   /dev/sdc1
+       7       8       49        2      active sync   /dev/sdd1
+       3       8       65        3      active sync   /dev/sde1
+       5       8       81        4      active sync   /dev/sdf1
+
+>    mdadm --examine /dev/<devices>
+
+# mdadm --examine /dev/sdb1
+/dev/sdb1:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x1
+     Array UUID : 4fef0683:8f39a12d:eb69f742:b501ef53
+           Name : any:nas
+  Creation Time : Sat Oct 19 22:39:14 2019
+     Raid Level : raid5
+   Raid Devices : 5
+
+ Avail Dev Size : 5860266895 sectors (2.73 TiB 3.00 TB)
+     Array Size : 11720531968 KiB (10.92 TiB 12.00 TB)
+  Used Dev Size : 5860265984 sectors (2.73 TiB 3.00 TB)
+    Data Offset : 264192 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=3D264112 sectors, after=3D911 sectors
+          State : clean
+    Device UUID : 506215d3:7893b583:1b956e6a:532d7751
+
+Internal Bitmap : 8 sectors from superblock
+    Update Time : Wed Mar  2 22:29:09 2022
+       Checksum : b8ce0df8 - correct
+         Events : 71011
+
+         Layout : left-symmetric
+     Chunk Size : 512K
+
+   Device Role : Active device 0
+   Array State : AAAAA ('A' =3D=3D active, '.' =3D=3D missing, 'R' =3D=3D r=
+eplacing)
+# mdadm --examine /dev/sdc1
+/dev/sdc1:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x1
+     Array UUID : 4fef0683:8f39a12d:eb69f742:b501ef53
+           Name : any:nas
+  Creation Time : Sat Oct 19 22:39:14 2019
+     Raid Level : raid5
+   Raid Devices : 5
+
+ Avail Dev Size : 5860266895 sectors (2.73 TiB 3.00 TB)
+     Array Size : 11720531968 KiB (10.92 TiB 12.00 TB)
+  Used Dev Size : 5860265984 sectors (2.73 TiB 3.00 TB)
+    Data Offset : 264192 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=3D264112 sectors, after=3D911 sectors
+          State : clean
+    Device UUID : 9ab16a47:b23435f3:9231fd6b:e7d709d4
+
+Internal Bitmap : 8 sectors from superblock
+    Update Time : Wed Mar  2 22:29:09 2022
+       Checksum : 20c43ebb - correct
+         Events : 71011
+
+         Layout : left-symmetric
+     Chunk Size : 512K
+
+   Device Role : Active device 1
+   Array State : AAAAA ('A' =3D=3D active, '.' =3D=3D missing, 'R' =3D=3D r=
+eplacing)
+# mdadm --examine /dev/sdd1
+/dev/sdd1:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x1
+     Array UUID : 4fef0683:8f39a12d:eb69f742:b501ef53
+           Name : any:nas
+  Creation Time : Sat Oct 19 22:39:14 2019
+     Raid Level : raid5
+   Raid Devices : 5
+
+ Avail Dev Size : 5860266895 sectors (2.73 TiB 3.00 TB)
+     Array Size : 11720531968 KiB (10.92 TiB 12.00 TB)
+  Used Dev Size : 5860265984 sectors (2.73 TiB 3.00 TB)
+    Data Offset : 264192 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=3D264112 sectors, after=3D911 sectors
+          State : clean
+    Device UUID : 44265974:c83d899d:9bab17f4:59a0786e
+
+Internal Bitmap : 8 sectors from superblock
+    Update Time : Wed Mar  2 22:29:09 2022
+       Checksum : 1a8ffefc - correct
+         Events : 71011
+
+         Layout : left-symmetric
+     Chunk Size : 512K
+
+   Device Role : Active device 2
+   Array State : AAAAA ('A' =3D=3D active, '.' =3D=3D missing, 'R' =3D=3D r=
+eplacing)
+# mdadm --examine /dev/sde1
+/dev/sde1:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x1
+     Array UUID : 4fef0683:8f39a12d:eb69f742:b501ef53
+           Name : any:nas
+  Creation Time : Sat Oct 19 22:39:14 2019
+     Raid Level : raid5
+   Raid Devices : 5
+
+ Avail Dev Size : 5860266895 sectors (2.73 TiB 3.00 TB)
+     Array Size : 11720531968 KiB (10.92 TiB 12.00 TB)
+  Used Dev Size : 5860265984 sectors (2.73 TiB 3.00 TB)
+    Data Offset : 264192 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=3D264112 sectors, after=3D911 sectors
+          State : clean
+    Device UUID : 722420f5:3d9c05e0:71bad4ca:add63b08
+
+Internal Bitmap : 8 sectors from superblock
+    Update Time : Wed Mar  2 22:29:09 2022
+       Checksum : 4e53a0c5 - correct
+         Events : 71011
+
+         Layout : left-symmetric
+     Chunk Size : 512K
+
+   Device Role : Active device 3
+   Array State : AAAAA ('A' =3D=3D active, '.' =3D=3D missing, 'R' =3D=3D r=
+eplacing)
+# mdadm --examine /dev/sdf1
+/dev/sdf1:
+          Magic : a92b4efc
+        Version : 1.2
+    Feature Map : 0x1
+     Array UUID : 4fef0683:8f39a12d:eb69f742:b501ef53
+           Name : any:nas
+  Creation Time : Sat Oct 19 22:39:14 2019
+     Raid Level : raid5
+   Raid Devices : 5
+
+ Avail Dev Size : 5860266895 sectors (2.73 TiB 3.00 TB)
+     Array Size : 11720531968 KiB (10.92 TiB 12.00 TB)
+  Used Dev Size : 5860265984 sectors (2.73 TiB 3.00 TB)
+    Data Offset : 264192 sectors
+   Super Offset : 8 sectors
+   Unused Space : before=3D264112 sectors, after=3D911 sectors
+          State : clean
+    Device UUID : 6c2badc9:f7803c8b:9ee398c0:b4e7497d
+
+Internal Bitmap : 8 sectors from superblock
+    Update Time : Wed Mar  2 22:29:09 2022
+       Checksum : 38e9c6af - correct
+         Events : 71011
+
+         Layout : left-symmetric
+     Chunk Size : 512K
+
+   Device Role : Active device 4
+   Array State : AAAAA ('A' =3D=3D active, '.' =3D=3D missing, 'R' =3D=3D r=
+eplacing)
 
 
--- 
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-If you say that getting the money is the most important thing
-You will spend your life completely wasting your time
-You will be doing things you don't like doing
-In order to go on living
-That is, to go on doing things you don't like doing
+Regards,
+Dominik
 
-Which is stupid.
-
-- Alan Watts
-https://www.youtube.com/watch?v=-gXTZM_uPMY
-
-Quidquid latine dictum sit, altum sonatur.
+--=20
+Fedora   https://getfedora.org  |  RPM Fusion  http://rpmfusion.org
+There should be a science of discontent. People need hard times and
+oppression to develop psychic muscles.
+        -- from "Collected Sayings of Muad'Dib" by the Princess Irulan
