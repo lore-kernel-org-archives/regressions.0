@@ -1,289 +1,345 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CE52576
-	for <regressions@lists.linux.dev>; Wed,  2 Mar 2022 06:56:08 +0000 (UTC)
-Received: by mail-yb1-f170.google.com with SMTP id b35so1374087ybi.13
-        for <regressions@lists.linux.dev>; Tue, 01 Mar 2022 22:56:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6rPAnekLzbNk36KECkvK8z0i9G5GfS66p/4TMh/dn2w=;
-        b=PMLv095RVv3uIatU7yXtNUJUIVhdWimLwnzTZuDbgMQR+gsVYyCzAEjud8LYTHKRND
-         7sjYu0nmzwwx7nd9iIy/1TVnz8bM4T9NaQOepevI4yRvysLwalRcGgpM1uaOvhmycnXo
-         bUoehgjQtu2XMTS0YogLVasoe4R+5z76/oVnyXkxhdZ9r7oex2ey1rzdHxSvCofOKeYR
-         UqsnwgZ/zRt7ddrqFVUyQ1qm0WsqiBbGLxC4piOW2yahV2ZJiG8veOFbb9j22z258NRC
-         sBvilGVpPm1GFCqHmC7wBGIrjXmnWe/ZxoU8Jy9m6hikDpluOsGvGiqFoplksf3l4ibP
-         g/nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6rPAnekLzbNk36KECkvK8z0i9G5GfS66p/4TMh/dn2w=;
-        b=YrN3e1lGUxzPvfQqKb3kPSfWajm606umdflwCIIELrCEy1b4BG1TPyzxytehfuzVpR
-         VALprfYhStZFmFhumLrAWocBPj+Hwvj1nL4mvXpADLLW6kkoKn6g+ts0eEikb/7Q0wu/
-         ayFaivNup+zkT/wZcxZdUsZ+gyy1x5vXGtuZ9bcjFcoRdG7JaO5S5sBi2AJ38j5IZtao
-         UsXI0UkDRSumPNdZ/QjE8m53rGJaAANaGebOZcYu/Sk98qMEr7/7zyNuzTfrdFYVhH6W
-         fnLZF/nkH11ZVPowqUib7OA2Bp4KXfcdvalczX3Rz6QMmKfWSuQpou/XF2jZW5E7RU9K
-         M6eA==
-X-Gm-Message-State: AOAM5311ErZsmbXxv1ozBe6iT9VTkwmNj5ugDKyiNPzxk3I85uXSf3/p
-	N3WGQ4htgPBMHa56P1lv+UxdgaE+4ovMOu4Mle4=
-X-Google-Smtp-Source: ABdhPJzB3U4sjBYLQDqUAYIcCkQ9wKWSGZZ5c9AedUoRH1Jz8t6GC7ruhfITx5rmueF8LS93LXwpIvihtmcYxAT7hc8=
-X-Received: by 2002:a25:2597:0:b0:628:7f84:3138 with SMTP id
- l145-20020a252597000000b006287f843138mr5573036ybl.41.1646204167727; Tue, 01
- Mar 2022 22:56:07 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E47762576
+	for <regressions@lists.linux.dev>; Wed,  2 Mar 2022 07:36:04 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nPIwD-0002nj-TX; Wed, 02 Mar 2022 07:58:17 +0100
+Message-ID: <fe156bb6-c6d2-57da-7f62-57d2972bf1ae@leemhuis.info>
+Date: Wed, 2 Mar 2022 07:58:17 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i+RE+L2FTXSA@mail.gmail.com>
- <b1a4a920-dbba-58be-72b4-2c95b9b79283@googlemail.com> <82216882-463a-8976-e6bc-4a8919107a31@googlemail.com>
- <CABBYNZ+mO1gQgfwhemY9cqbi8vNLm_60A9c1vPYT2tH4rhgFww@mail.gmail.com>
- <a35b4b75-bb64-89c8-bacd-d58ed8576272@googlemail.com> <2ce6175c-74ec-8469-80a5-374bd1429542@googlemail.com>
- <CABBYNZJNTOT-mEQe2cfZiEX6A2pR7+sacBqtBRPRZY69YmgtvA@mail.gmail.com>
- <17f2bf7e-1d6b-e090-8926-21a408f2b496@googlemail.com> <CABBYNZ+cL4f8xvTJFQGLgqPueE=-UsOtvcPQez0BEsJ5xGppfQ@mail.gmail.com>
- <16cac2c8-c1ca-c8d7-e3d9-5f00be511614@googlemail.com> <CABBYNZJQOSZ1fecTRQOX+w8crdiLdr0_tVstgbnyEVq3NaxscQ@mail.gmail.com>
- <6b17bdb5-dddb-e7c7-86f6-2240c6523a81@googlemail.com> <CABBYNZ+2Dg+AdnJqpR=wS0juektNapwHcPHBWdZyvSGFT1dVLQ@mail.gmail.com>
- <cdfed116-a5ea-0313-ba87-da429a0ac089@googlemail.com> <CABBYNZLnMwod+pgomEfvu83AJ=jM+uqwK9-Eqj6fA9_wXg6HBA@mail.gmail.com>
- <CABBYNZJvQaD4z_pL2YJnu3Ma8MLmxkUqAHMswd8s9XsE5FNMMw@mail.gmail.com>
- <032917a9-0c14-16d3-2751-945b9cd766a3@googlemail.com> <CABBYNZKZZT0Wmzx5YfTWSR7_P--O=8QLOdn7jWKa9x=GjYNgzA@mail.gmail.com>
- <CABBYNZJekcb8wy+Sp7pLPs-usvm8yXPqL+e3RCDv5i9S+cq8dQ@mail.gmail.com> <CABBYNZLSFjVRZf+CTZ0qE+tObaHrDa5rtFvSVuQrwUc1cQWeZA@mail.gmail.com>
-In-Reply-To: <CABBYNZLSFjVRZf+CTZ0qE+tObaHrDa5rtFvSVuQrwUc1cQWeZA@mail.gmail.com>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Tue, 1 Mar 2022 22:55:56 -0800
-Message-ID: <CABBYNZJ_W-SsfBc2m-8dQkzbJ6KHoP_5YoAiED5JewVd17kUAQ@mail.gmail.com>
-Subject: Re: bug kernel 5.17, qualcom and intel adapters, unable to reliably
- connect to bluetooth devices
-To: Chris Clayton <chris2553@googlemail.com>
-Cc: Chris Murphy <lists@colorremedies.com>, Bluetooth <linux-bluetooth@vger.kernel.org>, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: Possible regression: unable to mount CIFS 1.0 shares from older
+ machines since 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
+Content-Language: en-US
+To: Davyd McColl <davydm@gmail.com>, Steve French <smfrench@gmail.com>
+Cc: ronnie sahlberg <ronniesahlberg@gmail.com>,
+ CIFS <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <CAJjP=Bt52AW_w2sKnM=MbckPkH1hevPMJVWm_Wf+wThmR72YTg@mail.gmail.com>
+ <CAH2r5mt_2f==5reyc0HmMLvYJVmP4Enykwauo+LQoFGFbVFeRQ@mail.gmail.com>
+ <CAJjP=BvNVOj3KRnhFgk6xiwnxVhxE-sN98-pr6e1Kzc5Xg5EvQ@mail.gmail.com>
+ <CAH2r5mvsetx5G+c=8ePh+X8ng7FvMrnuM9+FJ4Sid4b3E+T41Q@mail.gmail.com>
+ <CAJjP=BvqZUnJPq=C0OUKbXr=mbJd7a6YDSJC-sNY1j_33_e-uw@mail.gmail.com>
+ <CAN05THSGwCKckQoeB6D91iBv0Sed+ethK7tde7GSc1UzS-0OYg@mail.gmail.com>
+ <CAJjP=BvcWrF-k_sFxak1mgHAHVVS7_JZow+h_47XB1VzG2+Drw@mail.gmail.com>
+ <ebf8c487-0377-834e-fbb7-725cceae1fbb@leemhuis.info>
+ <CAN05THRJJj48ueb34t18Yj=JYuhiwZ8hTvOssX4D6XhNpjx-bg@mail.gmail.com>
+ <f7eb4a3e-9799-3fe4-d464-d84dd9e64510@leemhuis.info>
+ <CAJjP=Bus1_ce4vbHXpiou1WrSe8a61U1NzGm4XvN5fYCPGNikA@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CAJjP=Bus1_ce4vbHXpiou1WrSe8a61U1NzGm4XvN5fYCPGNikA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646206565;e75f0438;
+X-HE-SMSGID: 1nPIwD-0002nj-TX
 
-Hi Chris,
+Hi, this is your Linux kernel regression tracker, once again...
 
-On Tue, Mar 1, 2022 at 6:31 PM Luiz Augusto von Dentz
-<luiz.dentz@gmail.com> wrote:
->
-> Hi Chris,
->
-> On Tue, Mar 1, 2022 at 2:47 PM Luiz Augusto von Dentz
-> <luiz.dentz@gmail.com> wrote:
-> >
-> > Hi Chris,
-> >
-> > On Tue, Mar 1, 2022 at 2:40 PM Luiz Augusto von Dentz
-> > <luiz.dentz@gmail.com> wrote:
-> > >
-> > > Hi Chris,
-> > >
-> > > On Tue, Mar 1, 2022 at 11:40 AM Chris Clayton <chris2553@googlemail.com> wrote:
-> > > >
-> > > > Hi
-> > > >
-> > > > On 01/03/2022 18:57, Luiz Augusto von Dentz wrote:
-> > > > > Hi Chris,
-> > > > >
-> > > > > On Tue, Mar 1, 2022 at 10:34 AM Luiz Augusto von Dentz
-> > > > > <luiz.dentz@gmail.com> wrote:
-> > > > >>
-> > > > >> Hi Chris,
-> > > > >>
-> > > > >> On Tue, Mar 1, 2022 at 1:26 AM Chris Clayton <chris2553@googlemail.com> wrote:
-> > > > >>>
-> > > > >>> Hi Luiz,
-> > > > >>>
-> > > > >>> I guess you are hoping for PEBKAC :-)
-> > > > >>>
-> > > > >>> On 28/02/2022 21:20, Luiz Augusto von Dentz wrote:
-> > > > >>>> Hi Chris,
-> > > > >>>>
-> > > > >>>> On Mon, Feb 28, 2022 at 1:02 PM Chris Clayton <chris2553@googlemail.com> wrote:
-> > > > >>>>>
-> > > > >>>>> Hi Luiz,
-> > > > >>>>>
-> > > > >>>>> On 28/02/2022 19:34, Luiz Augusto von Dentz wrote:
-> > > > >>>>>> Hi Chris,
-> > > > >>>>>>
-> > > > >>>>>> On Sat, Feb 26, 2022 at 12:04 AM Chris Clayton <chris2553@googlemail.com> wrote:
-> > > > >>>>>>>
-> > > > >>>>>>> Hi,
-> > > > >>>>>>>
-> > > > >>>>>>> On 24/02/2022 15:16, Luiz Augusto von Dentz wrote:
-> > > > >>>>>>>>> I'll try another bisection today, but limit its range to changes made in the net/bluetooth directory.
-> > > > >>>>>>>
-> > > > >>>>>>> That  bisection has proved very difficult because the bluetooth "service" in kernels at some steps of the bisection were
-> > > > >>>>>>> completely borked to the extent that blueman's device-manager application wouldn't start and emitted the messages:
-> > > > >>>>>>>
-> > > > >>>>>>> blueman-manager 12.00.37 ERROR    Manager:137 on_dbus_name_appeared: Default adapter not found, trying first available.
-> > > > >>>>>>> blueman-manager 12.00.37 ERROR    Manager:141 on_dbus_name_appeared: No adapter(s) found, exiting
-> > > > >>>>>>>
-> > > > >>>>>>> Obviously, I don't know whether the problem I am trying to pinpoint is hiding behind this more fundamental problem with
-> > > > >>>>>>> the bluetooth "service", so being unable to say whether that kernel was good or bad, I had to skip. There seems to be a
-> > > > >>>>>>> batch of commits that mean that, whilst the kernel builds okay, hunting down a bluetooth-related problem is not
-> > > > >>>>>>> possible. Eventually and I cursed and gave up. Whatever was causing this breakage has obviously been fixed.
-> > > > >>>>>>>
-> > > > >>>>>>>> Please record the HCI with btmon, it must be producing something since
-> > > > >>>>>>>> it records even the mgmt commands.
-> > > > >>>>>>>>
-> > > > >>>>>>>
-> > > > >>>>>>> Refreshed by a good night's sleep, I started another bisection (between 5.16 and 5.17-rc1) yesterday morning but this
-> > > > >>>>>>> time did not limit it to net/bluetooth.  That was going okay until I ran into what I assume is the same batch of borked
-> > > > >>>>>>> kernels. I've been more persistent this time but have just had a run of 16 steps in which the bluetooth support in the
-> > > > >>>>>>> kernel is broken so badly that testing bluetooth is not possible. I will push on today, but I've suspended that activity
-> > > > >>>>>>> to get the hci trace that Luiz has asked for.
-> > > > >>>>>>>
-> > > > >>>>>>> Using information from the bisect, I built a kernel that had tested as bad (but not borked). The commit is
-> > > > >>>>>>> f2b551fad8d8f2ac5e1f810ad595298381e0b0c5. As I've mentioned before, the problem with devices not connecting is
-> > > > >>>>>>> intermittent - for a given kernel, sometimes a connection works and other times it doesn't. On the first boot of this
-> > > > >>>>>>> kernel, my bluetooth devices could connect, Attached are 4 files related to this - the output from btmon, and the
-> > > > >>>>>>> related portions of daemon.log, kern.log and sys.log from /var/log/. Each of the these files is suffixed with ".good".
-> > > > >>>>>>>
-> > > > >>>>>>> I then powered down the laptop and booted into the same kernel. This time the bluetooth devices could not connect. Four
-> > > > >>>>>>> more files are attached for this boot and are suffixed with ".bad". I said in an earlier email that when connection
-> > > > >>>>>>> fails, there is no output from btmon, so that log is empty. That's still the case, but I guess that fact itself is a
-> > > > >>>>>>> clue to what the problem might be. What I can add, however, is that if, in that same bad kernel, I unload and then
-> > > > >>>>>>> reload the btusb module, connections start to work. Maybe that too is a clue. The same unload/load process revives
-> > > > >>>>>>> bluetooth on a kernel built after a pull of Linus' latest and greatest this morning.
-> > > > >>>>>>>
-> > > > >>>>>>> Since I now have a workround, I'm going stop the current bisection that I was doing.  I've done another couple of steps
-> > > > >>>>>>> this morning and both produced kernels on which I could not test bluetooth and had to tell git bisect to skip. If
-> > > > >>>>>>> however, I can provide any other diagnostics, please let me know.
-> > > > >>>>>>>
-> > > > >>>>>>> Chris
-> > > > >>>>>>
-> > > > >>>>>> Can you try with the following patch:
-> > > > >>>>>>
-> > > > >>>>>> https://patchwork.kernel.org/project/bluetooth/patch/20220228173918.524733-1-brian.gix@intel.com/
-> > > > >>>>>>
-> > > > >>>>>>
-> > > > >>>>> Sorry, that patch has made no difference. After the first boot my headphones connected okay, but after a power-down and
-> > > > >>>>> reboot they would not connect without an unload and reload of the btusb module.
-> > > > >>>>
-> > > > >>>> Can you tell us exactly what steps you are using? Are you applying on
-> > > > >>>> top of what, rc6?
-> > > > >>>>
-> > > > >>>
-> > > > >>> Until I got your patch yesterday, I was using a clone of
-> > > > >>> git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git which I update frequently and have been doing so for as
-> > > > >>> long as I can remember. Just in case there was a hidden flaw in that tree, I took a new clone yesterday, (so yes, the
-> > > > >>> patch was tested on top of rc6) copied over the .config file and applied the patch. Then I built and installed the
-> > > > >>> kernel, updated grub, powered off the laptop and booted into the new kernel. Once the laptop had booted and logged in to
-> > > > >>> my LXQt desktop, I powered on my headphones and a connection was establisehed almost straight away. I powered the
-> > > > >>> headphones off and the disconnection worked fine.
-> > > > >>>
-> > > > >>> Knowing that the problem crops up intermittently, I then rebooted the laptop. When the boot was complete, I then powered
-> > > > >>> on my bluetooth headphones an waited for them to connect to the laptop. After about 20 seconds, a connection had not
-> > > > >>> been established. I powered off the headphones, used modprobe to unload and then reload the btusb module. When I powered
-> > > > >>> on the headphones, a connectiin was established within 2 or 3 seconds.
-> > > > >
-> > > > > Ive attempted 5 restart with 5.17.0-0.rc6.109.fc37.x86_64, my headset
-> > > > > was able to reconnect every single time without any problem. The only
-> > > >
-> > > > For your five tests, did it connect on the first boot? As I've said, sometimes it fails to connect on the first boot,
-> > > > but if it succeeds, it has always failed after a power-off and restart. Looking back at the notes I took during the
-> > > > bisect, I've didn't have a single bisection step where I had to boot more more than twice to ascertain that it was a bad
-> > > > kernel. As I said, I didn't mark a kernel as good until I'd had five successful boots.
-> > >
-> > > It did connect every single time.
-> > >
-> > > > > normally, once from gdm and then another time when gnome is loading,
-> > > > > but I assume it is normal nowadays since it appears when switching
-> > > > > session pipewire unregisters its audio endpoints.
-> > > > >
-> > > >
-> > > > I don't use pipewire. Prior to 5.17, bluetooth has worked more or less trouble free for at least 4 years. I've read
-> > > > about pipewire in Linux Magazine but don't see what it would bring to my party except complication.
-> > > >
-> > > > ends on how bluetoothd is being
-> > > > > started or something.
-> > > > >
-> > > >
-> > > > Did you see the warnings that read "Bluetooth: hci0: unexpected event 0xff length: 5 > 0"? That seems to indicate that
-> > > > something is sending events that are unexpected. What effect will that have?  As I said, according to lshw, my system's
-> > > > bluetooth hardware is Intel AX201. Is that what you are testing on?
-> > >
-> > > I have an AX200 on my system, AX201 is very similar so Id be surprised
-> > > if that is the problem, btw Ive also got some unexpected events but
-> > > that didn't stop the headset to reconnect.
-> > >
-> > > > >>> I've booted this laptop countless times over the last few days. Doing the bisect, I didn't mark a commit as good until I
-> > > > >>> had done five boots and been able to connect my headphones on each boot. What I can say from that work is that two
-> > > > >>> consecutive boots into a working kernel are very rare. I can't remeber an occasion when it took more than two boots to
-> > > > >>> establish that a kernel was bad.
-> > > > >>
-> > > > >> Do commands such as bluetoothctl power on or scan on works? Try
-> > > > >> running bluetoothd -dn from a shell (disable bluetooth.service), also
-> > > > >> are there any settings changed in main.conf?
-> > > > >>
-> > > >
-> > > > Sorry, I forgot to answer this question earlier. I haven't changed main.conf. Besides, my bluetooth devices connect
-> > > > successfully every time with 5.16.11 and 5.15.25 kernels. As I've said before, that strongly suggests that there is a
-> > > > code regression in 5.17.
-> > >
-> > > Not saying there isn't something wrong, we have sent a couple of fixes
-> > > that doesn't seem to be merged yet, and we are working on another one
-> > > for fixing the scan:
-> > >
-> > > https://lore.kernel.org/linux-bluetooth/f648f2e11bb3c2974c32e605a85ac3a9fac944f1.camel@redhat.com/T/
-> >
-> > Btw, are you by any chance doing something like hciconfig hci0 up on
-> > your init scripts?
->
-> Looks like I was able to reproduce but I still don't know the cause,
-> anyway the symptom is the following:
->
-> [23412.856410] remove_uuid:2273: hci0: sock 0000000049dcd70a
-> [23412.856467] mgmt_class_complete:2174: hci0: err 0
-> [23412.856470] mgmt_cmd_complete:176: sock 00000000d63e046a
->
-> It looks like the cmd->sk is wrong/corrupted, what is even more
-> strange is that the socket pointer does seem to match previously
-> connected MGMT clients and after a few attempts with btmgmt> power on
-> it does come back to life, very bizarre...
->
-> Can you try to enable some kernel debugs before you start bluetoothd:
->
-> echo "file net/bluetooth/mgmt.c +pfl" > /sys/kernel/debug/dynamic_debug/control
-> echo "file net/bluetooth/mgmt_util.c +pfl" >
-> /sys/kernel/debug/dynamic_debug/control
->
-> Maybe that should give us a clue what triggers it.
+On 18.02.22 14:30, Davyd McColl wrote:
+> Apologies for the late response - I didn't see the last bit of the
+> mail asking for more info.
+> 
+> Thorsten: the only group policy modification I have on my win11
+> machine (which was
+> loaded fresh not too long ago) is to enable insecure guest logins,
+> which is obviously
+> required for samba shares where the share allows a guest login without
+> any password.
+> I have to enable this to browse the shares on my Gentoo machine from the win11
+> machine anyway.
 
-Here is an attempt to fix the problem:
+Thx for the update. I pointed Linus towards this thread two times now,
+but he didn't comment on it afaics. CCing him now, maybe that will to
+the trick. If not, it'll leave me with two options:
 
-https://patchwork.kernel.org/project/bluetooth/patch/20220302064351.225212-1-luiz.dentz@gmail.com/
+a) give up
+b) submit a revert for 5.18 to force a discussion of the issue
 
-Also it probably make more sense to test with the following tree since
-we are using it to push regression fixes:
+I currently tend to do the latter due to the fact that it's something
+that still works on Win11 with a simple change in the registry. But
+before that:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git/
+@Steve: what's your option on this? Do you basically agree with what
+Ronnie stated in
+https://lore.kernel.org/lkml/CAN05THQbR4d55kx6MEHGcn-iLZKJG1C0vhq19wfo=NrB6q1Apg@mail.gmail.com/
+To quote:
+```
+> Right now you can likely just revert it. Maybe in the next kernel too.
+> But in a kernel not too far into the future some of the crypto primitives that
+> this depended on will simply not exist any more in the linux kernel
+> and will not be
+> available through the standard api.
+> 
+> At that point it is no longer a matter of just reverting the patch but
+> a matter of
+> re-importing an equivalent crypto replacement and port cifs.ko to its new api.
+> 
+> That is a lot of work and maintenance for something that is obsolete.
+```
 
-> > > > >>
-> > > > >> --
-> > > > >> Luiz Augusto von Dentz
-> > > > >
-> > > > >
-> > > > >
-> > >
-> > >
-> > >
-> > > --
-> > > Luiz Augusto von Dentz
-> >
-> >
-> >
-> > --
-> > Luiz Augusto von Dentz
->
->
->
-> --
-> Luiz Augusto von Dentz
+And Davyd: if you have a minute, could you maybe try running 5.17-rc6
+(or Linus mainline from git) with
+76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c reverted and check if
+everything wrt to cifs continues to work?
 
+Ciao, Thorsten
 
+> On Fri, 28 Jan 2022 at 16:02, Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+>>
+>> On 28.01.22 14:50, ronnie sahlberg wrote:
+>>> On Fri, Jan 28, 2022 at 11:30 PM Thorsten Leemhuis
+>>> <regressions@leemhuis.info> wrote:
+>>>>
+>>>> Hi, this is your Linux kernel regression tracker speaking.
+>>>>
+>>>> Top-posting for once, to make this easy accessible to everyone.
+>>>>
+>>>> Davyd, Ronnie, and/or Steve: What the status here? It seems after some
+>>>> productive debugging back and forth it seems everyone forgot about this.
+>>>> Or was progress made somewhere and I just missed it?
+>>>
+>>> I tried but can not find a system old enough to reproduce.
+>>> Remember, this is an authentication mechanism that Microsoft begged
+>>> people to stop using and migrate away from over 20 years ago.
+>>> Win2k works just fine, as does samba3.0.
+>>> I have no idea if Samba 2.0 works with current cifs.ko   but then
+>>> again  I seriously doubt you can even get samba 2.0 to even compile on
+>>> a modern
+>>> machine as so many APIs have changed or just gone away since the late 90s.
+>>>
+>>> I tried, but there is just so much time you can spend on something
+>>> that was declared obsolete 20 years ago.
+>>
+>> I can fully understand that -- otoh then I'd normally say "well, then
+>> let's just revert the commit that causes this". But in this case I can
+>> understand that it might not be wise.
+>>
+>> There is one thing that would help me to judge this situation better:
+>>
+>> Davyd, did a default Win11 install connect fine with standard settings
+>> or did you have to modify something in the registry to make it work
+>> there (which you might have done years ago in case you updated the
+>> machine!), as Ronnie suspected? Or was this already clarified in this
+>> thread somewhere and I just missed that (in that case: sorry!)?
+>>
+>> Ciao, Thorsten
+>>
+>>>> Ciao, Thorsten
+>>>>
+>>>> #regzbot poke
+>>>>
+>>>>
+>>>> On 12.01.22 06:49, Davyd McColl wrote:
+>>>>> Hi Ronnie
+>>>>>
+>>>>> The regular fstab line for this mount is:
+>>>>>
+>>>>> //mede8er/mede8er  /mnt/mede8er-smb  cifs
+>>>>> noauto,guest,users,uid=daf,gid=daf,iocharset=utf8,vers=1.0,nobrl,sec=none
+>>>>>  0  0
+>>>>>
+>>>>> Altering the end of the options from "sec=none" to
+>>>>> "username=guest,sec=ntlmssp" or "guest,sec=ntlmssp" results in failure
+>>>>> to mount
+>>>>> (tested on my patched kernel, which still supports the original fstab
+>>>>> line), with dmesg containing:
+>>>>>
+>>>>> [45753.525219] CIFS: VFS: Use of the less secure dialect vers=1.0 is
+>>>>> not recommended unless required for acc
+>>>>> ess to very old servers
+>>>>> [45753.525222] CIFS: Attempting to mount \\mede8er\mede8er
+>>>>> [45756.861351] CIFS: VFS: Unable to select appropriate authentication method!
+>>>>> [45756.861361] CIFS: VFS: \\mede8er Send error in SessSetup = -22
+>>>>> [45756.861395] CIFS: VFS: cifs_mount failed w/return code = -22
+>>>>>
+>>>>> There is no way that I know of to set up users for smb auth on this
+>>>>> device - it only supports guest connections.
+>>>>>
+>>>>> -d
+>>>>>
+>>>>>
+>>>>> On Wed, 12 Jan 2022 at 04:32, ronnie sahlberg <ronniesahlberg@gmail.com> wrote:
+>>>>>>
+>>>>>> Thanks for the network traces.
+>>>>>>
+>>>>>> In the traces, both win11 and linux are not using even NTLM but the
+>>>>>> even older "share password" authentication mode where you specify a
+>>>>>> password for the share in the TreeConnect command.
+>>>>>> That is something I think we should not support at all.
+>>>>>>
+>>>>>> What is the exact mount command line you use?
+>>>>>> Can you try mounting the share using a username and ntlmssp ?
+>>>>>> I.e. username=your-user,sec=ntlmssp  on the mount command
+>>>>>>
+>>>>>> regards
+>>>>>> ronnie sahlberg
+>>>>>>
+>>>>>> On Wed, Jan 12, 2022 at 6:57 AM Davyd McColl <davydm@gmail.com> wrote:
+>>>>>>>
+>>>>>>> Hi Steve
+>>>>>>>
+>>>>>>> As requested, wireshark captures to the device in question, as well as
+>>>>>>> the fstab entry I have for the device:
+>>>>>>> - win11, browsing with explorer
+>>>>>>> - win11, net use
+>>>>>>> - unpatched linux 5.16.0 attempt to mount
+>>>>>>> - patched linux 5.16.0 successful mount
+>>>>>>> - fstab entry - note that I have to specify samba version 1.0 as the
+>>>>>>> default has changed and the mount fails otherwise. Explicitly
+>>>>>>> specifying 2.0 errors and suggests that I should select a different
+>>>>>>> version.
+>>>>>>>
+>>>>>>> -d
+>>>>>>>
+>>>>>>> On Tue, 11 Jan 2022 at 00:13, Steve French <smfrench@gmail.com> wrote:
+>>>>>>>>
+>>>>>>>> I would be surprised if Windows 11 still negotiates (with default
+>>>>>>>> registry settings) SMB1 much less NTLMv1 in SMB1, but I have not tried
+>>>>>>>> Windows 11 with an NTLMv1 only server (they are hard to find - I may
+>>>>>>>> have an original NT4 and an NT3.5 CD somewhere - might be possible to
+>>>>>>>> install a VM with NT3.5 but that is really really old and not sure I
+>>>>>>>> can find those CDs).
+>>>>>>>>
+>>>>>>>> Is it possible to send me the wireshark trace (or other network trace)
+>>>>>>>> of the failing mount from Linux and also the one with the succeeding
+>>>>>>>> NET USE from Windows 11 to the same server?
+>>>>>>>>
+>>>>>>>> Hopefully it is something unrelated to NTLMv1, there has been a LOT of
+>>>>>>>> pushback across the world, across products in making sure no one uses
+>>>>>>>> SMB1 anymore.  See e.g.
+>>>>>>>> https://techcommunity.microsoft.com/t5/storage-at-microsoft/stop-using-smb1/ba-p/425858
+>>>>>>>> and https://twitter.com/nerdpyle/status/776900804712148993
+>>>>>>>>
+>>>>>>>> On Mon, Jan 10, 2022 at 2:30 PM Davyd McColl <davydm@gmail.com> wrote:
+>>>>>>>>>
+>>>>>>>>> I don't understand. I tracked down the exact commit where the issue
+>>>>>>>>> occurs with a 2 hour git bisect. This was after first confirming that
+>>>>>>>>> my older 5.14 kernel did not display the symptoms. I can still connect
+>>>>>>>>> to the share via windows 11 explorer. I don't know what else I need to
+>>>>>>>>> do here to show where the issue was introduced?
+>>>>>>>>>
+>>>>>>>>> Apologies for bouncing mails - literally no email client I have seems
+>>>>>>>>> to be capable of plaintext emails, so every time I forget, I have to
+>>>>>>>>> find a browser with the gmail web interface to reply.
+>>>>>>>>>
+>>>>>>>>> -d
+>>>>>>>>>
+>>>>>>>>> On Mon, 10 Jan 2022 at 19:31, Steve French <smfrench@gmail.com> wrote:
+>>>>>>>>>>
+>>>>>>>>>> I want to make sure that we don't have an unrelated regression
+>>>>>>>>>> involved here since NTLMv2 replaced NTLMv1 over 20 years ago (googling
+>>>>>>>>>> this e.g. I see "NTLMv2, introduced in Windows NT 4.0 SP4 and natively
+>>>>>>>>>> supported in Windows 2000")  and should be the default for Windows
+>>>>>>>>>> NT4, Windows 2000 etc. as well as any version of Samba from the last
+>>>>>>>>>> 15 years+.  I have significant concerns with adding mechanisms that
+>>>>>>>>>> were asked to be disabled ~19 years ago e.g. see
+>>>>>>>>>> https://support.microsoft.com/en-us/topic/security-guidance-for-ntlmv1-and-lm-network-authentication-da2168b6-4a31-0088-fb03-f081acde6e73
+>>>>>>>>>> due to security concerns.
+>>>>>>>>>>
+>>>>>>>>>> Can we double check that there are not other issues involved in your example?
+>>>>>>>>>>
+>>>>>>>>>> The concerns about NTLMv1 security concerns (and why it should never
+>>>>>>>>>> be used) are very persuasive e.g. many articles like
+>>>>>>>>>> https://miriamxyra.com/2017/11/08/stop-using-lan-manager-and-ntlmv1/
+>>>>>>>>>>
+>>>>>>>>>> On Mon, Jan 10, 2022 at 7:48 AM Davyd McColl <davydm@gmail.com> wrote:
+>>>>>>>>>>>
+>>>>>>>>>>> Good day
+>>>>>>>>>>>
+>>>>>>>>>>> I'm following advice from the thread at
+>>>>>>>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=215375 as to how to report
+>>>>>>>>>>> this, so please bear with me and redirect me as necessary.
+>>>>>>>>>>>
+>>>>>>>>>>> Since commit 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c, I'm unable to
+>>>>>>>>>>> mount a CIFS 1.0 share ( from a media player: mede8er med600x3d, which
+>>>>>>>>>>> runs some older linux). Apparently I'm not the only one, according to
+>>>>>>>>>>> that thread, though the other affected party there is windows-based.
+>>>>>>>>>>>
+>>>>>>>>>>> I first logged this in the Gentoo bugtracker
+>>>>>>>>>>> (https://bugs.gentoo.org/821895) and a reversion patch is available
+>>>>>>>>>>> there for the time being.
+>>>>>>>>>>>
+>>>>>>>>>>> I understand that some of the encryption methods upon which the
+>>>>>>>>>>> original feature relied are to be removed and, as such, the ability to
+>>>>>>>>>>> mount these older shares was removed. This is sure to affect anyone
+>>>>>>>>>>> running older Windows virtual machines (or older, internally-visible
+>>>>>>>>>>> windows hosts) in addition to anyone attempting to connect to shares
+>>>>>>>>>>> from esoteric devices like mine.
+>>>>>>>>>>>
+>>>>>>>>>>> Whilst I understand the desire to clean up code and remove dead
+>>>>>>>>>>> branches, I'd really appreciate it if this particular feature remains
+>>>>>>>>>>> available either by kernel configuration (which suits me fine, but is
+>>>>>>>>>>> likely to be a hassle for anyone running a binary distribution) or via
+>>>>>>>>>>> boot parameters. In the mean-time, I'm updating my own sync software
+>>>>>>>>>>> to support this older device because if I can't sync media to the
+>>>>>>>>>>> player, the device is not very useful to me.
+>>>>>>>>>>>
+>>>>>>>>>>> Thanks
+>>>>>>>>>>> -d
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> --
+>>>>>>>>>> Thanks,
+>>>>>>>>>>
+>>>>>>>>>> Steve
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> --
+>>>>>>>>> -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>>>>>>>>> If you say that getting the money is the most important thing
+>>>>>>>>> You will spend your life completely wasting your time
+>>>>>>>>> You will be doing things you don't like doing
+>>>>>>>>> In order to go on living
+>>>>>>>>> That is, to go on doing things you don't like doing
+>>>>>>>>>
+>>>>>>>>> Which is stupid.
+>>>>>>>>>
+>>>>>>>>> - Alan Watts
+>>>>>>>>> https://www.youtube.com/watch?v=-gXTZM_uPMY
+>>>>>>>>>
+>>>>>>>>> Quidquid latine dictum sit, altum sonatur.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> --
+>>>>>>>> Thanks,
+>>>>>>>>
+>>>>>>>> Steve
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> --
+>>>>>>> -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>>>>>>> If you say that getting the money is the most important thing
+>>>>>>> You will spend your life completely wasting your time
+>>>>>>> You will be doing things you don't like doing
+>>>>>>> In order to go on living
+>>>>>>> That is, to go on doing things you don't like doing
+>>>>>>>
+>>>>>>> Which is stupid.
+>>>>>>>
+>>>>>>> - Alan Watts
+>>>>>>> https://www.youtube.com/watch?v=-gXTZM_uPMY
+>>>>>>>
+>>>>>>> Quidquid latine dictum sit, altum sonatur.
+>>>>>
+>>>>>
+>>>>>
+>>>>
+>>>
+> 
+> 
+> 
 
--- 
-Luiz Augusto von Dentz
