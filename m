@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DF9815
-	for <regressions@lists.linux.dev>; Fri,  4 Mar 2022 06:43:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE60D815
+	for <regressions@lists.linux.dev>; Fri,  4 Mar 2022 07:13:14 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nQ1ey-0006TW-E5; Fri, 04 Mar 2022 07:43:28 +0100
-Message-ID: <ba16b515-80bc-626a-42ca-1083c78eb5aa@leemhuis.info>
-Date: Fri, 4 Mar 2022 07:43:27 +0100
+	id 1nQ27i-00078Q-8L; Fri, 04 Mar 2022 08:13:10 +0100
+Message-ID: <cadc5208-2eb1-beb1-4f6d-d07939072ca3@leemhuis.info>
+Date: Fri, 4 Mar 2022 08:13:08 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,83 +16,124 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: Possible regression: unable to mount CIFS 1.0 shares from older
- machines since 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
 Content-Language: en-US
-To: Steve French <smfrench@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Davyd McColl <davydm@gmail.com>,
- ronnie sahlberg <ronniesahlberg@gmail.com>, CIFS
- <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <CAJjP=Bt52AW_w2sKnM=MbckPkH1hevPMJVWm_Wf+wThmR72YTg@mail.gmail.com>
- <CAH2r5mt_2f==5reyc0HmMLvYJVmP4Enykwauo+LQoFGFbVFeRQ@mail.gmail.com>
- <CAJjP=BvNVOj3KRnhFgk6xiwnxVhxE-sN98-pr6e1Kzc5Xg5EvQ@mail.gmail.com>
- <CAH2r5mvsetx5G+c=8ePh+X8ng7FvMrnuM9+FJ4Sid4b3E+T41Q@mail.gmail.com>
- <CAJjP=BvqZUnJPq=C0OUKbXr=mbJd7a6YDSJC-sNY1j_33_e-uw@mail.gmail.com>
- <CAN05THSGwCKckQoeB6D91iBv0Sed+ethK7tde7GSc1UzS-0OYg@mail.gmail.com>
- <CAJjP=BvcWrF-k_sFxak1mgHAHVVS7_JZow+h_47XB1VzG2+Drw@mail.gmail.com>
- <ebf8c487-0377-834e-fbb7-725cceae1fbb@leemhuis.info>
- <CAN05THRJJj48ueb34t18Yj=JYuhiwZ8hTvOssX4D6XhNpjx-bg@mail.gmail.com>
- <f7eb4a3e-9799-3fe4-d464-d84dd9e64510@leemhuis.info>
- <CAJjP=Bus1_ce4vbHXpiou1WrSe8a61U1NzGm4XvN5fYCPGNikA@mail.gmail.com>
- <fe156bb6-c6d2-57da-7f62-57d2972bf1ae@leemhuis.info>
- <CAHk-=wjSBvRk-ksUBOiQzJd=e19UZKvOSZs1UHahK5U0QVh6RQ@mail.gmail.com>
- <CAH2r5mvQnQTDQaci-NbLBjRb=gCPtMewrKhLBOLGrN2_Zpc3Bg@mail.gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
+ stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>,
+ Will McVicker <willmcvicker@google.com>,
+ Sergio Tanzilli <tanzilli@acmesystems.it>
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+ <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
+ <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
+ <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
+ <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
+ <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAH2r5mvQnQTDQaci-NbLBjRb=gCPtMewrKhLBOLGrN2_Zpc3Bg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+In-Reply-To: <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646376210;1defcfb9;
-X-HE-SMSGID: 1nQ1ey-0006TW-E5
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646377994;cb89fc5c;
+X-HE-SMSGID: 1nQ27i-00078Q-8L
 
-On 03.03.22 02:27, Steve French wrote:
-> We have been looking to see if we could setup some VMs for something
-> that old, and we are willing to test against it if it could
-> realistically be setup, but it has been harder than expected.  Ronnie
-> had some ideas and we are willing to experiment more but realistically
-> it is very hard to deal with 'legacy museum style' unless we have some
-> VMs available for old systems.
-> 
-> Feel free to contact Ronnie and me or Shyam etc (offline if easier) if
-> you have ideas on how to setup something like this.   We don't want to
-> be encouraging SMB1, but certainly not NTLMv1 auth with SMB1 given its
-> security weaknesses (especially given the particular uses hackers have
-> made of 25+ year old NTLMv1 weaknesses).
+Hi, this is your Linux kernel regression tracker.
 
-Linus, Steve, thx for your option on this. I not sure if "museum style
-equipment" really applies here, as the hardware seems to be sold in
-2013/2014 and according to the reporter even got a update in 2016. But
-whatever, yes, it's niche thing and what the hw manufacturer did there
-was a bad idea.
-
-Anyway, I'll stop tracking this then.
-
-#regzbot invalid: to niche/risky/old, see Linus and Steve's messages for
-details
-
-> On Wed, Mar 2, 2022 at 6:51 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
+On 16.02.22 15:40, Bartosz Golaszewski wrote:
+> On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
 >>
->> On Tue, Mar 1, 2022 at 10:58 PM Thorsten Leemhuis
->> <regressions@leemhuis.info> wrote:
+>> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
+>> <marcelo.jimenez@gmail.com> wrote:
+>>> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>
+>>>> I am curious about the usecases and how deeply you have built
+>>>> yourselves into this.
 >>>
->>> Thx for the update. I pointed Linus towards this thread two times now,
->>> but he didn't comment on it afaics. CCing him now, maybe that will to
->>> the trick.
+>>> I don't know if I understand what you mean, sorry.
 >>
->> So I have to admit that I think it's a 20+ year old legacy and
->> insecure protocol that nobody should be using.
+>> Why does the user need the sysfs ABI? What is it used for?
 >>
->> When the maintainer can't really even test it, and it really has been
->> deprecated that long, I get the feeling that somebody who wants it to
->> be maintained will need to do that job himself.
+>> I.e what is the actual use case?
 >>
->> This seems to be a _very_ niche thing, possibly legacy museum style
->> equipment, and maybe using an older kernel ends up being the answer if
->> nobody steps up and maintains it as an external patch.
+>>>>> In any case, the upstream file should be enough to test the issue reported here.
+>>>>
+>>>> The thing is that upstream isn't super happy that you have been
+>>>> making yourselves dependent on features that we are actively
+>>>> discouraging and then demanding that we support these features.
+>>>
+>>> Hum, demanding seems to be a strong word for what I am doing here.
+>>>
+>>> Deprecated should not mean broken. My point is: the API seems to be
+>>> currently broken. User space apps got broken, that's a fact. I even
+>>> took the time to bisect the kernel and show you which commit broke it.
+>>> So, no, I am not demanding. More like reporting and providing a
+>>> temporary solution to those with a similar problem.
+>>>
+>>> Maybe it is time to remove the API, but this is up to "upstream".
+>>> Leaving the API broken seems pointless and unproductive.
+>>>
+>>> Sorry for the "not super happiness of upstream", but maybe upstream
+>>> got me wrong.
+>>>
+>>> We are not "making ourselves dependent on features ...". The API was
+>>> there. We used it. Now it is deprecated, ok, we should move on. I got
+>>> the message.
 >>
->>              Linus
+>> Ouch I deserved some slamming for this.
+>>
+>> I'm sorry if I came across as harsh :(
+>>
+>> I just don't know how to properly push for this.
+>>
+>> I have even pushed the option of the deprecated sysfs ABI
+>> behind the CONFIG_EXPERT option, which should mean that
+>> the kernel config has been made by someone who has checked
+>> the option "yes I am an expert I know what I am doing"
+>> yet failed to observe that this ABI is obsoleted since 5 years
+>> and hence failed to be an expert.
+>>
+>> Of course the ABI (not API really) needs to be fixed if we can find the
+>> problem. It's frustrating that fixing it seems to fix broken other
+>> features which are not deprecated, hence the annoyance on my
+>> part.
+>>
 > 
+> I'm afraid we'll earn ourselves a good old LinusRant if we keep
+> pushing the character device as a solution to the problem here.
+> Marcelo is right after all: he used an existing user interface, the
+> interface broke, it must be fixed.
 > 
+> I would prefer to find a solution that fixes Marcelo's issue while
+> keeping the offending patches in tree but it seems like the issue is
+> more complicated and will require some rework of the sysfs interface.
 > 
+> In which case unless there are objections I lean towards reverting the
+> relevant commits.
+
+Sounds good to me, but that was two weeks ago and afaics nothing
+happened since then. Or did the discussion continue somewhere else?
+
+>>> And I will also tell the dev team that they must use the GPIO char dev
+>>> and libgpiod from now on and must port everything to it. And we will
+>>> likely have another group of people who are not super happy, but
+>>> that's life... :)
+>>
+>> I'm happy to hear this!
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+#regzbot poke
