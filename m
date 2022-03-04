@@ -1,244 +1,170 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721F57A
-	for <regressions@lists.linux.dev>; Fri,  4 Mar 2022 05:49:43 +0000 (UTC)
-Received: by mail-ej1-f43.google.com with SMTP id p15so15237275ejc.7
-        for <regressions@lists.linux.dev>; Thu, 03 Mar 2022 21:49:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fjW5q4EhTl9Ua9XZ8exe2N5HZm167BX78Qdq6vCxVxM=;
-        b=lNNP3ChN/0KWoV698AvgviN9B8VhITOfUkEMZh3Tnxeurj1Hp1/R41pnLyn2lBf4PE
-         2JtZYn0812ZUQEouGoCe8rf0XXYnWow+pSCh+aBif8oj2VJ9Q+zAj9M5fhPF28K2xK+/
-         umOjf/0fhnFphi/NbBtS/G6yed0vH+d66EzRRz3hT8M6kKhUhJqZC0co3XWpKilveYHH
-         WXT9MXify45AFGH/QYFuXegWw9eZkfPnbC2pHgr/GCKzvRr9/i5B1XWWrKVCnnbN2/JB
-         bcAqTksEbozQFEaEfaYYBuRwgJVs15LR3JShtgmcZbLVYaIUfOW/eU4G7lswSGf84cSy
-         t0mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fjW5q4EhTl9Ua9XZ8exe2N5HZm167BX78Qdq6vCxVxM=;
-        b=UPKWnXWBXE/62LGRK6L+Iv8jGoLmpAQPjkAxUZPoFYfQ07M9nowQ0zt3v3P+LyQKuR
-         oQ4dO67w7XtlbIMH4HF1W0N5O9aH47lSqUIKTwLY+erE2mKg/eZIawdC8nxkNiVi4a4W
-         8LKCZP/BdAZR/jvXOT8Howf/KNhyDduhyKiqSEK40YKQBsE8GpIYDvT9SwXzicqlYZMF
-         yNoXeHuDOePamcutZuS1wtTvOI8hJEWp/JPlwf+GlttGpPCUcnme7JpofMwZgf3mr5K3
-         KPhL3ay5lZkHF3J1H4ZuB4GfgeXfW0sKxtMZx7qLXtXaQ9JLd0bPXMednS8cb6YbSmzs
-         SwkQ==
-X-Gm-Message-State: AOAM531O5ymzKO4METLS/1gVPxTbNPg25tkX2HjjO82AOSZKUhb2KVNg
-	jmoroPiyBr1HgJ3H4qQ9vpAS7XBPpwJzeMF8LIo=
-X-Google-Smtp-Source: ABdhPJwLdJQAc950dfGTo/WnWLCdgdoUNyHQHiKUGSTB0XMN+m5OAu6OaPxXNGYvC9bH74xgmO3AkhFfkpoA5uFJbFM=
-X-Received: by 2002:a17:906:3117:b0:6cd:f81b:e295 with SMTP id
- 23-20020a170906311700b006cdf81be295mr28654660ejx.511.1646372981466; Thu, 03
- Mar 2022 21:49:41 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7247A
+	for <regressions@lists.linux.dev>; Fri,  4 Mar 2022 06:21:23 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nQ1JS-0002Ll-Qd; Fri, 04 Mar 2022 07:21:15 +0100
+Message-ID: <1686eb5f-7484-8ec2-8564-84fe04bf6a70@leemhuis.info>
+Date: Fri, 4 Mar 2022 07:21:13 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAFrh3J9soC36+BVuwHB=g9z_KB5Og2+p2_W+BBoBOZveErz14w@mail.gmail.com>
- <eae5c0cc-55d1-f8db-aba0-57cee7f10332@leemhuis.info> <CAH2r5msUiBuZ74_nPVyzn=k=g0ELpcMnoTm_z30zrMSxF4sn1A@mail.gmail.com>
- <CAFrh3J-oOR1FxPrpzKsQQvronyk9fhDSqD2CY5DNsYO5Lt0ydg@mail.gmail.com>
- <CAFrh3J-TOW4JG6QND0nz_9asiv2g0DzPmxR68BBB_an9yAQ+Vw@mail.gmail.com>
- <CAFrh3J83sUd3tQYHzssKoBb4uQXd3MXf9e=4jLsJ9aH7z2B3oA@mail.gmail.com>
- <CANT5p=qvrV5mrE8dN=RAmCBefGd4_3BzTfM7U98eqmZN2ZVjEg@mail.gmail.com> <CAFrh3J8xaEoLo56SmgTKd7gU_KZiyK2AqmrT_7VSM-Hxsyxwrw@mail.gmail.com>
-In-Reply-To: <CAFrh3J8xaEoLo56SmgTKd7gU_KZiyK2AqmrT_7VSM-Hxsyxwrw@mail.gmail.com>
-From: Shyam Prasad N <nspmangalore@gmail.com>
-Date: Fri, 4 Mar 2022 11:19:30 +0530
-Message-ID: <CANT5p=p50RU4HY=Dbx0+HzorZ_W0gTmE6iCZbQf0RdF3ZcfRLw@mail.gmail.com>
-Subject: Re: Failure to access cifs mount of samba share after resume from
- sleep with 5.17-rc5
-To: Satadru Pramanik <satadru@gmail.com>
-Cc: Steve French <smfrench@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	CIFS <linux-cifs@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-US
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i+RE+L2FTXSA@mail.gmail.com>
+ <0ab4466e-1fa8-1904-3f71-770fbd28c83a@leemhuis.info>
+Subject: Re: bug kernel 5.17, qualcom and intel adapters, unable to reliably
+ connect to bluetooth devices #forregzbot
+In-Reply-To: <0ab4466e-1fa8-1904-3f71-770fbd28c83a@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1646374883;1d59310a;
+X-HE-SMSGID: 1nQ1JS-0002Ll-Qd
 
-On Wed, Mar 2, 2022 at 8:16 PM Satadru Pramanik <satadru@gmail.com> wrote:
->
-> Here is also the dmesg as promised. (After resuming from suspend/sleep
-> this morning, when I again had the same issue.)
->
-> On Wed, Mar 2, 2022 at 2:57 AM Shyam Prasad N <nspmangalore@gmail.com> wrote:
-> >
-> > On Wed, Mar 2, 2022 at 3:51 AM Satadru Pramanik <satadru@gmail.com> wrote:
-> > >
-> > > I have put the trace.dat and other debug files here since I can not
-> > > attach the files to a message to the list. (Apparently the trace.dat
-> > > file is too large.)
-> > >
-> > > https://drive.google.com/drive/folders/1wEi968RbXxivXMMH8J7XUsHhrxu9OWDX?usp=sharing
-> > >
-> > > On Mon, Feb 28, 2022 at 11:12 PM Satadru Pramanik <satadru@gmail.com> wrote:
-> > > >
-> > > > The trace.dat file is attached, covering the period before suspend,
-> > > > and through wake several hours later, when the mount no longer worked,
-> > > > and showed the CIFS: VFS: cifs_tree_connect: could not find
-> > > > superblock: -22 message, and through when I unmounted and remounted
-> > > > the share, which then started working.
-> > > >
-> > > > On Mon, Feb 28, 2022 at 9:31 AM Satadru Pramanik <satadru@gmail.com> wrote:
-> > > > >
-> > > > > Here is the DebugData from before and after from the system with the
-> > > > > failed mount.
-> > > > > Both systems are now running 5.17-rc6.
-> > > > >
-> > > > > Working on the trace-cmd now.
-> > > > >
-> > > > > On Sun, Feb 27, 2022 at 9:37 PM Steve French <smfrench@gmail.com> wrote:
-> > > > > >
-> > > > > > I would like to see the output of:
-> > > > > >
-> > > > > > /proc/fs/cifs/DebugData before and after the failure if possible.
-> > > > > >
-> > > > > > In addition, there would be some value in seeing trace information
-> > > > > > (e.g start tracing by
-> > > > > > "trace-cmd record -e cifs" before the failure and then forward the
-> > > > > > debug information displayed by "trace-cmd show" after the failure)
-> > > > > >
-> > > > > > On Sun, Feb 27, 2022 at 7:55 AM Thorsten Leemhuis
-> > > > > > <regressions@leemhuis.info> wrote:
-> > > > > > >
-> > > > > > > [TLDR: I'm adding the regression report below to regzbot, the Linux
-> > > > > > > kernel regression tracking bot; all text you find below is compiled from
-> > > > > > > a few templates paragraphs you might have encountered already already
-> > > > > > > from similar mails.]
-> > > > > > >
-> > > > > > > Hi, this is your Linux kernel regression tracker. Top-posting for once,
-> > > > > > > to make this easily accessible to everyone.
-> > > > > > >
-> > > > > > > CCing the regression mailing list, as it should be in the loop for all
-> > > > > > > regressions, as explained here:
-> > > > > > > https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-> > > > > > >
-> > > > > > > To be sure below issue doesn't fall through the cracks unnoticed, I'm
-> > > > > > > adding it to regzbot, my Linux kernel regression tracking bot:
-> > > > > > >
-> > > > > > > #regzbot ^introduced v5.16.11..v5.17-rc5
-> > > > > > > #regzbot title cifs: Failure to access cifs mount of samba share after
-> > > > > > > resume from sleep
-> > > > > > > #regzbot ignore-activity
-> > > > > > >
-> > > > > > > Reminder for developers: when fixing the issue, please add a 'Link:'
-> > > > > > > tags pointing to the report (the mail quoted above) using
-> > > > > > > lore.kernel.org/r/, as explained in
-> > > > > > > 'Documentation/process/submitting-patches.rst' and
-> > > > > > > 'Documentation/process/5.Posting.rst'. This allows the bot to connect
-> > > > > > > the report with any patches posted or committed to fix the issue; this
-> > > > > > > again allows the bot to show the current status of regressions and
-> > > > > > > automatically resolve the issue when the fix hits the right tree.
-> > > > > > >
-> > > > > > > I'm sending this to everyone that got the initial report, to make them
-> > > > > > > aware of the tracking. I also hope that messages like this motivate
-> > > > > > > people to directly get at least the regression mailing list and ideally
-> > > > > > > even regzbot involved when dealing with regressions, as messages like
-> > > > > > > this wouldn't be needed then. And don't worry, if I need to send other
-> > > > > > > mails regarding this regression only relevant for regzbot I'll send them
-> > > > > > > to the regressions lists only (with a tag in the subject so people can
-> > > > > > > filter them away). With a bit of luck no such messages will be needed
-> > > > > > > anyway.
-> > > > > > >
-> > > > > > > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> > > > > > >
-> > > > > > > P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> > > > > > > reports on my table. I can only look briefly into most of them and lack
-> > > > > > > knowledge about most of the areas they concern. I thus unfortunately
-> > > > > > > will sometimes get things wrong or miss something important. I hope
-> > > > > > > that's not the case here; if you think it is, don't hesitate to tell me
-> > > > > > > in a public reply, it's in everyone's interest to set the public record
-> > > > > > > straight.
-> > > > > > >
-> > > > > > >
-> > > > > > > On 27.02.22 03:36, Satadru Pramanik wrote:
-> > > > > > > > I'm on a x86_64 ubuntu 22.04 system accessing a similar system running
-> > > > > > > > samba Version 4.13.14-Ubuntu. Both systems are on ubuntu mainline
-> > > > > > > > kernel 5.17-rc5.
-> > > > > > > >
-> > > > > > > > I have a samba share mounted from my fstab, and file access works fine.
-> > > > > > > > Upon suspending my system and resuming though, the mounted samba share
-> > > > > > > > is inaccessible, and my dmesg has many "CIFS: VFS: cifs_tree_connect:
-> > > > > > > > could not find superblock: -22" messages.
-> > > > > > > >
-> > > > > > > > Unmounting and remounting the share restores access.
-> > > > > > > >
-> > > > > > > > When I boot into kernel 5.16.11, I do not have this issue. The cifs
-> > > > > > > > share is accessible just fine after a suspend/resume cycle.
-> > > > > > > >
-> > > > > > > > I assume this is a regression with 5.17? Is there any information
-> > > > > > > > worth providing which might help debug and fix this issue?
-> > > > > > > >
-> > > > > > > > Regards,
-> > > > > > > >
-> > > > > > > > Satadru Pramanik
-> > > > > > >
-> > > > > > > --
-> > > > > > > Additional information about regzbot:
-> > > > > > >
-> > > > > > > If you want to know more about regzbot, check out its web-interface, the
-> > > > > > > getting start guide, and the references documentation:
-> > > > > > >
-> > > > > > > https://linux-regtracking.leemhuis.info/regzbot/
-> > > > > > > https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> > > > > > > https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-> > > > > > >
-> > > > > > > The last two documents will explain how you can interact with regzbot
-> > > > > > > yourself if your want to.
-> > > > > > >
-> > > > > > > Hint for reporters: when reporting a regression it's in your interest to
-> > > > > > > CC the regression list and tell regzbot about the issue, as that ensures
-> > > > > > > the regression makes it onto the radar of the Linux kernel's regression
-> > > > > > > tracker -- that's in your interest, as it ensures your report won't fall
-> > > > > > > through the cracks unnoticed.
-> > > > > > >
-> > > > > > > Hint for developers: you normally don't need to care about regzbot once
-> > > > > > > it's involved. Fix the issue as you normally would, just remember to
-> > > > > > > include 'Link:' tag in the patch descriptions pointing to all reports
-> > > > > > > about the issue. This has been expected from developers even before
-> > > > > > > regzbot showed up for reasons explained in
-> > > > > > > 'Documentation/process/submitting-patches.rst' and
-> > > > > > > 'Documentation/process/5.Posting.rst'.
-> > > > > >
-> > > > > >
-> > > > > >
-> > > > > > --
-> > > > > > Thanks,
-> > > > > >
-> > > > > > Steve
-> >
-> > The DebugData shows that the connection and smb session are fine, but
-> > the tree connect is not in a good state.
-> > Similarly, the trace output shows that connection was reconnected
-> > successfully, SMB session was reconnected as well. However, the tree
-> > connect did not go over the wire.
-> >
-> > > The trace.dat file is attached, covering the period before suspend,
-> > > and through wake several hours later, when the mount no longer worked,
-> > > and showed the CIFS: VFS: cifs_tree_connect: could not find
-> > > superblock: -22 message, and through when I unmounted and remounted
-> > > the share, which then started working.
-> >
-> > This suggests to me that the cifs_tcp_get_super is failing.
-> > This is odd, since it looks up the server as pointers.
-> > Did we start undercounting the ref count somewhere?
-> >
-> > --
-> > Regards,
-> > Shyam
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-Hi Satadru,
+#regzbot fixed-by: 008ee9eb8a11bcabf12c91771dd4f470b082bd44
 
-The attached dmesg did not have cifsFYI enabled.
-Please use the below steps to enable cifsFYI before the sleep:
-# echo 'module cifs +p' > /sys/kernel/debug/dynamic_debug/control
-# echo 'file fs/cifs/* +p' > /sys/kernel/debug/dynamic_debug/control
-# echo 7 > /proc/fs/cifs/cifsFYI
+https://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git/commit/?id=008ee9eb8a11bcabf12c91771dd4f470b082bd44
 
-You can disable it after the repro using this cmd:
-# echo 0 > /proc/fs/cifs/cifsFYI
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
--- 
-Regards,
-Shyam
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+
+
+On 24.02.22 11:26, Thorsten Leemhuis wrote:
+> [TLDR: I'm adding the regression report below to regzbot, the Linux
+> kernel regression tracking bot; all text you find below is compiled from
+> a few templates paragraphs you might have encountered already already
+> from similar mails.]
+> 
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> Thanks for the report and CCing the regression list in a downstream reply.
+> 
+> To be sure this issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, my Linux kernel regression tracking bot:
+> 
+> #regzbot ^introduced v5.16..
+> #regzbot title net: bluetooth: qualcom and intel adapters, unable to
+> reliably connect to bluetooth devices
+> #regzbot ignore-activity
+> 
+> Reminder for developers: when fixing the issue, please add a 'Link:'
+> tags pointing to the report (the mail quoted above) using
+> lore.kernel.org/r/, as explained in
+> 'Documentation/process/submitting-patches.rst' and
+> 'Documentation/process/5.Posting.rst'. This allows the bot to connect
+> the report with any patches posted or committed to fix the issue; this
+> again allows the bot to show the current status of regressions and
+> automatically resolve the issue when the fix hits the right tree.
+> 
+> I'm sending this to everyone that got the initial report, to make them
+> aware of the tracking. I also hope that messages like this motivate
+> people to directly get at least the regression mailing list and ideally
+> even regzbot involved when dealing with regressions, as messages like
+> this wouldn't be needed then.
+> 
+> Don't worry, I'll send further messages wrt to this regression just to
+> the lists (with a tag in the subject so people can filter them away), if
+> they are relevant just for regzbot. With a bit of luck no such messages
+> will be needed anyway.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> 
+> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> reports on my table. I can only look briefly into most of them and lack
+> knowledge about most of the areas they concern. I thus unfortunately
+> will sometimes get things wrong or miss something important. I hope
+> that's not the case here; if you think it is, don't hesitate to tell me
+> in a public reply, it's in everyone's interest to set the public record
+> straight.
+> 
+> 
+> 
+> 
+> 
+> On 11.02.22 02:44, Chris Murphy wrote:
+>> Since kernel 5.17, some users are seeing problems connecting to
+>> bluetooth devices, the problem doesn't happen with 5.16 series
+>> kernels.
+>>
+>> So far two different devices are affected, although it's possible it's
+>> not even device related, but could be the interface between kernel and
+>> user space.
+>>
+>> Case 1:
+>>
+>> Bus 001 Device 003: ID 0cf3:e301 Qualcomm Atheros Communications
+>>
+>> Not seeing anything that stands out in dmesg, bluetoothd -d shows
+>> various curious messages like
+>>
+>> bluetoothd[5889]: src/service.c:change_state() 0x7f33becdebc0: device
+>> 94:65:2D:DC:F4:A7 profile avrcp-controller state changed: disconnected
+>> -> unavailable (0)
+>> and
+>> bluetoothd[5889]: src/service.c:change_state() 0x7f33becd91e0: device
+>> 94:65:2D:DC:F4:A7 profile Hands-Free Voice gateway state changed:
+>> unavailable -> disconnected (0)
+>>
+>>
+>> Case 2:
+>>
+>> Bus 001 Device 005: ID 8087:0aaa Intel Corp. Bluetooth 9460/9560
+>> Jefferson Peak (JfP)
+>> [    5.923865] kernel: Bluetooth: hci0: Found device firmware:
+>> intel/ibt-17-16-1.sfi
+>> [    5.930536] kernel: Bluetooth: hci0: Boot Address: 0x40800
+>> [    5.930539] kernel: Bluetooth: hci0: Firmware Version: 60-44.21
+>> ...
+>> [16102.640651] Bluetooth: hci0: unexpected event 0xff length: 5 > 0
+>> [16102.640802] Bluetooth: hci0: Waiting for device to boot
+>> [16102.654712] Bluetooth: hci0: Device booted in 13698 usecs
+>> [16102.654753] Bluetooth: hci0: unexpected event 0xff length: 7 > 0
+>> [16102.655907] Bluetooth: hci0: Found Intel DDC parameters:
+>> intel/ibt-17-16-1.ddc
+>> [16102.657821] Bluetooth: hci0: Applying Intel DDC parameters completed
+>> [16102.658829] Bluetooth: hci0: Firmware revision 0.1 build 60 week 44 2021
+>> [17422.210558] Bluetooth: hci0: command 0x0c03 tx timeout
+>> [17430.338412] Bluetooth: hci0: HCI reset during shutdown failed
+>>
+>> [15975.194153] bluetoothd[42895]:
+>> src/adapter.c:device_found_callback() hci0 addr 75:0B:19:0C:47:F6,
+>> rssi -82 flags 0x0000 eir_len 17
+>> [15975.194412] bluetoothd[42895]:
+>> src/adv_monitor.c:btd_adv_monitor_offload_supported() Manager is NULL,
+>> get offload support failed
+>> [15975.194510] bluetoothd[42895]: src/device.c:device_set_legacy() legacy 0
+>> [15975.194599] bluetoothd[42895]:
+>> src/device.c:device_set_rssi_with_delta() rssi -82 delta 1
+>> [15975.194661] bluetoothd[42895]: src/device.c:device_set_flags() flags 26
+>>
+>> There are many many of the "Manager is NULL, get offload support
+>> failed" messages in this case. I'm not entirely sure the root causes
+>> are the same for the two cases.
+>>
+>> Downstream bug has attachments (dmesg, btmon, lsbsb, journalctl
+>> snippet with bluetoothd in debug, for both)
+>> https://bugzilla.redhat.com/show_bug.cgi?id=2053283
+>>
+>> Thanks,
+>>
+> 
