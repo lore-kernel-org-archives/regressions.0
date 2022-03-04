@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA7D64F
-	for <regressions@lists.linux.dev>; Fri,  4 Mar 2022 06:33:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DF9815
+	for <regressions@lists.linux.dev>; Fri,  4 Mar 2022 06:43:30 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nQ1VA-0002DE-HC; Fri, 04 Mar 2022 07:33:20 +0100
-Message-ID: <02ef7552-67f5-dbcf-ece6-87b5b49e1bb5@leemhuis.info>
-Date: Fri, 4 Mar 2022 07:33:20 +0100
+	id 1nQ1ey-0006TW-E5; Fri, 04 Mar 2022 07:43:28 +0100
+Message-ID: <ba16b515-80bc-626a-42ca-1083c78eb5aa@leemhuis.info>
+Date: Fri, 4 Mar 2022 07:43:27 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,60 +16,83 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: rtw_8822ce wifi regression after kernel update from 5.15 to 5.16
-To: Larry Finger <Larry.Finger@lwfinger.net>, Nico Sneck
- <snecknico@gmail.com>, Yan-Hsuan Chuang <tony0620emma@gmail.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- linux-wireless@vger.kernel.org
-References: <CAO_iuKEL8tHnovpGiQGUxg7JUpZFxHpxhOHbqAMgbt5R4Eftgg@mail.gmail.com>
- <2d1c129b-d473-39e3-69b7-6f36dc1682a6@leemhuis.info>
- <9312eb18-840f-9a1f-bcb0-8e3a43e45239@leemhuis.info>
- <236d45a6-8b88-c02e-a61d-ce1773fdb0ef@lwfinger.net>
+Subject: Re: Possible regression: unable to mount CIFS 1.0 shares from older
+ machines since 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
 Content-Language: en-US
-In-Reply-To: <236d45a6-8b88-c02e-a61d-ce1773fdb0ef@lwfinger.net>
+To: Steve French <smfrench@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Davyd McColl <davydm@gmail.com>,
+ ronnie sahlberg <ronniesahlberg@gmail.com>, CIFS
+ <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CAJjP=Bt52AW_w2sKnM=MbckPkH1hevPMJVWm_Wf+wThmR72YTg@mail.gmail.com>
+ <CAH2r5mt_2f==5reyc0HmMLvYJVmP4Enykwauo+LQoFGFbVFeRQ@mail.gmail.com>
+ <CAJjP=BvNVOj3KRnhFgk6xiwnxVhxE-sN98-pr6e1Kzc5Xg5EvQ@mail.gmail.com>
+ <CAH2r5mvsetx5G+c=8ePh+X8ng7FvMrnuM9+FJ4Sid4b3E+T41Q@mail.gmail.com>
+ <CAJjP=BvqZUnJPq=C0OUKbXr=mbJd7a6YDSJC-sNY1j_33_e-uw@mail.gmail.com>
+ <CAN05THSGwCKckQoeB6D91iBv0Sed+ethK7tde7GSc1UzS-0OYg@mail.gmail.com>
+ <CAJjP=BvcWrF-k_sFxak1mgHAHVVS7_JZow+h_47XB1VzG2+Drw@mail.gmail.com>
+ <ebf8c487-0377-834e-fbb7-725cceae1fbb@leemhuis.info>
+ <CAN05THRJJj48ueb34t18Yj=JYuhiwZ8hTvOssX4D6XhNpjx-bg@mail.gmail.com>
+ <f7eb4a3e-9799-3fe4-d464-d84dd9e64510@leemhuis.info>
+ <CAJjP=Bus1_ce4vbHXpiou1WrSe8a61U1NzGm4XvN5fYCPGNikA@mail.gmail.com>
+ <fe156bb6-c6d2-57da-7f62-57d2972bf1ae@leemhuis.info>
+ <CAHk-=wjSBvRk-ksUBOiQzJd=e19UZKvOSZs1UHahK5U0QVh6RQ@mail.gmail.com>
+ <CAH2r5mvQnQTDQaci-NbLBjRb=gCPtMewrKhLBOLGrN2_Zpc3Bg@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CAH2r5mvQnQTDQaci-NbLBjRb=gCPtMewrKhLBOLGrN2_Zpc3Bg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646375603;5c41529d;
-X-HE-SMSGID: 1nQ1VA-0002DE-HC
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646376210;1defcfb9;
+X-HE-SMSGID: 1nQ1ey-0006TW-E5
 
-Hi, this is your Linux kernel regression tracker.
-
-On 28.02.22 23:07, Larry Finger wrote:
-> On 2/28/22 08:30, Thorsten Leemhuis wrote:
-> [...]
->
-> Your use of rtw_8822ce in the title finally registered on me. With that
-> driver in use, that means that you are using my GitHub repo; however,
-> newer kernels have the driver built in, but with names such as
-> rtw88_8822ce. The difference in the name is deliberate.
-
-Many thx for this, the names already had made me a bit suspicious, but
-wasn't aware of this!
-
-> If you want to
-> use the GitHub version, you must blacklist the ones from the kernel.
+On 03.03.22 02:27, Steve French wrote:
+> We have been looking to see if we could setup some VMs for something
+> that old, and we are willing to test against it if it could
+> realistically be setup, but it has been harder than expected.  Ronnie
+> had some ideas and we are willing to experiment more but realistically
+> it is very hard to deal with 'legacy museum style' unless we have some
+> VMs available for old systems.
 > 
-> To check this, run 'lsmod | grep 88'. If you see a mixture of rtw_xxx
-> and rtw88_xxx, then this is your problem.
+> Feel free to contact Ronnie and me or Shyam etc (offline if easier) if
+> you have ideas on how to setup something like this.   We don't want to
+> be encouraging SMB1, but certainly not NTLMv1 auth with SMB1 given its
+> security weaknesses (especially given the particular uses hackers have
+> made of 25+ year old NTLMv1 weaknesses).
 
-Nico didn't reply to your mail, so I'll assume for now that this is not
-a kernel regression:
+Linus, Steve, thx for your option on this. I not sure if "museum style
+equipment" really applies here, as the hardware seems to be sold in
+2013/2014 and according to the reporter even got a update in 2016. But
+whatever, yes, it's niche thing and what the hw manufacturer did there
+was a bad idea.
 
-#regzbot invalid: seems it's a regression in a external module of
-similar name
+Anyway, I'll stop tracking this then.
 
-@Yan-Hsuan Chuang: sorry for the noise!
+#regzbot invalid: to niche/risky/old, see Linus and Steve's messages for
+details
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
-
-
-
+> On Wed, Mar 2, 2022 at 6:51 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>
+>> On Tue, Mar 1, 2022 at 10:58 PM Thorsten Leemhuis
+>> <regressions@leemhuis.info> wrote:
+>>>
+>>> Thx for the update. I pointed Linus towards this thread two times now,
+>>> but he didn't comment on it afaics. CCing him now, maybe that will to
+>>> the trick.
+>>
+>> So I have to admit that I think it's a 20+ year old legacy and
+>> insecure protocol that nobody should be using.
+>>
+>> When the maintainer can't really even test it, and it really has been
+>> deprecated that long, I get the feeling that somebody who wants it to
+>> be maintained will need to do that job himself.
+>>
+>> This seems to be a _very_ niche thing, possibly legacy museum style
+>> equipment, and maybe using an older kernel ends up being the answer if
+>> nobody steps up and maintains it as an external patch.
+>>
+>>              Linus
+> 
+> 
+> 
