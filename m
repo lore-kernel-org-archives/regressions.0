@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530041FB7
-	for <regressions@lists.linux.dev>; Sun,  6 Mar 2022 11:19:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BE823AB
+	for <regressions@lists.linux.dev>; Sun,  6 Mar 2022 15:48:16 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nQovK-0005Fe-6I; Sun, 06 Mar 2022 12:19:38 +0100
-Message-ID: <ed531ff6-7f5c-f306-8d68-3050baf4c418@leemhuis.info>
-Date: Sun, 6 Mar 2022 12:19:37 +0100
+	id 1nQt7F-0006pL-Di; Sun, 06 Mar 2022 16:48:13 +0100
+Message-ID: <092b825a-10ff-e197-18a1-d3e3a097b0e3@leemhuis.info>
+Date: Sun, 6 Mar 2022 16:48:12 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,138 +16,108 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [RFC] Scheduler: DMA Engine regression because of sched/fair
- changes #forregzbot
+Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
+ PCI-passed-through to Windows VM
 Content-Language: en-US
+To: Alex Deucher <alexdeucher@gmail.com>,
+ "James D. Turner" <linuxkernel.foss@dmarc-none.turner.link>
+Cc: "Lazar, Lijo" <lijo.lazar@amd.com>,
+ "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>, "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ "Koenig, Christian" <Christian.Koenig@amd.com>
+References: <87ee57c8fu.fsf@turner.link>
+ <acd2fd5e-d622-948c-82ef-629a8030c9d8@leemhuis.info>
+ <87a6ftk9qy.fsf@dmarc-none.turner.link> <87zgnp96a4.fsf@turner.link>
+ <fc2b7593-db8f-091c-67a0-ae5ffce71700@leemhuis.info>
+ <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
+ <87czkk1pmt.fsf@dmarc-none.turner.link>
+ <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
+ <87sftfqwlx.fsf@dmarc-none.turner.link>
+ <BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
+ <87ee4wprsx.fsf@turner.link> <4b3ed7f6-d2b6-443c-970e-d963066ebfe3@amd.com>
+ <87pmo8r6ob.fsf@turner.link>
+ <5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
+ <CADnq5_MCKTLOfWKWvi94Q9-d5CGdWBoWVxEYL3YXOpMiPnLOyg@mail.gmail.com>
+ <87pmnnpmh5.fsf@dmarc-none.turner.link>
+ <CADnq5_NG_dQCYwqHM0umjTMg5Uud6zC4=MiscH91Y9v7mW9bJA@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220112152609.gg2boujeh5vv5cns@yadro.com>
- <20220112170512.GO3301@suse.de> <20220117081905.a4pwglxqj7dqpyql@yadro.com>
- <20220117102701.GQ3301@suse.de> <20220118020448.2399-1-hdanton@sina.com>
- <20220121101217.2849-1-hdanton@sina.com>
- <20220122233314.2999-1-hdanton@sina.com>
- <20220128165058.zxyrnd7nzr4hlks2@yadro.com>
- <6bdf8ca8-8836-4e44-5c27-0644aa9819ca@leemhuis.info>
-In-Reply-To: <6bdf8ca8-8836-4e44-5c27-0644aa9819ca@leemhuis.info>
+In-Reply-To: <CADnq5_NG_dQCYwqHM0umjTMg5Uud6zC4=MiscH91Y9v7mW9bJA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646565580;cefaf95c;
-X-HE-SMSGID: 1nQovK-0005Fe-6I
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646581696;ebba6b85;
+X-HE-SMSGID: 1nQt7F-0006pL-Di
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Hi, this is your Linux kernel regression tracker again. Top-posting once
+more, to make this easily accessible to everyone.
 
-Not totally sure, but I got the impression even the reporter (who I
-asked in private a while ago, but I didn't get a reply) doesn't care
-about this regressions anymore, so I'm removing it from the list for
-tracked regressions
+What's the status of this? It looks stuck, or did the discussion
+continue somewhere else? James, it sounded like you wanted to test
+something, did you give it a try? Or is there some reason why I should
+stop tracking this regression?
 
-#regzbot invalid: seems it can be ignored
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-On 23.02.22 16:24, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker. Top-posting for once,
-> to make this easy accessible to everyone.
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+#regzbot poke
+
+On 16.02.22 17:37, Alex Deucher wrote:
+> On Tue, Feb 15, 2022 at 9:35 PM James D. Turner
+> <linuxkernel.foss@dmarc-none.turner.link> wrote:
+>>
+>> Hi Alex,
+>>
+>>> I guess just querying the ATIF method does something that negatively
+>>> influences the windows driver in the guest. Perhaps the platform
+>>> thinks the driver has been loaded since the method has been called so
+>>> it enables certain behaviors that require ATIF interaction that never
+>>> happen because the ACPI methods are not available in the guest.
+>>
+>> Do you mean the `amdgpu_atif_pci_probe_handle` function? If it would be
+>> helpful, I could try disabling that function and testing again.
 > 
-> After below message nothing happened anymore afaics. Could anybody be so
-> kind to provide a quick status update, to ensure this wasn't simply
-> forgotten? And if this is not considered a regression anymore (I didn#t
-> fully understand below message, sorry), it would be ideal if the person
-> that replies could include a paragraph stating something like "#regzbot
-> invalid: Some reason why this can be ignored", as then I'll stop
-> tracking this. tia!
+> Correct.
 > 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>
+>>> I don't really have a good workaround other than blacklisting the
+>>> driver since on bare metal the driver needs to use this interface for
+>>> platform interactions.
+>>
+>> I'm not familiar with ATIF, but should `amdgpu_atif_pci_probe_handle`
+>> really be called for PCI devices which are bound to vfio-pci? I'd expect
+>> amdgpu to ignore such devices.
+>>
+>> As I understand it, starting with
+>> f9b7f3703ff9 ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)"),
+>> the `amdgpu_acpi_detect` function loops over all PCI devices in the
+>> `PCI_CLASS_DISPLAY_VGA` and `PCI_CLASS_DISPLAY_OTHER` classes to find
+>> the ATIF and ATCS handles. Maybe skipping over any PCI devices bound to
+>> vfio-pci would fix the issue? On a related note, shouldn't it also skip
+>> over any PCI devices with non-AMD vendor IDs?
 > 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
+> The ACPI methods are global.  There's only one instance of each per
+> system and they are relevant to add GPUs on the platform.  That's why
+> they are a global resource in the driver.  They can be hung off of the
+> dGPU or APU ACPI namespace, depending on the platform which is why we
+> check all of the display devices.  Skipping them would prevent them
+> from being available if you later bound the amdgpu driver to the GPU
+> device(s) I think.
 > 
-> #regzbot poke
+> Alex
 > 
-> On 28.01.22 17:50, Alexander Fomichev wrote:
->> On Sun, Jan 23, 2022 at 07:33:14AM +0800, Hillf Danton wrote:
->>>
->>> Lets put pieces together based on the data collected.
->>>
->>> 1, No irq migration was observed.
->>>
->>> 2, Your patch that produced the highest iops fo far
->>>
->>> -----< 5.15.8-ioat-ptdma-dirty-fix+ >-----
->>> [ 6183.356549] dmatest: Added 1 threads using dma0chan0
->>> [ 6187.868237] dmatest: Started 1 threads using dma0chan0
->>> [ 6187.887389] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 52753.74 iops 3376239 KB/s (0)
->>> [ 6201.913154] dmatest: Added 1 threads using dma0chan0
->>> [ 6204.701340] dmatest: Started 1 threads using dma0chan0
->>> [ 6204.720490] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 52614.96 iops 3367357 KB/s (0)
->>> [ 6285.114603] dmatest: Added 1 threads using dma0chan0
->>> [ 6287.031875] dmatest: Started 1 threads using dma0chan0
->>> [ 6287.050278] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 54939.01 iops 3516097 KB/s (0)
->>> -----< end >-----
->>>
->>>
->>> -       if (available_idle_cpu(this_cpu) && cpus_share_cache(this_cpu, prev_cpu))
->>> -               return available_idle_cpu(prev_cpu) ? prev_cpu : this_cpu;
->>> +       if (available_idle_cpu(this_cpu))
->>> +               return this_cpu;
->>>
->>> prefers this cpu if it is idle regardless of cache affinity.
->>>
->>> This implies task migration to the cpu that handled irq.
->>>
->>> 3, Given this cpu is different from the prev cpu in addition to no irq
->>> migration, the tested task was bouncing between the two cpus, with one
->>> more question rising, why was task migrated off from the irq-handling cpu?
->>>
->>> Despite no evidence, I bet no bounce occurred given iops observed.
->>>
 >>
->> IMHO, your assumptions are correct.
->> I've added CPU number counters on every step of dmatest. It reveals that
->> test task migration between (at least 2) CPUs occurs in even one thread
->> mode. Below is for vanilla 5.15.8 kernel:
->>
->> -----< threads_per_chan=1 >-----
->> [19449.557950] dmatest: Added 1 threads using dma0chan0
->> [19469.238180] dmatest: Started 1 threads using dma0chan0
->> [19469.253962] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 65291.19 iops 4178636 KB/s (0)
->> [19469.253973] dmatest: CPUs hit: #52:417 #63:583  (times)
->> -----< end >-----
->>
->> Note that IRQ handler runs on CPU #52 in this environment.
->>
->> In 4 thread mode the task migrates even more aggressively:
->>
->> -----< threads_per_chan=4 >-----
->> [19355.460227] dmatest: Added 4 threads using dma0chan0
->> [19359.841182] dmatest: Started 4 threads using dma0chan0
->> [19359.860447] dmatest: dma0chan0-copy3: summary 1000 tests, 0 failures 53908.35 iops 3450134 KB/s (0)
->> [19359.860451] dmatest: dma0chan0-copy2: summary 1000 tests, 0 failures 54179.98 iops 3467519 KB/s (0)
->> [19359.860456] dmatest: CPUs hit: #50:1000  (times)
->> [19359.860459] dmatest: CPUs hit: #17:1000  (times)
->> [19359.860459] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 54048.21 iops 3459085 KB/s (0)
->> [19359.860466] dmatest: CPUs hit: #31:1000  (times)
->> [19359.861420] dmatest: dma0chan0-copy1: summary 1000 tests, 0 failures 51466.80 iops 3293875 KB/s (0)
->> [19359.861425] dmatest: CPUs hit: #30:213 #48:556 #52:231  (times)
->> -----< end >-----
->>
->> On the other hand, for dirty-patched kernel task doesn't migrate:
->>
->> -----< patched threads_per_chan=1 >-----
->> [ 2100.142002] dmatest: Added 1 threads using dma0chan0
->> [ 2102.359727] dmatest: Started 1 threads using dma0chan0
->> [ 2102.373594] dmatest: dma0chan0-copy0: summary 1000 tests, 0 failures 76173.06 iops 4875076 KB/s (0)
->> [ 2102.373600] dmatest: CPUs hit: #49:1000  (times)
->> -----< end >-----
->>
->> IRQ handler runs on CPU #49 in this case.
->>
->> Although in 4 thread mode the task still migrates. I think we should
->> consider such scenario as non-relevant for this isue.
->>
+>> Regards,
+>> James
+> 
 > 
