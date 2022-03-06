@@ -1,335 +1,108 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0077A
-	for <regressions@lists.linux.dev>; Sun,  6 Mar 2022 19:58:53 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1nQx1n-0008IS-Bc; Sun, 06 Mar 2022 20:58:51 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2022-03-06]
-Date: Sun,  6 Mar 2022 19:58:50 +0000
-Message-Id: <164659571791.547857.13375280613389065406@leemhuis.info>
-X-Mailer: git-send-email 2.34.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83387E
+	for <regressions@lists.linux.dev>; Sun,  6 Mar 2022 21:33:22 +0000 (UTC)
+Received: by mail-lf1-f51.google.com with SMTP id bu29so23251293lfb.0
+        for <regressions@lists.linux.dev>; Sun, 06 Mar 2022 13:33:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=I1VslL3ye1MbAoXD/93dVSkYx3rBEqLz04PvwnWO5Xc=;
+        b=aP7NIVkTp8F0TQzsVHRkgravZwx4iPy0i/GXcER23Kdwa3h0g1I9y3M8zMLvIP91ma
+         ObiiRLWF0p9p92E69K8HInTDYUDFmL7AEyunpOxfqnONlKhXGU6Fd6Bw+kpf40xyPLD7
+         J4arYW2KdltXWYcpnA2rG4WjyBSh6aOQAuIOY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=I1VslL3ye1MbAoXD/93dVSkYx3rBEqLz04PvwnWO5Xc=;
+        b=2ZMUk8kP3Hhq0tWplUXr5FQTXF4ik7RbjpYB5g6uOl4eStoKD5aBgR2W13FDNt+dBY
+         LaAltO3cTJSsEwJogr60y9DHwEOMrcXBI4POuTO7Hfotm0gvF8mkxGxy3UAKQoMAHlKc
+         atGfnAR5NviyUeAgmiKCp5FOzAF0deSdMbLQ4b7jJUNCxDTWgiZd0qP4U0guWvNL1w7L
+         T+cxJwd2KsZ1VG5YoLD0kBPTGAoL6A7nkh325pwJtqMOR1P5wqgutEiBYYIIBp0c47e4
+         zfv6HxAfYV36wRe7pBgxbERpi1pt6752Tz2Rde4LVgI0UeeIzwPyjINpFT/1JOLDcsrP
+         7VGg==
+X-Gm-Message-State: AOAM530s+E7lzAgJwJA4etBeehUvhsHlHAwF4S86XI6qb8Zphhk1i4IQ
+	zRhOBLdKXrUS3FzgwWx+u4m/oUYzURgJMPIkJR8=
+X-Google-Smtp-Source: ABdhPJyjkAa4HhUrG4R6uU+8yk5KL1WXdWnf8m8p+cB16RUZ0MMW4++wEGRpbFCsHK/LO8ac6IbEPA==
+X-Received: by 2002:a05:6512:3f09:b0:43a:4463:56f9 with SMTP id y9-20020a0565123f0900b0043a446356f9mr5710610lfa.533.1646602400594;
+        Sun, 06 Mar 2022 13:33:20 -0800 (PST)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id m8-20020a196148000000b004482fc6516csm337137lfk.178.2022.03.06.13.33.18
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 06 Mar 2022 13:33:18 -0800 (PST)
+Received: by mail-lf1-f50.google.com with SMTP id w27so23155427lfa.5
+        for <regressions@lists.linux.dev>; Sun, 06 Mar 2022 13:33:18 -0800 (PST)
+X-Received: by 2002:ac2:41cf:0:b0:448:1eaa:296c with SMTP id
+ d15-20020ac241cf000000b004481eaa296cmr5987125lfi.52.1646602398190; Sun, 06
+ Mar 2022 13:33:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646596734;19de4d75;
-X-HE-SMSGID: 1nQx1n-0008IS-Bc
-
-Hi Linus, Thorsten here, with a quick preface before the latest report
-from regzbot.
-
-From my side things seem to look normal right now; quite a few
-regressions got fixed in the past few days. I (and thus regzbot) are
-only aware of two regressions remaining that got introduced this cycle
-(at least one of them pretty special); I didn't add those build problems
-from Guenter to the tracking: he seems to look after those quite well
-already (I need to talk to him if he want's me to track them, but I
-didn't get around to do that).
-
-Sadly I'm guess there are some regressions out there which I and regzbot
-are not aware of. Hopefully more people will at least CC the regressions
-mailing list (regressions@lists.linux.dev) on regressions reports in the
-future (and/or get regzbot involved themselves), as that ensures I'll
-get aware of them.
-
-Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 15 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-========================================================
-current cycle (v5.16.. aka v5.17-rc), culprit identified
-========================================================
-
-
-Follow-up error for the commit fixing "PCIe regression on APM Merlin (aarch64 dev platform) preventing NVME initialization"
----------------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/Yf2wTLjmcRj+AbDv@xps13.dannf/
-https://lore.kernel.org/stable/Yf2wTLjmcRj%2BAbDv@xps13.dannf/
-
-By dann frazier, 29 days ago; 7 activities, latest 23 days ago; poked 13 days ago.
-Introduced in c7a75d07827a (v5.17-rc1)
-
-
-====================================================
-current cycle (v5.16.. aka v5.17-rc), unkown culprit
-====================================================
-
-
-net: bluetooth: qualcom and intel adapters, unable to reliably connect to bluetooth devices
--------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i+RE+L2FTXSA@mail.gmail.com/
-https://lore.kernel.org/linux-bluetooth/CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i%2BRE%2BL2FTXSA@mail.gmail.com/
-
-By Chris Murphy, 23 days ago; 47 activities, latest 3 days ago.
-Introduced in v5.16..f1baf68e1383 (v5.16..v5.17-rc4)
-
-Fix incoming:
-* https://lore.kernel.org/regressions/1686eb5f-7484-8ec2-8564-84fe04bf6a70@leemhuis.info/
-
-
-=========================================================================================
-previous cycle (v5.15..v5.16), culprit identified, with activity in the past three months
-=========================================================================================
-
-
-drm: fb_helper:  Build failure of mainline kernel with qcom_defconfig
----------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/YhofdlzadzRmy7tj@debian/
-https://lore.kernel.org/lkml/YhofdlzadzRmy7tj@debian/
-
-By Sudip Mukherjee, 8 days ago; 10 activities, latest 2 days ago.
-Introduced in 9d6366e743f3 (v5.16-rc1)
-
-Fix incoming:
-* drm/panel: Select DRM_DP_HELPER for DRM_PANEL_EDP
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=eea89dff4c39a106f98d1cb5e4d626f8c63908b9
-
-
-net: wireless: rtl8723bs (SDIO) - Access point mode causes a kernel panic
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/d58625ad-6f3e-a7d7-b5b4-d18eb16f4082@leemhuis.info/
-https://lore.kernel.org/regressions/d58625ad-6f3e-a7d7-b5b4-d18eb16f4082@leemhuis.info/
-
-By José Ángel Pastrana, 35 days ago; 3 activities, latest 2 days ago.
-Introduced in 54659ca026e5 (v5.16-rc1)
-
-Fix incoming:
-* staging: rtl8723bs: Fix access-point mode deadlock
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=8f4347081be32e67b0873827e0138ab0fdaaf450
-
-
-bluetooth: HSP/HFP mSBC profile broken with QCA6174
----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bug-215576-62941@https.bugzilla.kernel.org//
-https://lore.kernel.org/linux-bluetooth/bug-215576-62941@https.bugzilla.kernel.org%2F/
-
-By bugzilla-daemon@kernel.org, 27 days ago; 11 activities, latest 7 days ago.
-Introduced in b2af264ad3af (v5.16-rc1)
-
-2 patch postings are associated with this regression, the latest is this:
-* [Bug 215576] HSP/HFP mSBC profile broken with QCA6174
-  https://lore.kernel.org/linux-bluetooth/bug-215576-62941-2nprEl3omz@https.bugzilla.kernel.org%2F/
-  15 days ago, by bugzilla-daemon@kernel.org
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215576
-
-
-==================================================================================
-older cycles (..v5.15), culprit identified, with activity in the past three months
-==================================================================================
-
-
-mtd: cfi_cmdset_0002: flash write accesses on the hardware fail on a PowerPC MPC8313 to a 8-bit-parallel S29GL064N flash
-------------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de/
-https://lore.kernel.org/lkml/b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de/
-
-By Ahmad Fatoum, 83 days ago; 16 activities, latest 0 days ago.
-Introduced in dfeae1073583 (v4.18-rc1)
-
-Recent activities from: Tokunori Ikegami (3), Ahmad Fatoum (1), Vignesh
-  Raghavendra (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* [PATCH v2] mtd: cfi_cmdset_0002: Use chip_ready() for write on S29GL064N
-  https://lore.kernel.org/stable/20220306153213.411425-1-ikegami.t@gmail.com/
-  0 days ago, by Tokunori Ikegami; thread monitored.
-
-Noteworthy links:
-* [PATCH] mtd: cfi_cmdset_0002: Use chip_ready() for write on S29GL064N
-  https://lore.kernel.org/stable/20220214182011.8493-1-ikegami.t@gmail.com/
-  20 days ago, by Tokunori Ikegami; thread monitored.
-
-
-[ *NEW* ] memory corruption on Atmel SAMA5D31
----------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/13c6c9a2-6db5-c3bf-349b-4c127ad3496a@axentia.se/
-https://lore.kernel.org/lkml/13c6c9a2-6db5-c3bf-349b-4c127ad3496a@axentia.se/
-
-By Peter Rosin, 3 days ago; 10 activities, latest 1 days ago.
-Introduced in f9aa460672c9 (v5.11-rc1)
-
-Recent activities from: Peter Rosin (5), Saravana Kannan (3),
-  Tudor.Ambarus@microchip.com (2)
-
-
-btrfs: deadlocks in dedupe
---------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20211210183456.GP17148@hungrycats.org/
-https://lore.kernel.org/linux-btrfs/20211210183456.GP17148@hungrycats.org/
-
-By Zygo Blaxell, 86 days ago; 15 activities, latest 16 days ago; poked 0 days ago.
-Introduced in 3078d85c9a10 (v5.11-rc1)
-
-
-gpio: some GPIO lines have stopped working
-------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20211217153555.9413-1-marcelo.jimenez@gmail.com/
-https://lore.kernel.org/stable/20211217153555.9413-1-marcelo.jimenez@gmail.com/
-
-By Marcelo Roberto Jimenez, 79 days ago; 19 activities, latest 17 days ago; poked 2 days ago.
-Introduced in 2ab73c6d8323 (v5.7-rc1)
-
-One patch associated with this regression:
-* Patch "ARM: dts: gpio-ranges property is now required" has been added to the 5.4-stable tree
-  https://lore.kernel.org/linux-arm-kernel/16432993096685@kroah.com/
-  38 days ago, by gregkh@linuxfoundation.org
-
-
-drm: amdgpu: Too-low frequency limit for AMD GPU PCI-passed-through to Windows VM
----------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/87ee57c8fu.fsf@turner.link/
-https://lore.kernel.org/lkml/87ee57c8fu.fsf@turner.link/
-
-By James D. Turner, 48 days ago; 19 activities, latest 18 days ago; poked 0 days ago.
-Introduced in f9b7f3703ff9 (v5.14-rc1)
-
-
-Intel TGL notebook no longer enters power states deeper than PC2
-----------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/34eb9d46-d937-fc29-02b1-7cfb9162f9b8@leemhuis.info/
-https://lore.kernel.org/regressions/34eb9d46-d937-fc29-02b1-7cfb9162f9b8@leemhuis.info/
-
-By MarcelHB, 45 days ago; 19 activities, latest 24 days ago.
-Introduced in e5ad96f388b7 (v5.15-rc1)
-
-One patch associated with this regression:
-* Re: [PATCH] nvme/pci: default to simple suspend
-  https://lore.kernel.org/linux-nvme/20220207160655.GB635727@dhcp-10-100-145-180.wdc.com/
-  27 days ago, by Keith Busch
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215467
-* [Bug] nvme blocks PC10 since v5.15 - bisected
-  https://lore.kernel.org/lkml/CAJZ5v0hvvYedSn5u-i7sjpoEHU4P65t7i1b2pVn=S1q0nHWgqQ@mail.gmail.com/
-  44 days ago, by Rafael J. Wysocki; thread monitored.
-* [PATCH] nvme/pci: default to simple suspend
-  https://lore.kernel.org/linux-nvme/20220201165006.3074615-1-kbusch@kernel.org/
-  33 days ago, by Keith Busch; thread monitored.
-
-
-=============================================================================
-older cycles (..v5.15), unkown culprit, with activity in the past three weeks
-=============================================================================
-
-
-Regression in workingset_refault latency on 5.15
-------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CA+wXwBSyO87ZX5PVwdHm-=dBjZYECGmfnydUicUyrQqndgX2MQ@mail.gmail.com/
-https://lore.kernel.org/linux-mm/CA%2BwXwBSyO87ZX5PVwdHm-=dBjZYECGmfnydUicUyrQqndgX2MQ@mail.gmail.com/
-
-By Daniel Dao, 11 days ago; 49 activities, latest 1 days ago.
-Introduced in v3.0..v5.15.19
-
-Recent activities from: Shakeel Butt (11), Ivan Babrou (8), Michal
-  Koutný (3), Andrew Morton (1), Frank Hofmann (1), Michal Hocko (1)
-
-8 patch postings are associated with this regression, the latest is this:
-* + memcg-sync-flush-only-if-periodic-flush-is-delayed.patch added to -mm tree
-  https://lore.kernel.org/stable/20220304235350.5043FC340E9@smtp.kernel.org/
-  1 days ago, by Andrew Morton; thread monitored.
-
-Noteworthy links:
-* [PATCH] memcg: async flush memcg stats from perf sensitive codepaths
-  https://lore.kernel.org/stable/20220226002412.113819-1-shakeelb@google.com/
-  8 days ago, by Shakeel Butt; thread monitored.
-* [PATCH] memcg: sync flush only if periodic flush is delayed
-  https://lore.kernel.org/stable/20220304184040.1304781-1-shakeelb@google.com/
-  2 days ago, by Shakeel Butt; thread monitored.
-
-
-cifs: Failure to access cifs mount of samba share after resume from sleep
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAFrh3J9soC36+BVuwHB=g9z_KB5Og2+p2_W+BBoBOZveErz14w@mail.gmail.com/
-https://lore.kernel.org/linux-cifs/CAFrh3J9soC36%2BBVuwHB=g9z_KB5Og2%2Bp2_W%2BBBoBOZveErz14w@mail.gmail.com/
-
-By Satadru Pramanik, 7 days ago; 10 activities, latest 2 days ago.
-Introduced in v5.16.11..v5.17-rc5
-
-Recent activities from: Satadru Pramanik (6), Shyam Prasad N (2), Steve
-  French (1)
-
-
-md: unable to handle page fault while running badblocks (fsck.ext4 -c) on a raid5 md array
-------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/53e7de78-4d27-5089-f159-0d443b354666@leemhuis.info/
-https://lore.kernel.org/lkml/53e7de78-4d27-5089-f159-0d443b354666@leemhuis.info/
-
-By Dominik Mierzejewski, 12 days ago; 4 activities, latest 2 days ago.
-Introduced in v5.13..v5.14.10
-
-Recent activities from: Song Liu (2), Dominik Mierzejewski (1)
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215605
-
-
-====================================================================
-all others with unkown culprit and activity in the past three months
-====================================================================
-
-
-backlight: Intel_backlight does not work after updating from 5.10.89 to latest 5.15.17
---------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/74ee2216-a295-c2b6-328b-3e6d0cc1847e@leemhuis.info/
-https://lore.kernel.org/regressions/74ee2216-a295-c2b6-328b-3e6d0cc1847e@leemhuis.info/
-
-By Filippo Falezza, 34 days ago; 1 activities, latest 34 days ago.
-Introduced in v5.10.89..v5.15.17
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215553
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/164598944963.346832.10219407090470852309@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+References: <164659571791.547857.13375280613389065406@leemhuis.info>
+In-Reply-To: <164659571791.547857.13375280613389065406@leemhuis.info>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Sun, 6 Mar 2022 13:33:02 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgYjH_GMvdnNdVOn8m81eBXVykMAZvv_nfh8v_qdyQNvA@mail.gmail.com>
+Message-ID: <CAHk-=wgYjH_GMvdnNdVOn8m81eBXVykMAZvv_nfh8v_qdyQNvA@mail.gmail.com>
+Subject: Re: Linux regressions report for mainline [2022-03-06]
+To: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>, Rob Herring <robh@kernel.org>, 
+	Marcel Holtmann <marcel@holtmann.org>, Jakub Kicinski <kuba@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Netdev <netdev@vger.kernel.org>, 
+	Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+
+On Sun, Mar 6, 2022 at 11:58 AM Regzbot (on behalf of Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> ========================================================
+> current cycle (v5.16.. aka v5.17-rc), culprit identified
+> ========================================================
+>
+> Follow-up error for the commit fixing "PCIe regression on APM Merlin (aarch64 dev platform) preventing NVME initialization"
+> ---------------------------------------------------------------------------------------------------------------------------
+> https://linux-regtracking.leemhuis.info/regzbot/regression/Yf2wTLjmcRj+AbDv@xps13.dannf/
+> https://lore.kernel.org/stable/Yf2wTLjmcRj%2BAbDv@xps13.dannf/
+>
+> By dann frazier, 29 days ago; 7 activities, latest 23 days ago; poked 13 days ago.
+> Introduced in c7a75d07827a (v5.17-rc1)
+
+Hmm. The culprit may be identified, but it looks like we don't have a
+fix for it, so this may be one of those "left for later" things. It
+being Xgene, there's a limited number of people who care, I'm afraid.
+
+Alternatively, maybe 6dce5aa59e0b ("PCI: xgene: Use inbound resources
+for setup") should just be reverted as broken?
+
+> ====================================================
+> current cycle (v5.16.. aka v5.17-rc), unknown culprit
+> ====================================================
+>
+>
+> net: bluetooth: qualcom and intel adapters, unable to reliably connect to bluetooth devices
+> -------------------------------------------------------------------------------------------
+> https://linux-regtracking.leemhuis.info/regzbot/regression/CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i+RE+L2FTXSA@mail.gmail.com/
+> https://lore.kernel.org/linux-bluetooth/CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i%2BRE%2BL2FTXSA@mail.gmail.com/
+>
+> By Chris Murphy, 23 days ago; 47 activities, latest 3 days ago.
+> Introduced in v5.16..f1baf68e1383 (v5.16..v5.17-rc4)
+>
+> Fix incoming:
+> * https://lore.kernel.org/regressions/1686eb5f-7484-8ec2-8564-84fe04bf6a70@leemhuis.info/
+
+That's a recent fix, it seems to be only in the bluetooth tree right
+now, and won't be in rc7. I'm hoping that I'll get it in next week's
+networking dump.
+
+Cc'ing the right people just to prod them, since we've had much too
+many "Oh, I didn't even realize it was a regression" issues this time
+around.
+
+                       Linus
