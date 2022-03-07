@@ -1,166 +1,163 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CD038E2
-	for <regressions@lists.linux.dev>; Mon,  7 Mar 2022 09:59:03 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id kt27so30762837ejb.0
-        for <regressions@lists.linux.dev>; Mon, 07 Mar 2022 01:59:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rAWZGHckQWG83FD6qmD6twtYogiaFbCPHvkaTYgvtrc=;
-        b=OuN6Fob8ZXARHAUb6lnubhL4AxmCZJ99baH8LErGQIlvfbE5eL1uatf1DTdBRtKv9P
-         MoAAKYrvhoHS0rTcHVQ+C2+C9tubmu3xnQYptbsKli159zmbJHX/23gJS/iXyW9nXAfB
-         Poa3z7zMsdiDz8R1IqpEWHHEj23m3Ntksg1QHLPBM2UKPWfE2q2Oyu7sK1Sz9UIky6dk
-         /yhTHzTvwJydUatAF4uJBeZbELpjFZa961DWbw/0gqxCYiQDVtcZR9c/QQD0IkkseYWM
-         RzRc699Un2EYGq27FOp5ywEaDZlsWOWjwEt3WDwENMvcZaLw4cEeHrigtbp8kneuqzfH
-         xAOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rAWZGHckQWG83FD6qmD6twtYogiaFbCPHvkaTYgvtrc=;
-        b=xI2Kro9COWU3XYrY4HUBtozT4W/AJIyA+E38DLzuK3u8qWuhgLegwYwE/bXZvK/Fqo
-         KqOWI4yh8qJjX2z2p3NLF6Wvx+DZKOD7kV0IxOpmnyZhXO2wHBrAMR5AvNoGMSNPKKht
-         QVW7KsPaY1XqMmhiT0R95D8QIhKgRgsXHFWkDeJQwxPjJdBWCgwuvpRVfmlcTudIVW+q
-         R7+EP+1ydflEj+QzyH1EVtiJeNW2T1Q9qTubOamE61tUku+ENgDTYSaULyIk4sQEOAzb
-         e1+8S3FTPE9gm9ATUocO6bqh9U9duYmXYEG/ID+8VuvVmqHio0e0NPpnRsJaPlFlo3Vh
-         CD8g==
-X-Gm-Message-State: AOAM531tQGNAYzF9UCnpgYZ2h7Aqjku+mJAWTcPBa5SPhwxxtMsbkZSh
-	tx2lPKWKZyi7i2hPQy4DAN0NvvUIRdPdhFkiCGBJ7liDRKQ=
-X-Google-Smtp-Source: ABdhPJyFIGlx6PfBNJwwECfjPB46G0LNPkPrBmFv66KUSM4TH0xQBhxXMM2hyhDHPkU331BJW8BrmsFxGfgNtYbBGdM=
-X-Received: by 2002:a17:907:728b:b0:6da:97db:b66d with SMTP id
- dt11-20020a170907728b00b006da97dbb66dmr8327290ejc.636.1646647141819; Mon, 07
- Mar 2022 01:59:01 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2994138E2
+	for <regressions@lists.linux.dev>; Mon,  7 Mar 2022 10:12:11 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nRALX-0003xB-MY; Mon, 07 Mar 2022 11:12:07 +0100
+Message-ID: <28ebe79a-6e94-4b1b-c4e8-291e614327b0@leemhuis.info>
+Date: Mon, 7 Mar 2022 11:12:06 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+Content-Language: en-US
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>,
+ stable <stable@vger.kernel.org>, regressions@lists.linux.dev,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ Thierry Reding <treding@nvidia.com>, Vidya Sagar <vidyas@nvidia.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Stephen Rothwell <sfr@canb.auug.org.au>,
+ Edmond Chung <edmondchung@google.com>, Andrew Chant <achant@google.com>,
+ Will McVicker <willmcvicker@google.com>,
+ Sergio Tanzilli <tanzilli@acmesystems.it>
 References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
  <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
  <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
  <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
  <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
  <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
- <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com> <cadc5208-2eb1-beb1-4f6d-d07939072ca3@leemhuis.info>
-In-Reply-To: <cadc5208-2eb1-beb1-4f6d-d07939072ca3@leemhuis.info>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 7 Mar 2022 10:58:51 +0100
-Message-ID: <CAMRc=MfbeOBim5mAMGghUYX_uvAKnCikEqftF-k4EZE6g48cNg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>, stable <stable@vger.kernel.org>, 
-	regressions@lists.linux.dev, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, 
-	Vidya Sagar <vidyas@nvidia.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Edmond Chung <edmondchung@google.com>, 
-	Andrew Chant <achant@google.com>, Will McVicker <willmcvicker@google.com>, 
-	Sergio Tanzilli <tanzilli@acmesystems.it>
-Content-Type: text/plain; charset="UTF-8"
+ <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com>
+ <cadc5208-2eb1-beb1-4f6d-d07939072ca3@leemhuis.info>
+ <CAMRc=MfbeOBim5mAMGghUYX_uvAKnCikEqftF-k4EZE6g48cNg@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CAMRc=MfbeOBim5mAMGghUYX_uvAKnCikEqftF-k4EZE6g48cNg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646647931;82637779;
+X-HE-SMSGID: 1nRALX-0003xB-MY
 
-On Fri, Mar 4, 2022 at 8:13 AM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> Hi, this is your Linux kernel regression tracker.
->
-> On 16.02.22 15:40, Bartosz Golaszewski wrote:
-> > On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >>
-> >> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
-> >> <marcelo.jimenez@gmail.com> wrote:
-> >>> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >>
-> >>>> I am curious about the usecases and how deeply you have built
-> >>>> yourselves into this.
-> >>>
-> >>> I don't know if I understand what you mean, sorry.
-> >>
-> >> Why does the user need the sysfs ABI? What is it used for?
-> >>
-> >> I.e what is the actual use case?
-> >>
-> >>>>> In any case, the upstream file should be enough to test the issue reported here.
-> >>>>
-> >>>> The thing is that upstream isn't super happy that you have been
-> >>>> making yourselves dependent on features that we are actively
-> >>>> discouraging and then demanding that we support these features.
-> >>>
-> >>> Hum, demanding seems to be a strong word for what I am doing here.
-> >>>
-> >>> Deprecated should not mean broken. My point is: the API seems to be
-> >>> currently broken. User space apps got broken, that's a fact. I even
-> >>> took the time to bisect the kernel and show you which commit broke it.
-> >>> So, no, I am not demanding. More like reporting and providing a
-> >>> temporary solution to those with a similar problem.
-> >>>
-> >>> Maybe it is time to remove the API, but this is up to "upstream".
-> >>> Leaving the API broken seems pointless and unproductive.
-> >>>
-> >>> Sorry for the "not super happiness of upstream", but maybe upstream
-> >>> got me wrong.
-> >>>
-> >>> We are not "making ourselves dependent on features ...". The API was
-> >>> there. We used it. Now it is deprecated, ok, we should move on. I got
-> >>> the message.
-> >>
-> >> Ouch I deserved some slamming for this.
-> >>
-> >> I'm sorry if I came across as harsh :(
-> >>
-> >> I just don't know how to properly push for this.
-> >>
-> >> I have even pushed the option of the deprecated sysfs ABI
-> >> behind the CONFIG_EXPERT option, which should mean that
-> >> the kernel config has been made by someone who has checked
-> >> the option "yes I am an expert I know what I am doing"
-> >> yet failed to observe that this ABI is obsoleted since 5 years
-> >> and hence failed to be an expert.
-> >>
-> >> Of course the ABI (not API really) needs to be fixed if we can find the
-> >> problem. It's frustrating that fixing it seems to fix broken other
-> >> features which are not deprecated, hence the annoyance on my
-> >> part.
-> >>
-> >
-> > I'm afraid we'll earn ourselves a good old LinusRant if we keep
-> > pushing the character device as a solution to the problem here.
-> > Marcelo is right after all: he used an existing user interface, the
-> > interface broke, it must be fixed.
-> >
-> > I would prefer to find a solution that fixes Marcelo's issue while
-> > keeping the offending patches in tree but it seems like the issue is
-> > more complicated and will require some rework of the sysfs interface.
-> >
-> > In which case unless there are objections I lean towards reverting the
-> > relevant commits.
->
-> Sounds good to me, but that was two weeks ago and afaics nothing
-> happened since then. Or did the discussion continue somewhere else?
->
+On 07.03.22 10:58, Bartosz Golaszewski wrote:
+> On Fri, Mar 4, 2022 at 8:13 AM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+>> On 16.02.22 15:40, Bartosz Golaszewski wrote:
+>>> On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>>>
+>>>> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
+>>>> <marcelo.jimenez@gmail.com> wrote:
+>>>>> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>>>
+>>>>>> I am curious about the usecases and how deeply you have built
+>>>>>> yourselves into this.
+>>>>>
+>>>>> I don't know if I understand what you mean, sorry.
+>>>>
+>>>> Why does the user need the sysfs ABI? What is it used for?
+>>>>
+>>>> I.e what is the actual use case?
+>>>>
+>>>>>>> In any case, the upstream file should be enough to test the issue reported here.
+>>>>>>
+>>>>>> The thing is that upstream isn't super happy that you have been
+>>>>>> making yourselves dependent on features that we are actively
+>>>>>> discouraging and then demanding that we support these features.
+>>>>>
+>>>>> Hum, demanding seems to be a strong word for what I am doing here.
+>>>>>
+>>>>> Deprecated should not mean broken. My point is: the API seems to be
+>>>>> currently broken. User space apps got broken, that's a fact. I even
+>>>>> took the time to bisect the kernel and show you which commit broke it.
+>>>>> So, no, I am not demanding. More like reporting and providing a
+>>>>> temporary solution to those with a similar problem.
+>>>>>
+>>>>> Maybe it is time to remove the API, but this is up to "upstream".
+>>>>> Leaving the API broken seems pointless and unproductive.
+>>>>>
+>>>>> Sorry for the "not super happiness of upstream", but maybe upstream
+>>>>> got me wrong.
+>>>>>
+>>>>> We are not "making ourselves dependent on features ...". The API was
+>>>>> there. We used it. Now it is deprecated, ok, we should move on. I got
+>>>>> the message.
+>>>>
+>>>> Ouch I deserved some slamming for this.
+>>>>
+>>>> I'm sorry if I came across as harsh :(
+>>>>
+>>>> I just don't know how to properly push for this.
+>>>>
+>>>> I have even pushed the option of the deprecated sysfs ABI
+>>>> behind the CONFIG_EXPERT option, which should mean that
+>>>> the kernel config has been made by someone who has checked
+>>>> the option "yes I am an expert I know what I am doing"
+>>>> yet failed to observe that this ABI is obsoleted since 5 years
+>>>> and hence failed to be an expert.
+>>>>
+>>>> Of course the ABI (not API really) needs to be fixed if we can find the
+>>>> problem. It's frustrating that fixing it seems to fix broken other
+>>>> features which are not deprecated, hence the annoyance on my
+>>>> part.
+>>>>
+>>>
+>>> I'm afraid we'll earn ourselves a good old LinusRant if we keep
+>>> pushing the character device as a solution to the problem here.
+>>> Marcelo is right after all: he used an existing user interface, the
+>>> interface broke, it must be fixed.
+>>>
+>>> I would prefer to find a solution that fixes Marcelo's issue while
+>>> keeping the offending patches in tree but it seems like the issue is
+>>> more complicated and will require some rework of the sysfs interface.
+>>>
+>>> In which case unless there are objections I lean towards reverting the
+>>> relevant commits.
+>>
+>> Sounds good to me, but that was two weeks ago and afaics nothing
+>> happened since then. Or did the discussion continue somewhere else?
+> 
+> Now queued for fixes, thanks for the reminder.
 
-Now queued for fixes, thanks for the reminder.
+thx, and yw, that's what I'm here for ;-)
 
-Bart
+Sadly that commit didn't use 'Link:' tags pointing to the report (the
+start of this thread) using lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'. I'd say that would have been
+really wise here if someone sooner or later needs to look into the
+backstory of the fix. And is also means that I have to tell my
+regression tracking bot about this issue manually now. :-/
 
-> >>> And I will also tell the dev team that they must use the GPIO char dev
-> >>> and libgpiod from now on and must port everything to it. And we will
-> >>> likely have another group of people who are not super happy, but
-> >>> that's life... :)
-> >>
-> >> I'm happy to hear this!
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
->
-> #regzbot poke
+#regzbot fixed-by: 86528d306d1826cfe59481001d63761ba793317a
+
+But whatever, thx for taking care of this!
+
+Have a nice week everyone!
+
+Ciao, Thorsten
+
+>>>>> And I will also tell the dev team that they must use the GPIO char dev
+>>>>> and libgpiod from now on and must port everything to it. And we will
+>>>>> likely have another group of people who are not super happy, but
+>>>>> that's life... :)
+>>>>
+>>>> I'm happy to hear this!
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>
+>> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+>> reports on my table. I can only look briefly into most of them and lack
+>> knowledge about most of the areas they concern. I thus unfortunately
+>> will sometimes get things wrong or miss something important. I hope
+>> that's not the case here; if you think it is, don't hesitate to tell me
+>> in a public reply, it's in everyone's interest to set the public record
+>> straight.
+>>
+>> #regzbot poke
+> 
