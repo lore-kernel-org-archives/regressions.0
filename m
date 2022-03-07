@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F256F7A
-	for <regressions@lists.linux.dev>; Mon,  7 Mar 2022 14:25:51 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30117A
+	for <regressions@lists.linux.dev>; Mon,  7 Mar 2022 14:26:36 +0000 (UTC)
+Received: from [77.20.72.149] (helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nREJ3-0002Dv-Oi; Mon, 07 Mar 2022 15:25:49 +0100
-Message-ID: <e47643b5-46b3-57f4-636b-e33d2c8f13ff@leemhuis.info>
-Date: Mon, 7 Mar 2022 15:25:49 +0100
+	id 1nREJk-0002Tm-M3; Mon, 07 Mar 2022 15:26:32 +0100
+Message-ID: <0011724c-655b-a667-9ff7-0e18c2a8c3f5@leemhuis.info>
+Date: Mon, 7 Mar 2022 15:26:31 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,116 +16,67 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH] PCI: xgene: Fix IB window setup #forregzbot
+Subject: Re: Linux regressions report for mainline [2022-03-06]
 Content-Language: en-US
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Marcel Holtmann <marcel@holtmann.org>, Jakub Kicinski <kuba@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Netdev <netdev@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>
+References: <164659571791.547857.13375280613389065406@leemhuis.info>
+ <CAHk-=wgYjH_GMvdnNdVOn8m81eBXVykMAZvv_nfh8v_qdyQNvA@mail.gmail.com>
+ <4a28b83b-37ef-1533-563a-39b66c5ff158@leemhuis.info>
+ <CAL_JsqLHun+X4jMwTbVMmjjETfbP73j52XCwWBj9MJCkpQ41mA@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20211129173637.303201-1-robh@kernel.org>
- <Yf2wTLjmcRj+AbDv@xps13.dannf>
- <74cf71d9-8c9f-6b3d-8019-2d7f4e9d0d2d@leemhuis.info>
-In-Reply-To: <74cf71d9-8c9f-6b3d-8019-2d7f4e9d0d2d@leemhuis.info>
+In-Reply-To: <CAL_JsqLHun+X4jMwTbVMmjjETfbP73j52XCwWBj9MJCkpQ41mA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646663152;78dfc3c7;
-X-HE-SMSGID: 1nREJ3-0002Dv-Oi
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646663196;db28dbbe;
+X-HE-SMSGID: 1nREJk-0002Tm-M3
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+On 07.03.22 14:34, Rob Herring wrote:
+> On Mon, Mar 7, 2022 at 1:32 AM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+>>
+>> On 06.03.22 22:33, Linus Torvalds wrote:
+>>> On Sun, Mar 6, 2022 at 11:58 AM Regzbot (on behalf of Thorsten
+>>> Leemhuis) <regressions@leemhuis.info> wrote:
+>>>>
+>>>> ========================================================
+>>>> current cycle (v5.16.. aka v5.17-rc), culprit identified
+>>>> ========================================================
+>>>>
+>>>> Follow-up error for the commit fixing "PCIe regression on APM Merlin (aarch64 dev platform) preventing NVME initialization"
+>>>> ---------------------------------------------------------------------------------------------------------------------------
+>>>> https://linux-regtracking.leemhuis.info/regzbot/regression/Yf2wTLjmcRj+AbDv@xps13.dannf/
+>>>> https://lore.kernel.org/stable/Yf2wTLjmcRj%2BAbDv@xps13.dannf/
+>>>>
+>>>> By dann frazier, 29 days ago; 7 activities, latest 23 days ago; poked 13 days ago.
+>>>> Introduced in c7a75d07827a (v5.17-rc1)
+> Actually, it was introduced over a year ago in 6dce5aa59e0b. It was
+> fixed in c7a75d07827a for XGene2, but that *further* broke XGene1
+> which was just reported this cycle.
 
-Forwarding a few details from here:
-https://lore.kernel.org/regressions/CAL_JsqLHun+X4jMwTbVMmjjETfbP73j52XCwWBj9MJCkpQ41mA@mail.gmail.com/
+Many thx for the clarification, I'll update the regzbot entry
+accordingly and..
 
-#regzbot introduced: 6dce5aa59e0b
-#regzbot title: c7a75d07827a fixed 6dce5aa59e0b for XGene2, but that
-*further* broke XGene1
-#regzbot backburner: needs more debugging and number of people who care
-likely small anyway
+>>> Hmm. The culprit may be identified, but it looks like we don't have a
+>>> fix for it, so this may be one of those "left for later" things. It
+>>> being Xgene, there's a limited number of people who care, I'm afraid.
+>>>
+>>> Alternatively, maybe 6dce5aa59e0b ("PCI: xgene: Use inbound resources
+>>> for setup") should just be reverted as broken?
+>>
+>> I don't care much, I just hope someone once again will look into this,
+>> as this (and the previous) regression are on my list for quite a while
+>> already and process once again seems to have slowed down. :-/
+> 
+> It's going to take some more debug patches from me as what's been
+> tried so far didn't work and I'm not ready to give up and revert this
+> cleanup.
 
-On 06.02.22 10:52, Thorsten Leemhuis wrote:
-> [TLDR: I'm adding the regression report below to regzbot, the Linux
-> kernel regression tracking bot; nearly all text you find below is
-> compiled from a few templates paragraphs you likely have encountered
-> already already from mails similar to this one.]
-> 
-> Hi, this is your Linux kernel regression tracker speaking.
-> 
-> CCing the regression mailing list, as it should be in the loop for all
-> regressions, as explained here:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-> 
-> On 05.02.22 00:01, dann frazier wrote:
->> On Mon, Nov 29, 2021 at 11:36:37AM -0600, Rob Herring wrote:
->>> Commit 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup")
->>> broke PCI support on XGene. The cause is the IB resources are now sorted
->>> in address order instead of being in DT dma-ranges order. The result is
->>> which inbound registers are used for each region are swapped. I don't
->>> know the details about this h/w, but it appears that IB region 0
->>> registers can't handle a size greater than 4GB. In any case, limiting
->>> the size for region 0 is enough to get back to the original assignment
->>> of dma-ranges to regions.
->>
->> hey Rob!
->>
->> I've been seeing a panic on HP Moonshoot m400 cartridges (X-Gene1) -
->> only during network installs - that I also bisected down to commit
->> 6dce5aa59e0b ("PCI: xgene: Use inbound resources for setup"). I was
->> hoping that this patch that fixed the issue on Stéphane's X-Gene2
->> system would also fix my issue, but no luck. In fact, it seems to just
->> makes it fail differently. Reverting both patches is required to get a
->> v5.17-rc kernel to boot.
->>
->> I've collected the following logs - let me know if anything else would
->> be useful.
->>
->> 1) v5.17-rc2+ (unmodified):
->>    http://dannf.org/bugs/m400-no-reverts.log
->>    Note that the mlx4 driver fails initialization.
->>
->> 2) v5.17-rc2+, w/o the commit that fixed Stéphane's system:
->>    http://dannf.org/bugs/m400-xgene2-fix-reverted.log
->>    Note the mlx4 MSI-X timeout, and later panic.
->>
->> 3) v5.17-rc2+, w/ both commits reverted (works)
->>    http://dannf.org/bugs/m400-both-reverted.log
-> 
-> Thanks for the report.
-> 
-> To be sure this issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, my Linux kernel regression tracking bot:
-> 
-> #regzbot ^introduced c7a75d07827a1f33d
-> #regzbot title Follow-up error for the commit fixing "PCIe regression on
-> APM Merlin (aarch64 dev platform) preventing NVME initialization"
-> #regzbot ignore-activity
-> 
-> Reminder for developers: when fixing the issue, please add a 'Link:'
-> tags pointing to the report (the mail quoted above) using the
-> lore.kernel.org/r/, as explained in
-> 'Documentation/process/submitting-patches.rst' and
-> 'Documentation/process/5.Posting.rst', as this allows the bot to assign
-> any fixes posted or commited with the report to always show the current
-> status of things and automatically close the issue when the fix hits the
-> right tree.
-> 
-> I'm sending this to everyone that got the initial report, to make them
-> aware of the tracking. I also hope that messages like this motivate
-> people to directly get at least the regression mailing list and ideally
-> even regzbot involved when dealing with regressions, as messages like
-> this wouldn't be needed then.
-> 
-> Don't worry, I'll send further messages wrt to this regression just to
-> the lists (with a tag in the subject so people can filter them away), if
-> they are relevant just for regzbot. With a bit of luck no such messages
-> will be needed anyway.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
-> 
+...will mark it as "on backburner" then, which stands for "get it out of
+sight, but don't forget about this completely".
+
+Ciao, Thorsten
