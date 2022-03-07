@@ -1,112 +1,60 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CD838C9
-	for <regressions@lists.linux.dev>; Mon,  7 Mar 2022 07:32:02 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nR7qZ-0006vu-C1; Mon, 07 Mar 2022 08:31:59 +0100
-Message-ID: <4a28b83b-37ef-1533-563a-39b66c5ff158@leemhuis.info>
-Date: Mon, 7 Mar 2022 08:31:57 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147D638C9
+	for <regressions@lists.linux.dev>; Mon,  7 Mar 2022 07:40:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 714C7C340F4;
+	Mon,  7 Mar 2022 07:40:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1646638804;
+	bh=90JipnhONsH+cRU/myoMOoJCjRMpxCED61IM/60Etbw=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=sujDwLFIZ9s6U/lq5t5WYSV9IwI6Xqgq8yVcSZQ4btcuExMybeeUjDxEKgHNzYEdJ
+	 MGrQVXUNTYZ1YXA/c2y6+HPCea6LpDrDpmzbw8DpOrz/V9g4eh2e2F5KPJX998VjlZ
+	 BJa7E0u2vHfO0ozZ6VG/K/UAxoA+3SRSPS7pmJoVJsShmdjUprVgJnmsFKhwpydF9f
+	 2uDjNRr/YDVDhXLUOzV8waXDgNCW7v9nJNcg8HEwlkJ0og2W67xTkELaQGqc7bpEXp
+	 ESUEb/GDR1QKrtz84EErzRunrq4c10AGW1kYNLx/pcddAdJfDzJIeILxLTuVRkO3DL
+	 fb0VrhdVSRzTQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: Nico Sneck <snecknico@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,  Larry Finger <Larry.Finger@lwfinger.net>,  Yan-Hsuan Chuang <tony0620emma@gmail.com>,  "regressions\@lists.linux.dev" <regressions@lists.linux.dev>,  linux-wireless@vger.kernel.org
+Subject: Re: rtw_8822ce wifi regression after kernel update from 5.15 to 5.16
+References: <CAO_iuKEL8tHnovpGiQGUxg7JUpZFxHpxhOHbqAMgbt5R4Eftgg@mail.gmail.com>
+	<2d1c129b-d473-39e3-69b7-6f36dc1682a6@leemhuis.info>
+	<9312eb18-840f-9a1f-bcb0-8e3a43e45239@leemhuis.info>
+	<236d45a6-8b88-c02e-a61d-ce1773fdb0ef@lwfinger.net>
+	<02ef7552-67f5-dbcf-ece6-87b5b49e1bb5@leemhuis.info>
+	<CAO_iuKHQ2DdLvSegcoezCzRVHqNFg+HM8qk1fr1n=s9cMz8QFA@mail.gmail.com>
+Date: Mon, 07 Mar 2022 09:39:59 +0200
+In-Reply-To: <CAO_iuKHQ2DdLvSegcoezCzRVHqNFg+HM8qk1fr1n=s9cMz8QFA@mail.gmail.com>
+	(Nico Sneck's message of "Fri, 4 Mar 2022 16:45:28 +0200")
+Message-ID: <877d96xlbk.fsf@tynnyri.adurom.net>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: Linux regressions report for mainline [2022-03-06]
-Content-Language: en-US
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Rob Herring <robh@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
- Jakub Kicinski <kuba@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Netdev <netdev@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>
-References: <164659571791.547857.13375280613389065406@leemhuis.info>
- <CAHk-=wgYjH_GMvdnNdVOn8m81eBXVykMAZvv_nfh8v_qdyQNvA@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAHk-=wgYjH_GMvdnNdVOn8m81eBXVykMAZvv_nfh8v_qdyQNvA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646638322;c6fcc38d;
-X-HE-SMSGID: 1nR7qZ-0006vu-C1
+Content-Type: text/plain
 
-On 06.03.22 22:33, Linus Torvalds wrote:
-> On Sun, Mar 6, 2022 at 11:58 AM Regzbot (on behalf of Thorsten
-> Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> ========================================================
->> current cycle (v5.16.. aka v5.17-rc), culprit identified
->> ========================================================
->>
->> Follow-up error for the commit fixing "PCIe regression on APM Merlin (aarch64 dev platform) preventing NVME initialization"
->> ---------------------------------------------------------------------------------------------------------------------------
->> https://linux-regtracking.leemhuis.info/regzbot/regression/Yf2wTLjmcRj+AbDv@xps13.dannf/
->> https://lore.kernel.org/stable/Yf2wTLjmcRj%2BAbDv@xps13.dannf/
->>
->> By dann frazier, 29 days ago; 7 activities, latest 23 days ago; poked 13 days ago.
->> Introduced in c7a75d07827a (v5.17-rc1)
-> 
-> Hmm. The culprit may be identified, but it looks like we don't have a
-> fix for it, so this may be one of those "left for later" things. It
-> being Xgene, there's a limited number of people who care, I'm afraid.
-> 
-> Alternatively, maybe 6dce5aa59e0b ("PCI: xgene: Use inbound resources
-> for setup") should just be reverted as broken?
+Nico Sneck <snecknico@gmail.com> writes:
 
-I don't care much, I just hope someone once again will look into this,
-as this (and the previous) regression are on my list for quite a while
-already and process once again seems to have slowed down. :-/
+> Sorry I'm a bit late, been really busy with work lately. Haven't had
+> time to continue bisecting, hopefully I can find some time this
+> sunday.
+>
+> I still think this is a kernel regression - I don't believe I'm using
+> the driver from Larry's repo. This is a stock Fedora 35 installation,
+> I've not installed the driver from Larry's repo, and I don't believe
+> Fedora packages it by default.
 
->> ====================================================
->> current cycle (v5.16.. aka v5.17-rc), unknown culprit
->> ====================================================
->>
->>
->> net: bluetooth: qualcom and intel adapters, unable to reliably connect to bluetooth devices
->> -------------------------------------------------------------------------------------------
->> https://linux-regtracking.leemhuis.info/regzbot/regression/CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i+RE+L2FTXSA@mail.gmail.com/
->> https://lore.kernel.org/linux-bluetooth/CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i%2BRE%2BL2FTXSA@mail.gmail.com/
->>
->> By Chris Murphy, 23 days ago; 47 activities, latest 3 days ago.
->> Introduced in v5.16..f1baf68e1383 (v5.16..v5.17-rc4)
->>
->> Fix incoming:
->> * https://lore.kernel.org/regressions/1686eb5f-7484-8ec2-8564-84fe04bf6a70@leemhuis.info/
-> 
-> That's a recent fix, it seems to be only in the bluetooth tree right
-> now, and won't be in rc7. I'm hoping that I'll get it in next week's
-> networking dump.
+It's not clear for me if you are using a vanilla release from
+kernel.org. But _if_ you are using a Fedora kernel you should report
+your problem to Fedora. We have no knowledge what changes distros do to
+their kernels.
 
-You will, it afaics already got merged into the right branch already:
-https://lore.kernel.org/all/164637060982.7623.2431046217416492091.git-patchwork-notify@kernel.org/
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-It just came slightly too late for the last pull into the net. The same
-had happened a week earlier with regression fixes, that's why I already
-brought this up:
-
-https://lore.kernel.org/netdev/37349299-c47b-1f67-2229-78ae9b9b4488@leemhuis.info/
-
-Short story: things should hopefully improve soon.
-
-BTW: @bluetooth maintainers, I noticed your -next branch is in next, but
-your -fixes branch
-git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git is
-not. Is that on purpose? Some (many?) of the other trees downstream to
-the net tree have both their -fixes and their -next branches included
-there regularly.
-
-> Cc'ing the right people just to prod them, since we've had much too
-> many "Oh, I didn't even realize it was a regression" issues this time
-> around.
-
-Yeah, since I started regression tracking again I noticed that quite a
-few regressions fixes are merged quite slowly because maintainers put
-them in their -next branches instead of sending them towards mainline
-within a few days. I always try to make the maintainers aware of this
-when I noticed it. That already helped a little afaics, but there is
-more work ahead of me afaics...
-
-Ciao, Thorsten
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
