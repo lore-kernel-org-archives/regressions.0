@@ -1,60 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147D638C9
-	for <regressions@lists.linux.dev>; Mon,  7 Mar 2022 07:40:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 714C7C340F4;
-	Mon,  7 Mar 2022 07:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1646638804;
-	bh=90JipnhONsH+cRU/myoMOoJCjRMpxCED61IM/60Etbw=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=sujDwLFIZ9s6U/lq5t5WYSV9IwI6Xqgq8yVcSZQ4btcuExMybeeUjDxEKgHNzYEdJ
-	 MGrQVXUNTYZ1YXA/c2y6+HPCea6LpDrDpmzbw8DpOrz/V9g4eh2e2F5KPJX998VjlZ
-	 BJa7E0u2vHfO0ozZ6VG/K/UAxoA+3SRSPS7pmJoVJsShmdjUprVgJnmsFKhwpydF9f
-	 2uDjNRr/YDVDhXLUOzV8waXDgNCW7v9nJNcg8HEwlkJ0og2W67xTkELaQGqc7bpEXp
-	 ESUEb/GDR1QKrtz84EErzRunrq4c10AGW1kYNLx/pcddAdJfDzJIeILxLTuVRkO3DL
-	 fb0VrhdVSRzTQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Nico Sneck <snecknico@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,  Larry Finger <Larry.Finger@lwfinger.net>,  Yan-Hsuan Chuang <tony0620emma@gmail.com>,  "regressions\@lists.linux.dev" <regressions@lists.linux.dev>,  linux-wireless@vger.kernel.org
-Subject: Re: rtw_8822ce wifi regression after kernel update from 5.15 to 5.16
-References: <CAO_iuKEL8tHnovpGiQGUxg7JUpZFxHpxhOHbqAMgbt5R4Eftgg@mail.gmail.com>
-	<2d1c129b-d473-39e3-69b7-6f36dc1682a6@leemhuis.info>
-	<9312eb18-840f-9a1f-bcb0-8e3a43e45239@leemhuis.info>
-	<236d45a6-8b88-c02e-a61d-ce1773fdb0ef@lwfinger.net>
-	<02ef7552-67f5-dbcf-ece6-87b5b49e1bb5@leemhuis.info>
-	<CAO_iuKHQ2DdLvSegcoezCzRVHqNFg+HM8qk1fr1n=s9cMz8QFA@mail.gmail.com>
-Date: Mon, 07 Mar 2022 09:39:59 +0200
-In-Reply-To: <CAO_iuKHQ2DdLvSegcoezCzRVHqNFg+HM8qk1fr1n=s9cMz8QFA@mail.gmail.com>
-	(Nico Sneck's message of "Fri, 4 Mar 2022 16:45:28 +0200")
-Message-ID: <877d96xlbk.fsf@tynnyri.adurom.net>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CD038E2
+	for <regressions@lists.linux.dev>; Mon,  7 Mar 2022 09:59:03 +0000 (UTC)
+Received: by mail-ej1-f42.google.com with SMTP id kt27so30762837ejb.0
+        for <regressions@lists.linux.dev>; Mon, 07 Mar 2022 01:59:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rAWZGHckQWG83FD6qmD6twtYogiaFbCPHvkaTYgvtrc=;
+        b=OuN6Fob8ZXARHAUb6lnubhL4AxmCZJ99baH8LErGQIlvfbE5eL1uatf1DTdBRtKv9P
+         MoAAKYrvhoHS0rTcHVQ+C2+C9tubmu3xnQYptbsKli159zmbJHX/23gJS/iXyW9nXAfB
+         Poa3z7zMsdiDz8R1IqpEWHHEj23m3Ntksg1QHLPBM2UKPWfE2q2Oyu7sK1Sz9UIky6dk
+         /yhTHzTvwJydUatAF4uJBeZbELpjFZa961DWbw/0gqxCYiQDVtcZR9c/QQD0IkkseYWM
+         RzRc699Un2EYGq27FOp5ywEaDZlsWOWjwEt3WDwENMvcZaLw4cEeHrigtbp8kneuqzfH
+         xAOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rAWZGHckQWG83FD6qmD6twtYogiaFbCPHvkaTYgvtrc=;
+        b=xI2Kro9COWU3XYrY4HUBtozT4W/AJIyA+E38DLzuK3u8qWuhgLegwYwE/bXZvK/Fqo
+         KqOWI4yh8qJjX2z2p3NLF6Wvx+DZKOD7kV0IxOpmnyZhXO2wHBrAMR5AvNoGMSNPKKht
+         QVW7KsPaY1XqMmhiT0R95D8QIhKgRgsXHFWkDeJQwxPjJdBWCgwuvpRVfmlcTudIVW+q
+         R7+EP+1ydflEj+QzyH1EVtiJeNW2T1Q9qTubOamE61tUku+ENgDTYSaULyIk4sQEOAzb
+         e1+8S3FTPE9gm9ATUocO6bqh9U9duYmXYEG/ID+8VuvVmqHio0e0NPpnRsJaPlFlo3Vh
+         CD8g==
+X-Gm-Message-State: AOAM531tQGNAYzF9UCnpgYZ2h7Aqjku+mJAWTcPBa5SPhwxxtMsbkZSh
+	tx2lPKWKZyi7i2hPQy4DAN0NvvUIRdPdhFkiCGBJ7liDRKQ=
+X-Google-Smtp-Source: ABdhPJyFIGlx6PfBNJwwECfjPB46G0LNPkPrBmFv66KUSM4TH0xQBhxXMM2hyhDHPkU331BJW8BrmsFxGfgNtYbBGdM=
+X-Received: by 2002:a17:907:728b:b0:6da:97db:b66d with SMTP id
+ dt11-20020a170907728b00b006da97dbb66dmr8327290ejc.636.1646647141819; Mon, 07
+ Mar 2022 01:59:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+ <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
+ <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
+ <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
+ <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
+ <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com> <cadc5208-2eb1-beb1-4f6d-d07939072ca3@leemhuis.info>
+In-Reply-To: <cadc5208-2eb1-beb1-4f6d-d07939072ca3@leemhuis.info>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 7 Mar 2022 10:58:51 +0100
+Message-ID: <CAMRc=MfbeOBim5mAMGghUYX_uvAKnCikEqftF-k4EZE6g48cNg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>, stable <stable@vger.kernel.org>, 
+	regressions@lists.linux.dev, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, 
+	Vidya Sagar <vidyas@nvidia.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Edmond Chung <edmondchung@google.com>, 
+	Andrew Chant <achant@google.com>, Will McVicker <willmcvicker@google.com>, 
+	Sergio Tanzilli <tanzilli@acmesystems.it>
+Content-Type: text/plain; charset="UTF-8"
 
-Nico Sneck <snecknico@gmail.com> writes:
-
-> Sorry I'm a bit late, been really busy with work lately. Haven't had
-> time to continue bisecting, hopefully I can find some time this
-> sunday.
+On Fri, Mar 4, 2022 at 8:13 AM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
 >
-> I still think this is a kernel regression - I don't believe I'm using
-> the driver from Larry's repo. This is a stock Fedora 35 installation,
-> I've not installed the driver from Larry's repo, and I don't believe
-> Fedora packages it by default.
+> Hi, this is your Linux kernel regression tracker.
+>
+> On 16.02.22 15:40, Bartosz Golaszewski wrote:
+> > On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> >>
+> >> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
+> >> <marcelo.jimenez@gmail.com> wrote:
+> >>> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> >>
+> >>>> I am curious about the usecases and how deeply you have built
+> >>>> yourselves into this.
+> >>>
+> >>> I don't know if I understand what you mean, sorry.
+> >>
+> >> Why does the user need the sysfs ABI? What is it used for?
+> >>
+> >> I.e what is the actual use case?
+> >>
+> >>>>> In any case, the upstream file should be enough to test the issue reported here.
+> >>>>
+> >>>> The thing is that upstream isn't super happy that you have been
+> >>>> making yourselves dependent on features that we are actively
+> >>>> discouraging and then demanding that we support these features.
+> >>>
+> >>> Hum, demanding seems to be a strong word for what I am doing here.
+> >>>
+> >>> Deprecated should not mean broken. My point is: the API seems to be
+> >>> currently broken. User space apps got broken, that's a fact. I even
+> >>> took the time to bisect the kernel and show you which commit broke it.
+> >>> So, no, I am not demanding. More like reporting and providing a
+> >>> temporary solution to those with a similar problem.
+> >>>
+> >>> Maybe it is time to remove the API, but this is up to "upstream".
+> >>> Leaving the API broken seems pointless and unproductive.
+> >>>
+> >>> Sorry for the "not super happiness of upstream", but maybe upstream
+> >>> got me wrong.
+> >>>
+> >>> We are not "making ourselves dependent on features ...". The API was
+> >>> there. We used it. Now it is deprecated, ok, we should move on. I got
+> >>> the message.
+> >>
+> >> Ouch I deserved some slamming for this.
+> >>
+> >> I'm sorry if I came across as harsh :(
+> >>
+> >> I just don't know how to properly push for this.
+> >>
+> >> I have even pushed the option of the deprecated sysfs ABI
+> >> behind the CONFIG_EXPERT option, which should mean that
+> >> the kernel config has been made by someone who has checked
+> >> the option "yes I am an expert I know what I am doing"
+> >> yet failed to observe that this ABI is obsoleted since 5 years
+> >> and hence failed to be an expert.
+> >>
+> >> Of course the ABI (not API really) needs to be fixed if we can find the
+> >> problem. It's frustrating that fixing it seems to fix broken other
+> >> features which are not deprecated, hence the annoyance on my
+> >> part.
+> >>
+> >
+> > I'm afraid we'll earn ourselves a good old LinusRant if we keep
+> > pushing the character device as a solution to the problem here.
+> > Marcelo is right after all: he used an existing user interface, the
+> > interface broke, it must be fixed.
+> >
+> > I would prefer to find a solution that fixes Marcelo's issue while
+> > keeping the offending patches in tree but it seems like the issue is
+> > more complicated and will require some rework of the sysfs interface.
+> >
+> > In which case unless there are objections I lean towards reverting the
+> > relevant commits.
+>
+> Sounds good to me, but that was two weeks ago and afaics nothing
+> happened since then. Or did the discussion continue somewhere else?
+>
 
-It's not clear for me if you are using a vanilla release from
-kernel.org. But _if_ you are using a Fedora kernel you should report
-your problem to Fedora. We have no knowledge what changes distros do to
-their kernels.
+Now queued for fixes, thanks for the reminder.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+Bart
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> >>> And I will also tell the dev team that they must use the GPIO char dev
+> >>> and libgpiod from now on and must port everything to it. And we will
+> >>> likely have another group of people who are not super happy, but
+> >>> that's life... :)
+> >>
+> >> I'm happy to hear this!
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>
+> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> reports on my table. I can only look briefly into most of them and lack
+> knowledge about most of the areas they concern. I thus unfortunately
+> will sometimes get things wrong or miss something important. I hope
+> that's not the case here; if you think it is, don't hesitate to tell me
+> in a public reply, it's in everyone's interest to set the public record
+> straight.
+>
+> #regzbot poke
