@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5E11FBD
-	for <regressions@lists.linux.dev>; Mon,  7 Mar 2022 06:45:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CD838C9
+	for <regressions@lists.linux.dev>; Mon,  7 Mar 2022 07:32:02 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nR77V-0004Cx-NX; Mon, 07 Mar 2022 07:45:25 +0100
-Message-ID: <782a683e-c625-8e68-899b-ce56939afece@leemhuis.info>
-Date: Mon, 7 Mar 2022 07:45:24 +0100
+	id 1nR7qZ-0006vu-C1; Mon, 07 Mar 2022 08:31:59 +0100
+Message-ID: <4a28b83b-37ef-1533-563a-39b66c5ff158@leemhuis.info>
+Date: Mon, 7 Mar 2022 08:31:57 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,118 +16,97 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH v2] drm/panel: Select DRM_DP_HELPER for DRM_PANEL_EDP
+Subject: Re: Linux regressions report for mainline [2022-03-06]
 Content-Language: en-US
-To: Thomas Zimmermann <tzimmermann@suse.de>,
- Doug Anderson <dianders@chromium.org>,
- Geert Uytterhoeven <geert@linux-m68k.org>, David Airlie <airlied@linux.ie>,
- Daniel Vetter <daniel@ffwll.ch>
-Cc: Arnd Bergmann <arnd@arndb.de>, David Airlie <airlied@linux.ie>,
- Naresh Kamboju <naresh.kamboju@linaro.org>,
- Randy Dunlap <rdunlap@infradead.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- DRI Development <dri-devel@lists.freedesktop.org>,
- Thierry Reding <thierry.reding@gmail.com>,
- Linux Kernel Functional Testing <lkft@linaro.org>,
- Sam Ravnborg <sam@ravnborg.org>, Ard Biesheuvel <ardb@kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220203093922.20754-1-tzimmermann@suse.de>
- <CAMuHMdWykWR4oKahC2GYF5jG4przRQ+MxNNm1BK7o62OhhGYwA@mail.gmail.com>
- <CAMuHMdXcRRgn4EMXn9qonnjTTp7EEfwP4F8FeVpLkQMNvB-6mg@mail.gmail.com>
- <CAD=FV=UbiXx4RBQNFp1htCYsM1YzAgES+mcA6KOJ7ZmydkHnBg@mail.gmail.com>
- <f9768b09-90a7-1908-0f5b-6474bbb00208@suse.de>
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Rob Herring <robh@kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
+ Jakub Kicinski <kuba@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Netdev <netdev@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>
+References: <164659571791.547857.13375280613389065406@leemhuis.info>
+ <CAHk-=wgYjH_GMvdnNdVOn8m81eBXVykMAZvv_nfh8v_qdyQNvA@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <f9768b09-90a7-1908-0f5b-6474bbb00208@suse.de>
+In-Reply-To: <CAHk-=wgYjH_GMvdnNdVOn8m81eBXVykMAZvv_nfh8v_qdyQNvA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646635533;806e2e64;
-X-HE-SMSGID: 1nR77V-0004Cx-NX
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646638322;c6fcc38d;
+X-HE-SMSGID: 1nR7qZ-0006vu-C1
 
-[CCing Dave and Daniel]
-
-Hi, this is your Linux kernel regression tracker.
-
-On 23.02.22 20:06, Thomas Zimmermann wrote:
-> Am 23.02.22 um 17:11 schrieb Doug Anderson:
->> On Tue, Feb 22, 2022 at 1:31 AM Geert Uytterhoeven
->> <geert@linux-m68k.org> wrote:
->>> On Tue, Feb 8, 2022 at 10:39 AM Geert Uytterhoeven
->>> <geert@linux-m68k.org> wrote:
->>>> On Mon, Feb 7, 2022 at 12:31 PM Thomas Zimmermann
->>>> <tzimmermann@suse.de> wrote:
->>>>> As reported in [1], DRM_PANEL_EDP depends on DRM_DP_HELPER. Select
->>>>> the option to fix the build failure. The error message is shown
->>>>> below.
->>>>>
->>>>>    arm-linux-gnueabihf-ld: drivers/gpu/drm/panel/panel-edp.o: in
->>>>> function
->>>>>      `panel_edp_probe': panel-edp.c:(.text+0xb74): undefined
->>>>> reference to
->>>>>      `drm_panel_dp_aux_backlight'
->>>>>    make[1]: *** [/builds/linux/Makefile:1222: vmlinux] Error 1
->>>>>
->>>>> The issue has been reported before, when DisplayPort helpers were
->>>>> hidden behind the option CONFIG_DRM_KMS_HELPER. [2]
->>>>>
->>>>> v2:
->>>>>          * fix and expand commit description (Arnd)
->>>>>
->>>>> Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
->>>>
->>>> Thanks for your patch!
->>>>
->>>> This fixes the build errors I'm seeing, so
->>>> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>
->>> Is this planned to be queued? This is still failing in drm-next.
->>> Thanks!
+On 06.03.22 22:33, Linus Torvalds wrote:
+> On Sun, Mar 6, 2022 at 11:58 AM Regzbot (on behalf of Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
 >>
->> Looks like this has been in drm-misc-next since Feb 4:
+>> ========================================================
+>> current cycle (v5.16.. aka v5.17-rc), culprit identified
+>> ========================================================
 >>
->> ---
+>> Follow-up error for the commit fixing "PCIe regression on APM Merlin (aarch64 dev platform) preventing NVME initialization"
+>> ---------------------------------------------------------------------------------------------------------------------------
+>> https://linux-regtracking.leemhuis.info/regzbot/regression/Yf2wTLjmcRj+AbDv@xps13.dannf/
+>> https://lore.kernel.org/stable/Yf2wTLjmcRj%2BAbDv@xps13.dannf/
 >>
->> commit eea89dff4c39a106f98d1cb5e4d626f8c63908b9
->> Author:     Thomas Zimmermann <tzimmermann@suse.de>
->> AuthorDate: Thu Feb 3 10:39:22 2022 +0100
->> Commit:     Thomas Zimmermann <tzimmermann@suse.de>
->> CommitDate: Fri Feb 4 09:38:47 2022 +0100
->>
->>      drm/panel: Select DRM_DP_HELPER for DRM_PANEL_EDP
->>
->> ---
->>
->> Maybe it needed to land elsewhere, though?
+>> By dann frazier, 29 days ago; 7 activities, latest 23 days ago; poked 13 days ago.
+>> Introduced in c7a75d07827a (v5.17-rc1)
 > 
-> Sorry about the mess. We had some confusion with this cycle's
-> drm-misc-next pull request, which got delayed significantly. There's
-> been a PR today, which should be merged into drm-next any time now. The
-> patch will be part of that.
-
-The patch for this regression late last week finally showed up in
-linux-next, great. But:
-
-I noticed the patch is not in drm-fixes but in drm-next -- and thus
-afaics seems to be on tack to only get merged in the next merge window
-(or am I wrong with that?). That seems wrong to me, as this fixes a
-regression (albeit from the previous cycle, not from the current one)
-and it already took quite a while to get this relative simple fix
-finally on track -- but it's still far away from getting fixed in 5.16
-and thus will make it into 5.17, too. That seems wrong to me, at least
-if the risk is low (which is the case here afaics).
-
-FWIW, this is not the only time where I noticed something like that,
-that's why I wrote documentation that covers this which is on track to
-get merged in the next merge window, unless Linus objects:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/process/handling-regressions.rst#n131
-
-To quote one of the sections relevant in this particular case:
-
->  * Aim to fix regressions within one week after the culprit was identified, if
->    the issue was introduced in either:
+> Hmm. The culprit may be identified, but it looks like we don't have a
+> fix for it, so this may be one of those "left for later" things. It
+> being Xgene, there's a limited number of people who care, I'm afraid.
 > 
->     * a recent stable/longterm release
+> Alternatively, maybe 6dce5aa59e0b ("PCI: xgene: Use inbound resources
+> for setup") should just be reverted as broken?
+
+I don't care much, I just hope someone once again will look into this,
+as this (and the previous) regression are on my list for quite a while
+already and process once again seems to have slowed down. :-/
+
+>> ====================================================
+>> current cycle (v5.16.. aka v5.17-rc), unknown culprit
+>> ====================================================
+>>
+>>
+>> net: bluetooth: qualcom and intel adapters, unable to reliably connect to bluetooth devices
+>> -------------------------------------------------------------------------------------------
+>> https://linux-regtracking.leemhuis.info/regzbot/regression/CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i+RE+L2FTXSA@mail.gmail.com/
+>> https://lore.kernel.org/linux-bluetooth/CAJCQCtSeUtHCgsHXLGrSTWKmyjaQDbDNpP4rb0i%2BRE%2BL2FTXSA@mail.gmail.com/
+>>
+>> By Chris Murphy, 23 days ago; 47 activities, latest 3 days ago.
+>> Introduced in v5.16..f1baf68e1383 (v5.16..v5.17-rc4)
+>>
+>> Fix incoming:
+>> * https://lore.kernel.org/regressions/1686eb5f-7484-8ec2-8564-84fe04bf6a70@leemhuis.info/
 > 
->     * the development cycle of the latest proper mainline release
+> That's a recent fix, it seems to be only in the bluetooth tree right
+> now, and won't be in rc7. I'm hoping that I'll get it in next week's
+> networking dump.
+
+You will, it afaics already got merged into the right branch already:
+https://lore.kernel.org/all/164637060982.7623.2431046217416492091.git-patchwork-notify@kernel.org/
+
+It just came slightly too late for the last pull into the net. The same
+had happened a week earlier with regression fixes, that's why I already
+brought this up:
+
+https://lore.kernel.org/netdev/37349299-c47b-1f67-2229-78ae9b9b4488@leemhuis.info/
+
+Short story: things should hopefully improve soon.
+
+BTW: @bluetooth maintainers, I noticed your -next branch is in next, but
+your -fixes branch
+git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git is
+not. Is that on purpose? Some (many?) of the other trees downstream to
+the net tree have both their -fixes and their -next branches included
+there regularly.
+
+> Cc'ing the right people just to prod them, since we've had much too
+> many "Oh, I didn't even realize it was a regression" issues this time
+> around.
+
+Yeah, since I started regression tracking again I noticed that quite a
+few regressions fixes are merged quite slowly because maintainers put
+them in their -next branches instead of sending them towards mainline
+within a few days. I always try to make the maintainers aware of this
+when I noticed it. That already helped a little afaics, but there is
+more work ahead of me afaics...
 
 Ciao, Thorsten
