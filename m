@@ -1,83 +1,119 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A95F7E
-	for <regressions@lists.linux.dev>; Mon,  7 Mar 2022 16:44:46 +0000 (UTC)
-Received: by mail-qt1-f173.google.com with SMTP id t18so2816403qtw.3
-        for <regressions@lists.linux.dev>; Mon, 07 Mar 2022 08:44:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20210112.gappssmtp.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=/XL/lMkKaAjZT+R1nP8H0cffa2vVj0nan43syJIwKEM=;
-        b=NGAxo4l6dVw4MjmbICDgizGHfOi4yre3b0pLfDORn6QkKhVCbfHF+rNemWGokfFRxH
-         NtY+yd2RUni7Od++YThC961zb+L5Yk2ElgJ+DYjcJKhNfNR2yIQmfScjlsvMIyDNMYQe
-         AXKXSlou68f/jC4mjOwJ8vmxzk+JY0I2UNLGmLBpfdJ5GRjidPgS/tcNepdp8+ee/Wmk
-         nr/FiTR9dxmfDbfhxRCDvHtnaGF39JYKTcY2bfSB3ZQERE5C1i1Es81mqkd3t5U9xMkN
-         VQwtkviAPHBlrajVClNPPqQ5qArz2i0+t0c+F1W37SpZXYWAeoHUyQ5m6fXR46JVYbnt
-         /Z1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=/XL/lMkKaAjZT+R1nP8H0cffa2vVj0nan43syJIwKEM=;
-        b=T1xhAH2qQnb5wm8S/nS5E9RKa5PLvr6AwEVjELfFX7RfmPcH4q2c0PZ+wc9rviY9Vv
-         tBwZn4oxM91d+j2ab1JFwJt/FNXHZVMhLnfmLBeLNpNjsB4S3/9XirftShd4/xkd8We6
-         m9IwIbz7PkY4T2N0cFMvdh+U2cTWs5xxvZxm8Vs8P/aXND2kYOVDeMKABaWp97v75VF/
-         nE72a4OYO5deJd660Q2uf/RoY6h3nuz19jjkmqlh0SAvw7+YqpZWnJKF9VFyRsfsS7xN
-         RPfdYUncycnSy8gq9e1LmFCbKO5DEyXc8wjDFbjKxbZh789UXitxoh+9/oGI8rZuDzUU
-         9atA==
-X-Gm-Message-State: AOAM530CWICDaO/svs6U3GQHoD9PXZ8vVBTGcREjOWNpuwlK/F5L+hZZ
-	S94T1W/GUZy8zj1qa5YW+Cn8Sg==
-X-Google-Smtp-Source: ABdhPJxUlGfyQuqHLZdnpfRoANxV+0hXCfHucRHiuTC80Gc6WFLFnVnTTEp8Y7BcKFfazeg0zyoF8A==
-X-Received: by 2002:ac8:5c10:0:b0:2de:2dac:1ea1 with SMTP id i16-20020ac85c10000000b002de2dac1ea1mr10272361qti.600.1646671485033;
-        Mon, 07 Mar 2022 08:44:45 -0800 (PST)
-Received: from localhost (cpe-98-15-154-102.hvc.res.rr.com. [98.15.154.102])
-        by smtp.gmail.com with ESMTPSA id u14-20020ac858ce000000b002de89087e7dsm8747493qta.78.2022.03.07.08.44.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Mar 2022 08:44:44 -0800 (PST)
-Date: Mon, 7 Mar 2022 11:44:39 -0500
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>,
-	Linux-Next Mailing List <linux-next@vger.kernel.org>,
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal Hocko <mhocko@suse.com>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	Shakeel Butt <shakeelb@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>, Nadav Amit <nadav.amit@gmail.com>,
-	David Hildenbrand <david@redhat.com>,
-	"Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Subject: Re: [next] mips: madvise.c:55:7: error: 'MADV_DONTNEED_LOCKED'
- undeclared
-Message-ID: <YiY2dx5F0pEbsxkU@cmpxchg.org>
-References: <CA+G9fYvPdufo6c3MgPjAMBrkTqoLDO+2LN1PV3V8rTsqN5XSFg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776423234
+	for <regressions@lists.linux.dev>; Tue,  8 Mar 2022 05:44:19 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nRSdt-0001Fo-7F; Tue, 08 Mar 2022 06:44:17 +0100
+Message-ID: <2f516c43-b357-70d2-9c49-9633e8a4aa76@leemhuis.info>
+Date: Tue, 8 Mar 2022 06:44:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYvPdufo6c3MgPjAMBrkTqoLDO+2LN1PV3V8rTsqN5XSFg@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: Raid6 check performance regression 5.15 -> 5.16
+Content-Language: en-US
+To: Larkin Lowrey <llowrey@nuclearwinter.com>,
+ linux-raid <linux-raid@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <0eb91a43-a153-6e29-14b6-65f97b9f3d99@nuclearwinter.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <0eb91a43-a153-6e29-14b6-65f97b9f3d99@nuclearwinter.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646718259;c58b755b;
+X-HE-SMSGID: 1nRSdt-0001Fo-7F
 
-On Mon, Mar 07, 2022 at 09:45:38PM +0530, Naresh Kamboju wrote:
-> Following build regressions errors/warnings noticed on mips architecture on
-> linux next-20220307 build.
+[TLDR: I'm adding the regression report below to regzbot, the Linux
+kernel regression tracking bot; all text you find below is compiled from
+a few templates paragraphs you might have encountered already already
+from similar mails.]
+
+On 07.03.22 19:15, Larkin Lowrey wrote:
+> I am seeing a 'check' speed regression between kernels 5.15 and 5.16.
+> One host with a 20 drive array went from 170MB/s to 11MB/s. Another host
+> with a 15 drive array went from 180MB/s to 43MB/s. In both cases the
+> arrays are almost completely idle. I can flip between the two kernels
+> with no other changes and observe the performance changes.
 > 
-> make --silent --keep-going --jobs=8
-> O=/home/tuxbuild/.cache/tuxmake/builds/1/build ARCH=mips
-> CROSS_COMPILE=mips-linux-gnu- 'CC=sccache mips-linux-gnu-gcc'
-> 'HOSTCC=sccache gcc'
-> 
-> mm/madvise.c: In function 'madvise_need_mmap_write':
-> mm/madvise.c:55:7: error: 'MADV_DONTNEED_LOCKED' undeclared (first use
-> in this function); did you mean 'MADV_DONTNEED'?
->    55 |  case MADV_DONTNEED_LOCKED:
+> Is this a known issue?
 
-Thanks for the report, I sent a fix in reply to Stephen:
+Hi, this is your Linux kernel regression tracker.
 
-https://lore.kernel.org/lkml/YiY2KYyjsCaANwo0@cmpxchg.org/T/#m58a9804edb680303b7351fb7cf6d9c93096ccaad
+Thanks for the report.
+
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced v5.15..v5.16
+#regzbot title md: Raid6 check performance regression
+#regzbot ignore-activity
+
+If it turns out this isn't a regression, free free to remove it from the
+tracking by sending a reply to this thread containing a paragraph like
+"#regzbot invalid: reason why this is invalid" (without the quotes).
+
+Reminder for developers: when fixing the issue, please add a 'Link:'
+tags pointing to the report (the mail quoted above) using
+lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'. Regzbot needs them to
+automatically connect reports with fixes, but they are useful in
+general, too.
+
+I'm sending this to everyone that got the initial report, to make
+everyone aware of the tracking. I also hope that messages like this
+motivate people to directly get at least the regression mailing list and
+ideally even regzbot involved when dealing with regressions, as messages
+like this wouldn't be needed then. And don't worry, if I need to send
+other mails regarding this regression only relevant for regzbot I'll
+send them to the regressions lists only (with a tag in the subject so
+people can filter them away). With a bit of luck no such messages will
+be needed anyway.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
+
