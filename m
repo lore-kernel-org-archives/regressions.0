@@ -1,133 +1,76 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3502E18D
-	for <regressions@lists.linux.dev>; Thu, 10 Mar 2022 18:15:38 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nSNK2-0006Hm-UL; Thu, 10 Mar 2022 19:15:34 +0100
-Message-ID: <892bdc62-703a-2cac-27f7-5dd1ae14d7ea@leemhuis.info>
-Date: Thu, 10 Mar 2022 19:15:34 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BAB5A1F
+	for <regressions@lists.linux.dev>; Thu, 10 Mar 2022 18:52:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 302F6C340E8;
+	Thu, 10 Mar 2022 18:52:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1646938354;
+	bh=y/1iJANFpJBZAClEvTFM6+CMClorptbc0C5A7qFstWc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pscF9adyqaPKmci8/7e5yo1QQeQ9HTjHp0ilIspfkBQcCVzxMg/uKc3eBU3yXKZvD
+	 LmuqzWbkRhxOsfqpYyaGOUzqk3Vp2S5fJxA26Ft7s86IR+NRt2JXwTfHBYQFaiXN6P
+	 eAbQ+SfQwid+VCZU7sw452sM2mZJdJEX6aX4mQqcfqutibJiWJ0sNvnkjVJMzPtp9q
+	 jHcMwQ5U3qJ5Ebjj5NECQ8C7wnycBoxkbUOo44RQ4FhFaa8mHGsAVgFn19eAzvTb3j
+	 3QOtcPazvskfA+tC6xTzqT2mBkhSawcqUHZ37dsoqsvjC/xp10xjkwneIGA4Kid0hZ
+	 /f3Y8LibrMN+Q==
+Date: Thu, 10 Mar 2022 10:52:32 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>, Manish Chopra
+ <manishc@marvell.com>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>, "netdev@vger.kernel.org"
+ <netdev@vger.kernel.org>, Ariel Elior <aelior@marvell.com>, Alok Prasad
+ <palok@marvell.com>, Prabhakar Kushwaha <pkushwaha@marvell.com>, "David S.
+ Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "it+netdev@molgen.mpg.de" <it+netdev@molgen.mpg.de>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [EXT] Re: [PATCH v2 net-next 1/2] bnx2x: Utilize firmware
+ 7.13.21.0
+Message-ID: <20220310105232.66f0a429@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <CAHk-=whXCf43ieh79fujcF=u3Ow1byRvWp+Lt5+v3vumA+V0yA@mail.gmail.com>
+References: <20211217165552.746-1-manishc@marvell.com>
+	<ea05bcab-fe72-4bc2-3337-460888b2c44e@molgen.mpg.de>
+	<BY3PR18MB46129282EBA1F699583134A4AB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
+	<e884cf16-3f98-e9a7-ce96-9028592246cc@molgen.mpg.de>
+	<BY3PR18MB4612BC158A048053BAC7A30EAB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
+	<CAHk-=wjN22EeVLviARu=amf1+422U2iswCC6cz7cN8h+S9=-Jg@mail.gmail.com>
+	<BY3PR18MB4612C2FFE05879E30BAD91D7AB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
+	<CAHk-=whXCf43ieh79fujcF=u3Ow1byRvWp+Lt5+v3vumA+V0yA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: Bug 215658 - arch/powerpc/mm/mmu_context.o Assembler messages:
- Error: unrecognized opcode: `dssall' (PowerMac G4)
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
- Alexey Kardashevskiy <aik@ozlabs.ru>, Michael Ellerman <mpe@ellerman.id.au>
-Cc: "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <831731e2-6769-3d36-0cdf-721437452fcc@leemhuis.info>
- <1367d2de-bc44-fb96-c1ef-fd4cf0fb82f4@csgroup.eu>
- <09086ab6-10ff-6334-6148-2fab9df64f9a@leemhuis.info>
-In-Reply-To: <09086ab6-10ff-6334-6148-2fab9df64f9a@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646936138;70b469a5;
-X-HE-SMSGID: 1nSNK2-0006Hm-UL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On 10.03.22 13:22, Thorsten Leemhuis wrote:
-> On 10.03.22 12:22, Christophe Leroy wrote:
->> Le 10/03/2022 à 11:39, Thorsten Leemhuis a écrit :
->>> Hi, this is your Linux kernel regression tracker.
->>>
->>> I noticed a regression report in bugzilla.kernel.org that afaics nobody
->>> acted upon since it was reported about a week ago, that's why I decided
->>> to forward it to the lists and a few relevant people to the CC. To quote
->>> from the ticket:
->> I already looked at it when the ticket was opened and that's a bit puzzling.
-> Yeah, same here, but I decided I to pick it up, as that's what I'm here for.
+On Wed, 9 Mar 2022 14:18:23 -0800 Linus Torvalds wrote:
+> On Wed, Mar 9, 2022 at 11:46 AM Manish Chopra <manishc@marvell.com> wrote:
+> >
+> > This has not changed anything functionally from driver/device perspective, FW is still being loaded only when device is opened.
+> > bnx2x_init_firmware() [I guess, perhaps the name is misleading] just request_firmware() to prepare the metadata to be used when device will be opened.  
+> 
+> So how do you explain the report by Paul Menzel that things used to
+> work and no longer work now?
+> 
+> You can't do request_firmware() early. When you actually then push the
+> firmware to the device is immaterial - but request_firmware() has to
+> be done after the system is up and running.
 
-TWIMC, the reported stated in bugzilla:
+Alright, I don't see a revert in my inbox, so let me double check.
 
-```
-> This was Gentoo Sources v5.16.12 not upstream sources. But now I am
-> not able to reproduce it which is even more strange... Also Gentoos'
-> v5.16.13 builds ok.
-> 
-> What I did in the meantime was downgrading to binutils 2.37 (had 2.38
-> before) and rebuilding the toolchain afterwards.
-> 
-> So this probably was never a bug but an issue with my setup. ;)
-> Closing here```
+Linus, is my understanding correct that our PR today should revert
+the patches in question [1]? Or just drop them from stable for now, 
+and give Manish and team a week or two to figure out a fix?
 
-Thus removing it from the regression tracking as well:
+Manish, assuming it's the former - would you be able to provide 
+a revert within a couple of hours (and I mean  "couple" in the 
+British sense of roughly two)?
 
-#regzbot invalid: reporter can't reproduce anymore and the report was  a
-bit puzzling anyway
-
-Ciao, Thorsten
-
->> With v5.16.12 and the config file in the bug report I have no such problem:
->>
->>    CC      arch/powerpc/mm/fault.o
->>    CC      arch/powerpc/mm/mem.o
->> [...]
-> 
-> Maybe it's one of those bugs related to the version of binutils?
-> 
->> The bug is puzzling because it says the problem is introduced by commit 
->> d51f86cfd8e3 ("powerpc/mm: Switch obsolete dssall to .long") whereas the 
->> purpose of that commit is exactly to fix the issue you are reporting.
->>
->> And as far as I can see that commit is not in v5.16.12, so my feeling is 
->> that somethings wrong with the bug report.
->>
->> By the way I think that cherry-picking that commit into v5.16.12 should 
->> fix it.
-> 
-> Maybe that's what he had meant to be writing? Maybe your comment in the
-> ticket will lead to some enlightenment.
-> 
-> Thx for looking into this.
-> 
-> Ciao, Thorsten
-> 
->>>> 5.16.12 kernel build for my G4 DP on my Talos II fails with:
->>>>
->>>> [...]
->>>>    CC      arch/powerpc/mm/init_32.o
->>>>    CC      arch/powerpc/mm/pgtable_32.o
->>>>    CC      arch/powerpc/mm/pgtable-frag.o
->>>>    CC      arch/powerpc/mm/ioremap.o
->>>>    CC      arch/powerpc/mm/ioremap_32.o
->>>>    CC      arch/powerpc/mm/init-common.o
->>>>    CC      arch/powerpc/mm/mmu_context.o
->>>> {standard input}: Assembler messages:
->>>> {standard input}:30: Error: unrecognized opcode: `dssall'
->>>> make[2]: *** [scripts/Makefile.build:287: arch/powerpc/mm/mmu_context.o] Fehler 1
->>>> make[1]: *** [scripts/Makefile.build:549: arch/powerpc/mm] Fehler 2
->>>> make: *** [Makefile:1846: arch/powerpc] Error 2
->>>>
->>>> This seems to have been introduced by commit d51f86cfd8e378d4907958db77da3074f6dce3ba "powerpc/mm: Switch obsolete dssall to .long"
->>>>
->>>> Reverting this commit fixes the build for my G4.
->>>
->>> Could somebody take a look into this? Or was this discussed somewhere
->>> else already? Or even fixed?
->>>
->>> Anyway, to get this tracked:
->>>
->>> #regzbot introduced: d51f86cfd8e378d4907958db77da3074f6dce3ba
->>> #regzbot from: Erhard F <erhard_f@mailbox.org>
->>> #regzbot title:  arch/powerpc/mm/mmu_context.o Assembler messages:
->>> Error: unrecognized opcode: `dssall' (PowerMac G4)
->>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215658
->>>
->>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>
->>> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
->>> reports on my table. I can only look briefly into most of them and lack
->>> knowledge about most of the areas they concern. I thus unfortunately
->>> will sometimes get things wrong or miss something important. I hope
->>> that's not the case here; if you think it is, don't hesitate to tell me
->>> in a public reply, it's in everyone's interest to set the public record
->>> straight.
+[1] patches in question:
+ e13ad1443684 ("bnx2x: fix driver load from initrd")
+ 802d4d207e75 ("bnx2x: Invalidate fastpath HSI version for VFs")
+ b7a49f73059f ("bnx2x: Utilize firmware 7.13.21.0")
