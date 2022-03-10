@@ -1,106 +1,103 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70FAC7A
-	for <regressions@lists.linux.dev>; Thu, 10 Mar 2022 10:39:35 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nSGCi-0005Cd-2t; Thu, 10 Mar 2022 11:39:32 +0100
-Message-ID: <831731e2-6769-3d36-0cdf-721437452fcc@leemhuis.info>
-Date: Thu, 10 Mar 2022 11:39:30 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0227A
+	for <regressions@lists.linux.dev>; Thu, 10 Mar 2022 10:58:31 +0000 (UTC)
+Received: by mail-yb1-f178.google.com with SMTP id j2so10208485ybu.0
+        for <regressions@lists.linux.dev>; Thu, 10 Mar 2022 02:58:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2vyPILdksEKQ/91DNQr4IF++5+dXCv46TKTfWGt4bI0=;
+        b=G5MTkzJkTLDrdd7w0RZQ0IbYpbbue66HLlZVnfI6v+pv6RjaAToFEAScAfAvg3cnw/
+         kt+NICDZMuxcikpMAg2ZDFLp9qg/nPfrD8Kb3OQku1y4LY3FmhtV1xcnYhXk4efoCnqb
+         HxIyOV594rP1THqqh6x+d+qGx0+JfjEw8Zza12X3a7xp7JiOnpTZ2Q/vaAn9LzzlFJUv
+         YL/n8ocaIUwtIePywk18N0ciCOh/5X8Bw4Y7IynHv55H6t3vLYbXupb9Znv5HHWlvBaf
+         jXo/mo3M5LxoqLITavHlwPpJ713SZ9nuJMsZQRoLrVzDuuHo7kCIufTjrpSa4mM7+lD9
+         9frQ==
+X-Gm-Message-State: AOAM533wSWwWL4j3m++8VvTZGrejc1owHyh7x6zPiJs6OFRtzikAhzEo
+	/rQyeWtkf5MolyQqeljEfNeH0FmsIwipt8JlzPA=
+X-Google-Smtp-Source: ABdhPJyHSLHMgP/mxlDj5pAIHk6jXZ9MHGeA9bBiTuLvuVOxHvz5HeqITq5ICBa7BuoXLjLFWGq8R+hyrkt/HEmslkA=
+X-Received: by 2002:a25:fe10:0:b0:625:262f:e792 with SMTP id
+ k16-20020a25fe10000000b00625262fe792mr3170099ybe.365.1646909910721; Thu, 10
+ Mar 2022 02:58:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-US
-To: Alexey Kardashevskiy <aik@ozlabs.ru>,
- Michael Ellerman <mpe@ellerman.id.au>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Bug 215658 - arch/powerpc/mm/mmu_context.o Assembler messages: Error:
- unrecognized opcode: `dssall' (PowerMac G4)
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1646908775;1ae64f2d;
-X-HE-SMSGID: 1nSGCi-0005Cd-2t
+References: <31b9d1cd-6a67-218b-4ada-12f72e6f00dc@redhat.com> <3f86f46d-947b-8485-bf87-2ebd4477a6c7@leemhuis.info>
+In-Reply-To: <3f86f46d-947b-8485-bf87-2ebd4477a6c7@leemhuis.info>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 10 Mar 2022 11:58:19 +0100
+Message-ID: <CAJZ5v0hLjj0UUtBoZ1rqcBm40HhX2AHL8RSvhNb+pzgt5w3izg@mail.gmail.com>
+Subject: Re: Many reports of laptops getting hot while suspended with kernels
+ >= 5.16.10 || >= 5.17-rc1
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Hans de Goede <hdegoede@redhat.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, 
+	Linux PM <linux-pm@vger.kernel.org>, Stable <stable@vger.kernel.org>, 
+	Justin Forbes <jmforbes@linuxtx.org>, Mark Pearson <markpearson@lenovo.com>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, this is your Linux kernel regression tracker.
+On Thu, Mar 10, 2022 at 11:02 AM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> Hi, this is your Linux kernel regression tracker.
+>
+> On 09.03.22 14:44, Hans de Goede wrote:
+> >
+> > We (Fedora) have been receiving a whole bunch of bug reports about
+> > laptops getting hot/toasty while suspended with kernels >= 5.16.10
+> > and this seems to still happen with 5.17-rc7 too.
+>
+> I was about to sent a similar mail, but then I found this one. Thx for
+> making my life easier. :-D
+>
+> But could you do me a big favor and CC the regression mailing list
+> (regressions@lists.linux.dev) in case similar situations arise in the
+> future? tia!
+>
+> > The following are all bugzilla.redhat.com bug numbers:
+> >
+> >    1750910 - Laptop failed to suspend and completely drained the battery
+> >    2050036 - Framework laptop: 5.16.5 breaks s2idle sleep
+> >    2053957 - Package c-states never go below C2
+> >    2056729 - No lid events when closing lid / laptop does not suspend
+> >    2057909 - Thinkpad X1C 9th in s2idle suspend still draining battery to zero over night , Ap
+> >    2059668 - HP Envy Laptop deadlocks on entering suspend power state when plugged in. Case ge
+> >    2059688 - Dell G15 5510 s2idle fails in 5.16.11 works in 5.16.10
+> >
+> > And one of the bugs has also been mirrored at bugzilla.kernel.org by
+> > the reporter:
+> >
+> >  bko215641 - Dell G15 5510 s2idle fails in 5.16.11 works in 5.16.10
+>
+> Here is another, but it's basically linking to reports you already
+> mentioned:
+> https://bugzilla.kernel.org/show_bug.cgi?id=215661
+>
+> > The common denominator here (besides the kernel version) seems to
+> > be that these are all Ice or Tiger Lake systems (I did not do
+> > check this applies 100% to all bugs, but it does see, to be a pattern).
+> >
+> > A similar arch-linux report:
+> >
+> > https://bbs.archlinux.org/viewtopic.php?id=274292&p=2
+> >
+> > Suggest that reverting
+> > "ACPI: PM: s2idle: Cancel wakeup before dispatching EC GPE"
+> >
+> > which was cherry-picked into 5.16.10 fixes things.
+>
+> From the thread I gather that it looks like 5.17 is not affected; if
 
-I noticed a regression report in bugzilla.kernel.org that afaics nobody
-acted upon since it was reported about a week ago, that's why I decided
-to forward it to the lists and a few relevant people to the CC. To quote
-from the ticket:
+This is most likely correct.
 
-> 5.16.12 kernel build for my G4 DP on my Talos II fails with:
-> 
-> [...]
->   CC      arch/powerpc/mm/init_32.o
->   CC      arch/powerpc/mm/pgtable_32.o
->   CC      arch/powerpc/mm/pgtable-frag.o
->   CC      arch/powerpc/mm/ioremap.o
->   CC      arch/powerpc/mm/ioremap_32.o
->   CC      arch/powerpc/mm/init-common.o
->   CC      arch/powerpc/mm/mmu_context.o
-> {standard input}: Assembler messages:
-> {standard input}:30: Error: unrecognized opcode: `dssall'
-> make[2]: *** [scripts/Makefile.build:287: arch/powerpc/mm/mmu_context.o] Fehler 1
-> make[1]: *** [scripts/Makefile.build:549: arch/powerpc/mm] Fehler 2
-> make: *** [Makefile:1846: arch/powerpc] Error 2
-> 
-> This seems to have been introduced by commit d51f86cfd8e378d4907958db77da3074f6dce3ba "powerpc/mm: Switch obsolete dssall to .long"
-> 
-> Reverting this commit fixes the build for my G4.
+There are at least 3 different sources that have confirmed that.
 
-Could somebody take a look into this? Or was this discussed somewhere
-else already? Or even fixed?
+> that changes, could anybody please give me a heads up please?
 
-Anyway, to get this tracked:
-
-#regzbot introduced: d51f86cfd8e378d4907958db77da3074f6dce3ba
-#regzbot from: Erhard F <erhard_f@mailbox.org>
-#regzbot title:  arch/powerpc/mm/mmu_context.o Assembler messages:
-Error: unrecognized opcode: `dssall' (PowerMac G4)
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215658
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
-
--- 
-Additional information about regzbot:
-
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-CC the regression list and tell regzbot about the issue, as that ensures
-the regression makes it onto the radar of the Linux kernel's regression
-tracker -- that's in your interest, as it ensures your report won't fall
-through the cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include 'Link:' tag in the patch descriptions pointing to all reports
-about the issue. This has been expected from developers even before
-regzbot showed up for reasons explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'.
+Sure.
