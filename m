@@ -1,80 +1,123 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx06-san.trellian.com (san.trellian.com [103.224.213.228])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD175127
-	for <regressions@lists.linux.dev>; Wed,  9 Mar 2022 22:18:43 +0000 (UTC)
-Received: by mail-lj1-f175.google.com with SMTP id o6so5233784ljp.3
-        for <regressions@lists.linux.dev>; Wed, 09 Mar 2022 14:18:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BWHcqmg8Jl/pDjYFxNFIoMx9za7BtcKb+LqL6quSfGc=;
-        b=JBSeZQVR2uJx6lhn0r/r5EYbLrVfz00Zsw3BXJynWJrUWxBjyZLMQRRqUzwINB6Asl
-         IhP8O5f3AGqqa+4bVe3ZJRj4DkJriEYCPudUq4j5tF7ZnRXpA28Jio1P65LhtHRzISKp
-         eUqgCoBPcZ3vxbqqZWdY88AkKNxFYF/4E1mLQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BWHcqmg8Jl/pDjYFxNFIoMx9za7BtcKb+LqL6quSfGc=;
-        b=3ylWzZHjtlexXJOZJNE/OsckvVePWR3Jjx5CQNANXdY7I84Cg/Ey09gstVaZqFqPJj
-         ujw9WbX0+1VlHqcL/F/GvrwsDrhLJFGZo+OoG+LCZYRFIYaEd85jdzin2kDsOAiW2PJp
-         F2OxsYPDTmnApphXy/A05HjV48vWgL8boW21dp/stgD4MK9dAmICIEmpGWOOZDhOYiq9
-         havA0UkYL+oSND4psSi3t47uhsDToNTtBxqdblvAbQCLbXlNo2tQH6eZQdU+ExSZfNl9
-         2y+7gQa47g063nRDynbBAjaMq1uUrzjwsRV4LCXfmg4HN+NOLS/9zvX4aAfIDaBYLmXu
-         WChg==
-X-Gm-Message-State: AOAM533U2dk3IR2LjOO6BroxVwZbtyfL5/wUGTsZpeiEA/JoJwkesuXC
-	4Gk9sfzao8TmjdSK68hsxf3AkHdpDb8wIuRGcPg=
-X-Google-Smtp-Source: ABdhPJxgNI0uBvjQTwy28MWMuZfVmSq9BKgtPME0CxWL9aPTok8Wuv4RHYQ2rBvWh6NbgRvtshuWFw==
-X-Received: by 2002:a05:651c:b12:b0:247:e2b0:5495 with SMTP id b18-20020a05651c0b1200b00247e2b05495mr1065150ljr.433.1646864321652;
-        Wed, 09 Mar 2022 14:18:41 -0800 (PST)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id k8-20020a2eb748000000b00244badbe7c9sm644783ljo.60.2022.03.09.14.18.39
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Mar 2022 14:18:39 -0800 (PST)
-Received: by mail-lf1-f52.google.com with SMTP id r7so6260496lfc.4
-        for <regressions@lists.linux.dev>; Wed, 09 Mar 2022 14:18:39 -0800 (PST)
-X-Received: by 2002:a05:6512:e8a:b0:443:7b8c:579a with SMTP id
- bi10-20020a0565120e8a00b004437b8c579amr1080661lfb.687.1646864319396; Wed, 09
- Mar 2022 14:18:39 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B26B7A
+	for <regressions@lists.linux.dev>; Thu, 10 Mar 2022 04:21:19 +0000 (UTC)
+Received: from mx02-mel.trellian.com (mx02-mel.trellian.com [192.168.0.216])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx06-san.trellian.com (Postfix) with ESMTPS id 7EA99211C8A2;
+	Thu, 10 Mar 2022 15:21:18 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=trellian.com;
+	s=default; t=1646886078;
+	bh=ilMoNQ0qJd9l4fAEtCmwgiFi+2QwIEYn7kLgSuE1axQ=;
+	h=Date:To:Cc:From:Subject;
+	b=5p2zFKPfxniOrFaZxVxN1+Z2oieFpP2ManpFUYRzbHFLVbyMYiS/ROKckSCWKhPGl
+	 ARVKev5S/p9CVissWI6CjtvOBhCpYP4TVFycB/6LPv/lgskn9M/RGwOALteph1ECy1
+	 irPBaXUn27LDj77ttNYT+f5x2PBJHZnlXMaLfyho=
+Received: from [10.185.50.86] (unknown [10.185.50.86])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by mx02-mel.trellian.com (Postfix) with ESMTPSA id C81A928E16E;
+	Thu, 10 Mar 2022 15:21:16 +1100 (AEDT)
+Message-ID: <f45ff567-6ef7-8a43-a645-4b9ab2e7a8ae@trellian.com>
+Date: Thu, 10 Mar 2022 15:21:15 +1100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20211217165552.746-1-manishc@marvell.com> <ea05bcab-fe72-4bc2-3337-460888b2c44e@molgen.mpg.de>
- <BY3PR18MB46129282EBA1F699583134A4AB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
- <e884cf16-3f98-e9a7-ce96-9028592246cc@molgen.mpg.de> <BY3PR18MB4612BC158A048053BAC7A30EAB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
- <CAHk-=wjN22EeVLviARu=amf1+422U2iswCC6cz7cN8h+S9=-Jg@mail.gmail.com> <BY3PR18MB4612C2FFE05879E30BAD91D7AB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
-In-Reply-To: <BY3PR18MB4612C2FFE05879E30BAD91D7AB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 9 Mar 2022 14:18:23 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whXCf43ieh79fujcF=u3Ow1byRvWp+Lt5+v3vumA+V0yA@mail.gmail.com>
-Message-ID: <CAHk-=whXCf43ieh79fujcF=u3Ow1byRvWp+Lt5+v3vumA+V0yA@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH v2 net-next 1/2] bnx2x: Utilize firmware 7.13.21.0
-To: Manish Chopra <manishc@marvell.com>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>, "kuba@kernel.org" <kuba@kernel.org>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, Ariel Elior <aelior@marvell.com>, 
-	Alok Prasad <palok@marvell.com>, Prabhakar Kushwaha <pkushwaha@marvell.com>, 
-	"David S. Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, 
-	"it+netdev@molgen.mpg.de" <it+netdev@molgen.mpg.de>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-US
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+From: Ryan Tierney <ryant@trellian.com>
+Subject: kernel BUG at include/linux/swapops.h:204!
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+X-Spamd-Bar: /
+Authentication-Results: mx06-san.trellian.com
+X-Rspamd-Server: mx06-san
+X-Rspamd-Queue-Id: 7EA99211C8A2
+X-Spamd-Result: default: False [0.00 / 20.00];
+	 IP_WHITELIST(0.00)[192.168.0.216]
 
-On Wed, Mar 9, 2022 at 11:46 AM Manish Chopra <manishc@marvell.com> wrote:
->
-> This has not changed anything functionally from driver/device perspective, FW is still being loaded only when device is opened.
-> bnx2x_init_firmware() [I guess, perhaps the name is misleading] just request_firmware() to prepare the metadata to be used when device will be opened.
-
-So how do you explain the report by Paul Menzel that things used to
-work and no longer work now?
-
-You can't do request_firmware() early. When you actually then push the
-firmware to the device is immaterial - but request_firmware() has to
-be done after the system is up and running.
-
-                 Linus
+SGkgTGludXgga2VybmVsIHRlYW0sDQoNCldlIGhhdmUgaGFkIG11bHRpcGxlIHNlcnZlcnMg
+bG9jayB1cCBvdmVyIHRoZSBjb3Vyc2Ugb2YgYSBmZXcgbW9udGhzIG9uIA0Ka2VybmVsIHZl
+cnNpb24gNS4xMC45Mg0KTG9va2luZyB0byBmaW5kIG91dCBhbnkgaW5mb3JtYXRpb24gdG8g
+aGVscCBtaXRpZ2F0ZSB0aGlzLg0KDQpJJ3ZlIGFsc28gZm91bmQgYSByZWxhdGVkIHJlcG9y
+dCBoZXJlIGJhY2sgaW4gMjAyMTogDQpodHRwczovL2xvcmUua2VybmVsLm9yZy9hbGwvNzU3
+YjY4NGEtNjdiNS05OTliLTdmMmQtYjU1ZmIxYzYxZmQ4QGdvb2dsZS5jb20vVC8NCg0KUGxl
+YXNlIHNlZSB0aGUgc3RhY2sgdHJhY2Ugb2J0YWluZWQgZHVyaW5nIHRoaXMgbG9ja3VwDQoN
+CiAgWzIxMzYxNzIuOTc1ODkyXSAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0t
+LS0NCiAgWzIxMzYxNzIuOTc1ODk2XSBrZXJuZWwgQlVHIGF0IGluY2x1ZGVcL2xpbnV4XC9z
+d2Fwb3BzLmg6MjA0IQ0KICBbMjEzNjE3Mi45ODEyNjhdIGludmFsaWQgb3Bjb2RlOiAwMDAw
+IFsjMV0gU01QIE5PUFRJDQogIFsyMTM2MTcyLjk4NTk4M10gQ1BVOiA0OSBQSUQ6IDE2NzI5
+NDkgQ29tbTogYXB0LWNhY2hlIE5vdCB0YWludGVkIDUuMTAuMC0xMS1hbWQ2NCAjMSBEZWJp
+YW4gNS4xMC45Mi0xDQogIFsyMTM2MTcyLjk5NDk0NF0gSGFyZHdhcmUgbmFtZTogU3VwZXJt
+aWNybyBBUyAtMTExNFMtV04xMFJUXC9IMTJTU1ctTlRSLCBCSU9TIDIuMyAxMFwvMjhcLzIw
+MjENCiAgWzIxMzYxNzMuMDAzMDQyXSBSSVA6IGUwMzA6X19taWdyYXRpb25fZW50cnlfd2Fp
+dCsweGY5XC8weDEwMA0KICBbMjEzNjE3My4wMDg0NDRdIENvZGU6IDBmIDQ1IGMyIDQxIDhi
+IDQwIDM0IDg1IGMwIDc0IDlmIDhkIDUwIDAxIGYwIDQxIDBmIGIxIDUwIDM0IDc1IGYxIDQ4
+IDg5IGVmIGU4IDAzIGUwIGU0IGZmIDY2IDkwIDViIDRjIDg5IGM3IDVkIGU5IDI3IDQ4IGY3
+IGZmIDwwZj4gMGIgMGYgMWYgNDQgMDAgMDAgMGYgMWYgNDQgMDAgMDAgNDkgODkgZjkgNDgg
+OGIgM2UgZTggMDggMzkgZDgNCiAgWzIxMzYxNzMuMDI3Mzk0XSBSU1A6IGUwMmI6ZmZmZmM5
+MDA3NWE0ZmRiOCBFRkxBR1M6IDAwMDEwMjQ2DQogIFsyMTM2MTczLjAzMjc5NV0gUkFYOiAw
+MDBmZmZmZmMwMDAwMDAwIFJCWDogZmZmZjg4ODA3YjBlNjk2OCBSQ1g6IGZmZmZlYTAwMDA2
+YTZmODcNCiAgWzIxMzYxNzMuMDQwMTE0XSBSRFg6IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiBm
+ZmZmODg4MDdiMGU2OTY4IFJESTogZmZmZmZmZmZmY2FjODQwMA0KICBbMjEzNjE3My4wNDc0
+MjldIFJCUDogZmZmZmVhMDAwMWVjMzlhOCBSMDg6IGZmZmZlYTAwMDA2YTZmNDAgUjA5OiBm
+ZmZmODg4MDQ2NzlmMmMwDQogIFsyMTM2MTczLjA1NDc0NV0gUjEwOiAwMDBmZmZmZmZmZmZm
+MDAwIFIxMTogMDAwMDAwMDAwMDAwMDAwMCBSMTI6IGZmZmZjOTAwNzVhNGZlNDANCiAgWzIx
+MzYxNzMuMDYyMDYwXSBSMTM6IDdjMDAwMDAwMDAwMWE5YmQgUjE0OiBmZmYwMDAwMDAwMDAw
+ZmZmIFIxNTogMDAwMDAwMDAwMDAwMDAwMA0KICBbMjEzNjE3My4wNjkzNzhdIEZTOiAgMDAw
+MDdmMmNjN2VlZTgwMCgwMDAwKSBHUzpmZmZmODg4MTE3NDQwMDAwKDAwMDApIGtubEdTOjAw
+MDAwMDAwMDAwMDAwMDANCiAgWzIxMzYxNzMuMDc3NjUxXSBDUzogIGUwMzAgRFM6IDAwMDAg
+RVM6IDAwMDAgQ1IwOiAwMDAwMDAwMDgwMDUwMDMzDQogIFsyMTM2MTczLjA4MzU3NV0gQ1Iy
+OiAwMDAwN2YyY2M0YjJkZjhjIENSMzogMDAwMDAwMDA4ZDM5NjAwMCBDUjQ6IDAwMDAwMDAw
+MDAwNTA2NjANCiAgWzIxMzYxNzMuMDkwODkzXSBDYWxsIFRyYWNlOg0KICBbMjEzNjE3My4w
+OTM1MjddICBkb19zd2FwX3BhZ2UrMHg2NmZcLzB4OTAwDQogIFsyMTM2MTczLjA5NzM3MF0g
+IGhhbmRsZV9tbV9mYXVsdCsweGQ3ZFwvMHgxYmYwDQogIFsyMTM2MTczLjEwMTU4NF0gID8g
+eGZzX2ZpbGVfcmVhZF9pdGVyKzB4NmVcLzB4ZDAgW3hmc10NCiAgWzIxMzYxNzMuMTA2NDY4
+XSAgZG9fdXNlcl9hZGRyX2ZhdWx0KzB4MWI4XC8weDNmMA0KICBbMjEzNjE3My4xMTA4MzVd
+ICBleGNfcGFnZV9mYXVsdCsweDc4XC8weDE2MA0KICBbMjEzNjE3My4xMTQ3NjZdICA/IGFz
+bV9leGNfcGFnZV9mYXVsdCsweDhcLzB4MzANCiAgWzIxMzYxNzMuMTE5MDM4XSAgYXNtX2V4
+Y19wYWdlX2ZhdWx0KzB4MWVcLzB4MzANCiAgWzIxMzYxNzMuMTIzMjI0XSBSSVA6IGUwMzM6
+MHg3ZjJjYzg5MzBmY2INCiAgWzIxMzYxNzMuMTI2OTc3XSBDb2RlOiA4YiA0NiAwOCA0OCA4
+ZCAxNCA4MCA0OCA4ZCAwNCA1MCA0OCA4ZCA0NCA4NSAwMCA0OCAzOSBjMyA3NCA1YSA4YiA0
+MyAxMCA0OCA4ZCAxNCA4MCA0OCA4ZCAwNCA1MCA0OCA4ZCA1YyA4NSAwMCA0OCAzOSBlYiA3
+NCA0NSA8OGI+IDMzIDRjIDAxIGM2IDBmIGI3IDQ2IGZlIDQ5IDM5IGM0IDc1IGM3IDRjIDg5
+IGUyIDRjIDg5IDQ0IDI0IDA4DQogIFsyMTM2MTczLjE0NTkxOV0gUlNQOiBlMDJiOjAwMDA3
+ZmZkMmEzZjNlODAgRUZMQUdTOiAwMDAxMDIwNg0KICBbMjEzNjE3My4xNTEzMjNdIFJBWDog
+MDAwMDAwMDAwMDAwMDAwNSBSQlg6IDAwMDA3ZjJjYzRiMmRmOGMgUkNYOiAwMDAwMDAwMDAw
+MDAwMDA2DQogIFsyMTM2MTczLjE1ODYzMl0gUkRYOiAwMDAwN2YyY2MzNTFiMmU2IFJTSTog
+MDAwMDdmZmQyYTNmM2ZkMCBSREk6IDAwMDA3ZjJjYzM1MWIyZTYNCiAgWzIxMzYxNzMuMTY1
+OTQ4XSBSQlA6IDAwMDA3ZjJjYzMzOWIwMDAgUjA4OiAwMDAwN2YyY2MzMzliMDAwIFIwOTog
+MDAwMDAwMDAwMDAwMGRlMA0KICBbMjEzNjE3My4xNzMyNjJdIFIxMDogMDAwMDdmMmNjNGM4
+YmM3YyBSMTE6IDAwMDAwMDAwMjA2ZTZmNjggUjEyOiAwMDAwMDAwMDAwMDAwMDA1DQogIFsy
+MTM2MTczLjE4MDU4MF0gUjEzOiAwMDAwN2ZmZDJhM2YzZjIwIFIxNDogMDAwMDdmMmNjNGIw
+ZDQxMCBSMTU6IDAwMDA1NWFiMzc0MGFmMDgNCiAgWzIxMzYxNzMuMTg3ODkyXSBNb2R1bGVz
+IGxpbmtlZCBpbjogeGVuX2FjcGlfcHJvY2Vzc29yIHhlbl9nbnRkZXYgeGVuX2V2dGNobiBi
+aW5mbXRfbWlzYyB4ZW5mcyB4ZW5fcHJpdmNtZCBubHNfYXNjaWkgbmxzX2NwNDM3IHZmYXQg
+ZmF0IGdoYXNoX2NsbXVsbmlfaW50ZWwgYWVzbmlfaW50ZWwgbGliYWVzIGNyeXB0b19zaW1k
+IGNyeXB0ZCBnbHVlX2hlbHBlciB3bWlfYm1vZiBlZmlfcHN0b3JlIHBjc3BrciBhc3QgZHJt
+X3ZyYW1faGVscGVyIGRybV90dG1faGVscGVyIHR0bSBjY3AgZHJtX2ttc19oZWxwZXIgcm5n
+X2NvcmUgcm5kaXNfaG9zdCBjZGNfZXRoZXIgY2VjIHVzYm5ldCBpMmNfYWxnb19iaXQgam95
+ZGV2IG1paSBrMTB0ZW1wIHNwNTEwMF90Y28gd2F0Y2hkb2cgaXBtaV9zc2lmIGV2ZGV2IGJy
+aWRnZSBhY3BpX2lwbWkgaXBtaV9zaSA4MDIxcSBpcG1pX2RldmludGYgZ2FycCBpcG1pX21z
+Z2hhbmRsZXIgc3RwIG1ycCBsbGMgYnV0dG9uIGJvbmRpbmcgbG9vcCBwc21vdXNlIHVoY2lf
+aGNkIG9oY2lfaGNkIGVoY2lfaGNkIGRyYmQgbHJ1X2NhY2hlIGRybSBmdXNlIGNvbmZpZ2Zz
+IGVmaXZhcmZzIGlwX3RhYmxlcyB4X3RhYmxlcyBhdXRvZnM0IHhmcyByYWlkNDU2IGFzeW5j
+X3JhaWQ2X3JlY292IGFzeW5jX21lbWNweSBhc3luY19wcSBhc3luY194b3IgYXN5bmNfdHgg
+eG9yIGhpZF9nZW5lcmljIHVzYmhpZCBoaWQgcmFpZDZfcHEgbGliY3JjMzJjIGNyYzMyY19n
+ZW5lcmljIHJhaWQwIG11bHRpcGF0aCBsaW5lYXIgcmFpZDEgcmFpZDEwIG1kX21vZCBjcmMz
+Ml9wY2xtdWwgY3JjMzJjX2ludGVsIGFoY2kgbGliYWhjaSB4aGNpX3BjaSBudm1lIHhoY2lf
+aGNkIGxpYmF0YSBudm1lX2NvcmUgaTQwZSB0MTBfcGkgdXNiY29yZSBibnh0X2VuIHNjc2lf
+bW9kIGNyY190MTBkaWYgY3JjdDEwZGlmX2dlbmVyaWMgY3JjdDEwZGlmX3BjbG11bCBjcmN0
+MTBkaWZfY29tbW9uIHB0cCB1c2JfY29tbW9uIGkyY19waWl4NCBwcHNfY29yZSB3bWkNCiAg
+WzIxMzYxNzMuMjc0MjYwXSAtLS1bIGVuZCB0cmFjZSAzN2U4YzFhZjdmNmU3ODJhIF0tLS0N
+Cg0K
