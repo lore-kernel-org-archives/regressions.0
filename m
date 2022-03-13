@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44CAF33D5
-	for <regressions@lists.linux.dev>; Fri, 11 Mar 2022 13:09:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C074F7E3
+	for <regressions@lists.linux.dev>; Sun, 13 Mar 2022 18:14:22 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nSf1K-0001C2-8a; Fri, 11 Mar 2022 14:09:26 +0100
-Message-ID: <bbcd6998-1038-e1fa-15ee-82293ecc6bad@leemhuis.info>
-Date: Fri, 11 Mar 2022 14:09:25 +0100
+	id 1nTSjN-0007Kn-P8; Sun, 13 Mar 2022 19:14:14 +0100
+Message-ID: <c8ece1fb-45ad-df5e-5dc1-96b0bec555c3@leemhuis.info>
+Date: Sun, 13 Mar 2022 19:14:13 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,59 +16,38 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH v2 net-next 1/2] bnx2x: Utilize firmware 7.13.21.0
+Subject: Re: regression: Build failure of mainline kernel with qcom_defconfig
  #forregzbot
 Content-Language: en-US
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: regressions@lists.linux.dev
-References: <20211217165552.746-1-manishc@marvell.com>
- <ea05bcab-fe72-4bc2-3337-460888b2c44e@molgen.mpg.de>
- <46f2d9d9-ae7f-b332-ddeb-b59802be2bab@molgen.mpg.de>
- <58ede701-f93b-d9f9-2775-4593a7756a30@leemhuis.info>
-In-Reply-To: <58ede701-f93b-d9f9-2775-4593a7756a30@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <YhofdlzadzRmy7tj@debian>
+ <79949bb0-0b7c-5e70-f554-45f40256e325@leemhuis.info>
+ <9425bd32-bb9a-acf1-1936-135753b246a9@leemhuis.info>
+In-Reply-To: <9425bd32-bb9a-acf1-1936-135753b246a9@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647004174;20a3e5cf;
-X-HE-SMSGID: 1nSf1K-0001C2-8a
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647195262;917b49a0;
+X-HE-SMSGID: 1nTSjN-0007Kn-P8
 
 TWIMC: this mail is primarily send for documentation purposes and for
 regzbot, my Linux kernel regression tracking bot. These mails usually
 contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-Workaround for a slightly misplaced ^introduced:
+#regzbot fixed-by: 3755d35ee1d2454b20b8a1
 
-#regzbot monitor:
-https://lore.kernel.org/stable/ea05bcab-fe72-4bc2-3337-460888b2c44e@molgen.mpg.de/
+https://git.kernel.org/torvalds/c/3755d35ee1d2454b20b8a1e20d790e56201678a4
 
-On 10.03.22 11:13, Thorsten Leemhuis wrote:
-> [TLDR: I'm adding the regression report below to regzbot, the Linux
-> kernel regression tracking bot; all text you find below is compiled from
-> a few templates paragraphs you might have encountered already already
-> from similar mails.]
+On 04.03.22 15:33, Thorsten Leemhuis wrote:
+> TWIMC: this mail is primarily send for documentation purposes and for
+> regzbot, my Linux kernel regression tracking bot. These mails usually
+> contain '#forregzbot' in the subject, to make them easy to spot and filter.
 > 
-> Hi, this is your Linux kernel regression tracker. Top-posting for once,
-> to make this easily accessible to everyone.
+> #regzbot fixed-by: eea89dff4c39a106f98d1
+> #regzbot monitor:
+> https://lore.kernel.org/lkml/20220203093922.20754-1-tzimmermann@suse.de/
 > 
-> To be sure below issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, my Linux kernel regression tracking bot:
-> 
-> #regzbot ^introduced b7a49f73059fe6147b6b7
-> #regzbot title firmware now as to be in the initramfs
-> #regzbot ignore-activity
-> 
-> If it turns out this isn't a regression, free free to remove it from the
-> tracking by sending a reply to this thread containing a paragraph like
-> "#regzbot invalid: reason why this is invalid" (without the quotes).
-> 
-> Reminder for developers: when fixing the issue, please add a 'Link:'
-> tags pointing to the report (the mail quoted above) using
-> lore.kernel.org/r/, as explained in
-> 'Documentation/process/submitting-patches.rst' and
-> 'Documentation/process/5.Posting.rst'. Regzbot needs them to
-> automatically connect reports with fixes, but they are useful in
-> general, too.
-> 
-> Sending this just to the lists, as this seems to be handled already.
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=eea89dff4c39a106f98d1cb5e4d626f8c63908b9
 > 
 > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 > 
@@ -81,352 +60,105 @@ On 10.03.22 11:13, Thorsten Leemhuis wrote:
 > straight.
 > 
 > 
-> On 09.03.22 17:18, Paul Menzel wrote:
->> [Use correct regression address]
+> 
+> On 27.02.22 09:28, Thorsten Leemhuis wrote:
+>> [TLDR: I'm adding the regression report below to regzbot, the Linux
+>> kernel regression tracking bot; all text you find below is compiled from
+>> a few templates paragraphs you might have encountered already already
+>> from similar mails.]
 >>
->> Am 09.03.22 um 17:15 schrieb Paul Menzel:
->>> Dear Manish,
->>>
->>>
->>> Am 17.12.21 um 17:55 schrieb Manish Chopra:
->>>> This new firmware addresses few important issues and enhancements
->>>> as mentioned below -
->>>>
->>>> - Support direct invalidation of FP HSI Ver per function ID, required
->>>> for
->>>>    invalidating FP HSI Ver prior to each VF start, as there is no VF
->>>> start
->>>> - BRB hardware block parity error detection support for the driver
->>>> - Fix the FCOE underrun flow
->>>> - Fix PSOD during FCoE BFS over the NIC ports after preboot driver
->>>> - Maintains backward compatibility
->>>>
->>>> This patch incorporates this new firmware 7.13.21.0 in bnx2x driver.
->>>>
->>>> Signed-off-by: Manish Chopra <manishc@marvell.com>
->>>> Signed-off-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
->>>> Signed-off-by: Alok Prasad <palok@marvell.com>
->>>> Signed-off-by: Ariel Elior <aelior@marvell.com>
->>>> ---
->>>>
->>>> v1->v2:
->>>> ------------
->>>> * Modified the patch such that driver to be backward compatible
->>>>    with older firmware too (New fw v7.13.21.0 on linux-firmware.git
->>>>    enables driver to maintain backward compatibility)
->>>> ---
->>>>   drivers/net/ethernet/broadcom/bnx2x/bnx2x.h        | 11 +++-
->>>>   drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c    |  6 +-
->>>>   .../net/ethernet/broadcom/bnx2x/bnx2x_fw_defs.h    |  2 +
->>>>   drivers/net/ethernet/broadcom/bnx2x/bnx2x_hsi.h    |  3 +-
->>>>   drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c   | 75
->>>> +++++++++++++++-------
->>>>   5 files changed, 69 insertions(+), 28 deletions(-)
->>>>
->>>> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x.h
->>>> b/drivers/net/ethernet/broadcom/bnx2x/bnx2x.h
->>>> index 2b06d78b..a19dd67 100644
->>>> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x.h
->>>> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x.h
->>>> @@ -1850,6 +1850,14 @@ struct bnx2x {
->>>>       /* Vxlan/Geneve related information */
->>>>       u16 udp_tunnel_ports[BNX2X_UDP_PORT_MAX];
->>>> +
->>>> +#define FW_CAP_INVALIDATE_VF_FP_HSI    BIT(0)
->>>> +    u32 fw_cap;
->>>> +
->>>> +    u32 fw_major;
->>>> +    u32 fw_minor;
->>>> +    u32 fw_rev;
->>>> +    u32 fw_eng;
->>>>   };
->>>>   /* Tx queues may be less or equal to Rx queues */
->>>> @@ -2525,5 +2533,6 @@ enum {
->>>>    * Meant for implicit re-load flows.
->>>>    */
->>>>   int bnx2x_vlan_reconfigure_vid(struct bnx2x *bp);
->>>> -
->>>> +int bnx2x_init_firmware(struct bnx2x *bp);
->>>> +void bnx2x_release_firmware(struct bnx2x *bp);
->>>>   #endif /* bnx2x.h */
->>>> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
->>>> b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
->>>> index 54a2334..8d36ebb 100644
->>>> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
->>>> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
->>>> @@ -2365,10 +2365,8 @@ int bnx2x_compare_fw_ver(struct bnx2x *bp, u32
->>>> load_code, bool print_err)
->>>>       if (load_code != FW_MSG_CODE_DRV_LOAD_COMMON_CHIP &&
->>>>           load_code != FW_MSG_CODE_DRV_LOAD_COMMON) {
->>>>           /* build my FW version dword */
->>>> -        u32 my_fw = (BCM_5710_FW_MAJOR_VERSION) +
->>>> -            (BCM_5710_FW_MINOR_VERSION << 8) +
->>>> -            (BCM_5710_FW_REVISION_VERSION << 16) +
->>>> -            (BCM_5710_FW_ENGINEERING_VERSION << 24);
->>>> +        u32 my_fw = (bp->fw_major) + (bp->fw_minor << 8) +
->>>> +                (bp->fw_rev << 16) + (bp->fw_eng << 24);
->>>>           /* read loaded FW from chip */
->>>>           u32 loaded_fw = REG_RD(bp, XSEM_REG_PRAM);
->>>> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_fw_defs.h
->>>> b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_fw_defs.h
->>>> index 3f84352..a84d015 100644
->>>> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_fw_defs.h
->>>> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_fw_defs.h
->>>> @@ -241,6 +241,8 @@
->>>>       IRO[221].m2))
->>>>   #define XSTORM_VF_TO_PF_OFFSET(funcId) \
->>>>       (IRO[48].base + ((funcId) * IRO[48].m1))
->>>> +#define XSTORM_ETH_FUNCTION_INFO_FP_HSI_VALID_E2_OFFSET(fid)    \
->>>> +    (IRO[386].base + ((fid) * IRO[386].m1))
->>>>   #define COMMON_ASM_INVALID_ASSERT_OPCODE 0x0
->>>>   /* eth hsi version */
->>>> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_hsi.h
->>>> b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_hsi.h
->>>> index 622fadc..611efee 100644
->>>> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_hsi.h
->>>> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_hsi.h
->>>> @@ -3024,7 +3024,8 @@ struct afex_stats {
->>>>   #define BCM_5710_FW_MAJOR_VERSION            7
->>>>   #define BCM_5710_FW_MINOR_VERSION            13
->>>> -#define BCM_5710_FW_REVISION_VERSION        15
->>>> +#define BCM_5710_FW_REVISION_VERSION        21
->>>> +#define BCM_5710_FW_REVISION_VERSION_V15    15
->>>>   #define BCM_5710_FW_ENGINEERING_VERSION        0
->>>>   #define BCM_5710_FW_COMPILE_FLAGS            1
->>>> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
->>>> b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
->>>> index aec666e..125dafe 100644
->>>> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
->>>> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
->>>> @@ -74,9 +74,19 @@
->>>>       __stringify(BCM_5710_FW_MINOR_VERSION) "."    \
->>>>       __stringify(BCM_5710_FW_REVISION_VERSION) "."    \
->>>>       __stringify(BCM_5710_FW_ENGINEERING_VERSION)
->>>> +
->>>> +#define FW_FILE_VERSION_V15                \
->>>> +    __stringify(BCM_5710_FW_MAJOR_VERSION) "."      \
->>>> +    __stringify(BCM_5710_FW_MINOR_VERSION) "."    \
->>>> +    __stringify(BCM_5710_FW_REVISION_VERSION_V15) "."    \
->>>> +    __stringify(BCM_5710_FW_ENGINEERING_VERSION)
->>>> +
->>>>   #define FW_FILE_NAME_E1        "bnx2x/bnx2x-e1-" FW_FILE_VERSION ".fw"
->>>>   #define FW_FILE_NAME_E1H    "bnx2x/bnx2x-e1h-" FW_FILE_VERSION ".fw"
->>>>   #define FW_FILE_NAME_E2        "bnx2x/bnx2x-e2-" FW_FILE_VERSION ".fw"
->>>> +#define FW_FILE_NAME_E1_V15    "bnx2x/bnx2x-e1-" FW_FILE_VERSION_V15
->>>> ".fw"
->>>> +#define FW_FILE_NAME_E1H_V15    "bnx2x/bnx2x-e1h-"
->>>> FW_FILE_VERSION_V15 ".fw"
->>>> +#define FW_FILE_NAME_E2_V15    "bnx2x/bnx2x-e2-" FW_FILE_VERSION_V15
->>>> ".fw"
->>>>   /* Time in jiffies before concluding the transmitter is hung */
->>>>   #define TX_TIMEOUT        (5*HZ)
->>>> @@ -747,9 +757,7 @@ static int bnx2x_mc_assert(struct bnx2x *bp)
->>>>             CHIP_IS_E1(bp) ? "everest1" :
->>>>             CHIP_IS_E1H(bp) ? "everest1h" :
->>>>             CHIP_IS_E2(bp) ? "everest2" : "everest3",
->>>> -          BCM_5710_FW_MAJOR_VERSION,
->>>> -          BCM_5710_FW_MINOR_VERSION,
->>>> -          BCM_5710_FW_REVISION_VERSION);
->>>> +          bp->fw_major, bp->fw_minor, bp->fw_rev);
->>>>       return rc;
->>>>   }
->>>> @@ -12308,6 +12316,15 @@ static int bnx2x_init_bp(struct bnx2x *bp)
->>>>       bnx2x_read_fwinfo(bp);
->>>> +    if (IS_PF(bp)) {
->>>> +        rc = bnx2x_init_firmware(bp);
->>>> +
->>>> +        if (rc) {
->>>> +            bnx2x_free_mem_bp(bp);
->>>> +            return rc;
->>>> +        }
->>>> +    }
->>>> +
->>>>       func = BP_FUNC(bp);
->>>>       /* need to reset chip if undi was active */
->>>> @@ -12320,6 +12337,7 @@ static int bnx2x_init_bp(struct bnx2x *bp)
->>>>           rc = bnx2x_prev_unload(bp);
->>>>           if (rc) {
->>>> +            bnx2x_release_firmware(bp);
->>>>               bnx2x_free_mem_bp(bp);
->>>>               return rc;
->>>>           }
->>>> @@ -13317,16 +13335,11 @@ static int bnx2x_check_firmware(struct
->>>> bnx2x *bp)
->>>>       /* Check FW version */
->>>>       offset = be32_to_cpu(fw_hdr->fw_version.offset);
->>>>       fw_ver = firmware->data + offset;
->>>> -    if ((fw_ver[0] != BCM_5710_FW_MAJOR_VERSION) ||
->>>> -        (fw_ver[1] != BCM_5710_FW_MINOR_VERSION) ||
->>>> -        (fw_ver[2] != BCM_5710_FW_REVISION_VERSION) ||
->>>> -        (fw_ver[3] != BCM_5710_FW_ENGINEERING_VERSION)) {
->>>> +    if (fw_ver[0] != bp->fw_major || fw_ver[1] != bp->fw_minor ||
->>>> +        fw_ver[2] != bp->fw_rev || fw_ver[3] != bp->fw_eng) {
->>>>           BNX2X_ERR("Bad FW version:%d.%d.%d.%d. Should be
->>>> %d.%d.%d.%d\n",
->>>> -               fw_ver[0], fw_ver[1], fw_ver[2], fw_ver[3],
->>>> -               BCM_5710_FW_MAJOR_VERSION,
->>>> -               BCM_5710_FW_MINOR_VERSION,
->>>> -               BCM_5710_FW_REVISION_VERSION,
->>>> -               BCM_5710_FW_ENGINEERING_VERSION);
->>>> +              fw_ver[0], fw_ver[1], fw_ver[2], fw_ver[3],
->>>> +              bp->fw_major, bp->fw_minor, bp->fw_rev, bp->fw_eng);
->>>>           return -EINVAL;
->>>>       }
->>>> @@ -13404,34 +13417,51 @@ static void be16_to_cpu_n(const u8
->>>> *_source, u8 *_target, u32 n)
->>>>            (u8 *)bp->arr, len);                    \
->>>>   } while (0)
->>>> -static int bnx2x_init_firmware(struct bnx2x *bp)
->>>> +int bnx2x_init_firmware(struct bnx2x *bp)
->>>>   {
->>>> -    const char *fw_file_name;
->>>> +    const char *fw_file_name, *fw_file_name_v15;
->>>>       struct bnx2x_fw_file_hdr *fw_hdr;
->>>>       int rc;
->>>>       if (bp->firmware)
->>>>           return 0;
->>>> -    if (CHIP_IS_E1(bp))
->>>> +    if (CHIP_IS_E1(bp)) {
->>>>           fw_file_name = FW_FILE_NAME_E1;
->>>> -    else if (CHIP_IS_E1H(bp))
->>>> +        fw_file_name_v15 = FW_FILE_NAME_E1_V15;
->>>> +    } else if (CHIP_IS_E1H(bp)) {
->>>>           fw_file_name = FW_FILE_NAME_E1H;
->>>> -    else if (!CHIP_IS_E1x(bp))
->>>> +        fw_file_name_v15 = FW_FILE_NAME_E1H_V15;
->>>> +    } else if (!CHIP_IS_E1x(bp)) {
->>>>           fw_file_name = FW_FILE_NAME_E2;
->>>> -    else {
->>>> +        fw_file_name_v15 = FW_FILE_NAME_E2_V15;
->>>> +    } else {
->>>>           BNX2X_ERR("Unsupported chip revision\n");
->>>>           return -EINVAL;
->>>>       }
->>>> +
->>>>       BNX2X_DEV_INFO("Loading %s\n", fw_file_name);
->>>>       rc = request_firmware(&bp->firmware, fw_file_name,
->>>> &bp->pdev->dev);
->>>>       if (rc) {
->>>> -        BNX2X_ERR("Can't load firmware file %s\n",
->>>> -              fw_file_name);
->>>> -        goto request_firmware_exit;
->>>> +        BNX2X_DEV_INFO("Trying to load older fw %s\n",
->>>> fw_file_name_v15);
->>>> +
->>>> +        /* try to load prev version */
->>>> +        rc = request_firmware(&bp->firmware, fw_file_name_v15,
->>>> &bp->pdev->dev);
->>>> +
->>>> +        if (rc)
->>>> +            goto request_firmware_exit;
->>>> +
->>>> +        bp->fw_rev = BCM_5710_FW_REVISION_VERSION_V15;
->>>> +    } else {
->>>> +        bp->fw_cap |= FW_CAP_INVALIDATE_VF_FP_HSI;
->>>> +        bp->fw_rev = BCM_5710_FW_REVISION_VERSION;
->>>>       }
->>>> +    bp->fw_major = BCM_5710_FW_MAJOR_VERSION;
->>>> +    bp->fw_minor = BCM_5710_FW_MINOR_VERSION;
->>>> +    bp->fw_eng = BCM_5710_FW_ENGINEERING_VERSION;
->>>> +
->>>>       rc = bnx2x_check_firmware(bp);
->>>>       if (rc) {
->>>>           BNX2X_ERR("Corrupt firmware file %s\n", fw_file_name);
->>>> @@ -13487,7 +13517,7 @@ static int bnx2x_init_firmware(struct bnx2x *bp)
->>>>       return rc;
->>>>   }
->>>> -static void bnx2x_release_firmware(struct bnx2x *bp)
->>>> +void bnx2x_release_firmware(struct bnx2x *bp)
->>>>   {
->>>>       kfree(bp->init_ops_offsets);
->>>>       kfree(bp->init_ops);
->>>> @@ -14004,6 +14034,7 @@ static int bnx2x_init_one(struct pci_dev *pdev,
->>>>       return 0;
->>>>   init_one_freemem:
->>>> +    bnx2x_release_firmware(bp);
->>>>       bnx2x_free_mem_bp(bp);
->>>>   init_one_exit:
->>>
->>> This change was added to Linux in commit b7a49f73059f (bnx2x: Utilize
->>> firmware 7.13.21.0) [1] to Linux v5.17-rc1, and backported to the
->>> stable series, for example, Linux v5.10.95.
->>>
->>> Due to CVE-2022-0847 (Dirty Pipe) [1] we updated systems from, for
->>> example, Linux 5.10.24 to Linux v5.10.103 and noticed that the
->>> Broadcom network devices failed to initialize.
->>>
->>> ```
->>> [   20.477325] bnx2 0000:02:00.0 eth0: Broadcom NetXtreme II BCM5709
->>> 1000Base-T (C0) PCI Express found at mem c6000000, IRQ 41, node addr
->>> c8:1f:66:cf:34:45
->>> [   20.491782] bnx2 0000:02:00.1 eth1: Broadcom NetXtreme II BCM5709
->>> 1000Base-T (C0) PCI Express found at mem c8000000, IRQ 42, node addr
->>> c8:1f:66:cf:34:47
->>> [   20.506223] bnx2 0000:03:00.0 eth2: Broadcom NetXtreme II BCM5709
->>> 1000Base-T (C0) PCI Express found at mem ca000000, IRQ 43, node addr
->>> c8:1f:66:cf:34:49
->>> [   20.520644] bnx2 0000:03:00.1 eth3: Broadcom NetXtreme II BCM5709
->>> 1000Base-T (C0) PCI Express found at mem cc000000, IRQ 44, node addr
->>> c8:1f:66:cf:34:4b
->>> [   20.534985] bnx2x 0000:45:00.0: msix capability found
->>> [   20.540342] bnx2x 0000:45:00.0: part number
->>> 394D4342-31373735-31314131-473331
->>> [   20.548605] bnx2x 0000:45:00.0: Direct firmware load for
->>> bnx2x/bnx2x-e1h-7.13.21.0.fw failed with error -2
->>> [   20.558373] bnx2x 0000:45:00.0: Direct firmware load for
->>> bnx2x/bnx2x-e1h-7.13.15.0.fw failed with error -2
->>> [   20.568319] bnx2x: probe of 0000:45:00.0 failed with error -2
->>> [   20.574148] bnx2x 0000:45:00.1: msix capability found
->>> [   20.579470] bnx2x 0000:45:00.1: part number
->>> 394D4342-31373735-31314131-473331
->>> [   20.587708] bnx2x 0000:45:00.1: Direct firmware load for
->>> bnx2x/bnx2x-e1h-7.13.21.0.fw failed with error -2
->>> [   20.597479] bnx2x 0000:45:00.1: Direct firmware load for
->>> bnx2x/bnx2x-e1h-7.13.15.0.fw failed with error -2
->>> [   20.607355] bnx2x: probe of 0000:45:00.1 failed with error -2
->>> [   20.613179] bnx2x 0000:46:00.0: msix capability found
->>> [   20.618501] bnx2x 0000:46:00.0: part number
->>> 394D4342-31373735-31314131-473331
->>> [   20.626805] bnx2x 0000:46:00.0: Direct firmware load for
->>> bnx2x/bnx2x-e1h-7.13.21.0.fw failed with error -2
->>> [   20.636580] bnx2x 0000:46:00.0: Direct firmware load for
->>> bnx2x/bnx2x-e1h-7.13.15.0.fw failed with error -2
->>> [   20.646453] bnx2x: probe of 0000:46:00.0 failed with error -2
->>> [   20.652279] bnx2x 0000:46:00.1: msix capability found
->>> [   20.657593] bnx2x 0000:46:00.1: part number
->>> 394D4342-31373735-31314131-473331
->>> [   20.665813] bnx2x 0000:46:00.1: Direct firmware load for
->>> bnx2x/bnx2x-e1h-7.13.21.0.fw failed with error -2
->>> [   20.675590] bnx2x 0000:46:00.1: Direct firmware load for
->>> bnx2x/bnx2x-e1h-7.13.15.0.fw failed with error -2
->>> [   20.685457] bnx2x: probe of 0000:46:00.1 failed with error -2
->>> ```
->>>
->>> Due to reasons, we do not have firmware in the initrd, and the
->>> firmware files are only the root partition in `/lib/firmware`.
->>>
->>> Logging in using other means¹, and removing the PCI devices, and
->>> rescanning brought the devices online.
->>>
->>>      $ echo 1 | sudo tee
->>> /sys/bus/pci/devices/0000\:{45,46}\:00.{0,1}/remove
->>>      $ echo 1 | sudo tee /sys/bus/pci/rescan
->>>
->>> Adding the firmware files to the initrd also fixes the issue.
->>>
->>> I didn’t bisect the change, but the refactoring of the init methods
->>> looks like the reason for the change of behavior. As it’s not
->>> documented in the commit message, was that intentional? I think it
->>> breaks Linux’ no regression rule, and the commit (and follow-ups)
->>> should be reverted in Linux v5.17 and backed out from the stable series.
->>>
->>>
->>> Kind regards,
->>>
->>> Paul
->>>
->>>
->>> ¹ Why can’t even without proper firmware, the card at least initialize
->>> to have a network connection even if it’s degraded?
+>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
+>> to make this easy accessible to everyone.
 >>
+>> Thanks for the report.
+>>
+>> To be sure below issue doesn't fall through the cracks unnoticed, I'm
+>> adding it to regzbot, my Linux kernel regression tracking bot:
+>>
+>> #regzbot ^introduced 9d6366e743f37d36ef69347924ead7bcc596076e
+>> #regzbot title drm: fb_helper:  Build failure of mainline kernel with
+>> qcom_defconfig
+>> #regzbot ignore-activity
+>>
+>> Reminder for developers: when fixing the issue, please add a 'Link:'
+>> tags pointing to the report (the mail quoted above) using
+>> lore.kernel.org/r/, as explained in
+>> 'Documentation/process/submitting-patches.rst' and
+>> 'Documentation/process/5.Posting.rst'. This allows the bot to connect
+>> the report with any patches posted or committed to fix the issue; this
+>> again allows the bot to show the current status of regressions and
+>> automatically resolve the issue when the fix hits the right tree.
+>>
+>> I'm sending this to everyone that got the initial report, to make them
+>> aware of the tracking. I also hope that messages like this motivate
+>> people to directly get at least the regression mailing list and ideally
+>> even regzbot involved when dealing with regressions, as messages like
+>> this wouldn't be needed then. And don't worry, if I need to send other
+>> mails regarding this regression only relevant for regzbot I'll send them
+>> to the regressions lists only (with a tag in the subject so people can
+>> filter them away). With a bit of luck no such messages will be needed
+>> anyway.
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>
+>> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+>> reports on my table. I can only look briefly into most of them and lack
+>> knowledge about most of the areas they concern. I thus unfortunately
+>> will sometimes get things wrong or miss something important. I hope
+>> that's not the case here; if you think it is, don't hesitate to tell me
+>> in a public reply, it's in everyone's interest to set the public record
+>> straight.
+>>
+>> On 26.02.22 13:39, Sudip Mukherjee wrote:
+>>> Hi Arnd, All,
+>>>
+>>> We recently noticed that arm "qcom_defconfig" failed to build with the error:
+>>>
+>>> arm-linux-gnueabi-ld: drivers/gpu/drm/panel/panel-edp.o: in function `panel_edp_probe':
+>>> drivers/gpu/drm/panel/panel-edp.c:843: undefined reference to `drm_panel_dp_aux_backlight'
+>>>
+>>> I have done a bisect and it points to:
+>>> 9d6366e743f3 ("drm: fb_helper: improve CONFIG_FB dependency")
+>>>
+>>> Here is the complete bisect log:
+>>>
+>>> # bad: [df0cc57e057f18e44dac8e6c18aba47ab53202f9] Linux 5.16
+>>> # good: [8bb7eca972ad531c9b149c0a51ab43a417385813] Linux 5.15
+>>> git bisect start 'v5.16' 'v5.15'
+>>> # good: [2219b0ceefe835b92a8a74a73fe964aa052742a2] Merge tag 'soc-5.16' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+>>> git bisect good 2219b0ceefe835b92a8a74a73fe964aa052742a2
+>>> # good: [206825f50f908771934e1fba2bfc2e1f1138b36a] Merge tag 'mtd/for-5.16' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux
+>>> git bisect good 206825f50f908771934e1fba2bfc2e1f1138b36a
+>>> # bad: [4e1fddc98d2585ddd4792b5e44433dcee7ece001] tcp_cubic: fix spurious Hystart ACK train detections for not-cwnd-limited flows
+>>> git bisect bad 4e1fddc98d2585ddd4792b5e44433dcee7ece001
+>>> # good: [dbf49896187fd58c577fa1574a338e4f3672b4b2] Merge branch 'akpm' (patches from Andrew)
+>>> git bisect good dbf49896187fd58c577fa1574a338e4f3672b4b2
+>>> # bad: [0ecca62beb12eeb13965ed602905c8bf53ac93d0] Merge tag 'ceph-for-5.16-rc1' of git://github.com/ceph/ceph-client
+>>> git bisect bad 0ecca62beb12eeb13965ed602905c8bf53ac93d0
+>>> # bad: [304ac8032d3fa2d37750969cd4b8d5736a1829d9] Merge tag 'drm-next-2021-11-12' of git://anongit.freedesktop.org/drm/drm
+>>> git bisect bad 304ac8032d3fa2d37750969cd4b8d5736a1829d9
+>>> # good: [f78e9de80f5ad15719a069a4e6c11e2777122188] Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
+>>> git bisect good f78e9de80f5ad15719a069a4e6c11e2777122188
+>>> # good: [806acd381960008700c15c3dc616d578e9558853] Merge tag 'amd-drm-fixes-5.16-2021-11-03' of https://gitlab.freedesktop.org/agd5f/linux into drm-next
+>>> git bisect good 806acd381960008700c15c3dc616d578e9558853
+>>> # bad: [f8ca7b74192b2e64bdfb89fb63c1d33b92bc899d] Merge tag 'drm-misc-next-fixes-2021-11-10' of git://anongit.freedesktop.org/drm/drm-misc into drm-next
+>>> git bisect bad f8ca7b74192b2e64bdfb89fb63c1d33b92bc899d
+>>> # good: [cecbc0c7eba7983965cac94f88d2db00b913253b] drm/i915/hdmi: Turn DP++ TMDS output buffers back on in encoder->shutdown()
+>>> git bisect good cecbc0c7eba7983965cac94f88d2db00b913253b
+>>> # bad: [14d9a37c952588930d7226953359fea3ab956d39] Revert "drm/imx: Annotate dma-fence critical section in commit path"
+>>> git bisect bad 14d9a37c952588930d7226953359fea3ab956d39
+>>> # good: [5591c8f79db1729d9c5ac7f5b4d3a5c26e262d93] drm/udl: fix control-message timeout
+>>> git bisect good 5591c8f79db1729d9c5ac7f5b4d3a5c26e262d93
+>>> # bad: [9d6366e743f37d36ef69347924ead7bcc596076e] drm: fb_helper: improve CONFIG_FB dependency
+>>> git bisect bad 9d6366e743f37d36ef69347924ead7bcc596076e
+>>> # good: [e0e6d1ea18c804de51b47fa65092c4cf2000604c] MAINTAINERS: dri-devel is for all of drivers/gpu
+>>> git bisect good e0e6d1ea18c804de51b47fa65092c4cf2000604c
+>>> # first bad commit: [9d6366e743f37d36ef69347924ead7bcc596076e] drm: fb_helper: improve CONFIG_FB dependency
+>>>
+>>>
+>>> And, indeed reverting "9d6366e743f37d36ef69347924ead7bcc596076e" on top of
+>>> 9137eda53752 ("Merge tag 'configfs-5.17-2022-02-25' of git://git.infradead.org/users/hch/configfs")
+>>> fixes the build.
+>>>
+>>> I will be happy to test any patch fxing this issue.
 >>
