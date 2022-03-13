@@ -1,351 +1,125 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D5462A
-	for <regressions@lists.linux.dev>; Sun, 13 Mar 2022 18:30:03 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1nTSyf-0001nK-GV; Sun, 13 Mar 2022 19:30:01 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report for mainline [2022-03-13]
-Date: Sun, 13 Mar 2022 18:30:00 +0000
-Message-Id: <164719604221.161559.15456635663646196218@leemhuis.info>
-X-Mailer: git-send-email 2.34.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9398DA40
+	for <regressions@lists.linux.dev>; Mon, 14 Mar 2022 02:53:40 +0000 (UTC)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id 8DFD85C0112;
+	Sun, 13 Mar 2022 22:53:39 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Sun, 13 Mar 2022 22:53:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=turner.link; h=
+	cc:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm2; bh=mk9hxX9pdpaTprhpWtmYamoWls5zOpQ2mqbAXe
+	YUr48=; b=a5KXI2BZUJhiA3fDQXwftBtJeQjfqVmIUk8KXXTvsbGB7pnI99fXuT
+	ZqzBOPwaDNwAPweuJAE/hKTYUob78wbwev83/J/Viqsv+SOPjGIPfqQqiIJ/EqyD
+	mZcR12Zt8dnNRCI4T9QXJKiFg4PlCLTViM5WBkhrHVO042BR50fVpbmt0lScv7Dw
+	SNB8WqIVDS/KQgfKJlNKERCJvOKHfW5+flWckvaPDCe+1dq51PzpyYM5Zir2Tbkl
+	yIcybJjvd4NVtj1/lnQ34GJTOGIRMsbSiTRyDAvKFoUZVEuYvE6MSk6Ze9UpfcH3
+	hVQqoKPHht3FfOQrt3PkFAkqc0+Ok9sQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=mk9hxX9pdpaTprhpW
+	tmYamoWls5zOpQ2mqbAXeYUr48=; b=ENWQVZ/6OdSptCSfVJ9UQ4r1zW+lXOx/8
+	4hzi6mFnY8SVDSK51blxdzEyt3JIxXyyF0ZGybf7UQnpAsZZDOtSxxa+CM70TvNh
+	C6Z15dLy/cRj6qY4E73Re6K7d/4G1o/KsQvc4t+Q+XnmPWtKLsP9Fj5Kjsd3Gx8G
+	D0YcmOGF3ICYXR7GS6fNziTvbVebiChvxMCHsGslkItQ4KFY8H6sypJAHcSdiuc6
+	C5mEAWwmC8w4y33hGjTX7RJlOSqn2ebiZ5iTXK+CNz2ivgm29jq4qG9O68limXpm
+	Ki79dwLbg2XlVbr0yx2Nx/56TiU4E7O6XAQcLJfmqMJ4WUuVKDDvA==
+X-ME-Sender: <xms:M64uYvpRU_NVx3x1jdn7bK_ETsK5smMmf6lGp6z4cVyQVYPOmX9ODQ>
+    <xme:M64uYpqfjhzCaPLraVydYPbOoZkACm8OqNVgH8_-jpYONEP527vnu24TWGcPBbcZB
+    T3rwKyOmJbHiOIN9w>
+X-ME-Received: <xmr:M64uYsOodvFcZ_0A-Drudina2r_Wzl09k17jCQV3d_VYakIXa1a-Lsx08Dws8ES_XqWn5PKbNeB8CsSoJq3g-Ln4EyeOGMdCiZE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddruddvjedgheduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfhfhvffuffgjkfggtgesthdtredttddttdenucfhrhhomheplfgrmhgvshcu
+    vfhurhhnvghruceolhhinhhugihkvghrnhgvlhdrfhhoshhssegumhgrrhgtqdhnohhnvg
+    drthhurhhnvghrrdhlihhnkheqnecuggftrfgrthhtvghrnhepfffhveeugfevteeileej
+    vdeltdegtdeggfeujefgveekueevkeehheehffduleevnecuffhomhgrihhnpegrrhgthh
+    hlihhnuhigrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomheplhhinhhugihkvghrnhgvlhdrfhhoshhssegumhgrrhgtqdhnohhnvgdrth
+    hurhhnvghrrdhlihhnkh
+X-ME-Proxy: <xmx:M64uYi55zF0psFGYdGy0OHLjJYK6VRocUJZ7LgqeOTLP81UHUdb4GQ>
+    <xmx:M64uYu6wmns2j2EAVEO2pAAZuIaDGfnQ8SuPM1zsXGwUKnq8IthXXw>
+    <xmx:M64uYqjFIZysjikoexKSzSt6J3lGtbaj9QQp8Od8fvlYDXDEdE_IhQ>
+    <xmx:M64uYhL9-F_nAtrpjLcqE3yK8XZbMACDoPzp93_XWIM69tV15Z1BQg>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 13 Mar 2022 22:53:39 -0400 (EDT)
+References: <87ee57c8fu.fsf@turner.link>
+ <acd2fd5e-d622-948c-82ef-629a8030c9d8@leemhuis.info>
+ <87a6ftk9qy.fsf@dmarc-none.turner.link> <87zgnp96a4.fsf@turner.link>
+ <fc2b7593-db8f-091c-67a0-ae5ffce71700@leemhuis.info>
+ <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
+ <87czkk1pmt.fsf@dmarc-none.turner.link>
+ <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
+ <87sftfqwlx.fsf@dmarc-none.turner.link>
+ <BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
+ <87ee4wprsx.fsf@turner.link>
+ <4b3ed7f6-d2b6-443c-970e-d963066ebfe3@amd.com>
+ <87pmo8r6ob.fsf@turner.link>
+ <5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
+ <CADnq5_MCKTLOfWKWvi94Q9-d5CGdWBoWVxEYL3YXOpMiPnLOyg@mail.gmail.com>
+ <87pmnnpmh5.fsf@dmarc-none.turner.link>
+ <CADnq5_NG_dQCYwqHM0umjTMg5Uud6zC4=MiscH91Y9v7mW9bJA@mail.gmail.com>
+ <092b825a-10ff-e197-18a1-d3e3a097b0e3@leemhuis.info>
+ <877d96to55.fsf@dmarc-none.turner.link>
+From: James Turner <linuxkernel.foss@dmarc-none.turner.link>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Alex Deucher <alexdeucher@gmail.com>, "Lazar, Lijo"
+ <lijo.lazar@amd.com>, "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Greg KH
+ <gregkh@linuxfoundation.org>, "Pan, Xinhui" <Xinhui.Pan@amd.com>, LKML
+ <linux-kernel@vger.kernel.org>, "amd-gfx@lists.freedesktop.org"
+ <amd-gfx@lists.freedesktop.org>, Alex Williamson
+ <alex.williamson@redhat.com>, "Koenig, Christian"
+ <Christian.Koenig@amd.com>
+Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
+ PCI-passed-through to Windows VM
+Date: Sun, 13 Mar 2022 14:33:41 -0400
+In-reply-to: <877d96to55.fsf@dmarc-none.turner.link>
+Message-ID: <87lexdw8gd.fsf@turner.link>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647196204;6d3c391e;
-X-HE-SMSGID: 1nTSyf-0001nK-GV
+Content-Type: text/plain
 
-Hi Linus, Thorsten here, with a quick preface before the latest report
-from regzbot.
+Hi all,
 
-From my side things look fine right now; the only regression in mainline
-regzbot and I are aware of is the one with bnx2x and firmware loading
-from the initramfs, which you were CCed on that needs more time to get
-addressed, as the changes got backported to stable already:
+I've confirmed that changing the `amdgpu_atif_pci_probe_handle` function
+to do nothing does make the GPU work properly in the VM. I started with
+f9b7f3703ff9 ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)")
+and changed the function implementation to:
 
-https://lore.kernel.org/stable/ea05bcab-fe72-4bc2-3337-460888b2c44e@molgen.mpg.de/
-https://lore.kernel.org/all/20220311002912.437871-1-kuba@kernel.org/
+static bool amdgpu_atif_pci_probe_handle(struct pci_dev *pdev)
+{
+	DRM_DEBUG_DRIVER("Entered amdgpu_atif_pci_probe_handle");
+	return false;
+}
 
-One report came in on Friday that looks a lot like a regression, but
-that is not confirmed yet:
+With that change, the GPU works properly in the VM.
 
-Bug 215673 - fsx dio testing get BAD DATA on NFS
-https://bugzilla.kernel.org/show_bug.cgi?id!5673
+I'm not sure where to go from here. This issue isn't much of a concern
+for me anymore, since blacklisting `amdgpu` works for my machine. At
+this point, my understanding is that the root problem needs to be fixed
+in AMD's Windows GPU driver or Dell's firmware, not the Linux kernel. If
+any of the AMD developers on this thread would like to forward it to the
+AMD Windows driver team, I'd be happy to work with AMD to fix the issue
+properly.
 
-Nothing else from my side.
+I've added a mention of this issue and workaround to the [Arch Wiki][1]
+to make it more discoverable. If anyone has a better place to document
+this, please let me know.
 
-Ciao, Thorsten
+Thank you all for your help on this.
 
----
+[1]: https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF#Too-low_frequency_limit_for_AMD_GPU_passed-through_to_virtual_machine
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 13 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-========================================================
-current cycle (v5.16.. aka v5.17-rc), culprit identified
-========================================================
-
-
-[ *NEW* ] firmware now as to be in the initramfs
-------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/46f2d9d9-ae7f-b332-ddeb-b59802be2bab@molgen.mpg.de/
-https://lore.kernel.org/stable/46f2d9d9-ae7f-b332-ddeb-b59802be2bab@molgen.mpg.de/
-
-By Paul Menzel, 4 days ago; 12 activities, latest 2 days ago.
-Introduced in b7a49f73059f (v5.17-rc1)
-
-Recent activities from: Paul Menzel (4), Manish Chopra (4), Linus
-  Torvalds (2), Greg KH (1), Jakub Kicinski (1)
-
-Noteworthy links:
-* Re: [PATCH v2 net-next 1/2] bnx2x: Utilize firmware 7.13.21.0
-  https://lore.kernel.org/stable/ea05bcab-fe72-4bc2-3337-460888b2c44e@molgen.mpg.de/
-  4 days ago, by Paul Menzel; thread monitored.
-
-
-=========================================================================================
-previous cycle (v5.15..v5.16), culprit identified, with activity in the past three months
-=========================================================================================
-
-
-bluetooth: HSP/HFP mSBC profile broken with QCA6174
----------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/bug-215576-62941@https.bugzilla.kernel.org//
-https://lore.kernel.org/linux-bluetooth/bug-215576-62941@https.bugzilla.kernel.org%2F/
-
-By bugzilla-daemon@kernel.org, 34 days ago; 18 activities, latest 4 days ago.
-Introduced in b2af264ad3af (v5.16-rc1)
-
-Recent activities from: bugzilla-daemon@kernel.org (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* [Bug 215576] HSP/HFP mSBC profile broken with QCA6174
-  https://lore.kernel.org/linux-bluetooth/bug-215576-62941-2nprEl3omz@https.bugzilla.kernel.org%2F/
-  22 days ago, by bugzilla-daemon@kernel.org
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215576
-* [RFC] Bluetooth: don't use ESCO setup for BT_VOICE
-  https://lore.kernel.org/linux-bluetooth/20220227163430.24694-1-pav@iki.fi/
-  14 days ago, by Pauli Virtanen; thread monitored.
-* [RFC] Bluetooth: HCI: Add HCI_QUIRK_ENHANCED_SETUP_SYNC_CONN quirk
-  https://lore.kernel.org/linux-bluetooth/20220302225049.432025-1-luiz.dentz@gmail.com/
-  10 days ago, by Luiz Augusto von Dentz; thread monitored.
-
-
-==================================================================================
-older cycles (..v5.15), culprit identified, with activity in the past three months
-==================================================================================
-
-
-memory corruption on Atmel SAMA5D31
------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/13c6c9a2-6db5-c3bf-349b-4c127ad3496a@axentia.se/
-https://lore.kernel.org/lkml/13c6c9a2-6db5-c3bf-349b-4c127ad3496a@axentia.se/
-
-By Peter Rosin, 10 days ago; 17 activities, latest 3 days ago.
-Introduced in f9aa460672c9 (v5.11-rc1)
-
-Recent activities from: Peter Rosin (5), Nicolas Ferre (1),
-  Tudor.Ambarus@microchip.com (1)
-
-One patch associated with this regression:
-* Re: Regression: memory corruption on Atmel SAMA5D31
-  https://lore.kernel.org/lkml/6ad73fa2-0ebb-1e96-a45a-b70faca623dd@axentia.se/
-  3 days ago, by Peter Rosin
-
-
-mtd: cfi_cmdset_0002: flash write accesses on the hardware fail on a PowerPC MPC8313 to a 8-bit-parallel S29GL064N flash
-------------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de/
-https://lore.kernel.org/lkml/b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de/
-
-By Ahmad Fatoum, 90 days ago; 22 activities, latest 4 days ago.
-Introduced in dfeae1073583 (v4.18-rc1)
-
-Recent activities from: Ahmad Fatoum (3), Tokunori Ikegami (2), Vignesh
-  Raghavendra (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* [PATCH v2] mtd: cfi_cmdset_0002: Use chip_ready() for write on S29GL064N
-  https://lore.kernel.org/stable/20220306153213.411425-1-ikegami.t@gmail.com/
-  7 days ago, by Tokunori Ikegami; thread monitored.
-
-Noteworthy links:
-* [PATCH] mtd: cfi_cmdset_0002: Use chip_ready() for write on S29GL064N
-  https://lore.kernel.org/stable/20220214182011.8493-1-ikegami.t@gmail.com/
-  27 days ago, by Tokunori Ikegami; thread monitored.
-
-
-gpio: some GPIO lines have stopped working
-------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20211217153555.9413-1-marcelo.jimenez@gmail.com/
-https://lore.kernel.org/stable/20211217153555.9413-1-marcelo.jimenez@gmail.com/
-
-By Marcelo Roberto Jimenez, 86 days ago; 21 activities, latest 6 days ago.
-Introduced in 2ab73c6d8323 (v5.7-rc1)
-
-Fix incoming:
-* https://lore.kernel.org/stable/28ebe79a-6e94-4b1b-c4e8-291e614327b0@leemhuis.info/
-
-
-drm: amdgpu: Too-low frequency limit for AMD GPU PCI-passed-through to Windows VM
----------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/87ee57c8fu.fsf@turner.link/
-https://lore.kernel.org/lkml/87ee57c8fu.fsf@turner.link/
-
-By James D. Turner, 55 days ago; 20 activities, latest 6 days ago.
-Introduced in f9b7f3703ff9 (v5.14-rc1)
-
-Recent activities from: James Turner (1)
-
-
-Intel TGL notebook no longer enters power states deeper than PC2
-----------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/34eb9d46-d937-fc29-02b1-7cfb9162f9b8@leemhuis.info/
-https://lore.kernel.org/regressions/34eb9d46-d937-fc29-02b1-7cfb9162f9b8@leemhuis.info/
-
-By MarcelHB, 52 days ago; 19 activities, latest 30 days ago.
-Introduced in e5ad96f388b7 (v5.15-rc1)
-
-One patch associated with this regression:
-* Re: [PATCH] nvme/pci: default to simple suspend
-  https://lore.kernel.org/linux-nvme/20220207160655.GB635727@dhcp-10-100-145-180.wdc.com/
-  34 days ago, by Keith Busch
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215467
-* [Bug] nvme blocks PC10 since v5.15 - bisected
-  https://lore.kernel.org/lkml/CAJZ5v0hvvYedSn5u-i7sjpoEHU4P65t7i1b2pVn=S1q0nHWgqQ@mail.gmail.com/
-  50 days ago, by Rafael J. Wysocki; thread monitored.
-* [PATCH] nvme/pci: default to simple suspend
-  https://lore.kernel.org/linux-nvme/20220201165006.3074615-1-kbusch@kernel.org/
-  40 days ago, by Keith Busch; thread monitored.
-
-
-====================================================================================
-previous cycle (v5.15..v5.16), unkown culprit, with activity in the past three weeks
-====================================================================================
-
-
-[ *NEW* ] md: Raid6 check performance regression
-------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/0eb91a43-a153-6e29-14b6-65f97b9f3d99@nuclearwinter.com/
-https://lore.kernel.org/linux-raid/0eb91a43-a153-6e29-14b6-65f97b9f3d99@nuclearwinter.com/
-
-By Larkin Lowrey, 6 days ago; 13 activities, latest 1 days ago.
-Introduced in v5.15..v5.16
-
-Recent activities from: Song Liu (3), Jens Axboe (3), Roger Heflin (2),
-  Larkin Lowrey (2), Wilson Jonathan (2), Thorsten Leemhuis (1)
-
-3 patch postings are associated with this regression, the latest is this:
-* [PATCH 2/2] block: flush plug based on hardware and software queue order
-  https://lore.kernel.org/linux-raid/20220311173041.165948-3-axboe@kernel.dk/
-  2 days ago, by Jens Axboe
-
-Noteworthy links:
-* [PATCHSET 0/2] Fix raid rebuild performance regression
-  https://lore.kernel.org/linux-raid/20220311173041.165948-1-axboe@kernel.dk/
-  2 days ago, by Jens Axboe; thread monitored.
-
-
-net: wireless: rtw_8822ce: Wifi connection doesn't really work anymore
-----------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAO_iuKEL8tHnovpGiQGUxg7JUpZFxHpxhOHbqAMgbt5R4Eftgg@mail.gmail.com/
-https://lore.kernel.org/linux-wireless/CAO_iuKEL8tHnovpGiQGUxg7JUpZFxHpxhOHbqAMgbt5R4Eftgg@mail.gmail.com/
-
-By Nico Sneck, 26 days ago; 5 activities, latest 6 days ago.
-Introduced in v5.15..v5.16
-
-Recent activities from: Kalle Valo (1)
-
-
-=============================================================================
-older cycles (..v5.15), unkown culprit, with activity in the past three weeks
-=============================================================================
-
-
-Regression in workingset_refault latency on 5.15
-------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CA+wXwBSyO87ZX5PVwdHm-=dBjZYECGmfnydUicUyrQqndgX2MQ@mail.gmail.com/
-https://lore.kernel.org/linux-mm/CA%2BwXwBSyO87ZX5PVwdHm-=dBjZYECGmfnydUicUyrQqndgX2MQ@mail.gmail.com/
-
-By Daniel Dao, 18 days ago; 57 activities, latest 0 days ago.
-Introduced in v3.0..v5.15.19
-
-Recent activities from: Andrew Morton (4), Shakeel Butt (2), Hillf
-  Danton (1), Michal Koutný (1)
-
-12 patch postings are associated with this regression, the latest is this:
-* Re: [PATCH] memcg: sync flush only if periodic flush is delayed
-  https://lore.kernel.org/lkml/20220313025050.1463-1-hdanton@sina.com/
-  0 days ago, by Hillf Danton
-
-Noteworthy links:
-* [PATCH] memcg: async flush memcg stats from perf sensitive codepaths
-  https://lore.kernel.org/stable/20220226002412.113819-1-shakeelb@google.com/
-  15 days ago, by Shakeel Butt; thread monitored.
-* [PATCH] memcg: sync flush only if periodic flush is delayed
-  https://lore.kernel.org/stable/20220304184040.1304781-1-shakeelb@google.com/
-  8 days ago, by Shakeel Butt; thread monitored.
-* + memcg-sync-flush-only-if-periodic-flush-is-delayed.patch added to -mm tree
-  https://lore.kernel.org/stable/20220304235350.5043FC340E9@smtp.kernel.org/
-  8 days ago, by Andrew Morton; thread monitored.
-* [failures] memcg-sync-flush-only-if-periodic-flush-is-delayed.patch removed from -mm tree
-  https://lore.kernel.org/stable/20220307024504.5EA2AC340EC@smtp.kernel.org/
-  6 days ago, by Andrew Morton; thread monitored.
-* + memcg-sync-flush-only-if-periodic-flush-is-delayed.patch added to -mm tree
-  https://lore.kernel.org/stable/20220307034042.A64CEC340F3@smtp.kernel.org/
-  6 days ago, by Andrew Morton; thread monitored.
-* + memcg-sync-flush-only-if-periodic-flush-is-delayed.patch added to -mm tree
-  https://lore.kernel.org/stable/20220307034236.DC2D6C340F3@smtp.kernel.org/
-  6 days ago, by Andrew Morton; thread monitored.
-
-
-cifs: Failure to access cifs mount of samba share after resume from sleep
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAFrh3J9soC36+BVuwHB=g9z_KB5Og2+p2_W+BBoBOZveErz14w@mail.gmail.com/
-https://lore.kernel.org/linux-cifs/CAFrh3J9soC36%2BBVuwHB=g9z_KB5Og2%2Bp2_W%2BBBoBOZveErz14w@mail.gmail.com/
-
-By Satadru Pramanik, 14 days ago; 10 activities, latest 9 days ago.
-Introduced in v5.16.11..v5.17-rc5
-
-
-md: unable to handle page fault while running badblocks (fsck.ext4 -c) on a raid5 md array
-------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/53e7de78-4d27-5089-f159-0d443b354666@leemhuis.info/
-https://lore.kernel.org/lkml/53e7de78-4d27-5089-f159-0d443b354666@leemhuis.info/
-
-By Dominik Mierzejewski, 19 days ago; 4 activities, latest 9 days ago.
-Introduced in v5.13..v5.14.10
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215605
-
-
-====================================================================
-all others with unkown culprit and activity in the past three months
-====================================================================
-
-
-backlight: Intel_backlight does not work after updating from 5.10.89 to latest 5.15.17
---------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/74ee2216-a295-c2b6-328b-3e6d0cc1847e@leemhuis.info/
-https://lore.kernel.org/regressions/74ee2216-a295-c2b6-328b-3e6d0cc1847e@leemhuis.info/
-
-By Filippo Falezza, 41 days ago; 1 activities, latest 41 days ago.
-Introduced in v5.10.89..v5.15.17
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215553
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/164659571791.547857.13375280613389065406@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+James
