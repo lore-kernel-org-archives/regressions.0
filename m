@@ -1,164 +1,351 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C074F7E3
-	for <regressions@lists.linux.dev>; Sun, 13 Mar 2022 18:14:22 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nTSjN-0007Kn-P8; Sun, 13 Mar 2022 19:14:14 +0100
-Message-ID: <c8ece1fb-45ad-df5e-5dc1-96b0bec555c3@leemhuis.info>
-Date: Sun, 13 Mar 2022 19:14:13 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D5462A
+	for <regressions@lists.linux.dev>; Sun, 13 Mar 2022 18:30:03 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1nTSyf-0001nK-GV; Sun, 13 Mar 2022 19:30:01 +0100
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report for mainline [2022-03-13]
+Date: Sun, 13 Mar 2022 18:30:00 +0000
+Message-Id: <164719604221.161559.15456635663646196218@leemhuis.info>
+X-Mailer: git-send-email 2.34.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: regression: Build failure of mainline kernel with qcom_defconfig
- #forregzbot
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <YhofdlzadzRmy7tj@debian>
- <79949bb0-0b7c-5e70-f554-45f40256e325@leemhuis.info>
- <9425bd32-bb9a-acf1-1936-135753b246a9@leemhuis.info>
-In-Reply-To: <9425bd32-bb9a-acf1-1936-135753b246a9@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647195262;917b49a0;
-X-HE-SMSGID: 1nTSjN-0007Kn-P8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647196204;6d3c391e;
+X-HE-SMSGID: 1nTSyf-0001nK-GV
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Hi Linus, Thorsten here, with a quick preface before the latest report
+from regzbot.
 
-#regzbot fixed-by: 3755d35ee1d2454b20b8a1
+From my side things look fine right now; the only regression in mainline
+regzbot and I are aware of is the one with bnx2x and firmware loading
+from the initramfs, which you were CCed on that needs more time to get
+addressed, as the changes got backported to stable already:
 
-https://git.kernel.org/torvalds/c/3755d35ee1d2454b20b8a1e20d790e56201678a4
+https://lore.kernel.org/stable/ea05bcab-fe72-4bc2-3337-460888b2c44e@molgen.mpg.de/
+https://lore.kernel.org/all/20220311002912.437871-1-kuba@kernel.org/
 
-On 04.03.22 15:33, Thorsten Leemhuis wrote:
-> TWIMC: this mail is primarily send for documentation purposes and for
-> regzbot, my Linux kernel regression tracking bot. These mails usually
-> contain '#forregzbot' in the subject, to make them easy to spot and filter.
-> 
-> #regzbot fixed-by: eea89dff4c39a106f98d1
-> #regzbot monitor:
-> https://lore.kernel.org/lkml/20220203093922.20754-1-tzimmermann@suse.de/
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=eea89dff4c39a106f98d1cb5e4d626f8c63908b9
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
-> 
-> 
-> 
-> On 27.02.22 09:28, Thorsten Leemhuis wrote:
->> [TLDR: I'm adding the regression report below to regzbot, the Linux
->> kernel regression tracking bot; all text you find below is compiled from
->> a few templates paragraphs you might have encountered already already
->> from similar mails.]
->>
->> Hi, this is your Linux kernel regression tracker. Top-posting for once,
->> to make this easy accessible to everyone.
->>
->> Thanks for the report.
->>
->> To be sure below issue doesn't fall through the cracks unnoticed, I'm
->> adding it to regzbot, my Linux kernel regression tracking bot:
->>
->> #regzbot ^introduced 9d6366e743f37d36ef69347924ead7bcc596076e
->> #regzbot title drm: fb_helper:  Build failure of mainline kernel with
->> qcom_defconfig
->> #regzbot ignore-activity
->>
->> Reminder for developers: when fixing the issue, please add a 'Link:'
->> tags pointing to the report (the mail quoted above) using
->> lore.kernel.org/r/, as explained in
->> 'Documentation/process/submitting-patches.rst' and
->> 'Documentation/process/5.Posting.rst'. This allows the bot to connect
->> the report with any patches posted or committed to fix the issue; this
->> again allows the bot to show the current status of regressions and
->> automatically resolve the issue when the fix hits the right tree.
->>
->> I'm sending this to everyone that got the initial report, to make them
->> aware of the tracking. I also hope that messages like this motivate
->> people to directly get at least the regression mailing list and ideally
->> even regzbot involved when dealing with regressions, as messages like
->> this wouldn't be needed then. And don't worry, if I need to send other
->> mails regarding this regression only relevant for regzbot I'll send them
->> to the regressions lists only (with a tag in the subject so people can
->> filter them away). With a bit of luck no such messages will be needed
->> anyway.
->>
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>
->> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
->> reports on my table. I can only look briefly into most of them and lack
->> knowledge about most of the areas they concern. I thus unfortunately
->> will sometimes get things wrong or miss something important. I hope
->> that's not the case here; if you think it is, don't hesitate to tell me
->> in a public reply, it's in everyone's interest to set the public record
->> straight.
->>
->> On 26.02.22 13:39, Sudip Mukherjee wrote:
->>> Hi Arnd, All,
->>>
->>> We recently noticed that arm "qcom_defconfig" failed to build with the error:
->>>
->>> arm-linux-gnueabi-ld: drivers/gpu/drm/panel/panel-edp.o: in function `panel_edp_probe':
->>> drivers/gpu/drm/panel/panel-edp.c:843: undefined reference to `drm_panel_dp_aux_backlight'
->>>
->>> I have done a bisect and it points to:
->>> 9d6366e743f3 ("drm: fb_helper: improve CONFIG_FB dependency")
->>>
->>> Here is the complete bisect log:
->>>
->>> # bad: [df0cc57e057f18e44dac8e6c18aba47ab53202f9] Linux 5.16
->>> # good: [8bb7eca972ad531c9b149c0a51ab43a417385813] Linux 5.15
->>> git bisect start 'v5.16' 'v5.15'
->>> # good: [2219b0ceefe835b92a8a74a73fe964aa052742a2] Merge tag 'soc-5.16' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
->>> git bisect good 2219b0ceefe835b92a8a74a73fe964aa052742a2
->>> # good: [206825f50f908771934e1fba2bfc2e1f1138b36a] Merge tag 'mtd/for-5.16' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux
->>> git bisect good 206825f50f908771934e1fba2bfc2e1f1138b36a
->>> # bad: [4e1fddc98d2585ddd4792b5e44433dcee7ece001] tcp_cubic: fix spurious Hystart ACK train detections for not-cwnd-limited flows
->>> git bisect bad 4e1fddc98d2585ddd4792b5e44433dcee7ece001
->>> # good: [dbf49896187fd58c577fa1574a338e4f3672b4b2] Merge branch 'akpm' (patches from Andrew)
->>> git bisect good dbf49896187fd58c577fa1574a338e4f3672b4b2
->>> # bad: [0ecca62beb12eeb13965ed602905c8bf53ac93d0] Merge tag 'ceph-for-5.16-rc1' of git://github.com/ceph/ceph-client
->>> git bisect bad 0ecca62beb12eeb13965ed602905c8bf53ac93d0
->>> # bad: [304ac8032d3fa2d37750969cd4b8d5736a1829d9] Merge tag 'drm-next-2021-11-12' of git://anongit.freedesktop.org/drm/drm
->>> git bisect bad 304ac8032d3fa2d37750969cd4b8d5736a1829d9
->>> # good: [f78e9de80f5ad15719a069a4e6c11e2777122188] Merge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input
->>> git bisect good f78e9de80f5ad15719a069a4e6c11e2777122188
->>> # good: [806acd381960008700c15c3dc616d578e9558853] Merge tag 'amd-drm-fixes-5.16-2021-11-03' of https://gitlab.freedesktop.org/agd5f/linux into drm-next
->>> git bisect good 806acd381960008700c15c3dc616d578e9558853
->>> # bad: [f8ca7b74192b2e64bdfb89fb63c1d33b92bc899d] Merge tag 'drm-misc-next-fixes-2021-11-10' of git://anongit.freedesktop.org/drm/drm-misc into drm-next
->>> git bisect bad f8ca7b74192b2e64bdfb89fb63c1d33b92bc899d
->>> # good: [cecbc0c7eba7983965cac94f88d2db00b913253b] drm/i915/hdmi: Turn DP++ TMDS output buffers back on in encoder->shutdown()
->>> git bisect good cecbc0c7eba7983965cac94f88d2db00b913253b
->>> # bad: [14d9a37c952588930d7226953359fea3ab956d39] Revert "drm/imx: Annotate dma-fence critical section in commit path"
->>> git bisect bad 14d9a37c952588930d7226953359fea3ab956d39
->>> # good: [5591c8f79db1729d9c5ac7f5b4d3a5c26e262d93] drm/udl: fix control-message timeout
->>> git bisect good 5591c8f79db1729d9c5ac7f5b4d3a5c26e262d93
->>> # bad: [9d6366e743f37d36ef69347924ead7bcc596076e] drm: fb_helper: improve CONFIG_FB dependency
->>> git bisect bad 9d6366e743f37d36ef69347924ead7bcc596076e
->>> # good: [e0e6d1ea18c804de51b47fa65092c4cf2000604c] MAINTAINERS: dri-devel is for all of drivers/gpu
->>> git bisect good e0e6d1ea18c804de51b47fa65092c4cf2000604c
->>> # first bad commit: [9d6366e743f37d36ef69347924ead7bcc596076e] drm: fb_helper: improve CONFIG_FB dependency
->>>
->>>
->>> And, indeed reverting "9d6366e743f37d36ef69347924ead7bcc596076e" on top of
->>> 9137eda53752 ("Merge tag 'configfs-5.17-2022-02-25' of git://git.infradead.org/users/hch/configfs")
->>> fixes the build.
->>>
->>> I will be happy to test any patch fxing this issue.
->>
+One report came in on Friday that looks a lot like a regression, but
+that is not confirmed yet:
+
+Bug 215673 - fsx dio testing get BAD DATA on NFS
+https://bugzilla.kernel.org/show_bug.cgi?id!5673
+
+Nothing else from my side.
+
+Ciao, Thorsten
+
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 13 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+========================================================
+current cycle (v5.16.. aka v5.17-rc), culprit identified
+========================================================
+
+
+[ *NEW* ] firmware now as to be in the initramfs
+------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/46f2d9d9-ae7f-b332-ddeb-b59802be2bab@molgen.mpg.de/
+https://lore.kernel.org/stable/46f2d9d9-ae7f-b332-ddeb-b59802be2bab@molgen.mpg.de/
+
+By Paul Menzel, 4 days ago; 12 activities, latest 2 days ago.
+Introduced in b7a49f73059f (v5.17-rc1)
+
+Recent activities from: Paul Menzel (4), Manish Chopra (4), Linus
+  Torvalds (2), Greg KH (1), Jakub Kicinski (1)
+
+Noteworthy links:
+* Re: [PATCH v2 net-next 1/2] bnx2x: Utilize firmware 7.13.21.0
+  https://lore.kernel.org/stable/ea05bcab-fe72-4bc2-3337-460888b2c44e@molgen.mpg.de/
+  4 days ago, by Paul Menzel; thread monitored.
+
+
+=========================================================================================
+previous cycle (v5.15..v5.16), culprit identified, with activity in the past three months
+=========================================================================================
+
+
+bluetooth: HSP/HFP mSBC profile broken with QCA6174
+---------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/bug-215576-62941@https.bugzilla.kernel.org//
+https://lore.kernel.org/linux-bluetooth/bug-215576-62941@https.bugzilla.kernel.org%2F/
+
+By bugzilla-daemon@kernel.org, 34 days ago; 18 activities, latest 4 days ago.
+Introduced in b2af264ad3af (v5.16-rc1)
+
+Recent activities from: bugzilla-daemon@kernel.org (1)
+
+2 patch postings are associated with this regression, the latest is this:
+* [Bug 215576] HSP/HFP mSBC profile broken with QCA6174
+  https://lore.kernel.org/linux-bluetooth/bug-215576-62941-2nprEl3omz@https.bugzilla.kernel.org%2F/
+  22 days ago, by bugzilla-daemon@kernel.org
+
+Noteworthy links:
+* https://bugzilla.kernel.org/show_bug.cgi?id=215576
+* [RFC] Bluetooth: don't use ESCO setup for BT_VOICE
+  https://lore.kernel.org/linux-bluetooth/20220227163430.24694-1-pav@iki.fi/
+  14 days ago, by Pauli Virtanen; thread monitored.
+* [RFC] Bluetooth: HCI: Add HCI_QUIRK_ENHANCED_SETUP_SYNC_CONN quirk
+  https://lore.kernel.org/linux-bluetooth/20220302225049.432025-1-luiz.dentz@gmail.com/
+  10 days ago, by Luiz Augusto von Dentz; thread monitored.
+
+
+==================================================================================
+older cycles (..v5.15), culprit identified, with activity in the past three months
+==================================================================================
+
+
+memory corruption on Atmel SAMA5D31
+-----------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/13c6c9a2-6db5-c3bf-349b-4c127ad3496a@axentia.se/
+https://lore.kernel.org/lkml/13c6c9a2-6db5-c3bf-349b-4c127ad3496a@axentia.se/
+
+By Peter Rosin, 10 days ago; 17 activities, latest 3 days ago.
+Introduced in f9aa460672c9 (v5.11-rc1)
+
+Recent activities from: Peter Rosin (5), Nicolas Ferre (1),
+  Tudor.Ambarus@microchip.com (1)
+
+One patch associated with this regression:
+* Re: Regression: memory corruption on Atmel SAMA5D31
+  https://lore.kernel.org/lkml/6ad73fa2-0ebb-1e96-a45a-b70faca623dd@axentia.se/
+  3 days ago, by Peter Rosin
+
+
+mtd: cfi_cmdset_0002: flash write accesses on the hardware fail on a PowerPC MPC8313 to a 8-bit-parallel S29GL064N flash
+------------------------------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de/
+https://lore.kernel.org/lkml/b687c259-6413-26c9-d4c9-b3afa69ea124@pengutronix.de/
+
+By Ahmad Fatoum, 90 days ago; 22 activities, latest 4 days ago.
+Introduced in dfeae1073583 (v4.18-rc1)
+
+Recent activities from: Ahmad Fatoum (3), Tokunori Ikegami (2), Vignesh
+  Raghavendra (1)
+
+2 patch postings are associated with this regression, the latest is this:
+* [PATCH v2] mtd: cfi_cmdset_0002: Use chip_ready() for write on S29GL064N
+  https://lore.kernel.org/stable/20220306153213.411425-1-ikegami.t@gmail.com/
+  7 days ago, by Tokunori Ikegami; thread monitored.
+
+Noteworthy links:
+* [PATCH] mtd: cfi_cmdset_0002: Use chip_ready() for write on S29GL064N
+  https://lore.kernel.org/stable/20220214182011.8493-1-ikegami.t@gmail.com/
+  27 days ago, by Tokunori Ikegami; thread monitored.
+
+
+gpio: some GPIO lines have stopped working
+------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/20211217153555.9413-1-marcelo.jimenez@gmail.com/
+https://lore.kernel.org/stable/20211217153555.9413-1-marcelo.jimenez@gmail.com/
+
+By Marcelo Roberto Jimenez, 86 days ago; 21 activities, latest 6 days ago.
+Introduced in 2ab73c6d8323 (v5.7-rc1)
+
+Fix incoming:
+* https://lore.kernel.org/stable/28ebe79a-6e94-4b1b-c4e8-291e614327b0@leemhuis.info/
+
+
+drm: amdgpu: Too-low frequency limit for AMD GPU PCI-passed-through to Windows VM
+---------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/87ee57c8fu.fsf@turner.link/
+https://lore.kernel.org/lkml/87ee57c8fu.fsf@turner.link/
+
+By James D. Turner, 55 days ago; 20 activities, latest 6 days ago.
+Introduced in f9b7f3703ff9 (v5.14-rc1)
+
+Recent activities from: James Turner (1)
+
+
+Intel TGL notebook no longer enters power states deeper than PC2
+----------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/34eb9d46-d937-fc29-02b1-7cfb9162f9b8@leemhuis.info/
+https://lore.kernel.org/regressions/34eb9d46-d937-fc29-02b1-7cfb9162f9b8@leemhuis.info/
+
+By MarcelHB, 52 days ago; 19 activities, latest 30 days ago.
+Introduced in e5ad96f388b7 (v5.15-rc1)
+
+One patch associated with this regression:
+* Re: [PATCH] nvme/pci: default to simple suspend
+  https://lore.kernel.org/linux-nvme/20220207160655.GB635727@dhcp-10-100-145-180.wdc.com/
+  34 days ago, by Keith Busch
+
+Noteworthy links:
+* https://bugzilla.kernel.org/show_bug.cgi?id=215467
+* [Bug] nvme blocks PC10 since v5.15 - bisected
+  https://lore.kernel.org/lkml/CAJZ5v0hvvYedSn5u-i7sjpoEHU4P65t7i1b2pVn=S1q0nHWgqQ@mail.gmail.com/
+  50 days ago, by Rafael J. Wysocki; thread monitored.
+* [PATCH] nvme/pci: default to simple suspend
+  https://lore.kernel.org/linux-nvme/20220201165006.3074615-1-kbusch@kernel.org/
+  40 days ago, by Keith Busch; thread monitored.
+
+
+====================================================================================
+previous cycle (v5.15..v5.16), unkown culprit, with activity in the past three weeks
+====================================================================================
+
+
+[ *NEW* ] md: Raid6 check performance regression
+------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/0eb91a43-a153-6e29-14b6-65f97b9f3d99@nuclearwinter.com/
+https://lore.kernel.org/linux-raid/0eb91a43-a153-6e29-14b6-65f97b9f3d99@nuclearwinter.com/
+
+By Larkin Lowrey, 6 days ago; 13 activities, latest 1 days ago.
+Introduced in v5.15..v5.16
+
+Recent activities from: Song Liu (3), Jens Axboe (3), Roger Heflin (2),
+  Larkin Lowrey (2), Wilson Jonathan (2), Thorsten Leemhuis (1)
+
+3 patch postings are associated with this regression, the latest is this:
+* [PATCH 2/2] block: flush plug based on hardware and software queue order
+  https://lore.kernel.org/linux-raid/20220311173041.165948-3-axboe@kernel.dk/
+  2 days ago, by Jens Axboe
+
+Noteworthy links:
+* [PATCHSET 0/2] Fix raid rebuild performance regression
+  https://lore.kernel.org/linux-raid/20220311173041.165948-1-axboe@kernel.dk/
+  2 days ago, by Jens Axboe; thread monitored.
+
+
+net: wireless: rtw_8822ce: Wifi connection doesn't really work anymore
+----------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CAO_iuKEL8tHnovpGiQGUxg7JUpZFxHpxhOHbqAMgbt5R4Eftgg@mail.gmail.com/
+https://lore.kernel.org/linux-wireless/CAO_iuKEL8tHnovpGiQGUxg7JUpZFxHpxhOHbqAMgbt5R4Eftgg@mail.gmail.com/
+
+By Nico Sneck, 26 days ago; 5 activities, latest 6 days ago.
+Introduced in v5.15..v5.16
+
+Recent activities from: Kalle Valo (1)
+
+
+=============================================================================
+older cycles (..v5.15), unkown culprit, with activity in the past three weeks
+=============================================================================
+
+
+Regression in workingset_refault latency on 5.15
+------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CA+wXwBSyO87ZX5PVwdHm-=dBjZYECGmfnydUicUyrQqndgX2MQ@mail.gmail.com/
+https://lore.kernel.org/linux-mm/CA%2BwXwBSyO87ZX5PVwdHm-=dBjZYECGmfnydUicUyrQqndgX2MQ@mail.gmail.com/
+
+By Daniel Dao, 18 days ago; 57 activities, latest 0 days ago.
+Introduced in v3.0..v5.15.19
+
+Recent activities from: Andrew Morton (4), Shakeel Butt (2), Hillf
+  Danton (1), Michal Koutný (1)
+
+12 patch postings are associated with this regression, the latest is this:
+* Re: [PATCH] memcg: sync flush only if periodic flush is delayed
+  https://lore.kernel.org/lkml/20220313025050.1463-1-hdanton@sina.com/
+  0 days ago, by Hillf Danton
+
+Noteworthy links:
+* [PATCH] memcg: async flush memcg stats from perf sensitive codepaths
+  https://lore.kernel.org/stable/20220226002412.113819-1-shakeelb@google.com/
+  15 days ago, by Shakeel Butt; thread monitored.
+* [PATCH] memcg: sync flush only if periodic flush is delayed
+  https://lore.kernel.org/stable/20220304184040.1304781-1-shakeelb@google.com/
+  8 days ago, by Shakeel Butt; thread monitored.
+* + memcg-sync-flush-only-if-periodic-flush-is-delayed.patch added to -mm tree
+  https://lore.kernel.org/stable/20220304235350.5043FC340E9@smtp.kernel.org/
+  8 days ago, by Andrew Morton; thread monitored.
+* [failures] memcg-sync-flush-only-if-periodic-flush-is-delayed.patch removed from -mm tree
+  https://lore.kernel.org/stable/20220307024504.5EA2AC340EC@smtp.kernel.org/
+  6 days ago, by Andrew Morton; thread monitored.
+* + memcg-sync-flush-only-if-periodic-flush-is-delayed.patch added to -mm tree
+  https://lore.kernel.org/stable/20220307034042.A64CEC340F3@smtp.kernel.org/
+  6 days ago, by Andrew Morton; thread monitored.
+* + memcg-sync-flush-only-if-periodic-flush-is-delayed.patch added to -mm tree
+  https://lore.kernel.org/stable/20220307034236.DC2D6C340F3@smtp.kernel.org/
+  6 days ago, by Andrew Morton; thread monitored.
+
+
+cifs: Failure to access cifs mount of samba share after resume from sleep
+-------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CAFrh3J9soC36+BVuwHB=g9z_KB5Og2+p2_W+BBoBOZveErz14w@mail.gmail.com/
+https://lore.kernel.org/linux-cifs/CAFrh3J9soC36%2BBVuwHB=g9z_KB5Og2%2Bp2_W%2BBBoBOZveErz14w@mail.gmail.com/
+
+By Satadru Pramanik, 14 days ago; 10 activities, latest 9 days ago.
+Introduced in v5.16.11..v5.17-rc5
+
+
+md: unable to handle page fault while running badblocks (fsck.ext4 -c) on a raid5 md array
+------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/53e7de78-4d27-5089-f159-0d443b354666@leemhuis.info/
+https://lore.kernel.org/lkml/53e7de78-4d27-5089-f159-0d443b354666@leemhuis.info/
+
+By Dominik Mierzejewski, 19 days ago; 4 activities, latest 9 days ago.
+Introduced in v5.13..v5.14.10
+
+Noteworthy links:
+* https://bugzilla.kernel.org/show_bug.cgi?id=215605
+
+
+====================================================================
+all others with unkown culprit and activity in the past three months
+====================================================================
+
+
+backlight: Intel_backlight does not work after updating from 5.10.89 to latest 5.15.17
+--------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/74ee2216-a295-c2b6-328b-3e6d0cc1847e@leemhuis.info/
+https://lore.kernel.org/regressions/74ee2216-a295-c2b6-328b-3e6d0cc1847e@leemhuis.info/
+
+By Filippo Falezza, 41 days ago; 1 activities, latest 41 days ago.
+Introduced in v5.10.89..v5.15.17
+
+Noteworthy links:
+* https://bugzilla.kernel.org/show_bug.cgi?id=215553
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/164659571791.547857.13375280613389065406@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
