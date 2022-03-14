@@ -1,214 +1,92 @@
-Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from ssl.serverraum.org (ssl.serverraum.org [176.9.125.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33EEC1B73
-	for <regressions@lists.linux.dev>; Mon, 14 Mar 2022 15:07:10 +0000 (UTC)
-Received: from [192.168.0.3] (ip5f5ae91c.dynamic.kabel-deutschland.de [95.90.233.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132411B73
+	for <regressions@lists.linux.dev>; Mon, 14 Mar 2022 16:02:19 +0000 (UTC)
+Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id B56D261E6478B;
-	Mon, 14 Mar 2022 16:07:08 +0100 (CET)
-Message-ID: <9513e74e-c682-d891-a5de-c9a82c5cf9d3@molgen.mpg.de>
-Date: Mon, 14 Mar 2022 16:07:08 +0100
+	by ssl.serverraum.org (Postfix) with ESMTPSA id CF79C2222E;
+	Mon, 14 Mar 2022 16:55:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+	t=1647273317;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bESQLLsW9UA6Y/GBZonv6IQcBfHiM3XWrdn1bAk3zJM=;
+	b=ufRCp9RjbPdcTjoSyh7FiO1rs4CJiG0W0oAlrdrAN3rY9R80dZqjzva0a8TIibYhHmTi6V
+	0tu/SFedIcGQD1gXbGr6tzo+w8mMQ/zHw7/wpbtR2mGSOPobA5KROdsO9JzKTx4/SJBWId
+	dsXQsC+PCF5GzyJEMPvGUMVBHcFXLmk=
+From: Michael Walle <michael@walle.cc>
+To: marcelo.jimenez@gmail.com
+Cc: achant@google.com,
+	brgl@bgdev.pl,
+	edmondchung@google.com,
+	geert@linux-m68k.org,
+	linus.walleij@linaro.org,
+	linux-gpio@vger.kernel.org,
+	regressions@lists.linux.dev,
+	sfr@canb.auug.org.au,
+	stable@vger.kernel.org,
+	tanzilli@acmesystems.it,
+	treding@nvidia.com,
+	vidyas@nvidia.com,
+	willmcvicker@google.com,
+	Horatiu Vultur <horatiu.vultur@microchip.com>,
+	Lars Povlsen <lars.povlsen@microchip.com>,
+	Michael Walle <michael@walle.cc>
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+Date: Mon, 14 Mar 2022 16:55:09 +0100
+Message-Id: <20220314155509.552218-1-michael@walle.cc>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Subject: Re: [EXT] Re: [PATCH v2 net-next 1/2] bnx2x: Utilize firmware
- 7.13.21.0
-Content-Language: en-US
-To: Manish Chopra <manishc@marvell.com>
-Cc: Donald Buczek <buczek@molgen.mpg.de>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
- Ariel Elior <aelior@marvell.com>, Alok Prasad <palok@marvell.com>,
- Prabhakar Kushwaha <pkushwaha@marvell.com>,
- "David S. Miller" <davem@davemloft.net>, Greg KH
- <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
- it+netdev@molgen.mpg.de, regressions@lists.linux.dev
-References: <20211217165552.746-1-manishc@marvell.com>
- <ea05bcab-fe72-4bc2-3337-460888b2c44e@molgen.mpg.de>
- <BY3PR18MB46129282EBA1F699583134A4AB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
- <e884cf16-3f98-e9a7-ce96-9028592246cc@molgen.mpg.de>
- <BY3PR18MB4612BC158A048053BAC7A30EAB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
- <CAHk-=wjN22EeVLviARu=amf1+422U2iswCC6cz7cN8h+S9=-Jg@mail.gmail.com>
- <BY3PR18MB4612C2FFE05879E30BAD91D7AB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
- <CAHk-=whXCf43ieh79fujcF=u3Ow1byRvWp+Lt5+v3vumA+V0yA@mail.gmail.com>
- <BY3PR18MB46124F3F575F9F7D1980E76BAB0C9@BY3PR18MB4612.namprd18.prod.outlook.com>
- <0dafa9d7-9c79-f367-a343-8ad38f7bde07@molgen.mpg.de>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <0dafa9d7-9c79-f367-a343-8ad38f7bde07@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-[Use Jakub’s current address]
+Hi,
 
-Dear Manish,
-
-
-Am 14.03.22 um 15:36 schrieb Donald Buczek:
-
-> On 3/11/22 1:11 PM, Manish Chopra wrote:
->>> -----Original Message-----
->>> From: Linus Torvalds <torvalds@linux-foundation.org>
->>> Sent: Thursday, March 10, 2022 3:48 AM
-
-[…]
-
->>> On Wed, Mar 9, 2022 at 11:46 AM Manish Chopra wrote:
->>>>
->>>> This has not changed anything functionally from driver/device 
->>>> perspective,
->>> FW is still being loaded only when device is opened.
->>>> bnx2x_init_firmware() [I guess, perhaps the name is misleading] just
->>> request_firmware() to prepare the metadata to be used when device 
->>> will be opened.
->>>
->>> So how do you explain the report by Paul Menzel that things used to 
->>> work and no longer work now?
->>>
->>
->> The issue which Paul mentioned had to do with "/lib/firmware/bnx2x/* 
->> file not found" when driver probes, which was introduced by the patch 
->> in subject,
->> And the commit e13ad1443684 ("bnx2x: fix driver load from initrd") 
->> fixes this issue. So things should work as it is with the mentioned 
->> fixed commit.
->> The only discussion led by this problem now is why the 
->> request_firmware() was moved early on [from open() to probe()] by the 
->> patch in subject.
->> I explained the intention to do this in my earlier emails and let me 
->> add more details below -
->>
->> Note that we have just moved request_firmware() logic, *not* something 
->> significant which has to do with actual FW loading or device 
->> initialization from the
->> FW file data which could cause significant functional change for this 
->> device/driver, FW load/init part still stays in open flow.
->>
->> Before the patch in subject, driver used to only work with 
->> fixed/specific FW version file whose version was statically known to 
->> the driver function at probe() time to take
->> some decision to fail the function probe early in the system if the 
->> function is supposed to run with a FW version which is not the same 
->> version loaded on the device by another PF (different ENV).
->> Now when we sent this new FW patch (in subject) then we got feedback 
->> from community to maintain backward compatibility with older FW 
->> versions as well and we did it in same v2 patch legitimately,
->> just that now we can work with both older or newer FW file so we need 
->> this run time FW version information to cache (based on 
->> request_firmware() return success value for an old FW file or new FW 
->> file)
->> which will be used in follow up probe() flows to decide the function 
->> probe failure early If there could be FW version mismatches against 
->> the loaded FW on the device by other PFs already
+> Some GPIO lines have stopped working after the patch
+> commit 2ab73c6d8323f ("gpio: Support GPIO controllers without pin-ranges")
 > 
-> There might be something more wrong with the patch in the subject: The 
-> usability of the ports from a single card (with older firmware?) now 
-> depends on the order the ports are enabled (first port enabled is 
-> working, second port enabled is not working, driver complaining about a 
-> firmware mismatch).
+> And this has supposedly been fixed in the following patches
+> commit 89ad556b7f96a ("gpio: Avoid using pin ranges with !PINCTRL")
+> commit 6dbbf84603961 ("gpiolib: Don't free if pin ranges are not defined")
 > 
-> In the following examples, the driver was not built-in to the kernel but 
-> loaded from the root filesystem instead, so there is no initramfs 
-> related problem here.
+> But an erratic behavior where some GPIO lines work while others do not work
+> has been introduced.
 > 
-> For the records:
+> This patch reverts those changes so that the sysfs-gpio interface works
+> properly again.
 > 
-> root@ira:~# dmesg|grep bnx2x
-> [   18.749871] bnx2x 0000:45:00.0: msix capability found
-> [   18.766534] bnx2x 0000:45:00.0: part number 394D4342-31373735-31314131-473331
-> [   18.799198] bnx2x 0000:45:00.0: 32.000 Gb/s available PCIe bandwidth (5.0 GT/s PCIe x8 link)
-> [   18.807638] bnx2x 0000:45:00.1: msix capability found
-> [   18.824509] bnx2x 0000:45:00.1: part number 394D4342-31373735-31314131-473331
-> [   18.857171] bnx2x 0000:45:00.1: 32.000 Gb/s available PCIe bandwidth (5.0 GT/s PCIe x8 link)
-> [   18.865619] bnx2x 0000:46:00.0: msix capability found
-> [   18.882636] bnx2x 0000:46:00.0: part number 394D4342-31373735-31314131-473331
-> [   18.915196] bnx2x 0000:46:00.0: 32.000 Gb/s available PCIe bandwidth (5.0 GT/s PCIe x8 link)
-> [   18.923636] bnx2x 0000:46:00.1: msix capability found
-> [   18.940505] bnx2x 0000:46:00.1: part number 394D4342-31373735-31314131-473331
-> [   18.973167] bnx2x 0000:46:00.1: 32.000 Gb/s available PCIe bandwidth (5.0 GT/s PCIe x8 link)
-> [   46.480660] bnx2x 0000:45:00.0 net04: renamed from eth4
-> [   46.494677] bnx2x 0000:45:00.1 net05: renamed from eth5
-> [   46.508544] bnx2x 0000:46:00.0 net06: renamed from eth6
-> [   46.524641] bnx2x 0000:46:00.1 net07: renamed from eth7
-> root@ira:~# ls /lib/firmware/bnx2x/
-> bnx2x-e1-6.0.34.0.fw   bnx2x-e1-7.13.1.0.fw   bnx2x-e1-7.8.2.0.fw     
-> bnx2x-e1h-7.12.30.0.fw  bnx2x-e1h-7.8.19.0.fw  bnx2x-e2-7.10.51.0.fw  bnx2x-e2-7.8.17.0.fw
-> bnx2x-e1-6.2.5.0.fw    bnx2x-e1-7.13.11.0.fw  bnx2x-e1h-6.0.34.0.fw   
-> bnx2x-e1h-7.13.1.0.fw   bnx2x-e1h-7.8.2.0.fw   bnx2x-e2-7.12.30.0.fw  bnx2x-e2-7.8.19.0.fw
-> bnx2x-e1-6.2.9.0.fw    bnx2x-e1-7.13.15.0.fw  bnx2x-e1h-6.2.5.0.fw    
-> bnx2x-e1h-7.13.11.0.fw  bnx2x-e2-6.0.34.0.fw   bnx2x-e2-7.13.1.0.fw   bnx2x-e2-7.8.2.0.fw
-> bnx2x-e1-7.0.20.0.fw   bnx2x-e1-7.13.21.0.fw  bnx2x-e1h-6.2.9.0.fw    
-> bnx2x-e1h-7.13.15.0.fw  bnx2x-e2-6.2.5.0.fw    bnx2x-e2-7.13.11.0.fw
-> bnx2x-e1-7.0.23.0.fw   bnx2x-e1-7.2.16.0.fw   bnx2x-e1h-7.0.20.0.fw   
-> bnx2x-e1h-7.13.21.0.fw  bnx2x-e2-6.2.9.0.fw    bnx2x-e2-7.13.15.0.fw
-> bnx2x-e1-7.0.29.0.fw   bnx2x-e1-7.2.51.0.fw   bnx2x-e1h-7.0.23.0.fw   
-> bnx2x-e1h-7.2.16.0.fw   bnx2x-e2-7.0.20.0.fw   bnx2x-e2-7.13.21.0.fw
-> bnx2x-e1-7.10.51.0.fw  bnx2x-e1-7.8.17.0.fw   bnx2x-e1h-7.0.29.0.fw   
-> bnx2x-e1h-7.2.51.0.fw   bnx2x-e2-7.0.23.0.fw   bnx2x-e2-7.2.16.0.fw
-> bnx2x-e1-7.12.30.0.fw  bnx2x-e1-7.8.19.0.fw   bnx2x-e1h-7.10.51.0.fw  
-> bnx2x-e1h-7.8.17.0.fw   bnx2x-e2-7.0.29.0.fw   bnx2x-e2-7.2.51.0.fw
-> 
-> Now with v5.10.95, the first kernel of the series which includes 
-> fdcfabd0952d ("bnx2x: Utilize firmware 7.13.21.0") and later:
-> 
-> root@ira:~# dmesg -w &
-> [...]
-> root@ira:~# ip link set net04 up
-> [   88.504536] bnx2x 0000:45:00.0 net04: using MSI-X  IRQs: sp 47  fp[0] 49 ... fp[7] 56
-> root@ira:~# ip link set net05 up
-> [   90.825820] bnx2x: [bnx2x_compare_fw_ver:2380(net05)]bnx2x with FW 120d07 was already loaded which mismatches my 150d07 FW. Aborting
-> RTNETLINK answers: Device or resource busy
-> root@ira:~# ip link set net04 down
-> root@ira:~# ip link set net05 down
-> root@ira:~# ip link set net05 up
-> [  114.462448] bnx2x 0000:45:00.1 net05: using MSI-X  IRQs: sp 58  fp[0] 60 ... fp[7] 67
-> root@ira:~# ip link set net04 up
-> [  117.247763] bnx2x: [bnx2x_compare_fw_ver:2380(net04)]bnx2x with FW 120d07 was already loaded which mismatches my 150d07 FW. Aborting
-> RTNETLINK answers: Device or resource busy
-> 
-> With v5.10.94, both ports work fine:
-> 
-> root@ira:~# dmesg -w &
-> [...]
-> root@ira:~# ip link set net04 up
-> [  133.126647] bnx2x 0000:45:00.0 net04: using MSI-X  IRQs: sp 47  fp[0] 49 ... fp[7] 56
-> root@ira:~# ip link set net05 up
-> [  136.215169] bnx2x 0000:45:00.1 net05: using MSI-X  IRQs: sp 58  fp[0] 60 ... fp[7] 67
+> Signed-off-by: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
 
-One additional note, that it’s totally unclear to us, where FW version 
-120d07 in the error message comes from. It maps to 7.13.18.0, which is 
-nowhere to be found and too new to be on the cards EEPROM, which should 
-be from 2013 or so.
+This breaks the pinctrl-microchip-sgpio driver as far as I can see.
 
+I tried to debug it and this is what I have discovered so far:
+ (1) the sgpio driver will use the gpio_stub_drv for its child nodes.
+     Looks like a workaround, see [1].
+ (2) these will have an empty gpio range
+ (3) with the changes of this patch, pinctrl_gpio_request() will now
+     be called and will fail with -EPROBE_DEFER.
 
-Kind regards,
+I'm not exactly sure what to do here. Saravana Kannan once suggested
+to use devm_of_platform_populate() to probe the child nodes [2]. But
+I haven't found any other driver doing that.
 
-Paul
+Also, I'm not sure if there are any other other driver which get
+broken by this. I.e. ones falling into the gpio_stub_drv category.
 
+[1] https://lore.kernel.org/lkml/20210122193600.1415639-1-saravanak@google.com/
+[2] https://lore.kernel.org/lkml/CAGETcx9PiX==mLxB9PO8Myyk6u2vhPVwTMsA5NkD-ywH5xhusw@mail.gmail.com/
 
->> So we need to understand why we should not call request_firmware() in 
->> probe or at least what's really harmful in doing that in probe() if 
->> some of the follow up probe flows needs
->> some of the metadata info (like the run time FW versions info in this 
->> case which we get based on request_firmware() return value), we could 
->> avoid this but we don't want
->> to add some ugly/unsuitable file APIs checks to know which FW version 
->> file is available on the file system if there is already an API 
->> request_firmware() available for this to be used.
->>
->> Please let us know. Thanks.
->>
->>> You can't do request_firmware() early. When you actually then push the
->>> firmware to the device is immaterial - but request_firmware() has to 
->>> be done
->>> after the system is up and running.
->>>
->>>                   Linus
+-michael
+
+NB. this patch doesn't contain a Fixes tag. Was this on purpose?
