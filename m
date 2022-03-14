@@ -1,125 +1,171 @@
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9398DA40
-	for <regressions@lists.linux.dev>; Mon, 14 Mar 2022 02:53:40 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id 8DFD85C0112;
-	Sun, 13 Mar 2022 22:53:39 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Sun, 13 Mar 2022 22:53:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=turner.link; h=
-	cc:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm2; bh=mk9hxX9pdpaTprhpWtmYamoWls5zOpQ2mqbAXe
-	YUr48=; b=a5KXI2BZUJhiA3fDQXwftBtJeQjfqVmIUk8KXXTvsbGB7pnI99fXuT
-	ZqzBOPwaDNwAPweuJAE/hKTYUob78wbwev83/J/Viqsv+SOPjGIPfqQqiIJ/EqyD
-	mZcR12Zt8dnNRCI4T9QXJKiFg4PlCLTViM5WBkhrHVO042BR50fVpbmt0lScv7Dw
-	SNB8WqIVDS/KQgfKJlNKERCJvOKHfW5+flWckvaPDCe+1dq51PzpyYM5Zir2Tbkl
-	yIcybJjvd4NVtj1/lnQ34GJTOGIRMsbSiTRyDAvKFoUZVEuYvE6MSk6Ze9UpfcH3
-	hVQqoKPHht3FfOQrt3PkFAkqc0+Ok9sQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=mk9hxX9pdpaTprhpW
-	tmYamoWls5zOpQ2mqbAXeYUr48=; b=ENWQVZ/6OdSptCSfVJ9UQ4r1zW+lXOx/8
-	4hzi6mFnY8SVDSK51blxdzEyt3JIxXyyF0ZGybf7UQnpAsZZDOtSxxa+CM70TvNh
-	C6Z15dLy/cRj6qY4E73Re6K7d/4G1o/KsQvc4t+Q+XnmPWtKLsP9Fj5Kjsd3Gx8G
-	D0YcmOGF3ICYXR7GS6fNziTvbVebiChvxMCHsGslkItQ4KFY8H6sypJAHcSdiuc6
-	C5mEAWwmC8w4y33hGjTX7RJlOSqn2ebiZ5iTXK+CNz2ivgm29jq4qG9O68limXpm
-	Ki79dwLbg2XlVbr0yx2Nx/56TiU4E7O6XAQcLJfmqMJ4WUuVKDDvA==
-X-ME-Sender: <xms:M64uYvpRU_NVx3x1jdn7bK_ETsK5smMmf6lGp6z4cVyQVYPOmX9ODQ>
-    <xme:M64uYpqfjhzCaPLraVydYPbOoZkACm8OqNVgH8_-jpYONEP527vnu24TWGcPBbcZB
-    T3rwKyOmJbHiOIN9w>
-X-ME-Received: <xmr:M64uYsOodvFcZ_0A-Drudina2r_Wzl09k17jCQV3d_VYakIXa1a-Lsx08Dws8ES_XqWn5PKbNeB8CsSoJq3g-Ln4EyeOGMdCiZE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddruddvjedgheduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfhfhvffuffgjkfggtgesthdtredttddttdenucfhrhhomheplfgrmhgvshcu
-    vfhurhhnvghruceolhhinhhugihkvghrnhgvlhdrfhhoshhssegumhgrrhgtqdhnohhnvg
-    drthhurhhnvghrrdhlihhnkheqnecuggftrfgrthhtvghrnhepfffhveeugfevteeileej
-    vdeltdegtdeggfeujefgveekueevkeehheehffduleevnecuffhomhgrihhnpegrrhgthh
-    hlihhnuhigrdhorhhgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
-    lhhfrhhomheplhhinhhugihkvghrnhgvlhdrfhhoshhssegumhgrrhgtqdhnohhnvgdrth
-    hurhhnvghrrdhlihhnkh
-X-ME-Proxy: <xmx:M64uYi55zF0psFGYdGy0OHLjJYK6VRocUJZ7LgqeOTLP81UHUdb4GQ>
-    <xmx:M64uYu6wmns2j2EAVEO2pAAZuIaDGfnQ8SuPM1zsXGwUKnq8IthXXw>
-    <xmx:M64uYqjFIZysjikoexKSzSt6J3lGtbaj9QQp8Od8fvlYDXDEdE_IhQ>
-    <xmx:M64uYhL9-F_nAtrpjLcqE3yK8XZbMACDoPzp93_XWIM69tV15Z1BQg>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 13 Mar 2022 22:53:39 -0400 (EDT)
-References: <87ee57c8fu.fsf@turner.link>
- <acd2fd5e-d622-948c-82ef-629a8030c9d8@leemhuis.info>
- <87a6ftk9qy.fsf@dmarc-none.turner.link> <87zgnp96a4.fsf@turner.link>
- <fc2b7593-db8f-091c-67a0-ae5ffce71700@leemhuis.info>
- <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
- <87czkk1pmt.fsf@dmarc-none.turner.link>
- <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
- <87sftfqwlx.fsf@dmarc-none.turner.link>
- <BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
- <87ee4wprsx.fsf@turner.link>
- <4b3ed7f6-d2b6-443c-970e-d963066ebfe3@amd.com>
- <87pmo8r6ob.fsf@turner.link>
- <5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
- <CADnq5_MCKTLOfWKWvi94Q9-d5CGdWBoWVxEYL3YXOpMiPnLOyg@mail.gmail.com>
- <87pmnnpmh5.fsf@dmarc-none.turner.link>
- <CADnq5_NG_dQCYwqHM0umjTMg5Uud6zC4=MiscH91Y9v7mW9bJA@mail.gmail.com>
- <092b825a-10ff-e197-18a1-d3e3a097b0e3@leemhuis.info>
- <877d96to55.fsf@dmarc-none.turner.link>
-From: James Turner <linuxkernel.foss@dmarc-none.turner.link>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Alex Deucher <alexdeucher@gmail.com>, "Lazar, Lijo"
- <lijo.lazar@amd.com>, "Deucher, Alexander" <Alexander.Deucher@amd.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>, Greg KH
- <gregkh@linuxfoundation.org>, "Pan, Xinhui" <Xinhui.Pan@amd.com>, LKML
- <linux-kernel@vger.kernel.org>, "amd-gfx@lists.freedesktop.org"
- <amd-gfx@lists.freedesktop.org>, Alex Williamson
- <alex.williamson@redhat.com>, "Koenig, Christian"
- <Christian.Koenig@amd.com>
-Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
- PCI-passed-through to Windows VM
-Date: Sun, 13 Mar 2022 14:33:41 -0400
-In-reply-to: <877d96to55.fsf@dmarc-none.turner.link>
-Message-ID: <87lexdw8gd.fsf@turner.link>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E251855
+	for <regressions@lists.linux.dev>; Mon, 14 Mar 2022 11:45:00 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nTj8D-0006gm-A0; Mon, 14 Mar 2022 12:44:57 +0100
+Message-ID: <9e4ea11e-7d00-d2c4-7f80-862f0cbe96db@leemhuis.info>
+Date: Mon, 14 Mar 2022 12:44:56 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-US
+To: Luca Coelho <luciano.coelho@intel.com>,
+ Johannes Berg <johannes.berg@intel.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Stephane Poignant <stephane.poignant@proton.ch>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Regression in 5.10.67: "iwlwifi: pcie: free RBs during configure"
+ causes rx lockups with BAR_FRAME_RELEASE on AX200/AX201 when using 802.11ax
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647258301;bf5e1c5d;
+X-HE-SMSGID: 1nTj8D-0006gm-A0
 
-Hi all,
+Hi, this is your Linux kernel regression tracker.
 
-I've confirmed that changing the `amdgpu_atif_pci_probe_handle` function
-to do nothing does make the GPU work properly in the VM. I started with
-f9b7f3703ff9 ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)")
-and changed the function implementation to:
+I noticed a regression report in bugzilla.kernel.org that afaics nobody
+acted upon since it was reported more than ten days ago (it afaifcs only
+later became clear this is a regression), that's why I decided to
+forward it to the lists and a few relevant people to the CC. To quote
+from https://bugzilla.kernel.org/show_bug.cgi?id=215660:
 
-static bool amdgpu_atif_pci_probe_handle(struct pci_dev *pdev)
-{
-	DRM_DEBUG_DRIVER("Entered amdgpu_atif_pci_probe_handle");
-	return false;
-}
+>  Stephane Poignant 2022-03-04 17:24:49 UTC
+> 
+> Created attachment 300529 [details]
+> lspci and ethtool outputs on reproducing systems
+> 
+> Context:
+> - dense enterprise deployment, 10 lightweight aps (Aruba) on one office floor, up to 125 concurrent users total, up to 25 user per AP
+> - the wireless network supports 802.11n, 802.11ac and 802.11ax in 5 GHz band
+> - authentication is wpa2-psk
+> - client devices consists in a variety of endpoints (laptops, cell phones, tablets, smart devices), running various versions of Mac OSX, Linux, Windows, Android or IOS.
+> - certain clients supports only 20Mhz, HT protection kicks in and turns off on APs as those clients are moving around. Consequently ht_operation_mode fluctuates between 4 and 6 even when staying on the same AP.
+> - the issue affects various laptops with Intel AX200 or AX201 chipsets, running Debian or Ubuntu with a recent kernel >= 5.10
+> - see attached file devices.txt for detailed information on the different laptops we have reproduced the issue on
+> 
+> 
+> Steps to reproduce:
+> - appears sometimes, but not always, after the iwlwifi STA roams from one AP to another
+> - seen more often when ht_operation_mode changes between 4 and 6 (but not sufficient to trigger the issue)
+> - STA deassociates from current AP and associates to the new one successfully
+> - connectivity works on the new AP for a short period of time, usually between 30s and 1 minute
+> - then suddenly, the Rx path breaks. No more received frame visible on the STA wireless interface. AP reports that frames are retransmitted and not acknowledged by STA.
+> - the Tx path keeps working. Frames sent by STA to AP are received and visible on the network
+> - in this state each inbound frame appears to trigger iwl_pcie_rx_handle_rb with cmd BAR_FRAME_RELEASE (seqnum is always the same):
+> 
+> Mar  4 12:44:32 debian kernel: [15884.715812] iwlwifi 0000:00:14.3: iwl_pcie_rx_handle Q 0: HW = 338, SW = 337
+> Mar  4 12:44:32 debian kernel: [15884.715819] iwlwifi 0000:00:14.3: iwl_pcie_get_rxb Got virtual RB ID 1348
+> Mar  4 12:44:32 debian kernel: [15884.715831] iwlwifi 0000:00:14.3: iwl_pcie_rx_handle_rb Q 0: cmd at offset 0: BAR_FRAME_RELEASE (00.c2, seq 0xbfff)
+> Mar  4 12:44:32 debian kernel: [15884.715838] iwlwifi 0000:00:14.3: iwl_mvm_release_frames_from_notif Frame release notification for BAID 14, NSSN 169
+> Mar  4 12:44:32 debian kernel: [15884.715843] iwlwifi 0000:00:14.3: iwl_pcie_rx_handle_rb Q 0: RB end marker at offset 64
+> Mar  4 12:44:32 debian kernel: [15884.715852] iwlwifi 0000:00:14.3: iwl_pcie_restock_bd Assigned virtual RB ID 1348 to queue 0 index 334
+> 
+> - those events do not appear during normal operation (or very rarely)
+> 
+> 
+> Temporary resolution:
+> - in most cases, the STA remains in this state until Wifi is restarted or until it roams to another AP
+> - while in that state, it may happens (rarely) that a few frame are received with very high latency, then the next ones are lost, for instance:
+> 
+> [1646398334.114200] From 10.200.2.67 icmp_seq=148 Destination Host Unreachable
+> [1646398334.114242] From 10.200.2.67 icmp_seq=149 Destination Host Unreachable
+> [1646398334.114251] From 10.200.2.67 icmp_seq=150 Destination Host Unreachable
+> [1646398336.365181] 64 bytes from 10.200.2.1: icmp_seq=151 ttl=64 time=2251 ms
+> [1646398336.365237] 64 bytes from 10.200.2.1: icmp_seq=152 ttl=64 time=1227 ms
+> [1646398336.365250] 64 bytes from 10.200.2.1: icmp_seq=153 ttl=64 time=203 ms
+> [1646398375.042236] From 10.200.2.67 icmp_seq=188 Destination Host Unreachable
+> [1646398375.042291] From 10.200.2.67 icmp_seq=189 Destination Host Unreachable
+> [1646398375.042303] From 10.200.2.67 icmp_seq=190 Destination Host Unreachable
+> 
+> 
+> Workaround:
+> - disable_11ax=1 prevents the problem from happening
+> [...]
 
-With that change, the GPU works properly in the VM.
+>  Stephane Poignant 2022-03-10 14:48:39 UTC
+> 
+> Did some further testing with vanilla kernel.
+> 5.10.66 and older DO NOT reproduce the issue.
+> 5.10.67 and newer DO reproduce.
+> 
+> I see the following changes according to changelog:
+> iwlwifi: mvm: Fix scan channel flags settings
+> iwlwifi: fw: correctly limit to monitor dump
+> iwlwifi: mvm: fix access to BSS elements
+> iwlwifi: mvm: avoid static queue number aliasing
+> iwlwifi: mvm: fix a memory leak in iwl_mvm_mac_ctxt_beacon_changed
+> iwlwifi: pcie: free RBs during configure
+> 
+> Suspecting the one related with queues but no strong opinion atm.
+> 
+> [reply] [−] Comment 6 Stephane Poignant 2022-03-11 10:18:29 UTC
+> 
+> Ok so after some further testing, turned out that after commenting the following lines in file drivers/net/wireless/intel/iwlwifi/pcie/trans.c:
+> 
+> 	/* free all first - we might be reconfigured for a different size */
+> 	iwl_pcie_free_rbs_pool(trans);
+> 
+> Which were introduced by the following commit:
+> iwlwifi: pcie: free RBs during configure
+> https://lore.kernel.org/all/iwlwifi.20210802170640.42d7c93279c4.I07f74e65aab0e3d965a81206fcb289dc92d74878@changeid/
+> 
+> Then i'm no longer able to reproduce. Tested in vanilla 5.10.67, vanilla 5.10.88 and 5.10.92 with Debian patches.
+> 
 
-I'm not sure where to go from here. This issue isn't much of a concern
-for me anymore, since blacklisting `amdgpu` works for my machine. At
-this point, my understanding is that the root problem needs to be fixed
-in AMD's Windows GPU driver or Dell's firmware, not the Linux kernel. If
-any of the AMD developers on this thread would like to forward it to the
-AMD Windows driver team, I'd be happy to work with AMD to fix the issue
-properly.
+Could somebody take a look into this? Or was this discussed somewhere
+else already? Or even fixed?
 
-I've added a mention of this issue and workaround to the [Arch Wiki][1]
-to make it more discoverable. If anyone has a better place to document
-this, please let me know.
+Anyway, to get this tracked:
 
-Thank you all for your help on this.
+#regzbot introduced: 608c8359c567b4a04dedbe
+#regzbot from: Stephane Poignant <stephane.poignant@proton.ch>
+#regzbot title: wireless: iwlwifi: regression in 5.10.67 due to
+"iwlwifi: pcie: free RBs during configure"
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215660
 
-[1]: https://wiki.archlinux.org/title/PCI_passthrough_via_OVMF#Too-low_frequency_limit_for_AMD_GPU_passed-through_to_virtual_machine
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-James
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
