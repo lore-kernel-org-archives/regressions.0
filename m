@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA5D186F
-	for <regressions@lists.linux.dev>; Mon, 14 Mar 2022 12:34:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97A5186F
+	for <regressions@lists.linux.dev>; Mon, 14 Mar 2022 12:39:45 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nTjuC-0001zy-Te; Mon, 14 Mar 2022 13:34:32 +0100
-Message-ID: <aad2db0f-6e7b-189e-ee91-1a6cc054473a@leemhuis.info>
-Date: Mon, 14 Mar 2022 13:34:32 +0100
+	id 1nTjzD-0000dE-1V; Mon, 14 Mar 2022 13:39:43 +0100
+Message-ID: <ad06e7b6-19f5-c499-314b-a3b4a0e27089@leemhuis.info>
+Date: Mon, 14 Mar 2022 13:39:42 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,148 +16,515 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: Regression/boot failure on 5.16.3 #forregzbot
+Subject: Re: Bisected regression: 4287509b4d21 causes HP Spectre 14t-ea100 to
+ overheat while suspended #forregzbot
 Content-Language: en-US
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220203161959.3edf1d6e@valencia>
- <f0e5b970-5982-313b-8c75-b839086ce100@leemhuis.info>
- <c75f77de-634e-a059-1165-8dcb68385dc7@leemhuis.info>
- <7c7a57aa-326a-0331-7132-78704bcc5d88@leemhuis.info>
-In-Reply-To: <7c7a57aa-326a-0331-7132-78704bcc5d88@leemhuis.info>
+To: Philippe Troin <phil@fifi.org>
+Cc: linux-kernel@vger.kernel.org,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <e1b3112fd6c8c889408915e9a849301d13acf2f1.camel@fifi.org>
+ <6c119f2e-1bf8-60b8-ce32-113a30d29152@leemhuis.info>
+In-Reply-To: <6c119f2e-1bf8-60b8-ce32-113a30d29152@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647261275;673fb3f4;
-X-HE-SMSGID: 1nTjuC-0001zy-Te
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647261585;3876a0ea;
+X-HE-SMSGID: 1nTjzD-0000dE-1V
 
-On 18.02.22 07:01, Thorsten Leemhuis wrote:
-> For the record:
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
+
+Just for the record: this should be fixed in 5.16.14
+
+#regzbot fixed-by: cf6eae0facc6022
+
+Ciao, Thorsten
+
+On 09.03.22 09:03, Thorsten Leemhuis wrote:
+> [TLDR: I'm adding the regression report below to regzbot, the Linux
+> kernel regression tracking bot; all text you find below is compiled from
+> a few templates paragraphs you might have encountered already already
+> from similar mails.]
 > 
-> #regzbot fixed-by: bea2662e7818e15d7607d17d57912ac984275d94
-
-Mixed something up there, sorry, now with more love:
-
-#regzbot fixed-by: 9958b9cbb2214529
-
-> https://git.kernel.org/torvalds/c/bea2662e7818e15d7607d17d57912ac984275d94
+> Hi, this is your Linux kernel regression tracker.
 > 
-> On 05.02.22 09:04, Thorsten Leemhuis wrote:
->> For the record:
+> On 09.03.22 04:50, Philippe Troin wrote:
+>> Linux 5.16.9 was working fine, but starting with 5.16.10 my main laptop
+>> has been overheating while suspended.
+>> I've also tried 5.16.11, 5.16.12 and 5.16.13 and they also show the
+>> same issue (overheating while suspended).
 >>
->> #regzbot monitor
->> https://lore.kernel.org/all/20220204061104.5851831a@valencia/
+>> I could not spot any difference between the dmesg messages issued
+>> during suspend between a working version (5.16.9) and the the broken
+>> ones (5.16.1[0-3]).
 >>
->> TWIMC: this mail is primarily send for documentation purposes and for
->> regzbot, my Linux kernel regression tracking bot. These mails usually
->> contain '#forregzbot' in the subject, to make them easy to spot and filter.
+>> I've bisected the regression down to commit 4287509b4d21
+>> https://lore.kernel.org/lkml/20220214092510.074083242@linuxfoundation.org/
 >>
->> On 04.02.22 09:48, Thorsten Leemhuis wrote:
->>> [TLDR: I'm adding this regression to regzbot, the Linux kernel
->>> regression tracking bot; most text you find below is compiled from a few
->>> templates paragraphs some of you might have seen already.]
->>>
->>> Hi, this is your Linux kernel regression tracker speaking.
->>>
->>> Adding the regression mailing list to the list of recipients, as it
->>> should be in the loop for all regressions, as explained here:
->>> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
->>>
->>> On 04.02.22 01:19, Jason Self wrote:
->>>> The computer (amd64) fails to boot. The init was stuck at the
->>>> synchronization of the time through the network. This began between
->>>> 5.16.2 (good) and 5.16.3 (bad.) This continues on 5.16.4 and 5.16.5.
->>>> Git bisect revealed the following. In this case the nonfree firmwre is
->>>> not present on the system. Blacklisting the iwflwifi module works as a
->>>> workaround for now.
->>>>
->>>> 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1 is the first bad commit
->>>> commit 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
->>>> Author: Johannes Berg <johannes.berg@intel.com>
->>>> Date:   Fri Dec 10 11:12:42 2021 +0200
->>>
->>> To be sure this issue doesn't fall through the cracks unnoticed, I'm
->>> adding it to regzbot, my Linux kernel regression tracking bot:
->>>
->>> #regzbot ^introduced 6b5ad4bd0d78fef6bbe0ecdf96e09237c9c52cc1
->>> #regzbot title net: iwlwifi: system fails to boot since 5.16.3
->>> #regzbot ignore-activity
->>>
->>> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
->>> to the report (the parent of this mail) using the kernel.org redirector,
->>> as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
->>> then will automatically mark the regression as resolved once the fix
->>> lands in the appropriate tree. For more details about regzbot see footer.
->>>
->>> Sending this to everyone that got the initial report, to make all aware
->>> of the tracking. I also hope that messages like this motivate people to
->>> directly get at least the regression mailing list and ideally even
->>> regzbot involved when dealing with regressions, as messages like this
->>> wouldn't be needed then.
->>>
->>> Don't worry, I'll send further messages wrt to this regression just to
->>> the lists (with a tag in the subject so people can filter them away), as
->>> long as they are intended just for regzbot. With a bit of luck no such
->>> messages will be needed anyway.
->>>
->>> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
->>>
->>> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
->>> on my table. I can only look briefly into most of them. Unfortunately
->>> therefore I sometimes will get things wrong or miss something important.
->>> I hope that's not the case here; if you think it is, don't hesitate to
->>> tell me about it in a public reply, that's in everyone's interest.
->>>
->>> BTW, I have no personal interest in this issue, which is tracked using
->>> regzbot, my Linux kernel regression tracking bot
->>> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
->>> this mail to get things rolling again and hence don't need to be CC on
->>> all further activities wrt to this regression.
->>>
->>>
->>>>     iwlwifi: fix leaks/bad data after failed firmware load
->>>>     
->>>>     [ Upstream commit ab07506b0454bea606095951e19e72c282bfbb42 ]
->>>>     
->>>>     If firmware load fails after having loaded some parts of the
->>>>     firmware, e.g. the IML image, then this would leak. For the
->>>>     host command list we'd end up running into a WARN on the next
->>>>     attempt to load another firmware image.
->>>>     
->>>>     Fix this by calling iwl_dealloc_ucode() on failures, and make
->>>>     that also clear the data so we start fresh on the next round.
->>>>     
->>>>     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
->>>>     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
->>>>     Link:
->>>>     https://lore.kernel.org/r/iwlwifi.20211210110539.1f742f0eb58a.I1315f22f6aa632d94ae2069f85e1bca5e734dce0@changeid
->>>>     Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
->>>>     Signed-off-by: Sasha Levin <sashal@kernel.org>
->>>>
->>>>  drivers/net/wireless/intel/iwlwifi/iwl-drv.c | 8 ++++++++
->>>>  1 file changed, 8 insertions(+)
->>>
->>> ---
->>> Additional information about regzbot:
->>>
->>> If you want to know more about regzbot, check out its web-interface, the
->>> getting start guide, and/or the references documentation:
->>>
->>> https://linux-regtracking.leemhuis.info/regzbot/
->>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
->>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
->>>
->>> The last two documents will explain how you can interact with regzbot
->>> yourself if your want to.
->>>
->>> Hint for reporters: when reporting a regression it's in your interest to
->>> tell #regzbot about it in the report, as that will ensure the regression
->>> gets on the radar of regzbot and the regression tracker. That's in your
->>> interest, as they will make sure the report won't fall through the
->>> cracks unnoticed.
->>>
->>> Hint for developers: you normally don't need to care about regzbot once
->>> it's involved. Fix the issue as you normally would, just remember to
->>> include a 'Link:' tag to the report in the commit message, as explained
->>> in Documentation/process/submitting-patches.rst
->>> That aspect was recently was made more explicit in commit 1f57bd42b77c:
->>> https://git.kernel.org/linus/1f57bd42b77c
+>> I have also tried reverting that change on top of 5.16.12, and the
+>> overheating behavior is gone.
+>>
+>> lspci and other details below.
+>>
+>> Phil.
+> 
+> Thanks for the report.
+> 
+> CCing the stable and the regression mailing list
+> 
+> To be sure below issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, my Linux kernel regression tracking bot:
+> 
+> #regzbot ^introduced 4287509b4d21
+> #regzbot title HP Spectre 14t-ea100 overheats while suspended
+> #regzbot ignore-activity
+> 
+> If it turns out this isn't a regression, free free to remove it from the
+> tracking by sending a reply to this thread containing a paragraph like
+> "#regzbot invalid: reason why this is invalid" (without the quotes).
+> 
+> Reminder for developers: when fixing the issue, please add a 'Link:'
+> tags pointing to the report (the mail quoted above) using
+> lore.kernel.org/r/, as explained in
+> 'Documentation/process/submitting-patches.rst' and
+> 'Documentation/process/5.Posting.rst'. Regzbot needs them to
+> automatically connect reports with fixes, but they are useful in
+> general, too.
+> 
+> I'm sending this to everyone that got the initial report, to make
+> everyone aware of the tracking. I also hope that messages like this
+> motivate people to directly get at least the regression mailing list and
+> ideally even regzbot involved when dealing with regressions, as messages
+> like this wouldn't be needed then. And don't worry, if I need to send
+> other mails regarding this regression only relevant for regzbot I'll
+> send them to the regressions lists only (with a tag in the subject so
+> people can filter them away). With a bit of luck no such messages will
+> be needed anyway.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> 
+> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> reports on my table. I can only look briefly into most of them and lack
+> knowledge about most of the areas they concern. I thus unfortunately
+> will sometimes get things wrong or miss something important. I hope
+> that's not the case here; if you think it is, don't hesitate to tell me
+> in a public reply, it's in everyone's interest to set the public record
+> straight.
+> 
+> 
+> 
+>> The laptop is a HP Spectre x360 Convertible 14t-ea100.
+>>
+>> CPU (/proc/cpuinfo): 11th Gen Intel(R) Core(TM) i7-1195G7 @ 2.90GHz
+>>
+>> # lspci -v
+>> 0000:00:00.0 Host bridge: Intel Corporation 11th Gen Core Processor Host Bridge/DRAM Registers (rev 02)
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: bus master, fast devsel, latency 0, IOMMU group 0
+>> 	Capabilities: [e0] Vendor Specific Information: Len=14 <?>
+>> 	Kernel modules: igen6_edac
+>>
+>> 0000:00:02.0 VGA compatible controller: Intel Corporation TigerLake-LP GT2 [Iris Xe Graphics] (rev 03) (prog-if 00 [VGA controller])
+>> 	DeviceName:  Onboard IGD
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 159, IOMMU group 1
+>> 	Memory at 603e000000 (64-bit, non-prefetchable) [size=16M]
+>> 	Memory at 4000000000 (64-bit, prefetchable) [size=256M]
+>> 	I/O ports at 3000 [size=64]
+>> 	Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
+>> 	Capabilities: [40] Vendor Specific Information: Len=0c <?>
+>> 	Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
+>> 	Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable+ 64bit-
+>> 	Capabilities: [d0] Power Management version 2
+>> 	Capabilities: [100] Process Address Space ID (PASID)
+>> 	Capabilities: [200] Address Translation Service (ATS)
+>> 	Capabilities: [300] Page Request Interface (PRI)
+>> 	Capabilities: [320] Single Root I/O Virtualization (SR-IOV)
+>> 	Kernel driver in use: i915
+>> 	Kernel modules: i915
+>>
+>> 0000:00:04.0 Signal processing controller: Intel Corporation TigerLake-LP Dynamic Tuning Processor Participant (rev 02)
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: fast devsel, IRQ 16, IOMMU group 2
+>> 	Memory at 603f240000 (64-bit, non-prefetchable) [size=128K]
+>> 	Capabilities: [90] MSI: Enable- Count=1/1 Maskable- 64bit-
+>> 	Capabilities: [d0] Power Management version 3
+>> 	Capabilities: [e0] Vendor Specific Information: Len=0c <?>
+>> 	Kernel driver in use: proc_thermal
+>> 	Kernel modules: processor_thermal_device_pci_legacy
+>>
+>> 0000:00:07.0 PCI bridge: Intel Corporation Tiger Lake-LP Thunderbolt 4 PCI Express Root Port #0 (rev 02) (prog-if 00 [Normal decode])
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 124, IOMMU group 3
+>> 	Bus: primary=00, secondary=01, subordinate=2b, sec-latency=0
+>> 	I/O behind bridge: 00004000-00004fff [size=4K]
+>> 	Memory behind bridge: 7a000000-861fffff [size=194M]
+>> 	Prefetchable memory behind bridge: 0000006020000000-000000603bffffff [size=448M]
+>> 	Capabilities: [40] Express Root Port (Slot+), MSI 00
+>> 	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>> 	Capabilities: [90] Subsystem: Hewlett-Packard Company Device 89da
+>> 	Capabilities: [a0] Power Management version 3
+>> 	Capabilities: [100] Null
+>> 	Capabilities: [220] Access Control Services
+>> 	Capabilities: [a00] Downstream Port Containment
+>> 	Kernel driver in use: pcieport
+>>
+>> 0000:00:07.1 PCI bridge: Intel Corporation Tiger Lake-LP Thunderbolt 4 PCI Express Root Port #1 (rev 02) (prog-if 00 [Normal decode])
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 125, IOMMU group 4
+>> 	Bus: primary=00, secondary=2c, subordinate=56, sec-latency=0
+>> 	I/O behind bridge: 00005000-00005fff [size=4K]
+>> 	Memory behind bridge: 6c000000-781fffff [size=194M]
+>> 	Prefetchable memory behind bridge: 0000006000000000-000000601bffffff [size=448M]
+>> 	Capabilities: [40] Express Root Port (Slot+), MSI 00
+>> 	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>> 	Capabilities: [90] Subsystem: Hewlett-Packard Company Device 89da
+>> 	Capabilities: [a0] Power Management version 3
+>> 	Capabilities: [100] Null
+>> 	Capabilities: [220] Access Control Services
+>> 	Capabilities: [a00] Downstream Port Containment
+>> 	Kernel driver in use: pcieport
+>>
+>> 0000:00:08.0 System peripheral: Intel Corporation GNA Scoring Accelerator module (rev 02)
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: fast devsel, IRQ 255, IOMMU group 5
+>> 	Memory at 603f2a2000 (64-bit, non-prefetchable) [disabled] [size=4K]
+>> 	Capabilities: [90] MSI: Enable- Count=1/1 Maskable- 64bit-
+>> 	Capabilities: [a0] Vendor Specific Information: Len=14 <?>
+>> 	Capabilities: [dc] Power Management version 2
+>> 	Capabilities: [f0] PCI Advanced Features
+>>
+>> 0000:00:0d.0 USB controller: Intel Corporation Tiger Lake-LP Thunderbolt 4 USB Controller (rev 02) (prog-if 30 [XHCI])
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: bus master, medium devsel, latency 0, IRQ 127, IOMMU group 6
+>> 	Memory at 603f280000 (64-bit, non-prefetchable) [size=64K]
+>> 	Capabilities: [70] Power Management version 2
+>> 	Capabilities: [80] MSI: Enable+ Count=1/8 Maskable- 64bit+
+>> 	Capabilities: [90] Vendor Specific Information: Len=14 <?>
+>> 	Capabilities: [b0] Vendor Specific Information: Len=00 <?>
+>> 	Kernel driver in use: xhci_hcd
+>>
+>> 0000:00:0d.2 USB controller: Intel Corporation Tiger Lake-LP Thunderbolt 4 NHI #0 (rev 02) (prog-if 40 [USB4 Host Interface])
+>> 	Subsystem: Device 2222:1111
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 16, IOMMU group 6
+>> 	Memory at 603f200000 (64-bit, non-prefetchable) [size=256K]
+>> 	Memory at 603f2a1000 (64-bit, non-prefetchable) [size=4K]
+>> 	Capabilities: [80] Power Management version 3
+>> 	Capabilities: [88] MSI: Enable- Count=1/1 Maskable- 64bit+
+>> 	Capabilities: [a0] MSI-X: Enable+ Count=16 Masked-
+>> 	Kernel driver in use: thunderbolt
+>> 	Kernel modules: thunderbolt
+>>
+>> 0000:00:0e.0 RAID bus controller: Intel Corporation Volume Management Device NVMe RAID Controller
+>> 	Subsystem: Intel Corporation Device 0000
+>> 	Flags: bus master, fast devsel, latency 0, IOMMU group 7
+>> 	Memory at 603c000000 (64-bit, non-prefetchable) [size=32M]
+>> 	Memory at 6a000000 (32-bit, non-prefetchable) [size=32M]
+>> 	Memory at 603f100000 (64-bit, non-prefetchable) [size=1M]
+>> 	Capabilities: [80] MSI-X: Enable+ Count=19 Masked-
+>> 	Capabilities: [90] Express Root Complex Integrated Endpoint, MSI 00
+>> 	Capabilities: [e0] Power Management version 3
+>> 	Kernel driver in use: vmd
+>> 	Kernel modules: vmd
+>>
+>> 0000:00:12.0 Serial controller: Intel Corporation Tiger Lake-LP Integrated Sensor Hub (rev 30) (prog-if 00 [8250])
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 16, IOMMU group 8
+>> 	Memory at 603f270000 (64-bit, non-prefetchable) [size=64K]
+>> 	Capabilities: [80] Power Management version 3
+>> 	Capabilities: [90] Vendor Specific Information: Len=14 <?>
+>> 	Kernel driver in use: intel_ish_ipc
+>> 	Kernel modules: intel_ish_ipc
+>>
+>> 0000:00:14.0 USB controller: Intel Corporation Tiger Lake-LP USB 3.2 Gen 2x1 xHCI Host Controller (rev 30) (prog-if 30 [XHCI])
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: bus master, medium devsel, latency 0, IRQ 128, IOMMU group 9
+>> 	Memory at 603f260000 (64-bit, non-prefetchable) [size=64K]
+>> 	Capabilities: [70] Power Management version 2
+>> 	Capabilities: [80] MSI: Enable+ Count=1/8 Maskable- 64bit+
+>> 	Capabilities: [90] Vendor Specific Information: Len=14 <?>
+>> 	Capabilities: [b0] Vendor Specific Information: Len=00 <?>
+>> 	Kernel driver in use: xhci_hcd
+>>
+>> 0000:00:14.2 RAM memory: Intel Corporation Tiger Lake-LP Shared SRAM (rev 30)
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: fast devsel, IOMMU group 9
+>> 	Memory at 603f298000 (64-bit, non-prefetchable) [disabled] [size=16K]
+>> 	Memory at 603f2a0000 (64-bit, non-prefetchable) [disabled] [size=4K]
+>> 	Capabilities: [80] Power Management version 3
+>>
+>> 0000:00:14.3 Network controller: Intel Corporation Wi-Fi 6 AX201 (rev 30)
+>> 	DeviceName: Intel Wi-Fi 6 AX201
+>> 	Subsystem: Intel Corporation Device 0074
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 19, IOMMU group 10
+>> 	Memory at 603f294000 (64-bit, non-prefetchable) [size=16K]
+>> 	Capabilities: [c8] Power Management version 3
+>> 	Capabilities: [d0] MSI: Enable- Count=1/1 Maskable- 64bit+
+>> 	Capabilities: [40] Express Root Complex Integrated Endpoint, MSI 00
+>> 	Capabilities: [80] MSI-X: Enable+ Count=16 Masked-
+>> 	Capabilities: [100] Latency Tolerance Reporting
+>> 	Capabilities: [164] Vendor Specific Information: ID=0010 Rev=0 Len=014 <?>
+>> 	Kernel driver in use: iwlwifi
+>> 	Kernel modules: iwlwifi
+>>
+>> 0000:00:15.0 Serial bus controller: Intel Corporation Tiger Lake-LP Serial IO I2C Controller #0 (rev 30)
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 27, IOMMU group 11
+>> 	Memory at 4017000000 (64-bit, non-prefetchable) [virtual] [size=4K]
+>> 	Capabilities: [80] Power Management version 3
+>> 	Capabilities: [90] Vendor Specific Information: Len=14 <?>
+>> 	Kernel driver in use: intel-lpss
+>>
+>> 0000:00:15.1 Serial bus controller: Intel Corporation Tiger Lake-LP Serial IO I2C Controller #1 (rev 30)
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 40, IOMMU group 11
+>> 	Memory at 4017001000 (64-bit, non-prefetchable) [virtual] [size=4K]
+>> 	Capabilities: [80] Power Management version 3
+>> 	Capabilities: [90] Vendor Specific Information: Len=14 <?>
+>> 	Kernel driver in use: intel-lpss
+>>
+>> 0000:00:16.0 Communication controller: Intel Corporation Tiger Lake-LP Management Engine Interface (rev 30)
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 186, IOMMU group 12
+>> 	Memory at 603f29d000 (64-bit, non-prefetchable) [size=4K]
+>> 	Capabilities: [50] Power Management version 3
+>> 	Capabilities: [8c] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>> 	Capabilities: [a4] Vendor Specific Information: Len=14 <?>
+>> 	Kernel driver in use: mei_me
+>> 	Kernel modules: mei_me
+>>
+>> 0000:00:1c.0 PCI bridge: Intel Corporation Tigerlake PCH-LP PCI Express Root Port #6 (rev 30) (prog-if 00 [Normal decode])
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 126, IOMMU group 13
+>> 	Bus: primary=00, secondary=57, subordinate=57, sec-latency=0
+>> 	I/O behind bridge: [disabled]
+>> 	Memory behind bridge: 86300000-863fffff [size=1M]
+>> 	Prefetchable memory behind bridge: [disabled]
+>> 	Capabilities: [40] Express Root Port (Slot-), MSI 00
+>> 	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>> 	Capabilities: [90] Subsystem: Hewlett-Packard Company Device 89db
+>> 	Capabilities: [a0] Power Management version 3
+>> 	Capabilities: [100] Advanced Error Reporting
+>> 	Capabilities: [220] Access Control Services
+>> 	Capabilities: [150] Precision Time Measurement
+>> 	Capabilities: [200] L1 PM Substates
+>> 	Capabilities: [a30] Secondary PCI Express
+>> 	Capabilities: [a00] Downstream Port Containment
+>> 	Kernel driver in use: pcieport
+>>
+>> 0000:00:1d.0 System peripheral: Intel Corporation Device 09ab
+>> 	Subsystem: Hewlett-Packard Company Device 89da
+>> 	Flags: fast devsel, IOMMU group 14
+>>
+>> 0000:00:1f.0 ISA bridge: Intel Corporation Tiger Lake-LP LPC Controller (rev 30)
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: bus master, fast devsel, latency 0, IOMMU group 15
+>>
+>> 0000:00:1f.3 Multimedia audio controller: Intel Corporation Tiger Lake-LP Smart Sound Technology Audio Controller (rev 30)
+>> 	Subsystem: Hewlett-Packard Company Device 89da
+>> 	Flags: bus master, fast devsel, latency 32, IRQ 197, IOMMU group 15
+>> 	Memory at 603f290000 (64-bit, non-prefetchable) [size=16K]
+>> 	Memory at 603f000000 (64-bit, non-prefetchable) [size=1M]
+>> 	Capabilities: [50] Power Management version 3
+>> 	Capabilities: [80] Vendor Specific Information: Len=14 <?>
+>> 	Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>> 	Kernel driver in use: sof-audio-pci-intel-tgl
+>> 	Kernel modules: snd_hda_intel, snd_sof_pci_intel_tgl
+>>
+>> 0000:00:1f.4 SMBus: Intel Corporation Tiger Lake-LP SMBus Controller (rev 30)
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: medium devsel, IRQ 16, IOMMU group 15
+>> 	Memory at 603f29c000 (64-bit, non-prefetchable) [size=256]
+>> 	I/O ports at efa0 [size=32]
+>> 	Kernel driver in use: i801_smbus
+>> 	Kernel modules: i2c_i801
+>>
+>> 0000:00:1f.5 Serial bus controller: Intel Corporation Tiger Lake-LP SPI Controller (rev 30)
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: fast devsel, IOMMU group 15
+>> 	Memory at 68400000 (32-bit, non-prefetchable) [size=4K]
+>>
+>> 0000:2c:00.0 PCI bridge: Intel Corporation Thunderbolt 4 Bridge [Goshen Ridge 2020] (rev 03) (prog-if 00 [Normal decode])
+>> 	Physical Slot: 0-1
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 16, IOMMU group 17
+>> 	Bus: primary=2c, secondary=2d, subordinate=56, sec-latency=0
+>> 	I/O behind bridge: 00005000-00005fff [size=4K]
+>> 	Memory behind bridge: 6c000000-781fffff [size=194M]
+>> 	Prefetchable memory behind bridge: 0000006000000000-000000601bffffff [size=448M]
+>> 	Capabilities: [80] Power Management version 3
+>> 	Capabilities: [88] MSI: Enable- Count=1/1 Maskable- 64bit+
+>> 	Capabilities: [ac] Subsystem: Intel Corporation Device 0000
+>> 	Capabilities: [c0] Express Upstream Port, MSI 00
+>> 	Capabilities: [50] Capability ID 0x15 [0000]
+>> 	Capabilities: [100] Device Serial Number c2-d5-04-18-86-b7-d0-00
+>> 	Capabilities: [200] Advanced Error Reporting
+>> 	Capabilities: [300] Virtual Channel
+>> 	Capabilities: [400] Power Budgeting <?>
+>> 	Capabilities: [500] Vendor Specific Information: ID=1234 Rev=1 Len=100 <?>
+>> 	Capabilities: [600] Vendor Specific Information: ID=8086 Rev=2 Len=04c <?>
+>> 	Capabilities: [700] Secondary PCI Express
+>> 	Capabilities: [800] Latency Tolerance Reporting
+>> 	Capabilities: [a00] L1 PM Substates
+>> 	Capabilities: [b00] Precision Time Measurement
+>> 	Kernel driver in use: pcieport
+>>
+>> 0000:2d:00.0 PCI bridge: Intel Corporation Thunderbolt 4 Bridge [Goshen Ridge 2020] (rev 03) (prog-if 00 [Normal decode])
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 16, IOMMU group 18
+>> 	Bus: primary=2d, secondary=2e, subordinate=2e, sec-latency=0
+>> 	I/O behind bridge: 00005000-00005fff [size=4K]
+>> 	Memory behind bridge: 6c000000-6c0fffff [size=1M]
+>> 	Prefetchable memory behind bridge: 0000006000000000-00000060000fffff [size=1M]
+>> 	Capabilities: [80] Power Management version 3
+>> 	Capabilities: [88] MSI: Enable- Count=1/1 Maskable- 64bit+
+>> 	Capabilities: [ac] Subsystem: Intel Corporation Device 0000
+>> 	Capabilities: [c0] Express Downstream Port (Slot+), MSI 00
+>> 	Capabilities: [50] Capability ID 0x15 [0000]
+>> 	Capabilities: [100] Device Serial Number c2-d5-04-18-86-b7-d0-00
+>> 	Capabilities: [200] Advanced Error Reporting
+>> 	Capabilities: [300] Virtual Channel
+>> 	Capabilities: [400] Power Budgeting <?>
+>> 	Capabilities: [500] Vendor Specific Information: ID=1234 Rev=1 Len=100 <?>
+>> 	Capabilities: [600] Vendor Specific Information: ID=8086 Rev=2 Len=04c <?>
+>> 	Capabilities: [700] Secondary PCI Express
+>> 	Capabilities: [900] Access Control Services
+>> 	Capabilities: [c00] Designated Vendor-Specific: Vendor=8086 ID=0006 Rev=0 Len=16 <?>
+>> 	Kernel driver in use: pcieport
+>>
+>> 0000:2d:01.0 PCI bridge: Intel Corporation Thunderbolt 4 Bridge [Goshen Ridge 2020] (rev 03) (prog-if 00 [Normal decode])
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 198, IOMMU group 19
+>> 	Bus: primary=2d, secondary=2f, subordinate=3b, sec-latency=0
+>> 	I/O behind bridge: [disabled]
+>> 	Memory behind bridge: 6c100000-700fffff [size=64M]
+>> 	Prefetchable memory behind bridge: 0000006000100000-00000060095fffff [size=149M]
+>> 	Capabilities: [80] Power Management version 3
+>> 	Capabilities: [88] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>> 	Capabilities: [ac] Subsystem: Intel Corporation Device 0000
+>> 	Capabilities: [c0] Express Downstream Port (Slot+), MSI 00
+>> 	Capabilities: [50] Capability ID 0x15 [0000]
+>> 	Capabilities: [100] Device Serial Number c2-d5-04-18-86-b7-d0-00
+>> 	Capabilities: [200] Advanced Error Reporting
+>> 	Capabilities: [300] Virtual Channel
+>> 	Capabilities: [400] Power Budgeting <?>
+>> 	Capabilities: [500] Vendor Specific Information: ID=1234 Rev=1 Len=100 <?>
+>> 	Capabilities: [600] Vendor Specific Information: ID=8086 Rev=2 Len=04c <?>
+>> 	Capabilities: [700] Secondary PCI Express
+>> 	Capabilities: [900] Access Control Services
+>> 	Capabilities: [c00] Designated Vendor-Specific: Vendor=8086 ID=0006 Rev=0 Len=16 <?>
+>> 	Kernel driver in use: pcieport
+>>
+>> 0000:2d:02.0 PCI bridge: Intel Corporation Thunderbolt 4 Bridge [Goshen Ridge 2020] (rev 03) (prog-if 00 [Normal decode])
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 199, IOMMU group 20
+>> 	Bus: primary=2d, secondary=3c, subordinate=48, sec-latency=0
+>> 	I/O behind bridge: [disabled]
+>> 	Memory behind bridge: 70100000-740fffff [size=64M]
+>> 	Prefetchable memory behind bridge: 0000006009600000-0000006012afffff [size=149M]
+>> 	Capabilities: [80] Power Management version 3
+>> 	Capabilities: [88] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>> 	Capabilities: [ac] Subsystem: Intel Corporation Device 0000
+>> 	Capabilities: [c0] Express Downstream Port (Slot+), MSI 00
+>> 	Capabilities: [50] Capability ID 0x15 [0000]
+>> 	Capabilities: [100] Device Serial Number c2-d5-04-18-86-b7-d0-00
+>> 	Capabilities: [200] Advanced Error Reporting
+>> 	Capabilities: [300] Virtual Channel
+>> 	Capabilities: [400] Power Budgeting <?>
+>> 	Capabilities: [500] Vendor Specific Information: ID=1234 Rev=1 Len=100 <?>
+>> 	Capabilities: [600] Vendor Specific Information: ID=8086 Rev=2 Len=04c <?>
+>> 	Capabilities: [700] Secondary PCI Express
+>> 	Capabilities: [900] Access Control Services
+>> 	Capabilities: [c00] Designated Vendor-Specific: Vendor=8086 ID=0006 Rev=0 Len=16 <?>
+>> 	Kernel driver in use: pcieport
+>>
+>> 0000:2d:03.0 PCI bridge: Intel Corporation Thunderbolt 4 Bridge [Goshen Ridge 2020] (rev 03) (prog-if 00 [Normal decode])
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 200, IOMMU group 21
+>> 	Bus: primary=2d, secondary=49, subordinate=55, sec-latency=0
+>> 	I/O behind bridge: [disabled]
+>> 	Memory behind bridge: 74100000-780fffff [size=64M]
+>> 	Prefetchable memory behind bridge: 0000006012b00000-000000601befffff [size=148M]
+>> 	Capabilities: [80] Power Management version 3
+>> 	Capabilities: [88] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>> 	Capabilities: [ac] Subsystem: Intel Corporation Device 0000
+>> 	Capabilities: [c0] Express Downstream Port (Slot+), MSI 00
+>> 	Capabilities: [50] Capability ID 0x15 [0000]
+>> 	Capabilities: [100] Device Serial Number c2-d5-04-18-86-b7-d0-00
+>> 	Capabilities: [200] Advanced Error Reporting
+>> 	Capabilities: [300] Virtual Channel
+>> 	Capabilities: [400] Power Budgeting <?>
+>> 	Capabilities: [500] Vendor Specific Information: ID=1234 Rev=1 Len=100 <?>
+>> 	Capabilities: [600] Vendor Specific Information: ID=8086 Rev=2 Len=04c <?>
+>> 	Capabilities: [700] Secondary PCI Express
+>> 	Capabilities: [900] Access Control Services
+>> 	Capabilities: [c00] Designated Vendor-Specific: Vendor=8086 ID=0006 Rev=0 Len=16 <?>
+>> 	Kernel driver in use: pcieport
+>>
+>> 0000:2d:04.0 PCI bridge: Intel Corporation Thunderbolt 4 Bridge [Goshen Ridge 2020] (rev 03) (prog-if 00 [Normal decode])
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 16, IOMMU group 22
+>> 	Bus: primary=2d, secondary=56, subordinate=56, sec-latency=0
+>> 	I/O behind bridge: [disabled]
+>> 	Memory behind bridge: 78100000-781fffff [size=1M]
+>> 	Prefetchable memory behind bridge: 000000601bf00000-000000601bffffff [size=1M]
+>> 	Capabilities: [80] Power Management version 3
+>> 	Capabilities: [88] MSI: Enable- Count=1/1 Maskable- 64bit+
+>> 	Capabilities: [ac] Subsystem: Intel Corporation Device 0000
+>> 	Capabilities: [c0] Express Downstream Port (Slot+), MSI 00
+>> 	Capabilities: [50] Capability ID 0x15 [0000]
+>> 	Capabilities: [100] Device Serial Number c2-d5-04-18-86-b7-d0-00
+>> 	Capabilities: [200] Advanced Error Reporting
+>> 	Capabilities: [300] Virtual Channel
+>> 	Capabilities: [400] Power Budgeting <?>
+>> 	Capabilities: [500] Vendor Specific Information: ID=1234 Rev=1 Len=100 <?>
+>> 	Capabilities: [600] Vendor Specific Information: ID=8086 Rev=2 Len=04c <?>
+>> 	Capabilities: [700] Secondary PCI Express
+>> 	Capabilities: [900] Access Control Services
+>> 	Capabilities: [c00] Designated Vendor-Specific: Vendor=8086 ID=0006 Rev=0 Len=16 <?>
+>> 	Kernel driver in use: pcieport
+>>
+>> 0000:57:00.0 Unassigned class [ff00]: Realtek Semiconductor Co., Ltd. RTS525A PCI Express Card Reader (rev 01)
+>> 	DeviceName: Realtek PCIE CardReader
+>> 	Subsystem: Hewlett-Packard Company Device 89db
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 149, IOMMU group 16
+>> 	Memory at 86300000 (32-bit, non-prefetchable) [size=4K]
+>> 	Capabilities: [80] Power Management version 3
+>> 	Capabilities: [90] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>> 	Capabilities: [b0] Express Endpoint, MSI 00
+>> 	Capabilities: [100] Advanced Error Reporting
+>> 	Capabilities: [148] Device Serial Number 00-00-00-01-00-4c-e0-00
+>> 	Capabilities: [158] Latency Tolerance Reporting
+>> 	Capabilities: [160] L1 PM Substates
+>> 	Kernel driver in use: rtsx_pci
+>> 	Kernel modules: rtsx_pci
+>>
+>> 10000:e0:1d.0 PCI bridge: Intel Corporation Tiger Lake-LP PCI Express Root Port #9 (rev 30) (prog-if 00 [Normal decode])
+>> 	Flags: bus master, fast devsel, latency 0, IRQ 148, IOMMU group 7
+>> 	Bus: primary=00, secondary=e1, subordinate=e1, sec-latency=0
+>> 	I/O behind bridge: [disabled]
+>> 	Memory behind bridge: 6a000000-6a0fffff [size=1M]
+>> 	Prefetchable memory behind bridge: [disabled]
+>> 	Capabilities: [40] Express Root Port (Slot-), MSI 00
+>> 	Capabilities: [80] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>> 	Capabilities: [90] Subsystem: Hewlett-Packard Company Device 89db
+>> 	Capabilities: [a0] Power Management version 3
+>> 	Capabilities: [100] Advanced Error Reporting
+>> 	Capabilities: [220] Access Control Services
+>> 	Capabilities: [150] Precision Time Measurement
+>> 	Capabilities: [200] L1 PM Substates
+>> 	Capabilities: [a30] Secondary PCI Express
+>> 	Capabilities: [a00] Downstream Port Containment
+>> 	Kernel driver in use: pcieport
+>>
+>> 10000:e1:00.0 Non-Volatile memory controller: Samsung Electronics Co Ltd NVMe SSD Controller SM981/PM981/PM983 (prog-if 02 [NVM Express])
+>> 	Subsystem: Samsung Electronics Co Ltd SSD 970 EVO Plus 1TB
+>> 	Flags: bus master, fast devsel, latency 0, IRQ -2147483648, NUMA node 0, IOMMU group 7
+>> 	Memory at 6a000000 (64-bit, non-prefetchable) [size=16K]
+>> 	Capabilities: [40] Power Management version 3
+>> 	Capabilities: [50] MSI: Enable- Count=1/32 Maskable- 64bit+
+>> 	Capabilities: [70] Express Endpoint, MSI 00
+>> 	Capabilities: [b0] MSI-X: Enable+ Count=33 Masked-
+>> 	Capabilities: [100] Advanced Error Reporting
+>> 	Capabilities: [148] Device Serial Number 00-00-00-00-00-00-00-00
+>> 	Capabilities: [158] Power Budgeting <?>
+>> 	Capabilities: [168] Secondary PCI Express
+>> 	Capabilities: [188] Latency Tolerance Reporting
+>> 	Capabilities: [190] L1 PM Substates
+>> 	Kernel driver in use: nvme
+>> 	Kernel modules: nvme
+>>
+> 
