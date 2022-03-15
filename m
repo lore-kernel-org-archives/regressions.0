@@ -1,170 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48F87A
-	for <regressions@lists.linux.dev>; Tue, 15 Mar 2022 02:57:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0304EC340E9;
-	Tue, 15 Mar 2022 02:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1647313057;
-	bh=vbVGF4busbB1SfADP/S6ab+VlgQgMMbCFKeAOde9lxw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ibGF1JNpawiYXF+YouYnMoja2x/89B7ZomKzO1ypHHAIJvEWfos4ZgfAjwvrdK1bW
-	 bb8IjVBpGr/vcvo4HTeoKFWd6ixhROA0EYpMfsOpSu1NdFS2Pm2lc5A8o3bad5+GuW
-	 zthRHNz/tE5pDqfV4Raqpa+UHFCJuZvX4/EYx+TqNMyC0D9SpHNqDv2+sqxgwf9Zex
-	 A/JX11fTy7IqH9zdY/Plc7bvH4n7yN1wLL2t46Npej3Sw1bD72GngxRPWZDmQHRBfu
-	 LvLd2FhZQV6ab/v/oiw9jqQbhxRtupjrvRJ5gszcgaqYTtayg9SUFHPprha/48rdMX
-	 3fxQij6Qdq1Eg==
-Date: Mon, 14 Mar 2022 19:57:35 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Manish Chopra <manishc@marvell.com>, Donald Buczek
- <buczek@molgen.mpg.de>, Linus Torvalds <torvalds@linux-foundation.org>,
- netdev@vger.kernel.org, Ariel Elior <aelior@marvell.com>, Alok Prasad
- <palok@marvell.com>, Prabhakar Kushwaha <pkushwaha@marvell.com>, "David S.
- Miller" <davem@davemloft.net>, Greg KH <gregkh@linuxfoundation.org>,
- stable@vger.kernel.org, it+netdev@molgen.mpg.de,
- regressions@lists.linux.dev
-Subject: Re: [EXT] Re: [PATCH v2 net-next 1/2] bnx2x: Utilize firmware
- 7.13.21.0
-Message-ID: <20220314195735.6ada196d@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <9513e74e-c682-d891-a5de-c9a82c5cf9d3@molgen.mpg.de>
-References: <20211217165552.746-1-manishc@marvell.com>
-	<ea05bcab-fe72-4bc2-3337-460888b2c44e@molgen.mpg.de>
-	<BY3PR18MB46129282EBA1F699583134A4AB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
-	<e884cf16-3f98-e9a7-ce96-9028592246cc@molgen.mpg.de>
-	<BY3PR18MB4612BC158A048053BAC7A30EAB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
-	<CAHk-=wjN22EeVLviARu=amf1+422U2iswCC6cz7cN8h+S9=-Jg@mail.gmail.com>
-	<BY3PR18MB4612C2FFE05879E30BAD91D7AB0A9@BY3PR18MB4612.namprd18.prod.outlook.com>
-	<CAHk-=whXCf43ieh79fujcF=u3Ow1byRvWp+Lt5+v3vumA+V0yA@mail.gmail.com>
-	<BY3PR18MB46124F3F575F9F7D1980E76BAB0C9@BY3PR18MB4612.namprd18.prod.outlook.com>
-	<0dafa9d7-9c79-f367-a343-8ad38f7bde07@molgen.mpg.de>
-	<9513e74e-c682-d891-a5de-c9a82c5cf9d3@molgen.mpg.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB3A1844
+	for <regressions@lists.linux.dev>; Tue, 15 Mar 2022 05:18:59 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nTza6-0002Bv-Om; Tue, 15 Mar 2022 06:18:50 +0100
+Message-ID: <debe14e6-2d7b-4741-589e-47c8f5c2aa96@leemhuis.info>
+Date: Tue, 15 Mar 2022 06:18:50 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
+ #forregzbot
+Content-Language: en-US
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
+ <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
+ <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
+ <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
+ <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
+ <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
+ <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com>
+ <cadc5208-2eb1-beb1-4f6d-d07939072ca3@leemhuis.info>
+ <CAMRc=MfbeOBim5mAMGghUYX_uvAKnCikEqftF-k4EZE6g48cNg@mail.gmail.com>
+ <28ebe79a-6e94-4b1b-c4e8-291e614327b0@leemhuis.info>
+In-Reply-To: <28ebe79a-6e94-4b1b-c4e8-291e614327b0@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647321539;f8a3053d;
+X-HE-SMSGID: 1nTza6-0002Bv-Om
 
-On Mon, 14 Mar 2022 16:07:08 +0100 Paul Menzel wrote:
-> > There might be something more wrong with the patch in the subject: The=
-=20
-> > usability of the ports from a single card (with older firmware?) now=20
-> > depends on the order the ports are enabled (first port enabled is=20
-> > working, second port enabled is not working, driver complaining about a=
-=20
-> > firmware mismatch).
-> >=20
-> > In the following examples, the driver was not built-in to the kernel bu=
-t=20
-> > loaded from the root filesystem instead, so there is no initramfs=20
-> > related problem here.
-> >=20
-> > For the records:
-> >=20
-> > root@ira:~# dmesg|grep bnx2x
-> > [=C2=A0=C2=A0 18.749871] bnx2x 0000:45:00.0: msix capability found
-> > [=C2=A0=C2=A0 18.766534] bnx2x 0000:45:00.0: part number 394D4342-31373=
-735-31314131-473331
-> > [=C2=A0=C2=A0 18.799198] bnx2x 0000:45:00.0: 32.000 Gb/s available PCIe=
- bandwidth (5.0 GT/s PCIe x8 link)
-> > [=C2=A0=C2=A0 18.807638] bnx2x 0000:45:00.1: msix capability found
-> > [=C2=A0=C2=A0 18.824509] bnx2x 0000:45:00.1: part number 394D4342-31373=
-735-31314131-473331
-> > [=C2=A0=C2=A0 18.857171] bnx2x 0000:45:00.1: 32.000 Gb/s available PCIe=
- bandwidth (5.0 GT/s PCIe x8 link)
-> > [=C2=A0=C2=A0 18.865619] bnx2x 0000:46:00.0: msix capability found
-> > [=C2=A0=C2=A0 18.882636] bnx2x 0000:46:00.0: part number 394D4342-31373=
-735-31314131-473331
-> > [=C2=A0=C2=A0 18.915196] bnx2x 0000:46:00.0: 32.000 Gb/s available PCIe=
- bandwidth (5.0 GT/s PCIe x8 link)
-> > [=C2=A0=C2=A0 18.923636] bnx2x 0000:46:00.1: msix capability found
-> > [=C2=A0=C2=A0 18.940505] bnx2x 0000:46:00.1: part number 394D4342-31373=
-735-31314131-473331
-> > [=C2=A0=C2=A0 18.973167] bnx2x 0000:46:00.1: 32.000 Gb/s available PCIe=
- bandwidth (5.0 GT/s PCIe x8 link)
-> > [=C2=A0=C2=A0 46.480660] bnx2x 0000:45:00.0 net04: renamed from eth4
-> > [=C2=A0=C2=A0 46.494677] bnx2x 0000:45:00.1 net05: renamed from eth5
-> > [=C2=A0=C2=A0 46.508544] bnx2x 0000:46:00.0 net06: renamed from eth6
-> > [=C2=A0=C2=A0 46.524641] bnx2x 0000:46:00.1 net07: renamed from eth7
-> > root@ira:~# ls /lib/firmware/bnx2x/
-> > bnx2x-e1-6.0.34.0.fw=C2=A0=C2=A0 bnx2x-e1-7.13.1.0.fw=C2=A0=C2=A0 bnx2x=
--e1-7.8.2.0.fw    =20
-> > bnx2x-e1h-7.12.30.0.fw=C2=A0 bnx2x-e1h-7.8.19.0.fw=C2=A0 bnx2x-e2-7.10.=
-51.0.fw=C2=A0 bnx2x-e2-7.8.17.0.fw
-> > bnx2x-e1-6.2.5.0.fw=C2=A0=C2=A0=C2=A0 bnx2x-e1-7.13.11.0.fw=C2=A0 bnx2x=
--e1h-6.0.34.0.fw  =20
-> > bnx2x-e1h-7.13.1.0.fw=C2=A0=C2=A0 bnx2x-e1h-7.8.2.0.fw=C2=A0=C2=A0 bnx2=
-x-e2-7.12.30.0.fw=C2=A0 bnx2x-e2-7.8.19.0.fw
-> > bnx2x-e1-6.2.9.0.fw=C2=A0=C2=A0=C2=A0 bnx2x-e1-7.13.15.0.fw=C2=A0 bnx2x=
--e1h-6.2.5.0.fw   =20
-> > bnx2x-e1h-7.13.11.0.fw=C2=A0 bnx2x-e2-6.0.34.0.fw=C2=A0=C2=A0 bnx2x-e2-=
-7.13.1.0.fw=C2=A0=C2=A0 bnx2x-e2-7.8.2.0.fw
-> > bnx2x-e1-7.0.20.0.fw=C2=A0=C2=A0 bnx2x-e1-7.13.21.0.fw=C2=A0 bnx2x-e1h-=
-6.2.9.0.fw   =20
-> > bnx2x-e1h-7.13.15.0.fw=C2=A0 bnx2x-e2-6.2.5.0.fw=C2=A0=C2=A0=C2=A0 bnx2=
-x-e2-7.13.11.0.fw
-> > bnx2x-e1-7.0.23.0.fw=C2=A0=C2=A0 bnx2x-e1-7.2.16.0.fw=C2=A0=C2=A0 bnx2x=
--e1h-7.0.20.0.fw  =20
-> > bnx2x-e1h-7.13.21.0.fw=C2=A0 bnx2x-e2-6.2.9.0.fw=C2=A0=C2=A0=C2=A0 bnx2=
-x-e2-7.13.15.0.fw
-> > bnx2x-e1-7.0.29.0.fw=C2=A0=C2=A0 bnx2x-e1-7.2.51.0.fw=C2=A0=C2=A0 bnx2x=
--e1h-7.0.23.0.fw  =20
-> > bnx2x-e1h-7.2.16.0.fw=C2=A0=C2=A0 bnx2x-e2-7.0.20.0.fw=C2=A0=C2=A0 bnx2=
-x-e2-7.13.21.0.fw
-> > bnx2x-e1-7.10.51.0.fw=C2=A0 bnx2x-e1-7.8.17.0.fw=C2=A0=C2=A0 bnx2x-e1h-=
-7.0.29.0.fw  =20
-> > bnx2x-e1h-7.2.51.0.fw=C2=A0=C2=A0 bnx2x-e2-7.0.23.0.fw=C2=A0=C2=A0 bnx2=
-x-e2-7.2.16.0.fw
-> > bnx2x-e1-7.12.30.0.fw=C2=A0 bnx2x-e1-7.8.19.0.fw=C2=A0=C2=A0 bnx2x-e1h-=
-7.10.51.0.fw =20
-> > bnx2x-e1h-7.8.17.0.fw=C2=A0=C2=A0 bnx2x-e2-7.0.29.0.fw=C2=A0=C2=A0 bnx2=
-x-e2-7.2.51.0.fw
-> >=20
-> > Now with v5.10.95, the first kernel of the series which includes=20
-> > fdcfabd0952d ("bnx2x: Utilize firmware 7.13.21.0") and later:
-> >=20
-> > root@ira:~# dmesg -w &
-> > [...]
-> > root@ira:~# ip link set net04 up
-> > [=C2=A0=C2=A0 88.504536] bnx2x 0000:45:00.0 net04: using MSI-X=C2=A0 IR=
-Qs: sp 47=C2=A0 fp[0] 49 ... fp[7] 56
-> > root@ira:~# ip link set net05 up
-> > [=C2=A0=C2=A0 90.825820] bnx2x: [bnx2x_compare_fw_ver:2380(net05)]bnx2x=
- with FW 120d07 was already loaded which mismatches my 150d07 FW. Aborting
-> > RTNETLINK answers: Device or resource busy
-> > root@ira:~# ip link set net04 down
-> > root@ira:~# ip link set net05 down
-> > root@ira:~# ip link set net05 up
-> > [=C2=A0 114.462448] bnx2x 0000:45:00.1 net05: using MSI-X=C2=A0 IRQs: s=
-p 58=C2=A0 fp[0] 60 ... fp[7] 67
-> > root@ira:~# ip link set net04 up
-> > [=C2=A0 117.247763] bnx2x: [bnx2x_compare_fw_ver:2380(net04)]bnx2x with=
- FW 120d07 was already loaded which mismatches my 150d07 FW. Aborting
-> > RTNETLINK answers: Device or resource busy
-> >=20
-> > With v5.10.94, both ports work fine:
-> >=20
-> > root@ira:~# dmesg -w &
-> > [...]
-> > root@ira:~# ip link set net04 up
-> > [=C2=A0 133.126647] bnx2x 0000:45:00.0 net04: using MSI-X=C2=A0 IRQs: s=
-p 47=C2=A0 fp[0] 49 ... fp[7] 56
-> > root@ira:~# ip link set net05 up
-> > [=C2=A0 136.215169] bnx2x 0000:45:00.1 net05: using MSI-X=C2=A0 IRQs: s=
-p 58=C2=A0 fp[0] 60 ... fp[7] 67 =20
->=20
-> One additional note, that it=E2=80=99s totally unclear to us, where FW ve=
-rsion=20
-> 120d07 in the error message comes from. It maps to 7.13.18.0, which is=20
-> nowhere to be found and too new to be on the cards EEPROM, which should=20
-> be from 2013 or so.
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-Hrm, any chance an out-of-tree driver or another OS loaded it?
-Does the dmesg indicate that the host loaded the FW at all?
-Looks like upstream went from .15 to .21, .18 was never in the picture.
+#regzbot fixed-by: fc328a7d1fcce263db0b046917a66f3aa6e68719
+#regzbot monitor:
+https://lore.kernel.org/lkml/20220314192522.GA3031157@roeck-us.net/
 
-Also, will the revert work for you?
+On 07.03.22 11:12, Thorsten Leemhuis wrote:
+> On 07.03.22 10:58, Bartosz Golaszewski wrote:
+>> On Fri, Mar 4, 2022 at 8:13 AM Thorsten Leemhuis
+>> <regressions@leemhuis.info> wrote:
+>>> On 16.02.22 15:40, Bartosz Golaszewski wrote:
+>>>> On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>>>>
+>>>>> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
+>>>>> <marcelo.jimenez@gmail.com> wrote:
+>>>>>> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+>>>>>
+>>>>>>> I am curious about the usecases and how deeply you have built
+>>>>>>> yourselves into this.
+>>>>>>
+>>>>>> I don't know if I understand what you mean, sorry.
+>>>>>
+>>>>> Why does the user need the sysfs ABI? What is it used for?
+>>>>>
+>>>>> I.e what is the actual use case?
+>>>>>
+>>>>>>>> In any case, the upstream file should be enough to test the issue reported here.
+>>>>>>>
+>>>>>>> The thing is that upstream isn't super happy that you have been
+>>>>>>> making yourselves dependent on features that we are actively
+>>>>>>> discouraging and then demanding that we support these features.
+>>>>>>
+>>>>>> Hum, demanding seems to be a strong word for what I am doing here.
+>>>>>>
+>>>>>> Deprecated should not mean broken. My point is: the API seems to be
+>>>>>> currently broken. User space apps got broken, that's a fact. I even
+>>>>>> took the time to bisect the kernel and show you which commit broke it.
+>>>>>> So, no, I am not demanding. More like reporting and providing a
+>>>>>> temporary solution to those with a similar problem.
+>>>>>>
+>>>>>> Maybe it is time to remove the API, but this is up to "upstream".
+>>>>>> Leaving the API broken seems pointless and unproductive.
+>>>>>>
+>>>>>> Sorry for the "not super happiness of upstream", but maybe upstream
+>>>>>> got me wrong.
+>>>>>>
+>>>>>> We are not "making ourselves dependent on features ...". The API was
+>>>>>> there. We used it. Now it is deprecated, ok, we should move on. I got
+>>>>>> the message.
+>>>>>
+>>>>> Ouch I deserved some slamming for this.
+>>>>>
+>>>>> I'm sorry if I came across as harsh :(
+>>>>>
+>>>>> I just don't know how to properly push for this.
+>>>>>
+>>>>> I have even pushed the option of the deprecated sysfs ABI
+>>>>> behind the CONFIG_EXPERT option, which should mean that
+>>>>> the kernel config has been made by someone who has checked
+>>>>> the option "yes I am an expert I know what I am doing"
+>>>>> yet failed to observe that this ABI is obsoleted since 5 years
+>>>>> and hence failed to be an expert.
+>>>>>
+>>>>> Of course the ABI (not API really) needs to be fixed if we can find the
+>>>>> problem. It's frustrating that fixing it seems to fix broken other
+>>>>> features which are not deprecated, hence the annoyance on my
+>>>>> part.
+>>>>>
+>>>>
+>>>> I'm afraid we'll earn ourselves a good old LinusRant if we keep
+>>>> pushing the character device as a solution to the problem here.
+>>>> Marcelo is right after all: he used an existing user interface, the
+>>>> interface broke, it must be fixed.
+>>>>
+>>>> I would prefer to find a solution that fixes Marcelo's issue while
+>>>> keeping the offending patches in tree but it seems like the issue is
+>>>> more complicated and will require some rework of the sysfs interface.
+>>>>
+>>>> In which case unless there are objections I lean towards reverting the
+>>>> relevant commits.
+>>>
+>>> Sounds good to me, but that was two weeks ago and afaics nothing
+>>> happened since then. Or did the discussion continue somewhere else?
+>>
+>> Now queued for fixes, thanks for the reminder.
+> 
+> thx, and yw, that's what I'm here for ;-)
+> 
+> Sadly that commit didn't use 'Link:' tags pointing to the report (the
+> start of this thread) using lore.kernel.org/r/, as explained in
+> 'Documentation/process/submitting-patches.rst' and
+> 'Documentation/process/5.Posting.rst'. I'd say that would have been
+> really wise here if someone sooner or later needs to look into the
+> backstory of the fix. And is also means that I have to tell my
+> regression tracking bot about this issue manually now. :-/
+> 
+> #regzbot fixed-by: 86528d306d1826cfe59481001d63761ba793317a
+> 
+> But whatever, thx for taking care of this!
+> 
+> Have a nice week everyone!
+> 
+> Ciao, Thorsten
+> 
+>>>>>> And I will also tell the dev team that they must use the GPIO char dev
+>>>>>> and libgpiod from now on and must port everything to it. And we will
+>>>>>> likely have another group of people who are not super happy, but
+>>>>>> that's life... :)
+>>>>>
+>>>>> I'm happy to hear this!
+>>>
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>
+>>> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+>>> reports on my table. I can only look briefly into most of them and lack
+>>> knowledge about most of the areas they concern. I thus unfortunately
+>>> will sometimes get things wrong or miss something important. I hope
+>>> that's not the case here; if you think it is, don't hesitate to tell me
+>>> in a public reply, it's in everyone's interest to set the public record
+>>> straight.
+>>>
+>>> #regzbot poke
+>>
