@@ -1,104 +1,205 @@
-Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B5B628E7
-	for <regressions@lists.linux.dev>; Wed, 16 Mar 2022 20:36:24 +0000 (UTC)
-Received: from [192.168.0.3] (ip5f5aef39.dynamic.kabel-deutschland.de [95.90.239.57])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 917F961EA192E;
-	Wed, 16 Mar 2022 21:36:22 +0100 (CET)
-Message-ID: <cb7d704a-60bd-a06f-6511-95889bc0bc5f@molgen.mpg.de>
-Date: Wed, 16 Mar 2022 21:36:22 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904813B56
+	for <regressions@lists.linux.dev>; Wed, 16 Mar 2022 21:47:31 +0000 (UTC)
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.16.1.2/8.16.1.2) with ESMTP id 22GG3tUR010116;
+	Wed, 16 Mar 2022 14:47:28 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=pfpt0220;
+ bh=wJ9UnMRWsMdYFDnjwXnOZuvYq/t95WJIZkibcPo2wDM=;
+ b=c3YuEBtVjKfprwXJo9bmG6Bu0wiU5BOnLl4RTA2U/wZqqEcXeF0y0latrBO3XhjGVTsw
+ 9WMs83ctMKT9QQDcsBIzMm6GB0oGtE8WzOFIFEwvNT9K+EV0n8ogPXPjyPnllIYJuQsx
+ qBR2c0OUPkxw5UeOakuY3yUMzTqE7K8VQKqglzDC0GrgHH7w590GRsGHcX8WVtXWQJyb
+ 4o8kTkh+PVeBfawxWFrkjpwmwhCCo+n/4+BG3IzZhJFEfXt7q57xPOmrNs1z/2fnBwsJ
+ NC8NsjnLYYk1qcc7LApixLQNXdoZqsg3fXkzibJnDKpiafe5kiokkSAl1OwYUiihQTQl qw== 
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3et64ar7r3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+	Wed, 16 Mar 2022 14:47:27 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 16 Mar
+ 2022 14:47:25 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
+ Transport; Wed, 16 Mar 2022 14:47:25 -0700
+Received: from dut1171.mv.qlogic.com (unknown [10.112.88.18])
+	by maili.marvell.com (Postfix) with ESMTP id E1E853F7044;
+	Wed, 16 Mar 2022 14:47:25 -0700 (PDT)
+Received: from dut1171.mv.qlogic.com (localhost [127.0.0.1])
+	by dut1171.mv.qlogic.com (8.14.7/8.14.7) with ESMTP id 22GLkpZT006929;
+	Wed, 16 Mar 2022 14:46:56 -0700
+Received: (from root@localhost)
+	by dut1171.mv.qlogic.com (8.14.7/8.14.7/Submit) id 22GLkFWr006920;
+	Wed, 16 Mar 2022 14:46:15 -0700
+From: Manish Chopra <manishc@marvell.com>
+To: <kuba@kernel.org>
+CC: <pmenzel@molgen.mpg.de>, <netdev@vger.kernel.org>, <aelior@marvell.com>,
+        <regressions@lists.linux.dev>, <stable@vger.kernel.org>
+Subject: [PATCH net] bnx2x: fix built-in kernel driver load failure
+Date: Wed, 16 Mar 2022 14:46:13 -0700
+Message-ID: <20220316214613.6884-1-manishc@marvell.com>
+X-Mailer: git-send-email 2.12.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: bnx2x: How to log the firmware version? (was: [RFC net] bnx2x: fix
- built-in kernel driver load failure)
-Content-Language: en-US
-To: Manish Chopra <manishc@marvell.com>
-Cc: Donald Buczek <buczek@molgen.mpg.de>, Jakub Kicinski <kuba@kernel.org>,
- netdev@vger.kernel.org, Ariel Elior <aelior@marvell.com>,
- it+netdev@molgen.mpg.de, regressions@lists.linux.dev
-References: <20220316111842.28628-1-manishc@marvell.com>
- <5f136c0c-2e16-d176-3d4a-caed6c3420a7@molgen.mpg.de>
- <BY3PR18MB4612DEDE441A89EEE0470850AB119@BY3PR18MB4612.namprd18.prod.outlook.com>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <BY3PR18MB4612DEDE441A89EEE0470850AB119@BY3PR18MB4612.namprd18.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: NbbWkX58m6uCzFPvjAgj_9CYZVlfWBsV
+X-Proofpoint-GUID: NbbWkX58m6uCzFPvjAgj_9CYZVlfWBsV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.850,Hydra:6.0.425,FMLib:17.11.64.514
+ definitions=2022-03-16_09,2022-03-15_01,2022-02-23_01
 
-Dear Manish,
+commit b7a49f73059f ("bnx2x: Utilize firmware 7.13.21.0")
+added request_firmware() logic in probe() which caused
+built-in kernel driver (CONFIG_BNX2X=y) load failure (below),
+as access to firmware file is not feasible during the probe.
 
+"Direct firmware load for bnx2x/bnx2x-e2-7.13.21.0.fw
+failed with error -2"
 
-Thank you for your answer.
+This patch fixes this issue by -
 
-Am 16.03.22 um 19:25 schrieb Manish Chopra:
+1. Removing request_firmware() logic from the probe()
+   such that .ndo_open() handle it as it used to handle
+   it earlier
 
->> -----Original Message-----
->> From: Paul Menzel <pmenzel@molgen.mpg.de>
+2. Given request_firmware() is removed from probe(), so
+   driver has to relax FW version comparisons a bit against
+   the already loaded FW version (by some other PFs of same
+   adapter) to allow different compatible/close FWs with which
+   multiple PFs may run with (in different environments), as the
+   given PF who is in probe flow has no idea now with which firmware
+   file version it is going to initialize the device in ndo_open()
 
-[…]
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/all/46f2d9d9-ae7f-b332-ddeb-b59802be2bab@molgen.mpg.de/
+Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
+Fixes: b7a49f73059f ("bnx2x: Utilize firmware 7.13.21.0")
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+---
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x.h   |  2 --
+ .../net/ethernet/broadcom/bnx2x/bnx2x_cmn.c   | 28 +++++++++++--------
+ .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 15 ++--------
+ 3 files changed, 19 insertions(+), 26 deletions(-)
 
->> Hmm, with `CONFIG_BNX2X=y` and `bnx2x.debug=0x0100000`, bringing up
->> net05 (.1) and then net04 (.0), I only see:
->>
->>       [ 3333.883697] bnx2x: [bnx2x_compare_fw_ver:2378(net04)]loaded fw f0d07 major 7 minor d rev f eng 0
-> 
-> I think this print is not good probably  (that's why it is default
-> disabled), it’s not really the firmware driver is supposed to work
-> with (it is something which was already loaded by any other PF
-> somewhere or some residue from earlier loads),
-Still interesting, when handling firmware files, and trying to wrap ones 
-head around the different versions flying around.
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x.h
+index a19dd6797070..2209d99b3404 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x.h
+@@ -2533,6 +2533,4 @@ void bnx2x_register_phc(struct bnx2x *bp);
+  * Meant for implicit re-load flows.
+  */
+ int bnx2x_vlan_reconfigure_vid(struct bnx2x *bp);
+-int bnx2x_init_firmware(struct bnx2x *bp);
+-void bnx2x_release_firmware(struct bnx2x *bp);
+ #endif /* bnx2x.h */
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+index 8d36ebbf08e1..5729a5ab059d 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+@@ -2364,24 +2364,30 @@ int bnx2x_compare_fw_ver(struct bnx2x *bp, u32 load_code, bool print_err)
+ 	/* is another pf loaded on this engine? */
+ 	if (load_code != FW_MSG_CODE_DRV_LOAD_COMMON_CHIP &&
+ 	    load_code != FW_MSG_CODE_DRV_LOAD_COMMON) {
+-		/* build my FW version dword */
+-		u32 my_fw = (bp->fw_major) + (bp->fw_minor << 8) +
+-				(bp->fw_rev << 16) + (bp->fw_eng << 24);
++		u8 loaded_fw_major, loaded_fw_minor, loaded_fw_rev, loaded_fw_eng;
++		u32 loaded_fw;
+ 
+ 		/* read loaded FW from chip */
+-		u32 loaded_fw = REG_RD(bp, XSEM_REG_PRAM);
++		loaded_fw = REG_RD(bp, XSEM_REG_PRAM);
+ 
+-		DP(BNX2X_MSG_SP, "loaded fw %x, my fw %x\n",
+-		   loaded_fw, my_fw);
++		loaded_fw_major = loaded_fw & 0xff;
++		loaded_fw_minor = (loaded_fw >> 8) & 0xff;
++		loaded_fw_rev = (loaded_fw >> 16) & 0xff;
++		loaded_fw_eng = (loaded_fw >> 24) & 0xff;
++
++		DP(BNX2X_MSG_SP, "loaded fw 0x%x major 0x%x minor 0x%x rev 0x%x eng 0x%x\n",
++		   loaded_fw, loaded_fw_major, loaded_fw_minor, loaded_fw_rev, loaded_fw_eng);
+ 
+ 		/* abort nic load if version mismatch */
+-		if (my_fw != loaded_fw) {
++		if (loaded_fw_major != BCM_5710_FW_MAJOR_VERSION ||
++		    loaded_fw_minor != BCM_5710_FW_MINOR_VERSION ||
++		    loaded_fw_eng != BCM_5710_FW_ENGINEERING_VERSION ||
++		    loaded_fw_rev < BCM_5710_FW_REVISION_VERSION_V15) {
+ 			if (print_err)
+-				BNX2X_ERR("bnx2x with FW %x was already loaded which mismatches my %x FW. Aborting\n",
+-					  loaded_fw, my_fw);
++				BNX2X_ERR("loaded FW incompatible. Aborting\n");
+ 			else
+-				BNX2X_DEV_INFO("bnx2x with FW %x was already loaded which mismatches my %x FW, possibly due to MF UNDI\n",
+-					       loaded_fw, my_fw);
++				BNX2X_DEV_INFO("loaded FW incompatible, possibly due to MF UNDI\n");
++
+ 			return -EBUSY;
+ 		}
+ 	}
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+index eedb48d945ed..c19b072f3a23 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -12319,15 +12319,6 @@ static int bnx2x_init_bp(struct bnx2x *bp)
+ 
+ 	bnx2x_read_fwinfo(bp);
+ 
+-	if (IS_PF(bp)) {
+-		rc = bnx2x_init_firmware(bp);
+-
+-		if (rc) {
+-			bnx2x_free_mem_bp(bp);
+-			return rc;
+-		}
+-	}
+-
+ 	func = BP_FUNC(bp);
+ 
+ 	/* need to reset chip if undi was active */
+@@ -12340,7 +12331,6 @@ static int bnx2x_init_bp(struct bnx2x *bp)
+ 
+ 		rc = bnx2x_prev_unload(bp);
+ 		if (rc) {
+-			bnx2x_release_firmware(bp);
+ 			bnx2x_free_mem_bp(bp);
+ 			return rc;
+ 		}
+@@ -13409,7 +13399,7 @@ do {									\
+ 	     (u8 *)bp->arr, len);					\
+ } while (0)
+ 
+-int bnx2x_init_firmware(struct bnx2x *bp)
++static int bnx2x_init_firmware(struct bnx2x *bp)
+ {
+ 	const char *fw_file_name, *fw_file_name_v15;
+ 	struct bnx2x_fw_file_hdr *fw_hdr;
+@@ -13509,7 +13499,7 @@ int bnx2x_init_firmware(struct bnx2x *bp)
+ 	return rc;
+ }
+ 
+-void bnx2x_release_firmware(struct bnx2x *bp)
++static void bnx2x_release_firmware(struct bnx2x *bp)
+ {
+ 	kfree(bp->init_ops_offsets);
+ 	kfree(bp->init_ops);
+@@ -14026,7 +14016,6 @@ static int bnx2x_init_one(struct pci_dev *pdev,
+ 	return 0;
+ 
+ init_one_freemem:
+-	bnx2x_release_firmware(bp);
+ 	bnx2x_free_mem_bp(bp);
+ 
+ init_one_exit:
+-- 
+2.35.1.273.ge6ebfd0
 
-> driver is always going to work with the firmware it gets from
-> request_firmware(). I suggest you to enable below prints to know
-> about which FW driver is going to work with. Perhaps, I will enable
-> below default.
-> 
->          BNX2X_DEV_INFO("Loading %s\n", fw_file_name);
-> 
->          rc = request_firmware(&bp->firmware, fw_file_name, &bp->pdev->dev);
->          if (rc) {
->                  BNX2X_DEV_INFO("Trying to load older fw %s\n", fw_file_name_v15);
-
-Indeed, after figuring out to enable `BNX2X_DEV_INFO()` by the probe 
-flag 0x2 – so either `bnx2x.debug=0x2` or `ethtool -s net04 msglvl 0x2`, 
-Linux logs:
-
-     $ dmesg --level=info | grep bnx2x | tail -8
-     [  242.987091] bnx2x 0000:45:00.1: fw_seq 0x0000003b
-     [  242.994144] bnx2x 0000:45:00.1: drv_pulse 0x6404
-     [  243.038239] bnx2x 0000:45:00.1: Loading bnx2x/bnx2x-e1h-7.13.21.0.fw
-     [  243.356284] bnx2x 0000:45:00.1 net05: using MSI-X  IRQs: sp 57 
-fp[0] 59 ... fp[7] 66
-     [  571.774061] bnx2x 0000:45:00.0: fw_seq 0x0000003b
-     [  571.781069] bnx2x 0000:45:00.0: drv_pulse 0x2149
-     [  571.799963] bnx2x 0000:45:00.0: Loading bnx2x/bnx2x-e1h-7.13.21.0.fw
-     [  571.811657] bnx2x 0000:45:00.0 net04: using MSI-X  IRQs: sp 46 
-fp[0] 48 ... fp[7] 55
-     $ dmesg --level=err | grep bnx2x
-     [  571.979621] bnx2x 0000:45:00.0 net04: Warning: Unqualified SFP+ 
-module detected, Port 0 from Intel Corp       part number AFBR-703SDZ-IN2
-
-Maybe the firmware version could be added to the line with the MSI-X and 
-IRQ info. Maybe also the old version on the device, which `ethtool -i 
-net04` shows.
-
-     $ ethtool -i net04 | grep firmware
-     firmware-version: 7.8.16 bc 6.2.26 phy aa0.406
-
-No idea, why ethtool does not show the loaded firmware.
-
-
-Kind regards,
-
-Paul
