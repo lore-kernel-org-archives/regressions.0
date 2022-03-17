@@ -1,64 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA484378
-	for <regressions@lists.linux.dev>; Thu, 17 Mar 2022 15:33:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0831C340E9;
-	Thu, 17 Mar 2022 15:33:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1647531196;
-	bh=hiTMb+hb7jq8mjJx4i7OhpNxGdWwl9SpPg2VvjLQpmQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VXj1oJDiJjfkEBwEX0TqV3EZ+ogzh7KOGzCeGOjvcjJA4iRqIKpBNuM2feKJPFmuI
-	 KWnPG58NZw0u1tOJPAKuG29iLdbxRKXmkIdjBy+Cb8VvVOmJcszmTXDMK4eM/3v5kc
-	 18DcRBBo7Uhr7Sx5xHih+Em+j98fQqg+ZPyOMtcgJA5e6uuZ+UArtXe23p+5jMU/dS
-	 1UmbgNWymSrhSak22KQii/vBgB40UcTrcLfWYS+YRrsufAWG2hj/6UVkBIK7+L23no
-	 3L4PhrNFe8rW53UNSGYm0qViNKzxqeM/gB9EJ5q5pvgeBWU5RTZSc6drwgnXb4/mGx
-	 fE/0a1iaXPNoA==
-Date: Thu, 17 Mar 2022 08:33:14 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org, Ariel Elior
- <aelior@marvell.com>, regressions@lists.linux.dev, stable@vger.kernel.org,
- it+netdev@molgen.mpg.de
-Subject: Re: [EXT] Re: [PATCH net] bnx2x: fix built-in kernel driver load
- failure
-Message-ID: <20220317083314.54f360b3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <1986e70f-9e3b-cc64-4c15-dbc2abd1dc8d@molgen.mpg.de>
-References: <20220316214613.6884-1-manishc@marvell.com>
-	<35d305f5-aa84-2c47-7efd-66fffb91c398@molgen.mpg.de>
-	<BY3PR18MB46129020BC8C93377CA16FB8AB129@BY3PR18MB4612.namprd18.prod.outlook.com>
-	<1986e70f-9e3b-cc64-4c15-dbc2abd1dc8d@molgen.mpg.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A8F4378
+	for <regressions@lists.linux.dev>; Thu, 17 Mar 2022 16:28:12 +0000 (UTC)
+Received: from [192.168.0.3] (ip5f5aef3c.dynamic.kabel-deutschland.de [95.90.239.60])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7E29261EA1923;
+	Thu, 17 Mar 2022 17:28:09 +0100 (CET)
+Message-ID: <d0955a71-4b29-d915-f2ff-c90e8776eb41@molgen.mpg.de>
+Date: Thu, 17 Mar 2022 17:28:09 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [EXT] Re: [PATCH net] bnx2x: fix built-in kernel driver load
+ failure
+Content-Language: en-US
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org,
+ Ariel Elior <aelior@marvell.com>, regressions@lists.linux.dev,
+ stable@vger.kernel.org, it+netdev@molgen.mpg.de
+References: <20220316214613.6884-1-manishc@marvell.com>
+ <35d305f5-aa84-2c47-7efd-66fffb91c398@molgen.mpg.de>
+ <BY3PR18MB46129020BC8C93377CA16FB8AB129@BY3PR18MB4612.namprd18.prod.outlook.com>
+ <1986e70f-9e3b-cc64-4c15-dbc2abd1dc8d@molgen.mpg.de>
+ <20220317083314.54f360b3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20220317083314.54f360b3@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 17 Mar 2022 14:31:45 +0100 Paul Menzel wrote:
-> >> I think it=E2=80=99s important to document, that the firmware was not =
-present in the
-> >> initrd. =20
-> >=20
-> > I believe this problem has nothing to do with initrd module/FW but
-> > rather a module built in the kernel/vmlinuz (CONFIG_BNX2X=3Dy) itself,=
-=20
-> > A module load from initrd works fine and can access the initrd FW
-> > files present in initrd file system even during the probe. For
-> > example, when I had CONFIG_BNX2X=3Dm, it loads the module fine from
-> > initrd with FW files present in initrd file system. When I had
-> > CONFIG_BNX2X=3Dy, which I believe doesn't install/load module in/from
-> > initrd but in kernel (vmlinuz) itself, that's where it can't access
-> > the firmware file and cause the load failure. =20
->=20
-> I can only say, that adding the firmware to the initrd worked around the=
-=20
-> problem on our side with `CONFIG_BNX2X=3Dy`.
+Dear Jakub,
 
-Hi Paul, I'd like to ship this one to Linus today. It sounds like it's
-okay from functional perspective, can I improve the commit message as
-you were suggesting and leave the comment / print improvements to a
-later patch?
+
+Am 17.03.22 um 16:33 schrieb Jakub Kicinski:
+> On Thu, 17 Mar 2022 14:31:45 +0100 Paul Menzel wrote:
+>>>> I think it’s important to document, that the firmware was not present in the
+>>>> initrd.
+>>>
+>>> I believe this problem has nothing to do with initrd module/FW but
+>>> rather a module built in the kernel/vmlinuz (CONFIG_BNX2X=y) itself,
+>>> A module load from initrd works fine and can access the initrd FW
+>>> files present in initrd file system even during the probe. For
+>>> example, when I had CONFIG_BNX2X=m, it loads the module fine from
+>>> initrd with FW files present in initrd file system. When I had
+>>> CONFIG_BNX2X=y, which I believe doesn't install/load module in/from
+>>> initrd but in kernel (vmlinuz) itself, that's where it can't access
+>>> the firmware file and cause the load failure.
+>>
+>> I can only say, that adding the firmware to the initrd worked around the
+>> problem on our side with `CONFIG_BNX2X=y`.
+> 
+> I'd like to ship this one to Linus today. It sounds like it's
+> okay from functional perspective, can I improve the commit message as
+> you were suggesting and leave the comment / print improvements to a
+> later patch?
+
+Sure, fine by me.
+
+
+Kind regards,
+
+Paul
