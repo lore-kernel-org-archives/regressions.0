@@ -1,65 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD36E2F31
-	for <regressions@lists.linux.dev>; Thu, 17 Mar 2022 16:40:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6F1B5C340F5;
-	Thu, 17 Mar 2022 16:40:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8C93228
+	for <regressions@lists.linux.dev>; Thu, 17 Mar 2022 22:41:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C770C340EC
+	for <regressions@lists.linux.dev>; Thu, 17 Mar 2022 22:41:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1647535211;
-	bh=6MisLZ+bYSgioty0zyGTw7QaXhNxopS1ATEHqy16iDQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Plo+FLh7d286uYhWY0/wiW0eFddtOpToHCLh/hNe9IKkkO9unXf2wfYKUBRtbzosu
-	 LdRfhIExVZfNlH1nZYN18E9TCMLY1Gqqlj0GEFmAT35t8ME+b3IAoA47bSCR9sPdnN
-	 N61FZennqrJ4JhafT9feGb3D7ZBTVoOOqIoV8OVyqQAbhrJtomMhW8n0x9qiqg4+Ot
-	 YqEhCO7VZEbO3FPLIqNPLzO6oqT6CDyKldgsj32RUli23l3xekyVxV9vFtSgML9bRA
-	 kGRPfKib1Qibd911Xp/VbWHcliOQkHLIhX6v1hB+8a6iVzLNquungXd4rfemmsN2nK
-	 k//MddMrV1v7A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 51562F0383F;
-	Thu, 17 Mar 2022 16:40:11 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1647556904;
+	bh=FHVVvG1Rr6KduhKbxfSM1ZOboRLahcePm/noojFXJbU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=UXZ2FtRTaiQZA1h8vkSKLcMqTegt8/jWtJ3IMK+Z93VsCTwOzDrvBVi3IdVugxdF8
+	 ZzfGG4Y6CIJ7PRys9bTsp/kmB361qPyfdC0iJalrzm7G4lkPWpdgtS3oDjIek7BCpM
+	 z6BM3qopcNGP52kPfupvo/3XOtCwVaPBdzxhi0Ofd4au4+arMzKQZsvnvV6EqqV1Nt
+	 EZz18u2vQp9bj3A3SsvSGDqJTA3ocAlvNIkT4oY/riYVlfSofl7rU+xGgylRsUpGER
+	 yjkenM9/uBPfDaCoYc+r23XdG/rT6mvazd89Pe632iD4p82twwfdwcAWk9hgHVh2Gm
+	 7e5nkxw9BQomQ==
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-2e59ea0f3d8so74372667b3.7
+        for <regressions@lists.linux.dev>; Thu, 17 Mar 2022 15:41:44 -0700 (PDT)
+X-Gm-Message-State: AOAM531n2j1uLq21S1/MCSc4eR2cn0+H4W1R3mGt1qTnTTrQjgYc3G8F
+	FpgMZSJxw7zWPVEULwl2zGadO+lQuWpiMzvRiNM=
+X-Google-Smtp-Source: ABdhPJwpLpgB9cyDboA5jfZvS5jXDt66IJFw/EavZfuqNUhe2jURYyPKbWxa2uUWdQZzL78EydR6lsVRhRMCnr+SzWU=
+X-Received: by 2002:a81:79d5:0:b0:2e5:9d33:82ab with SMTP id
+ u204-20020a8179d5000000b002e59d3382abmr8352505ywc.460.1647556903176; Thu, 17
+ Mar 2022 15:41:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] bnx2x: fix built-in kernel driver load failure
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <164753521133.23544.8557619135269165608.git-patchwork-notify@kernel.org>
-Date: Thu, 17 Mar 2022 16:40:11 +0000
-References: <20220316214613.6884-1-manishc@marvell.com>
-In-Reply-To: <20220316214613.6884-1-manishc@marvell.com>
-To: Manish Chopra <manishc@marvell.com>
-Cc: kuba@kernel.org, pmenzel@molgen.mpg.de, netdev@vger.kernel.org,
- aelior@marvell.com, regressions@lists.linux.dev, stable@vger.kernel.org
+References: <53e7de78-4d27-5089-f159-0d443b354666@leemhuis.info>
+ <35bafd68-b340-dfaa-dd5f-d45843104f91@leemhuis.info> <CAPhsuW44tX0rBpy5c63HgTtRSF=UAAsgv8ZuYE_QTLhi6syXaA@mail.gmail.com>
+ <Yh/nbZYmYD6SpZV9@sakura.greysector.net> <CAPhsuW4otwSDcOr8NWFhmecM4AfKim5jQ8aoZO-CY4KkwDFCgg@mail.gmail.com>
+ <254dc1fb-cda7-6249-35e5-a0c584c41206@leemhuis.info>
+In-Reply-To: <254dc1fb-cda7-6249-35e5-a0c584c41206@leemhuis.info>
+From: Song Liu <song@kernel.org>
+Date: Thu, 17 Mar 2022 15:41:32 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5vn7gepzFSn3a1p6SqzFHdvf0N7-U7EoAC7YTnF8wiFQ@mail.gmail.com>
+Message-ID: <CAPhsuW5vn7gepzFSn3a1p6SqzFHdvf0N7-U7EoAC7YTnF8wiFQ@mail.gmail.com>
+Subject: Re: Bug 215605 - [5.14 regression] BUG: unable to handle page fault
+ while running badblocks (fsck.ext4 -c) on a raid5 md array
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Dominik Mierzejewski <dominik@greysector.net>, linux-raid <linux-raid@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
+On Thu, Mar 17, 2022 at 6:14 AM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> Hi, this is your Linux kernel regression tracker. Top-posting for once,
+> to make this easily accessible to everyone.
+>
+> Song, two weeks ago you said you would try to reproduce this. Any
+> success? Or was the discussion moved somewhere else and I just missed it?
+>
 
-This patch was applied to netdev/net.git (master)
-by Jakub Kicinski <kuba@kernel.org>:
+I haven't got luck to reproduce the issue yet. I will keep trying and
+update when
+there is progress.
 
-On Wed, 16 Mar 2022 14:46:13 -0700 you wrote:
-> commit b7a49f73059f ("bnx2x: Utilize firmware 7.13.21.0")
-> added request_firmware() logic in probe() which caused
-> built-in kernel driver (CONFIG_BNX2X=y) load failure (below),
-> as access to firmware file is not feasible during the probe.
-> 
-> "Direct firmware load for bnx2x/bnx2x-e2-7.13.21.0.fw
-> failed with error -2"
-> 
-> [...]
+Thanks,
+Song
 
-Here is the summary with links:
-  - [net] bnx2x: fix built-in kernel driver load failure
-    https://git.kernel.org/netdev/net/c/424e7834e293
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>
+> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> reports on my table. I can only look briefly into most of them and lack
+> knowledge about most of the areas they concern. I thus unfortunately
+> will sometimes get things wrong or miss something important. I hope
+> that's not the case here; if you think it is, don't hesitate to tell me
+> in a public reply, it's in everyone's interest to set the public record
+> straight.
+>
