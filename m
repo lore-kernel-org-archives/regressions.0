@@ -1,13 +1,17 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx1.molgen.mpg.de (unknown [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEEF12F36
-	for <regressions@lists.linux.dev>; Thu, 17 Mar 2022 13:14:35 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nUpxZ-00035o-MG; Thu, 17 Mar 2022 14:14:33 +0100
-Message-ID: <254dc1fb-cda7-6249-35e5-a0c584c41206@leemhuis.info>
-Date: Thu, 17 Mar 2022 14:14:32 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B2E4352
+	for <regressions@lists.linux.dev>; Thu, 17 Mar 2022 13:31:54 +0000 (UTC)
+Received: from [192.168.0.3] (ip5f5aef3c.dynamic.kabel-deutschland.de [95.90.239.60])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id AE25F61EA1928;
+	Thu, 17 Mar 2022 14:31:45 +0100 (CET)
+Message-ID: <1986e70f-9e3b-cc64-4c15-dbc2abd1dc8d@molgen.mpg.de>
+Date: Thu, 17 Mar 2022 14:31:45 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,228 +19,264 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: Bug 215605 - [5.14 regression] BUG: unable to handle page fault
- while running badblocks (fsck.ext4 -c) on a raid5 md array
+ Thunderbird/91.7.0
+Subject: Re: [EXT] Re: [PATCH net] bnx2x: fix built-in kernel driver load
+ failure
 Content-Language: en-US
-To: Song Liu <song@kernel.org>, Dominik Mierzejewski <dominik@greysector.net>
-Cc: linux-raid <linux-raid@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Jens Axboe <axboe@kernel.dk>
-References: <53e7de78-4d27-5089-f159-0d443b354666@leemhuis.info>
- <35bafd68-b340-dfaa-dd5f-d45843104f91@leemhuis.info>
- <CAPhsuW44tX0rBpy5c63HgTtRSF=UAAsgv8ZuYE_QTLhi6syXaA@mail.gmail.com>
- <Yh/nbZYmYD6SpZV9@sakura.greysector.net>
- <CAPhsuW4otwSDcOr8NWFhmecM4AfKim5jQ8aoZO-CY4KkwDFCgg@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAPhsuW4otwSDcOr8NWFhmecM4AfKim5jQ8aoZO-CY4KkwDFCgg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647522875;13f774a4;
-X-HE-SMSGID: 1nUpxZ-00035o-MG
-
-Hi, this is your Linux kernel regression tracker. Top-posting for once,
-to make this easily accessible to everyone.
-
-Song, two weeks ago you said you would try to reproduce this. Any
-success? Or was the discussion moved somewhere else and I just missed it?=
+To: Manish Chopra <manishc@marvell.com>
+Cc: netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+ Ariel Elior <aelior@marvell.com>, regressions@lists.linux.dev,
+ stable@vger.kernel.org, it+netdev@molgen.mpg.de
+References: <20220316214613.6884-1-manishc@marvell.com>
+ <35d305f5-aa84-2c47-7efd-66fffb91c398@molgen.mpg.de>
+ <BY3PR18MB46129020BC8C93377CA16FB8AB129@BY3PR18MB4612.namprd18.prod.outlook.com>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <BY3PR18MB46129020BC8C93377CA16FB8AB129@BY3PR18MB4612.namprd18.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+Dear Manish,
 
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
 
-#regzbot poke
+Am 17.03.22 um 10:55 schrieb Manish Chopra:
+>> -----Original Message-----
+>> From: Paul Menzel <pmenzel@molgen.mpg.de>
+>> Sent: Thursday, March 17, 2022 1:03 PM
 
-On 04.03.22 07:26, Song Liu wrote:
-> On Wed, Mar 2, 2022 at 1:54 PM Dominik Mierzejewski
-> <dominik@greysector.net> wrote:
+[…]
+
+>> Am 16.03.22 um 22:46 schrieb Manish Chopra:
+>>> commit b7a49f73059f ("bnx2x: Utilize firmware 7.13.21.0") added
+>>> request_firmware() logic in probe() which caused built-in kernel
+>>> driver (CONFIG_BNX2X=y) load failure (below), as access to firmware
+>>> file is not feasible during the probe.
 >>
->> Hello!
->>
->> On Tuesday, 01 March 2022 at 01:24, Song Liu wrote:
->>> On Mon, Feb 28, 2022 at 1:43 AM Thorsten Leemhuis
->>> <regressions@leemhuis.info> wrote:
->>>>
->>>> [CCing Jens]
->>>>
->>>> Hi, this is your Linux kernel regression tracker. Top-posting for on=
-ce,
->>>> to make this easily accessible to everyone.
->>>>
->>>> What's up here? Below regression was reported two weeks ago and I
->>>> forwarded it nearly a week ago, nevertheless the reporter afaics did=
-n't
->>>> get a single reply. Is the issue discussed somewhere else and I just=
+>> I think it’s important to document, that the firmware was not present in the
+>> initrd.
+> 
+> I believe this problem has nothing to do with initrd module/FW but
+> rather a module built in the kernel/vmlinuz (CONFIG_BNX2X=y) itself, 
+> A module load from initrd works fine and can access the initrd FW
+> files present in initrd file system even during the probe. For
+> example, when I had CONFIG_BNX2X=m, it loads the module fine from
+> initrd with FW files present in initrd file system. When I had
+> CONFIG_BNX2X=y, which I believe doesn't install/load module in/from
+> initrd but in kernel (vmlinuz) itself, that's where it can't access
+> the firmware file and cause the load failure.
 
->>>> missed it? Is the report not accurate for some reason or missing
->>>> something important? Or did the report fall throug the cracks?
+I can only say, that adding the firmware to the initrd worked around the 
+problem on our side with `CONFIG_BNX2X=y`.
+
+>>> "Direct firmware load for bnx2x/bnx2x-e2-7.13.21.0.fw
+>>> failed with error -2"
+>>
+>> I’d say, no line break for log message. Maybe paste the excerpt below:
+>>
+>>       [   20.534985] bnx2x 0000:45:00.0: msix capability found
+>>       [   20.540342] bnx2x 0000:45:00.0: part number 394D4342-31373735-31314131-473331
+>>       [   20.548605] bnx2x 0000:45:00.0: Direct firmware load for bnx2x/bnx2x-e1h-7.13.21.0.fw failed with error -2
+>>       [   20.558373] bnx2x 0000:45:00.0: Direct firmware load for bnx2x/bnx2x-e1h-7.13.15.0.fw failed with error -2
+>>       [   20.568319] bnx2x: probe of 0000:45:00.0 failed with error -2
+>>
+>>> This patch fixes this issue by -
 >>>
->>> Sorry for the late reply. I was on vacation last week.
->>
->> No problem, thanks for responding.
->>
->> [...]
->>>> On 22.02.22 09:59, Thorsten Leemhuis wrote:
->>>>> Hi, this is your Linux kernel regression tracker.
->>>>>
->>>>> I noticed a regression report in bugzilla.kernel.org that afaics no=
-body
->>>>> acted upon since it was reported about a week ago, that's why I dec=
-ided
->>>>> to forward it to the lists and add a few relevant people to the CC.=
- To
->>>>> quote from https://bugzilla.kernel.org/show_bug.cgi?id=3D215605
->>>>>
->>>>>>  Dominik Mierzejewski 2022-02-14 10:36:36 UTC
->>>>>>
->>>>>> Created attachment 300450 [details]
->>>>>> kernel-5.16.8 dmesg with crash
->>>>>>
->>>>>> I'm experiencing kernel crash when running badblocks (fsck.ext4 -c=
-) on a raid5 md array in my Intel Atom-based NAS box (Thecus N5550):
->>>>>> [  720.911993] kernel: BUG: unable to handle page fault for addres=
-s: ffffdbc681023bc8
->>>>>> [  720.912073] kernel: #PF: supervisor read access in kernel mode
->>>>>> [  720.912120] kernel: #PF: error_code(0x0000) - not-present page
->>>>>> [  720.912166] kernel: PGD 11ffc6067 P4D 11ffc6067 PUD 0
->>>>>> [  720.912213] kernel: Oops: 0000 [#1] PREEMPT SMP NOPTI
->>>>>> [  720.912256] kernel: CPU: 1 PID: 1406 Comm: badblocks Not tainte=
-d 5.16.8-200.fc35.x86_64 #1
->>>>>> [  720.912321] kernel: Hardware name: Intel Corporation Milstead P=
-latform/Granite Well, BIOS CDV W Series 05 08/27/2015
->>>>>> [  720.912400] kernel: RIP: 0010:kfree+0x58/0x3e0
->>>>>> [  720.912449] kernel: Code: 80 4c 01 e5 0f 82 84 03 00 00 48 c7 c=
-0 00 00 00 80 48 2b 05 4a 96 3b 01 48 01 c5 48 c1 ed 0c 48 c1 e5 06 48 03=
- 2d 28 96 3b 01 <48> 8b 45 08 48 8d 50 ff a8 01 48 0f 45 ea 4
->>>>>> 8 8b 55 08 48 8d 42 ff
->>>>>> [  720.912598] kernel: RSP: 0018:ffff9db4008efaf8 EFLAGS: 00010286=
-
->>>>>> [  720.912648] kernel: RAX: 00006d7bc0000000 RBX: ffff9284c5214800=
- RCX: ffff9284c3758ff8
->>>>>> [  720.912708] kernel: RDX: ffff9283c1102740 RSI: ffffffffc07af091=
- RDI: ffff9db4008efd58
->>>>>> [  720.912767] kernel: RBP: ffffdbc681023bc0 R08: ffff9db4008efb88=
- R09: ffff9284c3759000
->>>>>> [  720.912826] kernel: R10: 0000000000000028 R11: ffff9284c213db48=
- R12: ffff9db4008efd58
->>>>>> [  720.912885] kernel: R13: ffff9284c213da00 R14: ffff9284c375f000=
- R15: ffff9db4008efd58
->>>>>> [  720.912945] kernel: FS:  00007f73e6669740(0000) GS:ffff9284dbc8=
-0000(0000) knlGS:0000000000000000
->>>>>> [  720.913012] kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080=
-050033
->>>>>> [  720.913062] kernel: CR2: ffffdbc681023bc8 CR3: 000000005c2cc000=
- CR4: 00000000000006e0
->>>>>> [  720.913122] kernel: Call Trace:
->>>>>> [  720.913150] kernel:  <TASK>
->>>>>> [  720.913179] kernel:  raid5_make_request+0xb31/0xb90 [raid456]
->>>>>> [  720.913247] kernel:  ? do_wait_intr_irq+0xa0/0xa0
->>>>>> [  720.913292] kernel:  ? __blk_queue_split+0x30a/0x470
->>>>>> [  720.913339] kernel:  md_handle_request+0x119/0x180
->>>>>> [  720.913386] kernel:  md_submit_bio+0x67/0xa0
->>>>>> [  720.913425] kernel:  __submit_bio_fops+0x91/0x160
->>>>>> [  720.913468] kernel:  submit_bio_noacct+0xd7/0x2c0
->>>>>> [  720.913510] kernel:  __blkdev_direct_IO_simple+0x198/0x290
->>>>>> [  720.913576] kernel:  ? __fpu_restore_sig+0x193/0x570
->>>>>> [  720.913623] kernel:  ? sysvec_apic_timer_interrupt+0xaf/0xd0
->>>>>> [  720.913676] kernel:  ? __blkdev_direct_IO_simple+0x290/0x290
->>>>>> [  720.913728] kernel:  generic_file_read_iter+0x9b/0x160
->>>>>> [  720.913775] kernel:  new_sync_read+0x105/0x180
->>>>>> [  720.913820] kernel:  vfs_read+0xf1/0x190
->>>>>> [  720.913858] kernel:  ksys_read+0x4f/0xc0
->>>>>> [  720.913896] kernel:  do_syscall_64+0x38/0x90
->>>>>> [  720.913936] kernel:  entry_SYSCALL_64_after_hwframe+0x44/0xae
->>>>>> [  720.913985] kernel: RIP: 0033:0x7f73e676d772
->>>>>> [  720.914024] kernel: Code: c0 e9 b2 fe ff ff 50 48 8d 3d da 2e 0=
-c 00 e8 b5 f9 01 00 0f 1f 44 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85=
- c0 75 10 0f 05 <48> 3d 00 f0 ff ff 77 56 c3 0f 1f 44 00 00 48 83 ec 28 4=
-8 89 54 24
->>>>>> [  720.914166] kernel: RSP: 002b:00007fff1b8fcbb8 EFLAGS: 00000246=
- ORIG_RAX: 0000000000000000
->>>>>> [  720.914231] kernel: RAX: ffffffffffffffda RBX: 0000000000000040=
- RCX: 00007f73e676d772
->>>>>> [  720.917149] kernel: RDX: 0000000000040000 RSI: 00007f73e65d3000=
- RDI: 0000000000000004
->>>>>> [  720.920078] kernel: RBP: 0000000000001000 R08: 00000000015105c0=
- R09: 0000000000000080
->>>>>> [  720.922980] kernel: R10: 00007fff1b8fca00 R11: 0000000000000246=
- R12: 00000015105c0000
->>>>>> [  720.925875] kernel: R13: 0000000000000004 R14: 00007f73e65d3000=
- R15: 0000000000040000
->>>>>> [  720.928795] kernel:  </TASK>
->>>>>> [  720.931704] kernel: Modules linked in: sctp ip6_udp_tunnel udp_=
-tunnel rpcrdma rdma_cm iw_cm ib_cm ib_core sit tunnel4 ip_tunnel rfkill i=
-pt_REJECT nf_reject_ipv4 iptable_filter xt_nat iptable_nat nf_nat iptable=
-_mangle nf_conntrack_pptp xt_CT iptable_raw xt_multiport xt_set ip6t_REJE=
-CT nf_reject_ipv6 xt_LOG nf_log_syslog xt_limit xt_state xt_conntrack nf_=
-conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip6table_filter ip6_tables ip_set=
-_hash_netport ip_set_hash_net ip_set drivetemp it87 nfnetlink hwmon_vid v=
-fat fat iTCO_wdt intel_pmc_bxt iTCO_vendor_support at24 raid456 async_rai=
-d6_recov async_memcpy async_pq async_xor async_tx intel_powerclamp raid1 =
-coretemp snd_hda_codec_realtek snd_hda_codec_generic ledtrig_audio snd_hd=
-a_codec_hdmi snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi snd_hda_co=
-dec snd_hda_core snd_usb_audio i2c_i801 gma500_gfx i2c_smbus snd_usbmidi_=
-lib joydev snd_hwdep snd_rawmidi snd_seq_device mc snd_pcm lpc_ich i2c_al=
-go_bit snd_timer drm_kms_helper snd cec soundcore nfsd auth_rpcgss
->>>>>> [  720.931885] kernel:  nfs_acl lockd grace drm fuse sunrpc zram i=
-p_tables hid_logitech_hidpp serio_raw r8152 sata_sil24 video mii hid_jabr=
-a e1000e hid_logitech_dj
->>>>>> [  720.952122] kernel: CR2: ffffdbc681023bc8
->>>>>> [  720.955651] kernel: ---[ end trace de2c3d5b971ae71d ]---
->>>>>> [  720.959186] kernel: RIP: 0010:kfree+0x58/0x3e0
->>>>>> [  720.962723] kernel: Code: 80 4c 01 e5 0f 82 84 03 00 00 48 c7 c=
-0 00 00 00 80 48 2b 05 4a 96 3b 01 48 01 c5 48 c1 ed 0c 48 c1 e5 06 48 03=
- 2d 28 96 3b 01 <48> 8b 45 08 48 8d 50 ff a8 01 48 0f 45 ea 48 8b 55 08 4=
-8 8d 42 ff
->>>>>> [  720.966472] kernel: RSP: 0018:ffff9db4008efaf8 EFLAGS: 00010286=
-
->>>>>> [  720.970238] kernel: RAX: 00006d7bc0000000 RBX: ffff9284c5214800=
- RCX: ffff9284c3758ff8
->>>>>> [  720.973993] kernel: RDX: ffff9283c1102740 RSI: ffffffffc07af091=
- RDI: ffff9db4008efd58
->>>>>> [  720.977723] kernel: RBP: ffffdbc681023bc0 R08: ffff9db4008efb88=
- R09: ffff9284c3759000
->>>>>> [  720.981464] kernel: R10: 0000000000000028 R11: ffff9284c213db48=
- R12: ffff9db4008efd58
->>>>>> [  720.985228] kernel: R13: ffff9284c213da00 R14: ffff9284c375f000=
- R15: ffff9db4008efd58
->>>>>> [  720.988995] kernel: FS:  00007f73e6669740(0000) GS:ffff9284dbc8=
-0000(0000) knlGS:0000000000000000
->>>>>> [  720.992774] kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080=
-050033
->>>>>> [  720.996535] kernel: CR2: ffffdbc681023bc8 CR3: 000000005c2cc000=
- CR4: 00000000000006e0
+>>> 1. Removing request_firmware() logic from the probe()
+>>>      such that .ndo_open() handle it as it used to handle
+>>>      it earlier
 >>>
->>> I tried a few things (injecting badblocks, etc.) but still could not
->>> reproduce this issue.
->>>
->>> Hi Dominik,
->>>
->>> Could you please share more information about the array?
+>>> 2. Given request_firmware() is removed from probe(), so
+>>>      driver has to relax FW version comparisons a bit against
+>>>      the already loaded FW version (by some other PFs of same
+>>>      adapter) to allow different compatible/close FWs with which
+>>>      multiple PFs may run with (in different environments), as the
+>>>      given PF who is in probe flow has no idea now with which firmware
+>>>      file version it is going to initialize the device in ndo_open()
 >>
->> Please note that I repaired the array by stopping it and reassembling
->> without badblocks maps:
->> # mdadm --assemble -U force-no-bbl /dev/md126 /dev/sdb1 /dev/sdc1 /dev=
-/sdd1 /dev/sde1 /dev/sdf1
->>
->> I ran fsck on it and repaired multiple-owned blocks. It's been running=
+>> Please be specific and state, that the revision part in the version has
+>> to be greater, and that downgrading is not allowed.
+> 
+> I didn't get it, you can't downgrade to any firmware unless you
+> downgrade the kernel/driver, driver with these recent commits/fixes
+> are always supposed to run with this minimum older FW version
+> (7.13.15.0) or a greater FW version (for example now 7.13.21.0). if
+> you want to use the FW version even older to these then you have to 
+> downgrade the driver/kernel as well which won't have these
+> commits/logics in them.
+I just want you to explicitly describe the added condition in the commit
+message.
 
->> smoothly since then, even under kernel 5.16.9. I'm not sure the
->> following information will be useful now.
->=20
-> Thanks for these information. I will try to repro with some similar set=
-up.
->=20
-> Song
->=20
-> [..]
->=20
->=20
+>>> Cc: stable@vger.kernel.org
+>>> Link: https://urldefense.proofpoint.com/v2/url?u=https-
+>> 3A__lore.kernel.org_all_46f2d9d9-2Dae7f-2Db332-2Dddeb-
+>> 2Db59802be2bab-
+>> 40molgen.mpg.de_&d=DwIDaQ&c=nKjWec2b6R0mOyPaz7xtfQ&r=bMTgx2X4
+>> 8QVXyXOEL8ALyI4dsWoR-m74c5n3d-ruJI8&m=FmUvhi_ygxQI4mnQmg5pU-
+>> th-BWb_aEXUni5bpt6e934rZh0Wp-
+>> KuVdfW7N2O0za&s=t3mHF8L4_cacsuvE5TqHUBSqD70Yfsbk3or973FvyEQ&e=
+
+Thank you Outlook for protecting the word. :/
+
+>>> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
+>>> Tested-by: Paul Menzel <pmenzel@molgen.mpg.de>
+>>> Fixes: b7a49f73059f ("bnx2x: Utilize firmware 7.13.21.0")
+>>> Signed-off-by: Manish Chopra <manishc@marvell.com>
+>>> Signed-off-by: Ariel Elior <aelior@marvell.com>
+>>> ---
+>>>    drivers/net/ethernet/broadcom/bnx2x/bnx2x.h   |  2 --
+>>>    .../net/ethernet/broadcom/bnx2x/bnx2x_cmn.c   | 28 +++++++++++--------
+>>>    .../net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 15 ++--------
+>>>    3 files changed, 19 insertions(+), 26 deletions(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x.h
+>> b/drivers/net/ethernet/broadcom/bnx2x/bnx2x.h
+>>> index a19dd6797070..2209d99b3404 100644
+>>> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x.h
+>>> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x.h
+>>> @@ -2533,6 +2533,4 @@ void bnx2x_register_phc(struct bnx2x *bp);
+>>>     * Meant for implicit re-load flows.
+>>>     */
+>>>    int bnx2x_vlan_reconfigure_vid(struct bnx2x *bp);
+>>> -int bnx2x_init_firmware(struct bnx2x *bp);
+>>> -void bnx2x_release_firmware(struct bnx2x *bp);
+>>>    #endif /* bnx2x.h */
+>>> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+>> b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+>>> index 8d36ebbf08e1..5729a5ab059d 100644
+>>> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+>>> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+>>> @@ -2364,24 +2364,30 @@ int bnx2x_compare_fw_ver(struct bnx2x *bp,
+>> u32 load_code, bool print_err)
+>>>    	/* is another pf loaded on this engine? */
+>>>    	if (load_code != FW_MSG_CODE_DRV_LOAD_COMMON_CHIP &&
+>>>    	    load_code != FW_MSG_CODE_DRV_LOAD_COMMON) {
+>>> -		/* build my FW version dword */
+>>> -		u32 my_fw = (bp->fw_major) + (bp->fw_minor << 8) +
+>>> -				(bp->fw_rev << 16) + (bp->fw_eng << 24);
+>>> +		u8 loaded_fw_major, loaded_fw_minor, loaded_fw_rev, loaded_fw_eng;
+>>> +		u32 loaded_fw;
+>>>
+>>>    		/* read loaded FW from chip */
+>>> -		u32 loaded_fw = REG_RD(bp, XSEM_REG_PRAM);
+>>> +		loaded_fw = REG_RD(bp, XSEM_REG_PRAM);
+>>>
+>>> -		DP(BNX2X_MSG_SP, "loaded fw %x, my fw %x\n",
+>>> -		   loaded_fw, my_fw);
+>>> +		loaded_fw_major = loaded_fw & 0xff;
+>>> +		loaded_fw_minor = (loaded_fw >> 8) & 0xff;
+>>> +		loaded_fw_rev = (loaded_fw >> 16) & 0xff;
+>>> +		loaded_fw_eng = (loaded_fw >> 24) & 0xff;
+>>> +
+>>> +		DP(BNX2X_MSG_SP, "loaded fw 0x%x major 0x%x minor 0x%x rev 0x%x eng 0x%x\n",
+>>> +		   loaded_fw, loaded_fw_major, loaded_fw_minor, loaded_fw_rev, loaded_fw_eng);
+>>>
+>>>    		/* abort nic load if version mismatch */
+>>> -		if (my_fw != loaded_fw) {
+>>> +		if (loaded_fw_major != BCM_5710_FW_MAJOR_VERSION ||
+>>> +		    loaded_fw_minor != BCM_5710_FW_MINOR_VERSION ||
+>>> +		    loaded_fw_eng != BCM_5710_FW_ENGINEERING_VERSION ||
+>>
+>> The engineering version comes after the revision, so I’d assume they can
+>> also be relaxed and differ?
+> 
+> We don't change the engineering version at all, it's just for sanity
+> and going to always remain as zero. We use this only for debugging
+> purpose, to differentiate debug FW version vs official FW version.
+
+Please add a comment to make that clean. (Also the existing comment
+should be updated.)
+
+>>> +		    loaded_fw_rev < BCM_5710_FW_REVISION_VERSION_V15) {
+>>>    			if (print_err)
+>>
+>> Unrelated, this print_err argument added in commit 91ebb929b6f8 (bnx2x:
+>> Add support for Multi-Function UNDI) is not so elegant.
+>>
+>>> -				BNX2X_ERR("bnx2x with FW %x was already loaded which mismatches my %x FW. Aborting\n",
+>>> -					  loaded_fw, my_fw);
+>>> +				BNX2X_ERR("loaded FW incompatible. Aborting\n");
+>>
+>> Please add the versions to the error message to give the user more clues.
+> 
+> I didn't keep it purposely here (to get rid of 100 chars warning) :- ), given the debug print just before this already logs
+> all the version info about the already loaded_fw which can be enabled to get those info. I would prefer a seeparate commit
+> on refining/enabling messages or adding any new informative messages for user about FW versioning related.
+
+Well, the warning does not apply to log messages, so – as it’s present 
+before – and debug logging is cumbersome to enable, please leave it.
+
+
+Kind regards,
+
+Paul
+
+
+>>>    			else
+>>> -				BNX2X_DEV_INFO("bnx2x with FW %x was already loaded which mismatches my %x FW, possibly due to MF UNDI\n",
+>>> -					       loaded_fw, my_fw);
+>>> +				BNX2X_DEV_INFO("loaded FW incompatible, possibly due to MF UNDI\n");
+>>> +
+>>>    			return -EBUSY;
+>>>    		}
+>>>    	}
+>>> diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+>> b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+>>> index eedb48d945ed..c19b072f3a23 100644
+>>> --- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+>>> +++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+>>> @@ -12319,15 +12319,6 @@ static int bnx2x_init_bp(struct bnx2x *bp)
+>>>
+>>>    	bnx2x_read_fwinfo(bp);
+>>>
+>>> -	if (IS_PF(bp)) {
+>>> -		rc = bnx2x_init_firmware(bp);
+>>> -
+>>> -		if (rc) {
+>>> -			bnx2x_free_mem_bp(bp);
+>>> -			return rc;
+>>> -		}
+>>> -	}
+>>> -
+>>>    	func = BP_FUNC(bp);
+>>>
+>>>    	/* need to reset chip if undi was active */
+>>> @@ -12340,7 +12331,6 @@ static int bnx2x_init_bp(struct bnx2x *bp)
+>>>
+>>>    		rc = bnx2x_prev_unload(bp);
+>>>    		if (rc) {
+>>> -			bnx2x_release_firmware(bp);
+>>>    			bnx2x_free_mem_bp(bp);
+>>>    			return rc;
+>>>    		}
+>>> @@ -13409,7 +13399,7 @@ do {
+>> 				\
+>>>    	     (u8 *)bp->arr, len);					\
+>>>    } while (0)
+>>>
+>>> -int bnx2x_init_firmware(struct bnx2x *bp)
+>>> +static int bnx2x_init_firmware(struct bnx2x *bp)
+>>>    {
+>>>    	const char *fw_file_name, *fw_file_name_v15;
+>>>    	struct bnx2x_fw_file_hdr *fw_hdr;
+>>> @@ -13509,7 +13499,7 @@ int bnx2x_init_firmware(struct bnx2x *bp)
+>>>    	return rc;
+>>>    }
+>>>
+>>> -void bnx2x_release_firmware(struct bnx2x *bp)
+>>> +static void bnx2x_release_firmware(struct bnx2x *bp)
+>>>    {
+>>>    	kfree(bp->init_ops_offsets);
+>>>    	kfree(bp->init_ops);
+>>> @@ -14026,7 +14016,6 @@ static int bnx2x_init_one(struct pci_dev *pdev,
+>>>    	return 0;
+>>>
+>>>    init_one_freemem:
+>>> -	bnx2x_release_firmware(bp);
+>>>    	bnx2x_free_mem_bp(bp);
+>>>
+>>>    init_one_exit:
+>>
+>>
+>> Kind regards,
+>>
+>> Paul
