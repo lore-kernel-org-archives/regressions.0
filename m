@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890893D7B
-	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 07:01:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848B63D7B
+	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 07:12:32 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nV6c9-00066r-PZ; Fri, 18 Mar 2022 08:01:33 +0100
-Message-ID: <bc714e87-d1dc-cdda-5a29-25820faaff40@leemhuis.info>
-Date: Fri, 18 Mar 2022 08:01:31 +0100
+	id 1nV6mk-0000IO-93; Fri, 18 Mar 2022 08:12:30 +0100
+Message-ID: <08e3a9b1-5ed3-be89-1d48-5d1061253789@leemhuis.info>
+Date: Fri, 18 Mar 2022 08:12:25 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,124 +16,100 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
- PCI-passed-through to Windows VM
 Content-Language: en-US
-To: Paul Menzel <pmenzel@molgen.mpg.de>,
- James Turner <linuxkernel.foss@dmarc-none.turner.link>
-Cc: Xinhui Pan <Xinhui.Pan@amd.com>, regressions@lists.linux.dev,
- kvm@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
- Lijo Lazar <lijo.lazar@amd.com>, LKML <linux-kernel@vger.kernel.org>,
- amd-gfx@lists.freedesktop.org, Alexander Deucher
- <Alexander.Deucher@amd.com>, Alex Williamson <alex.williamson@redhat.com>,
- Alex Deucher <alexdeucher@gmail.com>,
- =?UTF-8?Q?Christian_K=c3=b6nig?= <Christian.Koenig@amd.com>
-References: <87ee57c8fu.fsf@turner.link> <87zgnp96a4.fsf@turner.link>
- <fc2b7593-db8f-091c-67a0-ae5ffce71700@leemhuis.info>
- <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
- <87czkk1pmt.fsf@dmarc-none.turner.link>
- <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
- <87sftfqwlx.fsf@dmarc-none.turner.link>
- <BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
- <87ee4wprsx.fsf@turner.link> <4b3ed7f6-d2b6-443c-970e-d963066ebfe3@amd.com>
- <87pmo8r6ob.fsf@turner.link>
- <5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
- <CADnq5_MCKTLOfWKWvi94Q9-d5CGdWBoWVxEYL3YXOpMiPnLOyg@mail.gmail.com>
- <87pmnnpmh5.fsf@dmarc-none.turner.link>
- <CADnq5_NG_dQCYwqHM0umjTMg5Uud6zC4=MiscH91Y9v7mW9bJA@mail.gmail.com>
- <092b825a-10ff-e197-18a1-d3e3a097b0e3@leemhuis.info>
- <877d96to55.fsf@dmarc-none.turner.link> <87lexdw8gd.fsf@turner.link>
- <d541b534-8b83-b566-56eb-ea8baa7c998e@leemhuis.info>
- <40b3084a-11b8-0962-4b33-34b56d3a87a3@molgen.mpg.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <40b3084a-11b8-0962-4b33-34b56d3a87a3@molgen.mpg.de>
+To: Zack Rusin <zackr@vmware.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>,
+ VMware Graphics <linux-graphics-maintainer@vmware.com>
+Subject: Bug 215678 - vmwgfx: probe of 0000:00:0f.0 failed with error -16
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647586896;206b6243;
-X-HE-SMSGID: 1nV6c9-00066r-PZ
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647587552;314a5c82;
+X-HE-SMSGID: 1nV6mk-0000IO-93
 
-On 18.03.22 06:43, Paul Menzel wrote:
->
-> Am 17.03.22 um 13:54 schrieb Thorsten Leemhuis:
->> On 13.03.22 19:33, James Turner wrote:
->>>
->>>> My understanding at this point is that the root problem is probably
->>>> not in the Linux kernel but rather something else (e.g. the machine
->>>> firmware or AMD Windows driver) and that the change in f9b7f3703ff9
->>>> ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)") simply
->>>> exposed the underlying problem.
->>
->> FWIW: that in the end is irrelevant when it comes to the Linux kernel's
->> 'no regressions' rule. For details see:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/admin-guide/reporting-regressions.rst
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/process/handling-regressions.rst
->>
->>
->> That being said: sometimes for the greater good it's better to not
->> insist on that. And I guess that might be the case here.
+Hi, this is your Linux kernel regression tracker.
+
+I noticed a regression report in bugzilla.kernel.org that afaics nobody
+acted upon since it was reported about a week ago, that's why I decided
+to forward it to the lists and a few relevant people to the CC. To quote
+from https://bugzilla.kernel.org/show_bug.cgi?id=215678 :
+
+> With latest kernel, i notice this:
 > 
-> But who decides that?
-
-In the end afaics: Linus. But he can't watch each and every discussion,
-so it partly falls down to people discussing a regression, as they can
-always decide to get him involved in case they are unhappy with how a
-regression is handled. That obviously includes me in this case. I simply
-use my best judgement in such situations. I'm still undecided if that
-path is appropriate here, that's why I wrote above to see what James
-would say, as he afaics was the only one that reported this regression.
-
-> Running stuff in a virtual machine is not that uncommon.
-
-No, it's about passing through a GPU to a VM, which is a lot less common
--- and afaics an area where blacklisting GPUs on the host to pass them
-through is not uncommon (a quick internet search confirmed that, but I
-might be wrong there).
-
-> Should the commit be reverted, and re-added with a more elaborate commit
-> message documenting the downsides?
+> dmesg | grep vmwgfx
+> [    2.959200] vmwgfx 0000:00:0f.0: vgaarb: deactivate vga console
+> [    2.959764] vmwgfx 0000:00:0f.0: BAR 1: can't reserve [mem 0xf0000000-0xf7ffffff pref]
+> [    2.959766] vmwgfx: probe of 0000:00:0f.0 failed with error -16
 > 
-> Could the user be notified somehow? Can PCI passthrough and a loaded
-> amdgpu driver be detected, so Linux warns about this?
->
-> Also, should this be documented in the code?
->
->>> I'm not sure where to go from here. This issue isn't much of a concern
->>> for me anymore, since blacklisting `amdgpu` works for my machine. At
->>> this point, my understanding is that the root problem needs to be fixed
->>> in AMD's Windows GPU driver or Dell's firmware, not the Linux kernel. If
->>> any of the AMD developers on this thread would like to forward it to the
->>> AMD Windows driver team, I'd be happy to work with AMD to fix the issue
->>> properly.
 > 
-> (Thorsten, your mailer mangled the quote somehow 
-
-Kinda, but it IIRC was more me doing something stupid with my mailer.
-Sorry about that.
-
-> – I reformatted it –,
-
-thx!
-
-> which is too bad, as this message is shown when clicking on the link
-> *marked invalid* in the regzbot Web page [1]. (The link is a very nice
-> feature.)
+> lspci -s 0000:00:0f.0 -nnvv
+> 00:0f.0 VGA compatible controller [0300]: VMware SVGA II Adapter [15ad:0405] (prog-if 00 [VGA controller])
+>         Subsystem: VMware SVGA II Adapter [15ad:0405]
+>         Control: I/O+ Mem+ BusMaster- SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+>         Status: Cap+ 66MHz- UDF- FastB2B+ ParErr- DEVSEL=medium >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Interrupt: pin A routed to IRQ 16
+>         Region 0: I/O ports at 2140 [size=16]
+>         Region 1: Memory at f0000000 (32-bit, prefetchable) [size=128M]
+>         Region 2: Memory at fb800000 (32-bit, non-prefetchable) [size=8M]
+>         Expansion ROM at 000c0000 [disabled] [size=128K]
+>         Capabilities: [40] Vendor Specific Information: Len=00 <?>
+>         Capabilities: [44] PCI Advanced Features
+>                 AFCap: TP+ FLR+
+>                 AFCtrl: FLR-
+>                 AFStatus: TP-
+>         Kernel modules: vmwgfx
 > 
->> In that case I'll drop it from the list of regressions, unless what I
->> wrote above makes you change your mind.
->>
->> #regzbot invalid: firmware issue exposed by kernel change, user seems to
->> be happy with a workaround
->>
->> Thx everyone who participated in handling this.
+> Driver version:
+> #define VMWGFX_DRIVER_DATE "20211206"
 > 
-> Should the regression issue be re-opened until the questions above are
-> answered, and a more user friendly solution is found?
+> Host: Windows 11 & VMware Workstation 16 Pro 16.2.0 build-18760230
+> Guest: Debian 11
 
-I'll for now will just continue to watch this discussion and see what
-happens.
+Could somebody take a look into this? Or was this discussed somewhere
+else already? Or even fixed?
 
-> [1]: https://linux-regtracking.leemhuis.info/regzbot/resolved/
+Anyway, to get this tracked:
 
-Ciao, Thorsten
+#regzbot introduced: v5.16..v5.17-rc7
+#regzbot from: sander44 <ionut_n2001@yahoo.com>
+#regzbot title: "vmwgfx: probe of 0000:00:0f.0 failed with error -16" in
+guest
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215678
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
