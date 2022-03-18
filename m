@@ -1,175 +1,193 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88E94C7E
-	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 15:25:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1647617157;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YgcqHRxTmDCbGkiSAVOP1j9BkIjlIyVpT+jmLkaAADU=;
-	b=cNV2o/LG+1LpZ5MTmmssHJBDtAQQ2GXeeVUdjQ0rUYy6WVqkIkTMaYYrxwVSmNVRWVtOtn
-	MzxfjE3hV2YsVf7kUXDKj0yTO5mKkJD8ngq1D7BqotEHY4fgLLQR6V9CenuoODT2qdrkE7
-	YQmad2lRCqTWlN6j5AuOH+Xds7fQFk8=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-398-6teYH_HZM5mbnE0_caM4-A-1; Fri, 18 Mar 2022 11:25:56 -0400
-X-MC-Unique: 6teYH_HZM5mbnE0_caM4-A-1
-Received: by mail-il1-f198.google.com with SMTP id f18-20020a926a12000000b002be48b02bc6so4966407ilc.17
-        for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 08:25:56 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C73F4C7E
+	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 16:05:25 +0000 (UTC)
+Received: by mail-wr1-f53.google.com with SMTP id r10so12361461wrp.3
+        for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 09:05:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=DcA4sJmL1QB2BCHWjNUio1zxaNFvTCw7JphHxVAAEoA=;
+        b=JJHvdmaVym95g2UhAg4NBJbDDWm/Zebay9zZCSUFhMjFa2hqua//t51YUGRvjkKfCq
+         sQ2M++r9mVsNbctEurLszZpw8XXIpVlVwVq3z5qF/K/DHCY8jwtfIFzziAwr77FGyFWf
+         EdEUr21cOi39LRKa89SWa1Wm8tvaqMBCGsgllw9x+Lg3mycoiUHIJUWGVwsAwCaux2fd
+         HcDRWOYSEBLqZDPBdUFOl+JR084a5gzO8qkoCfTbhoWBjematobV8y5omZs6cb7W9ys0
+         TTGBNHppseBhKuasDsIMysdrKU+88K86BjAz5BxLybkF8E/5iT/tbdrFCKktPyLHev3u
+         k/Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=YgcqHRxTmDCbGkiSAVOP1j9BkIjlIyVpT+jmLkaAADU=;
-        b=LWCORcN61jYwUgpF7BkPjLFEALiqubMgQwLrZxsa1+GcrhoOAF7pIFa+a45jpFUkdm
-         1BXOZwAuv0z9oFLyejUOzThYWiKll57dRv2iQh9bDjJRN7Eagar7ZxjhXQTwFUXUV7fb
-         q4YD2CQT33LkGxqayDGh3u/YdwnAUtW3QQxehduTllupnvStHE617j2Dizd+kP1faNv0
-         firQmBo8Wl26Fbgo9gV8UpG/9nm71ASChtqZV7PTczEVf6ySG42oQwk0a/kw5MuN3Rfx
-         MSxPB6sqSUKCPVcH+RS/i5/dqSJFEPQC6M2g+u09JW+BppoieghwSMY7DruUaonhzR95
-         b+yA==
-X-Gm-Message-State: AOAM533SevCyRgPVbCsE0g46qG/kcsRtDyGgbblpzmZ+KkTXwV/EXsys
-	tOxeJpVRgmD64dWm4Yua0raNu0VMKXmiiH2WX09wXZpmXZ12l48dVvVGyUx7ZRUOtUSoF4h5bOI
-	5ggdgXuMH7Go+iSNu2bKOUFg=
-X-Received: by 2002:a5d:8714:0:b0:636:13bb:bc89 with SMTP id u20-20020a5d8714000000b0063613bbbc89mr4675386iom.126.1647617155693;
-        Fri, 18 Mar 2022 08:25:55 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwcyHxS7oTYC5euABr1WRzoAYAf/D3IPiqrWGqWvUPQt0yOjkh75RYfZwdgiryk5BgacuoZcA==
-X-Received: by 2002:a5d:8714:0:b0:636:13bb:bc89 with SMTP id u20-20020a5d8714000000b0063613bbbc89mr4675361iom.126.1647617155387;
-        Fri, 18 Mar 2022 08:25:55 -0700 (PDT)
-Received: from redhat.com ([98.55.18.59])
-        by smtp.gmail.com with ESMTPSA id 201-20020a6b14d2000000b00640df82a01csm4447795iou.3.2022.03.18.08.25.54
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=DcA4sJmL1QB2BCHWjNUio1zxaNFvTCw7JphHxVAAEoA=;
+        b=xAe4n5WtsOTNfubckbLTMttlW0N76ygX21mQ7On7mNZpUsSHP0mAfqUsnT1OKJ/Dnd
+         KG5uFV3so85I+Wn1v1ZcoTlYkOo6LVsqwdU6QvEwRpGbQtIFNi2ZWDNKhTTp+283Id+B
+         9pbn72CWXxBlCwaGCxX7N5tKbicY/vWaHVYOYFzJTfNIhCRdEsNEmIn1Ss/uDwDx0dH3
+         nnGmisD/WTLS+3zoHp2V33WVQv9jOTWwlCR+mNxK3CtH05o9SMiDxh+qkvWGixUn7yLC
+         qXHeEt7UuTKjxl8ekOx4RFCtrX2gdzaj29dGijKWJ4ZFkexyC3FjCRJOpklGQnlml+XR
+         8OAQ==
+X-Gm-Message-State: AOAM530g2cnzJpZK+XnoqNI51dNq1zoDFzuL7kLv2L95NS3Pw2J56I1h
+	zDTx8dn4ErRwfM+W6Q0lKa8=
+X-Google-Smtp-Source: ABdhPJwn9UVxOqp4FnLXXmD7jsk7zJUPQN6z4kSBqRl7+VCzvzQ4fKhcOMU+6m7D14IhOfWd6AIPZg==
+X-Received: by 2002:adf:a507:0:b0:203:f522:c01a with SMTP id i7-20020adfa507000000b00203f522c01amr3745533wrb.282.1647619522130;
+        Fri, 18 Mar 2022 09:05:22 -0700 (PDT)
+Received: from elementary ([94.73.33.246])
+        by smtp.gmail.com with ESMTPSA id 14-20020a5d47ae000000b00203f9af38f2sm1582990wrb.94.2022.03.18.09.05.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Mar 2022 08:25:55 -0700 (PDT)
-Date: Fri, 18 Mar 2022 09:25:52 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Paul Menzel
- <pmenzel@molgen.mpg.de>, James Turner
- <linuxkernel.foss@dmarc-none.turner.link>, Xinhui Pan <Xinhui.Pan@amd.com>,
- regressions@lists.linux.dev, kvm@vger.kernel.org, Greg KH
- <gregkh@linuxfoundation.org>, Lijo Lazar <lijo.lazar@amd.com>, LKML
- <linux-kernel@vger.kernel.org>, amd-gfx list
- <amd-gfx@lists.freedesktop.org>, Alexander Deucher
- <Alexander.Deucher@amd.com>, Christian =?UTF-8?B?S8O2bmln?=
- <Christian.Koenig@amd.com>
-Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
- PCI-passed-through to Windows VM
-Message-ID: <20220318092552.518a50ef.alex.williamson@redhat.com>
-In-Reply-To: <CADnq5_OE7JpffYggKsu92DAjur1CCSqZQ7LbMqcfmAk68FerDA@mail.gmail.com>
-References: <87ee57c8fu.fsf@turner.link>
-	<87sftfqwlx.fsf@dmarc-none.turner.link>
-	<BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
-	<87ee4wprsx.fsf@turner.link>
-	<4b3ed7f6-d2b6-443c-970e-d963066ebfe3@amd.com>
-	<87pmo8r6ob.fsf@turner.link>
-	<5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
-	<CADnq5_MCKTLOfWKWvi94Q9-d5CGdWBoWVxEYL3YXOpMiPnLOyg@mail.gmail.com>
-	<87pmnnpmh5.fsf@dmarc-none.turner.link>
-	<CADnq5_NG_dQCYwqHM0umjTMg5Uud6zC4=MiscH91Y9v7mW9bJA@mail.gmail.com>
-	<092b825a-10ff-e197-18a1-d3e3a097b0e3@leemhuis.info>
-	<877d96to55.fsf@dmarc-none.turner.link>
-	<87lexdw8gd.fsf@turner.link>
-	<d541b534-8b83-b566-56eb-ea8baa7c998e@leemhuis.info>
-	<40b3084a-11b8-0962-4b33-34b56d3a87a3@molgen.mpg.de>
-	<bc714e87-d1dc-cdda-5a29-25820faaff40@leemhuis.info>
-	<20220318084625.27d42a51.alex.williamson@redhat.com>
-	<CADnq5_OE7JpffYggKsu92DAjur1CCSqZQ7LbMqcfmAk68FerDA@mail.gmail.com>
-Organization: Red Hat
+        Fri, 18 Mar 2022 09:05:21 -0700 (PDT)
+Date: Fri, 18 Mar 2022 17:05:18 +0100
+From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	linux-input@vger.kernel.org,
+	Peter Hutterer <peter.hutterer@who-t.net>,
+	Jiri Kosina <jkosina@suse.cz>, stable@vger.kernel.org,
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION] Right touchpad button disabled on Dell 7750
+Message-ID: <20220318160518.GA2950@elementary>
+References: <s5htubv32s8.wl-tiwai@suse.de>
+ <20220318130740.GA33535@elementary>
+ <s5hlex72yno.wl-tiwai@suse.de>
+ <CAO-hwJK8QMjYhQAC8tp7hLWZjSB3JMBJXgpKmFZRSEqPUn3_iw@mail.gmail.com>
+ <s5hh77v2uov.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=alex.williamson@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <s5hh77v2uov.wl-tiwai@suse.de>
 
-On Fri, 18 Mar 2022 11:06:00 -0400
-Alex Deucher <alexdeucher@gmail.com> wrote:
-
-> On Fri, Mar 18, 2022 at 10:46 AM Alex Williamson
-> <alex.williamson@redhat.com> wrote:
-> >
-> > On Fri, 18 Mar 2022 08:01:31 +0100
-> > Thorsten Leemhuis <regressions@leemhuis.info> wrote:
-> >  
-> > > On 18.03.22 06:43, Paul Menzel wrote:  
-> > > >
-> > > > Am 17.03.22 um 13:54 schrieb Thorsten Leemhuis:  
-> > > >> On 13.03.22 19:33, James Turner wrote:  
-> > > >>>  
-> > > >>>> My understanding at this point is that the root problem is probably
-> > > >>>> not in the Linux kernel but rather something else (e.g. the machine
-> > > >>>> firmware or AMD Windows driver) and that the change in f9b7f3703ff9
-> > > >>>> ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)") simply
-> > > >>>> exposed the underlying problem.  
-> > > >>
-> > > >> FWIW: that in the end is irrelevant when it comes to the Linux kernel's
-> > > >> 'no regressions' rule. For details see:
-> > > >>
-> > > >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/admin-guide/reporting-regressions.rst
-> > > >>
-> > > >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/process/handling-regressions.rst
-> > > >>
-> > > >>
-> > > >> That being said: sometimes for the greater good it's better to not
-> > > >> insist on that. And I guess that might be the case here.  
-> > > >
-> > > > But who decides that?  
-> > >
-> > > In the end afaics: Linus. But he can't watch each and every discussion,
-> > > so it partly falls down to people discussing a regression, as they can
-> > > always decide to get him involved in case they are unhappy with how a
-> > > regression is handled. That obviously includes me in this case. I simply
-> > > use my best judgement in such situations. I'm still undecided if that
-> > > path is appropriate here, that's why I wrote above to see what James
-> > > would say, as he afaics was the only one that reported this regression.
-> > >  
-> > > > Running stuff in a virtual machine is not that uncommon.  
-> > >
-> > > No, it's about passing through a GPU to a VM, which is a lot less common
-> > > -- and afaics an area where blacklisting GPUs on the host to pass them
-> > > through is not uncommon (a quick internet search confirmed that, but I
-> > > might be wrong there).  
-> >
-> > Right, interference from host drivers and pre-boot environments is
-> > always a concern with GPU assignment in particular.  AMD GPUs have a
-> > long history of poor behavior relative to things like PCI secondary bus
-> > resets which we use to try to get devices to clean, reusable states for
-> > assignment.  Here a device is being bound to a host driver that
-> > initiates some sort of power control, unbound from that driver and
-> > exposed to new drivers far beyond the scope of the kernel's regression
-> > policy.  Perhaps it's possible to undo such power control when
-> > unbinding the device, but it's not necessarily a given that such a
-> > thing is possible for this device without a cold reset.
-> >
-> > IMO, it's not fair to restrict the kernel from such advancements.  If
-> > the use case is within a VM, don't bind host drivers.  It's difficult
-> > to make promises when dynamically switching between host and userspace
-> > drivers for devices that don't have functional reset mechanisms.
-> > Thanks,  
+On Fri, Mar 18, 2022 at 03:37:20PM +0100, Takashi Iwai wrote:
+> So is it like below?  I'll build another kernel with that.
 > 
-> Additionally, operating the isolated device in a VM on a constrained
-> environment like a laptop may have other adverse side effects.  The
-> driver in the guest would ideally know that this is a laptop and needs
-> to properly interact with APCI to handle power management on the
-> device.  If that is not the case, the driver in the guest may end up
-> running the device out of spec with what the platform supports.  It's
-> also likely to break suspend and resume, especially on systems which
-> use S0ix since the firmware will generally only turn off certain power
-> rails if all of the devices on the rails have been put into the proper
-> state.  That state may vary depending on the platform requirements.
+> 
+> Thanks!
+> 
+> Takashi
+> 
+> -- 8< --
+> From: José Expósito <jose.exposito89@gmail.com>
+> Subject: [PATCH] HID: multitouch: fix Dell Precision 7550 and 7750 button type
+> 
+> The touchpad present in the Dell Precision 7550 and 7750 laptops
+> reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
+> the device is not a clickpad, it is a touchpad with physical buttons.
+> 
+> In order to fix this issue, a quirk for the device was introduced in
+> libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
+> 
+> 	[Precision 7x50 Touchpad]
+> 	MatchBus=i2c
+> 	MatchUdevType=touchpad
+> 	MatchDMIModalias=dmi:*svnDellInc.:pnPrecision7?50*
+> 	AttrInputPropDisable=INPUT_PROP_BUTTONPAD
+> 
+> However, because of the change introduced in 37ef4c19b4 ("Input: clear
+> BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
+> anymore breaking the device right click button.
+> 
+> In order to fix the issue, create a quirk for the device forcing its
+> button type to touchpad regardless of the value reported by the
+> firmware.
+> 
+> [1] https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481
+> [2] https://bugzilla.redhat.com/show_bug.cgi?id=1868789
+> 
+> [ modified MT_CLS_BUTTONTYPE_TOUCHPAD quirk bits to base on MT_CLS_WIN8
+>   as suggested by Benjamin -- tiwai ]
+> 
+> Fixes: 37ef4c19b4 ("Input: clear BTN_RIGHT/MIDDLE on buttonpads")
+> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> 
+> ---
+>  drivers/hid/hid-ids.h        |    3 +++
+>  drivers/hid/hid-multitouch.c |   20 ++++++++++++++++++++
+>  2 files changed, 23 insertions(+)
+> 
+> --- a/drivers/hid/hid-ids.h
+> +++ b/drivers/hid/hid-ids.h
+> @@ -285,6 +285,9 @@
+>  
+>  #define USB_VENDOR_ID_CIDC		0x1677
+>  
+> +#define USB_VENDOR_ID_CIRQUE_CORP		0x0488
+> +#define USB_DEVICE_ID_DELL_PRECISION_7X50	0x120A
+> +
+>  #define USB_VENDOR_ID_CJTOUCH		0x24b8
+>  #define USB_DEVICE_ID_CJTOUCH_MULTI_TOUCH_0020	0x0020
+>  #define USB_DEVICE_ID_CJTOUCH_MULTI_TOUCH_0040	0x0040
+> --- a/drivers/hid/hid-multitouch.c
+> +++ b/drivers/hid/hid-multitouch.c
+> @@ -71,6 +71,7 @@ MODULE_LICENSE("GPL");
+>  #define MT_QUIRK_SEPARATE_APP_REPORT	BIT(19)
+>  #define MT_QUIRK_FORCE_MULTI_INPUT	BIT(20)
+>  #define MT_QUIRK_DISABLE_WAKEUP		BIT(21)
+> +#define MT_QUIRK_BUTTONTYPE_TOUCHPAD	BIT(22)
+>  
+>  #define MT_INPUTMODE_TOUCHSCREEN	0x02
+>  #define MT_INPUTMODE_TOUCHPAD		0x03
+> @@ -194,6 +195,7 @@ static void mt_post_parse(struct mt_devi
+>  #define MT_CLS_WIN_8_FORCE_MULTI_INPUT		0x0015
+>  #define MT_CLS_WIN_8_DISABLE_WAKEUP		0x0016
+>  #define MT_CLS_WIN_8_NO_STICKY_FINGERS		0x0017
+> +#define MT_CLS_BUTTONTYPE_TOUCHPAD		0x0018
+>  
+>  /* vendor specific classes */
+>  #define MT_CLS_3M				0x0101
+> @@ -302,6 +304,15 @@ static const struct mt_class mt_classes[
+>  			MT_QUIRK_CONTACT_CNT_ACCURATE |
+>  			MT_QUIRK_WIN8_PTP_BUTTONS,
+>  		.export_all_inputs = true },
+> +	{ .name = MT_CLS_BUTTONTYPE_TOUCHPAD,
+> +		.quirks = MT_QUIRK_ALWAYS_VALID |
+> +			MT_QUIRK_IGNORE_DUPLICATES |
+> +			MT_QUIRK_HOVERING |
+> +			MT_QUIRK_CONTACT_CNT_ACCURATE |
+> +			MT_QUIRK_STICKY_FINGERS |
+> +			MT_QUIRK_WIN8_PTP_BUTTONS |,
+> +			MT_QUIRK_BUTTONTYPE_TOUCHPAD,
+> +		.export_all_inputs = true },
+>  
+>  	/*
+>  	 * vendor specific classes
+> @@ -1286,6 +1297,9 @@ static int mt_touch_input_configured(str
+>  	    (app->buttons_count == 1))
+>  		td->is_buttonpad = true;
+>  
+> +	if (app->quirks & MT_QUIRK_BUTTONTYPE_TOUCHPAD)
+> +		td->is_buttonpad = false;
+> +
+>  	if (td->is_buttonpad)
+>  		__set_bit(INPUT_PROP_BUTTONPAD, input->propbit);
+>  
+> @@ -1875,6 +1889,12 @@ static const struct hid_device_id mt_dev
+>  		MT_USB_DEVICE(USB_VENDOR_ID_CHUNGHWAT,
+>  			USB_DEVICE_ID_CHUNGHWAT_MULTITOUCH) },
+>  
+> +	/* Cirque Corp (Dell Precision 7550 and 7750 touchpad) */
+> +	{ .driver_data = MT_CLS_BUTTONTYPE_TOUCHPAD,
+> +		HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+> +			USB_VENDOR_ID_CIRQUE_CORP,
+> +			USB_DEVICE_ID_DELL_PRECISION_7X50) },
+> +
+>  	/* CJTouch panels */
+>  	{ .driver_data = MT_CLS_NSMU,
+>  		MT_USB_DEVICE(USB_VENDOR_ID_CJTOUCH,
 
-Good point, devices with platform dependencies to manage thermal
-budgets, etc. should be considered "use at your own risk" relative to
-device assignment currently.  Thanks,
 
-Alex
+Yes, that is the correct patch. The original reporter just emailed me
+and confirmed that the patch works and that the class used by the
+device is MT_CLS_WIN_8, as Benjamin pointed out.
 
+I'll wait a couple of days before sending the patch to the mailing list
+so the other users can test it as well.
+
+Thanks for the quick response,
+Jose
