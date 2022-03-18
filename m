@@ -1,97 +1,145 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820AB4C7E
-	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 14:49:06 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nVDua-0000Qy-GP; Fri, 18 Mar 2022 15:49:04 +0100
-Message-ID: <0a0b0127-8e5d-d6ca-52db-bf9937d6d887@leemhuis.info>
-Date: Fri, 18 Mar 2022 15:49:04 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143F54C7E
+	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 15:06:11 +0000 (UTC)
+Received: by mail-oo1-f44.google.com with SMTP id g5-20020a4ae885000000b003240bc9b2afso10428721ooe.10
+        for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 08:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6OR3tTDRtWYJqdtBS5gkgMwjYTzt3PtVD/TCzwS5B3E=;
+        b=P6GyfmqXNrgLS9WdnRanGwu33FltrH4r1jDcHE+8Pm2fMu+V0ZfmQcJEcQJ4Xn0Oh2
+         hYp6oCAGTjP+sec69mqyOjyu9h87I0afMtQYY7AFCvStkbogH6y35FjZ8wbsM6uL6tiN
+         EO9ppgYqsiPR0FXAAfsRwBuqAK5zzb9yLItEVZR5jI96x92SLjW1rFcVLB8LzbyEeObc
+         KTtyYx1w2rAqy8QajRbXZt0GvqvQmgcXnidrH6mTAX3Pj9mSNcRRMrCmPv8OtDXP1HsK
+         NBLLv+ykOEZDRaGB55eGGD+H6DWmF3jdw5fml/GBaoOOPYcpfr/mU+4V71PbbHAmPSGk
+         5AEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6OR3tTDRtWYJqdtBS5gkgMwjYTzt3PtVD/TCzwS5B3E=;
+        b=0DWtFrwaBuMgr7b0tfczGVczf/ZL1itOndq7wbBQczqrigKxI8neriVqKNu6oIDfr0
+         SIqzCw/dMWhjgjvUqPDL/6brk+XC0tlvZDBsR5jJLuvRQGkRXW8cXmNKAWyYg9qTY/Vq
+         PDGxM0rwKMP4HKQEK1P5tfF2YdC+3+rs2A9i0j7qB4acV2HsLKjnmUJH1mKIkVfiVZSy
+         JwiLShJ4/ksULmiol8crQhF1yYKjGUt8bOWOuXUO6ScxHEvvez41xQ1IQyaiPmC5SqYN
+         ERN8So7unPXxsGnyfJ7NBuc6dy9iB66m3Mew6kshxhzJqg02ZBHNrPm3KfoKD+HMpFFm
+         u6Ow==
+X-Gm-Message-State: AOAM532S7QX0hxx18JRUzKzqIbQ0LOSxn2hsV2vI+EXhefbrQJoMVfRf
+	sj3QJR04lNFbhsBOg7lovdymAudCXoRBJEd/K+4=
+X-Google-Smtp-Source: ABdhPJxeq4SFYPT+zc21L6QpSflRysAOEA4Q2ctuTFK0PU5pgvaGdy23xjOP5wjtk9PpnhxW7e7FKuijutGY7E3iWLc=
+X-Received: by 2002:a05:6870:630c:b0:da:b3f:324d with SMTP id
+ s12-20020a056870630c00b000da0b3f324dmr3846119oao.253.1647615971082; Fri, 18
+ Mar 2022 08:06:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-US
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Bug 215679 - NVMe/writeback wb_workfn/blocked for more than 30
- seconds
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647614946;b151d132;
-X-HE-SMSGID: 1nVDua-0000Qy-GP
+References: <87ee57c8fu.fsf@turner.link> <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
+ <87czkk1pmt.fsf@dmarc-none.turner.link> <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
+ <87sftfqwlx.fsf@dmarc-none.turner.link> <BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
+ <87ee4wprsx.fsf@turner.link> <4b3ed7f6-d2b6-443c-970e-d963066ebfe3@amd.com>
+ <87pmo8r6ob.fsf@turner.link> <5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
+ <CADnq5_MCKTLOfWKWvi94Q9-d5CGdWBoWVxEYL3YXOpMiPnLOyg@mail.gmail.com>
+ <87pmnnpmh5.fsf@dmarc-none.turner.link> <CADnq5_NG_dQCYwqHM0umjTMg5Uud6zC4=MiscH91Y9v7mW9bJA@mail.gmail.com>
+ <092b825a-10ff-e197-18a1-d3e3a097b0e3@leemhuis.info> <877d96to55.fsf@dmarc-none.turner.link>
+ <87lexdw8gd.fsf@turner.link> <d541b534-8b83-b566-56eb-ea8baa7c998e@leemhuis.info>
+ <40b3084a-11b8-0962-4b33-34b56d3a87a3@molgen.mpg.de> <bc714e87-d1dc-cdda-5a29-25820faaff40@leemhuis.info>
+ <20220318084625.27d42a51.alex.williamson@redhat.com>
+In-Reply-To: <20220318084625.27d42a51.alex.williamson@redhat.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Fri, 18 Mar 2022 11:06:00 -0400
+Message-ID: <CADnq5_OE7JpffYggKsu92DAjur1CCSqZQ7LbMqcfmAk68FerDA@mail.gmail.com>
+Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
+ PCI-passed-through to Windows VM
+To: Alex Williamson <alex.williamson@redhat.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Paul Menzel <pmenzel@molgen.mpg.de>, 
+	James Turner <linuxkernel.foss@dmarc-none.turner.link>, Xinhui Pan <Xinhui.Pan@amd.com>, 
+	regressions@lists.linux.dev, kvm@vger.kernel.org, 
+	Greg KH <gregkh@linuxfoundation.org>, Lijo Lazar <lijo.lazar@amd.com>, 
+	LKML <linux-kernel@vger.kernel.org>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
+	Alexander Deucher <Alexander.Deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <Christian.Koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, this is your Linux kernel regression tracker speaking.
+On Fri, Mar 18, 2022 at 10:46 AM Alex Williamson
+<alex.williamson@redhat.com> wrote:
+>
+> On Fri, 18 Mar 2022 08:01:31 +0100
+> Thorsten Leemhuis <regressions@leemhuis.info> wrote:
+>
+> > On 18.03.22 06:43, Paul Menzel wrote:
+> > >
+> > > Am 17.03.22 um 13:54 schrieb Thorsten Leemhuis:
+> > >> On 13.03.22 19:33, James Turner wrote:
+> > >>>
+> > >>>> My understanding at this point is that the root problem is probably
+> > >>>> not in the Linux kernel but rather something else (e.g. the machine
+> > >>>> firmware or AMD Windows driver) and that the change in f9b7f3703ff9
+> > >>>> ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)") simply
+> > >>>> exposed the underlying problem.
+> > >>
+> > >> FWIW: that in the end is irrelevant when it comes to the Linux kernel's
+> > >> 'no regressions' rule. For details see:
+> > >>
+> > >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/admin-guide/reporting-regressions.rst
+> > >>
+> > >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/process/handling-regressions.rst
+> > >>
+> > >>
+> > >> That being said: sometimes for the greater good it's better to not
+> > >> insist on that. And I guess that might be the case here.
+> > >
+> > > But who decides that?
+> >
+> > In the end afaics: Linus. But he can't watch each and every discussion,
+> > so it partly falls down to people discussing a regression, as they can
+> > always decide to get him involved in case they are unhappy with how a
+> > regression is handled. That obviously includes me in this case. I simply
+> > use my best judgement in such situations. I'm still undecided if that
+> > path is appropriate here, that's why I wrote above to see what James
+> > would say, as he afaics was the only one that reported this regression.
+> >
+> > > Running stuff in a virtual machine is not that uncommon.
+> >
+> > No, it's about passing through a GPU to a VM, which is a lot less common
+> > -- and afaics an area where blacklisting GPUs on the host to pass them
+> > through is not uncommon (a quick internet search confirmed that, but I
+> > might be wrong there).
+>
+> Right, interference from host drivers and pre-boot environments is
+> always a concern with GPU assignment in particular.  AMD GPUs have a
+> long history of poor behavior relative to things like PCI secondary bus
+> resets which we use to try to get devices to clean, reusable states for
+> assignment.  Here a device is being bound to a host driver that
+> initiates some sort of power control, unbound from that driver and
+> exposed to new drivers far beyond the scope of the kernel's regression
+> policy.  Perhaps it's possible to undo such power control when
+> unbinding the device, but it's not necessarily a given that such a
+> thing is possible for this device without a cold reset.
+>
+> IMO, it's not fair to restrict the kernel from such advancements.  If
+> the use case is within a VM, don't bind host drivers.  It's difficult
+> to make promises when dynamically switching between host and userspace
+> drivers for devices that don't have functional reset mechanisms.
+> Thanks,
 
-About a week ago a regression was reported to bugzilla.kernel.org that
-seems to be handled there already, nevertheless I'd like to add to the
-tracking to ensure it's not forgotten.
+Additionally, operating the isolated device in a VM on a constrained
+environment like a laptop may have other adverse side effects.  The
+driver in the guest would ideally know that this is a laptop and needs
+to properly interact with APCI to handle power management on the
+device.  If that is not the case, the driver in the guest may end up
+running the device out of spec with what the platform supports.  It's
+also likely to break suspend and resume, especially on systems which
+use S0ix since the firmware will generally only turn off certain power
+rails if all of the devices on the rails have been put into the proper
+state.  That state may vary depending on the platform requirements.
 
-#regzbot introduced: 4f5022453acd0f7b28012
-#regzbot from: Imre Deak <imre.deak@intel.com>
-#regzbot title: nvme: NVMe/writeback wb_workfn/blocked for more than 30
-seconds
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215679
+Alex
 
-Quote:
-
-> 
-> After system suspend/resume filesystem IO will stall, producing a 'kworker blocked for more than x sec" in dmesg, recovering after a long delay. See the attached dmesg-suspend-resume-nvme-stuck.txt. I also noticed the same issue happening right after booting or after runtime suspend transitions.
-> 
-> The same issue also happens on multiple SKL systems in the i915 team's CI farm, see:
-> 
-> https://gitlab.freedesktop.org/drm/intel/-/issues/4547
-> 
-> I bisected the problem to
-> commit 4f5022453acd0f7b28012e20b7d048470f129894
-> Author: Jens Axboe <axboe@kernel.dk>
-> Date:   Mon Oct 18 08:45:39 2021 -0600
-> 
->     nvme: wire up completion batching for the IRQ path
-> 
-> By reverting it on top of 5.17.0-rc7, I can't reproduce the problem. Attached   dmesg-suspend-resume-nvme-ok.txt with the revert, captured after a few suspend/resume.
-
-
-See the ticket for details, there were a few replies already.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
-
--- 
-Additional information about regzbot:
-
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-CC the regression list and tell regzbot about the issue, as that ensures
-the regression makes it onto the radar of the Linux kernel's regression
-tracker -- that's in your interest, as it ensures your report won't fall
-through the cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include 'Link:' tag in the patch descriptions pointing to all reports
-about the issue. This has been expected from developers even before
-regzbot showed up for reasons explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'.
+>
+> Alex
+>
