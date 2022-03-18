@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779054C7E
-	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 14:47:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 820AB4C7E
+	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 14:49:06 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nVDsx-0006gp-Jp; Fri, 18 Mar 2022 15:47:23 +0100
-Message-ID: <1c913c49-ec49-99b7-8ddb-9f6045a4c50d@leemhuis.info>
-Date: Fri, 18 Mar 2022 15:47:23 +0100
+	id 1nVDua-0000Qy-GP; Fri, 18 Mar 2022 15:49:04 +0100
+Message-ID: <0a0b0127-8e5d-d6ca-52db-bf9937d6d887@leemhuis.info>
+Date: Fri, 18 Mar 2022 15:49:04 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,35 +16,48 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [REGRESSION] Right touchpad button disabled on Dell 7750
- #forregzbot
 Content-Language: en-US
-To: regressions@lists.linux.dev
-References: <s5htubv32s8.wl-tiwai@suse.de>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <s5htubv32s8.wl-tiwai@suse.de>
+Subject: Bug 215679 - NVMe/writeback wb_workfn/blocked for more than 30
+ seconds
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647614845;a8f5d3bf;
-X-HE-SMSGID: 1nVDsx-0006gp-Jp
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647614946;b151d132;
+X-HE-SMSGID: 1nVDua-0000Qy-GP
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Hi, this is your Linux kernel regression tracker speaking.
 
-Hi, this is your Linux kernel regression tracker. Top-posting for once,
-to make this easily accessible to everyone.
+About a week ago a regression was reported to bugzilla.kernel.org that
+seems to be handled there already, nevertheless I'd like to add to the
+tracking to ensure it's not forgotten.
 
-Seems below regression soon will be getting fixed, but with the nearing
-final I want to have this in the tracking to make sure everyone is aware
-of it:
+#regzbot introduced: 4f5022453acd0f7b28012
+#regzbot from: Imre Deak <imre.deak@intel.com>
+#regzbot title: nvme: NVMe/writeback wb_workfn/blocked for more than 30
+seconds
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215679
 
-#regzbot ^introduced 37ef4c19b4c659926ce65
-#regzbot title HID: multitouch: right touchpad button is disabled on
-recent kernels
-#regzbot ignore-activity
-#regzbot link:
-https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/726#note_1303623
+Quote:
+
+> 
+> After system suspend/resume filesystem IO will stall, producing a 'kworker blocked for more than x sec" in dmesg, recovering after a long delay. See the attached dmesg-suspend-resume-nvme-stuck.txt. I also noticed the same issue happening right after booting or after runtime suspend transitions.
+> 
+> The same issue also happens on multiple SKL systems in the i915 team's CI farm, see:
+> 
+> https://gitlab.freedesktop.org/drm/intel/-/issues/4547
+> 
+> I bisected the problem to
+> commit 4f5022453acd0f7b28012e20b7d048470f129894
+> Author: Jens Axboe <axboe@kernel.dk>
+> Date:   Mon Oct 18 08:45:39 2021 -0600
+> 
+>     nvme: wire up completion batching for the IRQ path
+> 
+> By reverting it on top of 5.17.0-rc7, I can't reproduce the problem. Attached   dmesg-suspend-resume-nvme-ok.txt with the revert, captured after a few suspend/resume.
+
+
+See the ticket for details, there were a few replies already.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -56,33 +69,29 @@ that's not the case here; if you think it is, don't hesitate to tell me
 in a public reply, it's in everyone's interest to set the public record
 straight.
 
-On 18.03.22 12:42, Takashi Iwai wrote:
-> Hi,
-> 
-> we received a bug report about the regression of the touchpad on Dell
-> 7750 laptop, the right touchpad button is disabled on recent kernels:
->   https://bugzilla.suse.com/show_bug.cgi?id=1197243
-> 
-> Note that it's a physical button, not a virtual clickpad button.
-> 
-> The regression seems introduced by the upstream commit
-> 37ef4c19b4c659926ce65a7ac709ceaefb211c40 ("Input: clear
-> BTN_RIGHT/MIDDLE on buttonpads") that was backported to stable 5.16.x
-> kernel.
-> 
-> The device is managed by hid-multitouch driver, and the further
-> investigation revealed that it's rather an incorrectly recognized
-> buttonpad property; namely, ID_DG_BUTTONTYPE reports it being 0 =
-> clickable touchpad although it's not.  I built a test kernel to ignore
-> this check and it was confirmed to make the right button working again
-> by the reporter.
-> 
-> Is this check really correct in general?  Or do we need some
-> device-specific quirk?
-> 
-> 
-> thanks,
-> 
-> Takashi
-> 
-> 
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
