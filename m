@@ -1,145 +1,175 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143F54C7E
-	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 15:06:11 +0000 (UTC)
-Received: by mail-oo1-f44.google.com with SMTP id g5-20020a4ae885000000b003240bc9b2afso10428721ooe.10
-        for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 08:06:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6OR3tTDRtWYJqdtBS5gkgMwjYTzt3PtVD/TCzwS5B3E=;
-        b=P6GyfmqXNrgLS9WdnRanGwu33FltrH4r1jDcHE+8Pm2fMu+V0ZfmQcJEcQJ4Xn0Oh2
-         hYp6oCAGTjP+sec69mqyOjyu9h87I0afMtQYY7AFCvStkbogH6y35FjZ8wbsM6uL6tiN
-         EO9ppgYqsiPR0FXAAfsRwBuqAK5zzb9yLItEVZR5jI96x92SLjW1rFcVLB8LzbyEeObc
-         KTtyYx1w2rAqy8QajRbXZt0GvqvQmgcXnidrH6mTAX3Pj9mSNcRRMrCmPv8OtDXP1HsK
-         NBLLv+ykOEZDRaGB55eGGD+H6DWmF3jdw5fml/GBaoOOPYcpfr/mU+4V71PbbHAmPSGk
-         5AEg==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88E94C7E
+	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 15:25:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1647617157;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YgcqHRxTmDCbGkiSAVOP1j9BkIjlIyVpT+jmLkaAADU=;
+	b=cNV2o/LG+1LpZ5MTmmssHJBDtAQQ2GXeeVUdjQ0rUYy6WVqkIkTMaYYrxwVSmNVRWVtOtn
+	MzxfjE3hV2YsVf7kUXDKj0yTO5mKkJD8ngq1D7BqotEHY4fgLLQR6V9CenuoODT2qdrkE7
+	YQmad2lRCqTWlN6j5AuOH+Xds7fQFk8=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-398-6teYH_HZM5mbnE0_caM4-A-1; Fri, 18 Mar 2022 11:25:56 -0400
+X-MC-Unique: 6teYH_HZM5mbnE0_caM4-A-1
+Received: by mail-il1-f198.google.com with SMTP id f18-20020a926a12000000b002be48b02bc6so4966407ilc.17
+        for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 08:25:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6OR3tTDRtWYJqdtBS5gkgMwjYTzt3PtVD/TCzwS5B3E=;
-        b=0DWtFrwaBuMgr7b0tfczGVczf/ZL1itOndq7wbBQczqrigKxI8neriVqKNu6oIDfr0
-         SIqzCw/dMWhjgjvUqPDL/6brk+XC0tlvZDBsR5jJLuvRQGkRXW8cXmNKAWyYg9qTY/Vq
-         PDGxM0rwKMP4HKQEK1P5tfF2YdC+3+rs2A9i0j7qB4acV2HsLKjnmUJH1mKIkVfiVZSy
-         JwiLShJ4/ksULmiol8crQhF1yYKjGUt8bOWOuXUO6ScxHEvvez41xQ1IQyaiPmC5SqYN
-         ERN8So7unPXxsGnyfJ7NBuc6dy9iB66m3Mew6kshxhzJqg02ZBHNrPm3KfoKD+HMpFFm
-         u6Ow==
-X-Gm-Message-State: AOAM532S7QX0hxx18JRUzKzqIbQ0LOSxn2hsV2vI+EXhefbrQJoMVfRf
-	sj3QJR04lNFbhsBOg7lovdymAudCXoRBJEd/K+4=
-X-Google-Smtp-Source: ABdhPJxeq4SFYPT+zc21L6QpSflRysAOEA4Q2ctuTFK0PU5pgvaGdy23xjOP5wjtk9PpnhxW7e7FKuijutGY7E3iWLc=
-X-Received: by 2002:a05:6870:630c:b0:da:b3f:324d with SMTP id
- s12-20020a056870630c00b000da0b3f324dmr3846119oao.253.1647615971082; Fri, 18
- Mar 2022 08:06:11 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=YgcqHRxTmDCbGkiSAVOP1j9BkIjlIyVpT+jmLkaAADU=;
+        b=LWCORcN61jYwUgpF7BkPjLFEALiqubMgQwLrZxsa1+GcrhoOAF7pIFa+a45jpFUkdm
+         1BXOZwAuv0z9oFLyejUOzThYWiKll57dRv2iQh9bDjJRN7Eagar7ZxjhXQTwFUXUV7fb
+         q4YD2CQT33LkGxqayDGh3u/YdwnAUtW3QQxehduTllupnvStHE617j2Dizd+kP1faNv0
+         firQmBo8Wl26Fbgo9gV8UpG/9nm71ASChtqZV7PTczEVf6ySG42oQwk0a/kw5MuN3Rfx
+         MSxPB6sqSUKCPVcH+RS/i5/dqSJFEPQC6M2g+u09JW+BppoieghwSMY7DruUaonhzR95
+         b+yA==
+X-Gm-Message-State: AOAM533SevCyRgPVbCsE0g46qG/kcsRtDyGgbblpzmZ+KkTXwV/EXsys
+	tOxeJpVRgmD64dWm4Yua0raNu0VMKXmiiH2WX09wXZpmXZ12l48dVvVGyUx7ZRUOtUSoF4h5bOI
+	5ggdgXuMH7Go+iSNu2bKOUFg=
+X-Received: by 2002:a5d:8714:0:b0:636:13bb:bc89 with SMTP id u20-20020a5d8714000000b0063613bbbc89mr4675386iom.126.1647617155693;
+        Fri, 18 Mar 2022 08:25:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwcyHxS7oTYC5euABr1WRzoAYAf/D3IPiqrWGqWvUPQt0yOjkh75RYfZwdgiryk5BgacuoZcA==
+X-Received: by 2002:a5d:8714:0:b0:636:13bb:bc89 with SMTP id u20-20020a5d8714000000b0063613bbbc89mr4675361iom.126.1647617155387;
+        Fri, 18 Mar 2022 08:25:55 -0700 (PDT)
+Received: from redhat.com ([98.55.18.59])
+        by smtp.gmail.com with ESMTPSA id 201-20020a6b14d2000000b00640df82a01csm4447795iou.3.2022.03.18.08.25.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Mar 2022 08:25:55 -0700 (PDT)
+Date: Fri, 18 Mar 2022 09:25:52 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Paul Menzel
+ <pmenzel@molgen.mpg.de>, James Turner
+ <linuxkernel.foss@dmarc-none.turner.link>, Xinhui Pan <Xinhui.Pan@amd.com>,
+ regressions@lists.linux.dev, kvm@vger.kernel.org, Greg KH
+ <gregkh@linuxfoundation.org>, Lijo Lazar <lijo.lazar@amd.com>, LKML
+ <linux-kernel@vger.kernel.org>, amd-gfx list
+ <amd-gfx@lists.freedesktop.org>, Alexander Deucher
+ <Alexander.Deucher@amd.com>, Christian =?UTF-8?B?S8O2bmln?=
+ <Christian.Koenig@amd.com>
+Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
+ PCI-passed-through to Windows VM
+Message-ID: <20220318092552.518a50ef.alex.williamson@redhat.com>
+In-Reply-To: <CADnq5_OE7JpffYggKsu92DAjur1CCSqZQ7LbMqcfmAk68FerDA@mail.gmail.com>
+References: <87ee57c8fu.fsf@turner.link>
+	<87sftfqwlx.fsf@dmarc-none.turner.link>
+	<BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
+	<87ee4wprsx.fsf@turner.link>
+	<4b3ed7f6-d2b6-443c-970e-d963066ebfe3@amd.com>
+	<87pmo8r6ob.fsf@turner.link>
+	<5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
+	<CADnq5_MCKTLOfWKWvi94Q9-d5CGdWBoWVxEYL3YXOpMiPnLOyg@mail.gmail.com>
+	<87pmnnpmh5.fsf@dmarc-none.turner.link>
+	<CADnq5_NG_dQCYwqHM0umjTMg5Uud6zC4=MiscH91Y9v7mW9bJA@mail.gmail.com>
+	<092b825a-10ff-e197-18a1-d3e3a097b0e3@leemhuis.info>
+	<877d96to55.fsf@dmarc-none.turner.link>
+	<87lexdw8gd.fsf@turner.link>
+	<d541b534-8b83-b566-56eb-ea8baa7c998e@leemhuis.info>
+	<40b3084a-11b8-0962-4b33-34b56d3a87a3@molgen.mpg.de>
+	<bc714e87-d1dc-cdda-5a29-25820faaff40@leemhuis.info>
+	<20220318084625.27d42a51.alex.williamson@redhat.com>
+	<CADnq5_OE7JpffYggKsu92DAjur1CCSqZQ7LbMqcfmAk68FerDA@mail.gmail.com>
+Organization: Red Hat
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <87ee57c8fu.fsf@turner.link> <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
- <87czkk1pmt.fsf@dmarc-none.turner.link> <BYAPR12MB46140BE09E37244AE129C01A975C9@BYAPR12MB4614.namprd12.prod.outlook.com>
- <87sftfqwlx.fsf@dmarc-none.turner.link> <BYAPR12MB4614E2CFEDDDEAABBAB986A0975E9@BYAPR12MB4614.namprd12.prod.outlook.com>
- <87ee4wprsx.fsf@turner.link> <4b3ed7f6-d2b6-443c-970e-d963066ebfe3@amd.com>
- <87pmo8r6ob.fsf@turner.link> <5a68afe4-1e9e-c683-e06d-30afc2156f14@leemhuis.info>
- <CADnq5_MCKTLOfWKWvi94Q9-d5CGdWBoWVxEYL3YXOpMiPnLOyg@mail.gmail.com>
- <87pmnnpmh5.fsf@dmarc-none.turner.link> <CADnq5_NG_dQCYwqHM0umjTMg5Uud6zC4=MiscH91Y9v7mW9bJA@mail.gmail.com>
- <092b825a-10ff-e197-18a1-d3e3a097b0e3@leemhuis.info> <877d96to55.fsf@dmarc-none.turner.link>
- <87lexdw8gd.fsf@turner.link> <d541b534-8b83-b566-56eb-ea8baa7c998e@leemhuis.info>
- <40b3084a-11b8-0962-4b33-34b56d3a87a3@molgen.mpg.de> <bc714e87-d1dc-cdda-5a29-25820faaff40@leemhuis.info>
- <20220318084625.27d42a51.alex.williamson@redhat.com>
-In-Reply-To: <20220318084625.27d42a51.alex.williamson@redhat.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Fri, 18 Mar 2022 11:06:00 -0400
-Message-ID: <CADnq5_OE7JpffYggKsu92DAjur1CCSqZQ7LbMqcfmAk68FerDA@mail.gmail.com>
-Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
- PCI-passed-through to Windows VM
-To: Alex Williamson <alex.williamson@redhat.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Paul Menzel <pmenzel@molgen.mpg.de>, 
-	James Turner <linuxkernel.foss@dmarc-none.turner.link>, Xinhui Pan <Xinhui.Pan@amd.com>, 
-	regressions@lists.linux.dev, kvm@vger.kernel.org, 
-	Greg KH <gregkh@linuxfoundation.org>, Lijo Lazar <lijo.lazar@amd.com>, 
-	LKML <linux-kernel@vger.kernel.org>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
-	Alexander Deucher <Alexander.Deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <Christian.Koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=alex.williamson@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 18, 2022 at 10:46 AM Alex Williamson
-<alex.williamson@redhat.com> wrote:
->
-> On Fri, 18 Mar 2022 08:01:31 +0100
-> Thorsten Leemhuis <regressions@leemhuis.info> wrote:
->
-> > On 18.03.22 06:43, Paul Menzel wrote:
-> > >
-> > > Am 17.03.22 um 13:54 schrieb Thorsten Leemhuis:
-> > >> On 13.03.22 19:33, James Turner wrote:
-> > >>>
-> > >>>> My understanding at this point is that the root problem is probably
-> > >>>> not in the Linux kernel but rather something else (e.g. the machine
-> > >>>> firmware or AMD Windows driver) and that the change in f9b7f3703ff9
-> > >>>> ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)") simply
-> > >>>> exposed the underlying problem.
-> > >>
-> > >> FWIW: that in the end is irrelevant when it comes to the Linux kernel's
-> > >> 'no regressions' rule. For details see:
-> > >>
-> > >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/admin-guide/reporting-regressions.rst
-> > >>
-> > >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/process/handling-regressions.rst
-> > >>
-> > >>
-> > >> That being said: sometimes for the greater good it's better to not
-> > >> insist on that. And I guess that might be the case here.
-> > >
-> > > But who decides that?
-> >
-> > In the end afaics: Linus. But he can't watch each and every discussion,
-> > so it partly falls down to people discussing a regression, as they can
-> > always decide to get him involved in case they are unhappy with how a
-> > regression is handled. That obviously includes me in this case. I simply
-> > use my best judgement in such situations. I'm still undecided if that
-> > path is appropriate here, that's why I wrote above to see what James
-> > would say, as he afaics was the only one that reported this regression.
-> >
-> > > Running stuff in a virtual machine is not that uncommon.
-> >
-> > No, it's about passing through a GPU to a VM, which is a lot less common
-> > -- and afaics an area where blacklisting GPUs on the host to pass them
-> > through is not uncommon (a quick internet search confirmed that, but I
-> > might be wrong there).
->
-> Right, interference from host drivers and pre-boot environments is
-> always a concern with GPU assignment in particular.  AMD GPUs have a
-> long history of poor behavior relative to things like PCI secondary bus
-> resets which we use to try to get devices to clean, reusable states for
-> assignment.  Here a device is being bound to a host driver that
-> initiates some sort of power control, unbound from that driver and
-> exposed to new drivers far beyond the scope of the kernel's regression
-> policy.  Perhaps it's possible to undo such power control when
-> unbinding the device, but it's not necessarily a given that such a
-> thing is possible for this device without a cold reset.
->
-> IMO, it's not fair to restrict the kernel from such advancements.  If
-> the use case is within a VM, don't bind host drivers.  It's difficult
-> to make promises when dynamically switching between host and userspace
-> drivers for devices that don't have functional reset mechanisms.
-> Thanks,
+On Fri, 18 Mar 2022 11:06:00 -0400
+Alex Deucher <alexdeucher@gmail.com> wrote:
 
-Additionally, operating the isolated device in a VM on a constrained
-environment like a laptop may have other adverse side effects.  The
-driver in the guest would ideally know that this is a laptop and needs
-to properly interact with APCI to handle power management on the
-device.  If that is not the case, the driver in the guest may end up
-running the device out of spec with what the platform supports.  It's
-also likely to break suspend and resume, especially on systems which
-use S0ix since the firmware will generally only turn off certain power
-rails if all of the devices on the rails have been put into the proper
-state.  That state may vary depending on the platform requirements.
+> On Fri, Mar 18, 2022 at 10:46 AM Alex Williamson
+> <alex.williamson@redhat.com> wrote:
+> >
+> > On Fri, 18 Mar 2022 08:01:31 +0100
+> > Thorsten Leemhuis <regressions@leemhuis.info> wrote:
+> >  
+> > > On 18.03.22 06:43, Paul Menzel wrote:  
+> > > >
+> > > > Am 17.03.22 um 13:54 schrieb Thorsten Leemhuis:  
+> > > >> On 13.03.22 19:33, James Turner wrote:  
+> > > >>>  
+> > > >>>> My understanding at this point is that the root problem is probably
+> > > >>>> not in the Linux kernel but rather something else (e.g. the machine
+> > > >>>> firmware or AMD Windows driver) and that the change in f9b7f3703ff9
+> > > >>>> ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)") simply
+> > > >>>> exposed the underlying problem.  
+> > > >>
+> > > >> FWIW: that in the end is irrelevant when it comes to the Linux kernel's
+> > > >> 'no regressions' rule. For details see:
+> > > >>
+> > > >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/admin-guide/reporting-regressions.rst
+> > > >>
+> > > >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/process/handling-regressions.rst
+> > > >>
+> > > >>
+> > > >> That being said: sometimes for the greater good it's better to not
+> > > >> insist on that. And I guess that might be the case here.  
+> > > >
+> > > > But who decides that?  
+> > >
+> > > In the end afaics: Linus. But he can't watch each and every discussion,
+> > > so it partly falls down to people discussing a regression, as they can
+> > > always decide to get him involved in case they are unhappy with how a
+> > > regression is handled. That obviously includes me in this case. I simply
+> > > use my best judgement in such situations. I'm still undecided if that
+> > > path is appropriate here, that's why I wrote above to see what James
+> > > would say, as he afaics was the only one that reported this regression.
+> > >  
+> > > > Running stuff in a virtual machine is not that uncommon.  
+> > >
+> > > No, it's about passing through a GPU to a VM, which is a lot less common
+> > > -- and afaics an area where blacklisting GPUs on the host to pass them
+> > > through is not uncommon (a quick internet search confirmed that, but I
+> > > might be wrong there).  
+> >
+> > Right, interference from host drivers and pre-boot environments is
+> > always a concern with GPU assignment in particular.  AMD GPUs have a
+> > long history of poor behavior relative to things like PCI secondary bus
+> > resets which we use to try to get devices to clean, reusable states for
+> > assignment.  Here a device is being bound to a host driver that
+> > initiates some sort of power control, unbound from that driver and
+> > exposed to new drivers far beyond the scope of the kernel's regression
+> > policy.  Perhaps it's possible to undo such power control when
+> > unbinding the device, but it's not necessarily a given that such a
+> > thing is possible for this device without a cold reset.
+> >
+> > IMO, it's not fair to restrict the kernel from such advancements.  If
+> > the use case is within a VM, don't bind host drivers.  It's difficult
+> > to make promises when dynamically switching between host and userspace
+> > drivers for devices that don't have functional reset mechanisms.
+> > Thanks,  
+> 
+> Additionally, operating the isolated device in a VM on a constrained
+> environment like a laptop may have other adverse side effects.  The
+> driver in the guest would ideally know that this is a laptop and needs
+> to properly interact with APCI to handle power management on the
+> device.  If that is not the case, the driver in the guest may end up
+> running the device out of spec with what the platform supports.  It's
+> also likely to break suspend and resume, especially on systems which
+> use S0ix since the firmware will generally only turn off certain power
+> rails if all of the devices on the rails have been put into the proper
+> state.  That state may vary depending on the platform requirements.
+
+Good point, devices with platform dependencies to manage thermal
+budgets, etc. should be considered "use at your own risk" relative to
+device assignment currently.  Thanks,
 
 Alex
 
->
-> Alex
->
