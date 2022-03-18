@@ -1,17 +1,13 @@
-Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 481C97A
-	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 05:43:20 +0000 (UTC)
-Received: from [192.168.0.3] (ip5f5aef49.dynamic.kabel-deutschland.de [95.90.239.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 6552A61E64846;
-	Fri, 18 Mar 2022 06:43:11 +0100 (CET)
-Message-ID: <40b3084a-11b8-0962-4b33-34b56d3a87a3@molgen.mpg.de>
-Date: Fri, 18 Mar 2022 06:43:10 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890893D7B
+	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 07:01:36 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nV6c9-00066r-PZ; Fri, 18 Mar 2022 08:01:33 +0100
+Message-ID: <bc714e87-d1dc-cdda-5a29-25820faaff40@leemhuis.info>
+Date: Fri, 18 Mar 2022 08:01:31 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -19,11 +15,11 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
+ Thunderbird/91.5.0
 Subject: Re: [REGRESSION] Too-low frequency limit for AMD GPU
  PCI-passed-through to Windows VM
 Content-Language: en-US
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
+To: Paul Menzel <pmenzel@molgen.mpg.de>,
  James Turner <linuxkernel.foss@dmarc-none.turner.link>
 Cc: Xinhui Pan <Xinhui.Pan@amd.com>, regressions@lists.linux.dev,
  kvm@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
@@ -32,8 +28,7 @@ Cc: Xinhui Pan <Xinhui.Pan@amd.com>, regressions@lists.linux.dev,
  <Alexander.Deucher@amd.com>, Alex Williamson <alex.williamson@redhat.com>,
  Alex Deucher <alexdeucher@gmail.com>,
  =?UTF-8?Q?Christian_K=c3=b6nig?= <Christian.Koenig@amd.com>
-References: <87ee57c8fu.fsf@turner.link>
- <87a6ftk9qy.fsf@dmarc-none.turner.link> <87zgnp96a4.fsf@turner.link>
+References: <87ee57c8fu.fsf@turner.link> <87zgnp96a4.fsf@turner.link>
  <fc2b7593-db8f-091c-67a0-ae5ffce71700@leemhuis.info>
  <CADnq5_Nr5-FR2zP1ViVsD_ZMiW=UHC1wO8_HEGm26K_EG2KDoA@mail.gmail.com>
  <87czkk1pmt.fsf@dmarc-none.turner.link>
@@ -49,71 +44,96 @@ References: <87ee57c8fu.fsf@turner.link>
  <092b825a-10ff-e197-18a1-d3e3a097b0e3@leemhuis.info>
  <877d96to55.fsf@dmarc-none.turner.link> <87lexdw8gd.fsf@turner.link>
  <d541b534-8b83-b566-56eb-ea8baa7c998e@leemhuis.info>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <d541b534-8b83-b566-56eb-ea8baa7c998e@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <40b3084a-11b8-0962-4b33-34b56d3a87a3@molgen.mpg.de>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <40b3084a-11b8-0962-4b33-34b56d3a87a3@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647586896;206b6243;
+X-HE-SMSGID: 1nV6c9-00066r-PZ
 
-Dear Thorsten, dear James,
-
-
-Am 17.03.22 um 13:54 schrieb Thorsten Leemhuis:
-> On 13.03.22 19:33, James Turner wrote:
+On 18.03.22 06:43, Paul Menzel wrote:
+>
+> Am 17.03.22 um 13:54 schrieb Thorsten Leemhuis:
+>> On 13.03.22 19:33, James Turner wrote:
+>>>
+>>>> My understanding at this point is that the root problem is probably
+>>>> not in the Linux kernel but rather something else (e.g. the machine
+>>>> firmware or AMD Windows driver) and that the change in f9b7f3703ff9
+>>>> ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)") simply
+>>>> exposed the underlying problem.
 >>
->>> My understanding at this point is that the root problem is probably
->>> not in the Linux kernel but rather something else (e.g. the machine
->>> firmware or AMD Windows driver) and that the change in f9b7f3703ff9
->>> ("drm/amdgpu/acpi: make ATPX/ATCS structures global (v2)") simply
->>> exposed the underlying problem.
+>> FWIW: that in the end is irrelevant when it comes to the Linux kernel's
+>> 'no regressions' rule. For details see:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/admin-guide/reporting-regressions.rst
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/process/handling-regressions.rst
+>>
+>>
+>> That being said: sometimes for the greater good it's better to not
+>> insist on that. And I guess that might be the case here.
 > 
-> FWIW: that in the end is irrelevant when it comes to the Linux kernel's
-> 'no regressions' rule. For details see:
+> But who decides that?
+
+In the end afaics: Linus. But he can't watch each and every discussion,
+so it partly falls down to people discussing a regression, as they can
+always decide to get him involved in case they are unhappy with how a
+regression is handled. That obviously includes me in this case. I simply
+use my best judgement in such situations. I'm still undecided if that
+path is appropriate here, that's why I wrote above to see what James
+would say, as he afaics was the only one that reported this regression.
+
+> Running stuff in a virtual machine is not that uncommon.
+
+No, it's about passing through a GPU to a VM, which is a lot less common
+-- and afaics an area where blacklisting GPUs on the host to pass them
+through is not uncommon (a quick internet search confirmed that, but I
+might be wrong there).
+
+> Should the commit be reverted, and re-added with a more elaborate commit
+> message documenting the downsides?
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/admin-guide/reporting-regressions.rst
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/process/handling-regressions.rst
+> Could the user be notified somehow? Can PCI passthrough and a loaded
+> amdgpu driver be detected, so Linux warns about this?
+>
+> Also, should this be documented in the code?
+>
+>>> I'm not sure where to go from here. This issue isn't much of a concern
+>>> for me anymore, since blacklisting `amdgpu` works for my machine. At
+>>> this point, my understanding is that the root problem needs to be fixed
+>>> in AMD's Windows GPU driver or Dell's firmware, not the Linux kernel. If
+>>> any of the AMD developers on this thread would like to forward it to the
+>>> AMD Windows driver team, I'd be happy to work with AMD to fix the issue
+>>> properly.
 > 
-> That being said: sometimes for the greater good it's better to not
-> insist on that. And I guess that might be the case here.
+> (Thorsten, your mailer mangled the quote somehow 
 
-But who decides that? Running stuff in a virtual machine is not that 
-uncommon.
+Kinda, but it IIRC was more me doing something stupid with my mailer.
+Sorry about that.
 
-Should the commit be reverted, and re-added with a more elaborate commit 
-message documenting the downsides?
+> – I reformatted it –,
 
-Could the user be notified somehow? Can PCI passthrough and a loaded 
-amdgpu driver be detected, so Linux warns about this?
+thx!
 
-Also, should this be documented in the code?
-
->> I'm not sure where to go from here. This issue isn't much of a concern
->> for me anymore, since blacklisting `amdgpu` works for my machine. At
->> this point, my understanding is that the root problem needs to be fixed
->> in AMD's Windows GPU driver or Dell's firmware, not the Linux kernel. If
->> any of the AMD developers on this thread would like to forward it to the
->> AMD Windows driver team, I'd be happy to work with AMD to fix the issue
->> properly.
-
-(Thorsten, your mailer mangled the quote somehow – I reformatted it –, 
-which is too bad, as this message is shown when clicking on the link 
-*marked invalid* in the regzbot Web page [1]. (The link is a very nice 
-feature.)
-
-> In that case I'll drop it from the list of regressions, unless what I
-> wrote above makes you change your mind.
+> which is too bad, as this message is shown when clicking on the link
+> *marked invalid* in the regzbot Web page [1]. (The link is a very nice
+> feature.)
 > 
-> #regzbot invalid: firmware issue exposed by kernel change, user seems to
-> be happy with a workaround
+>> In that case I'll drop it from the list of regressions, unless what I
+>> wrote above makes you change your mind.
+>>
+>> #regzbot invalid: firmware issue exposed by kernel change, user seems to
+>> be happy with a workaround
+>>
+>> Thx everyone who participated in handling this.
 > 
-> Thx everyone who participated in handling this.
+> Should the regression issue be re-opened until the questions above are
+> answered, and a more user friendly solution is found?
 
-Should the regression issue be re-opened until the questions above are 
-answered, and a more user friendly solution is found?
+I'll for now will just continue to watch this discussion and see what
+happens.
 
+> [1]: https://linux-regtracking.leemhuis.info/regzbot/resolved/
 
-Kind regards,
-
-Paul
-
-
-[1]: https://linux-regtracking.leemhuis.info/regzbot/resolved/
+Ciao, Thorsten
