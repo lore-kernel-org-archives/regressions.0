@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1829A2FAE
-	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 14:38:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A334C7E
+	for <regressions@lists.linux.dev>; Fri, 18 Mar 2022 14:41:47 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nVDkd-0006nl-RZ; Fri, 18 Mar 2022 15:38:47 +0100
-Message-ID: <4fb68d44-0d4f-df16-21b8-3d85ebe0aadc@leemhuis.info>
-Date: Fri, 18 Mar 2022 15:38:47 +0100
+	id 1nVDnV-0001ZP-Uq; Fri, 18 Mar 2022 15:41:46 +0100
+Message-ID: <045ed627-e054-a42d-c3ec-e4e44bd1cf81@leemhuis.info>
+Date: Fri, 18 Mar 2022 15:41:45 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,36 +16,29 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: Regression in 5.10.67: "iwlwifi: pcie: free RBs during configure"
- causes rx lockups with BAR_FRAME_RELEASE on AX200/AX201 when using 802.11ax
+Subject: Re: [PATCH][SMB3] fix multiuser mount regression #forregzbot
 Content-Language: en-US
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CAH2r5mth2fYLzU5+oN09ipT7peRdyAiPCF-7_fLPsTpA-fKKLA@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Luca Coelho <luciano.coelho@intel.com>,
- Johannes Berg <johannes.berg@intel.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- Stephane Poignant <stephane.poignant@proton.ch>
-References: <9e4ea11e-7d00-d2c4-7f80-862f0cbe96db@leemhuis.info>
-In-Reply-To: <9e4ea11e-7d00-d2c4-7f80-862f0cbe96db@leemhuis.info>
+In-Reply-To: <CAH2r5mth2fYLzU5+oN09ipT7peRdyAiPCF-7_fLPsTpA-fKKLA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647614337;eb4b19bf;
-X-HE-SMSGID: 1nVDkd-0006nl-RZ
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647614508;3203970e;
+X-HE-SMSGID: 1nVDnV-0001ZP-Uq
 
-Hi, this is your Linux kernel regression tracker. Top-posting for once,
-to make this easily accessible to everyone.
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-FYI: looks like this isn't a regression, as Stephane mentioned in a
-comment to the bko report:
-https://bugzilla.kernel.org/show_bug.cgi?id=215660#c13
+Seems below regression soon will be getting fixed, but with the nearing
+final I want to have this in the tracking to make sure everyone is aware
+of it:
 
-> So today i could reproduce on 5.10.46 after a few days of testing. It does not look like a regression.
-
-Thus removing it from the regression tracking:
-
-#regzbot invalid: After further testing it does not look like a
-regression anymore
+#regzbot ^introduced 73f9bfbe3d81
+#regzbot title cifs: smb3: incorrect session setup check for multiuser
+mounts
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -58,116 +51,36 @@ in a public reply, it's in everyone's interest to set the public record
 straight.
 
 
-On 14.03.22 12:44, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker.
+
+On 17.03.22 04:20, Steve French wrote:
+> cifssmb3: fix incorrect session setup check for multiuser mounts
 > 
-> I noticed a regression report in bugzilla.kernel.org that afaics nobody
-> acted upon since it was reported more than ten days ago (it afaifcs only
-> later became clear this is a regression), that's why I decided to
-> forward it to the lists and a few relevant people to the CC. To quote
-> from https://bugzilla.kernel.org/show_bug.cgi?id=215660:
+> A recent change to how the SMB3 server (socket) and session status
+> is managed regressed multiuser mounts by changing the check
+> for whether session setup is needed to the socket (TCP_Server_info)
+> structure instead of the session struct (cifs_ses). Add additional
+> check in cifs_setup_sesion to fix this.
 > 
->>  Stephane Poignant 2022-03-04 17:24:49 UTC
->>
->> Created attachment 300529 [details]
->> lspci and ethtool outputs on reproducing systems
->>
->> Context:
->> - dense enterprise deployment, 10 lightweight aps (Aruba) on one office floor, up to 125 concurrent users total, up to 25 user per AP
->> - the wireless network supports 802.11n, 802.11ac and 802.11ax in 5 GHz band
->> - authentication is wpa2-psk
->> - client devices consists in a variety of endpoints (laptops, cell phones, tablets, smart devices), running various versions of Mac OSX, Linux, Windows, Android or IOS.
->> - certain clients supports only 20Mhz, HT protection kicks in and turns off on APs as those clients are moving around. Consequently ht_operation_mode fluctuates between 4 and 6 even when staying on the same AP.
->> - the issue affects various laptops with Intel AX200 or AX201 chipsets, running Debian or Ubuntu with a recent kernel >= 5.10
->> - see attached file devices.txt for detailed information on the different laptops we have reproduced the issue on
->>
->>
->> Steps to reproduce:
->> - appears sometimes, but not always, after the iwlwifi STA roams from one AP to another
->> - seen more often when ht_operation_mode changes between 4 and 6 (but not sufficient to trigger the issue)
->> - STA deassociates from current AP and associates to the new one successfully
->> - connectivity works on the new AP for a short period of time, usually between 30s and 1 minute
->> - then suddenly, the Rx path breaks. No more received frame visible on the STA wireless interface. AP reports that frames are retransmitted and not acknowledged by STA.
->> - the Tx path keeps working. Frames sent by STA to AP are received and visible on the network
->> - in this state each inbound frame appears to trigger iwl_pcie_rx_handle_rb with cmd BAR_FRAME_RELEASE (seqnum is always the same):
->>
->> Mar  4 12:44:32 debian kernel: [15884.715812] iwlwifi 0000:00:14.3: iwl_pcie_rx_handle Q 0: HW = 338, SW = 337
->> Mar  4 12:44:32 debian kernel: [15884.715819] iwlwifi 0000:00:14.3: iwl_pcie_get_rxb Got virtual RB ID 1348
->> Mar  4 12:44:32 debian kernel: [15884.715831] iwlwifi 0000:00:14.3: iwl_pcie_rx_handle_rb Q 0: cmd at offset 0: BAR_FRAME_RELEASE (00.c2, seq 0xbfff)
->> Mar  4 12:44:32 debian kernel: [15884.715838] iwlwifi 0000:00:14.3: iwl_mvm_release_frames_from_notif Frame release notification for BAID 14, NSSN 169
->> Mar  4 12:44:32 debian kernel: [15884.715843] iwlwifi 0000:00:14.3: iwl_pcie_rx_handle_rb Q 0: RB end marker at offset 64
->> Mar  4 12:44:32 debian kernel: [15884.715852] iwlwifi 0000:00:14.3: iwl_pcie_restock_bd Assigned virtual RB ID 1348 to queue 0 index 334
->>
->> - those events do not appear during normal operation (or very rarely)
->>
->>
->> Temporary resolution:
->> - in most cases, the STA remains in this state until Wifi is restarted or until it roams to another AP
->> - while in that state, it may happens (rarely) that a few frame are received with very high latency, then the next ones are lost, for instance:
->>
->> [1646398334.114200] From 10.200.2.67 icmp_seq=148 Destination Host Unreachable
->> [1646398334.114242] From 10.200.2.67 icmp_seq=149 Destination Host Unreachable
->> [1646398334.114251] From 10.200.2.67 icmp_seq=150 Destination Host Unreachable
->> [1646398336.365181] 64 bytes from 10.200.2.1: icmp_seq=151 ttl=64 time=2251 ms
->> [1646398336.365237] 64 bytes from 10.200.2.1: icmp_seq=152 ttl=64 time=1227 ms
->> [1646398336.365250] 64 bytes from 10.200.2.1: icmp_seq=153 ttl=64 time=203 ms
->> [1646398375.042236] From 10.200.2.67 icmp_seq=188 Destination Host Unreachable
->> [1646398375.042291] From 10.200.2.67 icmp_seq=189 Destination Host Unreachable
->> [1646398375.042303] From 10.200.2.67 icmp_seq=190 Destination Host Unreachable
->>
->>
->> Workaround:
->> - disable_11ax=1 prevents the problem from happening
->> [...]
+> Fixes: 73f9bfbe3d81 ("cifs: maintain a state machine for tcp/smb/tcon sessions")
+> Reported-by: Ronnie Sahlberg <lsahlber@redhat.com>
+> Signed-off-by: Steve French <stfrench@microsoft.com>
+> ---
+>  fs/cifs/connect.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
->>  Stephane Poignant 2022-03-10 14:48:39 UTC
->>
->> Did some further testing with vanilla kernel.
->> 5.10.66 and older DO NOT reproduce the issue.
->> 5.10.67 and newer DO reproduce.
->>
->> I see the following changes according to changelog:
->> iwlwifi: mvm: Fix scan channel flags settings
->> iwlwifi: fw: correctly limit to monitor dump
->> iwlwifi: mvm: fix access to BSS elements
->> iwlwifi: mvm: avoid static queue number aliasing
->> iwlwifi: mvm: fix a memory leak in iwl_mvm_mac_ctxt_beacon_changed
->> iwlwifi: pcie: free RBs during configure
->>
->> Suspecting the one related with queues but no strong opinion atm.
->>
->> [reply] [−] Comment 6 Stephane Poignant 2022-03-11 10:18:29 UTC
->>
->> Ok so after some further testing, turned out that after commenting the following lines in file drivers/net/wireless/intel/iwlwifi/pcie/trans.c:
->>
->> 	/* free all first - we might be reconfigured for a different size */
->> 	iwl_pcie_free_rbs_pool(trans);
->>
->> Which were introduced by the following commit:
->> iwlwifi: pcie: free RBs during configure
->> https://lore.kernel.org/all/iwlwifi.20210802170640.42d7c93279c4.I07f74e65aab0e3d965a81206fcb289dc92d74878@changeid/
->>
->> Then i'm no longer able to reproduce. Tested in vanilla 5.10.67, vanilla 5.10.88 and 5.10.92 with Debian patches.
->>
+> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+> index 053cb449eb16..d3020abfe404 100644
+> --- a/fs/cifs/connect.c
+> +++ b/fs/cifs/connect.c
+> @@ -3924,7 +3924,8 @@ cifs_setup_session(const unsigned int xid,
+> struct cifs_ses *ses,
 > 
-> Could somebody take a look into this? Or was this discussed somewhere
-> else already? Or even fixed?
-> 
-> Anyway, to get this tracked:
-> 
-> #regzbot introduced: 608c8359c567b4a04dedbe
-> #regzbot from: Stephane Poignant <stephane.poignant@proton.ch>
-> #regzbot title: wireless: iwlwifi: regression in 5.10.67 due to
-> "iwlwifi: pcie: free RBs during configure"
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215660
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
+>   /* only send once per connect */
+>   spin_lock(&cifs_tcp_ses_lock);
+> - if (server->tcpStatus != CifsNeedSessSetup) {
+> + if ((server->tcpStatus != CifsNeedSessSetup) &&
+> +     (ses->status == CifsGood)) {
+>   spin_unlock(&cifs_tcp_ses_lock);
+>   return 0;
+>   }
 > 
