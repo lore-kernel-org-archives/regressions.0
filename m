@@ -1,158 +1,192 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78782C9E
-	for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 09:02:12 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nWDvW-0008Oq-9b; Mon, 21 Mar 2022 10:02:10 +0100
-Message-ID: <a9791877-2909-3f04-63f5-e7fcccdea9eb@leemhuis.info>
-Date: Mon, 21 Mar 2022 10:02:09 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75902F24
+	for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 09:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1647854736;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GzohBbkrXG4LXx7mo3/JLEha1Z8wnON9GrcgVqSwS/Y=;
+	b=NBFCyZWXXV453+ZO0TxQNWj/IcpALK7aFjorfTptOhlkyal+3QyqtOBaNEuioQK1f6rKPA
+	Aqf5h/s3VKNGHHAAs2NiiMMI9n1kaAb38p1SsR2iwwryExvx8yHvJiKhjFostdpI6kuEOg
+	+Vw7+jKmTGCHMbBAcxgPJBAtVPdCff4=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-472-YHxaAvYSMvW9PJyQVXnIwQ-1; Mon, 21 Mar 2022 05:25:33 -0400
+X-MC-Unique: YHxaAvYSMvW9PJyQVXnIwQ-1
+Received: by mail-pl1-f199.google.com with SMTP id i16-20020a170902cf1000b001540b6a09e3so2191273plg.0
+        for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 02:25:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GzohBbkrXG4LXx7mo3/JLEha1Z8wnON9GrcgVqSwS/Y=;
+        b=vA1z0hsCZVZOx9VCAhoiEdgxTFfxE7HrJqrCYUmHWMyCQFRFgbMTG3+inCbUQ62qdS
+         8iE3HfRDgV05pZuYmshaXJYsMTZsBnAeLrvzHROBLG+KPSxSmP0O61OMvQ+oI/IwhwH1
+         T7+19CgRQTLSblOtcQbMHb4OMtOiQ31SWHo8fYgYx+yE58IjKLddOVVYedYyHqi+FMy+
+         BbjZIpzo4eujmJLWjjUTLSDUknKqr1ASnxQqekzyMGkksxiJHZ1mvabBCJUXjUkprcph
+         9tUv8J1Da4LlrkVxqMfV1QZ2hz4o6vNN6YrL1crPgJQ8pTVHLHlw0Q9Fp67ChpsaT6wl
+         otWA==
+X-Gm-Message-State: AOAM530HJLXhWSBs1YFwhSA+rZh0WfGWyNtdb+gLZOcplGjdfz0OJLGa
+	6OGxJLvMnKqdKMbKLaV7+FnLSTiLDocmCLCQDXZTN9VrNkrbXx+B/+kH0tEO9N49isFlpRiDUUK
+	QOvR8I+sXN15pat0CX9oMeUI/A4sVUuTc4lnWVi4=
+X-Received: by 2002:a05:6a00:2182:b0:4fa:6d20:d95d with SMTP id h2-20020a056a00218200b004fa6d20d95dmr16423567pfi.83.1647854732184;
+        Mon, 21 Mar 2022 02:25:32 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy5GIeW+QMX4U4V2zHohKqElMK7B6VgQJYnzw3N7Tv/o+8SUhfr7/r1sr09VsGyUW1SRSGOo/l09OeZwZL0rvE=
+X-Received: by 2002:a05:6a00:2182:b0:4fa:6d20:d95d with SMTP id
+ h2-20020a056a00218200b004fa6d20d95dmr16423547pfi.83.1647854731876; Mon, 21
+ Mar 2022 02:25:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: Possible ACPI bug/regression in i2c-i801 [plain text] #forregzbot
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <2cd98d51-f868-2bbb-f048-8096a13aa2f7@wayoftao.net>
- <407c2559-4593-c06f-1fdd-cd84d8cfe884@leemhuis.info>
-In-Reply-To: <407c2559-4593-c06f-1fdd-cd84d8cfe884@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647853332;3e8e9b83;
-X-HE-SMSGID: 1nWDvW-0008Oq-9b
+References: <20220320190602.7484-1-jose.exposito89@gmail.com>
+In-Reply-To: <20220320190602.7484-1-jose.exposito89@gmail.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date: Mon, 21 Mar 2022 10:25:20 +0100
+Message-ID: <CAO-hwJKZUSTaWUpE_vsvAs-MNoZ8UJLgxiCyQ6OzwHYFZszf2w@mail.gmail.com>
+Subject: Re: [PATCH] HID: multitouch: fix Dell Precision 7550 and 7750 button type
+To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
+Cc: jkosina@suse.cz, tiwai@suse.de, regressions@leemhuis.info, 
+	peter.hutterer@who-t.net, linux-input@vger.kernel.org, stable@vger.kernel.org, 
+	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=btissoir@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Hi Jos=C3=A9,
 
-#regzbot invalid: reporter MIA after Jean Delvare ask for further
-details and had some remarks about the odd usage of kernel parameters
-
-On 31.01.22 07:33, Thorsten Leemhuis wrote:
-> [TLDR: I'm adding this regression to regzbot, the Linux kernel
-> regression tracking bot; most text you find below is compiled from a few
-> templates paragraphs some of you might have seen already.]
-> 
-> Hi, this is your Linux kernel regression tracker speaking.
-> 
-> Adding the regression mailing list to the list of recipients, as it
-> should be in the loop for all regressions, as explained here:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-> 
-> CCing Greg and Stable as well, as it's a stable regression.
-> 
-> On 30.01.22 22:33, Kim Nilsson wrote:
->>
->> I've recently been doing some suspend/resume testing related to an
->> s2idle bug in amdgpu
->> (https://gitlab.freedesktop.org/drm/amd/-/issues/1879) and I've come
->> across some problems with C-states.
->>
->> After resuming from s2idle, Pkg(HW) will no longer enter any state C2 or
->> deeper. Suspending to s3 would not trigger this issue on 5.16.2, but
->> after trying out 5.16.4 I'm facing a similar problem where Pkg(HW) will
->> rarely if ever go deeper than C3. Now, the reason I am contacting you is
->> because I was playing around today and found that unloading i2c-i801
->> seems to fix the issue.
-> 
-> Thanks for the report.
-> 
-> To be sure this issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, my Linux kernel regression tracking bot:
-> 
-> #regzbot ^introduced v5.16.2..v5.16.4
-> #regzbot title i2c: Possible ACPI bug/regression in i2c-i801 [plain text]
-> #regzbot ignore-activity
-> 
-> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
-> to the report (the parent of this mail) using the kernel.org redirector,
-> as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
-> then will automatically mark the regression as resolved once the fix
-> lands in the appropriate tree. For more details about regzbot see footer.
-> 
-> Sending this to everyone that got the initial report, to make all aware
-> of the tracking. I also hope that messages like this motivate people to
-> directly get at least the regression mailing list and ideally even
-> regzbot involved when dealing with regressions, as messages like this
-> wouldn't be needed then.
-> 
-> Don't worry, I'll send further messages wrt to this regression just to
-> the lists (with a tag in the subject so people can filter them away), as
-> long as they are intended just for regzbot. With a bit of luck no such
-> messages will be needed anyway.
-> 
->> # CPU: Intel(R) Core(TM) i7-8665U CPU @ 1.90GHz
->> # GPU: Intel Corporation WhiskeyLake-U GT2 [UHD Graphics 620], Advanced
->> Micro Devices, Inc. [AMD/ATI] Lexa XT [Radeon PRO WX 3100]
->> # 00:15.0 Serial bus controller: Intel Corporation Cannon Point-LP
->> Serial IO I2C Controller #0 (rev 30)
->> # 00:15.1 Serial bus controller: Intel Corporation Cannon Point-LP
->> Serial IO I2C Controller #1 (rev 300:19.0 Serial bus controller: Intel
->> Corporation Cannon Point-LP Serial IO I2C Host Controller (rev 30)
->>
->>
->> dmesg output when loading the module after an unload:
->>
->> [ 1002.961091] i801_smbus 0000:00:1f.4: SPD Write Disable is set
->> [ 1002.961171] i801_smbus 0000:00:1f.4: SMBus using PCI interrupt
->> [ 1002.961321] iTCO_wdt iTCO_wdt: unable to reset NO_REBOOT flag, device
->> disabled by hardware/BIOS
->> [ 1002.975399] i801_smbus 0000:00:1f.4: Accelerometer lis3lv02d is
->> present on SMBus but its address is unknown, skipping registration
->> [ 1002.975406] i2c i2c-10: 2/2 memory slots populated (from DMI)
->> [ 1002.976713] ee1004 10-0050: 512 byte EE1004-compliant SPD EEPROM,
->> read-only
->> [ 1002.976808] i2c i2c-10: Successfully instantiated SPD at 0x50
->>
->>
->> This is my first LKML bug report, so I could use some guidance in how to
->> provide more information.
-> 
-> 
-> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
-> 
-> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
-> on my table. I can only look briefly into most of them. Unfortunately
-> therefore I sometimes will get things wrong or miss something important.
-> I hope that's not the case here; if you think it is, don't hesitate to
-> tell me about it in a public reply, that's in everyone's interest.
-> 
-> BTW, I have no personal interest in this issue, which is tracked using
-> regzbot, my Linux kernel regression tracking bot
-> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
-> this mail to get things rolling again and hence don't need to be CC on
-> all further activities wrt to this regression.
-> 
+On Sun, Mar 20, 2022 at 8:06 PM Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gm=
+ail.com> wrote:
+>
+> The touchpad present in the Dell Precision 7550 and 7750 laptops
+> reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
+> the device is not a clickpad, it is a touchpad with physical buttons.
+>
+> In order to fix this issue, a quirk for the device was introduced in
+> libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
+>
+>         [Precision 7x50 Touchpad]
+>         MatchBus=3Di2c
+>         MatchUdevType=3Dtouchpad
+>         MatchDMIModalias=3Ddmi:*svnDellInc.:pnPrecision7?50*
+>         AttrInputPropDisable=3DINPUT_PROP_BUTTONPAD
+>
+> However, because of the change introduced in 37ef4c19b4 ("Input: clear
+> BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
+> anymore breaking the device right click button.
+>
+> In order to fix the issue, create a quirk for the device forcing its
+> button type to touchpad regardless of the value reported by the
+> firmware.
+>
+> [1] https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481
+> [2] https://bugzilla.redhat.com/show_bug.cgi?id=3D1868789
+>
+> Fixes: 37ef4c19b4 ("Input: clear BTN_RIGHT/MIDDLE on buttonpads")
+> Signed-off-by: Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gmail.com>
 > ---
-> Additional information about regzbot:
-> 
-> If you want to know more about regzbot, check out its web-interface, the
-> getting start guide, and/or the references documentation:
-> 
-> https://linux-regtracking.leemhuis.info/regzbot/
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-> 
-> The last two documents will explain how you can interact with regzbot
-> yourself if your want to.
-> 
-> Hint for reporters: when reporting a regression it's in your interest to
-> tell #regzbot about it in the report, as that will ensure the regression
-> gets on the radar of regzbot and the regression tracker. That's in your
-> interest, as they will make sure the report won't fall through the
-> cracks unnoticed.
-> 
-> Hint for developers: you normally don't need to care about regzbot once
-> it's involved. Fix the issue as you normally would, just remember to
-> include a 'Link:' tag to the report in the commit message, as explained
-> in Documentation/process/submitting-patches.rst
-> That aspect was recently was made more explicit in commit 1f57bd42b77c:
-> https://git.kernel.org/linus/1f57bd42b77c
-> 
+
+Thanks for the patch.
+However, I'd like to put this one on hold for a bit. I am discussing
+it right now with Peter and we are trying to see what are the possible
+implications of starting to fix those in the kernel one by one.
+
+So Jiri, please hold on before applying this one.
+
+Cheers,
+Benjamin
+
+>  drivers/hid/hid-ids.h        |  3 +++
+>  drivers/hid/hid-multitouch.c | 20 ++++++++++++++++++++
+>  2 files changed, 23 insertions(+)
+>
+> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+> index 78bd3ddda442..6cf7a5b6835b 100644
+> --- a/drivers/hid/hid-ids.h
+> +++ b/drivers/hid/hid-ids.h
+> @@ -287,6 +287,9 @@
+>
+>  #define USB_VENDOR_ID_CIDC             0x1677
+>
+> +#define USB_VENDOR_ID_CIRQUE_CORP              0x0488
+> +#define USB_DEVICE_ID_DELL_PRECISION_7X50      0x120A
+> +
+>  #define USB_VENDOR_ID_CJTOUCH          0x24b8
+>  #define USB_DEVICE_ID_CJTOUCH_MULTI_TOUCH_0020 0x0020
+>  #define USB_DEVICE_ID_CJTOUCH_MULTI_TOUCH_0040 0x0040
+> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
+> index 99eabfb4145b..f012cf8e0b8c 100644
+> --- a/drivers/hid/hid-multitouch.c
+> +++ b/drivers/hid/hid-multitouch.c
+> @@ -71,6 +71,7 @@ MODULE_LICENSE("GPL");
+>  #define MT_QUIRK_SEPARATE_APP_REPORT   BIT(19)
+>  #define MT_QUIRK_FORCE_MULTI_INPUT     BIT(20)
+>  #define MT_QUIRK_DISABLE_WAKEUP                BIT(21)
+> +#define MT_QUIRK_BUTTONTYPE_TOUCHPAD   BIT(22)
+>
+>  #define MT_INPUTMODE_TOUCHSCREEN       0x02
+>  #define MT_INPUTMODE_TOUCHPAD          0x03
+> @@ -194,6 +195,7 @@ static void mt_post_parse(struct mt_device *td, struc=
+t mt_application *app);
+>  #define MT_CLS_WIN_8_FORCE_MULTI_INPUT         0x0015
+>  #define MT_CLS_WIN_8_DISABLE_WAKEUP            0x0016
+>  #define MT_CLS_WIN_8_NO_STICKY_FINGERS         0x0017
+> +#define MT_CLS_BUTTONTYPE_TOUCHPAD             0x0018
+>
+>  /* vendor specific classes */
+>  #define MT_CLS_3M                              0x0101
+> @@ -302,6 +304,15 @@ static const struct mt_class mt_classes[] =3D {
+>                         MT_QUIRK_CONTACT_CNT_ACCURATE |
+>                         MT_QUIRK_WIN8_PTP_BUTTONS,
+>                 .export_all_inputs =3D true },
+> +       { .name =3D MT_CLS_BUTTONTYPE_TOUCHPAD,
+> +               .quirks =3D MT_QUIRK_ALWAYS_VALID |
+> +                       MT_QUIRK_IGNORE_DUPLICATES |
+> +                       MT_QUIRK_HOVERING |
+> +                       MT_QUIRK_CONTACT_CNT_ACCURATE |
+> +                       MT_QUIRK_STICKY_FINGERS |
+> +                       MT_QUIRK_WIN8_PTP_BUTTONS |
+> +                       MT_QUIRK_BUTTONTYPE_TOUCHPAD,
+> +               .export_all_inputs =3D true },
+>
+>         /*
+>          * vendor specific classes
+> @@ -1286,6 +1297,9 @@ static int mt_touch_input_configured(struct hid_dev=
+ice *hdev,
+>             (app->buttons_count =3D=3D 1))
+>                 td->is_buttonpad =3D true;
+>
+> +       if (app->quirks & MT_QUIRK_BUTTONTYPE_TOUCHPAD)
+> +               td->is_buttonpad =3D false;
+> +
+>         if (td->is_buttonpad)
+>                 __set_bit(INPUT_PROP_BUTTONPAD, input->propbit);
+>
+> @@ -1872,6 +1886,12 @@ static const struct hid_device_id mt_devices[] =3D=
+ {
+>                 MT_USB_DEVICE(USB_VENDOR_ID_CHUNGHWAT,
+>                         USB_DEVICE_ID_CHUNGHWAT_MULTITOUCH) },
+>
+> +       /* Cirque Corp (Dell Precision 7550 and 7750 touchpad) */
+> +       { .driver_data =3D MT_CLS_BUTTONTYPE_TOUCHPAD,
+> +               HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
+> +                       USB_VENDOR_ID_CIRQUE_CORP,
+> +                       USB_DEVICE_ID_DELL_PRECISION_7X50) },
+> +
+>         /* CJTouch panels */
+>         { .driver_data =3D MT_CLS_NSMU,
+>                 MT_USB_DEVICE(USB_VENDOR_ID_CJTOUCH,
+> --
+> 2.25.1
+>
+
