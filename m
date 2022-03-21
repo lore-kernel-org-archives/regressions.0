@@ -1,100 +1,202 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE55612C
-	for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 18:48:58 +0000 (UTC)
-Received: by mail-wr1-f43.google.com with SMTP id t11so21987244wrm.5
-        for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 11:48:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=NhgSfZDArluZLHM/ZGQGHtyPB2g1YM1L+AyBmippdgc=;
-        b=E6H7FdlWYcATK/Ci37TDC97uxTfQV5wTZHy4seLU3weGUKtZUfpSHM5JUgph0J3fMJ
-         tPcK6xSSZLn7dkMYTIKmrtgrCVdL6wehY5z1328CFqEJ+33VfHMA+K5GG7z0zYrGrg32
-         x0b6JtYVnHsGSOKEJVkB40OKaK09JSx4dK1lEhvkXi7oTteeoaMo+cGjs5W6MOlW3bkn
-         LVo65te+5eAEDA4j2QZlW121vCOxpHvfdAYe376s1EktIoJ9Kz8W53K/FhsZXycUu9ef
-         +2lkpe6e1l6hLVKHkDjBBLOIiG22McoVy/sW9kvxu5S/4Q+o5AyzVf6rBWbiNCVdWwn6
-         sRbA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7025736F
+	for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 23:37:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1647905871;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uzBrE/xKFER9oTs4R1yQOb5Smm6sapxjMw0ldJAMeCY=;
+	b=f1SKtT2F5UfMKC2bDQ029PVr9ykg63JI+KBzHTfxyCE6HZTcDIe2ehxMKnSiwb+vsrUh5L
+	P6YIVshFDwlhJUT5hpXt6GtsVkc4HwwaGvEOymdWFCy2A+S0Ukzj9QrFuX5sC50WPoc7lq
+	nZBHAgExBQ55fw1jOLeUzItrdjGYV4o=
+Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
+ [209.85.219.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-36-9QsC9rbfOl-FUB3D4PpNaw-1; Mon, 21 Mar 2022 19:37:50 -0400
+X-MC-Unique: 9QsC9rbfOl-FUB3D4PpNaw-1
+Received: by mail-yb1-f199.google.com with SMTP id w1-20020a5b08c1000000b00633be107f28so2303027ybq.4
+        for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 16:37:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=NhgSfZDArluZLHM/ZGQGHtyPB2g1YM1L+AyBmippdgc=;
-        b=24M8pg5eNTHqnDpH+K6p+gf1Hz35uplXRwFDhDD2K8oMkKYxELzFEbv2+rVKZ9V4yG
-         4ctD5uTcgxCvc2lFlmYbEzGk8VgyhnYi8PpVv/YxTZVy8XAq3gZKy//ALspuCaCi330J
-         Twg2S6VbxV37OA35HWWXzYcA+aApSC+496jtaA7qZZuVx5NibVVTviwpbhrypFTOPjuS
-         V8VNISai9g4/NcDVe4Xo0ok+rtA6G1twORh/+Ib5rnI35x48b2NN3VYJq6TV9R4xe6L4
-         1FYhRGWhC6hZcpNTDLWKbv4yeaJtjqcVGfidMqBzA5/GvZ1taAnMf1nEZOXVhp5c8qDQ
-         DjIw==
-X-Gm-Message-State: AOAM5335oTRt94GAEnG0GIN8q+hI4K1ZvROoFeSj9KVq9WRwvnyKdC08
-	fB+1Zn1qM2lNla/VuSD6yXc=
-X-Google-Smtp-Source: ABdhPJyfJdCZmE8tKzsiqRnR7Wsy3A+qRAqBFBPP0seRuR+2CuBc4MSPGkO7AsBhivZ2+kKQi2FkBQ==
-X-Received: by 2002:a5d:6d81:0:b0:203:e187:1faa with SMTP id l1-20020a5d6d81000000b00203e1871faamr20083750wrs.381.1647888536391;
-        Mon, 21 Mar 2022 11:48:56 -0700 (PDT)
-Received: from elementary ([94.73.33.246])
-        by smtp.gmail.com with ESMTPSA id h12-20020a5d548c000000b001f1f99e7792sm13796467wrv.111.2022.03.21.11.48.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Mar 2022 11:48:56 -0700 (PDT)
-Date: Mon, 21 Mar 2022 19:48:52 +0100
-From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Jiri Kosina <jkosina@suse.cz>, Takashi Iwai <tiwai@suse.de>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Peter Hutterer <peter.hutterer@who-t.net>,
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-	"3.8+" <stable@vger.kernel.org>, regressions@lists.linux.dev,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] HID: multitouch: fix Dell Precision 7550 and 7750 button
- type
-Message-ID: <20220321184852.GA20347@elementary>
-References: <20220320190602.7484-1-jose.exposito89@gmail.com>
- <CAO-hwJKZUSTaWUpE_vsvAs-MNoZ8UJLgxiCyQ6OzwHYFZszf2w@mail.gmail.com>
- <CAO-hwJL4=OGv34mXq3de4QEKW15tT4gZDOBxhkuXVh5AeSafeQ@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uzBrE/xKFER9oTs4R1yQOb5Smm6sapxjMw0ldJAMeCY=;
+        b=paEOHCy4useIq8eP/LGVDSWOBbvjxMuywgvaxrjJ5oYtNoNV60HUtR78pejNRBjcAH
+         bNAavDsLhixiNLnEHL8ZuwPVZSiPiSaeYnN0C+1GKLH+B0r4yRpKcCLNJGN2jolfTsBL
+         yMvTL2XsAE8LnLIL68R4NeQScrg4vveObZNfeg7KDQaYLdGgWcrxefYf/C+VZCta9kH4
+         01ut7O5QkVkkoFb1C58FEvG183+fwS78+IgmAA++F5xeS/i4jmwfGf9LmXB0b6AVh4TE
+         Lvn58YHU2hJ8punjp6V5qrDuyACCf6Rc6Baiyt0sHy5zAKZN4dKi3u5r/gEMpnZz5FfZ
+         m15A==
+X-Gm-Message-State: AOAM532DwNjHrsJfqB8MzL8UaqSDWfKYofNmTVcojMiN58qMSYwxR/nL
+	bX+PdpkngqojZwC4vrPwUsn30x0jQN5QmL8z0oQRM1IYAiEJDeS7m6xwjM4Ss/88y61b92/v782
+	lRCD5aIL7Tdb94/4ekVRZVBcQ6JZfT+JYQgRY81s=
+X-Received: by 2002:a81:5bc5:0:b0:2d6:5659:73c2 with SMTP id p188-20020a815bc5000000b002d6565973c2mr26915870ywb.121.1647905868548;
+        Mon, 21 Mar 2022 16:37:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyZDeclsfrCetATc8VAEyW1jquLTzrNR9LFM3udw/x+j0o/Or8O7TRRVLhT5BZmuQvKh/HJDxK24979jGo9y6w=
+X-Received: by 2002:a81:5bc5:0:b0:2d6:5659:73c2 with SMTP id
+ p188-20020a815bc5000000b002d6565973c2mr26915853ywb.121.1647905868276; Mon, 21
+ Mar 2022 16:37:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAO-hwJL4=OGv34mXq3de4QEKW15tT4gZDOBxhkuXVh5AeSafeQ@mail.gmail.com>
+References: <CAE4VaGDZr_4wzRn2___eDYRtmdPaGGJdzu_LCSkJYuY9BEO3cw@mail.gmail.com>
+In-Reply-To: <CAE4VaGDZr_4wzRn2___eDYRtmdPaGGJdzu_LCSkJYuY9BEO3cw@mail.gmail.com>
+From: Jirka Hladky <jhladky@redhat.com>
+Date: Tue, 22 Mar 2022 00:37:37 +0100
+Message-ID: <CAE4VaGDKXnQJKdayeNsAD5RcqsKu5XG2UeweLvgZoFO-pn-t9Q@mail.gmail.com>
+Subject: Re: PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" starting from 5.17 on
+ dual socket Intel Xeon Gold servers
+To: stable@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Cc: regressions@lists.linux.dev
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jhladky@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 21, 2022 at 07:22:45PM +0100, Benjamin Tissoires wrote:
-> Giving a little bit more context here (and quoting Peter).
-> 
-> """
-> The problem with [37ef4c19b4] is that it removes functionality -
-> before a clickpad was falsely advertised but the button worked, now in
-> the affected devices it simply no longer works because the button code
-> gets filtered. And user-space can't work around this.
-> ...
-> So the main question remains: why are we doing this?
-> 
-> And the answer here is: because libinput can't handle clickpads with
-> right buttons. But that's not really true either, libinput just
-> doesn't want to, and for no other reason than that it's easier to
-> handle it this way.
-> """
-> 
-> So basically, we tried to fix a choice on libinput assuming that all
-> devices are perfect, for the only sake of making it easy for libinput.
-> But the solution prevents further tweaks, and we then need to manually
-> quirk devices in the kernel which involves a slightly heavier
-> difficulty for end users than just dropping a config file or changing
-> a setting in their UI.
-> 
-> With that said, this patch is:
-> Nacked-by: me
-> 
-> José, could you send a revert of 37ef4c19b4, and add "Cc:
-> stable@vger.kernel.org" and all the other tags for the regression
-> tracker bot?
+Cc: regressions@lists.linux.dev stable@vger.kernel.org
 
-Sure, for reference, this patch should be ignored in favor of:
-https://lore.kernel.org/linux-input/20220321184404.20025-1-jose.exposito89@gmail.com/T/
+On Tue, Mar 22, 2022 at 12:29 AM Jirka Hladky <jhladky@redhat.com> wrote:
+>
+> Starting from kernel 5.17 (tested with rc2, rc4, rc7, rc8) we
+> experience kernel oops on Intel Xeon Gold dual-socket servers (2x Xeon
+> Gold 6126 CPU)
+>
+> Bellow is a backtrace and the dmesg log.
+>
+> I have trouble creating a simple reproducer - it happens at random
+> places when preparing the NAS benchmark to be run. The script creates
+> a bunch of directories, compiles the benchmark a start trial runs.
+>
+> Could you please help to narrow down the problem?
+>
+> Reports bellow were created with kernel 5.17 rc8 and with
+> echo 1 > /proc/sys/kernel/panic_on_oops
+> setting.
+>
+> crash> sys
+>       KERNEL: /usr/lib/debug/lib/modules/5.17.0-0.rc8.123.fc37.x86_64/vmlinux
+>     DUMPFILE: vmcore  [PARTIAL DUMP]
+>         CPUS: 48
+>         DATE: Thu Mar 17 02:49:40 CET 2022
+>       UPTIME: 00:02:50
+> LOAD AVERAGE: 0.32, 0.10, 0.03
+>        TASKS: 608
+>     NODENAME: gold-2s-c
+>      RELEASE: 5.17.0-0.rc8.123.fc37.x86_64
+>      VERSION: #1 SMP PREEMPT Mon Mar 14 18:11:49 UTC 2022
+>      MACHINE: x86_64  (2600 Mhz)
+>       MEMORY: 94.7 GB
+>        PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" (check log for details)
+>
+>
+> crash> bt
+> PID: 2480   TASK: ffff9e8f76cb8000  CPU: 26  COMMAND: "umount"
+> #0 [ffffae00cacbfbb8] machine_kexec at ffffffffbb068980
+> #1 [ffffae00cacbfc08] __crash_kexec at ffffffffbb1a300a
+> #2 [ffffae00cacbfcc8] crash_kexec at ffffffffbb1a4045
+> #3 [ffffae00cacbfcd0] oops_end at ffffffffbb02c410
+> #4 [ffffae00cacbfcf0] page_fault_oops at ffffffffbb076a38
+> #5 [ffffae00cacbfd68] exc_page_fault at ffffffffbbd0b7c1
+> #6 [ffffae00cacbfd90] asm_exc_page_fault at ffffffffbbe00ace
+>    [exception RIP: kernfs_remove+7]
+>    RIP: ffffffffbb421f67  RSP: ffffae00cacbfe48  RFLAGS: 00010246
+>    RAX: 0000000000000001  RBX: ffffffffbce31e58  RCX: 0000000080200018
+>    RDX: 0000000080200019  RSI: ffffdfbd44161640  RDI: 0000000000000000
+>    RBP: ffffffffbce31e58   R8: 0000000000000000   R9: 0000000080200018
+>    R10: ffff9e8f05859e80  R11: ffff9e9443b1bd98  R12: ffff9ea057f1d000
+>    R13: ffffffffbce31e60  R14: dead000000000122  R15: dead000000000100
+>    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+> #7 [ffffae00cacbfe58] rdt_kill_sb at ffffffffbb05074b
+> #8 [ffffae00cacbfea8] deactivate_locked_super at ffffffffbb36ce1f
+> #9 [ffffae00cacbfec0] cleanup_mnt at ffffffffbb39176e
+> #10 [ffffae00cacbfee8] task_work_run at ffffffffbb10703c
+> #11 [ffffae00cacbff08] exit_to_user_mode_prepare at ffffffffbb17a399
+> #12 [ffffae00cacbff28] syscall_exit_to_user_mode at ffffffffbbd0bde8
+> #13 [ffffae00cacbff38] do_syscall_64 at ffffffffbbd071a6
+> #14 [ffffae00cacbff50] entry_SYSCALL_64_after_hwframe at ffffffffbbe0007c
+>    RIP: 00007f442c75126b  RSP: 00007ffc82d66fe8  RFLAGS: 00000202
+>    RAX: 0000000000000000  RBX: 000055bd4cc37090  RCX: 00007f442c75126b
+>    RDX: 0000000000000001  RSI: 0000000000000001  RDI: 000055bd4cc3b950
+>    RBP: 000055bd4cc371a8   R8: 0000000000000000   R9: 0000000000000073
+>    R10: 0000000000000000  R11: 0000000000000202  R12: 0000000000000001
+>    R13: 000055bd4cc3b950  R14: 000055bd4cc372c0  R15: 000055bd4cc37090
+>    ORIG_RAX: 00000000000000a6  CS: 0033  SS: 002b
+>
+> [2] dmesg
+> [  172.776553] BUG: kernel NULL pointer dereference, address: 0000000000000008
+> [  172.783513] #PF: supervisor read access in kernel mode
+> [  172.788652] #PF: error_code(0x0000) - not-present page
+> [  172.793793] PGD 0 P4D 0
+> [  172.796330] Oops: 0000 [#1] PREEMPT SMP PTI
+> [  172.800519] CPU: 26 PID: 2480 Comm: umount Kdump: loaded Not
+> tainted 5.17.0-0.rc8.123.fc37.x86_64 #1
+> [  172.809645] Hardware name: Supermicro Super Server/X11DDW-L, BIOS
+> 2.0b 03/07/2018
+> [  172.817123] RIP: 0010:kernfs_remove+0x7/0x50
+> [  172.821397] Code: e8 be e7 2c 00 48 89 df e8 b6 8c f0 ff 48 c7 c3
+> f4 ff ff ff 48 89 d8 5b 5d 41 5c 41 5d 41 5e c3 cc 66 90 0f 1f 44 00
+> 00 55 53 <48> 8b 47 08 48 89 fb 48 85 c0 48 0f 44 c7 48 8b 68 50 48 83
+> c5 60
+> [  172.840141] RSP: 0018:ffffae00cacbfe48 EFLAGS: 00010246
+> [  172.845367] RAX: 0000000000000001 RBX: ffffffffbce31e58 RCX: 0000000080200018
+> [  172.852501] RDX: 0000000080200019 RSI: ffffdfbd44161640 RDI: 0000000000000000
+> [  172.859632] RBP: ffffffffbce31e58 R08: 0000000000000000 R09: 0000000080200018
+> [  172.866764] R10: ffff9e8f05859e80 R11: ffff9e9443b1bd98 R12: ffff9ea057f1d000
+> [  172.873899] R13: ffffffffbce31e60 R14: dead000000000122 R15: dead000000000100
+> [  172.881033] FS:  00007f442c53c800(0000) GS:ffff9e9429000000(0000)
+> knlGS:0000000000000000
+> [  172.889117] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  172.894861] CR2: 0000000000000008 CR3: 000000010ba96006 CR4: 00000000007706e0
+> [  172.901997] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  172.909127] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  172.916261] PKRU: 55555554
+> [  172.918974] Call Trace:
+> [  172.921427]  <TASK>
+> [  172.923533]  rdt_kill_sb+0x29b/0x350
+> [  172.927112]  deactivate_locked_super+0x2f/0xa0
+> [  172.931559]  cleanup_mnt+0xee/0x180
+> [  172.935051]  task_work_run+0x5c/0x90
+> [  172.938629]  exit_to_user_mode_prepare+0x229/0x230
+> [  172.943424]  syscall_exit_to_user_mode+0x18/0x40
+> [  172.948043]  do_syscall_64+0x46/0x80
+> [  172.951623]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> [  172.956675] RIP: 0033:0x7f442c75126b
+> [  172.960271] Code: cb 1b 0e 00 f7 d8 64 89 01 48 83 c8 ff c3 90 f3
+> 0f 1e fa 31 f6 e9 05 00 00 00 0f 1f 44 00 00 f3 0f 1e fa b8 a6 00 00
+> 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 91 1b 0e 00
+> f7 d8
+> [  172.979017] RSP: 002b:00007ffc82d66fe8 EFLAGS: 00000202 ORIG_RAX:
+> 00000000000000a6
+> [  172.986584] RAX: 0000000000000000 RBX: 000055bd4cc37090 RCX: 00007f442c75126b
+> [  172.993715] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 000055bd4cc3b950
+> [  173.000849] RBP: 000055bd4cc371a8 R08: 0000000000000000 R09: 0000000000000073
+> [  173.007980] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000001
+> [  173.015115] R13: 000055bd4cc3b950 R14: 000055bd4cc372c0 R15: 000055bd4cc37090
+> [  173.022249]  </TASK>
+> [  173.024440] Modules linked in: rfkill intel_rapl_msr
+> intel_rapl_common isst_if_common irdma skx_edac nfit libnvdimm ice
+> x86_pkg_temp_thermal intel_powerclamp coretemp ib_uverbs iTCO_wdt
+> intel_pmc_bxt ib_core iTCO_vendor_support kvm_
+> intel ipmi_ssif kvm irqbypass rapl acpi_ipmi intel_cstate i40e joydev
+> mei_me ioatdma i2c_i801 intel_uncore lpc_ich i2c_smbus mei
+> intel_pch_thermal dca ipmi_si ipmi_devintf ipmi_msghandler acpi_pad
+> acpi_power_meter fuse zram xfs crct10d
+> if_pclmul ast crc32_pclmul crc32c_intel drm_vram_helper drm_ttm_helper
+> ttm wmi ghash_clmulni_intel
+> [  173.073900] CR2: 0000000000000008
+>
+> --
+> -Jirka
 
-Jose
+
+
+-- 
+-Jirka
+
