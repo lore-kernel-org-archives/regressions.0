@@ -1,115 +1,158 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B08D20E4
-	for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 07:47:10 +0000 (UTC)
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D0B403F1D2
-	for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 07:47:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1647848820;
-	bh=hE46fXwO5LIlT2wOIccXFBKWLT6OdjVGt8q3eXVFAlU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=CAszEkHa04rSMetYmf5M2x0ieSNBOfkPm55O/+1tA/TIN8bWWCRUZSJl/9lN4+1bJ
-	 WATkSLhLa0yfu6yAN6u03m62mXdl5vpLlioAM9RynxWRxtk2/T9DjEWyyiZDVAfG/G
-	 HdnFZsox9RX4gcwOz9zQUpyh+aHYcKuW+1i/AHDKqXctBCq+QIA8a4f56noUjqaVQG
-	 TCOOS8a/pZ1urQmCe2o7n8gnLHzPaCFGq+O+ELAgadOYai5D/E93b7kcZwwZBs2IN8
-	 8lKnq2lJlCjAfjkrGsBCcCVt5mbbdjD0LfDyJPkLwkPcZFLHhXdI16ZGBRQpaSBMLh
-	 GvhOLZ9mSHoJQ==
-Received: by mail-oo1-f71.google.com with SMTP id e9-20020a4a9b49000000b0032474b3ad5dso4168128ook.19
-        for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 00:47:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hE46fXwO5LIlT2wOIccXFBKWLT6OdjVGt8q3eXVFAlU=;
-        b=O606k9hLQ06XDQvXbc/5xgi4aJST/M4bABk/wMySlXOI8UtIaUio5k3DRvnUB1rMU9
-         pRQUMoeAblYz14Ou+uiQKHX3lNvK3GiAxcMB6EIg5oeV9U8jh+DSVdAIXHma4w5NUPI0
-         Xe08Iwfsl+2R3lQvz/9Cj6J4qEjNumycI0S+Lpv5Hc3/qUsvBeuHBvzH5eaBKEeEHStq
-         pcjpP8obVp9OhzCCUH+M27yC0kvkoMJAoK433cpFA3pFU2/Omz1dJKr3vkLyBn55hdlZ
-         gGUBbTF27UPuDetLIHpoeofigayyzRr3+xFozgcjV5c1XOUCJZLo/z7mgRrl6Lti3bZx
-         BzTw==
-X-Gm-Message-State: AOAM533mGXc0cJbo53CtZVYX4zE2MdJ5Id9vO2yV9R6bznnGnowr20gY
-	KOo8KSb25RvsOYWZozTlJP7LwEIMP8b4tfVi57QoWM65s7SIUM/6HT/Wb4M6Ex+g307NuC4ZV0Y
-	ip85oY+AuqlcsnjsqIEiq2Kq6KWULaOFLJGFkzn+ldkXwpqSC3owfM+64
-X-Received: by 2002:a05:6808:3012:b0:2ef:79c7:1342 with SMTP id ay18-20020a056808301200b002ef79c71342mr4135oib.0.1647848819456;
-        Mon, 21 Mar 2022 00:46:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxNw2oa86WnfvCAmgfO2ITM7xMIXoAkd6X77Q5Vvz8OywnQP1upsmm4U9u9/5EKa5AxbhNHL9S2RWuJfMrN7t8=
-X-Received: by 2002:a05:6808:3012:b0:2ef:79c7:1342 with SMTP id
- ay18-20020a056808301200b002ef79c71342mr4129oib.0.1647848819115; Mon, 21 Mar
- 2022 00:46:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78782C9E
+	for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 09:02:12 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nWDvW-0008Oq-9b; Mon, 21 Mar 2022 10:02:10 +0100
+Message-ID: <a9791877-2909-3f04-63f5-e7fcccdea9eb@leemhuis.info>
+Date: Mon, 21 Mar 2022 10:02:09 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <fbfbdedd-21b5-5b6f-c03c-80027acbe2f5@leemhuis.info> <420bd395-10e7-b5de-97da-56d90fb82654@leemhuis.info>
-In-Reply-To: <420bd395-10e7-b5de-97da-56d90fb82654@leemhuis.info>
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date: Mon, 21 Mar 2022 15:46:47 +0800
-Message-ID: <CAAd53p4qmoRV1TjTG00vEmQmuiYWxQMjN9SER5i=1c_cB41d_A@mail.gmail.com>
-Subject: Re: [regression] Headphone output gets unproperly powered down - Mi
- Notebook Pro 2020 (ALC256) (fwd of b.k.o bug #215484; starting with 5.14.14)
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, itsbytebites@tutanota.com, alsa-devel@alsa-project.org, 
-	kailang@realtek.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: Possible ACPI bug/regression in i2c-i801 [plain text] #forregzbot
+Content-Language: en-US
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <2cd98d51-f868-2bbb-f048-8096a13aa2f7@wayoftao.net>
+ <407c2559-4593-c06f-1fdd-cd84d8cfe884@leemhuis.info>
+In-Reply-To: <407c2559-4593-c06f-1fdd-cd84d8cfe884@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647853332;3e8e9b83;
+X-HE-SMSGID: 1nWDvW-0008Oq-9b
 
-Hi Thorten,
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-On Mon, Mar 21, 2022 at 2:48 PM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> Hi, this is your Linux kernel regression tracker. Top-posting for once,
-> to make this easily accessible to everyone.
->
-> Could anybody please finally look into this bisected regression from
-> 5.14.13 to 5.14.14 (f8d3c17e1c37 ("ALSA: hda/realtek - ALC236 headset
-> MIC recording issue")) that according to a recent bugzilla comment from
-> reporter is still present in recent 5.16 kernels?
+#regzbot invalid: reporter MIA after Jean Delvare ask for further
+details and had some remarks about the odd usage of kernel parameters
 
-I just asked the affected user to test my patch. Once it's tested I'll
-send it out.
-
-Kai-Heng
-
->
-> Ciao, Thorsten
->
-> On 12.01.22 08:15, Thorsten Leemhuis wrote:
-> >
-> > Hi, this is your Linux kernel regression tracker speaking.
-> >
-> > I'm forwarding a regression reported in bugzilla.kernel.org to the list,
-> > to make sure all parties interested in this are aware of it. The
-> > reporter is CCed. Not CCing the stable list in this case, as 5.14 is EOL
-> > already.
-> >
-> > https://bugzilla.kernel.org/show_bug.cgi?id=215484
-> >
-> >> With headphones (or an auxiliary jack) plugged in, the audio output
-> >> is fine when anything is playing, but when that's stopped a loud pop
-> >> can be heard after some seconds and if the jack is connected to an
-> >> external amplifier it gets really noisy. Everything gets back to
-> >> normal whenever audio playback is resumed, although with another loud
-> >> pop at the start.
-> >>
-> >> This has been happening since kernel 5.14.14, whereas 5.14.13 is
-> >> fine. I suspect it has to do with the ALC256 mute logic implemented
-> >> in that version
-> >> (https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/diff/sound/pci/hda/patch_realtek.c?id=v5.14.14&id2=v5.14.13)
-> >>
-> >> OS: Fedora Linux 35 Kernel: 5.16.0-60 Vanilla Hardware: Xiaomi Mi
-> >> Notebook Pro Enhanced 2020 (i7 10510U, ALC256)
-> >
-> > Ciao, Thorsten
-> >
-> > #regzbot introduced v5.14.13..v5.14.14
-> > #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215484
-> > #regzbot from: Emanuele Melzi <itsbytebites@tutanota.com>
+On 31.01.22 07:33, Thorsten Leemhuis wrote:
+> [TLDR: I'm adding this regression to regzbot, the Linux kernel
+> regression tracking bot; most text you find below is compiled from a few
+> templates paragraphs some of you might have seen already.]
+> 
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> Adding the regression mailing list to the list of recipients, as it
+> should be in the loop for all regressions, as explained here:
+> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+> 
+> CCing Greg and Stable as well, as it's a stable regression.
+> 
+> On 30.01.22 22:33, Kim Nilsson wrote:
+>>
+>> I've recently been doing some suspend/resume testing related to an
+>> s2idle bug in amdgpu
+>> (https://gitlab.freedesktop.org/drm/amd/-/issues/1879) and I've come
+>> across some problems with C-states.
+>>
+>> After resuming from s2idle, Pkg(HW) will no longer enter any state C2 or
+>> deeper. Suspending to s3 would not trigger this issue on 5.16.2, but
+>> after trying out 5.16.4 I'm facing a similar problem where Pkg(HW) will
+>> rarely if ever go deeper than C3. Now, the reason I am contacting you is
+>> because I was playing around today and found that unloading i2c-i801
+>> seems to fix the issue.
+> 
+> Thanks for the report.
+> 
+> To be sure this issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, my Linux kernel regression tracking bot:
+> 
+> #regzbot ^introduced v5.16.2..v5.16.4
+> #regzbot title i2c: Possible ACPI bug/regression in i2c-i801 [plain text]
+> #regzbot ignore-activity
+> 
+> Reminder: when fixing the issue, please add a 'Link:' tag with the URL
+> to the report (the parent of this mail) using the kernel.org redirector,
+> as explained in 'Documentation/process/submitting-patches.rst'. Regzbot
+> then will automatically mark the regression as resolved once the fix
+> lands in the appropriate tree. For more details about regzbot see footer.
+> 
+> Sending this to everyone that got the initial report, to make all aware
+> of the tracking. I also hope that messages like this motivate people to
+> directly get at least the regression mailing list and ideally even
+> regzbot involved when dealing with regressions, as messages like this
+> wouldn't be needed then.
+> 
+> Don't worry, I'll send further messages wrt to this regression just to
+> the lists (with a tag in the subject so people can filter them away), as
+> long as they are intended just for regzbot. With a bit of luck no such
+> messages will be needed anyway.
+> 
+>> # CPU: Intel(R) Core(TM) i7-8665U CPU @ 1.90GHz
+>> # GPU: Intel Corporation WhiskeyLake-U GT2 [UHD Graphics 620], Advanced
+>> Micro Devices, Inc. [AMD/ATI] Lexa XT [Radeon PRO WX 3100]
+>> # 00:15.0 Serial bus controller: Intel Corporation Cannon Point-LP
+>> Serial IO I2C Controller #0 (rev 30)
+>> # 00:15.1 Serial bus controller: Intel Corporation Cannon Point-LP
+>> Serial IO I2C Controller #1 (rev 300:19.0 Serial bus controller: Intel
+>> Corporation Cannon Point-LP Serial IO I2C Host Controller (rev 30)
+>>
+>>
+>> dmesg output when loading the module after an unload:
+>>
+>> [ 1002.961091] i801_smbus 0000:00:1f.4: SPD Write Disable is set
+>> [ 1002.961171] i801_smbus 0000:00:1f.4: SMBus using PCI interrupt
+>> [ 1002.961321] iTCO_wdt iTCO_wdt: unable to reset NO_REBOOT flag, device
+>> disabled by hardware/BIOS
+>> [ 1002.975399] i801_smbus 0000:00:1f.4: Accelerometer lis3lv02d is
+>> present on SMBus but its address is unknown, skipping registration
+>> [ 1002.975406] i2c i2c-10: 2/2 memory slots populated (from DMI)
+>> [ 1002.976713] ee1004 10-0050: 512 byte EE1004-compliant SPD EEPROM,
+>> read-only
+>> [ 1002.976808] i2c i2c-10: Successfully instantiated SPD at 0x50
+>>
+>>
+>> This is my first LKML bug report, so I could use some guidance in how to
+>> provide more information.
+> 
+> 
+> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+> 
+> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+> on my table. I can only look briefly into most of them. Unfortunately
+> therefore I sometimes will get things wrong or miss something important.
+> I hope that's not the case here; if you think it is, don't hesitate to
+> tell me about it in a public reply, that's in everyone's interest.
+> 
+> BTW, I have no personal interest in this issue, which is tracked using
+> regzbot, my Linux kernel regression tracking bot
+> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+> this mail to get things rolling again and hence don't need to be CC on
+> all further activities wrt to this regression.
+> 
+> ---
+> Additional information about regzbot:
+> 
+> If you want to know more about regzbot, check out its web-interface, the
+> getting start guide, and/or the references documentation:
+> 
+> https://linux-regtracking.leemhuis.info/regzbot/
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> 
+> The last two documents will explain how you can interact with regzbot
+> yourself if your want to.
+> 
+> Hint for reporters: when reporting a regression it's in your interest to
+> tell #regzbot about it in the report, as that will ensure the regression
+> gets on the radar of regzbot and the regression tracker. That's in your
+> interest, as they will make sure the report won't fall through the
+> cracks unnoticed.
+> 
+> Hint for developers: you normally don't need to care about regzbot once
+> it's involved. Fix the issue as you normally would, just remember to
+> include a 'Link:' tag to the report in the commit message, as explained
+> in Documentation/process/submitting-patches.rst
+> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+> https://git.kernel.org/linus/1f57bd42b77c
+> 
