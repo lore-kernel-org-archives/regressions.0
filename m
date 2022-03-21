@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4EA7A
-	for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 06:29:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFC43362
+	for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 06:48:50 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nWBXX-0004rC-64; Mon, 21 Mar 2022 07:29:15 +0100
-Message-ID: <818a4927-b204-3eab-da9f-466841ec9a16@leemhuis.info>
-Date: Mon, 21 Mar 2022 07:29:08 +0100
+	id 1nWBqR-0005fY-Nd; Mon, 21 Mar 2022 07:48:47 +0100
+Message-ID: <420bd395-10e7-b5de-97da-56d90fb82654@leemhuis.info>
+Date: Mon, 21 Mar 2022 07:48:47 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,76 +16,60 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
-Subject: Re: [PATCH] HID: multitouch: fix Dell Precision 7550 and 7750 button
- type
+Subject: Re: [regression] Headphone output gets unproperly powered down - Mi
+ Notebook Pro 2020 (ALC256) (fwd of b.k.o bug #215484; starting with 5.14.14)
 Content-Language: en-US
-To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
- jkosina@suse.cz
-Cc: tiwai@suse.de, benjamin.tissoires@redhat.com, peter.hutterer@who-t.net,
- linux-input@vger.kernel.org, stable@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20220320190602.7484-1-jose.exposito89@gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20220320190602.7484-1-jose.exposito89@gmail.com>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc: itsbytebites@tutanota.com, alsa-devel@alsa-project.org,
+ "kai.heng.feng@canonical.com" <kai.heng.feng@canonical.com>,
+ kailang@realtek.com
+References: <fbfbdedd-21b5-5b6f-c03c-80027acbe2f5@leemhuis.info>
+In-Reply-To: <fbfbdedd-21b5-5b6f-c03c-80027acbe2f5@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647844161;5e144c40;
-X-HE-SMSGID: 1nWBXX-0004rC-64
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647845330;fc013610;
+X-HE-SMSGID: 1nWBqR-0005fY-Nd
 
-thx for working on this
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easily accessible to everyone.
 
-On 20.03.22 20:06, José Expósito wrote:
-> The touchpad present in the Dell Precision 7550 and 7750 laptops
-> reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
-> the device is not a clickpad, it is a touchpad with physical buttons.
-> 
-> In order to fix this issue, a quirk for the device was introduced in
-> libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
-> 
-> 	[Precision 7x50 Touchpad]
-> 	MatchBus=i2c
-> 	MatchUdevType=touchpad
-> 	MatchDMIModalias=dmi:*svnDellInc.:pnPrecision7?50*
-> 	AttrInputPropDisable=INPUT_PROP_BUTTONPAD
-> 
-> However, because of the change introduced in 37ef4c19b4 ("Input: clear
-> BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
-> anymore breaking the device right click button.
-> 
-> In order to fix the issue, create a quirk for the device forcing its
-> button type to touchpad regardless of the value reported by the
-> firmware.
-> 
-> [1] https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481
-> [2] https://bugzilla.redhat.com/show_bug.cgi?id=1868789
-
-Nitpicking: those should be "Link" tags, as explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'? Never tried, but if you want to
-make them footnote-style this should work according to the docs:
-
-Link:
-https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481  [1]
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=1868789  [2]
-
-In anyone wonders why I care: there are internal and publicly used tools
-and scripts out there that reply on proper "Link" tags. I don't known
-how many, but there is at least one public tool I'm running that cares:
-regzbot, my regression tracking bot, which I use to track Linux kernel
-regressions and generate the regression reports sent to Linus. Proper
-"Link:" tags allow the bot to automatically connect regression reports
-with fixes being posted or applied to resolve the particular regression
--- which makes regression tracking a whole lot easier and feasible for
-the Linux kernel. That's why it's a great help for me if people set
-proper "Link" tags.
-
-While at it, let me tell regzbot about this thread:
-#regzbot ^backmonitor:
-https://linux-regtracking.leemhuis.info/regzbot/regression/s5htubv32s8.wl-tiwai@suse.de/
-
-
-> Fixes: 37ef4c19b4 ("Input: clear BTN_RIGHT/MIDDLE on buttonpads")
-> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> [...]
+Could anybody please finally look into this bisected regression from
+5.14.13 to 5.14.14 (f8d3c17e1c37 ("ALSA: hda/realtek - ALC236 headset
+MIC recording issue")) that according to a recent bugzilla comment from
+reporter is still present in recent 5.16 kernels?
 
 Ciao, Thorsten
+
+On 12.01.22 08:15, Thorsten Leemhuis wrote:
+> 
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> I'm forwarding a regression reported in bugzilla.kernel.org to the list,
+> to make sure all parties interested in this are aware of it. The
+> reporter is CCed. Not CCing the stable list in this case, as 5.14 is EOL
+> already.
+> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=215484
+> 
+>> With headphones (or an auxiliary jack) plugged in, the audio output
+>> is fine when anything is playing, but when that's stopped a loud pop
+>> can be heard after some seconds and if the jack is connected to an
+>> external amplifier it gets really noisy. Everything gets back to
+>> normal whenever audio playback is resumed, although with another loud
+>> pop at the start.
+>>
+>> This has been happening since kernel 5.14.14, whereas 5.14.13 is
+>> fine. I suspect it has to do with the ALC256 mute logic implemented
+>> in that version
+>> (https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/diff/sound/pci/hda/patch_realtek.c?id=v5.14.14&id2=v5.14.13)
+>>
+>> OS: Fedora Linux 35 Kernel: 5.16.0-60 Vanilla Hardware: Xiaomi Mi
+>> Notebook Pro Enhanced 2020 (i7 10510U, ALC256)
+> 
+> Ciao, Thorsten
+> 
+> #regzbot introduced v5.14.13..v5.14.14
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215484
+> #regzbot from: Emanuele Melzi <itsbytebites@tutanota.com>
