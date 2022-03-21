@@ -1,192 +1,162 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75902F24
-	for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 09:25:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1647854736;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GzohBbkrXG4LXx7mo3/JLEha1Z8wnON9GrcgVqSwS/Y=;
-	b=NBFCyZWXXV453+ZO0TxQNWj/IcpALK7aFjorfTptOhlkyal+3QyqtOBaNEuioQK1f6rKPA
-	Aqf5h/s3VKNGHHAAs2NiiMMI9n1kaAb38p1SsR2iwwryExvx8yHvJiKhjFostdpI6kuEOg
-	+Vw7+jKmTGCHMbBAcxgPJBAtVPdCff4=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-472-YHxaAvYSMvW9PJyQVXnIwQ-1; Mon, 21 Mar 2022 05:25:33 -0400
-X-MC-Unique: YHxaAvYSMvW9PJyQVXnIwQ-1
-Received: by mail-pl1-f199.google.com with SMTP id i16-20020a170902cf1000b001540b6a09e3so2191273plg.0
-        for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 02:25:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GzohBbkrXG4LXx7mo3/JLEha1Z8wnON9GrcgVqSwS/Y=;
-        b=vA1z0hsCZVZOx9VCAhoiEdgxTFfxE7HrJqrCYUmHWMyCQFRFgbMTG3+inCbUQ62qdS
-         8iE3HfRDgV05pZuYmshaXJYsMTZsBnAeLrvzHROBLG+KPSxSmP0O61OMvQ+oI/IwhwH1
-         T7+19CgRQTLSblOtcQbMHb4OMtOiQ31SWHo8fYgYx+yE58IjKLddOVVYedYyHqi+FMy+
-         BbjZIpzo4eujmJLWjjUTLSDUknKqr1ASnxQqekzyMGkksxiJHZ1mvabBCJUXjUkprcph
-         9tUv8J1Da4LlrkVxqMfV1QZ2hz4o6vNN6YrL1crPgJQ8pTVHLHlw0Q9Fp67ChpsaT6wl
-         otWA==
-X-Gm-Message-State: AOAM530HJLXhWSBs1YFwhSA+rZh0WfGWyNtdb+gLZOcplGjdfz0OJLGa
-	6OGxJLvMnKqdKMbKLaV7+FnLSTiLDocmCLCQDXZTN9VrNkrbXx+B/+kH0tEO9N49isFlpRiDUUK
-	QOvR8I+sXN15pat0CX9oMeUI/A4sVUuTc4lnWVi4=
-X-Received: by 2002:a05:6a00:2182:b0:4fa:6d20:d95d with SMTP id h2-20020a056a00218200b004fa6d20d95dmr16423567pfi.83.1647854732184;
-        Mon, 21 Mar 2022 02:25:32 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy5GIeW+QMX4U4V2zHohKqElMK7B6VgQJYnzw3N7Tv/o+8SUhfr7/r1sr09VsGyUW1SRSGOo/l09OeZwZL0rvE=
-X-Received: by 2002:a05:6a00:2182:b0:4fa:6d20:d95d with SMTP id
- h2-20020a056a00218200b004fa6d20d95dmr16423547pfi.83.1647854731876; Mon, 21
- Mar 2022 02:25:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 961842F24
+	for <regressions@lists.linux.dev>; Mon, 21 Mar 2022 10:00:58 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nWEqO-0000ko-HO; Mon, 21 Mar 2022 11:00:56 +0100
+Message-ID: <c485aac7-ee4e-854b-469b-33b3326c73e3@leemhuis.info>
+Date: Mon, 21 Mar 2022 11:00:56 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220320190602.7484-1-jose.exposito89@gmail.com>
-In-Reply-To: <20220320190602.7484-1-jose.exposito89@gmail.com>
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date: Mon, 21 Mar 2022 10:25:20 +0100
-Message-ID: <CAO-hwJKZUSTaWUpE_vsvAs-MNoZ8UJLgxiCyQ6OzwHYFZszf2w@mail.gmail.com>
-Subject: Re: [PATCH] HID: multitouch: fix Dell Precision 7550 and 7750 button type
-To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
-Cc: jkosina@suse.cz, tiwai@suse.de, regressions@leemhuis.info, 
-	peter.hutterer@who-t.net, linux-input@vger.kernel.org, stable@vger.kernel.org, 
-	regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=btissoir@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [regression, stable] Re: Bug 215562 - BUG: unable to handle page
+ fault in cache_reap (fwd from bugzilla) #forregzbot
+Content-Language: en-US
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <062f4a59-2d41-9a6f-8c7c-42fc5773e282@leemhuis.info>
+ <d45e38db-205f-3400-af09-aa0bb1624975@leemhuis.info>
+In-Reply-To: <d45e38db-205f-3400-af09-aa0bb1624975@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1647856858;75013057;
+X-HE-SMSGID: 1nWEqO-0000ko-HO
 
-Hi Jos=C3=A9,
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-On Sun, Mar 20, 2022 at 8:06 PM Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gm=
-ail.com> wrote:
->
-> The touchpad present in the Dell Precision 7550 and 7750 laptops
-> reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
-> the device is not a clickpad, it is a touchpad with physical buttons.
->
-> In order to fix this issue, a quirk for the device was introduced in
-> libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
->
->         [Precision 7x50 Touchpad]
->         MatchBus=3Di2c
->         MatchUdevType=3Dtouchpad
->         MatchDMIModalias=3Ddmi:*svnDellInc.:pnPrecision7?50*
->         AttrInputPropDisable=3DINPUT_PROP_BUTTONPAD
->
-> However, because of the change introduced in 37ef4c19b4 ("Input: clear
-> BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
-> anymore breaking the device right click button.
->
-> In order to fix the issue, create a quirk for the device forcing its
-> button type to touchpad regardless of the value reported by the
-> firmware.
->
-> [1] https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481
-> [2] https://bugzilla.redhat.com/show_bug.cgi?id=3D1868789
->
-> Fixes: 37ef4c19b4 ("Input: clear BTN_RIGHT/MIDDLE on buttonpads")
-> Signed-off-by: Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gmail.com>
-> ---
+#regzbot invalid: reporter lost interest, as switching to 5.15 and SLUB
+made this go away for him
 
-Thanks for the patch.
-However, I'd like to put this one on hold for a bit. I am discussing
-it right now with Peter and we are trying to see what are the possible
-implications of starting to fix those in the kernel one by one.
+For details see: https://bugzilla.kernel.org/show_bug.cgi?id=215562#c5
 
-So Jiri, please hold on before applying this one.
-
-Cheers,
-Benjamin
-
->  drivers/hid/hid-ids.h        |  3 +++
->  drivers/hid/hid-multitouch.c | 20 ++++++++++++++++++++
->  2 files changed, 23 insertions(+)
->
-> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-> index 78bd3ddda442..6cf7a5b6835b 100644
-> --- a/drivers/hid/hid-ids.h
-> +++ b/drivers/hid/hid-ids.h
-> @@ -287,6 +287,9 @@
->
->  #define USB_VENDOR_ID_CIDC             0x1677
->
-> +#define USB_VENDOR_ID_CIRQUE_CORP              0x0488
-> +#define USB_DEVICE_ID_DELL_PRECISION_7X50      0x120A
-> +
->  #define USB_VENDOR_ID_CJTOUCH          0x24b8
->  #define USB_DEVICE_ID_CJTOUCH_MULTI_TOUCH_0020 0x0020
->  #define USB_DEVICE_ID_CJTOUCH_MULTI_TOUCH_0040 0x0040
-> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-> index 99eabfb4145b..f012cf8e0b8c 100644
-> --- a/drivers/hid/hid-multitouch.c
-> +++ b/drivers/hid/hid-multitouch.c
-> @@ -71,6 +71,7 @@ MODULE_LICENSE("GPL");
->  #define MT_QUIRK_SEPARATE_APP_REPORT   BIT(19)
->  #define MT_QUIRK_FORCE_MULTI_INPUT     BIT(20)
->  #define MT_QUIRK_DISABLE_WAKEUP                BIT(21)
-> +#define MT_QUIRK_BUTTONTYPE_TOUCHPAD   BIT(22)
->
->  #define MT_INPUTMODE_TOUCHSCREEN       0x02
->  #define MT_INPUTMODE_TOUCHPAD          0x03
-> @@ -194,6 +195,7 @@ static void mt_post_parse(struct mt_device *td, struc=
-t mt_application *app);
->  #define MT_CLS_WIN_8_FORCE_MULTI_INPUT         0x0015
->  #define MT_CLS_WIN_8_DISABLE_WAKEUP            0x0016
->  #define MT_CLS_WIN_8_NO_STICKY_FINGERS         0x0017
-> +#define MT_CLS_BUTTONTYPE_TOUCHPAD             0x0018
->
->  /* vendor specific classes */
->  #define MT_CLS_3M                              0x0101
-> @@ -302,6 +304,15 @@ static const struct mt_class mt_classes[] =3D {
->                         MT_QUIRK_CONTACT_CNT_ACCURATE |
->                         MT_QUIRK_WIN8_PTP_BUTTONS,
->                 .export_all_inputs =3D true },
-> +       { .name =3D MT_CLS_BUTTONTYPE_TOUCHPAD,
-> +               .quirks =3D MT_QUIRK_ALWAYS_VALID |
-> +                       MT_QUIRK_IGNORE_DUPLICATES |
-> +                       MT_QUIRK_HOVERING |
-> +                       MT_QUIRK_CONTACT_CNT_ACCURATE |
-> +                       MT_QUIRK_STICKY_FINGERS |
-> +                       MT_QUIRK_WIN8_PTP_BUTTONS |
-> +                       MT_QUIRK_BUTTONTYPE_TOUCHPAD,
-> +               .export_all_inputs =3D true },
->
->         /*
->          * vendor specific classes
-> @@ -1286,6 +1297,9 @@ static int mt_touch_input_configured(struct hid_dev=
-ice *hdev,
->             (app->buttons_count =3D=3D 1))
->                 td->is_buttonpad =3D true;
->
-> +       if (app->quirks & MT_QUIRK_BUTTONTYPE_TOUCHPAD)
-> +               td->is_buttonpad =3D false;
-> +
->         if (td->is_buttonpad)
->                 __set_bit(INPUT_PROP_BUTTONPAD, input->propbit);
->
-> @@ -1872,6 +1886,12 @@ static const struct hid_device_id mt_devices[] =3D=
- {
->                 MT_USB_DEVICE(USB_VENDOR_ID_CHUNGHWAT,
->                         USB_DEVICE_ID_CHUNGHWAT_MULTITOUCH) },
->
-> +       /* Cirque Corp (Dell Precision 7550 and 7750 touchpad) */
-> +       { .driver_data =3D MT_CLS_BUTTONTYPE_TOUCHPAD,
-> +               HID_DEVICE(BUS_I2C, HID_GROUP_MULTITOUCH_WIN_8,
-> +                       USB_VENDOR_ID_CIRQUE_CORP,
-> +                       USB_DEVICE_ID_DELL_PRECISION_7X50) },
-> +
->         /* CJTouch panels */
->         { .driver_data =3D MT_CLS_NSMU,
->                 MT_USB_DEVICE(USB_VENDOR_ID_CJTOUCH,
-> --
-> 2.25.1
->
-
+On 16.02.22 09:44, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking. Top-posting
+> for once, to make this easy accessible to everyone.
+> 
+> Below issue that started to happen between v5.10.80..v5.10.90 was
+> recently reported to bugzilla, but the reporter didn't even get a single
+> reply afaics. Could somebody maybe take a look? Bisection is likely no
+> easy in this case, so a few tips to narrow down the area to search might
+> help a lot here.
+> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=215562
+> 
+> Ciao, Thorsten
+> 
+> 
+> On 03.02.22 16:03, Thorsten Leemhuis wrote:
+>> Hi, this is your Linux kernel regression tracker speaking.
+>>
+>> There is a regression in bugzilla.kernel.org I'd like to add to the
+>> tracking:
+>>
+>> #regzbot introduced: v5.10.80..v5.10.90
+>> #regzbot from: Patrick Schaaf <kernelorg@bof.de>
+>> #regzbot title: mm: unable to handle page fault in cache_reap
+>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215562
+>>
+>> Quote:
+>>
+>>> We've been running self-built 5.10.x kernels on DL380 hosts for quite a while, also inside the VMs there.
+>>>
+>>> With I think 5.10.90 three weeks or so back, we experienced a lockup upon umounting a larger, dirty filesystem on the host side, unfortunately without capturing a backtrace back then.
+>>>
+>>> Today something feeling similar, happened again, on a machine running 5.10.93 both on the host and inside its 10 various VMs.
+>>>
+>>> Problem showed shortly (minutes) after shutting down one of the VMs (few hundred GB memory / dataset, VM shutdown was complete already; direct I/O), and then some LVM volume renames, a quick short outside ext4 mount followed by an umount (8 GB volume, probably a few hundred megabyte only to write). Actually monitoring suggests that disk writes were already done about a minute before the onset.
+>>>
+>>> What we then experienced, was the following BUG:, followed by one after the other CPU saying goodbye with soft lockup messages over the course of a few minutes; meanwhile there was no more pinging the box, logging in on console, etc. We hard powercycled and it recovered fully.
+>>>
+>>> here's the BUG that was logged; if it is useful for someone to see the followup soft lockup messages, tell me + I'll add them.
+>>>
+>>> Feb 02 15:22:27 kvm3j kernel: BUG: unable to handle page fault for address: ffffebde00000008
+>>> Feb 02 15:22:27 kvm3j kernel: #PF: supervisor read access in kernel mode
+>>> Feb 02 15:22:27 kvm3j kernel: #PF: error_code(0x0000) - not-present page
+>>> Feb 02 15:22:27 kvm3j kernel: Oops: 0000 [#1] SMP PTI
+>>> Feb 02 15:22:27 kvm3j kernel: CPU: 7 PID: 39833 Comm: kworker/7:0 Tainted: G          I       5.10.93-kvm #1
+>>> Feb 02 15:22:27 kvm3j kernel: Hardware name: HP ProLiant DL380p Gen8, BIOS P70 12/20/2013
+>>> Feb 02 15:22:27 kvm3j kernel: Workqueue: events cache_reap
+>>> Feb 02 15:22:27 kvm3j kernel: RIP: 0010:free_block.constprop.0+0xc0/0x1f0
+>>> Feb 02 15:22:27 kvm3j kernel: Code: 4c 8b 16 4c 89 d0 48 01 e8 0f 82 32 01 00 00 4c 89 f2 48 bb 00 00 00 00 00 ea ff ff 48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 01 d8 <48> 8b 50 08 48 8d 4a ff 83 e2 01 48 >
+>>> Feb 02 15:22:27 kvm3j kernel: RSP: 0018:ffffc9000252bdc8 EFLAGS: 00010086
+>>> Feb 02 15:22:27 kvm3j kernel: RAX: ffffebde00000000 RBX: ffffea0000000000 RCX: ffff888889141b00
+>>> Feb 02 15:22:27 kvm3j kernel: RDX: 0000777f80000000 RSI: ffff893d3edf3400 RDI: ffff8881000403c0
+>>> Feb 02 15:22:27 kvm3j kernel: RBP: 0000000080000000 R08: ffff888100041300 R09: 0000000000000003
+>>> Feb 02 15:22:27 kvm3j kernel: R10: 0000000000000000 R11: ffff888100041308 R12: dead000000000122
+>>> Feb 02 15:22:27 kvm3j kernel: R13: dead000000000100 R14: 0000777f80000000 R15: ffff893ed8780d60
+>>> Feb 02 15:22:27 kvm3j kernel: FS:  0000000000000000(0000) GS:ffff893d3edc0000(0000) knlGS:0000000000000000
+>>> Feb 02 15:22:27 kvm3j kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> Feb 02 15:22:27 kvm3j kernel: CR2: ffffebde00000008 CR3: 000000048c4aa002 CR4: 00000000001726e0
+>>> Feb 02 15:22:27 kvm3j kernel: Call Trace:
+>>> Feb 02 15:22:27 kvm3j kernel:  drain_array_locked.constprop.0+0x2e/0x80
+>>> Feb 02 15:22:27 kvm3j kernel:  drain_array.constprop.0+0x54/0x70
+>>> Feb 02 15:22:27 kvm3j kernel:  cache_reap+0x6c/0x100
+>>> Feb 02 15:22:27 kvm3j kernel:  process_one_work+0x1cf/0x360
+>>> Feb 02 15:22:27 kvm3j kernel:  worker_thread+0x45/0x3a0
+>>> Feb 02 15:22:27 kvm3j kernel:  ? process_one_work+0x360/0x360
+>>> Feb 02 15:22:27 kvm3j kernel:  kthread+0x116/0x130
+>>> Feb 02 15:22:27 kvm3j kernel:  ? kthread_create_worker_on_cpu+0x40/0x40
+>>> Feb 02 15:22:27 kvm3j kernel:  ret_from_fork+0x22/0x30
+>>> Feb 02 15:22:27 kvm3j kernel: Modules linked in: hpilo
+>>> Feb 02 15:22:27 kvm3j kernel: CR2: ffffebde00000008
+>>> Feb 02 15:22:27 kvm3j kernel: ---[ end trace ded3153d86a92898 ]---
+>>> Feb 02 15:22:27 kvm3j kernel: RIP: 0010:free_block.constprop.0+0xc0/0x1f0
+>>> Feb 02 15:22:27 kvm3j kernel: Code: 4c 8b 16 4c 89 d0 48 01 e8 0f 82 32 01 00 00 4c 89 f2 48 bb 00 00 00 00 00 ea ff ff 48 01 d0 48 c1 e8 0c 48 c1 e0 06 48 01 d8 <48> 8b 50 08 48 8d 4a ff 83 e2 01 48 >
+>>> Feb 02 15:22:27 kvm3j kernel: RSP: 0018:ffffc9000252bdc8 EFLAGS: 00010086
+>>> Feb 02 15:22:27 kvm3j kernel: RAX: ffffebde00000000 RBX: ffffea0000000000 RCX: ffff888889141b00
+>>> Feb 02 15:22:27 kvm3j kernel: RDX: 0000777f80000000 RSI: ffff893d3edf3400 RDI: ffff8881000403c0
+>>> Feb 02 15:22:27 kvm3j kernel: RBP: 0000000080000000 R08: ffff888100041300 R09: 0000000000000003
+>>> Feb 02 15:22:27 kvm3j kernel: R10: 0000000000000000 R11: ffff888100041308 R12: dead000000000122
+>>> Feb 02 15:22:27 kvm3j kernel: R13: dead000000000100 R14: 0000777f80000000 R15: ffff893ed8780d60
+>>> Feb 02 15:22:27 kvm3j kernel: FS:  0000000000000000(0000) GS:ffff893d3edc0000(0000) knlGS:0000000000000000
+>>> Feb 02 15:22:27 kvm3j kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>> Feb 02 15:22:27 kvm3j kernel: CR2: ffffebde00000008 CR3: 000000048c4aa002 CR4: 00000000001726e0
+>>
+>> Ciao, Thorsten (wearing his 'Linux kernel regression tracker' hat)
+>>
+>> P.S.: As a Linux kernel regression tracker I'm getting a lot of reports
+>> on my table. I can only look briefly into most of them. Unfortunately
+>> therefore I sometimes will get things wrong or miss something important.
+>> I hope that's not the case here; if you think it is, don't hesitate to
+>> tell me about it in a public reply, that's in everyone's interest.
+>>
+>> BTW, I have no personal interest in this issue, which is tracked using
+>> regzbot, my Linux kernel regression tracking bot
+>> (https://linux-regtracking.leemhuis.info/regzbot/). I'm only posting
+>> this mail to get things rolling again and hence don't need to be CC on
+>> all further activities wrt to this regression.
+>>
+>> ---
+>> Additional information about regzbot:
+>>
+>> If you want to know more about regzbot, check out its web-interface, the
+>> getting start guide, and/or the references documentation:
+>>
+>> https://linux-regtracking.leemhuis.info/regzbot/
+>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+>> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+>>
+>> The last two documents will explain how you can interact with regzbot
+>> yourself if your want to.
+>>
+>> Hint for reporters: when reporting a regression it's in your interest to
+>> tell #regzbot about it in the report, as that will ensure the regression
+>> gets on the radar of regzbot and the regression tracker. That's in your
+>> interest, as they will make sure the report won't fall through the
+>> cracks unnoticed.
+>>
+>> Hint for developers: you normally don't need to care about regzbot once
+>> it's involved. Fix the issue as you normally would, just remember to
+>> include a 'Link:' tag to the report in the commit message, as explained
+>> in Documentation/process/submitting-patches.rst
+>> That aspect was recently was made more explicit in commit 1f57bd42b77c:
+>> https://git.kernel.org/linus/1f57bd42b77c
