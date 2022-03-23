@@ -1,80 +1,76 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9A1A54
-	for <regressions@lists.linux.dev>; Tue, 22 Mar 2022 11:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1647947721;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9+UC/u0PtbhZRKj2jRfChXJZesydUtyvw1SAh08In7c=;
-	b=U0Dla9mKY1cVLYOkZNFllCVSIOKMzS8u3eEdcIyxp3/gdpYinh18BmRNMIE/L113cfJfnB
-	ZpJYerdZARUpVhxsjqQygK81s/xZkZYQ8/pK82GzZxVNYlo1uADXIyunhMt5qKaT34wLx4
-	huAfwcryB+O3CTmiQJauMXRlVI8ZPnk=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-54-KF9qAlHNNsm7kB6FzKgKaQ-1; Tue, 22 Mar 2022 07:15:18 -0400
-X-MC-Unique: KF9qAlHNNsm7kB6FzKgKaQ-1
-Received: by mail-ej1-f69.google.com with SMTP id gv17-20020a1709072bd100b006dfcc7f7962so4050637ejc.5
-        for <regressions@lists.linux.dev>; Tue, 22 Mar 2022 04:15:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=9+UC/u0PtbhZRKj2jRfChXJZesydUtyvw1SAh08In7c=;
-        b=Q3VOzfjiervyfQ4XgRmbkXX8XnAo+RrReNaV1lIDnVkUkfM6G5oCP/t/srYz2CiTUa
-         cUM0/2BSNq5HDBDsNIYTqM3PcMZHnok8pzdbRe/zE1l9rOCGxqgynYM3pJ8RpfsuTDhA
-         JMSIJUV2cILKhwSblGbE1oDEMa2rjEiEPR71R4AZ6rfplWlUDH4nE/reHsPXQrG8xpeP
-         AET1M7lNcEIKDXDX+sQvf+9ExApQ/LRZKaKythhA+xBAsHDqOnJYhgHlGgXVWKcSydMg
-         i0/YWA+rpbDrIkvogJUPQlXqJqLOcyTydGJDkoxaewVG8ta/WhhZ1hWW2VLTxleARiff
-         WtFg==
-X-Gm-Message-State: AOAM531Hrr8BMDTbM4/oMsWL7vtt5VeFkKGLosS58XJChJdv/rNaEuW8
-	86az63KS4KEU/WnBnGcFeCKMQf6l/L6gkUFJvWF8qFgHaj6kWpiybUu80Dxxnc+Weexb1oD7HXH
-	q+w8lmO8bYQDACj1QaoupeWM=
-X-Received: by 2002:a17:907:6d0d:b0:6db:f0f8:654d with SMTP id sa13-20020a1709076d0d00b006dbf0f8654dmr25117731ejc.304.1647947717433;
-        Tue, 22 Mar 2022 04:15:17 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJztuw0yNJlw73T6KIfQYuamz6XiUFLX3+Qtr0m4cBQUuSF6vyV6Eeh/JUedUW2DEs+W3oFzWQ==
-X-Received: by 2002:a17:907:6d0d:b0:6db:f0f8:654d with SMTP id sa13-20020a1709076d0d00b006dbf0f8654dmr25117698ejc.304.1647947717179;
-        Tue, 22 Mar 2022 04:15:17 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:cdb2:2781:c55:5db0? (2001-1c00-0c1e-bf00-cdb2-2781-0c55-5db0.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:cdb2:2781:c55:5db0])
-        by smtp.gmail.com with ESMTPSA id qa44-20020a17090786ac00b006dbe1ca23casm8117781ejc.45.2022.03.22.04.15.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Mar 2022 04:15:16 -0700 (PDT)
-Message-ID: <30340bc0-3a75-cccc-ed98-f80f3ce94627@redhat.com>
-Date: Tue, 22 Mar 2022 12:15:15 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFACB1360
+	for <regressions@lists.linux.dev>; Wed, 23 Mar 2022 05:05:46 +0000 (UTC)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailout.nyi.internal (Postfix) with ESMTP id 9A2795C01C2;
+	Wed, 23 Mar 2022 01:05:45 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 23 Mar 2022 01:05:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to; s=fm3; bh=cXs53kf34gzbeb
+	VPwtBy2GATRwcGNz8VOEiL+25X/14=; b=kXsFzI3ROzb6ENUiw13L+s3a4egCK3
+	6rfFrYikC4dduRHAaxOk9VyhGbQyqyjP0Ov1RZcklsw9OSV1qQjka9IEXkPuYo8e
+	nJiQ4sH6R0/gJCMsf4/KXQogDMXDqagAQ3AO82qeF6CSmSqmLCq6tk8j6N2Ylg56
+	wjfOqaLfRIQyHGfbxIcxg1cBkvnswMaQur9boEos99uJCXG+1HRetQScQzCq89Wo
+	agPAPD7z2XaY9TUs5Eq9Y3kSXO4cjcTlb1MSiwMs+tIm5okmKwe0NZ6QtxpEBEx0
+	GBV+lcdTWCWGU8GILRCqpYBIdX6u1IklJl3tYXBQpWfe3izDR4m24bWw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm3; bh=cXs53kf34gzbebVPwtBy2GATRwcGNz8VOEiL+25X/
+	14=; b=hJZ3AA0bANboTwuu0aoDJknE+op+FPx+IsLSk8CPZ1AGyKOLaPpVP63ls
+	nmMhNBkfl9qhX3Rgum/kbwXEKk2WBNtrrFtgtvZtmsoLQkR7cKInKw4w/awnN/V/
+	Aj+5ceAXu6iLVQfjwstREK46BpIoU9nG3zmAz++sfPhQkO84fQOxv4KsbeWbsnwE
+	tQwLs92/0ohABUkNOmD9PaANaw73FkGSUdvf+KhmyfRwclSRk77zFybkn65qR3TG
+	cG9NjIkrkrDm7wW/m91HcjQvg2I7YWqst8hoAHlViZfZ8FvpA2Yfq37sBfl9WIh9
+	qcTN42uYCfr4C1xrbnrjsx3K6v7+w==
+X-ME-Sender: <xms:qao6YtFmqUVQzSXOh-ouWgBq_S18-x6JZyVP0b4jxwsqjdj3ERhWPw>
+    <xme:qao6YiWpIiqgQRWDKROoRWVIZRuQP4HjCbHP76OaKYUQDzHN7jPFMKpppb6e_Fdf2
+    PRMGKWqedT3vY24Bxs>
+X-ME-Received: <xmr:qao6YvKaNRD5iQ_2WK7j7bse_U_FIbspkP_pAx5VzYSZFzTDdLM4kH-vvu0PPp0EPuzzpyhbUfnnmXZ6vKc7kHFh4a3NznEyDA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudegiedgjeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjgesthekredttddtudenucfhrhhomheprfgvthgv
+    rhcujfhuthhtvghrvghruceophgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvg
+    htqeenucggtffrrghtthgvrhhnpeevfeejhedvffeuhfelfefghfdtvddvfffhleejffeu
+    gfekvdefhfeffffgueefleenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrgh
+    dprhgvughhrghtrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepphgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvght
+X-ME-Proxy: <xmx:qao6YjHRAwhthxWqsP4rkbWRyDj2h2DIW7Wf-pEltZ-PiQF5qv431A>
+    <xmx:qao6YjXcAWuGr38uvfR_LKrYbhbukTB3JqduCm1EoBNdII69XCSvTQ>
+    <xmx:qao6YuP8ZLOiHnU3KDriRjDQIRvR6d2OxBkxLq6XbYsk8N_7Z5vAgg>
+    <xmx:qao6YqHGTG8zQs-OkPW-W3jE1wTjOmRfDl0MVdshzG5f1qpWQjvpeg>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 23 Mar 2022 01:05:42 -0400 (EDT)
+Date: Wed, 23 Mar 2022 15:05:37 +1000
+From: Peter Hutterer <peter.hutterer@who-t.net>
+To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
+Cc: jkosina@suse.cz, tiwai@suse.de, benjamin.tissoires@redhat.com,
+	regressions@leemhuis.info, linux-input@vger.kernel.org,
+	stable@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "Input: clear BTN_RIGHT/MIDDLE on buttonpads"
+Message-ID: <YjqqoW9jU3SoBgYn@quokka>
+References: <20220321184404.20025-1-jose.exposito89@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH] Revert "Input: clear BTN_RIGHT/MIDDLE on buttonpads"
-To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
- jkosina@suse.cz
-Cc: tiwai@suse.de, benjamin.tissoires@redhat.com, regressions@leemhuis.info,
- peter.hutterer@who-t.net, linux-input@vger.kernel.org,
- stable@vger.kernel.org, regressions@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20220321184404.20025-1-jose.exposito89@gmail.com>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20220321184404.20025-1-jose.exposito89@gmail.com>
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hdegoede@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220321184404.20025-1-jose.exposito89@gmail.com>
 
-Hi,
-
-On 3/21/22 19:44, JosÃ© ExpÃ³sito wrote:
+On Mon, Mar 21, 2022 at 07:44:05PM +0100, José Expósito wrote:
 > This reverts commit 37ef4c19b4c659926ce65a7ac709ceaefb211c40.
 > 
 > The touchpad present in the Dell Precision 7550 and 7750 laptops
@@ -101,15 +97,12 @@ On 3/21/22 19:44, JosÃ© ExpÃ³sito wrote:
 > Cc: stable@vger.kernel.org
 > Link: https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481 [1]
 > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1868789  [2]
-> Signed-off-by: JosÃ© ExpÃ³sito <jose.exposito89@gmail.com>
+> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
 
-Thanks, patch looks good to me:
+Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
 
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-
-Regards,
-
-Hans
+Cheers,
+  Peter
 
 
 > ---
@@ -133,4 +126,6 @@ Hans
 >  	/* Make sure that bitmasks not mentioned in dev->evbit are clean. */
 >  	input_cleanse_bitmasks(dev);
 >  
-
+> -- 
+> 2.25.1
+> 
