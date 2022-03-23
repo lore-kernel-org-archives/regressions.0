@@ -1,155 +1,185 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D251378
-	for <regressions@lists.linux.dev>; Wed, 23 Mar 2022 07:28:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3822C340E8;
-	Wed, 23 Mar 2022 07:28:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B602F66C5
+	for <regressions@lists.linux.dev>; Wed, 23 Mar 2022 19:41:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAF7CC340ED;
+	Wed, 23 Mar 2022 19:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1648020508;
-	bh=hKNgS86ZsDxy6XOWOVYZ4mXSoI2JeEPeXjYKqdb3U/g=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=mvilRrJh2Xh3sYVP75oDnkZonVy/ryJJtSI8z90QiLrFVbjYSWkaVUVlTbWcpgcL9
-	 WGNyFDQXKH7lwjYnbAPc/O2uuRo8YZurdS9AHiVPpbHmSDXAgBkr9FtO2panArUiks
-	 8U5oNTgQgK4Sgl+oFFaaU+Qxikoap7zp60ceW1t9xvFEw+EV2flAYrl/Wel2pELyfl
-	 Kx4W/EyS3zjqeAITrFoQlZPInv2XvFbIbVoFRptXDrcOpQnS00jrxPA6Axoa154b6O
-	 lmjVViEC13FzBd8r5PLlGmbE52GD7f+BUxEyqR/dDPYk2KhKLZqw2Aw4QA8th2p3M9
-	 pDt0RUc4D24BA==
-From: Kalle Valo <kvalo@kernel.org>
-To: Oleksandr Natalenko <oleksandr@natalenko.name>
-Cc: Halil Pasic <pasic@linux.ibm.com>,  Christoph Hellwig <hch@lst.de>,
-  Linus Torvalds <torvalds@linux-foundation.org>,  Marek Szyprowski
- <m.szyprowski@samsung.com>,  Robin Murphy <robin.murphy@arm.com>,  Toke
- =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,  "David S. Miller"
- <davem@davemloft.net>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
- <pabeni@redhat.com>,  Olha Cherevyk <olha.cherevyk@gmail.com>,
-  iommu@lists.linux-foundation.org,  linux-wireless@vger.kernel.org,
-  netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,  Greg
- Kroah-Hartman <gregkh@linuxfoundation.org>,  stable@vger.kernel.org,
- regressions@lists.linux.dev
-Subject: Re: [REGRESSION] Recent swiotlb DMA_FROM_DEVICE fixes break ath9k-based AP
-References: <1812355.tdWV9SEqCh@natalenko.name>
-Date: Wed, 23 Mar 2022 09:28:20 +0200
-In-Reply-To: <1812355.tdWV9SEqCh@natalenko.name> (Oleksandr Natalenko's
-	message of "Wed, 23 Mar 2022 08:19:24 +0100")
-Message-ID: <874k3pm8kr.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+	s=k20201202; t=1648064477;
+	bh=OyjlJzJfIVp7HiKk4ACH/tuEz4i5DlpA3FsJmafSM2M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nSkZm+DX9pLULF7Ja/imieggcbTcYtgRSSpaMwEUfIUr6ici/r3BmCzp/CTHRV4Tw
+	 8gkY30+fV5ZSjDEoACoHh3ZluxDtBiDnKriphgNTwHnciH8xf/05G4TpiEj5c0O23x
+	 cICmhI1ZhSAy5hRHPaMLvx4oHrqQiTWnb4Ve4Kj/MtQbPrF7ytIyhy4o+Zp6Fgk1+U
+	 WrTxdOBCwR07JeLBRF81oB3Ajh5k1+TLZyI8jRO+JduA2IyuDhy92SjdbYBRewODO0
+	 So1KmKQHsB2DgJh/txz763fUOKgMNDhRx1GBqKAIE0DZAC77p+wCVEn1xSGPE929/q
+	 iCJ4jKYUAYE3A==
+Date: Wed, 23 Mar 2022 12:41:10 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Eduard-Gabriel Munteanu <maxdamage@aladin.ro>,
+	linux-um <linux-um@lists.infradead.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH 1/1] um: fix error return code in winch_tramp()
+Message-ID: <Yjt31seiNv18HYrf@dev-arch.thelio-3990X>
+References: <20210508032239.2177-1-thunder.leizhen@huawei.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210508032239.2177-1-thunder.leizhen@huawei.com>
 
-Adding regressions list so that this can be tracked properly, including
-the full report below.
+Hello,
 
-Oleksandr Natalenko <oleksandr@natalenko.name> writes:
+On Sat, May 08, 2021 at 11:22:39AM +0800, Zhen Lei wrote:
+> Fix to return a negative error code from the error handling case instead
+> of 0, as done elsewhere in this function.
+> 
+> Fixes: 89df6bfc0405 ("uml: DEBUG_SHIRQ fixes")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  arch/um/drivers/chan_user.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/um/drivers/chan_user.c b/arch/um/drivers/chan_user.c
+> index d8845d4aac6a..6040817c036f 100644
+> --- a/arch/um/drivers/chan_user.c
+> +++ b/arch/um/drivers/chan_user.c
+> @@ -256,7 +256,8 @@ static int winch_tramp(int fd, struct tty_port *port, int *fd_out,
+>  		goto out_close;
+>  	}
+>  
+> -	if (os_set_fd_block(*fd_out, 0)) {
+> +	err = os_set_fd_block(*fd_out, 0);
+> +	if (err) {
+>  		printk(UM_KERN_ERR "winch_tramp: failed to set thread_fd "
+>  		       "non-blocking.\n");
+>  		goto out_close;
+> -- 
+> 2.25.1
+> 
+> 
+> 
 
-> Hello.
->
-> The following upstream commits:
->
-> aa6f8dcbab47 swiotlb: rework "fix info leak with DMA_FROM_DEVICE"
-> ddbd89deb7d3 swiotlb: fix info leak with DMA_FROM_DEVICE
->
-> break ath9k-based Wi-Fi access point for me. The AP emits beacons, but no client can connect to it, either from the very beginning, or shortly after start. These are the only symptoms I've noticed (i.e., no BUG/WARNING messages in `dmesg` etc).
->
-> The hardware is:
->
-> ```
-> $ dmesg | grep -i swiotlb
-> [    0.426785] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
->
-> BIOS Information
->     Vendor: American Megatrends Inc.
->     Version: P1.50
->     Release Date: 04/16/2018
->
-> Base Board Information
->     Manufacturer: ASRock
->     Product Name: J3710-ITX
->
-> 02:00.0 Network controller: Qualcomm Atheros AR9462 Wireless Network Adapter (rev 01)
-> 	Subsystem: Lite-On Communications Inc Device 6621
-> 	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
-> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
-> 	Latency: 0, Cache Line Size: 64 bytes
-> 	Interrupt: pin A routed to IRQ 17
-> 	Region 0: Memory at 81400000 (64-bit, non-prefetchable) [size=512K]
-> 	Expansion ROM at 81480000 [disabled] [size=64K]
-> 	Capabilities: [40] Power Management version 2
-> 		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
-> 		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
-> 	Capabilities: [50] MSI: Enable- Count=1/4 Maskable+ 64bit+
-> 		Address: 0000000000000000  Data: 0000
-> 		Masking: 00000000  Pending: 00000000
-> 	Capabilities: [70] Express (v2) Endpoint, MSI 00
-> 		DevCap:	MaxPayload 128 bytes, PhantFunc 0, Latency L0s unlimited, L1 <64us
-> 			ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 10.000W
-> 		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
-> 			RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
-> 			MaxPayload 128 bytes, MaxReadReq 512 bytes
-> 		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
-> 		LnkCap:	Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <4us, L1 <64us
-> 			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
-> 		LnkCtl:	ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
-> 			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
-> 		LnkSta:	Speed 2.5GT/s (ok), Width x1 (ok)
-> 			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
-> 		DevCap2: Completion Timeout: Not Supported, TimeoutDis+ NROPrPrP- LTR-
-> 			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
-> 			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
-> 			 FRS- TPHComp- ExtTPHComp-
-> 			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
-> 			 AtomicOpsCtl: ReqEn-
-> 		LnkCap2: Supported Link Speeds: 2.5GT/s, Crosslink- Retimer- 2Retimers- DRS-
-> 		LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
-> 			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
-> 			 Compliance De-emphasis: -6dB
-> 		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete- EqualizationPhase1-
-> 			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
-> 			 Retimer- 2Retimers- CrosslinkRes: unsupported
-> 	Capabilities: [100 v1] Advanced Error Reporting
-> 		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> 		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
-> 		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
-> 		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
-> 		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
-> 		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
-> 			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
-> 		HeaderLog: 00000000 00000000 00000000 00000000
-> 	Capabilities: [140 v1] Virtual Channel
-> 		Caps:	LPEVC=0 RefClk=100ns PATEntryBits=1
-> 		Arb:	Fixed- WRR32- WRR64- WRR128-
-> 		Ctrl:	ArbSelect=Fixed
-> 		Status:	InProgress-
-> 		VC0:	Caps:	PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
-> 			Arb:	Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
-> 			Ctrl:	Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
-> 			Status:	NegoPending- InProgress-
-> 	Capabilities: [160 v1] Device Serial Number 00-00-00-00-00-00-00-00
-> 	Kernel driver in use: ath9k
-> 	Kernel modules: ath9k
-> ```
->
-> These commits appeared in v5.17 and v5.16.15, and both kernels are broken for me. I'm pretty confident these commits make the difference since I've built both v5.17 and v5.16.15 without them, and it fixed the issue.
->
-> The machine has also got another Wi-Fi card that acts as a 802.11ax AP, and it is not affected:
->
-> ```
-> 01:00.0 Unclassified device [0002]: MEDIATEK Corp. MT7915E 802.11ax PCI Express Wireless Network Adapter (prog-if 80)
-> ```
->
-> So, I do understand this might be an issue with regard to SG I/O handling in ath9k, hence relevant people in Cc.
->
-> Please suggest on how to deal with this. Both me and Olha (in Cc) will be glad to test patches if needed. In case any extra info is required, please also let me know.
->
-> Thanks.
+Sorry for the necro bump but this patch as commit ccf1236ecac4 ("um: fix
+error return code in winch_tramp()") prevents UML from exiting cleanly
+when it is called from within in a shell script. It is still
+reproducible at next-20220323. I did see a patch from Richard that
+touches this area but that patch does not make a difference:
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+https://lore.kernel.org/r/20220101215810.13260-3-richard@nod.at/
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+My bisect log:
+
+# bad: [7d2a07b769330c34b4deabeed939325c77a7ec2f] Linux 5.14
+# good: [62fb9874f5da54fdb243003b386128037319b219] Linux 5.13
+git bisect start 'v5.14' 'v5.13'
+# good: [406254918b232db198ed60f5bf1f8b84d96bca00] Merge tag 'perf-tools-for-v5.14-2021-07-01' of git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux
+git bisect good 406254918b232db198ed60f5bf1f8b84d96bca00
+# good: [4ea90317956718e0648e1f87e56530db809a5a04] Merge tag 'for-linus-5.14-rc1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip
+git bisect good 4ea90317956718e0648e1f87e56530db809a5a04
+# bad: [65ca89c2b12cca0d473f3dd54267568ad3af55cc] ASoC: intel: atom: Fix breakage for PCM buffer address setup
+git bisect bad 65ca89c2b12cca0d473f3dd54267568ad3af55cc
+# bad: [6e207b882159ed3e35a4cd4ff0fc155cce5e3cbc] Merge tag 'arm-soc-5.14' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+git bisect bad 6e207b882159ed3e35a4cd4ff0fc155cce5e3cbc
+# good: [f55966571d5eb2876a11e48e798b4592fa1ffbb7] Merge tag 'drm-next-2021-07-08-1' of git://anongit.freedesktop.org/drm/drm
+git bisect good f55966571d5eb2876a11e48e798b4592fa1ffbb7
+# bad: [1459718d7d79013a4814275c466e0b32da6a26bc] Merge tag 'powerpc-5.14-2' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
+git bisect bad 1459718d7d79013a4814275c466e0b32da6a26bc
+# good: [227c4d507c71acb7bece298a98d83e5b44433f62] Merge tag 'f2fs-for-5.14-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs
+git bisect good 227c4d507c71acb7bece298a98d83e5b44433f62
+# good: [96890bc2eaa1f6bfc1b194e0f0815a10824352a4] Merge tag 'nfs-for-5.14-1' of git://git.linux-nfs.org/projects/trondmy/linux-nfs
+git bisect good 96890bc2eaa1f6bfc1b194e0f0815a10824352a4
+# good: [e49d68ce7cc5a865ce14c1e57938438ab01c3ce3] Merge tag 'ext4_for_linus_stable' of git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4
+git bisect good e49d68ce7cc5a865ce14c1e57938438ab01c3ce3
+# bad: [ccf1236ecac476d9d2704866d9a476c86e387971] um: fix error return code in winch_tramp()
+git bisect bad ccf1236ecac476d9d2704866d9a476c86e387971
+# good: [68f5d3f3b6543266b29e047cfaf9842333019b4c] um: add PCI over virtio emulation driver
+git bisect good 68f5d3f3b6543266b29e047cfaf9842333019b4c
+# good: [c0ecca6604b80e438b032578634c6e133c7028f6] um: enable the use of optimized xor routines in UML
+git bisect good c0ecca6604b80e438b032578634c6e133c7028f6
+# good: [80f849bf541ef9b633a9c08ac208f9c9afd14eb9] um: implement flush_cache_vmap/flush_cache_vunmap
+git bisect good 80f849bf541ef9b633a9c08ac208f9c9afd14eb9
+# good: [b77e81fbe5f5fb4ad9a61ec80f6d1e30b6da093a] um: fix error return code in slip_open()
+git bisect good b77e81fbe5f5fb4ad9a61ec80f6d1e30b6da093a
+# first bad commit: [ccf1236ecac476d9d2704866d9a476c86e387971] um: fix error return code in winch_tramp()
+
+$ make -skj"$(nproc)" ARCH=um mrproper defconfig all
+
+$ ./linux ubd0=...
+...
+Run /sbin/init as init process
+EXT4-fs (ubda): re-mounted. Quota mode: none.
+Starting syslogd: OK
+Starting klogd: OK
+Running sysctl: OK
+Initializing random number generator: OK
+Saving random seed: OK
+Starting network: OK
+Linux version 5.17.0-next-20220323 (nathan@dev-arch.thelio-3990X) (gcc (GCC) 11.2.0, GNU ld (GNU Binutils) 2.38) #1 Wed Mar 23 12:05:22 MST 2022
+Stopping network: OK
+Saving random seed: OK
+Stopping klogd: OK
+Stopping syslogd: OK
+EXT4-fs (ubda): re-mounted. Quota mode: none.
+The system is going down NOW!
+Sent SIGTERM to all processes
+Sent SIGKILL to all processes
+Requesting system poweroff
+reboot: System halted
+
+$ echo $?
+0
+
+$ cat test.sh
+#!/usr/bin/env bash
+
+./linux ubd0=...
+
+$ ./test.sh
+...
+Run /sbin/init as init process
+EXT4-fs (ubda): re-mounted. Quota mode: none.
+Starting syslogd: OK
+Starting klogd: OK
+Running sysctl: OK
+Initializing random number generator: OK
+Saving random seed: OK
+Starting network: OK
+Linux version 5.17.0-next-20220323 (nathan@dev-arch.thelio-3990X) (gcc (GCC) 11.2.0, GNU ld (GNU Binutils) 2.38) #1 Wed Mar 23 12:10:31 MST 2022
+Stopping network: OK
+Saving random seed: OK
+Stopping klogd: OK
+Stopping syslogd: OK
+EXT4-fs (ubda): re-mounted. Quota mode: none.
+The system is going down NOW!
+Sent SIGTERM to all processes
+Sent SIGKILL to all processes
+Requesting system poweroff
+reboot: System halted
+./test.sh: line 5: 970978 Killed                  ./linux ubd0=...
+
+$ echo $?
+137
+
+The rootfs is a simple Buildroot image, which just prints the version
+string then runs "poweroff". It is available at:
+
+https://github.com/nathanchance/boot-utils/raw/bd4b962ee12e00f666eef12e3413a79d334a0685/images/x86_64/rootfs.ext4.zst
+
+in case it helps. I am happy to provide more information or test patches
+as necessary.
+
+Cheers,
+Nathan
