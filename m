@@ -1,131 +1,155 @@
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFACB1360
-	for <regressions@lists.linux.dev>; Wed, 23 Mar 2022 05:05:46 +0000 (UTC)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-	by mailout.nyi.internal (Postfix) with ESMTP id 9A2795C01C2;
-	Wed, 23 Mar 2022 01:05:45 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 23 Mar 2022 01:05:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to; s=fm3; bh=cXs53kf34gzbeb
-	VPwtBy2GATRwcGNz8VOEiL+25X/14=; b=kXsFzI3ROzb6ENUiw13L+s3a4egCK3
-	6rfFrYikC4dduRHAaxOk9VyhGbQyqyjP0Ov1RZcklsw9OSV1qQjka9IEXkPuYo8e
-	nJiQ4sH6R0/gJCMsf4/KXQogDMXDqagAQ3AO82qeF6CSmSqmLCq6tk8j6N2Ylg56
-	wjfOqaLfRIQyHGfbxIcxg1cBkvnswMaQur9boEos99uJCXG+1HRetQScQzCq89Wo
-	agPAPD7z2XaY9TUs5Eq9Y3kSXO4cjcTlb1MSiwMs+tIm5okmKwe0NZ6QtxpEBEx0
-	GBV+lcdTWCWGU8GILRCqpYBIdX6u1IklJl3tYXBQpWfe3izDR4m24bWw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm3; bh=cXs53kf34gzbebVPwtBy2GATRwcGNz8VOEiL+25X/
-	14=; b=hJZ3AA0bANboTwuu0aoDJknE+op+FPx+IsLSk8CPZ1AGyKOLaPpVP63ls
-	nmMhNBkfl9qhX3Rgum/kbwXEKk2WBNtrrFtgtvZtmsoLQkR7cKInKw4w/awnN/V/
-	Aj+5ceAXu6iLVQfjwstREK46BpIoU9nG3zmAz++sfPhQkO84fQOxv4KsbeWbsnwE
-	tQwLs92/0ohABUkNOmD9PaANaw73FkGSUdvf+KhmyfRwclSRk77zFybkn65qR3TG
-	cG9NjIkrkrDm7wW/m91HcjQvg2I7YWqst8hoAHlViZfZ8FvpA2Yfq37sBfl9WIh9
-	qcTN42uYCfr4C1xrbnrjsx3K6v7+w==
-X-ME-Sender: <xms:qao6YtFmqUVQzSXOh-ouWgBq_S18-x6JZyVP0b4jxwsqjdj3ERhWPw>
-    <xme:qao6YiWpIiqgQRWDKROoRWVIZRuQP4HjCbHP76OaKYUQDzHN7jPFMKpppb6e_Fdf2
-    PRMGKWqedT3vY24Bxs>
-X-ME-Received: <xmr:qao6YvKaNRD5iQ_2WK7j7bse_U_FIbspkP_pAx5VzYSZFzTDdLM4kH-vvu0PPp0EPuzzpyhbUfnnmXZ6vKc7kHFh4a3NznEyDA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudegiedgjeekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthekredttddtudenucfhrhhomheprfgvthgv
-    rhcujfhuthhtvghrvghruceophgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvg
-    htqeenucggtffrrghtthgvrhhnpeevfeejhedvffeuhfelfefghfdtvddvfffhleejffeu
-    gfekvdefhfeffffgueefleenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrgh
-    dprhgvughhrghtrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepphgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvght
-X-ME-Proxy: <xmx:qao6YjHRAwhthxWqsP4rkbWRyDj2h2DIW7Wf-pEltZ-PiQF5qv431A>
-    <xmx:qao6YjXcAWuGr38uvfR_LKrYbhbukTB3JqduCm1EoBNdII69XCSvTQ>
-    <xmx:qao6YuP8ZLOiHnU3KDriRjDQIRvR6d2OxBkxLq6XbYsk8N_7Z5vAgg>
-    <xmx:qao6YqHGTG8zQs-OkPW-W3jE1wTjOmRfDl0MVdshzG5f1qpWQjvpeg>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 23 Mar 2022 01:05:42 -0400 (EDT)
-Date: Wed, 23 Mar 2022 15:05:37 +1000
-From: Peter Hutterer <peter.hutterer@who-t.net>
-To: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-Cc: jkosina@suse.cz, tiwai@suse.de, benjamin.tissoires@redhat.com,
-	regressions@leemhuis.info, linux-input@vger.kernel.org,
-	stable@vger.kernel.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "Input: clear BTN_RIGHT/MIDDLE on buttonpads"
-Message-ID: <YjqqoW9jU3SoBgYn@quokka>
-References: <20220321184404.20025-1-jose.exposito89@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D251378
+	for <regressions@lists.linux.dev>; Wed, 23 Mar 2022 07:28:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3822C340E8;
+	Wed, 23 Mar 2022 07:28:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1648020508;
+	bh=hKNgS86ZsDxy6XOWOVYZ4mXSoI2JeEPeXjYKqdb3U/g=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=mvilRrJh2Xh3sYVP75oDnkZonVy/ryJJtSI8z90QiLrFVbjYSWkaVUVlTbWcpgcL9
+	 WGNyFDQXKH7lwjYnbAPc/O2uuRo8YZurdS9AHiVPpbHmSDXAgBkr9FtO2panArUiks
+	 8U5oNTgQgK4Sgl+oFFaaU+Qxikoap7zp60ceW1t9xvFEw+EV2flAYrl/Wel2pELyfl
+	 Kx4W/EyS3zjqeAITrFoQlZPInv2XvFbIbVoFRptXDrcOpQnS00jrxPA6Axoa154b6O
+	 lmjVViEC13FzBd8r5PLlGmbE52GD7f+BUxEyqR/dDPYk2KhKLZqw2Aw4QA8th2p3M9
+	 pDt0RUc4D24BA==
+From: Kalle Valo <kvalo@kernel.org>
+To: Oleksandr Natalenko <oleksandr@natalenko.name>
+Cc: Halil Pasic <pasic@linux.ibm.com>,  Christoph Hellwig <hch@lst.de>,
+  Linus Torvalds <torvalds@linux-foundation.org>,  Marek Szyprowski
+ <m.szyprowski@samsung.com>,  Robin Murphy <robin.murphy@arm.com>,  Toke
+ =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>,  "David S. Miller"
+ <davem@davemloft.net>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
+ <pabeni@redhat.com>,  Olha Cherevyk <olha.cherevyk@gmail.com>,
+  iommu@lists.linux-foundation.org,  linux-wireless@vger.kernel.org,
+  netdev@vger.kernel.org,  linux-kernel@vger.kernel.org,  Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>,  stable@vger.kernel.org,
+ regressions@lists.linux.dev
+Subject: Re: [REGRESSION] Recent swiotlb DMA_FROM_DEVICE fixes break ath9k-based AP
+References: <1812355.tdWV9SEqCh@natalenko.name>
+Date: Wed, 23 Mar 2022 09:28:20 +0200
+In-Reply-To: <1812355.tdWV9SEqCh@natalenko.name> (Oleksandr Natalenko's
+	message of "Wed, 23 Mar 2022 08:19:24 +0100")
+Message-ID: <874k3pm8kr.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220321184404.20025-1-jose.exposito89@gmail.com>
+Content-Type: text/plain
 
-On Mon, Mar 21, 2022 at 07:44:05PM +0100, José Expósito wrote:
-> This reverts commit 37ef4c19b4c659926ce65a7ac709ceaefb211c40.
-> 
-> The touchpad present in the Dell Precision 7550 and 7750 laptops
-> reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
-> the device is not a clickpad, it is a touchpad with physical buttons.
-> 
-> In order to fix this issue, a quirk for the device was introduced in
-> libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
-> 
-> 	[Precision 7x50 Touchpad]
-> 	MatchBus=i2c
-> 	MatchUdevType=touchpad
-> 	MatchDMIModalias=dmi:*svnDellInc.:pnPrecision7?50*
-> 	AttrInputPropDisable=INPUT_PROP_BUTTONPAD
-> 
-> However, because of the change introduced in 37ef4c19b4 ("Input: clear
-> BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
-> anymore breaking the device right click button and making impossible to
-> workaround it in user space.
-> 
-> In order to avoid breakage on other present or future devices, revert
-> the patch causing the issue.
-> 
-> Cc: stable@vger.kernel.org
-> Link: https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481 [1]
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1868789  [2]
-> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+Adding regressions list so that this can be tracked properly, including
+the full report below.
 
-Acked-by: Peter Hutterer <peter.hutterer@who-t.net>
+Oleksandr Natalenko <oleksandr@natalenko.name> writes:
 
-Cheers,
-  Peter
+> Hello.
+>
+> The following upstream commits:
+>
+> aa6f8dcbab47 swiotlb: rework "fix info leak with DMA_FROM_DEVICE"
+> ddbd89deb7d3 swiotlb: fix info leak with DMA_FROM_DEVICE
+>
+> break ath9k-based Wi-Fi access point for me. The AP emits beacons, but no client can connect to it, either from the very beginning, or shortly after start. These are the only symptoms I've noticed (i.e., no BUG/WARNING messages in `dmesg` etc).
+>
+> The hardware is:
+>
+> ```
+> $ dmesg | grep -i swiotlb
+> [    0.426785] PCI-DMA: Using software bounce buffering for IO (SWIOTLB)
+>
+> BIOS Information
+>     Vendor: American Megatrends Inc.
+>     Version: P1.50
+>     Release Date: 04/16/2018
+>
+> Base Board Information
+>     Manufacturer: ASRock
+>     Product Name: J3710-ITX
+>
+> 02:00.0 Network controller: Qualcomm Atheros AR9462 Wireless Network Adapter (rev 01)
+> 	Subsystem: Lite-On Communications Inc Device 6621
+> 	Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx-
+> 	Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+> 	Latency: 0, Cache Line Size: 64 bytes
+> 	Interrupt: pin A routed to IRQ 17
+> 	Region 0: Memory at 81400000 (64-bit, non-prefetchable) [size=512K]
+> 	Expansion ROM at 81480000 [disabled] [size=64K]
+> 	Capabilities: [40] Power Management version 2
+> 		Flags: PMEClk- DSI- D1+ D2+ AuxCurrent=375mA PME(D0+,D1+,D2+,D3hot+,D3cold+)
+> 		Status: D0 NoSoftRst- PME-Enable- DSel=0 DScale=0 PME-
+> 	Capabilities: [50] MSI: Enable- Count=1/4 Maskable+ 64bit+
+> 		Address: 0000000000000000  Data: 0000
+> 		Masking: 00000000  Pending: 00000000
+> 	Capabilities: [70] Express (v2) Endpoint, MSI 00
+> 		DevCap:	MaxPayload 128 bytes, PhantFunc 0, Latency L0s unlimited, L1 <64us
+> 			ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset- SlotPowerLimit 10.000W
+> 		DevCtl:	CorrErr- NonFatalErr- FatalErr- UnsupReq-
+> 			RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop-
+> 			MaxPayload 128 bytes, MaxReadReq 512 bytes
+> 		DevSta:	CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr+ TransPend-
+> 		LnkCap:	Port #0, Speed 2.5GT/s, Width x1, ASPM L0s L1, Exit Latency L0s <4us, L1 <64us
+> 			ClockPM- Surprise- LLActRep- BwNot- ASPMOptComp-
+> 		LnkCtl:	ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
+> 			ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+> 		LnkSta:	Speed 2.5GT/s (ok), Width x1 (ok)
+> 			TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+> 		DevCap2: Completion Timeout: Not Supported, TimeoutDis+ NROPrPrP- LTR-
+> 			 10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
+> 			 EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+> 			 FRS- TPHComp- ExtTPHComp-
+> 			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
+> 			 AtomicOpsCtl: ReqEn-
+> 		LnkCap2: Supported Link Speeds: 2.5GT/s, Crosslink- Retimer- 2Retimers- DRS-
+> 		LnkCtl2: Target Link Speed: 2.5GT/s, EnterCompliance- SpeedDis-
+> 			 Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+> 			 Compliance De-emphasis: -6dB
+> 		LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete- EqualizationPhase1-
+> 			 EqualizationPhase2- EqualizationPhase3- LinkEqualizationRequest-
+> 			 Retimer- 2Retimers- CrosslinkRes: unsupported
+> 	Capabilities: [100 v1] Advanced Error Reporting
+> 		UESta:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+> 		UEMsk:	DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+> 		UESvrt:	DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+> 		CESta:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+> 		CEMsk:	RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+> 		AERCap:	First Error Pointer: 00, ECRCGenCap- ECRCGenEn- ECRCChkCap- ECRCChkEn-
+> 			MultHdrRecCap- MultHdrRecEn- TLPPfxPres- HdrLogCap-
+> 		HeaderLog: 00000000 00000000 00000000 00000000
+> 	Capabilities: [140 v1] Virtual Channel
+> 		Caps:	LPEVC=0 RefClk=100ns PATEntryBits=1
+> 		Arb:	Fixed- WRR32- WRR64- WRR128-
+> 		Ctrl:	ArbSelect=Fixed
+> 		Status:	InProgress-
+> 		VC0:	Caps:	PATOffset=00 MaxTimeSlots=1 RejSnoopTrans-
+> 			Arb:	Fixed- WRR32- WRR64- WRR128- TWRR128- WRR256-
+> 			Ctrl:	Enable+ ID=0 ArbSelect=Fixed TC/VC=ff
+> 			Status:	NegoPending- InProgress-
+> 	Capabilities: [160 v1] Device Serial Number 00-00-00-00-00-00-00-00
+> 	Kernel driver in use: ath9k
+> 	Kernel modules: ath9k
+> ```
+>
+> These commits appeared in v5.17 and v5.16.15, and both kernels are broken for me. I'm pretty confident these commits make the difference since I've built both v5.17 and v5.16.15 without them, and it fixed the issue.
+>
+> The machine has also got another Wi-Fi card that acts as a 802.11ax AP, and it is not affected:
+>
+> ```
+> 01:00.0 Unclassified device [0002]: MEDIATEK Corp. MT7915E 802.11ax PCI Express Wireless Network Adapter (prog-if 80)
+> ```
+>
+> So, I do understand this might be an issue with regard to SG I/O handling in ath9k, hence relevant people in Cc.
+>
+> Please suggest on how to deal with this. Both me and Olha (in Cc) will be glad to test patches if needed. In case any extra info is required, please also let me know.
+>
+> Thanks.
 
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-> ---
->  drivers/input/input.c | 6 ------
->  1 file changed, 6 deletions(-)
-> 
-> diff --git a/drivers/input/input.c b/drivers/input/input.c
-> index c3139bc2aa0d..ccaeb2426385 100644
-> --- a/drivers/input/input.c
-> +++ b/drivers/input/input.c
-> @@ -2285,12 +2285,6 @@ int input_register_device(struct input_dev *dev)
->  	/* KEY_RESERVED is not supposed to be transmitted to userspace. */
->  	__clear_bit(KEY_RESERVED, dev->keybit);
->  
-> -	/* Buttonpads should not map BTN_RIGHT and/or BTN_MIDDLE. */
-> -	if (test_bit(INPUT_PROP_BUTTONPAD, dev->propbit)) {
-> -		__clear_bit(BTN_RIGHT, dev->keybit);
-> -		__clear_bit(BTN_MIDDLE, dev->keybit);
-> -	}
-> -
->  	/* Make sure that bitmasks not mentioned in dev->evbit are clean. */
->  	input_cleanse_bitmasks(dev);
->  
-> -- 
-> 2.25.1
-> 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
