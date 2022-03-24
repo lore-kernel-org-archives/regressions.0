@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852007E
-	for <regressions@lists.linux.dev>; Thu, 24 Mar 2022 10:37:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9247A7E
+	for <regressions@lists.linux.dev>; Thu, 24 Mar 2022 11:49:12 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nXKqO-0005Aw-0x; Thu, 24 Mar 2022 11:37:29 +0100
-Message-ID: <6801d0ef-9620-0f61-c107-c2c5524952ef@leemhuis.info>
-Date: Thu, 24 Mar 2022 11:37:26 +0100
+	id 1nXLxk-0000eg-7s; Thu, 24 Mar 2022 12:49:08 +0100
+Message-ID: <536eca11-b4b9-c1a8-6e6b-fcd0c339a3ec@leemhuis.info>
+Date: Thu, 24 Mar 2022 12:49:07 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,122 +16,53 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
+Subject: Re: PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" starting from 5.17 on
+ dual socket Intel Xeon Gold servers
 Content-Language: en-US
+To: linux-kernel <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
+References: <CAE4VaGDZr_4wzRn2___eDYRtmdPaGGJdzu_LCSkJYuY9BEO3cw@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Sasha Neftin <sasha.neftin@intel.com>,
- Tony Nguyen <anthony.l.nguyen@intel.com>,
- Jesse Brandeburg <jesse.brandeburg@intel.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- intel-wired-lan <intel-wired-lan@lists.osuosl.org>,
- James <jahutchinson99@googlemail.com>
-Subject: Bug 215689 - e1000e: regression for I219-V for kernel 5.14 onwards
+In-Reply-To: <CAE4VaGDZr_4wzRn2___eDYRtmdPaGGJdzu_LCSkJYuY9BEO3cw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1648118255;69c69a2f;
-X-HE-SMSGID: 1nXKqO-0005Aw-0x
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1648122552;68271b30;
+X-HE-SMSGID: 1nXLxk-0000eg-7s
 
-Hi, this is your Linux kernel regression tracker.
+[TLDR: I'm adding the regression report below to regzbot, the Linux
+kernel regression tracking bot; all text you find below is compiled from
+a few templates paragraphs you might have encountered already already
+from similar mails.]
 
-I noticed a regression report in bugzilla.kernel.org that afaics nobody
-acted upon since it was reported about a week ago, that's why I decided
-to forward it to the lists and a few relevant people to the CC. To quote
-from https://bugzilla.kernel.org/show_bug.cgi?id=215689 :
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easily accessible to everyone.
 
-> [reply] [−] Description James 2022-03-15 13:45:38 UTC
-> 
-> I run Arch linux on an Intel NUC 8i3BEH which has the following network card:
-> 
-> 00:1f.6 Ethernet controller: Intel Corporation Ethernet Connection (6) I219-V (rev 30)
->         DeviceName:  LAN
->         Subsystem: Intel Corporation Device 2074
->         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
->         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
->         Latency: 0
->         Interrupt: pin A routed to IRQ 135
->         Region 0: Memory at c0b00000 (32-bit, non-prefetchable) [size=128K]
->         Capabilities: [c8] Power Management version 3
->                 Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
->                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=1 PME-
->         Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
->                 Address: 00000000fee003d8  Data: 0000
->         Kernel driver in use: e1000e
->         Kernel modules: e1000e
-> 
-> I found a major regression since the previous few kernel versions which causes several odd issues, most noteably I use the machine to stream live tv via TVheadend and was finding this to be unusable (picture freezes and sound breaks up very badly with continuity errors in the TVheadend logfile).
-> 
-> I found the issue was introduced since the 5.14 kernel, and have eventually got round to performing a git bisect, which landed upon the following commit:
-> 
-> 44a13a5: e1000e: Fix the max snoop/no-snoop latency for 10M 
-> 
-> Indeed, if I revert this single commit then the problem is resolved.
-> 
-> To help diagnose the issue I applied the following patch to capture the values of the lat_enc, max_ltr_enc vs lat_enc_d, max_ltr_enc_d variables:
-> 
-> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-> index d60e2016d..f4e5ffbcd 100644
-> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
-> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
-> @@ -1012,6 +1012,7 @@ static s32 e1000_platform_pm_pch_lpt(struct e1000_hw *hw, bool link)
->         u16 max_ltr_enc_d = 0;  /* maximum LTR decoded by platform */
->         u16 lat_enc_d = 0;      /* latency decoded */
->         u16 lat_enc = 0;        /* latency encoded */
-> +       struct e1000_adapter *adapter = hw->adapter;
-> 
->         if (link) {
->                 u16 speed, duplex, scale = 0;
-> @@ -1074,6 +1075,9 @@ static s32 e1000_platform_pm_pch_lpt(struct e1000_hw *hw, bool link)
->                                  ((max_ltr_enc & E1000_LTRV_SCALE_MASK)
->                                  >> E1000_LTRV_SCALE_SHIFT)));
-> 
-> +               e_info("e1000e: lat_enc=%d max_ltr_enc=%d", lat_enc, max_ltr_enc);
-> +               e_info("e1000e: lat_enc_d=%u max_ltr_enc_d=%u", lat_enc_d, max_ltr_enc_d);
-> +
->                 if (lat_enc_d > max_ltr_enc_d)
->                         lat_enc = max_ltr_enc;
->         }
-> 
-> With this in place I see the following in dmesg:
-> 
-> [    3.241215] e1000e: Intel(R) PRO/1000 Network Driver
-> [    3.241217] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
-> [    3.243382] e1000e 0000:00:1f.6: Interrupt Throttling Rate (ints/sec) set to dynamic conservative mode
-> [    3.749009] e1000e 0000:00:1f.6 0000:00:1f.6 (uninitialized): registered PHC clock
-> [    3.824751] e1000e 0000:00:1f.6 eth0: (PCI Express:2.5GT/s:Width x1) 94:c6:91:ae:b3:7b
-> [    3.824765] e1000e 0000:00:1f.6 eth0: Intel(R) PRO/1000 Network Connection
-> [    3.824849] e1000e 0000:00:1f.6 eth0: MAC: 13, PHY: 12, PBA No: FFFFFF-0FF
-> [    6.949327] e1000e 0000:00:1f.6 eth0: e1000e: lat_enc=2233 max_ltr_enc=4099
-> [    6.949331] e1000e 0000:00:1f.6 eth0: e1000e: lat_enc_d=58368 max_ltr_enc_d=0
-> [    6.951165] e1000e 0000:00:1f.6 eth0: NIC Link is Up 1000 Mbps Full Duplex, Flow Control: Rx/Tx
-> 
-> Notice that lat_enc_d=58368 and max_ltr_enc_d=0 !
-> 
-> lat_enc_d is greater than max_ltr_enc_d so it's setting snoop latency to max_ltr_enc (i.e. 4099) where it would have previously been set to 2233 in this particular example. This seems to be where the problem lies.
-> 
-> Prior to commit 44a13a5:
-> 
-> if (lat_enc > max_ltr_enc)
->   lat_enc = max_ltr_enc;
-> 
-> After commit 44a13a5:
-> 
-> if (lat_enc_d > max_ltr_enc_d)
->   lat_enc = max_ltr_enc;
-> 
-> 
-> I'm not sure whether it was intended for this new code to take effect for an I219 since the commit message on 44a13a5 indicates it was aimed at I217/I218. Seems strange that max_ltr_enc_d is getting set to 0?
-> 
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
 
-BTW, that commit is from Sasha Neftin.
+#regzbot ^introduced v5.16..v5.17
+#regzbot ignore-activity
 
-Could somebody take a look into this? Or was this discussed somewhere
-else already? Or even fixed?
+If it turns out this isn't a regression, free free to remove it from the
+tracking by sending a reply to this thread containing a paragraph like
+"#regzbot invalid: reason why this is invalid" (without the quotes).
 
-Anyway, to get this tracked:
+Reminder for developers: when fixing the issue, please add a 'Link:'
+tags pointing to the report (the mail quoted above) using
+lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'. Regzbot needs them to
+automatically connect reports with fixes, but they are useful in
+general, too.
 
-#regzbot introduced: 44a13a5d99c71bf9e1676d9e51679daf4d7b3d73
-#regzbot from: James <jahutchinson99@googlemail.com>
-#regzbot title: net: e1000e: instabilities on I219-V for kernel 5.14 onwards
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215689
+I'm sending this to everyone that got the initial report, to make
+everyone aware of the tracking. I also hope that messages like this
+motivate people to directly get at least the regression mailing list and
+ideally even regzbot involved when dealing with regressions, as messages
+like this wouldn't be needed then. And don't worry, if I need to send
+other mails regarding this regression only relevant for regzbot I'll
+send them to the regressions lists only (with a tag in the subject so
+people can filter them away). With a bit of luck no such messages will
+be needed anyway.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -142,6 +73,137 @@ will sometimes get things wrong or miss something important. I hope
 that's not the case here; if you think it is, don't hesitate to tell me
 in a public reply, it's in everyone's interest to set the public record
 straight.
+
+
+On 22.03.22 00:29, Jirka Hladky wrote:
+> Starting from kernel 5.17 (tested with rc2, rc4, rc7, rc8) we
+> experience kernel oops on Intel Xeon Gold dual-socket servers (2x Xeon
+> Gold 6126 CPU)
+> 
+> Bellow is a backtrace and the dmesg log.
+> 
+> I have trouble creating a simple reproducer - it happens at random
+> places when preparing the NAS benchmark to be run. The script creates
+> a bunch of directories, compiles the benchmark a start trial runs.
+> 
+> Could you please help to narrow down the problem?
+> 
+> Reports bellow were created with kernel 5.17 rc8 and with
+> echo 1 > /proc/sys/kernel/panic_on_oops
+> setting.
+> 
+> crash> sys
+>       KERNEL: /usr/lib/debug/lib/modules/5.17.0-0.rc8.123.fc37.x86_64/vmlinux
+>     DUMPFILE: vmcore  [PARTIAL DUMP]
+>         CPUS: 48
+>         DATE: Thu Mar 17 02:49:40 CET 2022
+>       UPTIME: 00:02:50
+> LOAD AVERAGE: 0.32, 0.10, 0.03
+>        TASKS: 608
+>     NODENAME: gold-2s-c
+>      RELEASE: 5.17.0-0.rc8.123.fc37.x86_64
+>      VERSION: #1 SMP PREEMPT Mon Mar 14 18:11:49 UTC 2022
+>      MACHINE: x86_64  (2600 Mhz)
+>       MEMORY: 94.7 GB
+>        PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" (check log for details)
+> 
+> 
+> crash> bt
+> PID: 2480   TASK: ffff9e8f76cb8000  CPU: 26  COMMAND: "umount"
+> #0 [ffffae00cacbfbb8] machine_kexec at ffffffffbb068980
+> #1 [ffffae00cacbfc08] __crash_kexec at ffffffffbb1a300a
+> #2 [ffffae00cacbfcc8] crash_kexec at ffffffffbb1a4045
+> #3 [ffffae00cacbfcd0] oops_end at ffffffffbb02c410
+> #4 [ffffae00cacbfcf0] page_fault_oops at ffffffffbb076a38
+> #5 [ffffae00cacbfd68] exc_page_fault at ffffffffbbd0b7c1
+> #6 [ffffae00cacbfd90] asm_exc_page_fault at ffffffffbbe00ace
+>    [exception RIP: kernfs_remove+7]
+>    RIP: ffffffffbb421f67  RSP: ffffae00cacbfe48  RFLAGS: 00010246
+>    RAX: 0000000000000001  RBX: ffffffffbce31e58  RCX: 0000000080200018
+>    RDX: 0000000080200019  RSI: ffffdfbd44161640  RDI: 0000000000000000
+>    RBP: ffffffffbce31e58   R8: 0000000000000000   R9: 0000000080200018
+>    R10: ffff9e8f05859e80  R11: ffff9e9443b1bd98  R12: ffff9ea057f1d000
+>    R13: ffffffffbce31e60  R14: dead000000000122  R15: dead000000000100
+>    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+> #7 [ffffae00cacbfe58] rdt_kill_sb at ffffffffbb05074b
+> #8 [ffffae00cacbfea8] deactivate_locked_super at ffffffffbb36ce1f
+> #9 [ffffae00cacbfec0] cleanup_mnt at ffffffffbb39176e
+> #10 [ffffae00cacbfee8] task_work_run at ffffffffbb10703c
+> #11 [ffffae00cacbff08] exit_to_user_mode_prepare at ffffffffbb17a399
+> #12 [ffffae00cacbff28] syscall_exit_to_user_mode at ffffffffbbd0bde8
+> #13 [ffffae00cacbff38] do_syscall_64 at ffffffffbbd071a6
+> #14 [ffffae00cacbff50] entry_SYSCALL_64_after_hwframe at ffffffffbbe0007c
+>    RIP: 00007f442c75126b  RSP: 00007ffc82d66fe8  RFLAGS: 00000202
+>    RAX: 0000000000000000  RBX: 000055bd4cc37090  RCX: 00007f442c75126b
+>    RDX: 0000000000000001  RSI: 0000000000000001  RDI: 000055bd4cc3b950
+>    RBP: 000055bd4cc371a8   R8: 0000000000000000   R9: 0000000000000073
+>    R10: 0000000000000000  R11: 0000000000000202  R12: 0000000000000001
+>    R13: 000055bd4cc3b950  R14: 000055bd4cc372c0  R15: 000055bd4cc37090
+>    ORIG_RAX: 00000000000000a6  CS: 0033  SS: 002b
+> 
+> [2] dmesg
+> [  172.776553] BUG: kernel NULL pointer dereference, address: 0000000000000008
+> [  172.783513] #PF: supervisor read access in kernel mode
+> [  172.788652] #PF: error_code(0x0000) - not-present page
+> [  172.793793] PGD 0 P4D 0
+> [  172.796330] Oops: 0000 [#1] PREEMPT SMP PTI
+> [  172.800519] CPU: 26 PID: 2480 Comm: umount Kdump: loaded Not
+> tainted 5.17.0-0.rc8.123.fc37.x86_64 #1
+> [  172.809645] Hardware name: Supermicro Super Server/X11DDW-L, BIOS
+> 2.0b 03/07/2018
+> [  172.817123] RIP: 0010:kernfs_remove+0x7/0x50
+> [  172.821397] Code: e8 be e7 2c 00 48 89 df e8 b6 8c f0 ff 48 c7 c3
+> f4 ff ff ff 48 89 d8 5b 5d 41 5c 41 5d 41 5e c3 cc 66 90 0f 1f 44 00
+> 00 55 53 <48> 8b 47 08 48 89 fb 48 85 c0 48 0f 44 c7 48 8b 68 50 48 83
+> c5 60
+> [  172.840141] RSP: 0018:ffffae00cacbfe48 EFLAGS: 00010246
+> [  172.845367] RAX: 0000000000000001 RBX: ffffffffbce31e58 RCX: 0000000080200018
+> [  172.852501] RDX: 0000000080200019 RSI: ffffdfbd44161640 RDI: 0000000000000000
+> [  172.859632] RBP: ffffffffbce31e58 R08: 0000000000000000 R09: 0000000080200018
+> [  172.866764] R10: ffff9e8f05859e80 R11: ffff9e9443b1bd98 R12: ffff9ea057f1d000
+> [  172.873899] R13: ffffffffbce31e60 R14: dead000000000122 R15: dead000000000100
+> [  172.881033] FS:  00007f442c53c800(0000) GS:ffff9e9429000000(0000)
+> knlGS:0000000000000000
+> [  172.889117] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  172.894861] CR2: 0000000000000008 CR3: 000000010ba96006 CR4: 00000000007706e0
+> [  172.901997] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  172.909127] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  172.916261] PKRU: 55555554
+> [  172.918974] Call Trace:
+> [  172.921427]  <TASK>
+> [  172.923533]  rdt_kill_sb+0x29b/0x350
+> [  172.927112]  deactivate_locked_super+0x2f/0xa0
+> [  172.931559]  cleanup_mnt+0xee/0x180
+> [  172.935051]  task_work_run+0x5c/0x90
+> [  172.938629]  exit_to_user_mode_prepare+0x229/0x230
+> [  172.943424]  syscall_exit_to_user_mode+0x18/0x40
+> [  172.948043]  do_syscall_64+0x46/0x80
+> [  172.951623]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> [  172.956675] RIP: 0033:0x7f442c75126b
+> [  172.960271] Code: cb 1b 0e 00 f7 d8 64 89 01 48 83 c8 ff c3 90 f3
+> 0f 1e fa 31 f6 e9 05 00 00 00 0f 1f 44 00 00 f3 0f 1e fa b8 a6 00 00
+> 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 91 1b 0e 00
+> f7 d8
+> [  172.979017] RSP: 002b:00007ffc82d66fe8 EFLAGS: 00000202 ORIG_RAX:
+> 00000000000000a6
+> [  172.986584] RAX: 0000000000000000 RBX: 000055bd4cc37090 RCX: 00007f442c75126b
+> [  172.993715] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 000055bd4cc3b950
+> [  173.000849] RBP: 000055bd4cc371a8 R08: 0000000000000000 R09: 0000000000000073
+> [  173.007980] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000001
+> [  173.015115] R13: 000055bd4cc3b950 R14: 000055bd4cc372c0 R15: 000055bd4cc37090
+> [  173.022249]  </TASK>
+> [  173.024440] Modules linked in: rfkill intel_rapl_msr
+> intel_rapl_common isst_if_common irdma skx_edac nfit libnvdimm ice
+> x86_pkg_temp_thermal intel_powerclamp coretemp ib_uverbs iTCO_wdt
+> intel_pmc_bxt ib_core iTCO_vendor_support kvm_
+> intel ipmi_ssif kvm irqbypass rapl acpi_ipmi intel_cstate i40e joydev
+> mei_me ioatdma i2c_i801 intel_uncore lpc_ich i2c_smbus mei
+> intel_pch_thermal dca ipmi_si ipmi_devintf ipmi_msghandler acpi_pad
+> acpi_power_meter fuse zram xfs crct10d
+> if_pclmul ast crc32_pclmul crc32c_intel drm_vram_helper drm_ttm_helper
+> ttm wmi ghash_clmulni_intel
+> [  173.073900] CR2: 0000000000000008
+> 
 
 -- 
 Additional information about regzbot:
