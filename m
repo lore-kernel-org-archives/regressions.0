@@ -1,13 +1,17 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC6E17C0
-	for <regressions@lists.linux.dev>; Sun, 27 Mar 2022 09:00:15 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nYOkp-0001jQ-OB; Sun, 27 Mar 2022 11:00:07 +0200
-Message-ID: <be9fe3f6-f6a1-f293-5fdc-0ec3c46c5952@leemhuis.info>
-Date: Sun, 27 Mar 2022 11:00:04 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0187E
+	for <regressions@lists.linux.dev>; Sun, 27 Mar 2022 10:36:12 +0000 (UTC)
+Received: from [192.168.1.11] (dynamic-078-055-201-104.78.55.pool.telefonica.de [78.55.201.104])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id C11CF61EA1923;
+	Sun, 27 Mar 2022 12:36:09 +0200 (CEST)
+Message-ID: <7edcd673-decf-7b4e-1f6e-f2e0e26f757a@molgen.mpg.de>
+Date: Sun, 27 Mar 2022 12:36:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,28 +19,75 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [REGRESSION] Recent swiotlb DMA_FROM_DEVICE fixes break
- ath9k-based AP #forregzbot
+ Thunderbird/91.7.0
+Subject: Re: BUG: Bad page state in process systemd-udevd (was: [PATCH v9
+ bpf-next 1/9] x86/Kconfig: select HAVE_ARCH_HUGE_VMALLOC with
+ HAVE_ARCH_HUGE_VMAP)
 Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <1812355.tdWV9SEqCh@natalenko.name>
- <dab4615d-2e57-de1b-4df9-f99b34ef4874@leemhuis.info>
- <6374a239-fe40-4aa2-771c-bf628b822b69@leemhuis.info>
-In-Reply-To: <6374a239-fe40-4aa2-771c-bf628b822b69@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1648371616;5c1aaa7e;
-X-HE-SMSGID: 1nYOkp-0001jQ-OB
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: Song Liu <song@kernel.org>
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ kernel-team@fb.com, peterz@infradead.org, x86@kernel.org, iii@linux.ibm.com,
+ Song Liu <songliubraving@fb.com>, bpf@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Rick P Edgecombe <rick.p.edgecombe@intel.com>, regressions@lists.linux.dev
+References: <20220204185742.271030-1-song@kernel.org>
+ <20220204185742.271030-2-song@kernel.org>
+ <14444103-d51b-0fb3-ee63-c3f182f0b546@molgen.mpg.de>
+In-Reply-To: <14444103-d51b-0fb3-ee63-c3f182f0b546@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 25.03.22 10:24, Thorsten Leemhuis wrote:
-> On 24.03.22 13:32, Thorsten Leemhuis wrote:
->> TWIMC: this mail is primarily send for documentation purposes and for
->> regzbot, my Linux kernel regression tracking bot. These mails usually
->> contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Dear Song,
+
+
+Am 26.03.22 um 19:46 schrieb Paul Menzel:
+> #regzbot introduced: fac54e2bfb5be2b0bbf115fe80d45f59fd773048
+> #regzbot title: BUG: Bad page state in process systemd-udevd
+
+> Am 04.02.22 um 19:57 schrieb Song Liu:
+>> From: Song Liu <songliubraving@fb.com>
+>>
+>> This enables module_alloc() to allocate huge page for 2MB+ requests.
+>> To check the difference of this change, we need enable config
+>> CONFIG_PTDUMP_DEBUGFS, and call module_alloc(2MB). Before the change,
+>> /sys/kernel/debug/page_tables/kernel shows pte for this map. With the
+>> change, /sys/kernel/debug/page_tables/ show pmd for thie map.
+>>
+>> Signed-off-by: Song Liu <songliubraving@fb.com>
+>> ---
+>>   arch/x86/Kconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> index 6fddb63271d9..e0e0d00cf103 100644
+>> --- a/arch/x86/Kconfig
+>> +++ b/arch/x86/Kconfig
+>> @@ -159,6 +159,7 @@ config X86
+>>       select HAVE_ALIGNED_STRUCT_PAGE        if SLUB
+>>       select HAVE_ARCH_AUDITSYSCALL
+>>       select HAVE_ARCH_HUGE_VMAP        if X86_64 || X86_PAE
+>> +    select HAVE_ARCH_HUGE_VMALLOC        if HAVE_ARCH_HUGE_VMAP
+>>       select HAVE_ARCH_JUMP_LABEL
+>>       select HAVE_ARCH_JUMP_LABEL_RELATIVE
+>>       select HAVE_ARCH_KASAN            if X86_64
 > 
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215703
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215698
+> Testing Linus’ current master branch, Linux logs critical messages like 
+> below:
+> 
+>      BUG: Bad page state in process systemd-udevd  pfn:102e03
+> 
+> I bisected to your commit fac54e2bfb5 (x86/Kconfig: select 
+> HAVE_ARCH_HUGE_VMALLOC with HAVE_ARCH_HUGE_VMAP).
 
-#regzbot fixed-by: bddac7c1e02ba47f0570e494c9289acea3062cc1
+Sorry, I forget to mention, that this is a 32-bit (i686) userspace, but 
+a 64-bit Linux kernel, so it might be the same issue as mentioned in 
+commit eed1fcee556f (x86: Disable HAVE_ARCH_HUGE_VMALLOC on 32-bit x86), 
+but didn’t fix the issue for 64-bit Linux kernel and 32-bit userspace.
+
+
+Kind regards,
+
+Paul
