@@ -1,36 +1,37 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2016.outbound.protection.outlook.com [40.92.20.16])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11olkn2101.outbound.protection.outlook.com [40.92.18.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75FC4182
-	for <regressions@lists.linux.dev>; Mon, 28 Mar 2022 01:29:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCE07C
+	for <regressions@lists.linux.dev>; Mon, 28 Mar 2022 03:12:40 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z+xrUF1yKFnxO8wmDCPBTjGJ46yc7P9NxcjjkQ76HsmO346Vc3kJGw+pa4aXxNkWVjJEqj9304IlxsSoJJIx3N32VITfWtpNrGjJJeBx+vqU68K1+Vdz0SwiPQvPGGRZbRGWl5PDQhNofsiKQ7a4uT/3K+HnPQrXgKAFONunQ/guktoUOtbwebwL+l/BLghjf42EeycRcKUiT37POlwi8fn/5YwOxxAZqc4z+gHdAhHGFJadLBcx4/SpEA4Nxu+nxNHZTyIbQTCv7oSlPPEGNLBTiywa+g5WULMv4oqNSOMz4DFtn34Y1ybeXeR+x+Tj20EJrz+TeQGB+9yUlfzDZQ==
+ b=X8XMMzHd+/jiTyD5EV5vAhnFWI4zPmKDwWwJg5xWYpjB/2RedYU9cigVrCnnl913gK56x1nXMGNiCtCikTkIeKXMj+xyPkGs3O6hXj4aesLlC+6ZjLxhWr5vt8cQ7z9za7Pj2IrvDpHRBXNRjD1oMdTjKnovNBGbL4+nGsUdkxkagCvrghLoDBUNOAaFPR23j5E0RZYjpGXA5ekZ+KLqWvyEi7Wcz/nwSDaJiJk5ubb3UPL7FshdFsojhqPzR/kdkKo1m8qjy43pIGvd+qiQRqY/mLvV/3hDJTH5NBsT5Tgo8RYpbKBxWFpA3uhHN90XhiLktkK6PsbeYbnE6zcvwA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UM/Gk8CkN9QO2X71vQYdvFC37BB5K2QHcIXhvnuctT8=;
- b=hSPLwMIj//FGBvrkjrLlyI55CSNjwFlwi0zufy3S8pxhIPan8Hjd3s9p1bcnOdqafAkpZ08tJlxtWRxmdSKYboaXZr1UAMFEaGP9Azc8j944SwGCSHxusPrGl3ioWC0vmXtC4snjfnu6ze9SNmEZATDemPnqh+5GeSPCWNKXb353KDEKs1mTTyGR1RwFOkW33e+/RdqrFLasAGRJxMGIf/8nLlfOFrr0QH/AMBIxxT5kQDtDiP0CA/YCaWkQPIrMXSqwqywDWlo3keVZ3naAL/Y95IVvyMHyLW9dMKisuCZp7jwVm8rkHJlGChB1pWR9Ek5MfI5v6U6pOdRDMAZwPw==
+ bh=fzZ8egp4NxB2BWpHp7tkSBzcZc7lifPSOiMNyAj14X4=;
+ b=cVdRtYAtSHCh2ZNPYZPX84IIL7hBqMXG9RvAFABoT4pNdSoaWvafTp3I+0bOvf5WkaFQ8EVYD6e2W0xdLnxI98LYuPNc4OsLXmYYbl22PPyTuwHiQqkwVwDuGx1LtCdpBD+fAOkLPCT0vMfxDjFFydVlw7ritsuSmZ/G8gR8h1b1EzllfrGKN8fSTP9hmHK4DLGbq8ymkTWFHpSvF0IPzGDgG02d3kVf7IAb8APfZI0ZZ2lePSBM7J0/FCPqqATrSO1T3F7shPFR04Wlc5teNCybp3i6OzDCOhswVG5v9TaRlDOXc1B2IvxzuX8IWxA1x7DOmgcBzW5uqlVSbLq09Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 Received: from MN2PR20MB2512.namprd20.prod.outlook.com (2603:10b6:208:130::24)
- by CH0PR20MB3929.namprd20.prod.outlook.com (2603:10b6:610:cb::6) with
+ by DM6PR20MB2746.namprd20.prod.outlook.com (2603:10b6:5:13f::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.22; Mon, 28 Mar
- 2022 01:29:06 +0000
+ 2022 03:12:38 +0000
 Received: from MN2PR20MB2512.namprd20.prod.outlook.com
  ([fe80::9478:70e3:10c0:b16b]) by MN2PR20MB2512.namprd20.prod.outlook.com
  ([fe80::9478:70e3:10c0:b16b%6]) with mapi id 15.20.5102.022; Mon, 28 Mar 2022
- 01:29:06 +0000
+ 03:12:38 +0000
 From: Bruno Damasceno Freire <bdamasceno@hotmail.com.br>
 To: Thorsten Leemhuis <regressions@leemhuis.info>
 CC: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Bruno Damasceno
+ Freire <bdamasceno@hotmail.com.br>
 Subject: Re: [regression] 5.15 kernel triggering 100x more inode evictions
 Thread-Topic: [regression] 5.15 kernel triggering 100x more inode evictions
-Thread-Index: AQHYPN5CzLbpGwv62Eyf/QOJSNQRSqzOeNCAgAVDwAE=
-Date: Mon, 28 Mar 2022 01:29:06 +0000
+Thread-Index: AQHYPN5CzLbpGwv62Eyf/QOJSNQRSqzOeNCAgAWocgM=
+Date: Mon, 28 Mar 2022 03:12:38 +0000
 Message-ID:
- <MN2PR20MB2512CC55566CDBE7133C0ACDD21C9@MN2PR20MB2512.namprd20.prod.outlook.com>
+ <MN2PR20MB251203B4B5445B4B0C4148C9D21D9@MN2PR20MB2512.namprd20.prod.outlook.com>
 References:
  <MN2PR20MB2512314446801B92562E26B5D2169@MN2PR20MB2512.namprd20.prod.outlook.com>
  <07bb78be-1d58-7d88-288b-6516790f3b5d@leemhuis.info>
@@ -39,42 +40,44 @@ Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-suggested_attachment_session_id: a6ecd9f3-ed7e-f35c-1fca-c8313d0c45ad
+suggested_attachment_session_id: 03e7dbd0-ec36-810e-54ae-a6fed71ae806
 x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn: [Z1yJhKG4aiOWLx6rwIMh4GV6TlzUJjMB]
+x-tmn: [GXTAzOXCS1yNySrDfh3BIvAPexmxKbbY]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3051a980-2b35-44e6-0444-08da105a59ab
-x-ms-traffictypediagnostic: CH0PR20MB3929:EE_
+x-ms-office365-filtering-correlation-id: d2148f25-267b-4f59-730a-08da1068d091
+x-ms-exchange-slblob-mailprops:
+ S/btQ8cKWiR6nMXE5xGBKE2J0Wx9WygQfbudtaJYsEQAmWwVdoybKt064UJuacKPB6/ZebAYG6hxhAIZjbGxuQv+NVvJlFaj5D/hV7BDpsJIuwTutWFXJ61LpKE9YBy5YrA7zJemJq1Ehw1Z+d7Roxz5sGgzK6J1Wx+QVMO1cmCYgBCqXAspkCh6QRJAXri33xzu3hggwuAmHCtUzdpKlD5JWjrwixDTeOUHpzmZeJ4XMNBWwAsrDSdOIxxUBOXTd3fpvf/N5qwOXWd5MmjQkkfgqUlqUIpkkbZ6Yyfe4KoDp5e4H/ETpWU3r2O0JCRZQjq6/B65tQOJoOaVy3g7NwiBPlRwb7rVvHUjWQxNEbGfVFL4PGzArYnrLDH3pJDoard4gCFGlJkEfZWqnZ69uvE2Lu/w170kcy4V3xZceteHZeg/XH2apj8M2S2OfHe0wlfthaS1kUi+lhrTFviO6K4qYjHdAA+1qXaRnPxPcYMA/0UE9Mv4gY+6FtlMDvkEKI1dfTZuPIpV7bwQM/9rSr0YG+YA2oawRk0VgN4eGHnUkDIqBSUSykJAziROUXNkVICUw35N//e4u0Mxh7KE2eTx3rrQy/yob9j6GZiU2pGIFQnQm/71F2uu11ASnROoO2dgJeoMt2UPNruI9Iz406MCIqfRv3pn9Zlhez0PfK8+xEnyAuHa+QPaIP/iEu7C+ffSRrkkRME41lRfS0yfueK+0Aj5mBa1xw45eEEvUA+NXGuKbgNFagRProQuVQFVSgOVmiJHpP8=
+x-ms-traffictypediagnostic: DM6PR20MB2746:EE_
 x-microsoft-antispam: BCL:0;
 x-microsoft-antispam-message-info:
- m9ZMG6KHPehmr7it2t7HjsX88C6FhvLytqXRglRMye8RQhE64/vyskBz2nNFaEju899zG3gQ8AWnhtoMWdQ/PXZGjMMcgecV7DzD4s2AowO9dsc4i021HFkeMhphqwM+Fiub5CYPHA4/w0CcRs8buTRU2/0tfwOGklGHWGwGaGxtgtyCHRoXt5tOd8ZTtX4bZIFCzq2QJbWpcjh8XytDhQ+HA5260rbPmkQVLUwi61grjnZyoTVJUX8aK+rbvAm83u4Yp1p2qSGMV9YCURue8sB+yA9aOPwh/YkZXQ7R7d4izzxFRAqive7hhJu1ENG+YGSH4nvL7e845+B+N4Y9dRIocbewbHk9vJZ+bjLGPnHyZQY56PRgM3yXWdPTaocluSEgBEAvxbpNyI4aj5al8Ns2hpcrbu6NTPpoexfeXSFUktc/F13PKTOy0mgnva89l9YSH1OzU4D72HXyL8I9QOBVUJDFb7Jog+44myggRYVW7J2lmtFXMD/9wsjaAyyWSy7vGbr8r8BkmIOWF+cm2ZlHNI0sP8bUk/Q2ZukAg3FyYQWfrR7w3qdbKvdERIisO137z/nsKjZaBuprYviUnOdrP4CAl4ax7WQz6w5R8eeRPIxr6A8AG43EBS2HISUi
+ 2HoOAWkhVhbmowkhYlW97bVIWWXBQht52JIGR6mQChsb7LHNnUWv1h+97/ei9bkWe5neZWRghiL+iXBBwuZHssOTP5fj7bbjf893eY2knJqv05LIMTxo6y7fCgo21u7sZE1OVqqae300cDoKd3Fr4eui2AuCu1lkkIEFE984K2E7H8V0QAo2T0ySg8irxZMA4CuD+6n93Tt12w9hBkjOwhMlAzrDIHHufpVn8LiF6cj9CBNO+qTCRySW+hQWF82noz1RF7z2QT4N0mriS9Ql3zXH0Wi5ciSQuOsFdZNyEqxbzgA0XxA9TLvp0JO+aYbs2R5I7Lb0oP55SmYv2ApZyEo1DlIZO1OcQzzKaa7MmQiQZtis5MqMnvxIB5byh0KTG2HmU4tn+90nQb8jKKIgbz4TqU5QyYzeM/VERguuHwAlN/+BMg38bljGkqKGlvopv+3SGP+oy7mo3V4DkxTTaOwxGwX///13nVB+deRghoITT6k3yIyMt4rp/9za9HCp+Ygpkh9vJe4vwxTw+y+pow++fYzUV+9QxshWt75OSBvWUbIoSUSARm7j8kjQXrxUguPYd5rChCe+DD9j+M0mNDxBTF0osJ4gVuD3s5PS7nC0vEAYdmuo2ZCaRi77hz5t
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?ll3GBRfmwSFWKYDL7e+ptNgioPd11em7JD2lxL8MG4/zdqQaEloVgBPptb?=
- =?iso-8859-1?Q?iL5e37pTpK2Fkry4AbjR8c9qSK5GWNEfxE8I3Cb5nYwBrSpFwtf4oyjqMZ?=
- =?iso-8859-1?Q?9Kz4H7fO3RvmApyPYEeEZs4Zbfb7INRt4UQBh/0warDIUZdXIqF3qqV7V1?=
- =?iso-8859-1?Q?LDelsLZTVLtmzOerFSUy+dXAnmUAWfJ1TpIXBCSGE6jbqwyGITI61cpEuI?=
- =?iso-8859-1?Q?XOyuzRWAJTYWi7jjbdhHZJdmYizlAh+ROchxdGz6HF5CUQp8OUSXM/HAoz?=
- =?iso-8859-1?Q?g7SSbwxFr6guCQ7fL4skzYDOgwLsOlvko3b2qDY3VgY/Ci8pilkRxzlgEN?=
- =?iso-8859-1?Q?Gc2PGYuo2/7IsKDQMWaHfdZDQ9v1TKWHWs5k+Dsk7stK7HQmvExX2TlJZV?=
- =?iso-8859-1?Q?HBLxiGa+5Y8v1nPRq1a91Ub2joO4p4+x8by4fUjRVI2KwhzRpDGCFlkMcs?=
- =?iso-8859-1?Q?Xi6X9vinQx87hfKJahG+4+8K0zP1v9uM/dwGQUzkadPiFn7GHT/vQHjgYD?=
- =?iso-8859-1?Q?4R96Rl32QuejJxXBBvp1gkZGFrSTusH3DLQqv62LoKKRI8uWc2K58sURvH?=
- =?iso-8859-1?Q?3YWty7kuoh7DkncDj7VKzrS09507b9+ZIfDPReUpqT2wScGCHueEIr7wEb?=
- =?iso-8859-1?Q?6Vy2THbsFDfZJ+xXJvCOMhR1vvteWPAEks6DX0VJvftMfnOmnySljSKGpN?=
- =?iso-8859-1?Q?kci8dBp3a3xPYrcK65nUMZ4hUsLKmHBsl2KkDPo8qBDAY09KGAwlU1Wuyr?=
- =?iso-8859-1?Q?Nk+j0kJjN4BDSkFPii9mn9dp1HuTk5Y+o3gkE45DajxJ14HqQzhpAWEsVE?=
- =?iso-8859-1?Q?GojXvn8lEqD5jg1RJXYqYUen+br2t9CF583IQlorO4AE+3GrtGRTy3MXwH?=
- =?iso-8859-1?Q?prjpv9JF+87CzrOmJ9UXUSZPv2p9XlHbX2gonMQ1vFt+VebMOShhBDs7yC?=
- =?iso-8859-1?Q?yH5bfENS7JHqehGd4/uGa4eNj+DFdLjWe5aoLY4ngaepZA6wfG2vmLJZzm?=
- =?iso-8859-1?Q?d2sERTcX7F+WpfwfYaAiVOkgoLsxTvbbAhAWk+WTjuLztbn1JmmEiDFd5d?=
- =?iso-8859-1?Q?j15mZQZtiL1HXZ6abXONjuuaND0w8ANlXudVxs7JTjSvBL+LaNx3cssO6+?=
- =?iso-8859-1?Q?Zta5OVrTSzNsUJHdxM3XmIPRO+Ffuv/zBm8bmSdMmYxZJQ69M6KpN7pUxy?=
- =?iso-8859-1?Q?8Z7m8uhAyKvHbqpfUBGRqPNOfkQOV/m5SuITnkwxK9ib5oYIbmLmuqN2+/?=
- =?iso-8859-1?Q?SuScNLQwNy9zcrfm8IN18IdIGBfKbTnbq69pJsH3q35DAJC3pXcGwITrqn?=
- =?iso-8859-1?Q?1gxMcFMed9WLu6evIAX4vayTnw16A6FmjPRnI3oQeKQCQDrZjVs9efT2Ow?=
- =?iso-8859-1?Q?AX/INpUymjusH/RDWIbfI7okCg1Ub4SzQrj1Yx8t1KhqLI9h5jV78XhV9D?=
- =?iso-8859-1?Q?nLuYgAQPbTrfNySNVu/Eznlaxh6g5+Td1goSyw=3D=3D?=
+ =?iso-8859-1?Q?f+RhgWZ8LTgL/FhtQ69XpXtTE0rR4lHlyX7PsVCSmankFkQUY29mI/StXH?=
+ =?iso-8859-1?Q?OgEsO+/G95ntAyYdykck2UmMQwDA+5oeT9bRq2RCnQcGr7HEU88CiXBAOS?=
+ =?iso-8859-1?Q?zK2KRd6QrlnfevJcDiJOtXCO2S4FDZ5m7NtoPhyB7FepQDFRxdaklO3vG6?=
+ =?iso-8859-1?Q?Du4WglB8VnPb24SOjws45GONEvfLcinLtC5fiv+wBRuWqZj4JtLA31Rauo?=
+ =?iso-8859-1?Q?Kz1nfTmnsx1XYLqB+TovlK7ujgdSn81u50/+oyybdFMIJTmmYe6F9HXry5?=
+ =?iso-8859-1?Q?UeT+MJhl9ovl8EAlt0weob9knW0ennfFgOjhXcz6A6ZsicCiMKSGoucnBi?=
+ =?iso-8859-1?Q?/BWoIa5KdEDJpH8LKHpWX0KaQhnLyyHP97aUXEkeOjz7rs95KZ5LZASiP6?=
+ =?iso-8859-1?Q?NosklJxDC5+OIHOMpHazQQtvAd+hzygSLtDObxnEZpv0appujC3QnxlvQ9?=
+ =?iso-8859-1?Q?Yb7iad5ieTfbJZn6tAvjks8yw4F0kEvj3fmhvYGgyHe7bNM2wZ9usTSCPC?=
+ =?iso-8859-1?Q?bJtcChv1h/4qQ4AF6nKiVpaDOH/wXoBbRdV3rGfnXrMxlQWydyvoL/MD/K?=
+ =?iso-8859-1?Q?c/TpSzLP3PsETIU7wElLBcXl3bhT9uTRnip8MCH3lvPMLqN4dVz+iGPAZA?=
+ =?iso-8859-1?Q?fowmoxax0QCVOmBN7yGqF3zqz9+GViqUnFPhuJ5t+fFoTH+KrEQJ7dqvRP?=
+ =?iso-8859-1?Q?yDSC0qyly8Rvq+sEN+Dd4RAgu50OGl5RoBTCCtQHw8RmR68tTnD0Hp7vr3?=
+ =?iso-8859-1?Q?DhaJA37/ZY4MMhG7pjxTms5h9rf5+o0zK93SWuTIAjA0E8d1YOusi61V/H?=
+ =?iso-8859-1?Q?2wamx7L+xnDVxRDjL2f76OPmHMHJjC9ogbsriF+4xX0Hf+QZ+/5UaJtLN5?=
+ =?iso-8859-1?Q?Ifl0LM1RM04BmG64RaZa1y4ZwIJvy2GrFZoi133/MsqMuersR/JsDIIKxZ?=
+ =?iso-8859-1?Q?7nMivqjpM/z3XZC0xlvgPe8CFoutB1zXVwG1GD8ZD7/4kleBTcPgxfJbjj?=
+ =?iso-8859-1?Q?X8eWJ5j3moI6DCRabNBhk6bs46+FNbz68w6bFSmwLEQ1tZLEpM+gZAyssk?=
+ =?iso-8859-1?Q?aa/0qP5VemtxDyJd+38JPzYRZHgYhQq9A3gkUMC5nxtZyeD3TuL4W6BIHd?=
+ =?iso-8859-1?Q?WIx2y2KFUigfPLSHVbgrULjvu3lMqwHCyOMh9RV36t3PDAKPr5wJF6dIyI?=
+ =?iso-8859-1?Q?kc08o4jB/h2AfAemkb71D2SaZY1+i2ZzCza0yfQ/nygmHA0xoYH1RyadiY?=
+ =?iso-8859-1?Q?tQZJgLJgivU7gnRGkfkWZwzlHxa2MTh2VgxWSTmr17rcSCMczVSpKgncIu?=
+ =?iso-8859-1?Q?0NWJ4tNTUB+WEQdLRoy8r1BsmpyfsZVIXcne61xvSP5AQqf4CU1DQhG+DI?=
+ =?iso-8859-1?Q?ZN3TgAUUnJqcB/QlNm0Wr7xz3MsZKj2isqooIXjL1zh3uaSgpCRcrZqMQD?=
+ =?iso-8859-1?Q?hW1mRfXm0iydUNgpgSypwe/03ajZbiUgzMgMCQ=3D=3D?=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -87,134 +90,186 @@ X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-9803a.templateTenant
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: MN2PR20MB2512.namprd20.prod.outlook.com
 X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3051a980-2b35-44e6-0444-08da105a59ab
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2022 01:29:06.2421
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2148f25-267b-4f59-730a-08da1068d091
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2022 03:12:38.7401
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
 X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR20MB3929
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR20MB2746
 
-On 24.03.22 13:18, Thorsten Leemhuis wrote:=0A=
-> Hi, this is your Linux kernel regression tracker.=0A=
-> =0A=
-> CCing the regression mailing list, as it should be in the loop for all=0A=
-> regressions, as explained here:=0A=
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html=
+___Updated test results=0A=
+=0A=
+These results were obtained with the script I've made to research this regr=
+ession [1].=0A=
+[1] https://github.com/bdamascen0/s3e=0A=
 =0A=
 =0A=
-Thanks.=0A=
+Main results=0A=
 =0A=
-> On 21.03.22 05:53, Bruno Damasceno Freire wrote:=0A=
-> > Hello everybody;=0A=
-> > =0A=
-> > This regression was first found during rpm operations with specific pac=
-kages that became A LOT slower to update ranging from 4 to 30 minutes.=0A=
-> > =0A=
-> > The slowness results from:=0A=
-> > a_ the kernel regression: specific system calls touching files with btr=
-fs compression property will generate higher inode eviction on 5.15 kernels=
-.=0A=
-> > b_ the inode eviction generating btrfs inode logging and directory logg=
-ing.=0A=
-> > c_ the btrfs directory logging on the 5.15 kernel not being particulary=
- efficient in the presence of high inode eviction.=0A=
-> > =0A=
-> > There is already an ongoing work [1] to improve "c" on newer kernels bu=
-t I was told they are not elegible for the 5.15 version due to backporting =
-policy restrictions.=0A=
-> > AFAIK there isn't any work for "a" yet.=0A=
-> > The consequence is that btrfs users running the 5.15 LTS kernel may exp=
-erience severely degraded performance for specific I/O workloads on files w=
-ith the compression property enabled.=0A=
-> > =0A=
-> > ___How to reproduce:=0A=
-> > After some research I learned how to reproduce the regression without r=
-pm.=0A=
-> >=0A=
-> > 1st option)=0A=
-> > I made a script specifically to research this regression [2].=0A=
-> > It has more information, more test results and several options.=0A=
-> > The scrip does a little too much so I'm just linking it here.=0A=
-> > I hope it can help.=0A=
-> > =0A=
-> > 2nd option)=0A=
-> > boot a 5.15 kernel,=0A=
-> > setup and mount a RAM disk with btrfs,=0A=
-> > create a folder and set its compression property,=0A=
-> > populate the folder,=0A=
-> > make a loop that:=0A=
-> > -rename a file,=0A=
-> > -unlink the renamed file,=0A=
-> > -create a new file.=0A=
-> > =0A=
-> > [1] https://bugzilla.opensuse.org/show_bug.cgi?id=3D1193549=0A=
-> > [2] https://github.com/bdamascen0/s3e=0A=
-> > =0A=
-> > ___Test results=0A=
-> > These tests were done on a virtual machine (kvm) with Ubuntu Jammy Jell=
-yfish.=0A=
-> > The kernel is 5.15.0.23 that relates to the 5.15.27 upstream kernel.=0A=
-> =0A=
-> Please repeat this with a vanilla kernel, Ubuntu's kernel are heavily=0A=
-> patched and one of their patches might be causing your problem.=0A=
+The regression was reproduced on:=0A=
+-several different 5.15 kernels versions across several different distros.=
 =0A=
-Done. Same higher inode-evictions and slow results.=0A=
-Also tested on a 5.15.0-rc1 kernel and, again, same results.=0A=
-Older and newer 5.14 kernels produced normal results so it really seems tha=
-t the regression was introduced early in the 5.15 cycle.=0A=
+-all 5.15 kernels that I have tried on.=0A=
+-the 5.15.0-rc1 kernel from the opensuse tumbleweed comunity repository.=0A=
+-the 5.15.12 vanilla kernel from the official opensuse tumbleweed repositor=
+y.=0A=
 =0A=
-> > Main results (x86_64):=0A=
-> > 250 files - zstd:         17521 ms @inode_evictions: 31375=0A=
-> > 250 files - lzo:          17114 ms @inode_evictions: 31375=0A=
-> > 250 files - uncompressed:  1138 ms @inode_evictions: 499=0A=
-> > =0A=
-> > Load test results (x86_64):=0A=
-> > 1000 files - 51.6 x more inode evictions - 18.1 x more time=0A=
-> > 250  files - 62.9 x more inode evictions - 15.2 x more time=0A=
-> > 100  files - 25.4 x more inode evictions -  3.7 x more time=0A=
-> > 50   files - 12.8 x more inode evictions -  2.0 x more time=0A=
-> > 10   files -  2.8 x more inode evictions -  1.3 x more time=0A=
-> =0A=
-> I'm missing something: more inode evictions when compared to what? A=0A=
-> 5.14 vanilla kernel?=0A=
+The regression could not be reproduced on kernels versions other than the 5=
+.15.=0A=
 =0A=
-Not clear at all. Sorry.=0A=
-Will repost with my full set of results [2] including a vanilla kernel, the=
- 15.0-rc1, more distros and a better load test report.=0A=
+The vanilla kernel test was suggested by Thorsten Leemhuis to make sure dow=
+nstream custom patches aren't causing the symptoms.=0A=
+The vanilla kernel test result shows the exact same pattern verified on dow=
+nstream kernels and fully validates the regression.=0A=
 =0A=
-> > CPU usage results (x86_64):=0A=
-> > 1000 files - zstd:           137841 ms=0A=
-> > real    2m17,881s=0A=
-> > user    0m1,704s=0A=
-> > sys     2m11,937s=0A=
-> > 1000 files - lzo:            135456 ms=0A=
-> > real    2m15,478s=0A=
-> > user    0m1,805s=0A=
-> > sys	2m9,758s=0A=
-> > 1000 files - uncompressed:     7496 ms=0A=
-> > real    0m7,517s=0A=
-> > user    0m1,386s=0A=
-> > sys     0m4,899s=0A=
-> > =0A=
-> > I'm sending this message to the linux-fsdevel mailing list first.=0A=
-> > Please tell if you think this subject would be of interest of another k=
-ernel subsystem.=0A=
-> > PS: I'm not subscribed to this list.=0A=
-> =0A=
-> We need to get Btrfs people into the boat, but please clarify first if=0A=
-> this really is a regression with the upstream kernel.=0A=
 =0A=
-Sure. The Btrfs crew belong on this boat.=0A=
-The Btrfs developer Filipe Manana assisted me on the original bug report [1=
-].=0A=
-He concluded that the btrfs compression property just happens to trigger so=
-mething outside the btrfs code and was guessing it could be at the vfs or m=
-m subsystems.=0A=
-The bug was also the beginning of a long term work to make the filesystem m=
-ore robust but the improvements would not be elegible for the 5.15 version =
-due to backport restrictions.=0A=
+General test results for the 5.15 kernel series (x86_64)=0A=
 =0A=
-> Ciao, Thorsten=0A=
+opensuse tumbleweed ----- kernel 5.15.12 --- vanilla --- (kvm)=0A=
+... 250 files - zstd:         13327 ms @inode_evictions: 31375=0A=
+... 250 files - lzo:          13361 ms @inode_evictions: 31375=0A=
+... 250 files - uncompressed:  1204 ms @inode_evictions: 499=0A=
+opensuse tumbleweed ----- kernel 5.15.0-rc1-1.g8787773 - (kvm)=0A=
+... 250 files - zstd:         13875 ms @inode_evictions: 31375=0A=
+... 250 files - lzo:          15351 ms @inode_evictions: 31375=0A=
+... 250 files - uncompressed:  1231 ms @inode_evictions: 499=0A=
+opensuse tumbleweed ----- kernel 5.15.12----------------------=0A=
+... 250 files - zstd:         12500 ms @inode_evictions: 31375=0A=
+... 250 files - lzo:          12327 ms @inode_evictions: 31375=0A=
+... 250 files - uncompressed:  1482 ms @inode_evictions: 499=0A=
+debian bookworm --------- kernel 5.15.0-3 - (5.15.15) -- (kvm)=0A=
+... 250 files - zstd:         12343 ms @inode_evictions: 31375=0A=
+... 250 files - lzo:          14028 ms @inode_evictions: 31375=0A=
+... 250 files - uncompressed:  1092 ms @inode_evictions: 499=0A=
+Zenwalk 15.0 Skywalker ---kernel 5.15.19 --------------- (kvm)=0A=
+... 250 files - zstd:         14374 ms @inode_evictions: -=0A=
+... 250 files - lzo:          14163 ms @inode_evictions: -=0A=
+... 250 files - uncompressed:  2173 ms @inode_evictions: -=0A=
+ubuntu jammy jellyfish -- kernel 5.15.0.23 - (5.15.27) - (kvm) =0A=
+... 250 files - zstd:         17521 ms @inode_evictions: 31375=0A=
+... 250 files - lzo:          17114 ms @inode_evictions: 31375=0A=
+... 250 files - uncompressed:  1138 ms @inode_evictions: 499=0A=
 =0A=
-Grazie, Bruno=
+=0A=
+General test results for other kernels (x86_64)=0A=
+=0A=
+opensuse leap 15.3 ------ kernel 5.3.18-150300.59.54----------=0A=
+... 250 files - zstd:           668 ms @inode_evictions: 251=0A=
+... 250 files - lzo:            693 ms @inode_evictions: 251=0A=
+... 250 files - uncompressed:   661 ms @inode_evictions: 252=0A=
+opensuse leap 15.4 beta - kernel 5.14.21-150400.11 ----- (kvm)=0A=
+... 250 files - zstd:           811 ms @inode_evictions: 251=0A=
+... 250 files - lzo:            912 ms @inode_evictions: 251=0A=
+... 250 files - uncompressed:   993 ms @inode_evictions: 251=0A=
+opensuse tumbleweed ----- kernel 5.14.14 --------------- (kvm)=0A=
+... 250 files - zstd:           888 ms @inode_evictions: 251=0A=
+... 250 files - lzo:           1063 ms @inode_evictions: 251=0A=
+... 250 files - uncompressed:   778 ms @inode_evictions: 251=0A=
+opensuse tumbleweed ----- kernel 5.16.14----------------------=0A=
+... 250 files - zstd:          1398 ms @inode_evictions: 250=0A=
+... 250 files - lzo:           1323 ms @inode_evictions: 250=0A=
+... 250 files - uncompressed:  1365 ms @inode_evictions: 250=0A=
+=0A=
+=0A=
+Load test results (x86_64):=0A=
+=0A=
+opensuse leap 15.4 beta - kernel 5.14.21-150400.11 ----- (kvm)=0A=
+...   50 files - zstd:            261 ms @inode_evictions: 51=0A=
+...   50 files - lzo:             256 ms @inode_evictions: 51=0A=
+...   50 files - uncompressed:    317 ms @inode_evictions: 51=0A=
+...  100 files - zstd:            450 ms @inode_evictions: 101=0A=
+...  100 files - lzo:             461 ms @inode_evictions: 101=0A=
+...  100 files - uncompressed:    471 ms @inode_evictions: 101=0A=
+...  150 files - zstd:            618 ms @inode_evictions: 151=0A=
+...  150 files - lzo:             624 ms @inode_evictions: 151=0A=
+...  150 files - uncompressed:    612 ms @inode_evictions: 151=0A=
+...  200 files - zstd:            822 ms @inode_evictions: 201=0A=
+...  200 files - lzo:             933 ms @inode_evictions: 201=0A=
+...  200 files - uncompressed:    747 ms @inode_evictions: 201=0A=
+...  250 files - zstd:           1128 ms @inode_evictions: 251=0A=
+...  250 files - lzo:             974 ms @inode_evictions: 251=0A=
+...  250 files - uncompressed:    936 ms @inode_evictions: 251=0A=
+... 1000 files - zstd:           3517 ms @inode_evictions: 1001=0A=
+... 1000 files - lzo:            4373 ms @inode_evictions: 1001=0A=
+... 1000 files - uncompressed:   3797 ms @inode_evictions: 1001=0A=
+ubuntu jammy jellyfish -- kernel 5.15.0.23 - (5.15.27) - (kvm) =0A=
+...   50 files - zstd:            424 ms @inode_evictions: 1275=0A=
+...   50 files - lzo:             423 ms @inode_evictions: 1275=0A=
+...   50 files - uncompressed:    207 ms @inode_evictions: 99=0A=
+...  100 files - zstd:           1744 ms @inode_evictions: 5050=0A=
+...  100 files - lzo:            1838 ms @inode_evictions: 5050=0A=
+...  100 files - uncompressed:    373 ms @inode_evictions: 199=0A=
+...  150 files - zstd:           4785 ms @inode_evictions: 11325=0A=
+...  150 files - lzo:            4660 ms @inode_evictions: 11325=0A=
+...  150 files - uncompressed:    689 ms @inode_evictions: 299=0A=
+...  200 files - zstd:           9763 ms @inode_evictions: 20100=0A=
+...  200 files - lzo:           10106 ms @inode_evictions: 20100=0A=
+...  200 files - uncompressed:    938 ms @inode_evictions: 399=0A=
+...  250 files - zstd:          17550 ms @inode_evictions: 31375=0A=
+...  250 files - lzo:           17337 ms @inode_evictions: 31375=0A=
+...  250 files - uncompressed:   1373 ms @inode_evictions: 499=0A=
+... 1000 files - zstd:         143614 ms @inode_evictions: 101132=0A=
+... 1000 files - lzo:          146724 ms @inode_evictions: 100314=0A=
+... 1000 files - uncompressed:   7735 ms @inode_evictions: 1999=0A=
+=0A=
+=0A=
+Load test results comparisson for compressed files (x86_64):=0A=
+ubuntu jammy jellyfish - compared to - opensuse leap 15.4 beta=0A=
+=0A=
+50   files gives aprox.  1.6 x more time and aprox.  25 x more inode evicti=
+ons =0A=
+100  files gives aprox.  3.8 x more time and aprox.  50 x more inode evicti=
+ons =0A=
+150  files gives aprox.  7.4 x more time and aprox.  75 x more inode evicti=
+ons =0A=
+200  files gives aprox. 10.8 x more time and aprox. 100 x more inode evicti=
+ons =0A=
+250  files gives aprox. 15.5 x more time and aprox. 125 x more inode evicti=
+ons =0A=
+1000 files gives aprox. 33.5 x more time and aprox. 100 x more inode evicti=
+ons =0A=
+=0A=
+=0A=
+Load test results comparisson for uncompressed files (x86_64):=0A=
+ubuntu jammy jellyfish - compared to - opensuse leap 15.4 beta=0A=
+=0A=
+50   files gives aprox. 0.6 x more time and aprox. 2 x more inode evictions=
+ =0A=
+100  files gives aprox. 0.8 x more time and aprox. 2 x more inode evictions=
+ =0A=
+150  files gives aprox. 1.1 x more time and aprox. 2 x more inode evictions=
+ =0A=
+200  files gives aprox. 1.2 x more time and aprox. 2 x more inode evictions=
+ =0A=
+250  files gives aprox. 1.4 x more time and aprox. 2 x more inode evictions=
+ =0A=
+1000 files gives aprox. 2.0 x more time and aprox. 2 x more inode evictions=
+ =0A=
+=0A=
+=0A=
+CPU usage results:=0A=
+The regression causes significant CPU usage by the kernel.=0A=
+=0A=
+ubuntu jammy jellyfish -- kernel  5.15.0.23 (5.15.27) - (kvm) =0A=
+... 1000 files - zstd:         137841 ms=0A=
+    real    2m17,881s=0A=
+    user    0m 1,704s=0A=
+    sys     2m11,937s=0A=
+... 1000 files - lzo:          135456 ms=0A=
+    real    2m15,478s=0A=
+    user    0m 1,805s=0A=
+    sys     2m 9,758s=0A=
+... 1000 files - uncompressed:   7496 ms=0A=
+    real    0m 7,517s=0A=
+    user    0m 1,386s=0A=
+    sys     0m 4,899s=0A=
+=0A=
+=0A=
+Test system specification:=0A=
+host: AMD FX-8370E 8 cores / 8GB RAM / ssd=0A=
+guests (kvm): 2 cores / 2G RAM / ssd=0A=
+test storage medium: RAM disk block device (host and guest)=0A=
+=0A=
+=0A=
+TIA, Bruno=
