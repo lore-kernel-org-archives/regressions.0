@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F6DE435A
-	for <regressions@lists.linux.dev>; Mon, 28 Mar 2022 11:44:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD214358
+	for <regressions@lists.linux.dev>; Mon, 28 Mar 2022 13:21:22 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nYnn2-0001nr-F8; Mon, 28 Mar 2022 13:44:04 +0200
-Message-ID: <45051cd2-2e28-3065-776b-d5e83c998cb5@leemhuis.info>
-Date: Mon, 28 Mar 2022 13:44:03 +0200
+	id 1nYpJA-0008Oi-58; Mon, 28 Mar 2022 15:21:20 +0200
+Message-ID: <cb5b81bd-9882-e5dc-cd22-54bdbaaefbbc@leemhuis.info>
+Date: Mon, 28 Mar 2022 15:21:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,163 +17,112 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.5.0
 Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Bug 215711 - snd_hda_intel not binding to codec
-Cc: Petr Cerny <bugzilla@black-net.org>,
+To: "H.J. Lu" <hjl.tools@gmail.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- alsa-devel@alsa-project.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+ Victor Stinner <vstinner@redhat.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Bug 215720 - brk() regression on AArch64 on static-pie binary --
+ issue with ASLR and a guard page?
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1648467848;fda44afa;
-X-HE-SMSGID: 1nYnn2-0001nr-F8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1648473682;77d6f0c8;
+X-HE-SMSGID: 1nYpJA-0008Oi-58
 
 Hi, this is your Linux kernel regression tracker.
 
 I noticed a regression report in bugzilla.kernel.org that afaics nobody
 acted upon since it was reported about a week ago, that's why I decided
-to forward it to the lists and the maintainers. To quote from
-https://bugzilla.kernel.org/show_bug.cgi?id=215711:
+to forward it to the lists and the author of the culprit. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=215720:
 
-> Created attachment 300588 [details]
-> SND_HDA_* excrept from kernel config
+>  Victor Stinner 2022-03-22 02:24:57 UTC
 > 
-> On PCI device discovery the Intel HDA codec doesn't bind to appropriate codec (if that is the correct term). The device codec (Conexant) is loaded, but sound doesn't work. Reloading the main module (snd_hda_intel) fixes the issue:
+> Created attachment 300597 [details]
+> empty.c reproducer
 > 
-> $ echo 1 > /sys/bus/pci/devices/0000:00:1b.0/remove
+> I found a brk() syscall regression of Linux kernel 5.17 on AArch64.
 > 
-> $ lsmod | sort
-> Module                  Size  Used by
-> configs                45056  0
-> e1000e                225280  0
-> grace                  16384  1 lockd
-> irqbypass              16384  1 kvm
-> iwlwifi               274432  0
-> kvm                   569344  1 kvm_intel
-> kvm_intel             229376  0
-> lockd                  98304  1 nfs
-> mei                    90112  1 mei_me
-> mei_me                 28672  0
-> nfs                   184320  3 nfsv4
-> nfsv4                 380928  2
-> sunrpc                274432  9 nfsv4,lockd,nfs
-> uvcvideo              110592  0
-> videobuf2_common       45056  4 videobuf2_vmalloc,videobuf2_v4l2,uvcvideo,videobuf2_memops
-> videobuf2_memops       16384  1 videobuf2_vmalloc
-> videobuf2_v4l2         24576  1 uvcvideo
-> videobuf2_vmalloc      16384  1 uvcvideo
+> A git bisect found the change "fs/binfmt_elf: use PT_LOAD p_align values for static PIE": commit 9630f0d60fec5fbcaa4435a66f75df1dc9704b66, changed related to the bz#215275.
 > 
-> $ echo 1 > /sys/bus/pci/rescan
-> # dmesg output
-> [ 9218.563134] pci 0000:00:1b.0: [8086:3b56] type 00 class 0x040300
-> [ 9218.563178] pci 0000:00:1b.0: reg 0x10: [mem 0xc0004000-0xc0007fff 64bit]
-> [ 9218.563344] pci 0000:00:1b.0: PME# supported from D0 D3hot D3cold
-> [ 9218.563818] pci 0000:00:1b.0: BAR 0: assigned [mem 0xc0004000-0xc0007fff 64bit]
-> [ 9218.563846] pci 0000:00:1e.0: PCI bridge to [bus 0e]
-> [ 9218.598927] snd_hda_intel 0000:00:1b.0: bound 0000:00:02.0 (ops 0xffffffff824a44e0)
-> [ 9218.609798] snd_hda_intel 0000:00:1b.0: Cannot probe codecs, giving up
+> Program to reproduce the bug, empty.c (attached to the issue):
+> ---
+> _Thread_local int var1 = 0;
+> int main() {
+>     volatile int x = 1;
+>     var1 = x;
+>     return 0;
+> }
+> ---
 > 
-> $ lsmod | sort
-> Module                  Size  Used by                                                                                                                                                                                                                                            
-> configs                45056  0                                                                                                                                                                                                                                                  
-> e1000e                225280  0                                                                                                                                                                                                                                                  
-> grace                  16384  1 lockd                                                                                                                                                                                                                                            
-> irqbypass              16384  1 kvm                                                                                                                                                                                                                                              
-> iwlwifi               274432  0                                                                                                                                                                                                                                                  
-> kvm                   569344  1 kvm_intel                                                                                               
-> kvm_intel             229376  0                                                                                                         
-> lockd                  98304  1 nfs                                                                                                     
-> mei                    90112  1 mei_me                                                                                                  
-> mei_me                 28672  0                                                                                                         
-> nfs                   184320  3 nfsv4                                                                                                   
-> nfsv4                 380928  2                                                                                                         
-> snd                    77824  7 snd_hda_codec_generic,snd_hda_codec_conexant,snd_hwdep,snd_hda_intel,snd_hda_codec,snd_timer,snd_pcm    
-> snd_hda_codec         118784  3 snd_hda_codec_generic,snd_hda_codec_conexant,snd_hda_intel                                              
-> snd_hda_codec_conexant    20480  0                                                                                                      
-> snd_hda_codec_generic    77824  1 snd_hda_codec_conexant                                                                                
-> snd_hda_core           65536  4 snd_hda_codec_generic,snd_hda_codec_conexant,snd_hda_intel,snd_hda_codec                                
-> snd_hda_intel          36864  0                                                                                                         
-> snd_hwdep              16384  1 snd_hda_codec                                                                                           
-> snd_intel_dspcfg       16384  1 snd_hda_intel                                                                                           
-> snd_pcm               110592  3 snd_hda_intel,snd_hda_codec,snd_hda_core                                                                
-> snd_timer              32768  1 snd_pcm                                                                                                 
-> soundcore              16384  1 snd                                                                                                     
-> sunrpc                274432  9 nfsv4,lockd,nfs                                                                                         
-> uvcvideo              110592  0                                                                                                         
-> videobuf2_common       45056  4 videobuf2_vmalloc,videobuf2_v4l2,uvcvideo,videobuf2_memops
-> videobuf2_memops       16384  1 videobuf2_vmalloc
-> videobuf2_v4l2         24576  1 uvcvideo
-> videobuf2_vmalloc      16384  1 uvcvideo
+> Build the program as a static PIE program:
 > 
-> $ modprobe -rv snd_hda_intel; modprobe -v snd_hda_intel
-> # dmesg output
-> [ 9230.886362] snd_hda_intel 0000:00:1b.0: bound 0000:00:02.0 (ops 0xffffffff824a44e0)
-> [ 9230.895721] snd_hda_codec_conexant hdaudioC0D0: CX20585: BIOS auto-probing.
-> [ 9230.896677] snd_hda_codec_conexant hdaudioC0D0: autoconfig for CX20585: line_outs=1 (0x1f/0x0/0x0/0x0/0x0) type:speaker
-> [ 9230.896691] snd_hda_codec_conexant hdaudioC0D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
-> [ 9230.896700] snd_hda_codec_conexant hdaudioC0D0:    hp_outs=2 (0x1c/0x19/0x0/0x0/0x0)
-> [ 9230.896707] snd_hda_codec_conexant hdaudioC0D0:    mono: mono_out=0x0
-> [ 9230.896713] snd_hda_codec_conexant hdaudioC0D0:    inputs:
-> [ 9230.896718] snd_hda_codec_conexant hdaudioC0D0:      Internal Mic=0x23
-> [ 9230.896724] snd_hda_codec_conexant hdaudioC0D0:      Mic=0x1b
-> [ 9230.896729] snd_hda_codec_conexant hdaudioC0D0:      Dock Mic=0x1a
-> [ 9230.908437] snd_hda_codec_generic hdaudioC0D3: autoconfig for Generic: line_outs=0 (0x0/0x0/0x0/0x0/0x0) type:line
-> [ 9230.908454] snd_hda_codec_generic hdaudioC0D3:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
-> [ 9230.908461] snd_hda_codec_generic hdaudioC0D3:    hp_outs=0 (0x0/0x0/0x0/0x0/0x0)
-> [ 9230.908468] snd_hda_codec_generic hdaudioC0D3:    mono: mono_out=0x0
-> [ 9230.908473] snd_hda_codec_generic hdaudioC0D3:    dig-out=0x5/0x0
-> [ 9230.908477] snd_hda_codec_generic hdaudioC0D3:    inputs:
-> [ 9230.916063] input: HDA Intel MID Mic as /devices/pci0000:00/0000:00:1b.0/sound/card0/input52
-> [ 9230.916216] input: HDA Intel MID Dock Mic as /devices/pci0000:00/0000:00:1b.0/sound/card0/input53
-> [ 9230.916353] input: HDA Intel MID Dock Headphone as /devices/pci0000:00/0000:00:1b.0/sound/card0/input54
-> [ 9230.919563] input: HDA Intel MID Headphone as /devices/pci0000:00/0000:00:1b.0/sound/card0/input55
-> [ 9230.919727] input: HDA Intel MID HDMI as /devices/pci0000:00/0000:00:1b.0/sound/card0/input56
+>     gcc -std=c11 -static-pie -g empty.c -o empty -O2
 > 
-> $ lsmod | sort
-> Module                  Size  Used by
-> configs                45056  0
-> e1000e                225280  0
-> grace                  16384  1 lockd
-> irqbypass              16384  1 kvm
-> iwlwifi               274432  0
-> kvm                   569344  1 kvm_intel
-> kvm_intel             229376  0
-> lockd                  98304  1 nfs
-> mei                    90112  1 mei_me
-> mei_me                 28672  0
-> nfs                   184320  3 nfsv4
-> nfsv4                 380928  2
-> snd                    77824  7 snd_hda_codec_generic,snd_hda_codec_conexant,snd_hwdep,snd_hda_intel,snd_hda_codec,snd_timer,snd_pcm
-> snd_hda_codec         118784  3 snd_hda_codec_generic,snd_hda_codec_conexant,snd_hda_intel
-> snd_hda_codec_conexant    20480  1
-> snd_hda_codec_generic    77824  2 snd_hda_codec_conexant
-> snd_hda_core           65536  4 snd_hda_codec_generic,snd_hda_codec_conexant,snd_hda_intel,snd_hda_codec
-> snd_hda_intel          36864  0
-> snd_hwdep              16384  1 snd_hda_codec
-> snd_intel_dspcfg       16384  1 snd_hda_intel
-> snd_pcm               110592  3 snd_hda_intel,snd_hda_codec,snd_hda_core
-> snd_timer              32768  1 snd_pcm
-> soundcore              16384  1 snd
-> sunrpc                274432  9 nfsv4,lockd,nfs
-> uvcvideo              110592  0
-> videobuf2_common       45056  4 videobuf2_vmalloc,videobuf2_v4l2,uvcvideo,videobuf2_memops
-> videobuf2_memops       16384  1 videobuf2_vmalloc
-> videobuf2_v4l2         24576  1 uvcvideo
-> videobuf2_vmalloc      16384  1 uvcvideo
+> The program fails randomly, it takes 100 to 6000 runs to reproduce the crash.
 > 
+> Short shell loop to reproduce the crash:
+> ---
+> $ i=0; while true; do ./empty; rc=$?; i=$(($i + 1)); echo "$i:
+> $(date): $rc"; if [ $rc -ne 0 ]; then break; fi; done
+> (...)
+> 159: Tue Mar 22 01:54:22 CET 2022: 0
+> 160: Tue Mar 22 01:54:22 CET 2022: 0
+> Segmentation fault (core dumped)
+> 161: Tue Mar 22 01:54:22 CET 2022: 139
+> ---
 > 
-> 5.15.29, have observed it already at least on 5.10.27, HW is ThinkPad x201 (x220 as well). I'm marking it as regression, since it used to work in the distant past (5.4-ish at least iirc)
+> Disabling ASLR (write 0 to /proc/sys/kernel/randomize_va_space) works
+> around the bug.
+> 
+> Rather than using "empty.c" program, the "ldconfig -V > /dev/null" command can be used: standard static-pie program.
+> 
+> strace when the program works:
+> ---
+> brk(NULL)                               = 0xaaaac3961000
+> brk(0xaaaac3961b78)                     = 0xaaaac3961b78
+> ---
+> 
+> strace when the bug occurs:
+> ---
+> brk(NULL)                               = 0xaaaabf3c3000
+> brk(0xaaaabf3c3b78)                     = 0xaaaabf3c3000
+> ---
+> 
+> The following test of the brk() syscall fails when the bug occurs:
+> ---
+> 	/* Check against existing mmap mappings. */
+> 	next = find_vma(mm, oldbrk);
+> 	if (next && newbrk + PAGE_SIZE > vm_start_gap(next))
+> 		goto out;
+> ---
+> 
+> Note: When the bug occurs, the program crash with SIGSEGV: the glibc __libc_setup_tls() function calls sbrk(2936) to allocate TLS variables, but it doesn't handle the memory allocation failure.
+> 
+> Note: At the beginning, I discovered this kernel regression while checking for Python
+> buildbot failures on our Fedora Rawhide AArch64 machine.
+> 
+> * Fedora downstream issue: https://bugzilla.redhat.com/show_bug.cgi?id=2066147
+> * Python issue: https://bugs.python.org/issue47078
+> 
+> [reply] [−] Comment 1 Victor Stinner 2022-03-22 02:41:00 UTC
+> 
+> See also the binutils issue: "p_align in ELF program headers should not exceed section alignment"
+> https://sourceware.org/bugzilla/show_bug.cgi?id=28689
+> 
+> See also this old (kernel 4.18) fixed x86-64 kernel bug: "kernel: brk can grow the heap into the area reserved for the stack"
+> https://bugzilla.redhat.com/show_bug.cgi?id=1749633
+
 
 Could somebody take a look into this? Or was this discussed somewhere
 else already? Or even fixed?
 
 Anyway, to get this tracked:
 
-#regzbot introduced: v5.4..v5.10
-#regzbot from: Petr Cerny <bugzilla@black-net.org>
-#regzbot title: snd: snd_hda_intel not binding to codec
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215711
+#regzbot introduced: 9630f0d60fec5fbcaa4435a66f75df1dc9704b66
+#regzbot from: Victor Stinner <vstinner@redhat.com>
+#regzbot title: brk() regression on AArch64 on static-pie binary
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215720
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -211,4 +160,3 @@ about the issue. This has been expected from developers even before
 regzbot showed up for reasons explained in
 'Documentation/process/submitting-patches.rst' and
 'Documentation/process/5.Posting.rst'.
-
