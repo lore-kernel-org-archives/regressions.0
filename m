@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7BD7C
-	for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 12:22:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A5E7C
+	for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 12:27:32 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nZXLE-0000QY-Ki; Wed, 30 Mar 2022 14:22:25 +0200
-Message-ID: <49ae9e66-0fa1-7c9d-49e7-88a7c6cf9ddb@leemhuis.info>
-Date: Wed, 30 Mar 2022 14:22:24 +0200
+	id 1nZXQ7-0005Vx-JJ; Wed, 30 Mar 2022 14:27:27 +0200
+Message-ID: <44abc738-1532-63fa-9cd1-2b3870a963bc@leemhuis.info>
+Date: Wed, 30 Mar 2022 14:27:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,63 +16,61 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Re: scalability regressions related to hugetlb_fault() changes
+Subject: Re: [PATCH] Revert "Input: clear BTN_RIGHT/MIDDLE on buttonpads"
 Content-Language: en-US
-To: Ray Fucillo <Ray.Fucillo@intersystems.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <D3204B1E-50A1-4261-8C75-3DF77A302502@intersystems.com>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-In-Reply-To: <D3204B1E-50A1-4261-8C75-3DF77A302502@intersystems.com>
+To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
+ jkosina@suse.cz
+Cc: tiwai@suse.de, benjamin.tissoires@redhat.com, regressions@leemhuis.info,
+ peter.hutterer@who-t.net, linux-input@vger.kernel.org,
+ stable@vger.kernel.org, regressions@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20220321184404.20025-1-jose.exposito89@gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20220321184404.20025-1-jose.exposito89@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1648642952;0a5d059e;
-X-HE-SMSGID: 1nZXLE-0000QY-Ki
-
-[TLDR: I'm adding the regression report below to regzbot, the Linux
-kernel regression tracking bot; all text you find below is compiled from
-a few templates paragraphs you might have encountered already already
-from similar mails.]
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1648643252;7c3c0756;
+X-HE-SMSGID: 1nZXQ7-0005Vx-JJ
 
 Hi, this is your Linux kernel regression tracker.
 
-On 24.03.22 21:12, Ray Fucillo wrote:
-> In moving to newer versions of the kernel, our customers have experienced dramatic new scalability problems in our database application, InterSystems IRIS.  Our research has narrowed this down to new processes that attach to the database's shared memory segment taking very long delays (in some cases ~100ms!) acquiring the i_mmap_lock_read() in hugetlb_fault() as they fault in the huge page for the first time.  The addition of this lock in hugetlb_fault() matches the versions where we see this problem.  It's not just slowing the new process that incurs the delay, but backing up other processes if the page fault occurs inside a critical section within the database application.
+On 21.03.22 19:44, José Expósito wrote:
+> This reverts commit 37ef4c19b4c659926ce65a7ac709ceaefb211c40.
 > 
-> Is there something that can be improved here?  
+> The touchpad present in the Dell Precision 7550 and 7750 laptops
+> reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
+> the device is not a clickpad, it is a touchpad with physical buttons.
 > 
-> The read locks in hugetlb_fault() contend with write locks that seem to be taken in very common application code paths: shmat(), process exit, fork() (not vfork()), shmdt(), presumably others.  So hugetlb_fault() contending to read turns out to be common.  When the system is loaded, there will be many new processes faulting in pages that may blocks the write lock, which in turn blocks more readers in fault behind it, and so on...  I don't think there's any support for shared page tables in hugetlb to avoid the faults altogether.
+> In order to fix this issue, a quirk for the device was introduced in
+> libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
 > 
-> Switching to 1GB huge pages instead of 2MB is a good mitigation in reducing the frequency of fault, but not a complete solution.
+> 	[Precision 7x50 Touchpad]
+> 	MatchBus=i2c
+> 	MatchUdevType=touchpad
+> 	MatchDMIModalias=dmi:*svnDellInc.:pnPrecision7?50*
+> 	AttrInputPropDisable=INPUT_PROP_BUTTONPAD
 > 
-> Thanks for considering.
+> However, because of the change introduced in 37ef4c19b4 ("Input: clear
+> BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
+> anymore breaking the device right click button and making impossible to
+> workaround it in user space.
 > 
-> Ray
+> In order to avoid breakage on other present or future devices, revert
+> the patch causing the issue.
+> 
+> Cc: stable@vger.kernel.org
+> Link: https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481 [1]
+> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1868789  [2]
+> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+> [...]
 
-Thanks for the report. CCing the regression mailing list, as it should
-be in the loop for all regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+Jiri, Benjamin, what the status here? Sure, this is not a crucial
+regression and we are in the middle of the merge window, but it looks
+like nothing has happened for a week now. Or was progress made somewhere
+and I just missed it?
 
-To be sure below issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
-
-#regzbot ^introduced c0d0381ade79
-#regzbot title mm: scalability regressions related to hugetlb_fault()
-changes
-#regzbot ignore-activity
-#regzbot back-burner: looks like this will take some time to get sorted out
-
-If it turns out this isn't a regression, free free to remove it from the
-tracking by sending a reply to this thread containing a paragraph like
-"#regzbot invalid: reason why this is invalid" (without the quotes).
-
-Reminder for developers: when fixing the issue, please add a 'Link:'
-tags pointing to the report (the mail quoted above) using
-lore.kernel.org/r/, as explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'. Regzbot needs them to
-automatically connect reports with fixes, but they are useful in
-general, too.
+#regzbot ^backmonitor:
+https://lore.kernel.org/stable/s5htubv32s8.wl-tiwai@suse.de/
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -84,29 +82,4 @@ that's not the case here; if you think it is, don't hesitate to tell me
 in a public reply, it's in everyone's interest to set the public record
 straight.
 
--- 
-Additional information about regzbot:
 
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-CC the regression list and tell regzbot about the issue, as that ensures
-the regression makes it onto the radar of the Linux kernel's regression
-tracker -- that's in your interest, as it ensures your report won't fall
-through the cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include 'Link:' tag in the patch descriptions pointing to all reports
-about the issue. This has been expected from developers even before
-regzbot showed up for reasons explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'.
