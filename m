@@ -1,84 +1,79 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7705836C
-	for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 07:18:46 +0000 (UTC)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-2e5827a76f4so208122427b3.6
-        for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 00:18:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/p7whsLBrJDzlLPKukpCC+zZhIvPp6QD/9IfTIUVO/k=;
-        b=WYxBqmBRte9I3qaul6d0E/TgxsEWvxFeVpzDhDH8+mR07IEXoXjrZ5LyOPDPgTus0q
-         MSl6FzeJ9gwUMdCg+r0EfDJjl3czj9PD0munrBgRBvSzuK/LOJDli2dzCV4lWpCLBCgV
-         sMxWK4Cgj3tTgN6FmJQEGN5KIG4A8fUTMvuTG2jH5wJ8FCr9mSdiXMpJkoFc3YPVPtob
-         RbmsEX+sjbDo4qBDp/xr0JjpdjBBVKvdYzJv3PHGvKaK+subs1JMF0Pyht7UoN6H+uA0
-         2/P7KsAcUeGOE8AsziGBi16OvrHoFm72m64pf3Wj2mbB23HaDfhxDxoa0L5kEmHNXTXH
-         OETA==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274BC36C
+	for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 08:02:20 +0000 (UTC)
+Received: by mail-ed1-f45.google.com with SMTP id h1so23446226edj.1
+        for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 01:02:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/p7whsLBrJDzlLPKukpCC+zZhIvPp6QD/9IfTIUVO/k=;
-        b=GPn4ZIsuzNBMcXxVhhghjhkUVDczperoICcdb6tJVpYOlDHNck0hA8m3tsv1znt5nW
-         s5hRPE4AYrMIzof+SBTN7IA7w/CDlE3k6KjbwM6mJhxIKMRLb40JwW/zrDJ5PUa5D7O0
-         3mbrCLr7VKW5DVzUKzHNYfxAD/UB5IUqUbWj34l5J8ddTIaZtDDCWYkOZSe6au+cFYRY
-         7TCH0up1Ds7hXJ+uEFPWbmxAUQsXkeKcy4NcK4LH/h+1OsGK1DOl7R/CoR5b21OETVb+
-         XRGZHGYmq0ZC3r+GS0HQrVp8ssmnLI+RzrGAmDO5rbcsTxc52TctHGglVZPUs3tW77XX
-         visw==
-X-Gm-Message-State: AOAM531r4ZtZDUe/7CyGTalbXA2tgF9ETxwm15EqfeA6Rq5+wNxvxxeM
-	3yVE09hHj2vtflsUJ5UG2AhUZUeUtw1bvus+LCEgpdc9rPt/TmcW
-X-Google-Smtp-Source: ABdhPJznwHQN5FMNpEZZnY2reh0XgsyH3yNmaoHIJfsgewbmBIMcE4I52hWoVknM4VV05eHx9iYMTHrya1XNBLdIx70=
-X-Received: by 2002:a81:7812:0:b0:2d0:8c2c:5159 with SMTP id
- t18-20020a817812000000b002d08c2c5159mr34297551ywc.120.1648624725188; Wed, 30
- Mar 2022 00:18:45 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=0nhYzrk89CFYhP0OL9hhz1b8TpKXi7qnAX0VfrTasFU=;
+        b=XerG2TmbVLI1LMLDDPjb/ZpmPSOz3E1JdsifOx9UJpGJleQdWJZK+Q/kG5s7grgNvK
+         2veXIqGULxfTu11HZPHpKd9aSiZc2e6s3TGqvnQMhgcJa3QlziOg1A0mg2mgnhAijUcX
+         qa2Wuf5qZYWkM235lGTJXqczfb8KRogRP08WIYly4TqbDSehUhOjRq6dAxAZux9RDMzz
+         K2HBjeZG64vtawHcNOUk1ORBOK6OTaPJ2frbfRS7kOHARNdGg79oGV3scbrmtI7r8zxO
+         PFgZ1Jz8YgzK3aXdpWe/ZONyNZK7cqoPTpGl8sGcOPwYaO4MgyJXzcygnnA3I4toycRi
+         bqXA==
+X-Gm-Message-State: AOAM5304vbiYjPUhG3yenZw/o8uEWTBjV3cdn4TL6678AfCvq10LOqF7
+	kQf+BxaNqRcUe6nqoskGbpA=
+X-Google-Smtp-Source: ABdhPJx+jLhT7yt4Ec4HKq1/sZa+KCGnRWXebnA30Qq39MunDzYYqU8wVc6jku+/XPAqTN0Zy83YrA==
+X-Received: by 2002:a05:6402:b7a:b0:419:3046:3abb with SMTP id cb26-20020a0564020b7a00b0041930463abbmr9076948edb.257.1648627338356;
+        Wed, 30 Mar 2022 01:02:18 -0700 (PDT)
+Received: from ?IPV6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id u9-20020a170906124900b006ce88a505a1sm8147711eja.179.2022.03.30.01.02.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Mar 2022 01:02:17 -0700 (PDT)
+Message-ID: <292d7225-5ac2-71f0-08bc-8c33217fb93f@kernel.org>
+Date: Wed, 30 Mar 2022 10:02:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYtk6rpp=0WG9LyfQRCsMbbvf=P7uhMuon4RzZz3UjYVYQ@mail.gmail.com>
-In-Reply-To: <CA+G9fYtk6rpp=0WG9LyfQRCsMbbvf=P7uhMuon4RzZz3UjYVYQ@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 30 Mar 2022 12:48:33 +0530
-Message-ID: <CA+G9fYsnw3TEvqtP+sH812Sbzm8ZH1sTS4RkuX07Fyd-PTkf6g@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.0
 Subject: Re: mainline: qemu_arm64 boot failed - Failed to start Hostname
  Service - Stopped Serial Getty on ttyAMA0
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, Linux ARM <linux-arm-kernel@lists.infradead.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>, 
-	Vincent Whitchurch <vincent.whitchurch@axis.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ regressions@lists.linux.dev, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+ Vincent Whitchurch <vincent.whitchurch@axis.com>
+References: <CA+G9fYtk6rpp=0WG9LyfQRCsMbbvf=P7uhMuon4RzZz3UjYVYQ@mail.gmail.com>
+From: Jiri Slaby <jirislaby@kernel.org>
+In-Reply-To: <CA+G9fYtk6rpp=0WG9LyfQRCsMbbvf=P7uhMuon4RzZz3UjYVYQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 30 Mar 2022 at 12:46, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
+Hi,
+
+I am not sure what this report is good for. See below.
+
+On 30. 03. 22, 9:16, Naresh Kamboju wrote:
 > Linux mainline kernel booting qemu_arm64 and Raspberry Pi 4 boot
 > failed [1] and [2].
-
-metadata:
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
-  git_sha: 965181d7ef7e1a863477536dc328c23a7ebc8a1d
-  git_describe: v5.17-13033-g965181d7ef7e
-  kernel_version: 5.17.0
-  kernel-config: https://builds.tuxbuild.com/275QxOAreyw3SRwLZ39TW5KVdRa/config
-
->
+> 
 > Boot log:
 > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x413fd0c1]
 > [    0.000000] Linux version 5.17.0 (tuxmake@tuxmake)
 > (aarch64-linux-gnu-gcc (Debian 11.2.0-18) 11.2.0, GNU ld (GNU Binutils
 > for Debian) 2.38) #1 SMP PREEMPT @1648607824
 > [    0.000000] Machine model: linux,dummy-virt
->
+> 
 > <trim>
->
->          Starting Hostname Service...
+> 
+>           Starting Hostname Service...
 > [FAILED] Failed to start Hostname Service.
 > See 'systemctl status systemd-hostnamed.service' for details.
+
+One failure here.
+
 > [    2.453172] random: crng init done
 > [    2.453522] random: 7 urandom warning(s) missed due to ratelimiting
 > [    2.483013] audit: type=1334 audit(1648621045.348:8): prog-id=0 op=UNLOAD
@@ -89,65 +84,45 @@ metadata:
 > ] A start job is running for Network Manager (7s / 1min 30s)[   ] A
 > start job is running for Network Manager (7s / 1min 30s)[   ] A start
 > job is running for Network Manager (8s / 1min 30s)[   ] A start job is
-> running for Network Manager (9s / 1min 30s)[   ] A start job is
-> running for Network Manager (9s / 1min 30s)[    [ A start job is
-> running for Network Manager (10s / 1min 30s)[     ] A start job is
-> running for Network Manager (10s / 1min 30s)[    [ A start job is
-> running for Network Manager (11s / 1min 30s)[   ] A start job is
-> running for Network Manager (12s / 1min 30s)[   ] A start job is
-> running for Network Manager (12s / 1min 30s)[   ] A start job is
-> running for Network Manager (13s / 1min 30s)[   ] A start job is
-> running for Network Manager (13s / 1min 30s)    ] A start job is
-> running for Network Manager (14s / 1min 30s)[     ] A start job is
-> running for Network Manager (14s / 1min 30s)    ] A start job is
-> running for Network Manager (15s / 1min 30s)[   ] A start job is
-> running for Network Manager (16s / 1min 30s)[   ] A start job is
-> running for Network Manager (16s / 1min 30s)[   ] A start job is
-> running for Network Manager (17s / 1min 30s)[   ] A start job is
-> running for Network Manager (17s / 1min 30s)[    [ A start job is
-> running for Network Manager (18s / 1min 30s)[     ] A start job is
-> running for Network Manager (19s / 1min 30s)[    [ A start job is
-> running for Network Manager (19s / 1min 30s)[   ] A start job is
-> running for Network Manager (19s / 1min 30s)[   ] A start job is
-> running for Network Manager (20s / 1min 30s)[   ] A start job is
-> running for Network Manager (20s / 1min 30s)[   ] A start job is
-> running for Network Manager (21s / 1min 30s)    ] A start job is
-> running for Network Manager (21s / 1min 30s)[     ] A start job is
-> running for Network Manager (22s / 1min 30s)    ] A start job is
-> running for Network Manager (22s / 1min 30s)[   ] A start job is
-> running for Network Manager (23s / 1min 30s)[   ] A start job is
-> running for Network Manager (23s / 1min 30s)[   ] A start job is
-> running for Network Manager (24s / 1min 30s)[   ] A start job is
-> running for Network Manager (24s / 1min 30s)[    [ A start job is
-> running for Network Manager (25s / 1min 30s)[     ] A start job is
+
+So NM is unable to start -- another networking failure.
+
+> ...
 > running for Network Manager (25s / 1min 30s)[  OK  ] Started Network
 > Manager.
 > [  OK  ] Listening on Load/Save RF Kill Switch Status /dev/rfkill Watch.
->          Starting Network Manager Script Dispatcher Service...
+>           Starting Network Manager Script Dispatcher Service...
 > [   27.359980] kauditd_printk_skb: 11 callbacks suppressed
 > [   27.359988] audit: type=1701 audit(1648621070.228:22):
 > auid=4294967295 uid=0 gid=0 ses=4294967295 pid=313 comm=\"(spatcher)\"
 > exe=\"/lib/systemd/systemd\" sig=6 res=1
 > [  OK  ] Reached target Network.
->          Starting DNS forwarder and DHCP server...
+>           Starting DNS forwarder and DHCP server...
 > [   27.367248] audit: type=1701 audit(1648621070.232:23):
 > auid=4294967295 uid=0 gid=0 ses=4294967295 pid=315 comm=\"(dnsmasq)\"
 > exe=\"/lib/systemd/systemd\" sig=6 res=1
->          Starting Permit User Sessions...
+>           Starting Permit User Sessions...
 > [   27.371110] audit: type=1701 audit(1648621070.240:24):
 > auid=4294967295 uid=0 gid=0 ses=4294967295 pid=317 comm=\"(sessions)\"
 > exe=\"/lib/systemd/systemd\" sig=6 res=1
 > [FAILED] Failed to start Network Manager Script Dispatcher Service.
 > See 'systemctl status NetworkManager-dispatcher.service' for details.
+
+And finally NM failed here. And it also tells you what to do for further 
+investigation.
+
 > [FAILED] Failed to start DNS forwarder and DHCP server.
 > See 'systemctl status dnsmasq.service' for details.
+
+Again, a network service.
+
 > [FAILED] Failed to start Permit User Sessions.
 > See 'systemctl status systemd-user-sessions.service' for details.
 > [  OK  ] Started Getty on tty1.
 > [  OK  ] Started Serial Getty on ttyAMA0.
 > [  OK  ] Reached target Login Prompts.
 > [  OK  ] Reached target Multi-User System.
->          Starting Update UTMP about System Runlevel Changes...
+>           Starting Update UTMP about System Runlevel Changes...
 > [   27.402975] audit: type=1701 audit(1648621070.268:25):
 > auid=4294967295 uid=0 gid=0 ses=4294967295 pid=322 comm=\"(ate-utmp)\"
 > exe=\"/lib/systemd/systemd\" sig=6 res=1
@@ -161,14 +136,11 @@ metadata:
 > exe=\"/lib/systemd/systemd\" sig=6 res=1
 > [  OK  ] Stopped Serial Getty on ttyAMA0.
 > [  OK  ] Started Serial Getty on ttyAMA0.
-> [  OK  ] Stopped Getty on tty1.
-> [  OK  ] Started Getty on tty1.
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
->
-> [1] https://lkft.validation.linaro.org/scheduler/job/4809453#L252
-> [2] https://lkft.validation.linaro.org/scheduler/job/4809125#L386
+
+      ^^ This one is "OK", so I see no connection to serial layer at all 
+as the Subject and CCed people list suggest. Am I missing something?
+
+regards,
+-- 
+js
+suse labs
