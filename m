@@ -1,135 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B463E363
-	for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 12:30:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1648643453;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EHl9Iys2fNo0cHL3L00P9uLCZVoH7/jMKcSWCaOEXSw=;
-	b=Rk7ho4NzzZbUtDswKuPio9nfniido0z4WiivvCNno4vPSPYUxvi6ob6PJwI9MNc7hDwzww
-	Sgd0ZIPEdwWawOzTC37NSKkQMigDu8cZ2bvaqJQQGQ9rRiLZkfnp7V39bnTTiw+9QIqyRQ
-	Mq4PDUVnSQ3Wq13OURNGNAteX9q4vWA=
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
- [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-241-1hR9hO_zMIiYwQvdVe7Z2A-1; Wed, 30 Mar 2022 08:30:49 -0400
-X-MC-Unique: 1hR9hO_zMIiYwQvdVe7Z2A-1
-Received: by mail-pf1-f200.google.com with SMTP id y27-20020aa79afb000000b004fa7883f756so11946773pfp.18
-        for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 05:30:49 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1EB63C
+	for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 13:55:02 +0000 (UTC)
+Received: by mail-yb1-f178.google.com with SMTP id g9so34462583ybf.1
+        for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 06:55:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q91+udaPfkikoXVsmrkPYxbQ6mQZheByBkLR51EBLso=;
+        b=QlKoswTnuWcy0GKiy459UIMZAEil7yMBJAPk3UUCoOZZ3ynW5YzHrKnf0PsG9TiWqj
+         zg2BGpmbZxbEorRIE3OGkmJWmkxrm4XX9TX2G3pL2tavv8gYQTDLlIGaAiaP/FlXMkyJ
+         7lzBIQYBJy8Id/lRNy4lIEW3RinLniERxKfM2lWEwh5F1bXTZweVL8+HepwydIIaKLIf
+         Xu6THxqoocaydEKFo7sp8soJPmIo3s7objjk8Uko6JMY/62lPjizNu+kJhUloAGD+ZHK
+         aqTM0FKPvZj3mHDnN0/qmN0PsRRbM05GtcmAe74nSVzsoimN0EYNUIhstvkdEzGCAPQa
+         7ePQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=EHl9Iys2fNo0cHL3L00P9uLCZVoH7/jMKcSWCaOEXSw=;
-        b=kmUzSrjR5RNwfvgaPMW616ut+paeEQvsRIKpMxjw2fEk09HZQ7Vrg7gZwaW1hQO+U8
-         xahxJA+5850ZyrDlnYyenbKmcB1IUxEebnLEL2O2wJAUMeJGbL0yCz/74I4jBZRjBqzE
-         haXK1jRKWi2u59DjkEAcGRiJK7XJepNvteM5qfZf+mPmSJDJ3HHdIQboKU2itQ2TAXdf
-         06nO3JfWI7WYWyLyTFIChOssA98JdA7FwH18u8Lcr2CcxtWJ4Y7FNQAkME6QN1oF6MnS
-         6oZo9MzRK+JHCrXJ8FXzDmqsZIOKu3a0+hGOYRztbflbRfy2nle8OrE4XpsGypMYqcRy
-         TU1g==
-X-Gm-Message-State: AOAM533owAKp6priYOybURljViWwLvk8PtqbwpYJoXsUHeXzbL5iWe5t
-	c/PC3hfWCmcTigpD/+xIRbglYVKSp37WrVwNAHbBJXW2uuNWbOFujs6l0Zu6SjJVI+UGkofbaV7
-	89E2x4ZzzcUQvLOME2ItY4FjWQdmwDa8Q+mmcgYA=
-X-Received: by 2002:a63:416:0:b0:386:66e:33d9 with SMTP id 22-20020a630416000000b00386066e33d9mr6130720pge.146.1648643448700;
-        Wed, 30 Mar 2022 05:30:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxekgq7KrEQL6DDoYa2FqMqNPIp9xe0b62gAYQ5LJDPH7bPsfl3FeLlM+UX3hqiOfixrB+XHzDe6gin6hyPK0o=
-X-Received: by 2002:a63:416:0:b0:386:66e:33d9 with SMTP id 22-20020a630416000000b00386066e33d9mr6130693pge.146.1648643448387;
- Wed, 30 Mar 2022 05:30:48 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=Q91+udaPfkikoXVsmrkPYxbQ6mQZheByBkLR51EBLso=;
+        b=wZ1xaUo+O6Gi3AmqeXp0HcXJGD6k3ItfyxcjFo2Oaj211u0oHcaaYGFUBHBf5Z0HCX
+         ai1rkshtIe6/7ieOoD3Z/rHESKCaLsdwLrWVs4gDcYYnFnAvIkphlNZtCTnDDhyAFdJv
+         FZOy5kwnKhTK/RVStAHZTrYY0BPUa01VRtS12qOrWyYQksdeaWkjGBCJNh1a38K5MfWG
+         cYdRw9FbaOH72ygtMEjTKCZ5hV17ANAN3smoP1yxgz8LX9xVbuCst8DGIONAUDTOw1D1
+         1cjF3OkmoPz7NAVAHaZ+Im2aKtibmANTFabUXRVRcuV484ADgmIfhPZDrgljNxwdJEPP
+         vBog==
+X-Gm-Message-State: AOAM5330KEQ3Z9XF7A5VcxuOHrt+BVaw2Otb6Kipf7KdC3XJe2tcgHuc
+	m3wb38wEpmXyyxvnfoUs67pS9bxkwymnKIuh2rESJw==
+X-Google-Smtp-Source: ABdhPJyqnWcakti9oK8dCIkF3XFE6/D1gUZjFvowPmRBx0Zr0pP1x4y+gBIXnWZwlirsMlRE1F4tkx0flJ8w9wn072g=
+X-Received: by 2002:a25:a0c5:0:b0:633:63da:5ead with SMTP id
+ i5-20020a25a0c5000000b0063363da5eadmr33457010ybm.412.1648648501392; Wed, 30
+ Mar 2022 06:55:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220321184404.20025-1-jose.exposito89@gmail.com> <44abc738-1532-63fa-9cd1-2b3870a963bc@leemhuis.info>
-In-Reply-To: <44abc738-1532-63fa-9cd1-2b3870a963bc@leemhuis.info>
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date: Wed, 30 Mar 2022 14:30:37 +0200
-Message-ID: <CAO-hwJJweSuSBE_18ZbvqS12eX9GcS+aJoe7SRFJdASOrN3bqw@mail.gmail.com>
-Subject: Re: [PATCH] Revert "Input: clear BTN_RIGHT/MIDDLE on buttonpads"
-To: Thorsten Leemhuis <regressions@leemhuis.info>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>, 
-	Jiri Kosina <jkosina@suse.cz>, Takashi Iwai <tiwai@suse.de>, 
-	Peter Hutterer <peter.hutterer@who-t.net>, 
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>, "3.8+" <stable@vger.kernel.org>, 
-	regressions@lists.linux.dev, lkml <linux-kernel@vger.kernel.org>
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=btissoir@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+References: <CA+G9fYtk6rpp=0WG9LyfQRCsMbbvf=P7uhMuon4RzZz3UjYVYQ@mail.gmail.com>
+ <YkQOoQRUKemBEn02@kroah.com> <CA+G9fYuK2GDqWHuW3oOi2O0h4RWsLLQb9198i-PS=nMf1t0T7w@mail.gmail.com>
+ <YkQT0ROhctplAuds@kroah.com>
+In-Reply-To: <YkQT0ROhctplAuds@kroah.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 30 Mar 2022 19:24:50 +0530
+Message-ID: <CA+G9fYv9uNrUTv2TQfV6yW98qQBxhJ9Fg6UwHLJKYbPHEGHFtA@mail.gmail.com>
+Subject: Re: mainline: qemu_arm64 boot failed - Failed to start Hostname
+ Service - Stopped Serial Getty on ttyAMA0
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Jiri Slaby <jirislaby@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>, 
+	Vincent Whitchurch <vincent.whitchurch@axis.com>, Anders Roxell <anders.roxell@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 30, 2022 at 2:27 PM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> Hi, this is your Linux kernel regression tracker.
->
-> On 21.03.22 19:44, Jos=C3=A9 Exp=C3=B3sito wrote:
-> > This reverts commit 37ef4c19b4c659926ce65a7ac709ceaefb211c40.
+On Wed, 30 Mar 2022 at 13:54, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+
+> > > That's a lot of userspace logs, any kernel logs showing that anything
+> > > failed?
 > >
-> > The touchpad present in the Dell Precision 7550 and 7750 laptops
-> > reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
-> > the device is not a clickpad, it is a touchpad with physical buttons.
-> >
-> > In order to fix this issue, a quirk for the device was introduced in
-> > libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
-> >
-> >       [Precision 7x50 Touchpad]
-> >       MatchBus=3Di2c
-> >       MatchUdevType=3Dtouchpad
-> >       MatchDMIModalias=3Ddmi:*svnDellInc.:pnPrecision7?50*
-> >       AttrInputPropDisable=3DINPUT_PROP_BUTTONPAD
-> >
-> > However, because of the change introduced in 37ef4c19b4 ("Input: clear
-> > BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
-> > anymore breaking the device right click button and making impossible to
-> > workaround it in user space.
-> >
-> > In order to avoid breakage on other present or future devices, revert
-> > the patch causing the issue.
-> >
-> > Cc: stable@vger.kernel.org
-> > Link: https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests=
-/481 [1]
-> > Link: https://bugzilla.redhat.com/show_bug.cgi?id=3D1868789  [2]
-> > Signed-off-by: Jos=C3=A9 Exp=C3=B3sito <jose.exposito89@gmail.com>
-> > [...]
+> > I do not see kernel logs failures here.
 >
-> Jiri, Benjamin, what the status here? Sure, this is not a crucial
-> regression and we are in the middle of the merge window, but it looks
-> like nothing has happened for a week now. Or was progress made somewhere
-> and I just missed it?
-
-No, I think it just wasn't picked up by the input maintainer yet
-(Dmitry, now in CC).
-
-FWIW:
-Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-
-Jos=C3=A9, please do not forget to add the input maintainer when you target
-the input tree, not the HID one :)
-
-Cheers,
-Benjamin
-
+> Great, then the kernel is working just fine!  :)
 >
-> #regzbot ^backmonitor:
-> https://lore.kernel.org/stable/s5htubv32s8.wl-tiwai@suse.de/
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
->
->
+> Seriously, without some sort of hint, it's going to be impossible for us
+> to know what to do here...
 
+Ander is bisecting this problem.
+
+OTOH, I am looking into test history and found the head commit is booting pass.
+The problem report I have sent is a head-1 test report.
+
+This means that, current Linus master boot pass.
+
+Do you see any relation of top fix commit vs the report I sent.
+
+BAD: 965181d7ef7e (head -1 )
+GOOD: d888c83fcec75194a8 ( head)
+
+git log 965181d7ef7e..d888c83fcec75194a8
+
+commit d888c83fcec75194a8a48ccd283953bdba7b2550 (HEAD -> linux-master,
+linux/master)
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue Mar 29 23:29:18 2022 -0700
+
+    fs: fix fd table size alignment properly
+
+    Jason Donenfeld reports that my commit 1c24a186398f ("fs: fd tables have
+    to be multiples of BITS_PER_LONG") doesn't work, and the reason is an
+    embarrassing brown-paper-bag bug.
+
+    Yes, we want to align the number of fds to BITS_PER_LONG, and yes, the
+    reason they might not be aligned is because the incoming 'max_fd'
+    argument might not be aligned.
+
+    But aligining the argument - while simple - will cause a "infinitely
+    big" maxfd (eg NR_OPEN_MAX) to just overflow to zero.  Which most
+    definitely isn't what we want either.
+
+    The obvious fix was always just to do the alignment last, but I had
+    moved it earlier just to make the patch smaller and the code look
+    simpler.  Duh.  It certainly made _me_ look simple.
+
+    Fixes: 1c24a186398f ("fs: fd tables have to be multiples of BITS_PER_LONG")
+    Reported-and-tested-by: Jason A. Donenfeld <Jason@zx2c4.com>
+    Cc: Fedor Pchelkin <aissur0002@gmail.com>
+    Cc: Alexey Khoroshilov <khoroshilov@ispras.ru>
+    Cc: Christian Brauner <brauner@kernel.org>
+    Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
+- Naresh
