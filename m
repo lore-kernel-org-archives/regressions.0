@@ -1,61 +1,41 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274BC36C
-	for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 08:02:20 +0000 (UTC)
-Received: by mail-ed1-f45.google.com with SMTP id h1so23446226edj.1
-        for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 01:02:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=0nhYzrk89CFYhP0OL9hhz1b8TpKXi7qnAX0VfrTasFU=;
-        b=XerG2TmbVLI1LMLDDPjb/ZpmPSOz3E1JdsifOx9UJpGJleQdWJZK+Q/kG5s7grgNvK
-         2veXIqGULxfTu11HZPHpKd9aSiZc2e6s3TGqvnQMhgcJa3QlziOg1A0mg2mgnhAijUcX
-         qa2Wuf5qZYWkM235lGTJXqczfb8KRogRP08WIYly4TqbDSehUhOjRq6dAxAZux9RDMzz
-         K2HBjeZG64vtawHcNOUk1ORBOK6OTaPJ2frbfRS7kOHARNdGg79oGV3scbrmtI7r8zxO
-         PFgZ1Jz8YgzK3aXdpWe/ZONyNZK7cqoPTpGl8sGcOPwYaO4MgyJXzcygnnA3I4toycRi
-         bqXA==
-X-Gm-Message-State: AOAM5304vbiYjPUhG3yenZw/o8uEWTBjV3cdn4TL6678AfCvq10LOqF7
-	kQf+BxaNqRcUe6nqoskGbpA=
-X-Google-Smtp-Source: ABdhPJx+jLhT7yt4Ec4HKq1/sZa+KCGnRWXebnA30Qq39MunDzYYqU8wVc6jku+/XPAqTN0Zy83YrA==
-X-Received: by 2002:a05:6402:b7a:b0:419:3046:3abb with SMTP id cb26-20020a0564020b7a00b0041930463abbmr9076948edb.257.1648627338356;
-        Wed, 30 Mar 2022 01:02:18 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id u9-20020a170906124900b006ce88a505a1sm8147711eja.179.2022.03.30.01.02.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Mar 2022 01:02:17 -0700 (PDT)
-Message-ID: <292d7225-5ac2-71f0-08bc-8c33217fb93f@kernel.org>
-Date: Wed, 30 Mar 2022 10:02:16 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5456E36C
+	for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 08:02:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B294C340EC;
+	Wed, 30 Mar 2022 08:02:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1648627363;
+	bh=th87IHJy7/yDQo0A5r34hisJJu3XzxL2LpvctqkCO5E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Em1zLiEDNn6z/j4HJswbyHsspjJZqMIHyuMbRAmq5BU4QDsuzo/imOKhbloiFCNv0
+	 zZM1zcfDAV2XbSaegpHVQHP56O3YmV08wu1bI8z0JOpWsR9dCiK6RPA0w7HZUCjlXl
+	 FWHa8+A+xPFdOKqoP/RGk4H/BZxR3wrL77aVmdaw=
+Date: Wed, 30 Mar 2022 10:02:41 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
+	regressions@lists.linux.dev,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+	Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: Re: mainline: qemu_arm64 boot failed - Failed to start Hostname
+ Service - Stopped Serial Getty on ttyAMA0
+Message-ID: <YkQOoQRUKemBEn02@kroah.com>
+References: <CA+G9fYtk6rpp=0WG9LyfQRCsMbbvf=P7uhMuon4RzZz3UjYVYQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: mainline: qemu_arm64 boot failed - Failed to start Hostname
- Service - Stopped Serial Getty on ttyAMA0
-Content-Language: en-US
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- regressions@lists.linux.dev, Linux ARM <linux-arm-kernel@lists.infradead.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
- Vincent Whitchurch <vincent.whitchurch@axis.com>
-References: <CA+G9fYtk6rpp=0WG9LyfQRCsMbbvf=P7uhMuon4RzZz3UjYVYQ@mail.gmail.com>
-From: Jiri Slaby <jirislaby@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <CA+G9fYtk6rpp=0WG9LyfQRCsMbbvf=P7uhMuon4RzZz3UjYVYQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-Hi,
-
-I am not sure what this report is good for. See below.
-
-On 30. 03. 22, 9:16, Naresh Kamboju wrote:
+On Wed, Mar 30, 2022 at 12:46:40PM +0530, Naresh Kamboju wrote:
 > Linux mainline kernel booting qemu_arm64 and Raspberry Pi 4 boot
 > failed [1] and [2].
 > 
@@ -68,12 +48,9 @@ On 30. 03. 22, 9:16, Naresh Kamboju wrote:
 > 
 > <trim>
 > 
->           Starting Hostname Service...
+>          Starting Hostname Service...
 > [FAILED] Failed to start Hostname Service.
 > See 'systemctl status systemd-hostnamed.service' for details.
-
-One failure here.
-
 > [    2.453172] random: crng init done
 > [    2.453522] random: 7 urandom warning(s) missed due to ratelimiting
 > [    2.483013] audit: type=1334 audit(1648621045.348:8): prog-id=0 op=UNLOAD
@@ -84,45 +61,65 @@ One failure here.
 > ] A start job is running for Network Manager (7s / 1min 30s)[   ] A
 > start job is running for Network Manager (7s / 1min 30s)[   ] A start
 > job is running for Network Manager (8s / 1min 30s)[   ] A start job is
-
-So NM is unable to start -- another networking failure.
-
-> ...
+> running for Network Manager (9s / 1min 30s)[   ] A start job is
+> running for Network Manager (9s / 1min 30s)[    [ A start job is
+> running for Network Manager (10s / 1min 30s)[     ] A start job is
+> running for Network Manager (10s / 1min 30s)[    [ A start job is
+> running for Network Manager (11s / 1min 30s)[   ] A start job is
+> running for Network Manager (12s / 1min 30s)[   ] A start job is
+> running for Network Manager (12s / 1min 30s)[   ] A start job is
+> running for Network Manager (13s / 1min 30s)[   ] A start job is
+> running for Network Manager (13s / 1min 30s)    ] A start job is
+> running for Network Manager (14s / 1min 30s)[     ] A start job is
+> running for Network Manager (14s / 1min 30s)    ] A start job is
+> running for Network Manager (15s / 1min 30s)[   ] A start job is
+> running for Network Manager (16s / 1min 30s)[   ] A start job is
+> running for Network Manager (16s / 1min 30s)[   ] A start job is
+> running for Network Manager (17s / 1min 30s)[   ] A start job is
+> running for Network Manager (17s / 1min 30s)[    [ A start job is
+> running for Network Manager (18s / 1min 30s)[     ] A start job is
+> running for Network Manager (19s / 1min 30s)[    [ A start job is
+> running for Network Manager (19s / 1min 30s)[   ] A start job is
+> running for Network Manager (19s / 1min 30s)[   ] A start job is
+> running for Network Manager (20s / 1min 30s)[   ] A start job is
+> running for Network Manager (20s / 1min 30s)[   ] A start job is
+> running for Network Manager (21s / 1min 30s)    ] A start job is
+> running for Network Manager (21s / 1min 30s)[     ] A start job is
+> running for Network Manager (22s / 1min 30s)    ] A start job is
+> running for Network Manager (22s / 1min 30s)[   ] A start job is
+> running for Network Manager (23s / 1min 30s)[   ] A start job is
+> running for Network Manager (23s / 1min 30s)[   ] A start job is
+> running for Network Manager (24s / 1min 30s)[   ] A start job is
+> running for Network Manager (24s / 1min 30s)[    [ A start job is
+> running for Network Manager (25s / 1min 30s)[     ] A start job is
 > running for Network Manager (25s / 1min 30s)[  OK  ] Started Network
 > Manager.
 > [  OK  ] Listening on Load/Save RF Kill Switch Status /dev/rfkill Watch.
->           Starting Network Manager Script Dispatcher Service...
+>          Starting Network Manager Script Dispatcher Service...
 > [   27.359980] kauditd_printk_skb: 11 callbacks suppressed
 > [   27.359988] audit: type=1701 audit(1648621070.228:22):
 > auid=4294967295 uid=0 gid=0 ses=4294967295 pid=313 comm=\"(spatcher)\"
 > exe=\"/lib/systemd/systemd\" sig=6 res=1
 > [  OK  ] Reached target Network.
->           Starting DNS forwarder and DHCP server...
+>          Starting DNS forwarder and DHCP server...
 > [   27.367248] audit: type=1701 audit(1648621070.232:23):
 > auid=4294967295 uid=0 gid=0 ses=4294967295 pid=315 comm=\"(dnsmasq)\"
 > exe=\"/lib/systemd/systemd\" sig=6 res=1
->           Starting Permit User Sessions...
+>          Starting Permit User Sessions...
 > [   27.371110] audit: type=1701 audit(1648621070.240:24):
 > auid=4294967295 uid=0 gid=0 ses=4294967295 pid=317 comm=\"(sessions)\"
 > exe=\"/lib/systemd/systemd\" sig=6 res=1
 > [FAILED] Failed to start Network Manager Script Dispatcher Service.
 > See 'systemctl status NetworkManager-dispatcher.service' for details.
-
-And finally NM failed here. And it also tells you what to do for further 
-investigation.
-
 > [FAILED] Failed to start DNS forwarder and DHCP server.
 > See 'systemctl status dnsmasq.service' for details.
-
-Again, a network service.
-
 > [FAILED] Failed to start Permit User Sessions.
 > See 'systemctl status systemd-user-sessions.service' for details.
 > [  OK  ] Started Getty on tty1.
 > [  OK  ] Started Serial Getty on ttyAMA0.
 > [  OK  ] Reached target Login Prompts.
 > [  OK  ] Reached target Multi-User System.
->           Starting Update UTMP about System Runlevel Changes...
+>          Starting Update UTMP about System Runlevel Changes...
 > [   27.402975] audit: type=1701 audit(1648621070.268:25):
 > auid=4294967295 uid=0 gid=0 ses=4294967295 pid=322 comm=\"(ate-utmp)\"
 > exe=\"/lib/systemd/systemd\" sig=6 res=1
@@ -136,11 +133,22 @@ Again, a network service.
 > exe=\"/lib/systemd/systemd\" sig=6 res=1
 > [  OK  ] Stopped Serial Getty on ttyAMA0.
 > [  OK  ] Started Serial Getty on ttyAMA0.
+> [  OK  ] Stopped Getty on tty1.
+> [  OK  ] Started Getty on tty1.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+> 
+> [1] https://lkft.validation.linaro.org/scheduler/job/4809453#L252
+> [2] https://lkft.validation.linaro.org/scheduler/job/4809125#L386
+> 
 
-      ^^ This one is "OK", so I see no connection to serial layer at all 
-as the Subject and CCed people list suggest. Am I missing something?
+That's a lot of userspace logs, any kernel logs showing that anything
+failed?
 
-regards,
--- 
-js
-suse labs
+thanks,
+
+greg k-h
