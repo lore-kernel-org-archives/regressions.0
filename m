@@ -1,142 +1,216 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB5B67F6
-	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 08:43:24 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nZqOk-0000r9-F8; Thu, 31 Mar 2022 10:43:18 +0200
-Message-ID: <a7a91106-1443-b38a-ece6-7c3f335908b1@leemhuis.info>
-Date: Thu, 31 Mar 2022 10:43:17 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46CD57C
+	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 12:04:10 +0000 (UTC)
+Received: by mail-yb1-f175.google.com with SMTP id g9so39448831ybf.1
+        for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 05:04:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=vVg2+GBr03vvdC1xuzhWdwYhm3SEo/ZuYCT/xeS6niE=;
+        b=XNIiZdqQuTo9cCA9QknJGojKVZIDaKhcCSFvqVYy8YyUk0bpVsdrbTjVTg7Lp1nLew
+         IY5YwQesdZeJO98Wtkf0gJDBPUKL0m9+Wn0YFc7j2yQlVMrw9N4nJUZZN9iaJHSGV8GE
+         wIfWgiVS8+lJwlFzJnR0mXEnPFYJwx9CWMy5YXQ7WbWrfvP429nyRcq2mne7+JpnESyV
+         cqRzfXEOIrPHo33blb3UFUEL2zzeQB+/vqt3oqOIJcbDGv83tPNxRMjYKdFa9Z7k33Cp
+         /ihZLKJMJerWNVDj3vJ38u2daHkYQUbIR7pwbvAk49sNYBMw23xdUWia+PkY7jqErTnZ
+         OdZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=vVg2+GBr03vvdC1xuzhWdwYhm3SEo/ZuYCT/xeS6niE=;
+        b=UpiTc/KnMNdaPiGTujs8/kGLt8rJXFMZt6RlFyNqQGvdJEHeQ4Ei5X/zMCoCpbKMco
+         msDC9/SmfAE+SJGUWzWx5En1zqufmovA4v2oSQgJwQW9kS8czBZ7PM0D813NDdrU4gU3
+         p/RtM/+jO8iK1AOQN+z+R0A6Kziz37W3K09Bp8hzPwEfPLNip5Go/9cJYu/f0h8lQknM
+         tEwp/6m8l7/7YxpUZ53pjiEESO+1bCzj20fMIFpgJkGmgaCeYIeymwUGcPL0VW841I8W
+         pDDWWqV9thtKFZN9mKIH7Q+R6d6ViaJixPqq3vDuafsVLb66npUdJSg4tkHbOid/FWEF
+         ovOw==
+X-Gm-Message-State: AOAM533e50hqsEi2jS/yHuoxU9k0+Pn8Q+Bl/LA5X+NpVDkV4D1ppqJH
+	YGqWH14IYK2NL9+v1Fe3yzq9spQahk0YKkbhyKqQDQ==
+X-Google-Smtp-Source: ABdhPJyuBIMuDDH57X67oIQx5rSGcAvWFmiQQo2st/DsFD9hZKNBoW+8nuJ7Dfs4pq8CE5AAmKpXj6tqdVl0JB0YC4I=
+X-Received: by 2002:a25:548:0:b0:633:81bd:e319 with SMTP id
+ 69-20020a250548000000b0063381bde319mr3993613ybf.603.1648728248547; Thu, 31
+ Mar 2022 05:04:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: Performance regression with random IO pattern from the client
-Content-Language: en-US
-To: Jan Kara <jack@suse.cz>, Trond Myklebust <trondmy@gmail.com>
-Cc: "J. Bruce Fields" <bfields@redhat.com>,
- Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
- nfbrown@suse.com, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220330103457.r4xrhy2d6nhtouzk@quack3.lan>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20220330103457.r4xrhy2d6nhtouzk@quack3.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1648716204;640b965c;
-X-HE-SMSGID: 1nZqOk-0000r9-F8
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 31 Mar 2022 17:33:57 +0530
+Message-ID: <CA+G9fYuqU45hHmK4WMUNEXQbmBucE+9fB=S9wcHEfEHaZ2jgcQ@mail.gmail.com>
+Subject: [next] db845c: WARNING: CPU: 5 PID: 8 at drivers/clk/clk-divider.c:139
+ divider_recalc_rate
+To: linux-clk <linux-clk@vger.kernel.org>, 
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev
+Cc: gabriel.fernandez@foss.st.com, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-[TLDR: I'm adding the regression report below to regzbot, the Linux
-kernel regression tracking bot; all text you find below is compiled from
-a few templates paragraphs you might have encountered already already
-from similar mails.]
+Following kernel warning noticed on db845c while booting linux next-20220331.
 
-Hi, this is your Linux kernel regression tracker.  CCing the regression
-mailing list, as it should be in the loop for all regressions, as
-explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+metadata:
+  git_ref: master
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: fdcbcd1348f4ef713668bae1b0fa9774e1811205
+  git_describe: next-20220331
+  kernel_version: 5.17.0
+  kernel-config: https://builds.tuxbuild.com/278RLnhgJL7XdlJbcbv07jiwbYB/config
 
-On 30.03.22 12:34, Jan Kara wrote:
-> Hello,
-> 
-> during our performance testing we have noticed that commit b6669305d35a
-> ("nfsd: Reduce the number of calls to nfsd_file_gc()") has introduced a
-> performance regression when a client does random buffered writes. The
-> workload on NFS client is fio running 4 processed doing random buffered writes to 4
-> different files and the files are large enough to hit dirty limits and
-> force writeback from the client. In particular the invocation is like:
-> 
-> fio --direct=0 --ioengine=sync --thread --directory=/mnt/mnt1 --invalidate=1 --group_reporting=1 --runtime=300 --fallocate=posix --ramp_time=10 --name=RandomReads-128000-4k-4 --new_group --rw=randwrite --size=4000m --numjobs=4 --bs=4k --filename_format=FioWorkloads.\$jobnum --end_fsync=1
-> 
-> The reason why commit b6669305d35a regresses performance is the
-> filemap_flush() call it adds into nfsd_file_put(). Before this commit
-> writeback on the server happened from nfsd_commit() code resulting in
-> rather long semisequential streams of 4k writes. After commit b6669305d35a
-> all the writeback happens from filemap_flush() calls resulting in much
-> longer average seek distance (IO from different files is more interleaved)
-> and about 16-20% regression in the achieved writeback throughput when the
-> backing store is rotational storage.
-> 
-> I think the filemap_flush() from nfsd_file_put() is indeed rather
-> aggressive and I think we'd be better off to just leave writeback to either
-> nfsd_commit() or standard dirty page cleaning happening on the system. I
-> assume the rationale for the filemap_flush() call was to make it more
-> likely the file can be evicted during the garbage collection run? Was there
-> any particular problem leading to addition of this call or was it just "it
-> seemed like a good idea" thing?
-> 
-> Thanks in advance for ideas.
-> 
+Boot log:
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x517f803c]
+[    0.000000] Linux version 5.17.0-next-20220331 (tuxmake@tuxmake)
+(aarch64-linux-gnu-gcc (Debian 11.2.0-18) 11.2.0, GNU ld (GNU Binutils
+for Debian) 2.38) #1 SMP PREEMPT @1648699852
+[    0.000000] Machine model: Thundercomm Dragonboard 845c
+<trim>
+[    8.131366] ------------[ cut here ]------------
+[    8.131374] dsi0_pll_bit_clk: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set
+[    8.131387] WARNING: CPU: 5 PID: 8 at drivers/clk/clk-divider.c:139
+divider_recalc_rate+0x8c/0xc0
+[    8.131398] Modules linked in: qcom_spmi_adc5 snd_soc_sdm845
+qcom_vadc_common qcom_spmi_temp_alarm qcom_pon crct10dif_ce rtc_pm8xxx
+snd_soc_rt5663 msm snd_soc_qcom_common gpu_sched snd_soc_rl6231
+soundwire_bus reset_qcom_pdc drm_dp_helper qcom_camss hci_uart
+videobuf2_dma_sg btqca v4l2_fwnode venus_core ath10k_snoc v4l2_async
+btbcm ath10k_core i2c_qcom_geni v4l2_mem2mem videobuf2_memops
+videobuf2_v4l2 ath bluetooth camcc_sdm845 videobuf2_common
+spi_geni_qcom i2c_qcom_cci qcom_rng mac80211 xhci_pci qcom_q6v5_mss
+xhci_pci_renesas cfg80211 icc_osm_l3 slim_qcom_ngd_ctrl qcom_wdt
+rfkill qrtr lmh pdr_interface display_connector slimbus qcom_q6v5_pas
+drm_kms_helper qcom_pil_info qcom_q6v5 qcom_sysmon qcom_common
+qcom_glink_smem qmi_helpers drm mdt_loader socinfo rmtfs_mem fuse
+[    8.131462] CPU: 5 PID: 8 Comm: kworker/u16:0 Not tainted
+5.17.0-next-20220331 #1
+[    8.131465] Hardware name: Thundercomm Dragonboard 845c (DT)
+[    8.131467] Workqueue: events_unbound deferred_probe_work_func
+[    8.131475] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    8.131477] pc : divider_recalc_rate+0x8c/0xc0
+[    8.131479] lr : divider_recalc_rate+0x8c/0xc0
+[    8.131481] sp : ffff8000080936c0
+[    8.131482] x29: ffff8000080936c0 x28: ffff781940e58d00 x27: ffffa7f3f1bc6d38
+[    8.131485] x26: ffffa7f3f1bc6cf8 x25: 0000000000000000 x24: ffffffffffffffff
+[    8.131488] x23: ffff781947e8a400 x22: 000000003b9aca50 x21: ffff781940be0800
+[    8.131491] x20: ffff781947e8a800 x19: 000000003b9aca50 x18: 0000000000000000
+[    8.131494] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[    8.131497] x14: ffff7819bd718000 x13: 0a74657320746f6e x12: 204f52455a5f574f
+[    8.131500] x11: 4c4c415f52454449 x10: 5649445f4b4c4320 x9 : ffffa7f3f011de84
+[    8.131502] x8 : 445f4b4c4320646e x7 : 6120726f73697669 x6 : 0000000000000001
+[    8.131505] x5 : ffffa7f3f288f000 x4 : ffffa7f3f288f2d0 x3 : 0000000000000000
+[    8.131508] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff7819402c7000
+[    8.131511] Call trace:
+[    8.131512]  divider_recalc_rate+0x8c/0xc0
+[    8.131513]  clk_divider_recalc_rate+0x64/0x90
+[    8.131515]  clk_recalc+0x40/0xb0
+[    8.131519]  clk_calc_subtree+0x58/0x90
+[    8.131521]  clk_calc_subtree+0x70/0x90
+[    8.131523]  clk_calc_new_rates+0x150/0x290
+[    8.131526]  clk_calc_new_rates+0x100/0x290
+[    8.131528]  clk_calc_new_rates+0x100/0x290
+[    8.131530]  clk_calc_new_rates+0x100/0x290
+[    8.131533]  clk_core_set_rate_nolock+0xa0/0x2a4
+[    8.131535]  clk_set_rate_range_nolock.part.0+0xbc/0x2a0
+[    8.131538]  __clk_put+0x70/0x140
+[    8.131540]  clk_put+0x1c/0x30
+[    8.131543]  of_clk_set_defaults+0x140/0x3c0
+[    8.131546]  platform_probe+0x48/0xf0
+[    8.131548]  really_probe+0x184/0x3d0
+[    8.131550]  __driver_probe_device+0x11c/0x190
+[    8.131553]  driver_probe_device+0x44/0xf4
+[    8.131556]  __device_attach_driver+0xa4/0x140
+[    8.131558]  bus_for_each_drv+0x84/0xe0
+[    8.131561]  __device_attach+0xe4/0x1c0
+[    8.131563]  device_initial_probe+0x20/0x30
+[    8.131565]  bus_probe_device+0xa4/0xb0
+[    8.131567]  deferred_probe_work_func+0xa8/0xfc
+[    8.131570]  process_one_work+0x1dc/0x450
+[    8.131575]  worker_thread+0x154/0x450
+[    8.131577]  kthread+0x100/0x110
+[    8.131579]  ret_from_fork+0x10/0x20
+[    8.131584] ---[ end trace 0000000000000000 ]---
+[    8.131588] ------------[ cut here ]------------
+[    8.131589] dsi0_phy_pll_out_dsiclk: Zero divisor and
+CLK_DIVIDER_ALLOW_ZERO not set
+[    8.131596] WARNING: CPU: 5 PID: 8 at drivers/clk/clk-divider.c:139
+divider_recalc_rate+0x8c/0xc0
+[    8.131599] Modules linked in: qcom_spmi_adc5 snd_soc_sdm845 qcom_vadc_commo#
+n qcom_spmi_temp_alarm qcom_pon crct10dif_ce rtc_pm8xxx snd_soc_rt5663
+msm snd_soc_qcom_common gpu_sched snd_soc_rl6231 soundwire_bus
+reset_qcom_pdc drm_dp_helper qcom_camss hci_uart videobuf2_dma_sg
+btqca v4l2_fwnode venus_core ath10k_snoc v4l2_async btbcm ath10k_core
+i2c_qcom_geni v4l2_mem2mem videobuf2_memops videobuf2_v4l2 ath
+bluetooth camcc_sdm845 videobuf2_common spi_geni_qcom i2c_qcom_cci
+qcom_rng mac80211 xhci_pci qcom_q6v5_mss xhci_pci_renesas cfg80211
+icc_osm_l3 slim_qcom_ngd_ctrl qcom_wdt rfkill qrtr lmh pdr_interface
+display_connector slimbus qcom_q6v5_pas drm_kms_helper qcom_pil_info
+qcom_q6v5 qcom_sysmon qcom_common qcom_glink_smem qmi_helpers drm
+mdt_loader socinfo rmtfs_mem fuse
+[    8.131637] CPU: 5 PID: 8 Comm: kworker/u16:0 Tainted: G        W
+      5.17.0-next-20220331 #1
+[    8.131639] Hardware name: Thundercomm Dragonboard 845c (DT)
+[    8.131640] Workqueue: events_unbound deferred_probe_work_func
+[    8.131643] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    8.131645] pc : divider_recalc_rate+0x8c/0xc0
+[    8.131647] lr : divider_recalc_rate+0x8c/0xc0
+[    8.131648] sp : ffff800008093680
+[    8.131649] x29: ffff800008093680 x28: ffff781940e58d00 x27: ffffa7f3f1bc6d38
+[    8.131652] x26: ffffa7f3f1bc6cf8 x25: 0000000000000000 x24: ffffffffffffffff
+[    8.131655] x23: ffff781947e8a400 x22: 000000003b9aca50 x21: ffff781940be0800
+[    8.131657] x20: ffff781947e8b300 x19: 000000003b9aca50 x18: 0000000000000000
+[    8.131660] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[    8.131663] x14: ffff7819bd718000 x13: 0a74657320746f6e x12: 204f52455a5f574f
+[    8.131666] x11: 4c4c415f52454449 x10: 5649445f4b4c4320 x9 : ffffa7f3f011de84
+[    8.131669] x8 : 445f4b4c4320646e x7 : 6120726f73697669 x6 : 0000000000000001
+[    8.131671] x5 : ffffa7f3f288f000 x4 : ffffa7f3f288f2d0 x3 : 0000000000000000
+[    8.131674] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff7819402c7000
+[    8.131677] Call trace:
+[    8.131677]  divider_recalc_rate+0x8c/0xc0
+[    8.131679]  clk_divider_recalc_rate+0x64/0x90
+[    8.131680]  clk_recalc+0x40/0xb0
+[    8.131683]  clk_calc_subtree+0x58/0x90
+[    8.131685]  clk_calc_subtree+0x70/0x90
+[    8.131687]  clk_calc_subtree+0x70/0x90
+[    8.131690]  clk_calc_subtree+0x70/0x90
+[    8.131692]  clk_calc_new_rates+0x150/0x290
+[    8.131694]  clk_calc_new_rates+0x100/0x290
+[    8.131697]  clk_calc_new_rates+0x100/0x290
+[    8.131699]  clk_calc_new_rates+0x100/0x290
+[    8.131701]  clk_core_set_rate_nolock+0xa0/0x2a4
+[    8.131704]  clk_set_rate_range_nolock.part.0+0xbc/0x2a0
+[    8.131707]  __clk_put+0x70/0x140
+[    8.131708]  clk_put+0x1c/0x30
+[    8.131710]  of_clk_set_defaults+0x140/0x3c0
+[    8.131712]  platform_probe+0x48/0xf0
+[    8.131714]  really_probe+0x184/0x3d0
+[    8.131716]  __driver_probe_device+0x11c/0x190
+[    8.131719]  driver_probe_device+0x44/0xf4
+[    8.131722]  __device_attach_driver+0xa4/0x140
+[    8.131723]  bus_for_each_drv+0x84/0xe0
+[    8.131726]  __device_attach+0xe4/0x1c0
+[    8.131728]  device_initial_probe+0x20/0x30
+[    8.131730]  bus_probe_device+0xa4/0xb0
+[    8.131732]  deferred_probe_work_func+0xa8/0xfc
+[    8.131735]  process_one_work+0x1dc/0x450
+[    8.131737]  worker_thread+0x154/0x450
+[    8.131739]  kthread+0x100/0x110
+[    8.131741]  ret_from_fork+0x10/0x20
+[    8.131743] ---[ end trace 0000000000000000 ]---
+[    8.131756] ------------[ cut here ]#
+------------
+[    8.131757] dsi0_pll_bit_clk: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set
 
-To be sure below issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
 
-#regzbot ^introduced b6669305d35a
-#regzbot title nfs: Performance regression with random IO pattern from
-the client
-#regzbot backburner: introduced more than two years ago, first report,
-hence developers want to give it some thought
-#regzbot ignore-activity
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-If it turns out this isn't a regression, free free to remove it from the
-tracking by sending a reply to this thread containing a paragraph like
-"#regzbot invalid: reason why this is invalid" (without the quotes).
+--
+Linaro LKFT
+https://lkft.linaro.org
 
-Reminder for developers: when fixing the issue, please add a 'Link:'
-tags pointing to the report (the mail quoted above) using
-lore.kernel.org/r/, as explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'. Regzbot needs them to
-automatically connect reports with fixes, but they are useful in
-general, too.
-
-I'm sending this to everyone that got the initial report, to make
-everyone aware of the tracking. I also hope that messages like this
-motivate people to directly get at least the regression mailing list and
-ideally even regzbot involved when dealing with regressions, as messages
-like this wouldn't be needed then. And don't worry, if I need to send
-other mails regarding this regression only relevant for regzbot I'll
-send them to the regressions lists only (with a tag in the subject so
-people can filter them away). With a bit of luck no such messages will
-be needed anyway.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
-
--- 
-Additional information about regzbot:
-
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-CC the regression list and tell regzbot about the issue, as that ensures
-the regression makes it onto the radar of the Linux kernel's regression
-tracker -- that's in your interest, as it ensures your report won't fall
-through the cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include 'Link:' tag in the patch descriptions pointing to all reports
-about the issue. This has been expected from developers even before
-regzbot showed up for reasons explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'.
+[1] https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20220331/testrun/8808185/suite/linux-log-parser/test/check-kernel-exception-4814166/log
