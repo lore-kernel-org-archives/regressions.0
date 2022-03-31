@@ -1,231 +1,480 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E9DA4C
-	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 22:04:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9246C340F0;
-	Thu, 31 Mar 2022 22:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1648764246;
-	bh=4xVNdxBqaOVelyuYC2NTicn7Q2prJGEUjhHB+LPAEfM=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=A8n1KsdbCA+kmhsUFUWkc/f6UB0evGNGV2r+m4o6sOVjFyyfp9cVFERV/T2f80NIY
-	 0cT+3fGm4iiOA8qhThrOOlGGw8yGfGBjlhbXmhFApeRGkhu3nryPoxsVfR3dLFkKW9
-	 HFfSwlQOycv1j64erLNQvag7hwy/moPQApZqHqKrd7zMAmZQvviXOxZiDThAMn9Ajv
-	 9ZxVdxjCalMkv5+c8/DZdGMo/p+s/MDK9UwuEVLD/zv1/3rdDp26uFn0WryZwdK0xS
-	 k3egXtDQ64TBXAxtVd5MYlztrpEs/DI4NwTJnao4kz8/5BkD5vILZH4hJXM1rsUHXG
-	 Uo6aAUpnLfGZg==
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E221C7B
+	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 23:33:50 +0000 (UTC)
+Received: by mail-pf1-f169.google.com with SMTP id f3so1048855pfe.2
+        for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 16:33:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=c4ZolPbKYGpIqD+xp7koL3Gqp52EzP0gp9shv1Ul/0c=;
+        b=T4HPXNUxsBzJKdQ3C0f2spYHP32WvexPxr62Zk0iBJtxicE8/ZKPFCppSJwbh1Mia7
+         9guHSUu2fTdXyo1p+7S3D8bbhpf0YVfjrjDiC0GuI6niVLD8y/JtwTh0pKqAmRboKlRr
+         rSLrv2wQ9PHDKNi6jdU4yeI7WVmqZ/OCFKTgfmbrarOr9MtaLGLIylSLMPhEl58ef+/4
+         KCtN9VFXwn9+kj4uPxvtRmH+832u4eVlulySIITVLAKYfkmn5EVssv3k/1rp8C0mxvYs
+         u+UGOQbPjouEgmJEvL1mtzYwIENmPx/FaJQdLxBNKerDEmjIqzQSM3NGXDVjw/jh85mK
+         ijCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=c4ZolPbKYGpIqD+xp7koL3Gqp52EzP0gp9shv1Ul/0c=;
+        b=pSf10OiMWxLIs0SFvpRlgwIpGj+uZ5vqoYYNKlTOpU0MbRTO99pjdH8SlQ6wu/cQKM
+         4DR7X9t9WkG4GsTQU9I+9D3Buc9KAiXDwOlxhEhjCgFlDG+VsR+nVSlf8H6rihidcAVl
+         iiI1ZIJF5K8ksG+sHp4SgNmhT+mbPwmVIAyTiAf16K07claDv0TUUz3DiVpNt3s38tB/
+         SHb0a8crEXXOqnBsepbXwjwjdumQTQhBF3hyDYKmj0rypUZ8QNBe0WE+8FlKH/3VC+HF
+         K/qh5Gyj4DlZo9KF+Ps13mDRTTaqkb7AaKK4bRGQ2vouP8M24cEG8tATdSKiJA6xUiT1
+         fO9w==
+X-Gm-Message-State: AOAM533I5l48+IFgf6E9l/waXBMrDKHSewpV7wvSF5xdkMzovsTiTUmI
+	8VTg94vkk+Tej/uCvn2utnc=
+X-Google-Smtp-Source: ABdhPJyOhS/gK15Ij/JynByBPh3ei8JmKXu7MDriWfd2nlmyzJcCG2eYSaPReopfpuCHyEluFQ0NWA==
+X-Received: by 2002:a65:4541:0:b0:382:a08a:bf37 with SMTP id x1-20020a654541000000b00382a08abf37mr12635946pgr.392.1648769630039;
+        Thu, 31 Mar 2022 16:33:50 -0700 (PDT)
+Received: from google.com ([2620:15c:211:201:3c4a:c58b:5e93:9cc7])
+        by smtp.gmail.com with ESMTPSA id b25-20020a637159000000b00381fda49d15sm439233pgn.39.2022.03.31.16.33.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 31 Mar 2022 16:33:49 -0700 (PDT)
+Sender: Minchan Kim <minchan.kim@gmail.com>
+Date: Thu, 31 Mar 2022 16:33:47 -0700
+From: Minchan Kim <minchan@kernel.org>
+To: Jirka Hladky <jhladky@redhat.com>
+Cc: tj@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
+	regressions@lists.linux.dev,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Justin Forbes <jforbes@fedoraproject.org>
+Subject: Re: PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" starting from 5.17 on
+ dual socket Intel Xeon Gold servers
+Message-ID: <YkY6W1NS+1RTw0VB@google.com>
+References: <CAE4VaGDZr_4wzRn2___eDYRtmdPaGGJdzu_LCSkJYuY9BEO3cw@mail.gmail.com>
+ <536eca11-b4b9-c1a8-6e6b-fcd0c339a3ec@leemhuis.info>
+ <CAE4VaGBZk2NL6Tn2fGxmGMR-n8KFNqgPOktY_sQ1vjViLDNhhg@mail.gmail.com>
+ <CAE4VaGB4=aCd8iDb4EduR+-5QTSgVWd5sxrnBA4e3g9dPrnuBg@mail.gmail.com>
+ <YkTxox8ZQIDtojfU@google.com>
+ <CAFxkdAq6r2WnwML-pPfdZiajaYZCEcUU3GrXW=+wsA7CxGnJdQ@mail.gmail.com>
+ <CAE4VaGBchOMWeHQ8GKiGFv_aCaNGLEvSdLWXZTpE+qC=0bgM3A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CA+G9fYuqU45hHmK4WMUNEXQbmBucE+9fB=S9wcHEfEHaZ2jgcQ@mail.gmail.com>
-References: <CA+G9fYuqU45hHmK4WMUNEXQbmBucE+9fB=S9wcHEfEHaZ2jgcQ@mail.gmail.com>
-Subject: Re: [next] db845c: WARNING: CPU: 5 PID: 8 at drivers/clk/clk-divider.c:139 divider_recalc_rate
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: gabriel.fernandez@foss.st.com, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Maxime Ripard <maxime@cerno.tech>
-To: Linux ARM <linux-arm-kernel@lists.infradead.org>, Naresh Kamboju <naresh.kamboju@linaro.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, lkft-triage@lists.linaro.org, open list <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
-Date: Thu, 31 Mar 2022 15:04:04 -0700
-User-Agent: alot/0.10
-Message-Id: <20220331220406.A9246C340F0@smtp.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAE4VaGBchOMWeHQ8GKiGFv_aCaNGLEvSdLWXZTpE+qC=0bgM3A@mail.gmail.com>
 
-+Maxime
+On Thu, Mar 31, 2022 at 06:18:28PM +0200, Jirka Hladky wrote:
+> > So, do you mean you hit the bug with the additional fix?
+> 
+> Yes, exactly. We have been hitting this issue since v5.17-rc1. I have
+> now specifically tested the "555a0ce4558d kernfs: prevent early
+> freeing of root node" commit and it does not resolve the issue.
 
-Quoting Naresh Kamboju (2022-03-31 05:03:57)
-> Following kernel warning noticed on db845c while booting linux next-20220=
-331.
->=20
-> metadata:
->   git_ref: master
->   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
->   git_sha: fdcbcd1348f4ef713668bae1b0fa9774e1811205
->   git_describe: next-20220331
->   kernel_version: 5.17.0
->   kernel-config: https://builds.tuxbuild.com/278RLnhgJL7XdlJbcbv07jiwbYB/=
-config
+Could you decode exact source code line from the oops?
 
-I guess we really just shouldn't call clk_set_rate_range()
-unconditionally on clk_put().
+> 
+> > Do you have any reproducer?
+> Yes. It happens in various places when preparing a NAS parallel
+> benchmark for the execution. Sometimes during compilation, sometimes
+> with the first trial run. It takes 1 or 2 minutes to hit that issue.
+> 
+> @Michan - the tarball with the reproducer has ~170kB. How can I send
+> it to you? (I have been trying to create a simple reproducer but
+> without success).
 
->=20
-> Boot log:
-> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x517f803c]
-> [    0.000000] Linux version 5.17.0-next-20220331 (tuxmake@tuxmake)
-> (aarch64-linux-gnu-gcc (Debian 11.2.0-18) 11.2.0, GNU ld (GNU Binutils
-> for Debian) 2.38) #1 SMP PREEMPT @1648699852
-> [    0.000000] Machine model: Thundercomm Dragonboard 845c
-> <trim>
-> [    8.131366] ------------[ cut here ]------------
-> [    8.131374] dsi0_pll_bit_clk: Zero divisor and CLK_DIVIDER_ALLOW_ZERO =
-not set
-> [    8.131387] WARNING: CPU: 5 PID: 8 at drivers/clk/clk-divider.c:139
-> divider_recalc_rate+0x8c/0xc0
-> [    8.131398] Modules linked in: qcom_spmi_adc5 snd_soc_sdm845
-> qcom_vadc_common qcom_spmi_temp_alarm qcom_pon crct10dif_ce rtc_pm8xxx
-> snd_soc_rt5663 msm snd_soc_qcom_common gpu_sched snd_soc_rl6231
-> soundwire_bus reset_qcom_pdc drm_dp_helper qcom_camss hci_uart
-> videobuf2_dma_sg btqca v4l2_fwnode venus_core ath10k_snoc v4l2_async
-> btbcm ath10k_core i2c_qcom_geni v4l2_mem2mem videobuf2_memops
-> videobuf2_v4l2 ath bluetooth camcc_sdm845 videobuf2_common
-> spi_geni_qcom i2c_qcom_cci qcom_rng mac80211 xhci_pci qcom_q6v5_mss
-> xhci_pci_renesas cfg80211 icc_osm_l3 slim_qcom_ngd_ctrl qcom_wdt
-> rfkill qrtr lmh pdr_interface display_connector slimbus qcom_q6v5_pas
-> drm_kms_helper qcom_pil_info qcom_q6v5 qcom_sysmon qcom_common
-> qcom_glink_smem qmi_helpers drm mdt_loader socinfo rmtfs_mem fuse
-> [    8.131462] CPU: 5 PID: 8 Comm: kworker/u16:0 Not tainted
-> 5.17.0-next-20220331 #1
-> [    8.131465] Hardware name: Thundercomm Dragonboard 845c (DT)
-> [    8.131467] Workqueue: events_unbound deferred_probe_work_func
-> [    8.131475] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYP=
-E=3D--)
-> [    8.131477] pc : divider_recalc_rate+0x8c/0xc0
-> [    8.131479] lr : divider_recalc_rate+0x8c/0xc0
-> [    8.131481] sp : ffff8000080936c0
-> [    8.131482] x29: ffff8000080936c0 x28: ffff781940e58d00 x27: ffffa7f3f=
-1bc6d38
-> [    8.131485] x26: ffffa7f3f1bc6cf8 x25: 0000000000000000 x24: fffffffff=
-fffffff
-> [    8.131488] x23: ffff781947e8a400 x22: 000000003b9aca50 x21: ffff78194=
-0be0800
-> [    8.131491] x20: ffff781947e8a800 x19: 000000003b9aca50 x18: 000000000=
-0000000
-> [    8.131494] x17: 0000000000000000 x16: 0000000000000000 x15: 000000000=
-0000000
-> [    8.131497] x14: ffff7819bd718000 x13: 0a74657320746f6e x12: 204f52455=
-a5f574f
-> [    8.131500] x11: 4c4c415f52454449 x10: 5649445f4b4c4320 x9 : ffffa7f3f=
-011de84
-> [    8.131502] x8 : 445f4b4c4320646e x7 : 6120726f73697669 x6 : 000000000=
-0000001
-> [    8.131505] x5 : ffffa7f3f288f000 x4 : ffffa7f3f288f2d0 x3 : 000000000=
-0000000
-> [    8.131508] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff78194=
-02c7000
-> [    8.131511] Call trace:
-> [    8.131512]  divider_recalc_rate+0x8c/0xc0
-> [    8.131513]  clk_divider_recalc_rate+0x64/0x90
-> [    8.131515]  clk_recalc+0x40/0xb0
-> [    8.131519]  clk_calc_subtree+0x58/0x90
-> [    8.131521]  clk_calc_subtree+0x70/0x90
-> [    8.131523]  clk_calc_new_rates+0x150/0x290
-> [    8.131526]  clk_calc_new_rates+0x100/0x290
-> [    8.131528]  clk_calc_new_rates+0x100/0x290
-> [    8.131530]  clk_calc_new_rates+0x100/0x290
-> [    8.131533]  clk_core_set_rate_nolock+0xa0/0x2a4
-> [    8.131535]  clk_set_rate_range_nolock.part.0+0xbc/0x2a0
-> [    8.131538]  __clk_put+0x70/0x140
-> [    8.131540]  clk_put+0x1c/0x30
-> [    8.131543]  of_clk_set_defaults+0x140/0x3c0
-> [    8.131546]  platform_probe+0x48/0xf0
-> [    8.131548]  really_probe+0x184/0x3d0
-> [    8.131550]  __driver_probe_device+0x11c/0x190
-> [    8.131553]  driver_probe_device+0x44/0xf4
-> [    8.131556]  __device_attach_driver+0xa4/0x140
-> [    8.131558]  bus_for_each_drv+0x84/0xe0
-> [    8.131561]  __device_attach+0xe4/0x1c0
-> [    8.131563]  device_initial_probe+0x20/0x30
-> [    8.131565]  bus_probe_device+0xa4/0xb0
-> [    8.131567]  deferred_probe_work_func+0xa8/0xfc
-> [    8.131570]  process_one_work+0x1dc/0x450
-> [    8.131575]  worker_thread+0x154/0x450
-> [    8.131577]  kthread+0x100/0x110
-> [    8.131579]  ret_from_fork+0x10/0x20
-> [    8.131584] ---[ end trace 0000000000000000 ]---
-> [    8.131588] ------------[ cut here ]------------
-> [    8.131589] dsi0_phy_pll_out_dsiclk: Zero divisor and
-> CLK_DIVIDER_ALLOW_ZERO not set
-> [    8.131596] WARNING: CPU: 5 PID: 8 at drivers/clk/clk-divider.c:139
-> divider_recalc_rate+0x8c/0xc0
-> [    8.131599] Modules linked in: qcom_spmi_adc5 snd_soc_sdm845 qcom_vadc=
-_commo#
-> n qcom_spmi_temp_alarm qcom_pon crct10dif_ce rtc_pm8xxx snd_soc_rt5663
-> msm snd_soc_qcom_common gpu_sched snd_soc_rl6231 soundwire_bus
-> reset_qcom_pdc drm_dp_helper qcom_camss hci_uart videobuf2_dma_sg
-> btqca v4l2_fwnode venus_core ath10k_snoc v4l2_async btbcm ath10k_core
-> i2c_qcom_geni v4l2_mem2mem videobuf2_memops videobuf2_v4l2 ath
-> bluetooth camcc_sdm845 videobuf2_common spi_geni_qcom i2c_qcom_cci
-> qcom_rng mac80211 xhci_pci qcom_q6v5_mss xhci_pci_renesas cfg80211
-> icc_osm_l3 slim_qcom_ngd_ctrl qcom_wdt rfkill qrtr lmh pdr_interface
-> display_connector slimbus qcom_q6v5_pas drm_kms_helper qcom_pil_info
-> qcom_q6v5 qcom_sysmon qcom_common qcom_glink_smem qmi_helpers drm
-> mdt_loader socinfo rmtfs_mem fuse
-> [    8.131637] CPU: 5 PID: 8 Comm: kworker/u16:0 Tainted: G        W
->       5.17.0-next-20220331 #1
-> [    8.131639] Hardware name: Thundercomm Dragonboard 845c (DT)
-> [    8.131640] Workqueue: events_unbound deferred_probe_work_func
-> [    8.131643] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYP=
-E=3D--)
-> [    8.131645] pc : divider_recalc_rate+0x8c/0xc0
-> [    8.131647] lr : divider_recalc_rate+0x8c/0xc0
-> [    8.131648] sp : ffff800008093680
-> [    8.131649] x29: ffff800008093680 x28: ffff781940e58d00 x27: ffffa7f3f=
-1bc6d38
-> [    8.131652] x26: ffffa7f3f1bc6cf8 x25: 0000000000000000 x24: fffffffff=
-fffffff
-> [    8.131655] x23: ffff781947e8a400 x22: 000000003b9aca50 x21: ffff78194=
-0be0800
-> [    8.131657] x20: ffff781947e8b300 x19: 000000003b9aca50 x18: 000000000=
-0000000
-> [    8.131660] x17: 0000000000000000 x16: 0000000000000000 x15: 000000000=
-0000000
-> [    8.131663] x14: ffff7819bd718000 x13: 0a74657320746f6e x12: 204f52455=
-a5f574f
-> [    8.131666] x11: 4c4c415f52454449 x10: 5649445f4b4c4320 x9 : ffffa7f3f=
-011de84
-> [    8.131669] x8 : 445f4b4c4320646e x7 : 6120726f73697669 x6 : 000000000=
-0000001
-> [    8.131671] x5 : ffffa7f3f288f000 x4 : ffffa7f3f288f2d0 x3 : 000000000=
-0000000
-> [    8.131674] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff78194=
-02c7000
-> [    8.131677] Call trace:
-> [    8.131677]  divider_recalc_rate+0x8c/0xc0
-> [    8.131679]  clk_divider_recalc_rate+0x64/0x90
-> [    8.131680]  clk_recalc+0x40/0xb0
-> [    8.131683]  clk_calc_subtree+0x58/0x90
-> [    8.131685]  clk_calc_subtree+0x70/0x90
-> [    8.131687]  clk_calc_subtree+0x70/0x90
-> [    8.131690]  clk_calc_subtree+0x70/0x90
-> [    8.131692]  clk_calc_new_rates+0x150/0x290
-> [    8.131694]  clk_calc_new_rates+0x100/0x290
-> [    8.131697]  clk_calc_new_rates+0x100/0x290
-> [    8.131699]  clk_calc_new_rates+0x100/0x290
-> [    8.131701]  clk_core_set_rate_nolock+0xa0/0x2a4
-> [    8.131704]  clk_set_rate_range_nolock.part.0+0xbc/0x2a0
-> [    8.131707]  __clk_put+0x70/0x140
-> [    8.131708]  clk_put+0x1c/0x30
-> [    8.131710]  of_clk_set_defaults+0x140/0x3c0
-> [    8.131712]  platform_probe+0x48/0xf0
-> [    8.131714]  really_probe+0x184/0x3d0
-> [    8.131716]  __driver_probe_device+0x11c/0x190
-> [    8.131719]  driver_probe_device+0x44/0xf4
-> [    8.131722]  __device_attach_driver+0xa4/0x140
-> [    8.131723]  bus_for_each_drv+0x84/0xe0
-> [    8.131726]  __device_attach+0xe4/0x1c0
-> [    8.131728]  device_initial_probe+0x20/0x30
-> [    8.131730]  bus_probe_device+0xa4/0xb0
-> [    8.131732]  deferred_probe_work_func+0xa8/0xfc
-> [    8.131735]  process_one_work+0x1dc/0x450
-> [    8.131737]  worker_thread+0x154/0x450
-> [    8.131739]  kthread+0x100/0x110
-> [    8.131741]  ret_from_fork+0x10/0x20
-> [    8.131743] ---[ end trace 0000000000000000 ]---
-> [    8.131756] ------------[ cut here ]#
-> ------------
-> [    8.131757] dsi0_pll_bit_clk: Zero divisor and CLK_DIVIDER_ALLOW_ZERO =
-not set
->=20
->=20
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->=20
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
->=20
-> [1] https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20220=
-331/testrun/8808185/suite/linux-log-parser/test/check-kernel-exception-4814=
-166/log
+I think it's fine to attach in the reply because kernel test bot 
+usually attach bigger size files to report some bug and I have not
+seen anyone complaing about it.
+
+Thanks!
+> 
+> Thanks
+> Jirka
+> 
+> 
+> On Thu, Mar 31, 2022 at 4:55 PM Justin Forbes <jforbes@fedoraproject.org> wrote:
+> >
+> > On Wed, Mar 30, 2022 at 7:11 PM Minchan Kim <minchan@kernel.org> wrote:
+> > >
+> > > On Thu, Mar 31, 2022 at 12:24:12AM +0200, Jirka Hladky wrote:
+> > > > Adding Minchan Kim on Cc.
+> > > >
+> > > > @Minchan - commit 393c3714081a53795bbff0e985d24146def6f57f authored by
+> > > > you is causing BUG: kernel NULL pointer dereference, address:
+> > > > 0000000000000008
+> > > >
+> > > > Could you please have a look at what might be wrong?
+> > >
+> > > There was one follow-up patch to fix some issue at that time.
+> > >
+> > > 555a0ce4558d kernfs: prevent early freeing of root node
+> > >
+> > > So, do you mean you hit the bug with the additional fix?
+> > > Do you have any reproducer?
+> > >
+> > > Ccing Tejun to borrow kernfs expertise.
+> >
+> > That patch was included in v5.17-rc1, so yes, it does reproduce with
+> > that patch included.
+> >
+> > Justin
+> >
+> > > >
+> > > > Thank you!
+> > > > Jirka
+> > > >
+> > > > On Thu, Mar 31, 2022 at 12:16 AM Jirka Hladky <jhladky@redhat.com> wrote:
+> > > > >
+> > > > > Hi Thorsten,
+> > > > >
+> > > > > thanks for adding this to the regzbot bot.
+> > > > >
+> > > > > Hi Greg and all,
+> > > > >
+> > > > > I did bisecting and I have found the commit causing this issue [1].
+> > > > > Could you please have a look at the code how to fix it?
+> > > > >
+> > > > > Thanks a lot
+> > > > > Jirka
+> > > > >
+> > > > > [1]
+> > > > > =========================================================
+> > > > > $ git bisect visualize
+> > > > > commit 393c3714081a53795bbff0e985d24146def6f57f (refs/bisect/bad)
+> > > > > Author: Minchan Kim <minchan@kernel.org>
+> > > > > Date:   Thu Nov 18 15:00:08 2021 -0800
+> > > > >
+> > > > >    kernfs: switch global kernfs_rwsem lock to per-fs lock
+> > > > >
+> > > > >    The kernfs implementation has big lock granularity(kernfs_rwsem) so
+> > > > >    every kernfs-based(e.g., sysfs, cgroup) fs are able to compete the
+> > > > >    lock. It makes trouble for some cases to wait the global lock
+> > > > >    for a long time even though they are totally independent contexts
+> > > > >    each other.
+> > > > >
+> > > > >    A general example is process A goes under direct reclaim with holding
+> > > > >    the lock when it accessed the file in sysfs and process B is waiting
+> > > > >    the lock with exclusive mode and then process C is waiting the lock
+> > > > >    until process B could finish the job after it gets the lock from
+> > > > >    process A.
+> > > > >
+> > > > >    This patch switches the global kernfs_rwsem to per-fs lock, which
+> > > > >    put the rwsem into kernfs_root.
+> > > > >
+> > > > >    Suggested-by: Tejun Heo <tj@kernel.org>
+> > > > >    Acked-by: Tejun Heo <tj@kernel.org>
+> > > > >    Signed-off-by: Minchan Kim <minchan@kernel.org>
+> > > > >    Link: https://lore.kernel.org/r/20211118230008.2679780-1-minchan@kernel.org
+> > > > >    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > =========================================================
+> > > > >
+> > > > > The bug is triggered by running NAS Parallel benchmark suite on
+> > > > > SuperMicro servers with 2x Xeon(R) Gold 6126 CPU. Here is the error
+> > > > > log:
+> > > > >
+> > > > > [  247.035564] BUG: kernel NULL pointer dereference, address: 0000000000000008
+> > > > > [  247.036009] #PF: supervisor read access in kernel mode
+> > > > > [  247.036009] #PF: error_code(0x0000) - not-present page
+> > > > > [  247.036009] PGD 0 P4D 0
+> > > > > [  247.036009] Oops: 0000 [#1] PREEMPT SMP PTI
+> > > > > [  247.058060] CPU: 1 PID: 6546 Comm: umount Not tainted
+> > > > > 5.16.0393c3714081a53795bbff0e985d24146def6f57f+ #16
+> > > > > [  247.058060] Hardware name: Supermicro Super Server/X11DDW-L, BIOS
+> > > > > 2.0b 03/07/2018
+> > > > > [  247.058060] RIP: 0010:kernfs_remove+0x8/0x50
+> > > > > [  247.058060] Code: 4c 89 e0 5b 5d 41 5c 41 5d 41 5e c3 49 c7 c4 f4
+> > > > > ff ff ff eb b2 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 0f 1f 44 00 00
+> > > > > 41 54 55 <48> 8b 47 08 48 89 fd 48 85 c0 48 0f 44 c7 4c 8b 60 50 49 83
+> > > > > c4 60
+> > > > > [  247.058060] RSP: 0018:ffffbbfa48a27e48 EFLAGS: 00010246
+> > > > > [  247.058060] RAX: 0000000000000001 RBX: ffffffff89e31f98 RCX: 0000000080200018
+> > > > > [  247.058060] RDX: 0000000080200019 RSI: fffff6760786c900 RDI: 0000000000000000
+> > > > > [  247.058060] RBP: ffffffff89e31f98 R08: ffff926b61b24d00 R09: 0000000080200018
+> > > > > [  247.122048] R10: ffff926b61b24d00 R11: ffff926a8040c000 R12: ffff927bd09a2000
+> > > > > [  247.122048] R13: ffffffff89e31fa0 R14: dead000000000122 R15: dead000000000100
+> > > > > [  247.122048] FS:  00007f01be0a8c40(0000) GS:ffff926fa8e40000(0000)
+> > > > > knlGS:0000000000000000
+> > > > > [  247.122048] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > > [  247.122048] CR2: 0000000000000008 CR3: 00000001145c6003 CR4: 00000000007706e0
+> > > > > [  247.122048] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > > [  247.122048] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > > [  247.122048] PKRU: 55555554
+> > > > > [  247.122048] Call Trace:
+> > > > > [  247.122048]  <TASK>
+> > > > > [  247.122048]  rdt_kill_sb+0x29d/0x350
+> > > > > [  247.122048]  deactivate_locked_super+0x36/0xa0
+> > > > > [  247.122048]  cleanup_mnt+0x131/0x190
+> > > > > [  247.122048]  task_work_run+0x5c/0x90
+> > > > > [  247.122048]  exit_to_user_mode_prepare+0x229/0x230
+> > > > > [  247.122048]  syscall_exit_to_user_mode+0x18/0x40
+> > > > > [  247.122048]  do_syscall_64+0x48/0x90
+> > > > > [  247.122048]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> > > > > [  247.122048] RIP: 0033:0x7f01be2d735b
+> > > > > [  247.122048] Code: 2b 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 90 f3
+> > > > > 0f 1e fa 31 f6 e9 05 00 00 00 0f 1f 44 00 00 f3 0f 1e fa b8 a6 00 00
+> > > > > 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 e9 2a 0c 00
+> > > > > f7 d8
+> > > > > [  247.122048] RSP: 002b:00007ffde1021e08 EFLAGS: 00000202 ORIG_RAX:
+> > > > > 00000000000000a6
+> > > > > [  247.122048] RAX: 0000000000000000 RBX: 0000560c012bf5a0 RCX: 00007f01be2d735b
+> > > > > [  247.122048] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000560c012c33a0
+> > > > > [  247.259079] RBP: 0000560c012bf370 R08: 0000000000000001 R09: 00007ffde1020b90
+> > > > > [  247.267058] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000001
+> > > > > [  247.271055] R13: 0000560c012c33a0 R14: 0000560c012bf480 R15: 0000560c012bf370
+> > > > > [  247.279066]  </TASK>
+> > > > > [  247.283054] Modules linked in: rfkill sunrpc intel_rapl_msr
+> > > > > intel_rapl_common isst_if_common skx_edac nfit libnvdimm
+> > > > > x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel irdma kvm ice
+> > > > > iTCO_wdt intel_pmc_bxt iTCO_vendor_support i
+> > > > > rqbypass ib_uverbs ipmi_ssif rapl intel_cstate ib_core mei_me joydev
+> > > > > intel_uncore i2c_i801 ioatdma acpi_ipmi lpc_ich mei pcspkr i2c_smbus
+> > > > > intel_pch_thermal dca ipmi_si acpi_power_meter acpi_pad zram ip_tables
+> > > > > xfs ast i2c_algo_bit drm_v
+> > > > > ram_helper drm_kms_helper cec drm_ttm_helper ttm drm i40e
+> > > > > crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel wmi
+> > > > > fuse ipmi_devintf ipmi_msghandler
+> > > > > [  247.335054] CR2: 0000000000000008
+> > > > > [  247.339041] ---[ end trace d8ccdb6c2d272688 ]---
+> > > > > [  247.355057] RIP: 0010:kernfs_remove+0x8/0x50
+> > > > > [  247.359059] Code: 4c 89 e0 5b 5d 41 5c 41 5d 41 5e c3 49 c7 c4 f4
+> > > > > ff ff ff eb b2 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 0f 1f 44 00 00
+> > > > > 41 54 55 <48> 8b 47 08 48 89 fd 48 85 c0 48 0f 44 c7 4c 8b 60 50 49 83
+> > > > > c4 60
+> > > > > [  247.379054] RSP: 0018:ffffbbfa48a27e48 EFLAGS: 00010246
+> > > > > [  247.383056] RAX: 0000000000000001 RBX: ffffffff89e31f98 RCX: 0000000080200018
+> > > > > [  247.391053] RDX: 0000000080200019 RSI: fffff6760786c900 RDI: 0000000000000000
+> > > > > [  247.395047] RBP: ffffffff89e31f98 R08: ffff926b61b24d00 R09: 0000000080200018
+> > > > > [  247.403055] R10: ffff926b61b24d00 R11: ffff926a8040c000 R12: ffff927bd09a2000
+> > > > > [  247.411046] R13: ffffffff89e31fa0 R14: dead000000000122 R15: dead000000000100
+> > > > > [  247.419055] FS:  00007f01be0a8c40(0000) GS:ffff926fa8e40000(0000)
+> > > > > knlGS:0000000000000000
+> > > > > [  247.427055] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > > [  247.431055] CR2: 0000000000000008 CR3: 00000001145c6003 CR4: 00000000007706e0
+> > > > > [  247.439055] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > > [  247.443055] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > > [  247.455060] PKRU: 55555554
+> > > > >
+> > > > > On Thu, Mar 24, 2022 at 12:49 PM Thorsten Leemhuis
+> > > > > <regressions@leemhuis.info> wrote:
+> > > > > >
+> > > > > > [TLDR: I'm adding the regression report below to regzbot, the Linux
+> > > > > > kernel regression tracking bot; all text you find below is compiled from
+> > > > > > a few templates paragraphs you might have encountered already already
+> > > > > > from similar mails.]
+> > > > > >
+> > > > > > Hi, this is your Linux kernel regression tracker. Top-posting for once,
+> > > > > > to make this easily accessible to everyone.
+> > > > > >
+> > > > > > To be sure below issue doesn't fall through the cracks unnoticed, I'm
+> > > > > > adding it to regzbot, my Linux kernel regression tracking bot:
+> > > > > >
+> > > > > > #regzbot ^introduced v5.16..v5.17
+> > > > > > #regzbot ignore-activity
+> > > > > >
+> > > > > > If it turns out this isn't a regression, free free to remove it from the
+> > > > > > tracking by sending a reply to this thread containing a paragraph like
+> > > > > > "#regzbot invalid: reason why this is invalid" (without the quotes).
+> > > > > >
+> > > > > > Reminder for developers: when fixing the issue, please add a 'Link:'
+> > > > > > tags pointing to the report (the mail quoted above) using
+> > > > > > lore.kernel.org/r/, as explained in
+> > > > > > 'Documentation/process/submitting-patches.rst' and
+> > > > > > 'Documentation/process/5.Posting.rst'. Regzbot needs them to
+> > > > > > automatically connect reports with fixes, but they are useful in
+> > > > > > general, too.
+> > > > > >
+> > > > > > I'm sending this to everyone that got the initial report, to make
+> > > > > > everyone aware of the tracking. I also hope that messages like this
+> > > > > > motivate people to directly get at least the regression mailing list and
+> > > > > > ideally even regzbot involved when dealing with regressions, as messages
+> > > > > > like this wouldn't be needed then. And don't worry, if I need to send
+> > > > > > other mails regarding this regression only relevant for regzbot I'll
+> > > > > > send them to the regressions lists only (with a tag in the subject so
+> > > > > > people can filter them away). With a bit of luck no such messages will
+> > > > > > be needed anyway.
+> > > > > >
+> > > > > > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> > > > > >
+> > > > > > P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> > > > > > reports on my table. I can only look briefly into most of them and lack
+> > > > > > knowledge about most of the areas they concern. I thus unfortunately
+> > > > > > will sometimes get things wrong or miss something important. I hope
+> > > > > > that's not the case here; if you think it is, don't hesitate to tell me
+> > > > > > in a public reply, it's in everyone's interest to set the public record
+> > > > > > straight.
+> > > > > >
+> > > > > >
+> > > > > > On 22.03.22 00:29, Jirka Hladky wrote:
+> > > > > > > Starting from kernel 5.17 (tested with rc2, rc4, rc7, rc8) we
+> > > > > > > experience kernel oops on Intel Xeon Gold dual-socket servers (2x Xeon
+> > > > > > > Gold 6126 CPU)
+> > > > > > >
+> > > > > > > Bellow is a backtrace and the dmesg log.
+> > > > > > >
+> > > > > > > I have trouble creating a simple reproducer - it happens at random
+> > > > > > > places when preparing the NAS benchmark to be run. The script creates
+> > > > > > > a bunch of directories, compiles the benchmark a start trial runs.
+> > > > > > >
+> > > > > > > Could you please help to narrow down the problem?
+> > > > > > >
+> > > > > > > Reports bellow were created with kernel 5.17 rc8 and with
+> > > > > > > echo 1 > /proc/sys/kernel/panic_on_oops
+> > > > > > > setting.
+> > > > > > >
+> > > > > > > crash> sys
+> > > > > > >       KERNEL: /usr/lib/debug/lib/modules/5.17.0-0.rc8.123.fc37.x86_64/vmlinux
+> > > > > > >     DUMPFILE: vmcore  [PARTIAL DUMP]
+> > > > > > >         CPUS: 48
+> > > > > > >         DATE: Thu Mar 17 02:49:40 CET 2022
+> > > > > > >       UPTIME: 00:02:50
+> > > > > > > LOAD AVERAGE: 0.32, 0.10, 0.03
+> > > > > > >        TASKS: 608
+> > > > > > >     NODENAME: gold-2s-c
+> > > > > > >      RELEASE: 5.17.0-0.rc8.123.fc37.x86_64
+> > > > > > >      VERSION: #1 SMP PREEMPT Mon Mar 14 18:11:49 UTC 2022
+> > > > > > >      MACHINE: x86_64  (2600 Mhz)
+> > > > > > >       MEMORY: 94.7 GB
+> > > > > > >        PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" (check log for details)
+> > > > > > >
+> > > > > > >
+> > > > > > > crash> bt
+> > > > > > > PID: 2480   TASK: ffff9e8f76cb8000  CPU: 26  COMMAND: "umount"
+> > > > > > > #0 [ffffae00cacbfbb8] machine_kexec at ffffffffbb068980
+> > > > > > > #1 [ffffae00cacbfc08] __crash_kexec at ffffffffbb1a300a
+> > > > > > > #2 [ffffae00cacbfcc8] crash_kexec at ffffffffbb1a4045
+> > > > > > > #3 [ffffae00cacbfcd0] oops_end at ffffffffbb02c410
+> > > > > > > #4 [ffffae00cacbfcf0] page_fault_oops at ffffffffbb076a38
+> > > > > > > #5 [ffffae00cacbfd68] exc_page_fault at ffffffffbbd0b7c1
+> > > > > > > #6 [ffffae00cacbfd90] asm_exc_page_fault at ffffffffbbe00ace
+> > > > > > >    [exception RIP: kernfs_remove+7]
+> > > > > > >    RIP: ffffffffbb421f67  RSP: ffffae00cacbfe48  RFLAGS: 00010246
+> > > > > > >    RAX: 0000000000000001  RBX: ffffffffbce31e58  RCX: 0000000080200018
+> > > > > > >    RDX: 0000000080200019  RSI: ffffdfbd44161640  RDI: 0000000000000000
+> > > > > > >    RBP: ffffffffbce31e58   R8: 0000000000000000   R9: 0000000080200018
+> > > > > > >    R10: ffff9e8f05859e80  R11: ffff9e9443b1bd98  R12: ffff9ea057f1d000
+> > > > > > >    R13: ffffffffbce31e60  R14: dead000000000122  R15: dead000000000100
+> > > > > > >    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+> > > > > > > #7 [ffffae00cacbfe58] rdt_kill_sb at ffffffffbb05074b
+> > > > > > > #8 [ffffae00cacbfea8] deactivate_locked_super at ffffffffbb36ce1f
+> > > > > > > #9 [ffffae00cacbfec0] cleanup_mnt at ffffffffbb39176e
+> > > > > > > #10 [ffffae00cacbfee8] task_work_run at ffffffffbb10703c
+> > > > > > > #11 [ffffae00cacbff08] exit_to_user_mode_prepare at ffffffffbb17a399
+> > > > > > > #12 [ffffae00cacbff28] syscall_exit_to_user_mode at ffffffffbbd0bde8
+> > > > > > > #13 [ffffae00cacbff38] do_syscall_64 at ffffffffbbd071a6
+> > > > > > > #14 [ffffae00cacbff50] entry_SYSCALL_64_after_hwframe at ffffffffbbe0007c
+> > > > > > >    RIP: 00007f442c75126b  RSP: 00007ffc82d66fe8  RFLAGS: 00000202
+> > > > > > >    RAX: 0000000000000000  RBX: 000055bd4cc37090  RCX: 00007f442c75126b
+> > > > > > >    RDX: 0000000000000001  RSI: 0000000000000001  RDI: 000055bd4cc3b950
+> > > > > > >    RBP: 000055bd4cc371a8   R8: 0000000000000000   R9: 0000000000000073
+> > > > > > >    R10: 0000000000000000  R11: 0000000000000202  R12: 0000000000000001
+> > > > > > >    R13: 000055bd4cc3b950  R14: 000055bd4cc372c0  R15: 000055bd4cc37090
+> > > > > > >    ORIG_RAX: 00000000000000a6  CS: 0033  SS: 002b
+> > > > > > >
+> > > > > > > [2] dmesg
+> > > > > > > [  172.776553] BUG: kernel NULL pointer dereference, address: 0000000000000008
+> > > > > > > [  172.783513] #PF: supervisor read access in kernel mode
+> > > > > > > [  172.788652] #PF: error_code(0x0000) - not-present page
+> > > > > > > [  172.793793] PGD 0 P4D 0
+> > > > > > > [  172.796330] Oops: 0000 [#1] PREEMPT SMP PTI
+> > > > > > > [  172.800519] CPU: 26 PID: 2480 Comm: umount Kdump: loaded Not
+> > > > > > > tainted 5.17.0-0.rc8.123.fc37.x86_64 #1
+> > > > > > > [  172.809645] Hardware name: Supermicro Super Server/X11DDW-L, BIOS
+> > > > > > > 2.0b 03/07/2018
+> > > > > > > [  172.817123] RIP: 0010:kernfs_remove+0x7/0x50
+> > > > > > > [  172.821397] Code: e8 be e7 2c 00 48 89 df e8 b6 8c f0 ff 48 c7 c3
+> > > > > > > f4 ff ff ff 48 89 d8 5b 5d 41 5c 41 5d 41 5e c3 cc 66 90 0f 1f 44 00
+> > > > > > > 00 55 53 <48> 8b 47 08 48 89 fb 48 85 c0 48 0f 44 c7 48 8b 68 50 48 83
+> > > > > > > c5 60
+> > > > > > > [  172.840141] RSP: 0018:ffffae00cacbfe48 EFLAGS: 00010246
+> > > > > > > [  172.845367] RAX: 0000000000000001 RBX: ffffffffbce31e58 RCX: 0000000080200018
+> > > > > > > [  172.852501] RDX: 0000000080200019 RSI: ffffdfbd44161640 RDI: 0000000000000000
+> > > > > > > [  172.859632] RBP: ffffffffbce31e58 R08: 0000000000000000 R09: 0000000080200018
+> > > > > > > [  172.866764] R10: ffff9e8f05859e80 R11: ffff9e9443b1bd98 R12: ffff9ea057f1d000
+> > > > > > > [  172.873899] R13: ffffffffbce31e60 R14: dead000000000122 R15: dead000000000100
+> > > > > > > [  172.881033] FS:  00007f442c53c800(0000) GS:ffff9e9429000000(0000)
+> > > > > > > knlGS:0000000000000000
+> > > > > > > [  172.889117] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > > > > > [  172.894861] CR2: 0000000000000008 CR3: 000000010ba96006 CR4: 00000000007706e0
+> > > > > > > [  172.901997] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > > > > > > [  172.909127] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > > > > > > [  172.916261] PKRU: 55555554
+> > > > > > > [  172.918974] Call Trace:
+> > > > > > > [  172.921427]  <TASK>
+> > > > > > > [  172.923533]  rdt_kill_sb+0x29b/0x350
+> > > > > > > [  172.927112]  deactivate_locked_super+0x2f/0xa0
+> > > > > > > [  172.931559]  cleanup_mnt+0xee/0x180
+> > > > > > > [  172.935051]  task_work_run+0x5c/0x90
+> > > > > > > [  172.938629]  exit_to_user_mode_prepare+0x229/0x230
+> > > > > > > [  172.943424]  syscall_exit_to_user_mode+0x18/0x40
+> > > > > > > [  172.948043]  do_syscall_64+0x46/0x80
+> > > > > > > [  172.951623]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> > > > > > > [  172.956675] RIP: 0033:0x7f442c75126b
+> > > > > > > [  172.960271] Code: cb 1b 0e 00 f7 d8 64 89 01 48 83 c8 ff c3 90 f3
+> > > > > > > 0f 1e fa 31 f6 e9 05 00 00 00 0f 1f 44 00 00 f3 0f 1e fa b8 a6 00 00
+> > > > > > > 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 91 1b 0e 00
+> > > > > > > f7 d8
+> > > > > > > [  172.979017] RSP: 002b:00007ffc82d66fe8 EFLAGS: 00000202 ORIG_RAX:
+> > > > > > > 00000000000000a6
+> > > > > > > [  172.986584] RAX: 0000000000000000 RBX: 000055bd4cc37090 RCX: 00007f442c75126b
+> > > > > > > [  172.993715] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 000055bd4cc3b950
+> > > > > > > [  173.000849] RBP: 000055bd4cc371a8 R08: 0000000000000000 R09: 0000000000000073
+> > > > > > > [  173.007980] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000001
+> > > > > > > [  173.015115] R13: 000055bd4cc3b950 R14: 000055bd4cc372c0 R15: 000055bd4cc37090
+> > > > > > > [  173.022249]  </TASK>
+> > > > > > > [  173.024440] Modules linked in: rfkill intel_rapl_msr
+> > > > > > > intel_rapl_common isst_if_common irdma skx_edac nfit libnvdimm ice
+> > > > > > > x86_pkg_temp_thermal intel_powerclamp coretemp ib_uverbs iTCO_wdt
+> > > > > > > intel_pmc_bxt ib_core iTCO_vendor_support kvm_
+> > > > > > > intel ipmi_ssif kvm irqbypass rapl acpi_ipmi intel_cstate i40e joydev
+> > > > > > > mei_me ioatdma i2c_i801 intel_uncore lpc_ich i2c_smbus mei
+> > > > > > > intel_pch_thermal dca ipmi_si ipmi_devintf ipmi_msghandler acpi_pad
+> > > > > > > acpi_power_meter fuse zram xfs crct10d
+> > > > > > > if_pclmul ast crc32_pclmul crc32c_intel drm_vram_helper drm_ttm_helper
+> > > > > > > ttm wmi ghash_clmulni_intel
+> > > > > > > [  173.073900] CR2: 0000000000000008
+> > > > > > >
+> > > > > >
+> > > > > > --
+> > > > > > Additional information about regzbot:
+> > > > > >
+> > > > > > If you want to know more about regzbot, check out its web-interface, the
+> > > > > > getting start guide, and the references documentation:
+> > > > > >
+> > > > > > https://linux-regtracking.leemhuis.info/regzbot/
+> > > > > > https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+> > > > > > https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> > > > > >
+> > > > > > The last two documents will explain how you can interact with regzbot
+> > > > > > yourself if your want to.
+> > > > > >
+> > > > > > Hint for reporters: when reporting a regression it's in your interest to
+> > > > > > CC the regression list and tell regzbot about the issue, as that ensures
+> > > > > > the regression makes it onto the radar of the Linux kernel's regression
+> > > > > > tracker -- that's in your interest, as it ensures your report won't fall
+> > > > > > through the cracks unnoticed.
+> > > > > >
+> > > > > > Hint for developers: you normally don't need to care about regzbot once
+> > > > > > it's involved. Fix the issue as you normally would, just remember to
+> > > > > > include 'Link:' tag in the patch descriptions pointing to all reports
+> > > > > > about the issue. This has been expected from developers even before
+> > > > > > regzbot showed up for reasons explained in
+> > > > > > 'Documentation/process/submitting-patches.rst' and
+> > > > > > 'Documentation/process/5.Posting.rst'.
+> > > > > >
+> > > > >
+> > > > >
+> > > > > --
+> > > > > -Jirka
+> > > >
+> > > >
+> > > >
+> > > > --
+> > > > -Jirka
+> > > >
+> >
+> 
+> 
+> -- 
+> -Jirka
+> 
