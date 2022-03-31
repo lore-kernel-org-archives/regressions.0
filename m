@@ -1,150 +1,140 @@
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE0A36F
-	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 04:38:38 +0000 (UTC)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.west.internal (Postfix) with ESMTP id 4ACA83201F94;
-	Thu, 31 Mar 2022 00:38:37 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Thu, 31 Mar 2022 00:38:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=cc
-	:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to; s=fm3; bh=220FvBfvs98k1i
-	EJqsZ+bl0CZjmlZ3jc/CXvJx3fxGs=; b=RLMQq0lrMr2v0PWc4EJtO7H7pUDfT7
-	ZQ0a9TP8mentwV2H54yDA8k0sp/kUiNNZ92krGTF9ZXYE/r++Vf5sHXYxa/BtHiD
-	b3Kxp1cykXI/FXIJhkBcpIpkNpHYhM1HTD2bRBgJx6+CPSn3tiupa5iMOP6RvBoV
-	9/Iflj0E3pirSCqWLxAkqEEdacIYOPIsqA3Q8USU3eduMeC/IL3J0+ec4Rw89Ve8
-	ln55npPmY2teiTKh7xVx9M6V1AIt+8Vcm9ALl9cr4AlsmLNq9/UJqOpO7atd1RFX
-	bMjvsBKm+poxrS3VOc5wlBDBgkHMQfQA+aHdFCD4OpGJHrvNj4LTG0kA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm3; bh=220FvBfvs98k1iEJqsZ+bl0CZjmlZ3jc/CXvJx3fx
-	Gs=; b=oluUQ17m7MAC9vzPWeqgJ6avk9ohDHnMVbQD+I12ByS95TD8cUXcXl6p4
-	JlRBWqn0g8LbVwptRKoOWM/kyveSovgI6pVS1Lh2TTleOMbc/sM5cVi4+VYaHOZp
-	ZOUObEuFywn6p/dXHNBhFLwpL16fuiYvo5PVdnu/DZnA824igC+k1wiHoAkshReX
-	L0YMggj3GLdJGAZdS9e0C+EehFlewx7NVQFP66+wJE9sVWa/+2kbAVXU2+qzo0pf
-	RqCmcI7NIfwEZnWAtVFRHbsRiCHbpZAjmB+6d/6FrDP96AIskfm0IBsvadGG1s/M
-	oZXTBG6uPdHLMYAymzfRBAUNiNsTQ==
-X-ME-Sender: <xms:TDBFYgj_xKbPdmeiLPniqBYx4PLXFU1N5CCZIIFZfMSiLYUi7SuFaw>
-    <xme:TDBFYpDiV1KwBSR-xRy_gQla5HMzPVvgmtoJzlyKsZY4AN769dR-eda2dx8bmyZLB
-    mw3gvfbiDFiFoG3szY>
-X-ME-Received: <xmr:TDBFYoEvGbnJCAANaZdTYlXQKrMJl5NPOA2CYgvG2UlBb_zqg_IBOyIK499PDjjfYhaoG91sJAghCpXscLPdhYEFzaCZg5L47g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudeifedgkedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtugfgjgesthekredttddtudenucfhrhhomheprfgvthgv
-    rhcujfhuthhtvghrvghruceophgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvg
-    htqeenucggtffrrghtthgvrhhnpeevfeejhedvffeuhfelfefghfdtvddvfffhleejffeu
-    gfekvdefhfeffffgueefleenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrgh
-    dprhgvughhrghtrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
-    rghilhhfrhhomhepphgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvght
-X-ME-Proxy: <xmx:TDBFYhSMNl4Bu6DHMPfcV_YzkyIbHs7mi5RQiaXJJsszDqO5sYztqA>
-    <xmx:TDBFYtxgx9WrY6NT_KgbH49cOdjw3gnd943x5AKGzC8wYHJEc1-wwA>
-    <xmx:TDBFYv6BoLo7iKO5yRYE-iC1eR2C7RH3_gZQM5hHXsRTEdC_CnHplA>
-    <xmx:TDBFYkn65k_eP794kQX1E9SzRUOU_lvmY-rnvUh3SIbPkrNz-5St5g>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 31 Mar 2022 00:38:33 -0400 (EDT)
-Date: Thu, 31 Mar 2022 14:38:28 +1000
-From: Peter Hutterer <peter.hutterer@who-t.net>
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	=?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
-	Jiri Kosina <jkosina@suse.cz>, Takashi Iwai <tiwai@suse.de>,
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-	"3.8+" <stable@vger.kernel.org>, regressions@lists.linux.dev,
-	lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert "Input: clear BTN_RIGHT/MIDDLE on buttonpads"
-Message-ID: <YkUwRIa4ZI3TLAs0@quokka>
-References: <20220321184404.20025-1-jose.exposito89@gmail.com>
- <44abc738-1532-63fa-9cd1-2b3870a963bc@leemhuis.info>
- <CAO-hwJJweSuSBE_18ZbvqS12eX9GcS+aJoe7SRFJdASOrN3bqw@mail.gmail.com>
- <YkUqajiNZmi+lAPC@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20347E0
+	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 06:17:35 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nZo7g-0004Pj-63; Thu, 31 Mar 2022 08:17:32 +0200
+Message-ID: <e2b90c55-1a4a-4cf1-2dc7-2b2a4dc7d168@leemhuis.info>
+Date: Thu, 31 Mar 2022 08:17:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Content-Language: en-US
+To: "H.J. Lu" <hjl.tools@gmail.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Chris Kennelly <ckennelly@google.com>, Al Viro <viro@zeniv.linux.org.uk>,
+ Alexey Dobriyan <adobriyan@gmail.com>, Song Liu <songliubraving@fb.com>,
+ David Rientjes <rientjes@google.com>, Ian Rogers <irogers@google.com>,
+ Hugh Dickins <hughd@google.com>, Suren Baghdasaryan <surenb@google.com>,
+ Sandeep Patil <sspatil@google.com>, Fangrui Song <maskray@google.com>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Mike Kravetz <mike.kravetz@oracle.com>, Shuah Khan <shuah@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Bug 215734 - shared object loaded very low in memory ARM 32bit with
+ kernel 5.17.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <YkUqajiNZmi+lAPC@google.com>
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1648707455;b5ef16f0;
+X-HE-SMSGID: 1nZo7g-0004Pj-63
 
-On Wed, Mar 30, 2022 at 09:13:30PM -0700, Dmitry Torokhov wrote:
-> On Wed, Mar 30, 2022 at 02:30:37PM +0200, Benjamin Tissoires wrote:
-> > On Wed, Mar 30, 2022 at 2:27 PM Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> > >
-> > > Hi, this is your Linux kernel regression tracker.
-> > >
-> > > On 21.03.22 19:44, José Expósito wrote:
-> > > > This reverts commit 37ef4c19b4c659926ce65a7ac709ceaefb211c40.
-> > > >
-> > > > The touchpad present in the Dell Precision 7550 and 7750 laptops
-> > > > reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
-> > > > the device is not a clickpad, it is a touchpad with physical buttons.
-> > > >
-> > > > In order to fix this issue, a quirk for the device was introduced in
-> > > > libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
-> > > >
-> > > >       [Precision 7x50 Touchpad]
-> > > >       MatchBus=i2c
-> > > >       MatchUdevType=touchpad
-> > > >       MatchDMIModalias=dmi:*svnDellInc.:pnPrecision7?50*
-> > > >       AttrInputPropDisable=INPUT_PROP_BUTTONPAD
-> > > >
-> > > > However, because of the change introduced in 37ef4c19b4 ("Input: clear
-> > > > BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
-> > > > anymore breaking the device right click button and making impossible to
-> > > > workaround it in user space.
-> > > >
-> > > > In order to avoid breakage on other present or future devices, revert
-> > > > the patch causing the issue.
-> > > >
-> > > > Cc: stable@vger.kernel.org
-> > > > Link: https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481 [1]
-> > > > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1868789  [2]
-> > > > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> > > > [...]
-> > >
-> > > Jiri, Benjamin, what the status here? Sure, this is not a crucial
-> > > regression and we are in the middle of the merge window, but it looks
-> > > like nothing has happened for a week now. Or was progress made somewhere
-> > > and I just missed it?
-> > 
-> > No, I think it just wasn't picked up by the input maintainer yet
-> > (Dmitry, now in CC).
-> > 
-> > FWIW:
-> > Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> > 
-> > José, please do not forget to add the input maintainer when you target
-> > the input tree, not the HID one :)
+Hi, this is your Linux kernel regression tracker.
+
+I noticed a regression report in bugzilla.kernel.org that afaics nobody
+acted upon since it was reported about a week ago, that's why I decided
+to forward it to the lists and all people that seemed to be relevant
+here. Note, this is the second regression report referencin a commit
+from H.J. Lu as culprit (9630f0d60fec ("fs/binfmt_elf: use PT_LOAD
+p_align values for static PIE")). I forwarded the first one on Monday
+already, but seems nothing happened:
+https://lore.kernel.org/all/cb5b81bd-9882-e5dc-cd22-54bdbaaefbbc@leemhuis.info/
+
+Anyway, to get back to the latest report. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=215734 :
+
+>  Jan Palus 2022-03-24 10:17:02 UTC
 > 
-> I see that there were several ACKs, but how many devices misuse the
-> HID_DG_BUTTONTYPE? Would it be better to quirk against either affected
-> Dell models, or particular touchpads (by HID IDs) instead of reverting
-> wholesale?
+> This is a followup to https://sourceware.org/bugzilla/show_bug.cgi?id=28990 where ld.so --verify segfault was reported on binaries > 4MB.
+> 
+> It appears that starting with kernel 5.17.0 shared object is loaded in the begging of address space at least on 32-bit ARM:
+> 
+> /proc/<pid>/maps just before mmap (5.17):
+> 00400000-00429000 r-xp 00000000 b3:02 393320     /lib/ld-linux-armhf.so.3
+> 00439000-0043c000 rw-p 00029000 b3:02 393320     /lib/ld-linux-armhf.so.3
+> 76ffd000-76ffe000 r-xp 00000000 00:00 0          [sigpage]
+> 76ffe000-76fff000 r--p 00000000 00:00 0          [vvar]
+> 76fff000-77000000 r-xp 00000000 00:00 0          [vdso]
+> 7efdf000-7f000000 rw-p 00000000 00:00 0          [stack]
+> ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]
+> 
+> causing segfaults when mmaping large binaries at fixed address 0x10000 (ie done by ld.so --verify used by ldd).
+> 
+> By comparison it is not the case for kernel 5.16.8:
+> 
+> /proc/<pid>/maps just before mmap (5.16):
+> 76fc4000-76fed000 r-xp 00000000 b3:02 393320     /lib/ld-linux-armhf.so.3
+> 76ffa000-76ffb000 r-xp 00000000 00:00 0          [sigpage]
+> 76ffb000-76ffc000 r--p 00000000 00:00 0          [vvar]
+> 76ffc000-76ffd000 r-xp 00000000 00:00 0          [vdso]
+> 76ffd000-77000000 rw-p 00029000 b3:02 393320     /lib/ld-linux-armhf.so.3
+> 7efdf000-7f000000 rw-p 00000000 00:00 0          [stack]
+> ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]
+> 
+> [reply] [âˆ’] Comment 1 Jan Palus 2022-03-29 22:14:12 UTC
+> 
+> First bad commit appears to be:
+> 
+> From: "H.J. Lu" <hjl.tools@gmail.com>
+> Date: Wed, 19 Jan 2022 18:09:40 -0800
+> Subject: fs/binfmt_elf: use PT_LOAD p_align values for static PIE
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9630f0d60fec5fbcaa4435a66f75df1dc9704b66
+> 
 
-fwiw, a quick git grep in libinput shows 12 entries for disabling BTN_RIGHT
-and 9 entries for enabling/disabling INPUT_PROP_BUTTONPAD. That's not the
-number of devices affected by this bug, merely devices we know advertise the
-wrong combination.
+Could somebody take a look into this? Or was this discussed somewhere
+else already? Or even fixed?
 
-Note that the cause for the revert is loss of functionality. Previously, a
-device was just advertising buttons incorrectly but still worked fine. This
-was mostly a cosmetic issue (and could be worked around in userspace). With
-the patch in place some devices right button no longer works because it's
-filtered by the kernel. That's why the revert is needed.
 
-The device could/should still be quirked to drop INPUT_PROP_BUTTONPAD but that
-is only required to work around the cosmetic issues then.
+Anyway, to get this tracked:
 
-Cheers,
-  Peter
+#regzbot introduced: 9630f0d60fec5fbcaa4435a66f75df1dc9704b6
+#regzbot from: Jan Palus <jpalus@fastmail.com>
+#regzbot title: shared object loaded very low in memory ARM 32bit
+causing segfaults on binaries > 4MB
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215734
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
