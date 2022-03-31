@@ -1,140 +1,98 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20347E0
-	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 06:17:35 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nZo7g-0004Pj-63; Thu, 31 Mar 2022 08:17:32 +0200
-Message-ID: <e2b90c55-1a4a-4cf1-2dc7-2b2a4dc7d168@leemhuis.info>
-Date: Thu, 31 Mar 2022 08:17:30 +0200
+Received: from muru.com (muru.com [72.249.23.125])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69AD27E0
+	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 06:25:22 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by muru.com (Postfix) with ESMTPS id 45FA080FA;
+	Thu, 31 Mar 2022 06:23:13 +0000 (UTC)
+Date: Thu, 31 Mar 2022 09:25:20 +0300
+From: Tony Lindgren <tony@atomide.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+	Christoph Hellwig <hch@infradead.org>,
+	Ben Skeggs <bskeggs@redhat.com>, Kevin Tian <kevin.tian@intel.com>,
+	Ashok Raj <ashok.raj@intel.com>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Eric Auger <eric.auger@redhat.com>, Liu Yi L <yi.l.liu@intel.com>,
+	Jacob jun Pan <jacob.jun.pan@intel.com>,
+	David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+	Christoph Hellwig <hch@lst.de>, linux-omap@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev
+Subject: Re: [PATCH v4 8/9] iommu: Remove unused argument in
+ is_attach_deferred
+Message-ID: <YkVJUBK5uHl7ELdv@atomide.com>
+References: <20220216025249.3459465-1-baolu.lu@linux.intel.com>
+ <20220216025249.3459465-9-baolu.lu@linux.intel.com>
+ <YkRiawC2T9g+CHSJ@atomide.com>
+ <20220330142340.GA2111031@nvidia.com>
+ <YkSRKZcJO0q3v5WL@atomide.com>
+ <20220330173323.GA2120790@nvidia.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Content-Language: en-US
-To: "H.J. Lu" <hjl.tools@gmail.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Chris Kennelly <ckennelly@google.com>, Al Viro <viro@zeniv.linux.org.uk>,
- Alexey Dobriyan <adobriyan@gmail.com>, Song Liu <songliubraving@fb.com>,
- David Rientjes <rientjes@google.com>, Ian Rogers <irogers@google.com>,
- Hugh Dickins <hughd@google.com>, Suren Baghdasaryan <surenb@google.com>,
- Sandeep Patil <sspatil@google.com>, Fangrui Song <maskray@google.com>,
- Nick Desaulniers <ndesaulniers@google.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Mike Kravetz <mike.kravetz@oracle.com>, Shuah Khan <shuah@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Bug 215734 - shared object loaded very low in memory ARM 32bit with
- kernel 5.17.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1648707455;b5ef16f0;
-X-HE-SMSGID: 1nZo7g-0004Pj-63
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220330173323.GA2120790@nvidia.com>
 
-Hi, this is your Linux kernel regression tracker.
+Hi,
 
-I noticed a regression report in bugzilla.kernel.org that afaics nobody
-acted upon since it was reported about a week ago, that's why I decided
-to forward it to the lists and all people that seemed to be relevant
-here. Note, this is the second regression report referencin a commit
-from H.J. Lu as culprit (9630f0d60fec ("fs/binfmt_elf: use PT_LOAD
-p_align values for static PIE")). I forwarded the first one on Monday
-already, but seems nothing happened:
-https://lore.kernel.org/all/cb5b81bd-9882-e5dc-cd22-54bdbaaefbbc@leemhuis.info/
-
-Anyway, to get back to the latest report. To quote from
-https://bugzilla.kernel.org/show_bug.cgi?id=215734 :
-
->  Jan Palus 2022-03-24 10:17:02 UTC
+* Jason Gunthorpe <jgg@nvidia.com> [220330 17:31]:
+> On Wed, Mar 30, 2022 at 08:19:37PM +0300, Tony Lindgren wrote:
 > 
-> This is a followup to https://sourceware.org/bugzilla/show_bug.cgi?id=28990 where ld.so --verify segfault was reported on binaries > 4MB.
+> > > > __iommu_probe_device from probe_iommu_group+0x2c/0x38
+> > > > probe_iommu_group from bus_for_each_dev+0x74/0xbc
+> > > > bus_for_each_dev from bus_iommu_probe+0x34/0x2e8
+> > > > bus_iommu_probe from bus_set_iommu+0x80/0xc8
+> > > > bus_set_iommu from omap_iommu_init+0x88/0xcc
+> > > > omap_iommu_init from do_one_initcall+0x44/0x24c
+> > > > 
+> > > > Any ideas for a fix?
+> > > > 
+> > > > It would be good to fix this quickly so we don't end up with a broken
+> > > > v5.18-rc1..
+> > > > 
+> > > > For reference, this is mainline commit 41bb23e70b50 ("iommu: Remove unused
+> > > > argument in is_attach_deferred").
+> > > 
+> > > Are you confident in the bisection? I don't see how that commit could
+> > > NULL deref..
+> > 
+> > Oops sorry you're right, the breaking commit is a different patch, it's
+> > 3f6634d997db ("iommu: Use right way to retrieve iommu_ops") instead. I must
+> > have picked the wrong commit while testing.
 > 
-> It appears that starting with kernel 5.17.0 shared object is loaded in the begging of address space at least on 32-bit ARM:
+> That makes alot more sense
+>  
+> > > Can you find the code that is the NULL deref?
+> > 
+> > I can debug a bit more tomorrow.
 > 
-> /proc/<pid>/maps just before mmap (5.17):
-> 00400000-00429000 r-xp 00000000 b3:02 393320     /lib/ld-linux-armhf.so.3
-> 00439000-0043c000 rw-p 00029000 b3:02 393320     /lib/ld-linux-armhf.so.3
-> 76ffd000-76ffe000 r-xp 00000000 00:00 0          [sigpage]
-> 76ffe000-76fff000 r--p 00000000 00:00 0          [vvar]
-> 76fff000-77000000 r-xp 00000000 00:00 0          [vdso]
-> 7efdf000-7f000000 rw-p 00000000 00:00 0          [stack]
-> ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]
+> Looks like omap's omap_iommu_probe_device() is buggy, it returns 0 on
+> error paths:
 > 
-> causing segfaults when mmaping large binaries at fixed address 0x10000 (ie done by ld.so --verify used by ldd).
+> 	num_iommus = of_property_count_elems_of_size(dev->of_node, "iommus",
+> 						     sizeof(phandle));
+> 	if (num_iommus < 0)
+> 		return 0;
 > 
-> By comparison it is not the case for kernel 5.16.8:
+> This function needs to return an errno -ENODEV
 > 
-> /proc/<pid>/maps just before mmap (5.16):
-> 76fc4000-76fed000 r-xp 00000000 b3:02 393320     /lib/ld-linux-armhf.so.3
-> 76ffa000-76ffb000 r-xp 00000000 00:00 0          [sigpage]
-> 76ffb000-76ffc000 r--p 00000000 00:00 0          [vvar]
-> 76ffc000-76ffd000 r-xp 00000000 00:00 0          [vdso]
-> 76ffd000-77000000 rw-p 00029000 b3:02 393320     /lib/ld-linux-armhf.so.3
-> 7efdf000-7f000000 rw-p 00000000 00:00 0          [stack]
-> ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]
-> 
-> [reply] [−] Comment 1 Jan Palus 2022-03-29 22:14:12 UTC
-> 
-> First bad commit appears to be:
-> 
-> From: "H.J. Lu" <hjl.tools@gmail.com>
-> Date: Wed, 19 Jan 2022 18:09:40 -0800
-> Subject: fs/binfmt_elf: use PT_LOAD p_align values for static PIE
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9630f0d60fec5fbcaa4435a66f75df1dc9704b66
-> 
+> Otherwise it causes a NULL dev->iommu->iommu_dev and dev_iommu_ops() will
+> crash.
 
-Could somebody take a look into this? Or was this discussed somewhere
-else already? Or even fixed?
+You got it. This fixes the issue for me. Looks like the regression already
+happened earlier and recent changes just expose it.
 
+For reference, fix posted at:
 
-Anyway, to get this tracked:
+https://lore.kernel.org/linux-iommu/20220331062301.24269-1-tony@atomide.com/T/#u
 
-#regzbot introduced: 9630f0d60fec5fbcaa4435a66f75df1dc9704b6
-#regzbot from: Jan Palus <jpalus@fastmail.com>
-#regzbot title: shared object loaded very low in memory ARM 32bit
-causing segfaults on binaries > 4MB
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215734
+Regards,
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
-
--- 
-Additional information about regzbot:
-
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-CC the regression list and tell regzbot about the issue, as that ensures
-the regression makes it onto the radar of the Linux kernel's regression
-tracker -- that's in your interest, as it ensures your report won't fall
-through the cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include 'Link:' tag in the patch descriptions pointing to all reports
-about the issue. This has been expected from developers even before
-regzbot showed up for reasons explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'.
+Tony
