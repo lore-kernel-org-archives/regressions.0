@@ -1,470 +1,218 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48777B
-	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 16:18:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1648743523;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RJRxio+KIRDJC4gehWMvPkl27dePwLPglqNmIITje9s=;
-	b=gn1yJvFesEC0ATNGOl6Is2rFRhOGrXueVEGoegNtGZy9EgrYT5L3swA5vFlmFa+2+Ur6up
-	jR9ClUiupntEiPMwt7ffL+0E91tQJ/kd334hR0VeNOnSXsZZQ5nzsla3Vxim6YC+40hv/J
-	8fBbBR24Hp93Y0OzYKfiE1kzM7dH5VU=
-Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
- [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-553-7elD_k0aPA-uUiH-ow2QoQ-1; Thu, 31 Mar 2022 12:18:42 -0400
-X-MC-Unique: 7elD_k0aPA-uUiH-ow2QoQ-1
-Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-2eadd524e72so2588737b3.6
-        for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 09:18:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RJRxio+KIRDJC4gehWMvPkl27dePwLPglqNmIITje9s=;
-        b=K9ofyRvTSwpYdxUuUcEZIP/hR71ng61pNrTUdg4LWzf3hs6LHm/06TS9j1Z2OgDfGy
-         zh84kU7BALWaSZ7Jwpu/vg5bnxgNkbKIoyA0uEbgOgw1Gq1uASiTI50g+JxVjT41D0m7
-         J+6MEFqRjvRrcld9w//xHaZj5r5LHksqTjlYLlZRzOzYcrfSxQ7fzyvqgqiFezxN9Dgk
-         abNEOwfyVkixLzjOV6Abl3HAGa69U58yQAimEJCy2o88NSZctu7OssIpLw5a/JjhciAQ
-         jwSYf5UVDBn+ibbAhi7va3+i6s8iUZhLf7p+YqSNeer8j7v9zF5xbkulIitze3KSCOir
-         dwgg==
-X-Gm-Message-State: AOAM530tPNU24E+ZWhv4EW6ZYwp63CTU6aUvwTE6bKiQqAQ2sgdK/Xxv
-	b9cvaYn61L2pMrgmyqcAvMXndFfp7fc7L0sXcf4CqvKdKXiMGl7km5N8g1ojRzpjTyV+BQTrXpo
-	zHNTQmkiKXTulrD5AyZZwW0ZOe8sz9/WGoy7gr+Y=
-X-Received: by 2002:a25:8887:0:b0:622:77:ecad with SMTP id d7-20020a258887000000b006220077ecadmr4587949ybl.30.1648743520645;
-        Thu, 31 Mar 2022 09:18:40 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzxZg1anSJTdhph3/xJcVDhJ2tq47NnQMnESKJyR3w4f1I6MNo8Ncsjm4XlLjGgIQns9utOPSSLfxoMvaAdibg=
-X-Received: by 2002:a25:8887:0:b0:622:77:ecad with SMTP id d7-20020a258887000000b006220077ecadmr4587926ybl.30.1648743520252;
- Thu, 31 Mar 2022 09:18:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300337C
+	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 19:14:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648754060; x=1680290060;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=X8hMiD65BwBac2nERlYNPwdcnZ65NrE+HSRCKpU0Hps=;
+  b=gRpKozq7iYorfqNLW+Ua4gaOdcgG9GjYdf6pJl+7Unvjs1Txj3DUZVrE
+   lUg4KhBNJAFcB/u4gkK2iu5ZvI8ASJFP/XjFYoRdY8h189kt6RQhBoi2l
+   SxuOtEdLpFUkd7ukkZWkBQZNY3XUx+XG/ilGbSgL9JRin92VYCCrTO3k3
+   sVIOBtzaSuulIZC5cJR2WmrZrl5HnWCsLfgguY4ysgw4CZldQ2b51mKA9
+   q7DUYexyYgcjzmv2ZTl3Z53lOuUCmgWhNtOme9mrET9yx7RTHLgREKx9x
+   YeWgt82u5bHC7mDq4ViFl5iEehw9k9ZnPWyHbXYP2wcEd0EMziSG/BFR+
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10302"; a="247428697"
+X-IronPort-AV: E=Sophos;i="5.90,225,1643702400"; 
+   d="scan'208";a="247428697"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2022 12:14:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,225,1643702400"; 
+   d="scan'208";a="586554951"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga001.jf.intel.com with ESMTP; 31 Mar 2022 12:14:19 -0700
+Received: from orsmsx608.amr.corp.intel.com (10.22.229.21) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Thu, 31 Mar 2022 12:14:19 -0700
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx608.amr.corp.intel.com (10.22.229.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27 via Frontend Transport; Thu, 31 Mar 2022 12:14:19 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.175)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2308.27; Thu, 31 Mar 2022 12:14:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NjIAVvjFvWK9Kw6qaVDzfS4S7Jrl9HOu55U8/eIdqOIXzwZ48W5dvxDY3exKJBIAnS5fFe5Y1u0aCkH7LjWLcNVAkO3xAdwGchPNiudzAcGme0pWhqceoLDaQwtvPFrAAQ+YdsOWX0HJWku7nqCGrAuM0UyNlRynGmSTLgttpgI9dbbpmuoSCAtk6SeSwcczgB5rp10JBRHu2+voLYXz7d4sZGPgSD5jLlbjTmtpxlj3ht4Hw6LrWSiQzd5FJDCqPYWuwkdzuVnqoeYfII+m16H1jXB99kMd08ulEs1p+z9BSGxTh/XIjpKqTUsFwCcEpxInjujZr84bfdrXaXAEPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qw64XaH4j2y/C66B9yPgRrbgIOri6i9IyHCrleZ9qsM=;
+ b=MlncdiMQce0oDSC0S0UK0L814TT1wj8N2JbBqYsLR/WDemFiGa8Uq9qXBHTzR87zO2F+wgvAGVXtWkA7b047EyYPpUVdQpSg63nlMD1LthcfFVtbqqMuwF546paCWmP7A7W0naHxoS9bTNWn5EKbdISrWUTW9ZzZ3OEsrkoGpjii7QO4bevKOhJm25qTb1PEL0FVbfAEzNTrrTnjViNRI4MwFU/Z/JwAIJynPUzpmYR8F0XifUrdziDwbfPWE09kbPCf3ZQfR1sTJfZWzlAeGahnHwv4PAJEmN1E5yqOx6BbX3Q9ZyU0B9zgo3yFk5CyyFfabT4SBklxxWi4W+kpcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SA1PR11MB5825.namprd11.prod.outlook.com (2603:10b6:806:234::5)
+ by CH2PR11MB4438.namprd11.prod.outlook.com (2603:10b6:610:4a::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.21; Thu, 31 Mar
+ 2022 19:14:16 +0000
+Received: from SA1PR11MB5825.namprd11.prod.outlook.com
+ ([fe80::fcb0:5d44:ef18:7b3c]) by SA1PR11MB5825.namprd11.prod.outlook.com
+ ([fe80::fcb0:5d44:ef18:7b3c%5]) with mapi id 15.20.5123.018; Thu, 31 Mar 2022
+ 19:14:16 +0000
+Message-ID: <44ef1183-c3f1-5ada-c127-710ec116e559@intel.com>
+Date: Thu, 31 Mar 2022 21:14:10 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Firefox/91.0 Thunderbird/91.7.0
+Subject: Re: Bug 215715 - PCI device (iwlwifi) is not working due to PCI power
+ state change issues
+Content-Language: en-US
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "Linux Kernel
+ Mailing List" <linux-kernel@vger.kernel.org>, Linux PM
+	<linux-pm@vger.kernel.org>, Luca Coelho <luciano.coelho@intel.com>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+References: <ad13371f-2883-bcf2-a62c-78104bfd615c@leemhuis.info>
+ <07541714-5d44-dd84-5ab2-a9ce91bba715@leemhuis.info>
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+In-Reply-To: <07541714-5d44-dd84-5ab2-a9ce91bba715@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DB6PR0802CA0045.eurprd08.prod.outlook.com
+ (2603:10a6:4:a3::31) To SA1PR11MB5825.namprd11.prod.outlook.com
+ (2603:10b6:806:234::5)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAE4VaGDZr_4wzRn2___eDYRtmdPaGGJdzu_LCSkJYuY9BEO3cw@mail.gmail.com>
- <536eca11-b4b9-c1a8-6e6b-fcd0c339a3ec@leemhuis.info> <CAE4VaGBZk2NL6Tn2fGxmGMR-n8KFNqgPOktY_sQ1vjViLDNhhg@mail.gmail.com>
- <CAE4VaGB4=aCd8iDb4EduR+-5QTSgVWd5sxrnBA4e3g9dPrnuBg@mail.gmail.com>
- <YkTxox8ZQIDtojfU@google.com> <CAFxkdAq6r2WnwML-pPfdZiajaYZCEcUU3GrXW=+wsA7CxGnJdQ@mail.gmail.com>
-In-Reply-To: <CAFxkdAq6r2WnwML-pPfdZiajaYZCEcUU3GrXW=+wsA7CxGnJdQ@mail.gmail.com>
-From: Jirka Hladky <jhladky@redhat.com>
-Date: Thu, 31 Mar 2022 18:18:28 +0200
-Message-ID: <CAE4VaGBchOMWeHQ8GKiGFv_aCaNGLEvSdLWXZTpE+qC=0bgM3A@mail.gmail.com>
-Subject: Re: PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" starting from 5.17 on
- dual socket Intel Xeon Gold servers
-To: Minchan Kim <minchan@kernel.org>
-Cc: tj@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, 
-	regressions@lists.linux.dev, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Justin Forbes <jforbes@fedoraproject.org>
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jhladky@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 963672f4-24fd-4fb2-7e0e-08da134aa65a
+X-MS-TrafficTypeDiagnostic: CH2PR11MB4438:EE_
+X-Microsoft-Antispam-PRVS: <CH2PR11MB44380707AB4F974B19C78911CBE19@CH2PR11MB4438.namprd11.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yQKBWmrHj6b3BBN732lBapNPpvILmFLCKcB1yQSQodtHNozeJ9eBc5/BvH/oxS2Qe0KsPS4EVfYgnCp5Bb84hqnIqxlmIGnAxoHJ49SeqHIM8Rl90398t6oMzJypHraIOCIFZ/JiY57Y6dabUHHwTq6tu2IsY3hNzCAGezs4WDoTwQWvmUBFFio68Dy8qpqpKNbXSMXWhq3nvThXFxZNyQDmqRNaINMHMFbfDTHX9nA30UGtLBv3OduMhhv4E6J1chnUUpNzTjB7upIIXhwh+i6f35F1CoUXl6sSfPMIcjGPZ1WUhkZFOyo5lGCk6pHHMee/b0CZR5K1vyor3BRTsCdVvP6sBl1zPDIHZ02jKULM5M332sEQvOiWLHFwd1gMTNb1Ax3G5KlZE3KjXJ3RufkWkRblC1VKvUppD4LbzVIyDKare659fuxh3AlRvI9wtEf65qIlCYdt8xSROf5XMBWbEz1dG+Cf3uGHBN5XHfk/oXl3xTru7oX8VH5pXxFrDSDI0nsP7nYDCWvbEGJKWzVit7viS+2momdeZ/dycx5qYcDITWeNXE64dQ13965aXNInJkZUvCezeB+KORxnKgDtA/oO2Fz+VJNdEQlZdrqxWi6yBQwgt6Ax1DUWhQT329zHvPrpbpYzVnF42D4wCkRqz2i3ROkQEX2YEBv1YIZlowWX4R2dWFMcC+9g7sufeHt5jdEDo2eE2qvbZ0kXcNgjS6WcUt49Sf0w9g13Lsi+Y/LlsUVt0/YNBgwtNeuUFs7m6K3gFfaWRjdGq33ig/E/0+TjZr/iuSaSE3W2paA+7mlgTgaCGdPPuzNM3MGCQl8ugdMdiZny8W3NgCHg/A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB5825.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(53546011)(2906002)(86362001)(186003)(26005)(66946007)(6512007)(966005)(4326008)(6666004)(5660300002)(6486002)(8936002)(6506007)(66556008)(8676002)(66476007)(36916002)(54906003)(82960400001)(38100700002)(6916009)(31686004)(31696002)(36756003)(83380400001)(508600001)(2616005)(316002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SXlLaGNQZ3p4TThNckdQWXdNQUJtQm9TK0c3OWZnWm9nSXVUaXIwejM3ZXNu?=
+ =?utf-8?B?aU9talJ1aTM2L1loeDhPc3dKWkJTb04rK05GOVFuTWp1OWhoNWQ4Q2o5M0Vz?=
+ =?utf-8?B?WDFvbXk4RXhzVHdzcmJJOUxsQ2pua05ZZXp5dmRkQk54RVQrYlpsTlk2ZWZJ?=
+ =?utf-8?B?OVB1TU9VSmh2a1R3bG9lRFYyVm02a3cwamt6L25oK3lQTE9YcW1wMmRnc3Nz?=
+ =?utf-8?B?UjZJK1Q2Q1pxVzV6WGU4U1pRNnZ0MVNvckZYQ0IrRWVJUjFiZHY4MGtPSGZn?=
+ =?utf-8?B?T3Fxc2d1dHNna3pYK252RjlkVEc0N0NsL1puU0hUa0FoVUZFQnJWaHIyWE5J?=
+ =?utf-8?B?a29VZHhOTFY0YWtyOTlhQkRYQlQ4N1hHZUlKU3JiaXN4b25mZldEYXJHRTl1?=
+ =?utf-8?B?cDYwQUlrWXU3bCtoMkIxb0krWTFXNnpDZ2dxSVRRR0txZ0dldVJhdTZxZUpW?=
+ =?utf-8?B?MkhLTWFDYXluYUl5ZS9MVGs5Vm5OUEN1dDVhOFlKNE9oZU82azVUQUFSTWRn?=
+ =?utf-8?B?QWdFK1B4cktOeFZnOThweXArZXlpb2ZSOWxDQ2o2ODBvSlVNN3ZqTG9RWm9Z?=
+ =?utf-8?B?WC9CNm1iejVqVHk5MUR1RHpPdHVWUGFYK0Rxb2Q5YjhNYlNUcXRCQndraVhE?=
+ =?utf-8?B?SCtTekp3MGhXZWxNVEJPTUJNMk9tMVF1czRpNGhYUlk2L1cxbFNYTHNXeWpN?=
+ =?utf-8?B?K2VUWDFKbkpvMy9raWQwSHRwMFpiQk1tUEMrZUpjeUlaV0l5a2xjV2Fvd09C?=
+ =?utf-8?B?eEhxa29MVUc2ckJJZnhaVXpMcG9SbnVSOFNpU1dmUU5MR1Z2R2trWSttZDA4?=
+ =?utf-8?B?NGE2TWNENkVDa29wL3ZmZHFINmRzWkllK0RYVlA3MlEyTFBSQVlhMTdSVVNF?=
+ =?utf-8?B?N0g4MWxKSFFJZ2p3dTBsUnY3WWFsbWJiaTU3Vzk0RktNWDgvWHl5b0NwZEFp?=
+ =?utf-8?B?MG5xWmVhQ1M4VWJFVnpJbUhwR0crRjdjUmJmNyt4cDhieWVLbjFjdTRZN0Rp?=
+ =?utf-8?B?K1Rkc3M4TGpkZnZVV1dhQUdLczJCWVpFUGFnY3ZCV1FRM2VYMWsyRjh3Mnpk?=
+ =?utf-8?B?Mis2UHloVm1EeWR3Q3NTT0J2eWNKVmM2cXdzaXlrN3kwckxoa01KbVliYlNS?=
+ =?utf-8?B?TmtDaEZTVTRyeDJwdXZuU2x3Qm9CeDA3SXpqYTZvbXk1Z2lQRjN1N2tDODAy?=
+ =?utf-8?B?RVpiNHNwRDFUQlBkRXdFd00zSFpYMXpZaWRnenNlTmlha0JNWUhKeFhCbWNB?=
+ =?utf-8?B?b2RLMWF4Nms0Ly9VQWRFWWY4SjhZVU1tZ291eUg4eVFqcytOK3FUd2JpT0hO?=
+ =?utf-8?B?NTBuaXlxNldLR1VXMlJhOFZ2TUVwSUdLMmhySWdNVmRhcnZZQlpzM29abEMy?=
+ =?utf-8?B?N0xmQkVzWE5lc25UaHhmcHRpSFhaL0lPM2NtRTZaRVBFZlRsSHEwTUhHZDYw?=
+ =?utf-8?B?VmFqTW5FRFF0d2VTWGp4cTRuRHVGTG41dWNOSW0xVEQxT1lZQmZLTUhjMm9v?=
+ =?utf-8?B?RmQwT1Zqd3E4Z3loQkxOL1kvRmxqdVpDMUY3K0w1STVXVXg5KzVqeHNIbjc4?=
+ =?utf-8?B?SUFYTmk5WHJwZVhUYjB3ZWtXZHc5VFd3Rk9TRGZmcFNTZlYrY1hYVFFwMVJs?=
+ =?utf-8?B?Ulh0L2E5a0lzOExMQUdPYi9iMFpnVTVwbWg0UjJsSVdjNzR4Q2RNcmtiRnUy?=
+ =?utf-8?B?ODltYUxuYnUyWUdkazVNbVRRMWF5U2M0di9JclE1dE9Sd2Y1SkU0dTJCWng4?=
+ =?utf-8?B?eXRIdzRqQWZTbk9yTTc4L3Y0YysvMHJtSFhUQXh1OVBoOS84YnNkcllpcUxz?=
+ =?utf-8?B?MG1aazZ4WlY5LzlWaVJud0FCczNKekVDaEVuN29PSmtmOHl0WW9kNllSbjYx?=
+ =?utf-8?B?UXJGSlpuUWViNjEyQTVWUmZUY1BTQnlESlh6MGpMb1lMVjllUVBmaEdDU3BH?=
+ =?utf-8?B?TUFoNEQ5a2FVWDhMejVrNGtOWlhBK1RhMFFIUHMzci9tOWgvM2tyVGVIUnJR?=
+ =?utf-8?B?U1VFOWR0QTNQamYyc1ZNbWllZjlSanFwUTNMMFAzQktCOERDY3RUWEZ3Mm5F?=
+ =?utf-8?B?Tlg5VjNMZUJJTWNOKytWNzJrOXRIb01Ddzd3ay94RjlmUzlSWkh5RXVhLzN1?=
+ =?utf-8?B?SFNEMTVobGJycmt2T3c1dVd1REJmcTZ6L0FBeU9vckF0MEhvZmEzY0F0NTBl?=
+ =?utf-8?B?eDZhOVY3d1hlbjhacVF3TG9iQTE2WFk0b0ExM2h3UzYzcVJaeXFkQUpPZ250?=
+ =?utf-8?B?YnhGQVc1Mm42V21wM2lRWnRreGQ3Nlp1Z2VrN21IZ091Y25JMVNPUnB6c3RC?=
+ =?utf-8?B?amplVnBOMWM0SEZqMTZMYldjT0lvZUYzS0xLaitVaFlGeXV3WDcvaGl1YlQv?=
+ =?utf-8?Q?3XnSuEksbbe6sRxg=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 963672f4-24fd-4fb2-7e0e-08da134aa65a
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB5825.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2022 19:14:16.7833
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: GbcHj75KInGi/CZP6h7HuLJHFJDv3orcYExjKVbhV4XeyOJJRunUAMclC36tYTud5dRWfxEN6yQZ9DWSV6JpUiMgiwuu11p7zC2hxJq0QMw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR11MB4438
+X-OriginatorOrg: intel.com
 
-> So, do you mean you hit the bug with the additional fix?
+On 3/29/2022 10:49 AM, Thorsten Leemhuis wrote:
+> On 28.03.22 15:33, Thorsten Leemhuis wrote:
+>> Hi, this is your Linux kernel regression tracker.
+>>
+>> Rafael, I noticed a regression report in bugzilla.kernel.org that afaics
+>> nobody acted upon since it was reported about a week ago, that's why I
+>> decided to forward it to the lists, maintainers, and the author of the
+>> culprit. To quote from
+>> https://bugzilla.kernel.org/show_bug.cgi?id=215715 :
 
-Yes, exactly. We have been hitting this issue since v5.17-rc1. I have
-now specifically tested the "555a0ce4558d kernfs: prevent early
-freeing of root node" commit and it does not resolve the issue.
+This turns out to be a platform firmware issue exposed by the commit 
+indicated as the "first bad one".
 
-> Do you have any reproducer?
-Yes. It happens in various places when preparing a NAS parallel
-benchmark for the execution. Sometimes during compilation, sometimes
-with the first trial run. It takes 1 or 2 minutes to hit that issue.
-
-@Michan - the tarball with the reproducer has ~170kB. How can I send
-it to you? (I have been trying to create a simple reproducer but
-without success).
-
-Thanks
-Jirka
+It is being addressed by adding a quirk for the affected platform.
 
 
-On Thu, Mar 31, 2022 at 4:55 PM Justin Forbes <jforbes@fedoraproject.org> wrote:
+>>>   Stefan Gottwald 2022-03-21 13:31:43 UTC
+>>>
+>>> Created attachment 300589 [details]
+>>> dmesg output from error case
+>>>
+>>> We got a Elo AIO i2 device which most current BIOS where WiFi was working with Kernel 5.12.x but stopped working since Kernel 5.13.19 and newer (5.17.0-rc5).
+>>>
+>>> The kernel error message is:
+>>>
+>>> [    3.419766] iwlwifi 0000:01:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+>>> [    3.419781] iwlwifi 0000:01:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+>>> [    3.419975] iwlwifi 0000:01:00.0: HW_REV=0xFFFFFFFF, PCI issues?
+>>> [    3.420911] iwlwifi: probe of 0000:01:00.0 failed with error -5
+>>>
+>>> The issue can be solved by adding the iwlwifi driver to the initramfs so it is loaded much earlier and seems to work.
+>>>
+>>> To narrow down the issue I did an git bisect between v5.13.18 and v5.13.19 mainline kernel version which got me to following commit which if reverted fix the issue on this device.
+>>>
+>>> Reverting commit d0660d8ab123ea471064f0828f290bec9593e16b : PCI: Use pci_update_current_state() in pci_enable_device_flags()
+>> FWIW, that afaics is d0660d8ab123 ("PCI: Use pci_update_current_state()
+>> in pci_enable_device_flags()") in mainline.
+> Sorry, I made a (obvious) cut-n-paste error there: the stable commit
+> mentioned by the reporter is 14858dcc3b35 ("PCI: Use
+> pci_update_current_state() in pci_enable_device_flags()") in mainline.
 >
-> On Wed, Mar 30, 2022 at 7:11 PM Minchan Kim <minchan@kernel.org> wrote:
-> >
-> > On Thu, Mar 31, 2022 at 12:24:12AM +0200, Jirka Hladky wrote:
-> > > Adding Minchan Kim on Cc.
-> > >
-> > > @Minchan - commit 393c3714081a53795bbff0e985d24146def6f57f authored by
-> > > you is causing BUG: kernel NULL pointer dereference, address:
-> > > 0000000000000008
-> > >
-> > > Could you please have a look at what might be wrong?
-> >
-> > There was one follow-up patch to fix some issue at that time.
-> >
-> > 555a0ce4558d kernfs: prevent early freeing of root node
-> >
-> > So, do you mean you hit the bug with the additional fix?
-> > Do you have any reproducer?
-> >
-> > Ccing Tejun to borrow kernfs expertise.
+> #regzbot introduced: 14858dcc3b35
 >
-> That patch was included in v5.17-rc1, so yes, it does reproduce with
-> that patch included.
->
-> Justin
->
-> > >
-> > > Thank you!
-> > > Jirka
-> > >
-> > > On Thu, Mar 31, 2022 at 12:16 AM Jirka Hladky <jhladky@redhat.com> wrote:
-> > > >
-> > > > Hi Thorsten,
-> > > >
-> > > > thanks for adding this to the regzbot bot.
-> > > >
-> > > > Hi Greg and all,
-> > > >
-> > > > I did bisecting and I have found the commit causing this issue [1].
-> > > > Could you please have a look at the code how to fix it?
-> > > >
-> > > > Thanks a lot
-> > > > Jirka
-> > > >
-> > > > [1]
-> > > > =========================================================
-> > > > $ git bisect visualize
-> > > > commit 393c3714081a53795bbff0e985d24146def6f57f (refs/bisect/bad)
-> > > > Author: Minchan Kim <minchan@kernel.org>
-> > > > Date:   Thu Nov 18 15:00:08 2021 -0800
-> > > >
-> > > >    kernfs: switch global kernfs_rwsem lock to per-fs lock
-> > > >
-> > > >    The kernfs implementation has big lock granularity(kernfs_rwsem) so
-> > > >    every kernfs-based(e.g., sysfs, cgroup) fs are able to compete the
-> > > >    lock. It makes trouble for some cases to wait the global lock
-> > > >    for a long time even though they are totally independent contexts
-> > > >    each other.
-> > > >
-> > > >    A general example is process A goes under direct reclaim with holding
-> > > >    the lock when it accessed the file in sysfs and process B is waiting
-> > > >    the lock with exclusive mode and then process C is waiting the lock
-> > > >    until process B could finish the job after it gets the lock from
-> > > >    process A.
-> > > >
-> > > >    This patch switches the global kernfs_rwsem to per-fs lock, which
-> > > >    put the rwsem into kernfs_root.
-> > > >
-> > > >    Suggested-by: Tejun Heo <tj@kernel.org>
-> > > >    Acked-by: Tejun Heo <tj@kernel.org>
-> > > >    Signed-off-by: Minchan Kim <minchan@kernel.org>
-> > > >    Link: https://lore.kernel.org/r/20211118230008.2679780-1-minchan@kernel.org
-> > > >    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > =========================================================
-> > > >
-> > > > The bug is triggered by running NAS Parallel benchmark suite on
-> > > > SuperMicro servers with 2x Xeon(R) Gold 6126 CPU. Here is the error
-> > > > log:
-> > > >
-> > > > [  247.035564] BUG: kernel NULL pointer dereference, address: 0000000000000008
-> > > > [  247.036009] #PF: supervisor read access in kernel mode
-> > > > [  247.036009] #PF: error_code(0x0000) - not-present page
-> > > > [  247.036009] PGD 0 P4D 0
-> > > > [  247.036009] Oops: 0000 [#1] PREEMPT SMP PTI
-> > > > [  247.058060] CPU: 1 PID: 6546 Comm: umount Not tainted
-> > > > 5.16.0393c3714081a53795bbff0e985d24146def6f57f+ #16
-> > > > [  247.058060] Hardware name: Supermicro Super Server/X11DDW-L, BIOS
-> > > > 2.0b 03/07/2018
-> > > > [  247.058060] RIP: 0010:kernfs_remove+0x8/0x50
-> > > > [  247.058060] Code: 4c 89 e0 5b 5d 41 5c 41 5d 41 5e c3 49 c7 c4 f4
-> > > > ff ff ff eb b2 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 0f 1f 44 00 00
-> > > > 41 54 55 <48> 8b 47 08 48 89 fd 48 85 c0 48 0f 44 c7 4c 8b 60 50 49 83
-> > > > c4 60
-> > > > [  247.058060] RSP: 0018:ffffbbfa48a27e48 EFLAGS: 00010246
-> > > > [  247.058060] RAX: 0000000000000001 RBX: ffffffff89e31f98 RCX: 0000000080200018
-> > > > [  247.058060] RDX: 0000000080200019 RSI: fffff6760786c900 RDI: 0000000000000000
-> > > > [  247.058060] RBP: ffffffff89e31f98 R08: ffff926b61b24d00 R09: 0000000080200018
-> > > > [  247.122048] R10: ffff926b61b24d00 R11: ffff926a8040c000 R12: ffff927bd09a2000
-> > > > [  247.122048] R13: ffffffff89e31fa0 R14: dead000000000122 R15: dead000000000100
-> > > > [  247.122048] FS:  00007f01be0a8c40(0000) GS:ffff926fa8e40000(0000)
-> > > > knlGS:0000000000000000
-> > > > [  247.122048] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > [  247.122048] CR2: 0000000000000008 CR3: 00000001145c6003 CR4: 00000000007706e0
-> > > > [  247.122048] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > [  247.122048] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > [  247.122048] PKRU: 55555554
-> > > > [  247.122048] Call Trace:
-> > > > [  247.122048]  <TASK>
-> > > > [  247.122048]  rdt_kill_sb+0x29d/0x350
-> > > > [  247.122048]  deactivate_locked_super+0x36/0xa0
-> > > > [  247.122048]  cleanup_mnt+0x131/0x190
-> > > > [  247.122048]  task_work_run+0x5c/0x90
-> > > > [  247.122048]  exit_to_user_mode_prepare+0x229/0x230
-> > > > [  247.122048]  syscall_exit_to_user_mode+0x18/0x40
-> > > > [  247.122048]  do_syscall_64+0x48/0x90
-> > > > [  247.122048]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> > > > [  247.122048] RIP: 0033:0x7f01be2d735b
-> > > > [  247.122048] Code: 2b 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 90 f3
-> > > > 0f 1e fa 31 f6 e9 05 00 00 00 0f 1f 44 00 00 f3 0f 1e fa b8 a6 00 00
-> > > > 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 e9 2a 0c 00
-> > > > f7 d8
-> > > > [  247.122048] RSP: 002b:00007ffde1021e08 EFLAGS: 00000202 ORIG_RAX:
-> > > > 00000000000000a6
-> > > > [  247.122048] RAX: 0000000000000000 RBX: 0000560c012bf5a0 RCX: 00007f01be2d735b
-> > > > [  247.122048] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000560c012c33a0
-> > > > [  247.259079] RBP: 0000560c012bf370 R08: 0000000000000001 R09: 00007ffde1020b90
-> > > > [  247.267058] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000001
-> > > > [  247.271055] R13: 0000560c012c33a0 R14: 0000560c012bf480 R15: 0000560c012bf370
-> > > > [  247.279066]  </TASK>
-> > > > [  247.283054] Modules linked in: rfkill sunrpc intel_rapl_msr
-> > > > intel_rapl_common isst_if_common skx_edac nfit libnvdimm
-> > > > x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel irdma kvm ice
-> > > > iTCO_wdt intel_pmc_bxt iTCO_vendor_support i
-> > > > rqbypass ib_uverbs ipmi_ssif rapl intel_cstate ib_core mei_me joydev
-> > > > intel_uncore i2c_i801 ioatdma acpi_ipmi lpc_ich mei pcspkr i2c_smbus
-> > > > intel_pch_thermal dca ipmi_si acpi_power_meter acpi_pad zram ip_tables
-> > > > xfs ast i2c_algo_bit drm_v
-> > > > ram_helper drm_kms_helper cec drm_ttm_helper ttm drm i40e
-> > > > crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel wmi
-> > > > fuse ipmi_devintf ipmi_msghandler
-> > > > [  247.335054] CR2: 0000000000000008
-> > > > [  247.339041] ---[ end trace d8ccdb6c2d272688 ]---
-> > > > [  247.355057] RIP: 0010:kernfs_remove+0x8/0x50
-> > > > [  247.359059] Code: 4c 89 e0 5b 5d 41 5c 41 5d 41 5e c3 49 c7 c4 f4
-> > > > ff ff ff eb b2 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 0f 1f 44 00 00
-> > > > 41 54 55 <48> 8b 47 08 48 89 fd 48 85 c0 48 0f 44 c7 4c 8b 60 50 49 83
-> > > > c4 60
-> > > > [  247.379054] RSP: 0018:ffffbbfa48a27e48 EFLAGS: 00010246
-> > > > [  247.383056] RAX: 0000000000000001 RBX: ffffffff89e31f98 RCX: 0000000080200018
-> > > > [  247.391053] RDX: 0000000080200019 RSI: fffff6760786c900 RDI: 0000000000000000
-> > > > [  247.395047] RBP: ffffffff89e31f98 R08: ffff926b61b24d00 R09: 0000000080200018
-> > > > [  247.403055] R10: ffff926b61b24d00 R11: ffff926a8040c000 R12: ffff927bd09a2000
-> > > > [  247.411046] R13: ffffffff89e31fa0 R14: dead000000000122 R15: dead000000000100
-> > > > [  247.419055] FS:  00007f01be0a8c40(0000) GS:ffff926fa8e40000(0000)
-> > > > knlGS:0000000000000000
-> > > > [  247.427055] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > [  247.431055] CR2: 0000000000000008 CR3: 00000001145c6003 CR4: 00000000007706e0
-> > > > [  247.439055] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > [  247.443055] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > [  247.455060] PKRU: 55555554
-> > > >
-> > > > On Thu, Mar 24, 2022 at 12:49 PM Thorsten Leemhuis
-> > > > <regressions@leemhuis.info> wrote:
-> > > > >
-> > > > > [TLDR: I'm adding the regression report below to regzbot, the Linux
-> > > > > kernel regression tracking bot; all text you find below is compiled from
-> > > > > a few templates paragraphs you might have encountered already already
-> > > > > from similar mails.]
-> > > > >
-> > > > > Hi, this is your Linux kernel regression tracker. Top-posting for once,
-> > > > > to make this easily accessible to everyone.
-> > > > >
-> > > > > To be sure below issue doesn't fall through the cracks unnoticed, I'm
-> > > > > adding it to regzbot, my Linux kernel regression tracking bot:
-> > > > >
-> > > > > #regzbot ^introduced v5.16..v5.17
-> > > > > #regzbot ignore-activity
-> > > > >
-> > > > > If it turns out this isn't a regression, free free to remove it from the
-> > > > > tracking by sending a reply to this thread containing a paragraph like
-> > > > > "#regzbot invalid: reason why this is invalid" (without the quotes).
-> > > > >
-> > > > > Reminder for developers: when fixing the issue, please add a 'Link:'
-> > > > > tags pointing to the report (the mail quoted above) using
-> > > > > lore.kernel.org/r/, as explained in
-> > > > > 'Documentation/process/submitting-patches.rst' and
-> > > > > 'Documentation/process/5.Posting.rst'. Regzbot needs them to
-> > > > > automatically connect reports with fixes, but they are useful in
-> > > > > general, too.
-> > > > >
-> > > > > I'm sending this to everyone that got the initial report, to make
-> > > > > everyone aware of the tracking. I also hope that messages like this
-> > > > > motivate people to directly get at least the regression mailing list and
-> > > > > ideally even regzbot involved when dealing with regressions, as messages
-> > > > > like this wouldn't be needed then. And don't worry, if I need to send
-> > > > > other mails regarding this regression only relevant for regzbot I'll
-> > > > > send them to the regressions lists only (with a tag in the subject so
-> > > > > people can filter them away). With a bit of luck no such messages will
-> > > > > be needed anyway.
-> > > > >
-> > > > > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> > > > >
-> > > > > P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> > > > > reports on my table. I can only look briefly into most of them and lack
-> > > > > knowledge about most of the areas they concern. I thus unfortunately
-> > > > > will sometimes get things wrong or miss something important. I hope
-> > > > > that's not the case here; if you think it is, don't hesitate to tell me
-> > > > > in a public reply, it's in everyone's interest to set the public record
-> > > > > straight.
-> > > > >
-> > > > >
-> > > > > On 22.03.22 00:29, Jirka Hladky wrote:
-> > > > > > Starting from kernel 5.17 (tested with rc2, rc4, rc7, rc8) we
-> > > > > > experience kernel oops on Intel Xeon Gold dual-socket servers (2x Xeon
-> > > > > > Gold 6126 CPU)
-> > > > > >
-> > > > > > Bellow is a backtrace and the dmesg log.
-> > > > > >
-> > > > > > I have trouble creating a simple reproducer - it happens at random
-> > > > > > places when preparing the NAS benchmark to be run. The script creates
-> > > > > > a bunch of directories, compiles the benchmark a start trial runs.
-> > > > > >
-> > > > > > Could you please help to narrow down the problem?
-> > > > > >
-> > > > > > Reports bellow were created with kernel 5.17 rc8 and with
-> > > > > > echo 1 > /proc/sys/kernel/panic_on_oops
-> > > > > > setting.
-> > > > > >
-> > > > > > crash> sys
-> > > > > >       KERNEL: /usr/lib/debug/lib/modules/5.17.0-0.rc8.123.fc37.x86_64/vmlinux
-> > > > > >     DUMPFILE: vmcore  [PARTIAL DUMP]
-> > > > > >         CPUS: 48
-> > > > > >         DATE: Thu Mar 17 02:49:40 CET 2022
-> > > > > >       UPTIME: 00:02:50
-> > > > > > LOAD AVERAGE: 0.32, 0.10, 0.03
-> > > > > >        TASKS: 608
-> > > > > >     NODENAME: gold-2s-c
-> > > > > >      RELEASE: 5.17.0-0.rc8.123.fc37.x86_64
-> > > > > >      VERSION: #1 SMP PREEMPT Mon Mar 14 18:11:49 UTC 2022
-> > > > > >      MACHINE: x86_64  (2600 Mhz)
-> > > > > >       MEMORY: 94.7 GB
-> > > > > >        PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" (check log for details)
-> > > > > >
-> > > > > >
-> > > > > > crash> bt
-> > > > > > PID: 2480   TASK: ffff9e8f76cb8000  CPU: 26  COMMAND: "umount"
-> > > > > > #0 [ffffae00cacbfbb8] machine_kexec at ffffffffbb068980
-> > > > > > #1 [ffffae00cacbfc08] __crash_kexec at ffffffffbb1a300a
-> > > > > > #2 [ffffae00cacbfcc8] crash_kexec at ffffffffbb1a4045
-> > > > > > #3 [ffffae00cacbfcd0] oops_end at ffffffffbb02c410
-> > > > > > #4 [ffffae00cacbfcf0] page_fault_oops at ffffffffbb076a38
-> > > > > > #5 [ffffae00cacbfd68] exc_page_fault at ffffffffbbd0b7c1
-> > > > > > #6 [ffffae00cacbfd90] asm_exc_page_fault at ffffffffbbe00ace
-> > > > > >    [exception RIP: kernfs_remove+7]
-> > > > > >    RIP: ffffffffbb421f67  RSP: ffffae00cacbfe48  RFLAGS: 00010246
-> > > > > >    RAX: 0000000000000001  RBX: ffffffffbce31e58  RCX: 0000000080200018
-> > > > > >    RDX: 0000000080200019  RSI: ffffdfbd44161640  RDI: 0000000000000000
-> > > > > >    RBP: ffffffffbce31e58   R8: 0000000000000000   R9: 0000000080200018
-> > > > > >    R10: ffff9e8f05859e80  R11: ffff9e9443b1bd98  R12: ffff9ea057f1d000
-> > > > > >    R13: ffffffffbce31e60  R14: dead000000000122  R15: dead000000000100
-> > > > > >    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
-> > > > > > #7 [ffffae00cacbfe58] rdt_kill_sb at ffffffffbb05074b
-> > > > > > #8 [ffffae00cacbfea8] deactivate_locked_super at ffffffffbb36ce1f
-> > > > > > #9 [ffffae00cacbfec0] cleanup_mnt at ffffffffbb39176e
-> > > > > > #10 [ffffae00cacbfee8] task_work_run at ffffffffbb10703c
-> > > > > > #11 [ffffae00cacbff08] exit_to_user_mode_prepare at ffffffffbb17a399
-> > > > > > #12 [ffffae00cacbff28] syscall_exit_to_user_mode at ffffffffbbd0bde8
-> > > > > > #13 [ffffae00cacbff38] do_syscall_64 at ffffffffbbd071a6
-> > > > > > #14 [ffffae00cacbff50] entry_SYSCALL_64_after_hwframe at ffffffffbbe0007c
-> > > > > >    RIP: 00007f442c75126b  RSP: 00007ffc82d66fe8  RFLAGS: 00000202
-> > > > > >    RAX: 0000000000000000  RBX: 000055bd4cc37090  RCX: 00007f442c75126b
-> > > > > >    RDX: 0000000000000001  RSI: 0000000000000001  RDI: 000055bd4cc3b950
-> > > > > >    RBP: 000055bd4cc371a8   R8: 0000000000000000   R9: 0000000000000073
-> > > > > >    R10: 0000000000000000  R11: 0000000000000202  R12: 0000000000000001
-> > > > > >    R13: 000055bd4cc3b950  R14: 000055bd4cc372c0  R15: 000055bd4cc37090
-> > > > > >    ORIG_RAX: 00000000000000a6  CS: 0033  SS: 002b
-> > > > > >
-> > > > > > [2] dmesg
-> > > > > > [  172.776553] BUG: kernel NULL pointer dereference, address: 0000000000000008
-> > > > > > [  172.783513] #PF: supervisor read access in kernel mode
-> > > > > > [  172.788652] #PF: error_code(0x0000) - not-present page
-> > > > > > [  172.793793] PGD 0 P4D 0
-> > > > > > [  172.796330] Oops: 0000 [#1] PREEMPT SMP PTI
-> > > > > > [  172.800519] CPU: 26 PID: 2480 Comm: umount Kdump: loaded Not
-> > > > > > tainted 5.17.0-0.rc8.123.fc37.x86_64 #1
-> > > > > > [  172.809645] Hardware name: Supermicro Super Server/X11DDW-L, BIOS
-> > > > > > 2.0b 03/07/2018
-> > > > > > [  172.817123] RIP: 0010:kernfs_remove+0x7/0x50
-> > > > > > [  172.821397] Code: e8 be e7 2c 00 48 89 df e8 b6 8c f0 ff 48 c7 c3
-> > > > > > f4 ff ff ff 48 89 d8 5b 5d 41 5c 41 5d 41 5e c3 cc 66 90 0f 1f 44 00
-> > > > > > 00 55 53 <48> 8b 47 08 48 89 fb 48 85 c0 48 0f 44 c7 48 8b 68 50 48 83
-> > > > > > c5 60
-> > > > > > [  172.840141] RSP: 0018:ffffae00cacbfe48 EFLAGS: 00010246
-> > > > > > [  172.845367] RAX: 0000000000000001 RBX: ffffffffbce31e58 RCX: 0000000080200018
-> > > > > > [  172.852501] RDX: 0000000080200019 RSI: ffffdfbd44161640 RDI: 0000000000000000
-> > > > > > [  172.859632] RBP: ffffffffbce31e58 R08: 0000000000000000 R09: 0000000080200018
-> > > > > > [  172.866764] R10: ffff9e8f05859e80 R11: ffff9e9443b1bd98 R12: ffff9ea057f1d000
-> > > > > > [  172.873899] R13: ffffffffbce31e60 R14: dead000000000122 R15: dead000000000100
-> > > > > > [  172.881033] FS:  00007f442c53c800(0000) GS:ffff9e9429000000(0000)
-> > > > > > knlGS:0000000000000000
-> > > > > > [  172.889117] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > > > > [  172.894861] CR2: 0000000000000008 CR3: 000000010ba96006 CR4: 00000000007706e0
-> > > > > > [  172.901997] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> > > > > > [  172.909127] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > > > > [  172.916261] PKRU: 55555554
-> > > > > > [  172.918974] Call Trace:
-> > > > > > [  172.921427]  <TASK>
-> > > > > > [  172.923533]  rdt_kill_sb+0x29b/0x350
-> > > > > > [  172.927112]  deactivate_locked_super+0x2f/0xa0
-> > > > > > [  172.931559]  cleanup_mnt+0xee/0x180
-> > > > > > [  172.935051]  task_work_run+0x5c/0x90
-> > > > > > [  172.938629]  exit_to_user_mode_prepare+0x229/0x230
-> > > > > > [  172.943424]  syscall_exit_to_user_mode+0x18/0x40
-> > > > > > [  172.948043]  do_syscall_64+0x46/0x80
-> > > > > > [  172.951623]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> > > > > > [  172.956675] RIP: 0033:0x7f442c75126b
-> > > > > > [  172.960271] Code: cb 1b 0e 00 f7 d8 64 89 01 48 83 c8 ff c3 90 f3
-> > > > > > 0f 1e fa 31 f6 e9 05 00 00 00 0f 1f 44 00 00 f3 0f 1e fa b8 a6 00 00
-> > > > > > 00 0f 05 <48> 3d 00 f0 ff ff 77 05 c3 0f 1f 40 00 48 8b 15 91 1b 0e 00
-> > > > > > f7 d8
-> > > > > > [  172.979017] RSP: 002b:00007ffc82d66fe8 EFLAGS: 00000202 ORIG_RAX:
-> > > > > > 00000000000000a6
-> > > > > > [  172.986584] RAX: 0000000000000000 RBX: 000055bd4cc37090 RCX: 00007f442c75126b
-> > > > > > [  172.993715] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 000055bd4cc3b950
-> > > > > > [  173.000849] RBP: 000055bd4cc371a8 R08: 0000000000000000 R09: 0000000000000073
-> > > > > > [  173.007980] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000001
-> > > > > > [  173.015115] R13: 000055bd4cc3b950 R14: 000055bd4cc372c0 R15: 000055bd4cc37090
-> > > > > > [  173.022249]  </TASK>
-> > > > > > [  173.024440] Modules linked in: rfkill intel_rapl_msr
-> > > > > > intel_rapl_common isst_if_common irdma skx_edac nfit libnvdimm ice
-> > > > > > x86_pkg_temp_thermal intel_powerclamp coretemp ib_uverbs iTCO_wdt
-> > > > > > intel_pmc_bxt ib_core iTCO_vendor_support kvm_
-> > > > > > intel ipmi_ssif kvm irqbypass rapl acpi_ipmi intel_cstate i40e joydev
-> > > > > > mei_me ioatdma i2c_i801 intel_uncore lpc_ich i2c_smbus mei
-> > > > > > intel_pch_thermal dca ipmi_si ipmi_devintf ipmi_msghandler acpi_pad
-> > > > > > acpi_power_meter fuse zram xfs crct10d
-> > > > > > if_pclmul ast crc32_pclmul crc32c_intel drm_vram_helper drm_ttm_helper
-> > > > > > ttm wmi ghash_clmulni_intel
-> > > > > > [  173.073900] CR2: 0000000000000008
-> > > > > >
-> > > > >
-> > > > > --
-> > > > > Additional information about regzbot:
-> > > > >
-> > > > > If you want to know more about regzbot, check out its web-interface, the
-> > > > > getting start guide, and the references documentation:
-> > > > >
-> > > > > https://linux-regtracking.leemhuis.info/regzbot/
-> > > > > https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> > > > > https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-> > > > >
-> > > > > The last two documents will explain how you can interact with regzbot
-> > > > > yourself if your want to.
-> > > > >
-> > > > > Hint for reporters: when reporting a regression it's in your interest to
-> > > > > CC the regression list and tell regzbot about the issue, as that ensures
-> > > > > the regression makes it onto the radar of the Linux kernel's regression
-> > > > > tracker -- that's in your interest, as it ensures your report won't fall
-> > > > > through the cracks unnoticed.
-> > > > >
-> > > > > Hint for developers: you normally don't need to care about regzbot once
-> > > > > it's involved. Fix the issue as you normally would, just remember to
-> > > > > include 'Link:' tag in the patch descriptions pointing to all reports
-> > > > > about the issue. This has been expected from developers even before
-> > > > > regzbot showed up for reasons explained in
-> > > > > 'Documentation/process/submitting-patches.rst' and
-> > > > > 'Documentation/process/5.Posting.rst'.
-> > > > >
-> > > >
-> > > >
-> > > > --
-> > > > -Jirka
-> > >
-> > >
-> > >
-> > > --
-> > > -Jirka
-> > >
->
-
-
--- 
--Jirka
+>>> resolve the issue also in the newer kernels. Seems like the function platform_pci_get_power_state is always returning PCI_D3cold on this device also if this is not true.
+>> Could somebody take a look into this? Or was this discussed somewhere
+>> else already? Or even fixed?
+>>
+>> Anyway, to get this tracked:
+>>
+>> #regzbot introduced: d0660d8ab123ea471064f0828f290bec9593e16b
+>> #regzbot from: Stefan Gottwald <gottwald@igel.com>
+>> #regzbot title: pci/iwlwifi: wifi is not working due to PCI power state
+>> change issues
+>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215715
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>
+>> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+>> reports on my table. I can only look briefly into most of them and lack
+>> knowledge about most of the areas they concern. I thus unfortunately
+>> will sometimes get things wrong or miss something important. I hope
+>> that's not the case here; if you think it is, don't hesitate to tell me
+>> in a public reply, it's in everyone's interest to set the public record
+>> straight.
+>>
 
