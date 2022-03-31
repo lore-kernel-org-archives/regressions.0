@@ -1,57 +1,70 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111287C
-	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 04:13:34 +0000 (UTC)
-Received: by mail-pj1-f49.google.com with SMTP id a16-20020a17090a6d9000b001c7d6c1bb13so2385984pjk.4
-        for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 21:13:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=/+vGbz8SAWz67QqrCsaqBWY6f4aSs8L7q9rG9URu324=;
-        b=pC+ufU2hTzJJ4NnNPWS67Q4pTurIZpN/8TM2Rug587P2VYpw26BZj6Q6J9+uTrpwFh
-         unYJWww6phnB78O0dY+yzUWNwYzoasEwuMGE2HvGTAU8pd/Hum9/Khs11nfKrXn1h8ah
-         jP/9OBVZra6QcxFniQj2q3QnC4P59vzAM9yf9wXFsPvGGjYWcB17wNcJES2CU/LYfX+f
-         xLA0cx3JBq5+x3Pvvuc7pqvlSxSX/LfaOA2KO8C3I1lDVoSZOtfGlHxkqYfLOxCkir0T
-         KDXY2uMW1vDNNzTtrkIkJc1VtS7yzoIPal/cCwyvVjnTOflGA4QIfXn3t/LMj0dnRtHI
-         K63Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=/+vGbz8SAWz67QqrCsaqBWY6f4aSs8L7q9rG9URu324=;
-        b=b7nSc5H1/t0xpHdNZTfv9OVhP8GqIO4q8ByeaH5wHWP4fnV/KgVq4jcwIkEexdAEOw
-         8xqHdTbu4rOflhD5mqmcNUTANIoAHZCc+Jz6f6waJs/yFXTmMBOF/4mcwV+l/EUzRfVb
-         mrXTpA1TqZVYRLKc6SpS9AJqr7/z+H+zFQhLscs0jQ6EkmStl31/srXU1CM+kS6YEkgW
-         UnVZvRmYRwlhSUMRPHnT7rISE1m/2tC2xt7rss6/sse2+UXBo7EBPckwdHXIWJp+kmY3
-         mmqYFCyWiluJOAg76v5x/wKF6Qaf3q3hXkbx/RAEKFhQWV8dU64B9M+6bVkzOa/oZ107
-         gCzA==
-X-Gm-Message-State: AOAM532HaEEigD0O+ZldAelphDxji+U0E/TtL1eb/TYWs5hHodSwYlob
-	3pw2BXgUlOISJYigps3AQLE=
-X-Google-Smtp-Source: ABdhPJy+J7klF/WLTrxUys3ijbiydFDR1WqJxE7Y6/oefX3HIuNphCu5GOXq+etXWFl9gTYN3Mzf+Q==
-X-Received: by 2002:a17:902:bf07:b0:14f:a3a7:97a0 with SMTP id bi7-20020a170902bf0700b0014fa3a797a0mr3392328plb.105.1648700014186;
-        Wed, 30 Mar 2022 21:13:34 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:3d5d:c235:d5ab:d23])
-        by smtp.gmail.com with ESMTPSA id i8-20020a63a848000000b0037d5eac87e3sm21067376pgp.18.2022.03.30.21.13.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Mar 2022 21:13:33 -0700 (PDT)
-Date: Wed, 30 Mar 2022 21:13:30 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE0A36F
+	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 04:38:38 +0000 (UTC)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.west.internal (Postfix) with ESMTP id 4ACA83201F94;
+	Thu, 31 Mar 2022 00:38:37 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Thu, 31 Mar 2022 00:38:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=who-t.net; h=cc
+	:cc:content-transfer-encoding:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to; s=fm3; bh=220FvBfvs98k1i
+	EJqsZ+bl0CZjmlZ3jc/CXvJx3fxGs=; b=RLMQq0lrMr2v0PWc4EJtO7H7pUDfT7
+	ZQ0a9TP8mentwV2H54yDA8k0sp/kUiNNZ92krGTF9ZXYE/r++Vf5sHXYxa/BtHiD
+	b3Kxp1cykXI/FXIJhkBcpIpkNpHYhM1HTD2bRBgJx6+CPSn3tiupa5iMOP6RvBoV
+	9/Iflj0E3pirSCqWLxAkqEEdacIYOPIsqA3Q8USU3eduMeC/IL3J0+ec4Rw89Ve8
+	ln55npPmY2teiTKh7xVx9M6V1AIt+8Vcm9ALl9cr4AlsmLNq9/UJqOpO7atd1RFX
+	bMjvsBKm+poxrS3VOc5wlBDBgkHMQfQA+aHdFCD4OpGJHrvNj4LTG0kA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm3; bh=220FvBfvs98k1iEJqsZ+bl0CZjmlZ3jc/CXvJx3fx
+	Gs=; b=oluUQ17m7MAC9vzPWeqgJ6avk9ohDHnMVbQD+I12ByS95TD8cUXcXl6p4
+	JlRBWqn0g8LbVwptRKoOWM/kyveSovgI6pVS1Lh2TTleOMbc/sM5cVi4+VYaHOZp
+	ZOUObEuFywn6p/dXHNBhFLwpL16fuiYvo5PVdnu/DZnA824igC+k1wiHoAkshReX
+	L0YMggj3GLdJGAZdS9e0C+EehFlewx7NVQFP66+wJE9sVWa/+2kbAVXU2+qzo0pf
+	RqCmcI7NIfwEZnWAtVFRHbsRiCHbpZAjmB+6d/6FrDP96AIskfm0IBsvadGG1s/M
+	oZXTBG6uPdHLMYAymzfRBAUNiNsTQ==
+X-ME-Sender: <xms:TDBFYgj_xKbPdmeiLPniqBYx4PLXFU1N5CCZIIFZfMSiLYUi7SuFaw>
+    <xme:TDBFYpDiV1KwBSR-xRy_gQla5HMzPVvgmtoJzlyKsZY4AN769dR-eda2dx8bmyZLB
+    mw3gvfbiDFiFoG3szY>
+X-ME-Received: <xmr:TDBFYoEvGbnJCAANaZdTYlXQKrMJl5NPOA2CYgvG2UlBb_zqg_IBOyIK499PDjjfYhaoG91sJAghCpXscLPdhYEFzaCZg5L47g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudeifedgkedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtugfgjgesthekredttddtudenucfhrhhomheprfgvthgv
+    rhcujfhuthhtvghrvghruceophgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvg
+    htqeenucggtffrrghtthgvrhhnpeevfeejhedvffeuhfelfefghfdtvddvfffhleejffeu
+    gfekvdefhfeffffgueefleenucffohhmrghinhepfhhrvggvuggvshhkthhophdrohhrgh
+    dprhgvughhrghtrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehm
+    rghilhhfrhhomhepphgvthgvrhdrhhhuthhtvghrvghrseifhhhoqdhtrdhnvght
+X-ME-Proxy: <xmx:TDBFYhSMNl4Bu6DHMPfcV_YzkyIbHs7mi5RQiaXJJsszDqO5sYztqA>
+    <xmx:TDBFYtxgx9WrY6NT_KgbH49cOdjw3gnd943x5AKGzC8wYHJEc1-wwA>
+    <xmx:TDBFYv6BoLo7iKO5yRYE-iC1eR2C7RH3_gZQM5hHXsRTEdC_CnHplA>
+    <xmx:TDBFYkn65k_eP794kQX1E9SzRUOU_lvmY-rnvUh3SIbPkrNz-5St5g>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 31 Mar 2022 00:38:33 -0400 (EDT)
+Date: Thu, 31 Mar 2022 14:38:28 +1000
+From: Peter Hutterer <peter.hutterer@who-t.net>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
 	=?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
 	Jiri Kosina <jkosina@suse.cz>, Takashi Iwai <tiwai@suse.de>,
-	Peter Hutterer <peter.hutterer@who-t.net>,
 	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
 	"3.8+" <stable@vger.kernel.org>, regressions@lists.linux.dev,
 	lkml <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH] Revert "Input: clear BTN_RIGHT/MIDDLE on buttonpads"
-Message-ID: <YkUqajiNZmi+lAPC@google.com>
+Message-ID: <YkUwRIa4ZI3TLAs0@quokka>
 References: <20220321184404.20025-1-jose.exposito89@gmail.com>
  <44abc738-1532-63fa-9cd1-2b3870a963bc@leemhuis.info>
  <CAO-hwJJweSuSBE_18ZbvqS12eX9GcS+aJoe7SRFJdASOrN3bqw@mail.gmail.com>
+ <YkUqajiNZmi+lAPC@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -61,64 +74,77 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAO-hwJJweSuSBE_18ZbvqS12eX9GcS+aJoe7SRFJdASOrN3bqw@mail.gmail.com>
+In-Reply-To: <YkUqajiNZmi+lAPC@google.com>
 
-On Wed, Mar 30, 2022 at 02:30:37PM +0200, Benjamin Tissoires wrote:
-> On Wed, Mar 30, 2022 at 2:27 PM Thorsten Leemhuis
-> <regressions@leemhuis.info> wrote:
-> >
-> > Hi, this is your Linux kernel regression tracker.
-> >
-> > On 21.03.22 19:44, José Expósito wrote:
-> > > This reverts commit 37ef4c19b4c659926ce65a7ac709ceaefb211c40.
+On Wed, Mar 30, 2022 at 09:13:30PM -0700, Dmitry Torokhov wrote:
+> On Wed, Mar 30, 2022 at 02:30:37PM +0200, Benjamin Tissoires wrote:
+> > On Wed, Mar 30, 2022 at 2:27 PM Thorsten Leemhuis
+> > <regressions@leemhuis.info> wrote:
 > > >
-> > > The touchpad present in the Dell Precision 7550 and 7750 laptops
-> > > reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
-> > > the device is not a clickpad, it is a touchpad with physical buttons.
+> > > Hi, this is your Linux kernel regression tracker.
 > > >
-> > > In order to fix this issue, a quirk for the device was introduced in
-> > > libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
+> > > On 21.03.22 19:44, José Expósito wrote:
+> > > > This reverts commit 37ef4c19b4c659926ce65a7ac709ceaefb211c40.
+> > > >
+> > > > The touchpad present in the Dell Precision 7550 and 7750 laptops
+> > > > reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
+> > > > the device is not a clickpad, it is a touchpad with physical buttons.
+> > > >
+> > > > In order to fix this issue, a quirk for the device was introduced in
+> > > > libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
+> > > >
+> > > >       [Precision 7x50 Touchpad]
+> > > >       MatchBus=i2c
+> > > >       MatchUdevType=touchpad
+> > > >       MatchDMIModalias=dmi:*svnDellInc.:pnPrecision7?50*
+> > > >       AttrInputPropDisable=INPUT_PROP_BUTTONPAD
+> > > >
+> > > > However, because of the change introduced in 37ef4c19b4 ("Input: clear
+> > > > BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
+> > > > anymore breaking the device right click button and making impossible to
+> > > > workaround it in user space.
+> > > >
+> > > > In order to avoid breakage on other present or future devices, revert
+> > > > the patch causing the issue.
+> > > >
+> > > > Cc: stable@vger.kernel.org
+> > > > Link: https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481 [1]
+> > > > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1868789  [2]
+> > > > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+> > > > [...]
 > > >
-> > >       [Precision 7x50 Touchpad]
-> > >       MatchBus=i2c
-> > >       MatchUdevType=touchpad
-> > >       MatchDMIModalias=dmi:*svnDellInc.:pnPrecision7?50*
-> > >       AttrInputPropDisable=INPUT_PROP_BUTTONPAD
-> > >
-> > > However, because of the change introduced in 37ef4c19b4 ("Input: clear
-> > > BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
-> > > anymore breaking the device right click button and making impossible to
-> > > workaround it in user space.
-> > >
-> > > In order to avoid breakage on other present or future devices, revert
-> > > the patch causing the issue.
-> > >
-> > > Cc: stable@vger.kernel.org
-> > > Link: https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481 [1]
-> > > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1868789  [2]
-> > > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
-> > > [...]
-> >
-> > Jiri, Benjamin, what the status here? Sure, this is not a crucial
-> > regression and we are in the middle of the merge window, but it looks
-> > like nothing has happened for a week now. Or was progress made somewhere
-> > and I just missed it?
+> > > Jiri, Benjamin, what the status here? Sure, this is not a crucial
+> > > regression and we are in the middle of the merge window, but it looks
+> > > like nothing has happened for a week now. Or was progress made somewhere
+> > > and I just missed it?
+> > 
+> > No, I think it just wasn't picked up by the input maintainer yet
+> > (Dmitry, now in CC).
+> > 
+> > FWIW:
+> > Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > 
+> > José, please do not forget to add the input maintainer when you target
+> > the input tree, not the HID one :)
 > 
-> No, I think it just wasn't picked up by the input maintainer yet
-> (Dmitry, now in CC).
-> 
-> FWIW:
-> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-> 
-> José, please do not forget to add the input maintainer when you target
-> the input tree, not the HID one :)
+> I see that there were several ACKs, but how many devices misuse the
+> HID_DG_BUTTONTYPE? Would it be better to quirk against either affected
+> Dell models, or particular touchpads (by HID IDs) instead of reverting
+> wholesale?
 
-I see that there were several ACKs, but how many devices misuse the
-HID_DG_BUTTONTYPE? Would it be better to quirk against either affected
-Dell models, or particular touchpads (by HID IDs) instead of reverting
-wholesale?
+fwiw, a quick git grep in libinput shows 12 entries for disabling BTN_RIGHT
+and 9 entries for enabling/disabling INPUT_PROP_BUTTONPAD. That's not the
+number of devices affected by this bug, merely devices we know advertise the
+wrong combination.
 
-Thanks.
+Note that the cause for the revert is loss of functionality. Previously, a
+device was just advertising buttons incorrectly but still worked fine. This
+was mostly a cosmetic issue (and could be worked around in userspace). With
+the patch in place some devices right button no longer works because it's
+filtered by the kernel. That's why the revert is needed.
 
--- 
-Dmitry
+The device could/should still be quirked to drop INPUT_PROP_BUTTONPAD but that
+is only required to work around the cosmetic issues then.
+
+Cheers,
+  Peter
