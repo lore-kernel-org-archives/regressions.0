@@ -1,64 +1,124 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A62F87C
-	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 04:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=TyI6lSLb2VMNQkD37oAbbw8GrUUXDy6JGKq3S68+GAs=; b=N2RXeHOlVWMotZnWmDzYjFmRvE
-	1rwxS4cCRHz+rrLZW3bq1Klzv9tSR/P+pFfwJduGkx/RHOrXbiCGigZQezP+2RVGDrWeUW6b4ldS7
-	Et5MhqtaU7oAaftlUdnP24FfW5v95xyYRqsGlVWKkHMEECZwvSZ3Xeu+n9h9yLangvp/XsKl9mWvO
-	/5GM1jSiGKNMTxt2HGVyV0jgNaRgnd9B0SkYHVtMI7oHPcViliW7Dt7dpLkQub0DtM1tpkHMAr5E6
-	3QoetEDLgY2g5033b79N10yje6RFYtjVWzlHVxBAlO11pMWi5ASbag1mt5Ugh5T1eB3zc0mC0GmAT
-	y8Pda/ZA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nZm71-000atJ-TS; Thu, 31 Mar 2022 04:08:43 +0000
-Date: Wed, 30 Mar 2022 21:08:43 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: "Alex Xu (Hello71)" <alex_y_xu@yahoo.ca>
-Cc: Christoph Hellwig <hch@infradead.org>, iommu@lists.linux-foundation.org,
-	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: "dma-mapping: remove CONFIG_DMA_REMAP" causes AMD SME boot fail
-Message-ID: <YkUpSy4snmZ7E5xX@infradead.org>
-References: <1648659326.eabkokyuym.none.ref@localhost>
- <1648659326.eabkokyuym.none@localhost>
- <YkSa9d3JOExAiBXU@infradead.org>
- <1648667469.u35o6clg82.none@localhost>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111287C
+	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 04:13:34 +0000 (UTC)
+Received: by mail-pj1-f49.google.com with SMTP id a16-20020a17090a6d9000b001c7d6c1bb13so2385984pjk.4
+        for <regressions@lists.linux.dev>; Wed, 30 Mar 2022 21:13:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=/+vGbz8SAWz67QqrCsaqBWY6f4aSs8L7q9rG9URu324=;
+        b=pC+ufU2hTzJJ4NnNPWS67Q4pTurIZpN/8TM2Rug587P2VYpw26BZj6Q6J9+uTrpwFh
+         unYJWww6phnB78O0dY+yzUWNwYzoasEwuMGE2HvGTAU8pd/Hum9/Khs11nfKrXn1h8ah
+         jP/9OBVZra6QcxFniQj2q3QnC4P59vzAM9yf9wXFsPvGGjYWcB17wNcJES2CU/LYfX+f
+         xLA0cx3JBq5+x3Pvvuc7pqvlSxSX/LfaOA2KO8C3I1lDVoSZOtfGlHxkqYfLOxCkir0T
+         KDXY2uMW1vDNNzTtrkIkJc1VtS7yzoIPal/cCwyvVjnTOflGA4QIfXn3t/LMj0dnRtHI
+         K63Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=/+vGbz8SAWz67QqrCsaqBWY6f4aSs8L7q9rG9URu324=;
+        b=b7nSc5H1/t0xpHdNZTfv9OVhP8GqIO4q8ByeaH5wHWP4fnV/KgVq4jcwIkEexdAEOw
+         8xqHdTbu4rOflhD5mqmcNUTANIoAHZCc+Jz6f6waJs/yFXTmMBOF/4mcwV+l/EUzRfVb
+         mrXTpA1TqZVYRLKc6SpS9AJqr7/z+H+zFQhLscs0jQ6EkmStl31/srXU1CM+kS6YEkgW
+         UnVZvRmYRwlhSUMRPHnT7rISE1m/2tC2xt7rss6/sse2+UXBo7EBPckwdHXIWJp+kmY3
+         mmqYFCyWiluJOAg76v5x/wKF6Qaf3q3hXkbx/RAEKFhQWV8dU64B9M+6bVkzOa/oZ107
+         gCzA==
+X-Gm-Message-State: AOAM532HaEEigD0O+ZldAelphDxji+U0E/TtL1eb/TYWs5hHodSwYlob
+	3pw2BXgUlOISJYigps3AQLE=
+X-Google-Smtp-Source: ABdhPJy+J7klF/WLTrxUys3ijbiydFDR1WqJxE7Y6/oefX3HIuNphCu5GOXq+etXWFl9gTYN3Mzf+Q==
+X-Received: by 2002:a17:902:bf07:b0:14f:a3a7:97a0 with SMTP id bi7-20020a170902bf0700b0014fa3a797a0mr3392328plb.105.1648700014186;
+        Wed, 30 Mar 2022 21:13:34 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:3d5d:c235:d5ab:d23])
+        by smtp.gmail.com with ESMTPSA id i8-20020a63a848000000b0037d5eac87e3sm21067376pgp.18.2022.03.30.21.13.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Mar 2022 21:13:33 -0700 (PDT)
+Date: Wed, 30 Mar 2022 21:13:30 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	=?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>,
+	Jiri Kosina <jkosina@suse.cz>, Takashi Iwai <tiwai@suse.de>,
+	Peter Hutterer <peter.hutterer@who-t.net>,
+	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+	"3.8+" <stable@vger.kernel.org>, regressions@lists.linux.dev,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Revert "Input: clear BTN_RIGHT/MIDDLE on buttonpads"
+Message-ID: <YkUqajiNZmi+lAPC@google.com>
+References: <20220321184404.20025-1-jose.exposito89@gmail.com>
+ <44abc738-1532-63fa-9cd1-2b3870a963bc@leemhuis.info>
+ <CAO-hwJJweSuSBE_18ZbvqS12eX9GcS+aJoe7SRFJdASOrN3bqw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1648667469.u35o6clg82.none@localhost>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAO-hwJJweSuSBE_18ZbvqS12eX9GcS+aJoe7SRFJdASOrN3bqw@mail.gmail.com>
 
-On Wed, Mar 30, 2022 at 03:17:20PM -0400, Alex Xu (Hello71) wrote:
-> Excerpts from Christoph Hellwig's message of March 30, 2022 2:01 pm:
-> > Can you try this patch, which is a bit of a hack?
-> > 
-> > diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-> > index 50d209939c66c..61997c2ee0a17 100644
-> > --- a/arch/x86/mm/mem_encrypt.c
-> > +++ b/arch/x86/mm/mem_encrypt.c
-> > @@ -28,7 +28,8 @@ bool force_dma_unencrypted(struct device *dev)
-> >  	 * device does not support DMA to addresses that include the
-> >  	 * encryption mask.
-> >  	 */
-> > -	if (cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT)) {
-> > +	if (cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT) &&
-> > +	    !get_dma_ops(dev)) {
-> >  		u64 dma_enc_mask = DMA_BIT_MASK(__ffs64(sme_me_mask));
-> >  		u64 dma_dev_mask = min_not_zero(dev->coherent_dma_mask,
-> >  						dev->bus_dma_limit);
-> > 
+On Wed, Mar 30, 2022 at 02:30:37PM +0200, Benjamin Tissoires wrote:
+> On Wed, Mar 30, 2022 at 2:27 PM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+> >
+> > Hi, this is your Linux kernel regression tracker.
+> >
+> > On 21.03.22 19:44, José Expósito wrote:
+> > > This reverts commit 37ef4c19b4c659926ce65a7ac709ceaefb211c40.
+> > >
+> > > The touchpad present in the Dell Precision 7550 and 7750 laptops
+> > > reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
+> > > the device is not a clickpad, it is a touchpad with physical buttons.
+> > >
+> > > In order to fix this issue, a quirk for the device was introduced in
+> > > libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
+> > >
+> > >       [Precision 7x50 Touchpad]
+> > >       MatchBus=i2c
+> > >       MatchUdevType=touchpad
+> > >       MatchDMIModalias=dmi:*svnDellInc.:pnPrecision7?50*
+> > >       AttrInputPropDisable=INPUT_PROP_BUTTONPAD
+> > >
+> > > However, because of the change introduced in 37ef4c19b4 ("Input: clear
+> > > BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
+> > > anymore breaking the device right click button and making impossible to
+> > > workaround it in user space.
+> > >
+> > > In order to avoid breakage on other present or future devices, revert
+> > > the patch causing the issue.
+> > >
+> > > Cc: stable@vger.kernel.org
+> > > Link: https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481 [1]
+> > > Link: https://bugzilla.redhat.com/show_bug.cgi?id=1868789  [2]
+> > > Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+> > > [...]
+> >
+> > Jiri, Benjamin, what the status here? Sure, this is not a crucial
+> > regression and we are in the middle of the merge window, but it looks
+> > like nothing has happened for a week now. Or was progress made somewhere
+> > and I just missed it?
 > 
-> This seems to work for me.
+> No, I think it just wasn't picked up by the input maintainer yet
+> (Dmitry, now in CC).
+> 
+> FWIW:
+> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> 
+> José, please do not forget to add the input maintainer when you target
+> the input tree, not the HID one :)
 
-Ok, I'll try to come up with a less hacky version and will start a
-discussion with the AMD folks that know memory encryption better.
-Thanks for the report and testing already!
+I see that there were several ACKs, but how many devices misuse the
+HID_DG_BUTTONTYPE? Would it be better to quirk against either affected
+Dell models, or particular touchpads (by HID IDs) instead of reverting
+wholesale?
+
+Thanks.
+
+-- 
+Dmitry
