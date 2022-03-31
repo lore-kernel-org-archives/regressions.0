@@ -1,218 +1,231 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300337C
-	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 19:14:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648754060; x=1680290060;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=X8hMiD65BwBac2nERlYNPwdcnZ65NrE+HSRCKpU0Hps=;
-  b=gRpKozq7iYorfqNLW+Ua4gaOdcgG9GjYdf6pJl+7Unvjs1Txj3DUZVrE
-   lUg4KhBNJAFcB/u4gkK2iu5ZvI8ASJFP/XjFYoRdY8h189kt6RQhBoi2l
-   SxuOtEdLpFUkd7ukkZWkBQZNY3XUx+XG/ilGbSgL9JRin92VYCCrTO3k3
-   sVIOBtzaSuulIZC5cJR2WmrZrl5HnWCsLfgguY4ysgw4CZldQ2b51mKA9
-   q7DUYexyYgcjzmv2ZTl3Z53lOuUCmgWhNtOme9mrET9yx7RTHLgREKx9x
-   YeWgt82u5bHC7mDq4ViFl5iEehw9k9ZnPWyHbXYP2wcEd0EMziSG/BFR+
-   w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10302"; a="247428697"
-X-IronPort-AV: E=Sophos;i="5.90,225,1643702400"; 
-   d="scan'208";a="247428697"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Mar 2022 12:14:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,225,1643702400"; 
-   d="scan'208";a="586554951"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga001.jf.intel.com with ESMTP; 31 Mar 2022 12:14:19 -0700
-Received: from orsmsx608.amr.corp.intel.com (10.22.229.21) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Thu, 31 Mar 2022 12:14:19 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx608.amr.corp.intel.com (10.22.229.21) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Thu, 31 Mar 2022 12:14:19 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.175)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Thu, 31 Mar 2022 12:14:18 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NjIAVvjFvWK9Kw6qaVDzfS4S7Jrl9HOu55U8/eIdqOIXzwZ48W5dvxDY3exKJBIAnS5fFe5Y1u0aCkH7LjWLcNVAkO3xAdwGchPNiudzAcGme0pWhqceoLDaQwtvPFrAAQ+YdsOWX0HJWku7nqCGrAuM0UyNlRynGmSTLgttpgI9dbbpmuoSCAtk6SeSwcczgB5rp10JBRHu2+voLYXz7d4sZGPgSD5jLlbjTmtpxlj3ht4Hw6LrWSiQzd5FJDCqPYWuwkdzuVnqoeYfII+m16H1jXB99kMd08ulEs1p+z9BSGxTh/XIjpKqTUsFwCcEpxInjujZr84bfdrXaXAEPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qw64XaH4j2y/C66B9yPgRrbgIOri6i9IyHCrleZ9qsM=;
- b=MlncdiMQce0oDSC0S0UK0L814TT1wj8N2JbBqYsLR/WDemFiGa8Uq9qXBHTzR87zO2F+wgvAGVXtWkA7b047EyYPpUVdQpSg63nlMD1LthcfFVtbqqMuwF546paCWmP7A7W0naHxoS9bTNWn5EKbdISrWUTW9ZzZ3OEsrkoGpjii7QO4bevKOhJm25qTb1PEL0FVbfAEzNTrrTnjViNRI4MwFU/Z/JwAIJynPUzpmYR8F0XifUrdziDwbfPWE09kbPCf3ZQfR1sTJfZWzlAeGahnHwv4PAJEmN1E5yqOx6BbX3Q9ZyU0B9zgo3yFk5CyyFfabT4SBklxxWi4W+kpcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB5825.namprd11.prod.outlook.com (2603:10b6:806:234::5)
- by CH2PR11MB4438.namprd11.prod.outlook.com (2603:10b6:610:4a::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.21; Thu, 31 Mar
- 2022 19:14:16 +0000
-Received: from SA1PR11MB5825.namprd11.prod.outlook.com
- ([fe80::fcb0:5d44:ef18:7b3c]) by SA1PR11MB5825.namprd11.prod.outlook.com
- ([fe80::fcb0:5d44:ef18:7b3c%5]) with mapi id 15.20.5123.018; Thu, 31 Mar 2022
- 19:14:16 +0000
-Message-ID: <44ef1183-c3f1-5ada-c127-710ec116e559@intel.com>
-Date: Thu, 31 Mar 2022 21:14:10 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.7.0
-Subject: Re: Bug 215715 - PCI device (iwlwifi) is not working due to PCI power
- state change issues
-Content-Language: en-US
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "Linux Kernel
- Mailing List" <linux-kernel@vger.kernel.org>, Linux PM
-	<linux-pm@vger.kernel.org>, Luca Coelho <luciano.coelho@intel.com>,
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
-References: <ad13371f-2883-bcf2-a62c-78104bfd615c@leemhuis.info>
- <07541714-5d44-dd84-5ab2-a9ce91bba715@leemhuis.info>
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-In-Reply-To: <07541714-5d44-dd84-5ab2-a9ce91bba715@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DB6PR0802CA0045.eurprd08.prod.outlook.com
- (2603:10a6:4:a3::31) To SA1PR11MB5825.namprd11.prod.outlook.com
- (2603:10b6:806:234::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E9DA4C
+	for <regressions@lists.linux.dev>; Thu, 31 Mar 2022 22:04:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9246C340F0;
+	Thu, 31 Mar 2022 22:04:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1648764246;
+	bh=4xVNdxBqaOVelyuYC2NTicn7Q2prJGEUjhHB+LPAEfM=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=A8n1KsdbCA+kmhsUFUWkc/f6UB0evGNGV2r+m4o6sOVjFyyfp9cVFERV/T2f80NIY
+	 0cT+3fGm4iiOA8qhThrOOlGGw8yGfGBjlhbXmhFApeRGkhu3nryPoxsVfR3dLFkKW9
+	 HFfSwlQOycv1j64erLNQvag7hwy/moPQApZqHqKrd7zMAmZQvviXOxZiDThAMn9Ajv
+	 9ZxVdxjCalMkv5+c8/DZdGMo/p+s/MDK9UwuEVLD/zv1/3rdDp26uFn0WryZwdK0xS
+	 k3egXtDQ64TBXAxtVd5MYlztrpEs/DI4NwTJnao4kz8/5BkD5vILZH4hJXM1rsUHXG
+	 Uo6aAUpnLfGZg==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 963672f4-24fd-4fb2-7e0e-08da134aa65a
-X-MS-TrafficTypeDiagnostic: CH2PR11MB4438:EE_
-X-Microsoft-Antispam-PRVS: <CH2PR11MB44380707AB4F974B19C78911CBE19@CH2PR11MB4438.namprd11.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: yQKBWmrHj6b3BBN732lBapNPpvILmFLCKcB1yQSQodtHNozeJ9eBc5/BvH/oxS2Qe0KsPS4EVfYgnCp5Bb84hqnIqxlmIGnAxoHJ49SeqHIM8Rl90398t6oMzJypHraIOCIFZ/JiY57Y6dabUHHwTq6tu2IsY3hNzCAGezs4WDoTwQWvmUBFFio68Dy8qpqpKNbXSMXWhq3nvThXFxZNyQDmqRNaINMHMFbfDTHX9nA30UGtLBv3OduMhhv4E6J1chnUUpNzTjB7upIIXhwh+i6f35F1CoUXl6sSfPMIcjGPZ1WUhkZFOyo5lGCk6pHHMee/b0CZR5K1vyor3BRTsCdVvP6sBl1zPDIHZ02jKULM5M332sEQvOiWLHFwd1gMTNb1Ax3G5KlZE3KjXJ3RufkWkRblC1VKvUppD4LbzVIyDKare659fuxh3AlRvI9wtEf65qIlCYdt8xSROf5XMBWbEz1dG+Cf3uGHBN5XHfk/oXl3xTru7oX8VH5pXxFrDSDI0nsP7nYDCWvbEGJKWzVit7viS+2momdeZ/dycx5qYcDITWeNXE64dQ13965aXNInJkZUvCezeB+KORxnKgDtA/oO2Fz+VJNdEQlZdrqxWi6yBQwgt6Ax1DUWhQT329zHvPrpbpYzVnF42D4wCkRqz2i3ROkQEX2YEBv1YIZlowWX4R2dWFMcC+9g7sufeHt5jdEDo2eE2qvbZ0kXcNgjS6WcUt49Sf0w9g13Lsi+Y/LlsUVt0/YNBgwtNeuUFs7m6K3gFfaWRjdGq33ig/E/0+TjZr/iuSaSE3W2paA+7mlgTgaCGdPPuzNM3MGCQl8ugdMdiZny8W3NgCHg/A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB5825.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(53546011)(2906002)(86362001)(186003)(26005)(66946007)(6512007)(966005)(4326008)(6666004)(5660300002)(6486002)(8936002)(6506007)(66556008)(8676002)(66476007)(36916002)(54906003)(82960400001)(38100700002)(6916009)(31686004)(31696002)(36756003)(83380400001)(508600001)(2616005)(316002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SXlLaGNQZ3p4TThNckdQWXdNQUJtQm9TK0c3OWZnWm9nSXVUaXIwejM3ZXNu?=
- =?utf-8?B?aU9talJ1aTM2L1loeDhPc3dKWkJTb04rK05GOVFuTWp1OWhoNWQ4Q2o5M0Vz?=
- =?utf-8?B?WDFvbXk4RXhzVHdzcmJJOUxsQ2pua05ZZXp5dmRkQk54RVQrYlpsTlk2ZWZJ?=
- =?utf-8?B?OVB1TU9VSmh2a1R3bG9lRFYyVm02a3cwamt6L25oK3lQTE9YcW1wMmRnc3Nz?=
- =?utf-8?B?UjZJK1Q2Q1pxVzV6WGU4U1pRNnZ0MVNvckZYQ0IrRWVJUjFiZHY4MGtPSGZn?=
- =?utf-8?B?T3Fxc2d1dHNna3pYK252RjlkVEc0N0NsL1puU0hUa0FoVUZFQnJWaHIyWE5J?=
- =?utf-8?B?a29VZHhOTFY0YWtyOTlhQkRYQlQ4N1hHZUlKU3JiaXN4b25mZldEYXJHRTl1?=
- =?utf-8?B?cDYwQUlrWXU3bCtoMkIxb0krWTFXNnpDZ2dxSVRRR0txZ0dldVJhdTZxZUpW?=
- =?utf-8?B?MkhLTWFDYXluYUl5ZS9MVGs5Vm5OUEN1dDVhOFlKNE9oZU82azVUQUFSTWRn?=
- =?utf-8?B?QWdFK1B4cktOeFZnOThweXArZXlpb2ZSOWxDQ2o2ODBvSlVNN3ZqTG9RWm9Z?=
- =?utf-8?B?WC9CNm1iejVqVHk5MUR1RHpPdHVWUGFYK0Rxb2Q5YjhNYlNUcXRCQndraVhE?=
- =?utf-8?B?SCtTekp3MGhXZWxNVEJPTUJNMk9tMVF1czRpNGhYUlk2L1cxbFNYTHNXeWpN?=
- =?utf-8?B?K2VUWDFKbkpvMy9raWQwSHRwMFpiQk1tUEMrZUpjeUlaV0l5a2xjV2Fvd09C?=
- =?utf-8?B?eEhxa29MVUc2ckJJZnhaVXpMcG9SbnVSOFNpU1dmUU5MR1Z2R2trWSttZDA4?=
- =?utf-8?B?NGE2TWNENkVDa29wL3ZmZHFINmRzWkllK0RYVlA3MlEyTFBSQVlhMTdSVVNF?=
- =?utf-8?B?N0g4MWxKSFFJZ2p3dTBsUnY3WWFsbWJiaTU3Vzk0RktNWDgvWHl5b0NwZEFp?=
- =?utf-8?B?MG5xWmVhQ1M4VWJFVnpJbUhwR0crRjdjUmJmNyt4cDhieWVLbjFjdTRZN0Rp?=
- =?utf-8?B?K1Rkc3M4TGpkZnZVV1dhQUdLczJCWVpFUGFnY3ZCV1FRM2VYMWsyRjh3Mnpk?=
- =?utf-8?B?Mis2UHloVm1EeWR3Q3NTT0J2eWNKVmM2cXdzaXlrN3kwckxoa01KbVliYlNS?=
- =?utf-8?B?TmtDaEZTVTRyeDJwdXZuU2x3Qm9CeDA3SXpqYTZvbXk1Z2lQRjN1N2tDODAy?=
- =?utf-8?B?RVpiNHNwRDFUQlBkRXdFd00zSFpYMXpZaWRnenNlTmlha0JNWUhKeFhCbWNB?=
- =?utf-8?B?b2RLMWF4Nms0Ly9VQWRFWWY4SjhZVU1tZ291eUg4eVFqcytOK3FUd2JpT0hO?=
- =?utf-8?B?NTBuaXlxNldLR1VXMlJhOFZ2TUVwSUdLMmhySWdNVmRhcnZZQlpzM29abEMy?=
- =?utf-8?B?N0xmQkVzWE5lc25UaHhmcHRpSFhaL0lPM2NtRTZaRVBFZlRsSHEwTUhHZDYw?=
- =?utf-8?B?VmFqTW5FRFF0d2VTWGp4cTRuRHVGTG41dWNOSW0xVEQxT1lZQmZLTUhjMm9v?=
- =?utf-8?B?RmQwT1Zqd3E4Z3loQkxOL1kvRmxqdVpDMUY3K0w1STVXVXg5KzVqeHNIbjc4?=
- =?utf-8?B?SUFYTmk5WHJwZVhUYjB3ZWtXZHc5VFd3Rk9TRGZmcFNTZlYrY1hYVFFwMVJs?=
- =?utf-8?B?Ulh0L2E5a0lzOExMQUdPYi9iMFpnVTVwbWg0UjJsSVdjNzR4Q2RNcmtiRnUy?=
- =?utf-8?B?ODltYUxuYnUyWUdkazVNbVRRMWF5U2M0di9JclE1dE9Sd2Y1SkU0dTJCWng4?=
- =?utf-8?B?eXRIdzRqQWZTbk9yTTc4L3Y0YysvMHJtSFhUQXh1OVBoOS84YnNkcllpcUxz?=
- =?utf-8?B?MG1aazZ4WlY5LzlWaVJud0FCczNKekVDaEVuN29PSmtmOHl0WW9kNllSbjYx?=
- =?utf-8?B?UXJGSlpuUWViNjEyQTVWUmZUY1BTQnlESlh6MGpMb1lMVjllUVBmaEdDU3BH?=
- =?utf-8?B?TUFoNEQ5a2FVWDhMejVrNGtOWlhBK1RhMFFIUHMzci9tOWgvM2tyVGVIUnJR?=
- =?utf-8?B?U1VFOWR0QTNQamYyc1ZNbWllZjlSanFwUTNMMFAzQktCOERDY3RUWEZ3Mm5F?=
- =?utf-8?B?Tlg5VjNMZUJJTWNOKytWNzJrOXRIb01Ddzd3ay94RjlmUzlSWkh5RXVhLzN1?=
- =?utf-8?B?SFNEMTVobGJycmt2T3c1dVd1REJmcTZ6L0FBeU9vckF0MEhvZmEzY0F0NTBl?=
- =?utf-8?B?eDZhOVY3d1hlbjhacVF3TG9iQTE2WFk0b0ExM2h3UzYzcVJaeXFkQUpPZ250?=
- =?utf-8?B?YnhGQVc1Mm42V21wM2lRWnRreGQ3Nlp1Z2VrN21IZ091Y25JMVNPUnB6c3RC?=
- =?utf-8?B?amplVnBOMWM0SEZqMTZMYldjT0lvZUYzS0xLaitVaFlGeXV3WDcvaGl1YlQv?=
- =?utf-8?Q?3XnSuEksbbe6sRxg=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 963672f4-24fd-4fb2-7e0e-08da134aa65a
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB5825.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2022 19:14:16.7833
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GbcHj75KInGi/CZP6h7HuLJHFJDv3orcYExjKVbhV4XeyOJJRunUAMclC36tYTud5dRWfxEN6yQZ9DWSV6JpUiMgiwuu11p7zC2hxJq0QMw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR11MB4438
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CA+G9fYuqU45hHmK4WMUNEXQbmBucE+9fB=S9wcHEfEHaZ2jgcQ@mail.gmail.com>
+References: <CA+G9fYuqU45hHmK4WMUNEXQbmBucE+9fB=S9wcHEfEHaZ2jgcQ@mail.gmail.com>
+Subject: Re: [next] db845c: WARNING: CPU: 5 PID: 8 at drivers/clk/clk-divider.c:139 divider_recalc_rate
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: gabriel.fernandez@foss.st.com, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Maxime Ripard <maxime@cerno.tech>
+To: Linux ARM <linux-arm-kernel@lists.infradead.org>, Naresh Kamboju <naresh.kamboju@linaro.org>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, lkft-triage@lists.linaro.org, open list <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev
+Date: Thu, 31 Mar 2022 15:04:04 -0700
+User-Agent: alot/0.10
+Message-Id: <20220331220406.A9246C340F0@smtp.kernel.org>
 
-On 3/29/2022 10:49 AM, Thorsten Leemhuis wrote:
-> On 28.03.22 15:33, Thorsten Leemhuis wrote:
->> Hi, this is your Linux kernel regression tracker.
->>
->> Rafael, I noticed a regression report in bugzilla.kernel.org that afaics
->> nobody acted upon since it was reported about a week ago, that's why I
->> decided to forward it to the lists, maintainers, and the author of the
->> culprit. To quote from
->> https://bugzilla.kernel.org/show_bug.cgi?id=215715 :
++Maxime
 
-This turns out to be a platform firmware issue exposed by the commit 
-indicated as the "first bad one".
+Quoting Naresh Kamboju (2022-03-31 05:03:57)
+> Following kernel warning noticed on db845c while booting linux next-20220=
+331.
+>=20
+> metadata:
+>   git_ref: master
+>   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+>   git_sha: fdcbcd1348f4ef713668bae1b0fa9774e1811205
+>   git_describe: next-20220331
+>   kernel_version: 5.17.0
+>   kernel-config: https://builds.tuxbuild.com/278RLnhgJL7XdlJbcbv07jiwbYB/=
+config
 
-It is being addressed by adding a quirk for the affected platform.
+I guess we really just shouldn't call clk_set_rate_range()
+unconditionally on clk_put().
 
-
->>>   Stefan Gottwald 2022-03-21 13:31:43 UTC
->>>
->>> Created attachment 300589 [details]
->>> dmesg output from error case
->>>
->>> We got a Elo AIO i2 device which most current BIOS where WiFi was working with Kernel 5.12.x but stopped working since Kernel 5.13.19 and newer (5.17.0-rc5).
->>>
->>> The kernel error message is:
->>>
->>> [    3.419766] iwlwifi 0000:01:00.0: can't change power state from D3cold to D0 (config space inaccessible)
->>> [    3.419781] iwlwifi 0000:01:00.0: can't change power state from D3cold to D0 (config space inaccessible)
->>> [    3.419975] iwlwifi 0000:01:00.0: HW_REV=0xFFFFFFFF, PCI issues?
->>> [    3.420911] iwlwifi: probe of 0000:01:00.0 failed with error -5
->>>
->>> The issue can be solved by adding the iwlwifi driver to the initramfs so it is loaded much earlier and seems to work.
->>>
->>> To narrow down the issue I did an git bisect between v5.13.18 and v5.13.19 mainline kernel version which got me to following commit which if reverted fix the issue on this device.
->>>
->>> Reverting commit d0660d8ab123ea471064f0828f290bec9593e16b : PCI: Use pci_update_current_state() in pci_enable_device_flags()
->> FWIW, that afaics is d0660d8ab123 ("PCI: Use pci_update_current_state()
->> in pci_enable_device_flags()") in mainline.
-> Sorry, I made a (obvious) cut-n-paste error there: the stable commit
-> mentioned by the reporter is 14858dcc3b35 ("PCI: Use
-> pci_update_current_state() in pci_enable_device_flags()") in mainline.
->
-> #regzbot introduced: 14858dcc3b35
->
->>> resolve the issue also in the newer kernels. Seems like the function platform_pci_get_power_state is always returning PCI_D3cold on this device also if this is not true.
->> Could somebody take a look into this? Or was this discussed somewhere
->> else already? Or even fixed?
->>
->> Anyway, to get this tracked:
->>
->> #regzbot introduced: d0660d8ab123ea471064f0828f290bec9593e16b
->> #regzbot from: Stefan Gottwald <gottwald@igel.com>
->> #regzbot title: pci/iwlwifi: wifi is not working due to PCI power state
->> change issues
->> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215715
->>
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>
->> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
->> reports on my table. I can only look briefly into most of them and lack
->> knowledge about most of the areas they concern. I thus unfortunately
->> will sometimes get things wrong or miss something important. I hope
->> that's not the case here; if you think it is, don't hesitate to tell me
->> in a public reply, it's in everyone's interest to set the public record
->> straight.
->>
-
+>=20
+> Boot log:
+> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x517f803c]
+> [    0.000000] Linux version 5.17.0-next-20220331 (tuxmake@tuxmake)
+> (aarch64-linux-gnu-gcc (Debian 11.2.0-18) 11.2.0, GNU ld (GNU Binutils
+> for Debian) 2.38) #1 SMP PREEMPT @1648699852
+> [    0.000000] Machine model: Thundercomm Dragonboard 845c
+> <trim>
+> [    8.131366] ------------[ cut here ]------------
+> [    8.131374] dsi0_pll_bit_clk: Zero divisor and CLK_DIVIDER_ALLOW_ZERO =
+not set
+> [    8.131387] WARNING: CPU: 5 PID: 8 at drivers/clk/clk-divider.c:139
+> divider_recalc_rate+0x8c/0xc0
+> [    8.131398] Modules linked in: qcom_spmi_adc5 snd_soc_sdm845
+> qcom_vadc_common qcom_spmi_temp_alarm qcom_pon crct10dif_ce rtc_pm8xxx
+> snd_soc_rt5663 msm snd_soc_qcom_common gpu_sched snd_soc_rl6231
+> soundwire_bus reset_qcom_pdc drm_dp_helper qcom_camss hci_uart
+> videobuf2_dma_sg btqca v4l2_fwnode venus_core ath10k_snoc v4l2_async
+> btbcm ath10k_core i2c_qcom_geni v4l2_mem2mem videobuf2_memops
+> videobuf2_v4l2 ath bluetooth camcc_sdm845 videobuf2_common
+> spi_geni_qcom i2c_qcom_cci qcom_rng mac80211 xhci_pci qcom_q6v5_mss
+> xhci_pci_renesas cfg80211 icc_osm_l3 slim_qcom_ngd_ctrl qcom_wdt
+> rfkill qrtr lmh pdr_interface display_connector slimbus qcom_q6v5_pas
+> drm_kms_helper qcom_pil_info qcom_q6v5 qcom_sysmon qcom_common
+> qcom_glink_smem qmi_helpers drm mdt_loader socinfo rmtfs_mem fuse
+> [    8.131462] CPU: 5 PID: 8 Comm: kworker/u16:0 Not tainted
+> 5.17.0-next-20220331 #1
+> [    8.131465] Hardware name: Thundercomm Dragonboard 845c (DT)
+> [    8.131467] Workqueue: events_unbound deferred_probe_work_func
+> [    8.131475] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYP=
+E=3D--)
+> [    8.131477] pc : divider_recalc_rate+0x8c/0xc0
+> [    8.131479] lr : divider_recalc_rate+0x8c/0xc0
+> [    8.131481] sp : ffff8000080936c0
+> [    8.131482] x29: ffff8000080936c0 x28: ffff781940e58d00 x27: ffffa7f3f=
+1bc6d38
+> [    8.131485] x26: ffffa7f3f1bc6cf8 x25: 0000000000000000 x24: fffffffff=
+fffffff
+> [    8.131488] x23: ffff781947e8a400 x22: 000000003b9aca50 x21: ffff78194=
+0be0800
+> [    8.131491] x20: ffff781947e8a800 x19: 000000003b9aca50 x18: 000000000=
+0000000
+> [    8.131494] x17: 0000000000000000 x16: 0000000000000000 x15: 000000000=
+0000000
+> [    8.131497] x14: ffff7819bd718000 x13: 0a74657320746f6e x12: 204f52455=
+a5f574f
+> [    8.131500] x11: 4c4c415f52454449 x10: 5649445f4b4c4320 x9 : ffffa7f3f=
+011de84
+> [    8.131502] x8 : 445f4b4c4320646e x7 : 6120726f73697669 x6 : 000000000=
+0000001
+> [    8.131505] x5 : ffffa7f3f288f000 x4 : ffffa7f3f288f2d0 x3 : 000000000=
+0000000
+> [    8.131508] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff78194=
+02c7000
+> [    8.131511] Call trace:
+> [    8.131512]  divider_recalc_rate+0x8c/0xc0
+> [    8.131513]  clk_divider_recalc_rate+0x64/0x90
+> [    8.131515]  clk_recalc+0x40/0xb0
+> [    8.131519]  clk_calc_subtree+0x58/0x90
+> [    8.131521]  clk_calc_subtree+0x70/0x90
+> [    8.131523]  clk_calc_new_rates+0x150/0x290
+> [    8.131526]  clk_calc_new_rates+0x100/0x290
+> [    8.131528]  clk_calc_new_rates+0x100/0x290
+> [    8.131530]  clk_calc_new_rates+0x100/0x290
+> [    8.131533]  clk_core_set_rate_nolock+0xa0/0x2a4
+> [    8.131535]  clk_set_rate_range_nolock.part.0+0xbc/0x2a0
+> [    8.131538]  __clk_put+0x70/0x140
+> [    8.131540]  clk_put+0x1c/0x30
+> [    8.131543]  of_clk_set_defaults+0x140/0x3c0
+> [    8.131546]  platform_probe+0x48/0xf0
+> [    8.131548]  really_probe+0x184/0x3d0
+> [    8.131550]  __driver_probe_device+0x11c/0x190
+> [    8.131553]  driver_probe_device+0x44/0xf4
+> [    8.131556]  __device_attach_driver+0xa4/0x140
+> [    8.131558]  bus_for_each_drv+0x84/0xe0
+> [    8.131561]  __device_attach+0xe4/0x1c0
+> [    8.131563]  device_initial_probe+0x20/0x30
+> [    8.131565]  bus_probe_device+0xa4/0xb0
+> [    8.131567]  deferred_probe_work_func+0xa8/0xfc
+> [    8.131570]  process_one_work+0x1dc/0x450
+> [    8.131575]  worker_thread+0x154/0x450
+> [    8.131577]  kthread+0x100/0x110
+> [    8.131579]  ret_from_fork+0x10/0x20
+> [    8.131584] ---[ end trace 0000000000000000 ]---
+> [    8.131588] ------------[ cut here ]------------
+> [    8.131589] dsi0_phy_pll_out_dsiclk: Zero divisor and
+> CLK_DIVIDER_ALLOW_ZERO not set
+> [    8.131596] WARNING: CPU: 5 PID: 8 at drivers/clk/clk-divider.c:139
+> divider_recalc_rate+0x8c/0xc0
+> [    8.131599] Modules linked in: qcom_spmi_adc5 snd_soc_sdm845 qcom_vadc=
+_commo#
+> n qcom_spmi_temp_alarm qcom_pon crct10dif_ce rtc_pm8xxx snd_soc_rt5663
+> msm snd_soc_qcom_common gpu_sched snd_soc_rl6231 soundwire_bus
+> reset_qcom_pdc drm_dp_helper qcom_camss hci_uart videobuf2_dma_sg
+> btqca v4l2_fwnode venus_core ath10k_snoc v4l2_async btbcm ath10k_core
+> i2c_qcom_geni v4l2_mem2mem videobuf2_memops videobuf2_v4l2 ath
+> bluetooth camcc_sdm845 videobuf2_common spi_geni_qcom i2c_qcom_cci
+> qcom_rng mac80211 xhci_pci qcom_q6v5_mss xhci_pci_renesas cfg80211
+> icc_osm_l3 slim_qcom_ngd_ctrl qcom_wdt rfkill qrtr lmh pdr_interface
+> display_connector slimbus qcom_q6v5_pas drm_kms_helper qcom_pil_info
+> qcom_q6v5 qcom_sysmon qcom_common qcom_glink_smem qmi_helpers drm
+> mdt_loader socinfo rmtfs_mem fuse
+> [    8.131637] CPU: 5 PID: 8 Comm: kworker/u16:0 Tainted: G        W
+>       5.17.0-next-20220331 #1
+> [    8.131639] Hardware name: Thundercomm Dragonboard 845c (DT)
+> [    8.131640] Workqueue: events_unbound deferred_probe_work_func
+> [    8.131643] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYP=
+E=3D--)
+> [    8.131645] pc : divider_recalc_rate+0x8c/0xc0
+> [    8.131647] lr : divider_recalc_rate+0x8c/0xc0
+> [    8.131648] sp : ffff800008093680
+> [    8.131649] x29: ffff800008093680 x28: ffff781940e58d00 x27: ffffa7f3f=
+1bc6d38
+> [    8.131652] x26: ffffa7f3f1bc6cf8 x25: 0000000000000000 x24: fffffffff=
+fffffff
+> [    8.131655] x23: ffff781947e8a400 x22: 000000003b9aca50 x21: ffff78194=
+0be0800
+> [    8.131657] x20: ffff781947e8b300 x19: 000000003b9aca50 x18: 000000000=
+0000000
+> [    8.131660] x17: 0000000000000000 x16: 0000000000000000 x15: 000000000=
+0000000
+> [    8.131663] x14: ffff7819bd718000 x13: 0a74657320746f6e x12: 204f52455=
+a5f574f
+> [    8.131666] x11: 4c4c415f52454449 x10: 5649445f4b4c4320 x9 : ffffa7f3f=
+011de84
+> [    8.131669] x8 : 445f4b4c4320646e x7 : 6120726f73697669 x6 : 000000000=
+0000001
+> [    8.131671] x5 : ffffa7f3f288f000 x4 : ffffa7f3f288f2d0 x3 : 000000000=
+0000000
+> [    8.131674] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff78194=
+02c7000
+> [    8.131677] Call trace:
+> [    8.131677]  divider_recalc_rate+0x8c/0xc0
+> [    8.131679]  clk_divider_recalc_rate+0x64/0x90
+> [    8.131680]  clk_recalc+0x40/0xb0
+> [    8.131683]  clk_calc_subtree+0x58/0x90
+> [    8.131685]  clk_calc_subtree+0x70/0x90
+> [    8.131687]  clk_calc_subtree+0x70/0x90
+> [    8.131690]  clk_calc_subtree+0x70/0x90
+> [    8.131692]  clk_calc_new_rates+0x150/0x290
+> [    8.131694]  clk_calc_new_rates+0x100/0x290
+> [    8.131697]  clk_calc_new_rates+0x100/0x290
+> [    8.131699]  clk_calc_new_rates+0x100/0x290
+> [    8.131701]  clk_core_set_rate_nolock+0xa0/0x2a4
+> [    8.131704]  clk_set_rate_range_nolock.part.0+0xbc/0x2a0
+> [    8.131707]  __clk_put+0x70/0x140
+> [    8.131708]  clk_put+0x1c/0x30
+> [    8.131710]  of_clk_set_defaults+0x140/0x3c0
+> [    8.131712]  platform_probe+0x48/0xf0
+> [    8.131714]  really_probe+0x184/0x3d0
+> [    8.131716]  __driver_probe_device+0x11c/0x190
+> [    8.131719]  driver_probe_device+0x44/0xf4
+> [    8.131722]  __device_attach_driver+0xa4/0x140
+> [    8.131723]  bus_for_each_drv+0x84/0xe0
+> [    8.131726]  __device_attach+0xe4/0x1c0
+> [    8.131728]  device_initial_probe+0x20/0x30
+> [    8.131730]  bus_probe_device+0xa4/0xb0
+> [    8.131732]  deferred_probe_work_func+0xa8/0xfc
+> [    8.131735]  process_one_work+0x1dc/0x450
+> [    8.131737]  worker_thread+0x154/0x450
+> [    8.131739]  kthread+0x100/0x110
+> [    8.131741]  ret_from_fork+0x10/0x20
+> [    8.131743] ---[ end trace 0000000000000000 ]---
+> [    8.131756] ------------[ cut here ]#
+> ------------
+> [    8.131757] dsi0_pll_bit_clk: Zero divisor and CLK_DIVIDER_ALLOW_ZERO =
+not set
+>=20
+>=20
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>=20
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+>=20
+> [1] https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20220=
+331/testrun/8808185/suite/linux-log-parser/test/check-kernel-exception-4814=
+166/log
