@@ -1,253 +1,118 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam08on2081.outbound.protection.outlook.com [40.107.101.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC187C
-	for <regressions@lists.linux.dev>; Fri,  1 Apr 2022 19:47:52 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AY8FXS9N5atjTQ54ypSQRDyYoDuNIg2QmDoTwIz/Pl8eNb9jOiLANIbqXCKWX3CPLhgbFtJNFQAwReaxSc4IPeFD9e0z8g7SMrZuHqaDj3QhxK1Ny9BiYprKfWvr7Bat5nKS5Td/7scYuXHe+PwmOwQNxkKLMhS+SPLDduM+Z0HqPHmpEs5XGHVASikHFMb0d4nSbfYmfDdZQzYC14gHNGjQW/6w+GULSD7zeeAmj0VkzrUWstWqT9SDbpe6SVeCR+fzSnX1GxS0IW6HmwOu4sMT9BTtXisHT6Nz45cEPUWlBdhp+1uPLj+ttAIB/kcRWcEd3Fm0GUKsSepboIyXLQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jrMU/uAvMO64RSmUkIx5/83aWzrt6fHQUzsYK8kKFzA=;
- b=iVvTv/dbefg2DSKzfsTSAwEZYdLVyw79ykToRxIMs9NIpSH/+F5g96hQ0FyqbTje0HRkgbDqfRgd06TpDri4i2Ua/f8a1Hnas0nmLUChotfW7n9Il7dBdPaEreRiUvBI+LNCwVaWKlXUlpQvTXw+V/un3gZ3gInQY07Z8JeeQzMMgDgV0GA8W73Op3Tlrx5ZLiU5ffGj8ckItyDH52zDD6UYdEqV2TIqrRrY3ZHOzRHXnbAtJWzEpasavEYywCWZShY2knMs882BS6azmj4B7y9OEA3v895eh4akJuwtBfPSRhrlgMgs7d/gyKMeBgyhvL9QoFza8k/P0OL46eu1HQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jrMU/uAvMO64RSmUkIx5/83aWzrt6fHQUzsYK8kKFzA=;
- b=yEAm9BBmvOj9Z72lJGqkM0LFpn+XHjVIn/y61Rjbqm97ySm43TVYxQPoKXlOyhCSpbsarCbcjYBKP7dxVxy6KUeSqGFa8ASauEeGmJNRFngVIaNcbKSqso6Emj6Pf49/g/JaNorYRfALeyBHHcdMBCvglBNpnluJDASEnTCHk3s=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5040.namprd12.prod.outlook.com (2603:10b6:5:38b::19)
- by BN9PR12MB5353.namprd12.prod.outlook.com (2603:10b6:408:102::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5123.19; Fri, 1 Apr
- 2022 19:47:49 +0000
-Received: from DM4PR12MB5040.namprd12.prod.outlook.com
- ([fe80::313b:8981:d79a:52d0]) by DM4PR12MB5040.namprd12.prod.outlook.com
- ([fe80::313b:8981:d79a:52d0%5]) with mapi id 15.20.5123.026; Fri, 1 Apr 2022
- 19:47:49 +0000
-Message-ID: <0499f8ae-6966-be4b-5af8-e7e568bfcd5f@amd.com>
-Date: Sat, 2 Apr 2022 01:17:35 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: Bug 215744 - input from the accelerometer disappeared, regression
- on amd_sfh on kernel 5.17
-Content-Language: en-US
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Cc: Jiri Kosina <jkosina@suse.cz>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- linux-input@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Marco <rodomar705@protonmail.com>
-References: <048ef583-4a8f-96b0-68a3-45ab9ec8d6df@leemhuis.info>
-From: Basavaraj Natikar <bnatikar@amd.com>
-In-Reply-To: <048ef583-4a8f-96b0-68a3-45ab9ec8d6df@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN3PR01CA0098.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9b::11) To DM4PR12MB5040.namprd12.prod.outlook.com
- (2603:10b6:5:38b::19)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCB27C
+	for <regressions@lists.linux.dev>; Sun,  3 Apr 2022 11:22:49 +0000 (UTC)
+Received: by mail-ed1-f51.google.com with SMTP id b15so7884566edn.4
+        for <regressions@lists.linux.dev>; Sun, 03 Apr 2022 04:22:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dgerEdFRzuIlYuY53sGoFj/m20hn5vbUi+hCnqeiH6w=;
+        b=n4VNLMTf3TsEbOeB8m2Tpx9dd7ZjHDhguURXvtub4tRhen9QVHOHkFLkS1WiF/SeIO
+         oz25RokcW+p+yoAY73oHFqjsc91K1n8HcpqJS2jxAUyCd1rm+rGHYI4p/oLfHKIdM76C
+         +rCwUuqOi/GkUbt/zSYqVcKfUx8hjHn0uJYcfBM0p+jO0A3W/eMWqWgDPhmBSUwsZR8c
+         E2F6iQyDozaSD6ycROBOaQY5dTXYR1zQPTkOVC0FmzmAlpWN0w2dpMEBm8GOBLTqI7vj
+         uhveUa+XWvGBHpCe//0tpVnrGD+Dt80titujtdj0Qn5MjJFfPHuyCac/YacD44zNug0N
+         dIqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dgerEdFRzuIlYuY53sGoFj/m20hn5vbUi+hCnqeiH6w=;
+        b=wxm4pyO5MHlg8XPXGTyrKolEpiyq5eOY7KE0F/Fqs9OeIS+GTDQ4927qZtaRUMTJ2q
+         A85UEK9Esm93UHMOo5DM9Nuc6mZfKYTV7LM2xBBuh6xN1GfqUDdJxLERCbGUA/CdahUW
+         FmCS9OhcTzYBbEJ7UWA4VXQUmooCK7e+4iyO/2PJe09ghoYr8q9570yfVTSm3a4OQNMe
+         vmDgEuSRVO4vgRVLiZO05EOVfZscj0XQeE2MkQvmXTd40eNjLlDcKYselbaNhwIc4RSz
+         4qhfPgeDoCwZEdiS/0oU83BTd+sn4l2H+mQozZ4+R6YDRuM8fWQGRT90+viTlyPuoX40
+         v1tw==
+X-Gm-Message-State: AOAM533xLGNY1vJEei6tLhQ39wkoplKoG3WNe0obrStMf+t80TEwUqd7
+	7JcDUqfWwrlEkykUlXIeVRgISz/wzuuzRQ==
+X-Google-Smtp-Source: ABdhPJyeeMXlFuQJGEX61UsJN3vdMXp3UFgEtoXxms51nZCPVN8+t5B9eS+MqftX6aUv++0QBAzevQ==
+X-Received: by 2002:aa7:de93:0:b0:418:d700:662a with SMTP id j19-20020aa7de93000000b00418d700662amr28219490edv.107.1648984967756;
+        Sun, 03 Apr 2022 04:22:47 -0700 (PDT)
+Received: from darkstar.example.org (host-79-21-204-193.retail.telecomitalia.it. [79.21.204.193])
+        by smtp.gmail.com with ESMTPSA id nb30-20020a1709071c9e00b006e02fed8472sm3124778ejc.104.2022.04.03.04.22.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Apr 2022 04:22:47 -0700 (PDT)
+Date: Sun, 3 Apr 2022 13:22:45 +0200
+From: Michele Ballabio <ballabio.m@gmail.com>
+To: linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Possible regression in 5.16-stable
+Message-ID: <20220403132152.23330380@darkstar.example.org>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: e6c587fb-e7e3-47ee-64f6-08da14188069
-X-MS-TrafficTypeDiagnostic: BN9PR12MB5353:EE_
-X-Microsoft-Antispam-PRVS:
-	<BN9PR12MB5353E84EABF14B8B0F615F76E6E09@BN9PR12MB5353.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	jG2hyzoNfaW7dfjr1jiKFH6nePMxKmSnN7V9XY91MtWtach+fovD/LjApRORPDM1hGUeC/lsCMyqgPEUpDx0EEkST67GpIMfGFEXhfrUTaF6rzqUa9Ai5tkbmiUD2OiMutFS/JCMhgpXpqdUsWt/pn2Ggw7MFUVKmPUKviJEc893yx3jHcs80lxtvjIO9Eou/EdOqF96y+a+PU8sFmvn33eJ6Mdj0YHovEo7VtQpT3BRWE0C188UN8dc5JMtIKq3APAcioBFJqjM8WU07tEp1oh6zXaur42FLwt/WEpM2KrTaTTyb0RRNYXsy3OCpJr7wwK8FaEqeEA8OBRxgNS4sc1zwzba1bEbpIyPerrdxoCHK7F7sZKQwpiFSFo76zKIvN1xvQyovR5iAqwHA0Rx1f25k8Gh/0N0NDdpIRLna1M7/vZK7AUwacB/Jc6yzkWZtLlZaUQFXrVVlH+mQrKpmoV6gctLRraJciE8W1MyuT0fYVmtoB5BzumgpK/bRu2haIoI5zaJAJWKwT3kpRU8OHhIPcienuS10N99ktGWo2epQ0muiLIuRau0FHC86Yajht2ZnLZepQw4yqfBb2ftLjNMwUmg+jRWoZAjPttkiT05vX9187QsdsgpDcrt0UfK+kkxupRuegj2sA3ixRaIxHXUmJwU/LL8PgeiEzwY407B3tXwlDIV4Pvi9GiYOZz8xC40mRTL0Yp4pQ/yAblhsS7NsNfrllyY8mDvJxZOKW2AlPmRTl4xvgRTFAEyW6q/fTR8a7v3Juvaf3n+Dynb84Lnp6OdfkiRvPGsUOyrrP6px0s/PyI4/J/nXjZnZxaekBDLCXbet5ulnTuXSddW8mYMt6ES/bnqkFhM9BK3ff0=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5040.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(6506007)(2906002)(83380400001)(8676002)(45080400002)(6636002)(54906003)(66556008)(6512007)(4326008)(66476007)(6486002)(6666004)(36756003)(53546011)(966005)(508600001)(110136005)(66946007)(31686004)(316002)(26005)(186003)(19627235002)(31696002)(38100700002)(8936002)(2616005)(5660300002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WmtMT3NOMmVWL21uU2JLOXA3dkpYMm9QODJrM0hmRk53RXo1VlcrQzJxT2Er?=
- =?utf-8?B?SXFyTmJCaE9ad0FvQUloUVhtMkUzc1JUcmJNeUs1eURhaXI5Q0tjK0pkTjZB?=
- =?utf-8?B?UWI5QmRKWU1lajNEMkJ1ckRycnlHcVNQWUxLWmpTV2NRN0sxOWxFTWI0WHJQ?=
- =?utf-8?B?NlpDQkREczljc0NjQTVkb3ZlLzVxM09hU1kvcDVzS1dCekN3Zy9wcXRaVUpV?=
- =?utf-8?B?QWk4dGZvVUdCaGNXQ0VwVW1QbTY1aDE2MExsWmQrMXFId01rT1E2Y0VPbVI1?=
- =?utf-8?B?UlNuc05Ja2RqNkt1TTZTNXp3eEZSRzJqM1FkU3FkR2p1Mng5clhzZUliNlJ5?=
- =?utf-8?B?UERBZGtmTUZ3dGdNQ1VRZnpKOXI2VW1ZTm9DY0lLczVGeEkzaEs0YXphZ3Y0?=
- =?utf-8?B?VjY5a0dVZDJyMTRnTkg1YVJ2bVBYTTJoR1NiVGJlcVRIZXE0ZTNmSUZPa2ZI?=
- =?utf-8?B?SUduUFRMUGtDb0FnSmtjK1o5djNmRktNL3h2U1hGZnBlWnZTN3FaK2Y1N25p?=
- =?utf-8?B?RzFMckZjMElpNnBTRmpERkVNVEFOaTUyb3lseXp1NUJvSUxKbno5QXQ2UE9j?=
- =?utf-8?B?UVRZUTh0dzdtRkI1d0RNN2w0N1dmTGNFcUhQQmI0SHJCSzJGUUVHSkVJcGNK?=
- =?utf-8?B?RGovRjFVdnN6LzdCTTFFV3lWZ3Q3YlhrdVVzVDZlOXhYWVE2YTYyWGZMVWdq?=
- =?utf-8?B?bnZhU2lvTjlMbXV4Mk9NVkpmK2sxQmpGVUhaRWNpVU9pVVZzYVFkenJheUJo?=
- =?utf-8?B?WlRFVDlpZTZ3M1BJVzJHKzdZcndWQVY3WmlwekJYWlE3YWFGZU8vUWJhUHNh?=
- =?utf-8?B?ZDhjL2NyMXlBTEZtNWg2NkVNbHgrTHIyWkFCUy9SMzFXc1hKTWNjTjk1QW9l?=
- =?utf-8?B?VlZWQXdNTVZ5QTlXSmlnTmRwWXBTYklIa3k1R21JV3JJR0kxblgrVlZ3cDZw?=
- =?utf-8?B?NWUyQlZTS25reU5EVFkzWjRkU3JCM1o3eElhWTJiRXk4elVLOVlxSlh1SEpM?=
- =?utf-8?B?eHgrLzVvaDRWeDd5REQyUi9zZzNDUm4vVGhUVFBiMzNORUtQLzB5STJhNDh4?=
- =?utf-8?B?MUJSemlSRm1hckpsRkN6R1lCUUQySlo2VVQybDNEN09rNmpSVU05VDd4NW5l?=
- =?utf-8?B?QmZ0MVQxZWljeTRGSDdzSFlEWmxibUdzRHJuNHFtSW9LRUtKS3F5aVV3aGlo?=
- =?utf-8?B?MlJJSmRMQjJUQmZWMG15RkdtZFhkTkZlMGhCSnhxQklHQjIvQXdSZWtvY2Ir?=
- =?utf-8?B?SytQSjJGMVJpWGRtVmdMczJUTW05Ymw4THplZ3ErRS8ydTV5eFhpQ3dmUmlM?=
- =?utf-8?B?ZVFUcXpLWGxxK0lZMW5acUFmMTlZNFhWay9HVmJXNlA2dWJCUVlUVGtXSEd5?=
- =?utf-8?B?azJjeU5ka1A2WWpFVERwTlI2aWUyVUFkWWhLNTZBRXlvM05KOVlnL2V1VTF1?=
- =?utf-8?B?R3pGbnRYR09ZMTNCMEFLWmNrTjByRWNLMWFBTUlLN1NhV1liTWxJZ3NON2tP?=
- =?utf-8?B?WVJVU3NuU0ZOUEcxbm92WTlOdDlFYzcrdks4c1pJMzcyeFJxRWFDOHB6VDNk?=
- =?utf-8?B?bnNTQmtMWGdjTnlZSk53ZHZTbStUZWV4MjJZeVhXS2dxcVRINU8vRkJqRmdH?=
- =?utf-8?B?Y0NwK2tMc1Y5b01ZZ1hMNGZUcXljV3lqTHN4cmFNVWdWL2pKVGFKN0NNenNm?=
- =?utf-8?B?TGdVM3hPMDZkWnFrTHV4SzdjU2lwWitCZy9WTHhkK3J3Ri9Nbmp5cUV6Z2pP?=
- =?utf-8?B?bEhIZWdSY0pKMGtFdFB5ZEY4SFAySDdPMVp2bmxYdzQ2SEZRcWRHVzI2SnlQ?=
- =?utf-8?B?cVFmN2tkUDM4eGFCeEEwTDJJbFdwdnZzNzE1NW15ZS9mVExKbi9Sb29HSnpW?=
- =?utf-8?B?dlZZdVZ3dGtlcEluOWdYRFcwWXdvNUI1c0NMODdXaTg3RGFtb1FBRGhBellp?=
- =?utf-8?B?Q25kMWtIQzdzT2laR3lkWkYxdVhPc0dNV1FyYjQ0Z0wwd0FvMjBYaWJGYXQx?=
- =?utf-8?B?SnZKUzZMQzZHL3ZJMUlGVjRwZUdIUW5IdVIxZHBmTTIwdFRHdU1XU2RqR1I1?=
- =?utf-8?B?aVdsVDVOVzQyUFBic3FrQllzL0o1dmtaM0EyeXZmTUFaVWMrVWM3SDhsWnNa?=
- =?utf-8?B?d09DNWxCcVZIUHV1TE82VzNBTUkxYStaeDJwWTV3QWN3WnFMeVNPYWl1QStw?=
- =?utf-8?B?bXdrc01qLzY1RjFHWXkxYmJ0MXF6cDU4LzZVWXhWNmhRSGlNdkN3cjlnMVhU?=
- =?utf-8?B?M29UcWZGY0dEdkNIVXV2KzRSbVc0NldCOEI1dDlaV0JxVE8yeCswNXg1c1l4?=
- =?utf-8?B?RkRIMytITndLMHl5ZmFONVlZZ1Rpc2dVK0NwRUhhbFhUK2VacitGdz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e6c587fb-e7e3-47ee-64f6-08da14188069
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5040.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Apr 2022 19:47:49.6100
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EBaQieawHy0qRr7OYDGsd3364OpSefbPAApol6zY68x6muUzRUWSBMBVydtuoMEUPPfkHd075mBzEBpmiu4Jyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5353
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
 Hi,
+	I think I hit a regression in 5.16-stable.
+It is difficult to reproduce, and I'm not sure if it's
+still present in 5.17 and/or if it's caused by flaky hardware.
 
-Committed patch is disabling the interrupt mode and does not cause any
-functionality or working issues.
+The machine is a Ryzen 5 1600 with AMD graphics (RX 560).
 
-I also cross verified on 3 system and working fine on 5.17 and not able
-to reproduce or recreate.
+Kernels 5.16.10 do not have the following regression, 5.16.11-16
+do. My machine would freeze completely about once a week, no oops in
+the logs, sysrq won't work either. I managed to log only the
+following (and only once) with netconsole, while running kernel 5.16.16.
+I could not reproduce the problem since.
 
-Output on 5.17:
+	Michele Ballabio
 
---------------------------------------------------------------
-
-root@amd-HP-ENVY-x360-Convertible-15-eu0xxx:/home/amd# uname -a
-
-Linux amd-HP-ENVY-x360-Convertible-15-eu0xxx 5.17.0+ #5 SMP PREEMPT Fri
-Apr 1 23:28:34 IST 2022 x86_64 x86_64 x86_64 GNU/Linux
-
-root@amd-HP-ENVY-x360-Convertible-15-eu0xxx:/home/amd# monitor-sensor
-
-    Waiting for iio-sensor-proxy to appear
-
-+++ iio-sensor-proxy appeared
-
-=== Has accelerometer (orientation: normal)
-
-=== No ambient light sensor
-
-    Accelerometer orientation changed: right-up
-
-    Accelerometer orientation changed: normal
-
-    Accelerometer orientation changed: right-up
-
-    Accelerometer orientation changed: normal
-
-    Accelerometer orientation changed: left-up
-
-    Accelerometer orientation changed: normal
-
-    Accelerometer orientation changed: right-up
-
-    Accelerometer orientation changed: normal
-
-    Accelerometer orientation changed: left-up
-
-    Accelerometer orientation changed: normal
-
-    Accelerometer orientation changed: right-up
-
-    Accelerometer orientation changed: normal
-
-    Accelerometer orientation changed: bottom-up
-
-    Accelerometer orientation changed: normal
-
-    Accelerometer orientation changed: right-up
-
-    Accelerometer orientation changed: normal
-
-root@amd-HP-ENVY-x360-Convertible-15-eu0xxx:/home/amd# dmidecode -s
-bios-version
-
-B.16T19
-
-root@amd-HP-ENVY-x360-Convertible-15-eu0xxx:/home/amd# dmidecode -s
-system-product-name
-
-HP ENVY x360 Convertible 15-eu0xxx
-
-root@amd-HP-ENVY-x360-Convertible-15-eu0xxx:/home/amd# dmidecode -s
-system-manufacturer
-
-HP
-
-root@amd-HP-ENVY-x360-Convertible-15-eu0xxx:/home/amd#
-
-------------------------------------------------
-
-Looks like this is not regression. May be some hardware/firmware bug.
-
-Just curious reverting this patch how it is working just suspecting
-firmware undefined behavior.
-
-If possible, please check on other platform/system also if same behavior
-occurs.
-
-Could you please provide me platform/system details so that I can check
-this behavior?
-
-Thanks,
-Basavaraj
-
-On 4/1/2022 1:36 PM, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker.
->
-> I noticed a regression report in bugzilla.kernel.org that afaics nobody
-> acted upon since it was reported about a week ago, that's why I decided
-> to forward it to the lists and all people that seemed to be relevant
-> here. It looks to me like this is something for Basavaraj, as it seems
-> to be caused by	b300667b33b2 ("HID: amd_sfh: Disable the interrupt for
-> all command"). But I'm not totally sure, I only looked briefly into the
-> details. Or was this discussed somewhere else already? Or even fixed?
->
-> To quote from https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D215744&amp;data=04%7C01%7CBasavaraj.Natikar%40amd.com%7C9155f6987d45479f721208da13b682f9%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637843972013904577%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=HbQ5LymDwsc94RZhNuzN83%2F0BUplqRUG7bB%2BXymViP0%3D&amp;reserved=0 :
->
->>  Marco 2022-03-25 15:22:19 UTC
->>
->> After updating to 5.17, the input from the accelerometer disappeared, completely. No devices available from IIO tree. First bad commit causing it is https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ftorvalds%2Flinux.git%2Fcommit%2Fdrivers%2Fhid%2Famd-sfh-hid%2Famd_sfh_pcie.c%3Fid%3Db300667b33b2b5a2c8e5f8f22826befb3d7f4f2b&amp;data=04%7C01%7CBasavaraj.Natikar%40amd.com%7C9155f6987d45479f721208da13b682f9%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637843972013904577%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=odHA0EIxLb0xpSJJ9ShzgGL0%2BOAJ6tbG68lQe0QOqLY%3D&amp;reserved=0. Reverting this and the the other two on top fixed this. Tried to not revert only the above mentioned commit, but it's still not working.
->>
->> Marco.
-> Anyway, to get this tracked:
->
-> #regzbot introduced: b300667b33b2b5a2c8e5f8f22826befb3d7f4
-> #regzbot from: Marco <rodomar705@protonmail.com>
-> #regzbot title: input: hid: input from the accelerometer disappeared due
-> to changes to amd_sfh
-> #regzbot link: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D215744&amp;data=04%7C01%7CBasavaraj.Natikar%40amd.com%7C9155f6987d45479f721208da13b682f9%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637843972013904577%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=HbQ5LymDwsc94RZhNuzN83%2F0BUplqRUG7bB%2BXymViP0%3D&amp;reserved=0
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
->
-
+----------
+4,1490,11865947234,-;ieee80211 phy0: rt2x00usb_watchdog_tx_dma: Warning - TX queue 2 DMA timed out, invoke forced reset
+ SUBSYSTEM=ieee80211
+ DEVICE=+ieee80211:phy0
+4,1491,11872348272,-;ieee80211 phy0: rt2x00usb_watchdog_tx_dma: Warning - TX queue 2 DMA timed out, invoke forced reset
+ SUBSYSTEM=ieee80211
+ DEVICE=+ieee80211:phy0
+0,1493,12767657117,-;traps: PANIC: double fault, error_code: 0x0
+4,1494,12767657121,-;double fault: 0000 [#1] PREEMPT SMP NOPTI
+4,1495,12767657123,-;CPU: 4 PID: 16786 Comm: MediaPD~der #12 Not tainted 5.16.16 #1
+4,1496,12767657126,-;Hardware name: System manufacturer System Product Name/PRIME B350-PLUS, BIOS 4011 04/19/2018
+4,1497,12767657127,-;RIP: 0010:entry_SYSCALL_64+0x3/0x29
+4,1498,12767657133,-;Code: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 0f 01 f8 <65> 48 89 24 25 14 60 00 00 eb 12 0f 20 dc 0f 1f 44 00 00 48 81 e4
+4,1499,12767657134,-;RSP: 0018:00007f2a8bcbd438 EFLAGS: 00010002
+4,1500,12767657136,-;RAX: 00000000000000ca RBX: 000000000000005d RCX: 00007f2aa45e8aab
+4,1501,12767657138,-;RDX: 0000000000000002 RSI: 0000000000000080 RDI: 00007f2aa4400018
+4,1502,12767657139,-;RBP: 00007f2aa4400018 R08: 0000000000000000 R09: 00007f2a8ed00000
+4,1503,12767657140,-;R10: 0000000000000000 R11: 0000000000000282 R12: 00000000000000a8
+4,1504,12767657141,-;R13: 0000000000000003 R14: 0000000000000030 R15: 00007f2aa4400000
+4,1505,12767657142,-;FS:  00007f2a8bcbe640(0000) GS:ffff8b110ed00000(0000) knlGS:0000000000000000
+4,1506,12767657143,-;CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+4,1507,12767657144,-;CR2: 00007f2a8bcbd428 CR3: 00000002953f2000 CR4: 00000000003506e0
+4,1508,12767657146,-;Call Trace:
+4,1509,12767657146,-,ncfrag=0/986;Modules linked in: nfnetlink_queue nfnetlink_log nfnetlink bluetooth ecdh_generic ecc netconsole uas usb_storage snd_seq_dummy snd_hrtimer snd_seq snd_seq_device iptable_filter xt_tcpudp ip_tables
+ x_tables hwmon_vid 8021q garp mrp stp llc ipv6 fuse rt73usb rt2x00usb rt2x00lib mac80211 hid_logitech cfg80211 joydev hid_generic usbhid hid amdgpu intel_rapl_msr iommu_v2 intel_rapl_common gpu_sched eeepc_wmi asus_wmi drm_ttm_helper
+ ttm platform_profile battery drm_kms_helper sparse_keymap edac_mce_amd rfkill drm kvm_amd snd_hda_codec_realtek video snd_hda_codec_generic ledtrig_audio kvm snd_hda_codec_hdmi snd_hda_intel agpgart snd_intel_dspcfg snd_intel_sdw_acpi
+ wmi_bmof snd_hda_codec evdev i2c_algo_bit snd_hda_core fb_sys_fops syscopyarea sysfillrect sysimgblt snd_hwdep mfd_core snd_pcm r8169 irqbypass snd_timer realtek snd xhci_pci xhci_pci_renesas xhci_hcd mdio_devres crct10dif_pclmul
+ crc32_pclmul i2c_piix4 soundcore ccp libphy ghash_clmulni_intel i2c_co4,1509,12767657146,-,ncfrag=966/986;re rapl k10temp wmi
+4,1510,12767657189,c; acpi_cpufreq gpio_amdpt button gpio_generic loop [last unloaded: netconsole]
+4,1511,12767657207,-;------------[ cut here ]------------
+4,1512,12767657207,-;WARNING: CPU: 4 PID: 16786 at kernel/softirq.c:362 __local_bh_enable_ip+0x43/0x70
+4,1513,12767657212,-,ncfrag=0/986;Modules linked in: nfnetlink_queue nfnetlink_log nfnetlink bluetooth ecdh_generic ecc netconsole uas usb_storage snd_seq_dummy snd_hrtimer snd_seq snd_seq_device iptable_filter xt_tcpudp ip_tables
+ x_tables hwmon_vid 8021q garp mrp stp llc ipv6 fuse rt73usb rt2x00usb rt2x00lib mac80211 hid_logitech cfg80211 joydev hid_generic usbhid hid amdgpu intel_rapl_msr iommu_v2 intel_rapl_common gpu_sched eeepc_wmi asus_wmi drm_ttm_helper
+ ttm platform_profile battery drm_kms_helper sparse_keymap edac_mce_amd rfkill drm kvm_amd snd_hda_codec_realtek video snd_hda_codec_generic ledtrig_audio kvm snd_hda_codec_hdmi snd_hda_intel agpgart snd_intel_dspcfg snd_intel_sdw_acpi
+ wmi_bmof snd_hda_codec evdev i2c_algo_bit snd_hda_core fb_sys_fops syscopyarea sysfillrect sysimgblt snd_hwdep mfd_core snd_pcm r8169 irqbypass snd_timer realtek snd xhci_pci xhci_pci_renesas xhci_hcd mdio_devres crct10dif_pclmul
+ crc32_pclmul i2c_piix4 soundcore ccp libphy ghash_clmulni_intel i2c_co4,1513,12767657212,-,ncfrag=966/986;re rapl k10temp wmi
+4,1514,12767657248,c; acpi_cpufreq gpio_amdpt button gpio_generic loop [last unloaded: netconsole]
+4,1515,12767657252,-;CPU: 4 PID: 16786 Comm: MediaPD~der #12 Not tainted 5.16.16 #1
+4,1516,12767657254,-;Hardware name: System manufacturer System Product Name/PRIME B350-PLUS, BIOS 4011 04/19/2018
+4,1517,12767657255,-;RIP: 0010:__local_bh_enable_ip+0x43/0x70
+4,1518,12767657257,-;Code: 01 35 61 1d f3 7d 65 8b 05 5a 1d f3 7d a9 00 ff ff 00 74 1a bf 01 00 00 00 e8 99 b5 02 00 65 8b 05 42 1d f3 7d 85 c0 74 25 c3 <0f> 0b eb cc 48 c7 c7 d9 53 42 83 e8 4d ec a6 00 65 66 8b 05 25 19
+4,1519,12767657259,-;RSP: 0018:fffffe00000f69a0 EFLAGS: 00010006
+4,1520,12767657260,-;RAX: 0000000080110203 RBX: ffff8b0e05bd2000 RCX: ffff8b0e05bd2000
+4,1521,12767657261,-;RDX: ffff8b0e0ac28000 RSI: 0000000000000201 RDI: ffffffffc12f12c3
+4,1522,12767657262,-;RBP: ffff8b0e0c977a30 R08: fffffe00000f69e8 R09: ffff8b0e0d085000
+4,1523,12767657263,-;R10: ffff8b0e03234300 R11: 0000000000000fff R12: ffff8b0e0d0850d0
+4,1524,12767657264,-;R13: fffffe00000f69e8 R14: ffff8b0e0ddfc980 R15: ffff8b0e0d085a58
+4,1525,12767657265,-;FS:  00007f2a8bcbe640(0000) GS:ffff8b110ed00000(0000) knlGS:0000000000000000
+4,1526,12767657266,-;CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+----------
