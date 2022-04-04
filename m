@@ -1,324 +1,233 @@
-Received: from mail-41104.protonmail.ch (mail-41104.protonmail.ch [185.70.41.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87D27C
-	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 17:47:44 +0000 (UTC)
-Date: Mon, 04 Apr 2022 17:40:00 +0000
-Authentication-Results: mail-41104.protonmail.ch;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="3zwPnEvM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail; t=1649094008;
-	bh=Abj/f7lL3h7XnhObd7VBg4DhV/bWNl/cvotUhP1u5T8=;
-	h=Date:To:From:Cc:Reply-To:Subject:Message-ID:In-Reply-To:
-	 References:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID;
-	b=3zwPnEvMbMsRufQ4rkq/plkvyH4UTTC+wCAjxwm1qROB63BFurVZOSl9DjEddPlH1
-	 ML0RCDqePpTF7NnbABDwUsqFtHbWRNhTmX6x56uG71l24aYpVFnr0KpdnhMvK2OQZ3
-	 vfaJcfMHXqIVz4yAZyE8N4zzzgPwjYLOwrb2DiqWzSl7zUMpwTNqCxC51yMHMsZY8V
-	 MXOAdrV1mn8S+/xZFcjV/oq3fiS85tNkHDPQFazOT/Fzil9BXweVNqRZjpFuNt+Xxq
-	 gXV6wir5MiuHIj1uf59qZQxDz9Vr/htCYnaygN3gfzyGntVIMQEbR2z3LEYKmof2FW
-	 c4L5ElgyA954w==
-To: regressions@leemhuis.info, Basavaraj.Natikar@amd.com, bnatikar@amd.com
-From: Marco <rodomar705@protonmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, jkosina@suse.cz, benjamin.tissoires@redhat.com
-Reply-To: Marco <rodomar705@protonmail.com>
-Subject: Re: Bug 215744 - input from the accelerometer disappeared, regression on amd_sfh on kernel 5.17
-Message-ID: <xZsLVmWExSSYgHXHsfOKkB7SbLy-bltitpJznKV1HHsv2-_ZcSFArnir30v-7Eg8zqmGSMmZi3Cr7YHpB8tD_FVnBvf2W-VsmmFGdc7hlWw=@protonmail.com>
-In-Reply-To: <-IeN6GQXuvFeZGmf-HSltWI3MN3V02oQzXAW0XR74vD62w_Fo_A6lSfJXrDgV2MTrHs9Id2Ce_r9J_zZCKx67DnVAWeFg3-ULIZ2GSm_ITQ=@protonmail.com>
-References: <048ef583-4a8f-96b0-68a3-45ab9ec8d6df@leemhuis.info> <0499f8ae-6966-be4b-5af8-e7e568bfcd5f@amd.com> <6fe27103-5e35-5f16-d213-29bd71412f5b@leemhuis.info> <7dfb121f-848c-873e-f3cc-43239c264f21@amd.com> <0a33735c-dd43-4305-ff92-7b9ac2c6a0d9@leemhuis.info> <539ff0c5-a95b-836d-e1c6-39f64ee2a418@leemhuis.info> <056621a6-b6ac-90d9-c409-ba5d9404c868@amd.com> <-IeN6GQXuvFeZGmf-HSltWI3MN3V02oQzXAW0XR74vD62w_Fo_A6lSfJXrDgV2MTrHs9Id2Ce_r9J_zZCKx67DnVAWeFg3-ULIZ2GSm_ITQ=@protonmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796C83200
+	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 18:49:34 +0000 (UTC)
+Received: by mail-ej1-f45.google.com with SMTP id a6so10971933ejk.0
+        for <regressions@lists.linux.dev>; Mon, 04 Apr 2022 11:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=3ZJa7P2AbXCXeW6xvXsCiP3LWm5yyogWWr/a7zJOtNM=;
+        b=Z2O7Cf61jq3MA+6JmnvTQucNZTDvkuC3L31nRoKLs+MYgic7gmyFaIZd/dkFh5aBSy
+         yybjMXv34DiHGp70+T/er+yow225iYtDeGfvYYHH7UtDRGN3mabZEzCR9lIHvxz4c+E7
+         SYW9CCKPeFKOWv6xQBwvAynEKPQ+Eow2WweiX3V6MS0T7jNQpEuWY9sc5o6SgK42iIOh
+         /OJbRv6fF4KO96xoSVcUArV9dohPkNn0SpXXnfLHufCv3crlrdc5rLXY/u8kjI98G1oV
+         yOYovniIhXr838pa8UYXLhCPqpW+4Cda0gOXT5SGG+hbrzmo+UMSB7R3QxkcybHRe5dy
+         SmPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3ZJa7P2AbXCXeW6xvXsCiP3LWm5yyogWWr/a7zJOtNM=;
+        b=DlyL5heQ+Y+tR/94NAlttn1QmKBd4cC8PeZXLZmepVcpNtTJ8jt/IodVeHmovW45fP
+         9fLdDddpAHm/Y1OJ1KVEKRm3P+Nfa9GrqpguKstUIsjCinn/Fcykl9AugkN7doDbEk/i
+         bdgQ7tajud+F0HSHdZDN8qzGbQUWg6OErggENR4aEi+hkzpu2G3lXLXuJbVxcxOgxogr
+         wI1/FMUIMYRU85uVamzBZsBs0a7U5jqOWkG5bYun/tqwU4AHG2V9mgq01HL3djdreHrU
+         1yM1oFxZWuI0INTiYAYYnAZXcQNjppPTsULzbhB5j6dUlxxUsDbT4pdwg8FHLvzhYUrf
+         gydQ==
+X-Gm-Message-State: AOAM530fNKlUYht/S9DwpbGaRu/KFXhlTPHQFPbsAbIOcCwvYhZVReRB
+	OUbffOUGWjLvKef+pWqzPVM=
+X-Google-Smtp-Source: ABdhPJy3+nGdpgaPHslQ1iHZwzN+x4swcFMaonp/MMXGm2yUuNXTbNdm6Ti54jFv3tSh8i1d4eM73w==
+X-Received: by 2002:a17:907:8a01:b0:6e5:1f4:afa with SMTP id sc1-20020a1709078a0100b006e501f40afamr1452481ejc.691.1649098172495;
+        Mon, 04 Apr 2022 11:49:32 -0700 (PDT)
+Received: from darkstar.example.org (host-79-21-204-193.retail.telecomitalia.it. [79.21.204.193])
+        by smtp.gmail.com with ESMTPSA id b14-20020a170906d10e00b006e803595901sm375275ejz.172.2022.04.04.11.49.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Apr 2022 11:49:31 -0700 (PDT)
+Date: Mon, 4 Apr 2022 20:49:30 +0200
+From: Michele Ballabio <ballabio.m@gmail.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: Possible regression in 5.16-stable
+Message-ID: <20220404204854.22338b7d@darkstar.example.org>
+In-Reply-To: <9fd4d3df-ef82-4a9b-1ba9-289181eb0d0a@leemhuis.info>
+References: <20220403132152.23330380@darkstar.example.org>
+	<9fd4d3df-ef82-4a9b-1ba9-289181eb0d0a@leemhuis.info>
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-I've added the three test cases (dmesg + sudo monitor-sensor on all three t=
-ests) on the bug report on bugzilla.kernel.org. One is with the stock kerne=
-l from arch, 5.17.1. The other two is using zen patches on top of 5.17. One=
- is without the three reverts above mentioned. Sensor is missing still. The=
-n my same custom configuration only with the three reverts applied. The sen=
-sor is back and working.
+On Mon, 4 Apr 2022 09:12:41 +0200
+Thorsten Leemhuis <regressions@leemhuis.info> wrote:
 
-If you need anything more, just let me know.
+> > Kernels 5.16.10 do not have the following regression, 5.16.11-16  
+> 
+> 5.16.11-16 sounds like this is a distro kernel that might or might not
+> be patched. Or is 11-16 just meant as a range. Could you clarify?
 
-Link to bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D215744
+Sorry, I meant the problem occurred on 5.16.11, .12 and .16.
 
-Marco.
+> > do. My machine would freeze completely about once a week, no oops in
+> > the logs, sysrq won't work either. I managed to log only the
+> > following (and only once) with netconsole, while running kernel
+> > 5.16.16. I could not reproduce the problem since.  
+> 
+> Hmmm. Of course ideally all regressions get fixed, but that beeing
+> said: 5.16 will likely be EOL in round about two weeks anway and
+> getting to the root of this problem might take some time and effort.
+> That's why I'm not sure myself what's the best way forward here.
 
-Inviato con l'email sicura di ProtonMail.
-------- Original Message -------
-Il luned=C3=AC 4 aprile 2022 16:26, Marco <rodomar705@protonmail.com> ha sc=
-ritto:
+I'm aware of this, but given the nature of the problem and how difficult
+it is to reproduce, I thought it was better to report it.
+Meanwhile I'm now on 5.17.1: let's say this is on hold until someone
+has a similar problem with 5.17.x.
 
+> Maybe testing 5.17 to see if the problem still shows up would be
+> good; bisection would help, but I guess that will be hard here. But I
+> guess there is one thing that could help: could you maybe decode the
+> panic you have as described in this document:
+> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
-> I haven't tested this on the tip of the git tree, I can do this probably =
-wednesday if it is needed.
->
-> I'll post the output from sensors-detect shortly.
->
-> Marco.
->
->
-> Inviato da ProtonMail mobile
->
->
->
-> -------- Messaggio originale --------
-> On 4 apr 2022, 16:04, Basavaraj Natikar < bnatikar@amd.com> ha scritto:
->
-> >
-> >
-> > >
-> > >
-> > > On 4/4/2022 7:23 PM, Thorsten Leemhuis wrote:
-> > > > On 04.04.22 09:25, Thorsten Leemhuis wrote:
-> > > >> On 04.04.22 09:18, Basavaraj Natikar wrote:
-> > > >>>
-> > > >>> On 4/4/2022 12:05 PM, Thorsten Leemhuis wrote:
-> > > >>>> On 01.04.22 21:47, Basavaraj Natikar wrote:
-> > > >>>>> Committed patch is disabling the interrupt mode and does not ca=
-use any
-> > > >>>>> functionality or working issues.
-> > > >>>> Well, for the reporter it clearly does cause problems, unless so=
-mething
-> > > >>>> in testing went sideways.
-> > > >>>>
-> > > >>>>> I also cross verified on 3 system and working fine on 5.17 and =
-not able
-> > > >>>>> to reproduce or recreate.
-> > > >>>>> [...]
-> > > >>>>> ------------------------------------------------
-> > > >>>>>
-> > > >>>>> Looks like this is not regression. May be some hardware/firmwar=
-e bug.
-> > > >>>> Well, from the point of the kernel development process it afaics=
- is a
-> > > >>>> regression, unless the testing went sideways. It doesn't matter =
-if the
-> > > >>>> root cause is in fact a hardware/firmware bug, as what matters i=
-n the
-> > > >>>> scope of the kernel development is: things worked, and now they =
-don't.
-> > > >>>> For details please check this file and read the quotes from Linu=
-s:
-> > > >>> can you help to answer the below questions:
-> > > >> Me? No, I'm just the Linux kernels regression tracker trying to ma=
-ke
-> > > >> sure all regressions are handled appropriately. :-D
-> > > >>
-> > > >> Marco, can you help out here?
-> > > > Marco replied in private and allowed me to forward his reply:
-> > > >
-> > > > ```
-> > > > I can't since, as mentioned previously, this is the only AMD laptop
-> > > > device that I have.
-> > > > I am sure this is a regression for me, even if the issue is firmwar=
-e
-> > > > related. I have tested the 5.17 stock arch kernel and the sensor is
-> > > > gone. With the last three patches reverted the sensor is back and
-> > > > working fine.
-> > > >
-> > > > I would love to verify if the issue is hardware or software related=
-, but
-> > > > being outside of AMD and with AMD not releasing any public informat=
-ion
-> > > > with datasheet/specification on their Sensor Fusion Hub I really ca=
-n't
-> > > > say anything specific.
-> > > >
-> > > > This still remains a regression, since the hardware was working bef=
-ore
-> > > > and now it doesn't.
-> > > >
-> > > > By the way, I already have seen also this rework of this specific d=
-river
-> > > > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
-Fgithub.com%2Fconqp%2Famd-sfh-hid-dkms&amp;data=3D04%7C01%7CBasavaraj.Natik=
-ar%40amd.com%7C05891d0582f94d68e7f908da164272ca%7C3dd8961fe4884e608e11a82d9=
-94e183d%7C0%7C0%7C637846771908092322%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLj=
-AwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=3DnAm=
-JdcP2ALl9cEaejWezLb9B3bU5Omp72Z6kjTbaBRY%3D&amp;reserved=3D0 that even adde=
-d a still
-> > > > missing handler for the lid sensor switch for disabling touchpad an=
-d
-> > > > keyboard, and all efforts tried to merge it upstream with all sorts=
- of
-> > > > issues.
-> > > >
-> > > > Regardless of everything, this is a driver supported in kernel by A=
-MD
-> > > > engineers, so all of this doesn't matter. On my hardware this three
-> > > > patches break a previously working hardware.
-> > > > ```
-> > >
-> > > Thank=C2=A0You Marco for the information.
-> > >
-> > > Could you please provide me below results for acceleration
-> > > by re-applying and reverting patch once again on same laptop.
-> > >
-> > > Did you attempt to test it multiple times on the tip of the git to se=
-e
-> > > if the problems goes away?
-> > >
-> > > if same test is performed multiple times with or without reverting pa=
-tch
-> > > on same laptop on which issue is observed
-> > > we may see same working/issue behavior. if it is regressing then alwa=
-ys
-> > > it should work with or without reverting patches on same laptop. is t=
-his
-> > > the case here?
-> > >
-> > > Thanks,
-> > >
-> > > Basavaraj
-> > >
-> > > > Ciao, Thorsten
-> > > >
-> > > >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker=
-' hat)
-> > > >>
-> > > >> P.S.: As the Linux kernel's regression tracker I'm getting a lot o=
-f
-> > > >> reports on my table. I can only look briefly into most of them and=
- lack
-> > > >> knowledge about most of the areas they concern. I thus unfortunate=
-ly
-> > > >> will sometimes get things wrong or miss something important. I hop=
-e
-> > > >> that's not the case here; if you think it is, don't hesitate to te=
-ll me
-> > > >> in a public reply, it's in everyone's interest to set the public r=
-ecord
-> > > >> straight.
-> > > >>
-> > > >>> Did you attempt to test it multiple times on the tip of the git t=
-o see
-> > > >>> if the problems goes away?
-> > > >>>
-> > > >>> if same test is performed multiple times with or without revertin=
-g patch
-> > > >>> on same platform (laptop/hardware/firmware) on which issue is obs=
-erved
-> > > >>> we may see same working/issue behavior. if it is regressing then =
-always
-> > > >>> it should work with or without reverting patches on same laptop. =
-is this
-> > > >>> the case here?
-> > > >>>
-> > > >>> I don't see any regression here. I requested to retest with other
-> > > >>> hardware/platform/system also as per my above test (output) all w=
-orking
-> > > >>> fine in 3 different platforms and not able to reproduce or recrea=
-te for
-> > > >>> my side on 5.17.
-> > > >>>
-> > > >>> Thanks,
-> > > >>>
-> > > >>> Basavaraj
-> > > >>>
-> > > >>>> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2=
-F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fnext%2Flinux-next.g=
-it%2Fplain%2FDocumentation%2Fprocess%2Fhandling-regressions.rst&amp;data=3D=
-04%7C01%7CBasavaraj.Natikar%40amd.com%7C05891d0582f94d68e7f908da164272ca%7C=
-3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846771908092322%7CUnknown%7CT=
-WFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%=
-3D%7C3000&amp;sdata=3D9ORA2inmfocvEJ%2FXOov67q2ebzZrcuguViSPV%2B58yA0%3D&am=
-p;reserved=3D0
-> > > >>>>
-> > > >>>> Ciao, Thorsten
-> > > >>>>
-> > > >>>>> Just curious reverting this patch how it is working just suspec=
-ting
-> > > >>>>> firmware undefined behavior.
-> > > >>>>>
-> > > >>>>> If possible, please check on other platform/system also if same=
- behavior
-> > > >>>>> occurs.
-> > > >>>>>
-> > > >>>>> Could you please provide me platform/system details so that I c=
-an check
-> > > >>>>> this behavior?
-> > > >>>>>
-> > > >>>>> Thanks,
-> > > >>>>> Basavaraj
-> > > >>>>>
-> > > >>>>> On 4/1/2022 1:36 PM, Thorsten Leemhuis wrote:
-> > > >>>>>> Hi, this is your Linux kernel regression tracker.
-> > > >>>>>>
-> > > >>>>>> I noticed a regression report in bugzilla.kernel.org that afai=
-cs nobody
-> > > >>>>>> acted upon since it was reported about a week ago, that's why =
-I decided
-> > > >>>>>> to forward it to the lists and all people that seemed to be re=
-levant
-> > > >>>>>> here. It looks to me like this is something for Basavaraj, as =
-it seems
-> > > >>>>>> to be caused by b300667b33b2 ("HID: amd_sfh: Disable the inter=
-rupt for
-> > > >>>>>> all command"). But I'm not totally sure, I only looked briefly=
- into the
-> > > >>>>>> details. Or was this discussed somewhere else already? Or even=
- fixed?
-> > > >>>>>>
-> > > >>>>>> To quote from https://nam11.safelinks.protection.outlook.com/?=
-url=3Dhttps%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D215744&amp;da=
-ta=3D04%7C01%7CBasavaraj.Natikar%40amd.com%7C05891d0582f94d68e7f908da164272=
-ca%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846771908092322%7CUnknow=
-n%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI=
-6Mn0%3D%7C3000&amp;sdata=3DpLGKHCV1ZNrXghGdDFG16sguRA8xi0VzUSG%2Fbw%2FQsBw%=
-3D&amp;reserved=3D0 :
-> > > >>>>>>
-> > > >>>>>>> Marco 2022-03-25 15:22:19 UTC
-> > > >>>>>>>
-> > > >>>>>>> After updating to 5.17, the input from the accelerometer disa=
-ppeared, completely. No devices available from IIO tree. First bad commit c=
-ausing it is https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A=
-%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ftorvalds%2Flinux.=
-git%2Fcommit%2Fdrivers%2Fhid%2Famd-sfh-hid%2Famd_sfh_pcie.c%3Fid%3Db300667b=
-33b2b5a2c8e5f8f22826befb3d7f4f2b&amp;data=3D04%7C01%7CBasavaraj.Natikar%40a=
-md.com%7C05891d0582f94d68e7f908da164272ca%7C3dd8961fe4884e608e11a82d994e183=
-d%7C0%7C0%7C637846771908092322%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAi=
-LCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=3DL36JFc%2B=
-nejM4bJXfNui49v2uJKrS4cJnU93dpEhXPms%3D&amp;reserved=3D0. Reverting this an=
-d the the other two on top fixed this. Tried to not revert only the above m=
-entioned commit, but it's still not working.
-> > > >>>>>>>
-> > > >>>>>>> Marco.
-> > > >>>>>> Anyway, to get this tracked:
-> > > >>>>>>
-> > > >>>>>> #regzbot introduced: b300667b33b2b5a2c8e5f8f22826befb3d7f4
-> > > >>>>>> #regzbot from: Marco <rodomar705@protonmail.com>
-> > > >>>>>> #regzbot title: input: hid: input from the accelerometer disap=
-peared due
-> > > >>>>>> to changes to amd_sfh
-> > > >>>>>> #regzbot link: https://nam11.safelinks.protection.outlook.com/=
-?url=3Dhttps%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D215744&amp;d=
-ata=3D04%7C01%7CBasavaraj.Natikar%40amd.com%7C05891d0582f94d68e7f908da16427=
-2ca%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846771908092322%7CUnkno=
-wn%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVC=
-I6Mn0%3D%7C3000&amp;sdata=3DpLGKHCV1ZNrXghGdDFG16sguRA8xi0VzUSG%2Fbw%2FQsBw=
-%3D&amp;reserved=3D0
-> > > >>>>>>
-> > > >>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tra=
-cker' hat)
-> > > >>>>>>
-> > > >>>>>> P.S.: As the Linux kernel's regression tracker I'm getting a l=
-ot of
-> > > >>>>>> reports on my table. I can only look briefly into most of them=
- and lack
-> > > >>>>>> knowledge about most of the areas they concern. I thus unfortu=
-nately
-> > > >>>>>> will sometimes get things wrong or miss something important. I=
- hope
-> > > >>>>>> that's not the case here; if you think it is, don't hesitate t=
-o tell me
-> > > >>>>>> in a public reply, it's in everyone's interest to set the publ=
-ic record
-> > > >>>>>> straight.
-> > > >>>>>>
-> > > >>>
-> > > >>>
+Thanks, I tried but I'm not sure it's of any help:
+
+----------
+0,1493,12767657117,-;traps: PANIC: double fault, error_code: 0x0
+4,1494,12767657121,-;double fault: 0000 [#1] PREEMPT SMP NOPTI
+4,1496,12767657126,-;Hardware name: System manufacturer System Product Name/PRIME B350-PLUS, BIOS 4011 04/19/2018
+4,1497,12767657127,-;RIP: entry_SYSCALL_64+0x3/0x29 
+4,1498,12767657133,-;Code: cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 0f 01 f8 <65> 48 89 24 25 14 60 00 00 eb 12 0f 20 dc 0f 1f 44 00 00 48 81 e4
+All code
+========
+   0:	cc                   	int3   
+   1:	cc                   	int3   
+   2:	cc                   	int3   
+   3:	cc                   	int3   
+   4:	cc                   	int3   
+   5:	cc                   	int3   
+   6:	cc                   	int3   
+   7:	cc                   	int3   
+   8:	cc                   	int3   
+   9:	cc                   	int3   
+   a:	cc                   	int3   
+   b:	cc                   	int3   
+   c:	cc                   	int3   
+   d:	cc                   	int3   
+   e:	cc                   	int3   
+   f:	cc                   	int3   
+  10:	cc                   	int3   
+  11:	cc                   	int3   
+  12:	cc                   	int3   
+  13:	cc                   	int3   
+  14:	cc                   	int3   
+  15:	cc                   	int3   
+  16:	cc                   	int3   
+  17:	cc                   	int3   
+  18:	cc                   	int3   
+  19:	cc                   	int3   
+  1a:	cc                   	int3   
+  1b:	cc                   	int3   
+  1c:	cc                   	int3   
+  1d:	cc                   	int3   
+  1e:	cc                   	int3   
+  1f:	cc                   	int3   
+  20:	cc                   	int3   
+  21:	cc                   	int3   
+  22:	cc                   	int3   
+  23:	cc                   	int3   
+  24:	cc                   	int3   
+  25:	cc                   	int3   
+  26:	cc                   	int3   
+  27:	0f 01 f8             	swapgs 
+  2a:*	65 48 89 24 25 14 60 	mov    %rsp,%gs:0x6014		<-- trapping instruction
+  31:	00 00 
+  33:	eb 12                	jmp    0x47
+  35:	0f 20 dc             	mov    %cr3,%rsp
+  38:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+  3d:	48                   	rex.W
+  3e:	81                   	.byte 0x81
+  3f:	e4                   	.byte 0xe4
+
+Code starting with the faulting instruction
+===========================================
+   0:	65 48 89 24 25 14 60 	mov    %rsp,%gs:0x6014
+   7:	00 00 
+   9:	eb 12                	jmp    0x1d
+   b:	0f 20 dc             	mov    %cr3,%rsp
+   e:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+  13:	48                   	rex.W
+  14:	81                   	.byte 0x81
+  15:	e4                   	.byte 0xe4
+4,1499,12767657134,-;RSP: 0018:00007f2a8bcbd438 EFLAGS: 00010002
+4,1500,12767657136,-;RAX: 00000000000000ca RBX: 000000000000005d RCX: 00007f2aa45e8aab
+4,1501,12767657138,-;RDX: 0000000000000002 RSI: 0000000000000080 RDI: 00007f2aa4400018
+4,1502,12767657139,-;RBP: 00007f2aa4400018 R08: 0000000000000000 R09: 00007f2a8ed00000
+4,1503,12767657140,-;R10: 0000000000000000 R11: 0000000000000282 R12: 00000000000000a8
+4,1504,12767657141,-;R13: 0000000000000003 R14: 0000000000000030 R15: 00007f2aa4400000
+4,1505,12767657142,-;FS:  00007f2a8bcbe640(0000) GS:ffff8b110ed00000(0000) knlGS:0000000000000000
+4,1506,12767657143,-;CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+4,1507,12767657144,-;CR2: 00007f2a8bcbd428 CR3: 00000002953f2000 CR4: 00000000003506e0
+4,1508,12767657146,-;Call Trace:
+4,1509,12767657146,-,ncfrag=0/986;Modules linked in: nfnetlink_queue nfnetlink_log nfnetlink bluetooth ecdh_generic ecc netconsole uas usb_storage snd_seq_dummy snd_hrtimer snd_seq snd_seq_device iptable_filter xt_tcpudp ip_tables
+ x_tables hwmon_vid 8021q garp mrp stp llc ipv6 fuse rt73usb rt2x00usb rt2x00lib mac80211 hid_logitech cfg80211 joydev hid_generic usbhid hid amdgpu intel_rapl_msr iommu_v2 intel_rapl_common gpu_sched eeepc_wmi asus_wmi drm_ttm_helper
+ ttm platform_profile battery drm_kms_helper sparse_keymap edac_mce_amd rfkill drm kvm_amd snd_hda_codec_realtek video snd_hda_codec_generic ledtrig_audio kvm snd_hda_codec_hdmi snd_hda_intel agpgart snd_intel_dspcfg snd_intel_sdw_acpi
+ wmi_bmof snd_hda_codec evdev i2c_algo_bit snd_hda_core fb_sys_fops syscopyarea sysfillrect sysimgblt snd_hwdep mfd_core snd_pcm r8169 irqbypass snd_timer realtek snd xhci_pci xhci_pci_renesas xhci_hcd mdio_devres crct10dif_pclmul
+ crc32_pclmul i2c_piix4 soundcore ccp libphy ghash_clmulni_intel i2c_co4,1509,12767657146,-,ncfrag=966/986;re rapl k10temp wmi
+4,1510,12767657189,c; acpi_cpufreq gpio_amdpt button gpio_generic loop [last unloaded: netconsole]
+4,1511,12767657207,-;------------[ cut here ]------------
+4,1512,12767657207,-;WARNING: CPU: 4 PID: 16786 at kernel/softirq.c:362 __local_bh_enable_ip+0x43/0x70 
+4,1513,12767657212,-,ncfrag=0/986;Modules linked in: nfnetlink_queue nfnetlink_log nfnetlink bluetooth ecdh_generic ecc netconsole uas usb_storage snd_seq_dummy snd_hrtimer snd_seq snd_seq_device iptable_filter xt_tcpudp ip_tables
+ x_tables hwmon_vid 8021q garp mrp stp llc ipv6 fuse rt73usb rt2x00usb rt2x00lib mac80211 hid_logitech cfg80211 joydev hid_generic usbhid hid amdgpu intel_rapl_msr iommu_v2 intel_rapl_common gpu_sched eeepc_wmi asus_wmi drm_ttm_helper
+ ttm platform_profile battery drm_kms_helper sparse_keymap edac_mce_amd rfkill drm kvm_amd snd_hda_codec_realtek video snd_hda_codec_generic ledtrig_audio kvm snd_hda_codec_hdmi snd_hda_intel agpgart snd_intel_dspcfg snd_intel_sdw_acpi
+ wmi_bmof snd_hda_codec evdev i2c_algo_bit snd_hda_core fb_sys_fops syscopyarea sysfillrect sysimgblt snd_hwdep mfd_core snd_pcm r8169 irqbypass snd_timer realtek snd xhci_pci xhci_pci_renesas xhci_hcd mdio_devres crct10dif_pclmul
+ crc32_pclmul i2c_piix4 soundcore ccp libphy ghash_clmulni_intel i2c_co4,1513,12767657212,-,ncfrag=966/986;re rapl k10temp wmi
+4,1514,12767657248,c; acpi_cpufreq gpio_amdpt button gpio_generic loop [last unloaded: netconsole]
+4,1516,12767657254,-;Hardware name: System manufacturer System Product Name/PRIME B350-PLUS, BIOS 4011 04/19/2018
+4,1517,12767657255,-;RIP: __local_bh_enable_ip+0x43/0x70 
+4,1518,12767657257,-;Code: 01 35 61 1d f3 7d 65 8b 05 5a 1d f3 7d a9 00 ff ff 00 74 1a bf 01 00 00 00 e8 99 b5 02 00 65 8b 05 42 1d f3 7d 85 c0 74 25 c3 <0f> 0b eb cc 48 c7 c7 d9 53 42 83 e8 4d ec a6 00 65 66 8b 05 25 19
+All code
+========
+   0:	01 35 61 1d f3 7d    	add    %esi,0x7df31d61(%rip)        # 0x7df31d67
+   6:	65 8b 05 5a 1d f3 7d 	mov    %gs:0x7df31d5a(%rip),%eax        # 0x7df31d67
+   d:	a9 00 ff ff 00       	test   $0xffff00,%eax
+  12:	74 1a                	je     0x2e
+  14:	bf 01 00 00 00       	mov    $0x1,%edi
+  19:	e8 99 b5 02 00       	call   0x2b5b7
+  1e:	65 8b 05 42 1d f3 7d 	mov    %gs:0x7df31d42(%rip),%eax        # 0x7df31d67
+  25:	85 c0                	test   %eax,%eax
+  27:	74 25                	je     0x4e
+  29:	c3                   	ret    
+  2a:*	0f 0b                	ud2    		<-- trapping instruction
+  2c:	eb cc                	jmp    0xfffffffffffffffa
+  2e:	48 c7 c7 d9 53 42 83 	mov    $0xffffffff834253d9,%rdi
+  35:	e8 4d ec a6 00       	call   0xa6ec87
+  3a:	65                   	gs
+  3b:	66                   	data16
+  3c:	8b                   	.byte 0x8b
+  3d:	05                   	.byte 0x5
+  3e:	25                   	.byte 0x25
+  3f:	19                   	.byte 0x19
+
+Code starting with the faulting instruction
+===========================================
+   0:	0f 0b                	ud2    
+   2:	eb cc                	jmp    0xffffffffffffffd0
+   4:	48 c7 c7 d9 53 42 83 	mov    $0xffffffff834253d9,%rdi
+   b:	e8 4d ec a6 00       	call   0xa6ec5d
+  10:	65                   	gs
+  11:	66                   	data16
+  12:	8b                   	.byte 0x8b
+  13:	05                   	.byte 0x5
+  14:	25                   	.byte 0x25
+  15:	19                   	.byte 0x19
+4,1519,12767657259,-;RSP: 0018:fffffe00000f69a0 EFLAGS: 00010006
+4,1520,12767657260,-;RAX: 0000000080110203 RBX: ffff8b0e05bd2000 RCX: ffff8b0e05bd2000
+4,1521,12767657261,-;RDX: ffff8b0e0ac28000 RSI: 0000000000000201 RDI: ffffffffc12f12c3
+4,1522,12767657262,-;RBP: ffff8b0e0c977a30 R08: fffffe00000f69e8 R09: ffff8b0e0d085000
+4,1523,12767657263,-;R10: ffff8b0e03234300 R11: 0000000000000fff R12: ffff8b0e0d0850d0
+4,1524,12767657264,-;R13: fffffe00000f69e8 R14: ffff8b0e0ddfc980 R15: ffff8b0e0d085a58
+4,1525,12767657265,-;FS:  00007f2a8bcbe640(0000) GS:ffff8b110ed00000(0000) knlGS:0000000000000000
+4,1526,12767657266,-;CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+----------
+
+Thanks,
+    Michele Ballabio
+
