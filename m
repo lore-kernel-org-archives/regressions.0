@@ -1,221 +1,324 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-41104.protonmail.ch (mail-41104.protonmail.ch [185.70.41.104])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEAB7C
-	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 17:41:29 +0000 (UTC)
-Received: by mail-pj1-f46.google.com with SMTP id o5-20020a17090ad20500b001ca8a1dc47aso4073955pju.1
-        for <regressions@lists.linux.dev>; Mon, 04 Apr 2022 10:41:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=gRG4DzaFxaS3i3D5Dn6lXKx0bh0DkudE7AH+todWZpo=;
-        b=cULjnfUnYWUX1Kg8zxZdjfzMD7GQL25bJU0W7pJg5yaFBuUqoHyNwMXZrfQNYHw34E
-         gAyJ8Jjc7T6oZcOQxl6EKSBqurXC8Lbcjz6DXcDiYHAdqiU9X/W4p/FlLgIeDnChPz1+
-         K20FIwaCbqf88OMjvi2m2hfEfUeVijLQcS1u7vuVzxZ7Ydo9gQiSSF++k/Ok2yEbMGKB
-         /hFAwGaCE3pHDw4nSdIwKbqwSRIQ0GrNqdvEf86f7wi3kb5MIsxGw42+92GBllJGo6Di
-         wRWqcSXeUxZrUlr7IzQXEdKQG975PgJqSVDZXWIXsvACbOE27ihyAZco2A1Xl84JlR1+
-         lWoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=gRG4DzaFxaS3i3D5Dn6lXKx0bh0DkudE7AH+todWZpo=;
-        b=HTYzpWpkGy0rUYuuSMuxM/L1xioBt2PUVl/KmOnUxXOaxZ60FxXtxboksXDde2wK5d
-         bQJwQq2xNAUI1umFJ8EiR1+g0JdAiffzUkQRnGR9z1cK16ttv3kav7UphsMNwS+fkVGU
-         3D0GdSLHHjzpMTMd8pX/d3mlAyXiTVTQHXPhvz8Vy3t0mH9pU9q5aRnLFyDKfj1h4x5N
-         Z1B0QcNbBQBcxWwyNa0RfBJlwWsls3trwxRO0GTCzEC2c2HgWpDdxzYFwRr6NtRd9xI5
-         LsTe5oFaho/Zi01gDUBiEs29lJX0fgIK8kOVk2QLufArIaUKkXvUDg/UisAkrjpRorpA
-         V8bw==
-X-Gm-Message-State: AOAM530R8x2iB/OLrW7xWEdLIDNShrGF1ylV49IbSNeK5f6TkhgFx3E5
-	GFWAbjyFyA3f/znCJB5thHc=
-X-Google-Smtp-Source: ABdhPJyMZI05fy3SbjyPwUvOf+KODslEq3a0Y3XuRzUGsI83V2UmKZwOthdU6F2UIUaGckP+kXcj2w==
-X-Received: by 2002:a17:903:230a:b0:156:9c66:5cd2 with SMTP id d10-20020a170903230a00b001569c665cd2mr742397plh.57.1649094088348;
-        Mon, 04 Apr 2022 10:41:28 -0700 (PDT)
-Received: from google.com ([2620:15c:211:201:f271:5160:86de:f889])
-        by smtp.gmail.com with ESMTPSA id a38-20020a056a001d2600b004fae885424dsm13324657pfx.72.2022.04.04.10.41.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Apr 2022 10:41:27 -0700 (PDT)
-Sender: Minchan Kim <minchan.kim@gmail.com>
-Date: Mon, 4 Apr 2022 10:41:25 -0700
-From: Minchan Kim <minchan@kernel.org>
-To: Jirka Hladky <jhladky@redhat.com>, tj@kernel.org,
-	gregkh@linuxfoundation.org
-Cc: tj@kernel.org, linux-kernel <linux-kernel@vger.kernel.org>,
-	regressions@lists.linux.dev,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Justin Forbes <jforbes@fedoraproject.org>
-Subject: Re: PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" starting from 5.17 on
- dual socket Intel Xeon Gold servers
-Message-ID: <YkstxbC3OfzYnSRw@google.com>
-References: <CAE4VaGDZr_4wzRn2___eDYRtmdPaGGJdzu_LCSkJYuY9BEO3cw@mail.gmail.com>
- <536eca11-b4b9-c1a8-6e6b-fcd0c339a3ec@leemhuis.info>
- <CAE4VaGBZk2NL6Tn2fGxmGMR-n8KFNqgPOktY_sQ1vjViLDNhhg@mail.gmail.com>
- <CAE4VaGB4=aCd8iDb4EduR+-5QTSgVWd5sxrnBA4e3g9dPrnuBg@mail.gmail.com>
- <YkTxox8ZQIDtojfU@google.com>
- <CAFxkdAq6r2WnwML-pPfdZiajaYZCEcUU3GrXW=+wsA7CxGnJdQ@mail.gmail.com>
- <CAE4VaGBchOMWeHQ8GKiGFv_aCaNGLEvSdLWXZTpE+qC=0bgM3A@mail.gmail.com>
- <YkY6W1NS+1RTw0VB@google.com>
- <CAE4VaGDAMZqjwumyvbityzEiK30=5a5vuDMjaS+UHM39R-oPRw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87D27C
+	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 17:47:44 +0000 (UTC)
+Date: Mon, 04 Apr 2022 17:40:00 +0000
+Authentication-Results: mail-41104.protonmail.ch;
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="3zwPnEvM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail; t=1649094008;
+	bh=Abj/f7lL3h7XnhObd7VBg4DhV/bWNl/cvotUhP1u5T8=;
+	h=Date:To:From:Cc:Reply-To:Subject:Message-ID:In-Reply-To:
+	 References:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID;
+	b=3zwPnEvMbMsRufQ4rkq/plkvyH4UTTC+wCAjxwm1qROB63BFurVZOSl9DjEddPlH1
+	 ML0RCDqePpTF7NnbABDwUsqFtHbWRNhTmX6x56uG71l24aYpVFnr0KpdnhMvK2OQZ3
+	 vfaJcfMHXqIVz4yAZyE8N4zzzgPwjYLOwrb2DiqWzSl7zUMpwTNqCxC51yMHMsZY8V
+	 MXOAdrV1mn8S+/xZFcjV/oq3fiS85tNkHDPQFazOT/Fzil9BXweVNqRZjpFuNt+Xxq
+	 gXV6wir5MiuHIj1uf59qZQxDz9Vr/htCYnaygN3gfzyGntVIMQEbR2z3LEYKmof2FW
+	 c4L5ElgyA954w==
+To: regressions@leemhuis.info, Basavaraj.Natikar@amd.com, bnatikar@amd.com
+From: Marco <rodomar705@protonmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, regressions@lists.linux.dev, jkosina@suse.cz, benjamin.tissoires@redhat.com
+Reply-To: Marco <rodomar705@protonmail.com>
+Subject: Re: Bug 215744 - input from the accelerometer disappeared, regression on amd_sfh on kernel 5.17
+Message-ID: <xZsLVmWExSSYgHXHsfOKkB7SbLy-bltitpJznKV1HHsv2-_ZcSFArnir30v-7Eg8zqmGSMmZi3Cr7YHpB8tD_FVnBvf2W-VsmmFGdc7hlWw=@protonmail.com>
+In-Reply-To: <-IeN6GQXuvFeZGmf-HSltWI3MN3V02oQzXAW0XR74vD62w_Fo_A6lSfJXrDgV2MTrHs9Id2Ce_r9J_zZCKx67DnVAWeFg3-ULIZ2GSm_ITQ=@protonmail.com>
+References: <048ef583-4a8f-96b0-68a3-45ab9ec8d6df@leemhuis.info> <0499f8ae-6966-be4b-5af8-e7e568bfcd5f@amd.com> <6fe27103-5e35-5f16-d213-29bd71412f5b@leemhuis.info> <7dfb121f-848c-873e-f3cc-43239c264f21@amd.com> <0a33735c-dd43-4305-ff92-7b9ac2c6a0d9@leemhuis.info> <539ff0c5-a95b-836d-e1c6-39f64ee2a418@leemhuis.info> <056621a6-b6ac-90d9-c409-ba5d9404c868@amd.com> <-IeN6GQXuvFeZGmf-HSltWI3MN3V02oQzXAW0XR74vD62w_Fo_A6lSfJXrDgV2MTrHs9Id2Ce_r9J_zZCKx67DnVAWeFg3-ULIZ2GSm_ITQ=@protonmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAE4VaGDAMZqjwumyvbityzEiK30=5a5vuDMjaS+UHM39R-oPRw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 01, 2022 at 02:04:03PM +0200, Jirka Hladky wrote:
-> > Could you decode exact source code line from the oops?
-> 
-> Yes - please see below [1].
+I've added the three test cases (dmesg + sudo monitor-sensor on all three t=
+ests) on the bug report on bugzilla.kernel.org. One is with the stock kerne=
+l from arch, 5.17.1. The other two is using zen patches on top of 5.17. One=
+ is without the three reverts above mentioned. Sensor is missing still. The=
+n my same custom configuration only with the three reverts applied. The sen=
+sor is back and working.
 
-Thanks.
+If you need anything more, just let me know.
 
-> 
-> > I think it's fine to attach in the reply because kernel test bot
-> 
-> OK. The reproducer is attached. Please unpack it and follow the
-> instructions in the README file. [2]
+Link to bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D215744
 
-Unfortunately, I failed to run the script in my machine.
+Marco.
 
-> 
-> Thanks a lot for looking into it!
-> Jirka
-> 
-> [1]
-> =============================================
-> Source code line numbers for the Oops message
-> =============================================
-> 
-> 1) RIP: 0010:kernfs_remove+0x8/0x50:
-> (gdb) l *kernfs_remove+0x8
-> 0xffffffff81418588 is in kernfs_remove (fs/kernfs/kernfs-internal.h:48).
-> 43       * Return the kernfs_root @kn belongs to.
-> 44       */
-> 45      static inline struct kernfs_root *kernfs_root(struct kernfs_node *kn)
-> 46      {
-> 47              /* if parent exists, it's always a dir; otherwise, @sd
-> is a dir */
-> 48              if (kn->parent)
-> 49                      kn = kn->parent;
-> 50              return kn->dir.root;
-> 51      }
-> 
-> And here are source code lines from the 5 first functions in call trace:
-> [ 8563.366280] Call Trace:
-> [ 8563.366280]  <TASK>
-> [ 8563.366280]  rdt_kill_sb+0x29d/0x350
-> [ 8563.366280]  deactivate_locked_super+0x36/0xa0
-> [ 8563.366280]  cleanup_mnt+0x131/0x190
-> [ 8563.366280]  task_work_run+0x5c/0x90
-> [ 8563.366280]  exit_to_user_mode_prepare+0x229/0x230
-> [ 8563.366280]  syscall_exit_to_user_mode+0x18/0x40
-> [ 8563.366280]  do_syscall_64+0x48/0x90
-> [ 8563.366280]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> 
-> 2)(gdb) l *rdt_kill_sb+0x29d
-> 0xffffffff810506bd is in rdt_kill_sb
-> (arch/x86/kernel/cpu/resctrl/rdtgroup.c:2442).
-> 2437            /* Notify online CPUs to update per cpu storage and
-> PQR_ASSOC MSR */
-> 2438            update_closid_rmid(cpu_online_mask, &rdtgroup_default);
-> 2439
-> 2440            kernfs_remove(kn_info);
-> 2441            kernfs_remove(kn_mongrp);
-> 2442            kernfs_remove(kn_mondata);
-> 2443    }
-> 
-> 3)(gdb) l *deactivate_locked_super+0x36
-> 0xffffffff813650f6 is in deactivate_locked_super (fs/super.c:342).
-> 337                     /*
-> 338                      * Since list_lru_destroy() may sleep, we
-> cannot call it from
-> 339                      * put_super(), where we hold the sb_lock.
-> Therefore we destroy
-> 340                      * the lru lists right now.
-> 341                      */
-> 342                     list_lru_destroy(&s->s_dentry_lru);
-> 343                     list_lru_destroy(&s->s_inode_lru);
-> 344
-> 345                     put_filesystem(fs);
-> 346                     put_super(s);
-> 
-> 4) (gdb) l *cleanup_mnt+0x131
-> 0xffffffff813890a1 is in cleanup_mnt (fs/namespace.c:137).
-> 132             return 0;
-> 133     }
-> 134
-> 135     static void mnt_free_id(struct mount *mnt)
-> 136     {
-> 137             ida_free(&mnt_id_ida, mnt->mnt_id);
-> 138     }
-> 
-> 5) (gdb) l *task_work_run+0x5c
-> 0xffffffff8110620c is in task_work_run (./include/linux/sched.h:2017).
-> 2012
-> 2013    DECLARE_STATIC_CALL(cond_resched, __cond_resched);
-> 2014
-> 2015    static __always_inline int _cond_resched(void)
-> 2016    {
-> 2017            return static_call_mod(cond_resched)();
-> 2018    }
-> 
-> 6) (gdb) l *exit_to_user_mode_prepare+0x229
-> 0xffffffff81176d19 is in exit_to_user_mode_prepare
-> (./include/linux/tracehook.h:189).
-> 184              * This barrier pairs with
-> task_work_add()->set_notify_resume() after
-> 185              * hlist_add_head(task->task_works);
-> 186              */
-> 187             smp_mb__after_atomic();
-> 188             if (unlikely(current->task_works))
-> 189                     task_work_run();
-> 190
-> 191     #ifdef CONFIG_KEYS_REQUEST_CACHE
-> 192             if (unlikely(current->cached_requested_key)) {
-> 193                     key_put(current->cached_requested_key);
-> 
-> [2]
-> =============================================
-> Reproducer - README
-> =============================================
-> 
-> 1) HW
-> This issue seems to be platform specific. I was not able to reproduce
-> it on AMD Zen and also not on Intel Ice Lake platform.
-> I see the issue on dual socket Intel Skylake systems. Reproduced on a
-> Supermicro Super Server/X11DDW-L with 2x Xeon Gold 6126 CPU.
-
-Based on your report, kernel was crashed due to kn_mondata was NULL
-
-  rdt_kill_sb
-    rmdir_all_sub
-      ..
-      kernfs_remove(kn_mondata);
-        struct kernfs_root *root = kernfs_root(kn); <-- crashed
+Inviato con l'email sicura di ProtonMail.
+------- Original Message -------
+Il luned=C3=AC 4 aprile 2022 16:26, Marco <rodomar705@protonmail.com> ha sc=
+ritto:
 
 
-Before the my patch[1], it worked like this.
-
-  rdt_kill_sb
-    rmdir_all_sub
-      ..
-      kernfs_remove(kn_mondata);
-        down_write(&kernfs_rwsem);
-          if (!kn)
-            return;
-        up_write(&kernfs_rwsem);
-
-IOW, before, kernfs_remove worked with NULL argument via just bailing
-but with the my patch[1], it doesn't work any longer.
-
-It makes me have questions for kernfs maintainers:
-
-Should kernfs_remove API support NULL parameter? If so, can we support
-it atomically without old global kernfs_rwsem?
-
-[1] 393c3714081a, kernfs: switch global kernfs_rwsem lock to per-fs lock
+> I haven't tested this on the tip of the git tree, I can do this probably =
+wednesday if it is needed.
+>
+> I'll post the output from sensors-detect shortly.
+>
+> Marco.
+>
+>
+> Inviato da ProtonMail mobile
+>
+>
+>
+> -------- Messaggio originale --------
+> On 4 apr 2022, 16:04, Basavaraj Natikar < bnatikar@amd.com> ha scritto:
+>
+> >
+> >
+> > >
+> > >
+> > > On 4/4/2022 7:23 PM, Thorsten Leemhuis wrote:
+> > > > On 04.04.22 09:25, Thorsten Leemhuis wrote:
+> > > >> On 04.04.22 09:18, Basavaraj Natikar wrote:
+> > > >>>
+> > > >>> On 4/4/2022 12:05 PM, Thorsten Leemhuis wrote:
+> > > >>>> On 01.04.22 21:47, Basavaraj Natikar wrote:
+> > > >>>>> Committed patch is disabling the interrupt mode and does not ca=
+use any
+> > > >>>>> functionality or working issues.
+> > > >>>> Well, for the reporter it clearly does cause problems, unless so=
+mething
+> > > >>>> in testing went sideways.
+> > > >>>>
+> > > >>>>> I also cross verified on 3 system and working fine on 5.17 and =
+not able
+> > > >>>>> to reproduce or recreate.
+> > > >>>>> [...]
+> > > >>>>> ------------------------------------------------
+> > > >>>>>
+> > > >>>>> Looks like this is not regression. May be some hardware/firmwar=
+e bug.
+> > > >>>> Well, from the point of the kernel development process it afaics=
+ is a
+> > > >>>> regression, unless the testing went sideways. It doesn't matter =
+if the
+> > > >>>> root cause is in fact a hardware/firmware bug, as what matters i=
+n the
+> > > >>>> scope of the kernel development is: things worked, and now they =
+don't.
+> > > >>>> For details please check this file and read the quotes from Linu=
+s:
+> > > >>> can you help to answer the below questions:
+> > > >> Me? No, I'm just the Linux kernels regression tracker trying to ma=
+ke
+> > > >> sure all regressions are handled appropriately. :-D
+> > > >>
+> > > >> Marco, can you help out here?
+> > > > Marco replied in private and allowed me to forward his reply:
+> > > >
+> > > > ```
+> > > > I can't since, as mentioned previously, this is the only AMD laptop
+> > > > device that I have.
+> > > > I am sure this is a regression for me, even if the issue is firmwar=
+e
+> > > > related. I have tested the 5.17 stock arch kernel and the sensor is
+> > > > gone. With the last three patches reverted the sensor is back and
+> > > > working fine.
+> > > >
+> > > > I would love to verify if the issue is hardware or software related=
+, but
+> > > > being outside of AMD and with AMD not releasing any public informat=
+ion
+> > > > with datasheet/specification on their Sensor Fusion Hub I really ca=
+n't
+> > > > say anything specific.
+> > > >
+> > > > This still remains a regression, since the hardware was working bef=
+ore
+> > > > and now it doesn't.
+> > > >
+> > > > By the way, I already have seen also this rework of this specific d=
+river
+> > > > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
+Fgithub.com%2Fconqp%2Famd-sfh-hid-dkms&amp;data=3D04%7C01%7CBasavaraj.Natik=
+ar%40amd.com%7C05891d0582f94d68e7f908da164272ca%7C3dd8961fe4884e608e11a82d9=
+94e183d%7C0%7C0%7C637846771908092322%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLj=
+AwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=3DnAm=
+JdcP2ALl9cEaejWezLb9B3bU5Omp72Z6kjTbaBRY%3D&amp;reserved=3D0 that even adde=
+d a still
+> > > > missing handler for the lid sensor switch for disabling touchpad an=
+d
+> > > > keyboard, and all efforts tried to merge it upstream with all sorts=
+ of
+> > > > issues.
+> > > >
+> > > > Regardless of everything, this is a driver supported in kernel by A=
+MD
+> > > > engineers, so all of this doesn't matter. On my hardware this three
+> > > > patches break a previously working hardware.
+> > > > ```
+> > >
+> > > Thank=C2=A0You Marco for the information.
+> > >
+> > > Could you please provide me below results for acceleration
+> > > by re-applying and reverting patch once again on same laptop.
+> > >
+> > > Did you attempt to test it multiple times on the tip of the git to se=
+e
+> > > if the problems goes away?
+> > >
+> > > if same test is performed multiple times with or without reverting pa=
+tch
+> > > on same laptop on which issue is observed
+> > > we may see same working/issue behavior. if it is regressing then alwa=
+ys
+> > > it should work with or without reverting patches on same laptop. is t=
+his
+> > > the case here?
+> > >
+> > > Thanks,
+> > >
+> > > Basavaraj
+> > >
+> > > > Ciao, Thorsten
+> > > >
+> > > >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker=
+' hat)
+> > > >>
+> > > >> P.S.: As the Linux kernel's regression tracker I'm getting a lot o=
+f
+> > > >> reports on my table. I can only look briefly into most of them and=
+ lack
+> > > >> knowledge about most of the areas they concern. I thus unfortunate=
+ly
+> > > >> will sometimes get things wrong or miss something important. I hop=
+e
+> > > >> that's not the case here; if you think it is, don't hesitate to te=
+ll me
+> > > >> in a public reply, it's in everyone's interest to set the public r=
+ecord
+> > > >> straight.
+> > > >>
+> > > >>> Did you attempt to test it multiple times on the tip of the git t=
+o see
+> > > >>> if the problems goes away?
+> > > >>>
+> > > >>> if same test is performed multiple times with or without revertin=
+g patch
+> > > >>> on same platform (laptop/hardware/firmware) on which issue is obs=
+erved
+> > > >>> we may see same working/issue behavior. if it is regressing then =
+always
+> > > >>> it should work with or without reverting patches on same laptop. =
+is this
+> > > >>> the case here?
+> > > >>>
+> > > >>> I don't see any regression here. I requested to retest with other
+> > > >>> hardware/platform/system also as per my above test (output) all w=
+orking
+> > > >>> fine in 3 different platforms and not able to reproduce or recrea=
+te for
+> > > >>> my side on 5.17.
+> > > >>>
+> > > >>> Thanks,
+> > > >>>
+> > > >>> Basavaraj
+> > > >>>
+> > > >>>> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2=
+F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fnext%2Flinux-next.g=
+it%2Fplain%2FDocumentation%2Fprocess%2Fhandling-regressions.rst&amp;data=3D=
+04%7C01%7CBasavaraj.Natikar%40amd.com%7C05891d0582f94d68e7f908da164272ca%7C=
+3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846771908092322%7CUnknown%7CT=
+WFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%=
+3D%7C3000&amp;sdata=3D9ORA2inmfocvEJ%2FXOov67q2ebzZrcuguViSPV%2B58yA0%3D&am=
+p;reserved=3D0
+> > > >>>>
+> > > >>>> Ciao, Thorsten
+> > > >>>>
+> > > >>>>> Just curious reverting this patch how it is working just suspec=
+ting
+> > > >>>>> firmware undefined behavior.
+> > > >>>>>
+> > > >>>>> If possible, please check on other platform/system also if same=
+ behavior
+> > > >>>>> occurs.
+> > > >>>>>
+> > > >>>>> Could you please provide me platform/system details so that I c=
+an check
+> > > >>>>> this behavior?
+> > > >>>>>
+> > > >>>>> Thanks,
+> > > >>>>> Basavaraj
+> > > >>>>>
+> > > >>>>> On 4/1/2022 1:36 PM, Thorsten Leemhuis wrote:
+> > > >>>>>> Hi, this is your Linux kernel regression tracker.
+> > > >>>>>>
+> > > >>>>>> I noticed a regression report in bugzilla.kernel.org that afai=
+cs nobody
+> > > >>>>>> acted upon since it was reported about a week ago, that's why =
+I decided
+> > > >>>>>> to forward it to the lists and all people that seemed to be re=
+levant
+> > > >>>>>> here. It looks to me like this is something for Basavaraj, as =
+it seems
+> > > >>>>>> to be caused by b300667b33b2 ("HID: amd_sfh: Disable the inter=
+rupt for
+> > > >>>>>> all command"). But I'm not totally sure, I only looked briefly=
+ into the
+> > > >>>>>> details. Or was this discussed somewhere else already? Or even=
+ fixed?
+> > > >>>>>>
+> > > >>>>>> To quote from https://nam11.safelinks.protection.outlook.com/?=
+url=3Dhttps%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D215744&amp;da=
+ta=3D04%7C01%7CBasavaraj.Natikar%40amd.com%7C05891d0582f94d68e7f908da164272=
+ca%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846771908092322%7CUnknow=
+n%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI=
+6Mn0%3D%7C3000&amp;sdata=3DpLGKHCV1ZNrXghGdDFG16sguRA8xi0VzUSG%2Fbw%2FQsBw%=
+3D&amp;reserved=3D0 :
+> > > >>>>>>
+> > > >>>>>>> Marco 2022-03-25 15:22:19 UTC
+> > > >>>>>>>
+> > > >>>>>>> After updating to 5.17, the input from the accelerometer disa=
+ppeared, completely. No devices available from IIO tree. First bad commit c=
+ausing it is https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A=
+%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ftorvalds%2Flinux.=
+git%2Fcommit%2Fdrivers%2Fhid%2Famd-sfh-hid%2Famd_sfh_pcie.c%3Fid%3Db300667b=
+33b2b5a2c8e5f8f22826befb3d7f4f2b&amp;data=3D04%7C01%7CBasavaraj.Natikar%40a=
+md.com%7C05891d0582f94d68e7f908da164272ca%7C3dd8961fe4884e608e11a82d994e183=
+d%7C0%7C0%7C637846771908092322%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAi=
+LCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=3DL36JFc%2B=
+nejM4bJXfNui49v2uJKrS4cJnU93dpEhXPms%3D&amp;reserved=3D0. Reverting this an=
+d the the other two on top fixed this. Tried to not revert only the above m=
+entioned commit, but it's still not working.
+> > > >>>>>>>
+> > > >>>>>>> Marco.
+> > > >>>>>> Anyway, to get this tracked:
+> > > >>>>>>
+> > > >>>>>> #regzbot introduced: b300667b33b2b5a2c8e5f8f22826befb3d7f4
+> > > >>>>>> #regzbot from: Marco <rodomar705@protonmail.com>
+> > > >>>>>> #regzbot title: input: hid: input from the accelerometer disap=
+peared due
+> > > >>>>>> to changes to amd_sfh
+> > > >>>>>> #regzbot link: https://nam11.safelinks.protection.outlook.com/=
+?url=3Dhttps%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D215744&amp;d=
+ata=3D04%7C01%7CBasavaraj.Natikar%40amd.com%7C05891d0582f94d68e7f908da16427=
+2ca%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846771908092322%7CUnkno=
+wn%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVC=
+I6Mn0%3D%7C3000&amp;sdata=3DpLGKHCV1ZNrXghGdDFG16sguRA8xi0VzUSG%2Fbw%2FQsBw=
+%3D&amp;reserved=3D0
+> > > >>>>>>
+> > > >>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tra=
+cker' hat)
+> > > >>>>>>
+> > > >>>>>> P.S.: As the Linux kernel's regression tracker I'm getting a l=
+ot of
+> > > >>>>>> reports on my table. I can only look briefly into most of them=
+ and lack
+> > > >>>>>> knowledge about most of the areas they concern. I thus unfortu=
+nately
+> > > >>>>>> will sometimes get things wrong or miss something important. I=
+ hope
+> > > >>>>>> that's not the case here; if you think it is, don't hesitate t=
+o tell me
+> > > >>>>>> in a public reply, it's in everyone's interest to set the publ=
+ic record
+> > > >>>>>> straight.
+> > > >>>>>>
+> > > >>>
+> > > >>>
