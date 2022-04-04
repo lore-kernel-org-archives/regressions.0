@@ -1,128 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEDD57C
-	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 10:28:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6370AC34110
-	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 10:28:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1649068121;
-	bh=zwUK1d+i5RXTJlC+Adlf8bRHaBsi5j9oBLcZmbARNm8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=u4dSFjGSpxeBVGAvXWQzGvUL6K7TQjhSHgVk8lztuwj8tcx4m1KBz3SgHZNKdBNCq
-	 RkPWMP1i4E2I1HAkxFNP8aRfSKsf2wfPKMHTKAyvUsbrkkei9VwBYTKIdiRZp/QKfV
-	 QRnbhPz6AmERszYevwrQ7zuVac/siEyzDl/jtvNO4QZXm4ZynlJ+u6GirFFyNzbC6E
-	 y6RXT139lJZzdpOF/JXOmP1nRDdiHthJmaxrP1Mph8nM91pNKJGel+VrnTlNlEOg9B
-	 jnKmDShWDNYasHR/roiRPvu/cfsWxAkSQmukax8snjwlwLmIz+lSMmKmgDc/Rzi2Oc
-	 RGKb5W7HLx8BQ==
-Received: by mail-vs1-f54.google.com with SMTP id z134so8717273vsz.8
-        for <regressions@lists.linux.dev>; Mon, 04 Apr 2022 03:28:41 -0700 (PDT)
-X-Gm-Message-State: AOAM532HtpXKRenN+R6uGXhyxb1TXMqInbTebFrLXPtsq31N5fmUmaZz
-	WevpACy3VjV+tGYNnbOrgqHCGL6rKshuY/4DZVc=
-X-Google-Smtp-Source: ABdhPJx6e/VYOA2WWRLC+sB4i7fzBVJ1DvExFTqsC4UIP3lN3bWU9HoW+rJb6BZz/2iFzWa6yDJhtpd1cSTN4vx0DrM=
-X-Received: by 2002:a67:efc3:0:b0:325:4fcf:60bf with SMTP id
- s3-20020a67efc3000000b003254fcf60bfmr6380956vsp.51.1649068120257; Mon, 04 Apr
- 2022 03:28:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9E62917
+	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 12:06:59 +0000 (UTC)
+Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7094161E6478B;
+	Mon,  4 Apr 2022 14:06:50 +0200 (CEST)
+Message-ID: <9e689fea-6c69-f4b0-8dee-32c4cf7d8f9c@molgen.mpg.de>
+Date: Mon, 4 Apr 2022 14:06:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYu_ZHOeOPDiwzXGL6Re8aFYW3K+JSL2Dozw=VHwaUFxyQ@mail.gmail.com>
-In-Reply-To: <CA+G9fYu_ZHOeOPDiwzXGL6Re8aFYW3K+JSL2Dozw=VHwaUFxyQ@mail.gmail.com>
-From: Guo Ren <guoren@kernel.org>
-Date: Mon, 4 Apr 2022 18:28:29 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTS_uhdujc_9+mrqKi=41eyURtffqrd067zo7ew3s4-dwQ@mail.gmail.com>
-Message-ID: <CAJF2gTS_uhdujc_9+mrqKi=41eyURtffqrd067zo7ew3s4-dwQ@mail.gmail.com>
-Subject: Re: [next] riscv: Linux next-20220404 riscv defconfig builds failed.
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Guo Ren <guoren@linux.alibaba.com>, Palmer Dabbelt <palmer@rivosinc.com>, 
-	Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Regression: No signal when loading amdgpu, and system lockup (was:
+ [PATCH V4 17/17] drm/amd/pm: unified lock protections in amdgpu_dpm.c)
+Content-Language: en-US
+To: Arthur Marsh <arthur.marsh@internode.on.net>
+Cc: evan.quan@amd.com, alexander.deucher@amd.com, lijo.lazar@amd.com,
+ kenneth.feng@amd.com, christian.koenig@amd.com,
+ amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev
+References: <20211203030540.1710564-17-evan.quan@amd.com>
+ <20220331022805.17236-1-amarsh04@internode.on.net>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20220331022805.17236-1-amarsh04@internode.on.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-It caused by:
+#regzbot introduced: 3712e7a494596b26861f4dc9b81676d1d0272eaf
+#regzbot title: No signal when loading amdgpu, and system lockup
+#regzbot monitor: https://gitlab.freedesktop.org/drm/amd/-/issues/1957
 
-commit 03248addadf1a5ef0a03cbcd5ec905b49adb9658
-Author: Eric W. Biederman <ebiederm@xmission.com>
-Date:   Wed Feb 9 12:20:45 2022 -0600
-
-    resume_user_mode: Move to resume_user_mode.h
-
-    Move set_notify_resume and tracehook_notify_resume into resume_user_mode.h.
-    While doing that rename tracehook_notify_resume to resume_user_mode_work.
-
-    Update all of the places that included tracehook.h for these functions to
-    include resume_user_mode.h instead.
-
-    Update all of the callers of tracehook_notify_resume to call
-    resume_user_mode_work.
-
-    Reviewed-by: Kees Cook <keescook@chromium.org>
-    Link: https://lkml.kernel.org/r/20220309162454.123006-12-ebiederm@xmission.com
-    Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-
-I would solve it.
-
-On Mon, Apr 4, 2022 at 5:58 PM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> Linux next-20220404 riscv defconfig builds failed.
->
-> Regressions found on riscv:
->    - riscv-riscv-clang-14-defconfig
->    - riscv-riscv-gcc-10-defconfig
->    - riscv-riscv-clang-13-defconfig
->    - riscv-riscv-clang-12-defconfig
->    - riscv-riscv-clang-11-defconfig
->    - riscv-riscv-gcc-11-defconfig
->    - riscv-riscv-gcc-8-defconfig
->    - riscv-riscv-gcc-9-defconfig
->    - riscv-riscv-clang-nightly-defconfig
->
->
-> arch/riscv/kernel/compat_signal.c:7:10: fatal error:
-> linux/tracehook.h: No such file or directory
->   7 | #include <linux/tracehook.h>
->     |          ^~~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> make[3]: *** [scripts/Makefile.build:289:
-> arch/riscv/kernel/compat_signal.o] Error 1
->
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> metadata:
->     git_describe: next-20220404
->     git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
->     git_sha: 696206280c5e5c028caf9fd259999cb72b1f6127
->     kconfig: defconfig
->     target_arch: riscv
->     toolchain: gcc-11
->
-> steps to reproduce:
->   # To install tuxmake on your system globally:
->   # sudo pip3 install -U tuxmake
->   #
->
->   tuxmake --runtime podman --target-arch riscv --toolchain gcc-11
-> --kconfig defconfig
->
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
->
->
-> [1]  https://builds.tuxbuild.com/27JdBBUbSHIhFJ9Wsq3Z6ssitb6/
+Dear Arthur,
 
 
+Thank you for your message. Too bad you didn’t update the subject, and 
+didn’t include regressions@lists.linux.dev and notify regzbot [1] about 
+it. (It’s understandable, as you might be unfamiliar with the processes, 
+but I would have expected at least Even to do.) So I also spent quite 
+some time on bisecting, but reached the same conclusion.
 
--- 
-Best Regards
- Guo Ren
+Am 31.03.22 um 04:28 schrieb Arthur Marsh:
+> Hi, I have a Cape Verde GPU card in my pc and after git bisecting a situation
+> where, at the time of the amdgpu module, the monitor would lose signal and
+> the pc locked up so that it only responded to a magic sysreq boot (with no
+> logging due to it happening before the root filesystem was writeable), the
+> above commit was identified as the culprit.
+> 
+> The GPU card is a Gigabyte R7 250 with pci-id 1002:682b (rev 87).
+> 
+> With the 5.17.0 kernel and a kernel command line of:
+> 
+> amdgpu.audio=1 amdgpu.si_support=1
+> 
+> the following dmesg output was received:
+> 
+> [   76.118991] [drm] amdgpu kernel modesetting enabled.
+> [   76.119100] amdgpu 0000:01:00.0: vgaarb: deactivate vga console
+> [   76.120004] Console: switching to colour dummy device 80x25
+> [   76.120203] [drm] initializing kernel modesetting (VERDE 0x1002:0x682B 0x1458:0x22CA 0x87).
+> [   76.120211] amdgpu 0000:01:00.0: amdgpu: Trusted Memory Zone (TMZ) feature not supported
+> [   76.120235] [drm] register mmio base: 0xFE8C0000
+> [   76.120238] [drm] register mmio size: 262144
+> [   76.120245] [drm] add ip block number 0 <si_common>
+> [   76.120248] [drm] add ip block number 1 <gmc_v6_0>
+> [   76.120251] [drm] add ip block number 2 <si_ih>
+> [   76.120253] [drm] add ip block number 3 <gfx_v6_0>
+> [   76.120256] [drm] add ip block number 4 <si_dma>
+> [   76.120258] [drm] add ip block number 5 <si_dpm>
+> [   76.120261] [drm] add ip block number 6 <dce_v6_0>
+> [   76.120264] [drm] add ip block number 7 <uvd_v3_1>
+> [   76.163659] [drm] BIOS signature incorrect 5b 7
+> [   76.163669] resource sanity check: requesting [mem 0x000c0000-0x000dffff], which spans more than PCI Bus 0000:00 [mem 0x000d0000-0x000dffff window]
+> [   76.163677] caller pci_map_rom+0x68/0x1b0 mapping multiple BARs
+> [   76.163691] amdgpu 0000:01:00.0: No more image in the PCI ROM
+> [   76.164996] amdgpu 0000:01:00.0: amdgpu: Fetched VBIOS from ROM BAR
+> [   76.165001] amdgpu: ATOM BIOS: xxx-xxx-xxx
+> [   76.165018] amdgpu 0000:01:00.0: amdgpu: PCIE atomic ops is not supported
+> [   76.165270] [drm] vm size is 64 GB, 2 levels, block size is 10-bit, fragment size is 9-bit
+> [   76.349679] amdgpu 0000:01:00.0: amdgpu: VRAM: 2048M 0x000000F400000000 - 0x000000F47FFFFFFF (2048M used)
+> [   76.349716] amdgpu 0000:01:00.0: amdgpu: GART: 1024M 0x000000FF00000000 - 0x000000FF3FFFFFFF
+> [   76.349753] [drm] Detected VRAM RAM=2048M, BAR=256M
+> [   76.349764] [drm] RAM width 128bits DDR3
+> [   76.349940] [drm] amdgpu: 2048M of VRAM memory ready
+> [   76.349953] [drm] amdgpu: 3072M of GTT memory ready.
+> [   76.349992] [drm] GART: num cpu pages 262144, num gpu pages 262144
+> [   76.350506] amdgpu 0000:01:00.0: amdgpu: PCIE GART of 1024M enabled (table at 0x000000F400900000).
+> [   76.495343] [drm] Internal thermal controller with fan control
+> [   76.495391] [drm] amdgpu: dpm initialized
+> [   76.495637] [drm] AMDGPU Display Connectors
+> [   76.495647] [drm] Connector 0:
+> [   76.495655] [drm]   HDMI-A-1
+> [   76.495662] [drm]   HPD1
+> [   76.495668] [drm]   DDC: 0x194c 0x194c 0x194d 0x194d 0x194e 0x194e 0x194f 0x194f
+> [   76.495685] [drm]   Encoders:
+> [   76.495691] [drm]     DFP1: INTERNAL_UNIPHY
+> [   76.495699] [drm] Connector 1:
+> [   76.495706] [drm]   DVI-D-1
+> [   76.495712] [drm]   HPD2
+> [   76.495718] [drm]   DDC: 0x1950 0x1950 0x1951 0x1951 0x1952 0x1952 0x1953 0x1953
+> [   76.495733] [drm]   Encoders:
+> [   76.495739] [drm]     DFP2: INTERNAL_UNIPHY
+> [   76.495746] [drm] Connector 2:
+> [   76.495753] [drm]   VGA-1
+> [   76.495758] [drm]   DDC: 0x1970 0x1970 0x1971 0x1971 0x1972 0x1972 0x1973 0x1973
+> [   76.495773] [drm]   Encoders:
+> [   76.495779] [drm]     CRT1: INTERNAL_KLDSCP_DAC1
+> [   76.599604] [drm] Found UVD firmware Version: 64.0 Family ID: 13
+> [   76.603443] [drm] PCIE gen 2 link speeds already enabled
+> [   77.149564] [drm] UVD initialized successfully.
+> [   77.149578] amdgpu 0000:01:00.0: amdgpu: SE 1, SH per SE 2, CU per SH 5, active_cu_number 8
+> [   77.456492] RTL8211B Gigabit Ethernet r8169-0-300:00: attached PHY driver (mii_bus:phy_addr=r8169-0-300:00, irq=MAC)
+> [   77.486245] [drm] Initialized amdgpu 3.44.0 20150101 for 0000:01:00.0 on minor 0
+> [   77.521555] r8169 0000:03:00.0 eth0: Link is Down
+> [   77.547158] fbcon: amdgpudrmfb (fb0) is primary device
+> [   77.591226] Console: switching to colour frame buffer device 240x67
+> [   77.600296] amdgpu 0000:01:00.0: [drm] fb0: amdgpudrmfb frame buffer device
+> 
+> I can supply extra details but found no logging from the sessions that experienced the lock-up.
 
-ML: https://lore.kernel.org/linux-csky/
+I had created issue *Worker [210] processing SEQNUM=2120 is taking a 
+long time* on March 28th, 2022 [1]. Most annoying thing was, that the 
+system locked up, and SSH didn’t work and Dell’s firmware (and all other 
+x86 vendor firmware not based on coreboot) is so slow. Also, it was only 
+reproducible with a powered-on monitor attached.
+
+
+Kind regards,
+
+Paul
+
+
+[1]: https://linux-regtracking.leemhuis.info/regzbot/
+[2]: https://gitlab.freedesktop.org/drm/amd/-/issues/1957
