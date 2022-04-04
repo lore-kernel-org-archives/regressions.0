@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4557A
-	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 07:25:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02917C
+	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 08:35:28 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nbH5i-0006xr-Om; Mon, 04 Apr 2022 09:25:34 +0200
-Message-ID: <0a33735c-dd43-4305-ff92-7b9ac2c6a0d9@leemhuis.info>
-Date: Mon, 4 Apr 2022 09:25:34 +0200
+	id 1nbIBK-0006Ff-8r; Mon, 04 Apr 2022 10:35:26 +0200
+Message-ID: <197ddfc4-39b9-ea78-1e51-d776294b79eb@leemhuis.info>
+Date: Mon, 4 Apr 2022 10:35:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,56 +16,77 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Re: Bug 215744 - input from the accelerometer disappeared, regression
- on amd_sfh on kernel 5.17
+Subject: Re: 5.17, WARNING: at block/bfq-iosched.c:602
+ bfqq_request_over_limit+0x122/0x3a0
 Content-Language: en-US
-To: Basavaraj Natikar <bnatikar@amd.com>,
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Cc: Jiri Kosina <jkosina@suse.cz>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- linux-input@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+To: Chris Murphy <lists@colorremedies.com>
+References: <CAJCQCtTw_2C7ZSz7as5Gvq=OmnDiio=HRkQekqWpKot84sQhFA@mail.gmail.com>
+Cc: linux-block@vger.kernel.org,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Marco <rodomar705@protonmail.com>
-References: <048ef583-4a8f-96b0-68a3-45ab9ec8d6df@leemhuis.info>
- <0499f8ae-6966-be4b-5af8-e7e568bfcd5f@amd.com>
- <6fe27103-5e35-5f16-d213-29bd71412f5b@leemhuis.info>
- <7dfb121f-848c-873e-f3cc-43239c264f21@amd.com>
+ Jens Axboe <axboe@kernel.dk>, Paolo Valente <paolo.valente@linaro.org>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <7dfb121f-848c-873e-f3cc-43239c264f21@amd.com>
+In-Reply-To: <CAJCQCtTw_2C7ZSz7as5Gvq=OmnDiio=HRkQekqWpKot84sQhFA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649057137;1d075f62;
-X-HE-SMSGID: 1nbH5i-0006xr-Om
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649061328;c732a82a;
+X-HE-SMSGID: 1nbIBK-0006Ff-8r
 
-On 04.04.22 09:18, Basavaraj Natikar wrote:
-> 
-> 
-> On 4/4/2022 12:05 PM, Thorsten Leemhuis wrote:
->> On 01.04.22 21:47, Basavaraj Natikar wrote:
->>> Committed patch is disabling the interrupt mode and does not cause any
->>> functionality or working issues.
->> Well, for the reporter it clearly does cause problems, unless something
->> in testing went sideways.
->>
->>> I also cross verified on 3 system and working fine on 5.17 and not able
->>> to reproduce or recreate.
->>> [...]
->>> ------------------------------------------------
->>>
->>> Looks like this is not regression. May be some hardware/firmware bug.
->> Well, from the point of the kernel development process it afaics is a
->> regression, unless the testing went sideways. It doesn't matter if the
->> root cause is in fact a hardware/firmware bug, as what matters in the
->> scope of the kernel development is: things worked, and now they don't.
->> For details please check this file and read the quotes from Linus:
-> 
-> can you help to answer the below questions:
+Quick question, before the boilerplate:
 
-Me? No, I'm just the Linux kernels regression tracker trying to make
-sure all regressions are handled appropriately. :-D
+Chris, I assumed this didn't happen with 5.16. Please correct me if
+that's wrong.
 
-Marco, can you help out here?
+Anyway, moving on:
+
+[TLDR: I'm adding the regression report below to regzbot, the Linux
+kernel regression tracking bot; all text you find below is compiled from
+a few templates paragraphs you might have encountered already already
+from similar mails.]
+
+Hi, this is your Linux kernel regression tracker. Partly top-posting for
+once, to make this easily accessible to everyone.
+
+On 02.04.22 08:39, Chris Murphy wrote:
+> Looks like a regression of some sort in BFQ, but I'm not immediately
+> aware of a manifestation in user space. I've also found four other
+> downstream BFQ related call traces with xfs and btrfs joining in. I'll
+> list those before the trace...
+
+Thanks for the report.
+
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced v5.16..v5.17
+#regzbot title block: bfq: WARNING: at block/bfq-iosched.c:602
+bfqq_request_over_limit+0x122/0x3a0
+#regzbot ignore-activity
+
+If it turns out this isn't a regression, free free to remove it from the
+tracking by sending a reply to this thread containing a paragraph like
+"#regzbot invalid: reason why this is invalid" (without the quotes).
+
+Reminder for developers: when fixing the issue, please add a 'Link:'
+tags pointing to the report (the mail quoted above) using
+lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'. Regzbot needs them to
+automatically connect reports with fixes, but they are useful in
+general, too.
+
+I'm sending this to everyone that got the initial report, to make
+everyone aware of the tracking. I also hope that messages like this
+motivate people to directly get at least the regression mailing list and
+ideally even regzbot involved when dealing with regressions, as messages
+like this wouldn't be needed then. And don't worry, if I need to send
+other mails regarding this regression only relevant for regzbot I'll
+send them to the regressions lists only (with a tag in the subject so
+people can filter them away). With a bit of luck no such messages will
+be needed anyway.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -77,78 +98,124 @@ that's not the case here; if you think it is, don't hesitate to tell me
 in a public reply, it's in everyone's interest to set the public record
 straight.
 
-> Did you attempt to test it multiple times on the tip of the git to see
-> if the problems goes away?
+
+
+> [   45.263999] kernel: ------------[ cut here ]------------
+> [   45.264006] kernel: WARNING: CPU: 4 PID: 73 at
+> block/bfq-iosched.c:602 bfqq_request_over_limit+0x122/0x3a0
+> [   45.264014] kernel: Modules linked in: uinput rfcomm snd_seq_dummy
+> snd_hrtimer nft_objref nf_conntrack_netbios_ns nf_conntrack_broadcast
+> nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet
+> nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat
+> nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables nfnetlink
+> qrtr bnep b43 snd_hda_codec_cirrus snd_hda_codec_generic btusb
+> uvcvideo cordic btrtl ledtrig_audio mac80211 btbcm videobuf2_vmalloc
+> snd_hda_intel btintel videobuf2_memops snd_intel_dspcfg videobuf2_v4l2
+> btmtk snd_intel_sdw_acpi libarc4 videobuf2_common snd_hda_codec
+> cfg80211 bluetooth intel_rapl_msr videodev intel_rapl_common
+> snd_hda_core ssb mc x86_pkg_temp_thermal intel_powerclamp coretemp
+> ecdh_generic snd_hwdep rfkill kvm_intel snd_seq bcm5974
+> apple_mfi_fastcharge snd_seq_device i915 joydev snd_pcm kvm snd_timer
+> irqbypass snd mei_pxp iTCO_wdt mei_hdcp intel_pmc_bxt bcma applesmc
+> at24 soundcore iTCO_vendor_support mei_me rapl i2c_i801 acpi_als
+> intel_cstate ttm
+> [   45.264066] kernel:  mei intel_uncore industrialio_triggered_buffer
+> i2c_smbus lpc_ich sbs kfifo_buf apple_gmux sbshc industrialio apple_bl
+> pcspkr zram isofs squashfs crct10dif_pclmul crc32_pclmul crc32c_intel
+> sdhci_pci cqhci ghash_clmulni_intel hid_appleir firewire_ohci sdhci
+> tg3 thunderbolt firewire_core mmc_core crc_itu_t hid_apple video uas
+> usb_storage sunrpc be2iscsi bnx2i cnic uio cxgb4i cxgb4 tls cxgb3i
+> cxgb3 mdio libcxgbi libcxgb qla4xxx iscsi_boot_sysfs iscsi_tcp
+> libiscsi_tcp libiscsi scsi_transport_iscsi loop ip6_tables ip_tables
+> ipmi_devintf ipmi_msghandler fuse
+> [   45.264101] kernel: CPU: 4 PID: 73 Comm: kworker/u16:2 Not tainted
+> 5.17.1-300.fc36.x86_64 #1
+> [   45.264104] kernel: Hardware name: Apple Inc.
+> MacBookPro8,2/Mac-94245A3940C91C80, BIOS
+> MBP81.88Z.0050.B00.1804101331 04/10/18
+> [   45.264106] kernel: Workqueue: loop0 loop_workfn [loop]
+> [   45.264112] kernel: RIP: 0010:bfqq_request_over_limit+0x122/0x3a0
+> [   45.264115] kernel: Code: 1e 48 8b 5b 60 8d 78 01 48 83 c6 08 48 85
+> db 0f 84 0e 02 00 00 89 f8 44 0f b6 63 18 45 84 e4 0f 84 f4 01 00 00
+> 44 39 e8 7c d4 <0f> 0b 8d 58 ff 44 39 e8 0f 85 24 02 00 00 83 fb ff 0f
+> 84 d8 01 00
+> [   45.264118] kernel: RSP: 0018:ffffa8e34034f7b8 EFLAGS: 00010046
+> [   45.264120] kernel: RAX: 0000000000000005 RBX: ffff92914c004098
+> RCX: 0000000000000000
+> [   45.264122] kernel: RDX: 0000000000000000 RSI: ffffa8e34034f800
+> RDI: 0000000000000005
+> [   45.264123] kernel: RBP: ffff9291435c5680 R08: 0000000000000800
+> R09: 0000000000008000
+> [   45.264125] kernel: R10: 0000000000000000 R11: ffffa8e34034f8e0
+> R12: 0000000000000001
+> [   45.264126] kernel: R13: 0000000000000005 R14: 0000000000000004
+> R15: 0000000000000002
+> [   45.264128] kernel: FS:  0000000000000000(0000)
+> GS:ffff9293a3b00000(0000) knlGS:0000000000000000
+> [   45.264130] kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   45.264131] kernel: CR2: 00007fa7a5755000 CR3: 000000010a9ec002
+> CR4: 00000000000606e0
+> [   45.264133] kernel: Call Trace:
+> [   45.264136] kernel:  <TASK>
+> [   45.264140] kernel:  ? mempool_alloc+0x4f/0x170
+> [   45.264145] kernel:  ? bvec_alloc+0x62/0xb0
+> [   45.264148] kernel:  ? kmem_cache_alloc+0x162/0x2c0
+> [   45.264152] kernel:  bfq_limit_depth+0xc3/0x220
+> [   45.264155] kernel:  __blk_mq_alloc_requests+0x237/0x2a0
+> [   45.264160] kernel:  blk_mq_submit_bio+0x3d3/0x620
+> [   45.264163] kernel:  submit_bio_noacct+0x1f3/0x2a0
+> [   45.264165] kernel:  mpage_readahead+0x133/0x180
+> [   45.264171] kernel:  ? isofs_get_blocks+0x210/0x210 [isofs]
+> [   45.264175] kernel:  read_pages+0x61/0x2a0
+> [   45.264178] kernel:  page_cache_ra_unbounded+0x1a8/0x200
+> [   45.264182] kernel:  filemap_get_pages+0x4ab/0x620
+> [   45.264185] kernel:  ? copy_page_to_iter+0x2bd/0x410
+> [   45.264189] kernel:  filemap_read+0xa8/0x2e0
+> [   45.264192] kernel:  ? avc_has_perm+0x7a/0x170
+> [   45.264196] kernel:  ? check_preempt_wakeup+0x125/0x2a0
+> [   45.264202] kernel:  do_iter_readv_writev+0x149/0x180
+> [   45.264206] kernel:  do_iter_read+0xde/0x1d0
+> [   45.264209] kernel:  loop_process_work+0x68f/0x8f0 [loop]
+> [   45.264214] kernel:  process_one_work+0x1c4/0x380
+> [   45.264218] kernel:  worker_thread+0x4d/0x380
+> [   45.264221] kernel:  ? process_one_work+0x380/0x380
+> [   45.264223] kernel:  kthread+0xe6/0x110
+> [   45.264225] kernel:  ? kthread_complete_and_exit+0x20/0x20
+> [   45.264227] kernel:  ret_from_fork+0x1f/0x30
+> [   45.264233] kernel:  </TASK>
+> [   45.264234] kernel: ---[ end trace 0000000000000000 ]---
 > 
-> if same test is performed multiple times with or without reverting patch
-> on same platform (laptop/hardware/firmware) on which issue is observed
-> we may see same working/issue behavior. if it is regressing then always
-> it should work with or without reverting patches on same laptop. is this
-> the case here?
 > 
-> I don't see any regression here. I requested to retest with other
-> hardware/platform/system also as per my above test (output) all working
-> fine in 3 different platforms and not able to reproduce or recreate for
-> my side on 5.17.
+> https://bugzilla.redhat.com/show_bug.cgi?id=2068723
+> https://bugzilla.redhat.com/show_bug.cgi?id=2049004
+> https://bugzilla.redhat.com/show_bug.cgi?id=2066214
+> https://bugzilla.redhat.com/show_bug.cgi?id=2064732
+
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
 > 
-> Thanks,
-> 
-> Basavaraj
-> 
->>
->> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fnext%2Flinux-next.git%2Fplain%2FDocumentation%2Fprocess%2Fhandling-regressions.rst&amp;data=04%7C01%7CBasavaraj.Natikar%40amd.com%7Ca64876e42c174bf2df5608da16054550%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846509153638366%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=nv4ZzNeRgRCrjnEgh5wHGcqSAHaCffdWxGm%2BsjiPu0Y%3D&amp;reserved=0
->>
->> Ciao, Thorsten
->>
->>> Just curious reverting this patch how it is working just suspecting
->>> firmware undefined behavior.
->>>
->>> If possible, please check on other platform/system also if same behavior
->>> occurs.
->>>
->>> Could you please provide me platform/system details so that I can check
->>> this behavior?
->>>
->>> Thanks,
->>> Basavaraj
->>>
->>> On 4/1/2022 1:36 PM, Thorsten Leemhuis wrote:
->>>> Hi, this is your Linux kernel regression tracker.
->>>>
->>>> I noticed a regression report in bugzilla.kernel.org that afaics nobody
->>>> acted upon since it was reported about a week ago, that's why I decided
->>>> to forward it to the lists and all people that seemed to be relevant
->>>> here. It looks to me like this is something for Basavaraj, as it seems
->>>> to be caused by	b300667b33b2 ("HID: amd_sfh: Disable the interrupt for
->>>> all command"). But I'm not totally sure, I only looked briefly into the
->>>> details. Or was this discussed somewhere else already? Or even fixed?
->>>>
->>>> To quote from https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D215744&amp;data=04%7C01%7CBasavaraj.Natikar%40amd.com%7Ca64876e42c174bf2df5608da16054550%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846509153638366%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=jXu50hKBHkHzjOrfEQ0sXme3%2BdliBd%2FleA%2F9oE61EpI%3D&amp;reserved=0 :
->>>>
->>>>>  Marco 2022-03-25 15:22:19 UTC
->>>>>
->>>>> After updating to 5.17, the input from the accelerometer disappeared, completely. No devices available from IIO tree. First bad commit causing it is https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ftorvalds%2Flinux.git%2Fcommit%2Fdrivers%2Fhid%2Famd-sfh-hid%2Famd_sfh_pcie.c%3Fid%3Db300667b33b2b5a2c8e5f8f22826befb3d7f4f2b&amp;data=04%7C01%7CBasavaraj.Natikar%40amd.com%7Ca64876e42c174bf2df5608da16054550%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846509153638366%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=o443EB8xRW%2BwEi7pxB82A8B0oty64pBSQwAEU4sF2UA%3D&amp;reserved=0. Reverting this and the the other two on top fixed this. Tried to not revert only the above mentioned commit, but it's still not working.
->>>>>
->>>>> Marco.
->>>> Anyway, to get this tracked:
->>>>
->>>> #regzbot introduced: b300667b33b2b5a2c8e5f8f22826befb3d7f4
->>>> #regzbot from: Marco <rodomar705@protonmail.com>
->>>> #regzbot title: input: hid: input from the accelerometer disappeared due
->>>> to changes to amd_sfh
->>>> #regzbot link: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D215744&amp;data=04%7C01%7CBasavaraj.Natikar%40amd.com%7Ca64876e42c174bf2df5608da16054550%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846509153638366%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=jXu50hKBHkHzjOrfEQ0sXme3%2BdliBd%2FleA%2F9oE61EpI%3D&amp;reserved=0
->>>>
->>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>>
->>>> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
->>>> reports on my table. I can only look briefly into most of them and lack
->>>> knowledge about most of the areas they concern. I thus unfortunately
->>>> will sometimes get things wrong or miss something important. I hope
->>>> that's not the case here; if you think it is, don't hesitate to tell me
->>>> in a public reply, it's in everyone's interest to set the public record
->>>> straight.
->>>>
->>>
-> 
-> 
-> 
+
