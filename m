@@ -1,124 +1,99 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9B37A
-	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 14:49:15 +0000 (UTC)
-Received: by mail-ot1-f50.google.com with SMTP id n19-20020a9d7113000000b005cd9cff76c3so7403760otj.1
-        for <regressions@lists.linux.dev>; Mon, 04 Apr 2022 07:49:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:from:subject:to:cc
-         :references:content-language:in-reply-to:content-transfer-encoding;
-        bh=QF1AbWF1FsN1/Qzjq17M6/poRQaG0jjTSkcR71d4GTo=;
-        b=oFbyOurzFVNKn/F2TWyGlmuePshZgofOYfnxl8sofCiEWAYXTZNRh3SKHbVyZ3xAyy
-         dCuPOuZGZSIY5pa9fNihKQ7dsCBGu1oGcF8fyYYUZxDiXfJzhkozwPBd19sZ6c31dAw+
-         d0zsaKYnIb6EW9BnzLgjv1U96mRB/3DZuty7EjcxrN1AP4W+JgbXsdVk8+7LhmRoSY6t
-         RC6URUDiof8FaJtmNegNpYPlO8KgvO7sUXVOSUsyWiuufnZTgR3w1LgB3KSE1Da5lBSO
-         odU855Z1G0J4Ga6HrLF9eBCNwVw24pNeGea5GOJCfjlu3FrkYGx4m3xSmW6rAhsyPbA1
-         47bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :from:subject:to:cc:references:content-language:in-reply-to
-         :content-transfer-encoding;
-        bh=QF1AbWF1FsN1/Qzjq17M6/poRQaG0jjTSkcR71d4GTo=;
-        b=aJaycVnX6sh8VT7yeTOzDmG6I6JoSCI0sZDOTg8MEmhXGNM0fPH3Es53mclz1gGMCP
-         gGQFMsziZoKO/yFizDGB4eekN/ys48ubOO5X18nIFlidjSY4qbVg/vAYv38Jz+kroNGP
-         /TkxQD3m6GacyGM9Vnk5f5YvipDmCaHWKCJZoAzOqNeFkjqL5ALro5zJ2iAyiT2NurD6
-         tGGdyNwd/zQKdPmhA71q1VTuQY7xwSg+PtiyFZVyED8aF88OPqE2DsytBKqar1OdRicz
-         4ekombXYdf71rfR5K0/4eGqF832Xy2jV8nnDri8FZeTwVUJO+ADzZ40NP+7CXGAUYijy
-         8NWg==
-X-Gm-Message-State: AOAM5337qYyHZ8/K3tCVWXsOPLDnCjJGexPzwp0IHdhtYPgy79kBKFwX
-	Zmo77WzY6gqB2eEK5H5imbo=
-X-Google-Smtp-Source: ABdhPJwVDx5BSavFHVb5Q3RoVY9fhaTLP7/5g7MBO11XfrbxLTd2bT0xIzrwAW+EaVQdovPB1kMvJg==
-X-Received: by 2002:a05:6830:104c:b0:5c9:5d9f:e924 with SMTP id b12-20020a056830104c00b005c95d9fe924mr156701otp.369.1649083754165;
-        Mon, 04 Apr 2022 07:49:14 -0700 (PDT)
-Received: from ?IPV6:2603:8090:2005:39b3::1004? (2603-8090-2005-39b3-0000-0000-0000-1004.res6.spectrum.com. [2603:8090:2005:39b3::1004])
-        by smtp.gmail.com with ESMTPSA id f8-20020a4ace88000000b00321598cd45dsm3973190oos.33.2022.04.04.07.49.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Apr 2022 07:49:13 -0700 (PDT)
-Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <ba45934b-69ab-edfa-1679-2e8e00fac126@lwfinger.net>
-Date: Mon, 4 Apr 2022 09:49:11 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB127C
+	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 16:57:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 235B7C2BBE4;
+	Mon,  4 Apr 2022 16:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1649091441;
+	bh=3DwgQQibm4QtCGLBPHzzEvuy5aoVnSuQo3AjjdM3vbs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fk4AO+Sm8xS1TVN83Ht+dupzgBCUyMwmk3BdxRedx7gSUjUC8tNpe6fkePJnDCgvn
+	 6z1ffAw+tRmbJc42ieFu4+y8g6Py2fjyb6A9BWRheaeI2tn5z4tAHTbLbEp2080+S9
+	 CxB1WsVq5EIoeUe1he75gyGAxOSSKUfgy6CHbfw+TkSwcXK04OcBTqJ0zH0UGN8jud
+	 gmLhXFq4Iv4cp4M9T+2ayVMUt/M0PSzt/xTjSrezEkmuwfcU4AMwGoj8W8UL1mjetC
+	 QdQOK6sowskP4tRwiSnLlB0DFDguDCHON0Eg949oEq3JMuR6oVLAgcBK5/sITPY06j
+	 QtceSyWGBreOw==
+Date: Mon, 4 Apr 2022 09:57:19 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Linux-Next Mailing List <linux-next@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	linux-riscv <linux-riscv@lists.infradead.org>,
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Guo Ren <guoren@linux.alibaba.com>, Guo Ren <guoren@kernel.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Heiko Stuebner <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Subject: Re: [next] riscv: Linux next-20220404 riscv defconfig builds failed.
+Message-ID: <Yksjb9Mkq658k4YJ@dev-arch.thelio-3990X>
+References: <CA+G9fYu_ZHOeOPDiwzXGL6Re8aFYW3K+JSL2Dozw=VHwaUFxyQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-From: Larry Finger <Larry.Finger@lwfinger.net>
-Subject: Re: rtw_8822ce wifi regression after kernel update from 5.15 to 5.16
-To: "G. P. B." <george.banyard@gmail.com>, snecknico@gmail.com
-Cc: kvalo@kernel.org, linux-wireless@vger.kernel.org,
- regressions@leemhuis.info, regressions@lists.linux.dev,
- tony0620emma@gmail.com
-References: <CAFPFaMLHXhHMhuAuvXWHb3c-tX_9qRxsquEUHXY0fMxh_VsKtw@mail.gmail.com>
-Content-Language: en-US
-In-Reply-To: <CAFPFaMLHXhHMhuAuvXWHb3c-tX_9qRxsquEUHXY0fMxh_VsKtw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYu_ZHOeOPDiwzXGL6Re8aFYW3K+JSL2Dozw=VHwaUFxyQ@mail.gmail.com>
 
-On 4/3/22 13:11, G. P. B. wrote:
-> Dear all,
+On Mon, Apr 04, 2022 at 03:28:41PM +0530, Naresh Kamboju wrote:
+> Linux next-20220404 riscv defconfig builds failed.
 > 
-> Hopefully this email gets added to the thread correctly as I came here from 
-> https://lore.kernel.org/linux-wireless/CAO_iuKG0gE=5fEKMF2A+iWUhsxtnPOQtTQTkBRo2vH5CmKu7iA@mail.gmail.com/ 
-> <https://lore.kernel.org/linux-wireless/CAO_iuKG0gE=5fEKMF2A+iWUhsxtnPOQtTQTkBRo2vH5CmKu7iA@mail.gmail.com/>
-> and using the mailto link with Gmail.
+> Regressions found on riscv:
+>    - riscv-riscv-clang-14-defconfig
+>    - riscv-riscv-gcc-10-defconfig
+>    - riscv-riscv-clang-13-defconfig
+>    - riscv-riscv-clang-12-defconfig
+>    - riscv-riscv-clang-11-defconfig
+>    - riscv-riscv-gcc-11-defconfig
+>    - riscv-riscv-gcc-8-defconfig
+>    - riscv-riscv-gcc-9-defconfig
+>    - riscv-riscv-clang-nightly-defconfig
 > 
-> I'm also hitting this issue but I'm not sure if this is a regression in 5.16. 
-> I've been struggling with weird random disconnects for a while but I blamed it 
-> on the known bad router that I usually connect to at my university (at least 
-> October 2021 when I got this laptop brand new).
 > 
-> The laptop is a HP Pavilion Laptop 15-eh0014na running Fedora 34:
-> Linux fedora 5.16.18-100.fc34.x86_64 #1 SMP PREEMPT Mon Mar 28 14:46:06 UTC 2022 
-> x86_64 x86_64 x86_64 GNU/Linux
-> 
-> Network driver:
-> 02:00.0 Network controller: Realtek Semiconductor Co., Ltd. RTL8822CE 802.11ac 
-> PCIe Wireless Network Adapter DeviceName: Realtek Wireless LAN + BT Subsystem: 
-> Hewlett-Packard Company Device 85f7 Kernel driver in use: rtw_8822ce Kernel 
-> modules: rtw88_8822ce
-> 
-> A sample, similar to the ones of Nico, of the output of dmesg -w:
-> [ 915.489081] rtw_8822ce 0000:02:00.0: timed out to flush queue 1 [ 915.599086] 
-> rtw_8822ce 0000:02:00.0: timed out to flush queue 2 [ 915.711096] rtw_8822ce 
-> 0000:02:00.0: timed out to flush queue 1 [ 915.822106] rtw_8822ce 0000:02:00.0: 
-> timed out to flush queue 2 [ 916.265097] rtw_8822ce 0000:02:00.0: timed out to 
-> flush queue 0 [ 916.376085] rtw_8822ce 0000:02:00.0: timed out to flush queue 1 
-> [ 916.449083] rtw_8822ce 0000:02:00.0: failed to get tx report from firmware
-> 
-> I'm not very proficient at debugging Linux so not sure how much more I can help 
-> to narrow down the issue.
-> But maybe a description of my experience might help, the WiFi icon still 
-> considers at all time to be connected to the router and have a perfect signal.
-> Sometimes enabling and immediately disabling Airplane mode fixes the issue 
-> (probably due to a restart of the module?), and the issue is more likely to come 
-> up after waking up from sleep.
-> 
-> I will try to see if I can rollback the kernel to 5.15 and see if that fixes the 
-> issue and report back.
-> 
-> If I can be of any other assistance please let me know.
+> arch/riscv/kernel/compat_signal.c:7:10: fatal error:
+> linux/tracehook.h: No such file or directory
+>   7 | #include <linux/tracehook.h>
+>     |          ^~~~~~~~~~~~~~~~~~~
+> compilation terminated.
+> make[3]: *** [scripts/Makefile.build:289:
+> arch/riscv/kernel/compat_signal.o] Error 1
 
-George,
+For what it's worth, I also see:
 
-I do not know of any regression in 5.16 with regard to the driver for RTL8822CE. 
-Certainly, I saw no regressions in my testing of that driver from before it was 
-in the kernel up to the present. That said, I can only comment on the user-space 
-part of openSUSE Tumbleweed, which is probably not your distro of choice.
+$ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- defconfig all
+arch/riscv/kernel/compat_vdso/compat_vdso.lds.S:3:10: fatal error: ../vdso/vdso.lds.S: No such file or directory
+    3 | #include <../vdso/vdso.lds.S>
+      |          ^~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[2]: *** [scripts/Makefile.build:462: arch/riscv/kernel/compat_vdso/compat_vdso.lds] Error 1
+arch/riscv/kernel/compat_vdso/rt_sigreturn.S:3:10: fatal error: ../vdso/rt_sigreturn.S: No such file or directory
+    3 | #include <../vdso/rt_sigreturn.S>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+arch/riscv/kernel/compat_vdso/note.S:3:10: fatal error: ../vdso/note.S: No such file or directory
+    3 | #include <../vdso/note.S>
+      |          ^~~~~~~~~~~~~~~~
+compilation terminated.
+arch/riscv/kernel/compat_vdso/getcpu.S:3:10: fatal error: ../vdso/getcpu.S: No such file or directory
+    3 | #include <../vdso/getcpu.S>
+      |          ^~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/rt_sigreturn.o] Error 1
+make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/note.o] Error 1
+make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/getcpu.o] Error 1
+arch/riscv/kernel/compat_vdso/flush_icache.S:3:10: fatal error: ../vdso/flush_icache.S: No such file or directory
+    3 | #include <../vdso/flush_icache.S>
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/flush_icache.o] Error 1
 
-Are you using the drivers at https://GitHub.com/lwfinger/rtw88.git rather than 
-the ones in the kernel? Your posted errors that refer to rtw_8822ce indicate 
-that to be true. If the drivers came from the kernel, the reference would be to 
-rtw88_8822ce! If so, do a 'git pull' to get the drivers updated to match the 
-code in kernel 5.18. A lot of things have been fixed.
+I am guessing this code was never tested with $(srctree) == $(objtree).
 
-In your system, please do a 'lsmod | grep rtw'. If any items refer to rtw88_*, 
-you have mixed drivers loaded. In that case, you should blacklist the rtw88_* 
-driver.
-
-Larry
+Cheers,
+Nathan
