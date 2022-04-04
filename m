@@ -1,17 +1,13 @@
-Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9E62917
-	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 12:06:59 +0000 (UTC)
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 7094161E6478B;
-	Mon,  4 Apr 2022 14:06:50 +0200 (CEST)
-Message-ID: <9e689fea-6c69-f4b0-8dee-32c4cf7d8f9c@molgen.mpg.de>
-Date: Mon, 4 Apr 2022 14:06:50 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1972F21
+	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 13:53:09 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nbN8k-0007Bt-C0; Mon, 04 Apr 2022 15:53:06 +0200
+Message-ID: <539ff0c5-a95b-836d-e1c6-39f64ee2a418@leemhuis.info>
+Date: Mon, 4 Apr 2022 15:53:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -20,123 +16,172 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Regression: No signal when loading amdgpu, and system lockup (was:
- [PATCH V4 17/17] drm/amd/pm: unified lock protections in amdgpu_dpm.c)
+Subject: Re: Bug 215744 - input from the accelerometer disappeared, regression
+ on amd_sfh on kernel 5.17
 Content-Language: en-US
-To: Arthur Marsh <arthur.marsh@internode.on.net>
-Cc: evan.quan@amd.com, alexander.deucher@amd.com, lijo.lazar@amd.com,
- kenneth.feng@amd.com, christian.koenig@amd.com,
- amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev
-References: <20211203030540.1710564-17-evan.quan@amd.com>
- <20220331022805.17236-1-amarsh04@internode.on.net>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20220331022805.17236-1-amarsh04@internode.on.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Basavaraj Natikar <bnatikar@amd.com>,
+ Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Cc: Jiri Kosina <jkosina@suse.cz>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ linux-input@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Marco <rodomar705@protonmail.com>
+References: <048ef583-4a8f-96b0-68a3-45ab9ec8d6df@leemhuis.info>
+ <0499f8ae-6966-be4b-5af8-e7e568bfcd5f@amd.com>
+ <6fe27103-5e35-5f16-d213-29bd71412f5b@leemhuis.info>
+ <7dfb121f-848c-873e-f3cc-43239c264f21@amd.com>
+ <0a33735c-dd43-4305-ff92-7b9ac2c6a0d9@leemhuis.info>
+In-Reply-To: <0a33735c-dd43-4305-ff92-7b9ac2c6a0d9@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649080389;1ce2c595;
+X-HE-SMSGID: 1nbN8k-0007Bt-C0
 
-#regzbot introduced: 3712e7a494596b26861f4dc9b81676d1d0272eaf
-#regzbot title: No signal when loading amdgpu, and system lockup
-#regzbot monitor: https://gitlab.freedesktop.org/drm/amd/-/issues/1957
-
-Dear Arthur,
-
-
-Thank you for your message. Too bad you didn’t update the subject, and 
-didn’t include regressions@lists.linux.dev and notify regzbot [1] about 
-it. (It’s understandable, as you might be unfamiliar with the processes, 
-but I would have expected at least Even to do.) So I also spent quite 
-some time on bisecting, but reached the same conclusion.
-
-Am 31.03.22 um 04:28 schrieb Arthur Marsh:
-> Hi, I have a Cape Verde GPU card in my pc and after git bisecting a situation
-> where, at the time of the amdgpu module, the monitor would lose signal and
-> the pc locked up so that it only responded to a magic sysreq boot (with no
-> logging due to it happening before the root filesystem was writeable), the
-> above commit was identified as the culprit.
+On 04.04.22 09:25, Thorsten Leemhuis wrote:
+> On 04.04.22 09:18, Basavaraj Natikar wrote:
+>>
+>>
+>> On 4/4/2022 12:05 PM, Thorsten Leemhuis wrote:
+>>> On 01.04.22 21:47, Basavaraj Natikar wrote:
+>>>> Committed patch is disabling the interrupt mode and does not cause any
+>>>> functionality or working issues.
+>>> Well, for the reporter it clearly does cause problems, unless something
+>>> in testing went sideways.
+>>>
+>>>> I also cross verified on 3 system and working fine on 5.17 and not able
+>>>> to reproduce or recreate.
+>>>> [...]
+>>>> ------------------------------------------------
+>>>>
+>>>> Looks like this is not regression. May be some hardware/firmware bug.
+>>> Well, from the point of the kernel development process it afaics is a
+>>> regression, unless the testing went sideways. It doesn't matter if the
+>>> root cause is in fact a hardware/firmware bug, as what matters in the
+>>> scope of the kernel development is: things worked, and now they don't.
+>>> For details please check this file and read the quotes from Linus:
+>>
+>> can you help to answer the below questions:
 > 
-> The GPU card is a Gigabyte R7 250 with pci-id 1002:682b (rev 87).
+> Me? No, I'm just the Linux kernels regression tracker trying to make
+> sure all regressions are handled appropriately. :-D
 > 
-> With the 5.17.0 kernel and a kernel command line of:
+> Marco, can you help out here?
+
+Marco replied in private and allowed me to forward his reply:
+
+```
+I can't since, as mentioned previously, this is the only AMD laptop
+device that I have.
+I am sure this is a regression for me, even if the issue is firmware
+related. I have tested the 5.17 stock arch kernel and the sensor is
+gone. With the last three patches reverted the sensor is back and
+working fine.
+
+I would love to verify if the issue is hardware or software related, but
+being outside of AMD and with AMD not releasing any public information
+with datasheet/specification on their Sensor Fusion Hub I really can't
+say anything specific.
+
+This still remains a regression, since the hardware was working before
+and now it doesn't.
+
+By the way, I already have seen also this rework of this specific driver
+https://github.com/conqp/amd-sfh-hid-dkms that even added a still
+missing handler for the lid sensor switch for disabling touchpad and
+keyboard, and all efforts tried to merge it upstream with all sorts of
+issues.
+
+Regardless of everything, this is a driver supported in kernel by AMD
+engineers, so all of this doesn't matter. On my hardware this three
+patches break a previously working hardware.
+```
+
+Ciao, Thorsten
+
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 > 
-> amdgpu.audio=1 amdgpu.si_support=1
+> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> reports on my table. I can only look briefly into most of them and lack
+> knowledge about most of the areas they concern. I thus unfortunately
+> will sometimes get things wrong or miss something important. I hope
+> that's not the case here; if you think it is, don't hesitate to tell me
+> in a public reply, it's in everyone's interest to set the public record
+> straight.
 > 
-> the following dmesg output was received:
-> 
-> [   76.118991] [drm] amdgpu kernel modesetting enabled.
-> [   76.119100] amdgpu 0000:01:00.0: vgaarb: deactivate vga console
-> [   76.120004] Console: switching to colour dummy device 80x25
-> [   76.120203] [drm] initializing kernel modesetting (VERDE 0x1002:0x682B 0x1458:0x22CA 0x87).
-> [   76.120211] amdgpu 0000:01:00.0: amdgpu: Trusted Memory Zone (TMZ) feature not supported
-> [   76.120235] [drm] register mmio base: 0xFE8C0000
-> [   76.120238] [drm] register mmio size: 262144
-> [   76.120245] [drm] add ip block number 0 <si_common>
-> [   76.120248] [drm] add ip block number 1 <gmc_v6_0>
-> [   76.120251] [drm] add ip block number 2 <si_ih>
-> [   76.120253] [drm] add ip block number 3 <gfx_v6_0>
-> [   76.120256] [drm] add ip block number 4 <si_dma>
-> [   76.120258] [drm] add ip block number 5 <si_dpm>
-> [   76.120261] [drm] add ip block number 6 <dce_v6_0>
-> [   76.120264] [drm] add ip block number 7 <uvd_v3_1>
-> [   76.163659] [drm] BIOS signature incorrect 5b 7
-> [   76.163669] resource sanity check: requesting [mem 0x000c0000-0x000dffff], which spans more than PCI Bus 0000:00 [mem 0x000d0000-0x000dffff window]
-> [   76.163677] caller pci_map_rom+0x68/0x1b0 mapping multiple BARs
-> [   76.163691] amdgpu 0000:01:00.0: No more image in the PCI ROM
-> [   76.164996] amdgpu 0000:01:00.0: amdgpu: Fetched VBIOS from ROM BAR
-> [   76.165001] amdgpu: ATOM BIOS: xxx-xxx-xxx
-> [   76.165018] amdgpu 0000:01:00.0: amdgpu: PCIE atomic ops is not supported
-> [   76.165270] [drm] vm size is 64 GB, 2 levels, block size is 10-bit, fragment size is 9-bit
-> [   76.349679] amdgpu 0000:01:00.0: amdgpu: VRAM: 2048M 0x000000F400000000 - 0x000000F47FFFFFFF (2048M used)
-> [   76.349716] amdgpu 0000:01:00.0: amdgpu: GART: 1024M 0x000000FF00000000 - 0x000000FF3FFFFFFF
-> [   76.349753] [drm] Detected VRAM RAM=2048M, BAR=256M
-> [   76.349764] [drm] RAM width 128bits DDR3
-> [   76.349940] [drm] amdgpu: 2048M of VRAM memory ready
-> [   76.349953] [drm] amdgpu: 3072M of GTT memory ready.
-> [   76.349992] [drm] GART: num cpu pages 262144, num gpu pages 262144
-> [   76.350506] amdgpu 0000:01:00.0: amdgpu: PCIE GART of 1024M enabled (table at 0x000000F400900000).
-> [   76.495343] [drm] Internal thermal controller with fan control
-> [   76.495391] [drm] amdgpu: dpm initialized
-> [   76.495637] [drm] AMDGPU Display Connectors
-> [   76.495647] [drm] Connector 0:
-> [   76.495655] [drm]   HDMI-A-1
-> [   76.495662] [drm]   HPD1
-> [   76.495668] [drm]   DDC: 0x194c 0x194c 0x194d 0x194d 0x194e 0x194e 0x194f 0x194f
-> [   76.495685] [drm]   Encoders:
-> [   76.495691] [drm]     DFP1: INTERNAL_UNIPHY
-> [   76.495699] [drm] Connector 1:
-> [   76.495706] [drm]   DVI-D-1
-> [   76.495712] [drm]   HPD2
-> [   76.495718] [drm]   DDC: 0x1950 0x1950 0x1951 0x1951 0x1952 0x1952 0x1953 0x1953
-> [   76.495733] [drm]   Encoders:
-> [   76.495739] [drm]     DFP2: INTERNAL_UNIPHY
-> [   76.495746] [drm] Connector 2:
-> [   76.495753] [drm]   VGA-1
-> [   76.495758] [drm]   DDC: 0x1970 0x1970 0x1971 0x1971 0x1972 0x1972 0x1973 0x1973
-> [   76.495773] [drm]   Encoders:
-> [   76.495779] [drm]     CRT1: INTERNAL_KLDSCP_DAC1
-> [   76.599604] [drm] Found UVD firmware Version: 64.0 Family ID: 13
-> [   76.603443] [drm] PCIE gen 2 link speeds already enabled
-> [   77.149564] [drm] UVD initialized successfully.
-> [   77.149578] amdgpu 0000:01:00.0: amdgpu: SE 1, SH per SE 2, CU per SH 5, active_cu_number 8
-> [   77.456492] RTL8211B Gigabit Ethernet r8169-0-300:00: attached PHY driver (mii_bus:phy_addr=r8169-0-300:00, irq=MAC)
-> [   77.486245] [drm] Initialized amdgpu 3.44.0 20150101 for 0000:01:00.0 on minor 0
-> [   77.521555] r8169 0000:03:00.0 eth0: Link is Down
-> [   77.547158] fbcon: amdgpudrmfb (fb0) is primary device
-> [   77.591226] Console: switching to colour frame buffer device 240x67
-> [   77.600296] amdgpu 0000:01:00.0: [drm] fb0: amdgpudrmfb frame buffer device
-> 
-> I can supply extra details but found no logging from the sessions that experienced the lock-up.
-
-I had created issue *Worker [210] processing SEQNUM=2120 is taking a 
-long time* on March 28th, 2022 [1]. Most annoying thing was, that the 
-system locked up, and SSH didn’t work and Dell’s firmware (and all other 
-x86 vendor firmware not based on coreboot) is so slow. Also, it was only 
-reproducible with a powered-on monitor attached.
-
-
-Kind regards,
-
-Paul
-
-
-[1]: https://linux-regtracking.leemhuis.info/regzbot/
-[2]: https://gitlab.freedesktop.org/drm/amd/-/issues/1957
+>> Did you attempt to test it multiple times on the tip of the git to see
+>> if the problems goes away?
+>>
+>> if same test is performed multiple times with or without reverting patch
+>> on same platform (laptop/hardware/firmware) on which issue is observed
+>> we may see same working/issue behavior. if it is regressing then always
+>> it should work with or without reverting patches on same laptop. is this
+>> the case here?
+>>
+>> I don't see any regression here. I requested to retest with other
+>> hardware/platform/system also as per my above test (output) all working
+>> fine in 3 different platforms and not able to reproduce or recreate for
+>> my side on 5.17.
+>>
+>> Thanks,
+>>
+>> Basavaraj
+>>
+>>>
+>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fnext%2Flinux-next.git%2Fplain%2FDocumentation%2Fprocess%2Fhandling-regressions.rst&amp;data=04%7C01%7CBasavaraj.Natikar%40amd.com%7Ca64876e42c174bf2df5608da16054550%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846509153638366%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=nv4ZzNeRgRCrjnEgh5wHGcqSAHaCffdWxGm%2BsjiPu0Y%3D&amp;reserved=0
+>>>
+>>> Ciao, Thorsten
+>>>
+>>>> Just curious reverting this patch how it is working just suspecting
+>>>> firmware undefined behavior.
+>>>>
+>>>> If possible, please check on other platform/system also if same behavior
+>>>> occurs.
+>>>>
+>>>> Could you please provide me platform/system details so that I can check
+>>>> this behavior?
+>>>>
+>>>> Thanks,
+>>>> Basavaraj
+>>>>
+>>>> On 4/1/2022 1:36 PM, Thorsten Leemhuis wrote:
+>>>>> Hi, this is your Linux kernel regression tracker.
+>>>>>
+>>>>> I noticed a regression report in bugzilla.kernel.org that afaics nobody
+>>>>> acted upon since it was reported about a week ago, that's why I decided
+>>>>> to forward it to the lists and all people that seemed to be relevant
+>>>>> here. It looks to me like this is something for Basavaraj, as it seems
+>>>>> to be caused by	b300667b33b2 ("HID: amd_sfh: Disable the interrupt for
+>>>>> all command"). But I'm not totally sure, I only looked briefly into the
+>>>>> details. Or was this discussed somewhere else already? Or even fixed?
+>>>>>
+>>>>> To quote from https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D215744&amp;data=04%7C01%7CBasavaraj.Natikar%40amd.com%7Ca64876e42c174bf2df5608da16054550%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846509153638366%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=jXu50hKBHkHzjOrfEQ0sXme3%2BdliBd%2FleA%2F9oE61EpI%3D&amp;reserved=0 :
+>>>>>
+>>>>>>  Marco 2022-03-25 15:22:19 UTC
+>>>>>>
+>>>>>> After updating to 5.17, the input from the accelerometer disappeared, completely. No devices available from IIO tree. First bad commit causing it is https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ftorvalds%2Flinux.git%2Fcommit%2Fdrivers%2Fhid%2Famd-sfh-hid%2Famd_sfh_pcie.c%3Fid%3Db300667b33b2b5a2c8e5f8f22826befb3d7f4f2b&amp;data=04%7C01%7CBasavaraj.Natikar%40amd.com%7Ca64876e42c174bf2df5608da16054550%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846509153638366%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=o443EB8xRW%2BwEi7pxB82A8B0oty64pBSQwAEU4sF2UA%3D&amp;reserved=0. Reverting this and the the other two on top fixed this. Tried to not revert only the above mentioned commit, but it's still not working.
+>>>>>>
+>>>>>> Marco.
+>>>>> Anyway, to get this tracked:
+>>>>>
+>>>>> #regzbot introduced: b300667b33b2b5a2c8e5f8f22826befb3d7f4
+>>>>> #regzbot from: Marco <rodomar705@protonmail.com>
+>>>>> #regzbot title: input: hid: input from the accelerometer disappeared due
+>>>>> to changes to amd_sfh
+>>>>> #regzbot link: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D215744&amp;data=04%7C01%7CBasavaraj.Natikar%40amd.com%7Ca64876e42c174bf2df5608da16054550%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637846509153638366%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=jXu50hKBHkHzjOrfEQ0sXme3%2BdliBd%2FleA%2F9oE61EpI%3D&amp;reserved=0
+>>>>>
+>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>>>
+>>>>> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+>>>>> reports on my table. I can only look briefly into most of them and lack
+>>>>> knowledge about most of the areas they concern. I thus unfortunately
+>>>>> will sometimes get things wrong or miss something important. I hope
+>>>>> that's not the case here; if you think it is, don't hesitate to tell me
+>>>>> in a public reply, it's in everyone's interest to set the public record
+>>>>> straight.
+>>>>>
+>>>>
+>>
+>>
+>>
