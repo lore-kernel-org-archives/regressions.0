@@ -1,90 +1,127 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 096103200
-	for <regressions@lists.linux.dev>; Mon,  4 Apr 2022 19:39:44 +0000 (UTC)
-Received: by mail-ej1-f42.google.com with SMTP id bg10so22194425ejb.4
-        for <regressions@lists.linux.dev>; Mon, 04 Apr 2022 12:39:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NU7HyoNi5meZJ6AGWzLvmGnJXrmedqwt4yUiP1S+dCg=;
-        b=LmrPdK7D8KSejIMXvgQfWXzEV/KY6ZsFIOXpOfLYcmxokXt1ycWJVJ5BBbQc4RZ+4m
-         Ij0yboQumDgoZPfnGCtP+DBbKVR+XYU5co738N4q2zihDCjnRMfR3nR3OfOVa6LM7pQE
-         mADowT1BHanupnNcq0NojZ+S1Oub+rtSfYbECsjxhgpevsQt50yUmzwnj+a2GWtXUKPT
-         vrsMxJXiI2buC1fXRD+u7C+61Fqf4JasghPdsYjmUq1NVvJnrnWHcc36uBqd1eoTgzfq
-         tod7AjQS34oMihVHShMHtR4cv7Uz9WL1l0aewijORHN/c3VDFF2QoldPR0zSBS4xgpwo
-         bGQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NU7HyoNi5meZJ6AGWzLvmGnJXrmedqwt4yUiP1S+dCg=;
-        b=jn2QmihhU82uiQILJqfosRD1+mpgzAChf8hawdTWoTY5dtXas9QOm+Au1gnMHQmWWR
-         N7ZJwL0z+fRixTl0nRAsHL45U+7eWJqwISCnHjSodNk8FKmApUY3D7CUkEYhrSMSTv7V
-         au+gCvP2aVqnpvtwDQuP30Er6BXtSoWf7IvVEEotGIaJ7y+SYgfuA93CrdtSGddDdBHP
-         hH9FrmCo/Ra0gcyL9PKdHAMPHKHsuuuV37lNR4Q/ngqOIiTrudr08UJARvfM5fMVxvWj
-         ZqjH0NU6sT0nBR05GMU83QbXXweTneQ1nCXxOXzwqD8QHfO8yOulkBMas5L6ppd0MMCw
-         MmDA==
-X-Gm-Message-State: AOAM531/l5Ggh1VBtopB0HadA63CBTs8NgU1xsxBxAI0w2bX3YvCmLl9
-	RRpYg23jYWzuTsR1NixKFv5k0NsUDw8p2Q==
-X-Google-Smtp-Source: ABdhPJwf+njJLTQQYntTOyiKLugPASzyX2p5fs8mxMEkTSLKyQsIlO/mL3faNbxx+FZvWyGg/vE+IA==
-X-Received: by 2002:a17:906:4787:b0:6e1:409f:8deb with SMTP id cw7-20020a170906478700b006e1409f8debmr1695858ejc.80.1649101183211;
-        Mon, 04 Apr 2022 12:39:43 -0700 (PDT)
-Received: from darkstar.example.org (host-79-21-204-193.retail.telecomitalia.it. [79.21.204.193])
-        by smtp.gmail.com with ESMTPSA id h5-20020a170906718500b006e7edcda732sm2052788ejk.125.2022.04.04.12.39.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Apr 2022 12:39:42 -0700 (PDT)
-Date: Mon, 4 Apr 2022 21:39:40 +0200
-From: Michele Ballabio <ballabio.m@gmail.com>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev, Maling
- list - DRI developers <dri-devel@lists.freedesktop.org>, amd-gfx list
- <amd-gfx@lists.freedesktop.org>
-Subject: Re: AMDGPU: regression on 5.17.1
-Message-ID: <20220404213940.09a56d15@darkstar.example.org>
-In-Reply-To: <CADnq5_M+M_iykM0Ag6RF+kxzgpEopUBtp82h7tRM3G+B3AWZ2w@mail.gmail.com>
-References: <20220403132322.51c90903@darkstar.example.org>
-	<CADnq5_M+M_iykM0Ag6RF+kxzgpEopUBtp82h7tRM3G+B3AWZ2w@mail.gmail.com>
-X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.33; x86_64-slackware-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2331F15A3
+	for <regressions@lists.linux.dev>; Tue,  5 Apr 2022 05:17:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1127C34117
+	for <regressions@lists.linux.dev>; Tue,  5 Apr 2022 05:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1649135856;
+	bh=F4BmQX2Y63BrfJkQle/Kee5eiX9lFVCLsQ1STIVzAGs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=dZrT9tlHLkA6Z2fmx2EGIMkYJG+2GcdgeYAhBLf+3ghitO5FbdzFychci3qHoiPwS
+	 5gTLjVg3FYJ7gCLHZ+u7fhr4TRFlLVEPJcT741lvrjqY5hlaUVZcltjHyEKwyUHzef
+	 3HkAC+bGcaMs0lY9jYnK+i4K5jJTYWmnhDilVV6gnow/mdTTKQghuGkqM/+uyiN0w8
+	 TzEWtCiEqCSz3gNlKAvVp3QOHRdyVVBxQq5UnE2xGg5nB9+A011q9Gv9oYuQvQmulM
+	 cSD637H0Na5dWVPkv1qsWFfz+Uo933sppnOREKxqpvKWcu9Fb04TymS+pZqwDdkjy4
+	 /peyhOqR6nm8Q==
+Received: by mail-vs1-f43.google.com with SMTP id x15so1881798vsq.10
+        for <regressions@lists.linux.dev>; Mon, 04 Apr 2022 22:17:36 -0700 (PDT)
+X-Gm-Message-State: AOAM5321UB3b9H/cfs5WsG39aZsKU78z8zSBx1BtIDYurLNAXg0kNvMT
+	Nz0K92B358GnNnIoggzcoMA0IYpVgFJUEgVBkw0=
+X-Google-Smtp-Source: ABdhPJxwAHd5YmIGFxtQXjLGpWT1kmM7IBN8n/zhBH0Urpkbt1tUAG2ja7KTW5WzlcRcBYmbO9u1or/8w7wC2pBLezE=
+X-Received: by 2002:a05:6102:dd1:b0:325:80a9:b5d7 with SMTP id
+ e17-20020a0561020dd100b0032580a9b5d7mr514202vst.51.1649135855592; Mon, 04 Apr
+ 2022 22:17:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYu_ZHOeOPDiwzXGL6Re8aFYW3K+JSL2Dozw=VHwaUFxyQ@mail.gmail.com>
+ <Yksjb9Mkq658k4YJ@dev-arch.thelio-3990X>
+In-Reply-To: <Yksjb9Mkq658k4YJ@dev-arch.thelio-3990X>
+From: Guo Ren <guoren@kernel.org>
+Date: Tue, 5 Apr 2022 13:17:24 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQkGZnwXrXsbx8drL0AicVpOMW=JmOcrieuvyEf91XPhg@mail.gmail.com>
+Message-ID: <CAJF2gTQkGZnwXrXsbx8drL0AicVpOMW=JmOcrieuvyEf91XPhg@mail.gmail.com>
+Subject: Re: [next] riscv: Linux next-20220404 riscv defconfig builds failed.
+To: Nathan Chancellor <nathan@kernel.org>, Palmer Dabbelt <palmer@rivosinc.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Guo Ren <guoren@linux.alibaba.com>, Heiko Stuebner <heiko@sntech.de>, 
+	Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 4 Apr 2022 13:03:41 -0400
-Alex Deucher <alexdeucher@gmail.com> wrote:
-
-> On Sun, Apr 3, 2022 at 10:19 AM Michele Ballabio
-> <ballabio.m@gmail.com> wrote:
+On Tue, Apr 5, 2022 at 12:57 AM Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> On Mon, Apr 04, 2022 at 03:28:41PM +0530, Naresh Kamboju wrote:
+> > Linux next-20220404 riscv defconfig builds failed.
 > >
-> > Hi,
-> >         I've hit a regression on 5.17.1 (haven't tested 5.17.0, but
-> > 5.16-stable didn't have this problem).
+> > Regressions found on riscv:
+> >    - riscv-riscv-clang-14-defconfig
+> >    - riscv-riscv-gcc-10-defconfig
+> >    - riscv-riscv-clang-13-defconfig
+> >    - riscv-riscv-clang-12-defconfig
+> >    - riscv-riscv-clang-11-defconfig
+> >    - riscv-riscv-gcc-11-defconfig
+> >    - riscv-riscv-gcc-8-defconfig
+> >    - riscv-riscv-gcc-9-defconfig
+> >    - riscv-riscv-clang-nightly-defconfig
 > >
-> > The machine is a Ryzen 5 1600 with AMD graphics (RX 560).
 > >
-> > The regression I hit seems to trigger when the machine is left
-> > idle at boot (I don't boot straight to X, I boot to a tty, login
-> > and then start X). The machine after a while blanks the screen.
-> > Usually, the screen unblanks as the keyboard is hit or the mouse
-> > moves, but with kernel 5.17.1 the screen does not wake up. The
-> > machine seems to run mostly fine: I can login from ssh, but I
-> > cannot reboot or halt it: a sysrq sequence is needed for that. Note
-> > that if the screen goes blank under X, it wakes up fine.
-> >
-> > Below a dmesg and two traces from syslog (they're quite similar).  
-> 
-> Can you bisect?  Does setting amdgpu.runpm=0 help?
+> > arch/riscv/kernel/compat_signal.c:7:10: fatal error:
+> > linux/tracehook.h: No such file or directory
+> >   7 | #include <linux/tracehook.h>
+> >     |          ^~~~~~~~~~~~~~~~~~~
+> > compilation terminated.
+> > make[3]: *** [scripts/Makefile.build:289:
+> > arch/riscv/kernel/compat_signal.o] Error 1
+>
+> For what it's worth, I also see:
+>
+> $ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- defconfig all
+> arch/riscv/kernel/compat_vdso/compat_vdso.lds.S:3:10: fatal error: ../vdso/vdso.lds.S: No such file or directory
+>     3 | #include <../vdso/vdso.lds.S>
+>       |          ^~~~~~~~~~~~~~~~~~~~
+> compilation terminated.
+> make[2]: *** [scripts/Makefile.build:462: arch/riscv/kernel/compat_vdso/compat_vdso.lds] Error 1
+> arch/riscv/kernel/compat_vdso/rt_sigreturn.S:3:10: fatal error: ../vdso/rt_sigreturn.S: No such file or directory
+>     3 | #include <../vdso/rt_sigreturn.S>
+>       |          ^~~~~~~~~~~~~~~~~~~~~~~~
+> compilation terminated.
+> arch/riscv/kernel/compat_vdso/note.S:3:10: fatal error: ../vdso/note.S: No such file or directory
+>     3 | #include <../vdso/note.S>
+>       |          ^~~~~~~~~~~~~~~~
+> compilation terminated.
+> arch/riscv/kernel/compat_vdso/getcpu.S:3:10: fatal error: ../vdso/getcpu.S: No such file or directory
+>     3 | #include <../vdso/getcpu.S>
+>       |          ^~~~~~~~~~~~~~~~~~
+> compilation terminated.
+> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/rt_sigreturn.o] Error 1
+> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/note.o] Error 1
+> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/getcpu.o] Error 1
+> arch/riscv/kernel/compat_vdso/flush_icache.S:3:10: fatal error: ../vdso/flush_icache.S: No such file or directory
+>     3 | #include <../vdso/flush_icache.S>
+>       |          ^~~~~~~~~~~~~~~~~~~~~~~~
+> compilation terminated.
+> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/flush_icache.o] Error 1
+>
+> I am guessing this code was never tested with $(srctree) == $(objtree).
+Thx for pointing it out:
+I always use:
+make -skj"$(nproc)" ARCH=riscv
+CROSS_COMPILE=riscv64-unknown-linux-gnu- EXTRA_CFLAGS+=-g
+O=../build-riscv/ defconfig all
 
-I can try to bisect, should I narrow the search to drivers/gpu/drm/ ?
+When I change to:
+make -skj"$(nproc)" ARCH=riscv
+CROSS_COMPILE=riscv64-unknown-linux-gnu- EXTRA_CFLAGS+=-g defconfig
+all
 
-Setting amdgpu.runpm=0 works, the display now unblanks without problems.
+I got your problem.
 
-Thanks,
-    Michele Ballabio
+>
+> Cheers,
+> Nathan
+
+
+--
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
