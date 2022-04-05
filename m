@@ -1,97 +1,134 @@
-Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF4D2F3A
-	for <regressions@lists.linux.dev>; Tue,  5 Apr 2022 14:23:28 +0000 (UTC)
-Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-ddfa38f1c1so14509184fac.11
-        for <regressions@lists.linux.dev>; Tue, 05 Apr 2022 07:23:28 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA0D7A
+	for <regressions@lists.linux.dev>; Tue,  5 Apr 2022 15:03:01 +0000 (UTC)
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-e1e5e8d9faso9399827fac.4
+        for <regressions@lists.linux.dev>; Tue, 05 Apr 2022 08:03:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3viWxA/JBHdP0TQbOykdsaxa+Gs7txej/lLx0GIvIYg=;
-        b=G9QnFQmPtVjj4tVobX1LMic5zPY274r2vdLPAoUHBKEo99rnSV8OgrXJiFUo/7/jTF
-         HjRanar2kAcinOYdoYvDGcnYJCuDuEuq0Zai+Uq0v6oNYRccBrMVRMdFmiEV85NERQ9C
-         7vO48nBrMzEKZEJVJ8XZajlPZLIjcsxvASt5VlRRUCL1kA3K18vbkH8swg9+yzJ9rGMP
-         bFCRoCQAY3/a8STCLM+PzA5oegHvKvG3gC1g6iDc6bi30ZQD9wkIiGfKM1QRvaqcYdSM
-         rfBcCGGpw/3xxa0Vz8+ryEQQNncgOdCH6noH47HWTgOvqSb3hQ57Qsfk/RiWmJ24PVYC
-         lHBw==
+        h=sender:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=/WeqeqXC6BXYo1pJqD9CNBUUl9OFyWmWbFYxNLGDQHI=;
+        b=bQukCczxFTy/nyTkXP0QiIbXJ65RiCMy2RGaZ2YF2bzbKJhyB8438iEcdN24lSV7WJ
+         crzZJHtlCFdqB10/RaxDK8HCHc3gj9IG1QFkjyXFxVL9+uqMGfB2dwWBc7MrwwMJxoxz
+         u09XT3dgTZ1beuRrNgb3DGyuJyXbCOBes9eWTkIM4en0hl4YEBynXGHCsp15XuKAGY2b
+         /wVmYgjHEGD3EwviJIkkypHQzk4QqruU8zYY4YMsuQw1WHmdSNcJcZt/zY0ykKImJf9+
+         NWy7hlvYRorDHLgtxFLQZB5y6svec40sethw88hoW5QNyunh+iVmjh3ztbGvZvMwJ45I
+         Wmwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3viWxA/JBHdP0TQbOykdsaxa+Gs7txej/lLx0GIvIYg=;
-        b=CrzDpVAJjkN1QGDr4SaNNJe8h8L/RW17pLvGqdXBz73o22Arq8I6ACwdX1Zaxx+2NO
-         /eq1YUoi1QKYpM93tt+Knw5J+Hl7cScRNlCAa8S9nKrPdrsDJa5FdivmKy2AjFIASq4w
-         b4SejSzREHtW81NyWEZbIk4uXtUDXBzSfR7Ej7b+OaHbFnu30N364C9LjqGOc3u5zGlk
-         EQvDnyiTJSaVKaX8CRSDyL85jaQmfeFXuKiAgsqAMOjt6Z8vIZFjRW7ApJ/djVN90hKS
-         FBlo631UNKZTMY0afwhRxbyCCMve0bLB5MssF3AoSctt2wfQV6z87pFouRhYSxOdzSWv
-         272g==
-X-Gm-Message-State: AOAM530l2cGdbOE6neKlnmcJGgo1EV0McK0intRn7QixNuzXHQRJn3iQ
-	fRh4I18zA80gVh74wxIB6UAEh72GJ92SU4sccDI=
-X-Google-Smtp-Source: ABdhPJwwvFJ/nErrBLzLGpycHCVzIhCmGoPUp6o1bgcidxfVOxHS2sTwvSWskrCQURlhd5hQ2zrWnsbBLhhhsqySV8U=
-X-Received: by 2002:a05:6870:311d:b0:de:9b6c:362b with SMTP id
- v29-20020a056870311d00b000de9b6c362bmr1567641oaa.200.1649168608008; Tue, 05
- Apr 2022 07:23:28 -0700 (PDT)
+        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
+         :subject:content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=/WeqeqXC6BXYo1pJqD9CNBUUl9OFyWmWbFYxNLGDQHI=;
+        b=Ka0x702JUGKTSWWpB4jLu8z2w1v/mx1pBzJ030uieNUz2fQRQMRIsnAjLs0CKmbSMi
+         w3yRDwVwUwcj6xvd4Z+Tqe4A/lf3YveDQVNsAA72AnG6ixkZiwqafw1k1mLRHeMfapfy
+         AFQPhJ7Q6IwbDs+XCvZlXO7qghAyWbm+4y12FiMR8ClWH/GTg+n53l+jrS0z5HeL5fkh
+         hpYlDZYbZMn6qp8AD4L5ASP6m9SssCEEByJo2a9gi2Rakw4po4o3OfEeFmgMQyVY55xc
+         fCvVkXoOJGn7S74MHTkPocA+bEyyU091nKrxk+dMsqoe2JRreKSro0cXWBC8LVWuhXrr
+         Ufzw==
+X-Gm-Message-State: AOAM532CH/zgV5gmWGyh4rL4GzINkVFJ9rDOfpA0KlTMsaPkqyWAxC6R
+	+64G+ZzqXTpMihmCroXpKLBBqc9wM3w=
+X-Google-Smtp-Source: ABdhPJx1RS2czUvlPYXgLqNNr0WKtbFxWTRwTbBUmMCYrGa7dlW692hqmrZE0kLTFVXtiqS5KTElSQ==
+X-Received: by 2002:a05:6870:2184:b0:e1:e0bf:3436 with SMTP id l4-20020a056870218400b000e1e0bf3436mr1663789oae.156.1649170980851;
+        Tue, 05 Apr 2022 08:03:00 -0700 (PDT)
+Received: from ?IPV6:2603:8090:2005:39b3::1004? (2603-8090-2005-39b3-0000-0000-0000-1004.res6.spectrum.com. [2603:8090:2005:39b3::1004])
+        by smtp.gmail.com with ESMTPSA id 12-20020a05687012cc00b000de97cc1beesm5586428oam.43.2022.04.05.08.02.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Apr 2022 08:03:00 -0700 (PDT)
+Sender: Larry Finger <larry.finger@gmail.com>
+Message-ID: <4032c417-fb57-c253-63e5-94a9c3f605bd@lwfinger.net>
+Date: Tue, 5 Apr 2022 10:02:58 -0500
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220403132322.51c90903@darkstar.example.org> <CADnq5_M+M_iykM0Ag6RF+kxzgpEopUBtp82h7tRM3G+B3AWZ2w@mail.gmail.com>
- <20220404213940.09a56d15@darkstar.example.org>
-In-Reply-To: <20220404213940.09a56d15@darkstar.example.org>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Tue, 5 Apr 2022 10:23:16 -0400
-Message-ID: <CADnq5_PhaFbVCb=-AUCx4L-sCyPCPOsY3tNpiAg=gfCN7hFcJA@mail.gmail.com>
-Subject: Re: AMDGPU: regression on 5.17.1
-To: Michele Ballabio <ballabio.m@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev, 
-	Maling list - DRI developers <dri-devel@lists.freedesktop.org>, 
-	amd-gfx list <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: rtw_8822ce wifi regression after kernel update from 5.15 to 5.16
+Content-Language: en-US
+To: "G. P. B." <george.banyard@gmail.com>
+Cc: snecknico@gmail.com, kvalo@kernel.org, linux-wireless@vger.kernel.org,
+ regressions@leemhuis.info, regressions@lists.linux.dev,
+ tony0620emma@gmail.com
+References: <CAFPFaMLHXhHMhuAuvXWHb3c-tX_9qRxsquEUHXY0fMxh_VsKtw@mail.gmail.com>
+ <ba45934b-69ab-edfa-1679-2e8e00fac126@lwfinger.net>
+ <CAFPFaMKpwmGqc_Cm1fv4psR6m+waax6YZO2ugOPhgmnG4mGJ4A@mail.gmail.com>
+From: Larry Finger <Larry.Finger@lwfinger.net>
+In-Reply-To: <CAFPFaMKpwmGqc_Cm1fv4psR6m+waax6YZO2ugOPhgmnG4mGJ4A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Apr 4, 2022 at 3:39 PM Michele Ballabio <ballabio.m@gmail.com> wrote:
->
-> On Mon, 4 Apr 2022 13:03:41 -0400
-> Alex Deucher <alexdeucher@gmail.com> wrote:
->
-> > On Sun, Apr 3, 2022 at 10:19 AM Michele Ballabio
-> > <ballabio.m@gmail.com> wrote:
-> > >
-> > > Hi,
-> > >         I've hit a regression on 5.17.1 (haven't tested 5.17.0, but
-> > > 5.16-stable didn't have this problem).
-> > >
-> > > The machine is a Ryzen 5 1600 with AMD graphics (RX 560).
-> > >
-> > > The regression I hit seems to trigger when the machine is left
-> > > idle at boot (I don't boot straight to X, I boot to a tty, login
-> > > and then start X). The machine after a while blanks the screen.
-> > > Usually, the screen unblanks as the keyboard is hit or the mouse
-> > > moves, but with kernel 5.17.1 the screen does not wake up. The
-> > > machine seems to run mostly fine: I can login from ssh, but I
-> > > cannot reboot or halt it: a sysrq sequence is needed for that. Note
-> > > that if the screen goes blank under X, it wakes up fine.
-> > >
-> > > Below a dmesg and two traces from syslog (they're quite similar).
-> >
-> > Can you bisect?  Does setting amdgpu.runpm=0 help?
->
-> I can try to bisect, should I narrow the search to drivers/gpu/drm/ ?
+On 4/5/22 06:39, G. P. B. wrote:
+> On Mon, 4 Apr 2022 at 15:49, Larry Finger <Larry.Finger@lwfinger.net 
+> <mailto:Larry.Finger@lwfinger.net>> wrote:
+> 
+>     George,
+> 
+>     I do not know of any regression in 5.16 with regard to the driver for
+>     RTL8822CE.
+>     Certainly, I saw no regressions in my testing of that driver from before it was
+>     in the kernel up to the present. That said, I can only comment on the
+>     user-space
+>     part of openSUSE Tumbleweed, which is probably not your distro of choice.
+> 
+>     Are you using the drivers at https://GitHub.com/lwfinger/rtw88.git
+>     <https://GitHub.com/lwfinger/rtw88.git> rather than
+>     the ones in the kernel? Your posted errors that refer to rtw_8822ce indicate
+>     that to be true. If the drivers came from the kernel, the reference would be to
+>     rtw88_8822ce! If so, do a 'git pull' to get the drivers updated to match the
+>     code in kernel 5.18. A lot of things have been fixed.
+> 
+>     In your system, please do a 'lsmod | grep rtw'. If any items refer to rtw88_*,
+>     you have mixed drivers loaded. In that case, you should blacklist the rtw88_*
+>     driver.
+> 
+>     Larry
+> 
+> 
+> I haven't had time to rollback to 5.15 to check if this fixes the issue but I 
+> have the following command line output:
+> [girgias@fedora ~]$ lsmod | grep rtw
+> rtw88_8822ce           16384  0
+> rtw88_8822c           483328  1 rtw88_8822ce
+> rtw88_pci              28672  1 rtw88_8822ce
+> rtw88_core            167936  2 rtw88_pci,rtw88_8822c
+> mac80211             1175552  2 rtw88_pci,rtw88_core
+> cfg80211             1036288  2 rtw88_core,mac80211
+> 
+> Which if I understand your email correctly means I have mixed drivers?
+> I personally did not start to use the drivers you provide on GitHub as I just do 
+> dnf update to update my packages.
+> Therefore, does this implies there is an issue with how Fedora is packaging the 
+> WiFi drivers?
+> 
+> If I need to blacklist drivers, I imagine I need to do this at the package 
+> manager level?
 
-I would just do a full bisect if possible in case the change happens
-to be outside of drm.
+George,
 
->
-> Setting amdgpu.runpm=0 works, the display now unblanks without problems.
+No, you have the in-kernel version - the rtw drivers all start with "rtw88".
 
-Thanks,
+Your "regression" between 5.15 and 5.16 is that you switched from the GitHub 
+repo to the in-kernel drivers. There have been many improvements in the kernel 
+version since 5.16. Those are included in the GitHub version. One or more of 
+them helped your system. I am not that familiar with fedora, but to get the 
+kernel versions of the drivers, it is not necessary to "dnf" anything other than 
+the kernel itself. All the in-kernel drivers come along with it.
 
-Alex
+Blacklisting is done by creating (as root) a blacklist file in /etc/modprobe.d/, 
+not in the package manager. It is at a much lower level. On my system is such a 
+file named /etc/modprobe.d/60-blacklist-rtw8822c.conf with contents of:
+blacklist rtw88_8822ce
+blacklist rtw88_8822c
+blacklist rtw88_pci
+blacklist rtw88_core
 
+With this file, I am assured that only the drivers from GitHub will be loaded.
 
->
-> Thanks,
->     Michele Ballabio
+Larry
+
