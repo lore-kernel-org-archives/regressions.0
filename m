@@ -1,134 +1,140 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDA0D7A
-	for <regressions@lists.linux.dev>; Tue,  5 Apr 2022 15:03:01 +0000 (UTC)
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-e1e5e8d9faso9399827fac.4
-        for <regressions@lists.linux.dev>; Tue, 05 Apr 2022 08:03:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D031A7A
+	for <regressions@lists.linux.dev>; Tue,  5 Apr 2022 16:15:02 +0000 (UTC)
+Received: by mail-pg1-f181.google.com with SMTP id t13so11382146pgn.8
+        for <regressions@lists.linux.dev>; Tue, 05 Apr 2022 09:15:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
+        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
          :content-transfer-encoding;
-        bh=/WeqeqXC6BXYo1pJqD9CNBUUl9OFyWmWbFYxNLGDQHI=;
-        b=bQukCczxFTy/nyTkXP0QiIbXJ65RiCMy2RGaZ2YF2bzbKJhyB8438iEcdN24lSV7WJ
-         crzZJHtlCFdqB10/RaxDK8HCHc3gj9IG1QFkjyXFxVL9+uqMGfB2dwWBc7MrwwMJxoxz
-         u09XT3dgTZ1beuRrNgb3DGyuJyXbCOBes9eWTkIM4en0hl4YEBynXGHCsp15XuKAGY2b
-         /wVmYgjHEGD3EwviJIkkypHQzk4QqruU8zYY4YMsuQw1WHmdSNcJcZt/zY0ykKImJf9+
-         NWy7hlvYRorDHLgtxFLQZB5y6svec40sethw88hoW5QNyunh+iVmjh3ztbGvZvMwJ45I
-         Wmwg==
+        bh=6FUWFiiYF7RQM6AiZGZcmbxOr+8HtS1WpPnaUZsigro=;
+        b=BTCrh4EKdaMDmASfvS4ew7BfBRsBgAtjr3IHlo839Gs+uNJL1JaNgY7v+7hWAxfY3l
+         JN6DJshYDWPdzucQ0JkmFgrUmhoNFfJi73bCsveF0oWuFRP7ZaRXxVcx2MyGXEHBvcqr
+         ezLUNEkIkWuxApp/dOzuZHu9vzWAhReBDPZbNvhL60twYPz0hc25qbW/Cgif/u1Y2Bey
+         PFaiizHMBpyTQJeQxq7a9EHoXAw6vbOcXzeuNAH9O6dn555WunwPMGVXih/B0i1WNkF8
+         JKObM6m7yVDL2I0mUfdRK16YlqWP6DY4csOafI7oq9eqeQjOy3Cx7zy5zk/TfjfOOHiP
+         KGvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :subject:content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=/WeqeqXC6BXYo1pJqD9CNBUUl9OFyWmWbFYxNLGDQHI=;
-        b=Ka0x702JUGKTSWWpB4jLu8z2w1v/mx1pBzJ030uieNUz2fQRQMRIsnAjLs0CKmbSMi
-         w3yRDwVwUwcj6xvd4Z+Tqe4A/lf3YveDQVNsAA72AnG6ixkZiwqafw1k1mLRHeMfapfy
-         AFQPhJ7Q6IwbDs+XCvZlXO7qghAyWbm+4y12FiMR8ClWH/GTg+n53l+jrS0z5HeL5fkh
-         hpYlDZYbZMn6qp8AD4L5ASP6m9SssCEEByJo2a9gi2Rakw4po4o3OfEeFmgMQyVY55xc
-         fCvVkXoOJGn7S74MHTkPocA+bEyyU091nKrxk+dMsqoe2JRreKSro0cXWBC8LVWuhXrr
-         Ufzw==
-X-Gm-Message-State: AOAM532CH/zgV5gmWGyh4rL4GzINkVFJ9rDOfpA0KlTMsaPkqyWAxC6R
-	+64G+ZzqXTpMihmCroXpKLBBqc9wM3w=
-X-Google-Smtp-Source: ABdhPJx1RS2czUvlPYXgLqNNr0WKtbFxWTRwTbBUmMCYrGa7dlW692hqmrZE0kLTFVXtiqS5KTElSQ==
-X-Received: by 2002:a05:6870:2184:b0:e1:e0bf:3436 with SMTP id l4-20020a056870218400b000e1e0bf3436mr1663789oae.156.1649170980851;
-        Tue, 05 Apr 2022 08:03:00 -0700 (PDT)
-Received: from ?IPV6:2603:8090:2005:39b3::1004? (2603-8090-2005-39b3-0000-0000-0000-1004.res6.spectrum.com. [2603:8090:2005:39b3::1004])
-        by smtp.gmail.com with ESMTPSA id 12-20020a05687012cc00b000de97cc1beesm5586428oam.43.2022.04.05.08.02.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Apr 2022 08:03:00 -0700 (PDT)
-Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <4032c417-fb57-c253-63e5-94a9c3f605bd@lwfinger.net>
-Date: Tue, 5 Apr 2022 10:02:58 -0500
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=6FUWFiiYF7RQM6AiZGZcmbxOr+8HtS1WpPnaUZsigro=;
+        b=6qUW1qS2C5Erz5upKisuRSUpq3M7ZulkhGUjAdgojrPPOygORG1H4hoodTQ9e+/Fpw
+         TpaeSiBVmmA2dzjYM/zlPf2mqfWUzNyTTjh/WWVsO6nJxJ7cbJK+6x1y5U93E0sNPEMg
+         5rXZRpCgSAoH86BULo7R4AQQqwOmA2HjxT+c83VpXitWrlkeC3e7Yhkjz4ZyNa2WFWqA
+         Ju2fBtWdzkWROPsZBhZV446Rq3F2Q8LMNbD98NfNyKDMRyCC8cXz+XOUF42ZiSEllUWm
+         YHgvFNP5+tsKkER+zL41ah7z0MmWurV53mrNqtVmLpK5H+q5nNJknvggib8Z82RNXOO+
+         CHDQ==
+X-Gm-Message-State: AOAM530MfPkWpKTlh09arK3WxS1LT/KnQUhaRVDgGH/JP8ug1Yor1cLt
+	xFp2+emPem8/PKf0aNVr7SSgQw==
+X-Google-Smtp-Source: ABdhPJxBsrRDDTM9H+4owE4Y81jBgCK2c5EsTHBBhVbKGNYldNMxrnBlnlMtBkUyZFupsZRuHzSSYg==
+X-Received: by 2002:a63:6443:0:b0:399:54fe:5184 with SMTP id y64-20020a636443000000b0039954fe5184mr3478339pgb.511.1649175302141;
+        Tue, 05 Apr 2022 09:15:02 -0700 (PDT)
+Received: from localhost ([12.3.194.138])
+        by smtp.gmail.com with ESMTPSA id l192-20020a6391c9000000b003861d9431c7sm13808252pge.62.2022.04.05.09.15.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Apr 2022 09:15:01 -0700 (PDT)
+Date: Tue, 05 Apr 2022 09:15:01 -0700 (PDT)
+X-Google-Original-Date: Tue, 05 Apr 2022 09:14:59 PDT (-0700)
+Subject:     Re: [next] riscv: Linux next-20220404 riscv defconfig builds failed.
+In-Reply-To: <CAJF2gTQkGZnwXrXsbx8drL0AicVpOMW=JmOcrieuvyEf91XPhg@mail.gmail.com>
+CC: nathan@kernel.org, naresh.kamboju@linaro.org, linux-next@vger.kernel.org,
+  linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, lkft-triage@lists.linaro.org,
+  regressions@lists.linux.dev, Stephen Rothwell <sfr@canb.auug.org.au>, guoren@linux.alibaba.com,
+  heiko@sntech.de, Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <paul.walmsley@sifive.com>,
+  aou@eecs.berkeley.edu
+From: Palmer Dabbelt <palmer@rivosinc.com>
+To: guoren@kernel.org
+Message-ID: <mhng-cfa7bfb9-bab8-423c-85ad-ecd407d6e806@palmer-ri-x1c9>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: rtw_8822ce wifi regression after kernel update from 5.15 to 5.16
-Content-Language: en-US
-To: "G. P. B." <george.banyard@gmail.com>
-Cc: snecknico@gmail.com, kvalo@kernel.org, linux-wireless@vger.kernel.org,
- regressions@leemhuis.info, regressions@lists.linux.dev,
- tony0620emma@gmail.com
-References: <CAFPFaMLHXhHMhuAuvXWHb3c-tX_9qRxsquEUHXY0fMxh_VsKtw@mail.gmail.com>
- <ba45934b-69ab-edfa-1679-2e8e00fac126@lwfinger.net>
- <CAFPFaMKpwmGqc_Cm1fv4psR6m+waax6YZO2ugOPhgmnG4mGJ4A@mail.gmail.com>
-From: Larry Finger <Larry.Finger@lwfinger.net>
-In-Reply-To: <CAFPFaMKpwmGqc_Cm1fv4psR6m+waax6YZO2ugOPhgmnG4mGJ4A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 4/5/22 06:39, G. P. B. wrote:
-> On Mon, 4 Apr 2022 at 15:49, Larry Finger <Larry.Finger@lwfinger.net 
-> <mailto:Larry.Finger@lwfinger.net>> wrote:
-> 
->     George,
-> 
->     I do not know of any regression in 5.16 with regard to the driver for
->     RTL8822CE.
->     Certainly, I saw no regressions in my testing of that driver from before it was
->     in the kernel up to the present. That said, I can only comment on the
->     user-space
->     part of openSUSE Tumbleweed, which is probably not your distro of choice.
-> 
->     Are you using the drivers at https://GitHub.com/lwfinger/rtw88.git
->     <https://GitHub.com/lwfinger/rtw88.git> rather than
->     the ones in the kernel? Your posted errors that refer to rtw_8822ce indicate
->     that to be true. If the drivers came from the kernel, the reference would be to
->     rtw88_8822ce! If so, do a 'git pull' to get the drivers updated to match the
->     code in kernel 5.18. A lot of things have been fixed.
-> 
->     In your system, please do a 'lsmod | grep rtw'. If any items refer to rtw88_*,
->     you have mixed drivers loaded. In that case, you should blacklist the rtw88_*
->     driver.
-> 
->     Larry
-> 
-> 
-> I haven't had time to rollback to 5.15 to check if this fixes the issue but I 
-> have the following command line output:
-> [girgias@fedora ~]$ lsmod | grep rtw
-> rtw88_8822ce           16384  0
-> rtw88_8822c           483328  1 rtw88_8822ce
-> rtw88_pci              28672  1 rtw88_8822ce
-> rtw88_core            167936  2 rtw88_pci,rtw88_8822c
-> mac80211             1175552  2 rtw88_pci,rtw88_core
-> cfg80211             1036288  2 rtw88_core,mac80211
-> 
-> Which if I understand your email correctly means I have mixed drivers?
-> I personally did not start to use the drivers you provide on GitHub as I just do 
-> dnf update to update my packages.
-> Therefore, does this implies there is an issue with how Fedora is packaging the 
-> WiFi drivers?
-> 
-> If I need to blacklist drivers, I imagine I need to do this at the package 
-> manager level?
+On Mon, 04 Apr 2022 22:17:24 PDT (-0700), guoren@kernel.org wrote:
+> On Tue, Apr 5, 2022 at 12:57 AM Nathan Chancellor <nathan@kernel.org> wrote:
+>>
+>> On Mon, Apr 04, 2022 at 03:28:41PM +0530, Naresh Kamboju wrote:
+>> > Linux next-20220404 riscv defconfig builds failed.
+>> >
+>> > Regressions found on riscv:
+>> >    - riscv-riscv-clang-14-defconfig
+>> >    - riscv-riscv-gcc-10-defconfig
+>> >    - riscv-riscv-clang-13-defconfig
+>> >    - riscv-riscv-clang-12-defconfig
+>> >    - riscv-riscv-clang-11-defconfig
+>> >    - riscv-riscv-gcc-11-defconfig
+>> >    - riscv-riscv-gcc-8-defconfig
+>> >    - riscv-riscv-gcc-9-defconfig
+>> >    - riscv-riscv-clang-nightly-defconfig
+>> >
+>> >
+>> > arch/riscv/kernel/compat_signal.c:7:10: fatal error:
+>> > linux/tracehook.h: No such file or directory
+>> >   7 | #include <linux/tracehook.h>
+>> >     |          ^~~~~~~~~~~~~~~~~~~
+>> > compilation terminated.
+>> > make[3]: *** [scripts/Makefile.build:289:
+>> > arch/riscv/kernel/compat_signal.o] Error 1
+>>
+>> For what it's worth, I also see:
+>>
+>> $ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- defconfig all
+>> arch/riscv/kernel/compat_vdso/compat_vdso.lds.S:3:10: fatal error: ../vdso/vdso.lds.S: No such file or directory
+>>     3 | #include <../vdso/vdso.lds.S>
+>>       |          ^~~~~~~~~~~~~~~~~~~~
+>> compilation terminated.
+>> make[2]: *** [scripts/Makefile.build:462: arch/riscv/kernel/compat_vdso/compat_vdso.lds] Error 1
+>> arch/riscv/kernel/compat_vdso/rt_sigreturn.S:3:10: fatal error: ../vdso/rt_sigreturn.S: No such file or directory
+>>     3 | #include <../vdso/rt_sigreturn.S>
+>>       |          ^~~~~~~~~~~~~~~~~~~~~~~~
+>> compilation terminated.
+>> arch/riscv/kernel/compat_vdso/note.S:3:10: fatal error: ../vdso/note.S: No such file or directory
+>>     3 | #include <../vdso/note.S>
+>>       |          ^~~~~~~~~~~~~~~~
+>> compilation terminated.
+>> arch/riscv/kernel/compat_vdso/getcpu.S:3:10: fatal error: ../vdso/getcpu.S: No such file or directory
+>>     3 | #include <../vdso/getcpu.S>
+>>       |          ^~~~~~~~~~~~~~~~~~
+>> compilation terminated.
+>> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/rt_sigreturn.o] Error 1
+>> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/note.o] Error 1
+>> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/getcpu.o] Error 1
+>> arch/riscv/kernel/compat_vdso/flush_icache.S:3:10: fatal error: ../vdso/flush_icache.S: No such file or directory
+>>     3 | #include <../vdso/flush_icache.S>
+>>       |          ^~~~~~~~~~~~~~~~~~~~~~~~
+>> compilation terminated.
+>> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/flush_icache.o] Error 1
+>>
+>> I am guessing this code was never tested with $(srctree) == $(objtree).
+> Thx for pointing it out:
+> I always use:
+> make -skj"$(nproc)" ARCH=riscv
+> CROSS_COMPILE=riscv64-unknown-linux-gnu- EXTRA_CFLAGS+=-g
+> O=../build-riscv/ defconfig all
+>
+> When I change to:
+> make -skj"$(nproc)" ARCH=riscv
+> CROSS_COMPILE=riscv64-unknown-linux-gnu- EXTRA_CFLAGS+=-g defconfig
+> all
+>
+> I got your problem.
 
-George,
+Just to be clear: this one wasn't supposed to go in via the csky tree, 
+and had other build issues that were being found by the autobuilders 
+(which is why it hadn't gone in via the riscv tree).  I do in-tree 
+builds somewhat regularly so that probably would have caught it if 
+nothing else did, but my guess is that some other autobuilder would have 
+found it first (some of the earlier patches 
 
-No, you have the in-kernel version - the rtw drivers all start with "rtw88".
-
-Your "regression" between 5.15 and 5.16 is that you switched from the GitHub 
-repo to the in-kernel drivers. There have been many improvements in the kernel 
-version since 5.16. Those are included in the GitHub version. One or more of 
-them helped your system. I am not that familiar with fedora, but to get the 
-kernel versions of the drivers, it is not necessary to "dnf" anything other than 
-the kernel itself. All the in-kernel drivers come along with it.
-
-Blacklisting is done by creating (as root) a blacklist file in /etc/modprobe.d/, 
-not in the package manager. It is at a much lower level. On my system is such a 
-file named /etc/modprobe.d/60-blacklist-rtw8822c.conf with contents of:
-blacklist rtw88_8822ce
-blacklist rtw88_8822c
-blacklist rtw88_pci
-blacklist rtw88_core
-
-With this file, I am assured that only the drivers from GitHub will be loaded.
-
-Larry
-
+Guo: please stop pushing things to linux-next that break the builds 
+and/or aren't aimed at your tree.  This just makes things unnecessarly 
+complicated.  If you don't want to deal with the build issues that's OK, 
+just LMK when you send the patch sets out and I'll deal with them, but 
+having linux-next's build break causes fallout for a lot of users.
