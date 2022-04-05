@@ -1,118 +1,97 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DFB7C
-	for <regressions@lists.linux.dev>; Tue,  5 Apr 2022 09:36:01 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nbfbM-0002uq-9O; Tue, 05 Apr 2022 11:35:52 +0200
-Message-ID: <4746cf3e-a9e7-4968-2695-22dd3356638f@leemhuis.info>
-Date: Tue, 5 Apr 2022 11:35:51 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF4D2F3A
+	for <regressions@lists.linux.dev>; Tue,  5 Apr 2022 14:23:28 +0000 (UTC)
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-ddfa38f1c1so14509184fac.11
+        for <regressions@lists.linux.dev>; Tue, 05 Apr 2022 07:23:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3viWxA/JBHdP0TQbOykdsaxa+Gs7txej/lLx0GIvIYg=;
+        b=G9QnFQmPtVjj4tVobX1LMic5zPY274r2vdLPAoUHBKEo99rnSV8OgrXJiFUo/7/jTF
+         HjRanar2kAcinOYdoYvDGcnYJCuDuEuq0Zai+Uq0v6oNYRccBrMVRMdFmiEV85NERQ9C
+         7vO48nBrMzEKZEJVJ8XZajlPZLIjcsxvASt5VlRRUCL1kA3K18vbkH8swg9+yzJ9rGMP
+         bFCRoCQAY3/a8STCLM+PzA5oegHvKvG3gC1g6iDc6bi30ZQD9wkIiGfKM1QRvaqcYdSM
+         rfBcCGGpw/3xxa0Vz8+ryEQQNncgOdCH6noH47HWTgOvqSb3hQ57Qsfk/RiWmJ24PVYC
+         lHBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3viWxA/JBHdP0TQbOykdsaxa+Gs7txej/lLx0GIvIYg=;
+        b=CrzDpVAJjkN1QGDr4SaNNJe8h8L/RW17pLvGqdXBz73o22Arq8I6ACwdX1Zaxx+2NO
+         /eq1YUoi1QKYpM93tt+Knw5J+Hl7cScRNlCAa8S9nKrPdrsDJa5FdivmKy2AjFIASq4w
+         b4SejSzREHtW81NyWEZbIk4uXtUDXBzSfR7Ej7b+OaHbFnu30N364C9LjqGOc3u5zGlk
+         EQvDnyiTJSaVKaX8CRSDyL85jaQmfeFXuKiAgsqAMOjt6Z8vIZFjRW7ApJ/djVN90hKS
+         FBlo631UNKZTMY0afwhRxbyCCMve0bLB5MssF3AoSctt2wfQV6z87pFouRhYSxOdzSWv
+         272g==
+X-Gm-Message-State: AOAM530l2cGdbOE6neKlnmcJGgo1EV0McK0intRn7QixNuzXHQRJn3iQ
+	fRh4I18zA80gVh74wxIB6UAEh72GJ92SU4sccDI=
+X-Google-Smtp-Source: ABdhPJwwvFJ/nErrBLzLGpycHCVzIhCmGoPUp6o1bgcidxfVOxHS2sTwvSWskrCQURlhd5hQ2zrWnsbBLhhhsqySV8U=
+X-Received: by 2002:a05:6870:311d:b0:de:9b6c:362b with SMTP id
+ v29-20020a056870311d00b000de9b6c362bmr1567641oaa.200.1649168608008; Tue, 05
+ Apr 2022 07:23:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] Revert "Input: clear BTN_RIGHT/MIDDLE on buttonpads"
-Content-Language: en-US
-To: Peter Hutterer <peter.hutterer@who-t.net>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
- Jiri Kosina <jkosina@suse.cz>, Takashi Iwai <tiwai@suse.de>,
- "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- "3.8+" <stable@vger.kernel.org>, regressions@lists.linux.dev,
- lkml <linux-kernel@vger.kernel.org>
-References: <20220321184404.20025-1-jose.exposito89@gmail.com>
- <44abc738-1532-63fa-9cd1-2b3870a963bc@leemhuis.info>
- <CAO-hwJJweSuSBE_18ZbvqS12eX9GcS+aJoe7SRFJdASOrN3bqw@mail.gmail.com>
- <YkUqajiNZmi+lAPC@google.com> <YkUwRIa4ZI3TLAs0@quokka>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <YkUwRIa4ZI3TLAs0@quokka>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649151361;58f6d46a;
-X-HE-SMSGID: 1nbfbM-0002uq-9O
+References: <20220403132322.51c90903@darkstar.example.org> <CADnq5_M+M_iykM0Ag6RF+kxzgpEopUBtp82h7tRM3G+B3AWZ2w@mail.gmail.com>
+ <20220404213940.09a56d15@darkstar.example.org>
+In-Reply-To: <20220404213940.09a56d15@darkstar.example.org>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Tue, 5 Apr 2022 10:23:16 -0400
+Message-ID: <CADnq5_PhaFbVCb=-AUCx4L-sCyPCPOsY3tNpiAg=gfCN7hFcJA@mail.gmail.com>
+Subject: Re: AMDGPU: regression on 5.17.1
+To: Michele Ballabio <ballabio.m@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev, 
+	Maling list - DRI developers <dri-devel@lists.freedesktop.org>, 
+	amd-gfx list <amd-gfx@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Just a quick add-on note for the record about another affected device:
+On Mon, Apr 4, 2022 at 3:39 PM Michele Ballabio <ballabio.m@gmail.com> wrote:
+>
+> On Mon, 4 Apr 2022 13:03:41 -0400
+> Alex Deucher <alexdeucher@gmail.com> wrote:
+>
+> > On Sun, Apr 3, 2022 at 10:19 AM Michele Ballabio
+> > <ballabio.m@gmail.com> wrote:
+> > >
+> > > Hi,
+> > >         I've hit a regression on 5.17.1 (haven't tested 5.17.0, but
+> > > 5.16-stable didn't have this problem).
+> > >
+> > > The machine is a Ryzen 5 1600 with AMD graphics (RX 560).
+> > >
+> > > The regression I hit seems to trigger when the machine is left
+> > > idle at boot (I don't boot straight to X, I boot to a tty, login
+> > > and then start X). The machine after a while blanks the screen.
+> > > Usually, the screen unblanks as the keyboard is hit or the mouse
+> > > moves, but with kernel 5.17.1 the screen does not wake up. The
+> > > machine seems to run mostly fine: I can login from ssh, but I
+> > > cannot reboot or halt it: a sysrq sequence is needed for that. Note
+> > > that if the screen goes blank under X, it wakes up fine.
+> > >
+> > > Below a dmesg and two traces from syslog (they're quite similar).
+> >
+> > Can you bisect?  Does setting amdgpu.runpm=0 help?
+>
+> I can try to bisect, should I narrow the search to drivers/gpu/drm/ ?
 
-On 31.03.22 06:38, Peter Hutterer wrote:
-> On Wed, Mar 30, 2022 at 09:13:30PM -0700, Dmitry Torokhov wrote:
->> On Wed, Mar 30, 2022 at 02:30:37PM +0200, Benjamin Tissoires wrote:
->>> On Wed, Mar 30, 2022 at 2:27 PM Thorsten Leemhuis
->>> <regressions@leemhuis.info> wrote:
->>>> On 21.03.22 19:44, José Expósito wrote:
->>>>> This reverts commit 37ef4c19b4c659926ce65a7ac709ceaefb211c40.
->>>>>
->>>>> The touchpad present in the Dell Precision 7550 and 7750 laptops
->>>>> reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
->>>>> the device is not a clickpad, it is a touchpad with physical buttons.
->>>>>
->>>>> In order to fix this issue, a quirk for the device was introduced in
->>>>> libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
->>>>>
->>>>>       [Precision 7x50 Touchpad]
->>>>>       MatchBus=i2c
->>>>>       MatchUdevType=touchpad
->>>>>       MatchDMIModalias=dmi:*svnDellInc.:pnPrecision7?50*
->>>>>       AttrInputPropDisable=INPUT_PROP_BUTTONPAD
->>>>>
->>>>> However, because of the change introduced in 37ef4c19b4 ("Input: clear
->>>>> BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
->>>>> anymore breaking the device right click button and making impossible to
->>>>> workaround it in user space.
->>>>>
->>>>> In order to avoid breakage on other present or future devices, revert
->>>>> the patch causing the issue.
->>>>>
->>>>> Cc: stable@vger.kernel.org
->>>>> Link: https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481 [1]
->>>>> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1868789  [2]
->>>>> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
->>>>> [...]
->>>>
->>>> Jiri, Benjamin, what the status here? Sure, this is not a crucial
->>>> regression and we are in the middle of the merge window, but it looks
->>>> like nothing has happened for a week now. Or was progress made somewhere
->>>> and I just missed it?
->>>
->>> No, I think it just wasn't picked up by the input maintainer yet
->>> (Dmitry, now in CC).
->>>
->>> FWIW:
->>> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->>>
->>> José, please do not forget to add the input maintainer when you target
->>> the input tree, not the HID one :)
->>
->> I see that there were several ACKs, but how many devices misuse the
->> HID_DG_BUTTONTYPE? Would it be better to quirk against either affected
->> Dell models, or particular touchpads (by HID IDs) instead of reverting
->> wholesale?
-> 
-> fwiw, a quick git grep in libinput shows 12 entries for disabling BTN_RIGHT
-> and 9 entries for enabling/disabling INPUT_PROP_BUTTONPAD. That's not the
-> number of devices affected by this bug, merely devices we know advertise the
-> wrong combination.
-> 
-> Note that the cause for the revert is loss of functionality. Previously, a
-> device was just advertising buttons incorrectly but still worked fine. This
-> was mostly a cosmetic issue (and could be worked around in userspace). With
-> the patch in place some devices right button no longer works because it's
-> filtered by the kernel. That's why the revert is needed.
-> 
-> The device could/should still be quirked to drop INPUT_PROP_BUTTONPAD but that
-> is only required to work around the cosmetic issues then.
+I would just do a full bisect if possible in case the change happens
+to be outside of drm.
 
-I anyone cares now or in the future: seems the patch meanwhile reverted
-(thx) also broke the ICL Si1516:
-https://bugzilla.kernel.org/show_bug.cgi?id=215771
+>
+> Setting amdgpu.runpm=0 works, the display now unblanks without problems.
 
-Ciao, Thorsten
+Thanks,
 
-P.S.: Any while at it, let me let regzbot about the fix as well:
+Alex
 
-#regzbot fixed-by: 8b188fba75195745026e11d408e4a7e94e01d701
+
+>
+> Thanks,
+>     Michele Ballabio
