@@ -1,127 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2331F15A3
-	for <regressions@lists.linux.dev>; Tue,  5 Apr 2022 05:17:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1127C34117
-	for <regressions@lists.linux.dev>; Tue,  5 Apr 2022 05:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1649135856;
-	bh=F4BmQX2Y63BrfJkQle/Kee5eiX9lFVCLsQ1STIVzAGs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dZrT9tlHLkA6Z2fmx2EGIMkYJG+2GcdgeYAhBLf+3ghitO5FbdzFychci3qHoiPwS
-	 5gTLjVg3FYJ7gCLHZ+u7fhr4TRFlLVEPJcT741lvrjqY5hlaUVZcltjHyEKwyUHzef
-	 3HkAC+bGcaMs0lY9jYnK+i4K5jJTYWmnhDilVV6gnow/mdTTKQghuGkqM/+uyiN0w8
-	 TzEWtCiEqCSz3gNlKAvVp3QOHRdyVVBxQq5UnE2xGg5nB9+A011q9Gv9oYuQvQmulM
-	 cSD637H0Na5dWVPkv1qsWFfz+Uo933sppnOREKxqpvKWcu9Fb04TymS+pZqwDdkjy4
-	 /peyhOqR6nm8Q==
-Received: by mail-vs1-f43.google.com with SMTP id x15so1881798vsq.10
-        for <regressions@lists.linux.dev>; Mon, 04 Apr 2022 22:17:36 -0700 (PDT)
-X-Gm-Message-State: AOAM5321UB3b9H/cfs5WsG39aZsKU78z8zSBx1BtIDYurLNAXg0kNvMT
-	Nz0K92B358GnNnIoggzcoMA0IYpVgFJUEgVBkw0=
-X-Google-Smtp-Source: ABdhPJxwAHd5YmIGFxtQXjLGpWT1kmM7IBN8n/zhBH0Urpkbt1tUAG2ja7KTW5WzlcRcBYmbO9u1or/8w7wC2pBLezE=
-X-Received: by 2002:a05:6102:dd1:b0:325:80a9:b5d7 with SMTP id
- e17-20020a0561020dd100b0032580a9b5d7mr514202vst.51.1649135855592; Mon, 04 Apr
- 2022 22:17:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DFB7C
+	for <regressions@lists.linux.dev>; Tue,  5 Apr 2022 09:36:01 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nbfbM-0002uq-9O; Tue, 05 Apr 2022 11:35:52 +0200
+Message-ID: <4746cf3e-a9e7-4968-2695-22dd3356638f@leemhuis.info>
+Date: Tue, 5 Apr 2022 11:35:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYu_ZHOeOPDiwzXGL6Re8aFYW3K+JSL2Dozw=VHwaUFxyQ@mail.gmail.com>
- <Yksjb9Mkq658k4YJ@dev-arch.thelio-3990X>
-In-Reply-To: <Yksjb9Mkq658k4YJ@dev-arch.thelio-3990X>
-From: Guo Ren <guoren@kernel.org>
-Date: Tue, 5 Apr 2022 13:17:24 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTQkGZnwXrXsbx8drL0AicVpOMW=JmOcrieuvyEf91XPhg@mail.gmail.com>
-Message-ID: <CAJF2gTQkGZnwXrXsbx8drL0AicVpOMW=JmOcrieuvyEf91XPhg@mail.gmail.com>
-Subject: Re: [next] riscv: Linux next-20220404 riscv defconfig builds failed.
-To: Nathan Chancellor <nathan@kernel.org>, Palmer Dabbelt <palmer@rivosinc.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	linux-riscv <linux-riscv@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Guo Ren <guoren@linux.alibaba.com>, Heiko Stuebner <heiko@sntech.de>, 
-	Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH] Revert "Input: clear BTN_RIGHT/MIDDLE on buttonpads"
+Content-Language: en-US
+To: Peter Hutterer <peter.hutterer@who-t.net>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>,
+ Jiri Kosina <jkosina@suse.cz>, Takashi Iwai <tiwai@suse.de>,
+ "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+ "3.8+" <stable@vger.kernel.org>, regressions@lists.linux.dev,
+ lkml <linux-kernel@vger.kernel.org>
+References: <20220321184404.20025-1-jose.exposito89@gmail.com>
+ <44abc738-1532-63fa-9cd1-2b3870a963bc@leemhuis.info>
+ <CAO-hwJJweSuSBE_18ZbvqS12eX9GcS+aJoe7SRFJdASOrN3bqw@mail.gmail.com>
+ <YkUqajiNZmi+lAPC@google.com> <YkUwRIa4ZI3TLAs0@quokka>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <YkUwRIa4ZI3TLAs0@quokka>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649151361;58f6d46a;
+X-HE-SMSGID: 1nbfbM-0002uq-9O
 
-On Tue, Apr 5, 2022 at 12:57 AM Nathan Chancellor <nathan@kernel.org> wrote:
->
-> On Mon, Apr 04, 2022 at 03:28:41PM +0530, Naresh Kamboju wrote:
-> > Linux next-20220404 riscv defconfig builds failed.
-> >
-> > Regressions found on riscv:
-> >    - riscv-riscv-clang-14-defconfig
-> >    - riscv-riscv-gcc-10-defconfig
-> >    - riscv-riscv-clang-13-defconfig
-> >    - riscv-riscv-clang-12-defconfig
-> >    - riscv-riscv-clang-11-defconfig
-> >    - riscv-riscv-gcc-11-defconfig
-> >    - riscv-riscv-gcc-8-defconfig
-> >    - riscv-riscv-gcc-9-defconfig
-> >    - riscv-riscv-clang-nightly-defconfig
-> >
-> >
-> > arch/riscv/kernel/compat_signal.c:7:10: fatal error:
-> > linux/tracehook.h: No such file or directory
-> >   7 | #include <linux/tracehook.h>
-> >     |          ^~~~~~~~~~~~~~~~~~~
-> > compilation terminated.
-> > make[3]: *** [scripts/Makefile.build:289:
-> > arch/riscv/kernel/compat_signal.o] Error 1
->
-> For what it's worth, I also see:
->
-> $ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- defconfig all
-> arch/riscv/kernel/compat_vdso/compat_vdso.lds.S:3:10: fatal error: ../vdso/vdso.lds.S: No such file or directory
->     3 | #include <../vdso/vdso.lds.S>
->       |          ^~~~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> make[2]: *** [scripts/Makefile.build:462: arch/riscv/kernel/compat_vdso/compat_vdso.lds] Error 1
-> arch/riscv/kernel/compat_vdso/rt_sigreturn.S:3:10: fatal error: ../vdso/rt_sigreturn.S: No such file or directory
->     3 | #include <../vdso/rt_sigreturn.S>
->       |          ^~~~~~~~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> arch/riscv/kernel/compat_vdso/note.S:3:10: fatal error: ../vdso/note.S: No such file or directory
->     3 | #include <../vdso/note.S>
->       |          ^~~~~~~~~~~~~~~~
-> compilation terminated.
-> arch/riscv/kernel/compat_vdso/getcpu.S:3:10: fatal error: ../vdso/getcpu.S: No such file or directory
->     3 | #include <../vdso/getcpu.S>
->       |          ^~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/rt_sigreturn.o] Error 1
-> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/note.o] Error 1
-> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/getcpu.o] Error 1
-> arch/riscv/kernel/compat_vdso/flush_icache.S:3:10: fatal error: ../vdso/flush_icache.S: No such file or directory
->     3 | #include <../vdso/flush_icache.S>
->       |          ^~~~~~~~~~~~~~~~~~~~~~~~
-> compilation terminated.
-> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/flush_icache.o] Error 1
->
-> I am guessing this code was never tested with $(srctree) == $(objtree).
-Thx for pointing it out:
-I always use:
-make -skj"$(nproc)" ARCH=riscv
-CROSS_COMPILE=riscv64-unknown-linux-gnu- EXTRA_CFLAGS+=-g
-O=../build-riscv/ defconfig all
+Just a quick add-on note for the record about another affected device:
 
-When I change to:
-make -skj"$(nproc)" ARCH=riscv
-CROSS_COMPILE=riscv64-unknown-linux-gnu- EXTRA_CFLAGS+=-g defconfig
-all
+On 31.03.22 06:38, Peter Hutterer wrote:
+> On Wed, Mar 30, 2022 at 09:13:30PM -0700, Dmitry Torokhov wrote:
+>> On Wed, Mar 30, 2022 at 02:30:37PM +0200, Benjamin Tissoires wrote:
+>>> On Wed, Mar 30, 2022 at 2:27 PM Thorsten Leemhuis
+>>> <regressions@leemhuis.info> wrote:
+>>>> On 21.03.22 19:44, José Expósito wrote:
+>>>>> This reverts commit 37ef4c19b4c659926ce65a7ac709ceaefb211c40.
+>>>>>
+>>>>> The touchpad present in the Dell Precision 7550 and 7750 laptops
+>>>>> reports a HID_DG_BUTTONTYPE of type MT_BUTTONTYPE_CLICKPAD. However,
+>>>>> the device is not a clickpad, it is a touchpad with physical buttons.
+>>>>>
+>>>>> In order to fix this issue, a quirk for the device was introduced in
+>>>>> libinput [1] [2] to disable the INPUT_PROP_BUTTONPAD property:
+>>>>>
+>>>>>       [Precision 7x50 Touchpad]
+>>>>>       MatchBus=i2c
+>>>>>       MatchUdevType=touchpad
+>>>>>       MatchDMIModalias=dmi:*svnDellInc.:pnPrecision7?50*
+>>>>>       AttrInputPropDisable=INPUT_PROP_BUTTONPAD
+>>>>>
+>>>>> However, because of the change introduced in 37ef4c19b4 ("Input: clear
+>>>>> BTN_RIGHT/MIDDLE on buttonpads") the BTN_RIGHT key bit is not mapped
+>>>>> anymore breaking the device right click button and making impossible to
+>>>>> workaround it in user space.
+>>>>>
+>>>>> In order to avoid breakage on other present or future devices, revert
+>>>>> the patch causing the issue.
+>>>>>
+>>>>> Cc: stable@vger.kernel.org
+>>>>> Link: https://gitlab.freedesktop.org/libinput/libinput/-/merge_requests/481 [1]
+>>>>> Link: https://bugzilla.redhat.com/show_bug.cgi?id=1868789  [2]
+>>>>> Signed-off-by: José Expósito <jose.exposito89@gmail.com>
+>>>>> [...]
+>>>>
+>>>> Jiri, Benjamin, what the status here? Sure, this is not a crucial
+>>>> regression and we are in the middle of the merge window, but it looks
+>>>> like nothing has happened for a week now. Or was progress made somewhere
+>>>> and I just missed it?
+>>>
+>>> No, I think it just wasn't picked up by the input maintainer yet
+>>> (Dmitry, now in CC).
+>>>
+>>> FWIW:
+>>> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>>>
+>>> José, please do not forget to add the input maintainer when you target
+>>> the input tree, not the HID one :)
+>>
+>> I see that there were several ACKs, but how many devices misuse the
+>> HID_DG_BUTTONTYPE? Would it be better to quirk against either affected
+>> Dell models, or particular touchpads (by HID IDs) instead of reverting
+>> wholesale?
+> 
+> fwiw, a quick git grep in libinput shows 12 entries for disabling BTN_RIGHT
+> and 9 entries for enabling/disabling INPUT_PROP_BUTTONPAD. That's not the
+> number of devices affected by this bug, merely devices we know advertise the
+> wrong combination.
+> 
+> Note that the cause for the revert is loss of functionality. Previously, a
+> device was just advertising buttons incorrectly but still worked fine. This
+> was mostly a cosmetic issue (and could be worked around in userspace). With
+> the patch in place some devices right button no longer works because it's
+> filtered by the kernel. That's why the revert is needed.
+> 
+> The device could/should still be quirked to drop INPUT_PROP_BUTTONPAD but that
+> is only required to work around the cosmetic issues then.
 
-I got your problem.
+I anyone cares now or in the future: seems the patch meanwhile reverted
+(thx) also broke the ICL Si1516:
+https://bugzilla.kernel.org/show_bug.cgi?id=215771
 
->
-> Cheers,
-> Nathan
+Ciao, Thorsten
 
+P.S.: Any while at it, let me let regzbot about the fix as well:
 
---
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+#regzbot fixed-by: 8b188fba75195745026e11d408e4a7e94e01d701
