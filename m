@@ -1,140 +1,148 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D031A7A
-	for <regressions@lists.linux.dev>; Tue,  5 Apr 2022 16:15:02 +0000 (UTC)
-Received: by mail-pg1-f181.google.com with SMTP id t13so11382146pgn.8
-        for <regressions@lists.linux.dev>; Tue, 05 Apr 2022 09:15:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6FUWFiiYF7RQM6AiZGZcmbxOr+8HtS1WpPnaUZsigro=;
-        b=BTCrh4EKdaMDmASfvS4ew7BfBRsBgAtjr3IHlo839Gs+uNJL1JaNgY7v+7hWAxfY3l
-         JN6DJshYDWPdzucQ0JkmFgrUmhoNFfJi73bCsveF0oWuFRP7ZaRXxVcx2MyGXEHBvcqr
-         ezLUNEkIkWuxApp/dOzuZHu9vzWAhReBDPZbNvhL60twYPz0hc25qbW/Cgif/u1Y2Bey
-         PFaiizHMBpyTQJeQxq7a9EHoXAw6vbOcXzeuNAH9O6dn555WunwPMGVXih/B0i1WNkF8
-         JKObM6m7yVDL2I0mUfdRK16YlqWP6DY4csOafI7oq9eqeQjOy3Cx7zy5zk/TfjfOOHiP
-         KGvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=6FUWFiiYF7RQM6AiZGZcmbxOr+8HtS1WpPnaUZsigro=;
-        b=6qUW1qS2C5Erz5upKisuRSUpq3M7ZulkhGUjAdgojrPPOygORG1H4hoodTQ9e+/Fpw
-         TpaeSiBVmmA2dzjYM/zlPf2mqfWUzNyTTjh/WWVsO6nJxJ7cbJK+6x1y5U93E0sNPEMg
-         5rXZRpCgSAoH86BULo7R4AQQqwOmA2HjxT+c83VpXitWrlkeC3e7Yhkjz4ZyNa2WFWqA
-         Ju2fBtWdzkWROPsZBhZV446Rq3F2Q8LMNbD98NfNyKDMRyCC8cXz+XOUF42ZiSEllUWm
-         YHgvFNP5+tsKkER+zL41ah7z0MmWurV53mrNqtVmLpK5H+q5nNJknvggib8Z82RNXOO+
-         CHDQ==
-X-Gm-Message-State: AOAM530MfPkWpKTlh09arK3WxS1LT/KnQUhaRVDgGH/JP8ug1Yor1cLt
-	xFp2+emPem8/PKf0aNVr7SSgQw==
-X-Google-Smtp-Source: ABdhPJxBsrRDDTM9H+4owE4Y81jBgCK2c5EsTHBBhVbKGNYldNMxrnBlnlMtBkUyZFupsZRuHzSSYg==
-X-Received: by 2002:a63:6443:0:b0:399:54fe:5184 with SMTP id y64-20020a636443000000b0039954fe5184mr3478339pgb.511.1649175302141;
-        Tue, 05 Apr 2022 09:15:02 -0700 (PDT)
-Received: from localhost ([12.3.194.138])
-        by smtp.gmail.com with ESMTPSA id l192-20020a6391c9000000b003861d9431c7sm13808252pge.62.2022.04.05.09.15.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Apr 2022 09:15:01 -0700 (PDT)
-Date: Tue, 05 Apr 2022 09:15:01 -0700 (PDT)
-X-Google-Original-Date: Tue, 05 Apr 2022 09:14:59 PDT (-0700)
-Subject:     Re: [next] riscv: Linux next-20220404 riscv defconfig builds failed.
-In-Reply-To: <CAJF2gTQkGZnwXrXsbx8drL0AicVpOMW=JmOcrieuvyEf91XPhg@mail.gmail.com>
-CC: nathan@kernel.org, naresh.kamboju@linaro.org, linux-next@vger.kernel.org,
-  linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, lkft-triage@lists.linaro.org,
-  regressions@lists.linux.dev, Stephen Rothwell <sfr@canb.auug.org.au>, guoren@linux.alibaba.com,
-  heiko@sntech.de, Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <paul.walmsley@sifive.com>,
-  aou@eecs.berkeley.edu
-From: Palmer Dabbelt <palmer@rivosinc.com>
-To: guoren@kernel.org
-Message-ID: <mhng-cfa7bfb9-bab8-423c-85ad-ecd407d6e806@palmer-ri-x1c9>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A644818D
+	for <regressions@lists.linux.dev>; Wed,  6 Apr 2022 01:13:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E94AC385BF
+	for <regressions@lists.linux.dev>; Wed,  6 Apr 2022 01:13:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1649207607;
+	bh=K2W88sa0e40FhxFM51hz1PVnPS6fYU/JKW4DlHd0JHk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HYGAzAvDvERjww1332qf4HBWmEBr8lBkHk5nMmpuHlcrS5xNhnbKDRvGd28nZ+kpN
+	 TyR2NMK9JSTMkmDUMQaAIe7sJuDWPs3BEWWckbImQOQQVb12qZhWymF9E6XURIGl3a
+	 ywXDWYdzLFYuIqxnrYkVbVipI7/38HCnjQcchEcsY3kjjiFKEn/sLMMxn3BglHVeeM
+	 CTPK108iZ1bfDOO75pm6RvAA1YcwofguWk2pYis7TDML2vBzhBJ34KsSC3mLhVZZoL
+	 RvjsW2J22HTbg1jpz9AndAsh4y5a+5KueCNel9rddnbDEZXBMQY2wLAx8cB7K3Bdi8
+	 GCpVhnbxbQaPg==
+Received: by mail-ua1-f48.google.com with SMTP id o10so1067079uar.0
+        for <regressions@lists.linux.dev>; Tue, 05 Apr 2022 18:13:27 -0700 (PDT)
+X-Gm-Message-State: AOAM532IUMNvu4uKqWcb8y8j1RXZvThbsAaupzzBTXMrty98SCtomZ3n
+	B2uAu+Mr9cv6KRs7RCSHLV8pcAKdnLeWjnWTse8=
+X-Google-Smtp-Source: ABdhPJwdlBT6DWcyITpQFk0eYMxDLklydODShGdQh3Dhz3gy5pvAEE1D7qv3EMRUsxW3oJsG0Lv+XReYvs2gnjTTYBE=
+X-Received: by 2002:a67:efc3:0:b0:325:4fcf:60bf with SMTP id
+ s3-20020a67efc3000000b003254fcf60bfmr1892801vsp.51.1649207606157; Tue, 05 Apr
+ 2022 18:13:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <CAJF2gTQkGZnwXrXsbx8drL0AicVpOMW=JmOcrieuvyEf91XPhg@mail.gmail.com>
+ <mhng-cfa7bfb9-bab8-423c-85ad-ecd407d6e806@palmer-ri-x1c9>
+In-Reply-To: <mhng-cfa7bfb9-bab8-423c-85ad-ecd407d6e806@palmer-ri-x1c9>
+From: Guo Ren <guoren@kernel.org>
+Date: Wed, 6 Apr 2022 09:13:15 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQgU=V+snWp7a8_txsX49BzAct1nkB18k-p4BZEd+s+eQ@mail.gmail.com>
+Message-ID: <CAJF2gTQgU=V+snWp7a8_txsX49BzAct1nkB18k-p4BZEd+s+eQ@mail.gmail.com>
+Subject: Re: [next] riscv: Linux next-20220404 riscv defconfig builds failed.
+To: Palmer Dabbelt <palmer@rivosinc.com>
+Cc: Nathan Chancellor <nathan@kernel.org>, Naresh Kamboju <naresh.kamboju@linaro.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	linux-riscv <linux-riscv@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Guo Ren <guoren@linux.alibaba.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
+	Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 04 Apr 2022 22:17:24 PDT (-0700), guoren@kernel.org wrote:
-> On Tue, Apr 5, 2022 at 12:57 AM Nathan Chancellor <nathan@kernel.org> wrote:
->>
->> On Mon, Apr 04, 2022 at 03:28:41PM +0530, Naresh Kamboju wrote:
->> > Linux next-20220404 riscv defconfig builds failed.
->> >
->> > Regressions found on riscv:
->> >    - riscv-riscv-clang-14-defconfig
->> >    - riscv-riscv-gcc-10-defconfig
->> >    - riscv-riscv-clang-13-defconfig
->> >    - riscv-riscv-clang-12-defconfig
->> >    - riscv-riscv-clang-11-defconfig
->> >    - riscv-riscv-gcc-11-defconfig
->> >    - riscv-riscv-gcc-8-defconfig
->> >    - riscv-riscv-gcc-9-defconfig
->> >    - riscv-riscv-clang-nightly-defconfig
->> >
->> >
->> > arch/riscv/kernel/compat_signal.c:7:10: fatal error:
->> > linux/tracehook.h: No such file or directory
->> >   7 | #include <linux/tracehook.h>
->> >     |          ^~~~~~~~~~~~~~~~~~~
->> > compilation terminated.
->> > make[3]: *** [scripts/Makefile.build:289:
->> > arch/riscv/kernel/compat_signal.o] Error 1
->>
->> For what it's worth, I also see:
->>
->> $ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- defconfig all
->> arch/riscv/kernel/compat_vdso/compat_vdso.lds.S:3:10: fatal error: ../vdso/vdso.lds.S: No such file or directory
->>     3 | #include <../vdso/vdso.lds.S>
->>       |          ^~~~~~~~~~~~~~~~~~~~
->> compilation terminated.
->> make[2]: *** [scripts/Makefile.build:462: arch/riscv/kernel/compat_vdso/compat_vdso.lds] Error 1
->> arch/riscv/kernel/compat_vdso/rt_sigreturn.S:3:10: fatal error: ../vdso/rt_sigreturn.S: No such file or directory
->>     3 | #include <../vdso/rt_sigreturn.S>
->>       |          ^~~~~~~~~~~~~~~~~~~~~~~~
->> compilation terminated.
->> arch/riscv/kernel/compat_vdso/note.S:3:10: fatal error: ../vdso/note.S: No such file or directory
->>     3 | #include <../vdso/note.S>
->>       |          ^~~~~~~~~~~~~~~~
->> compilation terminated.
->> arch/riscv/kernel/compat_vdso/getcpu.S:3:10: fatal error: ../vdso/getcpu.S: No such file or directory
->>     3 | #include <../vdso/getcpu.S>
->>       |          ^~~~~~~~~~~~~~~~~~
->> compilation terminated.
->> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/rt_sigreturn.o] Error 1
->> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/note.o] Error 1
->> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/getcpu.o] Error 1
->> arch/riscv/kernel/compat_vdso/flush_icache.S:3:10: fatal error: ../vdso/flush_icache.S: No such file or directory
->>     3 | #include <../vdso/flush_icache.S>
->>       |          ^~~~~~~~~~~~~~~~~~~~~~~~
->> compilation terminated.
->> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/flush_icache.o] Error 1
->>
->> I am guessing this code was never tested with $(srctree) == $(objtree).
-> Thx for pointing it out:
-> I always use:
-> make -skj"$(nproc)" ARCH=riscv
-> CROSS_COMPILE=riscv64-unknown-linux-gnu- EXTRA_CFLAGS+=-g
-> O=../build-riscv/ defconfig all
+On Wed, Apr 6, 2022 at 12:15 AM Palmer Dabbelt <palmer@rivosinc.com> wrote:
 >
-> When I change to:
-> make -skj"$(nproc)" ARCH=riscv
-> CROSS_COMPILE=riscv64-unknown-linux-gnu- EXTRA_CFLAGS+=-g defconfig
-> all
+> On Mon, 04 Apr 2022 22:17:24 PDT (-0700), guoren@kernel.org wrote:
+> > On Tue, Apr 5, 2022 at 12:57 AM Nathan Chancellor <nathan@kernel.org> wrote:
+> >>
+> >> On Mon, Apr 04, 2022 at 03:28:41PM +0530, Naresh Kamboju wrote:
+> >> > Linux next-20220404 riscv defconfig builds failed.
+> >> >
+> >> > Regressions found on riscv:
+> >> >    - riscv-riscv-clang-14-defconfig
+> >> >    - riscv-riscv-gcc-10-defconfig
+> >> >    - riscv-riscv-clang-13-defconfig
+> >> >    - riscv-riscv-clang-12-defconfig
+> >> >    - riscv-riscv-clang-11-defconfig
+> >> >    - riscv-riscv-gcc-11-defconfig
+> >> >    - riscv-riscv-gcc-8-defconfig
+> >> >    - riscv-riscv-gcc-9-defconfig
+> >> >    - riscv-riscv-clang-nightly-defconfig
+> >> >
+> >> >
+> >> > arch/riscv/kernel/compat_signal.c:7:10: fatal error:
+> >> > linux/tracehook.h: No such file or directory
+> >> >   7 | #include <linux/tracehook.h>
+> >> >     |          ^~~~~~~~~~~~~~~~~~~
+> >> > compilation terminated.
+> >> > make[3]: *** [scripts/Makefile.build:289:
+> >> > arch/riscv/kernel/compat_signal.o] Error 1
+> >>
+> >> For what it's worth, I also see:
+> >>
+> >> $ make -skj"$(nproc)" ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- defconfig all
+> >> arch/riscv/kernel/compat_vdso/compat_vdso.lds.S:3:10: fatal error: ../vdso/vdso.lds.S: No such file or directory
+> >>     3 | #include <../vdso/vdso.lds.S>
+> >>       |          ^~~~~~~~~~~~~~~~~~~~
+> >> compilation terminated.
+> >> make[2]: *** [scripts/Makefile.build:462: arch/riscv/kernel/compat_vdso/compat_vdso.lds] Error 1
+> >> arch/riscv/kernel/compat_vdso/rt_sigreturn.S:3:10: fatal error: ../vdso/rt_sigreturn.S: No such file or directory
+> >>     3 | #include <../vdso/rt_sigreturn.S>
+> >>       |          ^~~~~~~~~~~~~~~~~~~~~~~~
+> >> compilation terminated.
+> >> arch/riscv/kernel/compat_vdso/note.S:3:10: fatal error: ../vdso/note.S: No such file or directory
+> >>     3 | #include <../vdso/note.S>
+> >>       |          ^~~~~~~~~~~~~~~~
+> >> compilation terminated.
+> >> arch/riscv/kernel/compat_vdso/getcpu.S:3:10: fatal error: ../vdso/getcpu.S: No such file or directory
+> >>     3 | #include <../vdso/getcpu.S>
+> >>       |          ^~~~~~~~~~~~~~~~~~
+> >> compilation terminated.
+> >> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/rt_sigreturn.o] Error 1
+> >> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/note.o] Error 1
+> >> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/getcpu.o] Error 1
+> >> arch/riscv/kernel/compat_vdso/flush_icache.S:3:10: fatal error: ../vdso/flush_icache.S: No such file or directory
+> >>     3 | #include <../vdso/flush_icache.S>
+> >>       |          ^~~~~~~~~~~~~~~~~~~~~~~~
+> >> compilation terminated.
+> >> make[2]: *** [arch/riscv/kernel/compat_vdso/Makefile:43: arch/riscv/kernel/compat_vdso/flush_icache.o] Error 1
+> >>
+> >> I am guessing this code was never tested with $(srctree) == $(objtree).
+> > Thx for pointing it out:
+> > I always use:
+> > make -skj"$(nproc)" ARCH=riscv
+> > CROSS_COMPILE=riscv64-unknown-linux-gnu- EXTRA_CFLAGS+=-g
+> > O=../build-riscv/ defconfig all
+> >
+> > When I change to:
+> > make -skj"$(nproc)" ARCH=riscv
+> > CROSS_COMPILE=riscv64-unknown-linux-gnu- EXTRA_CFLAGS+=-g defconfig
+> > all
+> >
+> > I got your problem.
 >
-> I got your problem.
+> Just to be clear: this one wasn't supposed to go in via the csky tree,
+> and had other build issues that were being found by the autobuilders
+> (which is why it hadn't gone in via the riscv tree).  I do in-tree
+> builds somewhat regularly so that probably would have caught it if
+> nothing else did, but my guess is that some other autobuilder would have
+> found it first (some of the earlier patches
+The problem and other build issues (arm64 & 5.18-rc1 conflict) all
+have been solved in v12:
+https://lore.kernel.org/linux-riscv/20220405071314.3225832-1-guoren@kernel.org/
 
-Just to be clear: this one wasn't supposed to go in via the csky tree, 
-and had other build issues that were being found by the autobuilders 
-(which is why it hadn't gone in via the riscv tree).  I do in-tree 
-builds somewhat regularly so that probably would have caught it if 
-nothing else did, but my guess is that some other autobuilder would have 
-found it first (some of the earlier patches 
+>
+> Guo: please stop pushing things to linux-next that break the builds
+> and/or aren't aimed at your tree.  This just makes things unnecessarly
+> complicated.  If you don't want to deal with the build issues that's OK,
+> just LMK when you send the patch sets out and I'll deal with them, but
+> having linux-next's build break causes fallout for a lot of users.
+Yesterday, I made my
+https://github.com/c-sky/csky-linux/commits/linux-next with
+linux-5.18-rc1 tag commit version.
+So this only affected linux-next-20220404.
 
-Guo: please stop pushing things to linux-next that break the builds 
-and/or aren't aimed at your tree.  This just makes things unnecessarly 
-complicated.  If you don't want to deal with the build issues that's OK, 
-just LMK when you send the patch sets out and I'll deal with them, but 
-having linux-next's build break causes fallout for a lot of users.
+
+-- 
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
