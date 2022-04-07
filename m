@@ -1,464 +1,222 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D2E28E3
-	for <regressions@lists.linux.dev>; Wed,  6 Apr 2022 12:35:17 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nc4sP-0002uI-Ln; Wed, 06 Apr 2022 14:35:09 +0200
-Message-ID: <6808cd17-b48c-657d-de60-ef9d8bfa151e@leemhuis.info>
-Date: Wed, 6 Apr 2022 14:35:09 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2A8C20F5
+	for <regressions@lists.linux.dev>; Thu,  7 Apr 2022 07:54:39 +0000 (UTC)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.west.internal (Postfix) with ESMTP id DA65B3200EC0;
+	Thu,  7 Apr 2022 03:54:37 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 07 Apr 2022 03:54:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm3; bh=hvRJV0pvl3fLnQVaefDbK7s+xg+2wLBb3A3T1r
+	b+a40=; b=eHXmPPGVwTO8n00CRZPJ/6qTXK53BXAYGEUgX5Q4ulhZYaZVBXofVC
+	e+73TlEPGRjNEFTAp62XHawGFRcv2Vx+8OLji0ezh+6h6xAdNRW+gVDTsxgOQ6xC
+	SSSNTiV9WCeODs5dwjKJW3t8vBPjfA7m+chKp6C+lGrfMDNC88Yuj90znL63t3pl
+	aWYzG9i7wNkWts7SEosxihm928gTA1/9LUPssyeWPbh4Lj642vl5JvABNea7TPJo
+	kLVEo5rbL5yXxkuw11T5gy46szdIEA3Vr6eA6rfeYdOWTVKgsogCd9vomaoqQQWZ
+	aXf+NG3BJKBREvlz5Wb1UUhlKOL2tO3Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=hvRJV0pvl3fLnQVae
+	fDbK7s+xg+2wLBb3A3T1rb+a40=; b=ddD17FI/e7dTpvPXM+oT59gLJeP8esacR
+	qzemYeqBlTAXFmFAjU3Ldoh3ezkkg2slPyZBqvXnbGGWQ5ASMbPNM1J43qkF5d+V
+	AI5ivyyhGS9fHqtymUlz7K9Y/nxQKulVmN16w5HNL+KBQ7qC+R6r0G7fJZltQdMW
+	6tWmP4v6PVLaLkuxmLzI3pQmA7tME4yYOlmJF4aNC+ZWy24REG6fL8ihMJA1Hwhw
+	Vffq64B7/L4MvQUX2Wsm54NG+oWDZQBRT3fCbnJ1veDg0D2hlx1iHJtUcncteV7L
+	dhCWtywu5mHtmGmhdFJvH81fui0Ev1ead+22PGH7VzxNm1DcxNEnQ==
+X-ME-Sender: <xms:vZhOYvSYNG6eJq3NPujn5RnFmTh3UGDWuwo-62PxUGlhVgTTtmjPbw>
+    <xme:vZhOYgx0tg6Ra_heBgZ3o603PS36jkw_8ZAyXHIauJYx7-pH1wdkySWiEoCbud1mY
+    zrAcdO9lrQKuNeRj0s>
+X-ME-Received: <xmr:vZhOYk2JYooCHNI9FCJpq7_sVxnIYri9TrxS18AA_SiesYmfy0UiungjQWLUdo004MsR8R-ctJao0kU_HDNMVJd2czLP5DuMczGRYGA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvvddrudejjedguddvjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpefhffdtueegvedvueffjeeuffejfeffjedtfeevfeeuleejkeeghfeuheet
+    ffduheenucffohhmrghinhepghhithhlrggsrdgtohhmpdhtuhigsghuihhlugdrtghomh
+    dpkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigv
+    pedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtg
+    hh
+X-ME-Proxy: <xmx:vZhOYvAPLxH8jNLQWE9e3F1tB7METMXDutZ6OGPwtL9BbYgXU02n7Q>
+    <xmx:vZhOYogt36ZM9nWwgr3bYUgxrLqKVLAdYNmmjA3730hgffxEdR-Lyg>
+    <xmx:vZhOYjovNfrQvOv4Uvu9GX1FkT1TLcjJPQQ6R-sMH-M1iSSnu43eaQ>
+    <xmx:vZhOYkwGstWp97xfECSUvb9tHw6Elo7bdYe_jGXMYDxSvXroLaMOrw>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 7 Apr 2022 03:54:36 -0400 (EDT)
+Date: Thu, 7 Apr 2022 09:54:35 +0200
+From: Maxime Ripard <maxime@cerno.tech>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: linux-clk <linux-clk@vger.kernel.org>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+	gabriel.fernandez@foss.st.com,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@canonical.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Subject: Re: [next] db845c: WARNING: CPU: 5 PID: 8 at
+ drivers/clk/clk-divider.c:139 divider_recalc_rate
+Message-ID: <20220407075435.ahlylmbqmqnpxz64@houat>
+References: <CA+G9fYuqU45hHmK4WMUNEXQbmBucE+9fB=S9wcHEfEHaZ2jgcQ@mail.gmail.com>
+ <20220401151058.fipdax3kvmxknctv@houat>
+ <CA+G9fYu+WddXTb0NcbviUfGQHhsmThssVCafLPw7+nj3JsoFAA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-From: Thorsten Leemhuis <linux@leemhuis.info>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Greg KH <gregkh@linuxfoundation.org>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Content-Language: en-US
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- workflows@vger.kernel.org
-Subject: A lot of regression reports submitted to bugzilla.kernel.org are
- apparently ignored, even bisected ones
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1649248518;a871a917;
-X-HE-SMSGID: 1nc4sP-0002uI-Ln
-
-Hi! TLDR: I looked closer at every ticket filed in bugzilla.kernel.org
-over a time span of two weeks to see how well reports are handled, in
-particular those for kernel regressions. The results of this rough
-analysis are kinda devastating from my point of view. I for example
-found 8 tickets describing a regression where the reporter had even
-bisected the problem, but nevertheless the ticket afaics didn’t get a
-single reply or any other reaction from a regular kernel developer
-within about a week; in fact out of a total of 20 reports that looked
-like regressions to me (17 if you exclude tickets where the reporter
-used an afaics lightly patched distro kernel), only one got a helpful
-reply from a developer within a week. That makes us miss valuable
-reports and puts our "no regressions" rule into a bad light. Hence,
-something IMHO should be done here to improve the situation, but I'm not
-sure myself what exactly -- that's why I'm writing this mail. A better
-warning on bugzilla’s frontpage suggesting to report issues by mail
-maybe? And/or disable all bugzilla products and components where it's
-not clear that somebody will be looking at least once at submitted tickets?
-
-
-The long story: As part of my regression tracking work I a few months
-ago started to watch out for regressions reported in
-bugzilla.kernel.org. Normally I only skim roughly through tickets when
-they are about a week old, as doing it more thoroughly would quickly
-consume all the time I can spend on regression tracking (reminder: I'm
-doing this on my own time as a volunteer, it's not part of my job or
-something!). But multiple times already I got the impression that things
-were quite amiss. I also heard complaints from users about the state of
-things; some developers also complained when I told them about reports
-they had missed.
-
-That's why I took a closer look at the tickets filed in the weeks right
-before and after Linux 5.17 was released; that's 2022-03-14 till
-2022-03-27, which covers tickets with the IDs 215680 to 215764 (215707
-and up were filed during the first week of the merge window of 5.18).
-
-
-I excluded 31 tickets from my analysis for one reason or another (spam;
-tickets about man-pages and Trace-cmd/Kernelshark; note/reminder-to-self
-tickets filed by a developer; reports with distro-kernels heavily
-patched; ... -- see the list below for details). From the remaining
-tickets 20 looked like reports about regressions and 34 were about other
-issues; the numbers go down to 17 and 27 if one excludes tickets where
-the reporter used a distro-kernel that's afaics is only lightly patched
-(Arch, Fedora, Tumbleweed, ...). Warning, I'm just human and had to use
-my best judgment in quite a few cases, hence I might have mis-judged or
-mis-classified some tickets.
-
-Only 1 of those 20 regression tickets and 5 of the 34 other tickets
-within about a week got a reply from a kernel developer that works in
-the affected area. Don't worry, I forwarded all valid regression reports
-to the developers when I noticed the tickets were not acted upon (most
-of the time this got things moving).
-
-There is something I felt quite annoying: 8 out of those 20 tickets
-describing regressions where bisected and nevertheless were ignored in
-the first week. Among them is the (in)famous swiotlb/ath9k problem
-(https://lwn.net/Articles/889593/ ) that was recently fixed after
-someone brought it to LKML -- 4 days after the ticket was created and
-two after someone pointed to the culprit there.
-
-
-This situation afaics is in nobody's interest, as valuable regressions
-reports are ignored; and I guess the people that submitted them will
-feel ignored and likely think things like “they claim to have a ‘no
-regressions rule’, but don't take reports about regressions seriously”.
-
-[Quick reminder on the state of bugzilla.kernel.org for anyone that is
-not aware of the backstory: in an ideal world, nearly all of those 20/34
-tickets about regressions/issues should never have been reported to
-bugzilla.kernel.org in the first place. Our reporting-issues text
-(https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
--- linked on the front page of bugzilla.kernel.org) clearly warns that
-bugzilla.kernel.org almost always is the wrong place to file
-regressions/issues. But we don't live in an ideal world and that
-document sadly is quite long, as our bug-reporting process is special
-and hard for outsiders. OTOH I guess quite a few people afaics wouldn't
-even read the text even if it was really really short.]
-
-
-I'm not sure what's the best way forward to address the situation, as
-bugzilla.kernel.org is used by some kernel developers and subsystems.
-There are for example 19 entries (out of more than 2400!) in MAINTAINERS
-referring to it as the primary place to report issues; from what I've
-heard and seen there seem to be a few other kernel developers and
-subsystems that like having bugzilla around.
-
-But as the numbers show, a lot of tickets submitted there get ignored.
-Note though, many developers imho are not to blame here, as they never
-were told that tickets that might be of interest for them were
-submitted. That's because keeping an eye on bugzilla afaik has always
-been optional for kernel developers (many components assign the tickets
-to a non-existing email address; developers only get the reports in my
-mail, if they manually tell bugzilla in their account preferences to
-monitor that non-existing email address.) That's afaics the main reason
-why valuable tickets are ignored, but there are others. Many tickets for
-example get filed against components where afaics nobody watches at all
--- like other/other
-(https://bugzilla.kernel.org/buglist.cgi?component=Other&list_id=1110244&product=Other&resolution=---
-). Some tickets are forwarded to a mailing list, but it seems nobody
-takes a look at them.
-
-Something that could help for example would be an improved and really
-prominent text for the front-page of bugzilla.kernel.org that describes
-the situation. That text for example could clearly explain that
-submitting tickets in the bugtracker is often the wrong approach when it
-comes to the Linux kernel (aka "waste of time"); at the same time it
-obviously would need to point people to the (sadly quite long)
-reporting-issues text that explains the proper approach (disclaimer:
-that text was mostly written by yours truly and designed to get the
-important facts across quite quickly).
-
-Something else that could help: Disable all bugzilla products and
-components where it's not clear that somebody will be looking at least
-once at every ticket submitted. Except maybe for one where the name and
-the description makes it totally obvious that the report won't be sent
-to anyone; such a component is useful for people that want to upload big
-files somewhere and just link to them when reporting issues by mail.
-
-But as I said earlier: I’m not sure if that's the best angle of approach
-here. Sometimes I wonder if we should simply disallow filing new
-tickets. But then those subsystems and developers that rely on it would
-be forced to find alternatives; not to mention that afaics quite a few
-users will never report issues by mail and need something like
-bugzilla.kernel.org to get in contact with us.
-
-Does anyone have any better ideas on how to improve the situation? Or is
-this something that needs to be discussed at the next kernel/maintainers
-summit in September?
-
-Anyway, that's it from my side. Find the detailed report below if you
-want to check how I came up with the numbers mentioned above.
-
-Ciao, Thorsten
-
-P.S.: I'll try to continue keeping an eye on regressions reported to
-bugzilla.kernel.org, but I can't continue watching this closely, so some
-will slip through. Sorry.
-
-
----
-Detailed analysis:
-
-____________________________________________________________
-
-# Section 1: Regression reports
-
-1 out of 20 tickets mentioned in this section got a reply from a
-developer within round about a week
-
-____________________
-
-## Clearly reports about upstream regressions where a developer replied
-within roundabout one week
-
-1 ticket:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215713
-
-  Not bisected, but a fix was already available, apparently developed
-independently.
-
-____________________
-
-## Clearly reports about upstream regression that were bisected where no
-developer replied within roundabout one week
-
-8 tickets:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215689
-* https://bugzilla.kernel.org/show_bug.cgi?id=215703
-
-  Fun fact: that's the (in)famous swiotlb/ath9k problem
-(https://lwn.net/Articles/889593/ ("A security fix briefly breaks DMA"))
-that was reported properly to LKML by Oleksandr Natalenko
-(https://lore.kernel.org/lkml/1812355.tdWV9SEqCh@natalenko.name/ ) *four
-days* after this ticket was filed and *two days* after someone had
-identified and mentioned the culprit in the ticket.
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215715
-* https://bugzilla.kernel.org/show_bug.cgi?id=215720
-* https://bugzilla.kernel.org/show_bug.cgi?id=215726
-* https://bugzilla.kernel.org/show_bug.cgi?id=215734
-* https://bugzilla.kernel.org/show_bug.cgi?id=215742
-* https://bugzilla.kernel.org/show_bug.cgi?id=215744
-____________________
-
-## Clearly reports about upstream regression where no developer replied
-within roundabout one week
-
-3 tickets:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215711
-* https://bugzilla.kernel.org/show_bug.cgi?id=215725
-* https://bugzilla.kernel.org/show_bug.cgi?id=215743
-
-____________________
-
-## Reports that look a lot like a regression, but might not be one;
-after no kernel developer replied within one week the regression tracker
-asked for clarification and got confirmation it's a regression
-
-1 ticket:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215747
-
-____________________
-
-## tickets with reports that look a lot like regressions, but might not
-be; after no kernel developer replied within one week the regression
-tracker asked for clarification, but the reporter didn't respond (yet)
-
-4 tickets:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215682
-* https://bugzilla.kernel.org/show_bug.cgi?id=215691
-* https://bugzilla.kernel.org/show_bug.cgi?id=215719
-* https://bugzilla.kernel.org/show_bug.cgi?id=215761
-
-____________________
-
-## tickets about regressions occurring with distro kernels that are
-known to be close to upstream (some of these problems might be present
-in upstream, too)
-
-3 tickets:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215681
-* https://bugzilla.kernel.org/show_bug.cgi?id=215696
-* https://bugzilla.kernel.org/show_bug.cgi?id=215697
-
-
-
-____________________________________________________________
-
-# Section 2: tickets that don't look like regressions reports,
-nevertheless might be worth investigating
-
-Note: 5 out of 34 tickets mentioned in this section got a reply from a
-developer within roundabout a week.
-
-____________________
-
-## tickets where a developer replied within round about a week
-
-5 tickets:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215709
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215712
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215729
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215730
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215763
-
-____________________
-
-## Reports about circular locking and sanitizer warnings that didn't get
-a reply from a developer within round about a week
-
-2 tickets:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215746
-* https://bugzilla.kernel.org/show_bug.cgi?id=215748
-
-____________________
-
-## other issues that don't look like regressions (but might be!) that
-didn't get a reply from a developer within round about a week
-
-16 tickets:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215683
-* https://bugzilla.kernel.org/show_bug.cgi?id=215686
-* https://bugzilla.kernel.org/show_bug.cgi?id=215684
-* https://bugzilla.kernel.org/show_bug.cgi?id=215685
-* https://bugzilla.kernel.org/show_bug.cgi?id=215688
-* https://bugzilla.kernel.org/show_bug.cgi?id=215695
-* https://bugzilla.kernel.org/show_bug.cgi?id=215698
-* https://bugzilla.kernel.org/show_bug.cgi?id=215714
-* https://bugzilla.kernel.org/show_bug.cgi?id=215732
-* https://bugzilla.kernel.org/show_bug.cgi?id=215733
-* https://bugzilla.kernel.org/show_bug.cgi?id=215739
-* https://bugzilla.kernel.org/show_bug.cgi?id=215749
-* https://bugzilla.kernel.org/show_bug.cgi?id=215750
-* https://bugzilla.kernel.org/show_bug.cgi?id=215760
-* https://bugzilla.kernel.org/show_bug.cgi?id=215762
-* https://bugzilla.kernel.org/show_bug.cgi?id=215764
-
-____________________
-
-## tickets about issues occurring with distro kernels known to be close
-to upstream (some of these problems thus might be present in upstream, too)
-
-7 tickets:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215680
-* https://bugzilla.kernel.org/show_bug.cgi?id=215699
-* https://bugzilla.kernel.org/show_bug.cgi?id=215700
-* https://bugzilla.kernel.org/show_bug.cgi?id=215705
-* https://bugzilla.kernel.org/show_bug.cgi?id=215708
-* https://bugzilla.kernel.org/show_bug.cgi?id=215727
-* https://bugzilla.kernel.org/show_bug.cgi?id=215745
-
-_______________________________________
-
-## ticket about issues when mounting corrupted fs images (some of them
-might be regressions, but do we handle them as such? Related:
-https://lwn.net/Articles/796687/ )
-
-4 tickets:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215716
-* https://bugzilla.kernel.org/show_bug.cgi?id=215717
-* https://bugzilla.kernel.org/show_bug.cgi?id=215718
-* https://bugzilla.kernel.org/show_bug.cgi?id=215722
-
-
-
-____________________________________________________________
-
-# Section 3: other tickets that for one reason or another would be
-misleading to count them in Sections 1 or 2
-
-31 tickets
-
-____________________
-
-## regression reports
-
-5 tickets:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215687
-
-  Reporter brought the regression to IRC shortly after filing the bug,
-so developers might be aware that this ticket was safe to ignore.
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215693
-
-  Reporter brought the regression to IRC shortly after filing the bug,
-so developers might be aware that this ticket was safe to ignore.
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215721
-
-  Regression with a maintainers dev tree, developer replied.
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215728
-
-  This looked like a regression, but the reporter after one day noticed
-on his own it in fact was a bug in openZFS.
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215740
-
-  Hard to see that this is actually a regression; and when the
-regression tracker got the developers involved it turned out that this
-is caused by a change adding a warning that made an older problem now
-obvious.
-
-____________________
-
-## issues
-
-7 tickets:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215701
-
-  RHEL/CentOS kernel (known to contain quite a few patches)
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215702
-
-  RHEL/CentOS kernel (known to contain quite a few patches)
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215707
-
-  Arch Zen Kernel (seems to contains quite a few patches)
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215723
-
-  "dirty"(?) kernel (whatever that is)
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215724
-
-  Reporter marked it as a duplicate of 215730 (a ticket filed by the
-same reporter where a developer replied).
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215731
-
-   RHEL/CentOS kernel (known to contain quite a few patches) (a
-developer nevertheless replied within round about a week)
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215741
-
-  Very old kernel version
-
-____________________
-
-## tickets submitted from a developer as a kind of note/reminder-to-self
-
-10 tickets:
-
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215690
-* https://bugzilla.kernel.org/show_bug.cgi?id=215751
-* https://bugzilla.kernel.org/show_bug.cgi?id=215752
-* https://bugzilla.kernel.org/show_bug.cgi?id=215753
-* https://bugzilla.kernel.org/show_bug.cgi?id=215754
-* https://bugzilla.kernel.org/show_bug.cgi?id=215755
-* https://bugzilla.kernel.org/show_bug.cgi?id=215756
-* https://bugzilla.kernel.org/show_bug.cgi?id=215757
-* https://bugzilla.kernel.org/show_bug.cgi?id=215758
-* https://bugzilla.kernel.org/show_bug.cgi?id=215759
-
-____________________
-
-## Tickets either inaccessible or covering things like man-pages,
-Trace-cmd/Kernelshark, etc.
-
-9 tickets:
-
-* https://bugzilla.kernel.org/show_bug.cgi?id=215692
-* https://bugzilla.kernel.org/show_bug.cgi?id=215694
-* https://bugzilla.kernel.org/show_bug.cgi?id=215704
-* https://bugzilla.kernel.org/show_bug.cgi?id=215706
-* https://bugzilla.kernel.org/show_bug.cgi?id=215710
-* https://bugzilla.kernel.org/show_bug.cgi?id=215735
-* https://bugzilla.kernel.org/show_bug.cgi?id=215736
-* https://bugzilla.kernel.org/show_bug.cgi?id=215737
-* https://bugzilla.kernel.org/show_bug.cgi?id=215738
-
-
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="i5yz424gkn64kvgh"
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYu+WddXTb0NcbviUfGQHhsmThssVCafLPw7+nj3JsoFAA@mail.gmail.com>
+
+
+--i5yz424gkn64kvgh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Sat, Apr 02, 2022 at 12:16:48AM +0530, Naresh Kamboju wrote:
+> On Fri, 1 Apr 2022 at 20:41, Maxime Ripard <maxime@cerno.tech> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, Mar 31, 2022 at 05:33:57PM +0530, Naresh Kamboju wrote:
+> > > Following kernel warning noticed on db845c while booting linux next-2=
+0220331.
+> > >
+> > > metadata:
+> > >   git_ref: master
+> > >   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+> > >   git_sha: fdcbcd1348f4ef713668bae1b0fa9774e1811205
+> > >   git_describe: next-20220331
+> > >   kernel_version: 5.17.0
+> > >   kernel-config: https://builds.tuxbuild.com/278RLnhgJL7XdlJbcbv07jiw=
+bYB/config
+> > >
+> > > Boot log:
+> > > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x517f803c]
+> > > [    0.000000] Linux version 5.17.0-next-20220331 (tuxmake@tuxmake)
+> > > (aarch64-linux-gnu-gcc (Debian 11.2.0-18) 11.2.0, GNU ld (GNU Binutils
+> > > for Debian) 2.38) #1 SMP PREEMPT @1648699852
+> > > [    0.000000] Machine model: Thundercomm Dragonboard 845c
+> > > <trim>
+> > > [    8.131366] ------------[ cut here ]------------
+> > > [    8.131374] dsi0_pll_bit_clk: Zero divisor and CLK_DIVIDER_ALLOW_Z=
+ERO not set
+> > > [    8.131387] WARNING: CPU: 5 PID: 8 at drivers/clk/clk-divider.c:139
+> > > divider_recalc_rate+0x8c/0xc0
+> > > [    8.131398] Modules linked in: qcom_spmi_adc5 snd_soc_sdm845
+> > > qcom_vadc_common qcom_spmi_temp_alarm qcom_pon crct10dif_ce rtc_pm8xxx
+> > > snd_soc_rt5663 msm snd_soc_qcom_common gpu_sched snd_soc_rl6231
+> > > soundwire_bus reset_qcom_pdc drm_dp_helper qcom_camss hci_uart
+> > > videobuf2_dma_sg btqca v4l2_fwnode venus_core ath10k_snoc v4l2_async
+> > > btbcm ath10k_core i2c_qcom_geni v4l2_mem2mem videobuf2_memops
+> > > videobuf2_v4l2 ath bluetooth camcc_sdm845 videobuf2_common
+> > > spi_geni_qcom i2c_qcom_cci qcom_rng mac80211 xhci_pci qcom_q6v5_mss
+> > > xhci_pci_renesas cfg80211 icc_osm_l3 slim_qcom_ngd_ctrl qcom_wdt
+> > > rfkill qrtr lmh pdr_interface display_connector slimbus qcom_q6v5_pas
+> > > drm_kms_helper qcom_pil_info qcom_q6v5 qcom_sysmon qcom_common
+> > > qcom_glink_smem qmi_helpers drm mdt_loader socinfo rmtfs_mem fuse
+> > > [    8.131462] CPU: 5 PID: 8 Comm: kworker/u16:0 Not tainted
+> > > 5.17.0-next-20220331 #1
+> > > [    8.131465] Hardware name: Thundercomm Dragonboard 845c (DT)
+> > > [    8.131467] Workqueue: events_unbound deferred_probe_work_func
+> > > [    8.131475] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS =
+BTYPE=3D--)
+> > > [    8.131477] pc : divider_recalc_rate+0x8c/0xc0
+> > > [    8.131479] lr : divider_recalc_rate+0x8c/0xc0
+> > > [    8.131481] sp : ffff8000080936c0
+> > > [    8.131482] x29: ffff8000080936c0 x28: ffff781940e58d00 x27: ffffa=
+7f3f1bc6d38
+> > > [    8.131485] x26: ffffa7f3f1bc6cf8 x25: 0000000000000000 x24: fffff=
+fffffffffff
+> > > [    8.131488] x23: ffff781947e8a400 x22: 000000003b9aca50 x21: ffff7=
+81940be0800
+> > > [    8.131491] x20: ffff781947e8a800 x19: 000000003b9aca50 x18: 00000=
+00000000000
+> > > [    8.131494] x17: 0000000000000000 x16: 0000000000000000 x15: 00000=
+00000000000
+> > > [    8.131497] x14: ffff7819bd718000 x13: 0a74657320746f6e x12: 204f5=
+2455a5f574f
+> > > [    8.131500] x11: 4c4c415f52454449 x10: 5649445f4b4c4320 x9 : ffffa=
+7f3f011de84
+> > > [    8.131502] x8 : 445f4b4c4320646e x7 : 6120726f73697669 x6 : 00000=
+00000000001
+> > > [    8.131505] x5 : ffffa7f3f288f000 x4 : ffffa7f3f288f2d0 x3 : 00000=
+00000000000
+> > > [    8.131508] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff7=
+819402c7000
+> > > [    8.131511] Call trace:
+> > > [    8.131512]  divider_recalc_rate+0x8c/0xc0
+> > > [    8.131513]  clk_divider_recalc_rate+0x64/0x90
+> > > [    8.131515]  clk_recalc+0x40/0xb0
+> > > [    8.131519]  clk_calc_subtree+0x58/0x90
+> > > [    8.131521]  clk_calc_subtree+0x70/0x90
+> > > [    8.131523]  clk_calc_new_rates+0x150/0x290
+> > > [    8.131526]  clk_calc_new_rates+0x100/0x290
+> > > [    8.131528]  clk_calc_new_rates+0x100/0x290
+> > > [    8.131530]  clk_calc_new_rates+0x100/0x290
+> > > [    8.131533]  clk_core_set_rate_nolock+0xa0/0x2a4
+> > > [    8.131535]  clk_set_rate_range_nolock.part.0+0xbc/0x2a0
+> > > [    8.131538]  __clk_put+0x70/0x140
+> > > [    8.131540]  clk_put+0x1c/0x30
+> > > [    8.131543]  of_clk_set_defaults+0x140/0x3c0
+> > > [    8.131546]  platform_probe+0x48/0xf0
+> > > [    8.131548]  really_probe+0x184/0x3d0
+> > > [    8.131550]  __driver_probe_device+0x11c/0x190
+> > > [    8.131553]  driver_probe_device+0x44/0xf4
+> > > [    8.131556]  __device_attach_driver+0xa4/0x140
+> > > [    8.131558]  bus_for_each_drv+0x84/0xe0
+> > > [    8.131561]  __device_attach+0xe4/0x1c0
+> > > [    8.131563]  device_initial_probe+0x20/0x30
+> > > [    8.131565]  bus_probe_device+0xa4/0xb0
+> > > [    8.131567]  deferred_probe_work_func+0xa8/0xfc
+> > > [    8.131570]  process_one_work+0x1dc/0x450
+> > > [    8.131575]  worker_thread+0x154/0x450
+> > > [    8.131577]  kthread+0x100/0x110
+> > > [    8.131579]  ret_from_fork+0x10/0x20
+> > > [    8.131584] ---[ end trace 0000000000000000 ]---
+> > > [    8.131588] ------------[ cut here ]------------
+> >
+> > I'm not sure if it's feasible, but if it is, it looks like something
+> > that could be fixed by the patch pasted here:
+> >
+> > https://lore.kernel.org/linux-clk/20220401122736.5yvanksa4pla7uql@houat/
+> > Could you test it?
+>=20
+> I have tested the single line patch and reported problems not fixed.
+
+Could you test this branch?
+https://github.com/mripard/linux/tree/rpi/clk-improvements-more-fixes
+
+Thanks!
+Maxime
+
+--i5yz424gkn64kvgh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCYk6YuwAKCRDj7w1vZxhR
+xUChAP0UVOSNtC1qP84XhYgR5jOX0+qkLgOnE+8H9phnEaSRYAD/b4tGeJzdEGe1
+t+sCqPDcVmNLKYmYYv37511sduZt7Qw=
+=U3cn
+-----END PGP SIGNATURE-----
+
+--i5yz424gkn64kvgh--
