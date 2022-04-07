@@ -1,112 +1,84 @@
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF7120E9
-	for <regressions@lists.linux.dev>; Thu,  7 Apr 2022 11:42:22 +0000 (UTC)
-Received: by mail-oi1-f178.google.com with SMTP id q129so5344202oif.4
-        for <regressions@lists.linux.dev>; Thu, 07 Apr 2022 04:42:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4SlNyJLkNkQjFibbjG7LibUXxMJ0vZJMxjm1ghUeLSo=;
-        b=RyFz37RFrTq9tfEhm7CeR0XjT0XDM8te7eZ7yZTVn04gO23o3fYXZcM43nomGQETne
-         k7I9SVLcJZsWi3Hfk8otl/I4P4YAlBF6HAuW+IhPYqZvKLVPsNuLUFvm76frX+RVZmn1
-         EJLaHovsDsDTZqlT52trbcbd7nTvNGMLBZSNLyaXtpuq4KNeE/iKlH9MRyPxWNrglS2v
-         8Hh6gIDU7InmRt+pgufza4JN2xpcLZLF1ef0u06op9zmgSjZXMHNmOh+MS+oXQmIX2pQ
-         5HIWmA8Bu6/Qz5CvJGKvBtlb34aWLqpEGknEKNYwVumxYck8dYVDggcxvT5hL6UqNVYC
-         G9PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4SlNyJLkNkQjFibbjG7LibUXxMJ0vZJMxjm1ghUeLSo=;
-        b=348+CXDWG1SHzoIAbUzz2O9pt8kt7x6+gDMQWy7FI5FEePxe3PsQlXx8Dqst0SmLqI
-         1KQkhScRdWqN+bxryO3q9WNU6SeziajVSaa9Eq68gP/HDSzearZWmI7WjdCjgBJGEErf
-         jc5Yi9FMsDgc66iJJvn89YxD3mueu4O5ro9y1YSFbJ4U4/S4+tEKGXxUFbOwGRRD5C1R
-         Snrel7spKuwqiBb5dgz+GqoBm/GYIwbPVt344MwHErY+HgK2cPoIfEfv7BJVVuqGlYnN
-         dIFvIclgDzsSLkpMmhQce2/CsY06h0tHJSbjo36Uic0J8RAHxl+pHQz2BwrS6fwbpXUG
-         lErQ==
-X-Gm-Message-State: AOAM530nzCxByoqFIDfhZ0snvOGW9NVS981Md/PhYABT3GvAjuYn/vL4
-	6FJux8SmFehOeUKfEqOlPxCdHqc1pGVDwi9U7yvqKw==
-X-Google-Smtp-Source: ABdhPJwmb8NPaOfFwbH1UoLl7ZnI0TLh1pppFo6Oeu8yFnd1iYpTTiurcyIBl4X6Tu7dcJs42w/30+ElAs6L8dIdvzc=
-X-Received: by 2002:a05:6808:1991:b0:2da:350d:f9fc with SMTP id
- bj17-20020a056808199100b002da350df9fcmr5606947oib.251.1649331741621; Thu, 07
- Apr 2022 04:42:21 -0700 (PDT)
+Received: from muru.com (muru.com [72.249.23.125])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77A7D2564
+	for <regressions@lists.linux.dev>; Thu,  7 Apr 2022 13:27:30 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by muru.com (Postfix) with ESMTPS id C8B2E8125;
+	Thu,  7 Apr 2022 13:25:00 +0000 (UTC)
+Date: Thu, 7 Apr 2022 16:27:22 +0300
+From: Tony Lindgren <tony@atomide.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>, Johan Hovold <johan@kernel.org>,
+	linux-serial@vger.kernel.org, kernel@pengutronix.de,
+	Steffen Trumtrar <s.trumtrar@pengutronix.de>,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] serial: 8250: Return early in .start_tx() if there are
+ no chars to send
+Message-ID: <Yk7muv2McT5Sjqbk@atomide.com>
+References: <20220217211839.443039-1-u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYuqU45hHmK4WMUNEXQbmBucE+9fB=S9wcHEfEHaZ2jgcQ@mail.gmail.com>
- <20220401151058.fipdax3kvmxknctv@houat> <CA+G9fYu+WddXTb0NcbviUfGQHhsmThssVCafLPw7+nj3JsoFAA@mail.gmail.com>
- <20220407075435.ahlylmbqmqnpxz64@houat>
-In-Reply-To: <20220407075435.ahlylmbqmqnpxz64@houat>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 7 Apr 2022 17:12:09 +0530
-Message-ID: <CA+G9fYvT_W9+0AguQu97mqTm5zNnSvF0asnatZX8BTf=_1oANg@mail.gmail.com>
-Subject: Re: [next] db845c: WARNING: CPU: 5 PID: 8 at drivers/clk/clk-divider.c:139
- divider_recalc_rate
-To: Maxime Ripard <maxime@cerno.tech>
-Cc: linux-clk <linux-clk@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, gabriel.fernandez@foss.st.com, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Nicolas Dechesne <nicolas.dechesne@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220217211839.443039-1-u.kleine-koenig@pengutronix.de>
 
-On Thu, 7 Apr 2022 at 13:24, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi,
->
-> > > I'm not sure if it's feasible, but if it is, it looks like something
-> > > that could be fixed by the patch pasted here:
-> > >
-> > > https://lore.kernel.org/linux-clk/20220401122736.5yvanksa4pla7uql@houat/
-> > > Could you test it?
-> >
-> > I have tested the single line patch and reported problems not fixed.
->
-> Could you test this branch?
-> https://github.com/mripard/linux/tree/rpi/clk-improvements-more-fixes
+Hi,
 
-I have tested your tree and branch.
-I saw more clk prints in the boot log and did not notice the reported warning.
+* Uwe Kleine-König <u.kleine-koenig@pengutronix.de> [700101 02:00]:
+> From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> 
+> Don't start the whole chain for TX if there is no data to send. This is
+> mostly relevant for rs485 mode as there might be rts-before-send and
+> rts-after-send delays involved.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> ---
+> Hello,
+> 
+> a few other drivers have such an early exit already (imx, stm32-usart).
+> I wonder if it applies to all UART drivers that there is nothing to do
+> in .start_tx() if the circ buffer is empty and there is no x_char to
+> send. In this case it would be more sensible to ensure in serial_core
+> that .start_tx() is only ever called if there is something to do.
 
-[    0.734195] clk_set_rate_range_nolock: qdss: orphan ? n
-[    0.734222] clk_set_rate_range_nolock: qdss: core req rate 0
-[    0.734235] clk_set_rate_range_nolock: qdss: clamped rate 0
-[    0.734249] clk_core_set_rate_nolock: qdss: rate 0
-[    0.734262] clk_core_set_rate_nolock: qdss: rounded rate 0
-...
-[    3.574169] clk_set_rate_range_nolock: gcc_ufs_phy_ice_core_clk: orphan ? n
-[    3.581271] clk_set_rate_range_nolock: gcc_ufs_phy_ice_core_clk:
-core req rate 300000000
-[    3.589446] clk_set_rate_range_nolock: gcc_ufs_phy_ice_core_clk:
-clamped rate 300000000
-[    3.597521] clk_core_set_rate_nolock: gcc_ufs_phy_ice_core_clk:
-rate 300000000
-...
+This patch seems to cause a runtime PM regression in v5.18-rc1 where
+8250 is never idled for omaps.
 
-Please refer this link for detail boot log,
-https://lkft.validation.linaro.org/scheduler/job/4861930#L2712
+Looks like the return added here is not paired with put for the
+serial8250_rpm_get_tx() call above?
 
-Build link
-https://builds.tuxbuild.com/27SxYLYlZcKEUQGVbmnmLP3GxEp/
+Regards,
 
-- Naresh
+Tony
 
->
-> Thanks!
-> Maxime
+#regzbot ^introduced 932d596378b0
 
-
---
-Linaro LKFT
-https://lkft.linaro.org
+>  drivers/tty/serial/8250/8250_port.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 3b12bfc1ed67..5d4668f12f71 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -1657,6 +1657,9 @@ static void serial8250_start_tx(struct uart_port *port)
+>  
+>  	serial8250_rpm_get_tx(up);
+>  
+> +	if (!port->x_char && uart_circ_empty(&port->state->xmit))
+> +		return;
+> +
+>  	if (em485 &&
+>  	    em485->active_timer == &em485->start_tx_timer)
+>  		return;
+> 
+> base-commit: 754e0b0e35608ed5206d6a67a791563c631cec07
+> -- 
+> 2.34.1
+> 
