@@ -1,104 +1,79 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08B452570
-	for <regressions@lists.linux.dev>; Thu,  7 Apr 2022 17:56:52 +0000 (UTC)
-Received: by mail-yb1-f182.google.com with SMTP id l14so10942497ybe.4
-        for <regressions@lists.linux.dev>; Thu, 07 Apr 2022 10:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VlVF6lOp5dpC/j+GTWtTRB8fshiniUoILlPCbn8biBo=;
-        b=cnyeRbdWotGynXREUrsZQqgNgw9t4HD1KXVc4VKbHn62elv0ZJt7/Sny282D3dfpa7
-         9mwQsjnSnkas/boXNFGM4nCbO8mV/xB7h4n5AXa8sVjfI3a6kspQMlWxD7mZyWIVwdGO
-         1k9Sx57p+wkTVmp+URiYVrQqs+xgROZiGchYY37qIcmaFSYoqXA6sCPLlvBhtZUFpu3f
-         gvjzwXPBDF9oHVP9nQmjySzPmPJpUHFLeynLskBL2jB3YA1jp/eVHOgk7UEUFUcJOEAi
-         tFuYYy5mhJhPwfEJ/9nNrBcZZrwOjPrIpmdswHYrYNZ6PiZjnrXsqcHnToS9LDQHE13L
-         +V7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VlVF6lOp5dpC/j+GTWtTRB8fshiniUoILlPCbn8biBo=;
-        b=DVRRcNc4ljzH3B7JzTfagJ4m9qzNqCI/W0whUJQUVftm2xtzDycisRixnRfda4CHHK
-         CNv3O/5i1a7BwU5oYmliWIsMI2ykyojt/BE3D+PMNNG/lBltwwgmUryMp0AC5X6WQs7f
-         Wlq4VHEJkWIqvdR5TJ1JFO9+AdsOXHLObk55LUCg9aun8nZjujYaJZl3JvXjp0bF5VCu
-         y+oUydLLrVym0GBnmkoVo0dlKNXrb7TiaUF8u/ssoGglYpG079q0sUVc/xtCgjHQsBzM
-         mLdSS4lFswROOytlNvRDhFQ3Ry0hK2wFxdeGXnHryio8PYZEjj3soAJ6O0KV348DqORA
-         dVRw==
-X-Gm-Message-State: AOAM533MH3s5C4RR77/ZKw4YkBHFoGdkpUUNtj9eWry/dULoGRLaUru4
-	XGHZmRakG0pY0Xyd4EtQrq683kBWLfespBroFp1NXg==
-X-Google-Smtp-Source: ABdhPJx7pBIu4DCGwRwQQvrbwgWliwJ3a5uEdC2cz90Zd9apB6WTYrp2DxQjMM+J44bGx5hlZh8QCq7A4LTclign76w=
-X-Received: by 2002:a25:2409:0:b0:634:15f4:2240 with SMTP id
- k9-20020a252409000000b0063415f42240mr10337229ybk.88.1649354211810; Thu, 07
- Apr 2022 10:56:51 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3181E362
+	for <regressions@lists.linux.dev>; Fri,  8 Apr 2022 08:21:02 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ncjrS-0000yq-EN; Fri, 08 Apr 2022 10:20:54 +0200
+Message-ID: <cd89d263-43e4-5634-75b9-bf3340c9bb1e@leemhuis.info>
+Date: Fri, 8 Apr 2022 10:20:54 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYuqU45hHmK4WMUNEXQbmBucE+9fB=S9wcHEfEHaZ2jgcQ@mail.gmail.com>
- <20220401151058.fipdax3kvmxknctv@houat> <CA+G9fYu+WddXTb0NcbviUfGQHhsmThssVCafLPw7+nj3JsoFAA@mail.gmail.com>
- <20220407075435.ahlylmbqmqnpxz64@houat> <CA+G9fYvT_W9+0AguQu97mqTm5zNnSvF0asnatZX8BTf=_1oANg@mail.gmail.com>
- <20220407134615.pqx4lxvgl4ofjrki@houat>
-In-Reply-To: <20220407134615.pqx4lxvgl4ofjrki@houat>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 7 Apr 2022 23:26:40 +0530
-Message-ID: <CA+G9fYucyqd6LqBGGzmwXA=hYRyETJmk_w1Z0qPnFn3+Fzj7sQ@mail.gmail.com>
-Subject: Re: [next] db845c: WARNING: CPU: 5 PID: 8 at drivers/clk/clk-divider.c:139
- divider_recalc_rate
-To: Maxime Ripard <maxime@cerno.tech>
-Cc: linux-clk <linux-clk@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, gabriel.fernandez@foss.st.com, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
-	Alexandre Torgue <alexandre.torgue@foss.st.com>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Nicolas Dechesne <nicolas.dechesne@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Content-Language: en-US
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Bug 215777 - ath11k: 5.17.x causes cpu soft-lock on xps13 9310
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649406062;f3caacaa;
+X-HE-SMSGID: 1ncjrS-0000yq-EN
 
-Hi Maxime
+Hi, this is your Linux kernel regression tracker speaking.
 
-On Thu, 7 Apr 2022 at 19:16, Maxime Ripard <maxime@cerno.tech> wrote:
->
-> Hi Naresh,
->
-> On Thu, Apr 07, 2022 at 05:12:09PM +0530, Naresh Kamboju wrote:
-> > On Thu, 7 Apr 2022 at 13:24, Maxime Ripard <maxime@cerno.tech> wrote:
-> > >
-> > > Hi,
-> > >
-> > > > > I'm not sure if it's feasible, but if it is, it looks like something
-> > > > > that could be fixed by the patch pasted here:
-> > > > >
-> > > > > https://lore.kernel.org/linux-clk/20220401122736.5yvanksa4pla7uql@houat/
-> > > > > Could you test it?
-> > > >
-> > > > I have tested the single line patch and reported problems not fixed.
-> > >
-> > > Could you test this branch?
-> > > https://github.com/mripard/linux/tree/rpi/clk-improvements-more-fixes
-> >
-> > I have tested your tree and branch.
-> > I saw more clk prints in the boot log and did not notice the reported warning.
->
-> I just pushed a new version of my branch? It should get rid of most of
-> the side effects (and logs) you were seeing.
+About a week ago a regression was reported to bugzilla.kernel.org that
+seems to be handled there already, nevertheless I'd like to add to the
+tracking to ensure it's not forgotten.
 
-The reported problem has been fixed.
-Please check this boot log and test log [1].
-FYI, "clk_ignore_unused" has been used in Kernel boot args.
+#regzbot introduced: 9dcf6808b253a72b2c90eed179863bf5fab7d68c
+#regzbot from: dominik.foerderer@windeck-gymnasium.de
+<dominik.foerderer@windeck-gymnasium.de>
+#regzbot title: net: wifi: ath11k: 5.17.x causes cpu soft-lock on xps13
+9310
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215777
 
-https://lkft.validation.linaro.org/scheduler/job/4862043#L2712
+See the ticket for details, there were a few replies already.
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-- Naresh
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
 
->
-> Thanks!
-> Maxime
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
+
