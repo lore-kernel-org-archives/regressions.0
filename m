@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3181E362
-	for <regressions@lists.linux.dev>; Fri,  8 Apr 2022 08:21:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E567D623
+	for <regressions@lists.linux.dev>; Fri,  8 Apr 2022 10:08:19 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ncjrS-0000yq-EN; Fri, 08 Apr 2022 10:20:54 +0200
-Message-ID: <cd89d263-43e4-5634-75b9-bf3340c9bb1e@leemhuis.info>
-Date: Fri, 8 Apr 2022 10:20:54 +0200
+	id 1nclXN-0003iK-As; Fri, 08 Apr 2022 12:08:17 +0200
+Message-ID: <715d745d-5a85-092a-68c2-b9b1dd8ad53e@leemhuis.info>
+Date: Fri, 8 Apr 2022 12:08:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,28 +17,86 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
 Content-Language: en-US
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Bug 215777 - ath11k: 5.17.x causes cpu soft-lock on xps13 9310
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Moritz Duge <duge@pre-sense.de>, Aurelien Aptel <aaptel@suse.com>,
+ Ronnie Sahlberg <lsahlber@redhat.com>, Steve French
+ <stfrench@microsoft.com>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>
+To: "Paulo Alcantara (SUSE)" <pc@cjr.nz>
+Subject: Regression: CIFS umount fails since 14302ee33 with some servers (exit
+ code 32)
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649406062;f3caacaa;
-X-HE-SMSGID: 1ncjrS-0000yq-EN
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649412500;59e868b7;
+X-HE-SMSGID: 1nclXN-0003iK-As
 
-Hi, this is your Linux kernel regression tracker speaking.
+Hi, this is your Linux kernel regression tracker.
 
-About a week ago a regression was reported to bugzilla.kernel.org that
-seems to be handled there already, nevertheless I'd like to add to the
-tracking to ensure it's not forgotten.
+Paul, it seems a commit authored by you causes a regression:
 
-#regzbot introduced: 9dcf6808b253a72b2c90eed179863bf5fab7d68c
-#regzbot from: dominik.foerderer@windeck-gymnasium.de
-<dominik.foerderer@windeck-gymnasium.de>
-#regzbot title: net: wifi: ath11k: 5.17.x causes cpu soft-lock on xps13
-9310
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215777
+I noticed a regression report in bugzilla.kernel.org that afaics nobody
+acted upon since it was reported about a week ago, that's why I decided
+to forward it to the lists and all people that seemed to be relevant
+here. To quote from
+https://bugzilla.kernel.org/show_bug.cgi?id=215782
 
-See the ticket for details, there were a few replies already.
+>  Moritz Duge 2022-03-31 16:47:35 UTC
+> 
+> With upstream kernel 5.16.9 CIFS umount fails when using certain SMB servers.
+> 
+> "umount" returns exit code 32 and the "mount" command still lists the mount as being present.
+> See below for the bad commit I've bisected.
+> 
+> The bug has been reproduced multiple times with upstream kernel 5.16.9!
+> But additionally I've done much testing with openSUSE kernels.
+> Here's the openSUSE bugreport:
+> https://bugzilla.opensuse.org/show_bug.cgi?id=1194945
+> Additionally with the same servers there's a problem showing the free space with the "df" command. But I haven't been able to find out if this is really related to the umount problem.
+> 
+> 
+> 
+> 
+> = SMB Server =
+> 
+> I haven't been able to identify the exact server side settings. But this problem occured with at least this SMB server (with upstream kernel 5.16.9):
+> NetApp (Release 9.7P12) with dfs and CIFS mount options "vers=3.1.1,seal"
+> (quota state unknown)
+> 
+> Additionally I've verified the bug with the openSUSE kernel 5.3.18-lp152.72-default and this SMB server:
+> Windows Server 2019 with dfs and quota enabled
+> (no explicit "vers" or "seal" mount options)
+> 
+> Additionally the bug appeared with another NetApp SMB server (tested upstream 5.16.9) and two unknown servers (tested only openSUSE-15.2 kernels).
+> 
+> Also it looks like the bug may need a setup where the user can only read //server/share/username/ but has no permissions to read //server/share/.
+> 
+> 
+> 
+> 
+> = Bad Commit =
+> 
+> With the openSUSE kernel I bisected the problem down to this commit (6ae27f2b2) between openSUSE-15.2 kernels 5.3.18-lp152.69.1 and 5.3.18-lp152.72.1.
+> https://github.com/SUSE/kernel/commit/6ae27f2b260e91f16583bbc1ded3147e0f7c5d94
+> 
+> This commit is also present in the upstream kernel (14302ee33).
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=14302ee3301b3a77b331cc14efb95bf7184c73cc
+> And it has been merged between 5.11 and 5.12.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=d0df9aabefda4d0a64730087f939f53f91e29ee6
+> 
+> As said I can't reproduce this with arbitrary SMB servers. And it's always a time consuming procedure for me to do a test with the affected production SMB servers. But if you're really unhappy with the bisect search on the openSUSE kernel, I can repeat the test with the upstream commit 14302ee33 and it's predecessor.
+
+
+Could somebody take a look into this? Or was this discussed somewhere
+else already? Or even fixed?
+
+Anyway, to get this tracked:
+
+#regzbot introduced: 14302ee3301b3a77b331cc14
+#regzbot from: Moritz Duge <duge@pre-sense.de>
+#regzbot title: CIFS: umount fails with some servers (exit code 32)
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215782
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -76,4 +134,3 @@ about the issue. This has been expected from developers even before
 regzbot showed up for reasons explained in
 'Documentation/process/submitting-patches.rst' and
 'Documentation/process/5.Posting.rst'.
-
