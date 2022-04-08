@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515FA623
-	for <regressions@lists.linux.dev>; Fri,  8 Apr 2022 10:11:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6A2623
+	for <regressions@lists.linux.dev>; Fri,  8 Apr 2022 10:27:34 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nclaY-0007kr-Mq; Fri, 08 Apr 2022 12:11:34 +0200
-Message-ID: <031b72a5-907e-219f-7433-8de3641d7c01@leemhuis.info>
-Date: Fri, 8 Apr 2022 12:11:33 +0200
+	id 1nclq0-0003fV-Qf; Fri, 08 Apr 2022 12:27:32 +0200
+Message-ID: <d62431af-5ce4-3d8f-542f-df8e7a7faaf1@leemhuis.info>
+Date: Fri, 8 Apr 2022 12:27:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,48 +17,40 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
 Content-Language: en-US
-To: Luca Coelho <luciano.coelho@intel.com>
 Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- Kyle McGrath <kyle.mcgrath@protonmail.com>
+ "quackdoctech@gmail.com" <quackdoctech@gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Regression: Extremely unstable connection on ax200
+To: Todd Kjos <tkjos@google.com>
+Subject: Regression in BinderFS: Kernel bug at binder.c:2352
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649412697;79bafd5d;
-X-HE-SMSGID: 1nclaY-0007kr-Mq
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649413654;44f5b5d8;
+X-HE-SMSGID: 1nclq0-0003fV-Qf
 
 Hi, this is your Linux kernel regression tracker.
+
+Todd, seems there is a regression that is caused by one of your Linux
+kernel changes:
 
 I noticed a regression report in bugzilla.kernel.org that afaics nobody
 acted upon since it was reported about a week ago, that's why I decided
 to forward it to the lists and all people that seemed to be relevant
-here. To quote from https://bugzilla.kernel.org/show_bug.cgi?id=215789 :
+here. To quote from https://bugzilla.kernel.org/show_bug.cgi?id=215795 :
 
->  Kyle McGrath 2022-04-01 14:05:34 UTC
+>  quackdoctech@gmail.com 2022-04-02 19:56:29 UTC
 > 
-> Created attachment 300678 [details]
-> Log of iwlwifi on 5.17
+> Created attachment 300686 [details]
+> Dmesg output cut to error
 > 
-> Recently I updated to the Fedora 36 beta, with the 5.17 kernel. Ever since, I've experienced excessive issues with my Intel AX200 wireless card. Every other aspect of my usage has remained the same (laptop and router both in the same location, same number of devices on the network, etc.)
+> Apologies if this should have been reported under Drivers where the source is, selftests has it listed under filesystems so I chose here. Using Waydroid which is android run via LXC, on android 10 the bug comes when trying to use video playback. I know of issues on android 11 but have not yet had the chance to get the logs from it. the issue does not occur in Linux kernel 5.16 series. but does occur on linux 5.17. the issue is confirmed on both Arch's linux-zen 5.17.1.zen1-1 kernel as well as some users reporting a fedora kernel with the issue.
 > 
-> Before updating to 5.17, I was able to perform latency-sensitive tasks such as playing online games and use VoIP applications without issue, with acceptable latency. After updating to 5.17 it is at the point where I cannot have an enjoyable match due to constant ping spikes, often to the point where the game will "stutter" or "lock up" every 10 seconds or say, with excessively high ping to go along with this. My VoIP applications have similar issues with calls often being interrupted or distorted.
+> [reply] [−] Comment 1 quackdoctech@gmail.com 2022-04-03 19:38:37 UTC
 > 
-> I reverted to 5.16.16 and this has alleviated the issue for the time being. I've included journal output from both 5.17 and 5.16 and you can see there are several issues/errors which are not present on 5.16.
+> I've narrowed down the issue to this patch series. 
 > 
-> Below is all I get from the journal for iwlwifi under 5.16. I've included 5.17 output as an attachment.
+> https://lore.kernel.org/all/20211130185152.437403-1-tkjos@google.com/
 > 
-> 
-> Apr 01 01:18:06 tarsonis kernel: iwlwifi 0000:03:00.0: enabling device (0000 -> 0002)
-> Apr 01 01:18:06 tarsonis kernel: iwlwifi 0000:03:00.0: api flags index 2 larger than supported by driver
-> Apr 01 01:18:06 tarsonis kernel: iwlwifi 0000:03:00.0: TLV_FW_FSEQ_VERSION: FSEQ Version: 89.3.35.37
-> Apr 01 01:18:06 tarsonis kernel: iwlwifi 0000:03:00.0: loaded firmware version 67.8f59b80b.0 cc-a0-67.ucode op_mode iwlmvm
-> Apr 01 01:18:07 tarsonis kernel: iwlwifi 0000:03:00.0: Detected Intel(R) Wi-Fi 6 AX200 160MHz, REV=0x340
-> Apr 01 01:18:07 tarsonis kernel: iwlwifi 0000:03:00.0: Detected RF HR B3, rfid=0x10a100
-> Apr 01 01:18:07 tarsonis kernel: iwlwifi 0000:03:00.0: base HW address: e0:d4:e8:a5:98:21
-> Apr 01 01:18:07 tarsonis kernel: iwlwifi 0000:03:00.0 wlp3s0: renamed from wlan0
-
 
 Could somebody take a look into this? Or was this discussed somewhere
 else already? Or even fixed?
@@ -66,9 +58,9 @@ else already? Or even fixed?
 Anyway, to get this tracked:
 
 #regzbot introduced: v5.16..v5.17
-#regzbot from: Kyle McGrath <kyle.mcgrath@protonmail.com>
-#regzbot title: iwlwifi: Extremely unstable connection on ax200
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215789
+#regzbot from: quackdoctech@gmail.com <quackdoctech@gmail.com>
+#regzbot title: BinderFS: Kernel bug at binder.c:2352
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215795
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
