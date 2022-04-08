@@ -1,140 +1,118 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BE52564
-	for <regressions@lists.linux.dev>; Fri,  8 Apr 2022 15:28:15 +0000 (UTC)
-Received: by mail-lj1-f172.google.com with SMTP id h11so11969133ljb.2
-        for <regressions@lists.linux.dev>; Fri, 08 Apr 2022 08:28:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=K2IauWY4j4S877ahR/vQIQuOqpMFWHocXV+o9eQuTEk=;
-        b=lqZITmKiT+C/NLCwnMmEETtXUsHoMvUrXEgjGe1trko++PcRtcP2x71ZWngk3A9qVJ
-         GtxEA4vc/tTyYTybakjMhq5p+QQhdu/EBN2rPjR7kB+ndIJbUsKXD71UQU1gXHu7d2nk
-         oujm0ANKW+j7/Jmcs3AqJ5bbw+5VJpXXX7s3D23yzGvdRTgaULE5xh4viLRTdVsd8uTk
-         ft87kvLAOlsAGYAw13SnImPmFsGm2mxHDCyX0z1V8QjOIy/TLbQr47jwODS+FFOg1Svl
-         GJe6kERzsBFoPQS19xfJjtpWr1TBWxigdYtMPXIh4VeQzXJY/NCt2ucApxmnU5JBeUOW
-         pOcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=K2IauWY4j4S877ahR/vQIQuOqpMFWHocXV+o9eQuTEk=;
-        b=nBD9hIu58PK7abHIRgx54DEf8c6i58QuqNrcvzNQEZvPk8+7DPD4gPbu5A4lCxaXWV
-         Doo56eoO1rv2UrkEYxkPcFHoKgUX4xK9VtEzZLdqdCu1VUDfkaYW4qmtQRURbULH2+2i
-         rBw3FK3rbWfjSy3ljQA3g9q7Xj1iHFKygc+emOtjVs0wZDLc/EZsZgQBFG4vEY4ujHei
-         MJfn0505xxaaOdQ+oiyzlwTW5OJVU1C+NvaKaDYa1Es5ZWXyvY1WFhBX5difRwynpeK9
-         QHU0mNwIZ9YVdF7bW2cpM1U5tvdskfWfNoVQzDnIswjuQRc0JbC1nkej4c1yuYRD/mq9
-         PJ8A==
-X-Gm-Message-State: AOAM531KUk1mwuG2IUSqoUiD8lmbHG/TbrjHCPovg1BchBj+nwRYMz0F
-	cwlDdbaMcHMATM753imC5UjW8RigTn7hYM9oUzaBFQ==
-X-Google-Smtp-Source: ABdhPJwEhFCWnJxbnX9f/VLAvYTGBsLP+bArtXUb6d5gUexHwlJqrgPl7y1bXLPYlQbzPKdb7ZLkBg5KPR4+1SFyegI=
-X-Received: by 2002:a2e:a7c1:0:b0:24b:51eb:e432 with SMTP id
- x1-20020a2ea7c1000000b0024b51ebe432mr1549163ljp.238.1649431693395; Fri, 08
- Apr 2022 08:28:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3F22564
+	for <regressions@lists.linux.dev>; Fri,  8 Apr 2022 15:55:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B609C385A1;
+	Fri,  8 Apr 2022 15:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1649433345;
+	bh=z71D8Ftb9RFf7IcaJ0ZqdFqokasCdasRxdzV0agJtrY=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=U2HvdlT609p4kzuyhxP8AluqUQTrPV3CqliPhOt03S26DS6wkkw1mmtOCfk/aDPkq
+	 /w0XjxZS0Q38PSn4V6GU2WwCTnf/0RZIYoE9p1puooFxPd9+JJRjEdGIYp1Pi19bjZ
+	 NWOJlFwjHO4/NydFx7hlnKMqIfrnig4qMkSXLkE0pS/47KYFUbKbiGPcLJdIhVId+s
+	 Y3YIMa9qq0NSOlYX/sl4ZHRblot7TrFzR+1tIxqb07Sdna5N7+hOzzORrJqgRbAKws
+	 v1aear4KKyTvoWXttHbEhV6JfhlPflr1k/PsSGkazWnKtkZjwMS9bmciiMca+zFiRw
+	 ncyMSTuAopb6g==
+Date: Fri, 8 Apr 2022 16:55:41 +0100
+From: Filipe Manana <fdmanana@kernel.org>
+To: dsterba@suse.cz, Thorsten Leemhuis <regressions@leemhuis.info>,
+	Bruno Damasceno Freire <bdamasceno@hotmail.com.br>,
+	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	linux-btrfs <linux-btrfs@vger.kernel.org>, fdmanana@suse.com
+Subject: Re: [regression] 5.15 kernel triggering 100x more inode evictions
+Message-ID: <YlBa/Rc0lvJCm5Rr@debian9.Home>
+References: <MN2PR20MB2512314446801B92562E26B5D2169@MN2PR20MB2512.namprd20.prod.outlook.com>
+ <07bb78be-1d58-7d88-288b-6516790f3b5d@leemhuis.info>
+ <MN2PR20MB251203B4B5445B4B0C4148C9D21D9@MN2PR20MB2512.namprd20.prod.outlook.com>
+ <35b62998-e386-2032-5a7a-07e3413b3bc1@leemhuis.info>
+ <MN2PR20MB251205164078C367C3FC4166D2E59@MN2PR20MB2512.namprd20.prod.outlook.com>
+ <9163b8a9-e852-5786-24fa-d324e3118890@leemhuis.info>
+ <20220408145222.GR15609@twin.jikos.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <d62431af-5ce4-3d8f-542f-df8e7a7faaf1@leemhuis.info>
-In-Reply-To: <d62431af-5ce4-3d8f-542f-df8e7a7faaf1@leemhuis.info>
-From: Todd Kjos <tkjos@google.com>
-Date: Fri, 8 Apr 2022 08:28:00 -0700
-Message-ID: <CAHRSSEw5CBnCpXcowKKG5KzOoazecC6jDn+4_fd0Gp3+e9Yixw@mail.gmail.com>
-Subject: Re: Regression in BinderFS: Kernel bug at binder.c:2352
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	"quackdoctech@gmail.com" <quackdoctech@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220408145222.GR15609@twin.jikos.cz>
 
-On Fri, Apr 8, 2022 at 3:27 AM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> Hi, this is your Linux kernel regression tracker.
->
-> Todd, seems there is a regression that is caused by one of your Linux
-> kernel changes:
+On Fri, Apr 08, 2022 at 04:52:22PM +0200, David Sterba wrote:
+> On Fri, Apr 08, 2022 at 12:32:20PM +0200, Thorsten Leemhuis wrote:
+> > Hi, this is your Linux kernel regression tracker. Top-posting for once,
+> > to make this easily accessible to everyone.
+> > 
+> > Btrfs maintainers, what's up here? Yes, this regression report was a bit
+> > confusing in the beginning, but Bruno worked on it. And apparently it's
+> > already fixed in 5.16, but still in 5.15. Is this caused by a change
+> > that is to big to backport or something?
+> 
+> I haven't identified possible fixes in 5.16 so I can't tell how much
+> backport efforts it could be. As the report is related to performance on
+> package updates, my best guess is that the patches fixing it are those
+> from Filipe related to fsync/logging, and there are several of such
+> improvements in 5.16. Or something else that fixes it indirectly.
 
-Yes, it was reported a few days ago by the ChromeOS team. Already
-looking into it.
+So there's a lot of confusion in the thread, and the original openSUSE 
+bugzilla [1] is also a bit confusing and large to follow.
 
->
-> I noticed a regression report in bugzilla.kernel.org that afaics nobody
-> acted upon since it was reported about a week ago, that's why I decided
-> to forward it to the lists and all people that seemed to be relevant
-> here. To quote from https://bugzilla.kernel.org/show_bug.cgi?id=3D215795 =
-:
->
-> >  quackdoctech@gmail.com 2022-04-02 19:56:29 UTC
-> >
-> > Created attachment 300686 [details]
-> > Dmesg output cut to error
-> >
-> > Apologies if this should have been reported under Drivers where the sou=
-rce is, selftests has it listed under filesystems so I chose here. Using Wa=
-ydroid which is android run via LXC, on android 10 the bug comes when tryin=
-g to use video playback. I know of issues on android 11 but have not yet ha=
-d the chance to get the logs from it. the issue does not occur in Linux ker=
-nel 5.16 series. but does occur on linux 5.17. the issue is confirmed on bo=
-th Arch's linux-zen 5.17.1.zen1-1 kernel as well as some users reporting a =
-fedora kernel with the issue.
-> >
-> > [reply] [=E2=88=92] Comment 1 quackdoctech@gmail.com 2022-04-03 19:38:3=
-7 UTC
-> >
-> > I've narrowed down the issue to this patch series.
-> >
-> > https://lore.kernel.org/all/20211130185152.437403-1-tkjos@google.com/
-> >
->
-> Could somebody take a look into this? Or was this discussed somewhere
-> else already? Or even fixed?
->
-> Anyway, to get this tracked:
->
-> #regzbot introduced: v5.16..v5.17
-> #regzbot from: quackdoctech@gmail.com <quackdoctech@gmail.com>
-> #regzbot title: BinderFS: Kernel bug at binder.c:2352
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D215795
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
->
-> --
-> Additional information about regzbot:
->
-> If you want to know more about regzbot, check out its web-interface, the
-> getting start guide, and the references documentation:
->
-> https://linux-regtracking.leemhuis.info/regzbot/
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
->
-> The last two documents will explain how you can interact with regzbot
-> yourself if your want to.
->
-> Hint for reporters: when reporting a regression it's in your interest to
-> CC the regression list and tell regzbot about the issue, as that ensures
-> the regression makes it onto the radar of the Linux kernel's regression
-> tracker -- that's in your interest, as it ensures your report won't fall
-> through the cracks unnoticed.
->
-> Hint for developers: you normally don't need to care about regzbot once
-> it's involved. Fix the issue as you normally would, just remember to
-> include 'Link:' tag in the patch descriptions pointing to all reports
-> about the issue. This has been expected from developers even before
-> regzbot showed up for reasons explained in
-> 'Documentation/process/submitting-patches.rst' and
-> 'Documentation/process/5.Posting.rst'.
+Let me try to make it clear:
+
+1) For some reason, outside btrfs' control, inode eviction is triggered
+   a lot on 5.15 kernels in Bruno's test machine when doing package
+   installations/updates with zypper. It triggers about 100x times more
+   compared to 5.13, 5.14, 5.16 kernels, etc. This was measured with the
+   bpftrace script I provided him at [1], and he's including part of it
+   in his test script from this thread too;
+
+2) If an inode is evicted, reloaded and then we attempt to do a rename on
+   it, it can trigger unnecessary log updates, for the inode and/or the
+   parent directory. This is just btrfs not knowing if the inode was
+   previously logged in the current transaction before the inode was
+   evicted - since it doesn't know for sure, it assumes the worst case,
+   that is was logged, and then updates the log (partially relog the inode
+   and its parent directory), otherwise we could get into an inconsistency
+   in case it was logged before and we don't update the log;
+
+3) About the excessive inode eviction, there's nothing we can do in btrfs,
+   it's outside btrfs' control;
+
+4) What can be done, and was done in a recent patchset [2] (5.18-rc1), was
+   to make the behaviour on rename to not be so pessimistic, and instead
+   accurately determine if an inode was logged before or not, even if it was
+   recently evicted, and then skip log updates.
+
+   The test scripts in the change logs of the patches of that patchset,
+   essentially mimic what was happening with the zypper package
+   installations/updates. Bruno's test script basically copies/integrates
+   those test scripts;
+
+5) We can not just backport that patchset [2] into 5.15, because that depends
+   on several other patchsets that landed in 5.16, 5.17 and 5.18-rc1, which
+   mostly do a heavy rework regarding directory logging:
+
+   https://lore.kernel.org/linux-btrfs/cover.1630419897.git.fdmanana@suse.com/ (5.16)
+   https://lore.kernel.org/linux-btrfs/cover.1631787796.git.fdmanana@suse.com/ (5.16)
+   https://lore.kernel.org/linux-btrfs/cover.1632482680.git.fdmanana@suse.com/ (5.16)
+   https://lore.kernel.org/linux-btrfs/cover.1635178668.git.fdmanana@suse.com/ (5.17)
+   https://lore.kernel.org/linux-btrfs/cover.1639568905.git.fdmanana@suse.com/ (5.18-rc1)
+
+   And possibly other smaller dependencies in between those patchsets;
+
+6) In short, it is not known what causes the excessive evictions on 5.15
+   on his machine for that specific workload - we don't have a commit to
+   point at and say it caused a regression. The previously mentioned
+   patchset ([2]) will however make things much better, performance wise, in
+   case excessive inode eviction happens (regarding renames on btrfs).
+
+This thread is also basically a revamp of an older thread [3].
+
+[1] https://bugzilla.opensuse.org/show_bug.cgi?id=1193549
+[2] https://lore.kernel.org/linux-btrfs/cover.1642676248.git.fdmanana@suse.com/
+[3] https://lore.kernel.org/linux-fsdevel/MN2PR20MB251235DDB741CD46A9DD5FAAD24E9@MN2PR20MB2512.namprd20.prod.outlook.com/
