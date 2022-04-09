@@ -1,136 +1,115 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18B8809
-	for <regressions@lists.linux.dev>; Sat,  9 Apr 2022 11:52:30 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nd9dh-0002on-NS; Sat, 09 Apr 2022 13:52:26 +0200
-Message-ID: <b685f3d0-da34-531d-1aa9-479accd3e21b@leemhuis.info>
-Date: Sat, 9 Apr 2022 13:52:17 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2D1A22
+	for <regressions@lists.linux.dev>; Sat,  9 Apr 2022 16:28:36 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id n6so22798293ejc.13
+        for <regressions@lists.linux.dev>; Sat, 09 Apr 2022 09:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=X8ihlJGLhQulzBr/Bw9/Kc42S0CR8w0u1LhcgfZff4w=;
+        b=Rp5rWZgYKg3NYBOapq+5W42sOwe5sZwVG6LIf5HaeCPInbvjU0qENaMOcWl2u7Yioz
+         2CAkBusW1Tlk7lvxsin8/3fPhtBWRzQUB1jlA54wcT1PyRrcXrhGbImU5hhRpiS5ZLnM
+         jNdluI4j17cvS9/d6TkdYLdKWaSkV3Q9RVfepdq6awvnqeVvMXb7FS+Mj1bwwlzpu95n
+         bWivfy9DDpteMj3dmzXn9D9cLwDRN+fJd9f+Z9Avkq56gYvOZkS7ZTfM+yHks/LPrs7E
+         Gtd9UBb5UNKZXIZugtXUmbQ1kUdoaHATod1JUB/sJ7F3wPp0EGdBxchMDGKCxwLgtZIM
+         U31w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=X8ihlJGLhQulzBr/Bw9/Kc42S0CR8w0u1LhcgfZff4w=;
+        b=yg0X6Udn/rusPcqgwAParnIeJYXaOUrwIZYfldOCNrD2XHmCiQCstomaVyDt2iSiF4
+         hm0CcMLdLtuZ6/CZMIesHic5Pp70czEPbcH79j+G4nUkxm2jhj+RxFAqxwnXlHY+m5os
+         OxsSa3XEFOLHyAhff30FoMsUhfW+PtVhtGd4Ze8MD20UFU0LwAetSXASif0Q4m9SSrVK
+         EtdMiWpFC1w7OU5TnMDkfNWuJRhBetFl12kCe60mPTkfllyVCL10RKcO2TDjp4NKXbKz
+         mlplJgHd3sPK6ENwoGFqR5FBqLqOLKgRoeZMJA88lCoKp9pCnvtC1gdv9NfB3GtOk+Xe
+         usCQ==
+X-Gm-Message-State: AOAM530ynM7TbnBjP/Vx8IWI2nlniMIb8JYFcYcuUtqTREEEiUIyi4QN
+	3JyLp488cViJKQTdVfW7Ka0=
+X-Google-Smtp-Source: ABdhPJzNhxcvXvOdUp2SPEdE1BxJ9UHfBbGj0DPO7wTlUcLd9orD8k6sLkiR4VVw23suwE1/u0blTA==
+X-Received: by 2002:a17:906:2bd7:b0:6ce:698b:7531 with SMTP id n23-20020a1709062bd700b006ce698b7531mr22560580ejg.146.1649521714475;
+        Sat, 09 Apr 2022 09:28:34 -0700 (PDT)
+Received: from darkstar.example.org (host-79-21-204-193.retail.telecomitalia.it. [79.21.204.193])
+        by smtp.gmail.com with ESMTPSA id l17-20020a056402231100b0041d0718a3e3sm3586587eda.23.2022.04.09.09.28.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Apr 2022 09:28:33 -0700 (PDT)
+Date: Sat, 9 Apr 2022 18:28:31 +0200
+From: Michele Ballabio <ballabio.m@gmail.com>
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev, Maling
+ list - DRI developers <dri-devel@lists.freedesktop.org>, amd-gfx list
+ <amd-gfx@lists.freedesktop.org>
+Subject: Re: AMDGPU: regression on 5.17.1
+Message-ID: <20220409182831.185e5d92@darkstar.example.org>
+In-Reply-To: <CADnq5_PhaFbVCb=-AUCx4L-sCyPCPOsY3tNpiAg=gfCN7hFcJA@mail.gmail.com>
+References: <20220403132322.51c90903@darkstar.example.org>
+	<CADnq5_M+M_iykM0Ag6RF+kxzgpEopUBtp82h7tRM3G+B3AWZ2w@mail.gmail.com>
+	<20220404213940.09a56d15@darkstar.example.org>
+	<CADnq5_PhaFbVCb=-AUCx4L-sCyPCPOsY3tNpiAg=gfCN7hFcJA@mail.gmail.com>
+X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: Bug 215734 - shared object loaded very low in memory ARM 32bit
- with kernel 5.17.0
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "H.J. Lu" <hjl.tools@gmail.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Chris Kennelly <ckennelly@google.com>, Al Viro <viro@zeniv.linux.org.uk>,
- Alexey Dobriyan <adobriyan@gmail.com>, Song Liu <songliubraving@fb.com>,
- David Rientjes <rientjes@google.com>, Ian Rogers <irogers@google.com>,
- Hugh Dickins <hughd@google.com>, Suren Baghdasaryan <surenb@google.com>,
- Sandeep Patil <sspatil@google.com>, Fangrui Song <maskray@google.com>,
- Nick Desaulniers <ndesaulniers@google.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Mike Kravetz <mike.kravetz@oracle.com>, Shuah Khan <shuah@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>
-References: <e2b90c55-1a4a-4cf1-2dc7-2b2a4dc7d168@leemhuis.info>
-In-Reply-To: <e2b90c55-1a4a-4cf1-2dc7-2b2a4dc7d168@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649505151;1a6d28fa;
-X-HE-SMSGID: 1nd9dh-0002on-NS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi, this is your Linux kernel regression tracker. Top-posting for once,
-to make this easily accessible to everyone.
+On Tue, 5 Apr 2022 10:23:16 -0400
+Alex Deucher <alexdeucher@gmail.com> wrote:
 
-Hey, what's up here? Was this regressions fixed already?
+> On Mon, Apr 4, 2022 at 3:39 PM Michele Ballabio
+> <ballabio.m@gmail.com> wrote:
+> >
+> > On Mon, 4 Apr 2022 13:03:41 -0400
+> > Alex Deucher <alexdeucher@gmail.com> wrote:
+> >
+> > > On Sun, Apr 3, 2022 at 10:19 AM Michele Ballabio
+> > > <ballabio.m@gmail.com> wrote:
+> > > >
+> > > > Hi,
+> > > >         I've hit a regression on 5.17.1 (haven't tested 5.17.0,
+> > > > but 5.16-stable didn't have this problem).
+> > > >
+> > > > The machine is a Ryzen 5 1600 with AMD graphics (RX 560).
+> > > >
+> > > > The regression I hit seems to trigger when the machine is left
+> > > > idle at boot (I don't boot straight to X, I boot to a tty, login
+> > > > and then start X). The machine after a while blanks the screen.
+> > > > Usually, the screen unblanks as the keyboard is hit or the mouse
+> > > > moves, but with kernel 5.17.1 the screen does not wake up. The
+> > > > machine seems to run mostly fine: I can login from ssh, but I
+> > > > cannot reboot or halt it: a sysrq sequence is needed for that.
+> > > > Note that if the screen goes blank under X, it wakes up fine.
+> > > >
+> > > > Below a dmesg and two traces from syslog (they're quite
+> > > > similar).
+> > >
+> > > Can you bisect?  Does setting amdgpu.runpm=0 help?
+> >
+> > I can try to bisect, should I narrow the search to drivers/gpu/drm/
+> > ?
+> 
+> I would just do a full bisect if possible in case the change happens
+> to be outside of drm.
+> 
+> >
+> > Setting amdgpu.runpm=0 works, the display now unblanks without
+> > problems.
+> 
 
-H.J. Lu: reminder, this is caused by a patch of yours. One that causes
-two regressions I track, and it seem neither is getting addressed with
-the appropriate urgency. FWIW, the other regression can can be found here:
-https://lore.kernel.org/lkml/cb5b81bd-9882-e5dc-cd22-54bdbaaefbbc@leemhuis.info/
-https://bugzilla.kernel.org/show_bug.cgi?id=215720
+Hi,
+    I bisected this, and the first bad commit is
+[087451f372bf76d971184caa258807b7c35aac8f] drm/amdgpu: use generic fb
+helpers instead of setting up AMD own's.
 
-Mike, if you have a minute: '925346c129da' ("fs/binfmt_elf: fix PT_LOAD
-p_align values for loaders") in 'next' contains a 'Fixes:' tag for the
-culprit of this regression, but I assume it fixes a different issue?
+Let me know if you need some more testing.
 
-Ciao, Thorsten
+Thanks,
+    Michele Ballabio
 
-#regzbot poke
 
-On 31.03.22 08:17, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker.
-> 
-> I noticed a regression report in bugzilla.kernel.org that afaics nobody
-> acted upon since it was reported about a week ago, that's why I decided
-> to forward it to the lists and all people that seemed to be relevant
-> here. Note, this is the second regression report referencin a commit
-> from H.J. Lu as culprit (9630f0d60fec ("fs/binfmt_elf: use PT_LOAD
-> p_align values for static PIE")). I forwarded the first one on Monday
-> already, but seems nothing happened:
-> https://lore.kernel.org/all/cb5b81bd-9882-e5dc-cd22-54bdbaaefbbc@leemhuis.info/
-> 
-> Anyway, to get back to the latest report. To quote from
-> https://bugzilla.kernel.org/show_bug.cgi?id=215734 :
-> 
->>  Jan Palus 2022-03-24 10:17:02 UTC
->>
->> This is a followup to https://sourceware.org/bugzilla/show_bug.cgi?id=28990 where ld.so --verify segfault was reported on binaries > 4MB.
->>
->> It appears that starting with kernel 5.17.0 shared object is loaded in the begging of address space at least on 32-bit ARM:
->>
->> /proc/<pid>/maps just before mmap (5.17):
->> 00400000-00429000 r-xp 00000000 b3:02 393320     /lib/ld-linux-armhf.so.3
->> 00439000-0043c000 rw-p 00029000 b3:02 393320     /lib/ld-linux-armhf.so.3
->> 76ffd000-76ffe000 r-xp 00000000 00:00 0          [sigpage]
->> 76ffe000-76fff000 r--p 00000000 00:00 0          [vvar]
->> 76fff000-77000000 r-xp 00000000 00:00 0          [vdso]
->> 7efdf000-7f000000 rw-p 00000000 00:00 0          [stack]
->> ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]
->>
->> causing segfaults when mmaping large binaries at fixed address 0x10000 (ie done by ld.so --verify used by ldd).
->>
->> By comparison it is not the case for kernel 5.16.8:
->>
->> /proc/<pid>/maps just before mmap (5.16):
->> 76fc4000-76fed000 r-xp 00000000 b3:02 393320     /lib/ld-linux-armhf.so.3
->> 76ffa000-76ffb000 r-xp 00000000 00:00 0          [sigpage]
->> 76ffb000-76ffc000 r--p 00000000 00:00 0          [vvar]
->> 76ffc000-76ffd000 r-xp 00000000 00:00 0          [vdso]
->> 76ffd000-77000000 rw-p 00029000 b3:02 393320     /lib/ld-linux-armhf.so.3
->> 7efdf000-7f000000 rw-p 00000000 00:00 0          [stack]
->> ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]
->>
->> [reply] [−] Comment 1 Jan Palus 2022-03-29 22:14:12 UTC
->>
->> First bad commit appears to be:
->>
->> From: "H.J. Lu" <hjl.tools@gmail.com>
->> Date: Wed, 19 Jan 2022 18:09:40 -0800
->> Subject: fs/binfmt_elf: use PT_LOAD p_align values for static PIE
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9630f0d60fec5fbcaa4435a66f75df1dc9704b66
->>
-> 
-> Could somebody take a look into this? Or was this discussed somewhere
-> else already? Or even fixed?
-> 
-> 
-> Anyway, to get this tracked:
-> 
-> #regzbot introduced: 9630f0d60fec5fbcaa4435a66f75df1dc9704b6
-> #regzbot from: Jan Palus <jpalus@fastmail.com>
-> #regzbot title: shared object loaded very low in memory ARM 32bit
-> causing segfaults on binaries > 4MB
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215734
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
-> 
