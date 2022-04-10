@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 279407FC
-	for <regressions@lists.linux.dev>; Sun, 10 Apr 2022 06:38:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65F1EEC5
+	for <regressions@lists.linux.dev>; Sun, 10 Apr 2022 07:27:41 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ndRDr-0003l3-Uv; Sun, 10 Apr 2022 08:38:56 +0200
-Message-ID: <0a8f72ad-d88e-7764-16f5-ba47e751d808@leemhuis.info>
-Date: Sun, 10 Apr 2022 08:38:55 +0200
+	id 1ndRyy-0003TV-1x; Sun, 10 Apr 2022 09:27:36 +0200
+Message-ID: <3ab10248-be14-d161-14e6-bf19ac8cd998@leemhuis.info>
+Date: Sun, 10 Apr 2022 09:27:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,124 +16,63 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Re: Regression: Mouse gets sluggish after suspend/resume and power
- usage significant higher after resume
+Subject: Re: [regression] 5.15 kernel triggering 100x more inode evictions
 Content-Language: en-US
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- Nico Schottelius <nico-bugzilla.kernel.org@schottelius.org>,
- Jingle Wu <jingle.wu@emc.com.tw>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>
-References: <9af2d249-91e7-4871-59c8-704823118e48@leemhuis.info>
- <YlDr3bxY3tIOgn44@google.com>
+To: Bruno Damasceno Freire <bdamasceno@hotmail.com.br>,
+ Filipe Manana <fdmanana@kernel.org>, "dsterba@suse.cz" <dsterba@suse.cz>,
+ Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ linux-btrfs <linux-btrfs@vger.kernel.org>,
+ "fdmanana@suse.com" <fdmanana@suse.com>
+References: <MN2PR20MB2512314446801B92562E26B5D2169@MN2PR20MB2512.namprd20.prod.outlook.com>
+ <07bb78be-1d58-7d88-288b-6516790f3b5d@leemhuis.info>
+ <MN2PR20MB251203B4B5445B4B0C4148C9D21D9@MN2PR20MB2512.namprd20.prod.outlook.com>
+ <35b62998-e386-2032-5a7a-07e3413b3bc1@leemhuis.info>
+ <MN2PR20MB251205164078C367C3FC4166D2E59@MN2PR20MB2512.namprd20.prod.outlook.com>
+ <9163b8a9-e852-5786-24fa-d324e3118890@leemhuis.info>
+ <20220408145222.GR15609@twin.jikos.cz> <YlBa/Rc0lvJCm5Rr@debian9.Home>
+ <74e4cc73-f16d-3e79-9927-1de3beea4a11@leemhuis.info>
+ <MN2PR20MB2512CEFB95106D91FD9F1717D2E89@MN2PR20MB2512.namprd20.prod.outlook.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <YlDr3bxY3tIOgn44@google.com>
+In-Reply-To: <MN2PR20MB2512CEFB95106D91FD9F1717D2E89@MN2PR20MB2512.namprd20.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649572740;badfb6c9;
-X-HE-SMSGID: 1ndRDr-0003l3-Uv
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649575661;e0306e02;
+X-HE-SMSGID: 1ndRyy-0003TV-1x
 
-
-
-On 09.04.22 04:13, Dmitry Torokhov wrote:
-> On Fri, Apr 08, 2022 at 03:20:14PM +0200, Thorsten Leemhuis wrote:
->> Hi, this is your Linux kernel regression tracker.
+On 09.04.22 19:12, Bruno Damasceno Freire wrote:
+> On 08.04.22 04:50, Thorsten Leemhuis wrote:
+>> First off: David, Filipe, many thx for your answers, that helped me a
+>> lot to get a better picture of the situation!
+>> On 08.04.22 17:55, Filipe Manana wrote:
+>>> On Fri, Apr 08, 2022 at 04:52:22PM +0200, David Sterba wrote:
+>>>> On Fri, Apr 08, 2022 at 12:32:20PM +0200, Thorsten Leemhuis wrote:
+>
+>>> [...]
 >>
->> I noticed a regression report in bugzilla.kernel.org that afaics nobody
->> acted upon since it was reported about a week ago, that's why I decided
->> to forward it to the lists and all people that seemed to be relevant
->> here. To quote from https://bugzilla.kernel.org/show_bug.cgi?id=215747 :
+>>> 6) In short, it is not known what causes the excessive evictions on 5.15
+>>>    on his machine for that specific workload - we don't have a commit to
+>>>    point at and say it caused a regression. [...]
+>>
+>> Bruno, under these circumstances I'd say you need to bisect this to get
+>> us closer to the root of the problem (and a fix for it). Sadly that how
+>> it is sometimes, as briefly explained here:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/Documentation/admin-guide/reporting-regressions.rst#n140
 > 
-> This looks like I2C-HID controller and I see bunch of "incomplete
-> report"s in the logs:
+> Ok Thorsten.
 > 
-> [16558.456434] i2c_hid_acpi i2c-ELAN0670:00: i2c_hid_get_input: incomplete report (14/3583)
-> [16558.457434] i2c_hid_acpi i2c-ELAN0670:00: i2c_hid_get_input: incomplete report (14/259)
-> [16558.458384] i2c_hid_acpi i2c-ELAN0670:00: i2c_hid_get_input: incomplete report (14/65281)
-> 
-> Let's add benjamin, Jiri and Jungle...
+> It's not sad at all: I had a great time researching this regression and
+> gained a lot of knowledge while doing so. The problem is that I am just a
+> simple user at its limits here and additional bisection is probably beyond my
+> abilities.
 
-Thx. There was some discussion in the bko ticket and now it seems like
-it's not a regression (sorry for the noise) -- and the root of the
-problem apparently is a known firmware issue of the particular laptop:
-https://bugzilla.kernel.org/show_bug.cgi?id=214775
+Maybe, but I think you underestimate yourself here. Give it a try, it's
+not that hard once you figured out how to build and install a vanilla
+kernel (which you did already afaics; and if not: it's not that hard and
+you learn new stuff, too) and have some test case to check if the
+problem is there or now (which you already have afaics).
 
-Thx again! Ciao, Thorsten
-
-#regzbot invalid: not a regression, see
-https://bugzilla.kernel.org/show_bug.cgi?id=215747 for details
-
->>>  Nico Schottelius 2022-03-26 19:27:06 UTC
->>>
->>> Created attachment 300619 [details]
->>> dmesg
->>>
->>> TL;DR:
->>>
->>> Suspending and resume makes the ELAN0670:00 trackpad sluggish (very hard to move the pointer) and the energy usage of the notebook is about 3 times higher than before suspend.
->>>
->>> Background:
->>>
->>>
->>> On a Lenovo X1 Nano the trackpad works fine until suspend/resume.The estimated battery runtime PRIOR to suspend/resume is 8h 43m. After suspend resume it drops to 2h 20m instantly.
->>>
->>> There seems to be a firmware error in the iwlwifi card show in the attached dmesg, but I am not sure whether "that's enough" to cause both symptoms.
->>>
->>> Kernel is from Alpine Linux, which is basically stock upstream afaics.
->>
->> See later comments for more details. In one of them the reporter states
->> he's pretty sure that it didn't happen with 5.13.
->>
->> Not sure if this is input, PM, bluetooth, or something else. But sounds
->> like a problem in the input code to me (you have to start somewhere...).
->>
->> Could somebody take a look into this? Or was this discussed somewhere
->> else already? Or even fixed?
->>
->> Anyway, to get this tracked:
->>
->> #regzbot introduced: v5.13..v5.15.31	
->> #regzbot from: Nico Schottelius  <nico-bugzilla.kernel.org@schottelius.org>
->> #regzbot title: input: Mouse gets sluggish after suspend/resume and
->> power usage significant higher after resume
->> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215747
->>
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>
->> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
->> reports on my table. I can only look briefly into most of them and lack
->> knowledge about most of the areas they concern. I thus unfortunately
->> will sometimes get things wrong or miss something important. I hope
->> that's not the case here; if you think it is, don't hesitate to tell me
->> in a public reply, it's in everyone's interest to set the public record
->> straight.
->>
->> -- 
->> Additional information about regzbot:
->>
->> If you want to know more about regzbot, check out its web-interface, the
->> getting start guide, and the references documentation:
->>
->> https://linux-regtracking.leemhuis.info/regzbot/
->> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
->> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
->>
->> The last two documents will explain how you can interact with regzbot
->> yourself if your want to.
->>
->> Hint for reporters: when reporting a regression it's in your interest to
->> CC the regression list and tell regzbot about the issue, as that ensures
->> the regression makes it onto the radar of the Linux kernel's regression
->> tracker -- that's in your interest, as it ensures your report won't fall
->> through the cracks unnoticed.
->>
->> Hint for developers: you normally don't need to care about regzbot once
->> it's involved. Fix the issue as you normally would, just remember to
->> include 'Link:' tag in the patch descriptions pointing to all reports
->> about the issue. This has been expected from developers even before
->> regzbot showed up for reasons explained in
->> 'Documentation/process/submitting-patches.rst' and
->> 'Documentation/process/5.Posting.rst'.
-> 
+Ciao, Thorsten
