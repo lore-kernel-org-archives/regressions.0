@@ -1,65 +1,155 @@
-Received: from muru.com (muru.com [72.249.23.125])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FAAC1363
-	for <regressions@lists.linux.dev>; Mon, 11 Apr 2022 09:56:53 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by muru.com (Postfix) with ESMTPS id 625B081D0;
-	Mon, 11 Apr 2022 09:54:15 +0000 (UTC)
-Date: Mon, 11 Apr 2022 12:56:44 +0300
-From: Tony Lindgren <tony@atomide.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>, Johan Hovold <johan@kernel.org>,
-	linux-serial@vger.kernel.org, kernel@pengutronix.de,
-	Steffen Trumtrar <s.trumtrar@pengutronix.de>,
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] serial: 8250: Return early in .start_tx() if there are
- no chars to send
-Message-ID: <YlP7XDU8Xoq9Zl3C@atomide.com>
-References: <20220217211839.443039-1-u.kleine-koenig@pengutronix.de>
- <Yk7muv2McT5Sjqbk@atomide.com>
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2ACE1363
+	for <regressions@lists.linux.dev>; Mon, 11 Apr 2022 10:17:55 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ndr7J-0007JY-II; Mon, 11 Apr 2022 12:17:53 +0200
+Message-ID: <8137bfa9-dc0a-8aaa-f280-6d611ad8d490@leemhuis.info>
+Date: Mon, 11 Apr 2022 12:17:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Yk7muv2McT5Sjqbk@atomide.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: Regression in workingset_refault latency on 5.15 #forregzbot
+Content-Language: en-US
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CA+wXwBSyO87ZX5PVwdHm-=dBjZYECGmfnydUicUyrQqndgX2MQ@mail.gmail.com>
+ <fd550b0f-5733-48b7-756f-5fb2af3ab172@leemhuis.info>
+In-Reply-To: <fd550b0f-5733-48b7-756f-5fb2af3ab172@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649672275;4a68e665;
+X-HE-SMSGID: 1ndr7J-0007JY-II
 
-* Tony Lindgren <tony@atomide.com> [220407 13:25]:
-> Hi,
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
+
+#regzbot backburner: patch in mm, but it needs to be tested properly and
+the issue is not urgend
+
+On 24.02.22 10:22, Thorsten Leemhuis wrote:
+> [TLDR: I'm adding below regression report below to regzbot, the Linux
+> kernel regression tracking bot; all text you find below is compiled from
+> a few templates paragraphs you might have encountered already already
+> from similar mails.]
 > 
-> * Uwe Kleine-König <u.kleine-koenig@pengutronix.de> [700101 02:00]:
-> > From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > 
-> > Don't start the whole chain for TX if there is no data to send. This is
-> > mostly relevant for rs485 mode as there might be rts-before-send and
-> > rts-after-send delays involved.
-> > 
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > ---
-> > Hello,
-> > 
-> > a few other drivers have such an early exit already (imx, stm32-usart).
-> > I wonder if it applies to all UART drivers that there is nothing to do
-> > in .start_tx() if the circ buffer is empty and there is no x_char to
-> > send. In this case it would be more sensible to ensure in serial_core
-> > that .start_tx() is only ever called if there is something to do.
+> Hi, this is your Linux kernel regression tracker speaking.
 > 
-> This patch seems to cause a runtime PM regression in v5.18-rc1 where
-> 8250 is never idled for omaps.
+> Thanks for the report. CCing the regression mailing list, as it should
+> be in the loop for all regressions, as explained here:
+> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 > 
-> Looks like the return added here is not paired with put for the
-> serial8250_rpm_get_tx() call above?
-
-FYI I just posted two fixes for these early return cases:
-
-https://lore.kernel.org/linux-serial/20220411094805.45696-1-tony@atomide.com/T/#t
-
-Regards,
-
-Tony
+> To be sure this issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, my Linux kernel regression tracking bot:
+> 
+> #regzbot ^introduced v3.0..v5.15.19
+> #regzbot ignore-activity
+> 
+> Reminder for developers: when fixing the issue, please add a 'Link:'
+> tags pointing to the report (the mail quoted below) using
+> lore.kernel.org/r/, as explained in
+> 'Documentation/process/submitting-patches.rst' and
+> 'Documentation/process/5.Posting.rst'. This allows the bot to connect
+> the report with any patches posted or committed to fix the issue; this
+> again allows the bot to show the current status of regressions and
+> automatically resolve the issue when the fix hits the right tree.
+> 
+> I'm sending this to everyone that got the initial report, to make them
+> aware of the tracking. I also hope that messages like this motivate
+> people to directly get at least the regression mailing list and ideally
+> even regzbot involved when dealing with regressions, as messages like
+> this wouldn't be needed then.
+> 
+> Don't worry, I'll send further messages wrt to this regression just to
+> the lists (with a tag in the subject so people can filter them away), if
+> they are relevant just for regzbot. With a bit of luck no such messages
+> will be needed anyway.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> 
+> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> reports on my table. I can only look briefly into most of them and lack
+> knowledge about most of the areas they concern. I thus unfortunately
+> will sometimes get things wrong or miss something important. I hope
+> that's not the case here; if you think it is, don't hesitate to tell me
+> in a public reply, it's in everyone's interest to set the public record
+> straight.
+> 
+> On 23.02.22 14:51, Daniel Dao wrote:
+>> Hi all,
+>>
+>> We are observing some regressions in workingset_refault on our newly upgraded
+>> 5.15.19 nodes with zram as swap. This manifests in several ways:
+>>
+>> 1) Regression of workingset_refault duration observed in flamegraph
+>>
+>> We regularly collect flamegraphs for running services on the node. Since upgrade
+>> to 5.15.19, we see that workingset_refault occupied a more significant part of
+>> the service flamegraph (13%) with the following call trace
+>>
+>>   workingset_refault+0x128
+>>   add_to_page_cache_lru+0x9f
+>>   page_cache_ra_unbounded+0x154
+>>   force_page_cache_ra+0xe2
+>>   filemap_get_pages+0xe9
+>>   filemap_read+0xa4
+>>   xfs_file_buffered_read+0x98
+>>   xfs_file_read_iter+0x6a
+>>   new_sync_read+0x118
+>>   vfs_read+0xf2
+>>   __x64_sys_pread64+0x89
+>>   do_syscall_64+0x3b
+>>   entry_SYSCALL_64_after_hwframe+0x44
+>>
+>> 2) Regression of userspace performance sensitive code
+>>
+>> We have some performance sensentive code running in userspace that have their
+>> runtime measured by CLOCK_THREAD_CPUTIME_ID. They look roughly as:
+>>
+>>   now = clock_gettime(CLOCK_THREAD_CPUTIME_ID)
+>>   func()
+>>   elapsed = clock_gettime(CLOCK_THREAD_CPUTIME_ID) - now
+>>
+>> Since 5.15 upgrade, we observed long `elapsed` in the range of 4-10ms much more
+>> frequently than before.  This went away after we disabled swap for the service
+>> using `memory.swap.max=0` memcg configuration.
+>>
+>> The new thing in 5.15 workingset_refault seems to be introduction of
+>> mem_cgroup_flush_stats()
+>> by commit 1f828223b7991a228bc2aef837b78737946d44b2 (memcg: flush
+>> lruvec stats in the
+>> refault).
+>>
+>> Given that mem_cgroup_flush_stats can take quite a long time for us on the
+>> standard systemd cgroupv2 hierrachy ( root / system.slice / workload.service )
+>>
+>>   sudo /usr/share/bcc/tools/funcslower -m 10 -t mem_cgroup_flush_stats
+>>   Tracing function calls slower than 10 ms... Ctrl+C to quit.
+>>   TIME       COMM           PID    LAT(ms)             RVAL FUNC
+>>   0.000000   <redacted>     804776   11.50              200
+>> mem_cgroup_flush_stats
+>>   0.343383   <redacted>     647496   10.58              200
+>> mem_cgroup_flush_stats
+>>   0.604309   <redacted>     804776   10.50              200
+>> mem_cgroup_flush_stats
+>>   1.230416   <redacted>     803293   10.01              200
+>> mem_cgroup_flush_stats
+>>   1.248442   <redacted>     646400   11.02              200
+>> mem_cgroup_flush_stats
+>>
+>> could it be possible that workingset_refault in some unfortunate case can take
+>> much longer than before such that it increases the time observed by
+>> CLOCK_THREAD_CPUTIME_ID from userspace, or overall duration of
+>> workingset_refault
+>> observed by perf ?
+>>
+> 
+> 
