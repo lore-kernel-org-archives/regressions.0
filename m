@@ -1,232 +1,144 @@
-Received: from smtp-out.kfki.hu (smtp-out.kfki.hu [148.6.0.48])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2073.outbound.protection.outlook.com [40.107.243.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D2A1840
-	for <regressions@lists.linux.dev>; Mon, 11 Apr 2022 11:57:04 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by smtp2.kfki.hu (Postfix) with ESMTP id BA850CC010D;
-	Mon, 11 Apr 2022 13:47:21 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at smtp2.kfki.hu
-Received: from smtp2.kfki.hu ([127.0.0.1])
-	by localhost (smtp2.kfki.hu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP; Mon, 11 Apr 2022 13:47:19 +0200 (CEST)
-Received: from blackhole.kfki.hu (blackhole.szhk.kfki.hu [148.6.240.2])
-	by smtp2.kfki.hu (Postfix) with ESMTP id 0186FCC010C;
-	Mon, 11 Apr 2022 13:47:18 +0200 (CEST)
-Received: by blackhole.kfki.hu (Postfix, from userid 1000)
-	id DE08D343156; Mon, 11 Apr 2022 13:47:18 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by blackhole.kfki.hu (Postfix) with ESMTP id DC44A343155;
-	Mon, 11 Apr 2022 13:47:18 +0200 (CEST)
-Date: Mon, 11 Apr 2022 13:47:18 +0200 (CEST)
-From: Jozsef Kadlecsik <kadlec@netfilter.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-cc: Pablo Neira Ayuso <pablo@netfilter.org>, netfilter-devel@vger.kernel.org, 
-    "U'ren, Aaron" <Aaron.U'ren@sony.com>, 
-    "Brown, Russell" <Russell.Brown@sony.com>, 
-    "Rueger, Manuel" <manuel.rueger@sony.com>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-    Florian Westphal <fw@strlen.de>, 
-    "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-    "McLean, Patrick" <Patrick.Mclean@sony.com>
-Subject: Re: Intermittent performance regression related to ipset between
- 5.10 and 5.15
-In-Reply-To: <c28ed507-168e-e725-dddd-b81fadaf6aa5@leemhuis.info>
-Message-ID: <b1bfbc2f-2a91-9d20-434d-395491994de@netfilter.org>
-References: <BY5PR13MB3604D24C813A042A114B639DEE109@BY5PR13MB3604.namprd13.prod.outlook.com> <5e56c644-2311-c094-e099-cfe0d574703b@leemhuis.info> <c28ed507-168e-e725-dddd-b81fadaf6aa5@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E361849
+	for <regressions@lists.linux.dev>; Mon, 11 Apr 2022 14:24:28 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L2ULhKxTZwh4pPmumwpkjDolQjqjtyHw2wzl4aN+6wopMwxa8MJRGrNyKeNDmaz7USxFqPPcRhX24Ikg5vJ4FTfO7kXmPD5Bpzaj7FkavkiTgiFIVBIvP2uG4WE1OUVyGhjGrTLGvT1o8DPX1bOtyc5bRX4HwQcwRp1usBAgMzv1TuBycI0cts4N24i2TqTr4lBAkGz3N+pHvx8KMZPNGgcQw21OybUAGUyfmuLbkhZz4rZJWlk5wsYidx5dOMxQoUW/f/KPEiW6cxFf6p6iM+Uuc3vUg6RU54bXvjbQ9WrbDkpsdtxuirj9cqH91E8lfGN/iYL2gK/Ozy8r3eK8PQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hoaEPC1HTWsWGBGU7EBCSmMSj0fIHbFPwrFwUm5OY7I=;
+ b=mahISi8y6+IKJss5Qo8kA8KHqbBQ3ZVzgxfR3VM9EhngH+TPnYIpfozShThZBbFrc7P3dEWCTWC/Eb5cS9cwZYABQ/M8qqTdYC56j8o/ZczdNw+JTK2Fnh1Pol03aGuyU0JcyLfkX/IGPbCFLxQB+DtzJ+7kIPyFmGdTIsqKS62OAnHkXnD5XmPQ23QApH2stUWH9DnkseotWJ4vtzfyQ3gJZWHN0Wn9XgiGQedYKsZWP2hzoasf2k8VsKJtmpGt7xflPgDgE1fwBEf9xjL9+LbEuD11X2/8LLzuhmojB9ev0tNxbUJbQYEH+lhmQ+n76hqtktjmt9+77bWIATo21w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hoaEPC1HTWsWGBGU7EBCSmMSj0fIHbFPwrFwUm5OY7I=;
+ b=xx/V6parllov/wfLtEe+HbfKI110OVi2hFsODep8Xl5UntLKe84MUQuytk1vhL877XkMHOoC+q4B8wvi1hll/QdFptSk7Ov3cXRPh0DIQ+d5Om0+O0Ep+K8DUdHYZf7wSJLYFphIkrCDU3cTkiWNkYdqbGikOjD1NrDNO8g+bsA=
+Received: from MN2PR05MB6624.namprd05.prod.outlook.com (2603:10b6:208:d8::18)
+ by DM6PR05MB6539.namprd05.prod.outlook.com (2603:10b6:5:127::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5164.18; Mon, 11 Apr
+ 2022 14:24:26 +0000
+Received: from MN2PR05MB6624.namprd05.prod.outlook.com
+ ([fe80::c0e9:29ea:8618:834c]) by MN2PR05MB6624.namprd05.prod.outlook.com
+ ([fe80::c0e9:29ea:8618:834c%3]) with mapi id 15.20.5164.017; Mon, 11 Apr 2022
+ 14:24:26 +0000
+From: Zack Rusin <zackr@vmware.com>
+To: "hdegoede@redhat.com" <hdegoede@redhat.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>
+Subject: Re: 5.18 vmwgfx seems to break booting VirtualBox VMs
+Thread-Topic: 5.18 vmwgfx seems to break booting VirtualBox VMs
+Thread-Index: AQHYTYGHtZBezSHFMEi22ECSmBgwWKzqxK2A
+Date: Mon, 11 Apr 2022 14:24:26 +0000
+Message-ID: <84c30eb2dcdc330ea54aa1fedba9ae0eb0826068.camel@vmware.com>
+References: <2bd4b06e-7577-d7d7-5f2e-264005b316a1@redhat.com>
+In-Reply-To: <2bd4b06e-7577-d7d7-5f2e-264005b316a1@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.40.4-1ubuntu2 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vmware.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: db63b341-cba5-472e-b5cf-08da1bc6fb6b
+x-ms-traffictypediagnostic: DM6PR05MB6539:EE_
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-ms-exchange-atpmessageproperties: SA|SL
+x-microsoft-antispam-prvs:
+ <DM6PR05MB65393A7331355EB55E4320DDCEEA9@DM6PR05MB6539.namprd05.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ GGg8L1vUxPOdJpJhdBw4CeFqNCgAsasT9TNms4plRMHbetXvm8pdwPK29Tu3Qtkx8R7A6R8jlvUwK7sZX5+eXHdka9v35Mg+hdsQRlVfwQYiA984DuqGrwdupKjW3ZlqQSu9ZJdMqHtQpXXpTCHx/Em44/4vqpxQCCLunGAl7LwyvmQp8jmI+n1EoTsK6bbPPotxMUaqBF4hwxJZ75fC5mQ6bJbrVKQw6ehFW4/RirGaTCg5NCh18y8epZCLXoz0xetaipOCL3l8eQkLfAZNymza1Zvb0qq466BsxXLJt8NeL0rPnGlMMAwR3NhLBMq1zkXJ675uqbxiBrMjNJN7GQj824OFnsdDC4o+9c1Q+VsQOSHVN7tk9Mg8j2P8A/tIpVLdiofBjCQxr5J2/8Gl6qtWNoOd1dgPB3hOF6hc5pQh1uczdB923TvSG8hfvsq9AY9Gz30ttfU9a/TYkmN5UwgB5PdFf/5YJwA2FS0BtajeiXPclZ4dm2YRm5hg6n89ihy+tdbQ4I3BlDP8gZv36SKvgH3B2XWXu2pOEEG8SWRGHs41r6miWozgRX8nCPp/gykRbPY2GcfID6SaDmjTezT/fXeyixDwAQgOqIREVh22cGP7jS60Dqn0Rt+6vmZy467/+rh/FzI8PFeP/xiS0TPT8UFqOPMQfenkZ+m5JUGNDvKxpGWP6MjHvBo/OlxtJVYNdRWN2N3VST1fC354P8xLWUzKobX03roTMv1agC0V9a6bHVAX/l77hikZPKbk+kNx5N4mOJtaklQvYO27iXKo0ag2ZFc9BKcxJP5n7HO2jyu3/4tebJre6+Qe2GGN
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR05MB6624.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(122000001)(316002)(6636002)(110136005)(38100700002)(36756003)(2906002)(8676002)(64756008)(66476007)(66446008)(66556008)(66946007)(76116006)(508600001)(86362001)(966005)(6486002)(71200400001)(91956017)(38070700005)(45080400002)(5660300002)(2616005)(26005)(8936002)(186003)(6506007)(83380400001)(6512007)(40753002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?TTNlb1FybllOQUUyb2ZhbS9tVFBCUjlFeldSaHVzVGZLZUF0YTVYcWtROGw4?=
+ =?utf-8?B?Ti9naWhhMUprZFgxMXNUV2JYbUJub1BTWXRQT09YdzZ0NjIvV05qRy9FNTJk?=
+ =?utf-8?B?QXN2c1ljS0J1ZFI4UWRtbGtMNmFLNTBtazJyVHBDNzVBQlBGaXh0MC9vdVk2?=
+ =?utf-8?B?Rjl3M2krMzFWWXJQS002OXdiQmZLVGg2MGtvd0RUZ2QrZlpyaWNuWm9MUkZl?=
+ =?utf-8?B?NjBNSlNLUDM2cjk3cXBRT05naHE4bmVoWEJhM3c3a28wM0JBUllTeXBqbkFS?=
+ =?utf-8?B?Vk9uOS9vNmw3UFZwZGF6ck40TXRUa2Q1VlkvVVNPckxPV1haa1ZMSm0zb2FQ?=
+ =?utf-8?B?RjhpZHlBNWFWSUpVc0N4cE1CU21rNFBEcmRmTUM5RFN1cU5YZkhqMEd2RUtW?=
+ =?utf-8?B?UjllSjkwcU9Ub1JrWXFSNWY2bG8xNUd2WlBOTkN3VXRaTFdnWnVBZE9DR0p4?=
+ =?utf-8?B?TUZLZEZoUHpIa0tEdmY2R3BMUTFpRW04MjZLQ0Fsd0k0bUFCNTd1VWNHK2FI?=
+ =?utf-8?B?RmYzeU93SzUxaWVSMUE2Z28yL0ZlY1BpWTN3TWtOWTBjMVBXTWszeHBQYzE3?=
+ =?utf-8?B?Nm9OTWhoK1FpQjQzaVRoaVpFMmt1aXVIM1p3aUVmZ3pjRGhOTVdmZ1JnUkE1?=
+ =?utf-8?B?NmtTTkFVVHlFSU1raVdvNXBQa21wdDlvNnpPRVAzSkRmSEgrTi8ybERybHF6?=
+ =?utf-8?B?WnpRdmlBVkVlZ3VuSHhuTTV2T3I3T2krSGkwU3luTHBYL2h4VGp1Wjl5TUVC?=
+ =?utf-8?B?bmpKRDhTYTdXemVKS2RQUG5vd0cvV2loTkx6UTdUckcyclYwbEY2R1RzdUlh?=
+ =?utf-8?B?QWRTbEpOY1gzVU52QXNxalhrR2xZbUxxUFFyVTZpR3QraldxcFlVNUpoVEpF?=
+ =?utf-8?B?UXFIM1IyY21GRW1TaTUrQkRNMElEVnFlRzl6WjBtSFJFSzFBQVpkaHdlZ2Rs?=
+ =?utf-8?B?ZW56cHVhZXFtbUV2UU5YMStacFFnWEU2TUt4cHNsY2xCWGtWakRHT3JEQjlT?=
+ =?utf-8?B?VWFjeUxRWDcxNjBoa3NsUzNnNFVhdDJYYmh2cmRUNkVTcFhlS21saUNnYjhK?=
+ =?utf-8?B?Rlo2V25laEdzV01tVTdVV0U4MUpVOUwydGczY3RUUlMyMWtWemttMzhnVlFY?=
+ =?utf-8?B?U0lydW5RcjBlZm82WGpocnVxWm5yRUlFK1VkZDdrTC9Ub1ZlWDRCM2duc3Nn?=
+ =?utf-8?B?Tm9xUy9sNVA4bVRMcXpvZVFCZitrNHBoQ0IvTU00bFlXWlJRL1RiZHBDb3RU?=
+ =?utf-8?B?NVYzY3RRSGxZcVFKcGRIdzBNZmRWTG1PRzhpZWI2Rm04TzQvOHYrNm5UeVRm?=
+ =?utf-8?B?Z3lSMjZNd1VFK1E1MHJWQzR6ajFpZjNyYVNSeEI1U3Npc1ZmL0dUQ3RFWWtQ?=
+ =?utf-8?B?SzZ2a2NRUzU1Y2lRS0RrdU5relhNajVSK1NsOC9vRkNZZjFyN29TZStNTDNE?=
+ =?utf-8?B?RWdWaS9kbUtGY1prUlJ5Y005V1NNUzlxL2RiQWU5MU9FK004MC82UFFOYW9z?=
+ =?utf-8?B?YkgrbE9UR2VyVUxON09VSmdCVGREc3lKRm95SVQybE0weXpITEpYdE9oYk9x?=
+ =?utf-8?B?b1lJK1Q0ZXZXbW5GdWhCSlQ0dlVrWmd5YkdobWpSd0NIYWdMYkdRdE5Pd3Bq?=
+ =?utf-8?B?RStXK2UwcDRwQVdUUTEyNG1aYk1tei9lQm9kR3BJYVo1SEVWWHg0Wmc5cXgr?=
+ =?utf-8?B?K3N3OENCQlozT3FPejJHZm9VR2paaVg2NktzNHp2S0RaUW9vLzVic2RjbzQ3?=
+ =?utf-8?B?MVhuSmVZUFhhMi9mMHV5NWVHbVZ3TnVjWUIzdjNKM3h4MUJPU3NaM3hCZ3Ru?=
+ =?utf-8?B?UXdCOVNnMCtKY1NKSnBFaGFpc21UVno0czJjWE9MWFp2UnFCZG5qRkdVZW9L?=
+ =?utf-8?B?Y0EzbWhLalRuKzh0T1RjTlJmQnBvZVFRdlF1WG1oMEsvQTdLSkpDQ2I1V2ti?=
+ =?utf-8?B?U1lEeVhuaWliUmZQNVlUelZPTUNvZStoRkJCN2ZtZFg3RTY0eEx2S2psSEZY?=
+ =?utf-8?B?OHM1Mmk5VG9VOGdHK2hHSXJrNENzTFRndlRlRFBUUldKeWtKaDdtcW9sYzda?=
+ =?utf-8?B?cExmb3c2MXJVeWlrUFpRejU0MEJRRlVvN1lBdEZHR1hYbE5nR2VWNTA0dTJC?=
+ =?utf-8?B?NVpHaFhMdk04NHpKZDI5Qk5lSGZUSXpybzdjU3BaM2ZmWEhOcXZhaDh1dFpH?=
+ =?utf-8?B?OUpDUEgxdTdrelQwTVJISk83Q0pwTllFNEwyMmx1NmkyYklUcnZPTmRQS3dH?=
+ =?utf-8?B?VjhTak1Qa1N2emJlNHJST1JyUGlRbEdlUTJrTDV3dVJmOTVmY2hvWmFzVHZa?=
+ =?utf-8?B?M0QvRXpYNXRpY1NQOTN4Y2hSb0gxU0xFTWRBd1hncUZlaWRaZEw5dz09?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <79E5DA2F57B6184A9823C2958635F50C@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="110363376-1045859346-1649677638=:2782"
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR05MB6624.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db63b341-cba5-472e-b5cf-08da1bc6fb6b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2022 14:24:26.1492
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tWsPZmoPCvjYt3HuAe+ILXyFoJn4/MB05kCrcILZWIxJyYMgv4jZjYzV1N+zcKj41+Wo94qx+1CqL+NE5WVPSQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR05MB6539
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---110363376-1045859346-1649677638=:2782
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Mon, 11 Apr 2022, Thorsten Leemhuis wrote:
-
-> On 16.03.22 10:17, Thorsten Leemhuis wrote:
-> > [TLDR: I'm adding the regression report below to regzbot, the Linux
-> > kernel regression tracking bot; all text you find below is compiled f=
-rom
-> > a few templates paragraphs you might have encountered already already
-> > from similar mails.]
-> >=20
-> > On 16.03.22 00:15, McLean, Patrick wrote:
->
-> >> When we upgraded from the 5.10 (5.10.61) series to the 5.15 (5.15.16=
-)=20
-> >> series, we encountered an intermittent performance regression that=20
-> >> appears to be related to iptables / ipset. This regression was=20
-> >> noticed on Kubernetes hosts that run kube-router and experience a=20
-> >> high amount of churn to both iptables and ipsets. Specifically, when=
-=20
-> >> we run the nftables (iptables-1.8.7 / nftables-1.0.0) iptables=20
-> >> wrapper xtables-nft-multi on the 5.15 series kernel, we end up=20
-> >> getting extremely laggy response times when iptables attempts to=20
-> >> lookup information on the ipsets that are used in the iptables=20
-> >> definition. This issue isn=E2=80=99t reproducible on all hosts. Howe=
-ver, our=20
-> >> experience has been that across a fleet of ~50 hosts we experienced=20
-> >> this issue on ~40% of the hosts. When the problem evidences, the tim=
-e=20
-> >> that it takes to run unrestricted iptables list commands like=20
-> >> iptables -L or iptables-save gradually increases over the course of=20
-> >> about 1 - 2 hours. Growing from less than a second to run, to takin
->  g sometimes over 2 minutes to run. After that 2 hour mark it seems to=20
->  plateau and not grow any longer. Flushing tables or ipsets doesn=E2=80=
-=99t seem=20
->  to have any affect on the issue. However, rebooting the host does rese=
-t=20
->  the issue. Occasionally, a machine that was evidencing the problem may=
-=20
->  no longer evidence it after being rebooted.
-> >>
-> >> We did try to debug this to find a root cause, but ultimately ran=20
-> >> short on time. We were not able to perform a set of bisects to=20
-> >> hopefully narrow down the issue as the problem isn=E2=80=99t consist=
-ently=20
-> >> reproducible. We were able to get some straces where it appears that=
-=20
-> >> most of the time is spent on getsockopt() operations. It appears tha=
-t=20
-> >> during iptables operations, it attempts to do some work to resolve=20
-> >> the ipsets that are linked to the iptables definitions (perhaps=20
-> >> getting the names of the ipsets themselves?). Slowly that getsockopt=
-=20
-> >> request takes more and more time on affected hosts. Here is an=20
-> >> example strace of the operation in question:
-
-Yes, iptables list/save have to get the names of the referenced sets and=20
-that is performed via getsockopt() calls.
-
-I went through all of the ipset related patches between 5.10.6 (copy&past=
-e=20
-error but just the range is larger) and 5.15.16 and as far as I see none=20
-of them can be responsible for the regression. More data is required to=20
-locate the source of the slowdown.
-
-Best regards,
-Jozsef
-
-> >>
-> >> 0.000074 newfstatat(AT_FDCWD, "/etc/nsswitch.conf", {st_mode=3DS_IFR=
-EG|0644, st_size=3D539, ...}, 0) =3D 0 <0.000017>
-> >> 0.000064 openat(AT_FDCWD, "/var/db/protocols.db", O_RDONLY|O_CLOEXEC=
-) =3D -1 ENOENT (No such file or directory) <0.000017>
-> >> 0.000057 openat(AT_FDCWD, "/etc/protocols", O_RDONLY|O_CLOEXEC) =3D =
-4 <0.000013>
-> >> 0.000034 newfstatat(4, "", {st_mode=3DS_IFREG|0644, st_size=3D6108, =
-...}, AT_EMPTY_PATH) =3D 0 <0.000009>
-> >> 0.000032 lseek(4, 0, SEEK_SET)     =3D 0 <0.000008>
-> >> 0.000025 read(4, "# /etc/protocols\n#\n# Internet (I"..., 4096) =3D =
-4096 <0.000010>
-> >> 0.000036 close(4)                  =3D 0 <0.000008>
-> >> 0.000028 write(1, "ANGME7BF25 - [0:0]\n:KUBE-POD-FW-"..., 4096) =3D =
-4096 <0.000028>
-> >> 0.000049 socket(AF_INET, SOCK_RAW, IPPROTO_RAW) =3D 4 <0.000015>
-> >> 0.000032 fcntl(4, F_SETFD, FD_CLOEXEC) =3D 0 <0.000008>
-> >> 0.000024 getsockopt(4, SOL_IP, 0x53 /* IP_??? */, "\0\1\0\0\7\0\0\0"=
-, [8]) =3D 0 <0.000024>
-> >> 0.000046 getsockopt(4, SOL_IP, 0x53 /* IP_??? */, "\7\0\0\0\7\0\0\0K=
-UBE-DST-VBH27M7NWLDOZIE"..., [40]) =3D 0 <0.109384>
-> >> 0.109456 close(4)                  =3D 0 <0.000022>
-> >>
-> >> On a host that is not evidencing the performance regression we=20
-> >> normally see that operation take ~ 0.00001 as opposed to=20
-> >> 0.109384.Additionally, hosts that were evidencing the problem we als=
-o=20
-> >> saw high lock times with `klockstat` (unfortunately at the time we=20
-> >> did not know about or run echo "0" > /proc/sys/kernel/kptr_restrict=20
-> >> to get the callers of the below commands).
-> >>
-> >> klockstat -i 5 -n 10 (on a host experiencing the problem)
-> >> Caller   Avg Hold  Count   Max hold Total hold
-> >> b'[unknown]'  118490772     83  179899470 9834734132
-> >> b'[unknown]'  118416941     83  179850047 9828606138
-> >> # or somewhere later while iptables -vnL was running:
-> >> Caller   Avg Hold  Count   Max hold Total hold
-> >> b'[unknown]'  496466236     46 17919955720 22837446860
-> >> b'[unknown]'  496391064     46 17919893843 22833988950
-> >>
-> >> klockstat -i 5 -n 10 (on a host not experiencing the problem)
-> >> Caller   Avg Hold  Count   Max hold Total hold
-> >> b'[unknown]'     120316   1510   85537797  181677885
-> >> b'[unknown]'    7119070     24   85527251  170857690
-> >=20
-> > Hi, this is your Linux kernel regression tracker.
-> >=20
-> > Thanks for the report.
-> >=20
-> > CCing the regression mailing list, as it should be in the loop for al=
-l
-> > regressions, as explained here:
-> > https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.h=
-tml
-> >=20
-> > To be sure below issue doesn't fall through the cracks unnoticed, I'm
-> > adding it to regzbot, my Linux kernel regression tracking bot:
-> >=20
-> > #regzbot ^introduced v5.10..v5.15
-> > #regzbot title net: netfilter: Intermittent performance regression
-> > related to ipset
-> > #regzbot ignore-activity
-> >=20
-> > If it turns out this isn't a regression, free free to remove it from =
-the
-> > tracking by sending a reply to this thread containing a paragraph lik=
-e
-> > "#regzbot invalid: reason why this is invalid" (without the quotes).
-> >=20
-> > Reminder for developers: when fixing the issue, please add a 'Link:'
-> > tags pointing to the report (the mail quoted above) using
-> > lore.kernel.org/r/, as explained in
-> > 'Documentation/process/submitting-patches.rst' and
-> > 'Documentation/process/5.Posting.rst'. Regzbot needs them to
-> > automatically connect reports with fixes, but they are useful in
-> > general, too.
-> >=20
-> > I'm sending this to everyone that got the initial report, to make
-> > everyone aware of the tracking. I also hope that messages like this
-> > motivate people to directly get at least the regression mailing list =
-and
-> > ideally even regzbot involved when dealing with regressions, as messa=
-ges
-> > like this wouldn't be needed then. And don't worry, if I need to send
-> > other mails regarding this regression only relevant for regzbot I'll
-> > send them to the regressions lists only (with a tag in the subject so
-> > people can filter them away). With a bit of luck no such messages wil=
-l
-> > be needed anyway.
-> >=20
-> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' h=
-at)
-> >=20
-> > P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> > reports on my table. I can only look briefly into most of them and la=
-ck
-> > knowledge about most of the areas they concern. I thus unfortunately
-> > will sometimes get things wrong or miss something important. I hope
-> > that's not the case here; if you think it is, don't hesitate to tell =
-me
-> > in a public reply, it's in everyone's interest to set the public reco=
-rd
-> > straight.
-> >=20
->=20
-
--
-E-mail  : kadlec@blackhole.kfki.hu, kadlecsik.jozsef@wigner.hu
-PGP key : https://wigner.hu/~kadlec/pgp_public_key.txt
-Address : Wigner Research Centre for Physics
-          H-1525 Budapest 114, POB. 49, Hungary
---110363376-1045859346-1649677638=:2782--
+T24gTW9uLCAyMDIyLTA0LTExIGF0IDEwOjUyICswMjAwLCBIYW5zIGRlIEdvZWRlIHdyb3RlOg0K
+PiBIaSBBbGwsDQo+IA0KPiBGZWRvcmEgaGFzIHJlY2VpdmVkIGEgYnVnIHJlcG9ydCBoZXJlOg0K
+PiANCj4gaHR0cHM6Ly9uYW0wNC5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJs
+PWh0dHBzJTNBJTJGJTJGYnVnemlsbGEucmVkaGF0LmNvbSUyRnNob3dfYnVnLmNnaSUzRmlkJTNE
+MjA3MjU1NiZhbXA7ZGF0YT0wNCU3QzAxJTdDemFja3IlNDB2bXdhcmUuY29tJTdDMzY2NGRkZmUy
+NTMzNGIxNjEwOTEwOGRhMWI5OGE2YWYlN0NiMzkxMzhjYTNjZWU0YjRhYTRkNmNkODNkOWRkNjJm
+MCU3QzAlN0MwJTdDNjM3ODUyNjM5NzE5MzgyNDgwJTdDVW5rbm93biU3Q1RXRnBiR1pzYjNkOGV5
+SldJam9pTUM0d0xqQXdNREFpTENKUUlqb2lWMmx1TXpJaUxDSkJUaUk2SWsxaGFXd2lMQ0pYVkNJ
+Nk1uMCUzRCU3QzMwMDAmYW1wO3NkYXRhPUdwa015Nk91UFcwNmYlMkZ6aiUyRkJHem9xOHhUOHBO
+c0U2S3RIME1Udk41Rm9BJTNEJmFtcDtyZXNlcnZlZD0wDQo+IA0KPiBUaGF0IEZlZG9yYSByYXdo
+aWRlIFZNcyBubyBsb25nZXIgYm9vdCB1bmRlciB0aGUgVmlydHVhbEJveA0KPiBoeXBlcnZpc29y
+DQo+IGFmdGVyIHRoZSBWTSBoYXMgYmVlbiB1cGRhdGVkIHRvIGEgNS4xOC1yYyMga2VybmVsLg0K
+PiANCj4gU3dpdGNoaW5nIHRoZSBlbXVsYXRlZCBHUFUgZnJvbSB2bXdhcmVnZnggdG8gVmlydHVh
+bEJveFNWR0EgZml4ZXMNCj4gdGhpcywgc28gdGhpcyBzZWVtcyB0byBiZSBhIHZtd2dmeCBkcml2
+ZXIgcmVncmVzc2lvbi4NCj4gDQo+IE5vdGUgSSd2ZSBub3QgaW52ZXN0aWdhdGVkL3JlcHJvZHVj
+ZWQgdGhpcyBteXNlbGYgZHVlIHRvIC1FTk9USU1FLg0KDQpUaGFua3MgZm9yIGxldHRpbmcgdXMg
+a25vdy4gVW5mb3J0dW5hdGVseSB3ZSBkbyBub3Qgc3VwcG9ydCB2bXdnZnggb24NClZpcnR1YWxC
+b3guIEknZCBiZSBoYXBweSB0byByZXZpZXcgcGF0Y2hlcyByZWxhdGVkIHRvIHRoaXMsIGJ1dCBp
+dCdzDQp2ZXJ5IHVubGlrZWx5IHdlJ2QgaGF2ZSB0byB0aW1lIHRvIGxvb2sgYXQgdGhpcyBvdXJz
+ZWx2ZXMuDQoNCnoNCg0K
