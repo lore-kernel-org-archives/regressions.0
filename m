@@ -1,13 +1,50 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB3810EB
-	for <regressions@lists.linux.dev>; Mon, 11 Apr 2022 08:31:10 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ndpRr-0004tX-8k; Mon, 11 Apr 2022 10:30:59 +0200
-Message-ID: <5d7ac2a0-00b7-1307-6aeb-1461c79bd6f8@leemhuis.info>
-Date: Mon, 11 Apr 2022 10:30:57 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560B31363
+	for <regressions@lists.linux.dev>; Mon, 11 Apr 2022 08:52:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1649667166;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=3vF22tUUU5mQz2MMbsVAqGRpsABBDO2J9NhzUkzJrNw=;
+	b=Mmi3Rgtyp5gJ2FwpDlc8PZpCP/OKt4FyWBKcGpDGlpkHf9s7vfnnWvARj5L0Lpbj4bcIlL
+	dCEQ5EMhk1u3sVVH7dRQhGVeeGHmNM4wGKr9ExBvm69zOh+KOaTxs9U9Kf5F8AxCbs+Ri0
+	REs9Z844nQ/6Nwj1bTnZ9o8KNLI1M0U=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-615-T2UptG2KOkyr4quX-Vg1cA-1; Mon, 11 Apr 2022 04:52:45 -0400
+X-MC-Unique: T2UptG2KOkyr4quX-Vg1cA-1
+Received: by mail-ed1-f72.google.com with SMTP id p14-20020a05640243ce00b0041cbccbe008so8580581edc.16
+        for <regressions@lists.linux.dev>; Mon, 11 Apr 2022 01:52:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:to
+         :content-language:from:subject:content-transfer-encoding;
+        bh=3vF22tUUU5mQz2MMbsVAqGRpsABBDO2J9NhzUkzJrNw=;
+        b=mb4hZmpF7Nns9yrLeFa4+Vpkf4rpG81ZAeV0WknNwNUpdn6XkLf5jG/3yJzNU09tDw
+         Q82e50wBtWflULWKkTgbxct/7BrVAsw5MqTKqqTQ7igivxEsPqHGllhtpAJKng706pkm
+         8E8qLBfmQ1SkRzXp/ZC07GM+VmrzpV8K90mGI7+rzP//5chCVYyYeEi01UmwmjXx+ucn
+         aDzcitJTXmUWlhD1fNg7l7EKVuIwNd9ip13c9A0XGLGt7sJR95SCQ5pR9CBrPjaNkKiB
+         PlG6eBXF1CoKMyTVxlGZYqAcjC0UmE3BKm+YMuzvK2majqnWlLrYSkDkSUU0FzgipGO/
+         Zy5Q==
+X-Gm-Message-State: AOAM5334IJpKQF8e+yUVMM/RFMbGnLnOzudV6lpSq0FdZdGBa7lco2xL
+	bHAWMiZPmkfUf1uv34MoerdzTIPk3P6mUMbMAki+U6GnPy5O0kI/1hcokt4fMeVPfhk3Qxo2rBS
+	F6b1CsNngvq75OJPlDGjhTq84FpThoFOn6TUZA/NnJWps+iFbbfDwKUqX0ZyN42oUgUG8ZfSxHd
+	8=
+X-Received: by 2002:aa7:d543:0:b0:416:13eb:6fec with SMTP id u3-20020aa7d543000000b0041613eb6fecmr32613456edr.348.1649667163887;
+        Mon, 11 Apr 2022 01:52:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxk6gMCM8hNzyJd6iz1CEcJcPZ6bA4l4Q1eoDTZQZEir4whNxpF03iCABMMNp4xK8HhmQnN8w==
+X-Received: by 2002:aa7:d543:0:b0:416:13eb:6fec with SMTP id u3-20020aa7d543000000b0041613eb6fecmr32613436edr.348.1649667163483;
+        Mon, 11 Apr 2022 01:52:43 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id z21-20020a05640240d500b0041d7f66a9cesm1055757edb.41.2022.04.11.01.52.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 Apr 2022 01:52:43 -0700 (PDT)
+Message-ID: <2bd4b06e-7577-d7d7-5f2e-264005b316a1@redhat.com>
+Date: Mon, 11 Apr 2022 10:52:42 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,42 +53,35 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
+To: regressions@lists.linux.dev,
+ VMware Graphics <linux-graphics-maintainer@vmware.com>,
+ Zack Rusin <zackr@vmware.com>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: 5.18 vmwgfx seems to break booting VirtualBox VMs
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hdegoede@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-To: Paul Menzel <pmenzel@molgen.mpg.de>, Evan Quan <evan.quan@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, Alexander.Deucher@amd.com,
- arthur.marsh@internode.on.net, regressions@lists.linux.dev
-References: <20220411074732.36486-1-evan.quan@amd.com>
- <78cdd8a2-4482-7b1b-2df4-a2983c1b2887@molgen.mpg.de>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH] drm/amd/pm: fix the deadlock issue observed on SI
-In-Reply-To: <78cdd8a2-4482-7b1b-2df4-a2983c1b2887@molgen.mpg.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1649665870;0e5720ee;
-X-HE-SMSGID: 1ndpRr-0004tX-8k
+Content-Transfer-Encoding: 7bit
 
-On 11.04.22 09:59, Paul Menzel wrote:
-> Am 11.04.22 um 09:47 schrieb Evan Quan:
->
-> As it’s a regression, please follow the documentation, and add the
-> related tags.
+Hi All,
 
-Yes please, otherwise you break tools that reply on this, like my
-regression tracking efforts.
+Fedora has received a bug report here:
 
-> Fixes: 3712e7a49459 ("drm/amd/pm: unified lock protections in
-> amdgpu_dpm.c")
-> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-> Reported-by: Arthur Marsh <arthur.marsh@internode.on.net>
-> Link:
-> https://lore.kernel.org/r/9e689fea-6c69-f4b0-8dee-32c4cf7d8f9c@molgen.mpg.de
-> BugLink: https://gitlab.freedesktop.org/drm/amd/-/issues/1957
-> 
-> Also add the link from Arthur.
+https://bugzilla.redhat.com/show_bug.cgi?id=2072556
 
-What is BugLink? That is not in the kernel's documentation afaics (BTW,
-as other people use it as wll: where does that actually come from?
-GitLab?) . It should just be "Link:". Or am I missing something?
+That Fedora rawhide VMs no longer boot under the VirtualBox hypervisor
+after the VM has been updated to a 5.18-rc# kernel.
 
-Ciao, Thorsten
+Switching the emulated GPU from vmwaregfx to VirtualBoxSVGA fixes
+this, so this seems to be a vmwgfx driver regression.
+
+Note I've not investigated/reproduced this myself due to -ENOTIME.
+
+Regards,
+
+Hans
 
