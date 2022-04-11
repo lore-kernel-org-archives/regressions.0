@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2ACE1363
-	for <regressions@lists.linux.dev>; Mon, 11 Apr 2022 10:17:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E1C1363
+	for <regressions@lists.linux.dev>; Mon, 11 Apr 2022 10:19:51 +0000 (UTC)
 Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ndr7J-0007JY-II; Mon, 11 Apr 2022 12:17:53 +0200
-Message-ID: <8137bfa9-dc0a-8aaa-f280-6d611ad8d490@leemhuis.info>
-Date: Mon, 11 Apr 2022 12:17:53 +0200
+	id 1ndr9A-00027c-Vz; Mon, 11 Apr 2022 12:19:49 +0200
+Message-ID: <25159437-7938-a748-ac76-00f5293b0298@leemhuis.info>
+Date: Mon, 11 Apr 2022 12:19:48 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,62 +16,169 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Re: Regression in workingset_refault latency on 5.15 #forregzbot
+Subject: Re: Bug 215711 - snd_hda_intel not binding to codec #forregzbot
 Content-Language: en-US
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <CA+wXwBSyO87ZX5PVwdHm-=dBjZYECGmfnydUicUyrQqndgX2MQ@mail.gmail.com>
- <fd550b0f-5733-48b7-756f-5fb2af3ab172@leemhuis.info>
-In-Reply-To: <fd550b0f-5733-48b7-756f-5fb2af3ab172@leemhuis.info>
+References: <45051cd2-2e28-3065-776b-d5e83c998cb5@leemhuis.info>
+In-Reply-To: <45051cd2-2e28-3065-776b-d5e83c998cb5@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649672275;4a68e665;
-X-HE-SMSGID: 1ndr7J-0007JY-II
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649672391;931435b0;
+X-HE-SMSGID: 1ndr9A-00027c-Vz
 
 TWIMC: this mail is primarily send for documentation purposes and for
 regzbot, my Linux kernel regression tracking bot. These mails usually
 contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-#regzbot backburner: patch in mm, but it needs to be tested properly and
-the issue is not urgend
+#regzbot backburner: bisection needed
 
-On 24.02.22 10:22, Thorsten Leemhuis wrote:
-> [TLDR: I'm adding below regression report below to regzbot, the Linux
-> kernel regression tracking bot; all text you find below is compiled from
-> a few templates paragraphs you might have encountered already already
-> from similar mails.]
+On 28.03.22 13:44, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker.
 > 
-> Hi, this is your Linux kernel regression tracker speaking.
+> I noticed a regression report in bugzilla.kernel.org that afaics nobody
+> acted upon since it was reported about a week ago, that's why I decided
+> to forward it to the lists and the maintainers. To quote from
+> https://bugzilla.kernel.org/show_bug.cgi?id=215711:
 > 
-> Thanks for the report. CCing the regression mailing list, as it should
-> be in the loop for all regressions, as explained here:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+>> Created attachment 300588 [details]
+>> SND_HDA_* excrept from kernel config
+>>
+>> On PCI device discovery the Intel HDA codec doesn't bind to appropriate codec (if that is the correct term). The device codec (Conexant) is loaded, but sound doesn't work. Reloading the main module (snd_hda_intel) fixes the issue:
+>>
+>> $ echo 1 > /sys/bus/pci/devices/0000:00:1b.0/remove
+>>
+>> $ lsmod | sort
+>> Module                  Size  Used by
+>> configs                45056  0
+>> e1000e                225280  0
+>> grace                  16384  1 lockd
+>> irqbypass              16384  1 kvm
+>> iwlwifi               274432  0
+>> kvm                   569344  1 kvm_intel
+>> kvm_intel             229376  0
+>> lockd                  98304  1 nfs
+>> mei                    90112  1 mei_me
+>> mei_me                 28672  0
+>> nfs                   184320  3 nfsv4
+>> nfsv4                 380928  2
+>> sunrpc                274432  9 nfsv4,lockd,nfs
+>> uvcvideo              110592  0
+>> videobuf2_common       45056  4 videobuf2_vmalloc,videobuf2_v4l2,uvcvideo,videobuf2_memops
+>> videobuf2_memops       16384  1 videobuf2_vmalloc
+>> videobuf2_v4l2         24576  1 uvcvideo
+>> videobuf2_vmalloc      16384  1 uvcvideo
+>>
+>> $ echo 1 > /sys/bus/pci/rescan
+>> # dmesg output
+>> [ 9218.563134] pci 0000:00:1b.0: [8086:3b56] type 00 class 0x040300
+>> [ 9218.563178] pci 0000:00:1b.0: reg 0x10: [mem 0xc0004000-0xc0007fff 64bit]
+>> [ 9218.563344] pci 0000:00:1b.0: PME# supported from D0 D3hot D3cold
+>> [ 9218.563818] pci 0000:00:1b.0: BAR 0: assigned [mem 0xc0004000-0xc0007fff 64bit]
+>> [ 9218.563846] pci 0000:00:1e.0: PCI bridge to [bus 0e]
+>> [ 9218.598927] snd_hda_intel 0000:00:1b.0: bound 0000:00:02.0 (ops 0xffffffff824a44e0)
+>> [ 9218.609798] snd_hda_intel 0000:00:1b.0: Cannot probe codecs, giving up
+>>
+>> $ lsmod | sort
+>> Module                  Size  Used by                                                                                                                                                                                                                                            
+>> configs                45056  0                                                                                                                                                                                                                                                  
+>> e1000e                225280  0                                                                                                                                                                                                                                                  
+>> grace                  16384  1 lockd                                                                                                                                                                                                                                            
+>> irqbypass              16384  1 kvm                                                                                                                                                                                                                                              
+>> iwlwifi               274432  0                                                                                                                                                                                                                                                  
+>> kvm                   569344  1 kvm_intel                                                                                               
+>> kvm_intel             229376  0                                                                                                         
+>> lockd                  98304  1 nfs                                                                                                     
+>> mei                    90112  1 mei_me                                                                                                  
+>> mei_me                 28672  0                                                                                                         
+>> nfs                   184320  3 nfsv4                                                                                                   
+>> nfsv4                 380928  2                                                                                                         
+>> snd                    77824  7 snd_hda_codec_generic,snd_hda_codec_conexant,snd_hwdep,snd_hda_intel,snd_hda_codec,snd_timer,snd_pcm    
+>> snd_hda_codec         118784  3 snd_hda_codec_generic,snd_hda_codec_conexant,snd_hda_intel                                              
+>> snd_hda_codec_conexant    20480  0                                                                                                      
+>> snd_hda_codec_generic    77824  1 snd_hda_codec_conexant                                                                                
+>> snd_hda_core           65536  4 snd_hda_codec_generic,snd_hda_codec_conexant,snd_hda_intel,snd_hda_codec                                
+>> snd_hda_intel          36864  0                                                                                                         
+>> snd_hwdep              16384  1 snd_hda_codec                                                                                           
+>> snd_intel_dspcfg       16384  1 snd_hda_intel                                                                                           
+>> snd_pcm               110592  3 snd_hda_intel,snd_hda_codec,snd_hda_core                                                                
+>> snd_timer              32768  1 snd_pcm                                                                                                 
+>> soundcore              16384  1 snd                                                                                                     
+>> sunrpc                274432  9 nfsv4,lockd,nfs                                                                                         
+>> uvcvideo              110592  0                                                                                                         
+>> videobuf2_common       45056  4 videobuf2_vmalloc,videobuf2_v4l2,uvcvideo,videobuf2_memops
+>> videobuf2_memops       16384  1 videobuf2_vmalloc
+>> videobuf2_v4l2         24576  1 uvcvideo
+>> videobuf2_vmalloc      16384  1 uvcvideo
+>>
+>> $ modprobe -rv snd_hda_intel; modprobe -v snd_hda_intel
+>> # dmesg output
+>> [ 9230.886362] snd_hda_intel 0000:00:1b.0: bound 0000:00:02.0 (ops 0xffffffff824a44e0)
+>> [ 9230.895721] snd_hda_codec_conexant hdaudioC0D0: CX20585: BIOS auto-probing.
+>> [ 9230.896677] snd_hda_codec_conexant hdaudioC0D0: autoconfig for CX20585: line_outs=1 (0x1f/0x0/0x0/0x0/0x0) type:speaker
+>> [ 9230.896691] snd_hda_codec_conexant hdaudioC0D0:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
+>> [ 9230.896700] snd_hda_codec_conexant hdaudioC0D0:    hp_outs=2 (0x1c/0x19/0x0/0x0/0x0)
+>> [ 9230.896707] snd_hda_codec_conexant hdaudioC0D0:    mono: mono_out=0x0
+>> [ 9230.896713] snd_hda_codec_conexant hdaudioC0D0:    inputs:
+>> [ 9230.896718] snd_hda_codec_conexant hdaudioC0D0:      Internal Mic=0x23
+>> [ 9230.896724] snd_hda_codec_conexant hdaudioC0D0:      Mic=0x1b
+>> [ 9230.896729] snd_hda_codec_conexant hdaudioC0D0:      Dock Mic=0x1a
+>> [ 9230.908437] snd_hda_codec_generic hdaudioC0D3: autoconfig for Generic: line_outs=0 (0x0/0x0/0x0/0x0/0x0) type:line
+>> [ 9230.908454] snd_hda_codec_generic hdaudioC0D3:    speaker_outs=0 (0x0/0x0/0x0/0x0/0x0)
+>> [ 9230.908461] snd_hda_codec_generic hdaudioC0D3:    hp_outs=0 (0x0/0x0/0x0/0x0/0x0)
+>> [ 9230.908468] snd_hda_codec_generic hdaudioC0D3:    mono: mono_out=0x0
+>> [ 9230.908473] snd_hda_codec_generic hdaudioC0D3:    dig-out=0x5/0x0
+>> [ 9230.908477] snd_hda_codec_generic hdaudioC0D3:    inputs:
+>> [ 9230.916063] input: HDA Intel MID Mic as /devices/pci0000:00/0000:00:1b.0/sound/card0/input52
+>> [ 9230.916216] input: HDA Intel MID Dock Mic as /devices/pci0000:00/0000:00:1b.0/sound/card0/input53
+>> [ 9230.916353] input: HDA Intel MID Dock Headphone as /devices/pci0000:00/0000:00:1b.0/sound/card0/input54
+>> [ 9230.919563] input: HDA Intel MID Headphone as /devices/pci0000:00/0000:00:1b.0/sound/card0/input55
+>> [ 9230.919727] input: HDA Intel MID HDMI as /devices/pci0000:00/0000:00:1b.0/sound/card0/input56
+>>
+>> $ lsmod | sort
+>> Module                  Size  Used by
+>> configs                45056  0
+>> e1000e                225280  0
+>> grace                  16384  1 lockd
+>> irqbypass              16384  1 kvm
+>> iwlwifi               274432  0
+>> kvm                   569344  1 kvm_intel
+>> kvm_intel             229376  0
+>> lockd                  98304  1 nfs
+>> mei                    90112  1 mei_me
+>> mei_me                 28672  0
+>> nfs                   184320  3 nfsv4
+>> nfsv4                 380928  2
+>> snd                    77824  7 snd_hda_codec_generic,snd_hda_codec_conexant,snd_hwdep,snd_hda_intel,snd_hda_codec,snd_timer,snd_pcm
+>> snd_hda_codec         118784  3 snd_hda_codec_generic,snd_hda_codec_conexant,snd_hda_intel
+>> snd_hda_codec_conexant    20480  1
+>> snd_hda_codec_generic    77824  2 snd_hda_codec_conexant
+>> snd_hda_core           65536  4 snd_hda_codec_generic,snd_hda_codec_conexant,snd_hda_intel,snd_hda_codec
+>> snd_hda_intel          36864  0
+>> snd_hwdep              16384  1 snd_hda_codec
+>> snd_intel_dspcfg       16384  1 snd_hda_intel
+>> snd_pcm               110592  3 snd_hda_intel,snd_hda_codec,snd_hda_core
+>> snd_timer              32768  1 snd_pcm
+>> soundcore              16384  1 snd
+>> sunrpc                274432  9 nfsv4,lockd,nfs
+>> uvcvideo              110592  0
+>> videobuf2_common       45056  4 videobuf2_vmalloc,videobuf2_v4l2,uvcvideo,videobuf2_memops
+>> videobuf2_memops       16384  1 videobuf2_vmalloc
+>> videobuf2_v4l2         24576  1 uvcvideo
+>> videobuf2_vmalloc      16384  1 uvcvideo
+>>
+>>
+>> 5.15.29, have observed it already at least on 5.10.27, HW is ThinkPad x201 (x220 as well). I'm marking it as regression, since it used to work in the distant past (5.4-ish at least iirc)
 > 
-> To be sure this issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, my Linux kernel regression tracking bot:
+> Could somebody take a look into this? Or was this discussed somewhere
+> else already? Or even fixed?
 > 
-> #regzbot ^introduced v3.0..v5.15.19
-> #regzbot ignore-activity
+> Anyway, to get this tracked:
 > 
-> Reminder for developers: when fixing the issue, please add a 'Link:'
-> tags pointing to the report (the mail quoted below) using
-> lore.kernel.org/r/, as explained in
-> 'Documentation/process/submitting-patches.rst' and
-> 'Documentation/process/5.Posting.rst'. This allows the bot to connect
-> the report with any patches posted or committed to fix the issue; this
-> again allows the bot to show the current status of regressions and
-> automatically resolve the issue when the fix hits the right tree.
-> 
-> I'm sending this to everyone that got the initial report, to make them
-> aware of the tracking. I also hope that messages like this motivate
-> people to directly get at least the regression mailing list and ideally
-> even regzbot involved when dealing with regressions, as messages like
-> this wouldn't be needed then.
-> 
-> Don't worry, I'll send further messages wrt to this regression just to
-> the lists (with a tag in the subject so people can filter them away), if
-> they are relevant just for regzbot. With a bit of luck no such messages
-> will be needed anyway.
+> #regzbot introduced: v5.4..v5.10
+> #regzbot from: Petr Cerny <bugzilla@black-net.org>
+> #regzbot title: snd: snd_hda_intel not binding to codec
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215711
 > 
 > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 > 
@@ -82,74 +189,4 @@ On 24.02.22 10:22, Thorsten Leemhuis wrote:
 > that's not the case here; if you think it is, don't hesitate to tell me
 > in a public reply, it's in everyone's interest to set the public record
 > straight.
-> 
-> On 23.02.22 14:51, Daniel Dao wrote:
->> Hi all,
->>
->> We are observing some regressions in workingset_refault on our newly upgraded
->> 5.15.19 nodes with zram as swap. This manifests in several ways:
->>
->> 1) Regression of workingset_refault duration observed in flamegraph
->>
->> We regularly collect flamegraphs for running services on the node. Since upgrade
->> to 5.15.19, we see that workingset_refault occupied a more significant part of
->> the service flamegraph (13%) with the following call trace
->>
->>   workingset_refault+0x128
->>   add_to_page_cache_lru+0x9f
->>   page_cache_ra_unbounded+0x154
->>   force_page_cache_ra+0xe2
->>   filemap_get_pages+0xe9
->>   filemap_read+0xa4
->>   xfs_file_buffered_read+0x98
->>   xfs_file_read_iter+0x6a
->>   new_sync_read+0x118
->>   vfs_read+0xf2
->>   __x64_sys_pread64+0x89
->>   do_syscall_64+0x3b
->>   entry_SYSCALL_64_after_hwframe+0x44
->>
->> 2) Regression of userspace performance sensitive code
->>
->> We have some performance sensentive code running in userspace that have their
->> runtime measured by CLOCK_THREAD_CPUTIME_ID. They look roughly as:
->>
->>   now = clock_gettime(CLOCK_THREAD_CPUTIME_ID)
->>   func()
->>   elapsed = clock_gettime(CLOCK_THREAD_CPUTIME_ID) - now
->>
->> Since 5.15 upgrade, we observed long `elapsed` in the range of 4-10ms much more
->> frequently than before.  This went away after we disabled swap for the service
->> using `memory.swap.max=0` memcg configuration.
->>
->> The new thing in 5.15 workingset_refault seems to be introduction of
->> mem_cgroup_flush_stats()
->> by commit 1f828223b7991a228bc2aef837b78737946d44b2 (memcg: flush
->> lruvec stats in the
->> refault).
->>
->> Given that mem_cgroup_flush_stats can take quite a long time for us on the
->> standard systemd cgroupv2 hierrachy ( root / system.slice / workload.service )
->>
->>   sudo /usr/share/bcc/tools/funcslower -m 10 -t mem_cgroup_flush_stats
->>   Tracing function calls slower than 10 ms... Ctrl+C to quit.
->>   TIME       COMM           PID    LAT(ms)             RVAL FUNC
->>   0.000000   <redacted>     804776   11.50              200
->> mem_cgroup_flush_stats
->>   0.343383   <redacted>     647496   10.58              200
->> mem_cgroup_flush_stats
->>   0.604309   <redacted>     804776   10.50              200
->> mem_cgroup_flush_stats
->>   1.230416   <redacted>     803293   10.01              200
->> mem_cgroup_flush_stats
->>   1.248442   <redacted>     646400   11.02              200
->> mem_cgroup_flush_stats
->>
->> could it be possible that workingset_refault in some unfortunate case can take
->> much longer than before such that it increases the time observed by
->> CLOCK_THREAD_CPUTIME_ID from userspace, or overall duration of
->> workingset_refault
->> observed by perf ?
->>
-> 
 > 
