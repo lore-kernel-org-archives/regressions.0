@@ -1,85 +1,168 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB31D1FA6
-	for <regressions@lists.linux.dev>; Tue, 12 Apr 2022 10:37:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0CB0C385A9;
-	Tue, 12 Apr 2022 10:36:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1649759822;
-	bh=aW4x6amHzum00rDQPT0FUG+ggRroUKbynU3+mFAMVMs=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=qA+nHcZTf76+eD7wAm4dguMty2X7Md0r/KunP1VnoFC53/YPOSJyFrJRjRb1C6Os/
-	 i77YGzYijefmhXDTFLslXAKRS7T2NiScf7dO4p60+AswhP8uWewlnKa/Up6uG3pNq+
-	 dnOGUKfms80yp8RYw5UlMXDllY8DOMX7hUiEW6kESVrVdaJNe61vTUNQubYMBQ9H5+
-	 a9+jCxp3Pa7OqtWH+p8q87XlwbsgDcoN+RiYFKb/SeB4wqrph9EZl15pKyxMalpeND
-	 BaS9myYIVHQQfIzqcrUIWj3I1U3qRBz2Qi4XFNlbIRp3hOIYZkm+qEsoLy6gpgDpGV
-	 IYMdLHZ7etrSA==
-From: Kalle Valo <kvalo@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Philippe Schenker <dev@pschenker.ch>,  linux-wireless@vger.kernel.org,  Felix Fietkau <nbd@nbd.name>,  "David S. Miller" <davem@davemloft.net>,  Deren Wu <deren.wu@mediatek.com>,  Jakub Kicinski <kuba@kernel.org>,  Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,  Matthias Brugger <matthias.bgg@gmail.com>,  Paolo Abeni <pabeni@redhat.com>,  Ryder Lee <ryder.lee@mediatek.com>,  Sean Wang <sean.wang@mediatek.com>,  Shayne Chen <shayne.chen@mediatek.com>,  YN Chen <YN.Chen@mediatek.com>,  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,  linux-mediatek@lists.infradead.org,  netdev@vger.kernel.org,  "regressions\@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [PATCH] Revert "mt76: mt7921: enable aspm by default"
-References: <20220412090415.17541-1-dev@pschenker.ch>
-	<87y20aod5d.fsf@kernel.org>
-	<7aa0bbd0-5498-ba74-ad6d-6dacbade8a3d@leemhuis.info>
-Date: Tue, 12 Apr 2022 13:36:52 +0300
-In-Reply-To: <7aa0bbd0-5498-ba74-ad6d-6dacbade8a3d@leemhuis.info> (Thorsten
-	Leemhuis's message of "Tue, 12 Apr 2022 11:55:13 +0200")
-Message-ID: <87o816oaez.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6D81FBA
+	for <regressions@lists.linux.dev>; Tue, 12 Apr 2022 13:28:23 +0000 (UTC)
+Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id AA5E961EA1923;
+	Tue, 12 Apr 2022 15:28:14 +0200 (CEST)
+Message-ID: <bc534155-e5bc-b9d2-24b4-e7559a7c5fb5@molgen.mpg.de>
+Date: Tue, 12 Apr 2022 15:28:14 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [Intel-wired-lan] [PATCH] ice: wait for EMP reset after firmware
+ flash
+Content-Language: en-US
+To: Petr Oros <poros@redhat.com>
+Cc: Jacob Keller <jacob.e.keller@intel.com>, ivecera@redhat.com,
+ intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
+ kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net,
+ netdev@vger.kernel.org, regressions@lists.linux.dev
+References: <20220412102753.670867-1-poros@redhat.com>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <20220412102753.670867-1-poros@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Thorsten Leemhuis <regressions@leemhuis.info> writes:
+[Cc: +Jakob, +regressions@lists.linux.dev]
 
-> On 12.04.22 11:37, Kalle Valo wrote:
->> Philippe Schenker <dev@pschenker.ch> writes:
->> 
->>> This reverts commit bf3747ae2e25dda6a9e6c464a717c66118c588c8.
->>>
->>> This commit introduces a regression on some systems where the kernel is
->>> crashing in different locations after a reboot was issued.
->>>
->>> This issue was bisected on a Thinkpad P14s Gen2 (AMD) with latest firmware.
->>>
->>> Link:
->>> https://lore.kernel.org/linux-wireless/5077a953487275837e81bdf1808ded00b9676f9f.camel@pschenker.ch/
->>> Signed-off-by: Philippe Schenker <dev@pschenker.ch>
->> 
->> Can I take this to wireless tree? Felix, ack?
->> 
->> I'll also add:
->> 
->> Fixes: bf3747ae2e25 ("mt76: mt7921: enable aspm by default")
->
-> Sorry, stupid questions from the regression tracker: wouldn't this cause
-> a regression for users of kernel versions post-bf3747ae2e25, as the
-> power consumption is likely to increase for them? Without having dug
-> into the backstory much: would disabling ASPM for this particular
-> machine using a quirk be the better approach? Or are we assuming a lot
-> of machines are affected?
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
 
-BTW, maybe you could add that boilerplace text after P.S. into the
-signature (ie. under "-- " line)? That way your mails would more
-readable and make it more clear that you didn't write the boilerplate
-text specifically for this mail.
+Dear Petr,
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Thank you for your patch for the regression.
+
+#regzbot ^introduced 399e27dbbd9e94
+
+
+Am 12.04.22 um 12:27 schrieb Petr Oros:
+
+Please mention the time in the commit message summary:
+
+ice: Wait 5 s for EMP reset after firmware flash
+
+> We need to wait for EMP reset after firmware flash.
+> Code was extracted from OOT driver and without this wait fw_activate let
+
+Which OOT driver exactly?
+
+> card in inconsistent state recoverable only by second flash/activate
+
+Please reflow for 75 characters per line, and add a dot/period to the 
+end of sentences.
+
+> Reproducer:
+> [root@host ~]# devlink dev flash pci/0000:ca:00.0 file E810_XXVDA4_FH_O_SEC_FW_1p6p1p9_NVM_3p10_PLDMoMCTP_0.11_8000AD7B.bin
+> Preparing to flash
+> [fw.mgmt] Erasing
+> [fw.mgmt] Erasing done
+> [fw.mgmt] Flashing 100%
+> [fw.mgmt] Flashing done 100%
+> [fw.undi] Erasing
+> [fw.undi] Erasing done
+> [fw.undi] Flashing 100%
+> [fw.undi] Flashing done 100%
+> [fw.netlist] Erasing
+> [fw.netlist] Erasing done
+> [fw.netlist] Flashing 100%
+> [fw.netlist] Flashing done 100%
+> Activate new firmware by devlink reload
+> [root@host ~]# devlink dev reload pci/0000:ca:00.0 action fw_activate
+> reload_actions_performed:
+>      fw_activate
+> [root@host ~]# ip link show ens7f0
+> 71: ens7f0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN mode DEFAULT group default qlen 1000
+>      link/ether b4:96:91:dc:72:e0 brd ff:ff:ff:ff:ff:ff
+>      altname enp202s0f0
+> 
+> dmesg after flash:
+> [   55.120788] ice: Copyright (c) 2018, Intel Corporation.
+> [   55.274734] ice 0000:ca:00.0: Get PHY capabilities failed status = -5, continuing anyway
+> [   55.569797] ice 0000:ca:00.0: The DDP package was successfully loaded: ICE OS Default Package version 1.3.28.0
+> [   55.603629] ice 0000:ca:00.0: Get PHY capability failed.
+> [   55.608951] ice 0000:ca:00.0: ice_init_nvm_phy_type failed: -5
+> [   55.647348] ice 0000:ca:00.0: PTP init successful
+> [   55.675536] ice 0000:ca:00.0: DCB is enabled in the hardware, max number of TCs supported on this port are 8
+> [   55.685365] ice 0000:ca:00.0: FW LLDP is disabled, DCBx/LLDP in SW mode.
+> [   55.692179] ice 0000:ca:00.0: Commit DCB Configuration to the hardware
+> [   55.701382] ice 0000:ca:00.0: 126.024 Gb/s available PCIe bandwidth, limited by 16.0 GT/s PCIe x8 link at 0000:c9:02.0 (capable of 252.048 Gb/s with 16.0 GT/s PCIe x16 link)
+
+So, what is the error? `Get PHY capabilities failed status = -5`?
+
+What firmware version did the network card have before and after the update?
+
+> Reboot don't help, only second flash/activate with OOT or patched driver put card back in consistent state
+
+s/don't/doesn’t/
+
+> After patch:
+> [root@host ~]# devlink dev flash pci/0000:ca:00.0 file E810_XXVDA4_FH_O_SEC_FW_1p6p1p9_NVM_3p10_PLDMoMCTP_0.11_8000AD7B.bin
+> Preparing to flash
+> [fw.mgmt] Erasing
+> [fw.mgmt] Erasing done
+> [fw.mgmt] Flashing 100%
+> [fw.mgmt] Flashing done 100%
+> [fw.undi] Erasing
+> [fw.undi] Erasing done
+> [fw.undi] Flashing 100%
+> [fw.undi] Flashing done 100%
+> [fw.netlist] Erasing
+> [fw.netlist] Erasing done
+> [fw.netlist] Flashing 100%
+> [fw.netlist] Flashing done 100%
+> Activate new firmware by devlink reload
+> [root@host ~]# devlink dev reload pci/0000:ca:00.0 action fw_activate
+> reload_actions_performed:
+>      fw_activate
+> [root@host ~]# ip link show ens7f0
+> 19: ens7f0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
+>      link/ether b4:96:91:dc:72:e0 brd ff:ff:ff:ff:ff:ff
+>      altname enp202s0f0
+
+Did you try anything less than five seconds? i40e uses one second, cf. 
+commit 9b13bd53134c (i40e: Increase delay to 1 s after global EMP reset).
+
+> Fixes: 399e27dbbd9e94 ("ice: support immediate firmware activation via devlink reload")
+> Signed-off-by: Petr Oros <poros@redhat.com>
+> ---
+>   drivers/net/ethernet/intel/ice/ice_main.c | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
+> index d768925785ca79..90ea2203cdc763 100644
+> --- a/drivers/net/ethernet/intel/ice/ice_main.c
+> +++ b/drivers/net/ethernet/intel/ice/ice_main.c
+> @@ -6931,12 +6931,15 @@ static void ice_rebuild(struct ice_pf *pf, enum ice_reset_req reset_type)
+>   
+>   	dev_dbg(dev, "rebuilding PF after reset_type=%d\n", reset_type);
+>   
+> +#define ICE_EMP_RESET_SLEEP 5000
+
+Please append the unit to the macro name.
+
+>   	if (reset_type == ICE_RESET_EMPR) {
+>   		/* If an EMP reset has occurred, any previously pending flash
+>   		 * update will have completed. We no longer know whether or
+>   		 * not the NVM update EMP reset is restricted.
+>   		 */
+>   		pf->fw_emp_reset_disabled = false;
+> +
+> +		msleep(ICE_EMP_RESET_SLEEP);
+>   	}
+>   
+>   	err = ice_init_all_ctrlq(hw);
+
+
+Kind regards,
+
+Paul
