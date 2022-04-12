@@ -1,76 +1,75 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C06C7B
-	for <regressions@lists.linux.dev>; Tue, 12 Apr 2022 09:55:32 +0000 (UTC)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1neDEx-0005Ez-CY; Tue, 12 Apr 2022 11:55:15 +0200
-Message-ID: <7aa0bbd0-5498-ba74-ad6d-6dacbade8a3d@leemhuis.info>
-Date: Tue, 12 Apr 2022 11:55:13 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4EDC1FA6
+	for <regressions@lists.linux.dev>; Tue, 12 Apr 2022 10:33:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BF10C385A1;
+	Tue, 12 Apr 2022 10:33:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1649759639;
+	bh=h/Lw9izRLusTDmD2KCubgYWO5EB0A5SrBYBfsF6EwZk=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=b61UQ4X4zw6b2oqj7cqsksnVXuQh9qJJdTlX3mzgxfveyIxmCmtf8lGtk7t/KIU4/
+	 8KWpULW509FC+eUFEQvwEY9UlYa+9ykC2UgVDxngpNkJ+yrIuJWcpryAzpT3tRB3dH
+	 P2tiezjzuF2emFaeVhIRg1EHSBrhgn/EU+3v5s/IKYlo2y/66AEBvtoApANjBVn5qL
+	 qVU4HVdRH7pe49LUiABwacPBbDdo83V+4Xu5aW5tq8ZXgXRyGz+f8Ei9zi5mNC4LRl
+	 I2p9vq5G6dRG5UpuHGe+I2mbNqtIw9WJmAyRBFMrgkbEccPu+TCfoqnqYl38EG7hx4
+	 X9N3CA/7efcLg==
+From: Kalle Valo <kvalo@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Philippe Schenker <dev@pschenker.ch>,  linux-wireless@vger.kernel.org,  Felix Fietkau <nbd@nbd.name>,  "David S. Miller" <davem@davemloft.net>,  Deren Wu <deren.wu@mediatek.com>,  Jakub Kicinski <kuba@kernel.org>,  Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,  Matthias Brugger <matthias.bgg@gmail.com>,  Paolo Abeni <pabeni@redhat.com>,  Ryder Lee <ryder.lee@mediatek.com>,  Sean Wang <sean.wang@mediatek.com>,  Shayne Chen <shayne.chen@mediatek.com>,  YN Chen <YN.Chen@mediatek.com>,  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,  linux-mediatek@lists.infradead.org,  netdev@vger.kernel.org,  "regressions\@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [PATCH] Revert "mt76: mt7921: enable aspm by default"
+References: <20220412090415.17541-1-dev@pschenker.ch>
+	<87y20aod5d.fsf@kernel.org>
+	<7aa0bbd0-5498-ba74-ad6d-6dacbade8a3d@leemhuis.info>
+Date: Tue, 12 Apr 2022 13:33:52 +0300
+In-Reply-To: <7aa0bbd0-5498-ba74-ad6d-6dacbade8a3d@leemhuis.info> (Thorsten
+	Leemhuis's message of "Tue, 12 Apr 2022 11:55:13 +0200")
+Message-ID: <87sfqioajz.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Content-Language: en-US
-To: Kalle Valo <kvalo@kernel.org>, Philippe Schenker <dev@pschenker.ch>
-Cc: linux-wireless@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
- "David S. Miller" <davem@davemloft.net>, Deren Wu <deren.wu@mediatek.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
- Matthias Brugger <matthias.bgg@gmail.com>, Paolo Abeni <pabeni@redhat.com>,
- Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
- Shayne Chen <shayne.chen@mediatek.com>, YN Chen <YN.Chen@mediatek.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220412090415.17541-1-dev@pschenker.ch>
- <87y20aod5d.fsf@kernel.org>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [PATCH] Revert "mt76: mt7921: enable aspm by default"
-In-Reply-To: <87y20aod5d.fsf@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649757332;5da4d060;
-X-HE-SMSGID: 1neDEx-0005Ez-CY
+Content-Type: text/plain
 
-On 12.04.22 11:37, Kalle Valo wrote:
-> Philippe Schenker <dev@pschenker.ch> writes:
-> 
->> This reverts commit bf3747ae2e25dda6a9e6c464a717c66118c588c8.
->>
->> This commit introduces a regression on some systems where the kernel is
->> crashing in different locations after a reboot was issued.
->>
->> This issue was bisected on a Thinkpad P14s Gen2 (AMD) with latest firmware.
->>
->> Link: https://lore.kernel.org/linux-wireless/5077a953487275837e81bdf1808ded00b9676f9f.camel@pschenker.ch/
->> Signed-off-by: Philippe Schenker <dev@pschenker.ch>
-> 
-> Can I take this to wireless tree? Felix, ack?
-> 
-> I'll also add:
-> 
-> Fixes: bf3747ae2e25 ("mt76: mt7921: enable aspm by default")
+Thorsten Leemhuis <regressions@leemhuis.info> writes:
 
-Sorry, stupid questions from the regression tracker: wouldn't this cause
-a regression for users of kernel versions post-bf3747ae2e25, as the
-power consumption is likely to increase for them? Without having dug
-into the backstory much: would disabling ASPM for this particular
-machine using a quirk be the better approach? Or are we assuming a lot
-of machines are affected?
+> On 12.04.22 11:37, Kalle Valo wrote:
+>> Philippe Schenker <dev@pschenker.ch> writes:
+>> 
+>>> This reverts commit bf3747ae2e25dda6a9e6c464a717c66118c588c8.
+>>>
+>>> This commit introduces a regression on some systems where the kernel is
+>>> crashing in different locations after a reboot was issued.
+>>>
+>>> This issue was bisected on a Thinkpad P14s Gen2 (AMD) with latest firmware.
+>>>
+>>> Link:
+>>> https://lore.kernel.org/linux-wireless/5077a953487275837e81bdf1808ded00b9676f9f.camel@pschenker.ch/
+>>> Signed-off-by: Philippe Schenker <dev@pschenker.ch>
+>> 
+>> Can I take this to wireless tree? Felix, ack?
+>> 
+>> I'll also add:
+>> 
+>> Fixes: bf3747ae2e25 ("mt76: mt7921: enable aspm by default")
+>
+> Sorry, stupid questions from the regression tracker: wouldn't this cause
+> a regression for users of kernel versions post-bf3747ae2e25, as the
+> power consumption is likely to increase for them? Without having dug
+> into the backstory much: would disabling ASPM for this particular
+> machine using a quirk be the better approach? Or are we assuming a lot
+> of machines are affected?
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+Kernel crashing is far more serious than increased power consumption. If
+there's a better fix available in the next day or two of course that can
+be considered. But if there's no such fix available, we have to revert
+the commit.
 
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
