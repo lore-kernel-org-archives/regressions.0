@@ -1,61 +1,76 @@
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469231840
-	for <regressions@lists.linux.dev>; Mon, 11 Apr 2022 18:45:33 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 8331860F6B61;
-	Mon, 11 Apr 2022 20:45:25 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id 2Hw1TfcMpRAi; Mon, 11 Apr 2022 20:45:25 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 21C2960F6B73;
-	Mon, 11 Apr 2022 20:45:25 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id c5DjqaO2bHEL; Mon, 11 Apr 2022 20:45:25 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id E091060F6B61;
-	Mon, 11 Apr 2022 20:45:24 +0200 (CEST)
-Date: Mon, 11 Apr 2022 20:45:24 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Zhen Lei <thunder.leizhen@huawei.com>, Jeff Dike <jdike@addtoit.com>, 
-	anton ivanov <anton.ivanov@cambridgegreys.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, 
-	Eduard-Gabriel Munteanu <maxdamage@aladin.ro>, 
-	linux-um <linux-um@lists.infradead.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	Nick Desaulniers <ndesaulniers@google.com>, 
-	regressions <regressions@lists.linux.dev>
-Message-ID: <1287561645.244713.1649702724736.JavaMail.zimbra@nod.at>
-In-Reply-To: <YlRp9KR1mp3/4Txo@thelio-3990X>
-References: <20210508032239.2177-1-thunder.leizhen@huawei.com> <Yjt31seiNv18HYrf@dev-arch.thelio-3990X> <1b03d888-cea3-3e6f-087f-daeb5642a975@leemhuis.info> <1087614384.239493.1649583213699.JavaMail.zimbra@nod.at> <YlRp9KR1mp3/4Txo@thelio-3990X>
-Subject: Re: [PATCH 1/1] um: fix error return code in winch_tramp()
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C06C7B
+	for <regressions@lists.linux.dev>; Tue, 12 Apr 2022 09:55:32 +0000 (UTC)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1neDEx-0005Ez-CY; Tue, 12 Apr 2022 11:55:15 +0200
+Message-ID: <7aa0bbd0-5498-ba74-ad6d-6dacbade8a3d@leemhuis.info>
+Date: Tue, 12 Apr 2022 11:55:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
-Thread-Topic: fix error return code in winch_tramp()
-Thread-Index: U06xC3VNSbJwBqt91Rla1kwYc9mhWA==
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Content-Language: en-US
+To: Kalle Valo <kvalo@kernel.org>, Philippe Schenker <dev@pschenker.ch>
+Cc: linux-wireless@vger.kernel.org, Felix Fietkau <nbd@nbd.name>,
+ "David S. Miller" <davem@davemloft.net>, Deren Wu <deren.wu@mediatek.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>, Paolo Abeni <pabeni@redhat.com>,
+ Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
+ Shayne Chen <shayne.chen@mediatek.com>, YN Chen <YN.Chen@mediatek.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220412090415.17541-1-dev@pschenker.ch>
+ <87y20aod5d.fsf@kernel.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [PATCH] Revert "mt76: mt7921: enable aspm by default"
+In-Reply-To: <87y20aod5d.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1649757332;5da4d060;
+X-HE-SMSGID: 1neDEx-0005Ez-CY
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Nathan Chancellor" <nathan@kernel.org>
-> I attempted to print out the error code but it seems like there is no
-> output in the console after "reboot: System halted". If I add an
-> unconditional print right before the call to os_set_fd_block(), I see it
-> during start up but I do not see it during shutdown. Is there some way
-> to see that console output during shutdown?
+On 12.04.22 11:37, Kalle Valo wrote:
+> Philippe Schenker <dev@pschenker.ch> writes:
+> 
+>> This reverts commit bf3747ae2e25dda6a9e6c464a717c66118c588c8.
+>>
+>> This commit introduces a regression on some systems where the kernel is
+>> crashing in different locations after a reboot was issued.
+>>
+>> This issue was bisected on a Thinkpad P14s Gen2 (AMD) with latest firmware.
+>>
+>> Link: https://lore.kernel.org/linux-wireless/5077a953487275837e81bdf1808ded00b9676f9f.camel@pschenker.ch/
+>> Signed-off-by: Philippe Schenker <dev@pschenker.ch>
+> 
+> Can I take this to wireless tree? Felix, ack?
+> 
+> I'll also add:
+> 
+> Fixes: bf3747ae2e25 ("mt76: mt7921: enable aspm by default")
 
-I think in this case the easiest way is attaching gdb with a breakpoint.
+Sorry, stupid questions from the regression tracker: wouldn't this cause
+a regression for users of kernel versions post-bf3747ae2e25, as the
+power consumption is likely to increase for them? Without having dug
+into the backstory much: would disabling ASPM for this particular
+machine using a quirk be the better approach? Or are we assuming a lot
+of machines are affected?
 
-Thanks,
-//richard
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
