@@ -1,168 +1,148 @@
-Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF6D81FBA
-	for <regressions@lists.linux.dev>; Tue, 12 Apr 2022 13:28:23 +0000 (UTC)
-Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id AA5E961EA1923;
-	Tue, 12 Apr 2022 15:28:14 +0200 (CEST)
-Message-ID: <bc534155-e5bc-b9d2-24b4-e7559a7c5fb5@molgen.mpg.de>
-Date: Tue, 12 Apr 2022 15:28:14 +0200
+Received: from cmx-torrgo001.bell.net (mta-tor-002.bell.net [209.71.212.29])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6912346B6
+	for <regressions@lists.linux.dev>; Wed, 13 Apr 2022 00:17:45 +0000 (UTC)
+X-RG-CM-BuS: 0
+X-RG-CM-SC: 0
+X-RG-CM: Clean
+X-Originating-IP: [69.156.160.174]
+X-RG-Env-Sender: nick.steeves@bell.net
+X-RG-Rigid: 624AF58700E129A7
+X-CM-Envelope: MS4xfMobgET0KJEPEy2rz+iImhfnpIh7TGu5qIG8IJ8tylJDUtj79/i41IApO8fQ6BJHy2zpATKD1qgVquPGS2jtTH9RYS9gFGuksIQN38J5OBGRFJTSjUMX
+ 8GADK057e0F3i+e7MWgFH6nDiyME/cQk80iJ66jGrnArgdcU2v+ow09HEy0sgdN/3N+knZI/Lh0wMMDNTW5cOiKd0CZzKeG5HF/JS60kUiNDy/wDm347zGlA
+ I36G3RhYzBelek6anN1W/E+eCGa6sGkwge9Z+qNRjslxCDUsj4Ca08GNhxznpYs//g22LDhsoC9/HOVYRgYAzwFCV34aBrdQQhmYL9qhk4E7LfyqaLxj/SLX
+ vczOHF2Fd8hKoW2IOG6HvSmoKZ8ww6hEQvRYnsN6aFCWRQst3NNKcQ+DibEr5nZFQH58prUzjwbhp8sMz3+w+thUCdo4DnS7AT79JpWQkzPqeSBBmDgmUOQk
+ UXf/4rwU1UwhFG7wH07qXokX1hlF1uSuLOvAT5eHY4eJuEuK0/x2dP//LnCcCEzpHt0SfRI0MZRHif3lAJCbcIrTgsp+0VwQRhx7ya5BEH7E85wD4ftJONCE
+ v7Z7GFNDXQnCELwP0zc86AtTfLmwlEECOemGo7GK6fxOzu4cjwUKzsNapcUgJAOP3jKQOxA1eDQGzQz2W9CeOvBfIwoiZoKUuR4WP0G+NVPQReykaGiY7uA1
+ GHepaPB99a8ip7xAvFNbX08OWihABKOiPXGTkWR72zh8lffBd1fytYUx0WUdGyodroxIUD5RyHxiAlFNqx/ClksiXDYHuLePfGHk7fgtJ491vbInIaiVCHlE
+ WoqOf0lX+vAtmYZ0WMWyV0QOdvgKXAhV20tzeIcT62SiT+UBECpK+Wl4zWA0DaiVpjAsdtqs7wFHBpDWw1VNm5/RwHPg9Uvch09UkiJan8dn70MkWY6yBGcs
+ IBSslcb8RrjcWiDWCkF806JELk2u31nIUKADP8yGtM502rl1MX1ZhtY6h5MbnftMqrUeaBtuitezcWkkdZw1cA00bmUCwcm6QEtuQn3upk4Ivcv0R1tvWkWc
+ gddCbzW66cofJ+Sv3i28pES85JHdkDERZzLLr8ioP8FazDkB67tRHI23B95LYAudAPg4PjHsz/T8Hg==
+X-CM-Analysis: v=2.4 cv=B8zabMhM c=1 sm=1 tr=0 ts=6256163a
+ a=MIeb/1XuSZkfF0zOzarnVA==:117 a=MIeb/1XuSZkfF0zOzarnVA==:17
+ a=z0gMJWrwH1QA:10 a=lAgNKBcoAAAA:8 a=VwQbUJbxAAAA:8 a=DbH0gPOPAAAA:8
+ a=7mOBRU54AAAA:8 a=fxJcL_dCAAAA:8 a=44LDQt12AAAA:8 a=ZC48hzh6CcCYWVy3ZBUA:9
+ a=wU2KtiTIgF-na1uTuREA:9 a=FfaGCDsud1wA:10 a=drE6d5tx1tjNRBs8zHOc:22
+ a=AjGcO6oz07-iQ99wixmX:22 a=amFcwBvv0bFiKrp1vszQ:22 a=wa9RWnbW_A1YIeRBVszw:22
+ a=Sbs2_LdxfKMdlVWN_trs:22
+Received: from DigitalMercury.freeddns.org (69.156.160.174) by cmx-torrgo001.bell.net (5.8.807) (authenticated as nick.steeves@bell.net)
+        id 624AF58700E129A7; Tue, 12 Apr 2022 20:15:54 -0400
+Received: by DigitalMercury.freeddns.org (Postfix, from userid 1000)
+	id 7FD77C41A95; Tue, 12 Apr 2022 20:15:51 -0400 (EDT)
+From: Nicholas D Steeves <sten@debian.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>, Bruno Damasceno Freire
+ <bdamasceno@hotmail.com.br>, Filipe Manana <fdmanana@kernel.org>,
+ "dsterba@suse.cz" <dsterba@suse.cz>, Chris Mason <clm@fb.com>, Josef Bacik
+ <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>, linux-btrfs
+ <linux-btrfs@vger.kernel.org>, "fdmanana@suse.com" <fdmanana@suse.com>
+Subject: Re: [regression] 5.15 kernel triggering 100x more inode evictions
+In-Reply-To: <3ab10248-be14-d161-14e6-bf19ac8cd998@leemhuis.info>
+References: <MN2PR20MB2512314446801B92562E26B5D2169@MN2PR20MB2512.namprd20.prod.outlook.com>
+ <07bb78be-1d58-7d88-288b-6516790f3b5d@leemhuis.info>
+ <MN2PR20MB251203B4B5445B4B0C4148C9D21D9@MN2PR20MB2512.namprd20.prod.outlook.com>
+ <35b62998-e386-2032-5a7a-07e3413b3bc1@leemhuis.info>
+ <MN2PR20MB251205164078C367C3FC4166D2E59@MN2PR20MB2512.namprd20.prod.outlook.com>
+ <9163b8a9-e852-5786-24fa-d324e3118890@leemhuis.info>
+ <20220408145222.GR15609@twin.jikos.cz> <YlBa/Rc0lvJCm5Rr@debian9.Home>
+ <74e4cc73-f16d-3e79-9927-1de3beea4a11@leemhuis.info>
+ <MN2PR20MB2512CEFB95106D91FD9F1717D2E89@MN2PR20MB2512.namprd20.prod.outlook.com>
+ <3ab10248-be14-d161-14e6-bf19ac8cd998@leemhuis.info>
+Date: Tue, 12 Apr 2022 20:15:47 -0400
+Message-ID: <87r161zvm4.fsf@DigitalMercury.freeddns.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [Intel-wired-lan] [PATCH] ice: wait for EMP reset after firmware
- flash
-Content-Language: en-US
-To: Petr Oros <poros@redhat.com>
-Cc: Jacob Keller <jacob.e.keller@intel.com>, ivecera@redhat.com,
- intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
- kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net,
- netdev@vger.kernel.org, regressions@lists.linux.dev
-References: <20220412102753.670867-1-poros@redhat.com>
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20220412102753.670867-1-poros@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-[Cc: +Jakob, +regressions@lists.linux.dev]
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
+Hi Bruno,
 
-Dear Petr,
+Thorsten Leemhuis <regressions@leemhuis.info> writes:
 
+> On 09.04.22 19:12, Bruno Damasceno Freire wrote:
+>> On 08.04.22 04:50, Thorsten Leemhuis wrote:
+>>> On 08.04.22 17:55, Filipe Manana wrote:
+>>>> On Fri, Apr 08, 2022 at 04:52:22PM +0200, David Sterba wrote:
+>>>>> On Fri, Apr 08, 2022 at 12:32:20PM +0200, Thorsten Leemhuis wrote:
+>>> Bruno, under these circumstances I'd say you need to bisect this to get
+>>> us closer to the root of the problem (and a fix for it). Sadly that how
+>>> it is sometimes, as briefly explained here:
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tre=
+e/Documentation/admin-guide/reporting-regressions.rst#n140
+>>=20
+>> Ok Thorsten.
+>>=20
+>> It's not sad at all: I had a great time researching this regression and
+>> gained a lot of knowledge while doing so. The problem is that I am just a
+>> simple user at its limits here and additional bisection is probably beyo=
+nd my
+>> abilities.
+>
+> Maybe, but I think you underestimate yourself here. Give it a try, it's
+> not that hard once you figured out how to build and install a vanilla
+> kernel (which you did already afaics; and if not: it's not that hard and
+> you learn new stuff, too) and have some test case to check if the
+> problem is there or now (which you already have afaics).
+>
 
-Thank you for your patch for the regression.
+I also think it's something you can manage :-)
 
-#regzbot ^introduced 399e27dbbd9e94
+Something like:
 
+1. Use the .config from /boot/config-ubuntu_5.14.x
+2. git bisect start
+3. git bisect good v5.14 (7d2a07b)
+4. git bisect bad v5.15 (8bb7eca)
+5. Open a guide like these ones on another device, or print it out:
+  https://www.metaltoad.com/blog/beginners-guide-git-bisect-process-elimina=
+tion
+  https://wiki.gentoo.org/wiki/Kernel_git-bisect
+  https://wiki.ubuntu.com/Kernel/KernelBisection
+  https://ldpreload.com/blog/git-bisect-run ("Finding a kernel
+  regression in half an hour with git bisect run")
+6. make oldconfig
+7. make bindeb-pkg
+8. Deb packages are in ../
+9. Install, reboot, run tests, confirm logs, iterate
 
-Am 12.04.22 um 12:27 schrieb Petr Oros:
+Thank you for running these tests.  By chance, would you have time to
+compare 5.10.x to 5.15.x, or have you already compared them?  I'm
+always the most curious about how the latest LTS kernel compares to
+latest_LTS-1 ;-)
 
-Please mention the time in the commit message summary:
+Regards,
+Nicholas
 
-ice: Wait 5 s for EMP reset after firmware flash
+P.S. I'm sure you'll be able to find someone on IRC who'd be willing to
+help you, should any help be necessary!
 
-> We need to wait for EMP reset after firmware flash.
-> Code was extracted from OOT driver and without this wait fw_activate let
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Which OOT driver exactly?
+-----BEGIN PGP SIGNATURE-----
 
-> card in inconsistent state recoverable only by second flash/activate
-
-Please reflow for 75 characters per line, and add a dot/period to the 
-end of sentences.
-
-> Reproducer:
-> [root@host ~]# devlink dev flash pci/0000:ca:00.0 file E810_XXVDA4_FH_O_SEC_FW_1p6p1p9_NVM_3p10_PLDMoMCTP_0.11_8000AD7B.bin
-> Preparing to flash
-> [fw.mgmt] Erasing
-> [fw.mgmt] Erasing done
-> [fw.mgmt] Flashing 100%
-> [fw.mgmt] Flashing done 100%
-> [fw.undi] Erasing
-> [fw.undi] Erasing done
-> [fw.undi] Flashing 100%
-> [fw.undi] Flashing done 100%
-> [fw.netlist] Erasing
-> [fw.netlist] Erasing done
-> [fw.netlist] Flashing 100%
-> [fw.netlist] Flashing done 100%
-> Activate new firmware by devlink reload
-> [root@host ~]# devlink dev reload pci/0000:ca:00.0 action fw_activate
-> reload_actions_performed:
->      fw_activate
-> [root@host ~]# ip link show ens7f0
-> 71: ens7f0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq state DOWN mode DEFAULT group default qlen 1000
->      link/ether b4:96:91:dc:72:e0 brd ff:ff:ff:ff:ff:ff
->      altname enp202s0f0
-> 
-> dmesg after flash:
-> [   55.120788] ice: Copyright (c) 2018, Intel Corporation.
-> [   55.274734] ice 0000:ca:00.0: Get PHY capabilities failed status = -5, continuing anyway
-> [   55.569797] ice 0000:ca:00.0: The DDP package was successfully loaded: ICE OS Default Package version 1.3.28.0
-> [   55.603629] ice 0000:ca:00.0: Get PHY capability failed.
-> [   55.608951] ice 0000:ca:00.0: ice_init_nvm_phy_type failed: -5
-> [   55.647348] ice 0000:ca:00.0: PTP init successful
-> [   55.675536] ice 0000:ca:00.0: DCB is enabled in the hardware, max number of TCs supported on this port are 8
-> [   55.685365] ice 0000:ca:00.0: FW LLDP is disabled, DCBx/LLDP in SW mode.
-> [   55.692179] ice 0000:ca:00.0: Commit DCB Configuration to the hardware
-> [   55.701382] ice 0000:ca:00.0: 126.024 Gb/s available PCIe bandwidth, limited by 16.0 GT/s PCIe x8 link at 0000:c9:02.0 (capable of 252.048 Gb/s with 16.0 GT/s PCIe x16 link)
-
-So, what is the error? `Get PHY capabilities failed status = -5`?
-
-What firmware version did the network card have before and after the update?
-
-> Reboot don't help, only second flash/activate with OOT or patched driver put card back in consistent state
-
-s/don't/doesn’t/
-
-> After patch:
-> [root@host ~]# devlink dev flash pci/0000:ca:00.0 file E810_XXVDA4_FH_O_SEC_FW_1p6p1p9_NVM_3p10_PLDMoMCTP_0.11_8000AD7B.bin
-> Preparing to flash
-> [fw.mgmt] Erasing
-> [fw.mgmt] Erasing done
-> [fw.mgmt] Flashing 100%
-> [fw.mgmt] Flashing done 100%
-> [fw.undi] Erasing
-> [fw.undi] Erasing done
-> [fw.undi] Flashing 100%
-> [fw.undi] Flashing done 100%
-> [fw.netlist] Erasing
-> [fw.netlist] Erasing done
-> [fw.netlist] Flashing 100%
-> [fw.netlist] Flashing done 100%
-> Activate new firmware by devlink reload
-> [root@host ~]# devlink dev reload pci/0000:ca:00.0 action fw_activate
-> reload_actions_performed:
->      fw_activate
-> [root@host ~]# ip link show ens7f0
-> 19: ens7f0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP mode DEFAULT group default qlen 1000
->      link/ether b4:96:91:dc:72:e0 brd ff:ff:ff:ff:ff:ff
->      altname enp202s0f0
-
-Did you try anything less than five seconds? i40e uses one second, cf. 
-commit 9b13bd53134c (i40e: Increase delay to 1 s after global EMP reset).
-
-> Fixes: 399e27dbbd9e94 ("ice: support immediate firmware activation via devlink reload")
-> Signed-off-by: Petr Oros <poros@redhat.com>
-> ---
->   drivers/net/ethernet/intel/ice/ice_main.c | 3 +++
->   1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-> index d768925785ca79..90ea2203cdc763 100644
-> --- a/drivers/net/ethernet/intel/ice/ice_main.c
-> +++ b/drivers/net/ethernet/intel/ice/ice_main.c
-> @@ -6931,12 +6931,15 @@ static void ice_rebuild(struct ice_pf *pf, enum ice_reset_req reset_type)
->   
->   	dev_dbg(dev, "rebuilding PF after reset_type=%d\n", reset_type);
->   
-> +#define ICE_EMP_RESET_SLEEP 5000
-
-Please append the unit to the macro name.
-
->   	if (reset_type == ICE_RESET_EMPR) {
->   		/* If an EMP reset has occurred, any previously pending flash
->   		 * update will have completed. We no longer know whether or
->   		 * not the NVM update EMP reset is restricted.
->   		 */
->   		pf->fw_emp_reset_disabled = false;
-> +
-> +		msleep(ICE_EMP_RESET_SLEEP);
->   	}
->   
->   	err = ice_init_all_ctrlq(hw);
-
-
-Kind regards,
-
-Paul
+iQJEBAEBCgAuFiEE4qYmHjkArtfNxmcIWogwR199EGEFAmJWFjQQHHN0ZW5AZGVi
+aWFuLm9yZwAKCRBaiDBHX30QYRNWEACk2QT/FbL/b4WUYI6gl7xHgwMk82cU/Zpn
+dWRxvQXujZxWcShgdw3aji9nCt0vIWxaAMYh47ox9T0X6qbo4EirFTUmzOGjf9JM
+Pu08CyV+qqIB28itWtRvJTlg+5SPxENMFE7/vIVVcx13WxHQTpM7qtdsesqLBLYK
+fguEeow5qME57dmbwcF5Xkgn6WORq796/SkTtzRKh4H6Fz17Svpz2twD/TDF1Zmj
+wnCYP00SrFKfdBsUO2dYexuAHTUh5ORXQW4ZuB6K9aCUKZpgJK0/c2xNVClulNfq
+Td6LMtN35HyLez2VRnzfawbuQIQtm+OTviwAzehV8xqfsGTzeWbaq2k5SoQ3vdg8
+XCDNz/c5C+5ni4XVp706FpiIP4oMUcTOq/kr0e4+mwblVi4sAX1WLlTols6xYrr3
+luHkbIeqg5bfiwx6Z7lr0c979caHnV0XfnoWKEsgjnuYnpRK9UzPIua5Rf/PT8ZW
+JgF1Y/+8sNvutjx0vpSMT2oyX0kau97wNUmPCap9G+Mw7F/MEH57tndTdb8xizHO
+4pS55RSVLdE3ILpsv4t76NmC5HCYvwBpnYQu1+EIqyfAESBMuuyZVrYQNJxtIAbV
+ltp81CTzIf8aJqL+sjODXbRrg+oR+QBsz5Nz+3vynu9lsBGJVrB9rvpcE7q9Io0l
+iGY0rZsWcg==
+=YG5y
+-----END PGP SIGNATURE-----
+--=-=-=--
