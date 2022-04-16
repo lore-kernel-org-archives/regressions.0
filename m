@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F11620F3
-	for <regressions@lists.linux.dev>; Sat, 16 Apr 2022 04:42:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536A17A
+	for <regressions@lists.linux.dev>; Sat, 16 Apr 2022 11:38:40 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:6624:6d8d:f790:d5c]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nfaGe-0007D9-2O; Sat, 16 Apr 2022 06:42:40 +0200
-Message-ID: <e5c8cccd-c9dd-ff80-ae88-b47f70f66c6a@leemhuis.info>
-Date: Sat, 16 Apr 2022 06:42:39 +0200
+	id 1nfgl9-0000mk-RE; Sat, 16 Apr 2022 13:38:35 +0200
+Message-ID: <c6b80014-846d-cd90-7e67-d72959ffabe1@leemhuis.info>
+Date: Sat, 16 Apr 2022 13:38:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,99 +16,149 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.7.0
-Subject: Re: Bug 215734 - shared object loaded very low in memory ARM 32bit
- with kernel 5.17.0 #forregzbot
+Subject: Re: fscache corruption in Linux 5.17?
 Content-Language: en-US
+To: Max Kellermann <mk@cm4all.com>, dhowells@redhat.com
+Cc: linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <YlWWbpW5Foynjllo@rabbit.intern.cm-ag>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <e2b90c55-1a4a-4cf1-2dc7-2b2a4dc7d168@leemhuis.info>
-In-Reply-To: <e2b90c55-1a4a-4cf1-2dc7-2b2a4dc7d168@leemhuis.info>
+In-Reply-To: <YlWWbpW5Foynjllo@rabbit.intern.cm-ag>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1650084162;5241a5e2;
-X-HE-SMSGID: 1nfaGe-0007D9-2O
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1650109120;b62aed16;
+X-HE-SMSGID: 1nfgl9-0000mk-RE
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+[TLDR: I'm adding the regression report below to regzbot, the Linux
+kernel regression tracking bot; all text you find below is compiled from
+a few templates paragraphs you might have encountered already already
+from similar mails.]
 
-#regzbot fixed-by: aeb7923733d100
+Hi, this is your Linux kernel regression tracker. CCing the regression
+mailing list, as it should be in the loop for all regressions, as
+explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
+On 12.04.22 17:10, Max Kellermann wrote:
+> Hi David,
+> 
+> two weeks ago, I updated a cluster of web servers to Linux kernel
+> 5.17.1 (5.16.x previously) which includes your rewrite of the fscache
+> code.
+> 
+> In the last few days, there were numerous complaints about broken
+> WordPress installations after WordPress was updated.  There were
+> PHP syntax errors everywhere.
+> 
+> Indeed there were broken PHP files, but the interesting part is: those
+> corruptions were only on one of the web servers; the others were fine,
+> the file contents were only broken on one of the servers.
+> 
+> File size and time stamp and everyhing in "stat" is identical, just
+> the file contents are corrupted; it looks like a mix of old and new
+> contents.  The corruptions always started at multiples of 4096 bytes.
+> 
+> An example diff:
+> 
+>  --- ok/wp-includes/media.php    2022-04-06 05:51:50.000000000 +0200
+>  +++ broken/wp-includes/media.php    2022-04-06 05:51:50.000000000 +0200
+>  @@ -5348,7 +5348,7 @@
+>                  /**
+>                   * Filters the threshold for how many of the first content media elements to not lazy-load.
+>                   *
+>  -                * For these first content media elements, the `loading` attribute will be omitted. By default, this is the case
+>  +                * For these first content media elements, the `loading` efault, this is the case
+>                   * for only the very first content media element.
+>                   *
+>                   * @since 5.9.0
+>  @@ -5377,3 +5377,4 @@
+>   
+>          return $content_media_count;
+>   }
+>  +^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@^@
+> 
+> The corruption can be explained by WordPress commit
+> https://github.com/WordPress/WordPress/commit/07855db0ee8d5cff2 which
+> makes the file 31 bytes longer (185055 -> 185086).  The "broken" web
+> server sees the new contents until offset 184320 (= 45 * 4096), but
+> sees the old contents from there on; followed by 31 null bytes
+> (because the kernel reads past the end of the cache?).
+> 
+> All web servers mount a storage via NFSv3 with fscache.
+> 
+> My suspicion is that this is caused by a fscache regression in Linux
+> 5.17.  What do you think?
+> 
+> What can I do to debug this further, is there any information you
+> need?  I don't know much about how fscache works internally and how to
+> obtain information.
 
-On 31.03.22 08:17, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker.
-> 
-> I noticed a regression report in bugzilla.kernel.org that afaics nobody
-> acted upon since it was reported about a week ago, that's why I decided
-> to forward it to the lists and all people that seemed to be relevant
-> here. Note, this is the second regression report referencin a commit
-> from H.J. Lu as culprit (9630f0d60fec ("fs/binfmt_elf: use PT_LOAD
-> p_align values for static PIE")). I forwarded the first one on Monday
-> already, but seems nothing happened:
-> https://lore.kernel.org/all/cb5b81bd-9882-e5dc-cd22-54bdbaaefbbc@leemhuis.info/
-> 
-> Anyway, to get back to the latest report. To quote from
-> https://bugzilla.kernel.org/show_bug.cgi?id=215734 :
-> 
->>  Jan Palus 2022-03-24 10:17:02 UTC
->>
->> This is a followup to https://sourceware.org/bugzilla/show_bug.cgi?id=28990 where ld.so --verify segfault was reported on binaries > 4MB.
->>
->> It appears that starting with kernel 5.17.0 shared object is loaded in the begging of address space at least on 32-bit ARM:
->>
->> /proc/<pid>/maps just before mmap (5.17):
->> 00400000-00429000 r-xp 00000000 b3:02 393320     /lib/ld-linux-armhf.so.3
->> 00439000-0043c000 rw-p 00029000 b3:02 393320     /lib/ld-linux-armhf.so.3
->> 76ffd000-76ffe000 r-xp 00000000 00:00 0          [sigpage]
->> 76ffe000-76fff000 r--p 00000000 00:00 0          [vvar]
->> 76fff000-77000000 r-xp 00000000 00:00 0          [vdso]
->> 7efdf000-7f000000 rw-p 00000000 00:00 0          [stack]
->> ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]
->>
->> causing segfaults when mmaping large binaries at fixed address 0x10000 (ie done by ld.so --verify used by ldd).
->>
->> By comparison it is not the case for kernel 5.16.8:
->>
->> /proc/<pid>/maps just before mmap (5.16):
->> 76fc4000-76fed000 r-xp 00000000 b3:02 393320     /lib/ld-linux-armhf.so.3
->> 76ffa000-76ffb000 r-xp 00000000 00:00 0          [sigpage]
->> 76ffb000-76ffc000 r--p 00000000 00:00 0          [vvar]
->> 76ffc000-76ffd000 r-xp 00000000 00:00 0          [vdso]
->> 76ffd000-77000000 rw-p 00029000 b3:02 393320     /lib/ld-linux-armhf.so.3
->> 7efdf000-7f000000 rw-p 00000000 00:00 0          [stack]
->> ffff0000-ffff1000 r-xp 00000000 00:00 0          [vectors]
->>
->> [reply] [−] Comment 1 Jan Palus 2022-03-29 22:14:12 UTC
->>
->> First bad commit appears to be:
->>
->> From: "H.J. Lu" <hjl.tools@gmail.com>
->> Date: Wed, 19 Jan 2022 18:09:40 -0800
->> Subject: fs/binfmt_elf: use PT_LOAD p_align values for static PIE
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9630f0d60fec5fbcaa4435a66f75df1dc9704b66
->>
-> 
-> Could somebody take a look into this? Or was this discussed somewhere
-> else already? Or even fixed?
-> 
-> 
-> Anyway, to get this tracked:
-> 
-> #regzbot introduced: 9630f0d60fec5fbcaa4435a66f75df1dc9704b6
-> #regzbot from: Jan Palus <jpalus@fastmail.com>
-> #regzbot title: shared object loaded very low in memory ARM 32bit
-> causing segfaults on binaries > 4MB
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215734
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
-> 
+Thx for the report. Maybe a bisection is what's needed here, but lets
+see what David says, maybe he has a idea already.
+
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced v5.16..v5.17
+#regzbot title fscache: file contents are corrupted
+#regzbot ignore-activity
+
+If it turns out this isn't a regression, free free to remove it from the
+tracking by sending a reply to this thread containing a paragraph like
+"#regzbot invalid: reason why this is invalid" (without the quotes).
+
+Reminder for developers: when fixing the issue, please add a 'Link:'
+tags pointing to the report (the mail quoted above) using
+lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'. Regzbot needs them to
+automatically connect reports with fixes, but they are useful in
+general, too.
+
+I'm sending this to everyone that got the initial report, to make
+everyone aware of the tracking. I also hope that messages like this
+motivate people to directly get at least the regression mailing list and
+ideally even regzbot involved when dealing with regressions, as messages
+like this wouldn't be needed then. And don't worry, if I need to send
+other mails regarding this regression only relevant for regzbot I'll
+send them to the regressions lists only (with a tag in the subject so
+people can filter them away). With a bit of luck no such messages will
+be needed anyway.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
+
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
