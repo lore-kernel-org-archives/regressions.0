@@ -1,137 +1,66 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCE3801
-	for <regressions@lists.linux.dev>; Mon, 18 Apr 2022 12:23:08 +0000 (UTC)
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id A5BC424002C
-	for <regressions@lists.linux.dev>; Mon, 18 Apr 2022 14:17:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-	t=1650284242; bh=m06zaNElDOLmrPptGcaA5mPzK3FeCBh7vUpbw9C7Aao=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oj8Sw8oP3Ux5jhs3XDkDp8GFL5aVKVx7HFlEMHhBH55I+8CllrlJEJNiifohEQZjn
-	 j4StBp6Z+VAxqmOa5LpdWHeRl4nvfHcI8eioFDbtCJu/rt9IjPOXoSj8G58Sn3I6pZ
-	 01PWym0i4o+KokdfAwf3iCjELBpljtDcjYEI0x10BbEweYv+LSwWxE10rN6HPsHhIE
-	 TfmG5ObrWy4HbVCrdw/M+sDIUeYRAPg5FKFmZKN1VuxwF6Z54lLk9b3KEwk+CrYpf8
-	 p5O95hZ8C6pTHt7IRko0FihmlGEIufIJ/yppCK4gmdJnpcsuryxdujKvtUQixJcQFC
-	 r6qLIuzcUU25A==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4KhmC30fQpz6trV;
-	Mon, 18 Apr 2022 14:17:03 +0200 (CEST)
-From: Manuel Ullmann <labre@posteo.de>
-To: Igor Russkikh <irusskikh@marvell.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-Subject: [PATCH] net: atlantic: invert deep par in pm functions, preventing
- null derefs
-Date: Mon, 18 Apr 2022 12:17:02 +0000
-Message-ID: <87sfqaa8n5.fsf@posteo.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B313B65E
+	for <regressions@lists.linux.dev>; Mon, 18 Apr 2022 12:40:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 72F6CC385AB;
+	Mon, 18 Apr 2022 12:40:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1650285611;
+	bh=UjHumYdc82wnlGeLD8eIQ3nUM8EQ3vQ7nmLedHMKBXg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=YgdYlJ9AqdKVrWfttDHxPsYex/q7y6zIsnrHEBEFu9URRRuVnheH8cfMaF+y77DBh
+	 X+PCT7d1zPmNdaSX+AAt2e/wn/U0nuNC34dLHQLjJnXZ2oY1meYMNEvwp2nCx4RtSH
+	 YLNwCvomYiBKPbyrrVk11ETL/nvxKGEGIi8mSBtyj1tyvAthzqDZ01cYQFxNfGybc1
+	 W51eH+w0DjNIMie4pHX3vCUwLL66ZzGkE8Fu8nJfyXWCOakpCnMpbwtDuEXDwbxVOd
+	 NtTC+E9BCRe60UUv9ZrG2prmifxEFKHwp0kn5NFRmf9kGoGUJQkH+qWPB/cZWd7qcw
+	 onI1dZs96VQWA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 58A83E8DD13;
+	Mon, 18 Apr 2022 12:40:11 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] net: atlantic: invert deep par in pm functions, preventing
+ null derefs
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <165028561135.26453.17217915183447099984.git-patchwork-notify@kernel.org>
+Date: Mon, 18 Apr 2022 12:40:11 +0000
+References: <87sfqaa8n5.fsf@posteo.de>
+In-Reply-To: <87sfqaa8n5.fsf@posteo.de>
+To: Manuel Ullmann <labre@posteo.de>
+Cc: irusskikh@marvell.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev
 
-From: Manuel Ullmann <labre@posteo.de>
-From 6c4cd8210835489da84bf4ee5049945dc0f2c986 Mon Sep 17 00:00:00 2001
-Date: Mon, 18 Apr 2022 00:20:01 +0200
+Hello:
 
-This will reset deeply on freeze and thaw instead of suspend and
-resume and prevent null pointer dereferences of the uninitialized ring
-0 buffer while thawing.
+This patch was applied to netdev/net.git (master)
+by David S. Miller <davem@davemloft.net>:
 
-The impact is an indefinitely hanging kernel. You can't switch
-consoles after this and the only possible user interaction is SysRq.
+On Mon, 18 Apr 2022 12:17:02 +0000 you wrote:
+> From: Manuel Ullmann <labre@posteo.de>
+> >From 6c4cd8210835489da84bf4ee5049945dc0f2c986 Mon Sep 17 00:00:00 2001
+> Date: Mon, 18 Apr 2022 00:20:01 +0200
+> 
+> This will reset deeply on freeze and thaw instead of suspend and
+> resume and prevent null pointer dereferences of the uninitialized ring
+> 0 buffer while thawing.
+> 
+> [...]
 
-BUG: kernel NULL pointer dereference
-RIP: 0010:aq_ring_rx_fill+0xcf/0x210 [atlantic]
-aq_vec_init+0x85/0xe0 [atlantic]
-aq_nic_init+0xf7/0x1d0 [atlantic]
-atl_resume_common+0x4f/0x100 [atlantic]
-pci_pm_thaw+0x42/0xa0
+Here is the summary with links:
+  - net: atlantic: invert deep par in pm functions, preventing null derefs
+    https://git.kernel.org/netdev/net/c/cbe6c3a8f8f4
 
-resolves in aq_ring.o to
-
-```
-0000000000000ae0 <aq_ring_rx_fill>:
-{
-/* ... */
- baf:	48 8b 43 08          	mov    0x8(%rbx),%rax
- 		buff->flags = 0U; /* buff is NULL */
-```
-
-The bug has been present since the introduction of the new pm code in
-8aaa112a57c1 ("net: atlantic: refactoring pm logic") and was hidden
-until 8ce84271697a ("net: atlantic: changes for multi-TC support"),
-which refactored the aq_vec_{free,alloc} functions into
-aq_vec_{,ring}_{free,alloc}, but is technically not wrong. The
-original functions just always reinitialized the buffers on S3/S4. If
-the interface is down before freezing, the bug does not occur. It does
-not matter, whether the initrd contains and loads the module before
-thawing.
-
-So the fix is to invert the boolean parameter deep in all pm function
-calls, which was clearly intended to be set like that.
-
-First report was on Github [1], which you have to guess from the
-resume logs in the posted dmesg snippet. Recently I posted one on
-Bugzilla [2], since I did not have an AQC device so far.
-
-#regzbot introduced: 8ce84271697a
-#regzbot from: koo5 <kolman.jindrich@gmail.com>
-#regzbot monitor: https://github.com/Aquantia/AQtion/issues/32
-
-Fixes: 8aaa112a57c1 ("net: atlantic: refactoring pm logic")
-Link: https://github.com/Aquantia/AQtion/issues/32 [1]
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=215798 [2]
-Cc: stable@vger.kernel.org
-Reported-by: koo5 <kolman.jindrich@gmail.com>
-Signed-off-by: Manuel Ullmann <labre@posteo.de>
----
-Once in mainline, this should be backported to 5.10 and newer
-supported stable branches. Although 5.4 includes the bug, it is not
-affected (see above).
-
-As a side effect, this might increase suspend/resume performance,
-although I did no measurements.
- 
- drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-index 797a95142d1f..3a529ee8c834 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-@@ -444,22 +444,22 @@ static int atl_resume_common(struct device *dev, bool deep)
- 
- static int aq_pm_freeze(struct device *dev)
- {
--	return aq_suspend_common(dev, false);
-+	return aq_suspend_common(dev, true);
- }
- 
- static int aq_pm_suspend_poweroff(struct device *dev)
- {
--	return aq_suspend_common(dev, true);
-+	return aq_suspend_common(dev, false);
- }
- 
- static int aq_pm_thaw(struct device *dev)
- {
--	return atl_resume_common(dev, false);
-+	return atl_resume_common(dev, true);
- }
- 
- static int aq_pm_resume_restore(struct device *dev)
- {
--	return atl_resume_common(dev, true);
-+	return atl_resume_common(dev, false);
- }
- 
- static const struct dev_pm_ops aq_pm_ops = {
-
-base-commit: ce522ba9ef7e2d9fb22a39eb3371c0c64e2a433e
+You are awesome, thank you!
 -- 
-2.35.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
