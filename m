@@ -1,66 +1,173 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B313B65E
-	for <regressions@lists.linux.dev>; Mon, 18 Apr 2022 12:40:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 72F6CC385AB;
-	Mon, 18 Apr 2022 12:40:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A5C7A
+	for <regressions@lists.linux.dev>; Tue, 19 Apr 2022 13:15:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00941C385A5;
+	Tue, 19 Apr 2022 13:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1650285611;
-	bh=UjHumYdc82wnlGeLD8eIQ3nUM8EQ3vQ7nmLedHMKBXg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=YgdYlJ9AqdKVrWfttDHxPsYex/q7y6zIsnrHEBEFu9URRRuVnheH8cfMaF+y77DBh
-	 X+PCT7d1zPmNdaSX+AAt2e/wn/U0nuNC34dLHQLjJnXZ2oY1meYMNEvwp2nCx4RtSH
-	 YLNwCvomYiBKPbyrrVk11ETL/nvxKGEGIi8mSBtyj1tyvAthzqDZ01cYQFxNfGybc1
-	 W51eH+w0DjNIMie4pHX3vCUwLL66ZzGkE8Fu8nJfyXWCOakpCnMpbwtDuEXDwbxVOd
-	 NtTC+E9BCRe60UUv9ZrG2prmifxEFKHwp0kn5NFRmf9kGoGUJQkH+qWPB/cZWd7qcw
-	 onI1dZs96VQWA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 58A83E8DD13;
-	Mon, 18 Apr 2022 12:40:11 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1650374117;
+	bh=Nr1xI1e2E08joksC7XU9drnzSZ/vxzpYBL5YBFJG5HU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=N2mpSVE2FrjpV80xmL/2Mb+9qzEknfIYgX5JENWENEoW0N+RxdA+SnwBi2s2uDcI1
+	 CL5uiuM1nj9TTHNvxFHM0EhIziDurtyCdtW4011xk9ia9hTd+5hA9AD9+UBam4bMER
+	 HtjGE8x8rXqXYGYZsnrJRV+HnMTTlrPnKfuIcIufxmfVA2PPmMX+RADeE8gIKpoDhI
+	 RLqY7lgv7jQsXHs4a86ELYdRpcYyEu7v59xfTN1wejFZTKzoNWUBhRZhIKFE1sSzuI
+	 TsVx1X2zF2Oi3IXBinusc0ZniYhjHnPfpjB65GMQ543ecMP7bEygAl0S5vL5z2PLJ2
+	 xXXpYTPyDbRPA==
+From: Christian Brauner <brauner@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Christoph Hellwig <hch@lst.de>,
+	Seth Forshee <sforshee@digitalocean.com>,
+	Peter Jin <peter@peterjin.org>,
+	linux-fsdevel@vger.kernel.org,
+	stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [PATCH] fs: fix acl translation
+Date: Tue, 19 Apr 2022 15:14:23 +0200
+Message-Id: <20220419131423.2367795-1-brauner@kernel.org>
+X-Mailer: git-send-email 2.32.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5296; h=from:subject; bh=Nr1xI1e2E08joksC7XU9drnzSZ/vxzpYBL5YBFJG5HU=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMSTFbZ3+hvWek6rhxSPNwlYP/+34tGf+j9a/Gr0njrbPDTj+ +mnenI5SFgYxLgZZMUUWh3aTcLnlPBWbjTI1YOawMoEMYeDiFICJ3LFiZNgTO0P+2/alL6Yeb9OZqG Zge0BcROxN/vpKC1fW36r8SZkM/3NvvUjUWtDG+uB8dG1ygc3HO6G33ssFvLujUv/0bMC2fhYA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] net: atlantic: invert deep par in pm functions, preventing
- null derefs
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <165028561135.26453.17217915183447099984.git-patchwork-notify@kernel.org>
-Date: Mon, 18 Apr 2022 12:40:11 +0000
-References: <87sfqaa8n5.fsf@posteo.de>
-In-Reply-To: <87sfqaa8n5.fsf@posteo.de>
-To: Manuel Ullmann <labre@posteo.de>
-Cc: irusskikh@marvell.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
 
-Hello:
+Last cycle we extended the idmapped mounts infrastructure to support idmapped
+mounts of idmapped filesystems (No such filesystem yet exist.).
+Since then, the meaning of an idmapped mount is a mount whose idmapping is
+different from the filesystems idmapping.
 
-This patch was applied to netdev/net.git (master)
-by David S. Miller <davem@davemloft.net>:
+While doing that work we missed to adapt the acl translation helpers. They
+still assume that checking for the identity mapping is enough. But they need to
+use the no_idmapping() helper instead.
 
-On Mon, 18 Apr 2022 12:17:02 +0000 you wrote:
-> From: Manuel Ullmann <labre@posteo.de>
-> >From 6c4cd8210835489da84bf4ee5049945dc0f2c986 Mon Sep 17 00:00:00 2001
-> Date: Mon, 18 Apr 2022 00:20:01 +0200
-> 
-> This will reset deeply on freeze and thaw instead of suspend and
-> resume and prevent null pointer dereferences of the uninitialized ring
-> 0 buffer while thawing.
-> 
-> [...]
+Note, POSIX ACLs are always translated right at the userspace-kernel boundary
+using the caller's current idmapping and the initial idmapping. The order
+depends on whether we're coming from or going to userspace. The filesystem's
+idmapping doesn't matter at the border.
 
-Here is the summary with links:
-  - net: atlantic: invert deep par in pm functions, preventing null derefs
-    https://git.kernel.org/netdev/net/c/cbe6c3a8f8f4
+Consequently, if a non-idmapped mount is passed we need to make sure to always
+pass the initial idmapping as the mount's idmapping and not the filesystem
+idmapping. Since it's irrelevant here it would yield invalid ids and prevent
+setting acls for filesystems that are mountable in a userns and support posix
+acls (tmpfs and fuse).
 
-You are awesome, thank you!
+I verified the regression reported in [1] and verified that this patch fixes
+it. A regression test will be added to xfstests in parallel.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=215849 [1]
+Fixes: bd303368b776 ("fs: support mapped mounts of mapped filesystems")
+Cc: Seth Forshee <sforshee@digitalocean.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: <stable@vger.kernel.org> # 5.17
+Cc: <regressions@lists.linux.dev>
+Signed-off-by: Christian Brauner (Microsoft) <brauner@kernel.org>
+---
+
+Hey Linus,
+
+Last cycle we introduced a regression that got reported to me right over Easter
+on Bugzilla. It is only relevant for 5.17 and current mainline. Could you
+please apply this regression fix?
+
+Thanks!
+Christian
+---
+ fs/posix_acl.c                  | 10 ++++++++++
+ fs/xattr.c                      |  6 ++++--
+ include/linux/posix_acl_xattr.h |  4 ++++
+ 3 files changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/fs/posix_acl.c b/fs/posix_acl.c
+index 80acb6885cf9..962d32468eb4 100644
+--- a/fs/posix_acl.c
++++ b/fs/posix_acl.c
+@@ -759,9 +759,14 @@ static void posix_acl_fix_xattr_userns(
+ }
+ 
+ void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
++				   struct inode *inode,
+ 				   void *value, size_t size)
+ {
+ 	struct user_namespace *user_ns = current_user_ns();
++
++	/* Leave ids untouched on non-idmapped mounts. */
++	if (no_idmapping(mnt_userns, i_user_ns(inode)))
++		mnt_userns = &init_user_ns;
+ 	if ((user_ns == &init_user_ns) && (mnt_userns == &init_user_ns))
+ 		return;
+ 	posix_acl_fix_xattr_userns(&init_user_ns, user_ns, mnt_userns, value,
+@@ -769,9 +774,14 @@ void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
+ }
+ 
+ void posix_acl_fix_xattr_to_user(struct user_namespace *mnt_userns,
++				 struct inode *inode,
+ 				 void *value, size_t size)
+ {
+ 	struct user_namespace *user_ns = current_user_ns();
++
++	/* Leave ids untouched on non-idmapped mounts. */
++	if (no_idmapping(mnt_userns, i_user_ns(inode)))
++		mnt_userns = &init_user_ns;
+ 	if ((user_ns == &init_user_ns) && (mnt_userns == &init_user_ns))
+ 		return;
+ 	posix_acl_fix_xattr_userns(user_ns, &init_user_ns, mnt_userns, value,
+diff --git a/fs/xattr.c b/fs/xattr.c
+index 5c8c5175b385..998045165916 100644
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -569,7 +569,8 @@ setxattr(struct user_namespace *mnt_userns, struct dentry *d,
+ 		}
+ 		if ((strcmp(kname, XATTR_NAME_POSIX_ACL_ACCESS) == 0) ||
+ 		    (strcmp(kname, XATTR_NAME_POSIX_ACL_DEFAULT) == 0))
+-			posix_acl_fix_xattr_from_user(mnt_userns, kvalue, size);
++			posix_acl_fix_xattr_from_user(mnt_userns, d_inode(d),
++						      kvalue, size);
+ 	}
+ 
+ 	error = vfs_setxattr(mnt_userns, d, kname, kvalue, size, flags);
+@@ -667,7 +668,8 @@ getxattr(struct user_namespace *mnt_userns, struct dentry *d,
+ 	if (error > 0) {
+ 		if ((strcmp(kname, XATTR_NAME_POSIX_ACL_ACCESS) == 0) ||
+ 		    (strcmp(kname, XATTR_NAME_POSIX_ACL_DEFAULT) == 0))
+-			posix_acl_fix_xattr_to_user(mnt_userns, kvalue, error);
++			posix_acl_fix_xattr_to_user(mnt_userns, d_inode(d),
++						    kvalue, error);
+ 		if (size && copy_to_user(value, kvalue, error))
+ 			error = -EFAULT;
+ 	} else if (error == -ERANGE && size >= XATTR_SIZE_MAX) {
+diff --git a/include/linux/posix_acl_xattr.h b/include/linux/posix_acl_xattr.h
+index 060e8d203181..1766e1de6956 100644
+--- a/include/linux/posix_acl_xattr.h
++++ b/include/linux/posix_acl_xattr.h
+@@ -34,15 +34,19 @@ posix_acl_xattr_count(size_t size)
+ 
+ #ifdef CONFIG_FS_POSIX_ACL
+ void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
++				   struct inode *inode,
+ 				   void *value, size_t size);
+ void posix_acl_fix_xattr_to_user(struct user_namespace *mnt_userns,
++				   struct inode *inode,
+ 				 void *value, size_t size);
+ #else
+ static inline void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
++						 struct inode *inode,
+ 						 void *value, size_t size)
+ {
+ }
+ static inline void posix_acl_fix_xattr_to_user(struct user_namespace *mnt_userns,
++					       struct inode *inode,
+ 					       void *value, size_t size)
+ {
+ }
+
+base-commit: b2d229d4ddb17db541098b83524d901257e93845
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.32.0
 
