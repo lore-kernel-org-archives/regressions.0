@@ -1,150 +1,238 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA281364
-	for <regressions@lists.linux.dev>; Tue, 19 Apr 2022 15:33:26 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:6624:6d8d:f790:d5c]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ngpqw-0004ML-Ud; Tue, 19 Apr 2022 17:33:18 +0200
-Message-ID: <9b7189bf-0639-29df-520c-4c61fe613b4f@leemhuis.info>
-Date: Tue, 19 Apr 2022 17:33:16 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE00C10F0
+	for <regressions@lists.linux.dev>; Wed, 20 Apr 2022 08:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1650441755;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sZZR3zwNKQKDEnJylIibAFIQ2Qi+eLRKOEhLM32uxeU=;
+	b=bDtd6oUhrLNedJKVARYjv+0DMiNaGOJEhRmIqkUNqKAlq0AVfU/dmX/kzXA1ccyNqIc0tP
+	JhR8UBNpBaMbe479hmNBP1YhxPvwf57kdCD78B+DXU6BpgbgC88zB+WXUgg6/6FHspX7ln
+	2b9fJCi3Y+8vmpF8KwxwUPOe2Bx3vJg=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-307-D0xqcqUTNc24n4E1DoK83Q-1; Wed, 20 Apr 2022 04:02:34 -0400
+X-MC-Unique: D0xqcqUTNc24n4E1DoK83Q-1
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-2ec060cffa5so9405117b3.4
+        for <regressions@lists.linux.dev>; Wed, 20 Apr 2022 01:02:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sZZR3zwNKQKDEnJylIibAFIQ2Qi+eLRKOEhLM32uxeU=;
+        b=LZ1VJzRffkj3iL7Vj7JT8V2NJKaKtUd61YAVf65bEx/AALwkRH8MsDSlBZxwyZ2RCz
+         iYUi3excyEKM+Q0WFYlPuAg/fY00ZrqZmkspOTlN9kizSq8XQ1LRkjZHOXSZjFkVYQ0i
+         oGzHJVM0dBg4LA//5np/D8NAJo8Lkdg3SysCFTt5gvWFBHz/csRIDpGjJ8Lx0TjZPOxV
+         yadPFl9s+fvG9E+k80IkbTatbwGmxZZUIgqY2Y4wracaBftunPvMl83+mBMx2wqLmcRf
+         I9+Eq17C0ooqI4p2sYhTBpQPwgC58dqGC3itrqFXFT9UcMjk5Er7IznOyuNMbpbR+92l
+         mTRw==
+X-Gm-Message-State: AOAM53122M89VjpDrYG5b1hwHREWWBDpZItxCB/JYWVLP4nHtUgtVlvB
+	pKRY8Aswqo8LEeYRQUcry3gTsz5YzrwHcs+gjcxb7o/sDZQk1Ztlcrtgqp8rn3anbvj1qMxm6dF
+	gKRWNqeJQrUBIph/DZZU5y86NG2cruRDHGOwGOSs=
+X-Received: by 2002:a25:7c05:0:b0:644:dec5:6d6e with SMTP id x5-20020a257c05000000b00644dec56d6emr15237452ybc.598.1650441752136;
+        Wed, 20 Apr 2022 01:02:32 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzKvWp/Gtz+Z/v13ug97g5sDZA82DQrAGOOsGB643evErgBkO2frODmnrorSZdExprtDOMi7dXLleEAE0MAGPw=
+X-Received: by 2002:a25:7c05:0:b0:644:dec5:6d6e with SMTP id
+ x5-20020a257c05000000b00644dec56d6emr15237426ybc.598.1650441751900; Wed, 20
+ Apr 2022 01:02:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: Bug 215689 - e1000e: regression for I219-V for kernel 5.14
- onwards #forregzbot
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <6801d0ef-9620-0f61-c107-c2c5524952ef@leemhuis.info>
-In-Reply-To: <6801d0ef-9620-0f61-c107-c2c5524952ef@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1650382406;e9019123;
-X-HE-SMSGID: 1ngpqw-0004ML-Ud
+References: <CAE4VaGDZr_4wzRn2___eDYRtmdPaGGJdzu_LCSkJYuY9BEO3cw@mail.gmail.com>
+ <536eca11-b4b9-c1a8-6e6b-fcd0c339a3ec@leemhuis.info> <CAE4VaGBZk2NL6Tn2fGxmGMR-n8KFNqgPOktY_sQ1vjViLDNhhg@mail.gmail.com>
+ <CAE4VaGB4=aCd8iDb4EduR+-5QTSgVWd5sxrnBA4e3g9dPrnuBg@mail.gmail.com>
+ <YkTxox8ZQIDtojfU@google.com> <CAFxkdAq6r2WnwML-pPfdZiajaYZCEcUU3GrXW=+wsA7CxGnJdQ@mail.gmail.com>
+ <CAE4VaGBchOMWeHQ8GKiGFv_aCaNGLEvSdLWXZTpE+qC=0bgM3A@mail.gmail.com>
+ <YkY6W1NS+1RTw0VB@google.com> <CAE4VaGDAMZqjwumyvbityzEiK30=5a5vuDMjaS+UHM39R-oPRw@mail.gmail.com>
+ <YkstxbC3OfzYnSRw@google.com>
+In-Reply-To: <YkstxbC3OfzYnSRw@google.com>
+From: Jirka Hladky <jhladky@redhat.com>
+Date: Wed, 20 Apr 2022 10:02:20 +0200
+Message-ID: <CAE4VaGAQZcQzN8D+iwcBnP5vY=Ctmbh+oTikvONHir6JjTgpsw@mail.gmail.com>
+Subject: Re: PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" starting from 5.17 on
+ dual socket Intel Xeon Gold servers
+To: Minchan Kim <minchan@kernel.org>
+Cc: tj@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	linux-kernel <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev, 
+	Thorsten Leemhuis <regressions@leemhuis.info>, Justin Forbes <jforbes@fedoraproject.org>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jhladky@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Hi Minchan,
 
-#regzbot fixed-by: 04ebaa1cfddae5f240
+have you heard back from the kernfs maintainers?
 
-On 24.03.22 11:37, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker.
-> 
-> I noticed a regression report in bugzilla.kernel.org that afaics nobody
-> acted upon since it was reported about a week ago, that's why I decided
-> to forward it to the lists and a few relevant people to the CC. To quote
-> from https://bugzilla.kernel.org/show_bug.cgi?id=215689 :
-> 
->> [reply] [−] Description James 2022-03-15 13:45:38 UTC
->>
->> I run Arch linux on an Intel NUC 8i3BEH which has the following network card:
->>
->> 00:1f.6 Ethernet controller: Intel Corporation Ethernet Connection (6) I219-V (rev 30)
->>         DeviceName:  LAN
->>         Subsystem: Intel Corporation Device 2074
->>         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
->>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
->>         Latency: 0
->>         Interrupt: pin A routed to IRQ 135
->>         Region 0: Memory at c0b00000 (32-bit, non-prefetchable) [size=128K]
->>         Capabilities: [c8] Power Management version 3
->>                 Flags: PMEClk- DSI+ D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
->>                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=1 PME-
->>         Capabilities: [d0] MSI: Enable+ Count=1/1 Maskable- 64bit+
->>                 Address: 00000000fee003d8  Data: 0000
->>         Kernel driver in use: e1000e
->>         Kernel modules: e1000e
->>
->> I found a major regression since the previous few kernel versions which causes several odd issues, most noteably I use the machine to stream live tv via TVheadend and was finding this to be unusable (picture freezes and sound breaks up very badly with continuity errors in the TVheadend logfile).
->>
->> I found the issue was introduced since the 5.14 kernel, and have eventually got round to performing a git bisect, which landed upon the following commit:
->>
->> 44a13a5: e1000e: Fix the max snoop/no-snoop latency for 10M 
->>
->> Indeed, if I revert this single commit then the problem is resolved.
->>
->> To help diagnose the issue I applied the following patch to capture the values of the lat_enc, max_ltr_enc vs lat_enc_d, max_ltr_enc_d variables:
->>
->> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->> index d60e2016d..f4e5ffbcd 100644
->> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
->> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->> @@ -1012,6 +1012,7 @@ static s32 e1000_platform_pm_pch_lpt(struct e1000_hw *hw, bool link)
->>         u16 max_ltr_enc_d = 0;  /* maximum LTR decoded by platform */
->>         u16 lat_enc_d = 0;      /* latency decoded */
->>         u16 lat_enc = 0;        /* latency encoded */
->> +       struct e1000_adapter *adapter = hw->adapter;
->>
->>         if (link) {
->>                 u16 speed, duplex, scale = 0;
->> @@ -1074,6 +1075,9 @@ static s32 e1000_platform_pm_pch_lpt(struct e1000_hw *hw, bool link)
->>                                  ((max_ltr_enc & E1000_LTRV_SCALE_MASK)
->>                                  >> E1000_LTRV_SCALE_SHIFT)));
->>
->> +               e_info("e1000e: lat_enc=%d max_ltr_enc=%d", lat_enc, max_ltr_enc);
->> +               e_info("e1000e: lat_enc_d=%u max_ltr_enc_d=%u", lat_enc_d, max_ltr_enc_d);
->> +
->>                 if (lat_enc_d > max_ltr_enc_d)
->>                         lat_enc = max_ltr_enc;
->>         }
->>
->> With this in place I see the following in dmesg:
->>
->> [    3.241215] e1000e: Intel(R) PRO/1000 Network Driver
->> [    3.241217] e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
->> [    3.243382] e1000e 0000:00:1f.6: Interrupt Throttling Rate (ints/sec) set to dynamic conservative mode
->> [    3.749009] e1000e 0000:00:1f.6 0000:00:1f.6 (uninitialized): registered PHC clock
->> [    3.824751] e1000e 0000:00:1f.6 eth0: (PCI Express:2.5GT/s:Width x1) 94:c6:91:ae:b3:7b
->> [    3.824765] e1000e 0000:00:1f.6 eth0: Intel(R) PRO/1000 Network Connection
->> [    3.824849] e1000e 0000:00:1f.6 eth0: MAC: 13, PHY: 12, PBA No: FFFFFF-0FF
->> [    6.949327] e1000e 0000:00:1f.6 eth0: e1000e: lat_enc=2233 max_ltr_enc=4099
->> [    6.949331] e1000e 0000:00:1f.6 eth0: e1000e: lat_enc_d=58368 max_ltr_enc_d=0
->> [    6.951165] e1000e 0000:00:1f.6 eth0: NIC Link is Up 1000 Mbps Full Duplex, Flow Control: Rx/Tx
->>
->> Notice that lat_enc_d=58368 and max_ltr_enc_d=0 !
->>
->> lat_enc_d is greater than max_ltr_enc_d so it's setting snoop latency to max_ltr_enc (i.e. 4099) where it would have previously been set to 2233 in this particular example. This seems to be where the problem lies.
->>
->> Prior to commit 44a13a5:
->>
->> if (lat_enc > max_ltr_enc)
->>   lat_enc = max_ltr_enc;
->>
->> After commit 44a13a5:
->>
->> if (lat_enc_d > max_ltr_enc_d)
->>   lat_enc = max_ltr_enc;
->>
->>
->> I'm not sure whether it was intended for this new code to take effect for an I219 since the commit message on 44a13a5 indicates it was aimed at I217/I218. Seems strange that max_ltr_enc_d is getting set to 0?
->>
-> 
-> BTW, that commit is from Sasha Neftin.
-> 
-> Could somebody take a look into this? Or was this discussed somewhere
-> else already? Or even fixed?
-> 
-> Anyway, to get this tracked:
-> 
-> #regzbot introduced: 44a13a5d99c71bf9e1676d9e51679daf4d7b3d73
-> #regzbot from: James <jahutchinson99@googlemail.com>
-> #regzbot title: net: e1000e: instabilities on I219-V for kernel 5.14 onwards
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215689
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
-> 
+Thank you!
+Jirka
+
+
+On Mon, Apr 4, 2022 at 7:41 PM Minchan Kim <minchan@kernel.org> wrote:
+>
+> On Fri, Apr 01, 2022 at 02:04:03PM +0200, Jirka Hladky wrote:
+> > > Could you decode exact source code line from the oops?
+> >
+> > Yes - please see below [1].
+>
+> Thanks.
+>
+> >
+> > > I think it's fine to attach in the reply because kernel test bot
+> >
+> > OK. The reproducer is attached. Please unpack it and follow the
+> > instructions in the README file. [2]
+>
+> Unfortunately, I failed to run the script in my machine.
+>
+> >
+> > Thanks a lot for looking into it!
+> > Jirka
+> >
+> > [1]
+> > =============================================
+> > Source code line numbers for the Oops message
+> > =============================================
+> >
+> > 1) RIP: 0010:kernfs_remove+0x8/0x50:
+> > (gdb) l *kernfs_remove+0x8
+> > 0xffffffff81418588 is in kernfs_remove (fs/kernfs/kernfs-internal.h:48).
+> > 43       * Return the kernfs_root @kn belongs to.
+> > 44       */
+> > 45      static inline struct kernfs_root *kernfs_root(struct kernfs_node *kn)
+> > 46      {
+> > 47              /* if parent exists, it's always a dir; otherwise, @sd
+> > is a dir */
+> > 48              if (kn->parent)
+> > 49                      kn = kn->parent;
+> > 50              return kn->dir.root;
+> > 51      }
+> >
+> > And here are source code lines from the 5 first functions in call trace:
+> > [ 8563.366280] Call Trace:
+> > [ 8563.366280]  <TASK>
+> > [ 8563.366280]  rdt_kill_sb+0x29d/0x350
+> > [ 8563.366280]  deactivate_locked_super+0x36/0xa0
+> > [ 8563.366280]  cleanup_mnt+0x131/0x190
+> > [ 8563.366280]  task_work_run+0x5c/0x90
+> > [ 8563.366280]  exit_to_user_mode_prepare+0x229/0x230
+> > [ 8563.366280]  syscall_exit_to_user_mode+0x18/0x40
+> > [ 8563.366280]  do_syscall_64+0x48/0x90
+> > [ 8563.366280]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> >
+> > 2)(gdb) l *rdt_kill_sb+0x29d
+> > 0xffffffff810506bd is in rdt_kill_sb
+> > (arch/x86/kernel/cpu/resctrl/rdtgroup.c:2442).
+> > 2437            /* Notify online CPUs to update per cpu storage and
+> > PQR_ASSOC MSR */
+> > 2438            update_closid_rmid(cpu_online_mask, &rdtgroup_default);
+> > 2439
+> > 2440            kernfs_remove(kn_info);
+> > 2441            kernfs_remove(kn_mongrp);
+> > 2442            kernfs_remove(kn_mondata);
+> > 2443    }
+> >
+> > 3)(gdb) l *deactivate_locked_super+0x36
+> > 0xffffffff813650f6 is in deactivate_locked_super (fs/super.c:342).
+> > 337                     /*
+> > 338                      * Since list_lru_destroy() may sleep, we
+> > cannot call it from
+> > 339                      * put_super(), where we hold the sb_lock.
+> > Therefore we destroy
+> > 340                      * the lru lists right now.
+> > 341                      */
+> > 342                     list_lru_destroy(&s->s_dentry_lru);
+> > 343                     list_lru_destroy(&s->s_inode_lru);
+> > 344
+> > 345                     put_filesystem(fs);
+> > 346                     put_super(s);
+> >
+> > 4) (gdb) l *cleanup_mnt+0x131
+> > 0xffffffff813890a1 is in cleanup_mnt (fs/namespace.c:137).
+> > 132             return 0;
+> > 133     }
+> > 134
+> > 135     static void mnt_free_id(struct mount *mnt)
+> > 136     {
+> > 137             ida_free(&mnt_id_ida, mnt->mnt_id);
+> > 138     }
+> >
+> > 5) (gdb) l *task_work_run+0x5c
+> > 0xffffffff8110620c is in task_work_run (./include/linux/sched.h:2017).
+> > 2012
+> > 2013    DECLARE_STATIC_CALL(cond_resched, __cond_resched);
+> > 2014
+> > 2015    static __always_inline int _cond_resched(void)
+> > 2016    {
+> > 2017            return static_call_mod(cond_resched)();
+> > 2018    }
+> >
+> > 6) (gdb) l *exit_to_user_mode_prepare+0x229
+> > 0xffffffff81176d19 is in exit_to_user_mode_prepare
+> > (./include/linux/tracehook.h:189).
+> > 184              * This barrier pairs with
+> > task_work_add()->set_notify_resume() after
+> > 185              * hlist_add_head(task->task_works);
+> > 186              */
+> > 187             smp_mb__after_atomic();
+> > 188             if (unlikely(current->task_works))
+> > 189                     task_work_run();
+> > 190
+> > 191     #ifdef CONFIG_KEYS_REQUEST_CACHE
+> > 192             if (unlikely(current->cached_requested_key)) {
+> > 193                     key_put(current->cached_requested_key);
+> >
+> > [2]
+> > =============================================
+> > Reproducer - README
+> > =============================================
+> >
+> > 1) HW
+> > This issue seems to be platform specific. I was not able to reproduce
+> > it on AMD Zen and also not on Intel Ice Lake platform.
+> > I see the issue on dual socket Intel Skylake systems. Reproduced on a
+> > Supermicro Super Server/X11DDW-L with 2x Xeon Gold 6126 CPU.
+>
+> Based on your report, kernel was crashed due to kn_mondata was NULL
+>
+>   rdt_kill_sb
+>     rmdir_all_sub
+>       ..
+>       kernfs_remove(kn_mondata);
+>         struct kernfs_root *root = kernfs_root(kn); <-- crashed
+>
+>
+> Before the my patch[1], it worked like this.
+>
+>   rdt_kill_sb
+>     rmdir_all_sub
+>       ..
+>       kernfs_remove(kn_mondata);
+>         down_write(&kernfs_rwsem);
+>           if (!kn)
+>             return;
+>         up_write(&kernfs_rwsem);
+>
+> IOW, before, kernfs_remove worked with NULL argument via just bailing
+> but with the my patch[1], it doesn't work any longer.
+>
+> It makes me have questions for kernfs maintainers:
+>
+> Should kernfs_remove API support NULL parameter? If so, can we support
+> it atomically without old global kernfs_rwsem?
+>
+> [1] 393c3714081a, kernfs: switch global kernfs_rwsem lock to per-fs lock
+>
+
+
+-- 
+-Jirka
+
