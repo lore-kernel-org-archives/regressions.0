@@ -1,116 +1,379 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A3DB1FA1
-	for <regressions@lists.linux.dev>; Thu, 21 Apr 2022 08:56:07 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:6624:6d8d:f790:d5c]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nhSbX-00034T-FY; Thu, 21 Apr 2022 10:55:59 +0200
-Message-ID: <fbf11471-6d52-9b96-05e0-572bfa3a6ad2@leemhuis.info>
-Date: Thu, 21 Apr 2022 10:55:59 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C15946B1
+	for <regressions@lists.linux.dev>; Thu, 21 Apr 2022 09:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1650532550;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6GBI+dW7/NO5MYmhrOVhiWRnYsRGOAInfWi+gKO1iL4=;
+	b=ONqOD8bhluonoKUEnzCDbt+qyiQhnQWamSonjdniBZQIuD2TKS/ekLX+y7veLLVMV2HqIA
+	GSyvUiB4cUJzEEGtDQf49EGEfaQOOSO1eFz+W/3m7XQ9bXHJKZT3ndZYdhe3W48NE1g9yi
+	WACenZpJjztvzZEpgYXgxJO0SZGFB3k=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-221-0QAuUpLwPbC99JSPATDznA-1; Thu, 21 Apr 2022 05:15:49 -0400
+X-MC-Unique: 0QAuUpLwPbC99JSPATDznA-1
+Received: by mail-pj1-f71.google.com with SMTP id t15-20020a17090a3b4f00b001d67e27715dso579828pjf.0
+        for <regressions@lists.linux.dev>; Thu, 21 Apr 2022 02:15:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=6GBI+dW7/NO5MYmhrOVhiWRnYsRGOAInfWi+gKO1iL4=;
+        b=d2/Y8shoqf/zIuywz5utYf5eE7rzHq9GnnFrI2QXGIgdEJRu20upDmhPwa1q6R0OB2
+         G7w46SyHU++QT2AgQi+C1qNspCweH+w0tGymq29aBVLNqTAAf0ujpnvy9W9bHzauOi+6
+         5sUty4pAj19nsjkgSaIAN6lyFoh+5Gsc0X4h55Tu8DMAZNPPZITb/Lu8W/r+k55Wj2aJ
+         Ek53bs8gfb83qhnzMYkHjyXyDQfNLC66AirTkE1psHMNxUkxHq6Iex7wfhBjqP4LGMl0
+         TanOIkLlOxk3drNn6dc0BQ4Pe5nKShNdLMwGyOLk2MhOIqnDklubgmMnceOggduL6wnO
+         oQzw==
+X-Gm-Message-State: AOAM532YLOf3CKAmATYcXDlQ2t1GZ8z7cUDswrCuyH5lXq9sJb69eGNX
+	r87NosXALsToXxcG65T8KFvyKWO3zIpg9euTvPhXnWg8qGkYzCKPAP4vRWDYwqjt/dy6hl11Ujy
+	JVd7j3V2fXjkgn430C3VrpEPJzWCujC7TmTfDdLs=
+X-Received: by 2002:a63:444f:0:b0:39d:3aa5:c9f0 with SMTP id t15-20020a63444f000000b0039d3aa5c9f0mr23334464pgk.363.1650532547855;
+        Thu, 21 Apr 2022 02:15:47 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy8NrWxgRbjiR50laTOy0tvspGBzaPfZ8HJnTKIdhi6K9j+LzMjrjrtDYZUPjGUaa3frz1nCXXR0ev/f9H31Bs=
+X-Received: by 2002:a63:444f:0:b0:39d:3aa5:c9f0 with SMTP id
+ t15-20020a63444f000000b0039d3aa5c9f0mr23334443pgk.363.1650532547601; Thu, 21
+ Apr 2022 02:15:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [regression]: xps13 9310 system freeze with kernel 5.17/5.18-rc1
- #forregzbot
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-References: <f02808cda5adcf34db79f75cf57b44a2780cd644.camel@windeck-gymnasium.de>
- <a76467c3-77af-f1ea-37a0-5e96256a495c@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-In-Reply-To: <a76467c3-77af-f1ea-37a0-5e96256a495c@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1650531367;46bee070;
-X-HE-SMSGID: 1nhSbX-00034T-FY
+References: <048ef583-4a8f-96b0-68a3-45ab9ec8d6df@leemhuis.info>
+ <0499f8ae-6966-be4b-5af8-e7e568bfcd5f@amd.com> <6fe27103-5e35-5f16-d213-29bd71412f5b@leemhuis.info>
+ <7dfb121f-848c-873e-f3cc-43239c264f21@amd.com> <0a33735c-dd43-4305-ff92-7b9ac2c6a0d9@leemhuis.info>
+ <539ff0c5-a95b-836d-e1c6-39f64ee2a418@leemhuis.info> <056621a6-b6ac-90d9-c409-ba5d9404c868@amd.com>
+ <-IeN6GQXuvFeZGmf-HSltWI3MN3V02oQzXAW0XR74vD62w_Fo_A6lSfJXrDgV2MTrHs9Id2Ce_r9J_zZCKx67DnVAWeFg3-ULIZ2GSm_ITQ=@protonmail.com>
+ <xZsLVmWExSSYgHXHsfOKkB7SbLy-bltitpJznKV1HHsv2-_ZcSFArnir30v-7Eg8zqmGSMmZi3Cr7YHpB8tD_FVnBvf2W-VsmmFGdc7hlWw=@protonmail.com>
+ <nqBA6pARHM6h_5hMj32zIxq_lgo2z8mmj7FPM5bXBv5DhWmh4K5Qv3MbKfAAi0tXlRy2IFYtfgyk2i_GPLIH5xsJ1hKBaLstHiNI1IEdUVc=@protonmail.com>
+In-Reply-To: <nqBA6pARHM6h_5hMj32zIxq_lgo2z8mmj7FPM5bXBv5DhWmh4K5Qv3MbKfAAi0tXlRy2IFYtfgyk2i_GPLIH5xsJ1hKBaLstHiNI1IEdUVc=@protonmail.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date: Thu, 21 Apr 2022 11:15:36 +0200
+Message-ID: <CAO-hwJL80Oz071zGj93MkZ4vn+ewdgExZhOBM5TyhTEvvhcqOg@mail.gmail.com>
+Subject: Re: Bug 215744 - input from the accelerometer disappeared, regression
+ on amd_sfh on kernel 5.17
+To: Marco <rodomar705@protonmail.com>
+Cc: regressions@leemhuis.info, Basavaraj.Natikar@amd.com, bnatikar@amd.com, 
+	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, jkosina@suse.cz
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=btissoir@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Jiri, it seems you are pushing patches to the tree (or at least were),
+I would suggest reverting b300667b33b2 because there is obviously a
+regression, and we'll let Basavaraj figure out a better solution in a
+future release.
 
-For the record:
+Cheers,
+Benjamin
 
-#regzbot dup-of:
-https://lore.kernel.org/regressions/cd89d263-43e4-5634-75b9-bf3340c9bb1e@leemhuis.info/
-#regzbot fixed-by: 1f682dc9fb3790a
+On Sun, Apr 17, 2022 at 7:16 PM Marco <rodomar705@protonmail.com> wrote:
+>
+> Any updates to this issue? The latest kernel 5.17.3 is still problematic =
+for me.
+>
+> Inviato con l'email sicura di ProtonMail.
+> ------- Original Message -------
+> Il luned=C3=AC 4 aprile 2022 19:40, Marco <rodomar705@protonmail.com> ha =
+scritto:
+>
+>
+> > I've added the three test cases (dmesg + sudo monitor-sensor on all thr=
+ee tests) on the bug report on bugzilla.kernel.org. One is with the stock k=
+ernel from arch, 5.17.1. The other two is using zen patches on top of 5.17.=
+ One is without the three reverts above mentioned. Sensor is missing still.=
+ Then my same custom configuration only with the three reverts applied. The=
+ sensor is back and working.
+> >
+> > If you need anything more, just let me know.
+> >
+> > Link to bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D215744
+> >
+> > Marco.
+> >
+> > Inviato con l'email sicura di ProtonMail.
+> > ------- Original Message -------
+> > Il luned=C3=AC 4 aprile 2022 16:26, Marco rodomar705@protonmail.com ha =
+scritto:
+> >
+> >
+> >
+> > > I haven't tested this on the tip of the git tree, I can do this proba=
+bly wednesday if it is needed.
+> > >
+> > > I'll post the output from sensors-detect shortly.
+> > >
+> > > Marco.
+> > >
+> > > Inviato da ProtonMail mobile
+> > >
+> > > -------- Messaggio originale --------
+> > > On 4 apr 2022, 16:04, Basavaraj Natikar < bnatikar@amd.com> ha scritt=
+o:
+> > >
+> > > > > On 4/4/2022 7:23 PM, Thorsten Leemhuis wrote:
+> > > > >
+> > > > > > On 04.04.22 09:25, Thorsten Leemhuis wrote:
+> > > > > >
+> > > > > > > On 04.04.22 09:18, Basavaraj Natikar wrote:
+> > > > > > >
+> > > > > > > > On 4/4/2022 12:05 PM, Thorsten Leemhuis wrote:
+> > > > > > > >
+> > > > > > > > > On 01.04.22 21:47, Basavaraj Natikar wrote:
+> > > > > > > > >
+> > > > > > > > > > Committed patch is disabling the interrupt mode and doe=
+s not cause any
+> > > > > > > > > > functionality or working issues.
+> > > > > > > > > > Well, for the reporter it clearly does cause problems, =
+unless something
+> > > > > > > > > > in testing went sideways.
+> > > > > > > > >
+> > > > > > > > > > I also cross verified on 3 system and working fine on 5=
+.17 and not able
+> > > > > > > > > > to reproduce or recreate.
+> > > > > > > > > > [...]
+> > > > > > > > > > ------------------------------------------------
+> > > > > > > > > >
+> > > > > > > > > > Looks like this is not regression. May be some hardware=
+/firmware bug.
+> > > > > > > > > > Well, from the point of the kernel development process =
+it afaics is a
+> > > > > > > > > > regression, unless the testing went sideways. It doesn'=
+t matter if the
+> > > > > > > > > > root cause is in fact a hardware/firmware bug, as what =
+matters in the
+> > > > > > > > > > scope of the kernel development is: things worked, and =
+now they don't.
+> > > > > > > > > > For details please check this file and read the quotes =
+from Linus:
+> > > > > > > > > > can you help to answer the below questions:
+> > > > > > > > > > Me? No, I'm just the Linux kernels regression tracker t=
+rying to make
+> > > > > > > > > > sure all regressions are handled appropriately. :-D
+> > > > > > >
+> > > > > > > Marco, can you help out here?
+> > > > > > > Marco replied in private and allowed me to forward his reply:
+> > > > > >
+> > > > > > ```
+> > > > > > I can't since, as mentioned previously, this is the only AMD la=
+ptop
+> > > > > > device that I have.
+> > > > > > I am sure this is a regression for me, even if the issue is fir=
+mware
+> > > > > > related. I have tested the 5.17 stock arch kernel and the senso=
+r is
+> > > > > > gone. With the last three patches reverted the sensor is back a=
+nd
+> > > > > > working fine.
+> > > > > >
+> > > > > > I would love to verify if the issue is hardware or software rel=
+ated, but
+> > > > > > being outside of AMD and with AMD not releasing any public info=
+rmation
+> > > > > > with datasheet/specification on their Sensor Fusion Hub I reall=
+y can't
+> > > > > > say anything specific.
+> > > > > >
+> > > > > > This still remains a regression, since the hardware was working=
+ before
+> > > > > > and now it doesn't.
+> > > > > >
+> > > > > > By the way, I already have seen also this rework of this specif=
+ic driver
+> > > > > > https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%=
+2F%2Fgithub.com%2Fconqp%2Famd-sfh-hid-dkms&data=3D04|01|Basavaraj.Natikar%4=
+0amd.com|05891d0582f94d68e7f908da164272ca|3dd8961fe4884e608e11a82d994e183d|=
+0|0|637846771908092322|Unknown|TWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2lu=
+MzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D|3000&sdata=3DnAmJdcP2ALl9cEaejWezLb9B3bU=
+5Omp72Z6kjTbaBRY%3D&reserved=3D0 that even added a still
+> > > > > > missing handler for the lid sensor switch for disabling touchpa=
+d and
+> > > > > > keyboard, and all efforts tried to merge it upstream with all s=
+orts of
+> > > > > > issues.
+> > > > > >
+> > > > > > Regardless of everything, this is a driver supported in kernel =
+by AMD
+> > > > > > engineers, so all of this doesn't matter. On my hardware this t=
+hree
+> > > > > > patches break a previously working hardware.
+> > > > > > ```
+> > > > >
+> > > > > Thank You Marco for the information.
+> > > > >
+> > > > > Could you please provide me below results for acceleration
+> > > > > by re-applying and reverting patch once again on same laptop.
+> > > > >
+> > > > > Did you attempt to test it multiple times on the tip of the git t=
+o see
+> > > > > if the problems goes away?
+> > > > >
+> > > > > if same test is performed multiple times with or without revertin=
+g patch
+> > > > > on same laptop on which issue is observed
+> > > > > we may see same working/issue behavior. if it is regressing then =
+always
+> > > > > it should work with or without reverting patches on same laptop. =
+is this
+> > > > > the case here?
+> > > > >
+> > > > > Thanks,
+> > > > >
+> > > > > Basavaraj
+> > > > >
+> > > > > > Ciao, Thorsten
+> > > > > >
+> > > > > > > Ciao, Thorsten (wearing his 'the Linux kernel's regression tr=
+acker' hat)
+> > > > > > >
+> > > > > > > P.S.: As the Linux kernel's regression tracker I'm getting a =
+lot of
+> > > > > > > reports on my table. I can only look briefly into most of the=
+m and lack
+> > > > > > > knowledge about most of the areas they concern. I thus unfort=
+unately
+> > > > > > > will sometimes get things wrong or miss something important. =
+I hope
+> > > > > > > that's not the case here; if you think it is, don't hesitate =
+to tell me
+> > > > > > > in a public reply, it's in everyone's interest to set the pub=
+lic record
+> > > > > > > straight.
+> > > > > > >
+> > > > > > > > Did you attempt to test it multiple times on the tip of the=
+ git to see
+> > > > > > > > if the problems goes away?
+> > > > > > > >
+> > > > > > > > if same test is performed multiple times with or without re=
+verting patch
+> > > > > > > > on same platform (laptop/hardware/firmware) on which issue =
+is observed
+> > > > > > > > we may see same working/issue behavior. if it is regressing=
+ then always
+> > > > > > > > it should work with or without reverting patches on same la=
+ptop. is this
+> > > > > > > > the case here?
+> > > > > > > >
+> > > > > > > > I don't see any regression here. I requested to retest with=
+ other
+> > > > > > > > hardware/platform/system also as per my above test (output)=
+ all working
+> > > > > > > > fine in 3 different platforms and not able to reproduce or =
+recreate for
+> > > > > > > > my side on 5.17.
+> > > > > > > >
+> > > > > > > > Thanks,
+> > > > > > > >
+> > > > > > > > Basavaraj
+> > > > > > > >
+> > > > > > > > > https://nam11.safelinks.protection.outlook.com/?url=3Dhtt=
+ps%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fnext%2Flinux=
+-next.git%2Fplain%2FDocumentation%2Fprocess%2Fhandling-regressions.rst&data=
+=3D04|01|Basavaraj.Natikar%40amd.com|05891d0582f94d68e7f908da164272ca|3dd89=
+61fe4884e608e11a82d994e183d|0|0|637846771908092322|Unknown|TWFpbGZsb3d8eyJW=
+IjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D|3000&sdata=
+=3D9ORA2inmfocvEJ%2FXOov67q2ebzZrcuguViSPV%2B58yA0%3D&reserved=3D0
+> > > > > > > > >
+> > > > > > > > > Ciao, Thorsten
+> > > > > > > > >
+> > > > > > > > > > Just curious reverting this patch how it is working jus=
+t suspecting
+> > > > > > > > > > firmware undefined behavior.
+> > > > > > > > > >
+> > > > > > > > > > If possible, please check on other platform/system also=
+ if same behavior
+> > > > > > > > > > occurs.
+> > > > > > > > > >
+> > > > > > > > > > Could you please provide me platform/system details so =
+that I can check
+> > > > > > > > > > this behavior?
+> > > > > > > > > >
+> > > > > > > > > > Thanks,
+> > > > > > > > > > Basavaraj
+> > > > > > > > > >
+> > > > > > > > > > On 4/1/2022 1:36 PM, Thorsten Leemhuis wrote:
+> > > > > > > > > >
+> > > > > > > > > > > Hi, this is your Linux kernel regression tracker.
+> > > > > > > > > > >
+> > > > > > > > > > > I noticed a regression report in bugzilla.kernel.org =
+that afaics nobody
+> > > > > > > > > > > acted upon since it was reported about a week ago, th=
+at's why I decided
+> > > > > > > > > > > to forward it to the lists and all people that seemed=
+ to be relevant
+> > > > > > > > > > > here. It looks to me like this is something for Basav=
+araj, as it seems
+> > > > > > > > > > > to be caused by b300667b33b2 ("HID: amd_sfh: Disable =
+the interrupt for
+> > > > > > > > > > > all command"). But I'm not totally sure, I only looke=
+d briefly into the
+> > > > > > > > > > > details. Or was this discussed somewhere else already=
+? Or even fixed?
+> > > > > > > > > > >
+> > > > > > > > > > > To quote from https://nam11.safelinks.protection.outl=
+ook.com/?url=3Dhttps%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D2157=
+44&data=3D04|01|Basavaraj.Natikar%40amd.com|05891d0582f94d68e7f908da164272c=
+a|3dd8961fe4884e608e11a82d994e183d|0|0|637846771908092322|Unknown|TWFpbGZsb=
+3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D|3000&=
+sdata=3DpLGKHCV1ZNrXghGdDFG16sguRA8xi0VzUSG%2Fbw%2FQsBw%3D&reserved=3D0 :
+> > > > > > > > > > >
+> > > > > > > > > > > > Marco 2022-03-25 15:22:19 UTC
+> > > > > > > > > > > >
+> > > > > > > > > > > > After updating to 5.17, the input from the accelero=
+meter disappeared, completely. No devices available from IIO tree. First ba=
+d commit causing it is https://nam11.safelinks.protection.outlook.com/?url=
+=3Dhttps%3A%2F%2Fgit.kernel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Ftorval=
+ds%2Flinux.git%2Fcommit%2Fdrivers%2Fhid%2Famd-sfh-hid%2Famd_sfh_pcie.c%3Fid=
+%3Db300667b33b2b5a2c8e5f8f22826befb3d7f4f2b&data=3D04|01|Basavaraj.Natikar%=
+40amd.com|05891d0582f94d68e7f908da164272ca|3dd8961fe4884e608e11a82d994e183d=
+|0|0|637846771908092322|Unknown|TWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2l=
+uMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D|3000&sdata=3DL36JFc%2BnejM4bJXfNui49v2u=
+JKrS4cJnU93dpEhXPms%3D&reserved=3D0. Reverting this and the the other two o=
+n top fixed this. Tried to not revert only the above mentioned commit, but =
+it's still not working.
+> > > > > > > > > > > >
+> > > > > > > > > > > > Marco.
+> > > > > > > > > > > > Anyway, to get this tracked:
+> > > > > > > > > > >
+> > > > > > > > > > > #regzbot introduced: b300667b33b2b5a2c8e5f8f22826befb=
+3d7f4
+> > > > > > > > > > > #regzbot from: Marco rodomar705@protonmail.com
+> > > > > > > > > > > #regzbot title: input: hid: input from the accelerome=
+ter disappeared due
+> > > > > > > > > > > to changes to amd_sfh
+> > > > > > > > > > > #regzbot link: https://nam11.safelinks.protection.out=
+look.com/?url=3Dhttps%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D215=
+744&data=3D04|01|Basavaraj.Natikar%40amd.com|05891d0582f94d68e7f908da164272=
+ca|3dd8961fe4884e608e11a82d994e183d|0|0|637846771908092322|Unknown|TWFpbGZs=
+b3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D|3000=
+&sdata=3DpLGKHCV1ZNrXghGdDFG16sguRA8xi0VzUSG%2Fbw%2FQsBw%3D&reserved=3D0
+> > > > > > > > > > >
+> > > > > > > > > > > Ciao, Thorsten (wearing his 'the Linux kernel's regre=
+ssion tracker' hat)
+> > > > > > > > > > >
+> > > > > > > > > > > P.S.: As the Linux kernel's regression tracker I'm ge=
+tting a lot of
+> > > > > > > > > > > reports on my table. I can only look briefly into mos=
+t of them and lack
+> > > > > > > > > > > knowledge about most of the areas they concern. I thu=
+s unfortunately
+> > > > > > > > > > > will sometimes get things wrong or miss something imp=
+ortant. I hope
+> > > > > > > > > > > that's not the case here; if you think it is, don't h=
+esitate to tell me
+> > > > > > > > > > > in a public reply, it's in everyone's interest to set=
+ the public record
+> > > > > > > > > > > straight.
+>
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-reports on my table. I can only look briefly into most of them and lack
-knowledge about most of the areas they concern. I thus unfortunately
-will sometimes get things wrong or miss something important. I hope
-that's not the case here; if you think it is, don't hesitate to tell me
-in a public reply, it's in everyone's interest to set the public record
-straight.
-
-On 09.04.22 13:08, Thorsten Leemhuis wrote:
-> [TLDR: I'm adding the regression report below to regzbot, the Linux
-> kernel regression tracking bot; all text you find below is compiled from
-> a few templates paragraphs you might have encountered already already
-> from similar mails.]
-> 
-> Hi, this is your Linux kernel regression tracker.
-> 
-> On 08.04.22 09:26, Dominik Förderer wrote:
->> After switching from kernel 5.16 to 5.17/%.18-rc1 my system (dell xps13 9310)
->> allways freezes short after boot with a cpu-soft lock.
->>
->> A git bisect shows, that the Problem is caused by commit 9dcf6808b253 ath11k:
->> add 11d scan offload support. Reverting this commit makes the problem going
->> away.
->>
->> There is also a bug report with further descriptions here: 
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=215777
-> 
-> Thanks for the report.
-> 
-> CCing the regression mailing list, as it should be in the loop for all
-> regressions, as explained here:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-> 
-> To be sure below issue doesn't fall through the cracks unnoticed, I'm
-> adding it to regzbot, my Linux kernel regression tracking bot:
-> 
-> #regzbot ^introduced 9dcf6808b253
-> #regzbot title net: wireless: ath11k: xps13 9310 freezes
-> #regzbot ignore-activity
-> 
-> If it turns out this isn't a regression, free free to remove it from the
-> tracking by sending a reply to this thread containing a paragraph like
-> "#regzbot invalid: reason why this is invalid" (without the quotes).
-> 
-> Reminder for developers: when fixing the issue, please add a 'Link:'
-> tags pointing to the report (the mail quoted above) using
-> lore.kernel.org/r/, as explained in
-> 'Documentation/process/submitting-patches.rst' and
-> 'Documentation/process/5.Posting.rst'. Regzbot needs them to
-> automatically connect reports with fixes, but they are useful in
-> general, too.
-> 
-> I'm sending this to everyone that got the initial report, to make
-> everyone aware of the tracking. I also hope that messages like this
-> motivate people to directly get at least the regression mailing list and
-> ideally even regzbot involved when dealing with regressions, as messages
-> like this wouldn't be needed then. And don't worry, if I need to send
-> other mails regarding this regression only relevant for regzbot I'll
-> send them to the regressions lists only (with a tag in the subject so
-> people can filter them away). With a bit of luck no such messages will
-> be needed anyway.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
-> 
