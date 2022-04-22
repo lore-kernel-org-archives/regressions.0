@@ -1,204 +1,202 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2078.outbound.protection.outlook.com [40.107.243.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5502901
-	for <regressions@lists.linux.dev>; Fri, 22 Apr 2022 14:38:20 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cBh2S0A97qoUAvSAPfC3LD044kpdL9REqE+aCuVWM+8xygZwCcKQ8mFehJSPNghLMARuvCjdYAXw4a7RCvMyPLMQeC5lJBhtJUHEyk3CbPP3ClBZVbui0pLLzqM0uf2us7Lvzlv+JYw6FOvf4mz77gC45dWTxsbEDoyTRoFGAqgv9KhcCheWxJDH5UjPl5vXaUnKG5DwWnWx+rMU8JTbRlyS4tlE6kp/rEHUm2XbRGuL6iYOkCek/KzfxDCckZVATJB/COwt+EAMjdZV9EYBPc1COD5+enAc0wQwH2pmcEYwAZNQnitti5hTrz+3ARZbVXXT/kIo9evZro7MpwuIGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6ldpWoQ2FMaC6Bx8KapOF0Fb1x+Raqocg+nqTG6yIzw=;
- b=BdP5TBYBe4vFObx2+f15peMtcubv1ZV2fUq34qsyL9vjHXEDWzjee/EoHBafyf8/80gSNGbn1h+ZpOXDsNMy674Bm2MyE8L6AzxyWSPNrXl7ahcNkom0Lj5YT4vVN036F9TM8iQm75aw+rvkIrODCCiT0dum83CwfGSmhUkN//CkSV28g7CpDlCBbJ5CdQRofCUhofxtlEXwXtXKwCAz+SfE3y/ExRQAD2TfvK7veBL8DNl5CuYFGyG72efp1OsObqcb22MdjffaLwxASPK5aOM6N+PrSM8KxNYywtoUn4k8Ns80TMuB0CSxoUP0ygLy0U3eW9RDf0rhp3HDpszIwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ldpWoQ2FMaC6Bx8KapOF0Fb1x+Raqocg+nqTG6yIzw=;
- b=zyhQEK9kT1lw5AJ96hVyoDreuvVuHvr7oI/pOfuPag5Hw9LD+mIXh6wrp/9PqanrQ46gvkXJHP1dWNDBRWUbu2UEE9KEdMsAti/GKgwOLswjMkgzv+Al9dAjUN2pbhIfZDSD74ycmvmA8syt98dlSECU8DOFg+emveQPdH11m2g=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5157.namprd12.prod.outlook.com (2603:10b6:208:308::15)
- by BYAPR12MB3447.namprd12.prod.outlook.com (2603:10b6:a03:a9::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.13; Fri, 22 Apr
- 2022 14:38:17 +0000
-Received: from BL1PR12MB5157.namprd12.prod.outlook.com
- ([fe80::3157:3164:59df:b603]) by BL1PR12MB5157.namprd12.prod.outlook.com
- ([fe80::3157:3164:59df:b603%8]) with mapi id 15.20.5186.015; Fri, 22 Apr 2022
- 14:38:17 +0000
-Message-ID: <65720c2c-2d26-23e0-95f8-22c297270cb6@amd.com>
-Date: Fri, 22 Apr 2022 09:38:09 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH v2 1/1] gpio: Request interrupts after IRQ is initialized
-Content-Language: en-US
-To: torvalds@linux-foundation.org
-Cc: Natikar Basavaraj <Basavaraj.Natikar@amd.com>,
- Gong Richard <Richard.Gong@amd.com>, regressions@lists.linux.dev,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Shreeya Patel <shreeya.patel@collabora.com>,
- Andy Shevchenko <andy.shevchenko@gmail.com>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>, =?UTF-8?Q?Samuel_=c4=8cavoj?=
- <samuel@cavoj.net>, lukeluk498@gmail.com, tiwai@suse.de
-References: <20220422131452.20757-1-mario.limonciello@amd.com>
- <20220422131452.20757-2-mario.limonciello@amd.com>
-From: "Limonciello, Mario" <mario.limonciello@amd.com>
-In-Reply-To: <20220422131452.20757-2-mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BL1P223CA0006.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:208:2c4::11) To BL1PR12MB5157.namprd12.prod.outlook.com
- (2603:10b6:208:308::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFA3F290F
+	for <regressions@lists.linux.dev>; Fri, 22 Apr 2022 18:27:45 +0000 (UTC)
+Received: by mail-pl1-f181.google.com with SMTP id h12so8954444plf.12
+        for <regressions@lists.linux.dev>; Fri, 22 Apr 2022 11:27:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xe89oBvqonfmG8L8+DamcfoD7ftIM3wziDNzG2pEI6I=;
+        b=c63hAyLk48GG0rINSSBO4k6xl5x6A/8uiMRKV5sjDsEGoui8TKNpkXGbO2lnTuktqp
+         H8wHklzwQzsQUfCKNkIbtK+2/oHShKYtFWfp4WrsVfy3ALydPTXybbX/MHqpLXp2ULaL
+         4GsS1BRP5Jo1k9GOwH5ooxl9R/atHcm/4UvXAr5YNj1b088FST3afGnb5SGyzOeZ+nEG
+         LmIIV2uiYeHsInsHEP3vwnN6l83tvkyTgwnHI1DvxBclq7ctkC0VX/9TWO7dwhK/w7ZM
+         Dwj5YFovBUr08isjYc/3eYFsPnJrqlyGYAAkRHMQZTeYyJP5aMhQYP+C5Vhi886gxXCv
+         Musg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=xe89oBvqonfmG8L8+DamcfoD7ftIM3wziDNzG2pEI6I=;
+        b=LKpIwc7ZJPocikZOYefP6I2BVufXTturofv1lxiM1G4Ym2Hmgmc5LP1fUdrQJ93OfB
+         KkkLA9s6tVXLFHB4WDCu7ONNM1Mf5od91PIe6u2PwOXYy6yjVzUj46vzpH9zaR98noCL
+         M9AAPG39xIy43wiTy6RO8lS4mXhPHKltR/K/tGG20WYwqsLH4m1auEdbbPFiWD6h7EJz
+         wPmKh8Xw3lZibK3nSDkoeylcGkSekNagtKBMY3fR5ZVqBXSonePz5E/8c3G9q+k8bVAY
+         5YlIa7ugv5OBNxbweEXWCnmNzWa/ZfTYhHW0IWn5XATF/H0ohS25JAvO9++tDVVQM/6/
+         44RA==
+X-Gm-Message-State: AOAM531motW3eqJvvcebOV7pjZWesx31R5GqetJS75saqVYBkrMKVPEO
+	U1wBPWqmcAJ3A41Y9dGsPaU=
+X-Google-Smtp-Source: ABdhPJwvU0C8IZgjSDjzDtzYXVIpTFsXRpxosHpqcV37V2LpiK2ovmWIc2GKCF3CtNKf+ewMz/VB6w==
+X-Received: by 2002:a17:90b:1d11:b0:1d2:aa8f:f65b with SMTP id on17-20020a17090b1d1100b001d2aa8ff65bmr6938818pjb.96.1650652065105;
+        Fri, 22 Apr 2022 11:27:45 -0700 (PDT)
+Received: from google.com ([2620:15c:211:201:2194:db4:85a8:b0df])
+        by smtp.gmail.com with ESMTPSA id u9-20020a17090a4bc900b001d26f134e43sm7045869pjl.51.2022.04.22.11.27.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Apr 2022 11:27:44 -0700 (PDT)
+Sender: Minchan Kim <minchan.kim@gmail.com>
+Date: Fri, 22 Apr 2022 11:27:42 -0700
+From: Minchan Kim <minchan@kernel.org>
+To: Tejun Heo <tj@kernel.org>
+Cc: Jirka Hladky <jhladky@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	regressions@lists.linux.dev,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	Justin Forbes <jforbes@fedoraproject.org>
+Subject: Re: PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" starting from 5.17 on
+ dual socket Intel Xeon Gold servers
+Message-ID: <YmLznjFdpblHzZiM@google.com>
+References: <CAE4VaGBZk2NL6Tn2fGxmGMR-n8KFNqgPOktY_sQ1vjViLDNhhg@mail.gmail.com>
+ <CAE4VaGB4=aCd8iDb4EduR+-5QTSgVWd5sxrnBA4e3g9dPrnuBg@mail.gmail.com>
+ <YkTxox8ZQIDtojfU@google.com>
+ <CAFxkdAq6r2WnwML-pPfdZiajaYZCEcUU3GrXW=+wsA7CxGnJdQ@mail.gmail.com>
+ <CAE4VaGBchOMWeHQ8GKiGFv_aCaNGLEvSdLWXZTpE+qC=0bgM3A@mail.gmail.com>
+ <YkY6W1NS+1RTw0VB@google.com>
+ <CAE4VaGDAMZqjwumyvbityzEiK30=5a5vuDMjaS+UHM39R-oPRw@mail.gmail.com>
+ <YkstxbC3OfzYnSRw@google.com>
+ <CAE4VaGAQZcQzN8D+iwcBnP5vY=Ctmbh+oTikvONHir6JjTgpsw@mail.gmail.com>
+ <YmGKrd1BR9HSEy6q@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9cd7c277-e58b-4c62-9553-08da246dbd5e
-X-MS-TrafficTypeDiagnostic: BYAPR12MB3447:EE_
-X-Microsoft-Antispam-PRVS:
-	<BYAPR12MB3447A5EED6D0DC81F2F5538FE2F79@BYAPR12MB3447.namprd12.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	EihdSwIyGnbdT5tK0Nhyn9AdNUdj2eJ5vk8l/4YMktTdL4Opu9p8enN/Y/qkNfUo4KJV6l8g8UHG52WaxGyhnH4B4ZDERiQfFDEcAl+s+ioY0Fn8XyVt6THnvxnxf53rBQfG3jrdGWtVHM362XhwqBBg1u6cAmvFf9h11oCuowmJcET/9+MP9vVbrfreg1QKv3Kj3YCWP3uastS76jfG/KCETrTWoYvnX95yCd7/0sneH2pTZJuTsqjl5eyhfony8roIwengUAULZs7deaRpCkTtWvRdUoLfXErLsS3ctS9fQwDHZZ0EDwKWF5kS3Ncum5uVrjEdOZwhK669EdFjA+FJT7RXraDpWCF80BxwUMOwChNsTzO5Jnas9fD6JkiUCLmmZ92b73J2tD72Mi//pxeMWEGtCOPfHhMvQYKJ/gjkem7RoJrtWFYyYhQbECCq7Yu62dfW22HdFbgN2e2EGJDULTZ5t418UR3eNs+WUbUGxeR09JBHdSKsRtARgnRfZa9iq/PjU0ctalVYiGRvMHC3DdgQyXOEvO5Bb00vVmK5Gf5Xowjgy++dhRk3dJ/NHMHx4Ckfz+6LbcpJkLSl6z4hlNF5n2kIKsy5yP5yz9105kM1iVtgNYakhYIVX/5k3GFYlWJMWwkOxD8XEdN8O28rlT2/GpoWOIRowC9mbgsKQWgJQKe+uzbLanNusKFBHaBrJNC956w5XTdrkV4NoqwuwfW8+iIdptFGU+eFy9y2ZUhKYM1dhAmANrzRhWJ1Xiwwqw88TbYNXXXvFyS/yI0WMni5NlUOkj3GxT5ANaWObkGHr1tIvHLfERrVIt13uArr+7PLb+69NC5fd9FTPGIINAxcuL8AH7SxmyHzMd8=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5157.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(4326008)(8676002)(66946007)(66574015)(316002)(38100700002)(186003)(86362001)(31696002)(2616005)(5660300002)(36756003)(54906003)(83380400001)(6916009)(26005)(31686004)(508600001)(66556008)(6486002)(45080400002)(8936002)(6506007)(2906002)(6512007)(966005)(66476007)(53546011)(7416002)(6666004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZWJTM0RidzhXb3dtYXN0VkZhbGdxTjJTMFpKUVl3VVJBWXRjYThrQTExaVRi?=
- =?utf-8?B?Qk9EZXQwdCtYWFVBcXk0aU9UU29WZlFHQnNPa01QbmpLSGhLb08wcG5qYkRE?=
- =?utf-8?B?NlpBMjFtYWozcUVPWDJLMm5xS21ydlBlSUsxcXpSUHkvRmplZWUyeSt5dERB?=
- =?utf-8?B?OGJZbTJWRUNtSFRtQWtHTkNsMlFNcUJnK2R5aG1NSk8vOHhuTmd2aUwxOFFs?=
- =?utf-8?B?RjFyc1kzVW9VQWx0RmUzYkpsRkN0bGY5MzJsUDQvZmIwMzl1aGZtQ0F4d3dB?=
- =?utf-8?B?S2p5YUplUEFpbFdFZzhNL3d5aEhUWTBjeFdBMFBnbXhQZk0wWGx6cVVEYUhR?=
- =?utf-8?B?dkFRQlZQUk5FSjNiUnFKcUk2QjZ1L0Q0ZjFhMVgwTnBaRXhpY2lQMnZsTUdG?=
- =?utf-8?B?Ums5QmltN3Z2ZWxnZVEvaDR0UjUyRjRFdGZkMnZpMUV5SkU1SHJpTlREbDdy?=
- =?utf-8?B?TGhNakQ4Q3lpdDJtV2RweGdyRDRjV1dLVWwyZGdxRFJydXpwVEVGbm5QWWk0?=
- =?utf-8?B?ZHgwa0c1SFZrbS93dVV5S2NKNW5wWFI2c05rL3ovaVE1SDJSeXFzZlVmTmZm?=
- =?utf-8?B?NGdxN1hHdXJJWHZPNnlsdVNiM1BDSXNPWGErU0pFOE1Jc1QzSjdPM3hUNUxT?=
- =?utf-8?B?bmNja0p4R3lUZk5oUlRocUhoMWNtQzFXNForT01sZzJJRVZGVUtKekhNaHdK?=
- =?utf-8?B?ZERjVzMzL1pldENocVZqYzFNZHNwdUp2RGl4V3phOGlhSkljMUd6K0l4L3Bh?=
- =?utf-8?B?NUtIOWJyaTNncG5DbG80d2REaGFZL09BeWFESmpLbDZCTDA2eGp1MVNXeWtL?=
- =?utf-8?B?c0ZWcTN4dkdIT0p0MWI5RlZnNE1tOER3Wk5GVnROTUs3ZGVDYmoxYnBNdkh5?=
- =?utf-8?B?UDdlSHhicWdIWmc2VklXMGV6MDNkODF5Z2ZmdFdHMWhPZEFkV2F5SFMxVVh1?=
- =?utf-8?B?WVQzMjVIWXo2ZjF6YUtSclNGVlNhMEk4TGVkNkpZZWVwbWFUZUdMa2xmME5U?=
- =?utf-8?B?OGdRRlJaU0RmMThoMVhyVkpsOFJRdk0xVVQ4OWhySWoyUDRabEs2ZFNFSnZw?=
- =?utf-8?B?cHMxMDhYa2k2NldUSlRKVUYvSWpkWEtiZHJseDRvQnZMTWJrQ2ZhS29qWGhP?=
- =?utf-8?B?WUowaTBxbUUwdytvcjhyVUx1czE1U3VLTXRwZGNoNFRZVXhob003T29KR0pq?=
- =?utf-8?B?bFVKTzV3ODJ2UkJBRlFsUUlaa0ZNcVU2ZVE2MVlJTGNuYlFNQVl6UkJCa1dU?=
- =?utf-8?B?MW1CUk9mWFF1U240Tjk0SVNHV3NzcjNvOHRMNnArWGZiN0NvQ0lmV3UzUkpz?=
- =?utf-8?B?MHZXc25ocFhXRzdST3pha3B1OXZkcTJjenZhY2hJWk9BU2ZBUk9KRG5tNXVG?=
- =?utf-8?B?SW9MMXZRVUhDRDFtbHR0THlEMzU4WVBmaWt5NjlYTSthdFRyUkdXYXZkb3I5?=
- =?utf-8?B?S0N4UTNicjNYNkx4Y2s5VnFDR0NQSUhPYXhjOWpoSVg5S3UzYnNwZ3NVY1VJ?=
- =?utf-8?B?T1dXM0xZaWlSOVpVK1lQaU9TL1RndDlPTUt4c0RsTTBJSXRIdlVPSUhzMTZz?=
- =?utf-8?B?UjhFRXF0alhvT01PQTFDZGp3YTJrTllRQldTcHN2dkZOck9YZnlHWWJ5SnBi?=
- =?utf-8?B?UjgxRjZaNVVQdlpTTTg3eFVuT2lKME9rWi9qazNLV09nbU5GbDJpVlpnRXU3?=
- =?utf-8?B?U041QzVGc3JxcUF5RFpWd3Jxczd6aXozUytnMmdkYU5jNHJoeWV4WFdGSVdB?=
- =?utf-8?B?ak8xVkg4azlpcFNickw3TTVMSzBvZmNRblZYYjhsRUl3N3BFOWZGK3A3dkx0?=
- =?utf-8?B?RlZUd2ljS3l3OVEzUWZEUlorTStiUERMeFY3MGxxT0FCV24wVzVhZS9sVVFR?=
- =?utf-8?B?TDJTM0QvS0hGSTVyZWFHbVAzV0dnVEJKRDh3TUlGUVJtV2c1T3ArWS9jWWY0?=
- =?utf-8?B?VkhaaHFjQUk2SkU5c3FkZEhsdEtEWlE4NkVicnlBRGt3eTJVR1pRSWN3bkN3?=
- =?utf-8?B?MEYrK0JycklkQjZka2RHZ1dhdlVSRGYxNE1vYjdZcEhBOXVRUGk4ZWtmVWZH?=
- =?utf-8?B?emVDN1ZHQm52VldEdE56V1oxYk1nUFF2ZWNNUHNOY3ZOK0tJVldWLzFWTE0r?=
- =?utf-8?B?My9lL0lFVDhOMGU1QS9nRitlNWd5Tm05NWU2RFJPNWVSM0NUQ2xueW9qY3V0?=
- =?utf-8?B?YlJ2WXRldi9jNDZkajB6MzNBcU5xRkp5UTlTUk11RCtSejdoYk83MWpaZHpH?=
- =?utf-8?B?Vk1idkdrQ2FQTnZIK293cFRwSFY1UEV0NmtZL3dIMkpaQWV6Y0t2K053YWtO?=
- =?utf-8?B?ekdOTWJDWTFvdDFmZzRKckdCUE9TSlc0K3dCMVVjb1NrejNsSXJmQT09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9cd7c277-e58b-4c62-9553-08da246dbd5e
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5157.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2022 14:38:17.5192
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: blqVURABGbIyAWfMCZVgq9fEPYm2dNhk51xQaFAQLPNtI/Zl0wjvnJ86VYvDxgd6eyu7jXZPoTaHtFffJl5YIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3447
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YmGKrd1BR9HSEy6q@slm.duckdns.org>
 
-On 4/22/2022 08:14, Mario Limonciello wrote:
-> commit 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before
-> initialization") attempted to fix a race condition that lead to a NULL
-> pointer, but in the process caused a regression for _AEI/_EVT declared
-> GPIOs. This manifests in messages showing deferred probing while trying
-> to allocate IRQs like so:
+On Thu, Apr 21, 2022 at 06:47:41AM -1000, Tejun Heo wrote:
+> Sorry about late reply.
 > 
-> [    0.688318] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0000 to IRQ, err -517
-> [    0.688337] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x002C to IRQ, err -517
-> [    0.688348] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003D to IRQ, err -517
-> [    0.688359] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003E to IRQ, err -517
-> [    0.688369] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003A to IRQ, err -517
-> [    0.688379] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x003B to IRQ, err -517
-> [    0.688389] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0002 to IRQ, err -517
-> [    0.688399] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0011 to IRQ, err -517
-> [    0.688410] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0012 to IRQ, err -517
-> [    0.688420] amd_gpio AMDI0030:00: Failed to translate GPIO pin 0x0007 to IRQ, err -517
+> On Wed, Apr 20, 2022 at 10:02:20AM +0200, Jirka Hladky wrote:
+> > > Based on your report, kernel was crashed due to kn_mondata was NULL
+> > >
+> > >   rdt_kill_sb
+> > >     rmdir_all_sub
+> > >       ..
+> > >       kernfs_remove(kn_mondata);
+> > >         struct kernfs_root *root = kernfs_root(kn); <-- crashed
+> > >
+> > >
+> > > Before the my patch[1], it worked like this.
+> > >
+> > >   rdt_kill_sb
+> > >     rmdir_all_sub
+> > >       ..
+> > >       kernfs_remove(kn_mondata);
+> > >         down_write(&kernfs_rwsem);
+> > >           if (!kn)
+> > >             return;
+> > >         up_write(&kernfs_rwsem);
+> > >
+> > > IOW, before, kernfs_remove worked with NULL argument via just bailing
+> > > but with the my patch[1], it doesn't work any longer.
+> > >
+> > > It makes me have questions for kernfs maintainers:
+> > >
+> > > Should kernfs_remove API support NULL parameter? If so, can we support
+> > > it atomically without old global kernfs_rwsem?
+> > >
+> > > [1] 393c3714081a, kernfs: switch global kernfs_rwsem lock to per-fs lock
 > 
-> The code for walking _AEI doesn't handle deferred probing and so this leads
-> to non-functional GPIO interrupts.
-> 
-> Fix this issue by moving the call to `acpi_gpiochip_request_interrupts` to
-> occur after gc->irc.initialized is set.
-> 
-> Cc: Shreeya Patel <shreeya.patel@collabora.com>
-> Cc: stable@vger.kernel.org
-> Fixes: 5467801f1fcb ("gpio: Restrict usage of GPIO chip irq members before initialization")
-> Reported-by: Mario Limonciello <mario.limonciello@amd.com>
-> Link: https://lore.kernel.org/linux-gpio/BL1PR12MB51577A77F000A008AA694675E2EF9@BL1PR12MB5157.namprd12.prod.outlook.com/T/#u
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> Reviewed-by: Shreeya Patel <shreeya.patel@collabora.com>
-> Tested-By: Samuel Čavoj <samuel@cavoj.net>
-> Tested-By: lukeluk498@gmail.com Link:
-> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1979
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215850
-> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1976
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> Yes, I mean, kernfs_remove() used to support NULL arg, so it should do the
+> same after the locking change too. Can you send a patch?
 
-Takashi hit this as well recently and provided a few more tags.
+Thanks for checking, Tejun.
 
-BugLink: https://bugzilla.suse.com/show_bug.cgi?id=1198697
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Tested-by: Takashi Iwai <tiwai@suse.de>
+Jirka, Could you test the patch? Once it's confirmed, I need to resend
+it with Ccing stable.
 
+Thanks.
 
-> ---
-> v1->v2:
->   * Pick up acked-by/reviewed-by/link/tested-by
-> 
->   drivers/gpio/gpiolib.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 085348e08986..b7694171655c 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1601,8 +1601,6 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
->   
->   	gpiochip_set_irq_hooks(gc);
->   
-> -	acpi_gpiochip_request_interrupts(gc);
-> -
->   	/*
->   	 * Using barrier() here to prevent compiler from reordering
->   	 * gc->irq.initialized before initialization of above
-> @@ -1612,6 +1610,8 @@ static int gpiochip_add_irqchip(struct gpio_chip *gc,
->   
->   	gc->irq.initialized = true;
->   
-> +	acpi_gpiochip_request_interrupts(gc);
-> +
->   	return 0;
->   }
->   
+From c7441bc659d2869f2d751b43f27356156e028513 Mon Sep 17 00:00:00 2001
+From: Minchan Kim <minchan@kernel.org>
+Date: Fri, 22 Apr 2022 11:16:45 -0700
+Subject: [PATCH] kernfs: fix NULL dereferencing in kernfs_remove
 
+kernfs_remove supported NULL kernfs_node param to bail out but revent
+per-fs lock change introduced regression that dereferencing the
+param without NULL check so kernel goes crash.
+
+This patch checks the NULL kernfs_node in kernfs_remove and if so,
+just return.
+
+Quote from bug report by Jirka
+
+```
+The bug is triggered by running NAS Parallel benchmark suite on
+SuperMicro servers with 2x Xeon(R) Gold 6126 CPU. Here is the error
+log:
+
+[  247.035564] BUG: kernel NULL pointer dereference, address: 0000000000000008
+[  247.036009] #PF: supervisor read access in kernel mode
+[  247.036009] #PF: error_code(0x0000) - not-present page
+[  247.036009] PGD 0 P4D 0
+[  247.036009] Oops: 0000 [#1] PREEMPT SMP PTI
+[  247.058060] CPU: 1 PID: 6546 Comm: umount Not tainted
+5.16.0393c3714081a53795bbff0e985d24146def6f57f+ #16
+[  247.058060] Hardware name: Supermicro Super Server/X11DDW-L, BIOS
+2.0b 03/07/2018
+[  247.058060] RIP: 0010:kernfs_remove+0x8/0x50
+[  247.058060] Code: 4c 89 e0 5b 5d 41 5c 41 5d 41 5e c3 49 c7 c4 f4
+ff ff ff eb b2 66 66 2e 0f 1f 84 00 00 00 00 00 66 90 0f 1f 44 00 00
+41 54 55 <48> 8b 47 08 48 89 fd 48 85 c0 48 0f 44 c7 4c 8b 60 50 49 83
+c4 60
+[  247.058060] RSP: 0018:ffffbbfa48a27e48 EFLAGS: 00010246
+[  247.058060] RAX: 0000000000000001 RBX: ffffffff89e31f98 RCX: 0000000080200018
+[  247.058060] RDX: 0000000080200019 RSI: fffff6760786c900 RDI: 0000000000000000
+[  247.058060] RBP: ffffffff89e31f98 R08: ffff926b61b24d00 R09: 0000000080200018
+[  247.122048] R10: ffff926b61b24d00 R11: ffff926a8040c000 R12: ffff927bd09a2000
+[  247.122048] R13: ffffffff89e31fa0 R14: dead000000000122 R15: dead000000000100
+[  247.122048] FS:  00007f01be0a8c40(0000) GS:ffff926fa8e40000(0000)
+knlGS:0000000000000000
+[  247.122048] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  247.122048] CR2: 0000000000000008 CR3: 00000001145c6003 CR4: 00000000007706e0
+[  247.122048] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[  247.122048] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[  247.122048] PKRU: 55555554
+[  247.122048] Call Trace:
+[  247.122048]  <TASK>
+[  247.122048]  rdt_kill_sb+0x29d/0x350
+[  247.122048]  deactivate_locked_super+0x36/0xa0
+[  247.122048]  cleanup_mnt+0x131/0x190
+[  247.122048]  task_work_run+0x5c/0x90
+[  247.122048]  exit_to_user_mode_prepare+0x229/0x230
+[  247.122048]  syscall_exit_to_user_mode+0x18/0x40
+[  247.122048]  do_syscall_64+0x48/0x90
+[  247.122048]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+[  247.122048] RIP: 0033:0x7f01be2d735b
+```
+
+Fixes: 393c3714081a (kernfs: switch global kernfs_rwsem lock to per-fs lock)
+Reported-by: Jirka Hladky <jhladky@redhat.com>
+Signed-off-by: Minchan Kim <minchan@kernel.org>
+---
+ fs/kernfs/dir.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
+index 61a8edc4ba8b..e205fde7163a 100644
+--- a/fs/kernfs/dir.c
++++ b/fs/kernfs/dir.c
+@@ -1406,7 +1406,12 @@ static void __kernfs_remove(struct kernfs_node *kn)
+  */
+ void kernfs_remove(struct kernfs_node *kn)
+ {
+-	struct kernfs_root *root = kernfs_root(kn);
++	struct kernfs_root *root;
++
++	if (!kn)
++		return;
++
++	root = kernfs_root(kn);
+ 
+ 	down_write(&root->kernfs_rwsem);
+ 	__kernfs_remove(kn);
+-- 
+2.36.0.rc2.479.g8af0fa9b8e-goog
 
