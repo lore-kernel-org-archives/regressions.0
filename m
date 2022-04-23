@@ -1,80 +1,99 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F374915A4
-	for <regressions@lists.linux.dev>; Sat, 23 Apr 2022 01:03:21 +0000 (UTC)
-Received: by mail-lj1-f173.google.com with SMTP id q14so11501541ljc.12
-        for <regressions@lists.linux.dev>; Fri, 22 Apr 2022 18:03:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g096DpfSCcf8IWJKS1josNtXLu3tIDY7masJQNFWcAg=;
-        b=AQYaKU5/J5+aM5TlCj8JWxqEyNRrWADeSBitRwGal1ELDw+cu8iXPNVIYHG5rXsFKr
-         EttNL829nFI/wGAfiIXCY1eNMdjdRPK/3HU5lHecTvmamw0HZg8jKDTcyxWmvbvs+/HQ
-         Zc3NjzjDRQt7nWoj0trGeL7HrH1BccrnLvfSg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g096DpfSCcf8IWJKS1josNtXLu3tIDY7masJQNFWcAg=;
-        b=0dVcNzUH2jaMk0uDP9eEtKVSclcQ/Q+mxPHz1ZBLU7X/3hMhh36HFlIo3Tev45ialy
-         y2rRt6X8kK9/N3seBDQFE6agL4wxT92zprZbvqbvzRFVCAwML8dRXuU0BN7fhMgg2Esd
-         CFw9tCNv+EgxpAkxxTN4C11AMEWLnczcGflVQ5U95O5iSR1bJFELRyXd5/KcHb6dHx7x
-         iTYQ/DA3wUhaA+eZeqfLW5G1zQ7LHIbPbLBpRbTscZ/1DWVkllDMH8lxJ9bYbcvHdibC
-         w5/v3cxWf7cyQ0uIFv4poLt/9suWX2T1J5zOCAxSw0JKIHmuXfR/uome+Y7Br6SuUyr9
-         waug==
-X-Gm-Message-State: AOAM531h11ubpKyxjgYCxwF3JwhEVzUxoc6Co1JtjeZtDomxawMrf0cD
-	SivGf2MIxPisUsU4C53Ko+GLqq04F4hjsaxhZrk=
-X-Google-Smtp-Source: ABdhPJwqtydyQbHYkZy+W2mH+AjcPfJmfqoVo5bBA+C2lHYtp7u553h1wgeA9CcUxX/HjAI46lEbHg==
-X-Received: by 2002:a2e:92c9:0:b0:24d:b719:23bd with SMTP id k9-20020a2e92c9000000b0024db71923bdmr4264119ljh.304.1650675799741;
-        Fri, 22 Apr 2022 18:03:19 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id x5-20020a0565123f8500b0045cb9e46b1csm409585lfa.268.2022.04.22.18.03.17
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Apr 2022 18:03:17 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id q14so11501458ljc.12
-        for <regressions@lists.linux.dev>; Fri, 22 Apr 2022 18:03:17 -0700 (PDT)
-X-Received: by 2002:a2e:9041:0:b0:24a:ce83:dcb4 with SMTP id
- n1-20020a2e9041000000b0024ace83dcb4mr4454046ljg.291.1650675796759; Fri, 22
- Apr 2022 18:03:16 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5669429A0
+	for <regressions@lists.linux.dev>; Sat, 23 Apr 2022 16:01:54 +0000 (UTC)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.west.internal (Postfix) with ESMTP id 7FA373200C6B;
+	Sat, 23 Apr 2022 12:01:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Sat, 23 Apr 2022 12:01:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-type:date:date:from:from
+	:in-reply-to:message-id:mime-version:reply-to:sender:subject
+	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+	:x-sasl-enc; s=fm1; t=1650729711; x=1650816111; bh=YDksKwqWIKNlt
+	34SLbnMDH445KGkZXi3f/U3DAOZUMU=; b=AEP3gJTpRI9FIimWwFBAarUoE3EGT
+	DHAA9ydv9CdYEJ9lIJS+fMYkwhlzewJsMX3kYtXPoQO49etiq3eA0RUHGmm87vIS
+	hW+9kZRFtdxQPJ/hyGSFdPMm2TLJEPLr4MW4QVpm50ngW5yOmpQk1uK1ceL6oKTg
+	cR3gx90EQpW8gMja/bTiBuZp61RUbHgQ6HbzIavSqXbtmjYR+z9guxwvtk8j1sTs
+	PmUPt7OyGLnguiCHjL7TjXcKMGeO9VeHgu5DllEr6NchzAniIUs74MWztEb392Zi
+	tSvFLMc1l/sFbbsRMefXYyMlkynS1R/gPaq15z1I/myAGxvqquis5EGnA==
+X-ME-Sender: <xms:7yJkYvdfY72g2mPy9vM-Q33pTZDyRuqGkye8ZfSlqPDzB8GnoDmwvA>
+    <xme:7yJkYlPiMd3FuM5Rpv_eotfGDwQB7loH9eHq3drpFfHst6O7gFrLWbHtWv0Mzo6Lk
+    Ipoi3kRRYfhxms>
+X-ME-Received: <xmr:7yJkYohHeJVsSgxGWGdt5Ey1COAsYP8VKkXkl4Bu4as89VL7s7adgt6E3MuP>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrtdeigdeliecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfggtggusehgtderredttd
+    ejnecuhfhrohhmpeffvghmihcuofgrrhhivgcuqfgsvghnohhurhcuoeguvghmihesihhn
+    vhhishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpeeiue
+    ekkeejteduhfduteehhfeggfevkefgveejudegtedvudelteekkeevvdetveenucffohhm
+    rghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomhepuggvmhhisehinhhvihhsihgslhgvthhhihhnghhslhgrsgdr
+    tghomh
+X-ME-Proxy: <xmx:7yJkYg8RvtoUtcIzPOtUxctG2XSm8EdwUW5yUHGf3-R-ia-HAnJcEg>
+    <xmx:7yJkYruBWN7O_JB-Nl70fDzbPyPEIMredenu009mx7KYal3xf7QICQ>
+    <xmx:7yJkYvHah3MYDgHlfjxk5jBmlKTXyTZAMgsoWdEMUA4mA2GIh_QH3g>
+    <xmx:7yJkYo7swjGc4S3-B62a5XiwG1g2Lk-qQtZUCgcg9TjvHz_Xe1hTyA>
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 23 Apr 2022 12:01:51 -0400 (EDT)
+Date: Sat, 23 Apr 2022 12:01:24 -0400
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
+To: amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev
+Subject: AMD GPU regression in 5.16.18..5.17.4
+Message-ID: <YmQi7ajZpZ4W7BJL@itl-email>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220422131452.20757-1-mario.limonciello@amd.com>
-In-Reply-To: <20220422131452.20757-1-mario.limonciello@amd.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 22 Apr 2022 18:03:00 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh-F2KtXkQueVJRNqWr7O737NzN=8mYA_r-h-16=VxLQA@mail.gmail.com>
-Message-ID: <CAHk-=wh-F2KtXkQueVJRNqWr7O737NzN=8mYA_r-h-16=VxLQA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/1] Fix regression in 5.18 for GPIO
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Natikar Basavaraj <Basavaraj.Natikar@amd.com>, Gong Richard <Richard.Gong@amd.com>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Greg KH <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Shreeya Patel <shreeya.patel@collabora.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Kv6tUGJJ6rzKIW1c"
+Content-Disposition: inline
 
-On Fri, Apr 22, 2022 at 6:15 AM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> This patch is being sent directly to you because there has been
-> a regression in 5.18 that I identified and sent a fix up that has been
-> reviewed/tested/acked for nearly a week but the current subsystem
-> maintainer (Bartosz) hasn't picked it up to send to you.
 
-Applied.
+--Kv6tUGJJ6rzKIW1c
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 23 Apr 2022 12:01:24 -0400
+From: Demi Marie Obenour <demi@invisiblethingslab.com>
+To: amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev
+Subject: AMD GPU regression in 5.16.18..5.17.4
 
-I'm not sure the "cc: stable" makes much sense since the bug was
-introduced in this release, but I assume you added it because the
-problem commit was also marked for stable.
+Two Qubes OS users reported that their AMD GPU systems did not work on
+5.17.4, while 5.16.18 worked fine.  Details can be found on
+https://github.com/QubesOS/qubes-issues/issues/7462.  The initial report
+listed the GPU as =E2=80=9CAdvanced Micro Devices, Inc. [AMD/ATI] Renoir
+[1002:1636} (rev d3) (prog-if 00 [VGA controller])=E2=80=9D and the CPU as
+=E2=80=9CAMD Ryzen 5 PRO 4650U with Radeon Graphics=E2=80=9D.
 
-The "Fixes:" tag should take care of it, but I left that cc:stable alone.
+#regzbot introduced: v5.16.18..v5.17.4
+--=20
+Sincerely,
+Demi Marie Obenour (she/her/hers)
+Invisible Things Lab
 
-           Linus
+--Kv6tUGJJ6rzKIW1c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmJkIu0ACgkQsoi1X/+c
+IsHKiBAAm8lW6omdTh1vgPDmbyXkNj4tqe1izvq3culWVP0Bjkl5pVUX87WUQ9r/
+xqmy5seDhWVGI/hofBxs/RxB339GsJR8t9aVO6qWBc8grapHocDdmxkD5o8iksTD
+CZ8C8Q3lqs1lLi/WXMy2rrcBdO7N1xaPOLtZacoiUtCXtMHM2pHhXq+Y5gyAZWQF
+y5t8D2EDcrYJJ3v77MWinL4cgIE4k+o+gT+IqvHsmIPxxFk/ooRE2R4myuziGLpv
+QsbWdpUMJJcFWHXKE8LC4YPkv3KautpUIdunIJ5l8shUm/WtsWYadbPE5eRxMnEF
+EmrcTGMJjizWIAkMDrkeNpM5/AqaRqlfbNa/Et3ktE8NtRWeU/MqhWLdydD3wrkC
+uNG5HGKi36fB6VGOwMauMTDLCLyggGkGISJvt/lyBHN4CA7va2TIYO/70DCSxVps
+pxk6CmSwt7hu+affJChVLLZoymAIG+5RcLR5sblWLuvxWLL7EQohl9hhxgknxXEA
+L+wTxB9AWoil3fPFVPOcQI325BEGHNRA4PFOA8LrtflFkKJ2cc/CW3PZIgjUTvUx
+6PRYM3oOG3w2h+Wls3QVovWqbhxzr+RQk/zDs7EyR426S6rQ9i6fTphb8YC7IEFK
+nTD51WvWDBeS5OtZFpal1iHveYLJgoeuNoDxEG8CVYvyLcEMVlw=
+=Vik0
+-----END PGP SIGNATURE-----
+
+--Kv6tUGJJ6rzKIW1c--
