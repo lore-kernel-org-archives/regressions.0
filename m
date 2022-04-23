@@ -1,48 +1,50 @@
 Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5669429A0
-	for <regressions@lists.linux.dev>; Sat, 23 Apr 2022 16:01:54 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.west.internal (Postfix) with ESMTP id 7FA373200C6B;
-	Sat, 23 Apr 2022 12:01:52 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sat, 23 Apr 2022 12:01:52 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A2F2F2A
+	for <regressions@lists.linux.dev>; Sat, 23 Apr 2022 16:06:37 +0000 (UTC)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+	by mailout.west.internal (Postfix) with ESMTP id 6FF2A3200EAD;
+	Sat, 23 Apr 2022 12:06:36 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Sat, 23 Apr 2022 12:06:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1650729711; x=1650816111; bh=YDksKwqWIKNlt
-	34SLbnMDH445KGkZXi3f/U3DAOZUMU=; b=AEP3gJTpRI9FIimWwFBAarUoE3EGT
-	DHAA9ydv9CdYEJ9lIJS+fMYkwhlzewJsMX3kYtXPoQO49etiq3eA0RUHGmm87vIS
-	hW+9kZRFtdxQPJ/hyGSFdPMm2TLJEPLr4MW4QVpm50ngW5yOmpQk1uK1ceL6oKTg
-	cR3gx90EQpW8gMja/bTiBuZp61RUbHgQ6HbzIavSqXbtmjYR+z9guxwvtk8j1sTs
-	PmUPt7OyGLnguiCHjL7TjXcKMGeO9VeHgu5DllEr6NchzAniIUs74MWztEb392Zi
-	tSvFLMc1l/sFbbsRMefXYyMlkynS1R/gPaq15z1I/myAGxvqquis5EGnA==
-X-ME-Sender: <xms:7yJkYvdfY72g2mPy9vM-Q33pTZDyRuqGkye8ZfSlqPDzB8GnoDmwvA>
-    <xme:7yJkYlPiMd3FuM5Rpv_eotfGDwQB7loH9eHq3drpFfHst6O7gFrLWbHtWv0Mzo6Lk
-    Ipoi3kRRYfhxms>
-X-ME-Received: <xmr:7yJkYohHeJVsSgxGWGdt5Ey1COAsYP8VKkXkl4Bu4as89VL7s7adgt6E3MuP>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrtdeigdeliecutefuodetggdotefrodftvf
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1650729995; x=
+	1650816395; bh=Zq/2pkFhrvANrVxG+E62UALvcS+IzKjSuNatq+wsPGc=; b=N
+	xXNm5E584Cy+LVj/B9gKBpyCfnH6I1IzJ8/Z50CHEHxFfHFppT6rqmBKm6QgzvRH
+	co4Glf0gMudA2n/9HTddwjZk+/1G0l0UYEfEQ41fo/n1Zw7YrULjMzN1JgqhBbAT
+	79v9AzNjp3AjkD2Z3Q6afUn6AbcGrZUFWC7KcUwWqQbYhC730dsXE5y8pBl0QHIo
+	ko5rA70G2QfGWjXyN30frvPXJ8ORHDapadtxEMupZu4Su7kkGFDJijTChSUOt0ld
+	ZvJ9Bao1WQ2OtVKE6OllEHi5Xs99X6ofzRI9uOxZPdgi8oTOmUAHn1pNnd8azx0c
+	KWBaZrqzO3K5P62EzpLrA==
+X-ME-Sender: <xms:CyRkYi8PaxXtmKoqqVZ-c8N247oHtJUCfatPkkVcoEBZRSZXPPoVmg>
+    <xme:CyRkYivNg1fjQU10u1CCwGyUQtCO4zNE9Yci9DwGXlpPis-uZrFNeeDIm45cILdAD
+    942YBpFE_ap0Vs>
+X-ME-Received: <xmr:CyRkYoBVdxLY5g9JufJZ9Q76X1960qM8o-zQcapRv59wjYGOdIC34vQNxpRm>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrtdeigdelkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfggtggusehgtderredttd
-    ejnecuhfhrohhmpeffvghmihcuofgrrhhivgcuqfgsvghnohhurhcuoeguvghmihesihhn
-    vhhishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpeeiue
-    ekkeejteduhfduteehhfeggfevkefgveejudegtedvudelteekkeevvdetveenucffohhm
-    rghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepuggvmhhisehinhhvihhsihgslhgvthhhihhnghhslhgrsgdr
-    tghomh
-X-ME-Proxy: <xmx:7yJkYg8RvtoUtcIzPOtUxctG2XSm8EdwUW5yUHGf3-R-ia-HAnJcEg>
-    <xmx:7yJkYruBWN7O_JB-Nl70fDzbPyPEIMredenu009mx7KYal3xf7QICQ>
-    <xmx:7yJkYvHah3MYDgHlfjxk5jBmlKTXyTZAMgsoWdEMUA4mA2GIh_QH3g>
-    <xmx:7yJkYo7swjGc4S3-B62a5XiwG1g2Lk-qQtZUCgcg9TjvHz_Xe1hTyA>
+    uegrihhlohhuthemuceftddtnecunecujfgurhepfffhvffukfhfgggtuggjsehgtderre
+    dttdejnecuhfhrohhmpeffvghmihcuofgrrhhivgcuqfgsvghnohhurhcuoeguvghmihes
+    ihhnvhhishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpe
+    eukeeitedvfeffffehveelheeitdfgiedtueekieeuheejkefhtedttdevffejfeenucff
+    ohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepuggvmhhisehinhhvihhsihgslhgvthhhihhnghhslhgr
+    sgdrtghomh
+X-ME-Proxy: <xmx:CyRkYqfTgyq_JCF-oiJPa8t12VIYChvi-PPYtuyG0vTws5MeSqzpNA>
+    <xmx:CyRkYnPsgLbNiZRCeVh5z88MaU9ZDTd263F_aIIV7CGix9ujLYjeeA>
+    <xmx:CyRkYkmbPr5rwVQCDhfcOh3yj8SJzvAbPzbZtzci81Pq_xhIG571rg>
+    <xmx:CyRkYmZaZvC9jxB_xLzhwkKHJw80hokGn0gGCjlLFNJ_i-bsaxRFtg>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 23 Apr 2022 12:01:51 -0400 (EDT)
-Date: Sat, 23 Apr 2022 12:01:24 -0400
+ 23 Apr 2022 12:06:35 -0400 (EDT)
+Date: Sat, 23 Apr 2022 12:06:33 -0400
 From: Demi Marie Obenour <demi@invisiblethingslab.com>
 To: amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev
-Subject: AMD GPU regression in 5.16.18..5.17.4
-Message-ID: <YmQi7ajZpZ4W7BJL@itl-email>
+Subject: [REGRESSION] AMD GPU regression in 5.16.18..5.17.4
+Message-ID: <YmQkCXZEqp6TKrhJ@itl-email>
+References: <YmQi7ajZpZ4W7BJL@itl-email>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -50,18 +52,19 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Kv6tUGJJ6rzKIW1c"
+	protocol="application/pgp-signature"; boundary="Fp+Cfkkmh+USsjTE"
 Content-Disposition: inline
+In-Reply-To: <YmQi7ajZpZ4W7BJL@itl-email>
 
 
---Kv6tUGJJ6rzKIW1c
+--Fp+Cfkkmh+USsjTE
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 23 Apr 2022 12:01:24 -0400
+Date: Sat, 23 Apr 2022 12:06:33 -0400
 From: Demi Marie Obenour <demi@invisiblethingslab.com>
 To: amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev
-Subject: AMD GPU regression in 5.16.18..5.17.4
+Subject: [REGRESSION] AMD GPU regression in 5.16.18..5.17.4
 
 Two Qubes OS users reported that their AMD GPU systems did not work on
 5.17.4, while 5.16.18 worked fine.  Details can be found on
@@ -76,24 +79,24 @@ Sincerely,
 Demi Marie Obenour (she/her/hers)
 Invisible Things Lab
 
---Kv6tUGJJ6rzKIW1c
+--Fp+Cfkkmh+USsjTE
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmJkIu0ACgkQsoi1X/+c
-IsHKiBAAm8lW6omdTh1vgPDmbyXkNj4tqe1izvq3culWVP0Bjkl5pVUX87WUQ9r/
-xqmy5seDhWVGI/hofBxs/RxB339GsJR8t9aVO6qWBc8grapHocDdmxkD5o8iksTD
-CZ8C8Q3lqs1lLi/WXMy2rrcBdO7N1xaPOLtZacoiUtCXtMHM2pHhXq+Y5gyAZWQF
-y5t8D2EDcrYJJ3v77MWinL4cgIE4k+o+gT+IqvHsmIPxxFk/ooRE2R4myuziGLpv
-QsbWdpUMJJcFWHXKE8LC4YPkv3KautpUIdunIJ5l8shUm/WtsWYadbPE5eRxMnEF
-EmrcTGMJjizWIAkMDrkeNpM5/AqaRqlfbNa/Et3ktE8NtRWeU/MqhWLdydD3wrkC
-uNG5HGKi36fB6VGOwMauMTDLCLyggGkGISJvt/lyBHN4CA7va2TIYO/70DCSxVps
-pxk6CmSwt7hu+affJChVLLZoymAIG+5RcLR5sblWLuvxWLL7EQohl9hhxgknxXEA
-L+wTxB9AWoil3fPFVPOcQI325BEGHNRA4PFOA8LrtflFkKJ2cc/CW3PZIgjUTvUx
-6PRYM3oOG3w2h+Wls3QVovWqbhxzr+RQk/zDs7EyR426S6rQ9i6fTphb8YC7IEFK
-nTD51WvWDBeS5OtZFpal1iHveYLJgoeuNoDxEG8CVYvyLcEMVlw=
-=Vik0
+iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmJkJAoACgkQsoi1X/+c
+IsGCUBAAl+q95fZbYNmxQWVR37DPr0HqsKZOEkNkfKguRRelPb7wIWfrlaDbnNLe
+Gmt/X7DeROmR7k3WQc5k5Kk9TyABnz904tiHCJYfrhKk7G042tljPRj59/MNo/vV
+Fl/muoUWQWD7QquxTFGilfKl4Peb3zx8N9hi/FcTdI88pdwuov/eAnAqi+d6JXI9
+u8RAod1Y3xcC/Us+sbGZ4btxXCkcZ5DnpePK8tms8ThvtiVsoK6bDcQc4Db8jbSS
+30K7kwlWSvDINKX+4frkFwsDSWzsL25YEdfeHXXqP3VWhbA2a7Ovb9KveKY2Ly7d
+/xHhYqv+cFmmYTGW3PlORhH3zIC+9uoZb8rz1qhT/THIeT8PoA44Oj65hjHeMbcs
+ufH7zlW3L3QLCkbKw3GUBuNB84BhxQ3b9rYywDBHnVc6U0OrBgj9I7sk5XELyiyy
+3m7tG/N61BiHhVV/XUK0AFsg1yGMN/qy5f+bqjYw7Exaoeqd5x9/rNqwmxf18uqp
+CRFsJz4+lqGzL+5mZ4sige7hJQgRoGbpMa5wkk6ZwRQAnKtSZZCwf40uoaDHMyhq
+kKPqTqiLKJDgQcw9ALzJ9JAN+TtA6e/8t/5Dxt8BQkHbv49aRMh1FpPJ4mtaHKil
+T96DybEvv7QX1UbQyOJOebx7JELl7Abjvc90e3Z88lReYQXqw6Q=
+=rml6
 -----END PGP SIGNATURE-----
 
---Kv6tUGJJ6rzKIW1c--
+--Fp+Cfkkmh+USsjTE--
