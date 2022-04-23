@@ -1,110 +1,80 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A9F2F25
-	for <regressions@lists.linux.dev>; Fri, 22 Apr 2022 20:09:39 +0000 (UTC)
-Received: by mail-pg1-f177.google.com with SMTP id bg9so8167045pgb.9
-        for <regressions@lists.linux.dev>; Fri, 22 Apr 2022 13:09:39 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F374915A4
+	for <regressions@lists.linux.dev>; Sat, 23 Apr 2022 01:03:21 +0000 (UTC)
+Received: by mail-lj1-f173.google.com with SMTP id q14so11501541ljc.12
+        for <regressions@lists.linux.dev>; Fri, 22 Apr 2022 18:03:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=A1ANqscgWrr+i9qXJ4NjdbCbnC9Em60ZXs/L6LLEDPQ=;
-        b=hee5401YfY3mM159bKwgJ4bIEqeQkj173uXYT7dPpJ5azX964g02koFtEcAuIfLTj+
-         rlpNWNBUKof8UwQvg817MhGdA8by3djJRqMt/pdn1mjkj/FmSb+irGhbmhWU0wc6tnCu
-         0Pf70dD6VTbb/cnJZGxrY7M6wH4w/6WjkeYsqAtKl9xDrlijhoquGWF+F4uhCxQk1Lw3
-         vfLCi8oqj72wZJN0S4ZzitmGgeBa/4r7zsSRYM5D6K5KmYuqJnuGTwFJxGeTQW7YE4rO
-         me/rRwHzVCHcoJppCgl5ncYeL2fKRs4DIST51lgeMzb51bDZKWngVFa9r78l1TrH00PT
-         kKeQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g096DpfSCcf8IWJKS1josNtXLu3tIDY7masJQNFWcAg=;
+        b=AQYaKU5/J5+aM5TlCj8JWxqEyNRrWADeSBitRwGal1ELDw+cu8iXPNVIYHG5rXsFKr
+         EttNL829nFI/wGAfiIXCY1eNMdjdRPK/3HU5lHecTvmamw0HZg8jKDTcyxWmvbvs+/HQ
+         Zc3NjzjDRQt7nWoj0trGeL7HrH1BccrnLvfSg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=A1ANqscgWrr+i9qXJ4NjdbCbnC9Em60ZXs/L6LLEDPQ=;
-        b=M+JwGpI6a6qGayQnyiXvs2yRNSCgHOi7eG3locv/Z2/Xg0wi3hhPkj+bJEpgqeENiL
-         Pswup/PRw32Y3CsC0/taQ4BDnTv9UOoS0W9gy17M1TvNADFHzYl0ujz+6zU+dsL8JGJF
-         YHDCh4gNYmFJAfwj2hnmaEhS9LrRsSGWvcHWboh4XAXPTQC3wtIsC9ob1RQvHfigkroe
-         ROBNoQo4v9aPLo3deRrZYCavblIertgEfAZsiPqdxVSOHf20zSvPQFyqYrd1P2AGcJS5
-         AGmY1HqJfMxkZK3SVXfAj+uq0iWS9SswYykQcwSIl4JlLXupv5GID0sLdhQbhHy/HMzp
-         wufg==
-X-Gm-Message-State: AOAM530XdhVTUiKPrpz4iRViRyvt/KKXrAPeKfhDCrFA1BLBfGzpnuyr
-	chb6qP5EK8LvM2qo36DLeQM=
-X-Google-Smtp-Source: ABdhPJx+WS6Nuywl3yCzbvZFN3i8d1cDPEY8/qA+T8UpuC+zaV8L0Hp+W3He9um9IFbfbECC1bs4XQ==
-X-Received: by 2002:a05:6a00:1307:b0:4b0:b1c:6fd9 with SMTP id j7-20020a056a00130700b004b00b1c6fd9mr6559976pfu.27.1650658179194;
-        Fri, 22 Apr 2022 13:09:39 -0700 (PDT)
-Received: from google.com ([2620:15c:211:201:2194:db4:85a8:b0df])
-        by smtp.gmail.com with ESMTPSA id i22-20020a17090a7e1600b001b917d4a1a6sm6789977pjl.2.2022.04.22.13.09.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Apr 2022 13:09:38 -0700 (PDT)
-Sender: Minchan Kim <minchan.kim@gmail.com>
-Date: Fri, 22 Apr 2022 13:09:36 -0700
-From: Minchan Kim <minchan@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Jirka Hladky <jhladky@redhat.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	regressions@lists.linux.dev,
-	Justin Forbes <jforbes@fedoraproject.org>,
-	Tejun Heo <tj@kernel.org>
-Subject: Re: PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" starting from 5.17 on
- dual socket Intel Xeon Gold servers
-Message-ID: <YmMLgHnxoTC1idCE@google.com>
-References: <YkTxox8ZQIDtojfU@google.com>
- <CAFxkdAq6r2WnwML-pPfdZiajaYZCEcUU3GrXW=+wsA7CxGnJdQ@mail.gmail.com>
- <CAE4VaGBchOMWeHQ8GKiGFv_aCaNGLEvSdLWXZTpE+qC=0bgM3A@mail.gmail.com>
- <YkY6W1NS+1RTw0VB@google.com>
- <CAE4VaGDAMZqjwumyvbityzEiK30=5a5vuDMjaS+UHM39R-oPRw@mail.gmail.com>
- <YkstxbC3OfzYnSRw@google.com>
- <CAE4VaGAQZcQzN8D+iwcBnP5vY=Ctmbh+oTikvONHir6JjTgpsw@mail.gmail.com>
- <YmGKrd1BR9HSEy6q@slm.duckdns.org>
- <YmLznjFdpblHzZiM@google.com>
- <56ac17fd-5f13-840c-09d8-03363af94520@leemhuis.info>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g096DpfSCcf8IWJKS1josNtXLu3tIDY7masJQNFWcAg=;
+        b=0dVcNzUH2jaMk0uDP9eEtKVSclcQ/Q+mxPHz1ZBLU7X/3hMhh36HFlIo3Tev45ialy
+         y2rRt6X8kK9/N3seBDQFE6agL4wxT92zprZbvqbvzRFVCAwML8dRXuU0BN7fhMgg2Esd
+         CFw9tCNv+EgxpAkxxTN4C11AMEWLnczcGflVQ5U95O5iSR1bJFELRyXd5/KcHb6dHx7x
+         iTYQ/DA3wUhaA+eZeqfLW5G1zQ7LHIbPbLBpRbTscZ/1DWVkllDMH8lxJ9bYbcvHdibC
+         w5/v3cxWf7cyQ0uIFv4poLt/9suWX2T1J5zOCAxSw0JKIHmuXfR/uome+Y7Br6SuUyr9
+         waug==
+X-Gm-Message-State: AOAM531h11ubpKyxjgYCxwF3JwhEVzUxoc6Co1JtjeZtDomxawMrf0cD
+	SivGf2MIxPisUsU4C53Ko+GLqq04F4hjsaxhZrk=
+X-Google-Smtp-Source: ABdhPJwqtydyQbHYkZy+W2mH+AjcPfJmfqoVo5bBA+C2lHYtp7u553h1wgeA9CcUxX/HjAI46lEbHg==
+X-Received: by 2002:a2e:92c9:0:b0:24d:b719:23bd with SMTP id k9-20020a2e92c9000000b0024db71923bdmr4264119ljh.304.1650675799741;
+        Fri, 22 Apr 2022 18:03:19 -0700 (PDT)
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
+        by smtp.gmail.com with ESMTPSA id x5-20020a0565123f8500b0045cb9e46b1csm409585lfa.268.2022.04.22.18.03.17
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Apr 2022 18:03:17 -0700 (PDT)
+Received: by mail-lj1-f176.google.com with SMTP id q14so11501458ljc.12
+        for <regressions@lists.linux.dev>; Fri, 22 Apr 2022 18:03:17 -0700 (PDT)
+X-Received: by 2002:a2e:9041:0:b0:24a:ce83:dcb4 with SMTP id
+ n1-20020a2e9041000000b0024ace83dcb4mr4454046ljg.291.1650675796759; Fri, 22
+ Apr 2022 18:03:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <56ac17fd-5f13-840c-09d8-03363af94520@leemhuis.info>
+References: <20220422131452.20757-1-mario.limonciello@amd.com>
+In-Reply-To: <20220422131452.20757-1-mario.limonciello@amd.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 22 Apr 2022 18:03:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wh-F2KtXkQueVJRNqWr7O737NzN=8mYA_r-h-16=VxLQA@mail.gmail.com>
+Message-ID: <CAHk-=wh-F2KtXkQueVJRNqWr7O737NzN=8mYA_r-h-16=VxLQA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/1] Fix regression in 5.18 for GPIO
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Natikar Basavaraj <Basavaraj.Natikar@amd.com>, Gong Richard <Richard.Gong@amd.com>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Thorsten Leemhuis <regressions@leemhuis.info>, 
+	Greg KH <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Shreeya Patel <shreeya.patel@collabora.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Apr 22, 2022 at 08:44:17PM +0200, Thorsten Leemhuis wrote:
-> On 22.04.22 20:27, Minchan Kim wrote:
-> > On Thu, Apr 21, 2022 at 06:47:41AM -1000, Tejun Heo wrote:
-> > [...]
-> 
-> Many thx for looking into this.
-> 
-> > Jirka, Could you test the patch? Once it's confirmed, I need to resend
-> > it with Ccing stable.
-> 
-> When you do so, could you please include a proper "Link:" tag pointing
-> to all reports of the regression, as explained in the Linux kernels
-> documentation (see 'Documentation/process/submitting-patches.rst' and
-> 'Documentation/process/5.Posting.rst'). E.g. in this case:
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=215696
-> Link:
-> https://lore.kernel.org/lkml/CAE4VaGDZr_4wzRn2___eDYRtmdPaGGJdzu_LCSkJYuY9BEO3cw@mail.gmail.com/
+On Fri, Apr 22, 2022 at 6:15 AM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> This patch is being sent directly to you because there has been
+> a regression in 5.18 that I identified and sent a fix up that has been
+> reviewed/tested/acked for nearly a week but the current subsystem
+> maintainer (Bartosz) hasn't picked it up to send to you.
 
-Sure. Will do that.
+Applied.
 
-> 
-> This concept is not new (Linus and quite a few other developers use them
-> like this for a long time), I just recently improved those documents to
-> clarify things, as my regression tracking efforts rely on this (and
-> there might be other people and software out there that does) -- that's
-> why it's making my work a lot harder if such tags are missing. :-/
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
-> 
-> > [...]
+I'm not sure the "cc: stable" makes much sense since the bug was
+introduced in this release, but I assume you added it because the
+problem commit was also marked for stable.
+
+The "Fixes:" tag should take care of it, but I left that cc:stable alone.
+
+           Linus
