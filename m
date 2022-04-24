@@ -1,60 +1,58 @@
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9113C2F2F
-	for <regressions@lists.linux.dev>; Sun, 24 Apr 2022 15:58:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3463D77
+	for <regressions@lists.linux.dev>; Sun, 24 Apr 2022 23:39:25 +0000 (UTC)
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id 669645C00AC;
-	Sun, 24 Apr 2022 11:58:12 -0400 (EDT)
+	by mailout.nyi.internal (Postfix) with ESMTP id 5E5D75C01A6;
+	Sun, 24 Apr 2022 19:39:24 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sun, 24 Apr 2022 11:58:12 -0400
+  by compute3.internal (MEProxy); Sun, 24 Apr 2022 19:39:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1650815892; x=
-	1650902292; bh=cEAURrI/DbqfdaG0MmrORHTjJszJibbIWpItKpjzfQ4=; b=f
-	NrnFdnq0PACm+IQ8PxrrOxEMucfnmLxoCPT34MT4+pdhxI+EniRHuk+hyiwqTPd9
-	OJ70nePx3HLR9yYrddOICpQG1bxb4eoQwrxxjuCQxlsvTBBSl/+1QaF5Ft1O4Dpw
-	11pdE6Kkcoe/wmRtPhuGVJynNOfoS2h9sUvIaOYnITpfmDVEHi0k5HcJCuFHFX6n
-	mnjmemJoOjA3xtuoBFNCRiGVSFxfsc49gtW0uUU4V4wVyYksgybSc+yern+r4w8H
-	Bed41yAnq+CQFSpQnK/mtmeL5GVJmuXt8QyWiAx8uGE59AUpgIJ58mZcug1SVZSp
-	o00rHSvmpX3AHcaV6bWCQ==
-X-ME-Sender: <xms:lHNlYh8CRRmqTEJNaZlZxKWVkr9m5IJnuVc25YqEhfNgE_4KwDlENg>
-    <xme:lHNlYlvd0-B874g5blupP765j13x5iRmWk09WYs_AwPZWndkQxg1u45vdtJH3-BCJ
-    uBkGisf1IEHbAg>
-X-ME-Received: <xmr:lHNlYvBZWQQG5YWz8PjnRNSzv_haHX0nQVj2pA8clt7PBPzCR3hwn1q1DEgQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrtdelgdeljecutefuodetggdotefrodftvf
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1650843564; x=
+	1650929964; bh=TnzC/xewfks6siQR2OzUMgonZrv7KZx+dVNe8LLuhCc=; b=L
+	M8JA2SwWTGr6LGXrFQ9NYpfhYDDamqXrrClVeoNa5w4cJqDfi634PGAcQrUNdW7z
+	1Xv4LmgyopQcr/0FPOBZg19l2O7qL8MPYmfDGUa+GuavZ6Twzn680cM9ae1BmqmI
+	TcJ4FyeCB5PTy3kL/zMECnLPhPIAWQTwdyEwy2qnd2g51krPQBpAWnhvZtOucGIn
+	Cm1UHBAelbL/XqllwOnCKG1XqPkqMlilaHsmSKGWd9ffLqS6+YVHnN5NFxFMr1lE
+	2AepO63Bl4/djYiwobt7jPVVxmm2gfmrR5z5+1tyeTpWax/7L+jvE6mqr4x4V58x
+	3DhQEolRIs7VU+eNJVsmA==
+X-ME-Sender: <xms:rN9lYipgpaU3-5aeL4nfjUGXztenvPV1JL5sklRhy5Wobr9xglrqTg>
+    <xme:rN9lYgrKfXajtuHr5bbfZVS9Gt03q3Y0iWuOup74dQovq2iC4ZSWOqjKPDg6K8ddX
+    w2uYtWlJc1IlrI>
+X-ME-Received: <xmr:rN9lYnNarFv8ko65osE2R2Y0Md0VYZrkWJGtuaTQhSbU_MVcblZVoklxrXF3>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedruddtgddviecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpeffhffvvefukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeffvghmihcu
     ofgrrhhivgcuqfgsvghnohhurhcuoeguvghmihesihhnvhhishhisghlvghthhhinhhgsh
-    hlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpedvjeetgeekhfetudfhgfetffegfffg
-    uddvgffhffeifeeikeektdehgeetheffleenucevlhhushhtvghrufhiiigvpedtnecurf
-    grrhgrmhepmhgrihhlfhhrohhmpeguvghmihesihhnvhhishhisghlvghthhhinhhgshhl
-    rggsrdgtohhm
-X-ME-Proxy: <xmx:lHNlYldX_G7xancctIpSThaGe0A0Q1SoXdMujQjoumAkvicLNineJA>
-    <xmx:lHNlYmMeYSp-u6s3fNMx2p0Qx38uJlaeIgqF9v85bsQ70mmlhDxQOA>
-    <xmx:lHNlYnl-0ao1YYsKTJr6o4pTmJcCiQ6TVdvdeIqKtwMhBZpSUbOYUQ>
-    <xmx:lHNlYt3Y4mErSMgTkwiBza1_arPfBNcNfL77ayjo-pHLNgmTZZgd8Q>
+    hlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpeeutdehhfdtvdfffeejjedvhedvjeei
+    heffheekkeehgeelueelveeludetheetteenucffohhmrghinhepghhithhhuhgsrdgtoh
+    hmnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepuggv
+    mhhisehinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
+X-ME-Proxy: <xmx:rN9lYh5BjUKBmJ_-sdFjgL38sJA8YNbqcRYrj5PJZp-0M_DR7n2Vog>
+    <xmx:rN9lYh5ykYYP69Gb6K4gDzvOZkKrIc8vkuHQIT7Mkr5Bbdmcdrw5RA>
+    <xmx:rN9lYhgnA7HeIp14WCiix89GC4o4ZK9PA0CBWPsusaeuzoqEKS3KIg>
+    <xmx:rN9lYk0vpV53s2kpG3HYjfzH4jWpZvD26LuUvwefBndD7ScogIX7XA>
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 24 Apr 2022 11:58:11 -0400 (EDT)
-Date: Sun, 24 Apr 2022 11:58:06 -0400
+ 24 Apr 2022 19:39:23 -0400 (EDT)
+Date: Sun, 24 Apr 2022 19:38:47 -0400
 From: Demi Marie Obenour <demi@invisiblethingslab.com>
 To: Thorsten Leemhuis <regressions@leemhuis.info>,
 	Greg KH <gregkh@linuxfoundation.org>
 Cc: amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>
 Subject: Re: [REGRESSION] AMD GPU regression in 5.16.18..5.17.4
-Message-ID: <YmVzks1LR88douen@itl-email>
+Message-ID: <YmXfqrktdufyYC4r@itl-email>
 References: <YmQi7ajZpZ4W7BJL@itl-email>
  <YmQkCXZEqp6TKrhJ@itl-email>
  <YmTqYkGEqiz1o2o6@kroah.com>
  <e1950610-ba09-7c42-4a1a-152ad41015b5@leemhuis.info>
- <YmVyQJlV4Bs827V5@itl-email>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -62,57 +60,84 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Hkd2LlQVfWnzONvX"
+	protocol="application/pgp-signature"; boundary="IWeqqwZPHTdMGABi"
 Content-Disposition: inline
-In-Reply-To: <YmVyQJlV4Bs827V5@itl-email>
+In-Reply-To: <e1950610-ba09-7c42-4a1a-152ad41015b5@leemhuis.info>
 
 
---Hkd2LlQVfWnzONvX
+--IWeqqwZPHTdMGABi
 Content-Type: text/plain; protected-headers=v1; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 24 Apr 2022 11:58:06 -0400
+Date: Sun, 24 Apr 2022 19:38:47 -0400
 From: Demi Marie Obenour <demi@invisiblethingslab.com>
 To: Thorsten Leemhuis <regressions@leemhuis.info>,
 	Greg KH <gregkh@linuxfoundation.org>
 Cc: amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev,
 	Alex Deucher <alexander.deucher@amd.com>,
 	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
-	"Pan, Xinhui" <Xinhui.Pan@amd.com>,
-	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+	"Pan, Xinhui" <Xinhui.Pan@amd.com>
 Subject: Re: [REGRESSION] AMD GPU regression in 5.16.18..5.17.4
 
-On Sun, Apr 24, 2022 at 11:52:05AM -0400, Demi Marie Obenour wrote:
-> On Sun, Apr 24, 2022 at 11:02:43AM +0200, Thorsten Leemhuis wrote:
-> > CCing the amdgpu maintainers
+On Sun, Apr 24, 2022 at 11:02:43AM +0200, Thorsten Leemhuis wrote:
+> CCing the amdgpu maintainers
 >=20
-> Also CCing Marek Marczykowski-G=C3=B3recki as Qubes OS Project Lead.
+> On 24.04.22 08:12, Greg KH wrote:
+> > On Sat, Apr 23, 2022 at 12:06:33PM -0400, Demi Marie Obenour wrote:
+> >> Two Qubes OS users reported that their AMD GPU systems did not work on
+> >> 5.17.4, while 5.16.18 worked fine.  Details can be found on
+> >> https://github.com/QubesOS/qubes-issues/issues/7462.  The initial repo=
+rt
+> >> listed the GPU as =E2=80=9CAdvanced Micro Devices, Inc. [AMD/ATI] Reno=
+ir
+> >> [1002:1636} (rev d3) (prog-if 00 [VGA controller])=E2=80=9D and the CP=
+U as
+> >> =E2=80=9CAMD Ryzen 5 PRO 4650U with Radeon Graphics=E2=80=9D.
+> >>
+> >> #regzbot introduced: v5.16.18..v5.17.4
+> >=20
+> > That's a big range, can you use 'git bisect' to track it down?
+>=20
+> FWIW, in another mail in this thread and
+> https://github.com/QubesOS/qubes-issues/issues/7462#issuecomment-11076811=
+26
+> it was clarified that the problem was introduced between 5.17.3 and
+> 5.17.4, where a few amdgpu changes were applied. Maybe they are the reaso=
+n.
+>=20
+> Anyway: Yes, as Gregkh said, a bisection really would help. But maybe
+> the amdgfx developers might already have an idea what might be wrong
+> here? The QubesOS ticket linked above has some more details.
 
-For real this time (whoops!).
+The reporter was able to bisect the regression.  I am not surprised that
+this commit caused problems for Qubes OS, as dom0 in Qubes OS is
+technically a guest of Xen.
+
+#regzbot ^introduced: b818a5d374542ccec73dcfe578a081574029820e
 
 --=20
 Sincerely,
 Demi Marie Obenour (she/her/hers)
 Invisible Things Lab
 
---Hkd2LlQVfWnzONvX
+--IWeqqwZPHTdMGABi
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmJlc5EACgkQsoi1X/+c
-IsHHJQ/9HpuBw+4Rd3Erqlc+hY9NQGtLql81cwqIDIYM3t3nsD2Z/JSLPJz63f9T
-pHU6l6TO2yc5q+5SvQWfTCWwrNhSVYYlC8qg5qrYumR8iGgBLi1Deaj5JcW4rPb6
-VPBgaXMCpB5/rYkoGQGHm25rfldEfp5fX48esWJQUCij5UII8rHxgfIBsA8BhS2N
-N6SKGvzKVJdRpwB/771yEJQly9SPs6i2lBTLDNiUXkxkQvBNxHz0B9NR7X6hBtHh
-y/LmbTC014bYXRmo1/o5wY1Ne7kTgX5HtlXaKuhOp549dEaKi6TrrPr0GVXnOiYV
-uLkGmZMUd/wakHvPMBt2VrH+sxt9/TsnAIy7LYlDE0ok+u1Jkoa2Mz1q/7GWy49o
-7GbOnzaIGND1UWVp3dqj7Tz5CvsNj808uVzEo2g9RSx0qjus99wWGIe22lKuFy+B
-jgVZzIbTm1okE/+dwz+0q/nRaB43sbDmoCnvbPL7UOf0XBrQYKA5jc3/gPTtJA2B
-kabDg31PCcwjy+kHBru2Vyqy6YbU/j6RbdpSW9+8ShYjkCq7+WUcAUT/wMQLaoz1
-aL9RYqBRNiMkJmdVQ9IhDU62c1Bzis7ZTsfVoRf7qtuOKL4mQ9tWpz6mpK75vveL
-2aRRnNMN3P+BUG5AfHQsk59DVDygi9i+VfJNlSQ8vScRx6eiDFY=
-=mUgq
+iQIzBAEBCAAdFiEEdodNnxM2uiJZBxxxsoi1X/+cIsEFAmJl36kACgkQsoi1X/+c
+IsEPKw//ZpF8oBPSG4UWxpHdK0OrWQrXuAVsZcZ6aE/zFMLaavcJo1BfUXbgEJ3Z
++10tyxLR0dllcWNPREcS90TJb2lUGny2fJ1C1NLCgH0WA4hocYUCpUGHaoE5g2/n
+LyiXJVN0XV3Hbx7A4ZgBj5A9wnL5ybKJwGCVQu5XFBISPu7XSLhL6JQmsy97Vlxu
+qrbCEbTLvOPnyp5r1ONOh2GrGkfh13s2ZSjh0HDZGWKIv/Hs4if2q2egGxiWVlHW
+rx/e4RrBtommerw1GDUKmDP69j5GSU7QmwM5UEIGPZOsbfOlEEayc4zLE9Ha7WYW
+0q4DgAHvAmUDUdBUeaiRCEMbmrDytHa6wqrzpPitW/rLkL5exA3eM4NiKS8J4oaD
+5hOjgI9KkgE0y0NMCj/+QLBUkwWz7duIrdhkJyzYTUvd7gk9guPgTn2a9zbL/H7J
+RnOeU5iqWmYsk50TS08Rq3RURWnlRBmOlsd0V0Yoo392oAhMV/rz1TIxx+PgyUE/
+YAmiUBZtnUnP8HR05ti6G9aYJaMtnydQB3YDANGp44535AkRGeB+surqT0aMiHfk
+cuydijqpnlBJTznvFEn8ZWTpXvgCIhdnA3XoRQbhGzezlVkUfOxaMgpwHiXmKuS7
+oKI3Eis/Ljz2sgqRPdYJjSPkrTT+SdLS/IusoI/lN5oed3hescc=
+=zcu0
 -----END PGP SIGNATURE-----
 
---Hkd2LlQVfWnzONvX--
+--IWeqqwZPHTdMGABi--
