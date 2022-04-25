@@ -1,175 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426E57E
-	for <regressions@lists.linux.dev>; Mon, 25 Apr 2022 10:38:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 970C1C385A4;
-	Mon, 25 Apr 2022 10:38:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1650883137;
-	bh=V8pEoKpMeSaB5AoEEPcWCd76H1dppsLpNHGsBAVzyEU=;
-	h=Subject:To:Cc:From:Date:From;
-	b=zjLsHW+x8yNdWh6MT1w7Svqn2/0yCYMv3Sp15DIfZlwEvVRb6w7GknI5ykUxudFLd
-	 GI/FFKjTlmzraY6Zha/CN6b4Fw2zHqECptkx4OvU4KIOTLvFqqNqP/tSDCs7bb0xxd
-	 ff8wGLuDYPC7+s5WrfhQ4EBtIE8BWo9uDl60q3iE=
-Subject: Patch "fs: fix acl translation" has been added to the 5.17-stable tree
-To: brauner@kernel.org,gregkh@linuxfoundation.org,hch@lst.de,regressions@lists.linux.dev,sforshee@digitalocean.com,torvalds@linux-foundation.org
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Mon, 25 Apr 2022 12:38:17 +0200
-Message-ID: <165088309731238@kroah.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724E92571
+	for <regressions@lists.linux.dev>; Mon, 25 Apr 2022 18:41:26 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id i27so31338805ejd.9
+        for <regressions@lists.linux.dev>; Mon, 25 Apr 2022 11:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mya3nkIwUh+TIu4djYFcQK6BbUW1zaOYt4akasWqvFg=;
+        b=B9KKXsLTpzuVV8sBlKnNNvWObeafflqmJvR/smeZgdhpHe7uFZ496oEr1jZfzXMymA
+         pVVpZlQzDspkhMyYyU2BEn3cLLzy+4K1AJIP8KNuHHK2F4+OXzHT0Lx4MAnyADwSC2fz
+         C3xXlkkJaCxNbA2z0qwrIsYi0VRxXQVfQNb4GKBP2wWkiow6GzhhujMirqo82yf2GMd/
+         sS9eWHmKe84vW/wgDaguhMBHbRRg6rKcnOyzyk/LMSi+TOaBqwwqq8KAdCli/3p2a2Tp
+         LEvpc51OZYXOjxQlQEjLMcq9Lpjbv+8TlCYiyAzWWCKDPD+dZI8GzuCtdxJwpd8joV6j
+         Wcaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mya3nkIwUh+TIu4djYFcQK6BbUW1zaOYt4akasWqvFg=;
+        b=H3E7ZjhbS0lTf0OBL0XG8zDVHYF2Z2osZK5nh6tXXPp4xWl6ES3DveiVdzNTu80Ibg
+         4HJVbDG1fseESG2I+uFygQ+DwE/H7Lrh/m7fgPAfwYNPDCUNX6mEiZnAHH5+l+omQy6T
+         tAzEr6QHYvoRVO6o/2slxn2iwpjhNFQWugnJwjscu+/ekjZM7VMmo06Efw8iGPV6plKL
+         l2Bbsu6cRWfJTiCFMxKsPQY6Hh6ht3DtqxwTkDTGL9kvKjJ9rBAU28clV+wg+M5qqgNX
+         O5uOiMFDaS87rX+2mSS6+vWkCVsetdDoAjle2rleoSzSlI8/tr3L1nNTE+aKiNghKSdG
+         I+Lw==
+X-Gm-Message-State: AOAM53003OoHYV9rSGjOPO1g4RuT2Bj/Zyoq/dAE7FI9br8ybEnGrdpB
+	eKOCKYM2ch4OrhexLMcNd2Vr3mZqQQukIW1p85lgFQ==
+X-Google-Smtp-Source: ABdhPJxxi69r7JPs9NcrUSZVx/mya0DVWjV7GHPAed3DI2n08j+lZIdXYcnh6dMilSxNEph0K4PXbEgKFunxQP6p+cs=
+X-Received: by 2002:a17:907:6d94:b0:6e8:c309:9923 with SMTP id
+ sb20-20020a1709076d9400b006e8c3099923mr17335243ejc.101.1650912084719; Mon, 25
+ Apr 2022 11:41:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+References: <20220422131452.20757-1-mario.limonciello@amd.com>
+In-Reply-To: <20220422131452.20757-1-mario.limonciello@amd.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 25 Apr 2022 20:41:14 +0200
+Message-ID: <CAMRc=Mf7FVN4QeAEdap_JzKmTy6i0A=BbcCZtCCQhzocg4PDfg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/1] Fix regression in 5.18 for GPIO
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
+	Natikar Basavaraj <Basavaraj.Natikar@amd.com>, Gong Richard <Richard.Gong@amd.com>, 
+	regressions@lists.linux.dev, Thorsten Leemhuis <regressions@leemhuis.info>, 
+	Greg KH <gregkh@linuxfoundation.org>, stable <stable@vger.kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Shreeya Patel <shreeya.patel@collabora.com>, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Fri, Apr 22, 2022 at 3:15 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> Linus,
+>
+> This patch is being sent directly to you because there has been
+> a regression in 5.18 that I identified and sent a fix up that has been
+> reviewed/tested/acked for nearly a week but the current subsystem
+> maintainer (Bartosz) hasn't picked it up to send to you.
+>
 
-This is a note to let you know that I've just added the patch titled
+Hi Mario!
 
-    fs: fix acl translation
+I don't have any previous submission in my inbox. Are you sure to have
+used my current address (brgl@bgdev.pl)?
 
-to the 5.17-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+Bart
 
-The filename of the patch is:
-     fs-fix-acl-translation.patch
-and it can be found in the queue-5.17 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From 705191b03d507744c7e097f78d583621c14988ac Mon Sep 17 00:00:00 2001
-From: Christian Brauner <brauner@kernel.org>
-Date: Tue, 19 Apr 2022 15:14:23 +0200
-Subject: fs: fix acl translation
-
-From: Christian Brauner <brauner@kernel.org>
-
-commit 705191b03d507744c7e097f78d583621c14988ac upstream.
-
-Last cycle we extended the idmapped mounts infrastructure to support
-idmapped mounts of idmapped filesystems (No such filesystem yet exist.).
-Since then, the meaning of an idmapped mount is a mount whose idmapping
-is different from the filesystems idmapping.
-
-While doing that work we missed to adapt the acl translation helpers.
-They still assume that checking for the identity mapping is enough.  But
-they need to use the no_idmapping() helper instead.
-
-Note, POSIX ACLs are always translated right at the userspace-kernel
-boundary using the caller's current idmapping and the initial idmapping.
-The order depends on whether we're coming from or going to userspace.
-The filesystem's idmapping doesn't matter at the border.
-
-Consequently, if a non-idmapped mount is passed we need to make sure to
-always pass the initial idmapping as the mount's idmapping and not the
-filesystem idmapping.  Since it's irrelevant here it would yield invalid
-ids and prevent setting acls for filesystems that are mountable in a
-userns and support posix acls (tmpfs and fuse).
-
-I verified the regression reported in [1] and verified that this patch
-fixes it.  A regression test will be added to xfstests in parallel.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=215849 [1]
-Fixes: bd303368b776 ("fs: support mapped mounts of mapped filesystems")
-Cc: Seth Forshee <sforshee@digitalocean.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: <stable@vger.kernel.org> # 5.17
-Cc: <regressions@lists.linux.dev>
-Signed-off-by: Christian Brauner (Microsoft) <brauner@kernel.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/posix_acl.c                  |   10 ++++++++++
- fs/xattr.c                      |    6 ++++--
- include/linux/posix_acl_xattr.h |    4 ++++
- 3 files changed, 18 insertions(+), 2 deletions(-)
-
---- a/fs/posix_acl.c
-+++ b/fs/posix_acl.c
-@@ -759,9 +759,14 @@ static void posix_acl_fix_xattr_userns(
- }
- 
- void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
-+				   struct inode *inode,
- 				   void *value, size_t size)
- {
- 	struct user_namespace *user_ns = current_user_ns();
-+
-+	/* Leave ids untouched on non-idmapped mounts. */
-+	if (no_idmapping(mnt_userns, i_user_ns(inode)))
-+		mnt_userns = &init_user_ns;
- 	if ((user_ns == &init_user_ns) && (mnt_userns == &init_user_ns))
- 		return;
- 	posix_acl_fix_xattr_userns(&init_user_ns, user_ns, mnt_userns, value,
-@@ -769,9 +774,14 @@ void posix_acl_fix_xattr_from_user(struc
- }
- 
- void posix_acl_fix_xattr_to_user(struct user_namespace *mnt_userns,
-+				 struct inode *inode,
- 				 void *value, size_t size)
- {
- 	struct user_namespace *user_ns = current_user_ns();
-+
-+	/* Leave ids untouched on non-idmapped mounts. */
-+	if (no_idmapping(mnt_userns, i_user_ns(inode)))
-+		mnt_userns = &init_user_ns;
- 	if ((user_ns == &init_user_ns) && (mnt_userns == &init_user_ns))
- 		return;
- 	posix_acl_fix_xattr_userns(user_ns, &init_user_ns, mnt_userns, value,
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -569,7 +569,8 @@ setxattr(struct user_namespace *mnt_user
- 		}
- 		if ((strcmp(kname, XATTR_NAME_POSIX_ACL_ACCESS) == 0) ||
- 		    (strcmp(kname, XATTR_NAME_POSIX_ACL_DEFAULT) == 0))
--			posix_acl_fix_xattr_from_user(mnt_userns, kvalue, size);
-+			posix_acl_fix_xattr_from_user(mnt_userns, d_inode(d),
-+						      kvalue, size);
- 	}
- 
- 	error = vfs_setxattr(mnt_userns, d, kname, kvalue, size, flags);
-@@ -667,7 +668,8 @@ getxattr(struct user_namespace *mnt_user
- 	if (error > 0) {
- 		if ((strcmp(kname, XATTR_NAME_POSIX_ACL_ACCESS) == 0) ||
- 		    (strcmp(kname, XATTR_NAME_POSIX_ACL_DEFAULT) == 0))
--			posix_acl_fix_xattr_to_user(mnt_userns, kvalue, error);
-+			posix_acl_fix_xattr_to_user(mnt_userns, d_inode(d),
-+						    kvalue, error);
- 		if (size && copy_to_user(value, kvalue, error))
- 			error = -EFAULT;
- 	} else if (error == -ERANGE && size >= XATTR_SIZE_MAX) {
---- a/include/linux/posix_acl_xattr.h
-+++ b/include/linux/posix_acl_xattr.h
-@@ -34,15 +34,19 @@ posix_acl_xattr_count(size_t size)
- 
- #ifdef CONFIG_FS_POSIX_ACL
- void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
-+				   struct inode *inode,
- 				   void *value, size_t size);
- void posix_acl_fix_xattr_to_user(struct user_namespace *mnt_userns,
-+				   struct inode *inode,
- 				 void *value, size_t size);
- #else
- static inline void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
-+						 struct inode *inode,
- 						 void *value, size_t size)
- {
- }
- static inline void posix_acl_fix_xattr_to_user(struct user_namespace *mnt_userns,
-+					       struct inode *inode,
- 					       void *value, size_t size)
- {
- }
-
-
-Patches currently in stable-queue which might be from brauner@kernel.org are
-
-queue-5.17/fs-fix-acl-translation.patch
+> It's a severe problem; anyone who hits it:
+> 1) Power button doesn't work anymore
+> 2) Can't resume their laptop from S3 or s2idle
+>
+> Because the original patch was cc stable@, it landed in stable releases
+> and has been breaking people left and right as distros track the stable
+> channels.  The patch is well tested. Would you please consider to pick
+> this up directly to fix that regression?
+>
+> Thanks,
+>
+> Mario Limonciello (1):
+>   gpio: Request interrupts after IRQ is initialized
+>
+>  drivers/gpio/gpiolib.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> --
+> 2.34.1
+>
