@@ -1,90 +1,175 @@
-Received: from mail.sh-group.fi (business-c25921-108.syi.inet.fi [194.89.33.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74DA7A
-	for <regressions@lists.linux.dev>; Mon, 25 Apr 2022 03:21:19 +0000 (UTC)
-Received: by mail.sh-group.fi (Postfix)
-	id BA4BC16411AA; Mon, 25 Apr 2022 03:12:37 +0000 (UTC)
-Date: Mon, 25 Apr 2022 03:12:37 +0000 (UTC)
-From: MAILER-DAEMON@mail.sh-group.fi (Mail Delivery System)
-Subject: Undelivered Mail Returned to Sender
-To: regressions@lists.linux.dev
-Auto-Submitted: auto-replied
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426E57E
+	for <regressions@lists.linux.dev>; Mon, 25 Apr 2022 10:38:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 970C1C385A4;
+	Mon, 25 Apr 2022 10:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1650883137;
+	bh=V8pEoKpMeSaB5AoEEPcWCd76H1dppsLpNHGsBAVzyEU=;
+	h=Subject:To:Cc:From:Date:From;
+	b=zjLsHW+x8yNdWh6MT1w7Svqn2/0yCYMv3Sp15DIfZlwEvVRb6w7GknI5ykUxudFLd
+	 GI/FFKjTlmzraY6Zha/CN6b4Fw2zHqECptkx4OvU4KIOTLvFqqNqP/tSDCs7bb0xxd
+	 ff8wGLuDYPC7+s5WrfhQ4EBtIE8BWo9uDl60q3iE=
+Subject: Patch "fs: fix acl translation" has been added to the 5.17-stable tree
+To: brauner@kernel.org,gregkh@linuxfoundation.org,hch@lst.de,regressions@lists.linux.dev,sforshee@digitalocean.com,torvalds@linux-foundation.org
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Mon, 25 Apr 2022 12:38:17 +0200
+Message-ID: <165088309731238@kroah.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/report; report-type=delivery-status;
-	boundary="8C0A31640727.1650856357/mail.sh-group.fi"
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-Message-Id: <20220425031237.BA4BC16411AA@mail.sh-group.fi>
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-This is a MIME-encapsulated message.
 
---8C0A31640727.1650856357/mail.sh-group.fi
-Content-Description: Notification
-Content-Type: text/plain; charset=us-ascii
+This is a note to let you know that I've just added the patch titled
 
-This is the mail system at host mail.sh-group.fi.
+    fs: fix acl translation
 
-I'm sorry to have to inform you that your message could not
-be delivered to one or more recipients. It's attached below.
+to the 5.17-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
-For further assistance, please send mail to postmaster.
+The filename of the patch is:
+     fs-fix-acl-translation.patch
+and it can be found in the queue-5.17 subdirectory.
 
-If you do so, please include this problem report. You can
-delete your own text from the attached returned message.
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
 
-                   The mail system
 
-<kevin@tietokonekauppa.fi>: user unknown
+From 705191b03d507744c7e097f78d583621c14988ac Mon Sep 17 00:00:00 2001
+From: Christian Brauner <brauner@kernel.org>
+Date: Tue, 19 Apr 2022 15:14:23 +0200
+Subject: fs: fix acl translation
 
---8C0A31640727.1650856357/mail.sh-group.fi
-Content-Description: Delivery report
-Content-Type: message/delivery-status
+From: Christian Brauner <brauner@kernel.org>
 
-Reporting-MTA: dns; mail.sh-group.fi
-X-Postfix-Queue-ID: 8C0A31640727
-X-Postfix-Sender: rfc822; regressions@lists.linux.dev
-Arrival-Date: Mon, 25 Apr 2022 03:12:37 +0000 (UTC)
+commit 705191b03d507744c7e097f78d583621c14988ac upstream.
 
-Final-Recipient: rfc822; kevin@tietokonekauppa.fi
-Original-Recipient: rfc822;kevin@tietokonekauppa.fi
-Action: failed
-Status: 5.1.1
-Diagnostic-Code: x-unix; user unknown
+Last cycle we extended the idmapped mounts infrastructure to support
+idmapped mounts of idmapped filesystems (No such filesystem yet exist.).
+Since then, the meaning of an idmapped mount is a mount whose idmapping
+is different from the filesystems idmapping.
 
---8C0A31640727.1650856357/mail.sh-group.fi
-Content-Description: Undelivered Message Headers
-Content-Type: text/rfc822-headers
-Content-Transfer-Encoding: 8bit
+While doing that work we missed to adapt the acl translation helpers.
+They still assume that checking for the identity mapping is enough.  But
+they need to use the no_idmapping() helper instead.
 
-Return-Path: <regressions@lists.linux.dev>
-Received: from mail.sh-group.fi (localhost [127.0.0.1])
-	by mail.sh-group.fi (Postfix) with ESMTP id 8C0A31640727
-	for <kevin@tietokonekauppa.fi>; Mon, 25 Apr 2022 06:12:37 +0300 (EEST)
-Received: by mail.sh-group.fi (Postfix, from userid 1001)
-	id 71FAF16411AA; Mon, 25 Apr 2022 03:12:37 +0000 (UTC)
-Received: from localhost by mail.sh-group.fi
-	with SpamAssassin (version 3.4.2);
-	Mon, 25 Apr 2022 06:12:37 +0300
-From: "v11tk" <regressions@lists.linux.dev>
-To: "kevin" <kevin@tietokonekauppa.fi>
-Subject: *****SPAM***** =?UTF-8?B?6L2s5Y+R77yaa2V2aW5AdGlldG9rb25la2F1cHBhLmZp?=
-Date: Mon, 25 Apr 2022 11:12:34 +0800
-Message-Id: <202204251112212569565@lists.linux.dev>
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on mail.sh-group.fi
-X-Spam-Flag: YES
-X-Spam-Level: *********
-X-Spam-Status: Yes, score=9.6 required=5.0 tests=BAYES_50,
-	FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,HTML_IMAGE_ONLY_04,
-	HTML_MESSAGE,RCVD_IN_PBL,RCVD_IN_XBL,RDNS_NONE,SPF_HELO_SOFTFAIL,
-	T_OBFU_JPG_ATTACH,T_REMOTE_IMAGE autolearn=no autolearn_force=no
-	version=3.4.2
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="----------=_626611A5.1AAB7578"
-X-Virus-Scanned: ClamAV using ClamSMTP
+Note, POSIX ACLs are always translated right at the userspace-kernel
+boundary using the caller's current idmapping and the initial idmapping.
+The order depends on whether we're coming from or going to userspace.
+The filesystem's idmapping doesn't matter at the border.
 
---8C0A31640727.1650856357/mail.sh-group.fi--
+Consequently, if a non-idmapped mount is passed we need to make sure to
+always pass the initial idmapping as the mount's idmapping and not the
+filesystem idmapping.  Since it's irrelevant here it would yield invalid
+ids and prevent setting acls for filesystems that are mountable in a
+userns and support posix acls (tmpfs and fuse).
+
+I verified the regression reported in [1] and verified that this patch
+fixes it.  A regression test will be added to xfstests in parallel.
+
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=215849 [1]
+Fixes: bd303368b776 ("fs: support mapped mounts of mapped filesystems")
+Cc: Seth Forshee <sforshee@digitalocean.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: <stable@vger.kernel.org> # 5.17
+Cc: <regressions@lists.linux.dev>
+Signed-off-by: Christian Brauner (Microsoft) <brauner@kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ fs/posix_acl.c                  |   10 ++++++++++
+ fs/xattr.c                      |    6 ++++--
+ include/linux/posix_acl_xattr.h |    4 ++++
+ 3 files changed, 18 insertions(+), 2 deletions(-)
+
+--- a/fs/posix_acl.c
++++ b/fs/posix_acl.c
+@@ -759,9 +759,14 @@ static void posix_acl_fix_xattr_userns(
+ }
+ 
+ void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
++				   struct inode *inode,
+ 				   void *value, size_t size)
+ {
+ 	struct user_namespace *user_ns = current_user_ns();
++
++	/* Leave ids untouched on non-idmapped mounts. */
++	if (no_idmapping(mnt_userns, i_user_ns(inode)))
++		mnt_userns = &init_user_ns;
+ 	if ((user_ns == &init_user_ns) && (mnt_userns == &init_user_ns))
+ 		return;
+ 	posix_acl_fix_xattr_userns(&init_user_ns, user_ns, mnt_userns, value,
+@@ -769,9 +774,14 @@ void posix_acl_fix_xattr_from_user(struc
+ }
+ 
+ void posix_acl_fix_xattr_to_user(struct user_namespace *mnt_userns,
++				 struct inode *inode,
+ 				 void *value, size_t size)
+ {
+ 	struct user_namespace *user_ns = current_user_ns();
++
++	/* Leave ids untouched on non-idmapped mounts. */
++	if (no_idmapping(mnt_userns, i_user_ns(inode)))
++		mnt_userns = &init_user_ns;
+ 	if ((user_ns == &init_user_ns) && (mnt_userns == &init_user_ns))
+ 		return;
+ 	posix_acl_fix_xattr_userns(user_ns, &init_user_ns, mnt_userns, value,
+--- a/fs/xattr.c
++++ b/fs/xattr.c
+@@ -569,7 +569,8 @@ setxattr(struct user_namespace *mnt_user
+ 		}
+ 		if ((strcmp(kname, XATTR_NAME_POSIX_ACL_ACCESS) == 0) ||
+ 		    (strcmp(kname, XATTR_NAME_POSIX_ACL_DEFAULT) == 0))
+-			posix_acl_fix_xattr_from_user(mnt_userns, kvalue, size);
++			posix_acl_fix_xattr_from_user(mnt_userns, d_inode(d),
++						      kvalue, size);
+ 	}
+ 
+ 	error = vfs_setxattr(mnt_userns, d, kname, kvalue, size, flags);
+@@ -667,7 +668,8 @@ getxattr(struct user_namespace *mnt_user
+ 	if (error > 0) {
+ 		if ((strcmp(kname, XATTR_NAME_POSIX_ACL_ACCESS) == 0) ||
+ 		    (strcmp(kname, XATTR_NAME_POSIX_ACL_DEFAULT) == 0))
+-			posix_acl_fix_xattr_to_user(mnt_userns, kvalue, error);
++			posix_acl_fix_xattr_to_user(mnt_userns, d_inode(d),
++						    kvalue, error);
+ 		if (size && copy_to_user(value, kvalue, error))
+ 			error = -EFAULT;
+ 	} else if (error == -ERANGE && size >= XATTR_SIZE_MAX) {
+--- a/include/linux/posix_acl_xattr.h
++++ b/include/linux/posix_acl_xattr.h
+@@ -34,15 +34,19 @@ posix_acl_xattr_count(size_t size)
+ 
+ #ifdef CONFIG_FS_POSIX_ACL
+ void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
++				   struct inode *inode,
+ 				   void *value, size_t size);
+ void posix_acl_fix_xattr_to_user(struct user_namespace *mnt_userns,
++				   struct inode *inode,
+ 				 void *value, size_t size);
+ #else
+ static inline void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
++						 struct inode *inode,
+ 						 void *value, size_t size)
+ {
+ }
+ static inline void posix_acl_fix_xattr_to_user(struct user_namespace *mnt_userns,
++					       struct inode *inode,
+ 					       void *value, size_t size)
+ {
+ }
+
+
+Patches currently in stable-queue which might be from brauner@kernel.org are
+
+queue-5.17/fs-fix-acl-translation.patch
