@@ -1,159 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BB33363
-	for <regressions@lists.linux.dev>; Tue, 26 Apr 2022 08:47:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9384C385A0;
-	Tue, 26 Apr 2022 08:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75607625
+	for <regressions@lists.linux.dev>; Tue, 26 Apr 2022 09:43:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 605A7C385A4;
+	Tue, 26 Apr 2022 09:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1650962861;
-	bh=yij2d1Ux7ctNvj7P7J9HDGOnvtH6jjc+nI7oka++9FQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=xsrD4euY7v+y4w5W0N3BR2eTFTPkp/G+emBM/GpECuDFv/wSKnK7nPFUxunMUN896
-	 IgujwGhRiiB+6I2wtoyVaG97h/VfuY5gEouShsnoOn2OX97rKhaQd+OjFrc0S+ne4b
-	 JnGzCwyqgYRgGB4eMiOr0SC/ouWR1wmYVoU7NLXg=
+	s=korg; t=1650966223;
+	bh=hhTYoNv8/l0ISvj9DhCdthUaL/GLIjOmC4ltkJn+odE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=IkyDmLw3AB8k4tfsxy3j65T+vpaZ5cMpHivxn0+mxgK+wZWyV5bX1pHL5fwPuXEvm
+	 stB8p1VMMcfsY5zA6eRSyvSdGYOlxP31Uk2QiUf/LSHFepEcND3CdZFcnnAAHZKmrG
+	 D2PEkdXNZmiTtTUIWXPPyHPjgVgJQpdRsMtdk0MU=
+Date: Tue, 26 Apr 2022 11:43:39 +0200
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	stable@vger.kernel.org,
-	Seth Forshee <sforshee@digitalocean.com>,
-	Christoph Hellwig <hch@lst.de>,
+To: Minchan Kim <minchan@kernel.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Jirka Hladky <jhladky@redhat.com>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
 	regressions@lists.linux.dev,
-	"Christian Brauner (Microsoft)" <brauner@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.17 114/146] fs: fix acl translation
-Date: Tue, 26 Apr 2022 10:21:49 +0200
-Message-Id: <20220426081753.258552761@linuxfoundation.org>
-X-Mailer: git-send-email 2.36.0
-In-Reply-To: <20220426081750.051179617@linuxfoundation.org>
-References: <20220426081750.051179617@linuxfoundation.org>
-User-Agent: quilt/0.66
+	Justin Forbes <jforbes@fedoraproject.org>,
+	Tejun Heo <tj@kernel.org>
+Subject: Re: PANIC: "Oops: 0000 [#1] PREEMPT SMP PTI" starting from 5.17 on
+ dual socket Intel Xeon Gold servers
+Message-ID: <Yme+y7Vh9NB9PmrO@kroah.com>
+References: <CAFxkdAq6r2WnwML-pPfdZiajaYZCEcUU3GrXW=+wsA7CxGnJdQ@mail.gmail.com>
+ <CAE4VaGBchOMWeHQ8GKiGFv_aCaNGLEvSdLWXZTpE+qC=0bgM3A@mail.gmail.com>
+ <YkY6W1NS+1RTw0VB@google.com>
+ <CAE4VaGDAMZqjwumyvbityzEiK30=5a5vuDMjaS+UHM39R-oPRw@mail.gmail.com>
+ <YkstxbC3OfzYnSRw@google.com>
+ <CAE4VaGAQZcQzN8D+iwcBnP5vY=Ctmbh+oTikvONHir6JjTgpsw@mail.gmail.com>
+ <YmGKrd1BR9HSEy6q@slm.duckdns.org>
+ <YmLznjFdpblHzZiM@google.com>
+ <56ac17fd-5f13-840c-09d8-03363af94520@leemhuis.info>
+ <YmMLgHnxoTC1idCE@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YmMLgHnxoTC1idCE@google.com>
 
-From: Christian Brauner <brauner@kernel.org>
+On Fri, Apr 22, 2022 at 01:09:36PM -0700, Minchan Kim wrote:
+> On Fri, Apr 22, 2022 at 08:44:17PM +0200, Thorsten Leemhuis wrote:
+> > On 22.04.22 20:27, Minchan Kim wrote:
+> > > On Thu, Apr 21, 2022 at 06:47:41AM -1000, Tejun Heo wrote:
+> > > [...]
+> > 
+> > Many thx for looking into this.
+> > 
+> > > Jirka, Could you test the patch? Once it's confirmed, I need to resend
+> > > it with Ccing stable.
+> > 
+> > When you do so, could you please include a proper "Link:" tag pointing
+> > to all reports of the regression, as explained in the Linux kernels
+> > documentation (see 'Documentation/process/submitting-patches.rst' and
+> > 'Documentation/process/5.Posting.rst'). E.g. in this case:
+> > 
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=215696
+> > Link:
+> > https://lore.kernel.org/lkml/CAE4VaGDZr_4wzRn2___eDYRtmdPaGGJdzu_LCSkJYuY9BEO3cw@mail.gmail.com/
+> 
+> Sure. Will do that.
 
-commit 705191b03d507744c7e097f78d583621c14988ac upstream.
+Did this ever get sent, I can't find it in my queue anywhere...
 
-Last cycle we extended the idmapped mounts infrastructure to support
-idmapped mounts of idmapped filesystems (No such filesystem yet exist.).
-Since then, the meaning of an idmapped mount is a mount whose idmapping
-is different from the filesystems idmapping.
+thanks,
 
-While doing that work we missed to adapt the acl translation helpers.
-They still assume that checking for the identity mapping is enough.  But
-they need to use the no_idmapping() helper instead.
-
-Note, POSIX ACLs are always translated right at the userspace-kernel
-boundary using the caller's current idmapping and the initial idmapping.
-The order depends on whether we're coming from or going to userspace.
-The filesystem's idmapping doesn't matter at the border.
-
-Consequently, if a non-idmapped mount is passed we need to make sure to
-always pass the initial idmapping as the mount's idmapping and not the
-filesystem idmapping.  Since it's irrelevant here it would yield invalid
-ids and prevent setting acls for filesystems that are mountable in a
-userns and support posix acls (tmpfs and fuse).
-
-I verified the regression reported in [1] and verified that this patch
-fixes it.  A regression test will be added to xfstests in parallel.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=215849 [1]
-Fixes: bd303368b776 ("fs: support mapped mounts of mapped filesystems")
-Cc: Seth Forshee <sforshee@digitalocean.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: <stable@vger.kernel.org> # 5.17
-Cc: <regressions@lists.linux.dev>
-Signed-off-by: Christian Brauner (Microsoft) <brauner@kernel.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/posix_acl.c                  |   10 ++++++++++
- fs/xattr.c                      |    6 ++++--
- include/linux/posix_acl_xattr.h |    4 ++++
- 3 files changed, 18 insertions(+), 2 deletions(-)
-
---- a/fs/posix_acl.c
-+++ b/fs/posix_acl.c
-@@ -759,9 +759,14 @@ static void posix_acl_fix_xattr_userns(
- }
- 
- void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
-+				   struct inode *inode,
- 				   void *value, size_t size)
- {
- 	struct user_namespace *user_ns = current_user_ns();
-+
-+	/* Leave ids untouched on non-idmapped mounts. */
-+	if (no_idmapping(mnt_userns, i_user_ns(inode)))
-+		mnt_userns = &init_user_ns;
- 	if ((user_ns == &init_user_ns) && (mnt_userns == &init_user_ns))
- 		return;
- 	posix_acl_fix_xattr_userns(&init_user_ns, user_ns, mnt_userns, value,
-@@ -769,9 +774,14 @@ void posix_acl_fix_xattr_from_user(struc
- }
- 
- void posix_acl_fix_xattr_to_user(struct user_namespace *mnt_userns,
-+				 struct inode *inode,
- 				 void *value, size_t size)
- {
- 	struct user_namespace *user_ns = current_user_ns();
-+
-+	/* Leave ids untouched on non-idmapped mounts. */
-+	if (no_idmapping(mnt_userns, i_user_ns(inode)))
-+		mnt_userns = &init_user_ns;
- 	if ((user_ns == &init_user_ns) && (mnt_userns == &init_user_ns))
- 		return;
- 	posix_acl_fix_xattr_userns(user_ns, &init_user_ns, mnt_userns, value,
---- a/fs/xattr.c
-+++ b/fs/xattr.c
-@@ -569,7 +569,8 @@ setxattr(struct user_namespace *mnt_user
- 		}
- 		if ((strcmp(kname, XATTR_NAME_POSIX_ACL_ACCESS) == 0) ||
- 		    (strcmp(kname, XATTR_NAME_POSIX_ACL_DEFAULT) == 0))
--			posix_acl_fix_xattr_from_user(mnt_userns, kvalue, size);
-+			posix_acl_fix_xattr_from_user(mnt_userns, d_inode(d),
-+						      kvalue, size);
- 	}
- 
- 	error = vfs_setxattr(mnt_userns, d, kname, kvalue, size, flags);
-@@ -667,7 +668,8 @@ getxattr(struct user_namespace *mnt_user
- 	if (error > 0) {
- 		if ((strcmp(kname, XATTR_NAME_POSIX_ACL_ACCESS) == 0) ||
- 		    (strcmp(kname, XATTR_NAME_POSIX_ACL_DEFAULT) == 0))
--			posix_acl_fix_xattr_to_user(mnt_userns, kvalue, error);
-+			posix_acl_fix_xattr_to_user(mnt_userns, d_inode(d),
-+						    kvalue, error);
- 		if (size && copy_to_user(value, kvalue, error))
- 			error = -EFAULT;
- 	} else if (error == -ERANGE && size >= XATTR_SIZE_MAX) {
---- a/include/linux/posix_acl_xattr.h
-+++ b/include/linux/posix_acl_xattr.h
-@@ -34,15 +34,19 @@ posix_acl_xattr_count(size_t size)
- 
- #ifdef CONFIG_FS_POSIX_ACL
- void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
-+				   struct inode *inode,
- 				   void *value, size_t size);
- void posix_acl_fix_xattr_to_user(struct user_namespace *mnt_userns,
-+				   struct inode *inode,
- 				 void *value, size_t size);
- #else
- static inline void posix_acl_fix_xattr_from_user(struct user_namespace *mnt_userns,
-+						 struct inode *inode,
- 						 void *value, size_t size)
- {
- }
- static inline void posix_acl_fix_xattr_to_user(struct user_namespace *mnt_userns,
-+					       struct inode *inode,
- 					       void *value, size_t size)
- {
- }
-
-
+greg k-h
