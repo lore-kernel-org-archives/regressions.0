@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C581385
-	for <regressions@lists.linux.dev>; Fri, 29 Apr 2022 11:34:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8741385
+	for <regressions@lists.linux.dev>; Fri, 29 Apr 2022 11:36:32 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:6624:6d8d:f790:d5c]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nkOsy-0003f1-Uz; Fri, 29 Apr 2022 13:34:09 +0200
-Message-ID: <34691c94-ca34-89a2-a846-5416d44da9f3@leemhuis.info>
-Date: Fri, 29 Apr 2022 13:34:08 +0200
+	id 1nkOvG-0004nQ-4S; Fri, 29 Apr 2022 13:36:30 +0200
+Message-ID: <0b0025c1-107b-8dab-f30a-87b428b45e08@leemhuis.info>
+Date: Fri, 29 Apr 2022 13:36:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,61 +16,76 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: Bug 215744 - input from the accelerometer disappeared, regression
- on amd_sfh on kernel 5.17 #forregzbot
+Subject: Re: [REGRESSION] AMD GPU regression in 5.16.18..5.17.4 #forregzbot
 Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-input@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <048ef583-4a8f-96b0-68a3-45ab9ec8d6df@leemhuis.info>
-In-Reply-To: <048ef583-4a8f-96b0-68a3-45ab9ec8d6df@leemhuis.info>
+References: <YmQi7ajZpZ4W7BJL@itl-email> <YmQkCXZEqp6TKrhJ@itl-email>
+ <YmTqYkGEqiz1o2o6@kroah.com>
+ <e1950610-ba09-7c42-4a1a-152ad41015b5@leemhuis.info>
+ <YmXfqrktdufyYC4r@itl-email>
+ <BL1PR12MB5144A5433CD3495A3B74F30AF7F89@BL1PR12MB5144.namprd12.prod.outlook.com>
+Cc: "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <BL1PR12MB5144A5433CD3495A3B74F30AF7F89@BL1PR12MB5144.namprd12.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651232051;0250173e;
-X-HE-SMSGID: 1nkOsy-0003f1-Uz
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651232192;036b3ccf;
+X-HE-SMSGID: 1nkOvG-0004nQ-4S
 
 TWIMC: this mail is primarily send for documentation purposes and for
 regzbot, my Linux kernel regression tracking bot. These mails usually
 contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-#regzbot invalid: bios bug and reporter seems to be satisfied by
-resolving this with a bios update
+#regzbot fixed-by: 78b12008f20
 
-On 01.04.22 10:06, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker.
+On 25.04.22 23:29, Deucher, Alexander wrote:
+> [Public]
 > 
-> I noticed a regression report in bugzilla.kernel.org that afaics nobody
-> acted upon since it was reported about a week ago, that's why I decided
-> to forward it to the lists and all people that seemed to be relevant
-> here. It looks to me like this is something for Basavaraj, as it seems
-> to be caused by	b300667b33b2 ("HID: amd_sfh: Disable the interrupt for
-> all command"). But I'm not totally sure, I only looked briefly into the
-> details. Or was this discussed somewhere else already? Or even fixed?
-> 
-> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=215744 :
-> 
->>  Marco 2022-03-25 15:22:19 UTC
+>> -----Original Message-----
+>> From: Demi Marie Obenour <demi@invisiblethingslab.com>
+>> Sent: Sunday, April 24, 2022 7:39 PM
+>> To: Thorsten Leemhuis <regressions@leemhuis.info>; Greg KH 
+>> <gregkh@linuxfoundation.org>
+>> Cc: amd-gfx@lists.freedesktop.org; regressions@lists.linux.dev; 
+>> Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian 
+>> <Christian.Koenig@amd.com>; Pan, Xinhui <Xinhui.Pan@amd.com>
+>> Subject: Re: [REGRESSION] AMD GPU regression in 5.16.18..5.17.4
 >>
->> After updating to 5.17, the input from the accelerometer disappeared, completely. No devices available from IIO tree. First bad commit causing it is https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c?id=b300667b33b2b5a2c8e5f8f22826befb3d7f4f2b. Reverting this and the the other two on top fixed this. Tried to not revert only the above mentioned commit, but it's still not working.
+>> On Sun, Apr 24, 2022 at 11:02:43AM +0200, Thorsten Leemhuis wrote:
+>>> CCing the amdgpu maintainers
+>>>
+>>> On 24.04.22 08:12, Greg KH wrote:
+>>>> On Sat, Apr 23, 2022 at 12:06:33PM -0400, Demi Marie Obenour wrote:
+>>>>> Two Qubes OS users reported that their AMD GPU systems did not 
+>>>>> work on 5.17.4, while 5.16.18 worked fine.  Details can be found 
+>>>>> on https://github.com/QubesOS/qubes-issues/issues/7462.  The 
+>>>>> initial report listed the GPU as “Advanced Micro Devices, Inc. 
+>>>>> [AMD/ATI] Renoir [1002:1636} (rev d3) (prog-if 00 [VGA 
+>>>>> controller])” and the CPU as “AMD Ryzen 5 PRO 4650U with Radeon Graphics”.
+>>>>>
+>>>>> #regzbot introduced: v5.16.18..v5.17.4
+>>>>
+>>>> That's a big range, can you use 'git bisect' to track it down?
+>>>
+>>> FWIW, in another mail in this thread and
+>>> https://github.com/QubesOS/qubes-issues/issues/7462#issuecomment-
+>> 11076
+>>> 81126 it was clarified that the problem was introduced between 
+>>> 5.17.3 and 5.17.4, where a few amdgpu changes were applied. Maybe 
+>>> they are the reason.
+>>>
+>>> Anyway: Yes, as Gregkh said, a bisection really would help. But 
+>>> maybe the amdgfx developers might already have an idea what might be 
+>>> wrong here? The QubesOS ticket linked above has some more details.
 >>
->> Marco.
+>> The reporter was able to bisect the regression.  I am not surprised 
+>> that this commit caused problems for Qubes OS, as dom0 in Qubes OS is 
+>> technically a guest of Xen.
+>>
+>> #regzbot ^introduced: b818a5d374542ccec73dcfe578a081574029820e
 > 
-> Anyway, to get this tracked:
+> Can you please follow up on the bug ticket:
+> https://gitlab.freedesktop.org/drm/amd/-/issues/1985
+> It will be easier to track everything there.
 > 
-> #regzbot introduced: b300667b33b2b5a2c8e5f8f22826befb3d7f4
-> #regzbot from: Marco <rodomar705@protonmail.com>
-> #regzbot title: input: hid: input from the accelerometer disappeared due
-> to changes to amd_sfh
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215744
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
-> reports on my table. I can only look briefly into most of them and lack
-> knowledge about most of the areas they concern. I thus unfortunately
-> will sometimes get things wrong or miss something important. I hope
-> that's not the case here; if you think it is, don't hesitate to tell me
-> in a public reply, it's in everyone's interest to set the public record
-> straight.
-> 
+> Alex
