@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A971385
-	for <regressions@lists.linux.dev>; Fri, 29 Apr 2022 11:59:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CDCF1385
+	for <regressions@lists.linux.dev>; Fri, 29 Apr 2022 12:03:33 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:6624:6d8d:f790:d5c]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nkPHt-0002CR-PA; Fri, 29 Apr 2022 13:59:54 +0200
-Message-ID: <9811c780-ea28-1461-6347-93a3cf218b6c@leemhuis.info>
-Date: Fri, 29 Apr 2022 13:59:53 +0200
+	id 1nkPLP-00068i-GK; Fri, 29 Apr 2022 14:03:31 +0200
+Message-ID: <0b09b35a-64d3-5ba3-dabc-1e36ace1c275@leemhuis.info>
+Date: Fri, 29 Apr 2022 14:03:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,73 +16,52 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [Bug 215872] New: ath11k: QCA6390 firmware crashes after some
- time
+X-Mozilla-News-Host: news://nntp.lore.kernel.org:119
 Content-Language: en-US
-References: <bug-215872-62941@https.bugzilla.kernel.org/>
-Cc: linux-bluetooth@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Kai Mast <mail@kai-mast.de>
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Marcel Holtmann <marcel@holtmann.org>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <bug-215872-62941@https.bugzilla.kernel.org/>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: tboot suspend broken on Lenovo T460p
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651233596;c0f83ca4;
-X-HE-SMSGID: 1nkPHt-0002CR-PA
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651233813;b8e41faf;
+X-HE-SMSGID: 1nkPLP-00068i-GK
 
-Hi, this is your Linux kernel regression tracker.
+Hi, this is your Linux kernel regression tracker speaking.
 
-I noticed below regression report in bugzilla.kernel.org that afaics
-nobody acted upon since it was reported about a week ago, that's why I
-decided to step in here. Could somebody take a look into below issue? Or
-was this discussed somewhere else already? Or even fixed?
+About a week ago a regression was reported to bugzilla.kernel.org that
+seems to be handled there already, nevertheless I'd like to add to the
+tracking to ensure it's not forgotten.
 
-On 21.04.22 22:07, bugzilla-daemon@kernel.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=215872
-> 
->             Bug ID: 215872
->            Summary: ath11k: QCA6390 firmware crashes after some time
->            Product: Drivers
->            Version: 2.5
->     Kernel Version: 5.17.3-arch1-1
->           Hardware: x86-64
->                 OS: Linux
->               Tree: Mainline
->             Status: NEW
->           Severity: normal
->           Priority: P1
->          Component: Bluetooth
->           Assignee: linux-bluetooth@vger.kernel.org
->           Reporter: mail@kai-mast.de
->         Regression: No
-> 
-> Created attachment 300786
->   --> https://bugzilla.kernel.org/attachment.cgi?id=300786&action=edit
-> dmesg | grep Bluetooth
-> 
-> I'm on arch Linux. For a while now (multiple kernel versions since 5.15 at
-> least) my qca firwmare seems to crash. Weirdly bluetooth stops working and WiFi
-> still works fine.
-> There is nothing in particular that seems to trigger this. I just have to wait
-> for a while. Sometimes a few minutes after boot sometimes a few hours. 
-> 
-> Rebooting without a power connection or booting into Windows usually resolves
-> this issue.
-> 
-> I'm on a 2020 Dell XPS 9500. Fimrware is up to date at 1.13.
-> 
-> Output of uname -a: Linux kai-xps 5.17.3-arch1-1 #1 SMP PREEMPT Thu, 14 Apr
-> 2022 01:18:36 +0000 x86_64 GNU/Linux
+#regzbot introduced: 453e41085183980087f8a80dada523caf1131c3c
+#regzbot from: Derek Dolney <z23@posteo.net>
+#regzbot title: tboot suspend broken on Lenovo T460p
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215867
 
-Anyway, to get this tracked:
+Quote:
 
-#regzbot introduced: v5.15..v5.17
-#regzbot from: Kai Mast <mail@kai-mast.de>
-#regzbot title: bluetooth: QCA6390 firmware crashes after some time
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215872
+> I am using tboot (v1.10.5) to make use of intel-txt and all was
+> working fine with the Linux kernel 5.10 series. However later in 5.12
+> release candidates, I have  proper booting however suspend is broken.
+> I am using a Lenovo T460p. Usually when suspending on this machine
+> the power button LED will blink 8 times and then it goes into a sleep
+> state. With newer kernels I get power LED and caps lock LED blinking,
+> cpu fan runs fast, and can't get out of that state without hard
+> powerdown.
+> 
+> I did a git bisect on and found that commit
+> 453e41085183980087f8a80dada523caf1131c3c is the one that breaks
+> tboot+suspend to ram. It is part of a series of some cpu hotplug
+> commits.
+> 
+> Just to be clear: if I build a kernel from the commit just before
+> this one, I can suspend and resume, but if I build with this commit I
+> can not suspend, laptop gets stuck on blinking power LED. Let me also
+> mention that, given the above commit, if I do not use tboot, I can
+> suspend and resume ok. It is only within the tboot boot context that
+> I have suspend&resume problems.
+
+
+See the ticket for details, there were a few replies already.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -117,4 +96,3 @@ about the issue. This has been expected from developers even before
 regzbot showed up for reasons explained in
 'Documentation/process/submitting-patches.rst' and
 'Documentation/process/5.Posting.rst'.
-
