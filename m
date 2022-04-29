@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2E51385
-	for <regressions@lists.linux.dev>; Fri, 29 Apr 2022 11:32:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21C581385
+	for <regressions@lists.linux.dev>; Fri, 29 Apr 2022 11:34:10 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:6624:6d8d:f790:d5c]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nkOr7-0000tj-Nz; Fri, 29 Apr 2022 13:32:13 +0200
-Message-ID: <34bc7a39-b7e6-55a8-38d9-4a49c34d1797@leemhuis.info>
-Date: Fri, 29 Apr 2022 13:32:13 +0200
+	id 1nkOsy-0003f1-Uz; Fri, 29 Apr 2022 13:34:09 +0200
+Message-ID: <34691c94-ca34-89a2-a846-5416d44da9f3@leemhuis.info>
+Date: Fri, 29 Apr 2022 13:34:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,171 +16,61 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [Intel-wired-lan] [PATCH] ice: wait for EMP reset after firmware
- flash #forregzbot
+Subject: Re: Bug 215744 - input from the accelerometer disappeared, regression
+ on amd_sfh on kernel 5.17 #forregzbot
 Content-Language: en-US
-To: regressions@lists.linux.dev, Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: intel-wired-lan@lists.osuosl.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20220412102753.670867-1-poros@redhat.com>
- <bc534155-e5bc-b9d2-24b4-e7559a7c5fb5@molgen.mpg.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <bc534155-e5bc-b9d2-24b4-e7559a7c5fb5@molgen.mpg.de>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: linux-input@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <048ef583-4a8f-96b0-68a3-45ab9ec8d6df@leemhuis.info>
+In-Reply-To: <048ef583-4a8f-96b0-68a3-45ab9ec8d6df@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651231943;3f114607;
-X-HE-SMSGID: 1nkOr7-0000tj-Nz
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651232051;0250173e;
+X-HE-SMSGID: 1nkOsy-0003f1-Uz
 
 TWIMC: this mail is primarily send for documentation purposes and for
 regzbot, my Linux kernel regression tracking bot. These mails usually
 contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-#regzbot fixed-by: b537752e6cbf0e
+#regzbot invalid: bios bug and reporter seems to be satisfied by
+resolving this with a bios update
 
-On 12.04.22 15:28, Paul Menzel wrote:
-> [Cc: +Jakob, +regressions@lists.linux.dev]
+On 01.04.22 10:06, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker.
 > 
+> I noticed a regression report in bugzilla.kernel.org that afaics nobody
+> acted upon since it was reported about a week ago, that's why I decided
+> to forward it to the lists and all people that seemed to be relevant
+> here. It looks to me like this is something for Basavaraj, as it seems
+> to be caused by	b300667b33b2 ("HID: amd_sfh: Disable the interrupt for
+> all command"). But I'm not totally sure, I only looked briefly into the
+> details. Or was this discussed somewhere else already? Or even fixed?
 > 
-> Dear Petr,
+> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=215744 :
 > 
-> 
-> Thank you for your patch for the regression.
-> 
-> #regzbot ^introduced 399e27dbbd9e94
-> 
-> 
-> Am 12.04.22 um 12:27 schrieb Petr Oros:
-> 
-> Please mention the time in the commit message summary:
-> 
-> ice: Wait 5 s for EMP reset after firmware flash
-> 
->> We need to wait for EMP reset after firmware flash.
->> Code was extracted from OOT driver and without this wait fw_activate let
-> 
-> Which OOT driver exactly?
-> 
->> card in inconsistent state recoverable only by second flash/activate
-> 
-> Please reflow for 75 characters per line, and add a dot/period to the
-> end of sentences.
-> 
->> Reproducer:
->> [root@host ~]# devlink dev flash pci/0000:ca:00.0 file
->> E810_XXVDA4_FH_O_SEC_FW_1p6p1p9_NVM_3p10_PLDMoMCTP_0.11_8000AD7B.bin
->> Preparing to flash
->> [fw.mgmt] Erasing
->> [fw.mgmt] Erasing done
->> [fw.mgmt] Flashing 100%
->> [fw.mgmt] Flashing done 100%
->> [fw.undi] Erasing
->> [fw.undi] Erasing done
->> [fw.undi] Flashing 100%
->> [fw.undi] Flashing done 100%
->> [fw.netlist] Erasing
->> [fw.netlist] Erasing done
->> [fw.netlist] Flashing 100%
->> [fw.netlist] Flashing done 100%
->> Activate new firmware by devlink reload
->> [root@host ~]# devlink dev reload pci/0000:ca:00.0 action fw_activate
->> reload_actions_performed:
->>      fw_activate
->> [root@host ~]# ip link show ens7f0
->> 71: ens7f0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc mq
->> state DOWN mode DEFAULT group default qlen 1000
->>      link/ether b4:96:91:dc:72:e0 brd ff:ff:ff:ff:ff:ff
->>      altname enp202s0f0
+>>  Marco 2022-03-25 15:22:19 UTC
 >>
->> dmesg after flash:
->> [   55.120788] ice: Copyright (c) 2018, Intel Corporation.
->> [   55.274734] ice 0000:ca:00.0: Get PHY capabilities failed status =
->> -5, continuing anyway
->> [   55.569797] ice 0000:ca:00.0: The DDP package was successfully
->> loaded: ICE OS Default Package version 1.3.28.0
->> [   55.603629] ice 0000:ca:00.0: Get PHY capability failed.
->> [   55.608951] ice 0000:ca:00.0: ice_init_nvm_phy_type failed: -5
->> [   55.647348] ice 0000:ca:00.0: PTP init successful
->> [   55.675536] ice 0000:ca:00.0: DCB is enabled in the hardware, max
->> number of TCs supported on this port are 8
->> [   55.685365] ice 0000:ca:00.0: FW LLDP is disabled, DCBx/LLDP in SW
->> mode.
->> [   55.692179] ice 0000:ca:00.0: Commit DCB Configuration to the hardware
->> [   55.701382] ice 0000:ca:00.0: 126.024 Gb/s available PCIe
->> bandwidth, limited by 16.0 GT/s PCIe x8 link at 0000:c9:02.0 (capable
->> of 252.048 Gb/s with 16.0 GT/s PCIe x16 link)
-> 
-> So, what is the error? `Get PHY capabilities failed status = -5`?
-> 
-> What firmware version did the network card have before and after the
-> update?
-> 
->> Reboot don't help, only second flash/activate with OOT or patched
->> driver put card back in consistent state
-> 
-> s/don't/doesn’t/
-> 
->> After patch:
->> [root@host ~]# devlink dev flash pci/0000:ca:00.0 file
->> E810_XXVDA4_FH_O_SEC_FW_1p6p1p9_NVM_3p10_PLDMoMCTP_0.11_8000AD7B.bin
->> Preparing to flash
->> [fw.mgmt] Erasing
->> [fw.mgmt] Erasing done
->> [fw.mgmt] Flashing 100%
->> [fw.mgmt] Flashing done 100%
->> [fw.undi] Erasing
->> [fw.undi] Erasing done
->> [fw.undi] Flashing 100%
->> [fw.undi] Flashing done 100%
->> [fw.netlist] Erasing
->> [fw.netlist] Erasing done
->> [fw.netlist] Flashing 100%
->> [fw.netlist] Flashing done 100%
->> Activate new firmware by devlink reload
->> [root@host ~]# devlink dev reload pci/0000:ca:00.0 action fw_activate
->> reload_actions_performed:
->>      fw_activate
->> [root@host ~]# ip link show ens7f0
->> 19: ens7f0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state
->> UP mode DEFAULT group default qlen 1000
->>      link/ether b4:96:91:dc:72:e0 brd ff:ff:ff:ff:ff:ff
->>      altname enp202s0f0
-> 
-> Did you try anything less than five seconds? i40e uses one second, cf.
-> commit 9b13bd53134c (i40e: Increase delay to 1 s after global EMP reset).
-> 
->> Fixes: 399e27dbbd9e94 ("ice: support immediate firmware activation via
->> devlink reload")
->> Signed-off-by: Petr Oros <poros@redhat.com>
->> ---
->>   drivers/net/ethernet/intel/ice/ice_main.c | 3 +++
->>   1 file changed, 3 insertions(+)
+>> After updating to 5.17, the input from the accelerometer disappeared, completely. No devices available from IIO tree. First bad commit causing it is https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/hid/amd-sfh-hid/amd_sfh_pcie.c?id=b300667b33b2b5a2c8e5f8f22826befb3d7f4f2b. Reverting this and the the other two on top fixed this. Tried to not revert only the above mentioned commit, but it's still not working.
 >>
->> diff --git a/drivers/net/ethernet/intel/ice/ice_main.c
->> b/drivers/net/ethernet/intel/ice/ice_main.c
->> index d768925785ca79..90ea2203cdc763 100644
->> --- a/drivers/net/ethernet/intel/ice/ice_main.c
->> +++ b/drivers/net/ethernet/intel/ice/ice_main.c
->> @@ -6931,12 +6931,15 @@ static void ice_rebuild(struct ice_pf *pf,
->> enum ice_reset_req reset_type)
->>         dev_dbg(dev, "rebuilding PF after reset_type=%d\n", reset_type);
->>   +#define ICE_EMP_RESET_SLEEP 5000
+>> Marco.
 > 
-> Please append the unit to the macro name.
+> Anyway, to get this tracked:
 > 
->>       if (reset_type == ICE_RESET_EMPR) {
->>           /* If an EMP reset has occurred, any previously pending flash
->>            * update will have completed. We no longer know whether or
->>            * not the NVM update EMP reset is restricted.
->>            */
->>           pf->fw_emp_reset_disabled = false;
->> +
->> +        msleep(ICE_EMP_RESET_SLEEP);
->>       }
->>         err = ice_init_all_ctrlq(hw);
+> #regzbot introduced: b300667b33b2b5a2c8e5f8f22826befb3d7f4
+> #regzbot from: Marco <rodomar705@protonmail.com>
+> #regzbot title: input: hid: input from the accelerometer disappeared due
+> to changes to amd_sfh
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215744
 > 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 > 
-> Kind regards,
-> 
-> Paul
-> 
+> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> reports on my table. I can only look briefly into most of them and lack
+> knowledge about most of the areas they concern. I thus unfortunately
+> will sometimes get things wrong or miss something important. I hope
+> that's not the case here; if you think it is, don't hesitate to tell me
+> in a public reply, it's in everyone's interest to set the public record
+> straight.
 > 
