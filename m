@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8741385
-	for <regressions@lists.linux.dev>; Fri, 29 Apr 2022 11:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89A971385
+	for <regressions@lists.linux.dev>; Fri, 29 Apr 2022 11:59:56 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:6624:6d8d:f790:d5c]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nkOvG-0004nQ-4S; Fri, 29 Apr 2022 13:36:30 +0200
-Message-ID: <0b0025c1-107b-8dab-f30a-87b428b45e08@leemhuis.info>
-Date: Fri, 29 Apr 2022 13:36:29 +0200
+	id 1nkPHt-0002CR-PA; Fri, 29 Apr 2022 13:59:54 +0200
+Message-ID: <9811c780-ea28-1461-6347-93a3cf218b6c@leemhuis.info>
+Date: Fri, 29 Apr 2022 13:59:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,76 +16,105 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [REGRESSION] AMD GPU regression in 5.16.18..5.17.4 #forregzbot
+Subject: Re: [Bug 215872] New: ath11k: QCA6390 firmware crashes after some
+ time
 Content-Language: en-US
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <YmQi7ajZpZ4W7BJL@itl-email> <YmQkCXZEqp6TKrhJ@itl-email>
- <YmTqYkGEqiz1o2o6@kroah.com>
- <e1950610-ba09-7c42-4a1a-152ad41015b5@leemhuis.info>
- <YmXfqrktdufyYC4r@itl-email>
- <BL1PR12MB5144A5433CD3495A3B74F30AF7F89@BL1PR12MB5144.namprd12.prod.outlook.com>
-Cc: "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+References: <bug-215872-62941@https.bugzilla.kernel.org/>
+Cc: linux-bluetooth@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Kai Mast <mail@kai-mast.de>
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Marcel Holtmann <marcel@holtmann.org>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <BL1PR12MB5144A5433CD3495A3B74F30AF7F89@BL1PR12MB5144.namprd12.prod.outlook.com>
+In-Reply-To: <bug-215872-62941@https.bugzilla.kernel.org/>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651232192;036b3ccf;
-X-HE-SMSGID: 1nkOvG-0004nQ-4S
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651233596;c0f83ca4;
+X-HE-SMSGID: 1nkPHt-0002CR-PA
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Hi, this is your Linux kernel regression tracker.
 
-#regzbot fixed-by: 78b12008f20
+I noticed below regression report in bugzilla.kernel.org that afaics
+nobody acted upon since it was reported about a week ago, that's why I
+decided to step in here. Could somebody take a look into below issue? Or
+was this discussed somewhere else already? Or even fixed?
 
-On 25.04.22 23:29, Deucher, Alexander wrote:
-> [Public]
+On 21.04.22 22:07, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=215872
 > 
->> -----Original Message-----
->> From: Demi Marie Obenour <demi@invisiblethingslab.com>
->> Sent: Sunday, April 24, 2022 7:39 PM
->> To: Thorsten Leemhuis <regressions@leemhuis.info>; Greg KH 
->> <gregkh@linuxfoundation.org>
->> Cc: amd-gfx@lists.freedesktop.org; regressions@lists.linux.dev; 
->> Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian 
->> <Christian.Koenig@amd.com>; Pan, Xinhui <Xinhui.Pan@amd.com>
->> Subject: Re: [REGRESSION] AMD GPU regression in 5.16.18..5.17.4
->>
->> On Sun, Apr 24, 2022 at 11:02:43AM +0200, Thorsten Leemhuis wrote:
->>> CCing the amdgpu maintainers
->>>
->>> On 24.04.22 08:12, Greg KH wrote:
->>>> On Sat, Apr 23, 2022 at 12:06:33PM -0400, Demi Marie Obenour wrote:
->>>>> Two Qubes OS users reported that their AMD GPU systems did not 
->>>>> work on 5.17.4, while 5.16.18 worked fine.  Details can be found 
->>>>> on https://github.com/QubesOS/qubes-issues/issues/7462.  The 
->>>>> initial report listed the GPU as “Advanced Micro Devices, Inc. 
->>>>> [AMD/ATI] Renoir [1002:1636} (rev d3) (prog-if 00 [VGA 
->>>>> controller])” and the CPU as “AMD Ryzen 5 PRO 4650U with Radeon Graphics”.
->>>>>
->>>>> #regzbot introduced: v5.16.18..v5.17.4
->>>>
->>>> That's a big range, can you use 'git bisect' to track it down?
->>>
->>> FWIW, in another mail in this thread and
->>> https://github.com/QubesOS/qubes-issues/issues/7462#issuecomment-
->> 11076
->>> 81126 it was clarified that the problem was introduced between 
->>> 5.17.3 and 5.17.4, where a few amdgpu changes were applied. Maybe 
->>> they are the reason.
->>>
->>> Anyway: Yes, as Gregkh said, a bisection really would help. But 
->>> maybe the amdgfx developers might already have an idea what might be 
->>> wrong here? The QubesOS ticket linked above has some more details.
->>
->> The reporter was able to bisect the regression.  I am not surprised 
->> that this commit caused problems for Qubes OS, as dom0 in Qubes OS is 
->> technically a guest of Xen.
->>
->> #regzbot ^introduced: b818a5d374542ccec73dcfe578a081574029820e
+>             Bug ID: 215872
+>            Summary: ath11k: QCA6390 firmware crashes after some time
+>            Product: Drivers
+>            Version: 2.5
+>     Kernel Version: 5.17.3-arch1-1
+>           Hardware: x86-64
+>                 OS: Linux
+>               Tree: Mainline
+>             Status: NEW
+>           Severity: normal
+>           Priority: P1
+>          Component: Bluetooth
+>           Assignee: linux-bluetooth@vger.kernel.org
+>           Reporter: mail@kai-mast.de
+>         Regression: No
 > 
-> Can you please follow up on the bug ticket:
-> https://gitlab.freedesktop.org/drm/amd/-/issues/1985
-> It will be easier to track everything there.
+> Created attachment 300786
+>   --> https://bugzilla.kernel.org/attachment.cgi?id=300786&action=edit
+> dmesg | grep Bluetooth
 > 
-> Alex
+> I'm on arch Linux. For a while now (multiple kernel versions since 5.15 at
+> least) my qca firwmare seems to crash. Weirdly bluetooth stops working and WiFi
+> still works fine.
+> There is nothing in particular that seems to trigger this. I just have to wait
+> for a while. Sometimes a few minutes after boot sometimes a few hours. 
+> 
+> Rebooting without a power connection or booting into Windows usually resolves
+> this issue.
+> 
+> I'm on a 2020 Dell XPS 9500. Fimrware is up to date at 1.13.
+> 
+> Output of uname -a: Linux kai-xps 5.17.3-arch1-1 #1 SMP PREEMPT Thu, 14 Apr
+> 2022 01:18:36 +0000 x86_64 GNU/Linux
+
+Anyway, to get this tracked:
+
+#regzbot introduced: v5.15..v5.17
+#regzbot from: Kai Mast <mail@kai-mast.de>
+#regzbot title: bluetooth: QCA6390 firmware crashes after some time
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215872
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
+
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
+
