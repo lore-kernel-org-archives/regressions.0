@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EAD02110
-	for <regressions@lists.linux.dev>; Wed,  4 May 2022 09:45:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BA72118
+	for <regressions@lists.linux.dev>; Wed,  4 May 2022 10:39:24 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:1b3c:6996:5378:f253]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nmBZf-0005Go-GG; Wed, 04 May 2022 11:45:35 +0200
-Message-ID: <4262c3f2-7b24-49a9-1cf2-2e9b7b68d4bb@leemhuis.info>
-Date: Wed, 4 May 2022 11:45:33 +0200
+	id 1nmCPg-0002qJ-9r; Wed, 04 May 2022 12:39:20 +0200
+Message-ID: <3bb21e7a-8937-d813-7273-f760b4e95cdb@leemhuis.info>
+Date: Wed, 4 May 2022 12:39:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,39 +16,40 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: NFS regression between 5.17 and 5.18
+Subject: Re: Regression: Extremely unstable connection on ax200
 Content-Language: en-US
-To: Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- linux-nfs@vger.kernel.org
-References: <979544aa-a7b1-ab22-678f-5ac19f03e17a@cornelisnetworks.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <979544aa-a7b1-ab22-678f-5ac19f03e17a@cornelisnetworks.com>
+To: Luca Coelho <luciano.coelho@intel.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ Kyle McGrath <kyle.mcgrath@protonmail.com>, s.viper.z@gmail.com,
+ info@cgnetlink.com, Udo Steinberg <udo@hypervisor.org>,
+ golan.ben.ami@intel.com
+References: <031b72a5-907e-219f-7433-8de3641d7c01@leemhuis.info>
+In-Reply-To: <031b72a5-907e-219f-7433-8de3641d7c01@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651657538;1778e36e;
-X-HE-SMSGID: 1nmBZf-0005Go-GG
-
-[TLDR: I'm adding the regression report below to regzbot, the Linux
-kernel regression tracking bot; all text you find below is compiled from
-a few templates paragraphs you might have encountered already already
-from similar mails.]
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651660764;032c9a95;
+X-HE-SMSGID: 1nmCPg-0002qJ-9r
 
 Hi, this is your Linux kernel regression tracker. Top-posting for once,
 to make this easily accessible to everyone.
 
-To be sure below issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
+Iwlwifi maintainers, what happened regarding below regression report?
+Looks like it was ignored, is there a reason why? There are two other
+tickets reg. similar problems in bugzilla.kernel.org that look like they
+were mostly ignored as well:
 
-#regzbot ^introduced v5.17..v5.18
-#regzbot title nfs: copy from NFS to the local disk suddently takes 3
-min instead of half a second
-#regzbot ignore-activity
+https://bugzilla.kernel.org/show_bug.cgi?id=215635
+https://bugzilla.kernel.org/show_bug.cgi?id=215697
 
-If it turns out this isn't a regression, free free to remove it from the
-tracking by sending a reply to this thread containing a paragraph like
-"#regzbot invalid: reason why this is invalid" (without the quotes).
+Can anyone clarify what's up here? Are they all the same issue or are it
+different ones?
+
+And could the reporters of those tickets (CCed) please clarify in the
+ticket if their problem still happens with the latest kernel (either
+5.17.y or mainline; 5.16.y is irrelevant now, as it's EOL)
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -57,101 +58,55 @@ reports and sometimes miss something important when writing mails like
 this. If that's the case here, don't hesitate to tell me in a public
 reply, it's in everyone's interest to set the public record straight.
 
-On 28.04.22 15:05, Dennis Dalessandro wrote:
-> Hi NFS folks,
+On 08.04.22 12:11, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker.
 > 
-> I've noticed a pretty nasty regression in our NFS capability between 5.17 and
-> 5.18-rc1. I've tried to bisect but not having any luck. The problem I'm seeing
-> is it takes 3 minutes to copy a file from NFS to the local disk. When it should
-> take less than half a second, which it did up through 5.17.
+> I noticed a regression report in bugzilla.kernel.org that afaics nobody
+> acted upon since it was reported about a week ago, that's why I decided
+> to forward it to the lists and all people that seemed to be relevant
+> here. To quote from https://bugzilla.kernel.org/show_bug.cgi?id=215789 :
 > 
-> It doesn't seem to be network related, but can't rule that out completely.
+>>  Kyle McGrath 2022-04-01 14:05:34 UTC
+>>
+>> Created attachment 300678 [details]
+>> Log of iwlwifi on 5.17
+>>
+>> Recently I updated to the Fedora 36 beta, with the 5.17 kernel. Ever since, I've experienced excessive issues with my Intel AX200 wireless card. Every other aspect of my usage has remained the same (laptop and router both in the same location, same number of devices on the network, etc.)
+>>
+>> Before updating to 5.17, I was able to perform latency-sensitive tasks such as playing online games and use VoIP applications without issue, with acceptable latency. After updating to 5.17 it is at the point where I cannot have an enjoyable match due to constant ping spikes, often to the point where the game will "stutter" or "lock up" every 10 seconds or say, with excessively high ping to go along with this. My VoIP applications have similar issues with calls often being interrupted or distorted.
+>>
+>> I reverted to 5.16.16 and this has alleviated the issue for the time being. I've included journal output from both 5.17 and 5.16 and you can see there are several issues/errors which are not present on 5.16.
+>>
+>> Below is all I get from the journal for iwlwifi under 5.16. I've included 5.17 output as an attachment.
+>>
+>>
+>> Apr 01 01:18:06 tarsonis kernel: iwlwifi 0000:03:00.0: enabling device (0000 -> 0002)
+>> Apr 01 01:18:06 tarsonis kernel: iwlwifi 0000:03:00.0: api flags index 2 larger than supported by driver
+>> Apr 01 01:18:06 tarsonis kernel: iwlwifi 0000:03:00.0: TLV_FW_FSEQ_VERSION: FSEQ Version: 89.3.35.37
+>> Apr 01 01:18:06 tarsonis kernel: iwlwifi 0000:03:00.0: loaded firmware version 67.8f59b80b.0 cc-a0-67.ucode op_mode iwlmvm
+>> Apr 01 01:18:07 tarsonis kernel: iwlwifi 0000:03:00.0: Detected Intel(R) Wi-Fi 6 AX200 160MHz, REV=0x340
+>> Apr 01 01:18:07 tarsonis kernel: iwlwifi 0000:03:00.0: Detected RF HR B3, rfid=0x10a100
+>> Apr 01 01:18:07 tarsonis kernel: iwlwifi 0000:03:00.0: base HW address: e0:d4:e8:a5:98:21
+>> Apr 01 01:18:07 tarsonis kernel: iwlwifi 0000:03:00.0 wlp3s0: renamed from wlan0
 > 
-> I tried to bisect but the problem can be intermittent. Some runs I'll see a
-> problem in 3 out of 100 cycles, sometimes 0 out of 100. Sometimes I'll see it
-> 100 out of 100.
 > 
-> The latest attempt I have is at 5.18-rc4 and here's what I see when I 1) create
-> file with dd, 2) copy local disk to NFS mount, 3) copy NFS to local disk.
+> Could somebody take a look into this? Or was this discussed somewhere
+> else already? Or even fixed?
 > 
-> Test 2
-> Creating /dev/shm/run_nfs_test.junk...
-> 262144+0 records in
-> 262144+0 records out
-> 268435456 bytes (268 MB, 256 MiB) copied, 1.29037 s, 208 MB/s
-> Done
-> copy /dev/shm/run_nfs_test.junk to /mnt/nfs_test/run_nfs_test.junk...
+> Anyway, to get this tracked:
 > 
-> real    0m0.502s
-> user    0m0.001s
-> sys     0m0.250s
-> Done
-> copy /mnt/nfs_test/run_nfs_test.junk to /dev/shm/run_nfs_test.tmp...
+> #regzbot introduced: v5.16..v5.17
+> #regzbot from: Kyle McGrath <kyle.mcgrath@protonmail.com>
+> #regzbot title: iwlwifi: Extremely unstable connection on ax200
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215789
 > 
-> real    4m11.835s
-> user    0m0.001s
-> sys     0m0.277s
-> Done
-> Comparing files...
-> Done
-> Remove /dev/shm/run_nfs_test.tmp...
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 > 
-> real    0m0.031s
-> user    0m0.000s
-> sys     0m0.031s
-> Done
-> Remove /dev/shm/run_nfs_test.junk...
+> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> reports on my table. I can only look briefly into most of them and lack
+> knowledge about most of the areas they concern. I thus unfortunately
+> will sometimes get things wrong or miss something important. I hope
+> that's not the case here; if you think it is, don't hesitate to tell me
+> in a public reply, it's in everyone's interest to set the public record
+> straight.
 > 
-> real    0m0.031s
-> user    0m0.001s
-> sys     0m0.030s
-> Done
-> Remove /mnt/nfs_test/run_nfs_test.junk...
-> 
-> real    0m0.024s
-> user    0m0.001s
-> sys     0m0.022s
-> Done
-> 
-> Create the server with a 4G RAM disk:
-> mount -t tmpfs -o size=4096M tmpfs /mnt/nfs_test
-> 
-> exportfs -o fsid=0,rw,async,insecure,no_root_squash
-> 192.168.254.0/255.255.255.0:/mnt/nfs_test
-> 
-> Mount on the client side with:
-> mount -o rdma,port=20049 192.168.254.1:/mnt/nfs_test /mnt/nfs_test
-> 
-> Any advice on tracking this down further would be greatly appreciated.
-> 
-> Thanks
-> 
-> -Denny
-> 
-
--- 
-Additional information about regzbot:
-
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and the references documentation:
-
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
-
-Hint for reporters: when reporting a regression it's in your interest to
-CC the regression list and tell regzbot about the issue, as that ensures
-the regression makes it onto the radar of the Linux kernel's regression
-tracker -- that's in your interest, as it ensures your report won't fall
-through the cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include 'Link:' tag in the patch descriptions pointing to all reports
-about the issue. This has been expected from developers even before
-regzbot showed up for reasons explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'.
