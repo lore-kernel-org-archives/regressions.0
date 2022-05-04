@@ -1,57 +1,90 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail-41104.protonmail.ch (mail-41104.protonmail.ch [185.70.41.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C682596
-	for <regressions@lists.linux.dev>; Wed,  4 May 2022 16:43:50 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nmI6O-0001sG-7M; Wed, 04 May 2022 18:43:48 +0200
-Message-ID: <29f90334-53dc-4926-fc38-420b4d024f1b@leemhuis.info>
-Date: Wed, 4 May 2022 18:43:47 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282D22596
+	for <regressions@lists.linux.dev>; Wed,  4 May 2022 16:45:20 +0000 (UTC)
+Date: Wed, 04 May 2022 16:38:01 +0000
+Authentication-Results: mail-41104.protonmail.ch;
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="ETrz8E2E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail2; t=1651682287;
+	bh=yOoxg2N5zJ4F1OoSCgUaKhglPU6NB2rB8SsmeAPDDmM=;
+	h=Date:To:From:Cc:Reply-To:Subject:Message-ID:In-Reply-To:
+	 References:Feedback-ID:From:To:Cc:Date:Subject:Reply-To:
+	 Feedback-ID:Message-ID;
+	b=ETrz8E2Ecixoq5zO+zb61vwH1Uhl9f9E5C9NnUQ+f99bjDPcqwqs6debkIxamKJFk
+	 RbFOcIRODUPl2+fQ0kb14L0r+A0iIUuf5XWvG4n+iDhR/ny9mBHV7OT7zfa3dXYL3C
+	 JdTuNEFRietq10Rqtj8Fc8Xrk3DYzqlAZGlPVyhBtetZtpNFTi01B5s+XMd+YbeSpZ
+	 yJNHjjm7FxqAvuuPFwSy/a0zcCp44BDD1xQrTRjdQwA5N8DkYQRwybNnQMscwa3K/x
+	 yNQFZvydKAb370R8MjRG9DB9T9QE1b+ML4NeUpV27p67zI9+/XlmvOXi2qEU6xfQMF
+	 VfzR4JQ1FhjoQ==
+To: "stable@vger.kernel.org" <stable@vger.kernel.org>
+From: Jordan Leppert <jordanleppert@protonmail.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "labre@posteo.de" <labre@posteo.de>, "davem@davemloft.net" <davem@davemloft.net>
+Reply-To: Jordan Leppert <jordanleppert@protonmail.com>
+Subject: Re: Crash on resume after suspend (5.17.5 and 5.15.36)
+Message-ID: <m2x6JjQLsOKoQvBopqci-aIwjaD4NAjGwR2ifWQ1UiGU4nnC9HzU0TpntBf8hWSIbItvCxm8fDgDnrDQbmGAg1-FRsfUO_rFzF1PAd_Amrw=@protonmail.com>
+In-Reply-To: <9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
+References: <refZ3y2HAXztrRkMMmFbBaF7Dz1CctWgjchSdBtcSNlpk-TL0fqLepVVHfw9qXtIQF9uFzBvFdjQiiX9Jv2zW9oaWej952s1IYwu61d1REo=@protonmail.com> <9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
+Feedback-ID: 43610911:user:proton
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: Regression: CIFS umount fails since 14302ee33 with some servers
- (exit code 32)
-Content-Language: en-US
-To: Paulo Alcantara <pc@cjr.nz>, Moritz Duge <duge@pre-sense.de>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Aurelien Aptel <aaptel@suse.com>, Ronnie Sahlberg <lsahlber@redhat.com>,
- Steve French <stfrench@microsoft.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>
-References: <715d745d-5a85-092a-68c2-b9b1dd8ad53e@leemhuis.info>
- <5fc82f02-be3a-6bb4-0800-aaf19a782655@leemhuis.info>
- <64a7de55-8f93-8e7a-4102-26f7d4dbe1dc@pre-sense.de> <87zgjx1d09.fsf@cjr.nz>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <87zgjx1d09.fsf@cjr.nz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651682630;c88b019e;
-X-HE-SMSGID: 1nmI6O-0001sG-7M
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 04.05.22 18:25, Paulo Alcantara wrote:
-> Moritz Duge <duge@pre-sense.de> writes:
-> 
->> I'm still waiting for a reply from Paul.
-> 
-> The bug is currently being handled at [1].  Enzo has also asked you to
-> send us network traces in [2] and you haven't sent any, yet.
+Some info I missed out, and some I've discovered:
 
-Many thx for the update.
+1. This causes my system to completely freeze such that I need to reboot to=
+ recover
 
-> I'm not "Paul", BTW.
+2. There are no system logs from the crash, in fact absolutely no logs from=
+ the resume at all, the last logs were of the computer going into suspend
 
-Paulo, please accept my apologies, that was my fault.
+3. I've found that I can prevent this crash by unloading the atlantic modul=
+e before suspending (modprobe -r atlantic)
 
-> [1] https://bugzilla.opensuse.org/show_bug.cgi?id=1194945
-> [2] https://bugzilla.opensuse.org/show_bug.cgi?id=1194945#c13
+4. Also, if I take the v5.17.5 tag of the kernel and revert the commit ment=
+ioned in my first email, this also prevents the crash
 
-#regzbot link: https://bugzilla.opensuse.org/show_bug.cgi?id=1194945
+Regards,
+Jordan
 
-Ciao, Thorsten
+
+
+------- Original Message -------
+On Wednesday, May 4th, 2022 at 16:07, Jordan Leppert <jordanleppert@protonm=
+ail.com> wrote:
+
+
+>
+>
+> Hi,
+>
+> A changed was added to both version 5.17.5 and 5.15.36 which causes my co=
+mputer to freeze when resuming after a suspend. This happens every time I s=
+uspend and then resume.
+>
+> I've bisected the change to commit: cbe6c3a8f8f4315b96e46e1a1c70393c06d95=
+a4c (net: atlantic: invert deep par in pm functions, preventing null derefs=
+)
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?=
+h=3Dlinux-5.17.y&id=3Dcbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
+>
+> My computer details that might be relevant:
+> OS: Arch Linux
+> CPU: AMD 5950X
+> GPU: AMD 6800XT
+>
+> As expected I have an Aquantia ethernet controller listed in lspci:
+>
+> 05:00.0 Ethernet controller: Aquantia Corp. AQC107 NBase-T/IEEE 802.3bz E=
+thernet Controller [AQtion] (rev 02)
+>
+> Please let me know if there is any more info I can give that will help.
+>
+> Regards,
+> Jordan
