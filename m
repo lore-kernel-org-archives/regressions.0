@@ -1,61 +1,177 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB872583
-	for <regressions@lists.linux.dev>; Wed,  4 May 2022 15:07:54 +0000 (UTC)
-Date: Wed, 04 May 2022 15:07:46 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail2; t=1651676871;
-	bh=o10sw0tBjGYFqmRrH+fVUfT4lfywBEMkHYlcUAVI/y8=;
-	h=Date:To:From:Cc:Reply-To:Subject:Message-ID:In-Reply-To:
-	 References:Feedback-ID:From:To:Cc:Date:Subject:Reply-To:
-	 Feedback-ID:Message-ID;
-	b=kwN8druepZBT8H5u0V5ZB9bLgMb8VlorSd5rf3dcu6oO/rfFJCcRpWy69Q5Uz7DxL
-	 MWJa6S7mIZ/1XnB1fNubnfhMnXoBDT0IFhYB1WaFbX9NulkkDLB9j8nsk8z9yHcVOo
-	 lgWK1XbR3qjux36H+jMES5cS+u+LxFUI/bX3lEZfQ9ibzOezVQv7c+2fGXXFi49Nr2
-	 GIB5BHt1b747lJVcrsH19lnAJImLzUYEO/97n8Pidp+PquDn4C9YwagmWRvQy5Am2P
-	 mG4L7w7wNT0YIBftTz0bDoWwzX8NDUppVsv5STdmXYxq1OBXtqgUm1+d2yTw/8P65N
-	 2SaOUAoJnfOCA==
-To: "stable@vger.kernel.org" <stable@vger.kernel.org>
-From: Jordan Leppert <jordanleppert@protonmail.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, "labre@posteo.de" <labre@posteo.de>, "davem@davemloft.net" <davem@davemloft.net>
-Reply-To: Jordan Leppert <jordanleppert@protonmail.com>
-Subject: Crash on resume after suspend (5.17.5 and 5.15.36)
-Message-ID: <9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
-In-Reply-To: <refZ3y2HAXztrRkMMmFbBaF7Dz1CctWgjchSdBtcSNlpk-TL0fqLepVVHfw9qXtIQF9uFzBvFdjQiiX9Jv2zW9oaWej952s1IYwu61d1REo=@protonmail.com>
-References: <refZ3y2HAXztrRkMMmFbBaF7Dz1CctWgjchSdBtcSNlpk-TL0fqLepVVHfw9qXtIQF9uFzBvFdjQiiX9Jv2zW9oaWej952s1IYwu61d1REo=@protonmail.com>
-Feedback-ID: 43610911:user:proton
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C23F2583
+	for <regressions@lists.linux.dev>; Wed,  4 May 2022 15:17:30 +0000 (UTC)
+Received: by mail-lf1-f53.google.com with SMTP id w1so2908027lfa.4
+        for <regressions@lists.linux.dev>; Wed, 04 May 2022 08:17:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ON3l4VmfZTG6tfwh+lXTECz7xGtbdAVvVE9pqJrPtBU=;
+        b=J2SSXllFqS1rJDj7D1UO39D19e0lq8vqwXrRiHfahcSGqgbVPU0EW3OLFTSV0kZyw4
+         n4wRz06XtabBNEHttqGQyC/+ZbbXMbv3ml2MaaPbP0Hjy7f3gy+C/yPNc97VFn5oTvxr
+         uNhfKBUqXoNR4nI9ktONtligR2UzOGlgTKfJFFT59eHZND01Hm6OFtxK7SCs9N1NJPe9
+         RY1qXdckssbDIO8n9IOurAWo+9zlCdGRwb4IDboOTWSr6iBBCQPg9g2im/cRpr9BHH/1
+         jWzxLeBK+I0PXma6RoK3U9+ySNujPb+4j8KNW/eHJFaZK/NAuG1BHYNSxrX7ccd51jY4
+         SJGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ON3l4VmfZTG6tfwh+lXTECz7xGtbdAVvVE9pqJrPtBU=;
+        b=vKto/Ohirg9rkpCDdbD89eTA9LtznXeqzO9T2TKL7tCv21p0iq8WVeT+a2M0awvi7w
+         MtG3AkRSfArK6trW0aw4BjBhxKM+acvTpVAfFLYRGBfxvNq9TXz4eMs675l0cx+oKUv1
+         MSS0aor8Us3vpE1HfRYuIZf7ITfKZyJMiNF1j5SHzirkOsvMTcdsnoiV3yp++T70KWGl
+         KYmvcrhdv8E3lXzbn418l+UJOxcwtX1ZGxnMiArvAqy2uDmAIlnsFDUlMxNXqRa/l75r
+         iJy3sd+H/YkPp+YpXtqrmwtz6AqxCpQvDMpdtF/4qE9lb/jze6oUlwTP4FjDdWork9bG
+         iOug==
+X-Gm-Message-State: AOAM532tAiZ9w6TfqXKRqer5lajKqaHVRmusYXlEWzlsbg7IjK2+P1lJ
+	b7tY26I1mLOoJx9EUnookL+AtjHYDnbXR/7tZeRByg==
+X-Google-Smtp-Source: ABdhPJwVVFpZrp63qehiOaApGMb7R3PSPk3Y0CqHNyMQMAWHboLPGnr21On/mQGhundTtGQK1k6X5wdFojmyk8m8nNA=
+X-Received: by 2002:a05:6512:3b87:b0:473:9e36:5f0d with SMTP id
+ g7-20020a0565123b8700b004739e365f0dmr8663687lfv.424.1651677448063; Wed, 04
+ May 2022 08:17:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <d62431af-5ce4-3d8f-542f-df8e7a7faaf1@leemhuis.info>
+ <CAHRSSEw5CBnCpXcowKKG5KzOoazecC6jDn+4_fd0Gp3+e9Yixw@mail.gmail.com> <f42e91ae-a22d-b664-003a-e1698dc021aa@leemhuis.info>
+In-Reply-To: <f42e91ae-a22d-b664-003a-e1698dc021aa@leemhuis.info>
+From: Todd Kjos <tkjos@google.com>
+Date: Wed, 4 May 2022 08:17:16 -0700
+Message-ID: <CAHRSSEyVc0pNwp23Tu2SH3ti0aKfTw+XRrHTuSkMjoCe7huHyA@mail.gmail.com>
+Subject: Re: Regression in BinderFS: Kernel bug at binder.c:2352
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	"quackdoctech@gmail.com" <quackdoctech@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, May 4, 2022 at 3:47 AM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+>
+>
+> On 08.04.22 17:28, Todd Kjos wrote:
+> > On Fri, Apr 8, 2022 at 3:27 AM Thorsten Leemhuis
+> > <regressions@leemhuis.info> wrote:
+> >>
+> >> Hi, this is your Linux kernel regression tracker.
+> >>
+> >> Todd, seems there is a regression that is caused by one of your Linux
+> >> kernel changes:
+> >
+> > Yes, it was reported a few days ago by the ChromeOS team. Already
+> > looking into it.
+>
+> What happen to this? It looks like it has fallen through the cracks. Or
+> was progress made and it just didn't link to the ticket or mention the
+> reporter?
 
-A changed was added to both version 5.17.5 and 5.15.36 which causes my comp=
-uter to freeze when resuming after a suspend. This happens every time I sus=
-pend and then resume.
+It was found and fixed independently by Alessandro Astone in
+https://lore.kernel.org/lkml/20220415120015.52684-2-ales.astone@gmail.com/
 
-I've bisected the change to commit: cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4=
-c (net: atlantic: invert deep par in pm functions, preventing null derefs)
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=
-=3Dlinux-5.17.y&id=3Dcbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
-
-My computer details that might be relevant:
-OS: Arch Linux
-CPU: AMD 5950X
-GPU: AMD 6800XT
-
-As expected I have an Aquantia ethernet controller listed in lspci:
-
-05:00.0 Ethernet controller: Aquantia Corp. AQC107 NBase-T/IEEE 802.3bz Eth=
-ernet Controller [AQtion] (rev 02)
-
-Please let me know if there is any more info I can give that will help.
-
-Regards,
-Jordan
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>
+> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+> reports and sometimes miss something important when writing mails like
+> this. If that's the case here, don't hesitate to tell me in a public
+> reply, it's in everyone's interest to set the public record straight.
+>
+> #regzbot poke
+>
+> >> I noticed a regression report in bugzilla.kernel.org that afaics nobod=
+y
+> >> acted upon since it was reported about a week ago, that's why I decide=
+d
+> >> to forward it to the lists and all people that seemed to be relevant
+> >> here. To quote from https://bugzilla.kernel.org/show_bug.cgi?id=3D2157=
+95 :
+> >>
+> >>>  quackdoctech@gmail.com 2022-04-02 19:56:29 UTC
+> >>>
+> >>> Created attachment 300686 [details]
+> >>> Dmesg output cut to error
+> >>>
+> >>> Apologies if this should have been reported under Drivers where the s=
+ource is, selftests has it listed under filesystems so I chose here. Using =
+Waydroid which is android run via LXC, on android 10 the bug comes when try=
+ing to use video playback. I know of issues on android 11 but have not yet =
+had the chance to get the logs from it. the issue does not occur in Linux k=
+ernel 5.16 series. but does occur on linux 5.17. the issue is confirmed on =
+both Arch's linux-zen 5.17.1.zen1-1 kernel as well as some users reporting =
+a fedora kernel with the issue.
+> >>>
+> >>> [reply] [=E2=88=92] Comment 1 quackdoctech@gmail.com 2022-04-03 19:38=
+:37 UTC
+> >>>
+> >>> I've narrowed down the issue to this patch series.
+> >>>
+> >>> https://lore.kernel.org/all/20211130185152.437403-1-tkjos@google.com/
+> >>>
+> >>
+> >> Could somebody take a look into this? Or was this discussed somewhere
+> >> else already? Or even fixed?
+> >>
+> >> Anyway, to get this tracked:
+> >>
+> >> #regzbot introduced: v5.16..v5.17
+> >> #regzbot from: quackdoctech@gmail.com <quackdoctech@gmail.com>
+> >> #regzbot title: BinderFS: Kernel bug at binder.c:2352
+> >> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D215795
+> >>
+> >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' ha=
+t)
+> >>
+> >> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+> >> reports on my table. I can only look briefly into most of them and lac=
+k
+> >> knowledge about most of the areas they concern. I thus unfortunately
+> >> will sometimes get things wrong or miss something important. I hope
+> >> that's not the case here; if you think it is, don't hesitate to tell m=
+e
+> >> in a public reply, it's in everyone's interest to set the public recor=
+d
+> >> straight.
+> >>
+> >> --
+> >> Additional information about regzbot:
+> >>
+> >> If you want to know more about regzbot, check out its web-interface, t=
+he
+> >> getting start guide, and the references documentation:
+> >>
+> >> https://linux-regtracking.leemhuis.info/regzbot/
+> >> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+> >> https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> >>
+> >> The last two documents will explain how you can interact with regzbot
+> >> yourself if your want to.
+> >>
+> >> Hint for reporters: when reporting a regression it's in your interest =
+to
+> >> CC the regression list and tell regzbot about the issue, as that ensur=
+es
+> >> the regression makes it onto the radar of the Linux kernel's regressio=
+n
+> >> tracker -- that's in your interest, as it ensures your report won't fa=
+ll
+> >> through the cracks unnoticed.
+> >>
+> >> Hint for developers: you normally don't need to care about regzbot onc=
+e
+> >> it's involved. Fix the issue as you normally would, just remember to
+> >> include 'Link:' tag in the patch descriptions pointing to all reports
+> >> about the issue. This has been expected from developers even before
+> >> regzbot showed up for reasons explained in
+> >> 'Documentation/process/submitting-patches.rst' and
+> >> 'Documentation/process/5.Posting.rst'.
+> >
+> >
