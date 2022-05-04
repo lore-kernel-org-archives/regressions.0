@@ -1,15 +1,16 @@
 Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AAB129AA
-	for <regressions@lists.linux.dev>; Wed,  4 May 2022 17:57:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35B5210B
+	for <regressions@lists.linux.dev>; Wed,  4 May 2022 18:31:27 +0000 (UTC)
 Received: from tux.applied-asynchrony.com (p5ddd7616.dip0.t-ipconnect.de [93.221.118.22])
-	by mail.itouring.de (Postfix) with ESMTPSA id 9A640124EC0;
-	Wed,  4 May 2022 19:50:31 +0200 (CEST)
+	by mail.itouring.de (Postfix) with ESMTPSA id DFDF0124EC0;
+	Wed,  4 May 2022 20:31:25 +0200 (CEST)
 Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
-	by tux.applied-asynchrony.com (Postfix) with ESMTP id 54AA0F01600;
-	Wed,  4 May 2022 19:50:31 +0200 (CEST)
+	by tux.applied-asynchrony.com (Postfix) with ESMTP id 8CEA2F01600;
+	Wed,  4 May 2022 20:31:25 +0200 (CEST)
 Subject: Re: Crash on resume after suspend (5.17.5 and 5.15.36)
+From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
 To: Jordan Leppert <jordanleppert@protonmail.com>,
  "stable@vger.kernel.org" <stable@vger.kernel.org>
 Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
@@ -17,47 +18,56 @@ Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
  "davem@davemloft.net" <davem@davemloft.net>
 References: <refZ3y2HAXztrRkMMmFbBaF7Dz1CctWgjchSdBtcSNlpk-TL0fqLepVVHfw9qXtIQF9uFzBvFdjQiiX9Jv2zW9oaWej952s1IYwu61d1REo=@protonmail.com>
  <9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
-From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+ <0e53891e-418f-ce94-2204-060c35b32a2d@applied-asynchrony.com>
 Organization: Applied Asynchrony, Inc.
-Message-ID: <0e53891e-418f-ce94-2204-060c35b32a2d@applied-asynchrony.com>
-Date: Wed, 4 May 2022 19:50:31 +0200
+Message-ID: <888dd07b-89b3-6620-820a-74f497ddc223@applied-asynchrony.com>
+Date: Wed, 4 May 2022 20:31:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
+In-Reply-To: <0e53891e-418f-ce94-2204-060c35b32a2d@applied-asynchrony.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 2022-05-04 17:07, Jordan Leppert wrote:
-> Hi,
+On 2022-05-04 19:50, Holger Hoffstätte wrote:
+> On 2022-05-04 17:07, Jordan Leppert wrote:
+>> Hi,
+>>
+>> A changed was added to both version 5.17.5 and 5.15.36 which causes my computer to freeze when resuming after a suspend. This happens every time I suspend and then resume.
+>>
+>> I've bisected the change to commit: cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c (net: atlantic: invert deep par in pm functions, preventing null derefs)
+>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.17.y&id=cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
+>>
+>> My computer details that might be relevant:
+>> OS: Arch Linux
+>> CPU: AMD 5950X
+>> GPU: AMD 6800XT
+>>
+>> As expected I have an Aquantia ethernet controller listed in lspci:
+>>
+>> 05:00.0 Ethernet controller: Aquantia Corp. AQC107 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion] (rev 02)
+>>
+>> Please let me know if there is any more info I can give that will help.
+>>
+>> Regards,
+>> Jordan
+>>
 > 
-> A changed was added to both version 5.17.5 and 5.15.36 which causes my computer to freeze when resuming after a suspend. This happens every time I suspend and then resume.
-> 
-> I've bisected the change to commit: cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c (net: atlantic: invert deep par in pm functions, preventing null derefs)
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.17.y&id=cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
-> 
-> My computer details that might be relevant:
-> OS: Arch Linux
-> CPU: AMD 5950X
-> GPU: AMD 6800XT
-> 
-> As expected I have an Aquantia ethernet controller listed in lspci:
-> 
-> 05:00.0 Ethernet controller: Aquantia Corp. AQC107 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion] (rev 02)
-> 
-> Please let me know if there is any more info I can give that will help.
-> 
-> Regards,
-> Jordan
-> 
+> Just a quick note that I have the same issue (same card model); since recently
+> (5.15.36) the hang after resume is 100% reliable. IIRC it used to be hit-and-miss
+> before that. I'm currently building .38 with the mentioned commit reverted and
+> will report back. Thanks for bringing this up.
 
-Just a quick note that I have the same issue (same card model); since recently
-(5.15.36) the hang after resume is 100% reliable. IIRC it used to be hit-and-miss
-before that. I'm currently building .38 with the mentioned commit reverted and
-will report back. Thanks for bringing this up.
+With said commit reverted and 5.15.38 I got 1 successful resume and 1 lockup.
+Difference is that with the patch reverted, the locked-up system can be pinged
+(unlike with the patch applied), though resume still does not finish properly and
+now probably runs into the problem that the patch was trying to fix.
+Any network services like ssh are still dead though.
+This used to work every time, all the time..looks like I'll try removing the
+module before suspend.
 
 -h
