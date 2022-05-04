@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF552101
-	for <regressions@lists.linux.dev>; Wed,  4 May 2022 06:56:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7816A2101
+	for <regressions@lists.linux.dev>; Wed,  4 May 2022 07:13:25 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:1b3c:6996:5378:f253]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nm8vt-0003UR-71; Wed, 04 May 2022 08:56:21 +0200
-Message-ID: <8e85ab99-1f54-755d-7377-51055d5fa4a4@leemhuis.info>
-Date: Wed, 4 May 2022 08:56:19 +0200
+	id 1nm9CM-00042j-Sr; Wed, 04 May 2022 09:13:23 +0200
+Message-ID: <7c84392d-8ba9-e74e-256b-036b728e5568@leemhuis.info>
+Date: Wed, 4 May 2022 09:13:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,130 +16,326 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: Xorg SEGV in Xen PV dom0 after updating from 5.16.18 to 5.17.5
+Subject: Re: CIFS regression mounting vers=1.0 NTLMSSP when hostname is too
+ long
 Content-Language: en-US
-To: Juergen Gross <jgross@suse.com>,
- Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: regressions@lists.linux.dev,
- =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?=
- <marmarek@invisiblethingslab.com>, Jani Nikula
- <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- intel-gfx <intel-gfx@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <YnHK1Z3o99eMXsVK@mail-itl>
- <f4b00553-4e77-84bc-e25c-01383d7e92dd@leemhuis.info>
- <fa6967cf-a718-4be2-2591-b675e2095b4c@suse.com>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Byron Stanoszek <gandalf@winds.org>, "Paulo Alcantara (SUSE)" <pc@cjr.nz>,
+ Steve French <sfrench@samba.org>
+References: <e6837098-15d9-acb6-7e34-1923cf8c6fe1@winds.org>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <fa6967cf-a718-4be2-2591-b675e2095b4c@suse.com>
+In-Reply-To: <e6837098-15d9-acb6-7e34-1923cf8c6fe1@winds.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651647385;f91155f8;
-X-HE-SMSGID: 1nm8vt-0003UR-71
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651648405;133b0c76;
+X-HE-SMSGID: 1nm9CM-00042j-Sr
 
-On 04.05.22 08:48, Juergen Gross wrote:
-> On 04.05.22 07:46, Thorsten Leemhuis wrote:
->> Hi, this is your Linux kernel regression tracker. Sending this just to
->> CC the developers of the culprit mentioned below (bdd8b6c98239cad
->> ("drm/i915: replace X86_FEATURE_PAT with pat_enabled()")) and the
->> maintainers for the subsystem.
->>
->> While at it a quick note: I wonder if this is problem a similar to one
->> that recently turned up with amdgpu and is fixed by this problem:
->> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=78b12008f20
->>
+[TLDR: I'm adding the regression report below to regzbot, the Linux
+kernel regression tracking bot; all text you find below is compiled from
+a few templates paragraphs you might have encountered already already
+from similar mails.]
+
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easily accessible to everyone.
+
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
+
+#regzbot ^introduced v4.14..v5.16
+#regzbot title cifs: regression mounting vers=1.0 NTLMSSP when hostname
+is too long
+#regzbot ignore-activity
+
+If it turns out this isn't a regression, free free to remove it from the
+tracking by sending a reply to this thread containing a paragraph like
+"#regzbot invalid: reason why this is invalid" (without the quotes).
+
+Reminder for developers: when fixing the issue, please add a 'Link:'
+tags pointing to the report (the mail quoted above) using
+lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'. Regzbot needs them to
+automatically connect reports with fixes, but they are useful in
+general, too.
+
+I'm sending this to everyone that got the initial report, to make
+everyone aware of the tracking. I also hope that messages like this
+motivate people to directly get at least the regression mailing list and
+ideally even regzbot involved when dealing with regressions, as messages
+like this wouldn't be needed then. And don't worry, if I need to send
+other mails regarding this regression only relevant for regzbot I'll
+send them to the regressions lists only (with a tag in the subject so
+people can filter them away). With a bit of luck no such messages will
+be needed anyway.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
+
+
+On 03.05.22 22:36, Byron Stanoszek wrote:
+> I would like to report a regression in the CIFS fs. Sometime between
+> Linux 4.14
+> and 5.16, mounting CIFS with option vers=1.0 (and
+> CONFIG_CIFS_ALLOW_INSECURE_LEGACY=y set appropriately) with security type
+> NTLMSSP stopped working for me. The server side is a Windows 2003 Server.
 > 
-> No, this is different.
+> I found that this behavior depends on the length of the Linux client's
+> host+domain name (e.g. utsname()->nodename), where the mount works as
+> long as
+> the name is 16 characters or less. Anything 17 or above returns -EIO,
+> per the
+> following example:
 > 
-> I have posted a patch yesterday which should fix the issue:
+> /etc/fstab entry:
 > 
-> https://lore.kernel.org/lkml/20220503132207.17234-3-jgross@suse.com/T/#m75efc68c96d8f7160229b5f3147242221ce0c28c
-
-Ahh, great, thx for letting us know.
-
-#regzbot monitor:
-https://lore.kernel.org/lkml/20220503132207.17234-1-jgross@suse.com/
-
-Ciao, Thorsten
-
->> Ciao, Thorsten
->>
->> On 04.05.22 02:37, Marek Marczykowski-Górecki wrote:
->>>
->>> After updating from 5.16.18 to 5.17.5 in Xen PV dom0, my Xorg started
->>> crashing when displaying any window mapped from a guest (domU) system.
->>> This is 100% reproducible.
->>> The system is Qubes OS, and it uses a trick that maps windows content
->>> from other guests using Xen grant tables, wrapped as "shared memory"
->>> from Xorg point of view (so, the memory that Xorg mmaps is not just from
->>> another process, but from another VM). That's the ShmPutImage you can
->>> see on the stack trace below.
->>>
->>> Stack trace of thread 12858:
->>> #0  0x00007f80029e17d5 raise (libc.so.6 + 0x3c7d5)
->>> #1  0x00007f80029ca895 abort (libc.so.6 + 0x25895)
->>> #2  0x00005b3469ace0e0 OsAbort (Xorg + 0x1c60e0)
->>> #3  0x00005b3469ad3959 AbortServer (Xorg + 0x1cb959)
->>> #4  0x00005b3469ad46aa FatalError (Xorg + 0x1cc6aa)
->>> #5  0x00005b3469acb450 OsSigHandler (Xorg + 0x1c3450)
->>> #6  0x00007f8002b85a90 __restore_rt (libpthread.so.0 + 0x14a90)
->>> #7  0x00007f8002b0a2a1 __memmove_avx_unaligned_erms (libc.so.6 +
->>> 0x1652a1)
->>> #8  0x00007f80015dfcc9 linear_to_xtiled_faster (iris_dri.so + 0xc91cc9)
->>> #9  0x00007f80015e3477 _isl_memcpy_linear_to_tiled (iris_dri.so +
->>> 0xc95477)
->>> #10 0x00007f8001468440 iris_texture_subdata (iris_dri.so + 0xb1a440)
->>> #11 0x00007f8000a76107 st_TexSubImage (iris_dri.so + 0x128107)
->>> #12 0x00007f8000be9a47 texture_sub_image (iris_dri.so + 0x29ba47)
->>> #13 0x00007f8000becd0c texsubimage_err (iris_dri.so + 0x29ed0c)
->>> #14 0x00007f8000bf2939 _mesa_TexSubImage2D (iris_dri.so + 0x2a4939)
->>> #15 0x00007f800213831f glamor_upload_boxes (libglamoregl.so + 0x1e31f)
->>> #16 0x00007f800213856f glamor_upload_region (libglamoregl.so + 0x1e56f)
->>> #17 0x00007f800212aea6 glamor_put_image (libglamoregl.so + 0x10ea6)
->>> #18 0x00005b3469a4d79c damagePutImage (Xorg + 0x14579c)
->>> #19 0x00005b3469a00a7e ProcShmPutImage (Xorg + 0xf8a7e)
->>> #20 0x00005b3469965a2b Dispatch (Xorg + 0x5da2b)
->>> #21 0x00005b3469969b04 dix_main (Xorg + 0x61b04)
->>> #22 0x00007f80029cc082 __libc_start_main (libc.so.6 + 0x27082)
->>> #23 0x00005b3469952e6e _start (Xorg + 0x4ae6e)
->>>
->>> Disassembly of the surrounding code:
->>>
->>>     0x00007596ae8c82fb <+123>:    ja     0x7596ae8c8338
->>> <__memmove_avx_unaligned_erms+184>
->>>     0x00007596ae8c82fd <+125>:    jb     0x7596ae8c8304
->>> <__memmove_avx_unaligned_erms+132>
->>>     0x00007596ae8c82ff <+127>:    movzbl (%rsi),%ecx
->>>     0x00007596ae8c8302 <+130>:    mov    %cl,(%rdi)
->>>     0x00007596ae8c8304 <+132>:    retq
->>>     0x00007596ae8c8305 <+133>:    vmovdqu (%rsi),%xmm0
->>>     0x00007596ae8c8309 <+137>:    vmovdqu -0x10(%rsi,%rdx,1),%xmm1
->>> => 0x00007596ae8c830f <+143>:    vmovdqu %xmm0,(%rdi)
->>>     0x00007596ae8c8313 <+147>:    vmovdqu %xmm1,-0x10(%rdi,%rdx,1)
->>>     0x00007596ae8c8319 <+153>:    retq
->>>
->>>
->>> I don't see any related kernel or Xen messages at this time. Xorg's SEGV
->>> handler prints also:
->>>
->>>      (EE) Segmentation fault at address 0x3c010
->>>
->>> Git bisect says it's bdd8b6c98239cad ("drm/i915: replace X86_FEATURE_PAT
->>> with pat_enabled()"), and indeed with this commit reverted on top of
->>> 5.17.5 everything works fine.
->>>
->>> I guess this part of dom0's boot dmesg may be relevant:
->>>
->>> [    0.000949] x86/PAT: MTRRs disabled, skipping PAT initialization too.
->>> [    0.000953] x86/PAT: Configuration [0-7]: WB  WT  UC- UC  WC  WP 
->>> UC  UC
->>>
->>> Originally reported at
->>> https://github.com/QubesOS/qubes-issues/issues/7479
->>>
->>>   #regzbot introduced bdd8b6c98239cad
->>> #regzbot monitor: https://github.com/QubesOS/qubes-issues/issues/7479
->>>
+> //10.0.0.12/xxxxxxxxx /ext0     cifs   
+> vers=1.0,user=xxxxx,pass=xxxxxxxxxxx,dom=xxxxxxxxxxx,dir_mode=0755,file_mode=0644,noauto
+> 0 0
 > 
+> # hostname 12345678901234567;mount /ext0
+> mount error(5): Input/output error
+> Refer to the mount.cifs(8) manual page (e.g. man mount.cifs) and kernel
+> log messages (dmesg)
+> # hostname 1234567890123456;mount /ext0
+> #
+> 
+> I implemented a workaround using the following patch:
+> 
+> Signed-off-by: Byron Stanoszek <gandalf@winds.org>
+> ---
+> --- a/fs/cifs/cifsglob.h
+> +++ b/fs/cifs/cifsglob.h
+> @@ -101,7 +101,7 @@
+>  #define XATTR_DOS_ATTRIB "user.DOSATTRIB"
+>  #endif
+> 
+> -#define CIFS_MAX_WORKSTATION_LEN  (__NEW_UTS_LEN + 1)  /* reasonable
+> max for client */
+> +#define CIFS_MAX_WORKSTATION_LEN 16
+> 
+>  /*
+>   * CIFS vfs client Status information (based on what we know.)
+> 
+> I don't know if this patch is correct or will have any real effect
+> outside of
+> the NTLMSSP session connect sequence, but it worked in my case.
+> 
+> I appended a transcript of the CIFS debug log from Linux 5.17.5 showing
+> this
+> behavior. Server names are X'd out, and I highlighted the hostname as
+> "12345678901234567890".
+> 
+> Thanks,
+>  -Byron
+> 
+>  - - -
+> 
+> CIFS: fs/cifs/fs_context.c: CIFS: parsing cifs mount option 'source'
+> CIFS: fs/cifs/fs_context.c: CIFS: parsing cifs mount option 'ip'
+> CIFS: address conversion returned 1 for 10.0.0.12
+> CIFS: fs/cifs/fs_context.c: CIFS: parsing cifs mount option 'unc'
+> CIFS: fs/cifs/fs_context.c: CIFS: parsing cifs mount option 'vers'
+> Use of the less secure dialect vers=1.0 is not recommended unless
+> required for access to very old servers
+> 
+> CIFS: VFS: Use of the less secure dialect vers=1.0 is not recommended
+> unless required for access to very old servers
+> CIFS: fs/cifs/fs_context.c: CIFS: parsing cifs mount option 'user'
+> CIFS: fs/cifs/fs_context.c: CIFS: parsing cifs mount option 'pass'
+> CIFS: fs/cifs/fs_context.c: CIFS: parsing cifs mount option 'dom'
+> CIFS: fs/cifs/fs_context.c: Domain name set
+> CIFS: fs/cifs/fs_context.c: CIFS: parsing cifs mount option 'dir_mode'
+> CIFS: fs/cifs/fs_context.c: CIFS: parsing cifs mount option 'file_mode'
+> CIFS: fs/cifs/fs_context.c: CIFS: parsing cifs mount option 'netbiosname'
+> CIFS: fs/cifs/cifsfs.c: Devname: \\10.0.0.12\xxxxxxxxx flags: 0
+> CIFS: fs/cifs/connect.c: Username: xxxxx
+> CIFS: fs/cifs/connect.c: file mode: 0644  dir mode: 0755
+> CIFS: fs/cifs/connect.c: VFS: in mount_get_conns as Xid: 104 with uid: 0
+> CIFS: fs/cifs/connect.c: UNC: \\10.0.0.12\xxxxxxxxx
+> CIFS: fs/cifs/connect.c: generic_ip_connect: connecting to 10.0.0.12:445
+> CIFS: fs/cifs/connect.c: Socket created
+> CIFS: fs/cifs/connect.c: sndbuf 16384 rcvbuf 131072 rcvtimeo 0x1b58
+> CIFS: fs/cifs/connect.c: cifs_get_tcp_session: next dns resolution
+> scheduled for 600 seconds in the future
+> CIFS: fs/cifs/connect.c: VFS: in cifs_get_smb_ses as Xid: 105 with uid: 0
+> CIFS: fs/cifs/connect.c: Existing smb sess not found
+> CIFS: fs/cifs/cifssmb.c: Requesting extended security
+> CIFS: fs/cifs/connect.c: Demultiplex PID: 6581
+> CIFS: fs/cifs/transport.c: wait_for_free_credits: remove 1 credits total=0
+> CIFS: fs/cifs/transport.c: For smb_command 114
+> CIFS: fs/cifs/transport.c: Sending smb: smb_len=51
+> 0000 2f00                                .../
+> 53ff 424d 0072 0000 0000 c801 0000 0000  .SMBr...........
+> 0000 0000 0000 0000 0000 19b3 0000 0001  ................
+> 00 0c 00 02 4e 54 20 4c 4d 20 30 2e 31 32 00     ....NT LM 0.12.
+> CIFS: fs/cifs/connect.c: RFC1002 header 0xb2
+> 0000 b200 53ff 424d 0072 0000 9800 8001  .....SMBr.......
+> 0000 0000 0000 0000 0000 0000 0000 19b3  ................
+> 0000 0001 0011 0300 00fd 0001 8104 0000  ................
+> 0000 0001 e4e2 692b d3fd 8000 79be a08c  ......+i.....y..
+> 5f1b 01d8 012c 6d00 1500 0000 4200 e8c1  ._..,..m.....B..
+> 3625 c892 1069 2669 6056 065b 2b06 0106  %6..i.i&V`[..+..
+> 0505 a002 3051 a04f 3024 0622 2a09 4886  ....Q0O.$0"..*.H
+> f782 0112 0202 0906 862a 8648 12f7 0201  ........*.H.....
+> 0602 2b0a 0106 0104 3782 0202 a30a 3027  ...+.....7....'0
+> a025 1b23 xx21 xxxx xxxx xxxx xxxx xxxx  %.#.!xxxxxxxxxxx
+> 4024 xxxx xxxx xxxx xxxx xxxx xxxx xxxx  $@xxxxxxxxxxxxxx
+> xxxx xxxx xxxx                           xxxxxx
+> CIFS: fs/cifs/misc.c: checkSMB Length: 0xb6, smb_buf_length: 0xb2
+> CIFS: fs/cifs/transport.c: cifs_sync_mid_result: cmd=114 mid=1 state=4
+> 0000 b200 53ff 424d 0072 0000 9800 8001  .....SMBr.......
+> 0000 0000 0000 0000 0000 0000 0000 19b3  ................
+> 0000 0001 0011 0300 00fd 0001 8104 0000  ................
+> 0000 0001 e4e2 692b d3fd 8000 79be a08c  ......+i.....y..
+> 5f1b 01d8 012c 6d00 1500 0000 4200 e8c1  ._..,..m.....B..
+> 3625 c892 1069 2669 6056 065b            %6..i.i&V`[.
+> CIFS: fs/cifs/cifssmb.c: Dialect: 0
+> CIFS: Max buf = 33028
+> CIFS: fs/cifs/cifssmb.c: negprot rc 0
+> CIFS: fs/cifs/connect.c: Security Mode: 0x3 Capabilities: 0x8000d3fd
+> TimeAdjust: 18000
+> CIFS: fs/cifs/sess.c: sess setup type 2
+> CIFS: fs/cifs/sess.c: rawntlmssp session setup negotiate phase
+> CIFS: fs/cifs/transport.c: wait_for_free_credits: remove 1 credits
+> total=252
+> CIFS: fs/cifs/transport.c: For smb_command 115
+> CIFS: fs/cifs/transport.c: Sending smb: smb_len=194
+> 0000 be00                                ....
+> 53ff 424d 0073 0000 0000 d801 0000 0000  .SMBs...........
+> 0000 0000 0000 0000 0000 19b3 0000 0002  ................
+> ff0c 0000 5400 fd40 0100 0000 0000 2400  .....T@........$
+> 00 00 00 00 00 dc d0 00 80 83 00                 ...........
+> 544e 4d4c 5353 0050 0001 0000 8235 e008  NTLMSSP.....5...
+> 0000 0000 0020 0000 0000 0000 0022 0000  .... ......."...
+> 0000 0000                                ....
+> 4c00 6900 6e00 7500 7800 2000 7600 6500  .L.i.n.u.x. .v.e
+> 7200 7300 6900 6f00 6e00 2000 3500 2e00  .r.s.i.o.n. .5..
+> 3100 3700 2e00 3500 0000 4300 4900 4600  .1.7...5...C.I.F
+> 5300 2000 5600 4600 5300 2000 4300 6c00  .S. .V.F.S. .C.l
+> 6900 6500 6e00 7400 2000 6600 6f00 7200  .i.e.n.t. .f.o.r
+> 00 20 00 4c 00 69 00 6e 00 75 00 78 00 00 00     . .L.i.n.u.x...
+> CIFS: fs/cifs/connect.c: RFC1002 header 0x154
+> 0000 5401 53ff 424d 1673 0000 98c0 c807  ...T.SMBs.......
+> 0000 0000 0000 0000 0000 0000 0000 19b3  ................
+> 0800 0002 ff04 0000 0000 de00 2900 4e01  .............).N
+> 4c54 534d 5053 0200 0000 0e00 0e00 3000  TLMSSP.........0
+> 0000 0500 8982 6560 8fb0 4b2d 8980 002a  ......`e..-K..*.
+> 0000 0000 0000 a000 a000 3e00 0000 XX00  ...........>...X
+> XX00 XX00 XX00 XX00 XX00 XX00 0200 0e00  .X.X.X.X.X.X....
+> XX00 XX00 XX00 XX00 XX00 XX00 XX00 0100  .X.X.X.X.X.X.X..
+> 1600 XX00 XX00 XX00 XX00 XX00 XX00 XX00  ...X.X.X.X.X.X.X
+> XX00 XX00 XX00 XX00 0400 XX00 XX00 XX00  .X.X.X.X...X.X.X
+> XX00 XX00 XX00 XX00 XX00 XX00 XX00 XX00  .X.X.X.X.X.X.X.X
+> XX00 XX00 XX00 XX00 XX00 XX00 XX00 XX00  .X.X.X.X.X.X.X.X
+> XX00 XX00 0300 XX00 XX00 XX00 XX00 XX00  .X.X...X.X.X.X.X
+> XX00 XX00 XX00 XX00 XX00 XX00 XX00 XX00  .X.X.X.X.X.X.X.X
+> XX00 XX00 XX00 XX00 XX00 XX00 XX00 XX00  .X.X.X.X.X.X.X.X
+> XX00 XX00 XX00 XX00 XX00 XX00 XX00 XX00  .X.X.X.X.X.X.X.X
+> XX00 XX00 XX00 XX00 0000 0000 0000 0057  .X.X.X.X......W.
+> 0069 006e 0064 006f 0077 0073 0020 0035  i.n.d.o.w.s. .5.
+> 002e 0030 0000 0057 0069 006e 0064 006f  ..0...W.i.n.d.o.
+> 0077 0073 0020 0032 0030 0030 0030 0020  w.s. .2.0.0.0. .
+> 004c 0041 004e 0020 004d 0061 006e 0061  L.A.N. .M.a.n.a.
+> 0067 0065 0072 0000                      g.e.r...
+> CIFS: fs/cifs/misc.c: checkSMB Length: 0x158, smb_buf_length: 0x154
+> CIFS: fs/cifs/transport.c: cifs_sync_mid_result: cmd=115 mid=2 state=4
+> 0000 5401 53ff 424d 1673 0000 98c0 c807  ...T.SMBs.......
+> 0000 0000 0000 0000 0000 0000 0000 19b3  ................
+> 0800 0002 ff04 0000 0000 de00 2900 4e01  .............).N
+> 4c54 534d 5053 0200 0000 0e00 0e00 3000  TLMSSP.........0
+> 0000 0500 8982 6560 8fb0 4b2d 8980 002a  ......`e..-K..*.
+> 0000 0000 0000 a000 a000 3e00            ...........>
+> CIFS: Status code returned 0xc0000016 NT_STATUS_MORE_PROCESSING_REQUIRED
+> CIFS: fs/cifs/netmisc.c: Mapping smb error code 0xc0000016 to POSIX err -5
+> CIFS: fs/cifs/misc.c: Null buffer passed to cifs_small_buf_release
+> CIFS: fs/cifs/sess.c: rawntlmssp session setup challenge phase
+> CIFS: fs/cifs/sess.c: UID = 2048
+> CIFS: fs/cifs/sess.c: decode_ntlmssp_challenge: negotiate=0xe0088235
+> challenge=0x60898205
+> CIFS: fs/cifs/sess.c: rawntlmssp session setup authenticate phase
+> CIFS: fs/cifs/transport.c: wait_for_free_credits: remove 1 credits
+> total=252
+> CIFS: fs/cifs/transport.c: For smb_command 115
+> CIFS: fs/cifs/transport.c: Sending smb: smb_len=514
+> 0000 fe01                                ....
+> 53ff 424d 0073 0000 0000 d801 0000 0000  .SMBs...........
+> 0000 0000 0000 0000 0000 19b3 0800 0003  ................
+> ff0c 0000 5400 fd40 0100 0000 0000 6400  .....T@........d
+> 01 00 00 00 00 dc d0 00 80 c3 01                 ...........
+> 544e 4d4c 5353 0050 0003 0000 0000 0000  NTLMSSP.........
+> 0040 0000 00cc 00cc 0040 0000 0016 0016  @.......@.......
+> 010c 0000 000a 000a 0122 0000 0028 0028  ........"...(.(.
+> 012c 0000 0010 0010 0154 0000 a205 6089  ,.......T......`
+> 277e 10f2 c522 1143 c4d3 2343 28f2 5b32  ~'..".C...C#.(2[
+> 0101 0000 0000 0000 2278 bb86 5f1b 01d8  ........x"..._..
+> 66a8 9bd0 c591 0e07 0000 0000 0002 000e  .f..............
+> 00XX 00XX 00XX 00XX 00XX 00XX 00XX 0001  X.X.X.X.X.X.X...
+> 0016 00XX 00XX 00XX 00XX 00XX 00XX 00XX  ..X.X.X.X.X.X.X.
+> 00XX 00XX 00XX 00XX 0004 00XX 00XX 00XX  X.X.X.X...X.X.X.
+> 00XX 00XX 00XX 00XX 00XX 00XX 00XX 00XX  X.X.X.X.X.X.X.X.
+> 00XX 00XX 00XX 00XX 00XX 00XX 00XX 00XX  X.X.X.X.X.X.X.X.
+> 00XX 00XX 0003 00XX 00XX 00XX 00XX 00XX  X.X...@.X.X.X.X.
+> 00XX 00XX 00XX 00XX 00XX 00XX 00XX 00XX  X.X.X.X.X.X.X.X.
+> 00XX 00XX 00XX 00XX 00XX 00XX 00XX 00XX  X.X.X.X.X.X.X.X.
+> 00XX 00XX 00XX 00XX 00XX 00XX 00XX 00XX  X.X.X.X.X.X.X.X.
+> 00XX 00XX 00XX 00XX 0000 0000 00XX 00XX  X.X.X.X.....X.X.
+> 00XX 00XX 00XX 00XX 00XX 00XX 00XX 00XX  X.X.X.X.X.X.X.X.
+> 00XX 00XX 00XX 00XX 00XX 00XX 0031 0032  X.X.X.X.X.X.1.2.
+> 0033 0034 0035 0036 0037 0038 0039 0030  3.4.5.6.7.8.9.0.
+> 0031 0032 0033 0034 0035 0036 0037 0038  1.2.3.4.5.6.7.8.
+> 0039 0030 3063 e7c2 9bea b237 7fe3 a91f  9.0.c0....7.....
+> ac5f e633                                _.3.
+> 4c00 6900 6e00 7500 7800 2000 7600 6500  .L.i.n.u.x. .v.e
+> 7200 7300 6900 6f00 6e00 2000 3500 2e00  .r.s.i.o.n. .5..
+> 3100 3700 2e00 3500 0000 4300 4900 4600  .1.7...5...C.I.F
+> 5300 2000 5600 4600 5300 2000 4300 6c00  .S. .V.F.S. .C.l
+> 6900 6500 6e00 7400 2000 6600 6f00 7200  .i.e.n.t. .f.o.r
+> 00 20 00 4c 00 69 00 6e 00 75 00 78 00 00 00     . .L.i.n.u.x...
+> CIFS: fs/cifs/connect.c: RFC1002 header 0x23
+> 0000 2300 53ff 424d 1673 0000 88c0 c001  ...#.SMBs.......
+> 0000 0000 0000 0000 0000 0000 0000 19b3  ................
+> 00 00 03 00 00 00 00                             .......
+> CIFS: fs/cifs/misc.c: checkSMB Length: 0x27, smb_buf_length: 0x23
+> CIFS: fs/cifs/transport.c: cifs_sync_mid_result: cmd=115 mid=3 state=4
+> 0000 2300 53ff 424d 1673 0000 88c0 c001  ...#.SMBs.......
+> 0000 0000 0000 0000 0000 0000 0000 19b3  ................
+> 00 00 03 00 00 00 00                             .......
+> CIFS: Status code returned 0xc0000016 NT_STATUS_MORE_PROCESSING_REQUIRED
+> CIFS: fs/cifs/netmisc.c: Mapping smb error code 0xc0000016 to POSIX err -5
+> CIFS: fs/cifs/misc.c: Null buffer passed to cifs_small_buf_release
+> CIFS: VFS: \\10.0.0.12 Send error in SessSetup = -5
+> CIFS: fs/cifs/connect.c: VFS: leaving cifs_get_smb_ses (xid = 105) rc = -5
+> CIFS: fs/cifs/connect.c: VFS: leaving mount_put_conns (xid = 104) rc = 0
+> CIFS: VFS: cifs_mount failed w/return code = -5
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
+
