@@ -1,73 +1,70 @@
-Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35B5210B
-	for <regressions@lists.linux.dev>; Wed,  4 May 2022 18:31:27 +0000 (UTC)
-Received: from tux.applied-asynchrony.com (p5ddd7616.dip0.t-ipconnect.de [93.221.118.22])
-	by mail.itouring.de (Postfix) with ESMTPSA id DFDF0124EC0;
-	Wed,  4 May 2022 20:31:25 +0200 (CEST)
-Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
-	by tux.applied-asynchrony.com (Postfix) with ESMTP id 8CEA2F01600;
-	Wed,  4 May 2022 20:31:25 +0200 (CEST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F2B3237
+	for <regressions@lists.linux.dev>; Wed,  4 May 2022 19:33:00 +0000 (UTC)
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 859F2240108
+	for <regressions@lists.linux.dev>; Wed,  4 May 2022 21:25:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+	t=1651692313; bh=xQMF+5afuQoxgkF9mHfBopm170bOS0rnq3uzCt9KPYc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=U9WURfQts9wFPQVyxrVjPg5VaUJYU1mIgVfu6yTrASmG0EbAri3G1ovfYgpda7Z2x
+	 CipyOQmT27Xuss7XyhgAidHyCHVt8hMG4d33Ih+XPODRUTKyrIO/2tcSPNgQuB/TO8
+	 DNtOgXryQWqNt5MSum4LfDW+FpLojPzPVX9pDff5I0vJcGAzdBhufklyQWB54HKwwn
+	 9j5jgJVp6aca7q0hbTUo3smKKWAcYM7qPtpI1/ENbxeKSD2u3sK88fh4xRCD+wCK2l
+	 6EKZ83CK849lbdaPibcF56aMEZlWNqJ6CnBucgVN44zSUG1HDLq1npkrJ1Qdz1Zyj/
+	 /7SwDf54xOj4A==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4Ktmxh59shz9rxK;
+	Wed,  4 May 2022 21:25:12 +0200 (CEST)
+From: Manuel Ullmann <labre@posteo.de>
+To: Jordan Leppert <jordanleppert@protonmail.com>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+  "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+  "labre@posteo.de" <labre@posteo.de>,  "davem@davemloft.net"
+ <davem@davemloft.net>
 Subject: Re: Crash on resume after suspend (5.17.5 and 5.15.36)
-From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-To: Jordan Leppert <jordanleppert@protonmail.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "labre@posteo.de" <labre@posteo.de>,
- "davem@davemloft.net" <davem@davemloft.net>
 References: <refZ3y2HAXztrRkMMmFbBaF7Dz1CctWgjchSdBtcSNlpk-TL0fqLepVVHfw9qXtIQF9uFzBvFdjQiiX9Jv2zW9oaWej952s1IYwu61d1REo=@protonmail.com>
- <9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
- <0e53891e-418f-ce94-2204-060c35b32a2d@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <888dd07b-89b3-6620-820a-74f497ddc223@applied-asynchrony.com>
-Date: Wed, 4 May 2022 20:31:25 +0200
+	<9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
+Date: Wed, 04 May 2022 19:25:29 +0000
+In-Reply-To: <9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
+	(Jordan Leppert's message of "Wed, 04 May 2022 15:07:46 +0000")
+Message-ID: <87levhnlqu.fsf@posteo.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <0e53891e-418f-ce94-2204-060c35b32a2d@applied-asynchrony.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 2022-05-04 19:50, Holger Hoffstätte wrote:
-> On 2022-05-04 17:07, Jordan Leppert wrote:
->> Hi,
->>
->> A changed was added to both version 5.17.5 and 5.15.36 which causes my computer to freeze when resuming after a suspend. This happens every time I suspend and then resume.
->>
->> I've bisected the change to commit: cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c (net: atlantic: invert deep par in pm functions, preventing null derefs)
->> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.17.y&id=cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
->>
->> My computer details that might be relevant:
->> OS: Arch Linux
->> CPU: AMD 5950X
->> GPU: AMD 6800XT
->>
->> As expected I have an Aquantia ethernet controller listed in lspci:
->>
->> 05:00.0 Ethernet controller: Aquantia Corp. AQC107 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion] (rev 02)
->>
->> Please let me know if there is any more info I can give that will help.
->>
->> Regards,
->> Jordan
->>
-> 
-> Just a quick note that I have the same issue (same card model); since recently
-> (5.15.36) the hang after resume is 100% reliable. IIRC it used to be hit-and-miss
-> before that. I'm currently building .38 with the mentioned commit reverted and
-> will report back. Thanks for bringing this up.
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?=
+h=3Dlinux-5.17.y&id=3Dcbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
+Yup, that=E2=80=99s my fault and I reproduced this myself yesterday. I actu=
+ally
+expected this to happen and attempted to test suspend with the patch,
+but must have screwed up by kexec-rebooting into an unpatched kernel
+version or something like that. I=E2=80=99ll disable the kexec service in t=
+he
+future, if I ever need to prepare a patch again.
+> 05:00.0 Ethernet controller: Aquantia Corp. AQC107 NBase-T/IEEE 802.3bz E=
+thernet Controller [AQtion] (rev 02)
+Yes, I have the same one.
 
-With said commit reverted and 5.15.38 I got 1 successful resume and 1 lockup.
-Difference is that with the patch reverted, the locked-up system can be pinged
-(unlike with the patch applied), though resume still does not finish properly and
-now probably runs into the problem that the patch was trying to fix.
-Any network services like ssh are still dead though.
-This used to work every time, all the time..looks like I'll try removing the
-module before suspend.
+> Please let me know if there is any more info I can give that will help.
+Can you confirm, that hibernation works with the patch, but not without
+it? The patch was an attempt to fix it, because I had the same behaviour
+with hibernation. I tried to make sense of the deep parameter in
+atl_resume_common pm function calls, but apparently it=E2=80=99s always req=
+uired
+to be true and thus obsolete.
 
--h
+I=E2=80=99ll leave the cleanup of that parameter to the maintainers for mai=
+nline
+and prepare a patch. Last time I sent it against mainline. If this fixup
+of a stable patch regression should be posted differently, it would be
+nice, if someone could give me a pointer.
+
+5.10.113 is also affected.
