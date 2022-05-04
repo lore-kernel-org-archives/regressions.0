@@ -1,60 +1,106 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE96933E0
-	for <regressions@lists.linux.dev>; Wed,  4 May 2022 22:21:07 +0000 (UTC)
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 93195240108
-	for <regressions@lists.linux.dev>; Thu,  5 May 2022 00:21:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-	t=1651702865; bh=l5fU5AlspjVNt2vkjfCweBCpgGYWhRAH4hwZaPcBIdo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=LKN/2vLrJNi011b4JZAlXEjOoI7ZbPPNS4mQ8tWsbSVCURXg2WzN0XgeKo93zn5Y8
-	 Pze/9jghh0cI3S9saWXbXYN3wNBSscnXVYXYAHGfNL1dNhbTN2SVVAseLu4UwvoRNw
-	 JNWObC0awcnPdAxpA4hL5wNf41dlxOoeq7XB2OBYwlmlebHkQ7NSqQbzbpRjeC0JAc
-	 FygdvVNoMzMVoWnp9ubuRWvGJnFSfeXBHo5ZWkbUbnach1cijZgRZ2S5dkisQYyoSu
-	 Zl5heZ1pbYmNYu6ovP9ggBwCFjjPufkOSABkAK0xmRzblR3eFdXfRbf76A4u42onAe
-	 tbjCIUuziEhQg==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Ktrrc6vwPz6tpJ;
-	Thu,  5 May 2022 00:21:04 +0200 (CEST)
-From: Manuel Ullmann <labre@posteo.de>
-To: Jordan Leppert <jordanleppert@protonmail.com>
-Cc: labre@posteo.de,  stable@vger.kernel.org,  regressions@lists.linux.dev,
-  davem@davemloft.net
-Subject: Re: Crash on resume after suspend (5.17.5 and 5.15.36)
-References: <refZ3y2HAXztrRkMMmFbBaF7Dz1CctWgjchSdBtcSNlpk-TL0fqLepVVHfw9qXtIQF9uFzBvFdjQiiX9Jv2zW9oaWej952s1IYwu61d1REo=@protonmail.com>
-	<9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
-	<87levhnlqu.fsf@posteo.de>
-	<vcehgVc5mzweaw_ru0o1up63In2GGa9jtEWuaH8op7p2753Wfr2ezPhxFJdMPFxmpiPmrUB4XnH2nakuhC_BJby3wFa87cbpdLV-lDDb6Ko=@protonmail.com>
-Date: Wed, 04 May 2022 22:21:20 +0000
-In-Reply-To: <vcehgVc5mzweaw_ru0o1up63In2GGa9jtEWuaH8op7p2753Wfr2ezPhxFJdMPFxmpiPmrUB4XnH2nakuhC_BJby3wFa87cbpdLV-lDDb6Ko=@protonmail.com>
-	(Jordan Leppert's message of "Wed, 04 May 2022 21:13:45 +0000")
-Message-ID: <874k252b33.fsf@posteo.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C4733E0
+	for <regressions@lists.linux.dev>; Wed,  4 May 2022 22:24:35 +0000 (UTC)
+Received: from tux.applied-asynchrony.com (p5ddd7616.dip0.t-ipconnect.de [93.221.118.22])
+	by mail.itouring.de (Postfix) with ESMTPSA id 435A2124EC0;
+	Thu,  5 May 2022 00:24:33 +0200 (CEST)
+Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
+	by tux.applied-asynchrony.com (Postfix) with ESMTP id E9601F01600;
+	Thu,  5 May 2022 00:24:32 +0200 (CEST)
+Subject: Re: [PATCH] net: atlantic: always deep reset on pm op, fixing null
+ deref regression
+To: Manuel Ullmann <labre@posteo.de>, Igor Russkikh <irusskikh@marvell.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ regressions@lists.linux.dev, davem@davemloft.net, ndanilov@marvell.com,
+ kuba@kernel.org, pabeni@redhat.com,
+ Jordan Leppert <jordanleppert@protonmail.com>,
+ koo5 <kolman.jindrich@gmail.com>
+References: <87czgt2bsb.fsf@posteo.de>
+From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <05b077d6-95a7-60d6-94ad-b44dbe7cd5e4@applied-asynchrony.com>
+Date: Thu, 5 May 2022 00:24:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <87czgt2bsb.fsf@posteo.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-> I also probably can't test hibernation, never managed to get it
-> working before. I'll give it a shot tomorrow though if I have time but
-> I don't even have swap set up ATM.
-That=E2=80=99s a pity, but okay, of course. Thanks for reporting this bug.
+On 2022-05-05 00:06, Manuel Ullmann wrote:
+>  From a3eccd32c618fe4b4f5c537cd83ba5611149623e Mon Sep 17 00:00:00 2001
+> Date: Wed, 4 May 2022 21:30:44 +0200
+> 
+> The impact of this regression is the same for resume that I saw on
+> thaw: the kernel hangs and nothing except SysRq rebooting can be done.
+> 
+> The null deref occurs at the same position as on thaw.
+> BUG: kernel NULL pointer dereference
+> RIP: aq_ring_rx_fill+0xcf/0x210 [atlantic]
+> 
+> Fixes regression in cbe6c3a8f8f4 ("net: atlantic: invert deep par in
+> pm functions, preventing null derefs"), where I disabled deep pm
+> resets in suspend and resume, trying to make sense of the
+> atl_resume_common deep parameter in the first place.
+> 
+> It turns out, that atlantic always has to deep reset on pm operations
+> and the parameter is useless. Even though I expected that and tested
+> resume, I screwed up by kexec-rebooting into an unpatched kernel, thus
+> missing the breakage.
+> 
+> This fixup obsoletes the deep parameter of atl_resume_common, but I
+> leave the cleanup for the maintainers to post to mainline.
+> 
+> PS: I'm very sorry for this regression.
+> 
+> Fixes: cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
+> Link: https://lore.kernel.org/regressions/9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com/
+> Reported-by: Jordan Leppert <jordanleppert@protonmail.com>
+> Reported-by: Holger Hoffstätte <holger@applied-asynchrony.com>
+> CC: <stable@vger.kernel.org> # 5.17.5
+> CC: <stable@vger.kernel.org> # 5.15.36
+> CC: <stable@vger.kernel.org> # 5.10.113
+> Signed-off-by: Manuel ULlmann <labre@posteo.de>
+> ---
+>   drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+> index 3a529ee8c834..831833911a52 100644
+> --- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+> +++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+> @@ -449,7 +449,7 @@ static int aq_pm_freeze(struct device *dev)
+>   
+>   static int aq_pm_suspend_poweroff(struct device *dev)
+>   {
+> -	return aq_suspend_common(dev, false);
+> +	return aq_suspend_common(dev, true);
+>   }
+>   
+>   static int aq_pm_thaw(struct device *dev)
+> @@ -459,7 +459,7 @@ static int aq_pm_thaw(struct device *dev)
+>   
+>   static int aq_pm_resume_restore(struct device *dev)
+>   {
+> -	return atl_resume_common(dev, false);
+> +	return atl_resume_common(dev, true);
+>   }
+>   
+>   static const struct dev_pm_ops aq_pm_ops = {
+> 
+> base-commit: 672c0c5173427e6b3e2a9bbb7be51ceeec78093a
+> 
 
-Since you are using Arch and the Wiki is quite detailed, you could try
-setting up a swap on an unused USB stick floating around. This should be
-the easiest setup. Make sure to add resume to the mkinitcpio hooks after
-udev, but before fsck and add the resume parameter to your bootloader as
-described in the Wiki. This should get you going.
+As mentioned in the discusson thread this reliably restores resume
+for me, so:
 
-Don=E2=80=99t make this a permanent setup, if you use encryption or like
-performance. The permanent solution would be creating a swap partition
-or, if that is not feasible, a swap file while considering the Wiki
-notes for e.g. btrfs.
+Tested-by: Holger Hoffstätte <holger@applied-asynchrony.com>
 
-Best regards,
-Manuel
+Thanks!
+Holger
