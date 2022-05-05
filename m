@@ -1,133 +1,137 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6019E632
-	for <regressions@lists.linux.dev>; Thu,  5 May 2022 13:32:01 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nmbaD-0001OP-HI; Thu, 05 May 2022 15:31:54 +0200
-Message-ID: <237660ea-794e-8347-4e1a-869ccef9ba3c@leemhuis.info>
-Date: Thu, 5 May 2022 15:31:48 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B75C259A
+	for <regressions@lists.linux.dev>; Thu,  5 May 2022 17:38:50 +0000 (UTC)
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout01.posteo.de (Postfix) with ESMTPS id 6367524002B
+	for <regressions@lists.linux.dev>; Thu,  5 May 2022 19:38:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+	t=1651772328; bh=KHnBAH4NavijbLBgpxqUDpbWR0IBU0dr4uSK4a3Nlk4=;
+	h=From:To:Cc:Subject:Date:Autocrypt:OpenPGP:From;
+	b=nxZea6oDnG8bIvjpguQzu/InPhhAzG4Hx9WGjP7rvkb+/Rk1zXDdn0t2aPfnPoGwu
+	 36OZk9uyICDRizYUkAPZjYlSji0svdTHEMkBqekT/r4M6xI8uCRLb/J4mVvrRih8L+
+	 wcLHoAqapR5osDKiTYIkmkgBT6fAorfef2lJbTNP4tguAPI+L1vjEEHjAOYaj2mKyI
+	 o2OAN9tkTE1/vk/xbJWZkbdm+emfGsbrjDKtUJLKmMmvReYdVjVvvEyusTiMuCGdsX
+	 A3TFM5WASxJAhDHbnK71n5UqntJXUYM/LoVFwza0B/fnooqlSgC2B2mOwtC/kQX1O+
+	 xyFh7UdXWz8Vg==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4KvLXP6rDbz9rxV;
+	Thu,  5 May 2022 19:38:45 +0200 (CEST)
+From: Manuel Ullmann <manuel.ullmann@posteo.de>
+To: Jordan Leppert <jordanleppert@protonmail.com>
+Cc: Igor Russkikh <irusskikh@marvell.com>,  Manuel Ullmann
+ <labre@posteo.de>,  linux-kernel@vger.kernel.org,  netdev@vger.kernel.org,
+  regressions@lists.linux.dev,  davem@davemloft.net,  kuba@kernel.org,
+  pabeni@redhat.com,  Holger =?utf-8?Q?Hoffst=C3=A4tte?=
+ <holger@applied-asynchrony.com>,
+  koo5 <kolman.jindrich@gmail.com>,  Dmitry Bezrukov
+ <dbezrukov@marvell.com>
+Subject: Re: [EXT] [PATCH] net: atlantic: always deep reset on pm op, fixing
+ null deref regression
+References: <87czgt2bsb.fsf@posteo.de>
+	<1f4b595a-1553-f015-c7a0-6d3075bdbcda@marvell.com>
+	<99KGBavpdWUsYAzz1AIlqoFSVt9JXUAmj3Sbso-671ku1gnhokcfi3D9bbh_2xYS_wWYRQOhGxgUsZKsgqkyIivlelLor9zNvpOLC0I3nxA=@protonmail.com>
+Date: Thu, 05 May 2022 17:39:02 +0000
+In-Reply-To: <99KGBavpdWUsYAzz1AIlqoFSVt9JXUAmj3Sbso-671ku1gnhokcfi3D9bbh_2xYS_wWYRQOhGxgUsZKsgqkyIivlelLor9zNvpOLC0I3nxA=@protonmail.com>
+	(Jordan Leppert's message of "Thu, 05 May 2022 10:24:49 +0000")
+Message-ID: <87ee17nakp.fsf@posteo.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-X-Mozilla-News-Host: news://nntp.lore.kernel.org:119
-Content-Language: en-US
-To: Mathias Nyman <mathias.nyman@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: =?UTF-8?Q?Piotr_Pi=c3=b3rkowski?= <qba100@gmail.com>,
- "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: regression v5.13..v5.15: USB hub stopped working -- DMAR fault when
- connected usb hub
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651757521;0a0bc0aa;
-X-HE-SMSGID: 1nmbaD-0001OP-HI
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Autocrypt: addr=manuel.ullmann@posteo.de; prefer-encrypt=mutual; keydata=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
+OpenPGP: url=https://posteo.de/keys/manuel.ullmann@posteo.de.asc; preference=encrypt
 
-Hi, this is your Linux kernel regression tracker.
+>>
+>>
+>> > The impact of this regression is the same for resume that I saw on
+>> > thaw: the kernel hangs and nothing except SysRq rebooting can be done.
+>> >
+>> > The null deref occurs at the same position as on thaw.
+>> > BUG: kernel NULL pointer dereference
+>> > RIP: aq_ring_rx_fill+0xcf/0x210 [atlantic]
+>> >
+>> > Fixes regression in cbe6c3a8f8f4 ("net: atlantic: invert deep par in
+>> > pm functions, preventing null derefs"), where I disabled deep pm
+>> > resets in suspend and resume, trying to make sense of the
+>> > atl_resume_common deep parameter in the first place.
+>> >
+>> > It turns out, that atlantic always has to deep reset on pm operations
+>> > and the parameter is useless. Even though I expected that and tested
+>> > resume, I screwed up by kexec-rebooting into an unpatched kernel, thus
+>> > missing the breakage.
+>> >
+>> > This fixup obsoletes the deep parameter of atl_resume_common, but I
+>> > leave the cleanup for the maintainers to post to mainline.
+>> >
+>> > PS: I'm very sorry for this regression.
+>>
+>>
+>> Hi Manuel,
+>>
+>> Unfortunately I've missed to review and comment on previous patch - it w=
+as too quickly accepted.
+>>
+>> I'm still in doubt on your fixes, even after rereading the original prob=
+lem.
+>> Is it possible for you to test this with all the possible combinations?
+>> suspend/resume with device up/down,
+>> hibernate/restore with device up/down?
 
-I noticed a regression report in bugzilla.kernel.org that afaics nobody
-acted upon since it was reported about a week ago. That's why I decided
-to forward it to a few maintainers and mailing lists. To quote from
-https://bugzilla.kernel.org/show_bug.cgi?id=215906 :
+I confirm that suspend/resume/hibernation/thaw keeps working in all
+cases. Thaw would work without the original patch, if the device is down
+before hibernation. I also originally described this behaviour on
+bugzilla at
 
-> Since kernel 5.15 (with kernel 5.13 I see no problem) I have a problem with my USB hub. The device stops working shortly after starting the system.
-> In dmesg log I see DMAR fault on usb controller
-> 
-> 
-> [kwi27 22:03] usb 5-1.2: new high-speed USB device number 3 using xhci_hcd
-> [  +0,100440] usb 5-1.2: New USB device found, idVendor=1a40, idProduct=0101, bcdDevice= 1.11
-> [  +0,000004] usb 5-1.2: New USB device strings: Mfr=0, Product=1, SerialNumber=0
-> [  +0,000002] usb 5-1.2: Product: USB 2.0 Hub
-> [  +0,001002] hub 5-1.2:1.0: USB hub found
-> [  +0,000133] hub 5-1.2:1.0: 4 ports detected
-> [  +0,702453] usb 5-1.2.2: new full-speed USB device number 4 using xhci_hcd
-> [  +0,471198] usb 5-1.2.2: New USB device found, idVendor=047f, idProduct=c025, bcdDevice= 1.35
-> [  +0,000004] usb 5-1.2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
-> [  +0,000002] usb 5-1.2.2: Product: Plantronics C320-M
-> [  +0,000001] usb 5-1.2.2: Manufacturer: Plantronics
-> [  +0,000001] usb 5-1.2.2: SerialNumber: B13D8BE491B04E73AEB4C95E162DBE2B
-> [  +0,255862] mc: Linux media interface: v0.10
-> [  +0,001057] input: Plantronics Plantronics C320-M as /devices/pci0000:00/0000:00:1c.5/0000:04:00.0/usb5/5-1/5-1.2/5-1.2.2/5-1.2.2:1.3/0003:047F:C025.0004/input/input21
-> [  +0,060275] plantronics 0003:047F:C025.0004: input,hiddev1,hidraw3: USB HID v1.11 Device [Plantronics Plantronics C320-M] on usb-0000:04:00.0-1.2.2/input3
-> [  +0,859655] usb 5-1.2.2: Warning! Unlikely big volume range (=8192), cval->res is probably wrong.
-> [  +0,000003] usb 5-1.2.2: [11] FU [Sidetone Playback Volume] ch = 1, val = 0/8192/1
-> [  +0,584234] usbcore: registered new interface driver snd-usb-audio
-> [  +0,229229] xhci_hcd 0000:04:00.0: WARNING: Host System Error
-> [  +0,000014] DMAR: DRHD: handling fault status reg 2
-> [  +0,000004] DMAR: [DMA Read NO_PASID] Request device [04:00.0] fault addr 0xfffca000 [fault reason 0x06] PTE Read access is not set
-> [  +0,031993] xhci_hcd 0000:04:00.0: Host halt failed, -110
-> [kwi27 22:04] xhci_hcd 0000:04:00.0: xHCI host not responding to stop endpoint command.
-> [  +0,000003] xhci_hcd 0000:04:00.0: USBSTS: HSE EINT
-> [  +0,032011] xhci_hcd 0000:04:00.0: Host halt failed, -110
-> [  +0,000002] xhci_hcd 0000:04:00.0: xHCI host controller not responding, assume dead
-> [  +0,000017] xhci_hcd 0000:04:00.0: HC died; cleaning up
-> [  +0,000042] usb 5-1: USB disconnect, device number 2
-> [  +0,000003] usb 5-1.2: USB disconnect, device number 3
-> [  +0,000002] usb 5-1.2.2: USB disconnect, device number 4
-> [  +0,000114] usb 5-1.2.2: 1:0: usb_set_interface failed (-110)
-> [  +0,000016] usb 5-1.2.2: 1:1: usb_set_interface failed (-19)
-> [  +0,000011] usb 5-1.2.2: 1:0: usb_set_interface failed (-19)
-See the ticket for details and further comments. According to the latest
-one the problem is still present in 5.18-rc5.
+https://bugzilla.kernel.org/show_bug.cgi?id=3D215798
 
-Was this issue discussed or even addressed somewhere already? Or does
-anyone at least have a good idea what might be causing this problem?
-@reporter: If neither is the case, you most likely will need to perform
-a bisection with git to identify the change causing the problem.
+See also Jordan=E2=80=99s confirmation below.
 
-Anyway, could one of the kernel developers among the recipients please
-help with this? BTW, I was unsure where to send this to the DMA/IOMMU
-maintainers or the USB/xhci maintainers. I settled for the latter; I
-apologize in advance if that was the wrong choice.
+I think, the main reason, why this could break, is, that the deep
+parameter had no real impact until the breaking commit. So it was
+practically untested, when the allocation/free functions were split.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+Another thing, that I tested, was guarding all null pointer references
+with null checks, which failed at first, because GCC optimized them
+out. I think I have the atlantic tree for this (bad) fix attempt
+floating around. I can try to rebase and create a patch from this and
+post it to the Github issue, if you are interested.
+https://github.com/Aquantia/AQtion/issues/32
 
-P.S.: As the Linux kernel's regression tracker I defsdal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+Don=E2=80=99t have time for this before the weekend though.
 
-P.P.S: to get this tracked by the the Linux kernel regression tracking bot:
+>> I'll try to do the same on our side, but we don't have much resources fo=
+r that now unfortunately..
+>>
+>> > Fixes: cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
+>>
+>>
+>> That tag format is incorrect I think..
 
-#regzbot introduced: v5.13..v5.15
-#regzbot from: Piotr Piórkowski <qba100@gmail.com>
-#regzbot title: usb/dma/iommu/???: USB hub stopped working -- DMAR fault
-when connected usb hub
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215906
-#regzbot monitor:
-https://lore.kernel.org/all/bug-215906-208809@https.bugzilla.kernel.org%2F/
--- 
-Additional information about regzbot:
+Thanks for pointing that out. Also, are those stable Cc tags correct?
+Because I figured, that the x in the documentation could be also the
+branch name and not a placeholder. Should I resend the patch, fixing the
+tags? Won=E2=80=99t get to it before tomorrow, though.
 
-If you want to know more about regzbot, check out its web-interface, the
-getting start guide, and the references documentation:
+>> Igor
 
-https://linux-regtracking.leemhuis.info/regzbot/
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+> With the proposed patch (deep parameter is always true), I've managed to =
+test:
+> 1. Hibernate/restore (with device down/up)
+> 2. Suspend/resume (with device down/up)
+>
+> I put the device down with the command:
+> sudo ip link set <connection> down
+>
+> I hope that's correct, if not please let me know correct command.
 
-The last two documents will explain how you can interact with regzbot
-yourself if your want to.
+This should be the correct.
 
-Hint for reporters: when reporting a regression it's in your interest to
-CC the regression list and tell regzbot about the issue, as that ensures
-the regression makes it onto the radar of the Linux kernel's regression
-tracker -- that's in your interest, as it ensures your report won't fall
-through the cracks unnoticed.
-
-Hint for developers: you normally don't need to care about regzbot once
-it's involved. Fix the issue as you normally would, just remember to
-include 'Link:' tag in the patch descriptions pointing to all reports
-about the issue. This has been expected from developers even before
-regzbot showed up for reasons explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'.
+Manuel
