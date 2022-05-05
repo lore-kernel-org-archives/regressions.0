@@ -1,42 +1,67 @@
-Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C4733E0
-	for <regressions@lists.linux.dev>; Wed,  4 May 2022 22:24:35 +0000 (UTC)
-Received: from tux.applied-asynchrony.com (p5ddd7616.dip0.t-ipconnect.de [93.221.118.22])
-	by mail.itouring.de (Postfix) with ESMTPSA id 435A2124EC0;
-	Thu,  5 May 2022 00:24:33 +0200 (CEST)
-Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
-	by tux.applied-asynchrony.com (Postfix) with ESMTP id E9601F01600;
-	Thu,  5 May 2022 00:24:32 +0200 (CEST)
-Subject: Re: [PATCH] net: atlantic: always deep reset on pm op, fixing null
- deref regression
-To: Manuel Ullmann <labre@posteo.de>, Igor Russkikh <irusskikh@marvell.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- regressions@lists.linux.dev, davem@davemloft.net, ndanilov@marvell.com,
- kuba@kernel.org, pabeni@redhat.com,
- Jordan Leppert <jordanleppert@protonmail.com>,
- koo5 <kolman.jindrich@gmail.com>
-References: <87czgt2bsb.fsf@posteo.de>
-From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Organization: Applied Asynchrony, Inc.
-Message-ID: <05b077d6-95a7-60d6-94ad-b44dbe7cd5e4@applied-asynchrony.com>
-Date: Thu, 5 May 2022 00:24:32 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 181A2363
+	for <regressions@lists.linux.dev>; Thu,  5 May 2022 07:07:30 +0000 (UTC)
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.5/8.16.1.2) with ESMTP id 244LDqHD012012;
+	Thu, 5 May 2022 00:04:59 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pfpt0220;
+ bh=IvZ59VBMCUfOAZJJ9yKKHCWaGLF30TtIMEy60rvzfbI=;
+ b=d5w/6d6SoSWEzHF9Zkducbv0Skm8HvcJyegOfP4gEb8TmVInqqGxWifbSKLAqVbRDxqA
+ 2N5UaJUa3afg2nwbEMy5vHSpfLXKxHTyzDAvuSUl/iwoaWScMcZr4+pM8kRtc5eiD6t/
+ BiZVAN/bJnPBB0L5iCyBZ2feVitPwFTrMNnPoYZmS42sCW+ueUYPK7B0PYtqgSaq8Syn
+ pEzn+P3oS5z1vVSo6sbqCng55PZcjY0lZ3J4vRloUH85spp3jw6cCFZbnrA3v1aPTwCp
+ lc+NhSJtOwF5i5R1socZx/MEcG+x5+61eJPW6D0s7boLzvrcdBYEBm9b3/g6D793A0Ge ug== 
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3fuscx3sad-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+	Thu, 05 May 2022 00:04:58 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Thu, 5 May
+ 2022 00:04:57 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Thu, 5 May 2022 00:04:57 -0700
+Received: from [10.9.118.10] (EL-LT0043.marvell.com [10.9.118.10])
+	by maili.marvell.com (Postfix) with ESMTP id 4A67D3F70A1;
+	Thu,  5 May 2022 00:04:50 -0700 (PDT)
+Message-ID: <1f4b595a-1553-f015-c7a0-6d3075bdbcda@marvell.com>
+Date: Thu, 5 May 2022 09:04:48 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <87czgt2bsb.fsf@posteo.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101
+ Thunderbird/100.0
+Subject: Re: [EXT] [PATCH] net: atlantic: always deep reset on pm op, fixing
+ null deref regression
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+To: Manuel Ullmann <labre@posteo.de>
+CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <regressions@lists.linux.dev>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <pabeni@redhat.com>,
+        Jordan Leppert <jordanleppert@protonmail.com>,
+        =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>,
+        koo5
+	<kolman.jindrich@gmail.com>,
+        Dmitry Bezrukov <dbezrukov@marvell.com>
+References: <87czgt2bsb.fsf@posteo.de>
+From: Igor Russkikh <irusskikh@marvell.com>
+In-Reply-To: <87czgt2bsb.fsf@posteo.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: _7rCjKR59eG9a8k1-WxBl1-Uiu8haI-J
+X-Proofpoint-ORIG-GUID: _7rCjKR59eG9a8k1-WxBl1-Uiu8haI-J
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.858,Hydra:6.0.486,FMLib:17.11.64.514
+ definitions=2022-05-05_02,2022-05-04_02,2022-02-23_01
 
-On 2022-05-05 00:06, Manuel Ullmann wrote:
->  From a3eccd32c618fe4b4f5c537cd83ba5611149623e Mon Sep 17 00:00:00 2001
-> Date: Wed, 4 May 2022 21:30:44 +0200
-> 
+
 > The impact of this regression is the same for resume that I saw on
 > thaw: the kernel hangs and nothing except SysRq rebooting can be done.
 > 
@@ -58,49 +83,21 @@ On 2022-05-05 00:06, Manuel Ullmann wrote:
 > leave the cleanup for the maintainers to post to mainline.
 > 
 > PS: I'm very sorry for this regression.
-> 
+
+Hi Manuel,
+
+Unfortunately I've missed to review and comment on previous patch - it was too quickly accepted.
+
+I'm still in doubt on your fixes, even after rereading the original problem.
+Is it possible for you to test this with all the possible combinations?
+suspend/resume with device up/down,
+hibernate/restore with device up/down?
+
+I'll try to do the same on our side, but we don't have much resources for that now unfortunately..
+
+
 > Fixes: cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
-> Link: https://lore.kernel.org/regressions/9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com/
-> Reported-by: Jordan Leppert <jordanleppert@protonmail.com>
-> Reported-by: Holger Hoffstätte <holger@applied-asynchrony.com>
-> CC: <stable@vger.kernel.org> # 5.17.5
-> CC: <stable@vger.kernel.org> # 5.15.36
-> CC: <stable@vger.kernel.org> # 5.10.113
-> Signed-off-by: Manuel ULlmann <labre@posteo.de>
-> ---
->   drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-> index 3a529ee8c834..831833911a52 100644
-> --- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-> +++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-> @@ -449,7 +449,7 @@ static int aq_pm_freeze(struct device *dev)
->   
->   static int aq_pm_suspend_poweroff(struct device *dev)
->   {
-> -	return aq_suspend_common(dev, false);
-> +	return aq_suspend_common(dev, true);
->   }
->   
->   static int aq_pm_thaw(struct device *dev)
-> @@ -459,7 +459,7 @@ static int aq_pm_thaw(struct device *dev)
->   
->   static int aq_pm_resume_restore(struct device *dev)
->   {
-> -	return atl_resume_common(dev, false);
-> +	return atl_resume_common(dev, true);
->   }
->   
->   static const struct dev_pm_ops aq_pm_ops = {
-> 
-> base-commit: 672c0c5173427e6b3e2a9bbb7be51ceeec78093a
-> 
 
-As mentioned in the discusson thread this reliably restores resume
-for me, so:
+That tag format is incorrect I think..
 
-Tested-by: Holger Hoffstätte <holger@applied-asynchrony.com>
-
-Thanks!
-Holger
+Igor
