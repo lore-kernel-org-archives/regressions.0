@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E51363
-	for <regressions@lists.linux.dev>; Thu,  5 May 2022 07:43:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE71363
+	for <regressions@lists.linux.dev>; Thu,  5 May 2022 07:45:02 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nmW9M-0004Sz-Q2; Thu, 05 May 2022 09:43:48 +0200
-Message-ID: <f7ae9d50-a9dc-3473-903b-28dcd79aaeba@leemhuis.info>
-Date: Thu, 5 May 2022 09:43:48 +0200
+	id 1nmWAW-0004pF-JW; Thu, 05 May 2022 09:45:00 +0200
+Message-ID: <5da7d9bb-7c1a-63c1-e274-ae10cc465c3f@leemhuis.info>
+Date: Thu, 5 May 2022 09:45:00 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,65 +16,40 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
+Subject: Re: [Bug 215725] New: Basilisk X Hyperspeed Bluetooth LE mouse fail
+ to connect under 5.17 with Opcode 0x2043 failure #forregzbot
 Content-Language: en-US
-To: Jordan Leppert <jordanleppert@protonmail.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "labre@posteo.de" <labre@posteo.de>,
- "davem@davemloft.net" <davem@davemloft.net>
-References: <refZ3y2HAXztrRkMMmFbBaF7Dz1CctWgjchSdBtcSNlpk-TL0fqLepVVHfw9qXtIQF9uFzBvFdjQiiX9Jv2zW9oaWej952s1IYwu61d1REo=@protonmail.com>
- <9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Crash on resume after suspend (5.17.5 and 5.15.36)
-In-Reply-To: <9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <bug-215725-62941@https.bugzilla.kernel.org/>
+ <b6d3a868-d29f-224b-dcaf-7143fd8ce99a@leemhuis.info>
+ <be67a3cf-44a2-7ea2-c0c3-29829b029e1b@leemhuis.info>
+In-Reply-To: <be67a3cf-44a2-7ea2-c0c3-29829b029e1b@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651736637;c141e6e3;
-X-HE-SMSGID: 1nmW9M-0004Sz-Q2
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651736702;c9039818;
+X-HE-SMSGID: 1nmWAW-0004pF-JW
 
-[TLDR: I'm adding the regression report below to regzbot, the Linux
-kernel regression tracking bot; all text you find below is compiled from
-a few templates paragraphs you might have encountered already already
-from similar mails.]
 
-Hi, this is your Linux kernel regression tracker. Top-posting for once,
-to make this easily accessible to everyone.
 
-This is being dealt with already (great, thx a lot!), nevertheless I'd
-like to add it to the regression tracking:
+On 10.04.22 09:59, Thorsten Leemhuis wrote:
+> On 09.04.22 13:00, Thorsten Leemhuis wrote:
+>> TWIMC: this mail is primarily send for documentation purposes and for
+>> regzbot, my Linux kernel regression tracking bot. These mails usually
+>> contain '#forregzbot' in the subject, to make them easy to spot and filter.
+>>
+>> About a week ago a regression was reported to bugzilla.kernel.org that
+>> seems to be handled there already, nevertheless I'd like to add to the
+>> tracking to ensure it's not forgotten.
+>>
+>> #regzbot introduced: v5.16..v5.17
+>> #regzbot from: Winston Wu <winstonwu91@gmail.com>
+>> #regzbot title: net: bluetooth: Basilisk X Hyperspeed Bluetooth LE mouse
+>> fail to connect under 5.17 with Opcode 0x2043 failure
+>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215725
+> 
+> #regzbot monitor:
+> https://lore.kernel.org/all/bug-215725-62941@https.bugzilla.kernel.org%2F/
+> #regzbot ignore-activity
 
-#regzbot ^introduced cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
-#regzbot title net: atlantic: computer to freeze when resuming after a
-suspend
-#regzbot ignore-activity
-#regzbot monitor https://lore.kernel.org/lkml/87czgt2bsb.fsf@posteo.de/
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
-
-On 04.05.22 17:07, Jordan Leppert wrote:
-> 
-> A changed was added to both version 5.17.5 and 5.15.36 which causes my computer to freeze when resuming after a suspend. This happens every time I suspend and then resume.
-> 
-> I've bisected the change to commit: cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c (net: atlantic: invert deep par in pm functions, preventing null derefs)
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.17.y&id=cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
-> 
-> My computer details that might be relevant:
-> OS: Arch Linux
-> CPU: AMD 5950X
-> GPU: AMD 6800XT
-> 
-> As expected I have an Aquantia ethernet controller listed in lspci:
-> 
-> 05:00.0 Ethernet controller: Aquantia Corp. AQC107 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion] (rev 02)
-> 
-> Please let me know if there is any more info I can give that will help.
-> 
-> Regards,
-> Jordan
-> 
-> 
+#regzbot invalid: doesn#t happen anymore with 5.17.3
