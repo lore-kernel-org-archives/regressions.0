@@ -1,41 +1,34 @@
-Received: from mout01.posteo.de (mout01.posteo.de [185.67.36.65])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B75C259A
-	for <regressions@lists.linux.dev>; Thu,  5 May 2022 17:38:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4222F4F
+	for <regressions@lists.linux.dev>; Thu,  5 May 2022 21:41:36 +0000 (UTC)
 Received: from submission (posteo.de [185.67.36.169]) 
-	by mout01.posteo.de (Postfix) with ESMTPS id 6367524002B
-	for <regressions@lists.linux.dev>; Thu,  5 May 2022 19:38:48 +0200 (CEST)
+	by mout02.posteo.de (Postfix) with ESMTPS id 36AA1240107
+	for <regressions@lists.linux.dev>; Thu,  5 May 2022 23:41:29 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-	t=1651772328; bh=KHnBAH4NavijbLBgpxqUDpbWR0IBU0dr4uSK4a3Nlk4=;
-	h=From:To:Cc:Subject:Date:Autocrypt:OpenPGP:From;
-	b=nxZea6oDnG8bIvjpguQzu/InPhhAzG4Hx9WGjP7rvkb+/Rk1zXDdn0t2aPfnPoGwu
-	 36OZk9uyICDRizYUkAPZjYlSji0svdTHEMkBqekT/r4M6xI8uCRLb/J4mVvrRih8L+
-	 wcLHoAqapR5osDKiTYIkmkgBT6fAorfef2lJbTNP4tguAPI+L1vjEEHjAOYaj2mKyI
-	 o2OAN9tkTE1/vk/xbJWZkbdm+emfGsbrjDKtUJLKmMmvReYdVjVvvEyusTiMuCGdsX
-	 A3TFM5WASxJAhDHbnK71n5UqntJXUYM/LoVFwza0B/fnooqlSgC2B2mOwtC/kQX1O+
-	 xyFh7UdXWz8Vg==
+	t=1651786889; bh=bPb1kqwTN0xfUWA9/0wHbJECuxh+OsfFhhPsmRIveHU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mgxwNJ57cOkMTtZQ8Ij0d2a9HKiG/02Ow6ajM4qlk4M4vPF8soQh0ubJanHUwZl04
+	 jRn2LXVZHd6m7HjlbQO9/6Uk4xUCZs7ezNZyVAarqXQPsH6CFqCgLZe+yhUrCJtm6h
+	 kTw9UFFpyFyLa7PTpdm4q2kE60SSWo/xAagQ8kl+HfbHHxtx3a+alRaRGtQvpYSOh6
+	 bnYL0RvSFz0xy8WaatlgXzPwedU1A5eTWZiEDvvSuB67wMU3Ix04Trtvw2v/BG7iu9
+	 kW6OlyP8KnGg7Fhk6gzP5xj4nH0rL7ln/YbmqARRvaNScHdZCSC9z5Qrv/SK6a0NjJ
+	 /6Y+clGza1tDA==
 Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4KvLXP6rDbz9rxV;
-	Thu,  5 May 2022 19:38:45 +0200 (CEST)
-From: Manuel Ullmann <manuel.ullmann@posteo.de>
-To: Jordan Leppert <jordanleppert@protonmail.com>
-Cc: Igor Russkikh <irusskikh@marvell.com>,  Manuel Ullmann
- <labre@posteo.de>,  linux-kernel@vger.kernel.org,  netdev@vger.kernel.org,
-  regressions@lists.linux.dev,  davem@davemloft.net,  kuba@kernel.org,
-  pabeni@redhat.com,  Holger =?utf-8?Q?Hoffst=C3=A4tte?=
- <holger@applied-asynchrony.com>,
-  koo5 <kolman.jindrich@gmail.com>,  Dmitry Bezrukov
- <dbezrukov@marvell.com>
-Subject: Re: [EXT] [PATCH] net: atlantic: always deep reset on pm op, fixing
- null deref regression
-References: <87czgt2bsb.fsf@posteo.de>
-	<1f4b595a-1553-f015-c7a0-6d3075bdbcda@marvell.com>
-	<99KGBavpdWUsYAzz1AIlqoFSVt9JXUAmj3Sbso-671ku1gnhokcfi3D9bbh_2xYS_wWYRQOhGxgUsZKsgqkyIivlelLor9zNvpOLC0I3nxA=@protonmail.com>
-Date: Thu, 05 May 2022 17:39:02 +0000
-In-Reply-To: <99KGBavpdWUsYAzz1AIlqoFSVt9JXUAmj3Sbso-671ku1gnhokcfi3D9bbh_2xYS_wWYRQOhGxgUsZKsgqkyIivlelLor9zNvpOLC0I3nxA=@protonmail.com>
-	(Jordan Leppert's message of "Thu, 05 May 2022 10:24:49 +0000")
-Message-ID: <87ee17nakp.fsf@posteo.de>
+	by submission (posteo.de) with ESMTPSA id 4KvRwQ6d7Jz6tpp;
+	Thu,  5 May 2022 23:41:26 +0200 (CEST)
+From: Manuel Ullmann <labre@posteo.de>
+To: Igor Russkikh <irusskikh@marvell.com>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ regressions@lists.linux.dev, davem@davemloft.net, ndanilov@marvell.com,
+ kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, Jordan Leppert
+ <jordanleppert@protonmail.com>, Holger =?utf-8?Q?Hoffst=C3=A4tte?=
+ <holger@applied-asynchrony.com>, koo5 <kolman.jindrich@gmail.com>
+Subject: [PATCH v2] net: atlantic: always deep reset on pm op, fixing null
+ deref regression
+Date: Thu, 05 May 2022 21:41:41 +0000
+Message-ID: <877d6zirmy.fsf@posteo.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,94 +37,76 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Autocrypt: addr=manuel.ullmann@posteo.de; prefer-encrypt=mutual; keydata=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
-OpenPGP: url=https://posteo.de/keys/manuel.ullmann@posteo.de.asc; preference=encrypt
 
->>
->>
->> > The impact of this regression is the same for resume that I saw on
->> > thaw: the kernel hangs and nothing except SysRq rebooting can be done.
->> >
->> > The null deref occurs at the same position as on thaw.
->> > BUG: kernel NULL pointer dereference
->> > RIP: aq_ring_rx_fill+0xcf/0x210 [atlantic]
->> >
->> > Fixes regression in cbe6c3a8f8f4 ("net: atlantic: invert deep par in
->> > pm functions, preventing null derefs"), where I disabled deep pm
->> > resets in suspend and resume, trying to make sense of the
->> > atl_resume_common deep parameter in the first place.
->> >
->> > It turns out, that atlantic always has to deep reset on pm operations
->> > and the parameter is useless. Even though I expected that and tested
->> > resume, I screwed up by kexec-rebooting into an unpatched kernel, thus
->> > missing the breakage.
->> >
->> > This fixup obsoletes the deep parameter of atl_resume_common, but I
->> > leave the cleanup for the maintainers to post to mainline.
->> >
->> > PS: I'm very sorry for this regression.
->>
->>
->> Hi Manuel,
->>
->> Unfortunately I've missed to review and comment on previous patch - it w=
-as too quickly accepted.
->>
->> I'm still in doubt on your fixes, even after rereading the original prob=
-lem.
->> Is it possible for you to test this with all the possible combinations?
->> suspend/resume with device up/down,
->> hibernate/restore with device up/down?
+From 86ba48e4c5e1b34cea471b8f5a64b085763e0c57 Mon Sep 17 00:00:00 2001
+From: Manuel Ullmann <labre@posteo.de>
+Date: Wed, 4 May 2022 21:30:44 +0200
 
-I confirm that suspend/resume/hibernation/thaw keeps working in all
-cases. Thaw would work without the original patch, if the device is down
-before hibernation. I also originally described this behaviour on
-bugzilla at
+The impact of this regression is the same for resume that I saw on
+thaw: the kernel hangs and nothing except SysRq rebooting can be done.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=3D215798
+The null deref occurs at the same position as on thaw.
+BUG: kernel NULL pointer dereference
+RIP: aq_ring_rx_fill+0xcf/0x210 [atlantic]
 
-See also Jordan=E2=80=99s confirmation below.
+Fixes regression in cbe6c3a8f8f4 ("net: atlantic: invert deep par in
+pm functions, preventing null derefs"), where I disabled deep pm
+resets in suspend and resume, trying to make sense of the
+atl_resume_common deep parameter in the first place.
 
-I think, the main reason, why this could break, is, that the deep
-parameter had no real impact until the breaking commit. So it was
-practically untested, when the allocation/free functions were split.
+It turns out, that atlantic always has to deep reset on pm operations
+and the parameter is useless. Even though I expected that and tested
+resume, I screwed up by kexec-rebooting into an unpatched kernel, thus
+missing the breakage.
 
-Another thing, that I tested, was guarding all null pointer references
-with null checks, which failed at first, because GCC optimized them
-out. I think I have the atlantic tree for this (bad) fix attempt
-floating around. I can try to rebase and create a patch from this and
-post it to the Github issue, if you are interested.
-https://github.com/Aquantia/AQtion/issues/32
+This fixup obsoletes the deep parameter of atl_resume_common, but I
+leave the cleanup for the maintainers to post to mainline.
 
-Don=E2=80=99t have time for this before the weekend though.
+PS: I'm very sorry for this regression.
 
->> I'll try to do the same on our side, but we don't have much resources fo=
-r that now unfortunately..
->>
->> > Fixes: cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
->>
->>
->> That tag format is incorrect I think..
+Changes in v2:
+Patch formatting fixes
+- Fix Fixes tag
+=E2=80=93 Simplify stable Cc tag
+=E2=80=93 Fix Signed-off-by tag
 
-Thanks for pointing that out. Also, are those stable Cc tags correct?
-Because I figured, that the x in the documentation could be also the
-branch name and not a placeholder. Should I resend the patch, fixing the
-tags? Won=E2=80=99t get to it before tomorrow, though.
+Fixes: cbe6c3a8f8f4 ("net: atlantic: invert deep par in pm functions, preve=
+nting null derefs")
+Link: https://lore.kernel.org/regressions/9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4=
+MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=
+=3D@protonmail.com/
+Reported-by: Jordan Leppert <jordanleppert@protonmail.com>
+Reported-by: Holger Hoffst=C3=A4tte <holger@applied-asynchrony.com>
+Cc: <stable@vger.kernel.org> # 5.10+
+Signed-off-by: Manuel Ullmann <labre@posteo.de>
+---
+ drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->> Igor
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers=
+/net/ethernet/aquantia/atlantic/aq_pci_func.c
+index 3a529ee8c834..831833911a52 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
+@@ -449,7 +449,7 @@ static int aq_pm_freeze(struct device *dev)
+=20
+ static int aq_pm_suspend_poweroff(struct device *dev)
+ {
+-	return aq_suspend_common(dev, false);
++	return aq_suspend_common(dev, true);
+ }
+=20
+ static int aq_pm_thaw(struct device *dev)
+@@ -459,7 +459,7 @@ static int aq_pm_thaw(struct device *dev)
+=20
+ static int aq_pm_resume_restore(struct device *dev)
+ {
+-	return atl_resume_common(dev, false);
++	return atl_resume_common(dev, true);
+ }
+=20
+ static const struct dev_pm_ops aq_pm_ops =3D {
 
-> With the proposed patch (deep parameter is always true), I've managed to =
-test:
-> 1. Hibernate/restore (with device down/up)
-> 2. Suspend/resume (with device down/up)
->
-> I put the device down with the command:
-> sudo ip link set <connection> down
->
-> I hope that's correct, if not please let me know correct command.
-
-This should be the correct.
-
-Manuel
+base-commit: 672c0c5173427e6b3e2a9bbb7be51ceeec78093a
+--=20
+2.35.1
