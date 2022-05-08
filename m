@@ -1,42 +1,41 @@
 Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB7A1383
-	for <regressions@lists.linux.dev>; Sat,  7 May 2022 20:14:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BA57E
+	for <regressions@lists.linux.dev>; Sun,  8 May 2022 00:36:52 +0000 (UTC)
 Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 4613124010B
-	for <regressions@lists.linux.dev>; Sat,  7 May 2022 22:14:06 +0200 (CEST)
+	by mout02.posteo.de (Postfix) with ESMTPS id EBD4124010A
+	for <regressions@lists.linux.dev>; Sun,  8 May 2022 02:36:49 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-	t=1651954446; bh=SRuGjTpb0KWkEDEofC5Ly6FHVIAsobmM0kLjf3d6gpU=;
+	t=1651970210; bh=eRJ72IYITlVDpKnZ6+UmjwqGp62CGsHXISCjq+X2pUU=;
 	h=From:To:Cc:Subject:Date:From;
-	b=aJNPHx1/71wptf4GpJrbEGNVnpINKT5ku0ynWfqglBtATOB0kbwB+PFXZ9pxClbPu
-	 rdKBK0TsKv1pgKTlN4W65JxV6Ce5JiaM7+Sp1oWgb7URrSnOLg1TxoQOCW1GUbYvCS
-	 X74/Nn/Njg2rhCe6/tjBR62oooIsx3OS3QLH3rQ5bZZ3Opeg92jyPtZYNmoOW7pnCG
-	 B8VsLrN+zYSTahLULVn5wUPZM00V15GSOf+JBCNRA5xgVNB2ybgkT8+SoZxzU9CXIT
-	 Ys2afAUd+G6NOAxOD1m0XPexNSSgD6HH4f3JaG/R9o94CxG61aE5UrBWqoQC/r89DS
-	 y+qzeEua3FZCg==
+	b=PAok8vRxXvgVG/GaWnfIYBGcpramlP56iBb5i/MDcwepGnKrMLkK3y35DoY7BA7hP
+	 b5lW8X5tEsPKN60rd/GPa/2kitH70eMITGsuWKcEPkrmS9kjWY5S66bhIJbo3i5QEL
+	 br4GNSEmZGPKsDrgSnfBiD7KICn48dzr1cPHN4/OeqjCYbJAXRFFWWq4dVJ8muOQ+8
+	 jEM13+I4hlRS3ZV5lbhLTSynukGX8hTQAuR381F/u0w5VbR5obE26c/KD/3t3IRHte
+	 s/QfOIw9m1PO7jH9VK1VpqKFCGcy44tYrpdD2sNB56/JRMyZK5NeF9ZrhxcmbHsWXu
+	 gjhEdDLI5rRtw==
 Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Kwdth5SJ5z9rxG;
-	Sat,  7 May 2022 22:14:04 +0200 (CEST)
+	by submission (posteo.de) with ESMTPSA id 4Kwljr30zTz9rxG;
+	Sun,  8 May 2022 02:36:48 +0200 (CEST)
 From: Manuel Ullmann <labre@posteo.de>
 To: Igor Russkikh <irusskikh@marvell.com>
 Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
  regressions@lists.linux.dev, davem@davemloft.net, ndanilov@marvell.com,
  kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, Jordan Leppert
- <jordanleppert@protonmail.com>, Holger =?utf-8?Q?Hoffst=C3=A4tte?=
+ <jordanleppert@protonmail.com>, Holger Hoffstaette
  <holger@applied-asynchrony.com>, koo5 <kolman.jindrich@gmail.com>
-Subject: [PATCH net-next v5] net: atlantic: always deep reset on pm op,
- fixing up my null deref regression
-Date: Sat, 07 May 2022 16:27:48 +0000
-Message-ID: <87fsllcd80.fsf@posteo.de>
+Subject: [PATCH v6] net: atlantic: always deep reset on pm op, fixing up my
+ null deref regression
+Date: Sun, 08 May 2022 00:36:46 +0000
+Message-ID: <87bkw8dfmp.fsf@posteo.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
 From 18dc080d8d4a30d0fcb45f24fd15279cc87c47d5 Mon Sep 17 00:00:00 2001
 Date: Wed, 4 May 2022 21:30:44 +0200
@@ -62,13 +61,13 @@ Suspend and hibernation were successfully tested by the reporters.
 Fixes: cbe6c3a8f8f4 ("net: atlantic: invert deep par in pm functions, preventing null derefs")
 Link: https://lore.kernel.org/regressions/9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com/
 Reported-by: Jordan Leppert <jordanleppert@protonmail.com>
-Reported-by: Holger Hoffstätte <holger@applied-asynchrony.com>
+Reported-by: Holger Hoffstaette <holger@applied-asynchrony.com>
 Tested-by: Jordan Leppert <jordanleppert@protonmail.com>
-Tested-by: Holger Hoffstätte <holger@applied-asynchrony.com>
+Tested-by: Holger Hoffstaette <holger@applied-asynchrony.com>
 CC: <stable@vger.kernel.org> # 5.10+
 Signed-off-by: Manuel Ullmann <labre@posteo.de>
 ---
-I’m very sorry for this regression. It would be nice, if this could
+I'm very sorry for this regression. It would be nice, if this could
 reach mainline before 5.18 release, if applicable. This restores the
 original suspend behaviour, while keeping the fix for hibernation. The
 fix for hibernation might not be the root cause, but still is the most
@@ -77,30 +76,39 @@ to the maintainers.
 
 Changes in v2:
 Patch formatting fixes
-– Fix Fixes tag
-– Simplify stable Cc tag
-– Fix Signed-off-by tag
+~ Fix Fixes tag
+~ Simplify stable Cc tag
+~ Fix Signed-off-by tag
 
 Changes in v3:
-– Prefixed commit reference with "commit" aka I managed to use
+~ Prefixed commit reference with "commit" aka I managed to use
   checkpatch.pl.
-– Added Tested-by tags for the testing reporters.
-– People start to get annoyed by my patch revision spamming. Should be
+~ Added Tested-by tags for the testing reporters.
+~ People start to get annoyed by my patch revision spamming. Should be
   the last one.
 
 Changes in v4:
-– Moved patch changelog to comment section
-– Use unicode ndash for patch changelog list to avoid confusion with
+~ Moved patch changelog to comment section
+~ Use unicode ndash for patch changelog list to avoid confusion with
   diff in editors
-– Expanded comment
-– Targeting net-next by subject
+~ Expanded comment
+~ Targeting net-next by subject
 
 Changes in v5:
-– Changed my MTA transfer encoding to 8 bit instead of
+~ Changed my MTA transfer encoding to 8 bit instead of
   quoted-printable. Git should like this a bit more.
+
+Changes in v6:
+~ Reducing content to 7 bit chars, because nipa did not apply v4 and v5, while
+  git does against a fresh net-next HEAD. Maybe it chokes on the
+  additional bit.
+~ Omitting target tree to resemble the last passing patch version the most.
 
  drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
+
+
+base-commit: 672c0c5173427e6b3e2a9bbb7be51ceeec78093a
 
 diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
 index 3a529ee8c834..831833911a52 100644
