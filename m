@@ -1,138 +1,99 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54BA57E
-	for <regressions@lists.linux.dev>; Sun,  8 May 2022 00:36:52 +0000 (UTC)
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id EBD4124010A
-	for <regressions@lists.linux.dev>; Sun,  8 May 2022 02:36:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
-	t=1651970210; bh=eRJ72IYITlVDpKnZ6+UmjwqGp62CGsHXISCjq+X2pUU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=PAok8vRxXvgVG/GaWnfIYBGcpramlP56iBb5i/MDcwepGnKrMLkK3y35DoY7BA7hP
-	 b5lW8X5tEsPKN60rd/GPa/2kitH70eMITGsuWKcEPkrmS9kjWY5S66bhIJbo3i5QEL
-	 br4GNSEmZGPKsDrgSnfBiD7KICn48dzr1cPHN4/OeqjCYbJAXRFFWWq4dVJ8muOQ+8
-	 jEM13+I4hlRS3ZV5lbhLTSynukGX8hTQAuR381F/u0w5VbR5obE26c/KD/3t3IRHte
-	 s/QfOIw9m1PO7jH9VK1VpqKFCGcy44tYrpdD2sNB56/JRMyZK5NeF9ZrhxcmbHsWXu
-	 gjhEdDLI5rRtw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4Kwljr30zTz9rxG;
-	Sun,  8 May 2022 02:36:48 +0200 (CEST)
-From: Manuel Ullmann <labre@posteo.de>
-To: Igor Russkikh <irusskikh@marvell.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- regressions@lists.linux.dev, davem@davemloft.net, ndanilov@marvell.com,
- kuba@kernel.org, pabeni@redhat.com, edumazet@google.com, Jordan Leppert
- <jordanleppert@protonmail.com>, Holger Hoffstaette
- <holger@applied-asynchrony.com>, koo5 <kolman.jindrich@gmail.com>
-Subject: [PATCH v6] net: atlantic: always deep reset on pm op, fixing up my
- null deref regression
-Date: Sun, 08 May 2022 00:36:46 +0000
-Message-ID: <87bkw8dfmp.fsf@posteo.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4B2184B
+	for <regressions@lists.linux.dev>; Sun,  8 May 2022 14:38:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1652020717;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=2vd3NSd3JgaMgQX4g9MrIzVsxXUjPuBCRd7158kHL7Q=;
+	b=AvznTv3bzcGE/6/JHontEEEyOwRp2KfWDCICYBXj2Sd9UEL2tw6DoNnvtH+wMLJd4N4YqO
+	XDk7dzwndnRTc6VXmnIptYuloUk573WvTxkyOjIAjijtalld4ledeDv9RZrPm3kxQljUwO
+	yzJbHquYpOCSbD9kluaXaD7/aRp1j4c=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-184-ogRMzG-mNTy5280rUEVh0A-1; Sun, 08 May 2022 10:38:35 -0400
+X-MC-Unique: ogRMzG-mNTy5280rUEVh0A-1
+Received: by mail-ej1-f70.google.com with SMTP id qf19-20020a1709077f1300b006f439243355so5698149ejc.3
+        for <regressions@lists.linux.dev>; Sun, 08 May 2022 07:38:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:to
+         :content-language:cc:from:subject:content-transfer-encoding;
+        bh=2vd3NSd3JgaMgQX4g9MrIzVsxXUjPuBCRd7158kHL7Q=;
+        b=dmS2ncmVQyjOoMAbwgkBlzjID4C+UFPoZGRiRVJe2l23ky1UWuvqYnh4WtRHP/timJ
+         7hBvmUPN+9bRCN9InH5lDQ8aCp1FJm4N0CYlR1OjeZiw+bhSB81z3NnP74mtBRi8mSxZ
+         hrRN9qQU6TC9IFPJpSmY+QC5bKYCuqMdwHw8AH7tn3YhrJTSlrgUFMVrvBHTSY16PVtL
+         XtJ8wtJAmGX8JLRmvU63CKTg3IAaMRhKnN4xQkDzrj0UP3kKuT/CmmiHdHbV3VuK/T7Q
+         cljhEmJx7r8llh5AE5lRTlQhowv1/RE2Yk/MRGGiRvq7UcOogIlkkfgVAn1+w+XXNXf5
+         tbsg==
+X-Gm-Message-State: AOAM530+1+8p1f/QzB8QE5m1+l38gIHL55gJv3aTquvgUFXLP8/DWy7y
+	xNGp9zvVIR85+Jcwe9KiBkdBxYsngK02jyi0eVmuuTpcRHdhbnyeINkcBPKQg1mm0XP2Kmf+G3Z
+	V1fRRkwYWV+WJDw3X1qD3FWo=
+X-Received: by 2002:aa7:c445:0:b0:425:d509:2113 with SMTP id n5-20020aa7c445000000b00425d5092113mr13241287edr.12.1652020714616;
+        Sun, 08 May 2022 07:38:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyaSYNnu6BpNlx9fQIPCYO5HIR7MVKKudYeohWpTDYjvtfo48y/ZyBxHCv9jDHFhXa9lWGQOA==
+X-Received: by 2002:aa7:c445:0:b0:425:d509:2113 with SMTP id n5-20020aa7c445000000b00425d5092113mr13241273edr.12.1652020714411;
+        Sun, 08 May 2022 07:38:34 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id b31-20020a509f22000000b0042617ba6397sm4948483edf.33.2022.05.08.07.38.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 May 2022 07:38:33 -0700 (PDT)
+Message-ID: <1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com>
+Date: Sun, 8 May 2022 16:38:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ intel-gfx <intel-gfx@lists.freedesktop.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: [5.18 regression] drm/i915 BYT rendering broken due to "Remove
+ short-term pins from execbuf, v6"
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hdegoede@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From 18dc080d8d4a30d0fcb45f24fd15279cc87c47d5 Mon Sep 17 00:00:00 2001
-Date: Wed, 4 May 2022 21:30:44 +0200
+Hi All,
 
-The impact of this regression is the same for resume that I saw on
-thaw: the kernel hangs and nothing except SysRq rebooting can be done.
+When running a 5.18-rc4 (and -rc5) kernel on a Chuwi Hi 8, which is
+a Bay Trail based tablet with 2G RAM and a 1200x1920 DSI panel.
+I noticed that gnome-shell was misrendering. Many UI elements were
+missing (they were all black) and at the gdm login screen (which is
+a special gnome-shell session) the screen often was entirely black
+until I move the cursor around and then various things got
+highlighted after which they sometimes stuck around and sometimes
+they disappeared again after the highlight.
 
-Fixes regression in commit cbe6c3a8f8f4 ("net: atlantic: invert deep
-par in pm functions, preventing null derefs"), where I disabled deep
-pm resets in suspend and resume, trying to make sense of the
-atl_resume_common() deep parameter in the first place.
+Since this problem does not happen with various 5.17.y kernels I
+believe that this is a kernel regression in 5.18. I've bisected this
+and the bisect points to:
 
-It turns out, that atlantic always has to deep reset on pm
-operations. Even though I expected that and tested resume, I screwed
-up by kexec-rebooting into an unpatched kernel, thus missing the
-breakage.
+commit b5cfe6f7a6e1 ("drm/i915: Remove short-term pins from execbuf, v6.")
 
-This fixup obsoletes the deep parameter of atl_resume_common, but I
-leave the cleanup for the maintainers to post to mainline.
+from Maarten. This commit cleanly reverts on top of 5.18-rc5 and
+I can confirm that 5.18-rc5 with b5cfe6f7a6e1 reverted fixes things.
 
-Suspend and hibernation were successfully tested by the reporters.
+I would be more then happy to test any possible fixes for this.
 
-Fixes: cbe6c3a8f8f4 ("net: atlantic: invert deep par in pm functions, preventing null derefs")
-Link: https://lore.kernel.org/regressions/9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com/
-Reported-by: Jordan Leppert <jordanleppert@protonmail.com>
-Reported-by: Holger Hoffstaette <holger@applied-asynchrony.com>
-Tested-by: Jordan Leppert <jordanleppert@protonmail.com>
-Tested-by: Holger Hoffstaette <holger@applied-asynchrony.com>
-CC: <stable@vger.kernel.org> # 5.10+
-Signed-off-by: Manuel Ullmann <labre@posteo.de>
----
-I'm very sorry for this regression. It would be nice, if this could
-reach mainline before 5.18 release, if applicable. This restores the
-original suspend behaviour, while keeping the fix for hibernation. The
-fix for hibernation might not be the root cause, but still is the most
-simple fix for backporting to stable while the root cause is unknown
-to the maintainers.
+Regards,
 
-Changes in v2:
-Patch formatting fixes
-~ Fix Fixes tag
-~ Simplify stable Cc tag
-~ Fix Signed-off-by tag
+Hans
 
-Changes in v3:
-~ Prefixed commit reference with "commit" aka I managed to use
-  checkpatch.pl.
-~ Added Tested-by tags for the testing reporters.
-~ People start to get annoyed by my patch revision spamming. Should be
-  the last one.
-
-Changes in v4:
-~ Moved patch changelog to comment section
-~ Use unicode ndash for patch changelog list to avoid confusion with
-  diff in editors
-~ Expanded comment
-~ Targeting net-next by subject
-
-Changes in v5:
-~ Changed my MTA transfer encoding to 8 bit instead of
-  quoted-printable. Git should like this a bit more.
-
-Changes in v6:
-~ Reducing content to 7 bit chars, because nipa did not apply v4 and v5, while
-  git does against a fresh net-next HEAD. Maybe it chokes on the
-  additional bit.
-~ Omitting target tree to resemble the last passing patch version the most.
-
- drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-
-base-commit: 672c0c5173427e6b3e2a9bbb7be51ceeec78093a
-
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-index 3a529ee8c834..831833911a52 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_pci_func.c
-@@ -449,7 +449,7 @@ static int aq_pm_freeze(struct device *dev)
- 
- static int aq_pm_suspend_poweroff(struct device *dev)
- {
--	return aq_suspend_common(dev, false);
-+	return aq_suspend_common(dev, true);
- }
- 
- static int aq_pm_thaw(struct device *dev)
-@@ -459,7 +459,7 @@ static int aq_pm_thaw(struct device *dev)
- 
- static int aq_pm_resume_restore(struct device *dev)
- {
--	return atl_resume_common(dev, false);
-+	return atl_resume_common(dev, true);
- }
- 
- static const struct dev_pm_ops aq_pm_ops = {
-
-base-commit: 672c0c5173427e6b3e2a9bbb7be51ceeec78093a
--- 
-2.35.1
