@@ -1,49 +1,13 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4B2184B
-	for <regressions@lists.linux.dev>; Sun,  8 May 2022 14:38:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1652020717;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2vd3NSd3JgaMgQX4g9MrIzVsxXUjPuBCRd7158kHL7Q=;
-	b=AvznTv3bzcGE/6/JHontEEEyOwRp2KfWDCICYBXj2Sd9UEL2tw6DoNnvtH+wMLJd4N4YqO
-	XDk7dzwndnRTc6VXmnIptYuloUk573WvTxkyOjIAjijtalld4ledeDv9RZrPm3kxQljUwO
-	yzJbHquYpOCSbD9kluaXaD7/aRp1j4c=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-184-ogRMzG-mNTy5280rUEVh0A-1; Sun, 08 May 2022 10:38:35 -0400
-X-MC-Unique: ogRMzG-mNTy5280rUEVh0A-1
-Received: by mail-ej1-f70.google.com with SMTP id qf19-20020a1709077f1300b006f439243355so5698149ejc.3
-        for <regressions@lists.linux.dev>; Sun, 08 May 2022 07:38:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:to
-         :content-language:cc:from:subject:content-transfer-encoding;
-        bh=2vd3NSd3JgaMgQX4g9MrIzVsxXUjPuBCRd7158kHL7Q=;
-        b=dmS2ncmVQyjOoMAbwgkBlzjID4C+UFPoZGRiRVJe2l23ky1UWuvqYnh4WtRHP/timJ
-         7hBvmUPN+9bRCN9InH5lDQ8aCp1FJm4N0CYlR1OjeZiw+bhSB81z3NnP74mtBRi8mSxZ
-         hrRN9qQU6TC9IFPJpSmY+QC5bKYCuqMdwHw8AH7tn3YhrJTSlrgUFMVrvBHTSY16PVtL
-         XtJ8wtJAmGX8JLRmvU63CKTg3IAaMRhKnN4xQkDzrj0UP3kKuT/CmmiHdHbV3VuK/T7Q
-         cljhEmJx7r8llh5AE5lRTlQhowv1/RE2Yk/MRGGiRvq7UcOogIlkkfgVAn1+w+XXNXf5
-         tbsg==
-X-Gm-Message-State: AOAM530+1+8p1f/QzB8QE5m1+l38gIHL55gJv3aTquvgUFXLP8/DWy7y
-	xNGp9zvVIR85+Jcwe9KiBkdBxYsngK02jyi0eVmuuTpcRHdhbnyeINkcBPKQg1mm0XP2Kmf+G3Z
-	V1fRRkwYWV+WJDw3X1qD3FWo=
-X-Received: by 2002:aa7:c445:0:b0:425:d509:2113 with SMTP id n5-20020aa7c445000000b00425d5092113mr13241287edr.12.1652020714616;
-        Sun, 08 May 2022 07:38:34 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyaSYNnu6BpNlx9fQIPCYO5HIR7MVKKudYeohWpTDYjvtfo48y/ZyBxHCv9jDHFhXa9lWGQOA==
-X-Received: by 2002:aa7:c445:0:b0:425:d509:2113 with SMTP id n5-20020aa7c445000000b00425d5092113mr13241273edr.12.1652020714411;
-        Sun, 08 May 2022 07:38:34 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id b31-20020a509f22000000b0042617ba6397sm4948483edf.33.2022.05.08.07.38.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 08 May 2022 07:38:33 -0700 (PDT)
-Message-ID: <1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com>
-Date: Sun, 8 May 2022 16:38:32 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABAF7E
+	for <regressions@lists.linux.dev>; Mon,  9 May 2022 05:30:33 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nnvyO-0007xl-7n; Mon, 09 May 2022 07:30:20 +0200
+Message-ID: <cbf8a730-a169-f2e9-3041-e530dfe42ad6@leemhuis.info>
+Date: Mon, 9 May 2022 07:30:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,48 +16,105 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- intel-gfx <intel-gfx@lists.freedesktop.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [5.18 regression] drm/i915 BYT rendering broken due to "Remove
- short-term pins from execbuf, v6"
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hdegoede@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Subject: Re: regression v5.13..v5.15: USB hub stopped working -- DMAR fault
+ when connected usb hub
 Content-Language: en-US
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Mathias Nyman <mathias.nyman@intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: =?UTF-8?Q?Piotr_Pi=c3=b3rkowski?= <qba100@gmail.com>,
+ "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <237660ea-794e-8347-4e1a-869ccef9ba3c@leemhuis.info>
+In-Reply-To: <237660ea-794e-8347-4e1a-869ccef9ba3c@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652074233;f6cbd056;
+X-HE-SMSGID: 1nnvyO-0007xl-7n
 
-Hi All,
+Hi, this is your Linux kernel regression tracker.
 
-When running a 5.18-rc4 (and -rc5) kernel on a Chuwi Hi 8, which is
-a Bay Trail based tablet with 2G RAM and a 1200x1920 DSI panel.
-I noticed that gnome-shell was misrendering. Many UI elements were
-missing (they were all black) and at the gdm login screen (which is
-a special gnome-shell session) the screen often was entirely black
-until I move the cursor around and then various things got
-highlighted after which they sometimes stuck around and sometimes
-they disappeared again after the highlight.
+@kernel developers: you might want to consider ignoring this, the
+reporter provided additional information in the ticket and it looks a
+lot like it's not a regression. For details see:
+https://bugzilla.kernel.org/show_bug.cgi?id=215906#c4
 
-Since this problem does not happen with various 5.17.y kernels I
-believe that this is a kernel regression in 5.18. I've bisected this
-and the bisect points to:
+Sorry for the noise.
 
-commit b5cfe6f7a6e1 ("drm/i915: Remove short-term pins from execbuf, v6.")
+Ciao, Thorsten
 
-from Maarten. This commit cleanly reverts on top of 5.18-rc5 and
-I can confirm that 5.18-rc5 with b5cfe6f7a6e1 reverted fixes things.
-
-I would be more then happy to test any possible fixes for this.
-
-Regards,
-
-Hans
-
+On 05.05.22 15:31, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker.
+> 
+> I noticed a regression report in bugzilla.kernel.org that afaics nobody
+> acted upon since it was reported about a week ago. That's why I decided
+> to forward it to a few maintainers and mailing lists. To quote from
+> https://bugzilla.kernel.org/show_bug.cgi?id=215906 :
+> 
+>> Since kernel 5.15 (with kernel 5.13 I see no problem) I have a problem with my USB hub. The device stops working shortly after starting the system.
+>> In dmesg log I see DMAR fault on usb controller
+>>
+>>
+>> [kwi27 22:03] usb 5-1.2: new high-speed USB device number 3 using xhci_hcd
+>> [  +0,100440] usb 5-1.2: New USB device found, idVendor=1a40, idProduct=0101, bcdDevice= 1.11
+>> [  +0,000004] usb 5-1.2: New USB device strings: Mfr=0, Product=1, SerialNumber=0
+>> [  +0,000002] usb 5-1.2: Product: USB 2.0 Hub
+>> [  +0,001002] hub 5-1.2:1.0: USB hub found
+>> [  +0,000133] hub 5-1.2:1.0: 4 ports detected
+>> [  +0,702453] usb 5-1.2.2: new full-speed USB device number 4 using xhci_hcd
+>> [  +0,471198] usb 5-1.2.2: New USB device found, idVendor=047f, idProduct=c025, bcdDevice= 1.35
+>> [  +0,000004] usb 5-1.2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+>> [  +0,000002] usb 5-1.2.2: Product: Plantronics C320-M
+>> [  +0,000001] usb 5-1.2.2: Manufacturer: Plantronics
+>> [  +0,000001] usb 5-1.2.2: SerialNumber: B13D8BE491B04E73AEB4C95E162DBE2B
+>> [  +0,255862] mc: Linux media interface: v0.10
+>> [  +0,001057] input: Plantronics Plantronics C320-M as /devices/pci0000:00/0000:00:1c.5/0000:04:00.0/usb5/5-1/5-1.2/5-1.2.2/5-1.2.2:1.3/0003:047F:C025.0004/input/input21
+>> [  +0,060275] plantronics 0003:047F:C025.0004: input,hiddev1,hidraw3: USB HID v1.11 Device [Plantronics Plantronics C320-M] on usb-0000:04:00.0-1.2.2/input3
+>> [  +0,859655] usb 5-1.2.2: Warning! Unlikely big volume range (=8192), cval->res is probably wrong.
+>> [  +0,000003] usb 5-1.2.2: [11] FU [Sidetone Playback Volume] ch = 1, val = 0/8192/1
+>> [  +0,584234] usbcore: registered new interface driver snd-usb-audio
+>> [  +0,229229] xhci_hcd 0000:04:00.0: WARNING: Host System Error
+>> [  +0,000014] DMAR: DRHD: handling fault status reg 2
+>> [  +0,000004] DMAR: [DMA Read NO_PASID] Request device [04:00.0] fault addr 0xfffca000 [fault reason 0x06] PTE Read access is not set
+>> [  +0,031993] xhci_hcd 0000:04:00.0: Host halt failed, -110
+>> [kwi27 22:04] xhci_hcd 0000:04:00.0: xHCI host not responding to stop endpoint command.
+>> [  +0,000003] xhci_hcd 0000:04:00.0: USBSTS: HSE EINT
+>> [  +0,032011] xhci_hcd 0000:04:00.0: Host halt failed, -110
+>> [  +0,000002] xhci_hcd 0000:04:00.0: xHCI host controller not responding, assume dead
+>> [  +0,000017] xhci_hcd 0000:04:00.0: HC died; cleaning up
+>> [  +0,000042] usb 5-1: USB disconnect, device number 2
+>> [  +0,000003] usb 5-1.2: USB disconnect, device number 3
+>> [  +0,000002] usb 5-1.2.2: USB disconnect, device number 4
+>> [  +0,000114] usb 5-1.2.2: 1:0: usb_set_interface failed (-110)
+>> [  +0,000016] usb 5-1.2.2: 1:1: usb_set_interface failed (-19)
+>> [  +0,000011] usb 5-1.2.2: 1:0: usb_set_interface failed (-19)
+> See the ticket for details and further comments. According to the latest
+> one the problem is still present in 5.18-rc5.
+> 
+> Was this issue discussed or even addressed somewhere already? Or does
+> anyone at least have a good idea what might be causing this problem?
+> @reporter: If neither is the case, you most likely will need to perform
+> a bisection with git to identify the change causing the problem.
+> 
+> Anyway, could one of the kernel developers among the recipients please
+> help with this? BTW, I was unsure where to send this to the DMA/IOMMU
+> maintainers or the USB/xhci maintainers. I settled for the latter; I
+> apologize in advance if that was the wrong choice.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> 
+> P.S.: As the Linux kernel's regression tracker I defsdal with a lot of
+> reports and sometimes miss something important when writing mails like
+> this. If that's the case here, don't hesitate to tell me in a public
+> reply, it's in everyone's interest to set the public record straight.
+> 
+> P.P.S: to get this tracked by the the Linux kernel regression tracking bot:
+> 
+> #regzbot introduced: v5.13..v5.15
+> #regzbot from: Piotr Piórkowski <qba100@gmail.com>
+> #regzbot title: usb/dma/iommu/???: USB hub stopped working -- DMAR fault
+> when connected usb hub
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215906
+> #regzbot monitor:
+> https://lore.kernel.org/all/bug-215906-208809@https.bugzilla.kernel.org%2F/
