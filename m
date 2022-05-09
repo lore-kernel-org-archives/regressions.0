@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486DD1858
-	for <regressions@lists.linux.dev>; Mon,  9 May 2022 06:56:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B737A46A8
+	for <regressions@lists.linux.dev>; Mon,  9 May 2022 06:59:07 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nnxK6-0003RF-Ta; Mon, 09 May 2022 08:56:50 +0200
-Message-ID: <09333bbb-25b0-031d-a208-a81de34ad6a6@leemhuis.info>
-Date: Mon, 9 May 2022 08:56:49 +0200
+	id 1nnxMH-0005y9-Om; Mon, 09 May 2022 08:59:05 +0200
+Message-ID: <9710730b-4f53-6428-43bd-6027e0424e07@leemhuis.info>
+Date: Mon, 9 May 2022 08:59:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,20 +16,17 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: Apparent regression in blktests since 5.18-rc1+
 Content-Language: en-US
-To: Bob Pearson <rpearsonhpe@gmail.com>, Bart Van Assche
- <bvanassche@acm.org>, Zhu Yanjun <zyjzyj2000@gmail.com>,
- "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
- Bernard Metzler <bmt@zurich.ibm.com>, Jason Gunthorpe <jgg@nvidia.com>
-References: <e7c31ebb-60c0-cd57-2009-5e9383ecc472@gmail.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <refZ3y2HAXztrRkMMmFbBaF7Dz1CctWgjchSdBtcSNlpk-TL0fqLepVVHfw9qXtIQF9uFzBvFdjQiiX9Jv2zW9oaWej952s1IYwu61d1REo=@protonmail.com>
+ <9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <e7c31ebb-60c0-cd57-2009-5e9383ecc472@gmail.com>
+Subject: Re: Crash on resume after suspend (5.17.5 and 5.15.36)
+In-Reply-To: <9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652079416;25efae31;
-X-HE-SMSGID: 1nnxK6-0003RF-Ta
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652079547;177352aa;
+X-HE-SMSGID: 1nnxMH-0005y9-Om
 
 [TLDR: I'm adding this regression report to the list of tracked
 regressions; all text from me you find below is based on a few templates
@@ -38,16 +35,14 @@ paragraphs you might have encountered already already in similar form.]
 Hi, this is your Linux kernel regression tracker. Top-posting for once,
 to make this easily accessible to everyone.
 
-CCing the regression mailing list, as it should be in the loop for all
-regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-
 To be sure below issue doesn't fall through the cracks unnoticed, I'm
 adding it to regzbot, my Linux kernel regression tracking bot:
 
-#regzbot ^introduced v5.17..v5.18-rc6
-#regzbot title rdma: hangs in blktests since 5.18-rc1+
+#regzbot ^introduced cbe6c3a8f8f4
+#regzbot title net: atlantic: Crash on resume after suspend (5.17.5 and
+5.15.36)
 #regzbot ignore-activity
+#regzbot monitor: https://lore.kernel.org/all/87bkw8dfmp.fsf@posteo.de/
 
 This isn't a regression? This issue or a fix for it are already
 discussed somewhere else? It was fixed already? You want to clarify when
@@ -68,38 +63,26 @@ reports and sometimes miss something important when writing mails like
 this. If that's the case here, don't hesitate to tell me in a public
 reply, it's in everyone's interest to set the public record straight.
 
-On 06.05.22 20:11, Bob Pearson wrote:
-> Bart,
+On 04.05.22 17:07, Jordan Leppert wrote:
+> Hi,
 > 
-> Before the most recent kernel update I had blktests running OK on rdma_rxe. Since we went on to 5.18.0-rc1+
-> I have been experiencing hangs. All of this is with the 'revert scsi-debug' patch which addressed the
-> 3 min timeout related to modprobe -r scsi-debug.
+> A changed was added to both version 5.17.5 and 5.15.36 which causes my computer to freeze when resuming after a suspend. This happens every time I suspend and then resume.
 > 
-> You suggested checking with siw and I finally got around to this and the behavior is exactly the same.
+> I've bisected the change to commit: cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c (net: atlantic: invert deep par in pm functions, preventing null derefs)
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-5.17.y&id=cbe6c3a8f8f4315b96e46e1a1c70393c06d95a4c
 > 
-> Specifically here is a run and dmesgs from that run:
+> My computer details that might be relevant:
+> OS: Arch Linux
+> CPU: AMD 5950X
+> GPU: AMD 6800XT
 > 
-> root@u-22:/home/bob/src/blktests# use_siw=1 ./check srp
+> As expected I have an Aquantia ethernet controller listed in lspci:
 > 
-> srp/001 (Create and remove LUNs)                             [passed]
+> 05:00.0 Ethernet controller: Aquantia Corp. AQC107 NBase-T/IEEE 802.3bz Ethernet Controller [AQtion] (rev 02)
 > 
->     runtime  3.388s  ...  3.501s
+> Please let me know if there is any more info I can give that will help.
 > 
-> srp/002 (File I/O on top of multipath concurrently with logout and login (mq))
+> Regards,
+> Jordan
 > 
->     runtime  54.689s  ...
->   <HANGS HERE>
 > 
-> I had to reboot to recover.
-> 
-> The dmesg output is attached in a long file called out.
-> The output looks normal until line 1875 where it hangs at an "Already connected ..." message.
-> This is the same as the other hangs I have been seeing.
-> This is followed by a splat warning that a cpu has hung for 120 seconds.
-> 
-> Since this is behaving the same for rxe and siw I am going to stop chasing this bug since
-> it is most likely outside of the the rxe driver.
-> 
-> Bob
-> 
-
