@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41B646AE
-	for <regressions@lists.linux.dev>; Mon,  9 May 2022 08:04:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458147B
+	for <regressions@lists.linux.dev>; Mon,  9 May 2022 09:00:13 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nnyNw-0007Ew-Pp; Mon, 09 May 2022 10:04:52 +0200
-Message-ID: <db529b0f-c147-91f3-4382-01c636c5522c@leemhuis.info>
-Date: Mon, 9 May 2022 10:04:52 +0200
+	id 1nnzFT-0008IR-8B; Mon, 09 May 2022 11:00:11 +0200
+Message-ID: <36be85b9-db4a-92c6-b26c-0a3e12353fbd@leemhuis.info>
+Date: Mon, 9 May 2022 11:00:10 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,82 +16,56 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [REGRESSION] AMD GPU regression in 5.16.18..5.17.4 #forregzbot
+Subject: Re: Bug 215777 - ath11k: 5.17.x causes cpu soft-lock on xps13 9310
+ #forregzbot
 Content-Language: en-US
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
-References: <YmQi7ajZpZ4W7BJL@itl-email> <YmQkCXZEqp6TKrhJ@itl-email>
- <YmTqYkGEqiz1o2o6@kroah.com>
- <e1950610-ba09-7c42-4a1a-152ad41015b5@leemhuis.info>
- <YmXfqrktdufyYC4r@itl-email>
- <BL1PR12MB5144A5433CD3495A3B74F30AF7F89@BL1PR12MB5144.namprd12.prod.outlook.com>
- <0b0025c1-107b-8dab-f30a-87b428b45e08@leemhuis.info>
-In-Reply-To: <0b0025c1-107b-8dab-f30a-87b428b45e08@leemhuis.info>
+References: <cd89d263-43e4-5634-75b9-bf3340c9bb1e@leemhuis.info>
+ <745e356a-0d4c-966b-66cb-e4067ca33d40@leemhuis.info>
+In-Reply-To: <745e356a-0d4c-966b-66cb-e4067ca33d40@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652083495;85a0435a;
-X-HE-SMSGID: 1nnyNw-0007Ew-Pp
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652086813;9ab361ae;
+X-HE-SMSGID: 1nnzFT-0008IR-8B
 
-On 29.04.22 13:36, Thorsten Leemhuis wrote:
+
+
+On 21.04.22 11:51, Thorsten Leemhuis wrote:
 > TWIMC: this mail is primarily send for documentation purposes and for
 > regzbot, my Linux kernel regression tracking bot. These mails usually
 > contain '#forregzbot' in the subject, to make them easy to spot and filter.
 > 
-> #regzbot fixed-by: 78b12008f20
+> #regzbot fixed-by: 1f682dc9fb3790a
+> #regzbot from: Dominik Förderer <dominik.foerderer@windeck-gymnasium.de>
 
-Landed in mainline with a different ID:
+Now also in a for-linus branch:
 
-#regzbot fixed-by: 19965d8259fdabc68
+#regzbot fixed-by: bb300130e47fcefbe938f0
 
-> On 25.04.22 23:29, Deucher, Alexander wrote:
->> [Public]
+> On 08.04.22 10:20, Thorsten Leemhuis wrote:
+>> Hi, this is your Linux kernel regression tracker speaking.
 >>
->>> -----Original Message-----
->>> From: Demi Marie Obenour <demi@invisiblethingslab.com>
->>> Sent: Sunday, April 24, 2022 7:39 PM
->>> To: Thorsten Leemhuis <regressions@leemhuis.info>; Greg KH 
->>> <gregkh@linuxfoundation.org>
->>> Cc: amd-gfx@lists.freedesktop.org; regressions@lists.linux.dev; 
->>> Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian 
->>> <Christian.Koenig@amd.com>; Pan, Xinhui <Xinhui.Pan@amd.com>
->>> Subject: Re: [REGRESSION] AMD GPU regression in 5.16.18..5.17.4
->>>
->>> On Sun, Apr 24, 2022 at 11:02:43AM +0200, Thorsten Leemhuis wrote:
->>>> CCing the amdgpu maintainers
->>>>
->>>> On 24.04.22 08:12, Greg KH wrote:
->>>>> On Sat, Apr 23, 2022 at 12:06:33PM -0400, Demi Marie Obenour wrote:
->>>>>> Two Qubes OS users reported that their AMD GPU systems did not 
->>>>>> work on 5.17.4, while 5.16.18 worked fine.  Details can be found 
->>>>>> on https://github.com/QubesOS/qubes-issues/issues/7462.  The 
->>>>>> initial report listed the GPU as “Advanced Micro Devices, Inc. 
->>>>>> [AMD/ATI] Renoir [1002:1636} (rev d3) (prog-if 00 [VGA 
->>>>>> controller])” and the CPU as “AMD Ryzen 5 PRO 4650U with Radeon Graphics”.
->>>>>>
->>>>>> #regzbot introduced: v5.16.18..v5.17.4
->>>>>
->>>>> That's a big range, can you use 'git bisect' to track it down?
->>>>
->>>> FWIW, in another mail in this thread and
->>>> https://github.com/QubesOS/qubes-issues/issues/7462#issuecomment-
->>> 11076
->>>> 81126 it was clarified that the problem was introduced between 
->>>> 5.17.3 and 5.17.4, where a few amdgpu changes were applied. Maybe 
->>>> they are the reason.
->>>>
->>>> Anyway: Yes, as Gregkh said, a bisection really would help. But 
->>>> maybe the amdgfx developers might already have an idea what might be 
->>>> wrong here? The QubesOS ticket linked above has some more details.
->>>
->>> The reporter was able to bisect the regression.  I am not surprised 
->>> that this commit caused problems for Qubes OS, as dom0 in Qubes OS is 
->>> technically a guest of Xen.
->>>
->>> #regzbot ^introduced: b818a5d374542ccec73dcfe578a081574029820e
+>> About a week ago a regression was reported to bugzilla.kernel.org that
+>> seems to be handled there already, nevertheless I'd like to add to the
+>> tracking to ensure it's not forgotten.
 >>
->> Can you please follow up on the bug ticket:
->> https://gitlab.freedesktop.org/drm/amd/-/issues/1985
->> It will be easier to track everything there.
+>> #regzbot introduced: 9dcf6808b253a72b2c90eed179863bf5fab7d68c
+>> #regzbot from: dominik.foerderer@windeck-gymnasium.de
+>> <dominik.foerderer@windeck-gymnasium.de>
+>> #regzbot title: net: wifi: ath11k: 5.17.x causes cpu soft-lock on xps13
+>> 9310
+>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215777
 >>
->> Alex
+>> See the ticket for details, there were a few replies already.
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>
+>> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+>> reports on my table. I can only look briefly into most of them and lack
+>> knowledge about most of the areas they concern. I thus unfortunately
+>> will sometimes get things wrong or miss something important. I hope
+>> that's not the case here; if you think it is, don't hesitate to tell me
+>> in a public reply, it's in everyone's interest to set the public record
+>> straight.
+>>
