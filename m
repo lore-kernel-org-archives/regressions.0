@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609851858
-	for <regressions@lists.linux.dev>; Mon,  9 May 2022 07:44:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41B646AE
+	for <regressions@lists.linux.dev>; Mon,  9 May 2022 08:04:54 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nny4E-0001iO-8Z; Mon, 09 May 2022 09:44:30 +0200
-Message-ID: <3aa008b9-e477-3e6d-becb-13e28ea91f10@leemhuis.info>
-Date: Mon, 9 May 2022 09:44:29 +0200
+	id 1nnyNw-0007Ew-Pp; Mon, 09 May 2022 10:04:52 +0200
+Message-ID: <db529b0f-c147-91f3-4382-01c636c5522c@leemhuis.info>
+Date: Mon, 9 May 2022 10:04:52 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,131 +16,82 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
- 4 (CM4) breaks booting
+Subject: Re: [REGRESSION] AMD GPU regression in 5.16.18..5.17.4 #forregzbot
 Content-Language: en-US
-To: Jim Quinlan <jim2101024@gmail.com>
-Cc: kibi@debian.org, "regressions@lists.linux.dev"
- <regressions@lists.linux.dev>, Linux PCI <linux-pci@vger.kernel.org>,
- bjorn@helgaas.com
-References: <bug-215925-41252@https.bugzilla.kernel.org/>
- <CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+References: <YmQi7ajZpZ4W7BJL@itl-email> <YmQkCXZEqp6TKrhJ@itl-email>
+ <YmTqYkGEqiz1o2o6@kroah.com>
+ <e1950610-ba09-7c42-4a1a-152ad41015b5@leemhuis.info>
+ <YmXfqrktdufyYC4r@itl-email>
+ <BL1PR12MB5144A5433CD3495A3B74F30AF7F89@BL1PR12MB5144.namprd12.prod.outlook.com>
+ <0b0025c1-107b-8dab-f30a-87b428b45e08@leemhuis.info>
+In-Reply-To: <0b0025c1-107b-8dab-f30a-87b428b45e08@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652082272;8871ff18;
-X-HE-SMSGID: 1nny4E-0001iO-8Z
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652083495;85a0435a;
+X-HE-SMSGID: 1nnyNw-0007Ew-Pp
 
-Hi, this is your Linux kernel regression tracker. Partly top-posting to
-mnake this easily accessible.
+On 29.04.22 13:36, Thorsten Leemhuis wrote:
+> TWIMC: this mail is primarily send for documentation purposes and for
+> regzbot, my Linux kernel regression tracking bot. These mails usually
+> contain '#forregzbot' in the subject, to make them easy to spot and filter.
+> 
+> #regzbot fixed-by: 78b12008f20
 
-Jim, what's up here? The regression was reported more than a week ago
-and it seems nothing happened since then. Or was there progress and I
-just missed it?
+Landed in mainline with a different ID:
 
-Anyway:
+#regzbot fixed-by: 19965d8259fdabc68
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
-
-On 02.05.22 20:38, Bjorn Helgaas wrote:
-> On Sat, Apr 30, 2022 at 2:53 PM <bugzilla-daemon@kernel.org> wrote:
+> On 25.04.22 23:29, Deucher, Alexander wrote:
+>> [Public]
 >>
->> https://bugzilla.kernel.org/show_bug.cgi?id=215925
+>>> -----Original Message-----
+>>> From: Demi Marie Obenour <demi@invisiblethingslab.com>
+>>> Sent: Sunday, April 24, 2022 7:39 PM
+>>> To: Thorsten Leemhuis <regressions@leemhuis.info>; Greg KH 
+>>> <gregkh@linuxfoundation.org>
+>>> Cc: amd-gfx@lists.freedesktop.org; regressions@lists.linux.dev; 
+>>> Deucher, Alexander <Alexander.Deucher@amd.com>; Koenig, Christian 
+>>> <Christian.Koenig@amd.com>; Pan, Xinhui <Xinhui.Pan@amd.com>
+>>> Subject: Re: [REGRESSION] AMD GPU regression in 5.16.18..5.17.4
+>>>
+>>> On Sun, Apr 24, 2022 at 11:02:43AM +0200, Thorsten Leemhuis wrote:
+>>>> CCing the amdgpu maintainers
+>>>>
+>>>> On 24.04.22 08:12, Greg KH wrote:
+>>>>> On Sat, Apr 23, 2022 at 12:06:33PM -0400, Demi Marie Obenour wrote:
+>>>>>> Two Qubes OS users reported that their AMD GPU systems did not 
+>>>>>> work on 5.17.4, while 5.16.18 worked fine.  Details can be found 
+>>>>>> on https://github.com/QubesOS/qubes-issues/issues/7462.  The 
+>>>>>> initial report listed the GPU as “Advanced Micro Devices, Inc. 
+>>>>>> [AMD/ATI] Renoir [1002:1636} (rev d3) (prog-if 00 [VGA 
+>>>>>> controller])” and the CPU as “AMD Ryzen 5 PRO 4650U with Radeon Graphics”.
+>>>>>>
+>>>>>> #regzbot introduced: v5.16.18..v5.17.4
+>>>>>
+>>>>> That's a big range, can you use 'git bisect' to track it down?
+>>>>
+>>>> FWIW, in another mail in this thread and
+>>>> https://github.com/QubesOS/qubes-issues/issues/7462#issuecomment-
+>>> 11076
+>>>> 81126 it was clarified that the problem was introduced between 
+>>>> 5.17.3 and 5.17.4, where a few amdgpu changes were applied. Maybe 
+>>>> they are the reason.
+>>>>
+>>>> Anyway: Yes, as Gregkh said, a bisection really would help. But 
+>>>> maybe the amdgfx developers might already have an idea what might be 
+>>>> wrong here? The QubesOS ticket linked above has some more details.
+>>>
+>>> The reporter was able to bisect the regression.  I am not surprised 
+>>> that this commit caused problems for Qubes OS, as dom0 in Qubes OS is 
+>>> technically a guest of Xen.
+>>>
+>>> #regzbot ^introduced: b818a5d374542ccec73dcfe578a081574029820e
 >>
->>             Bug ID: 215925
->>            Summary: PCIe regression on Raspberry Pi Compute Module 4 (CM4)
->>                     breaks booting
->>            Product: Drivers
->>            Version: 2.5
->>     Kernel Version: v5.17-rc1
->>           Hardware: ARM
->>                 OS: Linux
->>               Tree: Mainline
->>             Status: NEW
->>           Severity: normal
->>           Priority: P1
->>          Component: PCI
->>           Assignee: drivers_pci@kernel-bugs.osdl.org
->>           Reporter: kibi@debian.org
->>         Regression: No
+>> Can you please follow up on the bug ticket:
+>> https://gitlab.freedesktop.org/drm/amd/-/issues/1985
+>> It will be easier to track everything there.
 >>
->> Catching up with latest kernel releases in Debian, it turned out that my
->> Raspberry Pi Compute Module 4, mounted on an official Compute Module 4 IO
->> Board,
->> and booting from an SD card, no longer boots: this means a black screen on the
->> HDMI output, and no output on the serial console.
->>
->> Trying various releases, I confirmed that v5.16 was fine, and v5.17-rc1 was the
->> first (pre)release that wasn't.
->>
->> After some git bisect, it turns out the cause seems to be the following commit
->> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21):
->>
->> ```
->> commit 830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21
->> Author: Jim Quinlan <jim2101024@gmail.com>
->> Date:   Thu Jan 6 11:03:27 2022 -0500
->>
->>     PCI: brcmstb: Split brcm_pcie_setup() into two funcs
->> ```
->>
->> Starting with this commit, the kernel panics early (before 0.30 seconds), with
->> an `Asynchronous SError Interrupt`. The backtrace references various
->> `brcm_pcie_*` functions; I can share a picture or try and transcribe it
->> manually if that helps (nothing on the serial console…).
->>
->> This commit is part of a branch that was ultimately merged as
->> d0a231f01e5b25bacd23e6edc7c979a18a517b2b; starting with this commit, there's
->> not even a backtrace anymore, the screen stays black after the usual “boot-up
->> rainbow”, and there's still nothing on the serial console.
->>
->> I confirmed that 88db8458086b1dcf20b56682504bdb34d2bca0e2 (on the master side)
->> was still booting properly, and that 87c71931633bd15e9cfd51d4a4d9cd685e8cdb55
->> (from the branch being merged into master) is the last commit showing the
->> panic.
->>
->> Since d0a231f01e5b25bacd23e6edc7c979a18a517b2b is a merge commit that includes
->> conflict resolutions in drivers/pci/controller/pcie-brcmstb.c, I suppose this
->> could be consistent with the initial panic being “upgraded” into an even more
->> serious issue.
->>
->> I've also verified that latest master (v5.18-rc4-396-g57ae8a492116) is still
->> affected by this issue.
->>
->> The regular Raspberry Pi 4 B doesn't seem to be affected by this issue: the
->> exact same image on the same SD card (with latest master) boots fine on it.
-
-CCing the regression mailing list, as it should be in the loop for all
-regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-
-To be sure below issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
-
-#regzbot ^introduced 830aa6f29f07a4e2f1a
-#regzbot title pci: brcmstb: CM4 no longer boots from SD card
-#regzbot ignore-activity
-#regzbot from: Cyril Brulebois <kibi@debian.org>
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replied to), as the kernel's
-documentation call for; above page explains why this is important for
-tracked regressions.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+>> Alex
