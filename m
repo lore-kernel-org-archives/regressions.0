@@ -1,93 +1,121 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from hobbes.mraw.org (hobbes.mraw.org [195.154.31.160])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15191FC0
-	for <regressions@lists.linux.dev>; Mon,  9 May 2022 17:21:17 +0000 (UTC)
-Received: by mail-ej1-f44.google.com with SMTP id j6so28124914ejc.13
-        for <regressions@lists.linux.dev>; Mon, 09 May 2022 10:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NbKadAlbEuv9SCL4clueu9SSBtV1FA6IQDblzg5FTkc=;
-        b=VhLWVfy7VuAnawsLFBmFlKuhHwfBkHheP2GCjLRi0YYeGJiosDj1ZiqdhTw0COwHlL
-         oyAC748yRG+xi07STBQBggoNnarsQtg82LQ2wAmMCse/7vNdZan7c8GM+wPCCL33stzb
-         zsXIFmfxn4Can6ZOtEq58A3aSqYgMGqCetzAE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NbKadAlbEuv9SCL4clueu9SSBtV1FA6IQDblzg5FTkc=;
-        b=ppi9917KEr6avP9fZZbn3BkDKkGRl18rO9y2X4PWZ7i/2kAAjm8dMkHL20FpvROea0
-         H6RafCz31gCnBADs+Od3N1Ft0dr9DAO8yIn5Vm0RtKro9gfqNHgvT/cNtrchLUbx0olZ
-         rzemIHJ5aB7aK6yKADgZwly2rgKOH+4vef2NIAtkN+v4GN6RexH4ec6ZNAGLm5cIaJ19
-         tkP6PupaAOmAn+sD7EaUTF5VtvlvJo82nJ7TG7y61lnhvX0qg23fQnVwiXqNUV/1TrxA
-         8J6tp5IGr1XxHjJPTUReJhS97pQpEeEO7+94s6NnCm4okRroErb2kP8CujXa3GqwMN4B
-         PH8w==
-X-Gm-Message-State: AOAM532HXgErVnveZRW004SPlDG+1oICo8kb6EoKUDsaMecAxnufLyZ3
-	5qfwBE91qxpCzPN/YrxfVVQdrmeEKr8jzymh
-X-Google-Smtp-Source: ABdhPJwmNbaH+/v/EY5ZtH1LrLALX0nkNRIoyGVUEoBaz1h7cyv27Xoo77O0+h4a+tzcXG7lpEGNFg==
-X-Received: by 2002:a17:907:7f12:b0:6f4:57e7:b20a with SMTP id qf18-20020a1709077f1200b006f457e7b20amr15033272ejc.538.1652116875809;
-        Mon, 09 May 2022 10:21:15 -0700 (PDT)
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com. [209.85.128.50])
-        by smtp.gmail.com with ESMTPSA id jz11-20020a17090775eb00b006f3ef214e51sm5201757ejc.183.2022.05.09.10.21.14
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 May 2022 10:21:15 -0700 (PDT)
-Received: by mail-wm1-f50.google.com with SMTP id c190-20020a1c35c7000000b0038e37907b5bso11193873wma.0
-        for <regressions@lists.linux.dev>; Mon, 09 May 2022 10:21:14 -0700 (PDT)
-X-Received: by 2002:a05:600c:4f06:b0:394:836b:1552 with SMTP id
- l6-20020a05600c4f0600b00394836b1552mr11550087wmq.145.1652116874604; Mon, 09
- May 2022 10:21:14 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108401FC0
+	for <regressions@lists.linux.dev>; Mon,  9 May 2022 18:17:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mraw.org;
+	s=mail2022; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=/AbJu07AVkebdRbVb4cnZuMPRRUQJilRZfHMvZ/Ym3A=; b=tu2gB7shXKWudKlpO8TnnE9pFL
+	Jh3Dt9LhBeURa+2PkUYhHXac5+PDfdPOstlpPX2OGPV30en6k0Kz/gS4slV+RT3NqrocFr1/eBuro
+	locXQhrY7hk6Ge0bF5r2QU4lYYyCC/knCX6AfgBqiA+1SZqyZVr7gV8HEnfgPHA/lQBpkL8+6LbM6
+	EefCU82YLf0au678XpADXCwhO5iBU73wzuu9ffQ1MkTftGF5APp9FcupTYrB/kJ7g7hqG1Dbb5OO3
+	iWrsPdyjOl5alRo3lEh0HAo2tDS2hli3lCnoCkpJtKbcnczDTDdBg2seVR5Ag7aNpPN4INntpf92B
+	7Jv0ii/g==;
+Received: from 82-64-171-251.subs.proxad.net ([82.64.171.251] helo=mraw.org)
+	by hobbes.mraw.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <kibi@debian.org>)
+	id 1no7Rp-003fbK-8u; Mon, 09 May 2022 19:45:29 +0200
+Date: Mon, 9 May 2022 19:45:27 +0200
+From: Cyril Brulebois <kibi@debian.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Linux PCI <linux-pci@vger.kernel.org>, bjorn@helgaas.com
+Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
+ 4 (CM4) breaks booting
+Message-ID: <20220509174527.zoqhmaxfwo7udezo@mraw.org>
+Organization: Debian
+References: <3aa008b9-e477-3e6d-becb-13e28ea91f10@leemhuis.info>
+ <20220509170708.GA604646@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAHk-=wi0vqZQUAS67tBsJQW+dtt89m+dqA-Z4bOs8CH-mm8u2w@mail.gmail.com>
- <165209064657.193515.10163777181547077546@leemhuis.info>
-In-Reply-To: <165209064657.193515.10163777181547077546@leemhuis.info>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 9 May 2022 10:20:58 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj0gHsG6iw3D8ufptm9a_dvTSqrrOFY9WopObbYbyuwnA@mail.gmail.com>
-Message-ID: <CAHk-=wj0gHsG6iw3D8ufptm9a_dvTSqrrOFY9WopObbYbyuwnA@mail.gmail.com>
-Subject: Re: Linux regressions report for mainline [2022-05-09] (was: Linux 5.18-rc6)
-To: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Matthew Auld <matthew.auld@intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fm7uldoigioq6ukb"
+Content-Disposition: inline
+In-Reply-To: <20220509170708.GA604646@bhelgaas>
 
-On Mon, May 9, 2022 at 3:47 AM Regzbot (on behalf of Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> Hi Linus! Here's a quick compilation of open reports about regressions in
-> 5.18-rc that I'm currently aware of; most of the reports are quite
-> recent and there afaics is nothing that looks particularly worrisome.
 
-Well, the Intel GPU issue seems likely to cause problems for lots of people:
+--fm7uldoigioq6ukb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> [ *NEW* ] drm/i915: BYT rendering broken due to "Remove short-term pins from execbuf, v6"
-> -----------------------------------------------------------------------------------------
-> https://linux-regtracking.leemhuis.info/regzbot/regression/1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com/
-> https://lore.kernel.org/dri-devel/1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com/
->
-> By Hans de Goede; 0 days ago; 2 activities, latest 0 days ago.
-> Introduced in b5cfe6f7a6e1 (v5.18-rc1)
->
-> Recent activities from: Tvrtko Ursulin (1), Hans de Goede (1)
+Hi Bjorn,
 
-Although it looks possible that it mainly affects old chipsets (ie the
-two reports are for a Bay Trail chip and a Core 2 Duo chip - I have no
-idea how they compare).
+Bjorn Helgaas <helgaas@kernel.org> (2022-05-09):
+> Cyril, 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two
+> funcs") reverts cleanly as of 57ae8a492116.  Does reverting it avoid
+> the regression?
 
-That probably means there are a lot of machines out there, but likely
-not the kind that most kernel developers will be testing, so not a ton
-of reports until it hits distro kernels etc.
+I didn't even try and revert this commit before you suggested doing so
+since it was supposed to be some preliminary work. Quoting a part of
+its commit message:
 
-It looks like Maarten is already involved.
+    In future commits the brcm_pcie_linkup() function will be called
+    indirectly by pci_host_probe() as opposed to the host driver
+    invoking it directly.
 
-                    Linus
+
+Anyway, the patch can indeed be reverted on top of v5.18-rc4 or
+v5.18-rc6 but the build fails due to the former function being removed,
+while being still called from other places:
+
+      CC      drivers/pci/controller/pcie-brcmstb.o
+    drivers/pci/controller/pcie-brcmstb.c:199:12: warning: =E2=80=98brcm_pc=
+ie_linkup=E2=80=99 used but never defined
+      199 | static int brcm_pcie_linkup(struct brcm_pcie *pcie);
+          |            ^~~~~~~~~~~~~~~~
+    =E2=80=A6
+    aarch64-linux-gnu-ld: drivers/pci/controller/pcie-brcmstb.o: in functio=
+n `brcm_pcie_add_bus':
+    /home/kibi/hack/linux.git/drivers/pci/controller/pcie-brcmstb.c:527: un=
+defined reference to `brcm_pcie_linkup'
+
+
+See for example:
+
+    commit 93e41f3fca3d4a0f927b784012338c37f80a8a80
+    Author: Jim Quinlan <jim2101024@gmail.com>
+    Date:   Thu Jan 6 11:03:29 2022 -0500
+   =20
+        PCI: brcmstb: Add control of subdevice voltage regulators
+
+(And that one cannot be trivially reverted.)
+
+
+Cheers,
+--=20
+Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
+D-I release manager -- Release team member -- Freelance Consultant
+
+--fm7uldoigioq6ukb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEtg6/KYRFPHDXTPR4/5FK8MKzVSAFAmJ5UzIACgkQ/5FK8MKz
+VSD5Hw//RC0xiVTWjeHCHLECJ2DqOpmSZrswB7wQcMF8leixZxYdcy9YVdGpwTaC
+nyQ/t1LhXor7iDlQkn0o6YncDR/LKHp1TrKjNVbjF4I838V+859INYgyKp7rsWaB
+tXQVK8GB3Haw1bEWIkzPlTliqAN41Yl+JY77qhWWwxw/VDsmjCoq9II8frIR7/KF
+lChgPY7FXZcIpBWcHABld/mW/qWWZH6CwOxPQidfXebsXmeC8cVqG0kWN/psI4NQ
+FNOPRZC1FwydTiZZb1kaXxfxxlRaPh5txG4jJTshn7WhZArdN92NPZ2z1Btt/SuG
++NQyGH6HTY4X5HOv9DN4PRpQN/1VEg91D6cSt/G1CMJsjZvVUr+RF0Wr/LjyndtQ
+a+7+IX01wK52UaMpg+BaRt5RT7I5+x5j9CDgOiBzn+kbUhSYY0jBdhCtayPUR6Zx
+v/ICrNpGT1HPMggKHBYKTh1b1KFFaJ6vhPQbPwcVvgYiOkms7+yRlYUGQyfkP570
+lJhFj07MgWTNZpGt1JKXVQqe6vhw0tHf2mmwLQLndH6949cAqaI8Rx2/d6H//QEx
+XZwTuAp2Mod/FMXYr9xCnUj4O70YgaiH+QINZ6aq9MDz4eh881SYrFIfkjfcijz6
++eFIM+/LtPBrjmwrY05gsfKq2rtUsaRWAfJocdEHCLCqCn/bDww=
+=jOW6
+-----END PGP SIGNATURE-----
+
+--fm7uldoigioq6ukb--
