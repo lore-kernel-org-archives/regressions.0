@@ -1,192 +1,116 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE8E46BD
-	for <regressions@lists.linux.dev>; Mon,  9 May 2022 10:47:53 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1no0vd-0004LQ-W0; Mon, 09 May 2022 12:47:50 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2022-05-09] (was: Linux 5.18-rc6)
-Date: Mon,  9 May 2022 10:47:49 +0000
-Message-Id: <165209064657.193515.10163777181547077546@leemhuis.info>
-X-Mailer: git-send-email 2.34.3
-In-Reply-To: <CAHk-=wi0vqZQUAS67tBsJQW+dtt89m+dqA-Z4bOs8CH-mm8u2w@mail.gmail.com>
-References: <CAHk-=wi0vqZQUAS67tBsJQW+dtt89m+dqA-Z4bOs8CH-mm8u2w@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117831865
+	for <regressions@lists.linux.dev>; Mon,  9 May 2022 10:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1652093832;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EFrPs9L4di1vV1xZJqP9rzxBR1+UAeDEbQHD/bxvJ7Y=;
+	b=VnsMMKuul/WaDHelV8z8/qWoq09dDLSb6qLOUtUbiNhDPKzkSp0W2HvKIORgOjhXw6PEwF
+	XwIDbQ0LWBivmPax4QQeIgyPf9JWsxrlFmwv8dEd543US/ah0vwF8t08V+5rGaTnF8J4fc
+	UgMfUAmZTr1EoVxdyCZixITcr8D1JVk=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-638-icI49yjcMjGOL4AT13L-Zw-1; Mon, 09 May 2022 06:57:09 -0400
+X-MC-Unique: icI49yjcMjGOL4AT13L-Zw-1
+Received: by mail-ej1-f71.google.com with SMTP id re25-20020a170906d8d900b006f50701fbefso4227225ejb.23
+        for <regressions@lists.linux.dev>; Mon, 09 May 2022 03:57:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=EFrPs9L4di1vV1xZJqP9rzxBR1+UAeDEbQHD/bxvJ7Y=;
+        b=Qbz+nyQAJAXZ2yHQpoIAMr/YhmhLXCHwYhOWpdUaQFFUCmpeQ6KZdlDTOrlqi2hfFC
+         O+sIvRSAKXGXUVYOUusJNN96bX3Kb3TWz79GnFr9hr79OXkz/jSEU/A2MIpTyB4Mq85d
+         CccxmYEh5nI4OHk3RpFuT2Ym/rqk/UqjpG+qvLaIjW49gog0cGKqAyo1FvBdaZ9Dns6f
+         yFr4xseE5/zKQ4nzbg/jh54mrDVgo3O/YBZj6FjD5qeh/65YabJ/WO4MciUBNJK1pDsg
+         8mgkuW9dg1lge4bHbrCpW7OUsfhSXwmLha8Xogyou0pMYzGHN2ZhteAezjOjXw6Dbium
+         vFIg==
+X-Gm-Message-State: AOAM532+b2AGxIjk3XMcJXiQhhJwYmm50vaB+5RkGDLSupYe18a9yf7n
+	/GjAB4d5sXDIQDewKuPlzO4PYMAREoxi/Wp2sHpFF3ZKD9jdqaLvhvHdRPo+Zq8Gwz908nzvlMW
+	61Gxp3Z8kc33LIkkUwrzyNvc=
+X-Received: by 2002:a17:907:7da7:b0:6f4:f92b:3986 with SMTP id oz39-20020a1709077da700b006f4f92b3986mr13581740ejc.50.1652093828684;
+        Mon, 09 May 2022 03:57:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyR2LyN1sGr/ku45VLAMUVTF9Djf8FtshH8TyrOMtMCisUpjWy4B6l9l3wolcFcqotZ7FxfuQ==
+X-Received: by 2002:a17:907:7da7:b0:6f4:f92b:3986 with SMTP id oz39-20020a1709077da700b006f4f92b3986mr13581728ejc.50.1652093828504;
+        Mon, 09 May 2022 03:57:08 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id a4-20020aa7d904000000b0042617ba6385sm6150956edr.15.2022.05.09.03.57.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 May 2022 03:57:08 -0700 (PDT)
+Message-ID: <087a0754-422c-0d88-a5ed-c03f2b5906c2@redhat.com>
+Date: Mon, 9 May 2022 12:57:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652093273;35602804;
-X-HE-SMSGID: 1no0vd-0004LQ-W0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: 5.18 vmwgfx seems to break booting VirtualBox VMs
+To: Zack Rusin <zackr@vmware.com>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>
+References: <2bd4b06e-7577-d7d7-5f2e-264005b316a1@redhat.com>
+ <84c30eb2dcdc330ea54aa1fedba9ae0eb0826068.camel@vmware.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <84c30eb2dcdc330ea54aa1fedba9ae0eb0826068.camel@vmware.com>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hdegoede@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Linus! Here's a quick compilation of open reports about regressions in
-5.18-rc that I'm currently aware of; most of the reports are quite
-recent and there afaics is nothing that looks particularly worrisome.
+Hi Zack,
 
-Sorry, I didn't get around to sent any reports in that past few weeks, I
-simply didn't find enough time to get on top of things to compile a
-meaningful report. But I nevertheless had an eye on things an poked some
-developers when it seemed there wasn't any progress.
+On 4/11/22 16:24, Zack Rusin wrote:
+> On Mon, 2022-04-11 at 10:52 +0200, Hans de Goede wrote:
+>> Hi All,
+>>
+>> Fedora has received a bug report here:
+>>
+>> https://nam04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.redhat.com%2Fshow_bug.cgi%3Fid%3D2072556&amp;data=04%7C01%7Czackr%40vmware.com%7C3664ddfe25334b16109108da1b98a6af%7Cb39138ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C0%7C637852639719382480%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000&amp;sdata=GpkMy6OuPW06f%2Fzj%2FBGzoq8xT8pNsE6KtH0MTvN5FoA%3D&amp;reserved=0
+>>
+>> That Fedora rawhide VMs no longer boot under the VirtualBox
+>> hypervisor
+>> after the VM has been updated to a 5.18-rc# kernel.
+>>
+>> Switching the emulated GPU from vmwaregfx to VirtualBoxSVGA fixes
+>> this, so this seems to be a vmwgfx driver regression.
+>>
+>> Note I've not investigated/reproduced this myself due to -ENOTIME.
+> 
+> Thanks for letting us know. Unfortunately we do not support vmwgfx on
+> VirtualBox. I'd be happy to review patches related to this, but it's
+> very unlikely we'd have to time to look at this ourselves.
 
-On reason why I was short on time: the number of tracked open
-regressions increased a bit over the past few weeks. Most of them are
-found in older cycles. Listing them all here would make the report quite
-long and hard to read -- and people then might stop reading them, which
-I'd like to avoid. That's why I stopped including all and only focused
-on the ones in the current cycle. Is that okay for you? Or would you
-prefer to have at least those from the previous cycle listed as well? Or
-at least all that were bisected? Or should I split things up over
-multiple reports? Or is having the others on the website enough for
-everyone?
+I somewhat understand where you are coming from, but this is not
+how the kernels "no regressions" policy works. For the end user
+a regression is a regression and as maintainers we are supposed
+to make sure any regressions noticed are fixed before a new
+kernel hits end user's systems.
 
-Ciao, Thorsten
+At a minimum it would have been good if you had tried to at least
+reproduce this bug by installing Fedora rawhide inside an actual
+vmware VM. I've just spend a couple of hours debugging this and
+the bug definitely impacts vmware VMs too; and thus very likely
+also reproduces there.
 
----
+I've a patch fixing this, which I will send out right after this
+email.
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
+Regards,
 
-Currently I'm aware of 5 regressions in linux-mainline that
-where introduced this cycle. Find the current status below
-and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Regressions from previous cycles are listed there as well.
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-========================================================
-current cycle (v5.17.. aka v5.18-rc), culprit identified
-========================================================
-
-
-[ *NEW* ] drm/i915: BYT rendering broken due to "Remove short-term pins from execbuf, v6"
------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com/
-https://lore.kernel.org/dri-devel/1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com/
-
-By Hans de Goede; 0 days ago; 2 activities, latest 0 days ago.
-Introduced in b5cfe6f7a6e1 (v5.18-rc1)
-
-Recent activities from: Tvrtko Ursulin (1), Hans de Goede (1)
-
-
-[ *NEW* ] net: atlantic: Crash on resume after suspend (5.17.5 and 5.15.36)
----------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com/
-https://lore.kernel.org/stable/9-Ehc_xXSwdXcvZqKD5aSqsqeNj5Izco4MYEwnx5cySXVEc9-x_WC4C3kAoCqNTi-H38frroUK17iobNVnkLtW36V6VWGSQEOHXhmVMm5iQ=@protonmail.com/
-
-By Jordan Leppert; 4 days ago; 22 activities, latest 1 days ago.
-Introduced in cbe6c3a8f8f4 (v5.18-rc4)
-
-Recent activities from: Manuel Ullmann (11), Jordan Leppert (4), Holger
-  Hoffstätte (4), Thorsten Leemhuis (2), Igor Russkikh (1)
-
-Noteworthy links:
-* [PATCH] net: atlantic: always deep reset on pm op, fixing null deref regression
-  https://lore.kernel.org/lkml/87czgt2bsb.fsf@posteo.de/
-  4 days ago, by Manuel Ullmann; thread monitored.
-* [PATCH v2] net: atlantic: always deep reset on pm op, fixing null deref regression
-  https://lore.kernel.org/lkml/877d6zirmy.fsf@posteo.de/
-  3 days ago, by Manuel Ullmann; thread monitored.
-* [PATCH v3] net: atlantic: always deep reset on pm op, fixing null deref regression
-  https://lore.kernel.org/lkml/8735hniqcm.fsf@posteo.de/
-  3 days ago, by Manuel Ullmann; thread monitored.
-* [PATCH net-next v4] net: atlantic: always deep reset on pm op, fixing up my null deref regression
-  https://lore.kernel.org/lkml/87zgjtz4sb.fsf@posteo.de/
-  1 days ago, by Manuel Ullmann; thread monitored.
-* [PATCH net-next v5] net: atlantic: always deep reset on pm op, fixing up my null deref regression
-  https://lore.kernel.org/lkml/87fsllcd80.fsf@posteo.de/
-  1 days ago, by Manuel Ullmann; thread monitored.
-* [PATCH v6] net: atlantic: always deep reset on pm op, fixing up my null deref regression
-  https://lore.kernel.org/lkml/87bkw8dfmp.fsf@posteo.de/
-  1 days ago, by Manuel Ullmann; thread monitored.
-* [PATCH v6] net: atlantic: always deep reset on pm op, fixing up my null deref regression
-  https://lore.kernel.org/lkml/87bkw8dfmp.fsf@posteo.de/
-  1 days ago, by Manuel Ullmann; thread monitored.
+Hans
 
 
-[ *NEW* ] net: dpaa2: TSO offload on lx2160a causes fatal exception in interrupt
---------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/7ca81e6b-85fd-beff-1c2b-62c86c9352e9@leemhuis.info/
-https://lore.kernel.org/netdev/7ca81e6b-85fd-beff-1c2b-62c86c9352e9@leemhuis.info/
-
-By Unkown; 5 days ago; 2 activities, latest 5 days ago.
-Introduced in 3dc709e0cd47 (v5.18-rc1)
-
-Recent activities from: Ioana Ciornei (1), Thorsten Leemhuis (1)
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215886
-
-
-====================================================
-current cycle (v5.17.. aka v5.18-rc), unkown culprit
-====================================================
-
-
-[ *NEW* ] rdma: hangs in blktests since 5.18-rc1+
--------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/e7c31ebb-60c0-cd57-2009-5e9383ecc472@gmail.com/
-https://lore.kernel.org/linux-rdma/e7c31ebb-60c0-cd57-2009-5e9383ecc472@gmail.com/
-
-By Bob Pearson; 2 days ago; 10 activities, latest 0 days ago.
-Introduced in v5.17..v5.18-rc6
-
-Recent activities from: Yanjun Zhu (3), Bob Pearson (3), Bart Van
-  Assche (2), Zhu Yanjun (1), Jason Gunthorpe (1)
-
-
-[ *NEW* ] input/usb/???: bcm5974 trackpad causes error: xhci_hcd rejecting DMA map of vmalloc memory
-----------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/76e24afa-ad7d-bf6d-d610-df61851b3e2b@leemhuis.info/
-https://lore.kernel.org/linux-usb/76e24afa-ad7d-bf6d-d610-df61851b3e2b@leemhuis.info/
-
-By Satadru Pramanik; 5 days ago; 1 activities, latest 5 days ago.
-Introduced in v5.17..v5.18-rc4
-
-Recent activities from: Thorsten Leemhuis (1)
-
-Noteworthy links:
-* https://bugzilla.kernel.org/show_bug.cgi?id=215890
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/164779309771.379023.10823585483674878438@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
