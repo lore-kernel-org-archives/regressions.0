@@ -1,121 +1,121 @@
-Received: from hobbes.mraw.org (hobbes.mraw.org [195.154.31.160])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108401FC0
-	for <regressions@lists.linux.dev>; Mon,  9 May 2022 18:17:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mraw.org;
-	s=mail2022; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=/AbJu07AVkebdRbVb4cnZuMPRRUQJilRZfHMvZ/Ym3A=; b=tu2gB7shXKWudKlpO8TnnE9pFL
-	Jh3Dt9LhBeURa+2PkUYhHXac5+PDfdPOstlpPX2OGPV30en6k0Kz/gS4slV+RT3NqrocFr1/eBuro
-	locXQhrY7hk6Ge0bF5r2QU4lYYyCC/knCX6AfgBqiA+1SZqyZVr7gV8HEnfgPHA/lQBpkL8+6LbM6
-	EefCU82YLf0au678XpADXCwhO5iBU73wzuu9ffQ1MkTftGF5APp9FcupTYrB/kJ7g7hqG1Dbb5OO3
-	iWrsPdyjOl5alRo3lEh0HAo2tDS2hli3lCnoCkpJtKbcnczDTDdBg2seVR5Ag7aNpPN4INntpf92B
-	7Jv0ii/g==;
-Received: from 82-64-171-251.subs.proxad.net ([82.64.171.251] helo=mraw.org)
-	by hobbes.mraw.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <kibi@debian.org>)
-	id 1no7Rp-003fbK-8u; Mon, 09 May 2022 19:45:29 +0200
-Date: Mon, 9 May 2022 19:45:27 +0200
-From: Cyril Brulebois <kibi@debian.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Linux PCI <linux-pci@vger.kernel.org>, bjorn@helgaas.com
-Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
- 4 (CM4) breaks booting
-Message-ID: <20220509174527.zoqhmaxfwo7udezo@mraw.org>
-Organization: Debian
-References: <3aa008b9-e477-3e6d-becb-13e28ea91f10@leemhuis.info>
- <20220509170708.GA604646@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB487B
+	for <regressions@lists.linux.dev>; Mon,  9 May 2022 19:04:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1652123053;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4c+bANNOi4sApJZ1cTVk45/N0JeRAadFfeHChP/lKJw=;
+	b=AOieuT286XCFvsWCZuw3zpZ/TbLs+PO/HVz5vE13+JAeUJASJV23vHtytsnmKwEbnBZSmf
+	0PVtuMEQlyeQS+sZVxu4/brUTNBRCcObOFDg+/grfBfudd9wm9zab/M22ksy4WCWUpZ7SW
+	Fu14tTEDNK53HJzqQT/iVhp0FmJEAvQ=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-662-vA1mc7q4PNCatKUkFX0BTw-1; Mon, 09 May 2022 15:04:10 -0400
+X-MC-Unique: vA1mc7q4PNCatKUkFX0BTw-1
+Received: by mail-ej1-f70.google.com with SMTP id nd34-20020a17090762a200b006e0ef16745cso7185850ejc.20
+        for <regressions@lists.linux.dev>; Mon, 09 May 2022 12:04:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=4c+bANNOi4sApJZ1cTVk45/N0JeRAadFfeHChP/lKJw=;
+        b=SV1kuc/zyovOdnBunGkv/zpZqOSy2QVMQ0e6N3Pe1ISfg+WmBxSDuUaIkwe85SZ3Gp
+         ho6ZJdSzJmcvGSZzkYE/PIQ/wB/cAoe7HWWGgPZFWwvyjDWuxLCXRhWGyETi7lgClMQJ
+         1+uKINtrI9fJFWDSHduRj3fkeR9T9AgIb4uJtYldmwymvaVco36BhZfcrkivp6Q8aEni
+         LU2UxQOIIpjWw09uh/frOtuI2HQYNr6NcJHTjLt/ZFeBkbK5vPIcMrwsxV8miJSm14S/
+         9BFhZtX3c1JPlnD3o5jRu/o2zTh5/K1s1QB17X8Ohb7zHVtBS0zTL9oP00T8MiuXuU3o
+         eimg==
+X-Gm-Message-State: AOAM533nuJ/8Z0d90diL7Jk5VKKeOtHxPh4Hd0yHAfT6d1eb7tnkBdHW
+	dx2mSWN6+FqPElEaVSeYxK2VdLAOodQdFYKN2s6IGO+dtvy1SPHWDnBep9d5yE9tUZh7ahMb5sL
+	F8nYh1189cDxOZu23m3fECRM=
+X-Received: by 2002:a17:907:2ce6:b0:6f4:7e8e:af40 with SMTP id hz6-20020a1709072ce600b006f47e8eaf40mr15521397ejc.211.1652123049429;
+        Mon, 09 May 2022 12:04:09 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxnHAgNoRkHPDpX0mV6CZQzXr55+KlJweOT0EUsiyDdB6Wa4kFRNLe0wYZ20i6JowEuwIgfjQ==
+X-Received: by 2002:a17:907:2ce6:b0:6f4:7e8e:af40 with SMTP id hz6-20020a1709072ce600b006f47e8eaf40mr15521374ejc.211.1652123049157;
+        Mon, 09 May 2022 12:04:09 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id w7-20020a170907270700b006f3ef214e49sm5380213ejk.175.2022.05.09.12.04.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 May 2022 12:04:08 -0700 (PDT)
+Message-ID: <54664f6a-b046-1330-e794-cb533e942a94@redhat.com>
+Date: Mon, 9 May 2022 21:04:07 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fm7uldoigioq6ukb"
-Content-Disposition: inline
-In-Reply-To: <20220509170708.GA604646@bhelgaas>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: Linux regressions report for mainline [2022-05-09] (was: Linux
+ 5.18-rc6)
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Matthew Auld <matthew.auld@intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+References: <CAHk-=wi0vqZQUAS67tBsJQW+dtt89m+dqA-Z4bOs8CH-mm8u2w@mail.gmail.com>
+ <165209064657.193515.10163777181547077546@leemhuis.info>
+ <CAHk-=wj0gHsG6iw3D8ufptm9a_dvTSqrrOFY9WopObbYbyuwnA@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAHk-=wj0gHsG6iw3D8ufptm9a_dvTSqrrOFY9WopObbYbyuwnA@mail.gmail.com>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hdegoede@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi,
 
---fm7uldoigioq6ukb
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 5/9/22 19:20, Linus Torvalds wrote:
+> On Mon, May 9, 2022 at 3:47 AM Regzbot (on behalf of Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+>>
+>> Hi Linus! Here's a quick compilation of open reports about regressions in
+>> 5.18-rc that I'm currently aware of; most of the reports are quite
+>> recent and there afaics is nothing that looks particularly worrisome.
+> 
+> Well, the Intel GPU issue seems likely to cause problems for lots of people:
+> 
+>> [ *NEW* ] drm/i915: BYT rendering broken due to "Remove short-term pins from execbuf, v6"
+>> -----------------------------------------------------------------------------------------
+>> https://linux-regtracking.leemhuis.info/regzbot/regression/1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com/
+>> https://lore.kernel.org/dri-devel/1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com/
+>>
+>> By Hans de Goede; 0 days ago; 2 activities, latest 0 days ago.
+>> Introduced in b5cfe6f7a6e1 (v5.18-rc1)
+>>
+>> Recent activities from: Tvrtko Ursulin (1), Hans de Goede (1)
+> 
+> Although it looks possible that it mainly affects old chipsets (ie the
+> two reports are for a Bay Trail chip and a Core 2 Duo chip - I have no
+> idea how they compare).
+> 
+> That probably means there are a lot of machines out there, but likely
+> not the kind that most kernel developers will be testing, so not a ton
+> of reports until it hits distro kernels etc.
+> 
+> It looks like Maarten is already involved.
 
-Hi Bjorn,
+This is being tracked here:
+https://gitlab.freedesktop.org/drm/intel/-/issues/5806
 
-Bjorn Helgaas <helgaas@kernel.org> (2022-05-09):
-> Cyril, 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two
-> funcs") reverts cleanly as of 57ae8a492116.  Does reverting it avoid
-> the regression?
+I've just tested a patch from Maarten which fixes things for me,
+so hopefully we can get this resolved soon.
 
-I didn't even try and revert this commit before you suggested doing so
-since it was supposed to be some preliminary work. Quoting a part of
-its commit message:
+Regards,
 
-    In future commits the brcm_pcie_linkup() function will be called
-    indirectly by pci_host_probe() as opposed to the host driver
-    invoking it directly.
+Hans
 
-
-Anyway, the patch can indeed be reverted on top of v5.18-rc4 or
-v5.18-rc6 but the build fails due to the former function being removed,
-while being still called from other places:
-
-      CC      drivers/pci/controller/pcie-brcmstb.o
-    drivers/pci/controller/pcie-brcmstb.c:199:12: warning: =E2=80=98brcm_pc=
-ie_linkup=E2=80=99 used but never defined
-      199 | static int brcm_pcie_linkup(struct brcm_pcie *pcie);
-          |            ^~~~~~~~~~~~~~~~
-    =E2=80=A6
-    aarch64-linux-gnu-ld: drivers/pci/controller/pcie-brcmstb.o: in functio=
-n `brcm_pcie_add_bus':
-    /home/kibi/hack/linux.git/drivers/pci/controller/pcie-brcmstb.c:527: un=
-defined reference to `brcm_pcie_linkup'
-
-
-See for example:
-
-    commit 93e41f3fca3d4a0f927b784012338c37f80a8a80
-    Author: Jim Quinlan <jim2101024@gmail.com>
-    Date:   Thu Jan 6 11:03:29 2022 -0500
-   =20
-        PCI: brcmstb: Add control of subdevice voltage regulators
-
-(And that one cannot be trivially reverted.)
-
-
-Cheers,
---=20
-Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
-D-I release manager -- Release team member -- Freelance Consultant
-
---fm7uldoigioq6ukb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEtg6/KYRFPHDXTPR4/5FK8MKzVSAFAmJ5UzIACgkQ/5FK8MKz
-VSD5Hw//RC0xiVTWjeHCHLECJ2DqOpmSZrswB7wQcMF8leixZxYdcy9YVdGpwTaC
-nyQ/t1LhXor7iDlQkn0o6YncDR/LKHp1TrKjNVbjF4I838V+859INYgyKp7rsWaB
-tXQVK8GB3Haw1bEWIkzPlTliqAN41Yl+JY77qhWWwxw/VDsmjCoq9II8frIR7/KF
-lChgPY7FXZcIpBWcHABld/mW/qWWZH6CwOxPQidfXebsXmeC8cVqG0kWN/psI4NQ
-FNOPRZC1FwydTiZZb1kaXxfxxlRaPh5txG4jJTshn7WhZArdN92NPZ2z1Btt/SuG
-+NQyGH6HTY4X5HOv9DN4PRpQN/1VEg91D6cSt/G1CMJsjZvVUr+RF0Wr/LjyndtQ
-a+7+IX01wK52UaMpg+BaRt5RT7I5+x5j9CDgOiBzn+kbUhSYY0jBdhCtayPUR6Zx
-v/ICrNpGT1HPMggKHBYKTh1b1KFFaJ6vhPQbPwcVvgYiOkms7+yRlYUGQyfkP570
-lJhFj07MgWTNZpGt1JKXVQqe6vhw0tHf2mmwLQLndH6949cAqaI8Rx2/d6H//QEx
-XZwTuAp2Mod/FMXYr9xCnUj4O70YgaiH+QINZ6aq9MDz4eh881SYrFIfkjfcijz6
-+eFIM+/LtPBrjmwrY05gsfKq2rtUsaRWAfJocdEHCLCqCn/bDww=
-=jOW6
------END PGP SIGNATURE-----
-
---fm7uldoigioq6ukb--
