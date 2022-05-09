@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABAF7E
-	for <regressions@lists.linux.dev>; Mon,  9 May 2022 05:30:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486DD1858
+	for <regressions@lists.linux.dev>; Mon,  9 May 2022 06:56:56 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nnvyO-0007xl-7n; Mon, 09 May 2022 07:30:20 +0200
-Message-ID: <cbf8a730-a169-f2e9-3041-e530dfe42ad6@leemhuis.info>
-Date: Mon, 9 May 2022 07:30:19 +0200
+	id 1nnxK6-0003RF-Ta; Mon, 09 May 2022 08:56:50 +0200
+Message-ID: <09333bbb-25b0-031d-a208-a81de34ad6a6@leemhuis.info>
+Date: Mon, 9 May 2022 08:56:49 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,105 +16,90 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: regression v5.13..v5.15: USB hub stopped working -- DMAR fault
- when connected usb hub
+Subject: Re: Apparent regression in blktests since 5.18-rc1+
 Content-Language: en-US
+To: Bob Pearson <rpearsonhpe@gmail.com>, Bart Van Assche
+ <bvanassche@acm.org>, Zhu Yanjun <zyjzyj2000@gmail.com>,
+ "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+ Bernard Metzler <bmt@zurich.ibm.com>, Jason Gunthorpe <jgg@nvidia.com>
+References: <e7c31ebb-60c0-cd57-2009-5e9383ecc472@gmail.com>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Mathias Nyman <mathias.nyman@intel.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: =?UTF-8?Q?Piotr_Pi=c3=b3rkowski?= <qba100@gmail.com>,
- "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-References: <237660ea-794e-8347-4e1a-869ccef9ba3c@leemhuis.info>
-In-Reply-To: <237660ea-794e-8347-4e1a-869ccef9ba3c@leemhuis.info>
+In-Reply-To: <e7c31ebb-60c0-cd57-2009-5e9383ecc472@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652074233;f6cbd056;
-X-HE-SMSGID: 1nnvyO-0007xl-7n
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652079416;25efae31;
+X-HE-SMSGID: 1nnxK6-0003RF-Ta
 
-Hi, this is your Linux kernel regression tracker.
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-@kernel developers: you might want to consider ignoring this, the
-reporter provided additional information in the ticket and it looks a
-lot like it's not a regression. For details see:
-https://bugzilla.kernel.org/show_bug.cgi?id=215906#c4
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easily accessible to everyone.
 
-Sorry for the noise.
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
-Ciao, Thorsten
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
 
-On 05.05.22 15:31, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker.
+#regzbot ^introduced v5.17..v5.18-rc6
+#regzbot title rdma: hangs in blktests since 5.18-rc1+
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replied to), as the kernel's
+documentation call for; above page explains why this is important for
+tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
+
+On 06.05.22 20:11, Bob Pearson wrote:
+> Bart,
 > 
-> I noticed a regression report in bugzilla.kernel.org that afaics nobody
-> acted upon since it was reported about a week ago. That's why I decided
-> to forward it to a few maintainers and mailing lists. To quote from
-> https://bugzilla.kernel.org/show_bug.cgi?id=215906 :
+> Before the most recent kernel update I had blktests running OK on rdma_rxe. Since we went on to 5.18.0-rc1+
+> I have been experiencing hangs. All of this is with the 'revert scsi-debug' patch which addressed the
+> 3 min timeout related to modprobe -r scsi-debug.
 > 
->> Since kernel 5.15 (with kernel 5.13 I see no problem) I have a problem with my USB hub. The device stops working shortly after starting the system.
->> In dmesg log I see DMAR fault on usb controller
->>
->>
->> [kwi27 22:03] usb 5-1.2: new high-speed USB device number 3 using xhci_hcd
->> [  +0,100440] usb 5-1.2: New USB device found, idVendor=1a40, idProduct=0101, bcdDevice= 1.11
->> [  +0,000004] usb 5-1.2: New USB device strings: Mfr=0, Product=1, SerialNumber=0
->> [  +0,000002] usb 5-1.2: Product: USB 2.0 Hub
->> [  +0,001002] hub 5-1.2:1.0: USB hub found
->> [  +0,000133] hub 5-1.2:1.0: 4 ports detected
->> [  +0,702453] usb 5-1.2.2: new full-speed USB device number 4 using xhci_hcd
->> [  +0,471198] usb 5-1.2.2: New USB device found, idVendor=047f, idProduct=c025, bcdDevice= 1.35
->> [  +0,000004] usb 5-1.2.2: New USB device strings: Mfr=1, Product=2, SerialNumber=3
->> [  +0,000002] usb 5-1.2.2: Product: Plantronics C320-M
->> [  +0,000001] usb 5-1.2.2: Manufacturer: Plantronics
->> [  +0,000001] usb 5-1.2.2: SerialNumber: B13D8BE491B04E73AEB4C95E162DBE2B
->> [  +0,255862] mc: Linux media interface: v0.10
->> [  +0,001057] input: Plantronics Plantronics C320-M as /devices/pci0000:00/0000:00:1c.5/0000:04:00.0/usb5/5-1/5-1.2/5-1.2.2/5-1.2.2:1.3/0003:047F:C025.0004/input/input21
->> [  +0,060275] plantronics 0003:047F:C025.0004: input,hiddev1,hidraw3: USB HID v1.11 Device [Plantronics Plantronics C320-M] on usb-0000:04:00.0-1.2.2/input3
->> [  +0,859655] usb 5-1.2.2: Warning! Unlikely big volume range (=8192), cval->res is probably wrong.
->> [  +0,000003] usb 5-1.2.2: [11] FU [Sidetone Playback Volume] ch = 1, val = 0/8192/1
->> [  +0,584234] usbcore: registered new interface driver snd-usb-audio
->> [  +0,229229] xhci_hcd 0000:04:00.0: WARNING: Host System Error
->> [  +0,000014] DMAR: DRHD: handling fault status reg 2
->> [  +0,000004] DMAR: [DMA Read NO_PASID] Request device [04:00.0] fault addr 0xfffca000 [fault reason 0x06] PTE Read access is not set
->> [  +0,031993] xhci_hcd 0000:04:00.0: Host halt failed, -110
->> [kwi27 22:04] xhci_hcd 0000:04:00.0: xHCI host not responding to stop endpoint command.
->> [  +0,000003] xhci_hcd 0000:04:00.0: USBSTS: HSE EINT
->> [  +0,032011] xhci_hcd 0000:04:00.0: Host halt failed, -110
->> [  +0,000002] xhci_hcd 0000:04:00.0: xHCI host controller not responding, assume dead
->> [  +0,000017] xhci_hcd 0000:04:00.0: HC died; cleaning up
->> [  +0,000042] usb 5-1: USB disconnect, device number 2
->> [  +0,000003] usb 5-1.2: USB disconnect, device number 3
->> [  +0,000002] usb 5-1.2.2: USB disconnect, device number 4
->> [  +0,000114] usb 5-1.2.2: 1:0: usb_set_interface failed (-110)
->> [  +0,000016] usb 5-1.2.2: 1:1: usb_set_interface failed (-19)
->> [  +0,000011] usb 5-1.2.2: 1:0: usb_set_interface failed (-19)
-> See the ticket for details and further comments. According to the latest
-> one the problem is still present in 5.18-rc5.
+> You suggested checking with siw and I finally got around to this and the behavior is exactly the same.
 > 
-> Was this issue discussed or even addressed somewhere already? Or does
-> anyone at least have a good idea what might be causing this problem?
-> @reporter: If neither is the case, you most likely will need to perform
-> a bisection with git to identify the change causing the problem.
+> Specifically here is a run and dmesgs from that run:
 > 
-> Anyway, could one of the kernel developers among the recipients please
-> help with this? BTW, I was unsure where to send this to the DMA/IOMMU
-> maintainers or the USB/xhci maintainers. I settled for the latter; I
-> apologize in advance if that was the wrong choice.
+> root@u-22:/home/bob/src/blktests# use_siw=1 ./check srp
 > 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> srp/001 (Create and remove LUNs)                             [passed]
 > 
-> P.S.: As the Linux kernel's regression tracker I defsdal with a lot of
-> reports and sometimes miss something important when writing mails like
-> this. If that's the case here, don't hesitate to tell me in a public
-> reply, it's in everyone's interest to set the public record straight.
+>     runtime  3.388s  ...  3.501s
 > 
-> P.P.S: to get this tracked by the the Linux kernel regression tracking bot:
+> srp/002 (File I/O on top of multipath concurrently with logout and login (mq))
 > 
-> #regzbot introduced: v5.13..v5.15
-> #regzbot from: Piotr Piórkowski <qba100@gmail.com>
-> #regzbot title: usb/dma/iommu/???: USB hub stopped working -- DMAR fault
-> when connected usb hub
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215906
-> #regzbot monitor:
-> https://lore.kernel.org/all/bug-215906-208809@https.bugzilla.kernel.org%2F/
+>     runtime  54.689s  ...
+>   <HANGS HERE>
+> 
+> I had to reboot to recover.
+> 
+> The dmesg output is attached in a long file called out.
+> The output looks normal until line 1875 where it hangs at an "Already connected ..." message.
+> This is the same as the other hangs I have been seeing.
+> This is followed by a splat warning that a cpu has hung for 120 seconds.
+> 
+> Since this is behaving the same for rxe and siw I am going to stop chasing this bug since
+> it is most likely outside of the the rxe driver.
+> 
+> Bob
+> 
+
