@@ -1,123 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05CE51FC0
-	for <regressions@lists.linux.dev>; Mon,  9 May 2022 17:07:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF982C385AC;
-	Mon,  9 May 2022 17:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1652116033;
-	bh=7mdyGEpL3OOua4pxGGbQjQ82HdhK59OERf0hhMsH08k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=NRjnV2G+B68kKhCzD/QCQ/mkBRN6sB4/GbcIpuNVe2OL5J/qRXvEdh4GuOK65Xa3r
-	 xudqrXe9uJjNXFLqTWAumdnK5eW4tTaatY4O/+l69Ka47MSnEbfde7wz4b4CHaGqmB
-	 9JHwPJwUCHMVb3LR5gcnruqadM54mPE1Cw0JQGsvKx4A7nBLfnA/0k4jAdvpk1GyiT
-	 MSfkkLrK2EPrY9EuLBtCT4MOFdUS6slSRtwHbkJrRwKqT0Lr1ysWX39F4waLxXhYWN
-	 rLDALggmWKZSAEppgE1cZaNe06ARS9bcJrSC0iAw3eSKAWfv41nr623SX7ypqUy5vi
-	 RRyXZkcjnLzwA==
-Date: Mon, 9 May 2022 12:07:08 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Cyril Brulebois <kibi@debian.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Linux PCI <linux-pci@vger.kernel.org>, bjorn@helgaas.com
-Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
- 4 (CM4) breaks booting
-Message-ID: <20220509170708.GA604646@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15191FC0
+	for <regressions@lists.linux.dev>; Mon,  9 May 2022 17:21:17 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id j6so28124914ejc.13
+        for <regressions@lists.linux.dev>; Mon, 09 May 2022 10:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NbKadAlbEuv9SCL4clueu9SSBtV1FA6IQDblzg5FTkc=;
+        b=VhLWVfy7VuAnawsLFBmFlKuhHwfBkHheP2GCjLRi0YYeGJiosDj1ZiqdhTw0COwHlL
+         oyAC748yRG+xi07STBQBggoNnarsQtg82LQ2wAmMCse/7vNdZan7c8GM+wPCCL33stzb
+         zsXIFmfxn4Can6ZOtEq58A3aSqYgMGqCetzAE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NbKadAlbEuv9SCL4clueu9SSBtV1FA6IQDblzg5FTkc=;
+        b=ppi9917KEr6avP9fZZbn3BkDKkGRl18rO9y2X4PWZ7i/2kAAjm8dMkHL20FpvROea0
+         H6RafCz31gCnBADs+Od3N1Ft0dr9DAO8yIn5Vm0RtKro9gfqNHgvT/cNtrchLUbx0olZ
+         rzemIHJ5aB7aK6yKADgZwly2rgKOH+4vef2NIAtkN+v4GN6RexH4ec6ZNAGLm5cIaJ19
+         tkP6PupaAOmAn+sD7EaUTF5VtvlvJo82nJ7TG7y61lnhvX0qg23fQnVwiXqNUV/1TrxA
+         8J6tp5IGr1XxHjJPTUReJhS97pQpEeEO7+94s6NnCm4okRroErb2kP8CujXa3GqwMN4B
+         PH8w==
+X-Gm-Message-State: AOAM532HXgErVnveZRW004SPlDG+1oICo8kb6EoKUDsaMecAxnufLyZ3
+	5qfwBE91qxpCzPN/YrxfVVQdrmeEKr8jzymh
+X-Google-Smtp-Source: ABdhPJwmNbaH+/v/EY5ZtH1LrLALX0nkNRIoyGVUEoBaz1h7cyv27Xoo77O0+h4a+tzcXG7lpEGNFg==
+X-Received: by 2002:a17:907:7f12:b0:6f4:57e7:b20a with SMTP id qf18-20020a1709077f1200b006f457e7b20amr15033272ejc.538.1652116875809;
+        Mon, 09 May 2022 10:21:15 -0700 (PDT)
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com. [209.85.128.50])
+        by smtp.gmail.com with ESMTPSA id jz11-20020a17090775eb00b006f3ef214e51sm5201757ejc.183.2022.05.09.10.21.14
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 May 2022 10:21:15 -0700 (PDT)
+Received: by mail-wm1-f50.google.com with SMTP id c190-20020a1c35c7000000b0038e37907b5bso11193873wma.0
+        for <regressions@lists.linux.dev>; Mon, 09 May 2022 10:21:14 -0700 (PDT)
+X-Received: by 2002:a05:600c:4f06:b0:394:836b:1552 with SMTP id
+ l6-20020a05600c4f0600b00394836b1552mr11550087wmq.145.1652116874604; Mon, 09
+ May 2022 10:21:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3aa008b9-e477-3e6d-becb-13e28ea91f10@leemhuis.info>
+References: <CAHk-=wi0vqZQUAS67tBsJQW+dtt89m+dqA-Z4bOs8CH-mm8u2w@mail.gmail.com>
+ <165209064657.193515.10163777181547077546@leemhuis.info>
+In-Reply-To: <165209064657.193515.10163777181547077546@leemhuis.info>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 9 May 2022 10:20:58 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj0gHsG6iw3D8ufptm9a_dvTSqrrOFY9WopObbYbyuwnA@mail.gmail.com>
+Message-ID: <CAHk-=wj0gHsG6iw3D8ufptm9a_dvTSqrrOFY9WopObbYbyuwnA@mail.gmail.com>
+Subject: Re: Linux regressions report for mainline [2022-05-09] (was: Linux 5.18-rc6)
+To: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Matthew Auld <matthew.auld@intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, May 09, 2022 at 09:44:29AM +0200, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker. Partly top-posting to
-> mnake this easily accessible.
-> 
-> Jim, what's up here? The regression was reported more than a week ago
-> and it seems nothing happened since then. Or was there progress and I
-> just missed it?
-> 
-> Anyway:
-> 
-> [TLDR: I'm adding this regression report to the list of tracked
-> regressions; all text from me you find below is based on a few templates
-> paragraphs you might have encountered already already in similar form.]
-> 
-> On 02.05.22 20:38, Bjorn Helgaas wrote:
-> > On Sat, Apr 30, 2022 at 2:53 PM <bugzilla-daemon@kernel.org> wrote:
-> >>
-> >> https://bugzilla.kernel.org/show_bug.cgi?id=215925
-> >>
-> >>             Bug ID: 215925
-> >>            Summary: PCIe regression on Raspberry Pi Compute Module 4 (CM4)
-> >>                     breaks booting
-> >>            Product: Drivers
-> >>            Version: 2.5
-> >>     Kernel Version: v5.17-rc1
-> >>           Hardware: ARM
-> >>                 OS: Linux
-> >>               Tree: Mainline
-> >>             Status: NEW
-> >>           Severity: normal
-> >>           Priority: P1
-> >>          Component: PCI
-> >>           Assignee: drivers_pci@kernel-bugs.osdl.org
-> >>           Reporter: kibi@debian.org
-> >>         Regression: No
-> >>
-> >> Catching up with latest kernel releases in Debian, it turned out that my
-> >> Raspberry Pi Compute Module 4, mounted on an official Compute Module 4 IO
-> >> Board,
-> >> and booting from an SD card, no longer boots: this means a black screen on the
-> >> HDMI output, and no output on the serial console.
-> >>
-> >> Trying various releases, I confirmed that v5.16 was fine, and v5.17-rc1 was the
-> >> first (pre)release that wasn't.
-> >>
-> >> After some git bisect, it turns out the cause seems to be the following commit
-> >> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21):
-> >>
-> >> ```
-> >> commit 830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21
-> >> Author: Jim Quinlan <jim2101024@gmail.com>
-> >> Date:   Thu Jan 6 11:03:27 2022 -0500
-> >>
-> >>     PCI: brcmstb: Split brcm_pcie_setup() into two funcs
-> >> ```
-> >>
-> >> Starting with this commit, the kernel panics early (before 0.30 seconds), with
-> >> an `Asynchronous SError Interrupt`. The backtrace references various
-> >> `brcm_pcie_*` functions; I can share a picture or try and transcribe it
-> >> manually if that helps (nothing on the serial console…).
-> >>
-> >> This commit is part of a branch that was ultimately merged as
-> >> d0a231f01e5b25bacd23e6edc7c979a18a517b2b; starting with this commit, there's
-> >> not even a backtrace anymore, the screen stays black after the usual “boot-up
-> >> rainbow”, and there's still nothing on the serial console.
-> >>
-> >> I confirmed that 88db8458086b1dcf20b56682504bdb34d2bca0e2 (on the master side)
-> >> was still booting properly, and that 87c71931633bd15e9cfd51d4a4d9cd685e8cdb55
-> >> (from the branch being merged into master) is the last commit showing the
-> >> panic.
-> >>
-> >> Since d0a231f01e5b25bacd23e6edc7c979a18a517b2b is a merge commit that includes
-> >> conflict resolutions in drivers/pci/controller/pcie-brcmstb.c, I suppose this
-> >> could be consistent with the initial panic being “upgraded” into an even more
-> >> serious issue.
-> >>
-> >> I've also verified that latest master (v5.18-rc4-396-g57ae8a492116) is still
-> >> affected by this issue.
-> >>
-> >> The regular Raspberry Pi 4 B doesn't seem to be affected by this issue: the
-> >> exact same image on the same SD card (with latest master) boots fine on it.
+On Mon, May 9, 2022 at 3:47 AM Regzbot (on behalf of Thorsten
+Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> Hi Linus! Here's a quick compilation of open reports about regressions in
+> 5.18-rc that I'm currently aware of; most of the reports are quite
+> recent and there afaics is nothing that looks particularly worrisome.
 
-Cyril, 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two
-funcs") reverts cleanly as of 57ae8a492116.  Does reverting it avoid
-the regression?
+Well, the Intel GPU issue seems likely to cause problems for lots of people:
+
+> [ *NEW* ] drm/i915: BYT rendering broken due to "Remove short-term pins from execbuf, v6"
+> -----------------------------------------------------------------------------------------
+> https://linux-regtracking.leemhuis.info/regzbot/regression/1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com/
+> https://lore.kernel.org/dri-devel/1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com/
+>
+> By Hans de Goede; 0 days ago; 2 activities, latest 0 days ago.
+> Introduced in b5cfe6f7a6e1 (v5.18-rc1)
+>
+> Recent activities from: Tvrtko Ursulin (1), Hans de Goede (1)
+
+Although it looks possible that it mainly affects old chipsets (ie the
+two reports are for a Bay Trail chip and a Core 2 Duo chip - I have no
+idea how they compare).
+
+That probably means there are a lot of machines out there, but likely
+not the kind that most kernel developers will be testing, so not a ton
+of reports until it hits distro kernels etc.
+
+It looks like Maarten is already involved.
+
+                    Linus
