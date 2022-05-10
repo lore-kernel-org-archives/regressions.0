@@ -1,91 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6D42912
-	for <regressions@lists.linux.dev>; Tue, 10 May 2022 17:22:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38B10C385C2;
-	Tue, 10 May 2022 17:22:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1652203365;
-	bh=GWylRjms/kidi7h4Oy0wn70MPEovvqtAvRoJ6jzh07Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=sjjATE3gw5OQdOWgl2Jg0Iv+wk2KeE0T9B2qORwN32LdVApmi+5PMq8L1Xgmv5MvQ
-	 FUvMno/MFltgaDdLCfhkFraaxbZWhawTLtheRnHl1yNgEaKNEMeig2zMM/i9qJuR6f
-	 loHUNqi1wq69oXvpW4zTSennvAux1o7YJQbB5rmmN3KqrvLJ9ufVxbLisxWeA8yeAe
-	 qkkkYhe/Dt1eHLBu4jOF/O9U18feQK/ibe1/0Q9BzLvmzHgjhkI25Alt39HLqyVdLE
-	 zzImP2hwoEdInbr+gx31vCCkfu4/oQLAVppimgFjiDJRYWpSn0jaaqsD3BsVXPurSO
-	 pp6iazKSQ4BhQ==
-Date: Tue, 10 May 2022 12:22:43 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Cyril Brulebois <kibi@debian.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Jim Quinlan <jim2101024@gmail.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Linux PCI <linux-pci@vger.kernel.org>, bjorn@helgaas.com
-Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
- 4 (CM4) breaks booting
-Message-ID: <20220510172243.GA684299@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921B329A2
+	for <regressions@lists.linux.dev>; Tue, 10 May 2022 19:17:48 +0000 (UTC)
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 04B7E240108
+	for <regressions@lists.linux.dev>; Tue, 10 May 2022 21:17:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+	t=1652210260; bh=ytrK2CBdoNyq3TQUxDwxGqNP998kUeZVBv6SkMgZ8c4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=SpSo+RIS5AqPkBnKIFrzjJFRU5pxj3UqMS5aNbCZCDfZ8/O1PugZQAiYI4JjSu52g
+	 vSNJhDlT0G7EwPsvVLoqhoAg496KAdm7fDVPeeYwuQ4sJcebe9XKNvoKtmdSoy5aX+
+	 JwF6Hb2X5xeMi0mqZrcKbT0aCVGUGRq2gktcAyj3+GxRIBrG4T8xZGM5nJhoe+OhjF
+	 4r9O9GJWiAkgr2DfWL3TXVn060CZrDCrcmdMzFXbT5qjAFRNvhHF74dlrwMf9cDmlU
+	 CfuQ2fR35AUBAA3xvdec29Rkkkm8CpvE8GDz1sjLPd7IJAFYTD7UsZ0cK+qvUTBERU
+	 twvuU9VRuwzwQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4KySV871Pqz6tnP;
+	Tue, 10 May 2022 21:17:36 +0200 (CEST)
+From: Manuel Ullmann <labre@posteo.de>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Manuel Ullmann <labre@posteo.de>,  Igor Russkikh
+ <irusskikh@marvell.com>,  linux-kernel@vger.kernel.org,
+  netdev@vger.kernel.org,  regressions@lists.linux.dev,
+  davem@davemloft.net,  ndanilov@marvell.com,  kuba@kernel.org,
+  edumazet@google.com,  Jordan Leppert <jordanleppert@protonmail.com>,
+  Holger Hoffstaette <holger@applied-asynchrony.com>,  koo5
+ <kolman.jindrich@gmail.com>
+Subject: Re: [PATCH v6] net: atlantic: always deep reset on pm op, fixing up
+ my null deref regression
+References: <87bkw8dfmp.fsf@posteo.de>
+	<b140c37fe1aac315e07464dd6a2d7a8f463e6fe4.camel@redhat.com>
+Date: Tue, 10 May 2022 19:17:56 +0000
+In-Reply-To: <b140c37fe1aac315e07464dd6a2d7a8f463e6fe4.camel@redhat.com>
+	(Paolo Abeni's message of "Tue, 10 May 2022 10:37:24 +0200")
+Message-ID: <87r151gpsr.fsf@posteo.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220509174527.zoqhmaxfwo7udezo@mraw.org>
+Content-Type: text/plain
 
-On Mon, May 09, 2022 at 07:45:27PM +0200, Cyril Brulebois wrote:
-> Hi Bjorn,
-> 
-> Bjorn Helgaas <helgaas@kernel.org> (2022-05-09):
-> > Cyril, 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two
-> > funcs") reverts cleanly as of 57ae8a492116.  Does reverting it avoid
-> > the regression?
-> 
-> I didn't even try and revert this commit before you suggested doing so
-> since it was supposed to be some preliminary work. Quoting a part of
-> its commit message:
-> 
->     In future commits the brcm_pcie_linkup() function will be called
->     indirectly by pci_host_probe() as opposed to the host driver
->     invoking it directly.
-> 
-> 
-> Anyway, the patch can indeed be reverted on top of v5.18-rc4 or
-> v5.18-rc6 but the build fails due to the former function being removed,
-> while being still called from other places:
-> 
->       CC      drivers/pci/controller/pcie-brcmstb.o
->     drivers/pci/controller/pcie-brcmstb.c:199:12: warning: ‘brcm_pcie_linkup’ used but never defined
->       199 | static int brcm_pcie_linkup(struct brcm_pcie *pcie);
->           |            ^~~~~~~~~~~~~~~~
->     …
->     aarch64-linux-gnu-ld: drivers/pci/controller/pcie-brcmstb.o: in function `brcm_pcie_add_bus':
->     /home/kibi/hack/linux.git/drivers/pci/controller/pcie-brcmstb.c:527: undefined reference to `brcm_pcie_linkup'
-> 
-> 
-> See for example:
-> 
->     commit 93e41f3fca3d4a0f927b784012338c37f80a8a80
->     Author: Jim Quinlan <jim2101024@gmail.com>
->     Date:   Thu Jan 6 11:03:29 2022 -0500
->     
->         PCI: brcmstb: Add control of subdevice voltage regulators
-> 
-> (And that one cannot be trivially reverted.)
+Paolo Abeni <pabeni@redhat.com> writes:
 
-What if you revert 830aa6f29f07 and the subsequent brcmstb patches?
+> On Sun, 2022-05-08 at 00:36 +0000, Manuel Ullmann wrote:
+>> [...]
+>
+> For future submission, please always specify the target tree (which is
+> -net in this case). No need to resubmit: I'm applying it.
+>
+> Thanks,
+>
+> Paolo
 
-  11ed8b8624b8 ("PCI: brcmstb: Do not turn off WOL regulators on suspend")
-  93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
-  67211aadcb4b ("PCI: brcmstb: Add mechanism to turn on subdev regulators")
-  830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
+Ah, okay. So next branches are reserved for new changes, while non-next
+may be targeted by fixups or at least regression fixes. I can't recall a
+definition for this in the documentation, but that might be me. I'll
+keep this in mind for the future. Thanks for applying it and bearing
+with me.
 
-  $ git revert 11ed8b8624b8 93e41f3fca3d 67211aadcb4b 830aa6f29f07
-
-I did that on current upstream: 9be9ed2612b5 ("Merge tag
-'platform-drivers-x86-v5.18-4' of
-git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86")
-and it built fine on x86.
+Regards,
+Manuel
