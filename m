@@ -1,60 +1,91 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEBCC28E9
-	for <regressions@lists.linux.dev>; Tue, 10 May 2022 15:34:58 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1noRt0-0000Py-Tt; Tue, 10 May 2022 17:34:55 +0200
-Message-ID: <6e44ba51-167b-0e0a-7fe6-267d1f7a26c4@leemhuis.info>
-Date: Tue, 10 May 2022 17:34:54 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6D42912
+	for <regressions@lists.linux.dev>; Tue, 10 May 2022 17:22:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38B10C385C2;
+	Tue, 10 May 2022 17:22:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1652203365;
+	bh=GWylRjms/kidi7h4Oy0wn70MPEovvqtAvRoJ6jzh07Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=sjjATE3gw5OQdOWgl2Jg0Iv+wk2KeE0T9B2qORwN32LdVApmi+5PMq8L1Xgmv5MvQ
+	 FUvMno/MFltgaDdLCfhkFraaxbZWhawTLtheRnHl1yNgEaKNEMeig2zMM/i9qJuR6f
+	 loHUNqi1wq69oXvpW4zTSennvAux1o7YJQbB5rmmN3KqrvLJ9ufVxbLisxWeA8yeAe
+	 qkkkYhe/Dt1eHLBu4jOF/O9U18feQK/ibe1/0Q9BzLvmzHgjhkI25Alt39HLqyVdLE
+	 zzImP2hwoEdInbr+gx31vCCkfu4/oQLAVppimgFjiDJRYWpSn0jaaqsD3BsVXPurSO
+	 pp6iazKSQ4BhQ==
+Date: Tue, 10 May 2022 12:22:43 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Cyril Brulebois <kibi@debian.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Jim Quinlan <jim2101024@gmail.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Linux PCI <linux-pci@vger.kernel.org>, bjorn@helgaas.com
+Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
+ 4 (CM4) breaks booting
+Message-ID: <20220510172243.GA684299@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: 5.18 vmwgfx seems to break booting VirtualBox VMs #forregzbot
-Content-Language: en-US
-To: regressions@lists.linux.dev
-References: <2bd4b06e-7577-d7d7-5f2e-264005b316a1@redhat.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <2bd4b06e-7577-d7d7-5f2e-264005b316a1@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652196898;0d1d2eaa;
-X-HE-SMSGID: 1noRt0-0000Py-Tt
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220509174527.zoqhmaxfwo7udezo@mraw.org>
 
-On 11.04.22 10:52, Hans de Goede wrote:
+On Mon, May 09, 2022 at 07:45:27PM +0200, Cyril Brulebois wrote:
+> Hi Bjorn,
 > 
-> Fedora has received a bug report here:
+> Bjorn Helgaas <helgaas@kernel.org> (2022-05-09):
+> > Cyril, 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two
+> > funcs") reverts cleanly as of 57ae8a492116.  Does reverting it avoid
+> > the regression?
 > 
-> https://bugzilla.redhat.com/show_bug.cgi?id=2072556
+> I didn't even try and revert this commit before you suggested doing so
+> since it was supposed to be some preliminary work. Quoting a part of
+> its commit message:
 > 
-> That Fedora rawhide VMs no longer boot under the VirtualBox hypervisor
-> after the VM has been updated to a 5.18-rc# kernel.
+>     In future commits the brcm_pcie_linkup() function will be called
+>     indirectly by pci_host_probe() as opposed to the host driver
+>     invoking it directly.
 > 
-> Switching the emulated GPU from vmwaregfx to VirtualBoxSVGA fixes
-> this, so this seems to be a vmwgfx driver regression.
 > 
-> Note I've not investigated/reproduced this myself due to -ENOTIME.
+> Anyway, the patch can indeed be reverted on top of v5.18-rc4 or
+> v5.18-rc6 but the build fails due to the former function being removed,
+> while being still called from other places:
+> 
+>       CC      drivers/pci/controller/pcie-brcmstb.o
+>     drivers/pci/controller/pcie-brcmstb.c:199:12: warning: ‘brcm_pcie_linkup’ used but never defined
+>       199 | static int brcm_pcie_linkup(struct brcm_pcie *pcie);
+>           |            ^~~~~~~~~~~~~~~~
+>     …
+>     aarch64-linux-gnu-ld: drivers/pci/controller/pcie-brcmstb.o: in function `brcm_pcie_add_bus':
+>     /home/kibi/hack/linux.git/drivers/pci/controller/pcie-brcmstb.c:527: undefined reference to `brcm_pcie_linkup'
+> 
+> 
+> See for example:
+> 
+>     commit 93e41f3fca3d4a0f927b784012338c37f80a8a80
+>     Author: Jim Quinlan <jim2101024@gmail.com>
+>     Date:   Thu Jan 6 11:03:29 2022 -0500
+>     
+>         PCI: brcmstb: Add control of subdevice voltage regulators
+> 
+> (And that one cannot be trivially reverted.)
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+What if you revert 830aa6f29f07 and the subsequent brcmstb patches?
 
-FWIW, this issue wasn't tracked yet, so let's add it:
+  11ed8b8624b8 ("PCI: brcmstb: Do not turn off WOL regulators on suspend")
+  93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
+  67211aadcb4b ("PCI: brcmstb: Add mechanism to turn on subdev regulators")
+  830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
 
-#regzbot ^introduced dabdcdc9822a
-#regzbot title drm: vmwgfx: VirtualBox VMs stopped booting
-#regzbot ignore-activity
-#regzbot monitor:
-https://lore.kernel.org/all/20220509110425.165537-1-hdegoede@redhat.com/
-#regzbot monitor:
-https://lore.kernel.org/all/20220302152426.885214-7-zack@kde.org/
+  $ git revert 11ed8b8624b8 93e41f3fca3d 67211aadcb4b 830aa6f29f07
 
-Ciao, Thorsten
-
-
+I did that on current upstream: 9be9ed2612b5 ("Merge tag
+'platform-drivers-x86-v5.18-4' of
+git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86")
+and it built fine on x86.
