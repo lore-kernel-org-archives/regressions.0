@@ -1,72 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BD623C2
-	for <regressions@lists.linux.dev>; Tue, 10 May 2022 08:40:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E24F1C385A6;
-	Tue, 10 May 2022 08:40:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1652172013;
-	bh=Gg4GBOVhcfWY8hOjf9chedymoD585NYunojoJKazB2c=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=YVK+1yMjndGd+gwoK2oYsuXxEglU/A0jU+xMZcFmbavabGe1uc+T2saUIT6HHjLKb
-	 Pq2Mmf+CLhal68cxG0FGeIkSV5ykFKZv2dt1r6a1sXz7CMumjfE1ZLJAjpGBmfThv6
-	 NhEYn3clEiL2VeDbxEzPMsfIzDqYvGrAu6Yw8ISjR7OMmyvh3fDqFFNlqpePrcR5GH
-	 UPWpz4FzA28RYlCKPMguQ6td/pZxjhGkSoOp4Z/+WHjfT5YIbMI725QGvk/O+5ZEXK
-	 CO8a9PqVY4CnLaBJ5r7+XfxXUwObx96LjqTz9R3i6fJ8M36ZvgHR8UxlIkaaLn9S8P
-	 q4yaOkNcyFoLA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B97CAF03929;
-	Tue, 10 May 2022 08:40:12 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6218923C2
+	for <regressions@lists.linux.dev>; Tue, 10 May 2022 08:46:36 +0000 (UTC)
+Received: from [192.168.0.2] (ip5f5aeae3.dynamic.kabel-deutschland.de [95.90.234.227])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 9040C61EA1923;
+	Tue, 10 May 2022 10:37:20 +0200 (CEST)
+Content-Type: multipart/mixed; boundary="------------0svoNg2nlmSd1VWlwVhizSm5"
+Message-ID: <66e1d78c-bf27-80b4-9804-6c9f3a8c5547@molgen.mpg.de>
+Date: Tue, 10 May 2022 10:37:20 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v6] net: atlantic: always deep reset on pm op, fixing up my
- null deref regression
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <165217201275.28090.9247936511102323749.git-patchwork-notify@kernel.org>
-Date: Tue, 10 May 2022 08:40:12 +0000
-References: <87bkw8dfmp.fsf@posteo.de>
-In-Reply-To: <87bkw8dfmp.fsf@posteo.de>
-To: Manuel Ullmann <labre@posteo.de>
-Cc: irusskikh@marvell.com, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, regressions@lists.linux.dev, davem@davemloft.net,
- ndanilov@marvell.com, kuba@kernel.org, pabeni@redhat.com,
- edumazet@google.com, jordanleppert@protonmail.com,
- holger@applied-asynchrony.com, kolman.jindrich@gmail.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+References: <note_1375796@gitlab.freedesktop.org>
+Subject: Fwd: Re: amd | ASUS ROG Strix G513QY fails to resume from suspend
+ [regression] (#2008)
+Content-Language: en-US
+To: regressions@lists.linux.dev
+Cc: amd-gfx@lists.freedesktop.org,
+ Mario Limonciello <mario.limonciello@amd.com>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <note_1375796@gitlab.freedesktop.org>
+X-Forwarded-Message-Id: <note_1375796@gitlab.freedesktop.org>
 
-Hello:
+This is a multi-part message in MIME format.
+--------------0svoNg2nlmSd1VWlwVhizSm5
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This patch was applied to netdev/net.git (master)
-by Paolo Abeni <pabeni@redhat.com>:
+Dear Linux regressions folks,
 
-On Sun, 08 May 2022 00:36:46 +0000 you wrote:
-> >From 18dc080d8d4a30d0fcb45f24fd15279cc87c47d5 Mon Sep 17 00:00:00 2001
-> Date: Wed, 4 May 2022 21:30:44 +0200
-> 
-> The impact of this regression is the same for resume that I saw on
-> thaw: the kernel hangs and nothing except SysRq rebooting can be done.
-> 
-> Fixes regression in commit cbe6c3a8f8f4 ("net: atlantic: invert deep
-> par in pm functions, preventing null derefs"), where I disabled deep
-> pm resets in suspend and resume, trying to make sense of the
-> atl_resume_common() deep parameter in the first place.
-> 
-> [...]
 
-Here is the summary with links:
-  - [v6] net: atlantic: always deep reset on pm op, fixing up my null deref regression
-    https://git.kernel.org/netdev/net/c/1809c30b6e5a
+A user reported a regression [1], which also trickled down to the stable 
+series, for example between 5.15.13 and 5.15.14.
 
-You are awesome, thank you!
+
+Kind regards,
+
+Paul
+
+
+[1]: https://gitlab.freedesktop.org/drm/amd/-/issues/2008
+--------------0svoNg2nlmSd1VWlwVhizSm5
+Content-Type: message/rfc822; name="Re: amd | ASUS ROG Strix G513QY fails to
+ resume from suspend [regression] (#2008).eml"
+Content-Disposition: attachment; filename*0="Re: amd | ASUS ROG Strix G513QY
+ fails to resume from suspend"; filename*1=" [regression] (#2008).eml"
+Content-Transfer-Encoding: 7bit
+
+Return-Path: <gitlab@gitlab.freedesktop.org>
+Received: from mx.molgen.mpg.de (mx.molgen.mpg.de [141.14.17.8])
+	 by tldr.molgen.mpg.de (Cyrus 2.5.3) with LMTPA;
+	 Tue, 10 May 2022 10:09:52 +0200
+X-Sieve: CMU Sieve 2.4
+Received: from a1241.mx.srv.dfn.de (a1241.mx.srv.dfn.de [194.95.232.62])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx2.molgen.mpg.de (Postfix) with ESMTPS id 9C06461EA1923
+	for <pmenzel+gitlab.freedesktop.org@molgen.mpg.de>; Tue, 10 May 2022 10:09:52 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by a1241.mx.srv.dfn.de (Postfix) with ESMTP id 7ED61320085
+	for <pmenzel+gitlab.freedesktop.org@molgen.mpg.de>; Tue, 10 May 2022 10:09:52 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at mgw6-han.srv.dfn.de
+Received: from a1241.mx.srv.dfn.de ([127.0.0.1])
+	by localhost (mgw6-han.srv.dfn.de [127.0.0.1]) (amavisd-new, port 20030)
+	with ESMTP id 6KHhpr0XRj9S
+	for <pmenzel+gitlab.freedesktop.org@molgen.mpg.de>;
+	Tue, 10 May 2022 10:09:17 +0200 (CEST)
+Received: from gabe.freedesktop.org (gabe.freedesktop.org [131.252.210.177])
+	by a1241.mx.srv.dfn.de (Postfix) with ESMTPS
+	for <pmenzel+gitlab.freedesktop.org@molgen.mpg.de>; Tue, 10 May 2022 10:09:17 +0200 (CEST)
+Received: from gitlab.freedesktop.org (unknown [139.178.65.18])
+	by gabe.freedesktop.org (Postfix) with ESMTPSA id 51BD210F1F9
+	for <pmenzel+gitlab.freedesktop.org@molgen.mpg.de>; Tue, 10 May 2022 08:08:47 +0000 (UTC)
+Date: Tue, 10 May 2022 08:08:46 +0000
+From: "spin83 (@spin83)" <gitlab@gitlab.freedesktop.org>
+Reply-To: GitLab <noreply@freedesktop.org>
+To: pmenzel+gitlab.freedesktop.org@molgen.mpg.de
+Message-ID: <note_1375796@gitlab.freedesktop.org>
+In-Reply-To: <issue_54035@gitlab.freedesktop.org>
+References: <issue_54035@gitlab.freedesktop.org>
+Subject: Re: amd | ASUS ROG Strix G513QY fails to resume from suspend
+ [regression] (#2008)
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="--==_mimepart_627a1d8e3c2cc_154289c149f6";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GitLab-Project: amd
+X-GitLab-Project-Id: 4522
+X-GitLab-Project-Path: drm/amd
+List-Id: drm/amd <4522.amd.drm.gitlab.freedesktop.org>
+List-Unsubscribe: <https://gitlab.freedesktop.org/-/sent_notifications/e6179f6336692b71190e18265f7cdf85/unsubscribe?force=true>
+X-GitLab-Issue-ID: 54035
+X-GitLab-Issue-IID: 2008
+X-GitLab-NotificationReason: subscribed
+X-GitLab-Discussion-ID: 74f4fe9555791956a10bb4fb07e7b3f5a781f0f5
+X-GitLab-Reply-Key: e6179f6336692b71190e18265f7cdf85
+Auto-Submitted: auto-generated
+X-Auto-Response-Suppress: All
+
+
+----==_mimepart_627a1d8e3c2cc_154289c149f6
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+
+
+
+spin83 commented:
+
+
+It doesn't work either.
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+View it on GitLab: https://gitlab.freedesktop.org/drm/amd/-/issues/2008#note_1375796
+You're receiving this email because of your account on gitlab.freedesktop.org.
 
 
+
+----==_mimepart_627a1d8e3c2cc_154289c149f6
+Content-Type: text/html;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html lang="en">
+<head>
+<meta content="text/html; charset=US-ASCII" http-equiv="Content-Type">
+<title>
+GitLab
+</title>
+
+
+<style>img {
+max-width: 100%; height: auto;
+}
+</style>
+</head>
+<body>
+<div class="content">
+
+<p style="color: #777777;">
+<a href="https://gitlab.freedesktop.org/spin83">spin83</a>
+<a href="https://gitlab.freedesktop.org/drm/amd/-/issues/2008#note_1375796">commented</a>:
+</p>
+<div class="md" style="">
+<p dir="auto">It doesn't work either.</p>
+</div>
+
+
+</div>
+<div class="footer" style="margin-top: 10px;">
+<p style="font-size: small; color: #666;">
+&#8212;
+<br>
+<a href="https://gitlab.freedesktop.org/drm/amd/-/issues/2008#note_1375796">View it on GitLab</a>.
+<br>
+You're receiving this email because of your account on gitlab.freedesktop.org.
+If you'd like to receive fewer emails, you can
+<a href="https://gitlab.freedesktop.org/-/sent_notifications/e6179f6336692b71190e18265f7cdf85/unsubscribe">unsubscribe</a>
+from this thread or
+adjust your notification settings.
+<script type="application/ld+json">{"@context":"http://schema.org","@type":"EmailMessage","action":{"@type":"ViewAction","name":"View Issue","url":"https://gitlab.freedesktop.org/drm/amd/-/issues/2008#note_1375796"}}</script>
+
+
+</p>
+</div>
+</body>
+</html>
+
+----==_mimepart_627a1d8e3c2cc_154289c149f6--
+
+--------------0svoNg2nlmSd1VWlwVhizSm5--
