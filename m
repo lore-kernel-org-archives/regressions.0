@@ -1,23 +1,13 @@
-Received: from fallback17.mail.ru (fallback17.m.smailru.net [94.100.176.130])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711CD7B
-	for <regressions@lists.linux.dev>; Tue, 10 May 2022 10:58:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail4;
-	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:Subject:References:Cc:To:From:MIME-Version:Date:Message-ID:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=L3YmQNDwiCXO4DrGfWrJfqXFeboZlajyEeIQAv4zh6I=;
-	t=1652180288;x=1652785688; 
-	b=N2uwZBP4KHblO9gkUhwyt2h2C45lr01RO8l7MBF9zrPWlaieMBzrPGKjeKwIUCM0nw5qyCMchExHsKC+fJ4ezBS9FpLrUA1WhYkP7q1fg98IV3lj5ImxCJWBD5MyIpFZDJbRRnUAoKafqRUq6w7Z9kibELOyS8uV7HOeyKrGg83Tr1yL67IVGRdg4IvMARgX+vMGmgN/j99olOyZY35jVLocHHOAfmFtd5THaLJfzTH74d42TxcUDYFJvw4JXpYCYNXxDwMpBbvqaIulFDZ1/32jbKpk9jWC35iOXsi46+KKx0y1lp259gcKBnHdXkvvkky9iJMSJFt3Aol5dWNPww==;
-Received: from [10.161.22.25] (port=52130 helo=smtp55.i.mail.ru)
-	by fallback17.m.smailru.net with esmtp (envelope-from <joey.corleone@mail.ru>)
-	id 1noNE2-0000d8-Rb; Tue, 10 May 2022 13:36:19 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mail.ru; s=mail4;
-	h=Content-Transfer-Encoding:Content-Type:In-Reply-To:Subject:References:Cc:To:From:MIME-Version:Date:Message-ID:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=L3YmQNDwiCXO4DrGfWrJfqXFeboZlajyEeIQAv4zh6I=;
-	t=1652178978;x=1652784378; 
-	b=c6Y6GKXYf2PKVL2nju60r4yfaF/V5wVdm2SJYcbYmI2h8YWXcD09tHu6y5llaOsx8rI8DJnHDWZmrV8/ryKP5mLsOtvPH4hxKsPZ0ESQjE+RwgzO+tAEUHtp8u/xb0NoccrY4RVtgYx1Zd8ScgZOhRPaiIep5rWvkcTD1xWO9cqrHyZufDWFgW1HyrLic49oOSiNjfj7GsFyllMXH0N312T0Umr/HyhVm1+rAuenD01Vq4wQ207qE3Xdbf2paeIdZmrp7M3ryj8CsMkyviH75mUlVJcsFJ915n3LeRFOmfLM6gy0quA88ByRU1mgr+3OKP/f/Trb67GqSe3tfSBWUg==;
-Received: by smtp55.i.mail.ru with esmtpa (envelope-from <joey.corleone@mail.ru>)
-	id 1noNDu-0008Hi-Dg; Tue, 10 May 2022 13:36:10 +0300
-Message-ID: <44f9b7f2-ac5f-55e9-e72b-cebe1d9bda80@mail.ru>
-Date: Tue, 10 May 2022 12:36:00 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB407B
+	for <regressions@lists.linux.dev>; Tue, 10 May 2022 11:07:01 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1noNhj-0000RL-6L; Tue, 10 May 2022 13:06:59 +0200
+Message-ID: <3d8f7aa0-0846-436d-7fe1-e8f8af7eaff5@leemhuis.info>
+Date: Tue, 10 May 2022 13:06:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -25,61 +15,127 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-From: Joey Corleone <joey.corleone@mail.ru>
-To: Marcel Holtmann <marcel@holtmann.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev
-References: <20220224151147.119619-1-luiz.dentz@gmail.com>
- <46FADD2F-2B35-4CC7-BC01-CACB81FC6FAE@holtmann.org>
+ Thunderbird/91.8.0
 Content-Language: en-US
-Subject: Re: [PATCH v2] Bluetooth: hci_sync: Fix hci_update_accept_list_sync
-In-Reply-To: <46FADD2F-2B35-4CC7-BC01-CACB81FC6FAE@holtmann.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Zack Rusin <zackr@vmware.com>, Hans de Goede <hdegoede@redhat.com>
+Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>
+References: <2bd4b06e-7577-d7d7-5f2e-264005b316a1@redhat.com>
+ <84c30eb2dcdc330ea54aa1fedba9ae0eb0826068.camel@vmware.com>
+ <087a0754-422c-0d88-a5ed-c03f2b5906c2@redhat.com>
+ <41AD6A60-9C2C-4545-8A62-114B07C0383F@vmware.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: 5.18 vmwgfx seems to break booting VirtualBox VMs
+In-Reply-To: <41AD6A60-9C2C-4545-8A62-114B07C0383F@vmware.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-7564579A: B8F34718100C35BD
-X-77F55803: 4F1203BC0FB41BD9D611630AF6200BAFEFCD3CDEC2FEE866C771F55010ECFC94182A05F5380850402CF28C8A5930B01A9DDCACC9FB0DEEA6B072943EE4690130EEA4FD5B542D4146
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7B9D6DADD6B53929DEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006378D70459434292EC88638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8823A546A550F282323EF34CCF4084A1E6F9789CCF6C18C3F8528715B7D10C86878DA827A17800CE73D04F0695778128A9FA2833FD35BB23D9E625A9149C048EE26055571C92BF10FE5D25F19253116ADD2E47CDBA5A96583BD4B6F7A4D31EC0BC014FD901B82EE079FA2833FD35BB23D27C277FBC8AE2E8B1A9C11735BBA05FBA471835C12D1D977C4224003CC836476EB9C4185024447017B076A6E789B0E975F5C1EE8F4F765FC3991949FB789967B3AA81AA40904B5D9CF19DD082D7633A078D18283394535A93AA81AA40904B5D98AA50765F790063785F20CC23D277B7AD81D268191BDAD3D698AB9A7B718F8C4D1B931868CE1C5781A620F70A64A45A98AA50765F79006372E808ACE2090B5E1725E5C173C3A84C3C5EA940A35A165FF2DBA43225CD8A89F3A8A7E6F3D1559285E1C53F199C2BB95B5C8C57E37DE458BEDA766A37F9254B7
-X-8FC586DF: 6EFBBC1D9D64D975
-X-C1DE0DAB: 0D63561A33F958A5B6B223FAFB34206065F2405749FDEA057DF03EECB07794F8D59269BC5F550898D99A6476B3ADF6B4886A5961035A09600383DAD389E261318FB05168BE4CE3AF
-X-C8649E89: 4E36BF7865823D7055A7F0CF078B5EC49A30900B95165D34E69981C39E7B068A20F1BDFA68636FB1CAB9E203EB8402CD2ACAF1466146AB6B339942E759AC44901D7E09C32AA3244C66BE0F5804BAEEC57D2C10FFBBD72D877C0C08F7987826B9927AC6DF5659F194
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojHSSTTj/1E5JGQrZ1zheX/g==
-X-Mailru-Sender: DED7486378921B4FACC540DC0644B2C119F1615C1900E78F689C242C3A78447776A57DEB513830E0C7BD54E8F9380F2338FA998476DAE4F3C2C748B250BAC47DFBB808E5A3D83AADCC0C6A881B01D7986DAEE9A828B31F4FEAB4BC95F72C04283CDA0F3B3F5B9367
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B47675259DE6CCD0836881391AB7CA884DE0CE0B444BB75180049FFFDB7839CE9E119AD1F268BF77D671CFDD5739A4F042048EA7E7AEE0660A1D782E1076260C94
-X-7FA49CB5: 0D63561A33F958A58A6242602D53BFBEBD3AC8C4F66E4175AFDF1CC2358EC69DCACD7DF95DA8FC8BD5E8D9A59859A8B64071617579528AACCC7F00164DA146DAFE8445B8C89999728AA50765F790063706CBA4EB72A0A67C389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC8A5ED62E35AC703CCF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C9D50A20087A7B80B6E0066C2D8992A164AD6D5ED66289B52698AB9A7B718F8C442539A7722CA490CD5E8D9A59859A8B60049E179A48B82B7089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
-X-C1DE0DAB: 0D63561A33F958A58A6242602D53BFBEBD3AC8C4F66E4175A32048312F3CC41BD59269BC5F550898D99A6476B3ADF6B4886A5961035A09600383DAD389E261318FB05168BE4CE3AF
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojHSSTTj/1E5KbgjyZsl51+A==
-X-Mailru-MI: 8000000000000800
-X-Mras: Ok
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652180821;6840bec9;
+X-HE-SMSGID: 1noNhj-0000RL-6L
 
-On 24.02.22 21:08, Marcel Holtmann wrote:
-> Hi Luiz,
-> 
->> hci_update_accept_list_sync is returning the filter based on the error
->> but that gets overwritten by hci_le_set_addr_resolution_enable_sync
->> return instead of using the actual result of the likes of
->> hci_le_add_accept_list_sync which was intended.
->>
->> Fixes: ad383c2c65a5b ("Bluetooth: hci_sync: Enable advertising when LL privacy is enabled")
->> Signed-off-by: Luiz Augusto von Dentz <luiz.von.dentz@intel.com>
->> ---
->> v2: Use u8 filter_policy instead of int ret as variable to store the result.
->>
->> net/bluetooth/hci_sync.c | 5 ++++-
->> 1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> patch has been applied to bluetooth-stable tree.
-> 
-> Regards
-> 
-> Marcel
+Hi, this is your Linux kernel regression tracker.
 
-Just to put you in the loop in case you have not noticed it yet: there 
-seems to be some kind of regression introduced by this patch. See 
-comment #5 of ticket 215768 where Damien Thébault bisected the kernel [1].
+On 10.05.22 02:12, Zack Rusin wrote:
+>> On May 9, 2022, at 6:57 AM, Hans de Goede <hdegoede@redhat.com>
+>> wrote: On 4/11/22 16:24, Zack Rusin wrote:
+>>> On Mon, 2022-04-11 at 10:52 +0200, Hans de Goede wrote:
+>>>> 
+>>>> Fedora has received a bug report here:
+>>>> 
+>>>> https://nam04.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.redhat.com%2Fshow_bug.cgi%3Fid%3D2072556&amp;data=05%7C01%7Czackr%40vmware.com%7C89c5a1adfffd434f102c08da31aaabcc%7Cb39138ca3cee4b4aa4d6cd83d9dd62f0%7C0%7C0%7C637876906347789531%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=L3rfwX0R0XXgEJbI88kY%2B7SrIqyJtuC7VLcN97NUSuk%3D&amp;reserved=0
+>>>>
+>>>>
+>>>> 
+That Fedora rawhide VMs no longer boot under the VirtualBox
+>>>> hypervisor after the VM has been updated to a 5.18-rc# kernel.
+>>>> 
+>>>> Switching the emulated GPU from vmwaregfx to VirtualBoxSVGA
+>>>> fixes this, so this seems to be a vmwgfx driver regression.
+>>>> 
+>>>> Note I've not investigated/reproduced this myself due to
+>>>> -ENOTIME.
+>>> 
+>>> Thanks for letting us know. Unfortunately we do not support
+>>> vmwgfx on VirtualBox. I'd be happy to review patches related to
+>>> this, but it's very unlikely we'd have to time to look at this
+>>> ourselves.
+>> 
+>> I somewhat understand where you are coming from, but this is not 
+>> how the kernels "no regressions" policy works.
 
-Joey
+Hans, many thx for writing your mail, I once intended to write something
+similar, but then forgot about it. :-/
 
-[1] https://bugzilla.kernel.org/show_bug.cgi?id=215768#c5
+>> For the end user a regression is a regression and as maintainers we
+>> are supposed to make sure any regressions noticed are fixed before
+>> a new kernel hits end user's systems.
+> 
+> I think there’s a misunderstanding here - the vmwgfx driver never
+> supported VirtualBox. VirtualBox implementation of the svga device
+> lacks a bunch of features,
+
+Which from the kernel's point of view is irrelevant. If the Linux
+kernel's vmwgfx driver ever supported the VirtualBox implementation then
+things shouldn't regress with later versions.
+
+> vmwgfx has been put on denylists
+
+/me wonders what exactly is meant by "denylists" here in the upstream
+context(¹), but whatever, doesn't matter much now afaics.
+
+(¹) Did the users that reported the issue do anything unusual (like
+writing telling the driver to load with a pciid that is normally doesn't
+support) to be enable vmwgfx for this hardware?
+
+> before
+> due to bugs in VirtualBox implementation of it, we just didn’t feel
+> like playing games like having the driver query the hypervisor “are
+> you really from VMware?” and refuse to load.
+> 
+> In this case it’s their lack of mksStats interfaces that’s the issue.
+> We can’t stop development of vmwgfx because our competitor was trying
+> to reuse our work and didn’t implement the features we have. vmwgfx
+> patches are now months ahead on drm-misc-next which should give
+> anyone working on that device in VirtualBox plenty of time to fix it.
+
+As Hans said: 'this is not how the kernels "no regressions" policy
+works.' For details see these documents, esp. the quotes from Linus.
+
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-regressions.html
+https://www.kernel.org/doc/html/latest/process/handling-regressions.html
+
+> I’m happy to spend my spare time reviewing patches that would make it
+> work but it’s just not reasonable to expect anyone to spend their
+> time in the office working on a directly competing product.
+
+No, but maintaining the driver in the kernel also means that you can't
+break a directly competing product, otherwise Linus might revert the
+commits that cause this, unless someone fixes the breakage.
+
+>> At a minimum it would have been good if you had tried to at least 
+>> reproduce this bug by installing Fedora rawhide inside an actual 
+>> vmware VM. I've just spend a couple of hours debugging this and the
+>> bug definitely impacts vmware VMs too; and thus very likely also
+>> reproduces there.
+> 
+> We’re always running Fedora, it should always just work on vmwgfx.
+> 
+>> I've a patch fixing this, which I will send out right after this 
+>> email.
+
+Many thx for taking care of this, Hans!
+
+> That looks like a back porting issue. drm-misc/drm-misc-next is
+> continuously tested on Fedora with vmwgfx so any breaks should never
+> last more than a day. I’ll back port some patches tomorrow when
+> drm-misc-next-fixes opens (because it’s after rc6). I’m sorry you had
+> to deal with this, just send me an email next time, I should always
+> have a pretty good handle on any issues with Fedora with latest
+> vmwgfx.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
