@@ -1,99 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9240E2F42
-	for <regressions@lists.linux.dev>; Tue, 10 May 2022 20:55:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04DF3C385C8;
-	Tue, 10 May 2022 20:55:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1652216111;
-	bh=y5KZ01KPhZhlesTIKjKDXWUgsEACasSjVTXo1WYMOaY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=cHo/O7jErWjCNI/QnnHlHJgkl2NeA+kU1BxUM+5yu0PGAxoRbghmtlRo8HdCYVAsQ
-	 mWijdHEY0lj+DHAxL6q/XAhXLyQnYXbgz0a2wtVfJmyusBLOln7GOmgqhoIVS4padZ
-	 91x+nAHvtuf4HhdcFRT2UG4j2NqtR5XI0uCI3vqler/qU8IwKD5SQCEWSvrJpNWE0i
-	 wp47XNjgJh10dxClPWmtO+e+flLuljgFnkb4cEHfhmGFPe90rvc9Mf6SD4VwobKWFj
-	 hd/rzdhiDOpHGQc3GxPLODgP99Z4ku5DNVBqJZO2z9j4iX402TuahCfxv7pg3QAy70
-	 ux7w+6ogrApbg==
-Date: Tue, 10 May 2022 15:55:08 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Cyril Brulebois <kibi@debian.org>, Jim Quinlan <jim2101024@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Linux PCI <linux-pci@vger.kernel.org>, bjorn@helgaas.com
-Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
- 4 (CM4) breaks booting
-Message-ID: <20220510205508.GA704570@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E3728F3
+	for <regressions@lists.linux.dev>; Wed, 11 May 2022 12:13:38 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nolDd-0007Gi-LU; Wed, 11 May 2022 14:13:29 +0200
+Message-ID: <04c2cb21-a377-d996-8297-16cd7c744063@leemhuis.info>
+Date: Wed, 11 May 2022 14:13:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20220510200709.vudemjipdvm2tpkq@mraw.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [mm/page_alloc] f26b3fa046: netperf.Throughput_Mbps -18.0%
+ regression #forregzbot
+Content-Language: en-US
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220420013526.GB14333@xsang-OptiPlex-9020>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20220420013526.GB14333@xsang-OptiPlex-9020>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652271218;9c3811d6;
+X-HE-SMSGID: 1nolDd-0007Gi-LU
 
-[+to Jim, heads-up about reverting commits to avoid the regression]
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-On Tue, May 10, 2022 at 10:07:09PM +0200, Cyril Brulebois wrote:
-> Bjorn Helgaas <helgaas@kernel.org> (2022-05-10):
-> > What if you revert 830aa6f29f07 and the subsequent brcmstb patches?
-> > 
-> >   11ed8b8624b8 ("PCI: brcmstb: Do not turn off WOL regulators on suspend")
-> >   93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
-> >   67211aadcb4b ("PCI: brcmstb: Add mechanism to turn on subdev regulators")
-> >   830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
-> > 
-> >   $ git revert 11ed8b8624b8 93e41f3fca3d 67211aadcb4b 830aa6f29f07
-> > 
-> > I did that on current upstream: 9be9ed2612b5 ("Merge tag
-> > 'platform-drivers-x86-v5.18-4' of
-> > git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86")
-> > and it built fine on x86.
+On 20.04.22 03:35, kernel test robot wrote:
 > 
-> I've done exactly that, and it boots again. Comparing kernel messages
-> against an older version (5.10.106), I'm getting the same output on that
-> bare CM4 on CM4 IO Board setup:
+> (please be noted we reported
+> "[mm/page_alloc]  39907a939a:  netperf.Throughput_Mbps -18.1% regression"
+> on
+> https://lore.kernel.org/all/20220228155733.GF1643@xsang-OptiPlex-9020/
+> while the commit is on branch.
+> now we still observe similar regression when it's on mainline, and we also
+> observe a 13.2% improvement on another netperf subtest.
+> so report again for information)
 > 
->     # dmesg|grep -i pcie
->     [    3.368620] brcm-pcie fd500000.pcie: host bridge /scb/pcie@7d500000 ranges:
->     [    3.368654] brcm-pcie fd500000.pcie:   No bus range found for /scb/pcie@7d500000, using [bus 00-ff]
->     [    3.368703] brcm-pcie fd500000.pcie:      MEM 0x0600000000..0x0603ffffff -> 0x00f8000000
->     [    3.368748] brcm-pcie fd500000.pcie:   IB MEM 0x0000000000..0x003fffffff -> 0x0400000000
->     [    3.421094] brcm-pcie fd500000.pcie: link up, 5.0 GT/s PCIe x1 (SSC)
->     [    3.421341] brcm-pcie fd500000.pcie: PCI host bridge to bus 0000:00
+> Greeting,
 > 
-> And with a PCIe → quad-USB board plugged in, I'm getting those
-> additional lines:
-> 
->     [    3.426842] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
->     [    3.427072] pcieport 0000:00:00.0: PME: Signaling with IRQ 51
->     [    3.427472] pcieport 0000:00:00.0: AER: enabled with IRQ 51
-> 
-> (It seems to be consistently IRQ 51 with 5.18.0-rc6+ while it seems to
-> be consistently IRQ 52 on 5.10.106, but the output is very similar in
-> both cases.)
-> 
-> And plugging a keyboard on one of those USB ports works fine:
-> 
->     [   13.406351] input: Logitech USB Keyboard as /devices/platform/scb/fd500000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/usb1/1-1/1-1.2/1-1.2:1.0/0003:046D:C31C.0001/input/input0
->     [   13.510144] input: Logitech USB Keyboard Consumer Control as /devices/platform/scb/fd500000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/usb1/1-1/1-1.2/1-1.2:1.1/0003:046D:C31C.0002/input/input2
->     [   13.591345] input: Logitech USB Keyboard System Control as /devices/platform/scb/fd500000.pcie/pci0000:00/0000:00:00.0/0000:01:00.0/usb1/1-1/1-1.2/1-1.2:1.1/0003:046D:C31C.0002/input/input3
+> FYI, we noticed a -18.0% regression of netperf.Throughput_Mbps due to commit:
 > 
 > 
-> Wrapping up: it boots again (with or without PCIe equipment plugged in),
-> and PCIe seems functional.
+> commit: f26b3fa046116a7dedcaafe30083402113941451 ("mm/page_alloc: limit number of high-order pages on PCP during bulk free")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
 > 
-> I'm happy to test more patches (e.g. trying to fix the actual issue
-> without going for a set of reverts).
+> in testcase: netperf
+> on test machine: 128 threads 2 sockets Intel(R) Xeon(R) Platinum 8358 CPU @ 2.60GHz with 128G memory
+> with following parameters:
+> 
+> 	ip: ipv4
+> 	runtime: 300s
+> 	nr_threads: 1
+> 	cluster: cs-localhost
+> 	test: UDP_STREAM
+> 	cpufreq_governor: performance
+> 	ucode: 0xd000331
+> 
+> test-description: Netperf is a benchmark that can be use to measure various aspect of networking performance.
+> test-url: http://www.netperf.org/netperf/
+> [...]
 
-We're at -rc6 already, but no word from Jim yet.  I think all we can
-do at this point is queue up reverts of these patches for v5.18.  The
-reverts on now on my for-linus branch.
+This regression is discussed quite a bit currently, so let's better add
+it to the tracking:
 
-If we get a fix, I can easily drop the reverts, but I don't want v5.18
-to release with PCI completely broken on the Compute Module 4.
+#regzbot ^introduced 39907a939a
+#regzbot title mm: [mm/page_alloc]  f26b3fa046:  netperf.Throughput_Mbps
+-18.0% regression
+#regzbot ignore-activity
 
-Bjorn
+Ciao, Thorsten
