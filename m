@@ -1,40 +1,75 @@
-Received: from eki-net.com (unknown [152.32.156.133])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CC9A17D2
-	for <regressions@lists.linux.dev>; Thu, 12 May 2022 05:49:19 +0000 (UTC)
-Message-ID: <20220512111920687522@eki-net.com>
-From: =?utf-8?B?44GI44GN44Gt44Gj44Go?= <vpcpydxr@eki-net.com>
-To: <regressions@lists.linux.dev>
-Subject: =?utf-8?B?44CQ44GI44GN44Gt44Gj44Go44CR56K66KqN44GV44KM44Gf5oOF5aCx?=
-Date: Thu, 12 May 2022 11:19:14 +0530
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E183A17D2
+	for <regressions@lists.linux.dev>; Thu, 12 May 2022 06:24:05 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1np2F0-0003ty-1P; Thu, 12 May 2022 08:24:02 +0200
+Message-ID: <d66ec3a0-10b4-fd60-0b03-e9a3f3571645@leemhuis.info>
+Date: Thu, 12 May 2022 08:24:00 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: base64
-X-mailer: Zihrbrbch 1
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>, Jim Quinlan <jim2101024@gmail.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Nicolas Saenz Julienne
+ <nsaenz@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>,
+ bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+ regressions@lists.linux.dev, Bjorn Helgaas <bhelgaas@google.com>
+References: <20220511201856.808690-1-helgaas@kernel.org>
+ <20220511201856.808690-2-helgaas@kernel.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [PATCH 1/4] Revert "PCI: brcmstb: Do not turn off WOL regulators
+ on suspend"
+In-Reply-To: <20220511201856.808690-2-helgaas@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652336646;91a4093b;
+X-HE-SMSGID: 1np2F0-0003ty-1P
 
-44CM44GI44GN44Gt44Gj44Go44CN44Gu44Ki44Kr44Km44Oz44OI44Gv5Yi26ZmQ44GV44KM44Gm
-44GE44G+44GZ44CC6YCa5bi444Gu5L2/55So44Gr5b2x6Z+/44KS5LiO44GI44Gq44GE44KI44GG
-44Gr44CB5LiL44Gu44Oq44Oz44Kv44KS44Kv44Oq44OD44Kv44GX44Gm6Zai6YCj5oOF5aCx44KS
-44Gn44GN44KL44Gg44GR5pep44GP56K66KqN44GX44Gm44GP44Gg44GV44GE44CCMTLmmYLplpPk
-u6XlhoXjgavnlLPjgZfovrzjgb/jgYzlsYrjgYvjgarjgYTloLTlkIjjgIHjgqLjgqvjgqbjg7Pj
-g4jjga/luLjjgavjgZTkuI3kvr/jgpLjgYrjgYvjgZHjgZfjgabnlLPjgZfoqLPjgZTjgZbjgYTj
-gb7jgZvjgpPjgIINCi0tLS0tLS0tLS0tLS0tDQoNCuOAkOeiuuiqjeOBleOCjOOBn+aDheWgseOA
-kQ0KaHR0cHM6Ly9zLnlhbS5jb20vaVF3a3oNCi0tLS0tLS0tLS0tLS0tLS0tLS0tDQrjgYrllY/j
-gYTlkIjjgo/jgZvlhYgNCiDjgYjjgY3jga3jgaPjgajjgrXjg53jg7zjg4jjgrvjg7Pjgr/jg7wN
-CiBURUwgMDUwLTIwMTYtNTAwMA0KIOWPl+S7mOaZgumWkyA45pmCMDDliIbvvZ4yMuaZgjAw5YiG
-DQog44K144Kk44OI6YGL5Za244O7566h55CGDQogSlLmnbHml6XmnKzjg43jg4Pjg4jjgrnjg4bj
-g7zjgrfjg6fjg7MNCi0tLS0tLS0tLS0tLS0tLS0tLS0tDQoNCuOBk+OBruODoeODvOODq+OBr+OA
-jOOBiOOBjeOBreOBo+OBqOOAjeOCiOOCiuiHquWLlemFjeS/oeOBleOCjOOBpuOBhOOBvuOBmeOA
-gg0K6L+U5L+h44GE44Gf44Gg44GN44G+44GX44Gm44KC5a++5b+c6Ie044GX44GL44Gt44G+44GZ
-44Gu44Gn44CB44GC44KJ44GL44GY44KB44GU5LqG5om/44GP44Gg44GV44GE44CCDQoNCuOBiuW/
-g+W9k+OBn+OCiuOBruOBquOBhOaWueOBr+OAgeiqoOOBq+aBkOOCjOWFpeOCiuOBvuOBmeOBjOOB
-k+OBruODoeODvOODq+OBruWJiumZpOOCkuOBiumhmOOBhOOBhOOBn+OBl+OBvuOBmeOAgg0K44GU
-5LiN5piO44Gq54K544Gu44GC44KL5pa544Gv44CB44GI44GN44Gt44Gj44Go44K144Od44O844OI
-44K744Oz44K/44O844G+44Gn44GU6YCj57Wh44GP44Gg44GV44GE44CCDQogDQo=
+On 11.05.22 22:18, Bjorn Helgaas wrote:
+> From: Bjorn Helgaas <bhelgaas@google.com>
+> 
+> This reverts commit 11ed8b8624b8085f706864b4addcd304b1e4fc38.
+> 
+> This is part of a revert of the following commits:
+> 
+>   11ed8b8624b8 ("PCI: brcmstb: Do not turn off WOL regulators on suspend")
+>   93e41f3fca3d ("PCI: brcmstb: Add control of subdevice voltage regulators")
+>   67211aadcb4b ("PCI: brcmstb: Add mechanism to turn on subdev regulators")
+>   830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup() into two funcs")
+> 
+> Cyril reported that 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup()
+> into two funcs"), which appeared in v5.17-rc1, broke booting on the
+> Raspberry Pi Compute Module 4.  Apparently 830aa6f29f07 panics with an
+> Asynchronous SError Interrupt, and after further commits here is a black
+> screen on HDMI and no output on the serial console.
+> 
+> This does not seem to affect the Raspberry Pi 4 B.
+> 
+> Reported-by: Cyril Brulebois <kibi@debian.org>
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=215925
 
+A "Bugzilla" tag? Why don't you just use a proper "Link:" tag, as
+explained by the documentation to use in this case (I clarified the docs
+recently with regards to this). Such inventions (some people use
+"References:", others "BugLink:" and there were a few others I already
+forget about) make my regression tracking efforts hard. :-/
 
+Side note: Linus in the past few days two times reminded people to use
+proper Link: tags, but that was in a totally different context (when
+there was no link at all or just a Link: pointing to the submission of a
+patch)
+
+> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+
+> [...]
+
+Ciao, Thorsten
