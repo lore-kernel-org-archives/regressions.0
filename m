@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1C32100
-	for <regressions@lists.linux.dev>; Fri, 13 May 2022 08:16:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E7D2100
+	for <regressions@lists.linux.dev>; Fri, 13 May 2022 08:18:29 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1npQSy-0006PS-Nd; Fri, 13 May 2022 10:16:05 +0200
-Message-ID: <dfff630d-1408-5306-d70f-297f934ee8a4@leemhuis.info>
-Date: Fri, 13 May 2022 10:16:03 +0200
+	id 1npQVG-0007GN-TF; Fri, 13 May 2022 10:18:27 +0200
+Message-ID: <17cfc10c-1a51-b7b5-2510-160bc64d5e75@leemhuis.info>
+Date: Fri, 13 May 2022 10:18:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,55 +16,94 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.8.0
-Subject: Re: Fwd: Re: amd | ASUS ROG Strix G513QY fails to resume from suspend
- [regression] (#2008) #forregzbot
 Content-Language: en-US
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: regressions@lists.linux.dev
-References: <note_1375796@gitlab.freedesktop.org>
- <66e1d78c-bf27-80b4-9804-6c9f3a8c5547@molgen.mpg.de>
- <2192e546-cac7-f802-2297-3461a1cf8e03@leemhuis.info>
-In-Reply-To: <2192e546-cac7-f802-2297-3461a1cf8e03@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: intel-gfx <intel-gfx@lists.freedesktop.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com>
+ <da66cb8e-62b7-4c48-1ed6-afe363b26d4f@leemhuis.info>
+Subject: Re: [5.18 regression] drm/i915 BYT rendering broken due to "Remove
+ short-term pins from execbuf, v6" #forregzbot
+In-Reply-To: <da66cb8e-62b7-4c48-1ed6-afe363b26d4f@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652429773;39973dc9;
-X-HE-SMSGID: 1npQSy-0006PS-Nd
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652429909;abac5184;
+X-HE-SMSGID: 1npQVG-0007GN-TF
 
 TWIMC: this mail is primarily send for documentation purposes and for
 regzbot, my Linux kernel regression tracking bot. These mails usually
 contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-On 10.05.22 12:33, Thorsten Leemhuis wrote:
-> On 10.05.22 10:37, Paul Menzel wrote:
->> Dear Linux regressions folks,
+On 09.05.22 09:01, Thorsten Leemhuis wrote:
+> [TLDR: I'm adding this regression report to the list of tracked
+> regressions; all text from me you find below is based on a few templates
+> paragraphs you might have encountered already already in similar form.]
+> 
+> Hi, this is your Linux kernel regression tracker. Top-posting for once,
+> to make this easily accessible to everyone.
+> 
+> Thanks for the report.
+> 
+> To be sure below issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, my Linux kernel regression tracking bot:
+> 
+> #regzbot ^introduced b5cfe6f7a6e1
+> #regzbot title drm/i915: BYT rendering broken due to "Remove short-term
+> pins from execbuf, v6"
+> #regzbot ignore-activity
+
+#regzbot link: https://gitlab.freedesktop.org/drm/intel/-/issues/5806
+#regzbot monitor:
+https://lore.kernel.org/all/20220511115219.46507-1-maarten.lankhorst@linux.intel.com/
+
+> This isn't a regression? This issue or a fix for it are already
+> discussed somewhere else? It was fixed already? You want to clarify when
+> the regression started to happen? Or point out I got the title or
+> something else totally wrong? Then just reply -- ideally with also
+> telling regzbot about it, as explained here:
+> https://linux-regtracking.leemhuis.info/tracked-regression/
+> 
+> Reminder for developers: When fixing the issue, add 'Link:' tags
+> pointing to the report (the mail this one replied to), as the kernel's
+> documentation call for; above page explains why this is important for
+> tracked regressions.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> 
+> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+> reports and sometimes miss something important when writing mails like
+> this. If that's the case here, don't hesitate to tell me in a public
+> reply, it's in everyone's interest to set the public record straight.
+> 
+> 
+> 
+> On 08.05.22 16:38, Hans de Goede wrote:
+>> Hi All,
 >>
->> A user reported a regression [1], which also trickled down to the stable
->> series, for example between 5.15.13 and 5.15.14.
+>> When running a 5.18-rc4 (and -rc5) kernel on a Chuwi Hi 8, which is
+>> a Bay Trail based tablet with 2G RAM and a 1200x1920 DSI panel.
+>> I noticed that gnome-shell was misrendering. Many UI elements were
+>> missing (they were all black) and at the gdm login screen (which is
+>> a special gnome-shell session) the screen often was entirely black
+>> until I move the cursor around and then various things got
+>> highlighted after which they sometimes stuck around and sometimes
+>> they disappeared again after the highlight.
 >>
->> [1]: https://gitlab.freedesktop.org/drm/amd/-/issues/2008
-> 
-> Many thx for forwarding. I'll add it to the tracking to ensure it's not
-> forgotten:
-> 
-> #regzbot introduced: 887f75cfd0da44c19dd
-> #regzbot from: spin83
-> #regzbot title: drm: amdgpu: ASUS ROG Strix G513QY fails to resume from
-> suspend
-> #regzbot link: https://gitlab.freedesktop.org/drm/amd/-/issues/2008
-> 
-> Maybe the culprit is actually daf8de0874ab5b74b38a38726fdd3d, the report
-> is not clear on that, I just picked the newest the reporter mentioned
-> for now.
-
-#regzbot introduced: eaa090538e8d21801c6d5f94590c3799e6a5
-#regzbot fixed-by: a56f445f807b0276
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
-
-
-
+>> Since this problem does not happen with various 5.17.y kernels I
+>> believe that this is a kernel regression in 5.18. I've bisected this
+>> and the bisect points to:
+>>
+>> commit b5cfe6f7a6e1 ("drm/i915: Remove short-term pins from execbuf, v6.")
+>>
+>> from Maarten. This commit cleanly reverts on top of 5.18-rc5 and
+>> I can confirm that 5.18-rc5 with b5cfe6f7a6e1 reverted fixes things.
+>>
+>> I would be more then happy to test any possible fixes for this.
+>>
+>> Regards,
+>>
+>> Hans
+>>
+>>
+>>
