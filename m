@@ -1,13 +1,13 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFF8362
-	for <regressions@lists.linux.dev>; Sat, 14 May 2022 08:17:36 +0000 (UTC)
-Received: from [192.168.1.107] ([37.4.249.94]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1Mbj3e-1oLHQZ0uJK-00dFtL; Sat, 14 May 2022 10:17:09 +0200
-Message-ID: <d130ce59-1a4b-901c-d038-07515db746ec@i2se.com>
-Date: Sat, 14 May 2022 10:17:07 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A8C624
+	for <regressions@lists.linux.dev>; Sat, 14 May 2022 11:57:25 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1npqOb-0002iX-SH; Sat, 14 May 2022 13:57:18 +0200
+Message-ID: <82f5a064-85f3-8329-81ab-8ce0570ccaff@leemhuis.info>
+Date: Sat, 14 May 2022 13:57:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,71 +15,34 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [PATCH] clk: bcm2835: fix bcm2835_clock_choose_div
+ Thunderbird/91.9.0
+Subject: Re: Bug 215679 - NVMe/writeback wb_workfn/blocked for more than 30
+ seconds #forregzbot
 Content-Language: en-US
-To: Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>,
- bcm-kernel-feedback-list@broadcom.com, linux-clk@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Maxime Ripard <maxime@cerno.tech>,
- regressions@lists.linux.dev
-References: <20220428183010.1635248-1-stefan.wahren@i2se.com>
- <20220503145804.b2xz4etzc6kpr3fk@houat>
- <ee39ddd1-bfce-012d-5e04-448d779ed995@i2se.com>
- <20220510132756.qmyjca53xu44iwn7@houat>
-From: Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <20220510132756.qmyjca53xu44iwn7@houat>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <0a0b0127-8e5d-d6ca-52db-bf9937d6d887@leemhuis.info>
+In-Reply-To: <0a0b0127-8e5d-d6ca-52db-bf9937d6d887@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:r2U+3GHILFBJRwdN1QPH4ahI0ZnQAgBHx5ON/pp7+M6xKkOOU7B
- cDh3ez2wjRJDVkrRmJyZwqRX20qLK1h0odGOKQA2gTvVdOIshrolMPvO+ltIotrDkCOtZNv
- LiY7PFDCv4rd6871n6rH6mVZPgjfoFEW85IhYK6dJd44NRceaaeueFrXBEdw6B6E6ArK/SB
- c4xfRAYikG3kU9drmxyug==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OBUcdSwGzvA=:7kGSMmYVHvANedwOjmE35m
- SzdqVBJwDVp9wf95BaSpp3sfWCU4L4eNupi1Kk+MfxmfgsDIrCEsZ8raEt2qcUZGVa2pHV7yy
- fcGYyYA4dRRVjNLSDjx0rEAjq5hba/B6WdJsEoy/lsnaRzUgHjg0gU0lrvxFUM2D+3yNRVABR
- ZGGHtQVu7SGQm1nUgScsxQVFVur89dyT/bSSSzvHqNmocn/6s2wu9NPPcTIz//6DMs4+4avjz
- 3hbnW1KFFA8F1VbVMWDbLBzD38/cQCB37EFv/lODaFi74u2JYDq5vs6Gy8Adqc4Kz0EE9ywBI
- 4pobsDdp7eu/Oe5iT6P0KZaT47dzaNJVGSoYOZcRSKEftQ17Ph/wxaTz6Iajk7/fT2XtgFNLV
- IhFQEjRwHG9jlmgLQ+zz3HJ/piqnqMl092hVk/UB99bmp+mIdkhZDOEOWkdxK88lyFpIblB67
- ui15rI9kZThCBe34+KZVA3KtDdKBLGlYKee2Cxh0NCcShParsWRB6rYWhLKBtOy4YJuqacbeM
- Tceoun7RySowctJv9QYJST8OitRLcbuQwKamXV4gTVABcVCKs6zhfEmzELI82lWPnWufgHtCm
- plNtvNzjQNlMhylKibpNSMsedV+uPonc7BCxL/Rdr490wpCQmc1fc/bpdlyWoSsg+JDKl5dRi
- RP7Oaj0/h3aBtA0HDsX13QMCt6v97jUf7tzCVVySjnRasWRhCNIYnh3NwHdgMqdEc7i14er5N
- RX6jO9XoycglYTeatOVWytW1rkDApoI3Lrn/A1e+QF1eDQAedtgUdJd+ogk=
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652529446;c0a27d9a;
+X-HE-SMSGID: 1npqOb-0002iX-SH
 
-Hi,
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-Am 10.05.22 um 15:27 schrieb Maxime Ripard:
-> On Sat, May 07, 2022 at 11:26:28AM +0200, Stefan Wahren wrote:
->> Am 03.05.22 um 16:58 schrieb Maxime Ripard:
->>> Hi,
->>>
->>> On Thu, Apr 28, 2022 at 08:30:10PM +0200, Stefan Wahren wrote:
->>>> The commit 09e3b18ca5de ("clk: bcm2835: Remove unused variable")
->>>> accidentially breaks the behavior of bcm2835_clock_choose_div() and
->>>> booting of Raspberry Pi. The removed do_div macro call had side effects,
->>>> so we need to restore it.
->>>>
->>>> Fixes: 09e3b18ca5de ("clk: bcm2835: Remove unused variable")
->>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->>> I only found this patch after debugging why the HDMI driver was
->>> returning -EINVAL at probe on -rc5.
->>>
->>> Acked-by: Maxime Ripard <maxime@cerno.tech>
->>> Tested-by: Maxime Ripard <maxime@cerno.tech>
->> Thanks,
->>
->> does this go via clk-fixes?
-> Yep, it should.
->
-> Stephen, could we merge this?
-Is there any chance to get this regression fix into mainline before 5.18 
-is released?
->
-> Maxime
+On 18.03.22 15:49, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> About a week ago a regression was reported to bugzilla.kernel.org that
+> seems to be handled there already, nevertheless I'd like to add to the
+> tracking to ensure it's not forgotten.
+> 
+> #regzbot introduced: 4f5022453acd0f7b28012
+> #regzbot from: Imre Deak <imre.deak@intel.com>
+> #regzbot title: nvme: NVMe/writeback wb_workfn/blocked for more than 30
+> seconds
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215679
+
+#regzbot invalid: turns out hardware was faulty
