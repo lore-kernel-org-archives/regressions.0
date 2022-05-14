@@ -1,48 +1,71 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01A8C624
-	for <regressions@lists.linux.dev>; Sat, 14 May 2022 11:57:25 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1npqOb-0002iX-SH; Sat, 14 May 2022 13:57:18 +0200
-Message-ID: <82f5a064-85f3-8329-81ab-8ce0570ccaff@leemhuis.info>
-Date: Sat, 14 May 2022 13:57:11 +0200
+Received: from smtpfb2-g21.free.fr (smtpfb2-g21.free.fr [212.27.42.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0376F63F
+	for <regressions@lists.linux.dev>; Sat, 14 May 2022 14:47:26 +0000 (UTC)
+Received: from smtp5-g21.free.fr (smtp5-g21.free.fr [212.27.42.5])
+	by smtpfb2-g21.free.fr (Postfix) with ESMTP id 2E57C4DC0E
+	for <regressions@lists.linux.dev>; Sat, 14 May 2022 16:41:46 +0200 (CEST)
+Received: from geek500.localdomain (unknown [82.65.8.64])
+	(Authenticated sender: casteyde.christian@free.fr)
+	by smtp5-g21.free.fr (Postfix) with ESMTPSA id EB1D25FFA9;
+	Sat, 14 May 2022 16:41:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
+	s=smtp-20201208; t=1652539298;
+	bh=RVUXgeNXqlyrexHEFCz9+8klDgtdwYVM274LVBDdlG8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Udnzf2F8L35lxGLDoyygbcKRDHt0A2TLy70dsZNdTUGrqVtQJvWW0ozWcBeo2vvoE
+	 T1MsmH+BJn9pNzHd1Zie6jtcnJ5TdvFjJRtAB6IxLxEXiYg0xzNjHuNpKFhW/ZnoFZ
+	 vrDkgQJkT9mjSmulkRZadUTJCU4KxlhVKSXB28geKZ6bfgjtuQkL39ws5fjaEu2C44
+	 0h5gUkljqOhOOGGH4g6xdlKF4z3pVpF2WL9Ev3WR6gWDyj9gaiM7GGbklXQV4CNsiq
+	 UZiyXNIDeqUlMdqmOdG3g+3Hsb06HzuykGLlCyGPMTPO0W8BSzNYUw/b26IoUUu+O+
+	 i7ZXXLuo6ePYA==
+From: Christian Casteyde <casteyde.christian@free.fr>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, kai.heng.feng@canonical.com, alexander.deucher@amd.com, gregkh@linuxfoundation.org
+Subject: [REGRESSION] Laptop with Ryzen 4600H fails to resume video since 5.17.4 (works 5.17.3)
+Date: Sat, 14 May 2022 16:41:19 +0200
+Message-ID: <2584945.lGaqSPkdTl@geek500.localdomain>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: Bug 215679 - NVMe/writeback wb_workfn/blocked for more than 30
- seconds #forregzbot
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <0a0b0127-8e5d-d6ca-52db-bf9937d6d887@leemhuis.info>
-In-Reply-To: <0a0b0127-8e5d-d6ca-52db-bf9937d6d887@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652529446;c0a27d9a;
-X-HE-SMSGID: 1npqOb-0002iX-SH
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+#regzbot introduced v5.17.3..v5.17.4
+#regzbot introduced: 001828fb3084379f3c3e228b905223c50bc237f9
 
-On 18.03.22 15:49, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker speaking.
-> 
-> About a week ago a regression was reported to bugzilla.kernel.org that
-> seems to be handled there already, nevertheless I'd like to add to the
-> tracking to ensure it's not forgotten.
-> 
-> #regzbot introduced: 4f5022453acd0f7b28012
-> #regzbot from: Imre Deak <imre.deak@intel.com>
-> #regzbot title: nvme: NVMe/writeback wb_workfn/blocked for more than 30
-> seconds
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215679
+Hello
+Since 5.17.4 my laptop doesn't resume from suspend anymore. At resume, 
+symptoms are variable:
+- either the laptop freezes;
+- either the screen keeps blank;
+- either the screen is OK but mouse is frozen;
+- either display lags with several logs in dmesg:
+[  228.275492] [drm] Fence fallback timer expired on ring gfx
+[  228.395466] [drm:amdgpu_dm_atomic_commit_tail] *ERROR* Waiting for fences 
+timed out!
+[  228.779490] [drm] Fence fallback timer expired on ring gfx
+[  229.283484] [drm] Fence fallback timer expired on ring sdma0
+[  229.283485] [drm] Fence fallback timer expired on ring gfx
+[  229.787487] [drm] Fence fallback timer expired on ring gfx
+...
 
-#regzbot invalid: turns out hardware was faulty
+I've bisected the problem.
+
+Please note this laptop has a strange behaviour on suspend:
+The first suspend request always fails (this point has never been fixed and 
+plagues us when trying to diagnose another regression on touchpad not resuming 
+in the past). The screen goes blank and I can get it OK when pressing the 
+power button, this seems to reset it. After that all suspend/resume works OK.
+
+Since 5.17.4, it is not possible anymore to get the laptop working again after 
+the first suspend failure.
+
+HW : HP Pavilion / Ryzen 4600H with AMD graphics integrated + NVidia 1650Ti 
+(turned off with ACPI call in order to get more battery, I'm not using NVidia 
+driver).
+
+
+
