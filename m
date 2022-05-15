@@ -1,150 +1,173 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29908621
-	for <regressions@lists.linux.dev>; Sun, 15 May 2022 08:30:54 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nq9eA-0002xu-Gj; Sun, 15 May 2022 10:30:38 +0200
-Message-ID: <d4402e3c-7ca8-62d0-bba8-f1afe6e42dfa@leemhuis.info>
-Date: Sun, 15 May 2022 10:30:38 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C2A627
+	for <regressions@lists.linux.dev>; Sun, 15 May 2022 16:37:02 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1nqHEj-00022T-CU; Sun, 15 May 2022 18:36:53 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2022-05-15]
+Date: Sun, 15 May 2022 16:36:51 +0000
+Message-Id: <165263184972.441566.6613731168195248776@leemhuis.info>
+X-Mailer: git-send-email 2.34.3
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: Xorg SEGV in Xen PV dom0 after updating from 5.16.18 to 5.17.5
-Content-Language: en-US
-To: Juergen Gross <jgross@suse.com>,
- Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: regressions@lists.linux.dev,
- =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?=
- <marmarek@invisiblethingslab.com>, Jani Nikula
- <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- intel-gfx <intel-gfx@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <YnHK1Z3o99eMXsVK@mail-itl>
- <f4b00553-4e77-84bc-e25c-01383d7e92dd@leemhuis.info>
- <fa6967cf-a718-4be2-2591-b675e2095b4c@suse.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <fa6967cf-a718-4be2-2591-b675e2095b4c@suse.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652603454;3b796bdf;
-X-HE-SMSGID: 1nq9eA-0002xu-Gj
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652632622;1d5bb383;
+X-HE-SMSGID: 1nqHEj-00022T-CU
 
-On 04.05.22 08:48, Juergen Gross wrote:
-> On 04.05.22 07:46, Thorsten Leemhuis wrote:
->> Hi, this is your Linux kernel regression tracker. Sending this just to
->> CC the developers of the culprit mentioned below (bdd8b6c98239cad
->> ("drm/i915: replace X86_FEATURE_PAT with pat_enabled()")) and the
->> maintainers for the subsystem.
->>
->> While at it a quick note: I wonder if this is problem a similar to one
->> that recently turned up with amdgpu and is fixed by this problem:
->> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=78b12008f20
-> 
-> No, this is different.
-> 
-> I have posted a patch yesterday which should fix the issue:
-> 
-> https://lore.kernel.org/lkml/20220503132207.17234-3-jgross@suse.com/T/#m75efc68c96d8f7160229b5f3147242221ce0c28c
+Hi Linus! Find below a quick compilation of open reports about
+regressions in 5.18-rc that I'm currently aware of.
 
-What happened to that? It looks like there wasn't any progress in the
-past week to get this regression fixed, which sometimes happens, but is
-kinda undesired when it comes to regressions.
+There is WIP for most of them:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+* the "clk/bcm2835 breaking raspi" is report and patch at the same time
+that is more that two weeks old, but seems the maintainer hasn't picked
+it up yet :-/
 
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+* for the "input/usb problem with bcm5974" there is a rough but already
+tested patch in bugzilla
 
-#regzbot poke
+* didn't look closely at the "mm: [mm/page_alloc]  f26b3fa046:
+netperf.Throughput_Mbps -18.0% regression" thing, you were involved in
+those discussions yourself
 
->> Ciao, Thorsten
->>
->> On 04.05.22 02:37, Marek Marczykowski-Górecki wrote:
->>>
->>> After updating from 5.16.18 to 5.17.5 in Xen PV dom0, my Xorg started
->>> crashing when displaying any window mapped from a guest (domU) system.
->>> This is 100% reproducible.
->>> The system is Qubes OS, and it uses a trick that maps windows content
->>> from other guests using Xen grant tables, wrapped as "shared memory"
->>> from Xorg point of view (so, the memory that Xorg mmaps is not just from
->>> another process, but from another VM). That's the ShmPutImage you can
->>> see on the stack trace below.
->>>
->>> Stack trace of thread 12858:
->>> #0  0x00007f80029e17d5 raise (libc.so.6 + 0x3c7d5)
->>> #1  0x00007f80029ca895 abort (libc.so.6 + 0x25895)
->>> #2  0x00005b3469ace0e0 OsAbort (Xorg + 0x1c60e0)
->>> #3  0x00005b3469ad3959 AbortServer (Xorg + 0x1cb959)
->>> #4  0x00005b3469ad46aa FatalError (Xorg + 0x1cc6aa)
->>> #5  0x00005b3469acb450 OsSigHandler (Xorg + 0x1c3450)
->>> #6  0x00007f8002b85a90 __restore_rt (libpthread.so.0 + 0x14a90)
->>> #7  0x00007f8002b0a2a1 __memmove_avx_unaligned_erms (libc.so.6 +
->>> 0x1652a1)
->>> #8  0x00007f80015dfcc9 linear_to_xtiled_faster (iris_dri.so + 0xc91cc9)
->>> #9  0x00007f80015e3477 _isl_memcpy_linear_to_tiled (iris_dri.so +
->>> 0xc95477)
->>> #10 0x00007f8001468440 iris_texture_subdata (iris_dri.so + 0xb1a440)
->>> #11 0x00007f8000a76107 st_TexSubImage (iris_dri.so + 0x128107)
->>> #12 0x00007f8000be9a47 texture_sub_image (iris_dri.so + 0x29ba47)
->>> #13 0x00007f8000becd0c texsubimage_err (iris_dri.so + 0x29ed0c)
->>> #14 0x00007f8000bf2939 _mesa_TexSubImage2D (iris_dri.so + 0x2a4939)
->>> #15 0x00007f800213831f glamor_upload_boxes (libglamoregl.so + 0x1e31f)
->>> #16 0x00007f800213856f glamor_upload_region (libglamoregl.so + 0x1e56f)
->>> #17 0x00007f800212aea6 glamor_put_image (libglamoregl.so + 0x10ea6)
->>> #18 0x00005b3469a4d79c damagePutImage (Xorg + 0x14579c)
->>> #19 0x00005b3469a00a7e ProcShmPutImage (Xorg + 0xf8a7e)
->>> #20 0x00005b3469965a2b Dispatch (Xorg + 0x5da2b)
->>> #21 0x00005b3469969b04 dix_main (Xorg + 0x61b04)
->>> #22 0x00007f80029cc082 __libc_start_main (libc.so.6 + 0x27082)
->>> #23 0x00005b3469952e6e _start (Xorg + 0x4ae6e)
->>>
->>> Disassembly of the surrounding code:
->>>
->>>     0x00007596ae8c82fb <+123>:    ja     0x7596ae8c8338
->>> <__memmove_avx_unaligned_erms+184>
->>>     0x00007596ae8c82fd <+125>:    jb     0x7596ae8c8304
->>> <__memmove_avx_unaligned_erms+132>
->>>     0x00007596ae8c82ff <+127>:    movzbl (%rsi),%ecx
->>>     0x00007596ae8c8302 <+130>:    mov    %cl,(%rdi)
->>>     0x00007596ae8c8304 <+132>:    retq
->>>     0x00007596ae8c8305 <+133>:    vmovdqu (%rsi),%xmm0
->>>     0x00007596ae8c8309 <+137>:    vmovdqu -0x10(%rsi,%rdx,1),%xmm1
->>> => 0x00007596ae8c830f <+143>:    vmovdqu %xmm0,(%rdi)
->>>     0x00007596ae8c8313 <+147>:    vmovdqu %xmm1,-0x10(%rdi,%rdx,1)
->>>     0x00007596ae8c8319 <+153>:    retq
->>>
->>>
->>> I don't see any related kernel or Xen messages at this time. Xorg's SEGV
->>> handler prints also:
->>>
->>>      (EE) Segmentation fault at address 0x3c010
->>>
->>> Git bisect says it's bdd8b6c98239cad ("drm/i915: replace X86_FEATURE_PAT
->>> with pat_enabled()"), and indeed with this commit reverted on top of
->>> 5.17.5 everything works fine.
->>>
->>> I guess this part of dom0's boot dmesg may be relevant:
->>>
->>> [    0.000949] x86/PAT: MTRRs disabled, skipping PAT initialization too.
->>> [    0.000953] x86/PAT: Configuration [0-7]: WB  WT  UC- UC  WC  WP 
->>> UC  UC
->>>
->>> Originally reported at
->>> https://github.com/QubesOS/qubes-issues/issues/7479
->>>
->>>   #regzbot introduced bdd8b6c98239cad
->>> #regzbot monitor: https://github.com/QubesOS/qubes-issues/issues/7479
->>>
-> 
+* for the "net: dpaa2" thing there is a patch in bugzilla that is
+awaiting testing by the reporter
+
+* for the intel graphics problem a patch was tested and discussed on the
+list, but not yet heading towards you afaics
+
+HTH, Ciao, Thorsten
+
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 30 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+========================================================
+current cycle (v5.17.. aka v5.18-rc), culprit identified
+========================================================
+
+
+[ *NEW* ] clk: bcm2835: 09e3b18ca5de broke the behavior of bcm2835_clock_choose_div() and booting of Raspberry Pi booting of Raspberry Pi
+-----------------------------------------------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/20220428183010.1635248-1-stefan.wahren@i2se.com/
+https://lore.kernel.org/lkml/20220428183010.1635248-1-stefan.wahren@i2se.com/
+
+By Stefan Wahren; 16 days ago; 5 activities, latest 1 days ago.
+Introduced in 09e3b18ca5de (v5.18-rc1)
+
+Recent activities from: Stefan Wahren (1), Maxime Ripard (1)
+
+
+input/usb/???: bcm5974 trackpad causes error: xhci_hcd rejecting DMA map of vmalloc memory
+------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/76e24afa-ad7d-bf6d-d610-df61851b3e2b@leemhuis.info/
+https://lore.kernel.org/linux-usb/76e24afa-ad7d-bf6d-d610-df61851b3e2b@leemhuis.info/
+
+By Satadru Pramanik; 11 days ago; 4 activities, latest 2 days ago.
+Introduced in f5ff79fddf0e (v5.18-rc1)
+
+Recent activities from: Christoph Hellwig (2), Thorsten Leemhuis (1)
+
+Noteworthy links:
+* https://bugzilla.kernel.org/show_bug.cgi?id=215890
+
+
+[ *NEW* ] mm: [mm/page_alloc]  f26b3fa046:  netperf.Throughput_Mbps -18.0% regression
+-------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/20220420013526.GB14333@xsang-OptiPlex-9020/
+https://lore.kernel.org/lkml/20220420013526.GB14333@xsang-OptiPlex-9020/
+
+By kernel test robot; 25 days ago; 33 activities, latest 2 days ago.
+Introduced in f26b3fa04611 (v5.18-rc1)
+
+Recent activities from: ying.huang@intel.com (5), Linus Torvalds (5),
+  Aaron Lu (5), Waiman Long (3), Andrew Morton (1), Peter Zijlstra (1)
+
+2 patch postings are associated with this regression, the latest is this:
+* Re: [mm/page_alloc] f26b3fa046: netperf.Throughput_Mbps -18.0% regression
+  https://lore.kernel.org/lkml/YnuYV3J2ljY88DyQ@ziqianlu-desk1/
+  4 days ago, by Aaron Lu
+
+
+net: dpaa2: TSO offload on lx2160a causes fatal exception in interrupt
+----------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/7ca81e6b-85fd-beff-1c2b-62c86c9352e9@leemhuis.info/
+https://lore.kernel.org/netdev/7ca81e6b-85fd-beff-1c2b-62c86c9352e9@leemhuis.info/
+
+By Unkown; 11 days ago; 3 activities, latest 2 days ago.
+Introduced in 3dc709e0cd47 (v5.18-rc1)
+
+Recent activities from: Jakub Kicinski (1)
+
+Noteworthy links:
+* https://bugzilla.kernel.org/show_bug.cgi?id=215886
+
+
+drm/i915: BYT rendering broken due to "Remove short-term pins from execbuf, v6"
+-------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com/
+https://lore.kernel.org/dri-devel/1366349e-f96a-3f2c-3094-f5cd1a6fa31f@redhat.com/
+
+By Hans de Goede; 7 days ago; 8 activities, latest 3 days ago.
+Introduced in b5cfe6f7a6e1 (v5.18-rc1)
+
+Recent activities from: Matthew Auld (2), Maarten Lankhorst (2),
+  Patchwork (2)
+
+Noteworthy links:
+* [PATCH] drm/i915: Use i915_gem_object_ggtt_pin_ww for reloc_iomap
+  https://lore.kernel.org/dri-devel/20220511115219.46507-1-maarten.lankhorst@linux.intel.com/
+  4 days ago, by Maarten Lankhorst; thread monitored.
+* https://gitlab.freedesktop.org/drm/intel/-/issues/5806
+
+
+3D============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/165209064657.193515.10163777181547077546@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
