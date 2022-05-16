@@ -1,230 +1,605 @@
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B742C9D
-	for <regressions@lists.linux.dev>; Sun, 15 May 2022 18:34:41 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.west.internal (Postfix) with ESMTP id EBFF93200972;
-	Sun, 15 May 2022 14:34:39 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sun, 15 May 2022 14:34:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=living180.net;
-	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:sender:subject:subject:to:to; s=fm2; t=1652639679; x=
-	1652726079; bh=1tqwKGxvROapik2SZuXrpiyKuwJSO346wMqf0Svvi3s=; b=V
-	7RDZwhnjNHoUl+SnGUB32icJcjYPZerNpiRLx0H0J4qKV5OKbJqag1s4EIRoZxHV
-	CfMVNMNwUBnm97fepkMdA0HrJpjZO7b+963bC3IHDeXsfqPd9xIcGPz1YjqOYGJ/
-	iV1i41LwsH17UiEnaF/NJC+WZdwkWNt7vvJrFPYY5A80iaGvkBohVwza6QKqwCWc
-	1ZUvQabiLMvx7Vmbnyqg/HdlX62VL6WllbBQBhYPy+57Jx0iimnV8vzpBWorflFK
-	G2OUbsJA5ZM2qCdAVjcDGIj6eaYFZlBwnYzj9+gTTIQuGAyACO25YeGiM1QpCp3l
-	B3C8MkyhnjPiWVTowhLeA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1652639679; x=1652726079; bh=1tqwKGxvROapi
-	k2SZuXrpiyKuwJSO346wMqf0Svvi3s=; b=n3ic4cjP6oMiDgJdmmVbSY8k/m0kA
-	4YNNyMu1sJW0h05D3IRB1pFtBTP1rQ6apKZipklWVkjAQGopz1iU9ilUFIWvs6fr
-	YW3VmxDqMbllzJn8VpyiiskW3eBwLCE2Fkni3p5UK4fmYbFzWWM0V+iTgOB+Pd9S
-	K2aJrCN0KxAn3ZwWTBX5opXDqW8oJ3FzUp7+FqLgdhzNB5mPYyoj/CBKBoNVZVh/
-	z1z8MxoC6ASta1b8kZxv2RZu2yXUdYEwmWj77WDkmSQ91YgHT/fNXHfvEPXAhGBz
-	mtAVMmAmK/c4E/FNSHuh7foEiYbdRQMiT9wAcYfdGwBuO5quyfEG2c1IA==
-X-ME-Sender: <xms:v0eBYsIfaVvZk9-p92ok4U9D1VcTpvJHm5Ybel9K7ctUD9u1N8_GjQ>
-    <xme:v0eBYsLtGCnU-yaix8LDlhCm8E6b7R0S9N-6020bHsB8B6qRVR_6bfvgb-jkpoM0R
-    5Oshu6TQfNoVQ>
-X-ME-Received: <xmr:v0eBYsvfcUc1qHAzUpnImPm9M5rbYQr06CJbltm65e_DmSRn04RktysGwzsuXA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrheefgdduvdeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtkeertddtfeejnecuhfhrohhmpeffrghn
-    ihgvlhcujfgrrhguihhnghcuoeguhhgrrhguihhngheslhhivhhinhhgudektddrnhgvth
-    eqnecuggftrfgrthhtvghrnhepfeffjeejffegffeuveekkeffiefghefhtefgvdehveei
-    geeuffegfeeileeihfevnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpeguhhgrrhguihhnghes
-    lhhivhhinhhgudektddrnhgvth
-X-ME-Proxy: <xmx:v0eBYpYXlFjste4YbVDcId4VSJU9xrVLvYB5K2qWAUyOKXm3LcrbMw>
-    <xmx:v0eBYjaTytIVPidYr_e97rcrPH7LbcIkfsZ2VC2deOx_78mikvGKhQ>
-    <xmx:v0eBYlDOMcsiBwEDgQkdH5B4bCYaK1HvhtV7j-ZQFJQITIwOSvaONQ>
-    <xmx:v0eBYiU1C2drFgFPbULENOUedaFvnOnM2N61BfwvhKIRNW2D5IDrHw>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
- 15 May 2022 14:34:37 -0400 (EDT)
-Message-ID: <c2f956e2-b235-9937-d554-424ae44c68e4@living180.net>
-Date: Sun, 15 May 2022 21:34:35 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B345A35
+	for <regressions@lists.linux.dev>; Mon, 16 May 2022 02:55:03 +0000 (UTC)
+Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com [209.85.160.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 3B5723F802
+	for <regressions@lists.linux.dev>; Mon, 16 May 2022 02:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1652669258;
+	bh=LbVZpzmd4WQjgxCWt4NgccxaEzz/Pb7baxR1d7vGewQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=jpdRfJd+LOpDFwb7404gCbExd2FPXYiKqUvkqyDU68OuFfgqfKPqNO+Z2tGuQqcO9
+	 5Fx5uqN8ZVRpVRQ8UGDiMaplvuHqMyK5yftZx9iYCpSJJ5ZwzCz2IWnQ6X/ueB+K4L
+	 8DTYZR2KsaachFz/oWx9k9ZjF9FGOWTA7gWedFfe9FaOKB03WjOnM/u3c8QDCR1+sd
+	 ybdcJPRzQCm9YfR2VusP3O6t9Jwm5q3Pt5pVOdLVAeF4u1m7hUiikWJk1bZfPWmet/
+	 xxmlMl6gOGRzIthpOe86hmYHXM8HL8BXlHhOdkKc6n5uqAjaB3DGkvUz1hjgCntZFc
+	 K0y1RT08iuPgA==
+Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-e90d2b84b5so8552812fac.9
+        for <regressions@lists.linux.dev>; Sun, 15 May 2022 19:47:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LbVZpzmd4WQjgxCWt4NgccxaEzz/Pb7baxR1d7vGewQ=;
+        b=1PvUJEM5pDVijjXLjKxb/UR5NVL21hTCS0A35QwcfM6VmbIecoMdBzsdM1myzApWQp
+         PLn/0oIBB1ndfefRmd/1wYMkK80CX/tPByOBYWerRfwhvrf7tYaD1RT3dAlITM1vflla
+         V76QAN7gbPRFmf0PHNe540MTWyHJLcqtNIQfBly/+E+bmyRaOmqHDLnOSZxxGYcxBde8
+         bJIaRkVl7myNkzzWoWGKyyt9OQC5pUhtuWfqGjkRjSFiUj0afp7PzZMntbFMHv5dt47Y
+         /FV3tst1yg+oSnlVIznH1H4e+xjakLX6Fszs3Ui7PvRK7PGogQWoSCsb27Z6Q+XoT+JO
+         MMyA==
+X-Gm-Message-State: AOAM531dxSp/GCYQQYpUXE0unxI0qEervPCG/aF0KhuuiekAq2M4YeJt
+	X6twpqc782nSVWC9PZFI7xZHL32OaH6kADKV5JnK+BR4OPkLm4ZIDZAWTLmCgG3dw11qQnpPp6J
+	f0qjdObjq0z4g403h+shx3LaWupDJxNuBOMmoRjjrszWUzmp83H4Qbq+h
+X-Received: by 2002:a05:6808:1441:b0:328:af9e:5540 with SMTP id x1-20020a056808144100b00328af9e5540mr6949477oiv.42.1652669256994;
+        Sun, 15 May 2022 19:47:36 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw5Xuzn8KrPTI5dqpzKra5nhIxZ/jVo2NoLpJO0gz+dNOjl0lDo31AJ40AuXT6T2TEx/ECFU43oTDTaZL7xyE8=
+X-Received: by 2002:a05:6808:1441:b0:328:af9e:5540 with SMTP id
+ x1-20020a056808144100b00328af9e5540mr6949464oiv.42.1652669256578; Sun, 15 May
+ 2022 19:47:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [REGRESSION] lxc-stop hang on 5.17.x kernels
-Content-Language: en-US
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Pavel Begunkov <asml.silence@gmail.com>, Jens Axboe <axboe@kernel.dk>
-Cc: regressions@lists.linux.dev, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <7925e262-e0d4-6791-e43b-d37e9d693414@living180.net>
- <6ad38ecc-b2a9-f0e9-f7c7-f312a2763f97@kernel.dk>
- <ccf6cea1-1139-cd73-c4e5-dc9799708bdd@living180.net>
- <bb283ff5-6820-d096-2fca-ae7679698a50@kernel.dk>
- <371c01dd-258c-e428-7428-ff390b664752@kernel.dk>
- <2436d42c-85ca-d060-6508-350c769804f1@gmail.com>
- <ad9c31e5-ee75-4df2-c16d-b1461be1901a@living180.net>
- <fb0dbd71-9733-0208-48f2-c5d22ed17510@gmail.com>
- <a204ba93-7261-5c6e-1baf-e5427e26b124@living180.net>
- <bd932b5a-9508-e58f-05f8-001503e4bd2b@gmail.com>
- <12a57dd9-4423-a13d-559b-2b1dd2fb0ef3@living180.net>
- <897dc597-fc0a-34ec-84b8-7e1c4901e0fc@leemhuis.info>
-From: Daniel Harding <dharding@living180.net>
-In-Reply-To: <897dc597-fc0a-34ec-84b8-7e1c4901e0fc@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <2584945.lGaqSPkdTl@geek500.localdomain> <eed25dd6-36ba-cd1c-1828-08a1535ce6c6@leemhuis.info>
+ <25425832.1r3eYUQgxm@geek500.localdomain>
+In-Reply-To: <25425832.1r3eYUQgxm@geek500.localdomain>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date: Mon, 16 May 2022 10:47:25 +0800
+Message-ID: <CAAd53p60PzKT50uAkLeTjDVsH7TKSNHiLBQjJx5uPvzPpURkfQ@mail.gmail.com>
+Subject: Re: [REGRESSION] Laptop with Ryzen 4600H fails to resume video since
+ 5.17.4 (works 5.17.3)
+To: Christian Casteyde <casteyde.christian@free.fr>
+Cc: stable@vger.kernel.org, Thorsten Leemhuis <regressions@leemhuis.info>, 
+	regressions@lists.linux.dev, alexander.deucher@amd.com, 
+	gregkh@linuxfoundation.org, "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/15/22 11:20, Thorsten Leemhuis wrote:
-> On 04.05.22 08:54, Daniel Harding wrote:
->> On 5/3/22 17:14, Pavel Begunkov wrote:
->>> On 5/3/22 08:37, Daniel Harding wrote:
->>>> [Resend with a smaller trace]
->>>> On 5/3/22 02:14, Pavel Begunkov wrote:
->>>>> On 5/2/22 19:49, Daniel Harding wrote:
->>>>>> On 5/2/22 20:40, Pavel Begunkov wrote:
->>>>>>> On 5/2/22 18:00, Jens Axboe wrote:
->>>>>>>> On 5/2/22 7:59 AM, Jens Axboe wrote:
->>>>>>>>> On 5/2/22 7:36 AM, Daniel Harding wrote:
->>>>>>>>>> On 5/2/22 16:26, Jens Axboe wrote:
->>>>>>>>>>> On 5/2/22 7:17 AM, Daniel Harding wrote:
->>>>>>>>>>>> I use lxc-4.0.12 on Gentoo, built with io-uring support
->>>>>>>>>>>> (--enable-liburing), targeting liburing-2.1.  My kernel
->>>>>>>>>>>> config is a
->>>>>>>>>>>> very lightly modified version of Fedora's generic kernel
->>>>>>>>>>>> config. After
->>>>>>>>>>>> moving from the 5.16.x series to the 5.17.x kernel series, I
->>>>>>>>>>>> started
->>>>>>>>>>>> noticed frequent hangs in lxc-stop.  It doesn't happen 100%
->>>>>>>>>>>> of the
->>>>>>>>>>>> time, but definitely more than 50% of the time. Bisecting
->>>>>>>>>>>> narrowed
->>>>>>>>>>>> down the issue to commit
->>>>>>>>>>>> aa43477b040251f451db0d844073ac00a8ab66ee:
->>>>>>>>>>>> io_uring: poll rework. Testing indicates the problem is still
->>>>>>>>>>>> present
->>>>>>>>>>>> in 5.18-rc5. Unfortunately I do not have the expertise with the
->>>>>>>>>>>> codebases of either lxc or io-uring to try to debug the problem
->>>>>>>>>>>> further on my own, but I can easily apply patches to any of the
->>>>>>>>>>>> involved components (lxc, liburing, kernel) and rebuild for
->>>>>>>>>>>> testing or
->>>>>>>>>>>> validation.  I am also happy to provide any further
->>>>>>>>>>>> information that
->>>>>>>>>>>> would be helpful with reproducing or debugging the problem.
->>>>>>>>>>> Do you have a recipe to reproduce the hang? That would make it
->>>>>>>>>>> significantly easier to figure out.
->>>>>>>>>> I can reproduce it with just the following:
->>>>>>>>>>
->>>>>>>>>>       sudo lxc-create --n lxc-test --template download --bdev
->>>>>>>>>> dir --dir /var/lib/lxc/lxc-test/rootfs -- -d ubuntu -r bionic
->>>>>>>>>> -a amd64
->>>>>>>>>>       sudo lxc-start -n lxc-test
->>>>>>>>>>       sudo lxc-stop -n lxc-test
->>>>>>>>>>
->>>>>>>>>> The lxc-stop command never exits and the container continues
->>>>>>>>>> running.
->>>>>>>>>> If that isn't sufficient to reproduce, please let me know.
->>>>>>>>> Thanks, that's useful! I'm at a conference this week and hence have
->>>>>>>>> limited amount of time to debug, hopefully Pavel has time to
->>>>>>>>> take a look
->>>>>>>>> at this.
->>>>>>>> Didn't manage to reproduce. Can you try, on both the good and bad
->>>>>>>> kernel, to do:
->>>>>>> Same here, it doesn't reproduce for me
->>>>>> OK, sorry it wasn't something simple.
->>>>>>> # echo 1 > /sys/kernel/debug/tracing/events/io_uring/enable
->>>>>>>> run lxc-stop
->>>>>>>>
->>>>>>>> # cp /sys/kernel/debug/tracing/trace ~/iou-trace
->>>>>>>>
->>>>>>>> so we can see what's going on? Looking at the source, lxc is just
->>>>>>>> using
->>>>>>>> plain POLL_ADD, so I'm guessing it's not getting a notification
->>>>>>>> when it
->>>>>>>> expects to, or it's POLL_REMOVE not doing its job. If we have a
->>>>>>>> trace
->>>>>>>> from both a working and broken kernel, that might shed some light
->>>>>>>> on it.
->>>>>> It's late in my timezone, but I'll try to work on getting those
->>>>>> traces tomorrow.
->>>>> I think I got it, I've attached a trace.
->>>>>
->>>>> What's interesting is that it issues a multi shot poll but I don't
->>>>> see any kind of cancellation, neither cancel requests nor task/ring
->>>>> exit. Perhaps have to go look at lxc to see how it's supposed
->>>>> to work
->>>> Yes, that looks exactly like my bad trace.  I've attached good trace
->>>> (captured with linux-5.16.19) and a bad trace (captured with
->>>> linux-5.17.5).  These are the differences I noticed with just a
->>>> visual scan:
->>>>
->>>> * Both traces have three io_uring_submit_sqe calls at the very
->>>> beginning, but in the good trace, there are further
->>>> io_uring_submit_sqe calls throughout the trace, while in the bad
->>>> trace, there are none.
->>>> * The good trace uses a mask of c3 for io_uring_task_add much more
->>>> often than the bad trace:  the bad trace uses a mask of c3 only for
->>>> the very last call to io_uring_task_add, but a mask of 41 for the
->>>> other calls.
->>>> * In the good trace, many of the io_uring_complete calls have a
->>>> result of 195, while in the bad trace, they all have a result of 1.
->>>>
->>>> I don't know whether any of those things are significant or not, but
->>>> that's what jumped out at me.
->>>>
->>>> I have also attached a copy of the script I used to generate the
->>>> traces.  If there is anything further I can to do help debug, please
->>>> let me know.
->>> Good observations! thanks for traces.
->>>
->>> It sounds like multi-shot poll requests were getting downgraded
->>> to one-shot, which is a valid behaviour and was so because we
->>> didn't fully support some cases. If that's the reason, than
->>> the userspace/lxc is misusing the ABI. At least, that's the
->>> working hypothesis for now, need to check lxc.
->> So, I looked at the lxc source code, and it appears to at least try to
->> handle the case of multi-shot being downgraded to one-shot.  I don't
->> know enough to know if the code is actually correct however:
->>
->> https://github.com/lxc/lxc/blob/7e37cc96bb94175a8e351025d26cc35dc2d10543/src/lxc/mainloop.c#L165-L189
->> https://github.com/lxc/lxc/blob/7e37cc96bb94175a8e351025d26cc35dc2d10543/src/lxc/mainloop.c#L254
->> https://github.com/lxc/lxc/blob/7e37cc96bb94175a8e351025d26cc35dc2d10543/src/lxc/mainloop.c#L288-L290
-> Hi, this is your Linux kernel regression tracker. Nothing happened here
-> for round about ten days now afaics; or did the discussion continue
-> somewhere else.
+[+Cc Mario]
+
+On Sun, May 15, 2022 at 1:34 AM Christian Casteyde
+<casteyde.christian@free.fr> wrote:
 >
->  From what I gathered from this discussion is seems the root cause might
-> be in LXC, but it was exposed by kernel change. That makes it sill a
-> kernel regression that should be fixed; or is there a strong reason why
-> we should let this one slip?
+> I've applied the commit a56f445f807b0276 on 5.17.7 and tested.
+> This does not fix the problem on my laptop.
 
-No, there hasn't been any discussion since the email you replied to.  
-I've done a bit more testing on my end, but without anything 
-conclusive.  The one thing I can say is that my testing shows that LXC 
-does correctly handle multi-shot poll requests which were being 
-downgraded to one-shot in 5.16.x kernels, which I think invalidates 
-Pavel's theory.  In 5.17.x kernels, those same poll requests are no 
-longer being downgraded to one-shot requests, and thus under 5.17.x LXC 
-is no longer re-arming those poll requests (but also shouldn't need to, 
-according to what is being returned by the kernel).  I don't know if 
-this change in kernel behavior is related to the hang, or if it is just 
-a side effect of other io-uring changes that made it into 5.17.  Nothing 
-in the LXC's usage of io-uring seems obviously incorrect to me, but I am 
-far from an expert.  I also did some work toward creating a simpler 
-reproducer, without success (I was able to get a simple program using 
-io-uring running, but never could get it to hang).  ISTM that this is 
-still a kernel regression, unless someone can point out a definite fault 
-in the way LXC is using io-uring.
+Maybe some commits are still missing?
 
--- 
-Regards,
+>
+> For informatio, here is a part of the log around the suspend process:
 
-Daniel Harding
+Is it possible to attach full dmesg?
+
+Kai-Heng
+
+>
+> May 14 19:21:41 geek500 kernel: snd_hda_intel 0000:01:00.1: can't change =
+power
+> state from D3cold to D0 (config space inaccessible)
+> May 14 19:21:41 geek500 kernel: PM: late suspend of devices failed
+> May 14 19:21:41 geek500 kernel: ------------[ cut here ]------------
+> May 14 19:21:41 geek500 kernel: i2c_designware AMDI0010:03: Transfer whil=
+e
+> suspended
+> May 14 19:21:41 geek500 kernel: pci 0000:00:00.2: can't derive routing fo=
+r PCI
+> INT A
+> May 14 19:21:41 geek500 kernel: pci 0000:00:00.2: PCI INT A: no GSI
+> May 14 19:21:41 geek500 kernel: WARNING: CPU: 9 PID: 1972 at drivers/i2c/
+> busses/i2c-designware-master.c:570 i2c_dw_xfer+0x3f6/0x440
+> May 14 19:21:41 geek500 kernel: Modules linked in: [last unloaded: acpi_c=
+all]
+> May 14 19:21:41 geek500 kernel: CPU: 9 PID: 1972 Comm: kworker/u32:18 Tai=
+nted:
+> G           O      5.17.7+ #7
+> May 14 19:21:41 geek500 kernel: Hardware name: HP HP Pavilion Gaming Lapt=
+op
+> 15-ec1xxx/87B2, BIOS F.25 08/18/2021
+> May 14 19:21:41 geek500 kernel: Workqueue: events_unbound async_run_entry=
+_fn
+> May 14 19:21:41 geek500 kernel: RIP: 0010:i2c_dw_xfer+0x3f6/0x440
+> May 14 19:21:41 geek500 kernel: Code: c6 05 db 31 45 01 01 4c 8b 67 50 4d=
+ 85
+> e4 75 03 4c 8b 27 e8 fc e1 e9 ff 4c 89 e2 48 c7 c7 00 01 cc
+>  ab 48 89 c6 e8 b3 4f 45 00 <0f> 0b 41 be 94 ff ff ff e9 cc fc ff ff e9 2=
+d 9c
+> 4b 00 83 f8 01 74
+> May 14 19:21:41 geek500 kernel: RSP: 0018:ffff8dbfc31e7c68 EFLAGS: 000102=
+86
+> May 14 19:21:41 geek500 kernel: RAX: 0000000000000000 RBX: ffff888540f170=
+e8
+> RCX: 0000000000000be5
+> May 14 19:21:41 geek500 kernel: RDX: 0000000000000000 RSI: 00000000000000=
+86
+> RDI: ffffffffac858df8
+> May 14 19:21:41 geek500 kernel: RBP: ffff888540f170e8 R08: ffffffffabe46d=
+60
+> R09: 00000000ac86a0f6
+> May 14 19:21:41 geek500 kernel: R10: ffffffffffffffff R11: ffffffffffffff=
+ff
+> R12: ffff888540f5c070
+> May 14 19:21:41 geek500 kernel: R13: ffff8dbfc31e7d70 R14: 00000000ffffff=
+94
+> R15: ffff888540f17028
+> May 14 19:21:41 geek500 kernel: FS:  0000000000000000(0000)
+> GS:ffff88885f640000(0000) knlGS:0000000000000000
+> May 14 19:21:41 geek500 kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+> 0000000080050033
+> May 14 19:21:41 geek500 kernel: CR2: 00007f1984067028 CR3: 0000000045e0c0=
+00
+> CR4: 0000000000350ee0
+> May 14 19:21:41 geek500 kernel: Call Trace:
+> May 14 19:21:41 geek500 kernel:  <TASK>
+> May 14 19:21:41 geek500 kernel:  ? dequeue_entity+0xd4/0x250
+> May 14 19:21:41 geek500 kernel:  ? newidle_balance.constprop.0+0x1f7/0x3b=
+0
+> May 14 19:21:41 geek500 kernel:  __i2c_transfer+0x16d/0x520
+> May 14 19:21:41 geek500 kernel:  i2c_transfer+0x7a/0xd0
+> May 14 19:21:41 geek500 kernel:  __i2c_hid_command+0x106/0x2d0
+> May 14 19:21:41 geek500 kernel:  ? amd_gpio_irq_enable+0x19/0x50
+> May 14 19:21:41 geek500 kernel:  i2c_hid_set_power+0x4a/0xd0
+> May 14 19:21:41 geek500 kernel:  i2c_hid_core_resume+0x60/0xb0
+> May 14 19:21:41 geek500 kernel:  ? acpi_subsys_resume_early+0x50/0x50
+> May 14 19:21:41 geek500 kernel:  dpm_run_callback+0x1d/0xd0
+> May 14 19:21:41 geek500 kernel:  device_resume+0x122/0x230
+> May 14 19:21:41 geek500 kernel:  async_resume+0x14/0x30
+> May 14 19:21:41 geek500 kernel:  async_run_entry_fn+0x1b/0xa0
+> May 14 19:21:41 geek500 kernel:  process_one_work+0x1d3/0x3a0
+> May 14 19:21:41 geek500 kernel:  worker_thread+0x48/0x3c0
+> May 14 19:21:41 geek500 kernel:  ? rescuer_thread+0x380/0x380
+> May 14 19:21:41 geek500 kernel:  kthread+0xd3/0x100
+> May 14 19:21:41 geek500 kernel:  ? kthread_complete_and_exit+0x20/0x20
+> May 14 19:21:41 geek500 kernel:  ret_from_fork+0x22/0x30
+> May 14 19:21:41 geek500 kernel:  </TASK>
+> May 14 19:21:41 geek500 kernel: ---[ end trace 0000000000000000 ]---
+> May 14 19:21:41 geek500 kernel: i2c_hid_acpi i2c-ELAN0718:00: failed to c=
+hange
+> power setting.
+> May 14 19:21:41 geek500 kernel: PM: dpm_run_callback():
+> acpi_subsys_resume+0x0/0x50 returns -108
+> May 14 19:21:41 geek500 kernel: i2c_hid_acpi i2c-ELAN0718:00: PM: failed =
+to
+> resume async: error -108
+> May 14 19:21:41 geek500 kernel: amdgpu 0000:05:00.0:
+> [drm:amdgpu_ring_test_helper] *ERROR* ring gfx test failed (-110)
+> May 14 19:21:41 geek500 kernel: [drm:amdgpu_device_ip_resume_phase2] *ERR=
+OR*
+> resume of IP block <gfx_v9_0> failed -110
+> May 14 19:21:41 geek500 kernel: amdgpu 0000:05:00.0: amdgpu:
+> amdgpu_device_ip_resume failed (-110).
+> May 14 19:21:41 geek500 kernel: PM: dpm_run_callback():
+> pci_pm_resume+0x0/0x120 returns -110
+> May 14 19:21:41 geek500 kernel: amdgpu 0000:05:00.0: PM: failed to resume
+> async: error -110
+> May 14 19:21:41 geek500 kernel: ------------[ cut here ]------------
+> May 14 19:21:41 geek500 kernel: AMDI0010:03 already disabled
+> May 14 19:21:41 geek500 kernel: WARNING: CPU: 6 PID: 1091 at drivers/clk/
+> clk.c:971 clk_core_disable+0x80/0x1a0
+> May 14 19:21:41 geek500 kernel: Modules linked in: [last unloaded: acpi_c=
+all]
+> May 14 19:21:41 geek500 kernel: CPU: 6 PID: 1091 Comm: kworker/6:3 Tainte=
+d: G
+> W  O      5.17.7+ #7
+> May 14 19:21:41 geek500 kernel: Hardware name: HP HP Pavilion Gaming Lapt=
+op
+> 15-ec1xxx/87B2, BIOS F.25 08/18/2021
+> May 14 19:21:41 geek500 kernel: Workqueue: pm pm_runtime_work
+> May 14 19:21:41 geek500 kernel: RIP: 0010:clk_core_disable+0x80/0x1a0
+> May 14 19:21:41 geek500 kernel: Code: 10 e8 e4 4a d1 00 0f 1f 44 00 00 48=
+ 8b
+> 5b 30 48 85 db 74 b6 8b 43 7c 85 c0 75 a4 48 8b 33 48 c7 c7 7d 87 c4 ab e=
+8 79
+> 7a 9a 00 <0f> 0b 5b 5d c3 65 8b 05 5c a1 92 55 89 c0 48 0f a3 05 4a 61 9d=
+ 01
+> May 14 19:21:41 geek500 kernel: RSP: 0018:ffff8dbfc1c47d50 EFLAGS: 000100=
+82
+> May 14 19:21:41 geek500 kernel:
+> May 14 19:21:41 geek500 kernel: RAX: 0000000000000000 RBX: ffff8885401b63=
+00
+> RCX: 0000000000000027
+> May 14 19:21:41 geek500 kernel: RDX: ffff88885f59f468 RSI: 00000000000000=
+01
+> RDI: ffff88885f59f460
+> May 14 19:21:41 geek500 kernel: RBP: 0000000000000283 R08: ffffffffabf26d=
+a8
+> R09: 00000000ffffdfff
+> May 14 19:21:41 geek500 kernel: R10: ffffffffabe46dc0 R11: ffffffffabe46d=
+c0
+> R12: ffff8885401b6300
+> May 14 19:21:41 geek500 kernel: R13: ffff888540fc30f4 R14: 00000000000000=
+08
+> R15: 0000000000000000
+> May 14 19:21:41 geek500 kernel: FS:  0000000000000000(0000)
+> GS:ffff88885f580000(0000) knlGS:0000000000000000
+> May 14 19:21:41 geek500 kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+> 0000000080050033
+> May 14 19:21:41 geek500 kernel: CR2: 00000000010fa990 CR3: 00000001029560=
+00
+> CR4: 0000000000350ee0
+> May 14 19:21:41 geek500 kernel: Call Trace:
+> May 14 19:21:41 geek500 kernel:  <TASK>
+> May 14 19:21:41 geek500 kernel:  clk_disable+0x24/0x30
+> May 14 19:21:41 geek500 kernel:  i2c_dw_prepare_clk+0x74/0xd0
+> May 14 19:21:41 geek500 kernel:  dw_i2c_plat_suspend+0x2e/0x40
+> May 14 19:21:41 geek500 kernel:  acpi_subsys_runtime_suspend+0x9/0x20
+> May 14 19:21:41 geek500 kernel:  ? acpi_dev_suspend+0x160/0x160
+> May 14 19:21:41 geek500 kernel:  __rpm_callback+0x3f/0x150
+> May 14 19:21:41 geek500 kernel:  ? acpi_dev_suspend+0x160/0x160
+> May 14 19:21:41 geek500 kernel:  rpm_callback+0x54/0x60
+> May 14 19:21:41 geek500 kernel:  ? acpi_dev_suspend+0x160/0x160
+> May 14 19:21:41 geek500 kernel:  rpm_suspend+0x142/0x720
+> May 14 19:21:41 geek500 kernel:  pm_runtime_work+0x8f/0xa0
+> May 14 19:21:41 geek500 kernel:  process_one_work+0x1d3/0x3a0
+> May 14 19:21:41 geek500 kernel:  worker_thread+0x48/0x3c0
+> May 14 19:21:41 geek500 kernel:  ? rescuer_thread+0x380/0x380
+> May 14 19:21:41 geek500 kernel:  kthread+0xd3/0x100
+> May 14 19:21:41 geek500 kernel:  ? kthread_complete_and_exit+0x20/0x20
+> May 14 19:21:41 geek500 kernel:  ret_from_fork+0x22/0x30
+> May 14 19:21:41 geek500 kernel:  </TASK>
+> May 14 19:21:41 geek500 kernel: ---[ end trace 0000000000000000 ]---
+> May 14 19:21:41 geek500 kernel: ------------[ cut here ]------------
+> May 14 19:21:41 geek500 kernel: AMDI0010:03 already unprepared
+> May 14 19:21:41 geek500 kernel: WARNING: CPU: 6 PID: 1091 at drivers/clk/
+> clk.c:829 clk_core_unprepare+0xb1/0x1a0
+> May 14 19:21:41 geek500 kernel: Modules linked in: [last unloaded: acpi_c=
+all]
+> May 14 19:21:41 geek500 kernel: CPU: 6 PID: 1091 Comm: kworker/6:3 Tainte=
+d: G
+> W  O      5.17.7+ #7
+> May 14 19:21:41 geek500 kernel: Hardware name: HP HP Pavilion Gaming Lapt=
+op
+> 15-ec1xxx/87B2, BIOS F.25 08/18/2021
+> May 14 19:21:41 geek500 kernel: Workqueue: pm pm_runtime_work
+> May 14 19:21:41 geek500 kernel: RIP: 0010:clk_core_unprepare+0xb1/0x1a0
+> May 14 19:21:41 geek500 kernel: Code: 40 00 66 90 48 8b 5b 30 48 85 db 74=
+ a2
+> 8b 83 80 00 00 00 85 c0 0f 85 79 ff ff ff 48 8b 33 48 c7 c7 35 87 c4 ab e=
+8 18
+> 7c 9a 00 <0f> 0b 5b c3 65 8b 05 fc a2 92 55 89 c0 48 0f a3 05 ea 62 9d 01=
+ 73
+> May 14 19:21:41 geek500 kernel: RSP: 0018:ffff8dbfc1c47d60 EFLAGS: 000102=
+86
+> May 14 19:21:41 geek500 kernel: RAX: 0000000000000000 RBX: ffff8885401b63=
+00
+> RCX: 0000000000000027
+> May 14 19:21:41 geek500 kernel: RDX: ffff88885f59f468 RSI: 00000000000000=
+01
+> RDI: ffff88885f59f460
+> May 14 19:21:41 geek500 kernel: RBP: ffff8885401b6300 R08: ffffffffabf26d=
+a8
+> R09: 00000000ffffdfff
+> May 14 19:21:41 geek500 kernel: R10: ffffffffabe46dc0 R11: ffffffffabe46d=
+c0
+> R12: 0000000000000000
+> May 14 19:21:41 geek500 kernel: R13: ffff888540fc30f4 R14: 00000000000000=
+08
+> R15: 0000000000000000
+> May 14 19:21:41 geek500 kernel: FS:  0000000000000000(0000)
+> GS:ffff88885f580000(0000) knlGS:0000000000000000
+> May 14 19:21:41 geek500 kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+> 0000000080050033
+> May 14 19:21:41 geek500 kernel: CR2: 00000000010fa990 CR3: 00000001029560=
+00
+> CR4: 0000000000350ee0
+> May 14 19:21:41 geek500 kernel: Call Trace:
+> May 14 19:21:41 geek500 kernel:  <TASK>
+> May 14 19:21:41 geek500 kernel:  clk_unprepare+0x1f/0x30
+> May 14 19:21:41 geek500 kernel:  i2c_dw_prepare_clk+0x7c/0xd0
+> May 14 19:21:41 geek500 kernel:  dw_i2c_plat_suspend+0x2e/0x40
+> May 14 19:21:41 geek500 kernel:  acpi_subsys_runtime_suspend+0x9/0x20
+> May 14 19:21:41 geek500 kernel:  ? acpi_dev_suspend+0x160/0x160
+> May 14 19:21:41 geek500 kernel:  __rpm_callback+0x3f/0x150
+> May 14 19:21:41 geek500 kernel:  ? acpi_dev_suspend+0x160/0x160
+> May 14 19:21:41 geek500 kernel: done.
+> May 14 19:21:41 geek500 kernel:  rpm_callback+0x54/0x60
+> May 14 19:21:41 geek500 kernel:  ? acpi_dev_suspend+0x160/0x160
+> May 14 19:21:41 geek500 kernel:  rpm_suspend+0x142/0x720
+> May 14 19:21:41 geek500 kernel:  pm_runtime_work+0x8f/0xa0
+> May 14 19:21:41 geek500 kernel:  process_one_work+0x1d3/0x3a0
+> May 14 19:21:41 geek500 kernel:  worker_thread+0x48/0x3c0
+> May 14 19:21:41 geek500 kernel:  ? rescuer_thread+0x380/0x380
+> May 14 19:21:41 geek500 kernel:  kthread+0xd3/0x100
+> May 14 19:21:41 geek500 kernel:  ? kthread_complete_and_exit+0x20/0x20
+> May 14 19:21:41 geek500 kernel:  ret_from_fork+0x22/0x30
+> May 14 19:21:41 geek500 kernel:  </TASK>
+> May 14 19:21:41 geek500 kernel: ---[ end trace 0000000000000000 ]---
+> May 14 19:21:41 geek500 kernel: ------------[ cut here ]------------
+> May 14 19:21:41 geek500 kernel: AMDI0010:03 already disabled
+> May 14 19:21:41 geek500 kernel: WARNING: CPU: 6 PID: 1091 at drivers/clk/
+> clk.c:971 clk_core_disable+0x80/0x1a0
+> May 14 19:21:41 geek500 kernel: Modules linked in: [last unloaded: acpi_c=
+all]
+> May 14 19:21:41 geek500 kernel: CPU: 6 PID: 1091 Comm: kworker/6:3 Tainte=
+d: G
+> W  O      5.17.7+ #7
+> May 14 19:21:41 geek500 kernel: Hardware name: HP HP Pavilion Gaming Lapt=
+op
+> 15-ec1xxx/87B2, BIOS F.25 08/18/2021
+> May 14 19:21:41 geek500 kernel: Workqueue: pm pm_runtime_work
+> May 14 19:21:41 geek500 kernel: RIP: 0010:clk_core_disable+0x80/0x1a0
+> May 14 19:21:41 geek500 kernel: Code: 10 e8 e4 4a d1 00 0f 1f 44 00 00 48=
+ 8b
+> 5b 30 48 85 db 74 b6 8b 43 7c 85 c0 75 a4 48 8b 33 48 c7 c7 7d 87 c4 ab e=
+8 79
+> 7a 9a 00 <0f> 0b 5b 5d c3 65 8b 05 5c a1 92 55 89 c0 48 0f a3 05 4a 61 9d=
+ 01
+> May 14 19:21:41 geek500 kernel: RSP: 0018:ffff8dbfc1c47d50 EFLAGS: 000100=
+82
+> May 14 19:21:41 geek500 kernel: RAX: 0000000000000000 RBX: ffff8885401b63=
+00
+> RCX: 0000000000000027
+> May 14 19:21:41 geek500 kernel: RDX: ffff88885f59f468 RSI: 00000000000000=
+01
+> RDI: ffff88885f59f460
+> May 14 19:21:41 geek500 kernel: RBP: 0000000000000287 R08: ffffffffabf26d=
+a8
+> R09: 00000000ffffdfff
+> May 14 19:21:41 geek500 kernel: R10: ffffffffabe46dc0 R11: ffffffffabe46d=
+c0
+> R12: ffff8885401b6300
+> May 14 19:21:41 geek500 kernel: R13: ffff888540fc30f4 R14: 00000000000000=
+08
+> R15: 0000000000000000
+> May 14 19:21:41 geek500 kernel: FS:  0000000000000000(0000)
+> GS:ffff88885f580000(0000) knlGS:0000000000000000
+> May 14 19:21:41 geek500 kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+> 0000000080050033
+> May 14 19:21:41 geek500 kernel: CR2: 00000000010fa990 CR3: 00000001029560=
+00
+> CR4: 0000000000350ee0
+> May 14 19:21:41 geek500 kernel: Call Trace:
+> May 14 19:21:41 geek500 kernel:  <TASK>
+> May 14 19:21:41 geek500 kernel:  clk_disable+0x24/0x30
+> May 14 19:21:41 geek500 kernel:  i2c_dw_prepare_clk+0x88/0xd0
+> May 14 19:21:41 geek500 kernel:  dw_i2c_plat_suspend+0x2e/0x40
+> May 14 19:21:41 geek500 kernel:  acpi_subsys_runtime_suspend+0x9/0x20
+> May 14 19:21:41 geek500 kernel:  ? acpi_dev_suspend+0x160/0x160
+> May 14 19:21:41 geek500 kernel:  __rpm_callback+0x3f/0x150
+> May 14 19:21:41 geek500 kernel:  ? acpi_dev_suspend+0x160/0x160
+> May 14 19:21:41 geek500 kernel:  rpm_callback+0x54/0x60
+> May 14 19:21:41 geek500 kernel:  ? acpi_dev_suspend+0x160/0x160
+> May 14 19:21:41 geek500 kernel:  rpm_suspend+0x142/0x720
+> May 14 19:21:41 geek500 kernel:  pm_runtime_work+0x8f/0xa0
+> May 14 19:21:41 geek500 kernel:  process_one_work+0x1d3/0x3a0
+> May 14 19:21:41 geek500 kernel:  worker_thread+0x48/0x3c0
+> May 14 19:21:41 geek500 kernel:  ? rescuer_thread+0x380/0x380
+> May 14 19:21:41 geek500 kernel:  kthread+0xd3/0x100
+> May 14 19:21:41 geek500 kernel:  ? kthread_complete_and_exit+0x20/0x20
+> May 14 19:21:41 geek500 kernel:  ret_from_fork+0x22/0x30
+> May 14 19:21:41 geek500 kernel:  </TASK>
+> May 14 19:21:41 geek500 kernel: ---[ end trace 0000000000000000 ]---
+> May 14 19:21:41 geek500 kernel: ------------[ cut here ]------------
+> May 14 19:21:41 geek500 kernel: AMDI0010:03 already unprepared
+> May 14 19:21:41 geek500 kernel: WARNING: CPU: 6 PID: 1091 at drivers/clk/
+> clk.c:829 clk_core_unprepare+0xb1/0x1a0
+> May 14 19:21:41 geek500 kernel: Modules linked in: [last unloaded: acpi_c=
+all]
+> May 14 19:21:41 geek500 kernel: CPU: 6 PID: 1091 Comm: kworker/6:3 Tainte=
+d: G
+> W  O      5.17.7+ #7
+> May 14 19:21:41 geek500 kernel: Hardware name: HP HP Pavilion Gaming Lapt=
+op
+> 15-ec1xxx/87B2, BIOS F.25 08/18/2021
+> May 14 19:21:41 geek500 kernel: Workqueue: pm pm_runtime_work
+> May 14 19:21:41 geek500 kernel: RIP: 0010:clk_core_unprepare+0xb1/0x1a0
+> May 14 19:21:41 geek500 kernel: Code: 40 00 66 90 48 8b 5b 30 48 85 db 74=
+ a2
+> 8b 83 80 00 00 00 85 c0 0f 85 79 ff ff ff 48 8b 33 48 c7 c7 35 87 c4 ab e=
+8 18
+> 7c 9a 00 <0f> 0b 5b c3 65 8b 05 fc a2 92 55 89 c0 48 0f a3 05 ea 62 9d 01=
+ 73
+> May 14 19:21:41 geek500 kernel: RSP: 0018:ffff8dbfc1c47d60 EFLAGS: 000102=
+86
+> May 14 19:21:41 geek500 kernel: RAX: 0000000000000000 RBX: ffff8885401b63=
+00
+> RCX: 0000000000000027
+> May 14 19:21:41 geek500 kernel: RDX: ffff88885f59f468 RSI: 00000000000000=
+01
+> RDI: ffff88885f59f460
+> May 14 19:21:41 geek500 kernel: RBP: ffff8885401b6300 R08: ffffffffabf26d=
+a8
+> R09: 00000000ffffdfff
+> May 14 19:21:41 geek500 kernel: R10: ffffffffabe46dc0 R11: ffffffffabe46d=
+c0
+> R12: 0000000000000000
+> May 14 19:21:41 geek500 kernel: R13: ffff888540fc30f4 R14: 00000000000000=
+08
+> R15: 0000000000000000
+> May 14 19:21:41 geek500 kernel: FS:  0000000000000000(0000)
+> GS:ffff88885f580000(0000) knlGS:0000000000000000
+> May 14 19:21:41 geek500 kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+> 0000000080050033
+> May 14 19:21:41 geek500 kernel: CR2: 00000000010fa990 CR3: 00000001029560=
+00
+> CR4: 0000000000350ee0
+> May 14 19:21:41 geek500 kernel: Call Trace:
+> May 14 19:21:41 geek500 kernel:  <TASK>
+> May 14 19:21:41 geek500 kernel:  clk_unprepare+0x1f/0x30
+> May 14 19:21:41 geek500 kernel:  i2c_dw_prepare_clk+0x90/0xd0
+> May 14 19:21:41 geek500 kernel:  dw_i2c_plat_suspend+0x2e/0x40
+> May 14 19:21:41 geek500 kernel:  acpi_subsys_runtime_suspend+0x9/0x20
+> May 14 19:21:41 geek500 kernel:  ? acpi_dev_suspend+0x160/0x160
+> May 14 19:21:41 geek500 kernel:  __rpm_callback+0x3f/0x150
+> May 14 19:21:41 geek500 kernel:  ? acpi_dev_suspend+0x160/0x160
+> May 14 19:21:41 geek500 kernel:  rpm_callback+0x54/0x60
+> May 14 19:21:41 geek500 kernel:  ? acpi_dev_suspend+0x160/0x160
+> May 14 19:21:41 geek500 kernel:  rpm_suspend+0x142/0x720
+> May 14 19:21:41 geek500 kernel:  pm_runtime_work+0x8f/0xa0
+> May 14 19:21:41 geek500 kernel:  process_one_work+0x1d3/0x3a0
+> May 14 19:21:41 geek500 kernel:  worker_thread+0x48/0x3c0
+> May 14 19:21:41 geek500 kernel:  ? rescuer_thread+0x380/0x380
+> May 14 19:21:41 geek500 kernel:  kthread+0xd3/0x100
+> May 14 19:21:41 geek500 kernel:  ? kthread_complete_and_exit+0x20/0x20
+> May 14 19:21:41 geek500 kernel:  ret_from_fork+0x22/0x30
+> May 14 19:21:41 geek500 kernel:  </TASK>
+> May 14 19:21:41 geek500 kernel: ---[ end trace 0000000000000000 ]---
+> May 14 19:21:59 geek500 kernel: snd_hda_codec_hdmi hdaudioC1D0: Unable to=
+ sync
+> register 0x4f0800. -5
+> May 14 19:21:59 geek500 kernel: (elapsed 0.175 seconds) done.
+> May 14 19:21:59 geek500 kernel: amdgpu 0000:05:00.0: amdgpu: Power consum=
+ption
+> will be higher as BIOS has not been configured for suspend-to-idle.
+> To use suspend-to-idle change the sleep mode in BIOS setup.
+> May 14 19:21:59 geek500 kernel: snd_hda_intel 0000:01:00.1: can't change =
+power
+> state from D3cold to D0 (config space inaccessible)
+> May 14 19:21:59 geek500 kernel: pci 0000:00:00.2: can't derive routing fo=
+r PCI
+> INT A
+> May 14 19:21:59 geek500 kernel: pci 0000:00:00.2: PCI INT A: no GSI
+> May 14 19:21:59 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g gfx
+> May 14 19:21:59 geek500 kernel: Bluetooth: hci0: command 0xfc20 tx timeou=
+t
+> May 14 19:21:59 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g
+> sdma0
+> May 14 19:21:59 geek500 kernel: Bluetooth: hci0: RTL: download fw command
+> failed (-110)
+> May 14 19:21:59 geek500 kernel: done.
+> May 14 19:22:00 geek500 kernel: snd_hda_codec_hdmi hdaudioC1D0: Unable to=
+ sync
+> register 0x4f0800. -5
+> May 14 19:22:00 geek500 dnsmasq[2079]: no servers found in /etc/dnsmasq.d=
+/
+> dnsmasq-resolv.conf, will retry
+> May 14 19:22:01 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g
+> sdma0
+> May 14 19:22:01 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g gfx
+> May 14 19:22:01 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g
+> sdma0
+> May 14 19:22:02 geek500 last message buffered 2 times
+> May 14 19:22:03 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g gfx
+> May 14 19:22:03 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g
+> sdma0
+> May 14 19:22:03 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g gfx
+> May 14 19:22:03 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g
+> sdma0
+> May 14 19:22:04 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g gfx
+> May 14 19:22:04 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g
+> sdma0
+> May 14 19:22:04 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g gfx
+> May 14 19:22:04 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g
+> sdma0
+> May 14 19:22:05 geek500 last message buffered 2 times
+> May 14 19:22:05 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g gfx
+> May 14 19:22:06 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g
+> sdma0
+> May 14 19:22:06 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g gfx
+> May 14 19:22:06 geek500 last message buffered 1 times
+> ...
+> May 14 19:22:18 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g
+> sdma0
+> May 14 19:22:18 geek500 kernel: [drm:amdgpu_dm_atomic_commit_tail] *ERROR=
+*
+> Waiting for fences timed out!
+> May 14 19:22:18 geek500 kernel: [drm] Fence fallback timer expired on rin=
+g
+> sdma0
+>
+> CC
+>
+> Le samedi 14 mai 2022, 17:12:33 CEST Thorsten Leemhuis a =C3=A9crit :
+> > Hi, this is your Linux kernel regression tracker. Thanks for the report=
+.
+> >
+> > On 14.05.22 16:41, Christian Casteyde wrote:
+> > > #regzbot introduced v5.17.3..v5.17.4
+> > > #regzbot introduced: 001828fb3084379f3c3e228b905223c50bc237f9
+> >
+> > FWIW, that's commit 887f75cfd0da ("drm/amdgpu: Ensure HDA function is
+> > suspended before ASIC reset") upstream.
+> >
+> > Recently a regression was reported where 887f75cfd0da was suspected as
+> > the culprit:
+> > https://gitlab.freedesktop.org/drm/amd/-/issues/2008
+> >
+> > And a one related to it:
+> > https://gitlab.freedesktop.org/drm/amd/-/issues/1982
+> >
+> > You might want to take a look if what was discussed there might be
+> > related to your problem (I'm not directly involved in any of this, I
+> > don't know the details, it's just that 887f75cfd0da looked familiar to
+> > me). If it is, a fix for these two bugs was committed to master earlier
+> > this week:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/?i
+> > d=3Da56f445f807b0276
+> >
+> > It will likely be backported to 5.17.y, maybe already in the over-next
+> > release. HTH.
+> >
+> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat=
+)
+> >
+> > P.S.: As the Linux kernel's regression tracker I deal with a lot of
+> > reports and sometimes miss something important when writing mails like
+> > this. If that's the case here, don't hesitate to tell me in a public
+> > reply, it's in everyone's interest to set the public record straight.
+> >
+> > > Hello
+> > > Since 5.17.4 my laptop doesn't resume from suspend anymore. At resume=
+,
+> > > symptoms are variable:
+> > > - either the laptop freezes;
+> > > - either the screen keeps blank;
+> > > - either the screen is OK but mouse is frozen;
+> > > - either display lags with several logs in dmesg:
+> > > [  228.275492] [drm] Fence fallback timer expired on ring gfx
+> > > [  228.395466] [drm:amdgpu_dm_atomic_commit_tail] *ERROR* Waiting for
+> > > fences timed out!
+> > > [  228.779490] [drm] Fence fallback timer expired on ring gfx
+> > > [  229.283484] [drm] Fence fallback timer expired on ring sdma0
+> > > [  229.283485] [drm] Fence fallback timer expired on ring gfx
+> > > [  229.787487] [drm] Fence fallback timer expired on ring gfx
+> > > ...
+> > >
+> > > I've bisected the problem.
+> > >
+> > > Please note this laptop has a strange behaviour on suspend:
+> > > The first suspend request always fails (this point has never been fix=
+ed
+> > > and
+> > > plagues us when trying to diagnose another regression on touchpad not
+> > > resuming in the past). The screen goes blank and I can get it OK when
+> > > pressing the power button, this seems to reset it. After that all
+> > > suspend/resume works OK.
+> > >
+> > > Since 5.17.4, it is not possible anymore to get the laptop working ag=
+ain
+> > > after the first suspend failure.
+> > >
+> > > HW : HP Pavilion / Ryzen 4600H with AMD graphics integrated + NVidia
+> > > 1650Ti
+> > > (turned off with ACPI call in order to get more battery, I'm not usin=
+g
+> > > NVidia driver).
+>
+>
+>
+>
