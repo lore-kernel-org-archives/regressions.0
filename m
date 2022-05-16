@@ -1,30 +1,61 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4522E1376
-	for <regressions@lists.linux.dev>; Mon, 16 May 2022 18:34:21 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nqfXu-0001nq-QR; Mon, 16 May 2022 20:34:18 +0200
-Message-ID: <1ce76b24-9185-6b2e-844e-d6a0ce42bb0f@leemhuis.info>
-Date: Mon, 16 May 2022 20:34:17 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D804C1376
+	for <regressions@lists.linux.dev>; Mon, 16 May 2022 18:39:07 +0000 (UTC)
+Received: by mail-il1-f181.google.com with SMTP id b11so7173647ilr.4
+        for <regressions@lists.linux.dev>; Mon, 16 May 2022 11:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=3eQ02kjrBJm3pP3IQQPhqRaXYnuZt0FpJtLq26rhSTc=;
+        b=7pgtE5BgxtvCdKobQLIn3F+JGlA8bClHad3mwvaZSfu3A95TaeUK2nuDuDm4fCe2I+
+         1bvlOodVc5JPWljWdjllrBgm71ZoPtHFWKSxR+zl4JhUVCA2i205D7MtTFjqFlVoVM+D
+         SydXNGNKZWYSLV9B5bfJqNb10RNwsPLBIFtL6OhIouLHEbRLSIQ5Ioc0WB6xNLvYjWrK
+         SRwoRT5rYjldnhlkh3Sintqm4fDWPEaisrYqnpdmFALdt0XSf8zEWGDPHkkHUuEy/+zy
+         7BQDZ899YHLA+1xPfzqEBWuXFLYLqAV4Guuue2JKtnkIM8tNcyA4UQQSD4oIHFnrxpCN
+         rRxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=3eQ02kjrBJm3pP3IQQPhqRaXYnuZt0FpJtLq26rhSTc=;
+        b=Zs46j+S0MytP812tgsBnerYpDiw3fgZJYENcS4fGUVSsDXJPvYhmAhyrZSy6Q6IjRP
+         MKOPAZfaMZNUOelsyPYlYZY3HfX8/miu4zCqDXq+7s0E6CJtOMopZja7e6W8AEinXHP2
+         telZct6PCvH4EMWfbtCFCGI+ubvfRjdaxoa3JSettOJkQr1nEu+/JIc1lyGO5aYM42O3
+         Cx+BGDg0SBfUOLCpCVgjztAt7YwvZHET934fDxyXLCslj1fNZYi0NUCNuA006zI5dyWA
+         8i9EjShzu9QxbZ7Frf2bwM8EuvqytqqvtfpW4p/FT/7PLsgNNgCP2vYiRF8bUz8yJCUL
+         gwMQ==
+X-Gm-Message-State: AOAM533MO8iebf6sdWOtvjeVawSXiY2xa3UJb8waH3LcLdyfb/BlP4jM
+	Y+yDnBlFvzWFCbQX6mFgRCCCiA==
+X-Google-Smtp-Source: ABdhPJxFCwYm1E5HggIdr+qL/ARzvjLrEEVlf1lnk5WG9zQMSO5Gx+DNggoaR5on1KJaFqtdzDKg5Q==
+X-Received: by 2002:a92:c26a:0:b0:2d1:3622:1fd4 with SMTP id h10-20020a92c26a000000b002d136221fd4mr329556ild.79.1652726346890;
+        Mon, 16 May 2022 11:39:06 -0700 (PDT)
+Received: from [192.168.1.172] ([207.135.234.126])
+        by smtp.gmail.com with ESMTPSA id t14-20020a02ab8e000000b0032e2fc23508sm1088424jan.77.2022.05.16.11.39.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 May 2022 11:39:06 -0700 (PDT)
+Message-ID: <55ddaa3c-57a5-f17e-13a7-7427c5f1bb88@kernel.dk>
+Date: Mon, 16 May 2022 12:39:04 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
 Subject: Re: [REGRESSION] lxc-stop hang on 5.17.x kernels
 Content-Language: en-US
-To: Jens Axboe <axboe@kernel.dk>, Daniel Harding <dharding@living180.net>,
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Daniel Harding <dharding@living180.net>,
  Pavel Begunkov <asml.silence@gmail.com>
 Cc: regressions@lists.linux.dev, io-uring@vger.kernel.org,
  linux-kernel@vger.kernel.org,
  Christian Brauner <christian.brauner@ubuntu.com>
 References: <7925e262-e0d4-6791-e43b-d37e9d693414@living180.net>
- <6ad38ecc-b2a9-f0e9-f7c7-f312a2763f97@kernel.dk>
  <ccf6cea1-1139-cd73-c4e5-dc9799708bdd@living180.net>
  <bb283ff5-6820-d096-2fca-ae7679698a50@kernel.dk>
  <371c01dd-258c-e428-7428-ff390b664752@kernel.dk>
@@ -42,50 +73,62 @@ References: <7925e262-e0d4-6791-e43b-d37e9d693414@living180.net>
  <13028ff4-3565-f09e-818c-19e5f95fa60f@living180.net>
  <469e5a9b-c7e0-6365-c353-d831ff1c5071@leemhuis.info>
  <eaee4ea1-8e5a-dde8-472d-44241d992037@kernel.dk>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <eaee4ea1-8e5a-dde8-472d-44241d992037@kernel.dk>
+ <1ce76b24-9185-6b2e-844e-d6a0ce42bb0f@leemhuis.info>
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <1ce76b24-9185-6b2e-844e-d6a0ce42bb0f@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1652726061;02ccf4ca;
-X-HE-SMSGID: 1nqfXu-0001nq-QR
 
-On 16.05.22 20:22, Jens Axboe wrote:
-> On 5/16/22 12:17 PM, Thorsten Leemhuis wrote:
->>>> Pavel, I had actually just started a draft email with the same theory
->>>> (although you stated it much more clearly than I could have).  I'm
->>>> working on debugging the LXC side, but I'm pretty sure the issue is
->>>> due to LXC using blocking reads and getting stuck exactly as you
->>>> describe.  If I can confirm this, I'll go ahead and mark this
->>>> regression as invalid and file an issue with LXC. Thanks for your help
->>>> and patience.
+On 5/16/22 12:34 PM, Thorsten Leemhuis wrote:
+> On 16.05.22 20:22, Jens Axboe wrote:
+>> On 5/16/22 12:17 PM, Thorsten Leemhuis wrote:
+>>>>> Pavel, I had actually just started a draft email with the same theory
+>>>>> (although you stated it much more clearly than I could have).  I'm
+>>>>> working on debugging the LXC side, but I'm pretty sure the issue is
+>>>>> due to LXC using blocking reads and getting stuck exactly as you
+>>>>> describe.  If I can confirm this, I'll go ahead and mark this
+>>>>> regression as invalid and file an issue with LXC. Thanks for your help
+>>>>> and patience.
+>>>>
+>>>> Yes, it does appear that was the problem.  The attach POC patch against
+>>>> LXC fixes the hang.  The kernel is working as intended.
+>>>>
+>>>> #regzbot invalid:  userspace programming error
 >>>
->>> Yes, it does appear that was the problem.  The attach POC patch against
->>> LXC fixes the hang.  The kernel is working as intended.
->>>
->>> #regzbot invalid:  userspace programming error
+>>> Hmmm, not sure if I like this. So yes, this might be a bug in LXC, but
+>>> afaics it's a bug that was exposed by kernel change in 5.17 (correct me
+>>> if I'm wrong!). The problem thus still qualifies as a kernel regression
+>>> that normally needs to be fixed, as can be seen my some of the quotes
+>>> from Linus in this file:
+>>> https://www.kernel.org/doc/html/latest/process/handling-regressions.html
 >>
->> Hmmm, not sure if I like this. So yes, this might be a bug in LXC, but
->> afaics it's a bug that was exposed by kernel change in 5.17 (correct me
->> if I'm wrong!). The problem thus still qualifies as a kernel regression
->> that normally needs to be fixed, as can be seen my some of the quotes
->> from Linus in this file:
->> https://www.kernel.org/doc/html/latest/process/handling-regressions.html
+>> Sorry, but that's really BS in this particularly case. This could always
+>> have triggered, it's the way multishot works. Will we count eg timing
+>> changes as potential regressions, because an application relied on
+>> something there? That does not make it ABI.
+>>
+>> In general I agree with Linus on this, a change in behavior breaking
+>> something should be investigated and figured out (and reverted, if need
+>> be). This is not that.
 > 
-> Sorry, but that's really BS in this particularly case. This could always
-> have triggered, it's the way multishot works. Will we count eg timing
-> changes as potential regressions, because an application relied on
-> something there? That does not make it ABI.
-> 
-> In general I agree with Linus on this, a change in behavior breaking
-> something should be investigated and figured out (and reverted, if need
-> be). This is not that.
+> Sorry, I have to deal with various subsystems and a lot of regressions
+> reports. I can't know the details of each of issue and there are
+> developers around that are not that familiar with all the practical
+> implications of the "no regressions". That's why I was just trying to
+> ensure that this is something safe to ignore. If you say it is, than I'm
+> totally happy and now rest my case. :-D
 
-Sorry, I have to deal with various subsystems and a lot of regressions
-reports. I can't know the details of each of issue and there are
-developers around that are not that familiar with all the practical
-implications of the "no regressions". That's why I was just trying to
-ensure that this is something safe to ignore. If you say it is, than I'm
-totally happy and now rest my case. :-D
+It's just a slippery slope that quickly leads to the fact that _any_
+kernel change is a potential regressions, as it may change something
+that an app unknowingly depends on. For this case, the multishot ended
+up being downgraded to single shot on older kernels, so you'd never see
+multiple triggers of it. And multiple triggers is a natural effect of
+the level triggered poll that io_uring does. The app didn't handle
+multiple events in between reading them, which was an oversight in how
+that was done.
 
-Ciao, Thorsten
+Hence I do think this one can be safely closed.
+
+-- 
+Jens Axboe
 
