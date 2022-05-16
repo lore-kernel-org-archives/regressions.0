@@ -1,138 +1,208 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C9D1376
-	for <regressions@lists.linux.dev>; Mon, 16 May 2022 19:14:23 +0000 (UTC)
-Received: by mail-io1-f46.google.com with SMTP id r27so17048386iot.1
-        for <regressions@lists.linux.dev>; Mon, 16 May 2022 12:14:23 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B17FB1392
+	for <regressions@lists.linux.dev>; Mon, 16 May 2022 21:05:56 +0000 (UTC)
+Received: by mail-oi1-f169.google.com with SMTP id q10so20152485oia.9
+        for <regressions@lists.linux.dev>; Mon, 16 May 2022 14:05:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=yu8jpBcESlRO41WVtwunoeenHnb5B2EXEF8tRgSzHgE=;
-        b=tqCZDZ0dx3cF6RCC1hPbCmSnLFGA3LUJA9FPT9yl/mq42q/ABuK1f4ejnoMS+6ky5L
-         sZV492OnuqI4ApfBjNxD/my1zZ8AwFpREQ1L/GBEJ32+4I6LJOEjUl2OgZalqTspT+p+
-         2mNM7tW92wIo49NXj9jlQ35oPO2uzhro/D/D0tz2/GPSuepEvmI3a9TXF0pwkODrPVxD
-         Z9XoZjpMtFeR0EceB3XQFrrJPstyipKo6XN44acrdN7iQWOBUT6EbQ3duotSqKjd1XR3
-         sSGEgWF7gL//m1iuVAY1+gkUbrNLBBX8g9luU4HxxMQUlozNuKRnPvzYT56wXGLm7anM
-         QWJw==
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/9SPlk7OLhnYukKBI3NvIEjsAgrJfYYekeMJ9zCWY3M=;
+        b=XubHDdmVLG8AAMxQzu+pSDivbey8ZMEIBauQLo3jC2H39gxObJGShkoT2bS1IMuYgw
+         ++lJTSyNqW1X6HlSZJN5/4eYpoV2NySo7vevESDV88ELK0ORZC9W9ckLvUb9zJB809Jd
+         RQEaJzxNm0zj/NAguhiMzJCsGzOdzcNZxGnjo+3laIXjvOWfN/SeyMCzmLOSlJ5fZdHw
+         s9eHdXtiCFi9cfsDrmh3Pxx/6A3p27T7l+U0c10TXQnLKFsDbcQQir7fBbLbQbPZ15q6
+         r9eWFflQhu/DWWTcM/DwJHlfQ37gfMruGY0JXOIuZiMZd+xOEzRginNrmImo+/WYg+kz
+         AvRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=yu8jpBcESlRO41WVtwunoeenHnb5B2EXEF8tRgSzHgE=;
-        b=VTQWYbSTbxI+aj/S1txdCapWsz6JrcwbHKpPoYQvFFCJPzZzlUlsf9CE+K8+DCuLJn
-         o3ywZqa4EtW5olHXI38e3liECq67NMF3aec5mz+bgRY0HCetAinWCPgfKE4/ZHUwHyhP
-         rEh/KtZYXzxNKr0duGAm2Twk1HZ3hmO7M9kqiSjANDYho7rsw6051VhGwnCXuRzBsRa7
-         clCW1b7YQxc1YkTUN2CStEnUanrK/35iL4nBeO7PCAGolv1dvZO/KTyWjWsa8GZeB1Xm
-         eMW3CrL7nXT10Loqpo8kAUfhoWvCURPhVSzt3rVhGjOyBP2XlI4xg7odpJzQGfiFzyE0
-         WjPg==
-X-Gm-Message-State: AOAM532h+E2CkGi72We5Lrb7NrPEncZYewBGwgYTeukgRj0wmTJ4Qggw
-	8yvACflBOCbZE7CLY0ii2nP0Ew==
-X-Google-Smtp-Source: ABdhPJzXFsXpsavDxnMRAYebmJL6UV04urGytrVKDDgSBJcwMy3VAVKN7/BgDEhXPwIkvfb4FKH84Q==
-X-Received: by 2002:a02:7a06:0:b0:32b:1b83:649a with SMTP id a6-20020a027a06000000b0032b1b83649amr9861961jac.29.1652728462508;
-        Mon, 16 May 2022 12:14:22 -0700 (PDT)
-Received: from [192.168.1.172] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id w24-20020a6b4a18000000b0065a47e16f41sm63007iob.19.2022.05.16.12.14.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 May 2022 12:14:21 -0700 (PDT)
-Message-ID: <143f0708-e446-9cfe-eba8-8731d52345db@kernel.dk>
-Date: Mon, 16 May 2022 13:14:20 -0600
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/9SPlk7OLhnYukKBI3NvIEjsAgrJfYYekeMJ9zCWY3M=;
+        b=4gcUoA5b6RV9/zsiC88BaxnGOxpnnU+/981yQOQrmaoRMs9Ose4xzdOwMsv6jK+IVq
+         Lk8lfc5OaY/FcZgjt7ZnLpTQGZMv5BpQuSk/YqRbdzSopqyCOTYTSRZ9FnmBOfFxekAZ
+         wsgEQITsn9vHpJOLDFhyTRih6lOWD1RpUCjX+7YjvKyaa0tDwevT+BArbbOU0ZETGI2C
+         lpJW8YTRztXsUDpzhjfJxTuEXKAaGFAQ4lCe8Rza3ZXVS8uQ0M5KUAUj513VCcyt5UD3
+         5wsJCxW+LeVRtprQHl59JIW28K1KkPzb/kpy9ARjz7ohuCFksh+B0BCm30Iz8PRlHS5i
+         eetQ==
+X-Gm-Message-State: AOAM5321LWo5fabIKnwYPxFR3Y68cKZy3FhLlr2ixq1PWHOG33eZw3sU
+	itTIsMe4mq8hjVQXNuS1iLv3h/WBRdZdbOXPeXA=
+X-Google-Smtp-Source: ABdhPJyQsPp9UugQDKyM/yRyzmWf38DwgW9VBgBkdkfv2PNI8fd/vkFinZKtPq5cnj3gxEJ3+EgTxgnBKHwN59gnlls=
+X-Received: by 2002:a54:4688:0:b0:325:9a36:ecfe with SMTP id
+ k8-20020a544688000000b003259a36ecfemr9516040oic.96.1652735155809; Mon, 16 May
+ 2022 14:05:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Subject: Re: [REGRESSION] lxc-stop hang on 5.17.x kernels
-Content-Language: en-US
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Daniel Harding <dharding@living180.net>,
- Pavel Begunkov <asml.silence@gmail.com>
-Cc: regressions@lists.linux.dev, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Christian Brauner <christian.brauner@ubuntu.com>
-References: <7925e262-e0d4-6791-e43b-d37e9d693414@living180.net>
- <371c01dd-258c-e428-7428-ff390b664752@kernel.dk>
- <2436d42c-85ca-d060-6508-350c769804f1@gmail.com>
- <ad9c31e5-ee75-4df2-c16d-b1461be1901a@living180.net>
- <fb0dbd71-9733-0208-48f2-c5d22ed17510@gmail.com>
- <a204ba93-7261-5c6e-1baf-e5427e26b124@living180.net>
- <bd932b5a-9508-e58f-05f8-001503e4bd2b@gmail.com>
- <12a57dd9-4423-a13d-559b-2b1dd2fb0ef3@living180.net>
- <897dc597-fc0a-34ec-84b8-7e1c4901e0fc@leemhuis.info>
- <c2f956e2-b235-9937-d554-424ae44c68e4@living180.net>
- <41c86189-0d1f-60f0-ca8e-f80b3ccf5130@gmail.com>
- <da56fa5f-0624-413e-74a1-545993940d27@gmail.com>
- <3fc08243-f9e0-9cec-4207-883c55ccff78@living180.net>
- <13028ff4-3565-f09e-818c-19e5f95fa60f@living180.net>
- <469e5a9b-c7e0-6365-c353-d831ff1c5071@leemhuis.info>
- <eaee4ea1-8e5a-dde8-472d-44241d992037@kernel.dk>
- <1ce76b24-9185-6b2e-844e-d6a0ce42bb0f@leemhuis.info>
- <55ddaa3c-57a5-f17e-13a7-7427c5f1bb88@kernel.dk>
- <735012d3-bbda-54df-11fb-8e7b561c598d@leemhuis.info>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <735012d3-bbda-54df-11fb-8e7b561c598d@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <bug-215925-41252@https.bugzilla.kernel.org/> <CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com>
+ <3aa008b9-e477-3e6d-becb-13e28ea91f10@leemhuis.info>
+In-Reply-To: <3aa008b9-e477-3e6d-becb-13e28ea91f10@leemhuis.info>
+From: Jim Quinlan <jim2101024@gmail.com>
+Date: Mon, 16 May 2022 17:05:44 -0400
+Message-ID: <CANCKTBuOjJk6SRTHs+tXXWaC9cGsxkp9PM2rwpf+hs50S+cBfQ@mail.gmail.com>
+Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
+ 4 (CM4) breaks booting
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: kibi@debian.org, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Linux PCI <linux-pci@vger.kernel.org>, 
+	bjorn@helgaas.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/16/22 1:07 PM, Thorsten Leemhuis wrote:
-> 
-> 
-> On 16.05.22 20:39, Jens Axboe wrote:
->> On 5/16/22 12:34 PM, Thorsten Leemhuis wrote:
->>> On 16.05.22 20:22, Jens Axboe wrote:
->>>> On 5/16/22 12:17 PM, Thorsten Leemhuis wrote:
->>>>>>> Pavel, I had actually just started a draft email with the same theory
->>>>>>> (although you stated it much more clearly than I could have).  I'm
->>>>>>> working on debugging the LXC side, but I'm pretty sure the issue is
->>>>>>> due to LXC using blocking reads and getting stuck exactly as you
->>>>>>> describe.  If I can confirm this, I'll go ahead and mark this
->>>>>>> regression as invalid and file an issue with LXC. Thanks for your help
->>>>>>> and patience.
->>>>>>
->>>>>> Yes, it does appear that was the problem.  The attach POC patch against
->>>>>> LXC fixes the hang.  The kernel is working as intended.
->>>>>>
->>>>>> #regzbot invalid:  userspace programming error
->>>>>
->>>>> Hmmm, not sure if I like this. So yes, this might be a bug in LXC, but
->>>>> afaics it's a bug that was exposed by kernel change in 5.17 (correct me
->>>>> if I'm wrong!). The problem thus still qualifies as a kernel regression
->>>>> that normally needs to be fixed, as can be seen my some of the quotes
->>>>> from Linus in this file:
->>>>> https://www.kernel.org/doc/html/latest/process/handling-regressions.html
->>>>
->>>> Sorry, but that's really BS in this particularly case. This could always
->>>> have triggered, it's the way multishot works. Will we count eg timing
->>>> changes as potential regressions, because an application relied on
->>>> something there? That does not make it ABI.
->>>>
->>>> In general I agree with Linus on this, a change in behavior breaking
->>>> something should be investigated and figured out (and reverted, if need
->>>> be). This is not that.
->>>
->>> Sorry, I have to deal with various subsystems and a lot of regressions
->>> reports. I can't know the details of each of issue and there are
->>> developers around that are not that familiar with all the practical
->>> implications of the "no regressions". That's why I was just trying to
->>> ensure that this is something safe to ignore. If you say it is, than I'm
->>> totally happy and now rest my case. :-D
->>
->> It's just a slippery slope that quickly leads to the fact that _any_
->> kernel change is a potential regressions,
-> 
-> I know, don't worry, that's why I'm trying to be careful. But I also had
-> cases already where someone (even a proper subsystem maintainer) said
-> "this is not a regression, it's a userspace bug" and it clearly was a
-> kernel regression (and Linus wasn't happy when he found out). That why I
+Hi Bjorn, Thorsten,
 
-I get where you're coming from, and that is indeed what most maintainers
-would say :-)
+I apologize -- I did not see this email until now; I think I have to
+work on my gmail filters and labels.
 
--- 
-Jens Axboe
+I've just made a post on the Bugzilla website regarding this
+regression and have ideas on what may be causing the problem.
+Unfortunately, the error cannot be reproduced on my RPi4 or Broadcom
+STB version of the 2711.
+Hopefully Cyril can help me identify the issue.
 
+I will try to get a Fixup ASAP.
+
+Regards,
+Jim Quinlan
+Broadcom STB
+
+On Mon, May 9, 2022 at 3:44 AM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> Hi, this is your Linux kernel regression tracker. Partly top-posting to
+> mnake this easily accessible.
+>
+> Jim, what's up here? The regression was reported more than a week ago
+> and it seems nothing happened since then. Or was there progress and I
+> just missed it?
+>
+> Anyway:
+>
+> [TLDR: I'm adding this regression report to the list of tracked
+> regressions; all text from me you find below is based on a few templates
+> paragraphs you might have encountered already already in similar form.]
+>
+> On 02.05.22 20:38, Bjorn Helgaas wrote:
+> > On Sat, Apr 30, 2022 at 2:53 PM <bugzilla-daemon@kernel.org> wrote:
+> >>
+> >> https://bugzilla.kernel.org/show_bug.cgi?id=3D215925
+> >>
+> >>             Bug ID: 215925
+> >>            Summary: PCIe regression on Raspberry Pi Compute Module 4 (=
+CM4)
+> >>                     breaks booting
+> >>            Product: Drivers
+> >>            Version: 2.5
+> >>     Kernel Version: v5.17-rc1
+> >>           Hardware: ARM
+> >>                 OS: Linux
+> >>               Tree: Mainline
+> >>             Status: NEW
+> >>           Severity: normal
+> >>           Priority: P1
+> >>          Component: PCI
+> >>           Assignee: drivers_pci@kernel-bugs.osdl.org
+> >>           Reporter: kibi@debian.org
+> >>         Regression: No
+> >>
+> >> Catching up with latest kernel releases in Debian, it turned out that =
+my
+> >> Raspberry Pi Compute Module 4, mounted on an official Compute Module 4=
+ IO
+> >> Board,
+> >> and booting from an SD card, no longer boots: this means a black scree=
+n on the
+> >> HDMI output, and no output on the serial console.
+> >>
+> >> Trying various releases, I confirmed that v5.16 was fine, and v5.17-rc=
+1 was the
+> >> first (pre)release that wasn't.
+> >>
+> >> After some git bisect, it turns out the cause seems to be the followin=
+g commit
+> >> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/co=
+mmit/?id=3D830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21):
+> >>
+> >> ```
+> >> commit 830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21
+> >> Author: Jim Quinlan <jim2101024@gmail.com>
+> >> Date:   Thu Jan 6 11:03:27 2022 -0500
+> >>
+> >>     PCI: brcmstb: Split brcm_pcie_setup() into two funcs
+> >> ```
+> >>
+> >> Starting with this commit, the kernel panics early (before 0.30 second=
+s), with
+> >> an `Asynchronous SError Interrupt`. The backtrace references various
+> >> `brcm_pcie_*` functions; I can share a picture or try and transcribe i=
+t
+> >> manually if that helps (nothing on the serial console=E2=80=A6).
+> >>
+> >> This commit is part of a branch that was ultimately merged as
+> >> d0a231f01e5b25bacd23e6edc7c979a18a517b2b; starting with this commit, t=
+here's
+> >> not even a backtrace anymore, the screen stays black after the usual =
+=E2=80=9Cboot-up
+> >> rainbow=E2=80=9D, and there's still nothing on the serial console.
+> >>
+> >> I confirmed that 88db8458086b1dcf20b56682504bdb34d2bca0e2 (on the mast=
+er side)
+> >> was still booting properly, and that 87c71931633bd15e9cfd51d4a4d9cd685=
+e8cdb55
+> >> (from the branch being merged into master) is the last commit showing =
+the
+> >> panic.
+> >>
+> >> Since d0a231f01e5b25bacd23e6edc7c979a18a517b2b is a merge commit that =
+includes
+> >> conflict resolutions in drivers/pci/controller/pcie-brcmstb.c, I suppo=
+se this
+> >> could be consistent with the initial panic being =E2=80=9Cupgraded=E2=
+=80=9D into an even more
+> >> serious issue.
+> >>
+> >> I've also verified that latest master (v5.18-rc4-396-g57ae8a492116) is=
+ still
+> >> affected by this issue.
+> >>
+> >> The regular Raspberry Pi 4 B doesn't seem to be affected by this issue=
+: the
+> >> exact same image on the same SD card (with latest master) boots fine o=
+n it.
+>
+> CCing the regression mailing list, as it should be in the loop for all
+> regressions, as explained here:
+> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+>
+> To be sure below issue doesn't fall through the cracks unnoticed, I'm
+> adding it to regzbot, my Linux kernel regression tracking bot:
+>
+> #regzbot ^introduced 830aa6f29f07a4e2f1a
+> #regzbot title pci: brcmstb: CM4 no longer boots from SD card
+> #regzbot ignore-activity
+> #regzbot from: Cyril Brulebois <kibi@debian.org>
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=3D215925
+>
+> This isn't a regression? This issue or a fix for it are already
+> discussed somewhere else? It was fixed already? You want to clarify when
+> the regression started to happen? Or point out I got the title or
+> something else totally wrong? Then just reply -- ideally with also
+> telling regzbot about it, as explained here:
+> https://linux-regtracking.leemhuis.info/tracked-regression/
+>
+> Reminder for developers: When fixing the issue, add 'Link:' tags
+> pointing to the report (the mail this one replied to), as the kernel's
+> documentation call for; above page explains why this is important for
+> tracked regressions.
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>
+> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+> reports and sometimes miss something important when writing mails like
+> this. If that's the case here, don't hesitate to tell me in a public
+> reply, it's in everyone's interest to set the public record straight.
