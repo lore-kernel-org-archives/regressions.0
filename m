@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4023F15A9
-	for <regressions@lists.linux.dev>; Fri, 20 May 2022 05:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581C615A9
+	for <regressions@lists.linux.dev>; Fri, 20 May 2022 05:54:47 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nrvUc-0002ph-OR; Fri, 20 May 2022 07:48:06 +0200
-Message-ID: <02950542-6d20-b382-0457-e5912200a2c5@leemhuis.info>
-Date: Fri, 20 May 2022 07:48:06 +0200
+	id 1nrvb3-0005jR-8p; Fri, 20 May 2022 07:54:45 +0200
+Message-ID: <76f0b081-73e4-3b39-8c22-de62b650a45b@leemhuis.info>
+Date: Fri, 20 May 2022 07:54:44 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,178 +16,90 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
- 4 (CM4) breaks booting
+Subject: Re: Bug 215715 - PCI device (iwlwifi) is not working due to PCI power
+ state change issues #forregzbot
 Content-Language: en-US
-To: Jim Quinlan <jim2101024@gmail.com>
-Cc: Cyril Brulebois <kibi@debian.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Linux PCI <linux-pci@vger.kernel.org>, bjorn@helgaas.com
-References: <bug-215925-41252@https.bugzilla.kernel.org/>
- <CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com>
- <3aa008b9-e477-3e6d-becb-13e28ea91f10@leemhuis.info>
- <CANCKTBuOjJk6SRTHs+tXXWaC9cGsxkp9PM2rwpf+hs50S+cBfQ@mail.gmail.com>
- <CANCKTBsvL8AJ-O54+Wque_A2O6XZTPZO5Jw+xUoviXC84+8WWw@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CANCKTBsvL8AJ-O54+Wque_A2O6XZTPZO5Jw+xUoviXC84+8WWw@mail.gmail.com>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <ad13371f-2883-bcf2-a62c-78104bfd615c@leemhuis.info>
+ <07541714-5d44-dd84-5ab2-a9ce91bba715@leemhuis.info>
+ <ee42d869-bf2a-e9fd-6fa7-ad630f17f7fb@leemhuis.info>
+In-Reply-To: <ee42d869-bf2a-e9fd-6fa7-ad630f17f7fb@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653025689;9b4cfba0;
-X-HE-SMSGID: 1nrvUc-0002ph-OR
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653026087;97629e4d;
+X-HE-SMSGID: 1nrvb3-0005jR-8p
 
-On 18.05.22 21:47, Jim Quinlan wrote:
 
-> I have just sent a pullrequest to linu-pci@vger@kernel.org to address
-> this regression.
 
-Great, thx
+On 10.04.22 11:11, Thorsten Leemhuis wrote:
+> TWIMC: this mail is primarily send for documentation purposes and for
+> regzbot, my Linux kernel regression tracking bot. These mails usually
+> contain '#forregzbot' in the subject, to make them easy to spot and filter.
+> 
+> #regzbot monitor: https://lore.kernel.org/all/11980172.O9o76ZdvQC@kreacher/
 
-> Please let me know if I have to do anything else besides addressing
-> reviewers concerns
-> for this pullreq.
+#regzbot fixed-by: 92597f97a40bf661
 
-No need to, everything fine. I just have to tell regzbot manually about
-the patch (and the commit-id once it landed), as it doesn't handle links
-to bugzilla ticket to well yet, but that hopefully should be history in
-a week or two (or three).
-
-#regzbot monitor:
-https://lore.kernel.org/linux-pci/CANCKTBuz9FG-aGuwM-thFgkAyTi480=1j78DpjWUkgU4UDuurg@mail.gmail.com/
-
-Ciao, Thorsten
-
-> On Mon, May 16, 2022 at 5:05 PM Jim Quinlan <jim2101024@gmail.com> wrote:
+> On 29.03.22 10:49, Thorsten Leemhuis wrote:
+>> On 28.03.22 15:33, Thorsten Leemhuis wrote:
+>>> Hi, this is your Linux kernel regression tracker.
+>>>
+>>> Rafael, I noticed a regression report in bugzilla.kernel.org that afaics
+>>> nobody acted upon since it was reported about a week ago, that's why I
+>>> decided to forward it to the lists, maintainers, and the author of the
+>>> culprit. To quote from
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=215715 :
+>>>
+>>>>  Stefan Gottwald 2022-03-21 13:31:43 UTC
+>>>>
+>>>> Created attachment 300589 [details]
+>>>> dmesg output from error case
+>>>>
+>>>> We got a Elo AIO i2 device which most current BIOS where WiFi was working with Kernel 5.12.x but stopped working since Kernel 5.13.19 and newer (5.17.0-rc5).
+>>>>
+>>>> The kernel error message is:
+>>>>
+>>>> [    3.419766] iwlwifi 0000:01:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+>>>> [    3.419781] iwlwifi 0000:01:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+>>>> [    3.419975] iwlwifi 0000:01:00.0: HW_REV=0xFFFFFFFF, PCI issues?
+>>>> [    3.420911] iwlwifi: probe of 0000:01:00.0 failed with error -5
+>>>>
+>>>> The issue can be solved by adding the iwlwifi driver to the initramfs so it is loaded much earlier and seems to work.
+>>>>
+>>>> To narrow down the issue I did an git bisect between v5.13.18 and v5.13.19 mainline kernel version which got me to following commit which if reverted fix the issue on this device.
+>>>>
+>>>> Reverting commit d0660d8ab123ea471064f0828f290bec9593e16b : PCI: Use pci_update_current_state() in pci_enable_device_flags()
+>>>
+>>> FWIW, that afaics is d0660d8ab123 ("PCI: Use pci_update_current_state()
+>>> in pci_enable_device_flags()") in mainline.
 >>
->> Hi Bjorn, Thorsten,
+>> Sorry, I made a (obvious) cut-n-paste error there: the stable commit
+>> mentioned by the reporter is 14858dcc3b35 ("PCI: Use
+>> pci_update_current_state() in pci_enable_device_flags()") in mainline.
 >>
->> I apologize -- I did not see this email until now; I think I have to
->> work on my gmail filters and labels.
+>> #regzbot introduced: 14858dcc3b35
 >>
->> I've just made a post on the Bugzilla website regarding this
->> regression and have ideas on what may be causing the problem.
->> Unfortunately, the error cannot be reproduced on my RPi4 or Broadcom
->> STB version of the 2711.
->> Hopefully Cyril can help me identify the issue.
->>
->> I will try to get a Fixup ASAP.
->>
->> Regards,
->> Jim Quinlan
->> Broadcom STB
->>
->> On Mon, May 9, 2022 at 3:44 AM Thorsten Leemhuis
->> <regressions@leemhuis.info> wrote:
+>>>> resolve the issue also in the newer kernels. Seems like the function platform_pci_get_power_state is always returning PCI_D3cold on this device also if this is not true.
 >>>
->>> Hi, this is your Linux kernel regression tracker. Partly top-posting to
->>> mnake this easily accessible.
+>>> Could somebody take a look into this? Or was this discussed somewhere
+>>> else already? Or even fixed?
 >>>
->>> Jim, what's up here? The regression was reported more than a week ago
->>> and it seems nothing happened since then. Or was there progress and I
->>> just missed it?
+>>> Anyway, to get this tracked:
 >>>
->>> Anyway:
->>>
->>> [TLDR: I'm adding this regression report to the list of tracked
->>> regressions; all text from me you find below is based on a few templates
->>> paragraphs you might have encountered already already in similar form.]
->>>
->>> On 02.05.22 20:38, Bjorn Helgaas wrote:
->>>> On Sat, Apr 30, 2022 at 2:53 PM <bugzilla-daemon@kernel.org> wrote:
->>>>>
->>>>> https://bugzilla.kernel.org/show_bug.cgi?id=215925
->>>>>
->>>>>             Bug ID: 215925
->>>>>            Summary: PCIe regression on Raspberry Pi Compute Module 4 (CM4)
->>>>>                     breaks booting
->>>>>            Product: Drivers
->>>>>            Version: 2.5
->>>>>     Kernel Version: v5.17-rc1
->>>>>           Hardware: ARM
->>>>>                 OS: Linux
->>>>>               Tree: Mainline
->>>>>             Status: NEW
->>>>>           Severity: normal
->>>>>           Priority: P1
->>>>>          Component: PCI
->>>>>           Assignee: drivers_pci@kernel-bugs.osdl.org
->>>>>           Reporter: kibi@debian.org
->>>>>         Regression: No
->>>>>
->>>>> Catching up with latest kernel releases in Debian, it turned out that my
->>>>> Raspberry Pi Compute Module 4, mounted on an official Compute Module 4 IO
->>>>> Board,
->>>>> and booting from an SD card, no longer boots: this means a black screen on the
->>>>> HDMI output, and no output on the serial console.
->>>>>
->>>>> Trying various releases, I confirmed that v5.16 was fine, and v5.17-rc1 was the
->>>>> first (pre)release that wasn't.
->>>>>
->>>>> After some git bisect, it turns out the cause seems to be the following commit
->>>>> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21):
->>>>>
->>>>> ```
->>>>> commit 830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21
->>>>> Author: Jim Quinlan <jim2101024@gmail.com>
->>>>> Date:   Thu Jan 6 11:03:27 2022 -0500
->>>>>
->>>>>     PCI: brcmstb: Split brcm_pcie_setup() into two funcs
->>>>> ```
->>>>>
->>>>> Starting with this commit, the kernel panics early (before 0.30 seconds), with
->>>>> an `Asynchronous SError Interrupt`. The backtrace references various
->>>>> `brcm_pcie_*` functions; I can share a picture or try and transcribe it
->>>>> manually if that helps (nothing on the serial console…).
->>>>>
->>>>> This commit is part of a branch that was ultimately merged as
->>>>> d0a231f01e5b25bacd23e6edc7c979a18a517b2b; starting with this commit, there's
->>>>> not even a backtrace anymore, the screen stays black after the usual “boot-up
->>>>> rainbow”, and there's still nothing on the serial console.
->>>>>
->>>>> I confirmed that 88db8458086b1dcf20b56682504bdb34d2bca0e2 (on the master side)
->>>>> was still booting properly, and that 87c71931633bd15e9cfd51d4a4d9cd685e8cdb55
->>>>> (from the branch being merged into master) is the last commit showing the
->>>>> panic.
->>>>>
->>>>> Since d0a231f01e5b25bacd23e6edc7c979a18a517b2b is a merge commit that includes
->>>>> conflict resolutions in drivers/pci/controller/pcie-brcmstb.c, I suppose this
->>>>> could be consistent with the initial panic being “upgraded” into an even more
->>>>> serious issue.
->>>>>
->>>>> I've also verified that latest master (v5.18-rc4-396-g57ae8a492116) is still
->>>>> affected by this issue.
->>>>>
->>>>> The regular Raspberry Pi 4 B doesn't seem to be affected by this issue: the
->>>>> exact same image on the same SD card (with latest master) boots fine on it.
->>>
->>> CCing the regression mailing list, as it should be in the loop for all
->>> regressions, as explained here:
->>> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
->>>
->>> To be sure below issue doesn't fall through the cracks unnoticed, I'm
->>> adding it to regzbot, my Linux kernel regression tracking bot:
->>>
->>> #regzbot ^introduced 830aa6f29f07a4e2f1a
->>> #regzbot title pci: brcmstb: CM4 no longer boots from SD card
->>> #regzbot ignore-activity
->>> #regzbot from: Cyril Brulebois <kibi@debian.org>
->>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
->>>
->>> This isn't a regression? This issue or a fix for it are already
->>> discussed somewhere else? It was fixed already? You want to clarify when
->>> the regression started to happen? Or point out I got the title or
->>> something else totally wrong? Then just reply -- ideally with also
->>> telling regzbot about it, as explained here:
->>> https://linux-regtracking.leemhuis.info/tracked-regression/
->>>
->>> Reminder for developers: When fixing the issue, add 'Link:' tags
->>> pointing to the report (the mail this one replied to), as the kernel's
->>> documentation call for; above page explains why this is important for
->>> tracked regressions.
+>>> #regzbot introduced: d0660d8ab123ea471064f0828f290bec9593e16b
+>>> #regzbot from: Stefan Gottwald <gottwald@igel.com>
+>>> #regzbot title: pci/iwlwifi: wifi is not working due to PCI power state
+>>> change issues
+>>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215715
 >>>
 >>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 >>>
->>> P.S.: As the Linux kernel's regression tracker I deal with a lot of
->>> reports and sometimes miss something important when writing mails like
->>> this. If that's the case here, don't hesitate to tell me in a public
->>> reply, it's in everyone's interest to set the public record straight.
-> 
+>>> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+>>> reports on my table. I can only look briefly into most of them and lack
+>>> knowledge about most of the areas they concern. I thus unfortunately
+>>> will sometimes get things wrong or miss something important. I hope
+>>> that's not the case here; if you think it is, don't hesitate to tell me
+>>> in a public reply, it's in everyone's interest to set the public record
+>>> straight.
+>>>
