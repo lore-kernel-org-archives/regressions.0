@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E812E15A9
-	for <regressions@lists.linux.dev>; Fri, 20 May 2022 05:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4023F15A9
+	for <regressions@lists.linux.dev>; Fri, 20 May 2022 05:48:09 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nrvLk-00073S-CF; Fri, 20 May 2022 07:38:56 +0200
-Message-ID: <8e135260-b3b9-6162-1f2f-998540aef616@leemhuis.info>
-Date: Fri, 20 May 2022 07:38:55 +0200
+	id 1nrvUc-0002ph-OR; Fri, 20 May 2022 07:48:06 +0200
+Message-ID: <02950542-6d20-b382-0457-e5912200a2c5@leemhuis.info>
+Date: Fri, 20 May 2022 07:48:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,170 +16,178 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [Bug 215890] New: Regression in 5.18: bcm5974 trackpad causes
- error: xhci_hcd rejecting DMA map of vmalloc memory #forregzbot
+Subject: Re: [Bug 215925] New: PCIe regression on Raspberry Pi Compute Module
+ 4 (CM4) breaks booting
 Content-Language: en-US
+To: Jim Quinlan <jim2101024@gmail.com>
+Cc: Cyril Brulebois <kibi@debian.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Linux PCI <linux-pci@vger.kernel.org>, bjorn@helgaas.com
+References: <bug-215925-41252@https.bugzilla.kernel.org/>
+ <CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com>
+ <3aa008b9-e477-3e6d-becb-13e28ea91f10@leemhuis.info>
+ <CANCKTBuOjJk6SRTHs+tXXWaC9cGsxkp9PM2rwpf+hs50S+cBfQ@mail.gmail.com>
+ <CANCKTBsvL8AJ-O54+Wque_A2O6XZTPZO5Jw+xUoviXC84+8WWw@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <bug-215890-208809@https.bugzilla.kernel.org/>
- <76e24afa-ad7d-bf6d-d610-df61851b3e2b@leemhuis.info>
-In-Reply-To: <76e24afa-ad7d-bf6d-d610-df61851b3e2b@leemhuis.info>
+In-Reply-To: <CANCKTBsvL8AJ-O54+Wque_A2O6XZTPZO5Jw+xUoviXC84+8WWw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653025145;e3375518;
-X-HE-SMSGID: 1nrvLk-00073S-CF
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653025689;9b4cfba0;
+X-HE-SMSGID: 1nrvUc-0002ph-OR
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+On 18.05.22 21:47, Jim Quinlan wrote:
 
-On 04.05.22 10:42, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker.
-> 
-> Linux-Input developers, do you have any idea what might be causing the
-> problem outline below? It's a post 5.17 regression in mainline that was
-> reported to bugzilla.kernel.org about a week ago, but didn't even get a
-> single reply. Might be some other subsystem that is causing it, not sure.
-> 
-> On 27.04.22 00:42, bugzilla-daemon@kernel.org wrote:
->> https://bugzilla.kernel.org/show_bug.cgi?id=215890
+> I have just sent a pullrequest to linu-pci@vger@kernel.org to address
+> this regression.
 
-#regzbot invalid: something apparently fixed it with 5.18-rc7
-https://bugzilla.kernel.org/show_bug.cgi?id=215890#c21
+Great, thx
 
->>             Bug ID: 215890
->>            Summary: Regression in 5.18: bcm5974 trackpad causes error:
->>                     xhci_hcd rejecting DMA map of vmalloc memory
->>            Product: Drivers
->>            Version: 2.5
->>     Kernel Version: 5.18-rc4
->>           Hardware: Intel
->>                 OS: Linux
->>               Tree: Mainline
->>             Status: NEW
->>           Severity: high
->>           Priority: P1
->>          Component: USB
->>           Assignee: drivers_usb@kernel-bugs.kernel.org
->>           Reporter: satadru@umich.edu
->>         Regression: No
+> Please let me know if I have to do anything else besides addressing
+> reviewers concerns
+> for this pullreq.
+
+No need to, everything fine. I just have to tell regzbot manually about
+the patch (and the commit-id once it landed), as it doesn't handle links
+to bugzilla ticket to well yet, but that hopefully should be history in
+a week or two (or three).
+
+#regzbot monitor:
+https://lore.kernel.org/linux-pci/CANCKTBuz9FG-aGuwM-thFgkAyTi480=1j78DpjWUkgU4UDuurg@mail.gmail.com/
+
+Ciao, Thorsten
+
+> On Mon, May 16, 2022 at 5:05 PM Jim Quinlan <jim2101024@gmail.com> wrote:
 >>
->> The Apple BCM5974 trackpad & keyboard show up in sudo libinput list-devices
->> when booted into 5.17.4.
+>> Hi Bjorn, Thorsten,
 >>
->> In 5.18-rc4, the keyboard works, but the trackpad does not. libinput
->> list-devices shows the keyboard, but not the trackpad.
+>> I apologize -- I did not see this email until now; I think I have to
+>> work on my gmail filters and labels.
 >>
->> This error shows up in dmesg:
+>> I've just made a post on the Bugzilla website regarding this
+>> regression and have ideas on what may be causing the problem.
+>> Unfortunately, the error cannot be reproduced on my RPi4 or Broadcom
+>> STB version of the 2711.
+>> Hopefully Cyril can help me identify the issue.
 >>
->> [    7.144632] ------------[ cut here ]------------
->> [    7.144635] xhci_hcd 0000:00:14.0: rejecting DMA map of vmalloc memory
->> [    7.144648] WARNING: CPU: 6 PID: 969 at include/linux/dma-mapping.h:326
->> usb_hcd_map_urb_for_dma+0x4c0/0x4f0
->> [    7.144656] Modules linked in: mei_hdcp x86_pkg_temp_thermal
->> intel_powerclamp snd_hda_codec_cirrus snd_hda_codec_generic ledtrig_audio
->> snd_hda_codec_hdmi btusb btrtl wl(POE) kvm_intel btbcm snd_seq_midi
->> snd_hda_intel btintel snd_seq_midi_event btmtk kvm bluetooth snd_intel_dspcfg
->> snd_intel_sdw_acpi rapl applesmc snd_rawmidi ecdh_generic snd_hda_codec
->> intel_cstate ecc joydev mei_me bcm5974 snd_hda_core input_leds cfg80211
->> efi_pstore(+) snd_hwdep apple_mfi_fastcharge snd_seq snd_pcm mei snd_seq_device
->> snd_timer snd sbs(+) soundcore acpi_als industrialio_triggered_buffer sbshc
->> kfifo_buf apple_gmux industrialio mac_hid apple_bl facetimehd(OE)
->> videobuf2_dma_sg videobuf2_memops videobuf2_v4l2 videobuf2_common videodev mc
->> coretemp ipmi_devintf ipmi_msghandler msr parport_pc ppdev lp parport ip_tables
->> x_tables autofs4 zfs(POE) zunicode(POE) zzstd(OE) zlua(OE) zavl(POE) icp(POE)
->> zcommon(POE) znvpair(POE) spl(OE) z3fold lz4 lz4_compress hid_logitech_hidpp
->> hid_apple hid_logitech_dj hid_generic
->> [    7.144716]  usbhid hid i915 nouveau mxm_wmi wmi drm_buddy i2c_algo_bit
->> drm_ttm_helper ttm drm_dp_helper cec rc_core drm_kms_helper uas syscopyarea
->> usb_storage sysfillrect crct10dif_pclmul crc32_pclmul ghash_clmulni_intel
->> sysimgblt fb_sys_fops aesni_intel nvme crypto_simd i2c_i801 cryptd drm
->> nvme_core thunderbolt lpc_ich i2c_smbus xhci_pci xhci_pci_renesas video
->> [    7.144742] CPU: 6 PID: 969 Comm: systemd-udevd Tainted: P           OE    
->> 5.18.0-rc4 #1
->> [    7.144745] Hardware name: Apple Inc. MacBookPro11,3/Mac-2BD1B31983FE1663,
->> BIOS 432.60.3.0.0 10/27/2021
->> [    7.144746] RIP: 0010:usb_hcd_map_urb_for_dma+0x4c0/0x4f0
->> [    7.144752] Code: 50 c6 05 dd fd 8a 01 01 4d 85 f6 75 03 4d 8b 32 4c 89 d7
->> e8 42 6f ef ff 4c 89 f2 48 c7 c7 e8 3d 43 96 48 89 c6 e8 0f f7 36 00 <0f> 0b e9
->> 58 ff ff ff 48 8b 35 32 e9 4a 01 e9 ae fe ff ff 48 8b 35
->> [    7.144754] RSP: 0018:ffffb4494abd7978 EFLAGS: 00010286
->> [    7.144756] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
->> ffffa0ae6f3a05a8
->> [    7.144757] RDX: 00000000ffffffd8 RSI: 0000000000000027 RDI:
->> ffffa0ae6f3a05a0
->> [    7.144759] RBP: ffffb4494abd79b0 R08: 0000000000000003 R09:
->> 0000000000000001
->> [    7.144760] R10: ffffffffffffffff R11: 0000000000000001 R12:
->> ffffa0ab16e42900
->> [    7.144761] R13: ffffa0ab1e092000 R14: ffffa0ab0155cec0 R15:
->> 00000000000001de
->> [    7.144762] FS:  00007f7696c778c0(0000) GS:ffffa0ae6f380000(0000)
->> knlGS:0000000000000000
->> [    7.144764] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [    7.144766] CR2: 00007f76975c1f06 CR3: 000000011eda6005 CR4:
->> 00000000001706e0
->> [    7.144767] Call Trace:
->> [    7.144771]  <TASK>
->> [    7.144774]  xhci_map_urb_for_dma+0x14c/0x2b0
->> [    7.144783]  usb_hcd_submit_urb+0x98/0xc70
->> [    7.144785]  ? __slab_free+0xbf/0x310
->> [    7.144789]  ? usb_control_msg+0xfc/0x140
->> [    7.144792]  usb_submit_urb+0x24f/0x6c0
->> [    7.144797]  bcm5974_start_traffic+0x4c/0xa0 [bcm5974]
->> [    7.144801]  bcm5974_open+0x44/0x90 [bcm5974]
->> [    7.144803]  input_open_device+0x8d/0xe0
->> [    7.144806]  evdev_open+0x1cc/0x200
->> [    7.144809]  chrdev_open+0xc4/0x240
->> [    7.144813]  ? cdev_device_add+0x90/0x90
->> [    7.144815]  do_dentry_open+0x157/0x380
->> [    7.144819]  vfs_open+0x2d/0x30
->> [    7.144823]  path_openat+0xb5b/0x12b0
->> [    7.144826]  ? page_add_file_rmap+0x81/0x300
->> [    7.144829]  ? filemap_map_pages+0x148/0x7a0
->> [    7.144833]  do_filp_open+0xb6/0x160
->> [    7.144836]  ? __check_object_size+0x128/0x160
->> [    7.144840]  do_sys_openat2+0x9b/0x160
->> [    7.144842]  __x64_sys_openat+0x56/0x90
->> [    7.144844]  do_syscall_64+0x59/0x80
->> [    7.144848]  ? irqentry_exit_to_user_mode+0x9/0x20
->> [    7.144850]  ? irqentry_exit+0x33/0x40
->> [    7.144852]  ? exc_page_fault+0x87/0x170
->> [    7.144854]  ? asm_exc_page_fault+0x8/0x30
->> [    7.144858]  entry_SYSCALL_64_after_hwframe+0x44/0xae
->> [    7.144861] RIP: 0033:0x7f76974096eb
->> [    7.144864] Code: 25 00 00 41 00 3d 00 00 41 00 74 4b 64 8b 04 25 18 00 00
->> 00 85 c0 75 67 44 89 e2 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00
->> f0 ff ff 0f 87 91 00 00 00 48 8b 54 24 28 64 48 2b 14 25
->> [    7.144866] RSP: 002b:00007ffff8b30d00 EFLAGS: 00000246 ORIG_RAX:
->> 0000000000000101
->> [    7.144868] RAX: ffffffffffffffda RBX: 0000000000000000 RCX:
->> 00007f76974096eb
->> [    7.144870] RDX: 0000000000080902 RSI: 0000558ac9a4b030 RDI:
->> 00000000ffffff9c
->> [    7.144871] RBP: 0000558ac9a4b030 R08: 0000000000000000 R09:
->> 0000000000000000
->> [    7.144872] R10: 0000000000000000 R11: 0000000000000246 R12:
->> 0000000000080902
->> [    7.144873] R13: 00007ffff8b30da0 R14: 0000558ac9925570 R15:
->> 0000558ac992557a
->> [    7.144875]  </TASK>
->> [    7.144876] ---[ end trace 0000000000000000 ]---
+>> I will try to get a Fixup ASAP.
+>>
+>> Regards,
+>> Jim Quinlan
+>> Broadcom STB
+>>
+>> On Mon, May 9, 2022 at 3:44 AM Thorsten Leemhuis
+>> <regressions@leemhuis.info> wrote:
+>>>
+>>> Hi, this is your Linux kernel regression tracker. Partly top-posting to
+>>> mnake this easily accessible.
+>>>
+>>> Jim, what's up here? The regression was reported more than a week ago
+>>> and it seems nothing happened since then. Or was there progress and I
+>>> just missed it?
+>>>
+>>> Anyway:
+>>>
+>>> [TLDR: I'm adding this regression report to the list of tracked
+>>> regressions; all text from me you find below is based on a few templates
+>>> paragraphs you might have encountered already already in similar form.]
+>>>
+>>> On 02.05.22 20:38, Bjorn Helgaas wrote:
+>>>> On Sat, Apr 30, 2022 at 2:53 PM <bugzilla-daemon@kernel.org> wrote:
+>>>>>
+>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=215925
+>>>>>
+>>>>>             Bug ID: 215925
+>>>>>            Summary: PCIe regression on Raspberry Pi Compute Module 4 (CM4)
+>>>>>                     breaks booting
+>>>>>            Product: Drivers
+>>>>>            Version: 2.5
+>>>>>     Kernel Version: v5.17-rc1
+>>>>>           Hardware: ARM
+>>>>>                 OS: Linux
+>>>>>               Tree: Mainline
+>>>>>             Status: NEW
+>>>>>           Severity: normal
+>>>>>           Priority: P1
+>>>>>          Component: PCI
+>>>>>           Assignee: drivers_pci@kernel-bugs.osdl.org
+>>>>>           Reporter: kibi@debian.org
+>>>>>         Regression: No
+>>>>>
+>>>>> Catching up with latest kernel releases in Debian, it turned out that my
+>>>>> Raspberry Pi Compute Module 4, mounted on an official Compute Module 4 IO
+>>>>> Board,
+>>>>> and booting from an SD card, no longer boots: this means a black screen on the
+>>>>> HDMI output, and no output on the serial console.
+>>>>>
+>>>>> Trying various releases, I confirmed that v5.16 was fine, and v5.17-rc1 was the
+>>>>> first (pre)release that wasn't.
+>>>>>
+>>>>> After some git bisect, it turns out the cause seems to be the following commit
+>>>>> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21):
+>>>>>
+>>>>> ```
+>>>>> commit 830aa6f29f07a4e2f1a947dfa72b3ccddb46dd21
+>>>>> Author: Jim Quinlan <jim2101024@gmail.com>
+>>>>> Date:   Thu Jan 6 11:03:27 2022 -0500
+>>>>>
+>>>>>     PCI: brcmstb: Split brcm_pcie_setup() into two funcs
+>>>>> ```
+>>>>>
+>>>>> Starting with this commit, the kernel panics early (before 0.30 seconds), with
+>>>>> an `Asynchronous SError Interrupt`. The backtrace references various
+>>>>> `brcm_pcie_*` functions; I can share a picture or try and transcribe it
+>>>>> manually if that helps (nothing on the serial console…).
+>>>>>
+>>>>> This commit is part of a branch that was ultimately merged as
+>>>>> d0a231f01e5b25bacd23e6edc7c979a18a517b2b; starting with this commit, there's
+>>>>> not even a backtrace anymore, the screen stays black after the usual “boot-up
+>>>>> rainbow”, and there's still nothing on the serial console.
+>>>>>
+>>>>> I confirmed that 88db8458086b1dcf20b56682504bdb34d2bca0e2 (on the master side)
+>>>>> was still booting properly, and that 87c71931633bd15e9cfd51d4a4d9cd685e8cdb55
+>>>>> (from the branch being merged into master) is the last commit showing the
+>>>>> panic.
+>>>>>
+>>>>> Since d0a231f01e5b25bacd23e6edc7c979a18a517b2b is a merge commit that includes
+>>>>> conflict resolutions in drivers/pci/controller/pcie-brcmstb.c, I suppose this
+>>>>> could be consistent with the initial panic being “upgraded” into an even more
+>>>>> serious issue.
+>>>>>
+>>>>> I've also verified that latest master (v5.18-rc4-396-g57ae8a492116) is still
+>>>>> affected by this issue.
+>>>>>
+>>>>> The regular Raspberry Pi 4 B doesn't seem to be affected by this issue: the
+>>>>> exact same image on the same SD card (with latest master) boots fine on it.
+>>>
+>>> CCing the regression mailing list, as it should be in the loop for all
+>>> regressions, as explained here:
+>>> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+>>>
+>>> To be sure below issue doesn't fall through the cracks unnoticed, I'm
+>>> adding it to regzbot, my Linux kernel regression tracking bot:
+>>>
+>>> #regzbot ^introduced 830aa6f29f07a4e2f1a
+>>> #regzbot title pci: brcmstb: CM4 no longer boots from SD card
+>>> #regzbot ignore-activity
+>>> #regzbot from: Cyril Brulebois <kibi@debian.org>
+>>> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215925
+>>>
+>>> This isn't a regression? This issue or a fix for it are already
+>>> discussed somewhere else? It was fixed already? You want to clarify when
+>>> the regression started to happen? Or point out I got the title or
+>>> something else totally wrong? Then just reply -- ideally with also
+>>> telling regzbot about it, as explained here:
+>>> https://linux-regtracking.leemhuis.info/tracked-regression/
+>>>
+>>> Reminder for developers: When fixing the issue, add 'Link:' tags
+>>> pointing to the report (the mail this one replied to), as the kernel's
+>>> documentation call for; above page explains why this is important for
+>>> tracked regressions.
+>>>
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>
+>>> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+>>> reports and sometimes miss something important when writing mails like
+>>> this. If that's the case here, don't hesitate to tell me in a public
+>>> reply, it's in everyone's interest to set the public record straight.
 > 
-> For more details check this thread or the bugzilla ticket, it has a
-> second comment already from the reporter.
-> 
-> Anyway, to get this tracked:
-> 
-> #regzbot introduced: v5.17..v5.18-rc4
-> #regzbot from: Satadru Pramanik <satadru@umich.edu>
-> #regzbot title: input/usb/???: bcm5974 trackpad causes error: xhci_hcd
-> rejecting DMA map of vmalloc memory
-> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215890
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I deal with a lot of
-> reports and sometimes miss something important when writing mails like
-> this. If that's the case here, don't hesitate to tell me in a public
-> reply, it's in everyone's interest to set the public record straight.
