@@ -1,160 +1,185 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam07on2055.outbound.protection.outlook.com [40.107.95.55])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2598E2904
-	for <regressions@lists.linux.dev>; Thu, 19 May 2022 18:07:33 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ImDaFkpsnSYHiyjGN9QTA3f65FU23DnkFPcm1fdJ9MToWZi2t5a+GF50hOJHP1IZ3/VOITDCX6JTsI9CjzU0e+9tS2c9qSwZdlvG7Z2GtjiT6HC7GItfEQzD+Ero28/ob+lARnJ0T64BLxJWph/PHc/c9OHaTVjpA5nWjKDXGDSL0mZ8MLGuAtqoQWR053GNba3gXALkR/y1tEHI52vmrQfkhCY1lqJFj+nQtS0LZ89YaBwpL064pKU2auDAnmQhy6su3Wjn/2YaxBvkuFda/qo6v4ieh/Z4fAYYaRiMQBNJW3ZtcY+HlHWH78WT3k+8Agt9I532eaCHchfaBJu1Xw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TrOpxHDoJ6n1/rurlHxGPtMpXYoqMS4rL5z0D1CGvLw=;
- b=It4opKT63hLoOxvMOJ9BerU4e48VuXqYLNxo5kEHO9lU8AMZGmzEsPIzoJvH6vxSPpS+GQtDn9eVZbZcMd6ky77Hk9k4f1KcnIRSH70cjmNb+9/VwZM/6bcjzqPhon4L7WxDiq6vXegKKZevFbIvUoNh4fg2OuytWiPJv9rv6MPZsCAFvUQo/yOW5fG3ah9iVit6C58T/36+A4zQj7DU3iqhDCVafqhEUFRzkujif7SVyoma5/3Bv9RyRbafxpV8uWuL3lTf0I8yxJoXz6gu/RU+mzrGmhprsNmnk/QhbTWuINvqRYB56yNOm+XkRoznYo2t0MmJQGUqZG58ir4RXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TrOpxHDoJ6n1/rurlHxGPtMpXYoqMS4rL5z0D1CGvLw=;
- b=PCjyHbMniW3QdM6Deqg/K4cJH+/3C4KmoHkoy6z2pyYvv08Ov4XwOyTeHVDcb1GmqemnpSX4ujbEYDXhrjK+twc8DNln1zYW7GSRxg3qIIfMNEcWz+EUENrAanV8jqKG9cQsr1SY9s9Rhcv0T22ioS+h0RzQsy1mHw7eM7GibGU=
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by BL3PR12MB6642.namprd12.prod.outlook.com (2603:10b6:208:38e::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5250.18; Thu, 19 May
- 2022 18:07:31 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::d42b:7413:ba19:e8db]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::d42b:7413:ba19:e8db%6]) with mapi id 15.20.5273.016; Thu, 19 May 2022
- 18:07:31 +0000
-From: "Limonciello, Mario" <Mario.Limonciello@amd.com>
-To: "casteyde.christian@free.fr" <casteyde.christian@free.fr>
-CC: "stable@vger.kernel.org" <stable@vger.kernel.org>, Thorsten Leemhuis
-	<regressions@leemhuis.info>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "Deucher, Alexander"
-	<Alexander.Deucher@amd.com>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>, Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: RE: [REGRESSION] Laptop with Ryzen 4600H fails to resume video since
- 5.17.4 (works 5.17.3)
-Thread-Topic: [REGRESSION] Laptop with Ryzen 4600H fails to resume video since
- 5.17.4 (works 5.17.3)
-Thread-Index: AQHYabuPQo7dlCpjq0mwll14F3A0P60jVmoAgAAIYsCAARsvgIAB/OSggAALy1A=
-Date: Thu, 19 May 2022 18:07:31 +0000
-Message-ID:
- <MN0PR12MB6101D7AB5BC33430A8492E0AE2D09@MN0PR12MB6101.namprd12.prod.outlook.com>
-References:
- <MN0PR12MB6101BB3D9C3D73563C3445B9E2CE9@MN0PR12MB6101.namprd12.prod.outlook.com>
- <1375623147.551034914.1652871731034.JavaMail.root@zimbra40-e7.priv.proxad.net>
- <MN0PR12MB6101FA3FF375A961E67AE89CE2D09@MN0PR12MB6101.namprd12.prod.outlook.com>
-In-Reply-To:
- <MN0PR12MB6101FA3FF375A961E67AE89CE2D09@MN0PR12MB6101.namprd12.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2022-05-19T17:27:21Z;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=fd3e14ba-5598-4029-9d76-3f457f40f8cf;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2022-05-19T18:07:30Z
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid:
- 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid:
- ae3ac430-a387-406a-b00f-f3452512ec04
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: de876937-4fc3-4448-54a2-08da39c2717e
-x-ms-traffictypediagnostic: BL3PR12MB6642:EE_
-x-microsoft-antispam-prvs:
- <BL3PR12MB66425A3FA8EE46D227E0CFB4E2D09@BL3PR12MB6642.namprd12.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- +2ZCGI0K2Eem/QH79HHmYNA3kanHr/+Sk0OnVTxmJcWXYXg4jsmRS2v28oUO7/yRLEXRw/zbvu1W4pML7lEC7P0Z0vKJurp9GIqX4yEWBLu9nbEZct6/lQu2kbheZXkjtZzek2vHJCuADyh5vShAsp5ulQNjGx+kCvYp8kHHIMExqCPGmBlEXDmfEy8Y+peMrLP9VKLu897WmOojemxCRNHwS/jI+L7jt6WQyv/qdkJok9+SuLPXz7QEHBq6H5btaEd/CaMT5ovE3tYkqwKneAdgzwyiKPlHvLR1C0zBqkPoXrewwqn34qnPw9nsffJQO/Qve/0uuJBZTDiAeisTWgKp8a56hGBV6GrIwnD7Rr/BW9WgtkiRbqL/uyxcOTpD31Sd9FaW5OG+/kTtS7Wst3tHwIFbdKaiepYNWZwcMxBt+rxE3reWPz6k5RaKMKhadYlMDjceBzge7JMJAHFK1TjUQxQKLOV+CYqJegbCtvLLnojJK6MEPk9aq/GypYJDn7+kLVyHbMISvSOoeWPH7HOHEO6/VJFnlXMZM+1f6M4fIrmyiUQzw1+NOK/roeQ0aWrvOtd9TFL/pHWIl1sXvZ8kI2qXmhmPuY1l5asswZ60IkEUerUk61GwSrPNMRMUsbLgQpXIeIGynb6Wvvy4tmrbhoMaUJ7hJXA0Vr8lBbKhM2sj4SX53IY+UoHrKKP/XfHXresUQwx7fhhFYKYbwaSMitfH++A+s9MZT6iHR5tNsEix2Edczcy+EvmqxmK0
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(8936002)(86362001)(2940100002)(122000001)(55016003)(966005)(508600001)(186003)(83380400001)(7696005)(52536014)(6506007)(5660300002)(38070700005)(38100700002)(33656002)(66476007)(66556008)(4326008)(76116006)(66946007)(66446008)(4744005)(64756008)(6916009)(54906003)(71200400001)(9686003)(316002)(8676002)(2906002)(26005)(41080700001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?R20xQ3VoWVdhZFZvNVpwOW1qZEFHN1Z2U2ovdDMrK1hkbUMwZ2VxdUIxUE1B?=
- =?utf-8?B?c0RyK0RySmsvUzY0am0vMnhVUHhVcTJQZkVKOTFEd3VzY0FUbXgrTDZjS1FL?=
- =?utf-8?B?Njk4R2hiaG43L1ZkNjNtVFJCb2tYS1FGRERTWWNSWHEvUmdueGVLcDZneVJr?=
- =?utf-8?B?dklZamJxRHgyU2xreHBYSlVZNEZ5b3laNitSMmtaamhkVjk1SzZHOTFmSjlh?=
- =?utf-8?B?WFp3WGp4RHVIZ2l4cVhyWU5QTWV1WXRDVjZuSFdydStMV2tWRG0wTkxsM0hi?=
- =?utf-8?B?dHZ0L2hHckJIZTN5dktxNEtqR215QzdaLzgxZkJRZFIrbDlLeElVTmlEQXFq?=
- =?utf-8?B?MjEzeGRxeTNEMWJhbnl2Y1dVb1QwWUJ5KzhxQVluNGxnd09Fd1NNWGN0cVZv?=
- =?utf-8?B?RmRaaFk1WnFmaVZINGpudGRyb3dkbmZ2NTBkNnVKVTBLQllUTEtlNzEzYWEx?=
- =?utf-8?B?VklBVHAyUDBRSW5WMEhPc3o4Mmk1VWdudC9VNUoyYldORDFrcjY2MVQ3Mmdk?=
- =?utf-8?B?dVVQS0xpU0NZaTNxZGdFdjRRSFdINlhRaEM1V05SSWZMeHJpOFArOVdrdkNl?=
- =?utf-8?B?NkYrT0drOW0zYUZLUDdmdGlMUmQrWEVLR1BhWkJsSjRFZ1dXVXNrbnRRdmEx?=
- =?utf-8?B?bVZXYmFpRzA1ajdBNi81dDYydUh0ZVdvU1FuUC8yTmpWeFUvbmxiVXhGYWRx?=
- =?utf-8?B?WHdablRxc2NJc051cVVsek1ucU1QTGRCbklseUhha1VDR0twcDlOd0w2WTZI?=
- =?utf-8?B?Ti9ZaWErVkdWVUQyZDVNQXRaTzRsUG9HVWVXZHhIR1M5ZHhxb0ZILzBuVlhS?=
- =?utf-8?B?Z3FsT2RFSHl3RWpKRFRENlVqdmYxWCtGeWk3c3NEby9xWEI5TWlFYjYyMk8y?=
- =?utf-8?B?MW0xdTlhTlMwUlhITXFUNkRPa1kwNVdQSjhGOTZiRVVqUGc2aGlhaFduOHVW?=
- =?utf-8?B?L0drcGVZMWplSDQzZjN4d3Z4Y2ZnUVZWNjhYZDFjM20zTENiU3N1OU4reXRx?=
- =?utf-8?B?c2dqL0NXNkREQVcyNGMvMm1HV2psSWE0Z3AvdkhEUW84WTBNRHpibkYyK2lt?=
- =?utf-8?B?VWs0UGdUYXdpWXh2ZEJHYTFiNEwwNGZlQU5BQ2lxUkM1Q29PY2lQZ3Nod09z?=
- =?utf-8?B?dHdXODlDNTV4WTdzLzNwYlBZZjdCdG1MZmpIdjV5ZEtvR2RCL2xaV0NUcnJr?=
- =?utf-8?B?TW9zb1JoSG11ZDhpTEdaTFZTQWVMSVF0VUUzQWVLRFlLRnRNSEd6QWI1bmd1?=
- =?utf-8?B?OWxrM1IzRzNXQWprQ2NFYkRuYVNXWW03S2RnbTQ2T3Z0VHE5TUpwN2ZqczUy?=
- =?utf-8?B?a01aQSs5dUxIaVd4Y2I4RGdyc2xhK3BHcDZzMFg0dnYvK09vU1N5Tk56Lzlr?=
- =?utf-8?B?VmtNZzUxOStHUUFKT1huamJKU0NoMG8xdE1sakl1aGFDLzlRWUhZYlBQMGdE?=
- =?utf-8?B?Z3Zmd291ZXJQSEpvYVlYbmhXeG9ZZXRpbzl3UWhadk5wUkY2RVZPSjJ1K1RK?=
- =?utf-8?B?dWNleStEajNYVW5DTnB5NXRhRWg2RWNaQ0FDQTVxZkJLZzJaTlY3TDAyYVAy?=
- =?utf-8?B?M1hrd1J2SnlNN29xemlaZktwM1NlRE9CYmZUY2hEd0ZNV2l6Ykc4TzcyTHhC?=
- =?utf-8?B?MnJaQmRHQjJZa3ZMaTdLVGJ1SldTdGlGUnAvbHRXbE9KbGgra3NSbXg4VjNS?=
- =?utf-8?B?bXo0WGVBeC9YV3A0bmorQWNFMHh1bWhYVTcyNktNbnFIeFByUE1uY2MwbG9N?=
- =?utf-8?B?QUwvb3NOcjBrREM0RVRKV3BJMGEzazhCMkRZbkQ2Y091ZnhqUUk3MDJXNUNI?=
- =?utf-8?B?TDFUODlsS1hxT1lyZGNabDRkRkRFZDFsTFpWMFo1YVpIU29aeGFycUQyeTd2?=
- =?utf-8?B?WHpmdEt3Rk1xaVFvcHlPMCtDRDUrUkxxUnRMZGorUmRyYlh6WnlZSUdpZk4w?=
- =?utf-8?B?ODBrc3I0aDE3NnQzN1l2VEtSbHA5VWI0WGtnWGFZOTErRDdUcFZGcjA4ZUxj?=
- =?utf-8?B?aHg4SHVlSk16aklIcFRvZ1NPVDRxdlRHckdGUW5xUjBCMHFiODNyT0ZrZC84?=
- =?utf-8?B?Q3JMSjZKT3RkdXRyS0tNZkJxWUtCZ3RzQ0lmZUFUTjh4WmhTaTRJQlBvak9J?=
- =?utf-8?B?Ni9rYnEyLzJkTGhaR293YkdOVFJYYzBKV05Tb3BVMTdlRk5zVHV6N01nZVd4?=
- =?utf-8?B?ZUw2Z0tzS21Pc1NRRlV6VFErWHpiNjBsZ1FDQWlBOStVN2d3dDliVUdWaWxh?=
- =?utf-8?B?cjJzUy9Yc2FzcDBzS3lvU1Z0dmVVY2plYnUyU1Y4Ylp5Q0d1SnI3a0lFcC9m?=
- =?utf-8?B?NEZlcmpHS0Y1WHlWNmlKSTlxRWJSMlBJSS9SYTM2R0N0NThZVGRWZz09?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E812E15A9
+	for <regressions@lists.linux.dev>; Fri, 20 May 2022 05:39:04 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nrvLk-00073S-CF; Fri, 20 May 2022 07:38:56 +0200
+Message-ID: <8e135260-b3b9-6162-1f2f-998540aef616@leemhuis.info>
+Date: Fri, 20 May 2022 07:38:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: de876937-4fc3-4448-54a2-08da39c2717e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2022 18:07:31.6733
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FkDbUdmnQ0Kfrhia41/E26hZSqTDNQlPaAH5fEmZSCDQfjosJzCKhNpPUIsCajQdF+orWswktc8qfY11LhfgKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6642
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [Bug 215890] New: Regression in 5.18: bcm5974 trackpad causes
+ error: xhci_hcd rejecting DMA map of vmalloc memory #forregzbot
+Content-Language: en-US
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <bug-215890-208809@https.bugzilla.kernel.org/>
+ <76e24afa-ad7d-bf6d-d610-df61851b3e2b@leemhuis.info>
+In-Reply-To: <76e24afa-ad7d-bf6d-d610-df61851b3e2b@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653025145;e3375518;
+X-HE-SMSGID: 1nrvLk-00073S-CF
 
-W1B1YmxpY10NCg0KPiANCj4gSW4gYWRkaXRpb24gdG8gbXkgb3RoZXIgYXNrIHNvbWV3aGVyZSBp
-biB0aGlzIHRocmVhZCBmb3IgaW5jcmVhc2VkDQo+IGRlYnVnZ2luZw0KPiBvdXRwdXQgdG8gZmlu
-ZCB5b3VyICJyZWFsIiBwcm9ibGVtLCBwbGVhc2UgZ2l2ZSBhIHRyeSBvZiB0aGlzIGNvbWJvOg0K
-PiANCj4gMSkgNS4xOC1yYzcNCj4gMikgUGF0Y2ggdHVybmluZyBvZmYgcmVzZXQgb24gZEdQVXMg
-aW4gczJpZGxlDQo+IDMpIFRoZSBiZWxvdyBwYXRjaA0KPiANCj4gVGhpcyBwYXRjaCBzaG91bGQg
-ZG8gcHJldHR5IG11Y2ggdGhlIHNhbWUgdGhpbmcsIHRyeSB0byByZWNvdmVyIHlvdXIgR1BVDQo+
-IHdoZW4NCj4gaXQncyBpbiB0aGlzIGJhZCBzdGF0ZS4gTm93IGl0IGhhcHBlbnMgc29tZXdoZXJl
-IG1vcmUgc3VzdGFpbmFibGUgYW5kDQo+IHNlbnNpYmxlOg0KPiBvbiB0aGUgcmVzdW1lIHBhdGgu
-ICBJIHRoaW5rIHRoaXMgbWlnaHQgZ2V0IHlvdSBhIGZ1bmN0aW9uYWwgZGlzcGxheSByYXRoZXIN
-Cj4gdGhhbiB0aGF0DQo+ICJibGFjayBzY3JlZW4iIGZyb20gdGhlIGZhaWxlZCBzdXNwZW5kIGN5
-Y2xlLiAgSXQncyBzdGlsbCBwYXBlcmluZyBvdmVyIHlvdXIgcmVhbA0KPiBpc3N1ZQ0KPiBvZiB3
-aGF0ZXZlciBjYXVzZWQgdGhlIGZhaWxlZCBzdXNwZW5kLg0KPiANCg0KSSBub3RpY2VkIHRoZSBy
-ZXNldCBkb2Vzbid0IHJlZG8gdGhlIEhXIGluaXQsIHRoYXQncyBzdGlsbCBhbm90aGVyIG5lZWRl
-ZCBzdGVwLg0KDQpTbyBoZXJlJ3MgYSBwcm9wZXIgbGluayB0byB0aGUgcGF0Y2ggeW91IGNhbiBh
-cHBseSBhcyBhbiBtYm94Og0KaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3BhdGNo
-LzQ4NjgzNi8NClRoaXMgaXMgdW50ZXN0ZWQuDQo=
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
+
+On 04.05.22 10:42, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker.
+> 
+> Linux-Input developers, do you have any idea what might be causing the
+> problem outline below? It's a post 5.17 regression in mainline that was
+> reported to bugzilla.kernel.org about a week ago, but didn't even get a
+> single reply. Might be some other subsystem that is causing it, not sure.
+> 
+> On 27.04.22 00:42, bugzilla-daemon@kernel.org wrote:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=215890
+
+#regzbot invalid: something apparently fixed it with 5.18-rc7
+https://bugzilla.kernel.org/show_bug.cgi?id=215890#c21
+
+>>             Bug ID: 215890
+>>            Summary: Regression in 5.18: bcm5974 trackpad causes error:
+>>                     xhci_hcd rejecting DMA map of vmalloc memory
+>>            Product: Drivers
+>>            Version: 2.5
+>>     Kernel Version: 5.18-rc4
+>>           Hardware: Intel
+>>                 OS: Linux
+>>               Tree: Mainline
+>>             Status: NEW
+>>           Severity: high
+>>           Priority: P1
+>>          Component: USB
+>>           Assignee: drivers_usb@kernel-bugs.kernel.org
+>>           Reporter: satadru@umich.edu
+>>         Regression: No
+>>
+>> The Apple BCM5974 trackpad & keyboard show up in sudo libinput list-devices
+>> when booted into 5.17.4.
+>>
+>> In 5.18-rc4, the keyboard works, but the trackpad does not. libinput
+>> list-devices shows the keyboard, but not the trackpad.
+>>
+>> This error shows up in dmesg:
+>>
+>> [    7.144632] ------------[ cut here ]------------
+>> [    7.144635] xhci_hcd 0000:00:14.0: rejecting DMA map of vmalloc memory
+>> [    7.144648] WARNING: CPU: 6 PID: 969 at include/linux/dma-mapping.h:326
+>> usb_hcd_map_urb_for_dma+0x4c0/0x4f0
+>> [    7.144656] Modules linked in: mei_hdcp x86_pkg_temp_thermal
+>> intel_powerclamp snd_hda_codec_cirrus snd_hda_codec_generic ledtrig_audio
+>> snd_hda_codec_hdmi btusb btrtl wl(POE) kvm_intel btbcm snd_seq_midi
+>> snd_hda_intel btintel snd_seq_midi_event btmtk kvm bluetooth snd_intel_dspcfg
+>> snd_intel_sdw_acpi rapl applesmc snd_rawmidi ecdh_generic snd_hda_codec
+>> intel_cstate ecc joydev mei_me bcm5974 snd_hda_core input_leds cfg80211
+>> efi_pstore(+) snd_hwdep apple_mfi_fastcharge snd_seq snd_pcm mei snd_seq_device
+>> snd_timer snd sbs(+) soundcore acpi_als industrialio_triggered_buffer sbshc
+>> kfifo_buf apple_gmux industrialio mac_hid apple_bl facetimehd(OE)
+>> videobuf2_dma_sg videobuf2_memops videobuf2_v4l2 videobuf2_common videodev mc
+>> coretemp ipmi_devintf ipmi_msghandler msr parport_pc ppdev lp parport ip_tables
+>> x_tables autofs4 zfs(POE) zunicode(POE) zzstd(OE) zlua(OE) zavl(POE) icp(POE)
+>> zcommon(POE) znvpair(POE) spl(OE) z3fold lz4 lz4_compress hid_logitech_hidpp
+>> hid_apple hid_logitech_dj hid_generic
+>> [    7.144716]  usbhid hid i915 nouveau mxm_wmi wmi drm_buddy i2c_algo_bit
+>> drm_ttm_helper ttm drm_dp_helper cec rc_core drm_kms_helper uas syscopyarea
+>> usb_storage sysfillrect crct10dif_pclmul crc32_pclmul ghash_clmulni_intel
+>> sysimgblt fb_sys_fops aesni_intel nvme crypto_simd i2c_i801 cryptd drm
+>> nvme_core thunderbolt lpc_ich i2c_smbus xhci_pci xhci_pci_renesas video
+>> [    7.144742] CPU: 6 PID: 969 Comm: systemd-udevd Tainted: P           OE    
+>> 5.18.0-rc4 #1
+>> [    7.144745] Hardware name: Apple Inc. MacBookPro11,3/Mac-2BD1B31983FE1663,
+>> BIOS 432.60.3.0.0 10/27/2021
+>> [    7.144746] RIP: 0010:usb_hcd_map_urb_for_dma+0x4c0/0x4f0
+>> [    7.144752] Code: 50 c6 05 dd fd 8a 01 01 4d 85 f6 75 03 4d 8b 32 4c 89 d7
+>> e8 42 6f ef ff 4c 89 f2 48 c7 c7 e8 3d 43 96 48 89 c6 e8 0f f7 36 00 <0f> 0b e9
+>> 58 ff ff ff 48 8b 35 32 e9 4a 01 e9 ae fe ff ff 48 8b 35
+>> [    7.144754] RSP: 0018:ffffb4494abd7978 EFLAGS: 00010286
+>> [    7.144756] RAX: 0000000000000000 RBX: 0000000000000000 RCX:
+>> ffffa0ae6f3a05a8
+>> [    7.144757] RDX: 00000000ffffffd8 RSI: 0000000000000027 RDI:
+>> ffffa0ae6f3a05a0
+>> [    7.144759] RBP: ffffb4494abd79b0 R08: 0000000000000003 R09:
+>> 0000000000000001
+>> [    7.144760] R10: ffffffffffffffff R11: 0000000000000001 R12:
+>> ffffa0ab16e42900
+>> [    7.144761] R13: ffffa0ab1e092000 R14: ffffa0ab0155cec0 R15:
+>> 00000000000001de
+>> [    7.144762] FS:  00007f7696c778c0(0000) GS:ffffa0ae6f380000(0000)
+>> knlGS:0000000000000000
+>> [    7.144764] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>> [    7.144766] CR2: 00007f76975c1f06 CR3: 000000011eda6005 CR4:
+>> 00000000001706e0
+>> [    7.144767] Call Trace:
+>> [    7.144771]  <TASK>
+>> [    7.144774]  xhci_map_urb_for_dma+0x14c/0x2b0
+>> [    7.144783]  usb_hcd_submit_urb+0x98/0xc70
+>> [    7.144785]  ? __slab_free+0xbf/0x310
+>> [    7.144789]  ? usb_control_msg+0xfc/0x140
+>> [    7.144792]  usb_submit_urb+0x24f/0x6c0
+>> [    7.144797]  bcm5974_start_traffic+0x4c/0xa0 [bcm5974]
+>> [    7.144801]  bcm5974_open+0x44/0x90 [bcm5974]
+>> [    7.144803]  input_open_device+0x8d/0xe0
+>> [    7.144806]  evdev_open+0x1cc/0x200
+>> [    7.144809]  chrdev_open+0xc4/0x240
+>> [    7.144813]  ? cdev_device_add+0x90/0x90
+>> [    7.144815]  do_dentry_open+0x157/0x380
+>> [    7.144819]  vfs_open+0x2d/0x30
+>> [    7.144823]  path_openat+0xb5b/0x12b0
+>> [    7.144826]  ? page_add_file_rmap+0x81/0x300
+>> [    7.144829]  ? filemap_map_pages+0x148/0x7a0
+>> [    7.144833]  do_filp_open+0xb6/0x160
+>> [    7.144836]  ? __check_object_size+0x128/0x160
+>> [    7.144840]  do_sys_openat2+0x9b/0x160
+>> [    7.144842]  __x64_sys_openat+0x56/0x90
+>> [    7.144844]  do_syscall_64+0x59/0x80
+>> [    7.144848]  ? irqentry_exit_to_user_mode+0x9/0x20
+>> [    7.144850]  ? irqentry_exit+0x33/0x40
+>> [    7.144852]  ? exc_page_fault+0x87/0x170
+>> [    7.144854]  ? asm_exc_page_fault+0x8/0x30
+>> [    7.144858]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+>> [    7.144861] RIP: 0033:0x7f76974096eb
+>> [    7.144864] Code: 25 00 00 41 00 3d 00 00 41 00 74 4b 64 8b 04 25 18 00 00
+>> 00 85 c0 75 67 44 89 e2 48 89 ee bf 9c ff ff ff b8 01 01 00 00 0f 05 <48> 3d 00
+>> f0 ff ff 0f 87 91 00 00 00 48 8b 54 24 28 64 48 2b 14 25
+>> [    7.144866] RSP: 002b:00007ffff8b30d00 EFLAGS: 00000246 ORIG_RAX:
+>> 0000000000000101
+>> [    7.144868] RAX: ffffffffffffffda RBX: 0000000000000000 RCX:
+>> 00007f76974096eb
+>> [    7.144870] RDX: 0000000000080902 RSI: 0000558ac9a4b030 RDI:
+>> 00000000ffffff9c
+>> [    7.144871] RBP: 0000558ac9a4b030 R08: 0000000000000000 R09:
+>> 0000000000000000
+>> [    7.144872] R10: 0000000000000000 R11: 0000000000000246 R12:
+>> 0000000000080902
+>> [    7.144873] R13: 00007ffff8b30da0 R14: 0000558ac9925570 R15:
+>> 0000558ac992557a
+>> [    7.144875]  </TASK>
+>> [    7.144876] ---[ end trace 0000000000000000 ]---
+> 
+> For more details check this thread or the bugzilla ticket, it has a
+> second comment already from the reporter.
+> 
+> Anyway, to get this tracked:
+> 
+> #regzbot introduced: v5.17..v5.18-rc4
+> #regzbot from: Satadru Pramanik <satadru@umich.edu>
+> #regzbot title: input/usb/???: bcm5974 trackpad causes error: xhci_hcd
+> rejecting DMA map of vmalloc memory
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215890
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> 
+> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+> reports and sometimes miss something important when writing mails like
+> this. If that's the case here, don't hesitate to tell me in a public
+> reply, it's in everyone's interest to set the public record straight.
