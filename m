@@ -1,180 +1,124 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E382F4A
-	for <regressions@lists.linux.dev>; Fri, 20 May 2022 17:28:46 +0000 (UTC)
-Received: by mail-oi1-f180.google.com with SMTP id v66so10727225oib.3
-        for <regressions@lists.linux.dev>; Fri, 20 May 2022 10:28:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PJV//q4C+9A8+JynDsrPULdS+3PNMfOCw/IssIKP16o=;
-        b=lqjsrr+pfYAGghM/3IYxhgJS8jGQ+XlKdPGeBOVSMF01xv7MVSJBIWIgmKQ6u5H7EC
-         CdSU2X+8spRMfr/k2ncLLnRgJOynr4Rbfbfxf0uOpUB/GKnWC/piU6pn55pjzSHHqkno
-         LBPTO1Wk9FjWIRVEDx07/rh27z0ICXZH3kNsk5YojYTf7oQ19p2FgBYBPN5McGtLJK1o
-         un4x0Lujsrq45IXG9A07ApSb3+7xPX4vOixg5sAF96aaAPT9mIRrgKCrblDQezb8NTIW
-         N+64rUiOYTKY1Fy2mvV484io7ygZF8Sp9G7z8OrX7FoVzpJLTUEz9xBrNME/ng24Hz02
-         Jx8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PJV//q4C+9A8+JynDsrPULdS+3PNMfOCw/IssIKP16o=;
-        b=EPwy3165lS6Q+RXoUOw0N/cDq6JLrEAYnxXQtlKww/Baf+wQNd8bo03AsuZU1cH4Dy
-         aQ/iPTW/AY9o4F8HcJIZUbXKuc/hCeZ4DCAtZauFCNGuOTFcFzHveSdbCkdIyvtwzxUu
-         JlfS4Kz2Qs4zxV+2AOv0XN3k0IF9waobqD7MQmqTdAJ2hx/J63aSU9Qtg/NW5Z5jANj1
-         l/G0v0rqkr9GlNhvS0GTj1qDp3nZu8H6wKb/f6bpw91pZIsi4dfRonWJRJd8EadZlHRZ
-         3e+YIPN7wKIO2HPJGhe0/XkB4q67Y2SyP57b4udsZPwJH50vvmRcW4IdKe3fQDsMOGHD
-         xQyg==
-X-Gm-Message-State: AOAM531bgW8CT5WcmNoMxleYNZho1kbaeOCHIyqn0Fmq7XmDv2634ZSN
-	rhjjzWSNuA+KB4tObjUAQrPjyc0cNgNgvP8+iPY=
-X-Google-Smtp-Source: ABdhPJzve0DTjiYQrp8wbZsMGhQApnnSSk2ujTqRgV6cbl0vEP2x0jeqLmCnKUADThYGL+hlxOE+qrXR/HQzdowXe3o=
-X-Received: by 2002:a05:6808:302b:b0:2f9:eeef:f03 with SMTP id
- ay43-20020a056808302b00b002f9eeef0f03mr6312601oib.128.1653067725056; Fri, 20
- May 2022 10:28:45 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABA22F4A
+	for <regressions@lists.linux.dev>; Fri, 20 May 2022 17:31:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11AC8C385A9;
+	Fri, 20 May 2022 17:31:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1653067906;
+	bh=lEuAPpH49ZAL8xvh6aePU+pfbu+JAGfsbB+0Xp3O5LU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vH5U9BVcMfslOBDGllyc1uR5srxpm61snyd8KD79TxwamdnxAQY6dYFSJYd6CLTUM
+	 msvqdro9xGZRcMh6YgQnjDjvixVbkSFfOGK2WkXBkSfYcl0StygIyFeB+6YCF0rNwp
+	 xDsc8txBnndbkSOr4nTSH8f5jKmSF3TsdFeMkGFuvhv7QNOO6PE1qYFzPnndV06Rq2
+	 0yc3Qh9DCs3rVFVPUSE9qXGz+qgTlftdEG9UQEz4NVqS+kQsCpNqEj3NTuvTuv/2Nr
+	 i1oL5opLZ3un9oZNbRN8zo5KAacrarjAKPr2J5MTQ7DIeQgujpntkouuNmsKyZxyjV
+	 IsSaggEuq8ivw==
+Date: Fri, 20 May 2022 10:31:44 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Richard Weinberger <richard@nod.at>,
+	Zhen Lei <thunder.leizhen@huawei.com>,
+	Jeff Dike <jdike@addtoit.com>,
+	anton ivanov <anton.ivanov@cambridgegreys.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Eduard-Gabriel Munteanu <maxdamage@aladin.ro>,
+	linux-um <linux-um@lists.infradead.org>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	regressions <regressions@lists.linux.dev>
+Subject: Re: [PATCH 1/1] um: fix error return code in winch_tramp()
+Message-ID: <YofQgDo38fAnPZEy@dev-arch.thelio-3990X>
+References: <20210508032239.2177-1-thunder.leizhen@huawei.com>
+ <Yjt31seiNv18HYrf@dev-arch.thelio-3990X>
+ <1b03d888-cea3-3e6f-087f-daeb5642a975@leemhuis.info>
+ <1087614384.239493.1649583213699.JavaMail.zimbra@nod.at>
+ <YlRp9KR1mp3/4Txo@thelio-3990X>
+ <1287561645.244713.1649702724736.JavaMail.zimbra@nod.at>
+ <e9597cbc-cabb-facf-deb6-662d40cf16a3@leemhuis.info>
+ <Yoe5/HwL9DXhaw7Z@dev-arch.thelio-3990X>
+ <32824a71109fe3387d582abbf56601fb08bdc9ef.camel@sipsolutions.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20211217153555.9413-1-marcelo.jimenez@gmail.com>
- <CACRpkdbzk55pmK9XMwc470O8vJFUBQ6zs35shOYCFKr+YaOezw@mail.gmail.com>
- <CACjc_5q247Yb8t8PfJcudVAPFYQcioREAE3zj8OtPR-Ug_x=tA@mail.gmail.com>
- <CACRpkda=0=Hcyyote+AfwoLKPGak7RV6VFt6b0fMVWBe8veTwA@mail.gmail.com>
- <CACjc_5r7i3HJ466MtwR0iZD6jdVXEqq4km0Tn7XwRijGnsDz=Q@mail.gmail.com>
- <CACRpkdZGVq19GZuOP1BwLB2-qxj1_=O9tHMVRvphvy3m6KbNig@mail.gmail.com>
- <CAMRc=McPSFQFPP1nSTXj3snKWqQyzNgz0j_J5ooyUrhRFRMqJQ@mail.gmail.com> <a0ce4372-df94-a19c-063d-274e65da7c38@leemhuis.info>
-In-Reply-To: <a0ce4372-df94-a19c-063d-274e65da7c38@leemhuis.info>
-From: Marcelo Roberto Jimenez <marcelo.jimenez@gmail.com>
-Date: Fri, 20 May 2022 14:28:19 -0300
-Message-ID: <CACjc_5oRRHdCjbSEeMMY2DeJRyFDcbQ2Vk7vaFC9h+kas8zC9g@mail.gmail.com>
-Subject: Re: [PATCH] gpio: Revert regression in sysfs-gpio (gpiolib.c)
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linus.walleij@linaro.org>, 
-	stable <stable@vger.kernel.org>, regressions@lists.linux.dev, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Thierry Reding <treding@nvidia.com>, 
-	Vidya Sagar <vidyas@nvidia.com>, Geert Uytterhoeven <geert@linux-m68k.org>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Edmond Chung <edmondchung@google.com>, 
-	Andrew Chant <achant@google.com>, Will McVicker <willmcvicker@google.com>, 
-	Sergio Tanzilli <tanzilli@acmesystems.it>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <32824a71109fe3387d582abbf56601fb08bdc9ef.camel@sipsolutions.net>
 
-Hi Thorsten,
+On Fri, May 20, 2022 at 07:18:28PM +0200, Johannes Berg wrote:
+> On Fri, 2022-05-20 at 08:55 -0700, Nathan Chancellor wrote:
+> > On Fri, May 20, 2022 at 08:08:01AM +0200, Thorsten Leemhuis wrote:
+> > > On 11.04.22 20:45, Richard Weinberger wrote:
+> > > > ----- Ursprüngliche Mail -----
+> > > > > Von: "Nathan Chancellor" <nathan@kernel.org>
+> > > > > I attempted to print out the error code but it seems like there is no
+> > > > > output in the console after "reboot: System halted". If I add an
+> > > > > unconditional print right before the call to os_set_fd_block(), I see it
+> > > > > during start up but I do not see it during shutdown. Is there some way
+> > > > > to see that console output during shutdown?
+> > > > 
+> > > > I think in this case the easiest way is attaching gdb with a breakpoint.
+> > > 
+> > > I noticed this in my list of open regressions. It seems there wasn't any
+> > > progress to get this regression fixed (please let me know in case I
+> > > missed something), but I guess nobody considered it urgent which is
+> > > likely not that much of a problem in this case.
+> > 
+> > Yes, sorry, I tried to get gdb to reveal something but I couldn't get it
+> > to work then I had to move onto other work. We have worked around this
+> > for the time being but it would still be nice to figure out what is
+> > going on here; I am just not sure when I am going to have time to
+> > participate in that process.
+> > 
+> 
+> This fixes it for me, can you check it?
 
-On Fri, May 20, 2022 at 6:12 AM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> On 16.02.22 15:40, Bartosz Golaszewski wrote:
-> > On Tue, Feb 15, 2022 at 10:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >>
-> >> On Mon, Feb 14, 2022 at 12:24 AM Marcelo Roberto Jimenez
-> >> <marcelo.jimenez@gmail.com> wrote:
-> >>> On Sat, Feb 12, 2022 at 1:55 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >>
-> >>>> I am curious about the usecases and how deeply you have built
-> >>>> yourselves into this.
-> >>>
-> >>> I don't know if I understand what you mean, sorry.
-> >>
-> >> Why does the user need the sysfs ABI? What is it used for?
-> >>
-> >> I.e what is the actual use case?
-> >>
-> >>>>> In any case, the upstream file should be enough to test the issue reported here.
-> >>>>
-> >>>> The thing is that upstream isn't super happy that you have been
-> >>>> making yourselves dependent on features that we are actively
-> >>>> discouraging and then demanding that we support these features.
-> >>>
-> >>> Hum, demanding seems to be a strong word for what I am doing here.
-> >>>
-> >>> Deprecated should not mean broken. My point is: the API seems to be
-> >>> currently broken. User space apps got broken, that's a fact. I even
-> >>> took the time to bisect the kernel and show you which commit broke it.
-> >>> So, no, I am not demanding. More like reporting and providing a
-> >>> temporary solution to those with a similar problem.
-> >>>
-> >>> Maybe it is time to remove the API, but this is up to "upstream".
-> >>> Leaving the API broken seems pointless and unproductive.
-> >>>
-> >>> Sorry for the "not super happiness of upstream", but maybe upstream
-> >>> got me wrong.
-> >>>
-> >>> We are not "making ourselves dependent on features ...". The API was
-> >>> there. We used it. Now it is deprecated, ok, we should move on. I got
-> >>> the message.
-> >>
-> >> Ouch I deserved some slamming for this.
-> >>
-> >> I'm sorry if I came across as harsh :(
-> >>
-> >> I just don't know how to properly push for this.
-> >>
-> >> I have even pushed the option of the deprecated sysfs ABI
-> >> behind the CONFIG_EXPERT option, which should mean that
-> >> the kernel config has been made by someone who has checked
-> >> the option "yes I am an expert I know what I am doing"
-> >> yet failed to observe that this ABI is obsoleted since 5 years
-> >> and hence failed to be an expert.
-> >>
-> >> Of course the ABI (not API really) needs to be fixed if we can find the
-> >> problem. It's frustrating that fixing it seems to fix broken other
-> >> features which are not deprecated, hence the annoyance on my
-> >> part.
-> >>
-> >
-> > I'm afraid we'll earn ourselves a good old LinusRant if we keep
-> > pushing the character device as a solution to the problem here.
-> > Marcelo is right after all: he used an existing user interface, the
-> > interface broke, it must be fixed.
-> >
-> > I would prefer to find a solution that fixes Marcelo's issue while
-> > keeping the offending patches in tree but it seems like the issue is
-> > more complicated and will require some rework of the sysfs interface.
-> >
-> > In which case unless there are objections I lean towards reverting the
-> > relevant commits.
->
-> Reviving and old thread, hence a quick reminder: The patch at the start
-> of this thread was applied and then reverted in 56e337f2cf13 with this text:
->
-> ```
-> This commit - while attempting to fix a regression - has caused a number
-> of other problems. As the fallout from it is more significant than the
-> initial problem itself, revert it for now before we find a correct
-> solution.
-> ```
->
-> I still have this on my list of open regressions and that made me
-> wonder: is anyone working on a "correct solution" (or was one even
-> applied and I missed it)? Or is the situation so tricky that we better
-> leave everything as it is? Marcelo, do you still care?
+Yes, that works for me as well, thanks for looking into it!
 
-The purpose of my patch was to revert the patch that was causing the
-hardware I work with to fail. But reverting that patch had bad
-consequences in other hardware, so I really do not think that my patch
-should go in.
+Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-Following Linus Walleij's advice, we are stopping using sysfs for
-gpio, so in the near future that patch will be irrelevant for me. On
-the other hand, a few people using recent kernels have tried my patch
-successfully, so it can be used as a temporary transition hack.
-
-Also, the patch exposes a serious problem with the sysfs gpio, which
-is currently broken. Maybe we should consider removing the interface
-in a near future release, as it has been advocated several times
-before, since it has long been deprecated, has a much better
-substitute API and, the worse part, it is broken and no one seems to
-have a high priority in fixing it.
-
-IIRC, the last time I read, the kernel documentation said that the API
-would be removed in 2020, so we are a bit late :). I know that
-removing an API has lots of implications, so the consequences must be
-carefully balanced.
-
-> Ciao, Thorsten
-
-Best regards,
-Marcelo.
+> diff --git a/arch/um/drivers/chan_user.c b/arch/um/drivers/chan_user.c
+> index 6040817c036f..25727ed648b7 100644
+> --- a/arch/um/drivers/chan_user.c
+> +++ b/arch/um/drivers/chan_user.c
+> @@ -220,7 +220,7 @@ static int winch_tramp(int fd, struct tty_port *port, int *fd_out,
+>  		       unsigned long *stack_out)
+>  {
+>  	struct winch_data data;
+> -	int fds[2], n, err;
+> +	int fds[2], n, err, pid;
+>  	char c;
+>  
+>  	err = os_pipe(fds, 1, 1);
+> @@ -238,8 +238,9 @@ static int winch_tramp(int fd, struct tty_port *port, int *fd_out,
+>  	 * problem with /dev/net/tun, which if held open by this
+>  	 * thread, prevents the TUN/TAP device from being reused.
+>  	 */
+> -	err = run_helper_thread(winch_thread, &data, CLONE_FILES, stack_out);
+> -	if (err < 0) {
+> +	pid = run_helper_thread(winch_thread, &data, CLONE_FILES, stack_out);
+> +	if (pid < 0) {
+> +		err = pid;
+>  		printk(UM_KERN_ERR "fork of winch_thread failed - errno = %d\n",
+>  		       -err);
+>  		goto out_close;
+> @@ -263,7 +264,7 @@ static int winch_tramp(int fd, struct tty_port *port, int *fd_out,
+>  		goto out_close;
+>  	}
+>  
+> -	return err;
+> +	return pid;
+>  
+>   out_close:
+>  	close(fds[1]);
+> 
+> 
+> Kind of obvious, really. :)
+> 
+> johannes
