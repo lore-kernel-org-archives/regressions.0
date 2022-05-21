@@ -1,78 +1,139 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF90E7E
-	for <regressions@lists.linux.dev>; Sat, 21 May 2022 23:28:36 +0000 (UTC)
-Received: from [192.168.1.107] ([37.4.249.107]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MtfRp-1naCv71a5H-00v56E; Sun, 22 May 2022 01:22:02 +0200
-Message-ID: <77d6d498-7dd9-03eb-60f2-d7e682bb1b20@i2se.com>
-Date: Sun, 22 May 2022 01:22:00 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9E77E
+	for <regressions@lists.linux.dev>; Sat, 21 May 2022 23:46:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7088EC385A9;
+	Sat, 21 May 2022 23:46:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1653176776;
+	bh=ZvwJRsmyPHVu6xMhRrUXxcn+midJndmIlbuFTRbahrQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=XNscoE2xqCQNZy+sn84caROY4Pxn5GkYOAAbzVz5+lbHEEml6WVMqBNgkiou73QwX
+	 Lt7PM5eAxLu5xtIqrEwYC3h4rtDFGAWkntf56M+7gocu+qFwcz85a7NpmqDl2nDnJk
+	 IDRdGAKKBpu4Pmk4csxXGDhkU3axPoqKq1AySe+y9IZHoNb3U/ojJBfFrqYlqp7SF4
+	 xWRohg+uDIJrnkQApg+mcNZC/wLCcQI8lM+yAh2v89GwMdmw+5kV0mvCOvEWeaWVh2
+	 N49aNlCAZrVJ6xkaTpiC9dx5IVqXnjbLCWroX7xKJyHK/4RdzRJF9Z40CeUtNt7vEc
+	 w4TejJZKiszbg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 0C41A5C034F; Sat, 21 May 2022 16:46:16 -0700 (PDT)
+Date: Sat, 21 May 2022 16:46:16 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Minchan Kim <minchan@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	Phil Elwell <phil@raspberrypi.com>, regressions@lists.linux.dev,
+	riel@surriel.com, viro@zeniv.linux.org.uk
+Subject: Re: vchiq: Performance regression since 5.18-rc1
+Message-ID: <20220521234616.GO1790663@paulmck-ThinkPad-P17-Gen-1>
+Reply-To: paulmck@kernel.org
+References: <77d6d498-7dd9-03eb-60f2-d7e682bb1b20@i2se.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.1
-Content-Language: en-US
-To: Marcelo Tosatti <mtosatti@redhat.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>, Minchan Kim <minchan@kernel.org>,
- Matthew Wilcox <willy@infradead.org>,
- Mel Gorman <mgorman@techsingularity.net>, Juri Lelli
- <juri.lelli@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Paul E. McKenney" <paulmck@kernel.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Linux ARM <linux-arm-kernel@lists.infradead.org>,
- Phil Elwell <phil@raspberrypi.com>, regressions@lists.linux.dev
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: vchiq: Performance regression since 5.18-rc1
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:rd1cpxzMrn3SOHrTFF5zZUZ+MyEdYrLnnFtzNhw6NDyO+22glyu
- r0DsQ26+qvx7bbyHXAbhlpFs7NcpxGkkiPsahc6ylqEqE7yzbcdGXMkT5GCTU6EzkNaFNbV
- DH5rSUxT4TsO6SX5yC7dQcUnMd0IpcqFKHV8pZVLKeTN5IzMFNeeqy1I812kZxKOuFHjxDw
- r9Ff3KZtGm3XuAGsCR08A==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:FsoeVz1q9aE=:GGjM1Vo99WAQVIVm+e7wzA
- SjBk4BAa5vtxd+sYEih7pZdDURgEUwupCM0LA62uWqCUodSXxz0KtKfIvfslCSBkWijJOsQwc
- 5z8xMCLiaUuMzKdTMPp1NgofbjKU1plRK0yo3L7Juc1he36dOEW6QCTHkCNbD7QZonhAeeMdV
- xIaOmByrWGxIAvdNFTNAkqnGbTU1x7ouvHSlavIIaZ03gHLQOEIsmw7msoE/to/GrbUdT/bzy
- HFT2XP5BJLukHEBRUUeei9M3enQTUzOF8JZI6CEalBvCqxU1t/nNMz/iNi4DiwrReuhbh4Le+
- oYVzyoxvidWgKq8f9AOph8QLE7rOoTp5mRHNnYjajJQcnWwgmq9H61+LtpwNgPMgHYAibBRD9
- LaJMpzmc7+daQgoqMFG7KTinKEnVURFFrjkIzKl1fVefVM44tBFulnl+H2HqyGgHo0vkrqLK8
- rwS4WufVAHnMKARk3uVqwdxKSXrXROi/O6fEnCy+sxUjjGn0fEBQkKGAoz7P7ah/LnRUy+nR3
- gnpQpBOrmmfkMl8nAiI672rnJTMwbQDUqiJtiRJJa2blqrhjfl1foLtklwnMU8yJQ6wWgRxY3
- UWkvLZz744cpyhYIZQ3Q8CTdo3vAuJzph1v2H81qKevM9rjr1rGAu6omEIFWmkV4Ey1VDw3jB
- nUJElb8Ti+OQIDZm/0AsgDocoinWxxpshwf85oCcyfh5dtnUgWbGpJMN/Y+CY3nZeO5zV4xEA
- G/2GfK512e7JoULGmFkr26P6VrLVNTKtyHFnrflXTkMyS52KuNky3pEkL2U=
+In-Reply-To: <77d6d498-7dd9-03eb-60f2-d7e682bb1b20@i2se.com>
 
-Hi,
+On Sun, May 22, 2022 at 01:22:00AM +0200, Stefan Wahren wrote:
+> Hi,
+> 
+> while testing the staging/vc04_services/interface/vchiq_arm driver with my
+> Raspberry Pi 3 B+ (multi_v7_defconfig) i noticed a huge performance
+> regression since [ff042f4a9b050895a42cae893cc01fa2ca81b95c] mm:
+> lru_cache_disable: replace work queue synchronization with synchronize_rcu
+> 
+> Usually i run "vchiq_test -f 1" to see the driver is still working [1].
+> 
+> Before commit:
+> 
+> real    0m1,500s
+> user    0m0,068s
+> sys    0m0,846s
+> 
+> After commit:
+> 
+> real    7m11,449s
+> user    0m2,049s
+> sys    0m0,023s
+> 
+> Best regards
+> 
+> [1] - https://github.com/raspberrypi/userland
 
-while testing the staging/vc04_services/interface/vchiq_arm driver with 
-my Raspberry Pi 3 B+ (multi_v7_defconfig) i noticed a huge performance 
-regression since [ff042f4a9b050895a42cae893cc01fa2ca81b95c] mm: 
-lru_cache_disable: replace work queue synchronization with synchronize_rcu
+Please feel free to try the patch shown below.  Or the pair of patches
+from Rik here:
 
-Usually i run "vchiq_test -f 1" to see the driver is still working [1].
+https://lore.kernel.org/lkml/20220218183114.2867528-2-riel@surriel.com/
+https://lore.kernel.org/lkml/20220218183114.2867528-3-riel@surriel.com/
 
-Before commit:
+There is work ongoing to produce something better, but ongoing slowly.
+Especially my part of that work.
 
-realÂ Â Â  0m1,500s
-userÂ Â Â  0m0,068s
-sysÂ Â Â  0m0,846s
+							Thanx, Paul
 
-After commit:
+------------------------------------------------------------------------
 
-realÂ Â Â  7m11,449s
-userÂ Â Â  0m2,049s
-sysÂ Â Â  0m0,023s
+From paulmck@kernel.org Mon Feb 14 11:05:49 2022
+Date: Mon, 14 Feb 2022 11:05:49 -0800
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: clm@fb.com
+Cc: riel@surriel.com, viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCH RFC fs/namespace] Make kern_unmount() use
+ synchronize_rcu_expedited()
+Message-ID: <20220214190549.GA2815154@paulmck-ThinkPad-P17-Gen-1>
+Reply-To: paulmck@kernel.org
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Status: RO
+Content-Length: 1036
+Lines: 32
 
-Best regards
+Experimental.  Not for inclusion.  Yet, anyway.
 
-[1] - https://github.com/raspberrypi/userland
+Freeing large numbers of namespaces in quick succession can result in
+a bottleneck on the synchronize_rcu() invoked from kern_unmount().
+This patch applies the synchronize_rcu_expedited() hammer to allow
+further testing and fault isolation.
 
+Hey, at least there was no need to change the comment!  ;-)
+
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: <linux-fsdevel@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Not-yet-signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+---
+
+ namespace.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/namespace.c b/fs/namespace.c
+index 40b994a29e90d..79c50ad0ade5b 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -4389,7 +4389,7 @@ void kern_unmount(struct vfsmount *mnt)
+ 	/* release long term mount so mount point can be released */
+ 	if (!IS_ERR_OR_NULL(mnt)) {
+ 		real_mount(mnt)->mnt_ns = NULL;
+-		synchronize_rcu();	/* yecchhh... */
++		synchronize_rcu_expedited();	/* yecchhh... */
+ 		mntput(mnt);
+ 	}
+ }
 
