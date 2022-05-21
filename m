@@ -1,127 +1,74 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [144.76.43.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F562F4A
-	for <regressions@lists.linux.dev>; Fri, 20 May 2022 17:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=mYBo9IPynpe0pl+mZeNGkr1lS3oG/UutDNomBlexN9o=;
-	t=1653068364; x=1654277964; b=oP8TImOLPdcUKCe0+E0gjqnIqy0gkTSe23eb3ntMrYJJD55
-	OQnZaR310QAZIBFv96v34z/ZwvYfp1ANcnjaSEajQ/4dYNJ+O48Hu0QAsd+/wILdYKQcu11gTVro7
-	yipTRvoLptQKZIWGrqyMVkMs0PgOyiiHvrKN+mEYj9IP2B55eKYADwOisJlITLedOyuzjUps4Qgia
-	yDUQU8tvnPtWyfLhVHZ3MAG2HqkSS86SmNCh4JMlHMpp8gIUWHNvULejSWXis202SWQvLVDAusruU
-	T1iHALiPL+fL+0W1u4CqmxsYbcmRQ54W95Rft4i2UQ35QZQli/niyyAM1t6O4XSg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.95)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1ns6Gk-00HR5C-0z;
-	Fri, 20 May 2022 19:18:30 +0200
-Message-ID: <32824a71109fe3387d582abbf56601fb08bdc9ef.camel@sipsolutions.net>
-Subject: Re: [PATCH 1/1] um: fix error return code in winch_tramp()
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Nathan Chancellor <nathan@kernel.org>, Thorsten Leemhuis
-	 <regressions@leemhuis.info>
-Cc: Richard Weinberger <richard@nod.at>, Zhen Lei
- <thunder.leizhen@huawei.com>,  Jeff Dike <jdike@addtoit.com>, anton ivanov
- <anton.ivanov@cambridgegreys.com>, Andrew Morton
- <akpm@linux-foundation.org>, Eduard-Gabriel Munteanu <maxdamage@aladin.ro>,
-  linux-um <linux-um@lists.infradead.org>, linux-kernel
- <linux-kernel@vger.kernel.org>, Nick Desaulniers <ndesaulniers@google.com>,
- regressions <regressions@lists.linux.dev>
-Date: Fri, 20 May 2022 19:18:28 +0200
-In-Reply-To: <Yoe5/HwL9DXhaw7Z@dev-arch.thelio-3990X>
-References: <20210508032239.2177-1-thunder.leizhen@huawei.com>
-	 <Yjt31seiNv18HYrf@dev-arch.thelio-3990X>
-	 <1b03d888-cea3-3e6f-087f-daeb5642a975@leemhuis.info>
-	 <1087614384.239493.1649583213699.JavaMail.zimbra@nod.at>
-	 <YlRp9KR1mp3/4Txo@thelio-3990X>
-	 <1287561645.244713.1649702724736.JavaMail.zimbra@nod.at>
-	 <e9597cbc-cabb-facf-deb6-662d40cf16a3@leemhuis.info>
-	 <Yoe5/HwL9DXhaw7Z@dev-arch.thelio-3990X>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.1 (3.44.1-1.fc36) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FF27E
+	for <regressions@lists.linux.dev>; Sat, 21 May 2022 05:01:48 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id f9so18970948ejc.0
+        for <regressions@lists.linux.dev>; Fri, 20 May 2022 22:01:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+JP7eb9X89dzmMi77NTEFpsoLT6OioYPHTkokdTxBHc=;
+        b=cQzbMTyiE3pGwpfX4bEhpbYVQq+AvZNw60MIRF7N3gv42F9YVuqaF8j3RZf5Kc2Zx7
+         yIFe8S3IfJm4FOgTmmlvYMn2RZTN3K23qkz2gZv8lX4lFoRTrFCZs4AUUAouLsXxSkd3
+         dDYwffr2dYvPunf5WQ66AzJlIoyBw7YtXbuUo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+JP7eb9X89dzmMi77NTEFpsoLT6OioYPHTkokdTxBHc=;
+        b=2etRWCvRaXqvUyUMPnqKQtDik+8M4zpZuuV748AdjLjKkjOuCtQsowg0QzbKJSqG00
+         2iSKbvwpiEDh6PTz9jxCdghny4iOzr3paez7YGwXThP+CuzdDcPUwoUPgZh6vXiqZzmi
+         DBB84ci+dXcimsg5BKUcmBqInBpLadx5OXWBrTDW+aX83Svs0pQ+UA/9MxR8s/9h0Ea/
+         OfJb09wbWXmkDDMumcs29F/Ob+YxFv9k9H50mESjmWz/Q91wHwmMZczdgyqczcjsGp0t
+         JYyOjc6Ugdfd6sF5/GGR3stwwP59mrXt1oJ56H8aaep+GygjSECdnviG9qiXzZLLgqVh
+         lKlg==
+X-Gm-Message-State: AOAM531jRVl2yCKRHB3CcDl+JSJnNSht1E2qiPMExzYOUV2Bib2PNh+V
+	/041oOqrqzorlVbwP5MRpyWiqlMNFZlu83Q4
+X-Google-Smtp-Source: ABdhPJwnstKGWBxFzJQRbFOSdevgDetRkdtLICV+hmp8wfAH3j4KByYqy51FfN4615g/wArRd/NoIg==
+X-Received: by 2002:a17:907:c30f:b0:6fe:5637:c130 with SMTP id tl15-20020a170907c30f00b006fe5637c130mr11224175ejc.270.1653109307028;
+        Fri, 20 May 2022 22:01:47 -0700 (PDT)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com. [209.85.128.52])
+        by smtp.gmail.com with ESMTPSA id u12-20020a50a40c000000b0042acf2cb490sm5323219edb.97.2022.05.20.22.01.45
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 May 2022 22:01:46 -0700 (PDT)
+Received: by mail-wm1-f52.google.com with SMTP id k126-20020a1ca184000000b003943fd07180so5291118wme.3
+        for <regressions@lists.linux.dev>; Fri, 20 May 2022 22:01:45 -0700 (PDT)
+X-Received: by 2002:a05:600c:4f06:b0:394:836b:1552 with SMTP id
+ l6-20020a05600c4f0600b00394836b1552mr11323806wmq.145.1653109305450; Fri, 20
+ May 2022 22:01:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+References: <CAHk-=wi0vqZQUAS67tBsJQW+dtt89m+dqA-Z4bOs8CH-mm8u2w@mail.gmail.com>
+ <165209064657.193515.10163777181547077546@leemhuis.info> <CAHk-=wj0gHsG6iw3D8ufptm9a_dvTSqrrOFY9WopObbYbyuwnA@mail.gmail.com>
+ <54664f6a-b046-1330-e794-cb533e942a94@redhat.com> <04f2e08c-4c39-16d3-d785-f36494c6256c@redhat.com>
+ <063d7fdb-2d4c-5798-773b-d82b4f0e918a@redhat.com>
+In-Reply-To: <063d7fdb-2d4c-5798-773b-d82b4f0e918a@redhat.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 20 May 2022 19:01:29 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wjKtV3mT3S=vxgqe__MUzxRrZ7=fopKQtTKOeQJAVyoUQ@mail.gmail.com>
+Message-ID: <CAHk-=wjKtV3mT3S=vxgqe__MUzxRrZ7=fopKQtTKOeQJAVyoUQ@mail.gmail.com>
+Subject: Re: Linux regressions report for mainline [2022-05-09] (was: Linux 5.18-rc6)
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Jani Nikula <jani.nikula@linux.intel.com>, Matthew Auld <matthew.auld@intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>, 
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 2022-05-20 at 08:55 -0700, Nathan Chancellor wrote:
-> On Fri, May 20, 2022 at 08:08:01AM +0200, Thorsten Leemhuis wrote:
-> > On 11.04.22 20:45, Richard Weinberger wrote:
-> > > ----- Urspr=C3=BCngliche Mail -----
-> > > > Von: "Nathan Chancellor" <nathan@kernel.org>
-> > > > I attempted to print out the error code but it seems like there is =
-no
-> > > > output in the console after "reboot: System halted". If I add an
-> > > > unconditional print right before the call to os_set_fd_block(), I s=
-ee it
-> > > > during start up but I do not see it during shutdown. Is there some =
-way
-> > > > to see that console output during shutdown?
-> > >=20
-> > > I think in this case the easiest way is attaching gdb with a breakpoi=
-nt.
-> >=20
-> > I noticed this in my list of open regressions. It seems there wasn't an=
-y
-> > progress to get this regression fixed (please let me know in case I
-> > missed something), but I guess nobody considered it urgent which is
-> > likely not that much of a problem in this case.
->=20
-> Yes, sorry, I tried to get gdb to reveal something but I couldn't get it
-> to work then I had to move onto other work. We have worked around this
-> for the time being but it would still be nice to figure out what is
-> going on here; I am just not sure when I am going to have time to
-> participate in that process.
->=20
+On Thu, May 19, 2022 at 6:10 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Note this is not part of any pending drm-fixes* pull-reqs yet though.
 
-This fixes it for me, can you check it?
+It has now hit my tree as part of Dave's drm pull today.
 
-diff --git a/arch/um/drivers/chan_user.c b/arch/um/drivers/chan_user.c
-index 6040817c036f..25727ed648b7 100644
---- a/arch/um/drivers/chan_user.c
-+++ b/arch/um/drivers/chan_user.c
-@@ -220,7 +220,7 @@ static int winch_tramp(int fd, struct tty_port *port, i=
-nt *fd_out,
- 		       unsigned long *stack_out)
- {
- 	struct winch_data data;
--	int fds[2], n, err;
-+	int fds[2], n, err, pid;
- 	char c;
-=20
- 	err =3D os_pipe(fds, 1, 1);
-@@ -238,8 +238,9 @@ static int winch_tramp(int fd, struct tty_port *port, i=
-nt *fd_out,
- 	 * problem with /dev/net/tun, which if held open by this
- 	 * thread, prevents the TUN/TAP device from being reused.
- 	 */
--	err =3D run_helper_thread(winch_thread, &data, CLONE_FILES, stack_out);
--	if (err < 0) {
-+	pid =3D run_helper_thread(winch_thread, &data, CLONE_FILES, stack_out);
-+	if (pid < 0) {
-+		err =3D pid;
- 		printk(UM_KERN_ERR "fork of winch_thread failed - errno =3D %d\n",
- 		       -err);
- 		goto out_close;
-@@ -263,7 +264,7 @@ static int winch_tramp(int fd, struct tty_port *port, i=
-nt *fd_out,
- 		goto out_close;
- 	}
-=20
--	return err;
-+	return pid;
-=20
-  out_close:
- 	close(fds[1]);
+Will go out after the usual basic build test.
 
-
-Kind of obvious, really. :)
-
-johannes
+               Linus
