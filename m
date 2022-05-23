@@ -1,260 +1,297 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2078.outbound.protection.outlook.com [40.107.92.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB39637
-	for <regressions@lists.linux.dev>; Mon, 23 May 2022 13:46:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F383C385A9;
-	Mon, 23 May 2022 13:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1653313584;
-	bh=kPFrkK7R8Z3FLQ/Ga3oHcZu2eJfPeGP9aA53WSZ2j7I=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=snIBaoyed1NB7+1ufuo7BHCHVXTRttSPlRulBa+VNAZlDbgDa3jLp4AGzQmq2eB49
-	 tPzlkLxOIcgyYh6DM7hA/0suFDG68q5J5NdddCBUy5BJcm6V60XnxG1ucttUGzwg60
-	 c6oNv6+GdGPAuzjMBOzxvAveV/9smx0mFzRmC1qBG+B2O2RN84xTwYfv09CtFgyXT6
-	 Q9ZCSDFzpe4bDuW7SvIDqG+IXIeW6L7FLStlp0Ex5ytQlzoUB+dehhd2eThl4P6neJ
-	 YamDEz3GpCaYbSCRFZyHsF8UjkrVobCwJ+RqnD1RSZ2B/OhuQe3H4cIEaHEwm0dUh0
-	 er0tvRDwGLOKA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id F38AC5C032C; Mon, 23 May 2022 06:46:23 -0700 (PDT)
-Date: Mon, 23 May 2022 06:46:23 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>,
-	linux-rpi-kernel@lists.infradead.org,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Richard Fitzgerald <rf@opensource.cirrus.com>,
-	rcu <rcu@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>
-Subject: Re: WARNING: CPU: 2 PID: 3331 at drivers/firmware/raspberrypi.c:63
- rpi_firmware_property_list
-Message-ID: <20220523134623.GV1790663@paulmck-ThinkPad-P17-Gen-1>
-Reply-To: paulmck@kernel.org
-References: <CA+G9fYt4+47GzfEYT1nV3dqbGa1YCwFm9XwC668D4PkK4BHFgQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A23A20E4
+	for <regressions@lists.linux.dev>; Mon, 23 May 2022 14:00:50 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cKIvMSgXvoBHI2AcUTjGIAAmCskTs48lPlCAq0wnNA/C5oqER7QutE2xX8dmgzER87iJ10jQseJuxrch1w93SGZ20RYejxUbQLWcvks152mrn1Gl9kZakk1lrxDx3i2Ebs05v8+kJtSnCx0Su3Pdmwavw9hBCJiXlC1MmbKQILyuh0SY2Ll1NW3M5u6tsLLuTZLSD1sMdxO8IQa085hZQnDgi0bhTjWkTrgdA9zlY1N2n5ItXVhJ4RV31b50tLHGRguMQNHc06fCASbLeeEuGIMbnNvvu6Wt5ApCa8bBMxbyBAdfeHpcQW8RTpHiipfpLFp0bhjKfPUu3JHOJO2hLA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=es2d1G0h/yMiaNjM3+qqMNYIcDhUosSN1zJzCJqTjSw=;
+ b=kfTNLUt63wUqW3hj4X/4afjFOjSTUGPwSzE/mFgWMUSZfrhiOhyluiUzLvJ1SrpVJQueNA5A6d1yHI/XonlbJ5Z8YZ2alrT5WPhATolskt6X809QMSCxdmY3YrZ8H16oFM9Y+sfbuk9feqqGPhjjzycOxqt/n1LiGgbrh+IkEjqZbXy4lAuk0ewH/fm56EonSZ+22ZEMlpYYi8hbHbFDscFlhIqTSY1bOMuhcUIWEl54K5jtHwmfrP9Jool1LIcJu1jAU9Ic+sFHx1+4EqHelDV7jDJuETJUYKVw90PJCwD/sapxWgvB6PBiQbQh3AkcwmJ+OO50xbne7K71GAS++w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=es2d1G0h/yMiaNjM3+qqMNYIcDhUosSN1zJzCJqTjSw=;
+ b=BgpJrSY+q5IU3n0mp5Xwam7Yq+DMC8NKnI6O+YCUGOKCLMo9a3MP/033nv92CXyx4EONttO3SdwENHu9RuluD5U8QX7oZbLJlmGLefQ3RSuK85eZcvEnJTf0lgzDGh+5NU3J3OU3+s0kEcqRfBEuSzSfXRyvOk/bMNaK2GhwQps=
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by CY4PR1201MB2534.namprd12.prod.outlook.com (2603:10b6:903:da::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.15; Mon, 23 May
+ 2022 14:00:47 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::d42b:7413:ba19:e8db]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::d42b:7413:ba19:e8db%6]) with mapi id 15.20.5273.022; Mon, 23 May 2022
+ 14:00:46 +0000
+From: "Limonciello, Mario" <Mario.Limonciello@amd.com>
+To: Christian Casteyde <casteyde.christian@free.fr>, Kai-Heng Feng
+	<kai.heng.feng@canonical.com>, Thorsten Leemhuis <regressions@leemhuis.info>
+CC: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, "Deucher,
+ Alexander" <Alexander.Deucher@amd.com>, "gregkh@linuxfoundation.org"
+	<gregkh@linuxfoundation.org>
+Subject: RE: [REGRESSION] Laptop with Ryzen 4600H fails to resume video since
+ 5.17.4 (works 5.17.3)
+Thread-Topic: [REGRESSION] Laptop with Ryzen 4600H fails to resume video since
+ 5.17.4 (works 5.17.3)
+Thread-Index:
+ AQHYabuPQo7dlCpjq0mwll14F3A0P60jViwAgADNTwCAAACrgIAAC92AgAhHWYCAAA/aAA==
+Date: Mon, 23 May 2022 14:00:46 +0000
+Message-ID:
+ <MN0PR12MB6101E9BB90129B888C9DC069E2D49@MN0PR12MB6101.namprd12.prod.outlook.com>
+References:
+ <941867856.547807110.1652809066335.JavaMail.root@zimbra40-e7.priv.proxad.net>
+ <CAAd53p4ddFYE+O6Je8z9XDy54nTiODJsQEn7PncZ95K_PXPtPQ@mail.gmail.com>
+ <2ce8f87e-785a-25b2-159a-cca45243b75b@leemhuis.info>
+ <2585440.lGaqSPkdTl@geek500.localdomain>
+In-Reply-To: <2585440.lGaqSPkdTl@geek500.localdomain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2022-05-23T13:59:44Z;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=1ad2001a-a8f6-4e87-99d0-d141d6112a1a;
+ MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2022-05-23T14:00:53Z
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid:
+ 3dd8961f-e488-4e60-8e11-a82d994e183d
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid:
+ d81423fd-8045-4d0a-8e16-55b2c4f1df14
+msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 426a14a0-7c48-459e-ce42-08da3cc4a2b3
+x-ms-traffictypediagnostic: CY4PR1201MB2534:EE_
+x-microsoft-antispam-prvs:
+ <CY4PR1201MB25349A0DF8D9AFCB33BFBDABE2D49@CY4PR1201MB2534.namprd12.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ i5zZE+apn+ILC5o3lM7yAeT7lE4Q+1nSq8u/q+8moqS98zTDNZqtxrsIRhJ2kxlqgS5iLG7TDEaTpa8S1+biVtGjUlAV1XlJ6Ata62F0jRmEnhWXxongmrWXTGHrvxTeP/qzvQHjXUaocYDXxBH8Xl3kZljYBupPsIRw3EZUL7mEk2eQCV+htbv+Q5BNltnoLox32UEvvtPA7UxkUpbkwhfmC6lb52JFY02x5ICoc0ThTdqqDC9GxAjXWKSV+vDEfffFgjax9KyiFwG/6fCARq9Bz1Kx7p5yA3UZzrPw1ElgB6A6QS3runwdVFFpOTjxePNNOEVk7kRe9Gpcw4SwmDxMfLGp9axWJUTqFVvSxtn5OKtUKI/LxIM0EmoSVeG3vCgOPCApmBk2ZzjI6EWZLn9vCsizP9F2WoqWDXDxTpen8pzLooy+7R5isQ0o3zFiI3vnK1gIS9npubadKRdy23JzzYYY/qKSZdNAvWaslyNPHgpyn5Kkukb+eN3/p0yWcAKynFkU4eSbFNJUtanZnVuE7at0FByZBBLgFZjpLMt3mN8gYzx5FB/O5RNqqJGBx2pcumoFALp33ktOKtph2smONMGBVgpXH+SBCjkbNI/vAwYsz4so3NFgGROhZvDLtTZfya1utTP3YsaNEhTub7HVs7KBWm6GB7sT9SFrOsnrzPeG2YvXAO7E5cDTvn+9fXPmM6+pO+ArXaBrdhs4C5m0rwgEMaEdH1XiYdnoKladP9bO25GNa+AzDv7BVdIUdKdFhstO1BDTGUU8phzX7w==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(508600001)(52536014)(38070700005)(33656002)(966005)(71200400001)(8936002)(55016003)(66574015)(5660300002)(4326008)(76116006)(8676002)(83380400001)(66946007)(66476007)(66446008)(64756008)(66556008)(316002)(54906003)(186003)(7696005)(110136005)(26005)(122000001)(38100700002)(2906002)(9686003)(6506007)(86362001)(53546011)(41080700001)(15866825006);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?BtpOc7dT8jUD3zDG41zuK7hOmRc1v+JgJYnFwQg3ICluKF7Hyl4dN0h3ZW?=
+ =?iso-8859-1?Q?/dJYofuPI2ZXEd0cpjmmdTs8yq3AV4SRrjGncFSM2OvV60IDhRkMUqhub7?=
+ =?iso-8859-1?Q?m/o+5CynPUknNKc6chesXh/Kfu2xg/DEZrUYSewYv9hJirHg5w0T1d5DTA?=
+ =?iso-8859-1?Q?eFGyoMbY3rYCA0G9FmaSjjBMw/+wFYwHnePf+eQHAxH9nSoVVvNdUId52j?=
+ =?iso-8859-1?Q?Sb91RKYF7vWDlrCEwiBqifMJSAoEyn5J/thzrkouAAGXKh1wVxoy3V3mM+?=
+ =?iso-8859-1?Q?rTjCMHqL8HqTRnTII7wAwpaF5IImBFxhJBElAUzZ0/YQ73E8M9ziVOQ/ep?=
+ =?iso-8859-1?Q?mVfxb1yAscKMEEko6ZsR2FNH7WVY38tUw3a1AnVZzUUaVIb68967Z7wBb0?=
+ =?iso-8859-1?Q?KnyECT0ROwjDSBMvOa8dM8R3dmgL+1c6in+3hAg+hMfGrfXSfUVU7ciVOU?=
+ =?iso-8859-1?Q?0MMow+LIEjq0l86Tg2vdyf9vzsDY6jDbLEuRlvDtUmYSzBvtPOHaUMaYB0?=
+ =?iso-8859-1?Q?KEJewJFVYU+AJ1EHJ8dqXk5qXL63REH1U5tg5KhoEhEIgdUK+61ksi/W+E?=
+ =?iso-8859-1?Q?HKyZV/0fS8gF9qmTCp52ofHoN3KWXix8c3Dp8xurZOqJLm/J7ccC90SbN4?=
+ =?iso-8859-1?Q?RznCYhPgORKjovSU2QzDa7AfJqhYVYkGl5QZdRoajaaN0pTOniA8zOK40R?=
+ =?iso-8859-1?Q?8u/aH3srlpVbUiErwZKGDZXqMka2GJDWNil2QJaJ+PD1UxSL8oKc1fzmnX?=
+ =?iso-8859-1?Q?uVhgLCwTLEJCsZxe8oyi1AcSB9j0JNi19X5mD9HgeXwMtAAbd6yCoIhXI9?=
+ =?iso-8859-1?Q?Zi4HbgMOyiuX5wWET5/viPH+kiu1L94AiCYVnyDUa5XgI5TXLlCX6PgnHj?=
+ =?iso-8859-1?Q?/MZe28noKfvVsLvhpKYp3VDqWoS0csiiVrftw4NtMmofqAtlihLyX5WkL1?=
+ =?iso-8859-1?Q?FXFs5lf4Ps9nfNYcCINM6D/HKPZObEZ4VS2Bz9f4oqq5wWu7gVgstrfgiB?=
+ =?iso-8859-1?Q?z0e0X9L67PsjjKd3H+KSLh4+j/fWqmikJoAWl0UyBzWnOkbHZ68jc4DaxH?=
+ =?iso-8859-1?Q?bfPrcp+1R8ZC7mK2i4VTD4mS9ObiBTsOGPjIJM3r792hnuC6rtQLvMLX1v?=
+ =?iso-8859-1?Q?oP8QprZGboO+Ds4CzNukKFLBzUT1l2dI5U+9t4FAXSbb27prF8MgBQXsvZ?=
+ =?iso-8859-1?Q?S8/Rx0nOhK4HA9vSjhyWWRX7XG0APL4M3/pipCoR2Cayu3msJ8Hx45KEFi?=
+ =?iso-8859-1?Q?0DnMOc18Q3wNxH4vc1d9Hd9xxWhk4r2Io2vrIZwTNmCP6Ev6UT3AUom67O?=
+ =?iso-8859-1?Q?Y0ysjNojOguxXlaEo4iOWBFTKJ3rgfIOwFcSqDB+Spaei1hSPQOVF8dGWw?=
+ =?iso-8859-1?Q?PrwNFY3+TKe+8dw5olEi5zaxaVCBN9I894nrlZ63ZbpDis4VY/PNbsg0lm?=
+ =?iso-8859-1?Q?1/+IrRRQxrCUzrTLb2Ctew5KLGAJ3eMHoQH82T38J3tbOyQXd4qKGW/+EO?=
+ =?iso-8859-1?Q?eVjJsVKRqh21IPigjG59v77xyC0gplqrE0h6HE4Dw2WBi/31Oq+jj4ieFr?=
+ =?iso-8859-1?Q?TAfaCzPOA/EfrTyIdo2Xgnwstoyk5nBDAJhEmA3Osk2hjIM1teO+yoEKy2?=
+ =?iso-8859-1?Q?Q08Ci+eWCTU1meLD2NiCgdp8KHmmKe3eMgcqtR8EbnFX7D291USu3FjPZ7?=
+ =?iso-8859-1?Q?ixGfbsF7/iLalTnBB/mBvuGaOKgkqLX3iZ03B5uPW8OjbZJrqZEBa3oVQ3?=
+ =?iso-8859-1?Q?sZlSXEyWSBMxGLHY2e1e09CMLzUrUTDJz1WwMsQL2iy8Ht?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYt4+47GzfEYT1nV3dqbGa1YCwFm9XwC668D4PkK4BHFgQ@mail.gmail.com>
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 426a14a0-7c48-459e-ce42-08da3cc4a2b3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2022 14:00:46.7139
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Dbe2J8vPfg6SSiHHS+si989J4GxQOXIUebcTKGrL0XgS9JYkUlpYGduIc2o6tNbMJkdKB01mwACNmI6hupeLcQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2534
 
-On Mon, May 23, 2022 at 02:34:04PM +0530, Naresh Kamboju wrote:
-> The following kernel warning was noticed on raspberrypi4 device while
-> running LTP controllers with Linus mainline kernel tree.
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> metadata:
->   git_ref: master
->   git_repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->   git_sha: 4b0986a3613c92f4ec1bdc7f60ec66fea135991f
->   git_describe: v5.18
->   kernel_version: 5.18.0
->   kernel-config: https://builds.tuxbuild.com/29XDpgnCMxtWJ6lVJ9M0x3hTNWu/config
->   artifact-location: https://builds.tuxbuild.com/29XDpgnCMxtWJ6lVJ9M0x3hTNWu
->   toolchain: gcc-11
->   System.map: https://builds.tuxbuild.com/29XDpgnCMxtWJ6lVJ9M0x3hTNWu/System.map
->   vmlinux.xz: https://builds.tuxbuild.com/29XDpgnCMxtWJ6lVJ9M0x3hTNWu/vmlinux.xz
-> 
-> Steps to reproduce:
-> # cd /opt/ltp
-> # ./runltp -p -q -f controllers
-> 
-> cgroup_fj_stress_blkio_1_200_one 1 TINFO: Attaching task 7221 to
-> /sys/fs/cgroup/blkio/ltp/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1
-> cgroup_fj_stress_blkio_1_200_one 1 TINFO: Attaching task 7221 to
-> /sys/fs/cgroup/blkio/ltp/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1
-> cgroup_fj_stress_blkio_1_200_one 1 TINFO: Attaching task 7221 to
-> /sys/fs/cgroup/blkio/ltp/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1/1
-> [ 2442.255887] ------------[ cut here ]------------
-> [ 2442.260615] Firmware transaction timeout
-> [ 2442.260704] WARNING: CPU: 2 PID: 3331 at
-> drivers/firmware/raspberrypi.c:63
-> rpi_firmware_property_list+0x1e8/0x270
-> [ 2442.275114] Modules linked in: btrfs blake2b_generic libcrc32c
-> raid6_pq zstd_compress brcmfmac xhci_pci brcmutil snd_soc_hdmi_codec
-> xhci_pci_renesas raspberrypi_cpufreq hci_uart btqca btbcm vc4 cfg80211
-> bluetooth cec drm_cma_helper rfkill drm_kms_helper reset_raspberrypi
-> clk_raspberrypi crct10dif_ce raspberrypi_hwmon drm pwm_bcm2835
-> iproc_rng200 pcie_brcmstb i2c_bcm2835 rng_core bcm2711_thermal fuse
-> [ 2442.311148] CPU: 2 PID: 3331 Comm: kworker/2:2 Not tainted 5.18.0 #1
-> [ 2442.317599] Hardware name: Raspberry Pi 4 Model B (DT)
-> [ 2442.322810] Workqueue: events get_values_poll [raspberrypi_hwmon]
-> [ 2442.329007] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [ 2442.336074] pc : rpi_firmware_property_list+0x1e8/0x270
-> [ 2442.341381] lr : rpi_firmware_property_list+0x1e8/0x270
-> [ 2442.346685] sp : ffff800010d63cc0
-> [ 2442.350043] x29: ffff800010d63cc0 x28: 0000000000000000 x27: ffff0000419d0540
-> [ 2442.357297] x26: 0000000000000011 x25: ffff80000afdd008 x24: 0000000000001000
-> [ 2442.364547] x23: ffff000061ce9300 x22: ffff80000ac330b0 x21: ffff0000419d0500
-> [ 2442.371797] x20: 0000000000000010 x19: ffff80000afdd000 x18: ffffffffffffffff
-> [ 2442.379046] x17: 0000000000000000 x16: 0000000000000000 x15: ffff800090d63937
-> [ 2442.386295] x14: ffff80000a912dd0 x13: 74756f656d697420 x12: 6e6f69746361736e
-> [ 2442.393544] x11: ffff80000a8b1ce8 x10: ffff80000a91c178 x9 : ffff80000811d524
-> [ 2442.400794] x8 : 00000000ffffefff x7 : ffff80000a909cf8 x6 : 0000000000000001
-> [ 2442.408044] x5 : ffff80000a88f000 x4 : ffff80000a88f2c0 x3 : 0000000000000000
-> [ 2442.415293] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff000062921040
-> [ 2442.422543] Call trace:
-> [ 2442.425020]  rpi_firmware_property_list+0x1e8/0x270
-> [ 2442.429973]  rpi_firmware_property+0x7c/0xc0
-> [ 2442.434308]  get_values_poll+0x54/0x120 [raspberrypi_hwmon]
-> [ 2442.439967]  process_one_work+0x1dc/0x450
-> [ 2442.444045]  worker_thread+0x154/0x450
-> [ 2442.447850]  kthread+0x100/0x110
-> [ 2442.451126]  ret_from_fork+0x10/0x20
-> [ 2442.454760] ---[ end trace 0000000000000000 ]---
-> [ 2442.471909] hwmon hwmon1: Failed to get throttled (-110)
-> [ 2443.499865] raspberrypi-clk soc:firmware:clocks: Failed to change
-> fw-clk-arm frequency: -110
-> [ 2446.575893] raspberrypi-clk soc:firmware:clocks: Failed to change
-> fw-clk-arm frequency: -110
-> [ 2450.915855] mmc1: Timeout waiting for hardware cmd interrupt.
-> [ 2450.921693] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
-> [ 2450.928227] mmc1: sdhci: Sys addr:  0x00000008 | Version:  0x00001002
-> [ 2450.934763] mmc1: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000000
-> [ 2450.941297] mmc1: sdhci: Argument:  0xaaaa0000 | Trn mode: 0x00000033
-> [ 2450.947830] mmc1: sdhci: Present:   0x1fff0000 | Host ctl: 0x00000017
-> [ 2450.954362] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000080
-> [ 2450.960896] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
-> [ 2450.967429] mmc1: sdhci: Timeout:   0x00000000 | Int stat: 0x00000001
-> [ 2450.973960] mmc1: sdhci: Int enab:  0x03ff100b | Sig enab: 0x03ff100b
-> [ 2450.980493] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000001
-> [ 2450.987025] mmc1: sdhci: Caps:      0x45ee6432 | Caps_1:   0x0000a525
-> [ 2450.993558] mmc1: sdhci: Cmd:       0x00000d1a | Max curr: 0x00080008
-> [ 2451.000091] mmc1: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x0076b27f
-> [ 2451.006624] mmc1: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00000900
-> [ 2451.013155] mmc1: sdhci: Host ctl2: 0x0000808c
-> [ 2451.017659] mmc1: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0xc3400208
-> [ 2451.024191] mmc1: sdhci: ============================================
-> [ 2452.679889] raspberrypi-clk soc:firmware:clocks: Failed to change
-> fw-clk-arm frequency: -110
-> [ 2455.763879] raspberrypi-clk soc:firmware:clocks: Failed to change
-> fw-clk-arm frequency: -110
-> [ 2460.759844] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> [ 2460.766034] rcu: 1-...!: (1 GPs behind)
-> idle=add/1/0x4000000000000000 softirq=481373/481374 fqs=23
-> [ 2460.775311] (detected by 3, t=5253 jiffies, g=915057, q=822)
-> [ 2460.781141] Task dump for CPU 1:
-> [ 2460.784411] task:cgroup_fj_stres state:R  running task     stack:
->  0 pid: 6806 ppid:   501 flags:0x00000200
-> [ 2460.794483] Call trace:
-> [ 2460.796958]  __switch_to+0x104/0x160
-> [ 2460.800595]  0xffff0000403cff00
-> [ 2460.803782] rcu: rcu_preempt kthread timer wakeup didn't happen for
-> 5216 jiffies! g915057 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-> [ 2460.815430] rcu: Possible timer handling issue on cpu=0 timer-softirq=161506
+[Public]
 
-This looks to be a follow-on error due to the earlier firmware splat
-above.  What happened here is that RCU's grace-period kthread attempted
-to sleep for a few jiffies, but the timer's wakeup still hadn't happened
-more than 5,000 jiffies later.
 
-And is the "Timeout waiting for hardware cmd interrupt" below
-additional evidence in favor of this diagnosis?
 
-							Thanx, Paul
+> -----Original Message-----
+> From: Christian Casteyde <casteyde.christian@free.fr>
+> Sent: Monday, May 23, 2022 08:03
+> To: Kai-Heng Feng <kai.heng.feng@canonical.com>; Thorsten Leemhuis
+> <regressions@leemhuis.info>
+> Cc: stable@vger.kernel.org; regressions@lists.linux.dev; Deucher, Alexand=
+er
+> <Alexander.Deucher@amd.com>; gregkh@linuxfoundation.org; Limonciello,
+> Mario <Mario.Limonciello@amd.com>
+> Subject: Re: [REGRESSION] Laptop with Ryzen 4600H fails to resume video s=
+ince
+> 5.17.4 (works 5.17.3)
+>=20
+> Hello
+>=20
+> I've checked with 5.18 the problem is still there.
+> Interestingly, I tried to revert the commit but it was rejected because o=
+f the
+> change in the test from:
+>         if (!adev->in_s0ix)
+> to:
+>       if (amdgpu_acpi_should_gpu_reset(adev))
+>=20
+> in amdgpu_pmops_suspend.
+>=20
+> I fixed the rejection, keeping shoud_gpu_reset, but it still fails.
+> Then I changed to restore test of in_s0ix as it was in 5.17, and it works=
+.
+> I tried with a call to amd_gpu_asic_reset without testing at all in_s0ix,=
+ it
+> works.
+>=20
+> Therefore, my APU wants a reset in amdgpu_pmops_suspend.
+>=20
+> By curiosity, I tried to do the reset in amdgpu_pmops_suspend_noirq as wa=
+s
+> intended in 5.18 original code, commenting out the test of
+> amdgpu_acpi_should_gpu_reset(adev) (since this APU wants a reset).
+> This does not work, I got the Fence timeout errors or freezes.
+>=20
+> If I leave  noirq function unchanged (original 5.18 code), and just add a
+> reset in suspend() as was done in 5.17, it works.
+>=20
+> Therefore, my GPU does NOT want to be reset in noirq, the reset must be i=
+n
+> suspend.
+>=20
+> In other words, I modified amdgpu_pmops_suspend (partial revert) like thi=
+s and
+> this works on my laptop:
+>=20
+> static int amdgpu_pmops_suspend(struct device *dev)
+> {
+> 	struct drm_device *drm_dev =3D dev_get_drvdata(dev);
+> 	struct amdgpu_device *adev =3D drm_to_adev(drm_dev);
+> +	int r;
+>=20
+> 	if (amdgpu_acpi_is_s0ix_active(adev))
+> 		adev->in_s0ix =3D true;
+> 	else
+> 		adev->in_s3 =3D true;
+> -	return amdgpu_device_suspend(drm_dev, true);
+> +	r =3D amdgpu_device_suspend(drm_dev, true);
+> +	if (r)
+> +		return r;
+> +	if (!adev->in_s0ix)
+> +		return amdgpu_asic_reset(adev);
+> 	return 0;
+> }
+>=20
+> static int amdgpu_pmops_suspend_noirq(struct device *dev)
+> {
+> 	struct drm_device *drm_dev =3D dev_get_drvdata(dev);
+> 	struct amdgpu_device *adev =3D drm_to_adev(drm_dev);
+>=20
+> 	if (amdgpu_acpi_should_gpu_reset(adev))
+> 		return amdgpu_asic_reset(adev);
+>=20
+> 	return 0;
+> }
+>=20
+> I don't know if other APU want a reset, in the same context, and how to
+> differentiate all the cases, so I cannot go further, but I can test patch=
+es if
+> needed.
 
-> [ 2460.822667] rcu: rcu_preempt kthread starved for 5222 jiffies!
-> g915057 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
-> [ 2460.833345] rcu: Unless rcu_preempt kthread gets sufficient CPU
-> time, OOM is now expected behavior.
-> [ 2460.842606] rcu: RCU grace-period kthread stack dump:
-> [ 2460.847726] task:rcu_preempt     state:I stack:    0 pid:   15
-> ppid:     2 flags:0x00000008
-> [ 2460.856203] Call trace:
-> [ 2460.858678]  __switch_to+0x104/0x160
-> [ 2460.862305]  __schedule+0x314/0x8ac
-> [ 2460.865843]  schedule+0x5c/0xd4
-> [ 2460.869028]  schedule_timeout+0xa4/0x1c4
-> [ 2460.873010]  rcu_gp_fqs_loop+0x140/0x520
-> [ 2460.876998]  rcu_gp_kthread+0x1a8/0x25c
-> [ 2460.880891]  kthread+0x100/0x110
-> [ 2460.884167]  ret_from_fork+0x10/0x20
-> [ 2460.887796] rcu: Stack dump where RCU GP kthread last ran:
-> [ 2460.893357] Task dump for CPU 0:
-> [ 2460.896624] task:swapper/0       state:R  running task     stack:
->  0 pid:    0 ppid:     0 flags:0x0000000a
-> [ 2460.906690] Call trace:
-> [ 2460.909165]  __switch_to+0x104/0x160
-> [ 2460.912791]  0x0
-> [ 2461.159863] mmc1: Timeout waiting for hardware cmd interrupt.
-> [ 2461.165699] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
-> [ 2461.172231] mmc1: sdhci: Sys addr:  0x00000008 | Version:  0x00001002
-> [ 2461.178763] mmc1: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000000
-> [ 2461.185294] mmc1: sdhci: Argument:  0xaaaa0000 | Trn mode: 0x00000033
-> [ 2461.191826] mmc1: sdhci: Present:   0x1fff0000 | Host ctl: 0x00000017
-> [ 2461.198358] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000080
-> [ 2461.204887] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
-> [ 2461.211419] mmc1: sdhci: Timeout:   0x00000000 | Int stat: 0x00000001
-> [ 2461.217951] mmc1: sdhci: Int enab:  0x03ff100b | Sig enab: 0x03ff100b
-> [ 2461.224483] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000001
-> [ 2461.231013] mmc1: sdhci: Caps:      0x45ee6432 | Caps_1:   0x0000a525
-> [ 2461.237543] mmc1: sdhci: Cmd:       0x00000d1a | Max curr: 0x00080008
-> [ 2461.244073] mmc1: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x0076b27f
-> [ 2461.250604] mmc1: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00000900
-> [ 2461.257135] mmc1: sdhci: Host ctl2: 0x0000808c
-> [ 2461.261639] mmc1: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0xc3400208
-> [ 2461.268169] mmc1: sdhci: ============================================
-> [ 2462.019897] raspberrypi-clk soc:firmware:clocks: Failed to change
-> fw-clk-arm frequency: -110
-> [ 2471.403852] mmc1: Timeout waiting for hardware cmd interrupt.
-> [ 2471.409689] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
-> [ 2471.416219] mmc1: sdhci: Sys addr:  0x00000008 | Version:  0x00001002
-> [ 2471.422751] mmc1: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000000
-> [ 2471.429282] mmc1: sdhci: Argument:  0xaaaa0000 | Trn mode: 0x00000033
-> [ 2471.435814] mmc1: sdhci: Present:   0x1fff0000 | Host ctl: 0x00000017
-> [ 2471.442345] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000080
-> [ 2471.448876] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
-> [ 2471.455407] mmc1: sdhci: Timeout:   0x00000000 | Int stat: 0x00000001
-> [ 2471.461938] mmc1: sdhci: Int enab:  0x03ff100b | Sig enab: 0x03ff100b
-> [ 2471.468469] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000001
-> [ 2471.474998] mmc1: sdhci: Caps:      0x45ee6432 | Caps_1:   0x0000a525
-> [ 2471.481529] mmc1: sdhci: Cmd:       0x00000d1a | Max curr: 0x00080008
-> [ 2471.488061] mmc1: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x0076b27f
-> [ 2471.494592] mmc1: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00000900
-> [ 2471.501122] mmc1: sdhci: Host ctl2: 0x0000808c
-> [ 2471.505624] mmc1: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0xc3400208
-> [ 2471.512155] mmc1: sdhci: ============================================
-> [ 2481.647850] mmc1: Timeout waiting for hardware cmd interrupt.
-> [ 2481.653680] mmc1: sdhci: ============ SDHCI REGISTER DUMP ===========
-> [ 2481.660211] mmc1: sdhci: Sys addr:  0x00000008 | Version:  0x00001002
-> [ 2481.666742] mmc1: sdhci: Blk size:  0x00007200 | Blk cnt:  0x00000000
-> [ 2481.673273] mmc1: sdhci: Argument:  0xaaaa0000 | Trn mode: 0x00000033
-> [ 2481.679804] mmc1: sdhci: Present:   0x1fff0000 | Host ctl: 0x00000017
-> [ 2481.686335] mmc1: sdhci: Power:     0x0000000f | Blk gap:  0x00000080
-> [ 2481.692866] mmc1: sdhci: Wake-up:   0x00000000 | Clock:    0x00000107
-> [ 2481.699397] mmc1: sdhci: Timeout:   0x00000000 | Int stat: 0x00000001
-> [ 2481.705928] mmc1: sdhci: Int enab:  0x03ff100b | Sig enab: 0x03ff100b
-> [ 2481.712459] mmc1: sdhci: ACmd stat: 0x00000000 | Slot int: 0x00000001
-> [ 2481.718988] mmc1: sdhci: Caps:      0x45ee6432 | Caps_1:   0x0000a525
-> [ 2481.725519] mmc1: sdhci: Cmd:       0x00000d1a | Max curr: 0x00080008
-> [ 2481.732050] mmc1: sdhci: Resp[0]:   0x00000900 | Resp[1]:  0x0076b27f
-> [ 2481.738581] mmc1: sdhci: Resp[2]:   0x325b5900 | Resp[3]:  0x00000900
-> [ 2481.745111] mmc1: sdhci: Host ctl2: 0x0000808c
-> [ 2481.749613] mmc1: sdhci: ADMA Err:  0x00000000 | ADMA Ptr: 0xc3400208
-> [ 2481.756143] mmc1: sdhci: ============================================
-> [ 2481.763349] mmc1: card aaaa removed
-> [ 2523.923843] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> [ 2523.930032] rcu: 1-...0: (1 GPs behind)
-> idle=add/1/0x4000000000000000 softirq=481373/481374 fqs=3169
-> [ 2523.939484] (detected by 3, t=21044 jiffies, g=915057, q=1474)
-> [ 2523.945491] Task dump for CPU 1:
-> [ 2523.948761] task:cgroup_fj_stres state:R  running task     stack:
->  0 pid: 6806 ppid:   501 flags:0x00000202
-> [ 2523.958831] Call trace:
-> [ 2523.961307]  __switch_to+0x104/0x160
-> [ 2523.964942]  0xffff0000403cff00
-> 
-> Full test log,
-> https://lkft.validation.linaro.org/scheduler/job/5075973
-> 
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+The core of this problem is that your first suspend fails and the GPU is in=
+ a bad
+state for the next suspend.
+
+I'm not sure why you're ignoring my other emails, but I did suggest a diffe=
+rent
+approach in this thread here:
+
+https://patchwork.freedesktop.org/patch/486836/
+
+Thanks,
+
+>=20
+> CC
+>=20
+> Le mercredi 18 mai 2022, 08:37:27 CEST Thorsten Leemhuis a =E9crit :
+> > On 18.05.22 07:54, Kai-Heng Feng wrote:
+> > > On Wed, May 18, 2022 at 1:52 PM Thorsten Leemhuis
+> > >
+> > > <regressions@leemhuis.info> wrote:
+> > >> On 17.05.22 19:37, casteyde.christian@free.fr wrote:
+> > >>> I've tryied to revert the offending commit on 5.18-rc7 (887f75cfd0d=
+a
+> > >>> ("drm/amdgpu: Ensure HDA function is suspended before ASIC reset"),=
+ and
+> > >>> the problem disappears so it's really this commit that breaks.
+> > >>
+> > >> In that case I'll update the regzbot status to make sure it's visibl=
+e as
+> > >> regression introduced in the 5.18 cycle:
+> > >>
+> > >> #regzbot introduced: 887f75cfd0da
+> > >>
+> > >> BTW: obviously would be nice to get this fixed before 5.18 is releas=
+ed
+> > >> (which might already happen on Sunday), especially as the culprit
+> > >> apparently was already backported to stable, but I guess that won't =
+be
+> > >> easy...
+> > >>
+> > >> Which made me wondering: is reverting the culprit temporarily in
+> > >> mainline (and reapplying it later with a fix) a option here?
+> > >
+> > > It's too soon to call it's the culprit.
+> >
+> > Well, sure, the root-cause might be somewhere else. But from the point
+> > of kernel regressions (and tracking them) it's the culprit, as that's
+> > the change that triggers the misbehavior. And that's how Linus
+> > approaches these things as well when it comes to reverting to fix
+> > regressions -- and he even might...
+> >
+> > > The suspend on the system
+> > > doesn't work properly at the first place.
+> >
+> > ...ignore things like this, as long as a revert is unlikely to cause
+> > more damage than good.
+> >
+> > Ciao. Thorsten
+> >
+> > >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' =
+hat)
+> > >>
+> > >> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+> > >> reports and sometimes miss something important when writing mails li=
+ke
+> > >> this. If that's the case here, don't hesitate to tell me in a public
+> > >> reply, it's in everyone's interest to set the public record straight=
+.
+>=20
+>=20
+>=20
