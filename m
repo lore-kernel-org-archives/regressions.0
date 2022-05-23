@@ -1,162 +1,44 @@
-Received: from smtp5-g21.free.fr (smtp5-g21.free.fr [212.27.42.5])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F9B637
-	for <regressions@lists.linux.dev>; Mon, 23 May 2022 13:03:33 +0000 (UTC)
-Received: from geek500.localdomain (unknown [82.65.8.64])
-	(Authenticated sender: casteyde.christian@free.fr)
-	by smtp5-g21.free.fr (Postfix) with ESMTPSA id C7D665FFA6;
-	Mon, 23 May 2022 15:03:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
-	s=smtp-20201208; t=1653311006;
-	bh=0z3zL/WZHRAKaLiAQMOG4o179eNPYBkTLCSIymjxibY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g18WtXd2bLJ9zeIbshtgIkBV248tIir5K2ZBjZyYU9TtzTEYMTPE+lYVV7NFdmHCZ
-	 JlR8A8eJl/UpH/rHtCQZXNaSCSKiwgxkD32f+eMCKl/9Vu4Dsh3yJX9aXzsf/BhUvA
-	 r1EBKsDJVNrzE8EiSw3PIRQ4Va1bdsmhLFEqKJMma7t6fxCgAano6uEGhuhEHVtUr9
-	 vbTqfe0/asN4JSf5Jvg+2U7OilKWQC9u8fkW6kr7xL/RKuHbnCbqYvNSF3Hb3RJ5Dq
-	 w4z8h29RLpe40oK4EFLloEpAlWhIydxLFpQ/yJTXyf8RkjwO9y40jd2A39ybYhOoyh
-	 4sBodO4/00Hlg==
-From: Christian Casteyde <casteyde.christian@free.fr>
-To: Kai-Heng Feng <kai.heng.feng@canonical.com>, Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, alexander deucher <alexander.deucher@amd.com>, gregkh@linuxfoundation.org, Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [REGRESSION] Laptop with Ryzen 4600H fails to resume video since 5.17.4 (works 5.17.3)
-Date: Mon, 23 May 2022 15:02:53 +0200
-Message-ID: <2585440.lGaqSPkdTl@geek500.localdomain>
-In-Reply-To: <2ce8f87e-785a-25b2-159a-cca45243b75b@leemhuis.info>
-References: <941867856.547807110.1652809066335.JavaMail.root@zimbra40-e7.priv.proxad.net> <CAAd53p4ddFYE+O6Je8z9XDy54nTiODJsQEn7PncZ95K_PXPtPQ@mail.gmail.com> <2ce8f87e-785a-25b2-159a-cca45243b75b@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E36637
+	for <regressions@lists.linux.dev>; Mon, 23 May 2022 13:10:00 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nt7os-0004UB-Np; Mon, 23 May 2022 15:09:58 +0200
+Message-ID: <04bac239-afd9-5b73-ed46-258f61f9329e@leemhuis.info>
+Date: Mon, 23 May 2022 15:09:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [regression] dpaa2: TSO offload on lx2160a causes fatal exception
+ in interrupt #forregzbot
+Content-Language: en-US
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <7ca81e6b-85fd-beff-1c2b-62c86c9352e9@leemhuis.info>
+In-Reply-To: <7ca81e6b-85fd-beff-1c2b-62c86c9352e9@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653311401;ea2ea19a;
+X-HE-SMSGID: 1nt7os-0004UB-Np
 
-Hello
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-I've checked with 5.18 the problem is still there.
-Interestingly, I tried to revert the commit but it was rejected because of =
-the=20
-change in the test from:
-        if (!adev->in_s0ix)=20
-to:
-      if (amdgpu_acpi_should_gpu_reset(adev))
+On 04.05.22 09:46, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker.
+> 
+> Ioana, I noticed a regression report in bugzilla.kernel.org that afaics
+> nobody acted upon since it was reported about a week ago. The reporter
+> *suspects* it's caused by a recent change of yours. That's why I decided
+> to forward it to the lists and all people that seemed to be relevant
+> here. To quote from https://bugzilla.kernel.org/show_bug.cgi?id=215886 :
 
-in amdgpu_pmops_suspend.
-
-I fixed the rejection, keeping shoud_gpu_reset, but it still fails.
-Then I changed to restore test of in_s0ix as it was in 5.17, and it works.
-I tried with a call to amd_gpu_asic_reset without testing at all in_s0ix, i=
-t=20
-works.
-
-Therefore, my APU wants a reset in amdgpu_pmops_suspend.
-
-By curiosity, I tried to do the reset in amdgpu_pmops_suspend_noirq as was=
-=20
-intended in 5.18 original code, commenting out the test of=20
-amdgpu_acpi_should_gpu_reset(adev) (since this APU wants a reset).
-This does not work, I got the Fence timeout errors or freezes.
-
-If I leave  noirq function unchanged (original 5.18 code), and just add a=20
-reset in suspend() as was done in 5.17, it works.
-
-Therefore, my GPU does NOT want to be reset in noirq, the reset must be in=
-=20
-suspend.
-
-In other words, I modified amdgpu_pmops_suspend (partial revert) like this =
-and=20
-this works on my laptop:
-
-static int amdgpu_pmops_suspend(struct device *dev)
-{
-	struct drm_device *drm_dev =3D dev_get_drvdata(dev);
-	struct amdgpu_device *adev =3D drm_to_adev(drm_dev);
-+	int r;
-
-	if (amdgpu_acpi_is_s0ix_active(adev))
-		adev->in_s0ix =3D true;
-	else
-		adev->in_s3 =3D true;
-=2D	return amdgpu_device_suspend(drm_dev, true);
-+	r =3D amdgpu_device_suspend(drm_dev, true);
-+	if (r)
-+		return r;
-+	if (!adev->in_s0ix)
-+		return amdgpu_asic_reset(adev);
-	return 0;
-}
-
-static int amdgpu_pmops_suspend_noirq(struct device *dev)
-{
-	struct drm_device *drm_dev =3D dev_get_drvdata(dev);
-	struct amdgpu_device *adev =3D drm_to_adev(drm_dev);
-
-	if (amdgpu_acpi_should_gpu_reset(adev))
-		return amdgpu_asic_reset(adev);
-
-	return 0;
-}
-
-I don't know if other APU want a reset, in the same context, and how to=20
-differentiate all the cases, so I cannot go further, but I can test patches=
- if=20
-needed.
-
-CC
-
-Le mercredi 18 mai 2022, 08:37:27 CEST Thorsten Leemhuis a =E9crit :
-> On 18.05.22 07:54, Kai-Heng Feng wrote:
-> > On Wed, May 18, 2022 at 1:52 PM Thorsten Leemhuis
-> >=20
-> > <regressions@leemhuis.info> wrote:
-> >> On 17.05.22 19:37, casteyde.christian@free.fr wrote:
-> >>> I've tryied to revert the offending commit on 5.18-rc7 (887f75cfd0da
-> >>> ("drm/amdgpu: Ensure HDA function is suspended before ASIC reset"), a=
-nd
-> >>> the problem disappears so it's really this commit that breaks.
-> >>=20
-> >> In that case I'll update the regzbot status to make sure it's visible =
-as
-> >> regression introduced in the 5.18 cycle:
-> >>=20
-> >> #regzbot introduced: 887f75cfd0da
-> >>=20
-> >> BTW: obviously would be nice to get this fixed before 5.18 is released
-> >> (which might already happen on Sunday), especially as the culprit
-> >> apparently was already backported to stable, but I guess that won't be
-> >> easy...
-> >>=20
-> >> Which made me wondering: is reverting the culprit temporarily in
-> >> mainline (and reapplying it later with a fix) a option here?
-> >=20
-> > It's too soon to call it's the culprit.
->=20
-> Well, sure, the root-cause might be somewhere else. But from the point
-> of kernel regressions (and tracking them) it's the culprit, as that's
-> the change that triggers the misbehavior. And that's how Linus
-> approaches these things as well when it comes to reverting to fix
-> regressions -- and he even might...
->=20
-> > The suspend on the system
-> > doesn't work properly at the first place.
->=20
-> ...ignore things like this, as long as a revert is unlikely to cause
-> more damage than good.
->=20
-> Ciao. Thorsten
->=20
-> >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' ha=
-t)
-> >>=20
-> >> P.S.: As the Linux kernel's regression tracker I deal with a lot of
-> >> reports and sometimes miss something important when writing mails like
-> >> this. If that's the case here, don't hesitate to tell me in a public
-> >> reply, it's in everyone's interest to set the public record straight.
-
-
-
-
+#regzbot fixed-by: 06d129946a71f3159
