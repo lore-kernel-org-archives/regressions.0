@@ -1,341 +1,307 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2067.outbound.protection.outlook.com [40.107.92.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic317-20.consmr.mail.gq1.yahoo.com (sonic317-20.consmr.mail.gq1.yahoo.com [98.137.66.146])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6563D7A
-	for <regressions@lists.linux.dev>; Mon, 23 May 2022 22:01:53 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dKP4XYLU6UlbPmwpNBveV/vRmvxqbTPkGV1Zv2NYC2yUre8uL9Ep0GNAts6fD4cIVnb+4fbUeVBZ3qJ6qfH3sb92JzGllbsZsd4R4R6tZq/cS8HZLwZsffGIDdZZz3oX9i4VQoeSvA4/rEHNinCRrGkDfdi2Yc6UqVNVZgfNxZBv5KbBDFxSoMvGBXC7geO/68jPd5g4QDDjXq+wyWrKqP1bDKdint1e2HvAeLUkbEyoWtcZ8Ttc58DB/Cxx2KY15Wmo3d72jSQY/tRt1d8vM8/w5161tDXKVcJOsiOWwUdDEfp6qIpf7r3cW5Spg4TQdJV2aoO51+ml1+zjVFjkZw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=D2uOeCzbnewXFKxStjf0uNnLBVaNri3vJzdG0UeNhvU=;
- b=Q47DZ4A+5scWI7iXgjWvjobEeG0lvyeO0cd9rS08pfGposy87ZlahLZlh1UfWpcpgXhttr6yxGDca8nld+r5A4K7nmiFN6PQNIG7RRB2A+uvfjeGSsqME+3NugBvdY78PTWT4yaFkcOBLcsl6G5JnW5kDxWkbijuYDzNFpsw7cxfMFoXzV5aE4uUIsIgdEYFoPdOBIzZJVckAQyHFQW85H7qlqJppWn8rAuBsS/zAINemBzcJPSt9OPQ0b4J1acbxOxj/U8dUydduhmSK6AkDXgkjeFW52Sa50awM4RMrbHzgThT5l/N910ByNYgrrS2Inc627/B8hbjVy8LtPN68Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D2uOeCzbnewXFKxStjf0uNnLBVaNri3vJzdG0UeNhvU=;
- b=xTUAOUOCrPR/g7kTVeTMdfOLqD2bJSgsl6hEWBn3a52Xh/WeKvinmMdZixQ7mpIkpApVURhMdZxuBhuVm9SiAodX2HQOeIjbGh8G9OL4r33/1JGqV41ucxe1PnxHLkOx3n8tBcI7V29sEHssx6SroD1oDLX+hkcVmxzUpK7K+Go=
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by DM6PR12MB2732.namprd12.prod.outlook.com (2603:10b6:5:4a::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.21; Mon, 23 May
- 2022 22:01:50 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::d42b:7413:ba19:e8db]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::d42b:7413:ba19:e8db%6]) with mapi id 15.20.5273.022; Mon, 23 May 2022
- 22:01:49 +0000
-From: "Limonciello, Mario" <Mario.Limonciello@amd.com>
-To: Christian Casteyde <casteyde.christian@free.fr>, Kai-Heng Feng
-	<kai.heng.feng@canonical.com>, Thorsten Leemhuis <regressions@leemhuis.info>
-CC: "stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, "Deucher,
- Alexander" <Alexander.Deucher@amd.com>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>
-Subject: RE: [REGRESSION] Laptop with Ryzen 4600H fails to resume video since
- 5.17.4 (works 5.17.3)
-Thread-Topic: [REGRESSION] Laptop with Ryzen 4600H fails to resume video since
- 5.17.4 (works 5.17.3)
-Thread-Index:
- AQHYabuPQo7dlCpjq0mwll14F3A0P60jViwAgADNTwCAAACrgIAAC92AgAhHWYCAAEM3gIAAUJmw
-Date: Mon, 23 May 2022 22:01:49 +0000
-Message-ID:
- <MN0PR12MB61011E787AAAA98597A3A9DDE2D49@MN0PR12MB6101.namprd12.prod.outlook.com>
-References:
- <941867856.547807110.1652809066335.JavaMail.root@zimbra40-e7.priv.proxad.net>
- <2ce8f87e-785a-25b2-159a-cca45243b75b@leemhuis.info>
- <2585440.lGaqSPkdTl@geek500.localdomain>
- <2408578.XAFRqVoOGU@geek500.localdomain>
-In-Reply-To: <2408578.XAFRqVoOGU@geek500.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2022-05-23T21:51:58Z;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=8eff50c7-d37c-4932-b419-4aca6ebe7931;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2022-05-23T22:01:48Z
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid:
- 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid:
- 5b6af8bc-d7e6-4c0a-a9d9-5dac7dbdd38d
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e2056b8a-edde-4bde-e8fb-08da3d07d67f
-x-ms-traffictypediagnostic: DM6PR12MB2732:EE_
-x-microsoft-antispam-prvs:
- <DM6PR12MB273217B4892875F624482F66E2D49@DM6PR12MB2732.namprd12.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- K64Id63X5KYUw+NljPWkMAYtDHTPcGXqvEJZkFnyN+WJ8pJI5I5YulPKfNpXkFmuq68304sTqOvWq/GpSpsSg3Wjqsc5AShj22obIjskavgbWE96Yw5twPly3eHPqjp0TAi50vgtp5VwA5ya5fg01b+zortY1dhO8y50K6MWhqU+BguaBkBmXE7m6uFsEAbTma7xzf67WCmb00R+BN5AOZDrgiaQlMeiGAo2SRC1TyLg7tKeezsynSjdUg8XuYzgDcaGqiZWY7V10DN/mbLw95PMm2abbLzN1EThVTF5vUhzQImLFEo/3ZR1BIP2HZUl3YO7y2Wamavg/MTkkANeADljJxahvTEZ3FAr3fwsU6Fe5h07MX9Tv6dpk1mc05aqbshGF/wPgP/drXQZDuOcDvlhWnmRd0lg4ZoeaKDajADnFp699WWmDxbg2yvIjCTerW1md7xdoHEI6XzsYLoAq1A9INooSfMpdz0veskM1mU6/GF8je78sVK3UOTUSyZyL5p9/Z1TjvSaxgleh3Ms48DTemHCFJcFAkyS2LLlOD3wADspgKz9IueC4vyUQwt6BAYrVmQIf44RQwVniQHiUa4Mt32Wxzij974uVz7J/lYeRJXZxAnRNhEKDqmxyVlF5hMVQWpg73p6tcCuJFUvDlkvYUjg8hgicNubEF9DhdRDgT5n0iGo1lwcgjqBzg2rTtZJZ7aAanBZeQgtvCqCNZeDxZzg1Z0ULiDJZPbvP8qRD4yCQ/HuE84UvTQ7WTYkLUmuhZGwrukaASiIH6M54scndJbb2ZiKMGC7AXbHWhKeyAffAp17ws6GH3dvOhJVJh0j6A7szPkvtI86W70iSTglRB+J9iZDaFIgB31gmdTggrsNUaEcpsLBc/vECSzB7WNYYVdlgVaMl0sNT6Xg4Q==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(52536014)(8936002)(76116006)(110136005)(54906003)(66946007)(4326008)(5660300002)(33656002)(83380400001)(122000001)(38070700005)(8676002)(66556008)(66476007)(66446008)(64756008)(2906002)(55016003)(86362001)(316002)(38100700002)(966005)(7696005)(71200400001)(45080400002)(6506007)(186003)(66574015)(53546011)(26005)(9686003)(508600001)(41080700001)(15866825006);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?yWUgb7GN9siVdroJ1xhtWbikHGvF4+LTSUK3ARyHtnBe3AYJ8+iB7jD7LQ?=
- =?iso-8859-1?Q?gzuh9BzqY9tK8YUlE6cNAR0KFve0m4Z86d4iMrbVKeS5vJPs6odVISKGNN?=
- =?iso-8859-1?Q?w64cLXB4IICN1NbH1NtBuUivpf5ekAaGpsu7L2eeU58SVIrb/B1hXGtJ26?=
- =?iso-8859-1?Q?uitE1pJsKVUSwVGer1X8kUh4pe9Zo0u4nif6H5WjSrGCEwyGwQ16BVt8l7?=
- =?iso-8859-1?Q?adKh3eLmL18SDewwq7dZYk52pBKv3AGiysz0JlQM2VrDiMs5RuZCfRHwXK?=
- =?iso-8859-1?Q?UFwZm8oH0U35SOCAtH0w5lF2MzOwMNS44FNqZqq9agy5PSIth27b+XGxkV?=
- =?iso-8859-1?Q?R7JjAYevQ2WtI6+KHGCbjIg15Kj2KbdsC8jIro/e8Nz1H96Th23x5EAfnS?=
- =?iso-8859-1?Q?h10aDy9aXGJxxjjFYXgKhFcZ8kyItBvri90x4n/5WHOEVFWJu7TtqL+BE4?=
- =?iso-8859-1?Q?FBs+mmOVroYsoeRbUpMp2lqhslJ2w8tBjFiiZlfQ5SEAG9tttOUpURqJDq?=
- =?iso-8859-1?Q?cCvNOtAPpn+a2B/BKShDyA85dnOoF6+vCOMoitttvAJdFC+jNyQlg/j+76?=
- =?iso-8859-1?Q?KSG5Ufj7RadFwFzOVGDjpIbVauiTf04u0jz1wjczGP2ZRwTY/2p8zBXvDt?=
- =?iso-8859-1?Q?uAA2ctjI9aZ9FhY82/GzMiqNTSPj/p/s+LvGUfCpGljaZTAEkV1E5HvdtU?=
- =?iso-8859-1?Q?dJeyi3jk+lfc1DDq9ZWyoFbkzskX1hioeqxeCNN5di07/qHkwpppZRgSRi?=
- =?iso-8859-1?Q?eqHyBknTZBZMIHzwcfn4+FTpcPvqI+bW/C7JxnFP2ei5JKZFti7ql+BmqD?=
- =?iso-8859-1?Q?iaf024lkHH8UBNSviuBmngm3xSC22uofHbDRta8AD89OvTyjYtS5M1mgp2?=
- =?iso-8859-1?Q?dW7nmqLHpIrPFk9O2jHrax5ZUO9MZqj5Abmx+3h49CFJ2xocN+0+z15wAZ?=
- =?iso-8859-1?Q?YIMI6RRV+y1yqERGve/BNkS1doAPEZJCEmAdrYWcUN3URVF59IRhdEv/oT?=
- =?iso-8859-1?Q?THbBHpgqtzxqU6WerI29lQtTG5SkrKKsN3lw8avCfQEY9KR45oJRKZQice?=
- =?iso-8859-1?Q?hMoIybyRlV0MDuj00m8Ix8PXrejRSn15ut6m0e7hrkPF/LfZpJgORScE0t?=
- =?iso-8859-1?Q?reNBvop6Ji/wLG18HBEyhO9h85V7mKEwd2OvYeeGP99p+l8E4LVCbx1UnY?=
- =?iso-8859-1?Q?avw+W7SUAk7GT1BD7A1gF9nA+RJDxGVMmZeCKIt8amtv6Buu79DMrYUGPY?=
- =?iso-8859-1?Q?MwGY+Bxr2XeyStnBJuDugikc45IXlGUvKTaYyCknGYH86wsRbSw8daRizL?=
- =?iso-8859-1?Q?4GpPwmNG1Po8bi/D7iDk9RM8QbSQz5xcmY7AfB1R7TCbZ++4OIr6PZosgY?=
- =?iso-8859-1?Q?gS0USwfDhCi2AnSMFFJ1waaHF4u/YqZ+vkVC+wFD4kssMIENkOSQ8PKClE?=
- =?iso-8859-1?Q?TFS1MuKpi3Knv4v6kz+XJ/9XtMMMcyQ+Y4EtATPqShz8Jp6OV2bR1bOcRu?=
- =?iso-8859-1?Q?WfqpRZGR9tXo9B86J2wCjCxzRxIi9aRVlcOwHkvUFrxBGpkq8O8yvN84Ma?=
- =?iso-8859-1?Q?/AZlJ55I57UqGXhFK3m4+uTNouA4UTwnShqL4QefYseRKg//N9yFvtvvxs?=
- =?iso-8859-1?Q?fi+a1DOTMFg2QUKosvrwFzthqISTQueYWTJVHHZCcZZ/Jo7j/7s7Tv8xwJ?=
- =?iso-8859-1?Q?GJFuyS/m5b7q2tWu7LmkKUNW1YPWIkeeUM3PgGKYXhNrbvcoKHIXdnBkZw?=
- =?iso-8859-1?Q?+No9yFYw+7OOzWXfoMIEPujky2IYzqjH9Ufy7gxYGCkl7/?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0902D7C
+	for <regressions@lists.linux.dev>; Tue, 24 May 2022 18:32:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netscape.net; s=a2048; t=1653417157; bh=bWdvczIx7ry7wZOALAI1wr+HsImsxjNz7PtVMvZvtj8=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=lBrYG59B4NAY+zeSFmHe92QcF1AtKxVljoQibxCKbJeGAH6xT4wrcxRqmVgG+ZOnF/NwJnyx2D2jrxTQFFqcrnsNlQGzqyBr5FBJqtk4pi20bJU2LWH5nt4WpEOYVPfuX/21cWrYreqcQWzIW3bKDCN1zS/9lbxTnCbXPvnX3ZjxQ+R/5bhf6v7zWSSZK5o9Lmxj2GTwf3/bdDZH9StPsPqz35Mce5ne2lTmyWvajx/dMfqjTw4Pj0lYyatwW5y/sJEvGh1y0rOGiz3cyRN3KY927n2ZsoCD++cxgFVxAB7Aa0L9w+gA+GQUMTzOEf1asJoeqnEjrBV3QOonXUDNAw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1653417157; bh=s3RpZhgR4s9uWwhVoE5EIzWfLL3MAfA6mE5D7/0OW9A=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=XrB1Ps2zvpEsObxvQNaMgTqSxGlBkUGvkxRXCc3LJIL9Ix9+giBk514R43WYLmzpvcT5yUIeaeMertglYe0cAsiPxgqXTudWefTGZVv0eZ30RFj1BMIubkW5z362+2jITR0lCNEhFCMWOVm1b7Diio8crHcxT3hUT1uXvdGPOuMzi12PmZ/KNzkksfLObxZNgb8mNiuLxXB2xOV2ysRLkuI6OKzAq6zaS7NP064Ao4o8x+Y7nVk5NQIdd1IYsv8hbUYkpv7YvVUw8bju8kc5/IknnI7C5gDhpfuZwR892FeSehs4tQqExb0gJ94bzSVw6FFnyVrupqGThIPulLOE2g==
+X-YMail-OSG: J42Z.mEVM1mppfHkyqWoRpCGB0mXn4dGsrlfQrFalIJjwaJPzLD9X6PbJIQodNc
+ I1oX7Jwl3xDkSLGmOgC5IpFTFwncYKvZWjVHTKDLXTLUvGnVEZkhM.cT1_Qe32_VHoIQ3K7QhF_T
+ fs2bSdHo8POl2vloU_or9Ynxo84f3n.pglT46gC4Q4zpaZHmvPUxNn0LpHNAkoLizYif2vDzLkDN
+ L2J.leqIbGq61xTEGg37LZLVNmrLtecDoe_l80EkYfKzUGob7bKDek3tx3HXFvq4XeZGmXPVBRgI
+ x04Y0LzovydetX11xkm9BEmp9VplSympKgWB_sopf7ndo2VPviGMVxPCkUTzdGzmQTHZeuHK0baM
+ nwY95HLmK1tKFLfmUIyfsOf5Sh.SoTzGFP6KNI5prw3OwnfgXTEb2Xvn5VkHva.Lbb_hWgKRBi8G
+ QY5avLVfQkfBm6rlcpDdAyoFgVQg91OsH0xDDQmw.JUiU_h3O39Vdw6GHo1Z6CSnKa.8mHrCZ2_K
+ oC4Ic26g68biMyU7QCQJLoQO3td.jifMKrUOMzd4Yqnl2nus4HtKD5tlFy6mZVRiIQwkfhYnZuHf
+ Uh_bh0hSTs6dE5rb7ionVmwIdwcxkEeLN_s_jFj8.TDWfS4oWJGG5yGmLBstw4rdPrCnx9tMoote
+ F_KQxur7Sj9Ruo1OK0xckP0ZgJ3f0v.CEkt7kSE0j_ScNJ1v3Q553xBBj6PlyTXa41Q1hTBLmCnl
+ wbhkOGD92YNzz.4nG5x2jfC7L2nwVlXI8RAUlPQTj1eqK1Qys5ECNU10auqEMFbXQDaNUdYJQ4tY
+ udzuQWNh4CMSf93DwYXh7cOuc5rmERY7rfYkGnbmn2y4MeTBJmyFFo03_p.DSotwbJUAsDBxYdXR
+ HeH30PSe8o3Ni0rcOFixzqo8jA3bZ27ISECfahxR1842QNS.3j_Bw7.kyikWGTxKZza03bcbF_re
+ s8Hs9syqWwy37LhyVfe1Clm.rCIN1QHsWR2hxOMwERAHqL4DDCO4MMe8LrgGRJWdTwZdxyuNYSBB
+ 8CNU65ORiE5idkjg44.En3efNoi06JYJRY9h3r8eULAFVTUr.MO3XCxmsipHeIlxx4a8PYp9DU15
+ F0Gm_CiSgul2mWQzUs.nE0FRzMnU6BjZ4d2WU7k6UKNpp79v1QfKy4DCjPzNnAiBS793Mdd6IBCu
+ WHkQmdAT.VgfAfi7pJvHVWH_iZu5fV1rJT7l1Rx.2heRhzdabGeZPi0QbUcG4wbKybegpH_EACkF
+ vOgMlKG6W5vcpNztXUerPYCueShA1SWGTgpz5bnwoqo2GbZOMjo.IR8Ynb.AYp5Flc.iKINKy4s_
+ X911QoCXMBQzNfz9An9pQfeZuVFZJBripjQQ50X3v4tOn0rlSMMZZSXSpoVY2x6iFkyAof0PfENZ
+ tHSP8r8ssIS.y8Fmj_9gc._SeczNxPHfThrqEluHwUQf35vlYvTfh6XHJKGzuECWx5uNgsuNWsqj
+ 0f_S.WJHzmAJ9URgVJQlIzI_pHXQt9nPBoXkmz_7c6PsZRN9cJniMmvaf68QUryyFy5V36_LDfHo
+ SdxQy7829U58fbic2I.iEfnQ3hh8KCaMUqihkmRXOSZlHxxqRjNin4eFDoi_qSAqFB7o1h6YSwSS
+ .sm9dDBiw1C_sJSRJLUYxCKJPxkkFb3NsgDodKxcUVAN3nBzY6QW9JkRLTfXIhZ7SMrrmknSQhw1
+ Dzhd6yHj4lcrd_4VFOFi5lMKOMsLdD6ydUpoWhwkCt.vDH8OJbd4Nk0ruPBOscAbBl0MJgzAMjEs
+ zvO3sePr.8oHBgzNEw2wYX5u9Y7ykffC_YtgPSLRg.HAZxlWLMGVDWT4a5UKhsPuoHpX_Xf19WGf
+ UdAqS6bb7MlA_K_coB3EGR3.CvJst2VQD5ewL5XK0s7NWI28ks1WbdmImZr9yQE3dkHLe7YYmq2t
+ SS90c4vme4OWiiEokiOsIIb94tvgpAUhGXsVSu9Cp9Cjv_hr9ImPppkeec9Fjv944GfzlIQ2a18w
+ P1eeVMx2c2mRgA3n0r8aq.LnmhxnQ3Ee2CFIPGpkb1ptoJ3mdELhzQiQ3wdzcwJhSAzoTPoQY4V.
+ YBEK7no8jP6Ftxfj9Gh1k9rgPy9qGCbS9iJpa3bdVmnahP7gkZ244Pn0W6lEHIt7.RGpVG1lkkL9
+ mZhwuqB4VikkxukFkcgJR6rdy99.nUF.0YiAAf8kMksIXv0sT.YrlDYaraSWuXayrHTSNnURDwu4
+ 0
+X-Sonic-MF: <brchuckz@aim.com>
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.gq1.yahoo.com with HTTP; Tue, 24 May 2022 18:32:37 +0000
+Received: by hermes--canary-production-ne1-5495f4d555-xgn59 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID f18826b5cd811627c8ace28c66b17372;
+          Tue, 24 May 2022 18:32:32 +0000 (UTC)
+Message-ID: <3fc70595-3dcc-4901-0f3f-193f043b753f@netscape.net>
+Date: Tue, 24 May 2022 14:32:30 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2056b8a-edde-4bde-e8fb-08da3d07d67f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2022 22:01:49.8650
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RUwONf57exLx696rhVK1yFzIB8NIuzfG3UQDzVI2d+xahd15IpBi3lTl0ywHRSbCQqSgDNBmPf3YfJLo1EPZ1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2732
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 2/2] x86/pat: add functions to query specific cache mode
+ availability
+Content-Language: en-US
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Jan Beulich <jbeulich@suse.com>, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+ David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+ xen-devel@lists.xenproject.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, Juergen Gross <jgross@suse.com>
+References: <20220503132207.17234-1-jgross@suse.com>
+ <20220503132207.17234-3-jgross@suse.com>
+ <1d86d8ff-6878-5488-e8c4-cbe8a5e8f624@suse.com>
+ <0dcb05d0-108f-6252-e768-f75b393a7f5c@suse.com>
+ <77255e5b-12bf-5390-6910-dafbaff18e96@netscape.net>
+ <a2e95587-418b-879f-2468-8699a6df4a6a@suse.com>
+ <8b1ebea5-7820-69c4-2e2b-9866d55bc180@netscape.net>
+ <c5fa3c3f-e602-ed68-d670-d59b93c012a0@netscape.net>
+ <3bff3562-bb1e-04e6-6eca-8d9bc355f2eb@suse.com>
+ <3ca084a9-768e-a6f5-ace4-cd347978dec7@netscape.net>
+ <9af0181a-e143-4474-acda-adbe72fc6227@suse.com>
+ <b2585c19-d38b-9640-64ab-d0c9be24be34@netscape.net>
+ <dae4cc45-a1cd-e33f-25ef-c536df9b49e6@leemhuis.info>
+From: Chuck Zmudzinski <brchuckz@netscape.net>
+In-Reply-To: <dae4cc45-a1cd-e33f-25ef-c536df9b49e6@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Mailer: WebService/1.1.20225 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
 
-[Public]
+On 5/21/22 6:47 AM, Thorsten Leemhuis wrote:
+> On 20.05.22 16:48, Chuck Zmudzinski wrote:
+>> On 5/20/2022 10:06 AM, Jan Beulich wrote:
+>>> On 20.05.2022 15:33, Chuck Zmudzinski wrote:
+>>>> On 5/20/2022 5:41 AM, Jan Beulich wrote:
+>>>>> On 20.05.2022 10:30, Chuck Zmudzinski wrote:
+>>>>>> On 5/20/2022 2:59 AM, Chuck Zmudzinski wrote:
+>>>>>>> On 5/20/2022 2:05 AM, Jan Beulich wrote:
+>>>>>>>> On 20.05.2022 06:43, Chuck Zmudzinski wrote:
+>>>>>>>>> On 5/4/22 5:14 AM, Juergen Gross wrote:
+>>>>>>>>>> On 04.05.22 10:31, Jan Beulich wrote:
+>>>>>>>>>>> On 03.05.2022 15:22, Juergen Gross wrote:
+>>>>>>>>>>>
+>>>>>>>>>>> ... these uses there are several more. You say nothing on why
+>>>>>>>>>>> those want
+>>>>>>>>>>> leaving unaltered. When preparing my earlier patch I did
+>>>>>>>>>>> inspect them
+>>>>>>>>>>> and came to the conclusion that these all would also better
+>>>>>>>>>>> observe the
+>>>>>>>>>>> adjusted behavior (or else I couldn't have left pat_enabled()
+>>>>>>>>>>> as the
+>>>>>>>>>>> only predicate). In fact, as said in the description of my
+>>>>>>>>>>> earlier
+>>>>>>>>>>> patch, in
+>>>>>>>>>>> my debugging I did find the use in i915_gem_object_pin_map()
+>>>>>>>>>>> to be
+>>>>>>>>>>> the
+>>>>>>>>>>> problematic one, which you leave alone.
+>>>>>>>>>> Oh, I missed that one, sorry.
+>>>>>>>>> That is why your patch would not fix my Haswell unless
+>>>>>>>>> it also touches i915_gem_object_pin_map() in
+>>>>>>>>> drivers/gpu/drm/i915/gem/i915_gem_pages.c
+>>>>>>>>>
+>>>>>>>>>> I wanted to be rather defensive in my changes, but I agree at
+>>>>>>>>>> least
+>>>>>>>>>> the
+>>>>>>>>>> case in arch_phys_wc_add() might want to be changed, too.
+>>>>>>>>> I think your approach needs to be more aggressive so it will fix
+>>>>>>>>> all the known false negatives introduced by bdd8b6c98239
+>>>>>>>>> such as the one in i915_gem_object_pin_map().
+>>>>>>>>>
+>>>>>>>>> I looked at Jan's approach and I think it would fix the issue
+>>>>>>>>> with my Haswell as long as I don't use the nopat option. I
+>>>>>>>>> really don't have a strong opinion on that question, but I
+>>>>>>>>> think the nopat option as a Linux kernel option, as opposed
+>>>>>>>>> to a hypervisor option, should only affect the kernel, and
+>>>>>>>>> if the hypervisor provides the pat feature, then the kernel
+>>>>>>>>> should not override that,
+>>>>>>>> Hmm, why would the kernel not be allowed to override that? Such
+>>>>>>>> an override would affect only the single domain where the
+>>>>>>>> kernel runs; other domains could take their own decisions.
+>>>>>>>>
+>>>>>>>> Also, for the sake of completeness: "nopat" used when running on
+>>>>>>>> bare metal has the same bad effect on system boot, so there
+>>>>>>>> pretty clearly is an error cleanup issue in the i915 driver. But
+>>>>>>>> that's orthogonal, and I expect the maintainers may not even care
+>>>>>>>> (but tell us "don't do that then").
+>>>>>> Actually I just did a test with the last official Debian kernel
+>>>>>> build of Linux 5.16, that is, a kernel before bdd8b6c98239 was
+>>>>>> applied. In fact, the nopat option does *not* break the i915 driver
+>>>>>> in 5.16. That is, with the nopat option, the i915 driver loads
+>>>>>> normally on both the bare metal and on the Xen hypervisor.
+>>>>>> That means your presumption (and the presumption of
+>>>>>> the author of bdd8b6c98239) that the "nopat" option was
+>>>>>> being observed by the i915 driver is incorrect. Setting "nopat"
+>>>>>> had no effect on my system with Linux 5.16. So after doing these
+>>>>>> tests, I am against the aggressive approach of breaking the i915
+>>>>>> driver with the "nopat" option because prior to bdd8b6c98239,
+>>>>>> nopat did not break the i915 driver. Why break it now?
+>>>>> Because that's, in my understanding, is the purpose of "nopat"
+>>>>> (not breaking the driver of course - that's a driver bug -, but
+>>>>> having an effect on the driver).
+>>>> I wouldn't call it a driver bug, but an incorrect configuration of the
+>>>> kernel by the user.  I presume X86_FEATURE_PAT is required by the
+>>>> i915 driver
+>>> The driver ought to work fine without PAT (and hence without being
+>>> able to make WC mappings). It would use UC instead and be slow, but
+>>> it ought to work.
+>>>
+>>>> and therefore the driver should refuse to disable
+>>>> it if the user requests to disable it and instead warn the user that
+>>>> the driver did not disable the feature, contrary to what the user
+>>>> requested with the nopat option.
+>>>>
+>>>> In any case, my test did not verify that when nopat is set in Linux
+>>>> 5.16,
+>>>> the thread takes the same code path as when nopat is not set,
+>>>> so I am not totally sure that the reason nopat does not break the
+>>>> i915 driver in 5.16 is that static_cpu_has(X86_FEATURE_PAT)
+>>>> returns true even when nopat is set. I could test it with a custom
+>>>> log message in 5.16 if that is necessary.
+>>>>
+>>>> Are you saying it was wrong for static_cpu_has(X86_FEATURE_PAT)
+>>>> to return true in 5.16 when the user requests nopat?
+>>> No, I'm not saying that. It was wrong for this construct to be used
+>>> in the driver, which was fixed for 5.17 (and which had caused the
+>>> regression I did observe, leading to the patch as a hopefully least
+>>> bad option).
+>>>
+>>>> I think that is
+>>>> just permitting a bad configuration to break the driver that a
+>>>> well-written operating system should not allow. The i915 driver
+>>>> was, in my opinion, correctly ignoring the nopat option in 5.16
+>>>> because that option is not compatible with the hardware the
+>>>> i915 driver is trying to initialize and setup at boot time. At least
+>>>> that is my understanding now, but I will need to test it on 5.16
+>>>> to be sure I understand it correctly.
+>>>>
+>>>> Also, AFAICT, your patch would break the driver when the nopat
+>>>> option is set and only fix the regression introduced by bdd8b6c98239
+>>>> when nopat is not set on my box, so your patch would
+>>>> introduce a regression relative to Linux 5.16 and earlier for the
+>>>> case when nopat is set on my box. I think your point would
+>>>> be that it is not a regression if it is an incorrect user configuration.
+>>> Again no - my view is that there's a separate, pre-existing issue
+>>> in the driver which was uncovered by the change. This may be a
+>>> perceived regression, but is imo different from a real one.
+> Sorry, for you maybe, but I'm pretty sure for Linus it's not when it
+> comes to the "no regressions rule". Just took a quick look at quotes
+> from Linus
+> https://www.kernel.org/doc/html/latest/process/handling-regressions.html
+> and found this statement from Linus to back this up:
+>
+> ```
+> One _particularly_ last-minute revert is the top-most commit (ignoring
+> the version change itself) done just before the release, and while
+> it's very annoying, it's perhaps also instructive.
+>
+> What's instructive about it is that I reverted a commit that wasn't
+> actually buggy. In fact, it was doing exactly what it set out to do,
+> and did it very well. In fact it did it _so_ well that the much
+> improved IO patterns it caused then ended up revealing a user-visible
+> regression due to a real bug in a completely unrelated area.
+> ```
+>
+> He said that here:
+> https://www.kernel.org/doc/html/latest/process/handling-regressions.html
+>
+> The situation is of course different here, but similar enough.
+>
+>> Since it is a regression, I think for now bdd8b6c98239 should
+>> be reverted and the fix backported to Linux 5.17 stable until
+>> the underlying memory subsystem can provide the i915 driver
+>> with an updated test for the PAT feature that also meets the
+>> requirements of the author of bdd8b6c98239 without breaking
+>> the i915 driver.
+> I'm not a developer and I'm don't known the details of this thread and
+> the backstory of the regression, but it sounds like that's the approach
+> that is needed here until someone comes up with a fix for the regression
+> exposed by bdd8b6c98239.
+>
+> But if I'm wrong, please tell me.
 
+You are mostly right, I think. Reverting bdd8b6c98239 fixes
+it. There is another way to fix it, though. The patch proposed
+by Jan Beulich also fixes the regression on my system, so as
+the person reporting this is a regression, I would also be satisfied
+with Jan's patch instead of reverting bdd8b6c98239 as a fix. Jan
+posted his proposed patch here:
 
+https://lore.kernel.org/lkml/9385fa60-fa5d-f559-a137-6608408f88b0@suse.com/
 
-> -----Original Message-----
-> From: Christian Casteyde <casteyde.christian@free.fr>
-> Sent: Monday, May 23, 2022 12:03
-> To: Kai-Heng Feng <kai.heng.feng@canonical.com>; Thorsten Leemhuis
-> <regressions@leemhuis.info>
-> Cc: stable@vger.kernel.org; regressions@lists.linux.dev; Deucher, Alexand=
-er
-> <Alexander.Deucher@amd.com>; gregkh@linuxfoundation.org; Limonciello,
-> Mario <Mario.Limonciello@amd.com>
-> Subject: Re: [REGRESSION] Laptop with Ryzen 4600H fails to resume video
-> since 5.17.4 (works 5.17.3)
->=20
-> I've opened the gitlab entry for this discussion:
-> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgitla
-> b.freedesktop.org%2Fdrm%2Famd%2F-
-> %2Fissues%2F2023&amp;data=3D05%7C01%7Cmario.limonciello%40amd.com%
-> 7C7a9cf928dd1e491f0c2c08da3cde2e21%7C3dd8961fe4884e608e11a82d994e
-> 183d%7C0%7C0%7C637889222210477502%7CUnknown%7CTWFpbGZsb3d8ey
-> JWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%
-> 7C3000%7C%7C%7C&amp;sdata=3DWnQwbF8J4j2F69GINpz49Zg5Qg0tpVCmUG
-> i1FjXrCu4%3D&amp;reserved=3D0
->=20
-> I confirm I 'm not receiving mails anymore from the mailing list but I'll
-> follow gitlab.
->=20
-> In reply to the patch proposed by Mario:
-> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fpatc
-> hwork.freedesktop.org%2Fpatch%2F486836%2F&amp;data=3D05%7C01%7Cma
-> rio.limonciello%40amd.com%7C7a9cf928dd1e491f0c2c08da3cde2e21%7C3dd
-> 8961fe4884e608e11a82d994e183d%7C0%7C0%7C637889222210477502%7CUn
-> known%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6
-> Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=3DFuhEnUyC8nv
-> ycpaGr4yfBbGpuXHXoKqImBTQ0PL8caY%3D&amp;reserved=3D0
-> With this patch applied on vanilla 5.18 kernel:
-> - suspend still fails;
-> - after suspend attempt, the screen comes back with only the cursor;
-> - switching to a console let me get the following dmesg file.
->=20
+The only reservation I have about Jan's patch is that the commit
+message does not clearly explain how the patch changes what
+the nopat kernel boot option does. It doesn't affect me because
+I don't use nopat, but it should probably be mentioned in the
+commit message, as pointed out here:
 
-I spent some time with Christian today on that Gitlab issue, and want to up=
-date this
-audience to a few things.
+https://lore.kernel.org/lkml/bd9ed2c2-1337-27bb-c9da-dfc7b31d492c@netscape.net/
 
-1) The first suspend failure is caused by something wrong with acpi_tad dri=
-ver on his
-system.  Blacklisting the driver everything works properly.
+Whatever fix for the regression exposed by bdd8b6c98239 also
+needs to be backported to the stable versions 5.17 and 5.18.
 
-2) Failing the first time with deep and trying s2idle instead is caused by =
-something in
-his userspace (unknown right now).
+Regards,
 
-3) This is not a regression IMO.  The GPU was in a bad state from the probl=
-em caused
-by acpi-tad.  We introduced poking around and resetting the GPU to help wit=
-h
-aborted suspends, but they've led to a pile of "Oh but not this case", fix =
-this ordering
-problem, deal with this repercussion.  We shouldn't be dropping any of thos=
-e incremental
-solutions to deal with a path like this; the direction should be for fixing=
- acpi_tad or whatever
-userspace is using it incorrectly on Christian's system.
+Chuck Zmudzinski
+>
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>
+> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+> reports and sometimes miss something important when writing mails like
+> this. If that's the case here, don't hesitate to tell me in a public
+> reply, it's in everyone's interest to set the public record straight.
+>
+>> The i915 driver relies on the memory subsytem
+>> to provide it with an accurate test for the existence of
+>> X86_FEATURE_PAT. I think your patch provides that more accurate
+>> test so that bdd8b6c98239 could be re-applied when your patch is
+>> committed. Juergen's patch would have to touch bdd8b6c98239
+>> with new functions that probably have unknown and unintended
+>> consequences, so I think your approach is also better in that regard.
+>> As regards your patch, there is just a disagreement about how the
+>> i915 driver should behave if nopat is set. I agree the i915 driver
+>> could do a better job handling that case, at least with better error
+>> logs.
+>>
+>> Chuck
+>>
+>>>> I respond by saying a well-written driver should refuse to honor
+>>>> the incorrect configuration requested by the user and instead
+>>>> warn the user that it did not honor the incorrect kernel option.
+>>>>
+>>>> I am only presuming what your patch would do on my box based
+>>>> on what I learned about this problem from my debugging. I can
+>>>> also test your patch on my box to verify that my understanding of
+>>>> it is correct.
+>>>>
+>>>> I also have not yet verified Juergen's patch will not fix it, but
+>>>> I am almost certain it will not unless it is expanded so it also
+>>>> touches i915_gem_object_pin_map() with the fix. I plan to test
+>>>> his patch, but expanded so it touches that function also.
+>>>>
+>>>> I also plan to test your patch with and without nopat and report the
+>>>> results in the thread where you posted your patch. Hopefully
+>>>> by tomorrow I will have the results.
+>>>>
+>>>> Chuck
 
-> CC
->=20
-> Le lundi 23 mai 2022, 15:02:53 CEST Christian Casteyde a =E9crit :
-> > Hello
-> >
-> > I've checked with 5.18 the problem is still there.
-> > Interestingly, I tried to revert the commit but it was rejected because=
- of
-> > the change in the test from:
-> >         if (!adev->in_s0ix)
-> > to:
-> >       if (amdgpu_acpi_should_gpu_reset(adev))
-> >
-> > in amdgpu_pmops_suspend.
-> >
-> > I fixed the rejection, keeping shoud_gpu_reset, but it still fails.
-> > Then I changed to restore test of in_s0ix as it was in 5.17, and it wor=
-ks.
-> > I tried with a call to amd_gpu_asic_reset without testing at all in_s0i=
-x, it
-> > works.
-> >
-> > Therefore, my APU wants a reset in amdgpu_pmops_suspend.
-> >
-> > By curiosity, I tried to do the reset in amdgpu_pmops_suspend_noirq as
-> was
-> > intended in 5.18 original code, commenting out the test of
-> > amdgpu_acpi_should_gpu_reset(adev) (since this APU wants a reset).
-> > This does not work, I got the Fence timeout errors or freezes.
-> >
-> > If I leave  noirq function unchanged (original 5.18 code), and just add=
- a
-> > reset in suspend() as was done in 5.17, it works.
-> >
-> > Therefore, my GPU does NOT want to be reset in noirq, the reset must be
-> in
-> > suspend.
-> >
-> > In other words, I modified amdgpu_pmops_suspend (partial revert) like
-> this
-> > and this works on my laptop:
-> >
-> > static int amdgpu_pmops_suspend(struct device *dev)
-> > {
-> > 	struct drm_device *drm_dev =3D dev_get_drvdata(dev);
-> > 	struct amdgpu_device *adev =3D drm_to_adev(drm_dev);
-> > +	int r;
-> >
-> > 	if (amdgpu_acpi_is_s0ix_active(adev))
-> > 		adev->in_s0ix =3D true;
-> > 	else
-> > 		adev->in_s3 =3D true;
-> > -	return amdgpu_device_suspend(drm_dev, true);
-> > +	r =3D amdgpu_device_suspend(drm_dev, true);
-> > +	if (r)
-> > +		return r;
-> > +	if (!adev->in_s0ix)
-> > +		return amdgpu_asic_reset(adev);
-> > 	return 0;
-> > }
-> >
-> > static int amdgpu_pmops_suspend_noirq(struct device *dev)
-> > {
-> > 	struct drm_device *drm_dev =3D dev_get_drvdata(dev);
-> > 	struct amdgpu_device *adev =3D drm_to_adev(drm_dev);
-> >
-> > 	if (amdgpu_acpi_should_gpu_reset(adev))
-> > 		return amdgpu_asic_reset(adev);
-> >
-> > 	return 0;
-> > }
-> >
-> > I don't know if other APU want a reset, in the same context, and how to
-> > differentiate all the cases, so I cannot go further, but I can test pat=
-ches
-> > if needed.
-> >
-> > CC
-> >
-> > Le mercredi 18 mai 2022, 08:37:27 CEST Thorsten Leemhuis a =E9crit :
-> > > On 18.05.22 07:54, Kai-Heng Feng wrote:
-> > > > On Wed, May 18, 2022 at 1:52 PM Thorsten Leemhuis
-> > > >
-> > > > <regressions@leemhuis.info> wrote:
-> > > >> On 17.05.22 19:37, casteyde.christian@free.fr wrote:
-> > > >>> I've tryied to revert the offending commit on 5.18-rc7 (887f75cfd=
-0da
-> > > >>> ("drm/amdgpu: Ensure HDA function is suspended before ASIC
-> reset"),
-> > > >>> and
-> > > >>> the problem disappears so it's really this commit that breaks.
-> > > >>
-> > > >> In that case I'll update the regzbot status to make sure it's visi=
-ble
-> > > >> as
-> > > >> regression introduced in the 5.18 cycle:
-> > > >>
-> > > >> #regzbot introduced: 887f75cfd0da
-> > > >>
-> > > >> BTW: obviously would be nice to get this fixed before 5.18 is rele=
-ased
-> > > >> (which might already happen on Sunday), especially as the culprit
-> > > >> apparently was already backported to stable, but I guess that won'=
-t be
-> > > >> easy...
-> > > >>
-> > > >> Which made me wondering: is reverting the culprit temporarily in
-> > > >> mainline (and reapplying it later with a fix) a option here?
-> > > >
-> > > > It's too soon to call it's the culprit.
-> > >
-> > > Well, sure, the root-cause might be somewhere else. But from the poin=
-t
-> > > of kernel regressions (and tracking them) it's the culprit, as that's
-> > > the change that triggers the misbehavior. And that's how Linus
-> > > approaches these things as well when it comes to reverting to fix
-> > > regressions -- and he even might...
-> > >
-> > > > The suspend on the system
-> > > > doesn't work properly at the first place.
-> > >
-> > > ...ignore things like this, as long as a revert is unlikely to cause
-> > > more damage than good.
-> > >
-> > > Ciao. Thorsten
-> > >
-> > > >> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker=
-'
-> > > >> hat)
-> > > >>
-> > > >> P.S.: As the Linux kernel's regression tracker I deal with a lot o=
-f
-> > > >> reports and sometimes miss something important when writing mails
-> like
-> > > >> this. If that's the case here, don't hesitate to tell me in a publ=
-ic
-> > > >> reply, it's in everyone's interest to set the public record straig=
-ht.
