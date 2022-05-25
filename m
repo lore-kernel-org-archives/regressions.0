@@ -1,108 +1,82 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67016EA8
-	for <regressions@lists.linux.dev>; Wed, 25 May 2022 08:51:55 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ntmjl-0003D1-IO; Wed, 25 May 2022 10:51:25 +0200
-Message-ID: <5334d001-af50-eacb-8845-dd83df35be56@leemhuis.info>
-Date: Wed, 25 May 2022 10:51:24 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA2FEC4
+	for <regressions@lists.linux.dev>; Wed, 25 May 2022 13:56:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1653487015;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bwKtBZV8ciaRCowgqevFzBNex6RHDTKadOeeg0UrfVc=;
+	b=ieO6jRkRrzbm3543JJ1jzvykbWFwziukIABw4g6kfdb87cPaQ25y+ZuIn/UffOxdM60zYw
+	W3VzAdtDgp0eF2ZiJBNNjF1Z8HcImmh0odhjwbXn3ffSlC/nZKH7o9Hb8xzg8Anloft+HP
+	GZCdW79WcA/XwkrXkZ+GuCrRd5c3Jc4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-587-0sDW9gHhNWyfEP9vRbyJdA-1; Wed, 25 May 2022 09:56:52 -0400
+X-MC-Unique: 0sDW9gHhNWyfEP9vRbyJdA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9DE3D8001EA;
+	Wed, 25 May 2022 13:56:51 +0000 (UTC)
+Received: from fuller.cnet (ovpn-112-2.gru2.redhat.com [10.97.112.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 2F263405D4BF;
+	Wed, 25 May 2022 13:56:51 +0000 (UTC)
+Received: by fuller.cnet (Postfix, from userid 1000)
+	id CDA06416F574; Wed, 25 May 2022 10:56:18 -0300 (-03)
+Date: Wed, 25 May 2022 10:56:18 -0300
+From: Marcelo Tosatti <mtosatti@redhat.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Minchan Kim <minchan@kernel.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Mel Gorman <mgorman@techsingularity.net>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	Phil Elwell <phil@raspberrypi.com>, regressions@lists.linux.dev
+Subject: Re: vchiq: Performance regression since 5.18-rc1
+Message-ID: <Yo41ggMvkI1B9TeM@fuller.cnet>
+References: <77d6d498-7dd9-03eb-60f2-d7e682bb1b20@i2se.com>
+ <YoszE8lQ9VcofLtX@linutronix.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH 2/2] x86/pat: add functions to query specific cache mode
- availability
-Content-Language: en-US
-To: Jan Beulich <jbeulich@suse.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
- xen-devel@lists.xenproject.org, x86@kernel.org,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Juergen Gross <jgross@suse.com>,
- Chuck Zmudzinski <brchuckz@netscape.net>, regressions@lists.linux.dev,
- stable@vger.kernel.org
-References: <20220503132207.17234-1-jgross@suse.com>
- <20220503132207.17234-3-jgross@suse.com>
- <1d86d8ff-6878-5488-e8c4-cbe8a5e8f624@suse.com>
- <0dcb05d0-108f-6252-e768-f75b393a7f5c@suse.com>
- <77255e5b-12bf-5390-6910-dafbaff18e96@netscape.net>
- <a2e95587-418b-879f-2468-8699a6df4a6a@suse.com>
- <8b1ebea5-7820-69c4-2e2b-9866d55bc180@netscape.net>
- <c5fa3c3f-e602-ed68-d670-d59b93c012a0@netscape.net>
- <3bff3562-bb1e-04e6-6eca-8d9bc355f2eb@suse.com>
- <3ca084a9-768e-a6f5-ace4-cd347978dec7@netscape.net>
- <9af0181a-e143-4474-acda-adbe72fc6227@suse.com>
- <b2585c19-d38b-9640-64ab-d0c9be24be34@netscape.net>
- <dae4cc45-a1cd-e33f-25ef-c536df9b49e6@leemhuis.info>
- <3fc70595-3dcc-4901-0f3f-193f043b753f@netscape.net>
- <eab9fdb0-11ef-4556-bdd7-f021cc5f10b7@leemhuis.info>
- <83cbd5ce-7f00-9121-44b3-5d1b94d66f02@suse.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <83cbd5ce-7f00-9121-44b3-5d1b94d66f02@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653468715;987b8953;
-X-HE-SMSGID: 1ntmjl-0003D1-IO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YoszE8lQ9VcofLtX@linutronix.de>
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
 
-On 25.05.22 10:37, Jan Beulich wrote:
-> On 25.05.2022 09:45, Thorsten Leemhuis wrote:
->> On 24.05.22 20:32, Chuck Zmudzinski wrote:
->>> On 5/21/22 6:47 AM, Thorsten Leemhuis wrote:
->>>> I'm not a developer and I'm don't known the details of this thread and
->>>> the backstory of the regression, but it sounds like that's the approach
->>>> that is needed here until someone comes up with a fix for the regression
->>>> exposed by bdd8b6c98239.
->>>>
->>>> But if I'm wrong, please tell me.
->>>
->>> You are mostly right, I think. Reverting bdd8b6c98239 fixes
->>> it. There is another way to fix it, though.
->>
->> Yeah, I'm aware of it. But it seems...
->>
->>> The patch proposed
->>> by Jan Beulich also fixes the regression on my system, so as
->>> the person reporting this is a regression, I would also be satisfied
->>> with Jan's patch instead of reverting bdd8b6c98239 as a fix. Jan
->>> posted his proposed patch here:
->>>
->>> https://lore.kernel.org/lkml/9385fa60-fa5d-f559-a137-6608408f88b0@suse.com/
->>
->> ...that approach is not making any progress either?
->>
->> Jan, can could provide a short status update here? I'd really like to
->> get this regression fixed one way or another rather sooner than later,
->> as this is taken way to long already IMHO.
+On Mon, May 23, 2022 at 09:09:07AM +0200, Sebastian Andrzej Siewior wrote:
+> On 2022-05-22 01:22:00 [+0200], Stefan Wahren wrote:
+> > Hi,
+> Hi,
 > 
-> What kind of status update could I provide? I've not heard back from
-> anyone of the maintainers, so I have no way to know what (if anything)
-> I need to do.
+> > while testing the staging/vc04_services/interface/vchiq_arm driver with my
+> > Raspberry Pi 3 B+ (multi_v7_defconfig) i noticed a huge performance
+> > regression since [ff042f4a9b050895a42cae893cc01fa2ca81b95c] mm:
+> > lru_cache_disable: replace work queue synchronization with synchronize_rcu
+> > 
+> > Usually i run "vchiq_test -f 1" to see the driver is still working [1].
+> 
+> What about
+> 	https://lore.kernel.org/all/YmrWK%2FKoU1zrAxPI@fuller.cnet/
+> 
+> Sebastian
 
-That is perfectly fine as a status update for me (I track a lot of
-regression and it's easy to miss updated patches, discussion in other
-places, and things like that).
+Stefan,
 
-Could you maybe send a reminder to the maintainer that this is a fix for
-regression that is bothering people and needs to be handled with high
-priority? Feel free to tell them the Linux kernel regression tracker is
-pestering you because things are taken so long. :-D
+Can you please try the patch above ?
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
