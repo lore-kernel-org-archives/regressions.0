@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80711A56
-	for <regressions@lists.linux.dev>; Wed, 25 May 2022 07:29:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135FDEA0
+	for <regressions@lists.linux.dev>; Wed, 25 May 2022 07:46:09 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ntlSM-00057l-W7; Wed, 25 May 2022 09:29:23 +0200
-Message-ID: <ff1191fa-1cc9-24ab-4c7d-b3d41c442670@leemhuis.info>
-Date: Wed, 25 May 2022 09:29:19 +0200
+	id 1ntliT-0002eu-2o; Wed, 25 May 2022 09:46:01 +0200
+Message-ID: <eab9fdb0-11ef-4556-bdd7-f021cc5f10b7@leemhuis.info>
+Date: Wed, 25 May 2022 09:45:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,228 +16,275 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [REGRESSION] Laptop with Ryzen 4600H fails to resume video since
- 5.17.4 (works 5.17.3)
+Subject: Re: [PATCH 2/2] x86/pat: add functions to query specific cache mode
+ availability
 Content-Language: en-US
-To: Christian Casteyde <casteyde.christian@free.fr>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- alexander deucher <alexander.deucher@amd.com>, gregkh@linuxfoundation.org,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <941867856.547807110.1652809066335.JavaMail.root@zimbra40-e7.priv.proxad.net>
- <2585440.lGaqSPkdTl@geek500.localdomain>
- <2408578.XAFRqVoOGU@geek500.localdomain>
- <2175827.vFx2qVVIhK@geek500.localdomain>
+To: Chuck Zmudzinski <brchuckz@netscape.net>, Jan Beulich
+ <jbeulich@suse.com>, regressions@lists.linux.dev, stable@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+ David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+ xen-devel@lists.xenproject.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, Juergen Gross <jgross@suse.com>
+References: <20220503132207.17234-1-jgross@suse.com>
+ <20220503132207.17234-3-jgross@suse.com>
+ <1d86d8ff-6878-5488-e8c4-cbe8a5e8f624@suse.com>
+ <0dcb05d0-108f-6252-e768-f75b393a7f5c@suse.com>
+ <77255e5b-12bf-5390-6910-dafbaff18e96@netscape.net>
+ <a2e95587-418b-879f-2468-8699a6df4a6a@suse.com>
+ <8b1ebea5-7820-69c4-2e2b-9866d55bc180@netscape.net>
+ <c5fa3c3f-e602-ed68-d670-d59b93c012a0@netscape.net>
+ <3bff3562-bb1e-04e6-6eca-8d9bc355f2eb@suse.com>
+ <3ca084a9-768e-a6f5-ace4-cd347978dec7@netscape.net>
+ <9af0181a-e143-4474-acda-adbe72fc6227@suse.com>
+ <b2585c19-d38b-9640-64ab-d0c9be24be34@netscape.net>
+ <dae4cc45-a1cd-e33f-25ef-c536df9b49e6@leemhuis.info>
+ <3fc70595-3dcc-4901-0f3f-193f043b753f@netscape.net>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <2175827.vFx2qVVIhK@geek500.localdomain>
+In-Reply-To: <3fc70595-3dcc-4901-0f3f-193f043b753f@netscape.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653463773;2b3898eb;
-X-HE-SMSGID: 1ntlSM-00057l-W7
-
-On 24.05.22 22:54, Christian Casteyde wrote:
-> Conclusion from gitlab discussion
-
-Christian, Mario, thx for the updates. I'll remove the issue from the
-list of tracked regressions then:
-
-#regzbot invalid: tricky situation with other problems; the issue thus
-not really qualifies as regression
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653464770;dfcd6487;
+X-HE-SMSGID: 1ntliT-0002eu-2o
 
 
-> There are three different problems at stake here:
-> 
-> 1. First suspend failure after boot is due to TAD driver.
-> When it is loaded, first suspend deep fails.
-> This is the root cause of the following sequence.
-> TAD seems to be not completely functionnal on my laptop, sysfs returns IO 
-> errors (missing handlers in dmesg).
-> After the first failure, every "deep" attempt work.
-> 
-> 2.  When suspend deep fails, elogind (used by Slackware 15) falls back to 
-> s2idle.
-> This behaviour is documented in logind.conf man page, and normaly can be 
-> configured (side note: I didn't manage to do so, it ignores my configuration 
-> file).
-> 
-> 3. When suspend to s2idle, the GPU fails to suspend and need a reset.
-> This reset must be done in pm_suspend (not totally ok if reset at resume).
-> However, the laptop indeed goes into s2idle.
-> In this state, the power button awakes it: this part is handled by the BIOS 
-> and not the distribution (which shut downs if not suspended).
-> This is what doesn't work anymore un 5.17.4 and 5.18.
-> 
-> The root cause is therefore the ACPI TAD preventing the first deep suspend to 
-> complete, then elogind asking for a s2idle in fallback, then s2idle leaving 
-> the APU in inconsistent state, that can only be fixed by a reset in 
-> pm_suspend, and not pm_suspend_noirq or pm_suspend_late.
-> 
-> I will open a separate bug for the ACPI TAD problem. For now I will run 
-> without this driver, as deep suspend works fine in this case and s2idle is 
-> therefore useless for me.
-> 
-> CC
-> 
-> 
-> Le lundi 23 mai 2022, 19:03:27 CEST Christian Casteyde a écrit :
->> I've opened the gitlab entry for this discussion:
->> https://gitlab.freedesktop.org/drm/amd/-/issues/2023
->>
->> I confirm I 'm not receiving mails anymore from the mailing list but I'll
->> follow gitlab.
->>
->> In reply to the patch proposed by Mario:
->> https://patchwork.freedesktop.org/patch/486836/
->> With this patch applied on vanilla 5.18 kernel:
->> - suspend still fails;
->> - after suspend attempt, the screen comes back with only the cursor;
->> - switching to a console let me get the following dmesg file.
->>
->> CC
->>
->> Le lundi 23 mai 2022, 15:02:53 CEST Christian Casteyde a écrit :
->>> Hello
->>>
->>> I've checked with 5.18 the problem is still there.
->>> Interestingly, I tried to revert the commit but it was rejected because of
->>>
->>> the change in the test from:
->>>         if (!adev->in_s0ix)
->>>
->>> to:
->>>       if (amdgpu_acpi_should_gpu_reset(adev))
->>>
->>> in amdgpu_pmops_suspend.
->>>
->>> I fixed the rejection, keeping shoud_gpu_reset, but it still fails.
->>> Then I changed to restore test of in_s0ix as it was in 5.17, and it works.
->>> I tried with a call to amd_gpu_asic_reset without testing at all in_s0ix,
->>> it works.
->>>
->>> Therefore, my APU wants a reset in amdgpu_pmops_suspend.
->>>
->>> By curiosity, I tried to do the reset in amdgpu_pmops_suspend_noirq as was
->>> intended in 5.18 original code, commenting out the test of
->>> amdgpu_acpi_should_gpu_reset(adev) (since this APU wants a reset).
->>> This does not work, I got the Fence timeout errors or freezes.
->>>
->>> If I leave  noirq function unchanged (original 5.18 code), and just add a
->>> reset in suspend() as was done in 5.17, it works.
->>>
->>> Therefore, my GPU does NOT want to be reset in noirq, the reset must be in
->>> suspend.
->>>
->>> In other words, I modified amdgpu_pmops_suspend (partial revert) like this
->>> and this works on my laptop:
->>>
->>> static int amdgpu_pmops_suspend(struct device *dev)
->>> {
->>>
->>> 	struct drm_device *drm_dev = dev_get_drvdata(dev);
->>> 	struct amdgpu_device *adev = drm_to_adev(drm_dev);
->>>
->>> +	int r;
->>>
->>> 	if (amdgpu_acpi_is_s0ix_active(adev))
->>> 	
->>> 		adev->in_s0ix = true;
->>> 	
->>> 	else
->>> 	
->>> 		adev->in_s3 = true;
->>>
->>> -	return amdgpu_device_suspend(drm_dev, true);
->>> +	r = amdgpu_device_suspend(drm_dev, true);
->>> +	if (r)
->>> +		return r;
->>> +	if (!adev->in_s0ix)
->>> +		return amdgpu_asic_reset(adev);
->>>
->>> 	return 0;
->>>
->>> }
->>>
->>> static int amdgpu_pmops_suspend_noirq(struct device *dev)
->>> {
->>>
->>> 	struct drm_device *drm_dev = dev_get_drvdata(dev);
->>> 	struct amdgpu_device *adev = drm_to_adev(drm_dev);
->>> 	
->>> 	if (amdgpu_acpi_should_gpu_reset(adev))
->>> 	
->>> 		return amdgpu_asic_reset(adev);
->>> 	
->>> 	return 0;
->>>
->>> }
->>>
->>> I don't know if other APU want a reset, in the same context, and how to
->>> differentiate all the cases, so I cannot go further, but I can test
->>> patches
->>> if needed.
->>>
->>> CC
->>>
->>> Le mercredi 18 mai 2022, 08:37:27 CEST Thorsten Leemhuis a écrit :
->>>> On 18.05.22 07:54, Kai-Heng Feng wrote:
->>>>> On Wed, May 18, 2022 at 1:52 PM Thorsten Leemhuis
+
+On 24.05.22 20:32, Chuck Zmudzinski wrote:
+> On 5/21/22 6:47 AM, Thorsten Leemhuis wrote:
+>> On 20.05.22 16:48, Chuck Zmudzinski wrote:
+>>> On 5/20/2022 10:06 AM, Jan Beulich wrote:
+>>>> On 20.05.2022 15:33, Chuck Zmudzinski wrote:
+>>>>> On 5/20/2022 5:41 AM, Jan Beulich wrote:
+>>>>>> On 20.05.2022 10:30, Chuck Zmudzinski wrote:
+>>>>>>> On 5/20/2022 2:59 AM, Chuck Zmudzinski wrote:
+>>>>>>>> On 5/20/2022 2:05 AM, Jan Beulich wrote:
+>>>>>>>>> On 20.05.2022 06:43, Chuck Zmudzinski wrote:
+>>>>>>>>>> On 5/4/22 5:14 AM, Juergen Gross wrote:
+>>>>>>>>>>> On 04.05.22 10:31, Jan Beulich wrote:
+>>>>>>>>>>>> On 03.05.2022 15:22, Juergen Gross wrote:
+>>>>>>>>>>>>
+>>>>>>>>>>>> ... these uses there are several more. You say nothing on why
+>>>>>>>>>>>> those want
+>>>>>>>>>>>> leaving unaltered. When preparing my earlier patch I did
+>>>>>>>>>>>> inspect them
+>>>>>>>>>>>> and came to the conclusion that these all would also better
+>>>>>>>>>>>> observe the
+>>>>>>>>>>>> adjusted behavior (or else I couldn't have left pat_enabled()
+>>>>>>>>>>>> as the
+>>>>>>>>>>>> only predicate). In fact, as said in the description of my
+>>>>>>>>>>>> earlier
+>>>>>>>>>>>> patch, in
+>>>>>>>>>>>> my debugging I did find the use in i915_gem_object_pin_map()
+>>>>>>>>>>>> to be
+>>>>>>>>>>>> the
+>>>>>>>>>>>> problematic one, which you leave alone.
+>>>>>>>>>>> Oh, I missed that one, sorry.
+>>>>>>>>>> That is why your patch would not fix my Haswell unless
+>>>>>>>>>> it also touches i915_gem_object_pin_map() in
+>>>>>>>>>> drivers/gpu/drm/i915/gem/i915_gem_pages.c
+>>>>>>>>>>
+>>>>>>>>>>> I wanted to be rather defensive in my changes, but I agree at
+>>>>>>>>>>> least
+>>>>>>>>>>> the
+>>>>>>>>>>> case in arch_phys_wc_add() might want to be changed, too.
+>>>>>>>>>> I think your approach needs to be more aggressive so it will fix
+>>>>>>>>>> all the known false negatives introduced by bdd8b6c98239
+>>>>>>>>>> such as the one in i915_gem_object_pin_map().
+>>>>>>>>>>
+>>>>>>>>>> I looked at Jan's approach and I think it would fix the issue
+>>>>>>>>>> with my Haswell as long as I don't use the nopat option. I
+>>>>>>>>>> really don't have a strong opinion on that question, but I
+>>>>>>>>>> think the nopat option as a Linux kernel option, as opposed
+>>>>>>>>>> to a hypervisor option, should only affect the kernel, and
+>>>>>>>>>> if the hypervisor provides the pat feature, then the kernel
+>>>>>>>>>> should not override that,
+>>>>>>>>> Hmm, why would the kernel not be allowed to override that? Such
+>>>>>>>>> an override would affect only the single domain where the
+>>>>>>>>> kernel runs; other domains could take their own decisions.
+>>>>>>>>>
+>>>>>>>>> Also, for the sake of completeness: "nopat" used when running on
+>>>>>>>>> bare metal has the same bad effect on system boot, so there
+>>>>>>>>> pretty clearly is an error cleanup issue in the i915 driver. But
+>>>>>>>>> that's orthogonal, and I expect the maintainers may not even care
+>>>>>>>>> (but tell us "don't do that then").
+>>>>>>> Actually I just did a test with the last official Debian kernel
+>>>>>>> build of Linux 5.16, that is, a kernel before bdd8b6c98239 was
+>>>>>>> applied. In fact, the nopat option does *not* break the i915 driver
+>>>>>>> in 5.16. That is, with the nopat option, the i915 driver loads
+>>>>>>> normally on both the bare metal and on the Xen hypervisor.
+>>>>>>> That means your presumption (and the presumption of
+>>>>>>> the author of bdd8b6c98239) that the "nopat" option was
+>>>>>>> being observed by the i915 driver is incorrect. Setting "nopat"
+>>>>>>> had no effect on my system with Linux 5.16. So after doing these
+>>>>>>> tests, I am against the aggressive approach of breaking the i915
+>>>>>>> driver with the "nopat" option because prior to bdd8b6c98239,
+>>>>>>> nopat did not break the i915 driver. Why break it now?
+>>>>>> Because that's, in my understanding, is the purpose of "nopat"
+>>>>>> (not breaking the driver of course - that's a driver bug -, but
+>>>>>> having an effect on the driver).
+>>>>> I wouldn't call it a driver bug, but an incorrect configuration of the
+>>>>> kernel by the user.  I presume X86_FEATURE_PAT is required by the
+>>>>> i915 driver
+>>>> The driver ought to work fine without PAT (and hence without being
+>>>> able to make WC mappings). It would use UC instead and be slow, but
+>>>> it ought to work.
+>>>>
+>>>>> and therefore the driver should refuse to disable
+>>>>> it if the user requests to disable it and instead warn the user that
+>>>>> the driver did not disable the feature, contrary to what the user
+>>>>> requested with the nopat option.
 >>>>>
->>>>> <regressions@leemhuis.info> wrote:
->>>>>> On 17.05.22 19:37, casteyde.christian@free.fr wrote:
->>>>>>> I've tryied to revert the offending commit on 5.18-rc7 (887f75cfd0da
->>>>>>> ("drm/amdgpu: Ensure HDA function is suspended before ASIC reset"),
->>>>>>> and
->>>>>>> the problem disappears so it's really this commit that breaks.
->>>>>>
->>>>>> In that case I'll update the regzbot status to make sure it's visible
->>>>>> as
->>>>>> regression introduced in the 5.18 cycle:
->>>>>>
->>>>>> #regzbot introduced: 887f75cfd0da
->>>>>>
->>>>>> BTW: obviously would be nice to get this fixed before 5.18 is
->>>>>> released
->>>>>> (which might already happen on Sunday), especially as the culprit
->>>>>> apparently was already backported to stable, but I guess that won't
->>>>>> be
->>>>>> easy...
->>>>>>
->>>>>> Which made me wondering: is reverting the culprit temporarily in
->>>>>> mainline (and reapplying it later with a fix) a option here?
+>>>>> In any case, my test did not verify that when nopat is set in Linux
+>>>>> 5.16,
+>>>>> the thread takes the same code path as when nopat is not set,
+>>>>> so I am not totally sure that the reason nopat does not break the
+>>>>> i915 driver in 5.16 is that static_cpu_has(X86_FEATURE_PAT)
+>>>>> returns true even when nopat is set. I could test it with a custom
+>>>>> log message in 5.16 if that is necessary.
 >>>>>
->>>>> It's too soon to call it's the culprit.
+>>>>> Are you saying it was wrong for static_cpu_has(X86_FEATURE_PAT)
+>>>>> to return true in 5.16 when the user requests nopat?
+>>>> No, I'm not saying that. It was wrong for this construct to be used
+>>>> in the driver, which was fixed for 5.17 (and which had caused the
+>>>> regression I did observe, leading to the patch as a hopefully least
+>>>> bad option).
 >>>>
->>>> Well, sure, the root-cause might be somewhere else. But from the point
->>>> of kernel regressions (and tracking them) it's the culprit, as that's
->>>> the change that triggers the misbehavior. And that's how Linus
->>>> approaches these things as well when it comes to reverting to fix
->>>> regressions -- and he even might...
->>>>
->>>>> The suspend on the system
->>>>> doesn't work properly at the first place.
->>>>
->>>> ...ignore things like this, as long as a revert is unlikely to cause
->>>> more damage than good.
->>>>
->>>> Ciao. Thorsten
->>>>
->>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
->>>>>> hat)
->>>>>>
->>>>>> P.S.: As the Linux kernel's regression tracker I deal with a lot of
->>>>>> reports and sometimes miss something important when writing mails
->>>>>> like
->>>>>> this. If that's the case here, don't hesitate to tell me in a public
->>>>>> reply, it's in everyone's interest to set the public record straight.
+>>>>> I think that is
+>>>>> just permitting a bad configuration to break the driver that a
+>>>>> well-written operating system should not allow. The i915 driver
+>>>>> was, in my opinion, correctly ignoring the nopat option in 5.16
+>>>>> because that option is not compatible with the hardware the
+>>>>> i915 driver is trying to initialize and setup at boot time. At least
+>>>>> that is my understanding now, but I will need to test it on 5.16
+>>>>> to be sure I understand it correctly.
+>>>>>
+>>>>> Also, AFAICT, your patch would break the driver when the nopat
+>>>>> option is set and only fix the regression introduced by bdd8b6c98239
+>>>>> when nopat is not set on my box, so your patch would
+>>>>> introduce a regression relative to Linux 5.16 and earlier for the
+>>>>> case when nopat is set on my box. I think your point would
+>>>>> be that it is not a regression if it is an incorrect user
+>>>>> configuration.
+>>>> Again no - my view is that there's a separate, pre-existing issue
+>>>> in the driver which was uncovered by the change. This may be a
+>>>> perceived regression, but is imo different from a real one.
+>> Sorry, for you maybe, but I'm pretty sure for Linus it's not when it
+>> comes to the "no regressions rule". Just took a quick look at quotes
+>> from Linus
+>> https://www.kernel.org/doc/html/latest/process/handling-regressions.html
+>> and found this statement from Linus to back this up:
+>>
+>> ```
+>> One _particularly_ last-minute revert is the top-most commit (ignoring
+>> the version change itself) done just before the release, and while
+>> it's very annoying, it's perhaps also instructive.
+>>
+>> What's instructive about it is that I reverted a commit that wasn't
+>> actually buggy. In fact, it was doing exactly what it set out to do,
+>> and did it very well. In fact it did it _so_ well that the much
+>> improved IO patterns it caused then ended up revealing a user-visible
+>> regression due to a real bug in a completely unrelated area.
+>> ```
+>>
+>> He said that here:
+>> https://www.kernel.org/doc/html/latest/process/handling-regressions.html
+>>
+>> The situation is of course different here, but similar enough.
+>>
+>>> Since it is a regression, I think for now bdd8b6c98239 should
+>>> be reverted and the fix backported to Linux 5.17 stable until
+>>> the underlying memory subsystem can provide the i915 driver
+>>> with an updated test for the PAT feature that also meets the
+>>> requirements of the author of bdd8b6c98239 without breaking
+>>> the i915 driver.
+>> I'm not a developer and I'm don't known the details of this thread and
+>> the backstory of the regression, but it sounds like that's the approach
+>> that is needed here until someone comes up with a fix for the regression
+>> exposed by bdd8b6c98239.
+>>
+>> But if I'm wrong, please tell me.
+> 
+> You are mostly right, I think. Reverting bdd8b6c98239 fixes
+> it. There is another way to fix it, though.
+
+Yeah, I'm aware of it. But it seems...
+
+> The patch proposed
+> by Jan Beulich also fixes the regression on my system, so as
+> the person reporting this is a regression, I would also be satisfied
+> with Jan's patch instead of reverting bdd8b6c98239 as a fix. Jan
+> posted his proposed patch here:
+> 
+> https://lore.kernel.org/lkml/9385fa60-fa5d-f559-a137-6608408f88b0@suse.com/
+
+...that approach is not making any progress either?
+
+Jan, can could provide a short status update here? I'd really like to
+get this regression fixed one way or another rather sooner than later,
+as this is taken way to long already IMHO.
+
+> The only reservation I have about Jan's patch is that the commit
+> message does not clearly explain how the patch changes what
+> the nopat kernel boot option does. It doesn't affect me because
+> I don't use nopat, but it should probably be mentioned in the
+> commit message, as pointed out here:
+> 
+> https://lore.kernel.org/lkml/bd9ed2c2-1337-27bb-c9da-dfc7b31d492c@netscape.net/
 > 
 > 
-> 
+> Whatever fix for the regression exposed by bdd8b6c98239 also
+> needs to be backported to the stable versions 5.17 and 5.18.
+
+Sure.
+
+BTW, as you seem to be familiar with the issue: there is another report
+about a regression WRT to Xen and i915 (that is also not making really
+progress):
+https://lore.kernel.org/lkml/Yn%2FTgj1Ehs%2FBdpHp@itl-email/
+
+It's just a wild guess, but bould this somehow be related?
+
+Ciao, Thorsten
+
+>>> The i915 driver relies on the memory subsytem
+>>> to provide it with an accurate test for the existence of
+>>> X86_FEATURE_PAT. I think your patch provides that more accurate
+>>> test so that bdd8b6c98239 could be re-applied when your patch is
+>>> committed. Juergen's patch would have to touch bdd8b6c98239
+>>> with new functions that probably have unknown and unintended
+>>> consequences, so I think your approach is also better in that regard.
+>>> As regards your patch, there is just a disagreement about how the
+>>> i915 driver should behave if nopat is set. I agree the i915 driver
+>>> could do a better job handling that case, at least with better error
+>>> logs.
+>>>
+>>> Chuck
+>>>
+>>>>> I respond by saying a well-written driver should refuse to honor
+>>>>> the incorrect configuration requested by the user and instead
+>>>>> warn the user that it did not honor the incorrect kernel option.
+>>>>>
+>>>>> I am only presuming what your patch would do on my box based
+>>>>> on what I learned about this problem from my debugging. I can
+>>>>> also test your patch on my box to verify that my understanding of
+>>>>> it is correct.
+>>>>>
+>>>>> I also have not yet verified Juergen's patch will not fix it, but
+>>>>> I am almost certain it will not unless it is expanded so it also
+>>>>> touches i915_gem_object_pin_map() with the fix. I plan to test
+>>>>> his patch, but expanded so it touches that function also.
+>>>>>
+>>>>> I also plan to test your patch with and without nopat and report the
+>>>>> results in the thread where you posted your patch. Hopefully
+>>>>> by tomorrow I will have the results.
+>>>>>
+>>>>> Chuck
 > 
 > 
