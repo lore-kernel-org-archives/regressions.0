@@ -1,67 +1,51 @@
-Received: from out30-45.freemail.mail.aliyun.com (out30-45.freemail.mail.aliyun.com [115.124.30.45])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FD7A7C
-	for <regressions@lists.linux.dev>; Fri, 27 May 2022 04:56:25 +0000 (UTC)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0VEVggNJ_1653627374;
-Received: from 30.32.82.202(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VEVggNJ_1653627374)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 27 May 2022 12:56:15 +0800
-Message-ID: <548a60d7-80bb-7551-cdc1-f9a58071a76b@linux.alibaba.com>
-Date: Fri, 27 May 2022 12:56:42 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB56346B1
+	for <regressions@lists.linux.dev>; Fri, 27 May 2022 09:51:13 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nuWcc-000254-Fu; Fri, 27 May 2022 11:51:06 +0200
+Message-ID: <26e75811-0663-bea4-b637-985091c70587@leemhuis.info>
+Date: Fri, 27 May 2022 11:51:05 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: mm: change huge_ptep_clear_flush() to return the original pte
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
- open list <linux-kernel@vger.kernel.org>,
- Linux-Next Mailing List <linux-next@vger.kernel.org>,
- lkft-triage@lists.linaro.org,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- Stephen Rothwell <sfr@canb.auug.org.au>,
- Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>
-References: <CA+G9fYtDBZaBGkEp5tRMM5C1xHEKeyyNK1S4WoKvrOoFxGm4KQ@mail.gmail.com>
- <ac245d62-2295-8cf6-6808-4a6eb6bdbd21@linux.alibaba.com>
- <CAHk-=wjgGW_jsjZxKLcKCf4Di22vzJU6K56j0Oe8Td6RgKrc+A@mail.gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <CAHk-=wjgGW_jsjZxKLcKCf4Di22vzJU6K56j0Oe8Td6RgKrc+A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [REGRESSION] Laptop with Ryzen 4600H fails to resume video since
+ 5.17.4 (works 5.17.3) #forregzbot
+Content-Language: en-US
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <2584945.lGaqSPkdTl@geek500.localdomain>
+ <eed25dd6-36ba-cd1c-1828-08a1535ce6c6@leemhuis.info>
+In-Reply-To: <eed25dd6-36ba-cd1c-1828-08a1535ce6c6@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653645073;264b746a;
+X-HE-SMSGID: 1nuWcc-000254-Fu
 
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-
-On 5/27/2022 11:42 AM, Linus Torvalds wrote:
-> On Thu, May 26, 2022 at 8:36 PM Baolin Wang
-> <baolin.wang@linux.alibaba.com> wrote:
->>
->> That is caused by commit:
->>
->> 00df1f1a133b ("mm: change huge_ptep_clear_flush() to return the original
->> pte")
->>
->> interacting with commit:
->>
->> fb396bb459c1 ("arm64/hugetlb: Drop TLB flush from get_clear_flush()")
->>
->> And Catalin has fixed the conflict with below changes [1], not sure why
->> it is not merged.
+On 14.05.22 17:12, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker. Thanks for the report.
 > 
-> Argh. Nobody informed me (or if they did, I clearly missed it).
+> On 14.05.22 16:41, Christian Casteyde wrote:
+>> #regzbot introduced v5.17.3..v5.17.4
+>> #regzbot introduced: 001828fb3084379f3c3e228b905223c50bc237f9
 > 
->> Linus, should I send a proper patch to fix this conflict for you?
-> 
-> Yeah, somebody please send me a proper tested fix-up patch with commit
-> message etc.
+> FWIW, that's commit 887f75cfd0da ("drm/amdgpu: Ensure HDA function is
+> suspended before ASIC reset") upstream.
 
-Sure. I send out a fix patch [1] which is already tested in linux-next 
-for several days.
+#regzbot invalid: tricky situation with other problems; the issue thus
+not really qualifies as regression
 
-[1] 
-https://lore.kernel.org/all/814e20c19b110209ee12ecae7cb05f8a78d021c8.1653625820.git.baolin.wang@linux.alibaba.com/
+For details see:
+https://lore.kernel.org/stable/MN0PR12MB61011E787AAAA98597A3A9DDE2D49@MN0PR12MB6101.namprd12.prod.outlook.com/
+https://lore.kernel.org/stable/2175827.vFx2qVVIhK@geek500.localdomain/
