@@ -1,107 +1,87 @@
-Received: from out199-2.us.a.mail.aliyun.com (out199-2.us.a.mail.aliyun.com [47.90.199.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 443C41841
-	for <regressions@lists.linux.dev>; Fri, 27 May 2022 03:36:34 +0000 (UTC)
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0VEVWECf_1653622574;
-Received: from 30.32.82.202(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0VEVWECf_1653622574)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 27 May 2022 11:36:16 +0800
-Message-ID: <ac245d62-2295-8cf6-6808-4a6eb6bdbd21@linux.alibaba.com>
-Date: Fri, 27 May 2022 11:36:43 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAB11841
+	for <regressions@lists.linux.dev>; Fri, 27 May 2022 03:43:14 +0000 (UTC)
+Received: by mail-ed1-f47.google.com with SMTP id n22so990145eda.5
+        for <regressions@lists.linux.dev>; Thu, 26 May 2022 20:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SPBb+g0viJg5NqTEyDBHqBkftk1kmk7JjYgXXaPHViY=;
+        b=QU3l08rm3NqbUG4rASTLaS9tNuaMKT998BWPJJS6SNMsHt6Nj82cqHJ09FZe56QEYz
+         ItovWKnHQvkgOX0S9uKQ5o+SRbcNcwsRrja5IRwjub0+ItN6yzbgpTUB4iWoPPAH/viN
+         iWBtDpLr0KpZjXTH6wz7YJOUUEkerlOMA+sxM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SPBb+g0viJg5NqTEyDBHqBkftk1kmk7JjYgXXaPHViY=;
+        b=Birds4PMSJZAslttYg6wUBl2EjGZpTcjnWKXwfU/Wtp0jGbOVs6DhmjJLXIMuGBuXB
+         s8lZspLJhjgZ8nBsvtJH16KNOpxYIuej9OS3ck8e/aHnc3s7E+DWt+vOuCYTm/eSKiHY
+         JBrvSi5XimSjZW+fc4bmPIg86QFTjjp/auislwesbzpoTYn9h9SFfM+YaLL0Td8u44Ko
+         OeDgWDrHpsbXaehuBeRveuSAfqfc5xK9dft7JstM2QNvJk+NRTiTRfy/+hMrgfumH0tn
+         E5rWmJf8xJ7pQQr2hvdvkdPskhvDPMQhkd5oCo7cG8dNCMoD4rIgfGkZ8siFb+ul23r7
+         KCBw==
+X-Gm-Message-State: AOAM533oscJKIOykN9TL0f14/7fCsmGd+oeZYvx/drb+9eH+yxPyWeql
+	Hnu8DbNeSrhfCnM5uHhsE+T4Iqfi/irzqk/nBPo=
+X-Google-Smtp-Source: ABdhPJyHpme8gkTpvCQAv3ljkLk6Bouf9t1lAX23PKFj1eDim0TQJuhrAp1VDrMl8t50Ok9obbVT2Q==
+X-Received: by 2002:a05:6402:12da:b0:42b:ddcc:6ba9 with SMTP id k26-20020a05640212da00b0042bddcc6ba9mr5518450edx.393.1653622992551;
+        Thu, 26 May 2022 20:43:12 -0700 (PDT)
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com. [209.85.221.43])
+        by smtp.gmail.com with ESMTPSA id mf17-20020a170906cb9100b006fecf74395bsm1047042ejb.8.2022.05.26.20.43.11
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 May 2022 20:43:11 -0700 (PDT)
+Received: by mail-wr1-f43.google.com with SMTP id e2so4302670wrc.1
+        for <regressions@lists.linux.dev>; Thu, 26 May 2022 20:43:11 -0700 (PDT)
+X-Received: by 2002:a5d:6152:0:b0:210:1864:2fbc with SMTP id
+ y18-20020a5d6152000000b0021018642fbcmr753156wrt.97.1653622990694; Thu, 26 May
+ 2022 20:43:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: mm: change huge_ptep_clear_flush() to return the original pte
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
- open list <linux-kernel@vger.kernel.org>,
- Linux-Next Mailing List <linux-next@vger.kernel.org>,
- lkft-triage@lists.linaro.org, regressions@lists.linux.dev
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
- Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>,
- Linus Torvalds <torvalds@linux-foundation.org>
 References: <CA+G9fYtDBZaBGkEp5tRMM5C1xHEKeyyNK1S4WoKvrOoFxGm4KQ@mail.gmail.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <CA+G9fYtDBZaBGkEp5tRMM5C1xHEKeyyNK1S4WoKvrOoFxGm4KQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <ac245d62-2295-8cf6-6808-4a6eb6bdbd21@linux.alibaba.com>
+In-Reply-To: <ac245d62-2295-8cf6-6808-4a6eb6bdbd21@linux.alibaba.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 26 May 2022 20:42:54 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjgGW_jsjZxKLcKCf4Di22vzJU6K56j0Oe8Td6RgKrc+A@mail.gmail.com>
+Message-ID: <CAHk-=wjgGW_jsjZxKLcKCf4Di22vzJU6K56j0Oe8Td6RgKrc+A@mail.gmail.com>
+Subject: Re: mm: change huge_ptep_clear_flush() to return the original pte
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Linux regressions mailing list <regressions@lists.linux.dev>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Andrew Morton <akpm@linux-foundation.org>, Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, May 26, 2022 at 8:36 PM Baolin Wang
+<baolin.wang@linux.alibaba.com> wrote:
+>
+> That is caused by commit:
+>
+> 00df1f1a133b ("mm: change huge_ptep_clear_flush() to return the original
+> pte")
+>
+> interacting with commit:
+>
+> fb396bb459c1 ("arm64/hugetlb: Drop TLB flush from get_clear_flush()")
+>
+> And Catalin has fixed the conflict with below changes [1], not sure why
+> it is not merged.
 
+Argh. Nobody informed me (or if they did, I clearly missed it).
 
-On 5/27/2022 10:56 AM, Naresh Kamboju wrote:
-> Following build failures noticed on arm64 on Linux mainline tree.
-> 
-> Which was detected and discussed at this email thread.
-> https://lore.kernel.org/all/20220512193855.4f6ce32f@canb.auug.org.au/T/
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> Build errors:
-> arch/arm64/mm/hugetlbpage.c: In function 'huge_ptep_clear_flush':
-> arch/arm64/mm/hugetlbpage.c:515:16: error: implicit declaration of
-> function 'get_clear_flush'; did you mean 'ptep_clear_flush'?
-> [-Werror=implicit-function-declaration]
->    515 |         return get_clear_flush(vma->vm_mm, addr, ptep, pgsize, ncontig);
->        |                ^~~~~~~~~~~~~~~
->        |                ptep_clear_flush
-> arch/arm64/mm/hugetlbpage.c:515:16: error: incompatible types when
-> returning type 'int' but 'pte_t' was expected
->    515 |         return get_clear_flush(vma->vm_mm, addr, ptep, pgsize, ncontig);
->        |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> arch/arm64/mm/hugetlbpage.c:516:1: error: control reaches end of
-> non-void function [-Werror=return-type]
->    516 | }
->        | ^
-> cc1: some warnings being treated as errors
-> 
-> metadata:
->      git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
->      git_describe: v5.18-9901-g7f50d4dfe816
->      git_sha: 7f50d4dfe816dd916a7cbf39039674825c2b388b
->      git_short_log: 7f50d4dfe816 (\Merge tag 'for-linus' of
-> https://github.com/openrisc/linux\)
->      target_arch: arm64
->      toolchain: gcc-11
+> Linus, should I send a proper patch to fix this conflict for you?
 
-That is caused by commit:
+Yeah, somebody please send me a proper tested fix-up patch with commit
+message etc.
 
-00df1f1a133b ("mm: change huge_ptep_clear_flush() to return the original 
-pte")
+Thanks,
 
-interacting with commit:
-
-fb396bb459c1 ("arm64/hugetlb: Drop TLB flush from get_clear_flush()")
-
-And Catalin has fixed the conflict with below changes [1], not sure why 
-it is not merged.
-
-Linus, should I send a proper patch to fix this conflict for you?
-
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index 30f5b76aabe9..9a999550df8e 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -485,12 +485,15 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct 
-*vma,
-  {
-  	size_t pgsize;
-  	int ncontig;
-+	pte_t orig_pte;
-
-  	if (!pte_cont(READ_ONCE(*ptep)))
-  		return ptep_clear_flush(vma, addr, ptep);
-
-  	ncontig = find_num_contig(vma->vm_mm, addr, ptep, &pgsize);
--	return get_clear_contig(vma->vm_mm, addr, ptep, pgsize, ncontig);
-+	orig_pte = get_clear_contig(vma->vm_mm, addr, ptep, pgsize, ncontig);
-+	flush_tlb_range(vma, addr, addr + pgsize * ncontig);
-+	return orig_pte;
-  }
-
-[1] https://lore.kernel.org/all/YnzqffV7STYS24Yn@arm.com/
+              Linus
