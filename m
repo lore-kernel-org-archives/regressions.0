@@ -1,13 +1,13 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CF717F8
-	for <regressions@lists.linux.dev>; Mon, 30 May 2022 09:54:49 +0000 (UTC)
-Received: from [192.168.1.107] ([37.4.249.170]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MzR0i-1nZWsg40rQ-00vMSe; Mon, 30 May 2022 11:54:15 +0200
-Message-ID: <69590289-58ef-d32b-0459-36fa00627605@i2se.com>
-Date: Mon, 30 May 2022 11:54:10 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1853D194
+	for <regressions@lists.linux.dev>; Mon, 30 May 2022 10:38:29 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nvcn0-000671-K1; Mon, 30 May 2022 12:38:22 +0200
+Message-ID: <2c354bfe-c74b-8a76-55d1-06e1da2a3b75@leemhuis.info>
+Date: Mon, 30 May 2022 12:38:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,74 +16,121 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.1
-Subject: Re: vchiq: Performance regression since 5.18-rc1
+Subject: Re: [Bug 215576] New: HSP/HFP mSBC profile broken with QCA6174
+ #forregzbot
 Content-Language: en-US
-To: Marcelo Tosatti <mtosatti@redhat.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>, Borislav Petkov
- <bp@alien8.de>, Minchan Kim <minchan@kernel.org>,
- Matthew Wilcox <willy@infradead.org>,
- Mel Gorman <mgorman@techsingularity.net>, Juri Lelli
- <juri.lelli@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
- "Paul E. McKenney" <paulmck@kernel.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Linux ARM <linux-arm-kernel@lists.infradead.org>,
- Phil Elwell <phil@raspberrypi.com>, regressions@lists.linux.dev
-References: <77d6d498-7dd9-03eb-60f2-d7e682bb1b20@i2se.com>
- <YoszE8lQ9VcofLtX@linutronix.de> <Yo41ggMvkI1B9TeM@fuller.cnet>
-From: Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <Yo41ggMvkI1B9TeM@fuller.cnet>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <bug-215576-62941@https.bugzilla.kernel.org/>
+ <d565674e-b12c-2444-6efc-65c1e6e540d1@leemhuis.info>
+ <efcf48d3-5a11-5f20-a27a-6fbe2acc5e2f@leemhuis.info>
+ <0cfc124d-9540-9f55-81a0-67b73dce0528@leemhuis.info>
+In-Reply-To: <0cfc124d-9540-9f55-81a0-67b73dce0528@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:r+ADtDFbqXY818140nc+F8gIG28Nz1VhevBnDdrLMd7MaSkBizD
- KdE2mmQyEo9EeZHtC63h/WwzVF3428nDz1BAOLgF5h94I6QCW1dBI4uLM5m8rUd8h5Obkst
- 3muxmf2kTrb3Yko5a9KehM+mTxjOk5CQyB8ytfNwQ1hyirAmQzQQ6mP5p94Ho1omDIWCscW
- WkKK8A0KhsEPpUqCMcR0w==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SzBOm+0D5lQ=:PK2pxYWDZLNiPfO51WKBNJ
- Ejdp9ND3c3zYyp16XAqUKBdSCt0xTNQY0hVMtVLDVw56LbOV3AVn2eiGoe/d1t2utOq8XCpkk
- OWmi0vCbmj9f1Zjbkh6UB+KvXg5uMpK9VmZKroctg79AGc+hGnH9EFrfg0LeQC2p5RoasZFgW
- rGzoAmggL+O/FrIGNcv5AhVuYYrzN0CHWfB2jTEOhreGKIkGe9K6m4ZfEK91ucsrUziHHOC87
- hKdRRJzBwVaYeXbY0LvZczSnEFJMkeUvNmdijsorT9mdIPGpzulJ1+t88P8QpvEJdyP9INRKQ
- 6ZkbNjH1TQI01L6eHWj+2eDevbxSiVz7OmV0EyzCGlUPf87yoLADUnoJ4keniScVoR9JNHtFv
- NWsxh8WX4YxsAhmCiW9fX1cmVLRU4Y/EpTvyOJ5Ot0C3VVfLXR/I/rd8smSrKBX+7TLS/ZgaI
- LTt3fOlUivQRTJZQBc9AyVQqVNGNy/ysPBh/Wk4FQLcq2TIOWB21+hxV0SUNU8ymeqQkGyOTL
- pF5Hlu1EFilpUXVpiP8k2Qw6Tuig9vpqNhRcQfeQVtHvDtKW/QgK8E1Sgw7jTn70I3pSSSts7
- z0/4Orb9/e7xEUEG62PcRZ0WVdRYRy88UjUiVQzRDtsBn1atUOztuQA3OdeR24EngTCZ1kESQ
- 0cuMQDvKF0TMaj3uxntqFzs/+xsNOThX6+dJIosDtVn2QLLGN1sU+oh4u/iqs+ooXVQjJ/92e
- pmYUXlPyPkJg947cspMt+O5AiDvqyd1Q6AOghKpD9fMuCm8tYNlNUOSUe4U=
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1653907110;059bfb8a;
+X-HE-SMSGID: 1nvcn0-000671-K1
 
-Hi Marcelo,
-hi Sebastian,
+On 10.04.22 10:56, Thorsten Leemhuis wrote:
+> On 07.03.22 12:24, Thorsten Leemhuis wrote:
+>> TWIMC: this mail is primarily send for documentation purposes and for
+>> regzbot, my Linux kernel regression tracking bot. These mails usually
+>> contain '#forregzbot' in the subject, to make them easy to spot and filter.
+> 
+> #regzbot monitor:
+> https://lore.kernel.org/all/20220401233826.122544-1-luiz.dentz@gmail.com/
+> #regzbot fixed-by: 38a1944deda4d9
 
-Am 25.05.22 um 15:56 schrieb Marcelo Tosatti:
-> On Mon, May 23, 2022 at 09:09:07AM +0200, Sebastian Andrzej Siewior wrote:
->> On 2022-05-22 01:22:00 [+0200], Stefan Wahren wrote:
->>> Hi,
->> Hi,
->>
->>> while testing the staging/vc04_services/interface/vchiq_arm driver with my
->>> Raspberry Pi 3 B+ (multi_v7_defconfig) i noticed a huge performance
->>> regression since [ff042f4a9b050895a42cae893cc01fa2ca81b95c] mm:
->>> lru_cache_disable: replace work queue synchronization with synchronize_rcu
+#regzbot fixed-by: d44e1dbda36fff5d7c2586683c4adc0963aef908
+
+>> On 08.02.22 07:49, Thorsten Leemhuis wrote:
+>>> [TLDR: I'm adding the regression report below to regzbot, the Linux
+>>> kernel regression tracking bot; all text you find below is compiled from
+>>> a few templates paragraphs you might have encountered already already
+>>> from similar mails.]
 >>>
->>> Usually i run "vchiq_test -f 1" to see the driver is still working [1].
->> What about
->> 	https://lore.kernel.org/all/YmrWK%2FKoU1zrAxPI@fuller.cnet/
->>
->> Sebastian
-> Stefan,
->
-> Can you please try the patch above ?
-
-this patch fixes the regression. Great
-
-Best regards
-
->
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>> Hi, this is your Linux kernel regression tracker speaking.
+>>>
+>>> CCing the regression mailing list, as it should be in the loop for all
+>>> regressions, as explained here:
+>>> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+>>>
+>>> On 07.02.22 19:00, bugzilla-daemon@kernel.org wrote:
+>>>> https://bugzilla.kernel.org/show_bug.cgi?id=215576
+>>>>
+>>>>             Bug ID: 215576
+>>>>            Summary: HSP/HFP mSBC profile broken with QCA6174
+>>>>            Product: Drivers
+>>>>            Version: 2.5
+>>>>     Kernel Version: 5.16.7
+>>>>           Hardware: x86-64
+>>>>                 OS: Linux
+>>>>               Tree: Mainline
+>>>>             Status: NEW
+>>>>           Severity: normal
+>>>>           Priority: P1
+>>>>          Component: Bluetooth
+>>>>           Assignee: linux-bluetooth@vger.kernel.org
+>>>>           Reporter: mike@mjones.io
+>>>>         Regression: No
+>>>>
+>>>> Created attachment 300405
+>>>>   --> https://bugzilla.kernel.org/attachment.cgi?id=300405&action=edit
+>>>> dmesg with 5.16.7
+>>>>
+>>>> Between v5.15 and v5.16, mSBC via pipewire stopped working with the QCA6174
+>>>> adapter.
+>>>>
+>>>> Switching to the HSP/HFP profile with mSBC codec in pipewire produces a loud
+>>>> buzzing sound, and the microphone does not function. When using PulseAudio
+>>>> instead of pipewire, the buzzing is absent but audio input/output also don't
+>>>> work.
+>>>>
+>>>> Other users are reporting the same issue at [1].
+>>>>
+>>>> I ran a git bisect between these two versions and the issue seems to have been
+>>>> caused by this commit:
+>>>>
+>>>> [b2af264ad3af437238c9500aa830ebcafb180e05] Bluetooth: Add support for
+>>>> HCI_Enhanced_Setup_Synchronous_Connection command
+>>>>
+>>>> [1] https://gitlab.freedesktop.org/pipewire/pipewire/-/issues/2019
+>>>
+>>> To be sure this issue doesn't fall through the cracks unnoticed, I'm
+>>> adding it to regzbot, my Linux kernel regression tracking bot:
+>>>
+>>> #regzbot ^introduced b2af264ad3af437238c9500aa830ebcafb180e05
+>>> #regzbot title bluetooth: HSP/HFP mSBC profile broken with QCA6174
+>>> #regzbot ignore-activity
+>>> #regzbot link https://bugzilla.kernel.org/show_bug.cgi?id=215576
+>>>
+>>> Reminder for developers: when fixing the issue, please add a 'Link:'
+>>> tags pointing to the report (the mail quoted above) using
+>>> lore.kernel.org/r/, as explained in
+>>> 'Documentation/process/submitting-patches.rst' and
+>>> 'Documentation/process/5.Posting.rst'. This allows the bot to connect
+>>> the report with any patches posted or committed to fix the issue; this
+>>> again allows the bot to show the current status of regressions and
+>>> automatically resolve the issue when the fix hits the right tree.
+>>>
+>>> I'm sending this to everyone that got the initial report, to make them
+>>> aware of the tracking. I also hope that messages like this motivate
+>>> people to directly get at least the regression mailing list and ideally
+>>> even regzbot involved when dealing with regressions, as messages like
+>>> this wouldn't be needed then.
+>>>
+>>> Don't worry, I'll send further messages wrt to this regression just to
+>>> the lists (with a tag in the subject so people can filter them away), if
+>>> they are relevant just for regzbot. With a bit of luck no such messages
+>>> will be needed anyway.
+>>>
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>
+>>> P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+>>> reports on my table. I can only look briefly into most of them and lack
+>>> knowledge about most of the areas they concern. I thus unfortunately
+>>> will sometimes get things wrong or miss something important. I hope
+>>> that's not the case here; if you think it is, don't hesitate to tell me
+>>> in a public reply, it's in everyone's interest to set the public record
+>>> straight.
+>>>
