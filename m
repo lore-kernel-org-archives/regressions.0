@@ -1,134 +1,88 @@
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012227E
-	for <regressions@lists.linux.dev>; Wed,  1 Jun 2022 16:55:42 +0000 (UTC)
-X-UUID: 170dd9d948264c66b172e68656e21f4b-20220602
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.5,REQID:6fa3c549-2e88-441f-bdf7-7aeed1eadcdb,OB:0,LO
-	B:0,IP:0,URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,ACTI
-	ON:release,TS:0
-X-CID-META: VersionHash:2a19b09,CLOUDID:82baf014-b515-4766-a72d-4514488fe823,C
-	OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:1,File:nil
-	,QS:0,BEC:nil
-X-UUID: 170dd9d948264c66b172e68656e21f4b-20220602
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
-	(envelope-from <deren.wu@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 713503531; Thu, 02 Jun 2022 00:55:39 +0800
-Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
- mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.792.3;
- Thu, 2 Jun 2022 00:55:38 +0800
-Received: from mtksdccf07 (172.21.84.99) by mtkmbs11n1.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.2.792.3 via Frontend
- Transport; Thu, 2 Jun 2022 00:55:38 +0800
-Message-ID: <da79fa2a94c435a308ea763efc557fc352d0245c.camel@mediatek.com>
-Subject: Re: [PATCH] Revert "mt76: mt7921: enable aspm by default"
-From: Deren Wu <deren.wu@mediatek.com>
-To: Kalle Valo <kvalo@kernel.org>, Philippe Schenker <dev@pschenker.ch>
-CC: <linux-wireless@vger.kernel.org>, Felix Fietkau <nbd@nbd.name>,
-	<linux@leemhuis.info>, "David S. Miller" <davem@davemloft.net>, "Jakub
- Kicinski" <kuba@kernel.org>, Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>, Paolo Abeni <pabeni@redhat.com>,
-	Ryder Lee <ryder.lee@mediatek.com>, "Sean Wang" <sean.wang@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>, "YN Chen" <YN.Chen@mediatek.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-mediatek@lists.infradead.org>, <netdev@vger.kernel.org>,
-	<regressions@lists.linux.dev>
-Date: Thu, 2 Jun 2022 00:55:38 +0800
-In-Reply-To: <87mtewoj4e.fsf@kernel.org>
-References: <20220412090415.17541-1-dev@pschenker.ch>
-	 <87y20aod5d.fsf@kernel.org>
-	 <668f1310cc78b17c24ce7be10f5f907d5578e280.camel@mediatek.com>
-	 <e93aef5c9f8a97efe23cfb5892f78f919ce328e7.camel@pschenker.ch>
-	 <87mtewoj4e.fsf@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C122592
+	for <regressions@lists.linux.dev>; Wed,  1 Jun 2022 21:02:33 +0000 (UTC)
+Received: from [192.168.41.150] ([46.114.146.95]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mv2pC-1nehWB2b56-00r4FC for <regressions@lists.linux.dev>; Wed, 01 Jun 2022
+ 23:02:31 +0200
+Message-ID: <79bb603e-37cb-d1dd-1e12-7ce28d7cfdae@i2se.com>
+Date: Wed, 1 Jun 2022 23:02:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK: N
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: vchiq: Performance regression since 5.18-rc1
+Content-Language: en-US
+From: Stefan Wahren <stefan.wahren@i2se.com>
+To: regressions@lists.linux.dev
+References: <77d6d498-7dd9-03eb-60f2-d7e682bb1b20@i2se.com>
+ <YoszE8lQ9VcofLtX@linutronix.de> <Yo41ggMvkI1B9TeM@fuller.cnet>
+ <69590289-58ef-d32b-0459-36fa00627605@i2se.com>
+In-Reply-To: <69590289-58ef-d32b-0459-36fa00627605@i2se.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:phRpW5te+24a6IM9LQKTV/Cmho826c2xnzbN/kpNljmPl/r4m+P
+ jR/ek3KaUc5r1eYYNlZQ+vJhifAxj/RerZm+p+axX2NZFt9uz8x4qkQLxB8wntcMJXqrpyp
+ Q7F/uUW+9E749SCTqWL1v++psTlgtNaN7qL9M1LKTgwbmUmEGA9FCrsqMgP3SVw9v8TAuRY
+ kKKNxf7HXMpQSq+k/qzqw==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ffk7JCtDkTE=:eN8YG6IeWJvMIIzMoLKN+K
+ /tudUpMkTWlOtPTEAqdLB7f/Huoo9rCfdfD09Vnf488FpdEmDE7TMfxhkY7Kv1jMQc1Y6cDwE
+ JWDbnL9xspXgEpr7fg3uVRZ2A3P4EjlopnlyzrtEGzea/sYb6je42h9JamUNpuqhbcSLhs7cI
+ mDNKuaS3STLOfiTuH2qGkvSvWr2qW+aUWshBXYV3mosJnuii6a0bouxjUhiaYVV6BKWBw/XgV
+ XWWUK/55Yqr3X1AdPPGxo1xQKbungaj0dikJgulwOKQNsyJrwBHSoGTfiP5jOR1kdqS6zonCB
+ yNLmIm1xbNTWxAUgCmywdRjrhDmyXGOAFI2n7TkVBvArDD+f5l8lJF628MB5GhSjt/wFoNclL
+ 9CXF4MfFCNjPaXfhd57NulJZJgUbIpGKGcbYTOde7FqiXqJkGBw05qblz9bFTyMuvnOJVnO3l
+ UET24sEAXRaJKEN3KB4yosTSheXe8OGqT/fIbJKikQhOd45DWkYaM082Yv3RuZhKmiJIZNIpa
+ /WU6SW1qkh0aAWagWCuGtiTNlygPv25M30Vwrips3nkkE5AQoxmkyI1Uei4a2jjlqu8+r1yG9
+ XnlvCkIz/55DUQ6bS8JzRhrMf6X2RYZbnLmgzdvq8B/rFbq8TaDaSpvlZ85jOte2vyMmk5TP0
+ pkurXf8B0vmC5+3DpQdk2QoffJCJAYMy7iIawMIfaT4yFvvj1p2NCGRuicX28Pwza1g5Nd9oY
+ CWbQ1MvWENHTWi06242jtM1kZttaB3e40POZjv4Oo01m/ByxOqqFgbRq/8E=
 
-On Wed, 2022-06-01 at 11:58 +0300, Kalle Valo wrote:
-> Philippe Schenker <dev@pschenker.ch> writes:
-> 
-> > On Tue, 2022-04-12 at 19:06 +0800, Deren Wu wrote:
-> > > On Tue, 2022-04-12 at 12:37 +0300, Kalle Valo wrote:
-> > > > Philippe Schenker <dev@pschenker.ch> writes:
-> > > > 
-> > > > > This reverts commit bf3747ae2e25dda6a9e6c464a717c66118c588c8.
-> > > > > 
-> > > > > This commit introduces a regression on some systems where the
-> > > > > kernel is
-> > > > > crashing in different locations after a reboot was issued.
-> > > > > 
-> > > > > This issue was bisected on a Thinkpad P14s Gen2 (AMD) with
-> > > > > latest
-> > > > > firmware.
-> > > > > 
-> > > > > Link: 
-> > > > > 
-https://urldefense.com/v3/__https://lore.kernel.org/linux-wireless/5077a953487275837e81bdf1808ded00b9676f9f.camel@pschenker.ch/__;!!CTRNKA9wMg0ARbw!09tjyaQlMci3fVI3yiNiDJKUW_qwNA_CbVhoAraeIX96B99Q14J4iDycWA9cq36Y$
-> > > > >  
-> > > > > Signed-off-by: Philippe Schenker <dev@pschenker.ch>
-> > > > 
-> > > > Can I take this to wireless tree? Felix, ack?
-> > > > 
-> > > > I'll also add:
-> > > > 
-> > > > Fixes: bf3747ae2e25 ("mt76: mt7921: enable aspm by default")
-> > > > 
-> > > 
-> > > Hi Kalle,
-> > > 
-> > > We have a patch for a similar problem. Can you wait for the
-> > > verification by Philippe?
-> > > Commit 602cc0c9618a81 ("mt76: mt7921e: fix possible probe failure
-> > > after
-> > > reboot")
-> > > Link: 
-> > > 
-https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/net/wireless/mediatek/mt76?id=602cc0c9618a819ab00ea3c9400742a0ca318380__;!!CTRNKA9wMg0ARbw!zCYyDcufJ-OLqQV6leCegA5SkNOOVjAIo-jzTHTk6HUWT9Gjt-bvSz8lr81Zv95u$
-> > >  
-> > > 
-> > > I can reproduce the problem in my v5.16-rc5 desktop. And the
-> > > issue can
-> > > be fixed when the patch applied.
-> > > 
-> > > 
-> > > Hi Philippe,
-> > > 
-> > > Can you please help to check the patch in your platform?
-> > 
-> > Hi Kalle and Deren,
-> > 
-> > I just noticed on my system and mainline v5.18 reboots do now work
-> > however Bluetooth is no longer accessible after a reboot.
-> > 
-> > Reverting commit bf3747ae2e25dda6a9e6c464a717c66118c588c8 on top of
-> > v5.18 solves this problem for me.
-> > 
-> > @Deren are you aware of this bug?
-> > @Kalle Is there a bugtracker somewhere I can submit this?
-> 
-> For regressions the best is to submit it to the regressions list,
-> CCed
-> it now.
-> 
-Hi Philippe,
+|||#regzbot fixed-by: 350e15124ee3|
 
-Tried your test with v5.18.0 on my desktop and both wifi/bt are still
-avaible after reboot. The only problem is I need to insert btusb module
-by command "modprobe btusb" to make BT workable.
-
-I will check the issue on different platforms. If there are any
-finding, I will let you know.
-
-Regards,
-Deren
-
+Am 30.05.22 um 11:54 schrieb Stefan Wahren:
+> Hi Marcelo,
+> hi Sebastian,
+>
+> Am 25.05.22 um 15:56 schrieb Marcelo Tosatti:
+>> On Mon, May 23, 2022 at 09:09:07AM +0200, Sebastian Andrzej Siewior 
+>> wrote:
+>>> On 2022-05-22 01:22:00 [+0200], Stefan Wahren wrote:
+>>>> Hi,
+>>> Hi,
+>>>
+>>>> while testing the staging/vc04_services/interface/vchiq_arm driver 
+>>>> with my
+>>>> Raspberry Pi 3 B+ (multi_v7_defconfig) i noticed a huge performance
+>>>> regression since [ff042f4a9b050895a42cae893cc01fa2ca81b95c] mm:
+>>>> lru_cache_disable: replace work queue synchronization with 
+>>>> synchronize_rcu
+>>>>
+>>>> Usually i run "vchiq_test -f 1" to see the driver is still working 
+>>>> [1].
+>>> What about
+>>>     https://lore.kernel.org/all/YmrWK%2FKoU1zrAxPI@fuller.cnet/
+>>>
+>>> Sebastian
+>> Stefan,
+>>
+>> Can you please try the patch above ?
+>
+> this patch fixes the regression. Great
+>
+> Best regards
+>
+>>
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
