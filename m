@@ -1,107 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F097E
-	for <regressions@lists.linux.dev>; Wed,  1 Jun 2022 08:58:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76A34C385B8;
-	Wed,  1 Jun 2022 08:58:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1654073912;
-	bh=fycRZup+rRlDibIJXv+b3HmaX/NftZkSg+gXy5Njcqo=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=laVepRzYyH9QSsliuI01fpIxdBnoq4GRTpBkDWb+GHnPG0tBOjLV9AyqB9D+h4yV4
-	 TPIkLvVZe4EBIdgshCqz0iqc/jH4PNKYahyQeUX5d+qxiRx0+CI25HWutXwoNNE8c3
-	 NjEGpTyEuMRAFGNQ2O/YkVc1LSOlqeqNb2ZKnOAduLGWHMk4y8pLRefiCwj6K2i+NW
-	 4Rnq6FdMXVyFiu0o3fN+a8kD6QBxODs4ggsFv6qyyr5LJhSzbKFP0aXJQwRc04HYHJ
-	 SYdBYRQVehNUABAvGHAEjwPlogc7hDLkElYPaKRBTeHVzOZicj61LT1hyAS2B3sgBE
-	 2PgUzp8xU9JAQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Philippe Schenker <dev@pschenker.ch>
-Cc: Deren Wu <deren.wu@mediatek.com>,  linux-wireless@vger.kernel.org,  Felix Fietkau <nbd@nbd.name>,  linux@leemhuis.info,  "David S. Miller" <davem@davemloft.net>,  Jakub Kicinski <kuba@kernel.org>,  Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,  Matthias Brugger <matthias.bgg@gmail.com>,  Paolo Abeni <pabeni@redhat.com>,  Ryder Lee <ryder.lee@mediatek.com>,  Sean Wang <sean.wang@mediatek.com>,  Shayne Chen <shayne.chen@mediatek.com>,  YN Chen <YN.Chen@mediatek.com>,  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,  linux-mediatek@lists.infradead.org,  netdev@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH] Revert "mt76: mt7921: enable aspm by default"
-References: <20220412090415.17541-1-dev@pschenker.ch>
-	<87y20aod5d.fsf@kernel.org>
-	<668f1310cc78b17c24ce7be10f5f907d5578e280.camel@mediatek.com>
-	<e93aef5c9f8a97efe23cfb5892f78f919ce328e7.camel@pschenker.ch>
-Date: Wed, 01 Jun 2022 11:58:25 +0300
-In-Reply-To: <e93aef5c9f8a97efe23cfb5892f78f919ce328e7.camel@pschenker.ch>
-	(Philippe Schenker's message of "Wed, 01 Jun 2022 10:28:27 +0200")
-Message-ID: <87mtewoj4e.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF79E7E
+	for <regressions@lists.linux.dev>; Wed,  1 Jun 2022 09:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1654075999;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VuuX8qrSGJ4hyfsiDt/rM6t9GO/71AZB53O3hdvqWXI=;
+	b=bdhC3W64gChtxoHObZd7iUZujqSUpNJcWAzohxM3p4miDLAyhzRz3gmGiCcjfvtb5yJZ9x
+	7r/2utIx+uA61BMON2Giq85gauC682+cyglTmiWCxVtPcFdSF4+q39jSSOSi0r96HYWTj7
+	kRQh9YA5nmiXwX2nWOf1lpPhonHvw2Q=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-85-dP36LYOcNWymw-vi6AyC_w-1; Wed, 01 Jun 2022 05:33:19 -0400
+X-MC-Unique: dP36LYOcNWymw-vi6AyC_w-1
+Received: by mail-wm1-f72.google.com with SMTP id j40-20020a05600c1c2800b003972dbb1066so3062172wms.4
+        for <regressions@lists.linux.dev>; Wed, 01 Jun 2022 02:33:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:from:subject:to:cc:content-transfer-encoding;
+        bh=VuuX8qrSGJ4hyfsiDt/rM6t9GO/71AZB53O3hdvqWXI=;
+        b=5i0Tnlezgkl551pYFRRsuO7YSr6irdOYHuvWxSj3uq0ECS5BxkrzhWB+/3kWsAO1Ej
+         c7R4XUjJRMUtlMVWIXoCZBlNu9pGa4xr1DPEyINXurHoXVGmbamipF5kfEsvZi108x0E
+         LtDzAqDJw6Lr+VJ+vmfkBn2GHFA8zCaMT/ghVSmHSgeP22xfYR3IqIBHSZA1HdG9G5C+
+         oQ0x9iMlmBKFtqPgq9TamxbBXawIwCUjtWb0fa7LdZETGFfm8oP5LYXTGY3vRUldZWT5
+         M9DoAIUm1dAEB2Y8XNb+3DUwRiagNVSreJFGi2XHXfD67OqEGNVVbVnAqb2434TUxDlD
+         UtSQ==
+X-Gm-Message-State: AOAM532lnFN83usIEfwl5ytSCzPdc/NRf8np2Sdc8jrnXusQzWj8pDt2
+	481Nhy0xROQJ407hnJAxEwDX7QvQz9Y7wG92M/PNwm7n/kUSuO3XDDleRIVWKHNJnAH0T3lz3aI
+	nVcFrzwKKEb+HoAYLD4rfjYk=
+X-Received: by 2002:a5d:584b:0:b0:20f:ec17:30b8 with SMTP id i11-20020a5d584b000000b0020fec1730b8mr35520930wrf.461.1654075997557;
+        Wed, 01 Jun 2022 02:33:17 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyvPKsSO/EFfPQVcpaiIDFTmJhbxQDRZXO4y+u2IxIwew8MR3rn8Ub+0M0Zn3HNAQ5cwMZZdA==
+X-Received: by 2002:a5d:584b:0:b0:20f:ec17:30b8 with SMTP id i11-20020a5d584b000000b0020fec1730b8mr35520919wrf.461.1654075997356;
+        Wed, 01 Jun 2022 02:33:17 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:c:37e0:f4b2:2105:b039:7367? ([2a01:e0a:c:37e0:f4b2:2105:b039:7367])
+        by smtp.gmail.com with ESMTPSA id j22-20020a05600c485600b0039756cdc8e1sm1362865wmo.37.2022.06.01.02.33.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jun 2022 02:33:16 -0700 (PDT)
+Message-ID: <d84ba981-d907-f942-6b05-67c836580542@redhat.com>
+Date: Wed, 1 Jun 2022 11:33:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+From: Jocelyn Falempe <jfalempe@redhat.com>
+Subject: [REGRESSION] VGA output with AST 2600 graphics.
+To: dri-devel@lists.freedesktop.org, kuohsiang_chou@aspeedtech.com,
+ David Airlie <airlied@redhat.com>, Thomas Zimmermann <tzimmermann@suse.de>
+Cc: regressions@lists.linux.dev, stable@vger.kernel.org
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jfalempe@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Philippe Schenker <dev@pschenker.ch> writes:
+Hi,
 
-> On Tue, 2022-04-12 at 19:06 +0800, Deren Wu wrote:
->> On Tue, 2022-04-12 at 12:37 +0300, Kalle Valo wrote:
->> > Philippe Schenker <dev@pschenker.ch> writes:
->> >=20
->> > > This reverts commit bf3747ae2e25dda6a9e6c464a717c66118c588c8.
->> > >=20
->> > > This commit introduces a regression on some systems where the
->> > > kernel is
->> > > crashing in different locations after a reboot was issued.
->> > >=20
->> > > This issue was bisected on a Thinkpad P14s Gen2 (AMD) with latest
->> > > firmware.
->> > >=20
->> > > Link:=20
->> > > https://urldefense.com/v3/__https://lore.kernel.org/linux-wireless/5=
-077a953487275837e81bdf1808ded00b9676f9f.camel@pschenker.ch/__;!!CTRNKA9wMg0=
-ARbw!09tjyaQlMci3fVI3yiNiDJKUW_qwNA_CbVhoAraeIX96B99Q14J4iDycWA9cq36Y$
->> > > =C2=A0
->> > > Signed-off-by: Philippe Schenker <dev@pschenker.ch>
->> >=20
->> > Can I take this to wireless tree? Felix, ack?
->> >=20
->> > I'll also add:
->> >=20
->> > Fixes: bf3747ae2e25 ("mt76: mt7921: enable aspm by default")
->> >=20
->>=20
->> Hi Kalle,
->>=20
->> We have a patch for a similar problem. Can you wait for the
->> verification by Philippe?
->> Commit 602cc0c9618a81 ("mt76: mt7921e: fix possible probe failure
->> after
->> reboot")
->> Link:=20
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commi=
-t/drivers/net/wireless/mediatek/mt76?id=3D602cc0c9618a819ab00ea3c9400742a0c=
-a318380
->>=20
->> I can reproduce the problem in my v5.16-rc5 desktop. And the issue can
->> be fixed when the patch applied.
->>=20
->>=20
->> Hi Philippe,
->>=20
->> Can you please help to check the patch in your platform?
->
-> Hi Kalle and Deren,
->
-> I just noticed on my system and mainline v5.18 reboots do now work
-> however Bluetooth is no longer accessible after a reboot.
->
-> Reverting commit bf3747ae2e25dda6a9e6c464a717c66118c588c8 on top of
-> v5.18 solves this problem for me.
->
-> @Deren are you aware of this bug?
-> @Kalle Is there a bugtracker somewhere I can submit this?
+I've found a regression in the ast driver, for AST2600 hardware.
 
-For regressions the best is to submit it to the regressions list, CCed
-it now.
+before the upstream commit f9bd00e0ea9d
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=f9bd00e0ea9d9b04140aa969a9a13ad3597a1e4e
 
---=20
-https://patchwork.kernel.org/project/linux-wireless/list/
+The ast driver handled AST 2600 chip like an AST 2500.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
-hes
+After this commit, it uses some default values, more like the older AST 
+chip.
+
+There are a lot of places in the driver like this:
+https://elixir.bootlin.com/linux/v5.18.1/source/drivers/gpu/drm/ast/ast_post.c#L82
+where it checks for (AST2300 || AST2400 || AST2500) but not for AST2600.
+
+This makes the VGA output, to be blurred and flickered with whites lines 
+on AST2600.
+
+The issue is present since v5.11
+
+For v5.11~v5.17 I propose a simple workaround (as there are no other 
+reference to AST2600 in the driver):
+--- a/drivers/gpu/drm/ast/ast_main.c
++++ b/drivers/gpu/drm/ast/ast_main.c
+@@ -146,7 +146,8 @@ static int ast_detect_chip(struct drm_device *dev, 
+bool *need_post)
+
+  	/* Identify chipset */
+  	if (pdev->revision >= 0x50) {
+-		ast->chip = AST2600;
++		/* Workaround to use the same codepath for AST2600 */
++		ast->chip = AST2500;
+  		drm_info(dev, "AST 2600 detected\n");
+  	} else if (pdev->revision >= 0x40) {
+  		ast->chip = AST2500;
+
+starting from v5.18, there is another reference to AST2600 in the code
+https://elixir.bootlin.com/linux/v5.18/source/drivers/gpu/drm/ast/ast_main.c#L212
+
+So I think someone with good aspeed knowledge should review all 
+locations where there is a test for AST2500, and figure out what should 
+be done for AST2600
+
+Thanks,
+
+-- 
+
+Jocelyn
+
