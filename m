@@ -1,42 +1,51 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4675B367
-	for <regressions@lists.linux.dev>; Wed,  1 Jun 2022 10:33:55 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B7DC61F8C6;
-	Wed,  1 Jun 2022 10:33:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1654079626; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 285AC63D
+	for <regressions@lists.linux.dev>; Wed,  1 Jun 2022 12:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1654086557;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=LTh5ATYU++zqMeYunecFwsJt3zReEUPuinehpFDM0oo=;
-	b=OF1CIKIJp4DkGEKxLE4TTgZbY1vj4qT0nuTyLeAlFhp15dXCVRXzBaOnJQwUPFwCbQRB8m
-	2jo0IwxxS8F7dg8TZFHF/oRImkaHGnlbsrYPNt+bhR1oG0hVCZmqI0IjW9RjOjH/zQUbAb
-	pcFC5KUc2wG6wr1E5dDML04N5lVjTOE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1654079626;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LTh5ATYU++zqMeYunecFwsJt3zReEUPuinehpFDM0oo=;
-	b=LlxosNjzGW+ZB8mymHFZIGQM4LMGQeVqPmOA7BcvIbkn25MHd6HKHK+qxdjiH3N3b2ewB/
-	Wp+E56wzjZSsxQDA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 95B881330F;
-	Wed,  1 Jun 2022 10:33:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id GVh5I4pAl2L7EwAAMHmgww
-	(envelope-from <tzimmermann@suse.de>); Wed, 01 Jun 2022 10:33:46 +0000
-Message-ID: <6e9f84f9-dc97-9ff4-57c8-97fbffd3a996@suse.de>
-Date: Wed, 1 Jun 2022 12:33:46 +0200
+	bh=+VBIBuP9XH5+e4gdIzNU2MNtABdrYAbgVzv2JZq6v4g=;
+	b=U/uuhiM84wysGYBp3AN8gOHr5THmTXrob8dmO8NyzgSwdyABK1eCkr0cRW0MnwMraCcv57
+	PggBtIRVspp0DOygkM0c61clPSQl1Ej4eOyXGzOlLq85wIjNLjO2Z+rV9/Xfq+yq7R7Tqk
+	V7MCrHx1GLe8U6j01oBbgO5aC49M+XA=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-316-KpwhrHfbOLy44UocELxXvg-1; Wed, 01 Jun 2022 08:29:16 -0400
+X-MC-Unique: KpwhrHfbOLy44UocELxXvg-1
+Received: by mail-wm1-f72.google.com with SMTP id bg7-20020a05600c3c8700b0039468585269so849869wmb.3
+        for <regressions@lists.linux.dev>; Wed, 01 Jun 2022 05:29:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=+VBIBuP9XH5+e4gdIzNU2MNtABdrYAbgVzv2JZq6v4g=;
+        b=LBLWKs6q3U51DFKqDvvuPiDKmj5fFo1wpiVPDgDj6cUgISoKjG3mrzkIB94L5OjIav
+         AzYl7zTNPb/JcFvTp0iayhfVZuB+QuMtLNrP7oAhRRQUtJJ441Rbj+1CinHY+W2Xgfuj
+         ajMo47Booyk/PRwtQT97FY52Xn8VMn/nRE/QrHDZpHTZRfcOxGpdgNtLLSYEI5miJFGQ
+         4C3oV8ssDTJj2rmJ0R3tKJdeAYu6a0Hr9lC5wrYU8BcKcCadWByFX2/O/4M5wLpmN/QQ
+         RU1QGXkEZ/Vvg067iJg75/FR74mvJpZSpG2JjV+/+8RXrbmKeqEy3oNfOx3RY9uSxFxL
+         x2PA==
+X-Gm-Message-State: AOAM533SI4rxthAeLY5Ex4S3WbmgvARtC40CEmSfWUUH+e+vGlZge5Jf
+	E+cqRKU0l3J6vFq8Ve5ObYvRT2kszQVNkBkWRT32yuzrTX8obwJBgU2QsX66wvcG2gbq2LhIL0e
+	smQdtlXPsL+X8xfd1DLxrWLw=
+X-Received: by 2002:a05:600c:21d0:b0:397:33e6:fd42 with SMTP id x16-20020a05600c21d000b0039733e6fd42mr28453946wmj.179.1654086555696;
+        Wed, 01 Jun 2022 05:29:15 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxkz1Y8pjn1ricjS6peAGoSHjCadpq4kbMUdRVXVI5Te6LpiY9GuLx6Lm3WXA+ZVVnsqQzwpQ==
+X-Received: by 2002:a05:600c:21d0:b0:397:33e6:fd42 with SMTP id x16-20020a05600c21d000b0039733e6fd42mr28453932wmj.179.1654086555454;
+        Wed, 01 Jun 2022 05:29:15 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:c:37e0:f4b2:2105:b039:7367? ([2a01:e0a:c:37e0:f4b2:2105:b039:7367])
+        by smtp.gmail.com with ESMTPSA id t67-20020a1c4646000000b003942a244f33sm5189360wma.12.2022.06.01.05.29.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 01 Jun 2022 05:29:15 -0700 (PDT)
+Message-ID: <66419e2f-8a68-0e0c-334b-96b211a96e50@redhat.com>
+Date: Wed, 1 Jun 2022 14:29:14 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,104 +53,105 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
+ Thunderbird/91.9.0
 Subject: Re: [REGRESSION] VGA output with AST 2600 graphics.
+To: Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org,
+ kuohsiang_chou@aspeedtech.com, David Airlie <airlied@redhat.com>
+Cc: regressions@lists.linux.dev, stable@vger.kernel.org
+References: <d84ba981-d907-f942-6b05-67c836580542@redhat.com>
+ <6e9f84f9-dc97-9ff4-57c8-97fbffd3a996@suse.de>
+From: Jocelyn Falempe <jfalempe@redhat.com>
+In-Reply-To: <6e9f84f9-dc97-9ff4-57c8-97fbffd3a996@suse.de>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jfalempe@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-To: Jocelyn Falempe <jfalempe@redhat.com>, dri-devel@lists.freedesktop.org,
- kuohsiang_chou@aspeedtech.com, David Airlie <airlied@redhat.com>
-Cc: regressions@lists.linux.dev, stable@vger.kernel.org
-References: <d84ba981-d907-f942-6b05-67c836580542@redhat.com>
-From: Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <d84ba981-d907-f942-6b05-67c836580542@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------rs0qKD0lZDFSRDxuai27ujQX"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------rs0qKD0lZDFSRDxuai27ujQX
-Content-Type: multipart/mixed; boundary="------------OBMFmimlMR3yrMffjWCIcytN";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Jocelyn Falempe <jfalempe@redhat.com>, dri-devel@lists.freedesktop.org,
- kuohsiang_chou@aspeedtech.com, David Airlie <airlied@redhat.com>
-Cc: regressions@lists.linux.dev, stable@vger.kernel.org
-Message-ID: <6e9f84f9-dc97-9ff4-57c8-97fbffd3a996@suse.de>
-Subject: Re: [REGRESSION] VGA output with AST 2600 graphics.
-References: <d84ba981-d907-f942-6b05-67c836580542@redhat.com>
-In-Reply-To: <d84ba981-d907-f942-6b05-67c836580542@redhat.com>
-
---------------OBMFmimlMR3yrMffjWCIcytN
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 
-SGkgSm9jZWx5biwNCg0KdGhhbmtzIGZvciByZXBvcnRpbmcgdGhpcyBidWcuDQoNCkFtIDAx
-LjA2LjIyIHVtIDExOjMzIHNjaHJpZWIgSm9jZWx5biBGYWxlbXBlOg0KPiBIaSwNCj4gDQo+
-IEkndmUgZm91bmQgYSByZWdyZXNzaW9uIGluIHRoZSBhc3QgZHJpdmVyLCBmb3IgQVNUMjYw
-MCBoYXJkd2FyZS4NCj4gDQo+IGJlZm9yZSB0aGUgdXBzdHJlYW0gY29tbWl0IGY5YmQwMGUw
-ZWE5ZA0KPiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dp
-dC9zdGFibGUvbGludXguZ2l0L2NvbW1pdC8/aWQ9ZjliZDAwZTBlYTlkOWIwNDE0MGFhOTY5
-YTlhMTNhZDM1OTdhMWU0ZSANCj4gDQo+IA0KPiBUaGUgYXN0IGRyaXZlciBoYW5kbGVkIEFT
-VCAyNjAwIGNoaXAgbGlrZSBhbiBBU1QgMjUwMC4NCj4gDQo+IEFmdGVyIHRoaXMgY29tbWl0
-LCBpdCB1c2VzIHNvbWUgZGVmYXVsdCB2YWx1ZXMsIG1vcmUgbGlrZSB0aGUgb2xkZXIgQVNU
-IA0KPiBjaGlwLg0KPiANCj4gVGhlcmUgYXJlIGEgbG90IG9mIHBsYWNlcyBpbiB0aGUgZHJp
-dmVyIGxpa2UgdGhpczoNCj4gaHR0cHM6Ly9lbGl4aXIuYm9vdGxpbi5jb20vbGludXgvdjUu
-MTguMS9zb3VyY2UvZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfcG9zdC5jI0w4MiANCj4gDQo+
-IHdoZXJlIGl0IGNoZWNrcyBmb3IgKEFTVDIzMDAgfHwgQVNUMjQwMCB8fCBBU1QyNTAwKSBi
-dXQgbm90IGZvciBBU1QyNjAwLg0KPiANCj4gVGhpcyBtYWtlcyB0aGUgVkdBIG91dHB1dCwg
-dG8gYmUgYmx1cnJlZCBhbmQgZmxpY2tlcmVkIHdpdGggd2hpdGVzIGxpbmVzIA0KPiBvbiBB
-U1QyNjAwLg0KPiANCj4gVGhlIGlzc3VlIGlzIHByZXNlbnQgc2luY2UgdjUuMTENCj4gDQo+
-IEZvciB2NS4xMX52NS4xNyBJIHByb3Bvc2UgYSBzaW1wbGUgd29ya2Fyb3VuZCAoYXMgdGhl
-cmUgYXJlIG5vIG90aGVyIA0KPiByZWZlcmVuY2UgdG8gQVNUMjYwMCBpbiB0aGUgZHJpdmVy
-KToNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfbWFpbi5jDQo+ICsrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9hc3QvYXN0X21haW4uYw0KPiBAQCAtMTQ2LDcgKzE0Niw4IEBAIHN0
-YXRpYyBpbnQgYXN0X2RldGVjdF9jaGlwKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYsIA0KPiBi
-b29sICpuZWVkX3Bvc3QpDQo+IA0KPiAgwqDCoMKgwqAgLyogSWRlbnRpZnkgY2hpcHNldCAq
-Lw0KPiAgwqDCoMKgwqAgaWYgKHBkZXYtPnJldmlzaW9uID49IDB4NTApIHsNCj4gLcKgwqDC
-oMKgwqDCoMKgIGFzdC0+Y2hpcCA9IEFTVDI2MDA7DQo+ICvCoMKgwqDCoMKgwqDCoCAvKiBX
-b3JrYXJvdW5kIHRvIHVzZSB0aGUgc2FtZSBjb2RlcGF0aCBmb3IgQVNUMjYwMCAqLw0KPiAr
-wqDCoMKgwqDCoMKgwqAgYXN0LT5jaGlwID0gQVNUMjUwMDsNCg0KVGhlIHdob2xlIGhhbmRs
-aW5nIG9mIGRpZmZlcmVudCBtb2RlbHMgaW4gdGhpcyBkcml2ZXIgaXMgYnJva2VuIGJ5IA0K
-ZGVzaWduIGFuZCBuZWVkcyB0byBiZSByZXBsYWNlZC4gIEkgZG9uJ3QgaGF2ZSBtdWNoIG9m
-IHRoZSBhZmZlY3RlZCANCmhhcmR3YXJlLCBzbyBzdWNoIHRoaW5ncyBhcmUgZ29pbmcgc2xv
-d2x5LiA6KA0KDQpGb3IgYW4gaW50ZXJtZWRpYXRlIGZpeCwgaXQgd291bGQgYmUgYmV0dGVy
-IHRvIGNoYW5nZSBhbGwgdGVzdHMgZm9yIA0KQVNUMjUwMCB0byBpbmNsdWRlIEFTVDI2MDAg
-YXMgd2VsbC4gVGhlcmUgYXJlbid0IHRvbyBtYW55IElJUkMuDQoNCkJlc3QgcmVnYXJkcw0K
-VGhvbWFzDQoNCj4gIMKgwqDCoMKgwqDCoMKgwqAgZHJtX2luZm8oZGV2LCAiQVNUIDI2MDAg
-ZGV0ZWN0ZWRcbiIpOw0KPiAgwqDCoMKgwqAgfSBlbHNlIGlmIChwZGV2LT5yZXZpc2lvbiA+
-PSAweDQwKSB7DQo+ICDCoMKgwqDCoMKgwqDCoMKgIGFzdC0+Y2hpcCA9IEFTVDI1MDA7DQo+
-IA0KPiBzdGFydGluZyBmcm9tIHY1LjE4LCB0aGVyZSBpcyBhbm90aGVyIHJlZmVyZW5jZSB0
-byBBU1QyNjAwIGluIHRoZSBjb2RlDQo+IGh0dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xp
-bnV4L3Y1LjE4L3NvdXJjZS9kcml2ZXJzL2dwdS9kcm0vYXN0L2FzdF9tYWluLmMjTDIxMiAN
-Cj4gDQo+IA0KPiBTbyBJIHRoaW5rIHNvbWVvbmUgd2l0aCBnb29kIGFzcGVlZCBrbm93bGVk
-Z2Ugc2hvdWxkIHJldmlldyBhbGwgDQo+IGxvY2F0aW9ucyB3aGVyZSB0aGVyZSBpcyBhIHRl
-c3QgZm9yIEFTVDI1MDAsIGFuZCBmaWd1cmUgb3V0IHdoYXQgc2hvdWxkIA0KPiBiZSBkb25l
-IGZvciBBU1QyNjAwDQo+IA0KPiBUaGFua3MsDQo+IA0KDQotLSANClRob21hcyBaaW1tZXJt
-YW5uDQpHcmFwaGljcyBEcml2ZXIgRGV2ZWxvcGVyDQpTVVNFIFNvZnR3YXJlIFNvbHV0aW9u
-cyBHZXJtYW55IEdtYkgNCk1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgR2VybWFu
-eQ0KKEhSQiAzNjgwOSwgQUcgTsO8cm5iZXJnKQ0KR2VzY2jDpGZ0c2bDvGhyZXI6IEl2byBU
-b3Rldg0K
+On 01/06/2022 12:33, Thomas Zimmermann wrote:
+> Hi Jocelyn,
+> 
+> thanks for reporting this bug.
+> 
+> Am 01.06.22 um 11:33 schrieb Jocelyn Falempe:
+>> Hi,
+>>
+>> I've found a regression in the ast driver, for AST2600 hardware.
+>>
+>> before the upstream commit f9bd00e0ea9d
+>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=f9bd00e0ea9d9b04140aa969a9a13ad3597a1e4e 
+>>
+>>
+>> The ast driver handled AST 2600 chip like an AST 2500.
+>>
+>> After this commit, it uses some default values, more like the older 
+>> AST chip.
+>>
+>> There are a lot of places in the driver like this:
+>> https://elixir.bootlin.com/linux/v5.18.1/source/drivers/gpu/drm/ast/ast_post.c#L82 
+>>
+>> where it checks for (AST2300 || AST2400 || AST2500) but not for AST2600.
+>>
+>> This makes the VGA output, to be blurred and flickered with whites 
+>> lines on AST2600.
+>>
+>> The issue is present since v5.11
+>>
+>> For v5.11~v5.17 I propose a simple workaround (as there are no other 
+>> reference to AST2600 in the driver):
+>> --- a/drivers/gpu/drm/ast/ast_main.c
+>> +++ b/drivers/gpu/drm/ast/ast_main.c
+>> @@ -146,7 +146,8 @@ static int ast_detect_chip(struct drm_device *dev, 
+>> bool *need_post)
+>>
+>>       /* Identify chipset */
+>>       if (pdev->revision >= 0x50) {
+>> -        ast->chip = AST2600;
+>> +        /* Workaround to use the same codepath for AST2600 */
+>> +        ast->chip = AST2500;
+> 
+> The whole handling of different models in this driver is broken by 
+> design and needs to be replaced.  I don't have much of the affected 
+> hardware, so such things are going slowly. :(
+> 
+> For an intermediate fix, it would be better to change all tests for 
+> AST2500 to include AST2600 as well. There aren't too many IIRC.
 
---------------OBMFmimlMR3yrMffjWCIcytN--
+I feel a bit uncomfortable doing this, because I don't know if this 
+settings are good for AST2600 or not. I just know that AST2500 settings 
+are better than the "default".
 
---------------rs0qKD0lZDFSRDxuai27ujQX
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+Also it may not apply cleanly up to v5.11
 
------BEGIN PGP SIGNATURE-----
+I will do a test patch and see what it gives.
 
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmKXQIoFAwAAAAAACgkQlh/E3EQov+BV
-Zg//bEkLNw9E9Tz8bxTCi29rWi9JLUdjtY7nuxLM3D64T7WEwOdFpslQYe0YQ/7H+q4j4wwR/Pk1
-ImF834b5/MJ8CVosP7wRtQPWRUoPE+wOO/tBL949FZbTSzp0fGfSl+rGllBHkMLS9w9QPMr11rSV
-fDldbNAPC7L1voO7xWvhlA2TtC9h33lGo31PozA1A3Czn611/WGsqeVzC4EuTTUuBguRXO10ZfWL
-dSc9yZZEU5BC/PvV2cAbIhc1S0VLQZcWFsScWVKSRXBipCZ+RgJx96WYR/Q8XHX/iNnuWvq/8DiK
-rYQIpM5hvKTwBHmxCQviKWaze7qG/GhG0BjpsYhLIDN7Sq22tJkp/8rPOodiEwFYCyNi/2vSnimL
-P+aSN6mK1WjO6DZLpH0xkYbnfOsOHsJTl0d0Hb+QZA7vGxu3MKKlaGnYhKOEzd751JCdqAGDWMsw
-dpwjqmS5bI3uzzvYX5DfPiNXNAmt8lJBmJ8XdDFlUNmPBPX1J7UA/X71e4m9Fx94YV7ymGyrIv7A
-wfgn9tkRc+UuuIIFBhIu4ikB86VlDNLvBZqDyxIjVAlKucd1oU7vlJob1UT4992S5/0X0kmTxB7q
-Sm3i9zHjFovvb8LsPxlVRUZdm/bjsNjQ+n0GUDfSmflIS2+hdE5bcqpIEQIRUekoBGJxxDrDFnt1
-6GE=
-=q6Sa
------END PGP SIGNATURE-----
+Another solution would be to just revert f9bd00e0ea9d for v5.11 to v5.17 ?
 
---------------rs0qKD0lZDFSRDxuai27ujQX--
+Best regards,
+
+-- 
+
+Jocelyn
+
+> 
+> Best regards
+> Thomas
+> 
+>>           drm_info(dev, "AST 2600 detected\n");
+>>       } else if (pdev->revision >= 0x40) {
+>>           ast->chip = AST2500;
+>>
+>> starting from v5.18, there is another reference to AST2600 in the code
+>> https://elixir.bootlin.com/linux/v5.18/source/drivers/gpu/drm/ast/ast_main.c#L212 
+>>
+>>
+>> So I think someone with good aspeed knowledge should review all 
+>> locations where there is a test for AST2500, and figure out what 
+>> should be done for AST2600
+>>
+>> Thanks,
+>>
+> 
+
