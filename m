@@ -1,143 +1,134 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2130.outbound.protection.outlook.com [40.107.94.130])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32D922562
-	for <regressions@lists.linux.dev>; Wed,  1 Jun 2022 15:56:53 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ml4HkOwFXBaRSDNEaPWzSQCqSnUklShYyPXvxbS7BAEyy2OgPJBpiNNhXNmybafaAnOKvXPOX64BpKCzvVxJpaMgSOEaaS2xEVGSocDEC5LGkwFRiEZUBClgXRxtpbldqxiHpXJ0Ae0hfKb5WErL2Fmj9QjB0TBeyuyGyI8rfaCHVW4l4ZCWNv/U213PyTwfxltDe6WWN9ZibZHkk3k+Rm3qjQc4yjxt8WfePKFCjKm2SZ0vzg3sTo1Cw/a4AFZgXN0Oi0NBHmlC2pP36OlbKLgwFMlCMHdDeeKfqSIZx6NcMa3mtUNSDrrC209QNfKiz13KU97vKkOkC5bwQqyNCw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cdi3/Au0WB6rvamlQfH3x7+Y8da7J/OAQUnXLle5N9E=;
- b=d0+gz3F95Wnmt52NkMMRlYNBgs74mFeurVuQdyPIP5V6qLf+I2n3E/OI6Ks5QBs5q4bJstj6D0Gx88l6bhWB1kxTbraFKmCfWZ3JTy1W/yVaAuxf0dhD5Aguad2ubqGbJaf9avyVd3bp+/6NHgRK77za1wvrKO1LbgFwmHHy3if/WE3/3CRKHY+Fq4Syp8nAvFPBjPSXP2qu9kT2fbrMl1tDiPRy31JehIyMzTJmlpUkUV3GpF1tk9xGg+4Xmmq8pNYvyF6GBQcJ24KOHq6OuPcvqOqFUlrJpJF1laQ3F06ovxxn3tEmdovGepDjdDcAdJJqcPUQPjsCcpD1ImeMSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=novatechautomation.com; dmarc=pass action=none
- header.from=novatechautomation.com; dkim=pass
- header.d=novatechautomation.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=NOVATECHWEB.onmicrosoft.com; s=selector2-NOVATECHWEB-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cdi3/Au0WB6rvamlQfH3x7+Y8da7J/OAQUnXLle5N9E=;
- b=fWgXyZrQs/xGrzWZ61U2s+O4VTOJz07hebYT9m7Di1KJAnWUok42gQdIq3CQM8h20QxXP6zsEkUyE2rolHnHgqBg28tvICu7RepE/mON4JCamxqyWuw/ahNJBRAI35uGo90OCOT1JZPVPdHYhYNDx/mFquf9mPag/34pX3U7HVA=
-Received: from CY1PR07MB2700.namprd07.prod.outlook.com (2a01:111:e400:c61b::8)
- by DM5PR07MB3893.namprd07.prod.outlook.com (2603:10b6:4:af::37) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5314.12; Wed, 1 Jun
- 2022 15:56:51 +0000
-Received: from CY1PR07MB2700.namprd07.prod.outlook.com
- ([fe80::a9b6:a462:eddc:cedc]) by CY1PR07MB2700.namprd07.prod.outlook.com
- ([fe80::a9b6:a462:eddc:cedc%12]) with mapi id 15.20.5293.019; Wed, 1 Jun 2022
- 15:56:51 +0000
-From: Eric Schikschneit <eric.schikschneit@novatechautomation.com>
-To: "stable@vger.kernel.org" <stable@vger.kernel.org>
-CC: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>,
-	"grygorii.strashko@ti.com" <grygorii.strashko@ti.com>, "tony@atomide.com"
-	<tony@atomide.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Subject: [REGRESSION] gpio: omap: ensure irq is enabled before wakeup
-Thread-Topic: [REGRESSION] gpio: omap: ensure irq is enabled before wakeup
-Thread-Index: AQHYdc+tWv7aWWd/6kGN6rTOpeTdyQ==
-Date: Wed, 1 Jun 2022 15:56:51 +0000
-Message-ID:
- <CY1PR07MB2700E81609B0967127D0773381DF9@CY1PR07MB2700.namprd07.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-suggested_attachment_session_id: 4dfcf29b-4524-b1d6-15cb-38588e780b0c
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=novatechautomation.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 238a2e74-3984-43ec-abc6-08da43e7579e
-x-ms-traffictypediagnostic: DM5PR07MB3893:EE_
-x-microsoft-antispam-prvs:
- <DM5PR07MB389340FEFB5CFCC48CCAC12081DF9@DM5PR07MB3893.namprd07.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- pSegnSBNVQ0G3dv112cCb4TMGfBaU2Q95bRTpPp7wNrocxVffQf78upspW3h+yG7H0OPR3y9aNLbNCf1ts9hAWsnK6bqy62h0PfkSz9RrvX51VYZ4e1qikZ2IItT2pK92tXKyf8ym+IJ7n8MiWD335+wWt8/VsURNC+HBa6UyuU4wa+EIXVrXkH1Xs4Wu7FzAgYI5IZkK3wvKJ2cWfFzWbPcoLJ+9DFdzx/Lc8MaBoOEYMh+3bsmI3aKQJ0ENpLALJGS7n1I6MYrSVLvgXBiq9dWUI4VvRoU5ixj7Rdt/SNTRmk8qRwoG4EEEZvwWocWaxkCJnp/ihwrk8Kce7zDRavtbIAg/GG4Jx7LfV+UVE7oGR12GVnaFl99TZExpoP0t4z8oCE8iHCq4MUW9ecsf27WNtojlkFQkKvwSkp3yV+f9bHYtTnfwLgW6c6slYFjZqBf64eQGv+lUFkLAUar87JBEkteXRs4J+36LF+HgGrbTD9+Euv20m0V6uk8oWFUWh8rtOimJTUgSVlBNULk01R9ApabUsC7PJCkV9kSPlTM5WzmPoCvRb2VNL46HRfrvd7TzEOp7gJKTFl1K9NLFt96CaH4dKSO9IbbGvMn3dbG044Or9K3esXnJ8uhdcwBH64FgzbTKtHThsG8D/HYTlkpXqwGkn/z8v9QigceLA9j5O9qBIMh5hkIFb0DayN8enfflO92gFvIBPaS3mKHzg==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY1PR07MB2700.namprd07.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(376002)(346002)(39840400004)(366004)(396003)(136003)(71200400001)(186003)(316002)(508600001)(91956017)(41300700001)(38100700002)(54906003)(6916009)(6506007)(33656002)(40140700001)(83380400001)(26005)(7696005)(55016003)(9686003)(2906002)(122000001)(4744005)(64756008)(52536014)(66446008)(44832011)(66556008)(38070700005)(76116006)(86362001)(8936002)(66946007)(4326008)(8676002)(66476007)(5660300002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?zjOzkWQowvqzC/sLJJTSWfVAQxD0abngKl5WLo89bp/czng4JzT4/WuJcf?=
- =?iso-8859-1?Q?1De7keDYDBiZ1i0YFr6DgoT5hJPp4X50T3LMyeObqFG7zj+wMPSdL0nTY3?=
- =?iso-8859-1?Q?7bdcEsvjoo1AocbybRLYjM53yo6MEIpMYws/fCQEL9H41TdfHaTtJMBojE?=
- =?iso-8859-1?Q?IMgg45NQ13HEQdDkHlEFJgbKQctxgDpqGcF4VUDD5oJzOHyeJdWJmX3UZA?=
- =?iso-8859-1?Q?L4qaaLlV/HvZUaNuq2gc65qpbS1LvTDcapZejKoedI1p0TFzo88aP7xQyY?=
- =?iso-8859-1?Q?Sv6MUzIpGbbUbFn1RRjkqddc/FUitTEV/9pqsIW4HOk0u0s2lA1hds/XHY?=
- =?iso-8859-1?Q?qsD0LQakUICPViBfoZ5sb/rVBG+Y47PayoyCgs+JQJkG85KZ7DVLgDBlhs?=
- =?iso-8859-1?Q?XWsgQigfUUbvtzUfVCgPufdGdcEnxgPYvxGxsu3pDLs/ZLBQeRuIy1NtEc?=
- =?iso-8859-1?Q?fHnNd7Jso9qUePaB0WHPCGGUUA6luLr3HYzZPiRK2sg/7EDjeQ+AqqooSF?=
- =?iso-8859-1?Q?B1mYc6gJNz9izRBRdKjFNn2wZ+kc1ADcyQ9OJPSGtD3CB/hhFkarZWTIb6?=
- =?iso-8859-1?Q?jWy/7KWkFpmRzU1aMPdZuQp5IU1cpFJ7n3oJWSUUpgPUZ+wAWpFTA6sxfz?=
- =?iso-8859-1?Q?/xyPOdPoGqJ093rCMlsMa9Y2TM197HSHWE0AiBMKlFj2o2nL9REJ32rhp8?=
- =?iso-8859-1?Q?0cOiWYWqpS5wSIgJQ4ILZ8umkLLtd2RpAxmqdVg79nvypfrltpJ/80VaIR?=
- =?iso-8859-1?Q?Yx+pBzecIZ79IMQnxRZN1IqsIkJ1sxsltvFER9PC6bl/g4Lrw1vfv3iBem?=
- =?iso-8859-1?Q?DGn1orX1SAYVeS+lJsuCiYELJiWFH82IdMy+jXJl8YRIr/rLudXNM7upGj?=
- =?iso-8859-1?Q?0uAKhIg3fV5fn7lNBVpbMQfFNU97VttyQGyAS5aoQw5y02O2QADAAbptRG?=
- =?iso-8859-1?Q?d+Y1v5wvLkF3NBZOvW/erAtCWJCVuk1Uc0+XvFf6eNJRv1g9BMWsgD0bPR?=
- =?iso-8859-1?Q?spCd39rWaunegZtYtpFMrTD995GYocQs2KKXCVKxuAmxRjuXYa1krUhGXv?=
- =?iso-8859-1?Q?133YDttZ0GF5fBH9D57zImeLSZKJuSTADkuLcXQZOcijAReCaY1bkr7HFL?=
- =?iso-8859-1?Q?pJMtjWuxEe5w+6JDt234TeBs9lLf03myZ4+tQXYPS7cpZaCU8MLwk1LNdL?=
- =?iso-8859-1?Q?ErbNqBYg1tPUBnmkOwfbo5GbtOCAH4t5wFzct9R4P761p4fjRzrZF9n0gr?=
- =?iso-8859-1?Q?J0gofedk2AVPYvSEaIo0CfON557p+no9PNvFg99iQBxDFMzrdXUpqrb4a7?=
- =?iso-8859-1?Q?Cgb0NMbtakTa7g+q6VLgaxI9j/zLdo4IdUTJSCs5CUcojmJpDqa9N9Z8+Z?=
- =?iso-8859-1?Q?3sLmzqFqEHuSiEHy3XV2ElA/+AI7t5SpvclzYAS9T/eTuf2bfOPPSlFYph?=
- =?iso-8859-1?Q?ptenrVGYxKGvQuzdt77OTwtaWYs8zal0IsJB8oX9uu5RsDbSgKbcit+B+5?=
- =?iso-8859-1?Q?uDJBkFeF4lEGqU45755b61p5qCUkz5qhsR+8Fsi12Q5VjWnSvI0ZDgtIDs?=
- =?iso-8859-1?Q?mcVLYqYcsxp191RAo9LoUTqz18Q26oAwMZMbn4+grTFB1Y4jLR36O3UzCQ?=
- =?iso-8859-1?Q?dDwKCsjCq/bFxEDzHUoWIxqhxUbkOZRU9pCFTScd8JSqKpcf5QmSUz1s/u?=
- =?iso-8859-1?Q?KhDJdxT1HqRLFNiOS8kOR7FgZAp67fDZNvQP/5y0n7zOAXazEZQUvhzs5E?=
- =?iso-8859-1?Q?++f4nB15/DzxLJ0k214uhG7e2Rqms5ELvhgJX5+FzuJRu85/wu+b4yaFns?=
- =?iso-8859-1?Q?bkNJj2ItB4ip+7vuzz27LOFZ9lQJUM9Xz7LLgTtluPc95PjZdK1s?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012227E
+	for <regressions@lists.linux.dev>; Wed,  1 Jun 2022 16:55:42 +0000 (UTC)
+X-UUID: 170dd9d948264c66b172e68656e21f4b-20220602
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.5,REQID:6fa3c549-2e88-441f-bdf7-7aeed1eadcdb,OB:0,LO
+	B:0,IP:0,URL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-META: VersionHash:2a19b09,CLOUDID:82baf014-b515-4766-a72d-4514488fe823,C
+	OID:IGNORED,Recheck:0,SF:nil,TC:nil,Content:0,EDM:-3,IP:nil,URL:1,File:nil
+	,QS:0,BEC:nil
+X-UUID: 170dd9d948264c66b172e68656e21f4b-20220602
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
+	(envelope-from <deren.wu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 713503531; Thu, 02 Jun 2022 00:55:39 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.792.3;
+ Thu, 2 Jun 2022 00:55:38 +0800
+Received: from mtksdccf07 (172.21.84.99) by mtkmbs11n1.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.2.792.3 via Frontend
+ Transport; Thu, 2 Jun 2022 00:55:38 +0800
+Message-ID: <da79fa2a94c435a308ea763efc557fc352d0245c.camel@mediatek.com>
+Subject: Re: [PATCH] Revert "mt76: mt7921: enable aspm by default"
+From: Deren Wu <deren.wu@mediatek.com>
+To: Kalle Valo <kvalo@kernel.org>, Philippe Schenker <dev@pschenker.ch>
+CC: <linux-wireless@vger.kernel.org>, Felix Fietkau <nbd@nbd.name>,
+	<linux@leemhuis.info>, "David S. Miller" <davem@davemloft.net>, "Jakub
+ Kicinski" <kuba@kernel.org>, Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>, Paolo Abeni <pabeni@redhat.com>,
+	Ryder Lee <ryder.lee@mediatek.com>, "Sean Wang" <sean.wang@mediatek.com>,
+	Shayne Chen <shayne.chen@mediatek.com>, "YN Chen" <YN.Chen@mediatek.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-mediatek@lists.infradead.org>, <netdev@vger.kernel.org>,
+	<regressions@lists.linux.dev>
+Date: Thu, 2 Jun 2022 00:55:38 +0800
+In-Reply-To: <87mtewoj4e.fsf@kernel.org>
+References: <20220412090415.17541-1-dev@pschenker.ch>
+	 <87y20aod5d.fsf@kernel.org>
+	 <668f1310cc78b17c24ce7be10f5f907d5578e280.camel@mediatek.com>
+	 <e93aef5c9f8a97efe23cfb5892f78f919ce328e7.camel@pschenker.ch>
+	 <87mtewoj4e.fsf@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: novatechautomation.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY1PR07MB2700.namprd07.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 238a2e74-3984-43ec-abc6-08da43e7579e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2022 15:56:51.2244
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eb0f6598-d3e5-4ff3-a8b8-fe893d304059
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AafhQAMfjoRLcXNSgiNbbPDG9WP+mYaVPJELyz+KKPiTxWYJTWIuYLapi3HmHUzKQmEubRr2rKQ7TXfUOBTiSyo/lG5yG1oIKCZPrlcM6S5e4ZEilDIosxc608dIEG1ZsmuCQ9bS9+GDGD3Du8GHxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR07MB3893
+Content-Transfer-Encoding: 7bit
+X-MTK: N
 
-Summary: OMAP patch causes SPI bus transaction failure on TI CPU=0A=
-Commit: c859e0d479b3b4f6132fc12637c51e01492f31f6=0A=
-Kernel version: 5.10.87=0A=
-=0A=
-=0A=
-The detailed description:=0A=
-=0A=
-=0A=
-I know this is a old commit at this point, but we have observed a regressio=
-n caused by this commit. It causes improper toggle during a SPI transaction=
- with a microcontroller. The CPU in use is Texas Instruments AM3352BZCZA80.=
- The microcontroller in use is a PIC based micro. I have logic capture imag=
-es available to show the signal difference that is causing confusion on the=
- SPI bus.=0A=
-=0A=
-=0A=
-..............................................=0A=
-=0A=
-Eric Schikschneit=0A=
-=0A=
-Embedded Linux Engineer=0A=
-=0A=
-NovaTech, LLC=0A=
-13555 W. 107th Street=0A=
-Lenexa, KS 66215=0A=
-(913) 451-1880 (main)=0A=
-(913) 742-XXXX (direct)=0A=
-=0A=
-Eric.Schikschneit@novatechweb.com=
+On Wed, 2022-06-01 at 11:58 +0300, Kalle Valo wrote:
+> Philippe Schenker <dev@pschenker.ch> writes:
+> 
+> > On Tue, 2022-04-12 at 19:06 +0800, Deren Wu wrote:
+> > > On Tue, 2022-04-12 at 12:37 +0300, Kalle Valo wrote:
+> > > > Philippe Schenker <dev@pschenker.ch> writes:
+> > > > 
+> > > > > This reverts commit bf3747ae2e25dda6a9e6c464a717c66118c588c8.
+> > > > > 
+> > > > > This commit introduces a regression on some systems where the
+> > > > > kernel is
+> > > > > crashing in different locations after a reboot was issued.
+> > > > > 
+> > > > > This issue was bisected on a Thinkpad P14s Gen2 (AMD) with
+> > > > > latest
+> > > > > firmware.
+> > > > > 
+> > > > > Link: 
+> > > > > 
+https://urldefense.com/v3/__https://lore.kernel.org/linux-wireless/5077a953487275837e81bdf1808ded00b9676f9f.camel@pschenker.ch/__;!!CTRNKA9wMg0ARbw!09tjyaQlMci3fVI3yiNiDJKUW_qwNA_CbVhoAraeIX96B99Q14J4iDycWA9cq36Y$
+> > > > >  
+> > > > > Signed-off-by: Philippe Schenker <dev@pschenker.ch>
+> > > > 
+> > > > Can I take this to wireless tree? Felix, ack?
+> > > > 
+> > > > I'll also add:
+> > > > 
+> > > > Fixes: bf3747ae2e25 ("mt76: mt7921: enable aspm by default")
+> > > > 
+> > > 
+> > > Hi Kalle,
+> > > 
+> > > We have a patch for a similar problem. Can you wait for the
+> > > verification by Philippe?
+> > > Commit 602cc0c9618a81 ("mt76: mt7921e: fix possible probe failure
+> > > after
+> > > reboot")
+> > > Link: 
+> > > 
+https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/net/wireless/mediatek/mt76?id=602cc0c9618a819ab00ea3c9400742a0ca318380__;!!CTRNKA9wMg0ARbw!zCYyDcufJ-OLqQV6leCegA5SkNOOVjAIo-jzTHTk6HUWT9Gjt-bvSz8lr81Zv95u$
+> > >  
+> > > 
+> > > I can reproduce the problem in my v5.16-rc5 desktop. And the
+> > > issue can
+> > > be fixed when the patch applied.
+> > > 
+> > > 
+> > > Hi Philippe,
+> > > 
+> > > Can you please help to check the patch in your platform?
+> > 
+> > Hi Kalle and Deren,
+> > 
+> > I just noticed on my system and mainline v5.18 reboots do now work
+> > however Bluetooth is no longer accessible after a reboot.
+> > 
+> > Reverting commit bf3747ae2e25dda6a9e6c464a717c66118c588c8 on top of
+> > v5.18 solves this problem for me.
+> > 
+> > @Deren are you aware of this bug?
+> > @Kalle Is there a bugtracker somewhere I can submit this?
+> 
+> For regressions the best is to submit it to the regressions list,
+> CCed
+> it now.
+> 
+Hi Philippe,
+
+Tried your test with v5.18.0 on my desktop and both wifi/bt are still
+avaible after reboot. The only problem is I need to insert btusb module
+by command "modprobe btusb" to make BT workable.
+
+I will check the issue on different platforms. If there are any
+finding, I will let you know.
+
+Regards,
+Deren
+
