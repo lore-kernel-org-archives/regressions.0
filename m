@@ -1,157 +1,54 @@
-Received: from smtp-190d.mail.infomaniak.ch (smtp-190d.mail.infomaniak.ch [185.125.25.13])
+Received: from mailout.rz.uni-frankfurt.de (mailout.rz.uni-frankfurt.de [141.2.22.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E146B7E
-	for <regressions@lists.linux.dev>; Thu,  2 Jun 2022 11:47:08 +0000 (UTC)
-Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
-	by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4LDM2S0hckzMqVZ1;
-	Thu,  2 Jun 2022 12:00:16 +0200 (CEST)
-Received: from [10.0.0.141] (unknown [31.10.206.125])
-	by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4LDM2R1hVrzljk0H;
-	Thu,  2 Jun 2022 12:00:15 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=pschenker.ch;
-	s=20220412; t=1654164016;
-	bh=6clftNNkW5b/aLVfOs7w8oDA4IjZgT0jJnfYalkyXtc=;
-	h=Subject:From:Reply-To:To:Cc:Date:In-Reply-To:References:From;
-	b=MpfhxnUiBgc+nT3XyFNggIH4DEYXpuPFvnua6h7NJWilzYTT4MomXlytP5wDq6uDj
-	 lP3sLe/hjP4cDifzRVZiBGxdxaZ7YA99O+wL3SUKgDsOPJqSKmqd1p6tvJs6nj47Az
-	 BGEAbuMmyRoRhgzAiPemv/lhoB+iIXufekVl5a7M=
-Message-ID: <75b5f888b2e23f52aabce54ff38ddc70d1ad6a34.camel@pschenker.ch>
-Subject: Re: [PATCH] Revert "mt76: mt7921: enable aspm by default"
-From: Philippe Schenker <dev@pschenker.ch>
-Reply-To: dev@pschenker.ch
-To: Deren Wu <deren.wu@mediatek.com>, Kalle Valo <kvalo@kernel.org>
-Cc: linux-wireless@vger.kernel.org, Felix Fietkau <nbd@nbd.name>, 
- linux@leemhuis.info, "David S. Miller" <davem@davemloft.net>, Jakub
- Kicinski <kuba@kernel.org>, Lorenzo Bianconi
- <lorenzo.bianconi83@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>,
- Paolo Abeni <pabeni@redhat.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean
- Wang <sean.wang@mediatek.com>, Shayne Chen <shayne.chen@mediatek.com>, YN
- Chen <YN.Chen@mediatek.com>,  linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org,  linux-mediatek@lists.infradead.org,
- netdev@vger.kernel.org,  regressions@lists.linux.dev
-Date: Thu, 02 Jun 2022 12:00:14 +0200
-In-Reply-To: <da79fa2a94c435a308ea763efc557fc352d0245c.camel@mediatek.com>
-References: <20220412090415.17541-1-dev@pschenker.ch>
-	 <87y20aod5d.fsf@kernel.org>
-	 <668f1310cc78b17c24ce7be10f5f907d5578e280.camel@mediatek.com>
-	 <e93aef5c9f8a97efe23cfb5892f78f919ce328e7.camel@pschenker.ch>
-	 <87mtewoj4e.fsf@kernel.org>
-	 <da79fa2a94c435a308ea763efc557fc352d0245c.camel@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CAE6A50
+	for <regressions@lists.linux.dev>; Thu,  2 Jun 2022 16:42:31 +0000 (UTC)
+Received: from smtpauth2.cluster.uni-frankfurt.de ([10.1.1.238])
+	by mailout.rz.uni-frankfurt.de with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <sattler@med.uni-frankfurt.de>)
+	id 1nwnu1-0004gT-Th; Thu, 02 Jun 2022 18:42:29 +0200
+Received: from p57bcf53e.dip0.t-ipconnect.de ([87.188.245.62] helo=[192.168.2.17])
+	by smtpauth2.cluster.uni-frankfurt.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.94.2)
+	(envelope-from <sattler@med.uni-frankfurt.de>)
+	id 1nwnu1-0007WJ-S1; Thu, 02 Jun 2022 18:42:29 +0200
+Message-ID: <c3b370a8-193e-329b-c73a-1371bd62edf3@med.uni-frankfurt.de>
+Date: Thu, 2 Jun 2022 18:42:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: boot loop since 5.17.6
+Content-Language: en-US
+From: Thomas Sattler <sattler@med.uni-frankfurt.de>
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+References: <11495172-41dd-5c44-3ef6-8d3ff3ebd1b2@med.uni-frankfurt.de>
+In-Reply-To: <11495172-41dd-5c44-3ef6-8d3ff3ebd1b2@med.uni-frankfurt.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 2022-06-02 at 00:55 +0800, Deren Wu wrote:
-> On Wed, 2022-06-01 at 11:58 +0300, Kalle Valo wrote:
-> > Philippe Schenker <dev@pschenker.ch> writes:
-> >=20
-> > > On Tue, 2022-04-12 at 19:06 +0800, Deren Wu wrote:
-> > > > On Tue, 2022-04-12 at 12:37 +0300, Kalle Valo wrote:
-> > > > > Philippe Schenker <dev@pschenker.ch> writes:
-> > > > >=20
-> > > > > > This reverts commit
-> > > > > > bf3747ae2e25dda6a9e6c464a717c66118c588c8.
-> > > > > >=20
-> > > > > > This commit introduces a regression on some systems where
-> > > > > > the
-> > > > > > kernel is
-> > > > > > crashing in different locations after a reboot was issued.
-> > > > > >=20
-> > > > > > This issue was bisected on a Thinkpad P14s Gen2 (AMD) with
-> > > > > > latest
-> > > > > > firmware.
-> > > > > >=20
-> > > > > > Link:=20
-> > > > > >=20
-> https://urldefense.com/v3/__https://lore.kernel.org/linux-wireless/5077a9=
-53487275837e81bdf1808ded00b9676f9f.camel@pschenker.ch/__;!!CTRNKA9wMg0ARbw!=
-09tjyaQlMci3fVI3yiNiDJKUW_qwNA_CbVhoAraeIX96B99Q14J4iDycWA9cq36Y$
-> > > > > > =C2=A0
-> > > > > > Signed-off-by: Philippe Schenker <dev@pschenker.ch>
-> > > > >=20
-> > > > > Can I take this to wireless tree? Felix, ack?
-> > > > >=20
-> > > > > I'll also add:
-> > > > >=20
-> > > > > Fixes: bf3747ae2e25 ("mt76: mt7921: enable aspm by default")
-> > > > >=20
-> > > >=20
-> > > > Hi Kalle,
-> > > >=20
-> > > > We have a patch for a similar problem. Can you wait for the
-> > > > verification by Philippe?
-> > > > Commit 602cc0c9618a81 ("mt76: mt7921e: fix possible probe
-> > > > failure
-> > > > after
-> > > > reboot")
-> > > > Link:=20
-> > > >=20
-> https://urldefense.com/v3/__https://git.kernel.org/pub/scm/linux/kernel/g=
-it/torvalds/linux.git/commit/drivers/net/wireless/mediatek/mt76?id=3D602cc0=
-c9618a819ab00ea3c9400742a0ca318380__;!!CTRNKA9wMg0ARbw!zCYyDcufJ-OLqQV6leCe=
-gA5SkNOOVjAIo-jzTHTk6HUWT9Gjt-bvSz8lr81Zv95u$
-> > > > =C2=A0
-> > > >=20
-> > > > I can reproduce the problem in my v5.16-rc5 desktop. And the
-> > > > issue can
-> > > > be fixed when the patch applied.
-> > > >=20
-> > > >=20
-> > > > Hi Philippe,
-> > > >=20
-> > > > Can you please help to check the patch in your platform?
-> > >=20
-> > > Hi Kalle and Deren,
-> > >=20
-> > > I just noticed on my system and mainline v5.18 reboots do now work
-> > > however Bluetooth is no longer accessible after a reboot.
-> > >=20
-> > > Reverting commit bf3747ae2e25dda6a9e6c464a717c66118c588c8 on top
-> > > of
-> > > v5.18 solves this problem for me.
-> > >=20
-> > > @Deren are you aware of this bug?
-> > > @Kalle Is there a bugtracker somewhere I can submit this?
-> >=20
-> > For regressions the best is to submit it to the regressions list,
-> > CCed
-> > it now.
-> >=20
-> Hi Philippe,
->=20
-> Tried your test with v5.18.0 on my desktop and both wifi/bt are still
-> avaible after reboot. The only problem is I need to insert btusb
-> module
-> by command "modprobe btusb" to make BT workable.
->=20
-> I will check the issue on different platforms. If there are any
-> finding, I will let you know.
+some more information:
 
-Thanks for your tests, I did test again on my platform. This time with a
-hand-built v5.18 straight from torvalds/linux. And I can confirm my
-findings I even loaded btusb (removed and reloaded) nothing helped. I
-always get the message
+$ cat /proc/version
+Linux version 5.17.5 (root@dragon) (x86_64-pc-linux-gnu-gcc (Gentoo 
+11.2.1_p20220115 p4) 11.2.1 20220115, GNU ld (Gentoo 2.37_p1 p2) 2.37) 
+#130 SMP PREEMPT Thu Apr 28 10:50:24 CEST 2022
 
-No default controller available
+$ uname -mi
+x86_64 GenuineIntel
 
-In this case I guess it could be rather a BIOS issue. In this testing
-round also some USB ports did not work.
 
-If it helps any my system is a Lenovo P14s Gen2. I believe then the
-driver is good.
+I tried to compile 5.17.6 without the three mentioned diffs which
+modify the following files:
 
-Regards,
-Philippe
+   tools/objtool/check.c   and
+   tools/objtool/elf.c      and
+   tools/objtool/include/objtool/elf.h
 
->=20
-> Regards,
-> Deren
->=20
-
+and was then able to successfully boot 5.17.6.
