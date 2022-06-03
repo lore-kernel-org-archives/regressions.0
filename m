@@ -1,79 +1,57 @@
-Received: from if35.nano.lv (m2-if35.nano.lv [85.31.97.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4395A7FC
-	for <regressions@lists.linux.dev>; Fri,  3 Jun 2022 12:48:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=3a-alliance.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Date:Message-ID:Subject:Cc:From:To:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=BvXX60Q1GjUuVRCBAuhAlIuikIw7yhdZQWVAmf+wQXY=; b=pPbaM7KQbwM6aaQNmC0IQaJiLH
-	zkS59zFNfwUYEU6Q6LuUZT3KExfgiAyGfWeM3sCYkhINQ2ALru3vDkznufVAA/b3DNsa4IvQbAU2r
-	qETytlM4TyxcTOrZP7abaplU5z4UDPl1YkMf1NyNvk9Oi7E9S7OUMkaIp13KG2tKkQvE=;
-Received: from [46.109.159.121] (port=57530 helo=[192.168.1.241])
-	by if35.nano.lv with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.95)
-	(envelope-from <am@3a-alliance.com>)
-	id 1nx6Kt-006BUO-AX;
-	Fri, 03 Jun 2022 15:23:27 +0300
-To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- david.lebrun@uclouvain.be
-From: Anton Makarov <am@3a-alliance.com>
-Cc: regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: [REGRESSION] net: SRv6 End.DT6 function is broken in VRF mode
-Message-ID: <7e315ff1-e172-16c3-44b5-0c83c4c92779@3a-alliance.com>
-Date: Fri, 3 Jun 2022 15:23:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37537ED2
+	for <regressions@lists.linux.dev>; Fri,  3 Jun 2022 12:57:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7798EC385A9;
+	Fri,  3 Jun 2022 12:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1654261028;
+	bh=BgxSOabF8NS37zOh6KbugrE/MEMF9mMNUdEJ5iL5IBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MiP6OTFBDA92tEzIiGA3uLEDPs3VtM1bNSM+s+iigi4cMZxb03rZEEvXGa5O/TA8q
+	 dcAC3vhH6Kl+jTSeqZlQQfhMrOpycfqwp4p7sxpKyGyof2AYpf7vFY+LYkQWJZrArO
+	 K7f+YffaBKOijQSIaEnjAnyTtqMwuWF0tsv5mC8g=
+Date: Fri, 3 Jun 2022 14:57:05 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Thomas Sattler <sattler@med.uni-frankfurt.de>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: boot loop since 5.17.6
+Message-ID: <YpoFId6um9GaXKha@kroah.com>
+References: <11495172-41dd-5c44-3ef6-8d3ff3ebd1b2@med.uni-frankfurt.de>
+ <YpkY0RLWki4PJ49y@kroah.com>
+ <88b0eb42-41eb-af0e-285c-05f86a5c5fea@med.uni-frankfurt.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - if35.nano.lv
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - 3a-alliance.com
-X-Get-Message-Sender-Via: if35.nano.lv: authenticated_id: am@3a-alliance.com
-X-Authenticated-Sender: if35.nano.lv: am@3a-alliance.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <88b0eb42-41eb-af0e-285c-05f86a5c5fea@med.uni-frankfurt.de>
 
-#regzbot introduced: b9132c32e01976686efa26252cc246944a0d2cab
+On Fri, Jun 03, 2022 at 01:29:26AM +0200, Thomas Sattler wrote:
+> Am 02.06.22 um 22:08 schrieb Greg KH:
+> > On Thu, Jun 02, 2022 at 06:14:43PM +0200, Thomas Sattler wrote:
+> > > After applying "patch-5.17.5-6.part198.patch" compilation is
+> > > broken. Still after applying "patch-5.17.5-6.part199.patch".
+> > > After applying "patch-5.17.5-6.part200.patch", compilation
+> > > works again but the resulting kernel now fails to boot.
+> > 
+> > I have no idea what those random patches are, please can you say what
+> > the upstream commit is?
+> 
+> I took what I reverted from patch-5.17.5-6.xz. In your tree it
+> matches what Nathan mentioned (60d2b0b1018a) plus d17f64c29512.
+> 
+> Now, knowing that they were two patchsets, I compiled 5.17.12
+> twice, once without 60d2b0b1018a and once without d17f64c29512.
+> 
+> And it turns out it is 60d2b0b1018a which breaks my system.
 
-Hi All!
+Does 5.18.1 also break for you?
 
-Seems there is a regression of SRv6 End.DT6 function in VRF mode. In the 
-following scenario packet is decapsulated successfully on vrf10 
-interface but not forwarded to vrf10's slave interface:
+thanks,
 
-ip netns exec r4 ip -6 nexthop add id 1004 encap seg6local action 
-End.DT6 vrftable 10 dev vrf10
-
-ip netns exec r4 ip -6 route add fcff:0:4:200:: nhid 1004
-
-
-In End.DT6 legacy mode everything works good:
-
-ip netns exec r4 ip -6 nexthop add id 1004 encap seg6local action 
-End.DT6 table 10 dev vrf10
-
-ip netns exec r4 ip -6 route add fcff:0:4:200:: nhid 1004
-
-
-The issue impacts even stable v5.18.1. Please help to fix it.
-
-
-Thanks!
-
-Anton
-
-
+greg k-h
