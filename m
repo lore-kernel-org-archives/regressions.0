@@ -1,92 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F32AD23BD
-	for <regressions@lists.linux.dev>; Mon,  6 Jun 2022 09:42:08 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 955B52B;
-	Mon,  6 Jun 2022 02:42:02 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.39.103])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D1EAA3F66F;
-	Mon,  6 Jun 2022 02:41:59 -0700 (PDT)
-Date: Mon, 6 Jun 2022 10:41:50 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	John Donnelly <john.p.donnelly@oracle.com>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Bjorn Andersson <bjorn.andersson@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	David Hildenbrand <david@redhat.com>,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Zhen Lei <thunder.leizhen@huawei.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>
-Subject: Re: gcc-12: build errors: arch/arm64/kernel/setup.c:225:56: warning:
- array subscript -1 is outside array bounds of 'char[]' [-Warray-bounds]
-Message-ID: <Yp3L0JgLpk+s54Lw@FVFF77S0Q05N>
-References: <CA+G9fYts-KH-R5EkBpz2u6H_Cx6YTXus1JKJS6yBxGhb0O2qQQ@mail.gmail.com>
- <CAK8P3a3QKWxqGore3+_DJnWo7bJgvDhkZjtkyg5EUg4_D=mE2w@mail.gmail.com>
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480A723CB
+	for <regressions@lists.linux.dev>; Mon,  6 Jun 2022 11:46:12 +0000 (UTC)
+Received: by mail-yb1-f181.google.com with SMTP id a64so25159502ybg.11
+        for <regressions@lists.linux.dev>; Mon, 06 Jun 2022 04:46:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=pq4w54S0xjOQhYVPvRcjJWBaSHI24L9PwLtQAAo4Ntg=;
+        b=gHaQNvBBVKcmZcocDQXhBOlog/h3SF6dgiasF2SXoHuLOtRY6PTNX8CJCUJTMQucRo
+         nkXSl1LAtAwDnvBOXLRmZZofPjkPhpJ9XnHGEPmfmhy5b9bYXyFOn5XCOsj6krAKOg8B
+         7f8Vooud4xE7xg0EqY+CdiZCmnaK7y85Azd2rO/cIH66U2Ut411KoKhqDDhAkKL9pPxm
+         DQNu84vWMMACJXyd5ltToyc62/56P8w3pZ4ftBmhG48+rAL3CZKpq7NZUnyDq+lpD9Dd
+         DqGxkqV5e2gPitP9FdardR9Ei70BfqIUstRyZvmQ/6SXx9G+LK4YI9qh42kJDwBR2zM1
+         5Ypg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=pq4w54S0xjOQhYVPvRcjJWBaSHI24L9PwLtQAAo4Ntg=;
+        b=MInT+OcVutbrrXheqd28wVXCctxySgWfZSVGE4GD9IhfT9k1vaPm0J/h4mxMKVhw6E
+         vZLAR1IU1/rNvAQjP4Ar9oMHk1vo4zFsFf0euVZDWAgk4tW8Pq/iwBwnKUJXrr35sTDO
+         n0XCfYLaYcv4jRDYOj/jFzTDPg7iyYcRWBWmb0RoGa3OEh2xJLEjVSuRPfLkXlK6pSZQ
+         Z46v3Yxa00+17OM/+p88U3AEKZkaOoDWYi/NMorgpo0QNmhseemhTMNAajefGrPH8jYe
+         qlf7dCUHmU+oqQ0zIC23H3nqWRkcm760dMQENhRolcWIfKWzoEaweWTLiZGD8a1D4Jgy
+         Ivpw==
+X-Gm-Message-State: AOAM533UTzVaFEIYQIoRPrDgtZTlMai77WXRuz06nlB52cAbeYEsjrmr
+	VSLX+ldQAC5d56Zj5HEHmuHPSuxezfKfAQgcg9acMg==
+X-Google-Smtp-Source: ABdhPJzbneoLeu30KiEdfnDmFRZ6ePkYkJLIfh3Fz42eU0SJGKqIICy/fbowKdH3ZfS8w2qGdglt9DN/yIu46atMQ00=
+X-Received: by 2002:a25:4705:0:b0:65d:43f8:5652 with SMTP id
+ u5-20020a254705000000b0065d43f85652mr23688028yba.389.1654515971012; Mon, 06
+ Jun 2022 04:46:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3QKWxqGore3+_DJnWo7bJgvDhkZjtkyg5EUg4_D=mE2w@mail.gmail.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 6 Jun 2022 17:16:00 +0530
+Message-ID: <CA+G9fYv7fESqpGoeKmHoJsst6wfRNMi2wQLGm+PsjbLDuDjdMQ@mail.gmail.com>
+Subject: [next] arm64: boot failed - next-20220606
+To: Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	regressions@lists.linux.dev, lkft-triage@lists.linaro.org, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mm <linux-mm@kvack.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Raghuram Thammiraju <raghuram.thammiraju@arm.com>, 
+	Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 03, 2022 at 09:40:07AM +0200, Arnd Bergmann wrote:
-> On Fri, Jun 3, 2022 at 4:03 AM Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >     inlined from 'setup_arch' at arch/arm64/kernel/setup.c:350:2:
-> > arch/arm64/kernel/setup.c:225:56: warning: array subscript -1 is
-> > outside array bounds of 'char[]' [-Warray-bounds]
-> >   225 |         kernel_code.end     = __pa_symbol(__init_begin - 1);
-> >
-> 
-> Is this the only warning of this type that you get for arm64?
+Linux next-20220606 arm64 boot failed. The kernel boot log is empty.
+I am bisecting this problem.
 
-There are a handful of those subscript warnings. Looking at v5.19-rc1
-defconfig, using the kernel.org GCC 12.1.0 cross toolchain:
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-| [mark@lakrids:~/src/linux]% usekorg 12.1.0 make ARCH=arm64 CROSS_COMPILE=aarch64-linux- -j50 2>&1 | grep -A1 subscript
-| arch/arm64/kernel/setup.c:225:56: warning: array subscript -1 is outside array bounds of 'char[]' [-Warray-bounds]
-|   225 |         kernel_code.end     = __pa_symbol(__init_begin - 1);
-| --
-| arch/arm64/kernel/setup.c:227:48: warning: array subscript -1 is outside array bounds of 'char[]' [-Warray-bounds]
-|   227 |         kernel_data.end     = __pa_symbol(_end - 1);
-| --
-| arch/arm64/kernel/hibernate.c:94:65: warning: array subscript -1 is outside array bounds of 'const void[]' [-Warray-bounds]
-|    94 |         unsigned long nosave_end_pfn = sym_to_pfn(&__nosave_end - 1);
+The initial investigation show that,
 
-The last of those can't have the `- 1` pulled out, but we could stuff a
-RELOC_HIDE() in there, as __pa_symbol() has internally.
+GOOD: next-20220603
+BAD:  next-20220606
 
-Ideally we'd rework the section markers to not have this problem, either
-rethinking the way we mark them as flexible arrays, or giving them accessors,
-e.g.
+Boot log:
+Starting kernel ...
 
-	#define va_init_begin()	RELOC_HIDE((unsigned long)__init_begin)
+The recent changes show,
 
-... which'd be a pain, but at least it'd solve this generally.
+# git log --oneline  next-20220603..next-20220606  -- arch/arm64/
+202693ac55e0 (origin/akpm-base, origin/akpm) Merge branch
+'mm-everything' of
+git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+a83bdd6800e3 Merge branch 'rust-next' of
+https://github.com/Rust-for-Linux/linux.git
+9daba6cb8145 Merge branch 'for-next' of git://github.com/Xilinx/linux-xlnx.git
+582d5ed4caf7 Merge branch 'master' of
+git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
+1ec6574a3c0a Merge tag 'kthread-cleanups-for-v5.19' of
+git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace
+21873bd66b6e Merge tag 'arm64-fixes' of
+git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
+a8fc46f5a417 mm: avoid unnecessary page fault retires on shared memory types
+3c59c47d1a6d arm64: Change elfcore for_each_mte_vma() to use VMA iterator
+1c826fa748d5 arm64: remove mmap linked list from vdso
+54c2cc79194c Merge tag 'usb-5.19-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
+09a018176ba2 Merge tag 'arm-late-5.19' of
+git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+96479c09803b Merge tag 'arm-multiplatform-5.19-2' of
+git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
 
-> I think the easy fix would be to reword this line to
-> 
->        kernel_code.end     = __pa_symbol(__init_begin) - 1;
-> 
 
-I agree that'd work for the __pa_symbol() cases.
+Test job link,
+https://lkft.validation.linaro.org/scheduler/job/5136989#L560
 
-For consistency it might be worth using RELOC_HIDE(), e.g.
 
-	kernel_code.end     = __pa_symbol(RELOC_HIDE(__init_begin)) - 1);
+metadata:
+  git_ref: master
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: 40b58e42584bf5bd9230481dc8946f714fb387de
+  git_describe: next-20220606
+  kernel_version: 5.19.0-rc1
+  kernel-config: https://builds.tuxbuild.com/2ABl8X9kHAAU5MlL3E3xExHFrNy/config
+  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/556237413
+  artifact-location: https://builds.tuxbuild.com/2ABl8X9kHAAU5MlL3E3xExHFrNy
 
-... which IIUC should do the trick.
 
-Thanks,
-Mark.
+--
+Linaro LKFT
+https://lkft.linaro.org
