@@ -1,129 +1,128 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10C31389
-	for <regressions@lists.linux.dev>; Sun,  5 Jun 2022 11:01:23 +0000 (UTC)
-Received: by mail-vs1-f41.google.com with SMTP id q14so11353245vsr.12
-        for <regressions@lists.linux.dev>; Sun, 05 Jun 2022 04:01:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=T57DzE1a+rfHF5vwDlZCSjEzhalOom7Y2d/yaDhAOXg=;
-        b=nhmjt3/5UkoVNe0yRgNoH4HALatrcvrtokQSksaQy824x8qi6oMjW2lSZ3i3pT1YIM
-         Wu5+KXgoygidyhF22vroer152RlGd6oIBpr74VCe1jX2vyc3a8KpTiOqGqamXPvtKcos
-         Lk32zGXioR9CBe55GR5jGgijHa+pVfhWmc6mP9ML6ijCNkeYJd7hLOJMdd95y5lyRsR1
-         UUQ2fPGTEInpj/i+4hh+sRztEJECqR9vJA/JgTU+6GsYZ3zH2Fyz1TQyAnc41idvEkR2
-         Hak90lFb/cizHbsgleFXuwRm/8u6LiDJ7lJ4NuVKDBmtB4KJ9yWlPELSt0wluqhyCX5g
-         T0hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=T57DzE1a+rfHF5vwDlZCSjEzhalOom7Y2d/yaDhAOXg=;
-        b=X4w346t6OP7Dgrls8jPzueFTLwz5hf+b9OyCN2Mgo97DeGFpenVi0X/XxIy3sq5AUR
-         BRtrzAIsyko0vC4Mx5aNc45iA1qe8lbMzoOlLpzxBhGL8yCDi0C4dPKhP71x2khrdspG
-         vZdJ5o7WtPRYVJxErdPq6Zv3Au2qra/gEE6AWMj/9sb9CeWAHF6H0upNIMdd2GCj9P7e
-         oBnh9StB2fjzrgZfaRjtoGLk6x2ZoSO4fDe8+eLEXrtpHG1ho8B+cyaBCKjICK7iwBAi
-         IOyaAmlKWj+6v9O7WRRtxo1b/lPreN5YqUZHfzQcZ/HvomUGyF+FzpvJyzS9Pqzbm2nZ
-         lFuQ==
-X-Gm-Message-State: AOAM532BNkacw/xBjTnbqfZqAt7FObKCrQTLJKLlDDB6HdzsWYk6Krtg
-	q1Boe/Jq4U8AHTzm1M8aNN4So64QL/EXH72yzNs=
-X-Google-Smtp-Source: ABdhPJyVyIS3nOKCqX5thnZgmcpLDJkLRQ7w20lDFFUYm+9mr8W1CFAWvPgAK859/Is9UCCxD08O1V/jkU6BQCirZg4=
-X-Received: by 2002:a67:df98:0:b0:320:8446:7c6d with SMTP id
- x24-20020a67df98000000b0032084467c6dmr35264162vsk.16.1654426882308; Sun, 05
- Jun 2022 04:01:22 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C591D46B6
+	for <regressions@lists.linux.dev>; Mon,  6 Jun 2022 09:01:35 +0000 (UTC)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id 7475D5C00A1;
+	Mon,  6 Jun 2022 05:01:34 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Mon, 06 Jun 2022 05:01:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm1; t=1654506094; x=1654592494; bh=KmUEnrHf+o
+	GOuY+Xvakm6L4Zo3/Ea+eM9/DA5uFudkY=; b=rCWtGLL6Iu/ZnCom744WZU1x7k
+	WuHyF5YZCXN90nVnHwJyQ3jvrjT+Sw1STF5/A6Uec7WZ+Cnaa/IfXBj3Ga1njgM2
+	O2ZQcG91cbGMIGBdQNAZVVJmXPdm3yq+qw7yuny2M7FeDtCpm1ooU0ffHkaZYU6z
+	MKJSy2eBLuRivoMfyoM3Q/WN9lGvYwqgbhR7bgCeqCpMj9HqUludzlvPhP6vAwdF
+	XSg1hfnf+SZ+FX5Rp0+94m83J+vsX9pwy515dQbcwhxOewFelr6WgscA2eq0riXB
+	vZ0/p9rAdMqrJPdG/+XsAt43tlKjn7J9yFSursDpkDfj+dAMdvtHbdz0my4w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1654506094; x=1654592494; bh=KmUEnrHf+oGOuY+Xvakm6L4Zo3/E
+	a+eM9/DA5uFudkY=; b=oULOGo5cddjw63j71RFECI1sLvIK3lCDex4rzqZ6dbKt
+	GkADHMKVqWI3UufCLVDWKGLAiezEbpkRcYadcBzCPkRxXMldOlmd8vSLBuzSwFsi
+	XX0e0MkvGPxGZcsm7uQsnSnuCTaMF5nmVSzGkh/XExaLjb3xSuTZik0kbioHkOC1
+	JxbLTpr68KUKay8+y0K7upNY+2Y8PcQhQuexP6D1Xzu7iAWXRgLZbaoNy4u9+Hrc
+	gU5kJHi2rkDeg90jF3X0hE48HE9ArEBlLF+5Z1cZJIvTEQ9fotzII38UdHM8T/1o
+	fMaxXTCw33fzJEZrHzWJ93DzmMspVOI+8Fi/vWVbUw==
+X-ME-Sender: <xms:a8KdYlKBWa3UJ4NS08ntsE3zZmL0Y2TzSloHSXkgEk4WcmZjy3Dlhw>
+    <xme:a8KdYhLY2dQk0cAmHjK78z-IYSO6emPPdnle4LYztnqYeH_X32SyXmLS-UdrESus0
+    qFEDcb8qEhBmeR-z9E>
+X-ME-Received: <xmr:a8KdYtuD2Rx6OEygLXyIlRFFAq3kZFVvmrm1ujB-nCU0ZGHD7znX3W6BUTdEFRiTd82P70MKZ-OAIaXa8k2-XLMnsOVTGS02omNiwsg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedruddtvddgtdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpeetfefffefgkedtfefgledugfdtjeefjedvtddtkeetieffjedvgfehheff
+    hfevudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:a8KdYmZS23Gs5UU-hzrjJpc6lNNQcqsh7PwI9iiT2mjeblQFDDYfDg>
+    <xmx:a8KdYsZ9tSxi9OJooqSyoOtek41gJpOBiUSFVSBkc04C8wRj1qpMbw>
+    <xmx:a8KdYqANtT-1pAjs3zvvzWroLtYscdaSzZzY4gLrOhnLmf11qrszQA>
+    <xmx:bsKdYsJkIobMQ7FUDeX37llie5znXiD3s1PHy9oYe-pLI9bwpANZEw>
+Feedback-ID: i8771445c:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 6 Jun 2022 05:01:31 -0400 (EDT)
+Date: Mon, 6 Jun 2022 11:01:29 +0200
+From: Maxime Ripard <maxime@cerno.tech>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	regressions@lists.linux.dev, lkft-triage@lists.linaro.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	John Donnelly <john.p.donnelly@oracle.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Bjorn Andersson <bjorn.andersson@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+	Zhen Lei <thunder.leizhen@huawei.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>
+Subject: Re: gcc-12: build errors: arch/arm64/kernel/setup.c:225:56: warning:
+ array subscript -1 is outside array bounds of 'char[]' [-Warray-bounds]
+Message-ID: <20220606090129.mpidmwwobgkcfc2v@houat>
+References: <CA+G9fYts-KH-R5EkBpz2u6H_Cx6YTXus1JKJS6yBxGhb0O2qQQ@mail.gmail.com>
+ <CAK8P3a3QKWxqGore3+_DJnWo7bJgvDhkZjtkyg5EUg4_D=mE2w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAFrh3J9soC36+BVuwHB=g9z_KB5Og2+p2_W+BBoBOZveErz14w@mail.gmail.com>
- <87k09wz0ec.fsf@cjr.nz> <CAFrh3J9Mrnw0bhJ-S3wYoZfNkKB-QjcLa5=r+vXMNudZ+zATFA@mail.gmail.com>
-In-Reply-To: <CAFrh3J9Mrnw0bhJ-S3wYoZfNkKB-QjcLa5=r+vXMNudZ+zATFA@mail.gmail.com>
-From: Satadru Pramanik <satadru@gmail.com>
-Date: Sun, 5 Jun 2022 07:01:10 -0400
-Message-ID: <CAFrh3J8c5cLhDpbDxOCL0XOx_UAN23_hnhMRy+NLqmRSC46rGQ@mail.gmail.com>
-Subject: Re: Failure to access cifs mount of samba share after resume from
- sleep with 5.17-rc5
-To: Paulo Alcantara <pc@cjr.nz>
-Cc: CIFS <linux-cifs@vger.kernel.org>, Steve French <smfrench@gmail.com>, 
-	Shyam Prasad N <nspmangalore@gmail.com>, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	ronnie sahlberg <ronniesahlberg@gmail.com>, regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="tsirw27bcrup6k37"
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3QKWxqGore3+_DJnWo7bJgvDhkZjtkyg5EUg4_D=mE2w@mail.gmail.com>
 
-I can confirm that the patch fixes the issue on 5.18.1 as well.
 
-Thanks again!
+--tsirw27bcrup6k37
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Satadru
+Hi,
 
-On Sat, Jun 4, 2022 at 10:31 PM Satadru Pramanik <satadru@gmail.com> wrote:
->
-> The patch appears to fix the issue on the problematic bisected
-> pre-5.16 kernel. (I let the machine sleep for 3 hours and the mount
-> still worked after resume.)
->
-> I'm now booted into a 5.18.1 kernel with this patch, and I'll be able
-> to tell tomorrow morning if this also resolves the issue with this
-> newer kernel.
->
-> Thanks for the help in getting this issue resolved!
->
-> Regards,
->
-> Satadru
->
-> On Sat, Jun 4, 2022 at 3:36 PM Paulo Alcantara <pc@cjr.nz> wrote:
+On Fri, Jun 03, 2022 at 09:40:07AM +0200, Arnd Bergmann wrote:
+> On Fri, Jun 3, 2022 at 4:03 AM Naresh Kamboju <naresh.kamboju@linaro.org>=
+ wrote:
+> >     inlined from 'setup_arch' at arch/arm64/kernel/setup.c:350:2:
+> > arch/arm64/kernel/setup.c:225:56: warning: array subscript -1 is
+> > outside array bounds of 'char[]' [-Warray-bounds]
+> >   225 |         kernel_code.end     =3D __pa_symbol(__init_begin - 1);
 > >
-> > Hi Satadru,
-> >
-> > Thanks for providing all requested files off-list.  With that, I ended
-> > up with below changes that should fix your issue.  Please let us if it
-> > works.
-> >
-> > diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
-> > index 12c872800326..325423180fd2 100644
-> > --- a/fs/cifs/cifsfs.c
-> > +++ b/fs/cifs/cifsfs.c
-> > @@ -1086,7 +1086,7 @@ struct file_system_type cifs_fs_type = {
-> >  };
-> >  MODULE_ALIAS_FS("cifs");
-> >
-> > -static struct file_system_type smb3_fs_type = {
-> > +struct file_system_type smb3_fs_type = {
-> >         .owner = THIS_MODULE,
-> >         .name = "smb3",
-> >         .init_fs_context = smb3_init_fs_context,
-> > diff --git a/fs/cifs/cifsfs.h b/fs/cifs/cifsfs.h
-> > index dd7e070ca243..b17be47a8e59 100644
-> > --- a/fs/cifs/cifsfs.h
-> > +++ b/fs/cifs/cifsfs.h
-> > @@ -38,7 +38,7 @@ static inline unsigned long cifs_get_time(struct dentry *dentry)
-> >         return (unsigned long) dentry->d_fsdata;
-> >  }
-> >
-> > -extern struct file_system_type cifs_fs_type;
-> > +extern struct file_system_type cifs_fs_type, smb3_fs_type;
-> >  extern const struct address_space_operations cifs_addr_ops;
-> >  extern const struct address_space_operations cifs_addr_ops_smallbuf;
-> >
-> > diff --git a/fs/cifs/misc.c b/fs/cifs/misc.c
-> > index 35962a1a23b9..eeb2a2957a68 100644
-> > --- a/fs/cifs/misc.c
-> > +++ b/fs/cifs/misc.c
-> > @@ -1211,8 +1211,12 @@ static struct super_block *__cifs_get_super(void (*f)(struct super_block *, void
-> >                 .data = data,
-> >                 .sb = NULL,
-> >         };
-> > +       struct file_system_type **fs_type = (struct file_system_type *[]) {
-> > +               &cifs_fs_type, &smb3_fs_type, NULL,
-> > +       };
-> >
-> > -       iterate_supers_type(&cifs_fs_type, f, &sd);
-> > +       for (; *fs_type; fs_type++)
-> > +               iterate_supers_type(*fs_type, f, &sd);
-> >
-> >         if (!sd.sb)
-> >                 return ERR_PTR(-EINVAL);
+>=20
+> Is this the only warning of this type that you get for arm64?
+
+In that function, both kernel_code.end and kernel_data_end show a
+similar warning in 5.19-rc1
+
+> I think the easy fix would be to reword this line to
+>=20
+>        kernel_code.end     =3D __pa_symbol(__init_begin) - 1;
+
+Doing this for both fix the warnings.
+
+Maxime
+
+--tsirw27bcrup6k37
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCYp3CaQAKCRDj7w1vZxhR
+xSNxAQCcTzhzMOxcDL9WGAwz0vVmy99JZhx9Udyas1PPaIoBcwEAyh5jqqVu2smB
+yLg+OIxwEhblK6XNPX6hyeOfhD412w0=
+=6RO8
+-----END PGP SIGNATURE-----
+
+--tsirw27bcrup6k37--
