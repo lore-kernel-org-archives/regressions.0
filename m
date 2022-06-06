@@ -1,109 +1,101 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.uniroma2.it (smtp.uniroma2.it [160.80.6.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480A723CB
-	for <regressions@lists.linux.dev>; Mon,  6 Jun 2022 11:46:12 +0000 (UTC)
-Received: by mail-yb1-f181.google.com with SMTP id a64so25159502ybg.11
-        for <regressions@lists.linux.dev>; Mon, 06 Jun 2022 04:46:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=pq4w54S0xjOQhYVPvRcjJWBaSHI24L9PwLtQAAo4Ntg=;
-        b=gHaQNvBBVKcmZcocDQXhBOlog/h3SF6dgiasF2SXoHuLOtRY6PTNX8CJCUJTMQucRo
-         nkXSl1LAtAwDnvBOXLRmZZofPjkPhpJ9XnHGEPmfmhy5b9bYXyFOn5XCOsj6krAKOg8B
-         7f8Vooud4xE7xg0EqY+CdiZCmnaK7y85Azd2rO/cIH66U2Ut411KoKhqDDhAkKL9pPxm
-         DQNu84vWMMACJXyd5ltToyc62/56P8w3pZ4ftBmhG48+rAL3CZKpq7NZUnyDq+lpD9Dd
-         DqGxkqV5e2gPitP9FdardR9Ei70BfqIUstRyZvmQ/6SXx9G+LK4YI9qh42kJDwBR2zM1
-         5Ypg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=pq4w54S0xjOQhYVPvRcjJWBaSHI24L9PwLtQAAo4Ntg=;
-        b=MInT+OcVutbrrXheqd28wVXCctxySgWfZSVGE4GD9IhfT9k1vaPm0J/h4mxMKVhw6E
-         vZLAR1IU1/rNvAQjP4Ar9oMHk1vo4zFsFf0euVZDWAgk4tW8Pq/iwBwnKUJXrr35sTDO
-         n0XCfYLaYcv4jRDYOj/jFzTDPg7iyYcRWBWmb0RoGa3OEh2xJLEjVSuRPfLkXlK6pSZQ
-         Z46v3Yxa00+17OM/+p88U3AEKZkaOoDWYi/NMorgpo0QNmhseemhTMNAajefGrPH8jYe
-         qlf7dCUHmU+oqQ0zIC23H3nqWRkcm760dMQENhRolcWIfKWzoEaweWTLiZGD8a1D4Jgy
-         Ivpw==
-X-Gm-Message-State: AOAM533UTzVaFEIYQIoRPrDgtZTlMai77WXRuz06nlB52cAbeYEsjrmr
-	VSLX+ldQAC5d56Zj5HEHmuHPSuxezfKfAQgcg9acMg==
-X-Google-Smtp-Source: ABdhPJzbneoLeu30KiEdfnDmFRZ6ePkYkJLIfh3Fz42eU0SJGKqIICy/fbowKdH3ZfS8w2qGdglt9DN/yIu46atMQ00=
-X-Received: by 2002:a25:4705:0:b0:65d:43f8:5652 with SMTP id
- u5-20020a254705000000b0065d43f85652mr23688028yba.389.1654515971012; Mon, 06
- Jun 2022 04:46:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E002723D9
+	for <regressions@lists.linux.dev>; Mon,  6 Jun 2022 12:44:01 +0000 (UTC)
+Received: from smtpauth-2019-1.uniroma2.it (smtpauth-2019-1.uniroma2.it [160.80.5.46])
+	by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 256CXgr7024134;
+	Mon, 6 Jun 2022 14:33:47 +0200
+Received: from lubuntu-18.04 (unknown [160.80.103.126])
+	by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id DFA831212B4;
+	Mon,  6 Jun 2022 14:33:38 +0200 (CEST)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=uniroma2.it;
+	s=ed201904; t=1654518819; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8B6BQq7gCMMTyTKJNSZBHuMyyStdALnwUURupL2Td2o=;
+	b=X7w1dL/Qdi0cGco1mzCLqfC//5laoY1s1Mcit4m6zobej3fu2+NwBDv9UFWimW+rIlfVnu
+	oLBzbUp7cCWCJvBQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniroma2.it; s=rsa201904;
+	t=1654518819; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8B6BQq7gCMMTyTKJNSZBHuMyyStdALnwUURupL2Td2o=;
+	b=nz5Ja2R9K87ulc+qvyWNju3i1v8S9IXm1GruSHe1XLogKTdmXH8UY3Sfs4k/t52+iDxB+c
+	wj23Fqx0P1hqsZ1l988VEenJPgrYS6dl1fBVUocxgHER8nTlfoOR52HwjapbuDDNutwSyI
+	Q7N+sm7olNFUdRjzGD8Oos6kow+yYuUSApFPJlxa/RtegzNgGvkeIsbjBZCv2a5JKBLNqY
+	+hN/mRWoa3j8e6OAIqvH/F5Z1rpPexJIbAzAVMzIN/13+EevVnb+5pPM9rBFq7QzhFRLqK
+	B73DgcDvU/UpPpAqsQrVMJ2jWs87WuBW+zTfr8eQBkMLkuUlB8NeLOHqh3PF+w==
+Date: Mon, 6 Jun 2022 14:33:38 +0200
+From: Andrea Mayer <andrea.mayer@uniroma2.it>
+To: Anton Makarov <am@3a-alliance.com>
+Cc: David Ahern <dsahern@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, david.lebrun@uclouvain.be,
+        regressions@lists.linux.dev, stable@vger.kernel.org,
+        Stefano Salsano
+ <stefano.salsano@uniroma2.it>,
+        Paolo Lungaroni
+ <paolo.lungaroni@uniroma2.it>,
+        Ahmed Abdelsalam <ahabdels.dev@gmail.com>,
+        Andrea Mayer <andrea.mayer@uniroma2.it>
+Subject: Re: [REGRESSION] net: SRv6 End.DT6 function is broken in VRF mode
+Message-Id: <20220606143338.91df592bbb7dc2f7db4747e6@uniroma2.it>
+In-Reply-To: <7e315ff1-e172-16c3-44b5-0c83c4c92779@3a-alliance.com>
+References: <7e315ff1-e172-16c3-44b5-0c83c4c92779@3a-alliance.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 6 Jun 2022 17:16:00 +0530
-Message-ID: <CA+G9fYv7fESqpGoeKmHoJsst6wfRNMi2wQLGm+PsjbLDuDjdMQ@mail.gmail.com>
-Subject: [next] arm64: boot failed - next-20220606
-To: Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mm <linux-mm@kvack.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, 
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Raghuram Thammiraju <raghuram.thammiraju@arm.com>, 
-	Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 
-Linux next-20220606 arm64 boot failed. The kernel boot log is empty.
-I am bisecting this problem.
+On Fri, 3 Jun 2022 15:23:26 +0300
+Anton Makarov <am@3a-alliance.com> wrote:
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> #regzbot introduced: b9132c32e01976686efa26252cc246944a0d2cab
+> 
+> Hi All!
+> 
+> Seems there is a regression of SRv6 End.DT6 function in VRF mode. In the 
+> following scenario packet is decapsulated successfully on vrf10 
+> interface but not forwarded to vrf10's slave interface:
+> 
+> ip netns exec r4 ip -6 nexthop add id 1004 encap seg6local action 
+> End.DT6 vrftable 10 dev vrf10
+> 
+> ip netns exec r4 ip -6 route add fcff:0:4:200:: nhid 1004
+> 
+> 
+> In End.DT6 legacy mode everything works good:
+> 
+> ip netns exec r4 ip -6 nexthop add id 1004 encap seg6local action 
+> End.DT6 table 10 dev vrf10
+> 
+> ip netns exec r4 ip -6 route add fcff:0:4:200:: nhid 1004
+> 
+> 
+> The issue impacts even stable v5.18.1. Please help to fix it.
+> 
+> 
+> Thanks!
+> 
+> Anton
+> 
+> 
+> 
 
-The initial investigation show that,
+Hi Anton,
 
-GOOD: next-20220603
-BAD:  next-20220606
+thank you for reporting this issue. I am already working on a fix patch which I
+will send shortly.
 
-Boot log:
-Starting kernel ...
-
-The recent changes show,
-
-# git log --oneline  next-20220603..next-20220606  -- arch/arm64/
-202693ac55e0 (origin/akpm-base, origin/akpm) Merge branch
-'mm-everything' of
-git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
-a83bdd6800e3 Merge branch 'rust-next' of
-https://github.com/Rust-for-Linux/linux.git
-9daba6cb8145 Merge branch 'for-next' of git://github.com/Xilinx/linux-xlnx.git
-582d5ed4caf7 Merge branch 'master' of
-git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf.git
-1ec6574a3c0a Merge tag 'kthread-cleanups-for-v5.19' of
-git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace
-21873bd66b6e Merge tag 'arm64-fixes' of
-git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
-a8fc46f5a417 mm: avoid unnecessary page fault retires on shared memory types
-3c59c47d1a6d arm64: Change elfcore for_each_mte_vma() to use VMA iterator
-1c826fa748d5 arm64: remove mmap linked list from vdso
-54c2cc79194c Merge tag 'usb-5.19-rc1' of
-git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
-09a018176ba2 Merge tag 'arm-late-5.19' of
-git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-96479c09803b Merge tag 'arm-multiplatform-5.19-2' of
-git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-
-
-Test job link,
-https://lkft.validation.linaro.org/scheduler/job/5136989#L560
-
-
-metadata:
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: 40b58e42584bf5bd9230481dc8946f714fb387de
-  git_describe: next-20220606
-  kernel_version: 5.19.0-rc1
-  kernel-config: https://builds.tuxbuild.com/2ABl8X9kHAAU5MlL3E3xExHFrNy/config
-  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/556237413
-  artifact-location: https://builds.tuxbuild.com/2ABl8X9kHAAU5MlL3E3xExHFrNy
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Andrea
