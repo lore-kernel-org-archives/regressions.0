@@ -1,33 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB60C7F
-	for <regressions@lists.linux.dev>; Tue,  7 Jun 2022 16:55:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 053FBC385A5;
-	Tue,  7 Jun 2022 16:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1654620916;
-	bh=QNEYXqTYrmzrvz2qIW/0ktUexovk58Fij+DKCMOQu7k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tZnSWtPPTKKdlPL2tfPRZ0BAs0XfAquc4BzgcMkMpu0WSv+NAHoaz+TGXnRzy2ZBz
-	 3WCG6fU4NOJhB5iQ3RLSFmR+ToRqKc03wfu8nr9skdk2O3Fs3GkTOp0wl7fCwyLLWc
-	 HaAC66Ffk55UkRyvg/oXQzY6OdBwOTaZARkrS6T8=
-Date: Tue, 7 Jun 2022 18:55:13 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thomas Sattler <sattler@med.uni-frankfurt.de>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: boot loop since 5.17.6
-Message-ID: <Yp+C8XVYvK5XszuU@kroah.com>
-References: <11495172-41dd-5c44-3ef6-8d3ff3ebd1b2@med.uni-frankfurt.de>
- <c3b370a8-193e-329b-c73a-1371bd62edf3@med.uni-frankfurt.de>
- <181a6369-e373-b020-2059-33fb5161d8d3@med.uni-frankfurt.de>
- <YpksflOG2Y1Xng89@dev-arch.thelio-3990X>
- <1f8a4bec-53bd-aaaa-49a7-b5ed4fc5ae34@med.uni-frankfurt.de>
- <a9a68c68-8830-2aa0-acbe-d5d3bb04968f@leemhuis.info>
- <4dc96ed3-169e-37b9-7b8f-85e58dca0bbf@med.uni-frankfurt.de>
- <Yp88N2qL3HXLz0bi@kroah.com>
- <4282db24-0c4e-df01-8b0e-06cf647a3351@med.uni-frankfurt.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C484C65
+	for <regressions@lists.linux.dev>; Tue,  7 Jun 2022 23:52:07 +0000 (UTC)
+Received: by mail-pj1-f42.google.com with SMTP id l7-20020a17090aaa8700b001dd1a5b9965so16821682pjq.2
+        for <regressions@lists.linux.dev>; Tue, 07 Jun 2022 16:52:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=b3NZKzwwnS36QL4ucaqxtIuHPEUyyTomuKdcLQyEKAY=;
+        b=Gf7bKdJ2hUOr/LphELuKt2o2il5QdNDO4rPQYRQp+1RKXfjR13N6bKmp5cYllzWRT1
+         xhWgDv9jhC081rAPWRyoHtai4YiXoOEshYmG98xEi3wfEpFCM2PDCdIuy+YcJ0chYvKT
+         atBYZkLGl8/N43pToDTwRSTpFzFaMaAypJvvAQf+dndtlcYidM4/cRGYnwFcXWEtFEWi
+         Tcg9DoCiNNhHm/4hSnGnujiO9+rEPF9ieyuGMobYFn67e4mR2wStVhet3fN/z1EhPV1t
+         aMmWf/7BmFv9yBtn8Iwp64KBjrIImavp8mV1C3jBkHuJyJPrwDy+v+PnhrbQjoGDC5sB
+         2t0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=b3NZKzwwnS36QL4ucaqxtIuHPEUyyTomuKdcLQyEKAY=;
+        b=2/Gvprd8YtsciP3ISxrbkyVCgxgNDUChjWEpgTJ2fbIcXJhuDztJXH722WWtbDAmmf
+         7Qkr6gP0wwF+/WfZzo7RkX/bKvovbxuvzI79Tnvqr9PLpF7cDHpBgodE2xctx5guDpp8
+         wGUI4AFiYsytRYA12cS3de5oBEuQrS2wJgkNcCwV8UAbGwKkETiyapMR3E5H7I+v/jfn
+         e8CvdS5nsUpc4KGxJtZS6iFFHPkeuB3Z0es9jVKL4xDvCrE062sTFtMxuwMt3YjRzOpr
+         oaFVyvxonncMJ/hT6yyWVtPbGcCLBI/gFBhAmKw96zS1A5OrWd8vJ9MJWNWSK+vhZeps
+         wI1g==
+X-Gm-Message-State: AOAM531IPJSrIHInGl+Z/uFW4H314buns12y96fDilZ5WpNckRBkwmcM
+	saV3Tomb/GWl/zB7HXbS0l8=
+X-Google-Smtp-Source: ABdhPJxccdrile2mSoYxkExBirNwrH/WiEDWbZeQDdUwJ0Lkq9krO4qFXX5rn/DFlb/QY2Iq77CWPw==
+X-Received: by 2002:a17:902:ce11:b0:167:7d4a:964b with SMTP id k17-20020a170902ce1100b001677d4a964bmr12617889plg.37.1654645927119;
+        Tue, 07 Jun 2022 16:52:07 -0700 (PDT)
+Received: from google.com ([2620:15c:211:201:f30f:4d03:66e6:b121])
+        by smtp.gmail.com with ESMTPSA id t9-20020a1709027fc900b00167863f0e68sm4026924plb.237.2022.06.07.16.52.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jun 2022 16:52:06 -0700 (PDT)
+Sender: Minchan Kim <minchan.kim@gmail.com>
+Date: Tue, 7 Jun 2022 16:52:04 -0700
+From: Minchan Kim <minchan@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	linux-block <linux-block@vger.kernel.org>,
+	regressions@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Nitin Gupta <ngupta@vflare.org>
+Subject: Re: qemu-arm: zram: mkfs.ext4 : Unable to handle kernel NULL pointer
+ dereference at virtual address 00000140
+Message-ID: <Yp/kpPA7GdbArXDo@google.com>
+References: <CA+G9fYtVOfWWpx96fa3zzKzBPKiNu1w3FOD4j++G8MOG3Vs0EA@mail.gmail.com>
+ <Yp47DODPCz0kNgE8@google.com>
+ <CA+G9fYsjn0zySHU4YYNJWAgkABuJuKtHty7ELHmN-+30VYgCDA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -36,21 +61,96 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4282db24-0c4e-df01-8b0e-06cf647a3351@med.uni-frankfurt.de>
+In-Reply-To: <CA+G9fYsjn0zySHU4YYNJWAgkABuJuKtHty7ELHmN-+30VYgCDA@mail.gmail.com>
 
-On Tue, Jun 07, 2022 at 04:17:26PM +0200, Thomas Sattler wrote:
-> Hi Greg,
+On Tue, Jun 07, 2022 at 06:51:27AM +0530, Naresh Kamboju wrote:
+> On Mon, 6 Jun 2022 at 23:06, Minchan Kim <minchan@kernel.org> wrote:
+> >
+> > On Thu, Jun 02, 2022 at 02:19:34PM +0530, Naresh Kamboju wrote:
+> > > The following kernel crash reported while running selftests: zram: zram.sh
+> > > test case on qemu-arm with Linux mainline v5.18.0 kernel version.
+> > >
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > >
+> > > Started noticing from kernel crash from
+> > > BAD: git_sha: cdeffe87f790dfd1baa193020411ce9a538446d7
+> > > GOOD:   git_sha: babf0bb978e3c9fce6c4eba6b744c8754fd43d8e
+> > >
+> > > # git log  --oneline
+> > > babf0bb978e3c9fce6c4eba6b744c8754fd43d8e..cdeffe87f790dfd1baa193020411ce9a538446d7
+> > >   -- drivers/block/
+> > > 98931dd95fd4 Merge tag 'mm-stable-2022-05-25' of
+> > > git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> > > 6140ae41effe zram: fix Kconfig dependency warning
+> > > b3fbd58fcbb1 mm: Kconfig: simplify zswap configuration
+> > > e7be8d1dd983 zram: remove double compression logic
+> > > a2ad63daa88b VFS: add FMODE_CAN_ODIRECT file flag
+> > > 30226b69f876 zram: add a huge_idle writeback mode
+> >
+> > Hi Nalesh,
+> >
+> > Thanks for the reporting the bug!
+> >
+> > I locally ran the test in my x86 KVM machine but couldn't reproduce it.
+> > How is it easy to reproduce?  Could you help to bisect it?
 > 
-> I did not yet start a bisect but looked at commits that modify
-> the same file again. And there was a promising one:
+> It works on qemu_x86-64
+> It is always reproducible in qemu arm32 environment.
 > 
->   22682a07acc3 objtool: Fix objtool regression on x32 systems
+> steps to reproduce:
+> # Please download and use this rootfs and kernel zImage
 > 
-> That one applies cleanly to both, 5.17.12 and 5.18.2, and also
-> fixes my boot-problem on both.
+> rootfs: https://oebuilds.tuxbuild.com/29zhlbEc3EWq2wod9Uy964Bp27q/images/am57xx-evm/rpb-console-image-lkft-am57xx-evm-20220601222434.rootfs.ext4.gz
+> kernel: https://builds.tuxbuild.com/29zhqJJizU2Y7Ka7ArhryUOrNDC/zImage
+> 
+> Boot command,
+>  /usr/bin/qemu-system-aarch64 -cpu host,aarch64=off -machine
+> virt-2.10,accel=kvm -nographic -net
+> nic,model=virtio,maaacaddr=BA:DD:AD:CC:09:04 -net tap -m 2048 -monitor
+> none -kernel kernel/zImage --append "console=ttyAMA0 root=/dev/vda rw"
+> -hda rootfs/rpb-console-image-lkft-am57xx-evm-20220601222434.rootfs.ext4
+> -m 4096 -smp 2
+> 
+> # cd /opt/kselftests/default-in-kernel/zram
+> # ./zram.sh
+> 
+> Allow me sometime I will try to bisect this problem.
 
-Oh good, that's already queued up for the next round of stable kernels.
+Thanks for sharing the info. 
 
-thanks,
+I managed to work your rootfs with my local arm build
+based on the problematic git tip. 
+However, I couldn't suceed to reproduce it.
 
-greg k-h
+I needed to build zsmalloc/zram built-in instead of modules
+Is it related? Hmm,
+
+Yeah, It would be very helpful if you could help to bisect it.
+Thanks!
+
+=== &< ====
+create '1' zram device(s)
+zram modules already loaded, kernel supports zram-control interface
+[  936.188541] zram: Added device: zram1
+all zram devices (/dev/zram1~1 successfully created
+set max_comp_streams to zram device(s)
+The device attribute max_comp_streams was deprecated in 4.7
+set disk size to zram device(s)
+/sys/block/zram1/disksize = '1048576'
+zram set disksizes: OK
+set memory limit to zram device(s)
+[  936.214438] zram1: detected capacity change from 0 to 2048
+/sys/block/zram1/mem_limit = '1M'
+zram set memory limit: OK
+make swap with zram device(s)
+[  936.608854] Adding 1020k swap on /dev/zram1.  Priority:-2 extents:1 across:1020k SS
+done with /dev/zram1
+zram making zram mkswap and swapon: OK
+zram swapoff: OK
+zram cleanup
+[  937.063416] zram1: detected capacity change from 2048 to 0
+[  937.189223] zram: Removed device: zram1
+zram02 : [PASS]
+root@am57xx-evm:/opt/kselftests/default-in-kernel/zram# uname -r
+5.18.0-11934-g54eb8462f21f
+
