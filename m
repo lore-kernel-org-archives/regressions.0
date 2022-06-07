@@ -1,13 +1,20 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mailout.rz.uni-frankfurt.de (mailout.rz.uni-frankfurt.de [141.2.22.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D637F
-	for <regressions@lists.linux.dev>; Tue,  7 Jun 2022 11:02:29 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1nyWyc-0005Ut-Nb; Tue, 07 Jun 2022 13:02:22 +0200
-Message-ID: <789eb485-067c-88fa-e687-4201b37b5dc3@leemhuis.info>
-Date: Tue, 7 Jun 2022 13:02:21 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E630F7F
+	for <regressions@lists.linux.dev>; Tue,  7 Jun 2022 11:40:14 +0000 (UTC)
+Received: from smtpauth1.cluster.uni-frankfurt.de ([10.1.1.45])
+	by mailout.rz.uni-frankfurt.de with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <sattler@med.uni-frankfurt.de>)
+	id 1nyXZ5-00013t-LG; Tue, 07 Jun 2022 13:40:03 +0200
+Received: from p57bcf684.dip0.t-ipconnect.de ([87.188.246.132] helo=[192.168.2.17])
+	by smtpauth1.cluster.uni-frankfurt.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.94.2)
+	(envelope-from <sattler@med.uni-frankfurt.de>)
+	id 1nyXZ5-0005DF-Jb; Tue, 07 Jun 2022 13:40:03 +0200
+Message-ID: <4dc96ed3-169e-37b9-7b8f-85e58dca0bbf@med.uni-frankfurt.de>
+Date: Tue, 7 Jun 2022 13:40:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,86 +23,23 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
+Subject: Re: boot loop since 5.17.6
 Content-Language: en-US
-To: Jocelyn Falempe <jfalempe@redhat.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, dri-devel@lists.freedesktop.org,
- kuohsiang_chou@aspeedtech.com, David Airlie <airlied@redhat.com>
-Cc: regressions@lists.linux.dev, stable@vger.kernel.org
-References: <d84ba981-d907-f942-6b05-67c836580542@redhat.com>
- <6e9f84f9-dc97-9ff4-57c8-97fbffd3a996@suse.de>
- <66419e2f-8a68-0e0c-334b-96b211a96e50@redhat.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [REGRESSION] VGA output with AST 2600 graphics.
-In-Reply-To: <66419e2f-8a68-0e0c-334b-96b211a96e50@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1654599749;f4e705aa;
-X-HE-SMSGID: 1nyWyc-0005Ut-Nb
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+References: <11495172-41dd-5c44-3ef6-8d3ff3ebd1b2@med.uni-frankfurt.de>
+ <c3b370a8-193e-329b-c73a-1371bd62edf3@med.uni-frankfurt.de>
+ <181a6369-e373-b020-2059-33fb5161d8d3@med.uni-frankfurt.de>
+ <YpksflOG2Y1Xng89@dev-arch.thelio-3990X>
+ <1f8a4bec-53bd-aaaa-49a7-b5ed4fc5ae34@med.uni-frankfurt.de>
+ <a9a68c68-8830-2aa0-acbe-d5d3bb04968f@leemhuis.info>
+From: Thomas Sattler <sattler@med.uni-frankfurt.de>
+In-Reply-To: <a9a68c68-8830-2aa0-acbe-d5d3bb04968f@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi, this is your Linux kernel regression tracker.
+Hi Thorsten,
 
-On 01.06.22 14:29, Jocelyn Falempe wrote:
-> On 01/06/2022 12:33, Thomas Zimmermann wrote:
->> Am 01.06.22 um 11:33 schrieb Jocelyn Falempe:
->>>
->>> I've found a regression in the ast driver, for AST2600 hardware.
->>>
->>> before the upstream commit f9bd00e0ea9d
->>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=f9bd00e0ea9d9b04140aa969a9a13ad3597a1e4e
->>>
->>>
->>> The ast driver handled AST 2600 chip like an AST 2500.
->>>
->>> After this commit, it uses some default values, more like the older
->>> AST chip.
->>>
->>> There are a lot of places in the driver like this:
->>> https://elixir.bootlin.com/linux/v5.18.1/source/drivers/gpu/drm/ast/ast_post.c#L82
->>>
->>> where it checks for (AST2300 || AST2400 || AST2500) but not for AST2600.
->>>
->>> This makes the VGA output, to be blurred and flickered with whites
->>> lines on AST2600.
->>>
->>> The issue is present since v5.11
->>>
->>> For v5.11~v5.17 I propose a simple workaround (as there are no other
->>> reference to AST2600 in the driver):
->>> --- a/drivers/gpu/drm/ast/ast_main.c
->>> +++ b/drivers/gpu/drm/ast/ast_main.c
->>> @@ -146,7 +146,8 @@ static int ast_detect_chip(struct drm_device
->>> *dev, bool *need_post)
->>>
->>>       /* Identify chipset */
->>>       if (pdev->revision >= 0x50) {
->>> -        ast->chip = AST2600;
->>> +        /* Workaround to use the same codepath for AST2600 */
->>> +        ast->chip = AST2500;
->>
->> The whole handling of different models in this driver is broken by
->> design and needs to be replaced.  I don't have much of the affected
->> hardware, so such things are going slowly. :(
->>
->> For an intermediate fix, it would be better to change all tests for
->> AST2500 to include AST2600 as well. There aren't too many IIRC.
->
-> I feel a bit uncomfortable doing this, because I don't know if this
-> settings are good for AST2600 or not. I just know that AST2500 settings
-> are better than the "default".
+I just compiled 5.19-rc1 and my issue is solved there.
 
-KuoHsiang Chou, you wrote the commit causing this regression. Could you
-maybe take care of the idea Thomas outlined to get this fixed relative
-quickly? Or do you have a better idea?
-
-> Also it may not apply cleanly up to v5.11
-
-FWIW, 5.11 is EOL anyway.
-
-> I will do a test patch and see what it gives.
-> 
-> Another solution would be to just revert f9bd00e0ea9d for v5.11 to v5.17 ?
-
-That might cause a regression for users that depend on something
-supported thx to this change. :-/
-
-Ciao, Thorsten
+Thomas
