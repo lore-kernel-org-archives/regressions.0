@@ -1,90 +1,109 @@
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C9317C6
-	for <regressions@lists.linux.dev>; Tue,  7 Jun 2022 10:28:04 +0000 (UTC)
-Received: by mail-yb1-f173.google.com with SMTP id e184so30367315ybf.8
-        for <regressions@lists.linux.dev>; Tue, 07 Jun 2022 03:28:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lLb4OstT3sRsRSOzWSrE/P7lW42UYdWQsdQ0kmyUq3w=;
-        b=pCE60kVDw2MImA3LMLKXGPwLWoHbYh3JLP0GUT87HFqfaKmFBv/ReQSW0JJHa/Ix53
-         dH+UtzW9JX977Qi0MrS3OXG5uD485M/CUkNH068x00Uxuoe52+M2BjozYvWdP7TyXUlq
-         ByKNbzCe6n4lAvFnOcfrQ3ASctplUIjZ0CTh+40kssFrI1FdW6D7pEQC4bd7q7dXi1xI
-         Z0YFyCFhZgKWp+TkKtnp5UsUenGdtau3pTfr7bTveX32n903KMJ4gFQv4hSUlraiX18k
-         P5OD/58Kj9LqVbwv9staYVQYt6fG58glp/46sWLLwIdoFfoZCTtNHUNG0WNk5ent5wvD
-         XIlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lLb4OstT3sRsRSOzWSrE/P7lW42UYdWQsdQ0kmyUq3w=;
-        b=FWLxrEkblAiI7rdtUKoaTOsE4pTNGquybs/4zaiVSAss57SEwMqHss4zPjCHfFw2im
-         3wsFwpBbbZYxzv6lhAlN6ealWl9/kw/ueBIu+9OE/wCXcDOf3UzkPhYvUfnXaj245ej0
-         A5m/unwOpZCElWbk7mzxH2YIkPH1KKt/CYeFmcKz/Ul21SeYw+ZAcw5qoTINmD5LDJgX
-         GiP7U9XxmCdxVzqCYjf7K13LNpnoE0OHBhwylODVexe4pRNftBEIm8VfNsMvsYNOnW6x
-         NGM0lFJBgusMf4eJwSY2f3YjB1kzcax8uYj8/0vVWmXsd86aFYNxhv1L3AGXcF6VuGsC
-         vG9Q==
-X-Gm-Message-State: AOAM533lvoOe6TzGk/row9IpD310qbJvePLnrMvCqLLm5LfujzxOulyD
-	ZxvvcFGeiZsbgHW8ebHGyPkfpc5E0RUtRkmluitL2A==
-X-Google-Smtp-Source: ABdhPJwKT2UmpuK+kDxqDiEIkG8TF0esYpFi4IVr32ervm1z3rjq6TIlEmUWrJNsgH3MWaBpO5f9Rfu/L0y/NukH9mc=
-X-Received: by 2002:a25:4705:0:b0:65d:43f8:5652 with SMTP id
- u5-20020a254705000000b0065d43f85652mr28527025yba.389.1654597683604; Tue, 07
- Jun 2022 03:28:03 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A507F
+	for <regressions@lists.linux.dev>; Tue,  7 Jun 2022 10:57:25 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1nyWtn-0003kN-Bz; Tue, 07 Jun 2022 12:57:23 +0200
+Message-ID: <6077d233-b0ea-f716-bf23-3fd6c16364af@leemhuis.info>
+Date: Tue, 7 Jun 2022 12:57:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYv7fESqpGoeKmHoJsst6wfRNMi2wQLGm+PsjbLDuDjdMQ@mail.gmail.com>
- <CA+G9fYsJThWFAxXTbAcJmjshx+oYxVVd+gMM680hS0X1z37+FQ@mail.gmail.com>
- <20220607162504.7fd5a92a@canb.auug.org.au> <CALvZod5XBjw7MZfYSNv-UnE7pHMKTquUNomqyC5T05Qu_ef6Zw@mail.gmail.com>
- <CALvZod4DhM00LXsPty=cnYyv3Ci5YS5otasu_tr9o7ujQekKLw@mail.gmail.com>
-In-Reply-To: <CALvZod4DhM00LXsPty=cnYyv3Ci5YS5otasu_tr9o7ujQekKLw@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 7 Jun 2022 15:57:52 +0530
-Message-ID: <CA+G9fYve1faH7AmpEa-p_ySb_WCgc4DdjqyS6fSdiJYsaEi=rA@mail.gmail.com>
-Subject: Re: [next] arm64: boot failed - next-20220606
-To: Shakeel Butt <shakeelb@google.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mm <linux-mm@kvack.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Ard Biesheuvel <ardb@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Raghuram Thammiraju <raghuram.thammiraju@arm.com>, Mark Brown <broonie@kernel.org>, 
-	Will Deacon <will@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>, 
-	Vasily Averin <vvs@openvz.org>, Qian Cai <quic_qiancai@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [REGRESSION] VGA output with AST 2600 graphics.
+Content-Language: en-US
+To: regressions@lists.linux.dev
+References: <d84ba981-d907-f942-6b05-67c836580542@redhat.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <d84ba981-d907-f942-6b05-67c836580542@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1654599445;ad5053be;
+X-HE-SMSGID: 1nyWtn-0003kN-Bz
 
-Hi Shakeel,
+Hi, this is your Linux kernel regression tracker.
 
-> > > Can you test v5.19-rc1, please?  If that does not fail, then you could
-> > > bisect between that and next-20220606 ...
-> > >
-> >
-> > This is already reported at
-> > https://lore.kernel.org/all/Yp4F6n2Ie32re7Ed@qian/ and I think we know
-> > the underlying issue (which is calling virt_to_page() on a vmalloc
-> > address).
->
-> Sorry, I might be wrong. Just checked the stacktrace again and it
-> seems like the failure is happening in early boot in this report.
-> Though the error "Unable to handle kernel paging request at virtual
-> address" is happening in the function mem_cgroup_from_obj().
->
-> Naresh, can you repro the issue if you revert the patch "net: set
-> proper memcg for net_init hooks allocations"?
+On 01.06.22 11:33, Jocelyn Falempe wrote:
+> 
+> I've found a regression in the ast driver, for AST2600 hardware.
+> 
+> before the upstream commit f9bd00e0ea9d
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=f9bd00e0ea9d9b04140aa969a9a13ad3597a1e4e
+> 
+> The ast driver handled AST 2600 chip like an AST 2500.
+> 
+> After this commit, it uses some default values, more like the older AST
+> chip.
 
-yes. You are right !
-19ee3818b7c6 ("net: set proper memcg for net_init hooks allocations")
-After reverting this single commit I am able to boot arm64 successfully.
+Thanks for the report.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
 
---
-Linaro LKFT
-https://lkft.linaro.org
+#regzbot ^introduced f9bd00e0ea9d
+#regzbot title drm/ast: VGA output blurred and flickered with whites
+lines on AST2600
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replied to), as the kernel's
+documentation call for; above page explains why this is important for
+tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
+
+
+> There are a lot of places in the driver like this:
+> https://elixir.bootlin.com/linux/v5.18.1/source/drivers/gpu/drm/ast/ast_post.c#L82
+> 
+> where it checks for (AST2300 || AST2400 || AST2500) but not for AST2600.
+> 
+> This makes the VGA output, to be blurred and flickered with whites lines
+> on AST2600.
+> 
+> The issue is present since v5.11
+> 
+> For v5.11~v5.17 I propose a simple workaround (as there are no other
+> reference to AST2600 in the driver):
+> --- a/drivers/gpu/drm/ast/ast_main.c
+> +++ b/drivers/gpu/drm/ast/ast_main.c
+> @@ -146,7 +146,8 @@ static int ast_detect_chip(struct drm_device *dev,
+> bool *need_post)
+> 
+>      /* Identify chipset */
+>      if (pdev->revision >= 0x50) {
+> -        ast->chip = AST2600;
+> +        /* Workaround to use the same codepath for AST2600 */
+> +        ast->chip = AST2500;
+>          drm_info(dev, "AST 2600 detected\n");
+>      } else if (pdev->revision >= 0x40) {
+>          ast->chip = AST2500;
+> 
+> starting from v5.18, there is another reference to AST2600 in the code
+> https://elixir.bootlin.com/linux/v5.18/source/drivers/gpu/drm/ast/ast_main.c#L212
+> 
+> 
+> So I think someone with good aspeed knowledge should review all
+> locations where there is a test for AST2500, and figure out what should
+> be done for AST2600
+> 
+> Thanks,
+> 
