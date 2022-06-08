@@ -1,100 +1,96 @@
-Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1486195
-	for <regressions@lists.linux.dev>; Wed,  8 Jun 2022 00:53:09 +0000 (UTC)
-Received: from submission (posteo.de [185.67.36.169]) 
-	by mout02.posteo.de (Postfix) with ESMTPS id 7C37E240108
-	for <regressions@lists.linux.dev>; Wed,  8 Jun 2022 02:44:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.at; s=2017;
-	t=1654649057; bh=Yf4sDEoLCkYKu/WIf4AhczsOZG7t0ytvtN262rM88qg=;
-	h=Date:To:Cc:From:Subject:From;
-	b=NcGG/Sxx6H7OAV6f7JGurh9rmm0dhvH+EHB2tipft5wPFzb4LEXlBQdwFuArCfNNU
-	 rEX0wkQJbqM4AjDIi9C+EmOZcSfpK5tIoJ9K2u1VgXkAkvNlCqiLXW/HdGUr+gjJKa
-	 MFyhYvsjrgK6iKvUYxNL934zVWgyMd0wE5qrV5PM+695c5rRgKdLPnZdK6jvJodPYY
-	 xmN31Sqj7qwti7yB8/6pqLUBXMFJ0YcP7xHMBYk+bjDFeyRnFhUQ670cHKluU1KgmG
-	 DcdlCRcFg4y2T/2gBjlms9kWSkL2JlDwrV35NHC3CX6Jqo60BuxNo5P0FxctwAAagh
-	 PHue2bO84FlFw==
-Received: from customer (localhost [127.0.0.1])
-	by submission (posteo.de) with ESMTPSA id 4LHpQ81JVtz6tmT;
-	Wed,  8 Jun 2022 02:44:16 +0200 (CEST)
-Message-ID: <9ebb43ee-52a1-c77d-d609-ca447a32f3e6@posteo.at>
-Date: Wed,  8 Jun 2022 00:44:15 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C407B
+	for <regressions@lists.linux.dev>; Wed,  8 Jun 2022 02:39:58 +0000 (UTC)
+Received: by mail-pj1-f47.google.com with SMTP id v11-20020a17090a4ecb00b001e2c5b837ccso22545875pjl.3
+        for <regressions@lists.linux.dev>; Tue, 07 Jun 2022 19:39:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6bOa4esw0xksLVfNdAT6B93rV/P/8VSGEKMP6EjzR0E=;
+        b=K6KpXwM81tTGGNFDdq17Lj1eMk1q3eODHH8nocGcaU9nWe7rFntrd/gnI4dJmrX5ot
+         jelT47mS9pdJT0S2PzSCrNgL5Sh63CeXCG+aYcN+ywbxrVtSsSCUllZRXU38BSZmlUri
+         DAKxKJgyjtIwfLg5ysES88sOtfU39kmTixM4U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6bOa4esw0xksLVfNdAT6B93rV/P/8VSGEKMP6EjzR0E=;
+        b=e/WUO9T5DXUS6mfQays1ELBL4i5Mvcqk1Eaa1rwBKRa1jQ1GTL3Ubn+y17A5DwUkHP
+         4OFPbvTRskXRuQ4rRIlVPKatTGI0Vr60Yqu71YBZEpj6lwW5Je4W2f53RAPe6ouq28xd
+         x4Uvq1vGgueBACApQnRVAa21Q2yhAB0EaTJ6tZlcdGAKKoeRqyquGBIDeZxpKqYEg63x
+         ARa6GqeVsJrZ2bqbKvAu63rwR68i55KJ/xvg18LBlkgPIiDNQQx9XlhUMqb0pRoKlsld
+         eYlwZiN8urQ+rAej7o8fmWE4QeJrzLNyMvgVBj0yl2Ul3OOXVVvcQzNr++fg1Dho97t3
+         ckWw==
+X-Gm-Message-State: AOAM532Tr4FJaaDo4sA0PSLNBaBCi/1kN+M173aJlBikytRvizxgepy8
+	mHsBAilshi1TkwB+NwJTYcLR+sliRaJ9VQ==
+X-Google-Smtp-Source: ABdhPJyJZwIgrQupdT+vh6Z2lrRhM1s6jhssKdeRPoFc/TqToiSIDBj6GM5p6VPlbfki0O4rCxkesQ==
+X-Received: by 2002:a17:90b:3a8f:b0:1e8:7669:8a2f with SMTP id om15-20020a17090b3a8f00b001e876698a2fmr16728205pjb.55.1654655998366;
+        Tue, 07 Jun 2022 19:39:58 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:463d:a192:6128:66e])
+        by smtp.gmail.com with ESMTPSA id 84-20020a621857000000b0050dc7628158sm13612168pfy.50.2022.06.07.19.39.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jun 2022 19:39:57 -0700 (PDT)
+Date: Wed, 8 Jun 2022 11:39:52 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Minchan Kim <minchan@kernel.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	linux-block <linux-block@vger.kernel.org>,
+	regressions@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Nitin Gupta <ngupta@vflare.org>
+Subject: Re: qemu-arm: zram: mkfs.ext4 : Unable to handle kernel NULL pointer
+ dereference at virtual address 00000140
+Message-ID: <YqAL+HeZDk5Wug28@google.com>
+References: <CA+G9fYtVOfWWpx96fa3zzKzBPKiNu1w3FOD4j++G8MOG3Vs0EA@mail.gmail.com>
+ <Yp47DODPCz0kNgE8@google.com>
+ <CA+G9fYsjn0zySHU4YYNJWAgkABuJuKtHty7ELHmN-+30VYgCDA@mail.gmail.com>
+ <Yp/kpPA7GdbArXDo@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Language: en-US
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: nic_swsd@realtek.com, netdev@vger.kernel.org,
- regressions@lists.linux.dev, Jakub Kicinski <kuba@kernel.org>
-From: Bernhard Hampel-Waffenthal <bernhard.hampelw@posteo.at>
-Subject: [REGRESSION] r8169: RTL8168h "transmit queue 0 timed out" after ASPM
- L1 enablement
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Yp/kpPA7GdbArXDo@google.com>
 
-#regzbot introduced: 4b5f82f6aaef3fa95cce52deb8510f55ddda6a71
+On (22/06/07 16:52), Minchan Kim wrote:
+> > rootfs: https://oebuilds.tuxbuild.com/29zhlbEc3EWq2wod9Uy964Bp27q/images/am57xx-evm/rpb-console-image-lkft-am57xx-evm-20220601222434.rootfs.ext4.gz
+> > kernel: https://builds.tuxbuild.com/29zhqJJizU2Y7Ka7ArhryUOrNDC/zImage
+> > 
+> > Boot command,
+> >  /usr/bin/qemu-system-aarch64 -cpu host,aarch64=off -machine
+> > virt-2.10,accel=kvm -nographic -net
+> > nic,model=virtio,maaacaddr=BA:DD:AD:CC:09:04 -net tap -m 2048 -monitor
+> > none -kernel kernel/zImage --append "console=ttyAMA0 root=/dev/vda rw"
+> > -hda rootfs/rpb-console-image-lkft-am57xx-evm-20220601222434.rootfs.ext4
+> > -m 4096 -smp 2
+> > 
+> > # cd /opt/kselftests/default-in-kernel/zram
+> > # ./zram.sh
+> > 
+> > Allow me sometime I will try to bisect this problem.
+> 
+> Thanks for sharing the info. 
+> 
+> I managed to work your rootfs with my local arm build
+> based on the problematic git tip. 
+> However, I couldn't suceed to reproduce it.
+> 
+> I needed to build zsmalloc/zram built-in instead of modules
+> Is it related? Hmm,
+> 
+> Yeah, It would be very helpful if you could help to bisect it.
 
-Hi,
-
-since the last major kernel version upgrade to 5.18 on Arch Linux I'm 
-unable to get a usable ethernet connection on my desktop PC.
-
-I can see a timeout in the logs
-
- > kernel: NETDEV WATCHDOG: enp37s0 (r8169): transmit queue 0 timed out
-
-and regular very likely related errors after
-
- > kernel: r8169 0000:25:00.0 enp37s0: rtl_rxtx_empty_cond == 0 (loop: 
-42, delay: 100).
-
-
-The link does manage to go up at nominal full 1Gbps speed, but there is 
-no usable connection to speak of and pings are very bursty and take 
-multiple seconds.
-
-I was able to pinpoint that the problems were introduced in commit 
-4b5f82f6aaef3fa95cce52deb8510f55ddda6a71 with the enablement of ASPM 
-L1/L1.1 for ">= RTL_GIGA_MAC_VER_45", which my chip falls under. Adding 
-pcie_aspm=off the kernel command line or changing that check to ">= 
-RTL_GIGA_MAC_VER_60" for testing purposes and recompiling the kernel 
-fixes my problems.
-
-
-I'm using a MSI B450I GAMING PLUS AC motherboard with a RTL8168h chip as 
-per dmesg:
-
- > r8169 0000:25:00.0 eth0: RTL8168h/8111h, 30:9c:23:de:97:a9, XID 541, 
-IRQ 101
-
-lspci says:
-
- > 25:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd. 
-RTL8111/8168/8411 PCI Express Gigabit Ethernet Controller [10ec:8168] 
-(rev 15)
-         Subsystem: Micro-Star International Co., Ltd. [MSI] Device 
-[1462:7a40]
-         Control: I/O+ Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- 
-ParErr- Stepping- SERR- FastB2B- DisINTx+
-         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- 
-<TAbort- <MAbort- >SERR- <PERR- INTx-
-         Latency: 0, Cache Line Size: 64 bytes
-         Interrupt: pin A routed to IRQ 30
-         IOMMU group: 14
-         Region 0: I/O ports at f000 [size=256]
-         Region 2: Memory at fcb04000 (64-bit, non-prefetchable) [size=4K]
-         Region 4: Memory at fcb00000 (64-bit, non-prefetchable) [size=16K]
-         Capabilities: <access denied>
-         Kernel driver in use: r8169
-         Kernel modules: r8169
-
-
-If you need more info I'll do my best to provide what I can, hope that 
-helps already.
-
-Regards,
-Bernhard
+This looks like a NULL lock->name dereference in lockdep. I suspect
+that somehow local_lock doesn't get .dep_map initialized. Maybe running
+the kernel with CONFIG_DEBUG_LOCK_ALLOC would help us? Naresh, can you
+help us with this?
