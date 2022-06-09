@@ -1,41 +1,60 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99BD1210B
-	for <regressions@lists.linux.dev>; Thu,  9 Jun 2022 10:26:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D37CC34114;
-	Thu,  9 Jun 2022 10:25:58 +0000 (UTC)
-Date: Thu, 9 Jun 2022 11:25:55 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Will Deacon <will@kernel.org>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Vasily Averin <vvs@openvz.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B683C7A
+	for <regressions@lists.linux.dev>; Thu,  9 Jun 2022 11:02:47 +0000 (UTC)
+Received: by mail-pg1-f174.google.com with SMTP id c14so21478178pgu.13
+        for <regressions@lists.linux.dev>; Thu, 09 Jun 2022 04:02:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=eA2rSMTUFSewTOnPsmOrnE6HCmgRpXaUuyafBR4ipFo=;
+        b=PhF2l/vtHVZjCKAqz4OpktNX8yi0juQT7/9mlOjaRI+WJ/8mFLlvmrChupswhPlMoa
+         bc7vMTDPOhZSuBdmsu8Ao+uRlmChD/jUJbcP2miIjzmjYzQ9L3TWeewo4w8AdkVg1o6p
+         4Y0jslyAC5Xw0nkFpxZEl70DVxJkswiTrwXxo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eA2rSMTUFSewTOnPsmOrnE6HCmgRpXaUuyafBR4ipFo=;
+        b=rIpLMMXE9R4vBun2YR6/1pJOIGXWaMZCmePDI8eFIV2M4dhFgx7S4fkaQ8Agsx8r3j
+         V4E+41hs1P5LjxWH5ez4KggP/usGMem4f5ZGYI2StQDqcGsQSemQHNSUR5mXw8J+jg7k
+         EZcncg4f1eygMbh9JKExRKt4g+7EQQkbPfS7E/acZE+3Q0U7OvYbL1907OOH0PTE2I23
+         PTQJkiQBsCa3Emss0T+0uT7ZEju8Qv/n8TxQyCbHbDX1mMYoU+vDdFtH0dgN4Y8f4mul
+         vykI8GmwNdA6NfLz7s29kZx4Xll3EjStIOMbYkLpiRCswE4SagWKzr7U6BCYVxplSHhi
+         s2Vg==
+X-Gm-Message-State: AOAM532nFvhFTlMh0QO9YO3hVPNZIklOg5XggQKzTIvfdJTOFt45jxir
+	kfsvEewnD1TlwMbyPKwGPTuynA==
+X-Google-Smtp-Source: ABdhPJyRD8M4C4AIWlnMkoCdrxA428zPc/65lMrKv7boT8iwH7ATo4M+sNcCYcjeZm4RCxc0iZEi5Q==
+X-Received: by 2002:a63:8242:0:b0:3fe:3601:747f with SMTP id w63-20020a638242000000b003fe3601747fmr6713986pgd.314.1654772567192;
+        Thu, 09 Jun 2022 04:02:47 -0700 (PDT)
+Received: from google.com ([240f:75:7537:3187:1572:8d44:6d26:109d])
+        by smtp.gmail.com with ESMTPSA id t1-20020a1709027fc100b00163f2f9f07csm194145plb.48.2022.06.09.04.02.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jun 2022 04:02:46 -0700 (PDT)
+Date: Thu, 9 Jun 2022 20:02:41 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Minchan Kim <minchan@kernel.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
 	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Shakeel Butt <shakeelb@google.com>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux-Next Mailing List <linux-next@vger.kernel.org>,
 	open list <linux-kernel@vger.kernel.org>,
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org,
-	linux-mm <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Raghuram Thammiraju <raghuram.thammiraju@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Qian Cai <quic_qiancai@quicinc.com>
-Subject: Re: [next] arm64: boot failed - next-20220606
-Message-ID: <YqHKs19RBubUNrve@arm.com>
-References: <CA+G9fYsJThWFAxXTbAcJmjshx+oYxVVd+gMM680hS0X1z37+FQ@mail.gmail.com>
- <20220607162504.7fd5a92a@canb.auug.org.au>
- <CALvZod5XBjw7MZfYSNv-UnE7pHMKTquUNomqyC5T05Qu_ef6Zw@mail.gmail.com>
- <CALvZod4DhM00LXsPty=cnYyv3Ci5YS5otasu_tr9o7ujQekKLw@mail.gmail.com>
- <CA+G9fYve1faH7AmpEa-p_ySb_WCgc4DdjqyS6fSdiJYsaEi=rA@mail.gmail.com>
- <CALvZod72bp9ejY+KghaUGkoXDrOMMbs_ofsopGib=MY4jzhRkg@mail.gmail.com>
- <CA+G9fYu6mayYrrYK+0Rn1K7HOM6WbaOhnJSx-Wv6CaKBDpaT2g@mail.gmail.com>
- <2a4cc632-c936-1e42-4fdc-572334c58ee1@openvz.org>
- <44530040-0384-796e-143f-b7293886753c@huawei.com>
- <20220609101153.GB2187@willie-the-truck>
+	linux-fsdevel@vger.kernel.org,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
+	linux-block <linux-block@vger.kernel.org>,
+	regressions@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
+	Nitin Gupta <ngupta@vflare.org>
+Subject: Re: qemu-arm: zram: mkfs.ext4 : Unable to handle kernel NULL pointer
+ dereference at virtual address 00000140
+Message-ID: <YqHTUdeZ8H0Lnf8E@google.com>
+References: <CA+G9fYtVOfWWpx96fa3zzKzBPKiNu1w3FOD4j++G8MOG3Vs0EA@mail.gmail.com>
+ <Yp47DODPCz0kNgE8@google.com>
+ <CA+G9fYsjn0zySHU4YYNJWAgkABuJuKtHty7ELHmN-+30VYgCDA@mail.gmail.com>
+ <Yp/kpPA7GdbArXDo@google.com>
+ <YqAL+HeZDk5Wug28@google.com>
+ <YqAMmTiwcyS3Ttla@google.com>
+ <YqEKapKLBgKEXGBg@google.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,61 +63,15 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220609101153.GB2187@willie-the-truck>
+In-Reply-To: <YqEKapKLBgKEXGBg@google.com>
 
-On Thu, Jun 09, 2022 at 11:11:54AM +0100, Will Deacon wrote:
-> On Thu, Jun 09, 2022 at 11:44:09AM +0800, Kefeng Wang wrote:
-> > On 2022/6/9 10:49, Vasily Averin wrote:
-> > > mem_cgroup_from_obj():
-> > > ffff80000836cf40:       d503245f        bti     c
-> > > ffff80000836cf44:       d503201f        nop
-> > > ffff80000836cf48:       d503201f        nop
-> > > ffff80000836cf4c:       d503233f        paciasp
-> > > ffff80000836cf50:       d503201f        nop
-> > > ffff80000836cf54:       d2e00021        mov     x1, #0x1000000000000            // #281474976710656
-> > > ffff80000836cf58:       8b010001        add     x1, x0, x1
-> > > ffff80000836cf5c:       b25657e4        mov     x4, #0xfffffc0000000000         // #-4398046511104
-> > > ffff80000836cf60:       d34cfc21        lsr     x1, x1, #12
-> > > ffff80000836cf64:       d37ae421        lsl     x1, x1, #6
-> > > ffff80000836cf68:       8b040022        add     x2, x1, x4
-> > > ffff80000836cf6c:       f9400443        ldr     x3, [x2, #8]
-> > > 
-> > > x5 : ffff80000a96f000 x4 : fffffc0000000000 x3 : ffff80000ad5e680
-> > > x2 : fffffe00002bc240 x1 : 00000200002bc240 x0 : ffff80000af09740
-> > > 
-> > > x0 = 0xffff80000af09740 is an argument of mem_cgroup_from_obj()
-> > > according to System.map it is init_net
-> > > 
-> > > This issue is caused by calling virt_to_page() on address of static variable init_net.
-> > > Arm64 consider that addresses of static variables are not valid virtual addresses.
-> > > On x86_64 the same API works without any problem.
+On (22/06/08 13:45), Minchan Kim wrote:
 > 
-> This just depends on whether or not the kernel is running out of the linear
-> mapping or not. On arm64, we use the vmalloc area for the kernel image and
-> so virt_to_page() won't work, just like it won't work for modules on other
-> architectures.
-> 
-> How are module addresses handled by mem_cgroup_from_obj()?
+> I am trying to understand the problem. AFAIK, the mapping_area was
+> static allocation per cpu so in zs_cpu_down, we never free the
+> mapping_area itself. Then, why do we need to reinitialize the local
+> lock again?
 
-It doesn't look like they are handled in any way. It just expects the
-pointer to be a linear map one. Something like below:
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 27cebaa53472..795bf3673fa7 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2860,6 +2860,11 @@ struct mem_cgroup *mem_cgroup_from_obj(void *p)
- 	if (mem_cgroup_disabled())
- 		return NULL;
- 
-+	if (is_module_address((unsigned long)p))
-+		return NULL;
-+	else if (is_kernel((unsigned long)p))
-+		return NULL;
-+
- 	folio = virt_to_folio(p);
- 
- 	/*
-
--- 
-Catalin
+Well... Something zero-s out that memory. NULL deref in strcmp() in
+lockdep points at NULL ->name. So I'm merely testing my theories here.
+If it's not area lock then it's pool->migrate_lock?
