@@ -1,109 +1,127 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01olkn2027.outbound.protection.outlook.com [40.92.53.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1607C
-	for <regressions@lists.linux.dev>; Fri, 10 Jun 2022 15:11:02 +0000 (UTC)
-Received: by mail-qv1-f49.google.com with SMTP id u8so18813813qvj.2
-        for <regressions@lists.linux.dev>; Fri, 10 Jun 2022 08:11:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=sKXGAog39LKZY4WYCXDbeAfVjBlfuLt1RyciOfygwXU=;
-        b=5XjnFx1Q4AQm5wIdywsF58LrpgI0DFqKlTw5rAl1tne0vdj0NiL/UmW25kXdFBolal
-         gMQcXcBylkNRLZqvRbsW7+24dMvZc4p4YYvoXFRgPrTe1skb/WJT0yrdd0gfQKG8ZiNS
-         D5+OXA/1qbb9TznPykh5k8dZhYnCK0Cz2cwSy/Azv/RPFdKwIdqYGcltIlQa2pIwvChW
-         Q3Eo1+Z1L9phXUF2U0kaO8wHhJyfcbnPcwVDW7bb0f9ioGYW369fTdqMBdM6UQ2o/9XW
-         TKlNlgjh4NuYzOw21MWUJwCZfEwXC43ThfJftTl4oCRNw6wdGgRN+xUdqS0hfHLsSBKe
-         a0Rg==
-X-Gm-Message-State: AOAM533mJRMju1I4ytn0JE/v2K/LWXq4GvQIonnkGuoCT+X+9giT8pXE
-	mpPEfAfejEgZ3oJo3n+kg4sh
-X-Google-Smtp-Source: ABdhPJzfpJR/RjQLHUu3kWRlKvxHxz6bsudZeV2/S/4eugGpDEdr3x2h4vOCWJiRMX7i6L/0LQCoNw==
-X-Received: by 2002:a05:6214:2308:b0:435:3440:7d3c with SMTP id gc8-20020a056214230800b0043534407d3cmr33667442qvb.65.1654873861579;
-        Fri, 10 Jun 2022 08:11:01 -0700 (PDT)
-Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id u20-20020a05620a0c5400b006a6a774d27bsm17078941qki.134.2022.06.10.08.11.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jun 2022 08:11:01 -0700 (PDT)
-Date: Fri, 10 Jun 2022 11:11:00 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Oleksandr Tymoshenko <ovt@google.com>, keescook@chromium.org,
-	sarthakkukreti@google.com, stable@vger.kernel.org,
-	regressions@lists.linux.dev, dm-devel@redhat.com
-Subject: Re: [PATCH 5.4 26/34] dm verity: set DM_TARGET_IMMUTABLE feature flag
-Message-ID: <YqNfBMOR9SE2TuCm@redhat.com>
-References: <20220603173816.944766454@linuxfoundation.org>
- <20220610042200.2561917-1-ovt@google.com>
- <YqLTV+5Q72/jBeOG@kroah.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B939F7A
+	for <regressions@lists.linux.dev>; Fri, 10 Jun 2022 19:57:47 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TitjFVCL2ET7w0S1yCmuY+i/LpVH7VaddcKnxhGlkbuzQe+s8uZQe/C8/CNZFz0q6nrZ5VPN6puphFMYdwEsTf1ebNTU/yJGr+byr3jifqv6hgs+ZxdpmSgChOIOUxolZVfAP+BOy2lyqV0Xyj0848nMu+MSGwyf/MgiSX1ekpuiiiuwW6McjY6hKWzVL/29uEuf2P/kiT0nmRlRV8MIjOV5307tAXPSh26iRCk6IB9JgUdtpcXfjg60YK5b6pk85d5dgX4klHHQ9B1cK/CZf6KUn/ieLn/bVFDyt2XGnQD/qbM1Mta8W5srWGaZstwMQH9FJ0MJFz0B61XvJa1KvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=d4vreyWaKrbXFpzyK5FwVioWcnRYYuiv3mzR54AOeDA=;
+ b=HPvqE9ajH83u/sFwb3hFGjtMVo3el7OUrfg66dTDiZLPIM62M/7pq3XRjUED1gXULJWM1GhFYa7wlldtpUAznTjON7DGlj4E/+ZgCD55Zv6X5lSGiMVZyLNw4+MZHJ6YeaaxVl+28YZ8A1pSz4L+XoxhRJaO+noQllKDXiOjAn6U650xBvpWqd7aB0TH4rR/PZYgWw1x+isf91u9YRbmqE5sOe1wL0RJR5Kp/XIYiMT9jEuFwbKW4IpBH5pNrBYrS5pFByJyvrRPBx6fpJHyM98kFSIfacCrjCMlPkaBkIBnBuq+bGGPRVHsQB7Ef+GUTSqd5oOP4OTzorypfGV6jA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d4vreyWaKrbXFpzyK5FwVioWcnRYYuiv3mzR54AOeDA=;
+ b=AObxL4z0+s4ohLx9K0XIBoaerhMORQWThsX7ai3GsvH/D4N9gAjQ75HvQ0wVp/hqJnekYSBWt4TwyZHYBecljXBcsR40rVOx+QUzVlBgBOAoP+X3YMnpjFsRRN31YuOBEx2VsyvnyIR4EUvY8zEA8vqQOJ6MwjJP9Ap5ZFOlEHr0/Ovw3PkqEwRwae/9Z0cjnm5ONQ0FL6XA08zBRKV94XvIn71NjAo6vKLNolk+CV/ig3ng2JonjWk4lkWkJ9y40JQjTXe5JvOyaScnbIkhdaqw59stMQmNDqGHUdouN2NXYVA4b8DwX4+y2JLmdcyrdtsjd/r/FKED58umnMMc+A==
+Received: from SG2PR03MB4152.apcprd03.prod.outlook.com (2603:1096:4:3d::10) by
+ SG2PR03MB3706.apcprd03.prod.outlook.com (2603:1096:4:48::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5332.8; Fri, 10 Jun 2022 19:57:44 +0000
+Received: from SG2PR03MB4152.apcprd03.prod.outlook.com
+ ([fe80::cdbc:70a:7467:63f8]) by SG2PR03MB4152.apcprd03.prod.outlook.com
+ ([fe80::cdbc:70a:7467:63f8%7]) with mapi id 15.20.5332.012; Fri, 10 Jun 2022
+ 19:57:44 +0000
+Message-ID:
+ <SG2PR03MB41529020102E6D613A0E651CFFA69@SG2PR03MB4152.apcprd03.prod.outlook.com>
+Date: Fri, 10 Jun 2022 14:57:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Content-Language: en-US
+To: stable@vger.kernel.org
+From: Yerong Li <yerong.li@outlook.com>
+Subject: external monitor no signal with HDMI port apple-gmux.c
+Cc: yerong.li@outlook.com, regressions@lists.linux.dev
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TMN: [2vIy1spFYthbIyFXqpgmhrJkvEL+Uryi]
+X-ClientProxiedBy: CH2PR14CA0031.namprd14.prod.outlook.com
+ (2603:10b6:610:56::11) To SG2PR03MB4152.apcprd03.prod.outlook.com
+ (2603:1096:4:3d::10)
+X-Microsoft-Original-Message-ID:
+ <ad5ca94b-164d-bbf5-ef73-0efbb1122643@outlook.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YqLTV+5Q72/jBeOG@kroah.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6f0f78f1-e343-44ee-60ce-08da4b1b7b89
+X-MS-Exchange-SLBlob-MailProps:
+	V5pmAly6juj5pXJYx5yH2BI0QAUxlBQYblM8nxARLv4Z9CF0JcuUJZW4zp8u0WVr7OzKDJKEQTqQnK1hwFH1u/dd5ez/u1w893L3m5lLG1jDFx7J9KbZFT8DpUhdKhifnnWlCDCZt2Ulq5JFrsWp+Jx364BknfWLv6ra21Ef9Pp7GmrP87JDtna8gTtr6cZnZbROh0fpppI95sjtm/k0uEHUAgSFZybORBrIx0dxb6pI0xvtsyu5Adr4urOA0JMN+irBKzU8vW38dNbXYw86jo+52xufeRcJIDzhhuqHcpkC6JoRs/gbGvyh1fW17F7NJVgqVSERD2QvkkbR6RRNJTv8bJELebHd0wwpZovEn5LSmvyDmNClNySl2VjT6hgeXuGI7TCVHw2CJStguYpAIq57Vg6j5eGHp0LzSQB9fwxG1t8yEOAhZ//VvMpkvTal7Irg6n4kNOvjyRtTzFWft68DN9CEevKijbIwCwxLpU3AaLhkktvPKAB4U+qRIBAqIbDuEq2QTrzRJFSKn1eXSMWVMgHLUv5eETHsoVFK/Ut9gw2VN9ANVDw3NQf8RqQO9i96bNNCzdFXX68ERdJ6fGFiri1gp6uC34XgP8r8TC+xZxZeiR1WCISYFwsfhlRZIw10wahn98dgimdUIS1OhqpyO0bGmRhaRSpLxDDqpLztZys082UCLp+N1EXBsXKz1qispeGVlPDlpzNNoAE3qXGooW4ntFJ47PYn1J/vzz5PTsxR5xRa4aZUGhgl4bRgVLqpue6V22nS+waOM0GqdrVGXbFTX8Wpe0kgdLVJ/BE=
+X-MS-TrafficTypeDiagnostic: SG2PR03MB3706:EE_
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	8EWyDLJbJiosOx0q3BEYLgIk4MkCbnUSiKhWqQrdsrBCpANkJWZUrHLp5BEfKHIUyGvBPmgCZZYAQ2D6Kom3cCQGcrXfzFbuJese6p+Cp+JPXncHuEGYaqbTTDfR+fwPZKtuy9lL49UDrtR+4vOANKbG2Ft5wSBAJ23l/x51uaN92zRPgOUJl0Xh5WrvUBd5FWl4vWztz2WNaaQACe/JMoENafGjnrB5w24L2OtWNXlgBtJQdRjHAkuj10qhuXtVZRZEYx/K9bus1SASPbAZf+DAMGJrw3FUtDLFQghz3bM4Qh/OINUrmnzIOrgXNae29t4zSfMQSzUOiIID+3OnU77NvQqxhTNOzptuMMBKAxt29V3N3YS/apx9fZf7ouwd29Gj2jiMMomBQJpkeOWVY8C3oITDU+AGGHp+/WQcR5PT59VLI8t8SEusJl44nIJXLeHUnVGVqYnvE9TVGMEzTgV8oJD/5eGVwojY18pwaDpr2uF9lzpcnrvA+XGXof6Mllzg+3QbBjU89b+K4/bOhrNUm4voybIq7bbmDhDJci7QqWgZoas2qG/FSfOWL072fNochXewvLeEGXSfPYXLMLJrGVxr6tAL5xDrq1I6GCkI5tjb5txA7LEpaFKzuqWg
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZGp4d2ZEeE4wbzBVV3RzTllKOTJVclorQ2Q1Vkh2V1VSdEZnTjM5R3NFTTVU?=
+ =?utf-8?B?dW9nbWJWeTlqcU9ldWJvbG5sSWJLY0x5MWdmL1FTK2ZuWVBHd1RwWVdIdVZ0?=
+ =?utf-8?B?d2N3aE9KMERuWjJDOThLdXVrRm5hZDdUL3REQmlRZnl3U2FUekVwQzIzRFFD?=
+ =?utf-8?B?eHp4MC9QRkNlcEpGQUVFcFliRi9LREFFK0ZoaEtIUU05ZnhlaTVpUDZIR2Nx?=
+ =?utf-8?B?VWhmQS90VDMvZEwzeFRhVXkvdk9CNTRrbEdwSnI5a1JJdnRUQmFpTmJHT3lG?=
+ =?utf-8?B?VlBQVzFNM1pXTVFPd0VRK0F1SDc5MWx2T0xzalpFaVM5dXJyU0hLUHQvU1Yv?=
+ =?utf-8?B?bEdmRGR1UDZ4dkcvVXByMk9Gd2NEQ3dZaGduV0ZaR2ZrNjAvZWlvM1VaWXhY?=
+ =?utf-8?B?V1h0MjdMb1RoNTlmSjA1NHBReFp1MnhnUXM5L2RINnJrcjdVcE00Lzlpak5a?=
+ =?utf-8?B?cXlHZTEvRGgxd1RlLzBRRUhUK0U3b1FISytqRC8yendwd0NxZENPbXRSSWp5?=
+ =?utf-8?B?dlZTMWFPL1J5aHpOMkprUThxLzlLZjljWWJxMUdKWUJsdTMwZEt6c3NGVWhl?=
+ =?utf-8?B?T0QydEFqTTZrVVNEZFRJMzZtLzU2UjVGS1lsZEFqN2wyQ2hhK1VvRy9qZTBR?=
+ =?utf-8?B?QUwwQ2NXRTVzSStCVGxwZ1k3aXJYRFYxZzZCcXMvN09VRXdaSHpJNlF2YWVC?=
+ =?utf-8?B?eVpYQzFCUW5WMndDVkxpMkNKdEJZdlhTamRLRDdyNEZUK1hVVlNqd0QvK3U2?=
+ =?utf-8?B?d0lQcGZDRDFRcWg4dW41QzdjdkRGbHlDWllSMHdjUWs5V3p4eEpPMUZud1JH?=
+ =?utf-8?B?OU9KT1BCTlhNblVHWU1oSkJGSjIxcFdvTS84Zi9xUFlmM3pYNUJQQy9hdldD?=
+ =?utf-8?B?WmE5Mi9jclVidnJ0TzdqVXhnM0dlNDQ1cEJNaXRkTEJuaEtrTFpuWnpuK1hz?=
+ =?utf-8?B?T0pPbzJGWFpPUnlxUnBWR2FySkd0YVN3MFdDaWhpUHhBSlFBWlVubjN2VVdx?=
+ =?utf-8?B?bUNLVVE5TDZNSElTWEFTYjFRTUtZWllTOThNWlVJYnNjNFRnNzkraDNZRVlo?=
+ =?utf-8?B?b2x0T3FudUVram5pK1RtNmJoQXVOTDRiSE1Ld1BKV25sVTNwRzgxUEJ3UjRF?=
+ =?utf-8?B?azVqam1NM3dsWkVxWk1kVDgyZFlvTFhqRlhkb1ZsdEY0ZjlETmlxaXVsSlhw?=
+ =?utf-8?B?amJqOEVPL2o5dk0zR0tQVUUvME9HU1B6S2J6Wlp2Z2h4a0pGLzU1TWs5TzZJ?=
+ =?utf-8?B?RHUrMkhUZDlVMTlmUTQyWUV4d0hHSDV2WVhabDUwelJEUXNaWTQxRW5Jd2Q4?=
+ =?utf-8?B?bmpXTDhGWXIyYXc1MzBNbEJEdUZkYXdFWnJSKzVTaFpCdEFsN2xQMlVNODJu?=
+ =?utf-8?B?WXl2NDd6ZUEyaUhRWVAwRjZ1bG10MzQ1dnJkSHhEa1RZZ2RLTXJNRDFMS1Ny?=
+ =?utf-8?B?Y2RRQXdXSVpEMCtEbE5va2o3NWpaOW9rc0dwU3pFS1p1dGVkWjlROTBWanRl?=
+ =?utf-8?B?TFhrMEIvWitTMjFYZWRZWU9kVTFGY0xWbk5FSzJUL3cwUUw4WTlCUnVreml3?=
+ =?utf-8?B?TzkwZ0tPektmNTBZTGYrRFVtQnV5UDNOVWpRbXhseUxWVkNIK2MyMWs3TlJn?=
+ =?utf-8?B?eGxTaUZSaHp4VStCMWdFdmVKWGZuSjVEVFo3TC9sK2lRcDRnQTBIVm1rNkNS?=
+ =?utf-8?B?NmE5VUtYSDE0Ym1tT3pGdmRHTnZuK0Jybk1ieWRJMjFRTjJFdVdJdzlJN2Zh?=
+ =?utf-8?B?NnV3MldrM1ZQN204ZDJHVFVDZWprUk1nU0x5WGd6NTladk50K2R5NXBvYTJw?=
+ =?utf-8?B?Q0xkZndNZ2hETHdld1hiSGhtdnRMeVhWRTRvZXVqL29vRGliSTNrZ2VSUUpm?=
+ =?utf-8?B?MGtwQjB2bWxSaDBwYmJ0dHNSV1cvaGhIWG1XOVpqWkJhN3ZYd3JxVTFpSElu?=
+ =?utf-8?Q?wh43keG12xY=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f0f78f1-e343-44ee-60ce-08da4b1b7b89
+X-MS-Exchange-CrossTenant-AuthSource: SG2PR03MB4152.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jun 2022 19:57:44.3896
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR03MB3706
 
-On Fri, Jun 10 2022 at  1:15P -0400,
-Greg KH <gregkh@linuxfoundation.org> wrote:
+Hi there:
 
-> On Fri, Jun 10, 2022 at 04:22:00AM +0000, Oleksandr Tymoshenko wrote:
-> > I believe this commit introduced a regression in dm verity on systems
-> > where data device is an NVME one. Loading table fails with the
-> > following diagnostics:
-> > 
-> > device-mapper: table: table load rejected: including non-request-stackable devices
-> > 
-> > The same kernel works with the same data drive on the SCSI interface.
-> > NVME-backed dm verity works with just this commit reverted.
-> > 
-> > I believe the presence of the immutable partition is used as an indicator
-> > of special case NVME configuration and if the data device's name starts
-> > with "nvme" the code tries to switch the target type to
-> > DM_TYPE_NVME_BIO_BASED (drivers/md/dm-table.c lines 1003-1010).
-> > 
-> > The special NVME optimization case was removed in
-> > 5.10 by commit 9c37de297f6590937f95a28bec1b7ac68a38618f, so only 5.4 is
-> > affected.
-> > 
-> 
-> Why wouldn't 4.9, 4.14, and 4.19 also be affected here?  Should I also
-> just queue up 9c37de297f65 ("dm: remove special-casing of bio-based
-> immutable singleton target on NVMe") to those older kernels?  If so,
-> have you tested this and verified that it worked?
+I am using debian 11 linux with a macbook pro 2013 15-inch. i7-3740QM 
+CPU (NIVIDIA-GPU switch)
 
-Sorry for the unforeseen stable@ troubles here!
+I think on my macbook pro the HDMI port with external monitor is not 
+working while the DP port /thunderbolt 2 is working. (Actually one of my 
+2 DP port is working the other is not) These three ports work under 
+MacOS system:
 
-In general we'd be fine to apply commit 9c37de297f65 but to do it
-properly would require also making sure commits that remove
-"DM_TYPE_NVME_BIO_BASED", like 8d47e65948dd ("dm mpath: remove
-unnecessary NVMe branching in favor of scsi_dh checks") are applied --
-basically any lingering references to DM_TYPE_NVME_BIO_BASED need to
-be removed.
+https://forums.developer.nvidia.com/t/external-monitor-not-working-nvidia-optimus/216573/2
 
-The commit header for 8d47e65948dd documents what
-DM_TYPE_NVME_BIO_BASED was used for.. it was dm-mpath specific and
-"nvme" mode really never got used by any userspace that I'm aware of.
+Many users met similar issues: HDMI got detected by xrandr while the 
+external monitor got no signals. Could you help us?
 
-Sadly I currently don't have the time to do this backport for all N
-stable kernels... :(
+https://forums.developer.nvidia.com/t/no-signal-with-hdmi-or-dp-0-ports-on-macbookpro10-1-gt-650m-only-dp-1-works/49777/5
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/platform/x86/apple-gmux.c#n311
 
-But if that backport gets out of control: A simpler, albeit stable@
-unicorn, way to resolve this is to simply revert 9c37de297f65 and make
-it so that DM-mpath and DM core just used bio-based if "nvme" is
-requested by dm-mpath, so also in drivers/md/dm-mpath.c e.g.:
+Yerong
 
-@@ -1091,8 +1088,6 @@ static int parse_features(struct dm_arg_set *as, struct multipath *m)
-
-                        if (!strcasecmp(queue_mode_name, "bio"))
-                                m->queue_mode = DM_TYPE_BIO_BASED;
-			else if (!strcasecmp(queue_mode_name, "nvme"))
--                               m->queue_mode = DM_TYPE_NVME_BIO_BASED;
-+                               m->queue_mode = DM_TYPE_BIO_BASED;
-                        else if (!strcasecmp(queue_mode_name, "rq"))
-                                m->queue_mode = DM_TYPE_REQUEST_BASED;
-                        else if (!strcasecmp(queue_mode_name, "mq"))
-
-Mike
