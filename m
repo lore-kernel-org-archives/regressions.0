@@ -1,90 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54515362
-	for <regressions@lists.linux.dev>; Fri, 10 Jun 2022 10:30:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99E47C34114;
-	Fri, 10 Jun 2022 10:30:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1654857038;
-	bh=HomKEPM17tMZ7u3VPSPWhPx1TPmD9+N1ylD/vNId9V8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rBM1No9yfHqXbW6wEShIwQ2IYiGlTs3/9nJAQA9RM/wvdw5LfJqJk0S3X2k9cT0MF
-	 fvNa76WwMtrgAKfte1RNOjbhip4pIRUbWfIQnjEi4FYqBUTdNK7aJ5hQ25PTFbxJmK
-	 YFouMv+23kEEZwDtMR4bmKimsFF676H5UHyXRhew=
-Date: Fri, 10 Jun 2022 12:30:35 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alex Natalsson <harmoniesworlds@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: echo mem > /sys/power/state write error "Device or resource
- busy" on Amlogic A311D device
-Message-ID: <YqMdS+3qpYHfWN9f@kroah.com>
-References: <CADs9LoMEF86Fp2-0ji7d9CNA5F=8ArwPWnj09h_Cwo6poNsWVA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B71362
+	for <regressions@lists.linux.dev>; Fri, 10 Jun 2022 10:56:30 +0000 (UTC)
+Received: by mail-yb1-f180.google.com with SMTP id t1so251044ybd.2
+        for <regressions@lists.linux.dev>; Fri, 10 Jun 2022 03:56:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UVWDkivKH1r0YSSFaw6OjTiC/YFmD6ezZssjPD8j23w=;
+        b=RXvlY48vrnprsPhlzCN84oVM35sDdA8yC03DQqkStEKvLu2TPLb4+GXHZs42yE1HQx
+         ttOCe8rdEkjLlqM3l9WDtsBCXfF4s+ChMyYv8Rr+fnyZ3LeVOcdMg6nEcEEKhCDER0yr
+         fJTIw9qxUsAPtehkIPwv0SyUlxvDgwGcMmXAwiiBSv9/Zl7En+0nWztnAMnMDurZDcZY
+         api97837F1HNyG80jX0Pe+SJ1JI7N7lMGqY67LErpq+TZ7CiRQ+ruwaymVLbslc02zZl
+         XSlXazfrWTPWCpkIL90Vp8CX52j6WIsUEJ/9kUyf+tpm9WQnID+ZJjebzkTlpXQUnTgH
+         lxFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UVWDkivKH1r0YSSFaw6OjTiC/YFmD6ezZssjPD8j23w=;
+        b=TdpVOzHG7tyhLSPfok4e/xNHWfEzIMcILas8nIxO+c2KT+jGTUbtqN5IEExWNFmILH
+         dxvcQQ0JPei/QZxEDzW9nT+nxFtITFtmto/ic0kTSrZORf4KYDNPpwN3AI7IPOKv501S
+         vSvjUqmRMqRSovpZgF+VHW7yXb58NMBRpSVLeuanw67FuWrJzFyoZe3U5oPcsw9QlsbS
+         z73eleLOSSMd5KNnvNbRWKNVXoG0KL55uf5E1ZU9JXEZVEJZFmqAUzqmwquwLaaRzd6R
+         fEZl3/Dp06yabYXtgcnM52M2LZOSZxs4JPCZ3FnRLKe22V8mzTbWEuzRBTM41SUzYntv
+         zMyQ==
+X-Gm-Message-State: AOAM531RaHS++8+NK9XAp+gkYG4S3H51NQwSyzh9yh43wUOXjTtlmGsF
+	UFW1ayq7FYmS8O/JL27XeeF8TCGb65stkNPR77NEUA==
+X-Google-Smtp-Source: ABdhPJwm7RORsPVX9EpA+f/rpyV/bm7dA/SQ01EzbzV1yVf+JvmxjuyQHKmWdjTOtYg6usHy7cw6J444+7/JlR3E6Mo=
+X-Received: by 2002:a25:6546:0:b0:660:2a80:d6b6 with SMTP id
+ z67-20020a256546000000b006602a80d6b6mr42004476ybb.617.1654858588911; Fri, 10
+ Jun 2022 03:56:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADs9LoMEF86Fp2-0ji7d9CNA5F=8ArwPWnj09h_Cwo6poNsWVA@mail.gmail.com>
+References: <CA+G9fYv7fESqpGoeKmHoJsst6wfRNMi2wQLGm+PsjbLDuDjdMQ@mail.gmail.com>
+ <CA+G9fYsJThWFAxXTbAcJmjshx+oYxVVd+gMM680hS0X1z37+FQ@mail.gmail.com> <YqItYKEIvsw4Yzjx@carbon>
+In-Reply-To: <YqItYKEIvsw4Yzjx@carbon>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Fri, 10 Jun 2022 16:26:17 +0530
+Message-ID: <CA+G9fYuLNjq0hc6T4sZcq7g4YoWgBwa1H7x21otED7QoLaTYXw@mail.gmail.com>
+Subject: Re: [next] arm64: boot failed - next-20220606
+To: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	regressions@lists.linux.dev, lkft-triage@lists.linaro.org, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mm <linux-mm@kvack.org>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, Andrew Morton <akpm@linux-foundation.org>, 
+	Ard Biesheuvel <ardb@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Raghuram Thammiraju <raghuram.thammiraju@arm.com>, 
+	Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>, Shakeel Butt <shakeelb@google.com>, 
+	Vasily Averin <vvs@openvz.org>, Qian Cai <quic_qiancai@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jun 10, 2022 at 01:18:56PM +0300, Alex Natalsson wrote:
-> Hello friends.
-> Suspend to RAM on Amlogic A311D chip (Khadas VIM3 SBC) was broken with
-> 5.17.13 and with 5.18.2 it also presents.
-> 
-> When I trying do this I recieve error message:
-> VIM3 ~ # LANG=C echo mem > /sys/power/state
-> [  952.824117] PM: suspend entry (deep)
-> [  952.828333] Filesystems sync: 0.003 seconds
-> [  952.829473] Freezing user space processes ...
-> [  972.833509] Freezing of tasks failed after 20.003 seconds (1 tasks
-> refusing to freeze, wq_busy=0):
-> [  972.841178] task:mplayer         state:D stack:    0 pid:  779
-> ppid:   736 flags:0x00000205
-> [  972.849457] Call trace:
-> [  972.851868]  __switch_to+0xf8/0x150
-> [  972.855315]  __schedule+0x1f8/0x570
-> [  972.858758]  schedule+0x48/0xc0
-> [  972.861856]  schedule_preempt_disabled+0x10/0x20
-> [  972.866417]  __mutex_lock.constprop.0+0x158/0x590
-> [  972.871071]  __mutex_lock_slowpath+0x14/0x20
-> [  972.875296]  mutex_lock+0x5c/0x70
-> [  972.878573]  dpcm_fe_dai_open+0x44/0x194
-> [  972.882456]  snd_pcm_open_substream+0xa4/0x174
-> [  972.886857]  snd_pcm_open.part.0+0xd8/0x1dc
-> [  972.890994]  snd_pcm_playback_open+0x64/0x94
-> [  972.895223]  snd_open+0xac/0x1d0
-> [  972.898411]  chrdev_open+0xdc/0x2c4
-> [  972.901861]  do_dentry_open+0x12c/0x380
-> [  972.905652]  vfs_open+0x30/0x3c
-> [  972.908758]  do_open+0x1e4/0x3a0
-> [  972.911948]  path_openat+0x10c/0x280
-> [  972.915486]  do_filp_open+0x80/0x130
-> [  972.919019]  do_sys_openat2+0xb4/0x170
-> [  972.922731]  __arm64_sys_openat+0x64/0xb0
-> [  972.926700]  invoke_syscall+0x48/0x114
-> [  972.930421]  el0_svc_common.constprop.0+0xd4/0xfc
-> [  972.935070]  do_el0_svc+0x28/0x90
-> [  972.938347]  el0_svc+0x34/0xb0
-> [  972.941367]  el0t_64_sync_handler+0xa4/0x130
-> [  972.945595]  el0t_64_sync+0x18c/0x190
-> 
-> [  972.950674] OOM killer enabled.
-> [  972.953781] Restarting tasks ... done.
-> -bash: echo: write error: Device or resource busy
-> VIM3 ~ :( #
-> 
-> With 5.16.2 kernel version suspend to RAM is working, but system very
-> slow after resume.
-> 
+Hi Roman,
 
-Can you use 'git bisect' to track down the offending commit?
+On Thu, 9 Jun 2022 at 22:57, Roman Gushchin <roman.gushchin@linux.dev> wrote:
+>
+> On Tue, Jun 07, 2022 at 11:00:39AM +0530, Naresh Kamboju wrote:
+> > On Mon, 6 Jun 2022 at 17:16, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> > >
+> > > Linux next-20220606 arm64 boot failed. The kernel boot log is empty.
+> > > I am bisecting this problem.
+> > >
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > >
+> > > The initial investigation show that,
+> > >
+> > > GOOD: next-20220603
+> > > BAD:  next-20220606
+> > >
+> > > Boot log:
+> > > Starting kernel ...
+> >
+> > Linux next-20220606 and next-20220607 arm64 boot failed.
+> > The kernel panic log showing after earlycon.
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>
+> Naresh, can you, please, check if the following patch resolves the issue?
+> (completely untested except for building)
 
-And does 5.19-rc1 also have this issue?
+I have tested this patch on top of next-20220606 and boot successfully [1].
 
-thanks,
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-greg k-h
+> --
+>
+> From 6a454876c9a1886e3cf8e9b66dae19b326f8901a Mon Sep 17 00:00:00 2001
+> From: Roman Gushchin <roman.gushchin@linux.dev>
+> Date: Thu, 9 Jun 2022 10:03:20 -0700
+> Subject: [PATCH] mm: kmem: make mem_cgroup_from_obj() vmalloc()-safe
+>
+> Currently mem_cgroup_from_obj() is not working properly with objects
+> allocated using vmalloc(). It creates problems in some cases, when
+> it's called for static objects belonging to  modules or generally
+> allocated using vmalloc().
+>
+> This patch makes mem_cgroup_from_obj() safe to be called on objects
+> allocated using vmalloc().
+>
+> It also introduces mem_cgroup_from_slab_obj(), which is a faster
+> version to use in places when we know the object is either a slab
+> object or a generic slab page (e.g. when adding an object to a lru
+> list).
+>
+> Suggested-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+> ---
+>  include/linux/memcontrol.h |  6 ++++
+>  mm/list_lru.c              |  2 +-
+>  mm/memcontrol.c            | 71 +++++++++++++++++++++++++++-----------
+>  3 files changed, 57 insertions(+), 22 deletions(-)
+>
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index 0d7584e2f335..4d31ce55b1c0 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -1761,6 +1761,7 @@ static inline int memcg_kmem_id(struct mem_cgroup *memcg)
+>  }
+>
+>  struct mem_cgroup *mem_cgroup_from_obj(void *p);
+> +struct mem_cgroup *mem_cgroup_from_slab_obj(void *p);
+>
+>  static inline void count_objcg_event(struct obj_cgroup *objcg,
+>                                      enum vm_event_item idx)
+> @@ -1858,6 +1859,11 @@ static inline struct mem_cgroup *mem_cgroup_from_obj(void *p)
+>         return NULL;
+>  }
+>
+> +static inline struct mem_cgroup *mem_cgroup_from_slab_obj(void *p)
+> +{
+> +       return NULL;
+> +}
+> +
+>  static inline void count_objcg_event(struct obj_cgroup *objcg,
+>                                      enum vm_event_item idx)
+>  {
+> diff --git a/mm/list_lru.c b/mm/list_lru.c
+> index ba76428ceece..a05e5bef3b40 100644
+> --- a/mm/list_lru.c
+> +++ b/mm/list_lru.c
+> @@ -71,7 +71,7 @@ list_lru_from_kmem(struct list_lru *lru, int nid, void *ptr,
+>         if (!list_lru_memcg_aware(lru))
+>                 goto out;
+>
+> -       memcg = mem_cgroup_from_obj(ptr);
+> +       memcg = mem_cgroup_from_slab_obj(ptr);
+>         if (!memcg)
+>                 goto out;
+>
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 4093062c5c9b..8c408d681377 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -783,7 +783,7 @@ void __mod_lruvec_kmem_state(void *p, enum node_stat_item idx, int val)
+>         struct lruvec *lruvec;
+>
+>         rcu_read_lock();
+> -       memcg = mem_cgroup_from_obj(p);
+> +       memcg = mem_cgroup_from_slab_obj(p);
+>
+>         /*
+>          * Untracked pages have no memcg, no lruvec. Update only the
+> @@ -2833,27 +2833,9 @@ int memcg_alloc_slab_cgroups(struct slab *slab, struct kmem_cache *s,
+>         return 0;
+>  }
+>
+> -/*
+> - * Returns a pointer to the memory cgroup to which the kernel object is charged.
+> - *
+> - * A passed kernel object can be a slab object or a generic kernel page, so
+> - * different mechanisms for getting the memory cgroup pointer should be used.
+> - * In certain cases (e.g. kernel stacks or large kmallocs with SLUB) the caller
+> - * can not know for sure how the kernel object is implemented.
+> - * mem_cgroup_from_obj() can be safely used in such cases.
+> - *
+> - * The caller must ensure the memcg lifetime, e.g. by taking rcu_read_lock(),
+> - * cgroup_mutex, etc.
+> - */
+> -struct mem_cgroup *mem_cgroup_from_obj(void *p)
+> +static __always_inline
+> +struct mem_cgroup *mem_cgroup_from_obj_folio(struct folio *folio, void *p)
+>  {
+> -       struct folio *folio;
+> -
+> -       if (mem_cgroup_disabled())
+> -               return NULL;
+> -
+> -       folio = virt_to_folio(p);
+> -
+>         /*
+>          * Slab objects are accounted individually, not per-page.
+>          * Memcg membership data for each individual object is saved in
+> @@ -2886,6 +2868,53 @@ struct mem_cgroup *mem_cgroup_from_obj(void *p)
+>         return page_memcg_check(folio_page(folio, 0));
+>  }
+>
+> +/*
+> + * Returns a pointer to the memory cgroup to which the kernel object is charged.
+> + *
+> + * A passed kernel object can be a slab object, vmalloc object or a generic
+> + * kernel page, so different mechanisms for getting the memory cgroup pointer
+> + * should be used.
+> + *
+> + * In certain cases (e.g. kernel stacks or large kmallocs with SLUB) the caller
+> + * can not know for sure how the kernel object is implemented.
+> + * mem_cgroup_from_obj() can be safely used in such cases.
+> + *
+> + * The caller must ensure the memcg lifetime, e.g. by taking rcu_read_lock(),
+> + * cgroup_mutex, etc.
+> + */
+> +struct mem_cgroup *mem_cgroup_from_obj(void *p)
+> +{
+> +       struct folio *folio;
+> +
+> +       if (mem_cgroup_disabled())
+> +               return NULL;
+> +
+> +       if (unlikely(is_vmalloc_addr(p)))
+> +               folio = page_folio(vmalloc_to_page(p));
+> +       else
+> +               folio = virt_to_folio(p);
+> +
+> +       return mem_cgroup_from_obj_folio(folio, p);
+> +}
+> +
+> +/*
+> + * Returns a pointer to the memory cgroup to which the kernel object is charged.
+> + * Similar to mem_cgroup_from_obj(), but faster and not suitable for objects,
+> + * allocated using vmalloc().
+> + *
+> + * A passed kernel object must be a slab object or a generic kernel page.
+> + *
+> + * The caller must ensure the memcg lifetime, e.g. by taking rcu_read_lock(),
+> + * cgroup_mutex, etc.
+> + */
+> +struct mem_cgroup *mem_cgroup_from_slab_obj(void *p)
+> +{
+> +       if (mem_cgroup_disabled())
+> +               return NULL;
+> +
+> +       return mem_cgroup_from_obj_folio(virt_to_folio(p), p);
+> +}
+> +
+>  static struct obj_cgroup *__get_obj_cgroup_from_memcg(struct mem_cgroup *memcg)
+>  {
+>         struct obj_cgroup *objcg = NULL;
+> --
+> 2.35.3
+
+[1] https://lkft.validation.linaro.org/scheduler/job/5156201
+
+--
+Linaro LKFT
+https://lkft.linaro.org
