@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60F17A
-	for <regressions@lists.linux.dev>; Sat, 11 Jun 2022 13:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280F67A
+	for <regressions@lists.linux.dev>; Sat, 11 Jun 2022 13:53:47 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1o01Mz-0003Hv-Qn; Sat, 11 Jun 2022 15:41:41 +0200
-Message-ID: <a32f84e1-33d1-08ea-8912-cf2311532df8@leemhuis.info>
-Date: Sat, 11 Jun 2022 15:41:41 +0200
+	id 1o01Ye-0006jb-NG; Sat, 11 Jun 2022 15:53:44 +0200
+Message-ID: <84d01637-febb-f602-2d03-fe1600e85ae3@leemhuis.info>
+Date: Sat, 11 Jun 2022 15:53:44 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,40 +16,53 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: Regression: at24 eeprom writing times out on sama5d3
+Subject: Re: regression, 5.19.0-rc1 not powering off when hibernated
 Content-Language: en-US
-To: linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+To: Ken Moffat <zarniwhoop@ntlworld.com>, linux-kernel@vger.kernel.org,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <074b39c5-55fc-2bc1-072d-aef1070e284d@axentia.se>
+References: <YqE22nS9k2+AldI6@llamedos.localdomain>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <074b39c5-55fc-2bc1-072d-aef1070e284d@axentia.se>
+Cc: Linux PM <linux-pm@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+In-Reply-To: <YqE22nS9k2+AldI6@llamedos.localdomain>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1654954912;89e5426c;
-X-HE-SMSGID: 1o01Mz-0003Hv-Qn
-
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1654955627;d68108f2;
+X-HE-SMSGID: 1o01Ye-0006jb-NG
 
 Hi, this is your Linux kernel regression tracker.
 
-On 09.06.22 16:28, Peter Rosin wrote:
-> Hi!
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+Also CCing the hibernation maintainers and Linux-pm.
+
+On 09.06.22 01:55, Ken Moffat wrote:
+> Up to 5.18.0 hibernation has worked ok on my ryzen 5 3400G : screen
+> blanks, disk activity for the write to swap, screen briefly has a
+> trashed display, machine powers off.  When powering up from
+> hibernation, after the saved files are loaded X starts with a
+> briefly trashed display before my desktop reappears.
 > 
-> I have not actually bisected this issue but reverting the effects of
-> patch a4bd8da893a3 ("ARM: dts: at91: sama5d3: add i2c gpio pinctrl")
-> makes the problem go away.
+> But with 5.19.0-rc1 the screen is blank throughtout the hibernation,
+> and briefly when restoring (no complaint about that), but when
+> hibernating it no longer powers off and I have to hold the on/off
+> switch to power off.
+> 
+> Is this a known problem ?
 
-To be sure below issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
+Thanks for the report. Maybe the hibernation maintainers might know, but
+often issues like this are caused by other things like drivers. If they
+don#t have a idea, you likely need to do a bisection to get down to the
+change that introduced this regressions.
 
-#regzbot ^introduced a4bd8da893a3
-#regzbot title i2c: at24 eeprom writing times out on sama5d3
+Anyway: To be sure below issue doesn't fall through the cracks
+unnoticed, I'm adding it to regzbot, my Linux kernel regression tracking
+bot:
+
+#regzbot ^introduced v5.18..v5.19-rc1
+#regzbot title hibernate: Not powering off when hibernated
 #regzbot ignore-activity
-#regzbot monitor:
-https://lore.kernel.org/all/20210727111554.1338832-1-codrin.ciubotariu@microchip.com/
 
 This isn't a regression? This issue or a fix for it are already
 discussed somewhere else? It was fixed already? You want to clarify when
@@ -69,165 +82,3 @@ P.S.: As the Linux kernel's regression tracker I deal with a lot of
 reports and sometimes miss something important when writing mails like
 this. If that's the case here, don't hesitate to tell me in a public
 reply, it's in everyone's interest to set the public record straight.
-
-
-
-> I.e. I need something like this in my dts
-> 
-> &i2c2 {
-> 	status = "okay";
-> 
-> 	pinctrl-names = "default";
-> 	/delete-property/ pinctrl-1;
-> 	/delete-property/ sda-gpios;
-> 	/delete-property/ scl-gpios;
-> 
-> 	eeprom@50 {
-> 		compatible = "st,24c64", "atmel,24c64";
-> 		reg = <0x50>;
-> 		wp-gpios = <&filter_gpio 7 GPIO_ACTIVE_HIGH>;
-> 	};
-> };
-> 
-> for multi-page eeprom writes to not time out (a page is 32 bytes on this
-> eeprom).
-> 
-> For reference, the current defaults for this SoC/I2C-bus, that I modify,
-> are:
-> 
-> 	pinctrl-names = "default", "gpio";
-> 	pinctrl-0 = <&pinctrl_i2c2>;
-> 	pinctrl-1 = <&pinctrl_i2c2_gpio>;
-> 	sda-gpios = <&pioA 18 GPIO_ACTIVE_HIGH>;
-> 	scl-gpios = <&pioA 19 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
-> 
-> I suspect that the underlying reason is that the bus recovery takes
-> too long and that the at24 eeprom driver gives up prematurely. I doubt
-> that this is chip specific, but I don't know that.
-> 
-> I can work around the issue in user space with by writing in 4 byte
-> chunks, like so
-> 
-> dd if=source.file of=/sys/bus/i2c/devices/2-0050/eeprom obs=4
-> 
-> but that is really ugly and gets slow too, about 20 seconds to program
-> the full 8kB eeprom. With the above in my dts it takes a second or
-> so (a bit more with dynamic debug active).
-> 
-> 
-> If I run
-> 
-> dd if=source.file of=/sys/bus/i2c/devices/2-0050/eeprom
-> 
-> with a source.file of 8kB and the upstream dts properties in place, I can
-> collect the following debug output from at24, i2c-core and i2c-at91:
-> 
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer complete
-> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@0 --> 0 (-23170)
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: received nack
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
-> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@32 --> -121 (-23169)
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer complete
-> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@32 --> 0 (-23168)
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: received nack
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
-> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@64 --> -121 (-23168)
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer complete
-> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@64 --> 0 (-23167)
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: received nack
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
-> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@96 --> -121 (-23167)
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: controller timed out
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
-> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@96 --> -110 (-23155)
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: controller timed out
-> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
-> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@96 --> -110 (-23143)
-> 
-> And then there is no more action. I.e. only a couple of 32 byte pages
-> are written.
-> 
-> With the above mentioned dts override in place I instead get this, which is
-> a lot more sensible:
-> 
-> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
-> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@0 --> 0 (753629)
-> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
-> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@32 --> -121 (753629)
-> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
-> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@32 --> 0 (753630)
-> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
-> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@64 --> -121 (753630)
-> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
-> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@64 --> 0 (753631)
-> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
-> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@96 --> -121 (753631)
-> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
-> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@96 --> 0 (753632)
-> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
-> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@128 --> -121 (753632)
-> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
-> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@128 --> 0 (753633)
-> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
-> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@160 --> -121 (753633)
-> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
-> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@160 --> 0 (753634)
-> ... snip ...
-> Jun  9 15:48:55 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: received nack
-> Jun  9 15:48:55 me20 kernel: at24 2-0050: write 32@8128 --> -121 (753883)
-> Jun  9 15:48:55 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer complete
-> Jun  9 15:48:55 me20 kernel: at24 2-0050: write 32@8128 --> 0 (753884)
-> Jun  9 15:48:55 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: received nack
-> Jun  9 15:48:55 me20 kernel: at24 2-0050: write 32@8160 --> -121 (753884)
-> Jun  9 15:48:55 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
-> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
-> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer complete
-> Jun  9 15:48:55 me20 kernel: at24 2-0050: write 32@8160 --> 0 (753885)
-> 
-> Cheers,
-> Peter
-
