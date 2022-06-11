@@ -1,137 +1,233 @@
-Received: from proxima.lasnet.de (proxima.lasnet.de [78.47.171.185])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8B87C
-	for <regressions@lists.linux.dev>; Sat, 11 Jun 2022 11:19:36 +0000 (UTC)
-Received: from [IPv6:2003:f8:3f14:2000:8797:6795:925b:bcbb] (p200300f83f14200087976795925bbcbb.dip0.t-ipconnect.de [IPv6:2003:f8:3f14:2000:8797:6795:925b:bcbb])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jluebbe@lasnet.de)
-	by proxima.lasnet.de (Postfix) with ESMTPSA id D76C4C0106;
-	Sat, 11 Jun 2022 13:14:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lasnet.de; s=2021;
-	t=1654946063;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=tP7Lwh/5getqoLrsB1KpDEqmPHPuv8MuUka2JaZruq8=;
-	b=NyAA1orBLANUqz0mfifyxFEoKsvfDsd0GARx3tK/L0h4XSc5JWg0JD2KUnOwRRljBRAANk
-	MNGwF7mi2Be1BNzkpzkfcyBrrcYZAQZBaUU7lgRgUOIdGdk26kHxRiR639oxBY29vD9aXV
-	FFT4ZNoqFuwBbhMQMS/Ap+aXEsAHxstsnKN2XC/u8Bj+kKZ3WaBuAVfhJm0ACLoT+hHkXm
-	vyz1HsVQFaGUVCRFXwK1h0J3b4omX7sJEHNCJrsIB4x7dgn3+cdumj1OonCxVMltPDiUSb
-	c8o0F942z1iCDENempgrQE8naLKlSVhoz26p96K4Hu28OwU1Vryt1Mftj0M76w==
-Message-ID: <a54c149aed38fded2d3b5fdb1a6c89e36a083b74.camel@lasnet.de>
-Subject: [REGRESSION] connection timeout with routes to VRF
-From: Jan Luebbe <jluebbe@lasnet.de>
-To: David Ahern <dsahern@kernel.org>, Robert Shearman
- <robertshearman@gmail.com>
-Cc: Mike Manning <mvrmanning@gmail.com>, "David S. Miller"
- <davem@davemloft.net>,  netdev@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel <linux-kernel@vger.kernel.org>
-Date: Sat, 11 Jun 2022 13:14:43 +0200
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.3-1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60F17A
+	for <regressions@lists.linux.dev>; Sat, 11 Jun 2022 13:41:51 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1o01Mz-0003Hv-Qn; Sat, 11 Jun 2022 15:41:41 +0200
+Message-ID: <a32f84e1-33d1-08ea-8912-cf2311532df8@leemhuis.info>
+Date: Sat, 11 Jun 2022 15:41:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: Regression: at24 eeprom writing times out on sama5d3
+Content-Language: en-US
+To: linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <074b39c5-55fc-2bc1-072d-aef1070e284d@axentia.se>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <074b39c5-55fc-2bc1-072d-aef1070e284d@axentia.se>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1654954912;89e5426c;
+X-HE-SMSGID: 1o01Mz-0003Hv-Qn
 
-Hi,
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-TL;DR: We think we have found a regression in the handling of VRF route leaking
-caused by "net: allow binding socket in a VRF when there's an unbound socket"
-(3c82a21f4320).
+Hi, this is your Linux kernel regression tracker.
 
+On 09.06.22 16:28, Peter Rosin wrote:
+> Hi!
+> 
+> I have not actually bisected this issue but reverting the effects of
+> patch a4bd8da893a3 ("ARM: dts: at91: sama5d3: add i2c gpio pinctrl")
+> makes the problem go away.
 
-We've been using VRF on 4.19 (from Debian buster) for serveral years and want to
-update. After updating to 5.10 (from bullseye), we can no longer use routes
-pointed at the VRF to reach services in the VRF
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
 
-We use only one VRF, which contains some wireguard VPN interfaces.
-Then we have routes outside the VRF to make the network connected to it
-reachable from normal processes.
+#regzbot ^introduced a4bd8da893a3
+#regzbot title i2c: at24 eeprom writing times out on sama5d3
+#regzbot ignore-activity
+#regzbot monitor:
+https://lore.kernel.org/all/20210727111554.1338832-1-codrin.ciubotariu@microchip.com/
 
-Our minimized test case looks like this:
- ip rule add pref 32765 from all lookup local
- ip rule del pref 0 from all lookup local
- ip link add red type vrf table 1000
- ip link set red up
- ip route add vrf red unreachable default metric 8192
- ip addr add dev red 172.16.0.1/24
- ip route add 172.16.0.0/24 dev red
- ip vrf exec red socat -dd TCP-LISTEN:1234,reuseaddr,fork SYSTEM:"echo connected" &
- sleep 1
- nc 172.16.0.1 1234 < /dev/null
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
 
-While in our real setup, we connect to hosts reachable via th VRF's VPN
-interfaces, the issue also shows up with a simple listening socket in the VRF.
-In that case, the SYN-ACK from the remote host leads to a RST from the VRF, so
-it seems that the outbound socket is not found.
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replied to), as the kernel's
+documentation call for; above page explains why this is important for
+tracked regressions.
 
-A bisection with this leads to "net: allow binding socket in a VRF when there's
-an unbound socket" (3c82a21f4320).
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-Before 3c82a21f4320, this connects fine:
- 2022/06/11 11:11:03 socat[326] N listening on AF=2 0.0.0.0:1234
- nc 172.16.0.1 1234
- 2022/06/11 11:11:04 socat[326] N accepting connection from AF=2 172.16.0.1:44164 on AF=2 172.16.0.1:1234
- ...
- connected
-
-Since 3c82a21f4320, the connection does not complete:
- 2022/06/11 11:16:31 socat[324] N listening on AF=2 0.0.0.0:1234
- + nc 172.16.0.1 1234
- (... times out)
-
-We've retested with v5.19-rc1-262-g0885eacdc81f, and continue to get the
-timeout.
-
-The partial revert
-diff --git a/include/net/inet_hashtables.h b/include/net/inet_hashtables.h
-index 98e1ec1a14f0..41e7f20d7e51 100644
---- a/include/net/inet_hashtables.h
-+++ b/include/net/inet_hashtables.h
-@@ -310,8 +310,9 @@ static inline struct sock *inet_lookup_listener(struct net *net,
- #define INET_MATCH(__sk, __net, __cookie, __saddr, __daddr, __ports, __dif, __sdif) \
-        (((__sk)->sk_portpair == (__ports))                     &&      \
-         ((__sk)->sk_addrpair == (__cookie))                    &&      \
--        (((__sk)->sk_bound_dev_if == (__dif))                  ||      \
--         ((__sk)->sk_bound_dev_if == (__sdif)))                &&      \
-+        (!(__sk)->sk_bound_dev_if      ||                              \
-+          ((__sk)->sk_bound_dev_if == (__dif))                 ||      \
-+          ((__sk)->sk_bound_dev_if == (__sdif)))               &&      \
-         net_eq(sock_net(__sk), (__net)))
- #else /* 32-bit arch */
- #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
-@@ -321,8 +322,9 @@ static inline struct sock *inet_lookup_listener(struct net *net,
-        (((__sk)->sk_portpair == (__ports))             &&              \
-         ((__sk)->sk_daddr      == (__saddr))           &&              \
-         ((__sk)->sk_rcv_saddr  == (__daddr))           &&              \
--        (((__sk)->sk_bound_dev_if == (__dif))          ||              \
--         ((__sk)->sk_bound_dev_if == (__sdif)))        &&              \
-+        (!(__sk)->sk_bound_dev_if      ||                              \
-+          ((__sk)->sk_bound_dev_if == (__dif))         ||              \
-+          ((__sk)->sk_bound_dev_if == (__sdif)))       &&              \
-         net_eq(sock_net(__sk), (__net)))
- #endif /* 64-bit arch */
-
-restores the original behavior when applied on v5.18. This doesn't apply
-directly on master, as the macro was replaced by an inline function in "inet:
-add READ_ONCE(sk->sk_bound_dev_if) in INET_MATCH()" (4915d50e300e).
-
-I have to admit I don't quite understand 3c82a21f4320, so I'm not sure how to
-proceed. What would be broken by the partial revert above? Are there better ways
-to configure routing into the VRF than simply "ip route add 172.16.0.0/24 dev
-red" that still work?
-
-Thanks,
-Jan
-
-#regzbot introduced: 3c82a21f4320
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
 
 
+
+> I.e. I need something like this in my dts
+> 
+> &i2c2 {
+> 	status = "okay";
+> 
+> 	pinctrl-names = "default";
+> 	/delete-property/ pinctrl-1;
+> 	/delete-property/ sda-gpios;
+> 	/delete-property/ scl-gpios;
+> 
+> 	eeprom@50 {
+> 		compatible = "st,24c64", "atmel,24c64";
+> 		reg = <0x50>;
+> 		wp-gpios = <&filter_gpio 7 GPIO_ACTIVE_HIGH>;
+> 	};
+> };
+> 
+> for multi-page eeprom writes to not time out (a page is 32 bytes on this
+> eeprom).
+> 
+> For reference, the current defaults for this SoC/I2C-bus, that I modify,
+> are:
+> 
+> 	pinctrl-names = "default", "gpio";
+> 	pinctrl-0 = <&pinctrl_i2c2>;
+> 	pinctrl-1 = <&pinctrl_i2c2_gpio>;
+> 	sda-gpios = <&pioA 18 GPIO_ACTIVE_HIGH>;
+> 	scl-gpios = <&pioA 19 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+> 
+> I suspect that the underlying reason is that the bus recovery takes
+> too long and that the at24 eeprom driver gives up prematurely. I doubt
+> that this is chip specific, but I don't know that.
+> 
+> I can work around the issue in user space with by writing in 4 byte
+> chunks, like so
+> 
+> dd if=source.file of=/sys/bus/i2c/devices/2-0050/eeprom obs=4
+> 
+> but that is really ugly and gets slow too, about 20 seconds to program
+> the full 8kB eeprom. With the above in my dts it takes a second or
+> so (a bit more with dynamic debug active).
+> 
+> 
+> If I run
+> 
+> dd if=source.file of=/sys/bus/i2c/devices/2-0050/eeprom
+> 
+> with a source.file of 8kB and the upstream dts properties in place, I can
+> collect the following debug output from at24, i2c-core and i2c-at91:
+> 
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@0 --> 0 (-23170)
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: received nack
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
+> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@32 --> -121 (-23169)
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@32 --> 0 (-23168)
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: received nack
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
+> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@64 --> -121 (-23168)
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@64 --> 0 (-23167)
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: received nack
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
+> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@96 --> -121 (-23167)
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: controller timed out
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
+> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@96 --> -110 (-23155)
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: controller timed out
+> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
+> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@96 --> -110 (-23143)
+> 
+> And then there is no more action. I.e. only a couple of 32 byte pages
+> are written.
+> 
+> With the above mentioned dts override in place I instead get this, which is
+> a lot more sensible:
+> 
+> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@0 --> 0 (753629)
+> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
+> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@32 --> -121 (753629)
+> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@32 --> 0 (753630)
+> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
+> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@64 --> -121 (753630)
+> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@64 --> 0 (753631)
+> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
+> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@96 --> -121 (753631)
+> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@96 --> 0 (753632)
+> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
+> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@128 --> -121 (753632)
+> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@128 --> 0 (753633)
+> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
+> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@160 --> -121 (753633)
+> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@160 --> 0 (753634)
+> ... snip ...
+> Jun  9 15:48:55 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: received nack
+> Jun  9 15:48:55 me20 kernel: at24 2-0050: write 32@8128 --> -121 (753883)
+> Jun  9 15:48:55 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+> Jun  9 15:48:55 me20 kernel: at24 2-0050: write 32@8128 --> 0 (753884)
+> Jun  9 15:48:55 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: received nack
+> Jun  9 15:48:55 me20 kernel: at24 2-0050: write 32@8160 --> -121 (753884)
+> Jun  9 15:48:55 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+> Jun  9 15:48:55 me20 kernel: at24 2-0050: write 32@8160 --> 0 (753885)
+> 
+> Cheers,
+> Peter
 
