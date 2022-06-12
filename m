@@ -1,92 +1,120 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 875FB7A
-	for <regressions@lists.linux.dev>; Sun, 12 Jun 2022 11:12:01 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1o0LVf-0006Zc-A8; Sun, 12 Jun 2022 13:11:59 +0200
-Message-ID: <d4ea2dd2-2e89-d3a2-ee5c-f64bb1b8f576@leemhuis.info>
-Date: Sun, 12 Jun 2022 13:11:58 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4646710E0
+	for <regressions@lists.linux.dev>; Sun, 12 Jun 2022 15:27:09 +0000 (UTC)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-3137c877092so29763707b3.13
+        for <regressions@lists.linux.dev>; Sun, 12 Jun 2022 08:27:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JKtz7aN4iqLwpjMxddmPWT/Yv9HKk9kmTNthHMCTmzI=;
+        b=T9YefAqcwoWBIxZvqn+6v2XWWOet+BsnQU0+RFWVg6KgivzT/L5lObsCTPCQTt/t5Q
+         O40qE1hi12jMrF4WTFqKtW2LzpBjaorQNa34aV4k3hv8HKQ8PdKPMEaSSxFMV47/mzpy
+         5NB8fyovqGp5apHZFDa58gx5ZaH+tLAMzs45xITz4fb4vlzo0gMUB+DN67+3WhqdQW2m
+         K11090o1HY9Z5N/7OrH4HIp/tOUVaTeFZraEa0DnsQrfgrbOu3JKvaQW4n5bCyWXag2u
+         d53mOuvNeMu27ZoK5W99SVTmAQTCjGIg6OdP3eCz5qEG76PT5nxBz7fhGrEZ0izsu26g
+         oVZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JKtz7aN4iqLwpjMxddmPWT/Yv9HKk9kmTNthHMCTmzI=;
+        b=elYayA2ByKlidC5lEfJljUGHGF8nTmaJ0aVwdDWPkERHLW0B0siqVDjb4NVnNcw3Cs
+         AOmBhiQVzi+vCHLpzZhppLFd3H94MxT8gXtnvxP0nzA6UeCseO+UU6QmnoertqmWpoRw
+         mo4Awp8QR3DfsG7tNpdyuzzVy6E9SjbEd3GHkxVBDJBvOG2twxPzKIfRK0dur2X6Hhsp
+         eu2r6mSXyFfOa/ZclKy0jG0SGNO2M+5QFDkrqsO2L5inz+KDL/F6rtAL/iU/dQjJ0qQW
+         6LctooZx4RmOkQhDKjU2CGXoH00Ph3S1atVlQH0hj3FvpcsK+vipeEVOj3HddKNMzo7c
+         hrIA==
+X-Gm-Message-State: AOAM533RVhlSdTE+ccy2Qy9uOvgak5boMDwqAkti7AHyiFibkzAAFaAV
+	7JhfUUdtdVpiOXaV56YpBhpYrW8owNAFBCwcT278wQ==
+X-Google-Smtp-Source: ABdhPJzw73ekffcunyjrSkMcYzhG2oTN3hgX5618XHyVJPGma2VxAdtu2GUrDNvI7Ls/FS87wXEYytUyk6/LQyIQ8vY=
+X-Received: by 2002:a81:1a43:0:b0:30c:78b1:f23d with SMTP id
+ a64-20020a811a43000000b0030c78b1f23dmr60215098ywa.166.1655047628056; Sun, 12
+ Jun 2022 08:27:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [bugzilla-daemon@kernel.org: [Bug 216109] New: Steam Deck fails
- to boot when E820 entries clipped out of _CRS]
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220609224339.GA543225@bhelgaas>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20220609224339.GA543225@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1655032321;e51f73e7;
-X-HE-SMSGID: 1o0LVf-0006Zc-A8
+References: <CA+G9fYtVOfWWpx96fa3zzKzBPKiNu1w3FOD4j++G8MOG3Vs0EA@mail.gmail.com>
+ <Yp47DODPCz0kNgE8@google.com> <CA+G9fYsjn0zySHU4YYNJWAgkABuJuKtHty7ELHmN-+30VYgCDA@mail.gmail.com>
+ <Yp/kpPA7GdbArXDo@google.com> <YqAL+HeZDk5Wug28@google.com>
+ <YqAMmTiwcyS3Ttla@google.com> <YqANP1K/6oRNCUKZ@google.com> <YqBRZcsfrRMZXMCC@google.com>
+In-Reply-To: <YqBRZcsfrRMZXMCC@google.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Sun, 12 Jun 2022 20:56:56 +0530
+Message-ID: <CA+G9fYvjpCOcTVdpnHTOWaf3KcDeTM3Njn_NnXvU37ppoHH5uw@mail.gmail.com>
+Subject: Re: qemu-arm: zram: mkfs.ext4 : Unable to handle kernel NULL pointer
+ dereference at virtual address 00000140
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Minchan Kim <minchan@kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	linux-fsdevel@vger.kernel.org, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, linux-block <linux-block@vger.kernel.org>, 
+	regressions@lists.linux.dev, Jens Axboe <axboe@kernel.dk>, 
+	Nitin Gupta <ngupta@vflare.org>
+Content-Type: text/plain; charset="UTF-8"
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
+Hi Sergey,
 
-Hi, this is your Linux kernel regression tracker.
-
-On 10.06.22 00:43, Bjorn Helgaas wrote:
-> New regression in v5.19-rc1.
-> 
-> ----- Forwarded message from bugzilla-daemon@kernel.org -----
-> 
-> Subject: [Bug 216109] New: Steam Deck fails to boot when E820 entries clipped
-> 	out of _CRS
-> 
-> https://bugzilla.kernel.org/show_bug.cgi?id=216109
-> 
->            Summary: Steam Deck fails to boot when E820 entries clipped out
->                     of _CRS
->     Kernel Version: v5.19
-> 
-> Guilherme G. Piccoli reported that v5.18 boots fine on Steam Deck, but
-> v5.19-rc1 does not.  He bisected it to 4c5e242d3e93 ("x86/PCI: Clip only host
-> bridge windows for E820 regions") [1].
+On Wed, 8 Jun 2022 at 13:06, Sergey Senozhatsky
+<senozhatsky@chromium.org> wrote:
 >
-> A quirk similar to [2] that disables E820 clipping makes v5.19-rc1 work again.
-> 
-> The reason why v5.18 (which always does E820 clipping by default) works, while
-> v5.19-rc1 (which also does E820 clipping on this platform) does not has not
-> been explained yet.
-> 
-> [1] https://git.kernel.org/linus/4c5e242d3e93
-> [2] https://git.kernel.org/linus/d341838d776a
+> On (22/06/08 11:45), Sergey Senozhatsky wrote:
+> >
+> > Something like this?
+>
+> May be even something like below. Move static initializer to cpu up
+> hook.
 
-To be sure below issue doesn't fall through the cracks unnoticed, I'm
-adding it to regzbot, my Linux kernel regression tracking bot:
+Thanks for providing a fix patch.
+As per your suggestion debug lock enabled.
 
-#regzbot ^introduced 4c5e242d3e93
-#regzbot title x86/PCI/e820:Steam Deck fails to boot when E820 entries
-clipped out of _CRS
-#regzbot ignore-activity
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=216109
+CONFIG_DEBUG_LOCK_ALLOC=y
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
+I have tested this patch and the reported issue got resolved [1].
 
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replied to), as the kernel's
-documentation call for; above page explains why this is important for
-tracked regressions.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> ---
+>  mm/zsmalloc.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+> index 9152fbde33b5..6d3789d834e2 100644
+> --- a/mm/zsmalloc.c
+> +++ b/mm/zsmalloc.c
+> @@ -453,9 +453,7 @@ MODULE_ALIAS("zpool-zsmalloc");
+>  #endif /* CONFIG_ZPOOL */
+>
+>  /* per-cpu VM mapping areas for zspage accesses that cross page boundaries */
+> -static DEFINE_PER_CPU(struct mapping_area, zs_map_area) = {
+> -       .lock   = INIT_LOCAL_LOCK(lock),
+> -};
+> +static DEFINE_PER_CPU(struct mapping_area, zs_map_area);
+>
+>  static __maybe_unused int is_first_page(struct page *page)
+>  {
+> @@ -1113,6 +1111,7 @@ static inline int __zs_cpu_up(struct mapping_area *area)
+>         area->vm_buf = kmalloc(ZS_MAX_ALLOC_SIZE, GFP_KERNEL);
+>         if (!area->vm_buf)
+>                 return -ENOMEM;
+> +       local_lock_init(&area->lock);
+>         return 0;
+>  }
+>
+>
+> 2.36.1.255.ge46751e96f-goog
 
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+Build artifacts link [2]
+
+--
+Linaro LKFT
+https://lkft.linaro.org
+
+[1] https://lkft.validation.linaro.org/scheduler/job/5160519#L828
+[2] https://builds.tuxbuild.com/2ATpwm83jTe2wlUX33YeTpshh2u/
