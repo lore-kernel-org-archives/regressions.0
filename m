@@ -1,125 +1,247 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpq4.tb.ukmail.iss.as9143.net (smtpq4.tb.ukmail.iss.as9143.net [212.54.57.99])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5860184B
-	for <regressions@lists.linux.dev>; Mon, 13 Jun 2022 17:06:15 +0000 (UTC)
-Received: by mail-pg1-f173.google.com with SMTP id g186so6106938pgc.1
-        for <regressions@lists.linux.dev>; Mon, 13 Jun 2022 10:06:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=MOQgXtI+BKSvQKp350OufIdxJrNapSAlu2QwriUAL0M=;
-        b=Xr7brTWW1FS8zff2fqX5in7RA7W1ehGdNrTPpeehBMhGZLvChDjV5pABpRpyOvTxh2
-         +hFSK4aggLX2HLQh5AXCo0EkJpeIt8smwjmG6CoKDTxULhJPTSbnQuVGcXq+uUAEgFgo
-         MUO8lUwZjLjoVpzbK0Yh79o2bM1IwcP550ns91RLEY1ZhV35kAN7jMFexP/OvmsMmkO5
-         E3H4q67N9BhNr3oX+ovhxHlbX/jQ59vNB1ZpRNJc2udHx0hfENEKSgW25MlKGYzGuSb8
-         oTQSphWbPVCdzE70YFtOxLwdOk5vdq74xwoQT4oZEtnMDdlfdvK/OdHzv5oSoufXztIF
-         GZxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=MOQgXtI+BKSvQKp350OufIdxJrNapSAlu2QwriUAL0M=;
-        b=RUN7hCnBk9rGY27zlkQYEJbYA8fYAs982FChsmC/8vEQpCCY0/HHahdYrWwD/YPcbH
-         wuyUIumrRpUpqZHV+Qb+uiPFFR+rLa0GRPPmvjISP5F77VSydeiBT298rawWpKo84rd1
-         ZC1k8/cwMcIKj/Xa6dwjD5MMys0ROAYJ+n+PUPadkLglq3J+Z8VP3k4C0ZaoctFjgnfC
-         xQcH4l6Q4x2HeIVaPtkP8PeSnc5trDDEd0Jy0lxSQqKNowskjhFQg3N0KvF+m9NjAUNv
-         rWf3B5iilXvMX9Z6Bl6mBW8a1hAcMSXw8B5AaWaWLynCxihmLCkYElm+qzwssDA6qxlD
-         oOyg==
-X-Gm-Message-State: AOAM532JBeoKsZDJrkvNh1FqLXIi0lD/DexX8LncvoaL3+DE4QiqyM9k
-	Yak2DPCXKAbyCYPiksqJ+/I=
-X-Google-Smtp-Source: ABdhPJzZ7i5tys91503gKW2Dx5yn+4/pmdYgJ0M/Iv2UGbTxpnBMOzfRw0pPhZwC6EEadmpIF1e9UQ==
-X-Received: by 2002:a05:6a00:1687:b0:518:6c6b:6a9a with SMTP id k7-20020a056a00168700b005186c6b6a9amr161951pfc.81.1655139974873;
-        Mon, 13 Jun 2022 10:06:14 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 199-20020a6300d0000000b003f24d67d226sm5702673pga.92.2022.06.13.10.06.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jun 2022 10:06:14 -0700 (PDT)
-Message-ID: <e58125a4-f885-ae55-0441-d52ecab9a1e8@gmail.com>
-Date: Mon, 13 Jun 2022 10:06:12 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857171871
+	for <regressions@lists.linux.dev>; Mon, 13 Jun 2022 20:00:00 +0000 (UTC)
+Received: from [212.54.57.97] (helo=smtpq2.tb.ukmail.iss.as9143.net)
+	by smtpq4.tb.ukmail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.90_1)
+	(envelope-from <zarniwhoop@ntlworld.com>)
+	id 1o0q19-0002uQ-6M
+	for regressions@lists.linux.dev; Mon, 13 Jun 2022 21:46:31 +0200
+Received: from [212.54.57.105] (helo=csmtp1.tb.ukmail.iss.as9143.net)
+	by smtpq2.tb.ukmail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.90_1)
+	(envelope-from <zarniwhoop@ntlworld.com>)
+	id 1o0q11-00083W-D4
+	for regressions@lists.linux.dev; Mon, 13 Jun 2022 21:46:23 +0200
+Received: from llamedos.mydomain ([81.97.236.130])
+	by cmsmtp with ESMTPA
+	id 0q10oMdyp2Ckp0q10oMdd4; Mon, 13 Jun 2022 21:46:23 +0200
+X-SourceIP: 81.97.236.130
+X-Authenticated-Sender: zarniwhoop@ntlworld.com
+X-Spam: 0
+X-Authority: v=2.4 cv=S5fKfagP c=1 sm=1 tr=0 ts=62a7940f cx=a_exe
+ a=OGiDJHazYrvzwCbh7ZIPzQ==:117 a=OGiDJHazYrvzwCbh7ZIPzQ==:17
+ a=IkcTkHD0fZMA:10 a=JPEYwPQDsx4A:10 a=VwQbUJbxAAAA:8 a=lAgNKBcoAAAA:8
+ a=e5mUnYsNAAAA:8 a=NEAV23lmAAAA:8 a=XEvPOTf6ql8ZxkX-kUwA:9 a=QEXdDO2ut3YA:10
+ a=s7WzIJ968vAA:10 a=oEyQGRKERE8A:10 a=-FEs8UIgK8oA:10
+ a=AjGcO6oz07-iQ99wixmX:22 a=drE6d5tx1tjNRBs8zHOc:22 a=Vxmtnl_E_bksehYqCbjh:22
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ntlworld.com;
+	s=meg.feb2017; t=1655149583;
+	bh=RNfcCIKdVJ/iG8hi0PXRos+6xeUX7TSDceFHiaLae90=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=FqGA2psNIzF3xmCoUS3yKuvPQ2RCW6eRy1kRkbHogTxNX7XzJOObkvfg7T5wWIO6m
+	 twsPgi196Peg7p0zyMBj1qm/9POOm4XGOPWsjho6QWQYkfsOi2dJc09n9b+OAAGi5o
+	 G3oY0V3qUIHa58H/9Vd8M7K2/qTEkpwvuIVjV9NxPDPwLlvhUpW/OjQ3Lj36MiunfW
+	 yXGgfDPeyxNC7SohsRKODgOB9IXiKY7mRvOUsC1dQiAt225zFSpeKZr+z4GxrmSugf
+	 B4zVVHsplLsFtUsp4QNvOPRJucxrd43Ulok2nErrGzePnEaPoOAhPrbL1QGBfbodwG
+	 TxBdYCcrGE4pg==
+Received: by llamedos.mydomain (Postfix, from userid 1000)
+	id 862148DB58; Mon, 13 Jun 2022 20:46:22 +0100 (BST)
+Date: Mon, 13 Jun 2022 20:46:22 +0100
+From: Ken Moffat <zarniwhoop@ntlworld.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: linux-kernel@vger.kernel.org,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Linux PM <linux-pm@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: regression, 5.19.0-rc1 not powering off when hibernated
+Message-ID: <YqeUDpo+8RLVKH8r@llamedos.localdomain>
+References: <YqE22nS9k2+AldI6@llamedos.localdomain>
+ <84d01637-febb-f602-2d03-fe1600e85ae3@leemhuis.info>
+ <YqTPlGM9KQ0FqHdc@llamedos.localdomain>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH 0/4] PCI: brcmstb: Revert subdevice regulator stuff
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>, Jim Quinlan <jim2101024@gmail.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
- Cyril Brulebois <kibi@debian.org>, Nicolas Saenz Julienne
- <nsaenz@kernel.org>, bcm-kernel-feedback-list@broadcom.com,
- linux-pci@vger.kernel.org, regressions@lists.linux.dev,
- Bjorn Helgaas <bhelgaas@google.com>
-References: <20220511203948.GA811126@bhelgaas>
-From: Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20220511203948.GA811126@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-Clacks-Overhead: GNU Terry Pratchett
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <YqTPlGM9KQ0FqHdc@llamedos.localdomain>
+User-Agent: Mutt/2.2.3 (2022-04-12)
+X-CMAE-Envelope: MS4xfDxJHgYY1ZVrfwtqpYG4N9qA3bY9O3LSFgEquyIXDU2AU8/FacIQofadO389OjNuDhn90OJsU7m2WdZqDiTt1DgFxnd+JUUwDhUOS97R9XBRJX5AZLuR
+ 5V4bxk4IFUgaNVyg3wnBkGtnln687Q4ykAhiQ66Cx2m/TZKMlS4S9zrolIomeBkz4rdNI28RDBIXRWoFOmGFyzVtJLTR5rpKo1FOfgZlGY42J83fV8EMcJH9
+ 6zNHY+g5WNOOhR48kIGYCZAbbxwgHWSHD/+DqdHqBo4hZN0FKSsK726QEwxMCOG2QIq/mU+GUXO70Sch0QkWa+U4rEFuyrAAJ7yxTuZzOmfXgZIq6wPl4hdI
+ fEyFKRMKusMuciMhO07SIOeXIMarDA==
 
-Bjorn,
-
-On 5/11/22 13:39, Bjorn Helgaas wrote:
-> On Wed, May 11, 2022 at 01:24:55PM -0700, Florian Fainelli wrote:
->> On 5/11/22 13:18, Bjorn Helgaas wrote:
->>> From: Bjorn Helgaas <bhelgaas@google.com>
->>>
->>> Cyril reported that 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup()
->>> into two funcs"), which appeared in v5.17-rc1, broke booting on the
->>> Raspberry Pi Compute Module 4.  Revert 830aa6f29f07 and subsequent patches
->>> for now.
->>
->> How about we get a chance to fix this? Where, when and how was this even
->> reported?
+On Sat, Jun 11, 2022 at 06:23:32PM +0100, Ken Moffat wrote:
+> On Sat, Jun 11, 2022 at 03:53:44PM +0200, Thorsten Leemhuis wrote:
+> > Hi, this is your Linux kernel regression tracker.
+> > 
+> > CCing the regression mailing list, as it should be in the loop for all
+> > regressions, as explained here:
+> > https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+> > Also CCing the hibernation maintainers and Linux-pm.
+> > 
+> > On 09.06.22 01:55, Ken Moffat wrote:
+> > > Up to 5.18.0 hibernation has worked ok on my ryzen 5 3400G : screen
+> > > blanks, disk activity for the write to swap, screen briefly has a
+> > > trashed display, machine powers off.  When powering up from
+> > > hibernation, after the saved files are loaded X starts with a
+> > > briefly trashed display before my desktop reappears.
+> > > 
+> > > But with 5.19.0-rc1 the screen is blank throughtout the hibernation,
+> > > and briefly when restoring (no complaint about that), but when
+> > > hibernating it no longer powers off and I have to hold the on/off
+> > > switch to power off.
+> > > 
+> > > Is this a known problem ?
+> > 
+> > Thanks for the report. Maybe the hibernation maintainers might know, but
+> > often issues like this are caused by other things like drivers. If they
+> > don#t have a idea, you likely need to do a bisection to get down to the
+> > change that introduced this regressions.
+> > 
+> > Anyway: To be sure below issue doesn't fall through the cracks
+> > unnoticed, I'm adding it to regzbot, my Linux kernel regression tracking
+> > bot:
+> > 
+> > #regzbot ^introduced v5.18..v5.19-rc1
+> > #regzbot title hibernate: Not powering off when hibernated
+> > #regzbot ignore-activity
+> > 
+> > This isn't a regression? This issue or a fix for it are already
+> > discussed somewhere else? It was fixed already? You want to clarify when
+> > the regression started to happen? Or point out I got the title or
+> > something else totally wrong? Then just reply -- ideally with also
+> > telling regzbot about it, as explained here:
+> > https://linux-regtracking.leemhuis.info/tracked-regression/
+> > 
+> > Reminder for developers: When fixing the issue, add 'Link:' tags
+> > pointing to the report (the mail this one replied to), as the kernel's
+> > documentation call for; above page explains why this is important for
+> > tracked regressions.
+> > 
+> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> > 
+> > P.S.: As the Linux kernel's regression tracker I deal with a lot of
+> > reports and sometimes miss something important when writing mails like
+> > this. If that's the case here, don't hesitate to tell me in a public
+> > reply, it's in everyone's interest to set the public record straight.
 > 
-> Sorry, I forgot to cc you, that's my fault:
->    https://lore.kernel.org/r/CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com
+> Thanks.  I've started to bisect, but I've got a lot else on and it
+> might be a few days before I get a result.  All I know so far is
+> that whatever got rid of the garbled screens was fine, and the
+> problem seems to have arisen in the last 800+ commits for 5.19-rc1.
 > 
-> If you come up with a fix, I'll drop the reverts, of course.
+I think I must have gone wrong somewhere in that bisection, it took
+me through a load of habanalabs commits which were all good, and
+blamed the merge which for this which *was* definitely bad, but seems
+to have nothing related to the box not powering off on hibernation::
 
-OK, so now this patch series has landed in Linus' tree and was committed 
-on May 31st and we got no notification that this patch series was applied :/
+[6f9b5ed8caddfbc94af8307c557ed57a8ec5c65c] Merge tag 'char-misc-5.19-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
 
-How did I notice? Because suddenly the stable auto selection started to 
-email me about the 4 reverts being included which is kind of the worse 
-way to know about a patch having been applied.
+Not Cc'ing Greg at this point, I really don't believe that result.
 
-What is even better is that meanwhile there was already a candidate fix 
-proposed on May 18th, and a v2 on May 28th, so still an alternative to 
-the reverts making it to Linus' tree, or so I thought.
+Starting over.
 
-This utterly annoys me because:
+ĸen
+ ----
 
-- the history for pcie-brcmstb.c is now looking super ugly because we 
-have 4 commits getting reverted and if we were to add back the original 
-feature being added now what? Do we come up with reverts of reverts, or 
-the modified (with the fix) original commits applied on top, are not we 
-going to sign ourselves for another 13 or so round of patches before we 
-all agree on the solution?
+Details from this run, with resulting kernel versions -
 
-- we could have just fixed this with proper communication from the get 
-go about the regression in the first place, which remains the failure in 
-communicating appropriately with driver authors/maintainers
+git bisect start
+git bisect good v5.18
+git bisect bad  v5.19-rc1
 
-- v5.17 and v5.18 final were already broken, but who on earth uses v5.17 
-or v5.18 and not their stable counter parts, so we had a chance of 
-slipping in a fix in a subsequent stable, I mean, it's been broken for 2 
-releases on the CM4 and it was not noticed, so what was the urgency?
+Bisecting: 7030 revisions left to test after this (roughly 13 steps)
+[2518f226c60d8e04d18ba4295500a5b0b8ac7659] Merge tag 'drm-next-2022-05-25' of git://anongit.freedesktop.org/drm/drm
 
-- the reverts will make it to -stable being bug fixes for regressions, 
-however for users like Jim and I, now we will lose a feature that we 
-were relying on, thus causing a regression for *many other* platforms 
-than just the CM4
+ 5.18.0-06942-g2518f226c60d
 
-I appreciate that as a maintainer you are very sensitive to regressions 
-and want to be responsive and responsible but this is not leaving just a 
-slightest chance to right a wrong. Can we not do that again please?
+git bisct good
 
-Maybe I am being overly sensitive and disgruntled today, but really this 
-is the type of thing that makes me want to quit working on the Linux kernel.
+Bisecting: 3527 revisions left to test after this (roughly 12 steps)
+[aef1ff15927421a55312b4b9b2881a89a344bd80] Merge tag 'jfs-5.19' of https://github.com/kleikamp/linux-shaggy
+
+ 5.18.0-10445-gaef1ff159274
+
+git bisect good
+
+Bisecting: 834 revisions left to test after this (roughly 10 steps)
+[54c2cc79194c961a213c1d375fe3aa4165664cc4] Merge tag 'usb-5.19-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
+
+ 5.18.0-13138-g54c2cc79194c
+
+git bisect good
+
+Bisecting: 428 revisions left to test after this (roughly 9 steps)
+[7036440eab3e2d47a775d4616909f8235488d714] ARM: omap1: enable multiplatform
+
+ 5.18.0-13544-g7036440eab3e
+
+git bisect bad
+
+Bisecting: 203 revisions left to test after this (roughly 8 steps)
+[46ee6bcac9838b7f74ff91f9cf38511c901ea9c5] Merge tag 'mhi-for-v5.19' of git://git.kernel.org/pub/scm/linux/kernel/git/mani/mhi into char-work-next
+
+ 5.18.0-rc5-00202-g46ee6bcac983
+
+git bisect good
+
+Bisecting: 99 revisions left to test after this (roughly 7 steps)
+[dc6a7effb48e7267c9f1314e3aa8cfe539bd6096] Merge tag 'lkdtm-next' of https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux into char-misc-next
+
+ 5.18.0-rc5-00306-gdc6a7effb48e
+
+git bisect good
+
+Bisecting: 49 revisions left to test after this (roughly 6 steps)
+[b19768d81a6bd1591872952075ff9d960bd4e8d8] habanalabs/gaudi: increase submission resources
+
+ 5.18.0-rc5-00356-gb19768d81a6b
+
+git bisect good
+
+Bisecting: 24 revisions left to test after this (roughly 5 steps)
+[ab4ea5872842766b0155b2517db61a4ae99d98e0] habanalabs: use for_each_sgtable_dma_sg for dma sgt
+
+ 5.18.0-rc5-00381-gab4ea5872842
+
+git bisect good
+
+Bisecting: 12 revisions left to test after this (roughly 4 steps)
+[c37803388c95833c4728b089e6c94996dc457d95] habanalabs: handle race in driver fini
+
+ 5.18.0-rc5-00393-gc37803388c95
+
+git bisect good
+
+Bisecting: 6 revisions left to test after this (roughly 3 steps)
+[83617f5a87f4ad8403bf1177708fedc98b0a1059] habanalabs: order memory manager messages
+
+ 5.18.0-rc5-00399-g83617f5a87f4
+
+git bisect good
+
+Bisecting: 3 revisions left to test after this (roughly 2 steps)
+[f873a27fd50d161111d0e52087af0f5b2111c5c4] habanalabs: fix missing handle shift during mmap
+
+ 5.18.0-rc5-00402-gf873a27fd50d
+
+git bisect good
+
+Bisecting: 1 revision left to test after this (roughly 1 step)
+[6f9b5ed8caddfbc94af8307c557ed57a8ec5c65c] Merge tag 'char-misc-5.19-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
+
+  5.18.0-13542-g6f9b5ed8cadd
+  bad
+
+git bisect bad
+
+Bisecting: 0 revisions left to test after this (roughly 0 steps)
+[90de6805267f8c79cd2b1a36805071e257c39b5c] habanalabs: use separate structure info for each error collect data
+
+ 5.18.0-rc5-00403-g90de6805267f
+
+git bisect good
+
+ ----
 -- 
-Florian
+      Remembering The People's Republic of Treacle Mine Road.
+        Truth!  Justice!  Freedom!  Reasonably priced Love!
+                 And a Hard-boiled Egg!
