@@ -1,101 +1,125 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5915EA0
-	for <regressions@lists.linux.dev>; Mon, 13 Jun 2022 16:49:06 +0000 (UTC)
-Received: by mail-pf1-f175.google.com with SMTP id w21so6293887pfc.0
-        for <regressions@lists.linux.dev>; Mon, 13 Jun 2022 09:49:06 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5860184B
+	for <regressions@lists.linux.dev>; Mon, 13 Jun 2022 17:06:15 +0000 (UTC)
+Received: by mail-pg1-f173.google.com with SMTP id g186so6106938pgc.1
+        for <regressions@lists.linux.dev>; Mon, 13 Jun 2022 10:06:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9ALP8lsGfjdjgEofzfsJxd9qV2mlI2gIpt2uj+q0ckY=;
-        b=czz4osvuz+f2/S9+hKIjWaAk9nwSjJ5BOHALM+L8npDyOhQSu1gub0HzMFya7upev0
-         ksc11lhUgxu5WOL1X01iW7xW28n2VADA6Drw9tJPihqqX620yo73SEmRJ6hGnGZOAzjq
-         qAUgNs2B0F1W/wZQbVz2t2VLJ5nKXleE2zBa5OitnNb8XSHZrsJFKLMtydUtpznI1+9E
-         fehC7wCZeJMpJkFmbogNuBdjfUA42uqOY4DxjxHRGdQyX1ltUipgYipCxG2mdtoliuRV
-         jlddM/kmMTj75GnveSpGfFLOg8Kf6qr7icepy6U07x7cpPImoEsYWl/QwxdTSCRmlv4P
-         UeiA==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=MOQgXtI+BKSvQKp350OufIdxJrNapSAlu2QwriUAL0M=;
+        b=Xr7brTWW1FS8zff2fqX5in7RA7W1ehGdNrTPpeehBMhGZLvChDjV5pABpRpyOvTxh2
+         +hFSK4aggLX2HLQh5AXCo0EkJpeIt8smwjmG6CoKDTxULhJPTSbnQuVGcXq+uUAEgFgo
+         MUO8lUwZjLjoVpzbK0Yh79o2bM1IwcP550ns91RLEY1ZhV35kAN7jMFexP/OvmsMmkO5
+         E3H4q67N9BhNr3oX+ovhxHlbX/jQ59vNB1ZpRNJc2udHx0hfENEKSgW25MlKGYzGuSb8
+         oTQSphWbPVCdzE70YFtOxLwdOk5vdq74xwoQT4oZEtnMDdlfdvK/OdHzv5oSoufXztIF
+         GZxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=9ALP8lsGfjdjgEofzfsJxd9qV2mlI2gIpt2uj+q0ckY=;
-        b=vTlkdE3/TRKniVRl4BR8nG8tQPamo2F798Hg12YRHRe/JwSIVsNp0Vqan9n7HYRnFC
-         XER+Haa8PdzIr5QeEygqjLZwfuewTHURTehnLFMqoQiiHRMjJt9P03LOuyEaGpd3JoiP
-         uS0UkX62BpEpGoJYtLJR8RS/JIG6q9oaBUB0pevoN4va+ywqAkRGDQMpB7ard5wqm2wv
-         24ObBKNo4nhGcXeRyF9uSo+U46mLBhENvDkPyb+HFF87Rdzg8FwNWavt3ZOSTPtLhwum
-         TdjIwtjLf0ZOjKlwNGVvRmrBsshrcWzTJ0ztOwm60Aj07pL4YBoGGlWuwAJ/miLOFC0g
-         fUbA==
-X-Gm-Message-State: AOAM530WC0+5oLI4r0wbERumwnueh4W6fSsjWsLxNkD518S1ZTiDO874
-	nmyIjzJXhlGW5gn6tC4S+Lo=
-X-Google-Smtp-Source: ABdhPJz7UaAu1dmwAfduVnLzoXN0rY0S0U8WJE6KWUcTeKiIhK5MLmLXhvJaShL6SyWBuIMPeljjvA==
-X-Received: by 2002:a05:6a00:3491:b0:51c:1d3b:b0b0 with SMTP id cp17-20020a056a00349100b0051c1d3bb0b0mr131559pfb.68.1655138946195;
-        Mon, 13 Jun 2022 09:49:06 -0700 (PDT)
-Received: from google.com ([2620:15c:211:201:43cb:e071:e7f2:5e7a])
-        by smtp.gmail.com with ESMTPSA id ij7-20020a170902ab4700b001621cd83e49sm5356623plb.92.2022.06.13.09.49.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jun 2022 09:49:05 -0700 (PDT)
-Sender: Minchan Kim <minchan.kim@gmail.com>
-Date: Mon, 13 Jun 2022 09:49:03 -0700
-From: Minchan Kim <minchan@kernel.org>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>, umgwanakikbuti@gmail.com,
-	bigeasy@linutronix.de
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	linux-block <linux-block@vger.kernel.org>,
-	regressions@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
-	Nitin Gupta <ngupta@vflare.org>
-Subject: Re: qemu-arm: zram: mkfs.ext4 : Unable to handle kernel NULL pointer
- dereference at virtual address 00000140
-Message-ID: <Yqdqfz4Ycbg33k1R@google.com>
-References: <CA+G9fYtVOfWWpx96fa3zzKzBPKiNu1w3FOD4j++G8MOG3Vs0EA@mail.gmail.com>
- <Yp47DODPCz0kNgE8@google.com>
- <CA+G9fYsjn0zySHU4YYNJWAgkABuJuKtHty7ELHmN-+30VYgCDA@mail.gmail.com>
- <Yp/kpPA7GdbArXDo@google.com>
- <YqAL+HeZDk5Wug28@google.com>
- <YqAMmTiwcyS3Ttla@google.com>
- <YqANP1K/6oRNCUKZ@google.com>
- <YqBRZcsfrRMZXMCC@google.com>
- <CA+G9fYvjpCOcTVdpnHTOWaf3KcDeTM3Njn_NnXvU37ppoHH5uw@mail.gmail.com>
- <YqbtH9F47dkZghJ7@google.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=MOQgXtI+BKSvQKp350OufIdxJrNapSAlu2QwriUAL0M=;
+        b=RUN7hCnBk9rGY27zlkQYEJbYA8fYAs982FChsmC/8vEQpCCY0/HHahdYrWwD/YPcbH
+         wuyUIumrRpUpqZHV+Qb+uiPFFR+rLa0GRPPmvjISP5F77VSydeiBT298rawWpKo84rd1
+         ZC1k8/cwMcIKj/Xa6dwjD5MMys0ROAYJ+n+PUPadkLglq3J+Z8VP3k4C0ZaoctFjgnfC
+         xQcH4l6Q4x2HeIVaPtkP8PeSnc5trDDEd0Jy0lxSQqKNowskjhFQg3N0KvF+m9NjAUNv
+         rWf3B5iilXvMX9Z6Bl6mBW8a1hAcMSXw8B5AaWaWLynCxihmLCkYElm+qzwssDA6qxlD
+         oOyg==
+X-Gm-Message-State: AOAM532JBeoKsZDJrkvNh1FqLXIi0lD/DexX8LncvoaL3+DE4QiqyM9k
+	Yak2DPCXKAbyCYPiksqJ+/I=
+X-Google-Smtp-Source: ABdhPJzZ7i5tys91503gKW2Dx5yn+4/pmdYgJ0M/Iv2UGbTxpnBMOzfRw0pPhZwC6EEadmpIF1e9UQ==
+X-Received: by 2002:a05:6a00:1687:b0:518:6c6b:6a9a with SMTP id k7-20020a056a00168700b005186c6b6a9amr161951pfc.81.1655139974873;
+        Mon, 13 Jun 2022 10:06:14 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id 199-20020a6300d0000000b003f24d67d226sm5702673pga.92.2022.06.13.10.06.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jun 2022 10:06:14 -0700 (PDT)
+Message-ID: <e58125a4-f885-ae55-0441-d52ecab9a1e8@gmail.com>
+Date: Mon, 13 Jun 2022 10:06:12 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YqbtH9F47dkZghJ7@google.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 0/4] PCI: brcmstb: Revert subdevice regulator stuff
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>, Jim Quinlan <jim2101024@gmail.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Cyril Brulebois <kibi@debian.org>, Nicolas Saenz Julienne
+ <nsaenz@kernel.org>, bcm-kernel-feedback-list@broadcom.com,
+ linux-pci@vger.kernel.org, regressions@lists.linux.dev,
+ Bjorn Helgaas <bhelgaas@google.com>
+References: <20220511203948.GA811126@bhelgaas>
+From: Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <20220511203948.GA811126@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 13, 2022 at 04:54:07PM +0900, Sergey Senozhatsky wrote:
-> Hello,
+Bjorn,
+
+On 5/11/22 13:39, Bjorn Helgaas wrote:
+> On Wed, May 11, 2022 at 01:24:55PM -0700, Florian Fainelli wrote:
+>> On 5/11/22 13:18, Bjorn Helgaas wrote:
+>>> From: Bjorn Helgaas <bhelgaas@google.com>
+>>>
+>>> Cyril reported that 830aa6f29f07 ("PCI: brcmstb: Split brcm_pcie_setup()
+>>> into two funcs"), which appeared in v5.17-rc1, broke booting on the
+>>> Raspberry Pi Compute Module 4.  Revert 830aa6f29f07 and subsequent patches
+>>> for now.
+>>
+>> How about we get a chance to fix this? Where, when and how was this even
+>> reported?
 > 
-> On (22/06/12 20:56), Naresh Kamboju wrote:
-> > 
-> > I have tested this patch and the reported issue got resolved [1].
-> >
+> Sorry, I forgot to cc you, that's my fault:
+>    https://lore.kernel.org/r/CABhMZUWjZCwK1_qT2ghTSu2dguJBzBTpiTqKohyA72OSGMsaeg@mail.gmail.com
 > 
-> Many thanks for the tests.
-> 
-> Quite honestly I was hoping that the patch would not help :) Well, ok,
-> we now know that it's mapping area lock and the lockdep part of its
-> memory is zero-ed out. The question is - "why?" It really should not
-> be zeroed out.
+> If you come up with a fix, I'll drop the reverts, of course.
 
-Ccing Mike and Sebastian who are author/expert of the culprit patch
+OK, so now this patch series has landed in Linus' tree and was committed 
+on May 31st and we got no notification that this patch series was applied :/
 
-Naresh found zsmalloc crashed on the testing [1] and confirmed
-that Sergey's patch[2] fixed the problem.
-However, I don't understand why we need reinit the local_lock
-on cpu_up handler[3].
+How did I notice? Because suddenly the stable auto selection started to 
+email me about the 4 reverts being included which is kind of the worse 
+way to know about a patch having been applied.
 
-Could you guys shed some light?
+What is even better is that meanwhile there was already a candidate fix 
+proposed on May 18th, and a v2 on May 28th, so still an alternative to 
+the reverts making it to Linus' tree, or so I thought.
 
-[1] https://lore.kernel.org/all/CA+G9fYtVOfWWpx96fa3zzKzBPKiNu1w3FOD4j++G8MOG3Vs0EA@mail.gmail.com/
-[2] https://lore.kernel.org/all/YqBRZcsfrRMZXMCC@google.com/
-[3] https://lore.kernel.org/all/YqEKapKLBgKEXGBg@google.com/
+This utterly annoys me because:
+
+- the history for pcie-brcmstb.c is now looking super ugly because we 
+have 4 commits getting reverted and if we were to add back the original 
+feature being added now what? Do we come up with reverts of reverts, or 
+the modified (with the fix) original commits applied on top, are not we 
+going to sign ourselves for another 13 or so round of patches before we 
+all agree on the solution?
+
+- we could have just fixed this with proper communication from the get 
+go about the regression in the first place, which remains the failure in 
+communicating appropriately with driver authors/maintainers
+
+- v5.17 and v5.18 final were already broken, but who on earth uses v5.17 
+or v5.18 and not their stable counter parts, so we had a chance of 
+slipping in a fix in a subsequent stable, I mean, it's been broken for 2 
+releases on the CM4 and it was not noticed, so what was the urgency?
+
+- the reverts will make it to -stable being bug fixes for regressions, 
+however for users like Jim and I, now we will lose a feature that we 
+were relying on, thus causing a regression for *many other* platforms 
+than just the CM4
+
+I appreciate that as a maintainer you are very sensitive to regressions 
+and want to be responsive and responsible but this is not leaving just a 
+slightest chance to right a wrong. Can we not do that again please?
+
+Maybe I am being overly sensitive and disgruntled today, but really this 
+is the type of thing that makes me want to quit working on the Linux kernel.
+-- 
+Florian
