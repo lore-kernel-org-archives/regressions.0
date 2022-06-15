@@ -1,43 +1,43 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B468033CB
-	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 20:40:46 +0000 (UTC)
-Received: by mail-pj1-f50.google.com with SMTP id v17-20020a17090a899100b001ead067eaf9so3290714pjn.0
-        for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 13:40:46 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6BD29A7
+	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 23:59:39 +0000 (UTC)
+Received: by mail-pj1-f46.google.com with SMTP id a10so17100pju.3
+        for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 16:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=HXGT1SN8IRUj17QykJ95SQlzGYE/r46PmZhVx6OFLXg=;
-        b=LelFpkS7pXpwbVXWulHpk9I/9DkRhilIMUayz2rayB1Kt6nQMPM2POMLTeY79XPyLQ
-         1YeiryG8+Owu4dFQF4bPxFA9lts1EmElPJdqW0iHsuCsu6C8vAT/N1XII5y6lHse7WsL
-         LGPtZSJzDqd3p9Vx7/Z1zWy1HTuhMRwOe0oN8ioOOGHdwm4VlMbMyHoKqHTzuiD+96jF
-         wBmTe65m0v5tYzjmptG3JTGaMgpxO4eDZoyq5QYQWze82EFORwyXDWVlKE52xyHZHBcm
-         q+92/dB+vdmtqIvCkFe9qHQodieqBasIzvRwnjX/F3lJLUxH2Pb00dNi+zIgtqMRQsHa
-         13rA==
+        bh=5Prk+LICDaQOvsjdPKZk/RmR44xaZYCmvqstzf4ym1E=;
+        b=XUT3wX2qJ3M+yqprz4Jac19iLVnGCVp70v2Ru0HQ3hSuGBYd5d4QyPG7tmOvZpju2x
+         IS655UiIYPU+askm3GQPwCdJPNwbNEMEz0mJpOURDN+ES38tVgPTNu1yKvvNB1OtkW5g
+         mXX0eZOFQXaNb7VoRyuYAYvCzMBMO59XZ8T3VpEoNJ9HCKyAS2OGYjrKaVUqFZJ7OLi/
+         mxeSqtUM7L7I1W51w36SrEbOqmweMd4AjbzwNNVypSgARUhB0Ph1gXoLo5VbCUkVXYUd
+         rl5F00dgdyjEu0h8L6kMpOFPps7+Q9/HRSO/bNCszwCl+1mybeqzfhyyuS9o9HgNcjgG
+         4aFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to;
-        bh=HXGT1SN8IRUj17QykJ95SQlzGYE/r46PmZhVx6OFLXg=;
-        b=kBvaUykms0r4VU/OwGtKzVfYkz1XJn3/5yh3JfgIYuqjixCR6LSF/p6s4qUfdx/7qp
-         jpVgF2qU7jMpxRbVdvDptIoNj7BXDnNdygbpZpCOKcdu23w3i75QxlCUhpoUYHpCiHxt
-         tY7uYPPuORRCYWefc/ew9rL0aIqrsQk5leMPyLCiE27uQRP7zbGMJdWth8vea19uLYrX
-         5PNofAHwRce8d0XGDqEC45g86C2DxIMwQxenByEg4Ehmiq7xDLuKuQ9IXF/EktfM8caJ
-         +LQm3yGa7VK3e3t0uGdzm/CeOzAzWfXAmkKFhsZCgJ1HDM2+qasLuChQoeoblfm98jMj
-         AEkQ==
-X-Gm-Message-State: AJIora/SMANCTDi5gGTPnFZnVxbk6qCh2NwwpRNk9tPAg+qS1RuV8/U8
-	STyuDQ03vI8aVjNurxgQ0uc=
-X-Google-Smtp-Source: AGRyM1uLBrJ6qlsZfxfPteK1a3Npd+wMO6H3/cUVtRPfhBYY5qVlt0xTpznwHqgdUkF35d0kjb6dIw==
-X-Received: by 2002:a17:90a:2e02:b0:1ea:c661:7507 with SMTP id q2-20020a17090a2e0200b001eac6617507mr11055263pjd.133.1655325646116;
-        Wed, 15 Jun 2022 13:40:46 -0700 (PDT)
+        bh=5Prk+LICDaQOvsjdPKZk/RmR44xaZYCmvqstzf4ym1E=;
+        b=ez9E4oAySt4dYpfQDw7WWzUUplH3w49iR14WYmCcm1SBjDGwl/gaW6dAPgkFvxdxnI
+         62IgdWIkBPLNh8vY3IIk2AH98bwCBNYOj0yWSueQTPWA49aLxlA9U9NfkYxjKKKidaTK
+         7QhQAR3xsTamn/M72+YC+XAwd9PUM7YYI76yaFoLrAJDQzlku9NQ4dOibPYGXTeNAz6+
+         lm8AkszG9eR4usBjBASBhPC31IViuIB+STk9ahqPx+ZcxVUlsFIgaZdmdW0+U/r1TxKp
+         xxQQIzpD6RjgLcTa0BASYOA7E+gpOYClqmn/HOf0nw6MpsSvs0eGFTJ7ud8tUqJl3xjV
+         qmcQ==
+X-Gm-Message-State: AJIora+zx0fpu7seN72uCFP9RYca2lFxVeNVN3TUl5opQBh+xaQ8m8jA
+	P+1mCT7pJkPb2soPik+9iOA=
+X-Google-Smtp-Source: AGRyM1ui0eMwXDVveGgNtUMLZHRWr7Zn0AhmXvc3pIKMYDMhBAALz21WwHFM20ztgk0Var9OcLuqfw==
+X-Received: by 2002:a17:902:dacb:b0:167:621b:f2ec with SMTP id q11-20020a170902dacb00b00167621bf2ecmr2185382plx.19.1655337578882;
+        Wed, 15 Jun 2022 16:59:38 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e3-20020a170903240300b0015e8d4eb277sm42109plo.193.2022.06.15.13.40.44
+        by smtp.gmail.com with ESMTPSA id r24-20020a638f58000000b00401a7b4f137sm172579pgn.41.2022.06.15.16.59.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jun 2022 13:40:45 -0700 (PDT)
+        Wed, 15 Jun 2022 16:59:36 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Wed, 15 Jun 2022 13:40:44 -0700
+Date: Wed, 15 Jun 2022 16:59:35 -0700
 From: Guenter Roeck <linux@roeck-us.net>
 To: Mike Snitzer <snitzer@redhat.com>
 Cc: Mike Snitzer <snitzer@kernel.org>, keescook@chromium.org,
@@ -45,7 +45,7 @@ Cc: Mike Snitzer <snitzer@kernel.org>, keescook@chromium.org,
 	stable@vger.kernel.org, Oleksandr Tymoshenko <ovt@google.com>,
 	dm-devel@redhat.com, regressions@lists.linux.dev
 Subject: Re: [PATCH 5.4 26/34] dm verity: set DM_TARGET_IMMUTABLE feature flag
-Message-ID: <20220615204044.GA675578@roeck-us.net>
+Message-ID: <20220615235935.GA1236726@roeck-us.net>
 References: <20220603173816.944766454@linuxfoundation.org>
  <20220610042200.2561917-1-ovt@google.com>
  <YqLTV+5Q72/jBeOG@kroah.com>
@@ -66,7 +66,98 @@ Content-Disposition: inline
 In-Reply-To: <Yqo63CvFpTDFnH3x@redhat.com>
 
 On Wed, Jun 15, 2022 at 04:02:36PM -0400, Mike Snitzer wrote:
-[ ... ]
+> On Wed, Jun 15 2022 at  1:50P -0400,
+> Guenter Roeck <linux@roeck-us.net> wrote:
+> 
+> > On 6/15/22 08:29, Mike Snitzer wrote:
+> > > On Wed, Jun 15 2022 at 10:36P -0400,
+> > > Guenter Roeck <linux@roeck-us.net> wrote:
+> > > 
+> > > > On Mon, Jun 13, 2022 at 11:13:21AM +0200, Greg KH wrote:
+> > > > > On Fri, Jun 10, 2022 at 11:11:00AM -0400, Mike Snitzer wrote:
+> > > > > > On Fri, Jun 10 2022 at  1:15P -0400,
+> > > > > > Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > > > > 
+> > > > > > > On Fri, Jun 10, 2022 at 04:22:00AM +0000, Oleksandr Tymoshenko wrote:
+> > > > > > > > I believe this commit introduced a regression in dm verity on systems
+> > > > > > > > where data device is an NVME one. Loading table fails with the
+> > > > > > > > following diagnostics:
+> > > > > > > > 
+> > > > > > > > device-mapper: table: table load rejected: including non-request-stackable devices
+> > > > > > > > 
+> > > > > > > > The same kernel works with the same data drive on the SCSI interface.
+> > > > > > > > NVME-backed dm verity works with just this commit reverted.
+> > > > > > > > 
+> > > > > > > > I believe the presence of the immutable partition is used as an indicator
+> > > > > > > > of special case NVME configuration and if the data device's name starts
+> > > > > > > > with "nvme" the code tries to switch the target type to
+> > > > > > > > DM_TYPE_NVME_BIO_BASED (drivers/md/dm-table.c lines 1003-1010).
+> > > > > > > > 
+> > > > > > > > The special NVME optimization case was removed in
+> > > > > > > > 5.10 by commit 9c37de297f6590937f95a28bec1b7ac68a38618f, so only 5.4 is
+> > > > > > > > affected.
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > Why wouldn't 4.9, 4.14, and 4.19 also be affected here?  Should I also
+> > > > > > > just queue up 9c37de297f65 ("dm: remove special-casing of bio-based
+> > > > > > > immutable singleton target on NVMe") to those older kernels?  If so,
+> > > > > > > have you tested this and verified that it worked?
+> > > > > > 
+> > > > > > Sorry for the unforeseen stable@ troubles here!
+> > > > > > 
+> > > > > > In general we'd be fine to apply commit 9c37de297f65 but to do it
+> > > > > > properly would require also making sure commits that remove
+> > > > > > "DM_TYPE_NVME_BIO_BASED", like 8d47e65948dd ("dm mpath: remove
+> > > > > > unnecessary NVMe branching in favor of scsi_dh checks") are applied --
+> > > > > > basically any lingering references to DM_TYPE_NVME_BIO_BASED need to
+> > > > > > be removed.
+> > > > > > 
+> > > > > > The commit header for 8d47e65948dd documents what
+> > > > > > DM_TYPE_NVME_BIO_BASED was used for.. it was dm-mpath specific and
+> > > > > > "nvme" mode really never got used by any userspace that I'm aware of.
+> > > > > > 
+> > > > > > Sadly I currently don't have the time to do this backport for all N
+> > > > > > stable kernels... :(
+> > > > > > 
+> > > > > > But if that backport gets out of control: A simpler, albeit stable@
+> > > > > > unicorn, way to resolve this is to simply revert 9c37de297f65 and make
+> > > > 
+> > > > 9c37de297f65 can not be reverted in 5.4 and older because it isn't there,
+> > > > and trying to apply it results in conflicts which at least I can not
+> > > > resolve.
+> > > > 
+> > > > > > it so that DM-mpath and DM core just used bio-based if "nvme" is
+> > > > > > requested by dm-mpath, so also in drivers/md/dm-mpath.c e.g.:
+> > > > > > 
+> > > > > > @@ -1091,8 +1088,6 @@ static int parse_features(struct dm_arg_set *as, struct multipath *m)
+> > > > > > 
+> > > > > >                          if (!strcasecmp(queue_mode_name, "bio"))
+> > > > > >                                  m->queue_mode = DM_TYPE_BIO_BASED;
+> > > > > > 			else if (!strcasecmp(queue_mode_name, "nvme"))
+> > > > > > -                               m->queue_mode = DM_TYPE_NVME_BIO_BASED;
+> > > > > > +                               m->queue_mode = DM_TYPE_BIO_BASED;
+> > > > > >                          else if (!strcasecmp(queue_mode_name, "rq"))
+> > > > > >                                  m->queue_mode = DM_TYPE_REQUEST_BASED;
+> > > > > >                          else if (!strcasecmp(queue_mode_name, "mq"))
+> > > > > > 
+> > > > > > Mike
+> > > > > > 
+> > > > > 
+> > > > > Ok, please submit a working patch for the kernels that need it so that
+> > > > > we can review and apply it to solve this regression.
+> > > > > 
+> > > > 
+> > > > So, effectively, v5.4.y and older are broken right now for use cases
+> > > > with dm on NVME drives.
+> > > > 
+> > > > Given that the regression does affect older branches, and given that we
+> > > > have to revert this patch to avoid regressions in ChromeOS, would it be
+> > > > possible to revert it from v5.4.y and older until a fix is found ?
+> > > 
+> > > I obviously would prefer to not have this false-start.
+> > > 
+> > The false start has already happened since we had to revert the patch
+> > from chromeos-5.4 and older branches.
 > 
 > OK, well this is pretty easy to fix in general.  If there are slight
 > differences across older trees they are easily resolved.  Fact that
@@ -84,12 +175,6 @@ On Wed, Jun 15, 2022 at 04:02:36PM -0400, Mike Snitzer wrote:
 > establish DM_TYPE_NVME_BIO_BASED.
 > 
 > Signed-off-by: Mike Snitzer <snitzer@kernel.org>
-
-I'll give it a try.
-
-Thanks,
-Guenter
-
 > ---
 >  drivers/md/dm-table.c         | 32 ++----------------
 >  drivers/md/dm.c               | 64 +++--------------------------------
@@ -195,6 +280,13 @@ Guenter
 > -			ret = direct_make_request(clone);
 > -		else
 > -			ret = generic_make_request(clone);
+
+drivers/md/dm.c:1340:24: error: unused variable 'md'
+
+I'll try again with this fixed.
+
+Guenter
+
 > +		ret = generic_make_request(clone);
 >  		break;
 >  	case DM_MAPIO_KILL:
