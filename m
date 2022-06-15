@@ -1,141 +1,158 @@
-Received: from proxima.lasnet.de (proxima.lasnet.de [78.47.171.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DC17A
-	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 17:47:29 +0000 (UTC)
-Received: from [IPv6:2003:f8:3f08:ad00:4f10:e432:a44c:8e65] (p200300f83f08ad004f10e432a44c8e65.dip0.t-ipconnect.de [IPv6:2003:f8:3f08:ad00:4f10:e432:a44c:8e65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jluebbe@lasnet.de)
-	by proxima.lasnet.de (Postfix) with ESMTPSA id C6C94C0747;
-	Wed, 15 Jun 2022 19:47:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lasnet.de; s=2021;
-	t=1655315241;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9bz2STt3kmdDn2VeVPZgDH8qBkZlDCUWWkMWbxg3vV8=;
-	b=JXvpMPg5zJiUlnfeUG5vuPjKWS3deA/7wOON1oCwrC4EhjLjeBDdi1/RAN5Z4lj3VdNER9
-	p2Z6zB+JpIcMlMug3EuqosgSrBISYDBhUn2objvZiF5OifzA7AjN//b4DQGoBjzakkXEOs
-	/8A5itR9sR1UU8GumA5llZC2F2ga2URSMCuNT7ML7qtDuztN1ZSeVoW6s2YBw7osS+WNVe
-	aWEAoxLmOBlIgqBzz/HPuuDhDYqcl0t+yCTT5pzT2RQBS0cG8pQ1x1GjnjEMvo2RFtzFwb
-	OeD+zD0cF/n7Nri2QsFd7h094QFkDXbTvkX1FG1eTkcL/GBTojkn3xHDgY5Oaw==
-Message-ID: <3d0991cf30d6429e8dd059f7e0d1c54a2200c5a0.camel@lasnet.de>
-Subject: Re: [REGRESSION] connection timeout with routes to VRF
-From: Jan Luebbe <jluebbe@lasnet.de>
-To: David Ahern <dsahern@kernel.org>, Robert Shearman
- <robertshearman@gmail.com>,  Andy Roulin <aroulin@nvidia.com>
-Cc: Mike Manning <mvrmanning@gmail.com>, "David S. Miller"
- <davem@davemloft.net>,  netdev@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel <linux-kernel@vger.kernel.org>
-Date: Wed, 15 Jun 2022 19:47:44 +0200
-In-Reply-To: <6410890e-333d-5f0e-52f2-1041667c80f8@kernel.org>
-References: <a54c149aed38fded2d3b5fdb1a6c89e36a083b74.camel@lasnet.de>
-	 <6410890e-333d-5f0e-52f2-1041667c80f8@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.3-1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11447A
+	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 17:50:35 +0000 (UTC)
+Received: by mail-pj1-f50.google.com with SMTP id a10so11877855pju.3
+        for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 10:50:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=QfCF2UsmU1Pniv5Pf4uVgOiwJRRieSBYhaM8CMSmQ3U=;
+        b=Pdshfu1RKVhPNis08umwmUUzhrIzuI1qOJCBow86aXNtlNrNUkQkaCWDO89gmAgj6v
+         PoUjEwLg6MO5uM5qbb4DM5WmtipAbO4F/NrF7yjVysoPoGDCANnsAlG5f8A4TIkPgAnr
+         ZX3rmGkJHMi0g1gmWoEXhtwYVEJdKAmVAGmT2pgQ+WjgZnFJRHc9Uy0zkzI3K9PMma7K
+         MXuDZ3DtadPA/iculyZSRPJxHQXMg9lvYR/nSaej8PqYXcPEhFS1othMR7b1sJxvqbQX
+         KbkApuBpzlgRt7lA3TmFwIM+PaXj7jNMYGyv2PiJT5fl3fLOFlr5cvnyf7FinSFNGMcu
+         K2hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
+         :subject:content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=QfCF2UsmU1Pniv5Pf4uVgOiwJRRieSBYhaM8CMSmQ3U=;
+        b=21CvB+TguceMSjKbVtOns/jvaASR8OeSlp+UeHtOtp4Djygx2AE+AsPmbUnqHjnj+L
+         blaJrtSUHMbMt3NggLpy22/7IZ5Bhj/Qdl90GDQAGFKCrI33as+fnn1tlQXKlryd8HK0
+         C1NaWREQtQWxJfMuzNWfp/njg7jMZ5n6067FxlBmPCaJiWzeJ1XuzLdR6DOtXxC/mGfD
+         2bWTU6WwCbCYuVr3lIjxZK9jfckYsfrSbPc+jjnTwPigK4wWv2ytjLYXfgjuakQmc2k/
+         CxQsrSJL9/Al9WCGPMzGH0QJoh+0Pphw7ZdaE9KdECHumB9bc//eSI8/ETlb/Pm8npGa
+         XBEg==
+X-Gm-Message-State: AJIora93HeAs/265CPF4r+vWPRfIC5GkPs1e/yalRehYFYfoORcbcn6l
+	JfHsOOvOV7wydaXArrneLlw=
+X-Google-Smtp-Source: AGRyM1tuUWVOE9TzgSzU74eaIcQ/ZeNW5GN0XVRmVm0PRdEBUdPkL2L0CmPF+4r9OP3XWrBQYluWYQ==
+X-Received: by 2002:a17:90b:3654:b0:1ea:4540:d32 with SMTP id nh20-20020a17090b365400b001ea45400d32mr11452858pjb.92.1655315435252;
+        Wed, 15 Jun 2022 10:50:35 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h13-20020a17090a3d0d00b001ea5d9ae7d9sm2067433pjc.40.2022.06.15.10.50.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Jun 2022 10:50:34 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <50eeff2e-45c5-5eb2-c41d-3e0092a84483@roeck-us.net>
+Date: Wed, 15 Jun 2022 10:50:32 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 5.4 26/34] dm verity: set DM_TARGET_IMMUTABLE feature flag
+Content-Language: en-US
+To: Mike Snitzer <snitzer@kernel.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, keescook@chromium.org,
+ sarthakkukreti@google.com, stable@vger.kernel.org,
+ Oleksandr Tymoshenko <ovt@google.com>, dm-devel@redhat.com,
+ regressions@lists.linux.dev
+References: <20220603173816.944766454@linuxfoundation.org>
+ <20220610042200.2561917-1-ovt@google.com> <YqLTV+5Q72/jBeOG@kroah.com>
+ <YqNfBMOR9SE2TuCm@redhat.com> <Yqb/sT205Lrhl6Bv@kroah.com>
+ <20220615143642.GA2386944@roeck-us.net> <Yqn64AMwoIzQXwXM@redhat.com>
+From: Guenter Roeck <linux@roeck-us.net>
+In-Reply-To: <Yqn64AMwoIzQXwXM@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, 2022-06-11 at 10:44 -0600, David Ahern wrote:
-> On 6/11/22 5:14 AM, Jan Luebbe wrote:
-> > Hi,
-> > 
-> > TL;DR: We think we have found a regression in the handling of VRF route
-> > leaking
-> > caused by "net: allow binding socket in a VRF when there's an unbound
-> > socket"
-> > (3c82a21f4320).
+On 6/15/22 08:29, Mike Snitzer wrote:
+> On Wed, Jun 15 2022 at 10:36P -0400,
+> Guenter Roeck <linux@roeck-us.net> wrote:
 > 
-> This is the 3rd report in the past few months about this commit.
+>> On Mon, Jun 13, 2022 at 11:13:21AM +0200, Greg KH wrote:
+>>> On Fri, Jun 10, 2022 at 11:11:00AM -0400, Mike Snitzer wrote:
+>>>> On Fri, Jun 10 2022 at  1:15P -0400,
+>>>> Greg KH <gregkh@linuxfoundation.org> wrote:
+>>>>
+>>>>> On Fri, Jun 10, 2022 at 04:22:00AM +0000, Oleksandr Tymoshenko wrote:
+>>>>>> I believe this commit introduced a regression in dm verity on systems
+>>>>>> where data device is an NVME one. Loading table fails with the
+>>>>>> following diagnostics:
+>>>>>>
+>>>>>> device-mapper: table: table load rejected: including non-request-stackable devices
+>>>>>>
+>>>>>> The same kernel works with the same data drive on the SCSI interface.
+>>>>>> NVME-backed dm verity works with just this commit reverted.
+>>>>>>
+>>>>>> I believe the presence of the immutable partition is used as an indicator
+>>>>>> of special case NVME configuration and if the data device's name starts
+>>>>>> with "nvme" the code tries to switch the target type to
+>>>>>> DM_TYPE_NVME_BIO_BASED (drivers/md/dm-table.c lines 1003-1010).
+>>>>>>
+>>>>>> The special NVME optimization case was removed in
+>>>>>> 5.10 by commit 9c37de297f6590937f95a28bec1b7ac68a38618f, so only 5.4 is
+>>>>>> affected.
+>>>>>>
+>>>>>
+>>>>> Why wouldn't 4.9, 4.14, and 4.19 also be affected here?  Should I also
+>>>>> just queue up 9c37de297f65 ("dm: remove special-casing of bio-based
+>>>>> immutable singleton target on NVMe") to those older kernels?  If so,
+>>>>> have you tested this and verified that it worked?
+>>>>
+>>>> Sorry for the unforeseen stable@ troubles here!
+>>>>
+>>>> In general we'd be fine to apply commit 9c37de297f65 but to do it
+>>>> properly would require also making sure commits that remove
+>>>> "DM_TYPE_NVME_BIO_BASED", like 8d47e65948dd ("dm mpath: remove
+>>>> unnecessary NVMe branching in favor of scsi_dh checks") are applied --
+>>>> basically any lingering references to DM_TYPE_NVME_BIO_BASED need to
+>>>> be removed.
+>>>>
+>>>> The commit header for 8d47e65948dd documents what
+>>>> DM_TYPE_NVME_BIO_BASED was used for.. it was dm-mpath specific and
+>>>> "nvme" mode really never got used by any userspace that I'm aware of.
+>>>>
+>>>> Sadly I currently don't have the time to do this backport for all N
+>>>> stable kernels... :(
+>>>>
+>>>> But if that backport gets out of control: A simpler, albeit stable@
+>>>> unicorn, way to resolve this is to simply revert 9c37de297f65 and make
+>>
+>> 9c37de297f65 can not be reverted in 5.4 and older because it isn't there,
+>> and trying to apply it results in conflicts which at least I can not
+>> resolve.
+>>
+>>>> it so that DM-mpath and DM core just used bio-based if "nvme" is
+>>>> requested by dm-mpath, so also in drivers/md/dm-mpath.c e.g.:
+>>>>
+>>>> @@ -1091,8 +1088,6 @@ static int parse_features(struct dm_arg_set *as, struct multipath *m)
+>>>>
+>>>>                          if (!strcasecmp(queue_mode_name, "bio"))
+>>>>                                  m->queue_mode = DM_TYPE_BIO_BASED;
+>>>> 			else if (!strcasecmp(queue_mode_name, "nvme"))
+>>>> -                               m->queue_mode = DM_TYPE_NVME_BIO_BASED;
+>>>> +                               m->queue_mode = DM_TYPE_BIO_BASED;
+>>>>                          else if (!strcasecmp(queue_mode_name, "rq"))
+>>>>                                  m->queue_mode = DM_TYPE_REQUEST_BASED;
+>>>>                          else if (!strcasecmp(queue_mode_name, "mq"))
+>>>>
+>>>> Mike
+>>>>
+>>>
+>>> Ok, please submit a working patch for the kernels that need it so that
+>>> we can review and apply it to solve this regression.
+>>>
+>>
+>> So, effectively, v5.4.y and older are broken right now for use cases
+>> with dm on NVME drives.
+>>
+>> Given that the regression does affect older branches, and given that we
+>> have to revert this patch to avoid regressions in ChromeOS, would it be
+>> possible to revert it from v5.4.y and older until a fix is found ?
 > 
-> ...
-
-Hmm, I've not been able to find other reports. Could you point me to them?
-
-> > 
-> > Our minimized test case looks like this:
-> >  ip rule add pref 32765 from all lookup local
-> >  ip rule del pref 0 from all lookup local
-> >  ip link add red type vrf table 1000
-> >  ip link set red up
-> >  ip route add vrf red unreachable default metric 8192
-> >  ip addr add dev red 172.16.0.1/24
-> >  ip route add 172.16.0.0/24 dev red
-> >  ip vrf exec red socat -dd TCP-LISTEN:1234,reuseaddr,fork SYSTEM:"echo
-> > connected" &
-> >  sleep 1
-> >  nc 172.16.0.1 1234 < /dev/null
-> > 
+> I obviously would prefer to not have this false-start.
 > 
-> ...
-> Thanks for the detailed analysis and reproducer.
-> 
-> > 
-> > The partial revert
-> > diff --git a/include/net/inet_hashtables.h b/include/net/inet_hashtables.h
-> > index 98e1ec1a14f0..41e7f20d7e51 100644
-> > --- a/include/net/inet_hashtables.h
-> > +++ b/include/net/inet_hashtables.h
-> > @@ -310,8 +310,9 @@ static inline struct sock *inet_lookup_listener(struct
-> > net *net,
-> >  #define INET_MATCH(__sk, __net, __cookie, __saddr, __daddr, __ports, __dif,
-> > __sdif) \
-> >         (((__sk)->sk_portpair == (__ports))                     &&      \
-> >          ((__sk)->sk_addrpair == (__cookie))                    &&      \
-> > -        (((__sk)->sk_bound_dev_if == (__dif))                  ||      \
-> > -         ((__sk)->sk_bound_dev_if == (__sdif)))                &&      \
-> > +        (!(__sk)->sk_bound_dev_if      ||                              \
-> > +          ((__sk)->sk_bound_dev_if == (__dif))                 ||      \
-> > +          ((__sk)->sk_bound_dev_if == (__sdif)))               &&      \
-> >          net_eq(sock_net(__sk), (__net)))
-> >  #else /* 32-bit arch */
-> >  #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
-> > @@ -321,8 +322,9 @@ static inline struct sock *inet_lookup_listener(struct
-> > net *net,
-> >         (((__sk)->sk_portpair == (__ports))             &&              \
-> >          ((__sk)->sk_daddr      == (__saddr))           &&              \
-> >          ((__sk)->sk_rcv_saddr  == (__daddr))           &&              \
-> > -        (((__sk)->sk_bound_dev_if == (__dif))          ||              \
-> > -         ((__sk)->sk_bound_dev_if == (__sdif)))        &&              \
-> > +        (!(__sk)->sk_bound_dev_if      ||                              \
-> > +          ((__sk)->sk_bound_dev_if == (__dif))         ||              \
-> > +          ((__sk)->sk_bound_dev_if == (__sdif)))       &&              \
-> >          net_eq(sock_net(__sk), (__net)))
-> >  #endif /* 64-bit arch */
-> > 
-> > restores the original behavior when applied on v5.18. This doesn't apply
-> > directly on master, as the macro was replaced by an inline function in
-> > "inet:
-> > add READ_ONCE(sk->sk_bound_dev_if) in INET_MATCH()" (4915d50e300e).
-> > 
-> > I have to admit I don't quite understand 3c82a21f4320, so I'm not sure how
-> > to proceed. What would be broken by the partial revert above? Are there
-> > better ways to configure routing into the VRF than simply "ip route add
-> > 172.16.0.0/24 dev red" that still work?
-> > 
-> > Thanks,
-> > Jan
-> > 
-> > #regzbot introduced: 3c82a21f4320
-> > 
-> > 
-> > 
-> 
-> Andy Roulin suggested the same fix to the same problem a few weeks back.
-> Let's do it along with a test case in fcnl-test.sh which covers all of
-> these vrf permutations.
+The false start has already happened since we had to revert the patch
+from chromeos-5.4 and older branches.
 
-Thanks! I'd be happy to test any patch in our real setup.
-
-Regards,
-Jan
-
-
+Guenter
