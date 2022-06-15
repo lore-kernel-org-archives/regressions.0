@@ -1,92 +1,199 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4ED7A
-	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 10:08:00 +0000 (UTC)
-Received: by mail-vs1-f52.google.com with SMTP id r12so11405241vsg.8
-        for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 03:08:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gz01wLOmYbzPFewaBzlsp1NtYztmbI+KjPaWV1zpQ9A=;
-        b=Pzn4MqVDehQVMbSv0Q1Xm85YWmnHrd0OAEg7norCMhU41t+kdttCyU5mJs5WTSyI4a
-         Ev4Yp6oZBCCTG7sZcgT49J7OsZDJL1KZSbQsHB+gRYgvQPBK3hmWHmny+RNrSOHnVZsE
-         TqJ9Y/Tq7TiPIcaeiG4968ifnKGlApK4RNUY9dgIdTBpVss/N9/RY7bHQFHf4uoxnKMs
-         44+DG5kQ5J0ek0Uh4OsM6rEbz1WIs3R6cB9DdQsWUm7IVDlc2LgHNUO2Rt25ECPlYLf9
-         Q+CyCbouRHkQmYwFay4zCq/b2eHRnH49GjA2bluDhvetL2LKTtaOirG3Wk10TruoE8Oo
-         WR8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gz01wLOmYbzPFewaBzlsp1NtYztmbI+KjPaWV1zpQ9A=;
-        b=h36oGTH0cK3Fx2UzdwoXGFM0V0Vdm1f5mQcC5G6d/ZjGIGldz9Hde/WHxORQUKk2nf
-         8xkKQo+7q0oqihspYZSk7YY3lOqOzbsBl98wWYUtngG7ZI+xYj45XbcY2G7Jf2INBEn7
-         gDiSq6FVNWmI8rJozHhvz+eDQAeV5nen/Td6HME3vUQf3b1ywu4m5b1kzQb43JDPhx/9
-         9kgn34pOGyT0ydxYCa8GmcSivHyxAdrddfPFhsEB8ZcLJS+64ArC1UpAWzozENVUVMIz
-         0q2kPmi3QsQpiyBx9Eakv5OeKdo+RWmfyVxmZwIhtceM+Kp40TmCCh8+9nEnabSEu+Li
-         kE0A==
-X-Gm-Message-State: AJIora97sHQew2LKyImCdvJ+pFeSlvzxy1pA29CuEzFEo8peQ+JGFykz
-	SzF3zcQiIgzvpPtpQD2rHTLlF/BSh4idgqGiGw8=
-X-Google-Smtp-Source: AGRyM1uaMPZ5nuoTW+CbluiDhGGas1p5vSDfQirdJ16KSHY9gRMbLgEmoqvdcgfcfYfzOo+I6kfHtx44D09cbMENev0=
-X-Received: by 2002:a67:cd16:0:b0:34b:95ab:715a with SMTP id
- u22-20020a67cd16000000b0034b95ab715amr4458171vsl.19.1655287679078; Wed, 15
- Jun 2022 03:07:59 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4B87A
+	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 10:48:58 +0000 (UTC)
+Received: from mail-yb1-f177.google.com ([209.85.219.177]) by
+ mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
+ id 1MeD1l-1nTTPL0NoF-00bK6c for <regressions@lists.linux.dev>; Wed, 15 Jun
+ 2022 12:48:56 +0200
+Received: by mail-yb1-f177.google.com with SMTP id p13so19849914ybm.1
+        for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 03:48:55 -0700 (PDT)
+X-Gm-Message-State: AJIora/5Dk8uLK91V0j357K5tfJ+SMAvXGUnN5HohSLSqm/yOqFx8aDs
+	/mofXhgBDeydtqloitzqaS1fPvEcS9L84l4zQPk=
+X-Google-Smtp-Source: AGRyM1uLqkPKf59kwWCfljCBm5ZT7yCtwMl287dtrHSeVzKGWx3HCjXOif/E5TiMEJFGlLgyI6MBZ9ti+zoKUOOst6I=
+X-Received: by 2002:a05:6902:1023:b0:665:12c1:b44d with SMTP id
+ x3-20020a056902102300b0066512c1b44dmr9891763ybt.472.1655290134824; Wed, 15
+ Jun 2022 03:48:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <f038d6f9-b96b-0749-111c-33ac8939a1c0@i2se.com>
- <57664575-d02e-44fd-0314-d2e814775fdd@i2se.com> <CALeDE9PuZbWzSkA=fa+z+yhOox-ZEVuRO1_gyJp_d73ouSZtMw@mail.gmail.com>
- <05b3ae90-b66b-84c4-b525-dbab3aa677eb@i2se.com>
-In-Reply-To: <05b3ae90-b66b-84c4-b525-dbab3aa677eb@i2se.com>
-From: Peter Robinson <pbrobinson@gmail.com>
-Date: Wed, 15 Jun 2022 11:07:48 +0100
-Message-ID: <CALeDE9PB+25eq7ouxuhPj7-mOLT00CyRh4sAeKYkqvoDtPUo=w@mail.gmail.com>
-Subject: Re: [BUG] null pointer dereference when loading bpf_preload on
- Raspberry Pi
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: bpf@vger.kernel.org, jpalus@fastmail.com, regressions@lists.linux.dev, 
-	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Shubham Bansal <illusionist.neo@gmail.com>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <CA+G9fYtE0FmFgocYChrJrJc1Pcw+fc5yt8nHwTW7JPcZT=qH+w@mail.gmail.com>
+In-Reply-To: <CA+G9fYtE0FmFgocYChrJrJc1Pcw+fc5yt8nHwTW7JPcZT=qH+w@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Wed, 15 Jun 2022 12:48:38 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1h6wmoaw_tLiTMGsurPnHjsNvghSe_bppmscr7+04RmA@mail.gmail.com>
+Message-ID: <CAK8P3a1h6wmoaw_tLiTMGsurPnHjsNvghSe_bppmscr7+04RmA@mail.gmail.com>
+Subject: Re: [next] arm64: db410c: Internal error: Oops: 96000004 - pc : sysfs_kf_seq_show
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, regressions@lists.linux.dev, 
+	Pasha Tatashin <pasha.tatashin@soleen.com>, Tejun Heo <tj@kernel.org>, Hao Luo <haoluo@google.com>, 
+	Matthew Wilcox <willy@infradead.org>, Muchun Song <songmuchun@bytedance.com>, 
+	Bjorn Andersson <bjorn.andersson@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>
 Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:crOZ1c08y1AZ7UU5SipQk0k66Vn7jyYHWzemnEc8cszBRnui4CI
+ ZRjLGRcsb6oGfiRv4ViYX6h1a7qhxuCk83misqo5+cmyzA4x+kgAooUyALdQTnvbbjQu+Co
+ JqZ1o7mBU0EChkPzM++7rWN4witJHU2eUuBElJ2FeOirSA7x5R/2nzpL4U6/g0V2mLmm/It
+ 2IikLw74clEWglLJWnZZg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AnaEpPt+U7w=:RJ/q/P/xsJjxBjehobEL8q
+ W4azaGyPb8GOl8fz/RycavgEPWhgT1rLFVgtox1+TNVQer0VX0xmlSNnnnwdV5cpn11cbsMMT
+ v0jtMTLs6OW5BNDvVyeEzIqA8/Cn3sR9LQVMkZ+T/11L7Y3lvG1X94MPPazE9TuKoZ/10mKS2
+ 6pCCN271LKxGXz5+tAStaeuDQXRPhK/sOzN5f5TsraqJBjWlS94Wu9uBoj8SRYBg++Rtk9e+9
+ FRWiFZt+P3UTBNxZKWqYmTyl8b0YdYEeeEbpAyAerNW19zZLWthFJ3NK+fpxX6lyWaHS0L8jk
+ bxFg9WBK/VRmEkIlVxmQONKSyuqiWwFQMN/RYtOZi2u5ar/IvUQgP6H/TbCkLrPFajyJ3u4ij
+ tgOCopGCy/8qPJqBh7SyC8lH9R/J4cl9cPFXklxeTM031ckUDEztjXV4FVLVsSCERJH+CEABf
+ WR8HYYTmxI1B6ZJ4I0SymihsVZoZl93ndcxept6UavUyNL1pZxqrs8Nvttkm20VgLGJ0+BlG1
+ Llu68Jyd40UIqXQ1lq9seGbWC+eHYphUyUPavSYjumAUB5uAFq7FjuAoOthj5E/th6z3tTrkV
+ yIeyId/zIMZlXYX/d4wGeTJxxGedTWeSdDWKpRAiB7aC+01VZDrQ9UH7IufgUqW2/mrFAtL3Y
+ cELfEqvUXIP03tvejzmeGwmwH2X0QNaz23RvAzx4jX37YDYKbf2VDRlyCsz3cDXkhR7pP+Rwi
+ sWr2Tfa3O/dwgUGtlIa3JBB15T5IMIXpyk4ADGy9x16tQOuH9GydAm0vWrLnHJptvKWdBIAZO
+ WQCAonkEMHYhNZnm4plvcPPtE452fwXsbMxuyh/LOu8Q9ngPQYpwCPs4/QF6r3YD/vk97JL9J
+ xcUNColpFNnlJKU8awnQ==
 
-Hi Stefan,
-
-> >>> Jan Palus already reported this NULL pointer dereference on bugzilla
-> >>> [1], but i want to make sure this is noticed by the right people.
-> >>>
-> >>> I've i boot my Raspberry Pi 3 B Plus with multi_v7_defconfig and the
-> >>> following config settings:
-> >>>
-> >>> CONFIG_BPF_SYSCALL=y
-> >>> CONFIG_BPF_JIT=y
-> >>> CONFIG_BPF_JIT_ALWAYS_ON=y
-> >>> CONFIG_BPF_JIT_DEFAULT_ON=y
-> >>> CONFIG_BPF_UNPRIV_DEFAULT_OFF=y
-> >>> CONFIG_USERMODE_DRIVER=y
-> >>> CONFIG_BPF_PRELOAD=y
-> >>> CONFIG_BPF_PRELOAD_UMD=m
-> >> are you able to see this issue in 5.18.x, too? I'm asking because the
-> >> BPF settings comes from your configuration.
-> > I've not seen it in a standard boot, is there a simple way to test
-> > this, TBH I've never really played with bpf (it's on the todo list) so
-> > if there's an easy test I can certainly check.
+On Tue, Jun 14, 2022 at 10:57 PM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
 >
-> it's just during boot. No need to do something special.
+> Following kernel crash reported while booting arm64 db410c board with
+> Linux next-20220614 [1] kfence enabled on this kernel.
 >
-> I want to figure out, if this is caused by my cross compile environment.
+> CONFIG_KFENCE=y
+>
+>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-No, not seeing that anywhere, I've got 5.18.3 running on omap/rpi/imx6
-32 bit devices without anything like that
+Did it work on older linux-next kernels with KFENCE enabled, or did you
+just start enabling it?
 
-We had an issue around BPF on arm32 back in late 2018 and I tried to
-turn some of the options on in defconfig so they'd have wider testing
-but got push back. I don't remember the exact issue there though (and
-it's long been fixed)
+>
+> Boot log:
+> ---------
+> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd030]
+> [    0.000000] Linux version 5.19.0-rc2-next-20220614
+> (tuxmake@tuxmake) (aarch64-linux-gnu-gcc (Debian 11.3.0-3) 11.3.0, GNU
+> ld (GNU Binutils for Debian) 2.38) #1 SMP PREEMPT @1655189659
+> [    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
+> [    0.000000] efi: UEFI not found.
+> [    0.000000] [Firmware Bug]: Kernel image misaligned at boot, please
+> fix your bootloader!
 
-Peter
+This is probably unrelated, but try updating your boot loader to get rid of
+this warning.
+
+> <trim>
+> [    0.000000] kfence: initialized - using 2097152 bytes for 255
+> objects at 0x(____ptrval____)-0x(____ptrval____)
+> <trim>
+> [   11.317288] Unable to handle kernel NULL pointer dereference at
+> virtual address 0000000000000000
+> [   11.317361] Mem abort info:
+> [   11.317906] Unable to handle kernel paging request at virtual
+> address 0000000029f63007
+> [   11.328825] Unable to handle kernel NULL pointer dereference at
+> virtual address 0000000000000009
+> [   11.334704]   ESR = 0x0000000096000004
+> [   11.343115] Unable to handle kernel NULL pointer dereference at
+> virtual address 0000000000000000
+> [   11.357163] Mem abort info:
+> [   11.357217]   ESR = 0x0000000096000004
+> [   11.359935] Mem abort info:
+> [   11.369085] Mem abort info:
+> [   11.369138]   ESR = 0x0000000096000004
+> [   11.373564]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [   11.374530]   SET = 0, FnV = 0
+> [   11.382591]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [   11.382864]   SET = 0, FnV = 0
+> [   11.400484]   ESR = 0x0000000096000004
+> [   11.411713]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [   11.411776]   SET = 0, FnV = 0
+> [   11.422177]   EA = 0, S1PTW = 0
+> [   11.422234]   FSC = 0x04: level 0 translation fault
+> [   11.422724]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [   11.424129] Data abort info:
+> [   11.428397]   EA = 0, S1PTW = 0
+> [   11.428416]   FSC = 0x04: level 0 translation fault
+> [   11.428427] Data abort info:
+> [   11.428434]   ISV = 0, ISS = 0x00000004
+> [   11.428442]   CM = 0, WnR = 0
+> [   11.428451] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000854b8000
+> [   11.428464] [0000000029f63007] pgd=0000000000000000, p4d=0000000000000000
+> [   11.428494] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+> [   11.428503] Modules linked in: venus_enc venus_dec
+> videobuf2_dma_contig crct10dif_ce adv7511(+) cec qcom_wcnss_pil
+> snd_soc_msm8916_analog qcom_pon qcom_spmi_temp_alarm rtc_pm8xxx
+> qcom_spmi_vadc snd_soc_lpass_apq8016 qcom_vadc_common
+> snd_soc_msm8916_digital snd_soc_lpass_cpu snd_soc_apq8016_sbc
+> snd_soc_lpass_platform qcom_q6v5_mss snd_soc_qcom_common qcom_pil_info
+> msm qcom_camss qcom_q6v5 gpu_sched qcom_sysmon drm_dp_aux_bus
+> venus_core qcom_common videobuf2_dma_sg v4l2_mem2mem v4l2_fwnode
+> qcom_glink_smem v4l2_async videobuf2_memops qmi_helpers videobuf2_v4l2
+> mdt_loader qnoc_msm8916 drm_display_helper videobuf2_common
+> i2c_qcom_cci qcom_rng qcom_stats icc_smd_rpm rfkill display_connector
+> drm_kms_helper drm socinfo rmtfs_mem qrtr fuse
+> [   11.428683] CPU: 3 PID: 312 Comm: systemd-udevd Tainted: G        W
+>         5.19.0-rc2-next-20220614 #1
+> [   11.428694] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+> [   11.428699] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [   11.428709] pc : sysfs_kf_seq_show+0x3c/0x130
+> [   11.428724] lr : kernfs_seq_show+0x38/0x44
+> [   11.428735] sp : ffff80000b7ebbf0
+> [   11.428739] x29: ffff80000b7ebbf0 x28: 0000000000000001 x27: 0000000000400cc0
+> [   11.428753] x26: 000000007ffff000 x25: ffff000005581290 x24: ffff000005581280
+> [   11.428767] x23: 0000000000000000 x22: ffff0000056dd520 x21: ffff000004413d00
+> [   11.428780] x20: 0000000029f62fff x19: ffff000005581258 x18: 0000000000000000
+> [   11.428793] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+> [   11.428806] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
+> [   11.428819] x11: 0000000000000000 x10: 0000000000000000 x9 : ffff8000084b0ca8
+> [   11.428832] x8 : 0000000000000000 x7 : 0000000000000200 x6 : 0000000000000000
+> [   11.428845] x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff000004413d00
+> [   11.428857] x2 : ffff8000084b2e64 x1 : 0000000000000001 x0 : ffff000002368a00
+
+It appears that kobj->ktype is x20 here, which is a user space address
+(0x29f62fff),
+reading ->sysfs_ops at offset 8 from that causes a trap.
+
+static const struct sysfs_ops *sysfs_file_ops(struct kernfs_node *kn)
+{
+        struct kobject *kobj = kn->parent->priv;
+
+        if (kn->flags & KERNFS_LOCKDEP)
+                lockdep_assert_held(kn);
+        return kobj->ktype ? kobj->ktype->sysfs_ops : NULL;
+}
+static int sysfs_kf_seq_show(struct seq_file *sf, void *v)
+{
+        struct kernfs_open_file *of = sf->private;
+        struct kobject *kobj = of->kn->parent->priv;
+        const struct sysfs_ops *ops = sysfs_file_ops(of->kn);
+...
+
+ffff800008432e64 <sysfs_kf_seq_show>:
+ffff800008432e64:       d503245f        bti     c
+ffff800008432e68:       d503201f        nop
+ffff800008432e6c:       d503201f        nop
+ffff800008432e70:       d503233f        paciasp
+ffff800008432e74:       a9bd7bfd        stp     x29, x30, [sp, #-48]!
+ffff800008432e78:       910003fd        mov     x29, sp
+ffff800008432e7c:       a90153f3        stp     x19, x20, [sp, #16]
+ffff800008432e80:       aa0003f3        mov     x19, x0
+ffff800008432e84:       a9025bf5        stp     x21, x22, [sp, #32]
+ffff800008432e88:       f9403815        ldr     x21, [x0, #112]  # of
+= sf->private
+ffff800008432e8c:       f94002a0        ldr     x0, [x21] # of->kn
+ffff800008432e90:       f9400400        ldr     x0, [x0, #8]  # kn->parent
+ffff800008432e94:       f9403016        ldr     x22, [x0, #96] # kobj
+= parent->priv
+ffff800008432e98:       f94016d4        ldr     x20, [x22, #40] # kobj-> ktype
+ffff800008432e9c:       b4000054        cbz     x20, ffff800008432ea4
+<sysfs_kf_seq_show+0x40>
+ffff800008432ea0:       f9400694        ldr     x20, [x20, #8] #
+ktype->sysfs_ops, traps
+...
+
+        Arnd
