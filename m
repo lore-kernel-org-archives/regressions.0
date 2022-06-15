@@ -1,111 +1,141 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from proxima.lasnet.de (proxima.lasnet.de [78.47.171.185])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 458787A
-	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 16:47:34 +0000 (UTC)
-Received: by mail-pg1-f180.google.com with SMTP id e66so11873344pgc.8
-        for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 09:47:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9LNaObpm8Up+d88THK7j7rjplRd3qN/NAg8yWi2diNY=;
-        b=SEzTgTqa1tibXsbn9UFQMy9G1j3oY2LzsGeP1/MsJ5JJXf0sd7nyHGFUJ6/LOFFYdY
-         H4EyGJK07bylBZJ7bWTbCDXGivk/AHDglGYTakidrgvK7ug3j2zUIb4bIjMmAUVf7T7X
-         A7r2GSjnNOIRo9mArxNglUNnA141QT33PijaYjcvmcidjrfJppErZnv1ZExyZ+zbgvE8
-         t+qt4QFLbrXBcns+UIsJXSJPv6aEX6xvL2dnHhguwHn28wfAF2b9jFg+tHQDnSb+Ps3n
-         ftojStBruMb0ksJ36aCYFYwIfEoPTvtvpcrm0hxN8ngBIL51TfQKLIYq727o9PXGuNi+
-         PPCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=9LNaObpm8Up+d88THK7j7rjplRd3qN/NAg8yWi2diNY=;
-        b=QZIc/dnPc/4NxySR47ENaPSJU9AFut0yhQ8lXVnXFBUsaVOO3/8dq7zn9okn7jbewl
-         w/qvrUh7ybjOBmQixBBcRA3YYuFDyJODyPZtQEQVJxK1mVFsBidiHld5XPAf+pSU/wD0
-         T5zweYJBqyZ5n+aSj+1UuSoA2unUInLU9VhzIEUSFgB594iEvFSXBPvTlYKeVSirDVWX
-         46Ci6+Bp4nTaYbRbSRxxzjNlFe7wc8OhpzWqhD+keE4nRWoJvtodNXHyVkzm92ppjxr/
-         kZaMw1CIl4O6z+Xg4h8cloJec7S5pxiSVySmMAX8ICefqkHtaN/lPfW8uupWUgx0yQ6n
-         NSug==
-X-Gm-Message-State: AJIora/7V0wt/84lst8FrnSrIsNDFP2yd6qjRbzDk2bkQVwaLfRxkbQm
-	qlOFiWZGkWdIJuEQdNhb7ws=
-X-Google-Smtp-Source: AGRyM1u3viDRQjQA5a9+XRpLEHSUbaKAGBHEbFtATV5l0RU0mettXUmjuzH+0a0EmpJMHBNq6wak1g==
-X-Received: by 2002:a05:6a00:1690:b0:517:cc9e:3e2d with SMTP id k16-20020a056a00169000b00517cc9e3e2dmr527231pfc.0.1655311653545;
-        Wed, 15 Jun 2022 09:47:33 -0700 (PDT)
-Received: from google.com ([2620:15c:211:201:aa45:48f4:5c45:8d55])
-        by smtp.gmail.com with ESMTPSA id l1-20020a17090a384100b001e307d66123sm2024477pjf.25.2022.06.15.09.47.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jun 2022 09:47:32 -0700 (PDT)
-Sender: Minchan Kim <minchan.kim@gmail.com>
-Date: Wed, 15 Jun 2022 09:47:30 -0700
-From: Minchan Kim <minchan@kernel.org>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: umgwanakikbuti@gmail.com, bigeasy@linutronix.de,
-	open list <linux-kernel@vger.kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
-	linux-block <linux-block@vger.kernel.org>,
-	regressions@lists.linux.dev, Jens Axboe <axboe@kernel.dk>,
-	Nitin Gupta <ngupta@vflare.org>
-Subject: Re: qemu-arm: zram: mkfs.ext4 : Unable to handle kernel NULL pointer
- dereference at virtual address 00000140
-Message-ID: <YqoNIgqYl8lWRFTZ@google.com>
-References: <CA+G9fYsjn0zySHU4YYNJWAgkABuJuKtHty7ELHmN-+30VYgCDA@mail.gmail.com>
- <Yp/kpPA7GdbArXDo@google.com>
- <YqAL+HeZDk5Wug28@google.com>
- <YqAMmTiwcyS3Ttla@google.com>
- <YqANP1K/6oRNCUKZ@google.com>
- <YqBRZcsfrRMZXMCC@google.com>
- <CA+G9fYvjpCOcTVdpnHTOWaf3KcDeTM3Njn_NnXvU37ppoHH5uw@mail.gmail.com>
- <YqbtH9F47dkZghJ7@google.com>
- <Yqdqfz4Ycbg33k1R@google.com>
- <Yqf+PC+cKePAsaNI@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1DC17A
+	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 17:47:29 +0000 (UTC)
+Received: from [IPv6:2003:f8:3f08:ad00:4f10:e432:a44c:8e65] (p200300f83f08ad004f10e432a44c8e65.dip0.t-ipconnect.de [IPv6:2003:f8:3f08:ad00:4f10:e432:a44c:8e65])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: jluebbe@lasnet.de)
+	by proxima.lasnet.de (Postfix) with ESMTPSA id C6C94C0747;
+	Wed, 15 Jun 2022 19:47:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lasnet.de; s=2021;
+	t=1655315241;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9bz2STt3kmdDn2VeVPZgDH8qBkZlDCUWWkMWbxg3vV8=;
+	b=JXvpMPg5zJiUlnfeUG5vuPjKWS3deA/7wOON1oCwrC4EhjLjeBDdi1/RAN5Z4lj3VdNER9
+	p2Z6zB+JpIcMlMug3EuqosgSrBISYDBhUn2objvZiF5OifzA7AjN//b4DQGoBjzakkXEOs
+	/8A5itR9sR1UU8GumA5llZC2F2ga2URSMCuNT7ML7qtDuztN1ZSeVoW6s2YBw7osS+WNVe
+	aWEAoxLmOBlIgqBzz/HPuuDhDYqcl0t+yCTT5pzT2RQBS0cG8pQ1x1GjnjEMvo2RFtzFwb
+	OeD+zD0cF/n7Nri2QsFd7h094QFkDXbTvkX1FG1eTkcL/GBTojkn3xHDgY5Oaw==
+Message-ID: <3d0991cf30d6429e8dd059f7e0d1c54a2200c5a0.camel@lasnet.de>
+Subject: Re: [REGRESSION] connection timeout with routes to VRF
+From: Jan Luebbe <jluebbe@lasnet.de>
+To: David Ahern <dsahern@kernel.org>, Robert Shearman
+ <robertshearman@gmail.com>,  Andy Roulin <aroulin@nvidia.com>
+Cc: Mike Manning <mvrmanning@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>,  netdev@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel <linux-kernel@vger.kernel.org>
+Date: Wed, 15 Jun 2022 19:47:44 +0200
+In-Reply-To: <6410890e-333d-5f0e-52f2-1041667c80f8@kernel.org>
+References: <a54c149aed38fded2d3b5fdb1a6c89e36a083b74.camel@lasnet.de>
+	 <6410890e-333d-5f0e-52f2-1041667c80f8@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.3-1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yqf+PC+cKePAsaNI@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 14, 2022 at 12:19:24PM +0900, Sergey Senozhatsky wrote:
-> On (22/06/13 09:49), Minchan Kim wrote:
-> > > Many thanks for the tests.
-> > > 
-> > > Quite honestly I was hoping that the patch would not help :) Well, ok,
-> > > we now know that it's mapping area lock and the lockdep part of its
-> > > memory is zero-ed out. The question is - "why?" It really should not
-> > > be zeroed out.
+On Sat, 2022-06-11 at 10:44 -0600, David Ahern wrote:
+> On 6/11/22 5:14 AM, Jan Luebbe wrote:
+> > Hi,
 > > 
-> > Ccing Mike and Sebastian who are author/expert of the culprit patch
+> > TL;DR: We think we have found a regression in the handling of VRF route
+> > leaking
+> > caused by "net: allow binding socket in a VRF when there's an unbound
+> > socket"
+> > (3c82a21f4320).
+> 
+> This is the 3rd report in the past few months about this commit.
+> 
+> ...
+
+Hmm, I've not been able to find other reports. Could you point me to them?
+
 > > 
-> > Naresh found zsmalloc crashed on the testing [1] and confirmed
-> > that Sergey's patch[2] fixed the problem.
-> > However, I don't understand why we need reinit the local_lock
-> > on cpu_up handler[3].
+> > Our minimized test case looks like this:
+> >  ip rule add pref 32765 from all lookup local
+> >  ip rule del pref 0 from all lookup local
+> >  ip link add red type vrf table 1000
+> >  ip link set red up
+> >  ip route add vrf red unreachable default metric 8192
+> >  ip addr add dev red 172.16.0.1/24
+> >  ip route add 172.16.0.0/24 dev red
+> >  ip vrf exec red socat -dd TCP-LISTEN:1234,reuseaddr,fork SYSTEM:"echo
+> > connected" &
+> >  sleep 1
+> >  nc 172.16.0.1 1234 < /dev/null
 > > 
-> > Could you guys shed some light?
 > 
-> My guess is that it's either something very specific to Naresh's arch/config
-> or a bug somewhere, which memset() per-CPU memory. Not sure how to track it
-> down. KASAN maybe?
+> ...
+> Thanks for the detailed analysis and reproducer.
 > 
-> We certainly don't expect that
+> > 
+> > The partial revert
+> > diff --git a/include/net/inet_hashtables.h b/include/net/inet_hashtables.h
+> > index 98e1ec1a14f0..41e7f20d7e51 100644
+> > --- a/include/net/inet_hashtables.h
+> > +++ b/include/net/inet_hashtables.h
+> > @@ -310,8 +310,9 @@ static inline struct sock *inet_lookup_listener(struct
+> > net *net,
+> >  #define INET_MATCH(__sk, __net, __cookie, __saddr, __daddr, __ports, __dif,
+> > __sdif) \
+> >         (((__sk)->sk_portpair == (__ports))                     &&      \
+> >          ((__sk)->sk_addrpair == (__cookie))                    &&      \
+> > -        (((__sk)->sk_bound_dev_if == (__dif))                  ||      \
+> > -         ((__sk)->sk_bound_dev_if == (__sdif)))                &&      \
+> > +        (!(__sk)->sk_bound_dev_if      ||                              \
+> > +          ((__sk)->sk_bound_dev_if == (__dif))                 ||      \
+> > +          ((__sk)->sk_bound_dev_if == (__sdif)))               &&      \
+> >          net_eq(sock_net(__sk), (__net)))
+> >  #else /* 32-bit arch */
+> >  #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
+> > @@ -321,8 +322,9 @@ static inline struct sock *inet_lookup_listener(struct
+> > net *net,
+> >         (((__sk)->sk_portpair == (__ports))             &&              \
+> >          ((__sk)->sk_daddr      == (__saddr))           &&              \
+> >          ((__sk)->sk_rcv_saddr  == (__daddr))           &&              \
+> > -        (((__sk)->sk_bound_dev_if == (__dif))          ||              \
+> > -         ((__sk)->sk_bound_dev_if == (__sdif)))        &&              \
+> > +        (!(__sk)->sk_bound_dev_if      ||                              \
+> > +          ((__sk)->sk_bound_dev_if == (__dif))         ||              \
+> > +          ((__sk)->sk_bound_dev_if == (__sdif)))       &&              \
+> >          net_eq(sock_net(__sk), (__net)))
+> >  #endif /* 64-bit arch */
+> > 
+> > restores the original behavior when applied on v5.18. This doesn't apply
+> > directly on master, as the macro was replaced by an inline function in
+> > "inet:
+> > add READ_ONCE(sk->sk_bound_dev_if) in INET_MATCH()" (4915d50e300e).
+> > 
+> > I have to admit I don't quite understand 3c82a21f4320, so I'm not sure how
+> > to proceed. What would be broken by the partial revert above? Are there
+> > better ways to configure routing into the VRF than simply "ip route add
+> > 172.16.0.0/24 dev red" that still work?
+> > 
+> > Thanks,
+> > Jan
+> > 
+> > #regzbot introduced: 3c82a21f4320
+> > 
+> > 
+> > 
 > 
-> 	static DEFINE_PER_CPU(struct mapping_area, zs_map_area) = {
-> 	        .lock   = INIT_LOCAL_LOCK(lock),
-> 	};
-> 
-> would produce un-initialized dep_map. So I guess we start off with a
-> valid per-CPU lock, but then it somehow gets zeroed-out.
+> Andy Roulin suggested the same fix to the same problem a few weeks back.
+> Let's do it along with a test case in fcnl-test.sh which covers all of
+> these vrf permutations.
 
-Yes, I don't think we need to reinitialize the local_lock.
+Thanks! I'd be happy to test any patch in our real setup.
 
-Naresh, we believe the patch Sergey provided for the test
-was just band aid to hide the problem.
+Regards,
+Jan
 
-Could you please try to bisect it?
+
