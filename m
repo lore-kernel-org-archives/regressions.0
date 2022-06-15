@@ -1,30 +1,56 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CD0B7A
-	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 13:32:10 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4144C139F;
-	Wed, 15 Jun 2022 06:32:03 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.38.208])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DE3A3F40C;
-	Wed, 15 Jun 2022 06:32:00 -0700 (PDT)
-Date: Wed, 15 Jun 2022 14:31:51 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>,
-	Linux-Next Mailing List <linux-next@vger.kernel.org>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	regressions@lists.linux.dev,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Tejun Heo <tj@kernel.org>, Hao Luo <haoluo@google.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Muchun Song <songmuchun@bytedance.com>,
-	Bjorn Andersson <bjorn.andersson@linaro.org>,
-	Nicolas Dechesne <nicolas.dechesne@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [next] arm64: db410c: Internal error: Oops: 96000004 - pc :
- sysfs_kf_seq_show
-Message-ID: <YqnfRyJkhPCVBmDz@FVFF77S0Q05N>
-References: <CA+G9fYtE0FmFgocYChrJrJc1Pcw+fc5yt8nHwTW7JPcZT=qH+w@mail.gmail.com>
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F777A
+	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 14:36:46 +0000 (UTC)
+Received: by mail-pj1-f49.google.com with SMTP id a10so11422263pju.3
+        for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 07:36:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vttPuOhvTXbiLEEhPovlRRfss5Fl6l3AC5Df+QtEYl0=;
+        b=dECz2tOscedwKb10nqiExX/aMHC/mruVf9z0I2p/kXEV6ZXYpdgE2V83HMwyCNgVUc
+         8dt5yI79h6Ev+uZqFG923gjG8qGv5LbEpvhmxcrBK1Fmtc7qSM/hPNHSYQdukZpkRjn8
+         EKgTs0LFaVopUbgeFqtJEJCYRMbXcDrLm8ajufLSTPikFoVktgEtIUtW2nvGlRz629pf
+         qfsl16YQcuJRQaaX5L3s/eodpBctqMdW4VbLm5dtyGSefVO3nYxcbK3d92MIZFhV+e56
+         O6odxHx+xAQU5HoqHEFO+d0GAwebErvxvwWs4+7L+amsnWIiRjxV8qW5aEpOX+nxqoke
+         ar/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=vttPuOhvTXbiLEEhPovlRRfss5Fl6l3AC5Df+QtEYl0=;
+        b=qsGMOd2TLnlpADLDIpMr1ZXpkPJziRSaQZWer1a+4UdzIF7fUm4u7V3/rTFhITcHUF
+         A9kuiLoodqFgoi1yABcDvr6MRqF2AAmM/6NDHQXYUxcKyK0ynjQvUSCWKAe37C8dGU9T
+         lY+ESTHM/G7ANspHIudAevxoeJLWm441BVd+XJGB2Dz0P9k5XC8iRZLBYEnONtX2XT/6
+         GraR7ODYmozvwD1BTpKMOtb76sjr4vIQZaMX37wBT5BEU3SHnks3OPoT7nW0IhPuGGLg
+         li9qca+HvaV38pv2ydGWvqdxAQC9HXkZJEjOtYn/1WzouzvCYgM0I/HkCDNX1bfd1ngM
+         t16A==
+X-Gm-Message-State: AJIora/TouVwAeiTfw5WaKZTYgzjgv4DZs+3ArD8OxEFC805PLAIAYhK
+	8tbW9BnfDOjB3WCDiIjcHeY=
+X-Google-Smtp-Source: AGRyM1vIm4gzXJ/NN8VDQYgmf13YxaBHhPpLOyInhdNWbwcC/B2THPrqwJu3gsxJg1yjhnlgnMkzVg==
+X-Received: by 2002:a17:90b:2251:b0:1e6:76a8:44f3 with SMTP id hk17-20020a17090b225100b001e676a844f3mr10778425pjb.71.1655303805360;
+        Wed, 15 Jun 2022 07:36:45 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q2-20020a170902f78200b00164ade949adsm9482353pln.79.2022.06.15.07.36.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jun 2022 07:36:43 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 15 Jun 2022 07:36:42 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Mike Snitzer <snitzer@kernel.org>,
+	Oleksandr Tymoshenko <ovt@google.com>, keescook@chromium.org,
+	sarthakkukreti@google.com, stable@vger.kernel.org,
+	regressions@lists.linux.dev, dm-devel@redhat.com
+Subject: Re: [PATCH 5.4 26/34] dm verity: set DM_TARGET_IMMUTABLE feature flag
+Message-ID: <20220615143642.GA2386944@roeck-us.net>
+References: <20220603173816.944766454@linuxfoundation.org>
+ <20220610042200.2561917-1-ovt@google.com>
+ <YqLTV+5Q72/jBeOG@kroah.com>
+ <YqNfBMOR9SE2TuCm@redhat.com>
+ <Yqb/sT205Lrhl6Bv@kroah.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -33,177 +59,88 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYtE0FmFgocYChrJrJc1Pcw+fc5yt8nHwTW7JPcZT=qH+w@mail.gmail.com>
+In-Reply-To: <Yqb/sT205Lrhl6Bv@kroah.com>
 
-On Wed, Jun 15, 2022 at 02:27:31AM +0530, Naresh Kamboju wrote:
-> Following kernel crash reported while booting arm64 db410c board with
-> Linux next-20220614 [1] kfence enabled on this kernel.
-> 
-> CONFIG_KFENCE=y
+On Mon, Jun 13, 2022 at 11:13:21AM +0200, Greg KH wrote:
+> On Fri, Jun 10, 2022 at 11:11:00AM -0400, Mike Snitzer wrote:
+> > On Fri, Jun 10 2022 at  1:15P -0400,
+> > Greg KH <gregkh@linuxfoundation.org> wrote:
+> > 
+> > > On Fri, Jun 10, 2022 at 04:22:00AM +0000, Oleksandr Tymoshenko wrote:
+> > > > I believe this commit introduced a regression in dm verity on systems
+> > > > where data device is an NVME one. Loading table fails with the
+> > > > following diagnostics:
+> > > > 
+> > > > device-mapper: table: table load rejected: including non-request-stackable devices
+> > > > 
+> > > > The same kernel works with the same data drive on the SCSI interface.
+> > > > NVME-backed dm verity works with just this commit reverted.
+> > > > 
+> > > > I believe the presence of the immutable partition is used as an indicator
+> > > > of special case NVME configuration and if the data device's name starts
+> > > > with "nvme" the code tries to switch the target type to
+> > > > DM_TYPE_NVME_BIO_BASED (drivers/md/dm-table.c lines 1003-1010).
+> > > > 
+> > > > The special NVME optimization case was removed in
+> > > > 5.10 by commit 9c37de297f6590937f95a28bec1b7ac68a38618f, so only 5.4 is
+> > > > affected.
+> > > > 
+> > > 
+> > > Why wouldn't 4.9, 4.14, and 4.19 also be affected here?  Should I also
+> > > just queue up 9c37de297f65 ("dm: remove special-casing of bio-based
+> > > immutable singleton target on NVMe") to those older kernels?  If so,
+> > > have you tested this and verified that it worked?
+> > 
+> > Sorry for the unforeseen stable@ troubles here!
+> > 
+> > In general we'd be fine to apply commit 9c37de297f65 but to do it
+> > properly would require also making sure commits that remove
+> > "DM_TYPE_NVME_BIO_BASED", like 8d47e65948dd ("dm mpath: remove
+> > unnecessary NVMe branching in favor of scsi_dh checks") are applied --
+> > basically any lingering references to DM_TYPE_NVME_BIO_BASED need to
+> > be removed.
+> > 
+> > The commit header for 8d47e65948dd documents what
+> > DM_TYPE_NVME_BIO_BASED was used for.. it was dm-mpath specific and
+> > "nvme" mode really never got used by any userspace that I'm aware of.
+> > 
+> > Sadly I currently don't have the time to do this backport for all N
+> > stable kernels... :(
+> > 
+> > But if that backport gets out of control: A simpler, albeit stable@
+> > unicorn, way to resolve this is to simply revert 9c37de297f65 and make
 
-Was that just defconfig + CONFIG_KFENCE?
+9c37de297f65 can not be reverted in 5.4 and older because it isn't there,
+and trying to apply it results in conflicts which at least I can not
+resolve.
 
-Does this not happen *without* KFENCE?
+> > it so that DM-mpath and DM core just used bio-based if "nvme" is
+> > requested by dm-mpath, so also in drivers/md/dm-mpath.c e.g.:
+> > 
+> > @@ -1091,8 +1088,6 @@ static int parse_features(struct dm_arg_set *as, struct multipath *m)
+> > 
+> >                         if (!strcasecmp(queue_mode_name, "bio"))
+> >                                 m->queue_mode = DM_TYPE_BIO_BASED;
+> > 			else if (!strcasecmp(queue_mode_name, "nvme"))
+> > -                               m->queue_mode = DM_TYPE_NVME_BIO_BASED;
+> > +                               m->queue_mode = DM_TYPE_BIO_BASED;
+> >                         else if (!strcasecmp(queue_mode_name, "rq"))
+> >                                 m->queue_mode = DM_TYPE_REQUEST_BASED;
+> >                         else if (!strcasecmp(queue_mode_name, "mq"))
+> > 
+> > Mike
+> > 
+> 
+> Ok, please submit a working patch for the kernels that need it so that
+> we can review and apply it to solve this regression.
+> 
 
-FWIW, I tried your Image in a KVM VM on a ThunderX2 host, and I cannot
-reproduce the issue, so it looks like this is board-specific (e.g. due to
-specific drivers).
+So, effectively, v5.4.y and older are broken right now for use cases
+with dm on NVME drives.
 
-Looking at the backtrace, nothing seems to finger kfence specifically.
+Given that the regression does affect older branches, and given that we
+have to revert this patch to avoid regressions in ChromeOS, would it be
+possible to revert it from v5.4.y and older until a fix is found ?
 
-Can you bisect this? It looks like there are ~1700 commits between mainline and
-next-20220614, which is ~10 steps if mainline is working.
-
-Mark.
-
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> Boot log:
-> ---------
-> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd030]
-> [    0.000000] Linux version 5.19.0-rc2-next-20220614
-> (tuxmake@tuxmake) (aarch64-linux-gnu-gcc (Debian 11.3.0-3) 11.3.0, GNU
-> ld (GNU Binutils for Debian) 2.38) #1 SMP PREEMPT @1655189659
-> [    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
-> [    0.000000] efi: UEFI not found.
-> [    0.000000] [Firmware Bug]: Kernel image misaligned at boot, please
-> fix your bootloader!
-> <trim>
-> [    0.000000] kfence: initialized - using 2097152 bytes for 255
-> objects at 0x(____ptrval____)-0x(____ptrval____)
-> <trim>
-> [   11.317288] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000000
-> [   11.317361] Mem abort info:
-> [   11.317906] Unable to handle kernel paging request at virtual
-> address 0000000029f63007
-> [   11.328825] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000009
-> [   11.334704]   ESR = 0x0000000096000004
-> [   11.343115] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000000
-> [   11.357163] Mem abort info:
-> [   11.357217]   ESR = 0x0000000096000004
-> [   11.359935] Mem abort info:
-> [   11.369085] Mem abort info:
-> [   11.369138]   ESR = 0x0000000096000004
-> [   11.373564]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [   11.374530]   SET = 0, FnV = 0
-> [   11.382591]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [   11.382864]   SET = 0, FnV = 0
-> [   11.400484]   ESR = 0x0000000096000004
-> [   11.411713]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [   11.411776]   SET = 0, FnV = 0
-> [   11.422177]   EA = 0, S1PTW = 0
-> [   11.422234]   FSC = 0x04: level 0 translation fault
-> [   11.422724]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [   11.424129] Data abort info:
-> [   11.428397]   EA = 0, S1PTW = 0
-> [   11.428416]   FSC = 0x04: level 0 translation fault
-> [   11.428427] Data abort info:
-> [   11.428434]   ISV = 0, ISS = 0x00000004
-> [   11.428442]   CM = 0, WnR = 0
-> [   11.428451] user pgtable: 4k pages, 48-bit VAs, pgdp=00000000854b8000
-> [   11.428464] [0000000029f63007] pgd=0000000000000000, p4d=0000000000000000
-> [   11.428494] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-> [   11.428503] Modules linked in: venus_enc venus_dec
-> videobuf2_dma_contig crct10dif_ce adv7511(+) cec qcom_wcnss_pil
-> snd_soc_msm8916_analog qcom_pon qcom_spmi_temp_alarm rtc_pm8xxx
-> qcom_spmi_vadc snd_soc_lpass_apq8016 qcom_vadc_common
-> snd_soc_msm8916_digital snd_soc_lpass_cpu snd_soc_apq8016_sbc
-> snd_soc_lpass_platform qcom_q6v5_mss snd_soc_qcom_common qcom_pil_info
-> msm qcom_camss qcom_q6v5 gpu_sched qcom_sysmon drm_dp_aux_bus
-> venus_core qcom_common videobuf2_dma_sg v4l2_mem2mem v4l2_fwnode
-> qcom_glink_smem v4l2_async videobuf2_memops qmi_helpers videobuf2_v4l2
-> mdt_loader qnoc_msm8916 drm_display_helper videobuf2_common
-> i2c_qcom_cci qcom_rng qcom_stats icc_smd_rpm rfkill display_connector
-> drm_kms_helper drm socinfo rmtfs_mem qrtr fuse
-> [   11.428683] CPU: 3 PID: 312 Comm: systemd-udevd Tainted: G        W
->         5.19.0-rc2-next-20220614 #1
-> [   11.428694] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> [   11.428699] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [   11.428709] pc : sysfs_kf_seq_show+0x3c/0x130
-> [   11.428724] lr : kernfs_seq_show+0x38/0x44
-> [   11.428735] sp : ffff80000b7ebbf0
-> [   11.428739] x29: ffff80000b7ebbf0 x28: 0000000000000001 x27: 0000000000400cc0
-> [   11.428753] x26: 000000007ffff000 x25: ffff000005581290 x24: ffff000005581280
-> [   11.428767] x23: 0000000000000000 x22: ffff0000056dd520 x21: ffff000004413d00
-> [   11.428780] x20: 0000000029f62fff x19: ffff000005581258 x18: 0000000000000000
-> [   11.428793] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
-> [   11.428806] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
-> [   11.428819] x11: 0000000000000000 x10: 0000000000000000 x9 : ffff8000084b0ca8
-> [   11.428832] x8 : 0000000000000000 x7 : 0000000000000200 x6 : 0000000000000000
-> [   11.428845] x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff000004413d00
-> [   11.428857] x2 : ffff8000084b2e64 x1 : 0000000000000001 x0 : ffff000002368a00
-> [   11.428872] Call trace:
-> [   11.428875]  sysfs_kf_seq_show+0x3c/0x130
-> [   11.428884]  kernfs_seq_show+0x38/0x44
-> [   11.428895]  seq_read_iter+0x1c4/0x4c0
-> [   11.428905]  kernfs_fop_read_iter+0x14c/0x1d0
-> [   11.428917]  new_sync_read+0xdc/0x160
-> [   11.428927]  vfs_read+0x19c/0x1e4
-> [   11.428937]  ksys_read+0x74/0x100
-> [   11.428947]  __arm64_sys_read+0x28/0x3c
-> [   11.428956]  invoke_syscall+0x50/0x120
-> [   11.428968]  el0_svc_common.constprop.0+0x104/0x124
-> [   11.428980]  do_el0_svc+0x3c/0xcc
-> [   11.428990]  el0_svc+0x38/0xc0
-> [   11.429003]  el0t_64_sync_handler+0xbc/0x140
-> [   11.429013]  el0t_64_sync+0x18c/0x190
-> [   11.429026] Code: f9400400 f9403016 f94016d4 b4000054 (f9400694)
-> [   11.429034] ---[ end trace 0000000000000000 ]---
-> [   11.430509]   EA = 0, S1PTW = 0
-> [   11.436545]   SET = 0, FnV = 0
-> [   11.443175] Unable to handle kernel paging request at virtual
-> address 0000000029f63007
-> [   11.445643]   EA = 0, S1PTW = 0
-> [   11.452829] Mem abort info:
-> [   11.455190]   FSC = 0x04: level 0 translation fault
-> [   11.458711]   ISV = 0, ISS = 0x00000004
-> [   11.458728]   CM = 0, WnR = 0
-> [   11.458738] user pgtable: 4k pages, 48-bit VAs, pgdp=000000008223b000
-> [   11.458751] [0000000000000009] pgd=0000000000000000, p4d=0000000000000000
-> [   11.458780] Internal error: Oops: 96000004 [#2] PREEMPT SMP
-> [   11.458790] Modules linked in: pm8916_wdt(+) venus_enc venus_dec
-> videobuf2_dma_contig crct10dif_ce adv7511(+) cec qcom_wcnss_pil
-> snd_soc_msm8916_analog qcom_pon qcom_spmi_temp_alarm rtc_pm8xxx
-> qcom_spmi_vadc snd_soc_lpass_apq8016 qcom_vadc_common
-> snd_soc_msm8916_digital snd_soc_lpass_cpu snd_soc_apq8016_sbc
-> snd_soc_lpass_platform qcom_q6v5_mss snd_soc_qcom_common qcom_pil_info
-> msm qcom_camss qcom_q6v5 gpu_sched qcom_sysmon drm_dp_aux_bus
-> venus_core qcom_common videobuf2_dma_sg v4l2_mem2mem v4l2_fwnode
-> qcom_glink_smem v4l2_async videobuf2_memops qmi_helpers videobuf2_v4l2
-> mdt_loader qnoc_msm8916 drm_display_helper videobuf2_common
-> i2c_qcom_cci qcom_rng qcom_stats icc_smd_rpm rfkill display_connector
-> drm_kms_helper drm socinfo rmtfs_mem qrtr fuse
-> [   11.458973] CPU: 1 PID: 314 Comm: systemd-udevd Tainted: G      D W
->         5.19.0-rc2-next-20220614 #1
-> [   11.458982] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> [   11.458987] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [   11.458996] pc : sysfs_kf_seq_show+0x3c/0x130
-> [   11.459011] lr : kernfs_seq_show+0x38/0x44
-> 
-> 
-> metadata:
->   git_ref: master
->   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
->   git_sha: 35d872b9ea5b3ad784d7479ea728dcb688df2db7
->   git_describe: next-20220614
->   kernel_version: 5.19.0-rc2
->   kernel-config: https://builds.tuxbuild.com/2AYbNeAYdcbtKeaEoYNvOAwsMQf/config
->   build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/563047963
->   artifact-location: https://builds.tuxbuild.com/2AYbNeAYdcbtKeaEoYNvOAwsMQf
->   System.map: https://builds.tuxbuild.com/2AYbNeAYdcbtKeaEoYNvOAwsMQf/System.map
->   vmlinux: https://builds.tuxbuild.com/2AYbNeAYdcbtKeaEoYNvOAwsMQf/vmlinux.xz
->   toolchain: gcc-11
-> 
-> 
-> 
-> [1]
-> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20220614/testrun/10156029/suite/ltp-syscalls-tests/test/bpf_prog04/details/
-> 
-> 
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
-> 
+Thanks,
+Guenter
