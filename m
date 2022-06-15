@@ -1,77 +1,63 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4B87A
-	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 10:48:58 +0000 (UTC)
-Received: from mail-yb1-f177.google.com ([209.85.219.177]) by
- mrelayeu.kundenserver.de (mreue108 [213.165.67.113]) with ESMTPSA (Nemesis)
- id 1MeD1l-1nTTPL0NoF-00bK6c for <regressions@lists.linux.dev>; Wed, 15 Jun
- 2022 12:48:56 +0200
-Received: by mail-yb1-f177.google.com with SMTP id p13so19849914ybm.1
-        for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 03:48:55 -0700 (PDT)
-X-Gm-Message-State: AJIora/5Dk8uLK91V0j357K5tfJ+SMAvXGUnN5HohSLSqm/yOqFx8aDs
-	/mofXhgBDeydtqloitzqaS1fPvEcS9L84l4zQPk=
-X-Google-Smtp-Source: AGRyM1uLqkPKf59kwWCfljCBm5ZT7yCtwMl287dtrHSeVzKGWx3HCjXOif/E5TiMEJFGlLgyI6MBZ9ti+zoKUOOst6I=
-X-Received: by 2002:a05:6902:1023:b0:665:12c1:b44d with SMTP id
- x3-20020a056902102300b0066512c1b44dmr9891763ybt.472.1655290134824; Wed, 15
- Jun 2022 03:48:54 -0700 (PDT)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CD0B7A
+	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 13:32:10 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4144C139F;
+	Wed, 15 Jun 2022 06:32:03 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.38.208])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DE3A3F40C;
+	Wed, 15 Jun 2022 06:32:00 -0700 (PDT)
+Date: Wed, 15 Jun 2022 14:31:51 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>,
+	Linux-Next Mailing List <linux-next@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	regressions@lists.linux.dev,
+	Pasha Tatashin <pasha.tatashin@soleen.com>,
+	Tejun Heo <tj@kernel.org>, Hao Luo <haoluo@google.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Muchun Song <songmuchun@bytedance.com>,
+	Bjorn Andersson <bjorn.andersson@linaro.org>,
+	Nicolas Dechesne <nicolas.dechesne@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [next] arm64: db410c: Internal error: Oops: 96000004 - pc :
+ sysfs_kf_seq_show
+Message-ID: <YqnfRyJkhPCVBmDz@FVFF77S0Q05N>
+References: <CA+G9fYtE0FmFgocYChrJrJc1Pcw+fc5yt8nHwTW7JPcZT=qH+w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYtE0FmFgocYChrJrJc1Pcw+fc5yt8nHwTW7JPcZT=qH+w@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <CA+G9fYtE0FmFgocYChrJrJc1Pcw+fc5yt8nHwTW7JPcZT=qH+w@mail.gmail.com>
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Wed, 15 Jun 2022 12:48:38 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a1h6wmoaw_tLiTMGsurPnHjsNvghSe_bppmscr7+04RmA@mail.gmail.com>
-Message-ID: <CAK8P3a1h6wmoaw_tLiTMGsurPnHjsNvghSe_bppmscr7+04RmA@mail.gmail.com>
-Subject: Re: [next] arm64: db410c: Internal error: Oops: 96000004 - pc : sysfs_kf_seq_show
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, regressions@lists.linux.dev, 
-	Pasha Tatashin <pasha.tatashin@soleen.com>, Tejun Heo <tj@kernel.org>, Hao Luo <haoluo@google.com>, 
-	Matthew Wilcox <willy@infradead.org>, Muchun Song <songmuchun@bytedance.com>, 
-	Bjorn Andersson <bjorn.andersson@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:crOZ1c08y1AZ7UU5SipQk0k66Vn7jyYHWzemnEc8cszBRnui4CI
- ZRjLGRcsb6oGfiRv4ViYX6h1a7qhxuCk83misqo5+cmyzA4x+kgAooUyALdQTnvbbjQu+Co
- JqZ1o7mBU0EChkPzM++7rWN4witJHU2eUuBElJ2FeOirSA7x5R/2nzpL4U6/g0V2mLmm/It
- 2IikLw74clEWglLJWnZZg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AnaEpPt+U7w=:RJ/q/P/xsJjxBjehobEL8q
- W4azaGyPb8GOl8fz/RycavgEPWhgT1rLFVgtox1+TNVQer0VX0xmlSNnnnwdV5cpn11cbsMMT
- v0jtMTLs6OW5BNDvVyeEzIqA8/Cn3sR9LQVMkZ+T/11L7Y3lvG1X94MPPazE9TuKoZ/10mKS2
- 6pCCN271LKxGXz5+tAStaeuDQXRPhK/sOzN5f5TsraqJBjWlS94Wu9uBoj8SRYBg++Rtk9e+9
- FRWiFZt+P3UTBNxZKWqYmTyl8b0YdYEeeEbpAyAerNW19zZLWthFJ3NK+fpxX6lyWaHS0L8jk
- bxFg9WBK/VRmEkIlVxmQONKSyuqiWwFQMN/RYtOZi2u5ar/IvUQgP6H/TbCkLrPFajyJ3u4ij
- tgOCopGCy/8qPJqBh7SyC8lH9R/J4cl9cPFXklxeTM031ckUDEztjXV4FVLVsSCERJH+CEABf
- WR8HYYTmxI1B6ZJ4I0SymihsVZoZl93ndcxept6UavUyNL1pZxqrs8Nvttkm20VgLGJ0+BlG1
- Llu68Jyd40UIqXQ1lq9seGbWC+eHYphUyUPavSYjumAUB5uAFq7FjuAoOthj5E/th6z3tTrkV
- yIeyId/zIMZlXYX/d4wGeTJxxGedTWeSdDWKpRAiB7aC+01VZDrQ9UH7IufgUqW2/mrFAtL3Y
- cELfEqvUXIP03tvejzmeGwmwH2X0QNaz23RvAzx4jX37YDYKbf2VDRlyCsz3cDXkhR7pP+Rwi
- sWr2Tfa3O/dwgUGtlIa3JBB15T5IMIXpyk4ADGy9x16tQOuH9GydAm0vWrLnHJptvKWdBIAZO
- WQCAonkEMHYhNZnm4plvcPPtE452fwXsbMxuyh/LOu8Q9ngPQYpwCPs4/QF6r3YD/vk97JL9J
- xcUNColpFNnlJKU8awnQ==
 
-On Tue, Jun 14, 2022 at 10:57 PM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
->
+On Wed, Jun 15, 2022 at 02:27:31AM +0530, Naresh Kamboju wrote:
 > Following kernel crash reported while booting arm64 db410c board with
 > Linux next-20220614 [1] kfence enabled on this kernel.
->
+> 
 > CONFIG_KFENCE=y
->
->
+
+Was that just defconfig + CONFIG_KFENCE?
+
+Does this not happen *without* KFENCE?
+
+FWIW, I tried your Image in a KVM VM on a ThunderX2 host, and I cannot
+reproduce the issue, so it looks like this is board-specific (e.g. due to
+specific drivers).
+
+Looking at the backtrace, nothing seems to finger kfence specifically.
+
+Can you bisect this? It looks like there are ~1700 commits between mainline and
+next-20220614, which is ~10 steps if mainline is working.
+
+Mark.
+
 > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-Did it work on older linux-next kernels with KFENCE enabled, or did you
-just start enabling it?
-
->
+> 
 > Boot log:
 > ---------
 > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd030]
@@ -82,10 +68,6 @@ just start enabling it?
 > [    0.000000] efi: UEFI not found.
 > [    0.000000] [Firmware Bug]: Kernel image misaligned at boot, please
 > fix your bootloader!
-
-This is probably unrelated, but try updating your boot loader to get rid of
-this warning.
-
 > <trim>
 > [    0.000000] kfence: initialized - using 2097152 bytes for 255
 > objects at 0x(____ptrval____)-0x(____ptrval____)
@@ -153,47 +135,75 @@ this warning.
 > [   11.428832] x8 : 0000000000000000 x7 : 0000000000000200 x6 : 0000000000000000
 > [   11.428845] x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff000004413d00
 > [   11.428857] x2 : ffff8000084b2e64 x1 : 0000000000000001 x0 : ffff000002368a00
-
-It appears that kobj->ktype is x20 here, which is a user space address
-(0x29f62fff),
-reading ->sysfs_ops at offset 8 from that causes a trap.
-
-static const struct sysfs_ops *sysfs_file_ops(struct kernfs_node *kn)
-{
-        struct kobject *kobj = kn->parent->priv;
-
-        if (kn->flags & KERNFS_LOCKDEP)
-                lockdep_assert_held(kn);
-        return kobj->ktype ? kobj->ktype->sysfs_ops : NULL;
-}
-static int sysfs_kf_seq_show(struct seq_file *sf, void *v)
-{
-        struct kernfs_open_file *of = sf->private;
-        struct kobject *kobj = of->kn->parent->priv;
-        const struct sysfs_ops *ops = sysfs_file_ops(of->kn);
-...
-
-ffff800008432e64 <sysfs_kf_seq_show>:
-ffff800008432e64:       d503245f        bti     c
-ffff800008432e68:       d503201f        nop
-ffff800008432e6c:       d503201f        nop
-ffff800008432e70:       d503233f        paciasp
-ffff800008432e74:       a9bd7bfd        stp     x29, x30, [sp, #-48]!
-ffff800008432e78:       910003fd        mov     x29, sp
-ffff800008432e7c:       a90153f3        stp     x19, x20, [sp, #16]
-ffff800008432e80:       aa0003f3        mov     x19, x0
-ffff800008432e84:       a9025bf5        stp     x21, x22, [sp, #32]
-ffff800008432e88:       f9403815        ldr     x21, [x0, #112]  # of
-= sf->private
-ffff800008432e8c:       f94002a0        ldr     x0, [x21] # of->kn
-ffff800008432e90:       f9400400        ldr     x0, [x0, #8]  # kn->parent
-ffff800008432e94:       f9403016        ldr     x22, [x0, #96] # kobj
-= parent->priv
-ffff800008432e98:       f94016d4        ldr     x20, [x22, #40] # kobj-> ktype
-ffff800008432e9c:       b4000054        cbz     x20, ffff800008432ea4
-<sysfs_kf_seq_show+0x40>
-ffff800008432ea0:       f9400694        ldr     x20, [x20, #8] #
-ktype->sysfs_ops, traps
-...
-
-        Arnd
+> [   11.428872] Call trace:
+> [   11.428875]  sysfs_kf_seq_show+0x3c/0x130
+> [   11.428884]  kernfs_seq_show+0x38/0x44
+> [   11.428895]  seq_read_iter+0x1c4/0x4c0
+> [   11.428905]  kernfs_fop_read_iter+0x14c/0x1d0
+> [   11.428917]  new_sync_read+0xdc/0x160
+> [   11.428927]  vfs_read+0x19c/0x1e4
+> [   11.428937]  ksys_read+0x74/0x100
+> [   11.428947]  __arm64_sys_read+0x28/0x3c
+> [   11.428956]  invoke_syscall+0x50/0x120
+> [   11.428968]  el0_svc_common.constprop.0+0x104/0x124
+> [   11.428980]  do_el0_svc+0x3c/0xcc
+> [   11.428990]  el0_svc+0x38/0xc0
+> [   11.429003]  el0t_64_sync_handler+0xbc/0x140
+> [   11.429013]  el0t_64_sync+0x18c/0x190
+> [   11.429026] Code: f9400400 f9403016 f94016d4 b4000054 (f9400694)
+> [   11.429034] ---[ end trace 0000000000000000 ]---
+> [   11.430509]   EA = 0, S1PTW = 0
+> [   11.436545]   SET = 0, FnV = 0
+> [   11.443175] Unable to handle kernel paging request at virtual
+> address 0000000029f63007
+> [   11.445643]   EA = 0, S1PTW = 0
+> [   11.452829] Mem abort info:
+> [   11.455190]   FSC = 0x04: level 0 translation fault
+> [   11.458711]   ISV = 0, ISS = 0x00000004
+> [   11.458728]   CM = 0, WnR = 0
+> [   11.458738] user pgtable: 4k pages, 48-bit VAs, pgdp=000000008223b000
+> [   11.458751] [0000000000000009] pgd=0000000000000000, p4d=0000000000000000
+> [   11.458780] Internal error: Oops: 96000004 [#2] PREEMPT SMP
+> [   11.458790] Modules linked in: pm8916_wdt(+) venus_enc venus_dec
+> videobuf2_dma_contig crct10dif_ce adv7511(+) cec qcom_wcnss_pil
+> snd_soc_msm8916_analog qcom_pon qcom_spmi_temp_alarm rtc_pm8xxx
+> qcom_spmi_vadc snd_soc_lpass_apq8016 qcom_vadc_common
+> snd_soc_msm8916_digital snd_soc_lpass_cpu snd_soc_apq8016_sbc
+> snd_soc_lpass_platform qcom_q6v5_mss snd_soc_qcom_common qcom_pil_info
+> msm qcom_camss qcom_q6v5 gpu_sched qcom_sysmon drm_dp_aux_bus
+> venus_core qcom_common videobuf2_dma_sg v4l2_mem2mem v4l2_fwnode
+> qcom_glink_smem v4l2_async videobuf2_memops qmi_helpers videobuf2_v4l2
+> mdt_loader qnoc_msm8916 drm_display_helper videobuf2_common
+> i2c_qcom_cci qcom_rng qcom_stats icc_smd_rpm rfkill display_connector
+> drm_kms_helper drm socinfo rmtfs_mem qrtr fuse
+> [   11.458973] CPU: 1 PID: 314 Comm: systemd-udevd Tainted: G      D W
+>         5.19.0-rc2-next-20220614 #1
+> [   11.458982] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+> [   11.458987] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [   11.458996] pc : sysfs_kf_seq_show+0x3c/0x130
+> [   11.459011] lr : kernfs_seq_show+0x38/0x44
+> 
+> 
+> metadata:
+>   git_ref: master
+>   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+>   git_sha: 35d872b9ea5b3ad784d7479ea728dcb688df2db7
+>   git_describe: next-20220614
+>   kernel_version: 5.19.0-rc2
+>   kernel-config: https://builds.tuxbuild.com/2AYbNeAYdcbtKeaEoYNvOAwsMQf/config
+>   build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/563047963
+>   artifact-location: https://builds.tuxbuild.com/2AYbNeAYdcbtKeaEoYNvOAwsMQf
+>   System.map: https://builds.tuxbuild.com/2AYbNeAYdcbtKeaEoYNvOAwsMQf/System.map
+>   vmlinux: https://builds.tuxbuild.com/2AYbNeAYdcbtKeaEoYNvOAwsMQf/vmlinux.xz
+>   toolchain: gcc-11
+> 
+> 
+> 
+> [1]
+> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20220614/testrun/10156029/suite/ltp-syscalls-tests/test/bpf_prog04/details/
+> 
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+> 
