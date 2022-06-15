@@ -1,158 +1,140 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11447A
-	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 17:50:35 +0000 (UTC)
-Received: by mail-pj1-f50.google.com with SMTP id a10so11877855pju.3
-        for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 10:50:35 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A03E7A
+	for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 19:26:22 +0000 (UTC)
+Received: by mail-yb1-f176.google.com with SMTP id v81so22335315ybe.0
+        for <regressions@lists.linux.dev>; Wed, 15 Jun 2022 12:26:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=QfCF2UsmU1Pniv5Pf4uVgOiwJRRieSBYhaM8CMSmQ3U=;
-        b=Pdshfu1RKVhPNis08umwmUUzhrIzuI1qOJCBow86aXNtlNrNUkQkaCWDO89gmAgj6v
-         PoUjEwLg6MO5uM5qbb4DM5WmtipAbO4F/NrF7yjVysoPoGDCANnsAlG5f8A4TIkPgAnr
-         ZX3rmGkJHMi0g1gmWoEXhtwYVEJdKAmVAGmT2pgQ+WjgZnFJRHc9Uy0zkzI3K9PMma7K
-         MXuDZ3DtadPA/iculyZSRPJxHQXMg9lvYR/nSaej8PqYXcPEhFS1othMR7b1sJxvqbQX
-         KbkApuBpzlgRt7lA3TmFwIM+PaXj7jNMYGyv2PiJT5fl3fLOFlr5cvnyf7FinSFNGMcu
-         K2hg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+7ap878U9WJiqZiLJtB8+WDoIVBGF2CyyeANmhqBwmc=;
+        b=KtA+QsE4mywVenk5Gy1ER0/poJuM4+WHV2wmlEIamfsUNz3E2CsoWt3w0Iyctc7xJZ
+         x7KBpuIuC1qg7FsAwX7Vhwx6S5DExH4A8OQn4MVmzx5fD4HUKu+tt/AYxmc1pYXf0dHo
+         F+kMNtE3HrY3F+iYbkNSP6exnXcLXMXDKgqkk5X44eFrGHqgney3cPXC6Ax9vnHi756j
+         t+E076K7D4yVrNA155k1K3Ke/v7Mb90yeD3jbz0rGTDAFDZZwJxmRjCY5TbEoYqU5UKe
+         RLt4TRmayzVNLcEll4soeaPO2Y7Iqy7HMbxYAdBL5sawr/b4CEjnlsjf43KZcI0Pukyb
+         Yg4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:message-id:date:mime-version:user-agent
-         :subject:content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=QfCF2UsmU1Pniv5Pf4uVgOiwJRRieSBYhaM8CMSmQ3U=;
-        b=21CvB+TguceMSjKbVtOns/jvaASR8OeSlp+UeHtOtp4Djygx2AE+AsPmbUnqHjnj+L
-         blaJrtSUHMbMt3NggLpy22/7IZ5Bhj/Qdl90GDQAGFKCrI33as+fnn1tlQXKlryd8HK0
-         C1NaWREQtQWxJfMuzNWfp/njg7jMZ5n6067FxlBmPCaJiWzeJ1XuzLdR6DOtXxC/mGfD
-         2bWTU6WwCbCYuVr3lIjxZK9jfckYsfrSbPc+jjnTwPigK4wWv2ytjLYXfgjuakQmc2k/
-         CxQsrSJL9/Al9WCGPMzGH0QJoh+0Pphw7ZdaE9KdECHumB9bc//eSI8/ETlb/Pm8npGa
-         XBEg==
-X-Gm-Message-State: AJIora93HeAs/265CPF4r+vWPRfIC5GkPs1e/yalRehYFYfoORcbcn6l
-	JfHsOOvOV7wydaXArrneLlw=
-X-Google-Smtp-Source: AGRyM1tuUWVOE9TzgSzU74eaIcQ/ZeNW5GN0XVRmVm0PRdEBUdPkL2L0CmPF+4r9OP3XWrBQYluWYQ==
-X-Received: by 2002:a17:90b:3654:b0:1ea:4540:d32 with SMTP id nh20-20020a17090b365400b001ea45400d32mr11452858pjb.92.1655315435252;
-        Wed, 15 Jun 2022 10:50:35 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h13-20020a17090a3d0d00b001ea5d9ae7d9sm2067433pjc.40.2022.06.15.10.50.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jun 2022 10:50:34 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <50eeff2e-45c5-5eb2-c41d-3e0092a84483@roeck-us.net>
-Date: Wed, 15 Jun 2022 10:50:32 -0700
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+7ap878U9WJiqZiLJtB8+WDoIVBGF2CyyeANmhqBwmc=;
+        b=jh2oeMt8A6EpB4bSE3PIOhKvDGbCWh/1ZsUdE9vFmbd/YF0MfQFVEX+NYqT7RU0jIn
+         akjux6wqM+pCMALRic/N1uGRUshozG76s+RAP1Gb+iwTDnCx3E3+BQL7X9DnTDIqTW/y
+         iA3kbP1g4QUxzK+gc78ZD3gkB3JpjTXJQG3HOotb46NCDc0wQc3LJOTMCgudRNayYW/I
+         AvTQxWJVE8VFFLZX3Oc7M0n5XgVlwiMdWO+wQqNa/UE2ABfje0QX0N9z9NKe9YXsyhIp
+         qZVskcA/yzN6E4TgasFX1eXIPV0hxCsx/O1C7B5P2kr2fjPGhexmEVx7/dOe1MxDRdzS
+         V3SQ==
+X-Gm-Message-State: AJIora8u2+0fEgnCIAsfnbyQQ0SvfZ13HjV994/sfv8jToDkD3Oqm+sE
+	d8/a7llYKvdLc6f3/fbTGGFD7NtixtMJ/9jug3JJ9A==
+X-Google-Smtp-Source: AGRyM1tvrcUsHTOVHdrJSj+Bv5J/r8X/AQcZj0tTScEAnnW9cIKrg6CY2Nf/BMod6r2Ss+T6SGurUcC9KPzrigBne9Q=
+X-Received: by 2002:a25:b51:0:b0:663:4ff1:d20d with SMTP id
+ 78-20020a250b51000000b006634ff1d20dmr1499507ybl.608.1655321181295; Wed, 15
+ Jun 2022 12:26:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH 5.4 26/34] dm verity: set DM_TARGET_IMMUTABLE feature flag
-Content-Language: en-US
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, keescook@chromium.org,
- sarthakkukreti@google.com, stable@vger.kernel.org,
- Oleksandr Tymoshenko <ovt@google.com>, dm-devel@redhat.com,
- regressions@lists.linux.dev
-References: <20220603173816.944766454@linuxfoundation.org>
- <20220610042200.2561917-1-ovt@google.com> <YqLTV+5Q72/jBeOG@kroah.com>
- <YqNfBMOR9SE2TuCm@redhat.com> <Yqb/sT205Lrhl6Bv@kroah.com>
- <20220615143642.GA2386944@roeck-us.net> <Yqn64AMwoIzQXwXM@redhat.com>
-From: Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <Yqn64AMwoIzQXwXM@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYsP05V+bVoZsPto-ZdZra3Mo4unBjNqyk1dOjfMEK1XWg@mail.gmail.com>
+ <20220615052503.6dvtnuq2ai45pmro@vireshk-i7>
+In-Reply-To: <20220615052503.6dvtnuq2ai45pmro@vireshk-i7>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 16 Jun 2022 00:56:10 +0530
+Message-ID: <CA+G9fYvifz5xDDNjoJBt2MRfdqwDtNf53teWXUs5QCOn2uhbfw@mail.gmail.com>
+Subject: Re: [next] arm64: db410c: WARNING: CPU: 0 PID: 1 at
+ drivers/opp/core.c:2265 dev_pm_opp_clear_config+0x174/0x17c
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, regressions@lists.linux.dev, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
+	Bjorn Andersson <bjorn.andersson@linaro.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/15/22 08:29, Mike Snitzer wrote:
-> On Wed, Jun 15 2022 at 10:36P -0400,
-> Guenter Roeck <linux@roeck-us.net> wrote:
-> 
->> On Mon, Jun 13, 2022 at 11:13:21AM +0200, Greg KH wrote:
->>> On Fri, Jun 10, 2022 at 11:11:00AM -0400, Mike Snitzer wrote:
->>>> On Fri, Jun 10 2022 at  1:15P -0400,
->>>> Greg KH <gregkh@linuxfoundation.org> wrote:
->>>>
->>>>> On Fri, Jun 10, 2022 at 04:22:00AM +0000, Oleksandr Tymoshenko wrote:
->>>>>> I believe this commit introduced a regression in dm verity on systems
->>>>>> where data device is an NVME one. Loading table fails with the
->>>>>> following diagnostics:
->>>>>>
->>>>>> device-mapper: table: table load rejected: including non-request-stackable devices
->>>>>>
->>>>>> The same kernel works with the same data drive on the SCSI interface.
->>>>>> NVME-backed dm verity works with just this commit reverted.
->>>>>>
->>>>>> I believe the presence of the immutable partition is used as an indicator
->>>>>> of special case NVME configuration and if the data device's name starts
->>>>>> with "nvme" the code tries to switch the target type to
->>>>>> DM_TYPE_NVME_BIO_BASED (drivers/md/dm-table.c lines 1003-1010).
->>>>>>
->>>>>> The special NVME optimization case was removed in
->>>>>> 5.10 by commit 9c37de297f6590937f95a28bec1b7ac68a38618f, so only 5.4 is
->>>>>> affected.
->>>>>>
->>>>>
->>>>> Why wouldn't 4.9, 4.14, and 4.19 also be affected here?  Should I also
->>>>> just queue up 9c37de297f65 ("dm: remove special-casing of bio-based
->>>>> immutable singleton target on NVMe") to those older kernels?  If so,
->>>>> have you tested this and verified that it worked?
->>>>
->>>> Sorry for the unforeseen stable@ troubles here!
->>>>
->>>> In general we'd be fine to apply commit 9c37de297f65 but to do it
->>>> properly would require also making sure commits that remove
->>>> "DM_TYPE_NVME_BIO_BASED", like 8d47e65948dd ("dm mpath: remove
->>>> unnecessary NVMe branching in favor of scsi_dh checks") are applied --
->>>> basically any lingering references to DM_TYPE_NVME_BIO_BASED need to
->>>> be removed.
->>>>
->>>> The commit header for 8d47e65948dd documents what
->>>> DM_TYPE_NVME_BIO_BASED was used for.. it was dm-mpath specific and
->>>> "nvme" mode really never got used by any userspace that I'm aware of.
->>>>
->>>> Sadly I currently don't have the time to do this backport for all N
->>>> stable kernels... :(
->>>>
->>>> But if that backport gets out of control: A simpler, albeit stable@
->>>> unicorn, way to resolve this is to simply revert 9c37de297f65 and make
->>
->> 9c37de297f65 can not be reverted in 5.4 and older because it isn't there,
->> and trying to apply it results in conflicts which at least I can not
->> resolve.
->>
->>>> it so that DM-mpath and DM core just used bio-based if "nvme" is
->>>> requested by dm-mpath, so also in drivers/md/dm-mpath.c e.g.:
->>>>
->>>> @@ -1091,8 +1088,6 @@ static int parse_features(struct dm_arg_set *as, struct multipath *m)
->>>>
->>>>                          if (!strcasecmp(queue_mode_name, "bio"))
->>>>                                  m->queue_mode = DM_TYPE_BIO_BASED;
->>>> 			else if (!strcasecmp(queue_mode_name, "nvme"))
->>>> -                               m->queue_mode = DM_TYPE_NVME_BIO_BASED;
->>>> +                               m->queue_mode = DM_TYPE_BIO_BASED;
->>>>                          else if (!strcasecmp(queue_mode_name, "rq"))
->>>>                                  m->queue_mode = DM_TYPE_REQUEST_BASED;
->>>>                          else if (!strcasecmp(queue_mode_name, "mq"))
->>>>
->>>> Mike
->>>>
->>>
->>> Ok, please submit a working patch for the kernels that need it so that
->>> we can review and apply it to solve this regression.
->>>
->>
->> So, effectively, v5.4.y and older are broken right now for use cases
->> with dm on NVME drives.
->>
->> Given that the regression does affect older branches, and given that we
->> have to revert this patch to avoid regressions in ChromeOS, would it be
->> possible to revert it from v5.4.y and older until a fix is found ?
-> 
-> I obviously would prefer to not have this false-start.
-> 
-The false start has already happened since we had to revert the patch
-from chromeos-5.4 and older branches.
+Hi Viresh,
 
-Guenter
+On Wed, 15 Jun 2022 at 10:55, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 15-06-22, 02:49, Naresh Kamboju wrote:
+> > Following kernel crash reported while booting arm64 db410c board with
+> > Linux next-20220614 [1] kfence enabled on this kernel.
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > Boot log:
+> > ---------
+> > [    0.850420] WARNING: CPU: 0 PID: 1 at drivers/opp/core.c:2265
+>
+> A print like this normally comes when we hit a WARN or something.
+>
+> Here is the line 2265 from above tag
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/opp/core.c?h=next-20220614#n2265
+>
+> which doesn't have any such WARNs there. I wonder where exactly we hit the WARN
+> here and why it isn't showing up properly.
+>
+> > dev_pm_opp_clear_config+0x174/0x17c
+> > [    0.850447] Modules linked in:
+> > [    0.850459] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+> > 5.19.0-rc1-next-20220610 #1
+> > [    0.850470] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+> > [    0.850477] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> > [    0.850489] pc : dev_pm_opp_clear_config+0x174/0x17c
+> > [    0.850501] lr : dt_cpufreq_probe+0x1e4/0x4a0
+> > [    0.850513] sp : ffff80000802bb00
+> > [    0.850518] x29: ffff80000802bb00 x28: ffff80000ada1c30 x27: 0000000000000000
+> > [    0.850538] x26: 00000000fffffdfb x25: ffff00000311f410 x24: ffff00000389ec90
+> > [    0.850557] x23: ffff80000a9eea98 x22: ffff80000a9eed00 x21: ffff80000ada1b68
+> > [    0.850576] x20: ffff00000389ec80 x19: ffff00003fc41308 x18: ffffffffffffffff
+> > [    0.850595] x17: ffff800009f21700 x16: ffff8000080955c0 x15: ffff0000031c2a1c
+> > [    0.850614] x14: 0000000000000001 x13: 0a6b636f6c632064 x12: 6e69662074276e64
+> > [    0.850632] x11: 0000000000000040 x10: 0000000000000020 x9 : ffff800009006964
+> > [    0.850650] x8 : 0000000000000020 x7 : ffffffffffffffff x6 : 0000000000000000
+> > [    0.850668] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000000
+> > [    0.850686] x2 : 0000000000000004 x1 : 0000000000000000 x0 : 0000000000000000
+> > [    0.850704] Call trace:
+> > [    0.850708]  dev_pm_opp_clear_config+0x174/0x17c
+> > [    0.850722]  platform_probe+0x74/0xf0
+>
+> Nevertheless, I see one place from where such a WARN can be hit, which can be
+> fixed with:
+>
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index 58eae9de4b91..c3d4058d33fc 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -2437,7 +2437,7 @@ EXPORT_SYMBOL_GPL(dev_pm_opp_set_config);
+>   */
+>  void dev_pm_opp_clear_config(struct opp_table *opp_table)
+>  {
+> -       if (WARN_ON(!opp_table))
+> +       if (!opp_table)
+>                 return;
+>
+>         _opp_detach_genpd(opp_table);
+>
+> Not sure it fixes the issue you reported here though.
+>
+> Can you run the tests for my branch once, it has the updated fix as well.
+
+As per your suggestion, I have tested [1] this tree and branch and it worked.
+The reported kernel warning has been fixed.
+Thank you.
+
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+>
+> git://git.kernel.org/pub/scm/linux/kernel/git/vireshk/pm.git opp/linux-next
+>
+> --
+> viresh
+
+[1] https://lkft.validation.linaro.org/scheduler/job/5179605
+
+--
+Linaro LKFT
+https://lkft.linaro.org
