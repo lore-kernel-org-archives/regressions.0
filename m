@@ -1,139 +1,67 @@
-Received: from smtpq1.tb.ukmail.iss.as9143.net (smtpq1.tb.ukmail.iss.as9143.net [212.54.57.96])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390962F48
-	for <regressions@lists.linux.dev>; Thu, 16 Jun 2022 17:06:16 +0000 (UTC)
-Received: from [212.54.57.107] (helo=csmtp3.tb.ukmail.iss.as9143.net)
-	by smtpq1.tb.ukmail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.90_1)
-	(envelope-from <zarniwhoop@ntlworld.com>)
-	id 1o1swg-00073P-AW
-	for regressions@lists.linux.dev; Thu, 16 Jun 2022 19:06:14 +0200
-Received: from llamedos.mydomain ([81.97.236.130])
-	by cmsmtp with ESMTPA
-	id 1swfoFkxh45FH1swgo8XkA; Thu, 16 Jun 2022 19:06:14 +0200
-X-SourceIP: 81.97.236.130
-X-Authenticated-Sender: zarniwhoop@ntlworld.com
-X-Spam: 0
-X-Authority: v=2.4 cv=e64V9Il/ c=1 sm=1 tr=0 ts=62ab6306 cx=a_exe
- a=OGiDJHazYrvzwCbh7ZIPzQ==:117 a=OGiDJHazYrvzwCbh7ZIPzQ==:17
- a=IkcTkHD0fZMA:10 a=JPEYwPQDsx4A:10 a=QX4gbG5DAAAA:8 a=QyXUC8HyAAAA:8
- a=NLZqzBF-AAAA:8 a=fS49ki5Q-W1sAaxG2SAA:9 a=QEXdDO2ut3YA:10
- a=AbAUZ8qAyYyZVLSsDulk:22 a=wW_WBVUImv98JQXhvVPZ:22
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ntlworld.com;
-	s=meg.feb2017; t=1655399174;
-	bh=bGgOKyySvPDBIQ0HARYvFv7INGOOP345o5Y06M18/LU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=521wBzsIhBiPthrG380iXdJ5B7lYK+xJoCqizjjUUSWVSstmDpNoGUVYmTHZdZpqz
-	 tFo9jczAr+oOhiAtOGStx7DZQHp67L2rARPfD2x3Hwjl1G4lN1b7oXnqx0yGuXN1/o
-	 +g9dvLILCcW152J7RlN8ZX4TGdcuaCXPxSbmi9OvtkH7vpkWRdCXhmbVHw85J+9qJH
-	 0laJrKiyZ9QPEli5RCwQm6GIBNh+mc3sIj9lS4iEdXAvNPQ4IxCdAHbfD0N2QGhsW4
-	 wTYxSFn1wh9rPJxAcG/zt0+i8DQe8w0bkrZsKfI+6WZZ6zS0YY+1LlgETSJ9zzfniG
-	 EnQinJU4kXFgQ==
-Received: by llamedos.mydomain (Postfix, from userid 1000)
-	id A91868DB58; Thu, 16 Jun 2022 18:06:13 +0100 (BST)
-Date: Thu, 16 Jun 2022 18:06:13 +0100
-From: Ken Moffat <zarniwhoop@ntlworld.com>
-To: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	linux-kernel@vger.kernel.org,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Linux PM <linux-pm@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: regression, 5.19.0-rc1 not powering off when hibernated
-Message-ID: <YqtjBdEY59P9JQsx@llamedos.localdomain>
-References: <YqE22nS9k2+AldI6@llamedos.localdomain>
- <84d01637-febb-f602-2d03-fe1600e85ae3@leemhuis.info>
- <YqTPlGM9KQ0FqHdc@llamedos.localdomain>
- <YqeUDpo+8RLVKH8r@llamedos.localdomain>
- <YqoLjk8P+fChJ04m@llamedos.localdomain>
- <Yqo4ZTrRZXEvxS36@llamedos.localdomain>
- <65fbe95b-241a-c5c5-4eca-d6932e0fd59d@collabora.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAC93206
+	for <regressions@lists.linux.dev>; Thu, 16 Jun 2022 18:58:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DDF4C34114;
+	Thu, 16 Jun 2022 18:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1655405889;
+	bh=+33FWUswMZscBh+jqBDYywCE5EEwigUEJN3lzcTaQP4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iMNwklE4d1/OJsJ14nWiP9dvfrpXeFB1b6JjxYF/Wt8MKVgnfwOFyKcoeoQIkPkBA
+	 6/vb0cYHLPsNkqu7gDJGTEYkGghkmpSprBZ1UUJQOINzwWKVJTAw86MrkR3Fc1EpYz
+	 fTLq9+CpEfHG1I5eVQnJJuBO0SGXK8bOMItLriOA2RmefkrIgBa1dSYEn8Hef24WzC
+	 0gCm6ADEa7vFKy5lfW1ys3SUXiEB4yrrKnEzf5Stiw4ntBF5r6SVDZ5EHldgcO2top
+	 gdfxAdxedvHTzu3AMeGuU5OBIFU+G0DMOWHsLiKF7ebnfuhtAZioGo/JV4chChWXbh
+	 KTr5bFwaQHwXw==
+Date: Thu, 16 Jun 2022 11:58:08 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: golan.ben.ami@intel.com, Luca Coelho <luciano.coelho@intel.com>,
+ Johannes Berg <johannes@sipsolutions.net>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Udo Steinberg
+ <udo@hypervisor.org>, "linux-wireless@vger.kernel.org"
+ <linux-wireless@vger.kernel.org>, "regressions@lists.linux.dev"
+ <regressions@lists.linux.dev>
+Subject: Re: Bug 215635 - iwlwifi: Firmware crash with firmware
+ 36.ca7b901d.0 (8265-36.ucode)
+Message-ID: <20220616115808.141dec76@kernel.org>
+In-Reply-To: <915d6d66-4e42-8cbf-76bc-0f2f72d5e7d6@leemhuis.info>
+References: <915d6d66-4e42-8cbf-76bc-0f2f72d5e7d6@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-Clacks-Overhead: GNU Terry Pratchett
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <65fbe95b-241a-c5c5-4eca-d6932e0fd59d@collabora.com>
-User-Agent: Mutt/2.2.3 (2022-04-12)
-X-CMAE-Envelope: MS4xfNgKlh3OEABvgXRinkp/fVv/xnQv5XuI2wEFyIuhBAGpa/dBHRPoWZ/a10uHG59LQKkkgIGSiamZkqHuj7MsbcKkVW5YEm6MqLbVqZ5XoQeu4ec8R3VP
- 6oASgOBlqT94kaAj0bCzK2mKdljRK9hFcjEGPG3/xwOQdvwXlNSFcCvv9MGr9n/VFQN0sDcpcM+YcPdYndac3s9foWIh2EyVqud1xVs7hHMCd+0MA+gD3qWB
- wouc3cU9JMPQwA21O58froNwr6Y5Fvpu/+xDKVqrGssSNcAuyCctqiSSRhQWgdW4oCBFMuIdrYkBMjZMbcnZ11QrV2VlVHPqSbtwa/+naGI6LwMExwWOEPBR
- u9WjIeAkgf96I+38LG2P/9e/Atlect2vhoEC7tbAT/MHwe9QeJl4zkyu1LBvgmtAWjGknFcu
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 16, 2022 at 05:59:10PM +0300, Dmitry Osipenko wrote:
-> Hi,
+On Mon, 14 Mar 2022 12:51:38 +0100 Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker.
 > 
-> On 6/15/22 22:52, Ken Moffat wrote:
-> > On Wed, Jun 15, 2022 at 05:40:46PM +0100, Ken Moffat wrote:
-> >> On Mon, Jun 13, 2022 at 08:46:22PM +0100, Ken Moffat wrote:
-> >>
-> >>>>>> But with 5.19.0-rc1 the screen is blank throughtout the hibernation,
-> >>>>>> and briefly when restoring (no complaint about that), but when
-> >>>>>> hibernating it no longer powers off and I have to hold the on/off
-> >>>>>> switch to power off.
-> >>>>>>
-> >>>>>> Is this a known problem ?
-> >>>>>
+> I noticed a regression report in bugzilla.kernel.org that afaics isn't
+> properly handled, that's why I decided to forward it to the lists and a
+> few relevant people to the CC. To quote from
+> https://bugzilla.kernel.org/show_bug.cgi?id=215635 :
+> 
+> > Seeing the following firmware crash frequently with
+> > firmware-version: 36.ca7b901d.0 8265-36.ucode
+> > 
 > > [...]
-> >> Indeed, on the second attempt I've got a much more likely commit to
-> >> blame:
-> >>
-> >> 98f30d0ecf79da8cf17a171fa4cf6eda7ba4dd71 is the first bad commit
-> >> commit 98f30d0ecf79da8cf17a171fa4cf6eda7ba4dd71
-> >> Author: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> >> Date:   Tue May 10 02:32:30 2022 +0300
-> >>
-> >>     ACPI: power: Switch to sys-off handler API
-> >>     
-> >>     Switch to sys-off API that replaces legacy pm_power_off callbacks,
-> >>     allowing us to remove global pm_* variables and support chaining of
-> >>     all restart and power-off modes consistently.
-> >>     
-> >>     Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-> >>     Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>
-> >> Unsurprisingly, with this reverted 5.19-rc2 fails to build.
-> >>
-> > It occurs to me that maybe I'm missing something in my .config.
-> > Since that is 117K, here is the gzipped config from the version that
-> > git blamed (apart from not powering off, it appears to work ok).
+> > 
+> > Afterwards iwlwifi is entirely unusable, i.e. the hardware does not recover.  
 > 
-> The patch below likely should fix the problem, please give it a try on
-> top of the 5.19-rc2.
-
-Thanks, works like a charm.
-
-Feel free to add
-
-Reported-by: Ken Moffat <zarniwhhop@ntlworld.com>
-Tested-by: Ken Moffat <zarniwhoop@ntlworld.com>
-
-if you wish.
-
-Cheers,
-
-ĸen
+> > I have not been able to observe the problem with 5.15.x so far.
+> > 
+> > The problem manifests either by Wi-Fi becoming entirely unresponsive (not even ping to gateway works anymore) or by producing a firmware crash.
+> > 
+> > In response to #3, the problem was most recently observed as a firmware crash on Linux 5.16.13. HW is Intel Corporation Wireless 8265 / 8275 (rev 78) (Windstorm Peak) and firmware version 36.ca7b901d.0 8265-36.ucode.
+> > 
+> > I'm attaching the dmesg output from 5.16.13 (with the TWT patch mentioned above applied) which includes a firmware crash.  
 > 
-> diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-> index 20a66bf9f465..89c71fce225d 100644
-> --- a/kernel/power/hibernate.c
-> +++ b/kernel/power/hibernate.c
-> @@ -665,7 +665,7 @@ static void power_down(void)
->  		hibernation_platform_enter();
->  		fallthrough;
->  	case HIBERNATION_SHUTDOWN:
-> -		if (pm_power_off)
-> +		if (kernel_can_power_off())
->  			kernel_power_off();
->  		break;
->  	}
+> Could somebody take a look into this? Or was this discussed somewhere
+> else already? Or even fixed?
 
--- 
-     "Happiness isn't happiness without a violin-playing goat."
-                             -- Notting Hill
+Any progress / outputs on this one? Folks are reporting it's still
+happening on Fedora 36 w/ 5.17.13.
