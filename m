@@ -1,77 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D05BE28E4
-	for <regressions@lists.linux.dev>; Thu, 16 Jun 2022 13:27:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FA37C34114;
-	Thu, 16 Jun 2022 13:27:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1655386079;
-	bh=HMhp0mJRTG7zNNs/iEXiJn9LGjkNbXC/ziwq2P/zxvc=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3085217D5
+	for <regressions@lists.linux.dev>; Thu, 16 Jun 2022 14:59:22 +0000 (UTC)
+Received: from [192.168.2.145] (109-252-136-92.dynamic.spd-mgts.ru [109.252.136.92])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dmitry.osipenko)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id 193A06601776;
+	Thu, 16 Jun 2022 15:59:13 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1655391553;
+	bh=480bxtXiQTLxL9SJFuz2MLO035X+tYFjlvxNEbvX1vQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tR+mfsX8FqVRlq/hYI/S6RgsDDFEf7dGe1ORV4vNlfDOElJuAJz2eUTy3u/wOdZSz
-	 SjVlQKvKnVTQ461f630DPY+Is8wuTQ+UN6qK8EoFxjaVegPZVh5SOvAeIoOzLxduMf
-	 9TaH9HBd+qetOMRExR5WLegcS+pUeE+OO0AwlzINhAx7wjDnqu1DrXPny6Tu27HbVm
-	 /g6UfpGu6IO+qKvJG7i1ILmcX05KtwWMxbW2v2O1I5m13OD3mFaJv6bN0S4HGO+ZFq
-	 oHzxBg4LS4bQyb71gYR4fRAcODLfml+hYrn4lP6OZfWXPP+G3Jniw/vrPksgSUGk6c
-	 pVggR+FkGamow==
-Message-ID: <95d92401-3771-137c-9dd2-c3e1ef534f9c@kernel.org>
-Date: Thu, 16 Jun 2022 07:27:58 -0600
+	b=D1dR5eTFuepMuh2aUkqS4+tbq4xK9g2XhmVfvl08dCsjqbS1klllGMoPH56M4ThGF
+	 QUmRWxqt7Q32NaXKfImOc3m2WpgC32QpI9j18CdzMAwbzfLJOykTSPMuafKg1wfDTi
+	 oP/DO+a+qqzQ5U16dtaJ3pp31b/PjcPMz3Spu6LNF+H1UxyZU18mfvA5am8NAjZ542
+	 LGrpVOSinA1tZN8mm0jvNQDK0yRi9PRa5WVZqaQBrnw6DQjlERNNuzEuJXlgWOtDPE
+	 890Eq0OlS/b0+5VYJhEJe4LzibSR16jA26hQjWfYt/H5+2oUhNcmWRahHwJPW18VEw
+	 VgqU3QaAbJHfg==
+Message-ID: <65fbe95b-241a-c5c5-4eca-d6932e0fd59d@collabora.com>
+Date: Thu, 16 Jun 2022 17:59:10 +0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.9.1
-Subject: Re: [REGRESSION] connection timeout with routes to VRF
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: regression, 5.19.0-rc1 not powering off when hibernated
 Content-Language: en-US
-To: Jan Luebbe <jluebbe@lasnet.de>, Robert Shearman
- <robertshearman@gmail.com>, Andy Roulin <aroulin@nvidia.com>
-Cc: Mike Manning <mvrmanning@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, netdev@vger.kernel.org, regressions@lists.linux.dev,
- linux-kernel <linux-kernel@vger.kernel.org>
-References: <a54c149aed38fded2d3b5fdb1a6c89e36a083b74.camel@lasnet.de>
- <6410890e-333d-5f0e-52f2-1041667c80f8@kernel.org>
- <3d0991cf30d6429e8dd059f7e0d1c54a2200c5a0.camel@lasnet.de>
-From: David Ahern <dsahern@kernel.org>
-In-Reply-To: <3d0991cf30d6429e8dd059f7e0d1c54a2200c5a0.camel@lasnet.de>
+To: Ken Moffat <zarniwhoop@ntlworld.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: linux-kernel@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Linux PM <linux-pm@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ "Rafael J. Wysocki" <rafael@kernel.org>
+References: <YqE22nS9k2+AldI6@llamedos.localdomain>
+ <84d01637-febb-f602-2d03-fe1600e85ae3@leemhuis.info>
+ <YqTPlGM9KQ0FqHdc@llamedos.localdomain>
+ <YqeUDpo+8RLVKH8r@llamedos.localdomain>
+ <YqoLjk8P+fChJ04m@llamedos.localdomain>
+ <Yqo4ZTrRZXEvxS36@llamedos.localdomain>
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+In-Reply-To: <Yqo4ZTrRZXEvxS36@llamedos.localdomain>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/15/22 11:47 AM, Jan Luebbe wrote:
-> On Sat, 2022-06-11 at 10:44 -0600, David Ahern wrote:
->> On 6/11/22 5:14 AM, Jan Luebbe wrote:
->>> Hi,
->>>
->>> TL;DR: We think we have found a regression in the handling of VRF route
->>> leaking
->>> caused by "net: allow binding socket in a VRF when there's an unbound
->>> socket"
->>> (3c82a21f4320).
+Hi,
+
+On 6/15/22 22:52, Ken Moffat wrote:
+> On Wed, Jun 15, 2022 at 05:40:46PM +0100, Ken Moffat wrote:
+>> On Mon, Jun 13, 2022 at 08:46:22PM +0100, Ken Moffat wrote:
 >>
->> This is the 3rd report in the past few months about this commit.
+>>>>>> But with 5.19.0-rc1 the screen is blank throughtout the hibernation,
+>>>>>> and briefly when restoring (no complaint about that), but when
+>>>>>> hibernating it no longer powers off and I have to hold the on/off
+>>>>>> switch to power off.
+>>>>>>
+>>>>>> Is this a known problem ?
+>>>>>
+> [...]
+>> Indeed, on the second attempt I've got a much more likely commit to
+>> blame:
 >>
->> ...
-> 
-> Hmm, I've not been able to find other reports. Could you point me to them?
-
-March of this year:
-https://lore.kernel.org/netdev/20220324171930.GA21272@EXT-6P2T573.localdomain/
-
-Andy sent me an email offlist in May; same topic.
-
-Hence you are the 3rd in 3 months.
-
-...
-
+>> 98f30d0ecf79da8cf17a171fa4cf6eda7ba4dd71 is the first bad commit
+>> commit 98f30d0ecf79da8cf17a171fa4cf6eda7ba4dd71
+>> Author: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+>> Date:   Tue May 10 02:32:30 2022 +0300
 >>
->> Andy Roulin suggested the same fix to the same problem a few weeks back.
->> Let's do it along with a test case in fcnl-test.sh which covers all of
->> these vrf permutations.
-> 
-> Thanks! I'd be happy to test any patch in our real setup.
+>>     ACPI: power: Switch to sys-off handler API
+>>     
+>>     Switch to sys-off API that replaces legacy pm_power_off callbacks,
+>>     allowing us to remove global pm_* variables and support chaining of
+>>     all restart and power-off modes consistently.
+>>     
+>>     Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+>>     Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>
+>> Unsurprisingly, with this reverted 5.19-rc2 fails to build.
+>>
+> It occurs to me that maybe I'm missing something in my .config.
+> Since that is 117K, here is the gzipped config from the version that
+> git blamed (apart from not powering off, it appears to work ok).
 
-as I said, Andy suggested the same fix as you. Feel free to submit as a
-patch; would be best to get test cases added to the fcnal-test script.
+The patch below likely should fix the problem, please give it a try on
+top of the 5.19-rc2.
+
+diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
+index 20a66bf9f465..89c71fce225d 100644
+--- a/kernel/power/hibernate.c
++++ b/kernel/power/hibernate.c
+@@ -665,7 +665,7 @@ static void power_down(void)
+ 		hibernation_platform_enter();
+ 		fallthrough;
+ 	case HIBERNATION_SHUTDOWN:
+-		if (pm_power_off)
++		if (kernel_can_power_off())
+ 			kernel_power_off();
+ 		break;
+ 	}
