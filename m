@@ -1,109 +1,49 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2772F25
-	for <regressions@lists.linux.dev>; Fri, 17 Jun 2022 11:48:23 +0000 (UTC)
-Received: from [192.168.2.145] (109-252-136-92.dynamic.spd-mgts.ru [109.252.136.92])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dmitry.osipenko)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id 54683660179A;
-	Fri, 17 Jun 2022 12:48:21 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1655466501;
-	bh=4OnJ9LkHQ8ZP/4JtbxesRqqZ1hb4x6FRCrAnAmr9L3c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H0Txa8h4uFkIpa0KNjruM/jHtFUz/3rg9QT8hHSr3Dguwy+53Z+3fw7CUKxxoCPFg
-	 wshZjl6TbqzD3vfejcfJMWRvnLyjS8bKsUoZQDctLCpu511x7LUIZrhH9nbk3GLqlg
-	 la5uR2QB9fomh44ML1mb4LC4rSo8YCb8BaWbp/odS/SHxoxIlVLsYrN1DHOrH+YhSe
-	 hi/LcWaCF4IZTcVXz80j0jJDmHgso5TkFqX2ap6P1Ic7IuxrGDP6qRCEK8fjoS8VK7
-	 pmqTNaVonBqqv2IRvGOIsSsoB5oIchCjwCZT2dU2gKON35k/tieXpldSdL4xFVY0Le
-	 XCzaej71XQRgA==
-Message-ID: <33d5028e-20f9-e133-b41c-9ea789052069@collabora.com>
-Date: Fri, 17 Jun 2022 14:48:18 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D746C17D3
+	for <regressions@lists.linux.dev>; Fri, 17 Jun 2022 14:50:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39C5CC3411B;
+	Fri, 17 Jun 2022 14:50:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1655477447;
+	bh=M5/he+GrjhQIeU9BeJjdwoSJo2WLcrjwgadxd/BUjOc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Hik994yWZ1OHmY2jb7UzV/Gqx9JAsGxXem0AR66qQjzyb8tWswEJSfca/kVPdTKZd
+	 ZyvVAp9R25b3OJ+VDKqLanZ+iaYnHBu4V9tR7iXg60NlkbosiY8ItWPe8DX2eXXHfG
+	 vQCGE/e3nZLN3zEeIq0dTj44r1VuYOiiHqEbqYritDxVahC4mF71ZgrSPyd8H2UONa
+	 eJXhD8Fdoh+GJafuw0CK9u2eioKMZizLp1E9vr6Bc9/BLM2ThwWpm5cHZsrw2Jh4sI
+	 Q1vz6uURqZIH3VxvGuPmkPrRERzw3J/8PPinjp7gKdhe/A6ONpJVprsuVayoZuQZQT
+	 GMhg7VHKIPu1A==
+Date: Fri, 17 Jun 2022 07:50:46 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: golan.ben.ami@intel.com, Luca Coelho <luciano.coelho@intel.com>,
+ Johannes Berg <johannes@sipsolutions.net>, Gregory Greenman
+ <gregory.greenman@intel.com>, Udo Steinberg <udo@hypervisor.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: Bug 215635 - iwlwifi: Firmware crash with firmware
+ 36.ca7b901d.0 (8265-36.ucode)
+Message-ID: <20220617075046.79f41945@kernel.org>
+In-Reply-To: <28d2123f-65ce-f69c-12e1-f672b26225f4@leemhuis.info>
+References: <915d6d66-4e42-8cbf-76bc-0f2f72d5e7d6@leemhuis.info>
+	<20220616115808.141dec76@kernel.org>
+	<28d2123f-65ce-f69c-12e1-f672b26225f4@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: regression, 5.19.0-rc1 not powering off when hibernated
-Content-Language: en-US
-To: Ken Moffat <zarniwhoop@ntlworld.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- linux-kernel@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Linux PM <linux-pm@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-References: <YqE22nS9k2+AldI6@llamedos.localdomain>
- <84d01637-febb-f602-2d03-fe1600e85ae3@leemhuis.info>
- <YqTPlGM9KQ0FqHdc@llamedos.localdomain>
- <YqeUDpo+8RLVKH8r@llamedos.localdomain>
- <YqoLjk8P+fChJ04m@llamedos.localdomain>
- <Yqo4ZTrRZXEvxS36@llamedos.localdomain>
- <65fbe95b-241a-c5c5-4eca-d6932e0fd59d@collabora.com>
- <YqtjBdEY59P9JQsx@llamedos.localdomain>
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-In-Reply-To: <YqtjBdEY59P9JQsx@llamedos.localdomain>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 6/16/22 20:06, Ken Moffat wrote:
-> On Thu, Jun 16, 2022 at 05:59:10PM +0300, Dmitry Osipenko wrote:
->> Hi,
->>
->> On 6/15/22 22:52, Ken Moffat wrote:
->>> On Wed, Jun 15, 2022 at 05:40:46PM +0100, Ken Moffat wrote:
->>>> On Mon, Jun 13, 2022 at 08:46:22PM +0100, Ken Moffat wrote:
->>>>
->>>>>>>> But with 5.19.0-rc1 the screen is blank throughtout the hibernation,
->>>>>>>> and briefly when restoring (no complaint about that), but when
->>>>>>>> hibernating it no longer powers off and I have to hold the on/off
->>>>>>>> switch to power off.
->>>>>>>>
->>>>>>>> Is this a known problem ?
->>>>>>>
->>> [...]
->>>> Indeed, on the second attempt I've got a much more likely commit to
->>>> blame:
->>>>
->>>> 98f30d0ecf79da8cf17a171fa4cf6eda7ba4dd71 is the first bad commit
->>>> commit 98f30d0ecf79da8cf17a171fa4cf6eda7ba4dd71
->>>> Author: Dmitry Osipenko <dmitry.osipenko@collabora.com>
->>>> Date:   Tue May 10 02:32:30 2022 +0300
->>>>
->>>>     ACPI: power: Switch to sys-off handler API
->>>>     
->>>>     Switch to sys-off API that replaces legacy pm_power_off callbacks,
->>>>     allowing us to remove global pm_* variables and support chaining of
->>>>     all restart and power-off modes consistently.
->>>>     
->>>>     Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
->>>>     Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>>>
->>>> Unsurprisingly, with this reverted 5.19-rc2 fails to build.
->>>>
->>> It occurs to me that maybe I'm missing something in my .config.
->>> Since that is 117K, here is the gzipped config from the version that
->>> git blamed (apart from not powering off, it appears to work ok).
->>
->> The patch below likely should fix the problem, please give it a try on
->> top of the 5.19-rc2.
+On Fri, 17 Jun 2022 08:38:55 +0200 Thorsten Leemhuis wrote:
+> > Any progress / outputs on this one? Folks are reporting it's still
+> > happening on Fedora 36 w/ 5.17.13.  
 > 
-> Thanks, works like a charm.
-> 
-> Feel free to add
-> 
-> Reported-by: Ken Moffat <zarniwhhop@ntlworld.com>
-> Tested-by: Ken Moffat <zarniwhoop@ntlworld.com>
-> 
-> if you wish.
+> Jakub, thx for bringing this up, I had "look  into this again" on my
+> todo list for some time already. Out of interest: where where those reports?
 
-Nice, thank you!
-
--- 
-Best regards,
-Dmitry
+The reports I was referring to are internal at Meta.
