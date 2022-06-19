@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 766D37B
-	for <regressions@lists.linux.dev>; Sun, 19 Jun 2022 12:14:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 555DF7B
+	for <regressions@lists.linux.dev>; Sun, 19 Jun 2022 12:37:42 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1o2toa-0007gd-H3; Sun, 19 Jun 2022 14:14:04 +0200
-Message-ID: <67d39f78-8eed-f49a-b3b0-18f77f9821cd@leemhuis.info>
-Date: Sun, 19 Jun 2022 14:14:03 +0200
+	id 1o2uBQ-0005Md-E4; Sun, 19 Jun 2022 14:37:40 +0200
+Message-ID: <2c6bd8f9-e466-50d0-0d24-0ec334db37cb@leemhuis.info>
+Date: Sun, 19 Jun 2022 14:37:40 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,110 +16,33 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [patch v5] mm: lru_cache_disable: replace work queue
- synchronization with synchronize_rcu
+Subject: Re: [bugzilla-daemon@kernel.org: [Bug 216109] New: Steam Deck fails
+ to boot when E820 entries clipped out of _CRS] #forregzbot
 Content-Language: en-US
-To: Michael Larabel <Michael@MichaelLarabel.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Marcelo Tosatti <mtosatti@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, Minchan Kim <minchan@kernel.org>,
- Matthew Wilcox <willy@infradead.org>,
- Mel Gorman <mgorman@techsingularity.net>,
- Nicolas Saenz Julienne <nsaenzju@redhat.com>,
- Juri Lelli <juri.lelli@redhat.com>, Thomas Gleixner <tglx@linutronix.de>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Stefan Wahren <stefan.wahren@i2se.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <YhUI1wUtV8yguijO@fuller.cnet> <YhUKRzEKxMvlGQ5n@fuller.cnet>
- <YiI+a9gTr/UBCf0X@fuller.cnet>
- <20220304163554.8872fe5d5a9d634f7a2884f5@linux-foundation.org>
- <Yin7hDxdt0s/x+fp@fuller.cnet> <YkWyLaom/r7jXgbA@zn.tnic>
- <YmrWK/KoU1zrAxPI@fuller.cnet>
- <20220528141809.732788db257253396462c79e@linux-foundation.org>
- <134065a4-0446-bbbc-fca8-59f32798cf08@MichaelLarabel.com>
- <0ce05ce7-1a00-82df-f37a-bf7f9e216504@MichaelLarabel.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <0ce05ce7-1a00-82df-f37a-bf7f9e216504@MichaelLarabel.com>
+To: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220609224339.GA543225@bhelgaas>
+ <d4ea2dd2-2e89-d3a2-ee5c-f64bb1b8f576@leemhuis.info>
+In-Reply-To: <d4ea2dd2-2e89-d3a2-ee5c-f64bb1b8f576@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1655640860;ad4a49d9;
-X-HE-SMSGID: 1o2toa-0007gd-H3
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1655642262;2a3567af;
+X-HE-SMSGID: 1o2uBQ-0005Md-E4
 
-Hi, this is your Linux kernel regression tracker.
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-On 29.05.22 02:48, Michael Larabel wrote:
-> On 5/28/22 17:54, Michael Larabel wrote:
->> On 5/28/22 16:18, Andrew Morton wrote:
->>> On Thu, 28 Apr 2022 15:00:11 -0300 Marcelo Tosatti
->>> <mtosatti@redhat.com> wrote:
->>>> On Thu, Mar 31, 2022 at 03:52:45PM +0200, Borislav Petkov wrote:
->>>>> On Thu, Mar 10, 2022 at 10:22:12AM -0300, Marcelo Tosatti wrote:
->>>>> Someone pointed me at this:
->>>>> https://www.phoronix.com/scan.php?page=news_item&px=Linux-518-Stress-NUMA-Goes-Boom
->>>>>
->>>>> which says this one causes a performance regression with stress-ng's
->>>>> NUMA test...
->>>>
->>>> This is probably do_migrate_pages that is taking too long due to
->>>> synchronize_rcu().
->>>>
->>>> Switching to synchronize_rcu_expedited() should probably fix it...
->>>> Can you give it a try, please?
->>> I guess not.
->>>
->>> Is anyone else able to demonstrate a stress-ng performance regression
->>> due to ff042f4a9b0508?  And if so, are they able to try Marcelo's
->>> one-liner?
+On 12.06.22 13:11, Thorsten Leemhuis wrote:
+
+>> Subject: [Bug 216109] New: Steam Deck fails to boot when E820 entries clipped
+>> 	out of _CRS
 >>
->> Apologies I don't believe I got the email previously (or if it ended
->> up in spam or otherwise overlooked) so just noticed this thread now...
->>
->> I have the system around and will work on verifying it can reproduce
->> still and can then test the patch, should be able to get it tomorrow.
->>
->> Thanks and sorry about the delay.
-> 
-> Had a chance to look at it today still. I was able to reproduce the
-> regression still on that 5950X system going from v5.17 to v5.18 (using
-> newer stress-ng benchmark and other system changes since the prior
-> tests). Confirmed it also still showed slower as of today's Git.
-> 
-> I can confirm with Marcelo's patch below that the stress-ng NUMA
-> performance is back to the v5.17 level of performance (actually, faster)
-> and certainly not like what I was seeing on v5.18 or Git to this point.
-> 
-> So all seems to be good with that one-liner for the stress-ng NUMA test
-> case. All the system details and results for those interested is
-> documented @ https://openbenchmarking.org/result/2205284-PTS-NUMAREGR17
-> but basically amounts to:
-> 
->     Stress-NG 0.14
->     Test: NUMA
->     Bogo Ops/s > Higher Is Better
->     v5.17: 412.88
->     v5.18: 49.33
->     20220528 Git: 49.66
->     20220528 Git + sched-rcu-exped patch: 468.81
-> 
-> Apologies again about the delay / not seeing the email thread earlier.
->lru_cache_disable: replace work queue synchronization with synchronize_rcu 
-> Thanks,
-> 
-> Michael
-> 
-> Tested-by: Michael Larabel <Michael@MichaelLarabel.com>
+>> https://bugzilla.kernel.org/show_bug.cgi?id=216109
 
-Andrew, is there a reason why this patch afaics isn't mainlined yet and
-lingering in linux-next for so long? Michael confirmed that this patch
-fixes a regression three weeks ago and a few days later Stefan confirmed
-that his problem was solved as well:
-https://lore.kernel.org/regressions/79bb603e-37cb-d1dd-1e12-7ce28d7cfdae@i2se.com/
-
-Reminder: unless there are good reasons it shouldn't take this long to
-for reason explained in
-https://docs.kernel.org/process/handling-regressions.html
+#regzbot fixed-by: a2b36ffbf5b6
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -128,19 +51,4 @@ reports and sometimes miss something important when writing mails like
 this. If that's the case here, don't hesitate to tell me in a public
 reply, it's in everyone's interest to set the public record straight.
 
->>>> diff --git a/mm/swap.c b/mm/swap.c
->>>> index bceff0cb559c..04a8bbf9817a 100644
->>>> --- a/mm/swap.c
->>>> +++ b/mm/swap.c
->>>> @@ -879,7 +879,7 @@ void lru_cache_disable(void)
->>>>        * lru_disable_count = 0 will have exited the critical
->>>>        * section when synchronize_rcu() returns.
->>>>        */
->>>> -    synchronize_rcu();
->>>> +    synchronize_rcu_expedited();
->>>>   #ifdef CONFIG_SMP
->>>>       __lru_add_drain_all(true);
->>>>   #else
->>>>
->>>>
 
