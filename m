@@ -1,155 +1,232 @@
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A342A7B
-	for <regressions@lists.linux.dev>; Sun, 19 Jun 2022 17:00:58 +0000 (UTC)
-Received: by mail-qv1-f51.google.com with SMTP id 43so13128737qvb.3
-        for <regressions@lists.linux.dev>; Sun, 19 Jun 2022 10:00:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gooddata.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=P2Pzb/PaJ7Z+/ZicwcRN0lssuLoakMdj+znnhHREnpM=;
-        b=I25eIhLsilWbc24M5LzyajgvEN8Sn9jgS4f3qZqIi52kOrXVJAVjoZ54iAUcrfzZUo
-         CpT/X7RzR3brNxXXO9hmBWMDc5I/ZaR5dpfE+6ee2ebYKQXwlelu5N6C3MnOCVhY/QXn
-         B9nLXoxcWOH3eAmY9ouaMyxn/CZv5WTz5rnes=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=P2Pzb/PaJ7Z+/ZicwcRN0lssuLoakMdj+znnhHREnpM=;
-        b=OM2pSUhrs1XUzs32MkkoZXAnDrgBiSMXn3LZlO9XpfzcFBcjXXHKO30Ztqg7WulTnP
-         YYlaHVNvlSg9xWyUR6nrIp4mg3tea4KxXI2ljKBvjp3IkY6chwtYUmeZrEJmqQ+zddfb
-         uctyo1jNjjWs7IbKPyyVUPrDTERNuSKt0k1m7ZdZesPZIxabbP1PnsekrKx84sN3/DJC
-         T3MjJ2liYpZ/oo6q6AFIbrZoojmBKE+JBbdCLc7iNbW5dVuPuG2fnGTBy6Qt5F/OtzcG
-         MIDtRBaz5jJKFs/IwR6tnq48HDSr0kI+K9TzttcUkZ2L9LvEFVpuIEOh66fXSeWzfBis
-         jMrQ==
-X-Gm-Message-State: AJIora/GoVH+HKn/vYazqy3AwgCT+fs65p1oIubWuCBktE9Dyv2XfMKv
-	xKa8m0EOjW2SI5FObqtzEZQGxTI1VExh33TLsUTNWg==
-X-Google-Smtp-Source: AGRyM1u9BpxR11DJpEOt1YEvxLdgRzei2TxuhlqZv4bFrv9cru4rmZePHEnZXLDUe7k+tLaV38XT+SyxVvcS2YiQbus=
-X-Received: by 2002:a05:6214:5187:b0:46b:c045:1a2c with SMTP id
- kl7-20020a056214518700b0046bc0451a2cmr15945097qvb.33.1655658057453; Sun, 19
- Jun 2022 10:00:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD73F7B
+	for <regressions@lists.linux.dev>; Sun, 19 Jun 2022 17:06:06 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1o2yN8-0002Y0-Pg; Sun, 19 Jun 2022 19:06:02 +0200
+Message-ID: <56ffb198-8c93-1ec2-0b5e-9441e96359de@leemhuis.info>
+Date: Sun, 19 Jun 2022 19:06:02 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAK8fFZ7m-KR57M_rYX6xZN39K89O=LGooYkKsu6HKt0Bs+x6xQ@mail.gmail.com>
- <2596b2c6-71e4-543f-799f-b4b174c21f31@leemhuis.info>
-In-Reply-To: <2596b2c6-71e4-543f-799f-b4b174c21f31@leemhuis.info>
-From: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>
-Date: Sun, 19 Jun 2022 19:00:31 +0200
-Message-ID: <CAK8fFZ6hS69JMtnvFnLVt9aiWEivZ9-izNgMHtB+KeAWAfaXaQ@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] ice: Error setting promisc mode on VSI 6
- (rc=-17) @ 5.18.x
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: intel-wired-lan@lists.osuosl.org, 
-	Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Content-Language: en-US
+To: regressions@lists.linux.dev
+Cc: bpf@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <f038d6f9-b96b-0749-111c-33ac8939a1c0@i2se.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [BUG] null pointer dereference when loading bpf_preload on
+ Raspberry Pi
+In-Reply-To: <f038d6f9-b96b-0749-111c-33ac8939a1c0@i2se.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1655658366;6c642228;
+X-HE-SMSGID: 1o2yN8-0002Y0-Pg
 
-Hello,
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-yes, I revert that commit. Still the promiscs cannot be set and the dmesg
-error message changed to:
----------------
-$ ip link set em1 promisc on
-$ dmesg
-...
-ice 0000:63:00.0 em1: Error setting Multicast promiscuous mode on VSI 6
-...
----------------
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easily accessible to everyone.
 
-Jaroslav P.
+On 13.06.22 00:22, Stefan Wahren wrote:
+> 
+> Jan Palus already reported this NULL pointer dereference on bugzilla
+> [1], but i want to make sure this is noticed by the right people.
+> 
+> I've i boot my Raspberry Pi 3 B Plus with multi_v7_defconfig and the
+> following config settings:
+> 
+> CONFIG_BPF_SYSCALL=y
+> CONFIG_BPF_JIT=y
+> CONFIG_BPF_JIT_ALWAYS_ON=y
+> CONFIG_BPF_JIT_DEFAULT_ON=y
+> CONFIG_BPF_UNPRIV_DEFAULT_OFF=y
+> CONFIG_USERMODE_DRIVER=y
+> CONFIG_BPF_PRELOAD=y
+> CONFIG_BPF_PRELOAD_UMD=m
+> 
+> The kernel (Linux 5.18.3) crashes with a null pointer deference:
+> 
+> [    5.551587] Unable to handle kernel NULL pointer dereference at
+> virtual address 00000048
+> [    5.564467] [00000048] *pgd=39a12835
+> [    5.572700] Internal error: Oops: 17 [#1] SMP ARM
+> [    5.581249] Modules linked in: bpf_preload(+)
+> [    5.589400] CPU: 1 PID: 85 Comm: modprobe Not tainted 5.18.3 #1
+> [    5.597966] usb 1-1.1: new high-speed USB device number 3 using dwc2
+> [    5.599251] Hardware name: BCM2835
+> [    5.616839] PC is at mmiocpy+0xc8/0x334
+> [    5.624534] LR is at copy_from_bpfptr+0x60/0x80
+> [    5.632973] pc : [<c06e77e8>]    lr : [<c03fee50>]    psr: 60000013
+> [    5.643146] sp : f1515b30  ip : f1515b48  fp : f1515b30
+> [    5.652331] r10: c328e040  r9 : f1515b68  r8 : 00000000
+> [    5.661506] r7 : c328e040  r6 : 00000002  r5 : 00000048  r4 : 00000002
+> [    5.672037] r3 : 0000003d  r2 : 00000000  r1 : 00000048  r0 : f1515c08
+> [    5.682572] Flags: nZCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM 
+> Segment none
+> [    5.693670] Control: 10c5383d  Table: 023c406a  DAC: 00000051
+> [    5.703426] Register r0 information: 2-page vmalloc region starting
+> at 0xf1514000 allocated at kernel_clone+0x98/0x27c
+> [    5.718310] Register r1 information: non-paged memory
+> [    5.727454] Register r2 information: NULL pointer
+> [    5.736205] Register r3 information: non-paged memory
+> [    5.738825] hub 1-1.1:1.0: USB hub found
+> [    5.745334] Register r4 information: non-paged memory
+> [    5.753345] hub 1-1.1:1.0: 3 ports detected
+> [    5.762358] Register r5 information: non-paged memory
+> [    5.762364] Register r6 information: non-paged memory
+> [    5.762368] Register r7 information: slab task_struct start c328e040
+> pointer offset 0
+> [    5.800440] Register r8 information: NULL pointer
+> [    5.809029] Register r9 information: 2-page vmalloc region starting
+> at 0xf1514000 allocated at kernel_clone+0x98/0x27c
+> [    5.823843] Register r10 information: slab task_struct start c328e040
+> pointer offset 0
+> [    5.835847] Register r11 information: 2-page vmalloc region starting
+> at 0xf1514000 allocated at kernel_clone+0x98/0x27c
+> [    5.850796] Register r12 information: 2-page vmalloc region starting
+> at 0xf1514000 allocated at kernel_clone+0x98/0x27c
+> [    5.865664] Process modprobe (pid: 85, stack limit = 0x(ptrval))
+> [    5.867961] usb 1-1.3: new low-speed USB device number 4 using dwc2
+> [    5.875679] Stack: (0xf1515b30 to 0xf1516000)
+> [    5.894419] 5b20:                                     f1515c08
+> 00000002 00000000 c03fee50
+> [    5.906750] 5b40: 00000048 c051aa3d 00000000 c0402520 ef80327c
+> ef80328c c2001180 f1515c08
+> [    5.919097] 5b60: c1a45808 00012cc0 00000048 c051aa3d c3022440
+> 00000001 c2ee9898 ffffffff
+> [    5.931435] 5b80: 00000000 f1515bb4 00000000 00000000 c2ee9a48
+> 5beb87ed c22c4c8c 00000000
+> [    5.943733] 5ba0: 00000001 c328e040 00000000 00012cc0 00000dc0
+> 00000000 f1515f38 c048fb58
+> [    5.956089] 5bc0: f1515c00 00000000 c328e040 c217c000 4a389946
+> 00000001 00012cc0 ef7ff780
+> [    5.968456] 5be0: 00000000 4a389946 00000005 00000001 00000001
+> c328e2c0 c1804d8c c036a868
+> [    5.980852] 5c00: 00000801 ef7ff780 00000000 00000000 00000000
+> 00000000 00000000 00000000
+> [    5.993238] 5c20: 00000000 00000000 00000000 00000000 00000000
+> 00000000 00000000 00000000
+> [    6.005643] 5c40: 00000000 00000000 00000000 00000000 00000000
+> 00000000 00000000 00000000
+> [    6.018026] 5c60: 00000000 00000000 00000000 00000000 00000000
+> 00000000 00000000 00000000
+> [    6.030371] 5c80: 00000000 00000000 00000000 00000000 00000000
+> 00000000 00000019 5beb87ed
+> [    6.042719] 5ca0: c2004208 000017a8 00000048 c328e040 ffffffff
+> 00000000 c328e040 c328e040
+> [    6.055020] 5cc0: 00000000 c04043ec 00005dd9 7fffffff c2004208
+> 00000048 c051aa3d 5beb87ed
+> [    6.067330] 5ce0: 00005df9 000017a8 c328e040 c328e040 ffffffff
+> 00000000 c328e040 0000017b
+> [    6.079612] 5d00: 00000000 bf0031e0 00000002 00000004 000017a8
+> 00000001 00000000 00000000
+> [    6.091957] 5d20: 00000000 6f6c5f5f 72656461 70616d2e 00000000
+> 00000000 00000000 00000000
+> [    6.104254] 5d40: 00000000 00000000 00000000 00000000 c328e040
+> c0380594 c1325856 00000001
+> [    6.116521] 5d60: c23729a0 c051b97c c23729a0 5beb87ed 00000000
+> 00000000 c200423c c1a4a551
+> [    6.117969] usb 1-1.1.2: new low-speed USB device number 5 using dwc2
+> [    6.128707] 5d80: c2372a50 00000001 c1325856 00000124 c2372a50
+> c051b97c c2372a50 5beb87ed
+> [    6.128716] 5da0: 00000000 c22d1980 f1515e6c bf00322c ffffffff
+> 00000000 c2372a50 00000000
+> [    6.163743] 5dc0: 00000030 00000000 c2372a50 c0f179f0 c2348280
+> ef87f900 c2001180 c328e040
+> [    6.176062] 5de0: c04897dc 00000013 c0464698 c22d1980 c22d1980
+> 00000062 00000cc0 c049d584
+> [    6.188380] 5e00: 00000cc0 c328e040 c22d1980 5beb87ed 00000001
+> 00000cc0 00000062 bf00a05c
+> [    6.200720] 5e20: ffffffff c1a4a9e0 c328e040 0000017b 00000000
+> c0464698 c2348280 5beb87ed
+> [    6.213033] 5e40: 00000002 c328e040 bf007280 5beb87ed c22d1980
+> bf007280 c328e040 c2348280
+> [    6.225441] 5e60: 00000000 bf00a0e0 00000001 c2348280 bf0040b7
+> bf005860 000017a8 000008a8
+> [    6.237841] 5e80: 00000000 5beb87ed c328e040 bf00a000 c23481c0
+> 00000000 c1a4a9e0 c0301f30
+> [    6.250269] 5ea0: c357a3c0 c357a3c0 00000000 00000000 00000000
+> 00000000 c03c17f0 c23481c0
+> [    6.262591] 5ec0: c2001180 00000cc0 c03c17f0 c049d888 00000cc0
+> 00000000 c23481c0 5beb87ed
+> [    6.274942] 5ee0: 00000000 bf007040 0002d064 5beb87ed bf007040
+> 0002d064 c23481c0 c328e040
+> [    6.287336] 5f00: c0300324 c03c1810 bf007040 0000008f 00000000
+> 0002d064 00000000 c03c3ce4
+> [    6.299841] 5f20: f1515f34 7fffffff 00000000 00000002 c353e040
+> f151b000 f151d8cf f151d940
+> [    6.312151] 5f40: f151b000 00003f1c f151e904 f151e760 f151e25c
+> 00005000 00005150 00002884
+> [    6.324534] 5f60: 00005241 00000000 00000000 00000000 00002874
+> 00000024 00000025 0000001b
+> [    6.336923] 5f80: 00000000 00000017 00000000 5beb87ed 00000000
+> bbbecb00 000417d8 00000000
+> [    6.349310] 5fa0: 0000017b c03000c0 bbbecb00 000417d8 00000000
+> 0002d064 00000000 0002ec3c
+> [    6.361662] 5fc0: bbbecb00 000417d8 00000000 0000017b 00042ce0
+> 00000000 00042c38 00000000
+> [    6.374053] 5fe0: be8e3a88 be8e3a78 00022cb8 b6cb3ae0 60000010
+> 00000000 00000000 00000000
+> [    6.386437]  mmiocpy from copy_from_bpfptr+0x60/0x80
+> [    6.395558]  copy_from_bpfptr from __sys_bpf+0x78/0x1d30
+> [    6.404992]  __sys_bpf from bpf_sys_bpf+0x214/0x238
+> [    6.413982]  bpf_sys_bpf from skel_map_create.constprop.0+0x60/0x80
+> [bpf_preload]
+> [    6.425677]  skel_map_create.constprop.0 [bpf_preload] from
+> bpf_load_and_run.constprop.0+0x2c/0x1f8 [bpf_preload]
+> [    6.440256]  bpf_load_and_run.constprop.0 [bpf_preload] from
+> load+0xe0/0x1000 [bpf_preload]
+> [    6.452929]  load [bpf_preload] from do_one_initcall+0x68/0x170
+> [    6.463114]  do_one_initcall from do_init_module+0x3c/0x1e0
+> [    6.472955]  do_init_module from sys_finit_module+0xc8/0xd4
+> [    6.482802]  sys_finit_module from ret_fast_syscall+0x0/0x54
+> [    6.492679] Exception stack(0xf1515fa8 to 0xf1515ff0)
+> [    6.501975] 5fa0:                   bbbecb00 000417d8 00000000
+> 0002d064 00000000 0002ec3c
+> [    6.514476] 5fc0: bbbecb00 000417d8 00000000 0000017b 00042ce0
+> 00000000 00042c38 00000000
+> [    6.526999] 5fe0: be8e3a88 be8e3a78 00022cb8 b6cb3ae0
+> [    6.536392] Code: e480e004 e8bd0360 e1b02f82 14d13001 (24d14001)
+> [    6.546878] ---[ end trace 0000000000000000 ]---
+> 
+> It would be nice to get a hint, how to narrow down or which commit might
+> trigger this issue.
+> 
+> [1] - https://bugzilla.kernel.org/show_bug.cgi?id=216105
 
-ne 19. 6. 2022 v 13:51 odes=C3=ADlatel Thorsten Leemhuis
-<regressions@leemhuis.info> napsal:
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
 
->
-> [TLDR: I'm adding this regression report to the list of tracked
-> regressions; all text from me you find below is based on a few templates
-> paragraphs you might have encountered already already in similar form.]
->
-> Hi, this is your Linux kernel regression tracker.
->
-> On 09.06.22 08:58, Jaroslav Pulchart wrote:
-> >
-> > I'm struggling with broken network connectivity at VMs using linux
-> > bridge at host after update of kernel from 5.17.x to 5.18.x @ Dell
-> > R750 server with E810-XXV NICs.
-> >
-> > I noticed the kernel reports "Error setting promisc mode" in dmesg.
-> >
-> > # dmesg  | grep 'Error setting promisc'
-> > [   24.863557] ice 0000:31:00.0: Error setting promisc mode on VSI 6 (r=
-c=3D-17)
-> > [   24.878369] ice 0000:31:00.0: Error setting promisc mode on VSI 6 (r=
-c=3D-17)
-> > [   25.045834] ice 0000:31:00.0: Error setting promisc mode on VSI 6 (r=
-c=3D-17)
-> > [   25.129840] ice 0000:b1:00.0: Error setting promisc mode on VSI 6 (r=
-c=3D-17)
-> > [   25.144440] ice 0000:b1:00.0: Error setting promisc mode on VSI 6 (r=
-c=3D-17)
-> >
-> > # lspci -s 0000:31:00.0
-> > 31:00.0 Ethernet controller: Intel Corporation Ethernet Controller
-> > E810-XXV for SFP (rev 02)
-> > # lspci -s 0000:b1:00.0
-> > b1:00.0 Ethernet controller: Intel Corporation Ethernet Controller
-> > E810-XXV for SFP (rev 02)
-> >
-> > It is easy to reproduce by:
-> >   # ip link set em1 promisc on
-> >   # dmesg -T | tail -n 1
-> >   [Thu Jun  9 08:48:19 2022] ice 0000:31:00.0: Error setting promisc
-> > mode on VSI 6 (rc=3D-17)
-> >
-> > Could it be an 'ice' driver bug introduced in the 5.18 kernel?
->
-> CCing the regression mailing list, as it should be in the loop for all
-> regressions, as explained here:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
->
-> Jaroslav, did you try to revert the change that was suggested to you in
-> https://lore.kernel.org/all/d993bbb6-e583-5d91-76c0-841cc5da86af@roeck-us=
-.net/
-> Did it help?
->
-> Anyway: To be sure below issue doesn't fall through the cracks
-> unnoticed, I'm adding it to regzbot, my Linux kernel regression tracking
-> bot:
->
-> #regzbot ^introduced v5.17 to v5.18
-> #regzbot title net: ice: Error setting promisc mode on VSI 6 (rc=3D-17) @
-> 5.18.x
-> #regzbot monitor
-> https://lore.kernel.org/all/CAK8fFZ68+xZ2Z0vDWnihF8PeJKEmEwCyyF-8W9PCZJTd=
-8zfp-A@mail.gmail.com/
-> #regzbot monitor
-> https://lore.kernel.org/all/CAK8fFZ61mQ3AYpdWjWtyUXzrs-RVMW61mBLrjRDXBxB-=
-F9GzbA@mail.gmail.com/
-> #regzbot ignore-activity
->
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply -- ideally with also
-> telling regzbot about it, as explained here:
-> https://linux-regtracking.leemhuis.info/tracked-regression/
->
-> Reminder for developers: When fixing the issue, add 'Link:' tags
-> pointing to the report (the mail this one replied to), as the kernel's
-> documentation call for; above page explains why this is important for
-> tracked regressions.
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->
-> P.S.: As the Linux kernel's regression tracker I deal with a lot of
-> reports and sometimes miss something important when writing mails like
-> this. If that's the case here, don't hesitate to tell me in a public
-> reply, it's in everyone's interest to set the public record straight.
+#regzbot ^introduced v5.17..v5.18
+#regzbot title bet: bpf: null pointer dereference when loading
+bpf_preload on Raspberry Pi
+#regzbot ignore-activity
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=216105
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replied to), as the kernel's
+documentation call for; above page explains why this is important for
+tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
+
