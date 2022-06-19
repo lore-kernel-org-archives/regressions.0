@@ -1,152 +1,110 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362454C84
-	for <regressions@lists.linux.dev>; Fri, 17 Jun 2022 20:48:51 +0000 (UTC)
-Received: by mail-lj1-f172.google.com with SMTP id e4so5917919ljl.1
-        for <regressions@lists.linux.dev>; Fri, 17 Jun 2022 13:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZvlmhjX5WrHl156XHjI+XlN+ZCT9UnRn+tpViHipDk4=;
-        b=AQvbQNqjOh+vs7nV5O4ZkPwpwVG3IY/XB6qUsKlo+u+PXBU59U7UGX2SeOkfGtUFhe
-         OGLyR7EAaHiOA5PfWmMV9H4KzkryFkxzdJuYgfRXa/59tlGXShywPbvDJszBRZ4Y4PmJ
-         5Uh1/5YSEVpF9HtIFUpQl5jVL1LgshkzaXE8mTSaMAsJsVDYf1dznDACdEtMyavCHglw
-         zLEBZkjGuJ3sck9feEMZr/8ui88ly3fhgPHM0P0etLAyf1Jnm423P+biHDflkD+4PGjq
-         KuUI5Noeudu3KiO6beAYGEY0aG5QvAcdsLv9JT0D4EKsoIkZmf0WqC0GffegxYkKqatF
-         kUYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZvlmhjX5WrHl156XHjI+XlN+ZCT9UnRn+tpViHipDk4=;
-        b=RLf67UyIZ7mhf32HRRY63InOeffsMOBDDuQ+rg5RKp/HnM8heip7KbpU1wz4dSqgcT
-         Y892r3cTSza5bK0e0rXcM7MIMkQcdY8qrwZ+wAjX/NdtiqMyDlyHBhWAB4H4AIqsUGmx
-         6tCNIkbin9/F+U5Xy5GGPWxfuKKDmXlNUVf1wHy3DATz56JNc9onSpZG2S1tOr/miR3z
-         CMJHsLnvYcG+u0MpKGMvjBov0cO82WVW2H/2mO8zQmLkzw187Z28DR6AryTUNFuWJaft
-         m1p2YtNKx4wgh/SoQ3h5/OGU8HrrZir54emUUKFE96tbeM9s0eormlsfENjl2IGpJbBi
-         ZyMw==
-X-Gm-Message-State: AJIora/GL6TCl63A2Eu8RIMkNcIlm6fP4TZqaU5ZffmWjvTG0REY1+2l
-	nJXupbP1QVMUmDkZ8OHbVIz4tKSs5CqRqdSKen4=
-X-Google-Smtp-Source: AGRyM1sIFKriab8YwDUFvTn5R/ggwO4Y3nbrPnazNRow1Hj2WUYgE/JWWUOSKjHrCuDG+m3YpP66//FiqDgh8tckehc=
-X-Received: by 2002:a05:651c:549:b0:255:bbd2:fb8 with SMTP id
- q9-20020a05651c054900b00255bbd20fb8mr5859838ljp.305.1655498928997; Fri, 17
- Jun 2022 13:48:48 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96DD7B
+	for <regressions@lists.linux.dev>; Sun, 19 Jun 2022 11:51:09 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1o2tSD-00005i-2a; Sun, 19 Jun 2022 13:50:57 +0200
+Message-ID: <2596b2c6-71e4-543f-799f-b4b174c21f31@leemhuis.info>
+Date: Sun, 19 Jun 2022 13:50:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a1ce1743-e450-6cdb-dfab-56a3e3eb9aed@pengutronix.de>
- <CABBYNZ+z8kBUKGXbZSfb0ynJaTnPQRp0wFDUb12AW1ymbNx1eg@mail.gmail.com>
- <CABBYNZ+zsuggTpaUSPsZKeL=qqvM1=sgMWzdWEqaS_oh6dhY2g@mail.gmail.com>
- <8d5c4724-d511-39b1-21d7-116c91cada45@pengutronix.de> <b0cb4fb0-6b89-b9df-9ae6-421ac52b0100@pengutronix.de>
-In-Reply-To: <b0cb4fb0-6b89-b9df-9ae6-421ac52b0100@pengutronix.de>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Fri, 17 Jun 2022 13:48:37 -0700
-Message-ID: <CABBYNZ+ubN2rc=zoN_53Pmp6kt3L5UcY3knbtjhhVOjPBpJv4Q@mail.gmail.com>
-Subject: Re: [BUG] BLE device unpairing triggers kernel panic
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [Intel-wired-lan] ice: Error setting promisc mode on VSI 6
+ (rc=-17) @ 5.18.x
+Content-Language: en-US
+To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>,
+ intel-wired-lan@lists.osuosl.org,
+ Jesse Brandeburg <jesse.brandeburg@intel.com>,
+ Tony Nguyen <anthony.l.nguyen@intel.com>
+References: <CAK8fFZ7m-KR57M_rYX6xZN39K89O=LGooYkKsu6HKt0Bs+x6xQ@mail.gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CAK8fFZ7m-KR57M_rYX6xZN39K89O=LGooYkKsu6HKt0Bs+x6xQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1655639469;931f9815;
+X-HE-SMSGID: 1o2tSD-00005i-2a
 
-Hi Ahmad,
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-On Thu, Jun 16, 2022 at 3:38 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
->
-> Hello Luiz,
->
-> On 16.05.22 18:37, Ahmad Fatoum wrote:
-> >>>> - Commit a56a1138cbd8 ("Bluetooth: hci_sync: Fix not using conn_timeout")
-> >>>>   fixes, despite the title, what event is waited on. First Pairing works now,
-> >>>>   but the second pairing times out and crashes the kernel:
-> >>>>
-> >>>>   [   84.191684] Bluetooth: hci0: Opcode 0x200d failed: -110
-> >>>>   [   84.230478] Bluetooth: hci0: request failed to create LE connection: err -110
-> >>>>   [   84.237690] Unable to handle kernel read from unreadable memory at virtual address 0000000000000ca8
-> >>
-> >> That said the error -110 mean -ETIMEDOUT
-> >
-> > Yes, this issue remains still. I feel better about my revert
-> > knowing that the crash is fixed, but I'd like this regression
-> > here fixed upstream as well. I'll try to collect some more
-> > information and report back.
->
-> I've now found time to revisit this and sprinkle around some
-> extra logging. This is the initial pairing that works:
->
->   Bluetooth: entered hci_le_create_conn_sync()
->   Bluetooth: hci0: opcode 0x200d plen 25
->   Bluetooth: hci0: event 0x0f (sent = 0x0a)
->   Bluetooth: hci0: BT: opcode 0x200d (sent: 0x0a)
->   Bluetooth: hci0: event 0x3e (sent = 0x0a)
->   Bluetooth: hci0: BT: subevent 0x0a (sent 0x0a)
->   Bluetooth: entered hci_le_meta_evt(event=0x0a) completion clause
->
-> I unpaired on device side and then retried pairing:
->
->   Bluetooth: entered hci_le_create_conn_sync()
->   Bluetooth: hci0: opcode 0x200d plen 25
->   Bluetooth: hci0: event 0x0f (sent = 0x0a)
->   Bluetooth: hci0: BT: opcode 0x200d (sent: 0x0a)
->   Bluetooth: entered hci_abort_conn()
->   Bluetooth: hci0: opcode hci_req_add_ev 0x200e
->   Bluetooth: hci0: event 0x0e (sent = 0x00)
->   Bluetooth: hci0: event 0x3e (sent = 0x00)
->   Bluetooth: hci0: BT: subevent 0x0a (sent 0x00)
->   Bluetooth: __hci_cmd_sync_sk pending (event = 0x0a status=1, err=-110)
->   Bluetooth: hci0: Opcode 0x200d failed: -110
->   Bluetooth: hci0: opcode 0x2006 plen 15
->   Bluetooth: hci0: event 0x0e (sent = 0x00)
->   Bluetooth: hci0: opcode 0x200a plen 1
->   Bluetooth: hci0: event 0x0e (sent = 0x00)
->   Bluetooth: hci0: request failed to create LE connection: err -110
->
->
-> But now it times out as reported. It looks like the
-> intermittent hci_abort_conn() is at fault here. My theory is
-> that replacing hci->sent_cmd is the problem here, as other
-> events can't be matched anymore.
+Hi, this is your Linux kernel regression tracker.
 
-Yep, unpair command uses hci_abort_conn when it should really be using
-hci_abort_conn_sync, the problem is if we do that then it probably no
-longer work because it would have to wait for sync queue to complete
-so it would only be able to disconnect after the connect command
-completes, well perhaps that is acceptable otherwise we need a
-different queue to handle command that abort/cancel other already in
-the queue.
+On 09.06.22 08:58, Jaroslav Pulchart wrote:
+> 
+> I'm struggling with broken network connectivity at VMs using linux
+> bridge at host after update of kernel from 5.17.x to 5.18.x @ Dell
+> R750 server with E810-XXV NICs.
+> 
+> I noticed the kernel reports "Error setting promisc mode" in dmesg.
+> 
+> # dmesg  | grep 'Error setting promisc'
+> [   24.863557] ice 0000:31:00.0: Error setting promisc mode on VSI 6 (rc=-17)
+> [   24.878369] ice 0000:31:00.0: Error setting promisc mode on VSI 6 (rc=-17)
+> [   25.045834] ice 0000:31:00.0: Error setting promisc mode on VSI 6 (rc=-17)
+> [   25.129840] ice 0000:b1:00.0: Error setting promisc mode on VSI 6 (rc=-17)
+> [   25.144440] ice 0000:b1:00.0: Error setting promisc mode on VSI 6 (rc=-17)
+> 
+> # lspci -s 0000:31:00.0
+> 31:00.0 Ethernet controller: Intel Corporation Ethernet Controller
+> E810-XXV for SFP (rev 02)
+> # lspci -s 0000:b1:00.0
+> b1:00.0 Ethernet controller: Intel Corporation Ethernet Controller
+> E810-XXV for SFP (rev 02)
+> 
+> It is easy to reproduce by:
+>   # ip link set em1 promisc on
+>   # dmesg -T | tail -n 1
+>   [Thu Jun  9 08:48:19 2022] ice 0000:31:00.0: Error setting promisc
+> mode on VSI 6 (rc=-17)
+> 
+> Could it be an 'ice' driver bug introduced in the 5.18 kernel?
 
-> We've been deploying the revert for a while now and I just posted
-> it to the mailing list[1]. There have been other reports
-> of this issue with different hardware too and fixing sent_cmd
-> would likely be too complicated/time intensive for me.
->
-> I am happy to test future patches that fix this properly though.
->
-> [1]: https://lore.kernel.org/linux-bluetooth/20220616092418.738877-1-a.fatoum@pengutronix.de/T/#t
->
-> Cheers,
-> Ahmad
->
->
->
-> >
-> > Cheers,
-> > Ahmad
-> >
->
->
-> --
-> Pengutronix e.K.                           |                             |
-> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
+Jaroslav, did you try to revert the change that was suggested to you in
+https://lore.kernel.org/all/d993bbb6-e583-5d91-76c0-841cc5da86af@roeck-us.net/
+Did it help?
 
+Anyway: To be sure below issue doesn't fall through the cracks
+unnoticed, I'm adding it to regzbot, my Linux kernel regression tracking
+bot:
 
--- 
-Luiz Augusto von Dentz
+#regzbot ^introduced v5.17 to v5.18
+#regzbot title net: ice: Error setting promisc mode on VSI 6 (rc=-17) @
+5.18.x
+#regzbot monitor
+https://lore.kernel.org/all/CAK8fFZ68+xZ2Z0vDWnihF8PeJKEmEwCyyF-8W9PCZJTd8zfp-A@mail.gmail.com/
+#regzbot monitor
+https://lore.kernel.org/all/CAK8fFZ61mQ3AYpdWjWtyUXzrs-RVMW61mBLrjRDXBxB-F9GzbA@mail.gmail.com/
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replied to), as the kernel's
+documentation call for; above page explains why this is important for
+tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
