@@ -1,13 +1,14 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628E17F6
-	for <regressions@lists.linux.dev>; Mon, 20 Jun 2022 09:02:33 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1o3DIk-0008PF-GY; Mon, 20 Jun 2022 11:02:30 +0200
-Message-ID: <bbf11aa0-4c32-47c9-c9f9-5ae7089be177@leemhuis.info>
-Date: Mon, 20 Jun 2022 11:02:29 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEA847F6
+	for <regressions@lists.linux.dev>; Mon, 20 Jun 2022 10:06:11 +0000 (UTC)
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1o3EIK-0002S5-Fk; Mon, 20 Jun 2022 12:06:08 +0200
+Message-ID: <d5654901-6b1f-a1fa-0101-8b52b345af7b@pengutronix.de>
+Date: Mon, 20 Jun 2022 12:06:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,48 +16,139 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [Bug 215872] New: ath11k: QCA6390 firmware crashes after some
- time #forregzbot
+ Thunderbird/91.9.0
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Subject: Re: [BUG] BLE device unpairing triggers kernel panic
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>
+References: <a1ce1743-e450-6cdb-dfab-56a3e3eb9aed@pengutronix.de>
+ <CABBYNZ+z8kBUKGXbZSfb0ynJaTnPQRp0wFDUb12AW1ymbNx1eg@mail.gmail.com>
+ <CABBYNZ+zsuggTpaUSPsZKeL=qqvM1=sgMWzdWEqaS_oh6dhY2g@mail.gmail.com>
+ <8d5c4724-d511-39b1-21d7-116c91cada45@pengutronix.de>
+ <b0cb4fb0-6b89-b9df-9ae6-421ac52b0100@pengutronix.de>
+ <CABBYNZ+ubN2rc=zoN_53Pmp6kt3L5UcY3knbtjhhVOjPBpJv4Q@mail.gmail.com>
 Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <bug-215872-62941@https.bugzilla.kernel.org/>
- <9811c780-ea28-1461-6347-93a3cf218b6c@leemhuis.info>
-In-Reply-To: <9811c780-ea28-1461-6347-93a3cf218b6c@leemhuis.info>
+In-Reply-To: <CABBYNZ+ubN2rc=zoN_53Pmp6kt3L5UcY3knbtjhhVOjPBpJv4Q@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1655715753;32a5162a;
-X-HE-SMSGID: 1o3DIk-0008PF-GY
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Hi Luiz,
 
-On 29.04.22 13:59, Thorsten Leemhuis wrote:
-> On 21.04.22 22:07, bugzilla-daemon@kernel.org wrote:
->> https://bugzilla.kernel.org/show_bug.cgi?id=215872
+On 17.06.22 22:48, Luiz Augusto von Dentz wrote:
+> On Thu, Jun 16, 2022 at 3:38 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>> On 16.05.22 18:37, Ahmad Fatoum wrote:
+>>>>>> - Commit a56a1138cbd8 ("Bluetooth: hci_sync: Fix not using conn_timeout")
+>>>>>>   fixes, despite the title, what event is waited on. First Pairing works now,
+>>>>>>   but the second pairing times out and crashes the kernel:
+>>>>>>
+>>>>>>   [   84.191684] Bluetooth: hci0: Opcode 0x200d failed: -110
+>>>>>>   [   84.230478] Bluetooth: hci0: request failed to create LE connection: err -110
+>>>>>>   [   84.237690] Unable to handle kernel read from unreadable memory at virtual address 0000000000000ca8
+>>>>
+>>>> That said the error -110 mean -ETIMEDOUT
+>>>
+>>> Yes, this issue remains still. I feel better about my revert
+>>> knowing that the crash is fixed, but I'd like this regression
+>>> here fixed upstream as well. I'll try to collect some more
+>>> information and report back.
 >>
->>             Bug ID: 215872
->>            Summary: ath11k: QCA6390 firmware crashes after some time
->>            Product: Drivers
->>            Version: 2.5
->>     Kernel Version: 5.17.3-arch1-1
->>           Hardware: x86-64
->>                 OS: Linux
->>               Tree: Mainline
->>             Status: NEW
->>           Severity: normal
->>           Priority: P1
->>          Component: Bluetooth
->>           Assignee: linux-bluetooth@vger.kernel.org
->>           Reporter: mail@kai-mast.de
->>         Regression: No
+>> I've now found time to revisit this and sprinkle around some
+>> extra logging. This is the initial pairing that works:
 >>
->> Created attachment 300786
->>   --> https://bugzilla.kernel.org/attachment.cgi?id=300786&action=edit
+>>   Bluetooth: entered hci_le_create_conn_sync()
+>>   Bluetooth: hci0: opcode 0x200d plen 25
+>>   Bluetooth: hci0: event 0x0f (sent = 0x0a)
+>>   Bluetooth: hci0: BT: opcode 0x200d (sent: 0x0a)
+>>   Bluetooth: hci0: event 0x3e (sent = 0x0a)
+>>   Bluetooth: hci0: BT: subevent 0x0a (sent 0x0a)
+>>   Bluetooth: entered hci_le_meta_evt(event=0x0a) completion clause
+>>
+>> I unpaired on device side and then retried pairing:
+>>
+>>   Bluetooth: entered hci_le_create_conn_sync()
+>>   Bluetooth: hci0: opcode 0x200d plen 25
+>>   Bluetooth: hci0: event 0x0f (sent = 0x0a)
+>>   Bluetooth: hci0: BT: opcode 0x200d (sent: 0x0a)
+>>   Bluetooth: entered hci_abort_conn()
+>>   Bluetooth: hci0: opcode hci_req_add_ev 0x200e
+>>   Bluetooth: hci0: event 0x0e (sent = 0x00)
+>>   Bluetooth: hci0: event 0x3e (sent = 0x00)
+>>   Bluetooth: hci0: BT: subevent 0x0a (sent 0x00)
+>>   Bluetooth: __hci_cmd_sync_sk pending (event = 0x0a status=1, err=-110)
+>>   Bluetooth: hci0: Opcode 0x200d failed: -110
+>>   Bluetooth: hci0: opcode 0x2006 plen 15
+>>   Bluetooth: hci0: event 0x0e (sent = 0x00)
+>>   Bluetooth: hci0: opcode 0x200a plen 1
+>>   Bluetooth: hci0: event 0x0e (sent = 0x00)
+>>   Bluetooth: hci0: request failed to create LE connection: err -110
+>>
+>>
+>> But now it times out as reported. It looks like the
+>> intermittent hci_abort_conn() is at fault here. My theory is
+>> that replacing hci->sent_cmd is the problem here, as other
+>> events can't be matched anymore.
+> 
+> Yep, unpair command uses hci_abort_conn when it should really be using
+> hci_abort_conn_sync, the problem is if we do that then it probably no
+> longer work because it would have to wait for sync queue to complete
+> so it would only be able to disconnect after the connect command
+> completes, well perhaps that is acceptable
 
-Likely fixed, according to
-https://bugzilla.kernel.org/show_bug.cgi?id=215872#c5
+Disconnect of connection #1 being processed after new connection #2
+concluded sounds wrong. Would I be able to reconnect
+afterwards or would all connections, but the first, be directly
+disconnected...?
 
-#regzbot fixed-by: d44e1dbda36ff
+> otherwise we need a
+> different queue to handle command that abort/cancel other already in
+> the queue.
+
+Is the revert an acceptable interim solution or are there issues
+I am missing?
+
+Cheers,
+Ahmad
+
+> 
+>> We've been deploying the revert for a while now and I just posted
+>> it to the mailing list[1]. There have been other reports
+>> of this issue with different hardware too and fixing sent_cmd
+>> would likely be too complicated/time intensive for me.
+>>
+>> I am happy to test future patches that fix this properly though.
+>>
+>> [1]: https://lore.kernel.org/linux-bluetooth/20220616092418.738877-1-a.fatoum@pengutronix.de/T/#t
+>>
+>> Cheers,
+>> Ahmad
+>>
+>>
+>>
+>>>
+>>> Cheers,
+>>> Ahmad
+>>>
+>>
+>>
+>> --
+>> Pengutronix e.K.                           |                             |
+>> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+>> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+>> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> 
+> 
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
