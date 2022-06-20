@@ -1,54 +1,62 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F1B7F6
-	for <regressions@lists.linux.dev>; Mon, 20 Jun 2022 08:55:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943E3C3411B;
-	Mon, 20 Jun 2022 08:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1655715306;
-	bh=Dlx46ibDOjW0ve1IpwJyEmnqQ3sB8sQEricE+hL20YU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OV2eQeJT5UK6XBKXnHWW9LhWRYUVkquFy96kUHgLED1buvAZSDKuNLLIdS89pdDBr
-	 fvQZ2uw/89O8HfdCzeGryHVxjVt4f0pP8PZNM0SM66uxy/W5VqU/rz2DdQZwNpYeJI
-	 kY4j/ibE9gNw+1LpakFT22Lf4m73L04r51M972+w=
-Date: Mon, 20 Jun 2022 10:55:03 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Ernesto Vigano' <lanciadelsole@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
-	o.rempel@pengutronix.de
-Subject: Re: Fwd: question on driver for phy dp83td510e
-Message-ID: <YrA150NSJzFszEpB@kroah.com>
-References: <CAM3i8OEGrux+ku7hL20oGO10f=CDLkpcg3wH6hRbheEdacWnfw@mail.gmail.com>
- <CAM3i8OF1mC21wzwfsvhQTK7PPa0myCwftyhA9U1r7HR_0Q3fLQ@mail.gmail.com>
- <CAM3i8OFjvOkLGELkrKEo3B7x0hP=uPrYaPL05=0WXygvYJNZCQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628E17F6
+	for <regressions@lists.linux.dev>; Mon, 20 Jun 2022 09:02:33 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1o3DIk-0008PF-GY; Mon, 20 Jun 2022 11:02:30 +0200
+Message-ID: <bbf11aa0-4c32-47c9-c9f9-5ae7089be177@leemhuis.info>
+Date: Mon, 20 Jun 2022 11:02:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM3i8OFjvOkLGELkrKEo3B7x0hP=uPrYaPL05=0WXygvYJNZCQ@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [Bug 215872] New: ath11k: QCA6390 firmware crashes after some
+ time #forregzbot
+Content-Language: en-US
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <bug-215872-62941@https.bugzilla.kernel.org/>
+ <9811c780-ea28-1461-6347-93a3cf218b6c@leemhuis.info>
+In-Reply-To: <9811c780-ea28-1461-6347-93a3cf218b6c@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1655715753;32a5162a;
+X-HE-SMSGID: 1o3DIk-0008PF-GY
 
-On Mon, Jun 20, 2022 at 10:45:59AM +0200, Ernesto Vigano' wrote:
-> I see that some weeks ago a driver for phy dp83td510e from TI
-> (https://www.ti.com/product/DP83TD510E).
-> I see that it's really different from the Linux driver supplied by TI
-> on its official repo
-> https://git.ti.com/gitweb?p=ti-analog-linux-kernel/dmurphy-analog.git;a=commit;h=fefa908e4e3262455a0cec08f3bb7161d7792d02
-> As an example, TI writes some undocumented register for version 1.0 of the PHY.
-> 
-> Should I forget about the TI driver?
-> Or is there something that should be integrated in
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/phy/dp83td510.c
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-Why not ask on the proper mailing list and also ask the TI developers
-about why they are not submitting their changes upstream to us?
+On 29.04.22 13:59, Thorsten Leemhuis wrote:
+> On 21.04.22 22:07, bugzilla-daemon@kernel.org wrote:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=215872
+>>
+>>             Bug ID: 215872
+>>            Summary: ath11k: QCA6390 firmware crashes after some time
+>>            Product: Drivers
+>>            Version: 2.5
+>>     Kernel Version: 5.17.3-arch1-1
+>>           Hardware: x86-64
+>>                 OS: Linux
+>>               Tree: Mainline
+>>             Status: NEW
+>>           Severity: normal
+>>           Priority: P1
+>>          Component: Bluetooth
+>>           Assignee: linux-bluetooth@vger.kernel.org
+>>           Reporter: mail@kai-mast.de
+>>         Regression: No
+>>
+>> Created attachment 300786
+>>   --> https://bugzilla.kernel.org/attachment.cgi?id=300786&action=edit
 
-This has nothing to do with the stable or regressions list, sorry.
+Likely fixed, according to
+https://bugzilla.kernel.org/show_bug.cgi?id=215872#c5
 
-good luck!
-
-greg k-h
+#regzbot fixed-by: d44e1dbda36ff
