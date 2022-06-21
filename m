@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6079BEA4
-	for <regressions@lists.linux.dev>; Tue, 21 Jun 2022 09:36:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B29CEA4
+	for <regressions@lists.linux.dev>; Tue, 21 Jun 2022 09:39:20 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1o3aIh-0007GQ-G5; Tue, 21 Jun 2022 11:35:59 +0200
-Message-ID: <b5b67c54-e17d-64c5-7bec-00f0d5b5bae2@leemhuis.info>
-Date: Tue, 21 Jun 2022 11:35:58 +0200
+	id 1o3aLu-0000JA-E6; Tue, 21 Jun 2022 11:39:18 +0200
+Message-ID: <4457efae-2c74-4251-f0db-88cfc833b591@leemhuis.info>
+Date: Tue, 21 Jun 2022 11:39:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,40 +16,71 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: virtio_balloon regression in 5.19-rc3
+Subject: Re: Boot stall regression from "printk for 5.19" merge
 Content-Language: en-US
-To: Ben Hutchings <ben@decadent.org.uk>,
- virtualization@lists.linux-foundation.org
-Cc: debian-kernel@lists.debian.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <64c567bc77c4fbe7bfe37467cc1c89d24a45c37a.camel@decadent.org.uk>
+To: linux-kernel@vger.kernel.org
+References: <20220619204949.50d9154d@thinkpad>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <64c567bc77c4fbe7bfe37467cc1c89d24a45c37a.camel@decadent.org.uk>
+In-Reply-To: <20220619204949.50d9154d@thinkpad>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1655804163;a8393eba;
-X-HE-SMSGID: 1o3aIh-0007GQ-G5
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1655804360;0ed4c12f;
+X-HE-SMSGID: 1o3aLu-0000JA-E6
 
 [TLDR: I'm adding this regression report to the list of tracked
 regressions; all text from me you find below is based on a few templates
 paragraphs you might have encountered already already in similar form.]
 
-On 20.06.22 20:49, Ben Hutchings wrote:
-> I've tested a 5.19-rc3 kernel on top of QEMU/KVM with machine type
-> pc-q35-5.2.  It has a virtio balloon device defined in libvirt as:
+Hi, this is your Linux kernel regression tracker.
+
+On 19.06.22 20:49, Marek Behún wrote:
+> Hello Linus, Petr, John,
 > 
->     <memballoon model="virtio">
->       <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
->     </memballoon>
+> the series
+> https://lore.kernel.org/linux-kernel/YouKQw72H7y9EJQK@alley/
+> merged by commit 537e62c865dc ("Merge tag 'printk-for-5.19' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux")
 > 
-> but the virtio_balloon driver fails to bind to it:
+> and in particular the commit 09c5ba0aa2fc ("printk: add kthread console
+> printers")
 > 
->     virtio_balloon virtio4: init_vqs: add stat_vq failed
->     virtio_balloon: probe of virtio4 failed with error -5
+> causes a regression on arm64 (Marvell CN9130-CRB board) where the
+> system boot freezes in most cases (and is unusable until restarted by
+> watchdog), or, in some cases boots, but the console output gets mangled
+> for a while (the serial console spits garbage characters).
 > 
-> On a 5.18 kernel with similar configuration, it binds successfully.
+> The stall example:
 > 
-> I've attached the kernel config for 5.19-rc3.
+>   ...
+>   [    1.108141] io scheduler mq-deadline registered
+>   [    1.108143] io scheduler kyber registered
+>   [    1.163484] armada-ap806-pinctrl f06f4000.system-controller:pinctrl: registered pinctrl driver
+>   [
+> 
+> Or another:
+> 
+>   ...
+>   [    1.108155] io scheduler mq-deadline registered
+>   [    1.108156] io scheduler kyber registered
+>   [    1.162991] armada-ap806-pinctrl f06f4000.system-controller:pinctrl: registered pinctrl driver
+>   [    1.163361] armada-cp110-pinctrl f2440000.system-controller:pinctrl: registered pinctrl driver
+>   [    1.180827] mv_xor_v2 f0400000.xor: Marvell Version 2 XOR driver
+>   [  
+> 
+> The garbage example:
+> 
+>   ...
+>   [    0.920951] raid6: using neon recovery algorithm
+>   [    0.921228] iommu: Default domain type: Translated
+>   %
+> 
+>           gb@k+cFL/[    4.954974] DSA: tree 0 setup
+>   [    4.955286] cfg80211: Loading compiled-in X.509 certificates for regulatory database
+> 
+> I did not have time to look at the contents of the commit yet to try to
+> fix it myself, and won't have time for another two weeks. But I thought
+> I should let you know now.
 
 CCing the regression mailing list, as it should be in the loop for all
 regressions, as explained here:
