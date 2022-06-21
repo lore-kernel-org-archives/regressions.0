@@ -1,157 +1,340 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05771EA3
-	for <regressions@lists.linux.dev>; Tue, 21 Jun 2022 18:52:22 +0000 (UTC)
-Received: by mail-lf1-f51.google.com with SMTP id t24so11658058lfr.4
-        for <regressions@lists.linux.dev>; Tue, 21 Jun 2022 11:52:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LyC2xQZ/J7P7EEp9bZtR/lqMCT8LU/RUU5bcVNVOJp8=;
-        b=p9X9UxNP81FAxeV9hvfPvi0M1iZP1ZeRtYmFuwVS+IkfswgT2N6ure1O+4nZotEKvi
-         GodnVRPsPpulB/oqanX1HtbY3ONqc6zD1WY2WcJfuSGlCdeyH2qjJ2KlMMe4deX4ovrf
-         QaJJJrw+8ATGO11sXcMaXgPb6tEP/XJ4+vRCWcJ91f8NvXxpmXpT3RMOkQScZ4LlWzVG
-         P8TSSHhFY1FcVrInXyd79UctirOH7+JnnM4RfDeEsXzaW4qGxw7OYe57lv5BvbjVgZbC
-         Bo+pWU0Vww/QfSsArHVnSaA6o67fqVw85FJVhHpcEpmaL91y0ElPuBH13bvvvbikeOCV
-         acLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LyC2xQZ/J7P7EEp9bZtR/lqMCT8LU/RUU5bcVNVOJp8=;
-        b=2RwGPmERoHhkNmBkJi3odDXUXQ8d+aBpj36Wy3wgDQMq87Cw0vkmJMCQ8i5kXtsi1l
-         4McUM+q+FJVK4ntf+7a7BWkDVCR2gjRl4fNI85VUd0Q/TgC+j8llI+koakQunyFeg1XE
-         7j5Pe7CcshEaTbyl9dsia2I4n2XsZaDHXvgH1A/VXWyo2cBth+EL4NACZVi4mmKcyp8q
-         tj8lrvcNf/wadOT1cRDZxf6I1BwzANGEWhQm0Jkj4qT9nfBLe2pJPVWqCH6Z7rExy9Lg
-         dXgHBZpp8OZnQoJRxThjV9zk3Y8JroZoeFJ8XJhSt32z+tNr+0YwVUb7pv4cMWaPuMTI
-         YvCw==
-X-Gm-Message-State: AJIora+m5LSj88Dh7tQpTQnnW2o3mLdW5wjBtgTIxrhrhrsFYsPUdZa/
-	QOSwHtiQ/jGQrwMbwqlVHkzZKITa/CpqD646rAo=
-X-Google-Smtp-Source: AGRyM1vrSETpNBNYgiA6t5lW29KptH6Dy4G7OT1APqy5yr60iKZqS6cUjPDHL+SrRcQZhQ0Oc3NRbdezaLcximMa+jU=
-X-Received: by 2002:a05:6512:1307:b0:47f:67ab:4064 with SMTP id
- x7-20020a056512130700b0047f67ab4064mr8780904lfu.106.1655837540974; Tue, 21
- Jun 2022 11:52:20 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CD4A1C00
+	for <regressions@lists.linux.dev>; Tue, 21 Jun 2022 22:14:19 +0000 (UTC)
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25LLW0MX024435;
+	Tue, 21 Jun 2022 15:05:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=pfpt0220; bh=2bknUX5O7965J6L2q5e6pSLs4WQggrL4P2+DDTObS3U=;
+ b=ZNsEK5V9aLLkByMnCo75C81RXJWVxY0jGHF09ZfIHCpmluYFLYX/mz2VjE86GGKE8eLY
+ Nja6Jrbn8vL1THMIuUPrimq9QLUj2Rj+VMKTeL1tzKjJfbV38LG9csBtX3ujiOmn64zr
+ GeFUpUVeqO5NStViY6K3si4VGdnYNArB4kmM3O2k2tf9xtkAf5cLVz6C7/3r+btYkDZc
+ D/Un4fDQw+JmbM84Vq3k3cNp2kF3Pxsv80uM7g5+2XqEq3h/X156GFA+OmGz8wqLb9Ie
+ T8A+yNBiJWQEgIvhwnMHxZpXvAbyH3QLnEwbcRmt3ZK1aVvsLiOvfZKJjIPdL8dT22KM 9A== 
+Received: from dc5-exch01.marvell.com ([199.233.59.181])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3gse7np37f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+	Tue, 21 Jun 2022 15:05:24 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 21 Jun
+ 2022 15:05:22 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
+ Transport; Tue, 21 Jun 2022 15:05:22 -0700
+Received: from mvluser05.qlc.com (unknown [10.112.10.135])
+	by maili.marvell.com (Postfix) with ESMTP id BFF3A3F7066;
+	Tue, 21 Jun 2022 15:05:22 -0700 (PDT)
+Received: from localhost (aeasi@localhost)
+	by mvluser05.qlc.com (8.14.4/8.14.4/Submit) with ESMTP id 25LM5Kls014586;
+	Tue, 21 Jun 2022 15:05:21 -0700
+X-Authentication-Warning: mvluser05.qlc.com: aeasi owned process doing -bs
+Date: Tue, 21 Jun 2022 15:05:20 -0700
+From: Arun Easi <aeasi@marvell.com>
+X-X-Sender: aeasi@mvluser05.qlc.com
+To: Tony Battersby <tonyb@cybernetics.com>
+CC: Thorsten Leemhuis <regressions@leemhuis.info>,
+        Saurav Kashyap
+	<skashyap@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        <GR-QLogic-Storage-Upstream@marvell.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>
+Subject: Re: [EXT] Re: [REGRESSION] qla2xxx: tape drive not removed after
+ unplug FC cable
+In-Reply-To: <178e4e7a-64fc-a442-cdda-45100eaebda0@cybernetics.com>
+Message-ID: <alpine.LRH.2.21.9999.2206211156470.4730@mvluser05.qlc.com>
+References: <baef87c3-5dad-3b47-44c1-6914bfc90108@cybernetics.com>
+ <alpine.LRH.2.21.9999.2205271524460.4730@mvluser05.qlc.com>
+ <5bcb5963-9da0-fd59-45c5-d27af02e7748@leemhuis.info>
+ <178e4e7a-64fc-a442-cdda-45100eaebda0@cybernetics.com>
+User-Agent: Alpine 2.21.9999 (LRH 334 2019-03-29)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <a1ce1743-e450-6cdb-dfab-56a3e3eb9aed@pengutronix.de>
- <CABBYNZ+z8kBUKGXbZSfb0ynJaTnPQRp0wFDUb12AW1ymbNx1eg@mail.gmail.com>
- <CABBYNZ+zsuggTpaUSPsZKeL=qqvM1=sgMWzdWEqaS_oh6dhY2g@mail.gmail.com>
- <8d5c4724-d511-39b1-21d7-116c91cada45@pengutronix.de> <b0cb4fb0-6b89-b9df-9ae6-421ac52b0100@pengutronix.de>
- <CABBYNZ+ubN2rc=zoN_53Pmp6kt3L5UcY3knbtjhhVOjPBpJv4Q@mail.gmail.com>
- <d5654901-6b1f-a1fa-0101-8b52b345af7b@pengutronix.de> <CABBYNZ+8dpPBqaQMr-Hz_DJRxT-0ucCjgAJH50FUaN7Sn9H6rA@mail.gmail.com>
- <1d1b76cf-df6f-3935-5cd2-c45ea78f2c33@pengutronix.de>
-In-Reply-To: <1d1b76cf-df6f-3935-5cd2-c45ea78f2c33@pengutronix.de>
-From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Date: Tue, 21 Jun 2022 11:52:09 -0700
-Message-ID: <CABBYNZLdy-rndKczoG_WiWXQmacX+vzCbftQKvzJ3B6imtZopw@mail.gmail.com>
-Subject: Re: [BUG] BLE device unpairing triggers kernel panic
-To: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Tedd Ho-Jeong An <hj.tedd.an@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed;
+	boundary="1879738122-1695936884-1655849122=:4730"
+X-Proofpoint-GUID: FizcLzr81MGexsAvP8-eymxfFXPYcrGH
+X-Proofpoint-ORIG-GUID: FizcLzr81MGexsAvP8-eymxfFXPYcrGH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-06-21_09,2022-06-21_01,2022-02-23_01
 
-Hi Ahmad, Tedd,
+--1879738122-1695936884-1655849122=:4730
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 
-On Tue, Jun 21, 2022 at 1:32 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
->
-> Hello Luiz,
->
-> On 20.06.22 22:18, Luiz Augusto von Dentz wrote:
-> > On Mon, Jun 20, 2022 at 3:06 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
-> >> Disconnect of connection #1 being processed after new connection #2
-> >> concluded sounds wrong. Would I be able to reconnect
-> >> afterwards or would all connections, but the first, be directly
-> >> disconnected...?
+Hi Tony,
+
+Apologies for the delay. This was not forgotten, there were repro attempts 
+and discussions happening internally.
+
+See further comments inline..
+
+On Mon, 20 Jun 2022, 7:33am, Tony Battersby wrote:
+
+> 
+> ----------------------------------------------------------------------
+> On 6/20/22 02:56, Thorsten Leemhuis wrote:
+> > Hi!
 > >
-> > That depends on the order you have queued the commands, it will be
-> > processed in the exact order it is received, that why I said it is
-> > single queue design, and it is done like that to prevent messing up
-> > with states since we know the exact order the commands will be sent.
-> >
-> >>> otherwise we need a
-> >>> different queue to handle command that abort/cancel other already in
-> >>> the queue.
+> > On 28.05.22 02:27, Arun Easi wrote:
+> >> Hi Tony,
 > >>
-> >> Is the revert an acceptable interim solution or are there issues
-> >> I am missing?
-> >
-> > Afaik there were problem with concurrent connections request, so what
-> > would really help us here is to have some tests to emulate this
-> > scenario with our CI, in the meantime please check if the following
-> > fixes your problem:
-> >
-> > https://gist.github.com/Vudentz/b4fff292c7f4ad55ca3299fd5ab797ae
->
-> Doesn't help unfortunately. First pairing works as before.
-> Second still fails:
->
->   Bluetooth: hci0: Opcode 0x200d failed: -110
->   Bluetooth: hci0: request failed to create LE connection: err -110
-
-Can we try to add a test in mgmt-tester to reproduce the error above?
-
-> Cheers,
-> Ahmad
->
-> >
-> >> Cheers,
-> >> Ahmad
+> >> Thanks for reporting the issue. We are trying to recreate this issue in 
+> >> house. I will reach out to you for logs, if we cannot repro. Typically, we 
+> >> get sufficient context to the issue when the problem is reproduced with 
+> >> module parameter "ql2xextended_error_logging=1".
 > >>
-> >>>
-> >>>> We've been deploying the revert for a while now and I just posted
-> >>>> it to the mailing list[1]. There have been other reports
-> >>>> of this issue with different hardware too and fixing sent_cmd
-> >>>> would likely be too complicated/time intensive for me.
-> >>>>
-> >>>> I am happy to test future patches that fix this properly though.
-> >>>>
-> >>>> [1]: https://lore.kernel.org/linux-bluetooth/20220616092418.738877-1-a.fatoum@pengutronix.de/T/#t
-> >>>>
-> >>>> Cheers,
-> >>>> Ahmad
-> >>>>
-> >>>>
-> >>>>
-> >>>>>
-> >>>>> Cheers,
-> >>>>> Ahmad
-> >>>>>
-> >>>>
-> >>>>
-> >>>> --
-> >>>> Pengutronix e.K.                           |                             |
-> >>>> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> >>>> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> >>>> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> >>>
-> >>>
-> >>>
-> >>
-> >>
-> >> --
-> >> Pengutronix e.K.                           |                             |
-> >> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> >> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> >> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> >> Anyway, I will let you know the status.
+> > What's the status here? Tony, did you provide the info Arun asked for=
+> > Or was some progress made somehow without it?
 > >
-> >
-> >
->
->
-> --
-> Pengutronix e.K.                           |                             |
-> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> I was waiting for them to reproduce the problem, or ask for logs. 
+> Anyway, here are the logs they said they might want:
+> 
+> modprobe qla2xxx ql2xextended_error_logging=1
+> 
+> Jun 20 13:51:46 tony13 kern.warn kernel: qla2xxx [0000:00:00.0]-0005: : QLogic Fibre Channel HBA Driver: 10.02.07.400-k-debug.
+> Jun 20 13:51:46 tony13 kern.warn kernel: qla2xxx [0000:00:00.0]-011c: : MSI-X vector count: 32.
+> Jun 20 13:51:46 tony13 kern.warn kernel: qla2xxx [0000:00:00.0]-001d: : Found an ISP2031 irq 37 iobase 0x00000000875338f3.
+> Jun 20 13:51:46 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-00c6:6: MSI-X: Using 26 vectors
+> Jun 20 13:51:47 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-0075:6: ZIO mode 6 enabled; timer delay (200 us).
+> Jun 20 13:51:47 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-ffff:6: FC4 priority set to NVMe
+> Jun 20 13:51:48 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-507b:6: SFP detect: Short-Range SFP  (nvr=0 ll=40 lr=0 lrd=0).
+> Jun 20 13:51:50 tony13 kern.info kernel: scsi host6: qla2xxx
+> Jun 20 13:51:50 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-4000:6: DPC handler sleeping.
+> Jun 20 13:51:51 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-400f:6: Loop resync scheduled.
+> Jun 20 13:51:55 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-00fb:6: QLogic QLE2672 - QLE2672 QLogic 2-port 16Gb Fibre Channel Adapter.
+> Jun 20 13:51:55 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-00fc:6: ISP2031: PCIe (8.0GT/s x8) @ 0000:83:00.0 hdma- host#=6 fw=8.07.12 (d0d5).
+> Jun 20 13:51:55 tony13 kern.warn kernel: qla2xxx [0000:00:00.0]-011c: : MSI-X vector count: 32.
+> Jun 20 13:51:55 tony13 kern.warn kernel: qla2xxx [0000:00:00.0]-001d: : Found an ISP2031 irq 135 iobase 0x000000007cfbf1eb.
+> Jun 20 13:51:55 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-00c6:7: MSI-X: Using 26 vectors
+> Jun 20 13:51:55 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-0075:7: ZIO mode 6 enabled; timer delay (200 us).
+> Jun 20 13:51:55 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-ffff:7: FC4 priority set to NVMe
+> Jun 20 13:51:57 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-507b:7: SFP detect: Short-Range SFP  (nvr=0 ll=40 lr=0 lrd=0).
+> Jun 20 13:51:58 tony13 kern.info kernel: scsi host7: qla2xxx
+> Jun 20 13:51:58 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-4000:7: DPC handler sleeping.
+> Jun 20 13:51:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-400f:7: Loop resync scheduled.
+> Jun 20 13:52:03 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-00fb:7: QLogic QLE2672 - QLE2672 QLogic 2-port 16Gb Fibre Channel Adapter.
+> Jun 20 13:52:03 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-00fc:7: ISP2031: PCIe (8.0GT/s x8) @ 0000:83:00.1 hdma- host#=7 fw=8.07.12 (d0d5).
+> Jun 20 13:52:11 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-8038:6: Cable is unplugged...
+> Jun 20 13:52:11 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-803a:6: fw_state=4 (7, 141, 0, 800 0) curr time=ffffc764.
+> Jun 20 13:52:11 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-206c:6: qla2x00_loop_resync *** FAILED ***.
+> Jun 20 13:52:11 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-4010:6: Loop resync end.
+> Jun 20 13:52:11 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-4000:6: DPC handler sleeping.
+> Jun 20 13:52:20 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-8038:7: Cable is unplugged...
+> Jun 20 13:52:20 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-803a:7: fw_state=4 (7, 141, 0, 800 0) curr time=ffffcaac.
+> Jun 20 13:52:20 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-206c:7: qla2x00_loop_resync *** FAILED ***.
+> Jun 20 13:52:20 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-4010:7: Loop resync end.
+> Jun 20 13:52:20 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-4000:7: DPC handler sleeping.
+> 
+> Plug in cable
+> 
+> Jun 20 13:52:56 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-5009:7: LIP occurred (0).
+> Jun 20 13:52:56 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-10b7:7: Format 0 : Number of VPs setup 254, number of VPs acquired 1.
+> Jun 20 13:52:56 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-10b8:7: Primary port id 0000ef.
+> Jun 20 13:52:58 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-500a:7: LOOP UP detected (8 Gbps).
+> Jun 20 13:52:58 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-5012:7: Port database changed ffff 0006 0000.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-400f:7: Loop resync scheduled.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-8037:7: F/W Ready - OK.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-803a:7: fw_state=3 (7, 141, 0, 800 0) curr time=ffffd9e8.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-200b:7: HBA in NL topology.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-2014:7: Configure loop -- dpc flags = 0x112e0.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-2011:7: Entries in ID list (1).
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-20d8:7: qla24xx_fcport_handle_login 50:00:e1:11:c5:27:f0:70 DS 0 LS 7 P 0 fl 0 confl 0000000000000000 rscn 0|0 login 0 lid 0 scan 2 fc4type 0
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-307b:7: qla_chk_n2n_b4_login 50:00:e1:11:c5:27:f0:70 DS 0 LS 7 lid 0 retries=30
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-20bf:7: qla_chk_n2n_b4_login 1628 50:00:e1:11:c5:27:f0:70 post login
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-2069:7: LOOP READY.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-206b:7: qla2x00_configure_loop: exiting normally. local port wwpn 2100000e1e2227a1 id 0000ef)
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-4010:7: Loop resync end.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-2134:7: FCPort 50:00:e1:11:c5:27:f0:70 disc_state transition: DELETED to LOGIN_PEND - portid=000026.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-2072:7: Async-login - 50:00:e1:11:c5:27:f0:70 hdl=2, loopid=0 portid=000026 retries=29 .
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-4000:7: DPC handler sleeping.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-5036:7: Async-login complete: handle=2 pid=000026 wwpn=50:00:e1:11:c5:27:f0:70 iop0=312
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-20dd:7: qla2x00_async_login_sp_done 50:00:e1:11:c5:27:f0:70 res 0 
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-ffff:7: qla24xx_handle_plogi_done_event 50:00:e1:11:c5:27:f0:70 DS 3 LS 7 rc 0 login 0|0 rscn 0|0 data 4000|0 iop 0|0
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-20ea:7: qla24xx_handle_plogi_done_event 2232 50:00:e1:11:c5:27:f0:70 LoopID 0x0 in use with 000026. post gpdb
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-2134:7: FCPort 50:00:e1:11:c5:27:f0:70 disc_state transition: LOGIN_PEND to GPDB - portid=000026.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-20dc:7: Async-gpdb 50:00:e1:11:c5:27:f0:70 hndl 0 opt 0
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-20db:7: Async done-gpdb res 0, WWPN 50:00:e1:11:c5:27:f0:70 mb[1]=0 mb[2]=ffdd 
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-20d2:7: qla24xx_handle_gpdb_event 50:00:e1:11:c5:27:f0:70 DS 5 LS 6 fc4_type 0 rc 0
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-2062:7: 50:00:e1:11:c5:27:f0:70 SVC Param w3 0312
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-2134:7: FCPort 50:00:e1:11:c5:27:f0:70 disc_state transition: GPDB to UPD_FCPORT - portid=000026.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-20ef:7: qla2x00_update_fcport 50:00:e1:11:c5:27:f0:70
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-2134:7: FCPort 50:00:e1:11:c5:27:f0:70 disc_state transition: UPD_FCPORT to UPD_FCPORT - portid=000026.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-207d:7: FCPort 50:00:e1:11:c5:27:f0:70 state transitioned from UNCONFIGURED to ONLINE - portid=000026.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-20ee:7: qla2x00_reg_remote_port: 5000e111c527f070. rport 7:0:0 (00000000bd175424) is tgt mode
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-2134:7: FCPort 50:00:e1:11:c5:27:f0:70 disc_state transition: UPD_FCPORT to LOGIN_COMPLETE - portid=000026.
+> Jun 20 13:52:59 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-911e:7: qla_register_fcport_fn rscn gen 0/0 next DS 0
+> Jun 20 13:52:59 tony13 kern.notice kernel: scsi 7:0:0:0: Sequential-Access IBM      ULTRIUM-HH8      K4K1 PQ: 0 ANSI: 6
+> Jun 20 13:52:59 tony13 kern.notice kernel: scsi 7:0:0:0: Attached scsi generic sg1 type 1
+> Jun 20 13:52:59 tony13 kern.info kernel: st: Version 20160209, fixed bufsize 32768, s/g segs 256
+> Jun 20 13:52:59 tony13 kern.notice kernel: st 7:0:0:0: Attached scsi tape st0
+> Jun 20 13:52:59 tony13 kern.info kernel: st 7:0:0:0: st0: try direct i/o: yes (alignment 8 B)
+> 
+> Unplug cable
+> 
+> Jun 20 13:54:03 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-500b:7: LOOP DOWN detected (2 7 0 0).
+> Jun 20 13:54:03 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-20f1:7: Mark all dev lost
+> 
+> sleep 180
+> 
+> cat /proc/scsi/scsi 
+> Attached devices:
+> Host: scsi7 Channel: 00 Id: 00 Lun: 00
+>   Vendor: IBM      Model: ULTRIUM-HH8      Rev: K4K1
+>   Type:   Sequential-Access                ANSI  SCSI revision: 06
 
+Thanks for the info. Just to reiterate, you've reported two issues (though 
+this log was showing only 1 of them).
 
+Issue 1 - Tape device never disappears when removed
+Issue 2 - When a direct connected tape 1 was replaced with tape 2, tape 2 
+          was not discovered.
 
--- 
-Luiz Augusto von Dentz
+For Issue-2, please try the attached patch. This may not be the final fix, 
+but wanted to check if that would fix the issue for you.
+
+For Issue-1, the behavior was intentional, though that behavior needs 
+refinement. These tape drives support something called FC sequence level 
+error recovery (added in FCP-2), which can make tape I/Os survive even 
+across a short cable pull. This is not a simple retry of the I/O, rather a 
+retry done at the FC sequence level that gives the IO a better chance of
+revival. In other words, the said patch that caused regression, while 
+introduces an incorrect reporting of the state of the device, makes backup 
+more resilient.
+
+Now, onto the behavior when device state is reported immediately. What we 
+have observed, at least with one tape drive from a major vendor, is that, 
+across a device loss and device back case with both the events reported to 
+upper layers, the backup operation was getting failed. This is due to a 
+REPORT LUNS command being issued during device reappearance reporting 
+(fc_remote_port_add -> SCSI scan), which the tape drive was not expecting 
+and caused the backup to fail.
+
+I know that some tape drives do not support multiple commands to it at the 
+same time, but not sure if that is still the norm these days.
+
+So, perhaps one way to make the behavior better, is to either report the 
+disappearing device a bit delayed or have intelligence added in SCSI scan 
+to detect ongoing tape IO operations and delay/avoid the REPORT LUNs. 
+Former is a more contained (in the LLD) fix.
+
+Regards,
+-Arun
+
+> 
+> rmmod qla2xxx
+> 
+> Jun 20 14:00:18 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-211a:7: Delaying session delete for FCP2 flags 0x4 port_type = 0x4 port_id=000026 50
+> Jun 20 14:00:18 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-b079:7: Removing driver
+> Jun 20 14:00:18 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-00af:7: Performing ISP error recovery - ha=00000000c584070c.
+> Jun 20 14:00:18 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-20f1:7: Mark all dev lost
+> Jun 20 14:00:28 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-211a:7: Delaying session delete for FCP2 flags 0x4 port_type = 0x4 port_id=000026 50
+> Jun 20 14:00:28 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-4011:7: DPC handler exiting.
+> Jun 20 14:00:28 tony13 kern.warn kernel: qla2xxx [0000:83:00.1]-207d:7: FCPort 50:00:e1:11:c5:27:f0:70 state transitioned from ONLINE to DEAD - portid=000026.
+> Jun 20 14:00:28 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-b079:6: Removing driver
+> Jun 20 14:00:28 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-00af:6: Performing ISP error recovery - ha=000000008a8560d1.
+> Jun 20 14:00:28 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-20f1:6: Mark all dev lost
+> Jun 20 14:00:28 tony13 kern.warn kernel: qla2xxx [0000:83:00.0]-4011:6: DPC handler exiting.
+> 
+--1879738122-1695936884-1655849122=:4730
+Content-Type: text/plain; charset="US-ASCII";
+	name="0001-qla2xxx-Fix-discovery-issues-in-FC-AL-topology.patch"
+Content-Transfer-Encoding: BASE64
+Content-ID: <alpine.LRH.2.21.9999.2206211505200.4730@mvluser05.qlc.com>
+Content-Description: 
+Content-Disposition: attachment;
+	filename="0001-qla2xxx-Fix-discovery-issues-in-FC-AL-topology.patch"
+
+RnJvbSBhZjU4MzczYzZhNjFmNzRiM2IxOTBlMTczMzNiM2IxZTRkMTUxOTE5
+IE1vbiBTZXAgMTcgMDA6MDA6MDAgMjAwMQ0KRnJvbTogQXJ1biBFYXNpIDxh
+ZWFzaUBtYXJ2ZWxsLmNvbT4NCkRhdGU6IFRodSwgMTYgSnVuIDIwMjIgMTc6
+MzE6NDMgLTA3MDANClN1YmplY3Q6IFtQQVRDSF0gcWxhMnh4eDogRml4IGRp
+c2NvdmVyeSBpc3N1ZXMgaW4gRkMtQUwgdG9wb2xvZ3kNCg0KVG9wb2xvZ3k6
+IEFyYml0cmF0ZWQgbG9vcA0KRGV2aWNlOiBUYXBlIChGQ1AtMiBkZXZpY2Up
+DQpJc3N1ZToNCiAgMS4gQ29ubmVjdCBUYXBlLUEgZGlyZWN0bHkgdG8gdGhl
+IEhCQSBwb3J0DQogIDIuIERpc2Nvbm5lY3QgaXQgYW5kIGNvbm5lY3QgVGFw
+ZS1CDQogIDMuIFRhcGUtQiBpcyBub3QgZGlzY292ZXJlZCBieSB0aGUgSEJB
+IGRyaXZlcg0KICA0LiBXaGVuIFRhcGUtQiBpcyBkaXNjb25uZWN0ZWQgYW5k
+IGNvbm5lY3RlZCBiYWNrLCBpdCBzaG93cyB1cA0KDQpUbyBmaXggdGhpcywg
+d2hlbiBHZXQgSUQgTGlzdCByZXBvcnRzIG5vIGRldmljZXMgYW5kIGxvb3Ag
+bWFwDQpyZXBvcnRzIHRoZXJlIGFyZSBkZXZpY2VzLCBpc3N1ZSBhIHJlLWlu
+aXQgc28gdGhhdCBkZXZpY2UgbG9naW4NCmNvdWxkIGJlIHBlcmZvcm1lZCBk
+dXJpbmcgbmV4dCBsaW5rIGluaXRpYWxpemF0aW9uLg0KDQpSZXBvcnRlZC1i
+eTogVG9ueSBCYXR0ZXJzYnkgPHRvbnliQGN5YmVybmV0aWNzLmNvbT4NClNp
+Z25lZC1vZmYtYnk6IEFydW4gRWFzaSA8YWVhc2lAbWFydmVsbC5jb20+DQot
+LS0NCiBkcml2ZXJzL3Njc2kvcWxhMnh4eC9xbGFfZ2JsLmggIHwgIDMgKyst
+DQogZHJpdmVycy9zY3NpL3FsYTJ4eHgvcWxhX2luaXQuYyB8IDI5ICsrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrDQogZHJpdmVycy9zY3NpL3FsYTJ4
+eHgvcWxhX21ieC5jICB8ICA1ICsrKystDQogMyBmaWxlcyBjaGFuZ2VkLCAz
+NSBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9zY3NpL3FsYTJ4eHgvcWxhX2dibC5oIGIvZHJpdmVycy9z
+Y3NpL3FsYTJ4eHgvcWxhX2dibC5oDQppbmRleCBkYWMyN2I1Li5iOWYxMDZh
+IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9zY3NpL3FsYTJ4eHgvcWxhX2dibC5o
+DQorKysgYi9kcml2ZXJzL3Njc2kvcWxhMnh4eC9xbGFfZ2JsLmgNCkBAIC00
+MzMsNyArNDMzLDggQEAgZXh0ZXJuIGludA0KIHFsYTJ4MDBfZ2V0X3Jlc291
+cmNlX2NudHMoc2NzaV9xbGFfaG9zdF90ICopOw0KIA0KIGV4dGVybiBpbnQN
+Ci1xbGEyeDAwX2dldF9mY2FsX3Bvc2l0aW9uX21hcChzY3NpX3FsYV9ob3N0
+X3QgKmhhLCBjaGFyICpwb3NfbWFwKTsNCitxbGEyeDAwX2dldF9mY2FsX3Bv
+c2l0aW9uX21hcChzY3NpX3FsYV9ob3N0X3QgKmhhLCBjaGFyICpwb3NfbWFw
+LA0KKwkJdTggKm51bV9lbnRyaWVzKTsNCiANCiBleHRlcm4gaW50DQogcWxh
+MngwMF9nZXRfbGlua19zdGF0dXMoc2NzaV9xbGFfaG9zdF90ICosIHVpbnQx
+Nl90LCBzdHJ1Y3QgbGlua19zdGF0aXN0aWNzICosDQpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9zY3NpL3FsYTJ4eHgvcWxhX2luaXQuYyBiL2RyaXZlcnMvc2Nz
+aS9xbGEyeHh4L3FsYV9pbml0LmMNCmluZGV4IDNmMzQxN2EuLjNkZWZiZWEg
+MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Njc2kvcWxhMnh4eC9xbGFfaW5pdC5j
+DQorKysgYi9kcml2ZXJzL3Njc2kvcWxhMnh4eC9xbGFfaW5pdC5jDQpAQCAt
+NTQ4OCw2ICs1NDg4LDIyIEBAIHN0YXRpYyBpbnQgcWxhMngwMF9jb25maWd1
+cmVfbjJuX2xvb3Aoc2NzaV9xbGFfaG9zdF90ICp2aGEpDQogCXJldHVybiBR
+TEFfRlVOQ1RJT05fRkFJTEVEOw0KIH0NCiANCitzdGF0aWMgdm9pZA0KK3Fs
+YV9yZWluaXRpYWxpemVfbGluayhzY3NpX3FsYV9ob3N0X3QgKnZoYSkNCit7
+DQorCWludCBydmFsOw0KKw0KKwlhdG9taWNfc2V0KCZ2aGEtPmxvb3Bfc3Rh
+dGUsIExPT1BfRE9XTik7DQorCWF0b21pY19zZXQoJnZoYS0+bG9vcF9kb3du
+X3RpbWVyLCBMT09QX0RPV05fVElNRSk7DQorCXJ2YWwgPSBxbGEyeDAwX2Z1
+bGxfbG9naW5fbGlwKHZoYSk7DQorCWlmIChydmFsID09IFFMQV9TVUNDRVNT
+KSB7DQorCQlxbF9kYmcocWxfZGJnX2Rpc2MsIHZoYSwgMHhkMDUwLCAiTGlu
+ayByZWluaXRpYWxpemVkXG4iKTsNCisJfSBlbHNlIHsNCisJCXFsX2RiZyhx
+bF9kYmdfZGlzYywgdmhhLCAweGQwNTEsDQorCQkJIkxpbmsgcmVpbml0aWFs
+aXphdGlvbiBmYWlsZWQgKCVkKVxuIiwgcnZhbCk7DQorCX0NCit9DQorDQog
+LyoNCiAgKiBxbGEyeDAwX2NvbmZpZ3VyZV9sb2NhbF9sb29wDQogICoJVXBk
+YXRlcyBGaWJyZSBDaGFubmVsIERldmljZSBEYXRhYmFzZSB3aXRoIGxvY2Fs
+IGxvb3AgZGV2aWNlcy4NCkBAIC01NTM5LDYgKzU1NTUsMTkgQEAgcWxhMngw
+MF9jb25maWd1cmVfbG9jYWxfbG9vcChzY3NpX3FsYV9ob3N0X3QgKnZoYSkN
+CiAJCXNwaW5fdW5sb2NrX2lycXJlc3RvcmUoJnZoYS0+d29ya19sb2NrLCBm
+bGFncyk7DQogDQogCQlpZiAodmhhLT5zY2FuLnNjYW5fcmV0cnkgPCBNQVhf
+U0NBTl9SRVRSSUVTKSB7DQorCQkJdTggbG9vcF9tYXBfZW50cmllcyA9IDA7
+DQorCQkJaW50IHJjOw0KKw0KKwkJCXJjID0gcWxhMngwMF9nZXRfZmNhbF9w
+b3NpdGlvbl9tYXAodmhhLCBOVUxMLA0KKwkJCQkJCSZsb29wX21hcF9lbnRy
+aWVzKTsNCisJCQlpZiAocmMgPT0gUUxBX1NVQ0NFU1MgJiYgbG9vcF9tYXBf
+ZW50cmllcyA+IDEpIHsNCisJCQkJLyoNCisJCQkJICogVGhlcmUgYXJlIGRl
+dmljZXMgdGhhdCBhcmUgc3RpbGwgbm90IGxvZ2dlZA0KKwkJCQkgKiBpbi4g
+UmVpbml0aWFsaXplIHRvIGdpdmUgdGhlbSBhIGNoYW5jZS4NCisJCQkJICov
+DQorCQkJCXFsYV9yZWluaXRpYWxpemVfbGluayh2aGEpOw0KKwkJCQlyZXR1
+cm4gUUxBX0ZVTkNUSU9OX0ZBSUxFRDsNCisJCQl9DQogCQkJc2V0X2JpdChM
+T0NBTF9MT09QX1VQREFURSwgJnZoYS0+ZHBjX2ZsYWdzKTsNCiAJCQlzZXRf
+Yml0KExPT1BfUkVTWU5DX05FRURFRCwgJnZoYS0+ZHBjX2ZsYWdzKTsNCiAJ
+CX0NCmRpZmYgLS1naXQgYS9kcml2ZXJzL3Njc2kvcWxhMnh4eC9xbGFfbWJ4
+LmMgYi9kcml2ZXJzL3Njc2kvcWxhMnh4eC9xbGFfbWJ4LmMNCmluZGV4IDg5
+MmNhZjIuLjRhMzM4NzQgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL3Njc2kvcWxh
+Mnh4eC9xbGFfbWJ4LmMNCisrKyBiL2RyaXZlcnMvc2NzaS9xbGEyeHh4L3Fs
+YV9tYnguYw0KQEAgLTMwNjYsNyArMzA2Niw4IEBAIHFsYTJ4MDBfZ2V0X3Jl
+c291cmNlX2NudHMoc2NzaV9xbGFfaG9zdF90ICp2aGEpDQogICoJS2VybmVs
+IGNvbnRleHQuDQogICovDQogaW50DQotcWxhMngwMF9nZXRfZmNhbF9wb3Np
+dGlvbl9tYXAoc2NzaV9xbGFfaG9zdF90ICp2aGEsIGNoYXIgKnBvc19tYXAp
+DQorcWxhMngwMF9nZXRfZmNhbF9wb3NpdGlvbl9tYXAoc2NzaV9xbGFfaG9z
+dF90ICp2aGEsIGNoYXIgKnBvc19tYXAsDQorCQl1OCAqbnVtX2VudHJpZXMp
+DQogew0KIAlpbnQgcnZhbDsNCiAJbWJ4X2NtZF90IG1jOw0KQEAgLTMxMDYs
+NiArMzEwNyw4IEBAIHFsYTJ4MDBfZ2V0X2ZjYWxfcG9zaXRpb25fbWFwKHNj
+c2lfcWxhX2hvc3RfdCAqdmhhLCBjaGFyICpwb3NfbWFwKQ0KIA0KIAkJaWYg
+KHBvc19tYXApDQogCQkJbWVtY3B5KHBvc19tYXAsIHBtYXAsIEZDQUxfTUFQ
+X1NJWkUpOw0KKwkJaWYgKG51bV9lbnRyaWVzKQ0KKwkJCSpudW1fZW50cmll
+cyA9IHBtYXBbMF07DQogCX0NCiAJZG1hX3Bvb2xfZnJlZShoYS0+c19kbWFf
+cG9vbCwgcG1hcCwgcG1hcF9kbWEpOw0KIA0KLS0gDQoyLjkuNQ0KDQo=
+
+--1879738122-1695936884-1655849122=:4730--
