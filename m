@@ -1,308 +1,111 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [95.217.213.242])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD4EA4E
-	for <regressions@lists.linux.dev>; Tue, 21 Jun 2022 16:35:07 +0000 (UTC)
-Received: by mail-qv1-f54.google.com with SMTP id p31so21142824qvp.5
-        for <regressions@lists.linux.dev>; Tue, 21 Jun 2022 09:35:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7o7lxnUCtyY119FDb7ETl2LEK0niL9adrYh+6j8vRDM=;
-        b=flk4u5913XUvvh+q4sVRUKpfhxEfQzyf9gDtJk/EXjQo1cNw/J8x/dLytx50YQ/nAf
-         mcKYy9kPQSrWPk+qrvU0bRCrNXDMMnxr8x4no+93FXzfGsM8qJ3Kyz+Lzfg+qR3qkYum
-         1vaJAaNmIXFQER0U8iGQbfrtQeZuM2uPPSVbkW05nMtS5oNDin5OQ8FK93+gKMvy4tSP
-         2Bkw6D9pcmOz+sRmen5Pf+hZJCJ4jowbsvaiXsPnau3GTzOXkgWMadNoOBDsEX99rSg2
-         KGHCpJtsjBl7qaGlPV+0Rb7TBAl4KgvRwnBj7ix/poIDPi6coM7b5inKDIBwLZb/gfeA
-         GXeg==
-X-Gm-Message-State: AJIora/80vQ0EFhkEc/J7cGb5JG8X2NZ9lzAb5xgcVeXh74QE3qBHpH8
-	gtbZ6XT7PN0y5ESw97mu+Yxk
-X-Google-Smtp-Source: AGRyM1vb5epLM31RsTODGVjfqmrGoNVubXn0wSp23W4x2r0NPOZ/e265VHIpuY+3dMMPz16j405rgw==
-X-Received: by 2002:a05:6214:2309:b0:46e:5fb9:a33 with SMTP id gc9-20020a056214230900b0046e5fb90a33mr23883039qvb.28.1655829306287;
-        Tue, 21 Jun 2022 09:35:06 -0700 (PDT)
-Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id w8-20020a05620a444800b006a6f68c8a87sm15162267qkp.126.2022.06.21.09.35.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Jun 2022 09:35:05 -0700 (PDT)
-Date: Tue, 21 Jun 2022 12:35:04 -0400
-From: Mike Snitzer <snitzer@kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Mike Snitzer <snitzer@kernel.org>,
-	keescook@chromium.org, sarthakkukreti@google.com,
-	stable@vger.kernel.org, Oleksandr Tymoshenko <ovt@google.com>,
-	dm-devel@redhat.com, regressions@lists.linux.dev
-Subject: [5.4.y PATCH v2] dm: remove special-casing of bio-based immutable
- singleton target on NVMe
-Message-ID: <YrHzOGO5fOSFwqdJ@redhat.com>
-References: <20220603173816.944766454@linuxfoundation.org>
- <20220610042200.2561917-1-ovt@google.com>
- <YqLTV+5Q72/jBeOG@kroah.com>
- <YqNfBMOR9SE2TuCm@redhat.com>
- <Yqb/sT205Lrhl6Bv@kroah.com>
- <20220615143642.GA2386944@roeck-us.net>
- <Yqn64AMwoIzQXwXM@redhat.com>
- <50eeff2e-45c5-5eb2-c41d-3e0092a84483@roeck-us.net>
- <Yqo63CvFpTDFnH3x@redhat.com>
- <YrBdsTDrreF3H82o@kroah.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8F0EA4
+	for <regressions@lists.linux.dev>; Tue, 21 Jun 2022 16:55:14 +0000 (UTC)
+Received: from 168.7-181-91.adsl-dyn.isp.belgacom.be ([91.181.7.168] helo=deadeye)
+	by maynard with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ben@decadent.org.uk>)
+	id 1o3gSA-0001rR-QL; Tue, 21 Jun 2022 18:10:10 +0200
+Received: from ben by deadeye with local (Exim 4.95)
+	(envelope-from <ben@decadent.org.uk>)
+	id 1o3gSA-001lbD-9I;
+	Tue, 21 Jun 2022 18:10:10 +0200
+Message-ID: <a1a127d144d65937c5543c142e69213c9b8d2d40.camel@decadent.org.uk>
+Subject: Re: virtio_balloon regression in 5.19-rc3
+From: Ben Hutchings <ben@decadent.org.uk>
+To: Jason Wang <jasowang@redhat.com>, David Hildenbrand <david@redhat.com>
+Cc: virtualization <virtualization@lists.linux-foundation.org>, 
+	debian-kernel@lists.debian.org, "Michael S. Tsirkin" <mst@redhat.com>, 
+	"regressions@lists.linux.dev"
+	 <regressions@lists.linux.dev>
+Date: Tue, 21 Jun 2022 18:10:00 +0200
+In-Reply-To: <CACGkMEs45CCniTjbxr3OThdbG=Q4nGrm_11LLDfR4rRLetSx0A@mail.gmail.com>
+References: <64c567bc77c4fbe7bfe37467cc1c89d24a45c37a.camel@decadent.org.uk>
+	 <402bb9b5-7d6e-ed69-8b66-3ebefd80ff15@redhat.com>
+	 <CACGkMEs45CCniTjbxr3OThdbG=Q4nGrm_11LLDfR4rRLetSx0A@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="=-18guuWA2Rs44JNkFHwRr"
+User-Agent: Evolution 3.44.1-2 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YrBdsTDrreF3H82o@kroah.com>
+X-SA-Exim-Connect-IP: 91.181.7.168
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
 
-Commit 9c37de297f6590937f95a28bec1b7ac68a38618f upstream.
 
-There is no benefit to DM special-casing NVMe. Remove all code used to
-establish DM_TYPE_NVME_BIO_BASED.
+--=-18guuWA2Rs44JNkFHwRr
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Also, remove 3 'struct mapped_device *md' variables in __map_bio() which
-masked the same variable that is available within __map_bio()'s scope.
+On Tue, 2022-06-21 at 17:34 +0800, Jason Wang wrote:
+> On Tue, Jun 21, 2022 at 5:24 PM David Hildenbrand <david@redhat.com> wrot=
+e:
+> >=20
+> > On 20.06.22 20:49, Ben Hutchings wrote:
+> > > I've tested a 5.19-rc3 kernel on top of QEMU/KVM with machine type
+> > > pc-q35-5.2.  It has a virtio balloon device defined in libvirt as:
+> > >=20
+> > >     <memballoon model=3D"virtio">
+> > >       <address type=3D"pci" domain=3D"0x0000" bus=3D"0x05" slot=3D"0x=
+00" function=3D"0x0"/>
+> > >     </memballoon>
+> > >=20
+> > > but the virtio_balloon driver fails to bind to it:
+> > >=20
+> > >     virtio_balloon virtio4: init_vqs: add stat_vq failed
+> > >     virtio_balloon: probe of virtio4 failed with error -5
+> > >=20
+> >=20
+> > Hmm, I don't see any recent changes to drivers/virtio/virtio_balloon.c
+> >=20
+> > virtqueue_add_outbuf() fails with -EIO if I'm not wrong. That's the
+> > first call of virtqueue_add_outbuf() when virtio_balloon initializes.
+> >=20
+> >=20
+> > Maybe something in generic virtio code changed?
+>=20
+> Yes, we introduced the IRQ hardening. That could be the root cause and
+> we've received lots of reports so we decide to disable it by default.
+>=20
+> Ben, could you please try this patch: (and make sure
+> CONFIG_VIRTIO_HARDEN_NOTIFICATION is not set)
+>=20
+> https://lore.kernel.org/lkml/20220620024158.2505-1-jasowang@redhat.com/T/
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Mike Snitzer <snitzer@kernel.org>
----
- drivers/md/dm-table.c         | 32 +--------------
- drivers/md/dm.c               | 73 ++++-------------------------------
- include/linux/device-mapper.h |  1 -
- 3 files changed, 9 insertions(+), 97 deletions(-)
+Yes, that patch fixes the regression for me.
 
-diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
-index 06b382304d92..81bc36a43b32 100644
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -872,8 +872,7 @@ EXPORT_SYMBOL(dm_consume_args);
- static bool __table_type_bio_based(enum dm_queue_mode table_type)
- {
- 	return (table_type == DM_TYPE_BIO_BASED ||
--		table_type == DM_TYPE_DAX_BIO_BASED ||
--		table_type == DM_TYPE_NVME_BIO_BASED);
-+		table_type == DM_TYPE_DAX_BIO_BASED);
- }
- 
- static bool __table_type_request_based(enum dm_queue_mode table_type)
-@@ -929,8 +928,6 @@ bool dm_table_supports_dax(struct dm_table *t,
- 	return true;
- }
- 
--static bool dm_table_does_not_support_partial_completion(struct dm_table *t);
--
- static int device_is_rq_stackable(struct dm_target *ti, struct dm_dev *dev,
- 				  sector_t start, sector_t len, void *data)
- {
-@@ -960,7 +957,6 @@ static int dm_table_determine_type(struct dm_table *t)
- 			goto verify_bio_based;
- 		}
- 		BUG_ON(t->type == DM_TYPE_DAX_BIO_BASED);
--		BUG_ON(t->type == DM_TYPE_NVME_BIO_BASED);
- 		goto verify_rq_based;
- 	}
- 
-@@ -999,15 +995,6 @@ static int dm_table_determine_type(struct dm_table *t)
- 		if (dm_table_supports_dax(t, device_not_dax_capable, &page_size) ||
- 		    (list_empty(devices) && live_md_type == DM_TYPE_DAX_BIO_BASED)) {
- 			t->type = DM_TYPE_DAX_BIO_BASED;
--		} else {
--			/* Check if upgrading to NVMe bio-based is valid or required */
--			tgt = dm_table_get_immutable_target(t);
--			if (tgt && !tgt->max_io_len && dm_table_does_not_support_partial_completion(t)) {
--				t->type = DM_TYPE_NVME_BIO_BASED;
--				goto verify_rq_based; /* must be stacked directly on NVMe (blk-mq) */
--			} else if (list_empty(devices) && live_md_type == DM_TYPE_NVME_BIO_BASED) {
--				t->type = DM_TYPE_NVME_BIO_BASED;
--			}
- 		}
- 		return 0;
- 	}
-@@ -1024,8 +1011,7 @@ static int dm_table_determine_type(struct dm_table *t)
- 	 * (e.g. request completion process for partial completion.)
- 	 */
- 	if (t->num_targets > 1) {
--		DMERR("%s DM doesn't support multiple targets",
--		      t->type == DM_TYPE_NVME_BIO_BASED ? "nvme bio-based" : "request-based");
-+		DMERR("request-based DM doesn't support multiple targets");
- 		return -EINVAL;
- 	}
- 
-@@ -1714,20 +1700,6 @@ static int device_is_not_random(struct dm_target *ti, struct dm_dev *dev,
- 	return q && !blk_queue_add_random(q);
- }
- 
--static int device_is_partial_completion(struct dm_target *ti, struct dm_dev *dev,
--					sector_t start, sector_t len, void *data)
--{
--	char b[BDEVNAME_SIZE];
--
--	/* For now, NVMe devices are the only devices of this class */
--	return (strncmp(bdevname(dev->bdev, b), "nvme", 4) != 0);
--}
--
--static bool dm_table_does_not_support_partial_completion(struct dm_table *t)
--{
--	return !dm_table_any_dev_attr(t, device_is_partial_completion, NULL);
--}
--
- static int device_not_write_same_capable(struct dm_target *ti, struct dm_dev *dev,
- 					 sector_t start, sector_t len, void *data)
- {
-diff --git a/drivers/md/dm.c b/drivers/md/dm.c
-index 37b8bb4d80f0..77e28f77c59f 100644
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1000,7 +1000,7 @@ static void clone_endio(struct bio *bio)
- 	struct mapped_device *md = tio->io->md;
- 	dm_endio_fn endio = tio->ti->type->end_io;
- 
--	if (unlikely(error == BLK_STS_TARGET) && md->type != DM_TYPE_NVME_BIO_BASED) {
-+	if (unlikely(error == BLK_STS_TARGET)) {
- 		if (bio_op(bio) == REQ_OP_DISCARD &&
- 		    !bio->bi_disk->queue->limits.max_discard_sectors)
- 			disable_discard(md);
-@@ -1325,7 +1325,6 @@ static blk_qc_t __map_bio(struct dm_target_io *tio)
- 	sector = clone->bi_iter.bi_sector;
- 
- 	if (unlikely(swap_bios_limit(ti, clone))) {
--		struct mapped_device *md = io->md;
- 		int latch = get_swap_bios();
- 		if (unlikely(latch != md->swap_bios))
- 			__set_swap_bios_limit(md, latch);
-@@ -1340,24 +1339,17 @@ static blk_qc_t __map_bio(struct dm_target_io *tio)
- 		/* the bio has been remapped so dispatch it */
- 		trace_block_bio_remap(clone->bi_disk->queue, clone,
- 				      bio_dev(io->orig_bio), sector);
--		if (md->type == DM_TYPE_NVME_BIO_BASED)
--			ret = direct_make_request(clone);
--		else
--			ret = generic_make_request(clone);
-+		ret = generic_make_request(clone);
- 		break;
- 	case DM_MAPIO_KILL:
--		if (unlikely(swap_bios_limit(ti, clone))) {
--			struct mapped_device *md = io->md;
-+		if (unlikely(swap_bios_limit(ti, clone)))
- 			up(&md->swap_bios_semaphore);
--		}
- 		free_tio(tio);
- 		dec_pending(io, BLK_STS_IOERR);
- 		break;
- 	case DM_MAPIO_REQUEUE:
--		if (unlikely(swap_bios_limit(ti, clone))) {
--			struct mapped_device *md = io->md;
-+		if (unlikely(swap_bios_limit(ti, clone)))
- 			up(&md->swap_bios_semaphore);
--		}
- 		free_tio(tio);
- 		dec_pending(io, BLK_STS_DM_REQUEUE);
- 		break;
-@@ -1732,51 +1724,6 @@ static blk_qc_t __split_and_process_bio(struct mapped_device *md,
- 	return ret;
- }
- 
--/*
-- * Optimized variant of __split_and_process_bio that leverages the
-- * fact that targets that use it do _not_ have a need to split bios.
-- */
--static blk_qc_t __process_bio(struct mapped_device *md, struct dm_table *map,
--			      struct bio *bio, struct dm_target *ti)
--{
--	struct clone_info ci;
--	blk_qc_t ret = BLK_QC_T_NONE;
--	int error = 0;
--
--	init_clone_info(&ci, md, map, bio);
--
--	if (bio->bi_opf & REQ_PREFLUSH) {
--		struct bio flush_bio;
--
--		/*
--		 * Use an on-stack bio for this, it's safe since we don't
--		 * need to reference it after submit. It's just used as
--		 * the basis for the clone(s).
--		 */
--		bio_init(&flush_bio, NULL, 0);
--		flush_bio.bi_opf = REQ_OP_WRITE | REQ_PREFLUSH | REQ_SYNC;
--		ci.bio = &flush_bio;
--		ci.sector_count = 0;
--		error = __send_empty_flush(&ci);
--		bio_uninit(ci.bio);
--		/* dec_pending submits any data associated with flush */
--	} else {
--		struct dm_target_io *tio;
--
--		ci.bio = bio;
--		ci.sector_count = bio_sectors(bio);
--		if (__process_abnormal_io(&ci, ti, &error))
--			goto out;
--
--		tio = alloc_tio(&ci, ti, 0, GFP_NOIO);
--		ret = __clone_and_map_simple_bio(&ci, tio, NULL);
--	}
--out:
--	/* drop the extra reference count */
--	dec_pending(ci.io, errno_to_blk_status(error));
--	return ret;
--}
--
- static blk_qc_t dm_process_bio(struct mapped_device *md,
- 			       struct dm_table *map, struct bio *bio)
- {
-@@ -1807,8 +1754,6 @@ static blk_qc_t dm_process_bio(struct mapped_device *md,
- 		/* regular IO is split by __split_and_process_bio */
- 	}
- 
--	if (dm_get_md_type(md) == DM_TYPE_NVME_BIO_BASED)
--		return __process_bio(md, map, bio, ti);
- 	return __split_and_process_bio(md, map, bio);
- }
- 
-@@ -2200,12 +2145,10 @@ static struct dm_table *__bind(struct mapped_device *md, struct dm_table *t,
- 	if (request_based)
- 		dm_stop_queue(q);
- 
--	if (request_based || md->type == DM_TYPE_NVME_BIO_BASED) {
-+	if (request_based) {
- 		/*
--		 * Leverage the fact that request-based DM targets and
--		 * NVMe bio based targets are immutable singletons
--		 * - used to optimize both dm_request_fn and dm_mq_queue_rq;
--		 *   and __process_bio.
-+		 * Leverage the fact that request-based DM targets are
-+		 * immutable singletons - used to optimize dm_mq_queue_rq.
- 		 */
- 		md->immutable_target = dm_table_get_immutable_target(t);
- 	}
-@@ -2334,7 +2277,6 @@ int dm_setup_md_queue(struct mapped_device *md, struct dm_table *t)
- 		break;
- 	case DM_TYPE_BIO_BASED:
- 	case DM_TYPE_DAX_BIO_BASED:
--	case DM_TYPE_NVME_BIO_BASED:
- 		dm_init_congested_fn(md);
- 		break;
- 	case DM_TYPE_NONE:
-@@ -3070,7 +3012,6 @@ struct dm_md_mempools *dm_alloc_md_mempools(struct mapped_device *md, enum dm_qu
- 	switch (type) {
- 	case DM_TYPE_BIO_BASED:
- 	case DM_TYPE_DAX_BIO_BASED:
--	case DM_TYPE_NVME_BIO_BASED:
- 		pool_size = max(dm_get_reserved_bio_based_ios(), min_pool_size);
- 		front_pad = roundup(per_io_data_size, __alignof__(struct dm_target_io)) + offsetof(struct dm_target_io, clone);
- 		io_front_pad = roundup(front_pad,  __alignof__(struct dm_io)) + offsetof(struct dm_io, tio);
-diff --git a/include/linux/device-mapper.h b/include/linux/device-mapper.h
-index a53d7d2c2d95..60631f3abddb 100644
---- a/include/linux/device-mapper.h
-+++ b/include/linux/device-mapper.h
-@@ -28,7 +28,6 @@ enum dm_queue_mode {
- 	DM_TYPE_BIO_BASED	 = 1,
- 	DM_TYPE_REQUEST_BASED	 = 2,
- 	DM_TYPE_DAX_BIO_BASED	 = 3,
--	DM_TYPE_NVME_BIO_BASED	 = 4,
- };
- 
- typedef enum { STATUSTYPE_INFO, STATUSTYPE_TABLE } status_type_t;
--- 
-2.30.0
+Ben.
 
+--=20
+Ben Hutchings
+Any smoothly functioning technology is indistinguishable
+from a rigged demo.
+
+--=-18guuWA2Rs44JNkFHwRr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmKx7VgACgkQ57/I7JWG
+EQmvrQ/+IRi2atnEKmlvl2BpjvDAPIgPUaaKWHZ0maLpvhcxvzwY5f6lZhRSlumr
+rUNilVFmA79hxDQL1SDV4uluqZYgaKA09K7Q7BSGWRskRJwog4yTkaaAEfJTsiTe
+zf3Fm/0dMTRbs8VHwcXqeGPiihertKLmwm3T/km+AVTXngpRuLGMt2HjRnClrcWj
+dbb2rQIU6ur/6JHKbz1qNI4YNHdPjdBWqDd+KJBvUQ6QUUYlbbVyO5sO+KSXY1gu
+UgslR/NfNIAezFkOaomenRPQEBzg90+ePhnEG5YL9J3xYjxKmJfy0z7gxlwh1xv+
+GR/7cCkVWZCJ0wpP0ZvmnRgWndebVs1GizgPwaMN2hNUgsja0t41MgNvVAyzE5LX
+m7XYO49ZcHV3OoDS5ByOxEAR5Hk1NETYoJbTSq7/s2k69RN89U2Kk/oVB+vqyl/F
+n9kM7nBdXAy05ExcUrFVRT8LGPbgR8Dpoo3pn1mwGtqPZ9NM893Ka8RrZPNeNvX0
+7qXyJGhxZOSuer8kdLO5JwTGDfank4KeMenMNg8h4oeBPDXt4Lgj6iQmoxZBe44q
+NBW/iiN3VUrswC1x7itQUeveq/lFg/2orB3c4tRNGMB3PeFx88dWzn4sVw/DwF1l
+A/oZ1sl/EmtaCHC0zmLjbOGEtFQ5ZI2EHqgulNXEmMvRaEIJ73s=
+=gNBI
+-----END PGP SIGNATURE-----
+
+--=-18guuWA2Rs44JNkFHwRr--
