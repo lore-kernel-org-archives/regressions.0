@@ -1,111 +1,157 @@
-Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [95.217.213.242])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8F0EA4
-	for <regressions@lists.linux.dev>; Tue, 21 Jun 2022 16:55:14 +0000 (UTC)
-Received: from 168.7-181-91.adsl-dyn.isp.belgacom.be ([91.181.7.168] helo=deadeye)
-	by maynard with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1o3gSA-0001rR-QL; Tue, 21 Jun 2022 18:10:10 +0200
-Received: from ben by deadeye with local (Exim 4.95)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1o3gSA-001lbD-9I;
-	Tue, 21 Jun 2022 18:10:10 +0200
-Message-ID: <a1a127d144d65937c5543c142e69213c9b8d2d40.camel@decadent.org.uk>
-Subject: Re: virtio_balloon regression in 5.19-rc3
-From: Ben Hutchings <ben@decadent.org.uk>
-To: Jason Wang <jasowang@redhat.com>, David Hildenbrand <david@redhat.com>
-Cc: virtualization <virtualization@lists.linux-foundation.org>, 
-	debian-kernel@lists.debian.org, "Michael S. Tsirkin" <mst@redhat.com>, 
-	"regressions@lists.linux.dev"
-	 <regressions@lists.linux.dev>
-Date: Tue, 21 Jun 2022 18:10:00 +0200
-In-Reply-To: <CACGkMEs45CCniTjbxr3OThdbG=Q4nGrm_11LLDfR4rRLetSx0A@mail.gmail.com>
-References: <64c567bc77c4fbe7bfe37467cc1c89d24a45c37a.camel@decadent.org.uk>
-	 <402bb9b5-7d6e-ed69-8b66-3ebefd80ff15@redhat.com>
-	 <CACGkMEs45CCniTjbxr3OThdbG=Q4nGrm_11LLDfR4rRLetSx0A@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-18guuWA2Rs44JNkFHwRr"
-User-Agent: Evolution 3.44.1-2 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05771EA3
+	for <regressions@lists.linux.dev>; Tue, 21 Jun 2022 18:52:22 +0000 (UTC)
+Received: by mail-lf1-f51.google.com with SMTP id t24so11658058lfr.4
+        for <regressions@lists.linux.dev>; Tue, 21 Jun 2022 11:52:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LyC2xQZ/J7P7EEp9bZtR/lqMCT8LU/RUU5bcVNVOJp8=;
+        b=p9X9UxNP81FAxeV9hvfPvi0M1iZP1ZeRtYmFuwVS+IkfswgT2N6ure1O+4nZotEKvi
+         GodnVRPsPpulB/oqanX1HtbY3ONqc6zD1WY2WcJfuSGlCdeyH2qjJ2KlMMe4deX4ovrf
+         QaJJJrw+8ATGO11sXcMaXgPb6tEP/XJ4+vRCWcJ91f8NvXxpmXpT3RMOkQScZ4LlWzVG
+         P8TSSHhFY1FcVrInXyd79UctirOH7+JnnM4RfDeEsXzaW4qGxw7OYe57lv5BvbjVgZbC
+         Bo+pWU0Vww/QfSsArHVnSaA6o67fqVw85FJVhHpcEpmaL91y0ElPuBH13bvvvbikeOCV
+         acLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LyC2xQZ/J7P7EEp9bZtR/lqMCT8LU/RUU5bcVNVOJp8=;
+        b=2RwGPmERoHhkNmBkJi3odDXUXQ8d+aBpj36Wy3wgDQMq87Cw0vkmJMCQ8i5kXtsi1l
+         4McUM+q+FJVK4ntf+7a7BWkDVCR2gjRl4fNI85VUd0Q/TgC+j8llI+koakQunyFeg1XE
+         7j5Pe7CcshEaTbyl9dsia2I4n2XsZaDHXvgH1A/VXWyo2cBth+EL4NACZVi4mmKcyp8q
+         tj8lrvcNf/wadOT1cRDZxf6I1BwzANGEWhQm0Jkj4qT9nfBLe2pJPVWqCH6Z7rExy9Lg
+         dXgHBZpp8OZnQoJRxThjV9zk3Y8JroZoeFJ8XJhSt32z+tNr+0YwVUb7pv4cMWaPuMTI
+         YvCw==
+X-Gm-Message-State: AJIora+m5LSj88Dh7tQpTQnnW2o3mLdW5wjBtgTIxrhrhrsFYsPUdZa/
+	QOSwHtiQ/jGQrwMbwqlVHkzZKITa/CpqD646rAo=
+X-Google-Smtp-Source: AGRyM1vrSETpNBNYgiA6t5lW29KptH6Dy4G7OT1APqy5yr60iKZqS6cUjPDHL+SrRcQZhQ0Oc3NRbdezaLcximMa+jU=
+X-Received: by 2002:a05:6512:1307:b0:47f:67ab:4064 with SMTP id
+ x7-20020a056512130700b0047f67ab4064mr8780904lfu.106.1655837540974; Tue, 21
+ Jun 2022 11:52:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 91.181.7.168
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
-
-
---=-18guuWA2Rs44JNkFHwRr
+References: <a1ce1743-e450-6cdb-dfab-56a3e3eb9aed@pengutronix.de>
+ <CABBYNZ+z8kBUKGXbZSfb0ynJaTnPQRp0wFDUb12AW1ymbNx1eg@mail.gmail.com>
+ <CABBYNZ+zsuggTpaUSPsZKeL=qqvM1=sgMWzdWEqaS_oh6dhY2g@mail.gmail.com>
+ <8d5c4724-d511-39b1-21d7-116c91cada45@pengutronix.de> <b0cb4fb0-6b89-b9df-9ae6-421ac52b0100@pengutronix.de>
+ <CABBYNZ+ubN2rc=zoN_53Pmp6kt3L5UcY3knbtjhhVOjPBpJv4Q@mail.gmail.com>
+ <d5654901-6b1f-a1fa-0101-8b52b345af7b@pengutronix.de> <CABBYNZ+8dpPBqaQMr-Hz_DJRxT-0ucCjgAJH50FUaN7Sn9H6rA@mail.gmail.com>
+ <1d1b76cf-df6f-3935-5cd2-c45ea78f2c33@pengutronix.de>
+In-Reply-To: <1d1b76cf-df6f-3935-5cd2-c45ea78f2c33@pengutronix.de>
+From: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Date: Tue, 21 Jun 2022 11:52:09 -0700
+Message-ID: <CABBYNZLdy-rndKczoG_WiWXQmacX+vzCbftQKvzJ3B6imtZopw@mail.gmail.com>
+Subject: Re: [BUG] BLE device unpairing triggers kernel panic
+To: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Tedd Ho-Jeong An <hj.tedd.an@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2022-06-21 at 17:34 +0800, Jason Wang wrote:
-> On Tue, Jun 21, 2022 at 5:24 PM David Hildenbrand <david@redhat.com> wrot=
-e:
-> >=20
-> > On 20.06.22 20:49, Ben Hutchings wrote:
-> > > I've tested a 5.19-rc3 kernel on top of QEMU/KVM with machine type
-> > > pc-q35-5.2.  It has a virtio balloon device defined in libvirt as:
-> > >=20
-> > >     <memballoon model=3D"virtio">
-> > >       <address type=3D"pci" domain=3D"0x0000" bus=3D"0x05" slot=3D"0x=
-00" function=3D"0x0"/>
-> > >     </memballoon>
-> > >=20
-> > > but the virtio_balloon driver fails to bind to it:
-> > >=20
-> > >     virtio_balloon virtio4: init_vqs: add stat_vq failed
-> > >     virtio_balloon: probe of virtio4 failed with error -5
-> > >=20
-> >=20
-> > Hmm, I don't see any recent changes to drivers/virtio/virtio_balloon.c
-> >=20
-> > virtqueue_add_outbuf() fails with -EIO if I'm not wrong. That's the
-> > first call of virtqueue_add_outbuf() when virtio_balloon initializes.
-> >=20
-> >=20
-> > Maybe something in generic virtio code changed?
->=20
-> Yes, we introduced the IRQ hardening. That could be the root cause and
-> we've received lots of reports so we decide to disable it by default.
->=20
-> Ben, could you please try this patch: (and make sure
-> CONFIG_VIRTIO_HARDEN_NOTIFICATION is not set)
->=20
-> https://lore.kernel.org/lkml/20220620024158.2505-1-jasowang@redhat.com/T/
+Hi Ahmad, Tedd,
 
-Yes, that patch fixes the regression for me.
+On Tue, Jun 21, 2022 at 1:32 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>
+> Hello Luiz,
+>
+> On 20.06.22 22:18, Luiz Augusto von Dentz wrote:
+> > On Mon, Jun 20, 2022 at 3:06 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+> >> Disconnect of connection #1 being processed after new connection #2
+> >> concluded sounds wrong. Would I be able to reconnect
+> >> afterwards or would all connections, but the first, be directly
+> >> disconnected...?
+> >
+> > That depends on the order you have queued the commands, it will be
+> > processed in the exact order it is received, that why I said it is
+> > single queue design, and it is done like that to prevent messing up
+> > with states since we know the exact order the commands will be sent.
+> >
+> >>> otherwise we need a
+> >>> different queue to handle command that abort/cancel other already in
+> >>> the queue.
+> >>
+> >> Is the revert an acceptable interim solution or are there issues
+> >> I am missing?
+> >
+> > Afaik there were problem with concurrent connections request, so what
+> > would really help us here is to have some tests to emulate this
+> > scenario with our CI, in the meantime please check if the following
+> > fixes your problem:
+> >
+> > https://gist.github.com/Vudentz/b4fff292c7f4ad55ca3299fd5ab797ae
+>
+> Doesn't help unfortunately. First pairing works as before.
+> Second still fails:
+>
+>   Bluetooth: hci0: Opcode 0x200d failed: -110
+>   Bluetooth: hci0: request failed to create LE connection: err -110
 
-Ben.
+Can we try to add a test in mgmt-tester to reproduce the error above?
 
---=20
-Ben Hutchings
-Any smoothly functioning technology is indistinguishable
-from a rigged demo.
+> Cheers,
+> Ahmad
+>
+> >
+> >> Cheers,
+> >> Ahmad
+> >>
+> >>>
+> >>>> We've been deploying the revert for a while now and I just posted
+> >>>> it to the mailing list[1]. There have been other reports
+> >>>> of this issue with different hardware too and fixing sent_cmd
+> >>>> would likely be too complicated/time intensive for me.
+> >>>>
+> >>>> I am happy to test future patches that fix this properly though.
+> >>>>
+> >>>> [1]: https://lore.kernel.org/linux-bluetooth/20220616092418.738877-1-a.fatoum@pengutronix.de/T/#t
+> >>>>
+> >>>> Cheers,
+> >>>> Ahmad
+> >>>>
+> >>>>
+> >>>>
+> >>>>>
+> >>>>> Cheers,
+> >>>>> Ahmad
+> >>>>>
+> >>>>
+> >>>>
+> >>>> --
+> >>>> Pengutronix e.K.                           |                             |
+> >>>> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+> >>>> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+> >>>> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> >>>
+> >>>
+> >>>
+> >>
+> >>
+> >> --
+> >> Pengutronix e.K.                           |                             |
+> >> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+> >> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+> >> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> >
+> >
+> >
+>
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
---=-18guuWA2Rs44JNkFHwRr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmKx7VgACgkQ57/I7JWG
-EQmvrQ/+IRi2atnEKmlvl2BpjvDAPIgPUaaKWHZ0maLpvhcxvzwY5f6lZhRSlumr
-rUNilVFmA79hxDQL1SDV4uluqZYgaKA09K7Q7BSGWRskRJwog4yTkaaAEfJTsiTe
-zf3Fm/0dMTRbs8VHwcXqeGPiihertKLmwm3T/km+AVTXngpRuLGMt2HjRnClrcWj
-dbb2rQIU6ur/6JHKbz1qNI4YNHdPjdBWqDd+KJBvUQ6QUUYlbbVyO5sO+KSXY1gu
-UgslR/NfNIAezFkOaomenRPQEBzg90+ePhnEG5YL9J3xYjxKmJfy0z7gxlwh1xv+
-GR/7cCkVWZCJ0wpP0ZvmnRgWndebVs1GizgPwaMN2hNUgsja0t41MgNvVAyzE5LX
-m7XYO49ZcHV3OoDS5ByOxEAR5Hk1NETYoJbTSq7/s2k69RN89U2Kk/oVB+vqyl/F
-n9kM7nBdXAy05ExcUrFVRT8LGPbgR8Dpoo3pn1mwGtqPZ9NM893Ka8RrZPNeNvX0
-7qXyJGhxZOSuer8kdLO5JwTGDfank4KeMenMNg8h4oeBPDXt4Lgj6iQmoxZBe44q
-NBW/iiN3VUrswC1x7itQUeveq/lFg/2orB3c4tRNGMB3PeFx88dWzn4sVw/DwF1l
-A/oZ1sl/EmtaCHC0zmLjbOGEtFQ5ZI2EHqgulNXEmMvRaEIJ73s=
-=gNBI
------END PGP SIGNATURE-----
-
---=-18guuWA2Rs44JNkFHwRr--
+-- 
+Luiz Augusto von Dentz
