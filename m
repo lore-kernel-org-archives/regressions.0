@@ -1,56 +1,59 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CFD1C0C
-	for <regressions@lists.linux.dev>; Tue, 21 Jun 2022 23:32:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0541FC3411C;
-	Tue, 21 Jun 2022 23:32:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1655854379;
-	bh=KUFldZDOWzF29Fw8oxWmlptCGlug7MaVxTpjrB6Z71Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=glnbAs7yOUm3A15oxIScXlj1d8r2W6PlYM03YYu5tsS7nfoFiX50dODjrF3eerESw
-	 Im2aFI6jXmi2eCpLTSIj2MHK5SRTeG13x6yzelkdm4nNoGGIsLa1MuJWzITKrytH1N
-	 s7S1vROFSmlvTsJCtG+C8yZ3kd3cZsrzU/cdXvXTJJA4o5Z3f4nK8XZnn4yMNj4aLf
-	 eV63CC4Ypf6OEOjLNDbQeDGTWRLDszm9fvBDZlNGD9hcRRtjCi8mR5B82ZBpQX/yIq
-	 QB0ScxGgUXFR/I4s9tIHyhmg7W8+s0ow6sPS37vlK4+zluPaFxneoP36GgP0tBI5t8
-	 owrjVtqCjyRvg==
-Date: Tue, 21 Jun 2022 18:32:57 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jim Quinlan <jim2101024@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Cyril Brulebois <kibi@debian.org>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-	linux-pci <linux-pci@vger.kernel.org>, regressions@lists.linux.dev,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 0/4] PCI: brcmstb: Revert subdevice regulator stuff
-Message-ID: <20220621233257.GA1342369@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C11CA52
+	for <regressions@lists.linux.dev>; Wed, 22 Jun 2022 00:16:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D927C3411C;
+	Wed, 22 Jun 2022 00:16:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1655856976;
+	bh=PgcuBqHZZbQa503bM4Scmsi3N1vfutVANcvd63kNuss=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YHoqI6jQZ9n64iK1Jnv8hF/5uCm+hiv+wdBc20tt7b8V8OZ7QWtrkQlxj2VNsvJKj
+	 7sskAV1Hp8mo7yYAlK6aUvFLWEPI43CTBovgt3bBjIIDNbIE+3D/VqolRzlITy0Lzw
+	 qUEUuqLFPqy0DqUx5v/1U2vrl5kwVd0WsTTagsTM=
+Date: Tue, 21 Jun 2022 17:15:54 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Michael Larabel <Michael@MichaelLarabel.com>, Marcelo Tosatti
+ <mtosatti@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org, Minchan Kim
+ <minchan@kernel.org>, Matthew Wilcox <willy@infradead.org>, Mel Gorman
+ <mgorman@techsingularity.net>, Nicolas Saenz Julienne
+ <nsaenzju@redhat.com>, Juri Lelli <juri.lelli@redhat.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Stefan Wahren
+ <stefan.wahren@i2se.com>, "regressions@lists.linux.dev"
+ <regressions@lists.linux.dev>
+Subject: Re: [patch v5] mm: lru_cache_disable: replace work queue
+ synchronization with synchronize_rcu
+Message-Id: <20220621171554.7ad01842c933b3049afeb3b6@linux-foundation.org>
+In-Reply-To: <67d39f78-8eed-f49a-b3b0-18f77f9821cd@leemhuis.info>
+References: <YhUI1wUtV8yguijO@fuller.cnet>
+	<YhUKRzEKxMvlGQ5n@fuller.cnet>
+	<YiI+a9gTr/UBCf0X@fuller.cnet>
+	<20220304163554.8872fe5d5a9d634f7a2884f5@linux-foundation.org>
+	<Yin7hDxdt0s/x+fp@fuller.cnet>
+	<YkWyLaom/r7jXgbA@zn.tnic>
+	<YmrWK/KoU1zrAxPI@fuller.cnet>
+	<20220528141809.732788db257253396462c79e@linux-foundation.org>
+	<134065a4-0446-bbbc-fca8-59f32798cf08@MichaelLarabel.com>
+	<0ce05ce7-1a00-82df-f37a-bf7f9e216504@MichaelLarabel.com>
+	<67d39f78-8eed-f49a-b3b0-18f77f9821cd@leemhuis.info>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANCKTBtgZoXZikHVoLUVLGk04dzXYzdi-vdD-xaHnt0Z3BD45Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 14, 2022 at 02:59:02PM -0400, Jim Quinlan wrote:
-> ...
+On Sun, 19 Jun 2022 14:14:03 +0200 Thorsten Leemhuis <regressions@leemhuis.info> wrote:
 
-> The original patchset was and is controversial, as it is basically a
-> square peg that does not fit nicely into a round Linux hole. It took
-> 11 versions of following reviewers' suggestions until it was
-> accepted.  And now it has been reverted, I am wondering if it will
-> ever be let in again or whether I should even try.
+> Andrew, is there a reason why this patch afaics isn't mainlined yet and
+> lingering in linux-next for so long? 
 
-The original patchset [1] may have been controversial, but that's not
-the issue here.  The only thing we need to solve here is to post the
-four patches I reverted with a tiny change to one of them to avoid the
-regression.  I don't think that should be a problem.
-
-Bjorn
-
-[1] https://lore.kernel.org/r/20220106160332.2143-1-jim2101024@gmail.com
+I didn't bother doing a hotfixes merge last week because there wasn't anything
+very urgent-looking in there.  I'll be putting together a pull request later this week.
