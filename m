@@ -1,118 +1,161 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73C207C
-	for <regressions@lists.linux.dev>; Fri, 24 Jun 2022 09:14:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1656062047;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=glFz0yEPd5ahmG1wMSVmuqssquTjanShg2UhFo4gmlE=;
-	b=QKY7qQSelDvtfnEcBEFVTx3AOS9xF76YpM8xkq027ivJP90TXDGrHL/Tb6Qk0sCEPvJvWh
-	c0lcvH+frKW6l0m7AeMgsZHQ+zEVZrlvWTTdvdVY9KgGpnl7Ggq959DXtHoFyKCYMOOKZX
-	KshPy2QMA3WTv6r3XYxEABv+edXh0Ng=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-502-BDPMhO6UP5Sf9t1Pf7FYsQ-1; Fri, 24 Jun 2022 05:14:05 -0400
-X-MC-Unique: BDPMhO6UP5Sf9t1Pf7FYsQ-1
-Received: by mail-wm1-f70.google.com with SMTP id j31-20020a05600c1c1f00b0039c481c4664so774273wms.7
-        for <regressions@lists.linux.dev>; Fri, 24 Jun 2022 02:14:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=glFz0yEPd5ahmG1wMSVmuqssquTjanShg2UhFo4gmlE=;
-        b=AjEwIS876tRlUS50SKt7e7e/Rg+NZbec1nHcAAPVBcPMxo03IQKknj1Jn+NQQdXyQL
-         cX8hNYcWHCi6mxMrZuhlOHkDdHUgaN2UtGjWsAyi/9R3dWIAwDBT/l3h2/jcL0AptS9b
-         fS6i0d+Ob+4bgPSyKWoqTZAyqBFM98NJDUrx7T6faNWAmZXkD/8+emDuH8FEIS4pZTlm
-         2qFrjdnIAuicpquh8D/XdKojradrK5M93sS2UGOmqZRo7bFQmWTRZGsDGKQfK4wl8SFj
-         f61Ue1lOHeWZ+aC6TvRJPrl4fCkwaEAtm/MdxuCw6yr+9udE7oag81RLx7EwUcOIh2N1
-         FuTw==
-X-Gm-Message-State: AJIora/+zPLQrxxg0qvMO6IBxHoDAPI/SWLt2pD6YL4nzNTghDlrd+YA
-	Rxn8YMaSmHnqQxXCro2Nl7PXaEOpdpm5Nk3sw0FWjrm2GlqpXWlYNkykV2DsdbB696YhAfDGG5u
-	7Z0qjNFGmuQFq8jTJpUimexs=
-X-Received: by 2002:a05:6000:1ac8:b0:21b:9236:6207 with SMTP id i8-20020a0560001ac800b0021b92366207mr11874824wry.123.1656062044432;
-        Fri, 24 Jun 2022 02:14:04 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1v+v1Mo2hL5d9qzq/pxsLzqhnsh8+crKgUNMKL9qPMWqbIpLCOjYlzZkK4pNrV4/4W7u8qnwQ==
-X-Received: by 2002:a05:6000:1ac8:b0:21b:9236:6207 with SMTP id i8-20020a0560001ac800b0021b92366207mr11874810wry.123.1656062044239;
-        Fri, 24 Jun 2022 02:14:04 -0700 (PDT)
-Received: from redhat.com ([2.55.188.216])
-        by smtp.gmail.com with ESMTPSA id w4-20020a7bc104000000b0039c45fc58c4sm2105865wmi.21.2022.06.24.02.14.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jun 2022 02:14:03 -0700 (PDT)
-Date: Fri, 24 Jun 2022 05:14:00 -0400
-From: "Michael S. Tsirkin" <mst@redhat.com>
-To: Ben Hutchings <ben@decadent.org.uk>
-Cc: Jason Wang <jasowang@redhat.com>, David Hildenbrand <david@redhat.com>,
-	virtualization <virtualization@lists.linux-foundation.org>,
-	debian-kernel@lists.debian.org,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: virtio_balloon regression in 5.19-rc3
-Message-ID: <20220624051309-mutt-send-email-mst@kernel.org>
-References: <64c567bc77c4fbe7bfe37467cc1c89d24a45c37a.camel@decadent.org.uk>
- <402bb9b5-7d6e-ed69-8b66-3ebefd80ff15@redhat.com>
- <CACGkMEs45CCniTjbxr3OThdbG=Q4nGrm_11LLDfR4rRLetSx0A@mail.gmail.com>
- <a1a127d144d65937c5543c142e69213c9b8d2d40.camel@decadent.org.uk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183BA28EB
+	for <regressions@lists.linux.dev>; Fri, 24 Jun 2022 12:53:34 +0000 (UTC)
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1o4ioQ-0006Q1-5U; Fri, 24 Jun 2022 14:53:26 +0200
+Message-ID: <1a5ec80d-690f-285c-3da8-ccdaf5516d85@pengutronix.de>
+Date: Fri, 24 Jun 2022 14:53:23 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <a1a127d144d65937c5543c142e69213c9b8d2d40.camel@decadent.org.uk>
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=mst@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [BUG] BLE device unpairing triggers kernel panic
+Content-Language: en-US
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Tedd Ho-Jeong An <hj.tedd.an@gmail.com>
+References: <a1ce1743-e450-6cdb-dfab-56a3e3eb9aed@pengutronix.de>
+ <CABBYNZ+z8kBUKGXbZSfb0ynJaTnPQRp0wFDUb12AW1ymbNx1eg@mail.gmail.com>
+ <CABBYNZ+zsuggTpaUSPsZKeL=qqvM1=sgMWzdWEqaS_oh6dhY2g@mail.gmail.com>
+ <8d5c4724-d511-39b1-21d7-116c91cada45@pengutronix.de>
+ <b0cb4fb0-6b89-b9df-9ae6-421ac52b0100@pengutronix.de>
+ <CABBYNZ+ubN2rc=zoN_53Pmp6kt3L5UcY3knbtjhhVOjPBpJv4Q@mail.gmail.com>
+ <d5654901-6b1f-a1fa-0101-8b52b345af7b@pengutronix.de>
+ <CABBYNZ+8dpPBqaQMr-Hz_DJRxT-0ucCjgAJH50FUaN7Sn9H6rA@mail.gmail.com>
+ <1d1b76cf-df6f-3935-5cd2-c45ea78f2c33@pengutronix.de>
+ <CABBYNZLdy-rndKczoG_WiWXQmacX+vzCbftQKvzJ3B6imtZopw@mail.gmail.com>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <CABBYNZLdy-rndKczoG_WiWXQmacX+vzCbftQKvzJ3B6imtZopw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
-On Tue, Jun 21, 2022 at 06:10:00PM +0200, Ben Hutchings wrote:
-> On Tue, 2022-06-21 at 17:34 +0800, Jason Wang wrote:
-> > On Tue, Jun 21, 2022 at 5:24 PM David Hildenbrand <david@redhat.com> wrote:
-> > > 
-> > > On 20.06.22 20:49, Ben Hutchings wrote:
-> > > > I've tested a 5.19-rc3 kernel on top of QEMU/KVM with machine type
-> > > > pc-q35-5.2.  It has a virtio balloon device defined in libvirt as:
-> > > > 
-> > > >     <memballoon model="virtio">
-> > > >       <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
-> > > >     </memballoon>
-> > > > 
-> > > > but the virtio_balloon driver fails to bind to it:
-> > > > 
-> > > >     virtio_balloon virtio4: init_vqs: add stat_vq failed
-> > > >     virtio_balloon: probe of virtio4 failed with error -5
-> > > > 
-> > > 
-> > > Hmm, I don't see any recent changes to drivers/virtio/virtio_balloon.c
-> > > 
-> > > virtqueue_add_outbuf() fails with -EIO if I'm not wrong. That's the
-> > > first call of virtqueue_add_outbuf() when virtio_balloon initializes.
-> > > 
-> > > 
-> > > Maybe something in generic virtio code changed?
-> > 
-> > Yes, we introduced the IRQ hardening. That could be the root cause and
-> > we've received lots of reports so we decide to disable it by default.
-> > 
-> > Ben, could you please try this patch: (and make sure
-> > CONFIG_VIRTIO_HARDEN_NOTIFICATION is not set)
-> > 
-> > https://lore.kernel.org/lkml/20220620024158.2505-1-jasowang@redhat.com/T/
+Hi Tedd, Luiz,
+
+On 21.06.22 20:52, Luiz Augusto von Dentz wrote:
+> Hi Ahmad, Tedd,
 > 
-> Yes, that patch fixes the regression for me.
+> On Tue, Jun 21, 2022 at 1:32 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>>
+>> Hello Luiz,
+>>
+>> On 20.06.22 22:18, Luiz Augusto von Dentz wrote:
+>>> On Mon, Jun 20, 2022 at 3:06 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>>>> Disconnect of connection #1 being processed after new connection #2
+>>>> concluded sounds wrong. Would I be able to reconnect
+>>>> afterwards or would all connections, but the first, be directly
+>>>> disconnected...?
+>>>
+>>> That depends on the order you have queued the commands, it will be
+>>> processed in the exact order it is received, that why I said it is
+>>> single queue design, and it is done like that to prevent messing up
+>>> with states since we know the exact order the commands will be sent.
+>>>
+>>>>> otherwise we need a
+>>>>> different queue to handle command that abort/cancel other already in
+>>>>> the queue.
+>>>>
+>>>> Is the revert an acceptable interim solution or are there issues
+>>>> I am missing?
+>>>
+>>> Afaik there were problem with concurrent connections request, so what
+>>> would really help us here is to have some tests to emulate this
+>>> scenario with our CI, in the meantime please check if the following
+>>> fixes your problem:
+>>>
+>>> https://gist.github.com/Vudentz/b4fff292c7f4ad55ca3299fd5ab797ae
+>>
+>> Doesn't help unfortunately. First pairing works as before.
+>> Second still fails:
+>>
+>>   Bluetooth: hci0: Opcode 0x200d failed: -110
+>>   Bluetooth: hci0: request failed to create LE connection: err -110
 > 
-> Ben.
+> Can we try to add a test in mgmt-tester to reproduce the error above?
+
+I am not familiar with mgmt-tester. What information do you
+need to reproduce? In the meantime, can we revert the commit?
+I understand that this may break other uses, but I believe
+previously working stuff should have precedence..
+
+Cheers,
+Ahmad
+
+> 
+>> Cheers,
+>> Ahmad
+>>
+>>>
+>>>> Cheers,
+>>>> Ahmad
+>>>>
+>>>>>
+>>>>>> We've been deploying the revert for a while now and I just posted
+>>>>>> it to the mailing list[1]. There have been other reports
+>>>>>> of this issue with different hardware too and fixing sent_cmd
+>>>>>> would likely be too complicated/time intensive for me.
+>>>>>>
+>>>>>> I am happy to test future patches that fix this properly though.
+>>>>>>
+>>>>>> [1]: https://lore.kernel.org/linux-bluetooth/20220616092418.738877-1-a.fatoum@pengutronix.de/T/#t
+>>>>>>
+>>>>>> Cheers,
+>>>>>> Ahmad
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>> Cheers,
+>>>>>>> Ahmad
+>>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> --
+>>>>>> Pengutronix e.K.                           |                             |
+>>>>>> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+>>>>>> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+>>>>>> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>>>>>
+>>>>>
+>>>>>
+>>>>
+>>>>
+>>>> --
+>>>> Pengutronix e.K.                           |                             |
+>>>> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+>>>> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+>>>> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>>>
+>>>
+>>>
+>>
+>>
+>> --
+>> Pengutronix e.K.                           |                             |
+>> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+>> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+>> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> 
+> 
 
 
-Jason are you going to fix balloon to call device_ready before
-registering device with linux?
-> -- 
-> Ben Hutchings
-> Any smoothly functioning technology is indistinguishable
-> from a rigged demo.
-
-
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
