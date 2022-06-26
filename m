@@ -1,133 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4C472907
-	for <regressions@lists.linux.dev>; Sat, 25 Jun 2022 16:44:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09853C3411C;
-	Sat, 25 Jun 2022 16:44:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1656175468;
-	bh=Geg+5XlzYixUTV3CmVE0KP0pCVZ2wxiFREf+OoFrCsE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lswxXwhy7AKXZPCl3Cez5IfeYFtSo3HVu40F91mlYwDV8O1fLFvMcTACIzkwknM9v
-	 ZzKf6d9zBC1DAsA2PA45a3HizjWm1uRVvYsVJn3RdHPYmQT3RJxaIMI4sbaHwKxzsP
-	 4wxcPcA4RjO1Pj16yMXAX1z2+vHRi92F88qUaEuk=
-Date: Sat, 25 Jun 2022 18:44:23 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Alex Natalsson <harmoniesworlds@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: echo mem > /sys/power/state write error "Device or resource
- busy" on Amlogic A311D device
-Message-ID: <Yrc7Z6R4iG26FkmD@kroah.com>
-References: <CADs9LoMEF86Fp2-0ji7d9CNA5F=8ArwPWnj09h_Cwo6poNsWVA@mail.gmail.com>
- <YqMdS+3qpYHfWN9f@kroah.com>
- <CADs9LoMAgCNU6Rx2y0t7kRMmLw-Qd06Ayq19qM2-PkOJUgdxig@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22E317EC
+	for <regressions@lists.linux.dev>; Sun, 26 Jun 2022 07:50:11 +0000 (UTC)
+Received: by mail-pj1-f54.google.com with SMTP id a11-20020a17090acb8b00b001eca0041455so8048221pju.1
+        for <regressions@lists.linux.dev>; Sun, 26 Jun 2022 00:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=szddLrd25i6U/qAutufSCQ2QV6OuNtFw/2uiX/jXMh4=;
+        b=frQpoe8ICsxbq/MTv7WGnraeh4/TfkGPi93p9PbqfAZdOUPTVZAgoXI797bfdn/YAY
+         gJv4b22jjyPMwZk5FZ9H6AJ4rXbxggNwGN2lpDU5fGL+ymKSaJLjGXDKPOfc1H88HTSq
+         upljifWvjf70kYZrddeip0InkVoyMNZHHpJkqA6kjbrNmysHSFIp9aLMAi7+MH7Y2d4w
+         aEezmHOinJM3MHmJg0YuwIB4fYA1FYSdGp0g9e8/yJRIQQ6Xcvhph71b1IxjE4r2X8hC
+         G8PH/+5MWzgcmQ7jA/khhRd7ZoxMKxakz+9ogF05cNP+WcQSivmMk0USE+CkPBQ0CB5A
+         gMWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=szddLrd25i6U/qAutufSCQ2QV6OuNtFw/2uiX/jXMh4=;
+        b=w/+ADsEC9aqufH2jcYpoP+jUzxj4+sIvv6aHAYMnEJj2kPQ71pbT02HGXZrr4FonnI
+         i/6mqL9mBH5Q4iMGixvZb/+K3QvGcbccUfUJDjywZhPrbcNEshIBja6lDDTc/xjmE6tu
+         xyxqC2RjrWoVEbMvkUNAjszFmsUgaGIIAfx3UIyrrAZnjKBXjBigfUQ+8Y9Zox6otirr
+         Og2VvGIBPqqZ8blX4Nu7xXC3PXd0zTidIS17pcVzHwHMsQzmgkSOjFYxJfixpJAoTw8W
+         Mamc0HwAzxw/CwgXK0slPPPNbrRSKW61K0JxaJQOVl+fagtrXm5ca8bXs9xyrztt7Sj1
+         r16g==
+X-Gm-Message-State: AJIora+nPi9ibj0Nh6+gAX1L8QXAwzXs5/PtY1s7+e0lC18JKuip9PBy
+	BaiG1x1KuC4YjqKiIIzSzQwur84QHdaaMVX3a9w=
+X-Google-Smtp-Source: AGRyM1tdCN30W9IzWasfH6F+mORtmrDOJWVskcMA9e9OIc6YTzpBZ9LqUTT9Zlx1rEJ4T/seOwPAzC/EHBOxBImVHog=
+X-Received: by 2002:a17:902:d5c3:b0:169:672:f897 with SMTP id
+ g3-20020a170902d5c300b001690672f897mr8063721plh.71.1656229811096; Sun, 26 Jun
+ 2022 00:50:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADs9LoMAgCNU6Rx2y0t7kRMmLw-Qd06Ayq19qM2-PkOJUgdxig@mail.gmail.com>
+References: <CADs9LoMEF86Fp2-0ji7d9CNA5F=8ArwPWnj09h_Cwo6poNsWVA@mail.gmail.com>
+ <YqMdS+3qpYHfWN9f@kroah.com> <CADs9LoMAgCNU6Rx2y0t7kRMmLw-Qd06Ayq19qM2-PkOJUgdxig@mail.gmail.com>
+ <Yrc7Z6R4iG26FkmD@kroah.com>
+In-Reply-To: <Yrc7Z6R4iG26FkmD@kroah.com>
+From: Alex Natalsson <harmoniesworlds@gmail.com>
+Date: Sun, 26 Jun 2022 10:49:59 +0300
+Message-ID: <CADs9LoNs=r90qtCwgQn2jKnYHCW7WnAWs39G37nbs+8RvpoVBg@mail.gmail.com>
+Subject: Re: echo mem > /sys/power/state write error "Device or resource busy"
+ on Amlogic A311D device
+To: Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-A: http://en.wikipedia.org/wiki/Top_post
-Q: Were do I find info about this thing called top-posting?
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
-
-A: No.
-Q: Should I include quotations after my reply?
-
-http://daringfireball.net/2007/07/on_top
-
-On Sat, Jun 25, 2022 at 06:01:22PM +0300, Alex Natalsson wrote:
-> New kernels freezing after resume only when scaling governor is
-> "conservative". Yes, I using this because my solar battery produce a
-> few of electricity. When scaling governor is performance system not
-> freezing after resume.
-> However, sometimes I received "Device or resource busy" error after
-> echo mem > /sys/power/state.
-> Later I found out what this was related with another bug:
-> pipewire-media-session is <defunct>, nosound and many processes which
-> using audio as mplayer, ffplay, alsamixer and etc was not responding
-> and not terminating even throught kill -9.
-> The log after alsamixer launch:
-> [  103.786358] Internal error: Oops: 96000004 [#1] SMP
-> [  103.786509] Modules linked in: snd_seq_dummy snd_hrtimer snd_seq
-> snd_seq_device bnep nls_utf8 mt7601u mac80211 hci_uart libarc4 joydev
-> brcmfmac btbcm panfrost bluetooth meson_vdec(C) brcmutil gpu_sched
-> cfg80211 dwmac_generic videobuf2_dma_contig v4l2_mem2mem
-> videobuf2_memops videobuf2_v4l2 videobuf2_common drm_shmem_helper
-> ecdh_generic dwmac_meson8b stmmac_platform dw_hdmi_i2s_audio stmmac
-> ecc ir_nec_decoder videodev pcs_xpcs rc_khadas phylink ptp
-> meson_saradc meson_ir rc_core snd_soc_meson_axg_frddr
-> snd_soc_meson_axg_toddr snd_soc_meson_axg_sound_card
-> snd_soc_meson_card_utils snd_soc_meson_axg_fifo ao_cec_g12a
-> snd_soc_meson_axg_tdmin snd_soc_meson_axg_tdm_interface
-> snd_soc_meson_axg_tdmout snd_soc_meson_axg_tdm_formatter rfkill
-> meson_gxbb_wdt fuse crypto_user uas usb_storage adc_keys
-> gpio_keys_polled industrialio
-> [  103.857778] CPU: 3 PID: 530 Comm: pipewire-media- Tainted: G
->  C        5.16.0-ARCH+ #8
-
-But this is 5.16.0, the commit you pointed to is in 5.17.
+> A: http://en.wikipedia.org/wiki/Top_post
+> Q: Were do I find info about this thing called top-posting?
+> A: Because it messes up the order in which people normally read text.
+> Q: Why is top-posting such a bad thing?
+> A: Top-posting.
+> Q: What is the most annoying thing in e-mail?
+>
+> A: No.
+> Q: Should I include quotations after my reply?
+>
+> http://daringfireball.net/2007/07/on_top
+Thanks))
 
 
+> But this is 5.16.0, the commit you pointed to is in 5.17.
+>
+I don't understanding why so it... At present  HEAD points to 5.19-rc2...
 
-> [  103.857791] Hardware name: Khadas VIM3 (DT)
-> [  103.857795] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [  103.857801] pc : dpcm_be_connect+0xd0/0x2d0
-> [  103.881758] lr : dpcm_add_paths.isra.0+0xcc/0x1e0
-> [  103.881763] sp : ffff800009f4b870
-> [  103.881765] x29: ffff800009f4b870 x28: ffff000003b944c0 x27: 0000000000000001
-> [  103.881772] x26: 0000000000000001 x25: 0000000000000340 x24: 00000000000002a0
-> [  103.881777] x23: 0000000000000001 x22: 0000000000000000 x21: ffff000005b18080
-> [  103.881782] x20: ffff000005b183c0 x19: ffff000005b1c080 x18: 0000000000000000
-> [  103.881787] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
-> [  103.881792] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
-> [  103.881797] x11: 0000000000000000 x10: 0000000000000000 x9 : 0000000000000000
-> [  103.881801] x8 : ffff000012020400 x7 : 0000000000000000 x6 : 000000000000003f
-> [  103.881806] x5 : 0000000000000040 x4 : 0000000000000000 x3 : ffff000002822000
-> [  103.881811] x2 : ffff000002861b50 x1 : ffff00000282f800 x0 : ffff000002861800
-> [  103.881817] Call trace:
-> [  103.881819]  dpcm_be_connect+0xd0/0x2d0
-> [  103.881823]  dpcm_add_paths.isra.0+0xcc/0x1e0
-> [  103.881826]  dpcm_fe_dai_open+0x80/0x194
-> [  103.881831]  snd_pcm_open_substream+0xa4/0x174
-> [  103.881838]  snd_pcm_open.part.0+0xd8/0x1dc
-> [  103.881843]  snd_pcm_capture_open+0x64/0x94
-> [  103.992730]  snd_open+0xac/0x1d0
-> [  103.992739]  chrdev_open+0xe0/0x2d0
-> [  103.999389]  do_dentry_open+0x12c/0x3a0
-> [  103.999397]  vfs_open+0x30/0x3c
-> [  103.999401]  do_open+0x204/0x414
-> [  103.999405]  path_openat+0x10c/0x27c
-> [  103.999408]  do_filp_open+0x80/0x130
-> [  103.999412]  do_sys_openat2+0xb4/0x170
-> [  103.999414]  __arm64_sys_openat+0x64/0xb0
-> [  103.999416]  invoke_syscall+0x48/0x114
-> [  103.999426]  el0_svc_common.constprop.0+0xd4/0xfc
-> [  103.999429]  do_el0_svc+0x28/0x90
-> [  103.999432]  el0_svc+0x28/0x80
-> [  103.999440]  el0t_64_sync_handler+0xa4/0x130
-> [  103.999442]  el0t_64_sync+0x1a0/0x1a4
-> [  103.999451] Code: 8b000020 f9406841 f9406816 f9400020 (f94002c1)
-> [  103.999457] ---[ end trace e01b673b8147057d ]---
-> 
-> 
-> After I removed pipewire software "Device or resource busy" error was
-> disappear. But the sound and media still doesn't working and alsamixer
-> cannot change sound card to my usb audio device after commit
-> bbf7d3b1c4f40eb02dd1dffb500ba00b0bff0303.
+commit b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3 (HEAD, tag: v5.19-rc2)
+Author: Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun Jun 12 16:11:37 2022 -0700
 
-Can you send the info to the sound mailing list and cc the developers of
-that commit with your information?  That commit looks odd to be causing
-problems.
+    Linux 5.19-rc2
 
-thanks,
+....but
+leha@VIM3 ~/ArchlinuxVIM/linux-git-sound/src/linux $ make kernelrelease
+5.16.0-rc1-ARCH+
+leha@VIM3 ~/ArchlinuxVIM/linux-git-sound/src/linux $ make kernelversion
+5.16.0-rc1
+leha@VIM3 ~/ArchlinuxVIM/linux-git-sound/src/linux $ zcat
+/proc/config.gz |head -n 5
+#
+# Automatically generated file; DO NOT EDIT.
+# Linux/arm64 5.16.0-rc1 Kernel Configuration
+#
+CONFIG_CC_VERSION_TEXT="gcc (GCC) 12.1.0"
+leha@VIM3 ~/ArchlinuxVIM/linux-git-sound/src/linux $
 
-greg k-h
+
+> Can you send the info to the sound mailing list and cc the developers of
+> that commit with your information?  That commit looks odd to be causing
+> problems.
+OK. I will be to try.
