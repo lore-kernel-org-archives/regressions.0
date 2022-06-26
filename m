@@ -1,96 +1,209 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22E317EC
-	for <regressions@lists.linux.dev>; Sun, 26 Jun 2022 07:50:11 +0000 (UTC)
-Received: by mail-pj1-f54.google.com with SMTP id a11-20020a17090acb8b00b001eca0041455so8048221pju.1
-        for <regressions@lists.linux.dev>; Sun, 26 Jun 2022 00:50:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFEC321F
+	for <regressions@lists.linux.dev>; Sun, 26 Jun 2022 20:06:53 +0000 (UTC)
+Received: by mail-wr1-f49.google.com with SMTP id i1so5779780wrb.11
+        for <regressions@lists.linux.dev>; Sun, 26 Jun 2022 13:06:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=szddLrd25i6U/qAutufSCQ2QV6OuNtFw/2uiX/jXMh4=;
-        b=frQpoe8ICsxbq/MTv7WGnraeh4/TfkGPi93p9PbqfAZdOUPTVZAgoXI797bfdn/YAY
-         gJv4b22jjyPMwZk5FZ9H6AJ4rXbxggNwGN2lpDU5fGL+ymKSaJLjGXDKPOfc1H88HTSq
-         upljifWvjf70kYZrddeip0InkVoyMNZHHpJkqA6kjbrNmysHSFIp9aLMAi7+MH7Y2d4w
-         aEezmHOinJM3MHmJg0YuwIB4fYA1FYSdGp0g9e8/yJRIQQ6Xcvhph71b1IxjE4r2X8hC
-         G8PH/+5MWzgcmQ7jA/khhRd7ZoxMKxakz+9ogF05cNP+WcQSivmMk0USE+CkPBQ0CB5A
-         gMWQ==
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=FTo+6T5cOGS/6r6fOb8WRRmId0zEZsn96kv36lWXteA=;
+        b=bfbfHQb0EGLBVt55AaYEx0O5i8agrroLGP9/uH/T9AKQOFTnG7UIphqWIhoRPXLUUL
+         9z1IbY6mia8q2outxOGXd3APbnWlbB3YrJC+di5Me97zZm26HinG7f4r1wlRlLOrInm/
+         41hD4sSx5XhAZqlLAHFjlNIJpcwpojVn54soR6qVnKinpYYVfqdXayfYbL64VZcBwN7c
+         DT/lJ6tC2s9Re1O3OZWxV8fSujNFE4x+/7pQlVnzo+7Of0RB02MP+33tmoDU0AbpZPCT
+         ODdsWmkURfXWKCWX7br7AvBhkryaFxhDdX8oXVUxMp+ihD8WVZ8qfrBhLIf/cwSGmE+b
+         dWSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=szddLrd25i6U/qAutufSCQ2QV6OuNtFw/2uiX/jXMh4=;
-        b=w/+ADsEC9aqufH2jcYpoP+jUzxj4+sIvv6aHAYMnEJj2kPQ71pbT02HGXZrr4FonnI
-         i/6mqL9mBH5Q4iMGixvZb/+K3QvGcbccUfUJDjywZhPrbcNEshIBja6lDDTc/xjmE6tu
-         xyxqC2RjrWoVEbMvkUNAjszFmsUgaGIIAfx3UIyrrAZnjKBXjBigfUQ+8Y9Zox6otirr
-         Og2VvGIBPqqZ8blX4Nu7xXC3PXd0zTidIS17pcVzHwHMsQzmgkSOjFYxJfixpJAoTw8W
-         Mamc0HwAzxw/CwgXK0slPPPNbrRSKW61K0JxaJQOVl+fagtrXm5ca8bXs9xyrztt7Sj1
-         r16g==
-X-Gm-Message-State: AJIora+nPi9ibj0Nh6+gAX1L8QXAwzXs5/PtY1s7+e0lC18JKuip9PBy
-	BaiG1x1KuC4YjqKiIIzSzQwur84QHdaaMVX3a9w=
-X-Google-Smtp-Source: AGRyM1tdCN30W9IzWasfH6F+mORtmrDOJWVskcMA9e9OIc6YTzpBZ9LqUTT9Zlx1rEJ4T/seOwPAzC/EHBOxBImVHog=
-X-Received: by 2002:a17:902:d5c3:b0:169:672:f897 with SMTP id
- g3-20020a170902d5c300b001690672f897mr8063721plh.71.1656229811096; Sun, 26 Jun
- 2022 00:50:11 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=FTo+6T5cOGS/6r6fOb8WRRmId0zEZsn96kv36lWXteA=;
+        b=lwCv33u25o8757EwWG767xcJQ9qP44Pi4XtC5jvZVUlUqYFoc7uvGaqs5J3PLhd0Fz
+         +1GI4UhF/lFUB+l7BGtPZBzk5XzzmQyCPDmKE0cLNMk4oFUQvanqp4gsCiigCTYVv0ui
+         nFXAcapLWCuDOO4yWxMCcFokRoKWhh32/z5gLynfCmwesOGJ6NLE35KcnTf30iuJIm55
+         //QGEOUTArGtKAy7qUWzLCZzko89K61JIwC1QSslyQrbS7XDMcDN3aptUnDSPjevLMET
+         FpTeA8hcGoQumCdRMxqc3cGuJqzrkotaH5q2ezEtJK9sFzAymlGNdc0Kr5LYO1smI2Q9
+         Zt4g==
+X-Gm-Message-State: AJIora9npZheNY2j93GLY/SikV88lKoy3VXzA7n/R1alir5H1ZZNNO8X
+	wvg+Vy5WozrIiazP0x2FV1I=
+X-Google-Smtp-Source: AGRyM1sPH3ekwgKmoKEnXpmO/sL1oVu+JInUhznDLtFtEFcn+zHA2g2xbEoadbT2WjgraNDO8EvSZw==
+X-Received: by 2002:a05:6000:10c5:b0:21b:9aed:47e3 with SMTP id b5-20020a05600010c500b0021b9aed47e3mr9490397wrx.570.1656274011704;
+        Sun, 26 Jun 2022 13:06:51 -0700 (PDT)
+Received: from [192.168.0.17] ([94.14.166.112])
+        by smtp.gmail.com with ESMTPSA id m17-20020adfe0d1000000b0021b866397a7sm8602456wri.1.2022.06.26.13.06.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 26 Jun 2022 13:06:51 -0700 (PDT)
+Message-ID: <940fa370-08ce-1d39-d5cc-51de8e853b47@gmail.com>
+Date: Sun, 26 Jun 2022 21:06:50 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CADs9LoMEF86Fp2-0ji7d9CNA5F=8ArwPWnj09h_Cwo6poNsWVA@mail.gmail.com>
- <YqMdS+3qpYHfWN9f@kroah.com> <CADs9LoMAgCNU6Rx2y0t7kRMmLw-Qd06Ayq19qM2-PkOJUgdxig@mail.gmail.com>
- <Yrc7Z6R4iG26FkmD@kroah.com>
-In-Reply-To: <Yrc7Z6R4iG26FkmD@kroah.com>
-From: Alex Natalsson <harmoniesworlds@gmail.com>
-Date: Sun, 26 Jun 2022 10:49:59 +0300
-Message-ID: <CADs9LoNs=r90qtCwgQn2jKnYHCW7WnAWs39G37nbs+8RvpoVBg@mail.gmail.com>
-Subject: Re: echo mem > /sys/power/state write error "Device or resource busy"
- on Amlogic A311D device
-To: Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [REGRESSION] connection timeout with routes to VRF
+Content-Language: en-US
+To: David Ahern <dsahern@kernel.org>, Jan Luebbe <jluebbe@lasnet.de>,
+ Robert Shearman <robertshearman@gmail.com>, Andy Roulin <aroulin@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+ regressions@lists.linux.dev, linux-kernel <linux-kernel@vger.kernel.org>
+References: <a54c149aed38fded2d3b5fdb1a6c89e36a083b74.camel@lasnet.de>
+ <6410890e-333d-5f0e-52f2-1041667c80f8@kernel.org>
+From: Mike Manning <mvrmanning@gmail.com>
+In-Reply-To: <6410890e-333d-5f0e-52f2-1041667c80f8@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> A: http://en.wikipedia.org/wiki/Top_post
-> Q: Were do I find info about this thing called top-posting?
-> A: Because it messes up the order in which people normally read text.
-> Q: Why is top-posting such a bad thing?
-> A: Top-posting.
-> Q: What is the most annoying thing in e-mail?
+On 11/06/2022 17:44, David Ahern wrote:
+> On 6/11/22 5:14 AM, Jan Luebbe wrote:
+>> Hi,
+>>
+>> TL;DR: We think we have found a regression in the handling of VRF route leaking
+>> caused by "net: allow binding socket in a VRF when there's an unbound socket"
+>> (3c82a21f4320).
+> This is the 3rd report in the past few months about this commit.
 >
-> A: No.
-> Q: Should I include quotations after my reply?
+> ...
 >
-> http://daringfireball.net/2007/07/on_top
-Thanks))
-
-
-> But this is 5.16.0, the commit you pointed to is in 5.17.
+>> Our minimized test case looks like this:
+>>  ip rule add pref 32765 from all lookup local
+>>  ip rule del pref 0 from all lookup local
+>>  ip link add red type vrf table 1000
+>>  ip link set red up
+>>  ip route add vrf red unreachable default metric 8192
+>>  ip addr add dev red 172.16.0.1/24
+>>  ip route add 172.16.0.0/24 dev red
+>>  ip vrf exec red socat -dd TCP-LISTEN:1234,reuseaddr,fork SYSTEM:"echo connected" &
+>>  sleep 1
+>>  nc 172.16.0.1 1234 < /dev/null
+>>
+> ...
+> Thanks for the detailed analysis and reproducer.
 >
-I don't understanding why so it... At present  HEAD points to 5.19-rc2...
+>> The partial revert
+>> diff --git a/include/net/inet_hashtables.h b/include/net/inet_hashtables.h
+>> index 98e1ec1a14f0..41e7f20d7e51 100644
+>> --- a/include/net/inet_hashtables.h
+>> +++ b/include/net/inet_hashtables.h
+>> @@ -310,8 +310,9 @@ static inline struct sock *inet_lookup_listener(struct net *net,
+>>  #define INET_MATCH(__sk, __net, __cookie, __saddr, __daddr, __ports, __dif, __sdif) \
+>>         (((__sk)->sk_portpair == (__ports))                     &&      \
+>>          ((__sk)->sk_addrpair == (__cookie))                    &&      \
+>> -        (((__sk)->sk_bound_dev_if == (__dif))                  ||      \
+>> -         ((__sk)->sk_bound_dev_if == (__sdif)))                &&      \
+>> +        (!(__sk)->sk_bound_dev_if      ||                              \
+>> +          ((__sk)->sk_bound_dev_if == (__dif))                 ||      \
+>> +          ((__sk)->sk_bound_dev_if == (__sdif)))               &&      \
+>>          net_eq(sock_net(__sk), (__net)))
+>>  #else /* 32-bit arch */
+>>  #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
+>> @@ -321,8 +322,9 @@ static inline struct sock *inet_lookup_listener(struct net *net,
+>>         (((__sk)->sk_portpair == (__ports))             &&              \
+>>          ((__sk)->sk_daddr      == (__saddr))           &&              \
+>>          ((__sk)->sk_rcv_saddr  == (__daddr))           &&              \
+>> -        (((__sk)->sk_bound_dev_if == (__dif))          ||              \
+>> -         ((__sk)->sk_bound_dev_if == (__sdif)))        &&              \
+>> +        (!(__sk)->sk_bound_dev_if      ||                              \
+>> +          ((__sk)->sk_bound_dev_if == (__dif))         ||              \
+>> +          ((__sk)->sk_bound_dev_if == (__sdif)))       &&              \
+>>          net_eq(sock_net(__sk), (__net)))
+>>  #endif /* 64-bit arch */
+>>
+>> restores the original behavior when applied on v5.18. This doesn't apply
+>> directly on master, as the macro was replaced by an inline function in "inet:
+>> add READ_ONCE(sk->sk_bound_dev_if) in INET_MATCH()" (4915d50e300e).
+>>
+>> I have to admit I don't quite understand 3c82a21f4320, so I'm not sure how to
+>> proceed. What would be broken by the partial revert above? Are there better ways
+>> to configure routing into the VRF than simply "ip route add 172.16.0.0/24 dev
+>> red" that still work?
+>>
+>> Thanks,
+>> Jan
+>>
+>> #regzbot introduced: 3c82a21f4320
+>>
+>>
+>>
+> Andy Roulin suggested the same fix to the same problem a few weeks back.
+> Let's do it along with a test case in fcnl-test.sh which covers all of
+> these vrf permutations.
+>
+Reverting 3c82a21f4320 would remove isolation between the default and other VRFs
+needed when no VRF route leaking has been configured between these: there may be
+unintended leaking of packets arriving on a device enslaved to an l3mdev due to
+the potential match on an unbound socket.
 
-commit b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3 (HEAD, tag: v5.19-rc2)
-Author: Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun Jun 12 16:11:37 2022 -0700
+VRF route leaking requires routes to be present for both ingress and egress VRFs,
+the testcase shown only has a route from default to red VRF. The implicit return
+path from red to default VRF due to match on unbound socket is no longer present.
 
-    Linux 5.19-rc2
+Match on unbound socket in all VRFs and not only in the default VRF should be
+possible by setting this option (see
+https://www.kernel.org/doc/Documentation/networking/vrf.txt):
 
-....but
-leha@VIM3 ~/ArchlinuxVIM/linux-git-sound/src/linux $ make kernelrelease
-5.16.0-rc1-ARCH+
-leha@VIM3 ~/ArchlinuxVIM/linux-git-sound/src/linux $ make kernelversion
-5.16.0-rc1
-leha@VIM3 ~/ArchlinuxVIM/linux-git-sound/src/linux $ zcat
-/proc/config.gz |head -n 5
-#
-# Automatically generated file; DO NOT EDIT.
-# Linux/arm64 5.16.0-rc1 Kernel Configuration
-#
-CONFIG_CC_VERSION_TEXT="gcc (GCC) 12.1.0"
-leha@VIM3 ~/ArchlinuxVIM/linux-git-sound/src/linux $
+sysctl net.ipv4.tcp_l3mdev_accept=1
+
+However, for this to work a change similar to the following is needed (I have
+shown the change to the macro for consistency with above, it is now an inline fn):
+
+---
+ include/net/inet_hashtables.h |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+--- a/include/net/inet_hashtables.h
++++ b/include/net/inet_hashtables.h
+@@ -300,9 +300,8 @@
+ #define INET_MATCH(__sk, __net, __cookie, __saddr, __daddr, __ports, __dif, __sdif) \
+        (((__sk)->sk_portpair == (__ports))                     &&      \
+         ((__sk)->sk_addrpair == (__cookie))                    &&      \
+-        (((__sk)->sk_bound_dev_if == (__dif))                  ||      \
+-         ((__sk)->sk_bound_dev_if == (__sdif)))                &&      \
+-        net_eq(sock_net(__sk), (__net)))
++        net_eq(sock_net(__sk), (__net))                        &&      \
++        inet_sk_bound_dev_eq((__net), (__sk)->sk_bound_dev_if, (__dif), (__sdif)))
+ #else /* 32-bit arch */
+ #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
+        const int __name __deprecated __attribute__((unused))
+@@ -311,9 +310,8 @@
+        (((__sk)->sk_portpair == (__ports))             &&              \
+         ((__sk)->sk_daddr      == (__saddr))           &&              \
+         ((__sk)->sk_rcv_saddr  == (__daddr))           &&              \
+-        (((__sk)->sk_bound_dev_if == (__dif))          ||              \
+-         ((__sk)->sk_bound_dev_if == (__sdif)))        &&              \
+-        net_eq(sock_net(__sk), (__net)))
++        net_eq(sock_net(__sk), (__net))                &&              \
++        inet_sk_bound_dev_eq((__net), (__sk)->sk_bound_dev_if, (__dif), (__sdif)))
+ #endif /* 64-bit arch */
+
+ /* Sockets in TCP_CLOSE state are _always_ taken out of the hash, so we need
 
 
-> Can you send the info to the sound mailing list and cc the developers of
-> that commit with your information?  That commit looks odd to be causing
-> problems.
-OK. I will be to try.
+This is to get the testcase to pass, I will leave it to others to comment on
+the testcase validity in terms of testing forwarding using commands on 1 device.
+
+The series that 3c82a21f4320 is part of were introduced into the kernel in 2018
+by the Vyatta team, who regularly run an extensive test suite for routing protocols
+for VRF functionality incl. all combinations of route leaking between default and
+other VRFs, so there is no known issue in this regard. I will attempt to reach out
+to them so as to advise them of this thread.
+
+Thanks
+Mike 
+ 
+
+
+
+
+
+ 
+ 
+
+
+
