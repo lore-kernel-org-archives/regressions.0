@@ -1,209 +1,120 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EFEC321F
-	for <regressions@lists.linux.dev>; Sun, 26 Jun 2022 20:06:53 +0000 (UTC)
-Received: by mail-wr1-f49.google.com with SMTP id i1so5779780wrb.11
-        for <regressions@lists.linux.dev>; Sun, 26 Jun 2022 13:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=message-id:date:mime-version:user-agent:subject:content-language:to
-         :cc:references:from:in-reply-to:content-transfer-encoding;
-        bh=FTo+6T5cOGS/6r6fOb8WRRmId0zEZsn96kv36lWXteA=;
-        b=bfbfHQb0EGLBVt55AaYEx0O5i8agrroLGP9/uH/T9AKQOFTnG7UIphqWIhoRPXLUUL
-         9z1IbY6mia8q2outxOGXd3APbnWlbB3YrJC+di5Me97zZm26HinG7f4r1wlRlLOrInm/
-         41hD4sSx5XhAZqlLAHFjlNIJpcwpojVn54soR6qVnKinpYYVfqdXayfYbL64VZcBwN7c
-         DT/lJ6tC2s9Re1O3OZWxV8fSujNFE4x+/7pQlVnzo+7Of0RB02MP+33tmoDU0AbpZPCT
-         ODdsWmkURfXWKCWX7br7AvBhkryaFxhDdX8oXVUxMp+ihD8WVZ8qfrBhLIf/cwSGmE+b
-         dWSQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDEDF20E6
+	for <regressions@lists.linux.dev>; Mon, 27 Jun 2022 02:30:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1656297017;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8P6kEog96p9rV6KMm+7lR+irC0+Mtj1M8Nzsctab+8w=;
+	b=HGm2JiA023/euYLaTFh4DatJHXRTIpSjDWFpOTdk7izrzI0ekzw4yFKfC4GouMu6Y9bNHL
+	6vtcjQG9bOOO8qvnl5nv2gsUH1N49QaaFh8cGiyQNb0ebwPdTtvHIw1l4Jrh/HJ5mOrZnj
+	2G1bLvpCYju4EQ47a6lwV8GvRkT+Ya4=
+Received: from mail-lf1-f69.google.com (mail-lf1-f69.google.com
+ [209.85.167.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-328-A820Vy8HM9-RNuTcRi6iwQ-1; Sun, 26 Jun 2022 22:30:16 -0400
+X-MC-Unique: A820Vy8HM9-RNuTcRi6iwQ-1
+Received: by mail-lf1-f69.google.com with SMTP id bq4-20020a056512150400b0047f7f36efc6so3970676lfb.9
+        for <regressions@lists.linux.dev>; Sun, 26 Jun 2022 19:30:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=FTo+6T5cOGS/6r6fOb8WRRmId0zEZsn96kv36lWXteA=;
-        b=lwCv33u25o8757EwWG767xcJQ9qP44Pi4XtC5jvZVUlUqYFoc7uvGaqs5J3PLhd0Fz
-         +1GI4UhF/lFUB+l7BGtPZBzk5XzzmQyCPDmKE0cLNMk4oFUQvanqp4gsCiigCTYVv0ui
-         nFXAcapLWCuDOO4yWxMCcFokRoKWhh32/z5gLynfCmwesOGJ6NLE35KcnTf30iuJIm55
-         //QGEOUTArGtKAy7qUWzLCZzko89K61JIwC1QSslyQrbS7XDMcDN3aptUnDSPjevLMET
-         FpTeA8hcGoQumCdRMxqc3cGuJqzrkotaH5q2ezEtJK9sFzAymlGNdc0Kr5LYO1smI2Q9
-         Zt4g==
-X-Gm-Message-State: AJIora9npZheNY2j93GLY/SikV88lKoy3VXzA7n/R1alir5H1ZZNNO8X
-	wvg+Vy5WozrIiazP0x2FV1I=
-X-Google-Smtp-Source: AGRyM1sPH3ekwgKmoKEnXpmO/sL1oVu+JInUhznDLtFtEFcn+zHA2g2xbEoadbT2WjgraNDO8EvSZw==
-X-Received: by 2002:a05:6000:10c5:b0:21b:9aed:47e3 with SMTP id b5-20020a05600010c500b0021b9aed47e3mr9490397wrx.570.1656274011704;
-        Sun, 26 Jun 2022 13:06:51 -0700 (PDT)
-Received: from [192.168.0.17] ([94.14.166.112])
-        by smtp.gmail.com with ESMTPSA id m17-20020adfe0d1000000b0021b866397a7sm8602456wri.1.2022.06.26.13.06.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 26 Jun 2022 13:06:51 -0700 (PDT)
-Message-ID: <940fa370-08ce-1d39-d5cc-51de8e853b47@gmail.com>
-Date: Sun, 26 Jun 2022 21:06:50 +0100
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8P6kEog96p9rV6KMm+7lR+irC0+Mtj1M8Nzsctab+8w=;
+        b=AxLUijQUUb1Kk6LAwWw9mRng7OPS6Wk9z9h1TbOloFiHgS0GIoNdWahR0ICPrlTf49
+         7uI986FwVnXrK2TOMloaHO4bc5req+baBVdudvI1WaZ/tU0vQwkEkzzHuN+fVvy4kK/m
+         i0XzRAEpxaOgNtg4afm220MokmTdieE2AUzrq0JSSUKJqnE6npPCSnlZGgaIt/mgh2RZ
+         P2ykXRTMhCX3SOfSaf4snc91pixSi3ilXeHVaM6ia81uZi+yXRvLOZqH4JiYfrza2UGk
+         Snr2buftNm/gTBB3KqT5qnYsoQKQtmx1B1/NU4WHVUuteYTxVvM2Yagrp68uIIldJySF
+         LbgA==
+X-Gm-Message-State: AJIora8gPW5a3Dy5DwonMT2xXYZAFaMMJozOw93rTLYNZDxrh/CftjFX
+	CiXz0WqlSv7yCola0SyDlE5VZgNPsegocHB19YGTbXW6DONQlJzfoCQJq8M2zQJLYSwEIS5XXOY
+	J4csPkdmzl40mVxE68SHDPRa+eIuqWJcgVSlVYY8=
+X-Received: by 2002:a05:6512:22c3:b0:47f:704b:3820 with SMTP id g3-20020a05651222c300b0047f704b3820mr6802744lfu.411.1656297014752;
+        Sun, 26 Jun 2022 19:30:14 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vihl7W4zbQFQ2ouUnfKabk1IX98Txdk8CYcQQ+eQfhlyohv3NGiMcnCeltVb+Lj1YXnvH3UF3uQbu22+LqqY0=
+X-Received: by 2002:a05:6512:22c3:b0:47f:704b:3820 with SMTP id
+ g3-20020a05651222c300b0047f704b3820mr6802734lfu.411.1656297014531; Sun, 26
+ Jun 2022 19:30:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [REGRESSION] connection timeout with routes to VRF
-Content-Language: en-US
-To: David Ahern <dsahern@kernel.org>, Jan Luebbe <jluebbe@lasnet.de>,
- Robert Shearman <robertshearman@gmail.com>, Andy Roulin <aroulin@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel <linux-kernel@vger.kernel.org>
-References: <a54c149aed38fded2d3b5fdb1a6c89e36a083b74.camel@lasnet.de>
- <6410890e-333d-5f0e-52f2-1041667c80f8@kernel.org>
-From: Mike Manning <mvrmanning@gmail.com>
-In-Reply-To: <6410890e-333d-5f0e-52f2-1041667c80f8@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <64c567bc77c4fbe7bfe37467cc1c89d24a45c37a.camel@decadent.org.uk>
+ <402bb9b5-7d6e-ed69-8b66-3ebefd80ff15@redhat.com> <CACGkMEs45CCniTjbxr3OThdbG=Q4nGrm_11LLDfR4rRLetSx0A@mail.gmail.com>
+ <a1a127d144d65937c5543c142e69213c9b8d2d40.camel@decadent.org.uk> <20220624051309-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20220624051309-mutt-send-email-mst@kernel.org>
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 27 Jun 2022 10:30:03 +0800
+Message-ID: <CACGkMEt4LaXnv2=yaiuhHOCF1VyZuwmi20CtqHEGsS0fFViFOA@mail.gmail.com>
+Subject: Re: virtio_balloon regression in 5.19-rc3
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Ben Hutchings <ben@decadent.org.uk>, David Hildenbrand <david@redhat.com>, 
+	virtualization <virtualization@lists.linux-foundation.org>, debian-kernel@lists.debian.org, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=jasowang@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 11/06/2022 17:44, David Ahern wrote:
-> On 6/11/22 5:14 AM, Jan Luebbe wrote:
->> Hi,
->>
->> TL;DR: We think we have found a regression in the handling of VRF route leaking
->> caused by "net: allow binding socket in a VRF when there's an unbound socket"
->> (3c82a21f4320).
-> This is the 3rd report in the past few months about this commit.
+On Fri, Jun 24, 2022 at 5:14 PM Michael S. Tsirkin <mst@redhat.com> wrote:
 >
-> ...
+> On Tue, Jun 21, 2022 at 06:10:00PM +0200, Ben Hutchings wrote:
+> > On Tue, 2022-06-21 at 17:34 +0800, Jason Wang wrote:
+> > > On Tue, Jun 21, 2022 at 5:24 PM David Hildenbrand <david@redhat.com> wrote:
+> > > >
+> > > > On 20.06.22 20:49, Ben Hutchings wrote:
+> > > > > I've tested a 5.19-rc3 kernel on top of QEMU/KVM with machine type
+> > > > > pc-q35-5.2.  It has a virtio balloon device defined in libvirt as:
+> > > > >
+> > > > >     <memballoon model="virtio">
+> > > > >       <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
+> > > > >     </memballoon>
+> > > > >
+> > > > > but the virtio_balloon driver fails to bind to it:
+> > > > >
+> > > > >     virtio_balloon virtio4: init_vqs: add stat_vq failed
+> > > > >     virtio_balloon: probe of virtio4 failed with error -5
+> > > > >
+> > > >
+> > > > Hmm, I don't see any recent changes to drivers/virtio/virtio_balloon.c
+> > > >
+> > > > virtqueue_add_outbuf() fails with -EIO if I'm not wrong. That's the
+> > > > first call of virtqueue_add_outbuf() when virtio_balloon initializes.
+> > > >
+> > > >
+> > > > Maybe something in generic virtio code changed?
+> > >
+> > > Yes, we introduced the IRQ hardening. That could be the root cause and
+> > > we've received lots of reports so we decide to disable it by default.
+> > >
+> > > Ben, could you please try this patch: (and make sure
+> > > CONFIG_VIRTIO_HARDEN_NOTIFICATION is not set)
+> > >
+> > > https://lore.kernel.org/lkml/20220620024158.2505-1-jasowang@redhat.com/T/
+> >
+> > Yes, that patch fixes the regression for me.
+> >
+> > Ben.
 >
->> Our minimized test case looks like this:
->>  ip rule add pref 32765 from all lookup local
->>  ip rule del pref 0 from all lookup local
->>  ip link add red type vrf table 1000
->>  ip link set red up
->>  ip route add vrf red unreachable default metric 8192
->>  ip addr add dev red 172.16.0.1/24
->>  ip route add 172.16.0.0/24 dev red
->>  ip vrf exec red socat -dd TCP-LISTEN:1234,reuseaddr,fork SYSTEM:"echo connected" &
->>  sleep 1
->>  nc 172.16.0.1 1234 < /dev/null
->>
-> ...
-> Thanks for the detailed analysis and reproducer.
 >
->> The partial revert
->> diff --git a/include/net/inet_hashtables.h b/include/net/inet_hashtables.h
->> index 98e1ec1a14f0..41e7f20d7e51 100644
->> --- a/include/net/inet_hashtables.h
->> +++ b/include/net/inet_hashtables.h
->> @@ -310,8 +310,9 @@ static inline struct sock *inet_lookup_listener(struct net *net,
->>  #define INET_MATCH(__sk, __net, __cookie, __saddr, __daddr, __ports, __dif, __sdif) \
->>         (((__sk)->sk_portpair == (__ports))                     &&      \
->>          ((__sk)->sk_addrpair == (__cookie))                    &&      \
->> -        (((__sk)->sk_bound_dev_if == (__dif))                  ||      \
->> -         ((__sk)->sk_bound_dev_if == (__sdif)))                &&      \
->> +        (!(__sk)->sk_bound_dev_if      ||                              \
->> +          ((__sk)->sk_bound_dev_if == (__dif))                 ||      \
->> +          ((__sk)->sk_bound_dev_if == (__sdif)))               &&      \
->>          net_eq(sock_net(__sk), (__net)))
->>  #else /* 32-bit arch */
->>  #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
->> @@ -321,8 +322,9 @@ static inline struct sock *inet_lookup_listener(struct net *net,
->>         (((__sk)->sk_portpair == (__ports))             &&              \
->>          ((__sk)->sk_daddr      == (__saddr))           &&              \
->>          ((__sk)->sk_rcv_saddr  == (__daddr))           &&              \
->> -        (((__sk)->sk_bound_dev_if == (__dif))          ||              \
->> -         ((__sk)->sk_bound_dev_if == (__sdif)))        &&              \
->> +        (!(__sk)->sk_bound_dev_if      ||                              \
->> +          ((__sk)->sk_bound_dev_if == (__dif))         ||              \
->> +          ((__sk)->sk_bound_dev_if == (__sdif)))       &&              \
->>          net_eq(sock_net(__sk), (__net)))
->>  #endif /* 64-bit arch */
->>
->> restores the original behavior when applied on v5.18. This doesn't apply
->> directly on master, as the macro was replaced by an inline function in "inet:
->> add READ_ONCE(sk->sk_bound_dev_if) in INET_MATCH()" (4915d50e300e).
->>
->> I have to admit I don't quite understand 3c82a21f4320, so I'm not sure how to
->> proceed. What would be broken by the partial revert above? Are there better ways
->> to configure routing into the VRF than simply "ip route add 172.16.0.0/24 dev
->> red" that still work?
->>
->> Thanks,
->> Jan
->>
->> #regzbot introduced: 3c82a21f4320
->>
->>
->>
-> Andy Roulin suggested the same fix to the same problem a few weeks back.
-> Let's do it along with a test case in fcnl-test.sh which covers all of
-> these vrf permutations.
->
-Reverting 3c82a21f4320 would remove isolation between the default and other VRFs
-needed when no VRF route leaking has been configured between these: there may be
-unintended leaking of packets arriving on a device enslaved to an l3mdev due to
-the potential match on an unbound socket.
+> Jason are you going to fix balloon to call device_ready before
+> registering device with linux?
 
-VRF route leaking requires routes to be present for both ingress and egress VRFs,
-the testcase shown only has a route from default to red VRF. The implicit return
-path from red to default VRF due to match on unbound socket is no longer present.
-
-Match on unbound socket in all VRFs and not only in the default VRF should be
-possible by setting this option (see
-https://www.kernel.org/doc/Documentation/networking/vrf.txt):
-
-sysctl net.ipv4.tcp_l3mdev_accept=1
-
-However, for this to work a change similar to the following is needed (I have
-shown the change to the macro for consistency with above, it is now an inline fn):
-
----
- include/net/inet_hashtables.h |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
---- a/include/net/inet_hashtables.h
-+++ b/include/net/inet_hashtables.h
-@@ -300,9 +300,8 @@
- #define INET_MATCH(__sk, __net, __cookie, __saddr, __daddr, __ports, __dif, __sdif) \
-        (((__sk)->sk_portpair == (__ports))                     &&      \
-         ((__sk)->sk_addrpair == (__cookie))                    &&      \
--        (((__sk)->sk_bound_dev_if == (__dif))                  ||      \
--         ((__sk)->sk_bound_dev_if == (__sdif)))                &&      \
--        net_eq(sock_net(__sk), (__net)))
-+        net_eq(sock_net(__sk), (__net))                        &&      \
-+        inet_sk_bound_dev_eq((__net), (__sk)->sk_bound_dev_if, (__dif), (__sdif)))
- #else /* 32-bit arch */
- #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
-        const int __name __deprecated __attribute__((unused))
-@@ -311,9 +310,8 @@
-        (((__sk)->sk_portpair == (__ports))             &&              \
-         ((__sk)->sk_daddr      == (__saddr))           &&              \
-         ((__sk)->sk_rcv_saddr  == (__daddr))           &&              \
--        (((__sk)->sk_bound_dev_if == (__dif))          ||              \
--         ((__sk)->sk_bound_dev_if == (__sdif)))        &&              \
--        net_eq(sock_net(__sk), (__net)))
-+        net_eq(sock_net(__sk), (__net))                &&              \
-+        inet_sk_bound_dev_eq((__net), (__sk)->sk_bound_dev_if, (__dif), (__sdif)))
- #endif /* 64-bit arch */
-
- /* Sockets in TCP_CLOSE state are _always_ taken out of the hash, so we need
-
-
-This is to get the testcase to pass, I will leave it to others to comment on
-the testcase validity in terms of testing forwarding using commands on 1 device.
-
-The series that 3c82a21f4320 is part of were introduced into the kernel in 2018
-by the Vyatta team, who regularly run an extensive test suite for routing protocols
-for VRF functionality incl. all combinations of route leaking between default and
-other VRFs, so there is no known issue in this regard. I will attempt to reach out
-to them so as to advise them of this thread.
+I'm working on the fix, (spot various bugs during review).
 
 Thanks
-Mike 
- 
 
-
-
-
-
- 
- 
-
-
+> > --
+> > Ben Hutchings
+> > Any smoothly functioning technology is indistinguishable
+> > from a rigged demo.
+>
+>
 
