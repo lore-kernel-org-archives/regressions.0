@@ -1,158 +1,85 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9D391850
-	for <regressions@lists.linux.dev>; Fri,  1 Jul 2022 11:11:20 +0000 (UTC)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C217113E;
-	Fri,  1 Jul 2022 04:11:20 -0700 (PDT)
-Received: from e126311.manchester.arm.com (unknown [10.57.71.169])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09F193F66F;
-	Fri,  1 Jul 2022 04:11:16 -0700 (PDT)
-Date: Fri, 1 Jul 2022 12:11:10 +0100
-From: Kajetan Puchalski <kajetan.puchalski@arm.com>
-To: Pablo Neira Ayuso <pablo@netfilter.org>
-Cc: Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Mel Gorman <mgorman@suse.de>, lukasz.luba@arm.com,
-	dietmar.eggemann@arm.com, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, netdev@vger.kernel.org,
-	stable@vger.kernel.org, regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [Regression] stress-ng udp-flood causes kernel panic on Ampere Altra
-Message-ID: <Yr7WTfd6AVTQkLjI@e126311.manchester.arm.com>
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BFD1850
+	for <regressions@lists.linux.dev>; Fri,  1 Jul 2022 11:25:45 +0000 (UTC)
+Received: by mail-oi1-f173.google.com with SMTP id u199so3189277oie.0
+        for <regressions@lists.linux.dev>; Fri, 01 Jul 2022 04:25:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oc9fPb0L9zIV1NpDh8/6a/qWUDurLbzQWr6Nau5hQcU=;
+        b=HJ+BISe//llOb/mXtH9LNBfVblBDN44SRvyGDZrSnmLh6eHWOoqQNmamqxxWOXNqcZ
+         mv/bNmfSRqaJbGt7+iPdNutd/5qMmq8TarDrxR4Xd7JdbOMKQIudhG1jSiIp5BPmD001
+         aPt3KVBzicwP/DHMW1sE4JGbf0TWFdp7MY3rAOXDqPTQacf5qzfiNdRSYakhC3qXDNLi
+         GVsDvJHAH1msCOKG9mUM3caRT/A4Cpj9bCx0riEfmyDkcNmf7E5dlM/tflWDgvOx3cKT
+         aD9Y8IyYD8JS2ZpE4StzCaVtWhW73gqLbamnBO54IIaBLoyxg9r/az17amtQf8LwNexC
+         9ljQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oc9fPb0L9zIV1NpDh8/6a/qWUDurLbzQWr6Nau5hQcU=;
+        b=kb8gJu8lsJK5BrAhdu17wm+vZ1xrnD9cv3msu82RFfpaoC2gzK/3eUp07J2xppi/6a
+         1px8zkJyQF4mlCzB8Zbqu8fGoOpb2YMKegakU8KDo/1VSehr+d8Y3VrHfg5/y6cuP5MW
+         HGyd+KBQRpmyBQFq1fFSU33n9gh3zEFLFhsNqSLTRaeYHOKeFBl1eECi9GDCQ27V4ILp
+         iqtObYotCZmnXiMb+3LWNoVS/D93NGrnDHPkXnjt9Yb7xWoPgASYOmcS82/TLjPv/SoY
+         1Npvi0yQN1A0RIp7m5aTFT2ILkHtZHS6dkiRNeeGAp0xvwID2A2kAQ0QiB8IkktKsMzJ
+         bgvQ==
+X-Gm-Message-State: AJIora80m9Kad6T7J4BKaADzqfJbvBgyERPd24QQUzoSoLE9Uxgr4AE+
+	lSLFRt4Crbkh0h3FsWfsgOPyRkGwjN7Z/Oz+3rg=
+X-Google-Smtp-Source: AGRyM1vH+nQNxwbQHOFAstUZnhCOEXz1GkaPKSaei28AgYp5XNV3Cu6sb1V0rzXZJmwhYmpDRRWdi60cNG0YDm7f9FQ=
+X-Received: by 2002:a54:4688:0:b0:325:9a36:ecfe with SMTP id
+ k8-20020a544688000000b003259a36ecfemr8453690oic.96.1656674745160; Fri, 01 Jul
+ 2022 04:25:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20220621233257.GA1342369@bhelgaas> <20220627231810.GA1790539@bhelgaas>
+In-Reply-To: <20220627231810.GA1790539@bhelgaas>
+From: Jim Quinlan <jim2101024@gmail.com>
+Date: Fri, 1 Jul 2022 07:25:33 -0400
+Message-ID: <CANCKTBtp+ar-s8NGH_iZz8GHH-smDzXuYrf-9AO44UDBCN3W_A@mail.gmail.com>
+Subject: Re: [PATCH 0/4] PCI: brcmstb: Revert subdevice regulator stuff
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
+	Cyril Brulebois <kibi@debian.org>, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
+	bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, 
+	linux-pci <linux-pci@vger.kernel.org>, regressions@lists.linux.dev, 
+	Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+On Mon, Jun 27, 2022 at 7:18 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Tue, Jun 21, 2022 at 06:32:59PM -0500, Bjorn Helgaas wrote:
+> > On Tue, Jun 14, 2022 at 02:59:02PM -0400, Jim Quinlan wrote:
+> > > ...
+> >
+> > > The original patchset was and is controversial, as it is basically a
+> > > square peg that does not fit nicely into a round Linux hole. It took
+> > > 11 versions of following reviewers' suggestions until it was
+> > > accepted.  And now it has been reverted, I am wondering if it will
+> > > ever be let in ag I also see that the ain or whether I should even try.
+> >
+> > The original patchset [1] may have been controversial, but that's not
+> > the issue here.  The only thing we need to solve here is to post the
+> > four patches I reverted with a tiny change to one of them to avoid the
+> > regression.  I don't think that should be a problem.
+>
+> I'll be on vacation until July 7 or 8.  Just a heads-up so you know
+> it's not that I'm ignoring anything you may post in the meantime.
 
-While running the udp-flood test from stress-ng on Ampere Altra (Mt.
-Jade platform) I encountered a kernel panic caused by NULL pointer
-dereference within nf_conntrack.
+Thanks Bjorn, hopefully I will send it today.  At least for me, it's
+not so easy to get the latest Linux running
+on an RPi w/o running into unrelated  issues.  :-)
 
-The issue is present in the latest mainline (5.19-rc4), latest stable
-(5.18.8), as well as multiple older stable versions. The last working
-stable version I found was 5.15.40.
-
-Through bisecting I've traced the issue back to mainline commit
-719774377622bc4025d2a74f551b5dc2158c6c30 (netfilter: conntrack: convert to refcount_t api),
-on kernels from before this commit the test runs fine. As far as I can tell, this commit was
-included in stable with version 5.15.41, thus causing the regression
-compared to 5.15.40. It was included in the mainline with version 5.16.
-
-The issue is very consistently reproducible as well, running this
-command resulted in the same kernel panic every time I tried it on
-different kernels from after the change in question was merged.
-
-stress-ng --udp-flood 0 -t 1m --metrics-brief --perf
-
-The commit was not easily revertible so I can't say whether reverting it
-on the latest mainline would fix the problem or not.
-
-Here's the decoded kernel panic in question for reference:
-
-[  869.372868] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[  869.381708] Mem abort info:
-[  869.384490]   ESR = 0x0000000096000044
-[  869.388245]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  869.393681]   SET = 0, FnV = 0
-[  869.396723]   EA = 0, S1PTW = 0
-[  869.399859]   FSC = 0x04: level 0 translation fault
-[  869.404731] Data abort info:
-[  869.407606]   ISV = 0, ISS = 0x00000044
-[  869.411437]   CM = 0, WnR = 1
-[  869.414398] user pgtable: 4k pages, 48-bit VAs, pgdp=000008002f6b9000
-[  869.420834] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
-[  869.427621] Internal error: Oops: 96000044 [#1] SMP
-[  869.432488] Modules linked in: sctp ip6_udp_tunnel udp_tunnel dccp_ipv4 dccp xt_conntrack xt_MASQUERADE xt_addrtype iptable_filter iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 bridge stp llc ipmi_devintf ipmi_msghandler overlay cppc_cpufreq drm ip_tables x_tables btrfs blake2b_generic libcrc32c xor xor_neon raid6_pq zstd_compress nvme mlx5_core crct10dif_ce nvme_core mlxfw
-[  869.466986] CPU: 13 PID: 100864 Comm: stress-ng-udp-f Not tainted 5.19.0-rc4-custom-kajpuc01-teo #15
-[  869.476107] Hardware name: WIWYNN Mt.Jade Server System B81.03001.0005/Mt.Jade Motherboard, BIOS 1.08.20220218 (SCP: 1.08.20220218) 2022/02/18
-[  869.488872] pstate: 40400009 (nZcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  869.495821] pc : __nf_ct_delete_from_lists (/home/kajpuc01/linux/./include/linux/list_nulls.h:108) nf_conntrack
-[  869.502174] lr : __nf_ct_delete_from_lists (/home/kajpuc01/linux/net/netfilter/nf_conntrack_core.c:628) nf_conntrack
-[  869.508523] sp : ffff800055acb6d0
-[  869.511825] x29: ffff800055acb6d0 x28: ffffa1a42f9c8ac0 x27: 0000000000000000
-[  869.518949] x26: ffffa1a3f531c780 x25: 000000000000ef6d x24: ffff4005eddfc500
-[  869.526072] x23: ffff4005eddfc520 x22: ffff4005eddfc558 x21: ffffa1a42f9c8ac0
-[  869.533195] x20: 0000000000000000 x19: 0000000000023923 x18: 0000000000000000
-[  869.540319] x17: 0000000000000000 x16: ffffa1a42d8c3bb0 x15: 0000ffffffec5ff0
-[  869.547442] x14: 4e4e4e4e4e4e4e4e x13: 4e4e4e4e4e4e4e4e x12: 4e4e4e4e4e4e4e4e
-[  869.554565] x11: 0000000000000000 x10: 000000000100007f x9 : ffffa1a3f5304074
-[  869.561688] x8 : 0000000000000000 x7 : 00113ec6b282834e x6 : ffff800055acb6c8
-[  869.568811] x5 : dd7051c45787c585 x4 : abfc59e3b0a2b492 x3 : 0000000000000000
-[  869.575934] x2 : 0000000000000001 x1 : 0000000000000000 x0 : 000000000001dedb
-[  869.583058] Call trace:
-[  869.585492] __nf_ct_delete_from_lists (/home/kajpuc01/linux/./include/linux/list_nulls.h:108) nf_conntrack
-[  869.591494] nf_ct_delete (/home/kajpuc01/linux/./include/linux/bottom_half.h:33) nf_conntrack
-[  869.596368] early_drop (/home/kajpuc01/linux/net/netfilter/nf_conntrack_core.c:1400) nf_conntrack
-[  869.601154] __nf_conntrack_alloc (/home/kajpuc01/linux/net/netfilter/nf_conntrack_core.c:1610) nf_conntrack
-[  869.606808] init_conntrack.isra.0 (/home/kajpuc01/linux/net/netfilter/nf_conntrack_core.c:1716) nf_conntrack
-[  869.612549] nf_conntrack_in (/home/kajpuc01/linux/net/netfilter/nf_conntrack_core.c:1832) nf_conntrack
-[  869.617769] ipv4_conntrack_local (/home/kajpuc01/linux/net/netfilter/nf_conntrack_proto.c:214) nf_conntrack
-[  869.623249] nf_hook_slow (/home/kajpuc01/linux/net/netfilter/core.c:621)
-[  869.626814] __ip_local_out (/home/kajpuc01/linux/net/ipv4/ip_output.c:118)
-[  869.630640] ip_local_out (/home/kajpuc01/linux/net/ipv4/ip_output.c:125)
-[  869.634117] ip_send_skb (/home/kajpuc01/linux/net/ipv4/ip_output.c:1572)
-[  869.637508] udp_send_skb.isra.0 (/home/kajpuc01/linux/net/ipv4/udp.c:968)
-[  869.641767] udp_sendmsg (/home/kajpuc01/linux/net/ipv4/udp.c:1254)
-[  869.645329] inet_sendmsg (/home/kajpuc01/linux/net/ipv4/af_inet.c:821)
-[  869.648807] sock_sendmsg (/home/kajpuc01/linux/net/socket.c:717)
-[  869.652284] __sys_sendto (/home/kajpuc01/linux/net/socket.c:2119)
-[  869.655847] __arm64_sys_sendto (/home/kajpuc01/linux/net/socket.c:2127)
-[  869.659845] invoke_syscall (/home/kajpuc01/linux/./arch/arm64/include/asm/current.h:19)
-[  869.663584] el0_svc_common.constprop.0 (/home/kajpuc01/linux/arch/arm64/kernel/syscall.c:75)
-[  869.668449] do_el0_svc (/home/kajpuc01/linux/arch/arm64/kernel/syscall.c:207)
-[  869.671753] el0_svc (/home/kajpuc01/linux/./arch/arm64/include/asm/daifflags.h:28)
-[  869.674796] el0t_64_sync_handler (/home/kajpuc01/linux/arch/arm64/kernel/entry-common.c:643)
-[  869.678966] el0t_64_sync (/home/kajpuc01/linux/arch/arm64/kernel/entry.S:581)
-[ 869.682618] Code: 72001c1f 54fffc01 d503201f a9410700 (f9000020)
-All code
-========
-   0:	72001c1f 	tst	w0, #0xff
-   4:	54fffc01 	b.ne	0xffffffffffffff84  // b.any
-   8:	d503201f 	nop
-   c:	a9410700 	ldp	x0, x1, [x24, #16]
-  10:*	f9000020 	str	x0, [x1]		<-- trapping instruction
-
-Code starting with the faulting instruction
-===========================================
-   0:	f9000020 	str	x0, [x1]
-[  869.688700] ---[ end trace 0000000000000000 ]---
-[  869.693306] Kernel panic - not syncing: Oops: Fatal exception in interrupt
-[  869.700168] SMP: stopping secondary CPUs
-[  869.704219] Kernel Offset: 0x21a4251b0000 from 0xffff800008000000
-[  869.710300] PHYS_OFFSET: 0x80000000
-[  869.713775] CPU features: 0x000,0042e015,19805c82
-[  869.718467] Memory Limit: none
-[  869.721509] ---[ end Kernel panic - not syncing: Oops: Fatal exception in interrupt ]---
-
-The contents of /proc/cpuinfo:
-
-processor	: 0
-BogoMIPS	: 50.00
-Features	: fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
-CPU implementer	: 0x41
-CPU architecture: 8
-CPU variant	: 0x3
-CPU part	: 0xd0c
-CPU revision	: 1
-
-(The same type of CPU is repeated 160 times, only including one for brevity)
-
-/proc/version:
-Linux version 5.19.0-rc4-custom-kajpuc01-teo gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #37 SMP Thu Jun 30 14:53:25 UTC 2022
-
-The distirbution is Ubuntu 20.04.3 LTS, the architecture is aarch64.
-
-Please let me know if I can provide any more details or try any more
-tests.
-
-Regards,
-Kajetan
+Jim Quinlan
+Broadcom STB
+>
+> Bjorn
+>
+> > [1] https://lore.kernel.org/r/20220106160332.2143-1-jim2101024@gmail.com
