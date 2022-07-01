@@ -1,48 +1,41 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F53A1850
-	for <regressions@lists.linux.dev>; Fri,  1 Jul 2022 11:42:31 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1o7F2b-0005HB-Ml; Fri, 01 Jul 2022 13:42:29 +0200
-Message-ID: <be9290fb-addb-b880-c5b0-f2ac223d2ab9@leemhuis.info>
-Date: Fri, 1 Jul 2022 13:42:29 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE6157EB
+	for <regressions@lists.linux.dev>; Fri,  1 Jul 2022 20:23:30 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1o7MpC-00040v-4C; Fri, 01 Jul 2022 22:01:10 +0200
+Date: Fri, 1 Jul 2022 22:01:10 +0200
+From: Florian Westphal <fw@strlen.de>
+To: Kajetan Puchalski <kajetan.puchalski@arm.com>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Florian Westphal <fw@strlen.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Mel Gorman <mgorman@suse.de>, lukasz.luba@arm.com,
+	dietmar.eggemann@arm.com, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org, netdev@vger.kernel.org,
+	stable@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [Regression] stress-ng udp-flood causes kernel panic on Ampere
+ Altra
+Message-ID: <20220701200110.GA15144@breakpoint.cc>
+References: <Yr7WTfd6AVTQkLjI@e126311.manchester.arm.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Content-Language: en-US
-To: regressions@lists.linux.dev, kajetan.puchalski@arm.com
-Cc: netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
- netdev@vger.kernel.org, stable@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <Yr7WTfd6AVTQkLjI@e126311.manchester.arm.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [Regression] stress-ng udp-flood causes kernel panic on Ampere
- Altra #forregzbot
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <Yr7WTfd6AVTQkLjI@e126311.manchester.arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1656675752;a7962714;
-X-HE-SMSGID: 1o7F2b-0005HB-Ml
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
-
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
-
-Hi, this is your Linux kernel regression tracker.
-
-On 01.07.22 13:11, Kajetan Puchalski wrote:
-> Hi,
-> 
+Kajetan Puchalski <kajetan.puchalski@arm.com> wrote:
 > While running the udp-flood test from stress-ng on Ampere Altra (Mt.
 > Jade platform) I encountered a kernel panic caused by NULL pointer
 > dereference within nf_conntrack.
@@ -50,57 +43,15 @@ On 01.07.22 13:11, Kajetan Puchalski wrote:
 > The issue is present in the latest mainline (5.19-rc4), latest stable
 > (5.18.8), as well as multiple older stable versions. The last working
 > stable version I found was 5.15.40.
-> 
-> Through bisecting I've traced the issue back to mainline commit
-> 719774377622bc4025d2a74f551b5dc2158c6c30 (netfilter: conntrack: convert to refcount_t api),
-> on kernels from before this commit the test runs fine. As far as I can tell, this commit was
-> included in stable with version 5.15.41, thus causing the regression
-> compared to 5.15.40. It was included in the mainline with version 5.16.
 
-FWIW, looks like it was merged for v5.17-rc1
-$ git describe --contains --tags  719774377622bc4025
+Do I need a special setup for conntrack?
 
-v5.17-rc1~170^2~24^2~19
+No crashes after more than one hour of stress-ng on
+1. 4 core amd64 Fedora 5.17 kernel
+2. 16 core amd64, linux stable 5.17.15
+3. 12 core intel, Fedora 5.18 kernel
+4. 3 core aarch64 vm, 5.18.7-200.fc36.aarch64
 
-> The issue is very consistently reproducible as well, running this
-> command resulted in the same kernel panic every time I tried it on
-> different kernels from after the change in question was merged.
-> 
-> stress-ng --udp-flood 0 -t 1m --metrics-brief --perf
-> 
-> The commit was not easily revertible so I can't say whether reverting it
-> on the latest mainline would fix the problem or not.
-> 
-> [...]
-> 
-> The distirbution is Ubuntu 20.04.3 LTS, the architecture is aarch64.
-> 
-> Please let me know if I can provide any more details or try any more
-> tests.
-
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced 719774377622bc402
-#regzbot title net: netfilter: stress-ng udp-flood causes kernel panic
-on Ampere Altra
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+I used standard firewalld ruleset for all of these and manually tuned
+conntrack settings to make sure the early evict path (as per backtrace)
+gets exercised.
