@@ -1,265 +1,397 @@
-Received: from smtp-out.kfki.hu (smtp-out.kfki.hu [148.6.0.45])
+Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09CF93C1D
-	for <regressions@lists.linux.dev>; Sat,  2 Jul 2022 17:48:29 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by smtp0.kfki.hu (Postfix) with ESMTP id 603A067400C9;
-	Sat,  2 Jul 2022 19:40:40 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at smtp0.kfki.hu
-Received: from smtp0.kfki.hu ([127.0.0.1])
-	by localhost (smtp0.kfki.hu [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP; Sat,  2 Jul 2022 19:40:38 +0200 (CEST)
-Received: from localhost.kfki.hu (host-94-248-211-146.kabelnet.hu [94.248.211.146])
-	(Authenticated sender: kadlecsik.jozsef@wigner.hu)
-	by smtp0.kfki.hu (Postfix) with ESMTPSA id 9BD6767400C7;
-	Sat,  2 Jul 2022 19:40:35 +0200 (CEST)
-Received: by localhost.kfki.hu (Postfix, from userid 1000)
-	id 4FA9F3C1C41; Sat,  2 Jul 2022 19:40:35 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by localhost.kfki.hu (Postfix) with ESMTP id 4D60D3C1789;
-	Sat,  2 Jul 2022 19:40:35 +0200 (CEST)
-Date: Sat, 2 Jul 2022 19:40:35 +0200 (CEST)
-From: Jozsef Kadlecsik <kadlec@netfilter.org>
-To: Jakub Kicinski <kuba@kernel.org>
-cc: "U'ren, Aaron" <Aaron.U'ren@sony.com>, 
-    Thorsten Leemhuis <regressions@leemhuis.info>, 
-    "McLean, Patrick" <Patrick.Mclean@sony.com>, 
-    Pablo Neira Ayuso <pablo@netfilter.org>, 
-    "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>, 
-    "Brown, Russell" <Russell.Brown@sony.com>, 
-    "Rueger, Manuel" <manuel.rueger@sony.com>, 
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-    "regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-    Florian Westphal <fw@strlen.de>, 
-    "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: Intermittent performance regression related to ipset between
- 5.10 and 5.15
-In-Reply-To: <20220630110443.100f8aa9@kernel.org>
-Message-ID: <d44d3522-ac1f-a1e-ddf6-312c7b25d685@netfilter.org>
-References: <BY5PR13MB3604D24C813A042A114B639DEE109@BY5PR13MB3604.namprd13.prod.outlook.com> <5e56c644-2311-c094-e099-cfe0d574703b@leemhuis.info> <c28ed507-168e-e725-dddd-b81fadaf6aa5@leemhuis.info> <b1bfbc2f-2a91-9d20-434d-395491994de@netfilter.org>
- <96e12c14-eb6d-ae07-916b-7785f9558c67@leemhuis.info> <DM6PR13MB3098E6B746264B4F96D9F743C8C39@DM6PR13MB3098.namprd13.prod.outlook.com> <2d9479bd-93bd-0cf1-9bc9-591ab3b2bdec@leemhuis.info> <6f6070ff-b50-1488-7e9-322be08f35b9@netfilter.org>
- <871bc2cb-ae4b-bc2a-1bd8-1315288957c3@leemhuis.info> <DM6PR13MB309846DD4673636DF440000EC8BA9@DM6PR13MB3098.namprd13.prod.outlook.com> <20220630110443.100f8aa9@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D21AE4411
+	for <regressions@lists.linux.dev>; Sat,  2 Jul 2022 20:57:12 +0000 (UTC)
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+	(envelope-from <fw@strlen.de>)
+	id 1o7kAd-0000y7-Fo; Sat, 02 Jul 2022 22:56:51 +0200
+Date: Sat, 2 Jul 2022 22:56:51 +0200
+From: Florian Westphal <fw@strlen.de>
+To: Kajetan Puchalski <kajetan.puchalski@arm.com>
+Cc: Florian Westphal <fw@strlen.de>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Mel Gorman <mgorman@suse.de>, lukasz.luba@arm.com,
+	dietmar.eggemann@arm.com, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org, netdev@vger.kernel.org,
+	stable@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [Regression] stress-ng udp-flood causes kernel panic on Ampere
+ Altra
+Message-ID: <20220702205651.GB15144@breakpoint.cc>
+References: <Yr7WTfd6AVTQkLjI@e126311.manchester.arm.com>
+ <20220701200110.GA15144@breakpoint.cc>
+ <YsAnPhPfWRjpkdmn@e126311.manchester.arm.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-1126082976-1656783635=:2522"
-X-deepspam: 20ham 14%
+Content-Type: multipart/mixed; boundary="CE+1k2dSO48ffgeK"
+Content-Disposition: inline
+In-Reply-To: <YsAnPhPfWRjpkdmn@e126311.manchester.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
 
---8323328-1126082976-1656783635=:2522
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+--CE+1k2dSO48ffgeK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+Kajetan Puchalski <kajetan.puchalski@arm.com> wrote:
+> On Fri, Jul 01, 2022 at 10:01:10PM +0200, Florian Westphal wrote:
+> > Kajetan Puchalski <kajetan.puchalski@arm.com> wrote:
+> > > While running the udp-flood test from stress-ng on Ampere Altra (Mt.
+> > > Jade platform) I encountered a kernel panic caused by NULL pointer
+> > > dereference within nf_conntrack.
+> > > 
+> > > The issue is present in the latest mainline (5.19-rc4), latest stable
+> > > (5.18.8), as well as multiple older stable versions. The last working
+> > > stable version I found was 5.15.40.
+> > 
+> > Do I need a special setup for conntrack?
+> 
+> I don't think there was any special setup involved, the config I started
+> from was a generic distribution config and I didn't change any
+> networking-specific options. In case that's helpful here's the .config I
+> used.
+> 
+> https://pastebin.com/Bb2wttdx
+> 
+> > 
+> > No crashes after more than one hour of stress-ng on
+> > 1. 4 core amd64 Fedora 5.17 kernel
+> > 2. 16 core amd64, linux stable 5.17.15
+> > 3. 12 core intel, Fedora 5.18 kernel
+> > 4. 3 core aarch64 vm, 5.18.7-200.fc36.aarch64
+> > 
+> 
+> That would make sense, from further experiments I ran it somehow seems
+> to be related to the number of workers being spawned by stress-ng along
+> with the CPUs/cores involved.
+>
+> For instance, running the test with <=25 workers (--udp-flood 25 etc.)
+> results in the test running fine for at least 15 minutes.
 
-On Thu, 30 Jun 2022, Jakub Kicinski wrote:
+Ok.  I will let it run for longer on the machines I have access to.
 
-> Sounds like you're pretty close to figuring this out! Can you check=20
-> if the user space is intentionally setting IPSET_ATTR_INITVAL?
-> Either that or IPSET_ATTR_GC was not as "unused" as initially thought.
+In mean time, you could test attached patch, its simple s/refcount_/atomic_/
+in nf_conntrack.
 
-IPSET_ATTR_GC was really unused. It was an old remnant from the time when=
-=20
-ipset userspace-kernel communication was through set/getsockopt. However,=
-=20
-when it was migrated to netlink, just the symbol was kept but it was not=20
-used either with the userspace tool or the kernel.
+If mainline (patch vs. HEAD 69cb6c6556ad89620547318439) crashes for you
+but works with attached patch someone who understands aarch64 memory ordering
+would have to look more closely at refcount_XXX functions to see where they
+might differ from atomic_ ones.
 
-Aaron, could you send me how to reproduce the issue? I have no idea how=20
-that patch could be the reason. Setting/getting/using IPSET_ATTR_INITVAL=20
-is totally independent from listing iptables rules. But if you have got a=
-=20
-reproducer then I can dig into it.
+If it still crashes, please try below hunk in addition, although I don't see
+how it would make a difference.
 
-Best regards,
-Jozsef
+This is the one spot where the original conversion replaced atomic_inc()
+with refcount_set(), this is on allocation, refcount is expected to be 0 so
+refcount_inc() triggers a warning hinting at a use-after free.
 
-> Testing something like this could be a useful data point:
->=20
-> diff --git a/include/uapi/linux/netfilter/ipset/ip_set.h b/include/uapi=
-/linux/netfilter/ipset/ip_set.h
-> index 6397d75899bc..7caf9b53d2a7 100644
-> --- a/include/uapi/linux/netfilter/ipset/ip_set.h
-> +++ b/include/uapi/linux/netfilter/ipset/ip_set.h
-> @@ -92,7 +92,7 @@ enum {
->  	/* Reserve empty slots */
->  	IPSET_ATTR_CADT_MAX =3D 16,
->  	/* Create-only specific attributes */
-> -	IPSET_ATTR_INITVAL,	/* was unused IPSET_ATTR_GC */
-> +	IPSET_ATTR_GC,
->  	IPSET_ATTR_HASHSIZE,
->  	IPSET_ATTR_MAXELEM,
->  	IPSET_ATTR_NETMASK,
-> @@ -104,6 +104,8 @@ enum {
->  	IPSET_ATTR_REFERENCES,
->  	IPSET_ATTR_MEMSIZE,
-> =20
-> +	IPSET_ATTR_INITVAL,
-> +
->  	__IPSET_ATTR_CREATE_MAX,
->  };
->  #define IPSET_ATTR_CREATE_MAX	(__IPSET_ATTR_CREATE_MAX - 1)
->=20
->=20
-> On Thu, 30 Jun 2022 14:59:14 +0000 U'ren, Aaron wrote:
-> > Thorsten / Jozsef -
-> >=20
-> > Thanks for continuing to follow up! I'm sorry that this has moved so =
-slow, it has taken us a bit to find the time to fully track this issue do=
-wn, however, I think that we have figured out enough to make some more fo=
-rward progress on this issue.
-> >=20
-> > Jozsef, thanks for your insight into what is happening between those =
-system calls. In regards to your question about wait/wound mutex debuggin=
-g possibly being enabled, I can tell you that we definitely don't have th=
-at enabled on any of our regular machines. While we were debugging we did=
- turn on quite a few debug options to help us try and track this issue do=
-wn and it is very possible that the strace that was taken that started of=
-f this email was taken on a machine that did have that debug option enabl=
-ed. Either way though, the root issue occurs on hosts that definitely do =
-not have wait/wound mutex debugging enabled.
-> >=20
-> > The good news is that we finally got one of our development environme=
-nts into a state where we could reliably reproduce the performance issue =
-across reboots. This was a win because it meant that we were able to do a=
- full bisect of the kernel and were able to tell relatively quickly wheth=
-er or not the issue was present in the test kernels.
-> >=20
-> > After bisecting for 3 days, I have been able to narrow it down to a s=
-ingle commit: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/li=
-nux.git/commit/?id=3D3976ca101990ca11ddf51f38bec7b86c19d0ca6f (netfilter:=
- ipset: Expose the initval hash parameter to userspace)
-> >=20
-> > I'm at a bit of a loss as to why this would cause such severe perform=
-ance regressions, but I've proved it out multiple times now. I've even ch=
-ecked out a fresh version of the 5.15 kernel that we've been deploying wi=
-th just this single commit reverted and found that the performance proble=
-ms are completely resolved.
-> >=20
-> > I'm hoping that maybe Jozsef will have some more insight into why thi=
-s seemingly innocuous commit causes such larger performance issues for us=
-? If you have any additional patches or other things that you would like =
-us to test I will try to leave our environment in its current state for t=
-he next couple of days so that we can do so.
-> >=20
-> > -Aaron
-> >=20
-> > From: Thorsten Leemhuis <regressions@leemhuis.info>
-> > Date: Monday, June 20, 2022 at 2:16 AM
-> > To: U'ren, Aaron <Aaron.U'ren@sony.com>
-> > Cc: McLean, Patrick <Patrick.Mclean@sony.com>, Pablo Neira Ayuso <pab=
-lo@netfilter.org>, netfilter-devel@vger.kernel.org <netfilter-devel@vger.=
-kernel.org>, Brown, Russell <Russell.Brown@sony.com>, Rueger, Manuel <man=
-uel.rueger@sony.com>, linux-kernel@vger.kernel.org <linux-kernel@vger.ker=
-nel.org>, regressions@lists.linux.dev <regressions@lists.linux.dev>, Flor=
-ian Westphal <fw@strlen.de>, netdev@vger.kernel.org <netdev@vger.kernel.o=
-rg>, Jozsef Kadlecsik <kadlec@netfilter.org>
-> > Subject: Re: Intermittent performance regression related to ipset bet=
-ween 5.10 and 5.15
-> > On 31.05.22 09:41, Jozsef Kadlecsik wrote:
-> > > On Mon, 30 May 2022, Thorsten Leemhuis wrote: =20
-> > >> On 04.05.22 21:37, U'ren, Aaron wrote: =20
-> >  [...] =20
-> > >=20
-> > > Every set lookups behind "iptables" needs two getsockopt() calls: y=
-ou can=20
-> > > see them in the strace logs. The first one check the internal proto=
-col=20
-> > > number of ipset and the second one verifies/gets the processed set =
-(it's=20
-> > > an extension to iptables and therefore there's no internal state to=
- save=20
-> > > the protocol version number). =20
-> >=20
-> > Hi Aaron! Did any of the suggestions from Jozsef help to track down t=
-he
-> > root case? I have this issue on the list of tracked regressions and
-> > wonder what the status is. Or can I mark this as resolved?
-> >=20
-> > Side note: this is not a "something breaks" regressions and it seems =
-to
-> > progress slowly, so I'm putting it on the backburner:
-> >=20
-> > #regzbot backburner: performance regression where the culprit is hard=
- to
-> > track down
-> >=20
-> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' h=
-at)
-> >=20
-> > P.S.: As the Linux kernel's regression tracker I deal with a lot of
-> > reports and sometimes miss something important when writing mails lik=
-e
-> > this. If that's the case here, don't hesitate to tell me in a public
-> > reply, it's in everyone's interest to set the public record straight.
-> >=20
-> >  [...] =20
-> > >=20
-> > > In your strace log
-> > >=20
-> > > 0.000024 getsockopt(4, SOL_IP, 0x53 /* IP_??? */, "\0\1\0\0\7\0\0\0=
-", [8]) =3D 0 <0.000024>
-> > > 0.000046 getsockopt(4, SOL_IP, 0x53 /* IP_??? */, "\7\0\0\0\7\0\0\0=
-KUBE-DST-VBH27M7NWLDOZIE"..., [40]) =3D 0 <0.1$
-> > > 0.109456 close(4)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D 0 <0.000022>
-> > >=20
-> > > the only things which happen in the second sockopt function are to =
-lock=20
-> > > the NFNL_SUBSYS_IPSET mutex, walk the array of the sets, compare th=
-e=20
-> > > setname, save the result in the case of a match and unlock the mute=
-x.=20
-> > > Nothing complicated, no deep, multi-level function calls. Just a fe=
-w line=20
-> > > of codes which haven't changed.
-> > >=20
-> > > The only thing which can slow down the processing is the mutex hand=
-ling.=20
-> > > Don't you have accidentally wait/wound mutex debugging enabled in t=
-he=20
-> > > kernel? If not, then bisecting the mutex related patches might help=
-.
-> > >=20
-> > > You wrote that flushing tables or ipsets didn't seem to help. That=20
-> > > literally meant flushing i.e. the sets were emptied but not destroy=
-ed? Did=20
-> > > you try both destroying or flushing?
-> > >  =20
-> > >> Jozsef, I still have this issue on my list of tracked regressions =
-and it
-> > >> looks like nothing happens since above mail (or did I miss it?). C=
-ould
-> > >> you maybe provide some guidance to Aaron to get us all closer to t=
-he
-> > >> root of the problem? =20
-> > >=20
-> > > I really hope it's an accidentally enabled debugging option in the =
-kernel.=20
-> > > Otherwise bisecting could help to uncover the issue.
-> > >=20
-> > > Best regards,
-> > > Jozsef
-> > >  =20
-> > >> P.S.: As the Linux kernel's regression tracker I deal with a lot o=
-f
-> > >> reports and sometimes miss something important when writing mails =
-like
-> > >> this. If that's the case here, don't hesitate to tell me in a publ=
-ic
-> > >> reply, it's in everyone's interest to set the public record straig=
-ht.
->=20
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -1776,7 +1776,7 @@ init_conntrack(struct net *net, struct nf_conn *tmpl,
+                __nf_ct_try_assign_helper(ct, tmpl, GFP_ATOMIC);
+ 
+        /* Now it is going to be associated with an sk_buff, set refcount to 1. */
+-       atomic_set(&ct->ct_general.use, 1);
++       atomic_inc(&ct->ct_general.use);
+ 
+        if (exp) {
+                if (exp->expectfn)
 
--
-E-mail  : kadlec@blackhole.kfki.hu, kadlecsik.jozsef@wigner.hu
-PGP key : https://wigner.hu/~kadlec/pgp_public_key.txt
-Address : Wigner Research Centre for Physics
-          H-1525 Budapest 114, POB. 49, Hungary
---8323328-1126082976-1656783635=:2522--
+--CE+1k2dSO48ffgeK
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename="0001-netfilter-conntrack-revert-to-atomic_t-api.patch"
+
+From 4234018dff486bdc30f4fe4625c8da1a8e30c2f6 Mon Sep 17 00:00:00 2001
+From: Florian Westphal <fw@strlen.de>
+Date: Sat, 2 Jul 2022 22:42:57 +0200
+Subject: [PATCH 1/1] netfilter: conntrack: revert to atomic_t api
+
+Just for testing.
+---
+ include/linux/netfilter/nf_conntrack_common.h |  6 ++---
+ include/net/netfilter/nf_conntrack.h          |  2 +-
+ net/netfilter/nf_conntrack_core.c             | 24 +++++++++----------
+ net/netfilter/nf_conntrack_expect.c           |  2 +-
+ net/netfilter/nf_conntrack_netlink.c          |  6 ++---
+ net/netfilter/nf_conntrack_standalone.c       |  4 ++--
+ net/netfilter/nf_flow_table_core.c            |  2 +-
+ net/netfilter/nft_ct.c                        |  4 ++--
+ net/netfilter/xt_CT.c                         |  2 +-
+ 9 files changed, 26 insertions(+), 26 deletions(-)
+
+diff --git a/include/linux/netfilter/nf_conntrack_common.h b/include/linux/netfilter/nf_conntrack_common.h
+index 2770db2fa080..48a78944182d 100644
+--- a/include/linux/netfilter/nf_conntrack_common.h
++++ b/include/linux/netfilter/nf_conntrack_common.h
+@@ -25,7 +25,7 @@ struct ip_conntrack_stat {
+ #define NFCT_PTRMASK	~(NFCT_INFOMASK)
+ 
+ struct nf_conntrack {
+-	refcount_t use;
++	atomic_t use;
+ };
+ 
+ void nf_conntrack_destroy(struct nf_conntrack *nfct);
+@@ -33,13 +33,13 @@ void nf_conntrack_destroy(struct nf_conntrack *nfct);
+ /* like nf_ct_put, but without module dependency on nf_conntrack */
+ static inline void nf_conntrack_put(struct nf_conntrack *nfct)
+ {
+-	if (nfct && refcount_dec_and_test(&nfct->use))
++	if (nfct && atomic_dec_and_test(&nfct->use))
+ 		nf_conntrack_destroy(nfct);
+ }
+ static inline void nf_conntrack_get(struct nf_conntrack *nfct)
+ {
+ 	if (nfct)
+-		refcount_inc(&nfct->use);
++		atomic_inc(&nfct->use);
+ }
+ 
+ #endif /* _NF_CONNTRACK_COMMON_H */
+diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+index a32be8aa7ed2..9fab0c8835bb 100644
+--- a/include/net/netfilter/nf_conntrack.h
++++ b/include/net/netfilter/nf_conntrack.h
+@@ -180,7 +180,7 @@ void nf_ct_destroy(struct nf_conntrack *nfct);
+ /* decrement reference count on a conntrack */
+ static inline void nf_ct_put(struct nf_conn *ct)
+ {
+-	if (ct && refcount_dec_and_test(&ct->ct_general.use))
++	if (ct && atomic_dec_and_test(&ct->ct_general.use))
+ 		nf_ct_destroy(&ct->ct_general);
+ }
+ 
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 082a2fd8d85b..4469e49d78a7 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -554,7 +554,7 @@ struct nf_conn *nf_ct_tmpl_alloc(struct net *net,
+ 	tmpl->status = IPS_TEMPLATE;
+ 	write_pnet(&tmpl->ct_net, net);
+ 	nf_ct_zone_add(tmpl, zone);
+-	refcount_set(&tmpl->ct_general.use, 1);
++	atomic_set(&tmpl->ct_general.use, 1);
+ 
+ 	return tmpl;
+ }
+@@ -586,7 +586,7 @@ void nf_ct_destroy(struct nf_conntrack *nfct)
+ 	struct nf_conn *ct = (struct nf_conn *)nfct;
+ 
+ 	pr_debug("%s(%p)\n", __func__, ct);
+-	WARN_ON(refcount_read(&nfct->use) != 0);
++	WARN_ON(atomic_read(&nfct->use) != 0);
+ 
+ 	if (unlikely(nf_ct_is_template(ct))) {
+ 		nf_ct_tmpl_free(ct);
+@@ -726,7 +726,7 @@ nf_ct_match(const struct nf_conn *ct1, const struct nf_conn *ct2)
+ /* caller must hold rcu readlock and none of the nf_conntrack_locks */
+ static void nf_ct_gc_expired(struct nf_conn *ct)
+ {
+-	if (!refcount_inc_not_zero(&ct->ct_general.use))
++	if (!atomic_inc_not_zero(&ct->ct_general.use))
+ 		return;
+ 
+ 	if (nf_ct_should_gc(ct))
+@@ -794,7 +794,7 @@ __nf_conntrack_find_get(struct net *net, const struct nf_conntrack_zone *zone,
+ 		 * in, try to obtain a reference and re-check tuple
+ 		 */
+ 		ct = nf_ct_tuplehash_to_ctrack(h);
+-		if (likely(refcount_inc_not_zero(&ct->ct_general.use))) {
++		if (likely(atomic_inc_not_zero(&ct->ct_general.use))) {
+ 			if (likely(nf_ct_key_equal(h, tuple, zone, net)))
+ 				goto found;
+ 
+@@ -923,7 +923,7 @@ nf_conntrack_hash_check_insert(struct nf_conn *ct)
+ 
+ 	smp_wmb();
+ 	/* The caller holds a reference to this object */
+-	refcount_set(&ct->ct_general.use, 2);
++	atomic_set(&ct->ct_general.use, 2);
+ 	__nf_conntrack_hash_insert(ct, hash, reply_hash);
+ 	nf_conntrack_double_unlock(hash, reply_hash);
+ 	NF_CT_STAT_INC(net, insert);
+@@ -981,7 +981,7 @@ static void __nf_conntrack_insert_prepare(struct nf_conn *ct)
+ {
+ 	struct nf_conn_tstamp *tstamp;
+ 
+-	refcount_inc(&ct->ct_general.use);
++	atomic_inc(&ct->ct_general.use);
+ 
+ 	/* set conntrack timestamp, if enabled. */
+ 	tstamp = nf_conn_tstamp_find(ct);
+@@ -1384,7 +1384,7 @@ static unsigned int early_drop_list(struct net *net,
+ 		    nf_ct_is_dying(tmp))
+ 			continue;
+ 
+-		if (!refcount_inc_not_zero(&tmp->ct_general.use))
++		if (!atomic_inc_not_zero(&tmp->ct_general.use))
+ 			continue;
+ 
+ 		/* kill only if still in same netns -- might have moved due to
+@@ -1533,7 +1533,7 @@ static void gc_worker(struct work_struct *work)
+ 				continue;
+ 
+ 			/* need to take reference to avoid possible races */
+-			if (!refcount_inc_not_zero(&tmp->ct_general.use))
++			if (!atomic_inc_not_zero(&tmp->ct_general.use))
+ 				continue;
+ 
+ 			if (gc_worker_skip_ct(tmp)) {
+@@ -1640,7 +1640,7 @@ __nf_conntrack_alloc(struct net *net,
+ 	/* Because we use RCU lookups, we set ct_general.use to zero before
+ 	 * this is inserted in any list.
+ 	 */
+-	refcount_set(&ct->ct_general.use, 0);
++	atomic_set(&ct->ct_general.use, 0);
+ 	return ct;
+ out:
+ 	atomic_dec(&cnet->count);
+@@ -1665,7 +1665,7 @@ void nf_conntrack_free(struct nf_conn *ct)
+ 	/* A freed object has refcnt == 0, that's
+ 	 * the golden rule for SLAB_TYPESAFE_BY_RCU
+ 	 */
+-	WARN_ON(refcount_read(&ct->ct_general.use) != 0);
++	WARN_ON(atomic_read(&ct->ct_general.use) != 0);
+ 
+ 	if (ct->status & IPS_SRC_NAT_DONE) {
+ 		const struct nf_nat_hook *nat_hook;
+@@ -1776,7 +1776,7 @@ init_conntrack(struct net *net, struct nf_conn *tmpl,
+ 		__nf_ct_try_assign_helper(ct, tmpl, GFP_ATOMIC);
+ 
+ 	/* Now it is going to be associated with an sk_buff, set refcount to 1. */
+-	refcount_set(&ct->ct_general.use, 1);
++	atomic_set(&ct->ct_general.use, 1);
+ 
+ 	if (exp) {
+ 		if (exp->expectfn)
+@@ -2390,7 +2390,7 @@ get_next_corpse(int (*iter)(struct nf_conn *i, void *data),
+ 
+ 	return NULL;
+ found:
+-	refcount_inc(&ct->ct_general.use);
++	atomic_inc(&ct->ct_general.use);
+ 	spin_unlock(lockp);
+ 	local_bh_enable();
+ 	return ct;
+diff --git a/net/netfilter/nf_conntrack_expect.c b/net/netfilter/nf_conntrack_expect.c
+index 96948e98ec53..84cb05eae410 100644
+--- a/net/netfilter/nf_conntrack_expect.c
++++ b/net/netfilter/nf_conntrack_expect.c
+@@ -208,7 +208,7 @@ nf_ct_find_expectation(struct net *net,
+ 	 * can be sure the ct cannot disappear underneath.
+ 	 */
+ 	if (unlikely(nf_ct_is_dying(exp->master) ||
+-		     !refcount_inc_not_zero(&exp->master->ct_general.use)))
++		     !atomic_inc_not_zero(&exp->master->ct_general.use)))
+ 		return NULL;
+ 
+ 	if (exp->flags & NF_CT_EXPECT_PERMANENT) {
+diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+index 722af5e309ba..d5de0e580e6c 100644
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -514,7 +514,7 @@ static int ctnetlink_dump_id(struct sk_buff *skb, const struct nf_conn *ct)
+ 
+ static int ctnetlink_dump_use(struct sk_buff *skb, const struct nf_conn *ct)
+ {
+-	if (nla_put_be32(skb, CTA_USE, htonl(refcount_read(&ct->ct_general.use))))
++	if (nla_put_be32(skb, CTA_USE, htonl(atomic_read(&ct->ct_general.use))))
+ 		goto nla_put_failure;
+ 	return 0;
+ 
+@@ -1204,7 +1204,7 @@ ctnetlink_dump_table(struct sk_buff *skb, struct netlink_callback *cb)
+ 			ct = nf_ct_tuplehash_to_ctrack(h);
+ 			if (nf_ct_is_expired(ct)) {
+ 				if (i < ARRAY_SIZE(nf_ct_evict) &&
+-				    refcount_inc_not_zero(&ct->ct_general.use))
++				    atomic_inc_not_zero(&ct->ct_general.use))
+ 					nf_ct_evict[i++] = ct;
+ 				continue;
+ 			}
+@@ -1747,7 +1747,7 @@ static int ctnetlink_dump_one_entry(struct sk_buff *skb,
+ 				  NFNL_MSG_TYPE(cb->nlh->nlmsg_type),
+ 				  ct, dying, 0);
+ 	if (res < 0) {
+-		if (!refcount_inc_not_zero(&ct->ct_general.use))
++		if (!atomic_inc_not_zero(&ct->ct_general.use))
+ 			return 0;
+ 
+ 		ctx->last = ct;
+diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+index 6ad7bbc90d38..badd3f219533 100644
+--- a/net/netfilter/nf_conntrack_standalone.c
++++ b/net/netfilter/nf_conntrack_standalone.c
+@@ -303,7 +303,7 @@ static int ct_seq_show(struct seq_file *s, void *v)
+ 	int ret = 0;
+ 
+ 	WARN_ON(!ct);
+-	if (unlikely(!refcount_inc_not_zero(&ct->ct_general.use)))
++	if (unlikely(!atomic_inc_not_zero(&ct->ct_general.use)))
+ 		return 0;
+ 
+ 	if (nf_ct_should_gc(ct)) {
+@@ -370,7 +370,7 @@ static int ct_seq_show(struct seq_file *s, void *v)
+ 	ct_show_zone(s, ct, NF_CT_DEFAULT_ZONE_DIR);
+ 	ct_show_delta_time(s, ct);
+ 
+-	seq_printf(s, "use=%u\n", refcount_read(&ct->ct_general.use));
++	seq_printf(s, "use=%u\n", atomic_read(&ct->ct_general.use));
+ 
+ 	if (seq_has_overflowed(s))
+ 		goto release;
+diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
+index f2def06d1070..8b3f91a60ba2 100644
+--- a/net/netfilter/nf_flow_table_core.c
++++ b/net/netfilter/nf_flow_table_core.c
+@@ -54,7 +54,7 @@ struct flow_offload *flow_offload_alloc(struct nf_conn *ct)
+ 	struct flow_offload *flow;
+ 
+ 	if (unlikely(nf_ct_is_dying(ct) ||
+-	    !refcount_inc_not_zero(&ct->ct_general.use)))
++	    !atomic_inc_not_zero(&ct->ct_general.use)))
+ 		return NULL;
+ 
+ 	flow = kzalloc(sizeof(*flow), GFP_ATOMIC);
+diff --git a/net/netfilter/nft_ct.c b/net/netfilter/nft_ct.c
+index d8e1614918a1..1b6ead61a8f1 100644
+--- a/net/netfilter/nft_ct.c
++++ b/net/netfilter/nft_ct.c
+@@ -260,8 +260,8 @@ static void nft_ct_set_zone_eval(const struct nft_expr *expr,
+ 
+ 	ct = this_cpu_read(nft_ct_pcpu_template);
+ 
+-	if (likely(refcount_read(&ct->ct_general.use) == 1)) {
+-		refcount_inc(&ct->ct_general.use);
++	if (likely(atomic_read(&ct->ct_general.use) == 1)) {
++		atomic_inc(&ct->ct_general.use);
+ 		nf_ct_zone_add(ct, &zone);
+ 	} else {
+ 		/* previous skb got queued to userspace, allocate temporary
+diff --git a/net/netfilter/xt_CT.c b/net/netfilter/xt_CT.c
+index 267757b0392a..cf2f8c1d4fb5 100644
+--- a/net/netfilter/xt_CT.c
++++ b/net/netfilter/xt_CT.c
+@@ -24,7 +24,7 @@ static inline int xt_ct_target(struct sk_buff *skb, struct nf_conn *ct)
+ 		return XT_CONTINUE;
+ 
+ 	if (ct) {
+-		refcount_inc(&ct->ct_general.use);
++		atomic_inc(&ct->ct_general.use);
+ 		nf_ct_set(skb, ct, IP_CT_NEW);
+ 	} else {
+ 		nf_ct_set(skb, ct, IP_CT_UNTRACKED);
+-- 
+2.35.1
+
+
+--CE+1k2dSO48ffgeK--
