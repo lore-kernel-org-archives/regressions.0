@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0A67E
-	for <regressions@lists.linux.dev>; Mon,  4 Jul 2022 12:06:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8AB7E
+	for <regressions@lists.linux.dev>; Mon,  4 Jul 2022 12:11:34 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1o8Kq7-0003VK-1C; Mon, 04 Jul 2022 14:06:07 +0200
-Message-ID: <30feb08e-83d0-34e2-06bb-40f4960c8be4@leemhuis.info>
-Date: Mon, 4 Jul 2022 14:06:06 +0200
+	id 1o8KvM-0005Uz-ER; Mon, 04 Jul 2022 14:11:32 +0200
+Message-ID: <b7b080ff-a5da-a10c-674b-c3bb653f0aeb@leemhuis.info>
+Date: Mon, 4 Jul 2022 14:11:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,102 +16,111 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [EXT] Re: [REGRESSION] qla2xxx: tape drive not removed after
- unplug FC cable
 Content-Language: en-US
-To: Arun Easi <aeasi@marvell.com>, Tony Battersby <tonyb@cybernetics.com>
-Cc: Saurav Kashyap <skashyap@marvell.com>, Nilesh Javali
- <njavali@marvell.com>, GR-QLogic-Storage-Upstream@marvell.com,
- linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev
-References: <baef87c3-5dad-3b47-44c1-6914bfc90108@cybernetics.com>
- <alpine.LRH.2.21.9999.2205271524460.4730@mvluser05.qlc.com>
- <5bcb5963-9da0-fd59-45c5-d27af02e7748@leemhuis.info>
- <178e4e7a-64fc-a442-cdda-45100eaebda0@cybernetics.com>
- <alpine.LRH.2.21.9999.2206211156470.4730@mvluser05.qlc.com>
- <d41671b4-8d29-b940-da37-b8dbe81f4d72@cybernetics.com>
- <alpine.LRH.2.21.9999.2206221557150.4730@mvluser05.qlc.com>
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Tedd Ho-Jeong An <hj.tedd.an@gmail.com>
+References: <a1ce1743-e450-6cdb-dfab-56a3e3eb9aed@pengutronix.de>
+ <CABBYNZ+z8kBUKGXbZSfb0ynJaTnPQRp0wFDUb12AW1ymbNx1eg@mail.gmail.com>
+ <CABBYNZ+zsuggTpaUSPsZKeL=qqvM1=sgMWzdWEqaS_oh6dhY2g@mail.gmail.com>
+ <8d5c4724-d511-39b1-21d7-116c91cada45@pengutronix.de>
+ <b0cb4fb0-6b89-b9df-9ae6-421ac52b0100@pengutronix.de>
+ <CABBYNZ+ubN2rc=zoN_53Pmp6kt3L5UcY3knbtjhhVOjPBpJv4Q@mail.gmail.com>
+ <d5654901-6b1f-a1fa-0101-8b52b345af7b@pengutronix.de>
+ <CABBYNZ+8dpPBqaQMr-Hz_DJRxT-0ucCjgAJH50FUaN7Sn9H6rA@mail.gmail.com>
+ <1d1b76cf-df6f-3935-5cd2-c45ea78f2c33@pengutronix.de>
+ <CABBYNZLdy-rndKczoG_WiWXQmacX+vzCbftQKvzJ3B6imtZopw@mail.gmail.com>
+ <1a5ec80d-690f-285c-3da8-ccdaf5516d85@pengutronix.de>
+ <CABBYNZJQKc9ozReXLeESWY8U648eQytKfGB4WmhZi4M+YOW7jw@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <alpine.LRH.2.21.9999.2206221557150.4730@mvluser05.qlc.com>
+Subject: Re: [BUG] BLE device unpairing triggers kernel panic
+In-Reply-To: <CABBYNZJQKc9ozReXLeESWY8U648eQytKfGB4WmhZi4M+YOW7jw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1656936373;bf296543;
-X-HE-SMSGID: 1o8Kq7-0003VK-1C
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1656936695;2d3c73c0;
+X-HE-SMSGID: 1o8KvM-0005Uz-ER
 
-On 23.06.22 01:03, Arun Easi wrote:
-> On Wed, 22 Jun 2022, 7:56am, Tony Battersby wrote:
-> 
->> On 6/21/22 18:05, Arun Easi wrote:
->>> Thanks for the info. Just to reiterate, you've reported two issues (though 
->>> this log was showing only 1 of them).
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easily accessible to everyone.
+
+Looks like the discussions to fix this regression got stuck. What can be
+done to get thing rolling again? Or has progress been made and I just
+missed it? Ciao, Thorsten
+
+On 24.06.22 21:59, Luiz Augusto von Dentz wrote:
+> On Fri, Jun 24, 2022 at 5:53 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>> On 21.06.22 20:52, Luiz Augusto von Dentz wrote:
+>>> On Tue, Jun 21, 2022 at 1:32 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>>>> On 20.06.22 22:18, Luiz Augusto von Dentz wrote:
+>>>>> On Mon, Jun 20, 2022 at 3:06 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>>>>>> Disconnect of connection #1 being processed after new connection #2
+>>>>>> concluded sounds wrong. Would I be able to reconnect
+>>>>>> afterwards or would all connections, but the first, be directly
+>>>>>> disconnected...?
+>>>>>
+>>>>> That depends on the order you have queued the commands, it will be
+>>>>> processed in the exact order it is received, that why I said it is
+>>>>> single queue design, and it is done like that to prevent messing up
+>>>>> with states since we know the exact order the commands will be sent.
+>>>>>
+>>>>>>> otherwise we need a
+>>>>>>> different queue to handle command that abort/cancel other already in
+>>>>>>> the queue.
+>>>>>>
+>>>>>> Is the revert an acceptable interim solution or are there issues
+>>>>>> I am missing?
+>>>>>
+>>>>> Afaik there were problem with concurrent connections request, so what
+>>>>> would really help us here is to have some tests to emulate this
+>>>>> scenario with our CI, in the meantime please check if the following
+>>>>> fixes your problem:
+>>>>>
+>>>>> https://gist.github.com/Vudentz/b4fff292c7f4ad55ca3299fd5ab797ae
+>>>>
+>>>> Doesn't help unfortunately. First pairing works as before.
+>>>> Second still fails:
+>>>>
+>>>>   Bluetooth: hci0: Opcode 0x200d failed: -110
+>>>>   Bluetooth: hci0: request failed to create LE connection: err -110
 >>>
->>> Issue 1 - Tape device never disappears when removed
->>> Issue 2 - When a direct connected tape 1 was replaced with tape 2, tape 2 
->>>           was not discovered.
->>>
->>> For Issue-2, please try the attached patch. This may not be the final fix, 
->>> but wanted to check if that would fix the issue for you.
->>>
->>> For Issue-1, the behavior was intentional, though that behavior needs 
->>> refinement. These tape drives support something called FC sequence level 
->>> error recovery (added in FCP-2), which can make tape I/Os survive even 
->>> across a short cable pull. This is not a simple retry of the I/O, rather a 
->>> retry done at the FC sequence level that gives the IO a better chance of
->>> revival. In other words, the said patch that caused regression, while 
->>> introduces an incorrect reporting of the state of the device, makes backup 
->>> more resilient.
->>>
->>> Now, onto the behavior when device state is reported immediately. What we 
->>> have observed, at least with one tape drive from a major vendor, is that, 
->>> across a device loss and device back case with both the events reported to 
->>> upper layers, the backup operation was getting failed. This is due to a 
->>> REPORT LUNS command being issued during device reappearance reporting 
->>> (fc_remote_port_add -> SCSI scan), which the tape drive was not expecting 
->>> and caused the backup to fail.
->>>
->>> I know that some tape drives do not support multiple commands to it at the 
->>> same time, but not sure if that is still the norm these days.
->>>
->>> So, perhaps one way to make the behavior better, is to either report the 
->>> disappearing device a bit delayed or have intelligence added in SCSI scan 
->>> to detect ongoing tape IO operations and delay/avoid the REPORT LUNs. 
->>> Former is a more contained (in the LLD) fix.
->>>
->>> Regards,
->>> -Arun
+>>> Can we try to add a test in mgmt-tester to reproduce the error above?
 >>
->> Your patch does fix Issue-2 for me.  For Issue-1, it would be fine with
->> me if qla2xxx reported device removal to the upper level a bit delayed,
->> as you said.
->>
+>> I am not familiar with mgmt-tester. What information do you
+>> need to reproduce? In the meantime, can we revert the commit?
+>> I understand that this may break other uses, but I believe
+>> previously working stuff should have precedence..
 > 
-> Thanks for testing and verifying the patch.
-
-BTW, that patch should have 'Link:' tags pointing to all reports about
-this issue, e.g. the start of this thread.
-
-These tags are important, as they allow others to look into the
-backstory now and years from now. That is why they should be placed in
-cases like this, as Documentation/process/submitting-patches.rst and
-Documentation/process/5.Posting.rst explain in more detail.
-Additionally, my regression tracking bot ‘regzbot’ relies on these tags
-to automatically connect reports with patches that are posted or
-committed to fix the reported issue. BTW, let me tell regzbot to monitor
-this thread:
-
-> We will post the patch upstream after due testing.
-That was more than two weeks ago now and I didn't see any progress. Or
-did I miss it?
-
-Reminder, things should take this long. For details see the section
-"Prioritize work on fixing regressions" in this document:
-https://docs.kernel.org/process/handling-regressions.html
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
-
-#regzbot poke
+> Have a looks at:
+> 
+> https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/doc/test-runner.txt
+> 
+> And then run with:
+> 
+> sudo tools/test-runner -k <pathyto/bzImage> -- tools/mgmt-tester
+> 
+> Btw, can we have the exact steps to reproduce it using bluetoothctl if possible?
+> 
+>> Cheers,
+>> Ahmad
+>>
+>>>
+>>>> Cheers,
+>>>> Ahmad
+>>>>
+>>>>>
+>>>>>> Cheers,
+>>>>>> Ahmad
+>>>>>>
+>>>>>>>
+>>>>>>>> We've been deploying the revert for a while now and I just posted
+>>>>>>>> it to the mailing list[1]. There have been other reports
+>>>>>>>> of this issue with different hardware too and fixing sent_cmd
+>>>>>>>> would likely be too complicated/time intensive for me.
+>>>>>>>>
+>>>>>>>> I am happy to test future patches that fix this properly though.
+>>>>>>>>
+>>>>>>>> [1]: https://lore.kernel.org/linux-bluetooth/20220616092418.738877-1-a.fatoum@pengutronix.de/T/#t
