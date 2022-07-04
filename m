@@ -1,384 +1,366 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39E415AE
-	for <regressions@lists.linux.dev>; Mon,  4 Jul 2022 09:02:16 +0000 (UTC)
-Received: by mail-io1-f49.google.com with SMTP id y18so8079601iof.2
-        for <regressions@lists.linux.dev>; Mon, 04 Jul 2022 02:02:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=2SeN0JcfoNKpJw5VeU2/8FnTNMxuNVHExcgA8hg1isU=;
-        b=sIEuSIM95KvwmUSKevTYQCZjTdM5hFf4VD/NyEsa3WEyh+PGNnWRmS3j15974/cGPE
-         mtIwOD5W9uXEnaBYGFmTnWUlez/3qpNdwNeDiuqrp85FYN/cN/6xaoeo6UcZrM4/Vv2x
-         ss2A2CWdZ3pyQzsPsy4XzbVIFaPWVnaJX0nDgBUNdId4hsN6HmJTWdVF10zbjrLM7zMc
-         8Y+Rx6eI06YxQ9DkpFuzqgunSNeLc8IeUVcTaK3Xh+jkzP+mnofGkwFBYrokPfIt6IYt
-         Xz64jpiTaZbZdWwNlc043l54D+bvasq31J7UhCQoMqYNUJZhD7mlD4LCd/iFl24BEdmI
-         NFpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=2SeN0JcfoNKpJw5VeU2/8FnTNMxuNVHExcgA8hg1isU=;
-        b=Afj6pISmrdKgd2RBQt7wDtxK8+7G7vyKD5jCN7RGQ7WnwcGMTYZHfMCIzKlzow2RWK
-         8cLl1FKscTQgR1CS4xyW4KzzfcwngJRJ/K1HoQ4XIJbpuD4yxOSHPz02ifYtYUxlqH+Y
-         aErYsSJce2BqMyqVHkYje+mpIxb3py57qz7ebnAW002TpsTMtXRhY1f5vfEsX56aixgQ
-         HjQB6F2kZ8VDIhKMrR/NSAPKF4Es7+YE/jewmUwgTqbTB2B+S506m4pXiI92I3MWU6Lp
-         lO/zK4G0vlquje2U7q1R/bRr3Y223jQjr4ahXNEbe0xX2u2LuatvFYQK90+D/8tBoO79
-         aBKQ==
-X-Gm-Message-State: AJIora8gMO4pCBm9oBsFw7XYfKOKaN6MF0iVTAtYSpIz2Jts4zh76UcJ
-	9+hmbZWp8vMnrQhgfZeIBnghBmnDXcGqv7gPjTKHcQ==
-X-Google-Smtp-Source: AGRyM1t1HXGYjU0u4nuqTwEXetxUoitm3Vb5oSttKC1QYU/82ZX97AMiMNfykr18l+oR9/d7MJi+BRe1RTx2iDcYFOs=
-X-Received: by 2002:a02:c503:0:b0:339:ec67:b0a4 with SMTP id
- s3-20020a02c503000000b00339ec67b0a4mr18011548jam.27.1656925334280; Mon, 04
- Jul 2022 02:02:14 -0700 (PDT)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 887D423B5
+	for <regressions@lists.linux.dev>; Mon,  4 Jul 2022 09:22:35 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A16B523A;
+	Mon,  4 Jul 2022 02:22:29 -0700 (PDT)
+Received: from e126311.manchester.arm.com (unknown [10.57.71.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1572B3F792;
+	Mon,  4 Jul 2022 02:22:26 -0700 (PDT)
+Date: Mon, 4 Jul 2022 10:22:20 +0100
+From: Kajetan Puchalski <kajetan.puchalski@arm.com>
+To: Florian Westphal <fw@strlen.de>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Mel Gorman <mgorman@suse.de>, lukasz.luba@arm.com,
+	dietmar.eggemann@arm.com, netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org, netdev@vger.kernel.org,
+	stable@vger.kernel.org, regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [Regression] stress-ng udp-flood causes kernel panic on Ampere
+ Altra
+Message-ID: <YsKxTAaIgvKMfOoU@e126311.manchester.arm.com>
+References: <Yr7WTfd6AVTQkLjI@e126311.manchester.arm.com>
+ <20220701200110.GA15144@breakpoint.cc>
+ <YsAnPhPfWRjpkdmn@e126311.manchester.arm.com>
+ <20220702205651.GB15144@breakpoint.cc>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 4 Jul 2022 14:32:03 +0530
-Message-ID: <CA+G9fYsjOUPw5OstKzoFvTEmUtXGk9+WLugTfmbeiMEg_vpL7A@mail.gmail.com>
-Subject: v5.19-rc5: igt-test: Unable to handle kernel write to read-only
- memory at virtual address - drm_dev_unregister
-To: open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, 
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org, 
-	linux-clk <linux-clk@vger.kernel.org>, igt-dev@lists.freedesktop.org
-Cc: Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Maxime Ripard <mripard@kernel.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Arkadiusz Hiler <arek@hiler.eu>, 
-	Petri Latvala <petri.latvala@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220702205651.GB15144@breakpoint.cc>
 
-While running igt testing on arm64 Qcomm db410c the following kernel warning
-and crash reported with Linux mainline kernel.
+On Sat, Jul 02, 2022 at 10:56:51PM +0200, Florian Westphal wrote:
+> > That would make sense, from further experiments I ran it somehow seems
+> > to be related to the number of workers being spawned by stress-ng along
+> > with the CPUs/cores involved.
+> >
+> > For instance, running the test with <=25 workers (--udp-flood 25 etc.)
+> > results in the test running fine for at least 15 minutes.
+> 
+> Ok.  I will let it run for longer on the machines I have access to.
+> 
+> In mean time, you could test attached patch, its simple s/refcount_/atomic_/
+> in nf_conntrack.
+> 
+> If mainline (patch vs. HEAD 69cb6c6556ad89620547318439) crashes for you
+> but works with attached patch someone who understands aarch64 memory ordering
+> would have to look more closely at refcount_XXX functions to see where they
+> might differ from atomic_ ones.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+I can confirm that the patch seems to solve the issue.
+With it applied on top of the 5.19-rc5 tag the test runs fine for at
+least 15 minutes which was not the case before so it looks like it is
+that aarch64 memory ordering problem.
 
-metadata:
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
-  git_sha: 88084a3df1672e131ddc1b4e39eeacfd39864acf
-  git_describe: v5.19-rc5
-  kernel_version: 5.19.0-rc5
-  kernel-config: https://builds.tuxbuild.com/2BSEyt8Sb19HSj6SnBFiMo6kiQh/config
-  build-url: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline/-/pipelines/579007773
-  artifact-location: https://builds.tuxbuild.com/2BSEyt8Sb19HSj6SnBFiMo6kiQh
-  vmlinux.xz: https://builds.tuxbuild.com/2BSEyt8Sb19HSj6SnBFiMo6kiQh/vmlinux.xz
-  System.map: https://builds.tuxbuild.com/2BSEyt8Sb19HSj6SnBFiMo6kiQh/System.map
-  toolchain: gcc-11
-  igt-gpu-tools__url: https://gitlab.freedesktop.org/drm/igt-gpu-tools
+> 
+> If it still crashes, please try below hunk in addition, although I don't see
+> how it would make a difference.
+> 
+> This is the one spot where the original conversion replaced atomic_inc()
+> with refcount_set(), this is on allocation, refcount is expected to be 0 so
+> refcount_inc() triggers a warning hinting at a use-after free.
+> 
+> diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+> --- a/net/netfilter/nf_conntrack_core.c
+> +++ b/net/netfilter/nf_conntrack_core.c
+> @@ -1776,7 +1776,7 @@ init_conntrack(struct net *net, struct nf_conn *tmpl,
+>                 __nf_ct_try_assign_helper(ct, tmpl, GFP_ATOMIC);
+>  
+>         /* Now it is going to be associated with an sk_buff, set refcount to 1. */
+> -       atomic_set(&ct->ct_general.use, 1);
+> +       atomic_inc(&ct->ct_general.use);
+>  
+>         if (exp) {
+>                 if (exp->expectfn)
 
+> From 4234018dff486bdc30f4fe4625c8da1a8e30c2f6 Mon Sep 17 00:00:00 2001
+> From: Florian Westphal <fw@strlen.de>
+> Date: Sat, 2 Jul 2022 22:42:57 +0200
+> Subject: [PATCH 1/1] netfilter: conntrack: revert to atomic_t api
+> 
+> Just for testing.
+> ---
+>  include/linux/netfilter/nf_conntrack_common.h |  6 ++---
+>  include/net/netfilter/nf_conntrack.h          |  2 +-
+>  net/netfilter/nf_conntrack_core.c             | 24 +++++++++----------
+>  net/netfilter/nf_conntrack_expect.c           |  2 +-
+>  net/netfilter/nf_conntrack_netlink.c          |  6 ++---
+>  net/netfilter/nf_conntrack_standalone.c       |  4 ++--
+>  net/netfilter/nf_flow_table_core.c            |  2 +-
+>  net/netfilter/nft_ct.c                        |  4 ++--
+>  net/netfilter/xt_CT.c                         |  2 +-
+>  9 files changed, 26 insertions(+), 26 deletions(-)
+> 
+> diff --git a/include/linux/netfilter/nf_conntrack_common.h b/include/linux/netfilter/nf_conntrack_common.h
+> index 2770db2fa080..48a78944182d 100644
+> --- a/include/linux/netfilter/nf_conntrack_common.h
+> +++ b/include/linux/netfilter/nf_conntrack_common.h
+> @@ -25,7 +25,7 @@ struct ip_conntrack_stat {
+>  #define NFCT_PTRMASK	~(NFCT_INFOMASK)
+>  
+>  struct nf_conntrack {
+> -	refcount_t use;
+> +	atomic_t use;
+>  };
+>  
+>  void nf_conntrack_destroy(struct nf_conntrack *nfct);
+> @@ -33,13 +33,13 @@ void nf_conntrack_destroy(struct nf_conntrack *nfct);
+>  /* like nf_ct_put, but without module dependency on nf_conntrack */
+>  static inline void nf_conntrack_put(struct nf_conntrack *nfct)
+>  {
+> -	if (nfct && refcount_dec_and_test(&nfct->use))
+> +	if (nfct && atomic_dec_and_test(&nfct->use))
+>  		nf_conntrack_destroy(nfct);
+>  }
+>  static inline void nf_conntrack_get(struct nf_conntrack *nfct)
+>  {
+>  	if (nfct)
+> -		refcount_inc(&nfct->use);
+> +		atomic_inc(&nfct->use);
+>  }
+>  
+>  #endif /* _NF_CONNTRACK_COMMON_H */
+> diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+> index a32be8aa7ed2..9fab0c8835bb 100644
+> --- a/include/net/netfilter/nf_conntrack.h
+> +++ b/include/net/netfilter/nf_conntrack.h
+> @@ -180,7 +180,7 @@ void nf_ct_destroy(struct nf_conntrack *nfct);
+>  /* decrement reference count on a conntrack */
+>  static inline void nf_ct_put(struct nf_conn *ct)
+>  {
+> -	if (ct && refcount_dec_and_test(&ct->ct_general.use))
+> +	if (ct && atomic_dec_and_test(&ct->ct_general.use))
+>  		nf_ct_destroy(&ct->ct_general);
+>  }
+>  
+> diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+> index 082a2fd8d85b..4469e49d78a7 100644
+> --- a/net/netfilter/nf_conntrack_core.c
+> +++ b/net/netfilter/nf_conntrack_core.c
+> @@ -554,7 +554,7 @@ struct nf_conn *nf_ct_tmpl_alloc(struct net *net,
+>  	tmpl->status = IPS_TEMPLATE;
+>  	write_pnet(&tmpl->ct_net, net);
+>  	nf_ct_zone_add(tmpl, zone);
+> -	refcount_set(&tmpl->ct_general.use, 1);
+> +	atomic_set(&tmpl->ct_general.use, 1);
+>  
+>  	return tmpl;
+>  }
+> @@ -586,7 +586,7 @@ void nf_ct_destroy(struct nf_conntrack *nfct)
+>  	struct nf_conn *ct = (struct nf_conn *)nfct;
+>  
+>  	pr_debug("%s(%p)\n", __func__, ct);
+> -	WARN_ON(refcount_read(&nfct->use) != 0);
+> +	WARN_ON(atomic_read(&nfct->use) != 0);
+>  
+>  	if (unlikely(nf_ct_is_template(ct))) {
+>  		nf_ct_tmpl_free(ct);
+> @@ -726,7 +726,7 @@ nf_ct_match(const struct nf_conn *ct1, const struct nf_conn *ct2)
+>  /* caller must hold rcu readlock and none of the nf_conntrack_locks */
+>  static void nf_ct_gc_expired(struct nf_conn *ct)
+>  {
+> -	if (!refcount_inc_not_zero(&ct->ct_general.use))
+> +	if (!atomic_inc_not_zero(&ct->ct_general.use))
+>  		return;
+>  
+>  	if (nf_ct_should_gc(ct))
+> @@ -794,7 +794,7 @@ __nf_conntrack_find_get(struct net *net, const struct nf_conntrack_zone *zone,
+>  		 * in, try to obtain a reference and re-check tuple
+>  		 */
+>  		ct = nf_ct_tuplehash_to_ctrack(h);
+> -		if (likely(refcount_inc_not_zero(&ct->ct_general.use))) {
+> +		if (likely(atomic_inc_not_zero(&ct->ct_general.use))) {
+>  			if (likely(nf_ct_key_equal(h, tuple, zone, net)))
+>  				goto found;
+>  
+> @@ -923,7 +923,7 @@ nf_conntrack_hash_check_insert(struct nf_conn *ct)
+>  
+>  	smp_wmb();
+>  	/* The caller holds a reference to this object */
+> -	refcount_set(&ct->ct_general.use, 2);
+> +	atomic_set(&ct->ct_general.use, 2);
+>  	__nf_conntrack_hash_insert(ct, hash, reply_hash);
+>  	nf_conntrack_double_unlock(hash, reply_hash);
+>  	NF_CT_STAT_INC(net, insert);
+> @@ -981,7 +981,7 @@ static void __nf_conntrack_insert_prepare(struct nf_conn *ct)
+>  {
+>  	struct nf_conn_tstamp *tstamp;
+>  
+> -	refcount_inc(&ct->ct_general.use);
+> +	atomic_inc(&ct->ct_general.use);
+>  
+>  	/* set conntrack timestamp, if enabled. */
+>  	tstamp = nf_conn_tstamp_find(ct);
+> @@ -1384,7 +1384,7 @@ static unsigned int early_drop_list(struct net *net,
+>  		    nf_ct_is_dying(tmp))
+>  			continue;
+>  
+> -		if (!refcount_inc_not_zero(&tmp->ct_general.use))
+> +		if (!atomic_inc_not_zero(&tmp->ct_general.use))
+>  			continue;
+>  
+>  		/* kill only if still in same netns -- might have moved due to
+> @@ -1533,7 +1533,7 @@ static void gc_worker(struct work_struct *work)
+>  				continue;
+>  
+>  			/* need to take reference to avoid possible races */
+> -			if (!refcount_inc_not_zero(&tmp->ct_general.use))
+> +			if (!atomic_inc_not_zero(&tmp->ct_general.use))
+>  				continue;
+>  
+>  			if (gc_worker_skip_ct(tmp)) {
+> @@ -1640,7 +1640,7 @@ __nf_conntrack_alloc(struct net *net,
+>  	/* Because we use RCU lookups, we set ct_general.use to zero before
+>  	 * this is inserted in any list.
+>  	 */
+> -	refcount_set(&ct->ct_general.use, 0);
+> +	atomic_set(&ct->ct_general.use, 0);
+>  	return ct;
+>  out:
+>  	atomic_dec(&cnet->count);
+> @@ -1665,7 +1665,7 @@ void nf_conntrack_free(struct nf_conn *ct)
+>  	/* A freed object has refcnt == 0, that's
+>  	 * the golden rule for SLAB_TYPESAFE_BY_RCU
+>  	 */
+> -	WARN_ON(refcount_read(&ct->ct_general.use) != 0);
+> +	WARN_ON(atomic_read(&ct->ct_general.use) != 0);
+>  
+>  	if (ct->status & IPS_SRC_NAT_DONE) {
+>  		const struct nf_nat_hook *nat_hook;
+> @@ -1776,7 +1776,7 @@ init_conntrack(struct net *net, struct nf_conn *tmpl,
+>  		__nf_ct_try_assign_helper(ct, tmpl, GFP_ATOMIC);
+>  
+>  	/* Now it is going to be associated with an sk_buff, set refcount to 1. */
+> -	refcount_set(&ct->ct_general.use, 1);
+> +	atomic_set(&ct->ct_general.use, 1);
+>  
+>  	if (exp) {
+>  		if (exp->expectfn)
+> @@ -2390,7 +2390,7 @@ get_next_corpse(int (*iter)(struct nf_conn *i, void *data),
+>  
+>  	return NULL;
+>  found:
+> -	refcount_inc(&ct->ct_general.use);
+> +	atomic_inc(&ct->ct_general.use);
+>  	spin_unlock(lockp);
+>  	local_bh_enable();
+>  	return ct;
+> diff --git a/net/netfilter/nf_conntrack_expect.c b/net/netfilter/nf_conntrack_expect.c
+> index 96948e98ec53..84cb05eae410 100644
+> --- a/net/netfilter/nf_conntrack_expect.c
+> +++ b/net/netfilter/nf_conntrack_expect.c
+> @@ -208,7 +208,7 @@ nf_ct_find_expectation(struct net *net,
+>  	 * can be sure the ct cannot disappear underneath.
+>  	 */
+>  	if (unlikely(nf_ct_is_dying(exp->master) ||
+> -		     !refcount_inc_not_zero(&exp->master->ct_general.use)))
+> +		     !atomic_inc_not_zero(&exp->master->ct_general.use)))
+>  		return NULL;
+>  
+>  	if (exp->flags & NF_CT_EXPECT_PERMANENT) {
+> diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+> index 722af5e309ba..d5de0e580e6c 100644
+> --- a/net/netfilter/nf_conntrack_netlink.c
+> +++ b/net/netfilter/nf_conntrack_netlink.c
+> @@ -514,7 +514,7 @@ static int ctnetlink_dump_id(struct sk_buff *skb, const struct nf_conn *ct)
+>  
+>  static int ctnetlink_dump_use(struct sk_buff *skb, const struct nf_conn *ct)
+>  {
+> -	if (nla_put_be32(skb, CTA_USE, htonl(refcount_read(&ct->ct_general.use))))
+> +	if (nla_put_be32(skb, CTA_USE, htonl(atomic_read(&ct->ct_general.use))))
+>  		goto nla_put_failure;
+>  	return 0;
+>  
+> @@ -1204,7 +1204,7 @@ ctnetlink_dump_table(struct sk_buff *skb, struct netlink_callback *cb)
+>  			ct = nf_ct_tuplehash_to_ctrack(h);
+>  			if (nf_ct_is_expired(ct)) {
+>  				if (i < ARRAY_SIZE(nf_ct_evict) &&
+> -				    refcount_inc_not_zero(&ct->ct_general.use))
+> +				    atomic_inc_not_zero(&ct->ct_general.use))
+>  					nf_ct_evict[i++] = ct;
+>  				continue;
+>  			}
+> @@ -1747,7 +1747,7 @@ static int ctnetlink_dump_one_entry(struct sk_buff *skb,
+>  				  NFNL_MSG_TYPE(cb->nlh->nlmsg_type),
+>  				  ct, dying, 0);
+>  	if (res < 0) {
+> -		if (!refcount_inc_not_zero(&ct->ct_general.use))
+> +		if (!atomic_inc_not_zero(&ct->ct_general.use))
+>  			return 0;
+>  
+>  		ctx->last = ct;
+> diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+> index 6ad7bbc90d38..badd3f219533 100644
+> --- a/net/netfilter/nf_conntrack_standalone.c
+> +++ b/net/netfilter/nf_conntrack_standalone.c
+> @@ -303,7 +303,7 @@ static int ct_seq_show(struct seq_file *s, void *v)
+>  	int ret = 0;
+>  
+>  	WARN_ON(!ct);
+> -	if (unlikely(!refcount_inc_not_zero(&ct->ct_general.use)))
+> +	if (unlikely(!atomic_inc_not_zero(&ct->ct_general.use)))
+>  		return 0;
+>  
+>  	if (nf_ct_should_gc(ct)) {
+> @@ -370,7 +370,7 @@ static int ct_seq_show(struct seq_file *s, void *v)
+>  	ct_show_zone(s, ct, NF_CT_DEFAULT_ZONE_DIR);
+>  	ct_show_delta_time(s, ct);
+>  
+> -	seq_printf(s, "use=%u\n", refcount_read(&ct->ct_general.use));
+> +	seq_printf(s, "use=%u\n", atomic_read(&ct->ct_general.use));
+>  
+>  	if (seq_has_overflowed(s))
+>  		goto release;
+> diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
+> index f2def06d1070..8b3f91a60ba2 100644
+> --- a/net/netfilter/nf_flow_table_core.c
+> +++ b/net/netfilter/nf_flow_table_core.c
+> @@ -54,7 +54,7 @@ struct flow_offload *flow_offload_alloc(struct nf_conn *ct)
+>  	struct flow_offload *flow;
+>  
+>  	if (unlikely(nf_ct_is_dying(ct) ||
+> -	    !refcount_inc_not_zero(&ct->ct_general.use)))
+> +	    !atomic_inc_not_zero(&ct->ct_general.use)))
+>  		return NULL;
+>  
+>  	flow = kzalloc(sizeof(*flow), GFP_ATOMIC);
+> diff --git a/net/netfilter/nft_ct.c b/net/netfilter/nft_ct.c
+> index d8e1614918a1..1b6ead61a8f1 100644
+> --- a/net/netfilter/nft_ct.c
+> +++ b/net/netfilter/nft_ct.c
+> @@ -260,8 +260,8 @@ static void nft_ct_set_zone_eval(const struct nft_expr *expr,
+>  
+>  	ct = this_cpu_read(nft_ct_pcpu_template);
+>  
+> -	if (likely(refcount_read(&ct->ct_general.use) == 1)) {
+> -		refcount_inc(&ct->ct_general.use);
+> +	if (likely(atomic_read(&ct->ct_general.use) == 1)) {
+> +		atomic_inc(&ct->ct_general.use);
+>  		nf_ct_zone_add(ct, &zone);
+>  	} else {
+>  		/* previous skb got queued to userspace, allocate temporary
+> diff --git a/net/netfilter/xt_CT.c b/net/netfilter/xt_CT.c
+> index 267757b0392a..cf2f8c1d4fb5 100644
+> --- a/net/netfilter/xt_CT.c
+> +++ b/net/netfilter/xt_CT.c
+> @@ -24,7 +24,7 @@ static inline int xt_ct_target(struct sk_buff *skb, struct nf_conn *ct)
+>  		return XT_CONTINUE;
+>  
+>  	if (ct) {
+> -		refcount_inc(&ct->ct_general.use);
+> +		atomic_inc(&ct->ct_general.use);
+>  		nf_ct_set(skb, ct, IP_CT_NEW);
+>  	} else {
+>  		nf_ct_set(skb, ct, IP_CT_UNTRACKED);
+> -- 
+> 2.35.1
+> 
 
-+ ./igt-test.sh -d /usr/share/igt-gpu-tools -t CHAMELIUM -c
-10.66.16.71 -h HDMI-A-1
-Going to run igt Chamelium test
-Generate ~/.igtrc
-Generate Chamelium test list
-igt@kms_chamelium@hdmi-hpd
-igt@kms_chamelium@hdmi-hpd-fast
-
-<trim>
-
-Subtest hdmi-hpd-storm-disable: SKIP (0.000s)
-[181.885373] [08/88] kms_chamelium (hdmi-crc-single)
-[  181.932031] Console: switching to colour dummy device 80x25
-[  181.932276] [IGT] kms_chamelium: executing
-[  182.178035] [IGT] kms_chamelium: starting subtest hdmi-crc-single
-[  183.696310] [drm:mdp5_irq_error_handler [msm]] *ERROR* errors: 04000000
-[  186.819771] msm_mdp 1a01000.mdp: vblank time out, crtc=0
-[  197.407969] [IGT] kms_chamelium: exiting, ret=98
-[  198.123226] Console: switching to colour frame buffer device 240x67
-[  208.352251] msm_mdp 1a01000.mdp: [drm] *ERROR* flip_done timed out
-[  208.352889] msm_mdp 1a01000.mdp: [drm] *ERROR* [CRTC:57:crtc-0]
-commit wait timed out
-[  218.592308] msm_mdp 1a01000.mdp: [drm] *ERROR* flip_done timed out
-[  218.592951] msm_mdp 1a01000.mdp: [drm] *ERROR* [PLANE:33:plane-0]
-commit wait timed out
-[  218.598698] ------------[ cut here ]------------
-[  218.605711] WARNING: CPU: 0 PID: 6 at
-drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c:807
-mdp5_crtc_atomic_flush+0x1b8/0x1d0 [msm]
-[  218.611025] Modules linked in: rfkill snd_soc_hdmi_codec venus_enc
-venus_dec videobuf2_dma_contig adv7511 pm8916_wdt smsc75xx cec
-qcom_wcnss_pil msm qrtr qcom_camss venus_core qcom_q6v5_mss
-videobuf2_dma_sg gpu_sched qcom_pil_info v4l2_fwnode qcom_q6v5
-snd_soc_lpass_apq8016 drm_dp_aux_bus qcom_sysmon v4l2_async
-snd_soc_lpass_cpu v4l2_mem2mem drm_display_helper display_connector
-qcom_common videobuf2_memops qcom_glink_smem snd_soc_msm8916_analog
-snd_soc_msm8916_digital snd_soc_apq8016_sbc snd_soc_lpass_platform
-videobuf2_v4l2 qmi_helpers snd_soc_qcom_common drm_kms_helper
-qcom_spmi_vadc mdt_loader qcom_spmi_temp_alarm videobuf2_common
-rtc_pm8xxx drm qcom_vadc_common i2c_qcom_cci qnoc_msm8916 qcom_stats
-socinfo qcom_pon crct10dif_ce qcom_rng icc_smd_rpm rmtfs_mem fuse
-[  218.671585] CPU: 0 PID: 6 Comm: kworker/0:0 Not tainted 5.19.0-rc5 #1
-[  218.689678] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[  218.696036] Workqueue: events drm_mode_rmfb_work_fn [drm]
-[  218.702723] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  218.708118] pc : mdp5_crtc_atomic_flush+0x1b8/0x1d0 [msm]
-[  218.714784] lr : mdp5_crtc_atomic_flush+0x44/0x1d0 [msm]
-[  218.720337] sp : ffff800008053b10
-[  218.725571] x29: ffff800008053b10 x28: 0000000000000001 x27: ffff00000ca3c2c8
-[  218.729045] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000020
-[  218.736165] x23: 0000000000000070 x22: 0000000000000038 x21: ffff00000f374200
-[  218.743281] x20: ffff00000ca3e000 x19: ffff00000ca3c000 x18: 0000000000000001
-[  218.750398] x17: 0000000000000004 x16: 0000000000000000 x15: 0000000000000000
-[  218.757516] x14: 0000000000000020 x13: 0000000000000000 x12: 0000000000000020
-[  218.764635] x11: 00000000ffffffff x10: ffff000004f1e678 x9 : ffff800001566000
-[  218.771753] x8 : ffff000003295140 x7 : 0000000000000000 x6 : 0000000000000000
-[  218.778871] x5 : ffff00000ca3e000 x4 : 0000000000000000 x3 : 0000000000000000
-[  218.785987] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000023d0980
-[  218.793108] Call trace:
-[  218.799906]  mdp5_crtc_atomic_flush+0x1b8/0x1d0 [msm]
-[  218.802347]  drm_atomic_helper_commit_planes+0x160/0x210 [drm_kms_helper]
-[  218.807678]  msm_atomic_commit_tail+0x1b0/0x8d0 [msm]
-[  218.814327]  commit_tail+0xac/0x184 [drm_kms_helper]
-[  218.819355]  drm_atomic_helper_commit+0x150/0x37c [drm_kms_helper]
-[  218.824471]  drm_atomic_commit+0xb0/0xf0 [drm]
-[  218.830345]  drm_framebuffer_remove+0x444/0x4e4 [drm]
-[  218.834813]  drm_mode_rmfb_work_fn+0x84/0xac [drm]
-[  218.839919]  process_one_work+0x1dc/0x450
-[  218.844544]  worker_thread+0x2d0/0x450
-[  218.848605]  kthread+0x100/0x110
-[  218.852216]  ret_from_fork+0x10/0x20
-[  218.855630] ---[ end trace 0000000000000000 ]---
-[  218.920029] msm_mdp 1a01000.mdp: vblank time out, crtc=0
-[  229.088439] msm_mdp 1a01000.mdp: [drm] *ERROR* flip_done timed out
-[  229.094070] msm_mdp 1a01000.mdp: [drm] *ERROR* [CRTC:57:crtc-0]
-commit wait timed out
-[  239.328613] msm_mdp 1a01000.mdp: [drm] *ERROR* flip_done timed out
-[  239.334313] msm_mdp 1a01000.mdp: [drm] *ERROR*
-[CONNECTOR:32:HDMI-A-1] commit wait timed out
-[  249.568128] msm_mdp 1a01000.mdp: [drm] *ERROR* flip_done timed out
-[  249.574071] msm_mdp 1a01000.mdp: [drm] *ERROR* [PLANE:33:plane-0]
-commit wait timed out
-[  249.712800] l6: Underflow of regulator enable count
-[  249.731423] Failed to disable vddio: -EINVAL
-[  249.742843] msm_dsi_phy 1a98300.dsi-phy: Runtime PM usage count underflow!
-[  249.788343] ------------[ cut here ]------------
-[  249.799580] WARNING: CPU: 1 PID: 918 at
-drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c:807
-mdp5_crtc_atomic_flush+0x1b8/0x1d0 [msm]
-[  249.811889] Modules linked in: rfkill snd_soc_hdmi_codec venus_enc
-venus_dec videobuf2_dma_contig adv7511 pm8916_wdt smsc75xx cec
-qcom_wcnss_pil msm qrtr qcom_camss venus_core qcom_q6v5_mss
-videobuf2_dma_sg gpu_sched qcom_pil_info v4l2_fwnode qcom_q6v5
-snd_soc_lpass_apq8016 drm_dp_aux_bus qcom_sysmon v4l2_async
-snd_soc_lpass_cpu v4l2_mem2mem drm_display_helper display_connector
-qcom_common videobuf2_memops qcom_glink_smem snd_soc_msm8916_analog
-snd_soc_msm8916_digital snd_soc_apq8016_sbc snd_soc_lpass_platform
-videobuf2_v4l2 qmi_helpers snd_soc_qcom_common drm_kms_helper
-qcom_spmi_vadc mdt_loader qcom_spmi_temp_alarm videobuf2_common
-rtc_pm8xxx drm qcom_vadc_common i2c_qcom_cci qnoc_msm8916 qcom_stats
-socinfo qcom_pon crct10dif_ce qcom_rng icc_smd_rpm rmtfs_mem fuse
-[  249.910734] CPU: 1 PID: 918 Comm: kms_chamelium Tainted: G        W
-        5.19.0-rc5 #1
-[  249.925068] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[  249.939565] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  249.954285] pc : mdp5_crtc_atomic_flush+0x1b8/0x1d0 [msm]
-[  249.969740] lr : mdp5_crtc_atomic_flush+0x44/0x1d0 [msm]
-[  249.985242] sp : ffff80000c413970
-[  250.000193] x29: ffff80000c413970 x28: 0000000000000001 x27: ffff00000ca3c2c8
-[  250.015308] x26: 0000000000000000 x25: 0000000000000000 x24: 0000000000000020
-[  250.030393] x23: 0000000000000070 x22: 0000000000000038 x21: ffff00000f374800
-[  250.045369] x20: ffff00000ca3e000 x19: ffff00000ca3c000 x18: 0000000000000000
-[  250.060301] x17: 000000040044ffff x16: 00400032b5503510 x15: 0000000000000000
-[  250.075233] x14: ffff0000032b2080 x13: ffff800001773000 x12: 0000000030d4d91d
-[  250.090193] x11: 000000000000000c x10: ffff80000aa62ac0 x9 : ffff800001566000
-[  250.105153] x8 : ffff00000f0f6180 x7 : 0000000000000000 x6 : 0000000000000000
-[  250.120023] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000000
-[  250.134629] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff0000023d0900
-[  250.148685] Call trace:
-[  250.162090]  mdp5_crtc_atomic_flush+0x1b8/0x1d0 [msm]
-[  250.175726]  drm_atomic_helper_commit_planes+0x160/0x210 [drm_kms_helper]
-[  250.188575]  msm_atomic_commit_tail+0x1b0/0x8d0 [msm]
-[  250.201697]  commit_tail+0xac/0x184 [drm_kms_helper]
-[  250.214380]  drm_atomic_helper_commit+0x150/0x37c [drm_kms_helper]
-[  250.227064]  drm_atomic_commit+0xb0/0xf0 [drm]
-[  250.239967]  drm_client_modeset_commit_atomic+0x208/0x260 [drm]
-[  250.252865]  drm_client_modeset_commit_locked+0x68/0x1a0 [drm]
-[  250.265757]  drm_client_modeset_commit+0x3c/0x64 [drm]
-[  250.278572]  drm_fb_helper_lastclose+0x78/0xd0 [drm_kms_helper]
-[  250.291139]  drm_lastclose+0x44/0x90 [drm]
-[  250.303977]  drm_release+0x100/0x120 [drm]
-[  250.316785]  __fput+0x78/0x22c
-[  250.329016]  ____fput+0x1c/0x30
-[  250.341205]  task_work_run+0x8c/0x1ac
-[  250.353465]  do_exit+0x2f8/0x984
-[  250.365655]  do_group_exit+0x40/0xb0
-[  250.377785]  __wake_up_parent+0x0/0x3c
-[  250.389954]  invoke_syscall+0x50/0x120
-[  250.402114]  el0_svc_common.constprop.0+0x104/0x124
-[  250.414237]  do_el0_svc+0x3c/0xcc
-[  250.426298]  el0_svc+0x38/0xc0
-[  250.438237]  el0t_64_sync_handler+0xbc/0x140
-[  250.450160]  el0t_64_sync+0x18c/0x190
-[  250.462003] ---[ end trace 0000000000000000 ]---
-Starting subtest: hdmi-crc-single
-Subtest hdmi-crc-single: FAIL (15.228s)
-[250.605238] [09/88] kms_chamelium (hdmi-crc-fast)
-[  250.648392] Console: switching to colour dummy device 80x25
-[  250.648623] [IGT] kms_chamelium: executing
-[  250.854890] ------------[ cut here ]------------
-[  250.854984] gcc_mdss_ahb_clk already disabled
-[  250.858801] WARNING: CPU: 2 PID: 64 at drivers/clk/clk.c:964
-clk_core_disable+0x24c/0x264
-[  250.862889] Modules linked in: rfkill snd_soc_hdmi_codec venus_enc
-venus_dec videobuf2_dma_contig adv7511 pm8916_wdt smsc75xx cec
-qcom_wcnss_pil msm qrtr qcom_camss venus_core qcom_q6v5_mss
-videobuf2_dma_sg gpu_sched qcom_pil_info v4l2_fwnode qcom_q6v5
-snd_soc_lpass_apq8016 drm_dp_aux_bus qcom_sysmon v4l2_async
-snd_soc_lpass_cpu v4l2_mem2mem drm_display_helper display_connector
-qcom_common videobuf2_memops qcom_glink_smem snd_soc_msm8916_analog
-snd_soc_msm8916_digital snd_soc_apq8016_sbc snd_soc_lpass_platform
-videobuf2_v4l2 qmi_helpers snd_soc_qcom_common drm_kms_helper
-qcom_spmi_vadc mdt_loader qcom_spmi_temp_alarm videobuf2_common
-rtc_pm8xxx drm qcom_vadc_common i2c_qcom_cci qnoc_msm8916 qcom_stats
-socinfo qcom_pon crct10dif_ce qcom_rng icc_smd_rpm rmtfs_mem fuse
-[  250.880779] [IGT] kms_chamelium: starting subtest hdmi-crc-fast
-[  250.916679] CPU: 2 PID: 64 Comm: kworker/2:2 Tainted: G        W
-     5.19.0-rc5 #1
-[  250.916724] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[  250.916748] Workqueue: pm pm_runtime_work
-[  250.916802] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  250.916848] pc : clk_core_disable+0x24c/0x264
-[  250.916900] lr : clk_core_disable+0x24c/0x264
-[  250.974624] sp : ffff80000b24bbb0
-[  250.978938] x29: ffff80000b24bbb0 x28: 0000000000000000 x27: 0000000000000000
-[  250.982243] x26: 0000000000000000 x25: 0000000000000000 x24: ffff00000d8b5900
-[  250.989360] x23: ffff80000abea618 x22: 0000000000000000 x21: ffff00000d8bbe80
-[  250.996478] x20: ffff000003270700 x19: ffff000003270700 x18: ffffffffffffffff
-[  251.003597] x17: 000000040044ffff x16: 00400032b5503510 x15: ffff80008b24b897
-[  251.010716] x14: 0000000000000000 x13: 64656c6261736964 x12: 2079646165726c61
-[  251.017833] x11: 206b6c635f626861 x10: ffff80000aa4a7a8 x9 : ffff8000081a1528
-[  251.024951] x8 : 00000000ffffefff x7 : ffff80000aa4a7a8 x6 : 0000000000000000
-[  251.032071] x5 : 000000000000bff4 x4 : 0000000000000000 x3 : 0000000000000027
-[  251.039186] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff000003b29040
-[  251.046307] Call trace:
-[  251.053413]  clk_core_disable+0x24c/0x264
-[  251.055675]  clk_disable+0x3c/0x5c
-[  251.059841]  clk_bulk_disable+0x44/0x60
-[  251.063140]  mdss_runtime_suspend+0x48/0xa0 [msm]
-[  251.066878]  pm_generic_runtime_suspend+0x38/0x50
-[  251.071736]  genpd_runtime_suspend+0xc4/0x310
-[  251.076421]  __rpm_callback+0x50/0x180
-[  251.080760]  rpm_callback+0x74/0x80
-[  251.084406]  rpm_suspend+0x110/0x640
-[  251.087793]  pm_runtime_work+0xd0/0xd4
-[  251.091611]  process_one_work+0x1dc/0x450
-[  251.095170]  worker_thread+0x154/0x450
-[  251.099251]  kthread+0x100/0x110
-[  251.102896]  ret_from_fork+0x10/0x20
-[  251.106281] ---[ end trace 0000000000000000 ]---
-[  251.110531] ------------[ cut here ]------------
-[  251.114483] gcc_mdss_ahb_clk already unprepared
-[  251.119155] WARNING: CPU: 2 PID: 64 at drivers/clk/clk.c:822
-clk_core_unprepare+0x210/0x230
-
-<trim>
-
-Starting subtest: hdmi-cmp-planes-random
-Subtest hdmi-cmp-planes-random: FAIL (3.678s)
-[343.808430] [15/88] kms_chamelium (hdmi-frame-dump)
-[  343.847491] Console: switching to colour dummy device 80x25
-[  343.847744] [IGT] kms_chamelium: executing
-[  344.119508] [IGT] kms_chamelium: starting subtest hdmi-frame-dump
-[  345.897236] [IGT] kms_chamelium: exiting, ret=98
-[  346.012383] Unable to handle kernel write to read-only memory at
-virtual address ffff80000175a5a8
-[  346.012543] Mem abort info:
-[  346.020830]   ESR = 0x000000009600004f
-[  346.022947]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  346.026999]   SET = 0, FnV = 0
-[  346.032300]   EA = 0, S1PTW = 0
-[  346.035073]   FSC = 0x0f: level 3 permission fault
-[  346.038225] Data abort info:
-[  346.043079]   ISV = 0, ISS = 0x0000004f
-[  346.046116]   CM = 0, WnR = 1
-[  346.049677] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000081eff000
-[  346.052834] [ffff80000175a5a8] pgd=10000000bfeff003,
-p4d=10000000bfeff003, pud=10000000bfefe003, pmd=100000008c9fc003,
-pte=006000008bb6ff83
-[  346.059541] Internal error: Oops: 9600004f [#1] PREEMPT SMP
-[  346.071693] Modules linked in: rfkill snd_soc_hdmi_codec venus_enc
-venus_dec videobuf2_dma_contig adv7511 pm8916_wdt smsc75xx cec
-qcom_wcnss_pil msm qrtr qcom_camss venus_core qcom_q6v5_mss
-videobuf2_dma_sg gpu_sched qcom_pil_info v4l2_fwnode qcom_q6v5
-snd_soc_lpass_apq8016 drm_dp_aux_bus qcom_sysmon v4l2_async
-snd_soc_lpass_cpu v4l2_mem2mem drm_display_helper display_connector
-qcom_common videobuf2_memops qcom_glink_smem snd_soc_msm8916_analog
-snd_soc_msm8916_digital snd_soc_apq8016_sbc snd_soc_lpass_platform
-videobuf2_v4l2 qmi_helpers snd_soc_qcom_common drm_kms_helper
-qcom_spmi_vadc mdt_loader qcom_spmi_temp_alarm videobuf2_common
-rtc_pm8xxx drm qcom_vadc_common i2c_qcom_cci qnoc_msm8916 qcom_stats
-socinfo qcom_pon crct10dif_ce qcom_rng icc_smd_rpm rmtfs_mem fuse
-[  346.123074] CPU: 1 PID: 962 Comm: kworker/1:0 Tainted: G        W
-      5.19.0-rc5 #1
-[  346.145304] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[  346.153030] Workqueue: events adv7511_hpd_work [adv7511]
-[  346.159971] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  346.165267] pc : drm_dev_unregister+0x38/0xb4 [drm]
-[  346.171950] lr : msm_drm_uninit.isra.0+0x190/0x1c0 [msm]
-[  346.176811] sp : ffff80000bfbb840
-[  346.182363] x29: ffff80000bfbb840 x28: ffff00000b803000 x27: ffff00000b803018
-
-Broadcast message from systemd-journald@dragonboard-410c (Mon
-2022-07-04 00:31:16 UTC):
-
-kernel[351]: [  346.059541] Internal error: Oops: 9600004f [#1] PREEMPT SMP
-[  346.185580] x26: ffff00000b803090 x25: ffff00000ba39100 x24: ffff00000ca3c000
-
-[  346.216430] x11: 0000000000000040 x10: ffff80000aa62ac0 x9 : ffff80000171bbc0
-[  346.216469] x8 : ffff00000a273258 x7 : 0000000000000000 x6 : 0000000000000001
-[  346.222703] x5 : 0000000000000000 x4 : 0000000000000000 x3 : dead000000000100
-[  346.229820] x2 : 00000000016e8530 x1 : 0000000001000130 x0 : ffff80000175a558
-[  346.236940] Call trace:
-[  346.244052]  drm_dev_unregister+0x38/0xb4 [drm]
-[  346.246313]  msm_drm_uninit.isra.0+0x190/0x1c0 [msm]
-[  346.250827]  msm_drm_unbind+0x1c/0x30 [msm]
-[  346.256034]  component_del+0xb0/0x16c
-[  346.259940]  dsi_dev_detach+0x2c/0x40 [msm]
-[  346.263758]  dsi_host_detach+0x28/0x6c [msm]
-[  346.267752]  mipi_dsi_detach+0x34/0x50
-[  346.272264]  adv7533_mode_set+0x68/0x90 [adv7511]
-[  346.275826]  adv7511_bridge_mode_set+0x218/0x220 [adv7511]
-[  346.280600]  drm_bridge_chain_mode_set+0x64/0x90 [drm]
-[  346.285983]  crtc_set_mode+0x190/0x1e0 [drm_kms_helper]
-[  346.291104]  drm_atomic_helper_commit_modeset_disables+0x48/0x60
-[drm_kms_helper]
-[  346.296228]  msm_atomic_commit_tail+0x1a0/0x8d0 [msm]
-[  346.303867]  commit_tail+0xac/0x184 [drm_kms_helper]
-[  346.308900]  drm_atomic_helper_commit+0x150/0x37c [drm_kms_helper]
-[  346.313935]  drm_atomic_commit+0xb0/0xf0 [drm]
-[  346.319926]  drm_client_modeset_commit_atomic+0x208/0x260 [drm]
-[  346.324352]  drm_client_modeset_commit_locked+0x68/0x1a0 [drm]
-[  346.330168]  drm_client_modeset_commit+0x3c/0x64 [drm]
-[  346.336069]  drm_fb_helper_set_par+0xd4/0x130 [drm_kms_helper]
-[  346.341192]  drm_fb_helper_hotplug_event.part.0+0xb8/0xf0 [drm_kms_helper]
-[  346.347008]  drm_fb_helper_output_poll_changed+0x44/0x50 [drm_kms_helper]
-[  346.353866]  drm_kms_helper_hotplug_event+0x38/0x50 [drm_kms_helper]
-[  346.360723]  drm_bridge_connector_hpd_cb+0xa4/0xbc [drm_kms_helper]
-[  346.367147]  drm_bridge_hpd_notify+0x48/0x64 [drm]
-[  346.373135]  adv7511_hpd_work+0x124/0x13c [adv7511]
-[  346.377996]  process_one_work+0x1dc/0x450
-[  346.382769]  worker_thread+0x154/0x450
-[  346.386935]  kthread+0x100/0x110
-[  346.390581]  ret_from_fork+0x10/0x20
-[  346.393973] Code: b940b821 0a020021 36d00041 97fff18b (3901427f)
-[  346.397534] ---[ end trace 0000000000000000 ]---
-
-
-kernel[351]: [  346.393973] Code: b940b821 0a020021 36d00041 97fff18b (3901427f)
-
-[  346.617897] fbcon_init: detected unhandled fb_set_par error, error code -16
-[  346.619178] Console: switching to colour frame buffer device 240x67
-Starting subtest: hdmi-frame-dump
-Subtest hdmi-frame-dump: FAIL (1.775s)
-
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v5.19-rc5/testrun/10489230/suite/log-parser-test/test/check-kernel-oops-5238446/details/
-
---
-Linaro LKFT
-https://lkft.linaro.org
