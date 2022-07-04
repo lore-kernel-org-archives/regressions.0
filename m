@@ -1,134 +1,373 @@
-Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A46428E1
-	for <regressions@lists.linux.dev>; Mon,  4 Jul 2022 10:21:57 +0000 (UTC)
-Received: by mail-io1-f54.google.com with SMTP id m13so8293196ioj.0
-        for <regressions@lists.linux.dev>; Mon, 04 Jul 2022 03:21:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=MHtsF8BuM0s8sZdzZdBF2dNP7G8scNA896vfo1rkN6A=;
-        b=MvOVTIbuHVF8RUyQSed7BrWw7zTkUuJMey/HH+HaiIewtWiqBftpb3cM/fuxKVDbbb
-         Wt0SLLcc38/gzO7UpT7i5UXwVCvFS1FEJZppvU5OvTbFckajEP2xXBa8lNrcIGYYZ2ph
-         BbcS8FPZa2LLimFQkEvvDzxhYnOXQ8o0hEFTU6AsxxmeBrWIf7Lv+3nOw4lIvq7Wamu/
-         cXQLlt/ILpvvKaHXnmsJIW6Y+Kz/tlyXM5flsncOGyKpKiM3e3W3YtQXxFXtz+lylhY1
-         DErtA7pIXS6HQLJoTecglPvy1givmGtQsCglBNoyteCM0RD63wbdzDExwceqNlIW6/JE
-         zx+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=MHtsF8BuM0s8sZdzZdBF2dNP7G8scNA896vfo1rkN6A=;
-        b=Ublii3uBtLK5xaqixjqshpqygJuGy7mgDzsXWpyseeoE/WfOmDimiTcUQsmEuP6AZz
-         JumS3juKwczK/H2WOQm+w2odyrQ3DpdUfPKK2XdxcKLgZUpFuzDdO9fv7xLBbqsS3gYG
-         e4kYTGRszh/G5p+klowlaTVFJbLC+OPB0hjyynom9X3TVLViK83enj95dAaUuT3h2n/q
-         mqJN4HC/vDjLb9wWG5X3URmHSprcBaZIefEoqqcWNe5/u2e9ALuykcwIUIduwRp/y2LY
-         034xlVZaxcphVh8R7tpxOkMui7jkVzwmw7SbOchjZ3y6AANJKayLS0hXdHHrC9u6p0Fn
-         ireg==
-X-Gm-Message-State: AJIora+RsSPmgfynRWrj1Jva7krOntjiq6xWwSAO+w/hADAbVPi0BbYo
-	9Ux355deRR/1ihFYWJQMJ9gRjVHrqGp5EZbECFDFag==
-X-Google-Smtp-Source: AGRyM1twJSnXUeK56KDrtuQvf3/Xbvfy61F/5TOiJt+rgJDaLehSSBxzBGJSypmwdI8AXp2HmlJQgocLjhAaDUD9pb8=
-X-Received: by 2002:a5d:8f96:0:b0:675:573e:6eb5 with SMTP id
- l22-20020a5d8f96000000b00675573e6eb5mr15588227iol.144.1656930115976; Mon, 04
- Jul 2022 03:21:55 -0700 (PDT)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 450977E
+	for <regressions@lists.linux.dev>; Mon,  4 Jul 2022 10:53:33 +0000 (UTC)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 089E923A;
+	Mon,  4 Jul 2022 03:53:33 -0700 (PDT)
+Received: from e126311.manchester.arm.com (unknown [10.57.71.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA8763F66F;
+	Mon,  4 Jul 2022 03:53:28 -0700 (PDT)
+Date: Mon, 4 Jul 2022 11:53:21 +0100
+From: Kajetan Puchalski <kajetan.puchalski@arm.com>
+To: Florian Westphal <fw@strlen.de>
+Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Mel Gorman <mgorman@suse.de>, lukasz.luba@arm.com,
+	dietmar.eggemann@arm.com, mark.rutland@arm.com, will@kernel.org,
+	mark.brown@arm.com, kajetan.puchalski@arm.com,
+	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+	netdev@vger.kernel.org, stable@vger.kernel.org,
+	regressions@lists.linux.dev, linux-kernel/@vger.kernel.org
+Subject: Re: [Regression] stress-ng udp-flood causes kernel panic on Ampere
+ Altra
+Message-ID: <YsLGoU7q5hP67TJJ@e126311.manchester.arm.com>
+References: <Yr7WTfd6AVTQkLjI@e126311.manchester.arm.com>
+ <20220701200110.GA15144@breakpoint.cc>
+ <YsAnPhPfWRjpkdmn@e126311.manchester.arm.com>
+ <20220702205651.GB15144@breakpoint.cc>
+ <YsKxTAaIgvKMfOoU@e126311.manchester.arm.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 4 Jul 2022 15:51:44 +0530
-Message-ID: <CA+G9fYvB5KmpJmwu+gkM4UiWFTwFVuRFZvAj7Kojw0o-raCezA@mail.gmail.com>
-Subject: 5.19.0-rc5: qemu-i386: traps: PANIC: double fault, error_code: 0x0
-To: open list <linux-kernel@vger.kernel.org>, LTP List <ltp@lists.linux.it>, 
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org
-Cc: Andy Lutomirski <luto@amacapital.net>, Thomas Gleixner <tglx@linutronix.de>, 
-	Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YsKxTAaIgvKMfOoU@e126311.manchester.arm.com>
 
-Following kernel crash noticed on qemu-i386 while running LTP cve tests
+On Mon, Jul 04, 2022 at 10:22:24AM +0100, Kajetan Puchalski wrote:
+> On Sat, Jul 02, 2022 at 10:56:51PM +0200, Florian Westphal wrote:
+> > > That would make sense, from further experiments I ran it somehow seems
+> > > to be related to the number of workers being spawned by stress-ng along
+> > > with the CPUs/cores involved.
+> > >
+> > > For instance, running the test with <=25 workers (--udp-flood 25 etc.)
+> > > results in the test running fine for at least 15 minutes.
+> > 
+> > Ok.  I will let it run for longer on the machines I have access to.
+> > 
+> > In mean time, you could test attached patch, its simple s/refcount_/atomic_/
+> > in nf_conntrack.
+> > 
+> > If mainline (patch vs. HEAD 69cb6c6556ad89620547318439) crashes for you
+> > but works with attached patch someone who understands aarch64 memory ordering
+> > would have to look more closely at refcount_XXX functions to see where they
+> > might differ from atomic_ ones.
+> 
+> I can confirm that the patch seems to solve the issue.
+> With it applied on top of the 5.19-rc5 tag the test runs fine for at
+> least 15 minutes which was not the case before so it looks like it is
+> that aarch64 memory ordering problem.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+I'm CCing some people who should be able to help with aarch64 memory
+ordering, maybe they could take a look.
 
-metadata:
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
-  git_sha: 88084a3df1672e131ddc1b4e39eeacfd39864acf
-  git_describe: v5.19-rc5
-  kernel_version: 5.19.0-rc5
-  kernel-config: https://builds.tuxbuild.com/2BSF0Azg4qZOVFsPdPsWOT0KBzM/config
-  artifact-location: https://builds.tuxbuild.com/2BSF0Azg4qZOVFsPdPsWOT0KBzM/
-  System.map: https://builds.tuxbuild.com/2BSF0Azg4qZOVFsPdPsWOT0KBzM/System.map
-  vmlinux.xz: https://builds.tuxbuild.com/2BSF0Azg4qZOVFsPdPsWOT0KBzM/vmlinux.xz
-
-steps to reproduce:
-cd /opt/ltp
-./runltp -p -q -f cve
-
-cve-2014-0196.c:125: TPASS: Nothing bad happened, probably.
-
-Summary:
-passed   1
-failed   0
-broken   0
-skipped  0
-warnings 0
-gethostbyname_r01    1  TPASS  :  not vulnerable
-tst_test.c:1433: TINFO: Timeout per run is 0h 15m 00s
-<47>[  916.714682] systemd-journald[195]: Sent WATCHDOG=1 notification.
-<47>[  916.915653] systemd-journald[195]: Successfully sent stream
-file descriptor to service manager.
-<0>[  920.086226] traps: PANIC: double fault, error_code: 0x0
-<4>[  920.087343] double fault: 0000 [#1] PREEMPT SMP
-<4>[  920.087914] CPU: 1 PID: 15074 Comm: keyctl02 Not tainted 5.19.0-rc5 #1
-<4>[  920.088131] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-BIOS 1.14.0-2 04/01/2014
-<4>[  920.088484] EIP: atomic64_add_return_cx8+0x21/0x2c
-<4>[  920.088700] Code: 90 f0 0f c7 0e 75 fa c3 90 55 53 56 57 89 c6
-89 d7 89 cd 89 d8 89 ca f0 0f c7 09 89 c3 89 d1 01 f3 11 f9 f0 0f c7
-4d 00 75 f1 <89> d8 89 ca 5f 5e 5b 5d c3 90 90 55 53 56 57 89 c6 89 d7
-89 cd 89
-<4>[  920.088700] EAX: 00000011 EBX: 00000010 ECX: 00000000 EDX: 00000000
-<4>[  920.088700] ESI: ffffffff EDI: ffffffff EBP: c1df3bb0 ESP: c3479eb0
-<4>[  920.088700] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: ffffffff
-<4>[  920.088700] CR0: 80050033 CR2: 01f17320 CR3: 0a126000 CR4: 000006d0
-<4>[  920.088700] Call Trace:
-<4>[  920.088700]  ? pids_release+0x32/0x50
-<4>[  920.088700]  ? cgroup_release+0x41/0xe0
-<4>[  920.088700]  ? release_task+0x61/0x640
-<4>[  920.088700]  ? trace_preempt_on+0x28/0x30
-<4>[  920.088700]  ? _raw_write_unlock_irq+0x1b/0x30
-<4>[  920.088700]  ? preempt_count_sub+0x7a/0xe0
-<4>[  920.088700]  ? do_exit+0x50a/0x910
-<4>[  920.088700]  ? syscall_enter_from_user_mode_work+0x135/0x150
-<4>[  920.088700]  ? __ia32_sys_exit+0x15/0x20
-<4>[  920.088700]  ? __do_fast_syscall_32+0x86/0xd0
-<4>[  920.088700]  ? __this_cpu_preempt_check+0xf/0x11
-<4>[  920.088700]  ? fpregs_restore_userregs+0x71/0xf0
-<4>[  920.088700]  ? syscall_exit_to_user_mode+0x3c/0x60
-<4>[  920.088700]  ? ret_from_fork+0x10/0x28
-<4>[  920.088700]  ? do_fast_syscall_32+0x29/0x60
-<4>[  920.088700]  ? do_SYSENTER_32+0x12/0x20
-<4>[  920.088700]  ? entry_SYSENTER_32+0x98/0xf1
-<4>[  920.088700] Modules linked in:
-<4>[  920.088700] ---[ end trace 0000000000000000 ]---
-<4>[  920.088700] EIP: atomic64_add_return_cx8+0x21/0x2c
-<4>[  920.088700] Code: 90 f0 0f c7 0e 75 fa c3 90 55 53 56 57 89 c6
-89 d7 89 cd 89 d8 89 ca f0 0f c7 09 89 c3 89 d1 01 f3 11 f9 f0 0f c7
-4d 00 75 f1 <89> d8 89 ca 5f 5e 5b 5d c3 90 90 55 53 56 57 89 c6 89 d7
-89 cd 89
-<4>[  920.088700] EAX: 00000011 EBX: 00000010 ECX: 00000000 EDX: 00000000
-<4>[  920.088700] ESI: ffffffff EDI: ffffffff EBP: c1df3bb0 ESP: c3479eb0
-<4>[  920.088700] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: ffffffff
-<4>[  920.088700] CR0: 80050033 CR2: 01f17320 CR3: 0a126000 CR4: 000006d0
-<0>[  920.088700] Kernel panic - not syncing: Fatal exception in interrupt
-<0>[  920.088700] Kernel Offset: disabled
-
-links,
-https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v5.19-rc5/testrun/10489457/suite/log-parser-test/tests/
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+> 
+> > 
+> > If it still crashes, please try below hunk in addition, although I don't see
+> > how it would make a difference.
+> > 
+> > This is the one spot where the original conversion replaced atomic_inc()
+> > with refcount_set(), this is on allocation, refcount is expected to be 0 so
+> > refcount_inc() triggers a warning hinting at a use-after free.
+> > 
+> > diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+> > --- a/net/netfilter/nf_conntrack_core.c
+> > +++ b/net/netfilter/nf_conntrack_core.c
+> > @@ -1776,7 +1776,7 @@ init_conntrack(struct net *net, struct nf_conn *tmpl,
+> >                 __nf_ct_try_assign_helper(ct, tmpl, GFP_ATOMIC);
+> >  
+> >         /* Now it is going to be associated with an sk_buff, set refcount to 1. */
+> > -       atomic_set(&ct->ct_general.use, 1);
+> > +       atomic_inc(&ct->ct_general.use);
+> >  
+> >         if (exp) {
+> >                 if (exp->expectfn)
+> 
+> > From 4234018dff486bdc30f4fe4625c8da1a8e30c2f6 Mon Sep 17 00:00:00 2001
+> > From: Florian Westphal <fw@strlen.de>
+> > Date: Sat, 2 Jul 2022 22:42:57 +0200
+> > Subject: [PATCH 1/1] netfilter: conntrack: revert to atomic_t api
+> > 
+> > Just for testing.
+> > ---
+> >  include/linux/netfilter/nf_conntrack_common.h |  6 ++---
+> >  include/net/netfilter/nf_conntrack.h          |  2 +-
+> >  net/netfilter/nf_conntrack_core.c             | 24 +++++++++----------
+> >  net/netfilter/nf_conntrack_expect.c           |  2 +-
+> >  net/netfilter/nf_conntrack_netlink.c          |  6 ++---
+> >  net/netfilter/nf_conntrack_standalone.c       |  4 ++--
+> >  net/netfilter/nf_flow_table_core.c            |  2 +-
+> >  net/netfilter/nft_ct.c                        |  4 ++--
+> >  net/netfilter/xt_CT.c                         |  2 +-
+> >  9 files changed, 26 insertions(+), 26 deletions(-)
+> > 
+> > diff --git a/include/linux/netfilter/nf_conntrack_common.h b/include/linux/netfilter/nf_conntrack_common.h
+> > index 2770db2fa080..48a78944182d 100644
+> > --- a/include/linux/netfilter/nf_conntrack_common.h
+> > +++ b/include/linux/netfilter/nf_conntrack_common.h
+> > @@ -25,7 +25,7 @@ struct ip_conntrack_stat {
+> >  #define NFCT_PTRMASK	~(NFCT_INFOMASK)
+> >  
+> >  struct nf_conntrack {
+> > -	refcount_t use;
+> > +	atomic_t use;
+> >  };
+> >  
+> >  void nf_conntrack_destroy(struct nf_conntrack *nfct);
+> > @@ -33,13 +33,13 @@ void nf_conntrack_destroy(struct nf_conntrack *nfct);
+> >  /* like nf_ct_put, but without module dependency on nf_conntrack */
+> >  static inline void nf_conntrack_put(struct nf_conntrack *nfct)
+> >  {
+> > -	if (nfct && refcount_dec_and_test(&nfct->use))
+> > +	if (nfct && atomic_dec_and_test(&nfct->use))
+> >  		nf_conntrack_destroy(nfct);
+> >  }
+> >  static inline void nf_conntrack_get(struct nf_conntrack *nfct)
+> >  {
+> >  	if (nfct)
+> > -		refcount_inc(&nfct->use);
+> > +		atomic_inc(&nfct->use);
+> >  }
+> >  
+> >  #endif /* _NF_CONNTRACK_COMMON_H */
+> > diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+> > index a32be8aa7ed2..9fab0c8835bb 100644
+> > --- a/include/net/netfilter/nf_conntrack.h
+> > +++ b/include/net/netfilter/nf_conntrack.h
+> > @@ -180,7 +180,7 @@ void nf_ct_destroy(struct nf_conntrack *nfct);
+> >  /* decrement reference count on a conntrack */
+> >  static inline void nf_ct_put(struct nf_conn *ct)
+> >  {
+> > -	if (ct && refcount_dec_and_test(&ct->ct_general.use))
+> > +	if (ct && atomic_dec_and_test(&ct->ct_general.use))
+> >  		nf_ct_destroy(&ct->ct_general);
+> >  }
+> >  
+> > diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+> > index 082a2fd8d85b..4469e49d78a7 100644
+> > --- a/net/netfilter/nf_conntrack_core.c
+> > +++ b/net/netfilter/nf_conntrack_core.c
+> > @@ -554,7 +554,7 @@ struct nf_conn *nf_ct_tmpl_alloc(struct net *net,
+> >  	tmpl->status = IPS_TEMPLATE;
+> >  	write_pnet(&tmpl->ct_net, net);
+> >  	nf_ct_zone_add(tmpl, zone);
+> > -	refcount_set(&tmpl->ct_general.use, 1);
+> > +	atomic_set(&tmpl->ct_general.use, 1);
+> >  
+> >  	return tmpl;
+> >  }
+> > @@ -586,7 +586,7 @@ void nf_ct_destroy(struct nf_conntrack *nfct)
+> >  	struct nf_conn *ct = (struct nf_conn *)nfct;
+> >  
+> >  	pr_debug("%s(%p)\n", __func__, ct);
+> > -	WARN_ON(refcount_read(&nfct->use) != 0);
+> > +	WARN_ON(atomic_read(&nfct->use) != 0);
+> >  
+> >  	if (unlikely(nf_ct_is_template(ct))) {
+> >  		nf_ct_tmpl_free(ct);
+> > @@ -726,7 +726,7 @@ nf_ct_match(const struct nf_conn *ct1, const struct nf_conn *ct2)
+> >  /* caller must hold rcu readlock and none of the nf_conntrack_locks */
+> >  static void nf_ct_gc_expired(struct nf_conn *ct)
+> >  {
+> > -	if (!refcount_inc_not_zero(&ct->ct_general.use))
+> > +	if (!atomic_inc_not_zero(&ct->ct_general.use))
+> >  		return;
+> >  
+> >  	if (nf_ct_should_gc(ct))
+> > @@ -794,7 +794,7 @@ __nf_conntrack_find_get(struct net *net, const struct nf_conntrack_zone *zone,
+> >  		 * in, try to obtain a reference and re-check tuple
+> >  		 */
+> >  		ct = nf_ct_tuplehash_to_ctrack(h);
+> > -		if (likely(refcount_inc_not_zero(&ct->ct_general.use))) {
+> > +		if (likely(atomic_inc_not_zero(&ct->ct_general.use))) {
+> >  			if (likely(nf_ct_key_equal(h, tuple, zone, net)))
+> >  				goto found;
+> >  
+> > @@ -923,7 +923,7 @@ nf_conntrack_hash_check_insert(struct nf_conn *ct)
+> >  
+> >  	smp_wmb();
+> >  	/* The caller holds a reference to this object */
+> > -	refcount_set(&ct->ct_general.use, 2);
+> > +	atomic_set(&ct->ct_general.use, 2);
+> >  	__nf_conntrack_hash_insert(ct, hash, reply_hash);
+> >  	nf_conntrack_double_unlock(hash, reply_hash);
+> >  	NF_CT_STAT_INC(net, insert);
+> > @@ -981,7 +981,7 @@ static void __nf_conntrack_insert_prepare(struct nf_conn *ct)
+> >  {
+> >  	struct nf_conn_tstamp *tstamp;
+> >  
+> > -	refcount_inc(&ct->ct_general.use);
+> > +	atomic_inc(&ct->ct_general.use);
+> >  
+> >  	/* set conntrack timestamp, if enabled. */
+> >  	tstamp = nf_conn_tstamp_find(ct);
+> > @@ -1384,7 +1384,7 @@ static unsigned int early_drop_list(struct net *net,
+> >  		    nf_ct_is_dying(tmp))
+> >  			continue;
+> >  
+> > -		if (!refcount_inc_not_zero(&tmp->ct_general.use))
+> > +		if (!atomic_inc_not_zero(&tmp->ct_general.use))
+> >  			continue;
+> >  
+> >  		/* kill only if still in same netns -- might have moved due to
+> > @@ -1533,7 +1533,7 @@ static void gc_worker(struct work_struct *work)
+> >  				continue;
+> >  
+> >  			/* need to take reference to avoid possible races */
+> > -			if (!refcount_inc_not_zero(&tmp->ct_general.use))
+> > +			if (!atomic_inc_not_zero(&tmp->ct_general.use))
+> >  				continue;
+> >  
+> >  			if (gc_worker_skip_ct(tmp)) {
+> > @@ -1640,7 +1640,7 @@ __nf_conntrack_alloc(struct net *net,
+> >  	/* Because we use RCU lookups, we set ct_general.use to zero before
+> >  	 * this is inserted in any list.
+> >  	 */
+> > -	refcount_set(&ct->ct_general.use, 0);
+> > +	atomic_set(&ct->ct_general.use, 0);
+> >  	return ct;
+> >  out:
+> >  	atomic_dec(&cnet->count);
+> > @@ -1665,7 +1665,7 @@ void nf_conntrack_free(struct nf_conn *ct)
+> >  	/* A freed object has refcnt == 0, that's
+> >  	 * the golden rule for SLAB_TYPESAFE_BY_RCU
+> >  	 */
+> > -	WARN_ON(refcount_read(&ct->ct_general.use) != 0);
+> > +	WARN_ON(atomic_read(&ct->ct_general.use) != 0);
+> >  
+> >  	if (ct->status & IPS_SRC_NAT_DONE) {
+> >  		const struct nf_nat_hook *nat_hook;
+> > @@ -1776,7 +1776,7 @@ init_conntrack(struct net *net, struct nf_conn *tmpl,
+> >  		__nf_ct_try_assign_helper(ct, tmpl, GFP_ATOMIC);
+> >  
+> >  	/* Now it is going to be associated with an sk_buff, set refcount to 1. */
+> > -	refcount_set(&ct->ct_general.use, 1);
+> > +	atomic_set(&ct->ct_general.use, 1);
+> >  
+> >  	if (exp) {
+> >  		if (exp->expectfn)
+> > @@ -2390,7 +2390,7 @@ get_next_corpse(int (*iter)(struct nf_conn *i, void *data),
+> >  
+> >  	return NULL;
+> >  found:
+> > -	refcount_inc(&ct->ct_general.use);
+> > +	atomic_inc(&ct->ct_general.use);
+> >  	spin_unlock(lockp);
+> >  	local_bh_enable();
+> >  	return ct;
+> > diff --git a/net/netfilter/nf_conntrack_expect.c b/net/netfilter/nf_conntrack_expect.c
+> > index 96948e98ec53..84cb05eae410 100644
+> > --- a/net/netfilter/nf_conntrack_expect.c
+> > +++ b/net/netfilter/nf_conntrack_expect.c
+> > @@ -208,7 +208,7 @@ nf_ct_find_expectation(struct net *net,
+> >  	 * can be sure the ct cannot disappear underneath.
+> >  	 */
+> >  	if (unlikely(nf_ct_is_dying(exp->master) ||
+> > -		     !refcount_inc_not_zero(&exp->master->ct_general.use)))
+> > +		     !atomic_inc_not_zero(&exp->master->ct_general.use)))
+> >  		return NULL;
+> >  
+> >  	if (exp->flags & NF_CT_EXPECT_PERMANENT) {
+> > diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+> > index 722af5e309ba..d5de0e580e6c 100644
+> > --- a/net/netfilter/nf_conntrack_netlink.c
+> > +++ b/net/netfilter/nf_conntrack_netlink.c
+> > @@ -514,7 +514,7 @@ static int ctnetlink_dump_id(struct sk_buff *skb, const struct nf_conn *ct)
+> >  
+> >  static int ctnetlink_dump_use(struct sk_buff *skb, const struct nf_conn *ct)
+> >  {
+> > -	if (nla_put_be32(skb, CTA_USE, htonl(refcount_read(&ct->ct_general.use))))
+> > +	if (nla_put_be32(skb, CTA_USE, htonl(atomic_read(&ct->ct_general.use))))
+> >  		goto nla_put_failure;
+> >  	return 0;
+> >  
+> > @@ -1204,7 +1204,7 @@ ctnetlink_dump_table(struct sk_buff *skb, struct netlink_callback *cb)
+> >  			ct = nf_ct_tuplehash_to_ctrack(h);
+> >  			if (nf_ct_is_expired(ct)) {
+> >  				if (i < ARRAY_SIZE(nf_ct_evict) &&
+> > -				    refcount_inc_not_zero(&ct->ct_general.use))
+> > +				    atomic_inc_not_zero(&ct->ct_general.use))
+> >  					nf_ct_evict[i++] = ct;
+> >  				continue;
+> >  			}
+> > @@ -1747,7 +1747,7 @@ static int ctnetlink_dump_one_entry(struct sk_buff *skb,
+> >  				  NFNL_MSG_TYPE(cb->nlh->nlmsg_type),
+> >  				  ct, dying, 0);
+> >  	if (res < 0) {
+> > -		if (!refcount_inc_not_zero(&ct->ct_general.use))
+> > +		if (!atomic_inc_not_zero(&ct->ct_general.use))
+> >  			return 0;
+> >  
+> >  		ctx->last = ct;
+> > diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+> > index 6ad7bbc90d38..badd3f219533 100644
+> > --- a/net/netfilter/nf_conntrack_standalone.c
+> > +++ b/net/netfilter/nf_conntrack_standalone.c
+> > @@ -303,7 +303,7 @@ static int ct_seq_show(struct seq_file *s, void *v)
+> >  	int ret = 0;
+> >  
+> >  	WARN_ON(!ct);
+> > -	if (unlikely(!refcount_inc_not_zero(&ct->ct_general.use)))
+> > +	if (unlikely(!atomic_inc_not_zero(&ct->ct_general.use)))
+> >  		return 0;
+> >  
+> >  	if (nf_ct_should_gc(ct)) {
+> > @@ -370,7 +370,7 @@ static int ct_seq_show(struct seq_file *s, void *v)
+> >  	ct_show_zone(s, ct, NF_CT_DEFAULT_ZONE_DIR);
+> >  	ct_show_delta_time(s, ct);
+> >  
+> > -	seq_printf(s, "use=%u\n", refcount_read(&ct->ct_general.use));
+> > +	seq_printf(s, "use=%u\n", atomic_read(&ct->ct_general.use));
+> >  
+> >  	if (seq_has_overflowed(s))
+> >  		goto release;
+> > diff --git a/net/netfilter/nf_flow_table_core.c b/net/netfilter/nf_flow_table_core.c
+> > index f2def06d1070..8b3f91a60ba2 100644
+> > --- a/net/netfilter/nf_flow_table_core.c
+> > +++ b/net/netfilter/nf_flow_table_core.c
+> > @@ -54,7 +54,7 @@ struct flow_offload *flow_offload_alloc(struct nf_conn *ct)
+> >  	struct flow_offload *flow;
+> >  
+> >  	if (unlikely(nf_ct_is_dying(ct) ||
+> > -	    !refcount_inc_not_zero(&ct->ct_general.use)))
+> > +	    !atomic_inc_not_zero(&ct->ct_general.use)))
+> >  		return NULL;
+> >  
+> >  	flow = kzalloc(sizeof(*flow), GFP_ATOMIC);
+> > diff --git a/net/netfilter/nft_ct.c b/net/netfilter/nft_ct.c
+> > index d8e1614918a1..1b6ead61a8f1 100644
+> > --- a/net/netfilter/nft_ct.c
+> > +++ b/net/netfilter/nft_ct.c
+> > @@ -260,8 +260,8 @@ static void nft_ct_set_zone_eval(const struct nft_expr *expr,
+> >  
+> >  	ct = this_cpu_read(nft_ct_pcpu_template);
+> >  
+> > -	if (likely(refcount_read(&ct->ct_general.use) == 1)) {
+> > -		refcount_inc(&ct->ct_general.use);
+> > +	if (likely(atomic_read(&ct->ct_general.use) == 1)) {
+> > +		atomic_inc(&ct->ct_general.use);
+> >  		nf_ct_zone_add(ct, &zone);
+> >  	} else {
+> >  		/* previous skb got queued to userspace, allocate temporary
+> > diff --git a/net/netfilter/xt_CT.c b/net/netfilter/xt_CT.c
+> > index 267757b0392a..cf2f8c1d4fb5 100644
+> > --- a/net/netfilter/xt_CT.c
+> > +++ b/net/netfilter/xt_CT.c
+> > @@ -24,7 +24,7 @@ static inline int xt_ct_target(struct sk_buff *skb, struct nf_conn *ct)
+> >  		return XT_CONTINUE;
+> >  
+> >  	if (ct) {
+> > -		refcount_inc(&ct->ct_general.use);
+> > +		atomic_inc(&ct->ct_general.use);
+> >  		nf_ct_set(skb, ct, IP_CT_NEW);
+> >  	} else {
+> >  		nf_ct_set(skb, ct, IP_CT_UNTRACKED);
+> > -- 
+> > 2.35.1
+> > 
+> 
