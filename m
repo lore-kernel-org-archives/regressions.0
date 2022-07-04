@@ -1,113 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1027E
-	for <regressions@lists.linux.dev>; Mon,  4 Jul 2022 11:26:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6A59C341D1;
-	Mon,  4 Jul 2022 11:26:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1656933971;
-	bh=RxQ+WPdK+8ljus8FYxhhp+i2WQDSKsXRyAKp1y5aKuI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IQGCOcGNIg9srb3P060dF/JcdvLQ/lKKW6K9hBHhqg466hXnhrCkjy1p4RUerAbgJ
-	 5yUA33dTMBD1n7hcjNKeLWR9JbW9PVxktu9AIbv2s9D9uDsfYTcRoXlkiYMiWfYwDO
-	 eDdLIl94OCId2IpV75BVjmP18+5f0UGUJvgvOHF6S78uD5vucg9rMi3CnXMGeOKUfx
-	 DFBAz2BbsxCOReoBFs0YSVOQCDCv7zocME3kAdw9MA7RXGnfpRJN8fwduw7177ARBL
-	 QeGdUDDh/fvj4ZFWq1OuMdNFtMCC0np/LxxRjTUegOnbP+AXFV6djciJUuRmPqKLJd
-	 /AwTNktqmdWaA==
-Date: Mon, 4 Jul 2022 12:26:06 +0100
-From: Will Deacon <will@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
-	regressions@lists.linux.dev,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	LTP List <ltp@lists.linux.it>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Catalin Marinas <catalin.marinas@arm.com>, brauner@kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: 5.19.0-rc5 : Raspberry Pi 4 : Unable to handle kernel paging
- request at virtual address
-Message-ID: <20220704112605.GB31553@willie-the-truck>
-References: <CA+G9fYtu1G4oGtKZQ_g5VJbQoET8c7hN_Ds-O1-1HD3PwV4wkQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B25F7E
+	for <regressions@lists.linux.dev>; Mon,  4 Jul 2022 11:54:05 +0000 (UTC)
+Received: by mail-io1-f51.google.com with SMTP id k15so8428324iok.5
+        for <regressions@lists.linux.dev>; Mon, 04 Jul 2022 04:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=dr/dAh8uy9rWUQzcd6qVKRRT4VyM+idO9nLwxtihPIw=;
+        b=zUndaHKAU95gs7fFge1Eq+6EOQvPzom0w9JwI3Rx3JifOqXeW+cbKMetSzOcAbeKTF
+         LRJXgGfa/utiPqWXPO87oyXFqHu3zreZAteLC3kwanit9K7PT6QLqLg8gelRvhUxdhsE
+         dP5AjRyGvhu1ehYZNUPa1tyzd5PcoVd0FfprBtFGN/ipHsFs4gyaWqhrdvSamf5iqiPr
+         2+BpV1nv9msUvFqjuruYSRy5DeWOIQtWPrjHo5V/E/R1BfJ1SZAUyzwD/Qw3UYcFysl+
+         Hudu6qkGUD5ElKwxu5iOxG0CK2w/66dr8x2Xcz1B8+pskSgTpkkW+Q3uY7BO7rgxiQBa
+         VepA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=dr/dAh8uy9rWUQzcd6qVKRRT4VyM+idO9nLwxtihPIw=;
+        b=71O1LIZVdDd7ibkMaG+GR9PUtqJlqou7sz2GzONLzTZkaEBkRQkHh0Xo2Z5MxiCLZ+
+         VaxFbZ1Iw2Q1bl5Q7mx8qXBi/Abx0rffAW8R5J6r4xoMF7wDk8lmqcBNABtp//jGHqnN
+         XBMwd28zmX9POLj3+NbbGucHU2JASuFerWhPjeELpSzTmFcErLIdlNokvLKJX4MWnED0
+         LZiZ2uAbni38qjKy7uSHtlHPP7mv84Ge/sQvdZOHj2U/XxCDqzbvPzukDgOCfjm2XU68
+         /Pylg5N/TMko5plZiX5FHiz2Tv83O5ioim1qYffzfPiCA1ZCJdvkfXm0Ana8nUp5YzRX
+         Wtzw==
+X-Gm-Message-State: AJIora9TuY3O4yHTLyXxW9PUHu6VopKhE0BUqRlvMYlD6U00xGq3FxNL
+	1G1PhZanJCg8Exx1uGzHelflPAIqQLn1t8Q5Khz0OQ==
+X-Google-Smtp-Source: AGRyM1sbUVln7CqCICHmv/uS/Iyug/P/XOcDINRsxeH4EvfuE390gLWteC3YHBGFfV5rgbUEFKHG+mhlkMPbq0iahpg=
+X-Received: by 2002:a05:6638:14d1:b0:339:e8ea:a7c4 with SMTP id
+ l17-20020a05663814d100b00339e8eaa7c4mr18487332jak.309.1656935644355; Mon, 04
+ Jul 2022 04:54:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYtu1G4oGtKZQ_g5VJbQoET8c7hN_Ds-O1-1HD3PwV4wkQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 4 Jul 2022 17:23:53 +0530
+Message-ID: <CA+G9fYu0CajqiX5bQq-zmp1rpOW2eniH=fcPaJA+Wwi_XmKCWQ@mail.gmail.com>
+Subject: next-20220704: juno-r2: Unable to handle kernel NULL pointer
+ dereference at virtual address - scpi_send_message
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Catalin Marinas <catalin.marinas@arm.com>, huhai <huhai@kylinos.cn>, 
+	Raghuram Thammiraju <raghuram.thammiraju@arm.com>, Mark Brown <broonie@kernel.org>, 
+	Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jul 04, 2022 at 01:28:30PM +0530, Naresh Kamboju wrote:
-> While running LTP controllers tests on arm64 Raspberry Pi 4 Model B
-> the following kernel crash noticed.
-> 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> metadata:
->   git_ref: master
->   git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
->   git_sha: 88084a3df1672e131ddc1b4e39eeacfd39864acf
->   kernel_version: 5.19.0-rc5
->   kernel-config: https://builds.tuxbuild.com/2BSEyt8Sb19HSj6SnBFiMo6kiQh/config
->   build-url: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline/-/pipelines/579007773
->   artifact-location: https://builds.tuxbuild.com/2BSEyt8Sb19HSj6SnBFiMo6kiQh
->   vmlinux.xz: https://builds.tuxbuild.com/2BSEyt8Sb19HSj6SnBFiMo6kiQh/vmlinux.xz
->   System.map: https://builds.tuxbuild.com/2BSEyt8Sb19HSj6SnBFiMo6kiQh/System.map
->   toolchain: gcc-11
-> 
-> Steps to reproduce:
-> -------------------
-> ./runltp -p -q -f controllers
-> 
-> Test log:
-> ----------
-> cgroup_fj_stress_blkio_4_4_each 1 TPASS: All done!
-> cgroup_fj_stress_blkio_4_4_each 2 TINFO: Removing all ltp subgroups...
-> cgroup_fj_stress_blkio_2_9_each 1 TINFO: Subsystem blkio is mounted at
-> /sys/fs/cgroup/blkio
-> cgroup_fj_stress_blkio_2_9_each 1 TINFO: Creating subgroups ...
-> [ 2414.973441] Unable to handle kernel paging request at virtual
-> address 00620000090336a0
-> [ 2414.981581] Mem abort info:
-> [ 2414.984480]   ESR = 0x0000000086000004
-> [ 2414.988323]   EC = 0x21: IABT (current EL), IL = 32 bits
-> [ 2414.993765]   SET = 0, FnV = 0
-> [ 2414.996905]   EA = 0, S1PTW = 0
-> [ 2415.000124]   FSC = 0x04: level 0 translation fault
-> [ 2415.005118] [00620000090336a0] address between user and kernel address ranges
-> [ 2415.012393] Internal error: Oops: 86000004 [#1] PREEMPT SMP
-> [ 2415.018048] Modules linked in: btrfs blake2b_generic libcrc32c
-> raid6_pq zstd_compress xhci_pci snd_soc_hdmi_codec xhci_pci_renesas
-> raspberrypi_cpufreq hci_uart btqca brcmfmac brcmutil btbcm vc4
-> bluetooth cfg80211 cec drm_display_helper drm_cma_helper rfkill
-> clk_raspberrypi reset_raspberrypi drm_kms_helper crct10dif_ce
-> raspberrypi_hwmon drm i2c_bcm2835 iproc_rng200 rng_core pwm_bcm2835
-> bcm2711_thermal pcie_brcmstb fuse
-> [ 2415.055725] CPU: 0 PID: 11626 Comm: cgroup_fj_stres Not taintedlinu#1
-> [ 2415.062965] Hardware name: Raspberry Pi 4 Model B (DT)
-> [ 2415.068175] pstate: 40000005 (nZcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [ 2415.075238] pc : 0x620000090336a0
-> [ 2415.078600] lr : ktime_get+0x50/0xac
-> [ 2415.082228] sp : ffff80000dfdbb90
-> [ 2415.085585] x29: ffff80000dfdbb90 x28: 00000000ffffffff x27: ffff00006405e580
-> [ 2415.092832] x26: ffff00006405e748 x25: 0000000001200000 x24: ffff00006405e180
-> [ 2415.100076] x23: ffff80000dfdbd68 x22: 0000000000000000 x21: 000002321545f201
-> [ 2415.107320] x20: 000000000012017e x19: ffff80000ae3b440 x18: ffff000000000000
-> [ 2415.114564] x17: 0000000000000000 x16: 0000000000000000 x15: 00000000000000dc
-> [ 2415.121809] x14: 0000000001200011 x13: 0000000060000000 x12: 0000ffffa7b6c1e8
-> [ 2415.129052] x11: 0000000000000040 x10: ffff80000a96c5c0 x9 : ffff8000080990d4
-> [ 2415.136295] x8 : 0000000000000000 x7 : 0000000000a9c84a x6 : 4480001ec1769752
-> [ 2415.143538] x5 : 00ffbffeffffffff x4 : 0000000900000000 x3 : 0000000000000000
-> [ 2415.150781] x2 : ffff80000a94e000 x1 : ffff8000090336a0 x0 : ffff80000ad102f0
-> [ 2415.158025] Call trace:
-> [ 2415.160498]  0x620000090336a0
-> [ 2415.163505]  copy_process+0xe34/0x1534
+[please ignore this if it is already reported]
 
-Do you have the disassembly (and source:line infor) around
-copy_process+0xe34/0x1534? The faulting PC is like a messed up copy of x1
-where the upper bits have been corrupted somehow.
+Following kernel crash noticed on arm64 juno-r2 device while booting
+the Linux next-20220704 kernel.
 
-Will
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+metadata:
+  git_ref: master
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: b6f1f2fa2bddd69ff46a190b8120bd440fd50563
+  git_describe: next-20220704
+  kernel_version: 5.19.0-rc4
+  kernel-config: https://builds.tuxbuild.com/2BTJuNI06nsF1Tg4INLiJo5PLKT/config
+  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/579259300
+  artifact-location: https://builds.tuxbuild.com/2BTJuNI06nsF1Tg4INLiJo5PLKT
+  System.map: https://builds.tuxbuild.com/2BTJuNI06nsF1Tg4INLiJo5PLKT/System.map
+  vmlinux.xz: https://builds.tuxbuild.com/2BTJuNI06nsF1Tg4INLiJo5PLKT/vmlinux.xz
+  toolchain: gcc-11
+
+
+crash log:
+----------
+[    3.243109] dma-pl330 7ff00000.dma-controller: DBUFF-1024x16bytes
+Num_Chans-8 Num_Peri-8 Num_Events-8
+[    3.257144] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000010
+[    3.265963] Mem abort info:
+[    3.268764]   ESR = 0x0000000096000004
+[    3.272532]   EC = 0x25: DABT (current EL), IL = 32 bits
+[    3.277894]   SET = 0, FnV = 0
+[    3.280960]   EA = 0, S1PTW = 0
+[    3.284109]   FSC = 0x04: level 0 translation fault
+[    3.289000] Data abort info:
+[    3.291887]   ISV = 0, ISS = 0x00000004
+[    3.295732]   CM = 0, WnR = 0
+[    3.298702] [0000000000000010] user address but active_mm is swapper
+[    3.305073] Internal error: Oops: 96000004 [#1] PREEMPT SMP
+[    3.310654] Modules linked in:
+[    3.313711] CPU: 2 PID: 10 Comm: kworker/u12:1 Not tainted
+5.19.0-rc4-next-20220704 #1
+[    3.321642] Hardware name: ARM Juno development board (r2) (DT)
+[    3.327569] Workqueue: events_unbound deferred_probe_work_func
+[    3.333424] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    3.340397] pc : scpi_send_message+0x30/0x290
+[    3.344760] lr : scpi_probe+0x2ec/0x4d0
+[    3.348598] sp : ffff80000b0d3a40
+[    3.351913] x29: ffff80000b0d3a40 x28: ffff80000af6a000 x27: 0000000000000000
+[    3.359065] x26: ffff000800982280 x25: ffff00082131b018 x24: ffff0008225f6b80
+[    3.366217] x23: ffff0008009bcc10 x22: 0000000000000001 x21: ffff00082131b018
+[    3.373367] x20: ffff80000af6a0b0 x19: ffff80000ad8dcc8 x18: ffffffffffffffff
+[    3.380517] x17: 000000005d8019b5 x16: 00000000cd715321 x15: ffff80008b0d390d
+[    3.387669] x14: 0000000000000001 x13: 007473696c5f7974 x12: 696e696666615f65
+[    3.394819] x11: 0000000000000040 x10: ffff80000aa62c50 x9 : ffff80000902e8dc
+[    3.401970] x8 : ffff000822601300 x7 : 0000000000000009 x6 : 0000000000000001
+[    3.409120] x5 : 0000000000000000 x4 : 000000000000001c x3 : ffff80000b0d3b7c
+[    3.416271] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000000
+[    3.423421] Call trace:
+[    3.425864]  scpi_send_message+0x30/0x290
+[    3.429877]  scpi_probe+0x2ec/0x4d0
+[    3.433368]  platform_probe+0x74/0xf0
+[    3.437034]  really_probe+0xc8/0x3e0
+[    3.440611]  __driver_probe_device+0x84/0x190
+[    3.444972]  driver_probe_device+0x44/0x100
+[    3.449158]  __device_attach_driver+0xa4/0x150
+[    3.453606]  bus_for_each_drv+0x84/0xe0
+[    3.457448]  __device_attach+0xb0/0x1f0
+[    3.461286]  device_initial_probe+0x20/0x30
+[    3.465473]  bus_probe_device+0xa4/0xb0
+[    3.469316]  deferred_probe_work_func+0xa8/0xfc
+[    3.473855]  process_one_work+0x1dc/0x450
+[    3.477872]  worker_thread+0x2d0/0x450
+[    3.481625]  kthread+0x108/0x110
+[    3.484856]  ret_from_fork+0x10/0x20
+[    3.488439] Code: aa0103fb f9405785 a9025bf5 b9006fe4 (f94008a1)
+[    3.494541] ---[ end trace 0000000000000000 ]---
+[    4.383179] atkbd serio1: keyboard reset failed on 1c070000.kmi
+[    5.365484] ata1: SATA link up 3.0 Gbps (SStatus 123 SControl 0)
+[    5.373920] ata1.00: ATA-9: SanDisk SSD PLUS 120GB, UE5000RL, max UDMA/133
+[    5.380871] ata1.00: 234455040 sectors, multi 1: LBA48 NCQ (depth 31/32)
+[    5.389317] ata1.00: Features: Dev-Sleep
+[    5.400248] ata1.00: configured for UDMA/100
+[    5.405730] scsi 0:0:0:0: Direct-Access     ATA      SanDisk SSD
+PLUS 00RL PQ: 0 ANSI: 5
+[    5.416154] sd 0:0:0:0: [sda] 234455040 512-byte logical blocks:
+(120 GB/112 GiB)
+[    5.423788] sd 0:0:0:0: [sda] Write Protect is off
+[    5.428664] sd 0:0:0:0: [sda] Mode Sense: 00 3a 00 00
+[    5.433913] sd 0:0:0:0: [sda] Write cache: enabled, read cache:
+enabled, doesn't support DPO or FUA
+[    5.443193] sd 0:0:0:0: [sda] Preferred minimum I/O size 512 bytes
+[    5.453537] sd 0:0:0:0: [sda] Attached SCSI disk
+[    7.467294] ata2: SATA link down (SStatus 0 SControl 0)
+[   10.970428] input: PS/2 Generic Mouse as
+/devices/platform/bus@8000000/bus@8000000:motherboard-bus@8000000/bus@8000000:motherboard-bus@8000000:iofpga-bus@300000000/1c060000.kmi/serio0/input/input2
+[   11.096505] psmouse serio0: Failed to enable mouse on 1c060000.kmi
+[   17.466565] input: PS/2 Generic Mouse as
+/devices/platform/bus@8000000/bus@8000000:motherboard-bus@8000000/bus@8000000:motherboard-bus@8000000:iofpga-bus@300000000/1c070000.kmi/serio1/input/input3
+[   17.592813] psmouse serio1: Failed to enable mouse on 1c070000.kmi
+[   60.415405] random: crng init done
+
+Full test log links,
+https://qa-reports.linaro.org/lkft/linux-next-master-sanity/build/next-20220704/testrun/10494299/suite/log-parser-test/tests/
+https://lkft.validation.linaro.org/scheduler/job/5239233#L1058
+
+--
+Linaro LKFT
+https://lkft.linaro.org
