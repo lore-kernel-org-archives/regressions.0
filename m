@@ -1,152 +1,157 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+Received: from proxima.lasnet.de (proxima.lasnet.de [78.47.171.185])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA47258B
-	for <regressions@lists.linux.dev>; Wed,  6 Jul 2022 17:38:25 +0000 (UTC)
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 266Ba5bg030505;
-	Wed, 6 Jul 2022 10:29:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
- cc : subject : in-reply-to : message-id : references : mime-version :
- content-type : content-id; s=pfpt0220;
- bh=1aRcRc2MiqHaKIAzJ+cFeflVMoGoOhtzVjNSZGQzyA0=;
- b=T8jGquzAXqnVhdnLz/okNaGudB3WgCs7wcL1NssaOk1KgE44W6g9V31lQbGU9h4NjLLu
- vYKfe8eJDl0mWlu3OPGdinBn294OfrPfuewyOylTiG7qBlYz90Gfj8N9JvXXJeQPr1L9
- k24pm414FiwfQK2XNeAQVgE4XK+fwkM9FmxllpmS7wNpMImtCJEgbLpHUimYy6AZgvYx
- 60n8hPlsuJ2QvXh6m/QcbDireUHBc1CuJloRb65b9waMnqp97AV8R0FJb4ewVw0wvwbx
- uxR6eMXGfLONibVdF8TVPqrlt3qydB+FuJdrv98vq4MqJe4IoxJJsjfK5JWLBNcEimuS 5g== 
-Received: from dc5-exch02.marvell.com ([199.233.59.182])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3h4yvr3fc1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-	Wed, 06 Jul 2022 10:29:23 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 6 Jul
- 2022 10:29:22 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
- Transport; Wed, 6 Jul 2022 10:29:22 -0700
-Received: from mvluser05.qlc.com (unknown [10.112.10.135])
-	by maili.marvell.com (Postfix) with ESMTP id 0FB1B3F7085;
-	Wed,  6 Jul 2022 10:29:22 -0700 (PDT)
-Received: from localhost (aeasi@localhost)
-	by mvluser05.qlc.com (8.14.4/8.14.4/Submit) with ESMTP id 266HTKTG022898;
-	Wed, 6 Jul 2022 10:29:21 -0700
-X-Authentication-Warning: mvluser05.qlc.com: aeasi owned process doing -bs
-Date: Wed, 6 Jul 2022 10:29:20 -0700
-From: Arun Easi <aeasi@marvell.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-CC: Tony Battersby <tonyb@cybernetics.com>,
-        Saurav Kashyap
-	<skashyap@marvell.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        <GR-QLogic-Storage-Upstream@marvell.com>, <linux-scsi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>
-Subject: Re: [EXT] Re: [REGRESSION] qla2xxx: tape drive not removed after
- unplug FC cable
-In-Reply-To: <30feb08e-83d0-34e2-06bb-40f4960c8be4@leemhuis.info>
-Message-ID: <3b2c7bd3-06e9-a11e-a44c-905540a2fa69@marvell.com>
-References: <baef87c3-5dad-3b47-44c1-6914bfc90108@cybernetics.com>
- <alpine.LRH.2.21.9999.2205271524460.4730@mvluser05.qlc.com>
- <5bcb5963-9da0-fd59-45c5-d27af02e7748@leemhuis.info>
- <178e4e7a-64fc-a442-cdda-45100eaebda0@cybernetics.com>
- <alpine.LRH.2.21.9999.2206211156470.4730@mvluser05.qlc.com>
- <d41671b4-8d29-b940-da37-b8dbe81f4d72@cybernetics.com>
- <alpine.LRH.2.21.9999.2206221557150.4730@mvluser05.qlc.com>
- <30feb08e-83d0-34e2-06bb-40f4960c8be4@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F4B7C
+	for <regressions@lists.linux.dev>; Wed,  6 Jul 2022 18:54:07 +0000 (UTC)
+Received: from [IPv6:2a01:c23:9553:2700:569c:b316:2406:eb4c] (dynamic-2a01-0c23-9553-2700-569c-b316-2406-eb4c.c23.pool.telefonica.de [IPv6:2a01:c23:9553:2700:569c:b316:2406:eb4c])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: jluebbe@lasnet.de)
+	by proxima.lasnet.de (Postfix) with ESMTPSA id F3EA5C0373;
+	Wed,  6 Jul 2022 20:48:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lasnet.de; s=2021;
+	t=1657133329;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Q1N88M69xDw45XQpZsRsQu5rF1MU+rMW1YQ0tIbUWkM=;
+	b=pTxEw9xvEo8NmFgytApBz58B51c7rSRlcJd/LGcOr5Xa0NpxIcqsBL1Mn9oILQipdn0ZF+
+	xLTeG04YGQSVrDohQrniIkm0DbTT6+W3IuuxqV3kSWPLB5Gfrz9TzdBhpx5+O/n2YkASvl
+	9Ouwb01iWqRXXGxCs3mtZZYVYzdbkQ6vm81QH9hmLD0LdYrCIbqqC0uhQ55gxFqKEhnnw4
+	sYAk+uT0TOxdLyaafrxtdJU7z+SZCHja/r5podGM6R8ZHiCiKxN170xL1pk1UKjk8hJK10
+	RZsGDgDTzRzPor8Yq9H9x6NNaYJzXtvCEZXR/yWSJCeocgXqFF3vBE+mZerwtg==
+Message-ID: <a32428fa0f3811c25912cd313a6fe1fb4f0a4fac.camel@lasnet.de>
+Subject: Re: [REGRESSION] connection timeout with routes to VRF
+From: Jan Luebbe <jluebbe@lasnet.de>
+To: Mike Manning <mvrmanning@gmail.com>, David Ahern <dsahern@kernel.org>, 
+ Robert Shearman <robertshearman@gmail.com>, Andy Roulin <aroulin@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, 
+	regressions@lists.linux.dev, linux-kernel <linux-kernel@vger.kernel.org>
+Date: Wed, 06 Jul 2022 20:49:27 +0200
+In-Reply-To: <940fa370-08ce-1d39-d5cc-51de8e853b47@gmail.com>
+References: <a54c149aed38fded2d3b5fdb1a6c89e36a083b74.camel@lasnet.de>
+	 <6410890e-333d-5f0e-52f2-1041667c80f8@kernel.org>
+	 <940fa370-08ce-1d39-d5cc-51de8e853b47@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.38.3-1 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="1879738122-1102453863-1657064255=:3483"
-Content-ID: <a5286f37-27ed-8a76-61ee-9530d32f91c0@marvell.com>
-X-Proofpoint-GUID: zW8s8bgT1p6OHHGfv3a-T6yw7N02hK_H
-X-Proofpoint-ORIG-GUID: zW8s8bgT1p6OHHGfv3a-T6yw7N02hK_H
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-06_09,2022-06-28_01,2022-06-22_01
+Content-Transfer-Encoding: 8bit
 
---1879738122-1102453863-1657064255=:3483
-Content-Type: text/plain; charset="ISO-8859-7"
-Content-Transfer-Encoding: 8BIT
-Content-ID: <11e5aaee-c6cc-5cba-d062-ddb3962c129e@marvell.com>
-
-Hi Thorsten,
-
-On Mon, 4 Jul 2022, 5:06am, Thorsten Leemhuis wrote:
-
-> On 23.06.22 01:03, Arun Easi wrote:
-> > On Wed, 22 Jun 2022, 7:56am, Tony Battersby wrote:
-> > 
-> >> On 6/21/22 18:05, Arun Easi wrote:
-> >>> Thanks for the info. Just to reiterate, you've reported two issues (though 
-> >>> this log was showing only 1 of them).
-> >>>
-> >>> Issue 1 - Tape device never disappears when removed
-> >>> Issue 2 - When a direct connected tape 1 was replaced with tape 2, tape 2 
-> >>>           was not discovered.
-> >>>
-> >>> For Issue-2, please try the attached patch. This may not be the final fix, 
-> >>> but wanted to check if that would fix the issue for you.
-> >>>
-> >>> For Issue-1, the behavior was intentional, though that behavior needs 
-> >>> refinement. These tape drives support something called FC sequence level 
-> >>> error recovery (added in FCP-2), which can make tape I/Os survive even 
-> >>> across a short cable pull. This is not a simple retry of the I/O, rather a 
-> >>> retry done at the FC sequence level that gives the IO a better chance of
-> >>> revival. In other words, the said patch that caused regression, while 
-> >>> introduces an incorrect reporting of the state of the device, makes backup 
-> >>> more resilient.
-> >>>
-> >>> Now, onto the behavior when device state is reported immediately. What we 
-> >>> have observed, at least with one tape drive from a major vendor, is that, 
-> >>> across a device loss and device back case with both the events reported to 
-> >>> upper layers, the backup operation was getting failed. This is due to a 
-> >>> REPORT LUNS command being issued during device reappearance reporting 
-> >>> (fc_remote_port_add -> SCSI scan), which the tape drive was not expecting 
-> >>> and caused the backup to fail.
-> >>>
-> >>> I know that some tape drives do not support multiple commands to it at the 
-> >>> same time, but not sure if that is still the norm these days.
-> >>>
-> >>> So, perhaps one way to make the behavior better, is to either report the 
-> >>> disappearing device a bit delayed or have intelligence added in SCSI scan 
-> >>> to detect ongoing tape IO operations and delay/avoid the REPORT LUNs. 
-> >>> Former is a more contained (in the LLD) fix.
-> >>>
-> >>> Regards,
-> >>> -Arun
-> >>
-> >> Your patch does fix Issue-2 for me.� For Issue-1, it would be fine with
-> >> me if qla2xxx reported device removal to the upper level a bit delayed,
-> >> as you said.
-> >>
-> > 
-> > Thanks for testing and verifying the patch.
+On Sun, 2022-06-26 at 21:06 +0100, Mike Manning wrote:
+...
+> Andy Roulin suggested the same fix to the same problem a few weeks back.
+> Let's do it along with a test case in fcnl-test.sh which covers all of
+> these vrf permutations.
 > 
-> BTW, that patch should have 'Link:' tags pointing to all reports about
-> this issue, e.g. the start of this thread.
+Reverting 3c82a21f4320 would remove isolation between the default and other VRFs
+needed when no VRF route leaking has been configured between these: there may be
+unintended leaking of packets arriving on a device enslaved to an l3mdev due to
+the potential match on an unbound socket.
 
-Thanks, will add, I was not aware of this.
+Thanks for the explanation.
 
-> 
-> These tags are important, as they allow others to look into the
-> backstory now and years from now. That is why they should be placed in
-> cases like this, as Documentation/process/submitting-patches.rst and
-> Documentation/process/5.Posting.rst explain in more detail.
-> Additionally, my regression tracking bot �regzbot� relies on these tags
-> to automatically connect reports with patches that are posted or
-> committed to fix the reported issue. BTW, let me tell regzbot to monitor
-> this thread:
-> 
-> > We will post the patch upstream after due testing.
-> That was more than two weeks ago now and I didn't see any progress. Or
-> did I miss it?
+VRF route leaking requires routes to be present for both ingress and egress
+VRFs,
+the testcase shown only has a route from default to red VRF. The implicit return
+path from red to default VRF due to match on unbound socket is no longer
+present.
 
-No, the fix is being prepared to be posted.
 
-Regards,
--Arun
---1879738122-1102453863-1657064255=:3483--
+If there is a better configuration that makes this work in the general case
+without a change to the kernel, we'd be happy as well.
+
+In our full setup, the outbound TCP connection (from the default VRF) gets a
+local IP from the interface enslaved to the VRF. Before 3c82a21f4320, this would
+simply work.
+
+How would the return path route from the red VRF to the default VRF look in that
+case?
+
+Match on unbound socket in all VRFs and not only in the default VRF should be
+possible by setting this option (see
+https://www.kernel.org/doc/Documentation/networking/vrf.txt):
+
+
+Do you mean unbound as in listening socket not bound to an IP with bind()? Or as
+in a socket in the default VRF?
+
+sysctl net.ipv4.tcp_l3mdev_accept=1
+
+
+The sysctl docs sound like this should only apply to listening sockets. In this
+case, we have an unconnected outbound socket.
+
+However, for this to work a change similar to the following is needed (I have
+shown the change to the macro for consistency with above, it is now an inline
+fn):
+
+
+I can also test on master and only used the macro form only because I wasn't
+completely sure how to translate it to the inline function form.
+
+---
+ include/net/inet_hashtables.h |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+--- a/include/net/inet_hashtables.h
++++ b/include/net/inet_hashtables.h
+@@ -300,9 +300,8 @@
+ #define INET_MATCH(__sk, __net, __cookie, __saddr, __daddr, __ports, __dif,
+__sdif) \
+        (((__sk)->sk_portpair == (__ports))                     &&      \
+         ((__sk)->sk_addrpair == (__cookie))                    &&      \
+-        (((__sk)->sk_bound_dev_if == (__dif))                  ||      \
+-         ((__sk)->sk_bound_dev_if == (__sdif)))                &&      \
+-        net_eq(sock_net(__sk), (__net)))
++        net_eq(sock_net(__sk), (__net))                        &&      \
++        inet_sk_bound_dev_eq((__net), (__sk)->sk_bound_dev_if, (__dif),
+(__sdif)))
+ #else /* 32-bit arch */
+ #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
+        const int __name __deprecated __attribute__((unused))
+@@ -311,9 +310,8 @@
+        (((__sk)->sk_portpair == (__ports))             &&              \
+         ((__sk)->sk_daddr      == (__saddr))           &&              \
+         ((__sk)->sk_rcv_saddr  == (__daddr))           &&              \
+-        (((__sk)->sk_bound_dev_if == (__dif))          ||              \
+-         ((__sk)->sk_bound_dev_if == (__sdif)))        &&              \
+-        net_eq(sock_net(__sk), (__net)))
++        net_eq(sock_net(__sk), (__net))                &&              \
++        inet_sk_bound_dev_eq((__net), (__sk)->sk_bound_dev_if, (__dif),
+(__sdif)))
+ #endif /* 64-bit arch */
+
+ /* Sockets in TCP_CLOSE state are _always_ taken out of the hash, so we need
+
+I can confirm that this gets my testcase working with 
+net.ipv4.tcp_l3mdev_accept=1.
+
+This is to get the testcase to pass, I will leave it to others to comment on
+the testcase validity in terms of testing forwarding using commands on 1 device.
+
+So a network-namespace-based testcase would be preferred? We used the simple
+setup because it seemed easier to understand.
+
+The series that 3c82a21f4320 is part of were introduced into the kernel in 2018
+by the Vyatta team, who regularly run an extensive test suite for routing
+protocols
+for VRF functionality incl. all combinations of route leaking between default
+and
+other VRFs, so there is no known issue in this regard. I will attempt to reach
+out
+to them so as to advise them of this thread.
+
+Are these testcases public? Perhaps I could use them find a better configuration
+that handles our use-case.
+
+Thanks,
+
+Jan
+
