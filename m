@@ -1,13 +1,13 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B411D3D86
-	for <regressions@lists.linux.dev>; Tue,  5 Jul 2022 15:30:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DD566022
+	for <regressions@lists.linux.dev>; Wed,  6 Jul 2022 10:39:58 +0000 (UTC)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E7C4D6E;
-	Tue,  5 Jul 2022 08:30:03 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8006F1042;
+	Wed,  6 Jul 2022 03:39:52 -0700 (PDT)
 Received: from e126311.manchester.arm.com (unknown [10.57.71.227])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AB343F66F;
-	Tue,  5 Jul 2022 08:29:59 -0700 (PDT)
-Date: Tue, 5 Jul 2022 16:29:51 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C5EF3F66F;
+	Wed,  6 Jul 2022 03:39:49 -0700 (PDT)
+Date: Wed, 6 Jul 2022 11:39:40 +0100
 From: Kajetan Puchalski <kajetan.puchalski@arm.com>
 To: Will Deacon <will@kernel.org>
 Cc: Florian Westphal <fw@strlen.de>,
@@ -21,10 +21,10 @@ Cc: Florian Westphal <fw@strlen.de>,
 	netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
 	netdev@vger.kernel.org, stable@vger.kernel.org,
 	regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
-	peterz@infradead.org
+	peterz@infradead.org, kajetan.puchalski@arm.com
 Subject: Re: [Regression] stress-ng udp-flood causes kernel panic on Ampere
  Altra
-Message-ID: <YsRY7xx2bPcE/tJL@e126311.manchester.arm.com>
+Message-ID: <YsVmbOqzACeo1rO4@e126311.manchester.arm.com>
 References: <Yr7WTfd6AVTQkLjI@e126311.manchester.arm.com>
  <20220701200110.GA15144@breakpoint.cc>
  <YsAnPhPfWRjpkdmn@e126311.manchester.arm.com>
@@ -45,6 +45,7 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20220705112449.GA931@willie-the-truck>
 
+On Tue, Jul 05, 2022 at 12:24:49PM +0100, Will Deacon wrote:
 > > > Sorry, but I have absolutely no context here. We have a handy document
 > > > describing the differences between atomic_t and refcount_t:
 > > > 
@@ -79,5 +80,9 @@ In-Reply-To: <20220705112449.GA931@willie-the-truck>
 >                     nf_ct_delete(tmp, 0, 0))
 > 
 
-With this patch applied the issue goes away as well. The test runs fine
-well beyond where it would crash previously so looks good, thanks!
+Just to follow up, I think you're right, the patch in question should be
+audited further for other missing memory barrier issues.
+While this one smp_rmb() helps a lot, ie lets the test run for at least
+an hour or two, an overnight 6 hour test still resulted in the same
+crash somewhere along the way so it looks like it's not the only one
+that's needed.
