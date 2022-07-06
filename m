@@ -1,209 +1,152 @@
-Received: from Chamillionaire.breakpoint.cc (Chamillionaire.breakpoint.cc [193.142.43.52])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F2F20EC
-	for <regressions@lists.linux.dev>; Wed,  6 Jul 2022 14:52:27 +0000 (UTC)
-Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
-	(envelope-from <fw@breakpoint.cc>)
-	id 1o96O8-0004rG-6N; Wed, 06 Jul 2022 16:52:24 +0200
-From: Florian Westphal <fw@strlen.de>
-To: <netfilter-devel@vger.kernel.org>
-Cc: regressions@lists.linux.dev,
-	<netdev@vger.kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Florian Westphal <fw@strlen.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Kajetan Puchalski <kajetan.puchalski@arm.com>,
-	Will Deacon <will@kernel.org>
-Subject: [PATCH nf v3] netfilter: conntrack: fix crash due to confirmed bit load reordering
-Date: Wed,  6 Jul 2022 16:50:04 +0200
-Message-Id: <20220706145004.22355-1-fw@strlen.de>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220706124007.GB7996@breakpoint.cc>
-References: <20220706124007.GB7996@breakpoint.cc>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DA47258B
+	for <regressions@lists.linux.dev>; Wed,  6 Jul 2022 17:38:25 +0000 (UTC)
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 266Ba5bg030505;
+	Wed, 6 Jul 2022 10:29:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=date : from : to :
+ cc : subject : in-reply-to : message-id : references : mime-version :
+ content-type : content-id; s=pfpt0220;
+ bh=1aRcRc2MiqHaKIAzJ+cFeflVMoGoOhtzVjNSZGQzyA0=;
+ b=T8jGquzAXqnVhdnLz/okNaGudB3WgCs7wcL1NssaOk1KgE44W6g9V31lQbGU9h4NjLLu
+ vYKfe8eJDl0mWlu3OPGdinBn294OfrPfuewyOylTiG7qBlYz90Gfj8N9JvXXJeQPr1L9
+ k24pm414FiwfQK2XNeAQVgE4XK+fwkM9FmxllpmS7wNpMImtCJEgbLpHUimYy6AZgvYx
+ 60n8hPlsuJ2QvXh6m/QcbDireUHBc1CuJloRb65b9waMnqp97AV8R0FJb4ewVw0wvwbx
+ uxR6eMXGfLONibVdF8TVPqrlt3qydB+FuJdrv98vq4MqJe4IoxJJsjfK5JWLBNcEimuS 5g== 
+Received: from dc5-exch02.marvell.com ([199.233.59.182])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3h4yvr3fc1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+	Wed, 06 Jul 2022 10:29:23 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 6 Jul
+ 2022 10:29:22 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.18 via Frontend
+ Transport; Wed, 6 Jul 2022 10:29:22 -0700
+Received: from mvluser05.qlc.com (unknown [10.112.10.135])
+	by maili.marvell.com (Postfix) with ESMTP id 0FB1B3F7085;
+	Wed,  6 Jul 2022 10:29:22 -0700 (PDT)
+Received: from localhost (aeasi@localhost)
+	by mvluser05.qlc.com (8.14.4/8.14.4/Submit) with ESMTP id 266HTKTG022898;
+	Wed, 6 Jul 2022 10:29:21 -0700
+X-Authentication-Warning: mvluser05.qlc.com: aeasi owned process doing -bs
+Date: Wed, 6 Jul 2022 10:29:20 -0700
+From: Arun Easi <aeasi@marvell.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+CC: Tony Battersby <tonyb@cybernetics.com>,
+        Saurav Kashyap
+	<skashyap@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        <GR-QLogic-Storage-Upstream@marvell.com>, <linux-scsi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <regressions@lists.linux.dev>
+Subject: Re: [EXT] Re: [REGRESSION] qla2xxx: tape drive not removed after
+ unplug FC cable
+In-Reply-To: <30feb08e-83d0-34e2-06bb-40f4960c8be4@leemhuis.info>
+Message-ID: <3b2c7bd3-06e9-a11e-a44c-905540a2fa69@marvell.com>
+References: <baef87c3-5dad-3b47-44c1-6914bfc90108@cybernetics.com>
+ <alpine.LRH.2.21.9999.2205271524460.4730@mvluser05.qlc.com>
+ <5bcb5963-9da0-fd59-45c5-d27af02e7748@leemhuis.info>
+ <178e4e7a-64fc-a442-cdda-45100eaebda0@cybernetics.com>
+ <alpine.LRH.2.21.9999.2206211156470.4730@mvluser05.qlc.com>
+ <d41671b4-8d29-b940-da37-b8dbe81f4d72@cybernetics.com>
+ <alpine.LRH.2.21.9999.2206221557150.4730@mvluser05.qlc.com>
+ <30feb08e-83d0-34e2-06bb-40f4960c8be4@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed;
+	boundary="1879738122-1102453863-1657064255=:3483"
+Content-ID: <a5286f37-27ed-8a76-61ee-9530d32f91c0@marvell.com>
+X-Proofpoint-GUID: zW8s8bgT1p6OHHGfv3a-T6yw7N02hK_H
+X-Proofpoint-ORIG-GUID: zW8s8bgT1p6OHHGfv3a-T6yw7N02hK_H
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-06_09,2022-06-28_01,2022-06-22_01
 
-Kajetan Puchalski reports crash on ARM, with backtrace of:
+--1879738122-1102453863-1657064255=:3483
+Content-Type: text/plain; charset="ISO-8859-7"
+Content-Transfer-Encoding: 8BIT
+Content-ID: <11e5aaee-c6cc-5cba-d062-ddb3962c129e@marvell.com>
 
-__nf_ct_delete_from_lists
-nf_ct_delete
-early_drop
-__nf_conntrack_alloc
+Hi Thorsten,
 
-Unlike atomic_inc_not_zero, refcount_inc_not_zero is not a full barrier.
-conntrack uses SLAB_TYPESAFE_BY_RCU, i.e. it is possible that a 'newly'
-allocated object is still in use on another CPU:
+On Mon, 4 Jul 2022, 5:06am, Thorsten Leemhuis wrote:
 
-CPU1						CPU2
-						encounter 'ct' during hlist walk
- delete_from_lists
- refcount drops to 0
- kmem_cache_free(ct);
- __nf_conntrack_alloc() // returns same object
-						refcount_inc_not_zero(ct); /* might fail */
+> On 23.06.22 01:03, Arun Easi wrote:
+> > On Wed, 22 Jun 2022, 7:56am, Tony Battersby wrote:
+> > 
+> >> On 6/21/22 18:05, Arun Easi wrote:
+> >>> Thanks for the info. Just to reiterate, you've reported two issues (though 
+> >>> this log was showing only 1 of them).
+> >>>
+> >>> Issue 1 - Tape device never disappears when removed
+> >>> Issue 2 - When a direct connected tape 1 was replaced with tape 2, tape 2 
+> >>>           was not discovered.
+> >>>
+> >>> For Issue-2, please try the attached patch. This may not be the final fix, 
+> >>> but wanted to check if that would fix the issue for you.
+> >>>
+> >>> For Issue-1, the behavior was intentional, though that behavior needs 
+> >>> refinement. These tape drives support something called FC sequence level 
+> >>> error recovery (added in FCP-2), which can make tape I/Os survive even 
+> >>> across a short cable pull. This is not a simple retry of the I/O, rather a 
+> >>> retry done at the FC sequence level that gives the IO a better chance of
+> >>> revival. In other words, the said patch that caused regression, while 
+> >>> introduces an incorrect reporting of the state of the device, makes backup 
+> >>> more resilient.
+> >>>
+> >>> Now, onto the behavior when device state is reported immediately. What we 
+> >>> have observed, at least with one tape drive from a major vendor, is that, 
+> >>> across a device loss and device back case with both the events reported to 
+> >>> upper layers, the backup operation was getting failed. This is due to a 
+> >>> REPORT LUNS command being issued during device reappearance reporting 
+> >>> (fc_remote_port_add -> SCSI scan), which the tape drive was not expecting 
+> >>> and caused the backup to fail.
+> >>>
+> >>> I know that some tape drives do not support multiple commands to it at the 
+> >>> same time, but not sure if that is still the norm these days.
+> >>>
+> >>> So, perhaps one way to make the behavior better, is to either report the 
+> >>> disappearing device a bit delayed or have intelligence added in SCSI scan 
+> >>> to detect ongoing tape IO operations and delay/avoid the REPORT LUNs. 
+> >>> Former is a more contained (in the LLD) fix.
+> >>>
+> >>> Regards,
+> >>> -Arun
+> >>
+> >> Your patch does fix Issue-2 for me.  For Issue-1, it would be fine with
+> >> me if qla2xxx reported device removal to the upper level a bit delayed,
+> >> as you said.
+> >>
+> > 
+> > Thanks for testing and verifying the patch.
+> 
+> BTW, that patch should have 'Link:' tags pointing to all reports about
+> this issue, e.g. the start of this thread.
 
-						/* If set, ct is public/in the hash table */
-						test_bit(IPS_CONFIRMED_BIT, &ct->status);
+Thanks, will add, I was not aware of this.
 
-In case CPU1 already set refcount back to 1, refcount_inc_not_zero()
-will succeed.
+> 
+> These tags are important, as they allow others to look into the
+> backstory now and years from now. That is why they should be placed in
+> cases like this, as Documentation/process/submitting-patches.rst and
+> Documentation/process/5.Posting.rst explain in more detail.
+> Additionally, my regression tracking bot ¡regzbot¢ relies on these tags
+> to automatically connect reports with patches that are posted or
+> committed to fix the reported issue. BTW, let me tell regzbot to monitor
+> this thread:
+> 
+> > We will post the patch upstream after due testing.
+> That was more than two weeks ago now and I didn't see any progress. Or
+> did I miss it?
 
-The expected possibilities for a CPU that obtained the object 'ct'
-(but no reference so far) are:
+No, the fix is being prepared to be posted.
 
-1. refcount_inc_not_zero() fails.  CPU2 ignores the object and moves to
-   the next entry in the list.  This happens for objects that are about
-   to be free'd, that have been free'd, or that have been reallocated
-   by __nf_conntrack_alloc(), but where the refcount has not been
-   increased back to 1 yet.
-
-2. refcount_inc_not_zero() succeeds. CPU2 checks the CONFIRMED bit
-   in ct->status.  If set, the object is public/in the table.
-
-   If not, the object must be skipped; CPU2 calls nf_ct_put() to
-   un-do the refcount increment and moves to the next object.
-
-Parallel deletion from the hlists is prevented by a
-'test_and_set_bit(IPS_DYING_BIT, &ct->status);' check, i.e. only one
-cpu will do the unlink, the other one will only drop its reference count.
-
-Because refcount_inc_not_zero is not a full barrier, CPU2 may try to
-delete an object that is not on any list:
-
-1. refcount_inc_not_zero() successful (refcount inited to 1 on other CPU)
-2. CONFIRMED test also successful (load was reordered or zeroing
-   of ct->status not yet visible)
-3. delete_from_lists unlinks entry not on the hlist, because
-   IPS_DYING_BIT is 0 (already cleared).
-
-2) is already wrong: CPU2 will handle a partially initited object
-that is supposed to be private to CPU1.
-
-Add needed barriers when refcount_inc_not_zero() is successful.
-
-It also inserts a smp_wmb() before the refcount is set to 1 during
-allocation.
-
-Because other CPU might still 'see' the object, refcount_set(1)
-"resurrects" the object, so we need to make sure that other CPUs will
-also observe the right contents.  In particular, the CONFIRMED bit test
-must only pass once the object is fully initialised and either in the
-hash or about to be inserted (with locks held to delay possible unlink from
-early_drop or gc worker).
-
-I did not change flow_offload_alloc(), as far as I can see it should call
-refcount_inc(), not refcount_inc_not_zero(): the ct object is attached to
-the skb so its refcount should be >= 1 in all cases.
-
-v2: prefer smp_acquire__after_ctrl_dep to smp_rmb (Will Deacon).
-v3: keep smp_acquire__after_ctrl_dep close to refcount_inc_not_zero call
-    add comment in nf_conntrack_netlink, no control dependency there
-    due to locks.
-
-Cc: Peter Zijlstra <peterz@infradead.org>
-Reported-by: Kajetan Puchalski <kajetan.puchalski@arm.com>
-Diagnosed-by: Will Deacon <will@kernel.org>
-Fixes: 719774377622 ("netfilter: conntrack: convert to refcount_t api")
-Signed-off-by: Florian Westphal <fw@strlen.de>
----
- net/netfilter/nf_conntrack_core.c       | 22 ++++++++++++++++++++++
- net/netfilter/nf_conntrack_netlink.c    |  1 +
- net/netfilter/nf_conntrack_standalone.c |  3 +++
- 3 files changed, 26 insertions(+)
-
-diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
-index 082a2fd8d85b..369aeabb94fe 100644
---- a/net/netfilter/nf_conntrack_core.c
-+++ b/net/netfilter/nf_conntrack_core.c
-@@ -729,6 +729,9 @@ static void nf_ct_gc_expired(struct nf_conn *ct)
- 	if (!refcount_inc_not_zero(&ct->ct_general.use))
- 		return;
- 
-+	/* load ->status after refcount increase */
-+	smp_acquire__after_ctrl_dep();
-+
- 	if (nf_ct_should_gc(ct))
- 		nf_ct_kill(ct);
- 
-@@ -795,6 +798,9 @@ __nf_conntrack_find_get(struct net *net, const struct nf_conntrack_zone *zone,
- 		 */
- 		ct = nf_ct_tuplehash_to_ctrack(h);
- 		if (likely(refcount_inc_not_zero(&ct->ct_general.use))) {
-+			/* re-check key after refcount */
-+			smp_acquire__after_ctrl_dep();
-+
- 			if (likely(nf_ct_key_equal(h, tuple, zone, net)))
- 				goto found;
- 
-@@ -1387,6 +1393,9 @@ static unsigned int early_drop_list(struct net *net,
- 		if (!refcount_inc_not_zero(&tmp->ct_general.use))
- 			continue;
- 
-+		/* load ->ct_net and ->status after refcount increase */
-+		smp_acquire__after_ctrl_dep();
-+
- 		/* kill only if still in same netns -- might have moved due to
- 		 * SLAB_TYPESAFE_BY_RCU rules.
- 		 *
-@@ -1536,6 +1545,9 @@ static void gc_worker(struct work_struct *work)
- 			if (!refcount_inc_not_zero(&tmp->ct_general.use))
- 				continue;
- 
-+			/* load ->status after refcount increase */
-+			smp_acquire__after_ctrl_dep();
-+
- 			if (gc_worker_skip_ct(tmp)) {
- 				nf_ct_put(tmp);
- 				continue;
-@@ -1775,6 +1787,16 @@ init_conntrack(struct net *net, struct nf_conn *tmpl,
- 	if (!exp)
- 		__nf_ct_try_assign_helper(ct, tmpl, GFP_ATOMIC);
- 
-+	/* Other CPU might have obtained a pointer to this object before it was
-+	 * released.  Because refcount is 0, refcount_inc_not_zero() will fail.
-+	 *
-+	 * After refcount_set(1) it will succeed; ensure that zeroing of
-+	 * ct->status and the correct ct->net pointer are visible; else other
-+	 * core might observe CONFIRMED bit which means the entry is valid and
-+	 * in the hash table, but its not (anymore).
-+	 */
-+	smp_wmb();
-+
- 	/* Now it is going to be associated with an sk_buff, set refcount to 1. */
- 	refcount_set(&ct->ct_general.use, 1);
- 
-diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
-index 722af5e309ba..f5905b5201a7 100644
---- a/net/netfilter/nf_conntrack_netlink.c
-+++ b/net/netfilter/nf_conntrack_netlink.c
-@@ -1203,6 +1203,7 @@ ctnetlink_dump_table(struct sk_buff *skb, struct netlink_callback *cb)
- 					   hnnode) {
- 			ct = nf_ct_tuplehash_to_ctrack(h);
- 			if (nf_ct_is_expired(ct)) {
-+				/* need to defer nf_ct_kill() until lock is released */
- 				if (i < ARRAY_SIZE(nf_ct_evict) &&
- 				    refcount_inc_not_zero(&ct->ct_general.use))
- 					nf_ct_evict[i++] = ct;
-diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
-index 6ad7bbc90d38..05895878610c 100644
---- a/net/netfilter/nf_conntrack_standalone.c
-+++ b/net/netfilter/nf_conntrack_standalone.c
-@@ -306,6 +306,9 @@ static int ct_seq_show(struct seq_file *s, void *v)
- 	if (unlikely(!refcount_inc_not_zero(&ct->ct_general.use)))
- 		return 0;
- 
-+	/* load ->status after refcount increase */
-+	smp_acquire__after_ctrl_dep();
-+
- 	if (nf_ct_should_gc(ct)) {
- 		nf_ct_kill(ct);
- 		goto release;
--- 
-2.35.1
-
+Regards,
+-Arun
+--1879738122-1102453863-1657064255=:3483--
