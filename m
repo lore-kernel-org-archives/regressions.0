@@ -1,149 +1,132 @@
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0258A7C
-	for <regressions@lists.linux.dev>; Thu,  7 Jul 2022 05:45:31 +0000 (UTC)
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
-	by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <a.fatoum@pengutronix.de>)
-	id 1o9KKG-0001Ic-Dn; Thu, 07 Jul 2022 07:45:20 +0200
-Message-ID: <577c7140-a30c-ca06-a81e-c791e44b1321@pengutronix.de>
-Date: Thu, 7 Jul 2022 07:45:16 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A34939D
+	for <regressions@lists.linux.dev>; Thu,  7 Jul 2022 08:19:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF964C3411E;
+	Thu,  7 Jul 2022 08:19:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1657181995;
+	bh=dlKZYg79yRfs31l7B5/WgBfVM2TrLooFz8zeZbYFV+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QduiOdNuFqVXHcTMs4SxGJaq1lG+dELES08mPqbFMLL+6gFYNszYUar1eRo36Xa/P
+	 zRR2GK4qKXGnMFxhZkB/NvKKJrUZnrWol/+RglB/4VzeLlat9aSaoUOZ91/WgeG51M
+	 qL144onb9+qe7IM+R2qxO7HIyf46LshybFDDUpbReLkFDsbi3MFWvDDSQNF7m4Qdvw
+	 Eh2Dx0cYfx0zcJQ6/xhiVwqpNzxFlfO1ySiDnAPz9b24rU89VWau/xxA3npTPYTu4p
+	 WL0By6eEwEJVzB9y219Cqw5xRtHnMbSpvZkbNWgc6AHxQV4b6sncPD+IuzEOg/x7wL
+	 zS/NWgN1c7a8Q==
+Date: Thu, 7 Jul 2022 09:19:50 +0100
+From: Will Deacon <will@kernel.org>
+To: Florian Westphal <fw@strlen.de>
+Cc: netfilter-devel@vger.kernel.org, regressions@lists.linux.dev,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Kajetan Puchalski <kajetan.puchalski@arm.com>
+Subject: Re: [PATCH nf v3] netfilter: conntrack: fix crash due to confirmed
+ bit load reordering
+Message-ID: <20220707081949.GA4057@willie-the-truck>
+References: <20220706124007.GB7996@breakpoint.cc>
+ <20220706145004.22355-1-fw@strlen.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [BUG] BLE device unpairing triggers kernel panic
-Content-Language: en-US
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
- Marcel Holtmann <marcel@holtmann.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Tedd Ho-Jeong An <hj.tedd.an@gmail.com>
-References: <a1ce1743-e450-6cdb-dfab-56a3e3eb9aed@pengutronix.de>
- <CABBYNZ+z8kBUKGXbZSfb0ynJaTnPQRp0wFDUb12AW1ymbNx1eg@mail.gmail.com>
- <CABBYNZ+zsuggTpaUSPsZKeL=qqvM1=sgMWzdWEqaS_oh6dhY2g@mail.gmail.com>
- <8d5c4724-d511-39b1-21d7-116c91cada45@pengutronix.de>
- <b0cb4fb0-6b89-b9df-9ae6-421ac52b0100@pengutronix.de>
- <CABBYNZ+ubN2rc=zoN_53Pmp6kt3L5UcY3knbtjhhVOjPBpJv4Q@mail.gmail.com>
- <d5654901-6b1f-a1fa-0101-8b52b345af7b@pengutronix.de>
- <CABBYNZ+8dpPBqaQMr-Hz_DJRxT-0ucCjgAJH50FUaN7Sn9H6rA@mail.gmail.com>
- <1d1b76cf-df6f-3935-5cd2-c45ea78f2c33@pengutronix.de>
- <CABBYNZLdy-rndKczoG_WiWXQmacX+vzCbftQKvzJ3B6imtZopw@mail.gmail.com>
- <1a5ec80d-690f-285c-3da8-ccdaf5516d85@pengutronix.de>
- <CABBYNZJQKc9ozReXLeESWY8U648eQytKfGB4WmhZi4M+YOW7jw@mail.gmail.com>
- <b7b080ff-a5da-a10c-674b-c3bb653f0aeb@leemhuis.info>
-From: Ahmad Fatoum <a.fatoum@pengutronix.de>
-In-Reply-To: <b7b080ff-a5da-a10c-674b-c3bb653f0aeb@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: regressions@lists.linux.dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220706145004.22355-1-fw@strlen.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Hi,
-
-On 04.07.22 14:11, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker. Top-posting for once,
-> to make this easily accessible to everyone.
+On Wed, Jul 06, 2022 at 04:50:04PM +0200, Florian Westphal wrote:
+> Kajetan Puchalski reports crash on ARM, with backtrace of:
 > 
-> Looks like the discussions to fix this regression got stuck. What can be
-> done to get thing rolling again? Or has progress been made and I just
-> missed it? Ciao, Thorsten
-
-No progress has been made as far as I am aware. I am reverting the commit
-introducing the regression on my systems and haven't yet had the time to
-debug this further to help find an alternative solution.
-
-Cheers,
-Ahmad
-
+> __nf_ct_delete_from_lists
+> nf_ct_delete
+> early_drop
+> __nf_conntrack_alloc
 > 
-> On 24.06.22 21:59, Luiz Augusto von Dentz wrote:
->> On Fri, Jun 24, 2022 at 5:53 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
->>> On 21.06.22 20:52, Luiz Augusto von Dentz wrote:
->>>> On Tue, Jun 21, 2022 at 1:32 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
->>>>> On 20.06.22 22:18, Luiz Augusto von Dentz wrote:
->>>>>> On Mon, Jun 20, 2022 at 3:06 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
->>>>>>> Disconnect of connection #1 being processed after new connection #2
->>>>>>> concluded sounds wrong. Would I be able to reconnect
->>>>>>> afterwards or would all connections, but the first, be directly
->>>>>>> disconnected...?
->>>>>>
->>>>>> That depends on the order you have queued the commands, it will be
->>>>>> processed in the exact order it is received, that why I said it is
->>>>>> single queue design, and it is done like that to prevent messing up
->>>>>> with states since we know the exact order the commands will be sent.
->>>>>>
->>>>>>>> otherwise we need a
->>>>>>>> different queue to handle command that abort/cancel other already in
->>>>>>>> the queue.
->>>>>>>
->>>>>>> Is the revert an acceptable interim solution or are there issues
->>>>>>> I am missing?
->>>>>>
->>>>>> Afaik there were problem with concurrent connections request, so what
->>>>>> would really help us here is to have some tests to emulate this
->>>>>> scenario with our CI, in the meantime please check if the following
->>>>>> fixes your problem:
->>>>>>
->>>>>> https://gist.github.com/Vudentz/b4fff292c7f4ad55ca3299fd5ab797ae
->>>>>
->>>>> Doesn't help unfortunately. First pairing works as before.
->>>>> Second still fails:
->>>>>
->>>>>   Bluetooth: hci0: Opcode 0x200d failed: -110
->>>>>   Bluetooth: hci0: request failed to create LE connection: err -110
->>>>
->>>> Can we try to add a test in mgmt-tester to reproduce the error above?
->>>
->>> I am not familiar with mgmt-tester. What information do you
->>> need to reproduce? In the meantime, can we revert the commit?
->>> I understand that this may break other uses, but I believe
->>> previously working stuff should have precedence..
->>
->> Have a looks at:
->>
->> https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/doc/test-runner.txt
->>
->> And then run with:
->>
->> sudo tools/test-runner -k <pathyto/bzImage> -- tools/mgmt-tester
->>
->> Btw, can we have the exact steps to reproduce it using bluetoothctl if possible?
->>
->>> Cheers,
->>> Ahmad
->>>
->>>>
->>>>> Cheers,
->>>>> Ahmad
->>>>>
->>>>>>
->>>>>>> Cheers,
->>>>>>> Ahmad
->>>>>>>
->>>>>>>>
->>>>>>>>> We've been deploying the revert for a while now and I just posted
->>>>>>>>> it to the mailing list[1]. There have been other reports
->>>>>>>>> of this issue with different hardware too and fixing sent_cmd
->>>>>>>>> would likely be too complicated/time intensive for me.
->>>>>>>>>
->>>>>>>>> I am happy to test future patches that fix this properly though.
->>>>>>>>>
->>>>>>>>> [1]: https://lore.kernel.org/linux-bluetooth/20220616092418.738877-1-a.fatoum@pengutronix.de/T/#t
+> Unlike atomic_inc_not_zero, refcount_inc_not_zero is not a full barrier.
+> conntrack uses SLAB_TYPESAFE_BY_RCU, i.e. it is possible that a 'newly'
+> allocated object is still in use on another CPU:
 > 
+> CPU1						CPU2
+> 						encounter 'ct' during hlist walk
+>  delete_from_lists
+>  refcount drops to 0
+>  kmem_cache_free(ct);
+>  __nf_conntrack_alloc() // returns same object
+> 						refcount_inc_not_zero(ct); /* might fail */
+> 
+> 						/* If set, ct is public/in the hash table */
+> 						test_bit(IPS_CONFIRMED_BIT, &ct->status);
+> 
+> In case CPU1 already set refcount back to 1, refcount_inc_not_zero()
+> will succeed.
+> 
+> The expected possibilities for a CPU that obtained the object 'ct'
+> (but no reference so far) are:
+> 
+> 1. refcount_inc_not_zero() fails.  CPU2 ignores the object and moves to
+>    the next entry in the list.  This happens for objects that are about
+>    to be free'd, that have been free'd, or that have been reallocated
+>    by __nf_conntrack_alloc(), but where the refcount has not been
+>    increased back to 1 yet.
+> 
+> 2. refcount_inc_not_zero() succeeds. CPU2 checks the CONFIRMED bit
+>    in ct->status.  If set, the object is public/in the table.
+> 
+>    If not, the object must be skipped; CPU2 calls nf_ct_put() to
+>    un-do the refcount increment and moves to the next object.
+> 
+> Parallel deletion from the hlists is prevented by a
+> 'test_and_set_bit(IPS_DYING_BIT, &ct->status);' check, i.e. only one
+> cpu will do the unlink, the other one will only drop its reference count.
+> 
+> Because refcount_inc_not_zero is not a full barrier, CPU2 may try to
+> delete an object that is not on any list:
+> 
+> 1. refcount_inc_not_zero() successful (refcount inited to 1 on other CPU)
+> 2. CONFIRMED test also successful (load was reordered or zeroing
+>    of ct->status not yet visible)
+> 3. delete_from_lists unlinks entry not on the hlist, because
+>    IPS_DYING_BIT is 0 (already cleared).
+> 
+> 2) is already wrong: CPU2 will handle a partially initited object
+> that is supposed to be private to CPU1.
+> 
+> Add needed barriers when refcount_inc_not_zero() is successful.
+> 
+> It also inserts a smp_wmb() before the refcount is set to 1 during
+> allocation.
+> 
+> Because other CPU might still 'see' the object, refcount_set(1)
+> "resurrects" the object, so we need to make sure that other CPUs will
+> also observe the right contents.  In particular, the CONFIRMED bit test
+> must only pass once the object is fully initialised and either in the
+> hash or about to be inserted (with locks held to delay possible unlink from
+> early_drop or gc worker).
+> 
+> I did not change flow_offload_alloc(), as far as I can see it should call
+> refcount_inc(), not refcount_inc_not_zero(): the ct object is attached to
+> the skb so its refcount should be >= 1 in all cases.
+> 
+> v2: prefer smp_acquire__after_ctrl_dep to smp_rmb (Will Deacon).
+> v3: keep smp_acquire__after_ctrl_dep close to refcount_inc_not_zero call
+>     add comment in nf_conntrack_netlink, no control dependency there
+>     due to locks.
+> 
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Reported-by: Kajetan Puchalski <kajetan.puchalski@arm.com>
+> Diagnosed-by: Will Deacon <will@kernel.org>
+> Fixes: 719774377622 ("netfilter: conntrack: convert to refcount_t api")
+> Signed-off-by: Florian Westphal <fw@strlen.de>
+> ---
+>  net/netfilter/nf_conntrack_core.c       | 22 ++++++++++++++++++++++
+>  net/netfilter/nf_conntrack_netlink.c    |  1 +
+>  net/netfilter/nf_conntrack_standalone.c |  3 +++
+>  3 files changed, 26 insertions(+)
 
+Acked-by: Will Deacon <will@kernel.org>
 
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Will
