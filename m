@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E99939D
-	for <regressions@lists.linux.dev>; Thu,  7 Jul 2022 08:20:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13B7625
+	for <regressions@lists.linux.dev>; Thu,  7 Jul 2022 10:17:22 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1o9Mk9-0001Rr-QT; Thu, 07 Jul 2022 10:20:13 +0200
-Message-ID: <77dbe20b-b99d-ec7c-9043-6d2b053303ad@leemhuis.info>
-Date: Thu, 7 Jul 2022 10:20:13 +0200
+	id 1o9OZU-0008RW-7S; Thu, 07 Jul 2022 12:17:20 +0200
+Message-ID: <a93e5967-026a-186d-2bf0-5628631b9e28@leemhuis.info>
+Date: Thu, 7 Jul 2022 12:17:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,42 +16,53 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [Regression?] Linux 5.19-rc5 gets stuck on boot, not rc4
 Content-Language: en-US
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <272584304.305738.1657029005216@office.mailbox.org>
+To: Florian Westphal <fw@strlen.de>, netfilter-devel@vger.kernel.org
+Cc: regressions@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ Kajetan Puchalski <kajetan.puchalski@arm.com>, Will Deacon <will@kernel.org>
+References: <20220706124007.GB7996@breakpoint.cc>
+ <20220706145004.22355-1-fw@strlen.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "platform-driver-x86@vger.kernel.org"
- <platform-driver-x86@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <272584304.305738.1657029005216@office.mailbox.org>
+Subject: Re: [PATCH nf v3] netfilter: conntrack: fix crash due to confirmed
+ bit load reordering
+In-Reply-To: <20220706145004.22355-1-fw@strlen.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1657182022;bebfe54d;
-X-HE-SMSGID: 1o9Mk9-0001Rr-QT
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1657189042;f22e09e4;
+X-HE-SMSGID: 1o9OZU-0008RW-7S
 
-On 05.07.22 15:50, torvic9@mailbox.org wrote:
-
-> Linux 5.19-rc5 does not boot on my Kaby Lake Thinkpad.
-> rc3 and rc4 were still fine, so I guess something between rc4 and rc5
-> introduced a regression.
+On 06.07.22 16:50, Florian Westphal wrote:
+> Kajetan Puchalski reports crash on ARM, with backtrace of:
 > 
-> Unfortunately, there are no errors or warning messages.
-> It gets stuck quite early on boot, about the time USB is initialized,
-> so less than 1 second into post-bootloader boot.
-> It then just sits there doing nothing - SysRq still works though.
-> 
-> I don't have time for a bisect, but I thought I'll let you know about
-> this issue, and maybe someone already has an idea.
 > [...]
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Reported-by: Kajetan Puchalski <kajetan.puchalski@arm.com>
+> Diagnosed-by: Will Deacon <will@kernel.org>
+> Fixes: 719774377622 ("netfilter: conntrack: convert to refcount_t api")
+> Signed-off-by: Florian Westphal <fw@strlen.de>
 
-This is mostly dealt with already, as can be seen from this thread,
-nevertheless adding it to the tracking:
+If you need to respin this patch for one reason or another, could you do
+me a favor and add proper 'Link:' tags pointing to all reports about
+this issue? e.g. like this:
 
-#regzbot ^introduced ee7a69aa38d8
-#regzbot title drm: fbdev/simplefb: Linux 5.19-rc5 gets stuck on boot,
-not rc4
-#regzbot ignore-activity
-#regzbot fixed-by: bf43e4521ff3223a
+ Link:
+https://lore.kernel.org/all/Yr7WTfd6AVTQkLjI@e126311.manchester.arm.com/
+
+These tags are considered important by Linus[1] and others, as they
+allow anyone to look into the backstory weeks or years from now. That is
+why they should be placed in cases like this, as
+Documentation/process/submitting-patches.rst and
+Documentation/process/5.Posting.rst explain in more detail. I care
+personally, because these tags make my regression tracking efforts a
+whole lot easier, as they allow my tracking bot 'regzbot' to
+automatically connect reports with patches posted or committed to fix
+tracked regressions.
+
+[1] see for example:
+https://lore.kernel.org/all/CAHk-=wjMmSZzMJ3Xnskdg4+GGz=5p5p+GSYyFBTh0f-DgvdBWg@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wjxzafG-=J8oT30s7upn4RhBs6TX-uVFZ5rME+L5_DoJA@mail.gmail.com/
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
