@@ -1,157 +1,149 @@
-Received: from proxima.lasnet.de (proxima.lasnet.de [78.47.171.185])
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F4B7C
-	for <regressions@lists.linux.dev>; Wed,  6 Jul 2022 18:54:07 +0000 (UTC)
-Received: from [IPv6:2a01:c23:9553:2700:569c:b316:2406:eb4c] (dynamic-2a01-0c23-9553-2700-569c-b316-2406-eb4c.c23.pool.telefonica.de [IPv6:2a01:c23:9553:2700:569c:b316:2406:eb4c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: jluebbe@lasnet.de)
-	by proxima.lasnet.de (Postfix) with ESMTPSA id F3EA5C0373;
-	Wed,  6 Jul 2022 20:48:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lasnet.de; s=2021;
-	t=1657133329;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Q1N88M69xDw45XQpZsRsQu5rF1MU+rMW1YQ0tIbUWkM=;
-	b=pTxEw9xvEo8NmFgytApBz58B51c7rSRlcJd/LGcOr5Xa0NpxIcqsBL1Mn9oILQipdn0ZF+
-	xLTeG04YGQSVrDohQrniIkm0DbTT6+W3IuuxqV3kSWPLB5Gfrz9TzdBhpx5+O/n2YkASvl
-	9Ouwb01iWqRXXGxCs3mtZZYVYzdbkQ6vm81QH9hmLD0LdYrCIbqqC0uhQ55gxFqKEhnnw4
-	sYAk+uT0TOxdLyaafrxtdJU7z+SZCHja/r5podGM6R8ZHiCiKxN170xL1pk1UKjk8hJK10
-	RZsGDgDTzRzPor8Yq9H9x6NNaYJzXtvCEZXR/yWSJCeocgXqFF3vBE+mZerwtg==
-Message-ID: <a32428fa0f3811c25912cd313a6fe1fb4f0a4fac.camel@lasnet.de>
-Subject: Re: [REGRESSION] connection timeout with routes to VRF
-From: Jan Luebbe <jluebbe@lasnet.de>
-To: Mike Manning <mvrmanning@gmail.com>, David Ahern <dsahern@kernel.org>, 
- Robert Shearman <robertshearman@gmail.com>, Andy Roulin <aroulin@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, 
-	regressions@lists.linux.dev, linux-kernel <linux-kernel@vger.kernel.org>
-Date: Wed, 06 Jul 2022 20:49:27 +0200
-In-Reply-To: <940fa370-08ce-1d39-d5cc-51de8e853b47@gmail.com>
-References: <a54c149aed38fded2d3b5fdb1a6c89e36a083b74.camel@lasnet.de>
-	 <6410890e-333d-5f0e-52f2-1041667c80f8@kernel.org>
-	 <940fa370-08ce-1d39-d5cc-51de8e853b47@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.3-1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0258A7C
+	for <regressions@lists.linux.dev>; Thu,  7 Jul 2022 05:45:31 +0000 (UTC)
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[127.0.0.1])
+	by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+	(envelope-from <a.fatoum@pengutronix.de>)
+	id 1o9KKG-0001Ic-Dn; Thu, 07 Jul 2022 07:45:20 +0200
+Message-ID: <577c7140-a30c-ca06-a81e-c791e44b1321@pengutronix.de>
+Date: Thu, 7 Jul 2022 07:45:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [BUG] BLE device unpairing triggers kernel panic
+Content-Language: en-US
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Tedd Ho-Jeong An <hj.tedd.an@gmail.com>
+References: <a1ce1743-e450-6cdb-dfab-56a3e3eb9aed@pengutronix.de>
+ <CABBYNZ+z8kBUKGXbZSfb0ynJaTnPQRp0wFDUb12AW1ymbNx1eg@mail.gmail.com>
+ <CABBYNZ+zsuggTpaUSPsZKeL=qqvM1=sgMWzdWEqaS_oh6dhY2g@mail.gmail.com>
+ <8d5c4724-d511-39b1-21d7-116c91cada45@pengutronix.de>
+ <b0cb4fb0-6b89-b9df-9ae6-421ac52b0100@pengutronix.de>
+ <CABBYNZ+ubN2rc=zoN_53Pmp6kt3L5UcY3knbtjhhVOjPBpJv4Q@mail.gmail.com>
+ <d5654901-6b1f-a1fa-0101-8b52b345af7b@pengutronix.de>
+ <CABBYNZ+8dpPBqaQMr-Hz_DJRxT-0ucCjgAJH50FUaN7Sn9H6rA@mail.gmail.com>
+ <1d1b76cf-df6f-3935-5cd2-c45ea78f2c33@pengutronix.de>
+ <CABBYNZLdy-rndKczoG_WiWXQmacX+vzCbftQKvzJ3B6imtZopw@mail.gmail.com>
+ <1a5ec80d-690f-285c-3da8-ccdaf5516d85@pengutronix.de>
+ <CABBYNZJQKc9ozReXLeESWY8U648eQytKfGB4WmhZi4M+YOW7jw@mail.gmail.com>
+ <b7b080ff-a5da-a10c-674b-c3bb653f0aeb@leemhuis.info>
+From: Ahmad Fatoum <a.fatoum@pengutronix.de>
+In-Reply-To: <b7b080ff-a5da-a10c-674b-c3bb653f0aeb@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: a.fatoum@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: regressions@lists.linux.dev
 
-On Sun, 2022-06-26 at 21:06 +0100, Mike Manning wrote:
-...
-> Andy Roulin suggested the same fix to the same problem a few weeks back.
-> Let's do it along with a test case in fcnl-test.sh which covers all of
-> these vrf permutations.
+Hi,
+
+On 04.07.22 14:11, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker. Top-posting for once,
+> to make this easily accessible to everyone.
 > 
-Reverting 3c82a21f4320 would remove isolation between the default and other VRFs
-needed when no VRF route leaking has been configured between these: there may be
-unintended leaking of packets arriving on a device enslaved to an l3mdev due to
-the potential match on an unbound socket.
+> Looks like the discussions to fix this regression got stuck. What can be
+> done to get thing rolling again? Or has progress been made and I just
+> missed it? Ciao, Thorsten
 
-Thanks for the explanation.
+No progress has been made as far as I am aware. I am reverting the commit
+introducing the regression on my systems and haven't yet had the time to
+debug this further to help find an alternative solution.
 
-VRF route leaking requires routes to be present for both ingress and egress
-VRFs,
-the testcase shown only has a route from default to red VRF. The implicit return
-path from red to default VRF due to match on unbound socket is no longer
-present.
+Cheers,
+Ahmad
+
+> 
+> On 24.06.22 21:59, Luiz Augusto von Dentz wrote:
+>> On Fri, Jun 24, 2022 at 5:53 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>>> On 21.06.22 20:52, Luiz Augusto von Dentz wrote:
+>>>> On Tue, Jun 21, 2022 at 1:32 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>>>>> On 20.06.22 22:18, Luiz Augusto von Dentz wrote:
+>>>>>> On Mon, Jun 20, 2022 at 3:06 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>>>>>>> Disconnect of connection #1 being processed after new connection #2
+>>>>>>> concluded sounds wrong. Would I be able to reconnect
+>>>>>>> afterwards or would all connections, but the first, be directly
+>>>>>>> disconnected...?
+>>>>>>
+>>>>>> That depends on the order you have queued the commands, it will be
+>>>>>> processed in the exact order it is received, that why I said it is
+>>>>>> single queue design, and it is done like that to prevent messing up
+>>>>>> with states since we know the exact order the commands will be sent.
+>>>>>>
+>>>>>>>> otherwise we need a
+>>>>>>>> different queue to handle command that abort/cancel other already in
+>>>>>>>> the queue.
+>>>>>>>
+>>>>>>> Is the revert an acceptable interim solution or are there issues
+>>>>>>> I am missing?
+>>>>>>
+>>>>>> Afaik there were problem with concurrent connections request, so what
+>>>>>> would really help us here is to have some tests to emulate this
+>>>>>> scenario with our CI, in the meantime please check if the following
+>>>>>> fixes your problem:
+>>>>>>
+>>>>>> https://gist.github.com/Vudentz/b4fff292c7f4ad55ca3299fd5ab797ae
+>>>>>
+>>>>> Doesn't help unfortunately. First pairing works as before.
+>>>>> Second still fails:
+>>>>>
+>>>>>   Bluetooth: hci0: Opcode 0x200d failed: -110
+>>>>>   Bluetooth: hci0: request failed to create LE connection: err -110
+>>>>
+>>>> Can we try to add a test in mgmt-tester to reproduce the error above?
+>>>
+>>> I am not familiar with mgmt-tester. What information do you
+>>> need to reproduce? In the meantime, can we revert the commit?
+>>> I understand that this may break other uses, but I believe
+>>> previously working stuff should have precedence..
+>>
+>> Have a looks at:
+>>
+>> https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/doc/test-runner.txt
+>>
+>> And then run with:
+>>
+>> sudo tools/test-runner -k <pathyto/bzImage> -- tools/mgmt-tester
+>>
+>> Btw, can we have the exact steps to reproduce it using bluetoothctl if possible?
+>>
+>>> Cheers,
+>>> Ahmad
+>>>
+>>>>
+>>>>> Cheers,
+>>>>> Ahmad
+>>>>>
+>>>>>>
+>>>>>>> Cheers,
+>>>>>>> Ahmad
+>>>>>>>
+>>>>>>>>
+>>>>>>>>> We've been deploying the revert for a while now and I just posted
+>>>>>>>>> it to the mailing list[1]. There have been other reports
+>>>>>>>>> of this issue with different hardware too and fixing sent_cmd
+>>>>>>>>> would likely be too complicated/time intensive for me.
+>>>>>>>>>
+>>>>>>>>> I am happy to test future patches that fix this properly though.
+>>>>>>>>>
+>>>>>>>>> [1]: https://lore.kernel.org/linux-bluetooth/20220616092418.738877-1-a.fatoum@pengutronix.de/T/#t
+> 
 
 
-If there is a better configuration that makes this work in the general case
-without a change to the kernel, we'd be happy as well.
-
-In our full setup, the outbound TCP connection (from the default VRF) gets a
-local IP from the interface enslaved to the VRF. Before 3c82a21f4320, this would
-simply work.
-
-How would the return path route from the red VRF to the default VRF look in that
-case?
-
-Match on unbound socket in all VRFs and not only in the default VRF should be
-possible by setting this option (see
-https://www.kernel.org/doc/Documentation/networking/vrf.txt):
-
-
-Do you mean unbound as in listening socket not bound to an IP with bind()? Or as
-in a socket in the default VRF?
-
-sysctl net.ipv4.tcp_l3mdev_accept=1
-
-
-The sysctl docs sound like this should only apply to listening sockets. In this
-case, we have an unconnected outbound socket.
-
-However, for this to work a change similar to the following is needed (I have
-shown the change to the macro for consistency with above, it is now an inline
-fn):
-
-
-I can also test on master and only used the macro form only because I wasn't
-completely sure how to translate it to the inline function form.
-
----
- include/net/inet_hashtables.h |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
-
---- a/include/net/inet_hashtables.h
-+++ b/include/net/inet_hashtables.h
-@@ -300,9 +300,8 @@
- #define INET_MATCH(__sk, __net, __cookie, __saddr, __daddr, __ports, __dif,
-__sdif) \
-        (((__sk)->sk_portpair == (__ports))                     &&      \
-         ((__sk)->sk_addrpair == (__cookie))                    &&      \
--        (((__sk)->sk_bound_dev_if == (__dif))                  ||      \
--         ((__sk)->sk_bound_dev_if == (__sdif)))                &&      \
--        net_eq(sock_net(__sk), (__net)))
-+        net_eq(sock_net(__sk), (__net))                        &&      \
-+        inet_sk_bound_dev_eq((__net), (__sk)->sk_bound_dev_if, (__dif),
-(__sdif)))
- #else /* 32-bit arch */
- #define INET_ADDR_COOKIE(__name, __saddr, __daddr) \
-        const int __name __deprecated __attribute__((unused))
-@@ -311,9 +310,8 @@
-        (((__sk)->sk_portpair == (__ports))             &&              \
-         ((__sk)->sk_daddr      == (__saddr))           &&              \
-         ((__sk)->sk_rcv_saddr  == (__daddr))           &&              \
--        (((__sk)->sk_bound_dev_if == (__dif))          ||              \
--         ((__sk)->sk_bound_dev_if == (__sdif)))        &&              \
--        net_eq(sock_net(__sk), (__net)))
-+        net_eq(sock_net(__sk), (__net))                &&              \
-+        inet_sk_bound_dev_eq((__net), (__sk)->sk_bound_dev_if, (__dif),
-(__sdif)))
- #endif /* 64-bit arch */
-
- /* Sockets in TCP_CLOSE state are _always_ taken out of the hash, so we need
-
-I can confirm that this gets my testcase working with 
-net.ipv4.tcp_l3mdev_accept=1.
-
-This is to get the testcase to pass, I will leave it to others to comment on
-the testcase validity in terms of testing forwarding using commands on 1 device.
-
-So a network-namespace-based testcase would be preferred? We used the simple
-setup because it seemed easier to understand.
-
-The series that 3c82a21f4320 is part of were introduced into the kernel in 2018
-by the Vyatta team, who regularly run an extensive test suite for routing
-protocols
-for VRF functionality incl. all combinations of route leaking between default
-and
-other VRFs, so there is no known issue in this regard. I will attempt to reach
-out
-to them so as to advise them of this thread.
-
-Are these testcases public? Perhaps I could use them find a better configuration
-that handles our use-case.
-
-Thanks,
-
-Jan
-
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
