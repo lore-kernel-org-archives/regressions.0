@@ -1,139 +1,182 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E9C3C22
-	for <regressions@lists.linux.dev>; Wed, 13 Jul 2022 13:58:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1657720714;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jYNhz1NPfsQo/c45frbmBM5LPLy9MyOHYAJRZW65u+E=;
-	b=QyvGEDQPjwVzEsx28EkgMrWTAGA/BEuePSe90PfPAvr3z7JppQe5rSonc78dibkD1c5wZ9
-	D9QFmZ5M5DVs3prI4uH5jtnOFmcjTmjVc6A9Si54hyKbeec6fBe2qTmWeMLhBZTb2OLoSQ
-	EcNlbtnn//wubdvCwUxf/KgwnRZccNg=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-367-3YqxCoMLM0-XZxGV_KAKFA-1; Wed, 13 Jul 2022 09:58:31 -0400
-X-MC-Unique: 3YqxCoMLM0-XZxGV_KAKFA-1
-Received: by mail-ed1-f69.google.com with SMTP id o13-20020a056402438d00b0043aa846b2d2so8379878edc.8
-        for <regressions@lists.linux.dev>; Wed, 13 Jul 2022 06:58:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708A94A0A
+	for <regressions@lists.linux.dev>; Wed, 13 Jul 2022 19:37:45 +0000 (UTC)
+Received: by mail-il1-f179.google.com with SMTP id a20so7309770ilk.9
+        for <regressions@lists.linux.dev>; Wed, 13 Jul 2022 12:37:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Gyhic3YuQiWkPXDh0dmo06Ni34a0PcNp5aOOqF+1Mjw=;
+        b=VIw/8Z+9ZhhO4bJAqBbvaM7zPVvdy1IQgZGCRmgtr5Aq26ZvIlE7Z67BWWe5q9ByUy
+         V2esw9YZX71visThXT4lgTc1w/CfK5vK6nI7D7pbIg7y0W/aIakF/9GH7aYce4BztRMp
+         f3i1ov6YWHKM68q3hwvBOz5oE/YTGQwuqzNe6IE/Kk0F3R9uv1pifGMVqnTaYDYpKSz5
+         9rCGfqnUD1pph/DE6WJ407G3VUa8zJw/5X0+jez+ldOEKo48vBeEzapyFafBwSmEn1ty
+         3EXzz2XXnflms4RvIv70Rl7gpIUWyZHiSuA/e/QoJzNIfQPhvrBuSp127QKWZxJdxql+
+         F/Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to;
-        bh=/KaBUzMJAb8ELoURf+aDcmgxflG4+mAlNx4MhWPAnms=;
-        b=779bYGNWeJvX3t0E0dovbC4Di/LVMXXS8L9q0APVefT86GYRKhRChZZ29wkn+yiK37
-         iqPfbW83q36jKJ8xraAOu3Fs1iV3n0+j1KJ9YWyEedXtpaMUeYhwz+qQ5stWfeLKC3Dw
-         Hl3xdYvAYwQIeF5rS7l/eqAxD+372Zk3KpD3hgC0Ehba2CQEqPPqgZL6l8i/jlmR0UCp
-         pbW0BmsFdZByu6a1ov9h1cNdjyMWeccXKFD2rDcsvIrBKu//GA1iop8jl39zBK51ZRNL
-         t8rF6fQ6W1onVbPcArqGQ8Iyp/YJIoq/SVxRnr6jybAxyTa+eMx+Nn05k6f0tqdr/KGN
-         5p0Q==
-X-Gm-Message-State: AJIora9vJvIyLepd7jYUQxpgYP0w98o2dbo/emfJgz5OzSD11ZpcMcOj
-	gKwiApQgn5Poqdi+BSQrZjjidC2qFgY76fvoNSk2B2Y0a7Yut+DKnyXyn8iWsYVxdcrAA5cxhsk
-	eaLdO8PaGHMarrj7a1Oka268=
-X-Received: by 2002:a17:907:9605:b0:6f5:c66:7c13 with SMTP id gb5-20020a170907960500b006f50c667c13mr3718844ejc.66.1657720710393;
-        Wed, 13 Jul 2022 06:58:30 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vMuFzYBhnUEpQjzR0GE0q5vpz83dYF6EUDZYybFG7bY9u68mWywkzQ+aLih1ks9mgLlfrtcg==
-X-Received: by 2002:a17:907:9605:b0:6f5:c66:7c13 with SMTP id gb5-20020a170907960500b006f50c667c13mr3718821ejc.66.1657720710145;
-        Wed, 13 Jul 2022 06:58:30 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id w21-20020a50fa95000000b0043a8f40a038sm7997545edr.93.2022.07.13.06.58.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Jul 2022 06:58:29 -0700 (PDT)
-Message-ID: <2f32f2f5-2c78-9860-5794-2cfd0a283702@redhat.com>
-Date: Wed, 13 Jul 2022 15:58:28 +0200
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Gyhic3YuQiWkPXDh0dmo06Ni34a0PcNp5aOOqF+1Mjw=;
+        b=1K+TuXHKlFNWmG/2DKbb1DZy1x2cOArTu8+kixV/MKvbfie8Iwo2tnf7DTt6A11F1t
+         XkaCiD7m/TYN+wC+F+Cqr3hgAsgAKCT21VgSnCEMx441vatW1KGbqlxKSxptW6UGLcPk
+         Y1JRYFc1yW9tiu5Jk2jPVooqnZ51CpF8orlZa71Ep0wkF78+QnoNnoKpoCCdXLhC6KjY
+         2J3cWpdfkb9DaSOHE9uarss9Kq6BkQZFusqLh6LBLkT+e6TfyV7oYQVatoqw8YSMz+Dx
+         rVde/7EO5AqS4+fRvqNf5o1j43qsd5iHaXWclxBoh0rSKkAewrbw9E+Y3fHHery0G66A
+         ILNQ==
+X-Gm-Message-State: AJIora/ZWA3C8DHo7IUyjfofCV1p2891q2K5KlUX5GAgF1HUbVy7Y+n/
+	jzwpJYlRjpWYIJ8Cinb4U6RaVnw4AVd51sehOOHOkQ==
+X-Google-Smtp-Source: AGRyM1tSM88aI26QD2eN5zKANOb2j7OphvM37pvnVUc6F5wy/zwYA2RWDnkIqVZyuaBVnpzte3Mowk1flf8HDLFRBSI=
+X-Received: by 2002:a05:6e02:194b:b0:2dc:a05f:d911 with SMTP id
+ x11-20020a056e02194b00b002dca05fd911mr2755279ilu.92.1657741064394; Wed, 13
+ Jul 2022 12:37:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [Regression] ACPI: video: Change how we determine if brightness
- key-presses are handled
-From: Hans de Goede <hdegoede@redhat.com>
-To: Ben Greening <bgreening@gmail.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, rafael@kernel.org,
- linux-acpi@vger.kernel.org
-References: <CALF=6jEe5G8+r1Wo0vvz4GjNQQhdkLT5p8uCHn6ZXhg4nsOWow@mail.gmail.com>
- <02190bee-2e1b-bea3-b716-a7c7f5aa2ff0@redhat.com>
- <CALF=6jG5gmqqXo5cSFFRWRM96K0rzx3WabNdwAmdZQH=unFG7g@mail.gmail.com>
- <3ddcdb24-cab3-509d-d694-edd4ab85df0a@redhat.com>
-In-Reply-To: <3ddcdb24-cab3-509d-d694-edd4ab85df0a@redhat.com>
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=hdegoede@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/mixed; boundary="------------LEBEnV2skDghZQRyUOjQNnwZ"
-Content-Language: en-US
+References: <CA+G9fYtOX-6=f70FA5PuDVA=kX=2L4spXKXS8=LHkUphafXowg@mail.gmail.com>
+ <Ys1g8PH4M2W7Z50U@sirena.org.uk>
+In-Reply-To: <Ys1g8PH4M2W7Z50U@sirena.org.uk>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 14 Jul 2022 01:07:32 +0530
+Message-ID: <CA+G9fYu7mJ6X3_xhboODP_cjABE4QTJCON_NMduQ60x4Z7N78Q@mail.gmail.com>
+Subject: Re: FVP: kernel BUG at arch/arm64/kernel/traps.c:497 - Internal
+ error: Oops - BUG: 0
+To: Mark Brown <broonie@kernel.org>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>, Aishwarya TCV <Aishwarya.TCV@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is a multi-part message in MIME format.
---------------LEBEnV2skDghZQRyUOjQNnwZ
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+On Tue, 12 Jul 2022 at 17:24, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Jul 12, 2022 at 03:27:09PM +0530, Naresh Kamboju wrote:
+>
+> > FVP boot failed with linux next 20220712.
+>
+> I can't reproduce this, including with your kernel binary, which
+> suggests that this an issue with your FVP usage and firmware.
+>
+> > Boot log:
+> > Starting kernel ...
+> >
+> > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd0f0]
+> > [    0.000000] Linux version 5.19.0-rc6-next-20220711
+>
+> How are you invoking the FVP, what firmware are you using and how is it
+> configured?
+>
+> > [    0.500709] kernel BUG at arch/arm64/kernel/traps.c:497!
+>
+> This is an undefined instruction, my first thought there would be that
+> you have some feature enabled for the kernel which requires enablement
+> at EL3 but your EL3 firmware is not configured to enable it.
 
-Hi again,
+Thanks for investigating the reported issue and providing details.
+We will do the needful to update / configure EL3 firmware.
 
-On 7/13/22 15:29, Hans de Goede wrote:
 
-<snip>
+>
+> > [    0.503562]  el1_undef+0x30/0x60
+> > [    0.503709]  el1h_64_sync_handler+0x84/0xd0
+> > [    0.503811]  el1h_64_sync+0x64/0x68
+> > [    0.503909]  net_sysctl_init+0x8/0x7c
+>
+> This is where the undef came from.
 
-> So I plan to fix this part by adding a quirk to make native the default
-> on your machine. Can you do:
-> 
-> sudo dmidecode > dmidecode.txt
-> 
-> And email me the generated dmidecode.txt (this will contain serialnumbers
-> so you may want to send it off-list) ? Then I can also prepare a patch
-> to add a quirk to make native the default on your model.
+Here I am providing the available data.
+Let me know what I am missing here, so that I will update my setup.
+Thanks in advance.
 
-I have found a DMI decode for your model here:
-https://github.com/linuxhw/DMI/
+Fast Models 11.17.21 (Feb 16 2022)
 
-So I've written the quirk patch (attached) based on that.
+https://storage.tuxboot.com/fvp-aemva/tf-bl1.bin
+https://storage.tuxboot.com/fvp-aemva/fvp-base-revc.dtb
+https://storage.tuxboot.com/fvp-aemva/fip-uboot.bin
+https://builds.tuxbuild.com/2BnQMpJj3kDTJXoCwd2pY5gW9CN/Image.gz
+https://builds.tuxbuild.com/2BnQMpJj3kDTJXoCwd2pY5gW9CN/modules.tar.xz
 
-Please give this a try. With a 5.18.1x kernel with both patches applied,
-everything should work without needing to specify anything on the kernel
-commandline.
 
-Regards,
+docker run
+  --rm
+  --interactive
+  --tty
+  --hostname lava
+  --name tuxrun-r4_1075p-lava-1
+  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/url-repo-action-3=
+h1oa_zl/url_repo/https___storage.tuxboot.com_test-definitions_2022.01.tar:/=
+tuxrun-r4_1075p-lava-1/https___storage.tuxboot.com_test-definitions_2022.01=
+.tar
+  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/fvp-deploy-w_qt5q=
+gt/bl1/tf-bl1.bin:/tuxrun-r4_1075p-lava-1/tf-bl1.bin
+  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/fvp-deploy-w_qt5q=
+gt/dtb/fvp-base-revc.dtb:/tuxrun-r4_1075p-lava-1/fvp-base-revc.dtb
+  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/fvp-deploy-w_qt5q=
+gt/fip/fip-uboot.bin:/tuxrun-r4_1075p-lava-1/fip-uboot.bin
+  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/fvp-deploy-w_qt5q=
+gt/kernel/Image:/tuxrun-r4_1075p-lava-1/Image
+  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/fvp-deploy-w_qt5q=
+gt/rootfs/https___storage.lkft.org_rootfs_oe-sumo_20220219_juno_rpb-console=
+-image-lkft-juno-20220219023239.rootfs.ext4:/tuxrun-r4_1075p-lava-1/https__=
+_storage.lkft.org_rootfs_oe-sumo_20220219_juno_rpb-console-image-lkft-juno-=
+20220219023239.rootfs.ext4
+  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/fvp-deploy-w_qt5q=
+gt/rootfs.modules/modules.tar:/tuxrun-r4_1075p-lava-1/modules.tar
+fvp:aemva-11.17.21
 
-Hans
---------------LEBEnV2skDghZQRyUOjQNnwZ
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-ACPI-video-Use-native-backlight-on-Dell-Inspiron-N40.patch"
-Content-Disposition: attachment;
- filename*0="0001-ACPI-video-Use-native-backlight-on-Dell-Inspiron-N40.pa";
- filename*1="tch"
-Content-Transfer-Encoding: base64
 
-RnJvbSAxMmIyYWU2Y2JiMzY4NjBmOTk2YTVjYTM4MmJiMWRkYTQzYTRmYjhiIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUByZWRoYXQuY29tPgpE
-YXRlOiBXZWQsIDEzIEp1bCAyMDIyIDE1OjUzOjA4ICswMjAwClN1YmplY3Q6IFtQQVRDSF0gQUNQ
-STogdmlkZW86IFVzZSBuYXRpdmUgYmFja2xpZ2h0IG9uIERlbGwgSW5zcGlyb24gTjQwMTAKClRo
-ZSBEZWxsIEluc3Bpcm9uIE40MDEwIGRvZXMgbm90IGhhdmUgQUNQSSBiYWNrbGlnaHQgY29udHJv
-bCwKc28gYWNwaV92aWRlb19nZXRfYmFja2xpZ2h0X3R5cGUoKSdzIGhldXJpc3RpY3MgcmV0dXJu
-IHZlbmRvciBhcwp0aGUgdHlwZSB0byB1c2UuCgpCdXQgdGhlIHZlbmRvciBpbnRlcmZhY2UgaXMg
-YnJva2VuLCB3aGVyZSBhcyB0aGUgbmF0aXZlIChpbnRlbF9iYWNrbGlnaHQpCndvcmtzIHdlbGws
-IGFkZCBhIHF1aXJrIHRvIHVzZSBuYXRpdmUuCgpMaW5rOiBodHRwczovL2xvcmUua2VybmVsLm9y
-Zy9yZWdyZXNzaW9ucy9DQUxGPTZqRWU1RzgrcjFXbzB2dno0R2pOUVFoZGtMVDVwOHVDSG42Wlho
-ZzRuc09Xb3dAbWFpbC5nbWFpbC5jb20vClJlcG9ydGVkLWFuZC10ZXN0ZWQtYnk6IEJlbiBHcmVl
-bmluZyA8YmdyZWVuaW5nQGdtYWlsLmNvbT4KU2lnbmVkLW9mZi1ieTogSGFucyBkZSBHb2VkZSA8
-aGRlZ29lZGVAcmVkaGF0LmNvbT4KLS0tCiBkcml2ZXJzL2FjcGkvdmlkZW9fZGV0ZWN0LmMgfCA4
-ICsrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9hY3BpL3ZpZGVvX2RldGVjdC5jIGIvZHJpdmVycy9hY3BpL3ZpZGVvX2RldGVjdC5j
-CmluZGV4IGJlY2MxOThlNGMyMi4uNDA5OTE0MGJiZDVmIDEwMDY0NAotLS0gYS9kcml2ZXJzL2Fj
-cGkvdmlkZW9fZGV0ZWN0LmMKKysrIGIvZHJpdmVycy9hY3BpL3ZpZGVvX2RldGVjdC5jCkBAIC0z
-NDcsNiArMzQ3LDE0IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZG1pX3N5c3RlbV9pZCB2aWRlb19k
-ZXRlY3RfZG1pX3RhYmxlW10gPSB7CiAJCURNSV9NQVRDSChETUlfUFJPRFVDVF9OQU1FLCAiTWFj
-Qm9va1BybzEyLDEiKSwKIAkJfSwKIAl9LAorCXsKKwkgLmNhbGxiYWNrID0gdmlkZW9fZGV0ZWN0
-X2ZvcmNlX25hdGl2ZSwKKwkgLyogRGVsbCBJbnNwaXJvbiBONDAxMCAqLworCSAubWF0Y2hlcyA9
-IHsKKwkJRE1JX01BVENIKERNSV9TWVNfVkVORE9SLCAiRGVsbCBJbmMuIiksCisJCURNSV9NQVRD
-SChETUlfUFJPRFVDVF9OQU1FLCAiSW5zcGlyb24gTjQwMTAiKSwKKwkJfSwKKwl9LAogCXsKIAkg
-LmNhbGxiYWNrID0gdmlkZW9fZGV0ZWN0X2ZvcmNlX25hdGl2ZSwKIAkgLyogRGVsbCBWb3N0cm8g
-VjEzMSAqLwotLSAKMi4zNi4wCgo=
---------------LEBEnV2skDghZQRyUOjQNnwZ--
 
+/opt/model/FVP_AEMvA/models/Linux64_GCC-9.3/FVP_Base_RevC-2xAEMvA
+  --plugin /opt/model/FVP_AEMvA/plugins/Linux64_GCC-9.3/ScalableVectorExten=
+sion.so
+  --data cluster0.cpu0=3D/tuxrun-r4_1075p-lava-1/fvp-base-revc.dtb@0x860000=
+00
+  --data cluster0.cpu0=3D/tuxrun-r4_1075p-lava-1/Image@0x80080000
+   -C pctl.startup=3D0.0.0.0
+   -C bp.secure_memory=3D0
+   -C cluster0.NUM_CORES=3D4
+   -C cluster1.NUM_CORES=3D4
+   -C cache_state_modelled=3D0
+   -C bp.smsc_91c111.enabled=3Dtrue
+   -C bp.pl011_uart0.untimed_fifos=3D1
+   -C bp.pl011_uart0.unbuffered_output=3D1
+   -C bp.secureflashloader.fname=3D'/tuxrun-r4_1075p-lava-1/tf-bl1.bin'
+   -C bp.flashloader0.fname=3D'/tuxrun-r4_1075p-lava-1/fip-uboot.bin'
+   -C bp.ve_sysregs.mmbSiteDefault=3D0
+   -C bp.ve_sysregs.exit_on_shutdown=3D1
+   -C bp.virtioblockdevice.image_path=3D'/tuxrun-r4_1075p-lava-1/https___st=
+orage.lkft.org_rootfs_oe-sumo_20220219_juno_rpb-console-image-lkft-juno-202=
+20219023239.rootfs.ext4'
+   -C pci.pcidevice0.bus=3D0xFF
+   -C pci.pcidevice1.bus=3D0xFF
+   -C cluster0.has_large_system_ext=3D1
+   -C cluster1.has_large_system_ext=3D1
+   -C cluster0.has_16k_granule=3D1
+   -C cluster1.has_16k_granule=3D1
+   -C cluster0.has_branch_target_exception=3D1
+   -C cluster1.has_branch_target_exception=3D1
+   -C cluster0.has_rndr=3D1
+   -C cluster1.has_rndr=3D1
+   -C cluster0.has_arm_v8-1=3D1
+   -C cluster1.has_arm_v8-1=3D1
+   -C cluster0.has_arm_v8-2=3D1
+   -C cluster1.has_arm_v8-2=3D1
+   -C cluster0.has_arm_v8-3=3D1
+   -C cluster1.has_arm_v8-3=3D1
+   -C cluster0.has_arm_v8-4=3D1
+   -C cluster1.has_arm_v8-4=3D1
+   -C cluster0.has_arm_v8-5=3D1
+   -C cluster1.has_arm_v8-5=3D1
+   -C cluster0.has_arm_v8-6=3D1
+   -C cluster1.has_arm_v8-6=3D1
+
+- Naresh
