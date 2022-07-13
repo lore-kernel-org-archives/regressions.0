@@ -1,182 +1,85 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708A94A0A
-	for <regressions@lists.linux.dev>; Wed, 13 Jul 2022 19:37:45 +0000 (UTC)
-Received: by mail-il1-f179.google.com with SMTP id a20so7309770ilk.9
-        for <regressions@lists.linux.dev>; Wed, 13 Jul 2022 12:37:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Gyhic3YuQiWkPXDh0dmo06Ni34a0PcNp5aOOqF+1Mjw=;
-        b=VIw/8Z+9ZhhO4bJAqBbvaM7zPVvdy1IQgZGCRmgtr5Aq26ZvIlE7Z67BWWe5q9ByUy
-         V2esw9YZX71visThXT4lgTc1w/CfK5vK6nI7D7pbIg7y0W/aIakF/9GH7aYce4BztRMp
-         f3i1ov6YWHKM68q3hwvBOz5oE/YTGQwuqzNe6IE/Kk0F3R9uv1pifGMVqnTaYDYpKSz5
-         9rCGfqnUD1pph/DE6WJ407G3VUa8zJw/5X0+jez+ldOEKo48vBeEzapyFafBwSmEn1ty
-         3EXzz2XXnflms4RvIv70Rl7gpIUWyZHiSuA/e/QoJzNIfQPhvrBuSp127QKWZxJdxql+
-         F/Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Gyhic3YuQiWkPXDh0dmo06Ni34a0PcNp5aOOqF+1Mjw=;
-        b=1K+TuXHKlFNWmG/2DKbb1DZy1x2cOArTu8+kixV/MKvbfie8Iwo2tnf7DTt6A11F1t
-         XkaCiD7m/TYN+wC+F+Cqr3hgAsgAKCT21VgSnCEMx441vatW1KGbqlxKSxptW6UGLcPk
-         Y1JRYFc1yW9tiu5Jk2jPVooqnZ51CpF8orlZa71Ep0wkF78+QnoNnoKpoCCdXLhC6KjY
-         2J3cWpdfkb9DaSOHE9uarss9Kq6BkQZFusqLh6LBLkT+e6TfyV7oYQVatoqw8YSMz+Dx
-         rVde/7EO5AqS4+fRvqNf5o1j43qsd5iHaXWclxBoh0rSKkAewrbw9E+Y3fHHery0G66A
-         ILNQ==
-X-Gm-Message-State: AJIora/ZWA3C8DHo7IUyjfofCV1p2891q2K5KlUX5GAgF1HUbVy7Y+n/
-	jzwpJYlRjpWYIJ8Cinb4U6RaVnw4AVd51sehOOHOkQ==
-X-Google-Smtp-Source: AGRyM1tSM88aI26QD2eN5zKANOb2j7OphvM37pvnVUc6F5wy/zwYA2RWDnkIqVZyuaBVnpzte3Mowk1flf8HDLFRBSI=
-X-Received: by 2002:a05:6e02:194b:b0:2dc:a05f:d911 with SMTP id
- x11-20020a056e02194b00b002dca05fd911mr2755279ilu.92.1657741064394; Wed, 13
- Jul 2022 12:37:44 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A554A25
+	for <regressions@lists.linux.dev>; Wed, 13 Jul 2022 21:11:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1657746669;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=iFHpCyvAUj8PR3pT8ZuAHtStGix9rf3O5MA6mbdziHg=;
+	b=PIHsrUrM+basyPGElsIEq2kMso8KdHih+Xx1Hq7r5l6tYOAT6fEADKoXCwmgFMvmanB+Q1
+	AdhbXjGC+sOghbGHNpjzrdBJsRQiCG7HIBvMUeQzAMhZ32/s0al3LnV/1GkrKlvo2BjR+j
+	wUlsj/zNyOi7qwMflyJLREFvNswv3fw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-398-IUXcygD8O064CeRXa8axtw-1; Wed, 13 Jul 2022 17:11:08 -0400
+X-MC-Unique: IUXcygD8O064CeRXa8axtw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CB7CA811E75;
+	Wed, 13 Jul 2022 21:11:07 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id A66B1141510F;
+	Wed, 13 Jul 2022 21:11:06 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: "Rafael J . Wysocki" <rafael@kernel.org>,
+	Mark Gross <markgross@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	linux-acpi@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Ben Greening <bgreening@gmail.com>
+Subject: [PATCH 0/1] ACPI: video: Fix acpi_video_handles_brightness_key_presses()
+Date: Wed, 13 Jul 2022 23:11:00 +0200
+Message-Id: <20220713211101.85547-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYtOX-6=f70FA5PuDVA=kX=2L4spXKXS8=LHkUphafXowg@mail.gmail.com>
- <Ys1g8PH4M2W7Z50U@sirena.org.uk>
-In-Reply-To: <Ys1g8PH4M2W7Z50U@sirena.org.uk>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 14 Jul 2022 01:07:32 +0530
-Message-ID: <CA+G9fYu7mJ6X3_xhboODP_cjABE4QTJCON_NMduQ60x4Z7N78Q@mail.gmail.com>
-Subject: Re: FVP: kernel BUG at arch/arm64/kernel/traps.c:497 - Internal
- error: Oops - BUG: 0
-To: Mark Brown <broonie@kernel.org>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>, Aishwarya TCV <Aishwarya.TCV@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
 
-On Tue, 12 Jul 2022 at 17:24, Mark Brown <broonie@kernel.org> wrote:
->
-> On Tue, Jul 12, 2022 at 03:27:09PM +0530, Naresh Kamboju wrote:
->
-> > FVP boot failed with linux next 20220712.
->
-> I can't reproduce this, including with your kernel binary, which
-> suggests that this an issue with your FVP usage and firmware.
->
-> > Boot log:
-> > Starting kernel ...
-> >
-> > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd0f0]
-> > [    0.000000] Linux version 5.19.0-rc6-next-20220711
->
-> How are you invoking the FVP, what firmware are you using and how is it
-> configured?
->
-> > [    0.500709] kernel BUG at arch/arm64/kernel/traps.c:497!
->
-> This is an undefined instruction, my first thought there would be that
-> you have some feature enabled for the kernel which requires enablement
-> at EL3 but your EL3 firmware is not configured to enable it.
+Hi Rafael,
 
-Thanks for investigating the reported issue and providing details.
-We will do the needful to update / configure EL3 firmware.
+Commit 3a0cf7ab8df3 ("ACPI: video: Change how we determine if brightness
+key-presses are handled") which fixes not sending any brightness
+key-presses at all on some Panasonic models, because of
+acpi_video_handles_brightness_key_presses() returning true while it
+should not, is causing duplicate brightness key presses on some
+(older) Dell models.
+
+This patch fixes this. As mentioned in the commit message a down-side
+of the fix is that the first brightness key-press on affected Dell models
+might still get reported twice. The alternative would be DMI based quirks
+and IMHO this generic fix is better.
+
+Since I send the original commit to Linus through the pdx86 tree
+as part of a panasonic-laptop driver fixes series, and since users
+are reporting regressions because of the original fix now, I plan to
+include this fix to the fix in my next fixes pull-req to Linus
+this Friday.
+
+If you have any objections against this fix please let me know
+before Friday.
+
+Regards,
+
+Hans
 
 
->
-> > [    0.503562]  el1_undef+0x30/0x60
-> > [    0.503709]  el1h_64_sync_handler+0x84/0xd0
-> > [    0.503811]  el1h_64_sync+0x64/0x68
-> > [    0.503909]  net_sysctl_init+0x8/0x7c
->
-> This is where the undef came from.
+Hans de Goede (1):
+  ACPI: video: Fix acpi_video_handles_brightness_key_presses()
 
-Here I am providing the available data.
-Let me know what I am missing here, so that I will update my setup.
-Thanks in advance.
+ drivers/acpi/acpi_video.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Fast Models 11.17.21 (Feb 16 2022)
+-- 
+2.36.0
 
-https://storage.tuxboot.com/fvp-aemva/tf-bl1.bin
-https://storage.tuxboot.com/fvp-aemva/fvp-base-revc.dtb
-https://storage.tuxboot.com/fvp-aemva/fip-uboot.bin
-https://builds.tuxbuild.com/2BnQMpJj3kDTJXoCwd2pY5gW9CN/Image.gz
-https://builds.tuxbuild.com/2BnQMpJj3kDTJXoCwd2pY5gW9CN/modules.tar.xz
-
-
-docker run
-  --rm
-  --interactive
-  --tty
-  --hostname lava
-  --name tuxrun-r4_1075p-lava-1
-  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/url-repo-action-3=
-h1oa_zl/url_repo/https___storage.tuxboot.com_test-definitions_2022.01.tar:/=
-tuxrun-r4_1075p-lava-1/https___storage.tuxboot.com_test-definitions_2022.01=
-.tar
-  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/fvp-deploy-w_qt5q=
-gt/bl1/tf-bl1.bin:/tuxrun-r4_1075p-lava-1/tf-bl1.bin
-  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/fvp-deploy-w_qt5q=
-gt/dtb/fvp-base-revc.dtb:/tuxrun-r4_1075p-lava-1/fvp-base-revc.dtb
-  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/fvp-deploy-w_qt5q=
-gt/fip/fip-uboot.bin:/tuxrun-r4_1075p-lava-1/fip-uboot.bin
-  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/fvp-deploy-w_qt5q=
-gt/kernel/Image:/tuxrun-r4_1075p-lava-1/Image
-  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/fvp-deploy-w_qt5q=
-gt/rootfs/https___storage.lkft.org_rootfs_oe-sumo_20220219_juno_rpb-console=
--image-lkft-juno-20220219023239.rootfs.ext4:/tuxrun-r4_1075p-lava-1/https__=
-_storage.lkft.org_rootfs_oe-sumo_20220219_juno_rpb-console-image-lkft-juno-=
-20220219023239.rootfs.ext4
-  --volume /var/lib/lava/dispatcher/tmp/tuxrun-r4_1075p-1/fvp-deploy-w_qt5q=
-gt/rootfs.modules/modules.tar:/tuxrun-r4_1075p-lava-1/modules.tar
-fvp:aemva-11.17.21
-
-
-
-/opt/model/FVP_AEMvA/models/Linux64_GCC-9.3/FVP_Base_RevC-2xAEMvA
-  --plugin /opt/model/FVP_AEMvA/plugins/Linux64_GCC-9.3/ScalableVectorExten=
-sion.so
-  --data cluster0.cpu0=3D/tuxrun-r4_1075p-lava-1/fvp-base-revc.dtb@0x860000=
-00
-  --data cluster0.cpu0=3D/tuxrun-r4_1075p-lava-1/Image@0x80080000
-   -C pctl.startup=3D0.0.0.0
-   -C bp.secure_memory=3D0
-   -C cluster0.NUM_CORES=3D4
-   -C cluster1.NUM_CORES=3D4
-   -C cache_state_modelled=3D0
-   -C bp.smsc_91c111.enabled=3Dtrue
-   -C bp.pl011_uart0.untimed_fifos=3D1
-   -C bp.pl011_uart0.unbuffered_output=3D1
-   -C bp.secureflashloader.fname=3D'/tuxrun-r4_1075p-lava-1/tf-bl1.bin'
-   -C bp.flashloader0.fname=3D'/tuxrun-r4_1075p-lava-1/fip-uboot.bin'
-   -C bp.ve_sysregs.mmbSiteDefault=3D0
-   -C bp.ve_sysregs.exit_on_shutdown=3D1
-   -C bp.virtioblockdevice.image_path=3D'/tuxrun-r4_1075p-lava-1/https___st=
-orage.lkft.org_rootfs_oe-sumo_20220219_juno_rpb-console-image-lkft-juno-202=
-20219023239.rootfs.ext4'
-   -C pci.pcidevice0.bus=3D0xFF
-   -C pci.pcidevice1.bus=3D0xFF
-   -C cluster0.has_large_system_ext=3D1
-   -C cluster1.has_large_system_ext=3D1
-   -C cluster0.has_16k_granule=3D1
-   -C cluster1.has_16k_granule=3D1
-   -C cluster0.has_branch_target_exception=3D1
-   -C cluster1.has_branch_target_exception=3D1
-   -C cluster0.has_rndr=3D1
-   -C cluster1.has_rndr=3D1
-   -C cluster0.has_arm_v8-1=3D1
-   -C cluster1.has_arm_v8-1=3D1
-   -C cluster0.has_arm_v8-2=3D1
-   -C cluster1.has_arm_v8-2=3D1
-   -C cluster0.has_arm_v8-3=3D1
-   -C cluster1.has_arm_v8-3=3D1
-   -C cluster0.has_arm_v8-4=3D1
-   -C cluster1.has_arm_v8-4=3D1
-   -C cluster0.has_arm_v8-5=3D1
-   -C cluster1.has_arm_v8-5=3D1
-   -C cluster0.has_arm_v8-6=3D1
-   -C cluster1.has_arm_v8-6=3D1
-
-- Naresh
