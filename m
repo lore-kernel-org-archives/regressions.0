@@ -1,47 +1,96 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6590A7A
-	for <regressions@lists.linux.dev>; Fri, 15 Jul 2022 09:04:18 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oCHFA-0000aR-6X; Fri, 15 Jul 2022 11:04:16 +0200
-Message-ID: <d1fe8d36-e06b-3b9f-5c0f-cd93f89f52ec@leemhuis.info>
-Date: Fri, 15 Jul 2022 11:04:15 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF582F34
+	for <regressions@lists.linux.dev>; Fri, 15 Jul 2022 12:28:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AD41C34115;
+	Fri, 15 Jul 2022 12:28:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1657888112;
+	bh=1WQoyyAkCDerK4uyFTm/h5bbBttlBNT3gkioRS+yT4Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GtQSWdXWimjAGo9or4zJmG2+2tsw4HN0iHXYVpGNl89aAImmBwL64ArkXHldkKw/I
+	 bcGKV1BefgjFF++jixQWnTgaMAnTUx8lGwKv3eYOFFrIY+GqVy/tGdfDlatSjypDVc
+	 +vNamPpzPcODKA8y0sUT7EAT3OscJ3cLneHRmJW1uRzXNbqIsz+QM4pHW49ed/CAIc
+	 OzrC8zBQmDWAwzBwC+DVCMcnKnbGza6fopTQEAf2C671TLy8PZ8J/rxRHDMRNvH8XG
+	 MAs5rUAFiO6gPN0z/i+rNACDwsqCh+Rd5zXlYGkjChseWipB5euOtoGEXkSYm3sJNc
+	 QA2OvVZlCct8g==
+Date: Fri, 15 Jul 2022 13:28:26 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux-Next Mailing List <linux-next@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Aishwarya TCV <Aishwarya.TCV@arm.com>
+Subject: Re: FVP: kernel BUG at arch/arm64/kernel/traps.c:497 - Internal
+ error: Oops - BUG: 0
+Message-ID: <YtFdarmJKQbV2Wz8@sirena.org.uk>
+References: <CA+G9fYtOX-6=f70FA5PuDVA=kX=2L4spXKXS8=LHkUphafXowg@mail.gmail.com>
+ <Ys1g8PH4M2W7Z50U@sirena.org.uk>
+ <CA+G9fYu7mJ6X3_xhboODP_cjABE4QTJCON_NMduQ60x4Z7N78Q@mail.gmail.com>
+ <Ys/9TSV5muvKXN6W@FVFF77S0Q05N>
+ <YtABEDylGJkYLXrJ@sirena.org.uk>
+ <YtASzuHo1MXe5LJH@FVFF77S0Q05N.cambridge.arm.com>
+ <YtAU1AHLLgK/v7RP@FVFF77S0Q05N.cambridge.arm.com>
+ <YtAcW9DRrdun/pW9@FVFF77S0Q05N.cambridge.arm.com>
+ <CA+G9fYvmrraS7ANdRA0XDoM-u-oVvcHFWsrFuBya9Es_WN3fkw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [Intel-gfx] [PATCH 1/1] drm/i915/guc: Update to GuC version
- 70.1.1 #forregzbot
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220412225955.1802543-1-John.C.Harrison@Intel.com>
- <20220412225955.1802543-2-John.C.Harrison@Intel.com>
- <Yli4/8OIbjyRaQAK@mdroper-desk1.amr.corp.intel.com>
- <CAPM=9txdca1VnRpp-oNLXpBc2UWq3=ceeim5+Gw4N9tAriRY6A@mail.gmail.com>
- <40101a14-ea44-1fd9-36ab-2048df2cb0e6@leemhuis.info>
-In-Reply-To: <40101a14-ea44-1fd9-36ab-2048df2cb0e6@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1657875858;0f59044b;
-X-HE-SMSGID: 1oCHFA-0000aR-6X
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="H1Sr8Wku87tqrIFD"
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvmrraS7ANdRA0XDoM-u-oVvcHFWsrFuBya9Es_WN3fkw@mail.gmail.com>
+X-Cookie: You dialed 5483.
 
-On 15.07.22 10:34, Thorsten Leemhuis wrote:
-> [TLDR: I'm adding this regression report to the list of tracked
-> regressions; all text from me you find below is based on a few templates
-> paragraphs you might have encountered already already in similar form.]
-> [...]> #regzbot ^introduced 2584b3549f4c4081
-> #regzbot title
 
-One more time with more love:
+--H1Sr8Wku87tqrIFD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-#regzbot title drm: i915: support for ADL-P GPUs requires updates GuC
-firmware files
+On Thu, Jul 14, 2022 at 07:35:50PM +0530, Naresh Kamboju wrote:
+> On Thu, 14 Jul 2022 at 19:09, Mark Rutland <mark.rutland@arm.com> wrote:
 
-> #regzbot ignore-activity
+> > When *only* using the initial loading into memory, that blows up in sta=
+ckdepot
+> > and with a subsequent bogus pointer dereference (full log below), and w=
+hen
+> > loaded via semihosting that just works. Note that my kernel is based on=
+ the
+> > arm64 for-next/core branch, which itself is based on v5.19-rc3.
+
+> > Naresh, please can you fix your boot flow before reporting any further =
+issues?
+>=20
+> Yes.
+
+If you don't *need* to use u-boot for any reason then it might be worth
+looking into using EDK2 instead, it will dynamically place loaded images
+so you don't need to worry about size issues unless you actually run out
+of memory which is a whole other problem.
+
+--H1Sr8Wku87tqrIFD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmLRXWkACgkQJNaLcl1U
+h9Dsggf8CuVIwr2J6sCd8w1lFG4bdwpcsGZVeZQTGRFo7mhscUcQA/DVbERphMa5
+rm/R+juwkEXldiHj1CHQvCBsNsW3a8WuDVVx5BWgiSuwFmKUmr95T4Sj2mNsCXPb
+T3qKNT9Ub1TA/h1zIpo53co/2p4kl+BaQO9cQm64TTuP4ACX+X8wH7q8oSp/kC2n
+/Xux0I+gA/BX2U6ppSGaIdBvck/hl5kF4NSaMx6kcojedaX/lpQjdZxUTOsz6rVj
+DfJ7E2nB38IVH+QJor1+274rd+zPrUNaHJRhKmuEtLMQb+iiSvRBq7se5lHVHFen
+JxJtedtwJe2QJQkEjSvrSoH6dM3/6Q==
+=hWus
+-----END PGP SIGNATURE-----
+
+--H1Sr8Wku87tqrIFD--
