@@ -1,119 +1,91 @@
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54AE4EA6
-	for <regressions@lists.linux.dev>; Mon, 18 Jul 2022 09:41:56 +0000 (UTC)
-Received: by mail-vs1-f53.google.com with SMTP id j65so9884415vsc.3
-        for <regressions@lists.linux.dev>; Mon, 18 Jul 2022 02:41:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uw96p5rg9bMjde+tQ6Y+RJreM2+o6oDSBazbHt0Gpe4=;
-        b=ZMcgYemoS6vhtGV+wZTepAv0v7yYdmq3PKJVRg8DujBUwUrtzrBTIQtVGghklIuZsp
-         pMH+ZEbCBITkHbGhkhnJVzLS/JRkvLlB3L1msVvqVDzqH0IaOlwS7HrlrywJufHp7a/1
-         Y46jotEQTTbMuP32ne5lLIti/hegrnYiBGCwT9XX/WeYE/yteviq9WPcw27r1wC+V43l
-         k0cNHGA09ys6nFRf+Q+HEeguCh75hz+/+d0OO1JmuJI4xeKUV4wP92OHwULfEI+pWMhI
-         Z4OSmv1RwcrOKfyQYWrW1I0zb/bFVGMMxpd7U5luCglHL8fYp3ncTlDbS6pHHk/YYaZL
-         R/SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uw96p5rg9bMjde+tQ6Y+RJreM2+o6oDSBazbHt0Gpe4=;
-        b=Tb0scbpPLbwItXCndh17UOaz2oqA88mJr7BiQ+ARpjDNtWbPUdGEK8PIrzg2vA1HuD
-         3jC+d2I/CCZyhOpdeOeB1cZY/bbXWo1LGrueeJllvtH4Uri1Bi/CP6ZD/OvwmP51abV2
-         r1vuu3106Obpk7xIpvPOeWXDqVCCHlFYyWT808SRLMCtT7AMgeUEMSP16XUqOkf/5yqP
-         Hlm7dUiXpRUM5XzjDqGH5TRBOoi9uxigH81oWuZS2twZQvd5/yvOP7Kj+kkeI+4OEugq
-         gqnpKTDv4ZAhXilze752Qa1EyLB3DJAx66MfgqTeA/lhymbKrtuYmStgWNKXlA+F2ycr
-         Z02Q==
-X-Gm-Message-State: AJIora/KzXQv2k5BHq22YLpZiI3f6qa8VkofMBoUtAg8FW1n6ALUuYwW
-	PKPBKf1yIAITszZpu7IJ3AQy+NFxC9h7mhHGW40=
-X-Google-Smtp-Source: AGRyM1uwPymo7DRuHzRKWZ13dPYMPZ/am7w4EtUZor/81WS5GgLWhgdwQXs2hG/1EIRU7O70pBwq+X5JnU9nktk2d/M=
-X-Received: by 2002:a05:6102:834:b0:357:e3b9:56d5 with SMTP id
- k20-20020a056102083400b00357e3b956d5mr190138vsb.72.1658137315176; Mon, 18 Jul
- 2022 02:41:55 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEAEECC
+	for <regressions@lists.linux.dev>; Mon, 18 Jul 2022 11:42:15 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oDP8f-0006ga-JZ; Mon, 18 Jul 2022 13:42:13 +0200
+Message-ID: <c6ef3d55-bd54-435f-52f3-e1ce5842f33a@leemhuis.info>
+Date: Mon, 18 Jul 2022 13:42:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Content-Language: en-US
+To: regressions@lists.linux.dev
 References: <YtTM8GYn0/HkSoet@squish.home.loc>
-In-Reply-To: <YtTM8GYn0/HkSoet@squish.home.loc>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Mon, 18 Jul 2022 11:41:43 +0200
-Message-ID: <CAOQ4uxgya2-H9=qNZkRBO1exr=GRqyn=PFfGgAf0Px0VkH4bjQ@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
 Subject: Re: [REGRESSION] recent changes to copy_file_range behavior breakage
-To: Paul Thompson <paul.a.thompson@zohomail.com>
-Cc: regressions@lists.linux.dev, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>, 
-	mat h <isolation.principle@gmail.com>, arvidn <arvid@libtorrent.org>, 
-	Luis Henriques <lhenriques@suse.de>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-	Linux API <linux-api@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+ #forregzbot
+In-Reply-To: <YtTM8GYn0/HkSoet@squish.home.loc>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1658144535;f2328b50;
+X-HE-SMSGID: 1oDP8f-0006ga-JZ
 
-On Mon, Jul 18, 2022 at 5:01 AM Paul Thompson
-<paul.a.thompson@zohomail.com> wrote:
->
->         Something that worked in 5.18.9 no longer does in 5.18.1[01] and 5.19-rc6.
->
->         Using the example code in the man page for copy_file_range:
->
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
+
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
+
+On 18.07.22 05:01, Paul Thompson wrote:
+> 	Something that worked in 5.18.9 no longer does in 5.18.1[01] and 5.19-rc6.
+> 
+> 	Using the example code in the man page for copy_file_range:
+> 
 > # ./copy-file-range testfile-on-ext4 /path-to-another-ext4/testfile (or symlink thereto)
->
+> 
 > Works in 5.18.9, fails with:
->
+> 
 > # copy_file_range: Invalid cross-device link
->
+> 
 > And produces garbage file at destination on newer (5.18.10+) kernels.
->
->         This breaks eg. qbittorrent (moving a distro image across ext4
+> 
+> 	This breaks eg. qbittorrent (moving a distro image across ext4
 > filesystems, or following such a symlink) So potentially other real world
 > applications. I do not know if the reason for the commit overrides this
 > breakage, but it caused me a bit of a headache.
->
+> 
+> Thanks;
+> Paul
+> 
+> This commit:
+> 
+> commit b9cabd2ec2ff6f452bd5744326cc5c5f503448c6
 
-Hi Paul,
+FWIW, that's 868f9f2f8e004bfe0d3935b1976f625b2924893b in mainline.
 
-I apologize for the headache this change has caused you.
-FWIW, Arvidn has already fixed the problem in libtorrent 2.0.7 release yesterday
-following a report by Mat [1].
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
-The story here is that cross-fs copy_file_range() was not allowed pre
-kernel v5.3.
-When we started allowing it in v5.3, we did not and we could not test
-all possible
-combinations of src and dst fs, so it took a few years, but regression reports
-started to surface [2].
+#regzbot ^introduced 868f9f2f8e004bfe0d3935b1976f625b2924893b
+#regzbot title fs: recent changes to copy_file_range behavior breakage
+#regzbot ignore-activity
 
-We decided to try and revert the behavior to pre kernel v5.3 to fix those
-regressions.
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
 
-The first attempt was around v5.12 release, but sadly, the patch got ignored
-and it wasn't before v5.19-rc5 that we managed to get the patch merged.
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
 
-In the meanwhile, libtorrent 2.0.0 was released with code that assumes
-that cross-fs copy_file_range() failure is a fatal error. This was
-fixed is 2.0.7
-released yesterday and I hope this fix will be packaged soon for distros.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-There is no easy way to find if other userspace tools have made the same
-assumptions except for getting regression reports like yours.
-It is encouraging to me that I got two regression reports from you and Mat
-shortly after the kernel patch was merged, which suggests that if there are
-other userspace tools out there making the same assumption, we will hear
-about them in the near future.
-
-If we find out that is it too late to revert to pre v5.3 behavior,
-then there are
-a few other options that were discussed on [2], but none of them are pretty
-and there was no consensus on either solution, so I'd rather wait a bit to
-see if other workloads rely on cross-fs copy_file_range() from any src fs to
-any dst fs, before taking further action.
-
-Thanks,
-Amir.
-
-[1] https://github.com/qbittorrent/qBittorrent/issues/17352
-[2] https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
