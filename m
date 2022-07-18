@@ -1,13 +1,13 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.187])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401621C07
-	for <regressions@lists.linux.dev>; Mon, 18 Jul 2022 13:29:54 +0000 (UTC)
-Received: from [192.168.1.107] ([37.4.249.155]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MtO06-1nOMvi0yvG-00usz7; Mon, 18 Jul 2022 15:29:48 +0200
-Message-ID: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
-Date: Mon, 18 Jul 2022 15:29:47 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AE1A1C07
+	for <regressions@lists.linux.dev>; Mon, 18 Jul 2022 13:46:06 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oDR4V-0003hz-LZ; Mon, 18 Jul 2022 15:46:03 +0200
+Message-ID: <96583b04-6ca7-ec2a-7275-4b48b90cb458@leemhuis.info>
+Date: Mon, 18 Jul 2022 15:46:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,83 +15,82 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
+ Thunderbird/91.11.0
 Content-Language: en-US
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [Regression] ext4: changes to mb_optimize_scan cause issues on
- Raspberry Pi
-To: linux-ext4@vger.kernel.org, Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Cc: Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
- Theodore Ts'o <tytso@mit.edu>, Ritesh Harjani <riteshh@linux.ibm.com>,
- linux-fsdevel@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
+ Raspberry Pi #forregzbot
+In-Reply-To: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:9fY30Z9jd9z0wsQphdvwiUzBCnLULQyuNQ0uIByAwsbooQNcfqb
- nKlAGwHxs0c5ASlv6XRDoLl+hDi/3Gp9Sb9X9yAOgc5WfuqRQZiF9sp1OA8kutUAGtP8oC/
- ox0cnH2YpmLwrfrAG+h0eSWfP8aKbduEAmEL14GxyPgWFrONRY7Ea3Djvp83TUerI0XyUre
- irkvwxm217+MRIau00B9Q==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CwKwexPPutM=:ml7nh5Q5lT5cE3anMzqwB+
- 5MbPejskWOkTI6L2y9E9elOAAbC48I2y5a4O4G7pTvByLSQRwBCVgTFzVUs3I0FzdFmG40r+u
- LNbaE9BVmWGq/B3s1HX2gF5BBvHuFryJQ8H3jAJmUItanRoeOCx4ODcpPknR2/6o28vWDNOUJ
- QEf/eCz5j9a6PqUU7FSjmyL8s8KSmEN3noMneD7dcvpCnm7OUIDtfZSnf7qPfR3av6AOO0rPE
- wYDoTDaUNtCTyiUbp66641aS7UP8HPq3uczjYA4w6gwGgLnusabxwOXgSLLRnhOjJ7vs47zr5
- e2iDP+9U92CguJsrZ0QAn+ZnuYHkT0I4ENOvE+UU+foMU/l8OJZuHzO5+h640qL4NcSn1RMSQ
- DpfS1aaMJKg2lM6xmR9rix5HVq6mUsIgu4EwKs+CLlC5L5IURWzLkU5gg3eI80sdeF+biFAK9
- XlNNTKA0eaQRn1WXQgCQ/l8z2VRsfPqBh8RW4ZAu6gfOkH9QJemAUMGb20ERhWFBON7qojMFc
- MhoPZsg7JskUI9AI3TGuyf2AGOVWywRmG7KyxJgY3byduJnuTT6ysUNKtIvHt2XyUdvoK0Bnq
- 396QDB1pqWAM5X4X047fKbjJoruAMD+H2z90+/uBffSTKK7EBNvrcE9KrzDVBrmvRx6ExSwmB
- J2yUTOcsH9iQ/+rQJD5dLSLq4U4BtAkaA8Ku2p/0SWF6EVbNBGGTtwgwjIHUdGeiUbCtT4QbD
- wyoB7gAnkur27LuTAON7kru1z9sVJK68MkkQRAdRvARclqmavoUX3kEjSR0=
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1658151966;19fa6a8e;
+X-HE-SMSGID: 1oDR4V-0003hz-LZ
 
-Hi,
+[TLDR: I'm adding below regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-i noticed that since Linux 5.18 (Linux 5.19-rc6 is still affected) i'm 
-unable to run "rpi-update" without massive performance regression on my 
-Raspberry Pi 4 (multi_v7_defconfig + CONFIG_ARM_LPAE). Using Linux 5.17 
-this tool successfully downloads the latest firmware (> 100 MB) on my 
-development micro SD card (Kingston 16 GB Industrial) with a ext4 
-filesystem within ~ 1 min. The same scenario on Linux 5.18 shows the 
-following symptoms:
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-- download takes endlessly much time and leads to an abort by userspace 
-in most cases because of the poor performance
-- massive system load during download even after download has been 
-aborted (heartbeat LED goes wild)
-- whole system becomes nearly unresponsive
-- system load goes back to normal after > 10 min
-- dmesg doesn't show anything suspicious
+On 18.07.22 15:29, Stefan Wahren wrote:
 
-I was able to bisect this issue:
+> i noticed that since Linux 5.18 (Linux 5.19-rc6 is still affected) i'm
+> unable to run "rpi-update" without massive performance regression on my
+> Raspberry Pi 4 (multi_v7_defconfig + CONFIG_ARM_LPAE). Using Linux 5.17
+> this tool successfully downloads the latest firmware (> 100 MB) on my
+> development micro SD card (Kingston 16 GB Industrial) with a ext4
+> filesystem within ~ 1 min. The same scenario on Linux 5.18 shows the
+> following symptoms:
+> 
+> - download takes endlessly much time and leads to an abort by userspace
+> in most cases because of the poor performance
+> - massive system load during download even after download has been
+> aborted (heartbeat LED goes wild)
+> - whole system becomes nearly unresponsive
+> - system load goes back to normal after > 10 min
+> - dmesg doesn't show anything suspicious
+> 
+> I was able to bisect this issue:
+> 
+> commit 077d0c2c78df6f7260cdd015a991327efa44d8ad
+> Author: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+> Date:   Tue Mar 8 15:22:01 2022 +0530
+> 
+> ext4: make mb_optimize_scan performance mount option work with extents
+> 
+> If i revert this commit with Linux 5.19-rc6 the performance regression
+> disappears.
+> 
+> Please ask if you need more information.
 
-ff042f4a9b050895a42cae893cc01fa2ca81b95c good
-4b0986a3613c92f4ec1bdc7f60ec66fea135991f bad
-25fd2d41b505d0640bdfe67aa77c549de2d3c18a bad
-b4bc93bd76d4da32600795cd323c971f00a2e788 bad
-3fe2f7446f1e029b220f7f650df6d138f91651f2 bad
-b080cee72ef355669cbc52ff55dc513d37433600 good
-ad9c6ee642a61adae93dfa35582b5af16dc5173a good
-9b03992f0c88baef524842e411fbdc147780dd5d bad
-aab4ed5816acc0af8cce2680880419cd64982b1d good
-14705fda8f6273501930dfe1d679ad4bec209f52 good
-5c93e8ecd5bd3bfdee013b6da0850357eb6ca4d8 good
-8cb5a30372ef5cf2b1d258fce1711d80f834740a bad
-077d0c2c78df6f7260cdd015a991327efa44d8ad bad
-cc5095747edfb054ca2068d01af20be3fcc3634f good
-27b38686a3bb601db48901dbc4e2fc5d77ffa2c1 good
+Hi, this is your Linux kernel regression tracker. Thanks for the report.
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
 
-commit 077d0c2c78df6f7260cdd015a991327efa44d8ad
-Author: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Date:   Tue Mar 8 15:22:01 2022 +0530
+#regzbot ^introduced 077d0c2c78df6f7260cdd015a991327efa44d8ad
+#regzbot title ext4: changes to mb_optimize_scan cause issues on
+Raspberry Pi
+#regzbot ignore-activity
 
-ext4: make mb_optimize_scan performance mount option work with extents
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
 
-If i revert this commit with Linux 5.19-rc6 the performance regression 
-disappears.
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
 
-Please ask if you need more information.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-Regards
-
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
