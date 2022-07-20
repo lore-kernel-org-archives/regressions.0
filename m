@@ -1,33 +1,13 @@
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E37C1105
-	for <regressions@lists.linux.dev>; Tue, 19 Jul 2022 16:48:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1658249300; x=1689785300;
-  h=message-id:date:mime-version:to:cc:references:from:
-   subject:in-reply-to:content-transfer-encoding;
-  bh=Ycu7Ok4eSxy7/aEcgWkuiWqgpnoYSn46cWi0gpMnDZQ=;
-  b=n1JqVpnQbGmj81vNhDNJVSmsJ7vu8slCgvG6A75aSJ6wsfgCAesUE09p
-   RTw62JPSBawCRHb3+tzSxaZowzUN1rlzhX0HMrenqtoSfPGf/znQJvbKk
-   0ku1AWqTQzMmrKDc3XGM5zJSuJoYk/ACuNHTs0C6yggFa31KSmqhLGt6V
-   NKfyeCOQv4SesRtyIQy78KlUbStFDfT1NYyBEXnvFM4A58lK6ukpdfs+F
-   P/4SaUDexqM3LZdUEeZxgh0fLtt7WUHq/um9rSHwDS4FI4a5mNBMr/Grc
-   IhMhpS2mWlUbeohlWoFonMgUrHXsVUEIhre3KZ+vWzKFTaq4RWGBKIAUK
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10413"; a="350505783"
-X-IronPort-AV: E=Sophos;i="5.92,284,1650956400"; 
-   d="scan'208";a="350505783"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2022 09:48:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,284,1650956400"; 
-   d="scan'208";a="687179855"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.199]) ([10.237.72.199])
-  by FMSMGA003.fm.intel.com with ESMTP; 19 Jul 2022 09:48:16 -0700
-Message-ID: <9d54d0e4-d2db-3896-301e-9d9048599092@linux.intel.com>
-Date: Tue, 19 Jul 2022 19:49:53 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707471376
+	for <regressions@lists.linux.dev>; Wed, 20 Jul 2022 10:36:29 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oE73z-00079V-QY; Wed, 20 Jul 2022 12:36:20 +0200
+Message-ID: <85daf682-7da8-6bc1-ca25-006cf7dd9494@leemhuis.info>
+Date: Wed, 20 Jul 2022 12:36:19 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -35,21 +15,31 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.8.1
+ Thunderbird/91.11.0
 Content-Language: en-US
-To: Joey Corleone <joey.corleone@mail.ru>, gregkh@linuxfoundation.org
-Cc: linux-usb@vger.kernel.org, stable@vger.kernel.org,
- regressions@lists.linux.dev
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 References: <20220623111945.1557702-1-mathias.nyman@linux.intel.com>
  <20220623111945.1557702-3-mathias.nyman@linux.intel.com>
  <fe4005ed-802a-d276-a6c8-87717d16c089@mail.ru>
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [PATCH 2/4] xhci: turn off port power in shutdown
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [PATCH 2/4] xhci: turn off port power in shutdown #forregzbot
 In-Reply-To: <fe4005ed-802a-d276-a6c8-87717d16c089@mail.ru>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1658313389;8f8f954b;
+X-HE-SMSGID: 1oE73z-00079V-QY
 
-On 19.7.2022 16.42, Joey Corleone wrote:
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
+
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
+
+Hi, this is your Linux kernel regression tracker.
+
+On 19.07.22 15:42, Joey Corleone wrote:
 > On 23.06.22 13:19, Mathias Nyman wrote:
 >> If ports are not turned off in shutdown then runtime suspended
 >> self-powered USB devices may survive in U3 link state over S5.
@@ -68,64 +58,7 @@ On 19.7.2022 16.42, Joey Corleone wrote:
 >>   drivers/usb/host/xhci.c     | 15 +++++++++++++--
 >>   drivers/usb/host/xhci.h     |  2 ++
 >>   3 files changed, 16 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
->> index c54f2bc23d3f..0fdc014c9401 100644
->> --- a/drivers/usb/host/xhci-hub.c
->> +++ b/drivers/usb/host/xhci-hub.c
->> @@ -652,7 +652,7 @@ struct xhci_hub *xhci_get_rhub(struct usb_hcd *hcd)
->>    * It will release and re-aquire the lock while calling ACPI
->>    * method.
->>    */
->> -static void xhci_set_port_power(struct xhci_hcd *xhci, struct usb_hcd *hcd,
->> +void xhci_set_port_power(struct xhci_hcd *xhci, struct usb_hcd *hcd,
->>                   u16 index, bool on, unsigned long *flags)
->>       __must_hold(&xhci->lock)
->>   {
->> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
->> index cb99bed5f755..65858f607437 100644
->> --- a/drivers/usb/host/xhci.c
->> +++ b/drivers/usb/host/xhci.c
->> @@ -791,6 +791,8 @@ static void xhci_stop(struct usb_hcd *hcd)
->>   void xhci_shutdown(struct usb_hcd *hcd)
->>   {
->>       struct xhci_hcd *xhci = hcd_to_xhci(hcd);
->> +    unsigned long flags;
->> +    int i;
->>       if (xhci->quirks & XHCI_SPURIOUS_REBOOT)
->>           usb_disable_xhci_ports(to_pci_dev(hcd->self.sysdev));
->> @@ -806,12 +808,21 @@ void xhci_shutdown(struct usb_hcd *hcd)
->>           del_timer_sync(&xhci->shared_hcd->rh_timer);
->>       }
->> -    spin_lock_irq(&xhci->lock);
->> +    spin_lock_irqsave(&xhci->lock, flags);
->>       xhci_halt(xhci);
->> +
->> +    /* Power off USB2 ports*/
->> +    for (i = 0; i < xhci->usb2_rhub.num_ports; i++)
->> +        xhci_set_port_power(xhci, xhci->main_hcd, i, false, &flags);
->> +
->> +    /* Power off USB3 ports*/
->> +    for (i = 0; i < xhci->usb3_rhub.num_ports; i++)
->> +        xhci_set_port_power(xhci, xhci->shared_hcd, i, false, &flags);
->> +
->>       /* Workaround for spurious wakeups at shutdown with HSW */
->>       if (xhci->quirks & XHCI_SPURIOUS_WAKEUP)
->>           xhci_reset(xhci, XHCI_RESET_SHORT_USEC);
->> -    spin_unlock_irq(&xhci->lock);
->> +    spin_unlock_irqrestore(&xhci->lock, flags);
->>       xhci_cleanup_msix(xhci);
->> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
->> index 0bd76c94a4b1..28aaf031f9a8 100644
->> --- a/drivers/usb/host/xhci.h
->> +++ b/drivers/usb/host/xhci.h
->> @@ -2196,6 +2196,8 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue, u16 wIndex,
->>   int xhci_hub_status_data(struct usb_hcd *hcd, char *buf);
->>   int xhci_find_raw_port_number(struct usb_hcd *hcd, int port1);
->>   struct xhci_hub *xhci_get_rhub(struct usb_hcd *hcd);
->> +void xhci_set_port_power(struct xhci_hcd *xhci, struct usb_hcd *hcd, u16 index,
->> +             bool on, unsigned long *flags);
->>   void xhci_hc_died(struct xhci_hcd *xhci);
+> [...]
 > 
 > fyi: there is a report [1] about a regression introduced by this patch.
 > 
@@ -133,19 +66,29 @@ On 19.7.2022 16.42, Joey Corleone wrote:
 > 
 > [1] https://bugzilla.kernel.org/show_bug.cgi?id=216243
 
-Thanks for the notice, I'm away until August.
-If it starts to cause more issues then this one incident then it should be reverted.
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
 
-Will take a look at this when I return.
-Meanwhile a log with xhci dynamic debug enabled could better show what is going on
+#regzbot ^introduced 9245c6c1f0095d1e9d7862253680cb1e53e65e7
+#regzbot title xhci: machine does not power off
+#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=216243
+#regzbot ignore-activity
 
-mount -t debugfs none /sys/kernel/debug
-echo 'module xhci_hcd =p' >/sys/kernel/debug/dynamic_debug/control
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
 
-Thanks
-Mathias
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-
-
-
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
