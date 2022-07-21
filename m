@@ -1,61 +1,110 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 140222CA8
-	for <regressions@lists.linux.dev>; Thu, 21 Jul 2022 12:51:46 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oEVea-0006Qj-Q7; Thu, 21 Jul 2022 14:51:44 +0200
-Message-ID: <bc32d126-fb34-26d7-0818-a607629c5611@leemhuis.info>
-Date: Thu, 21 Jul 2022 14:51:44 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D15441A
+	for <regressions@lists.linux.dev>; Thu, 21 Jul 2022 13:53:16 +0000 (UTC)
+Received: by mail-ej1-f47.google.com with SMTP id z23so3293170eju.8
+        for <regressions@lists.linux.dev>; Thu, 21 Jul 2022 06:53:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=QTfsunLqKTRB2CFPsnW6lbEDPr/NGxI4rqcD38FJJkw=;
+        b=DArx0cdwILUNhnM5+w7oUR7j8ov5x8tkDJdlXFTZUi79VTS/UMrU1tywOPb1RqBeWa
+         g/Dw1peDlFsUR5OON4WW29nG6C5hNeWlekxqCj2PxL3nGzZgKQKqvjTx2AIpSOd9+/wa
+         rNkf/n8mpaqOUtNgkn0i/XsVM6Jc2u+TzjB61cuX0XyfYZx8zvSTMp/fA+kgqV0YNsgR
+         mLefzb3HdB7mHmrwy81dUD0je+ohD29EALmiIJUYVT3thYfdiAHp3SoIR7fy9C04QA10
+         fpQ1QT4f2JlxBrcwuj06kZw5L3NnG+KUQUICjYGYNRzqmuq3zUokA8jJY6JVvXkP94y7
+         KjVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=QTfsunLqKTRB2CFPsnW6lbEDPr/NGxI4rqcD38FJJkw=;
+        b=1WUSf9F867zKRWJ8mbyBN3OQITb9BK5U79Rs6kMSyYJ3iT9OjZnXf1f0a7lT90/HUm
+         ETyQHuXl0kemvH5nEouD1XJ3z+UXkYmWTdquHCAw7x7GXnpNtVykM0ltjZSrUFW6ipfe
+         pqyAZ5+j1AiuRR4E9agNKCZic9RF0mW2/6G86He8khg/PhoUePuCqCS/8t2ufOxtaHgw
+         +1LrcSQlpmTkrm3DEzRK5klTuiRVdpQf7PI+uPLHjZ/X7mKa2Od+/IQdOIVqY5Jrd/Gq
+         D0JpBFA0x5v1Bh/QSUuWf071VVhOnMWrbZiSid3AJafl4WAd9FwZETDJHnhXchEV6Mv2
+         Q2EA==
+X-Gm-Message-State: AJIora+pdTHRzKzOV4fSwrkaeg0OXOWLID6ZU0IPAR0acJl9h7BAU44G
+	HNeEP+eB23tEJm3uxgfqtmJiwHbE1WwdQO+CMrfzfw==
+X-Google-Smtp-Source: AGRyM1ud9picHHVdTtA2cJCpNsz7WoU+vwr2wtnyBeX+6n2757l598TbKI0zKDRgvH5Gnk8iWrQ3dDdGNBKQc0p1aFI=
+X-Received: by 2002:a17:906:2dd:b0:712:1293:3dd8 with SMTP id
+ 29-20020a17090602dd00b0071212933dd8mr41059487ejk.448.1658411594627; Thu, 21
+ Jul 2022 06:53:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [Intel-gfx] [PATCH 1/1] drm/i915/guc: Update to GuC version
- 70.1.1 #forregzbot
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220412225955.1802543-1-John.C.Harrison@Intel.com>
- <20220412225955.1802543-2-John.C.Harrison@Intel.com>
- <Yli4/8OIbjyRaQAK@mdroper-desk1.amr.corp.intel.com>
- <CAPM=9txdca1VnRpp-oNLXpBc2UWq3=ceeim5+Gw4N9tAriRY6A@mail.gmail.com>
- <40101a14-ea44-1fd9-36ab-2048df2cb0e6@leemhuis.info>
- <d1fe8d36-e06b-3b9f-5c0f-cd93f89f52ec@leemhuis.info>
- <163e8e23-467a-4b9f-6288-aa850e5c2fc7@leemhuis.info>
-In-Reply-To: <163e8e23-467a-4b9f-6288-aa850e5c2fc7@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1658407907;c761f515;
-X-HE-SMSGID: 1oEVea-0006Qj-Q7
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 21 Jul 2022 19:23:03 +0530
+Message-ID: <CA+G9fYsuUdyUUUa_Xcfzfnh+Y8c82LnjeHum31C2ancBdxswCQ@mail.gmail.com>
+Subject: arm64: defconfig build failed on Linux next-20220721
+To: Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	regressions@lists.linux.dev, lkft-triage@lists.linaro.org, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Aishwarya TCV <Aishwarya.TCV@arm.com>, Marc Zyngier <maz@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
+arm64 defconfig build failed on Linux next-20220721 tag kernel.
 
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-On 17.07.22 17:33, Thorsten Leemhuis wrote:
-> 
-> 
-> On 15.07.22 11:04, Thorsten Leemhuis wrote:
->> On 15.07.22 10:34, Thorsten Leemhuis wrote:
->>> [TLDR: I'm adding this regression report to the list of tracked
->>> regressions; all text from me you find below is based on a few templates
->>> paragraphs you might have encountered already already in similar form.]
->>> [...]> #regzbot ^introduced 2584b3549f4c4081
->>> #regzbot title
->>
->> One more time with more love:
->>
->> #regzbot title drm: i915: support for ADL-P GPUs requires updates GuC
->> firmware files
-> 
-> #regzbot monitor
-> https://lore.kernel.org/all/20220715225451.1294354-1-daniele.ceraolospurio@intel.com/
-> #regzbot ignore-activity
+Regressions found on arm64:
+   - build-gcc-11-lkftconfig-64k_page_size
+   - build-gcc-11-lkftconfig-rcutorture
+   - build-gcc-11-lkftconfig-devicetree
+   - build-gcc-11-lkftconfig
+   - build-gcc-11-lkftconfig-debug
+   - build-gcc-11-lkftconfig-armv8_features
+   - build-gcc-11-lkftconfig-kselftest
+   - build-gcc-11-lkftconfig-kunit
+   - build-gcc-11-lkftconfig-libgpiod
+   - build-gcc-11-lkftconfig-kasan
+   - build-clang-12-lkftconfig
+   - build-clang-14-lkftconfig
+   - build-clang-13-lkftconfig
+   - build-clang-nightly-lkftconfig
+   - build-gcc-11-lkftconfig-debug-kmemleak
 
-#regzbot monitor:
-https://lore.kernel.org/dri-devel/20220718230732.1409641-1-daniele.ceraolospurio@intel.com/
-#regzbot fixed-by: 443148858f26ee0
+make --silent --keep-going --jobs=8
+O=/home/tuxbuild/.cache/tuxmake/builds/1/build
+CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- ARCH=arm64
+CROSS_COMPILE=aarch64-linux-gnu- 'CC=sccache aarch64-linux-gnu-gcc'
+'HOSTCC=sccache gcc'
+/builds/linux/arch/arm64/kernel/head.S: Assembler messages:
+/builds/linux/arch/arm64/kernel/head.S:334: Error: immediate cannot be
+moved by a single instruction
+/builds/linux/arch/arm64/kernel/head.S:343: Error: immediate cannot be
+moved by a single instruction
+/builds/linux/arch/arm64/kernel/head.S:354: Error: immediate cannot be
+moved by a single instruction
+/builds/linux/arch/arm64/kernel/head.S:379: Error: immediate cannot be
+moved by a single instruction
+make[3]: *** [/builds/linux/scripts/Makefile.build:382:
+arch/arm64/kernel/head.o] Error 1
+/builds/linux/arch/arm64/mm/proc.S: Assembler messages:
+/builds/linux/arch/arm64/mm/proc.S:296: Error: immediate cannot be
+moved by a single instruction
+make[3]: *** [/builds/linux/scripts/Makefile.build:382:
+arch/arm64/mm/proc.o] Error 1
+make[3]: Target '__build' not remade because of errors.
+make[2]: *** [/builds/linux/scripts/Makefile.build:525: arch/arm64/mm] Error 2
+make[3]: Target '__build' not remade because of errors.
+make[2]: *** [/builds/linux/scripts/Makefile.build:525:
+arch/arm64/kernel] Error 2
+make[2]: Target '__build' not remade because of errors.
+make[1]: *** [/builds/linux/Makefile:2005: arch/arm64] Error 2
+
+Build log details link,
+https://builds.tuxbuild.com/2CFcb9W3YxjuZPYeK5VFFhsYrbg/
+
+I am running my bisect scripts to find out the first bad commit.
+
+--
+Linaro LKFT
+https://lkft.linaro.org
