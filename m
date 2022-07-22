@@ -1,135 +1,105 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9C715A4
-	for <regressions@lists.linux.dev>; Fri, 22 Jul 2022 05:32:01 +0000 (UTC)
-Received: by mail-ed1-f52.google.com with SMTP id v12so4550699edc.10
-        for <regressions@lists.linux.dev>; Thu, 21 Jul 2022 22:32:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA9815A2
+	for <regressions@lists.linux.dev>; Fri, 22 Jul 2022 07:18:35 +0000 (UTC)
+Received: by mail-ej1-f48.google.com with SMTP id tk8so7081021ejc.7
+        for <regressions@lists.linux.dev>; Fri, 22 Jul 2022 00:18:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=J12RlWpg1XLxCQs673M+W3iUd5cD4FAYxDqqZcN0Pyo=;
-        b=MAOU0OWYWhl4uiv6fnh/7t9W12B1R8lxrYG2ze4wvne50ytYrYhG08pSW4obaX8wZ5
-         Wmqw/gEM+jLWUuTCb1KhOZzHb+WFwK9Qtee2X4do2tQ6uostzuEt7somvH4oa9JLn/t6
-         JWpRslF0ikr6UPqdn1KDNdSVwcT9twT3GoFMizpMu4RvK5pKe5LjvqvE7qJ8unm+AkS5
-         fpnqBIr2p4Vv9DJmxndv0YCWf+jsx0KDizJ8mPkgNXgABq+PaJvfEJszXmmQIQv/H57q
-         40yU9JzVKqMG8b24Q/sc7VvJms/IMv1OLrX/E7Y2zgY1i0ptHJnUiAZy9Qo3NoJxCDZV
-         pP9A==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IKcHWhHLCbnuHvgLiKMwDvz81Pgdj8AXCEWxJOu/1dE=;
+        b=sc2JUCYXDtkMU8ccXbzIM5u4hTQHKWEweOGwEP1DLnS7mV+uQZN3xKOOuiyntqa5zS
+         Jm+3fqTrJniRxLPk3hcFbCLERc7GUUopb208cJIi90gIymCqQ3HoDU4CWvCt9OxUIYWc
+         kfuPr1MeAwWzQEGzlCy8NfzW2U7y1R19BiDo7xhXtX/GsfxbxYGDcGuKxE/PEf1dfW3B
+         wdhBcJP4HpzoZoiViVw7qBTM6Wy6xYrJ7WJgTnt1+XxFrHmlay8RAFJ05oRMSMMyHCmw
+         JxEO7yYO4Ly0NnSm7PV+sFI7UiwskDwN38u+dHy9Bxqw1fCCLoHukvqDD0TIHtVI8234
+         CTKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=J12RlWpg1XLxCQs673M+W3iUd5cD4FAYxDqqZcN0Pyo=;
-        b=yI9jtaeC2N5rGgP9E9CEcubPnAEmThdLwE45wkobnbvhtkyG5Grd0cEj7WEufdETUO
-         KcgnxHeuS3QMOcq9jy3HU19plsNtd1r3FszrLsrtORCmosw6vO6VLx6A/q1ZNaldoVdW
-         49NH8aBDBp8Xw8C9iRGAxhq9jZPpidUXG/USiVQwCdKprl49vLnrjqFN9t/BPm58au/U
-         A2ed3fYRGw2qDAYotSoxTJ+DBOORHR5XAPkHzvkz9PvUDupj4lgkU2UW+8RATZRGXE1f
-         UVYVY8GfhHa0LsJ2Reh92y3X9SRTu4G7KGYjLUSqx8jkt+2dlteSfeKbgiXZO6a84U53
-         KRGw==
-X-Gm-Message-State: AJIora8NckU9ACEpak65qNxvxnF6SA5BpaAZTvcBJb68cQTT8ylDFcb0
-	0DI6jsseqA7pGCWCNd7BwZXxJwTWehMKnBjg7oRZ2g==
-X-Google-Smtp-Source: AGRyM1um9GWwTVvNubz/eer7Pf7iXXdZnZ4ivi5kbJbqiXHfK5WntpzGRM6ZTSC7VUBPrcluLV5uVgghw3WKca2LHHw=
-X-Received: by 2002:a05:6402:1d53:b0:43a:9ba7:315b with SMTP id
- dz19-20020a0564021d5300b0043a9ba7315bmr1774571edb.350.1658467919515; Thu, 21
- Jul 2022 22:31:59 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IKcHWhHLCbnuHvgLiKMwDvz81Pgdj8AXCEWxJOu/1dE=;
+        b=yrFdvEt2NRiUDN48W+KJm4sBdSrZcy4hLdtP9s37NO2YI9VkWSPyT+DUaKmE6F6zsB
+         JRuHebQwcQt+PNf7mDfesxku02j38rA+dfHHzRQdSZCw0JJ2joGh4gXrWXlqQXyETSbY
+         J6RgPySDMZ/VH1TeLKFb1wGUTZh/rc3qT3qlKiOlGP6MYXs3fK/Uid6KmObJ75Y9BGSV
+         +RbNUomChZzxXAP2v/LBKlKLBU5wLo3itsmOJt8teq1EFKQ5N8timEWP+gxryMJSeYSm
+         LlI0B1eDnDe8zdDzLgQvkIaTtrs/PTwlEO/4Ae80BPzpyRKgSAhFwiDTRNttgDWMtim+
+         Ebow==
+X-Gm-Message-State: AJIora915IWxT0FuGPoaDZHNBLu3/90RFnJPDkMuHXq0QJlnH8uUT1ul
+	S0jzTocXEeEG1DoAUmqi9YGgOikaXsU4TlucASLZcQ==
+X-Google-Smtp-Source: AGRyM1sa/4VkRblJLNUgVvrJHsqn5/Kg8T/Pt5KH3qWjYSsuyLK0p49NFzFHKCAKjc5leZV+Ciwd5XDbh6Bgs+1pwOk=
+X-Received: by 2002:a17:906:2dd:b0:712:1293:3dd8 with SMTP id
+ 29-20020a17090602dd00b0071212933dd8mr2076705ejk.448.1658474314198; Fri, 22
+ Jul 2022 00:18:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <CA+G9fYsuUdyUUUa_Xcfzfnh+Y8c82LnjeHum31C2ancBdxswCQ@mail.gmail.com>
+ <87zgh2y35y.wl-maz@kernel.org>
+In-Reply-To: <87zgh2y35y.wl-maz@kernel.org>
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 22 Jul 2022 11:01:48 +0530
-Message-ID: <CA+G9fYuGFReF0Z9qj7-80eY0gz-J2C5MVpno_8NjrGSH5_RB0Q@mail.gmail.com>
-Subject: WARNING: CPU: 4 PID: 326 at drivers/opp/core.c:2471 dev_pm_opp_set_config+0x344/0x620
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, regressions@lists.linux.dev, 
-	Linux PM <linux-pm@vger.kernel.org>, lkft-triage@lists.linaro.org
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, 
-	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>
+Date: Fri, 22 Jul 2022 12:48:22 +0530
+Message-ID: <CA+G9fYtB=5iHqNiL+=dB0bHfmTiQYyKhbabep7z4-0ZOUBZiUA@mail.gmail.com>
+Subject: Re: arm64: defconfig build failed on Linux next-20220721
+To: Marc Zyngier <maz@kernel.org>
+Cc: Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	regressions@lists.linux.dev, lkft-triage@lists.linaro.org, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Aishwarya TCV <Aishwarya.TCV@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 
-I have found this warning on db845c while booting Linux next-20220720.
-Please find more details in the below link,
+On Thu, 21 Jul 2022 at 19:32, Marc Zyngier <maz@kernel.org> wrote:
+>
+> On Thu, 21 Jul 2022 14:53:03 +0100,
+> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > arm64 defconfig build failed on Linux next-20220721 tag kernel.
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > Regressions found on arm64:
+> >    - build-gcc-11-lkftconfig-64k_page_size
+> >    - build-gcc-11-lkftconfig-rcutorture
+> >    - build-gcc-11-lkftconfig-devicetree
+> >    - build-gcc-11-lkftconfig
+> >    - build-gcc-11-lkftconfig-debug
+> >    - build-gcc-11-lkftconfig-armv8_features
+> >    - build-gcc-11-lkftconfig-kselftest
+> >    - build-gcc-11-lkftconfig-kunit
+> >    - build-gcc-11-lkftconfig-libgpiod
+> >    - build-gcc-11-lkftconfig-kasan
+> >    - build-clang-12-lkftconfig
+> >    - build-clang-14-lkftconfig
+> >    - build-clang-13-lkftconfig
+> >    - build-clang-nightly-lkftconfig
+> >    - build-gcc-11-lkftconfig-debug-kmemleak
+> >
+> > make --silent --keep-going --jobs=8
+> > O=/home/tuxbuild/.cache/tuxmake/builds/1/build
+> > CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- ARCH=arm64
+> > CROSS_COMPILE=aarch64-linux-gnu- 'CC=sccache aarch64-linux-gnu-gcc'
+> > 'HOSTCC=sccache gcc'
+> > /builds/linux/arch/arm64/kernel/head.S: Assembler messages:
+> > /builds/linux/arch/arm64/kernel/head.S:334: Error: immediate cannot be
+> > moved by a single instruction
+>
+> See https://lore.kernel.org/r/20220721124244.903567-1-maz@kernel.org
+> as a potential workaround.
+>
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+I have tested this patch and the reported build problem has been fixed.
 
-[    9.769688] WARNING: CPU: 4 PID: 326 at drivers/opp/core.c:2471
-dev_pm_opp_set_config+0x344/0x620
-[    9.769698] i2c 16-0010: Fixing up cyclic dependency with acb3000.camss
-[    9.810991] msm-mdss ae00000.mdss: Adding to iommu group 15
-[    9.811082] Modules linked in: hci_uart qcom_camss msm(+) videobuf2_dma_sg
-[    9.823435] ath10k_snoc 18800000.wifi: supply vdd-3.3-ch1 not
-found, using dummy regulator
-[    9.827664]  ath10k_snoc(+) btqca v4l2_fwnode btbcm ath10k_core
-venus_core(+) gpu_sched camcc_sdm845 reset_qcom_pdc v4l2_async
-v4l2_mem2mem i2c_qcom_geni videobuf2_memops ath drm_dp_aux_bus
-drm_display_helper videobuf2_v4l2 bluetooth mac80211 i2c_qcom_cci
-videobuf2_common qcom_rng spi_geni_qcom gpi(+) qcom_q6v5_mss xhci_pci
-qrtr xhci_pci_renesas cfg80211 rfkill slim_qcom_ngd_ctrl lmh
-icc_osm_l3 pdr_interface slimbus qcom_wdt display_connector icc_bwmon
-qcom_q6v5_pas qcom_pil_info qcom_q6v5 qcom_sysmon drm_kms_helper
-qcom_common qcom_glink_smem qmi_helpers mdt_loader drm socinfo
-rmtfs_mem fuse
-[    9.885445] qcom-camss acb3000.camss: Adding to iommu group 16
-[    9.911179] platform ae94000.dsi: Fixing up cyclic dependency with
-ae01000.display-controller
-[[0;32m  OK  [0m] Started D-Bus System Message Bus.[    9.911593]
-Bluetooth: hci0: setting up wcn399x
-[    9.928261] CPU: 4 PID: 326 Comm: systemd-udevd Not tainted
-5.19.0-rc7-next-20220720 #1
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
-[    9.928265] Hardware name: Thundercomm Dragonboard 845c (DT)
-[    9.928267] pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    9.928269] pc : dev_pm_opp_set_config+0x344/0x620
-[    9.977763] lr : dev_pm_opp_set_config+0x68/0x620
-[    9.982508] sp : ffff8000089337b0
-[    9.985846] x29: ffff8000089337b0 x28: ffff800008933c90 x27: ffff3e2780f9bc10
-[    9.993030] x26: ffffb9048f76dd40 x25: ffffb904d98c8de8 x24: ffff3e278da60080
-[   10.000226] x23: ffff3e2780f9bc10 x22: ffff8000089338b0 x21: ffff3e278eda0d80
-[   10.007416] x20: ffff3e2780f9bc10 x19: ffff3e2786ffe000 x18: ffffffffffffffff
-[   10.014602] x17: 0000000000000000 x16: ffffb904d7d90f50 x15: 6f63713d305f454c
-[   10.021795] x14: ffffb904d9df6a20 x13: 0000000000000040 x12: 0000000000000228
-[   10.028981] x11: 0000000000000000 x10: 0000000000000bd0 x9 : ffffb904d7d905e0
-[   10.036166] x8 : ffff3e27833a8c30 x7 : 0000000000000018 x6 : 0000000000000001
-[   10.043361] x5 : ffffb904d982f000 x4 : ffff3e27833a8000 x3 : ffffb904d9bf2c20
-[   10.043365] x2 : 0000000000000000 x1 : ffff3e2786f70d00 x0 : ffff3e2786ffe060
-[   10.043368] Call trace:
-[   10.043369]  dev_pm_opp_set_config+0x344/0x620
-[   10.043373]  devm_pm_opp_set_config+0x24/0x80
-[   10.043376]  core_get_v4+0x244/0x360 [venus_core]
-[   10.043393]  venus_probe+0x100/0x470 [venus_core]
-[   10.043404]  platform_probe+0x74/0xf0
-[   10.043410]  really_probe+0xc8/0x3e0
-[   10.043413]  __driver_probe_device+0x84/0x190
-[[0;32m  OK  [0m] Started Avahi mDNS/DNS-SD Stack.
-[   10.043414]  driver_probe_device+0x44/0x100
-[   10.043416]  __driver_attach+0xd8/0x210
-[   10.043418]  bus_for_each_dev+0x7c/0xe0
-[   10.043420]  driver_attach+0x30/0x3c
-[   10.043422]  bus_add_driver+0x188/0x244
-[   10.043424]  driver_register+0x84/0x140
-[   10.043426]  __platform_driver_register+0x34/0x40
-[   10.043428]  qcom_venus_driver_init+0x30/0x1000 [venus_core]
-[   10.043440]  do_one_initcall+0x50/0x2b0
-[   10.043445]  do_init_module+0x50/0x200
-[   10.043448]  load_module+0x1b5c/0x1fc4
-[   10.043449]  __do_sys_finit_module+0xac/0x12c
-[   10.043451]  __arm64_sys_finit_module+0x2c/0x40
-[   10.043453]  invoke_syscall+0x50/0x120
-[   10.043457]  el0_svc_common.constprop.0+0x104/0x124
-[   10.043460]  do_el0_svc+0x3c/0xd0
-[   10.043463]  el0_svc+0x30/0x94
-[   10.043467]  el0t_64_sync_handler+0xbc/0x140
-[   10.043469]  el0t_64_sync+0x18c/0x190
-[   10.043471] ---[ end trace 0000000000000000 ]---
+> Another solution would be to have Peter's patch in 5.19 but not in
+> 5.20.
 
-Link:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/v5.19-rc6-12429-g4ee7eaa411ee/testrun/10922376/suite/log-parser-test/test/check-kernel-warning-5303907/details/
-
-Build: https://builds.tuxbuild.com/2CD0dD2GUweY5lvh8VnF3rWZWEm/
-vmlinux: https://builds.tuxbuild.com/2CD0dD2GUweY5lvh8VnF3rWZWEm/vmlinux.xz
-System.map: https://builds.tuxbuild.com/2CD0dD2GUweY5lvh8VnF3rWZWEm/System.map
-
---
-Linaro LKFT
-https://lkft.linaro.org
+- Naresh
