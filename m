@@ -1,105 +1,149 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA9815A2
-	for <regressions@lists.linux.dev>; Fri, 22 Jul 2022 07:18:35 +0000 (UTC)
-Received: by mail-ej1-f48.google.com with SMTP id tk8so7081021ejc.7
-        for <regressions@lists.linux.dev>; Fri, 22 Jul 2022 00:18:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IKcHWhHLCbnuHvgLiKMwDvz81Pgdj8AXCEWxJOu/1dE=;
-        b=sc2JUCYXDtkMU8ccXbzIM5u4hTQHKWEweOGwEP1DLnS7mV+uQZN3xKOOuiyntqa5zS
-         Jm+3fqTrJniRxLPk3hcFbCLERc7GUUopb208cJIi90gIymCqQ3HoDU4CWvCt9OxUIYWc
-         kfuPr1MeAwWzQEGzlCy8NfzW2U7y1R19BiDo7xhXtX/GsfxbxYGDcGuKxE/PEf1dfW3B
-         wdhBcJP4HpzoZoiViVw7qBTM6Wy6xYrJ7WJgTnt1+XxFrHmlay8RAFJ05oRMSMMyHCmw
-         JxEO7yYO4Ly0NnSm7PV+sFI7UiwskDwN38u+dHy9Bxqw1fCCLoHukvqDD0TIHtVI8234
-         CTKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IKcHWhHLCbnuHvgLiKMwDvz81Pgdj8AXCEWxJOu/1dE=;
-        b=yrFdvEt2NRiUDN48W+KJm4sBdSrZcy4hLdtP9s37NO2YI9VkWSPyT+DUaKmE6F6zsB
-         JRuHebQwcQt+PNf7mDfesxku02j38rA+dfHHzRQdSZCw0JJ2joGh4gXrWXlqQXyETSbY
-         J6RgPySDMZ/VH1TeLKFb1wGUTZh/rc3qT3qlKiOlGP6MYXs3fK/Uid6KmObJ75Y9BGSV
-         +RbNUomChZzxXAP2v/LBKlKLBU5wLo3itsmOJt8teq1EFKQ5N8timEWP+gxryMJSeYSm
-         LlI0B1eDnDe8zdDzLgQvkIaTtrs/PTwlEO/4Ae80BPzpyRKgSAhFwiDTRNttgDWMtim+
-         Ebow==
-X-Gm-Message-State: AJIora915IWxT0FuGPoaDZHNBLu3/90RFnJPDkMuHXq0QJlnH8uUT1ul
-	S0jzTocXEeEG1DoAUmqi9YGgOikaXsU4TlucASLZcQ==
-X-Google-Smtp-Source: AGRyM1sa/4VkRblJLNUgVvrJHsqn5/Kg8T/Pt5KH3qWjYSsuyLK0p49NFzFHKCAKjc5leZV+Ciwd5XDbh6Bgs+1pwOk=
-X-Received: by 2002:a17:906:2dd:b0:712:1293:3dd8 with SMTP id
- 29-20020a17090602dd00b0071212933dd8mr2076705ejk.448.1658474314198; Fri, 22
- Jul 2022 00:18:34 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1AB3D93
+	for <regressions@lists.linux.dev>; Sun, 24 Jul 2022 19:48:50 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1oFhak-0007Uy-Ps; Sun, 24 Jul 2022 21:48:42 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2022-07-24]
+Date: Sun, 24 Jul 2022 19:48:41 +0000
+Message-Id: <165869171256.283493.2326902986633030609@leemhuis.info>
+X-Mailer: git-send-email 2.37.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYsuUdyUUUa_Xcfzfnh+Y8c82LnjeHum31C2ancBdxswCQ@mail.gmail.com>
- <87zgh2y35y.wl-maz@kernel.org>
-In-Reply-To: <87zgh2y35y.wl-maz@kernel.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 22 Jul 2022 12:48:22 +0530
-Message-ID: <CA+G9fYtB=5iHqNiL+=dB0bHfmTiQYyKhbabep7z4-0ZOUBZiUA@mail.gmail.com>
-Subject: Re: arm64: defconfig build failed on Linux next-20220721
-To: Marc Zyngier <maz@kernel.org>
-Cc: Linux-Next Mailing List <linux-next@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Aishwarya TCV <Aishwarya.TCV@arm.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1658692131;527f05af;
+X-HE-SMSGID: 1oFhak-0007Uy-Ps
 
-On Thu, 21 Jul 2022 at 19:32, Marc Zyngier <maz@kernel.org> wrote:
->
-> On Thu, 21 Jul 2022 14:53:03 +0100,
-> Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > arm64 defconfig build failed on Linux next-20220721 tag kernel.
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > Regressions found on arm64:
-> >    - build-gcc-11-lkftconfig-64k_page_size
-> >    - build-gcc-11-lkftconfig-rcutorture
-> >    - build-gcc-11-lkftconfig-devicetree
-> >    - build-gcc-11-lkftconfig
-> >    - build-gcc-11-lkftconfig-debug
-> >    - build-gcc-11-lkftconfig-armv8_features
-> >    - build-gcc-11-lkftconfig-kselftest
-> >    - build-gcc-11-lkftconfig-kunit
-> >    - build-gcc-11-lkftconfig-libgpiod
-> >    - build-gcc-11-lkftconfig-kasan
-> >    - build-clang-12-lkftconfig
-> >    - build-clang-14-lkftconfig
-> >    - build-clang-13-lkftconfig
-> >    - build-clang-nightly-lkftconfig
-> >    - build-gcc-11-lkftconfig-debug-kmemleak
-> >
-> > make --silent --keep-going --jobs=8
-> > O=/home/tuxbuild/.cache/tuxmake/builds/1/build
-> > CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- ARCH=arm64
-> > CROSS_COMPILE=aarch64-linux-gnu- 'CC=sccache aarch64-linux-gnu-gcc'
-> > 'HOSTCC=sccache gcc'
-> > /builds/linux/arch/arm64/kernel/head.S: Assembler messages:
-> > /builds/linux/arch/arm64/kernel/head.S:334: Error: immediate cannot be
-> > moved by a single instruction
->
-> See https://lore.kernel.org/r/20220721124244.903567-1-maz@kernel.org
-> as a potential workaround.
->
+Hi Linus! Below is the report from regzbot listing all regression from
+this cycle that the bot and I are aware of. Let me please highlight two
+things:
 
-I have tested this patch and the reported build problem has been fixed.
+* The following patch fixing a build bug reported three times now, that
+didn't get any reaction from the maintainer since it was posted six days
+ago:
+https://lore.kernel.org/lkml/20220717231105.33005-1-kilobyte@angband.pl/
 
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+* The virtio regression is kinda fixed by c346dae4f3fb already, but
+there is a patch in the branch Michael usually uses to sent patches to
+you that he for one reason or another hasn't sent your way yet:
+https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git/commit/?h=vhost&idj9720576cd00d30722c5f755bd17d4cfa9df636
+I asked what's up here a few days ago, but sadly got no reply.
 
-> Another solution would be to have Peter's patch in 5.19 but not in
-> 5.20.
+HTH, Ciao, Thorsten
 
-- Naresh
+---
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 23 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+========================================================
+current cycle (v5.18.. aka v5.19-rc), culprit identified
+========================================================
+
+
+[BUILD BUG] regression from certs: Move load_certificate_list() to be with the asymmetric keys code
+---------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/20220712104554.408dbf42@gandalf.local.home/
+https://lore.kernel.org/lkml/20220712104554.408dbf42@gandalf.local.home/
+
+By Steven Rostedt; 12 days ago; 3 activities, latest 6 days ago.
+Introduced in 60050ffe3d77 (v5.19-rc4)
+
+Recent activities from: Adam Borowski (2)
+
+One patch associated with this regression:
+* [PATCH] certs: make system keyring depend on x509 parser
+  https://lore.kernel.org/lkml/20220718135034.51457-1-kilobyte@angband.pl/
+  6 days ago, by Adam Borowski
+
+Noteworthy links:
+* [PATCH] certs: make system keyring depend on x509 parser
+  https://lore.kernel.org/lkml/20220717231105.33005-1-kilobyte@angband.pl/
+  6 days ago, by Adam Borowski; thread monitored.
+
+
+[ *NEW* ] fs: recent changes to copy_file_range behavior breakage
+-----------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/YtTM8GYn0/HkSoet@squish.home.loc/
+https://lore.kernel.org/regressions/YtTM8GYn0%2FHkSoet@squish.home.loc/
+
+By Paul Thompson; 6 days ago; 2 activities, latest 6 days ago.
+Introduced in 868f9f2f8e00 (v5.19-rc5)
+
+Recent activities from: Amir Goldstein (1), Paul Thompson (1)
+
+
+virtio_balloon regression in 5.19-rc3
+-------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/64c567bc77c4fbe7bfe37467cc1c89d24a45c37a.camel@decadent.org.uk/
+https://lore.kernel.org/virtualization/64c567bc77c4fbe7bfe37467cc1c89d24a45c37a.camel@decadent.org.uk/
+
+By Ben Hutchings; 34 days ago; 22 activities, latest 14 days ago.
+Introduced in 8b4ec69d7e09 (v5.19-rc1)
+
+Fix incoming:
+* virtio: VIRTIO_HARDEN_NOTIFICATION is broken
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=6a9720576cd00d30722c5f755bd17d4cfa9df636
+
+
+====================================================
+current cycle (v5.18.. aka v5.19-rc), unkown culprit
+====================================================
+
+
+PM: hibernate: Sound Distortion on boot
+---------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/46fd7a73-06fd-a8a0-8530-0ecf9b18c08d@dragonslave.de/
+https://lore.kernel.org/lkml/46fd7a73-06fd-a8a0-8530-0ecf9b18c08d@dragonslave.de/
+
+By Daniel Exner; 12 days ago; 5 activities, latest 10 days ago.
+Introduced in v5.19-rc1..v5.19-rc4
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/165808300299.1270116.2805091955648892933@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
