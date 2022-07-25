@@ -1,152 +1,170 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAAC33FA
-	for <regressions@lists.linux.dev>; Sun, 24 Jul 2022 21:43:46 +0000 (UTC)
-Received: from [192.168.1.107] ([37.4.249.109]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MIxFi-1nwXq53hBC-00KQhX; Sun, 24 Jul 2022 23:43:39 +0200
-Message-ID: <a9c9a644-cdff-2ef8-11f9-da1d358847af@i2se.com>
-Date: Sun, 24 Jul 2022 23:43:38 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7BC62D
+	for <regressions@lists.linux.dev>; Mon, 25 Jul 2022 10:27:15 +0000 (UTC)
+Received: by mail-pf1-f182.google.com with SMTP id o12so10020176pfp.5
+        for <regressions@lists.linux.dev>; Mon, 25 Jul 2022 03:27:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=FVLNEgbrV7foJiOyKD7CyXOXfsr9DbEH3gzOzG6OCuI=;
+        b=pVIuZ/c2Uv6L+vhi8g/UsENSY53aXIK4Auwh1luZ48FrfiNybE7MU/g8o7In0zr1os
+         Rbw6b/v9q5OSklfMgtBAJXEVk27ryXpPofeZf3uCavAcuJZAzcnigmi4Oxf8bVkjCK4Y
+         Fzf5Iq71QGoKVuo1ekRPGc5RmVyC0/ae7IbRLPjQE7vtvMkfiCBI9T4qKSeSzwPT+GtC
+         vLywsQ+A6OkGEBqP2tLaKFI/DGWl+MoE1IViHAylIAYCVa0g9oZ8fGGpWD02tpXgAIx1
+         tYxMm/stTLsOsTNpbLamFL0QMts9v3EyT+yWJPDFK/7u/wor3OiWpYgzhtPcUzWVSYTn
+         kT6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FVLNEgbrV7foJiOyKD7CyXOXfsr9DbEH3gzOzG6OCuI=;
+        b=yFUZcyTVZhzsSHsC9tJsfMvk/ufS9sLncRuH2FxwkwBDgRPOxM38dhASBl1OWWAaha
+         FonrTWX6CD+VQJxuzfJFkFBM1Zl6VNTz/t91qfR923odaxid0cgXmhagzUu4PfznKIJA
+         qn9MDusNzKx1/WuBjHu4RAdfdwwMf7Ofp0ZuBsZqda79+a0r1caSkdgkH5n51UuuJ8Aa
+         bdlVEH9WIAB8kFXTzXTdtoQZ5wXJ6yQ/aA/JmZYCAf1g90z5DcNo5sKViaSxZWpCo+3D
+         HnZUB+XTbBFJGZPvKPft7MnuBZUBv4E8CFEE3Ik+VffD1KXfXcy0+9yPcdphwxpx4ATu
+         Vriw==
+X-Gm-Message-State: AJIora90IioyJfRxYqHEPtl7yLEWVSgPQp6i0xeLvbL7rvMFwMB0fLWi
+	GYEeTh6Vhm6HXhmnB0/GQAB5EA==
+X-Google-Smtp-Source: AGRyM1vJRtd9Y8LTqsNydNjGRZEDIaR9B/HvZkp6B3wSISp3Skci9dfbcIJxYkihu89FIDX/FA5H7A==
+X-Received: by 2002:a05:6a00:1ac7:b0:52b:37ac:442c with SMTP id f7-20020a056a001ac700b0052b37ac442cmr12025537pfv.76.1658744834966;
+        Mon, 25 Jul 2022 03:27:14 -0700 (PDT)
+Received: from localhost ([122.171.18.80])
+        by smtp.gmail.com with ESMTPSA id b5-20020aa78ec5000000b0051b32c2a5a7sm9188106pfr.138.2022.07.25.03.27.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Jul 2022 03:27:14 -0700 (PDT)
+Date: Mon, 25 Jul 2022 15:57:11 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+	Bjorn Andersson <bjorn.andersson@linaro.org>,
+	Mansur Alisha Shaik <mansur@codeaurora.org>
+Cc: open list <linux-kernel@vger.kernel.org>,
+	Linux-Next Mailing List <linux-next@vger.kernel.org>,
+	regressions@lists.linux.dev, Linux PM <linux-pm@vger.kernel.org>,
+	lkft-triage@lists.linaro.org, Nishanth Menon <nm@ti.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>
+Subject: Re: WARNING: CPU: 4 PID: 326 at drivers/opp/core.c:2471
+ dev_pm_opp_set_config+0x344/0x620
+Message-ID: <20220725102711.p6eerjjzgeqi4blu@vireshk-i7>
+References: <CA+G9fYuGFReF0Z9qj7-80eY0gz-J2C5MVpno_8NjrGSH5_RB0Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
- Raspberry Pi
-Content-Language: en-US
-From: Stefan Wahren <stefan.wahren@i2se.com>
-To: linux-ext4@vger.kernel.org, Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Cc: Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
- Theodore Ts'o <tytso@mit.edu>, Ritesh Harjani <riteshh@linux.ibm.com>,
- linux-fsdevel@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev
-References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
-In-Reply-To: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:oja2Wt+tcVzeBU9ldED50aSJKmbsFGTzChGtab/VChQfD7/nZR5
- meOAPLlqN6J6B1LGTtTVNQSMghNDHCYkZQdE7c7YXhUSU6pHOoX4HVLcQcvAdh0qnpzQXHG
- aWB2dRl39fDeUCaXGSN2dYHv58MpTIJqVvqKk5gKsk/pB3x6zMn79MX0mOLtsu6tMI9LRNd
- 3QlJA7KwaBnmNGpAueXqw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Cdolft4/8b8=:oBsKyS8kuM/zb0dYfcYz3X
- rE5R0H+FuIaIe+IJbV1ytZn8m3H9bL30HuNlCCl4VD/VJOSnOck/msMku7Yubx0YcRQ/wTraR
- z7cdgqwHg7fOzfiu63ss57MwexNYo1bPuBGhNNNSBVYxEJm1113uGilBp3/C0A8KthwZN2zLM
- bEvptJRx528gL7OrWS5iMfrDcoAsYW7R6GAR/b69PLvC+J0VMmLmftG5vc4Z60weSLPZWIwd1
- WNnbYO/HnmkG9JmCfg13vfM0D+4ZatE6t0n0irmjTspKzGrH1fWJQ5bzGKQeU9Xad5AXgQ3ni
- 6xyrrTgTatRriNp80XBWrL8nWEdZqjumcsYrlwopv74wP97PqdXg2r8ZIEaXeDGGbO7UxAL2+
- V2b6xQDIj3xuz7GcvKNbmEifiwp4gQu19OlKpYq+Mt6nUg5T3r8FF6EhSqK1wtgmV0dskYsEe
- Eu3CZ69K+Lhv4rQgjFc8z8fekCzsGwbmwzJ05NX4JjvR/UZweQ52qjNWnp04eRFb9tfIvBbMG
- 7SqtWky1MnWXMGamGVIVeJ+WFab6V5PbpFc+vDrp2KuQvEOBk0CLxStpnJK0nL79TnYezCvac
- zvjg1CBwpNAO1v2aOK+9aXaKq8/bwLwZyRU7CZdGpkjO7hzCMObDvqnUff2np7y3vo3FXSdsM
- hWekPMzKor5NZ5hq+SMWEGQUv92Wp/potF3KuSwK+B60WIzwdfR0P2sePK/FYEIhAiuni34h4
- Nnu33FnNoxpVj0/L8jnCvFWDlz+lwChJmyE3iTOfmlRzrjh4I29JTDsb7wo=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYuGFReF0Z9qj7-80eY0gz-J2C5MVpno_8NjrGSH5_RB0Q@mail.gmail.com>
 
-Am 18.07.22 um 15:29 schrieb Stefan Wahren:
-> Hi,
->
-> i noticed that since Linux 5.18 (Linux 5.19-rc6 is still affected) i'm 
-> unable to run "rpi-update" without massive performance regression on 
-> my Raspberry Pi 4 (multi_v7_defconfig + CONFIG_ARM_LPAE). Using Linux 
-> 5.17 this tool successfully downloads the latest firmware (> 100 MB) 
-> on my development micro SD card (Kingston 16 GB Industrial) with a 
-> ext4 filesystem within ~ 1 min. The same scenario on Linux 5.18 shows 
-> the following symptoms:
->
-FWIW, here some information about the affected ext4 partition:
+On 22-07-22, 11:01, Naresh Kamboju wrote:
+> I have found this warning on db845c while booting Linux next-20220720.
+> Please find more details in the below link,
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> [    9.769688] WARNING: CPU: 4 PID: 326 at drivers/opp/core.c:2471
+> dev_pm_opp_set_config+0x344/0x620
+> [    9.769698] i2c 16-0010: Fixing up cyclic dependency with acb3000.camss
+> [    9.810991] msm-mdss ae00000.mdss: Adding to iommu group 15
+> [    9.811082] Modules linked in: hci_uart qcom_camss msm(+) videobuf2_dma_sg
+> [    9.823435] ath10k_snoc 18800000.wifi: supply vdd-3.3-ch1 not
+> found, using dummy regulator
+> [    9.827664]  ath10k_snoc(+) btqca v4l2_fwnode btbcm ath10k_core
+> venus_core(+) gpu_sched camcc_sdm845 reset_qcom_pdc v4l2_async
+> v4l2_mem2mem i2c_qcom_geni videobuf2_memops ath drm_dp_aux_bus
+> drm_display_helper videobuf2_v4l2 bluetooth mac80211 i2c_qcom_cci
+> videobuf2_common qcom_rng spi_geni_qcom gpi(+) qcom_q6v5_mss xhci_pci
+> qrtr xhci_pci_renesas cfg80211 rfkill slim_qcom_ngd_ctrl lmh
+> icc_osm_l3 pdr_interface slimbus qcom_wdt display_connector icc_bwmon
+> qcom_q6v5_pas qcom_pil_info qcom_q6v5 qcom_sysmon drm_kms_helper
+> qcom_common qcom_glink_smem qmi_helpers mdt_loader drm socinfo
+> rmtfs_mem fuse
+> [    9.885445] qcom-camss acb3000.camss: Adding to iommu group 16
+> [    9.911179] platform ae94000.dsi: Fixing up cyclic dependency with
+> ae01000.display-controller
+> [[0;32m  OK  [0m] Started D-Bus System Message Bus.[    9.911593]
+> Bluetooth: hci0: setting up wcn399x
+> [    9.928261] CPU: 4 PID: 326 Comm: systemd-udevd Not tainted
+> 5.19.0-rc7-next-20220720 #1
+> 
+> [    9.928265] Hardware name: Thundercomm Dragonboard 845c (DT)
+> [    9.928267] pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [    9.928269] pc : dev_pm_opp_set_config+0x344/0x620
+> [    9.977763] lr : dev_pm_opp_set_config+0x68/0x620
+> [    9.982508] sp : ffff8000089337b0
+> [    9.985846] x29: ffff8000089337b0 x28: ffff800008933c90 x27: ffff3e2780f9bc10
+> [    9.993030] x26: ffffb9048f76dd40 x25: ffffb904d98c8de8 x24: ffff3e278da60080
+> [   10.000226] x23: ffff3e2780f9bc10 x22: ffff8000089338b0 x21: ffff3e278eda0d80
+> [   10.007416] x20: ffff3e2780f9bc10 x19: ffff3e2786ffe000 x18: ffffffffffffffff
+> [   10.014602] x17: 0000000000000000 x16: ffffb904d7d90f50 x15: 6f63713d305f454c
+> [   10.021795] x14: ffffb904d9df6a20 x13: 0000000000000040 x12: 0000000000000228
+> [   10.028981] x11: 0000000000000000 x10: 0000000000000bd0 x9 : ffffb904d7d905e0
+> [   10.036166] x8 : ffff3e27833a8c30 x7 : 0000000000000018 x6 : 0000000000000001
+> [   10.043361] x5 : ffffb904d982f000 x4 : ffff3e27833a8000 x3 : ffffb904d9bf2c20
+> [   10.043365] x2 : 0000000000000000 x1 : ffff3e2786f70d00 x0 : ffff3e2786ffe060
+> [   10.043368] Call trace:
+> [   10.043369]  dev_pm_opp_set_config+0x344/0x620
+> [   10.043373]  devm_pm_opp_set_config+0x24/0x80
+> [   10.043376]  core_get_v4+0x244/0x360 [venus_core]
+> [   10.043393]  venus_probe+0x100/0x470 [venus_core]
+> [   10.043404]  platform_probe+0x74/0xf0
 
-fc stats:
-0 commits
-0 ineligible
-0 numblks
-0us avg_commit_time
-Ineligible reasons:
-"Extended attributes changed":    0
-"Cross rename":    0
-"Journal flag changed":    0
-"Insufficient memory":    0
-"Swap boot":    0
-"Resize":    0
-"Dir renamed":    0
-"Falloc range op":    0
-"Data journalling":    0
+Stanimir / Bjorn,
 
-options:
-rw
-bsddf
-nogrpid
-block_validity
-dioread_nolock
-nodiscard
-delalloc
-nowarn_on_error
-nojournal_checksum
-barrier
-auto_da_alloc
-user_xattr
-noquota
-resuid=0
-resgid=0
-errors=continue
-commit=5
-min_batch_time=0
-max_batch_time=15000
-stripe=0
-data=ordered
-inode_readahead_blks=32
-init_itable=10
-max_dir_size_kb=0
+The OPP core expects all configuration options to be provided before the OPP
+table is added. i.e. (for your case here), we need to call
+devm_pm_opp_set_clkname() and devm_pm_opp_attach_genpd(), before calling
+devm_pm_opp_of_add_table(). This is a hard requirement, it was a hard
+requirement earlier (before the new changes in OPP core came in) too, just that
+devm_pm_opp_attach_genpd() was missing the necessary WARN(), which was there in
+every other helper.
 
-tune2fs 1.44.5 (15-Dec-2018)
-Filesystem volume name:   rootfs
-Last mounted on:          /
-Filesystem UUID:          3857a514-b0f4-49ce-8430-34762068bb6f
-Filesystem magic number:  0xEF53
-Filesystem revision #:    1 (dynamic)
-Filesystem features:      has_journal ext_attr resize_inode dir_index 
-filetype needs_recovery extent flex_bg sparse_super large_file dir_nlink 
-extra_isize
-Filesystem flags:         unsigned_directory_hash
-Default mount options:    user_xattr acl
-Filesystem state:         clean
-Errors behavior:          Continue
-Filesystem OS type:       Linux
-Inode count:              927360
-Block count:              3755008
-Reserved block count:     158603
-Free blocks:              1770208
-Free inodes:              731074
-First block:              0
-Block size:               4096
-Fragment size:            4096
-Reserved GDT blocks:      220
-Blocks per group:         32768
-Fragments per group:      32768
-Inodes per group:         8064
-Inode blocks per group:   504
-Flex block group size:    16
-Filesystem created:       Fri Mar  5 00:10:14 2021
-Last mount time:          Sun Jul 24 22:47:19 2022
-Last write time:          Sun Jul 24 22:47:18 2022
-Mount count:              4
-Maximum mount count:      -1
-Last checked:             Tue Jul 19 09:16:29 2022
-Check interval:           0 (<none>)
-Lifetime writes:          25 GB
-Reserved blocks uid:      0 (user root)
-Reserved blocks gid:      0 (group root)
-First inode:              11
-Inode size:              256
-Required extra isize:     32
-Desired extra isize:      32
-Journal inode:            8
-Default directory hash:   half_md4
-Directory Hash Seed:      4f95e9ae-24e1-4c7f-bb32-f4a9c41649a7
-Journal backup:           inode blocks
+Can someone from Qcom team reorder things a bit provide a patch to fix this
+WARN() ? I will carry that in my tree then.
 
+It may look like this, I don't want to touch code that I don't understand at
+all:
+
+diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
+index cb48c5ff3dee..c93d2906e4c7 100644
+--- a/drivers/media/platform/qcom/venus/pm_helpers.c
++++ b/drivers/media/platform/qcom/venus/pm_helpers.c
+@@ -875,7 +875,7 @@ static int vcodec_domains_get(struct venus_core *core)
+        }
+
+ skip_pmdomains:
+-       if (!core->has_opp_table)
++       if (!core->res->opp_pmdomain)
+                return 0;
+
+        /* Attach the power domain for setting performance state */
+@@ -1007,6 +1007,10 @@ static int core_get_v4(struct venus_core *core)
+        if (ret)
+                return ret;
+
++       ret = vcodec_domains_get(core);
++       if (ret)
++               return ret;
++
+        if (core->res->opp_pmdomain) {
+                ret = devm_pm_opp_of_add_table(dev);
+                if (!ret) {
+@@ -1017,10 +1021,6 @@ static int core_get_v4(struct venus_core *core)
+                }
+        }
+
+-       ret = vcodec_domains_get(core);
+-       if (ret)
+-               return ret;
+-
+        return 0;
+ }
+
+-- 
+viresh
