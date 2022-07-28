@@ -1,114 +1,177 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2044F10E6
-	for <regressions@lists.linux.dev>; Thu, 28 Jul 2022 02:27:26 +0000 (UTC)
-Received: by mail-vs1-f44.google.com with SMTP id 125so414582vsd.5
-        for <regressions@lists.linux.dev>; Wed, 27 Jul 2022 19:27:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cZFlsUJOaADCOjobBXWN+Ry6rplJfP66zaPfTmczUmE=;
-        b=XT6C+CtssjABaCZvXmadnHkws66JxdUFWFpS9Ci/f99W/0HcTl0nVrjqUaQ/YOahZH
-         viPF0LtQxBhvgUqVpWoGic3U+usnS04aUEqxsPFCjRnHrc/cBYegoHrnzGTRimb17peB
-         L9F0+7FeuS4ihTtFTP5sUuwy/WlWwvxHto457qIscz3b7xbIV/hqYbzS6vhdtjkmkWy2
-         ca3KxotxpYdewZFlhWWK7vTKkYcIBS23UzQSurFIsw1i4IbDtcBLU+AfjoGHEjaTNtNG
-         Hz8/uPV1Pf5JOXr/jZdCH3baRG2duH7NOEI3lVq6JdU+GFCNjegDLhpcLMtJRXqyKJNI
-         c8tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cZFlsUJOaADCOjobBXWN+Ry6rplJfP66zaPfTmczUmE=;
-        b=ZdLXOeu0uInYF+X+NcOOrsauQjxm5zS/MHsmZvoOyH/L7qJpAULY5RePfOPeGiWACb
-         MzORcAXZthT4k5afB1tA+45ph/22HF9zyd6kJsPULMRNuFPlIh7t9qp4trXP6YPclhtK
-         xIVdj9m9eMDnTXKgdlNFHA2K2mWtJon1dKqmGeTCRGdNxTPEWRynXi54pDt9ctYVufAZ
-         tUUVw/z+CNuggRJajp4xEo8UU93U8Y1f6l5CNeaVUzW4LCHAfn5R5kY1gss44MvbdCkA
-         0z9Wa9fik/WV0pzfLRjMYSGYAgD2tKjqNkS3MKI4t4jtZSf3QrIfHfIdE4URvsYILWYt
-         RhKQ==
-X-Gm-Message-State: AJIora8MKr4FnrMjYgovxXtK3uM3NQl+Qp+8l2F7H/F2yYbL/7atX5Ms
-	VX6CI4WUNRHyhPt+raFBypJbepIUH1ZazwKf+Gk=
-X-Google-Smtp-Source: AGRyM1svemPRfB9LuqoREtDBGyHsaC9y38k6KATXp0QjoGbrPCj2bOAvpTi7rIqC+53WbHRV2PqRFuwflXEdY9VzgAk=
-X-Received: by 2002:a67:ef07:0:b0:358:611e:9105 with SMTP id
- j7-20020a67ef07000000b00358611e9105mr5084670vsr.61.1658975244833; Wed, 27 Jul
- 2022 19:27:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F5C7A
+	for <regressions@lists.linux.dev>; Thu, 28 Jul 2022 07:38:08 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oGy5o-0000kv-Ci; Thu, 28 Jul 2022 09:38:00 +0200
+Message-ID: <62df64ca-dc79-c308-a8e0-7c2b2c45248a@leemhuis.info>
+Date: Thu, 28 Jul 2022 09:37:59 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAHk-=wjSBvRk-ksUBOiQzJd=e19UZKvOSZs1UHahK5U0QVh6RQ@mail.gmail.com>
- <fda96c5c-9007-4147-3be1-8c9deca0442c@gmail.com>
-In-Reply-To: <fda96c5c-9007-4147-3be1-8c9deca0442c@gmail.com>
-From: Steve French <smfrench@gmail.com>
-Date: Wed, 27 Jul 2022 21:27:13 -0500
-Message-ID: <CAH2r5ms+uCF-sC1Hw6izmMhCb2jR55jB0pf8rK8OkkUh0hNGfg@mail.gmail.com>
-Subject: Re: Possible regression: unable to mount CIFS 1.0 shares from older
- machines since 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
-To: Clemens Leu <clemens.leu@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Davyd McColl <davydm@gmail.com>, 
-	CIFS <linux-cifs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev, 
-	ronnie sahlberg <ronniesahlberg@gmail.com>, 
-	samba-technical <samba-technical@lists.samba.org>
-Content-Type: text/plain; charset="UTF-8"
-
-Is using userspace tools (like Samba's "ftp like" smbclient tool) an
-option to migrate these files?
-
-On Wed, Jul 27, 2022 at 3:04 PM Clemens Leu <clemens.leu@gmail.com> wrote:
->
-> Hi all
->
-> Here follows now another practical reason why it is at the moment a
-> quite unhappy decision to ditch the NTLM/CIFS 1.0 support entirely.
->
-> I am on Kubuntu 20.04 LTS and the access to my Apple Time Capsule worked
-> fine. This changed when kernel 5.15.0-41-generic was installed some time
-> ago. Since then I have in dmesg the known "kernel: bad security option:
-> ntlm" and "kernel: CIFS: VFS: bad security option: ntlm" messages and no
-> access is possible any longer to the Time Capsule.
->
-> So it looks that commit "[76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c]
-> cifs: remove support for NTLM and weaker authentication algorithms" has
-> completely broken my Time Capsule access.
->
-> Yes, I know, ntlm is more than 20 years old and a quite insecure
-> protocol. It is absolutely understandable to disable it as default.
-> However, it should be also regarded that there exist companies which
-> decided because of narrow-minded reasons to implement only the old SMB1
-> protocol also on not so old hardware. Apple is such an example, they
-> really implemented on all of their Time Capsule models (which were using
-> a special Samba implementation) only the stone-age variant of SMB/NTLM.
-> This is true even for the last 2013 variant which was discontinued on
-> April 26, 2018. Apple could for sure support a more recent SMB version
-> but they didn't do it most likely to make their own AFP3 protocol look
-> and perform better.
->
-> So the alternative would be AFP in my case, unfortunately it's not so
-> easy. While we have thanks to Netatalk a rock-solid AFP support in Linux
-> at the server side, this is unfortunately not true for the client one.
-> The corresponding "afpfs-ng" (Apple Filing Protocol Library, a client
-> implementation of the Apple Filing Protocol) project is unmaintained and
-> dormant for years.
->
-> Long story short, the current situation in this topic is as I said quite
-> unhappy. While I fully agree to disable NTLM/CIFS 1.0 as default, it
-> shouldn't be removed entirely. Maybe it is possible to enable it only
-> for accessing older network volumes/shares while on the same time block
-> the possibility to create insecure NTLM network shares? I am aware that
-> the risk in enabling this old and flawed protocol will be my own
-> problem. I won't complain if I get into trouble because of it. ;-)
-> Unfortunately I have no alternative other than buying a new NAS or
-> downgrading to an older kernel which is also not a really practical option.
->
-> Whatever, many thanks for all your great work!
->
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Content-Language: en-US
+To: Stefan Wahren <stefan.wahren@i2se.com>,
+ Ojaswin Mujoo <ojaswin@linux.ibm.com>
+Cc: linux-ext4@vger.kernel.org,
+ Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
+ Theodore Ts'o <tytso@mit.edu>, Ritesh Harjani <riteshh@linux.ibm.com>,
+ linux-fsdevel@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev,
+ Jan Kara <jack@suse.cz>
+References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
+ <Yt6xsyy3+qEMn08y@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
+ <0840b428-3a77-2339-354f-7fbd3295bb4d@i2se.com>
+ <Yt+M+JgW6KuZFMvc@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
+ <e9aa5629-b6a8-3e5d-422e-eb79ac333fdc@i2se.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
+ Raspberry Pi
+In-Reply-To: <e9aa5629-b6a8-3e5d-422e-eb79ac333fdc@i2se.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1658993889;e54634e6;
+X-HE-SMSGID: 1oGy5o-0000kv-Ci
 
 
--- 
-Thanks,
 
-Steve
+On 26.07.22 17:54, Stefan Wahren wrote:
+> Hi Ojaswin,
+> 
+> Am 26.07.22 um 08:43 schrieb Ojaswin Mujoo:
+>> On Mon, Jul 25, 2022 at 09:09:32PM +0200, Stefan Wahren wrote:
+>>> Hi Ojaswin,
+>>>
+>>> Am 25.07.22 um 17:07 schrieb Ojaswin Mujoo:
+>>>> On Mon, Jul 18, 2022 at 03:29:47PM +0200, Stefan Wahren wrote:
+>>>>> Hi,
+>>>>>
+>>>>> i noticed that since Linux 5.18 (Linux 5.19-rc6 is still affected) i'm
+>>>>> unable to run "rpi-update" without massive performance regression
+>>>>> on my
+>>>>> Raspberry Pi 4 (multi_v7_defconfig + CONFIG_ARM_LPAE). Using Linux
+>>>>> 5.17 this
+>>>>> tool successfully downloads the latest firmware (> 100 MB) on my
+>>>>> development
+>>>>> micro SD card (Kingston 16 GB Industrial) with a ext4 filesystem
+>>>>> within ~ 1
+>>>>> min. The same scenario on Linux 5.18 shows the following symptoms:
+>>>>>
+>>>>> - download takes endlessly much time and leads to an abort by
+>>>>> userspace in
+>>>>> most cases because of the poor performance
+>>>>> - massive system load during download even after download has been
+>>>>> aborted
+>>>>> (heartbeat LED goes wild)
+>>>>> - whole system becomes nearly unresponsive
+>>>>> - system load goes back to normal after > 10 min
+>>>>> - dmesg doesn't show anything suspicious
+>>>>>
+>>>>> I was able to bisect this issue:
+>>>>>
+>>>>> ff042f4a9b050895a42cae893cc01fa2ca81b95c good
+>>>>> 4b0986a3613c92f4ec1bdc7f60ec66fea135991f bad
+>>>>> 25fd2d41b505d0640bdfe67aa77c549de2d3c18a bad
+>>>>> b4bc93bd76d4da32600795cd323c971f00a2e788 bad
+>>>>> 3fe2f7446f1e029b220f7f650df6d138f91651f2 bad
+>>>>> b080cee72ef355669cbc52ff55dc513d37433600 good
+>>>>> ad9c6ee642a61adae93dfa35582b5af16dc5173a good
+>>>>> 9b03992f0c88baef524842e411fbdc147780dd5d bad
+>>>>> aab4ed5816acc0af8cce2680880419cd64982b1d good
+>>>>> 14705fda8f6273501930dfe1d679ad4bec209f52 good
+>>>>> 5c93e8ecd5bd3bfdee013b6da0850357eb6ca4d8 good
+>>>>> 8cb5a30372ef5cf2b1d258fce1711d80f834740a bad
+>>>>> 077d0c2c78df6f7260cdd015a991327efa44d8ad bad
+>>>>> cc5095747edfb054ca2068d01af20be3fcc3634f good
+>>>>> 27b38686a3bb601db48901dbc4e2fc5d77ffa2c1 good
+>>>>>
+>>>>> commit 077d0c2c78df6f7260cdd015a991327efa44d8ad
+>>>>> Author: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+>>>>> Date:   Tue Mar 8 15:22:01 2022 +0530
+>>>>>
+>>>>> ext4: make mb_optimize_scan performance mount option work with extents
+>>>>>
+>>>>> If i revert this commit with Linux 5.19-rc6 the performance regression
+>>>>> disappears.
+>>>>>
+>>>>> Please ask if you need more information.
+>>>> Hi Stefan,
+>>>>
+>>>> Apologies, I had missed this email initially. So this particular patch
+>>>> simply changed a typo in an if condition which was preventing the
+>>>> mb_optimize_scan option to be enabled correctly (This feature was
+>>>> introduced in the following commit [1]). I think with the
+>>>> mb_optimize_scan now working, it is somehow causing the firmware
+>>>> download/update to take a longer time.
+>>>>
+>>>> I'll try to investigate this and get back with my findings.
+>>> thanks. I wasn't able to reproduce this heavy load symptoms with
+>>> every SD
+>>> card. Maybe this depends on the write performance of the SD card to
+>>> trigger
+>>> the situation (used command to measure write performance: dd
+>>> if=/dev/zero
+>>> of=/boot/test bs=1M count=30 oflag=dsync,direct ).
+>>>
+>>> I tested a Kingston consumer 32 GB which had nearly constant write
+>>> performance of 13 MB/s and didn't had the heavy load symptoms. The
+>>> firmware
+>>> update was done in a few seconds, so hard to say that at least the
+>>> performance regression is reproducible.
+>>>
+>>> I also tested 2x Kingston industrial 16 GB which had a floating write
+>>> performance between 5 and 10 MB/s (wear leveling?) and both had the
+>>> heavy
+>>> load symptoms.
+>>>
+>>> All SD cards has been detected as ultra high speed DDR50 by the emmc2
+>>> interface.
+>>>
+>>> Best regards
+>>>
+>>>> Regard,
+>>>> Ojaswin
+>>>>
+>>>> [1]
+>>>>     commit 196e402adf2e4cd66f101923409f1970ec5f1af3
+>>>>     From: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
+>>>>     Date: Thu, 1 Apr 2021 10:21:27 -0700
+>>>>     
+>>>>     ext4: improve cr 0 / cr 1 group scanning
+>>>>
+>>>>> Regards
+>>>>>
+>> Thanks for the info Stefan, I'm still trying to reproduce the issue but
+>> it's slightly challenging since I don't have my RPi handy at the moment.
+>>
+>> In the meantime, would you please try out the mb_optmize_scan=0 command
+>> line options to see if that helps bypass the issue. This will help
+>> confirm if the issue lies in mb_optmize_scan itself or if its something
+>> else.
+>>
+> I run the firmware update 5 times with mb_optimize_scan=0 on my
+> Raspberry Pi 4 and the industrial SD card and everytime the update worked.
+>>
+
+[CCing Jan]
+
+FYI, Jan yesterday reported benchmark regresses that might or might not
+be related Stefan's regression on the Raspberry Pi:
+https://lore.kernel.org/all/20220727105123.ckwrhbilzrxqpt24@quack3/
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
+
+#regzbot monitor
+https://lore.kernel.org/all/20220727105123.ckwrhbilzrxqpt24@quack3/
