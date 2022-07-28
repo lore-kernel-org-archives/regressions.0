@@ -1,177 +1,142 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC531101
+	for <regressions@lists.linux.dev>; Thu, 28 Jul 2022 10:01:03 +0000 (UTC)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+	by smtp-out2.suse.de (Postfix) with ESMTP id 376741FFA3;
+	Thu, 28 Jul 2022 10:00:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1659002456; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7MjBR5d5iF90QgK09LCBa7b8puT8yJDuRAnIWGff5/g=;
+	b=p3SWZtJOXud4Li8R6rfKe2x881b6TTDg8HOqBY1Bty2qZUV/BOw4oHBobvYWKg7PKIeaav
+	O+88qm2XQv3t098vubRxl0M7XSJB/WTtPoPPcDJpVY4r+VKbRUP/3aIzvOtfpdW9mTihy4
+	AVuxtH5f4JfWxIkD4pGQBru+WRuOCu0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1659002456;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7MjBR5d5iF90QgK09LCBa7b8puT8yJDuRAnIWGff5/g=;
+	b=T8jJtrsDU6q84QyDoCMshrYrfIFt+wL3JI2SNyqF0xECz3qBuyImj/AAPEERFnFhYssjVH
+	/ZM5bBJdClR670Ag==
+Received: from quack3.suse.cz (unknown [10.163.43.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F5C7A
-	for <regressions@lists.linux.dev>; Thu, 28 Jul 2022 07:38:08 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oGy5o-0000kv-Ci; Thu, 28 Jul 2022 09:38:00 +0200
-Message-ID: <62df64ca-dc79-c308-a8e0-7c2b2c45248a@leemhuis.info>
-Date: Thu, 28 Jul 2022 09:37:59 +0200
+	by relay2.suse.de (Postfix) with ESMTPS id 9D5F82C141;
+	Thu, 28 Jul 2022 10:00:55 +0000 (UTC)
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 21874A0664; Thu, 28 Jul 2022 12:00:55 +0200 (CEST)
+Date: Thu, 28 Jul 2022 12:00:55 +0200
+From: Jan Kara <jack@suse.cz>
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: linux-ext4@vger.kernel.org, Ojaswin Mujoo <ojaswin@linux.ibm.com>,
+	Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
+	Theodore Ts'o <tytso@mit.edu>,
+	Ritesh Harjani <riteshh@linux.ibm.com>,
+	linux-fsdevel@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev
+Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
+ Raspberry Pi
+Message-ID: <20220728100055.efbvaudwp3ofolpi@quack3>
+References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Content-Language: en-US
-To: Stefan Wahren <stefan.wahren@i2se.com>,
- Ojaswin Mujoo <ojaswin@linux.ibm.com>
-Cc: linux-ext4@vger.kernel.org,
- Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
- Theodore Ts'o <tytso@mit.edu>, Ritesh Harjani <riteshh@linux.ibm.com>,
- linux-fsdevel@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev,
- Jan Kara <jack@suse.cz>
-References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
- <Yt6xsyy3+qEMn08y@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
- <0840b428-3a77-2339-354f-7fbd3295bb4d@i2se.com>
- <Yt+M+JgW6KuZFMvc@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
- <e9aa5629-b6a8-3e5d-422e-eb79ac333fdc@i2se.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
- Raspberry Pi
-In-Reply-To: <e9aa5629-b6a8-3e5d-422e-eb79ac333fdc@i2se.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1658993889;e54634e6;
-X-HE-SMSGID: 1oGy5o-0000kv-Ci
+In-Reply-To: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
 
+Hello!
 
+On Mon 18-07-22 15:29:47, Stefan Wahren wrote:
+> i noticed that since Linux 5.18 (Linux 5.19-rc6 is still affected) i'm
+> unable to run "rpi-update" without massive performance regression on my
+> Raspberry Pi 4 (multi_v7_defconfig + CONFIG_ARM_LPAE). Using Linux 5.17 this
+> tool successfully downloads the latest firmware (> 100 MB) on my development
+> micro SD card (Kingston 16 GB Industrial) with a ext4 filesystem within ~ 1
+> min. The same scenario on Linux 5.18 shows the following symptoms:
 
-On 26.07.22 17:54, Stefan Wahren wrote:
-> Hi Ojaswin,
+Thanks for report and the bisection!
+ 
+> - download takes endlessly much time and leads to an abort by userspace in
+> most cases because of the poor performance
+> - massive system load during download even after download has been aborted
+> (heartbeat LED goes wild)
+
+OK, is it that the CPU is busy or are we waiting on the storage card?
+Observing top(1) for a while should be enough to get the idea.  (sorry, I'm
+not very familiar with RPi so I'm not sure what heartbeat LED shows).
+
+> - whole system becomes nearly unresponsive
+> - system load goes back to normal after > 10 min
+
+So what likely happens is that the downloaded data is in the pagecache and
+what is causing the stuckage is that we are writing it back to the SD card
+that somehow is much less efficient with mb_optimize_scan=1 for your setup.
+Even if you stop the download, we still have dirty data in the page cache
+which we need to write out so that is the reason why the system takes so
+long to return back to normal.
+
+> - dmesg doesn't show anything suspicious
 > 
-> Am 26.07.22 um 08:43 schrieb Ojaswin Mujoo:
->> On Mon, Jul 25, 2022 at 09:09:32PM +0200, Stefan Wahren wrote:
->>> Hi Ojaswin,
->>>
->>> Am 25.07.22 um 17:07 schrieb Ojaswin Mujoo:
->>>> On Mon, Jul 18, 2022 at 03:29:47PM +0200, Stefan Wahren wrote:
->>>>> Hi,
->>>>>
->>>>> i noticed that since Linux 5.18 (Linux 5.19-rc6 is still affected) i'm
->>>>> unable to run "rpi-update" without massive performance regression
->>>>> on my
->>>>> Raspberry Pi 4 (multi_v7_defconfig + CONFIG_ARM_LPAE). Using Linux
->>>>> 5.17 this
->>>>> tool successfully downloads the latest firmware (> 100 MB) on my
->>>>> development
->>>>> micro SD card (Kingston 16 GB Industrial) with a ext4 filesystem
->>>>> within ~ 1
->>>>> min. The same scenario on Linux 5.18 shows the following symptoms:
->>>>>
->>>>> - download takes endlessly much time and leads to an abort by
->>>>> userspace in
->>>>> most cases because of the poor performance
->>>>> - massive system load during download even after download has been
->>>>> aborted
->>>>> (heartbeat LED goes wild)
->>>>> - whole system becomes nearly unresponsive
->>>>> - system load goes back to normal after > 10 min
->>>>> - dmesg doesn't show anything suspicious
->>>>>
->>>>> I was able to bisect this issue:
->>>>>
->>>>> ff042f4a9b050895a42cae893cc01fa2ca81b95c good
->>>>> 4b0986a3613c92f4ec1bdc7f60ec66fea135991f bad
->>>>> 25fd2d41b505d0640bdfe67aa77c549de2d3c18a bad
->>>>> b4bc93bd76d4da32600795cd323c971f00a2e788 bad
->>>>> 3fe2f7446f1e029b220f7f650df6d138f91651f2 bad
->>>>> b080cee72ef355669cbc52ff55dc513d37433600 good
->>>>> ad9c6ee642a61adae93dfa35582b5af16dc5173a good
->>>>> 9b03992f0c88baef524842e411fbdc147780dd5d bad
->>>>> aab4ed5816acc0af8cce2680880419cd64982b1d good
->>>>> 14705fda8f6273501930dfe1d679ad4bec209f52 good
->>>>> 5c93e8ecd5bd3bfdee013b6da0850357eb6ca4d8 good
->>>>> 8cb5a30372ef5cf2b1d258fce1711d80f834740a bad
->>>>> 077d0c2c78df6f7260cdd015a991327efa44d8ad bad
->>>>> cc5095747edfb054ca2068d01af20be3fcc3634f good
->>>>> 27b38686a3bb601db48901dbc4e2fc5d77ffa2c1 good
->>>>>
->>>>> commit 077d0c2c78df6f7260cdd015a991327efa44d8ad
->>>>> Author: Ojaswin Mujoo <ojaswin@linux.ibm.com>
->>>>> Date:   Tue Mar 8 15:22:01 2022 +0530
->>>>>
->>>>> ext4: make mb_optimize_scan performance mount option work with extents
->>>>>
->>>>> If i revert this commit with Linux 5.19-rc6 the performance regression
->>>>> disappears.
->>>>>
->>>>> Please ask if you need more information.
->>>> Hi Stefan,
->>>>
->>>> Apologies, I had missed this email initially. So this particular patch
->>>> simply changed a typo in an if condition which was preventing the
->>>> mb_optimize_scan option to be enabled correctly (This feature was
->>>> introduced in the following commit [1]). I think with the
->>>> mb_optimize_scan now working, it is somehow causing the firmware
->>>> download/update to take a longer time.
->>>>
->>>> I'll try to investigate this and get back with my findings.
->>> thanks. I wasn't able to reproduce this heavy load symptoms with
->>> every SD
->>> card. Maybe this depends on the write performance of the SD card to
->>> trigger
->>> the situation (used command to measure write performance: dd
->>> if=/dev/zero
->>> of=/boot/test bs=1M count=30 oflag=dsync,direct ).
->>>
->>> I tested a Kingston consumer 32 GB which had nearly constant write
->>> performance of 13 MB/s and didn't had the heavy load symptoms. The
->>> firmware
->>> update was done in a few seconds, so hard to say that at least the
->>> performance regression is reproducible.
->>>
->>> I also tested 2x Kingston industrial 16 GB which had a floating write
->>> performance between 5 and 10 MB/s (wear leveling?) and both had the
->>> heavy
->>> load symptoms.
->>>
->>> All SD cards has been detected as ultra high speed DDR50 by the emmc2
->>> interface.
->>>
->>> Best regards
->>>
->>>> Regard,
->>>> Ojaswin
->>>>
->>>> [1]
->>>>     commit 196e402adf2e4cd66f101923409f1970ec5f1af3
->>>>     From: Harshad Shirwadkar <harshadshirwadkar@gmail.com>
->>>>     Date: Thu, 1 Apr 2021 10:21:27 -0700
->>>>     
->>>>     ext4: improve cr 0 / cr 1 group scanning
->>>>
->>>>> Regards
->>>>>
->> Thanks for the info Stefan, I'm still trying to reproduce the issue but
->> it's slightly challenging since I don't have my RPi handy at the moment.
->>
->> In the meantime, would you please try out the mb_optmize_scan=0 command
->> line options to see if that helps bypass the issue. This will help
->> confirm if the issue lies in mb_optmize_scan itself or if its something
->> else.
->>
-> I run the firmware update 5 times with mb_optimize_scan=0 on my
-> Raspberry Pi 4 and the industrial SD card and everytime the update worked.
->>
+> I was able to bisect this issue:
+> 
+> ff042f4a9b050895a42cae893cc01fa2ca81b95c good
+> 4b0986a3613c92f4ec1bdc7f60ec66fea135991f bad
+> 25fd2d41b505d0640bdfe67aa77c549de2d3c18a bad
+> b4bc93bd76d4da32600795cd323c971f00a2e788 bad
+> 3fe2f7446f1e029b220f7f650df6d138f91651f2 bad
+> b080cee72ef355669cbc52ff55dc513d37433600 good
+> ad9c6ee642a61adae93dfa35582b5af16dc5173a good
+> 9b03992f0c88baef524842e411fbdc147780dd5d bad
+> aab4ed5816acc0af8cce2680880419cd64982b1d good
+> 14705fda8f6273501930dfe1d679ad4bec209f52 good
+> 5c93e8ecd5bd3bfdee013b6da0850357eb6ca4d8 good
+> 8cb5a30372ef5cf2b1d258fce1711d80f834740a bad
+> 077d0c2c78df6f7260cdd015a991327efa44d8ad bad
+> cc5095747edfb054ca2068d01af20be3fcc3634f good
+> 27b38686a3bb601db48901dbc4e2fc5d77ffa2c1 good
+> 
+> commit 077d0c2c78df6f7260cdd015a991327efa44d8ad
+> Author: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+> Date:�� Tue Mar 8 15:22:01 2022 +0530
+> 
+> ext4: make mb_optimize_scan performance mount option work with extents
+> 
+> If i revert this commit with Linux 5.19-rc6 the performance regression
+> disappears.
+> 
+> Please ask if you need more information.
 
-[CCing Jan]
+Can you run "iostat -x 1" while the download is running so that we can see
+roughly how the IO pattern looks?
 
-FYI, Jan yesterday reported benchmark regresses that might or might not
-be related Stefan's regression on the Raspberry Pi:
-https://lore.kernel.org/all/20220727105123.ckwrhbilzrxqpt24@quack3/
+Also can get filesystem metadata image of your card like:
+  e2image -r <fs-device> - | gzip >/tmp/ext4-image.gz
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+and put it somewhere for download? The image will contain only fs metadata,
+not data so it should be relatively small and we won't have access to your
+secrets ;). With the image we'd be able to see how the free space looks
+like and whether it perhaps does not trigger some pathological behavior.
 
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+My current suspicion is that because the new allocator strategy spreads
+allocations over more block groups, we end up with more open erase blocks
+on the SD card which forces the firmware to do more garbage collection and
+RMW of erase blocks and write performance tanks...
 
-#regzbot monitor
-https://lore.kernel.org/all/20220727105123.ckwrhbilzrxqpt24@quack3/
+Thanks.
+								Honza
+
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
