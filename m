@@ -1,135 +1,52 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CEA67C
-	for <regressions@lists.linux.dev>; Thu,  4 Aug 2022 16:47:29 +0000 (UTC)
-Received: by mail-io1-f42.google.com with SMTP id l24so93494ion.13
-        for <regressions@lists.linux.dev>; Thu, 04 Aug 2022 09:47:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc;
-        bh=13zAhPFqYptAMYO+yTsXCLsMUg9Bk2fdg2na4GDfxbQ=;
-        b=SJD6PEmywG7k8htfKj53McptRoCw7aNrP9I37H7+teKTx9yYH+vltEgO8kMbLfYjMy
-         SFtoC007QTcSKbouRrk6xczrYkTgL/L8TvzLL6GFc485SjDY0dGcJ/0Ry9/dVJgmgI7t
-         ekykioGdU+8P/EsORNtvSMJpDnMYiT7ALKUzqlyt9a5ddMnvr7E8c3VeSOfD4PV1XqXf
-         7LQ8fbShzCb788pIqFpzMPLV7VS4DnnEiDbzdRfyJ6Yia2JaFAbwjlL2XvnOj6zOL0Ii
-         0ZCSrLrHLtB4mkTsweJnSNpBnBLwH3VAMOMh900rrPbEaQeug2a54Rh4EVrmHnSW0mL1
-         XBtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:subject:from:to:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc;
-        bh=13zAhPFqYptAMYO+yTsXCLsMUg9Bk2fdg2na4GDfxbQ=;
-        b=ZX7OLGxr39zLZt6I682swhrdC4QcPXK9RxrpJo8VUqq/MeUsm6d5sVlMPvfLlA2Udt
-         0izCpYJ9jNc5UBaq1T+g/sE8ao2gX4rw9XcZdbJ9l0eklJXaDOFD9xczV1TCYy84v384
-         5DGlfr1kOAQXO8w06i9JUBd7MmF76gCo6HkSn4rZUR9rUmwCo5ylE9nUkZypveMmEbr4
-         50BwibFCH2DJr3IZxdALwBQ6HjwJzZvQZUisgz8y2KcaUVtA4gpGFAzFeWWy9GJ9hqP8
-         PAT3uwckvY9wSrAKTw24kV82MNxtxIfCIPcxz7fSDE4vlq8K370B/vdMwTK2h7PMNYCz
-         UWtg==
-X-Gm-Message-State: ACgBeo3SQgoSSDsNhv5NSYIpSSSmbt+Qmh8bUJxPZfNmF6w2I6VskbYF
-	G1r4B7IN5HQ8Y+2tc3W2Yoc=
-X-Google-Smtp-Source: AA6agR4ci8+5UPj/KsIGC34fst8dsDiMJ745KPArRfp8uD/gVXH7fraxmeOWHoZ/AU7SnU2IkuU3vw==
-X-Received: by 2002:a05:6638:d8c:b0:341:4d9a:7d43 with SMTP id l12-20020a0566380d8c00b003414d9a7d43mr1283467jaj.126.1659631648578;
-        Thu, 04 Aug 2022 09:47:28 -0700 (PDT)
-Received: from ?IPV6:2604:2d80:0:d300:e347:f842:8fae:579b? ([2604:2d80:0:d300:e347:f842:8fae:579b])
-        by smtp.gmail.com with ESMTPSA id c7-20020a92cf07000000b002de990656f5sm603111ilo.32.2022.08.04.09.47.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 Aug 2022 09:47:28 -0700 (PDT)
-Message-ID: <8155d519-8ae3-6fb2-ca44-552541b3fedf@gmail.com>
-Date: Thu, 4 Aug 2022 11:47:27 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D8F9A3D
+	for <regressions@lists.linux.dev>; Fri,  5 Aug 2022 04:47:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59DA7C433D7;
+	Fri,  5 Aug 2022 04:47:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1659674846;
+	bh=FmKwzAx6tYuW/PdvvLxIOtwxLkZ7VwpD8hSB3GYZixo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=otZQ93y5SaMclvsXAAgys3YaI16GRHsa37lmr1hKJ7EkIi2ggKCoKvhEKIILBqGpo
+	 kc5eNWaa+UPjT/Ic3xOhAvTfzH1t/Hv4ZRtK9j5ZvTHh3UNgvhn1Md5hntKd13iq/b
+	 X/JAiZT7YjYZdxATP4d/hMKurlHt+grfbjCvxlME=
+Date: Fri, 5 Aug 2022 06:47:22 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: dmkgrim80 <dmkgrim80@gmail.com>
+Cc: linux-wireless@vger.kernel.org, regressions@lists.linux.dev,
+	gregory.greenman@intel.com
+Subject: Re: intel ax200 problem after iwlwifi source change from 5.6 to
+ 5.7,current
+Message-ID: <Yuyg2nYP0HrwKwUO@kroah.com>
+References: <8155d519-8ae3-6fb2-ca44-552541b3fedf@gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Content-Language: en-US
-To: linux-wireless@vger.kernel.org, regressions@lists.linux.dev,
- gregory.greenman@intel.com
-From: dmkgrim80 <dmkgrim80@gmail.com>
-Subject: intel ax200 problem after iwlwifi source change from 5.6 to
- 5.7,current
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8155d519-8ae3-6fb2-ca44-552541b3fedf@gmail.com>
 
-Hello I have a issue I would like resolved
+On Thu, Aug 04, 2022 at 11:47:27AM -0500, dmkgrim80 wrote:
+> Hello I have a issue I would like resolved
+> 
+> 
+>            Hi, I have a intel AX200 m.2 installed in a old Acer Aspire E15
+> E5-553-11PT
+> 
+> I am having some issues with kernels newer than 5.4 and possibly 5.6.
 
+If you can not use 'git bisect', it's going to be difficult to narrow
+this down to the offending commit.
 
-            Hi, I have a intel AX200 m.2 installed in a old Acer Aspire 
-E15 E5-553-11PT
+Please try to use that, and also remember that you can use 'make
+localmodconfig' to reduce your configuration file size so you don't end
+up building kernels with all options in it to reduce your build times.
 
-I am having some issues with kernels newer than 5.4 and possibly 5.6.
+good luck!
 
-I am using  longterm 5.4.x kernel and it works I have examined the code 
-for longterm and stable kernels.
-
-Some kernels give me ADVANCED_SYSASSERT which if I understand is 
-firmware crash.
-
-
-Willing to try and do testing to get my intel AX200 on my laptop till 
-its working.
-
-I have tried using git for kernel code but the kernel code seems bugged 
-or something.
-
-I can compile kernels on my slackware 15 and debian 11.3 that wont 
-compile in git for some reason.
-
-using longterm kernel 5.4.x at moment which the intel AX200 on my laptop 
-likes.
-
-git bisect kernels is time consuming been trying it with previous 
-unsuccessful results.
-
-I also have a desktop Asus motherboard with built in intel AX200 same 
-revision and model 01a and
-
-0x2723, 0x0084 the desktop works with differing results it works on 
-5.10,5.15 and newer
-
-though I recently got ahold of 0x0080 and 0x4080 hardware a netel and 
-deal4go manufacture intel AX200 with same results on laptop so its 
-either code or my laptop or both. Dont have financial means to test 
-other laptops with m.2 wifi/bluetooth. as is sending back 2 
-wifi/bluetooth adapters.
-
-
-Im no good with git and bisect nor am I a programmer though took some 
-classes. tried git clone couldnt get kernel 5.6 to either make or 
-install modules. the kernel code in drv.c of 
-kernel/drivers/net/wireless/intel/iwlwifi/pcie/
-
-
-Works in Windows 10,linux kernel 5.4.x and iwlwifi code is same from 5.4 
-to 5.6 and longterm 5.4.x has the good code.Differs starting 5.7 till 
-mainline or stable and my Laptop with intel AX200 m.2 installed will not 
-work.
-
-
-I have intel 7265 m.2 card and a old original m.2 wifi/bluetooth device 
-qualcom atheros card the laptop came with.
-
-both work kernels 5.10.x,5.15.x,5.18.x
-
-https://bugzilla.kernel.org/show_bug.cgi?id=216058
-
-https://www.linuxquestions.org/questions/debian-26/wifi-problems-intel-ax200-bullseye-11-3-a-4175711770/
-
-https://community.intel.com/t5/Wireless/problem-with-intel-ax200-rev-1a-and-linux/m-p/1384652
-
-https://www.linuxquestions.org/questions/linux-networking-3/trying-to-get-intel-ax200-wifi-card-to-work-in-debian-11-a-4175704711/
-
-intel ax200 m.2 key E stops working after kernel 5.4.x longterm which 
-uses the same iwlwifi code
-
-as 5.6.x kernel after that kernel wifi will either give 
-ADVANCED_SYSASSERT or mac address issues and the ax200 wifi adapter will 
-not work. tried multiple ax200
-
-
-Thanks for your time.
+greg k-h
