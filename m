@@ -1,91 +1,94 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7035CA4
-	for <regressions@lists.linux.dev>; Wed, 10 Aug 2022 06:13:44 +0000 (UTC)
-Received: by mail-lf1-f43.google.com with SMTP id c17so19861705lfb.3
-        for <regressions@lists.linux.dev>; Tue, 09 Aug 2022 23:13:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=i2gdhC2rvffRFn6QLbsSeXxxD0KZvfsj4PfnDV5evx8=;
-        b=b8C+B3uEVgdnTcwAksQm0gbtOcmyA1OEwrGay4Rek4sgd0pJK12dIGk2YSm0MeupVG
-         eBHbzLS8mBKS4Hwo0QTRuEHkChMhQsw/852H9Ww4sggXrT0KrRsHoJbt9U3zyYQLePFD
-         /E10+cd5jHiD0Z76BzMXcStnyqeQJjyEIu2PiwW+KDiRCFSQ1E4bwsyDCtTeo6zuk6uP
-         l4WSpNoNkLTapxhzSQbWXp6l9bOOduvmUMOjPlC/QTLz2oidn8OqNxatwR0XVHxCoHrG
-         Vf/PFaymUoAiKrxfcV3OQdcZQ3tT2G9dV/gH9mdQxzBcH+285riOMycB6Txr9rNmaDq3
-         DBDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=i2gdhC2rvffRFn6QLbsSeXxxD0KZvfsj4PfnDV5evx8=;
-        b=OMfnfA7puN4ESxOu8OxX0CFFQbkSBBhV4LHUU7LxnKykrvQFUtZ8FfRZQzFlndV4Y6
-         UcAsb8Rqf5aM5duuRgPL8HVtpKRaYHYBNxUcVUdoFz+4wo1dLxsxQsndmZDU7z9pG8ty
-         xCK5R+wMUgUUZvoeyNIGh8yOe6EsxJKZJhApY6Ax7eq9lxeGdlMX/j7fyPzEflUWRwYG
-         ChjZWXqmQWUqwvvHkW+tFXZZpQ4mc60teicf9TBgnTlayWkXvrK5/3cZj9BtWBQ4hHc/
-         yc7BYTNCvT7dsvzxsDB/7A4ufYjH2eMIhlWSUe+U9QsbWbRYZ/pl4JK7HP7z0ed905yu
-         6sWQ==
-X-Gm-Message-State: ACgBeo3UG+82qjOrf9Cu8Ep0/IVmYqQmbM+tLsfUKVE83ogpttlYcCxt
-	avu2Yp1aGSbLKlGhdUikcaC9gg==
-X-Google-Smtp-Source: AA6agR4qu+3Sz3tifCu8c4Zy550No4zrXM4kHyQBskFrpvpiKh43LgFdchUEg3JlJmjwYjLT8GhqxQ==
-X-Received: by 2002:a05:6512:3501:b0:48b:205f:91a2 with SMTP id h1-20020a056512350100b0048b205f91a2mr8947820lfs.83.1660112022262;
-        Tue, 09 Aug 2022 23:13:42 -0700 (PDT)
-Received: from [192.168.1.39] ([83.146.140.105])
-        by smtp.gmail.com with ESMTPSA id x1-20020a2e9dc1000000b0025df5f38da8sm268641ljj.119.2022.08.09.23.13.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 Aug 2022 23:13:41 -0700 (PDT)
-Message-ID: <28388e27-e562-65cd-4663-977ea4ad51a0@linaro.org>
-Date: Wed, 10 Aug 2022 09:13:40 +0300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5DE17CE
+	for <regressions@lists.linux.dev>; Wed, 10 Aug 2022 08:50:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39EFCC433D6;
+	Wed, 10 Aug 2022 08:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1660121411;
+	bh=ap+hpUr2Kf2miYTkYGgjpmcTT7rWQANkjKa3FY8YMcY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=zQIBofpETTExNY4SKRGkV1ULfy0bADSKTO4y7SUEBnsb8pnwdau5cEUkrCl4mpVkg
+	 fJJ93Lk2rHo8PQA+YlAYq+NXHqIjEZqNiIwz6eATF4O8lUpfbTZVEzZSJrm4dITxoY
+	 K/tSFhxVzORQU63ACh/wfbJ2MF3exBoToGOFRiLo=
+Date: Wed, 10 Aug 2022 08:11:33 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>,
+	Stephen Hemminger <stephen@networkplumber.org>, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] changes to driver_override parsing broke DPDK script
+Message-ID: <YvNMFR1dgtShQJju@kroah.com>
+References: <20220809192102.GA1331186@bhelgaas>
+ <af880c1a-cedd-181f-9b4d-2f1766312fc0@linaro.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [REGRESSION] changes to driver_override parsing broke DPDK script
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>,
- Stephen Hemminger <stephen@networkplumber.org>
-Cc: bhelgaas@google.com, gregkh@linuxfoundation.org,
- linux-pci@vger.kernel.org, regressions@lists.linux.dev
-References: <20220809192102.GA1331186@bhelgaas>
- <af880c1a-cedd-181f-9b4d-2f1766312fc0@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <af880c1a-cedd-181f-9b4d-2f1766312fc0@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 10/08/2022 08:54, Krzysztof Kozlowski wrote:
+On Wed, Aug 10, 2022 at 08:54:36AM +0300, Krzysztof Kozlowski wrote:
 > On 09/08/2022 22:21, Bjorn Helgaas wrote:
->> [+cc regressions list]
->>
->> 23d99baf9d72 appeared in v5.19-rc1.
->>
->> On Tue, Aug 09, 2022 at 11:29:43AM -0700, Stephen Hemminger wrote:
->>> This commit broke the driver override script in DPDK.
->>> This is an API/ABI breakage, please revert or fix the commit.
->>>
->>> Report of problem:
->>> http://mails.dpdk.org/archives/dev/2022-August/247794.html
+> > [+cc regressions list]
+> > 
+> > 23d99baf9d72 appeared in v5.19-rc1.
+> > 
+> > On Tue, Aug 09, 2022 at 11:29:43AM -0700, Stephen Hemminger wrote:
+> >> This commit broke the driver override script in DPDK.
+> >> This is an API/ABI breakage, please revert or fix the commit.
+> >>
+> >> Report of problem:
+> >> http://mails.dpdk.org/archives/dev/2022-August/247794.html
 > 
 > Thanks for the report. I'll take a look.
 > 
+> >>
+> >>
+> >> commit 23d99baf9d729ca30b2fb6798a7b403a37bfb800
+> >> Author: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >> Date:   Tue Apr 19 13:34:28 2022 +0200
+> >>
+> >>     PCI: Use driver_set_override() instead of open-coding
+> >>     
+> >>     Use a helper to set driver_override to the reduce amount of duplicated
+> >>     code.  Make the driver_override field const char, because it is not
+> >>     modified by the core and it matches other subsystems.
+> >>     
+> >>     Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> >>     Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> >>     Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> >>     Link: https://lore.kernel.org/r/20220419113435.246203-6-krzysztof.kozlowski@linaro.org
+> >>     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >>
+> >>
+> >> The script is sending single nul character to remove override
+> >> and that no longer works.
+> 
+> The sysfs API clearly states:
+> "and
+>  may be cleared with an empty string (echo > driver_override)."
+> Documentation/ABI/testing/sysfs-bus-pci
+> 
+> Sending other data and expecting the same result is not conforming to
+> API. Therefore we have usual example of some undocumented behavior which
+> user-space started relying on and instead using API, user-space expect
+> that undocumented behavior to be back.
+> 
+> Yay! I wonder what is the point to even describe the ABI if user-space
+> can simply ignore it?
 
-I could not find in the report (neither here) steps to reproduce it. Can
-you provide me some short description (what kernel options are required,
-what commands to run)?
+One can argue that a string of just '\0' is an "empty string" and we
+should be able to properly handle this in the kernel.  Heck,
+"\0\0\0\0\0\0" is also an "empty string", right?
 
-I tried to run:
-$ usertools/dpdk-devbind.py --status
-$ usertools/dpdk-devbind.py --bind '0000:00:03.0'
-Error: No devices specified.
+I don't have an issue with fixing the kernel up here, it should be able
+to handle this.
 
+thanks,
 
-Best regards,
-Krzysztof
+greg k-h
