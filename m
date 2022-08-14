@@ -1,151 +1,105 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic308-54.consmr.mail.gq1.yahoo.com (sonic308-54.consmr.mail.gq1.yahoo.com [98.137.68.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22979EB8
-	for <regressions@lists.linux.dev>; Sun, 14 Aug 2022 10:20:37 +0000 (UTC)
-Received: from [192.168.1.138] ([37.4.248.80]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M27ep-1oLEZz0ES9-002VzW; Sun, 14 Aug 2022 12:07:10 +0200
-Message-ID: <38333b47-6871-00e2-db54-bde96a74bf00@i2se.com>
-Date: Sun, 14 Aug 2022 12:07:08 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731FEEC5
+	for <regressions@lists.linux.dev>; Sun, 14 Aug 2022 12:08:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netscape.net; s=a2048; t=1660478917; bh=FqYDpk0W/PRCpDPiLkTM2gC2KdTfejvBGpSY4SplYNw=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=TNyh9i6GTxUe9jGu6jXq8FZlOkUUqHz67BAcKRDEEjWvJIGLdbDCnjDJUArkUTiv1KtlCh6zx5dknnpNzVMDJpAEfpK/8dc6Y3qqX05YNDiKo+t7gg9lkCjfD+Pi2FlhHHoE6sb+V5CY6RazKBxxjsIYTCK5wDw4BeJmMiLAb/cmgbUgu2Yc3z75nyj2pF5xMh9SfU8567Zh1ajlFZxTZFT/w3NK69NJShFMaG882m8tKXO3IU20DbmUGQiS2sVB/o67WNWGt3W4hWo6SFzk/+RvpcA5MBn3ivHlo4VMGq0sDY5dacXIfmPpluwNHpc2QsLfQR4uC0BfGATnetODuA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1660478917; bh=mxYY4Fyz6D5/6w7YGR7YkmkRjuywMPeaKHCjpRFARMS=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=BXCGtCEKhAfe8irw0TejGED6zCvMEqdeicATylEmXNeeg9J4Yf3EJQqVVWoD8DE4o+zXJ9vD9Jca64/ZZEZQ/IQiiv3Oqgg+RkJDASNksAsRGWAL7l36EC1TKOAUrsSEs5BN89TfWplWYtc1B+PLS59g5Twyr+fnNqxQy5Da330M2GcIkUDeE8t+3Hz6aYvChemUsVBwyzZUeRPNlsNIwuy4yBzCLgjiWM0BBxmebjare1n/ew0gzbvX4ePT3d8QcHICGbDqumHH6miZSZoYplCrUGu61ta97xk5uHEgVCt8H3k0F5pNYQII9q3crXk3O47wYAt0BZ/IHfKJu3chHw==
+X-YMail-OSG: Ll7JD_4VM1mpKxXJD72659d96qA4OFCwIcG_300V2QERIL1B.60NkINpWjQwCi7
+ CzUk8tCC6wrNoTJleeOjgO_NHZsdLXRvJwIYWQZgiOUXVsKWxR66.kizxf01HHmaLzABEYcJu3ef
+ 6h9Hs3loPl94mAehykkXvm1jfC.mIiOBDHmaEfzNn3pw9cn2aqNQLWbZy8sq529GoyWgNncAA_nG
+ FAkgO18eRwvr3QhNr7S4.7gcqyM6REghUHarwLjyz6A00ccAZOVwr_g0tJs.r4t6iWCdtXGL5RAa
+ m8ctmkCPlIrZrqyPR95vv7IeyslWVTMadwww39kTPnh40T8d9P013ZxaQjbWnq0q7rIQWHT.duC2
+ fkDQvOWmSHGvVZjvMDbZbNAu1LTCJ91Kc1_VYaLfLurXULnbJ_czX71VJ7OCoBv5vGtDgkWTtstD
+ FhzxI8fWVK_x6M0XWgw4EWHzGvTwcVRplNfx6_ZaOxadv7pyCsEM2cRw8D8odUoLx_NPErW7EB.l
+ EEHPnPzwoHKENwONb46dvRIloaS5OztcB_25IlpQxvmbSRAznmRSbywyyFFL1rfUBg_iLyNT_cgJ
+ jCWIIXxJJn7mIyS42gDTusqidXvh7laXd0SDcXKF0QB.q4F25Gb5Pk4St_lKS6DHu4MUdC64QUSG
+ NDW2JddKBNw4vwntNqkxpKHulx2AwIRBvhhh0mFdmvb8xJLjIiwvXW_uFaZcBiNenYsklmLUPfhn
+ ef0dxihEPlxqz0laANMXRwQbgLVlQKf.Vm.A4GDlWRqkiV17V9.g4h07lBEijvPBVWzKmgMPTocJ
+ kFZ9JfRd.J8maidTo0DUXlnkMvg0FD3oR2CCUcRdQFTajjI94CJ4QNSHGGn1MAoa0rpvG9JWsSFU
+ leHVhnQ_FJhSqzM8YFzfdDdTZKEas5Hk8Id9FLI4NIvmWQWGbVK0SY5xpfkdpmmKvz8DFCGN02Y8
+ DsyIIhaUYAS2rblUIp8CTKNBj_ZRtVO1621mghoHjxTuJirhc.bemEIqE1kii.MDmsm0.xYMRnQp
+ InXRLLdUvwaNG1gD3uXrk73fWpxP4cJu8N3p4S.GrpK1QBab3.HnNRXROUGCR8yII7YhsJ1adfRi
+ ESr44.colB0R_tOGTjHmwUuOV7upFPanKiJnQzZtSQSN.w7hcApglZLN2.aXJfTvmTRk4v_P8B7i
+ 7bIk4pMRhFonhV1U.t0_p4v6ZFzNZYKJUvJ9.0TKbFPBOt2kpeCBWfynrMYza2f1_dPoOw3EXJut
+ D20fG7yQZEg06K5zm.XvxDkDZYe2E47Nr9JPRq5N.qCVgVdTMJP2RuOTOGvWqzoEVLTgAGtj2dTF
+ z87wd3rIrevDY8eOI4amOb0wipXtpD_gPU0qSFHiM_rRw.qCV7ZtdsZx_vN4shEpFYrckTUjqSiw
+ qgnU1UrdbDcY53TCaHbsmLgqBKri6dHI3rf6ytK7cQ52ficVMkB6eQU183q_Je3KUcjqlw3zwoNU
+ 6FkB2CRx7kSE3St4jNHwKrAIdGybH5SUrovpWfaUWmRwtDz4CmEBwmpmK1nmC.P_8uV2SxaRkIOS
+ 0vm9Xcf8AD2b_cVg4TQ46onvY4zvCu98c00aAmm_sjptmg2LNw87gVOjDXamzrA3x40CsSr8z76s
+ uYOR0BD7N6DwrKkd2Fu5IS2MXOGqFBe0707ohccxLLV6n4fPf9L0GzyvrdK6I1NsNwlU4aSdAXqN
+ WyWSALTI_9CFaFVGwQpyT4p35E5k9.3kZlJtr_UnI_cpOUH6jY44RAnfoOawSqdmzz9Y79TzrqgA
+ t4Rv..bsKW1exTdADJBdhV8ypzzKsGchh.6jg277TK0OzM9SOHZdsXEHaMrD0gRVoIzwNrs3zqWR
+ C4ddCorFewsEEm_e_oy5lV55TwFA3vx1qZwKvxb95t.7T6pBlDhxfwxSEerANhSe25rWzBFg_3dE
+ ibDiebNcxPWEDt61kPpMdgJ0Te2m0QKDTZdLlhfDySC9YuetTpKptmBjM514G7kSto1ZJ9l0ujI1
+ xooHboVlU2IstphKsPKNMg.79QcOIl_SIt0xX6ochjQdhMSl29.MbGIoRVIV9E.PRhC4yI89Vv_r
+ uWkk4fTZSTtl_5ZVLMYm2ftnU1In34c2KGz2Trnz6CCxyfFLVnKkqiyBBTaq51RU43MLPaVRrkM5
+ kUDjOeqg2KgbBoW6laBjZO9FWG3WpM9.RbvVUFHG3tdeT9U7jIDwebfS3BrSi.19uiOADrxaWl6R
+ 9vIwwJSyddjmHXBhH0pCd.JxDsUdLxDWylQ--
+X-Sonic-MF: <brchuckz@aim.com>
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.gq1.yahoo.com with HTTP; Sun, 14 Aug 2022 12:08:37 +0000
+Received: by hermes--production-ne1-6649c47445-w4lms (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 4c973f23836126c98ca4bc66de1c044e;
+          Sun, 14 Aug 2022 12:08:34 +0000 (UTC)
+Message-ID: <22bb6f38-c319-35a1-cf8a-07f78904ecfb@netscape.net>
+Date: Sun, 14 Aug 2022 08:08:30 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
- Raspberry Pi
-To: Jan Kara <jack@suse.cz>, kernel-team@lists.ubuntu.com
-Cc: linux-ext4@vger.kernel.org, Ojaswin Mujoo <ojaswin@linux.ibm.com>,
- Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
- Theodore Ts'o <tytso@mit.edu>, Ritesh Harjani <riteshh@linux.ibm.com>,
- linux-fsdevel@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev,
- Florian Fainelli <f.fainelli@gmail.com>
-References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
- <20220728100055.efbvaudwp3ofolpi@quack3>
- <76a9b920-0937-7bef-db55-844f0f5f6c1b@i2se.com>
- <d3d36051-3f7e-ffe3-6991-85614c1384b4@i2se.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH 0/3] x86: make pat and mtrr independent from each other
 Content-Language: en-US
-In-Reply-To: <d3d36051-3f7e-ffe3-6991-85614c1384b4@i2se.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:n15zq3ZgBlvJQk8mViiXql5BsfLSMYPXCezwwSv3j/K3e6BQl74
- HMX197C3BfJHdx8d+zWb9I3Lvq6netg+krFBZUCx596RzIVPhRZXX3Aprm+nF8zNTTSAmPc
- sEvN2PUp5/tIX0+7dhwNqD1Z7ewUatn+hBVH/W3MSCwsgQGTNeWSdNWyxX6VZ/8dy64E7DX
- sk9b+GSv3N7logbKAfw3Q==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:bjYfGXDUikc=:l2Ae6P3JCPdDEj9XbOK9aQ
- uiRncq5gzxK6nhJ6YYggkCBe85N6rxaXnTs275hIe2sS+eetU0kNfcPskjs7Afoq1be1PcA0x
- akfgTj+rPeOJIbuBTDYdQgXcUsx3XrKT5goxSG+f7CdeBmgynhE8MoJXAVURoVoEH+G2aG9CW
- wqP/XBWLfKUcSJ7x2QlYe4cZ7Zw57Ckc8UeXPvUE3nburh5OBceGLkKOaxloDD7+61mt7Snzt
- LmlxuiU7Nf57mmdudwdrR9tr2DtHtcVw4L83G68FjYJwRUEKpl5aBRgFgyLlahkTxosUaiQNw
- RstyYEiv+hm/fuwiCSxYvJcNKEbuffZ9E45zBThgmvPI9gSzfKvIh4SjdjprfyXGiXHq4bmj4
- beYjrAdOtSAv7YpRtEhTkxtlZ3hHxX122eAqEhWUpP//zKlPScjdgYpEES6GwzpsD/wcd2t89
- /61QqzMOQTHYzX0Ay/MvZ1+eO7N5nHWwVYdjJUHRiPMAdby5IRmb/7jnopaSUZJIdfIc5BVsq
- DQwX0sfQKsL2SnQiQR2ba2m/mtgkpY+whvcZdEpUzg8k+ugti2DiQ5Ssfo3UuQmGYlU5zhkVf
- zQPLKnS/T9jt9VKOR3FmSoDYxN3JbHxTQeuSDtt53gOV5psBWWr9KxnGTIYqlr28n11/jh8sK
- AYbcAThw+AGozd5dr1ZytUTIg4S6ltiGmVK6E2JSUhdN8ylejqqR0OeLEFRFuiMW0KF8QOp7P
- Mn/VskHnYnYwuQkj+BCR6J4px6UqGSK/PaYa2vlb1j2i6ZKTArE1J2jVdI4=
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, jbeulich@suse.com,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Pavel Machek <pavel@ucw.cz>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>, regressions@lists.linux.dev,
+ Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20220715142549.25223-1-jgross@suse.com>
+ <efbde93b-e280-0e40-798d-dc7bf8ca83cf@leemhuis.info>
+ <a0ce2f59-b653-fa8b-a016-1335f05c86ae@netscape.net>
+ <32ed59c9-c894-c426-dd27-3602625cf3b1@netscape.net>
+ <4688ee9b-1b18-3204-cc93-c6ab2ce9222c@netscape.net>
+ <YvjFY1dn2Afg/mFj@kroah.com>
+From: Chuck Zmudzinski <brchuckz@netscape.net>
+In-Reply-To: <YvjFY1dn2Afg/mFj@kroah.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.20531 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
 
-Hi,
-
-Am 06.08.22 um 17:23 schrieb Stefan Wahren:
-> Hi,
+On 8/14/2022 5:50 AM, Greg KH wrote:
+> On Sun, Aug 14, 2022 at 05:19:12AM -0400, Chuck Zmudzinski wrote:
+> > Well, that did not take long. Juergen responded with a message,
+> > which is encrypted and not delivered to my mailbox because I do not
+> > have the PGP keys, presumably to make it difficult for me to continue
+> > the discussion and defend myself after I was accused of violating
+> > the netiquette rules yesterday by Boris:
 >
-> Am 31.07.22 um 22:42 schrieb Stefan Wahren:
->> Hi Jan,
->>
->> Am 28.07.22 um 12:00 schrieb Jan Kara:
->>>
->>> Also can get filesystem metadata image of your card like:
->>>    e2image -r <fs-device> - | gzip >/tmp/ext4-image.gz
->>>
->>> and put it somewhere for download? The image will contain only fs 
->>> metadata,
->>> not data so it should be relatively small and we won't have access 
->>> to your
->>> secrets ;). With the image we'd be able to see how the free space looks
->>> like and whether it perhaps does not trigger some pathological 
->>> behavior.
->> i've problems with this. If i try store uncompressed the metadata of 
->> the second SD card partition (/dev/sdb2 = rootfs) the generated image 
->> file is nearly big as the whole partition. In compressed state it's 
->> 25 MB. Is this expected?
+> The message was signed, not encrypted.  Odd that your email client could
+> not read it, perhaps you need to use a different one?
 >
-> This performance regression is also reproducible with 5.19 kernel 
-> (arm64, defconfig) and 64-bit Raspberry Pi OS. Unfortunately the 
-> problem with metadata generation is the same, the generated 
-> uncompressed file is 15 GB.
+> thanks,
 >
-recently i upgraded my build machine (Intel Core i7-1260P) which now 
-runs Ubuntu 22.04 including a recent 5.15 kernel. On my build machine if 
-i try to install my build kernel modules on the mentioned Industrial 
-Kingston SD card 16 GB (SDCIT) and call "sync" immediately, the process 
-will takes very long with recent LTS kernel (~ 5 minutes) and trigger a 
-hung task warning:
+> greg k-h
 
-[ 1692.880208] INFO: task sync:22272 blocked for more than 120 seconds.
-[ 1692.880222]       Not tainted 5.15.0-46-generic #49-Ubuntu
-[ 1692.880225] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-disables this message.
-[ 1692.880228] task:sync            state:D stack:    0 pid:22272 ppid:  
-5238 flags:0x00004002
-[ 1692.880237] Call Trace:
-[ 1692.880240]  <TASK>
-[ 1692.880246]  __schedule+0x23d/0x590
-[ 1692.880257]  schedule+0x4e/0xc0
-[ 1692.880261]  wb_wait_for_completion+0x59/0x90
-[ 1692.880269]  ? wait_woken+0x70/0x70
-[ 1692.880275]  sync_inodes_sb+0xbe/0x100
-[ 1692.880282]  sync_inodes_one_sb+0x19/0x20
-[ 1692.880288]  iterate_supers+0xab/0x110
-[ 1692.880294]  ? __x64_sys_tee+0xe0/0xe0
-[ 1692.880300]  ksys_sync+0x42/0xa0
-[ 1692.880304]  __do_sys_sync+0xe/0x20
-[ 1692.880307]  do_syscall_64+0x59/0xc0
-[ 1692.880312]  ? do_user_addr_fault+0x1e7/0x670
-[ 1692.880319]  ? syscall_exit_to_user_mode+0x27/0x50
-[ 1692.880324]  ? exit_to_user_mode_prepare+0x37/0xb0
-[ 1692.880331]  ? irqentry_exit_to_user_mode+0x9/0x20
-[ 1692.880336]  ? irqentry_exit+0x1d/0x30
-[ 1692.880340]  ? exc_page_fault+0x89/0x170
-[ 1692.880345]  entry_SYSCALL_64_after_hwframe+0x61/0xcb
-[ 1692.880353] RIP: 0033:0x7fcbda436abb
-[ 1692.880358] RSP: 002b:00007ffc94923968 EFLAGS: 00000246 ORIG_RAX: 
-00000000000000a2
-[ 1692.880363] RAX: ffffffffffffffda RBX: 00007ffc94923b48 RCX: 
-00007fcbda436abb
-[ 1692.880366] RDX: 00007fcbda53c101 RSI: 00007ffc94923b48 RDI: 
-00007fcbda4f4e29
-[ 1692.880369] RBP: 0000000000000001 R08: 0000000000000001 R09: 
-0000000000000000
-[ 1692.880371] R10: 000055ca76fb4340 R11: 0000000000000246 R12: 
-000055ca752c3bc0
-[ 1692.880373] R13: 000055ca752c119f R14: 00007fcbda53442c R15: 
-000055ca752c1034
-[ 1692.880379]  </TASK>
+It's not that my e-mail client could not read it, there is no evidence it
+was ever sent to me. I use aol.com which is administered by Yahoo!. It
+did not even appear in the web interface for my e-mail service, so it
+was never delivered to my e-mail client, which is Thunderbird. Neither
+the Windows nor the Linux client can retrieve a message not delivered
+to the Yahoo! servers! I also checked the Junk and Spam folders and it
+was not there either. But I received your message and other messages
+normally. It is as if the message was sent to everyone else on the To:
+and Cc: lists except for me. I think the problem was on the sender's end
+or with my e-mail service, Yahoo!, which apparently does not accept signed
+messages without some special configuration that I have not done
+with Yahoo! yet. I will look into it next week.
 
-Interestingly if i switch to the older ubuntu kernel version 5.15.25 
-(which shouldn't have "ext4: make mb_optimize_scan performance mount 
-option work with extents" applied) the write process is much faster (~ 1 
-minute) and i never saw the hung task.
-
-Btw i setup a repo [1] to collect information about this issue. The 
-first file adds a kernel log in regression case. The kernel was 5.19-rc6 
-with multi_v7_defconfig and ARM_LPAE & EXT4_DEBUG enabled.
-
-rpi-update was started before (backup & clean). The actual download 
-started at 11:11:29 and is aborted at 11:14:18.
-
-HTH
-
-[1] - https://github.com/lategoodbye/mb_optimize_scan_regress
-[2] - 
-https://github.com/lategoodbye/mb_optimize_scan_regress/commit/6ff14dd4026d8607290b2727f5a2c3522567fb21
-
+Chuck
