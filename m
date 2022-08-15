@@ -1,212 +1,120 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from sonic303-24.consmr.mail.gq1.yahoo.com (sonic303-24.consmr.mail.gq1.yahoo.com [98.137.64.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8A7A1C38
-	for <regressions@lists.linux.dev>; Mon, 15 Aug 2022 15:46:40 +0000 (UTC)
-Received: by mail-pl1-f174.google.com with SMTP id o3so6669090ple.5
-        for <regressions@lists.linux.dev>; Mon, 15 Aug 2022 08:46:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc;
-        bh=XRj0PDiSMZynH1zCQWiVZaBOl7oXuBXsH66ocbP/Vuw=;
-        b=F7TtGfnrlBum+rJkazEj/TAtZgpkyGjwRPhWlRkECnHGBtcEyMnRNBakk4wt7b6Y1x
-         9JmAafWwiJdYej0NFGzPrrOenVsusTQ9d6UGFAke+rPVaWmCGhdGB5myQ/DVfjaY4+RO
-         fcbowmlOD7w16kcMSui93Rlofhg4/xXy90m98=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc;
-        bh=XRj0PDiSMZynH1zCQWiVZaBOl7oXuBXsH66ocbP/Vuw=;
-        b=nwtCqLRulQp3XiMo+ymi7OIxXtUfaZ5EEbiaaP3+5PLyup9qFLqTf/z3/FEomCGj4u
-         6fUP1xu8VGJD+CmspSb3YcMTSPCzzS/+0tjRa0rfteXOfKv0IoT312oG5PWMVFtOuA8k
-         bCcsXJrGQwNyuV6cQiv8OFdCUtU0nT7ZzTzzUqADx8VSJnOLNaxlWhvKEZosZ7FbMeo/
-         QwIPVZhCVe14mEkMG66SCwVSByW6WpjMpdiyNZxafLcwg8pjvyuU+OiumVdbe8ynCD/Q
-         S2Wpx9zPo5mGfDpPNdc5/IUsJAg0IgmG2JP2tCOhTcAwKzK5iXwTIvYPvNMdCZ/RagLp
-         eErg==
-X-Gm-Message-State: ACgBeo0WQSqLKEuGfhYRXBIApWTiiCpwo0dheDyCQ/V1TuzclqTVBJpU
-	pwlsUwe7ftLMfPHkpTgfg1kmWw==
-X-Google-Smtp-Source: AA6agR59rgz10UcqrkCCYcZ8/YekSq2pViqBSKyziEk0QofgJ02b0L9XOKKOmH6Ssxo53FgF2y2VXA==
-X-Received: by 2002:a17:902:b18e:b0:172:5c92:d8da with SMTP id s14-20020a170902b18e00b001725c92d8damr11000857plr.26.1660578400164;
-        Mon, 15 Aug 2022 08:46:40 -0700 (PDT)
-Received: from smtpclient.apple (ip72-201-141-123.ph.ph.cox.net. [72.201.141.123])
-        by smtp.gmail.com with ESMTPSA id s11-20020a170902ea0b00b0016be96e07d1sm7141083plg.121.2022.08.15.08.46.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Aug 2022 08:46:39 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EEB91C38
+	for <regressions@lists.linux.dev>; Mon, 15 Aug 2022 16:04:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netscape.net; s=a2048; t=1660579475; bh=sYAAhX43MCCsbni+t3ras/1mu65BWwozDfG3fjXajrE=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=uIg3pIhy0YdYlJImLiEt17URoe2yHezG0c4Quwo1U/55CteT8PaXlscpd4MvRpYS3rd+4qmsrzvntNcu6GSbEb+6OEjxWyg/Gpt7Didi++hdGF2C0ORcmcJ+n1IP3swFnkA5I4sapMUglmtAuWA4m6rVDXQRQQLDLKVWRZ/p1OFcBb9sqbj6cHm6q5+QEENIVOjSQ4c1VHRYnLuzeKviiwkZ6kN9aWbX3BL5s9KZxs+LqtvhZzCN0n6i21OLJXvTOhJ3fKvuMXN51rVKKWlAn4+3Q2Sop6cbG9Jme3wyMpsdKN2N9MeLsVH1tXv4rifoIncoLctU/xUJWRL4QK7/4Q==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1660579475; bh=ybL5Mt+yaL5D3vUzu/vdv9kPx/lGJ4wGmcberhf3Pcz=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=jcqWWIhITjFqDRC6iVb346l6/0Wo3eXkRjYKJlMPm0ZPbn+iyVg9wy700o1DlE1sLpQmBUdnPZ4hUSEg/NZj1pIuYetbCc/wS+u+YWjmK4NH2ohrWLn2AMC2KNIypw1DCjsCo/tSUxzaLG4ZJ4ULf4KuIJnDbXjK6eCqozSXq0+DseQd3wl6ir4gExpqDPXHbWwg6gv7nMJ2lbRDQd0ijk6pZ2BnWvsMDRojS0uSb6sziOJ3lxtqq8bCt/YmYgGdQ/iPuKF0/LLQQRoBpX8mrdYIngmqfwRBWxI9+vQDmNrvmUsMZC3ecU9OIBKJUfIVr+iLNxQxaNm7ZA/+u3u/XQ==
+X-YMail-OSG: Lw1zKVAVM1lDEiCu_ta3TH3pZkDKTW8Uh.c6sfZ.0cVbYSFp0QtW.XesvgtZlOc
+ lyYzVrT.fWxCJoaRhcd6s8MiFC5XrUPFvVdefRbA2_ntdK1Kgfs3z8qvHlnTAWqm9RG9QRLVfhbz
+ focPQsiWtVBGddj9qzsgBS.4kIIjZQWOT2p1v4QI3ZdS6PpVSObCHhTfgoISo6ZSSfB3jrcZ5pXK
+ k4gFy.GbkrvLtwKyOJ_zXWyg9TVpryuCLjOcm1xVYP4s.7yWyQmzpg3u2y9RilLQseHxLWdlIHxR
+ 4aLUjcZkHt1oumxgMPBaWR1aRZk526wc2A10CyqZyf2dOuVvUf6XMUsiC9NZbdx0I62XIXiFGqev
+ 5In48r9mSwTqyFL1m5sRugxttH4c.HqsTe0s38WuPGdEzpwko.VxvNzlOoFtukS3MgJ5i2kdhioO
+ iE4C4.2kbkdOnki2Y1A009kB_oVECiDId0weTBzhlyOaam9lidznf2gaJ0qGRkDK6WtlsVTDAJqG
+ ALfd5SijJiP9gUts.mA4kBtYVmOPxcV5XH6y7PfksPqlGVOiRefUCh.omWiKDX9ljs0YvcSFtjWH
+ Bf.VOxR7ryEIWgo6qldcExG8XzoHFLaPE5x3CGF0UENqNM6xH3aXXWOGBNW2dZQ.nrW5bo5rXkbs
+ 5IIsFrgVtxg7FVLt3frGheUZp_XgTuGfFC4gFeOytR688SqvINifKe06Jbw79AsW9trR1cK8HkAs
+ 4ced5VVl7tag8pXeUJObT2reYGO4ulFJ9Dvs.D8wngi5rENzAn9l9d4KoRcQulNzEHR6RaENFbiz
+ AHm460wXj18ni1Bqm5XehXM_mCDrFgTASBEfqbrRiROR.NISmKz.wzwIzCCT8Fm06eyGyCOstRSG
+ L6NYDGyCQTwz5dxgwsy3y0IYmdsvTUGKr1r6DbdZbm2zc3.olBD2YNq5nrguITkRWsQ6nXql5MDa
+ E4YPqV4uUdfatcfywIT57xPFmZ7D6HybWsANaUxFfiPtb_RyXlPZdi4gL0I2onWOtP3b.NoYBtGb
+ 54qnFVCo8McoSSmS6leV9JEAF4z_BmtqV68ByCDjqvXzEQDkdEzz3xjDvq7lChVpjP0aeIUr0TS7
+ pqyPSiogtgxMm_.C.X7_VeS1FsB1e4LsME2BjTVTbjcLTfTHMUxM6JHX7MxsxiSOAja1va5bgp7q
+ N.osY841hGeXFWfSDJSAY.7q0CK8R1gSm_ruELxIUgnpgYVyRUQ3WdAQTN_3pavpK679unj7SAvX
+ uOaetmW7SCAP6DIpGph7c0Hvb0MzC8_lw7WnEgYB8owurh6MiutxCKRKsVKb25b2bV8QnH3LUbFr
+ vGYkX91K.lWVCB0OD3XO0fdpWev8aCEkd8eBwLs9egLDpiGL7szljDVCQImtzbeQGuHrOgl5AANw
+ ytSdmsIvJvaSd5m1CuR3a_X9EfDUeUG3xoxz8eQZSOI.WPfdghQ5mq_PX_CsRgv1bMBdd99IjqXG
+ qKCGzh5Zt3vsyqbsgUK0cwIIgcJD73dhII0ME_RJTciCpmGzRUfAQJHhUz_rT7nd_ze.lZ68ZJ9U
+ nKOnZejm7_y1UxHlDJy4uDi2OlAu09J2pe4kH38wEmdRNxZt0UnheZmyzu9ckz15.iAE6LlucYlZ
+ te9XzbVq31Y03uPqEENg02sQwtSURkWQT6_VD0mNgHqoV9vtYsigcZ_grZA0xbKhYKmpGDE4e.ev
+ w.aAWMcVK7t02sIgfiO8To7oUmMZaE4n9Fan5PU20hV5_qyUw2kb0lQxVV8LeW_T2SLa1kCzWyU4
+ AxIXX8E_yBiwPXG5Pjd68lZB2Hcuc5SGIROivjZzi55P2qiCQmlUCiOShQXR5m3vuizquDQ9AFcR
+ qfFv6R4q_23TzDek11jaZVOkH.hlVuFgSsmcvbkDeevdP5Q.SZSZ86QSSqfl_z6MRbHc2rjK4h.2
+ 8MixQT2Nq.8U8ITlKTvhnO9VsR6fkN2ACevUx_7IX.wQuuJ5r7m5FlGU4xbcWPWFS3lZVunLMCP6
+ eOHaTIjhrIVpFntw6rs_t3TV8lh4wi0fAyqO2bkEp7d0Zu3H1p6cCm5DP0oO.bbcVmskOx7XLHH.
+ d0QmfBh8Tc0BJc116ZImQ2QoTePEsTNlUc66Rh7DAWE8VQMc1Fsa3g4PCAJJyjlM6s7mqCLMIT4M
+ FLPHLzs26s0C4133qMiS6ULyWNwO5s8tjVaRCIrNUdMS0wWr96BxpsxzfrHx4mdVbb6BpW.cRPcz
+ .0ThTFXHoDhmJmgB3pIQTXR05Zd6h
+X-Sonic-MF: <brchuckz@aim.com>
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.gq1.yahoo.com with HTTP; Mon, 15 Aug 2022 16:04:35 +0000
+Received: by hermes--production-bf1-7586675c46-klczj (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID bff9f0204351eaed002b73cbfd01432e;
+          Mon, 15 Aug 2022 16:04:31 +0000 (UTC)
+Message-ID: <907702d6-05f0-0f2e-6dba-399688972b40@netscape.net>
+Date: Mon, 15 Aug 2022 12:04:27 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 14.0 \(3654.120.0.1.13\))
-Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
-From: Vishal Verma <vverma@digitalocean.com>
-In-Reply-To: <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info>
-Date: Mon, 15 Aug 2022 08:46:32 -0700
-Cc: Song Liu <song@kernel.org>,
- stable@vger.kernel.org,
- regressions@lists.linux.dev,
- Thomas Deutschmann <whissi@whissi.de>,
- Jens Axboe <axboe@kernel.dk>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0FBCAB10-545E-45E2-A0C8-D7620817651D@digitalocean.com>
-References: <000401d8a746$3eaca200$bc05e600$@whissi.de>
- <000001d8ad7e$c340ad70$49c20850$@whissi.de>
- <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-X-Mailer: Apple Mail (2.3654.120.0.1.13)
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH 0/3] x86: make pat and mtrr independent from each other
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, jbeulich@suse.com,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Pavel Machek <pavel@ucw.cz>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>, regressions@lists.linux.dev,
+ Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+References: <20220715142549.25223-1-jgross@suse.com>
+ <efbde93b-e280-0e40-798d-dc7bf8ca83cf@leemhuis.info>
+ <a0ce2f59-b653-fa8b-a016-1335f05c86ae@netscape.net>
+ <32ed59c9-c894-c426-dd27-3602625cf3b1@netscape.net>
+ <4688ee9b-1b18-3204-cc93-c6ab2ce9222c@netscape.net>
+ <YvjFY1dn2Afg/mFj@kroah.com>
+ <22bb6f38-c319-35a1-cf8a-07f78904ecfb@netscape.net>
+ <YvjyNdH+X0dwjj+f@kroah.com>
+Content-Language: en-US
+From: Chuck Zmudzinski <brchuckz@netscape.net>
+In-Reply-To: <YvjyNdH+X0dwjj+f@kroah.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.20531 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
 
-Just saw this. I=E2=80=99m trying to understand whether this happens =
-only on md array or individual nvme drives (without any raid) too?
-The commit you pointed added REQ_NOWAIT for md based arrays, but if it =
-is happening on individual nvme drives then that could point to =
-something with REQ_NOWAIT I think.
+On 8/14/2022 9:01 AM, Greg KH wrote:
+> On Sun, Aug 14, 2022 at 08:08:30AM -0400, Chuck Zmudzinski wrote:
+> > On 8/14/2022 5:50 AM, Greg KH wrote:
+> > > On Sun, Aug 14, 2022 at 05:19:12AM -0400, Chuck Zmudzinski wrote:
+> > > > Well, that did not take long. Juergen responded with a message,
+> > > > which is encrypted and not delivered to my mailbox because I do not
+> > > > have the PGP keys, presumably to make it difficult for me to continue
+> > > > the discussion and defend myself after I was accused of violating
+> > > > the netiquette rules yesterday by Boris:
+> > >
+> > > The message was signed, not encrypted.  Odd that your email client could
+> > > not read it, perhaps you need to use a different one?
+> > >
+> > > thanks,
+> > >
+> > > greg k-h
+> > 
+> > It's not that my e-mail client could not read it, there is no evidence it
+> > was ever sent to me.
+>
+> The To: line had your address in it, so it was sent to you,
 
-> On Aug 15, 2022, at 3:58 AM, Thorsten Leemhuis =
-<regressions@leemhuis.info> wrote:
->=20
-> Hi, this is your Linux kernel regression tracker. Top-posting for =
-once,
-> to make this easily accessible to everyone.
->=20
-> [CCing Jens, as the top-level maintainer who in this case also =
-reviewed
-> the patch that causes this regression.]
->=20
-> Vishal, Song, what up here? Could you please look into this and at =
-least
-> comment on the issue, as it's a regression that was reported more than
-> 10 days ago already. Ideally at this point it would be good if the
-> regression was fixed already, as explained by "Prioritize work on =
-fixing
-> regressions" here:
-> =
-https://docs.kernel.org/process/handling-regressions.html#prioritize-work-=
-on-fixing-regressions
->=20
-> Ciao, Thorsten
->=20
-> On 11.08.22 14:34, Thomas Deutschmann wrote:
->=20
->>=20
->> Hi,
->>=20
->> any news on this? Is there anything else you need from me or I can =
-help
->> with?
->>=20
->> Thanks.
->>=20
->>=20
->> -- Regards, Thomas -----Original Message----- From: Thomas =
-Deutschmann
->> <whissi@whissi.de> Sent: Wednesday, August 3, 2022 4:35 PM To:
->> vverma@digitalocean.com; song@kernel.org Cc: stable@vger.kernel.org;
->> regressions@lists.linux.dev Subject: [REGRESSION] v5.17-rc1+: =
-FIFREEZE
->> ioctl system call hangs Hi, while trying to backup a Dell R7525 =
-system
->> running Debian bookworm/testing using LVM snapshots I noticed that =
-the
->> system will 'freeze' sometimes (not all the times) when creating the
->> snapshot. First I thought this was related to LVM so I created
->> https://listman.redhat.com/archives/linux-lvm/2022-July/026228.html
->> (continued at
->> =
-https://listman.redhat.com/archives/linux-lvm/2022-August/thread.html#2622=
-9) Long story short: I was even able to reproduce with fsfreeze, see =
-last strace lines
->>> [...]
->>> 14471 1659449870.984635 openat(AT_FDCWD, "/var/lib/machines", =
-O_RDONLY) =3D3
->>> 14471 1659449870.984658 newfstatat(3, "",
->> {st_mode=3DS_IFDIR|0700,st_size=3D4096, ...}, AT_EMPTY_PATH) =3D 0
->>> 14471 1659449870.984678 ioctl(3, FIFREEZE
->> so I started to bisect kernel and found the following bad commit:
->>=20
->>> md: add support for REQ_NOWAIT
->>>=20
->>> commit 021a24460dc2 ("block: add QUEUE_FLAG_NOWAIT") added support
->>> for checking whether a given bdev supports handling of REQ_NOWAIT or =
-not.
->>> Since then commit 6abc49468eea ("dm: add support for REQ_NOWAIT and =
-enable
->>> it for linear target") added support for REQ_NOWAIT for dm. This =
-uses
->>> a similar approach to incorporate REQ_NOWAIT for md based bios.
->>>=20
->>> This patch was tested using t/io_uring tool within FIO. A nvme drive
->>> was partitioned into 2 partitions and a simple raid 0 configuration
->>> /dev/md0 was created.
->>>=20
->>> md0 : active raid0 nvme4n1p1[1] nvme4n1p2[0]
->>>      937423872 blocks super 1.2 512k chunks
->>>=20
->>> Before patch:
->>>=20
->>> $ ./t/io_uring /dev/md0 -p 0 -a 0 -d 1 -r 100
->>>=20
->>> Running top while the above runs:
->>>=20
->>> $ ps -eL | grep $(pidof io_uring)
->>>=20
->>>  38396   38396 pts/2    00:00:00 io_uring
->>>  38396   38397 pts/2    00:00:15 io_uring
->>>  38396   38398 pts/2    00:00:13 iou-wrk-38397
->>>=20
->>> We can see iou-wrk-38397 io worker thread created which gets created
->>> when io_uring sees that the underlying device (/dev/md0 in this =
-case)
->>> doesn't support nowait.
->>>=20
->>> After patch:
->>>=20
->>> $ ./t/io_uring /dev/md0 -p 0 -a 0 -d 1 -r 100
->>>=20
->>> Running top while the above runs:
->>>=20
->>> $ ps -eL | grep $(pidof io_uring)
->>>=20
->>>  38341   38341 pts/2    00:10:22 io_uring
->>>  38341   38342 pts/2    00:10:37 io_uring
->>>=20
->>> After running this patch, we don't see any io worker thread
->>> being created which indicated that io_uring saw that the
->>> underlying device does support nowait. This is the exact behaviour
->>> noticed on a dm device which also supports nowait.
->>>=20
->>> For all the other raid personalities except raid0, we would need
->>> to train pieces which involves make_request fn in order for them
->>> to correctly handle REQ_NOWAIT.
->> =
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/=
-?i
->> d=3Df51d46d0e7cb5b8494aa534d276a9d8915a2443d
->>=20
->> After reverting this commit (and follow up commit
->> 0f9650bd838efe5c52f7e5f40c3204ad59f1964d)
->> v5.18.15 and v5.19 worked for me again.
->>=20
->> At this point I still wonder why I experienced the same problem even =
-after I
->> removed one nvme device from the mdraid array and tested it =
-separately. So
->> maybe there is another nowait/REQ_NOWAIT problem somewhere. During =
-bisect
->> I only tested against the mdraid array.
->>=20
->>=20
->> #regzbot introduced: f51d46d0e7cb5b8494aa534d276a9d8915a2443d
->> #regzbot link:
->> https://listman.redhat.com/archives/linux-lvm/2022-July/026228.html
->> #regzbot link:
->> =
-https://listman.redhat.com/archives/linux-lvm/2022-August/thread.html#2622=
-9
->>=20
->>=20
->> -- Regards, Thomas
->>=20
+Well, that only proves the sender, Juergen Gross, intended to send it to me.
+So far, I have not found any evidence the message was delivered to my
+Inbox. The evidence I have obtained so far in my filesystem and from my
+e-mail provider and the messages I have received through my e-mail provider
+is that the message was never delivered to my Inbox, and based on that
+evidence, my current theory is that my e-mail service provider silently
+dropped the message because it was signed. I will report the full findings
+of my investigation here when my investigation is complete.
 
+The only way I was able to respond to the message was by downloading
+the mbox file from lore.kernel.org and importing it into my e-mail client.
+So it is a fact that it was more difficult for me to respond and defend myself
+against the attack that Juergen made against me because I had to go to the
+trouble of finding the message on lore.kernel.org and import it into my
+e-mail client instead of just using the ordinary procedure of replying to
+a message I received in my Inbox.
+
+Best regards,
+
+Chuck
