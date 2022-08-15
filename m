@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005BE1398
-	for <regressions@lists.linux.dev>; Mon, 15 Aug 2022 11:25:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486571398
+	for <regressions@lists.linux.dev>; Mon, 15 Aug 2022 11:35:21 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oNYEC-0003gE-T4; Mon, 15 Aug 2022 13:25:52 +0200
-Message-ID: <2004c259-6ec7-76d9-cad6-7c381dbfcf0c@leemhuis.info>
-Date: Mon, 15 Aug 2022 13:25:52 +0200
+	id 1oNXnH-0000zH-LA; Mon, 15 Aug 2022 12:58:03 +0200
+Message-ID: <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info>
+Date: Mon, 15 Aug 2022 12:58:02 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,115 +16,133 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.1.0
-Subject: Re: stalling IO regression in linux 5.12
 Content-Language: en-US
-To: Btrfs BTRFS <linux-btrfs@vger.kernel.org>,
- Linux-RAID <linux-raid@vger.kernel.org>, linux-block@vger.kernel.org,
- linux-kernel <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <e38aa76d-6034-4dde-8624-df1745bb17fc@www.fastmail.com>
+To: vverma@digitalocean.com, song@kernel.org
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ Thomas Deutschmann <whissi@whissi.de>, Jens Axboe <axboe@kernel.dk>
+References: <000401d8a746$3eaca200$bc05e600$@whissi.de>
+ <000001d8ad7e$c340ad70$49c20850$@whissi.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <e38aa76d-6034-4dde-8624-df1745bb17fc@www.fastmail.com>
+Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
+In-Reply-To: <000001d8ad7e$c340ad70$49c20850$@whissi.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1660562755;c674b6d0;
-X-HE-SMSGID: 1oNYEC-0003gE-T4
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1660563321;a38294e9;
+X-HE-SMSGID: 1oNXnH-0000zH-LA
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easily accessible to everyone.
 
-Hi, this is your Linux kernel regression tracker.
+[CCing Jens, as the top-level maintainer who in this case also reviewed
+the patch that causes this regression.]
 
-On 10.08.22 18:35, Chris Murphy wrote:
-> CPU: Intel E5-2680 v3
-> RAM: 128 G
-> 02:00.0 RAID bus controller [0104]: Broadcom / LSI MegaRAID SAS-3 3108 [Invader] [1000:005d] (rev 02), using megaraid_sas driver
-> 8 Disks: TOSHIBA AL13SEB600
-> 
-> 
-> The problem exhibits as increasing load, increasing IO pressure (PSI), and actual IO goes to zero. It never happens on kernel 5.11 series, and always happens after 5.12-rc1 and persists through 5.18.0. There's a new mix of behaviors with 5.19, I suspect the mm improvements in this series might be masking the problem.
-> 
-> The workload involves openqa, which spins up 30 qemu-kvm instances, and does a bunch of tests, generating quite a lot of writes: qcow2 files, and video in the form of many screenshots, and various log files, for each VM. These VMs are each in their own cgroup. As the problem begins, I see increasing IO pressure, and decreasing IO, for each qemu instance's cgroup, and the cgroups for httpd, journald, auditd, and postgresql. IO pressure goes to nearly ~99% and IO is literally 0.
-> 
-> The problem left unattended to progress will eventually result in a completely unresponsive system, with no kernel messages. It reproduces in the following configurations, the first two I provide links to full dmesg with sysrq+w:
-> 
-> btrfs raid10 (native) on plain partitions [1]
-> btrfs single/dup on dmcrypt on mdadm raid 10 and parity raid [2]
-> XFS on dmcrypt on mdadm raid10 or parity raid
-> 
-> I've started a bisect, but for some reason I haven't figured out I've started getting compiled kernels that don't boot the hardware. The failure is very early on such that the UUID for the root file system isn't found, but not much to go on as to why.[3] I have tested the first and last skipped commits in the bisect log below, they successfully boot a VM but not the hardware.
-> 
-> Anyway, I'm kinda stuck at this point trying to narrow it down further. Any suggestions? Thanks.
-> 
-> [1] btrfs raid10, plain partitions
-> https://drive.google.com/file/d/1-oT3MX-hHYtQqI0F3SpgPjCIDXXTysLU/view?usp=sharing
-> 
-> [2] btrfs single/dup, dmcrypt, mdadm raid10
-> https://drive.google.com/file/d/1m_T3YYaEjBKUROz6dHt5_h92ZVRji9FM/view?usp=sharing
-> 
-> [3] 
-> $ git bisect log
-> git bisect start
-> # status: waiting for both good and bad commits
-> # bad: [c03c21ba6f4e95e406a1a7b4c34ef334b977c194] Merge tag 'keys-misc-20210126' of git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs
-> git bisect bad c03c21ba6f4e95e406a1a7b4c34ef334b977c194
-> # status: waiting for good commit(s), bad commit known
-> # good: [f40ddce88593482919761f74910f42f4b84c004b] Linux 5.11
-> git bisect good f40ddce88593482919761f74910f42f4b84c004b
-> # bad: [df24212a493afda0d4de42176bea10d45825e9a0] Merge tag 's390-5.12-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
-> git bisect bad df24212a493afda0d4de42176bea10d45825e9a0
-> # good: [82851fce6107d5a3e66d95aee2ae68860a732703] Merge tag 'arm-dt-v5.12' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
-> git bisect good 82851fce6107d5a3e66d95aee2ae68860a732703
-> # good: [99f1a5872b706094ece117368170a92c66b2e242] Merge tag 'nfsd-5.12' of git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux
-> git bisect good 99f1a5872b706094ece117368170a92c66b2e242
-> # bad: [9eef02334505411667a7b51a8f349f8c6c4f3b66] Merge tag 'locking-core-2021-02-17' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
-> git bisect bad 9eef02334505411667a7b51a8f349f8c6c4f3b66
-> # bad: [9820b4dca0f9c6b7ab8b4307286cdace171b724d] Merge tag 'for-5.12/drivers-2021-02-17' of git://git.kernel.dk/linux-block
-> git bisect bad 9820b4dca0f9c6b7ab8b4307286cdace171b724d
-> # good: [bd018bbaa58640da786d4289563e71c5ef3938c7] Merge tag 'for-5.12/libata-2021-02-17' of git://git.kernel.dk/linux-block
-> git bisect good bd018bbaa58640da786d4289563e71c5ef3938c7
-> # skip: [203c018079e13510f913fd0fd426370f4de0fd05] Merge branch 'md-next' of https://git.kernel.org/pub/scm/linux/kernel/git/song/md into for-5.12/drivers
-> git bisect skip 203c018079e13510f913fd0fd426370f4de0fd05
-> # skip: [49d1ec8573f74ff1e23df1d5092211de46baa236] block: manage bio slab cache by xarray
-> git bisect skip 49d1ec8573f74ff1e23df1d5092211de46baa236
-> # bad: [73d90386b559d6f4c3c5db5e6bb1b68aae8fd3e7] nvme: cleanup zone information initialization
-> git bisect bad 73d90386b559d6f4c3c5db5e6bb1b68aae8fd3e7
-> # skip: [71217df39dc67a0aeed83352b0d712b7892036a2] block, bfq: make waker-queue detection more robust
-> git bisect skip 71217df39dc67a0aeed83352b0d712b7892036a2
-> # bad: [8358c28a5d44bf0223a55a2334086c3707bb4185] block: fix memory leak of bvec
-> git bisect bad 8358c28a5d44bf0223a55a2334086c3707bb4185
-> # skip: [3a905c37c3510ea6d7cfcdfd0f272ba731286560] block: skip bio_check_eod for partition-remapped bios
-> git bisect skip 3a905c37c3510ea6d7cfcdfd0f272ba731286560
-> # skip: [3c337690d2ebb7a01fa13bfa59ce4911f358df42] block, bfq: avoid spurious switches to soft_rt of interactive queues
-> git bisect skip 3c337690d2ebb7a01fa13bfa59ce4911f358df42
-> # skip: [3e1a88ec96259282b9a8b45c3f1fda7a3ff4f6ea] bio: add a helper calculating nr segments to alloc
-> git bisect skip 3e1a88ec96259282b9a8b45c3f1fda7a3ff4f6ea
-> # skip: [4eb1d689045552eb966ebf25efbc3ce648797d96] blk-crypto: use bio_kmalloc in blk_crypto_clone_bio
-> git bisect skip 4eb1d689045552eb966ebf25efbc3ce648797d96
+Vishal, Song, what up here? Could you please look into this and at least
+comment on the issue, as it's a regression that was reported more than
+10 days ago already. Ideally at this point it would be good if the
+regression was fixed already, as explained by "Prioritize work on fixing
+regressions" here:
+https://docs.kernel.org/process/handling-regressions.html#prioritize-work-on-fixing-regressions
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
+Ciao, Thorsten
 
-#regzbot ^introduced v5.11..v5.12-rc1
-#regzbot ignore-activity
+On 11.08.22 14:34, Thomas Deutschmann wrote:
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+> 
+> Hi,
+> 
+> any news on this? Is there anything else you need from me or I can help
+> with?
+> 
+> Thanks.
+> 
+> 
+> -- Regards, Thomas -----Original Message----- From: Thomas Deutschmann
+> <whissi@whissi.de> Sent: Wednesday, August 3, 2022 4:35 PM To:
+> vverma@digitalocean.com; song@kernel.org Cc: stable@vger.kernel.org;
+> regressions@lists.linux.dev Subject: [REGRESSION] v5.17-rc1+: FIFREEZE
+> ioctl system call hangs Hi, while trying to backup a Dell R7525 system
+> running Debian bookworm/testing using LVM snapshots I noticed that the
+> system will 'freeze' sometimes (not all the times) when creating the
+> snapshot. First I thought this was related to LVM so I created
+> https://listman.redhat.com/archives/linux-lvm/2022-July/026228.html
+> (continued at
+> https://listman.redhat.com/archives/linux-lvm/2022-August/thread.html#26229) Long story short: I was even able to reproduce with fsfreeze, see last strace lines
+>> [...]
+>> 14471 1659449870.984635 openat(AT_FDCWD, "/var/lib/machines", O_RDONLY) =3
+>> 14471 1659449870.984658 newfstatat(3, "",
+> {st_mode=S_IFDIR|0700,st_size=4096, ...}, AT_EMPTY_PATH) = 0
+>> 14471 1659449870.984678 ioctl(3, FIFREEZE
+> so I started to bisect kernel and found the following bad commit:
+> 
+>> md: add support for REQ_NOWAIT
+>>
+>> commit 021a24460dc2 ("block: add QUEUE_FLAG_NOWAIT") added support
+>> for checking whether a given bdev supports handling of REQ_NOWAIT or not.
+>> Since then commit 6abc49468eea ("dm: add support for REQ_NOWAIT and enable
+>> it for linear target") added support for REQ_NOWAIT for dm. This uses
+>> a similar approach to incorporate REQ_NOWAIT for md based bios.
+>>
+>> This patch was tested using t/io_uring tool within FIO. A nvme drive
+>> was partitioned into 2 partitions and a simple raid 0 configuration
+>> /dev/md0 was created.
+>>
+>> md0 : active raid0 nvme4n1p1[1] nvme4n1p2[0]
+>>       937423872 blocks super 1.2 512k chunks
+>>
+>> Before patch:
+>>
+>> $ ./t/io_uring /dev/md0 -p 0 -a 0 -d 1 -r 100
+>>
+>> Running top while the above runs:
+>>
+>> $ ps -eL | grep $(pidof io_uring)
+>>
+>>   38396   38396 pts/2    00:00:00 io_uring
+>>   38396   38397 pts/2    00:00:15 io_uring
+>>   38396   38398 pts/2    00:00:13 iou-wrk-38397
+>>
+>> We can see iou-wrk-38397 io worker thread created which gets created
+>> when io_uring sees that the underlying device (/dev/md0 in this case)
+>> doesn't support nowait.
+>>
+>> After patch:
+>>
+>> $ ./t/io_uring /dev/md0 -p 0 -a 0 -d 1 -r 100
+>>
+>> Running top while the above runs:
+>>
+>> $ ps -eL | grep $(pidof io_uring)
+>>
+>>   38341   38341 pts/2    00:10:22 io_uring
+>>   38341   38342 pts/2    00:10:37 io_uring
+>>
+>> After running this patch, we don't see any io worker thread
+>> being created which indicated that io_uring saw that the
+>> underlying device does support nowait. This is the exact behaviour
+>> noticed on a dm device which also supports nowait.
+>>
+>> For all the other raid personalities except raid0, we would need
+>> to train pieces which involves make_request fn in order for them
+>> to correctly handle REQ_NOWAIT.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?i
+> d=f51d46d0e7cb5b8494aa534d276a9d8915a2443d
+> 
+> After reverting this commit (and follow up commit
+> 0f9650bd838efe5c52f7e5f40c3204ad59f1964d)
+> v5.18.15 and v5.19 worked for me again.
+> 
+> At this point I still wonder why I experienced the same problem even after I
+> removed one nvme device from the mdraid array and tested it separately. So
+> maybe there is another nowait/REQ_NOWAIT problem somewhere. During bisect
+> I only tested against the mdraid array.
+> 
+> 
+> #regzbot introduced: f51d46d0e7cb5b8494aa534d276a9d8915a2443d
+> #regzbot link:
+> https://listman.redhat.com/archives/linux-lvm/2022-July/026228.html
+> #regzbot link:
+> https://listman.redhat.com/archives/linux-lvm/2022-August/thread.html#26229
+> 
+> 
+> -- Regards, Thomas
+> 
