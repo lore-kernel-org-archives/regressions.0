@@ -1,89 +1,130 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04871398
-	for <regressions@lists.linux.dev>; Mon, 15 Aug 2022 11:03:46 +0000 (UTC)
-Received: from [192.168.1.138] ([37.4.248.80]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MJWgK-1o3o6U0UWG-00JsTs; Mon, 15 Aug 2022 13:03:38 +0200
-Message-ID: <c08a9f42-e213-fc35-db7b-c95ed6f1fdc8@i2se.com>
-Date: Mon, 15 Aug 2022 13:03:37 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005BE1398
+	for <regressions@lists.linux.dev>; Mon, 15 Aug 2022 11:25:54 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oNYEC-0003gE-T4; Mon, 15 Aug 2022 13:25:52 +0200
+Message-ID: <2004c259-6ec7-76d9-cad6-7c381dbfcf0c@leemhuis.info>
+Date: Mon, 15 Aug 2022 13:25:52 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
- Raspberry Pi
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.0
+Subject: Re: stalling IO regression in linux 5.12
 Content-Language: en-US
-To: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org, Ojaswin Mujoo <ojaswin@linux.ibm.com>,
- Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
- Theodore Ts'o <tytso@mit.edu>, Ritesh Harjani <riteshh@linux.ibm.com>,
- linux-fsdevel@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev,
- Florian Fainelli <f.fainelli@gmail.com>
-References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
- <20220728100055.efbvaudwp3ofolpi@quack3>
- <76a9b920-0937-7bef-db55-844f0f5f6c1b@i2se.com>
- <20220815103452.7hjx7ohzx64e5lex@quack3>
-From: Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <20220815103452.7hjx7ohzx64e5lex@quack3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Btrfs BTRFS <linux-btrfs@vger.kernel.org>,
+ Linux-RAID <linux-raid@vger.kernel.org>, linux-block@vger.kernel.org,
+ linux-kernel <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <e38aa76d-6034-4dde-8624-df1745bb17fc@www.fastmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <e38aa76d-6034-4dde-8624-df1745bb17fc@www.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:AnzB4HAfkIiycFBgKsxTc+sAFq4EiPpS6CLnj6gUwrwjf3I+LJd
- ZhPWjk35dzscPw/FsLRyNQgQnG46MYvk7yRvgG6p+2qL3rE4hUTJfhyW0UqNw7x1bkO07Ru
- 3LewU2IeVYUEv0wOBZlMGIMFoDAvnlhZRhOsplyOUnujPYtmS98ZskpF2Sp5zwGAyPPDN7o
- y6+uODWanJ380I5550hqw==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rLAjXadvhNs=:f8ICrXtGKlHfq2MytpCZ3+
- 4EiuqrCf3YhuboCMieAg+vf1IHlbjGW3tBYyezTHRnPA+XqfYR489wcokB6+qaoT33CbzaEUJ
- nUVc0X6FjPLBi8zNrPEtPHDb2DYQbZIM42U6gCkBh6abO9wqOrMWZeECPpOkk6egRFyOjzaXV
- 8BDaPyE5tMjkst62shrsg/dg2DJTCD/iAOynsBux6cF2+dwvYBCG7uuK+DamYKbExf4irezsQ
- WpSZToosq0Ydz3ZqGSzsCtyQ/Lcj0t8e5bZ7+aH4rde7OQx7LBIFWwkHrDtOyDMTFjrsvVqo9
- wdwPwvQY0FiZSe5Kh7CDaV8x+D8ZmYMpIj48LTar3a37iwWFGcCQ6en5M+/pfvaRLN2xQ3Lwf
- gxTpb1+s/AjsHFPWNTzKyhCG7uFqO3Pln8oY7hpaAQZp1ddNom/EzoIUxffi9cXktf89GiGzC
- noqR0HqSIYIwItWVIz+QOsYtQtphcTqZN52uP/u8eZCNM+oxH4mEKNyomeXQRy9AZ1yh9pnRI
- AILv9CfDbEFLFa2/8RHLaiAcM/vnxKqV/tbJxWsNM5akJ8iuDbZ6JvL2kR3HYFslOQSj2RUXc
- vXzTnq9HxwpReueQ/cgIYijZaNGRGjKhpBssqsXx+pvkTwqPodj96u2CKcSRI8kgBumGp2abf
- fVu75IZS5ejSUXWsm+iU1kmkxEkdxoevLtdcrL1dRw0hNPnTGRZXPHq0Pww0EyQkEgUdRLGFe
- amZj/nZTkIUeUwaIgp04Aw7yj6/pK13kfah/BWt30MN0487U7Z/9EgFs8seeb2WXbt2HUEx4L
- tpXAB+lB0ir/LpgdJglZEdS/kCnkIRPGIlQ6iVNxAjy1vGvmG0=
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1660562755;c674b6d0;
+X-HE-SMSGID: 1oNYEC-0003gE-T4
 
-Hi Jan,
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-Am 15.08.22 um 12:34 schrieb Jan Kara:
-> Hi Stefan,
->
-> Back from vacation...
->
-> On Sun 31-07-22 22:42:56, Stefan Wahren wrote:
->> Hi Jan,
->>
->> Am 28.07.22 um 12:00 schrieb Jan Kara:
->>> Also can get filesystem metadata image of your card like:
->>>     e2image -r <fs-device> - | gzip >/tmp/ext4-image.gz
->>>
->>> and put it somewhere for download? The image will contain only fs metadata,
->>> not data so it should be relatively small and we won't have access to your
->>> secrets ;). With the image we'd be able to see how the free space looks
->>> like and whether it perhaps does not trigger some pathological behavior.
->> i've problems with this. If i try store uncompressed the metadata of the
->> second SD card partition (/dev/sdb2 = rootfs) the generated image file is
->> nearly big as the whole partition. In compressed state it's 25 MB. Is this
->> expected?
-> Yes, that is expected. The resulting file is a sparse file that contains
-> only metadata blocks that is the reason why it compresses so well but looks
-> big.
+Hi, this is your Linux kernel regression tracker.
 
-i've added here:
+On 10.08.22 18:35, Chris Murphy wrote:
+> CPU: Intel E5-2680 v3
+> RAM: 128 G
+> 02:00.0 RAID bus controller [0104]: Broadcom / LSI MegaRAID SAS-3 3108 [Invader] [1000:005d] (rev 02), using megaraid_sas driver
+> 8 Disks: TOSHIBA AL13SEB600
+> 
+> 
+> The problem exhibits as increasing load, increasing IO pressure (PSI), and actual IO goes to zero. It never happens on kernel 5.11 series, and always happens after 5.12-rc1 and persists through 5.18.0. There's a new mix of behaviors with 5.19, I suspect the mm improvements in this series might be masking the problem.
+> 
+> The workload involves openqa, which spins up 30 qemu-kvm instances, and does a bunch of tests, generating quite a lot of writes: qcow2 files, and video in the form of many screenshots, and various log files, for each VM. These VMs are each in their own cgroup. As the problem begins, I see increasing IO pressure, and decreasing IO, for each qemu instance's cgroup, and the cgroups for httpd, journald, auditd, and postgresql. IO pressure goes to nearly ~99% and IO is literally 0.
+> 
+> The problem left unattended to progress will eventually result in a completely unresponsive system, with no kernel messages. It reproduces in the following configurations, the first two I provide links to full dmesg with sysrq+w:
+> 
+> btrfs raid10 (native) on plain partitions [1]
+> btrfs single/dup on dmcrypt on mdadm raid 10 and parity raid [2]
+> XFS on dmcrypt on mdadm raid10 or parity raid
+> 
+> I've started a bisect, but for some reason I haven't figured out I've started getting compiled kernels that don't boot the hardware. The failure is very early on such that the UUID for the root file system isn't found, but not much to go on as to why.[3] I have tested the first and last skipped commits in the bisect log below, they successfully boot a VM but not the hardware.
+> 
+> Anyway, I'm kinda stuck at this point trying to narrow it down further. Any suggestions? Thanks.
+> 
+> [1] btrfs raid10, plain partitions
+> https://drive.google.com/file/d/1-oT3MX-hHYtQqI0F3SpgPjCIDXXTysLU/view?usp=sharing
+> 
+> [2] btrfs single/dup, dmcrypt, mdadm raid10
+> https://drive.google.com/file/d/1m_T3YYaEjBKUROz6dHt5_h92ZVRji9FM/view?usp=sharing
+> 
+> [3] 
+> $ git bisect log
+> git bisect start
+> # status: waiting for both good and bad commits
+> # bad: [c03c21ba6f4e95e406a1a7b4c34ef334b977c194] Merge tag 'keys-misc-20210126' of git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs
+> git bisect bad c03c21ba6f4e95e406a1a7b4c34ef334b977c194
+> # status: waiting for good commit(s), bad commit known
+> # good: [f40ddce88593482919761f74910f42f4b84c004b] Linux 5.11
+> git bisect good f40ddce88593482919761f74910f42f4b84c004b
+> # bad: [df24212a493afda0d4de42176bea10d45825e9a0] Merge tag 's390-5.12-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
+> git bisect bad df24212a493afda0d4de42176bea10d45825e9a0
+> # good: [82851fce6107d5a3e66d95aee2ae68860a732703] Merge tag 'arm-dt-v5.12' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+> git bisect good 82851fce6107d5a3e66d95aee2ae68860a732703
+> # good: [99f1a5872b706094ece117368170a92c66b2e242] Merge tag 'nfsd-5.12' of git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux
+> git bisect good 99f1a5872b706094ece117368170a92c66b2e242
+> # bad: [9eef02334505411667a7b51a8f349f8c6c4f3b66] Merge tag 'locking-core-2021-02-17' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect bad 9eef02334505411667a7b51a8f349f8c6c4f3b66
+> # bad: [9820b4dca0f9c6b7ab8b4307286cdace171b724d] Merge tag 'for-5.12/drivers-2021-02-17' of git://git.kernel.dk/linux-block
+> git bisect bad 9820b4dca0f9c6b7ab8b4307286cdace171b724d
+> # good: [bd018bbaa58640da786d4289563e71c5ef3938c7] Merge tag 'for-5.12/libata-2021-02-17' of git://git.kernel.dk/linux-block
+> git bisect good bd018bbaa58640da786d4289563e71c5ef3938c7
+> # skip: [203c018079e13510f913fd0fd426370f4de0fd05] Merge branch 'md-next' of https://git.kernel.org/pub/scm/linux/kernel/git/song/md into for-5.12/drivers
+> git bisect skip 203c018079e13510f913fd0fd426370f4de0fd05
+> # skip: [49d1ec8573f74ff1e23df1d5092211de46baa236] block: manage bio slab cache by xarray
+> git bisect skip 49d1ec8573f74ff1e23df1d5092211de46baa236
+> # bad: [73d90386b559d6f4c3c5db5e6bb1b68aae8fd3e7] nvme: cleanup zone information initialization
+> git bisect bad 73d90386b559d6f4c3c5db5e6bb1b68aae8fd3e7
+> # skip: [71217df39dc67a0aeed83352b0d712b7892036a2] block, bfq: make waker-queue detection more robust
+> git bisect skip 71217df39dc67a0aeed83352b0d712b7892036a2
+> # bad: [8358c28a5d44bf0223a55a2334086c3707bb4185] block: fix memory leak of bvec
+> git bisect bad 8358c28a5d44bf0223a55a2334086c3707bb4185
+> # skip: [3a905c37c3510ea6d7cfcdfd0f272ba731286560] block: skip bio_check_eod for partition-remapped bios
+> git bisect skip 3a905c37c3510ea6d7cfcdfd0f272ba731286560
+> # skip: [3c337690d2ebb7a01fa13bfa59ce4911f358df42] block, bfq: avoid spurious switches to soft_rt of interactive queues
+> git bisect skip 3c337690d2ebb7a01fa13bfa59ce4911f358df42
+> # skip: [3e1a88ec96259282b9a8b45c3f1fda7a3ff4f6ea] bio: add a helper calculating nr segments to alloc
+> git bisect skip 3e1a88ec96259282b9a8b45c3f1fda7a3ff4f6ea
+> # skip: [4eb1d689045552eb966ebf25efbc3ce648797d96] blk-crypto: use bio_kmalloc in blk_crypto_clone_bio
+> git bisect skip 4eb1d689045552eb966ebf25efbc3ce648797d96
 
-https://github.com/lategoodbye/mb_optimize_scan_regress/blob/main/Kingston_SDCIT_rootfs_metadata.gz
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
->
-> 								Honza
->
+#regzbot ^introduced v5.11..v5.12-rc1
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
