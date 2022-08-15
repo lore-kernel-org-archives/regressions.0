@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486571398
-	for <regressions@lists.linux.dev>; Mon, 15 Aug 2022 11:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 995E2185C
+	for <regressions@lists.linux.dev>; Mon, 15 Aug 2022 12:34:19 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oNXnH-0000zH-LA; Mon, 15 Aug 2022 12:58:03 +0200
-Message-ID: <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info>
-Date: Mon, 15 Aug 2022 12:58:02 +0200
+	id 1oNZIO-00044g-4S; Mon, 15 Aug 2022 14:34:16 +0200
+Message-ID: <fea58a8e-dbe1-56fd-eb43-1d893a93785f@leemhuis.info>
+Date: Mon, 15 Aug 2022 14:34:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,133 +16,47 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.1.0
+Subject: Re: [REGRESSION] recent changes to copy_file_range behavior breakage
+ #forregzbot
 Content-Language: en-US
-To: vverma@digitalocean.com, song@kernel.org
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- Thomas Deutschmann <whissi@whissi.de>, Jens Axboe <axboe@kernel.dk>
-References: <000401d8a746$3eaca200$bc05e600$@whissi.de>
- <000001d8ad7e$c340ad70$49c20850$@whissi.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
-In-Reply-To: <000001d8ad7e$c340ad70$49c20850$@whissi.de>
+To: regressions@lists.linux.dev
+References: <YtTM8GYn0/HkSoet@squish.home.loc>
+ <c6ef3d55-bd54-435f-52f3-e1ce5842f33a@leemhuis.info>
+In-Reply-To: <c6ef3d55-bd54-435f-52f3-e1ce5842f33a@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1660563321;a38294e9;
-X-HE-SMSGID: 1oNXnH-0000zH-LA
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1660566859;2ff92b3c;
+X-HE-SMSGID: 1oNZIO-00044g-4S
 
-Hi, this is your Linux kernel regression tracker. Top-posting for once,
-to make this easily accessible to everyone.
+On 18.07.22 13:42, Thorsten Leemhuis wrote:
+> On 18.07.22 05:01, Paul Thompson wrote:
+>> 	Something that worked in 5.18.9 no longer does in 5.18.1[01] and 5.19-rc6.
+>>
+>> 	Using the example code in the man page for copy_file_range:
+>>
+>> # ./copy-file-range testfile-on-ext4 /path-to-another-ext4/testfile (or symlink thereto)
+>>
+>> Works in 5.18.9, fails with:
+>>
+>> # copy_file_range: Invalid cross-device link
+>>
+>> And produces garbage file at destination on newer (5.18.10+) kernels.
+>>
+>> 	This breaks eg. qbittorrent (moving a distro image across ext4
+>> filesystems, or following such a symlink) So potentially other real world
+>> applications. I do not know if the reason for the commit overrides this
+>> breakage, but it caused me a bit of a headache.
+>
+> FWIW, that's 868f9f2f8e004bfe0d3935b1976f625b2924893b in mainline.
 
-[CCing Jens, as the top-level maintainer who in this case also reviewed
-the patch that causes this regression.]
+#regzbot invalid: This seems to be a "damned if you do, damned if you
+don't"
+https://lore.kernel.org/lkml/CAHk-=wjZ8snqJmoyhHjZCYVP5bMmNWzQMkDZ6LtNr1YKEg4A9w@mail.gmail.com/
 
-Vishal, Song, what up here? Could you please look into this and at least
-comment on the issue, as it's a regression that was reported more than
-10 days ago already. Ideally at this point it would be good if the
-regression was fixed already, as explained by "Prioritize work on fixing
-regressions" here:
-https://docs.kernel.org/process/handling-regressions.html#prioritize-work-on-fixing-regressions
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-Ciao, Thorsten
-
-On 11.08.22 14:34, Thomas Deutschmann wrote:
-
-> 
-> Hi,
-> 
-> any news on this? Is there anything else you need from me or I can help
-> with?
-> 
-> Thanks.
-> 
-> 
-> -- Regards, Thomas -----Original Message----- From: Thomas Deutschmann
-> <whissi@whissi.de> Sent: Wednesday, August 3, 2022 4:35 PM To:
-> vverma@digitalocean.com; song@kernel.org Cc: stable@vger.kernel.org;
-> regressions@lists.linux.dev Subject: [REGRESSION] v5.17-rc1+: FIFREEZE
-> ioctl system call hangs Hi, while trying to backup a Dell R7525 system
-> running Debian bookworm/testing using LVM snapshots I noticed that the
-> system will 'freeze' sometimes (not all the times) when creating the
-> snapshot. First I thought this was related to LVM so I created
-> https://listman.redhat.com/archives/linux-lvm/2022-July/026228.html
-> (continued at
-> https://listman.redhat.com/archives/linux-lvm/2022-August/thread.html#26229) Long story short: I was even able to reproduce with fsfreeze, see last strace lines
->> [...]
->> 14471 1659449870.984635 openat(AT_FDCWD, "/var/lib/machines", O_RDONLY) =3
->> 14471 1659449870.984658 newfstatat(3, "",
-> {st_mode=S_IFDIR|0700,st_size=4096, ...}, AT_EMPTY_PATH) = 0
->> 14471 1659449870.984678 ioctl(3, FIFREEZE
-> so I started to bisect kernel and found the following bad commit:
-> 
->> md: add support for REQ_NOWAIT
->>
->> commit 021a24460dc2 ("block: add QUEUE_FLAG_NOWAIT") added support
->> for checking whether a given bdev supports handling of REQ_NOWAIT or not.
->> Since then commit 6abc49468eea ("dm: add support for REQ_NOWAIT and enable
->> it for linear target") added support for REQ_NOWAIT for dm. This uses
->> a similar approach to incorporate REQ_NOWAIT for md based bios.
->>
->> This patch was tested using t/io_uring tool within FIO. A nvme drive
->> was partitioned into 2 partitions and a simple raid 0 configuration
->> /dev/md0 was created.
->>
->> md0 : active raid0 nvme4n1p1[1] nvme4n1p2[0]
->>       937423872 blocks super 1.2 512k chunks
->>
->> Before patch:
->>
->> $ ./t/io_uring /dev/md0 -p 0 -a 0 -d 1 -r 100
->>
->> Running top while the above runs:
->>
->> $ ps -eL | grep $(pidof io_uring)
->>
->>   38396   38396 pts/2    00:00:00 io_uring
->>   38396   38397 pts/2    00:00:15 io_uring
->>   38396   38398 pts/2    00:00:13 iou-wrk-38397
->>
->> We can see iou-wrk-38397 io worker thread created which gets created
->> when io_uring sees that the underlying device (/dev/md0 in this case)
->> doesn't support nowait.
->>
->> After patch:
->>
->> $ ./t/io_uring /dev/md0 -p 0 -a 0 -d 1 -r 100
->>
->> Running top while the above runs:
->>
->> $ ps -eL | grep $(pidof io_uring)
->>
->>   38341   38341 pts/2    00:10:22 io_uring
->>   38341   38342 pts/2    00:10:37 io_uring
->>
->> After running this patch, we don't see any io worker thread
->> being created which indicated that io_uring saw that the
->> underlying device does support nowait. This is the exact behaviour
->> noticed on a dm device which also supports nowait.
->>
->> For all the other raid personalities except raid0, we would need
->> to train pieces which involves make_request fn in order for them
->> to correctly handle REQ_NOWAIT.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?i
-> d=f51d46d0e7cb5b8494aa534d276a9d8915a2443d
-> 
-> After reverting this commit (and follow up commit
-> 0f9650bd838efe5c52f7e5f40c3204ad59f1964d)
-> v5.18.15 and v5.19 worked for me again.
-> 
-> At this point I still wonder why I experienced the same problem even after I
-> removed one nvme device from the mdraid array and tested it separately. So
-> maybe there is another nowait/REQ_NOWAIT problem somewhere. During bisect
-> I only tested against the mdraid array.
-> 
-> 
-> #regzbot introduced: f51d46d0e7cb5b8494aa534d276a9d8915a2443d
-> #regzbot link:
-> https://listman.redhat.com/archives/linux-lvm/2022-July/026228.html
-> #regzbot link:
-> https://listman.redhat.com/archives/linux-lvm/2022-August/thread.html#26229
-> 
-> 
-> -- Regards, Thomas
-> 
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
