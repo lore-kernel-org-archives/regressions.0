@@ -1,97 +1,177 @@
-Received: from sonic303-25.consmr.mail.gq1.yahoo.com (sonic303-25.consmr.mail.gq1.yahoo.com [98.137.64.206])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 219282CA2
-	for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 18:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netscape.net; s=a2048; t=1660674674; bh=q8wWOcwuIWp7jF+m+JG95FVHbs3q4ng16JE8P5IIOdI=; h=Date:Subject:From:To:Cc:References:In-Reply-To:From:Subject:Reply-To; b=K9QvIDtw9DoDRMNBYJRJtjej7x2KlWO/3XSw1i5V7/XXAQl+8qXuNkK+AiaNNxWr3mdFa8iYnB0Qz9inrjU7KRffjWYiGvnNboWDQ03jvBG353PDLGlK+hZHs8sDQ8V8cKXX+TMuSOccfavZ3Lsnzhh7Sj+V0JfVjAUONxtia6AMNk/fFVeOqmBdIoi73E3AFbS0ijle45g9MjEKeW39KpLYpFfQWcVmu2NufVbfjQ683b7aFwQKyVPEnKz09+BIHFAW2wUR6R9j130AdFpxC2kjiUzRRujI86MY89JAIqLvs4YMxT8o6Hs+WpXqKYWD30DOTrw4pMSwEGt2Mp5QRA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1660674674; bh=TsO9OnmVcK62vUwmvFbeK1iVzVOZ3JC5TnUELQbCFUp=; h=X-Sonic-MF:Date:Subject:From:To:From:Subject; b=A4AkXtjlW3Th1SyLhdJg+sWu5of8cenfYMNTs+X/JsChEY4t+VmzwIz5qrN1Q+dW7G5ilNaQk5XXcRlmVkdzYZMZywqyLvyyuqGkjH7LLQ5g5HoKo1OX9PPTy6W1oxpMDIOOZrk7JKsYdbzBdcv3w7rFvTnaPx/EQ3a5l8cslRg8ts7tS7RwBEi+OKyqSV4pJREpzTMmLlhlUEzEZ9xijpRgKBp0N42gClw0PVDwlbResaV4WK5fjZv2+DO5ARn7BBZ5vD+2BUiasmsd2E+VGahIiUhYg/hYJHLJzYXTed5LMQvE0Anw0/2fxK/C5fAhyWr05E6/fTH7HePOYzGXzA==
-X-YMail-OSG: .7H3UH4VM1ndSNL34UPAvb5VXC65DpJI_1A2nLTus0F8VmAcAtvonzuYw35.BwF
- Z0KxPlW7ZsFn6ntVRzNmw1hntiywuPKaKJEHJTVDBPmkqZOnEP2SPThPYE1N8uk0ed.cyC5iahSZ
- lGBnevXcFJv0kEm57GY473Hr_EvENwFBrgHzGEsQIi.evuuAkjNprYlVuHBSDRphu.0XcfdKAd2.
- jroHN0yZeOwKCIfIbwkLZ4HdFk8QzlRlDZok7oRypkw3eCe5YZ.SK8wpsTAdon7CRXuM8HHLF2rp
- 7pgp961q2jQ3MGvt_wU8AYmRwFtjs8sRnlxc1LoClxXF5F6DWkrVFwKSesA4hN4eNNhDV8zeQoMg
- TcEVQdWJZfnOjFkvWPzTfXHRDNVgGOUL5Shmah7KcoCB6.nybM9E7TCNTUhvupSip1.QMMOF1b7s
- tXYFcutVyj8ixjoCoLpM2G9mtA1CeBHPg4g247ACahtQI8YdANpqkb3Ludvi5MHnCwge77PcE8Xu
- aj5oYSxBxsPZWsURJm7Ewh9yoHzetF25Dn4VihhsFqftv1j.firKa0XDzXhbPZDWgvz9reE5Xbv0
- QXwaX67GiQPWqBzvigKUmoBwPAfqj9LDADk8yIWQIIWYQ6qQdg8lGdiIeXIyKEA0ZJViLBEh.ESo
- S1JrKwJglEVo4sZ7tDTS_IZRvkI0eISOYVSC1BYyTWDmSKmWtvj31PpdSq6UBIGe7mupgP6MkuMT
- jglj5iDHyAcVQD7s.7ySIHu9m.Gwq7l0RIi_AW6yobDI5ORG1Fbid65H69cDppBOpPGFogW0LsrY
- 2GXjEj9DLmpZRyKCj19tyyB6kYl5j3WHK0F3zm8mA33Q1PdhpG60ER3TYUH0Vs6LBaxsfH4uz2To
- kNDbNNo0KX9S.UV1jUM0_PsXJBDQamJ1wYIAxQ4ZR1YZuNEf5vskPVnC7THYLQWLsTn8zCD7kLXT
- FLPpi7E4iSLGGLkoS9yV98yp09RvfDiHqq8uVdwJCzpb_w5VovK2yjqFDYOqj57t2zsWfcZFCuht
- k_aHdQA_zQUtWMnHREOTtjCIihxWJWyhjLvX8POb6zGRIH0iv4PxhUnWbVrRRJR_1OPVi8o3wSXs
- 9Cx0Egwn4lZBXAPCYOlzwGSyO0YZuJUcO81OuU_B9MwwpyzMWRAGsFCFPxFwCakuxNQ2u8wue3LR
- .dVMc02fn62607azoPfTCb4x7wmIhJPXICl3YpWbfJcAM.IjxLI7P568wJYdg9UG66rJcE1GS9Cc
- sK0ixqn.WlsrwYBvWr2m9yvluinGHWL09uwtukrU3J2SQI13sXses6McK3yBVkQvsQfr9c73eoXZ
- kBVT9CHJ184MwZv97IvdxhzePfzOJTmwAHj4RFCzr3_2sQr04a76emgeWL0fVy1SA6laUvWxwpE.
- .kKsay.yQ_0uQBW78iEFqS3nbcs9yNR4.Dc6_reZ127hZF0hs.l2ElmnvvFEbMLbUrVnk7wlhX3F
- cerH_k6jsNeOvqmmLbDWnsvYgRfLbx0YpLFvlFxTc6nd.Yx5KXSzeUjk_kqDolZi5Qf2XYmcC97T
- 1MT53KfJPEZWo8ITgQkEHrFiOmwV6JUitocqsskV0mP1lDCWy.7UGfstiavQJZtgtj8_X4oMaCJr
- Oy88R.eujP97lvb4qvAJd4duiDc5V7LBv5VpGuvMPQA9PSWNwg_kPCnwiROL7L7W6uSlI.wCtHCZ
- zaJOnIW785yLK.YJHT1rwaHUnLust063YDvjhUBPP8p_7YSw44bxY7DFSOCj7jgEPyDEvrFy.5NM
- Zz9Y_ZLYr88oo973XwIQCfAFogR7XkgZdR_Umzk2dkBLjCmF9nVPeibakL8uhwSHoUs6VmdnWxeS
- SZKUpcpKCgd_1cLbztdEHmI4tIDw14v_C9ynRQSLnVtG0M2D_p6LNpf_F3tCeF7Inap_EEcpIPVs
- 1kL02wEJbfKytQITMOJTxh3PCafwyGVF5qaFlz6oojdKuYBW0Sl_jXoEJD0OY6S727LruHNnTuTP
- z_f6O84jF7VIZ8bI7hXxyRrjLHXrYKYzYTxL8S3pRSxfwHZi3ou3ipmhw3q.Q_cGGn7unbESaXPd
- qStsh7KwbORv1d9JJNs3W2oV4tgmtE3_OQ.4TbTZfsx.GVAlIxc5w5wvq3HgZ78YsWhyo2p06cJg
- 0c3ooMQcnjdq1sxreX0wIPlmRiUC8CCkojpMXaxFlUGFGYmHmoUTIVv3ReURDadGt4l2Legy_eMZ
- d2rwOiM71qaRgmQvN50s-
-X-Sonic-MF: <brchuckz@aim.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.gq1.yahoo.com with HTTP; Tue, 16 Aug 2022 18:31:14 +0000
-Received: by hermes--production-bf1-7586675c46-7c7p2 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 624f3e4bccaf700bc143e57e0451f3fc;
-          Tue, 16 Aug 2022 18:31:09 +0000 (UTC)
-Message-ID: <a47b2321-4809-f8bc-9eb3-45269ef79ff3@netscape.net>
-Date: Tue, 16 Aug 2022 14:31:06 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3936AAE
+	for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 19:00:56 +0000 (UTC)
+Received: by mail-ed1-f42.google.com with SMTP id s11so14659871edd.13
+        for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 12:00:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc;
+        bh=GPhJf/V9NFKKBvOE+jWQ6Jny25ln9DQHeUBrTTekG8Y=;
+        b=MzRYpEAO5G9GMFlz5fK/u6Dq/88Vl2/2ynCGU9tfF6ZUp4UmF3ogO/i5D3btUf1rqi
+         UN8+nqACURijdwgsv6Ih+V3kKL8rGXkzHCxzWDq2/M/DawVt3ins2CsGd4o3L86ezFrW
+         OMcMKcA9rpnr5hiw5J54Qv5/fPUqLxi6949q78rnjxeult3ZR0q5Rgje9XLKtDzyWcB+
+         Z6Y1o4oSBnSr9Wap58j14VO44crUnKlZJjcoe5qXRrcZ+vWyZvUFwiIcpI7mY3StPx8F
+         jUqvVinSysfE8LpG1Hw17W9m5YYi2veCePA+YSeKhUakrUR2BaMdRSV+Ot4K5Bdrroe8
+         0Lcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc;
+        bh=GPhJf/V9NFKKBvOE+jWQ6Jny25ln9DQHeUBrTTekG8Y=;
+        b=ls3TAmHRLpEyJEPEIDy4VYhCiESOv+tAtAm9UhUNE/QbmY76LmKz7J3++qJBmFzDJL
+         tEE5W6p9o5fPuXCLTbK21NCbvT++XydQC/aRbVT7vtQbbcjPFQkgH+GDk9Vt4F7RyjGJ
+         YzEBx8iOygOpcu2uZ9dapTRNAmdmRf+51nEy7+mtcRKQFqKewk6IDm1VUflIFEyCNIJ9
+         tRo8GCDe6lxyTrw5Jr5P9gcvCLwJepiyVETHRyPCpjxVE+FwGzhq4TklQy3oWiLhW4h5
+         3zWh6XM1XA1L5f010oBU/0Z8nnx/tE+FmqlICfzzgY7wI6zhMBmAzQv/qWEOsRi23a13
+         kzXQ==
+X-Gm-Message-State: ACgBeo1d7CdrH8KG3OcSaMRX705rNgWI4L4op4gBhYXkfEmO+R9QRope
+	u11hfMg2VrPnqcgh5oUOTnGctcyRsqgSUrlYVwMeaw==
+X-Google-Smtp-Source: AA6agR6/INaPLYxt95pYwq1zkt35uDm6YnJGdJsfEMn2xpGyyP0suBWBuDhNqh5PwHTBxpv4qQzCdgumBaMHhFY5aHE=
+X-Received: by 2002:a05:6402:32a8:b0:43e:5490:295f with SMTP id
+ f40-20020a05640232a800b0043e5490295fmr19879457eda.193.1660676454486; Tue, 16
+ Aug 2022 12:00:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: PING [PATCH 3/3] x86: decouple pat and mtrr handling
-From: Chuck Zmudzinski <brchuckz@netscape.net>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Juergen Gross <jgross@suse.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- Jan Beulich <jbeulich@suse.com>, xen-devel@lists.xenproject.org,
- x86@kernel.org, linux-kernel@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>, regressions@lists.linux.dev
-References: <20220715142549.25223-1-jgross@suse.com>
- <20220715142549.25223-4-jgross@suse.com> <YtbKf51S4lTaziKm@zn.tnic>
- <d838264a-bcd0-29e2-3b23-5427ee0ee041@netscape.net>
- <YvfdYS81vU66tQSs@zn.tnic>
- <3de36953-9b8a-d040-c8dd-44af1ae2d56d@netscape.net>
- <YvgcIu/Y1GMD5WNo@zn.tnic>
- <6e709192-064d-fdfb-8596-6474d891dd7f@netscape.net>
-Content-Language: en-US
-In-Reply-To: <6e709192-064d-fdfb-8596-6474d891dd7f@netscape.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.20531 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 17 Aug 2022 00:30:43 +0530
+Message-ID: <CA+G9fYv2Wof_Z4j8wGYapzngei_NjtnGUomb7y34h4VDjrQDBA@mail.gmail.com>
+Subject: [next] arm64: kernel BUG at fs/inode.c:622 - Internal error: Oops -
+ BUG: 0 - pc : clear_inode
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	regressions@lists.linux.dev, lkft-triage@lists.linaro.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <christian.brauner@ubuntu.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 8/13/2022 6:41 PM, Chuck Zmudzinski wrote:
-> On 8/13/2022 5:48 PM, Borislav Petkov wrote:
-> > On Sat, Aug 13, 2022 at 05:40:34PM -0400, Chuck Zmudzinski wrote:
-> > > I did a search for Juergen Gross on lkml and he is active submitting and
-> > > reviewing patches during the past few weeks. However, he is ignoring
-> > > comments on his patch to fix this regression.
-> >
-> > Please stop this non-sense and be patient. We will fix this soon. For
-> > the time being you can use Jan's patch locally.
-> >
+Following kernel BUG found while booting arm64 Qcom dragonboard 410c with
+Linux next-20220816 kernel Image.
 
-Hi Boris,
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-I see you have signed off on Jan's patch with a slight modification as
-the short-term fix that is also tagged to be backported to stable. Thank you!
-I hope no other problems or objections pop up and Linus will merge it into
-the mainline kernel soon. Please forgive me for my impatience.
+metadata:
+  git_ref: master
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: e1084bacab44f570691c0fdaa1259acf93ed0098
+  git_describe: next-20220816
+  kernel_version: 6.0.0-rc1
+  kernel-config: https://builds.tuxbuild.com/2DQCqsegDOgC0htScIz07RRDr7J/config
+  artifact-location: https://builds.tuxbuild.com/2DQCqsegDOgC0htScIz07RRDr7J
+  vmlinux: https://builds.tuxbuild.com/2DQCqsegDOgC0htScIz07RRDr7J/vmlinux.xz
+  System.map: https://builds.tuxbuild.com/2DQCqsegDOgC0htScIz07RRDr7J/System.map
+  toolchain: gcc-11
 
-Best regards,
+[   17.950163] kernel BUG at fs/inode.c:622!
+[   17.954719] Internal error: Oops - BUG: 0 [#6] PREEMPT SMP
+[   17.959290] Modules linked in: rfkill snd_soc_hdmi_codec venus_enc
+venus_dec videobuf2_dma_contig pm8916_wdt crct10dif_ce qcom_wcnss_pil
+adv7511 cec msm qrtr qcom_camss gpu_sched drm_dp_aux_bus venus_core
+display_connector videobuf2_dma_sg drm_display_helper qcom_q6v5_mss
+v4l2_fwnode qcom_pil_info snd_soc_lpass_apq8016 qcom_q6v5
+snd_soc_lpass_cpu v4l2_async snd_soc_msm8916_digital drm_kms_helper
+snd_soc_apq8016_sbc qcom_sysmon v4l2_mem2mem snd_soc_qcom_common
+snd_soc_lpass_platform qcom_spmi_temp_alarm snd_soc_msm8916_analog
+videobuf2_memops rtc_pm8xxx qcom_common videobuf2_v4l2 qcom_spmi_vadc
+qcom_glink_smem qcom_vadc_common qcom_pon qmi_helpers videobuf2_common
+mdt_loader i2c_qcom_cci drm qcom_stats qnoc_msm8916 qcom_rng
+icc_smd_rpm socinfo rmtfs_mem fuse
+[   18.023315] CPU: 3 PID: 457 Comm: systemd-udevd Tainted: G      D
+         6.0.0-rc1-next-20220816 #1
+[   18.030656] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[   18.039973] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   18.046925] pc : clear_inode+0x88/0x9c
+[   18.053570] lr : clear_inode+0x3c/0x9c
+[   18.058064] sp : ffff80000c9f3c30
+[   18.062518] x29: ffff80000c9f3c30 x28: ffff000004f19080 x27: 0000000000000000
+[   18.067099] x26: ffff000005b2ad90 x25: 0000000000000002 x24: 00000000ffffffec
+[   18.073181] x23: ffff80000aaaea80 x22: ffff000005b2ad58 x21: ffff0000037c3340
+[   18.077364] ax88179_178a 1-1.2:1.0 eth0: ax88179 - Link status is: 1
+[   18.080288] x20: ffff000005b2af10 x19: ffff000005b2ad90 x18: 0000000000000000
+[   18.080306] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+[   18.080319] x14: 0000ffffffffffff x13: 0000000000000000
+[   18.094909] IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+[   18.096330]  x12: fefefefefefefeff
+[   18.131891] x11: 0000fffffffffff8 x10: ffff00000a0776c0 x9 : ffff800009443f98
+[   18.136734] x8 : ffff80000c9f3d08 x7 : 0000000000000000 x6 : 0000000000000001
+[   18.142836] x5 : ffff80000aaaf000 x4 : ffff80000aaaf2e8 x3 : 0000000000000000
+[   18.149910] x2 : ffff000005043040 x1 : ffff000005b2af90 x0 : ffff000005b2afb0
+[   18.157031] Call trace:
+[   18.164169]  clear_inode+0x88/0x9c
+[   18.169006]  shmem_evict_inode+0xa4/0x29c
+[   18.173853]  evict+0xac/0x190
+[   18.178674]  iput+0x174/0x240
+[   18.183499]  do_unlinkat+0x1c4/0x270
+[   18.188333]  __arm64_sys_unlinkat+0x4c/0x90
+[   18.193195]  invoke_syscall+0x50/0x120
+[   18.198036]  el0_svc_common.constprop.0+0x104/0x124
+[   18.202891]  do_el0_svc+0x3c/0xd0
+[   18.207775]  el0_svc+0x30/0x94
+[   18.212631]  el0t_64_sync_handler+0xc0/0x13c
+[   18.217542]  el0t_64_sync+0x18c/0x190
+[   18.222401] Code: a8c27bfd d50323bf d65f03c0 d4210000 (d4210000)
+[   18.227277] ---[ end trace 0000000000000000 ]---
+[   18.232281] note: systemd-udevd[457] exited with preempt_count 1
+[   18.287738] ------------[ cut here ]------------
+[   18.292616] WARNING: CPU: 3 PID: 0 at kernel/context_tracking.c:128
+ct_kernel_exit.constprop.0+0x108/0x120
+[   18.297548] Modules linked in: rfkill snd_soc_hdmi_codec venus_enc
+venus_dec videobuf2_dma_contig pm8916_wdt crct10dif_ce qcom_wcnss_pil
+adv7511 cec msm qrtr qcom_camss gpu_sched drm_dp_aux_bus venus_core
+display_connector videobuf2_dma_sg drm_display_helper qcom_q6v5_mss
+v4l2_fwnode qcom_pil_info snd_soc_lpass_apq8016 qcom_q6v5
+snd_soc_lpass_cpu v4l2_async snd_soc_msm8916_digital drm_kms_helper
+snd_soc_apq8016_sbc qcom_sysmon v4l2_mem2mem snd_soc_qcom_common
+snd_soc_lpass_platform qcom_spmi_temp_alarm snd_soc_msm8916_analog
+videobuf2_memops rtc_pm8xxx qcom_common videobuf2_v4l2 qcom_spmi_vadc
+qcom_glink_smem qcom_vadc_common qcom_pon qmi_helpers videobuf2_common
+mdt_loader i2c_qcom_cci drm qcom_stats qnoc_msm8916 qcom_rng
+icc_smd_rpm socinfo rmtfs_mem fuse
+[   18.368071] CPU: 3 PID: 0 Comm: swapper/3 Tainted: G      D
+   6.0.0-rc1-next-20220816 #1
+[   18.373948] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[   18.383033] pstate: 200000c5 (nzCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   18.389948] pc : ct_kernel_exit.constprop.0+0x108/0x120
+[   18.397848] lr : ct_idle_enter+0x14/0x20
+[   18.404845] sp : ffff80000b0c3d60
+[   18.410655] x29: ffff80000b0c3d60 x28: 0000000000000000 x27: 0000000000000000
+[   18.417235] x26: 0000000000000000 x25: 0000000000000000 x24: 00000004420862ef
+[   18.424585] x23: 0000000000000000 x22: ffff000004cf2880 x21: ffff00003fca5940
+[   18.431994] x20: ffff000004cf2898 x19: ffff00003fca3b00 x18: 0000000000000000
+[   18.439447] x17: 0000000000000000 x16: ffff00003fc89040 x15: 0000000000000000
+[   18.446941] x14: 0000000000000003 x13: 0000000000000000 x12: 0000000000000000
+[   18.454423] x11: 0000000000000001 x10: 0000000000000c00 x9 : ffff80000901f4f0
+[   18.461904] x8 : ffff000003704e60 x7 : 0000000000000000 x6 : 000000000523b3e8
+[   18.469278] x5 : 4000000000000002 x4 : ffff800035adc000 x3 : ffff80000b0c3d60
+[   18.476594] x2 : ffff80000a1c7b00 x1 : 4000000000000000 x0 : ffff80000a1c7b00
+[   18.483850] Call trace:
+[   18.491111]  ct_kernel_exit.constprop.0+0x108/0x120
+[   18.498465]  ct_idle_enter+0x14/0x20
+[   18.505793]  cpuidle_enter_state+0x2cc/0x4c0
+[   18.513112]  cpuidle_enter+0x44/0x60
+[   18.518978]  do_idle+0x24c/0x2e0
+[   18.524950]  cpu_startup_entry+0x34/0x40
+[   18.531686]  secondary_start_kernel+0x13c/0x150
+[   18.538141]  __secondary_switched+0xb0/0xb4
+[   18.544315] ---[ end trace 0000000000000000 ]---
+[   19.722064]  mmcblk1: p1
+[   19.740791]  mmcblk1: p1
+[   19.759017]  mmcblk1: p1
+[   19.769040] EXT4-fs (mmcblk0p14): resizing filesystem from 652544
+to 1826299 blocks
+[   19.852550] EXT4-fs (mmcblk0p14): resized filesystem to 1826299
 
-Chuck
+
+ref:
+https://lkft.validation.linaro.org/scheduler/job/5391332#L2911
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20220816/testrun/11378204/suite/log-parser-boot/tests/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
