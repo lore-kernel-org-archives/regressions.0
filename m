@@ -1,86 +1,168 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A116AD0
-	for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 20:51:18 +0000 (UTC)
-Received: from [192.168.1.138] ([37.4.248.80]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MO9r5-1o0Dxc2Fk9-00OTr7; Tue, 16 Aug 2022 22:45:49 +0200
-Message-ID: <b8a5e43a-4d1e-aede-e0f7-f731fd8acf1d@i2se.com>
-Date: Tue, 16 Aug 2022 22:45:48 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEEB6AA9
+	for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 22:23:06 +0000 (UTC)
+Received: by mail-pf1-f173.google.com with SMTP id p125so10538864pfp.2
+        for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 15:23:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc;
+        bh=+TNnx1dvmda/Lv7ys0WsGi7Qw8HijA+5loROtGlHDMQ=;
+        b=LQ1EVAcV5dNOwoU/W9/2lHc048oEom0zyeEB5KHkA+qwNr+/I4LkjK+TLTeNJak9zH
+         u5lBg5s9ADmflAAE/AUqYG0c2CpRwnNquEv33BPHHMNohvPzzs6yh6soip5xpKZWEGs1
+         O4CIkxGzEq/EQpcuVtgo1ar3zyv2x3Jg5i6fypRCUJBmxSkIq1SKf7GHWN2Lkmj1SKho
+         9nu57cfn7o6wwrcOuEWOCtQzQhmeV53CS3eH6kjpiktfpBCEjEy8EPivvpikwJx/r7MD
+         1OLwRYSOlD8m20USk21OHThe0zRLVegrMrlWAvSdisk5yEQOEathlxHbIw4FbkJuvcp4
+         W3UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc;
+        bh=+TNnx1dvmda/Lv7ys0WsGi7Qw8HijA+5loROtGlHDMQ=;
+        b=lkTkoykpp6+t//u1l+OuULYUs1dF/IR5UKlXyrxyozJtHG1v25qMderWpg8BlbR3O5
+         fgQ8uD9RsFBnZF7bs7kgw8pLFsxhE7iZpnyPwor6w/lgKEUupfqPpq5KRNcGCxxmWluK
+         pdatW6GArxHt4mrrw7g6JWMY3vdR/ceOp1gFCPSDDDF9PXyeELdHS2vSFXQ/7bfE5LGY
+         aioXx4YZ7EmAU3uaRJ6SbFZx3HeCteHVlpET/LmToVIrH5FWdBPINFmOxNQdrJRI85gM
+         I+A5/jpb5vioSjvfM1Jm4wZXSxMmKDcIjkjrHy4LGmzfcgUVvjTHl30mGyFiamGG9h+L
+         ZrjQ==
+X-Gm-Message-State: ACgBeo2HyLbaalFYGg062c1YUbmxaqz1E4t9ubUBFTT1NekbVyyoNKi0
+	8TgMaZgjdxQbfGWnabEfS4TOsw==
+X-Google-Smtp-Source: AA6agR75Oq14Fdh+tX2fxCj/DPx+VQc5mfO76YBWcRAtPB/vfTWm4VKe0ZIorrzX4EsFqy1Q0/6L1A==
+X-Received: by 2002:a63:9042:0:b0:41c:cdd4:ae66 with SMTP id a63-20020a639042000000b0041ccdd4ae66mr19087027pge.47.1660688585597;
+        Tue, 16 Aug 2022 15:23:05 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id nh14-20020a17090b364e00b001fa867105a3sm62942pjb.4.2022.08.16.15.23.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Aug 2022 15:23:05 -0700 (PDT)
+Date: Tue, 16 Aug 2022 22:23:01 +0000
+From: Sean Christopherson <seanjc@google.com>
+To: Gavin Shan <gshan@redhat.com>
+Cc: kernel test robot <oliver.sang@intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Andrew Jones <andrew.jones@linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
+	lkp@lists.01.org, lkp@intel.com, xudong.hao@intel.com,
+	regressions@lists.linux.dev
+Subject: Re: [KVM] e923b0537d: kernel-selftests.kvm.rseq_test.fail
+Message-ID: <YvwYxeE4vc/Srbil@google.com>
+References: <Yvn60W/JpPO8URLY@xsang-OptiPlex-9020>
+ <Yvq9wzXNF4ZnlCdk@google.com>
+ <5034abb9-e176-d480-c577-1ec5dd47182b@redhat.com>
+ <9bfeae26-b4b1-eedb-6cbd-b4f9f1e1cc55@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
- Raspberry Pi
-Content-Language: en-US
-To: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org, Ojaswin Mujoo <ojaswin@linux.ibm.com>,
- Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
- Theodore Ts'o <tytso@mit.edu>, Ritesh Harjani <riteshh@linux.ibm.com>,
- linux-fsdevel@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev,
- Florian Fainelli <f.fainelli@gmail.com>
-References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
- <20220728100055.efbvaudwp3ofolpi@quack3>
- <64b7899f-d84d-93de-f9c5-49538bd080d0@i2se.com>
- <20220816093421.ok26tcyvf6bm3ngy@quack3>
-From: Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <20220816093421.ok26tcyvf6bm3ngy@quack3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:QATVIxUIzO4XNP67B+8HP4QQNAu7SDUyzpY148ZnYDJfs7tnRBJ
- P4nHE8TnbMh+WgAS4rs/lgc7XTshocNV1OpZ44YQvy18WcgxRaLBk+kobb43uc74GoOFyUp
- gR19howWA1OqDL8Aq7YNa5EhexZE8b5NFYrK0PM4hMG49wBDM/sICkgNrOWNn1soXhDp+O8
- TqJAbNdm7pr3HJsnooNqA==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jI94R+XpoKU=:YODqq+lF/DlxYRBssKasq8
- lWZmNmQPfTx1wSQHz1nHkBbIQnrJarg2TiYnLSYPIktGkSK5Rse4JoTC4GX5KU6xmDgsyQTtk
- 78fdG/0LT0Pa1piFV+dWiaCp/Ja8Wji2j6JYTNu4MzdJhxRrT0bTAGAa34Lt17irxaObS4Kvr
- quC2X7qeYVIf699jVQr0GHaqndBxAspAEsMn8OZsi8JIAwBmhLfm1Qmjp9UWDDf8BbBKjpQDe
- lrl0/gu403lPKXfSxVDaTCCR7MxLfDqP4i9FovwrexaSumaps/yQiKgRmeSR03O3GtJfbTZP+
- F2i74fZNLMSzMd20/yLgQwBTGusKWXWa1ib0I98iE8dwNizezXXa8SYRKsE6OXZYO67pgT0an
- FAxRUMKB51R03NDhlcoZlPK+vVVjSEYY4HUg0yr4j2OMi/5XOiyTV7sIOTRd2aoicVa9j03iB
- qpGG57d361DqBNRO++smr1Cp306I+rsbtU4iGfs4mhrghz9mO8Ea+WnEuRAoFOD/8Er+IFe2k
- x9axGZTgy6nQV2sqIa5ERhuhXKbW4fW0W7obbxm67y7ppRWgw+oCF15A0JhqSW294V8xAfodg
- Vg2FAd60t2+fIqWMiAE9sJMwIBMF2rLZy6lmdVJDiRAmD7xg1O8Y8C6CvkrgYalZrjcjy+ni4
- O/YJWQCImPbsdOiE/CoeCZk4SaB7QnYLcOOjFVZbNohaf4xavsN9+1CF8Mymfvan51ptFfNVp
- Mnw8Vdr5oXVGK/5G0QY+XWJkDfq+3If5Ir/hP3Ecc1pa09ZPcrGH3CHJG0o=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9bfeae26-b4b1-eedb-6cbd-b4f9f1e1cc55@redhat.com>
 
-Hi Jan,
+On Tue, Aug 16, 2022, Gavin Shan wrote:
+> Hi Sean,
+> 
+> On 8/16/22 3:02 PM, Gavin Shan wrote:
+> > On 8/16/22 7:42 AM, Sean Christopherson wrote:
+> > > On Mon, Aug 15, 2022, kernel test robot wrote:
+> > > > commit: e923b0537d28e15c9d31ce8b38f810b325816903 ("KVM: selftests: Fix target thread to be migrated in rseq_test")
+> > > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> > > 
+> > > ...
+> > > 
+> > > > # selftests: kvm: rseq_test
+> > > > # ==== Test Assertion Failure ====
+> > > > #   rseq_test.c:278: i > (NR_TASK_MIGRATIONS / 2)
+> > > > #   pid=49599 tid=49599 errno=4 - Interrupted system call
+> > > > #      1    0x000000000040265d: main at rseq_test.c:278
+> > > > #      2    0x00007fe44eed07fc: ?? ??:0
+> > > > #      3    0x00000000004026d9: _start at ??:?
+> > > > #   Only performed 23174 KVM_RUNs, task stalled too much?
+> > > > #
+> > > > not ok 56 selftests: kvm: rseq_test # exit=254
+> > > 
+> > > ...
+> > > 
+> > > > # Automatically generated file; DO NOT EDIT.
+> > > > # Linux/x86_64 5.19.0-rc6 Kernel Configuration
+> > > > #
+> > > > CONFIG_CC_VERSION_TEXT="gcc-11 (Debian 11.3.0-3) 11.3.0"
+> > > > CONFIG_CC_IS_GCC=y
+> > > > CONFIG_GCC_VERSION=110300
+> > > > CONFIG_CLANG_VERSION=0
+> > > > CONFIG_AS_IS_GNU=y
+> > > > CONFIG_AS_VERSION=23800
+> > > > CONFIG_LD_IS_BFD=y
+> > > > CONFIG_LD_VERSION=23800
+> > > > CONFIG_LLD_VERSION=0
+> > > 
+> > > Assuming 23800 == 2.38, this is a known issue.
+> > > 
+> > > https://lore.kernel.org/all/20220810104114.6838-1-gshan@redhat.com
+> > > 
+> > 
+> > It's probably different story this time.
 
-Am 16.08.22 um 11:34 schrieb Jan Kara:
-> Hi Stefan!
-> So this is interesting. We can see the card is 100% busy. The IO submitted
-> to the card is formed by small requests - 18-38 KB per request - and each
-> request takes 0.3-0.5s to complete. So the resulting throughput is horrible
-> - only tens of KB/s. Also we can see there are many IOs queued for the
-> device in parallel (aqu-sz columnt). This does not look like load I would
-> expect to be generated by download of a large file from the web.
->
-> You have mentioned in previous emails that with dd(1) you can do couple
-> MB/s writing to this card which is far more than these tens of KB/s. So the
-> file download must be doing something which really destroys the IO pattern
-> (and with mb_optimize_scan=0 ext4 happened to be better dealing with it and
-> generating better IO pattern). Can you perhaps strace the process doing the
-> download (or perhaps strace -f the whole rpi-update process) so that we can
-> see how does the load generated on the filesystem look like? Thanks!
+Doh, if I had bothered to actually look at the error message...
 
-i didn't create the strace yet, but i looked at the source of 
-rpi-update. At the end the download phase is a curl call to download a 
-tar archive and pipe it directly to tar.
+> > The assert is triggered because of the following instructions. I would
+> > guess the reason is vcpu thread has been running on CPU where we has high
+> > CPU load. In this case, the vcpu thread can't be run in time. More
+> > specific, the vcpu thread can't be run in the 1 - 10us time window, which
+> > is specified by the migration worker (thread).
+> > 
+> >      TEST_ASSERT(i > (NR_TASK_MIGRATIONS / 2),
+> >                  "Only performed %d KVM_RUNs, task stalled too much?\n", i);
+> > 
+> > I think we need to improve the handshake mechanism between the vcpu thread
+> > and migration worker. In current implementation, the handshake is done through
+> > the atomic counter. The mechanism is simple enough, but vcpu thread can miss
+> > the aforementioned time window. Another issue is the test case much more time
+> > than expected to finish.
 
-You can find the content list of the tar file here:
+There's not really an expected time to finish.  The original purpose of the test
+is to trigger a kernel race condition, so it's a balance between letting the test
+run long enough to have some confidence that the kernel is bug free, and not running
+so long that it wastes time.
 
-https://raw.githubusercontent.com/lategoodbye/mb_optimize_scan_regress/main/rpi-firmware-tar-content-list.txt
+> > Sean, if you think it's reasonable, I can figure out something to do:
+> > 
+> > - Reuse the atomic counter for a full synchronization between these two
+> >    threads. Something like below:
+> > 
+> >    #define RSEQ_TEST_STATE_RUN_VCPU       0     // vcpu_run()
+> >    #define RSEQ_TEST_STATE_MIGRATE        1     // sched_setaffinity()
+> >    #define RSEQ_TEST_STATE_CHECK          2     // Check rseq.cpu_id and get_cpu()
+> > 
+> >    The atomic counter is reset to RSEQ_TEST_STATE_RUN_VCPU after RSEQ_TEST_STATE_RUN_VCPU
 
-Best regards
+Again, because one of the primary goals is to ensure the kernel is race free, the
+test should avoid full synchronization.
 
->
-> 								Honza
+> > 
+> > - Reduce NR_TASK_MIGRATIONS from 100000 to num_of_online_cpus(). With this,
+> >    less time is needed to finish the test case.
+> > 
+> 
+> I'm able to recreate the issue on my local arm64 system.
+> 
+> - From the source code, the iteration count is changed from 100000 to 1000
+> - Only CPU#0 and CPU#1 are exposed in calc_min_max_cpu, meaning other CPUs
+>   are cleared from @possible_mask
+> - Run some CPU bound task on CPU#0 and CPU#1
+>   # while true; do taskset -c 0 ./a; done
+>   # while true; do taskset -c 1 ./a; done
+> - Run 'rseq_test' and hit the issue
+
+At this point, this isn't a test bug.  The test is right to complain that it didn't
+provide the coverage it's supposed to provide.
+
+If the bot failure is a one-off, my preference is to leave things as-is for now.
+If the failure is an ongoing issue, then we probably need to understand why the
+bot is failing.
