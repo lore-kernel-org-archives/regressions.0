@@ -1,146 +1,88 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECC93C0C
-	for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 11:25:45 +0000 (UTC)
-Received: from [192.168.1.138] ([37.4.248.80]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MPGJh-1o0RUz23cj-00Phll; Tue, 16 Aug 2022 13:25:36 +0200
-Message-ID: <4fcc28c9-c191-1d47-7d3d-c7dd82697ae0@i2se.com>
-Date: Tue, 16 Aug 2022 13:25:35 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 787BA5391
+	for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 14:41:37 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oNxkr-0006js-Lz; Tue, 16 Aug 2022 16:41:17 +0200
+Message-ID: <6b40ecc3-a2d3-3efd-4a19-2faf737f098b@leemhuis.info>
+Date: Tue, 16 Aug 2022 16:41:16 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
- Raspberry Pi
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.0
+Subject: Re: [PATCH 0/3] x86: make pat and mtrr independent from each other
+To: Chuck Zmudzinski <brchuckz@netscape.net>
+Cc: jbeulich@suse.com, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>, regressions@lists.linux.dev,
+ xen-devel@lists.xenproject.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ Juergen Gross <jgross@suse.com>
+References: <20220715142549.25223-1-jgross@suse.com>
+ <efbde93b-e280-0e40-798d-dc7bf8ca83cf@leemhuis.info>
+ <a0ce2f59-b653-fa8b-a016-1335f05c86ae@netscape.net>
+ <32ed59c9-c894-c426-dd27-3602625cf3b1@netscape.net>
+ <c88ea08c-a9d5-ef6a-333a-db9e00c6da6f@suse.com>
+ <bd66b5bc-4d07-d968-f46c-40cf624499a7@netscape.net>
+ <a29a66e0-2075-8084-84ad-8bd3e8a9fd4a@netscape.net>
+ <a7d10605-87e3-c4bd-4a76-f07a04f5751c@leemhuis.info>
+ <8d148826-62a5-95f9-8662-be14f56a6336@netscape.net>
 Content-Language: en-US
-To: Jan Kara <jack@suse.cz>
-Cc: linux-ext4@vger.kernel.org, Ojaswin Mujoo <ojaswin@linux.ibm.com>,
- Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
- Theodore Ts'o <tytso@mit.edu>, Ritesh Harjani <riteshh@linux.ibm.com>,
- linux-fsdevel@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev,
- Florian Fainelli <f.fainelli@gmail.com>
-References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
- <20220728100055.efbvaudwp3ofolpi@quack3>
- <64b7899f-d84d-93de-f9c5-49538bd080d0@i2se.com>
- <20220816093421.ok26tcyvf6bm3ngy@quack3>
-From: Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <20220816093421.ok26tcyvf6bm3ngy@quack3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Y3lubtrwtAjrQWjayneCxm2eMtafdCdLXzO0UmjgYWb7e0tMGkJ
- DJpwP42ujAa8ys2OrGLXqx+Kt2f7vCSW4zb/NwvqJMQCcKXHywK+FE8520NUCJcZQ2EgDfd
- 2bOwdf1cSwonAix3BvfmBXRKFnH4J+OFdfe097qnIwwtmmPLUG6eWgqeyflMaKWVYSQUCYd
- ABCgkRl4x10Uj+VErbBxg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wAMneOEZsME=:GegkZPNuuoVrGG67WI9CHm
- o79l0NLkCZBhiIPFGQgV+G41KdM/sudpLBX2TLW4HAlf0zbscsQpETtL13lo9J8UXtQ1cOC6F
- oZExFFlEhaoSgXhOAwyjCOjNbF/weTgcQsB8bvYHgVh1OdX7j+8gOmpdYLPfv6oe9THcqD4iT
- uj2prhkxUb8XjWS36HDcCfx/4gu2tV0ducc1DnacOEDYlUWDAP39Nh7QKv1B0ytt05Q+EkSeJ
- 3lteK4PTt829XQXroK2LwvTs6l+asWcQ4axs7fzHEu7NIhgz3aHWZajDqiElxvu1h60gPlYb4
- d6OUy33k3Ec8XyuhrdSpJGcAANxy7cIGRAGTprDHJ0A8qRzAI1Z5u1A4GnpZ3Jm4dXiAh7y39
- JLrQY/j2/4oQgSdUCckEdTodYPBT9byYUfNBswuJgN1p1vWztIuBN4uqdzNdUQCQ+rvMfUK8I
- aiBj83jT1SEHZv+2HgFRRKEObR2TN0zmJXddG1Fctqn5mGGgi8EZvk9W/w+nEErVsWYQc3uJr
- LiFqPcHH3OgrFjnXLHGNvlI5kmVo/ZlRvtKwGy4S2Pb++SX7tITJAHqp2pfBvKe1g3dZCK9+P
- xKI2IjKYRJSt3sofOy3ECYtP+pTx6XOqZnITzDyKRZMoTC6gYo3JZVQFg+p1RlizB/Sh3kkiv
- vqE8f5BCaYdC4d58ZItbNix0h384mOVnjq/5ApjdGv8lGTDfRm+ecnK7FhE/ScjQzhbPy05jx
- qYG+ZC5Yp/Um+ahNLjDlLMe2tyAgp/D+iMWeg7/lfEdue1siIsIx3WGYtdk=
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <8d148826-62a5-95f9-8662-be14f56a6336@netscape.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1660660897;fdd628ca;
+X-HE-SMSGID: 1oNxkr-0006js-Lz
 
-Hi Jan,
-
-Am 16.08.22 um 11:34 schrieb Jan Kara:
-> Hi Stefan!
+On 15.08.22 20:17, Chuck Zmudzinski wrote:
+> On 8/15/2022 2:00 PM, Thorsten Leemhuis wrote:
 >
-> On Sat 06-08-22 11:50:28, Stefan Wahren wrote:
->> Am 28.07.22 um 12:00 schrieb Jan Kara:
->>> Hello!
->>>
->>> On Mon 18-07-22 15:29:47, Stefan Wahren wrote:
->>>> i noticed that since Linux 5.18 (Linux 5.19-rc6 is still affected) i'm
->>>> unable to run "rpi-update" without massive performance regression on my
->>>> Raspberry Pi 4 (multi_v7_defconfig + CONFIG_ARM_LPAE). Using Linux 5.17 this
->>>> tool successfully downloads the latest firmware (> 100 MB) on my development
->>>> micro SD card (Kingston 16 GB Industrial) with a ext4 filesystem within ~ 1
->>>> min. The same scenario on Linux 5.18 shows the following symptoms:
->>> Thanks for report and the bisection!
->>>> - download takes endlessly much time and leads to an abort by userspace in
->>>> most cases because of the poor performance
->>>> - massive system load during download even after download has been aborted
->>>> (heartbeat LED goes wild)
->>> OK, is it that the CPU is busy or are we waiting on the storage card?
->>> Observing top(1) for a while should be enough to get the idea.  (sorry, I'm
->>> not very familiar with RPi so I'm not sure what heartbeat LED shows).
->> My description wasn't precise. I mean the green ACT LED, which uses the LED
->> heartbeat trigger:
+>> the right people have the issue on their radar again; give them time to
+>> breath and work out a solution: it's not something that can be fixed
+>> easily within a few minutes by one person alone, as previous discussions
+>> have shown (also keep in mind that the merge window was open until
+>> yesterday, which keeps many maintainers quite busy).
 >>
->> "This allows LEDs to be controlled by a CPU load average. The flash
->> frequency is a hyperbolic function of the 1-minute load average."
->>
->> I'm not sure if it's CPU or IO driven load, here the top output in bad case:
->>
->> top - 08:44:17 up 43 min,  2 users,  load average: 5,02, 5,45, 5,17
->> Tasks: 142 total,   1 running, 141 sleeping,   0 stopped,   0 zombie
->> %Cpu(s):  0,4 us,  0,4 sy,  0,0 ni, 49,0 id, 50,2 wa,  0,0 hi, 0,0 si,  0,0
->> st
->> MiB Mem :   7941,7 total,   4563,1 free,    312,7 used,   3066,0 buff/cache
->> MiB Swap:    100,0 total,    100,0 free,      0,0 used.   7359,6 avail Mem
-> OK, there's plenty of memory available, CPUs are mostly idle, the load is
-> likely created by tasks waiting for IO (which also contribute to load
-> despite not consuming CPU). Not much surprising here.
->
->>> Can you run "iostat -x 1" while the download is running so that we can see
->>> roughly how the IO pattern looks?
->>>
->> Here the output during download:
->>
->> Device            r/s     w/s     rkB/s     wkB/s   rrqm/s wrqm/s  %rrqm
->> %wrqm r_await w_await aqu-sz rareq-sz wareq-sz svctm  %util
->> mmcblk1          0,00    2,00      0,00     36,00     0,00 0,00   0,00
->> 0,00    0,00 23189,50  46,38     0,00    18,00 500,00 100,00
->>
->> avg-cpu:  %user   %nice %system %iowait  %steal   %idle
->>             0,25    0,00    0,00   49,62    0,00   50,13
->>
->> Device            r/s     w/s     rkB/s     wkB/s   rrqm/s wrqm/s  %rrqm
->> %wrqm r_await w_await aqu-sz rareq-sz wareq-sz svctm  %util
->> mmcblk1          0,00    2,00      0,00     76,00     0,00 0,00   0,00
->> 0,00    0,00 46208,50  92,42     0,00    38,00 500,00 100,00
->>
->> avg-cpu:  %user   %nice %system %iowait  %steal   %idle
->>             0,25    0,00    0,00   49,62    0,00   50,13
->>
->> Device            r/s     w/s     rkB/s     wkB/s   rrqm/s wrqm/s  %rrqm
->> %wrqm r_await w_await aqu-sz rareq-sz wareq-sz svctm  %util
->> mmcblk1          0,00    3,00      0,00     76,00     0,00 0,00   0,00
->> 0,00    0,00 48521,67 145,56     0,00    25,33 333,33 100,00
->>
->> avg-cpu:  %user   %nice %system %iowait  %steal   %idle
->>             0,25    0,00    0,00   49,62    0,00   50,13
-> So this is interesting. We can see the card is 100% busy. The IO submitted
-> to the card is formed by small requests - 18-38 KB per request - and each
-> request takes 0.3-0.5s to complete. So the resulting throughput is horrible
-> - only tens of KB/s. Also we can see there are many IOs queued for the
-> device in parallel (aqu-sz columnt). This does not look like load I would
-> expect to be generated by download of a large file from the web.
->
-> You have mentioned in previous emails that with dd(1) you can do couple
-> MB/s writing to this card which is far more than these tens of KB/s. So the
-> file download must be doing something which really destroys the IO pattern
-> (and with mb_optimize_scan=0 ext4 happened to be better dealing with it and
-> generating better IO pattern). Can you perhaps strace the process doing the
-> download (or perhaps strace -f the whole rpi-update process) so that we can
-> see how does the load generated on the filesystem look like? Thanks!
+>> And FWIW: I've seen indicators that a solution to resolve this is
+>> hopefully pretty close now.
+> 
+> That's good to know. But I must ask, can you provide a link to a public
+> discussion that indicates a fix is close?
 
-i can do that. But may be the sources of rpi-update is more helpful?
+I just searched for the commit id of the culprit yesterday like this:
+https://lore.kernel.org/all/?q=bdd8b6c982*
 
-https://github.com/raspberrypi/rpi-update/blob/master/rpi-update
+Which brought me to this message, which looks like Boris applied a
+slightly(?) modified version of Jan's patch to a branch that afaik is
+regularly pushed to Linus:
+https://lore.kernel.org/all/166055884287.401.612271624942869534.tip-bot2@tip-bot2/
 
->
-> 								Honza
+So unless problems show up in linux-next I expect this will land in
+master soon (and a bit later be backported to stable due to the CC
+stable tag).
+
+> Or do you know a fix is close
+> because of private discussions? That distinction is important to me
+> because open source software is much less useful to me if the solutions
+> to problems are not discussed openly (except, of course, for solutions
+> to security vulnerabilities that are not yet public).
+
+You IMHO are expecting a bit too much here IMHO. Solutions to problems
+in open source software get discussed on various, sometimes private
+channels all the time. Just take conferences for example, where people
+discuss them during talks, meetings, or in one-to-ones over coffee;
+sometimes they are the only way to solve complex problems. But as you
+can see from above link it's not like anybody is trying to sneak things
+into the kernel.
+
+Ciao, Thorsten
