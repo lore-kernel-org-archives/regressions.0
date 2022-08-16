@@ -1,151 +1,155 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F857323B
-	for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 09:34:24 +0000 (UTC)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-	by smtp-out1.suse.de (Postfix) with ESMTP id 4A308346EC;
-	Tue, 16 Aug 2022 09:34:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1660642463; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iEdYfa1M4GgGzZG+RuOCPAb/W8L0e/bqVBO0WbncbEE=;
-	b=pBpO8XTXlRzfr9XHY2EY5XFEQIVO6s1UiN7LVjuYTNaMxZ1PC+GyuKrmKnORBcGFydH69W
-	CnwM9Nb68o57IONPf+0uX7J958FobhMNbGv/VNAWtKCxykUsWfcMZPwYgZZKLSDI6+2qzn
-	RfQVriyqAxiodJYgcae2V5FcNO57/cQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1660642463;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iEdYfa1M4GgGzZG+RuOCPAb/W8L0e/bqVBO0WbncbEE=;
-	b=34FB+9QK0NXSIgtZkv3faxX4+8s2JgaMoRYkRu/il6P0qmVqGJ2OQE0yPWlt+IeVyDZPd1
-	p2RTyT8AIQphYQDQ==
-Received: from quack3.suse.cz (unknown [10.100.224.230])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by relay2.suse.de (Postfix) with ESMTPS id 221792C143;
-	Tue, 16 Aug 2022 09:34:23 +0000 (UTC)
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id CC041A066C; Tue, 16 Aug 2022 11:34:21 +0200 (CEST)
-Date: Tue, 16 Aug 2022 11:34:21 +0200
-From: Jan Kara <jack@suse.cz>
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org,
-	Ojaswin Mujoo <ojaswin@linux.ibm.com>,
-	Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
-	Theodore Ts'o <tytso@mit.edu>,
-	Ritesh Harjani <riteshh@linux.ibm.com>,
-	linux-fsdevel@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev,
-	Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
- Raspberry Pi
-Message-ID: <20220816093421.ok26tcyvf6bm3ngy@quack3>
-References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
- <20220728100055.efbvaudwp3ofolpi@quack3>
- <64b7899f-d84d-93de-f9c5-49538bd080d0@i2se.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C6233CC
+	for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 10:02:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1660644145;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tfchwm6zPrjSwgmik9MW07uDL8hwOaly4SF6JMKfNsI=;
+	b=jCOJLvsiGrdbYayjVRSZhweW0MPeph3pQT0kbc8xr8QJKNL3vqxCCPToOjFT7pZugZDYH+
+	1ADp/zbr6NIdbkuZjUm8rno4IF1lgs/zg5L9vzBTmit7GdVxcKMiY55rYwrMBuMeB3sleh
+	BM15cIGZGKy6+qKpKP2iNZjrLCulczU=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-596-kEKcHHxjNfC1IMd4KtneRA-1; Tue, 16 Aug 2022 06:02:21 -0400
+X-MC-Unique: kEKcHHxjNfC1IMd4KtneRA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3E0AA1C05EB6;
+	Tue, 16 Aug 2022 10:02:21 +0000 (UTC)
+Received: from [10.64.54.16] (vpn2-54-16.bne.redhat.com [10.64.54.16])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7992940D2827;
+	Tue, 16 Aug 2022 10:02:17 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
+Subject: Re: [KVM] e923b0537d: kernel-selftests.kvm.rseq_test.fail
+From: Gavin Shan <gshan@redhat.com>
+To: Sean Christopherson <seanjc@google.com>,
+ kernel test robot <oliver.sang@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Oliver Upton
+ <oliver.upton@linux.dev>, Andrew Jones <andrew.jones@linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, lkp@lists.01.org,
+ lkp@intel.com, xudong.hao@intel.com, regressions@lists.linux.dev
+References: <Yvn60W/JpPO8URLY@xsang-OptiPlex-9020>
+ <Yvq9wzXNF4ZnlCdk@google.com>
+ <5034abb9-e176-d480-c577-1ec5dd47182b@redhat.com>
+Message-ID: <9bfeae26-b4b1-eedb-6cbd-b4f9f1e1cc55@redhat.com>
+Date: Tue, 16 Aug 2022 20:02:14 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <5034abb9-e176-d480-c577-1ec5dd47182b@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <64b7899f-d84d-93de-f9c5-49538bd080d0@i2se.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
 
-Hi Stefan!
+Hi Sean,
 
-On Sat 06-08-22 11:50:28, Stefan Wahren wrote:
-> Am 28.07.22 um 12:00 schrieb Jan Kara:
-> > Hello!
-> > 
-> > On Mon 18-07-22 15:29:47, Stefan Wahren wrote:
-> > > i noticed that since Linux 5.18 (Linux 5.19-rc6 is still affected) i'm
-> > > unable to run "rpi-update" without massive performance regression on my
-> > > Raspberry Pi 4 (multi_v7_defconfig + CONFIG_ARM_LPAE). Using Linux 5.17 this
-> > > tool successfully downloads the latest firmware (> 100 MB) on my development
-> > > micro SD card (Kingston 16 GB Industrial) with a ext4 filesystem within ~ 1
-> > > min. The same scenario on Linux 5.18 shows the following symptoms:
-> > Thanks for report and the bisection!
-> > > - download takes endlessly much time and leads to an abort by userspace in
-> > > most cases because of the poor performance
-> > > - massive system load during download even after download has been aborted
-> > > (heartbeat LED goes wild)
-> > OK, is it that the CPU is busy or are we waiting on the storage card?
-> > Observing top(1) for a while should be enough to get the idea.  (sorry, I'm
-> > not very familiar with RPi so I'm not sure what heartbeat LED shows).
+On 8/16/22 3:02 PM, Gavin Shan wrote:
+> On 8/16/22 7:42 AM, Sean Christopherson wrote:
+>> On Mon, Aug 15, 2022, kernel test robot wrote:
+>>> commit: e923b0537d28e15c9d31ce8b38f810b325816903 ("KVM: selftests: Fix target thread to be migrated in rseq_test")
+>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>>
+>> ...
+>>
+>>> # selftests: kvm: rseq_test
+>>> # ==== Test Assertion Failure ====
+>>> #Â Â  rseq_test.c:278: i > (NR_TASK_MIGRATIONS / 2)
+>>> #Â Â  pid=49599 tid=49599 errno=4 - Interrupted system call
+>>> #Â Â Â Â Â  1Â Â Â  0x000000000040265d: main at rseq_test.c:278
+>>> #Â Â Â Â Â  2Â Â Â  0x00007fe44eed07fc: ?? ??:0
+>>> #Â Â Â Â Â  3Â Â Â  0x00000000004026d9: _start at ??:?
+>>> #Â Â  Only performed 23174 KVM_RUNs, task stalled too much?
+>>> #
+>>> not ok 56 selftests: kvm: rseq_test # exit=254
+>>
+>> ...
+>>
+>>> # Automatically generated file; DO NOT EDIT.
+>>> # Linux/x86_64 5.19.0-rc6 Kernel Configuration
+>>> #
+>>> CONFIG_CC_VERSION_TEXT="gcc-11 (Debian 11.3.0-3) 11.3.0"
+>>> CONFIG_CC_IS_GCC=y
+>>> CONFIG_GCC_VERSION=110300
+>>> CONFIG_CLANG_VERSION=0
+>>> CONFIG_AS_IS_GNU=y
+>>> CONFIG_AS_VERSION=23800
+>>> CONFIG_LD_IS_BFD=y
+>>> CONFIG_LD_VERSION=23800
+>>> CONFIG_LLD_VERSION=0
+>>
+>> Assuming 23800 == 2.38, this is a known issue.
+>>
+>> https://lore.kernel.org/all/20220810104114.6838-1-gshan@redhat.com
+>>
 > 
-> My description wasn't precise. I mean the green ACT LED, which uses the LED
-> heartbeat trigger:
+> It's probably different story this time. The assert is triggered because
+> of the following instructions. I would guess the reason is vcpu thread
+> has been running on CPU where we has high CPU load. In this case, the
+> vcpu thread can't be run in time. More specific, the vcpu thread can't
+> be run in the 1 - 10us time window, which is specified by the migration
+> worker (thread).
 > 
-> "This allows LEDs to be controlled by a CPU load average. The flash
-> frequency is a hyperbolic function of the 1-minute load average."
+>  Â Â Â  TEST_ASSERT(i > (NR_TASK_MIGRATIONS / 2),
+>  Â Â Â Â Â Â Â Â Â Â Â Â Â Â Â  "Only performed %d KVM_RUNs, task stalled too much?\n", i);
 > 
-> I'm not sure if it's CPU or IO driven load, here the top output in bad case:
+> I think we need to improve the handshake mechanism between the vcpu thread
+> and migration worker. In current implementation, the handshake is done through
+> the atomic counter. The mechanism is simple enough, but vcpu thread can miss
+> the aforementioned time window. Another issue is the test case much more time
+> than expected to finish.
 > 
-> top - 08:44:17 up 43 min,  2 users,  load average: 5,02, 5,45, 5,17
-> Tasks: 142 total,   1 running, 141 sleeping,   0 stopped,   0 zombie
-> %Cpu(s):  0,4 us,  0,4 sy,  0,0 ni, 49,0 id, 50,2 wa,  0,0 hi, 0,0 si,  0,0
-> st
-> MiB Mem :   7941,7 total,   4563,1 free,    312,7 used,   3066,0 buff/cache
-> MiB Swap:    100,0 total,    100,0 free,      0,0 used.   7359,6 avail Mem
+> Sean, if you think it's reasonable, I can figure out something to do:
+> 
+> - Reuse the atomic counter for a full synchronization between these two
+>  Â  threads. Something like below:
+> 
+>  Â  #define RSEQ_TEST_STATE_RUN_VCPUÂ Â Â Â Â Â  0Â Â Â Â  // vcpu_run()
+>  Â  #define RSEQ_TEST_STATE_MIGRATEÂ Â Â Â Â Â Â  1Â Â Â Â  // sched_setaffinity()
+>  Â  #define RSEQ_TEST_STATE_CHECKÂ Â Â Â Â Â Â Â Â  2Â Â Â Â  // Check rseq.cpu_id and get_cpu()
+> 
+>  Â  The atomic counter is reset to RSEQ_TEST_STATE_RUN_VCPU after RSEQ_TEST_STATE_RUN_VCPU
+> 
+> - Reduce NR_TASK_MIGRATIONS from 100000 to num_of_online_cpus(). With this,
+>  Â  less time is needed to finish the test case.
+> 
 
-OK, there's plenty of memory available, CPUs are mostly idle, the load is
-likely created by tasks waiting for IO (which also contribute to load
-despite not consuming CPU). Not much surprising here.
+I'm able to recreate the issue on my local arm64 system.
 
-> > Can you run "iostat -x 1" while the download is running so that we can see
-> > roughly how the IO pattern looks?
-> > 
-> Here the output during download:
-> 
-> Device            r/s     w/s     rkB/s     wkB/s   rrqm/s wrqm/s  %rrqm 
-> %wrqm r_await w_await aqu-sz rareq-sz wareq-sz svctm  %util
-> mmcblk1          0,00    2,00      0,00     36,00     0,00 0,00   0,00  
-> 0,00    0,00 23189,50  46,38     0,00    18,00 500,00 100,00
-> 
-> avg-cpu:  %user   %nice %system %iowait  %steal   %idle
->            0,25    0,00    0,00   49,62    0,00   50,13
-> 
-> Device            r/s     w/s     rkB/s     wkB/s   rrqm/s wrqm/s  %rrqm 
-> %wrqm r_await w_await aqu-sz rareq-sz wareq-sz svctm  %util
-> mmcblk1          0,00    2,00      0,00     76,00     0,00 0,00   0,00  
-> 0,00    0,00 46208,50  92,42     0,00    38,00 500,00 100,00
-> 
-> avg-cpu:  %user   %nice %system %iowait  %steal   %idle
->            0,25    0,00    0,00   49,62    0,00   50,13
-> 
-> Device            r/s     w/s     rkB/s     wkB/s   rrqm/s wrqm/s  %rrqm 
-> %wrqm r_await w_await aqu-sz rareq-sz wareq-sz svctm  %util
-> mmcblk1          0,00    3,00      0,00     76,00     0,00 0,00   0,00  
-> 0,00    0,00 48521,67 145,56     0,00    25,33 333,33 100,00
-> 
-> avg-cpu:  %user   %nice %system %iowait  %steal   %idle
->            0,25    0,00    0,00   49,62    0,00   50,13
+- From the source code, the iteration count is changed from 100000 to 1000
+- Only CPU#0 and CPU#1 are exposed in calc_min_max_cpu, meaning other CPUs
+   are cleared from @possible_mask
+- Run some CPU bound task on CPU#0 and CPU#1
+   # while true; do taskset -c 0 ./a; done
+   # while true; do taskset -c 1 ./a; done
+- Run 'rseq_test' and hit the issue
+   # ./rseq_test
+   calc_min_max_cpu: nproc=224
+   calc_min_max_cpu: min_cpu=0, max_cpu=1
+   main: Required tests: 1000   Succeeds: 1
+   ==== Test Assertion Failure ====
+     rseq_test.c:280: i > (NR_TASK_MIGRATIONS / 2)
+     pid=9624 tid=9624 errno=4 - Interrupted system call
+        1	0x0000000000401cf3: main at rseq_test.c:280
+        2	0x0000ffffbc64679b: ?? ??:0
+        3	0x0000ffffbc64686b: ?? ??:0
+        4	0x0000000000401def: _start at ??:?
+     Only performed 1 KVM_RUNs, task stalled too much?
 
-So this is interesting. We can see the card is 100% busy. The IO submitted
-to the card is formed by small requests - 18-38 KB per request - and each
-request takes 0.3-0.5s to complete. So the resulting throughput is horrible
-- only tens of KB/s. Also we can see there are many IOs queued for the
-device in parallel (aqu-sz columnt). This does not look like load I would
-expect to be generated by download of a large file from the web.
+Thanks,
+Gavin
 
-You have mentioned in previous emails that with dd(1) you can do couple
-MB/s writing to this card which is far more than these tens of KB/s. So the
-file download must be doing something which really destroys the IO pattern
-(and with mb_optimize_scan=0 ext4 happened to be better dealing with it and
-generating better IO pattern). Can you perhaps strace the process doing the
-download (or perhaps strace -f the whole rpi-update process) so that we can
-see how does the load generated on the filesystem look like? Thanks!
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
