@@ -1,82 +1,86 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D8A6AAE
-	for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 19:42:27 +0000 (UTC)
-Received: by mail-ed1-f44.google.com with SMTP id y3so14826199eda.6
-        for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 12:42:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=j6C9lf7JhzlxE1F6ouy9UeQqCIuaLiW4edqmr70l3os=;
-        b=gy/irX4iIF4tgnkELB1IcuP4tGk8YBjcODGsbsYD7RqExJGVHo0bL8amAC7w81Itx8
-         OpF7//aWC3ven/odaxRytaZW3ncs7O1Yu47hkFJEsxNY5Z4kL04QnQ89seNTpfsiSHIy
-         USuzpUUCp1KxFjMUb6L17sYt1B4yXRFEatTC0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=j6C9lf7JhzlxE1F6ouy9UeQqCIuaLiW4edqmr70l3os=;
-        b=Jz3np+8uaJKs8vKJe8iQdNlZTUmxuq8mGDRkBU80OtrBJQWOy5kZ+2kPyMAadPPqOQ
-         KvcPCQgpTWNOH0ybrxzQ98awDdC8b4pbQ0+nC5gEnMBJQGBm8IERD7+AgaIYFvewHtIc
-         jtYLqlL68DinSg44a1eEofI0PvLrwfb3v0d/WLMfUCz2CaXOpiTh/DelZi8KnySNxpGN
-         7NJ31VE5LV7Dtu5lTGregFAwUqWjo1lOXHtXlpCscAwSFKRhGYhAnqOPY5pracDif4oI
-         NgHlFJPBirPGWCD3Km0Naut89JegwtfH1HGEjHVv1VrT9u4go33KDwMMIaM3otVjsVjI
-         qelg==
-X-Gm-Message-State: ACgBeo2u5Ug8TfK9LW3JKcFYi/eLiZoY4mwNTAwmTOuumnrLQzIK1kk6
-	E8REqX1YE2ZxRL5CuujMXqT0CaSDebuWDj6cNUQ=
-X-Google-Smtp-Source: AA6agR4vx9yvK3KHDvXF4DYauf0cgqFeEUi2TdvdYf2HcDjLUewdNclfTCWQYuske57RtSFZ361ROw==
-X-Received: by 2002:a05:6402:4392:b0:43e:5033:40f8 with SMTP id o18-20020a056402439200b0043e503340f8mr20395941edc.245.1660678946031;
-        Tue, 16 Aug 2022 12:42:26 -0700 (PDT)
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com. [209.85.128.52])
-        by smtp.gmail.com with ESMTPSA id c26-20020a056402101a00b0043bea0a48d0sm8924167edu.22.2022.08.16.12.42.25
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 16 Aug 2022 12:42:25 -0700 (PDT)
-Received: by mail-wm1-f52.google.com with SMTP id j26so3482201wms.0
-        for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 12:42:25 -0700 (PDT)
-X-Received: by 2002:a05:600c:657:b0:3a5:e4e6:ee24 with SMTP id
- p23-20020a05600c065700b003a5e4e6ee24mr71425wmm.68.1660678944697; Tue, 16 Aug
- 2022 12:42:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A116AD0
+	for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 20:51:18 +0000 (UTC)
+Received: from [192.168.1.138] ([37.4.248.80]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MO9r5-1o0Dxc2Fk9-00OTr7; Tue, 16 Aug 2022 22:45:49 +0200
+Message-ID: <b8a5e43a-4d1e-aede-e0f7-f731fd8acf1d@i2se.com>
+Date: Tue, 16 Aug 2022 22:45:48 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYv2Wof_Z4j8wGYapzngei_NjtnGUomb7y34h4VDjrQDBA@mail.gmail.com>
- <CAHk-=wj=u9+0kitx6Z=efRDrGVu_OSUieenyK4ih=TFjZdyMYQ@mail.gmail.com> <CA+G9fYuLvTmVbyEpU3vrw58QaWfN=Eg8VdrdRei_jmu2Y2OzOg@mail.gmail.com>
-In-Reply-To: <CA+G9fYuLvTmVbyEpU3vrw58QaWfN=Eg8VdrdRei_jmu2Y2OzOg@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 16 Aug 2022 12:42:08 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whxpMiMj0M7rvz-zsd4G+LB=kcUrM-3VPTt5EauER4iyA@mail.gmail.com>
-Message-ID: <CAHk-=whxpMiMj0M7rvz-zsd4G+LB=kcUrM-3VPTt5EauER4iyA@mail.gmail.com>
-Subject: Re: [next] arm64: kernel BUG at fs/inode.c:622 - Internal error: Oops
- - BUG: 0 - pc : clear_inode
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <christian.brauner@ubuntu.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
+ Raspberry Pi
+Content-Language: en-US
+To: Jan Kara <jack@suse.cz>
+Cc: linux-ext4@vger.kernel.org, Ojaswin Mujoo <ojaswin@linux.ibm.com>,
+ Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
+ Theodore Ts'o <tytso@mit.edu>, Ritesh Harjani <riteshh@linux.ibm.com>,
+ linux-fsdevel@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev,
+ Florian Fainelli <f.fainelli@gmail.com>
+References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
+ <20220728100055.efbvaudwp3ofolpi@quack3>
+ <64b7899f-d84d-93de-f9c5-49538bd080d0@i2se.com>
+ <20220816093421.ok26tcyvf6bm3ngy@quack3>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+In-Reply-To: <20220816093421.ok26tcyvf6bm3ngy@quack3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:QATVIxUIzO4XNP67B+8HP4QQNAu7SDUyzpY148ZnYDJfs7tnRBJ
+ P4nHE8TnbMh+WgAS4rs/lgc7XTshocNV1OpZ44YQvy18WcgxRaLBk+kobb43uc74GoOFyUp
+ gR19howWA1OqDL8Aq7YNa5EhexZE8b5NFYrK0PM4hMG49wBDM/sICkgNrOWNn1soXhDp+O8
+ TqJAbNdm7pr3HJsnooNqA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jI94R+XpoKU=:YODqq+lF/DlxYRBssKasq8
+ lWZmNmQPfTx1wSQHz1nHkBbIQnrJarg2TiYnLSYPIktGkSK5Rse4JoTC4GX5KU6xmDgsyQTtk
+ 78fdG/0LT0Pa1piFV+dWiaCp/Ja8Wji2j6JYTNu4MzdJhxRrT0bTAGAa34Lt17irxaObS4Kvr
+ quC2X7qeYVIf699jVQr0GHaqndBxAspAEsMn8OZsi8JIAwBmhLfm1Qmjp9UWDDf8BbBKjpQDe
+ lrl0/gu403lPKXfSxVDaTCCR7MxLfDqP4i9FovwrexaSumaps/yQiKgRmeSR03O3GtJfbTZP+
+ F2i74fZNLMSzMd20/yLgQwBTGusKWXWa1ib0I98iE8dwNizezXXa8SYRKsE6OXZYO67pgT0an
+ FAxRUMKB51R03NDhlcoZlPK+vVVjSEYY4HUg0yr4j2OMi/5XOiyTV7sIOTRd2aoicVa9j03iB
+ qpGG57d361DqBNRO++smr1Cp306I+rsbtU4iGfs4mhrghz9mO8Ea+WnEuRAoFOD/8Er+IFe2k
+ x9axGZTgy6nQV2sqIa5ERhuhXKbW4fW0W7obbxm67y7ppRWgw+oCF15A0JhqSW294V8xAfodg
+ Vg2FAd60t2+fIqWMiAE9sJMwIBMF2rLZy6lmdVJDiRAmD7xg1O8Y8C6CvkrgYalZrjcjy+ni4
+ O/YJWQCImPbsdOiE/CoeCZk4SaB7QnYLcOOjFVZbNohaf4xavsN9+1CF8Mymfvan51ptFfNVp
+ Mnw8Vdr5oXVGK/5G0QY+XWJkDfq+3If5Ir/hP3Ecc1pa09ZPcrGH3CHJG0o=
 
-On Tue, Aug 16, 2022 at 12:39 PM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
+Hi Jan,
+
+Am 16.08.22 um 11:34 schrieb Jan Kara:
+> Hi Stefan!
+> So this is interesting. We can see the card is 100% busy. The IO submitted
+> to the card is formed by small requests - 18-38 KB per request - and each
+> request takes 0.3-0.5s to complete. So the resulting throughput is horrible
+> - only tens of KB/s. Also we can see there are many IOs queued for the
+> device in parallel (aqu-sz columnt). This does not look like load I would
+> expect to be generated by download of a large file from the web.
 >
-> This is a physical hardware db410c device.
-> Following VIRTIO configs enabled.
+> You have mentioned in previous emails that with dd(1) you can do couple
+> MB/s writing to this card which is far more than these tens of KB/s. So the
+> file download must be doing something which really destroys the IO pattern
+> (and with mb_optimize_scan=0 ext4 happened to be better dealing with it and
+> generating better IO pattern). Can you perhaps strace the process doing the
+> download (or perhaps strace -f the whole rpi-update process) so that we can
+> see how does the load generated on the filesystem look like? Thanks!
 
-Yeah, it's not enough to just enable the VIRTIO support, it actually
-needs to run in a virt environment, and with a hypervisor that gets
-confused by the virtio changes.
+i didn't create the strace yet, but i looked at the source of 
+rpi-update. At the end the download phase is a curl call to download a 
+tar archive and pipe it directly to tar.
 
-Plus:
+You can find the content list of the tar file here:
 
-> > Do you see the same issue with plain v6.0-rc1?
+https://raw.githubusercontent.com/lategoodbye/mb_optimize_scan_regress/main/rpi-firmware-tar-content-list.txt
+
+Best regards
+
 >
-> Nope. I do not notice reported BUG on v6.0-rc1.
-
-Ok, so definitely not related to the google cloud issue we had in rc1.
-
-               Linus
+> 								Honza
