@@ -1,168 +1,182 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BEEB6AA9
-	for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 22:23:06 +0000 (UTC)
-Received: by mail-pf1-f173.google.com with SMTP id p125so10538864pfp.2
-        for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 15:23:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc;
-        bh=+TNnx1dvmda/Lv7ys0WsGi7Qw8HijA+5loROtGlHDMQ=;
-        b=LQ1EVAcV5dNOwoU/W9/2lHc048oEom0zyeEB5KHkA+qwNr+/I4LkjK+TLTeNJak9zH
-         u5lBg5s9ADmflAAE/AUqYG0c2CpRwnNquEv33BPHHMNohvPzzs6yh6soip5xpKZWEGs1
-         O4CIkxGzEq/EQpcuVtgo1ar3zyv2x3Jg5i6fypRCUJBmxSkIq1SKf7GHWN2Lkmj1SKho
-         9nu57cfn7o6wwrcOuEWOCtQzQhmeV53CS3eH6kjpiktfpBCEjEy8EPivvpikwJx/r7MD
-         1OLwRYSOlD8m20USk21OHThe0zRLVegrMrlWAvSdisk5yEQOEathlxHbIw4FbkJuvcp4
-         W3UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc;
-        bh=+TNnx1dvmda/Lv7ys0WsGi7Qw8HijA+5loROtGlHDMQ=;
-        b=lkTkoykpp6+t//u1l+OuULYUs1dF/IR5UKlXyrxyozJtHG1v25qMderWpg8BlbR3O5
-         fgQ8uD9RsFBnZF7bs7kgw8pLFsxhE7iZpnyPwor6w/lgKEUupfqPpq5KRNcGCxxmWluK
-         pdatW6GArxHt4mrrw7g6JWMY3vdR/ceOp1gFCPSDDDF9PXyeELdHS2vSFXQ/7bfE5LGY
-         aioXx4YZ7EmAU3uaRJ6SbFZx3HeCteHVlpET/LmToVIrH5FWdBPINFmOxNQdrJRI85gM
-         I+A5/jpb5vioSjvfM1Jm4wZXSxMmKDcIjkjrHy4LGmzfcgUVvjTHl30mGyFiamGG9h+L
-         ZrjQ==
-X-Gm-Message-State: ACgBeo2HyLbaalFYGg062c1YUbmxaqz1E4t9ubUBFTT1NekbVyyoNKi0
-	8TgMaZgjdxQbfGWnabEfS4TOsw==
-X-Google-Smtp-Source: AA6agR75Oq14Fdh+tX2fxCj/DPx+VQc5mfO76YBWcRAtPB/vfTWm4VKe0ZIorrzX4EsFqy1Q0/6L1A==
-X-Received: by 2002:a63:9042:0:b0:41c:cdd4:ae66 with SMTP id a63-20020a639042000000b0041ccdd4ae66mr19087027pge.47.1660688585597;
-        Tue, 16 Aug 2022 15:23:05 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id nh14-20020a17090b364e00b001fa867105a3sm62942pjb.4.2022.08.16.15.23.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Aug 2022 15:23:05 -0700 (PDT)
-Date: Tue, 16 Aug 2022 22:23:01 +0000
-From: Sean Christopherson <seanjc@google.com>
-To: Gavin Shan <gshan@redhat.com>
-Cc: kernel test robot <oliver.sang@intel.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Andrew Jones <andrew.jones@linux.dev>,
-	LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-	lkp@lists.01.org, lkp@intel.com, xudong.hao@intel.com,
-	regressions@lists.linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C957C
+	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 00:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1660694814;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=p4aPAnVSr6FBk5QXVZnMKCLLXwxKwvTNDlLlqNRSqJg=;
+	b=AouqXUl+LhADRXvUZN8PP06rzsw1ms4Dt+0YAfgwXpzBfFQAOp1aatifaak4rWYEdqJHPg
+	JjQL74nG4jUoiVqYJNRJxmFtDSWv/I5UTktaIHK08uNW4kriLEwnTsGIbge7/71Im/f9sy
+	flO59xyEzVjeGA/lx/fXmukQCyDY5PM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-42-8Y_WoPEjP3KCyIOPNMhIEg-1; Tue, 16 Aug 2022 20:06:49 -0400
+X-MC-Unique: 8Y_WoPEjP3KCyIOPNMhIEg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C9862185A79C;
+	Wed, 17 Aug 2022 00:06:48 +0000 (UTC)
+Received: from [10.64.54.16] (vpn2-54-16.bne.redhat.com [10.64.54.16])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 504862166B26;
+	Wed, 17 Aug 2022 00:06:43 +0000 (UTC)
+Reply-To: Gavin Shan <gshan@redhat.com>
 Subject: Re: [KVM] e923b0537d: kernel-selftests.kvm.rseq_test.fail
-Message-ID: <YvwYxeE4vc/Srbil@google.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: kernel test robot <oliver.sang@intel.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Oliver Upton <oliver.upton@linux.dev>,
+ Andrew Jones <andrew.jones@linux.dev>, LKML <linux-kernel@vger.kernel.org>,
+ kvm@vger.kernel.org, lkp@lists.01.org, lkp@intel.com, xudong.hao@intel.com,
+ regressions@lists.linux.dev
 References: <Yvn60W/JpPO8URLY@xsang-OptiPlex-9020>
  <Yvq9wzXNF4ZnlCdk@google.com>
  <5034abb9-e176-d480-c577-1ec5dd47182b@redhat.com>
  <9bfeae26-b4b1-eedb-6cbd-b4f9f1e1cc55@redhat.com>
+ <YvwYxeE4vc/Srbil@google.com>
+From: Gavin Shan <gshan@redhat.com>
+Message-ID: <d8290cbe-5d87-137a-0633-0ff5c69d57b0@redhat.com>
+Date: Wed, 17 Aug 2022 10:06:41 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <YvwYxeE4vc/Srbil@google.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9bfeae26-b4b1-eedb-6cbd-b4f9f1e1cc55@redhat.com>
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
 
-On Tue, Aug 16, 2022, Gavin Shan wrote:
-> Hi Sean,
+Hi Sean,
+
+On 8/17/22 8:23 AM, Sean Christopherson wrote:
+> On Tue, Aug 16, 2022, Gavin Shan wrote:
+>> On 8/16/22 3:02 PM, Gavin Shan wrote:
+>>> On 8/16/22 7:42 AM, Sean Christopherson wrote:
+>>>> On Mon, Aug 15, 2022, kernel test robot wrote:
+>>>>> commit: e923b0537d28e15c9d31ce8b38f810b325816903 ("KVM: selftests: Fix target thread to be migrated in rseq_test")
+>>>>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+>>>>
+>>>> ...
+>>>>
+>>>>> # selftests: kvm: rseq_test
+>>>>> # ==== Test Assertion Failure ====
+>>>>> #   rseq_test.c:278: i > (NR_TASK_MIGRATIONS / 2)
+>>>>> #   pid=49599 tid=49599 errno=4 - Interrupted system call
+>>>>> #      1    0x000000000040265d: main at rseq_test.c:278
+>>>>> #      2    0x00007fe44eed07fc: ?? ??:0
+>>>>> #      3    0x00000000004026d9: _start at ??:?
+>>>>> #   Only performed 23174 KVM_RUNs, task stalled too much?
+>>>>> #
+>>>>> not ok 56 selftests: kvm: rseq_test # exit=254
+>>>>
+>>>> ...
+>>>>
+>>>>> # Automatically generated file; DO NOT EDIT.
+>>>>> # Linux/x86_64 5.19.0-rc6 Kernel Configuration
+>>>>> #
+>>>>> CONFIG_CC_VERSION_TEXT="gcc-11 (Debian 11.3.0-3) 11.3.0"
+>>>>> CONFIG_CC_IS_GCC=y
+>>>>> CONFIG_GCC_VERSION=110300
+>>>>> CONFIG_CLANG_VERSION=0
+>>>>> CONFIG_AS_IS_GNU=y
+>>>>> CONFIG_AS_VERSION=23800
+>>>>> CONFIG_LD_IS_BFD=y
+>>>>> CONFIG_LD_VERSION=23800
+>>>>> CONFIG_LLD_VERSION=0
+>>>>
+>>>> Assuming 23800 == 2.38, this is a known issue.
+>>>>
+>>>> https://lore.kernel.org/all/20220810104114.6838-1-gshan@redhat.com
+>>>>
+>>>
+>>> It's probably different story this time.
 > 
-> On 8/16/22 3:02 PM, Gavin Shan wrote:
-> > On 8/16/22 7:42 AM, Sean Christopherson wrote:
-> > > On Mon, Aug 15, 2022, kernel test robot wrote:
-> > > > commit: e923b0537d28e15c9d31ce8b38f810b325816903 ("KVM: selftests: Fix target thread to be migrated in rseq_test")
-> > > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> > > 
-> > > ...
-> > > 
-> > > > # selftests: kvm: rseq_test
-> > > > # ==== Test Assertion Failure ====
-> > > > #   rseq_test.c:278: i > (NR_TASK_MIGRATIONS / 2)
-> > > > #   pid=49599 tid=49599 errno=4 - Interrupted system call
-> > > > #      1    0x000000000040265d: main at rseq_test.c:278
-> > > > #      2    0x00007fe44eed07fc: ?? ??:0
-> > > > #      3    0x00000000004026d9: _start at ??:?
-> > > > #   Only performed 23174 KVM_RUNs, task stalled too much?
-> > > > #
-> > > > not ok 56 selftests: kvm: rseq_test # exit=254
-> > > 
-> > > ...
-> > > 
-> > > > # Automatically generated file; DO NOT EDIT.
-> > > > # Linux/x86_64 5.19.0-rc6 Kernel Configuration
-> > > > #
-> > > > CONFIG_CC_VERSION_TEXT="gcc-11 (Debian 11.3.0-3) 11.3.0"
-> > > > CONFIG_CC_IS_GCC=y
-> > > > CONFIG_GCC_VERSION=110300
-> > > > CONFIG_CLANG_VERSION=0
-> > > > CONFIG_AS_IS_GNU=y
-> > > > CONFIG_AS_VERSION=23800
-> > > > CONFIG_LD_IS_BFD=y
-> > > > CONFIG_LD_VERSION=23800
-> > > > CONFIG_LLD_VERSION=0
-> > > 
-> > > Assuming 23800 == 2.38, this is a known issue.
-> > > 
-> > > https://lore.kernel.org/all/20220810104114.6838-1-gshan@redhat.com
-> > > 
-> > 
-> > It's probably different story this time.
-
-Doh, if I had bothered to actually look at the error message...
-
-> > The assert is triggered because of the following instructions. I would
-> > guess the reason is vcpu thread has been running on CPU where we has high
-> > CPU load. In this case, the vcpu thread can't be run in time. More
-> > specific, the vcpu thread can't be run in the 1 - 10us time window, which
-> > is specified by the migration worker (thread).
-> > 
-> >      TEST_ASSERT(i > (NR_TASK_MIGRATIONS / 2),
-> >                  "Only performed %d KVM_RUNs, task stalled too much?\n", i);
-> > 
-> > I think we need to improve the handshake mechanism between the vcpu thread
-> > and migration worker. In current implementation, the handshake is done through
-> > the atomic counter. The mechanism is simple enough, but vcpu thread can miss
-> > the aforementioned time window. Another issue is the test case much more time
-> > than expected to finish.
-
-There's not really an expected time to finish.  The original purpose of the test
-is to trigger a kernel race condition, so it's a balance between letting the test
-run long enough to have some confidence that the kernel is bug free, and not running
-so long that it wastes time.
-
-> > Sean, if you think it's reasonable, I can figure out something to do:
-> > 
-> > - Reuse the atomic counter for a full synchronization between these two
-> >    threads. Something like below:
-> > 
-> >    #define RSEQ_TEST_STATE_RUN_VCPU       0     // vcpu_run()
-> >    #define RSEQ_TEST_STATE_MIGRATE        1     // sched_setaffinity()
-> >    #define RSEQ_TEST_STATE_CHECK          2     // Check rseq.cpu_id and get_cpu()
-> > 
-> >    The atomic counter is reset to RSEQ_TEST_STATE_RUN_VCPU after RSEQ_TEST_STATE_RUN_VCPU
-
-Again, because one of the primary goals is to ensure the kernel is race free, the
-test should avoid full synchronization.
-
-> > 
-> > - Reduce NR_TASK_MIGRATIONS from 100000 to num_of_online_cpus(). With this,
-> >    less time is needed to finish the test case.
-> > 
+> Doh, if I had bothered to actually look at the error message...
 > 
-> I'm able to recreate the issue on my local arm64 system.
+
+Ok :)
+
+>>> The assert is triggered because of the following instructions. I would
+>>> guess the reason is vcpu thread has been running on CPU where we has high
+>>> CPU load. In this case, the vcpu thread can't be run in time. More
+>>> specific, the vcpu thread can't be run in the 1 - 10us time window, which
+>>> is specified by the migration worker (thread).
+>>>
+>>>       TEST_ASSERT(i > (NR_TASK_MIGRATIONS / 2),
+>>>                   "Only performed %d KVM_RUNs, task stalled too much?\n", i);
+>>>
+>>> I think we need to improve the handshake mechanism between the vcpu thread
+>>> and migration worker. In current implementation, the handshake is done through
+>>> the atomic counter. The mechanism is simple enough, but vcpu thread can miss
+>>> the aforementioned time window. Another issue is the test case much more time
+>>> than expected to finish.
 > 
-> - From the source code, the iteration count is changed from 100000 to 1000
-> - Only CPU#0 and CPU#1 are exposed in calc_min_max_cpu, meaning other CPUs
->   are cleared from @possible_mask
-> - Run some CPU bound task on CPU#0 and CPU#1
->   # while true; do taskset -c 0 ./a; done
->   # while true; do taskset -c 1 ./a; done
-> - Run 'rseq_test' and hit the issue
+> There's not really an expected time to finish.  The original purpose of the test
+> is to trigger a kernel race condition, so it's a balance between letting the test
+> run long enough to have some confidence that the kernel is bug free, and not running
+> so long that it wastes time.
+> 
 
-At this point, this isn't a test bug.  The test is right to complain that it didn't
-provide the coverage it's supposed to provide.
+Yeah, I was thinking of it. It's why I'm not 100% sure for my proposal, to have
+full synchronization.
 
-If the bot failure is a one-off, my preference is to leave things as-is for now.
-If the failure is an ongoing issue, then we probably need to understand why the
-bot is failing.
+>>> Sean, if you think it's reasonable, I can figure out something to do:
+>>>
+>>> - Reuse the atomic counter for a full synchronization between these two
+>>>     threads. Something like below:
+>>>
+>>>     #define RSEQ_TEST_STATE_RUN_VCPU       0     // vcpu_run()
+>>>     #define RSEQ_TEST_STATE_MIGRATE        1     // sched_setaffinity()
+>>>     #define RSEQ_TEST_STATE_CHECK          2     // Check rseq.cpu_id and get_cpu()
+>>>
+>>>     The atomic counter is reset to RSEQ_TEST_STATE_RUN_VCPU after RSEQ_TEST_STATE_RUN_VCPU
+> 
+> Again, because one of the primary goals is to ensure the kernel is race free, the
+> test should avoid full synchronization.
+> 
+
+Ok.
+
+>>>
+>>> - Reduce NR_TASK_MIGRATIONS from 100000 to num_of_online_cpus(). With this,
+>>>     less time is needed to finish the test case.
+>>>
+>>
+>> I'm able to recreate the issue on my local arm64 system.
+>>
+>> - From the source code, the iteration count is changed from 100000 to 1000
+>> - Only CPU#0 and CPU#1 are exposed in calc_min_max_cpu, meaning other CPUs
+>>    are cleared from @possible_mask
+>> - Run some CPU bound task on CPU#0 and CPU#1
+>>    # while true; do taskset -c 0 ./a; done
+>>    # while true; do taskset -c 1 ./a; done
+>> - Run 'rseq_test' and hit the issue
+> 
+> At this point, this isn't a test bug.  The test is right to complain that it didn't
+> provide the coverage it's supposed to provide.
+> 
+> If the bot failure is a one-off, my preference is to leave things as-is for now.
+> If the failure is an ongoing issue, then we probably need to understand why the
+> bot is failing.
+> 
+
+Yeah, the system for the coverage was likely having high CPU loads, which is similar
+to my (simulated) environment. I usually have my system being idle when running the
+coverage test cases. I didn't hit this specific failure before.
+
+Lets leave it as of being. We can improve if needed in future :)
+
+Thanks,
+Gavin
+
