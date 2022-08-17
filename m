@@ -1,122 +1,142 @@
-Received: from gimli.rothwell.id.au (gimli.rothwell.id.au [103.230.158.156])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A037B
-	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 02:07:18 +0000 (UTC)
-Received: from authenticated.rothwell.id.au (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.rothwell.id.au (Postfix) with ESMTPSA id 4M6rpD6n0HzyZr;
-	Wed, 17 Aug 2022 12:00:52 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rothwell.id.au;
-	s=201702; t=1660701655;
-	bh=dtW8+2kRTTd1rXIAqfFHietP1JcPVL/dXFAV5Z7/924=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=B3gicvIbPhiksqYFbDzbrusCOR+IfJfi01CCVe2eHg+IpqhRZTc7FfsNrrGwzN+ny
-	 zizJAeprJ2hMEi0W4b49akWqiUKlhYT3ySc8mUoZj+LEGuxbelkebrreTAtCljksnt
-	 VKNSAhGz5ERwPWm5vbbAEUtoPW+CNhIlPZVr9MuBgtF5Rg7I1gIBa0C8Fxhh1279aA
-	 vSsoUsAFbV+T9f3+3gZdtvMgQD/GFgfjV8iQ9Y9urIHBlkMEVZ/jnWgcZja+/aIo58
-	 yEhxinFYBcoIxIWEAo6E4gEQUHhfx9vNRmwelGAJlyqnWD5QzbOOiwppYM/cypbtbM
-	 GkpPulwQSjMTg==
-Date: Wed, 17 Aug 2022 12:00:51 +1000
-From: Stephen Rothwell <sfr@rothwell.id.au>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, open list
- <linux-kernel@vger.kernel.org>, Linux-Next Mailing List
- <linux-next@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
- regressions@lists.linux.dev, lkft-triage@lists.linaro.org, Alexander Viro
- <viro@zeniv.linux.org.uk>, Christian Brauner <christian.brauner@ubuntu.com>
-Subject: Re: [next] arm64: kernel BUG at fs/inode.c:622 - Internal error:
- Oops - BUG: 0 - pc : clear_inode
-Message-ID: <20220817120051.20a39b52@oak.ozlabs.ibm.com>
-In-Reply-To: <CA+G9fYuLvTmVbyEpU3vrw58QaWfN=Eg8VdrdRei_jmu2Y2OzOg@mail.gmail.com>
-References: <CA+G9fYv2Wof_Z4j8wGYapzngei_NjtnGUomb7y34h4VDjrQDBA@mail.gmail.com>
-	<CAHk-=wj=u9+0kitx6Z=efRDrGVu_OSUieenyK4ih=TFjZdyMYQ@mail.gmail.com>
-	<CA+G9fYuLvTmVbyEpU3vrw58QaWfN=Eg8VdrdRei_jmu2Y2OzOg@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.34; aarch64-unknown-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFF023CB
+	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 05:25:02 +0000 (UTC)
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27H4kqG7012871;
+	Wed, 17 Aug 2022 05:24:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=pp1; bh=xjYCcnPE+FviXf6beLMD7vOup6H7R4aerrF4Ld4Rfq0=;
+ b=cJ41wWIQx1NgIlWobMRzRKla1fV1CvtPe0xQ4xyjaMYmNYAB7naeHvKM/XzTgy6MuyNB
+ vzdVb3Gkp5rRZioDT8L94RMXBDZjo5BQNpavr2hOfBnBdWCV5uzGAWTqunEXisEdC3hu
+ ADMr1JXu3BVc2RLFppc4tZbryV/xQcn7d6txO76RBSHf5E+iNzmxliL2Ui1YeKF/yiIH
+ o5VAI9H0r67r/nmiFESFzHwA3D6OPeAD4X7TDAeZ3OUv404DYsuxvwSPz2efiCy903cM
+ vgDTPMJzezgnPrVRUpIopj21w04es7KdNmWGcAhDNBzTamXiMppuXyZ3r08ktox94huM oA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3j0skw0t6n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Aug 2022 05:24:59 +0000
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 27H58axd026488;
+	Wed, 17 Aug 2022 05:24:58 GMT
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3j0skw0t5w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Aug 2022 05:24:58 +0000
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+	by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 27H55L2Y009924;
+	Wed, 17 Aug 2022 05:24:56 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+	by ppma05fra.de.ibm.com with ESMTP id 3hyp8shg1m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Aug 2022 05:24:56 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+	by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 27H5Ospo27132208
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 17 Aug 2022 05:24:54 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0F30B11C04C;
+	Wed, 17 Aug 2022 05:24:54 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C368D11C052;
+	Wed, 17 Aug 2022 05:24:50 +0000 (GMT)
+Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com (unknown [9.43.75.30])
+	by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+	Wed, 17 Aug 2022 05:24:50 +0000 (GMT)
+Date: Wed, 17 Aug 2022 10:54:47 +0530
+From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org,
+        Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Ritesh Harjani <riteshh@linux.ibm.com>, linux-fsdevel@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev,
+        Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
+ Raspberry Pi
+Message-ID: <Yvx7i7QthoTgykeE@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
+References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
+ <20220728100055.efbvaudwp3ofolpi@quack3>
+ <64b7899f-d84d-93de-f9c5-49538bd080d0@i2se.com>
+ <20220816093421.ok26tcyvf6bm3ngy@quack3>
+ <b8a5e43a-4d1e-aede-e0f7-f731fd8acf1d@i2se.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b8a5e43a-4d1e-aede-e0f7-f731fd8acf1d@i2se.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: n6F6GPtpYlL38AaBfAxyPlhOQJY2r__6
+X-Proofpoint-GUID: sK8sZS9P8BD1hOVTPEnkoE-5YCoAxPmv
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/p7uJ_iQfq=MtmPXdTyKBMw9";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-17_02,2022-08-16_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 clxscore=1011 phishscore=0
+ mlxlogscore=999 spamscore=0 bulkscore=0 malwarescore=0 impostorscore=0
+ mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2208170021
 
---Sig_/p7uJ_iQfq=MtmPXdTyKBMw9
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Aug 16, 2022 at 10:45:48PM +0200, Stefan Wahren wrote:
+> Hi Jan,
+> 
+> Am 16.08.22 um 11:34 schrieb Jan Kara:
+> > Hi Stefan!
+> > So this is interesting. We can see the card is 100% busy. The IO submitted
+> > to the card is formed by small requests - 18-38 KB per request - and each
+> > request takes 0.3-0.5s to complete. So the resulting throughput is horrible
+> > - only tens of KB/s. Also we can see there are many IOs queued for the
+> > device in parallel (aqu-sz columnt). This does not look like load I would
+> > expect to be generated by download of a large file from the web.
+> > 
+> > You have mentioned in previous emails that with dd(1) you can do couple
+> > MB/s writing to this card which is far more than these tens of KB/s. So the
+> > file download must be doing something which really destroys the IO pattern
+> > (and with mb_optimize_scan=0 ext4 happened to be better dealing with it and
+> > generating better IO pattern). Can you perhaps strace the process doing the
+> > download (or perhaps strace -f the whole rpi-update process) so that we can
+> > see how does the load generated on the filesystem look like? Thanks!
+> 
+> i didn't create the strace yet, but i looked at the source of rpi-update. At
+> the end the download phase is a curl call to download a tar archive and pipe
+> it directly to tar.
+> 
+> You can find the content list of the tar file here:
+> 
+> https://raw.githubusercontent.com/lategoodbye/mb_optimize_scan_regress/main/rpi-firmware-tar-content-list.txt
+> 
+> Best regards
+> 
+> > 
+> > 								Honza
+Hi Jan and Stefan,
 
-Hi Naresh,
+I did some analysis of this on my Raspberry Pi 3B+. Not sure of the root
+cause yet but here is what I observed:
 
-On Wed, 17 Aug 2022 01:09:40 +0530 Naresh Kamboju <naresh.kamboju@linaro.or=
-g> wrote:
->
-> On Wed, 17 Aug 2022 at 00:40, Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Tue, Aug 16, 2022 at 12:00 PM Naresh Kamboju
-> > <naresh.kamboju@linaro.org> wrote: =20
-> > >
-> > > Following kernel BUG found while booting arm64 Qcom dragonboard 410c =
-with
-> > > Linux next-20220816 kernel Image. =20
-> >
-> > What kind of environment is this?
-> >
-> > Havign that inode list corruption makes it smell a *bit* like the
-> > crazy memory corruption that we saw with the google cloud instances,
-> > but that would only happen wif you actually use VIRTIO for your
-> > environment? =20
->=20
-> This is a physical hardware db410c device.
-> Following VIRTIO configs enabled.
->=20
-> CONFIG_BLK_MQ_VIRTIO=3Dy
-> CONFIG_NET_9P_VIRTIO=3Dy
-> CONFIG_VIRTIO_BLK=3Dy
-> CONFIG_SCSI_VIRTIO=3Dy
-> CONFIG_VIRTIO_NET=3Dy
-> CONFIG_VIRTIO_CONSOLE=3Dy
-> CONFIG_VIRTIO_ANCHOR=3Dy
-> CONFIG_VIRTIO=3Dy
-> CONFIG_VIRTIO_PCI_LIB=3Dy
-> CONFIG_VIRTIO_PCI_LIB_LEGACY=3Dy
-> CONFIG_VIRTIO_MENU=3Dy
-> CONFIG_VIRTIO_PCI=3Dy
-> CONFIG_VIRTIO_PCI_LEGACY=3Dy
-> CONFIG_VIRTIO_BALLOON=3Dy
-> CONFIG_VIRTIO_MMIO=3Dy
-> CONFIG_CRYPTO_DEV_VIRTIO=3Dy
->=20
->=20
-> >
-> > Do you see the same issue with plain v6.0-rc1? =20
->=20
-> Nope. I do not notice reported BUG on v6.0-rc1.
+1. So I noticed that the download itself is not causing any issues in my
+case, but the download with a pipe to tar is what causes the degradation.
+With the pipe to tar, mb_optimize_scan=1 takes around 7mins whereas
+mb_optimize_scan=0 takes 1 min
 
-Is it reliable enough that you could possibly do a bisection between
-v6.0-rc1 and next-20220816?
+2. I tried to replicate this performance degradation by running untar
+on an x86 machine but I not able to get the degradation. It is
+reproducible pretty consistently on my Raspberry Pi though (w/ an 8GB
+memory card).
 
---=20
-Cheers,
-Stephen Rothwell
+3. I did analyse the resulting mb_optimize_scan=0 vs mb_optmize_scan=1
+filesystem and seems like the allocated blocks are more spread out in
+mb_optmize_scan=1 case but not yet sure if that is the issue.
 
---Sig_/p7uJ_iQfq=MtmPXdTyKBMw9
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Will update here if I notice anything else.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmL8S9MACgkQAVBC80lX
-0GzZAQf7Bsp+3irXdvFTPbeYTsFim8hgA9o1L4+3TfIVF5sd1bGcCdpcN20fck2P
-7viuEA5w5CXL1S2W6wzMmgKu7TwkhXHvbAGgPIGACHtGaCRjZXdix+sxlO/qX+ly
-HdhuvbqFkRW2ed+fj09Ww4KJgGP8/l0zwFemnBOrqao+cwIuNfKsQdbGVyzM43hr
-5PttxYZwGZvHar5BjSCqUM2MJ93i5s6frfJkreYg20gWCGaDOx3eZ468gSGPNw4t
-e6G/sdlX8e2aB0hhOuF4Fjn09vp5paWMelkEjEPbBlsgRsV04PmvNjEg0nKn8haJ
-0Ymh4ddoHGM2pz1ODoXplzCO8ap7uQ==
-=q9S1
------END PGP SIGNATURE-----
-
---Sig_/p7uJ_iQfq=MtmPXdTyKBMw9--
+Regards,
+Ojaswin
