@@ -1,70 +1,186 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from yamato.tf-network.de (yamato.tf-network.de [93.186.202.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45ACF7C
-	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 06:50:08 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oOCsO-00059W-SL; Wed, 17 Aug 2022 08:50:04 +0200
-Message-ID: <6ca707ac-d9f0-0c39-49c9-d514baf1e9a9@leemhuis.info>
-Date: Wed, 17 Aug 2022 08:50:04 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0047C
+	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 06:53:56 +0000 (UTC)
+Received: from amavis3.tf-network.de ([IPv6:2001:4ba0:ffa0:1b::d1:221])
+	by yamato.tf-network.de (Postfix) with ESMTP id 4M6zJF2t04z4Rg6;
+	Wed, 17 Aug 2022 08:53:49 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at amavis3.tf-network.de
+Received: from smtp.tf-network.de ([93.186.202.221])
+	by amavis3.tf-network.de ([IPv6:2001:4ba0:ffa0:1b::d1:221]) (amavisd-new, port 10024)
+	with LMTP id kIgk1_S4t-BQ; Wed, 17 Aug 2022 08:53:48 +0200 (CEST)
+Received: from [10.1.0.10] (xdsl-89-1-142-166.nc.de [89.1.142.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.tf-network.de (Postfix) with ESMTPSA id 4M6zJD3M9gz442N;
+	Wed, 17 Aug 2022 08:53:48 +0200 (CEST)
+Message-ID: <43e678ca-3fc3-6c08-f035-2c31a34dd889@whissi.de>
+Date: Wed, 17 Aug 2022 08:53:46 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.0
-Subject: Re: Xorg SEGV in Xen PV dom0 after updating from 5.16.18 to 5.17.5
- #forregzbot
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
+Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
 Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: intel-gfx <intel-gfx@lists.freedesktop.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <YnHK1Z3o99eMXsVK@mail-itl>
- <f4b00553-4e77-84bc-e25c-01383d7e92dd@leemhuis.info>
-To: regressions@lists.linux.dev
-In-Reply-To: <f4b00553-4e77-84bc-e25c-01383d7e92dd@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
+To: Song Liu <song@kernel.org>, Vishal Verma <vverma@digitalocean.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org,
+ regressions@lists.linux.dev, Jens Axboe <axboe@kernel.dk>
+References: <000401d8a746$3eaca200$bc05e600$@whissi.de>
+ <000001d8ad7e$c340ad70$49c20850$@whissi.de>
+ <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info>
+ <0FBCAB10-545E-45E2-A0C8-D7620817651D@digitalocean.com>
+ <CAPhsuW5f9QD+gzJ9eBhn5irsHvrsvkWjSnA4MPaHsQjjLMypXg@mail.gmail.com>
+From: Thomas Deutschmann <whissi@whissi.de>
+In-Reply-To: <CAPhsuW5f9QD+gzJ9eBhn5irsHvrsvkWjSnA4MPaHsQjjLMypXg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1660719008;914c93d6;
-X-HE-SMSGID: 1oOCsO-00059W-SL
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Hi,
 
-On 04.05.22 07:46, Thorsten Leemhuis wrote:
-> On 04.05.22 02:37, Marek Marczykowski-Górecki wrote:
->>
->> After updating from 5.16.18 to 5.17.5 in Xen PV dom0, my Xorg started
->> crashing when displaying any window mapped from a guest (domU) system.
->> This is 100% reproducible.
->> The system is Qubes OS, and it uses a trick that maps windows content
->> from other guests using Xen grant tables, wrapped as "shared memory"
->> from Xorg point of view (so, the memory that Xorg mmaps is not just from
->> another process, but from another VM). That's the ShmPutImage you can
->> see on the stack trace below.
->> [...]
->> I don't see any related kernel or Xen messages at this time. Xorg's SEGV
->> handler prints also:
->>
->>     (EE) Segmentation fault at address 0x3c010
->>
->> Git bisect says it's bdd8b6c98239cad ("drm/i915: replace X86_FEATURE_PAT
->> with pat_enabled()"), and indeed with this commit reverted on top of
->> 5.17.5 everything works fine.
->>
->> I guess this part of dom0's boot dmesg may be relevant:
->>
->> [    0.000949] x86/PAT: MTRRs disabled, skipping PAT initialization too.
->> [    0.000953] x86/PAT: Configuration [0-7]: WB  WT  UC- UC  WC  WP  UC  UC  
->>
->> Originally reported at
->> https://github.com/QubesOS/qubes-issues/issues/7479
->>  
->> #regzbot introduced bdd8b6c98239cad
->> #regzbot monitor: https://github.com/QubesOS/qubes-issues/issues/7479
+On 2022-08-17 08:19, Song Liu wrote:
+> On Mon, Aug 15, 2022 at 8:46 AM Vishal Verma
+> <vverma@digitalocean.com> wrote:
+>> 
+>> Just saw this. I’m trying to understand whether this happens only
+>> on md array or individual nvme drives (without any raid) too? The
+>> commit you pointed added REQ_NOWAIT for md based arrays, but if it
+>> is happening on individual nvme drives then that could point to
+>> something with REQ_NOWAIT I think.
+> 
+> Agreed with this analysis.
 
-#regzbot fixed-by: 72cbc8f04fe2fa9
+I bisected again, this time I tested against the single nvme device.
+
+I did it 2 times, and always ended up with
+
+ > git bisect start
+ > # good: [8bb7eca972ad531c9b149c0a51ab43a417385813] Linux 5.15
+ > git bisect good 8bb7eca972ad531c9b149c0a51ab43a417385813
+ > # bad: [df0cc57e057f18e44dac8e6c18aba47ab53202f9] Linux 5.16
+ > git bisect bad df0cc57e057f18e44dac8e6c18aba47ab53202f9
+ > # good: [2219b0ceefe835b92a8a74a73fe964aa052742a2] Merge tag 
+'soc-5.16' of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc
+ > git bisect good 2219b0ceefe835b92a8a74a73fe964aa052742a2
+ > # good: [206825f50f908771934e1fba2bfc2e1f1138b36a] Merge tag 
+'mtd/for-5.16' of git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux
+ > git bisect good 206825f50f908771934e1fba2bfc2e1f1138b36a
+ > # bad: [4e1fddc98d2585ddd4792b5e44433dcee7ece001] tcp_cubic: fix 
+spurious Hystart ACK train detections for not-cwnd-limited flows
+ > git bisect bad 4e1fddc98d2585ddd4792b5e44433dcee7ece001
+ > # good: [dbf49896187fd58c577fa1574a338e4f3672b4b2] Merge branch 
+'akpm' (patches from Andrew)
+ > git bisect good dbf49896187fd58c577fa1574a338e4f3672b4b2
+ > # good: [0ecca62beb12eeb13965ed602905c8bf53ac93d0] Merge tag 
+'ceph-for-5.16-rc1' of git://github.com/ceph/ceph-client
+ > git bisect good 0ecca62beb12eeb13965ed602905c8bf53ac93d0
+ > # bad: [7d5775d49e4a488bc8a07e5abb2b71a4c28aadbb] Merge tag 
+'printk-for-5.16-fixup' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux
+ > git bisect bad 7d5775d49e4a488bc8a07e5abb2b71a4c28aadbb
+ > # good: [35c8fad4a703fdfa009ed274f80bb64b49314cde] Merge tag 
+'perf-tools-for-v5.16-2021-11-13' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux
+ > git bisect good 35c8fad4a703fdfa009ed274f80bb64b49314cde
+ > # good: [6ea45c57dc176dde529ab5d7c4b3f20e52a2bd82] Merge tag 
+'for-linus' of git://git.armlinux.org.uk/~rmk/linux-arm
+ > git bisect good 6ea45c57dc176dde529ab5d7c4b3f20e52a2bd82
+ > # bad: [fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf] Linux 5.16-rc1
+ > git bisect bad fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
+ > # good: [475c3f599582a34e189f047ed3fb7e90a295ea5b] sh: fix READ/WRITE 
+redefinition warnings
+ > git bisect good 475c3f599582a34e189f047ed3fb7e90a295ea5b
+ > # good: [c3b68c27f58a07130382f3fa6320c3652ad76f15] Merge tag 
+'for-5.16/parisc-3' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux
+ > git bisect good c3b68c27f58a07130382f3fa6320c3652ad76f15
+ > # good: [4a6b35b3b3f28df81fea931dc77c4c229cbdb5b2] xfs: sync 
+xfs_btree_split macros with userspace libxfs
+ > git bisect good 4a6b35b3b3f28df81fea931dc77c4c229cbdb5b2
+ > # good: [dee2b702bcf067d7b6b62c18bdd060ff0810a800] kconfig: Add 
+support for -Wimplicit-fallthrough
+ > git bisect good dee2b702bcf067d7b6b62c18bdd060ff0810a800
+ > # first bad commit: [fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf] Linux 
+5.16-rc1
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf
+
+...but this doesn't make any sense, right?
+
+However, I cannot reproduce with the commit before, i.e. dee2b702bcf0 
+didn't freeze during my 10 test runs.
+But with fa55b7dcdc (or any later commit), system will freeze on _every_ 
+test run?!
+
+I checked out 1bd297988b75 which never failed before, changed Makefile 
+to PATCHLEVEL=16 and EXTRAVERSION=-rc1 and guess what: It's now failing, 
+too.
+
+So this sounds like some code changes behavior when KV is >=5.16-rc1. Is 
+that possible?
+
+Anyway, I started to test v5.10 (with PATCHLEVEL=16 and 
+EXTRAVERSION=-rc1 set) which worked so I started another bisect session 
+where I named all KV to 5.16-rc1.
+
+I'll post my finding when this session is completed.
+
+
+> I am not able to reproduce this on 5.19+ kernel. I have:
+> 
+> [root@eth50-1 ~]# lsblk NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT 
+> sr0      11:0    1 1024M  0 rom vda     253:0    0   32G  0 disk 
+> ├─vda1  253:1    0    2G  0 part  /boot └─vda2  253:2    0   30G  0
+> part  / nvme0n1 259:0    0    4G  0 disk └─md0     9:0    0   12G  0
+> raid5 /root/mnt nvme2n1 259:1    0    4G  0 disk └─md0     9:0    0
+> 12G  0 raid5 /root/mnt nvme3n1 259:2    0    4G  0 disk └─md0     9:0
+> 0   12G  0 raid5 /root/mnt nvme1n1 259:3    0    4G  0 disk └─md0
+> 9:0    0   12G  0 raid5 /root/mnt [root@eth50-1 ~]# for x in {1..100}
+> ; do fsfreeze --unfreeze /root/mnt ; fsfreeze --freeze /root/mnt ;
+> done
+> 
+> Did I miss something?
+
+Well, your reproducer doesn't work. Like written in my initial mail, 
+executing `fsfreeze --freeze...` directly after boot doesn't even fail 
+for me. The device/array must have seen some I/O to trigger this.
+
+To be more precise:
+
+During my current bisect session (where I set KV to 5.16-rc1 for all 
+kernels), I noticed that my 'reproducer' failed:
+
+To trigger the problem, it is not enough to create random I/O by copying 
+some files for example.
+
+I am using mysqld (MariaDB 10.6.8) and restore ~20GB of SQL dumps -- 
+somehow this is triggering the problem in a reliable way. The mysqld is 
+using O_DIRECT 
+(https://mariadb.com/kb/en/innodb-system-variables/#innodb_flush_method) 
+-- maybe Direct I/O is the trigger.
+
+This process usually takes ~620s on my test system where I am 
+experiencing the problem. After import I called `fsfreeze --freeze ...` 
+against the mount point used by mysqld.
+When this command did not return (=fsfreeze was hanging), I marked 
+revision as bad.
+
+Since setting KV in all kernels to "5.16-rc1" I noticed that the import 
+process sometimes "freezed" -- mysqld was still running and responsive 
+(that's not the case when fsfreeze hangs for example) and `SHOW 
+PROCESSLIST` showed the running imports with still increasing time 
+counter. However, no data are read and written anymore. Although 
+fsfreeze command works when this happens. Anyway, I marked revisions 
+showing this behavior as bad, too.
+
+I'll post my results when I finished this bisect session.
+
+
+-- 
+Regards,
+Thomas
+
