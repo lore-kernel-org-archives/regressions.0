@@ -1,126 +1,130 @@
-Received: from yamato.tf-network.de (yamato.tf-network.de [93.186.202.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DCC353B8
-	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 18:29:55 +0000 (UTC)
-Received: from amavis3.tf-network.de ([IPv6:2001:4ba0:ffa0:1b::d1:221])
-	by yamato.tf-network.de (Postfix) with ESMTP id 4M7GlP0nGjz4Rg8;
-	Wed, 17 Aug 2022 20:29:53 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at amavis3.tf-network.de
-Received: from smtp.tf-network.de ([93.186.202.221])
-	by amavis3.tf-network.de ([IPv6:2001:4ba0:ffa0:1b::d1:221]) (amavisd-new, port 10024)
-	with LMTP id rj_E9kK6sgxm; Wed, 17 Aug 2022 20:29:52 +0200 (CEST)
-Received: from [10.1.0.10] (xdsl-89-1-142-166.nc.de [89.1.142.166])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.tf-network.de (Postfix) with ESMTPSA id 4M7GlN2KN0z442L;
-	Wed, 17 Aug 2022 20:29:52 +0200 (CEST)
-Message-ID: <701f3fc0-2f0c-a32c-0d41-b489a9a59b99@whissi.de>
-Date: Wed, 17 Aug 2022 20:29:47 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E7AF3C29
+	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 19:09:15 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8090420753;
+	Wed, 17 Aug 2022 19:09:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1660763348; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tMXGxDZM1X0roInqXSmFgyBNJ8wdOge6KCuTyZJ4Flk=;
+	b=LDII6HgA2ok+rxXe1RL96VWQMkF3UHdKg2U+fYmx7+YJJ3n4mI3rNZ+KneItp5hkF/BARZ
+	/A79Lym68YyX2t0Fuu/1PF9BNgP6bQmLAb2E5n+EgJnOwPHsCIRYN/ZZ464Zvj+sPhJ9q4
+	ouR9AsIfN4UrB9YiQFhdUezp144w03A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1660763348;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tMXGxDZM1X0roInqXSmFgyBNJ8wdOge6KCuTyZJ4Flk=;
+	b=jM/m+IdBDeZpxCFr1AezGXoqGinm9MJB1mCGBkz2jIYWPSrNwwmkrVpTg53A3m2hX3+ExA
+	6X9vwXyaBmX3qoCg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A5E1913428;
+	Wed, 17 Aug 2022 19:09:07 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id CD7TJdM8/WJxYQAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Wed, 17 Aug 2022 19:09:07 +0000
+Message-ID: <98592410-dd31-9081-86be-fda67d3b06d2@suse.cz>
+Date: Wed, 17 Aug 2022 21:07:36 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
-Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH v2 2/2] scsi: sd: Rework asynchronous resume support
 Content-Language: en-US
-From: Thomas Deutschmann <whissi@whissi.de>
-To: Song Liu <song@kernel.org>, Vishal Verma <vverma@digitalocean.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org,
- regressions@lists.linux.dev, Jens Axboe <axboe@kernel.dk>
-References: <000401d8a746$3eaca200$bc05e600$@whissi.de>
- <000001d8ad7e$c340ad70$49c20850$@whissi.de>
- <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info>
- <0FBCAB10-545E-45E2-A0C8-D7620817651D@digitalocean.com>
- <CAPhsuW5f9QD+gzJ9eBhn5irsHvrsvkWjSnA4MPaHsQjjLMypXg@mail.gmail.com>
- <43e678ca-3fc3-6c08-f035-2c31a34dd889@whissi.de>
-In-Reply-To: <43e678ca-3fc3-6c08-f035-2c31a34dd889@whissi.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Bart Van Assche <bvanassche@acm.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+ Jaegeuk Kim <jaegeuk@kernel.org>, scsi <linux-scsi@vger.kernel.org>,
+ Ming Lei <ming.lei@redhat.com>, Hannes Reinecke <hare@suse.de>,
+ John Garry <john.garry@huawei.com>, ericspero@icloud.com,
+ jason600.groome@gmail.com, Linux-Renesas
+ <linux-renesas-soc@vger.kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-ide@vger.kernel.org,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ regressions@lists.linux.dev
+References: <20220630195703.10155-1-bvanassche@acm.org>
+ <20220630195703.10155-3-bvanassche@acm.org>
+ <alpine.DEB.2.22.394.2207191125130.1006766@ramsan.of.borg>
+ <db19ed29-e7f9-e5b0-3a6c-f2812078a07d@acm.org>
+ <CAMuHMdVzsgSYtbJQnaigNax_JbxPsQfU+gHcteS-ojWbxUdMfw@mail.gmail.com>
+ <CAMuHMdWtxBj8ug7AHTqentF8UD4jpO2sgoWWcQCOvEKLJtdq8A@mail.gmail.com>
+ <506ca1a6-1122-5755-fc74-60f7c7bfbd0d@acm.org>
+ <CAMuHMdVQ2K2v8jpsFfOMk99DG_sBB4_ioiQRroC7K_Ov1wvp9w@mail.gmail.com>
+ <6f70e742-9d8a-f389-0482-0ba9696bf445@acm.org>
+ <CAMuHMdVc+ATGV-=R3uV6RyF0-mZiuKv7HpmogRBgqGVyO-MKWg@mail.gmail.com>
+ <54e20a27-a10b-b77a-e950-1d3398e2e907@acm.org>
+ <CAMuHMdURQpAEGgv4cY7v0rqzs12v2TT=Amt26Y0OoBSW7YAoaw@mail.gmail.com>
+ <084e7c5a-f98d-d61e-de81-83525851ecf9@acm.org>
+ <CAMuHMdW2vOC8ZsE_XF8TbSNoF9zCrwq7UkGZ5jXen1E1mTZe+g@mail.gmail.com>
+ <14ec47f3-f3b8-61c7-2c64-d96d00dd7076@acm.org>
+ <CAMuHMdW7nGxV_3Z2JV_TCM+WtTdYv5P+0cE6Tw=6krcseNCdAw@mail.gmail.com>
+ <40700595-8c83-1b61-ea93-ea9554bfb2db@acm.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <40700595-8c83-1b61-ea93-ea9554bfb2db@acm.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2022-08-17 08:53, Thomas Deutschmann wrote:
-> I'll post my results when I finished this bisect session.
+Hi, I have a T460 hanging on resume from suspend to ram in 6.0-rc1 that
+I bisected to this commit.
 
-I bisected kernel with KV set to "5.16-rc1":
-
-> git bisect start
-> # good: [2c85ebc57b3e1817b6ce1a6b703928e113a90442] Linux 5.10
-> git bisect good 2c85ebc57b3e1817b6ce1a6b703928e113a90442
-> # bad: [8bb7eca972ad531c9b149c0a51ab43a417385813] Linux 5.15
-> git bisect bad 8bb7eca972ad531c9b149c0a51ab43a417385813
-> # bad: [6bdf2fbc48f104a84606f6165aa8a20d9a7d9074] Merge tag 'nvme-5.13-2021-05-13' of git://git.infradead.org/nvme into block-5.13
-> git bisect bad 6bdf2fbc48f104a84606f6165aa8a20d9a7d9074
-> # good: [02f9fc286e039d0bef7284fb1200ee755b525bde] Merge tag 'pm-5.12-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-> git bisect good 02f9fc286e039d0bef7284fb1200ee755b525bde
-> # bad: [f351f4b63dac127079bbd77da64b2a61c09d522d] usb: xhci-mtk: fix oops when unbind driver
-> git bisect bad f351f4b63dac127079bbd77da64b2a61c09d522d
-> # good: [28b9aaac4cc5a11485b6f70656e4e9ead590cf5b] Merge tag 'clk-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
-> git bisect good 28b9aaac4cc5a11485b6f70656e4e9ead590cf5b
-> # good: [cf64c2a905e0dabcc473ca70baf275fb3a61fac4] Merge branch 'work.sparc32' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs
-> git bisect good cf64c2a905e0dabcc473ca70baf275fb3a61fac4
-> # bad: [ea6be461cbedefaa881711a43f2842aabbd12fd4] Merge tag 'acpi-5.12-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-> git bisect bad ea6be461cbedefaa881711a43f2842aabbd12fd4
-> # good: [1c9077cdecd027714736e70704da432ee2b946bb] Merge tag 'nfs-for-5.12-1' of git://git.linux-nfs.org/projects/anna/linux-nfs
-> git bisect good 1c9077cdecd027714736e70704da432ee2b946bb
-> # good: [efba6d3a7c4bb59f0750609fae0f9644d82304b6] Merge tag 'for-5.12/io_uring-2021-02-25' of git://git.kernel.dk/linux-block
-> git bisect good efba6d3a7c4bb59f0750609fae0f9644d82304b6
-> # bad: [0b311e34d5033fdcca4c9b5f2d9165b3604704d3] Merge tag 'scsi-misc' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
-> git bisect bad 0b311e34d5033fdcca4c9b5f2d9165b3604704d3
-> # good: [5ceabb6078b80a8544ba86d6ee523ad755ae6d5e] Merge branch 'work.misc' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs
-> git bisect good 5ceabb6078b80a8544ba86d6ee523ad755ae6d5e
-> # bad: [3ab6608e66b16159c3a3c2d7015b9c11cd3396c1] Merge tag 'block-5.12-2021-02-27' of git://git.kernel.dk/linux-block
-> git bisect bad 3ab6608e66b16159c3a3c2d7015b9c11cd3396c1
-> # bad: [e941894eae31b52f0fd9bdb3ce20620afa152f45] io-wq: make buffered file write hashed work map per-ctx
-> git bisect bad e941894eae31b52f0fd9bdb3ce20620afa152f45
-> # good: [4379bf8bd70b5de6bba7d53015b0c36c57a634ee] io_uring: remove io_identity
-> git bisect good 4379bf8bd70b5de6bba7d53015b0c36c57a634ee
-> # good: [1c0aa1fae1acb77c5f9917adb0e4cb4500b9f3a6] io_uring: flag new native workers with IORING_FEAT_NATIVE_WORKERS
-> git bisect good 1c0aa1fae1acb77c5f9917adb0e4cb4500b9f3a6
-> # good: [0100e6bbdbb79404e56939313662b42737026574] arch: ensure parisc/powerpc handle PF_IO_WORKER in copy_thread()
-> git bisect good 0100e6bbdbb79404e56939313662b42737026574
-> # good: [8b3e78b5955abb98863832453f5c74eca8f53c3a] io-wq: fix races around manager/worker creation and task exit
-> git bisect good 8b3e78b5955abb98863832453f5c74eca8f53c3a
-> # good: [eb2de9418d56b5e6ebf27bad51dbce3e22ee109b] io-wq: fix race around io_worker grabbing
-> git bisect good eb2de9418d56b5e6ebf27bad51dbce3e22ee109b
-> # first bad commit: [e941894eae31b52f0fd9bdb3ce20620afa152f45] io-wq: make buffered file write hashed work map per-ctx
+> Unfortunately the above does not learn us anything new. The code 
+> modified by commit 88f1669019bd ("scsi: sd: Rework asynchronous resume 
+> support") is only called if sdev->manage_start_stop != 1. Only the SATA 
+> code, the Firewire code and the manage_start_stop sysfs attribute store 
+> method set that member variable:
 > 
-> From e941894eae31b52f0fd9bdb3ce20620afa152f45
-> From: Jens Axboe
-> Date: Fri, 19 Feb 2021 12:33:30 -0700
-> Subject: io-wq: make buffered file write hashed work map per-ctx
+> $ git grep -nH 'manage_start_stop = '
+> drivers/ata/libata-scsi.c:1083:		sdev->manage_start_stop = 1;
+> drivers/firewire/sbp2.c:1521:		sdev->manage_start_stop = 1;
+> drivers/scsi/sd.c:240:	sdp->manage_start_stop = v;
 > 
-> Before the io-wq thread change, we maintained a hash work map and lock
-> per-node per-ring. That wasn't ideal, as we really wanted it to be per
-> ring. But now that we have per-task workers, the hash map ends up being
-> just per-task. That'll work just fine for the normal case of having
-> one task use a ring, but if you share the ring between tasks, then it's
-> considerably worse than it was before.
+> Would it be possible to share the output of the command below? That 
+> should reveal which ATA driver is active on the test setup.
 > 
-> Make the hash map per ctx instead, which provides full per-ctx buffered
-> write serialization on hashed writes.
+> find /sys -name proc_name | xargs grep -aH .
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e941894eae31b52f0fd9bdb3ce20620afa152f45
+In my case it's
+/sys/devices/pci0000:00/0000:00:17.0/ata1/host0/scsi_host/host0/proc_name:ahci
+/sys/devices/pci0000:00/0000:00:17.0/ata2/host1/scsi_host/host1/proc_name:ahci
 
-But I think this result is misleading.
+Some more details from dmesg
 
-Like mentioned, the problem I experienced during this bisect session was 
-different (not the FIFREEZE ioctl hang). This sounds more like the 
-already fixed regressions caused by the commit above, i.e.
+[    0.849373] ata2: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
+[    0.852849] ata2.00: ACPI cmd f5/00:00:00:00:00:a0(SECURITY FREEZE LOCK) filtered out
+[    0.854671] ata2.00: supports DRM functions and may not be fully accessible
+[    0.856181] ata2.00: ATA-9: SAMSUNG MZ7LN512HMJP-000L7, MAV01L6Q, max UDMA/133
+[    0.858115] ata2.00: 1000215216 sectors, multi 1: LBA48 NCQ (depth 32), AA
+[    0.861584] ata2.00: Features: Trust Dev-Sleep NCQ-sndrcv
+[    0.863749] ata2.00: ACPI cmd f5/00:00:00:00:00:a0(SECURITY FREEZE LOCK) filtered out
+[    0.865481] ata2.00: supports DRM functions and may not be fully accessible
+[    0.870043] ata2.00: configured for UDMA/133
+[    0.871871] scsi 1:0:0:0: Direct-Access     ATA      SAMSUNG MZ7LN512 1L6Q PQ: 0 ANSI: 5
 
-- 
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=0242f6426ea78fbe3933b44f8c55ae93ec37f6cc
+Please Cc me on further questions/steps to try/patches to test.
 
-- 
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?id=d3e3c102d107bb84251455a298cf475f24bab995
+#regzbot introduced: 88f1669019bd62b3
+#regzbot monitor: https://lore.kernel.org/all/20220816172638.538734-1-bvanassche@acm.org/
 
-
-I will do another round with 2b7196a219bf (good) <-> 5.18 (bad).
-
-
--- 
-Regards,
-Thomas
+> Thanks,
+> 
+> Bart.
 
