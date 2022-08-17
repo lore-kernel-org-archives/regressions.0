@@ -1,142 +1,137 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFF023CB
-	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 05:25:02 +0000 (UTC)
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27H4kqG7012871;
-	Wed, 17 Aug 2022 05:24:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=pp1; bh=xjYCcnPE+FviXf6beLMD7vOup6H7R4aerrF4Ld4Rfq0=;
- b=cJ41wWIQx1NgIlWobMRzRKla1fV1CvtPe0xQ4xyjaMYmNYAB7naeHvKM/XzTgy6MuyNB
- vzdVb3Gkp5rRZioDT8L94RMXBDZjo5BQNpavr2hOfBnBdWCV5uzGAWTqunEXisEdC3hu
- ADMr1JXu3BVc2RLFppc4tZbryV/xQcn7d6txO76RBSHf5E+iNzmxliL2Ui1YeKF/yiIH
- o5VAI9H0r67r/nmiFESFzHwA3D6OPeAD4X7TDAeZ3OUv404DYsuxvwSPz2efiCy903cM
- vgDTPMJzezgnPrVRUpIopj21w04es7KdNmWGcAhDNBzTamXiMppuXyZ3r08ktox94huM oA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3j0skw0t6n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Aug 2022 05:24:59 +0000
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 27H58axd026488;
-	Wed, 17 Aug 2022 05:24:58 GMT
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3j0skw0t5w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Aug 2022 05:24:58 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-	by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 27H55L2Y009924;
-	Wed, 17 Aug 2022 05:24:56 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-	by ppma05fra.de.ibm.com with ESMTP id 3hyp8shg1m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 17 Aug 2022 05:24:56 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-	by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 27H5Ospo27132208
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 17 Aug 2022 05:24:54 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0F30B11C04C;
-	Wed, 17 Aug 2022 05:24:54 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C368D11C052;
-	Wed, 17 Aug 2022 05:24:50 +0000 (GMT)
-Received: from li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com (unknown [9.43.75.30])
-	by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-	Wed, 17 Aug 2022 05:24:50 +0000 (GMT)
-Date: Wed, 17 Aug 2022 10:54:47 +0530
-From: Ojaswin Mujoo <ojaswin@linux.ibm.com>
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Jan Kara <jack@suse.cz>, linux-ext4@vger.kernel.org,
-        Harshad Shirwadkar <harshadshirwadkar@gmail.com>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Ritesh Harjani <riteshh@linux.ibm.com>, linux-fsdevel@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Geetika.Moolchandani1@ibm.com, regressions@lists.linux.dev,
-        Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [Regression] ext4: changes to mb_optimize_scan cause issues on
- Raspberry Pi
-Message-ID: <Yvx7i7QthoTgykeE@li-bb2b2a4c-3307-11b2-a85c-8fa5c3a69313.ibm.com>
-References: <0d81a7c2-46b7-6010-62a4-3e6cfc1628d6@i2se.com>
- <20220728100055.efbvaudwp3ofolpi@quack3>
- <64b7899f-d84d-93de-f9c5-49538bd080d0@i2se.com>
- <20220816093421.ok26tcyvf6bm3ngy@quack3>
- <b8a5e43a-4d1e-aede-e0f7-f731fd8acf1d@i2se.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b8a5e43a-4d1e-aede-e0f7-f731fd8acf1d@i2se.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: n6F6GPtpYlL38AaBfAxyPlhOQJY2r__6
-X-Proofpoint-GUID: sK8sZS9P8BD1hOVTPEnkoE-5YCoAxPmv
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D3E2561
+	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 06:19:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB71DC433C1
+	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 06:19:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1660717154;
+	bh=oF6dkzDnT0pEMqj7irO9fBtZpglR0D+kddXm9mK6r3o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Jr5YrCU9MJroO3MbcbZYWIWGgxwIQZCmIwiY6vfbJXwqNXSyLCON08Ue/Y6bMxmaM
+	 oQEKZm1CI537PiWXD9Ls+7VoSAgeYuiUyNbBRZYFY6RrgtX6p0Kh8PdD/9v6UFXNaX
+	 JiefLh9b/eB9HMNye39yt64deRfc7s95qCf+Ae26g4KMGU4iaRYSHOkBuxwGZfpLto
+	 k2wI3TC0ma+/ESOKBLAYszWkATdR+QQAqfxk25wkLiom+rccqn/zj0j1/vE7Lt2Slr
+	 /shPjY66mFgz+G697thlG0SVALYsDlQkLsnN/bsEZ2c+lpLj6xUzpl/cwJ6F+zCkKF
+	 s6uU0BMnKPFCA==
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-32a17d3bba2so206506267b3.9
+        for <regressions@lists.linux.dev>; Tue, 16 Aug 2022 23:19:13 -0700 (PDT)
+X-Gm-Message-State: ACgBeo0pC1iJBYymUXLQS71XyQvEiLnNeYPhHjGjRH3Ftvdzq+Uh9luI
+	3jpZ2U0A4Kag0unvIyqyiDO2pNXkmg31807R77A=
+X-Google-Smtp-Source: AA6agR6ly96Gbeb7fJOMi9Oh/MOuM2LKJbwAX1IOJexEzTGU8S5JywiVDo21iWA8tCkkwToElKIilmI8m34xKUXCzGk=
+X-Received: by 2002:a25:3813:0:b0:68d:c8f8:60b9 with SMTP id
+ f19-20020a253813000000b0068dc8f860b9mr5549461yba.257.1660717152936; Tue, 16
+ Aug 2022 23:19:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-17_02,2022-08-16_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 clxscore=1011 phishscore=0
- mlxlogscore=999 spamscore=0 bulkscore=0 malwarescore=0 impostorscore=0
- mlxscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2207270000 definitions=main-2208170021
+References: <000401d8a746$3eaca200$bc05e600$@whissi.de> <000001d8ad7e$c340ad70$49c20850$@whissi.de>
+ <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info> <0FBCAB10-545E-45E2-A0C8-D7620817651D@digitalocean.com>
+In-Reply-To: <0FBCAB10-545E-45E2-A0C8-D7620817651D@digitalocean.com>
+From: Song Liu <song@kernel.org>
+Date: Tue, 16 Aug 2022 23:19:02 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5f9QD+gzJ9eBhn5irsHvrsvkWjSnA4MPaHsQjjLMypXg@mail.gmail.com>
+Message-ID: <CAPhsuW5f9QD+gzJ9eBhn5irsHvrsvkWjSnA4MPaHsQjjLMypXg@mail.gmail.com>
+Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
+To: Vishal Verma <vverma@digitalocean.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, stable@vger.kernel.org, 
+	regressions@lists.linux.dev, Thomas Deutschmann <whissi@whissi.de>, 
+	Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 16, 2022 at 10:45:48PM +0200, Stefan Wahren wrote:
-> Hi Jan,
-> 
-> Am 16.08.22 um 11:34 schrieb Jan Kara:
-> > Hi Stefan!
-> > So this is interesting. We can see the card is 100% busy. The IO submitted
-> > to the card is formed by small requests - 18-38 KB per request - and each
-> > request takes 0.3-0.5s to complete. So the resulting throughput is horrible
-> > - only tens of KB/s. Also we can see there are many IOs queued for the
-> > device in parallel (aqu-sz columnt). This does not look like load I would
-> > expect to be generated by download of a large file from the web.
-> > 
-> > You have mentioned in previous emails that with dd(1) you can do couple
-> > MB/s writing to this card which is far more than these tens of KB/s. So the
-> > file download must be doing something which really destroys the IO pattern
-> > (and with mb_optimize_scan=0 ext4 happened to be better dealing with it and
-> > generating better IO pattern). Can you perhaps strace the process doing the
-> > download (or perhaps strace -f the whole rpi-update process) so that we can
-> > see how does the load generated on the filesystem look like? Thanks!
-> 
-> i didn't create the strace yet, but i looked at the source of rpi-update. At
-> the end the download phase is a curl call to download a tar archive and pipe
-> it directly to tar.
-> 
-> You can find the content list of the tar file here:
-> 
-> https://raw.githubusercontent.com/lategoodbye/mb_optimize_scan_regress/main/rpi-firmware-tar-content-list.txt
-> 
-> Best regards
-> 
-> > 
-> > 								Honza
-Hi Jan and Stefan,
+On Mon, Aug 15, 2022 at 8:46 AM Vishal Verma <vverma@digitalocean.com> wrot=
+e:
+>
+> Just saw this. I=E2=80=99m trying to understand whether this happens only=
+ on md array or individual nvme drives (without any raid) too?
+> The commit you pointed added REQ_NOWAIT for md based arrays, but if it is=
+ happening on individual nvme drives then that could point to something wit=
+h REQ_NOWAIT I think.
 
-I did some analysis of this on my Raspberry Pi 3B+. Not sure of the root
-cause yet but here is what I observed:
+Agreed with this analysis.
 
-1. So I noticed that the download itself is not causing any issues in my
-case, but the download with a pipe to tar is what causes the degradation.
-With the pipe to tar, mb_optimize_scan=1 takes around 7mins whereas
-mb_optimize_scan=0 takes 1 min
+>
+> > On Aug 15, 2022, at 3:58 AM, Thorsten Leemhuis <regressions@leemhuis.in=
+fo> wrote:
+> >
+> > Hi, this is your Linux kernel regression tracker. Top-posting for once,
+> > to make this easily accessible to everyone.
+> >
+> > [CCing Jens, as the top-level maintainer who in this case also reviewed
+> > the patch that causes this regression.]
+> >
+> > Vishal, Song, what up here? Could you please look into this and at leas=
+t
+> > comment on the issue, as it's a regression that was reported more than
+> > 10 days ago already. Ideally at this point it would be good if the
+> > regression was fixed already, as explained by "Prioritize work on fixin=
+g
+> > regressions" here:
+> > https://docs.kernel.org/process/handling-regressions.html#prioritize-wo=
+rk-on-fixing-regressions
 
-2. I tried to replicate this performance degradation by running untar
-on an x86 machine but I not able to get the degradation. It is
-reproducible pretty consistently on my Raspberry Pi though (w/ an 8GB
-memory card).
+I am sorry for the delay.
 
-3. I did analyse the resulting mb_optimize_scan=0 vs mb_optmize_scan=1
-filesystem and seems like the allocated blocks are more spread out in
-mb_optmize_scan=1 case but not yet sure if that is the issue.
+[...]
 
-Will update here if I notice anything else.
+> >>
+> >> Hi,
+> >>
+> >> any news on this? Is there anything else you need from me or I can hel=
+p
+> >> with?
+> >>
+> >> Thanks.
+> >>
+> >>
+> >> -- Regards, Thomas -----Original Message----- From: Thomas Deutschmann
+> >> <whissi@whissi.de> Sent: Wednesday, August 3, 2022 4:35 PM To:
+> >> vverma@digitalocean.com; song@kernel.org Cc: stable@vger.kernel.org;
+> >> regressions@lists.linux.dev Subject: [REGRESSION] v5.17-rc1+: FIFREEZE
+> >> ioctl system call hangs Hi, while trying to backup a Dell R7525 system
+> >> running Debian bookworm/testing using LVM snapshots I noticed that the
+> >> system will 'freeze' sometimes (not all the times) when creating the
+> >> snapshot. First I thought this was related to LVM so I created
+> >> https://listman.redhat.com/archives/linux-lvm/2022-July/026228.html
+> >> (continued at
+> >> https://listman.redhat.com/archives/linux-lvm/2022-August/thread.html#=
+26229) Long story short: I was even able to reproduce with fsfreeze, see la=
+st strace lines
+> >>> [...]
+> >>> 14471 1659449870.984635 openat(AT_FDCWD, "/var/lib/machines", O_RDONL=
+Y) =3D3
+> >>> 14471 1659449870.984658 newfstatat(3, "",
+> >> {st_mode=3DS_IFDIR|0700,st_size=3D4096, ...}, AT_EMPTY_PATH) =3D 0
+> >>> 14471 1659449870.984678 ioctl(3, FIFREEZE
+> >> so I started to bisect kernel and found the following bad commit:
 
-Regards,
-Ojaswin
+I am not able to reproduce this on 5.19+ kernel. I have:
+
+[root@eth50-1 ~]# lsblk
+NAME    MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINT
+sr0      11:0    1 1024M  0 rom
+vda     253:0    0   32G  0 disk
+=E2=94=9C=E2=94=80vda1  253:1    0    2G  0 part  /boot
+=E2=94=94=E2=94=80vda2  253:2    0   30G  0 part  /
+nvme0n1 259:0    0    4G  0 disk
+=E2=94=94=E2=94=80md0     9:0    0   12G  0 raid5 /root/mnt
+nvme2n1 259:1    0    4G  0 disk
+=E2=94=94=E2=94=80md0     9:0    0   12G  0 raid5 /root/mnt
+nvme3n1 259:2    0    4G  0 disk
+=E2=94=94=E2=94=80md0     9:0    0   12G  0 raid5 /root/mnt
+nvme1n1 259:3    0    4G  0 disk
+=E2=94=94=E2=94=80md0     9:0    0   12G  0 raid5 /root/mnt
+[root@eth50-1 ~]# for x in {1..100} ; do fsfreeze --unfreeze /root/mnt
+; fsfreeze --freeze /root/mnt ; done
+
+Did I miss something?
+
+Thanks,
+Song
+
+[...]
