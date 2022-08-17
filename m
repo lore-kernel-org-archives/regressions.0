@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A56613C26
-	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 09:08:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2889B3D77
+	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 10:25:01 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oOF2h-0002Up-4y; Wed, 17 Aug 2022 11:08:51 +0200
-Message-ID: <35814f70-26ad-8007-9381-e8edf4a6d77f@leemhuis.info>
-Date: Wed, 17 Aug 2022 11:08:50 +0200
+	id 1oOGEM-0007dz-3X; Wed, 17 Aug 2022 12:24:58 +0200
+Message-ID: <12cafbc4-39a2-1bea-c1d1-2cad406c8b83@leemhuis.info>
+Date: Wed, 17 Aug 2022 12:24:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,52 +16,56 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.1.0
-Subject: Re: [Intel-wired-lan] ice: Error setting promisc mode on VSI 6
- (rc=-17) @ 5.18.x
+Subject: Re: [BUG] BLE device unpairing triggers kernel panic
 Content-Language: en-US
-To: "Wilczynski, Michal" <michal.wilczynski@intel.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>,
- "Siwik, Grzegorz" <grzegorz.siwik@intel.com>,
- "Kitszel, Przemyslaw" <przemyslaw.kitszel@intel.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- intel-wired-lan@lists.osuosl.org,
- Jesse Brandeburg <jesse.brandeburg@intel.com>,
- LKML <linux-kernel@vger.kernel.org>, Tony Nguyen <anthony.l.nguyen@intel.com>
-References: <CAK8fFZ7m-KR57M_rYX6xZN39K89O=LGooYkKsu6HKt0Bs+x6xQ@mail.gmail.com>
- <2596b2c6-71e4-543f-799f-b4b174c21f31@leemhuis.info>
- <CAK8fFZ6hS69JMtnvFnLVt9aiWEivZ9-izNgMHtB+KeAWAfaXaQ@mail.gmail.com>
- <6f52ccd2-8411-0c53-2deb-885bb1234ce5@leemhuis.info>
- <c89c993e-7a7a-15df-85ef-8d9b7be16b71@intel.com>
+To: Ahmad Fatoum <a.fatoum@pengutronix.de>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>,
+ Marcel Holtmann <marcel@holtmann.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Tedd Ho-Jeong An <hj.tedd.an@gmail.com>
+References: <a1ce1743-e450-6cdb-dfab-56a3e3eb9aed@pengutronix.de>
+ <CABBYNZ+z8kBUKGXbZSfb0ynJaTnPQRp0wFDUb12AW1ymbNx1eg@mail.gmail.com>
+ <CABBYNZ+zsuggTpaUSPsZKeL=qqvM1=sgMWzdWEqaS_oh6dhY2g@mail.gmail.com>
+ <8d5c4724-d511-39b1-21d7-116c91cada45@pengutronix.de>
+ <b0cb4fb0-6b89-b9df-9ae6-421ac52b0100@pengutronix.de>
+ <CABBYNZ+ubN2rc=zoN_53Pmp6kt3L5UcY3knbtjhhVOjPBpJv4Q@mail.gmail.com>
+ <d5654901-6b1f-a1fa-0101-8b52b345af7b@pengutronix.de>
+ <CABBYNZ+8dpPBqaQMr-Hz_DJRxT-0ucCjgAJH50FUaN7Sn9H6rA@mail.gmail.com>
+ <1d1b76cf-df6f-3935-5cd2-c45ea78f2c33@pengutronix.de>
+ <CABBYNZLdy-rndKczoG_WiWXQmacX+vzCbftQKvzJ3B6imtZopw@mail.gmail.com>
+ <1a5ec80d-690f-285c-3da8-ccdaf5516d85@pengutronix.de>
+ <CABBYNZJQKc9ozReXLeESWY8U648eQytKfGB4WmhZi4M+YOW7jw@mail.gmail.com>
+ <b7b080ff-a5da-a10c-674b-c3bb653f0aeb@leemhuis.info>
+ <577c7140-a30c-ca06-a81e-c791e44b1321@pengutronix.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <c89c993e-7a7a-15df-85ef-8d9b7be16b71@intel.com>
+In-Reply-To: <577c7140-a30c-ca06-a81e-c791e44b1321@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1660727336;0edf193d;
-X-HE-SMSGID: 1oOF2h-0002Up-4y
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1660731901;2f520449;
+X-HE-SMSGID: 1oOGEM-0007dz-3X
 
-On 05.07.22 15:51, Wilczynski, Michal wrote:
+On 07.07.22 07:45, Ahmad Fatoum wrote:
+> On 04.07.22 14:11, Thorsten Leemhuis wrote:
+>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
+>> to make this easily accessible to everyone.
+>>
+>> Looks like the discussions to fix this regression got stuck. What can be
+>> done to get thing rolling again? Or has progress been made and I just
+>> missed it? Ciao, Thorsten
 > 
-> Adding Grzegorz Siwik,  since he is working on similar issue and already
-> has a patch that is being tested/reviewed internally at the moment.
->
-> He can you a send patch tomorrow so you can test if it also fixes your
-> problem.
+> No progress has been made as far as I am aware. I am reverting the commit
+> introducing the regression on my systems and haven't yet had the time to
+> debug this further to help find an alternative solution.
 
-Tony, Jesse, I have to wonder: why is it taken so long to get this
-regression fixed? The regression was reported 69 days ago and the first
-patches to fix this went out 40 days ago. That's far from ideal.
+Just wondering: still no progress I assume?
 
-Reminder: this regression ideally should have been fixed within two
-weeks after the report, as explained here:
-https://docs.kernel.org/process/handling-regressions.html
+Anyway: I'm putting it on the backburner to get it out of the
+spot-light, as this doesn't look urgent and things seems to progress
+very slowly.
 
-FWIW, in case anyone wonders: the latest patch-series to fix this can be
-found here:
-https://lore.kernel.org/intel-wired-lan/1660310750-290943-1-git-send-email-grzegorz.siwik@intel.com/
-
-Thx for working on it Grzegorz! Side note: might be good to add a
-"Reported-by", but it's not really important I guess.
+#regzbot backburner: debuging is slow this further
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -70,142 +74,80 @@ reports and sometimes miss something important when writing mails like
 this. If that's the case here, don't hesitate to tell me in a public
 reply, it's in everyone's interest to set the public record straight.
 
-BTW, let me update the regzbot status:
 
-#regzbot introduce: 5eda8afd6bcc
-#regzbot poke
-
-> On 7/5/205eda8afd6bcc22 11:43 AM, Thorsten Leemhuis wrote:
->> [adding Michal to the recipients]
->>
->> Hi, this is your Linux kernel regression tracker. Top-posting for once,
->> to make this easily accessible to everyone.
->>
->> Intel network maintainers, help me out here please. Has anything been
->> done to address this regression? It looks like Jaroslav didn't even get
->> a single reply. What's up there?
->>
->> BTW, took a quick look into the issue and noticed a the patch "ice: Fix
->> promiscuous mode not turning off" from Michal:
->> https://lore.kernel.org/all/20220704131227.2966160-3-michal.wilczynski@intel.com/
->>
->> Is this maybe fixing this? Then it would be good to add Link and
->> Reported-by tags to that patch.
->>
->> Or is this something else and Jaroslav needs to bisect?
->>
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>
->> P.S.: As the Linux kernel's regression tracker I deal with a lot of
->> reports and sometimes miss something important when writing mails like
->> this. If that's the case here, don't hesitate to tell me in a public
->> reply, it's in everyone's interest to set the public record straight.
->>
->> #regzbot poke
->>
->> On 19.06.22 19:00, Jaroslav Pulchart wrote:
->>> Hello,
->>>
->>> yes, I revert that commit. Still the promiscs cannot be set and the
->>> dmesg
->>> error message changed to:
->>> ---------------
->>> $ ip link set em1 promisc on
->>> $ dmesg
->>> ...
->>> ice 0000:63:00.0 em1: Error setting Multicast promiscuous mode on VSI 6
->>> ...
->>> ---------------
->>>
->>> Jaroslav P.
->>>
->>> ne 19. 6. 2022 v 13:51 odesílatel Thorsten Leemhuis
->>> <regressions@leemhuis.info> napsal:
->>>
->>>> [TLDR: I'm adding this regression report to the list of tracked
->>>> regressions; all text from me you find below is based on a few
->>>> templates
->>>> paragraphs you might have encountered already already in similar form.]
->>>>
->>>> Hi, this is your Linux kernel regression tracker.
->>>>
->>>> On 09.06.22 08:58, Jaroslav Pulchart wrote:
->>>>> I'm struggling with broken network connectivity at VMs using linux
->>>>> bridge at host after update of kernel from 5.17.x to 5.18.x @ Dell
->>>>> R750 server with E810-XXV NICs.
+>> On 24.06.22 21:59, Luiz Augusto von Dentz wrote:
+>>> On Fri, Jun 24, 2022 at 5:53 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>>>> On 21.06.22 20:52, Luiz Augusto von Dentz wrote:
+>>>>> On Tue, Jun 21, 2022 at 1:32 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>>>>>> On 20.06.22 22:18, Luiz Augusto von Dentz wrote:
+>>>>>>> On Mon, Jun 20, 2022 at 3:06 AM Ahmad Fatoum <a.fatoum@pengutronix.de> wrote:
+>>>>>>>> Disconnect of connection #1 being processed after new connection #2
+>>>>>>>> concluded sounds wrong. Would I be able to reconnect
+>>>>>>>> afterwards or would all connections, but the first, be directly
+>>>>>>>> disconnected...?
+>>>>>>>
+>>>>>>> That depends on the order you have queued the commands, it will be
+>>>>>>> processed in the exact order it is received, that why I said it is
+>>>>>>> single queue design, and it is done like that to prevent messing up
+>>>>>>> with states since we know the exact order the commands will be sent.
+>>>>>>>
+>>>>>>>>> otherwise we need a
+>>>>>>>>> different queue to handle command that abort/cancel other already in
+>>>>>>>>> the queue.
+>>>>>>>>
+>>>>>>>> Is the revert an acceptable interim solution or are there issues
+>>>>>>>> I am missing?
+>>>>>>>
+>>>>>>> Afaik there were problem with concurrent connections request, so what
+>>>>>>> would really help us here is to have some tests to emulate this
+>>>>>>> scenario with our CI, in the meantime please check if the following
+>>>>>>> fixes your problem:
+>>>>>>>
+>>>>>>> https://gist.github.com/Vudentz/b4fff292c7f4ad55ca3299fd5ab797ae
+>>>>>>
+>>>>>> Doesn't help unfortunately. First pairing works as before.
+>>>>>> Second still fails:
+>>>>>>
+>>>>>>   Bluetooth: hci0: Opcode 0x200d failed: -110
+>>>>>>   Bluetooth: hci0: request failed to create LE connection: err -110
 >>>>>
->>>>> I noticed the kernel reports "Error setting promisc mode" in dmesg.
->>>>>
->>>>> # dmesg  | grep 'Error setting promisc'
->>>>> [   24.863557] ice 0000:31:00.0: Error setting promisc mode on VSI
->>>>> 6 (rc=-17)
->>>>> [   24.878369] ice 0000:31:00.0: Error setting promisc mode on VSI
->>>>> 6 (rc=-17)
->>>>> [   25.045834] ice 0000:31:00.0: Error setting promisc mode on VSI
->>>>> 6 (rc=-17)
->>>>> [   25.129840] ice 0000:b1:00.0: Error setting promisc mode on VSI
->>>>> 6 (rc=-17)
->>>>> [   25.144440] ice 0000:b1:00.0: Error setting promisc mode on VSI
->>>>> 6 (rc=-17)
->>>>>
->>>>> # lspci -s 0000:31:00.0
->>>>> 31:00.0 Ethernet controller: Intel Corporation Ethernet Controller
->>>>> E810-XXV for SFP (rev 02)
->>>>> # lspci -s 0000:b1:00.0
->>>>> b1:00.0 Ethernet controller: Intel Corporation Ethernet Controller
->>>>> E810-XXV for SFP (rev 02)
->>>>>
->>>>> It is easy to reproduce by:
->>>>>    # ip link set em1 promisc on
->>>>>    # dmesg -T | tail -n 1
->>>>>    [Thu Jun  9 08:48:19 2022] ice 0000:31:00.0: Error setting promisc
->>>>> mode on VSI 6 (rc=-17)
->>>>>
->>>>> Could it be an 'ice' driver bug introduced in the 5.18 kernel?
->>>> CCing the regression mailing list, as it should be in the loop for all
->>>> regressions, as explained here:
->>>> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+>>>>> Can we try to add a test in mgmt-tester to reproduce the error above?
 >>>>
->>>> Jaroslav, did you try to revert the change that was suggested to you in
->>>> https://lore.kernel.org/all/d993bbb6-e583-5d91-76c0-841cc5da86af@roeck-us.net/
->>>> Did it help?
->>>>
->>>> Anyway: To be sure below issue doesn't fall through the cracks
->>>> unnoticed, I'm adding it to regzbot, my Linux kernel regression
->>>> tracking
->>>> bot:
->>>>
->>>> #regzbot ^introduced v5.17 to v5.18
->>>> #regzbot title net: ice: Error setting promisc mode on VSI 6 (rc=-17) @
->>>> 5.18.x
->>>> #regzbot monitor
->>>> https://lore.kernel.org/all/CAK8fFZ68+xZ2Z0vDWnihF8PeJKEmEwCyyF-8W9PCZJTd8zfp-A@mail.gmail.com/
->>>> #regzbot monitor
->>>> https://lore.kernel.org/all/CAK8fFZ61mQ3AYpdWjWtyUXzrs-RVMW61mBLrjRDXBxB-F9GzbA@mail.gmail.com/
->>>> #regzbot ignore-activity
->>>>
->>>> This isn't a regression? This issue or a fix for it are already
->>>> discussed somewhere else? It was fixed already? You want to clarify
->>>> when
->>>> the regression started to happen? Or point out I got the title or
->>>> something else totally wrong? Then just reply -- ideally with also
->>>> telling regzbot about it, as explained here:
->>>> https://linux-regtracking.leemhuis.info/tracked-regression/
->>>>
->>>> Reminder for developers: When fixing the issue, add 'Link:' tags
->>>> pointing to the report (the mail this one replied to), as the kernel's
->>>> documentation call for; above page explains why this is important for
->>>> tracked regressions.
->>>>
->>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker'
->>>> hat)
->>>>
->>>> P.S.: As the Linux kernel's regression tracker I deal with a lot of
->>>> reports and sometimes miss something important when writing mails like
->>>> this. If that's the case here, don't hesitate to tell me in a public
->>>> reply, it's in everyone's interest to set the public record straight.
+>>>> I am not familiar with mgmt-tester. What information do you
+>>>> need to reproduce? In the meantime, can we revert the commit?
+>>>> I understand that this may break other uses, but I believe
+>>>> previously working stuff should have precedence..
 >>>
-> _______________________________________________
-> Intel-wired-lan mailing list
-> Intel-wired-lan@osuosl.org
-> https://lists.osuosl.org/mailman/listinfo/intel-wired-lan
+>>> Have a looks at:
+>>>
+>>> https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/doc/test-runner.txt
+>>>
+>>> And then run with:
+>>>
+>>> sudo tools/test-runner -k <pathyto/bzImage> -- tools/mgmt-tester
+>>>
+>>> Btw, can we have the exact steps to reproduce it using bluetoothctl if possible?
+>>>
+>>>> Cheers,
+>>>> Ahmad
+>>>>
+>>>>>
+>>>>>> Cheers,
+>>>>>> Ahmad
+>>>>>>
+>>>>>>>
+>>>>>>>> Cheers,
+>>>>>>>> Ahmad
+>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>> We've been deploying the revert for a while now and I just posted
+>>>>>>>>>> it to the mailing list[1]. There have been other reports
+>>>>>>>>>> of this issue with different hardware too and fixing sent_cmd
+>>>>>>>>>> would likely be too complicated/time intensive for me.
+>>>>>>>>>>
+>>>>>>>>>> I am happy to test future patches that fix this properly though.
+>>>>>>>>>>
+>>>>>>>>>> [1]: https://lore.kernel.org/linux-bluetooth/20220616092418.738877-1-a.fatoum@pengutronix.de/T/#t
+>>
+> 
+> 
