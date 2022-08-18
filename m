@@ -1,120 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [95.217.213.242])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4AFA2F22
-	for <regressions@lists.linux.dev>; Thu, 18 Aug 2022 20:38:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 672B3C433C1;
-	Thu, 18 Aug 2022 20:38:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1660855094;
-	bh=6Lsy0QaxfV6sD1O8kfNMv6jWWiIgfjbYjaUEeiQnpZU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=GHqlOIcqhocdbmY56+RBw2wUFa+XU+/RQhpmBU3iNw0GCy/D/PO6cTivwW30rUOpq
-	 8QZuT5OINLUWYQ7/NK0GiYMiO9/5ohREqvLPLXcw3lMvTx89My7rN3zi++cGAL2nud
-	 4o5HBR1ZTDttkXXxSGlgukaAYEQt4MFWQxnTU+zZjY9lGo/PE7JDCU3Q2l+suqrWDf
-	 Er6IONkOrkpDE+kNaEdmDV0m6IJr2Pd/3TgjtXlQe2zaYDuYWTwauJiS7ZNGK2fsU5
-	 oF7Z9DpqlgY6j4CkkMV9tqrPrOaWvQ9C6yHCchFqgol7HozQrWwv9+fTmKFNXO0qkd
-	 kDfbhLnGf4l2A==
-Date: Thu, 18 Aug 2022 15:38:12 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Xinhui Pan <Xinhui.Pan@amd.com>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-	Tom Seewald <tseewald@gmail.com>, Stefan Roese <sr@denx.de>,
-	Kai-Heng Feng <kai.heng.feng@canonical.com>,
-	regressions@lists.linux.dev, linux-pci@vger.kernel.org,
-	amd-gfx@lists.freedesktop.org
-Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
-Message-ID: <20220818203812.GA2381243@bhelgaas>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F60815A3
+	for <regressions@lists.linux.dev>; Thu, 18 Aug 2022 23:40:19 +0000 (UTC)
+Received: from 213.219.160.184.adsl.dyn.edpnet.net ([213.219.160.184] helo=deadeye)
+	by maynard with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ben@decadent.org.uk>)
+	id 1oOod9-0000LN-QA; Fri, 19 Aug 2022 01:08:51 +0200
+Received: from ben by deadeye with local (Exim 4.96)
+	(envelope-from <ben@decadent.org.uk>)
+	id 1oOod9-000YsC-0m;
+	Fri, 19 Aug 2022 01:08:51 +0200
+Date: Fri, 19 Aug 2022 01:08:51 +0200
+From: Ben Hutchings <benh@debian.org>
+To: x86@kernel.org
+Cc: linux-kernel@ver.kernel.org, 1017425@bugs.debian.org,
+	=?iso-8859-1?Q?Martin-=C9ric?= Racine <martin-eric.racine@iki.fi>,
+	stable@vger.kernel.org, regressions@lists.linux.dev,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Subject: [PATCH] x86/speculation: Avoid LFENCE in FILL_RETURN_BUFFER on CPUs
+ that lack it
+Message-ID: <Yv7Gg2nu4CpSY58S@decadent.org.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="X9reK1QatItOUBDw"
 Content-Disposition: inline
-In-Reply-To: <bug-216373-41252@https.bugzilla.kernel.org/>
+X-SA-Exim-Connect-IP: 213.219.160.184
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
 
-[Adding amdgpu folks]
 
-On Wed, Aug 17, 2022 at 11:45:15PM +0000, bugzilla-daemon@kernel.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=216373
-> 
->             Bug ID: 216373
->            Summary: Uncorrected errors reported for AMD GPU
->     Kernel Version: v6.0-rc1
->         Regression: No
-> ...
+--X9reK1QatItOUBDw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I marked this as a regression in bugzilla.
+The mitigation for PBRSB includes adding LFENCE instructions to the
+RSB filling sequence.  However, RSB filling is done on some older CPUs
+that don't support the LFENCE instruction.
 
-> Hardware:
-> CPU: Intel i7-12700K (Alder Lake)
-> GPU: AMD RX 6700 XT [1002:73df]
-> Motherboard: ASUS Prime Z690-A
-> 
-> Problem:
-> After upgrading to v6.0-rc1 the kernel is now reporting uncorrected PCI errors
-> for my GPU.
+Define and use a BARRIER_NOSPEC macro which makes the LFENCE
+conditional on X86_FEATURE_LFENCE_RDTSC, like the barrier_nospec()
+macro defined for C code in <asm/barrier.h>.
 
-Thank you very much for the report and for taking the trouble to
-bisect it and test Kai-Heng's patch!
+Reported-by: Martin-=C9ric Racine <martin-eric.racine@iki.fi>
+References: https://bugs.debian.org/1017425
+Cc: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev
+Cc: Daniel Sneddon <daniel.sneddon@linux.intel.com>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Fixes: 2b1299322016 ("x86/speculation: Add RSB VM Exit protections")
+Fixes: ba6e31af2be9 ("x86/speculation: Add LFENCE to RSB fill sequence")
+Signed-off-by: Ben Hutchings <benh@debian.org>
+---
+ arch/x86/include/asm/nospec-branch.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-I suspect that booting with "pci=noaer" should be a temporary
-workaround for this issue.  If it, can you add that to the bugzilla
-for anybody else who trips over this?
+diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/no=
+spec-branch.h
+index e64fd20778b6..b1029fd88474 100644
+--- a/arch/x86/include/asm/nospec-branch.h
++++ b/arch/x86/include/asm/nospec-branch.h
+@@ -34,6 +34,11 @@
+=20
+ #define RSB_CLEAR_LOOPS		32	/* To forcibly overwrite all entries */
+=20
++#ifdef __ASSEMBLY__
++
++/* Prevent speculative execution past this barrier. */
++#define BARRIER_NOSPEC ALTERNATIVE "", "lfence", X86_FEATURE_LFENCE_RDTSC
++
+ /*
+  * Google experimented with loop-unrolling and this turned out to be
+  * the optimal version - two calls, each with their own speculation
+@@ -62,9 +67,7 @@
+ 	dec	reg;				\
+ 	jnz	771b;				\
+ 	/* barrier for jnz misprediction */	\
+-	lfence;
+-
+-#ifdef __ASSEMBLY__
++	BARRIER_NOSPEC;
+=20
+ /*
+  * This should be used immediately before an indirect jump/call. It tells
+@@ -138,7 +141,7 @@
+ 	int3
+ .Lunbalanced_ret_guard_\@:
+ 	add $(BITS_PER_LONG/8), %_ASM_SP
+-	lfence
++	BARRIER_NOSPEC
+ .endm
+=20
+  /*
 
-> I have bisected this issue to: [8795e182b02dc87e343c79e73af6b8b7f9c5e635]
-> PCI/portdrv: Don't disable AER reporting in get_port_device_capability()
-> Reverting that commit causes the errors to cease.
+--X9reK1QatItOUBDw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I suspect the errors still occur, but we just don't notice and log
-them.
+-----BEGIN PGP SIGNATURE-----
 
-> I have also tried Kai-Heng Feng's patch[1] which seems to resolve a similar
-> problem, but it did not fix my issue.
-> 
-> [1]
-> https://lore.kernel.org/linux-pci/20220706123244.18056-1-kai.heng.feng@canonical.com/
->
-> dmesg snippet:
-> 
-> pcieport 0000:00:01.0: AER: Multiple Uncorrected (Non-Fatal) error received:
-> 0000:03:00.0
-> amdgpu 0000:03:00.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal),
-> type=Transaction Layer, (Requester ID)
-> amdgpu 0000:03:00.0:   device [1002:73df] error status/mask=00100000/00000000
-> amdgpu 0000:03:00.0:    [20] UnsupReq               (First)
-> amdgpu 0000:03:00.0: AER:   TLP Header: 40000001 0000000f 95e7f000 00000000
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmL+xn0ACgkQ57/I7JWG
+EQltURAAgnJN1OPNWZt4of2uNaxsWdziuJHTwiGBj0CISrZIBrEK5fFUyUP9pHdv
+qR5EV+dN04rge9ZHHskxlHVY0zz4RXjP34IWekKyTiVPSYK1EnEsdlD6gFYWNZ1H
+J/yu50W9fPi0lNAR94g8ZNokqyvTDpDFqlJfZMNX/oCBkDZ1tdiUKdjN+lHQwOAm
+9G4upD541+UFnsSAt/sBEbyAOz8XJxNLJNVvXYrm8+6NnhuWI40RYUFtuK/p15kC
+Hj0pbKMaJPKL8QeMeCE+gUKZEqCA7AVYZ51NTJn4uDs1yqXU/u5hEz92U3bhCWDM
+Y18b4Af75uMIIwF0irNQYJDzIoZWYjFcDG5lMq0CKw/VrQrizqQPJBwkuKCxZwNv
+5PyEu3YLb4RsRI8d0ItP46Osa9lXR5NKXVqWbvPFjg+7MfYUAwmSdgdf7CPC1nEs
+6NbpnjJan9C63vYJ5+kjAthLFlh/dzlg36EeTSwgK1aqdS9LUS3NG/5BIs3UGjGh
+Z5MTEpXUcihHlxN7sLwGR7/xwyRjyj4ChymnnhTWRW0h7sgxh+aexfxTH6i8hWWV
+BdYXbe7K5brpSAIcHUUAl7XwDYlAfWR18I+vAzxuSWbqK8MwqQqjwXH4eJh4kNDL
+yXpZqG1ScwZsqVDlLHjc6Bs+Buzw789esQoyn1RgxZbT0dYtvmU=
+=tFRN
+-----END PGP SIGNATURE-----
 
-I think the TLP header decodes to:
-
-  0x40000001 = 0100 0000 ... 0000 0001 binary
-  0x0000000f = 0000 0000 ... 0000 1111 binary
-
-  Fmt           010b                 3 DW header with data
-  Type          0000b  010 0 0000    MWr Memory Write Request
-  Length        00 0000 0001b        1 DW
-  Requester ID  0x0000               00:00.0
-  Tag           0x00
-  Last DW BE    0000b                must be zero for 1 DW write
-  First DW BE   1111b                all 4 bytes in DW enabled
-  Address       0x95e7f000
-  Data          0x00000000
-
-So I think this is a 32-bit write of zero to PCI bus address
-0x95e7f000.
-
-Your dmesg log says:
-
-  pci 0000:02:00.0: PCI bridge to [bus 03]
-  pci 0000:02:00.0:   bridge window [mem 0x95e00000-0x95ffffff]
-  pci 0000:03:00.0: reg 0x24: [mem 0x95e00000-0x95efffff]
-  [drm] register mmio base: 0x95E00000
-
-So this looks like a write to the device's BAR 5.  I don't see a PCI
-reason why this should fail.  Maybe there's some amdgpu reason?
-
-Bjorn
+--X9reK1QatItOUBDw--
