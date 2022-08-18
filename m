@@ -1,33 +1,47 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from sonic303-25.consmr.mail.gq1.yahoo.com (sonic303-25.consmr.mail.gq1.yahoo.com [98.137.64.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC6B3C29
-	for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 19:28:51 +0000 (UTC)
-Received: by mail-pg1-f182.google.com with SMTP id r69so12789783pgr.2
-        for <regressions@lists.linux.dev>; Wed, 17 Aug 2022 12:28:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=eIIJ90bC7P6FQljG0Svb0/jyjx1J3a6+sZdp1aw3LWc=;
-        b=YJlAzlm+VLuGAm03qKEdmRKAq4g2id2BJhEd7eXGupMycv0uG91eJrYcR5QAti9Vv+
-         ApauYDzdaJHXJbIovUmSgoXL4fsiuPYUqeqyo/A0Byzcv7gZqLOvMn18WpRwf3/4bheu
-         ST7LiNkViK82N4wA8NRJKxa0wPCcqyg52mTaN/MQ9fA5Ml82mrylxxjgAxI9ocGe/fCS
-         iCNlJjLAZbWed64q5CFc+3DiDLIR0I9DesxQ9g+BW2u9VlG25dUZUIZsIVASzt5pb7Bn
-         nfCTPdgzcbg9YzhACc4vgbOmCKIFCk9Ls3FLerY8jckqpKW8j6FjUWb48WkuYKpv8AAA
-         lojw==
-X-Gm-Message-State: ACgBeo1GPlrdPMGoqOyKMM67xnskaMHvdege0PfD3N4kj/UvbNHnn3tm
-	cgOngx6QTKXpWBjkNP7N418=
-X-Google-Smtp-Source: AA6agR5N1VLxg1D0o/efqSo+AfelEHXkXuS7UXlv7yTPvJeIol1q15tQVj7kMfdJLeiP19U+aJHknA==
-X-Received: by 2002:aa7:88d3:0:b0:52e:ade6:6192 with SMTP id k19-20020aa788d3000000b0052eade66192mr26944323pff.41.1660764530467;
-        Wed, 17 Aug 2022 12:28:50 -0700 (PDT)
-Received: from ?IPV6:2620:15c:211:201:55b:6314:9f8d:7bcd? ([2620:15c:211:201:55b:6314:9f8d:7bcd])
-        by smtp.gmail.com with ESMTPSA id n2-20020a170902e54200b0016ed8af2ec0sm312931plf.29.2022.08.17.12.28.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Aug 2022 12:28:49 -0700 (PDT)
-Message-ID: <41b3cf11-6129-60d8-436a-b957b442a4bc@acm.org>
-Date: Wed, 17 Aug 2022 12:28:46 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6226E7B
+	for <regressions@lists.linux.dev>; Thu, 18 Aug 2022 18:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netscape.net; s=a2048; t=1660848863; bh=wMw+QkYaY2UjMD+FyXhwlnZboSQZ8j1LKo94f3KpI78=; h=Date:Subject:From:To:Cc:References:In-Reply-To:From:Subject:Reply-To; b=Z2UgCW7sJ+mDHDWZNMfzVy5y8aczHtKAbDVpLu8JgxCHNYNVg0122SyVwgnltjSeXwycOZdOloxluOTwgH+aJRc5YzG9FBFIGR0LvRiOz85dJeznVCMNdRijj6mWGz9xJ8BGtlno3Ah9lt0PCVoTT2RIRQhkPytiD+B7EaQZXsh0mi8Xtr5G3kwQvacNumkt5dEy3cM30ikr8+AI5J0KpVfO+KdTkqjYKg8G6RiiIDLgZ/Q46lML0ERMqBuV50PdlaQnBV8TVeb0EpDnW4RbuukNuizCoooDYuQyGYxNZ/sHr0nenXej40iY+3CRa70Iu0/9eMOfPZmCujAXSZFDrw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1660848863; bh=l/IU3LIKb6aG1ZzgK5U0EAp+6bboLcPefTEZDZ/svCl=; h=X-Sonic-MF:Date:Subject:From:To:From:Subject; b=ogmRBCD2O5prO7BPljnvKiktjxzGL2GO2z4e45Qi6IMisjtRbHj5Upd9CHMxGV/9rHYyDdEN+Foa1ePPo+iaimnk0FFa37A3hwEZ0A72I/+V/a/I3V479K04uzQ7j2jqRDIjRod96yZf75rVL1c1pI+geK0PKCSfbsVQyoBjTpQ85lZkHVhmVpTMa+tBRjgYJ8XG2BYS4NX+kAqyeYGMyiA4Xaod3m5BemhLgf48Ts69/Qq/JJNlGBN7z+X6eX1/E/v28eoZUQxhbCeXSZmsfY/RUua+NPaPB483MHPedyCZOAnCV5p+uirqru9sniYk/tg5mPVceB8WcWeh2qIIwQ==
+X-YMail-OSG: ZMQ0oXMVM1l8ynKpii5JwAdDm95CUewQX5_YO6ICo62C4rChn6Qei7ddGBSjuno
+ VzIcQmxPo4NwAy5qrajFjTcI75uC1MhqKFDfXyXDoTm5g1MR2Pt_AnVgOjRVeuOt9R9Wz2Ph1mNm
+ aQHUwBqNgi9w.nDTbVyDv255DLt8tS8lFdcMDbghtlRB2vKCc1yT64okP1yhmNuPc8vBtKDveqTM
+ Dy68ST5Ycw12LSQW02JgQmpVNX29eIaXP89XZQQuROdMOrgu4PUj7Wp0cqiBYkJefuI0vqlxKibl
+ eBX8qcZ3wQl9T3uWlZMIrnpPJgdR3FMKnXkNtE5dAv0ZYhE5WlOnLFr1gChlfl6mh2XvQEBAsvMq
+ k6ilzb5VwpjPFVT_BPMaEr6OStSoWyYPYAq2mrqc6Pmr9EEntqomWqRuTE8JaXLLDHCPdcMz_A6c
+ JuSBEAVrGK2T3ygOnTUOF9Ik5idkddFpL3UA_UyJVXIbuw_fHzl01gprlK4rq_ix01yhrbGe7l.c
+ WkBqKknG2FjNwGsYnbuTpZIpfhZOrvhRJthnjpvbLY.ZohCoJ0IMJZWyWHUmG4gqPBHg.IZV_Jm2
+ 9Pw2LoBfl6GsLN3TSDF6Gp_eeluPrxZL1H.UgMedPRNffDwHwZdEh6aTOJQStL_o8_AMvzfATMKD
+ 4DjRDBxbYuktB0RKIAjd.afOj.FJ20reyFdGNCg4h0F4jTo4HLIe.szbSNxsFBOioZ26VHhP2vg5
+ yDz0BJW.1aBO13pXk9TFunqI3mMV5oQK2iTUEVOOsUd7FI7r2FSmHBjaRlOZDsAxb1l4QwvF2UDt
+ 9hr1D.kdnWoboRGL_Td9ZRHTYx7UKctHItBIfjpMTzDMxyxHXxrOe78NEb1y0ZHOcWdrileiBWnF
+ onGyaBgiFYB3xbufEfsglwCkbKXUjS.V.t.EZAqZGBE8lB76_joEAXi_CpEe5wnl8nnVaP_OWfzU
+ PsgaL8R2EhFiIkSZxhmnVHEzLQk6QJ_R1llwEa14734MZ8btovxy6ixrpMVUqUdodF1N697VdwmY
+ cnwpZoZeSwgXhcbiCV55QiIVShrFhbm_Pb0QAwQuPKfkjfcb8llbNy4Wdshta1bUY77FMvXcaTQH
+ 4vcmSog1r70xT2O.Yil3ak6ZujBeNp0cBl.mpf.mdiTBLA4v0r_CLoz2D4gusOYGy_6wypkgpXvx
+ Yw4N0yUpnVN84RGi_BWaGt3JyEAvSQL2ilRRNr2Hx4DRGJZ9AD0jfgZslJVPQWK7aviv7RPzq1Nb
+ wPgdR0l_uBZMFSNgUmQiIPtEbpZE0.QB__iuRM45Y9j9V5yAs1lV.TUNOEQPqbsE36FVgHMVKYdR
+ qj7vVd_kG6oYJFU6CWvI_m3Cvr8uTMEoK.uJSOVPMURl9RwqMBrI7pBn0cdLMiBHhAT2F82soDoc
+ Z_Azy9OynATz8jaH_8jbkSb_9ktiCSDA6xGPyUvUEYQ6h8HFgNJHqbHSmFN_nAB1rs6EmHcJ5llF
+ knfMjn_sfukNJkSYqw5WUcRi91d8gBB1IkYDqc.Xj7.OObUMuxsP5..znyTTCn3eG8stX4VAj4Zv
+ DmHSsJClbM4axBoS6zmxAYs43rKc.jenQKtPxAItd88S_rkfw5UKvxngTbPwviN80SppbWnvk6pw
+ 1YhVm.w_nerFQrjwN0frJnUzJzZKB4Ys798uCrcheOVdjIvFsI5zRiTMJYKjFZkgl.Svet3hAX1u
+ 166D.3tfKMSm0iOJ.yEzxUOQIU5qYtUCa20XP_W8uQCSlrmGH3Svqx8mWA1J3dHMg4b9gooa7Sa.
+ lUIQSqDTnfN55PiTTst6HhsXNUhXN.2hI46vDUqjxcO.gcyOVN7UJonrzCvxH3TKRUdAumTk5NTe
+ znCvUhTD2YimIUk5FCVIDadBwpwmDe5EVyYzC7lEBYV49QcKoJB5vOS7qwK6Tsr3czsLfCm_ObVr
+ YPxS_u4sBy5eXLN_7avB5t4Bpz6H2Q8Jd_tcJtT3qrrh0V7uXKoEWaU4SaFATpFFJjC2EaVi1fAE
+ eeAuRFVe243hNJwuiDwesYRso917ahfaUk73QZKhyadqMiXlpZb735ZPED5WG4tYPtb7iHmeune4
+ 4TLAjsAebqZ2ZIVLx12HQpXimOcrMIV_L_955ET9Lrli7hhqZ4s8lVVo0zmTo1Avj2QitQScWP45
+ EF_KZGSdanJzDDmrpvv.ORahOx7nSdyL7c67girVeeF7lhcKQb1zAOXWZVb5got5OUE7FQzdbZg8
+ TKdNsgL3LZrkPp_E-
+X-Sonic-MF: <brchuckz@aim.com>
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic303.consmr.mail.gq1.yahoo.com with HTTP; Thu, 18 Aug 2022 18:54:23 +0000
+Received: by hermes--production-bf1-7586675c46-lmmdh (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID d0129dba676f8848e6f0705cca693acd;
+          Thu, 18 Aug 2022 18:54:20 +0000 (UTC)
+Message-ID: <464f9f88-232d-4fa1-bc43-916ff7045f4e@netscape.net>
+Date: Thu, 18 Aug 2022 14:54:17 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -35,75 +49,61 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH v2 2/2] scsi: sd: Rework asynchronous resume support
+ Thunderbird/91.12.0
+Subject: Re: [PATCH 0/3] x86: make pat and mtrr independent from each other
 Content-Language: en-US
-To: Vlastimil Babka <vbabka@suse.cz>,
- Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
- Jaegeuk Kim <jaegeuk@kernel.org>, scsi <linux-scsi@vger.kernel.org>,
- Ming Lei <ming.lei@redhat.com>, Hannes Reinecke <hare@suse.de>,
- John Garry <john.garry@huawei.com>, ericspero@icloud.com,
- jason600.groome@gmail.com, Linux-Renesas
- <linux-renesas-soc@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- linux-ide@vger.kernel.org,
- James Bottomley <James.Bottomley@hansenpartnership.com>,
- regressions@lists.linux.dev
-References: <20220630195703.10155-1-bvanassche@acm.org>
- <alpine.DEB.2.22.394.2207191125130.1006766@ramsan.of.borg>
- <db19ed29-e7f9-e5b0-3a6c-f2812078a07d@acm.org>
- <CAMuHMdVzsgSYtbJQnaigNax_JbxPsQfU+gHcteS-ojWbxUdMfw@mail.gmail.com>
- <CAMuHMdWtxBj8ug7AHTqentF8UD4jpO2sgoWWcQCOvEKLJtdq8A@mail.gmail.com>
- <506ca1a6-1122-5755-fc74-60f7c7bfbd0d@acm.org>
- <CAMuHMdVQ2K2v8jpsFfOMk99DG_sBB4_ioiQRroC7K_Ov1wvp9w@mail.gmail.com>
- <6f70e742-9d8a-f389-0482-0ba9696bf445@acm.org>
- <CAMuHMdVc+ATGV-=R3uV6RyF0-mZiuKv7HpmogRBgqGVyO-MKWg@mail.gmail.com>
- <54e20a27-a10b-b77a-e950-1d3398e2e907@acm.org>
- <CAMuHMdURQpAEGgv4cY7v0rqzs12v2TT=Amt26Y0OoBSW7YAoaw@mail.gmail.com>
- <084e7c5a-f98d-d61e-de81-83525851ecf9@acm.org>
- <CAMuHMdW2vOC8ZsE_XF8TbSNoF9zCrwq7UkGZ5jXen1E1mTZe+g@mail.gmail.com>
- <14ec47f3-f3b8-61c7-2c64-d96d00dd7076@acm.org>
- <CAMuHMdW7nGxV_3Z2JV_TCM+WtTdYv5P+0cE6Tw=6krcseNCdAw@mail.gmail.com>
- <40700595-8c83-1b61-ea93-ea9554bfb2db@acm.org>
- <98592410-dd31-9081-86be-fda67d3b06d2@suse.cz>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <98592410-dd31-9081-86be-fda67d3b06d2@suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Chuck Zmudzinski <brchuckz@netscape.net>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: jbeulich@suse.com, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>,
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>, regressions@lists.linux.dev,
+ xen-devel@lists.xenproject.org, x86@kernel.org,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ Juergen Gross <jgross@suse.com>
+References: <20220715142549.25223-1-jgross@suse.com>
+ <efbde93b-e280-0e40-798d-dc7bf8ca83cf@leemhuis.info>
+ <a0ce2f59-b653-fa8b-a016-1335f05c86ae@netscape.net>
+ <32ed59c9-c894-c426-dd27-3602625cf3b1@netscape.net>
+ <c88ea08c-a9d5-ef6a-333a-db9e00c6da6f@suse.com>
+ <bd66b5bc-4d07-d968-f46c-40cf624499a7@netscape.net>
+ <a29a66e0-2075-8084-84ad-8bd3e8a9fd4a@netscape.net>
+ <a7d10605-87e3-c4bd-4a76-f07a04f5751c@leemhuis.info>
+ <8d148826-62a5-95f9-8662-be14f56a6336@netscape.net>
+ <6b40ecc3-a2d3-3efd-4a19-2faf737f098b@leemhuis.info>
+ <be9d077c-ed4d-d5e3-a134-33afff027af4@netscape.net>
+ <6294958a-177a-5c67-47c6-3a95c23ac58e@leemhuis.info>
+ <5c40a423-f70a-abb8-360c-a601c5b157fe@netscape.net>
+In-Reply-To: <5c40a423-f70a-abb8-360c-a601c5b157fe@netscape.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.20531 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
 
-On 8/17/22 12:07, Vlastimil Babka wrote:
-> In my case it's
-> /sys/devices/pci0000:00/0000:00:17.0/ata1/host0/scsi_host/host0/proc_name:ahci
-> /sys/devices/pci0000:00/0000:00:17.0/ata2/host1/scsi_host/host1/proc_name:ahci
-> 
-> Some more details from dmesg
-> 
-> [    0.849373] ata2: SATA link up 6.0 Gbps (SStatus 133 SControl 300)
-> [    0.852849] ata2.00: ACPI cmd f5/00:00:00:00:00:a0(SECURITY FREEZE LOCK) filtered out
-> [    0.854671] ata2.00: supports DRM functions and may not be fully accessible
-> [    0.856181] ata2.00: ATA-9: SAMSUNG MZ7LN512HMJP-000L7, MAV01L6Q, max UDMA/133
-> [    0.858115] ata2.00: 1000215216 sectors, multi 1: LBA48 NCQ (depth 32), AA
-> [    0.861584] ata2.00: Features: Trust Dev-Sleep NCQ-sndrcv
-> [    0.863749] ata2.00: ACPI cmd f5/00:00:00:00:00:a0(SECURITY FREEZE LOCK) filtered out
-> [    0.865481] ata2.00: supports DRM functions and may not be fully accessible
-> [    0.870043] ata2.00: configured for UDMA/133
-> [    0.871871] scsi 1:0:0:0: Direct-Access     ATA      SAMSUNG MZ7LN512 1L6Q PQ: 0 ANSI: 5
-> 
-> Please Cc me on further questions/steps to try/patches to test.
+On 8/16/22 1:28 PM, Chuck Zmudzinski wrote:
+> On 8/16/2022 12:53 PM, Thorsten Leemhuis wrote:
+>
+> >
+> > regzbot will notice when the patch hit's Linux next,
+>
+> IIUC, regzbot might not notice because the patch lacks a Link: tag
+> to the original regression report. The Link tag is to Jan's patch
+> that was posted sometime in April, I think, which also lacks the
+> Link tag to the original report of the regression which did not
+> happen until May 4. If regzbot is smart enough to notice that the
+> patch also has a Fixes: tag for the commit that was identified as
+> bad in the original regression report, then I expect regzbot will
+> find it.
 
-Hi Vlastimil,
+Hey, I see the patch hit linux-next and regzbot noticed and
+now lists the patch as an incoming fix. Great job with regzbot!
 
-Thank you for having provided the above information. The root cause of 
-the hang is not yet clear to me. I was wondering whether the hang 
-perhaps would be triggered by controllers that only support queue depth 
-1. However, in the above output I see "depth 32".
+By the way, I think regzbot is a great idea, and I think any resources
+devoted to develop it more would pay handsome returns for the
+quality of Linux. If no one but you is working on it, I actually might
+be willing to volunteer some time to help you develop it.
 
-As already reported in this email thread a revert for commit 
-88f1669019bd62b3 has been posted on the linux-scsi mailing list. 
-Additionally, Greg KH has been asked to drop that patch from the stable 
-trees.
+Best regards,
 
-Thanks,
-
-Bart.
+Chuck
