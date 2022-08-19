@@ -1,91 +1,52 @@
-Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [95.217.213.242])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED0023CD
-	for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 11:02:45 +0000 (UTC)
-Received: from 213.219.160.184.adsl.dyn.edpnet.net ([213.219.160.184] helo=deadeye)
-	by maynard with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1oOzlk-0002zN-5f; Fri, 19 Aug 2022 13:02:28 +0200
-Received: from ben by deadeye with local (Exim 4.96)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1oOzli-000aat-1m;
-	Fri, 19 Aug 2022 13:02:26 +0200
-Message-ID: <2d899b4a9a08f79396a071eb8c06d524ae6033b0.camel@decadent.org.uk>
-Subject: Re: [PATCH] x86/speculation: Avoid LFENCE in FILL_RETURN_BUFFER on
- CPUs that lack it
-From: Ben Hutchings <ben@decadent.org.uk>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 1017425@bugs.debian.org, 
- =?ISO-8859-1?Q?Martin-=C9ric?= Racine <martin-eric.racine@iki.fi>,
- stable@vger.kernel.org,  regressions@lists.linux.dev, Daniel Sneddon
- <daniel.sneddon@linux.intel.com>,  Pawan Gupta
- <pawan.kumar.gupta@linux.intel.com>
-Date: Fri, 19 Aug 2022 13:02:17 +0200
-In-Reply-To: <Yv9OGVc+WpoDAB0X@worktop.programming.kicks-ass.net>
-References: <Yv7aRJ/SvVhSdnSB@decadent.org.uk>
-	 <Yv9OGVc+WpoDAB0X@worktop.programming.kicks-ass.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-YjhQggnj2zhMxQngHr7f"
-User-Agent: Evolution 3.44.3-1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F77F23CD
+	for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 11:04:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99889C433C1;
+	Fri, 19 Aug 2022 11:04:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1660907078;
+	bh=Q1fuI6kaHUAKv7wckjSX+NjcOnO//x+YueLRXxDkRVo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=OiH9oAxVgOifiMh44MQ7+gci9H9HpPzkUVcSXO2NlagkWNs+eW2yhvdrtgbBPsYYk
+	 rNzaSQ6i6Udw9TmNlTPvYQnZ9Pe/IdaQr5FY1wwpRW0/XK+o7vPgd6w6GAo71JNbnY
+	 9s6GtGMpRvVicUzj64cVvG6tpr3SWtC1H1GBpu+KrPW+z6AlJFPVU6IHF1LZpOtNXn
+	 VuHxQI4LBR1x0czrNCfqsU7uDKyhX6njsOkBIsMl/iuzyGaqit1yLwUgHRFJaugeHw
+	 0IxtxOfAj/x/+FP9LfZ19q9XRtgUaCu0Zfvd9UDqidQr/gaql2+USeEBSgVC63HgtQ
+	 2YkTgG9vK/aEQ==
+Date: Fri, 19 Aug 2022 06:04:37 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: "Lazar, Lijo" <lijo.lazar@amd.com>
+Cc: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Xinhui Pan <Xinhui.Pan@amd.com>, regressions@lists.linux.dev,
+	David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org, Tom Seewald <tseewald@gmail.com>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	Daniel Vetter <daniel@ffwll.ch>, Stefan Roese <sr@denx.de>
+Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
+Message-ID: <20220819110437.GA2432401@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 213.219.160.184
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fc036a10-5c13-fdd7-9d98-2b5f0f8af383@amd.com>
 
+On Fri, Aug 19, 2022 at 02:03:59PM +0530, Lazar, Lijo wrote:
 
---=-YjhQggnj2zhMxQngHr7f
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> Or, it could be amdgpu or some other software component -
+> 
+> register mmio base: 0x95E00000
+> Address       0x95e7f000
+> 
+> 0x95e7f000 indicates access from CPU to a register offset 0x7FE000. This
+> doesn't look like a valid register offset for this chip (device
+> [1002:73df]). Any other clues in dmesg?
 
-On Fri, 2022-08-19 at 10:47 +0200, Peter Zijlstra wrote:
-> On Fri, Aug 19, 2022 at 02:33:08AM +0200, Ben Hutchings wrote:
-> > From: Ben Hutchings <benh@debian.org>
-> >=20
-> > The mitigation for PBRSB includes adding LFENCE instructions to the
-> > RSB filling sequence.  However, RSB filling is done on some older CPUs
-> > that don't support the LFENCE instruction.
-> >=20
->=20
-> Wait; what? There are chips that enable the RSB mitigations and DONT
-> have LFENCE ?!?
-
-Yes, X86_FEATURE_RSB_CTXSW is enabled if any other Spectre v2
-mitigation is enabled.  And all Intel family 6 (except some early
-Atoms) and AMD family 5+ get Spectre v2 mitigation by default.
-
-Ben.
-
---=20
-Ben Hutchings
-Beware of bugs in the above code;
-I have only proved it correct, not tried it. - Donald Knuth
-
---=-YjhQggnj2zhMxQngHr7f
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmL/bbkACgkQ57/I7JWG
-EQmxQg//ZS3fq6QOEM160thdxrPitpXbg0ygRoO4bBjmDY8G/+2sne8MEPRq2r2U
-gKHbq5O6TTLbGDQjZBwGwMEg1omi8dLHt9m9I8YKBxBwqOHdqO4UrZa9cuvVQnF4
-TDTGeBO7sGMRPcuaff7HPKMgjQL2E6+Db2DbZhxvtPkKyRRuoCRONajy7z/W+K0F
-9nHY/offfF5EXLySFwqSE1ypm/MTBVro4EGPFKMe/znSx5y4jFh6Dci39BAVb+rf
-YyzI1y5bmbBnRhy/GGbb/zVhPiQxnwjKCq4o9SUGCh+cWDLfrU8nmkttzxwb2J29
-KEK488/fxi7sI4WB7IxPMTI8REqyrxBq8ybWW0i1HBWt+VieHYroqMrsi9kjrgOU
-6ae6V5PPi773/WzLK/sYnKlKB74V7svRRsFXgk5p5GKVoIGngaWhNQNAknDpdhPK
-Sl8sQTsgS8mUnPIKitwtEgNX+XzvKUuSz8ep0tO/a96ZMahoBSbKO2dt2n+jv7e5
-FU17Q8IKFnqpb9SybcUhD/BGiTLJ7sWcb+sR20Nlxk2ji0j67gzkKcmtVU+qsgLB
-3IzG38XZsd5X+RwTUyO+ZRvTdjKTcj7phIywd+PgYBaWbck1y2OGygJt4U2FDe7a
-MPMJwbDp3jIE3lt/k+XDWY9x2HvXF5C1ZuOdhSapp+eRW4yVkzs=
-=QDsX
------END PGP SIGNATURE-----
-
---=-YjhQggnj2zhMxQngHr7f--
+The complete dmesg is at
+https://bugzilla.kernel.org/attachment.cgi?id=301596
