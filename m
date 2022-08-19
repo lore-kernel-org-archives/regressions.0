@@ -1,86 +1,204 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D45B29A0
-	for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 14:49:28 +0000 (UTC)
-Received: by mail-pg1-f177.google.com with SMTP id 202so3864263pgc.8
-        for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 07:49:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=AEaEgab2mhaMiSkvYoYiW7yx1z+hEFyxx9wlIiPpIa8=;
-        b=cFhfYo0F0faDtaSuJuCjzNW/+R2PwsKHR3a+RBWGv8oAdyyDVGr1sO+JjINi1c98ow
-         GNvFmE/R3DWc6Gq42M3DuP6EseBisWuphDcGndf9EE1NqCcTpqdx55/160IWF0g+gHZ+
-         ZbjdQdS58PCINE0DCco+tAxzVTbvBUbd/HlUkr/M22tC8/ty/juBAYx5DKNhgUcdRSWH
-         4iIPx7/6zZz19PaWWK0+pFdDEi/3KAJPLlmQ1FWyKL+qJDyPIeceeR3Iin+GxIDbnTpi
-         CnowSb5Mj8KbfoAdwcfgFzAXsqtjOlTQ/85w1K8cHdM8B+369l/WjfqZUDQDXQ+9dpAY
-         h2Jg==
-X-Gm-Message-State: ACgBeo287CJLKakAvIOUOGP64g5m00oPQLg3/AUIVfMESY2s0KRcPOli
-	74Y1hKqTH3F2WXy5VHzg8Qg=
-X-Google-Smtp-Source: AA6agR4n7cfXryL/GLcBwpbdaZ8OS1DGI89ou5DCJZPaiWYVxSuSylH84/CiOOS86Tu5616hB6UhkA==
-X-Received: by 2002:a63:1925:0:b0:429:f4f4:7d48 with SMTP id z37-20020a631925000000b00429f4f47d48mr6689792pgl.474.1660920568337;
-        Fri, 19 Aug 2022 07:49:28 -0700 (PDT)
-Received: from [192.168.3.217] ([98.51.102.78])
-        by smtp.gmail.com with ESMTPSA id e14-20020aa798ce000000b00534a1315a63sm3580495pfm.136.2022.08.19.07.49.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 Aug 2022 07:49:27 -0700 (PDT)
-Message-ID: <17ccd5ae-0268-1bee-7822-1352f4c676ba@acm.org>
-Date: Fri, 19 Aug 2022 07:49:25 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06B84182
+	for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 17:13:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A7A7C433D6;
+	Fri, 19 Aug 2022 17:13:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1660929184;
+	bh=Dd2HUsH0MI86l6T258D7rios4LMDmzA41/wv22GexTU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZRxjlzBQKCqqK9sB1Bwd8e+ZcO9mGxc6NQHL+TB5ivtraKu/zSV9gjU5IwzkZSNEI
+	 FCuQOgFd6v2fqCMBtStpiqL8x+sIKD43Tb5fjlL95LKzETSzOtURVo2Z3uK62pGktv
+	 97+f7WM7ELlxrKXe/dNx0xblsoUYFHf3KyUdXQWfA/unBQcIZIeA1/zad4unU0KEmp
+	 NYuPciw8K7dpFAJ35U4ccfnrGvS8FWpFVO/gSssY3oqqeSu9Zt2UQKx/ATgYPzXtnu
+	 iS/ETwld7SMxtZleVt5WyMvDHoXxiBSxQc6DeCgC4ZCIDdhLKJNN1hF1GDYgQ5GTzW
+	 OSRAkgA846i3w==
+Date: Fri, 19 Aug 2022 12:13:03 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Tom Seewald <tseewald@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+	Tom Seewald <tseewald@gmail.com>, Stefan Roese <sr@denx.de>,
+	Kai-Heng Feng <kai.heng.feng@canonical.com>,
+	regressions@lists.linux.dev, linux-pci@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Xinhui Pan <Xinhui.Pan@amd.com>, Lijo Lazar <lijo.lazar@amd.com>
+Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
+Message-ID: <20220819171303.GA2491617@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: 6.0-rc1 regression block (blk_mq) / RCU task stuck errors +
- block-io hang
-Content-Language: en-US
-To: Hans de Goede <hdegoede@redhat.com>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Jens Axboe <axboe@kernel.dk>
-Cc: linux-block@vger.kernel.org, rcu@vger.kernel.org
-References: <dd6844e7-f338-a4e9-2dad-0960e25b2ca1@redhat.com>
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <dd6844e7-f338-a4e9-2dad-0960e25b2ca1@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220818203812.GA2381243@bhelgaas>
 
-On 8/19/22 05:01, Hans de Goede wrote:
-> I've been dogfooding 6.0-rc1 on my main workstation and I have hit
-> this pretty serious bug, serious enough for me to go back to 5.19
+On Thu, Aug 18, 2022 at 03:38:12PM -0500, Bjorn Helgaas wrote:
+> [Adding amdgpu folks]
 > 
-> My dmesg is showing various blk_mq (RCU?) related lockdep splats
-> followed by some tasks getting stuck on disk-IO. E.g. "sync"
-> is guaranteed to hang, but other tasks too.
-> 
-> This seems to be mainly the case on "sd" disks (both sata
-> and USB) where as my main nvme drive seems fine, which has
-> probably saved me from worse issues...
-> 
-> Here are 4 task stuck reports from my last boot, where
-> I had to turn off the machine by keeping the power button
-> pressed for 4 seconds.
-> 
-> [ ... ]
- >
-> Sorry for not being able to write a better bug-report but I don't have
-> the time to dive into this deeper. I hope this report is enough for
-> someone to have a clue what is going on.
+> On Wed, Aug 17, 2022 at 11:45:15PM +0000, bugzilla-daemon@kernel.org wrote:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=216373
+> > 
+> >             Bug ID: 216373
+> >            Summary: Uncorrected errors reported for AMD GPU
+> >     Kernel Version: v6.0-rc1
+> >         Regression: No
 
-Thank you for the detailed report. I think this report is detailed 
-enough to root-cause this issue, something that was not possible before 
-this report.
+Tom, thanks for trying out "pci=noaer".  Hopefully we won't need the
+workaround for long.
 
-Please help with verifying whether this patch fixes this issue: "[PATCH] 
-scsi: sd: Revert "Rework asynchronous resume support"" 
-(https://lore.kernel.org/linux-scsi/20220816172638.538734-1-bvanassche@acm.org/).
+Could I trouble you to try the debug patch below and see if we get any
+stack trace clues in dmesg when the error happens?  I'm sure the
+experts would have a better approach, but I'm amdgpu-illiterate, so 
+this is all I can do :)
 
-Thanks,
+Bjorn
 
-Bart.
-
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index c4a6fe3070b6..fc34c66776bc 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -130,6 +130,14 @@ const char *amdgpu_asic_name[] = {
+ 	"LAST",
+ };
+ 
++void check_write(uint32_t v, void __iomem *base, uint32_t offset)
++{
++	if (offset == 0x7f000) {
++		pr_err("** writing %#010x to %px\n", v, base + offset);
++		dump_stack();
++	}
++}
++
+ /**
+  * DOC: pcie_replay_count
+  *
+@@ -512,9 +520,10 @@ void amdgpu_mm_wreg8(struct amdgpu_device *adev, uint32_t offset, uint8_t value)
+ 	if (amdgpu_device_skip_hw_access(adev))
+ 		return;
+ 
+-	if (offset < adev->rmmio_size)
++	if (offset < adev->rmmio_size) {
++		check_write(value, adev->rmmio, offset);
+ 		writeb(value, adev->rmmio + offset);
+-	else
++	} else
+ 		BUG();
+ }
+ 
+@@ -542,6 +551,7 @@ void amdgpu_device_wreg(struct amdgpu_device *adev,
+ 			amdgpu_kiq_wreg(adev, reg, v);
+ 			up_read(&adev->reset_domain->sem);
+ 		} else {
++			check_write(v, adev->rmmio, reg * 4);
+ 			writel(v, ((void __iomem *)adev->rmmio) + (reg * 4));
+ 		}
+ 	} else {
+@@ -574,6 +584,7 @@ void amdgpu_mm_wreg_mmio_rlc(struct amdgpu_device *adev,
+ 	} else if ((reg * 4) >= adev->rmmio_size) {
+ 		adev->pcie_wreg(adev, reg * 4, v);
+ 	} else {
++		check_write(v, adev->rmmio, reg * 4);
+ 		writel(v, ((void __iomem *)adev->rmmio) + (reg * 4));
+ 	}
+ }
+@@ -689,6 +700,7 @@ u32 amdgpu_device_indirect_rreg(struct amdgpu_device *adev,
+ 	pcie_index_offset = (void __iomem *)adev->rmmio + pcie_index * 4;
+ 	pcie_data_offset = (void __iomem *)adev->rmmio + pcie_data * 4;
+ 
++	check_write(reg_addr, adev->rmmio, pcie_index * 4);
+ 	writel(reg_addr, pcie_index_offset);
+ 	readl(pcie_index_offset);
+ 	r = readl(pcie_data_offset);
+@@ -721,10 +733,12 @@ u64 amdgpu_device_indirect_rreg64(struct amdgpu_device *adev,
+ 	pcie_data_offset = (void __iomem *)adev->rmmio + pcie_data * 4;
+ 
+ 	/* read low 32 bits */
++	check_write(reg_addr, adev->rmmio, pcie_index * 4);
+ 	writel(reg_addr, pcie_index_offset);
+ 	readl(pcie_index_offset);
+ 	r = readl(pcie_data_offset);
+ 	/* read high 32 bits */
++	check_write(reg_addr + 4, adev->rmmio, pcie_index * 4);
+ 	writel(reg_addr + 4, pcie_index_offset);
+ 	readl(pcie_index_offset);
+ 	r |= ((u64)readl(pcie_data_offset) << 32);
+@@ -755,8 +769,10 @@ void amdgpu_device_indirect_wreg(struct amdgpu_device *adev,
+ 	pcie_index_offset = (void __iomem *)adev->rmmio + pcie_index * 4;
+ 	pcie_data_offset = (void __iomem *)adev->rmmio + pcie_data * 4;
+ 
++	check_write(reg_addr, adev->rmmio, pcie_index * 4);
+ 	writel(reg_addr, pcie_index_offset);
+ 	readl(pcie_index_offset);
++	check_write(reg_data, adev->rmmio, pcie_data * 4);
+ 	writel(reg_data, pcie_data_offset);
+ 	readl(pcie_data_offset);
+ 	spin_unlock_irqrestore(&adev->pcie_idx_lock, flags);
+@@ -785,13 +801,17 @@ void amdgpu_device_indirect_wreg64(struct amdgpu_device *adev,
+ 	pcie_data_offset = (void __iomem *)adev->rmmio + pcie_data * 4;
+ 
+ 	/* write low 32 bits */
++	check_write(reg_addr, adev->rmmio, pcie_index * 4);
+ 	writel(reg_addr, pcie_index_offset);
+ 	readl(pcie_index_offset);
++	check_write((u32)(reg_data & 0xffffffffULL), adev->rmmio, pcie_data * 4);
+ 	writel((u32)(reg_data & 0xffffffffULL), pcie_data_offset);
+ 	readl(pcie_data_offset);
+ 	/* write high 32 bits */
++	check_write(reg_addr + 4, adev->rmmio, pcie_index * 4);
+ 	writel(reg_addr + 4, pcie_index_offset);
+ 	readl(pcie_index_offset);
++	check_write((u32)(reg_data >> 32), adev->rmmio, pcie_data * 4);
+ 	writel((u32)(reg_data >> 32), pcie_data_offset);
+ 	readl(pcie_data_offset);
+ 	spin_unlock_irqrestore(&adev->pcie_idx_lock, flags);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.c
+index 9be57389301b..b552d7c27ec0 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_virt.c
+@@ -36,6 +36,8 @@
+ #include "soc15.h"
+ #include "nv.h"
+ 
++extern void check_write(uint32_t v, void __iomem *base, uint32_t offset);
++
+ #define POPULATE_UCODE_INFO(vf2pf_info, ucode, ver) \
+ 	do { \
+ 		vf2pf_info->ucode_info[ucode].id = ucode; \
+@@ -900,11 +902,15 @@ static u32 amdgpu_virt_rlcg_reg_rw(struct amdgpu_device *adev, u32 offset, u32 v
+ 
+ 	if (offset == reg_access_ctrl->grbm_cntl) {
+ 		/* if the target reg offset is grbm_cntl, write to scratch_reg2 */
++		check_write(v, adev->rmmio, 4 * reg_access_ctrl->scratch_reg2);
+ 		writel(v, scratch_reg2);
++		check_write(v, adev->rmmio, offset * 4);
+ 		writel(v, ((void __iomem *)adev->rmmio) + (offset * 4));
+ 	} else if (offset == reg_access_ctrl->grbm_idx) {
+ 		/* if the target reg offset is grbm_idx, write to scratch_reg3 */
++		check_write(v, adev->rmmio, 4 * reg_access_ctrl->scratch_reg3);
+ 		writel(v, scratch_reg3);
++		check_write(v, adev->rmmio, offset * 4);
+ 		writel(v, ((void __iomem *)adev->rmmio) + (offset * 4));
+ 	} else {
+ 		/*
+@@ -913,10 +919,14 @@ static u32 amdgpu_virt_rlcg_reg_rw(struct amdgpu_device *adev, u32 offset, u32 v
+ 		 * SCRATCH_REG1[19:0]	= address in dword
+ 		 * SCRATCH_REG1[26:24]	= Error reporting
+ 		 */
++		check_write(v, adev->rmmio, 4 * reg_access_ctrl->scratch_reg0);
+ 		writel(v, scratch_reg0);
++		check_write(offset | flag, adev->rmmio, 4 * reg_access_ctrl->scratch_reg1);
+ 		writel((offset | flag), scratch_reg1);
+-		if (reg_access_ctrl->spare_int)
++		if (reg_access_ctrl->spare_int) {
++			check_write(1, adev->rmmio, 4 * reg_access_ctrl->spare_int);
+ 			writel(1, spare_int);
++		}
+ 
+ 		for (i = 0; i < timeout; i++) {
+ 			tmp = readl(scratch_reg1);
