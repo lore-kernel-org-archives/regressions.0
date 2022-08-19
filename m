@@ -1,131 +1,103 @@
-Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [95.217.213.242])
+Received: from yamato.tf-network.de (yamato.tf-network.de [93.186.202.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B75193
-	for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 00:33:19 +0000 (UTC)
-Received: from 213.219.160.184.adsl.dyn.edpnet.net ([213.219.160.184] helo=deadeye)
-	by maynard with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1oOpwj-0000wB-3a; Fri, 19 Aug 2022 02:33:09 +0200
-Received: from ben by deadeye with local (Exim 4.96)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1oOpwi-000a0S-0N;
-	Fri, 19 Aug 2022 02:33:08 +0200
-Date: Fri, 19 Aug 2022 02:33:08 +0200
-From: Ben Hutchings <ben@decadent.org.uk>
-To: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org, 1017425@bugs.debian.org,
-	=?iso-8859-1?Q?Martin-=C9ric?= Racine <martin-eric.racine@iki.fi>,
-	stable@vger.kernel.org, regressions@lists.linux.dev,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Subject: [PATCH] x86/speculation: Avoid LFENCE in FILL_RETURN_BUFFER on CPUs
- that lack it
-Message-ID: <Yv7aRJ/SvVhSdnSB@decadent.org.uk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685637B
+	for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 02:46:45 +0000 (UTC)
+Received: from amavis3.tf-network.de ([IPv6:2001:4ba0:ffa0:1b::d1:221])
+	by yamato.tf-network.de (Postfix) with ESMTP id 4M85k51lMSz4RgC;
+	Fri, 19 Aug 2022 04:46:37 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at amavis3.tf-network.de
+Received: from smtp.tf-network.de ([93.186.202.221])
+	by amavis3.tf-network.de ([IPv6:2001:4ba0:ffa0:1b::d1:221]) (amavisd-new, port 10024)
+	with LMTP id aCKhr1TY8UhC; Fri, 19 Aug 2022 04:46:36 +0200 (CEST)
+Received: from [10.1.0.10] (xdsl-78-34-186-118.nc.de [78.34.186.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.tf-network.de (Postfix) with ESMTPSA id 4M85k44hTtz442N;
+	Fri, 19 Aug 2022 04:46:36 +0200 (CEST)
+Message-ID: <0192a465-d75d-c09a-732a-eb2215bf3479@whissi.de>
+Date: Fri, 19 Aug 2022 04:46:35 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="eT0M3T1LYdQ/WIvW"
-Content-Disposition: inline
-X-SA-Exim-Connect-IP: 213.219.160.184
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+From: Thomas Deutschmann <whissi@whissi.de>
+Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
+To: Song Liu <song@kernel.org>, Vishal Verma <vverma@digitalocean.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Jens Axboe <axboe@kernel.dk>
+References: <000401d8a746$3eaca200$bc05e600$@whissi.de>
+ <000001d8ad7e$c340ad70$49c20850$@whissi.de>
+ <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info>
+ <0FBCAB10-545E-45E2-A0C8-D7620817651D@digitalocean.com>
+ <CAPhsuW5f9QD+gzJ9eBhn5irsHvrsvkWjSnA4MPaHsQjjLMypXg@mail.gmail.com>
+ <43e678ca-3fc3-6c08-f035-2c31a34dd889@whissi.de>
+ <701f3fc0-2f0c-a32c-0d41-b489a9a59b99@whissi.de>
+Content-Language: en-US
+In-Reply-To: <701f3fc0-2f0c-a32c-0d41-b489a9a59b99@whissi.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+
+On 2022-08-17 20:29, Thomas Deutschmann wrote:
+> I will do another round with 2b7196a219bf (good) <-> 5.18 (bad).
+
+...and this one also ended up in
+
+> first bad commit: [fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf] Linux 5.16-rc1 
+
+Now I built vanilla 5.18.18 and fsfreeze will hang after FIFREEZE ioctl 
+system call after running my reproducer which generated I/O load.
+
+=> So looks like bug is still present, right?
+
+When I now just edit Makefile and set KV <5.16-rc1, i.e.
+
+> diff --git a/Makefile b/Makefile
+> index 23162e2bdf14..0f344944d828 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  VERSION = 5
+> -PATCHLEVEL = 18
+> -SUBLEVEL = 18
+> +PATCHLEVEL = 15
+> +SUBLEVEL = 0
+>  EXTRAVERSION =
+>  NAME = Superb Owl
+> 
+
+then I can no longer reproduce the problem.
+
+Of course,
+
+> diff --git a/Makefile b/Makefile
+> index 23162e2bdf14..0f344944d828 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  VERSION = 5
+> -PATCHLEVEL = 18
+> -SUBLEVEL = 18
+> +PATCHLEVEL = 15
+> +SUBLEVEL = 99
+>  EXTRAVERSION =
+>  NAME = Superb Owl
+> 
+
+will freeze again.
+
+For me it looks like kernel is taking a different code path depending on 
+KV but I don't know how to proceed. Any idea how to continue debugging this?
 
 
---eT0M3T1LYdQ/WIvW
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-=46rom: Ben Hutchings <benh@debian.org>
-
-The mitigation for PBRSB includes adding LFENCE instructions to the
-RSB filling sequence.  However, RSB filling is done on some older CPUs
-that don't support the LFENCE instruction.
-
-Define and use a BARRIER_NOSPEC macro which makes the LFENCE
-conditional on X86_FEATURE_LFENCE_RDTSC, like the barrier_nospec()
-macro defined for C code in <asm/barrier.h>.
-
-Reported-by: Martin-=C9ric Racine <martin-eric.racine@iki.fi>
-References: https://bugs.debian.org/1017425
-Cc: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-Cc: Daniel Sneddon <daniel.sneddon@linux.intel.com>
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Fixes: 2b1299322016 ("x86/speculation: Add RSB VM Exit protections")
-Fixes: ba6e31af2be9 ("x86/speculation: Add LFENCE to RSB fill sequence")
-Signed-off-by: Ben Hutchings <benh@debian.org>
----
-Re-sending this with properly matched From address and server.
-Apologies if you got 2 copies.
-
-Ben.
-
- arch/x86/include/asm/nospec-branch.h | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/no=
-spec-branch.h
-index e64fd20778b6..b1029fd88474 100644
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -34,6 +34,11 @@
-=20
- #define RSB_CLEAR_LOOPS		32	/* To forcibly overwrite all entries */
-=20
-+#ifdef __ASSEMBLY__
-+
-+/* Prevent speculative execution past this barrier. */
-+#define BARRIER_NOSPEC ALTERNATIVE "", "lfence", X86_FEATURE_LFENCE_RDTSC
-+
- /*
-  * Google experimented with loop-unrolling and this turned out to be
-  * the optimal version - two calls, each with their own speculation
-@@ -62,9 +67,7 @@
- 	dec	reg;				\
- 	jnz	771b;				\
- 	/* barrier for jnz misprediction */	\
--	lfence;
--
--#ifdef __ASSEMBLY__
-+	BARRIER_NOSPEC;
-=20
- /*
-  * This should be used immediately before an indirect jump/call. It tells
-@@ -138,7 +141,7 @@
- 	int3
- .Lunbalanced_ret_guard_\@:
- 	add $(BITS_PER_LONG/8), %_ASM_SP
--	lfence
-+	BARRIER_NOSPEC
- .endm
-=20
-  /*
-
---eT0M3T1LYdQ/WIvW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmL+2j0ACgkQ57/I7JWG
-EQlPgA/+JoIOscO32lmTqexszlIn0F8EUMhfZfCh6h3mSgt0w8B1r4oBmEZTs9x5
-HOHjeG0ZtdQvTKm10bCn2eCQq9xhH35m/OSNoysS64lFsQLyKmvXoV2U36nvxSnu
-S7Dd0pt1Mgxs6o7+l/Gxhd1Jva6JagwjZjcOe3cPmcMtgbBZfPsmAofkSbq/89u4
-iBeUm7YE5i7zRB5DZWHbMs+GIEGdyRplu1u7pYxRSg9XQg/zSdNdS02c5v8/PLx2
-NgTGVR+t858WG791oTNXqkV1SG1s3LNuimJej155QCxyMNrJgAqre713cv9x5uEA
-tU/VRZdPoYkee/L6d31p77C9+BV1PD2wy1pUFVBEvXV7cbDXvpXNjb5ZRAHPSBIa
-1LBP1jrvCfeq7r4qQPIjIU5T8mU6ClJKkHLnf0ZjFwDvyNOEHy9dlH5ShjYy/oFX
-Wedrbb7Y/sk39fxF5km0ns8gL/s689HbT1quEbqE2NhjfurOlSTuejwE4kZv8+O9
-OTvzIPOoM0rjNZOWKn89zLwSygZxJeEczWiA6dml6vuqdU9p0TAI5b7DCvbcr71J
-KziLwMJAGHIik+FYKS34tKsQaHTUIIbgNV3H1GLZnQrcYH0zfSDvO0q+X8bVcSWB
-5k23Kkd4wwcu/WEVBSAIkiMoHmQrxUauVOcIDBXOoi0je9B67kQ=
-=/q8V
------END PGP SIGNATURE-----
-
---eT0M3T1LYdQ/WIvW--
+-- 
+Regards,
+Thomas
