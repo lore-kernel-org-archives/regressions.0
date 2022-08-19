@@ -1,120 +1,504 @@
-Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [95.217.213.242])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A421523CD
-	for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 11:38:45 +0000 (UTC)
-Received: from 213.219.160.184.adsl.dyn.edpnet.net ([213.219.160.184] helo=deadeye)
-	by maynard with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1oP0Ke-0003FT-Gc; Fri, 19 Aug 2022 13:38:32 +0200
-Received: from ben by deadeye with local (Exim 4.96)
-	(envelope-from <ben@decadent.org.uk>)
-	id 1oP0Kd-000b3h-39;
-	Fri, 19 Aug 2022 13:38:31 +0200
-Message-ID: <9395338630e3313c1bf0393ae507925d1f9af870.camel@decadent.org.uk>
-Subject: Re: [PATCH] x86/speculation: Avoid LFENCE in FILL_RETURN_BUFFER on
- CPUs that lack it
-From: Ben Hutchings <ben@decadent.org.uk>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 1017425@bugs.debian.org, 
- =?ISO-8859-1?Q?Martin-=C9ric?= Racine <martin-eric.racine@iki.fi>,
- stable@vger.kernel.org,  regressions@lists.linux.dev, Daniel Sneddon
- <daniel.sneddon@linux.intel.com>,  Pawan Gupta
- <pawan.kumar.gupta@linux.intel.com>
-Date: Fri, 19 Aug 2022 13:38:27 +0200
-In-Reply-To: <Yv9tj9vbQ9nNlXoY@worktop.programming.kicks-ass.net>
-References: <Yv7aRJ/SvVhSdnSB@decadent.org.uk>
-	 <Yv9OGVc+WpoDAB0X@worktop.programming.kicks-ass.net>
-	 <Yv9tj9vbQ9nNlXoY@worktop.programming.kicks-ass.net>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="=-nQrCdQRVr0v9wcLsIe/Y"
-User-Agent: Evolution 3.44.3-1 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9033D5CBF
+	for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 12:02:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1660910524;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=bs/RGqRU1P8HkB78nxVTIBhoGgYEyiHtrF13FSc69Hk=;
+	b=a7bjDp/FvqQxfpvo0H+8hd+Mj7MJI0P2RS+NmhQS3RohjEd8lz0ZKwGj+rpjZWy/YsIR7L
+	3AxeuXblhA7sK5OS9jcrrzH5FcMoHr9mGntPl5v2uU2xbPFJF+d1Kc36UtLP7aSnDdCTlD
+	zPZjxyPJouoRaWt2KMeP3ItJkWS+Q0A=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-455-zCzAdRp9NtSzL-I9NNHmAA-1; Fri, 19 Aug 2022 08:02:03 -0400
+X-MC-Unique: zCzAdRp9NtSzL-I9NNHmAA-1
+Received: by mail-ed1-f72.google.com with SMTP id t13-20020a056402524d00b0043db1fbefdeso2699453edd.2
+        for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 05:02:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc;
+        bh=bs/RGqRU1P8HkB78nxVTIBhoGgYEyiHtrF13FSc69Hk=;
+        b=Bfp5CIesSz+YpBdPzq/iuimhMorkxa8YaM/EzdSBq79PNsNW5aHBWuexDytlKgw7nj
+         AQUDAxJ3vXnZzPhJxv2z9dAZtHvPIZqfpBu+0UYTqCG83OusgKlK5oGwbg3ozwB/KSaU
+         E36QDxQ8Ocmb8amO9AKw41hoG1bbh5+589HrWSAbd2Wxe/qUf52dt1aUejVDKLi9etMc
+         SDU0S0vRpTHfnKWHAxJ/XJHxDDviRHkdowAcx5zBwtAb+ITt+ugD0cDLy88KLRMlnp5G
+         RBGSVO9RD5fS4f0Q6u7C7WTz1P3inQEgHfefxSv8nt3PCaRyQgWtHro5qAzDViYUitdh
+         tfWg==
+X-Gm-Message-State: ACgBeo1yi9GsxCACWf8qfESi7OFNoK7+VYIcf3Rsnx2GbTsZNaTzTE5y
+	kQQVCmGWq27SHTaWYQuX8A12wjxXQ6dzuOqFTtoQAurTlPVFbqaZ9/JCf1vV+rGsQK4sO0cYEHS
+	enZyMabZ7Pu8QzbFBKGdEXtY=
+X-Received: by 2002:a17:907:971e:b0:731:48b3:6fb7 with SMTP id jg30-20020a170907971e00b0073148b36fb7mr4765760ejc.267.1660910520974;
+        Fri, 19 Aug 2022 05:02:00 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR6Pq8KNfXUN3mOCREv9GJPMPra98QkIxCNGeAc7ZItf05+a7IlqY0LV4NcjgNnV7YHGHMdRbg==
+X-Received: by 2002:a17:907:971e:b0:731:48b3:6fb7 with SMTP id jg30-20020a170907971e00b0073148b36fb7mr4765735ejc.267.1660910520400;
+        Fri, 19 Aug 2022 05:02:00 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id q19-20020a17090676d300b0072af930cf97sm2190734ejn.115.2022.08.19.05.01.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Aug 2022 05:01:59 -0700 (PDT)
+Message-ID: <dd6844e7-f338-a4e9-2dad-0960e25b2ca1@redhat.com>
+Date: Fri, 19 Aug 2022 14:01:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 213.219.160.184
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Jens Axboe <axboe@kernel.dk>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: 6.0-rc1 regression block (blk_mq) / RCU task stuck errors + block-io
+ hang
+Cc: linux-block@vger.kernel.org, rcu@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+Hi All,
+
+I've been dogfooding 6.0-rc1 on my main workstation and I have hit
+this pretty serious bug, serious enough for me to go back to 5.19
+
+My dmesg is showing various blk_mq (RCU?) related lockdep splats
+followed by some tasks getting stuck on disk-IO. E.g. "sync"
+is guaranteed to hang, but other tasks too.
+
+This seems to be mainly the case on "sd" disks (both sata
+and USB) where as my main nvme drive seems fine, which has
+probably saved me from worse issues...
+
+Here are 4 task stuck reports from my last boot, where
+I had to turn off the machine by keeping the power button
+pressed for 4 seconds.
+
+Aug 19 12:25:46 shalem kernel: INFO: task kworker/0:3:305 blocked for more than 122 seconds.
+Aug 19 12:25:46 shalem kernel:       Tainted: G        W  OE     -------  ---  6.0.0-0.rc1.20220817git3cc40a443a04.14.fc38.x86_64 #1
+Aug 19 12:25:46 shalem kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Aug 19 12:25:46 shalem kernel: task:kworker/0:3     state:D stack:13008 pid:  305 ppid:     2 flags:0x00004000
+Aug 19 12:25:46 shalem kernel: Workqueue: events ata_scsi_dev_rescan
+Aug 19 12:25:46 shalem kernel: Call Trace:
+Aug 19 12:25:46 shalem kernel:  <TASK>
+Aug 19 12:25:46 shalem kernel:  __schedule+0x47f/0x16d0
+Aug 19 12:25:46 shalem kernel:  ? mark_held_locks+0x50/0x80
+Aug 19 12:25:46 shalem kernel:  ? _raw_spin_unlock_irq+0x24/0x50
+Aug 19 12:25:46 shalem kernel:  schedule+0x5d/0xe0
+Aug 19 12:25:46 shalem kernel:  blk_mq_freeze_queue_wait+0x57/0x90
+Aug 19 12:25:46 shalem kernel:  ? prepare_to_wait_exclusive+0xd0/0xd0
+Aug 19 12:25:46 shalem kernel:  disk_clear_zone_settings+0x19/0xa0
+Aug 19 12:25:46 shalem kernel:  sd_revalidate_disk.isra.0+0x1660/0x2c60
+Aug 19 12:25:46 shalem kernel:  ? slab_free_freelist_hook.constprop.0+0x11b/0x160
+Aug 19 12:25:46 shalem kernel:  ? scsi_rescan_device+0x2c/0x90
+Aug 19 12:25:46 shalem kernel:  scsi_rescan_device+0x77/0x90
+Aug 19 12:25:46 shalem kernel:  ata_scsi_dev_rescan+0x9d/0x110
+Aug 19 12:25:46 shalem kernel:  process_one_work+0x2a0/0x600
+Aug 19 12:25:46 shalem kernel:  worker_thread+0x4f/0x3a0
+Aug 19 12:25:46 shalem kernel:  ? process_one_work+0x600/0x600
+Aug 19 12:25:46 shalem kernel:  kthread+0xf5/0x120
+Aug 19 12:25:46 shalem kernel:  ? kthread_complete_and_exit+0x20/0x20
+Aug 19 12:25:46 shalem kernel:  ret_from_fork+0x22/0x30
+Aug 19 12:25:46 shalem kernel:  </TASK>
+Aug 19 12:25:46 shalem kernel: INFO: task smartd:2557 blocked for more than 122 seconds.
+Aug 19 12:25:46 shalem kernel:       Tainted: G        W  OE     -------  ---  6.0.0-0.rc1.20220817git3cc40a443a04.14.fc38.x86_64 #1
+Aug 19 12:25:46 shalem kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Aug 19 12:25:46 shalem kernel: task:smartd          state:D stack:13000 pid: 2557 ppid:     1 flags:0x00000002
+Aug 19 12:25:46 shalem kernel: Call Trace:
+Aug 19 12:25:46 shalem kernel:  <TASK>
+Aug 19 12:25:46 shalem kernel:  __schedule+0x47f/0x16d0
+Aug 19 12:25:46 shalem kernel:  ? lock_release+0x14f/0x460
+Aug 19 12:25:46 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x30/0x60
+Aug 19 12:25:46 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x40/0x60
+Aug 19 12:25:46 shalem kernel:  schedule+0x5d/0xe0
+Aug 19 12:25:46 shalem kernel:  blk_queue_enter+0xe5/0x190
+Aug 19 12:25:46 shalem kernel:  ? prepare_to_wait_exclusive+0xd0/0xd0
+Aug 19 12:25:46 shalem kernel:  blk_mq_alloc_request+0x50/0xb0
+Aug 19 12:25:46 shalem kernel:  scsi_alloc_request+0xb/0x30
+Aug 19 12:25:46 shalem kernel:  sg_io+0x6b/0x390
+Aug 19 12:25:46 shalem kernel:  ? _copy_from_user+0x83/0xa0
+Aug 19 12:25:46 shalem kernel:  ? get_sg_io_hdr+0x26/0xb0
+Aug 19 12:25:46 shalem kernel:  scsi_ioctl+0x44c/0x960
+Aug 19 12:25:46 shalem kernel:  ? scsi_ioctl_block_when_processing_errors+0x45/0x50
+Aug 19 12:25:46 shalem kernel:  blkdev_ioctl+0x143/0x2c0
+Aug 19 12:25:46 shalem kernel:  __x64_sys_ioctl+0x90/0xd0
+Aug 19 12:25:46 shalem kernel:  do_syscall_64+0x5b/0x80
+Aug 19 12:25:46 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:25:46 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:25:46 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:25:46 shalem kernel:  ? lockdep_hardirqs_on+0x7d/0x100
+Aug 19 12:25:46 shalem kernel:  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+Aug 19 12:25:46 shalem kernel: RIP: 0033:0x7f9641245cdf
+Aug 19 12:25:46 shalem kernel: RSP: 002b:00007ffc73d257d0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+Aug 19 12:25:46 shalem kernel: RAX: ffffffffffffffda RBX: 00007ffc73d25ad0 RCX: 00007f9641245cdf
+Aug 19 12:25:46 shalem kernel: RDX: 00007ffc73d25840 RSI: 0000000000002285 RDI: 0000000000000003
+Aug 19 12:25:46 shalem kernel: RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+Aug 19 12:25:46 shalem kernel: R10: 000000000000003c R11: 0000000000000246 R12: 00007ffc73d25c50
+Aug 19 12:25:46 shalem kernel: R13: 0000000000000001 R14: 0000000000000000 R15: 000055fbff0abd10
+Aug 19 12:25:46 shalem kernel:  </TASK>
+Aug 19 12:25:46 shalem kernel: INFO: task pool-udisksd:9404 blocked for more than 122 seconds.
+Aug 19 12:25:46 shalem kernel:       Tainted: G        W  OE     -------  ---  6.0.0-0.rc1.20220817git3cc40a443a04.14.fc38.x86_64 #1
+Aug 19 12:25:46 shalem kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Aug 19 12:25:46 shalem kernel: task:pool-udisksd    state:D stack:14624 pid: 9404 ppid:     1 flags:0x00000002
+Aug 19 12:25:46 shalem kernel: Call Trace:
+Aug 19 12:25:46 shalem kernel:  <TASK>
+Aug 19 12:25:46 shalem kernel:  __schedule+0x47f/0x16d0
+Aug 19 12:25:46 shalem kernel:  ? lock_release+0x14f/0x460
+Aug 19 12:25:46 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x30/0x60
+Aug 19 12:25:46 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x40/0x60
+Aug 19 12:25:46 shalem kernel:  schedule+0x5d/0xe0
+Aug 19 12:25:46 shalem kernel:  blk_queue_enter+0xe5/0x190
+Aug 19 12:25:46 shalem kernel:  ? prepare_to_wait_exclusive+0xd0/0xd0
+Aug 19 12:25:46 shalem kernel:  blk_mq_alloc_request+0x50/0xb0
+Aug 19 12:25:46 shalem kernel:  scsi_alloc_request+0xb/0x30
+Aug 19 12:25:46 shalem kernel:  sg_io+0x6b/0x390
+Aug 19 12:25:46 shalem kernel:  ? _copy_from_user+0x83/0xa0
+Aug 19 12:25:46 shalem kernel:  ? get_sg_io_hdr+0x26/0xb0
+Aug 19 12:25:46 shalem kernel:  scsi_ioctl+0x44c/0x960
+Aug 19 12:25:46 shalem kernel:  ? scsi_ioctl_block_when_processing_errors+0x45/0x50
+Aug 19 12:25:46 shalem kernel:  blkdev_ioctl+0x143/0x2c0
+Aug 19 12:25:46 shalem kernel:  __x64_sys_ioctl+0x90/0xd0
+Aug 19 12:25:46 shalem kernel:  do_syscall_64+0x5b/0x80
+Aug 19 12:25:46 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:25:46 shalem kernel:  ? lockdep_hardirqs_on+0x7d/0x100
+Aug 19 12:25:46 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:25:46 shalem kernel:  ? ret_from_fork+0x15/0x30
+Aug 19 12:25:46 shalem kernel:  ? lockdep_hardirqs_on+0x7d/0x100
+Aug 19 12:25:46 shalem kernel:  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+Aug 19 12:25:46 shalem kernel: RIP: 0033:0x7f0c77065cdf
+Aug 19 12:25:46 shalem kernel: RSP: 002b:00007f0c75dfd7f0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+Aug 19 12:25:46 shalem kernel: RAX: ffffffffffffffda RBX: 00007f0c75dfda00 RCX: 00007f0c77065cdf
+Aug 19 12:25:46 shalem kernel: RDX: 00007f0c75dfd860 RSI: 0000000000002285 RDI: 0000000000000011
+Aug 19 12:25:46 shalem kernel: RBP: 0000000000001388 R08: 00007f0c75dfd9e0 R09: 00007f0c75dfe550
+Aug 19 12:25:46 shalem kernel: R10: 00007f0c75dfd960 R11: 0000000000000246 R12: 00007f0c75dfdb70
+Aug 19 12:25:46 shalem kernel: R13: 0000000000000000 R14: 0000000000000011 R15: 00007f0c75dfd9e0
+Aug 19 12:25:46 shalem kernel:  </TASK>
+Aug 19 12:25:46 shalem kernel: 
+                               Showing all locks held in the system:
+Aug 19 12:25:46 shalem kernel: 1 lock held by rcu_tasks_kthre/11:
+Aug 19 12:25:46 shalem kernel:  #0: ffffffff86168820 (rcu_tasks.tasks_gp_mutex){+.+.}-{3:3}, at: rcu_tasks_one_gp+0x2b/0x3e0
+Aug 19 12:25:46 shalem kernel: 1 lock held by rcu_tasks_rude_/12:
+Aug 19 12:25:46 shalem kernel:  #0: ffffffff86168560 (rcu_tasks_rude.tasks_gp_mutex){+.+.}-{3:3}, at: rcu_tasks_one_gp+0x2b/0x3e0
+Aug 19 12:25:46 shalem kernel: 1 lock held by rcu_tasks_trace/13:
+Aug 19 12:25:46 shalem kernel:  #0: ffffffff86168260 (rcu_tasks_trace.tasks_gp_mutex){+.+.}-{3:3}, at: rcu_tasks_one_gp+0x2b/0x3e0
+Aug 19 12:25:46 shalem kernel: 1 lock held by khungtaskd/100:
+Aug 19 12:25:46 shalem kernel:  #0: ffffffff86169320 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x15/0x16b
+Aug 19 12:25:46 shalem kernel: 4 locks held by kworker/0:3/305:
+Aug 19 12:25:46 shalem kernel:  #0: ffff8ac180051748 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x20b/0x600
+Aug 19 12:25:46 shalem kernel:  #1: ffffa78dc4007e78 ((work_completion)(&ap->scsi_rescan_task)){+.+.}-{0:0}, at: process_one_work+0x20b/0x600
+Aug 19 12:25:46 shalem kernel:  #2: ffff8ac18ba840a8 (&ap->scsi_scan_mutex){+.+.}-{3:3}, at: ata_scsi_dev_rescan+0x32/0x110
+Aug 19 12:25:46 shalem kernel:  #3: ffff8ac1909b5390 (&dev->mutex){....}-{3:3}, at: scsi_rescan_device+0x24/0x90
+Aug 19 12:25:46 shalem kernel: 1 lock held by LCDd/2542:
+Aug 19 12:25:46 shalem kernel:  #0: ffffffff8635a578 (minors_rwsem){++++}-{3:3}, at: hidraw_write+0x1e/0x50
+Aug 19 12:25:46 shalem kernel: 
+Aug 19 12:25:46 shalem kernel: =============================================
 
 
---=-nQrCdQRVr0v9wcLsIe/Y
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Aug 19 12:27:49 shalem kernel: INFO: task kworker/0:3:305 blocked for more than 245 seconds.
+Aug 19 12:27:49 shalem kernel:       Tainted: G        W  OE     -------  ---  6.0.0-0.rc1.20220817git3cc40a443a04.14.fc38.x86_64 #1
+Aug 19 12:27:49 shalem kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Aug 19 12:27:49 shalem kernel: task:kworker/0:3     state:D stack:13008 pid:  305 ppid:     2 flags:0x00004000
+Aug 19 12:27:49 shalem kernel: Workqueue: events ata_scsi_dev_rescan
+Aug 19 12:27:49 shalem kernel: Call Trace:
+Aug 19 12:27:49 shalem kernel:  <TASK>
+Aug 19 12:27:49 shalem kernel:  __schedule+0x47f/0x16d0
+Aug 19 12:27:49 shalem kernel:  ? mark_held_locks+0x50/0x80
+Aug 19 12:27:49 shalem kernel:  ? _raw_spin_unlock_irq+0x24/0x50
+Aug 19 12:27:49 shalem kernel:  schedule+0x5d/0xe0
+Aug 19 12:27:49 shalem kernel:  blk_mq_freeze_queue_wait+0x57/0x90
+Aug 19 12:27:49 shalem kernel:  ? prepare_to_wait_exclusive+0xd0/0xd0
+Aug 19 12:27:49 shalem kernel:  disk_clear_zone_settings+0x19/0xa0
+Aug 19 12:27:49 shalem kernel:  sd_revalidate_disk.isra.0+0x1660/0x2c60
+Aug 19 12:27:49 shalem kernel:  ? slab_free_freelist_hook.constprop.0+0x11b/0x160
+Aug 19 12:27:49 shalem kernel:  ? scsi_rescan_device+0x2c/0x90
+Aug 19 12:27:49 shalem kernel:  scsi_rescan_device+0x77/0x90
+Aug 19 12:27:49 shalem kernel:  ata_scsi_dev_rescan+0x9d/0x110
+Aug 19 12:27:49 shalem kernel:  process_one_work+0x2a0/0x600
+Aug 19 12:27:49 shalem kernel:  worker_thread+0x4f/0x3a0
+Aug 19 12:27:49 shalem kernel:  ? process_one_work+0x600/0x600
+Aug 19 12:27:49 shalem kernel:  kthread+0xf5/0x120
+Aug 19 12:27:49 shalem kernel:  ? kthread_complete_and_exit+0x20/0x20
+Aug 19 12:27:49 shalem kernel:  ret_from_fork+0x22/0x30
+Aug 19 12:27:49 shalem kernel:  </TASK>
+Aug 19 12:27:49 shalem kernel: INFO: task smartd:2557 blocked for more than 245 seconds.
+Aug 19 12:27:49 shalem kernel:       Tainted: G        W  OE     -------  ---  6.0.0-0.rc1.20220817git3cc40a443a04.14.fc38.x86_64 #1
+Aug 19 12:27:49 shalem kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Aug 19 12:27:49 shalem kernel: task:smartd          state:D stack:13000 pid: 2557 ppid:     1 flags:0x00000002
+Aug 19 12:27:49 shalem kernel: Call Trace:
+Aug 19 12:27:49 shalem kernel:  <TASK>
+Aug 19 12:27:49 shalem kernel:  __schedule+0x47f/0x16d0
+Aug 19 12:27:49 shalem kernel:  ? lock_release+0x14f/0x460
+Aug 19 12:27:49 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x30/0x60
+Aug 19 12:27:49 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x40/0x60
+Aug 19 12:27:49 shalem kernel:  schedule+0x5d/0xe0
+Aug 19 12:27:49 shalem kernel:  blk_queue_enter+0xe5/0x190
+Aug 19 12:27:49 shalem kernel:  ? prepare_to_wait_exclusive+0xd0/0xd0
+Aug 19 12:27:49 shalem kernel:  blk_mq_alloc_request+0x50/0xb0
+Aug 19 12:27:49 shalem kernel:  scsi_alloc_request+0xb/0x30
+Aug 19 12:27:49 shalem kernel:  sg_io+0x6b/0x390
+Aug 19 12:27:49 shalem kernel:  ? _copy_from_user+0x83/0xa0
+Aug 19 12:27:49 shalem kernel:  ? get_sg_io_hdr+0x26/0xb0
+Aug 19 12:27:49 shalem kernel:  scsi_ioctl+0x44c/0x960
+Aug 19 12:27:49 shalem kernel:  ? scsi_ioctl_block_when_processing_errors+0x45/0x50
+Aug 19 12:27:49 shalem kernel:  blkdev_ioctl+0x143/0x2c0
+Aug 19 12:27:49 shalem kernel:  __x64_sys_ioctl+0x90/0xd0
+Aug 19 12:27:49 shalem kernel:  do_syscall_64+0x5b/0x80
+Aug 19 12:27:49 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:27:49 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:27:49 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:27:49 shalem kernel:  ? lockdep_hardirqs_on+0x7d/0x100
+Aug 19 12:27:49 shalem kernel:  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+Aug 19 12:27:49 shalem kernel: RIP: 0033:0x7f9641245cdf
+Aug 19 12:27:49 shalem kernel: RSP: 002b:00007ffc73d257d0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+Aug 19 12:27:49 shalem kernel: RAX: ffffffffffffffda RBX: 00007ffc73d25ad0 RCX: 00007f9641245cdf
+Aug 19 12:27:49 shalem kernel: RDX: 00007ffc73d25840 RSI: 0000000000002285 RDI: 0000000000000003
+Aug 19 12:27:49 shalem kernel: RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+Aug 19 12:27:49 shalem kernel: R10: 000000000000003c R11: 0000000000000246 R12: 00007ffc73d25c50
+Aug 19 12:27:49 shalem kernel: R13: 0000000000000001 R14: 0000000000000000 R15: 000055fbff0abd10
+Aug 19 12:27:49 shalem kernel:  </TASK>
+Aug 19 12:27:49 shalem kernel: INFO: task pool-udisksd:9404 blocked for more than 245 seconds.
+Aug 19 12:27:49 shalem kernel:       Tainted: G        W  OE     -------  ---  6.0.0-0.rc1.20220817git3cc40a443a04.14.fc38.x86_64 #1
+Aug 19 12:27:49 shalem kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Aug 19 12:27:49 shalem kernel: task:pool-udisksd    state:D stack:14624 pid: 9404 ppid:     1 flags:0x00000002
+Aug 19 12:27:49 shalem kernel: Call Trace:
+Aug 19 12:27:49 shalem kernel:  <TASK>
+Aug 19 12:27:49 shalem kernel:  __schedule+0x47f/0x16d0
+Aug 19 12:27:49 shalem kernel:  ? lock_release+0x14f/0x460
+Aug 19 12:27:49 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x30/0x60
+Aug 19 12:27:49 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x40/0x60
+Aug 19 12:27:49 shalem kernel:  schedule+0x5d/0xe0
+Aug 19 12:27:49 shalem kernel:  blk_queue_enter+0xe5/0x190
+Aug 19 12:27:49 shalem kernel:  ? prepare_to_wait_exclusive+0xd0/0xd0
+Aug 19 12:27:49 shalem kernel:  blk_mq_alloc_request+0x50/0xb0
+Aug 19 12:27:49 shalem kernel:  scsi_alloc_request+0xb/0x30
+Aug 19 12:27:49 shalem kernel:  sg_io+0x6b/0x390
+Aug 19 12:27:49 shalem kernel:  ? _copy_from_user+0x83/0xa0
+Aug 19 12:27:49 shalem kernel:  ? get_sg_io_hdr+0x26/0xb0
+Aug 19 12:27:49 shalem kernel:  scsi_ioctl+0x44c/0x960
+Aug 19 12:27:49 shalem kernel:  ? scsi_ioctl_block_when_processing_errors+0x45/0x50
+Aug 19 12:27:49 shalem kernel:  blkdev_ioctl+0x143/0x2c0
+Aug 19 12:27:49 shalem kernel:  __x64_sys_ioctl+0x90/0xd0
+Aug 19 12:27:49 shalem kernel:  do_syscall_64+0x5b/0x80
+Aug 19 12:27:49 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:27:49 shalem kernel:  ? lockdep_hardirqs_on+0x7d/0x100
+Aug 19 12:27:49 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:27:49 shalem kernel:  ? ret_from_fork+0x15/0x30
+Aug 19 12:27:49 shalem kernel:  ? lockdep_hardirqs_on+0x7d/0x100
+Aug 19 12:27:49 shalem kernel:  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+Aug 19 12:27:49 shalem kernel: RIP: 0033:0x7f0c77065cdf
+Aug 19 12:27:49 shalem kernel: RSP: 002b:00007f0c75dfd7f0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+Aug 19 12:27:49 shalem kernel: RAX: ffffffffffffffda RBX: 00007f0c75dfda00 RCX: 00007f0c77065cdf
+Aug 19 12:27:49 shalem kernel: RDX: 00007f0c75dfd860 RSI: 0000000000002285 RDI: 0000000000000011
+Aug 19 12:27:49 shalem kernel: RBP: 0000000000001388 R08: 00007f0c75dfd9e0 R09: 00007f0c75dfe550
+Aug 19 12:27:49 shalem kernel: R10: 00007f0c75dfd960 R11: 0000000000000246 R12: 00007f0c75dfdb70
+Aug 19 12:27:49 shalem kernel: R13: 0000000000000000 R14: 0000000000000011 R15: 00007f0c75dfd9e0
+Aug 19 12:27:49 shalem kernel:  </TASK>
+Aug 19 12:27:49 shalem kernel: 
+                               Showing all locks held in the system:
+Aug 19 12:27:49 shalem kernel: 1 lock held by rcu_tasks_kthre/11:
+Aug 19 12:27:49 shalem kernel:  #0: ffffffff86168820 (rcu_tasks.tasks_gp_mutex){+.+.}-{3:3}, at: rcu_tasks_one_gp+0x2b/0x3e0
+Aug 19 12:27:49 shalem kernel: 1 lock held by rcu_tasks_rude_/12:
+Aug 19 12:27:49 shalem kernel:  #0: ffffffff86168560 (rcu_tasks_rude.tasks_gp_mutex){+.+.}-{3:3}, at: rcu_tasks_one_gp+0x2b/0x3e0
+Aug 19 12:27:49 shalem kernel: 1 lock held by rcu_tasks_trace/13:
+Aug 19 12:27:49 shalem kernel:  #0: ffffffff86168260 (rcu_tasks_trace.tasks_gp_mutex){+.+.}-{3:3}, at: rcu_tasks_one_gp+0x2b/0x3e0
+Aug 19 12:27:49 shalem kernel: 1 lock held by khungtaskd/100:
+Aug 19 12:27:49 shalem kernel:  #0: ffffffff86169320 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x15/0x16b
+Aug 19 12:27:49 shalem kernel: 4 locks held by kworker/0:3/305:
+Aug 19 12:27:49 shalem kernel:  #0: ffff8ac180051748 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x20b/0x600
+Aug 19 12:27:49 shalem kernel:  #1: ffffa78dc4007e78 ((work_completion)(&ap->scsi_rescan_task)){+.+.}-{0:0}, at: process_one_work+0x20b/0x600
+Aug 19 12:27:49 shalem kernel:  #2: ffff8ac18ba840a8 (&ap->scsi_scan_mutex){+.+.}-{3:3}, at: ata_scsi_dev_rescan+0x32/0x110
+Aug 19 12:27:49 shalem kernel:  #3: ffff8ac1909b5390 (&dev->mutex){....}-{3:3}, at: scsi_rescan_device+0x24/0x90
+Aug 19 12:27:49 shalem kernel: 1 lock held by systemd-journal/2096:
+Aug 19 12:27:49 shalem kernel: 1 lock held by LCDd/2542:
+Aug 19 12:27:49 shalem kernel:  #0: ffffffff8635a578 (minors_rwsem){++++}-{3:3}, at: hidraw_write+0x1e/0x50
+Aug 19 12:27:49 shalem kernel: 
+Aug 19 12:27:49 shalem kernel: =============================================
 
-On Fri, 2022-08-19 at 13:01 +0200, Peter Zijlstra wrote:
-> On Fri, Aug 19, 2022 at 10:47:21AM +0200, Peter Zijlstra wrote:
-> > On Fri, Aug 19, 2022 at 02:33:08AM +0200, Ben Hutchings wrote:
-> > > From: Ben Hutchings <benh@debian.org>
-> > >=20
-> > > The mitigation for PBRSB includes adding LFENCE instructions to the
-> > > RSB filling sequence.  However, RSB filling is done on some older CPU=
-s
-> > > that don't support the LFENCE instruction.
-> > >=20
-> >=20
-> > Wait; what? There are chips that enable the RSB mitigations and DONT
-> > have LFENCE ?!?
->=20
-> So I gave in and clicked on the horrible bugzilla thing. Apparently this
-> is P3/Athlon64 era crud.
->=20
-> Anyway, the added LFENCE isn't because of retbleed; it is because you
-> can steer the jnz and terminate the loop early and then not actually
-> complete the RSB stuffing.
 
-I know, I corrected that further down.
+Aug 19 12:29:51 shalem kernel: INFO: task kworker/0:3:305 blocked for more than 368 seconds.
+Aug 19 12:29:51 shalem kernel:       Tainted: G        W  OE     -------  ---  6.0.0-0.rc1.20220817git3cc40a443a04.14.fc38.x86_64 #1
+Aug 19 12:29:51 shalem kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Aug 19 12:29:51 shalem kernel: task:kworker/0:3     state:D stack:13008 pid:  305 ppid:     2 flags:0x00004000
+Aug 19 12:29:51 shalem kernel: Workqueue: events ata_scsi_dev_rescan
+Aug 19 12:29:51 shalem kernel: Call Trace:
+Aug 19 12:29:51 shalem kernel:  <TASK>
+Aug 19 12:29:51 shalem kernel:  __schedule+0x47f/0x16d0
+Aug 19 12:29:51 shalem kernel:  ? mark_held_locks+0x50/0x80
+Aug 19 12:29:51 shalem kernel:  ? _raw_spin_unlock_irq+0x24/0x50
+Aug 19 12:29:51 shalem kernel:  schedule+0x5d/0xe0
+Aug 19 12:29:51 shalem kernel:  blk_mq_freeze_queue_wait+0x57/0x90
+Aug 19 12:29:51 shalem kernel:  ? prepare_to_wait_exclusive+0xd0/0xd0
+Aug 19 12:29:51 shalem kernel:  disk_clear_zone_settings+0x19/0xa0
+Aug 19 12:29:51 shalem kernel:  sd_revalidate_disk.isra.0+0x1660/0x2c60
+Aug 19 12:29:51 shalem kernel:  ? slab_free_freelist_hook.constprop.0+0x11b/0x160
+Aug 19 12:29:51 shalem kernel:  ? scsi_rescan_device+0x2c/0x90
+Aug 19 12:29:51 shalem kernel:  scsi_rescan_device+0x77/0x90
+Aug 19 12:29:51 shalem kernel:  ata_scsi_dev_rescan+0x9d/0x110
+Aug 19 12:29:51 shalem kernel:  process_one_work+0x2a0/0x600
+Aug 19 12:29:51 shalem kernel:  worker_thread+0x4f/0x3a0
+Aug 19 12:29:51 shalem kernel:  ? process_one_work+0x600/0x600
+Aug 19 12:29:51 shalem kernel:  kthread+0xf5/0x120
+Aug 19 12:29:51 shalem kernel:  ? kthread_complete_and_exit+0x20/0x20
+Aug 19 12:29:51 shalem kernel:  ret_from_fork+0x22/0x30
+Aug 19 12:29:51 shalem kernel:  </TASK>
+Aug 19 12:29:51 shalem kernel: INFO: task smartd:2557 blocked for more than 368 seconds.
+Aug 19 12:29:51 shalem kernel:       Tainted: G        W  OE     -------  ---  6.0.0-0.rc1.20220817git3cc40a443a04.14.fc38.x86_64 #1
+Aug 19 12:29:51 shalem kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Aug 19 12:29:51 shalem kernel: task:smartd          state:D stack:13000 pid: 2557 ppid:     1 flags:0x00000002
+Aug 19 12:29:51 shalem kernel: Call Trace:
+Aug 19 12:29:51 shalem kernel:  <TASK>
+Aug 19 12:29:51 shalem kernel:  __schedule+0x47f/0x16d0
+Aug 19 12:29:51 shalem kernel:  ? lock_release+0x14f/0x460
+Aug 19 12:29:51 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x30/0x60
+Aug 19 12:29:51 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x40/0x60
+Aug 19 12:29:51 shalem kernel:  schedule+0x5d/0xe0
+Aug 19 12:29:51 shalem kernel:  blk_queue_enter+0xe5/0x190
+Aug 19 12:29:51 shalem kernel:  ? prepare_to_wait_exclusive+0xd0/0xd0
+Aug 19 12:29:51 shalem kernel:  blk_mq_alloc_request+0x50/0xb0
+Aug 19 12:29:51 shalem kernel:  scsi_alloc_request+0xb/0x30
+Aug 19 12:29:51 shalem kernel:  sg_io+0x6b/0x390
+Aug 19 12:29:51 shalem kernel:  ? _copy_from_user+0x83/0xa0
+Aug 19 12:29:51 shalem kernel:  ? get_sg_io_hdr+0x26/0xb0
+Aug 19 12:29:51 shalem kernel:  scsi_ioctl+0x44c/0x960
+Aug 19 12:29:51 shalem kernel:  ? scsi_ioctl_block_when_processing_errors+0x45/0x50
+Aug 19 12:29:51 shalem kernel:  blkdev_ioctl+0x143/0x2c0
+Aug 19 12:29:51 shalem kernel:  __x64_sys_ioctl+0x90/0xd0
+Aug 19 12:29:51 shalem kernel:  do_syscall_64+0x5b/0x80
+Aug 19 12:29:51 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:29:51 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:29:51 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:29:51 shalem kernel:  ? lockdep_hardirqs_on+0x7d/0x100
+Aug 19 12:29:51 shalem kernel:  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+Aug 19 12:29:51 shalem kernel: RIP: 0033:0x7f9641245cdf
+Aug 19 12:29:51 shalem kernel: RSP: 002b:00007ffc73d257d0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+Aug 19 12:29:51 shalem kernel: RAX: ffffffffffffffda RBX: 00007ffc73d25ad0 RCX: 00007f9641245cdf
+Aug 19 12:29:51 shalem kernel: RDX: 00007ffc73d25840 RSI: 0000000000002285 RDI: 0000000000000003
+Aug 19 12:29:51 shalem kernel: RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+Aug 19 12:29:51 shalem kernel: R10: 000000000000003c R11: 0000000000000246 R12: 00007ffc73d25c50
+Aug 19 12:29:51 shalem kernel: R13: 0000000000000001 R14: 0000000000000000 R15: 000055fbff0abd10
+Aug 19 12:29:51 shalem kernel:  </TASK>
+Aug 19 12:29:51 shalem kernel: INFO: task pool-udisksd:9404 blocked for more than 368 seconds.
+Aug 19 12:29:51 shalem kernel:       Tainted: G        W  OE     -------  ---  6.0.0-0.rc1.20220817git3cc40a443a04.14.fc38.x86_64 #1
+Aug 19 12:29:51 shalem kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Aug 19 12:29:51 shalem kernel: task:pool-udisksd    state:D stack:14624 pid: 9404 ppid:     1 flags:0x00000002
+Aug 19 12:29:51 shalem kernel: Call Trace:
+Aug 19 12:29:51 shalem kernel:  <TASK>
+Aug 19 12:29:51 shalem kernel:  __schedule+0x47f/0x16d0
+Aug 19 12:29:51 shalem kernel:  ? lock_release+0x14f/0x460
+Aug 19 12:29:51 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x30/0x60
+Aug 19 12:29:51 shalem kernel:  ? _raw_spin_unlock_irqrestore+0x40/0x60
+Aug 19 12:29:51 shalem kernel:  schedule+0x5d/0xe0
+Aug 19 12:29:51 shalem kernel:  blk_queue_enter+0xe5/0x190
+Aug 19 12:29:51 shalem kernel:  ? prepare_to_wait_exclusive+0xd0/0xd0
+Aug 19 12:29:51 shalem kernel:  blk_mq_alloc_request+0x50/0xb0
+Aug 19 12:29:51 shalem kernel:  scsi_alloc_request+0xb/0x30
+Aug 19 12:29:51 shalem kernel:  sg_io+0x6b/0x390
+Aug 19 12:29:51 shalem kernel:  ? _copy_from_user+0x83/0xa0
+Aug 19 12:29:51 shalem kernel:  ? get_sg_io_hdr+0x26/0xb0
+Aug 19 12:29:51 shalem kernel:  scsi_ioctl+0x44c/0x960
+Aug 19 12:29:51 shalem kernel:  ? scsi_ioctl_block_when_processing_errors+0x45/0x50
+Aug 19 12:29:51 shalem kernel:  blkdev_ioctl+0x143/0x2c0
+Aug 19 12:29:51 shalem kernel:  __x64_sys_ioctl+0x90/0xd0
+Aug 19 12:29:51 shalem kernel:  do_syscall_64+0x5b/0x80
+Aug 19 12:29:51 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:29:51 shalem kernel:  ? lockdep_hardirqs_on+0x7d/0x100
+Aug 19 12:29:51 shalem kernel:  ? do_syscall_64+0x67/0x80
+Aug 19 12:29:51 shalem kernel:  ? ret_from_fork+0x15/0x30
+Aug 19 12:29:51 shalem kernel:  ? lockdep_hardirqs_on+0x7d/0x100
+Aug 19 12:29:51 shalem kernel:  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+Aug 19 12:29:51 shalem kernel: RIP: 0033:0x7f0c77065cdf
+Aug 19 12:29:51 shalem kernel: RSP: 002b:00007f0c75dfd7f0 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+Aug 19 12:29:51 shalem kernel: RAX: ffffffffffffffda RBX: 00007f0c75dfda00 RCX: 00007f0c77065cdf
+Aug 19 12:29:51 shalem kernel: RDX: 00007f0c75dfd860 RSI: 0000000000002285 RDI: 0000000000000011
+Aug 19 12:29:51 shalem kernel: RBP: 0000000000001388 R08: 00007f0c75dfd9e0 R09: 00007f0c75dfe550
+Aug 19 12:29:51 shalem kernel: R10: 00007f0c75dfd960 R11: 0000000000000246 R12: 00007f0c75dfdb70
+Aug 19 12:29:51 shalem kernel: R13: 0000000000000000 R14: 0000000000000011 R15: 00007f0c75dfd9e0
+Aug 19 12:29:51 shalem kernel:  </TASK>
+Aug 19 12:29:51 shalem kernel: 
+                               Showing all locks held in the system:
+Aug 19 12:29:51 shalem kernel: 1 lock held by rcu_tasks_kthre/11:
+Aug 19 12:29:51 shalem kernel:  #0: ffffffff86168820 (rcu_tasks.tasks_gp_mutex){+.+.}-{3:3}, at: rcu_tasks_one_gp+0x2b/0x3e0
+Aug 19 12:29:51 shalem kernel: 1 lock held by rcu_tasks_rude_/12:
+Aug 19 12:29:51 shalem kernel:  #0: ffffffff86168560 (rcu_tasks_rude.tasks_gp_mutex){+.+.}-{3:3}, at: rcu_tasks_one_gp+0x2b/0x3e0
+Aug 19 12:29:51 shalem kernel: 1 lock held by rcu_tasks_trace/13:
+Aug 19 12:29:51 shalem kernel:  #0: ffffffff86168260 (rcu_tasks_trace.tasks_gp_mutex){+.+.}-{3:3}, at: rcu_tasks_one_gp+0x2b/0x3e0
+Aug 19 12:29:51 shalem kernel: 1 lock held by khungtaskd/100:
+Aug 19 12:29:51 shalem kernel:  #0: ffffffff86169320 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x15/0x16b
+Aug 19 12:29:51 shalem kernel: 4 locks held by kworker/0:3/305:
+Aug 19 12:29:51 shalem kernel:  #0: ffff8ac180051748 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x20b/0x600
+Aug 19 12:29:51 shalem kernel:  #1: ffffa78dc4007e78 ((work_completion)(&ap->scsi_rescan_task)){+.+.}-{0:0}, at: process_one_work+0x20b/0x600
+Aug 19 12:29:51 shalem kernel:  #2: ffff8ac18ba840a8 (&ap->scsi_scan_mutex){+.+.}-{3:3}, at: ata_scsi_dev_rescan+0x32/0x110
+Aug 19 12:29:51 shalem kernel:  #3: ffff8ac1909b5390 (&dev->mutex){....}-{3:3}, at: scsi_rescan_device+0x24/0x90
+Aug 19 12:29:51 shalem kernel: 1 lock held by LCDd/2542:
+Aug 19 12:29:51 shalem kernel:  #0: ffffffff8635a578 (minors_rwsem){++++}-{3:3}, at: hidraw_write+0x1e/0x50
+Aug 19 12:29:51 shalem kernel: 
+Aug 19 12:29:51 shalem kernel: =============================================
 
-> New insights etc.. So it's a geniune fix for the existing rsb stuffing.
->=20
-> I'm not entirly sure what to do here. On the one hand, it's 32bit, so
-> who gives a crap, otoh we shouldn't break these ancient chips either I
-> suppose.
->=20
-> How's something like so then? It goes on top of my other patch cleaning
-> up this RSB mess:
->=20
->   https://lkml.kernel.org/r/Yv9m%2FhuNJLuyviIn%40worktop.programming.kick=
-s-ass.net
-[...]
 
-That should be:
-https://lore.kernel.org/all/Yv9m%2FhuNJLuyviIn@worktop.programming.kicks-as=
-s.net/
-(the redirector unescapes the URL-escaped /).
+Aug 19 12:31:54 shalem kernel: INFO: task kworker/0:3:305 blocked for more than 491 seconds.
+Aug 19 12:31:54 shalem kernel:       Tainted: G        W  OE     -------  ---  6.0.0-0.rc1.20220817git3cc40a443a04.14.fc38.x86_64 #1
+Aug 19 12:31:54 shalem kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+Aug 19 12:31:54 shalem kernel: task:kworker/0:3     state:D stack:13008 pid:  305 ppid:     2 flags:0x00004000
+Aug 19 12:31:54 shalem kernel: Workqueue: events ata_scsi_dev_rescan
+Aug 19 12:31:54 shalem kernel: Call Trace:
+Aug 19 12:31:54 shalem kernel:  <TASK>
+Aug 19 12:31:54 shalem kernel:  __schedule+0x47f/0x16d0
+Aug 19 12:31:54 shalem kernel:  ? mark_held_locks+0x50/0x80
+Aug 19 12:31:54 shalem kernel:  ? _raw_spin_unlock_irq+0x24/0x50
+Aug 19 12:31:54 shalem kernel:  schedule+0x5d/0xe0
+Aug 19 12:31:54 shalem kernel:  blk_mq_freeze_queue_wait+0x57/0x90
+Aug 19 12:31:54 shalem kernel:  ? prepare_to_wait_exclusive+0xd0/0xd0
+Aug 19 12:31:54 shalem kernel:  disk_clear_zone_settings+0x19/0xa0
+Aug 19 12:31:54 shalem kernel:  sd_revalidate_disk.isra.0+0x1660/0x2c60
+Aug 19 12:31:54 shalem kernel:  ? slab_free_freelist_hook.constprop.0+0x11b/0x160
+Aug 19 12:31:54 shalem kernel:  ? scsi_rescan_device+0x2c/0x90
+Aug 19 12:31:54 shalem kernel:  scsi_rescan_device+0x77/0x90
+Aug 19 12:31:54 shalem kernel:  ata_scsi_dev_rescan+0x9d/0x110
+Aug 19 12:31:54 shalem kernel:  process_one_work+0x2a0/0x600
+Aug 19 12:31:54 shalem kernel:  worker_thread+0x4f/0x3a0
+Aug 19 12:31:54 shalem kernel:  ? process_one_work+0x600/0x600
+Aug 19 12:31:54 shalem kernel:  kthread+0xf5/0x120
+Aug 19 12:31:54 shalem kernel:  ? kthread_complete_and_exit+0x20/0x20
+Aug 19 12:31:54 shalem kernel:  ret_from_fork+0x22/0x30
+Aug 19 12:31:54 shalem kernel:  </TASK>
+Aug 19 12:31:54 shalem kernel: 
+                               Showing all locks held in the system:
+Aug 19 12:31:54 shalem kernel: 1 lock held by rcu_tasks_kthre/11:
+Aug 19 12:31:54 shalem kernel:  #0: ffffffff86168820 (rcu_tasks.tasks_gp_mutex){+.+.}-{3:3}, at: rcu_tasks_one_gp+0x2b/0x3e0
+Aug 19 12:31:54 shalem kernel: 1 lock held by rcu_tasks_rude_/12:
+Aug 19 12:31:54 shalem kernel:  #0: ffffffff86168560 (rcu_tasks_rude.tasks_gp_mutex){+.+.}-{3:3}, at: rcu_tasks_one_gp+0x2b/0x3e0
+Aug 19 12:31:54 shalem kernel: 1 lock held by rcu_tasks_trace/13:
+Aug 19 12:31:54 shalem kernel:  #0: ffffffff86168260 (rcu_tasks_trace.tasks_gp_mutex){+.+.}-{3:3}, at: rcu_tasks_one_gp+0x2b/0x3e0
+Aug 19 12:31:54 shalem kernel: 1 lock held by khungtaskd/100:
+Aug 19 12:31:54 shalem kernel:  #0: ffffffff86169320 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x15/0x16b
+Aug 19 12:31:54 shalem kernel: 4 locks held by kworker/0:3/305:
+Aug 19 12:31:54 shalem kernel:  #0: ffff8ac180051748 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x20b/0x600
+Aug 19 12:31:54 shalem kernel:  #1: ffffa78dc4007e78 ((work_completion)(&ap->scsi_rescan_task)){+.+.}-{0:0}, at: process_one_work+0x20b/0x600
+Aug 19 12:31:54 shalem kernel:  #2: ffff8ac18ba840a8 (&ap->scsi_scan_mutex){+.+.}-{3:3}, at: ata_scsi_dev_rescan+0x32/0x110
+Aug 19 12:31:54 shalem kernel:  #3: ffff8ac1909b5390 (&dev->mutex){....}-{3:3}, at: scsi_rescan_device+0x24/0x90
+Aug 19 12:31:54 shalem kernel: 1 lock held by gfx/688:
+Aug 19 12:31:54 shalem kernel:  #0: ffffffff86169320 (rcu_read_lock){....}-{1:2}, at: raw_spin_rq_lock_nested+0x24/0x80
+Aug 19 12:31:54 shalem kernel: 1 lock held by LCDd/2542:
+Aug 19 12:31:54 shalem kernel:  #0: ffffffff8635a578 (minors_rwsem){++++}-{3:3}, at: hidraw_write+0x1e/0x50
+Aug 19 12:31:54 shalem kernel: 2 locks held by kworker/u64:119/8383:
+Aug 19 12:31:54 shalem kernel: 1 lock held by WRRende~ckend#1/9586:
+Aug 19 12:31:54 shalem kernel: 
+Aug 19 12:31:54 shalem kernel: =============================================
 
-So that puts the whole __FILL_RETURN_BUFFER inside an alternative, and
-we can't have nested alternatives.  That's unfortunate.
+Sorry for not being able to write a better bug-report but I don't have
+the time to dive into this deeper. I hope this report is enough for
+someone to have a clue what is going on.
 
-Ben.
+Regards,
 
---=20
-Ben Hutchings
-Beware of bugs in the above code;
-I have only proved it correct, not tried it. - Donald Knuth
+Hans
 
---=-nQrCdQRVr0v9wcLsIe/Y
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmL/djMACgkQ57/I7JWG
-EQlHpg/9FbaeEJKro9Qcmw+qk86shNJCNfyfeGVeLs0aiM6KgDOp17SaTPzAleea
-Y4UeZYgu36lGTPh+RnK9Llb6bJgqlG3ad90VyUO0fBcY7uuJF/uTxHtNQVRNYRHL
-pqmH36qNzJ8FGsHYbl6ikhpIiw5Ail4js4WbCiW0f5eL8BWyAKj2seKHkRpIkd2I
-eq8/Ux9YXRhGhGnPj+1XRhl/nqw7Hb1KUMjtGqUwKIjp/1NkubbzFnqRsQPL0w0i
-fLi/dbdtepWlcg8zy6xKa9B1xHqfPOnjldD4G2CDLrpprWacjkTZIoHY2WJmqv4+
-aU+q3XinoxZHODeqxD2DJ+r7TzJcBiSj+ypf3HxwR8YHReQVjUbdMLmMe6bXYX/f
-EyDNw1OaJUaxbbEPQM1dJaJOLKGPHGUgKQuucMJq1R6kcKqhnLfWIoPBaL/gKbHk
-xo6Tyg2WAMN14UzzDFzqTFwndU5zlA95J/Xi1RiS3muKdNkcpu33NnbEG45tpEiM
-P+N/xqZr1dvJ9BYYWlkA8OAdDcSnmL9vkHxuzWuHTyh1gxnW99C6IWosr5sIVc2G
-REAhuTXssLSMXsfm3plqmtPyXaJIm7vHSmB/d1OV9LylZOCOcqsGjmE1H0CbkVf9
-dPdEFxXudTWbOb9965rEzhQYMn3OWsv6Ik17S3S3ZAdeo4hMDEY=
-=P7Kd
------END PGP SIGNATURE-----
-
---=-nQrCdQRVr0v9wcLsIe/Y--
