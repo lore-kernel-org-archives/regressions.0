@@ -1,175 +1,190 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2083.outbound.protection.outlook.com [40.107.212.83])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9271613E
-	for <regressions@lists.linux.dev>; Sat, 20 Aug 2022 07:53:04 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UuqrQQD7xUUl/smv3eYM7RvV/C92qZPddsJG+lQPgrhhdz4JCiWHACUvy3QmeC3gudSJawdY0qScf3f9d2CJlyH4Fl7ip5G5QAfDZhvz38iDCdhw8CbRCDLhM9JY9HtLRohqUvX4jOrxKa1ENpSEbCMxKzErX9hAv0RBp4QXrqALFQfCpwI6Vrr7EBMy52AmO0UGmGIswBy7wXXDv0cn+ckrvHOc70fSyfFwIJG2CTPHusg/snxxhtaWN6sDDpn0LeIQUI8Q4ak9oqyaKt7JD7UdFrYE3GBxXR8r5h2GaIdxsqIAMW4Lpt/P+1WXA0YTcF7jsGxq2oYoh2mlubFhaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OVbbvIuMoc9Llpro/M+t5SLke35456D2cCkHpcSIE7Q=;
- b=XdkwE94q9LirmMXdRtuw2yf158Ser4Gif0jjF8SZ51eBTtga8mefpn+9Z57RK2xRE4Buu38pISwEXKY0cRj/0bKtFhBF0ckpj9LgnhpLJF0szG+PPFEBUgnAvte+lliANMAS+yoQXEzw3Dasw6LJ/K651+Vc//aoD44SBI3N7FXo5hKoxlFc5cKjU0+SadYiu36rSOP1HpofzRSlw4eMtGpmoNMHt3biQ5B3NUaHY5ZywMlenYRiER/hHxETpmMMPwAM6BHaXv2szIBYsJW19OfTLDep071OYIUulJFNr8V8ftDNjit7jq2PB3eX/eCkW7LEGATwOte4RkMxRdTjaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OVbbvIuMoc9Llpro/M+t5SLke35456D2cCkHpcSIE7Q=;
- b=2P1CcLDKfrbvWIpITp4J8X8pdAuRwcRhXEATF3qmqU9gRmlDSuvIop2V9jrpydKlrU2xKGsXpe2vQYNciYMv2CDJKV9Aa1x8TiDPN4rJRPUKA4/ljG0ataB9Goc9KgTb1087Np4w5QqmcWG7jzSCiwneK+D/XZB24GgFs3t54Oo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB4614.namprd12.prod.outlook.com (2603:10b6:a03:a6::22)
- by MW2PR12MB2473.namprd12.prod.outlook.com (2603:10b6:907:4::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.19; Sat, 20 Aug
- 2022 07:52:57 +0000
-Received: from BYAPR12MB4614.namprd12.prod.outlook.com
- ([fe80::4195:ca0b:381f:7900]) by BYAPR12MB4614.namprd12.prod.outlook.com
- ([fe80::4195:ca0b:381f:7900%4]) with mapi id 15.20.5546.016; Sat, 20 Aug 2022
- 07:52:57 +0000
-Message-ID: <6aad506b-5324-649e-9700-7ceaaf7ef94b@amd.com>
-Date: Sat, 20 Aug 2022 13:22:43 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.3.2
-Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
-Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>, Tom Seewald <tseewald@gmail.com>
-Cc: regressions@lists.linux.dev, David Airlie <airlied@linux.ie>,
- linux-pci@vger.kernel.org, Xinhui Pan <Xinhui.Pan@amd.com>,
- amd-gfx@lists.freedesktop.org, Kai-Heng Feng <kai.heng.feng@canonical.com>,
- Daniel Vetter <daniel@ffwll.ch>, Alex Deucher <alexander.deucher@amd.com>,
- Stefan Roese <sr@denx.de>, =?UTF-8?Q?Christian_K=c3=b6nig?=
- <christian.koenig@amd.com>
-References: <20220819190725.GA2499154@bhelgaas>
-From: "Lazar, Lijo" <lijo.lazar@amd.com>
-In-Reply-To: <20220819190725.GA2499154@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0150.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:6::35) To BYAPR12MB4614.namprd12.prod.outlook.com
- (2603:10b6:a03:a6::22)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DBA257B
+	for <regressions@lists.linux.dev>; Sat, 20 Aug 2022 13:12:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1661001157;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=7VhMB/edU4vERK3Do90DKnVGq5f8j707WBGLkGieYoU=;
+	b=IKrQMNN2ud3C6phYSMTbs+7grawufQkDiJPrdHN6IPj4faaUIPgCUedNBKNPNZHCGSkK7H
+	mZazCRMuq1dYl9C2Ug/YLtjr1EsSava+JNRyU4RuJ/9PBaT76ZrSxsSVBR6nFvVxQRYVwA
+	2JAZCyZMCJWF4HCpkA9PoiMRSNnaCIM=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-600-mM3P5sWQP_mPq5PkeRY9bA-1; Sat, 20 Aug 2022 09:12:35 -0400
+X-MC-Unique: mM3P5sWQP_mPq5PkeRY9bA-1
+Received: by mail-ed1-f72.google.com with SMTP id i5-20020a05640242c500b0043e50334109so4263177edc.1
+        for <regressions@lists.linux.dev>; Sat, 20 Aug 2022 06:12:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:subject:to:from:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc;
+        bh=91nALG5AfLhriIdk7WJzwKwaahhW489PlGbx2JMSjNY=;
+        b=mbloPWXJx0IFMsOkfSUt6iNGWVfdCF/IhMXwJHJg4UJXZrisuRS0XPn9rzIcPOwb2+
+         bOmC5+lVXAdwQO6SVgYtst45kqqsLxcnM2kgEWQoejKIDQz4vSX4kOuQlXMolOuqDNtq
+         QVT5w29HOjFGAD2wptk1IcAt2iuz5qFjuaQ9wVS9XO3zqWhAnzMler1dO9ybG92T9Hgc
+         8lwexynL5txPpvA8tnBQ6Fx1RIRIdbRqlA8+0YdOZRmsN60bOel6wMWfpQ8dX/ZLMkGU
+         EJgBbXUnV0Rve0er+IxLg0f38Ri7cIhLyctwsQNZjXamC1GCosgT/t7AWLDIJNchA0lf
+         swBQ==
+X-Gm-Message-State: ACgBeo07JwcPLBPBKrWBmByx6PhecMqcmylGTZAnRbE5v01Lyouqja3f
+	+yEuWaiUmS4162vLj1FohSeTRn1HfRYv/lz4UV0wM5HNYm4BIqMI0YYbx62CpSaujdYxlwuvxBY
+	1M0yQ0eQgLpuJShaVnZrw/zs=
+X-Received: by 2002:a17:907:2d8a:b0:730:6880:c396 with SMTP id gt10-20020a1709072d8a00b007306880c396mr7638975ejc.192.1661001154365;
+        Sat, 20 Aug 2022 06:12:34 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR76ml7N9Lsh1/L2YB4QmKVzYMD64l3OR59sClDnMmuUbJNOjRY5/7e7Rpt4qc7m3NjPGk4kZQ==
+X-Received: by 2002:a17:907:2d8a:b0:730:6880:c396 with SMTP id gt10-20020a1709072d8a00b007306880c396mr7638963ejc.192.1661001154108;
+        Sat, 20 Aug 2022 06:12:34 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
+        by smtp.gmail.com with ESMTPSA id ss2-20020a170907c00200b0072f42ca292bsm3476200ejc.129.2022.08.20.06.12.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 20 Aug 2022 06:12:33 -0700 (PDT)
+Message-ID: <498d714c-76be-9d04-26db-a1206878de5e@redhat.com>
+Date: Sat, 20 Aug 2022 15:12:33 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2cb282a0-c80f-4860-d53e-08da8280fed9
-X-MS-TrafficTypeDiagnostic: MW2PR12MB2473:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	+Z91fF/2m6KWoRNgN2H+zvSh0bPO24BjosG63rRb3QFBibFwkKqDff36xpJ799tsyuV2AFqEsTkL79oRYAFr7PmKG8WsE0DKC4WVe/mhw185mq3WAeKL8rdyAmQtCXOf1VYQjyUr5Wx7dNF92WGxF3aVOsTZxqm3wV+IvGjrzApTg6wN3aCBvmfBqGB4OsOcRPB1f3iUwlNKwO89XC+yczaNjDCEab2q9iVXTeqvlrE+EGLvNGAkIGa8xsPqKjhy0P9rXpP9CfchGwJBN0R5DUhvcJQkVGvRddiyvl6hgu7wF+R/c4xuhJe7niiKshCv2gYzwRGS5E9ioFp/l7Nl/Di6VwW9rO2c8HyfV9dh6FyUniXat+XryGEwicP5DjDXZHLYqKbH4kMzQmGLUNkITL4ly/k7ER2Y5a7Rd0CRwRZnxb/Wpmmurh1TlA+Z0QNXE1ekXEFkwbMnQty4hWBDe1FcTx1RLgUjh9akUUIDEAxbliLISuR712GiPyMChUGhsrU8MZcXli/F7pVO0xzSQK4vjrorWCX5Bn6JMtGeLh7s+4mbxCgfTQFA8tYr/YTcBnVOXdigDniXW0SxYtNBsSqigqgLJm6HWbY+8sY1ceRUQc6NPCAEFc3JCepoLKuHBRRAd7D76YF5VslBWdqjYXKcuwXLKPR5nA/a1gEqi6tvsPC247bDValhDNI8RiYQFbEwDRIG9rgBgmOEDMpvFIA7tntVDx7HABOh9m/6TnJSpMBL7G1AzMyDO4atU7hh0eTP1wSjPULR3ad2jOv0OVv5C778EgT4+Ozks8I8B1n77XClQX8jVYWYnMkiv8SQmYxeqMIhevr0gkgFRFXHQnEUho6WB5SCe5XMAgM9Jlto8ImLtwhN+VXsfnpbYYPc
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB4614.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(396003)(346002)(39860400002)(136003)(376002)(36756003)(31686004)(26005)(2906002)(6512007)(38100700002)(4326008)(8676002)(66946007)(66556008)(66476007)(6506007)(6666004)(53546011)(41300700001)(2616005)(83380400001)(186003)(45080400002)(8936002)(5660300002)(31696002)(86362001)(966005)(6486002)(478600001)(316002)(54906003)(110136005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WGtvWkkvZjcva0ZJdUF3YnFVbGV2NTViYTNTdE92Uk1BRmZhVnBqSDlQN0VI?=
- =?utf-8?B?NTlOWk4vanc1Uk5CQUgxVG0zcU5kMm96ZFhibmpyYitwRFhhT1pYcFVOYVN4?=
- =?utf-8?B?QlF0QWpOL3I0Q2JHUDF2MGluSTgvckN2ZW0yUHY2enBMVlI2MFR3VVpLVmNB?=
- =?utf-8?B?U1lJMURnK20xRHdjaG02SXJQM0JZMDRnbFI3TEZQRmFTdUJCb1F6MGhSTG9G?=
- =?utf-8?B?RXZLMnkyYmhSVmFvbnh6TTJSMWpoSGtmNTFUTFVZaHRiV3dNaGwzamh3NkJa?=
- =?utf-8?B?aHRjbzZlcnBHNSs4YnNkaVR1Zlp5M1RrQmprOTFSRll4QzUvQit6ZXBveUN6?=
- =?utf-8?B?N1k0c2M2aTVzUXE5SEtGb1J4WnB5a2tyVXJOTVZsNGhoK1ZYcERXd29IV2JV?=
- =?utf-8?B?UG0yU2N0ekVQa0lzRDVsdmZEaEhIdmRuUE51OHZVdE84NUl5Qk9Jeldac1pj?=
- =?utf-8?B?VWZvd1oyQys1a2hWQXQ2eTFRbmJJa3kyNzc4SzFCTUlEbUJCQlBPYXc5dG84?=
- =?utf-8?B?S2tpUjBOeFozMkxUeXljVGY3aEk2b1p4SzJnUzB5OGlBaVdIYitydDFvNms5?=
- =?utf-8?B?VEpRY01yUENROVQ1dXJyeWhXaUxqeFZvQUlBdXlaTm51eGYvV1ZpS1RqNC9S?=
- =?utf-8?B?dnZhVTBNWGZwOThlT0ErKy90U1R2bTRXWEd6TFdtSFFPcFEvNXdSQk4zdVRK?=
- =?utf-8?B?SFQ3QzdjNTY2STluZTVGZ2dzQ2t2OXFKN0J2L2dkRUtMd3RmTEFISVZEV0NH?=
- =?utf-8?B?SUFhSzdKRExubnd5SEZ1RDJ3VTU1WGxZNzBJZ2xNQlJYb0RLZngzMjcyMzho?=
- =?utf-8?B?WDlVRlNlNlhGbXozWnJPL0RkNElFUHhqd2ZseG9hdlZhZlBTTWxhN2pvc0dp?=
- =?utf-8?B?dVp4Tnpkc2pvQ0ZWbWhBWGxHNmY2SHhhWDNRb09rcEhFeXJHazFxRlJNMUpx?=
- =?utf-8?B?di9wbEt6ZVpUNVM0anZRc2ZpK3pkNk9HZjZWRXVmWG5pR21aLzFnUCtjRGFF?=
- =?utf-8?B?RTIrY2V6UHN6NEJwcTgvTUlwV0J5bWJsT2xXRS85QXlJTHAyWmRBdnpJN25Q?=
- =?utf-8?B?LzluRnVZYndaSmV5MVh6VitkamdyV1VtY2JINk5hcXEzcGpFdzZRMjlhREMz?=
- =?utf-8?B?NmFJZkZUd3k0eU1ET2N6TGhZM1BXeVFLUUovMkJPb2dGNWVaaFU2cFNMMERk?=
- =?utf-8?B?UTBTalcweGN1bFpZODNFNjgxWE1GR2FjTnRUZVEzMjkvNGxBMU9aeWsrZ1dq?=
- =?utf-8?B?T3ZFNkhmbys1YWpSNFpid1ZJZkZ2a0REcnRRcnE4MXJpSXovWEZtUStTWTJv?=
- =?utf-8?B?V25WdGoxZk1xNHJST0Vkd241aEExSG5keVUvYWdpV1VOQ3dsc3hnQ25kZjZP?=
- =?utf-8?B?a0E5b2xCUDJmUG5pQklpUTkwRzc5QWdLOStLL1ZzMStTRkxuanJqS25nMHZ5?=
- =?utf-8?B?M2tGZ0hMbXZWcVFXc0lGVml3aVVSYjQrTmhjeFVGMzgrOVJUWDVxaEw1RUJk?=
- =?utf-8?B?OFpWMlVIYUlEOURPd1htN1czSURmK2VpVlY3WVZ5eWJxNDA1R21PMUhtZk9w?=
- =?utf-8?B?ZU5qVENWbDRiVTVNUGt5RE00eU1Dd1FTYWg1dXZORFlTK3FucmZ6SzdNbkZK?=
- =?utf-8?B?UldQR0tjQk03dmVqUWJVVnpxME9jb2NTeVJKeTNMOVkzanlyaFZtT1JBZHVs?=
- =?utf-8?B?cWpnamE1RXVQQVVIMVlIdW1maW1xenhRY2lmMWRISXUwVE9KMzNaN3VuZEJx?=
- =?utf-8?B?YjdYWkg3T3lUeUo4TVRRdzE1OWFzU2laQkhVNkZPaElya3g1NVZkakdIbVZx?=
- =?utf-8?B?ZHIyYktlcFkyOTlTUHF4MkxIZGZKL3NTTnpXRXlVWWhKKzVqYlRieGhzR0dq?=
- =?utf-8?B?dUdBT28xVnJUYTZ4eUVpM3RHeUdtb3BCdXNuMTRvWHVRYlhheTV4dVBBWk92?=
- =?utf-8?B?aGxHcUZQWVU2b1E4SFJjM1NyUS93RVlESEliaDZNN2NSaE5KaU8yVnZtcXgw?=
- =?utf-8?B?NGZXeldqbjJ2bkZrcnN6NmJaZGhrSVJ4clhoekc5cys5dmJ2NFJVY3hmdEQx?=
- =?utf-8?B?Q2hPUkx2Zm15T2VWeFVNNzI0emlEdS95TkZZZU4vWUloLzdHMkw0SUw3dWR0?=
- =?utf-8?Q?DQIcz3EpGFb9geOZ1onfW8b/F?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2cb282a0-c80f-4860-d53e-08da8280fed9
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB4614.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2022 07:52:57.2897
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +NzaZSTFTZ9iVpBdB6BWEiuZC9+x3gCXl3OzOZ6xp7eqdk0rlhAW3tevigOF/Sj9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR12MB2473
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.12.0
+From: Hans de Goede <hdegoede@redhat.com>
+To: Gregory Greenman <gregory.greenman@intel.com>,
+ linux-wireless <linux-wireless@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: New 6.1 net/mac80211/rx.c warning with iwlwifi / Ultimate-N 6300 wifi
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+Hi All,
 
+While testing 6.0-rc1 on a Dell Latitude E6430 with:
 
-On 8/20/2022 12:37 AM, Bjorn Helgaas wrote:
-> On Fri, Aug 19, 2022 at 12:13:03PM -0500, Bjorn Helgaas wrote:
->> On Thu, Aug 18, 2022 at 03:38:12PM -0500, Bjorn Helgaas wrote:
->>> [Adding amdgpu folks]
->>>
->>> On Wed, Aug 17, 2022 at 11:45:15PM +0000, bugzilla-daemon@kernel.org wrote:
->>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D216373&amp;data=05%7C01%7Clijo.lazar%40amd.com%7C958674b7d05040ddd93f08da8216107a%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637965328525221166%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=otI1jfdKInPamMGrLyhFsVoGnK%2BIgL%2BcyMtBVPsV7bE%3D&amp;reserved=0
->>>>
->>>>              Bug ID: 216373
->>>>             Summary: Uncorrected errors reported for AMD GPU
->>>>      Kernel Version: v6.0-rc1
->>>>          Regression: No
->>
->> Tom, thanks for trying out "pci=noaer".  Hopefully we won't need the
->> workaround for long.
->>
->> Could I trouble you to try the debug patch below and see if we get any
->> stack trace clues in dmesg when the error happens?  I'm sure the
->> experts would have a better approach, but I'm amdgpu-illiterate, so
->> this is all I can do :)
-> 
-> Thanks for doing this, Tom!  For everybody else, Tom attached a dmesg
-> log to the bugzilla: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fattachment.cgi%3Fid%3D301606&amp;data=05%7C01%7Clijo.lazar%40amd.com%7C958674b7d05040ddd93f08da8216107a%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637965328525221166%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=pzmtR3daPOimRkX6fohHQTDiEkp8B9aCJX5Z%2BKUcq2c%3D&amp;reserved=0
-> 
-> Lots of traces of the form:
-> 
->    amdgpu_device_wreg.part.0.cold+0xb/0x17 [amdgpu]
->    amdgpu_gart_invalidate_tlb+0x22/0x60 [amdgpu]
->    gmc_v10_0_hw_init+0x44/0x180 [amdgpu]
-> 
->    amdgpu_device_wreg.part.0.cold+0xb/0x17 [amdgpu]
->    gmc_v10_0_hw_init+0xa8/0x180 [amdgpu]
-> 
->    amdgpu_device_wreg.part.0.cold+0xb/0x17 [amdgpu]
->    gmc_v10_0_flush_gpu_tlb+0x35/0x280 [amdgpu]
->    amdgpu_gart_invalidate_tlb+0x46/0x60 [amdgpu]
->    gmc_v10_0_hw_init+0x44/0x180 [amdgpu]
-> 
-> I tried connecting the dots but I gave up chasing all the function
-> pointers.
-> 
+03:00.0 Network controller: Intel Corporation Centrino Ultimate-N 6300 (rev=
+ 35)
 
-Missed the remap part, the offset is here -
+wifi, I noticed the following WARN()/backtrace:
 
-https://elixir.bootlin.com/linux/v6.0-rc1/source/drivers/gpu/drm/amd/amdgpu/nv.c#L680 
+[  563.888583] ------------[ cut here ]------------
+[  563.889447] WARNING: CPU: 0 PID: 0 at net/mac80211/rx.c:3993 ieee80211_r=
+x_handlers+0x230/0x2a70 [mac80211]
+[  563.890463] Modules linked in: snd_seq_dummy snd_hrtimer rfcomm btusb bn=
+ep intel_rapl_msr ppdev at24 mei_wdt mei_pxp mei_hdcp iTCO_wdt intel_pmc_bx=
+t iTCO_vendor_support dell_laptop intel_rapl_common dell_smm_hwmon x86_pkg_=
+temp_thermal intel_powerclamp coretemp kvm_intel vfat fat kvm irqbypass crc=
+t10dif_pclmul crc32_pclmul ghash_clmulni_intel rapl intel_cstate intel_unco=
+re btrtl btbcm btintel btmtk uvcvideo bluetooth dell_wmi videobuf2_vmalloc =
+videobuf2_memops dell_smbios videobuf2_v4l2 dcdbas option joydev videobuf2_=
+common usb_wwan iwldvm dell_wmi_descriptor sparse_keymap wmi_bmof ecdh_gene=
+ric videodev mac80211 mc pcspkr libarc4 iwlwifi iwlmei cfg80211 snd_hda_cod=
+ec_idt snd_hda_codec_generic ledtrig_audio snd_hda_codec_hdmi snd_hda_intel=
+ parport_pc parport snd_intel_dspcfg dell_smo8800 snd_intel_sdw_acpi i915 s=
+nd_hda_codec dell_rbtn snd_seq rfkill snd_hda_core snd_seq_device snd_hwdep=
+ snd_pcm i2c_i801 i2c_smbus lpc_ich e1000e snd_timer snd drm_buddy mei_me s=
+oundcore mei ip_tables
+[  563.890692]  nouveau crc32c_intel usb_storage sdhci_pci cqhci sdhci mmc_=
+core serio_raw drm_ttm_helper ttm mxm_wmi drm_display_helper cec video wmi =
+i2c_dev fuse [last unloaded: btusb]
+[  563.893158] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W          6=
+.0.0-rc1+ #99
+[  563.893633] Hardware name: Dell Inc. Latitude E6430/0H3MT5, BIOS A21 05/=
+08/2017
+[  563.894099] RIP: 0010:ieee80211_rx_handlers+0x230/0x2a70 [mac80211]
+[  563.894620] Code: 00 00 84 c0 0f 84 a4 05 00 00 48 8b 43 18 41 8b 57 70 =
+49 8b b7 d0 00 00 00 48 8b b8 08 09 00 00 e8 e5 e3 ed ff e9 12 06 00 00 <0f=
+> 0b 44 89 f6 48 89 df e8 83 f1 ff ff 48 8b 45 00 48 39 c5 74 09
+[  563.895665] RSP: 0018:ffffb7cc40003cd0 EFLAGS: 00010246
+[  563.896203] RAX: ffff95ea229e0f00 RBX: ffffb7cc40003da0 RCX: ffff95e886f=
+5ab00
+[  563.896759] RDX: ffffb7cc40003df0 RSI: 0000000000000028 RDI: ffff95e884f=
+61688
+[  563.897312] RBP: ffffb7cc40003df0 R08: 0000000000000001 R09: 00000000000=
+00000
+[  563.897871] R10: ffff95e88396a580 R11: 0000000000000001 R12: 00000000000=
+00000
+[  563.898422] R13: ffffb7cc40003df0 R14: 0000000000000002 R15: ffff95e889a=
+17200
+[  563.898975] FS:  0000000000000000(0000) GS:ffff95ea24200000(0000) knlGS:=
+0000000000000000
+[  563.899559] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  563.900132] CR2: 00007f27e270c000 CR3: 00000000b4c26003 CR4: 00000000001=
+706f0
+[  563.900731] Call Trace:
+[  563.901319]  <IRQ>
+[  563.901915]  ? rcu_read_lock_sched_held+0x10/0x80
+[  563.902530]  ? lock_release+0x1ef/0x2d0
+[  563.903128]  ? rcu_read_lock_sched_held+0x10/0x80
+[  563.903755]  ? lock_acquire+0x255/0x2b0
+[  563.904368]  ? rcu_read_lock_sched_held+0x10/0x80
+[  563.904994]  ? lock_release+0x1ef/0x2d0
+[  563.905637]  ? ieee80211_sta_reorder_release.isra.0+0x2ea/0x380 [mac8021=
+1]
+[  563.906308]  ieee80211_release_reorder_timeout+0x129/0x1a0 [mac80211]
+[  563.906997]  ? lock_acquire+0x255/0x2b0
+[  563.907667]  ? lock_acquire+0x255/0x2b0
+[  563.908318]  ? perf_event_task_tick+0x7d/0x430
+[  563.908980]  ? sta_rx_agg_session_timer_expired+0x70/0x70 [mac80211]
+[  563.909694]  ? sta_rx_agg_session_timer_expired+0x70/0x70 [mac80211]
+[  563.910396]  sta_rx_agg_reorder_timer_expired+0x45/0xd0 [mac80211]
+[  563.911107]  call_timer_fn+0x95/0x2a0
+[  563.911810]  __run_timers.part.0+0x1cd/0x2b0
+[  563.912507]  ? lock_release+0x1ef/0x2d0
+[  563.913192]  ? sched_clock_cpu+0xb/0xc0
+[  563.913904]  run_timer_softirq+0x31/0x70
+[  563.914623]  __do_softirq+0xf5/0x54d
+[  563.915317]  __irq_exit_rcu+0xed/0x160
+[  563.916015]  irq_exit_rcu+0xa/0x30
+[  563.916720]  sysvec_apic_timer_interrupt+0x9e/0xc0
+[  563.917406]  </IRQ>
+[  563.918084]  <TASK>
+[  563.918766]  asm_sysvec_apic_timer_interrupt+0x16/0x20
+[  563.919430] RIP: 0010:cpuidle_enter_state+0xeb/0x320
+[  563.920091] Code: 1b e2 5e ff 45 84 ff 74 16 9c 58 0f 1f 40 00 f6 c4 02 =
+0f 85 05 02 00 00 31 ff e8 20 8a 66 ff e8 8b cc 6d ff fb 0f 1f 44 00 00 <45=
+> 85 ed 0f 88 e2 00 00 00 49 63 cd 4c 89 f2 48 8d 04 49 48 8d 04
+[  563.921504] RSP: 0018:ffffffffa3c03e50 EFLAGS: 00000246
+[  563.922221] RAX: 0000000080000001 RBX: ffffd7cc3fc02d80 RCX: 00000000000=
+00000
+[  563.922963] RDX: 000000834a5f9154 RSI: ffffffffa38b0b6c RDI: ffffffffa2b=
+689d5
+[  563.923710] RBP: 0000000000000005 R08: 0000000000000000 R09: 00000000000=
+00000
+[  563.924422] R10: 0000000000000000 R11: 00000000000008ae R12: ffffffffa3e=
+c8040
+[  563.925125] R13: 0000000000000005 R14: 000000834a5f9154 R15: 00000000000=
+00000
+[  563.925836]  ? cpuidle_enter_state+0xe5/0x320
+[  563.926526]  cpuidle_enter+0x29/0x40
+[  563.927174]  do_idle+0x202/0x290
+[  563.927836]  cpu_startup_entry+0x19/0x20
+[  563.928466]  rest_init+0xeb/0x170
+[  563.929080]  arch_call_rest_init+0xa/0x14
+[  563.929708]  start_kernel+0x97f/0x993
+[  563.930310]  secondary_startup_64_no_verify+0xe5/0xeb
+[  563.930885]  </TASK>
+[  563.931396] irq event stamp: 484676
+[  563.931909] hardirqs last  enabled at (484675): [<ffffffffa21d4add>] tic=
+k_nohz_idle_exit+0x6d/0x140
+[  563.932430] hardirqs last disabled at (484676): [<ffffffffa2eb2123>] __s=
+chedule+0xdd3/0x1670
+[  563.932951] softirqs last  enabled at (484598): [<ffffffffa20fbcbd>] __i=
+rq_exit_rcu+0xed/0x160
+[  563.933474] softirqs last disabled at (484591): [<ffffffffa20fbcbd>] __i=
+rq_exit_rcu+0xed/0x160
+[  563.933996] ---[ end trace 0000000000000000 ]---
 
+FWIW this happened some time after a suspend/resume, but I don't think it
+is actually suspend/resume related.
 
-The trace is coming from *_flush_hdp.
+Regards,
 
-You may also check if *_remap_hdp_registers() is getting called. It is 
-done in nbio_vx_y files, most likely this one for your device -
-https://elixir.bootlin.com/linux/v6.0-rc1/source/drivers/gpu/drm/amd/amdgpu/nbio_v2_3.c#L68
-
-Thanks,
-Lijo
+Hans
 
