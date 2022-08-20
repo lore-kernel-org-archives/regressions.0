@@ -1,50 +1,50 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F09862F29
-	for <regressions@lists.linux.dev>; Sat, 20 Aug 2022 15:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A17482CA7
+	for <regressions@lists.linux.dev>; Sat, 20 Aug 2022 15:34:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661009383;
+	s=mimecast20190719; t=1661009695;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=9eDytxqOFXATcuaC2QjIlSYBaETDtOjAP11zj+1dFhI=;
-	b=bA1khCRwTYpSW4JKlsBJ2fHi2OS4Ny0R5mDoAjHfFdkSKUoFhzYizbu3fBr59VCQeGrbqW
-	lMnLNboY5RQe4wPAAzXJTne/ErvYuYZRusf+JxSBYFifJR70oGNyjIQ2iMdrGU2xFQ4KpQ
-	Rglh7JYTI1+cJ2E37L2lHOl0cjGp8KA=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=NLy5mk2uFJGejYtU0LSjeL994WxvbMVigI8c3fND+Uw=;
+	b=XKwNbj72sB1PqWpNBiiur5qOWpDsDTXPePTei36m8KVqwbIOj4fqK1jLOlKM7hstnoGj+J
+	288Xupx32TAiXUIFJsliyaWJPQ+fDg+9HIzBczNUBR3xsc99tsI1QV8g+a50qyVuaMYy+C
+	eoa4pJ0yfNqGfeF7ZQRrXtC5+XW+tAU=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-437-7XftQuBFPqmHUr1rF2Jqxg-1; Sat, 20 Aug 2022 11:29:42 -0400
-X-MC-Unique: 7XftQuBFPqmHUr1rF2Jqxg-1
-Received: by mail-ed1-f70.google.com with SMTP id o2-20020a056402438200b0043d552deb2aso4363300edc.0
-        for <regressions@lists.linux.dev>; Sat, 20 Aug 2022 08:29:42 -0700 (PDT)
+ us-mta-288-zf1UbzjiOh2OnYb7mr-LlA-1; Sat, 20 Aug 2022 11:34:53 -0400
+X-MC-Unique: zf1UbzjiOh2OnYb7mr-LlA-1
+Received: by mail-ed1-f71.google.com with SMTP id w5-20020a05640234c500b0043dda025648so4382138edc.8
+        for <regressions@lists.linux.dev>; Sat, 20 Aug 2022 08:34:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:content-language:to:subject:from
          :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
          :cc;
-        bh=9eDytxqOFXATcuaC2QjIlSYBaETDtOjAP11zj+1dFhI=;
-        b=mv4OxqY3lDy6PgwJMEvHOIn/UQEsYrN6WHa2PeIcP5lTl7zBO0o2Wl9QASEPKQoUh2
-         p6YHP2wovvycA0x4rsVpKDj3sxNzh4GmNCQ8GGf+hTl6NMu5QIhV6bHQr3a5xaBirDG6
-         g9NAx4IpvJUUK5yKWuUcuNyKnQ7CZ7ozd1QYHGtEIN2qtTaAoiVK2dEthvIV/RBywROP
-         i3SH76gptZppSqnwvIO18pnCRP8+5qD4pwjblRz+UkF/PLpzhW7wSO+4RsoOrfX4U7td
-         8CQzoJxdToptWpHR1UN7juGVrSfNmTwHWK8u0F24PBTitnhScPJZzxQ7nOs6ab/fj68Y
-         yOVg==
-X-Gm-Message-State: ACgBeo3F2B8WvWUAxqH83iHBG7N3nYELg7A5hQ2WlWQNGJdLjz3OzW1X
-	ml8a7XvP7V8INt55H7nq8h2zlt4DoopfaSi8hMEUTDIRAc+ffBCxqrlPoMP5ftc6+O3fMLiOZUc
-	bHtJc+JJnXhDU3KGzisc1AW0=
-X-Received: by 2002:a05:6402:2804:b0:439:83c2:8be2 with SMTP id h4-20020a056402280400b0043983c28be2mr10004405ede.292.1661009381062;
-        Sat, 20 Aug 2022 08:29:41 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR4rHIk3sxbzi5q1BvZzHlwlr5FRnZTYFUXNn/hws6YK8dF/QqociNsu2p5wg9Ex5uGhOW6G6w==
-X-Received: by 2002:a05:6402:2804:b0:439:83c2:8be2 with SMTP id h4-20020a056402280400b0043983c28be2mr10004399ede.292.1661009380905;
-        Sat, 20 Aug 2022 08:29:40 -0700 (PDT)
+        bh=NLy5mk2uFJGejYtU0LSjeL994WxvbMVigI8c3fND+Uw=;
+        b=cY8lRlLmRzQWrrs5YYOSWjg/LvItghNhN8Z9VxmhjldhENgpiaC7Od0xnIu+xAtvIL
+         C+4sJwWvtnPeTiMrepMUUZDkDR5i8QMGvxroJoqsV80SfVdhw3lg3Wk+n5eObKKu5gxO
+         B/LdVWsBrpj/ovTT/rf+9wga6foHQ97yEDBEXCFJ5Bho9LkoFrC651UmgCtokSKbRYgv
+         A4lQTerZCraakHKkk03uQOfg0CM2+FxIxsHSMWtHwtgxjR6b3K8ye+ZTpjbMghEAN7RN
+         WBqxhRnApCqnHZFp0z3eE2SffPAV//dhFfc3Fl2SQj7mTn+XkzkyBkk1kgg5kZlCmw6f
+         0omg==
+X-Gm-Message-State: ACgBeo3nFbPwmkTLhM9UpT2Rm24EESYZRCcbryZsv2H9owba6sBdFkBV
+	+OwVxCr23gThkAdfV8LfN63qr+aZf0Wn2I/n9rVQdYkVKgmRfNhnA+VYWrkrI2SfXyS6ETPfNHI
+	hLfctWyXIVHw4vCQbxUrUKyM=
+X-Received: by 2002:a17:907:2721:b0:731:2aeb:7940 with SMTP id d1-20020a170907272100b007312aeb7940mr8277705ejl.448.1661009692436;
+        Sat, 20 Aug 2022 08:34:52 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7S04Gbn5ONI4MHoH2GuZUEyxppQj2ZEMESIBqAECyxmlpFmCZsE9tmXn1SvEFmSrxnHMc9uQ==
+X-Received: by 2002:a17:907:2721:b0:731:2aeb:7940 with SMTP id d1-20020a170907272100b007312aeb7940mr8277695ejl.448.1661009692230;
+        Sat, 20 Aug 2022 08:34:52 -0700 (PDT)
 Received: from ?IPV6:2001:1c00:c1e:bf00:d69d:5353:dba5:ee81? (2001-1c00-0c1e-bf00-d69d-5353-dba5-ee81.cable.dynamic.v6.ziggo.nl. [2001:1c00:c1e:bf00:d69d:5353:dba5:ee81])
-        by smtp.gmail.com with ESMTPSA id c9-20020a17090618a900b007313a25e56esm3677726ejf.29.2022.08.20.08.29.39
+        by smtp.gmail.com with ESMTPSA id j31-20020a056402239f00b004466f5375a5sm1347354eda.53.2022.08.20.08.34.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 20 Aug 2022 08:29:40 -0700 (PDT)
-Message-ID: <d7ed51da-ddf1-cb43-4932-00ff523cf7b5@redhat.com>
-Date: Sat, 20 Aug 2022 17:29:39 +0200
+        Sat, 20 Aug 2022 08:34:51 -0700 (PDT)
+Message-ID: <e0cb72ca-bee2-2823-94f4-195261c7d588@redhat.com>
+Date: Sat, 20 Aug 2022 17:34:51 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -54,7 +54,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.12.0
 From: Hans de Goede <hdegoede@redhat.com>
-Subject: 6.0-rc1 new RCU stall warning/stack trace
+Subject: 6.0-rc1 new XHCI RCU stall warning/stack trace
 To: Mathias Nyman <mathias.nyman@intel.com>,
  linux-usb <linux-usb@vger.kernel.org>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
@@ -64,10 +64,12 @@ Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+<resend with missing XHCI added to the subject, sorry>
+
 Hi All,
 
 While dogfooding 6.0-rc1 on my main workstation I noticed the following
-new RCU stall warning/stack trace after a suspend/resume:
+new XHCI RCU stall warning/stack trace after a suspend/resume:
 
 [  290.653114] xhci_hcd 0000:16:00.0: xHC error in resume, USBSTS 0x401, Reinit
 ...
