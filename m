@@ -1,101 +1,175 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2083.outbound.protection.outlook.com [40.107.212.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D044E7B
-	for <regressions@lists.linux.dev>; Sat, 20 Aug 2022 04:27:28 +0000 (UTC)
-Received: by mail-lf1-f49.google.com with SMTP id o2so8486012lfb.1
-        for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 21:27:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc;
-        bh=wC9lL9Kc6Kp7xZsJEHL/dIwZgeCbFL0R65oEXkMpUCA=;
-        b=fXJr+IvqO5eCLb4L0UNuczZ9ytlfp93vBptFNfXYrkEM4z+aLvwjCDezTPjppA0MbE
-         0MeM/jpKhgBUvnnC9yaWkqmdX3s76mvgMTc1lDf5Mzmhjxp4KHnPbmUxKpBLKzah5FER
-         3jT0ZV/4hcOdQzDAGHvt8T4loNkP74uKIm59r44Ebltvd5D0RztGXXjo944NXqhu9bWZ
-         YS5cQ0q2YyuZ4KDbaJCuObYLp4jvsis8zduYJ7THpi75EPKa1pmxFJn0Ykt2YNSBEHvf
-         lkw5wVZSngpCxNVehDv4Iijum6BMafTE0qEQjh7/RcLcfb39UqAMGO3Y3tv/YhbiOzYe
-         g5bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc;
-        bh=wC9lL9Kc6Kp7xZsJEHL/dIwZgeCbFL0R65oEXkMpUCA=;
-        b=a070WMZNt31xzwWKmZjndisTYmV6Ukmj3gsysZdNjT2wboy9iF3VGnA3K69we7A4/G
-         cOnXho7omPAkQdb/RxeCtnljJ6cBM7HJ/tB+qljoGYyB6D2I2HnG17/Duu5wer6m3SLK
-         jb+tWCkqh86jvJ759p6o/EsIGVewqA6OgSWSMazyjeEfDfhEJOoEMIdGjBV1zm1NlRbh
-         D+nxkNTXrgbWE83rnNl1ZbhOu+C2NPkekiJ5900nquYDIK4AQrcgEyujVMA3u512kiaA
-         S1lmAf3+59+he+RhV4Il/uV5a+V/UKmIxLC7uZabxnYfpXOXQE5Ecq6AqxeSLUS7Klc5
-         QtbA==
-X-Gm-Message-State: ACgBeo2dgxK0IbVUlSQY7htFRJYrCttQaV6ek92yUXiAykwWx82vAQF1
-	1g6cm68EAylcPsPyLjOcx6Ak6PsyFvkerT9uvDM=
-X-Google-Smtp-Source: AA6agR7p+ven6ErQfFbkAvUx1F1VvXjx8u5VcCIIsX5st+SftUxZQa+jCMMAoIJmnvfUWU+Q1dRvLxf5/wJ06Ey0BoM=
-X-Received: by 2002:a05:6512:131f:b0:492:992f:1f3c with SMTP id
- x31-20020a056512131f00b00492992f1f3cmr3188670lfu.565.1660969646675; Fri, 19
- Aug 2022 21:27:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9271613E
+	for <regressions@lists.linux.dev>; Sat, 20 Aug 2022 07:53:04 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UuqrQQD7xUUl/smv3eYM7RvV/C92qZPddsJG+lQPgrhhdz4JCiWHACUvy3QmeC3gudSJawdY0qScf3f9d2CJlyH4Fl7ip5G5QAfDZhvz38iDCdhw8CbRCDLhM9JY9HtLRohqUvX4jOrxKa1ENpSEbCMxKzErX9hAv0RBp4QXrqALFQfCpwI6Vrr7EBMy52AmO0UGmGIswBy7wXXDv0cn+ckrvHOc70fSyfFwIJG2CTPHusg/snxxhtaWN6sDDpn0LeIQUI8Q4ak9oqyaKt7JD7UdFrYE3GBxXR8r5h2GaIdxsqIAMW4Lpt/P+1WXA0YTcF7jsGxq2oYoh2mlubFhaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OVbbvIuMoc9Llpro/M+t5SLke35456D2cCkHpcSIE7Q=;
+ b=XdkwE94q9LirmMXdRtuw2yf158Ser4Gif0jjF8SZ51eBTtga8mefpn+9Z57RK2xRE4Buu38pISwEXKY0cRj/0bKtFhBF0ckpj9LgnhpLJF0szG+PPFEBUgnAvte+lliANMAS+yoQXEzw3Dasw6LJ/K651+Vc//aoD44SBI3N7FXo5hKoxlFc5cKjU0+SadYiu36rSOP1HpofzRSlw4eMtGpmoNMHt3biQ5B3NUaHY5ZywMlenYRiER/hHxETpmMMPwAM6BHaXv2szIBYsJW19OfTLDep071OYIUulJFNr8V8ftDNjit7jq2PB3eX/eCkW7LEGATwOte4RkMxRdTjaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OVbbvIuMoc9Llpro/M+t5SLke35456D2cCkHpcSIE7Q=;
+ b=2P1CcLDKfrbvWIpITp4J8X8pdAuRwcRhXEATF3qmqU9gRmlDSuvIop2V9jrpydKlrU2xKGsXpe2vQYNciYMv2CDJKV9Aa1x8TiDPN4rJRPUKA4/ljG0ataB9Goc9KgTb1087Np4w5QqmcWG7jzSCiwneK+D/XZB24GgFs3t54Oo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB4614.namprd12.prod.outlook.com (2603:10b6:a03:a6::22)
+ by MW2PR12MB2473.namprd12.prod.outlook.com (2603:10b6:907:4::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.19; Sat, 20 Aug
+ 2022 07:52:57 +0000
+Received: from BYAPR12MB4614.namprd12.prod.outlook.com
+ ([fe80::4195:ca0b:381f:7900]) by BYAPR12MB4614.namprd12.prod.outlook.com
+ ([fe80::4195:ca0b:381f:7900%4]) with mapi id 15.20.5546.016; Sat, 20 Aug 2022
+ 07:52:57 +0000
+Message-ID: <6aad506b-5324-649e-9700-7ceaaf7ef94b@amd.com>
+Date: Sat, 20 Aug 2022 13:22:43 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
+Content-Language: en-US
+To: Bjorn Helgaas <helgaas@kernel.org>, Tom Seewald <tseewald@gmail.com>
+Cc: regressions@lists.linux.dev, David Airlie <airlied@linux.ie>,
+ linux-pci@vger.kernel.org, Xinhui Pan <Xinhui.Pan@amd.com>,
+ amd-gfx@lists.freedesktop.org, Kai-Heng Feng <kai.heng.feng@canonical.com>,
+ Daniel Vetter <daniel@ffwll.ch>, Alex Deucher <alexander.deucher@amd.com>,
+ Stefan Roese <sr@denx.de>, =?UTF-8?Q?Christian_K=c3=b6nig?=
+ <christian.koenig@amd.com>
+References: <20220819190725.GA2499154@bhelgaas>
+From: "Lazar, Lijo" <lijo.lazar@amd.com>
+In-Reply-To: <20220819190725.GA2499154@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0150.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:6::35) To BYAPR12MB4614.namprd12.prod.outlook.com
+ (2603:10b6:a03:a6::22)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: =?UTF-8?B?6I+c5Y+2?= <ye.jingchen@gmail.com>
-Date: Sat, 20 Aug 2022 12:27:14 +0800
-Message-ID: <CAA6RncSwQL5A1Ox3a088Kpp4=-bHPzAGcJa_fEFkiE801tAJjw@mail.gmail.com>
-Subject: No Audio from AMDGPU HDMI on 5.19.2
-To: stable@vger.kernel.org
-Cc: regressions@lists.linux.dev, amd-gfx@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2cb282a0-c80f-4860-d53e-08da8280fed9
+X-MS-TrafficTypeDiagnostic: MW2PR12MB2473:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	+Z91fF/2m6KWoRNgN2H+zvSh0bPO24BjosG63rRb3QFBibFwkKqDff36xpJ799tsyuV2AFqEsTkL79oRYAFr7PmKG8WsE0DKC4WVe/mhw185mq3WAeKL8rdyAmQtCXOf1VYQjyUr5Wx7dNF92WGxF3aVOsTZxqm3wV+IvGjrzApTg6wN3aCBvmfBqGB4OsOcRPB1f3iUwlNKwO89XC+yczaNjDCEab2q9iVXTeqvlrE+EGLvNGAkIGa8xsPqKjhy0P9rXpP9CfchGwJBN0R5DUhvcJQkVGvRddiyvl6hgu7wF+R/c4xuhJe7niiKshCv2gYzwRGS5E9ioFp/l7Nl/Di6VwW9rO2c8HyfV9dh6FyUniXat+XryGEwicP5DjDXZHLYqKbH4kMzQmGLUNkITL4ly/k7ER2Y5a7Rd0CRwRZnxb/Wpmmurh1TlA+Z0QNXE1ekXEFkwbMnQty4hWBDe1FcTx1RLgUjh9akUUIDEAxbliLISuR712GiPyMChUGhsrU8MZcXli/F7pVO0xzSQK4vjrorWCX5Bn6JMtGeLh7s+4mbxCgfTQFA8tYr/YTcBnVOXdigDniXW0SxYtNBsSqigqgLJm6HWbY+8sY1ceRUQc6NPCAEFc3JCepoLKuHBRRAd7D76YF5VslBWdqjYXKcuwXLKPR5nA/a1gEqi6tvsPC247bDValhDNI8RiYQFbEwDRIG9rgBgmOEDMpvFIA7tntVDx7HABOh9m/6TnJSpMBL7G1AzMyDO4atU7hh0eTP1wSjPULR3ad2jOv0OVv5C778EgT4+Ozks8I8B1n77XClQX8jVYWYnMkiv8SQmYxeqMIhevr0gkgFRFXHQnEUho6WB5SCe5XMAgM9Jlto8ImLtwhN+VXsfnpbYYPc
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB4614.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(396003)(346002)(39860400002)(136003)(376002)(36756003)(31686004)(26005)(2906002)(6512007)(38100700002)(4326008)(8676002)(66946007)(66556008)(66476007)(6506007)(6666004)(53546011)(41300700001)(2616005)(83380400001)(186003)(45080400002)(8936002)(5660300002)(31696002)(86362001)(966005)(6486002)(478600001)(316002)(54906003)(110136005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WGtvWkkvZjcva0ZJdUF3YnFVbGV2NTViYTNTdE92Uk1BRmZhVnBqSDlQN0VI?=
+ =?utf-8?B?NTlOWk4vanc1Uk5CQUgxVG0zcU5kMm96ZFhibmpyYitwRFhhT1pYcFVOYVN4?=
+ =?utf-8?B?QlF0QWpOL3I0Q2JHUDF2MGluSTgvckN2ZW0yUHY2enBMVlI2MFR3VVpLVmNB?=
+ =?utf-8?B?U1lJMURnK20xRHdjaG02SXJQM0JZMDRnbFI3TEZQRmFTdUJCb1F6MGhSTG9G?=
+ =?utf-8?B?RXZLMnkyYmhSVmFvbnh6TTJSMWpoSGtmNTFUTFVZaHRiV3dNaGwzamh3NkJa?=
+ =?utf-8?B?aHRjbzZlcnBHNSs4YnNkaVR1Zlp5M1RrQmprOTFSRll4QzUvQit6ZXBveUN6?=
+ =?utf-8?B?N1k0c2M2aTVzUXE5SEtGb1J4WnB5a2tyVXJOTVZsNGhoK1ZYcERXd29IV2JV?=
+ =?utf-8?B?UG0yU2N0ekVQa0lzRDVsdmZEaEhIdmRuUE51OHZVdE84NUl5Qk9Jeldac1pj?=
+ =?utf-8?B?VWZvd1oyQys1a2hWQXQ2eTFRbmJJa3kyNzc4SzFCTUlEbUJCQlBPYXc5dG84?=
+ =?utf-8?B?S2tpUjBOeFozMkxUeXljVGY3aEk2b1p4SzJnUzB5OGlBaVdIYitydDFvNms5?=
+ =?utf-8?B?VEpRY01yUENROVQ1dXJyeWhXaUxqeFZvQUlBdXlaTm51eGYvV1ZpS1RqNC9S?=
+ =?utf-8?B?dnZhVTBNWGZwOThlT0ErKy90U1R2bTRXWEd6TFdtSFFPcFEvNXdSQk4zdVRK?=
+ =?utf-8?B?SFQ3QzdjNTY2STluZTVGZ2dzQ2t2OXFKN0J2L2dkRUtMd3RmTEFISVZEV0NH?=
+ =?utf-8?B?SUFhSzdKRExubnd5SEZ1RDJ3VTU1WGxZNzBJZ2xNQlJYb0RLZngzMjcyMzho?=
+ =?utf-8?B?WDlVRlNlNlhGbXozWnJPL0RkNElFUHhqd2ZseG9hdlZhZlBTTWxhN2pvc0dp?=
+ =?utf-8?B?dVp4Tnpkc2pvQ0ZWbWhBWGxHNmY2SHhhWDNRb09rcEhFeXJHazFxRlJNMUpx?=
+ =?utf-8?B?di9wbEt6ZVpUNVM0anZRc2ZpK3pkNk9HZjZWRXVmWG5pR21aLzFnUCtjRGFF?=
+ =?utf-8?B?RTIrY2V6UHN6NEJwcTgvTUlwV0J5bWJsT2xXRS85QXlJTHAyWmRBdnpJN25Q?=
+ =?utf-8?B?LzluRnVZYndaSmV5MVh6VitkamdyV1VtY2JINk5hcXEzcGpFdzZRMjlhREMz?=
+ =?utf-8?B?NmFJZkZUd3k0eU1ET2N6TGhZM1BXeVFLUUovMkJPb2dGNWVaaFU2cFNMMERk?=
+ =?utf-8?B?UTBTalcweGN1bFpZODNFNjgxWE1GR2FjTnRUZVEzMjkvNGxBMU9aeWsrZ1dq?=
+ =?utf-8?B?T3ZFNkhmbys1YWpSNFpid1ZJZkZ2a0REcnRRcnE4MXJpSXovWEZtUStTWTJv?=
+ =?utf-8?B?V25WdGoxZk1xNHJST0Vkd241aEExSG5keVUvYWdpV1VOQ3dsc3hnQ25kZjZP?=
+ =?utf-8?B?a0E5b2xCUDJmUG5pQklpUTkwRzc5QWdLOStLL1ZzMStTRkxuanJqS25nMHZ5?=
+ =?utf-8?B?M2tGZ0hMbXZWcVFXc0lGVml3aVVSYjQrTmhjeFVGMzgrOVJUWDVxaEw1RUJk?=
+ =?utf-8?B?OFpWMlVIYUlEOURPd1htN1czSURmK2VpVlY3WVZ5eWJxNDA1R21PMUhtZk9w?=
+ =?utf-8?B?ZU5qVENWbDRiVTVNUGt5RE00eU1Dd1FTYWg1dXZORFlTK3FucmZ6SzdNbkZK?=
+ =?utf-8?B?UldQR0tjQk03dmVqUWJVVnpxME9jb2NTeVJKeTNMOVkzanlyaFZtT1JBZHVs?=
+ =?utf-8?B?cWpnamE1RXVQQVVIMVlIdW1maW1xenhRY2lmMWRISXUwVE9KMzNaN3VuZEJx?=
+ =?utf-8?B?YjdYWkg3T3lUeUo4TVRRdzE1OWFzU2laQkhVNkZPaElya3g1NVZkakdIbVZx?=
+ =?utf-8?B?ZHIyYktlcFkyOTlTUHF4MkxIZGZKL3NTTnpXRXlVWWhKKzVqYlRieGhzR0dq?=
+ =?utf-8?B?dUdBT28xVnJUYTZ4eUVpM3RHeUdtb3BCdXNuMTRvWHVRYlhheTV4dVBBWk92?=
+ =?utf-8?B?aGxHcUZQWVU2b1E4SFJjM1NyUS93RVlESEliaDZNN2NSaE5KaU8yVnZtcXgw?=
+ =?utf-8?B?NGZXeldqbjJ2bkZrcnN6NmJaZGhrSVJ4clhoekc5cys5dmJ2NFJVY3hmdEQx?=
+ =?utf-8?B?Q2hPUkx2Zm15T2VWeFVNNzI0emlEdS95TkZZZU4vWUloLzdHMkw0SUw3dWR0?=
+ =?utf-8?Q?DQIcz3EpGFb9geOZ1onfW8b/F?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2cb282a0-c80f-4860-d53e-08da8280fed9
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB4614.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2022 07:52:57.2897
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +NzaZSTFTZ9iVpBdB6BWEiuZC9+x3gCXl3OzOZ6xp7eqdk0rlhAW3tevigOF/Sj9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR12MB2473
 
-Hello,
 
-I experienced this issue on Arch Linux 5.19.2-arch1-1 kernel on an HP
-laptop with AMD Ryzen 6850HS CPU (detailed spec below), that the audio
-is completely silent on the HDMI connected monitor. KDE audio settings
-says everything works normally, HDMI audio shows up and can be
-selected as the default output, just no sound from it.
 
-It worked fine on Arch kernel v5.19.1-arch2. Laptop speakers always
-work, and the monitor works when connected to another Windows laptop
-over HDMI, so the monitor isn't the culprit I assume.
+On 8/20/2022 12:37 AM, Bjorn Helgaas wrote:
+> On Fri, Aug 19, 2022 at 12:13:03PM -0500, Bjorn Helgaas wrote:
+>> On Thu, Aug 18, 2022 at 03:38:12PM -0500, Bjorn Helgaas wrote:
+>>> [Adding amdgpu folks]
+>>>
+>>> On Wed, Aug 17, 2022 at 11:45:15PM +0000, bugzilla-daemon@kernel.org wrote:
+>>>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fshow_bug.cgi%3Fid%3D216373&amp;data=05%7C01%7Clijo.lazar%40amd.com%7C958674b7d05040ddd93f08da8216107a%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637965328525221166%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=otI1jfdKInPamMGrLyhFsVoGnK%2BIgL%2BcyMtBVPsV7bE%3D&amp;reserved=0
+>>>>
+>>>>              Bug ID: 216373
+>>>>             Summary: Uncorrected errors reported for AMD GPU
+>>>>      Kernel Version: v6.0-rc1
+>>>>          Regression: No
+>>
+>> Tom, thanks for trying out "pci=noaer".  Hopefully we won't need the
+>> workaround for long.
+>>
+>> Could I trouble you to try the debug patch below and see if we get any
+>> stack trace clues in dmesg when the error happens?  I'm sure the
+>> experts would have a better approach, but I'm amdgpu-illiterate, so
+>> this is all I can do :)
+> 
+> Thanks for doing this, Tom!  For everybody else, Tom attached a dmesg
+> log to the bugzilla: https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fattachment.cgi%3Fid%3D301606&amp;data=05%7C01%7Clijo.lazar%40amd.com%7C958674b7d05040ddd93f08da8216107a%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637965328525221166%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=pzmtR3daPOimRkX6fohHQTDiEkp8B9aCJX5Z%2BKUcq2c%3D&amp;reserved=0
+> 
+> Lots of traces of the form:
+> 
+>    amdgpu_device_wreg.part.0.cold+0xb/0x17 [amdgpu]
+>    amdgpu_gart_invalidate_tlb+0x22/0x60 [amdgpu]
+>    gmc_v10_0_hw_init+0x44/0x180 [amdgpu]
+> 
+>    amdgpu_device_wreg.part.0.cold+0xb/0x17 [amdgpu]
+>    gmc_v10_0_hw_init+0xa8/0x180 [amdgpu]
+> 
+>    amdgpu_device_wreg.part.0.cold+0xb/0x17 [amdgpu]
+>    gmc_v10_0_flush_gpu_tlb+0x35/0x280 [amdgpu]
+>    amdgpu_gart_invalidate_tlb+0x46/0x60 [amdgpu]
+>    gmc_v10_0_hw_init+0x44/0x180 [amdgpu]
+> 
+> I tried connecting the dots but I gave up chasing all the function
+> pointers.
+> 
 
-Kernel log from the journal didn't seem to contain something relevant,
-but it may be me not knowing what to look for.
+Missed the remap part, the offset is here -
 
-This is discovered on Arch Linux kernel 5.19.2-arch1-1, but also
-reproducible on vanilla v5.19.2 tag.
+https://elixir.bootlin.com/linux/v6.0-rc1/source/drivers/gpu/drm/amd/amdgpu/nv.c#L680 
 
-Bisecting between tag v5.19.1 and v5.19.2 in the stable tree gives:
-308d0d5d98c294b1185d6d7da60b268e0fe30193 is the first bad commit
-commit 308d0d5d98c294b1185d6d7da60b268e0fe30193
-Author: Leung, Martin <Martin.Leung@amd.com>
-Date:   Fri May 13 17:40:42 2022 -0400
 
-   drm/amdgpu/display: Prepare for new interfaces
+The trace is coming from *_flush_hdp.
 
-   [ Upstream commit a820190204aef0739aa3a067d00273d117f9367c ]
+You may also check if *_remap_hdp_registers() is getting called. It is 
+done in nbio_vx_y files, most likely this one for your device -
+https://elixir.bootlin.com/linux/v6.0-rc1/source/drivers/gpu/drm/amd/amdgpu/nbio_v2_3.c#L68
 
-Anything else I can do to investigate?
+Thanks,
+Lijo
 
-My hardware spec:
-Laptop: HP EliteBook 845 14 inch G9 Notebook PC
-CPU: AMD Ryzen 7 PRO 6850HS with Radeon Graphics
-GPU: VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI]
-Rembrandt [Radeon 680M]
-
-% lspci | grep -i audio
-63:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Rembrandt
-Radeon High Definition Audio Controller
-63:00.5 Multimedia controller: Advanced Micro Devices, Inc. [AMD]
-ACP/ACP3X/ACP6x Audio Coprocessor (rev 60)
-63:00.6 Audio device: Advanced Micro Devices, Inc. [AMD] Family
-17h/19h HD Audio Controller
-
-Software:
-plasma-desktop 5.25.4-1
-plasma-pa 5.25.4-1
-pipewire 1:0.3.56-1
-pipewire-pulse 1:0.3.56-1
-wireplumber 0.4.11-4
-alsa-card-profiles 1:0.3.56-1
-linux-firmware 20220708.be7798e-1
-sof-firmware 2.2-1
