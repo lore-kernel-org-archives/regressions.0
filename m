@@ -1,111 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092B56113
-	for <regressions@lists.linux.dev>; Sat, 20 Aug 2022 01:04:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9801C433B5
-	for <regressions@lists.linux.dev>; Sat, 20 Aug 2022 01:04:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1660957488;
-	bh=/+ZC0w82kc/bfDuYBIgG/HR+pney7i1yXva3ldnJsgE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=Nqrf7/wprdMflE6z7u3/RsY/8GlHVm0ErKB266r85igMtX+wGaWRjA5jX9bmQ6ms1
-	 JZnmDLzscLdh/ESskjXJt5cU/QrapTi75ZHM+xHDmFjQuApJD8QErjZ8jvM1aM/KO4
-	 wsh9/zsMdP6Rb8lSetTusajeyQpNsleXOcpqS6VOI2sc84io31YoDrM03gRjIAO4zR
-	 lsV4ALl/GfTzRIoLI8DbB2eke2BLyJZXXG9N/XypG9wXA/+AzHaIhGIbBMqeGn593C
-	 YKsJAtkSltbYgULkrCi9f5rGXvfhb6TruhAzyzGayLqn/oe4uc7NhmaTZ3metZKn9B
-	 ChVu310QMOuUA==
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-335624d1e26so162918487b3.4
-        for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 18:04:48 -0700 (PDT)
-X-Gm-Message-State: ACgBeo0jpwu56UqvQgwAbJkis3eZIzLeg9fx0W5xmsClMMV06+dNkkom
-	VrYHwJJ6hBwfGEZTsXMh+2I/zbTlHGsrcRj204o=
-X-Google-Smtp-Source: AA6agR7+9THx7w6NR2eGp9SXeAJVzTaUBuGXj6rYMP1Mivt8CtTu5kKiRiMhoIy3tpqheVPCJg35nk+7wp3SWDlhDQU=
-X-Received: by 2002:a81:63c3:0:b0:323:ce27:4e4d with SMTP id
- x186-20020a8163c3000000b00323ce274e4dmr10313901ywb.472.1660957487793; Fri, 19
- Aug 2022 18:04:47 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D044E7B
+	for <regressions@lists.linux.dev>; Sat, 20 Aug 2022 04:27:28 +0000 (UTC)
+Received: by mail-lf1-f49.google.com with SMTP id o2so8486012lfb.1
+        for <regressions@lists.linux.dev>; Fri, 19 Aug 2022 21:27:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc;
+        bh=wC9lL9Kc6Kp7xZsJEHL/dIwZgeCbFL0R65oEXkMpUCA=;
+        b=fXJr+IvqO5eCLb4L0UNuczZ9ytlfp93vBptFNfXYrkEM4z+aLvwjCDezTPjppA0MbE
+         0MeM/jpKhgBUvnnC9yaWkqmdX3s76mvgMTc1lDf5Mzmhjxp4KHnPbmUxKpBLKzah5FER
+         3jT0ZV/4hcOdQzDAGHvt8T4loNkP74uKIm59r44Ebltvd5D0RztGXXjo944NXqhu9bWZ
+         YS5cQ0q2YyuZ4KDbaJCuObYLp4jvsis8zduYJ7THpi75EPKa1pmxFJn0Ykt2YNSBEHvf
+         lkw5wVZSngpCxNVehDv4Iijum6BMafTE0qEQjh7/RcLcfb39UqAMGO3Y3tv/YhbiOzYe
+         g5bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc;
+        bh=wC9lL9Kc6Kp7xZsJEHL/dIwZgeCbFL0R65oEXkMpUCA=;
+        b=a070WMZNt31xzwWKmZjndisTYmV6Ukmj3gsysZdNjT2wboy9iF3VGnA3K69we7A4/G
+         cOnXho7omPAkQdb/RxeCtnljJ6cBM7HJ/tB+qljoGYyB6D2I2HnG17/Duu5wer6m3SLK
+         jb+tWCkqh86jvJ759p6o/EsIGVewqA6OgSWSMazyjeEfDfhEJOoEMIdGjBV1zm1NlRbh
+         D+nxkNTXrgbWE83rnNl1ZbhOu+C2NPkekiJ5900nquYDIK4AQrcgEyujVMA3u512kiaA
+         S1lmAf3+59+he+RhV4Il/uV5a+V/UKmIxLC7uZabxnYfpXOXQE5Ecq6AqxeSLUS7Klc5
+         QtbA==
+X-Gm-Message-State: ACgBeo2dgxK0IbVUlSQY7htFRJYrCttQaV6ek92yUXiAykwWx82vAQF1
+	1g6cm68EAylcPsPyLjOcx6Ak6PsyFvkerT9uvDM=
+X-Google-Smtp-Source: AA6agR7p+ven6ErQfFbkAvUx1F1VvXjx8u5VcCIIsX5st+SftUxZQa+jCMMAoIJmnvfUWU+Q1dRvLxf5/wJ06Ey0BoM=
+X-Received: by 2002:a05:6512:131f:b0:492:992f:1f3c with SMTP id
+ x31-20020a056512131f00b00492992f1f3cmr3188670lfu.565.1660969646675; Fri, 19
+ Aug 2022 21:27:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <000401d8a746$3eaca200$bc05e600$@whissi.de> <000001d8ad7e$c340ad70$49c20850$@whissi.de>
- <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info> <0FBCAB10-545E-45E2-A0C8-D7620817651D@digitalocean.com>
- <CAPhsuW5f9QD+gzJ9eBhn5irsHvrsvkWjSnA4MPaHsQjjLMypXg@mail.gmail.com>
- <43e678ca-3fc3-6c08-f035-2c31a34dd889@whissi.de> <701f3fc0-2f0c-a32c-0d41-b489a9a59b99@whissi.de>
- <0192a465-d75d-c09a-732a-eb2215bf3479@whissi.de>
-In-Reply-To: <0192a465-d75d-c09a-732a-eb2215bf3479@whissi.de>
-From: Song Liu <song@kernel.org>
-Date: Fri, 19 Aug 2022 18:04:36 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW6yLLcj3GtA+4mUFooQmfGo3cVTYn-xBEY2KuP1wwmQNA@mail.gmail.com>
-Message-ID: <CAPhsuW6yLLcj3GtA+4mUFooQmfGo3cVTYn-xBEY2KuP1wwmQNA@mail.gmail.com>
-Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
-To: Thomas Deutschmann <whissi@whissi.de>
-Cc: Vishal Verma <vverma@digitalocean.com>, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Jens Axboe <axboe@kernel.dk>
+From: =?UTF-8?B?6I+c5Y+2?= <ye.jingchen@gmail.com>
+Date: Sat, 20 Aug 2022 12:27:14 +0800
+Message-ID: <CAA6RncSwQL5A1Ox3a088Kpp4=-bHPzAGcJa_fEFkiE801tAJjw@mail.gmail.com>
+Subject: No Audio from AMDGPU HDMI on 5.19.2
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, amd-gfx@lists.freedesktop.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Aug 18, 2022 at 7:46 PM Thomas Deutschmann <whissi@whissi.de> wrote:
->
-> On 2022-08-17 20:29, Thomas Deutschmann wrote:
-> > I will do another round with 2b7196a219bf (good) <-> 5.18 (bad).
->
-> ...and this one also ended up in
->
-> > first bad commit: [fa55b7dcdc43c1aa1ba12bca9d2dd4318c2a0dbf] Linux 5.16-rc1
->
-> Now I built vanilla 5.18.18 and fsfreeze will hang after FIFREEZE ioctl
-> system call after running my reproducer which generated I/O load.
->
-> => So looks like bug is still present, right?
->
-> When I now just edit Makefile and set KV <5.16-rc1, i.e.
->
-> > diff --git a/Makefile b/Makefile
-> > index 23162e2bdf14..0f344944d828 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -1,7 +1,7 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  VERSION = 5
-> > -PATCHLEVEL = 18
-> > -SUBLEVEL = 18
-> > +PATCHLEVEL = 15
-> > +SUBLEVEL = 0
-> >  EXTRAVERSION =
-> >  NAME = Superb Owl
-> >
->
-> then I can no longer reproduce the problem.
->
-> Of course,
->
-> > diff --git a/Makefile b/Makefile
-> > index 23162e2bdf14..0f344944d828 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -1,7 +1,7 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  VERSION = 5
-> > -PATCHLEVEL = 18
-> > -SUBLEVEL = 18
-> > +PATCHLEVEL = 15
-> > +SUBLEVEL = 99
-> >  EXTRAVERSION =
-> >  NAME = Superb Owl
-> >
->
-> will freeze again.
->
-> For me it looks like kernel is taking a different code path depending on
-> KV but I don't know how to proceed. Any idea how to continue debugging this?
+Hello,
 
-Hmm.. does the user space use different logic based on the kernel version?
+I experienced this issue on Arch Linux 5.19.2-arch1-1 kernel on an HP
+laptop with AMD Ryzen 6850HS CPU (detailed spec below), that the audio
+is completely silent on the HDMI connected monitor. KDE audio settings
+says everything works normally, HDMI audio shows up and can be
+selected as the default output, just no sound from it.
 
-I still cannot reproduce the issue. Have you tried to reproduce the
-issue without
-mysqld? Something with fio will be great.
+It worked fine on Arch kernel v5.19.1-arch2. Laptop speakers always
+work, and the monitor works when connected to another Windows laptop
+over HDMI, so the monitor isn't the culprit I assume.
 
-Thanks,
-Song
+Kernel log from the journal didn't seem to contain something relevant,
+but it may be me not knowing what to look for.
+
+This is discovered on Arch Linux kernel 5.19.2-arch1-1, but also
+reproducible on vanilla v5.19.2 tag.
+
+Bisecting between tag v5.19.1 and v5.19.2 in the stable tree gives:
+308d0d5d98c294b1185d6d7da60b268e0fe30193 is the first bad commit
+commit 308d0d5d98c294b1185d6d7da60b268e0fe30193
+Author: Leung, Martin <Martin.Leung@amd.com>
+Date:   Fri May 13 17:40:42 2022 -0400
+
+   drm/amdgpu/display: Prepare for new interfaces
+
+   [ Upstream commit a820190204aef0739aa3a067d00273d117f9367c ]
+
+Anything else I can do to investigate?
+
+My hardware spec:
+Laptop: HP EliteBook 845 14 inch G9 Notebook PC
+CPU: AMD Ryzen 7 PRO 6850HS with Radeon Graphics
+GPU: VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI]
+Rembrandt [Radeon 680M]
+
+% lspci | grep -i audio
+63:00.1 Audio device: Advanced Micro Devices, Inc. [AMD/ATI] Rembrandt
+Radeon High Definition Audio Controller
+63:00.5 Multimedia controller: Advanced Micro Devices, Inc. [AMD]
+ACP/ACP3X/ACP6x Audio Coprocessor (rev 60)
+63:00.6 Audio device: Advanced Micro Devices, Inc. [AMD] Family
+17h/19h HD Audio Controller
+
+Software:
+plasma-desktop 5.25.4-1
+plasma-pa 5.25.4-1
+pipewire 1:0.3.56-1
+pipewire-pulse 1:0.3.56-1
+wireplumber 0.4.11-4
+alsa-card-profiles 1:0.3.56-1
+linux-firmware 20220708.be7798e-1
+sof-firmware 2.2-1
