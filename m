@@ -1,158 +1,88 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E97D7B
-	for <regressions@lists.linux.dev>; Mon, 22 Aug 2022 14:00:23 +0000 (UTC)
-Received: by mail-ed1-f43.google.com with SMTP id 2so6029501edx.2
-        for <regressions@lists.linux.dev>; Mon, 22 Aug 2022 07:00:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc;
-        bh=1xFTGxtPnY5rz14UsZfYBsBqowiRgdh5xBnWEgT36ds=;
-        b=v59zmBDYtRB+lVZpv+1Ag5zbMri2KBagr6ZKeFVLQy75tNiPJ1rM0ZhbeQHALFySWH
-         IFO9pDQMz/bE10arladkmQA5wsuS5Nbf1fbmbYX3IpQNtfmhkGmX1pWOpfWMzRNZpU6X
-         Jfix+MLXkkmL8r0nTh4WlJm8Ipe4vGqx0AiOlJi3fUBSVNJ7exJzk6FZ6BCa2EPk8hgx
-         +XDVJeYCN8TGn7XjsfrMLjemNKBEjBxil1chEIk6j2SYxVPQ+YOORLgF7PqrPZ8prHmV
-         XxucP/m3bqqlGNLwvSordUuZQVxhOdyIsbBKBcgnQuVP+KJhQ8yos6MyBM94EvAhcOBm
-         tICw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc;
-        bh=1xFTGxtPnY5rz14UsZfYBsBqowiRgdh5xBnWEgT36ds=;
-        b=8EDKS6Fl2sv5thR2ApC3vynugZC3C4C+b5u+c+17zOpBElNWEtPUCcirta07rHTszX
-         GzJLLvfwDPrXgVWpIgjlTzC6MLGmgslE84jvVzva4qn+CcCQ10fMhc8kBosI+MPUGjRP
-         aL704TWD8pa0BZdw8KxEg1o1RTrHJ5jN8sUJQQ9/t7tIz86bOJvM7RuQ2cj+/i8RTHnp
-         YtQOINPQYM44f0YIBYon762woX4DVvWUAhYBqqTEo4AYSyC7UoOjeS1Y74xiXXOvi3m8
-         cN9JA/vMBJr8FQBV69NAX64/34/AQD4Ph8coSO6qL1QBHFs3PUjDu6HdWagd6myIPhm8
-         dHiw==
-X-Gm-Message-State: ACgBeo3RPYrQZvrOinjwVf2ocxa1Ii17GF6XkI8i/SvR+0vwvFem1ll+
-	lfyBvhP8s1qYgQZ4fR5YZwD5hjM2DmIJgzhho8VFwQ==
-X-Google-Smtp-Source: AA6agR5cRiKE8XqOz+NcGgEGpahFtal3270yjgEmkMdeEf7MFInCL5IdrjTe14coVeo/FF3SC8RjmC/D0lBogqHTLCM=
-X-Received: by 2002:a05:6402:353:b0:446:2d2c:3854 with SMTP id
- r19-20020a056402035300b004462d2c3854mr13843348edw.193.1661176822067; Mon, 22
- Aug 2022 07:00:22 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB387B
+	for <regressions@lists.linux.dev>; Mon, 22 Aug 2022 14:13:03 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5E84B1FE46;
+	Mon, 22 Aug 2022 14:13:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1661177580; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=OZTNho0piDMRt5grNpBNNgNC36KxBYIItc3vdKu8/Wc=;
+	b=HxxBimv+8OH/UnifgYRTQIbi5UGiDsnh2rHhQn24Y/sVuMYaPWbMBG6n5Xv70h6R8Yo8hA
+	o4n/yIwgve7ELln+h91lEeZcRSRJTVsycB6pJ2ndHR971lGqODn/vZR7lzBBAmGyjf3zWW
+	/limqzisFnFjNygj7wHdE2iHcYywthg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1661177580;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type;
+	bh=OZTNho0piDMRt5grNpBNNgNC36KxBYIItc3vdKu8/Wc=;
+	b=yQFGn0S0SQblXcYnDLJCUALLYxWTo+wbhN968/o6PPLlpv/gmGfVgKV5/gO1iWV3StjRlB
+	8bV2bpUCto+4ZACw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2360F13523;
+	Mon, 22 Aug 2022 14:13:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id VaPQB+yOA2P6dgAAMHmgww
+	(envelope-from <tiwai@suse.de>); Mon, 22 Aug 2022 14:13:00 +0000
+Date: Mon, 22 Aug 2022 16:12:59 +0200
+Message-ID: <874jy4cqok.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <jroedel@suse.de>,
+    Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+    Bjorn Helgaas <bhelgaas@google.com>,
+    Jason Gunthorpe <jgg@nvidia.com>,
+    Robin Murphy <robin.murphy@arm.com>,
+    Eric Auger <eric.auger@redhat.com>,
+    regressions@lists.linux.dev,
+    linux-kernel@vger.kernel.org
+Subject: [REGRESSION 5.19.x] AMD HD-audio devices missing on 5.19
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 22 Aug 2022 19:30:10 +0530
-Message-ID: <CA+G9fYuecPu-n-ujLsv7vL8RjEJA-6rOZjc363+p1oo6v-FKKQ@mail.gmail.com>
-Subject: Unable to handle kernel NULL pointer dereference at virtual address 0000000000000008
-To: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev
-Cc: Russell King <linux@armlinux.org.uk>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Wang Kefeng <wangkefeng.wang@huawei.com>, 
-	Rob Herring <robh@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	Saravana Kannan <saravanak@google.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 
-The arm64 Qualcomm db410c device boot failed intermittently on
-Linux next-20220822 and Linux mainline 6.0.0-rc1.
+Hi,
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+we've received regression reports about the missing HD-audio devices
+on AMD platforms, and this turned out to be caused by the commit
+512881eacfa72c2136b27b9934b7b27504a9efc2
+    bus: platform,amba,fsl-mc,PCI: Add device DMA ownership management
 
-[    0.000000] Linux version 6.0.0-rc1 (tuxmake@tuxmake)
-(aarch64-linux-gnu-gcc (Debian 11.3.0-3) 11.3.0, GNU ld (GNU Binutils
-for Debian) 2.38.90.20220713) #1 SMP PREEMPT @1661110347
-[    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
-<trim>
-[    3.609382] Loading compiled-in X.509 certificates
-[    3.702306] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000008
-[    3.702380] Mem abort info:
-[    3.710225]   ESR = 0x0000000096000004
-[    3.711454] s3: Bringing 0uV into 375000-375000uV
-[    3.712713]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    3.717378] s4: Bringing 0uV into 1800000-1800000uV
-[    3.721289]   SET = 0, FnV = 0
-[    3.727634] l1: Bringing 0uV into 375000-375000uV
-[    3.731266]   EA = 0, S1PTW = 0
-[    3.731278]   FSC = 0x04: level 0 translation fault
-[    3.735046] l2: Bringing 0uV into 1200000-1200000uV
-[    3.739166] Data abort info:
-[    3.742737] l4: Bringing 0uV into 1750000-1750000uV
-[    3.746980]   ISV = 0, ISS = 0x00000004
-[    3.746991]   CM = 0, WnR = 0
-[    3.752504] l5: Bringing 0uV into 1750000-1750000uV
-[    3.754966] [0000000000000008] user address but active_mm is swapper
-[    3.754981] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-[    3.754991] Modules linked in:
-[    3.755002] CPU: 1 PID: 10 Comm: kworker/u8:1 Not tainted 6.0.0-rc1 #1
-[    3.760279] l6: Bringing 0uV into 1800000-1800000uV
-[    3.763370] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[    3.763378] Workqueue: events_unbound deferred_probe_work_func
-[    3.767152] l7: Bringing 0uV into 1750000-1750000uV
-[    3.771188] pstate: 40000005 (nZcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    3.771199] pc : pl011_probe+0x30/0x154
-[    3.778480] l8: Bringing 0uV into 1750000-1750000uV
-[    3.783073] lr : amba_probe+0x11c/0x1b0
-[    3.783086] sp : ffff800008073b50
-[    3.783090] x29: ffff800008073b50 x28: 0000000000000000
-[    3.787102] l9: Bringing 0uV into 1750000-1750000uV
-[    3.792712]  x27: 0000000000000000
-[    3.792720] x26: ffff80000af7a368 x25: ffff00000341f00d x24: ffff00003fcdce60
-[    3.798382] l10: Bringing 0uV into 1750000-1750000uV
-[    3.804432] x23: ffff80000adf0fb8 x22: 0000000000000000 x21: ffff000003c02800
-[    3.804449] x20: ffff000003c029b0 x19: 0000000000000000
-[    3.811003] l11: Bringing 0uV into 1750000-1750000uV
-[    3.814850]  x18: ffffffffffffffff
-[    3.814858] x17: 0000000000000000 x16: ffff00003fc4d040 x15: ffff000003c6fb8a
-[    3.814874] x14: ffffffffffffffff
-[    3.822730] l12: Bringing 0uV into 1750000-1750000uV
-[    3.825611]  x13: 00000000000005cf x12: 071c71c71c71c71c
-[    3.825623] x11: 00000000000005cf x10: 0000000000000c00 x9 : ffff8000088ead60
-[    3.831391] l13: Bringing 0uV into 1750000-1750000uV
-[    3.834290]
-[    3.834293] x8 : ffff00000367ad60 x7 : ffff00003fc69ccc x6 : 0000000000000001
-[    3.834310] x5 : ffff80000aa8f000
-[    3.838735] l14: Bringing 0uV into 1750000-1750000uV
-[    3.842798]  x4 : ffff80000aa8f2e8 x3 : 0000000000000000
-[    3.842810] x2 : ffff80000b035380 x1 : 0000000000000000 x0 : ffff000003c02800
-[    3.848640] l15: Bringing 0uV into 1750000-1750000uV
-[    3.851134]
-[    3.851138] Call trace:
-[    3.859837] l16: Bringing 0uV into 1750000-1750000uV
-[    3.863375]  pl011_probe+0x30/0x154
-[    3.863389]  amba_probe+0x11c/0x1b0
-[    3.863400]  really_probe+0xc8/0x3e0
-[    3.871415] l17: Bringing 0uV into 3300000-3300000uV
-[    3.875438]  __driver_probe_device+0x84/0x190
-[    3.875450]  driver_probe_device+0x44/0x100
-[    3.881633] l18: Bringing 0uV into 1750000-1750000uV
-[    3.883860]  __device_attach_driver+0xa4/0x150
-[    3.989109]  bus_for_each_drv+0x84/0xe0
-[    3.992982]  __device_attach+0xb0/0x1f0
-[    3.996714]  device_initial_probe+0x20/0x30
-[    4.000533]  bus_probe_device+0xa4/0xb0
-[    4.004699]  deferred_probe_work_func+0xa8/0xfc
-[    4.008521]  process_one_work+0x1dc/0x450
-[    4.013034]  worker_thread+0x2d0/0x450
-[    4.017200]  kthread+0x108/0x110
-[    4.020844]  ret_from_fork+0x10/0x20
-[    4.024237] Code: 910e0042 d2800013 a9025bf5 aa0003f5 (f9400436)
-[    4.027801] ---[ end trace 0000000000000000 ]---
-[  137.808813] random: crng init done
+The details are found in openSUSE bugzilla:
+  https://bugzilla.suse.com/show_bug.cgi?id=1202492
 
-ref:
-https://lkft.validation.linaro.org/scheduler/job/5419258#L2278
+The problem seems to be that HD-audio (both onboard analog and HDMI)
+PCI devices are assigned to the same IOMMU group as AMD graphics PCI
+device, and once after the AMDGPU is initialized beforehand, those
+audio devices can't be probed since iommu_device_use_default_domain()
+returns -EBUSY.
 
-metadata:
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
-  git_sha: e3f259d33c0ebae1b6e4922c7cdb50e864c81928
-  git_describe: v6.0-rc1-409-ge3f259d33c0e
-  kernel_version: 6.0.0-rc1
-  kernel-config: https://builds.tuxbuild.com/2DgA4YUQ8t1rgsLXKtyXRLM7wdg/config
-  vmlinux: https://builds.tuxbuild.com/2DgA4YUQ8t1rgsLXKtyXRLM7wdg/vmlinux.xz
-  System.map: https://builds.tuxbuild.com/2DgA4YUQ8t1rgsLXKtyXRLM7wdg/System.map
-  build-url: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline/-/pipelines/618915641
-  artifact-location: https://builds.tuxbuild.com/2DgA4YUQ8t1rgsLXKtyXRLM7wdg
-  toolchain: gcc-11
+I'm not sure whether it's specific to PCI bus due to the assignment
+logic of those IOMMU groups, or it's about the handling of the active
+domain assignment.  In anyway, disabling IOMMU works around the
+problem, and passing driver_managed_dma flag to the HD-audio driver
+was also confirmed to work around it, too.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+The problem persists with 6.0-rc1 kernel.
+
+If you have / can give any fix patch or debug patch, let me know; I'll
+build test kernels and ask the reporters.
+
+
+thanks,
+
+Takashi
