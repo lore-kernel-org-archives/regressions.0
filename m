@@ -1,92 +1,67 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+Received: from sipsolutions.net (s3.sipsolutions.net [144.76.43.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8117C7EC
-	for <regressions@lists.linux.dev>; Mon, 22 Aug 2022 09:58:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1661161915;
-	bh=AHjD0DvM8QxmU1Hawx6cTQsq43ntBX/baB6RCwWB3Ik=;
-	h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=ecI57KNqSePWYhwtVrWhM7CrHxqqvkFIa7eT2Ouoe3o1BcVXdk/hmXmtH36e7VAQe
-	 DQPjynBly6pN/zv/khvGwuVlVidi2/YdhzrkWZ7N1PtgkGY3N9MBO2smwgFQQEcepZ
-	 iL5o5c1DdTS4VXTK2l74sJ8e5j+S6tgRRSkbHa74=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from homer.fritz.box ([185.146.50.199]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRmfo-1os5cv2kW2-00T9UZ; Mon, 22
- Aug 2022 11:51:55 +0200
-Message-ID: <dbde377fbefdf77323e00c6aeeac251273a8a36c.camel@gmx.de>
-Subject: Re: regression bisect --> 88f1669019bd " scsi: sd: Rework
- asynchronous resume support"
-From: Mike Galbraith <efault@gmx.de>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, lkml
-	 <linux-kernel@vger.kernel.org>
-Cc: Bart Van Assche <bvanassche@acm.org>, Ming Lei <ming.lei@redhat.com>, 
-	Hannes Reinecke
-	 <hare@suse.de>, John Garry <john.garry@huawei.com>, ericspero@icloud.com, 
-	jason600.groome@gmail.com, "regressions@lists.linux.dev"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BACC7FA
+	for <regressions@lists.linux.dev>; Mon, 22 Aug 2022 10:37:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=R520qLhvi6eR64QPobcb0tF+bZFFRligcxZ5sitGwwQ=;
+	t=1661164664; x=1662374264; b=jLvup+8fx5i+T1flc4T/mrgcrAQ6ictLCYE3+GMZYeT5Qqi
+	0REnBqI7DYCi3DK/YnlxfssQttL/22i0E45nzer9KWVuyRi/s2bNw3GRB3GL69rITKU9muI/1p8lV
+	r6JTG5sNLij2BKGqdOj3XbEKhvvJe4+sGFX0GJ8uBp8m81cM+4Fa4mOS0B8nQwsElDsuCp2nj7Vgl
+	fnwrVFi3yNB71gATQSFJHgfbZhFs7g8rw2lv2f06KfrqA6ZjLV51sVSHEZcStnpjS7ikKvuoYJMaD
+	DOLajBpe50pd2LVLvm1ILJQBdUaEgyABycdnvUFoB9C2wWcgG03DnbR6Eist5Dlg==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.96)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1oQ4Z4-00EU40-0e;
+	Mon, 22 Aug 2022 12:21:50 +0200
+Message-ID: <644e506ab60a58b95bdbbb5d9c3e425622931f8f.camel@sipsolutions.net>
+Subject: Re: New 6.1 net/mac80211/rx.c warning with iwlwifi / Ultimate-N
+ 6300 wifi
+From: Johannes Berg <johannes@sipsolutions.net>
+To: =?ISO-8859-1?Q?Lu=EDs?= Henriques <lhenriques@suse.de>, Hans de Goede
+	 <hdegoede@redhat.com>
+Cc: Gregory Greenman <gregory.greenman@intel.com>, linux-wireless
+	 <linux-wireless@vger.kernel.org>, "regressions@lists.linux.dev"
 	 <regressions@lists.linux.dev>
-Date: Mon, 22 Aug 2022 11:51:54 +0200
-In-Reply-To: <b64ae172-505a-fbbe-688c-d2d7a713f9a4@leemhuis.info>
-References: <ca8052efe4d1357bc6ece0a45e8429de37e3ae03.camel@gmx.de>
-	 <b64ae172-505a-fbbe-688c-d2d7a713f9a4@leemhuis.info>
+Date: Mon, 22 Aug 2022 12:21:49 +0200
+In-Reply-To: <YwNNXKEFcX/GK2Sv@suse.de>
+References: <498d714c-76be-9d04-26db-a1206878de5e@redhat.com>
+	 <YwNNXKEFcX/GK2Sv@suse.de>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:NxS+ZUUynD02baWKpjTE6IrxUBCC33iDY4jZzY/AWtkH0b9i3Eu
- XK0CbcuKzLH5lAIwRl01V8sHAahGbA3W/VAMm10hki+39yOWT35awi3kQs60W1qcsaQ6QqT
- kTQy/KdPehh7g4wfiISi/ruSrYOLu0sqLNMNMLOCdAFQJJIu+01gfK9e+kV2Iog2FH/Fx6o
- Y5tYwHnjpVKFO7dRDiNcQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:nrufr0dxUEw=:yFKQ9DXfL/H2EjWFH9ZQFb
- 9Op9jKcDTzGdKpQGKEkrbY5KY3COXUcOTK+ONSRtM44WyeFvPoZkPlPkUzW00Lo35RoEMU5EX
- 0V9xhfWMLwFEDifm+o9yV0bfzsQQfLOr5/wCzj7YnmvNXH1GukubiqobmkLFqOnPDaflZRNZM
- r7tFb0Yl5dC3NaS1fnFVlNfiqI1NSQ0/5c+59YvxJdwd56clikBOJuf1BPX1Ub8HrJ2cNwIa2
- gz8fURCys3TzgfYi+IJqNPirTFp0rF/GRQpKvX5YdM+8QJwT2rtqgWvtl7ipQgzfusXejvPnk
- oj0+I9ZqYwmlyHEhvHQvSRdlO611ms/lUNSB5VsepV8zO1GFfzj0VE2cNnhwuKgpHEZmXpGfc
- Ekkcjbi3/wfPRdK61B4VG1XuAIh5Hm1XdhPP65ryLN3geJJ+qx9j9ZaoHvXEmBKZDqs84RVST
- f8P53y2iPJWklB+Cgs1p07V17r/+rq5lh0Hy9FxzIGFkkcZta1zIpxwdbTbV3Hv86LtAxSfOF
- JQlfXfJv5MZTtyHExLNLjXpsh1VWGfjNm/tgZYiyKeYx0GffEjNWePPZNFajrEcV+JgsMwGbP
- U0apGaGR38FTBRgK+j7ZGeZMRYPaxS078iQidyGbkMk7EtWtUX8FTk8tcNq7IPCbBcM7GMHd+
- srvWVrh5rQZfqPvyTHgwusSVwSQFw0FVKCTiFDJUp09/f/08MaanDfLQKfpZ/EoqLKhYBWcxj
- UAPqY//ARsXLjuPjC41aSNgQyV0q7WeXOG7aBYSR89HJG5AgLEhwz4JmNTKR7k8POyi5DjV7W
- NMjkuFkc1822kZPbiCEWgXY8zc4DSttue7WMsfuajJS9CalKatYT1C6hi55zI2oroGvi7eXoi
- TZirWhbUPB+ywdah0Ee0rl2XrIT/PrjVAXHLTnwr+PxjeoDjL7HWtXnQXQf7/PKckSlA25qRM
- 10zEINYUEkw+6So+owNztcgkf12MhAZeufDe5Jao2JMTqIBr3CzcLp/0xI5hWPdALD7BcR3yK
- 3ayBtXe2KjuRVH4TfT1YEFtNEqm80smAx7PrZpu5rUmKcatcmf4IZMvCmFqAAwmUTk23hKtxt
- WA43YCJBoSKLEfayXjdIzzgLntF33vd56GKMRT3lYQhzJRovDtVgR7hAg==
+X-malware-bazaar: not-scanned
 
-On Mon, 2022-08-22 at 11:11 +0200, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker.
->
-> On 21.08.22 09:34, Mike Galbraith wrote:
-> > Greetings,
-> >
-> > My box claims this patch is a dud for it, symptom being hang during
-> > suspend _after_ a successful suspend/resume cycle. Revert at bisect
-> > starting point and now HEAD (15b3f48a4339) confirms box's assertion.
-> > [...]
-> > # first bad commit: [88f1669019bd62b3009a3cebf772fbaaa21b9f38] scsi: s=
-d: Rework asynchronous resume support
->
-> FYI, in case you missed it: there are multiple reports that this patch
-> is causing problems. A revert and a partial reverts are discussed:
->
-> https://lore.kernel.org/all/20220816172638.538734-1-bvanassche@acm.org/
-> https://lore.kernel.org/regressions/dd6844e7-f338-a4e9-2dad-0960e25b2ca1=
-@redhat.com/
-> https://lore.kernel.org/all/98592410-dd31-9081-86be-fda67d3b06d2@suse.cz=
-/
->
-> See also:
-> https://lore.kernel.org/all/ecf878dc-905b-f714-4c44-6c90e81f8391@acm.org=
-/
+On Mon, 2022-08-22 at 10:33 +0100, Lu=C3=ADs Henriques wrote:
+> On Sat, Aug 20, 2022 at 03:12:33PM +0200, Hans de Goede wrote:
+> > Hi All,
+> >=20
+> > While testing 6.0-rc1 on a Dell Latitude E6430 with:
+> >=20
+> > 03:00.0 Network controller: Intel Corporation Centrino Ultimate-N 6300 =
+(rev 35)
+> >=20
+>=20
+> I've just seem a similar splat on -rc2, with a different card:
+>=20
+> 02:00.0 Network controller: Intel Corporation Wireless 8260 (rev 3a)
+>=20
 
-Yup, missed all that. Hohum, tosses bisection on the 'dead bugs' pile.
+Yeah this is an issue with the new multi-link work.
 
-	-Mike
+We've seen it too, though the rx->link _should_ be set to deflink here
+in the cases of non-MLO connections.
+
+We're investigating.
+
+johannes
