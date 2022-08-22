@@ -1,163 +1,260 @@
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924544A3B
-	for <regressions@lists.linux.dev>; Mon, 22 Aug 2022 20:39:27 +0000 (UTC)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-32a09b909f6so327680377b3.0
-        for <regressions@lists.linux.dev>; Mon, 22 Aug 2022 13:39:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=azYpYNhsQdFZ4hTXixgIKWt06patLToUHV+Y876Ymo0=;
-        b=EvsqbE/Il9kLi6nxChedGykxC38feEtm+cXu2oDwyfRd19JEPvBdhsxa1fKY75U3Td
-         M2NWeIk45MM39nIpoRwg+RTGGhMsb6znDaWf2ukwE61WpsS22xac85KnlmIpkYVG76di
-         4NoFxOs+7/wb86ni2UVbyfg/wqnL5eIALu59olOrOFefixudrAgwaFMVJZ1wbg3xUQdr
-         IEKFg7gm0RnUUHE8TAy3A2vrbpURpv/25BL84fIXy4CX4Kt7scZoB6yENtNrijGyg0dG
-         Afc9Ydgm132+7M3paR7DsI40oMRizvVrXg8+zgzVONiWeqkMqt8wPjb8JYJsbNNsNxsC
-         4PKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=azYpYNhsQdFZ4hTXixgIKWt06patLToUHV+Y876Ymo0=;
-        b=Mtri8EWtknXe/jU+n8EnLd9hAFIrWktCpDiAci4h1Ne9/ZNDMQdojvYjyfhfJn1+9X
-         YsRU2qg8PrPQmw5cdpwX/+AW7I3RD8+YHZm92uOhgmxzVnnAKsl00TZwdDNpoHQnqrsO
-         xd751I3mzzxn2Jiro2QS3C+SzAutDjHmuFrWJ8SrTaQZhrb00ligaT/4FeRpmpvYSsyf
-         GGOCdGbwWdvKhB4XQgQ1vDpBa/0xaxKKJVqKyxLWC8HWiPUyFONJsZwwWpvXlycG5wGr
-         v8TTUhuAhH28FZsF8K4ZLg+cvMQ0SWPuEBdWxG0LFxkTvQnv44df21p9ptS+Nc5i6hQO
-         eE2A==
-X-Gm-Message-State: ACgBeo3NGijY0kCFmgJ+6I26dvrTym1V+ZEAaTPe+EPN1v8HCRWvrWbC
-	HasiXZfPnEDkpZ0TCn2YC1CfgzZ2NY8L2yg0Td3H5w==
-X-Google-Smtp-Source: AA6agR4E7Ell9PoZYflisbEDkzwB19P3GP2Kt4RqgwkK7wTEAhZpP/xjVKDvjd6wumEt/3csxI3OKVh3XyTccx/RmPg=
-X-Received: by 2002:a25:ef0f:0:b0:695:b3d1:15c1 with SMTP id
- g15-20020a25ef0f000000b00695b3d115c1mr6357909ybd.80.1661200766338; Mon, 22
- Aug 2022 13:39:26 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7414A3B
+	for <regressions@lists.linux.dev>; Mon, 22 Aug 2022 20:55:19 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id BB1345CB1C;
+	Mon, 22 Aug 2022 20:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1661201717; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LJdRC5SMFOUj1Y7xZ0bXRO8O+t/Noh7uanF3FJkrpS4=;
+	b=nh/Sl0F3TAJ8SeM8B8AckzNTOo7q9Qydf7I0XwQiJXGnY6oEJJ+K+1ufXP1Ue9ZJFQdddF
+	FOaIR7hoomdnMpRMoCfFvF27l32dpxkD5PSlAMgFPPqZx/5WpcW0SWGY3xT5dQR0JPlGKW
+	EWTMWvq1Ie9eI3pJHpLskefLxZ81UxA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1661201717;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LJdRC5SMFOUj1Y7xZ0bXRO8O+t/Noh7uanF3FJkrpS4=;
+	b=zWfrVpAQqwpAmwhy7N7/5Wsh+WYkzN0OlPHEcJ2neU0EtKjNOHOA2dkHmkKSU7KJQ7mcTz
+	4jXNwjwVy765hwBA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7AE1F13523;
+	Mon, 22 Aug 2022 20:55:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id jVbyHDXtA2PtBgAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Mon, 22 Aug 2022 20:55:17 +0000
+Message-ID: <f7aad839-2116-ab85-8ad5-e8d2f7b10c43@suse.cz>
+Date: Mon, 22 Aug 2022 22:53:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYuecPu-n-ujLsv7vL8RjEJA-6rOZjc363+p1oo6v-FKKQ@mail.gmail.com>
-In-Reply-To: <CA+G9fYuecPu-n-ujLsv7vL8RjEJA-6rOZjc363+p1oo6v-FKKQ@mail.gmail.com>
-From: Saravana Kannan <saravanak@google.com>
-Date: Mon, 22 Aug 2022 13:38:50 -0700
-Message-ID: <CAGETcx_EpQx-QRtCbbcEDpLHSnNeYysNEnmTOQL4+vb4zzvk4Q@mail.gmail.com>
-Subject: Re: Unable to handle kernel NULL pointer dereference at virtual
- address 0000000000000008
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, Russell King <linux@armlinux.org.uk>, 
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Wang Kefeng <wangkefeng.wang@huawei.com>, 
-	Rob Herring <robh@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, Lu Baolu <baolu.lu@linux.intel.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] scsi: sd: Revert "Rework asynchronous resume support"
+Content-Language: en-US
+From: Vlastimil Babka <vbabka@suse.cz>
+To: Bart Van Assche <bvanassche@acm.org>,
+ "Martin K . Petersen" <martin.petersen@oracle.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-scsi@vger.kernel.org,
+ Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+ Hannes Reinecke <hare@suse.de>, Geert Uytterhoeven <geert@linux-m68k.org>,
+ gzhqyz@gmail.com, "James E.J. Bottomley" <jejb@linux.ibm.com>,
+ regressions@lists.linux.dev, Thorsten Leemhuis <regressions@leemhuis.info>
+References: <20220816172638.538734-1-bvanassche@acm.org>
+ <06afc774-063d-1aba-f75c-9a4c80e2f836@suse.cz>
+In-Reply-To: <06afc774-063d-1aba-f75c-9a4c80e2f836@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 22, 2022 at 7:00 AM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
->
-> The arm64 Qualcomm db410c device boot failed intermittently on
-> Linux next-20220822 and Linux mainline 6.0.0-rc1.
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> [    0.000000] Linux version 6.0.0-rc1 (tuxmake@tuxmake)
-> (aarch64-linux-gnu-gcc (Debian 11.3.0-3) 11.3.0, GNU ld (GNU Binutils
-> for Debian) 2.38.90.20220713) #1 SMP PREEMPT @1661110347
-> [    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
-> <trim>
-> [    3.609382] Loading compiled-in X.509 certificates
-> [    3.702306] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000008
-> [    3.702380] Mem abort info:
-> [    3.710225]   ESR = 0x0000000096000004
-> [    3.711454] s3: Bringing 0uV into 375000-375000uV
-> [    3.712713]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [    3.717378] s4: Bringing 0uV into 1800000-1800000uV
-> [    3.721289]   SET = 0, FnV = 0
-> [    3.727634] l1: Bringing 0uV into 375000-375000uV
-> [    3.731266]   EA = 0, S1PTW = 0
-> [    3.731278]   FSC = 0x04: level 0 translation fault
-> [    3.735046] l2: Bringing 0uV into 1200000-1200000uV
-> [    3.739166] Data abort info:
-> [    3.742737] l4: Bringing 0uV into 1750000-1750000uV
-> [    3.746980]   ISV = 0, ISS = 0x00000004
-> [    3.746991]   CM = 0, WnR = 0
-> [    3.752504] l5: Bringing 0uV into 1750000-1750000uV
-> [    3.754966] [0000000000000008] user address but active_mm is swapper
-> [    3.754981] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-> [    3.754991] Modules linked in:
-> [    3.755002] CPU: 1 PID: 10 Comm: kworker/u8:1 Not tainted 6.0.0-rc1 #1
-> [    3.760279] l6: Bringing 0uV into 1800000-1800000uV
-> [    3.763370] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> [    3.763378] Workqueue: events_unbound deferred_probe_work_func
-> [    3.767152] l7: Bringing 0uV into 1750000-1750000uV
-> [    3.771188] pstate: 40000005 (nZcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [    3.771199] pc : pl011_probe+0x30/0x154
-> [    3.778480] l8: Bringing 0uV into 1750000-1750000uV
-> [    3.783073] lr : amba_probe+0x11c/0x1b0
-> [    3.783086] sp : ffff800008073b50
-> [    3.783090] x29: ffff800008073b50 x28: 0000000000000000
-> [    3.787102] l9: Bringing 0uV into 1750000-1750000uV
-> [    3.792712]  x27: 0000000000000000
-> [    3.792720] x26: ffff80000af7a368 x25: ffff00000341f00d x24: ffff00003fcdce60
-> [    3.798382] l10: Bringing 0uV into 1750000-1750000uV
-> [    3.804432] x23: ffff80000adf0fb8 x22: 0000000000000000 x21: ffff000003c02800
-> [    3.804449] x20: ffff000003c029b0 x19: 0000000000000000
-> [    3.811003] l11: Bringing 0uV into 1750000-1750000uV
-> [    3.814850]  x18: ffffffffffffffff
-> [    3.814858] x17: 0000000000000000 x16: ffff00003fc4d040 x15: ffff000003c6fb8a
-> [    3.814874] x14: ffffffffffffffff
-> [    3.822730] l12: Bringing 0uV into 1750000-1750000uV
-> [    3.825611]  x13: 00000000000005cf x12: 071c71c71c71c71c
-> [    3.825623] x11: 00000000000005cf x10: 0000000000000c00 x9 : ffff8000088ead60
-> [    3.831391] l13: Bringing 0uV into 1750000-1750000uV
-> [    3.834290]
-> [    3.834293] x8 : ffff00000367ad60 x7 : ffff00003fc69ccc x6 : 0000000000000001
-> [    3.834310] x5 : ffff80000aa8f000
-> [    3.838735] l14: Bringing 0uV into 1750000-1750000uV
-> [    3.842798]  x4 : ffff80000aa8f2e8 x3 : 0000000000000000
-> [    3.842810] x2 : ffff80000b035380 x1 : 0000000000000000 x0 : ffff000003c02800
-> [    3.848640] l15: Bringing 0uV into 1750000-1750000uV
-> [    3.851134]
-> [    3.851138] Call trace:
-> [    3.859837] l16: Bringing 0uV into 1750000-1750000uV
-> [    3.863375]  pl011_probe+0x30/0x154
-> [    3.863389]  amba_probe+0x11c/0x1b0
-> [    3.863400]  really_probe+0xc8/0x3e0
-> [    3.871415] l17: Bringing 0uV into 3300000-3300000uV
-> [    3.875438]  __driver_probe_device+0x84/0x190
-> [    3.875450]  driver_probe_device+0x44/0x100
-> [    3.881633] l18: Bringing 0uV into 1750000-1750000uV
-> [    3.883860]  __device_attach_driver+0xa4/0x150
-> [    3.989109]  bus_for_each_drv+0x84/0xe0
-> [    3.992982]  __device_attach+0xb0/0x1f0
-> [    3.996714]  device_initial_probe+0x20/0x30
-> [    4.000533]  bus_probe_device+0xa4/0xb0
-> [    4.004699]  deferred_probe_work_func+0xa8/0xfc
-> [    4.008521]  process_one_work+0x1dc/0x450
-> [    4.013034]  worker_thread+0x2d0/0x450
-> [    4.017200]  kthread+0x108/0x110
-> [    4.020844]  ret_from_fork+0x10/0x20
-> [    4.024237] Code: 910e0042 d2800013 a9025bf5 aa0003f5 (f9400436)
-> [    4.027801] ---[ end trace 0000000000000000 ]---
-> [  137.808813] random: crng init done
->
+On 8/17/22 22:06, Vlastimil Babka wrote:
+> On 8/16/22 19:26, Bart Van Assche wrote:
+>> Although patch "Rework asynchronous resume support" eliminates the delay
+>> for some ATA disks after resume, it causes resume of ATA disks to fail
+>> on other setups. See also:
+>> * "Resume process hangs for 5-6 seconds starting sometime in 5.16"
+>>   (https://bugzilla.kernel.org/show_bug.cgi?id=215880).
+>> * Geert's regression report
+>>   (https://lore.kernel.org/linux-scsi/alpine.DEB.2.22.394.2207191125130.1006766@ramsan.of.borg/).
+>>
+>> This is what I understand about this issue:
+>> * During resume, ata_port_pm_resume() starts the SCSI error handler.
+>>   This changes the SCSI host state into SHOST_RECOVERY and causes
+>>   scsi_queue_rq() to return BLK_STS_RESOURCE.
+>> * sd_resume() calls sd_start_stop_device() for ATA devices. That
+>>   function in turn calls sd_submit_start() which tries to submit a START
+>>   STOP UNIT command. That command can only be submitted after the SCSI
+>>   error handler has changed the SCSI host state back to SHOST_RUNNING.
+>> * The SCSI error handler runs on its own thread and calls
+>>   schedule_work(&(ap->scsi_rescan_task)). That causes
+>>   ata_scsi_dev_rescan() to be called from the context of a kernel
+>>   workqueue. That call hangs in blk_mq_get_tag(). I'm not sure why -
+>>   maybe because all available tags have been allocated by
+>>   sd_submit_start() calls (this is a guess).
+>>
+>> Cc: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+>> Cc: Hannes Reinecke <hare@suse.de>
+>> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+>> Cc: gzhqyz@gmail.com
+>> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>> Reported-by: gzhqyz@gmail.com
+>> Fixes: 88f1669019bd ("scsi: sd: Rework asynchronous resume support"; v6.0-rc1~114^2~68)
+>> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+> 
+> Reported-and-tested-by: Vlastimil Babka <vbabka@suse.cz>
 
-Hi Naresh,
+What's the hold up on this? Didn't make it to rc2 and the number of
+people who independently spent time bisecting this seems to be only
+increasing.
 
-Thanks for the report!
+Thanks, Vlastimil
 
-These two patches together should fix the issue:
-https://lore.kernel.org/lkml/20220818172852.3548-1-isaacmanjarres@google.com/
-https://lore.kernel.org/lkml/20220817184026.3468620-1-isaacmanjarres@google.com/
+> 
+>> ---
+>>  drivers/scsi/sd.c | 84 ++++++++++-------------------------------------
+>>  drivers/scsi/sd.h |  5 ---
+>>  2 files changed, 18 insertions(+), 71 deletions(-)
+>>
+>> diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
+>> index 8f79fa6318fe..eb76ba055021 100644
+>> --- a/drivers/scsi/sd.c
+>> +++ b/drivers/scsi/sd.c
+>> @@ -103,7 +103,6 @@ static void sd_config_discard(struct scsi_disk *, unsigned int);
+>>  static void sd_config_write_same(struct scsi_disk *);
+>>  static int  sd_revalidate_disk(struct gendisk *);
+>>  static void sd_unlock_native_capacity(struct gendisk *disk);
+>> -static void sd_start_done_work(struct work_struct *work);
+>>  static int  sd_probe(struct device *);
+>>  static int  sd_remove(struct device *);
+>>  static void sd_shutdown(struct device *);
+>> @@ -3471,7 +3470,6 @@ static int sd_probe(struct device *dev)
+>>  	sdkp->max_retries = SD_MAX_RETRIES;
+>>  	atomic_set(&sdkp->openers, 0);
+>>  	atomic_set(&sdkp->device->ioerr_cnt, 0);
+>> -	INIT_WORK(&sdkp->start_done_work, sd_start_done_work);
+>>  
+>>  	if (!sdp->request_queue->rq_timeout) {
+>>  		if (sdp->type != TYPE_MOD)
+>> @@ -3594,69 +3592,12 @@ static void scsi_disk_release(struct device *dev)
+>>  	kfree(sdkp);
+>>  }
+>>  
+>> -/* Process sense data after a START command finished. */
+>> -static void sd_start_done_work(struct work_struct *work)
+>> -{
+>> -	struct scsi_disk *sdkp = container_of(work, typeof(*sdkp),
+>> -					      start_done_work);
+>> -	struct scsi_sense_hdr sshdr;
+>> -	int res = sdkp->start_result;
+>> -
+>> -	if (res == 0)
+>> -		return;
+>> -
+>> -	sd_print_result(sdkp, "Start/Stop Unit failed", res);
+>> -
+>> -	if (res < 0)
+>> -		return;
+>> -
+>> -	if (scsi_normalize_sense(sdkp->start_sense_buffer,
+>> -				 sdkp->start_sense_len, &sshdr))
+>> -		sd_print_sense_hdr(sdkp, &sshdr);
+>> -}
+>> -
+>> -/* A START command finished. May be called from interrupt context. */
+>> -static void sd_start_done(struct request *req, blk_status_t status)
+>> -{
+>> -	const struct scsi_cmnd *scmd = blk_mq_rq_to_pdu(req);
+>> -	struct scsi_disk *sdkp = scsi_disk(req->q->disk);
+>> -
+>> -	sdkp->start_result = scmd->result;
+>> -	WARN_ON_ONCE(scmd->sense_len > SCSI_SENSE_BUFFERSIZE);
+>> -	sdkp->start_sense_len = scmd->sense_len;
+>> -	memcpy(sdkp->start_sense_buffer, scmd->sense_buffer,
+>> -	       ARRAY_SIZE(sdkp->start_sense_buffer));
+>> -	WARN_ON_ONCE(!schedule_work(&sdkp->start_done_work));
+>> -}
+>> -
+>> -/* Submit a START command asynchronously. */
+>> -static int sd_submit_start(struct scsi_disk *sdkp, u8 cmd[], u8 cmd_len)
+>> -{
+>> -	struct scsi_device *sdev = sdkp->device;
+>> -	struct request_queue *q = sdev->request_queue;
+>> -	struct request *req;
+>> -	struct scsi_cmnd *scmd;
+>> -
+>> -	req = scsi_alloc_request(q, REQ_OP_DRV_IN, BLK_MQ_REQ_PM);
+>> -	if (IS_ERR(req))
+>> -		return PTR_ERR(req);
+>> -
+>> -	scmd = blk_mq_rq_to_pdu(req);
+>> -	scmd->cmd_len = cmd_len;
+>> -	memcpy(scmd->cmnd, cmd, cmd_len);
+>> -	scmd->allowed = sdkp->max_retries;
+>> -	req->timeout = SD_TIMEOUT;
+>> -	req->rq_flags |= RQF_PM | RQF_QUIET;
+>> -	req->end_io = sd_start_done;
+>> -	blk_execute_rq_nowait(req, /*at_head=*/true);
+>> -
+>> -	return 0;
+>> -}
+>> -
+>>  static int sd_start_stop_device(struct scsi_disk *sdkp, int start)
+>>  {
+>>  	unsigned char cmd[6] = { START_STOP };	/* START_VALID */
+>> +	struct scsi_sense_hdr sshdr;
+>>  	struct scsi_device *sdp = sdkp->device;
+>> +	int res;
+>>  
+>>  	if (start)
+>>  		cmd[4] |= 1;	/* START */
+>> @@ -3667,10 +3608,23 @@ static int sd_start_stop_device(struct scsi_disk *sdkp, int start)
+>>  	if (!scsi_device_online(sdp))
+>>  		return -ENODEV;
+>>  
+>> -	/* Wait until processing of sense data has finished. */
+>> -	flush_work(&sdkp->start_done_work);
+>> +	res = scsi_execute(sdp, cmd, DMA_NONE, NULL, 0, NULL, &sshdr,
+>> +			SD_TIMEOUT, sdkp->max_retries, 0, RQF_PM, NULL);
+>> +	if (res) {
+>> +		sd_print_result(sdkp, "Start/Stop Unit failed", res);
+>> +		if (res > 0 && scsi_sense_valid(&sshdr)) {
+>> +			sd_print_sense_hdr(sdkp, &sshdr);
+>> +			/* 0x3a is medium not present */
+>> +			if (sshdr.asc == 0x3a)
+>> +				res = 0;
+>> +		}
+>> +	}
+>>  
+>> -	return sd_submit_start(sdkp, cmd, sizeof(cmd));
+>> +	/* SCSI error codes must not go to the generic layer */
+>> +	if (res)
+>> +		return -EIO;
+>> +
+>> +	return 0;
+>>  }
+>>  
+>>  /*
+>> @@ -3697,8 +3651,6 @@ static void sd_shutdown(struct device *dev)
+>>  		sd_printk(KERN_NOTICE, sdkp, "Stopping disk\n");
+>>  		sd_start_stop_device(sdkp, 0);
+>>  	}
+>> -
+>> -	flush_work(&sdkp->start_done_work);
+>>  }
+>>  
+>>  static int sd_suspend_common(struct device *dev, bool ignore_stop_errors)
+>> diff --git a/drivers/scsi/sd.h b/drivers/scsi/sd.h
+>> index b89187761d61..5eea762f84d1 100644
+>> --- a/drivers/scsi/sd.h
+>> +++ b/drivers/scsi/sd.h
+>> @@ -150,11 +150,6 @@ struct scsi_disk {
+>>  	unsigned	urswrz : 1;
+>>  	unsigned	security : 1;
+>>  	unsigned	ignore_medium_access_errors : 1;
+>> -
+>> -	int		start_result;
+>> -	u32		start_sense_len;
+>> -	u8		start_sense_buffer[SCSI_SENSE_BUFFERSIZE];
+>> -	struct work_struct start_done_work;
+>>  };
+>>  #define to_scsi_disk(obj) container_of(obj, struct scsi_disk, disk_dev)
+>>  
+> 
 
-Can you give them a shot please?
-
-Also, in general, it'd be nice if you could report issues in the
-original thread of the patch causing issues. It would make it easier
-to keep track of all the issues.
-
-Thanks,
-Saravana
