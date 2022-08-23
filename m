@@ -1,69 +1,76 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A8C28F9
-	for <regressions@lists.linux.dev>; Tue, 23 Aug 2022 16:47:27 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oQX3l-0005u0-IL; Tue, 23 Aug 2022 18:47:25 +0200
-Message-ID: <7c41dd25-8bfa-c7b0-a430-1b115e8ee375@leemhuis.info>
-Date: Tue, 23 Aug 2022 18:47:24 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4FA2F5A
+	for <regressions@lists.linux.dev>; Tue, 23 Aug 2022 17:04:16 +0000 (UTC)
+Received: by mail-oo1-f49.google.com with SMTP id z23-20020a4ad1b7000000b0044931ffdcafso2536611oor.4
+        for <regressions@lists.linux.dev>; Tue, 23 Aug 2022 10:04:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=TUg/MW+5uwqkPY+MLc70krjM60VBeEeGCfnySwldiwg=;
+        b=Yy1D2HftO+eOzV0Ic0suR8nmcNMTHLyik3FZY7MaTj4OFyv37SMhw+ej0wDA23ngLK
+         CwPEql8zfjyGvUi1VFcpICjJgqQarDgcFZR9hRz3/yVobuA7vkCOixudjUYpUjO9hnyc
+         VKoQIrnb47IwnDpZQRCOJ1H9GsWAFI62J/s+A9N+K7W4VLtyIV/px6P4JE1a83SnvVcY
+         /MmLgVj3fmUHPZnUiV3DQgvCSIAWGOWJ7gSZJ4CidRmYHVPEjauK54QtR5J0fE18VFKt
+         MBigCSfySQ4qcEKE9R4EMOLNaN2pbepP4uwpqVN+hsX+v6ihxoD3KNc5HX3dgdLm+Ko9
+         XKXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=TUg/MW+5uwqkPY+MLc70krjM60VBeEeGCfnySwldiwg=;
+        b=CeLBLBKu+ORHqn4CCx13t8u3rUYlGyA2KiNVXV1GiT8tqX/Goed+GtX3vxalGZYBbe
+         1uYHHBPURWwYofzPfqJkJ8o6RZU4aMiO6LXj33LcxODK/k6urHV5XndK1bR/uVcuD98q
+         xTZH1RkmDSbCVgsCIQtmZe3vNtpZ6kmV0jlencI0j7n+62iE91j1DALMuSLG/oKoHxf6
+         A7z0gHzcDIglJAskCsXsJrWuNfgR55QvK+ucsJUiMENgoE5+VcPcJXZh9VcuH6vW60D0
+         ah6TN2EDaEXfYmK8P0ek4OKJf25YZFxxNvJBs+/IIAl4baHmjyIKbVsnxnbl8Jj6t1WA
+         JunA==
+X-Gm-Message-State: ACgBeo0U5+XdbZsbL4MT7qEgBysiwcM+C/M2Hfc20v6V7SQUSAiY72tY
+	3IhnijgaxOI1W50wkvoN7DYWy5/PjGynesUUloo=
+X-Google-Smtp-Source: AA6agR6XgQsau2DY6uzmKYWsDA7bVUlGQKf7jxT6ApzcWlbpOaCrokpE4iUclQ4NqT06TmpMl49uQQYc0O0JgDYZNgg=
+X-Received: by 2002:a4a:b607:0:b0:44a:f4e7:4808 with SMTP id
+ z7-20020a4ab607000000b0044af4e74808mr8239529oon.37.1661274255415; Tue, 23 Aug
+ 2022 10:04:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: Bug 216320 - KSZ8794 operation broken #forregzbot
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>
-References: <967ef480-2fac-9724-61c7-2d5e69c26ec3@leemhuis.info>
-In-Reply-To: <967ef480-2fac-9724-61c7-2d5e69c26ec3@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661273247;2e013e76;
-X-HE-SMSGID: 1oQX3l-0005u0-IL
+References: <20220819190725.GA2499154@bhelgaas> <6aad506b-5324-649e-9700-7ceaaf7ef94b@amd.com>
+In-Reply-To: <6aad506b-5324-649e-9700-7ceaaf7ef94b@amd.com>
+From: Tom Seewald <tseewald@gmail.com>
+Date: Tue, 23 Aug 2022 12:04:04 -0500
+Message-ID: <CAARYdbhVwD1m1rAzbR=K60O=_A3wFsb1ya=zRV_bmF8s3Kb02A@mail.gmail.com>
+Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
+To: "Lazar, Lijo" <lijo.lazar@amd.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, regressions@lists.linux.dev, 
+	David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org, 
+	Xinhui Pan <Xinhui.Pan@amd.com>, amd-gfx@lists.freedesktop.org, 
+	Kai-Heng Feng <kai.heng.feng@canonical.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Alex Deucher <alexander.deucher@amd.com>, Stefan Roese <sr@denx.de>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
-
-On 17.08.22 15:36, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker.
+On Sat, Aug 20, 2022 at 2:53 AM Lazar, Lijo <lijo.lazar@amd.com> wrote:
 >
-> I noticed a regression report in bugzilla.kernel.org that afaics nobody
-> acted upon since it was reported. That's why I decided to forward it by
-> mail to those that afaics should handle this.
-> 
-> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=216320 :
-> 
->> After upgrading a Yocto build system from kernel 5.4 to 5.15, I found KSZ8794 switch operation was no longer functional. I got errors such as:
->>
->> Aug  1 22:23:17 tv999996 kern.err kernel: [   10.770912] ksz8795-switch spi2.0: Unsupported interface: gmii, port: 0
->> Aug  1 22:23:17 tv999996 kern.warn kernel: [   10.777562] ksz8795-switch spi2.0 wan (uninitialized): validation of gmii with support 0000000,00000000,000062cf and advertisement 0000000,00000000,000062cf failed: -22
->> Aug  1 22:23:17 tv999996 kern.err kernel: [   10.792874] ksz8795-switch spi2.0 wan (uninitialized): failed to connect to PHY: -EINVAL
->> Aug  1 22:23:17 tv999996 kern.err kernel: [   10.800978] ksz8795-switch spi2.0 wan (uninitialized): error -22 setting up PHY for tree 0, switch 0, port 0
->> Aug  1 22:23:17 tv999996 kern.err kernel: [   10.829188] ksz8795-switch spi2.0: Unsupported interface: gmii, port: 1
->> Aug  1 22:23:17 tv999996 kern.warn kernel: [   10.835821] ksz8795-switch spi2.0 lan2 (uninitialized): validation of gmii with support 0000000,00000000,000062cf and advertisement 0000000,00000000,000062cf failed: -22
->> Aug  1 22:23:17 tv999996 kern.err kernel: [   10.851156] ksz8795-switch spi2.0 lan2 (uninitialized): failed to connect to PHY: -EINVAL
->> Aug  1 22:23:17 tv999996 kern.err kernel: [   10.859358] ksz8795-switch spi2.0 lan2 (uninitialized): error -22 setting up PHY for tree 0, switch 0, port 1
->> Aug  1 22:23:17 tv999996 kern.err kernel: [   10.892821] ksz8795-switch spi2.0: Unsupported interface: gmii, port: 2
->> Aug  1 22:23:17 tv999996 kern.warn kernel: [   10.899466] ksz8795-switch spi2.0 lan1 (uninitialized): validation of gmii with support 0000000,00000000,000062cf and advertisement 0000000,00000000,000062cf failed: -22
->> Aug  1 22:23:17 tv999996 kern.err kernel: [   10.914845] ksz8795-switch spi2.0 lan1 (uninitialized): failed to connect to PHY: -EINVAL
->> Aug  1 22:23:17 tv999996 kern.err kernel: [   10.923052] ksz8795-switch spi2.0 lan1 (uninitialized): error -22 setting up PHY for tree 0, switch 0, port 2
->>
->> I found that if I reverted commit 2c709e0bdad4d996ec8925b9ee6d5b97458708f1, "net: dsa: microchip: ksz8795: add phylink support", then it worked properly again. The errors I saw were due to the checks in ksz8_validate() that were added in the above commit.
-> Could somebody please take a look, especially if you're among the main
-> recipients of this mail and not just CCed?
-> 
-> Anyway, to ensure this is not forgotten I'll add it to the Linux kernel
-> regression tracking bot:
-> 
-> #regzbot introduced: 2c709e0bdad4d996ec8925b9ee6d5b97458708f1
-> https://bugzilla.kernel.org/show_bug.cgi?id=216320
+> Missed the remap part, the offset is here -
+>
+> https://elixir.bootlin.com/linux/v6.0-rc1/source/drivers/gpu/drm/amd/amdgpu/nv.c#L680
+>
+>
+> The trace is coming from *_flush_hdp.
+>
+> You may also check if *_remap_hdp_registers() is getting called. It is
+> done in nbio_vx_y files, most likely this one for your device -
+> https://elixir.bootlin.com/linux/v6.0-rc1/source/drivers/gpu/drm/amd/amdgpu/nbio_v2_3.c#L68
+>
+> Thanks,
+> Lijo
 
-#regzbot fixed-by: 5fbb08eb7f945c7e88
+Hi Lijo,
+
+I would be happy to test any patches that you think would shed some
+light on this.
