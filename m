@@ -1,100 +1,134 @@
-Received: from yamato.tf-network.de (yamato.tf-network.de [93.186.202.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F5DA20
-	for <regressions@lists.linux.dev>; Tue, 23 Aug 2022 03:15:37 +0000 (UTC)
-Received: from amavis3.tf-network.de ([IPv6:2001:4ba0:ffa0:1b::d1:221])
-	by yamato.tf-network.de (Postfix) with ESMTP id 4MBZ9g1czqz4R4W;
-	Tue, 23 Aug 2022 05:15:35 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at amavis3.tf-network.de
-Received: from smtp.tf-network.de ([93.186.202.221])
-	by amavis3.tf-network.de ([IPv6:2001:4ba0:ffa0:1b::d1:221]) (amavisd-new, port 10024)
-	with LMTP id 8l3EdAy_eX_Z; Tue, 23 Aug 2022 05:15:34 +0200 (CEST)
-Received: from [10.1.0.10] (xdsl-213-196-226-148.nc.de [213.196.226.148])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.tf-network.de (Postfix) with ESMTPSA id 4MBZ9f36ncz3wff;
-	Tue, 23 Aug 2022 05:15:34 +0200 (CEST)
-Message-ID: <172d7663-ce22-f87a-6aa0-0b6145115711@whissi.de>
-Date: Tue, 23 Aug 2022 05:15:33 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E3DA3D
+	for <regressions@lists.linux.dev>; Tue, 23 Aug 2022 06:06:08 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 48C1020D55;
+	Tue, 23 Aug 2022 06:06:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1661234766; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XXmRV3j3jF/dboZ9mDq8vtAInRpeHISrunDZMf2kdqg=;
+	b=oxmE7hJLQTm7BQvECemTCYzdzLzaDd0IGLlQl5RK1jFQuKSr1Om/C8URBWdybARUR9Jdz4
+	WxO43zzDdEbHXizcqUtJ0pyHaoqmeCx3zpA097FR2Ztgm8KX1/5VdGdrdQizlw3XGjsygZ
+	OgVCYA2/YemrSYSGeOl4eB82Hr3x2O4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1661234766;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XXmRV3j3jF/dboZ9mDq8vtAInRpeHISrunDZMf2kdqg=;
+	b=zU94cY81qyXBVJs6MaQGlgHjH3rKP3Zt/ovNj9S/YU8gV1QQ5jBQNBk6NbLHrGp4Rll41P
+	9XZq5x9X08Nl5GCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0ED6813A89;
+	Tue, 23 Aug 2022 06:06:06 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id 9ZW7Ak5uBGN4IAAAMHmgww
+	(envelope-from <tiwai@suse.de>); Tue, 23 Aug 2022 06:06:06 +0000
+Date: Tue, 23 Aug 2022 08:06:05 +0200
+Message-ID: <87h723sdde.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Joerg Roedel <jroedel@suse.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Eric Auger <eric.auger@redhat.com>,
+	regressions@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [REGRESSION 5.19.x] AMD HD-audio devices missing on 5.19
+In-Reply-To: <20220823010021.GA5967@nvidia.com>
+References: <874jy4cqok.wl-tiwai@suse.de>
+	<20220823010021.GA5967@nvidia.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
-Content-Language: en-US
-To: Song Liu <song@kernel.org>, Christoph Hellwig <hch@lst.de>
-Cc: Vishal Verma <vverma@digitalocean.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Jens Axboe <axboe@kernel.dk>
-References: <000401d8a746$3eaca200$bc05e600$@whissi.de>
- <000001d8ad7e$c340ad70$49c20850$@whissi.de>
- <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info>
- <0FBCAB10-545E-45E2-A0C8-D7620817651D@digitalocean.com>
- <CAPhsuW5f9QD+gzJ9eBhn5irsHvrsvkWjSnA4MPaHsQjjLMypXg@mail.gmail.com>
- <43e678ca-3fc3-6c08-f035-2c31a34dd889@whissi.de>
- <701f3fc0-2f0c-a32c-0d41-b489a9a59b99@whissi.de>
- <0192a465-d75d-c09a-732a-eb2215bf3479@whissi.de>
- <CAPhsuW6yLLcj3GtA+4mUFooQmfGo3cVTYn-xBEY2KuP1wwmQNA@mail.gmail.com>
- <b903abd4-d101-e6a5-06a0-667853286308@whissi.de>
- <4f69659f-7160-7854-0ed5-6867e3eb2edb@whissi.de>
- <CAPhsuW6Bq8rkiCzsWW7bkrCbYYEwFWtKaswOZcXsyk8tu3C5Dg@mail.gmail.com>
- <be8542cf-9b58-8861-11b5-8eeaa08f1421@whissi.de>
- <CAPhsuW45eYTjmA4C_wc_Z=ELbw9NStGpX6Mkf=tn1AEBknDg4Q@mail.gmail.com>
- <CAPhsuW7zdynykfXnz8X4CDEusHSHm9Vr01yiQSpEvizGwBUDkQ@mail.gmail.com>
-From: Thomas Deutschmann <whissi@whissi.de>
-In-Reply-To: <CAPhsuW7zdynykfXnz8X4CDEusHSHm9Vr01yiQSpEvizGwBUDkQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 
-On 2022-08-23 03:37, Song Liu wrote:
-> Thomas, have you tried to bisect with the fio repro?
-
-Yes, just finished:
-
-> d32d3d0b47f7e34560ae3c55ddfcf68694813501 is the first bad commit
-> commit d32d3d0b47f7e34560ae3c55ddfcf68694813501
-> Author: Christoph Hellwig
-> Date:   Mon Jun 14 13:17:34 2021 +0200
+On Tue, 23 Aug 2022 03:00:21 +0200,
+Jason Gunthorpe wrote:
 > 
->     nvme-multipath: set QUEUE_FLAG_NOWAIT
+> On Mon, Aug 22, 2022 at 04:12:59PM +0200, Takashi Iwai wrote:
+> > Hi,
+> > 
+> > we've received regression reports about the missing HD-audio devices
+> > on AMD platforms, and this turned out to be caused by the commit
+> > 512881eacfa72c2136b27b9934b7b27504a9efc2
+> >     bus: platform,amba,fsl-mc,PCI: Add device DMA ownership management
+> > 
+> > The details are found in openSUSE bugzilla:
+> >   https://bugzilla.suse.com/show_bug.cgi?id=1202492
+> > 
+> > The problem seems to be that HD-audio (both onboard analog and HDMI)
+> > PCI devices are assigned to the same IOMMU group as AMD graphics PCI
+> > device, and once after the AMDGPU is initialized beforehand, those
+> > audio devices can't be probed since iommu_device_use_default_domain()
+> > returns -EBUSY.
 > 
->     The nvme multipathing code just dispatches bios to one of the blk-mq
->     based paths and never blocks on its own, so set QUEUE_FLAG_NOWAIT
->     to support REQ_NOWAIT bios.
+> Can you describe exactly what drivers are involved in this? If it is
+> the above commit then several devices are sharing an iommu group and
+> one of them (well, the only one already attached, I suppose) has made
+> the group unsharable.
+> 
+> With grep I don't see an obvious place where the AMDGPU driver would
+> mess with the iommu configuration, so I have no guess.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d32d3d0b47f7e34560ae3c55ddfcf68694813501 
+I have also no concrete clue, either :)
+At least, drivers/gpu/drm/amd/amdkfd/kfd_iommu.c calls
+amd_iommu_init_device(), and this invokes iommu_attach_group(), which
+may change group->domain.  But it was just my wild guess, and it might
+be others, indeed.
+
+> It would be good to have some debugging to confirm if it is
+> group->owner (should be impossible, suggests memory corruption if it
+> is) or group->domain != group->default_domain.
+>
+> Most likely it is the later, but I can't see how that could happen on
+> a system like this.. There is no obvious manipulation in AMDGPU, for
+> instance.
+> 
+> So debugging to find the backtrace for exactly when 
+>  group->domain != group->default_domain
+> Occurs for the troubled group would be necessary.
+
+OK, will try to build a test kernel with some debug prints and ask the
+reporters.  It may take some time.
+
+> If you know the group name it would be easy enough to cook a patch to
+> throw a warn on when group->domain changes
+> 
+> > domain assignment.  In anyway, disabling IOMMU works around the
+> > problem, and passing driver_managed_dma flag to the HD-audio driver
+> > was also confirmed to work around it, too.
+> 
+> Disabling iommu removes the groups entirely, this disables the check.
+> 
+> driver_managed_dma disables the check entirely - which raises the
+> question how the driver is even able to work..
+> 
+> If the domain is not the default_domain it is very surprising that DMA
+> can work at all. Since it does, something really odd has happened.
+
+Yeah it's something odd ;)
+
+I'm not sure whether the people tested HD-audio capability at all, but
+otherwise they might have noticed.
 
 
-So another NOWAIT issue -- similar to the bad commit which is causing 
-the mdraid issue I already found 
-(https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0f9650bd838efe5c52f7e5f40c3204ad59f1964d).
-
-Reverting the commit, i.e. deleting
-
-   blk_queue_flag_set(QUEUE_FLAG_NOWAIT, head->disk->queue);
-
-fixes the problem for me. Well, sort of. Looks like this will disable 
-io_uring. fio reproducer fails with
-
-> $ fio reproducer.fio
-> filename0: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=io_uring, iodepth=1
-> fio-3.30
-> Starting 1 thread
-> fio: io_u error on file /srv/machines/fio/filename0.0.0: Operation not supported: write offset=12648448, buflen=4096
-> fio: pid=1585, err=95/file:io_u.c:1846, func=io_u error, error=Operation not supported
-
-My MariaDB reproducer also doesn't trigger the problem anymore, but 
-probably for the same reason -- it cannot use io_uring anymore.
-
-
--- 
-Regards,
-Thomas
-
+Takashi
