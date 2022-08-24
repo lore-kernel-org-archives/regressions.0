@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690271110
-	for <regressions@lists.linux.dev>; Wed, 24 Aug 2022 09:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5BB1110
+	for <regressions@lists.linux.dev>; Wed, 24 Aug 2022 10:19:04 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oQn2F-00065t-1o; Wed, 24 Aug 2022 11:50:55 +0200
-Message-ID: <4291cff9-b9d6-17f4-f62a-d88a9c01048a@leemhuis.info>
-Date: Wed, 24 Aug 2022 11:50:54 +0200
+	id 1oQnTS-0000mm-Vd; Wed, 24 Aug 2022 12:19:03 +0200
+Message-ID: <167d11c6-68a4-c10a-9703-fceaddac3e42@leemhuis.info>
+Date: Wed, 24 Aug 2022 12:19:00 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,88 +16,27 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.0
-Subject: Re: [REGRESSION 5.19] NULL dereference by ucsi_acpi driver
 Content-Language: en-US
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <87r11cmbx0.wl-tiwai@suse.de>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <87r11cmbx0.wl-tiwai@suse.de>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Bug 216382 - [bisected][regression] mediatek bluetooth 13d3:3563
+ (mt7921e) doesn't work with audio devices.
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661334657;dc02e3de;
-X-HE-SMSGID: 1oQn2F-00065t-1o
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661336345;44df0e4e;
+X-HE-SMSGID: 1oQnTS-0000mm-Vd
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
+Hi, this is your Linux kernel regression tracker speaking.
 
-Hi, this is your Linux kernel regression tracker.
+I noticed a regression reported in bugzilla.kernel.org that seems to be
+handled there already, nevertheless I'd like to add to the tracking to
+ensure it's doesn't fall through the cracks in the end:
 
-On 19.08.22 18:32, Takashi Iwai wrote:
-> Hi,
-> 
-> we've got multiple reports about 5.19 kernel starting crashing after
-> some time, and this turned out to be triggered by ucsi_acpi driver.
-> The details are found in:
->   https://bugzilla.suse.com/show_bug.cgi?id=1202386
-> 
-> The culprit seems to be the commit 87d0e2f41b8c
->     usb: typec: ucsi: add a common function ucsi_unregister_connectors()
->     
-> This commit looks as if it were a harmless cleanup, but this failed in
-> a subtle way.  Namely, in the error scenario, the driver gets an error
-> at ucsi_register_altmodes(), and goes to the error handling to release
-> the resources.  Through this refactoring, the release part was unified
-> to a funciton ucsi_unregister_connectors().  And there, it has a NULL
-> check of con->wq, and it bails out the loop if it's NULL. 
-> Meanwhile, ucsi_register_port() itself still calls destroy_workqueue()
-> and clear con->wq at its error path.  This ended up in the leftover
-> power supply device with the uninitialized / cleared device.
-> 
-> It was confirmed that the problem could be avoided by a simple
-> revert.
-> 
-> I guess another fix could be removing the part clearing con->wq, i.e.
-> 
-> --- a/drivers/usb/typec/ucsi/ucsi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi.c
-> @@ -1192,11 +1192,6 @@ static int ucsi_register_port(struct ucsi *ucsi, int index)
->  out_unlock:
->  	mutex_unlock(&con->lock);
->  
-> -	if (ret && con->wq) {
-> -		destroy_workqueue(con->wq);
-> -		con->wq = NULL;
-> -	}
-> -
->  	return ret;
->  }
->  
-> 
-> ... but it's totally untested and I'm not entirely sure whether it's
-> better.
-
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
-
-#regzbot introduced 87d0e2f41b8c ^
-https://bugzilla.suse.com/show_bug.cgi?id=1202386
-#regzbot title NULL dereference by ucsi_acpi driver
+#regzbot introduced: 26afbd826ee326e63a334c37fd45e82e50a61
+https://bugzilla.kernel.org/show_bug.cgi?id=216382
 #regzbot ignore-activity
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
+See the ticket for details, there were a few replies already.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
