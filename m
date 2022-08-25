@@ -1,136 +1,234 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581B74C74
-	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 22:24:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0777DC433D6
-	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 22:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1661466272;
-	bh=kbid+yAxhD0peTtBLuBbST88kUBhO5yA5WbEZLiL7GU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ieMg6rf+MIKPi2zSdsq9+uOQG/5/a0Ft8NJT1Nn5IKxTDSyqtmDYT6YYprlWTzq0q
-	 QbHIss805JqC0JPxi3+W58Cc/lYKCaubRV/VI6UscOa/UC4v+EPVUgQGuRmGmUmHHX
-	 ssgrXh/t9972eSbO/Ko7Lmu+7jspQl03sOZLQwcprzts6YEIotf07iMXC3WWpbaioo
-	 OT8Za34lcFmGuhquwoRV57zzXZEsCB1Esw6ey31SkKBZqTBPtFh0fa9P+vfuzo89fA
-	 IjmMA9AiToh8j+KQvmBLbkMxi101sow1qtFgJXjLxEX0J9wKUdPYTKAKZ8jEQ9YAFH
-	 7og9OvRHE3W5w==
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-324ec5a9e97so576711957b3.7
-        for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 15:24:31 -0700 (PDT)
-X-Gm-Message-State: ACgBeo1kmR3P4AjSFlinjTRbxhD2zLb4xoqbvXXeDJIinbV7boyfVFNV
-	ES6OLylCVvuUoQY/q6I1ooCxOnd6er33/WMXM0E=
-X-Google-Smtp-Source: AA6agR6zE4vjihgs0WHX7ETVPLZCOgYzHa+i2RwZzv215gtNx/cisxaQkqIR9Tu9IDAJw79qXLm0jjApBCIjwtHJDU8=
-X-Received: by 2002:a81:91d0:0:b0:335:10ff:8ee4 with SMTP id
- i199-20020a8191d0000000b0033510ff8ee4mr5893651ywg.73.1661466271069; Thu, 25
- Aug 2022 15:24:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A2E4C87
+	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 23:43:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1661471007; x=1693007007;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=7Fz5dyyX+/YdhjbMg04tyVUtHtuaDFuJrD8QRk+E2eY=;
+  b=Fgm+7KTQ0QgEQ+WeQsP/2zJf4cj/37wVx/s5cbqaxY/iFplygY9+BM9d
+   7sA4g7JxQhvm4essTNVr2Dc/fNG6mk6MbJDPGr9j6V244HYlFgu4STONF
+   +Wu4y0fKwOXAfZgIhUJ/kR6GJbeEF4F3UweXO2kGWTQQ1Tc/YEy88rJJf
+   h+Ab4ksqGdVAzYy8KkSel1D+ARHtoqI7j4nNtgO15zz6H7dJ/cQwqdsuG
+   RwXxQJQkhSj2EwRyD00t33KRKXmYVMZJJGV/fi5SfPalY7w//4xT3PJFI
+   fAV91ZCWbwLnuOw2N6zUUe0mjpf/99OcCsmv2vGVq7m0b3bxniwUAiJ9v
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10450"; a="274134108"
+X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
+   d="scan'208";a="274134108"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2022 16:42:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,264,1654585200"; 
+   d="scan'208";a="678658422"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Aug 2022 16:42:51 -0700
+Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 25 Aug 2022 16:42:51 -0700
+Received: from fmsmsx608.amr.corp.intel.com (10.18.126.88) by
+ fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Thu, 25 Aug 2022 16:42:51 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx608.amr.corp.intel.com (10.18.126.88) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Thu, 25 Aug 2022 16:42:50 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.47) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Thu, 25 Aug 2022 16:42:50 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FttSdbbaRt63KfvxoO2Q/rr7HP4+dzWrBaX0g5GC+aSbKLq+VU/nPCU1aBjMrTgVIFFLc5Ts5zngK/moBQ+S2sYxRv6G827z279bmbJhUVnrobxARaK8NF/S21IBiDqXgCNaWnuCRhFAaLXzcQJOfDYnVS6zeFfm8kLfU3jhn4AFaYGy2WXVUkE2gy832Z/GUM6GO1AjwWDoSGX+TNhjaE/7W+LD2eePScgYCIrx6S941zCGgqINkJuMnD8KVOD3G+eanYA/7fUtx6kitvM5HhQNkBNIMtczUCpEGEtDEQ4bPe/ThpCoBeaoLpexdlnGaDq+kuzA1SNMLwgUMA3oIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Fz6lBvDnGoo1hd4s/R9aBSvSiA1N4HsbxO0aG/a8PZg=;
+ b=kvj1OLKSyWA5hZsDy/CXC3ft3cGrNUSCAuBubbUd4vkWATm8TQjCGmOK9Tt3TQKcJMQzfaFLlVX+nNWqR42EMGzFfavFKc9R6yCe67d9EkKw1PQGb9bC+m/VxldNJs76tybUNw8U/IqiMstNlxth+rgByqjKkaNcCEtY2i60pjnSc1ko/a9KcUdfydMqf3c1bMwtfHvz0Qfa8n6dzy/vAgALMKpWfVcUEdwAd44gyHlph2455966tnkHPsTnPKH6logrtUoVxQwUX3LYsABiO73tj/mIqzZbfVYBFAr6dZ75vYJ2h90m+9H9ZSF7R3nOuH8o6brh0HnWnWB8NG18aA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM6PR11MB3113.namprd11.prod.outlook.com (2603:10b6:5:69::19) by
+ MWHPR11MB2062.namprd11.prod.outlook.com (2603:10b6:300:2a::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5546.21; Thu, 25 Aug 2022 23:42:47 +0000
+Received: from DM6PR11MB3113.namprd11.prod.outlook.com
+ ([fe80::7100:8281:521b:ff31]) by DM6PR11MB3113.namprd11.prod.outlook.com
+ ([fe80::7100:8281:521b:ff31%5]) with mapi id 15.20.5566.015; Thu, 25 Aug 2022
+ 23:42:47 +0000
+From: "Laba, SlawomirX" <slawomirx.laba@intel.com>
+To: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"bhelgaas@google.com" <bhelgaas@google.com>, "alex.williamson@redhat.com"
+	<alex.williamson@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "songmuchun@bytedance.com"
+	<songmuchun@bytedance.com>, "mike.kravetz@oracle.com"
+	<mike.kravetz@oracle.com>
+CC: "Brandeburg, Jesse" <jesse.brandeburg@intel.com>, "Nguyen, Anthony L"
+	<anthony.l.nguyen@intel.com>
+Subject: BUG: Virtual machine fails to start on 6.0-rc2
+Thread-Topic: BUG: Virtual machine fails to start on 6.0-rc2
+Thread-Index: Adi42gn6sxbvtLg7QcKy/nSIRHLahA==
+Date: Thu, 25 Aug 2022 23:42:47 +0000
+Message-ID: <DM6PR11MB3113DF6EC61D0AB73F3A2FE387729@DM6PR11MB3113.namprd11.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+dlp-version: 11.6.500.17
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 53a45f0a-83c6-4da7-8ba2-08da86f383f1
+x-ms-traffictypediagnostic: MWHPR11MB2062:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4hBaZ/0gE8wfnFlUzURp+nUYDLv/UgVr7jaM9Ktuvd//yKYOiRJqXshIqjQpcDrm3Ioea+xNEZD8m8DPAga88vP/taVCqyHlQoiV+gXbVNVhHA3LRj938WHqamA8NVSnblJaYjBYPJ9x0OhrZF8pDDFzjlLtf6Is3vhb0SXXi3ORtD7B+Z2yNToyKSZYM+nrK1KGNEgJQPy6vGFwgdkLdHWedO943l9iSeW5JfDY8GibGrrzVtDbr7aF5dlf2edqKNPJZzlMR/qZIzdN65pVCZipo/RGNpH5eZcB6+aWjZCSWbjggMKVy6QEt4uj17zZEYWARlCSx08JEAx2g2DPqBldrNRdbNLaNMFdjd20qBWfmBANTy5GtyPvF/KQsBytpiq8QyMXzdvGFyVPxQVku4iD4n92XYUHhovqE6urQ4B16k16SDkt3+4VTDfg6GrnRVwql/pV4Nw69hd/oJIoI0FiVQu1X5g5kI8Hd1SFujGRbUvOxCSF5SQW5YbOJGg3b4c6v5+dkm5CfcCI3hvgKVvaqna3fw/HC8BWwfPdT8lO8S/QU+vG3AZtMSvPAxqaWDpLhDQGTgzSYH1OT04QvX0Of2/oXmabzDJbzUouUFbkG7tEyrFx/w6KWm2PIleoJxGLB3FKSbjV6bB+HJJ4vgVpuTCNCr8sgfs41c45dGtulAhbxOp1EYOkmi7P8LBCIdE90p2JJ9NuFbB7J6mQPZx/sBRpkXcBw2rjmbg1vh4Z6OKL133Ahz0fo4DM/lPGBJn3BPZZIP6l/if5WGxRnFg3CNK2kzFsfzFPZUrdFsc=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3113.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(376002)(366004)(136003)(346002)(396003)(39860400002)(9686003)(26005)(7696005)(54906003)(478600001)(41300700001)(316002)(110136005)(122000001)(86362001)(38100700002)(71200400001)(6506007)(38070700005)(186003)(82960400001)(83380400001)(921005)(4326008)(8676002)(66446008)(66556008)(66476007)(64756008)(33656002)(66946007)(76116006)(8936002)(5660300002)(52536014)(7416002)(55016003)(107886003)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?cXDnHVyV5Tmqx8f8t5nMRdDiqB8uDMH+WNV16LiryFXduQwLZqfEOXKkbvTL?=
+ =?us-ascii?Q?4QV92E2pC/Io4iw6Ls8lBiwGxXwSRWR25MXnWUAehGz5MJToia4szWw5CqFr?=
+ =?us-ascii?Q?TCYPe3khCsyDazk30ir9U6SbUoUzElC15vz2dYj6SDWqwsC5cpQXK84UyFgc?=
+ =?us-ascii?Q?PDvXtOeW1oc6jQcmyX4uy+cAffDnPtgAjYA0ApGuZ/QDmilcgpZsErFRub1a?=
+ =?us-ascii?Q?WGvvPl7jwgDLkkSrWrvoeWJAPslfsxM0UtMnLAn8Y58SrCSeEHMhLuKTyM3i?=
+ =?us-ascii?Q?zcoIKc9qNMhm4o8RcuTHypEC6Qr78YRfdwplk29ktvQke3csSTADQUPZuVpe?=
+ =?us-ascii?Q?sAYbjPrdjj3A/JtSeUWbXi3tT6NYS/ZTBmMzGB5g4VtYa7tmEnnh5eWQYL7G?=
+ =?us-ascii?Q?uKinfjqFHcQEK+bsdqXUEVlYaLVkEKE9S1VDkKEUb/BAsRGaNwF+iGP+PYtf?=
+ =?us-ascii?Q?0Io5ZD6oZINTEtcoovv1LadThlcZDgU9wukYHDoU17z7WASlhdoU+6XqHTDw?=
+ =?us-ascii?Q?D/E1AP3jQDMtGq0G3mtacSURmokpaUfApDVdjtbWwFuAAkC0gRFHGH3b5cWS?=
+ =?us-ascii?Q?q+wUac61/berVQjqLyeDaRbQJKG9xZzlDKviLy2ZbPYwnS8iiPqltekwym79?=
+ =?us-ascii?Q?42bUKczhzQJ+UPLyx4OqewBuJdoqaGWtsnukHdAArVMDQ3Y95knCaaIF7Myp?=
+ =?us-ascii?Q?L2WxZRHVVKs8oktYZydq+UPzqeBfSK3En7SpvBo6yM+6vo3nxCTmvNHky90A?=
+ =?us-ascii?Q?ZQwGBnVXOto2G+5cl+/dOPtt4U4zwIhSrO+WI2J0vvvgpoAjyw7m/SneaBCG?=
+ =?us-ascii?Q?rmkda51VC9NgRb3LfCB2IwgtOH+IOrW1cBOLdwLWCs0/mcXCLsN6Zgs86ENR?=
+ =?us-ascii?Q?8PBV7/kvj3NTcCD96PuB2lzTXVowatUAWyFerDOtj24CzM8lvuJt7Rtyf3dL?=
+ =?us-ascii?Q?Ub+ywOqYY54lqIObDePjxmPePdR3iAyOgVh7zW21q6vC9yOAH80dPePo4zP5?=
+ =?us-ascii?Q?Y69uqruCiZb2e30iGD4QFoY6lmTj5FNast0vH2r4LnZQ+V3eMyh7IofJ5FDV?=
+ =?us-ascii?Q?1PQ8EKn+8zWTtmhTvOdoAfC4CVqR0AjmaNunagNEecFv7lKSLUGuEhHzutDr?=
+ =?us-ascii?Q?xwtHF+14Wk5iDRTfCWQcur3O6UfaQq4wwdZuum0Uf3Js74MdUGPdfnouOz4K?=
+ =?us-ascii?Q?yV7Kr+WRjK7jPL82NMkweVI4n2ua/45UfkXF5kuxFVr0RBCAxZNnUAtxOlHf?=
+ =?us-ascii?Q?382uTxOu5uWqU1LdIhmWS+J9YVMgdSUDQFbAB48vSjZEE6dyvcSj4DD0Hj6S?=
+ =?us-ascii?Q?LiWkSE7Ff90/URcUkXoKpy9V4+3UOnoh4TBNt1sIy1Dr3/K6qH7t09ZunOGR?=
+ =?us-ascii?Q?1qHHv+/qT0JhZrOtVzqdZAzgFDBnQqEfrad+heK9zwwTP3eGTcRJ+wdrfTvi?=
+ =?us-ascii?Q?vOs35tbR5thZx+lU1uO52OsZlLQFcoNInfdqILAOGLChVokLF6mmYkwJhPuF?=
+ =?us-ascii?Q?t1+Qtq9SpRM0N4n8CWQa2T74UUEIdJ52p44EKFjtdCvQzYDcf8BUrjOKfJ0n?=
+ =?us-ascii?Q?KDrM+DXqw0LiMPd1POApByO6FYOuiCN2JVXFL1nS?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <000401d8a746$3eaca200$bc05e600$@whissi.de> <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info>
- <0FBCAB10-545E-45E2-A0C8-D7620817651D@digitalocean.com> <CAPhsuW5f9QD+gzJ9eBhn5irsHvrsvkWjSnA4MPaHsQjjLMypXg@mail.gmail.com>
- <43e678ca-3fc3-6c08-f035-2c31a34dd889@whissi.de> <701f3fc0-2f0c-a32c-0d41-b489a9a59b99@whissi.de>
- <0192a465-d75d-c09a-732a-eb2215bf3479@whissi.de> <CAPhsuW6yLLcj3GtA+4mUFooQmfGo3cVTYn-xBEY2KuP1wwmQNA@mail.gmail.com>
- <b903abd4-d101-e6a5-06a0-667853286308@whissi.de> <4f69659f-7160-7854-0ed5-6867e3eb2edb@whissi.de>
- <CAPhsuW6Bq8rkiCzsWW7bkrCbYYEwFWtKaswOZcXsyk8tu3C5Dg@mail.gmail.com>
- <be8542cf-9b58-8861-11b5-8eeaa08f1421@whissi.de> <CAPhsuW45eYTjmA4C_wc_Z=ELbw9NStGpX6Mkf=tn1AEBknDg4Q@mail.gmail.com>
- <CAPhsuW7zdynykfXnz8X4CDEusHSHm9Vr01yiQSpEvizGwBUDkQ@mail.gmail.com>
- <172d7663-ce22-f87a-6aa0-0b6145115711@whissi.de> <CAPhsuW4ZeQXL2KsLD_xxUy2dz-aoe+1fZj_+tMEeaLwXJywf=g@mail.gmail.com>
- <CAPhsuW6OcFeyVO-=12opRDijXHpQh1drQZZ6nLAq9P5TzvpnMA@mail.gmail.com> <3114ed77-3802-8ca4-52e4-0e4b917d88b2@kernel.dk>
-In-Reply-To: <3114ed77-3802-8ca4-52e4-0e4b917d88b2@kernel.dk>
-From: Song Liu <song@kernel.org>
-Date: Thu, 25 Aug 2022 15:24:20 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7AYMXrW4DNRTnGEvySSLHVz_8n0vJDHzZh90o5NR_5_Q@mail.gmail.com>
-Message-ID: <CAPhsuW7AYMXrW4DNRTnGEvySSLHVz_8n0vJDHzZh90o5NR_5_Q@mail.gmail.com>
-Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Thomas Deutschmann <whissi@whissi.de>, Christoph Hellwig <hch@lst.de>, Vishal Verma <vverma@digitalocean.com>, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3113.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53a45f0a-83c6-4da7-8ba2-08da86f383f1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Aug 2022 23:42:47.4854
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cnEeNt2IpxhgLC6MsFIMQrHoAg6dx0ZaXtfs+3jPHVNuyzRLSYK9nB9pCO0OLL+IbD+8moC09JxTLGuJ5+8v+0PwJWaRzAf0hvOg3buBK/A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB2062
+X-OriginatorOrg: intel.com
 
-On Thu, Aug 25, 2022 at 12:12 PM Jens Axboe <axboe@kernel.dk> wrote:
->
-> On 8/25/22 10:47 AM, Song Liu wrote:
-> > On Tue, Aug 23, 2022 at 10:13 AM Song Liu <song@kernel.org> wrote:
-> >>
-> >> On Mon, Aug 22, 2022 at 8:15 PM Thomas Deutschmann <whissi@whissi.de> wrote:
-> >>>
-> >>> On 2022-08-23 03:37, Song Liu wrote:
-> >>>> Thomas, have you tried to bisect with the fio repro?
-> >>>
-> >>> Yes, just finished:
-> >>>
-> >>>> d32d3d0b47f7e34560ae3c55ddfcf68694813501 is the first bad commit
-> >>>> commit d32d3d0b47f7e34560ae3c55ddfcf68694813501
-> >>>> Author: Christoph Hellwig
-> >>>> Date:   Mon Jun 14 13:17:34 2021 +0200
-> >>>>
-> >>>>     nvme-multipath: set QUEUE_FLAG_NOWAIT
-> >>>>
-> >>>>     The nvme multipathing code just dispatches bios to one of the blk-mq
-> >>>>     based paths and never blocks on its own, so set QUEUE_FLAG_NOWAIT
-> >>>>     to support REQ_NOWAIT bios.
-> >>>
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d32d3d0b47f7e34560ae3c55ddfcf68694813501
-> >>>
-> >>>
-> >>> So another NOWAIT issue -- similar to the bad commit which is causing
-> >>> the mdraid issue I already found
-> >>> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0f9650bd838efe5c52f7e5f40c3204ad59f1964d).
-> >>>
-> >>> Reverting the commit, i.e. deleting
-> >>>
-> >>>    blk_queue_flag_set(QUEUE_FLAG_NOWAIT, head->disk->queue);
-> >>>
-> >>> fixes the problem for me. Well, sort of. Looks like this will disable
-> >>> io_uring. fio reproducer fails with
-> >>
-> >> My system doesn't have multipath enabled. I guess bisect will point to something
-> >> else here.
-> >>
-> >> I am afraid we won't get more information from bisect.
-> >
-> > OK, I am able to pinpoint the issue, and Jens found the proper fix for
-> > it (see below,
-> > also available in [1]). It survived 100 runs of the repro fio job.
-> >
-> > Thomas, please give it a try.
-> >
-> > Thanks,
-> > Song
-> >
-> > diff --git c/fs/io_uring.c w/fs/io_uring.c
-> > index 3f8a79a4affa..72a39f5ec5a5 100644
-> > --- c/fs/io_uring.c
-> > +++ w/fs/io_uring.c
-> > @@ -4551,7 +4551,12 @@ static int io_write(struct io_kiocb *req,
-> > unsigned int issue_flags)
-> >  copy_iov:
-> >                 iov_iter_restore(&s->iter, &s->iter_state);
-> >                 ret = io_setup_async_rw(req, iovec, s, false);
-> > -               return ret ?: -EAGAIN;
-> > +               if (!ret) {
-> > +                       if (kiocb->ki_flags & IOCB_WRITE)
-> > +                               kiocb_end_write(req);
-> > +                       return -EAGAIN;
-> > +               }
-> > +               return 0;
->
-> This should be 'return ret;' for that last line. I had to double check
-> the ones I did, but they did get it right. But I did a double take when
-> I saw this one :-)
+We were testing the changes for our VF devices and noticed an issue when st=
+arting VMs with passthrough VFs. We then moved back to mainline kernel and =
+reproduced the issue on 6.0-rc2
 
-Ah, right... "ret ?: -EAGAIN" is a lot of information..
+We noticed that the startup of the KVM hangs.
 
-Song
+Steps to reproduce:
+Create a VF from the PF interface.
+Configure VM XML with the VF PCI.
+Start the KVM.
 
->
-> It'll work fine for testing as we won't hit errors here unless we run
-> out of memory, so...
->
-> --
-> Jens Axboe
+To isolate the issue we moved back to kernel 5.19 and it was working fine.
+
+Working tag v5.19
+Tested failing commit 4c612826bec1
+
+[root@localhost sl]# uname -r
+6.0.0-rc2-00159-g4c612826bec1
+[root@localhost sl]# echo 1 > /sys/class/net/ens785f3/device/sriov_numvfs
+[root@localhost sl]# virsh start rhel_9_0_first
+^C
+[root@localhost sl]# virsh list --all
+ Id   Name             State
+-------------------------------
+ 1    rhel_9_0_first   paused=09
+
+Dmesg:
+[  +0.042400] iavf: Intel(R) Ethernet Adaptive Virtual Function Network Dri=
+ver
+[  +0.000004] Copyright (c) 2013 - 2018 Intel Corporation.
+[  +0.000309] iavf 0000:18:19.0: enabling device (0000 -> 0002)
+[  +0.073471] iavf 0000:18:19.0: Invalid MAC address 00:00:00:00:00:00, usi=
+ng random
+[  +0.000674] iavf 0000:18:19.0: Multiqueue Enabled: Queue pair count =3D 1=
+6
+[  +0.000466] iavf 0000:18:19.0: MAC address: 5a:0c:b5:f7:4f:0b
+[  +0.000003] iavf 0000:18:19.0: GRO is enabled
+[  +0.005941] iavf 0000:18:19.0 ens785f3v0: renamed from eth0
+[  +0.179174] IPv6: ADDRCONF(NETDEV_CHANGE): ens785f3v0: link becomes ready
+[  +0.000040] iavf 0000:18:19.0 ens785f3v0: NIC Link is Up Speed is 25 Gbps=
+ Full Duplex
+[ +26.408503] bridge: filtering via arp/ip/ip6tables is no longer available=
+ by default. Update your scripts to load br_netfilter if you need this.
+[  +0.399621] VFIO - User Level meta-driver version: 0.3
+[  +0.151579] iavf 0000:18:19.0: Remove device
+[  +0.292158] ice 0000:18:00.3 ens785f3: Setting MAC 52:54:00:9f:ea:de on V=
+F 0. VF driver will be reinitialized
+[  +0.083676] ice 0000:18:00.3: Clearing port VLAN on VF 0
+[  +0.155905] tun: Universal TUN/TAP device driver, 1.6
+[  +0.000976] virbr0: port 1(vnet0) entered blocking state
+[  +0.000017] virbr0: port 1(vnet0) entered disabled state
+[  +0.000052] device vnet0 entered promiscuous mode
+[  +0.000244] virbr0: port 1(vnet0) entered blocking state
+[  +0.000003] virbr0: port 1(vnet0) entered listening state
+[  +2.019924] virbr0: port 1(vnet0) entered learning state
+[  +2.047997] virbr0: port 1(vnet0) entered forwarding state
+[  +0.000018] virbr0: topology change detected, propagating
+[Aug25 19:12] INFO: task khugepaged:507 blocked for more than 122 seconds.
+[  +0.000016]       Tainted: G        W I        6.0.0-rc2-00159-g4c612826b=
+ec1 #1
+[  +0.000010] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables t=
+his message.
+[  +0.000010] task:khugepaged      state:D stack:    0 pid:  507 ppid:     =
+2 flags:0x00004000
+[  +0.000004] Call Trace:
+[  +0.000001]  <TASK>
+[  +0.000003]  __schedule+0x1bc/0x550
+[  +0.000006]  ? osq_unlock+0xf/0x90
+[  +0.000005]  schedule+0x5d/0xd0
+[  +0.000002]  rwsem_down_write_slowpath+0x2c9/0x5e0
+[  +0.000004]  ? find_vma+0x64/0x70
+[  +0.000004]  collapse_huge_page+0x1f8/0x8a0
+[  +0.000004]  ? _raw_spin_unlock+0x14/0x30
+[  +0.000002]  ? preempt_count_add+0x70/0xa0
+[  +0.000005]  ? _raw_spin_lock_irqsave+0x21/0x30
+[  +0.000001]  ? lock_timer_base+0x61/0x80
+[  +0.000005]  khugepaged_scan_pmd+0x33d/0x7b0
+[  +0.000003]  khugepaged_scan_mm_slot+0x155/0x440
+[  +0.000003]  khugepaged+0x189/0x3e0
+[  +0.000002]  ? preempt_count_add+0x70/0xa0
+[  +0.000002]  ? _raw_spin_unlock_irqrestore+0x1e/0x40
+[  +0.000002]  ? khugepaged_scan_mm_slot+0x440/0x440
+[  +0.000001]  kthread+0xf0/0x120
+[  +0.000003]  ? kthread_complete_and_exit+0x20/0x20
+[  +0.000003]  ret_from_fork+0x1f/0x30
+[  +0.000006]  </TASK>
+
+On the working version there is a line that enables the interface for the V=
+F which is missing on non-working one:
+[  +0.911730] vfio-pci 0000:18:19.0: enabling device (0000 -> 0002)
