@@ -1,153 +1,153 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1anam02on2082.outbound.protection.outlook.com [40.107.96.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F23A1FA7
-	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 07:26:31 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oR7Fu-0000TJ-L3; Thu, 25 Aug 2022 09:26:22 +0200
-Message-ID: <8c214c0b-4b8f-5e62-5aef-76668987e8fd@leemhuis.info>
-Date: Thu, 25 Aug 2022 09:26:21 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C524E1FA7
+	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 07:34:09 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=h4bX2O/3zFw4TfiwJzgshKu6qlVRR6q8OO4TAWqDLdfvGl42Gr0XoJQzEJyFtkCl2NYfL8V4ietpi6A+OhuI50wI9lcRERWRTX5m7xg0pMwMNdMfDjxDEVe1WDybHlcg77dFIxcRK6YM6MdF8rw7k39/oGrF9AV/RjC8WcH3s+HmWiFy9jlfba39APpXKVUaY63t7IeDfYWZPZ49On8qxEccWOCykqg8Ff3LCvrkqduqhMMRn6fmtU0nRvYkEjTcziPgPAeex9IQaPNOwns5eUdVI92uZOzBZ5oIodAj7BQadx6GhZE/knAQAmIm8uWl63bT3zjkorSwi5fLwl/UUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=U4ooapA1bauaCye1LW+igpbo+UEja2iSmtOHVE4HNYQ=;
+ b=ju9o6+dzAhXkWSyAvIgeKxwY+qIc54QgWas+vFOH4DwVsvLcMF1gNkD+aRtmPqcdbO7/g17cDgmvaYLMbFGhRFpBPoskBvHsHTF78IEkcVgDh0qUox8r0M7exlx2+K69IJcK/QthRPf4ECXpdvMyo/7E4eY3qQ1WU6DPEH6jbSPp8fpCjKC9xvQrg/sfNumai4YkiIc8flAX1XzvP29W0w45j5meXudBqVm2qAqe2jooHBC/CYP9067SqdNYCftOFu3mYPWBvx2fP8rHJW8IHLaS+ASeI64k2frf2iHzG9K3UC4tBzSDjNV8DfoZJwgTDR53hI9mdkGAmPl72Q6X5w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U4ooapA1bauaCye1LW+igpbo+UEja2iSmtOHVE4HNYQ=;
+ b=AZEDRdtAvncRZVS1uT6x8FkijOptphQ7DvF9LSmWCVOYxZq4bZCdDt2MOW9KEhba0UectDOtha3jO1L+hB/SSnbowDwqIaWNvFWmJeb6ALU2ispSYmsl02SCqv8oZbLIoHgO6job/VGdlhDBbbK/8x8jbIrhQaawv980AfiiSb8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN8PR12MB3587.namprd12.prod.outlook.com (2603:10b6:408:43::13)
+ by SN1PR12MB2543.namprd12.prod.outlook.com (2603:10b6:802:2a::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.14; Thu, 25 Aug
+ 2022 07:34:07 +0000
+Received: from BN8PR12MB3587.namprd12.prod.outlook.com
+ ([fe80::4524:eda6:873a:8f94]) by BN8PR12MB3587.namprd12.prod.outlook.com
+ ([fe80::4524:eda6:873a:8f94%7]) with mapi id 15.20.5566.015; Thu, 25 Aug 2022
+ 07:34:07 +0000
+Message-ID: <43df753f-faf7-f6be-4adb-e9c3ef615abc@amd.com>
+Date: Thu, 25 Aug 2022 09:34:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
+Content-Language: en-US
+To: Stefan Roese <sr@denx.de>, Tom Seewald <tseewald@gmail.com>,
+ "Lazar, Lijo" <lijo.lazar@amd.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, regressions@lists.linux.dev,
+ David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org,
+ Xinhui Pan <Xinhui.Pan@amd.com>, amd-gfx@lists.freedesktop.org,
+ Kai-Heng Feng <kai.heng.feng@canonical.com>, Daniel Vetter
+ <daniel@ffwll.ch>, Alex Deucher <alexander.deucher@amd.com>
+References: <20220819190725.GA2499154@bhelgaas>
+ <6aad506b-5324-649e-9700-7ceaaf7ef94b@amd.com>
+ <CAARYdbhVwD1m1rAzbR=K60O=_A3wFsb1ya=zRV_bmF8s3Kb02A@mail.gmail.com>
+ <30671d88-85a1-0cdf-03db-3a77d6ef96e9@amd.com>
+ <CAARYdbhdR0v=V82WnQOGBNrcth8z6F_61SxG9OTzgNpgg3xx7A@mail.gmail.com>
+ <68f140f8-1877-6077-0992-e435fb9a94e7@denx.de>
+From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+In-Reply-To: <68f140f8-1877-6077-0992-e435fb9a94e7@denx.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM5PR0601CA0033.eurprd06.prod.outlook.com
+ (2603:10a6:203:68::19) To BN8PR12MB3587.namprd12.prod.outlook.com
+ (2603:10b6:408:43::13)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: Commit 'r8152: fix a WOL issue' makes Ethernet port on Lenovo
- Thunderbolt 3 dock go crazy
-Content-Language: en-US
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Maxim Levitsky <mlevitsk@redhat.com>, netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
- Hayes Wang <hayeswang@realtek.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <3745745afedb2eff890277041896356149a8f2bf.camel@redhat.com>
- <339e2f94-213c-d707-b792-86d53329b3e5@leemhuis.info>
-In-Reply-To: <339e2f94-213c-d707-b792-86d53329b3e5@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661412391;e0b97aee;
-X-HE-SMSGID: 1oR7Fu-0000TJ-L3
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 51ef6641-7c10-4517-330e-08da866c315b
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2543:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	0qzkLVIyXhjf4uNoyOuVFlkUguk3xBLirhPf+vl3wg4vmGratJ6WJV+Q17PaAauuRcbYtVC2iWbCnoMSJW4z69ws5/ZGwyJlg5jlWIaoTFWLgRqhYwDu9hnY5zi77ulqsuSn3Yb9erB8bZ005STicTq7mINfXqo4hlWhqk9N5uLfZ61o9eVpFcqPCEj/PcB3ssdBiKtgGMpubXzYIkrXO1w6PoD+yHTSH0un1egtmEjaUBVpVbulyPoAgxSExjqvsAPNLPepk5wP6gdTks3NtG0KVnQ7UHqEWjQMWDb0ID3+RhiRiYNuTe6M7P8GPhBi4Ef73Pw1sLjXe9FEOqmEf5BBidDPauYFJc1kLizMllfP2CuHqHdKZ9oYcB+aH+gvpfGXcquMY6/JfTmNhygH7oYX90yyp/o+cQiVJU+pmN2QzIghOc5ti58VwQGxWnpiMRf6oTVlqjIHf8SqAWek/zTWIT78fnKw2LdHv03cofYRoQZ7dfLuOdj/B9g5ml9uZKyrfY84ss+aCTN7oPcj4PAGHxfX+iZbL8MKvzOG7ufQZ5N0RHyM3KqV48wGgM+V+8wrvOGDfymkzrIeeJLurfmfdbLVDrXccb0s5R29eWO8NFxb3+2Ntzu+rqHgyPnqRHxugTqb445AalC7P9cObpg5qmGea3U1p85fd+gl9AKgeVHmKdFzpMpW11JV2I5MpqNYKRxG/orJEJEYTqsfXargokaoaM/nBq6mLF/OQ3wD6LCULBTApLRViBUYTA1NwHTJ82qfHzJjsflZ1KVS7yOhhtxXCmegMG9g8p18r+VtRFAAXqkJdQlT/yZZ0gViEbESZlNVvBXIIqzUoUhmyw==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB3587.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(366004)(376002)(346002)(136003)(39860400002)(53546011)(110136005)(26005)(45080400002)(478600001)(2616005)(186003)(966005)(41300700001)(83380400001)(36756003)(6486002)(6666004)(6512007)(6506007)(86362001)(2906002)(31686004)(8936002)(38100700002)(316002)(31696002)(66946007)(4326008)(8676002)(6636002)(54906003)(66556008)(5660300002)(66476007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bUprTEgwVFMrRWFrWnhONlIrZ0Q5WVF2ZTBidlBJOXZwbjcvSENPcWZNL01Z?=
+ =?utf-8?B?RW4zSDFyMk5QUDR0UDlrV24zSko3QngzWGpKQjBOSk42MUhtU1NTb004QTM5?=
+ =?utf-8?B?bnZsWEtDN0F3NlJZbTdyM0lHaXZxVmprTjZVZTFJYkw5b2grMklTYTA0K29x?=
+ =?utf-8?B?TVRyQU85SmNPdUxacldKVE8wVHFPTnZqNjZzZkFjN0syN1JlZ0FITVFMSXVB?=
+ =?utf-8?B?bVZkVytZNGxQRkFlUDRROW5uUkR6bi9ZK3RNVEVlTmQwWjhuQlY2ZTRTRHU5?=
+ =?utf-8?B?MFFscnU4TzhncStDdTYyQVRZclhYa1hYNml1cXplbmkzalFTbEFmc1RSZ3dj?=
+ =?utf-8?B?Ly9UYkt5aTMzeSt6Z1JZVWUwRTEzcXlrNGV5alpqMDRXT3ZvUFMwM1E0MEFo?=
+ =?utf-8?B?bXpVandVQjJQREJlSC8vL3hyem5BbGVITHJHcmtUL2diVURNcGFmT2ovbHg5?=
+ =?utf-8?B?TG11RDJmYng2b0phMno1SWJCLzI1TUhjWEc0bnYxSm5FSklMQWpob1h2THJr?=
+ =?utf-8?B?NGMvNk5pREJaYzk1ZEc1ajZnSGp3YkJoWVc4UnI5Ni82Q280TkNzc0ZCaXY3?=
+ =?utf-8?B?Ny8zWlVQOWNodFBzUlNtT0dkQ2FROGxzOFBlZkJNVkR3ZzU2UkJxWU1iMnF4?=
+ =?utf-8?B?aEMySnE0U0RKaVozems1bERIbkdSdXVWRWVwdjBRd0p3L3A3TTliMUw4dmhB?=
+ =?utf-8?B?a3dXNTFRajErTFpDYTdqYVR4d1BIUHAvQnpjRHFHRjlzVjM1c3U5d2FrMGlz?=
+ =?utf-8?B?dHpjWnQ4eldIU2lSSDRiZGVsZEZRWkxWNjJKa3o1WjQ2dUJ0ZWFSMXp5Sysv?=
+ =?utf-8?B?RDhCbzgzRDgybGwyTW14cmxqQUo0S3R5cm9vdGR1b1p0YnorVXg3bjZSZ3Zr?=
+ =?utf-8?B?b052dnIycDBiaHkzbjNYSFpHRGlTSXNJaExMM0tDOWRqRVIrOUNwNzg0QlJU?=
+ =?utf-8?B?R1k3TlVlV1JKc1RZVDdHWVpjQ3h0UmdKMXBvdWttWkV5OHdoT3hnUFBKNUgy?=
+ =?utf-8?B?MlpiMGpld0RwQW1ZZWZLTFNSQ3ZkcFoxeUhQeUNCcUQzbUtCdlZralBGRGg1?=
+ =?utf-8?B?RjhrSFpwWGtRVXd2RmZUWm1qcWdnclVwaFJrcEpzM0YrWGZLbVhaVEFSVmxJ?=
+ =?utf-8?B?bXZGelQvbU40L2xXWlN1L2hEcDBaaEZsc0xTRHhTbE5SQmNJQ1JTRjU3ZWpp?=
+ =?utf-8?B?dFg4NUw4UVd0cWQ3QWpRYlJqTFBQc1BkZGFHVktFRk14NlF1b1FzUVU1cFRS?=
+ =?utf-8?B?L0p3LzY2QXNhbnBRRCtVWDViNHlqNkZpbUdKa1poVzA3MjZtUHBWRDBFN1J3?=
+ =?utf-8?B?ZWsvZi9OZHRmMmJrQk5jbUNvWFlhYXhPVXYzNVhwRWlBODU3ejduRld1WkZT?=
+ =?utf-8?B?SElWc2d6SWFRZE9rVmtlYS9vMTk0L3BJU2QycFR0a0o4YkdCNkowUXFkQVpp?=
+ =?utf-8?B?U3ozSEV5VlNwQ1lDdnpmaTA1eGh4UEpEREdrRTBKU3AxMFE4S3VCWGdnWlk2?=
+ =?utf-8?B?aG13eGR5Z3Fwa3BKRmJQeDJOMWFjM01DWk1hK2swU1h2K2FiR2YrcUtaU21w?=
+ =?utf-8?B?K1FpYStzYmhFeERPK0NWL0xtWmQ4TGlBUmlxLzhpelgrUUlKN1Npa0RrT0gr?=
+ =?utf-8?B?OFRVajJCYzFOeS9JbWhHVVVQcGcySmFvUDE5dFFsMUtzcFRFcEkxWEhOTlFT?=
+ =?utf-8?B?ZGpMdklZTG1RRHJUaGwxN1pVYklZMXY0cG9pQmJlbmNhenBVZGZYSkRrd3Zr?=
+ =?utf-8?B?R2hhYzFXSXQ4bFVJbmhOVE5MdEhDak5JYTROdVBXczI4dnZtMWtCWGtqMXBT?=
+ =?utf-8?B?VlBoUTcyb05yd1FXWnJIdlozK1Y4a0xOckM3TFdBQWZ6UFYvcTdkaEpvZXVB?=
+ =?utf-8?B?Zyt2eHM1Y2hwZTdEQXBCV3MrK1F0VkkrK0oxZWJDdm1HTGNDZld3akhSSlha?=
+ =?utf-8?B?cmJuZUhFZXNpVE94TTRSR0FweWs1YzlsRWJVeXZCWWdlUUdvdjB3WlNMRWhq?=
+ =?utf-8?B?T2toUVcxaDBicnZCSWhXZ1hOcFpkKzYreXNiczE0QWUyTll4RnBuWGN0K3dt?=
+ =?utf-8?B?V1J4UWVvRys2SW9pdGRGNVltZTFFUXFFSXB3akNGdTdkQk5sdENaNnI5L3dP?=
+ =?utf-8?Q?tFNELgoqiM8f9TF88x4nSLMot?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51ef6641-7c10-4517-330e-08da866c315b
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB3587.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2022 07:34:07.1809
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IsGVkjYeAu8TI8llpKq5TW92Lib2ceqKuzIpctxi5OrXKC6g/a5u5YFkqh2HeYVB
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2543
 
-On 24.08.22 13:16, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker.
-> 
-> Quick note before the boilerplate: there is another report about issues
-> caused by cdf0b86b250fd3 also involving a dock, but apparently it's
-> ignored so far:
-> https://bugzilla.kernel.org/show_bug.cgi?id=216333
+Am 25.08.22 um 08:40 schrieb Stefan Roese:
+> On 24.08.22 16:45, Tom Seewald wrote:
+>> On Wed, Aug 24, 2022 at 12:11 AM Lazar, Lijo <lijo.lazar@amd.com> wrote:
+>>> Unfortunately, I don't have any NV platforms to test. Attached is an
+>>> 'untested-patch' based on your trace logs.
+>>>
+>>> Thanks,
+>>> Lijo
+>>
+>> Thank you for the patch. It applied cleanly to v6.0-rc2 and after
+>> booting that kernel I no longer see any messages about PCI errors. I
+>> have uploaded a dmesg log to the bug report:
+>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Fbugzilla.kernel.org%2Fattachment.cgi%3Fid%3D301642&amp;data=05%7C01%7Cchristian.koenig%40amd.com%7Cd55a659245b24864bd2d08da8664ae2d%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637970065087671063%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C1000%7C%7C%7C&amp;sdata=vbhJ9OB0jIYr%2FRkDIbQHhRRqhyklnnHOT9Xi8z17MYY%3D&amp;reserved=0 
+>>
+>
+> I did not follow this thread in depth, but FWICT the bug is solved now
+> with this patch. So is it correct, that the now fully enabled AER
+> support in the PCI subsystem in v6.0 helped detecting a bug in the AMD
+> GPU driver?
 
-TWIMC, apparently it's the same problem.
+It looks like it, but I'm not 100% sure about the rational behind it.
 
-Fun fact: Hayes discussed this in privately with the bug reporter
-according to this comment:
-https://bugzilla.kernel.org/show_bug.cgi?id=216333#c3
+Lijo can you explain more on this?
 
-Well, that's not how things normally should be handled, but whatever, he
-in the end recently submitted a patch to fix it that is already merged
-to net.git:
+Thanks,
+Christian.
 
-https://lore.kernel.org/lkml/20220818080620.14538-394-nic_swsd@realtek.com/
+>
+> Thanks,
+> Stefan
 
-Ciao, Thorsten
-
-P.S.:
-
-#regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=216333	
-#regzbot fixed-by: b75d612014447
-
-
-> Anyway, moving on:
-> 
-> [TLDR: I'm adding this regression report to the list of tracked
-> regressions; all text from me you find below is based on a few templates
-> paragraphs you might have encountered already already in similar form.]
-> 
-> CCing the regression mailing list, as it should be in the loop for all
-> regressions, as explained here:
-> https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-> 
-> On 23.08.22 11:20, Maxim Levitsky wrote:
->>
->> I recently bisected an issue on my Lenovo P1 gen3, which is connected to the Lenovo Thunderbolt 3 dock.
->>
->> After I suspend the laptop to ram, the ethernet port led on the dock starts to blink like crazy,
->> its peer port on my ethernet switch blinks as well, and eventually the switch stops forwarding packets,
->> bringing all my network down.
->>
->> Likely the ethernet card in the dock sends some kind of a garbage over the wire.
->>
->> Resuming the laptop, "fixes" the issue (leds stops blinking, and the network starts working again
->> after a minute or so).
->>
->> I also tried to connect the dock directly to my main desktop over a dedicated usb network card
->> and try to capture the packets that are sent, but no packets were captured. I will soon retry
->> this test with another network card. I did use promicious mode.
->>
->>
->> This is the offending commit, and reverting it helps:
->>
->> commit cdf0b86b250fd3c1c3e120c86583ea510c52e4ce
->> Author: Hayes Wang <hayeswang@realtek.com>
->> Date:   Mon Jul 18 16:21:20 2022 +0800
->>
->>     r8152: fix a WOL issue
->>     
->>     This fixes that the platform is waked by an unexpected packet. The
->>     size and range of FIFO is different when the device enters S3 state,
->>     so it is necessary to correct some settings when suspending.
->>     
->>     Regardless of jumbo frame, set RMS to 1522 and MTPS to MTPS_DEFAULT.
->>     Besides, enable MCU_BORW_EN to update the method of calculating the
->>     pointer of data. Then, the hardware could get the correct data.
->>     
->>     Fixes: 195aae321c82 ("r8152: support new chips")
->>     Signed-off-by: Hayes Wang <hayeswang@realtek.com>
->>     Link: https://lore.kernel.org/r/20220718082120.10957-391-nic_swsd@realtek.com
->>     Signed-off-by: Jakub Kicinski <kuba@kernel.org>
->>
->>
->> WOL from dock was enabled in BIOS, but I tested with it disabled as well, and
->> no change in behavier.
->>
->> Any help is welcome. I can test patches if needed, the laptop currently runs 6.0-rc2
->> with this commit reverted.
->>
->> When I find some time I can also narrow the change down by reverting only parts
->> of the patch.
->>
->> Best regards,
->> 	Maxim Levitsky
->>
-> 
-> 
-> Thanks for the report. To be sure below issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-> tracking bot:
-> 
-> #regzbot ^introduced cdf0b86b250fd3c1c3e120c86583ea510c52e4ce
-> #regzbot title net: r8152: ehernet port on Lenovo Thunderbolt 3 dock
-> goes crazy
-> #regzbot ignore-activity
-> 
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply -- ideally with also
-> telling regzbot about it, as explained here:
-> https://linux-regtracking.leemhuis.info/tracked-regression/
-> 
-> Reminder for developers: When fixing the issue, add 'Link:' tags
-> pointing to the report (the mail this one replies to), as explained for
-> in the Linux kernel's documentation; above webpage explains why this is
-> important for tracked regressions.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I deal with a lot of
-> reports and sometimes miss something important when writing mails like
-> this. If that's the case here, don't hesitate to tell me in a public
-> reply, it's in everyone's interest to set the public record straight.
