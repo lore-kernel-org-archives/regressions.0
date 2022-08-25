@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B802D2F28
-	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 11:40:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9F82F28
+	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 11:42:22 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oRBDm-0006Sb-Ru; Thu, 25 Aug 2022 13:40:26 +0200
-Message-ID: <2ebb4b04-efe7-ffe8-bf8c-bfc08685eb57@leemhuis.info>
-Date: Thu, 25 Aug 2022 13:40:26 +0200
+	id 1oRBFc-0007Tp-H9; Thu, 25 Aug 2022 13:42:20 +0200
+Message-ID: <161d2c47-6003-0fd2-9826-ca36d75d6f96@leemhuis.info>
+Date: Thu, 25 Aug 2022 13:42:20 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,52 +16,38 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.0
-Subject: Re: [regression] Bug 216386 - rtw_8822be: Wifi stops working after
- resume #forregzbot
+Subject: Re: [regression] Bug 216388 - On Host, kernel errors in KVM, on
+ guests, it shows CPU stalls #forregzbot
 Content-Language: en-US
 From: Thorsten Leemhuis <regressions@leemhuis.info>
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <822ed6b6-fd3a-3873-cdf0-543340fd4103@leemhuis.info>
-In-Reply-To: <822ed6b6-fd3a-3873-cdf0-543340fd4103@leemhuis.info>
+References: <c27ace0f-7d04-e88b-6e2f-7e4a7ec3c36c@leemhuis.info>
+In-Reply-To: <c27ace0f-7d04-e88b-6e2f-7e4a7ec3c36c@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661427628;9b4fbbc2;
-X-HE-SMSGID: 1oRBDm-0006Sb-Ru
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661427742;76ab737e;
+X-HE-SMSGID: 1oRBFc-0007Tp-H9
 
 TWIMC: this mail is primarily send for documentation purposes and for
 regzbot, my Linux kernel regression tracking bot. These mails usually
 contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-On 25.08.22 13:25, Thorsten Leemhuis wrote:
-> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=216386 :
+On 25.08.22 13:27, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
 > 
->>  Utkarsh Verma 2022-08-20 09:16:41 UTC
->>
->> I have an ASUS TUF FX505DT which has the RTL8822BE wifi card. I recently upgraded to kernel 5.19 and this issue started popping up.
->>
->> When I close my laptop lid and let it sleep for a considerable amount of time, the wifi stops working the next time I open it, and I have to reboot my PC to get internet. This is annoying because I suspended my PC to continue with my work after some time quickly, and having to reboot defeats the purpose.
->>
->> I tried removing and reloading the kernel module for this device as well, and it fails with the following dmesg log.
->>
->> ```
->> [ 4914.877037] rtw_8822be 0000:04:00.0: Unable to change power state from D3cold to D0, device inaccessible
->> [ 4914.886333] rtw_8822be 0000:04:00.0: mac power on failed
->> [ 4914.886342] rtw_8822be 0000:04:00.0: failed to power on mac
->> [ 4914.886344] rtw_8822be 0000:04:00.0: failed to setup chip efuse info
->> [ 4914.886348] rtw_8822be 0000:04:00.0: failed to setup chip information
->> [ 4914.892027] rtw_8822be 0000:04:00.0: Firmware version 27.2.0, H2C version 13
->> [ 4914.922150] rtw_8822be: probe of 0000:04:00.0 failed with error -114
->> ```
+> I noticed a regression reported in bugzilla.kernel.org that seems to be
+> handled there already, nevertheless I'd like to add to the tracking to
+> ensure it's doesn't fall through the cracks in the end:
 > 
-> #regzbot introduced: https://bugzilla.kernel.org/show_bug.cgi?id=216386
+> #regzbot introduced: https://bugzilla.kernel.org/show_bug.cgi?id=216388
 > #regzbot ignore-activity
 
-Argh, apparently I forgot the appropriate syntax of the bot I wrote
-myself :-/
+Argh, stupid me, apparently I forgot the appropriate syntax of the bot I
+wrote myself :-/
 
 #regzbot introduced: v5.18..v5.19 ^
 https://bugzilla.kernel.org/show_bug.cgi?id=216386
-#regzbot From: Utkarsh Verma <utkarsh.naveen@gmail.com>
+#regzbot From: Robert Dinse <nanook@eskimo.com>
 #regzbot ignore-activity
+
+Sorry for the noise
