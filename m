@@ -1,90 +1,92 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF7129A9
-	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 10:42:52 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oRAK2-0007E0-V5; Thu, 25 Aug 2022 12:42:51 +0200
-Message-ID: <849a07ba-a53c-3f10-e2ec-25421c1e40ee@leemhuis.info>
-Date: Thu, 25 Aug 2022 12:42:50 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B0B29A9
+	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 10:43:43 +0000 (UTC)
+Received: by mail-oi1-f170.google.com with SMTP id a133so14930867oif.4
+        for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 03:43:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc;
+        bh=zrIRGklNoO2a5CD9cGT6cGI8Xi9o//UAgqinYGld0u0=;
+        b=sQXkC4Y6tu3f7sZSxSUrG3VeU9KAZZEQED4NsZGoqcDMb0WNORpyF+E/iBBHEmsoQB
+         xaUOwG0teJvwgQGIVxC2MCKY3XCNvreq3rzEIidHmHgN0diW3nPGiG4dsK4qmlvJKorm
+         AwuxpBrrK+ZSi3mkJxnlGYbvFvBbnnZxsHNcYCCYmChDRISJYUaRuI031uZilmkMmHRx
+         SgilGYKlkjKa7jSRsAqnxxTpUrVkDiqJMowEKp2izcKK8j5CEUt4eluqcV2JCKZDonHI
+         WodWylzgHS3vgt51nLZt2C3ztyR861IMjyPwCckx9X8DtX28n6IBqapxfdwLyfqWOaoM
+         D/tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc;
+        bh=zrIRGklNoO2a5CD9cGT6cGI8Xi9o//UAgqinYGld0u0=;
+        b=O7iBbnHYR+qCpJKFlSLOfLnpMz47bR5IH4cmAvTyKrskWNpbFwDN7laYb7owUtOfXl
+         Yke64RtRpfkaGVn+K/aH6vhXLRdnSD/UcWMZZTIZE+WA9vrqtEsOzc16vrPPW8YTDfrI
+         pgSB8tC0QpOO7zduQl6tplGTLRoBaGs6WkDh6WRwEKfhkCIapvwfWXreSsYO+qSRRHjJ
+         TQ9XZtGpLGrgYKP034YYlo4UddvUuexzlYNJKH6dNgJpuH1xpAhCJloXkd9XUmDsMAjV
+         8mDgkjDWGWdUWfQYuuKNB/AuB9e5GuSy1qJ6d5JRrIXBBTqnq63ymRZkzlxBkP+EeAo/
+         6vPQ==
+X-Gm-Message-State: ACgBeo3cjL0QiPnE4nt5VrEK40NDhtwWKhV44wdjd+De2b/jqL5iFgRi
+	OwJt4vak2hZ4ybQBiE0wsT+nawt5hAXkOVaNJgPMVQ==
+X-Google-Smtp-Source: AA6agR4l2jLyUhp4ZTjfG4oWL/P06sEpXpvwrFCJNJhC3/NFHdjStcjUwCLe2srqGsAAQCCGJ4TLcWgBznQ+hKT3H7I=
+X-Received: by 2002:a05:6808:1242:b0:345:7e6b:961b with SMTP id
+ o2-20020a056808124200b003457e6b961bmr1435273oiv.290.1661424222144; Thu, 25
+ Aug 2022 03:43:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Content-Language: en-US
-Cc: hi2@n101n.xyz, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: [Regression] Bug 216371 - acpi wake up with black screen with msg
- "amd_gpio AMDI0030:00: failed to get iomux index"
-To: Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661424173;a9168c86;
-X-HE-SMSGID: 1oRAK2-0007E0-V5
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 25 Aug 2022 16:13:30 +0530
+Message-ID: <CA+G9fYsHVdu0toduQqk6vsR8Z8mOVzZ9-_p3O5fjQ5mOpSxsDA@mail.gmail.com>
+Subject: [next] x86: fs/hugetlbfs/inode.c:673:16: error: variable 'm_index' is
+ uninitialized when used here [-Werror,-Wuninitialized]
+To: Mike Kravetz <mike.kravetz@oracle.com>, linux-mm <linux-mm@kvack.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, open list <linux-kernel@vger.kernel.org>, 
+	regressions@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>, 
+	clang-built-linux <clang-built-linux@googlegroups.com>
+Cc: Muchun Song <songmuchun@bytedance.com>, Andrea Arcangeli <aarcange@redhat.com>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>, Axel Rasmussen <axelrasmussen@google.com>, 
+	David Hildenbrand <david@redhat.com>, Davidlohr Bueso <dave@stgolabs.net>, 
+	James Houghton <jthoughton@google.com>, 
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Michal Hocko <mhocko@suse.com>, Mina Almasry <almasrymina@google.com>, 
+	Naoya Horiguchi <naoya.horiguchi@linux.dev>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Peter Xu <peterx@redhat.com>, Prakash Sangappa <prakash.sangappa@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, this is your Linux kernel regression tracker.
+The x86_64 and i386 clang builds failed due to these warnings / errors
+on Linux next-20220825.
 
-I noticed a regression report in bugzilla.kernel.org that afaics nobody
-acted upon since it was reported. That's why I decided to forward it by
-mail to those that afaics should handle this.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-To quote from https://bugzilla.kernel.org/show_bug.cgi?id=216371 :
+fs/hugetlbfs/inode.c:673:16: error: variable 'm_index' is
+uninitialized when used here [-Werror,-Wuninitialized]
+                                                m_start, m_index, truncate_op);
+                                                         ^~~~~~~
+fs/hugetlbfs/inode.c:651:26: note: initialize the variable 'm_index'
+to silence this warning
+        pgoff_t m_start, m_index;
+                                ^
+                                 = 0
+1 error generated.
+make[3]: *** [scripts/Makefile.build:250: fs/hugetlbfs/inode.o] Error 1
+make[3]: Target '__build' not remade because of errors.
+make[2]: *** [scripts/Makefile.build:525: fs/hugetlbfs] Error 2
 
->  neoe 2022-08-17 01:50:41 UTC
-> 
-> just upgrade from 5.18 to 6.0.0-rc1
-> 
-> `acpitool -s` 
-> to set to sleep, it seems a little slow.
-> 
-> then wake up, black screen,
-> 
-> everything works fine before.
-> 
-> AMD 3900X
-> 
-> [reply] [−] Comment 1 neoe 2022-08-22 02:39:12 UTC
-> 
-> dmesg
-> 
-> amd_gpio AMDI0030:00: failed to get iomux index
-See the ticket for details.
+Build link: https://builds.tuxbuild.com/2Dpvef6uVvzHMztbfQRmxJfPXZT/
 
-Please look into the issue if you're among the main recipients of this
-mail (and not just CCed). I hope I picked the right people to sent this
-to, if not, just let everyone know (and apologies!). Basavaraj, unless
-my quick analysis of the situation went haywire it seems that you
-recently added code with the error message noticed by the reporter.
+Steps to reproduce:
+-------------------
+# To install tuxmake on your system globally:
+# sudo pip3 install -U tuxmake
 
-Anyway, to ensure this is not forgotten lets get this tracked by the the
-Linux kernel regression tracking bot:
+tuxmake --runtime podman --target-arch x86_64 --toolchain clang-14
+--kconfig https://builds.tuxbuild.com/2Dpvef6uVvzHMztbfQRmxJfPXZT/config
+LLVM=1 LLVM_IAS=1
 
-#regzbot introduced: v5.19..v6.0-rc2
-https://bugzilla.kernel.org/show_bug.cgi?id=216371
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report in bugzilla, as the kernel's documentation calls
-for; above page explains why this is important for tracked regressions.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+--
+Linaro LKFT
+https://lkft.linaro.org
