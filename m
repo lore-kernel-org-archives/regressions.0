@@ -1,84 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B1C33F7;
-	Thu, 25 Aug 2022 16:10:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC67DC433C1;
-	Thu, 25 Aug 2022 16:10:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F093C02
+	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 16:13:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D6A1C433D6;
+	Thu, 25 Aug 2022 16:13:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1661443809;
-	bh=YeZpqXiWIj2UfGQAr0U2HYO2aQK9k8WY7/sp89p4GTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aaMwx8JKmkkb6t5r8pvyF2YpWKpX4SjF9KqZKXHKxAL2bkLj59sosnMbT7KLDUXeC
-	 MuZWH6jEnAENICgMXZmj9CyIeWZ+czj2hzTq+ho/6licNb3A79kj1ztNs829U+02RU
-	 8EP7yZJje2Ytht8AmmDi0pymRSWyH8oBa0sKGWHEODAaouA1/NuEvpUbZL2Lqg0iDx
-	 cgW2AjPInr+1TzJpqxo+ByAWUS0UB7hrTOBH8Eyt3bTQib9A/pAbTq+UycoR7NWyIR
-	 FD4f9HKnND++p5ItBYfnfD+z28AEdJcFaONZgYX4lKwG+PkJgLKel3wDhWV0ERgRBK
-	 DfrtefSXYKcuQ==
-Date: Thu, 25 Aug 2022 09:10:07 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>, linux-mm <linux-mm@kvack.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	regressions@lists.linux.dev,
-	clang-built-linux <clang-built-linux@googlegroups.com>,
-	Muchun Song <songmuchun@bytedance.com>,
-	Andrea Arcangeli <aarcange@redhat.com>,
-	"Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	David Hildenbrand <david@redhat.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	James Houghton <jthoughton@google.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Miaohe Lin <linmiaohe@huawei.com>, Michal Hocko <mhocko@suse.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Naoya Horiguchi <naoya.horiguchi@linux.dev>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Peter Xu <peterx@redhat.com>,
-	Prakash Sangappa <prakash.sangappa@oracle.com>,
-	llvm@lists.linux.dev
-Subject: Re: [next] x86: fs/hugetlbfs/inode.c:673:16: error: variable
- 'm_index' is uninitialized when used here [-Werror,-Wuninitialized]
-Message-ID: <Ywee393cssPJ07Gr@dev-arch.thelio-3990X>
-References: <CA+G9fYsHVdu0toduQqk6vsR8Z8mOVzZ9-_p3O5fjQ5mOpSxsDA@mail.gmail.com>
+	s=k20201202; t=1661444024;
+	bh=vZbgVY2G/5OHN0gh3qchTpghD4a8tCzza/y15Oz5I0U=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=P7A+WAnDdtwS91BYv3Rv+pX+9G0TX8G9reOfyDHKMgWrvjxXDNBk1hLpS7tdtM51a
+	 Gfi05PdZWtNQPamG+NZ3OIlndVUYqjuF+0xv63qIKv5h/KcPnnqmRj4vVwXbL5EOwX
+	 p7oRbum5ZMBMQvfwKVaqqsRbVe8wr6/qJ0MOUFs4tz7+nn58jFq6ear4LQ4xENQfeq
+	 at28aIP0Dpr5xz9B7ohAY5O2IbCFjjLVBVSrd5T4mLoD2A5RqKnfB/Zw6IyyXdGlJB
+	 5Lf5ZD6Qj3GpmTYrlM1wOvySQhYri3Kvy3rnUj4NAfCXwQ9SeIK7PCdnFhFH27dzBa
+	 6i1XM2OMv+ViQ==
+Date: Thu, 25 Aug 2022 09:13:43 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Maxim Levitsky <mlevitsk@redhat.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Hayes Wang
+ <hayeswang@realtek.com>, "regressions@lists.linux.dev"
+ <regressions@lists.linux.dev>
+Subject: Re: Commit 'r8152: fix a WOL issue' makes Ethernet port on Lenovo
+ Thunderbolt 3 dock go crazy
+Message-ID: <20220825091343.2e5f99dd@kernel.org>
+In-Reply-To: <8c214c0b-4b8f-5e62-5aef-76668987e8fd@leemhuis.info>
+References: <3745745afedb2eff890277041896356149a8f2bf.camel@redhat.com>
+	<339e2f94-213c-d707-b792-86d53329b3e5@leemhuis.info>
+	<8c214c0b-4b8f-5e62-5aef-76668987e8fd@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYsHVdu0toduQqk6vsR8Z8mOVzZ9-_p3O5fjQ5mOpSxsDA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Naresh,
-
-On Thu, Aug 25, 2022 at 04:13:30PM +0530, Naresh Kamboju wrote:
-> The x86_64 and i386 clang builds failed due to these warnings / errors
-> on Linux next-20220825.
+On Thu, 25 Aug 2022 09:26:21 +0200 Thorsten Leemhuis wrote:
+> On 24.08.22 13:16, Thorsten Leemhuis wrote:
+> > Hi, this is your Linux kernel regression tracker.
+> > 
+> > Quick note before the boilerplate: there is another report about issues
+> > caused by cdf0b86b250fd3 also involving a dock, but apparently it's
+> > ignored so far:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=216333  
 > 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> TWIMC, apparently it's the same problem.
 > 
-> fs/hugetlbfs/inode.c:673:16: error: variable 'm_index' is
-> uninitialized when used here [-Werror,-Wuninitialized]
->                                                 m_start, m_index, truncate_op);
->                                                          ^~~~~~~
-> fs/hugetlbfs/inode.c:651:26: note: initialize the variable 'm_index'
-> to silence this warning
->         pgoff_t m_start, m_index;
->                                 ^
->                                  = 0
-> 1 error generated.
+> Fun fact: Hayes discussed this in privately with the bug reporter
+> according to this comment:
+> https://bugzilla.kernel.org/show_bug.cgi?id=216333#c3
+> 
+> Well, that's not how things normally should be handled, but whatever, he
+> in the end recently submitted a patch to fix it that is already merged
+> to net.git:
+> 
+> https://lore.kernel.org/lkml/20220818080620.14538-394-nic_swsd@realtek.com/
 
-Thank you for the report! Commit fcc0d3d00d74 ("hugetlb: handle truncate
-racing with page faults") introduced this warning; the Intel folks
-caught this as well:
+Yup, it will be part of 6.0-rc3. 
 
-https://lore.kernel.org/202208251012.g1mOhhxy-lkp@intel.com/
-
-As an aside, can you please update your contact for our mailing list to
-llvm@lists.linux.dev? We do not use the Google Groups list anymore.
-
-Cheers,
-Nathan
+Thanks!
