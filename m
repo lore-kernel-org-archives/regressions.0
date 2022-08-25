@@ -1,154 +1,136 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC913C23
-	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 19:12:08 +0000 (UTC)
-Received: by mail-io1-f42.google.com with SMTP id y187so16773182iof.0
-        for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 12:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=q+BEJd4Ibh7RrLk+WP02zwpRxnVe4S55Gu4awiljDw0=;
-        b=sYe1bqsG1buPv8WYBHVu9LV8H/qwDqbG203kUVDdP8+N3ftpzuVifQWSZ5XB+t8cbd
-         ciM9aEBwxlKRID1G+BAkLVoCWTejWukPJh0/r2hJdsktVhHpZDlAdZofxnaUe2yYsAaD
-         Kw5b4Q9bVghiQ9xUptV64BKiB8JDrtH3urwe5yQufj72Hv+KlgnwZEf8VkQl4Jyf0lby
-         8o/0OuUtKO+/2tqNjZIVE7nlFprzh+Cbhgv2Mz+8IjD1qxS3kS3iLY7ag3gCdu/Yqbw3
-         vohSls7g7Z5dEXgdnTEiyH9sA8n/nOkNROh0wk0nVueXoV4wi9xHldpvUCMBqlDD4i3Q
-         dRLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=q+BEJd4Ibh7RrLk+WP02zwpRxnVe4S55Gu4awiljDw0=;
-        b=RHbiFG96Y4xGNqZSXNNuN58nweXTVcHQ0Xol0PsHegn9YGZmXn580qemt92JtBh7kH
-         zTVebwRU+zO6efIO0KMZKRwxMIypfLHdzMFP/gVAFJLwgb9hkRei+jx86uHjbkdpf/m/
-         9k/ymZDefMddZjnrwO8nJtig9nNh2yMvPH9tsItrjQ22UiZm8hnXWEK0CVGy5ETt9R3w
-         +w5t07xwI1xb82VUkUcleAEZkx9WKepfSu+PTZ1gUn+O0u1nFG007oHzYQP9VH1tcUdh
-         4eBnvWuG8mLyrWPN4KcH51G9AjNeDPMzggEjv86ahrOiXbpkeZ2werRqcd349Kno10uQ
-         syUw==
-X-Gm-Message-State: ACgBeo0mPWDhA/7SQCpkl7+IozADoToQ2rxBKV0jcQpVwDGM2wVVAevW
-	xkX/GkQPJ2LTFNIWDb1VBmKoPA==
-X-Google-Smtp-Source: AA6agR7SpU1XL/tRFdZlihXhRbSwW1y5wLCXg78jLRxlwn0vtzdxQqTuhgYzfvOOXFr0CgT2zLz/NA==
-X-Received: by 2002:a05:6638:d02:b0:346:f5ef:6ab2 with SMTP id q2-20020a0566380d0200b00346f5ef6ab2mr2584983jaj.300.1661454727295;
-        Thu, 25 Aug 2022 12:12:07 -0700 (PDT)
-Received: from [192.168.1.94] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id o2-20020a92c682000000b002e7e8b88c02sm86149ilg.82.2022.08.25.12.12.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Aug 2022 12:12:06 -0700 (PDT)
-Message-ID: <3114ed77-3802-8ca4-52e4-0e4b917d88b2@kernel.dk>
-Date: Thu, 25 Aug 2022 13:12:05 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581B74C74
+	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 22:24:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0777DC433D6
+	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 22:24:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1661466272;
+	bh=kbid+yAxhD0peTtBLuBbST88kUBhO5yA5WbEZLiL7GU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ieMg6rf+MIKPi2zSdsq9+uOQG/5/a0Ft8NJT1Nn5IKxTDSyqtmDYT6YYprlWTzq0q
+	 QbHIss805JqC0JPxi3+W58Cc/lYKCaubRV/VI6UscOa/UC4v+EPVUgQGuRmGmUmHHX
+	 ssgrXh/t9972eSbO/Ko7Lmu+7jspQl03sOZLQwcprzts6YEIotf07iMXC3WWpbaioo
+	 OT8Za34lcFmGuhquwoRV57zzXZEsCB1Esw6ey31SkKBZqTBPtFh0fa9P+vfuzo89fA
+	 IjmMA9AiToh8j+KQvmBLbkMxi101sow1qtFgJXjLxEX0J9wKUdPYTKAKZ8jEQ9YAFH
+	 7og9OvRHE3W5w==
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-324ec5a9e97so576711957b3.7
+        for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 15:24:31 -0700 (PDT)
+X-Gm-Message-State: ACgBeo1kmR3P4AjSFlinjTRbxhD2zLb4xoqbvXXeDJIinbV7boyfVFNV
+	ES6OLylCVvuUoQY/q6I1ooCxOnd6er33/WMXM0E=
+X-Google-Smtp-Source: AA6agR6zE4vjihgs0WHX7ETVPLZCOgYzHa+i2RwZzv215gtNx/cisxaQkqIR9Tu9IDAJw79qXLm0jjApBCIjwtHJDU8=
+X-Received: by 2002:a81:91d0:0:b0:335:10ff:8ee4 with SMTP id
+ i199-20020a8191d0000000b0033510ff8ee4mr5893651ywg.73.1661466271069; Thu, 25
+ Aug 2022 15:24:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.1.2
-Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
-Content-Language: en-US
-To: Song Liu <song@kernel.org>, Thomas Deutschmann <whissi@whissi.de>
-Cc: Christoph Hellwig <hch@lst.de>, Vishal Verma <vverma@digitalocean.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <000401d8a746$3eaca200$bc05e600$@whissi.de>
- <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info>
- <0FBCAB10-545E-45E2-A0C8-D7620817651D@digitalocean.com>
- <CAPhsuW5f9QD+gzJ9eBhn5irsHvrsvkWjSnA4MPaHsQjjLMypXg@mail.gmail.com>
- <43e678ca-3fc3-6c08-f035-2c31a34dd889@whissi.de>
- <701f3fc0-2f0c-a32c-0d41-b489a9a59b99@whissi.de>
- <0192a465-d75d-c09a-732a-eb2215bf3479@whissi.de>
- <CAPhsuW6yLLcj3GtA+4mUFooQmfGo3cVTYn-xBEY2KuP1wwmQNA@mail.gmail.com>
- <b903abd4-d101-e6a5-06a0-667853286308@whissi.de>
- <4f69659f-7160-7854-0ed5-6867e3eb2edb@whissi.de>
+References: <000401d8a746$3eaca200$bc05e600$@whissi.de> <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info>
+ <0FBCAB10-545E-45E2-A0C8-D7620817651D@digitalocean.com> <CAPhsuW5f9QD+gzJ9eBhn5irsHvrsvkWjSnA4MPaHsQjjLMypXg@mail.gmail.com>
+ <43e678ca-3fc3-6c08-f035-2c31a34dd889@whissi.de> <701f3fc0-2f0c-a32c-0d41-b489a9a59b99@whissi.de>
+ <0192a465-d75d-c09a-732a-eb2215bf3479@whissi.de> <CAPhsuW6yLLcj3GtA+4mUFooQmfGo3cVTYn-xBEY2KuP1wwmQNA@mail.gmail.com>
+ <b903abd4-d101-e6a5-06a0-667853286308@whissi.de> <4f69659f-7160-7854-0ed5-6867e3eb2edb@whissi.de>
  <CAPhsuW6Bq8rkiCzsWW7bkrCbYYEwFWtKaswOZcXsyk8tu3C5Dg@mail.gmail.com>
- <be8542cf-9b58-8861-11b5-8eeaa08f1421@whissi.de>
- <CAPhsuW45eYTjmA4C_wc_Z=ELbw9NStGpX6Mkf=tn1AEBknDg4Q@mail.gmail.com>
+ <be8542cf-9b58-8861-11b5-8eeaa08f1421@whissi.de> <CAPhsuW45eYTjmA4C_wc_Z=ELbw9NStGpX6Mkf=tn1AEBknDg4Q@mail.gmail.com>
  <CAPhsuW7zdynykfXnz8X4CDEusHSHm9Vr01yiQSpEvizGwBUDkQ@mail.gmail.com>
- <172d7663-ce22-f87a-6aa0-0b6145115711@whissi.de>
- <CAPhsuW4ZeQXL2KsLD_xxUy2dz-aoe+1fZj_+tMEeaLwXJywf=g@mail.gmail.com>
- <CAPhsuW6OcFeyVO-=12opRDijXHpQh1drQZZ6nLAq9P5TzvpnMA@mail.gmail.com>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CAPhsuW6OcFeyVO-=12opRDijXHpQh1drQZZ6nLAq9P5TzvpnMA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <172d7663-ce22-f87a-6aa0-0b6145115711@whissi.de> <CAPhsuW4ZeQXL2KsLD_xxUy2dz-aoe+1fZj_+tMEeaLwXJywf=g@mail.gmail.com>
+ <CAPhsuW6OcFeyVO-=12opRDijXHpQh1drQZZ6nLAq9P5TzvpnMA@mail.gmail.com> <3114ed77-3802-8ca4-52e4-0e4b917d88b2@kernel.dk>
+In-Reply-To: <3114ed77-3802-8ca4-52e4-0e4b917d88b2@kernel.dk>
+From: Song Liu <song@kernel.org>
+Date: Thu, 25 Aug 2022 15:24:20 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7AYMXrW4DNRTnGEvySSLHVz_8n0vJDHzZh90o5NR_5_Q@mail.gmail.com>
+Message-ID: <CAPhsuW7AYMXrW4DNRTnGEvySSLHVz_8n0vJDHzZh90o5NR_5_Q@mail.gmail.com>
+Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Thomas Deutschmann <whissi@whissi.de>, Christoph Hellwig <hch@lst.de>, Vishal Verma <vverma@digitalocean.com>, 
+	Thorsten Leemhuis <regressions@leemhuis.info>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On 8/25/22 10:47 AM, Song Liu wrote:
-> On Tue, Aug 23, 2022 at 10:13 AM Song Liu <song@kernel.org> wrote:
->>
->> On Mon, Aug 22, 2022 at 8:15 PM Thomas Deutschmann <whissi@whissi.de> wrote:
->>>
->>> On 2022-08-23 03:37, Song Liu wrote:
->>>> Thomas, have you tried to bisect with the fio repro?
->>>
->>> Yes, just finished:
->>>
->>>> d32d3d0b47f7e34560ae3c55ddfcf68694813501 is the first bad commit
->>>> commit d32d3d0b47f7e34560ae3c55ddfcf68694813501
->>>> Author: Christoph Hellwig
->>>> Date:   Mon Jun 14 13:17:34 2021 +0200
->>>>
->>>>     nvme-multipath: set QUEUE_FLAG_NOWAIT
->>>>
->>>>     The nvme multipathing code just dispatches bios to one of the blk-mq
->>>>     based paths and never blocks on its own, so set QUEUE_FLAG_NOWAIT
->>>>     to support REQ_NOWAIT bios.
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d32d3d0b47f7e34560ae3c55ddfcf68694813501
->>>
->>>
->>> So another NOWAIT issue -- similar to the bad commit which is causing
->>> the mdraid issue I already found
->>> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0f9650bd838efe5c52f7e5f40c3204ad59f1964d).
->>>
->>> Reverting the commit, i.e. deleting
->>>
->>>    blk_queue_flag_set(QUEUE_FLAG_NOWAIT, head->disk->queue);
->>>
->>> fixes the problem for me. Well, sort of. Looks like this will disable
->>> io_uring. fio reproducer fails with
->>
->> My system doesn't have multipath enabled. I guess bisect will point to something
->> else here.
->>
->> I am afraid we won't get more information from bisect.
-> 
-> OK, I am able to pinpoint the issue, and Jens found the proper fix for
-> it (see below,
-> also available in [1]). It survived 100 runs of the repro fio job.
-> 
-> Thomas, please give it a try.
-> 
-> Thanks,
-> Song
-> 
-> diff --git c/fs/io_uring.c w/fs/io_uring.c
-> index 3f8a79a4affa..72a39f5ec5a5 100644
-> --- c/fs/io_uring.c
-> +++ w/fs/io_uring.c
-> @@ -4551,7 +4551,12 @@ static int io_write(struct io_kiocb *req,
-> unsigned int issue_flags)
->  copy_iov:
->                 iov_iter_restore(&s->iter, &s->iter_state);
->                 ret = io_setup_async_rw(req, iovec, s, false);
-> -               return ret ?: -EAGAIN;
-> +               if (!ret) {
-> +                       if (kiocb->ki_flags & IOCB_WRITE)
-> +                               kiocb_end_write(req);
-> +                       return -EAGAIN;
-> +               }
-> +               return 0;
+On Thu, Aug 25, 2022 at 12:12 PM Jens Axboe <axboe@kernel.dk> wrote:
+>
+> On 8/25/22 10:47 AM, Song Liu wrote:
+> > On Tue, Aug 23, 2022 at 10:13 AM Song Liu <song@kernel.org> wrote:
+> >>
+> >> On Mon, Aug 22, 2022 at 8:15 PM Thomas Deutschmann <whissi@whissi.de> wrote:
+> >>>
+> >>> On 2022-08-23 03:37, Song Liu wrote:
+> >>>> Thomas, have you tried to bisect with the fio repro?
+> >>>
+> >>> Yes, just finished:
+> >>>
+> >>>> d32d3d0b47f7e34560ae3c55ddfcf68694813501 is the first bad commit
+> >>>> commit d32d3d0b47f7e34560ae3c55ddfcf68694813501
+> >>>> Author: Christoph Hellwig
+> >>>> Date:   Mon Jun 14 13:17:34 2021 +0200
+> >>>>
+> >>>>     nvme-multipath: set QUEUE_FLAG_NOWAIT
+> >>>>
+> >>>>     The nvme multipathing code just dispatches bios to one of the blk-mq
+> >>>>     based paths and never blocks on its own, so set QUEUE_FLAG_NOWAIT
+> >>>>     to support REQ_NOWAIT bios.
+> >>>
+> >>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d32d3d0b47f7e34560ae3c55ddfcf68694813501
+> >>>
+> >>>
+> >>> So another NOWAIT issue -- similar to the bad commit which is causing
+> >>> the mdraid issue I already found
+> >>> (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0f9650bd838efe5c52f7e5f40c3204ad59f1964d).
+> >>>
+> >>> Reverting the commit, i.e. deleting
+> >>>
+> >>>    blk_queue_flag_set(QUEUE_FLAG_NOWAIT, head->disk->queue);
+> >>>
+> >>> fixes the problem for me. Well, sort of. Looks like this will disable
+> >>> io_uring. fio reproducer fails with
+> >>
+> >> My system doesn't have multipath enabled. I guess bisect will point to something
+> >> else here.
+> >>
+> >> I am afraid we won't get more information from bisect.
+> >
+> > OK, I am able to pinpoint the issue, and Jens found the proper fix for
+> > it (see below,
+> > also available in [1]). It survived 100 runs of the repro fio job.
+> >
+> > Thomas, please give it a try.
+> >
+> > Thanks,
+> > Song
+> >
+> > diff --git c/fs/io_uring.c w/fs/io_uring.c
+> > index 3f8a79a4affa..72a39f5ec5a5 100644
+> > --- c/fs/io_uring.c
+> > +++ w/fs/io_uring.c
+> > @@ -4551,7 +4551,12 @@ static int io_write(struct io_kiocb *req,
+> > unsigned int issue_flags)
+> >  copy_iov:
+> >                 iov_iter_restore(&s->iter, &s->iter_state);
+> >                 ret = io_setup_async_rw(req, iovec, s, false);
+> > -               return ret ?: -EAGAIN;
+> > +               if (!ret) {
+> > +                       if (kiocb->ki_flags & IOCB_WRITE)
+> > +                               kiocb_end_write(req);
+> > +                       return -EAGAIN;
+> > +               }
+> > +               return 0;
+>
+> This should be 'return ret;' for that last line. I had to double check
+> the ones I did, but they did get it right. But I did a double take when
+> I saw this one :-)
 
-This should be 'return ret;' for that last line. I had to double check
-the ones I did, but they did get it right. But I did a double take when
-I saw this one :-)
+Ah, right... "ret ?: -EAGAIN" is a lot of information..
 
-It'll work fine for testing as we won't hit errors here unless we run
-out of memory, so...
+Song
 
--- 
-Jens Axboe
+>
+> It'll work fine for testing as we won't hit errors here unless we run
+> out of memory, so...
+>
+> --
+> Jens Axboe
