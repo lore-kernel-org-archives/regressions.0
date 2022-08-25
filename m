@@ -1,64 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F093C02
-	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 16:13:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D6A1C433D6;
-	Thu, 25 Aug 2022 16:13:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB9B32F47
+	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 16:47:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83BF3C433C1
+	for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 16:47:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1661444024;
-	bh=vZbgVY2G/5OHN0gh3qchTpghD4a8tCzza/y15Oz5I0U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=P7A+WAnDdtwS91BYv3Rv+pX+9G0TX8G9reOfyDHKMgWrvjxXDNBk1hLpS7tdtM51a
-	 Gfi05PdZWtNQPamG+NZ3OIlndVUYqjuF+0xv63qIKv5h/KcPnnqmRj4vVwXbL5EOwX
-	 p7oRbum5ZMBMQvfwKVaqqsRbVe8wr6/qJ0MOUFs4tz7+nn58jFq6ear4LQ4xENQfeq
-	 at28aIP0Dpr5xz9B7ohAY5O2IbCFjjLVBVSrd5T4mLoD2A5RqKnfB/Zw6IyyXdGlJB
-	 5Lf5ZD6Qj3GpmTYrlM1wOvySQhYri3Kvy3rnUj4NAfCXwQ9SeIK7PCdnFhFH27dzBa
-	 6i1XM2OMv+ViQ==
-Date: Thu, 25 Aug 2022 09:13:43 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Maxim Levitsky <mlevitsk@redhat.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Hayes Wang
- <hayeswang@realtek.com>, "regressions@lists.linux.dev"
- <regressions@lists.linux.dev>
-Subject: Re: Commit 'r8152: fix a WOL issue' makes Ethernet port on Lenovo
- Thunderbolt 3 dock go crazy
-Message-ID: <20220825091343.2e5f99dd@kernel.org>
-In-Reply-To: <8c214c0b-4b8f-5e62-5aef-76668987e8fd@leemhuis.info>
-References: <3745745afedb2eff890277041896356149a8f2bf.camel@redhat.com>
-	<339e2f94-213c-d707-b792-86d53329b3e5@leemhuis.info>
-	<8c214c0b-4b8f-5e62-5aef-76668987e8fd@leemhuis.info>
+	s=k20201202; t=1661446054;
+	bh=IZfErs2hZ+hFeA8fSKeKzHIymsMXzlY7+phPDJIpTd8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=hjf4P+5V2jA1In3yvJxbb0RaamcdqN9iz6y6zQfeMg7dB/gHXhoE8Tj2byNR7N0A3
+	 no8050o0eT1RPVOr4rVe+m9fX/ptJOh4xVGvbrRWikfoTD6gQFDBdyD9s3S31lUHr0
+	 jfvWFA6m0a5GJvUcNBpOZK91UdHCNw3ouFLF+DQQTwYEpOHLavrysdhFwTDsLwxywy
+	 wKM2mkcbYKfavjoTHfATmJBj3gEdW9S8ZKf3ZbeRwp6ztNQ4dLxBAxxkbD7Oa6LBLo
+	 hKp/J4qmy6LypgoAitFGHM/VsXzkP1zO0fH/zI2s7H5/9IXz9oSuKpVi5YP1+AgZPr
+	 B94rDoxMxroDQ==
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-33dbbf69b3dso58992467b3.1
+        for <regressions@lists.linux.dev>; Thu, 25 Aug 2022 09:47:34 -0700 (PDT)
+X-Gm-Message-State: ACgBeo0YXqJDmG1+j1I3Zn5FW6nPNCchIQODAATEOwwu0KSu2Yhy+ufr
+	UylWiZtPR7l5hwkypcrtfYAFH9rgZdho/i8JVVs=
+X-Google-Smtp-Source: AA6agR5gCJEl06VtSTiIuq1MMwArCuW1eS1wC8rZOuPzyy8JVDU6RT/sjiwnOBSpg26v7oPqx+DpZPPRLFfEuKIChFo=
+X-Received: by 2002:a81:a18b:0:b0:33d:c4bc:5340 with SMTP id
+ y133-20020a81a18b000000b0033dc4bc5340mr2387472ywg.130.1661446053562; Thu, 25
+ Aug 2022 09:47:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <000401d8a746$3eaca200$bc05e600$@whissi.de> <000001d8ad7e$c340ad70$49c20850$@whissi.de>
+ <2a2d1075-aa22-8c4d-ca21-274200dce2fc@leemhuis.info> <0FBCAB10-545E-45E2-A0C8-D7620817651D@digitalocean.com>
+ <CAPhsuW5f9QD+gzJ9eBhn5irsHvrsvkWjSnA4MPaHsQjjLMypXg@mail.gmail.com>
+ <43e678ca-3fc3-6c08-f035-2c31a34dd889@whissi.de> <701f3fc0-2f0c-a32c-0d41-b489a9a59b99@whissi.de>
+ <0192a465-d75d-c09a-732a-eb2215bf3479@whissi.de> <CAPhsuW6yLLcj3GtA+4mUFooQmfGo3cVTYn-xBEY2KuP1wwmQNA@mail.gmail.com>
+ <b903abd4-d101-e6a5-06a0-667853286308@whissi.de> <4f69659f-7160-7854-0ed5-6867e3eb2edb@whissi.de>
+ <CAPhsuW6Bq8rkiCzsWW7bkrCbYYEwFWtKaswOZcXsyk8tu3C5Dg@mail.gmail.com>
+ <be8542cf-9b58-8861-11b5-8eeaa08f1421@whissi.de> <CAPhsuW45eYTjmA4C_wc_Z=ELbw9NStGpX6Mkf=tn1AEBknDg4Q@mail.gmail.com>
+ <CAPhsuW7zdynykfXnz8X4CDEusHSHm9Vr01yiQSpEvizGwBUDkQ@mail.gmail.com>
+ <172d7663-ce22-f87a-6aa0-0b6145115711@whissi.de> <CAPhsuW4ZeQXL2KsLD_xxUy2dz-aoe+1fZj_+tMEeaLwXJywf=g@mail.gmail.com>
+In-Reply-To: <CAPhsuW4ZeQXL2KsLD_xxUy2dz-aoe+1fZj_+tMEeaLwXJywf=g@mail.gmail.com>
+From: Song Liu <song@kernel.org>
+Date: Thu, 25 Aug 2022 09:47:22 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6OcFeyVO-=12opRDijXHpQh1drQZZ6nLAq9P5TzvpnMA@mail.gmail.com>
+Message-ID: <CAPhsuW6OcFeyVO-=12opRDijXHpQh1drQZZ6nLAq9P5TzvpnMA@mail.gmail.com>
+Subject: Re: [REGRESSION] v5.17-rc1+: FIFREEZE ioctl system call hangs
+To: Thomas Deutschmann <whissi@whissi.de>
+Cc: Christoph Hellwig <hch@lst.de>, Vishal Verma <vverma@digitalocean.com>, 
+	Thorsten Leemhuis <regressions@leemhuis.info>, 
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 25 Aug 2022 09:26:21 +0200 Thorsten Leemhuis wrote:
-> On 24.08.22 13:16, Thorsten Leemhuis wrote:
-> > Hi, this is your Linux kernel regression tracker.
-> > 
-> > Quick note before the boilerplate: there is another report about issues
-> > caused by cdf0b86b250fd3 also involving a dock, but apparently it's
-> > ignored so far:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=216333  
-> 
-> TWIMC, apparently it's the same problem.
-> 
-> Fun fact: Hayes discussed this in privately with the bug reporter
-> according to this comment:
-> https://bugzilla.kernel.org/show_bug.cgi?id=216333#c3
-> 
-> Well, that's not how things normally should be handled, but whatever, he
-> in the end recently submitted a patch to fix it that is already merged
-> to net.git:
-> 
-> https://lore.kernel.org/lkml/20220818080620.14538-394-nic_swsd@realtek.com/
+On Tue, Aug 23, 2022 at 10:13 AM Song Liu <song@kernel.org> wrote:
+>
+> On Mon, Aug 22, 2022 at 8:15 PM Thomas Deutschmann <whissi@whissi.de> wrote:
+> >
+> > On 2022-08-23 03:37, Song Liu wrote:
+> > > Thomas, have you tried to bisect with the fio repro?
+> >
+> > Yes, just finished:
+> >
+> > > d32d3d0b47f7e34560ae3c55ddfcf68694813501 is the first bad commit
+> > > commit d32d3d0b47f7e34560ae3c55ddfcf68694813501
+> > > Author: Christoph Hellwig
+> > > Date:   Mon Jun 14 13:17:34 2021 +0200
+> > >
+> > >     nvme-multipath: set QUEUE_FLAG_NOWAIT
+> > >
+> > >     The nvme multipathing code just dispatches bios to one of the blk-mq
+> > >     based paths and never blocks on its own, so set QUEUE_FLAG_NOWAIT
+> > >     to support REQ_NOWAIT bios.
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d32d3d0b47f7e34560ae3c55ddfcf68694813501
+> >
+> >
+> > So another NOWAIT issue -- similar to the bad commit which is causing
+> > the mdraid issue I already found
+> > (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0f9650bd838efe5c52f7e5f40c3204ad59f1964d).
+> >
+> > Reverting the commit, i.e. deleting
+> >
+> >    blk_queue_flag_set(QUEUE_FLAG_NOWAIT, head->disk->queue);
+> >
+> > fixes the problem for me. Well, sort of. Looks like this will disable
+> > io_uring. fio reproducer fails with
+>
+> My system doesn't have multipath enabled. I guess bisect will point to something
+> else here.
+>
+> I am afraid we won't get more information from bisect.
 
-Yup, it will be part of 6.0-rc3. 
+OK, I am able to pinpoint the issue, and Jens found the proper fix for
+it (see below,
+also available in [1]). It survived 100 runs of the repro fio job.
 
-Thanks!
+Thomas, please give it a try.
+
+Thanks,
+Song
+
+diff --git c/fs/io_uring.c w/fs/io_uring.c
+index 3f8a79a4affa..72a39f5ec5a5 100644
+--- c/fs/io_uring.c
++++ w/fs/io_uring.c
+@@ -4551,7 +4551,12 @@ static int io_write(struct io_kiocb *req,
+unsigned int issue_flags)
+ copy_iov:
+                iov_iter_restore(&s->iter, &s->iter_state);
+                ret = io_setup_async_rw(req, iovec, s, false);
+-               return ret ?: -EAGAIN;
++               if (!ret) {
++                       if (kiocb->ki_flags & IOCB_WRITE)
++                               kiocb_end_write(req);
++                       return -EAGAIN;
++               }
++               return 0;
+        }
+ out_free:
+        /* it's reportedly faster than delegating the null check to kfree() */
+
+[1] https://lore.kernel.org/stable/a603cfc5-9ba5-20c3-3fec-2c4eec4350f7@kernel.dk/T/#u
