@@ -1,126 +1,77 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C5BA1851
-	for <regressions@lists.linux.dev>; Fri, 26 Aug 2022 07:10:56 +0000 (UTC)
-Received: by mail-wr1-f47.google.com with SMTP id t12so710093wrm.8
-        for <regressions@lists.linux.dev>; Fri, 26 Aug 2022 00:10:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc;
-        bh=Wk6ASekOjGWHwzdPH/KW6aUNU4MlaS+85Ve1j+puKOs=;
-        b=pRiDdYrLXUw1Ya7fKu91DJfxu/f9U+zY20DpJsAP/3OlSJYC5KaWEHNyJnaYzFQc48
-         z3flwYnJbt6bloYLLyVTw2Ipo84/gxMtoqih0/GUnQjXytzYpvhm0Pgcggw5puSUnssP
-         LHzIs0p6JVy+Z5jj3dVN77aXcPzmkb1iKGeNSdnhpnH6gmwFe91+GHsa2XOom7htPXHm
-         jx9d8dzp2w6LZy9JaitpKWCXoZh6OSGyVZ2XPaGAJjGJ1T/kMDTSqy+Wa+crMLIxNEe2
-         RN9pY2ASaJHZiMNYgV80Hjb1ep2B+y6xq9q2SsLA3Tc9zjnQoQVDokc5XQ7Q8f8IMrD3
-         VRDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc;
-        bh=Wk6ASekOjGWHwzdPH/KW6aUNU4MlaS+85Ve1j+puKOs=;
-        b=AfrKvc2Tr7dfc+FsqhTNYHgQGmSBobGDis5OTY5csEuXLjZ2pVP3i4hVEpduFbOC+s
-         SbIYCcdjxYos1H+IllEmj53pLXgjavpRHf6qplOgTbaAIW2ZWUoUQvuQKlju7auhFrHw
-         hAW1Cy3wbQ1ucBNsG3YsuJpn7nRjwp0W/oHrtatW6/LVwrpTczCWYVnHgCkr+xqBt0lT
-         /3FMQTCkk2Lr1oLnzyBYg5E+n5o56g9BP8/92hfjFbgXg/sPjEzKJf5O5LQtVzyJtdC4
-         DXOQ4LAgdcaIWMSJ6HYqlmxG8UoQrWtIIDmOS7Qio/4z+o70JDuHigGK2sMhyRFloIiO
-         /dfA==
-X-Gm-Message-State: ACgBeo0EF94eI8ZasBNe4T04tSaDc0LkQEBd3717mpEy8gRtjfq54n6k
-	TbO3eVjWrv7DuM+XeMl5Xio=
-X-Google-Smtp-Source: AA6agR6HYkDFzvv+DZYPIluooIiwsEdYN6WtA/pbVnK/YCeizt1B9gg4wJjGMCCGvF6VtOhek+08RA==
-X-Received: by 2002:a05:6000:2ce:b0:225:2c5f:3ba8 with SMTP id o14-20020a05600002ce00b002252c5f3ba8mr4205203wry.138.1661497854324;
-        Fri, 26 Aug 2022 00:10:54 -0700 (PDT)
-Received: from [192.168.178.21] (p4fc20ad4.dip0.t-ipconnect.de. [79.194.10.212])
-        by smtp.gmail.com with ESMTPSA id t63-20020a1c4642000000b003a673055e68sm8552519wma.0.2022.08.26.00.10.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Aug 2022 00:10:53 -0700 (PDT)
-Message-ID: <640aea69-963b-9846-8e71-959417b5615e@gmail.com>
-Date: Fri, 26 Aug 2022 09:10:50 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1749A23DB
+	for <regressions@lists.linux.dev>; Fri, 26 Aug 2022 07:49:26 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oRU5b-0005b5-EA; Fri, 26 Aug 2022 09:49:15 +0200
+Message-ID: <d88838ed-f49a-ac9f-5b4c-8e58cabf76fb@leemhuis.info>
+Date: Fri, 26 Aug 2022 09:49:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [Bug 216373] New: Uncorrected errors reported for AMD GPU
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: Commit 'r8152: fix a WOL issue' makes Ethernet port on Lenovo
+ Thunderbolt 3 dock go crazy
 Content-Language: en-US
-To: Bjorn Helgaas <helgaas@kernel.org>,
- =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Cc: Xinhui Pan <Xinhui.Pan@amd.com>, regressions@lists.linux.dev,
- David Airlie <airlied@linux.ie>, linux-pci@vger.kernel.org,
- "Lazar, Lijo" <lijo.lazar@amd.com>, amd-gfx@lists.freedesktop.org,
- Tom Seewald <tseewald@gmail.com>, Kai-Heng Feng
- <kai.heng.feng@canonical.com>, Daniel Vetter <daniel@ffwll.ch>,
- Alex Deucher <alexander.deucher@amd.com>, Stefan Roese <sr@denx.de>
-References: <20220825174845.GA2857385@bhelgaas>
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-In-Reply-To: <20220825174845.GA2857385@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Maxim Levitsky <mlevitsk@redhat.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+ Hayes Wang <hayeswang@realtek.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <3745745afedb2eff890277041896356149a8f2bf.camel@redhat.com>
+ <339e2f94-213c-d707-b792-86d53329b3e5@leemhuis.info>
+ <8c214c0b-4b8f-5e62-5aef-76668987e8fd@leemhuis.info>
+ <20220825091343.2e5f99dd@kernel.org>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20220825091343.2e5f99dd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661500167;8cdadd88;
+X-HE-SMSGID: 1oRU5b-0005b5-EA
 
-Am 25.08.22 um 19:48 schrieb Bjorn Helgaas:
-> On Thu, Aug 25, 2022 at 10:18:28AM +0200, Christian König wrote:
->> Am 25.08.22 um 09:54 schrieb Lazar, Lijo:
->>> On 8/25/2022 1:04 PM, Christian König wrote:
->>>> Am 25.08.22 um 08:40 schrieb Stefan Roese:
->>>>> On 24.08.22 16:45, Tom Seewald wrote:
->>>>>> On Wed, Aug 24, 2022 at 12:11 AM Lazar, Lijo
->>>>>> <lijo.lazar@amd.com> wrote:
->>>>>>> Unfortunately, I don't have any NV platforms to test. Attached is an
->>>>>>> 'untested-patch' based on your trace logs.
->>>>>> ...
->>>>> I did not follow this thread in depth, but FWICT the bug is solved now
->>>>> with this patch. So is it correct, that the now fully enabled AER
->>>>> support in the PCI subsystem in v6.0 helped detecting a bug in the AMD
->>>>> GPU driver?
->>>> It looks like it, but I'm not 100% sure about the rational behind it.
->>>>
->>>> Lijo can you explain more on this?
->>>  From the trace, during gmc hw_init it takes this route -
+On 25.08.22 18:13, Jakub Kicinski wrote:
+> On Thu, 25 Aug 2022 09:26:21 +0200 Thorsten Leemhuis wrote:
+>> On 24.08.22 13:16, Thorsten Leemhuis wrote:
+>>> Hi, this is your Linux kernel regression tracker.
 >>>
->>> gart_enable -> amdgpu_gtt_mgr_recover -> amdgpu_gart_invalidate_tlb ->
->>> amdgpu_device_flush_hdp -> amdgpu_asic_flush_hdp (non-ring based HDP
->>> flush)
->>>
->>> HDP flush is done using remapped offset which is MMIO_REG_HOLE_OFFSET
->>> (0x80000 - PAGE_SIZE)
->>>
->>> WREG32_NO_KIQ((adev->rmmio_remap.reg_offset +
->>> KFD_MMIO_REMAP_HDP_MEM_FLUSH_CNTL) >> 2, 0);
->>>
->>> However, the remapping is not yet done at this point. It's done at a
->>> later point during common block initialization. Access to the unmapped
->>> offset '(0x80000 - PAGE_SIZE)' seems to come back as unsupported request
->>> and reported through AER.
->> That's interesting behavior. So far AER always indicated some kind of
->> transmission error.
+>>> Quick note before the boilerplate: there is another report about issues
+>>> caused by cdf0b86b250fd3 also involving a dock, but apparently it's
+>>> ignored so far:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=216333  
 >>
->> When that happens as well on unmapped areas of the MMIO BAR then we need to
->> keep that in mind.
-> AER can log many different kinds of errors, some related to hardware
-> issues and some related to software.
->
-> PCI writes are normally posted and get no response, so AER is the main
-> way to find out about writes to unimplemented addresses.
->
-> Reads do get a response, of course, and reads to unimplemented
-> addresses cause errors that most hardware turns into a ~0 data return
-> (in addition to reporting via AER if enabled).
+>> TWIMC, apparently it's the same problem.
+>>
+>> Fun fact: Hayes discussed this in privately with the bug reporter
+>> according to this comment:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=216333#c3
+>>
+>> Well, that's not how things normally should be handled, but whatever, he
+>> in the end recently submitted a patch to fix it that is already merged
+>> to net.git:
+>>
+>> https://lore.kernel.org/lkml/20220818080620.14538-394-nic_swsd@realtek.com/
+> 
+> Yup, it will be part of 6.0-rc3. 
 
-The issue is that previous hardware generations reported this through a 
-device specific interrupt.
+Great. BTW, a small note for Hayes and reviewers: The commit
+b75d61201444 ("r8152: fix the RX FIFO settings when suspending") links
+to the report with a "BugLink" tag. You want to use plain "Link:" tags
+instead, as explained in the documentation. Also: a "BugLink" tag not
+that long ago made Linus write:
 
-It's nice to see that this is finally standardized. I'm just wondering 
-if we could retire our hardware specific interrupt handler for this as well.
+```
+please stop making up random tags that make no sense.
 
-Christian.
+Just use "Link:"
+```
 
->
-> Bjorn
+Quote from:
+https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
 
+Ciao, Thorsten
