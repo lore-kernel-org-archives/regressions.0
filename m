@@ -1,140 +1,156 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2532A28E7
-	for <regressions@lists.linux.dev>; Sun, 28 Aug 2022 10:03:22 +0000 (UTC)
-Received: by mail-wr1-f45.google.com with SMTP id z16so6754453wrh.10
-        for <regressions@lists.linux.dev>; Sun, 28 Aug 2022 03:03:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc;
-        bh=EDp9bFFfokiyig7e5bgko3ERNvFO4G1q9fzYUvPw5rA=;
-        b=l8Wk0pPdk+Bg6FopOMq8pXw5ITY/2Z1ItWKRm37519Fu1W4TLCQzabPFvEPpU0yElT
-         T2xbHEvPu2WgPFSMSgXch0/nBnOaxp7RVCesMZVz4z6l8Ib2D5BULnGIILeEXx/KQUw1
-         nu5adjwMUv8GS2X9ECOo02FEtIcAzCIOIj4IWekW1OUqPySfU/JfHLZ2a91N/hehI+E1
-         uEyJ77XeuApow1Fd3OgKej0HE9QouAU3ml8n6sMJfTDupRC173OPa/2IBSAd2p+n9Bxe
-         Yo9fJFHVBrIYF9dVoqr9qup7shF0onOLg2y3Aihdi3pHjdpsWnFbwvjefYxp0vOBhMUI
-         CccQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc;
-        bh=EDp9bFFfokiyig7e5bgko3ERNvFO4G1q9fzYUvPw5rA=;
-        b=prW921+YkDcHppRRm26EgPk6hm9GfiBdOphQmDYYZmQZ0WbYcUZNy3BKez8ODlqqGr
-         Tad1RN/lGpdfXjkYA85SR21gLo0QxXimMPqUHOTPDL2hNMjrJNrUWIldcf2owcVQ2xJp
-         lIWJGf6YhMN+Z+c/T7O/zYuJZ5wVWlhinKASNcQF9Q93te2ktO8a3vjjtK/kELNZWMNj
-         J5h527kw85F+hyQeOaYspK7A+neI/gcHYqt5L75CY+/ksosrlrLLRrGC+YbJemnJ4Aii
-         eoDXcS+3ttEjARL/5dzdQGclo3OmvpKpFjG8K4PhoS+Ph8cRqcTM6j7eRhgiVvkDfG7L
-         iz1g==
-X-Gm-Message-State: ACgBeo37AENmdS8HcExI7j6uqojjfeUMQZI8xlJSmKyNnRKZ1Jt/FvYh
-	jaUdzBovLWCOWER1uFsDisM=
-X-Google-Smtp-Source: AA6agR7dXl20W8E49WAfLNwEYgz6GcwD7bc8mHHbDk311LrvVYorwdtmdtB4ZuNVluxJe8y9t0JTVg==
-X-Received: by 2002:adf:f911:0:b0:21e:c0f6:fd26 with SMTP id b17-20020adff911000000b0021ec0f6fd26mr3725313wrr.361.1661681000385;
-        Sun, 28 Aug 2022 03:03:20 -0700 (PDT)
-Received: from elementary ([94.73.32.249])
-        by smtp.gmail.com with ESMTPSA id az22-20020a05600c601600b003a844885f88sm945512wmb.22.2022.08.28.03.03.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Aug 2022 03:03:20 -0700 (PDT)
-Date: Sun, 28 Aug 2022 12:03:18 +0200
-From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-To: Jiri Kosina <jikos@kernel.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	gomapo2868@safe-cart.com, LKML <linux-kernel@vger.kernel.org>,
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Roman Romanenko <romu4444@gmail.com>,
-	Nikolai Kondrashov <spbnick@gmail.com>
-Subject: Re: [Regression] Bug 216395 - XP-Pen Star G430S stops working on any
- kernel newer than 5.18.7
-Message-ID: <20220828100318.GB4121@elementary>
-References: <a3ab81d9-0fe1-0bc9-b265-37793c11ff77@leemhuis.info>
- <nycvar.YFH.7.76.2208261304470.19850@cbobk.fhfr.pm>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0110228E7
+	for <regressions@lists.linux.dev>; Sun, 28 Aug 2022 10:24:24 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oSFSn-0006qz-Ha; Sun, 28 Aug 2022 12:24:21 +0200
+Message-ID: <9968ab01-f9c4-ee47-9dd0-9e46560e459e@leemhuis.info>
+Date: Sun, 28 Aug 2022 12:24:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <nycvar.YFH.7.76.2208261304470.19850@cbobk.fhfr.pm>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: regression caused by block: freeze the queue earlier in
+ del_gendisk
+Content-Language: en-US
+To: Dusty Mabe <dusty@dustymabe.com>, Jens Axboe <axboe@kernel.dk>,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: hch@lst.de, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <017845ae-fbae-70f6-5f9e-29aff2742b8c@dustymabe.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <017845ae-fbae-70f6-5f9e-29aff2742b8c@dustymabe.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661682265;7d9b1390;
+X-HE-SMSGID: 1oSFSn-0006qz-Ha
 
-Hi,
+Hi, this is your Linux kernel regression tracker. Thx for the report.
 
-On Fri, Aug 26, 2022 at 01:05:44PM +0200, Jiri Kosina wrote:
-> On Fri, 26 Aug 2022, Thorsten Leemhuis wrote:
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+On 26.08.22 18:15, Dusty Mabe wrote:
 > 
-> > Hi, this is your Linux kernel regression tracker.
-> > 
-> > I noticed a regression report in bugzilla.kernel.org that afaics nobody
-> > acted upon since it was reported. That's why I decided to forward it by
-> > mail to those that afaics should handle this.
-> > 
-> > To quote from https://bugzilla.kernel.org/show_bug.cgi?id=216395 :
-> > 
-> > >  gomapo2868@safe-cart.com 2022-08-22 16:28:00 UTC
-> > > 
-> > > XP-Pen Star G430S stops working on newer kernels than 5.18.7 (5.18.8, 5.19, 6.0rc1 tested)
-> > > It seems to use the uclogic drivers.
-> > 
-> > See the ticket for details and further comments.
+> I think I've found a regression introduced by:
+> a09b314 o block: freeze the queue earlier in del_gendisk
+
+Just FYI, in case you are not aware of it already: there was another
+report that this commit causes problems. See this thread for details:
+https://lore.kernel.org/all/72a5bf2e-cd56-a85c-2b99-cb8729a66fed@deltatee.com/#t
+
+Anyway, let me add this report to the regressions tracking:
+
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
+
+> In Fedora CoreOS we have tests that set up RAID1 on the /boot/ and /root/ partitions
+> and then subsequently removes one of the disks to simulate a failure. Sometime recently
+> this test started timing out occasionally. Looking a bit closer it appears instances are
+> getting stuck during reboot with a bunch of looping messages:
 > 
-> Thorsten, thanks for the report.
+> ```
+> [   17.978854] block device autoloading is deprecated and will be removed.
+> [   17.982555] block device autoloading is deprecated and will be removed.
+> [   17.985537] block device autoloading is deprecated and will be removed.
+> [   17.987546] block device autoloading is deprecated and will be removed.
+> [   17.989540] block device autoloading is deprecated and will be removed.
+> [   17.991547] block device autoloading is deprecated and will be removed.
+> [   17.993555] block device autoloading is deprecated and will be removed.
+> [   17.995539] block device autoloading is deprecated and will be removed.
+> [   17.997577] block device autoloading is deprecated and will be removed.
+> [   17.999544] block device autoloading is deprecated and will be removed.
+> [   22.979465] blkdev_get_no_open: 1666 callbacks suppressed
+> ...
+> ...
+> ...
+> [  618.221270] blkdev_get_no_open: 1664 callbacks suppressed
+> [  618.221273] block device autoloading is deprecated and will be removed.
+> [  618.224274] block device autoloading is deprecated and will be removed.
+> [  618.227267] block device autoloading is deprecated and will be removed.
+> [  618.229274] block device autoloading is deprecated and will be removed.
+> [  618.231277] block device autoloading is deprecated and will be removed.
+> [  618.233277] block device autoloading is deprecated and will be removed.
+> [  618.235282] block device autoloading is deprecated and will be removed.
+> [  618.237370] block device autoloading is deprecated and will be removed.
+> [  618.239356] block device autoloading is deprecated and will be removed.
+> [  618.241290] block device autoloading is deprecated and will be removed.
+> ```
 > 
-> CCing people who have been working on XP-Pen support recently (Roman, 
-> Nikolai, José).
+> Using the Fedora kernels I narrowed it down to being introduced between 
+> `kernel-5.19.0-0.rc3.27.fc37` (good) and `kernel-5.19.0-0.rc4.33.fc37` (bad).
 > 
-> Keeping the rest of the mail below for reference.
+> I then did a bisect and found:
 > 
-> > 
-> > Please look into the issue if you're among the main recipients of this
-> > mail (and not just CCed). I hope I picked the right people to sent this
-> > to, if not just let everyone know (and apologies for getting it wrong!).
-> > 
-> > Anyway, to ensure this is not forgotten lets get this tracked by the the
-> > Linux kernel regression tracking bot:
-> > 
-> > #regzbot introduced: v5.18..5.18.7
-> > https://bugzilla.kernel.org/show_bug.cgi?id=216395
-> > #regzbot ignore-activity
-> > 
-> > This isn't a regression? This issue or a fix for it are already
-> > discussed somewhere else? It was fixed already? You want to clarify when
-> > the regression started to happen? Or point out I got the title or
-> > something else totally wrong? Then just reply -- ideally with also
-> > telling regzbot about it, as explained here:
-> > https://linux-regtracking.leemhuis.info/tracked-regression/
-> > 
-> > Reminder for developers: When fixing the issue, add 'Link:' tags
-> > pointing to the report in bugzilla, as the kernel's documentation calls
-> > for; above page explains why this is important for tracked regressions.
-> > 
-> > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> > 
-> > P.S.: As the Linux kernel's regression tracker I deal with a lot of
-> > reports and sometimes miss something important when writing mails like
-> > this. If that's the case here, don't hesitate to tell me in a public
-> > reply, it's in everyone's interest to set the public record straight.
-> > 
+> ```
+> $ git bisect bad
+> a09b314005f3a0956ebf56e01b3b80339df577cc is the first bad commit
+> commit a09b314005f3a0956ebf56e01b3b80339df577cc
+> Author: Christoph Hellwig <hch@lst.de>
+> Date:   Tue Jun 14 09:48:27 2022 +0200
 > 
-> -- 
-> Jiri Kosina
-> SUSE Labs
+>     block: freeze the queue earlier in del_gendisk
+>     
+>     Freeze the queue earlier in del_gendisk so that the state does not
+>     change while we remove debugfs and sysfs files.
+>     
+>     Ming mentioned that being able to observer request in debugfs might
+>     be useful while the queue is being frozen in del_gendisk, which is
+>     made possible by this change.
+>     
+>     Signed-off-by: Christoph Hellwig <hch@lst.de>
+>     Link: https://lore.kernel.org/r/20220614074827.458955-5-hch@lst.de
+>     Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> 
+>  block/genhd.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> ```
+> 
+> Reverting this commit on top of latest git master (4c612826b) gave me successful results.
+> 
+> Any ideas on what could be amiss here? Luckily the patch is tiny so hopefully it might
+> be obvious.
+> 
+> More details (including logs) in the following locations:
+> 
+> - https://bugzilla.redhat.com/show_bug.cgi?id=2121791
+> - https://github.com/coreos/fedora-coreos-tracker/issues/1282
+> 
+> 
+> Thanks!
+> Dusty
 > 
 
-I think that this bug report is similar to [1] and [2].
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
-The issue was already solved by Benjamin with this patch [3].
-If you can, please test his patch.
+#regzbot ^introduced a09b314005f3a0
+#regzbot title block: timeouts when removing a disk from a RAID1
+#regzbot ignore-activity
 
-Best wishes,
-Jose
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
 
-[1] https://lore.kernel.org/linux-input/CAO-hwJ+MtU5w9M5rqbOPYjUUZtJ609Q0GwPJpy-9egDEjo9m7g@mail.gmail.com/T/
-[2] https://bugzilla.kernel.org/show_bug.cgi?id=216106
-[3] https://lore.kernel.org/linux-input/20220828095624.GA4121@elementary/T/
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
