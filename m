@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FAEB7C
-	for <regressions@lists.linux.dev>; Sun, 28 Aug 2022 11:53:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980D87C
+	for <regressions@lists.linux.dev>; Sun, 28 Aug 2022 11:59:59 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oSGqb-0007QJ-4K; Sun, 28 Aug 2022 13:53:01 +0200
-Message-ID: <9729ab5f-422d-19a8-d4e0-94de0877736d@leemhuis.info>
-Date: Sun, 28 Aug 2022 13:52:59 +0200
+	id 1oSGxG-0000QA-1t; Sun, 28 Aug 2022 13:59:54 +0200
+Message-ID: <3470af88-a3bf-eb0c-c9db-ec1101b456f5@leemhuis.info>
+Date: Sun, 28 Aug 2022 13:59:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,56 +16,65 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.0
-Subject: Re: [PATCH v2 2/2] scsi: sd: Rework asynchronous resume support
- #forregzbot
+Subject: Re: Regression: PM: domains: Delete usage of
+ driver_deferred_probe_check_state #forregzbot
 Content-Language: en-US
-Cc: scsi <linux-scsi@vger.kernel.org>,
- Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- linux-ide@vger.kernel.org
-References: <20220630195703.10155-1-bvanassche@acm.org>
- <alpine.DEB.2.22.394.2207191125130.1006766@ramsan.of.borg>
- <db19ed29-e7f9-e5b0-3a6c-f2812078a07d@acm.org>
- <CAMuHMdVzsgSYtbJQnaigNax_JbxPsQfU+gHcteS-ojWbxUdMfw@mail.gmail.com>
- <CAMuHMdWtxBj8ug7AHTqentF8UD4jpO2sgoWWcQCOvEKLJtdq8A@mail.gmail.com>
- <506ca1a6-1122-5755-fc74-60f7c7bfbd0d@acm.org>
- <CAMuHMdVQ2K2v8jpsFfOMk99DG_sBB4_ioiQRroC7K_Ov1wvp9w@mail.gmail.com>
- <6f70e742-9d8a-f389-0482-0ba9696bf445@acm.org>
- <CAMuHMdVc+ATGV-=R3uV6RyF0-mZiuKv7HpmogRBgqGVyO-MKWg@mail.gmail.com>
- <54e20a27-a10b-b77a-e950-1d3398e2e907@acm.org>
- <CAMuHMdURQpAEGgv4cY7v0rqzs12v2TT=Amt26Y0OoBSW7YAoaw@mail.gmail.com>
- <084e7c5a-f98d-d61e-de81-83525851ecf9@acm.org>
- <CAMuHMdW2vOC8ZsE_XF8TbSNoF9zCrwq7UkGZ5jXen1E1mTZe+g@mail.gmail.com>
- <14ec47f3-f3b8-61c7-2c64-d96d00dd7076@acm.org>
- <CAMuHMdW7nGxV_3Z2JV_TCM+WtTdYv5P+0cE6Tw=6krcseNCdAw@mail.gmail.com>
- <40700595-8c83-1b61-ea93-ea9554bfb2db@acm.org>
- <98592410-dd31-9081-86be-fda67d3b06d2@suse.cz>
-To: regressions@lists.linux.dev
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <98592410-dd31-9081-86be-fda67d3b06d2@suse.cz>
+To: "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <DU0PR04MB941735271F45C716342D0410886B9@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <2c69b2bb-418c-ac78-703a-79c6a30f7a35@leemhuis.info>
+In-Reply-To: <2c69b2bb-418c-ac78-703a-79c6a30f7a35@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661687583;deb5fbbe;
-X-HE-SMSGID: 1oSGqb-0007QJ-4K
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1661687999;a9d3dc1d;
+X-HE-SMSGID: 1oSGxG-0000QA-1t
 
 TWIMC: this mail is primarily send for documentation purposes and for
 regzbot, my Linux kernel regression tracking bot. These mails usually
 contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-On 17.08.22 21:07, Vlastimil Babka wrote:
-> Hi, I have a T460 hanging on resume from suspend to ram in 6.0-rc1 that
-> I bisected to this commit.
+On 17.08.22 12:47, Thorsten Leemhuis wrote:
+> [TLDR: I'm adding this regression report to the list of tracked
+> regressions; all text from me you find below is based on a few templates
+> paragraphs you might have encountered already already in similar form.]
 > 
->> Unfortunately the above does not learn us anything new. The code 
->> modified by commit 88f1669019bd ("scsi: sd: Rework asynchronous resume 
->> support") is only called if sdev->manage_start_stop != 1. Only the SATA 
->> code, the Firewire code and the manage_start_stop sysfs attribute store 
->> method set that member variable:
-> [...]
-> #regzbot introduced: 88f1669019bd62b3
-> #regzbot monitor: https://lore.kernel.org/all/20220816172638.538734-1-bvanassche@acm.org/
+> Hi, this is your Linux kernel regression tracker.
+> 
+> On 16.08.22 08:21, Peng Fan wrote:
+>> Hi Saravana,
+>>
+>> The following two patches breaks NXP i.MX8ULP, but I think
+>> it may break others use SCMI.
+>> [...]
+>> When sdhc driver probe, the scmi power domain provider has not
+>> been registered. So __genpd_dev_pm_attach directly return
+>> -ENODEV.
+>>
+>> device_links_check_suppliers should already check suppliers,
+>> but scmi protocol device not have compatible, so 
+>> of_link_to_phandle
+>>       |-> of_get_compat_node
+>> use the parent node of scmi protocol as supplier if I understand
+>> correct.
+>>
+>> I am not sure whether we need to revert the above two patches,
+>> or do you have other suggestions?
+> 
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+> tracking bot:
+> 
+> #regzbot ^introduced 5a46079a9645
+> #regzbot title pm: booting on NXP i.MX8ULP broke
+> #regzbot monitor:
+> https://lore.kernel.org/all/20220727185012.3255200-1-saravanak@google.com/
+> #regzbot duplicate: https://lore.kernel.org/all/Yvpd2pwUJGp7R+YE@euler/
+> #regzbot ignore-activity
 
-#regzbot fixed-by: 785538bfdd682c8e962341d585f9b88262a0475
+#regzbot fixed-by: 13a8e0f6b01b1
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
