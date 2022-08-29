@@ -1,86 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9E992104
-	for <regressions@lists.linux.dev>; Mon, 29 Aug 2022 05:20:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14E43C433D6;
-	Mon, 29 Aug 2022 05:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1661750428;
-	bh=klNFK0zlZI++873Czf0Md6dHlhc5Jg4+H48SL864YBc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aZiJTXhA02tvA/MjrTiDITvQT/PQPFiKGpYIuPZ8f4GdTNPj+rTuxO3A3jujJA9GY
-	 h1Fnq3NIs0hzy46FCz3lRz/tbGeQSUb+Iws1s/t5siZUJwiLVU1b9qHWgYsxyNmgiz
-	 kDMNwP22DqJW2gqKvtPTZpWPAK8H5tx1LYy4QeD8=
-Date: Mon, 29 Aug 2022 07:20:42 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: Linux regressions report for mainline [2022-08-28]
-Message-ID: <YwxMqn6FbFmdKKFv@kroah.com>
-References: <166170992386.1651569.17504808724724706636@leemhuis.info>
- <CAHk-=wjn-GVDLEN0F+WT0PWysqH7HMD+mBjKUr65DEhav47u3w@mail.gmail.com>
- <9ec7563f-906f-2e72-73ae-6f373b9445d0@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FDB17C2
+	for <regressions@lists.linux.dev>; Mon, 29 Aug 2022 08:37:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1661762232;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NNK3eOpptevpY9xJ/bnha7S6prWm9aG3Q5ZcGIPIuHw=;
+	b=GciGZLy47cJtT9LHwWfHMGjJiNPZMn94Q0zITKrnkZUtnWVf8fjbUY+YH/0hOYel3+e0Vu
+	84HGcguhlk3h+mu6T0VqIcYg1ozsJSbznM77s+hw56wcO6f3Jid3vAztr2f6cltMxqbFye
+	dk8/xhu2vLKM6/bcsF0PHt5s5jlHdhk=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-513-xe55BlgjPheVhFRiXdhcQQ-1; Mon, 29 Aug 2022 04:37:11 -0400
+X-MC-Unique: xe55BlgjPheVhFRiXdhcQQ-1
+Received: by mail-ej1-f70.google.com with SMTP id gb33-20020a170907962100b00741496e2da1so986475ejc.1
+        for <regressions@lists.linux.dev>; Mon, 29 Aug 2022 01:37:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:subject:from:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc;
+        bh=NNK3eOpptevpY9xJ/bnha7S6prWm9aG3Q5ZcGIPIuHw=;
+        b=o8yoxbkc9pUvnwE8LcwD9NVl3EAIZxERqptJDY2+WbJgsVMpSTUjXQswJkQO2r9cAZ
+         m5UvULqWIn5nk5C6BeYuc5veTSni7CPlnPwN4XCcy1pEe0lZTp2zyghvMnYu2EPW4BLS
+         Y3QnqpYaVyKipoO1qD6xEpe8bDOAuk87ZWkt/A1pNai2cSupwRIBfhS+vREMMU86iIQk
+         1jCMTSAVR2TEleZBQppcpEwQPe57/jr8eXsFRdS9e5YWfmBEiJdYGoY55Ln4qNF1b2LM
+         q7oZIbMG/LNebrQQgChDhjjU+X6qjfxbWP6IWTIr3lCJP0Z3uKNpcd5A1IRy4b61OQ0A
+         5DNw==
+X-Gm-Message-State: ACgBeo2QSbjBIlwJn3j64/Gp5c6aMonv4EIWubO2DqXqKO5epDyxnvH6
+	odbDdXS76YZWcvakvh+LRAjyHvAq45YX8NXfk+pa+T/QdzbZ8zkfax6sTWtDr+tSgHigv4YRwt3
+	pJFjGeOEWAMzoUO3fK5Sw8tw=
+X-Received: by 2002:a17:907:6e94:b0:741:8c76:2ed8 with SMTP id sh20-20020a1709076e9400b007418c762ed8mr2796046ejc.731.1661762230148;
+        Mon, 29 Aug 2022 01:37:10 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7mfj50IDfXwet7kk2IwM0E4z4usxueT3nQjbRrYtq8JMMW5w0cQv+rvCP0RbnRtdS6mv4FDQ==
+X-Received: by 2002:a17:907:6e94:b0:741:8c76:2ed8 with SMTP id sh20-20020a1709076e9400b007418c762ed8mr2796029ejc.731.1661762229843;
+        Mon, 29 Aug 2022 01:37:09 -0700 (PDT)
+Received: from [10.40.98.142] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id lv4-20020a170906bc8400b007262a5e2204sm4204754ejb.153.2022.08.29.01.37.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Aug 2022 01:37:09 -0700 (PDT)
+Message-ID: <4b4bba5d-d291-d9fa-8382-cdc197b7ed35@redhat.com>
+Date: Mon, 29 Aug 2022 10:37:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9ec7563f-906f-2e72-73ae-6f373b9445d0@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+To: =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: 6.0 tty regression, NULL pointer deref in flush_to_ldisc
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Aug 28, 2022 at 09:08:12PM +0200, Thorsten Leemhuis wrote:
-> 
-> 
-> On 28.08.22 20:41, Linus Torvalds wrote:
-> > On Sun, Aug 28, 2022 at 11:23 AM Regzbot (on behalf of Thorsten
-> > Leemhuis) <regressions@leemhuis.info> wrote:
-> >>
-> >> Not sure, maybe it would have been good if the following fix would have
-> >> found the way into rc3, as it seems more than just one or two people
-> >> already stumbled over the regression fixed by it:
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id a8e0f6b01b14b2e28ba144e112c883f03a3db2
-> >> https://lore.kernel.org/all/?qœbffc7*
-> > 
-> > Neither of those links are valid for me.
-> > 
-> > "a8e0f6b01b14b2e28ba144e112c883f03a3db2" doesn't exist in linux-next.
-> > never mind that that isn't valid link syntax anyway.
-> > 
-> > The lore.kernel.org link is also just random noise.
-> > 
-> > So I'm not actually sure what you are trying to say...
-> 
-> Sorry, you are right, I did something really stupid when preparing the
-> mail (I manually modified one that was ready so send and already
-> encoded...). Here are the links:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=13a8e0f6b01b14b2e28ba144e112c883f03a3db2
-> https://lore.kernel.org/all/?q=9cbffc7*
-> 
-> But I just noticed that's not the only stupid thing I did, as the linked
-> commit in next (13a8e0f6b01b) is part of a series:
-> 
-> https://lore.kernel.org/all/20220819221616.2107893-1-saravanak@google.com/
-> 
-> The series fixes the regression "Regression: PM: domains: Delete usage
-> of driver_deferred_probe_check_state" that is in the list from regzbot:
-> https://lore.kernel.org/all/DU0PR04MB941735271F45C716342D0410886B9@DU0PR04MB9417.eurprd04.prod.outlook.com/
-> 
-> But there are more reports, for example:
-> https://lore.kernel.org/all/YvrkjH6%2FFpIzyAv+@euler/
-> 
-> Not sure if Greg didn't sent them to you because he think they need more
-> time or because he's simply afk/busy and didn't manage to send pull
-> requests.
+Hi All,
 
-I was busy, will get these out to Linus in the next few days.
+This weekend I noticed that on various Bay Trail based systems which have
+their bluetooth HCI connected over an uart (using hci_uart driver /
+using the drivers/tty/serial bus) there is a NULL pointer deref in
+flush_to_ldisc, see below for the full backtrace.
 
-thanks,
+I *suspect* that this is caused by commit 6bb6fa6908eb
+("tty: Implement lookahead to process XON/XOFF timely").
 
-greg k-h
+I can cleanly revert this by reverting the following commits:
+
+ab24a01b2765 ("tty: Add closing marker into comment in tty_ldisc.h")
+65534736d9a5 ("tty: Use flow-control char function on closing path")
+6bb6fa6908eb ("tty: Implement lookahead to process XON/XOFF timely")
+
+ATM I don't have one of the affected systems handy. I will give
+a 6.0-rc3 kernel with these 3 commits reverted a try tonight (CEST)
+and I'll let you know the results.
+
+Note I can NOT confirm yet that these reverts fix things, so please
+don't revert anything yet. I just wanted to give people a headsup
+about this issue.
+
+Also maybe we can fix the new lookahead code instead of reverting.
+I would be happy to add a patch adding some debugging prints the
+systems run fine after the backtrace as long as I don't suspend them
+so gathering logs is easy.
+
+Regards,
+
+Hans
+
+
+
+[   28.626537] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[   28.626555] #PF: supervisor instruction fetch in kernel mode
+[   28.626563] #PF: error_code(0x0010) - not-present page
+[   28.626569] PGD 0 P4D 0 
+[   28.626580] Oops: 0010 [#1] PREEMPT SMP PTI
+[   28.626589] CPU: 2 PID: 8 Comm: kworker/u8:0 Tainted: G         C  E      6.0.0-rc2+ #102
+[   28.626598] Hardware name: MPMAN Converter9/Converter9, BIOS 5.6.5 07/28/2015
+[   28.626604] Workqueue: events_unbound flush_to_ldisc
+[   28.626617] RIP: 0010:0x0
+[   28.626633] Code: Unable to access opcode bytes at RIP 0xffffffffffffffd6.
+[   28.626639] RSP: 0018:ffffacec40087e28 EFLAGS: 00010202
+[   28.626648] RAX: 0000000000000000 RBX: ffff92dc05fee000 RCX: 0000000000000001
+[   28.626654] RDX: 0000000000000000 RSI: ffff92dc05fee020 RDI: ffff92dc07341040
+[   28.626660] RBP: ffff92dc07341048 R08: ffff92dc05fee020 R09: 00000000f1e77022
+[   28.626667] R10: ffffacec40087e30 R11: 000000002f1e7702 R12: ffff92dc07341040
+[   28.626673] R13: ffff92dc07341090 R14: 0000000000000000 R15: 0000000000000001
+[   28.626679] FS:  0000000000000000(0000) GS:ffff92dc7bb00000(0000) knlGS:0000000000000000
+[   28.626687] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   28.626693] CR2: ffffffffffffffd6 CR3: 00000000060c6000 CR4: 00000000001006e0
+[   28.626700] Call Trace:
+[   28.626706]  <TASK>
+[   28.626712]  flush_to_ldisc+0x178/0x190
+[   28.626728]  process_one_work+0x257/0x570
+[   28.626749]  worker_thread+0x4f/0x3a0
+[   28.626762]  ? process_one_work+0x570/0x570
+[   28.626772]  kthread+0xf5/0x120
+[   28.626782]  ? kthread_complete_and_exit+0x20/0x20
+[   28.626794]  ret_from_fork+0x22/0x30
+[   28.626815]  </TASK>
+[   28.626820] Modules linked in: fjes(-) snd_soc_rl6231 snd_intel_sdw_acpi hci_uart dw_dmac soc_button_array dptf_power int3406_thermal snd_soc_core btqca int3401_thermal btrtl processor_thermal_device btbcm processor_thermal_rfim snd_compress processor_thermal_mbox processor_thermal_rapl ac97_bus btintel snd_pcm_dmaengine intel_rapl_common int3403_thermal snd_seq int3400_thermal int340x_thermal_zone snd_seq_device acpi_thermal_rel bluetooth intel_int0002_vgpio(E) kxcjk_1013 atomisp_gc0310(CE) industrialio_triggered_buffer atomisp_ov2680(CE) snd_pcm kfifo_buf atomisp_gmin_platform(CE) industrialio acpi_pad silead(+) videodev mc snd_timer snd ecdh_generic rfkill soundcore mei_txe mei dwc3_pci lpc_ich vfat fat zram mmc_block i915 crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel drm_buddy drm_display_helper cec ttm video wmi(E) sdhci_acpi sdhci mmc_core pwm_lpss_platform pwm_lpss ip6_tables ip_tables i2c_dev ipmi_devintf ipmi_msghandler fuse
+[   28.627005] CR2: 0000000000000000
+[   28.627013] ---[ end trace 0000000000000000 ]---
+[   28.627020] RIP: 0010:0x0
+[   28.627032] Code: Unable to access opcode bytes at RIP 0xffffffffffffffd6.
+[   28.627038] RSP: 0018:ffffacec40087e28 EFLAGS: 00010202
+[   28.627047] RAX: 0000000000000000 RBX: ffff92dc05fee000 RCX: 0000000000000001
+[   28.627053] RDX: 0000000000000000 RSI: ffff92dc05fee020 RDI: ffff92dc07341040
+[   28.627059] RBP: ffff92dc07341048 R08: ffff92dc05fee020 R09: 00000000f1e77022
+[   28.627065] R10: ffffacec40087e30 R11: 000000002f1e7702 R12: ffff92dc07341040
+[   28.627071] R13: ffff92dc07341090 R14: 0000000000000000 R15: 0000000000000001
+[   28.627077] FS:  0000000000000000(0000) GS:ffff92dc7bb00000(0000) knlGS:0000000000000000
+[   28.627085] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   28.627091] CR2: ffffffffffffffd6 CR3: 00000000060c6000 CR4: 00000000001006e0
+
