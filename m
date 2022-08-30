@@ -1,106 +1,257 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622D4625
-	for <regressions@lists.linux.dev>; Tue, 30 Aug 2022 09:29:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1661851740;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ah8/qz4A6ZAu9RX3bIj/W9IVTkE4sUTVT6VwswPKF2w=;
-	b=jGGI3tihDKHneZE11q/s/+8dtdUMZx6cs4Fv2cYgUMLL3DeBYTkeh+KkL1NIrw8EmWEdHg
-	L1R6Bq68BVopTXOSBi7v5b7ZSXwiuAFrlHfHB5Pzv+btrDGyFnTDFAOgj5OHh+Ai65qTFo
-	LgQhtZqhQhz/P+G7AIEu1Vul7U9nKw8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-570-PIpoL6fwM5mAdxFx-_D3dA-1; Tue, 30 Aug 2022 05:28:56 -0400
-X-MC-Unique: PIpoL6fwM5mAdxFx-_D3dA-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 133568039A1;
-	Tue, 30 Aug 2022 09:28:56 +0000 (UTC)
-Received: from starship (unknown [10.40.194.96])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 17F34492C3B;
-	Tue, 30 Aug 2022 09:28:53 +0000 (UTC)
-Message-ID: <bd59ecdaadfb5d515a487cf235f5339ce8808f9c.camel@redhat.com>
-Subject: Re: Commit 'r8152: fix a WOL issue' makes Ethernet port on Lenovo
- Thunderbolt 3 dock go crazy
-From: Maxim Levitsky <mlevitsk@redhat.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, Jakub Kicinski
-	 <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org, Hayes Wang <hayeswang@realtek.com>, 
-	"regressions@lists.linux.dev"
-	 <regressions@lists.linux.dev>
-Date: Tue, 30 Aug 2022 12:28:52 +0300
-In-Reply-To: <d88838ed-f49a-ac9f-5b4c-8e58cabf76fb@leemhuis.info>
-References: <3745745afedb2eff890277041896356149a8f2bf.camel@redhat.com>
-	 <339e2f94-213c-d707-b792-86d53329b3e5@leemhuis.info>
-	 <8c214c0b-4b8f-5e62-5aef-76668987e8fd@leemhuis.info>
-	 <20220825091343.2e5f99dd@kernel.org>
-	 <d88838ed-f49a-ac9f-5b4c-8e58cabf76fb@leemhuis.info>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37223625
+	for <regressions@lists.linux.dev>; Tue, 30 Aug 2022 10:22:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F25C433B5
+	for <regressions@lists.linux.dev>; Tue, 30 Aug 2022 10:22:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1661854940;
+	bh=mttadZTY30pjSdXU9ij3tsEtiy8cJl4Ly46BtNIgMy0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=axBKZaYxl3mnHQ18lzeYwnj/4nQzRUI2cWYqb/dXS5AcmWPqOJxVczRpdPM9tvkut
+	 V9pyAPbRJ0on6bm7jYLs+S0UJ38hrJptUzseqPmzK8JsjjMW0mIwkO3vUfQIzqDJON
+	 VTc5GQDnqp/hiI16nLRKvLjByR/nKjGAVr0F3bD6K3P38Yn0DAfDIAWQg6gSe3WJiJ
+	 Yj3CnplXfRJbJpZXwTgqktCFVs7wgaphFSpHms/NxMSbEPLDSpzfBM8EvQZyUas0lI
+	 geL0sMS2F7bmlGUX2nIsKNhTcTcYsBjspTx4clsxOyT8uA8QTNzBF/PUOPL7o/Si0I
+	 2B9rYs/upZ8pQ==
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-11f0fa892aeso7331608fac.7
+        for <regressions@lists.linux.dev>; Tue, 30 Aug 2022 03:22:20 -0700 (PDT)
+X-Gm-Message-State: ACgBeo3XpfM81P+zmMQXbSx8LsN3n4Tv2DgMi5GHD2OfTkh06Fw4pHDm
+	YGtr5JCqkb9g7BR67jMiLHC37tH6d/39a6V4WFE=
+X-Google-Smtp-Source: AA6agR5KRkyvyNBA/tBvmc34DnNOV0R2u0XV7KmXfZxmWWYNv7oxUwEH3ruESPuiZD3Vt84WBA4QYasR7/MH5saZc1s=
+X-Received: by 2002:a05:6870:538c:b0:11b:e64f:ee1b with SMTP id
+ h12-20020a056870538c00b0011be64fee1bmr9634439oan.92.1661854940036; Tue, 30
+ Aug 2022 03:22:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
+References: <20220830030032.GA2884@inn2.lkp.intel.com> <eb352106-5a3c-63fe-2409-494cf0a31bfc@intel.com>
+ <4b5d1c96-44c5-e8bb-01d8-9f9c72621d0d@intel.com>
+In-Reply-To: <4b5d1c96-44c5-e8bb-01d8-9f9c72621d0d@intel.com>
+From: Filipe Manana <fdmanana@kernel.org>
+Date: Tue, 30 Aug 2022 11:21:43 +0100
+X-Gmail-Original-Message-ID: <CAL3q7H78qPSp4O=ZrCCNFwX+6L4gZgn-A5q3VydvhTfkVDEUDQ@mail.gmail.com>
+Message-ID: <CAL3q7H78qPSp4O=ZrCCNFwX+6L4gZgn-A5q3VydvhTfkVDEUDQ@mail.gmail.com>
+Subject: Re: [LKP] [btrfs] ca6dee6b79: fxmark.ssd_btrfs_MWRM_72_bufferedio.works/sec
+ -8.4% regression
+To: Yujie Liu <yujie.liu@intel.com>
+Cc: Filipe Manana <fdmanana@suse.com>, lkp@lists.01.org, lkp@intel.com, 
+	David Sterba <dsterba@suse.com>, Anand Jain <anand.jain@oracle.com>, 
+	Nikolay Borisov <nborisov@suse.com>, linux-kernel@vger.kernel.org, 
+	linux-btrfs@vger.kernel.org, fengwei.yin@intel.com, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2022-08-26 at 09:49 +0200, Thorsten Leemhuis wrote:
-> On 25.08.22 18:13, Jakub Kicinski wrote:
-> > On Thu, 25 Aug 2022 09:26:21 +0200 Thorsten Leemhuis wrote:
-> > > On 24.08.22 13:16, Thorsten Leemhuis wrote:
-> > > > Hi, this is your Linux kernel regression tracker.
-> > > > 
-> > > > Quick note before the boilerplate: there is another report about issues
-> > > > caused by cdf0b86b250fd3 also involving a dock, but apparently it's
-> > > > ignored so far:
-> > > > https://bugzilla.kernel.org/show_bug.cgi?id=216333  
-> > > 
-> > > TWIMC, apparently it's the same problem.
-> > > 
-> > > Fun fact: Hayes discussed this in privately with the bug reporter
-> > > according to this comment:
-> > > https://bugzilla.kernel.org/show_bug.cgi?id=216333#c3
-> > > 
-> > > Well, that's not how things normally should be handled, but whatever, he
-> > > in the end recently submitted a patch to fix it that is already merged
-> > > to net.git:
-> > > 
-> > > https://lore.kernel.org/lkml/20220818080620.14538-394-nic_swsd@realtek.com/
-> > 
-> > Yup, it will be part of 6.0-rc3. 
+On Tue, Aug 30, 2022 at 7:58 AM Yujie Liu <yujie.liu@intel.com> wrote:
+>
+> Hi Filipe,
+>
+> We noticed that this case was reported when the patch was in linux-next.
+> Thanks for your comment that it is an expected result due to heavy rename=
+.
+>
+> https://lore.kernel.org/all/Ysb4T7Z8hKgdvPRk@xsang-OptiPlex-9020/
+>
+> This report is due to the patch being merged into mainline, if it is stil=
+l
+> the same case, please ignore this duplicate report. Sorry for the inconve=
+nience.
 
-Thank you all very much! -rc3 indeed works for me!
+Yes, it's the same.
+Thanks Yujie.
 
-Best regards,
-	Maxim Levitsky
-
-> 
-> Great. BTW, a small note for Hayes and reviewers: The commit
-> b75d61201444 ("r8152: fix the RX FIFO settings when suspending") links
-> to the report with a "BugLink" tag. You want to use plain "Link:" tags
-> instead, as explained in the documentation. Also: a "BugLink" tag not
-> that long ago made Linus write:
-> 
-> ```
-> please stop making up random tags that make no sense.
-> 
-> Just use "Link:"
-> ```
-> 
-> Quote from:
-> https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
-> 
-> Ciao, Thorsten
-> 
-
-
+>
+> --
+> Thanks,
+> Yujie
+>
+> On 8/30/2022 11:17, kernel test robot wrote:
+> > Greeting,
+> >
+> > FYI, we noticed a -8.4% regression of fxmark.ssd_btrfs_MWRM_72_buffered=
+io.works/sec due to commit:
+> >
+> >
+> > commit: ca6dee6b7946794fa340a7290ca399a50b61705f ("btrfs: balance btree=
+ dirty pages and delayed items after a rename")
+> > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> >
+> > in testcase: fxmark
+> > on test machine: 128 threads 2 sockets Intel(R) Xeon(R) Platinum 8358 C=
+PU @ 2.60GHz (Ice Lake) with 128G memory
+> > with following parameters:
+> >
+> >      disk: 1SSD
+> >      media: ssd
+> >      test: MWRM
+> >      fstype: btrfs
+> >      directio: bufferedio
+> >      cpufreq_governor: performance
+> >      ucode: 0xd000363
+> >
+> > test-description: FxMark is a filesystem benchmark that test multicore =
+scalability.
+> > test-url: https://github.com/sslab-gatech/fxmark
+> >
+> >
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > compiler/cpufreq_governor/directio/disk/fstype/kconfig/media/rootfs/tbo=
+x_group/test/testcase/ucode:
+> >    gcc-11/performance/bufferedio/1SSD/btrfs/x86_64-rhel-8.3/ssd/debian-=
+11.1-x86_64-20220510.cgz/lkp-icl-2sp5/MWRM/fxmark/0xd000363
+> >
+> > commit:
+> >    b8bea09a45 ("btrfs: add trace event for submitted RAID56 bio")
+> >    ca6dee6b79 ("btrfs: balance btree dirty pages and delayed items afte=
+r a rename")
+> >
+> > b8bea09a456fc31a ca6dee6b7946794fa340a7290ca
+> > ---------------- ---------------------------
+> >           %stddev     %change         %stddev
+> >               \          |                \
+> >     1821853           -13.9%    1568247 =C2=B1  3%  fxmark.ssd_btrfs_MW=
+RM_36_bufferedio.works
+> >       36436           -13.9%      31362 =C2=B1  3%  fxmark.ssd_btrfs_MW=
+RM_36_bufferedio.works/sec
+> >     1675102           -14.0%    1439994 =C2=B1  7%  fxmark.ssd_btrfs_MW=
+RM_54_bufferedio.works
+> >       33497           -14.0%      28796 =C2=B1  7%  fxmark.ssd_btrfs_MW=
+RM_54_bufferedio.works/sec
+> >     1572332            -8.4%    1440600 =C2=B1  6%  fxmark.ssd_btrfs_MW=
+RM_72_bufferedio.works
+> >       31445            -8.4%      28809 =C2=B1  6%  fxmark.ssd_btrfs_MW=
+RM_72_bufferedio.works/sec
+> >      356010           +80.0%     640832        fxmark.time.involuntary_=
+context_switches
+> >       68.50           -24.1%      52.00        fxmark.time.percent_of_c=
+pu_this_job_got
+> >      630.47           -24.0%     479.23        fxmark.time.system_time
+> >   1.335e+10           +49.8%      2e+10        cpuidle..time
+> >        1045 =C2=B1  4%     +11.8%       1168        uptime.idle
+> >       31.54           +50.2%      47.37        iostat.cpu.idle
+> >       64.16           -24.7%      48.29        iostat.cpu.system
+> >       31.17           +50.3%      46.83        vmstat.cpu.id
+> >       12.83 =C2=B1  5%     -55.8%       5.67 =C2=B1  8%  vmstat.procs.r
+> >       32.13           +15.8       47.95        mpstat.cpu.all.idle%
+> >        0.47 =C2=B1  7%      +0.1        0.53 =C2=B1  3%  mpstat.cpu.all=
+.iowait%
+> >       63.37           -16.1       47.31        mpstat.cpu.all.sys%
+> >       10.04 =C2=B1  3%     +13.5%      11.39 =C2=B1  3%  perf-stat.i.me=
+tric.K/sec
+> >      869.81 =C2=B1 10%     -16.2%     728.74 =C2=B1 15%  perf-stat.i.no=
+de-loads
+> >      871.23 =C2=B1 10%     -16.2%     730.49 =C2=B1 15%  perf-stat.ps.n=
+ode-loads
+> >        3004 =C2=B1  8%     -52.1%       1440 =C2=B1  6%  numa-meminfo.n=
+ode0.Active(anon)
+> >     1218568           -10.8%    1086453        numa-meminfo.node0.Inact=
+ive
+> >      351812 =C2=B1  3%     -29.0%     249640 =C2=B1 12%  numa-meminfo.n=
+ode0.Inactive(anon)
+> >      120150           -79.3%      24861 =C2=B1  3%  numa-meminfo.node0.=
+Shmem
+> >        3489 =C2=B1  8%     -45.0%       1919 =C2=B1  2%  meminfo.Active=
+(anon)
+> >      492107           -19.0%     398809        meminfo.Committed_AS
+> >      382253           -24.6%     288151        meminfo.Inactive(anon)
+> >      124727           -76.8%      28886 =C2=B1  2%  meminfo.Shmem
+> >        2050 =C2=B1  4%     -10.5%       1834 =C2=B1  5%  meminfo.Writeb=
+ack
+> >      750.83 =C2=B1  8%     -52.1%     360.00 =C2=B1  6%  numa-vmstat.no=
+de0.nr_active_anon
+> >       87951 =C2=B1  3%     -29.0%      62408 =C2=B1 12%  numa-vmstat.no=
+de0.nr_inactive_anon
+> >       30038           -79.3%       6216 =C2=B1  3%  numa-vmstat.node0.n=
+r_shmem
+> >      750.83 =C2=B1  8%     -52.1%     360.00 =C2=B1  6%  numa-vmstat.no=
+de0.nr_zone_active_anon
+> >       87951 =C2=B1  3%     -29.0%      62408 =C2=B1 12%  numa-vmstat.no=
+de0.nr_zone_inactive_anon
+> >     7554028 =C2=B1  3%     -71.2%    2174126 =C2=B1  5%  sched_debug.cf=
+s_rq:/.min_vruntime.avg
+> >     7640393 =C2=B1  3%     -70.5%    2254050 =C2=B1  5%  sched_debug.cf=
+s_rq:/.min_vruntime.max
+> >     7291209 =C2=B1  3%     -73.6%    1926973 =C2=B1  5%  sched_debug.cf=
+s_rq:/.min_vruntime.min
+> >      873.62 =C2=B1  7%     -19.2%     705.68 =C2=B1 10%  sched_debug.cf=
+s_rq:/.runnable_avg.avg
+> >      790.32 =C2=B1  7%     -21.4%     621.34 =C2=B1 12%  sched_debug.cf=
+s_rq:/.runnable_avg.min
+> >      747.11 =C2=B1  3%     -22.7%     577.37 =C2=B1  3%  sched_debug.cf=
+s_rq:/.util_avg.avg
+> >      670.92 =C2=B1  5%     -25.2%     501.70 =C2=B1  2%  sched_debug.cf=
+s_rq:/.util_avg.min
+> >      409.44 =C2=B1  9%     -35.1%     265.80 =C2=B1 21%  sched_debug.cf=
+s_rq:/.util_est_enqueued.avg
+> >      789.44 =C2=B1  3%     -20.1%     630.53 =C2=B1  5%  sched_debug.cf=
+s_rq:/.util_est_enqueued.max
+> >        0.00 =C2=B1 13%     -67.3%       0.00 =C2=B1 22%  sched_debug.cp=
+u.next_balance.stddev
+> >      872.67 =C2=B1  8%     -45.0%     479.83 =C2=B1  2%  proc-vmstat.nr=
+_active_anon
+> >     1801345            -1.7%    1771330        proc-vmstat.nr_file_page=
+s
+> >       95550           -24.6%      72037        proc-vmstat.nr_inactive_=
+anon
+> >        8752            -3.7%       8426        proc-vmstat.nr_mapped
+> >       31169           -76.8%       7221 =C2=B1  2%  proc-vmstat.nr_shme=
+m
+> >      872.67 =C2=B1  8%     -45.0%     479.83 =C2=B1  2%  proc-vmstat.nr=
+_zone_active_anon
+> >       95550           -24.6%      72037        proc-vmstat.nr_zone_inac=
+tive_anon
+> >        9553 =C2=B1 10%     -16.8%       7950 =C2=B1  3%  proc-vmstat.nu=
+ma_hint_faults
+> >    18886391            -3.6%   18207624        proc-vmstat.numa_hit
+> >    18770999            -3.6%   18091363        proc-vmstat.numa_local
+> >     7398756            -4.0%    7105675        proc-vmstat.pgactivate
+> >    18885154            -3.6%   18206666        proc-vmstat.pgalloc_norm=
+al
+> >     7248262            -4.3%    6933915 =C2=B1  2%  proc-vmstat.pgdeact=
+ivate
+> >    18894473            -3.4%   18243898        proc-vmstat.pgfree
+> >     7829962            -3.0%    7596447 =C2=B1  2%  proc-vmstat.pgrotat=
+ed
+> >
+> >
+> > If you fix the issue, kindly add following tag
+> > Reported-by: kernel test robot <yujie.liu@intel.com>
+> >
+> >
+> > To reproduce:
+> >
+> >          git clone https://github.com/intel/lkp-tests.git
+> >          cd lkp-tests
+> >          sudo bin/lkp install job.yaml           # job file is attached=
+ in this email
+> >          bin/lkp split-job --compatible job.yaml # generate the yaml fi=
+le for lkp run
+> >          sudo bin/lkp run generated-yaml-file
+> >
+> >          # if come across any failure that blocks the test,
+> >          # please remove ~/.lkp and /lkp dir to run from a clean state.
+> >
+> >
+> > Disclaimer:
+> > Results have been estimated based on internal Intel analysis and are pr=
+ovided
+> > for informational purposes only. Any difference in system hardware or s=
+oftware
+> > design or configuration may affect actual performance.
+> >
+> >
+> > #regzbot introduced: ca6dee6b79
+> >
+> >
+> >
+> > _______________________________________________
+> > LKP mailing list -- lkp@lists.01.org
+> > To unsubscribe send an email to lkp-leave@lists.01.org
