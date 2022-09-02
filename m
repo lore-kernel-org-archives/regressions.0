@@ -1,250 +1,166 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic307-55.consmr.mail.gq1.yahoo.com (sonic307-55.consmr.mail.gq1.yahoo.com [98.137.64.31])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A30EDB
-	for <regressions@lists.linux.dev>; Fri,  2 Sep 2022 12:32:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662121925; x=1693657925;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=dsfTc/ms2jLMG5DbAydsJmtBCyrtuoq7WpdGH0X3WSE=;
-  b=k2XQ3M2Xql1QWWjQXUJI2BjxlRsgDpeXSXQITVX1xlgn+IInqXYD71KK
-   vusvJhE5x91LZiZTZ1JzOZbl9aJpLCPiSwZMhj2QMQm1Nqda4EUFK/Rzn
-   nrx7wKglRtYDkluSqK+23i3TVkdbkRildmn6dS9C6lNwQ85gFHQwHDhPZ
-   oUfNh/BRkwFO82OlP1fKHgcUbw5zLxljDyLspeSBD5BTQaYeiVsrGam7b
-   Oo9L6yVl/EvAAinnxbpcLBH+FezidyvwQoYURQPSTV6sGlpBLMdi+JkiQ
-   6Yf83eNuiuUzbD6i5MjjUKSVE7+MwJygtfLa3utbgceDCdU3WGzstssFm
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10457"; a="322129136"
-X-IronPort-AV: E=Sophos;i="5.93,283,1654585200"; 
-   d="scan'208";a="322129136"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 05:32:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,283,1654585200"; 
-   d="scan'208";a="755247707"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Sep 2022 05:32:05 -0700
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 2 Sep 2022 05:32:05 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 2 Sep 2022 05:32:04 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Fri, 2 Sep 2022 05:32:04 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Fri, 2 Sep 2022 05:32:04 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WM3qa2sCJGTgmDFoa3yWCAPCrbDU9hJTcdnBFq6qYCVtQ5/99Iuk/jKvraWpDTt0Mao/+bjUZoFBC0L4/8metslVVP8aIOr+fA+ThjjHpDSyzDVhbuO7MLTo2aL4N8IovHMQYw5lT9iFXgDhznj43f/LGHHPFGQzkm8cwutlZRfOy99YvAktJ5R11Q8URUkXP+4GfLMJybs5DOGh3+k/t4dy7uvj+NU0hnixtDx7dWbgLxIHRan9Ba0yI2BwsnC4uLRFwXxIkGQBCBmAEeZnm6ii0LbELc0ma0OYF0YN4Dw9iozxLgzZr6kt9d5XXci6N2H9hTNbAwKLUVZwoxoeBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2yTicJlm4zMX0hsaYLNXIcJzLlXJz5fEdQ4Nw1OKevc=;
- b=HIxGPgdFO/0QugsZZ7nRQ4FcEH/ldNTqhyrxXVPMO5wPEYZAV275+D103Abpth6uUykGjJr4yUrE7rYHaosSblQf6DIwK9e6NwDderM2hkzrNK6IBkuDi1dZTkAtek2Y1c+EY627xltNdd1N0xSVoKKl/EJ79WCmC7Gj1gzGhmyPAklFF9Y4sZCe79fS3R2SKFGBOw+7sQfigZg4eZuGJjYp0v6mZB6dgaCzBHdPSEe8AlYjGex4qXk8IFOzhSnoGA7q7mWePgH9eN7gzovfacTAzi13bhLJNbYTlvQJjHj15LhJ6t6jXvzA7dRpk9yZoXn6IrUzXE8WlEQa8hEFew==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BL0PR11MB2995.namprd11.prod.outlook.com (2603:10b6:208:7a::28)
- by BN6PR11MB1636.namprd11.prod.outlook.com (2603:10b6:405:10::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.19; Fri, 2 Sep
- 2022 12:32:02 +0000
-Received: from BL0PR11MB2995.namprd11.prod.outlook.com
- ([fe80::5482:e4d0:c7d9:e8be]) by BL0PR11MB2995.namprd11.prod.outlook.com
- ([fe80::5482:e4d0:c7d9:e8be%4]) with mapi id 15.20.5588.014; Fri, 2 Sep 2022
- 12:32:02 +0000
-Date: Fri, 2 Sep 2022 20:31:51 +0800
-From: Philip Li <philip.li@intel.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-CC: "Si, Beibei" <Beibei.Si@intel.com>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "Sang, Oliver" <oliver.sang@intel.com>,
-	<lkp@intel.com>
-Subject: Re: [loop] efcfec579f: mdadm-selftests.12imsm-r0_2d-grow-r0_3d.fail
- #forregzbot
-Message-ID: <YxH3tyWPm3iqCFGg@rli9-MOBL1.ccr.corp.intel.com>
-References: <BN6PR11MB1729F27147FBD06FDED3F355FB659@BN6PR11MB1729.namprd11.prod.outlook.com>
- <384393c2-6155-9a07-ebd4-c2c410cbe947@leemhuis.info>
- <YxC5PJJlAG7VycLP@rli9-MOBL1.ccr.corp.intel.com>
- <6134ee07-a6c4-18e8-d54e-def4896821db@leemhuis.info>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <6134ee07-a6c4-18e8-d54e-def4896821db@leemhuis.info>
-X-ClientProxiedBy: SG2PR04CA0173.apcprd04.prod.outlook.com (2603:1096:4::35)
- To BL0PR11MB2995.namprd11.prod.outlook.com (2603:10b6:208:7a::28)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92AD57E
+	for <regressions@lists.linux.dev>; Fri,  2 Sep 2022 18:16:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netscape.net; s=a2048; t=1662142589; bh=s3DCCzDNWNr2o0vPxVJ9J8EDP7JjOQZ9oV86ErYAcgk=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=UuNBq5trwqOT1Zuujm0ArLr2nPzjtmN8ffppps8EfjK/dn5fgp+PUz21acySDzXRwIeSWYzGMpPNc2VuN7nSz+cig4tZXavIy8QAWayhAqNfNcO4yGyHBoWLKa0sSc8R3tnHPujLHXBB9nKhM4PUV1ARfzbLKcKwAmlXGyCXoRraXqyz+NDaUlRsmmmO9NTe3J1n5dpsUPu+unZ5Iv8WbiW9iD1QJqIaAoWl+s5zUCxKN//Zdxh6Bi0tnVk/+dTGVOH/Ffy53rZi7+3+UntrD9JQfqaAANsHWpJBrfLWy6YKKc+AhqrTKBCV/HluDpf1R7CWLQ32xXUdMndX/NY5Yg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1662142589; bh=VvLErFLgLh+5dIOl2uvWFYlDdU0cahVwaqvOzOwjaAM=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=bDTK+ytkf9CMrXOGh18DUQOUnyn6R68Qaxvp83PR5LkB90bNK1Q84Ke81P5YWfhSVxb7QGSPBXHru5MgKeDCEVGixi7g42GeGhP8jTUFSK81SPvj6tIYNcVJ+oys0qUkQ5gxPM0t4lBBeNRO6Rj5k7Gl2WHsay7cO858ky5RwUQvLWp05AG/HoDQPYlZGxmh+FkYRhqZyKpnFPKsct4gdaXGn2BajAC+wnq814et8+thMG7g/k9+bHGCY5fiMcxKd5Ot3/hY9ZnfT0wkDbhbZakxlBreVEhJJ4Tu/RDRxSKsai0ZIaIMOQhw2pkirc97krvXZgiE2tpU24XYm8T0CA==
+X-YMail-OSG: elTm_NQVM1lvo38G3pIAoKx5MoK89Uun0JR2_1wE044d8L.ehf_ryNlBRjgcYPY
+ YZG0ZfhLxIMgKOS6ZLcWskXATrt36jxlJYWarmF2X4EwHA8DhtSClnqFh5NE940ijcStWSqFqe8b
+ Z2CWFEzX0H0nq8YmzY3uLj02SyyZO30aKhIdyEB8oWla0qN92dj.3l3HIaNYlrIGozGHNByPA7ZJ
+ 0oFjphkXU4kVxWswObHfHl3fPxPa4VargLGzGUR7l6zOXNGrPCK8pmV.gMRo5byomb55u6o6NkXq
+ y5Lp7uhpwvw1qXp8acoP.u9y0Lt710KmPdJOgwEA6qE9FaK7CYmSvSE3HU_jFdeKgo1m67QoKDuF
+ n.U5xvsRZog642NXPY40tKM1n9KrUpUv0kQzjSPl0fjqhnhf.T01knY.rb_E8Q8dYj5BDyR4oJcB
+ ojmprrMvKLITce3FjTtjX6G288fYFfyEyLW7dJHC6rgu2wtpEUHWxYIV0wg0Z4ComBqrO5HtoilW
+ EB1umH2V02Ljm3b8Yrdh3tmuetofzHHnwq5bJ1POfSFV0GeA2JLt4ULQ4NsRmR17O7qPKzSXiEkl
+ elG2DYrZ9jxY8RsctW_VAQob0OWY5JrbtToKwuUpkDVbbzZHr14dm.T9t6FDKfPV4grhhbq9suzr
+ KgbsR6iPhwCm5BUuJcEGwkNjrHSSq_sf6jq9wT64Jyoo3SCcLwrezQYRhlGNmhzSA59iezIWru0B
+ 7G.TwmmyF30oYYMvkLK3KzndqOfroyz.7Z.fW2elpjNfDklRedvadqqHEznrOE9.nSDlD2tQNZFl
+ mNbsjE1WvdaAUYxD4Vip6m6yi0IjmHOcIEBC6dQwHY9RuDozXFdv15O4WrzOEW8KX_H5wrc3DNp2
+ _Y.8WlK2lGK_E2_CxuDFf5KVp7YksYbb41c3N1aqT.r_4o_X5zf9WBL9OtWBfiJy2iJxS9KomQ9X
+ 2VzPe6sEw.ZKUpV7YSEFcPMGpCa7FvEYYczH03HrT7_F3oCFgAoj4Qubbj6AAhkMLPJYbOcUN.JR
+ qUbpet632ZHTQ_Whqw8d88r68DsGF4GXTdSAeArb8.nX8D.kGO5EKN5YDT8Bgn4oJNHBKtfe756I
+ sYqOU0hjQRyTWRIVcwUXciV6M8PhYi4Fn85tKKuNL8OudLJDmcpIPHt7CxRVE9BnL2VTBMZsXrvu
+ 8SXBxHzQ2k.1gUzkDMuCTHdkwHLTVVQ8SYwOEN2zzYatTVtXbG23wmOIoZJOH4n81YQ_AahL80Jy
+ hwE1z0V2nuYzi1_X60VKkTKpBq4xy7xSyXEY0J.HQadpJVrLKyTXMRf9x_lLC20AMZ3xCBBSoICS
+ j3FgRBSFfqCoeqeYdly5cuY2PneQHy6eX1HBB_dxU0R3aoSnbdTayfW9NWDcGd1aGfZnwyzvB1FR
+ aCAAQHGKXIvvKNqUo_QknYBQZECW1MtoWr9kZmC5pudUKSsKDbyQECxOWvvNpAQXeJ3wVG3ooeTv
+ FM6r2aUtBEgdkMaq2n4z4nGhdZuh1HqPLwJ9PSwrYPHYAd87T49QoENXlVapo522sVcNTvvnENWf
+ 3tgvgvWcD.x8murBmFWj9TXzywvrfojN2KlTtJDGoqPafC4_.uIweMcymfoKt0w_68xXJ_Ep.ZR0
+ _pCllwN5igeq4WGb995RwjbbNqPzCxrNsC9m4rvTXJX5eqHaj.eUN5ZrP4GANbN79LEh.92T5zk3
+ irwIz4J4S_I182jD.05157zzQWD9S6tIGO1rrmHPtcvEw.S_hLPmISeK082DwHPQRHuCTtCeseV.
+ Cx..DSGvRzrtIV5SEUFSnQKPiIoMzl6GFxUOqCziahuo8Ok5Dp2.jcZ7oV2wx2QazGh0HMKrSSYn
+ YmxKikSBsPPOCqq3ma6YE0Rzy8vQX8EsmKolGVNOzxz3DKmGm2tTF3OfVrs6NW8iRr19FviEeLvY
+ kviOuxP_aoHzHUBSulSBn4tdOnso3M6VmyJo3X75IB5usdDKOKDOq4GJwOotO.etao6o8her0NxU
+ jG6xyvQ3xQXzCoRH1RmYY1OrZ3plAcHB01C11CLH7sLhf8A.JR0U4KAkDtACPzeCggkKqmtrAgSk
+ 5318qYdebdxGn_LbHV.fxGVF_B6vrYOxLyYAy2SN4Hz1HbUINxuZq94HPG.iqzKsOeSQUS92Uc7a
+ YzgWDpN5FnHoRSgeQm1v.dfZxHmbU7udKyqBFeXL0nBGF.D7XLZLoF4x86c2eilYN6nxUaRj5LcP
+ _OuE5sVtFO0Fw1xYbL78umu0dQzh7ZJE2fj7x
+X-Sonic-MF: <brchuckz@aim.com>
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.gq1.yahoo.com with HTTP; Fri, 2 Sep 2022 18:16:29 +0000
+Received: by hermes--production-bf1-64b498bbdd-ds6cg (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 0e5b82ec19e7d0722a50a09162dc19e5;
+          Fri, 02 Sep 2022 18:16:26 +0000 (UTC)
+Message-ID: <dc553a8a-d71b-9a55-be16-fca16ec92f01@netscape.net>
+Date: Fri, 2 Sep 2022 14:16:25 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 40ae9925-f430-4a6d-5c6e-08da8cdf2339
-X-MS-TrafficTypeDiagnostic: BN6PR11MB1636:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fXuhvC7OnpDBN1YGAPmjGEYQd3He/CwgL9C/+QU/++brJPCCCCEL8MNNIe1WYbBy0+MpHXWLPr8cPs/f2o2HRA1rZd/mdYzMjt32VZuBcGqscqTwzv4qB3FCAHlFLguv+2MtP37TNdndNTrQP9wKiFHTxiDkpJSTNtExASlHCnwE+WSikAybk5Wpf8DRc9yJTjzPjAJvsXZ1q9h+YO7LhMC9WcMPS8f2uqIEKI8fPQQI4sWupyUuxUwHO6UIXxkGVlwnLWeSlRImupCZHdyFGvf0Ya2bPzMZXpDcOD1jW9XdHGJ/IM0RSVLPR1a0TnKFsfxGzoTnbQNRoiQlICIlW5A97SH+tGvaJTw+QBxR/Q2lnAAVXnzCo42wVAVtpcNGRdA77EwHgxIcSLlmo1o07kuT8TJa9PrIQzFxpl603UwTsuPuivjfvYflXSIeXDPT+jmqABY39vEvESAKe35XboJZfukckbItJYb8+KgIyTYskrIJvYcQnx3hIBa2v29lgBzyZmNn5d9uLUwiGqsbuOsStKx7mjlXMIZzcLo8V/Fxb6oeW05SrlO484muTpftJ5yelqjmc6Q1XjQdiP7cNKh05qcDN/5APBwrmseHDoU4zD8jZhZGZPD+7iA0h0QBgY1yBBsNTTc3DNBv7PaLMrRRWk/IqsK7zh3LOCxgYeQahbSTSNbvyr5cd75q4ydw06SzUi96jRyuMqOR6PN12A8eaxO3yzSpy8wANK6EhwRpABdlrc481w87uHOEfWdh5vh98CBf7hnNkw6mjNzybA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR11MB2995.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(376002)(39860400002)(366004)(346002)(396003)(26005)(186003)(316002)(6916009)(6506007)(53546011)(6666004)(83380400001)(6512007)(2906002)(44832011)(107886003)(6486002)(82960400001)(66476007)(8936002)(66556008)(478600001)(38100700002)(41300700001)(86362001)(54906003)(966005)(66946007)(8676002)(4326008)(5660300002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9M9bRcmnxCeL7P+VLW9GLGeRr0Rhn7nrfIbHn29vcOJIaHyy9BvVK1VwMIH8?=
- =?us-ascii?Q?DrUqThxPDHxrZE7ftD8orUVsd+XtpwMSHR6FiQLNdILX/1fNunWX0awg4NjP?=
- =?us-ascii?Q?gHvMmj4AFHe+snChOT6TONneEptIoqVsQ4PSJkjMlPsQXKjHqdMMs7s+pHiH?=
- =?us-ascii?Q?4VF1MmBTPZO9gmEo4kgghoxLIQuUtd6to7SPydnitONyMbF3wvYkJzBHGHIK?=
- =?us-ascii?Q?oqHzsG5iMsGf1PKshMYhN8YF1hO0FFCRHXdFhzYlmR5xAfqj6WzednqO4cD7?=
- =?us-ascii?Q?xO5+zjYT3vrA5kgnKLPmqlE+AuQgyBNzZ/yj1uqmVuwAxfG6HWAHujH5+o1N?=
- =?us-ascii?Q?JAm+2zv8Jr2vhJAI8OnAwEmMmzyA/JaR/eWm22x2qfee3K3nVJ2Q2hJzLT6Z?=
- =?us-ascii?Q?m/VZ10BkxBjOOwY0/3kHRlt2VjgN4TrIqrxrnwN9Vx+3vXzEotuQrKMIoHTd?=
- =?us-ascii?Q?8FqQWFYK18jXB7yt692aw5hzKkNbPNGPig7MjL+E74KFW2b6K2/J/BP0GZik?=
- =?us-ascii?Q?vn+h/vpkRLChwBbbIOi6BgFxsJ/0WHHuc6BNR59ABshXfAXUQTysm3dD530J?=
- =?us-ascii?Q?uFV/GSm/46x89BkBeFzIZEMu0QttA8WTK8sN2o1R+DJJCY4cclP4v99QMsrg?=
- =?us-ascii?Q?nqFE1SGgaMZjlcYsKk2jfO58ZKaqOGTAI3roCAg13DzZfgVW7M+GkeaFpHv2?=
- =?us-ascii?Q?umNrrRXrT8+nkElriuOhzP+jbLZRD1f/jQydZWujl1EhKMWtix9V77gNunlq?=
- =?us-ascii?Q?S85VmHuvSed+p9KHRiizeaSYfU24V2tsrA8K2Xw9NnwNaL6IaGAGduFtWZH3?=
- =?us-ascii?Q?LuiCAqH1ppTc4XIpOCPqOW/NRM8ta68JIDg+oT7zCiAXegWeIHnhE1Ku6N8V?=
- =?us-ascii?Q?2ZPi7FmHa39e3fPeSBIzcLqPXK5W3mu0h0IY6RD8ceRm0DNrE/lWxS/SRe9V?=
- =?us-ascii?Q?N5tJeLVynfBzDlYS0kR1GqJs6tnhJMkdDRhV5DtszWH7A2ZbDc2Dwxpkdjct?=
- =?us-ascii?Q?ltWPfi23vIEouD2df8knLMWizLjX9E6gX07pa/klGj7ZngnCq19sfIYVqLW0?=
- =?us-ascii?Q?XN5dqGo0KpWBw6qb2p7HvlIYiZILoH/Wg3uMMZQZtiepHm//5zUUtbF870Dr?=
- =?us-ascii?Q?3dMRnZrSUYndUiYkHIuW6Lj/DKT1mgOQoDBSaGTVCXUX2ctWeHS8vm4CgyCa?=
- =?us-ascii?Q?5kASvVnyP00ib1MlvjiWrjIFtxMpBk0kT1s5Hc/1v6NgZcqfyNpiwdikdIuL?=
- =?us-ascii?Q?+30QL/a781JfnZrMVhfS/2YKZEJmJUp2QTIKsWrej/EE0i3Y/7D/JkGe2V6+?=
- =?us-ascii?Q?hdMPxwDYzMdUKxuVGUO2xqlFnyn+WUiJqM15uGLax1iPXXsFGOg/yGeJ7gZq?=
- =?us-ascii?Q?NwmnTv26qLhdDST8vF3/4pM+yCxMZzKuM7O/NQAAXQzTGpGk1TgGSNqvb/hQ?=
- =?us-ascii?Q?8tz2LP55QEQW+jNDkuqJKhpEZmVYcWgb9akU3CqoI/CAfj/5iPHXyy/RJmmz?=
- =?us-ascii?Q?T4j2GHdYst3caeWgRPNkgaUmiTPgmhJ9cZF4MqOghJI2N+gZVFfg4jdPtwK6?=
- =?us-ascii?Q?riu4eX7pKgqfkCY8NuC3+YGPE8MQ/5o47ddpaUC0Qa0B9jWt6QXlagnVguxp?=
- =?us-ascii?Q?ww=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40ae9925-f430-4a6d-5c6e-08da8cdf2339
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR11MB2995.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2022 12:32:02.6028
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GvJexXBYIVSmxaHnfOrqqgBVZEpJk7+Fa60G6sKl5RX03e0PzOfReSugAHNAlSR7B1UNW9bKqKsqFPFRAbSZqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1636
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH 5.19 109/158] x86/PAT: Have pat_enabled() properly reflect
+ state when running on Xen
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jan Beulich <jbeulich@suse.com>, Borislav Petkov <bp@suse.de>,
+ Juergen Gross <jgross@suse.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+ Lucas De Marchi <lucas.demarchi@intel.com>, regressions@lists.linux.dev,
+ lkml <linux-kernel@vger.kernel.org>
+References: <20220829105808.828227973@linuxfoundation.org>
+ <20220829105813.685677959@linuxfoundation.org>
+Content-Language: en-US
+From: Chuck Zmudzinski <brchuckz@netscape.net>
+In-Reply-To: <20220829105813.685677959@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.20612 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
 
-On Fri, Sep 02, 2022 at 01:23:55PM +0200, Thorsten Leemhuis wrote:
-> TWIMC for those that might not be aware of it: there is a parallel
-> discussion about the interaction about 0day and regzbot ongoing here:
-> https://lore.kernel.org/regressions/57c596f7-014f-1833-3173-af3bad2ca45d@leemhuis.info/
-> 
-> On 01.09.22 15:53, Philip Li wrote:
-> > On Mon, Aug 15, 2022 at 09:19:30PM +0800, Thorsten Leemhuis wrote:
-> >> On 10.08.22 07:44, Si, Beibei wrote:
-> > [...]
-> >> Would be really really great if these mails could also directly tell
-> >> users to add links tags that point to the report, e.g. in this case the
-> >> mail from Oliver that started this thread:
-> >>
-> >> ```
-> >>  If you fix the issue, kindly add following tag
-> >>  Reported-by: kernel test robot <oliver.sang@intel.com>
-> >>  Link: https://lore.kernel.org/lkml/YvEgyQM%2FWi0E2J3J@xsang-OptiPlex-9020/
-> >> ```
-> >>
-> >> Obviously you need the msgid of the mail before you sent it in this
-> >> case, but I assume you generate those mails semi-automatically anyway,
-> >> so it hopefully won't be too hard to add this.
-> > 
-> > Thanks, this is really great suggestion for us, we will be able to add
-> > this Link tag in future.
-> 
-> Great, thx.
-> 
-> > [...]
-> >> I care deeply in the case of 0-bot when the reports contains lines like
-> >> this:
-> >>
-> >>>> #regzbot introduced: efcfec579f
-> >> That's because regzbot uses the URL in Link: tags to associate patch
-> >> postings and commits with reports -- and even automatically closes
-> >> regression tracking entries in case a fix linking to a tracked report is
-> >> committed to the appropriate tree. A proper "Link:" tag thus saves me a
-> >> lot of trouble, as I otherwise have to tell regzbot manually about each
-> >> fix for tracked issues, which quickly becomes a PITA. :-/
-> >>
-> >> BTW: I noticed this was not the only recent reports from the kernel test
-> >> robot that directly got regzbot involved, but not all do. Is some bot
-> >> decising this or a human?
-> > 
-> > this is controlled by human, we try to connect with regzbot for the regression
-> > we found on mainline. So we add #regzbot after we confirm the issue is valid
-> > on mainline.
-> 
-> Okay, good to know. As maybe visible between the lines in the other mail
-> I linked above already: I guess it's fine that way and we should
-> continue with this and just see how it goes.
+On 8/29/2022 6:59 AM, Greg Kroah-Hartman wrote:
+> From: Jan Beulich <jbeulich@suse.com>
+>
+> commit 72cbc8f04fe2fa93443c0fcccb7ad91dfea3d9ce upstream.
+>
+> After commit ID in the Fixes: tag, pat_enabled() returns false (because
+> of PAT initialization being suppressed in the absence of MTRRs being
+> announced to be available).
+>
+> This has become a problem: the i915 driver now fails to initialize when
+> running PV on Xen (i915_gem_object_pin_map() is where I located the
+> induced failure), and its error handling is flaky enough to (at least
+> sometimes) result in a hung system.
+>
+> Yet even beyond that problem the keying of the use of WC mappings to
+> pat_enabled() (see arch_can_pci_mmap_wc()) means that in particular
+> graphics frame buffer accesses would have been quite a bit less optimal
+> than possible.
+>
+> Arrange for the function to return true in such environments, without
+> undermining the rest of PAT MSR management logic considering PAT to be
+> disabled: specifically, no writes to the PAT MSR should occur.
+>
+> For the new boolean to live in .init.data, init_cache_modes() also needs
+> moving to .init.text (where it could/should have lived already before).
+>
+>   [ bp: This is the "small fix" variant for stable. It'll get replaced
+>     with a proper PAT and MTRR detection split upstream but that is too
+>     involved for a stable backport.
+>     - additional touchups to commit msg. Use cpu_feature_enabled(). ]
+>
+> Fixes: bdd8b6c98239 ("drm/i915: replace X86_FEATURE_PAT with pat_enabled()")
+> Signed-off-by: Jan Beulich <jbeulich@suse.com>
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Acked-by: Ingo Molnar <mingo@kernel.org>
+> Cc: <stable@vger.kernel.org>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Lucas De Marchi <lucas.demarchi@intel.com>
+> Link: https://lore.kernel.org/r/9385fa60-fa5d-f559-a137-6608408f88b0@suse.com
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>  arch/x86/mm/pat/memtype.c |   10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> --- a/arch/x86/mm/pat/memtype.c
+> +++ b/arch/x86/mm/pat/memtype.c
+> @@ -62,6 +62,7 @@
+>  
+>  static bool __read_mostly pat_bp_initialized;
+>  static bool __read_mostly pat_disabled = !IS_ENABLED(CONFIG_X86_PAT);
+> +static bool __initdata pat_force_disabled = !IS_ENABLED(CONFIG_X86_PAT);
+>  static bool __read_mostly pat_bp_enabled;
+>  static bool __read_mostly pat_cm_initialized;
+>  
+> @@ -86,6 +87,7 @@ void pat_disable(const char *msg_reason)
+>  static int __init nopat(char *str)
+>  {
+>  	pat_disable("PAT support disabled via boot option.");
+> +	pat_force_disabled = true;
+>  	return 0;
+>  }
+>  early_param("nopat", nopat);
+> @@ -272,7 +274,7 @@ static void pat_ap_init(u64 pat)
+>  	wrmsrl(MSR_IA32_CR_PAT, pat);
+>  }
+>  
+> -void init_cache_modes(void)
+> +void __init init_cache_modes(void)
+>  {
+>  	u64 pat = 0;
+>  
+> @@ -313,6 +315,12 @@ void init_cache_modes(void)
+>  		 */
+>  		pat = PAT(0, WB) | PAT(1, WT) | PAT(2, UC_MINUS) | PAT(3, UC) |
+>  		      PAT(4, WB) | PAT(5, WT) | PAT(6, UC_MINUS) | PAT(7, UC);
+> +	} else if (!pat_force_disabled && cpu_feature_enabled(X86_FEATURE_HYPERVISOR)) {
+> +		/*
+> +		 * Clearly PAT is enabled underneath. Allow pat_enabled() to
+> +		 * reflect this.
+> +		 */
+> +		pat_bp_enabled = true;
+>  	}
+>  
+>  	__init_cache_modes(pat);
+>
+>
 
-Got it, as replied in https://lore.kernel.org/regressions/57c596f7-014f-1833-3173-af3bad2ca45d@leemhuis.info/,
-we will get ready for what you suggested, and send selected reports on mainline
-to regzbot.
+Dear Boris, Jan, Juergen, Thorsten, and Greg,
 
-> 
-> > BTW: 0day does testing on nearly all repos from developer to maintainers
-> > to next and mainline, thus part of them are bisected down to mainline.
-> 
-> Yeah, I know. Regzbot in principle is handling next as well, but I guess
-> we should ignore that for now with 0day, as keeping an eye on the
-> reports against mainline keeps me quite busy already.
+Just a note to say thanks to everyone who worked on this regression.
+I just upgraded my Xen PV dom0 on fc36 that was affected with the
+Fedora build of 5.19.6, which has the fix, and it works fine.
 
-Got it, we will focus on mainline to track valuable ones.
+Thanks again,
 
-> 
-> >> Because the thing is: the time I can spend on tracking regressions is
-> >> limited, hence I (at least for now) want to avoid spending any time on
-> >> regressions that likely only ever show up in CI testing. But if the
-> > 
-> > got it, probably we need consider a few test suites (and kernel configruations)
-> > that is more "standard", such as kselftests. But this is hard, for example,
-> > we detects performance issue on micro benchmark, and it only shows one perspective
-> > to developer as it may not reflect the use scenario of developer (thus sometimes
-> > it is not reasonable/necessary to fix).
-> 
-> Yeah, it's hard. :-/
-> 
-> >> problem is something that is likely to be seen in the wild it's totally
-> >> okay for me if you get regzbot involved. FWIWI, it remains to be seen if
-> >> that's a good idea in general (and is likely something I will bring up
-> >> for discussion on this years kernel summit), but let's just give it a
-> >> try. :-D
-> > 
-> > Thanks, we will stop this default behavior to send them directly regzbot. 
-> 
-> See above, as I said, it's fine for me if you just continue to get
-> regzbot involved for now and I'll get in contact if it becomes a problem
-> for me.
-
-Got it, thanks a lot
-
-> 
-> > [...]
-> > BTW: i want to consult that anyone (or CI) else send report to regzbot directly so far?
-> > 
-> > [1] https://lore.kernel.org/lkml/6b12a0b4-2f6d-1c35-f2e2-a28022583c47@leemhuis.info/
-> 
-> A few developers and users get regzbot directly involved when reporting
-> regressions, but I add most of the issues to the tracking. But no CI is
-> doing it currently. How to handle reports from CI is actually something
-> I hope to discuss on kernel and/or maintainers summit in ~10 days, if
-> time permits.
-
-We will be very glad to follow the decision if any is made there, and share
-our thinking along the way to see how 0-day can be useful in this regression
-tracking process.
-
-> 
-> Ciao, Thorsten
+Chuck
