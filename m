@@ -1,86 +1,85 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AA166F4
-	for <regressions@lists.linux.dev>; Fri,  2 Sep 2022 12:26:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A30EDB
+	for <regressions@lists.linux.dev>; Fri,  2 Sep 2022 12:32:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662121584; x=1693657584;
+  t=1662121925; x=1693657925;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=qT4KlYsAq8MJRKNqsN8cReTQdvwAA76NXJM/7mzZ7c4=;
-  b=G14sdUp30G1RTw1ygJn8BMUsUQMRIc0vP1GRnv17w1d7HWjWpGcLJB+K
-   pPXjn7XMXIJplWbos+x2OmQqJFHZ6aFdXRg7R2DU4mxtmZmPYOVSgufg3
-   lveWDpfu81pIPEJezymXbmDFsAMKeZSiRLTNlfcm5LNTK+5CuJtn7dsI1
-   vOXqorNbGn9/Orw7vvA87GWYydm7TggX1C9d6nK4YUtKBnIJaHTliarTL
-   TZ1dENTpmLbvD4HBng1NC9WdxX7oeaxFl3ADm0UJ0jdOChGccrxOWch/C
-   XeCsgS94TF4vKr7zlwRk+HCd7AjPXXl+7Njldy8Yx5Ug9b8hcUZN1d1QJ
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10457"; a="293546547"
+  bh=dsfTc/ms2jLMG5DbAydsJmtBCyrtuoq7WpdGH0X3WSE=;
+  b=k2XQ3M2Xql1QWWjQXUJI2BjxlRsgDpeXSXQITVX1xlgn+IInqXYD71KK
+   vusvJhE5x91LZiZTZ1JzOZbl9aJpLCPiSwZMhj2QMQm1Nqda4EUFK/Rzn
+   nrx7wKglRtYDkluSqK+23i3TVkdbkRildmn6dS9C6lNwQ85gFHQwHDhPZ
+   oUfNh/BRkwFO82OlP1fKHgcUbw5zLxljDyLspeSBD5BTQaYeiVsrGam7b
+   Oo9L6yVl/EvAAinnxbpcLBH+FezidyvwQoYURQPSTV6sGlpBLMdi+JkiQ
+   6Yf83eNuiuUzbD6i5MjjUKSVE7+MwJygtfLa3utbgceDCdU3WGzstssFm
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10457"; a="322129136"
 X-IronPort-AV: E=Sophos;i="5.93,283,1654585200"; 
-   d="scan'208";a="293546547"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 05:26:23 -0700
+   d="scan'208";a="322129136"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 05:32:05 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.93,283,1654585200"; 
-   d="scan'208";a="563948438"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga003.jf.intel.com with ESMTP; 02 Sep 2022 05:26:23 -0700
+   d="scan'208";a="755247707"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Sep 2022 05:32:05 -0700
 Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 2 Sep 2022 05:26:23 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ 15.1.2375.31; Fri, 2 Sep 2022 05:32:05 -0700
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
  fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 2 Sep 2022 05:26:22 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2375.31; Fri, 2 Sep 2022 05:32:04 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Fri, 2 Sep 2022 05:26:22 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.40) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2375.31 via Frontend Transport; Fri, 2 Sep 2022 05:32:04 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.168)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Fri, 2 Sep 2022 05:26:22 -0700
+ 15.1.2375.31; Fri, 2 Sep 2022 05:32:04 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K5xFV8L7m1yDJBHwIgl2e3Yb7wrDz55id0cKOsovwbN9y0qvupDeWGuslV6e9bpfc8aWMQtmdCXf3A/AaDRhhC6tjCOD3sldrznfzXhrtwJ1edXOFlwXIy1euoere79FTSec4RWObRELjD5owu7BBMk13qZKd3E4e1j9/jFQKmTB9eXJOCvi6xuihIg94Y31m5QoGOMW8uwd30OdY+4EE+EnsbJe0/1eF+qWhGDRa4x1q2h9Apu4hUOnNMo/AR0S4kLANTuu1KibJC/WGXUbim4DDJ1whDTZlrahR1RTwqFMnGgrwf2TC1iIDYSnMeFCOrfI2Z00xl24LvwjJO3Kog==
+ b=WM3qa2sCJGTgmDFoa3yWCAPCrbDU9hJTcdnBFq6qYCVtQ5/99Iuk/jKvraWpDTt0Mao/+bjUZoFBC0L4/8metslVVP8aIOr+fA+ThjjHpDSyzDVhbuO7MLTo2aL4N8IovHMQYw5lT9iFXgDhznj43f/LGHHPFGQzkm8cwutlZRfOy99YvAktJ5R11Q8URUkXP+4GfLMJybs5DOGh3+k/t4dy7uvj+NU0hnixtDx7dWbgLxIHRan9Ba0yI2BwsnC4uLRFwXxIkGQBCBmAEeZnm6ii0LbELc0ma0OYF0YN4Dw9iozxLgzZr6kt9d5XXci6N2H9hTNbAwKLUVZwoxoeBA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AF4Qc5oFsJHCwSYBPvAcsuqDeC/BhQmPs0HU3qbdleM=;
- b=N+843pGAyvB5A/pgTlzEaCDnqkG3BGUl9RhysC57c0yMqVFE9ARgTtAfh5+9drc03+jdGM6n5WDidIF3U25Yz2mtHkkq+m2mycUR9YFLPuVqQIy2OYuVTxoYErHjFukuYa6engXOsOUT1UyS4hk+r5SDl5w69Ci/AQEfQLL+fRKlBOUiIOD8p5BWgNWDEzNYJFUjCtZKhslS7FFiW6e9WVoDNlISZtpjTp+Wz/KWRtsrefA5gr3l82UR29WInfpAjucNn8k5UPi30FMSE8gjjv9fm2qG7wI9nO5AVWX7E4Y/DoVspwLl4DCeLeeMIh3GSPXIwo3lDm33jHswFYBk9w==
+ bh=2yTicJlm4zMX0hsaYLNXIcJzLlXJz5fEdQ4Nw1OKevc=;
+ b=HIxGPgdFO/0QugsZZ7nRQ4FcEH/ldNTqhyrxXVPMO5wPEYZAV275+D103Abpth6uUykGjJr4yUrE7rYHaosSblQf6DIwK9e6NwDderM2hkzrNK6IBkuDi1dZTkAtek2Y1c+EY627xltNdd1N0xSVoKKl/EJ79WCmC7Gj1gzGhmyPAklFF9Y4sZCe79fS3R2SKFGBOw+7sQfigZg4eZuGJjYp0v6mZB6dgaCzBHdPSEe8AlYjGex4qXk8IFOzhSnoGA7q7mWePgH9eN7gzovfacTAzi13bhLJNbYTlvQJjHj15LhJ6t6jXvzA7dRpk9yZoXn6IrUzXE8WlEQa8hEFew==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from BL0PR11MB2995.namprd11.prod.outlook.com (2603:10b6:208:7a::28)
- by BYAPR11MB2821.namprd11.prod.outlook.com (2603:10b6:a02:c9::29) with
+ by BN6PR11MB1636.namprd11.prod.outlook.com (2603:10b6:405:10::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.10; Fri, 2 Sep
- 2022 12:26:20 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.19; Fri, 2 Sep
+ 2022 12:32:02 +0000
 Received: from BL0PR11MB2995.namprd11.prod.outlook.com
  ([fe80::5482:e4d0:c7d9:e8be]) by BL0PR11MB2995.namprd11.prod.outlook.com
  ([fe80::5482:e4d0:c7d9:e8be%4]) with mapi id 15.20.5588.014; Fri, 2 Sep 2022
- 12:26:20 +0000
-Date: Fri, 2 Sep 2022 20:26:07 +0800
+ 12:32:02 +0000
+Date: Fri, 2 Sep 2022 20:31:51 +0800
 From: Philip Li <philip.li@intel.com>
 To: Thorsten Leemhuis <regressions@leemhuis.info>
-CC: kernel test robot <oliver.sang@intel.com>, Kai Huang
-	<kai.huang@intel.com>, LKML <linux-kernel@vger.kernel.org>,
-	<kvm@vger.kernel.org>, <lkp@lists.01.org>, <lkp@intel.com>,
-	<regressions@lists.linux.dev>
-Subject: Re: [LKP] Re: [KVM] c3e0c8c2e8:
- leaking-addresses.proc..data..ro_after_init.
-Message-ID: <YxH2X8gMWyJeKPRa@rli9-MOBL1.ccr.corp.intel.com>
-References: <YvpZYGa1Z1M38YcR@xsang-OptiPlex-9020>
- <04ce8956-3285-345a-4ce5-b78500729e42@leemhuis.info>
- <YxCyhTES9Nk+S94y@rli9-MOBL1.ccr.corp.intel.com>
- <57c596f7-014f-1833-3173-af3bad2ca45d@leemhuis.info>
+CC: "Si, Beibei" <Beibei.Si@intel.com>, "regressions@lists.linux.dev"
+	<regressions@lists.linux.dev>, "Sang, Oliver" <oliver.sang@intel.com>,
+	<lkp@intel.com>
+Subject: Re: [loop] efcfec579f: mdadm-selftests.12imsm-r0_2d-grow-r0_3d.fail
+ #forregzbot
+Message-ID: <YxH3tyWPm3iqCFGg@rli9-MOBL1.ccr.corp.intel.com>
+References: <BN6PR11MB1729F27147FBD06FDED3F355FB659@BN6PR11MB1729.namprd11.prod.outlook.com>
+ <384393c2-6155-9a07-ebd4-c2c410cbe947@leemhuis.info>
+ <YxC5PJJlAG7VycLP@rli9-MOBL1.ccr.corp.intel.com>
+ <6134ee07-a6c4-18e8-d54e-def4896821db@leemhuis.info>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <57c596f7-014f-1833-3173-af3bad2ca45d@leemhuis.info>
-X-ClientProxiedBy: SG2PR04CA0163.apcprd04.prod.outlook.com (2603:1096:4::25)
+In-Reply-To: <6134ee07-a6c4-18e8-d54e-def4896821db@leemhuis.info>
+X-ClientProxiedBy: SG2PR04CA0173.apcprd04.prod.outlook.com (2603:1096:4::35)
  To BL0PR11MB2995.namprd11.prod.outlook.com (2603:10b6:208:7a::28)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -89,198 +88,163 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2a58acb4-2350-4e39-1c04-08da8cde5710
-X-MS-TrafficTypeDiagnostic: BYAPR11MB2821:EE_
+X-MS-Office365-Filtering-Correlation-Id: 40ae9925-f430-4a6d-5c6e-08da8cdf2339
+X-MS-TrafficTypeDiagnostic: BN6PR11MB1636:EE_
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: JwzwId5yDV2zZhbcu+60SZRelHcDwCu2BMETSrmVJCiDjZacX3xhLlbXWEuAk+ob0IHLmuHEZHV2Mw2vHIvbKtREinfbv2qipt/KbOacFEge+tW9bjI5P6CBFYp3wuvOU+aiSrXy2mFHCOXj/scOoAoKdliMh+MLC5FyDGthXFF+DzDJsq2GBOcxVwSsoRTjOs7YOgxwZUxDJblzuPxZoTzHR9C1OyFsI/KAkkyI0FF3aTv2RFXaOl+Tul6nEb9ekCoijD7CPGlABPIm/Db3IXCaRp5D/cpOXjkF3klYrpbPZIO9JYb5iynsA+GHVYF2XofdHdPYsNjSXgqGHIM2y0s8379sSor87ToE3rCpdglmsr1d4Diiza5QJSlsS74bW/jQ1MqRYTrau2Lr96rt6fmzIt2MsMgL8UWNJm+QIh0PUmyihnQUB59HHnMOiIjU5J5iuEANCUP+LXaDeFfNbOX2vgQRtyLB2R3kNY/2xsGTq3LcSTE5GnLUarWGmHzEKAptPanZ0SnTNvPUt7epgRQLD0/yfhVtSAm1c6aaOPElulijvJRWZmmOKiuGr01tfIHyWR0smFojrqw7ovwOtyqviamgzWoDueb7rpWKfx1vFLYj2Bq2xC/tnvxH1KBDNjxJusuD01oR51QNIvDfEeDk8qoOOQyNXrVdnujzPbMdJM/SHIF3WJarcTj1l/3WmbJsnHJKtcQs5/Z6rfO4V95FUltjVDKyeZfnSVRJsNCmDYWcbuho+Ly/dsIdJnhgegMI93H9yFFlaoKbMwVZ1X6wB2nTjJgtF9pp/skrchs=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR11MB2995.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(376002)(366004)(39860400002)(396003)(346002)(136003)(82960400001)(6916009)(86362001)(38100700002)(54906003)(316002)(2906002)(5660300002)(44832011)(8676002)(66556008)(66946007)(66476007)(8936002)(186003)(4326008)(41300700001)(83380400001)(966005)(6486002)(6666004)(6506007)(53546011)(6512007)(26005)(478600001)(101420200003);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: fXuhvC7OnpDBN1YGAPmjGEYQd3He/CwgL9C/+QU/++brJPCCCCEL8MNNIe1WYbBy0+MpHXWLPr8cPs/f2o2HRA1rZd/mdYzMjt32VZuBcGqscqTwzv4qB3FCAHlFLguv+2MtP37TNdndNTrQP9wKiFHTxiDkpJSTNtExASlHCnwE+WSikAybk5Wpf8DRc9yJTjzPjAJvsXZ1q9h+YO7LhMC9WcMPS8f2uqIEKI8fPQQI4sWupyUuxUwHO6UIXxkGVlwnLWeSlRImupCZHdyFGvf0Ya2bPzMZXpDcOD1jW9XdHGJ/IM0RSVLPR1a0TnKFsfxGzoTnbQNRoiQlICIlW5A97SH+tGvaJTw+QBxR/Q2lnAAVXnzCo42wVAVtpcNGRdA77EwHgxIcSLlmo1o07kuT8TJa9PrIQzFxpl603UwTsuPuivjfvYflXSIeXDPT+jmqABY39vEvESAKe35XboJZfukckbItJYb8+KgIyTYskrIJvYcQnx3hIBa2v29lgBzyZmNn5d9uLUwiGqsbuOsStKx7mjlXMIZzcLo8V/Fxb6oeW05SrlO484muTpftJ5yelqjmc6Q1XjQdiP7cNKh05qcDN/5APBwrmseHDoU4zD8jZhZGZPD+7iA0h0QBgY1yBBsNTTc3DNBv7PaLMrRRWk/IqsK7zh3LOCxgYeQahbSTSNbvyr5cd75q4ydw06SzUi96jRyuMqOR6PN12A8eaxO3yzSpy8wANK6EhwRpABdlrc481w87uHOEfWdh5vh98CBf7hnNkw6mjNzybA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR11MB2995.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(376002)(39860400002)(366004)(346002)(396003)(26005)(186003)(316002)(6916009)(6506007)(53546011)(6666004)(83380400001)(6512007)(2906002)(44832011)(107886003)(6486002)(82960400001)(66476007)(8936002)(66556008)(478600001)(38100700002)(41300700001)(86362001)(54906003)(966005)(66946007)(8676002)(4326008)(5660300002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?u4UUO9AbvR5TNpg00KfItzufcx7VQubY3VkGHdOJX1fUFDn7PNdJ3czvnC03?=
- =?us-ascii?Q?PmXOGwzIlxbocT55b/vxa8uuf4xqfUp4LN58IS6ettvs4VWA6oaP1DymjJRt?=
- =?us-ascii?Q?p/iV4EIIJO9XQ1lCis+RfU625x7JJiImEwTiS23s/P2e3QPAX2AWNA9M39Oi?=
- =?us-ascii?Q?MW57T1v7a8aI8CHNDCsvgGgW9BCJoT0lvLt2vx2Xzpo0zMHlEO7RomkwU1rI?=
- =?us-ascii?Q?NQN+AoSjln07BPQ+R5L/F6jjMl8FFwXNBBMVsMD360gpStnpv8RWfNHnz6tu?=
- =?us-ascii?Q?xX85aXUO76OnxbHfVCUZSFr5eWJwVGI7eExFSt+juoOUSNrpYwhnuGjMTLqQ?=
- =?us-ascii?Q?P5gh37qKsiGE/wFQaRZc3DKGhy63BdOXzAiFN51uco6qQLqm/4lwOFvLG91M?=
- =?us-ascii?Q?F84dUKiyT5a8EbxA5ArxKcmJlKzdnND72fCm9efWpN1cY503ApcXV7dKGENQ?=
- =?us-ascii?Q?Yjl2DG2KAt6wg8+xb3oYxbUkf6IxQSWSUFTn/Nto38Z5trkAy3TzXHOIbmHy?=
- =?us-ascii?Q?sVGcsIPPneIsbdgXbpHavMKtm3RtlpwQZPFCRIqXR7rFx8NCJ+l0VPggCkvF?=
- =?us-ascii?Q?CRItMmllRbL0VcI3DoWiagzY3Dz52GrjQPs84Q1eto0LyQArPe+V05dESfGa?=
- =?us-ascii?Q?PYnnCTbAQa08gYbyttw99HVowzF25Vqwq2Ci/kEbCqipbTSD95Gux7dOX1B3?=
- =?us-ascii?Q?TQbhE0boSL8TX+q9MGygK+geKvTSDn96eYEqPgGa3XiPVGZE0FxQLO9nvLXG?=
- =?us-ascii?Q?ifoSuMXuBQfRnx8+6seMnMoDSlZunJeXj6OqDtdYeA7gFEgEEdGMz15uQ/sc?=
- =?us-ascii?Q?K/t1uUDeMQYTuIjyhm4IbQg3+5v87NU2eI6c1U17f4jikzDaoax3I+/bCeKe?=
- =?us-ascii?Q?20eKvyRdUYRmB/qsz5bsEOYjF0PkXKbV/DlfHP3U4pBsoDiqNTTfxbcMkhX1?=
- =?us-ascii?Q?Zbzz6y4eH6xIJcr4OGGv4KojOb0LyigDmRMlV+FpZTBFt0LDEtVaA4qQryYF?=
- =?us-ascii?Q?ezoKl93G+VKPU++AClDDvyi8KYDIlz1K3hEFKG9tFPAf14KnVCv9CQQGYg7/?=
- =?us-ascii?Q?Mfcysnhxtij+dR6HOcyHUon5XFJQ8Se2QDLdI1/YgkEsHzr7mzQ/4QqFDC1f?=
- =?us-ascii?Q?JIeBHEIwiHdTAFjhUL5DvriMh67DaijjyaA96UGOfpdLwLQKjiaRGVUE8Vyv?=
- =?us-ascii?Q?eVqVWRMQ/qE7t4OHTa/X24Newzd8SSHx5BJUYtvE2c3p2y7C14gelasmaa+Z?=
- =?us-ascii?Q?j1UXnDCvXDhKEv5jluCYFbUWAp+2swnNdtSQTuHvOfQA1CI74ue7U2qreXPM?=
- =?us-ascii?Q?ZsreyuxxAglTxVDBKItXXf10ldgEjmdCPIzOuUSwES+M6ONbTSYEkOUheryV?=
- =?us-ascii?Q?95nIFPxOu0hurhnH4+ZEQwSMtbtb7hid4o5JuBOgo4kLCDefZfpSThJc6dg+?=
- =?us-ascii?Q?2vVWBJ5seU9ogdLXHKFjyxLUH9QpLFR6uWM/oOByO8a24dh+MU+QeuD0FcaG?=
- =?us-ascii?Q?/jF1w9B7CzqRcOOIiNd8AiuA3xRePxY8I+FDiGZ6DyQndojwM+b6/Xx3V35z?=
- =?us-ascii?Q?x7ruaUKLmWiXemakRWfmEiKnfsVgbtaK7zoGdeRTOBDTAVlT+xaf4ruAH25h?=
- =?us-ascii?Q?gA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a58acb4-2350-4e39-1c04-08da8cde5710
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?9M9bRcmnxCeL7P+VLW9GLGeRr0Rhn7nrfIbHn29vcOJIaHyy9BvVK1VwMIH8?=
+ =?us-ascii?Q?DrUqThxPDHxrZE7ftD8orUVsd+XtpwMSHR6FiQLNdILX/1fNunWX0awg4NjP?=
+ =?us-ascii?Q?gHvMmj4AFHe+snChOT6TONneEptIoqVsQ4PSJkjMlPsQXKjHqdMMs7s+pHiH?=
+ =?us-ascii?Q?4VF1MmBTPZO9gmEo4kgghoxLIQuUtd6to7SPydnitONyMbF3wvYkJzBHGHIK?=
+ =?us-ascii?Q?oqHzsG5iMsGf1PKshMYhN8YF1hO0FFCRHXdFhzYlmR5xAfqj6WzednqO4cD7?=
+ =?us-ascii?Q?xO5+zjYT3vrA5kgnKLPmqlE+AuQgyBNzZ/yj1uqmVuwAxfG6HWAHujH5+o1N?=
+ =?us-ascii?Q?JAm+2zv8Jr2vhJAI8OnAwEmMmzyA/JaR/eWm22x2qfee3K3nVJ2Q2hJzLT6Z?=
+ =?us-ascii?Q?m/VZ10BkxBjOOwY0/3kHRlt2VjgN4TrIqrxrnwN9Vx+3vXzEotuQrKMIoHTd?=
+ =?us-ascii?Q?8FqQWFYK18jXB7yt692aw5hzKkNbPNGPig7MjL+E74KFW2b6K2/J/BP0GZik?=
+ =?us-ascii?Q?vn+h/vpkRLChwBbbIOi6BgFxsJ/0WHHuc6BNR59ABshXfAXUQTysm3dD530J?=
+ =?us-ascii?Q?uFV/GSm/46x89BkBeFzIZEMu0QttA8WTK8sN2o1R+DJJCY4cclP4v99QMsrg?=
+ =?us-ascii?Q?nqFE1SGgaMZjlcYsKk2jfO58ZKaqOGTAI3roCAg13DzZfgVW7M+GkeaFpHv2?=
+ =?us-ascii?Q?umNrrRXrT8+nkElriuOhzP+jbLZRD1f/jQydZWujl1EhKMWtix9V77gNunlq?=
+ =?us-ascii?Q?S85VmHuvSed+p9KHRiizeaSYfU24V2tsrA8K2Xw9NnwNaL6IaGAGduFtWZH3?=
+ =?us-ascii?Q?LuiCAqH1ppTc4XIpOCPqOW/NRM8ta68JIDg+oT7zCiAXegWeIHnhE1Ku6N8V?=
+ =?us-ascii?Q?2ZPi7FmHa39e3fPeSBIzcLqPXK5W3mu0h0IY6RD8ceRm0DNrE/lWxS/SRe9V?=
+ =?us-ascii?Q?N5tJeLVynfBzDlYS0kR1GqJs6tnhJMkdDRhV5DtszWH7A2ZbDc2Dwxpkdjct?=
+ =?us-ascii?Q?ltWPfi23vIEouD2df8knLMWizLjX9E6gX07pa/klGj7ZngnCq19sfIYVqLW0?=
+ =?us-ascii?Q?XN5dqGo0KpWBw6qb2p7HvlIYiZILoH/Wg3uMMZQZtiepHm//5zUUtbF870Dr?=
+ =?us-ascii?Q?3dMRnZrSUYndUiYkHIuW6Lj/DKT1mgOQoDBSaGTVCXUX2ctWeHS8vm4CgyCa?=
+ =?us-ascii?Q?5kASvVnyP00ib1MlvjiWrjIFtxMpBk0kT1s5Hc/1v6NgZcqfyNpiwdikdIuL?=
+ =?us-ascii?Q?+30QL/a781JfnZrMVhfS/2YKZEJmJUp2QTIKsWrej/EE0i3Y/7D/JkGe2V6+?=
+ =?us-ascii?Q?hdMPxwDYzMdUKxuVGUO2xqlFnyn+WUiJqM15uGLax1iPXXsFGOg/yGeJ7gZq?=
+ =?us-ascii?Q?NwmnTv26qLhdDST8vF3/4pM+yCxMZzKuM7O/NQAAXQzTGpGk1TgGSNqvb/hQ?=
+ =?us-ascii?Q?8tz2LP55QEQW+jNDkuqJKhpEZmVYcWgb9akU3CqoI/CAfj/5iPHXyy/RJmmz?=
+ =?us-ascii?Q?T4j2GHdYst3caeWgRPNkgaUmiTPgmhJ9cZF4MqOghJI2N+gZVFfg4jdPtwK6?=
+ =?us-ascii?Q?riu4eX7pKgqfkCY8NuC3+YGPE8MQ/5o47ddpaUC0Qa0B9jWt6QXlagnVguxp?=
+ =?us-ascii?Q?ww=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40ae9925-f430-4a6d-5c6e-08da8cdf2339
 X-MS-Exchange-CrossTenant-AuthSource: BL0PR11MB2995.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2022 12:26:20.0929
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2022 12:32:02.6028
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8LdwhCBpMmBxsC00kppXCx28f5YEZXO9pXfhZIgwOJwrT69Voj3jl9Fzm855Cly6B8cmTWDTPrGI+pzs8Ai0jA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR11MB2821
+X-MS-Exchange-CrossTenant-UserPrincipalName: GvJexXBYIVSmxaHnfOrqqgBVZEpJk7+Fa60G6sKl5RX03e0PzOfReSugAHNAlSR7B1UNW9bKqKsqFPFRAbSZqQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1636
 X-OriginatorOrg: intel.com
 
-On Fri, Sep 02, 2022 at 12:54:05PM +0200, Thorsten Leemhuis wrote:
-> On 01.09.22 15:24, Philip Li wrote:
-> > On Thu, Sep 01, 2022 at 02:12:39PM +0200, Thorsten Leemhuis wrote:
-> >> Hi, this is your Linux kernel regression tracker.
+On Fri, Sep 02, 2022 at 01:23:55PM +0200, Thorsten Leemhuis wrote:
+> TWIMC for those that might not be aware of it: there is a parallel
+> discussion about the interaction about 0day and regzbot ongoing here:
+> https://lore.kernel.org/regressions/57c596f7-014f-1833-3173-af3bad2ca45d@leemhuis.info/
+> 
+> On 01.09.22 15:53, Philip Li wrote:
+> > On Mon, Aug 15, 2022 at 09:19:30PM +0800, Thorsten Leemhuis wrote:
+> >> On 10.08.22 07:44, Si, Beibei wrote:
+> > [...]
+> >> Would be really really great if these mails could also directly tell
+> >> users to add links tags that point to the report, e.g. in this case the
+> >> mail from Oliver that started this thread:
 > >>
-> >> On 15.08.22 16:34, kernel test robot wrote:
-> >>> Greeting,
-> >>>
-> >>> FYI, we noticed the following commit (built with gcc-11):
-> >>>
-> >>> commit: c3e0c8c2e8b17bae30d5978bc2decdd4098f0f99 ("KVM: x86/mmu: Fully re-evaluate MMIO caching when SPTE masks change")
-> >>> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> >>>
-> >>> in testcase: leaking-addresses
-> >>> version: leaking-addresses-x86_64-4f19048-1_20220518
-> >>> with following parameters:
-> >>>
-> >>> 	ucode: 0x28
-> >>>
-> >>> on test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz with 16G memory
-> >>>
-> >>> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> >>>
-> >>> If you fix the issue, kindly add following tag
-> >>> Reported-by: kernel test robot <oliver.sang@intel.com>
-> >>>
-> >>> [...]
-> >>>
-> >>> #regzbot introduced: c3e0c8c2e8
+> >> ```
+> >>  If you fix the issue, kindly add following tag
+> >>  Reported-by: kernel test robot <oliver.sang@intel.com>
+> >>  Link: https://lore.kernel.org/lkml/YvEgyQM%2FWi0E2J3J@xsang-OptiPlex-9020/
+> >> ```
 > >>
-> >> Removing this from the list of tracked regressions:
+> >> Obviously you need the msgid of the mail before you sent it in this
+> >> case, but I assume you generate those mails semi-automatically anyway,
+> >> so it hopefully won't be too hard to add this.
+> > 
+> > Thanks, this is really great suggestion for us, we will be able to add
+> > this Link tag in future.
+> 
+> Great, thx.
+> 
+> > [...]
+> >> I care deeply in the case of 0-bot when the reports contains lines like
+> >> this:
 > >>
-> >> #regzbot invalid: report from the kernel test report that was ignored by
-> >> developers, so I assume it's not something bad
+> >>>> #regzbot introduced: efcfec579f
+> >> That's because regzbot uses the URL in Link: tags to associate patch
+> >> postings and commits with reports -- and even automatically closes
+> >> regression tracking entries in case a fix linking to a tracked report is
+> >> committed to the appropriate tree. A proper "Link:" tag thus saves me a
+> >> lot of trouble, as I otherwise have to tell regzbot manually about each
+> >> fix for tracked issues, which quickly becomes a PITA. :-/
 > >>
-> >> To explain: Yeah, maybe tracking regressions found by CI systems in
-> >> regzbot might be a good idea now or in the long run. If you are from
-> >> Intel and would like to discuss how to do this, please get in touch (I
-> >> tried recently, but got no answer[1]).
+> >> BTW: I noticed this was not the only recent reports from the kernel test
+> >> robot that directly got regzbot involved, but not all do. Is some bot
+> >> decising this or a human?
 > > 
-> > Sorry, this was a mistake that we missed [1] to provide our reply. I will
-> > reply to the questions in that one soon.
+> > this is controlled by human, we try to connect with regzbot for the regression
+> > we found on mainline. So we add #regzbot after we confirm the issue is valid
+> > on mainline.
 > 
-> Thx!
-> 
-> >> But I'm not sure if it's a good idea right now to get regzbot involved
-> >> by default (especially as long as the reports are not telling developers
-> >> to add proper "Link:" tags that would allow regzbot to notice when fixes
-> >
-> > Apologize again that we started to track mainline regression we found before
-> > we fully understand [2], which probably not the effective usage. Especially
-> > we missed the initial touch and led to more improper usage.
-> 
-> No worries, as maybe it's a good thing to have the 0day reports in
-> there, even if some of its reports don't get any traction. But having
-> them in the list of tracked regressions gives them some more visibility
-> for a while -- and at least one more set of eyes (mine) that take a look
-> at it. And it's not that much work for me or anybody else to close the
-> issue in regzbot (say after a week or two) if no developer acts on it
-> because it's irrelevant from their point of view. But would still be
-> better if they'd state that publicly themselves; in that case they even
-> could tell regzbot to ignore the issue; your report's could tell people
-> how to do that (e.g. "#regzbot invalid some_reason").
+> Okay, good to know. As maybe visible between the lines in the other mail
+> I linked above already: I guess it's fine that way and we should
+> continue with this and just see how it goes.
 
-Thanks for the encouragement :-) The flow/process is very helpful. We will follow
-up a few things before we resuming the tracking
-
-1) Add Link tag
-
-2) Do internal judgement of mainline regression we found for whether it is
-important, so we do some filtering at initial period to avoid bringing noise to the list.
-
-3) Add the hint as you suggested here, so it can be easily invalidate by developer.
-
-Also some thinking below.
+Got it, as replied in https://lore.kernel.org/regressions/57c596f7-014f-1833-3173-af3bad2ca45d@leemhuis.info/,
+we will get ready for what you suggested, and send selected reports on mainline
+to regzbot.
 
 > 
-> >> for the problem are posted or merged; see [1] and [2]), as it looks like
-> >> developers ignore quite a few (many?) reports like the one partly quoted
-> >> above.
-> >>
-> >> I guess there are various reasons why developers do so (too many false
-> >> positives? issues unlikely to happen in practice? already fixed?).
+> > BTW: 0day does testing on nearly all repos from developer to maintainers
+> > to next and mainline, thus part of them are bisected down to mainline.
+> 
+> Yeah, I know. Regzbot in principle is handling next as well, but I guess
+> we should ignore that for now with 0day, as keeping an eye on the
+> reports against mainline keeps me quite busy already.
+
+Got it, we will focus on mainline to track valuable ones.
+
+> 
+> >> Because the thing is: the time I can spend on tracking regressions is
+> >> limited, hence I (at least for now) want to avoid spending any time on
+> >> regressions that likely only ever show up in CI testing. But if the
 > > 
-> > agree, not all reports we send out got response even it was reported on
-> > mainline (0day does wide range testing include the repos from developer,
-> > so the reports are against these repos and mainline/next).
+> > got it, probably we need consider a few test suites (and kernel configruations)
+> > that is more "standard", such as kselftests. But this is hard, for example,
+> > we detects performance issue on micro benchmark, and it only shows one perspective
+> > to developer as it may not reflect the use scenario of developer (thus sometimes
+> > it is not reasonable/necessary to fix).
+> 
+> Yeah, it's hard. :-/
+> 
+> >> problem is something that is likely to be seen in the wild it's totally
+> >> okay for me if you get regzbot involved. FWIWI, it remains to be seen if
+> >> that's a good idea in general (and is likely something I will bring up
+> >> for discussion on this years kernel summit), but let's just give it a
+> >> try. :-D
 > > 
-> > Usuaally, we also ping/discuss with developer when an issue enters
-> > mainline if there's no response. This is one reason we tries to connect
-> > with regzbot to track the issue on mainline, but we missed the point that
-> > you mention below (it need look important).
+> > Thanks, we will stop this default behavior to send them directly regzbot. 
 > 
-> I just want to prevent the list of tracked regressions becoming too long
-> (and thus obscure) due to many issues that are not worth tracking, as I
-> fear people will then start to ignore regzbot and its reports. :-/
+> See above, as I said, it's fine for me if you just continue to get
+> regzbot involved for now and I'll get in contact if it becomes a problem
+> for me.
 
-got it, we will be very careful to selectly tracking. Maybe we don't need
-track the issue if it is responsed by developer quickly and can be solved
-directly.
-
-But only track the one that is valuable, while it need more discussion, extra
-testing, investigation and so one, that such problem can't be straight forward
-to solve in short time. For such case, the tracking helps us to get back to this
-even when there's a pause, like developer is blocked by testing or need switch
-to other effort. This is just my thinking.
+Got it, thanks a lot
 
 > 
-> >> Normally I'd say "this is a regression and I should try to find out and
-> >> prod developers to get it fixed". And I'll do that if the issue
-> >> obviously looks important to a Linux kernel generalist like me.
+> > [...]
+> > BTW: i want to consult that anyone (or CI) else send report to regzbot directly so far?
 > > 
-> > got it, thanks for the info, i found earlier you tracked a bug from kernel
-> > test robot, which should be the case that you thought it was important.
+> > [1] https://lore.kernel.org/lkml/6b12a0b4-2f6d-1c35-f2e2-a28022583c47@leemhuis.info/
 > 
-> Yeah, some of the reports are valuable, that's why I guess it makes
-> sense to track at least some of them. The question is, how to filter the
-> bad ones out or how to pick just the valuable ones...
+> A few developers and users get regzbot directly involved when reporting
+> regressions, but I add most of the issues to the tracking. But no CI is
+> doing it currently. How to handle reports from CI is actually something
+> I hope to discuss on kernel and/or maintainers summit in ~10 days, if
+> time permits.
 
-Currently what in my mind is we will consider performance regression like
-around or larger than 10% for certain test case, or some general tests such
-as kselftests, or serious boot issue.
+We will be very glad to follow the decision if any is made there, and share
+our thinking along the way to see how 0-day can be useful in this regression
+tracking process.
 
-Or if you considers certain reports are valuable and track them, we will also
-learn from this to get better understanding of what worth tracking now.
-
-> 
-> Are you or someone from the 0day team an LPC? Then we could discuss this
-> in person there.
-
-We will join 2 MC (Rust, Testing) but all virtually, thus not able to discuss in
-person :-( But we are glad to join any further discussion or follow the suggested
-rule if you have some discussion with other CI and reporters.
-
-> 
-> >> But that doesn't appear to be the case here (please correct me if I
-> >> misjudged!). I hence chose to ignore this report, as there are quite a
-> >> few other reports that are waiting for my attention, too. :-/
-> > 
-> > Thanks, we will revisit our process and consult you before we do any actual
-> > action, and sorry for causing you extra effort to do cleanup.
-> 
-> No need to be sorry, everything is fine, up to some point I liked what
-> you did. :-D
 > 
 > Ciao, Thorsten
