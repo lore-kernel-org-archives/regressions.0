@@ -1,90 +1,74 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125802F5A
-	for <regressions@lists.linux.dev>; Sat,  3 Sep 2022 22:00:07 +0000 (UTC)
-Received: by mail-pg1-f169.google.com with SMTP id q63so4963173pga.9
-        for <regressions@lists.linux.dev>; Sat, 03 Sep 2022 15:00:07 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC6C7D72
+	for <regressions@lists.linux.dev>; Sat,  3 Sep 2022 22:37:41 +0000 (UTC)
+Received: by mail-io1-f43.google.com with SMTP id b142so4391501iof.10
+        for <regressions@lists.linux.dev>; Sat, 03 Sep 2022 15:37:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date;
-        bh=Gm6usRBuViQMTZdHvwpmD6F0l3o1GEDbVd0wQwkYZq4=;
-        b=DpZKsXVxh3/ck373aUGzS6k6rPWwRKMcx6cji7XOAi4kZ6wcAS83ajA3pf59MFEJkp
-         lSs82WvqvpUYvcwZdUpV9QxyP43bvY/qeQfYaVN7fNWfJovhwPvkdGplxrrhnD2iKUze
-         EEj4gJCa7iUG2N1WUJ6Cv9QlKfEoGvYDBVxFfPxH46ZpcsA8qHHJUZ76sN7kDhUlFBD9
-         OAq/QogOkEkG6bmVjJ+lmi4GEUzP5fhF114QEFZGvQ2WU57oqx7Ff2w6qxIXou3J+Vxp
-         Jv1SWHXmsyhRrOeqdkPACSKN6Hsre7M/kUvd0ou0LsH73+LY4gkadnAozN1YUb62+YsZ
-         bqOQ==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=VG4WdCRTKsnUl8DU++AAwbVOVF3DpGRyvXwvrmGK6oA=;
+        b=pQeJQuP2nXfb0+sReafFsUZaOcsbp+inidtF93HkRXkV2hDDIRDL+jcyE6mSJJORbH
+         TwK68BzQAdPTsKl/0k9+sOG3Vu/tHUzxCCHpSJyxmQLDC5ldZtGpqLVJ9cRp3Fc+Syt0
+         +0NW/QPecJ0e6fOsrog2K/ozECF+1WLc+nCewjFMT4wgwNbHX3WWwd9PbXRC3pkLx1z8
+         wVPKGnvpR064v62Q6oOsN2qlksoABCuSdfyVJdVe2waeAlDGCk1NhY7ZSfZUaUJUrPRL
+         vrpibt3U/JyMhzSHm0dHvCA8rXyo3ajymwq+xy2dA7CQu1F/OUGfjuC50LBBZkqt3lxS
+         yIpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date;
-        bh=Gm6usRBuViQMTZdHvwpmD6F0l3o1GEDbVd0wQwkYZq4=;
-        b=TC/7xCGayMhMAHR29Qf2cWkGEeZmqci2reasCdiZ4u43UbuMBSYDTzFM2+yrIsFRNo
-         CUHnfEu+vw9eB9pMYKzNcExPTSqHTi7pKkuXANF7KB+6NzwLN8qor5xefknjRK9VOV9C
-         s1levXwRa4L8r4nveJr+aqbI0nnaz6AHRduUIeOeCVqHehmzziEHvLavThBqvrMcBpCU
-         oivxxfdy0S5rHDxHLitgWaAwlo7Wk99qSJcQtEH+hVYOoI+R5kXAsm1xdzfaxbuEkbUD
-         7Q2tvFAcWiW9JmDW6DCQp9bAkY8HNXa5FQC7yw9z8NPOItfu53hqGrYW45i3wItHXRPs
-         MnoA==
-X-Gm-Message-State: ACgBeo2TusFaxB716cJAxsdZzNj4qf9/ix6IfeH8q5VSLTVP/5uT/zFm
-	+3OnsDiZjJZSXZwhRPhbzfs=
-X-Google-Smtp-Source: AA6agR7y3zdpqy5HjA/yYykeVMbx4JbrwG2lpfDnt4TDVGHWoESf0N13hrFCQQBi3PFLn/vdkmutnA==
-X-Received: by 2002:a63:465e:0:b0:430:326c:7e6e with SMTP id v30-20020a63465e000000b00430326c7e6emr15500494pgk.84.1662242407445;
-        Sat, 03 Sep 2022 15:00:07 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x6-20020aa79a46000000b0052d432b4cc0sm4435733pfj.33.2022.09.03.15.00.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 03 Sep 2022 15:00:06 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <ac202c2e-3add-2470-3fa6-85783c1494a0@roeck-us.net>
-Date: Sat, 3 Sep 2022 15:00:04 -0700
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=VG4WdCRTKsnUl8DU++AAwbVOVF3DpGRyvXwvrmGK6oA=;
+        b=uhDrM7k+g8RmLufsUd8ss13F0u1U+kc212pThvQVmEhWIf2Dm/C1tMPg3PUtdZ3Xpj
+         xYJwEIG1VDF2N16wujEwG++P5AK/fxzOtDcMbhKRk1j7fNojqAW22LLM6TQfe4ZoPrBe
+         zTKQB8PoQ3qm7r/eLnCzokWAWraXntamcelKY7UjI7JjvqaVSnOoMuvwawwyBthLHWAO
+         TUSjCnW2TPN8ZBrqATthuMsiZ5jiwaNjZ25VwwjuRK7lNpGHjMSUDPxJbVzOBMOFi7DW
+         vxS7QHuWk+8ujoFg1RLi9B8fdCfSU5kTX/s4k8EqxAA+gSmcPAVeWo0eAk7qSHs7fenW
+         qOqQ==
+X-Gm-Message-State: ACgBeo22naGKXU/sykyPtrhw7f8MNredkzw45/TdqffDP0dhBGvnB92F
+	7SOrCX1xp2oFZrtPoiD21hqdap6zV0HfwvEUSCw=
+X-Google-Smtp-Source: AA6agR6SnB6cO1ifmtXXYnCDdd9ICvZ3HAoKwlUo3SzdXMb+RTmlbN2PKYQIJxHMHHm/nyWwVeB/P52/M+h1JFprFnY=
+X-Received: by 2002:a05:6638:1396:b0:350:1059:29bb with SMTP id
+ w22-20020a056638139600b00350105929bbmr3292827jad.67.1662244660593; Sat, 03
+ Sep 2022 15:37:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: Issue in asus_ec_sensors in Fedora installations and other
- distributions
-Content-Language: en-US
-To: Eugene Shalygin <eugene.shalygin@gmail.com>
-Cc: Christopher Klooz <py0xc3@my.mail.de>, linux-hwmon@vger.kernel.org,
- regressions@lists.linux.dev
 References: <6026b5e2-a8f5-1058-6112-f191bde333a6@my.mail.de>
- <47e41e8f-f6b2-4bc7-de3f-0c811ee6fdf7@my.mail.de>
- <62fb8a16-bebd-5de7-0b4f-eed4d2593587@roeck-us.net>
+ <47e41e8f-f6b2-4bc7-de3f-0c811ee6fdf7@my.mail.de> <62fb8a16-bebd-5de7-0b4f-eed4d2593587@roeck-us.net>
  <CAB95QATHd1sJwbYOPeb28j9vZAfZAu-Xa+pXWUhbMTVifKz93A@mail.gmail.com>
- <5e42685d-ae82-d74d-4883-d8a9e9fcb243@roeck-us.net>
- <CAB95QAQ9EXX3uZhiZyxr=aAwiSR6j6i1GstFg9iX4eF06b5GUQ@mail.gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <CAB95QAQ9EXX3uZhiZyxr=aAwiSR6j6i1GstFg9iX4eF06b5GUQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <5e42685d-ae82-d74d-4883-d8a9e9fcb243@roeck-us.net> <CAB95QAQ9EXX3uZhiZyxr=aAwiSR6j6i1GstFg9iX4eF06b5GUQ@mail.gmail.com>
+ <ac202c2e-3add-2470-3fa6-85783c1494a0@roeck-us.net>
+In-Reply-To: <ac202c2e-3add-2470-3fa6-85783c1494a0@roeck-us.net>
+From: Eugene Shalygin <eugene.shalygin@gmail.com>
+Date: Sun, 4 Sep 2022 00:37:29 +0200
+Message-ID: <CAB95QAT=x8V7yg70azPnnD=Hv70goQbA6S8fOVjRpsvKfcK8Ww@mail.gmail.com>
+Subject: Re: Issue in asus_ec_sensors in Fedora installations and other distributions
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Christopher Klooz <py0xc3@my.mail.de>, linux-hwmon@vger.kernel.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 9/3/22 12:40, Eugene Shalygin wrote:
->> I don't understand why that works either. Maybe it interferes with other
->> PNP0C09 devices and/or the code in drivers/acpi/ec.c.
-> 
-> Turns out the patch breaks sensors on a system where it should provide
-> output. The module gets loaded but provides no output (which should
-> mean the probe code is not executed). I will try to investigate
-> tomorrow.
-> 
->> Couple of comments:
->>
->> - You'll need to drop __init.
->> - No need or reason to rename asus_ec_sensors_platform_driver
->>     to asus_ec_sensors_platform_driver_probe.
-> That's in order to not drop __init.
-> 
+On Sun, 4 Sept 2022 at 00:00, Guenter Roeck <linux@roeck-us.net> wrote:
+> What does the name of the struct platform_driver data structure
+> have to do with __init ?
 
-What does the name of the struct platform_driver data structure
-have to do with __init ?
+That's what the modpost warning message suggests:
+WARNING: modpost:
+/home/eugene/develop/asus-ec-sensors/asus-ec-sensors.o(.data+0x60):
+Section mismatch in reference from the variable
+asus_ec_sensors_platform_driver to the function
+.init.text:asus_ec_probe()
+The variable asus_ec_sensors_platform_driver references
+the function __init asus_ec_probe()
+If the reference is valid then annotate the
+variable with __init* or __refdata (see linux/init.h) or name the variable:
+*_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console
 
-Thanks,
-Guenter
+Regards,
+Eugene
