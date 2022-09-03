@@ -1,79 +1,70 @@
-Received: from shout01.mail.de (shout01.mail.de [62.201.172.24])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372F6399
-	for <regressions@lists.linux.dev>; Sat,  3 Sep 2022 11:09:30 +0000 (UTC)
-Received: from postfix02.mail.de (postfix02.bt.mail.de [10.0.121.126])
-	by shout01.mail.de (Postfix) with ESMTP id 91C01A05D8;
-	Sat,  3 Sep 2022 13:00:34 +0200 (CEST)
-Received: from smtp03.mail.de (smtp03.bt.mail.de [10.0.121.213])
-	by postfix02.mail.de (Postfix) with ESMTP id 742DCA03C1;
-	Sat,  3 Sep 2022 13:00:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mail.de;
-	s=mailde202009; t=1662202834;
-	bh=vjc28tT2au2gcsuOe39PxWXvDyeVq/2VpAwMeLHUCps=;
-	h=Message-ID:Date:Subject:To:Cc:From:From:To:CC:Subject:Reply-To;
-	b=bWeYVeCUJS5LrgBnXky3o4ulGNjvzHm272LKtDdtHyxadrsrz8gWCJ4vDKv5vXetB
-	 zm72cOuzRl6k+06S9Rye5ZHwD8FVBUDhmXNidw9vtU3Vc1SBBMJ9gv7LlimYw7kxSk
-	 gMmpqiOI36xFB0jAuo3T6m9q9c86jifNfb8g2JuUsAjZUoeuYcaxQXe9MZhhVggGoj
-	 uWckBiTDrLCdbYPJfLWjgqhtWGe0R86VoGZ7FEvaFwbNnmuw5ZJcXXfsealmbhfbju
-	 AKXwVNkhJ5TtVlc4aGIKJ5VpDd1jCyl0lEx+7tw26Sl6sm1/D6EDnJU/lbUWB+EFkr
-	 8hdAJpSOitnwQ==
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp03.mail.de (Postfix) with ESMTPSA id DD181A0321;
-	Sat,  3 Sep 2022 13:00:33 +0200 (CEST)
-Message-ID: <47e41e8f-f6b2-4bc7-de3f-0c811ee6fdf7@my.mail.de>
-Date: Sat, 3 Sep 2022 13:00:33 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB5B1C31
+	for <regressions@lists.linux.dev>; Sat,  3 Sep 2022 14:17:45 +0000 (UTC)
+Received: from [192.168.1.138] ([37.4.248.23]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N6JtR-1pRf4u1D3J-016cz8; Sat, 03 Sep 2022 16:17:25 +0200
+Message-ID: <76951173-ce4e-adda-e80e-7c313725e937@i2se.com>
+Date: Sat, 3 Sep 2022 16:17:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Issue in asus_ec_sensors in Fedora installations and other
- distributions
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [BUG] null pointer dereference when loading bpf_preload on
+ Raspberry Pi
 Content-Language: en-US
-References: <6026b5e2-a8f5-1058-6112-f191bde333a6@my.mail.de>
-To: eugene.shalygin@gmail.com
-Cc: linux-hwmon@vger.kernel.org, regressions@lists.linux.dev
-From: Christopher Klooz <py0xc3@my.mail.de>
-In-Reply-To: <6026b5e2-a8f5-1058-6112-f191bde333a6@my.mail.de>
-X-Forwarded-Message-Id: <6026b5e2-a8f5-1058-6112-f191bde333a6@my.mail.de>
+To: Thorsten Leemhuis <linux@leemhuis.info>, regressions@lists.linux.dev
+Cc: bpf@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ jpalus@fastmail.com
+References: <f038d6f9-b96b-0749-111c-33ac8939a1c0@i2se.com>
+ <56ffb198-8c93-1ec2-0b5e-9441e96359de@leemhuis.info>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+In-Reply-To: <56ffb198-8c93-1ec2-0b5e-9441e96359de@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-purgate: clean
-X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
-X-purgate-type: clean
-X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
-X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
-X-purgate: clean
-X-purgate-size: 905
-X-purgate-ID: 154282::1662202834-3DFFF25E-6A252C7C/0/0
+X-Provags-ID: V03:K1:ov0oaWb7C/+FjrQe/F1UII/dPXzCZED0QapxnzPS7fBXveavtWV
+ C/Vr99OiP1eDSl7KIDgtQX0pH1ch1a7TS5269er37UdzI0JtRKg536V3F29x5/x9CQuJk8Y
+ tBJL+8l4Sv5Xc8/mRt3aGdzjzeEIpsQkQ7ZjUxwSKSBSxHuqvbv4B/VI/1SPqyKa0WOd8Bp
+ hzOKmVWOqV1VWXbTx7A2A==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:FS1JTfEW2Qs=:sIhZZDFMHvjT6JCtGogNms
+ HmDuFYFWUI0DwM5Pyu27DfkpPj9zhrPQwmcAncThsVzaA8hnBuIkDQ6bmbnIDltRP5BzgbQ61
+ agkAfDxeYln+qCYKVFxnZNEqxvHMOnOXS8fjDG4yW7qvtF2Sv+uz9jXnJaAnIIKVS153ZSOxi
+ INbXVkbDSZpXRQCulW26ZWWQy9grstJ28ID1qhKy/B5mlC8r9gU7NFtVz6uuPsKhX/LCjITvT
+ MUC+TTsipEuDJuDIaPQ0V5BwkdZLBPVclSiLJeEvHWxk8c1b5ymq6Vhl1XhQKKnqOnVgZCwaC
+ g+YEyGnpgKaMtN2pUp/fyy/aH/Z+ARV6trsO8Z9bqbeAYdS3fDF6AFE4nM4LZpNM/A59pKzwX
+ 0J01g3rGaPUp3cfEZ1FQa1r8wxfzN0tf91biVAlw1QY9sdW5XpWsGMI+F5YaxG/OObn87NRUm
+ eRmMlxMC1d8ec6cVAGa90UQ7+lPs44r+iHYgyP1e7GvNjXw1zPXxGDyCIJwSMBgh0Xf1qtqfW
+ A9PGO5GLB/pYTJUS9GfKWKfKf6ZV4bOdrIUAVCWkozTZC7iwwm5bKAC62xOGJao+kVIjEoxZX
+ 0i93oyJKGLABbTNmzJkKxiAjx4aaTW0FKy53AoouZqYNYRCtBlNvsHpjRymHUZ52PMOH2uvCF
+ mNeaqplUw5PKkS/OKXAp/bU8A5R4dvWkyWSLYChfVH0EYVxBQAX4j7/LQv85J8g91PYi2jwq2
+ nqFImP8T5c2+kJnwlHqzz70BnS/pun3czONfBNNFFKk8o9ga0yuhsJdm3DHpefurdnp2nmUUb
+ 5GAQmDE
 
-Hi Eugene,
+Hi Thorsten,
 
-Currently, we have user reports of at least 4 Fedora installations that 
-have issues with asus_ec_sensors since 5.19.4. They remain in 5.19.6.
+Am 19.06.22 um 19:06 schrieb Thorsten Leemhuis:
+> [TLDR: I'm adding this regression report to the list of tracked
+> regressions; all text from me you find below is based on a few templates
+> paragraphs you might have encountered already already in similar form.]
 
-All issues can be solved by blacklisting asus_ec_sensors.
+as reported by Jan on Bugzilla [1] the issue has been resolved by
 
-https://bugzilla.redhat.com/show_bug.cgi?id=2121844
+e2dcac2f58f5 ("BPF: Fix potential bad pointer dereference in 
+bpf_sys_bpf()")|
+|
 
-The bugzilla report contains kernel logs of two machines, one with 
-nvidia-driver and one without a tainted kernel.
+|I can confirm the fix.
+|
 
-The report and the contained ask.fedora link contain some elaborations 
-of how the issue manifests at the users' machines. The major issue is a 
-wrong output of battery power percentage (in one case it gets stuck, in 
-the other cases is becomes erratic). Also, in one case it has effects on 
-suspending (see the report).
+|#regzbot fixed-by: |e2dcac2f58f5
+||
 
-On the Internet, there are already reports from other Linux 
-distributions noting the issue and the same solution (blacklisting).
-
-Thanks for maintaining & regards,
-
-Chris
+||
 
