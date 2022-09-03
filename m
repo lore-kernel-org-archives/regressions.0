@@ -1,95 +1,79 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from shout01.mail.de (shout01.mail.de [62.201.172.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057B57D92
-	for <regressions@lists.linux.dev>; Sat,  3 Sep 2022 10:27:25 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oUQMz-0000Ns-D2; Sat, 03 Sep 2022 12:27:21 +0200
-Message-ID: <e633e50a-a72a-0d55-7c96-a1853eff1b8e@leemhuis.info>
-Date: Sat, 3 Sep 2022 12:27:19 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 372F6399
+	for <regressions@lists.linux.dev>; Sat,  3 Sep 2022 11:09:30 +0000 (UTC)
+Received: from postfix02.mail.de (postfix02.bt.mail.de [10.0.121.126])
+	by shout01.mail.de (Postfix) with ESMTP id 91C01A05D8;
+	Sat,  3 Sep 2022 13:00:34 +0200 (CEST)
+Received: from smtp03.mail.de (smtp03.bt.mail.de [10.0.121.213])
+	by postfix02.mail.de (Postfix) with ESMTP id 742DCA03C1;
+	Sat,  3 Sep 2022 13:00:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mail.de;
+	s=mailde202009; t=1662202834;
+	bh=vjc28tT2au2gcsuOe39PxWXvDyeVq/2VpAwMeLHUCps=;
+	h=Message-ID:Date:Subject:To:Cc:From:From:To:CC:Subject:Reply-To;
+	b=bWeYVeCUJS5LrgBnXky3o4ulGNjvzHm272LKtDdtHyxadrsrz8gWCJ4vDKv5vXetB
+	 zm72cOuzRl6k+06S9Rye5ZHwD8FVBUDhmXNidw9vtU3Vc1SBBMJ9gv7LlimYw7kxSk
+	 gMmpqiOI36xFB0jAuo3T6m9q9c86jifNfb8g2JuUsAjZUoeuYcaxQXe9MZhhVggGoj
+	 uWckBiTDrLCdbYPJfLWjgqhtWGe0R86VoGZ7FEvaFwbNnmuw5ZJcXXfsealmbhfbju
+	 AKXwVNkhJ5TtVlc4aGIKJ5VpDd1jCyl0lEx+7tw26Sl6sm1/D6EDnJU/lbUWB+EFkr
+	 8hdAJpSOitnwQ==
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp03.mail.de (Postfix) with ESMTPSA id DD181A0321;
+	Sat,  3 Sep 2022 13:00:33 +0200 (CEST)
+Message-ID: <47e41e8f-f6b2-4bc7-de3f-0c811ee6fdf7@my.mail.de>
+Date: Sat, 3 Sep 2022 13:00:33 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [LKP] Re: [KVM] c3e0c8c2e8:
- leaking-addresses.proc..data..ro_after_init.
-Content-Language: en-US, de-DE
-To: Philip Li <philip.li@intel.com>
-Cc: kernel test robot <oliver.sang@intel.com>, Kai Huang
- <kai.huang@intel.com>, LKML <linux-kernel@vger.kernel.org>,
- kvm@vger.kernel.org, lkp@lists.01.org, lkp@intel.com,
- regressions@lists.linux.dev
-References: <YvpZYGa1Z1M38YcR@xsang-OptiPlex-9020>
- <04ce8956-3285-345a-4ce5-b78500729e42@leemhuis.info>
- <YxCyhTES9Nk+S94y@rli9-MOBL1.ccr.corp.intel.com>
- <57c596f7-014f-1833-3173-af3bad2ca45d@leemhuis.info>
- <YxH2X8gMWyJeKPRa@rli9-MOBL1.ccr.corp.intel.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <YxH2X8gMWyJeKPRa@rli9-MOBL1.ccr.corp.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Subject: Issue in asus_ec_sensors in Fedora installations and other
+ distributions
+Content-Language: en-US
+References: <6026b5e2-a8f5-1058-6112-f191bde333a6@my.mail.de>
+To: eugene.shalygin@gmail.com
+Cc: linux-hwmon@vger.kernel.org, regressions@lists.linux.dev
+From: Christopher Klooz <py0xc3@my.mail.de>
+In-Reply-To: <6026b5e2-a8f5-1058-6112-f191bde333a6@my.mail.de>
+X-Forwarded-Message-Id: <6026b5e2-a8f5-1058-6112-f191bde333a6@my.mail.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1662200846;36c5a5ad;
-X-HE-SMSGID: 1oUQMz-0000Ns-D2
+X-purgate: clean
+X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
+X-purgate-type: clean
+X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
+X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
+X-purgate: clean
+X-purgate-size: 905
+X-purgate-ID: 154282::1662202834-3DFFF25E-6A252C7C/0/0
 
-On 02.09.22 14:26, Philip Li wrote:
-> On Fri, Sep 02, 2022 at 12:54:05PM +0200, Thorsten Leemhuis wrote:
->> On 01.09.22 15:24, Philip Li wrote:
->>> On Thu, Sep 01, 2022 at 02:12:39PM +0200, Thorsten Leemhuis wrote:
->
-> [...]
->
-> Thanks for the encouragement :-) The flow/process is very helpful. We will follow
-> up a few things before we resuming the tracking
-> [...]
+Hi Eugene,
 
-Great, thx!
+Currently, we have user reports of at least 4 Fedora installations that 
+have issues with asus_ec_sensors since 5.19.4. They remain in 5.19.6.
 
->>> Usuaally, we also ping/discuss with developer when an issue enters
->>> mainline if there's no response. This is one reason we tries to connect
->>> with regzbot to track the issue on mainline, but we missed the point that
->>> you mention below (it need look important).
->>
->> I just want to prevent the list of tracked regressions becoming too long
->> (and thus obscure) due to many issues that are not worth tracking, as I
->> fear people will then start to ignore regzbot and its reports. :-/
-> 
-> got it, we will be very careful to selectly tracking. Maybe we don't need
-> track the issue if it is responsed by developer quickly and can be solved
-> directly.
+All issues can be solved by blacklisting asus_ec_sensors.
 
-Maybe, but that will always bear the risk that something gets in the way
-(say a big problem is found in the proposed fix) and the regression in
-the end gets forgotten and remains unfixed -- which my tracking tries to
-prevent. Hence I'd say doing it the other way around (adding all
-regressions reported by the 0-day folks to regzbot and remove reports
-after a week or two if it's apparently something that can be ignored)
-would be the better approach.
+https://bugzilla.redhat.com/show_bug.cgi?id=2121844
 
-> But only track the one that is valuable, while it need more discussion, extra
-> testing, investigation and so one, that such problem can't be straight forward
-> to solve in short time. For such case, the tracking helps us to get back to this
-> even when there's a pause, like developer is blocked by testing or need switch
-> to other effort. This is just my thinking.
+The bugzilla report contains kernel logs of two machines, one with 
+nvidia-driver and one without a tainted kernel.
 
-Yeah, the problem is just: it's easy to forget the regression to the
-tracking. :-/
+The report and the contained ask.fedora link contain some elaborations 
+of how the issue manifests at the users' machines. The major issue is a 
+wrong output of battery power percentage (in one case it gets stuck, in 
+the other cases is becomes erratic). Also, in one case it has effects on 
+suspending (see the report).
 
->> Are you or someone from the 0day team an LPC? Then we could discuss this
->> in person there.
-> 
-> We will join 2 MC (Rust, Testing) but all virtually, thus not able to discuss in
-> person :-( 
+On the Internet, there are already reports from other Linux 
+distributions noting the issue and the same solution (blacklisting).
 
-Okay, was worth asking. :-D
+Thanks for maintaining & regards,
 
-> But we are glad to join any further discussion or follow the suggested
-> rule if you have some discussion with other CI and reporters.
+Chris
 
-Yeah, I'm pretty sure we'll find a way to make everybody happy.
-
-Ciao, Thorsten
