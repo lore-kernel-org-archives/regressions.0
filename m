@@ -1,96 +1,231 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8078E3229
-	for <regressions@lists.linux.dev>; Sun,  4 Sep 2022 14:10:24 +0000 (UTC)
-Received: by mail-pl1-f171.google.com with SMTP id f24so6264511plr.1
-        for <regressions@lists.linux.dev>; Sun, 04 Sep 2022 07:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date;
-        bh=/gHBjKku3P8caFwwAMIPXhFBShRIJ0U2g3RpNf94/7k=;
-        b=AtnwMSPJEBsTMyufxEdrGKx3rLIdydFUmWAvlx3hwGObbrSrjLVZML0ZwrxeJ7q+Ep
-         aQWTZJMz3QEA3WqogN0ZKLDcyfIQ+v449NUDIz1mA4zKgw4wT7Cswndcht6rkDa4zZj1
-         /DuThg/6ygVFJT1ifiV2nGa4fnarJ33IaEAPSpLdfcSQ9RAFJF1Z4AggBVZF+/9T4CXZ
-         wh7/IDegTIJH+zicW2FKW3zoMypvsO19/oOxtXx/TXAUiZZtb1W1NLkIZNfue6AN+G+3
-         1g61KFvRxgnMpXWVP19Ku6W/ET088Ea0aWCKjxU1LKAcRdnUBsZY8bhIdJxz4LvINc+s
-         TCNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date;
-        bh=/gHBjKku3P8caFwwAMIPXhFBShRIJ0U2g3RpNf94/7k=;
-        b=K+pWxfDbaKKzfkBX9qLRoeUcQHMqmYLI9yeRskB/zWu+TIupoWw3jTvnxd3MWs6PLC
-         PZ57ejSB2YqJhlrewQkncmRZBjqt3H9kWcvGuZcm/V3bgfW7giTikqGLG40JS6CgDzVC
-         8J/Wzo/Y9CtPdfuknO5vq5daUMa31duEuA9DGFMYNJEU1A+NxsirBz4L3rYHTKC1tr1j
-         bVas6CqeCaATZTp8PFOAc/mXbvJFOJzwns3dCl7jGL8+9MmkuqhAkfmafo4PoLBnfofV
-         1IrBZN8of95Avq1CnEC9y+4ReI4aEztwRkteJ47VrtiQGUNwNs/M7CFc9RpzdWxuQA0V
-         EYjA==
-X-Gm-Message-State: ACgBeo0k1NfVi2uAe15p6aCrNBBXIgmMOG35LDqUe9SsVozUSupvRgaW
-	LjPvvj3EbfazoS65u0R95EQ=
-X-Google-Smtp-Source: AA6agR4nf0ceOu4X8RBjT9NyoIEGErZP8cxSRcAHLRHP2S1fbAjprO/zObcGiJdMFs6ZKhutHZWYrQ==
-X-Received: by 2002:a17:90a:c789:b0:1fa:6bc0:77f6 with SMTP id gn9-20020a17090ac78900b001fa6bc077f6mr15254214pjb.1.1662300623804;
-        Sun, 04 Sep 2022 07:10:23 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id k14-20020aa79d0e000000b0052d2b55be32sm5872495pfp.171.2022.09.04.07.10.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 Sep 2022 07:10:17 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <1d234266-af01-5d8e-408f-ca58b53d870e@roeck-us.net>
-Date: Sun, 4 Sep 2022 07:10:10 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905022F25
+	for <regressions@lists.linux.dev>; Sun,  4 Sep 2022 18:42:13 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1oUuZP-0002hH-8B; Sun, 04 Sep 2022 20:42:11 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2022-09-04]
+Date: Sun,  4 Sep 2022 18:42:10 +0000
+Message-Id: <166231521235.1982292.2102689915618920245@leemhuis.info>
+X-Mailer: git-send-email 2.37.2
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: Issue in asus_ec_sensors in Fedora installations and other
- distributions
-Content-Language: en-US
-To: Eugene Shalygin <eugene.shalygin@gmail.com>
-Cc: Christopher Klooz <py0xc3@my.mail.de>, linux-hwmon@vger.kernel.org,
- regressions@lists.linux.dev
-References: <6026b5e2-a8f5-1058-6112-f191bde333a6@my.mail.de>
- <47e41e8f-f6b2-4bc7-de3f-0c811ee6fdf7@my.mail.de>
- <62fb8a16-bebd-5de7-0b4f-eed4d2593587@roeck-us.net>
- <CAB95QATHd1sJwbYOPeb28j9vZAfZAu-Xa+pXWUhbMTVifKz93A@mail.gmail.com>
- <5e42685d-ae82-d74d-4883-d8a9e9fcb243@roeck-us.net>
- <CAB95QAQ9EXX3uZhiZyxr=aAwiSR6j6i1GstFg9iX4eF06b5GUQ@mail.gmail.com>
- <ac202c2e-3add-2470-3fa6-85783c1494a0@roeck-us.net>
- <CAB95QAT=x8V7yg70azPnnD=Hv70goQbA6S8fOVjRpsvKfcK8Ww@mail.gmail.com>
- <2f14746c-8051-b711-cd28-7ca521d21c4d@roeck-us.net>
- <CAB95QARMOq0ie0SmhRx73L=mptTaa-eEHfNjGRH5CXvVFh-RLw@mail.gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-In-Reply-To: <CAB95QARMOq0ie0SmhRx73L=mptTaa-eEHfNjGRH5CXvVFh-RLw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1662316933;66c41da2;
+X-HE-SMSGID: 1oUuZP-0002hH-8B
 
-On 9/4/22 06:19, Eugene Shalygin wrote:
-> On Sun, 4 Sept 2022 at 01:47, Guenter Roeck <linux@roeck-us.net> wrote:
-> 
->> A driver with a probe function can be unloaded and reloaded manually.
->> I don't see how you can do that if the functions are marked __init
->> and the driver is built into the kernel.
-> 
-> Did that and a user tested those changes. Unfortunately, the ACPI EC
-> is still inoperational if a module uses the ACPI id of the EC device
-> and its probe function returns an error. Looks like I have to change
-> MODULE_DEVICE_TABLE completely.
-> 
+Hi Linus! Below is a slightly edited report from regzbot listing all
+regression from this cycle that the bot and I are aware of.
 
-If you insist on the __probe name hack, please add a note to the code
-explaining why that name is necessary. There is only one single driver
-besides this using that trick (I'd call it hack), hardly anyone will
-know about it, and thus it needs to be explained in the driver to
-prevent that the structure is renamed.
+People are working on fixing most of those where the root cause it
+known; for some a fix is not far away or even on your way already.
+There is just one regression found by 0-day bot ("[sched] f3dd3f6745:
+fxmark.ssd_ext4_no_jnl_DWSL_72_directio.works/sec -30.5% regression")
+that didn't get a single reply; and one from 0-day ("d4252071b9:
+fxmark.ssd_ext4_no_jnl_DWTL_54_directio.works/sec -26.5% regression")
+where you replied, but nobody else.
 
-Having said that, how did you de-instantiate the device when it was
-built into the kernel ?
+HTH, Ciao, Thorsten
 
-Thanks,
-Guenter
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 9 regressions in linux-mainline introduced
+this cycle. Find the current status below and the latest on the
+web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+=======================================================
+current cycle (v5.19.. aka v6.0-rc), culprit identified
+=======================================================
+
+
+[ *NEW* ] snd: IO_PAGE_FAULT and a lot of errors since a8d302a0b770
+-------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CABXGCsO+kB2t5QyHY-rUe76npr1m0-5JOtt8g8SiHUo34ur7Ww@mail.gmail.com/
+https://lore.kernel.org/lkml/CABXGCsO%2BkB2t5QyHY-rUe76npr1m0-5JOtt8g8SiHUo34ur7Ww@mail.gmail.com/
+
+By Mikhail Gavrilov; 1 days ago; 3 activities, latest 0 days ago.
+Introduced in a8d302a0b770
+
+Recent activities from: Takashi Iwai (2), Mikhail Gavrilov (1)
+
+2 patch postings are associated with this regression, the latest is this:
+* Re: [BUG] commit a8d302a0b77057568350fe0123e639d02dba0745 cause IO_PAGE_FAULT and a lot of errors
+  https://lore.kernel.org/lkml/875yi3froa.wl-tiwai@suse.de/
+  0 days ago, by Takashi Iwai
+
+
+[bisected][regression] mediatek bluetooth 13d3:3563 (mt7921e) doesn't work with audio devices.
+----------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/216382/
+https://bugzilla.kernel.org/show_bug.cgi?id=216382
+https://lore.kernel.org/regressions/167d11c6-68a4-c10a-9703-fceaddac3e42@leemhuis.info/
+
+By Arek Ruśniak and Arek Ruśniak; 16 days ago; 11 activities, latest 1 days ago.
+Introduced in 26afbd826ee3 (v6.0-rc1)
+
+Recent activities from: bugzilla-daemon@kernel.org (2), Arek
+  Ruśniak (1), patchwork-bot+bluetooth@kernel.org (1),
+  bluez.test.bot@gmail.com (1), Luiz Von Dentz (1), Luiz Augusto von
+  Dentz (1)
+
+One patch associated with this regression:
+* [PATCH] Bluetooth: hci_sync: Fix hci_read_buffer_size_sync
+  https://lore.kernel.org/all/20220902002717.1823748-1-luiz.dentz@gmail.com/
+  2 days ago, by Luiz Augusto von Dentz; thread monitored.
+
+
+[ *NEW* ] d4252071b9:  fxmark.ssd_ext4_no_jnl_DWTL_54_directio.works/sec -26.5% regression
+------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/Yw8L7HTZ/dE2/o9C@xsang-OptiPlex-9020/
+https://lore.kernel.org/lkml/Yw8L7HTZ%2FdE2%2Fo9C@xsang-OptiPlex-9020/
+
+By kernel test robot; 4 days ago; 2 activities, latest 4 days ago.
+Introduced in d4252071b9 (v6.0-rc1)
+
+Recent activities from: Linus Torvalds (1), kernel test robot (1)
+
+
+[ *NEW* ] [sched]  f3dd3f6745: fxmark.ssd_ext4_no_jnl_DWSL_72_directio.works/sec -30.5% regression
+--------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/Yw9xPOWgpPc5a0Pu@xsang-OptiPlex-9020/
+https://lore.kernel.org/lkml/Yw9xPOWgpPc5a0Pu@xsang-OptiPlex-9020/
+
+By kernel test robot; 4 days ago; 1 activities, latest 4 days ago.
+Introduced in f3dd3f6745 (v6.0-rc1)
+
+Recent activities from: kernel test robot (1)
+
+
+===================================================
+current cycle (v5.19.. aka v6.0-rc), unkown culprit
+===================================================
+
+
+acpi wake up with black screen(failed to get iomux index)
+---------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/216371/
+https://bugzilla.kernel.org/show_bug.cgi?id=216371
+https://lore.kernel.org/lkml/849a07ba-a53c-3f10-e2ec-25421c1e40ee@leemhuis.info/
+
+By neoe and neoe; 18 days ago; 18 activities, latest 0 days ago.
+Introduced in v5.19..v6.0-rc2
+
+Recent activities from: The Linux kernel's regression tracker (Thorsten
+  Leemhuis) (1), Mario Limonciello (AMD) (1)
+
+
+[regression] nl80211: kernel reports: key addition failed
+---------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/216421/
+https://bugzilla.kernel.org/show_bug.cgi?id=216421
+https://lore.kernel.org/lkml/dd37d8af-d7e4-daee-1f80-36c53fbac076@leemhuis.info/
+
+By XiaoYan Li and XiaoYan Li; 8 days ago; 4 activities, latest 0 days ago.
+Introduced in v6.0-rc1..v6.0-rc2
+
+Recent activities from: Johannes Berg (2), The Linux kernel's regression
+  tracker (Thorsten Leemhuis) (1)
+
+
+Unable to handle kernel NULL pointer dereference at virtual address 00000008
+----------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/216420/
+https://bugzilla.kernel.org/show_bug.cgi?id=216420
+https://lore.kernel.org/lkml/29a5c3e3-a590-01dd-1a2b-8415cae4a292@leemhuis.info/
+
+By frc.gabriel and frc.gabriel; 8 days ago; 7 activities, latest 0 days ago.
+Introduced in v5.19..v6.0-rc2
+
+Recent activities from: frc.gabriel (2), The Linux kernel's regression
+  tracker (Thorsten Leemhuis) (1)
+
+
+New 6.1 net/mac80211/rx.c warning with iwlwifi / Ultimate-N 6300 wifi
+---------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/498d714c-76be-9d04-26db-a1206878de5e@redhat.com/
+https://lore.kernel.org/linux-wireless/498d714c-76be-9d04-26db-a1206878de5e@redhat.com/
+
+By Hans de Goede; 15 days ago; 6 activities, latest 2 days ago.
+Introduced in v5.19..v6.0-rc1
+
+Recent activities from: Johannes Berg (3)
+
+Noteworthy links:
+* [PATCH v2] wifi: mac80211: fix link warning in RX agg timer expiry
+  https://lore.kernel.org/linux-wireless/20220902161130.af23678ddc21.I3d9a23c49e1df3bd0c91ef0e1c1805dd09937db8@changeid/
+  2 days ago, by Johannes Berg; thread monitored.
+* [PATCH v3] wifi: mac80211: fix link warning in RX agg timer expiry
+  https://lore.kernel.org/linux-wireless/20220902170143.71fc830073b8.I3d9a23c49e1df3bd0c91ef0e1c1805dd09937db8@changeid/
+  2 days ago, by Johannes Berg; thread monitored.
+* [PATCH v4] wifi: mac80211: fix link warning in RX agg timer expiry
+  https://lore.kernel.org/linux-wireless/20220902170201.9fa6c20e2c64.I3d9a23c49e1df3bd0c91ef0e1c1805dd09937db8@changeid/
+  2 days ago, by Johannes Berg; thread monitored.
+
+
+Uncorrected errors reported for AMD GPU
+---------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/216373/
+https://bugzilla.kernel.org/show_bug.cgi?id=216373
+https://lore.kernel.org/linux-pci/20220818203812.GA2381243@bhelgaas/
+
+By Tom Seewald; 17 days ago; 51 activities, latest 2 days ago.
+Introduced in v5.19..v6.0-rc1
+
+Recent activities from: Gustaw Smolarczyk (14), Alex Deucher (12), Bjorn
+  Helgaas (3), Lazar, Lijo (3), Lijo Lazar (2)
+
+A patch posting is associated with this regression:
+* [PATCH v2 1/2] drm/amdgpu: Move HDP remapping earlier during init
+  https://lore.kernel.org/all/CADnq5_O1Z0FK99cKDmRuCoxg-hbD3LtcW1q3n4zvrB9xFo0XHw@mail.gmail.com/
+  2 days ago, by Lijo Lazar; thread monitored
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/166170992386.1651569.17504808724724706636@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
