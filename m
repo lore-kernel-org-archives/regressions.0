@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217082574
-	for <regressions@lists.linux.dev>; Sun,  4 Sep 2022 10:54:26 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oUnGh-0007F2-Tf; Sun, 04 Sep 2022 12:54:23 +0200
-Message-ID: <dcecfc3b-0fd9-b406-4123-d414432d0e49@leemhuis.info>
-Date: Sun, 4 Sep 2022 12:54:23 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315312574
+	for <regressions@lists.linux.dev>; Sun,  4 Sep 2022 11:20:38 +0000 (UTC)
+Received: by mail-ej1-f49.google.com with SMTP id kk26so11972665ejc.11
+        for <regressions@lists.linux.dev>; Sun, 04 Sep 2022 04:20:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=yXCrR6/Ug5FqPe0HHHI96wXzGPHKH7VeJqOjajr7+Ic=;
+        b=k9sg2+8iLKj3TTHi7ILN3pJhY18CJaPLclt/ZuD0824eeHao8jx3/of7hGtwEBcyRS
+         SC0NHFLrGy059sMnfWYCTqV2gaTl3KjZtGzYuZB8aZ6cGSGZErqJAieaOZwXPjmjlhTC
+         uBAs51WmT5myy7NSFDPwYknanbsOGH656ZBzKbQsy5AVHuUEqjwpo1e4wj0VX24OxuqT
+         uMvbNjMxohgURHib3xYAI4dBqbBia8sPOyGgfCzeP/vJJr8A6YX8Y5sH5+ubI+aknxHn
+         E2WY7HeavVhK++ReNNyHYyAdS0ydhEEhd/6G9gC5e1OtW4Qu6/Mv/VT5riBhMsK3dlnZ
+         rEjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=yXCrR6/Ug5FqPe0HHHI96wXzGPHKH7VeJqOjajr7+Ic=;
+        b=V7iR+J0n3dIDggum5zh0TCaS7z/+kKyIBTZyGNMpC5xPVf9EKNxItqo5Ose0VBjCVL
+         zzcF0I64oUeVXGKs7vNHbUFqqieUvb3ukUNcyTPEnDcEtOFkB1q/uQXmcFFf2sRz36Nb
+         v7vVx1i92BTwWtPu3GbENfMB/pehxhf13fwDSmVjuZ3reKeyH+mWx4Vj5gz0lVm7MfPh
+         oOnkLJFv9REWJ190jsTJ7nMdfA9o0RXESJrc1ttMXLIJasDkSwwvn/bemyoZa2aUXpEr
+         170jxknApz7sW1uvA3JHNLBU5cv8Cyr3uzSEoD4WCHK0WTilFTp+iMxbtNzKbYG2W79T
+         NJQQ==
+X-Gm-Message-State: ACgBeo235I6/LGqT0Dk/qEN5mJZZDQdyS2/fy9+NwNkCFDhZnxqUUcND
+	GL4w+b/0DPCQ5hwvtrvnf8o=
+X-Google-Smtp-Source: AA6agR7gfZafVn7TWkkEBmlnD+A9DJv7BYLPvKaF3aIxfHTo2I/1cXirziSB0Q6jQfAf+lfkXtp2sg==
+X-Received: by 2002:a17:907:75da:b0:740:9ccd:ba51 with SMTP id jl26-20020a17090775da00b007409ccdba51mr29367984ejc.79.1662290436365;
+        Sun, 04 Sep 2022 04:20:36 -0700 (PDT)
+Received: from [192.168.0.10] (ip5f5bd57f.dynamic.kabel-deutschland.de. [95.91.213.127])
+        by smtp.gmail.com with ESMTPSA id i10-20020a170906264a00b0073cf8e0355fsm3461738ejc.208.2022.09.04.04.20.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 04 Sep 2022 04:20:35 -0700 (PDT)
+Message-ID: <b6b7ae5c-3572-f8a8-f1bf-4d883fcc833e@gmail.com>
+Date: Sun, 4 Sep 2022 13:20:34 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,272 +47,225 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [smb3] 5efdd9122e: filebench.sum_operations/s -50.0% regression
-Content-Language: en-US, de-DE
-To: regressions@lists.linux.dev
-Cc: lkp@lists.01.org, linux-kernel@vger.kernel.org,
- linux-cifs@vger.kernel.org, samba-technical@lists.samba.org
-References: <20220826022031.GA76590@inn2.lkp.intel.com>
- <c8310cba-36ef-2940-b2c2-07573e015185@intel.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <c8310cba-36ef-2940-b2c2-07573e015185@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1662288866;513d3eb5;
-X-HE-SMSGID: 1oUnGh-0007F2-Tf
+ Thunderbird/102.1.2
+Subject: Re: [Regression] Bug 216420 - Unable to handle kernel NULL pointer
+ dereference at virtual address 00000008
+Content-Language: en-US
+To: Saravana Kannan <saravanak@google.com>,
+ Yann Gautier <yann.gautier@foss.st.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>,
+ linux-mmc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <29a5c3e3-a590-01dd-1a2b-8415cae4a292@leemhuis.info>
+ <9d431289-085b-5619-00f8-95d692183e28@foss.st.com>
+ <99355482-960a-4669-19b5-926a7cd76c65@foss.st.com>
+ <CAGETcx9YvpYFf1mxHi1iA--sE5G2MZLS1x8vHnTu6Wj30ScaOA@mail.gmail.com>
+From: Gabriel Francisco <frc.gabriel@gmail.com>
+In-Reply-To: <CAGETcx9YvpYFf1mxHi1iA--sE5G2MZLS1x8vHnTu6Wj30ScaOA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi, this is your Linux kernel regression tracker. Top-posting for once,
-to make this easily accessible to everyone.
 
-As per recent general discussions with the 0-day folks, I'm dropping
-below regression from the list of tracked issues, as this report didn't
-gain any traction. That for example can happen if the developers
-considered the regression of no practical relevance, as they assume it
-only materializes in micro-benchmarks, is due to a broken test case, or
-some fluke.
+On 29/08/2022 23:35, Saravana Kannan wrote:
+> On Mon, Aug 29, 2022 at 6:54 AM Yann Gautier <yann.gautier@foss.st.com> wrote:
+>> On 8/29/22 13:50, Yann Gautier wrote:
+>>> On 8/28/22 13:44, Thorsten Leemhuis wrote:
+>>>> Hi, this is your Linux kernel regression tracker speaking.
+>>>>
+>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>>>> kernel developer don't keep an eye on it, I decided to forward it (I
+>>>> hope I picked the right recipients for this mail):
+>>>>
+>>>>>    frc.gabriel@gmail.com 2022-08-27 09:36:06 UTC
+>>>>>
+>>>>> Created attachment 301682 [details]
+>>>>> full dmesg output
+>>>>>
+>>>>> Hi, good morning!
+>>>>>
+>>>>> my device is currently crashing during boot with kernel 6.0.0-rc2. I
+>>>>> also tried next-20220826 and the outcome is the same.
+>>>>>
+>>>>> The full dmesg log can be found attached on crash-boot.txt file.
+>>>>>
+>>>>> Thank you and have a good day,
+>>>>> Gabriel Francisco
+>>>>   From that dmesg:
+>>>>
+>>>>> [    2.279556] 8<--- cut here ---
+>>>>> [    2.279734] s4: Bringing 0uV into 815000-815000uV
+>>>>> [    2.284139] Unable to handle kernel NULL pointer dereference at
+>>>>> virtual address 00000008
+>>>>> [    2.288082] s1: Bringing 0uV into 1300000-1300000uV
+>>>>> [    2.292017] [00000008] *pgd=00000000
+>>>>> [    2.300784] s2: Bringing 0uV into 2150000-2150000uV
+>>>>> [    2.304801] Internal error: Oops: 5 [#1] SMP ARM
+>>>>> [    2.309033] s3: Bringing 0uV into 1800000-1800000uV
+>>>>> [    2.313196] Modules linked in:
+>>>>> [    2.313208] CPU: 2 PID: 7 Comm: kworker/u8:0 Not tainted 6.0.0-rc2
+>>>>> #325
+>>>>> [    2.313221] Hardware name: Generic DT based system
+>>>>> [    2.318516] l1: Bringing 0uV into 1225000-1225000uV
+>>>>> [    2.322655] Workqueue: events_unbound deferred_probe_work_func
+>>>>> [    2.326162] l2: Bringing 0uV into 1200000-1200000uV
+>>>>> [    2.332290] PC is at mmci_probe+0x10/0x9b0
+>>>>> [    2.332308] LR is at amba_probe+0xf0/0x174
+>>>>> [    2.337399] l3: Bringing 0uV into 1225000-1225000uV
+>>>>> [    2.341927] pc : [<c0b14e10>]    lr : [<c089036c>]    psr: 80000013
+>>>>> [    2.348097] l4: Bringing 0uV into 1225000-1225000uV
+>>>>> [    2.352601] sp : f0839dd0  ip : fffffff8  fp : c1903248
+>>>>> [    2.352609] r10: c1448b9c  r9 : fffffdfb  r8 : 00000000
+>>>>> [    2.352616] r7 : c1903000  r6 : eefe45bc  r5 : 00000000  r4 :
+>>>>> c1903100
+>>>>> [    2.357020] l5: Bringing 0uV into 1800000-1800000uV
+>>>>> [    2.360849] r3 : c0b14e00  r2 : 00000000  r1 : 00000000  r0 :
+>>>>> c1903000
+>>>>> [    2.365896] l6: Bringing 0uV into 1800000-1800000uV
+>>>>> [    2.371873] Flags: Nzcv  IRQs on  FIQs on  Mode SVC_32  ISA ARM
+>>>>> Segment none
+>>>>> [    2.377217] l7: Bringing 0uV into 1800000-1800000uV
+>>>>> [    2.381944] Control: 10c5787d  Table: 0020406a  DAC: 00000051
+>>>>> [    2.387543] l8: Bringing 0uV into 1800000-1800000uV
+>>>>> [    2.393749] Register r0 information: slab kmalloc-1k start
+>>>>> c1903000 pointer offset 0 size 1024
+>>>>> [    2.398766] l9: Bringing 0uV into 1800000-1800000uV
+>>>>> [    2.405119]
+>>>>> [    2.405124] Register r1 information: NULL pointer
+>>>>> [    2.405137] Register r2 information:
+>>>>> [    2.410141] l10: Bringing 0uV into 1800000-1800000uV
+>>>>> [    2.417186]  NULL pointer
+>>>>> [    2.417193] Register r3 information: non-slab/vmalloc memory
+>>>>> [    2.417205] Register r4 information:
+>>>>> [    2.422124] l11: Bringing 0uV into 1300000-1300000uV
+>>>>> [    2.427776]  slab kmalloc-1k start c1903000 pointer offset 256
+>>>>> size 1024
+>>>>> [    2.432756] l12: Bringing 0uV into 1800000-1800000uV
+>>>>> [    2.441145]
+>>>>> [    2.446335] l13: Bringing 0uV into 1800000-1800000uV
+>>>>> [    2.447655] Register r5 information:
+>>>>> [    2.452735] l14: Bringing 0uV into 1800000-1800000uV
+>>>>> [    2.455902]  NULL pointer
+>>>>> [    2.461123] l15: Bringing 0uV into 2050000-2050000uV
+>>>>> [    2.463368] Register r6 information: non-slab/vmalloc memory
+>>>>> [    2.463380] Register r7 information: slab kmalloc-1k start c1903000
+>>>>> [    2.469373] l16: Bringing 0uV into 2700000-2700000uV
+>>>>> [    2.472656]  pointer offset 0 size 1024
+>>>>> [    2.472671] Register r8 information:
+>>>>> [    2.477868] l17: Bringing 0uV into 2850000-2850000uV
+>>>>> [    2.484288]  NULL pointer
+>>>>> [    2.484294] Register r9 information: non-paged memory
+>>>>> [    2.484305] Register r10 information:
+>>>>> [    2.489490] l18: Bringing 0uV into 2850000-2850000uV
+>>>>> [    2.490712]  non-slab/vmalloc memory
+>>>>> [    2.495937] l19: Bringing 0uV into 3000000-3000000uV
+>>>>> [    2.499217] Register r11 information:
+>>>>> [    2.504461] l20: Bringing 0uV into 2950000-2950000uV
+>>>>> [    2.506683]  slab kmalloc-1k
+>>>>> [    2.512149] l21: Bringing 0uV into 2950000-2950000uV
+>>>>> [    2.517361]  start c1903000 pointer offset 584 size 1024
+>>>>> [    2.517382] Register r12 information:
+>>>>> [    2.523805] l22: Bringing 0uV into 3000000-3000000uV
+>>>>> [    2.528556]  non-paged memory
+>>>>> [    2.532414] l23: Bringing 0uV into 3000000-3000000uV
+>>>>> [    2.535937] Process kworker/u8:0 (pid: 7, stack limit = 0x(ptrval))
+>>>>> [    2.541160] l24: Bringing 0uV into 3075000-3075000uV
+>>>>> [    2.543402] Stack: (0xf0839dd0 to 0xf083a000)
+>>>>> [    2.543413] 9dc0:                                     c1903000
+>>>>> c1903000 00000000 7ff15a00
+>>>>> [    2.543425] 9de0: 60172703 00000000 c1903000 c1903000 20000013
+>>>>> c1903084 c1903000 c1903100
+>>>>> [    2.627929] 9e00: 00000000 eefe45bc c1903000 00000000 fffffdfb
+>>>>> c1448b9c c1903248 c089036c
+>>>>> [    2.635613] 9e20: c089027c 00000000 c1903000 c1448b9c c147a260
+>>>>> 00000000 c14672a0 c180f00d
+>>>>> [    2.643773] 9e40: c18db480 c0940584 c1903000 00000000 c1903000
+>>>>> c147a260 c1448b9c 0000000d
+>>>>> [    2.651933] 9e60: 00000000 c0940950 c29b4380 c33d7380 c14c1fe4
+>>>>> c1448b9c c1903000 00000000
+>>>>> [    2.660092] 9e80: c14672a0 c180f00d c18db480 c0940ae4 fffffdfb
+>>>>> c1448b9c f0839ee4 c1903000
+>>>>> [    2.668252] 9ea0: 00000000 c0941190 00000000 f0839ee4 c09410ec
+>>>>> c147a260 00000000 c093e658
+>>>>> [    2.676412] 9ec0: c14672a0 c19dab6c c1b44fb8 cb719486 c1903000
+>>>>> c1903044 00000001 c0940d9c
+>>>>> [    2.684572] 9ee0: c147a260 c1903000 00000001 cb719486 c1903000
+>>>>> c1903000 c13f37dc c093f7a0
+>>>>> [    2.692731] 9f00: c1903000 c142aeec c142af00 c093fc94 c142af1c
+>>>>> c1803780 c1806800 c180f000
+>>>>> [    2.700890] 9f20: 00000000 c033dc60 c1803780 c18db480 c1806800
+>>>>> c1806800 c180681c c1803780
+>>>>> [    2.709050] 9f40: c1806800 c1803798 c180681c c1303d40 c18db480
+>>>>> 00000088 c1806800 c033e148
+>>>>> [    2.717211] 9f60: c1803780 c1303d40 f0821ea0 c18b7040 c18db480
+>>>>> c033df2c c1803780 c18b7400
+>>>>> [    2.725369] 9f80: f0821ea0 00000000 00000000 c03458ac c18b7040
+>>>>> c03457dc 00000000 00000000
+>>>>> [    2.733529] 9fa0: 00000000 00000000 00000000 c0300148 00000000
+>>>>> 00000000 00000000 00000000
+>>>>> [    2.741688] 9fc0: 00000000 00000000 00000000 00000000 00000000
+>>>>> 00000000 00000000 00000000
+>>>>> [    2.749850] 9fe0: 00000000 00000000 00000000 00000000 00000013
+>>>>> 00000000 00000000 00000000
+>>>>> [    2.758012]  mmci_probe from amba_probe+0xf0/0x174
+>>>>> [    2.766161]  amba_probe from really_probe+0xe0/0x40c
+>>>>> [    2.770847]  really_probe from __driver_probe_device+0xa0/0x204
+>>>>> [    2.775971]  __driver_probe_device from driver_probe_device+0x30/0xc0
+>>>>> [    2.781612]  driver_probe_device from
+>>>>> __device_attach_driver+0xa4/0x11c
+>>>>> [    2.788209]  __device_attach_driver from bus_for_each_drv+0x80/0xcc
+>>>>> [    2.794633]  bus_for_each_drv from __device_attach+0xa8/0x1f0
+>>>>> [    2.800881]  __device_attach from bus_probe_device+0x84/0x8c
+>>>>> [    2.806784]  bus_probe_device from deferred_probe_work_func+0x8c/0xd4
+>>>>> [    2.812515]  deferred_probe_work_func from
+>>>>> process_one_work+0x1fc/0x4c8
+>>>>> [    2.818854]  process_one_work from worker_thread+0x21c/0x540
+>>>>> [    2.825275]  worker_thread from kthread+0xd0/0xec
+>>>>> [    2.831177]  kthread from ret_from_fork+0x14/0x2c
+>>>>> [    2.835775] Exception stack(0xf0839fb0 to 0xf0839ff8)
+>>>>> [    2.840465] 9fa0:                                     00000000
+>>>>> 00000000 00000000 00000000
+>>>>> [    2.845509] 9fc0: 00000000 00000000 00000000 00000000 00000000
+>>>>> 00000000 00000000 00000000
+>>>>> [    2.853668] 9fe0: 00000000 00000000 00000000 00000000 00000013
+>>>>> 00000000
+>>>>> [    2.861826] Code: e92d4ff0 e590803c e24dd02c e59061a0 (e5917008)
+>>>>> [    2.868280] ---[ end trace 0000000000000000 ]---
+>>>> See the ticket for more details.
+>>>>
+>>>> I'd also like to add the report to the list of tracked regressions to
+>>>> ensure it's doesn't fall through the cracks in the end:
+>>>>
+>>>> #regzbot introduced: v5.19..v6.0-rc2
+>>>> https://bugzilla.kernel.org/show_bug.cgi?id=216420
+>>>> #regzbot ignore-activity
+>>>>
+>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>>>
+>>>> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+>>>> reports and sometimes miss something important when writing mails like
+>>>> this. If that's the case here, don't hesitate to tell me in a public
+>>>> reply, it's in everyone's interest to set the public record straight.
+>>> Hi,
+>>>
+>>> If I'm not wrong, the mmci driver shouldn't be probed for this platform.
+>>> So either there is something wrong with the device tree, or with the
+>>> AMBA bus driver.
+>>>
+>>>
+>>> Best regards,
+>>> Yann
+>> Maybe this is related (corrected?) with this patch:
+>> https://lkml.org/lkml/2022/8/27/164
+> This fix is probably this one:
+> https://lore.kernel.org/lkml/20220818172852.3548-1-isaacmanjarres@google.com/
+>
+> -Saravana
 
-Not sure if that or something else is the reason why this particular
-report didn't gain any traction, but I lack the bandwidth to follow-up
-on each and every regression some CI system found and reported. At the
-same time I don't want to keep these reports in the list of tracked
-issues forever, as that creates noise and makes it harder to spot the
-important issues in regzbot's reports and lists. That's why I hereby
-remove it:
+This patch alone on top of v6.0-rc2 still gives me the null pointer.
+But combining it with Zhen Lei's patch (from
+https://lkml.org/lkml/2022/8/27/164) my device boots successfully.
 
-#regzbot invalid: 0-day report that didn't get traction; might be of no
-relevance
+Thank you!
+Gabriel Francisco
 
-Ciao, Thorsten
-
-On 26.08.22 04:41, kernel test robot wrote:
-> Greeting,
-> 
-> FYI, we noticed a -50.0% regression of filebench.sum_operations/s due to
-> commit:
-> 
-> 
-> commit: 5efdd9122eff772eae2feae9f0fc0ec02d4846a3 ("smb3: allow deferred
-> close timeout to be configurable")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> 
-> in testcase: filebench
-> on test machine: 88 threads 2 sockets Intel(R) Xeon(R) Gold 6238M CPU @
-> 2.10GHz (Cascade Lake) with 128G memory
-> with following parameters:
-> 
->     disk: 1HDD
->     fs: ext4
->     fs2: cifs
->     test: filemicro_delete.f
->     cpufreq_governor: performance
->     ucode: 0x5003302
-> 
-> 
-> =========================================================================================
-> compiler/cpufreq_governor/disk/fs2/fs/kconfig/rootfs/tbox_group/test/testcase/ucode:
->  
-> gcc-11/performance/1HDD/cifs/ext4/x86_64-rhel-8.3/debian-11.1-x86_64-20220510.cgz/lkp-csl-2sp9/filemicro_delete.f/filebench/0x5003302
-> 
-> commit:
->   dcb45fd7f5 ("cifs: Do not use tcon->cfid directly, use the cfid we get
-> from open_cached_dir")
->   5efdd9122e ("smb3: allow deferred close timeout to be configurable")
-> 
-> dcb45fd7f501f864 5efdd9122eff772eae2feae9f0f
-> ---------------- ---------------------------
->          %stddev     %change         %stddev
->              \          |                \
->     515.95           -50.0%     257.98        filebench.sum_operations/s
->       4.81 ±  2%   +1038.4%      54.78 ±  6%  filebench.sum_time_ms/op
->      29.00 ±  8%    +212.1%      90.50 ±  3% 
-> filebench.time.percent_of_cpu_this_job_got
->      24629            +2.7%      25297       
-> filebench.time.voluntary_context_switches
->  7.685e+08           +19.3%  9.169e+08 ±  4%  cpuidle..time
->       2.53 ±  6%     -20.6%       2.00 ±  3%  iostat.cpu.iowait
->    1506141 ±  8%     +22.4%    1843256 ±  3%  turbostat.IRQ
->       2.00           -50.0%       1.00        vmstat.procs.b
->      21969 ±  2%      -9.5%      19885 ±  2%  vmstat.system.cs
->       3.06 ±  7%      -0.7        2.35 ±  4%  mpstat.cpu.all.iowait%
->       0.79 ±  5%      +0.5        1.27 ±  2%  mpstat.cpu.all.sys%
->       0.89 ±  3%      -0.1        0.79 ±  3%  mpstat.cpu.all.usr%
->      34.55 ± 14%     -34.8%      22.51 ± 27% 
-> sched_debug.cfs_rq:/.removed.runnable_avg.avg
->     119.64 ±  3%     -20.0%      95.69 ± 17% 
-> sched_debug.cfs_rq:/.removed.runnable_avg.stddev
->      34.55 ± 14%     -34.8%      22.51 ± 27% 
-> sched_debug.cfs_rq:/.removed.util_avg.avg
->     119.64 ±  3%     -20.0%      95.69 ± 17% 
-> sched_debug.cfs_rq:/.removed.util_avg.stddev
->       5249           +15.8%       6076        meminfo.Active
->       3866 ±  2%     +17.7%       4552        meminfo.Active(anon)
->       1382 ±  4%     +10.3%       1524 ±  4%  meminfo.Active(file)
->      69791 ± 14%     +39.8%      97553 ±  6%  meminfo.AnonHugePages
->      72709 ±  2%     +12.5%      81779 ±  3%  meminfo.Inactive(file)
->      23219           +13.5%      26352 ±  3%  meminfo.KernelStack
->     966.50 ±  2%     +17.7%       1137        proc-vmstat.nr_active_anon
->      74302            +6.3%      78977 ±  2%  proc-vmstat.nr_anon_pages
->      81133            +6.0%      85973        proc-vmstat.nr_inactive_anon
->      18172 ±  2%     +12.5%      20442 ±  3%  proc-vmstat.nr_inactive_file
->      23213           +13.5%      26348 ±  3%  proc-vmstat.nr_kernel_stack
->      17983            +2.3%      18400        proc-vmstat.nr_mapped
->       7446 ±  2%      +5.5%       7853 ±  3%  proc-vmstat.nr_shmem
->      26888            +1.6%      27306       
-> proc-vmstat.nr_slab_reclaimable
->      47220            +3.4%      48803       
-> proc-vmstat.nr_slab_unreclaimable
->     966.50 ±  2%     +17.7%       1137       
-> proc-vmstat.nr_zone_active_anon
->      81133            +6.0%      85973       
-> proc-vmstat.nr_zone_inactive_anon
->      18172 ±  2%     +12.5%      20442 ±  3% 
-> proc-vmstat.nr_zone_inactive_file
->     361460            +2.5%     370454        proc-vmstat.numa_hit
->     946.67           +18.6%       1122        proc-vmstat.pgactivate
->     361562            +2.5%     370553        proc-vmstat.pgalloc_normal
->     187906            +4.7%     196761        proc-vmstat.pgfault
->       8189            +2.5%       8395        proc-vmstat.pgreuse
->  1.097e+09           +15.5%  1.267e+09 ±  7% 
-> perf-stat.i.branch-instructions
->   39079265 ±  6%     -20.9%   30915354 ±  4%  perf-stat.i.branch-misses
->    5093263 ±  4%     -23.7%    3884752 ±  9%  perf-stat.i.cache-misses
->      29213           -18.7%      23764 ±  5%  perf-stat.i.context-switches
->  7.666e+09 ±  4%      +5.7%  8.106e+09 ±  2%  perf-stat.i.cpu-cycles
->       1877 ± 15%     +75.1%       3287 ± 12% 
-> perf-stat.i.cycles-between-cache-misses
->    1735450 ±  3%     -12.9%    1512060 ±  3%  perf-stat.i.iTLB-load-misses
->       2898 ±  3%     +34.4%       3895 ±  7% 
-> perf-stat.i.instructions-per-iTLB-miss
->       1493           -20.3%       1190 ±  7%  perf-stat.i.major-faults
->       0.09 ±  3%      +5.8%       0.09 ±  2%  perf-stat.i.metric.GHz
->      48.47 ± 11%      +8.4       56.83 ±  7% 
-> perf-stat.i.node-store-miss-rate%
->     283426 ±  4%     -21.6%     222190 ± 10%  perf-stat.i.node-stores
->       3.57 ±  7%      -1.1        2.44 ±  6% 
-> perf-stat.overall.branch-miss-rate%
->       1508 ±  3%     +39.8%       2108 ±  9% 
-> perf-stat.overall.cycles-between-cache-misses
->       3022 ±  3%     +23.6%       3736 ±  5% 
-> perf-stat.overall.instructions-per-iTLB-miss
->  9.585e+08           +18.8%  1.138e+09 ±  6% 
-> perf-stat.ps.branch-instructions
->   34151514 ±  6%     -18.8%   27725316 ±  4%  perf-stat.ps.branch-misses
->    4450329 ±  5%     -21.7%    3486409 ±  9%  perf-stat.ps.cache-misses
->      25524           -16.4%      21333 ±  4%  perf-stat.ps.context-switches
->      77139            +2.5%      79105        perf-stat.ps.cpu-clock
->  6.704e+09 ±  4%      +8.7%  7.287e+09        perf-stat.ps.cpu-cycles
->   1.06e+09           +11.3%   1.18e+09 ±  5%  perf-stat.ps.dTLB-loads
->    1517349 ±  3%     -10.5%    1357716 ±  2%  perf-stat.ps.iTLB-load-misses
->  4.582e+09           +10.8%  5.075e+09 ±  6%  perf-stat.ps.instructions
->       1296           -18.1%       1061 ±  6%  perf-stat.ps.major-faults
->     247613 ±  4%     -19.5%     199283 ±  9%  perf-stat.ps.node-stores
->      77139            +2.5%      79105        perf-stat.ps.task-clock
->  3.697e+10           +35.3%  5.003e+10        perf-stat.total.instructions
->       8.51 ± 91%      -6.9        1.59 ±223% 
-> perf-profile.calltrace.cycles-pp.getdents64
->       8.34 ± 83%      -6.7        1.67 ±141% 
-> perf-profile.calltrace.cycles-pp.exit_to_user_mode_loop.exit_to_user_mode_prepare.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe
->       6.25 ±107%      -6.2        0.00       
-> perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.open64
->       6.25 ±107%      -6.2        0.00       
-> perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.open64
->       6.25 ±107%      -6.2        0.00       
-> perf-profile.calltrace.cycles-pp.open64
->       7.63 ± 84%      -6.0        1.59 ±223% 
-> perf-profile.calltrace.cycles-pp.entry_SYSCALL_64_after_hwframe.getdents64
->       7.63 ± 84%      -6.0        1.59 ±223% 
-> perf-profile.calltrace.cycles-pp.do_syscall_64.entry_SYSCALL_64_after_hwframe.getdents64
->       7.63 ± 84%      -6.0        1.59 ±223% 
-> perf-profile.calltrace.cycles-pp.__x64_sys_getdents64.do_syscall_64.entry_SYSCALL_64_after_hwframe.getdents64
->       7.63 ± 84%      -6.0        1.59 ±223% 
-> perf-profile.calltrace.cycles-pp.iterate_dir.__x64_sys_getdents64.do_syscall_64.entry_SYSCALL_64_after_hwframe.getdents64
->       6.26 ±115%      -5.4        0.88 ±223% 
-> perf-profile.calltrace.cycles-pp.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe
->       6.26 ±115%      -5.4        0.88 ±223% 
-> perf-profile.calltrace.cycles-pp.exit_to_user_mode_prepare.syscall_exit_to_user_mode.do_syscall_64.entry_SYSCALL_64_after_hwframe
->       6.26 ±115%      -4.6        1.67 ±141% 
-> perf-profile.calltrace.cycles-pp.do_group_exit.get_signal.arch_do_signal_or_restart.exit_to_user_mode_loop.exit_to_user_mode_prepare
->       6.26 ±115%      -4.6        1.67 ±141% 
-> perf-profile.calltrace.cycles-pp.do_exit.do_group_exit.get_signal.arch_do_signal_or_restart.exit_to_user_mode_loop
->       6.26 ±115%      -4.6        1.67 ±141% 
-> perf-profile.calltrace.cycles-pp.arch_do_signal_or_restart.exit_to_user_mode_loop.exit_to_user_mode_prepare.syscall_exit_to_user_mode.do_syscall_64
->       6.26 ±115%      -4.6        1.67 ±141% 
-> perf-profile.calltrace.cycles-pp.get_signal.arch_do_signal_or_restart.exit_to_user_mode_loop.exit_to_user_mode_prepare.syscall_exit_to_user_mode
->       4.57 ± 73%      -3.8        0.76 ±223% 
-> perf-profile.calltrace.cycles-pp.asm_exc_page_fault.perf_mmap__read_head.perf_mmap__push.record__mmap_read_evlist.__cmd_record
->       4.57 ± 73%      -3.8        0.76 ±223% 
-> perf-profile.calltrace.cycles-pp.exc_page_fault.asm_exc_page_fault.perf_mmap__read_head.perf_mmap__push.record__mmap_read_evlist
->       4.57 ± 73%      -3.8        0.76 ±223% 
-> perf-profile.calltrace.cycles-pp.do_user_addr_fault.exc_page_fault.asm_exc_page_fault.perf_mmap__read_head.perf_mmap__push
->       4.57 ± 73%      -3.8        0.76 ±223% 
-> perf-profile.calltrace.cycles-pp.perf_mmap__read_head.perf_mmap__push.record__mmap_read_evlist.__cmd_record.cmd_record
->       3.38 ±103%      -3.4        0.00       
-> perf-profile.calltrace.cycles-pp.unmap_vmas.exit_mmap.mmput.exit_mm.do_exit
->       3.38 ±103%      -3.4        0.00       
-> perf-profile.calltrace.cycles-pp.unmap_page_range.unmap_vmas.exit_mmap.mmput.exit_mm
->       3.38 ±103%      -3.4        0.00       
-> perf-profile.calltrace.cycles-pp.zap_pmd_range.unmap_page_range.unmap_vmas.exit_mmap.mmput
->       3.38 ±103%      -3.4        0.00       
-> perf-profile.calltrace.cycles-pp.zap_pte_range.zap_pmd_range.unmap_page_range.unmap_vmas.exit_mmap
->       8.51 ± 91%      -6.9        1.59 ±223% 
-> perf-profile.children.cycles-pp.getdents64
->       8.34 ± 83%      -6.7        1.67 ±141% 
-> perf-profile.children.cycles-pp.exit_to_user_mode_prepare
->       8.34 ± 83%      -6.7        1.67 ±141% 
-> perf-profile.children.cycles-pp.exit_to_user_mode_loop
->       8.34 ± 83%      -6.7        1.67 ±141% 
-> perf-profile.children.cycles-pp.syscall_exit_to_user_mode
->       6.25 ±107%      -6.2        0.00       
-> perf-profile.children.cycles-pp.open64
->       7.63 ± 84%      -6.0        1.59 ±223% 
-> perf-profile.children.cycles-pp.__x64_sys_getdents64
->       7.63 ± 84%      -6.0        1.59 ±223% 
-> perf-profile.children.cycles-pp.iterate_dir
->       6.26 ±115%      -4.6        1.67 ±141% 
-> perf-profile.children.cycles-pp.arch_do_signal_or_restart
->       6.26 ±115%      -4.6        1.67 ±141% 
-> perf-profile.children.cycles-pp.get_signal
->       4.57 ± 73%      -3.8        0.76 ±223% 
-> perf-profile.children.cycles-pp.perf_mmap__read_head
->       3.38 ±103%      -3.4        0.00       
-> perf-profile.children.cycles-pp.unmap_vmas
->       3.38 ±103%      -3.4        0.00       
-> perf-profile.children.cycles-pp.unmap_page_range
->       3.38 ±103%      -3.4        0.00       
-> perf-profile.children.cycles-pp.zap_pmd_range
->       3.38 ±103%      -3.4        0.00       
-> perf-profile.children.cycles-pp.zap_pte_range
->       8.54 ± 43%      +8.6       17.19 ± 38% 
-> perf-profile.children.cycles-pp.asm_exc_page_fault
-> 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <yujie.liu@intel.com>
-> 
-> 
-> To reproduce:
-> 
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         sudo bin/lkp install job.yaml           # job file is attached
-> in this email
->         bin/lkp split-job --compatible job.yaml # generate the yaml file
-> for lkp run
->         sudo bin/lkp run generated-yaml-file
-> 
->         # if come across any failure that blocks the test,
->         # please remove ~/.lkp and /lkp dir to run from a clean state.
-> 
-> 
-> Disclaimer:
-> Results have been estimated based on internal Intel analysis and are
-> provided
-> for informational purposes only. Any difference in system hardware or
-> software
-> design or configuration may affect actual performance.
-> 
-> 
-> #regzbot introduced: 5efdd9122e
-> 
-> 
