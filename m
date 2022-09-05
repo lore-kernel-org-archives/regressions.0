@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A45915AD
-	for <regressions@lists.linux.dev>; Mon,  5 Sep 2022 10:32:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7E029AC
+	for <regressions@lists.linux.dev>; Mon,  5 Sep 2022 10:47:26 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oV9PV-0003SA-9P; Mon, 05 Sep 2022 12:32:57 +0200
-Message-ID: <38d9783f-9b1a-69bb-4f5d-3c77239d53fc@leemhuis.info>
-Date: Mon, 5 Sep 2022 12:32:56 +0200
+	id 1oV9dT-0007a7-OO; Mon, 05 Sep 2022 12:47:23 +0200
+Message-ID: <7f2cf157-2d1e-8b19-57ef-adce50db047b@leemhuis.info>
+Date: Mon, 5 Sep 2022 12:47:23 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,133 +16,40 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
-Subject: Re: setns() affecting other threads in 5.10.132 and 6.0
 Content-Language: en-US, de-DE
-To: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <d9f7a7d26eb5489e93742e57e55ebc02@AcuMS.aculab.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <d9f7a7d26eb5489e93742e57e55ebc02@AcuMS.aculab.com>
+To: regressions@lists.linux.dev
+Cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org, lkp@lists.01.org
+References: <Yvn60W/JpPO8URLY@xsang-OptiPlex-9020>
+ <Yvq9wzXNF4ZnlCdk@google.com>
+ <5034abb9-e176-d480-c577-1ec5dd47182b@redhat.com>
+ <9bfeae26-b4b1-eedb-6cbd-b4f9f1e1cc55@redhat.com>
+ <YvwYxeE4vc/Srbil@google.com>
+ <d8290cbe-5d87-137a-0633-0ff5c69d57b0@redhat.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: [KVM] e923b0537d: kernel-selftests.kvm.rseq_test.fail #forregzbot
+In-Reply-To: <d8290cbe-5d87-137a-0633-0ff5c69d57b0@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1662373979;3d617f57;
-X-HE-SMSGID: 1oV9PV-0003SA-9P
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1662374846;460815a9;
+X-HE-SMSGID: 1oV9dT-0007a7-OO
 
 TWIMC: this mail is primarily send for documentation purposes and for
 regzbot, my Linux kernel regression tracking bot. These mails usually
 contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
+On 17.08.22 02:06, Gavin Shan wrote:
+> 
+> Yeah, the system for the coverage was likely having high CPU loads,
+> which is similar
+> to my (simulated) environment. I usually have my system being idle when
+> running the
+> coverage test cases. I didn't hit this specific failure before.
+> 
+> Lets leave it as of being. We can improve if needed in future :)
 
-Hi, this is your Linux kernel regression tracker. CCing the regression
-mailing list, as it should be in the loop for all regressions, as
-explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+In that case:
 
-On 04.09.22 16:05, David Laight wrote:
-> Sometime after 5.10.105 (5.10.132 and 6.0) there is a change that
-> makes setns(open("/proc/1/ns/net")) in the main process change
-> the behaviour of other process threads.
-> 
-> I don't know how much is broken, but the following fails.
-> 
-> Create a network namespace (eg "test").
-> Create a 'bond' interface (eg "test0") in the namespace.
-> 
-> Then /proc/net/bonding/test0 only exists inside the namespace.
-> 
-> However if you run a program in the "test" namespace that does:
-> - create a thread.
-> - change the main thread to in "init" namespace.
-> - try to open /proc/net/bonding/test0 in the thread.
-> then the open fails.
-> 
-> I don't know how much else is affected and haven't tried
-> to bisect (I can't create bonds on my normal test kernel).
-> 
-> The test program below shows the problem.
-> Compile and run as:
-> # ip netns exec test strace -f test_prog /proc/net/bonding/test0
-> 
-> The second open by the child should succeed, but fails.
-> 
-> I can't see any changes to the bonding code, so I suspect
-> it is something much more fundamental.
-> It might only affect /proc/net, but it might also affect
-> which namespace sockets get created in.
-> IIRC ls -l /proc/n/task/*/ns gives the correct namespaces.
-> 
-> 	David
-> 
-> 
-> #define _GNU_SOURCE
-> 
-> #include <fcntl.h>
-> #include <unistd.h>
-> #include <poll.h>
-> #include <pthread.h>
-> #include <sched.h>
-> 
-> #define delay(secs) poll(0,0, (secs) * 1000)
-> 
-> static void *thread_fn(void *file)
-> {
->         delay(2);
->         open(file, O_RDONLY);
-> 
->         delay(5);
->         open(file, O_RDONLY);
-> 
->         return NULL;
-> }
-> 
-> int main(int argc, char **argv)
-> {
->         pthread_t id;
-> 
->         pthread_create(&id, NULL, thread_fn, argv[1]);
-> 
->         delay(1);
->         open(argv[1], O_RDONLY);
-> 
->         delay(2);
->         setns(open("/proc/1/ns/net", O_RDONLY), 0);
-> 
->         delay(1);
->         open(argv[1], O_RDONLY);
-> 
->         delay(4);
-> 
->         return 0;
-> }
-> 
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-> Registration No: 1397386 (Wales)
-> 
-
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced v5.10.105..v5.10.132
-#regzbot title setns() affecting other threads (also in 6.0-rc)
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
+#regzbot invalid: 0-day report that apparently can be ignoreD
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
