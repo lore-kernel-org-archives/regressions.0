@@ -1,204 +1,159 @@
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4AD77E
-	for <regressions@lists.linux.dev>; Mon,  5 Sep 2022 02:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1662345506; x=1693881506;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=Ipp4tyNb9S8pGrOSQXS6cG8s1J6PXSbTrtxO2ZLbozQ=;
-  b=aWXCOxeiTcS4vsdQ8ZFSeSFrDVAxwaM1XjW1tcEykUMXEaLhJpncFsVo
-   M3ZF2r3Ut3EwNxNTAUek7ZNL/DymCcQuZU7Ox/Yr6VK/rQ/fGdxP4ZgZS
-   YrqT85GoTvlciV68yfz0nIfamKcwkfZYWrtJbph/0MQTZ8/2jccMUDk++
-   XfzdnSW09YCNiPJkYOYRp/kZ+zrqdior3Wfac5BA2iRlVdbFLx6MkzzQG
-   2Z5goIErFCPeecfTU+/dOWE0dvVu0riiAmcO6aFeP8lzhGKtDKekdwj72
-   FeV5Q2H9EGt+73csgFiL9VcTZxBkE2zlcRmpplf20SE3ZEuSlo0hSeTIV
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10460"; a="322458025"
-X-IronPort-AV: E=Sophos;i="5.93,290,1654585200"; 
-   d="scan'208";a="322458025"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2022 19:38:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,290,1654585200"; 
-   d="scan'208";a="702734584"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by FMSMGA003.fm.intel.com with ESMTP; 04 Sep 2022 19:38:26 -0700
-Received: from fmsmsx607.amr.corp.intel.com (10.18.126.87) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Sun, 4 Sep 2022 19:38:25 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx607.amr.corp.intel.com (10.18.126.87) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Sun, 4 Sep 2022 19:38:25 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Sun, 4 Sep 2022 19:38:25 -0700
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.40) by
- edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Sun, 4 Sep 2022 19:38:25 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AV0fw+IZAg6u9wPedOJalFrrLVCkiW9wKhNivnKZfZAAkj4E1+h/lKfBCYLmusbJ0ghrbO2uWrXs/3cLozbkNNdGlzRJRvNxNO9Gv32sROQY3Jxz0PoxThpyaSwmCYpOzSbjJRE/7MV06KmLf+kfJbq4B7W777VjU3IMJRv0jQ3fWS3Z+KtGoqVNCt7X5PV5uyG0KRmgJIq2TpW0uvHbOcZWm/6SEFBlmmohm5hYlj58FKsak8HkzYfsA9z4NArwqEriYoKxw0DEdNyQJ3Zuu3HISOIUPknfoRrU3KYTjwTbWd7WCqZEQWS2y5+9bMnZTeLv/n8qPvQAa9O3eQ18yA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=C475xN1ha+sdzrQ/Lsj+vQL3FaNfPLCXXmi2Sj5MQqA=;
- b=QVK+tumjimsPJour2mzkEV3FbdOG+CUV27sM+0twjAnR/rMhW/Mh3Qvf+cHwC1zLv0SyZi205jFcwrT1jyYZMNM4GN6p6ei1j+cdvo40hwdD6IZnV1k+hgEWP/TdkQ2usQObg1NKeeL+yyXln1fSG5110J5Yqjnak3s9/CGEX/ma+noWAmTSMpIBeFl4NhrP7VyPKjWsks+bUxxgbbbIp9yuV7cGHWHFGNOZ+a1F4IuVwnA2iffFSY9bSTy/6CmNsJ6laH/BTezDWLIbkszXmAjwx0ULJwRD9vkfVy1rMvGe/mFRCi2WFE8v7t/oDiPZdrRwFjnV7mYNP3kf6r3K2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BL0PR11MB2995.namprd11.prod.outlook.com (2603:10b6:208:7a::28)
- by DM6PR11MB3420.namprd11.prod.outlook.com (2603:10b6:5:69::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.15; Mon, 5 Sep
- 2022 02:38:18 +0000
-Received: from BL0PR11MB2995.namprd11.prod.outlook.com
- ([fe80::5482:e4d0:c7d9:e8be]) by BL0PR11MB2995.namprd11.prod.outlook.com
- ([fe80::5482:e4d0:c7d9:e8be%4]) with mapi id 15.20.5588.018; Mon, 5 Sep 2022
- 02:38:18 +0000
-Date: Mon, 5 Sep 2022 10:38:06 +0800
-From: Philip Li <philip.li@intel.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-CC: kernel test robot <oliver.sang@intel.com>, Kai Huang
-	<kai.huang@intel.com>, LKML <linux-kernel@vger.kernel.org>,
-	<kvm@vger.kernel.org>, <lkp@lists.01.org>, <lkp@intel.com>,
-	<regressions@lists.linux.dev>
-Subject: Re: [LKP] Re: [KVM] c3e0c8c2e8:
- leaking-addresses.proc..data..ro_after_init.
-Message-ID: <YxVhDnUBWHxErg0S@rli9-MOBL1.ccr.corp.intel.com>
-References: <YvpZYGa1Z1M38YcR@xsang-OptiPlex-9020>
- <04ce8956-3285-345a-4ce5-b78500729e42@leemhuis.info>
- <YxCyhTES9Nk+S94y@rli9-MOBL1.ccr.corp.intel.com>
- <57c596f7-014f-1833-3173-af3bad2ca45d@leemhuis.info>
- <YxH2X8gMWyJeKPRa@rli9-MOBL1.ccr.corp.intel.com>
- <e633e50a-a72a-0d55-7c96-a1853eff1b8e@leemhuis.info>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <e633e50a-a72a-0d55-7c96-a1853eff1b8e@leemhuis.info>
-X-ClientProxiedBy: SG2PR04CA0172.apcprd04.prod.outlook.com (2603:1096:4::34)
- To BL0PR11MB2995.namprd11.prod.outlook.com (2603:10b6:208:7a::28)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3983C35
+	for <regressions@lists.linux.dev>; Mon,  5 Sep 2022 10:27:22 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oV9Jx-0001WI-TV; Mon, 05 Sep 2022 12:27:13 +0200
+Message-ID: <59c57de8-580e-a761-e69c-7b1bdbfb8dd4@leemhuis.info>
+Date: Mon, 5 Sep 2022 12:27:13 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fbdec1f8-3fef-446e-5e26-08da8ee7b0c7
-X-MS-TrafficTypeDiagnostic: DM6PR11MB3420:EE_
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2i2hGGuXN1LnIUGb45OwCWN+gwgkW1DddTzG1TeUz34aBoQeGqKSEwXJrG1x/RNlETKwsce5sAPxOxP5BccI7K0D8Y3ElovEMotUZT/bb1bWB0enldWI7VfyjwKnKCfMhdyWr00xDIVHEdd2dHClKOo2LElnAFFe2Ilnk7Jtn5Ix8X8uWEIb9SVQf/qBpxYolvAgcED37SvRxn5ddOQ7pCMGkEXjKzrSUqXvZNOrW/Ri/TZV0F6iXBIi6c87oedRrm91OKzIeQ0Ata4xP7QGzwuiri7VeTFbg8ScecmpzasYoI+IKChikPB33RjKcJa1Yj9Yis4ujlWdSsIMcNYljRHX8UWUcM2EjUb+kjw6dsup9Ol947WgfanPxf+6oC1/8HW9WqCqVwNYGrtCQyR12JXBAVwRjYx55z+hKNfv2v5J0vBnIcTTVOdJjfvf3vVm3pxwrMXWIrosZQUaRfNCDrZtxHLnaExraagOFCvYhdPEFNDMRXOymuZ7fhy+ktLrS7F2ZiPGFrMuEUfZrOFyqwBV953O/Qo79rb6vy6ExiuByTUdh4CBEabAKcSlvbdD4ux62gIqSgzK9cY6Ktco+mzXc2Ck59OAXYlLZgA4B2SXipC5cZGaqMZRu40BO2lLHTMmmnranF8K/JquwJ4x9BJ1tzYgDFTr2E5cc2UfW4jLHLdi3LG5U3YZEqploiyKZzD1HeypLrMS6/oQdwY02c82/IAE+LQGiVUQezk7WVht1y7xqJZFWlL4x29fr3catrHeOTDTWZMsnsukrczmTQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR11MB2995.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(376002)(136003)(396003)(366004)(39860400002)(44832011)(2906002)(8936002)(82960400001)(5660300002)(38100700002)(6486002)(478600001)(6506007)(53546011)(6666004)(41300700001)(316002)(54906003)(6916009)(83380400001)(66476007)(66946007)(4326008)(66556008)(8676002)(6512007)(186003)(26005)(86362001)(101420200003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Q0xcBHvCSv3L+nEW46UzIpff/6H9EFCOXDtGRPhE5hUh2bVqObfHBd4HNB1U?=
- =?us-ascii?Q?gOkOR+oXzqZKRWuNGGFOuweVZTFjWp+8G5Ih8YvFCxecaxiq01exT6RSmIaa?=
- =?us-ascii?Q?ujtzBYk0QYv1H0+Gh0sFRF65uVsDixouqwKzdTvTR/ry4dGSYxe19XdCOGco?=
- =?us-ascii?Q?3h1zxRZI7ILQns8miQsHArU+/fEp+BQIoOp2rngIbmOQapBCaoIShR1VgIi2?=
- =?us-ascii?Q?mU9vq0SP0YemlLak3PXf8ZCXcJ4n4uQJv6+ftl9HDg19KVePQjvi1MhtcCdj?=
- =?us-ascii?Q?/HTWxi+T9zYtBqUQRg2aoidHmy5+VWOe5+4NkNA0lfl+C26YC9cgcmEeDrv0?=
- =?us-ascii?Q?7XuEzvpvB+k2FHBWHEVVmfPXur2xP9gS2LhaGE96Bnm5FTWVs5iqciPaJm1R?=
- =?us-ascii?Q?SmhYgIgyF8zCDgKkBQvtYr8XooLNA+FkUCcvBRB5gHaoq4+Bi2DhTNHQ4clB?=
- =?us-ascii?Q?hPwDCRcIJVBe+i5vAwuGo3tU8Ad+H+wxt6zTjgdPfqC1wI7DBlTetOhIh/6g?=
- =?us-ascii?Q?PZEh5D+CzJ2eoADP4KfrwyMk7G5B6E9xKGfji1GWrtgpJiXMeYkPRhW6IL7n?=
- =?us-ascii?Q?rsKte9CSjCyl9xCDtZqgHv7DNQQbJ2OfhsnC96IG7tWuuXVywso0H760JVlS?=
- =?us-ascii?Q?FPJ8hx8+faooVQkHMkb3hPgv7Vn6mgTvuaOkYSRS1Z7FVKCUjBsMwxlUvUTp?=
- =?us-ascii?Q?eJkGuNS/Q5uW19xCBS+/HI2/x2oV3v4a7VpZjJvjhM+AKiuSmOfjCqq7myn1?=
- =?us-ascii?Q?+6KeSY+zd2/nIm7loNIB9PEy8f566Fs0AQwTUVkYRWa2CrHs7GMhhGvan7+B?=
- =?us-ascii?Q?Sddl4zCbEYSR7wsANbEocx7zmAr4JKeH1StTWhpqEu09vg3/ajmruHbR3aJt?=
- =?us-ascii?Q?fUfthG2Vqefc7fQDxHT4HNn308zYJlUxZ2ZG+x5B7Gg/2d/q0i+ITo43GUzo?=
- =?us-ascii?Q?jzrUo8I5N7a8rWypAU19g32vSL4olfxIC8uvB4CA9lnPhbqvgBSRIsOAuouW?=
- =?us-ascii?Q?J/Ai98LyXbTt0EzA+20+nwLW5rL5QMgoMwPYugKcyKYMxzPX0skBYR6dMJ4g?=
- =?us-ascii?Q?48hCVHtXP+ld9HgepJXGhoHfc724x4TcV4/Has4qfIpRoduVbRmogSVAnl2J?=
- =?us-ascii?Q?qYyiEEJZEZMzFDu9y4Yz1KoEUCdBv7Z2XYsdR9DaS2hs0IUJhAXFD6esdxps?=
- =?us-ascii?Q?7ROPMK3da17oThzG4/PVcvuGu0EytQSRm/jOnKXfE5QdZrZ9z2QKi8kNPHfT?=
- =?us-ascii?Q?Qw+JJB68xyi8ncyVdvK7tMEuxlZDcLCghwxvcVmdLU2yEYjX+B2Dlww9oPHJ?=
- =?us-ascii?Q?DXJsysaFynXQNzDE0V2gjfAzD4jXaLzUKjcXt7PZy8oMF1fAU2bQn5nIVib8?=
- =?us-ascii?Q?lNtO0gaSqf/nQMrUpUGfKaPleQyWspvSOr5sd6uiesWqboNYDD2K45Enwpu2?=
- =?us-ascii?Q?GNJkrU36uLt1WsI2nvPpRLvClb5jD8ISJ6qijX+UUdPojYh0tWPI4G4bGdRq?=
- =?us-ascii?Q?zEZnVRhn9Zy7o1GE1nrCYrwU0cYKz6NGetdCizdqUextFfAIFx8qxV5iBrX3?=
- =?us-ascii?Q?CKv8O9prEUjEPwaSw20Ag3p8aCpFP+1Z8RPw8/YWmGSoXFU59baGd436M4Pg?=
- =?us-ascii?Q?rA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbdec1f8-3fef-446e-5e26-08da8ee7b0c7
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR11MB2995.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2022 02:38:18.4072
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qQLdNFRWDb9iLuSUo4PSCQzK+auta0apMy8KO4JiF3Sl1Y2/oBMx0fpwC9nkExrMmoRx8aOY8ivx18aX8LPn4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3420
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [Bisected] Disconnecting pendrive with opened files causes
+ trouble on 6.0.0-rc3 #forregzbot
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ linux-scsi@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <fbd28a8c-858d-8891-f6be-a5c2ca3131da@o2.pl>
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <fbd28a8c-858d-8891-f6be-a5c2ca3131da@o2.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1662373642;2eaed1fa;
+X-HE-SMSGID: 1oV9Jx-0001WI-TV
 
-On Sat, Sep 03, 2022 at 12:27:19PM +0200, Thorsten Leemhuis wrote:
-> On 02.09.22 14:26, Philip Li wrote:
-> > On Fri, Sep 02, 2022 at 12:54:05PM +0200, Thorsten Leemhuis wrote:
-> >> On 01.09.22 15:24, Philip Li wrote:
-> >>> On Thu, Sep 01, 2022 at 02:12:39PM +0200, Thorsten Leemhuis wrote:
-> >
-> > [...]
-> >
-> > Thanks for the encouragement :-) The flow/process is very helpful. We will follow
-> > up a few things before we resuming the tracking
-> > [...]
-> 
-> Great, thx!
-> 
-> >>> Usuaally, we also ping/discuss with developer when an issue enters
-> >>> mainline if there's no response. This is one reason we tries to connect
-> >>> with regzbot to track the issue on mainline, but we missed the point that
-> >>> you mention below (it need look important).
-> >>
-> >> I just want to prevent the list of tracked regressions becoming too long
-> >> (and thus obscure) due to many issues that are not worth tracking, as I
-> >> fear people will then start to ignore regzbot and its reports. :-/
-> > 
-> > got it, we will be very careful to selectly tracking. Maybe we don't need
-> > track the issue if it is responsed by developer quickly and can be solved
-> > directly.
-> 
-> Maybe, but that will always bear the risk that something gets in the way
-> (say a big problem is found in the proposed fix) and the regression in
-> the end gets forgotten and remains unfixed -- which my tracking tries to
-> prevent. Hence I'd say doing it the other way around (adding all
-> regressions reported by the 0-day folks to regzbot and remove reports
-> after a week or two if it's apparently something that can be ignored)
-> would be the better approach.
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-Got it, we will follow this approach, to track the issue but remove them
-after a week or two.
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
+Hi, this is your Linux kernel regression tracker. CCing the regression
+mailing list, as it should be in the loop for all regressions, as
+explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+On 04.09.22 20:28, Mateusz Jończyk wrote:
+> Hello,
 > 
-> > But only track the one that is valuable, while it need more discussion, extra
-> > testing, investigation and so one, that such problem can't be straight forward
-> > to solve in short time. For such case, the tracking helps us to get back to this
-> > even when there's a pause, like developer is blocked by testing or need switch
-> > to other effort. This is just my thinking.
+> On Linux 6.0.0-rc3, disconnecting a mounted pendrive with opened files causes these symptoms:
 > 
-> Yeah, the problem is just: it's easy to forget the regression to the
-> tracking. :-/
+> - "task kworker/X blocked for more than Y seconds" warnings (see below) are repeatedly printed in dmesg,
+> - after reconnecting the pendrive (or possibly other USB devices), it is not detected,
+> - the login screen (Gnome on Ubuntu 20.04) freezes for some time (around 20s), due to a hang in colord-sane.
 > 
-> >> Are you or someone from the 0day team an LPC? Then we could discuss this
-> >> in person there.
-> > 
-> > We will join 2 MC (Rust, Testing) but all virtually, thus not able to discuss in
-> > person :-( 
+> These symptoms disappear after closing the opened files (and perhaps also directories) on the pendrive.
 > 
-> Okay, was worth asking. :-D
+> I am aware that disconnecting a pendrive with a mounted filesystem is unwise, but many people do so
+> nonetheless.
 > 
-> > But we are glad to join any further discussion or follow the suggested
-> > rule if you have some discussion with other CI and reporters.
+> I have bisected this down to
+> commit 16728aaba62e ("scsi: core: Make sure that hosts outlive targets")
 > 
-> Yeah, I'm pretty sure we'll find a way to make everybody happy.
+> With the previous
+> commit fe442604199e ("scsi: core: Make sure that targets outlive devices")
+> the problem does not happen.
 > 
-> Ciao, Thorsten
+> To reproduce:
+> 
+> 1. Plug a pendrive into a USB port (checked with a pendrive formatted with a FAT32 filesystem).
+> 2. Mount it, open a file on this pendrive with the "less" command-line program.
+> 3. Optionally suspend the system to RAM.
+> 4. Disconnect the pendrive.
+> 5. Resume the system, if it was suspended.
+> 
+> Warnings from dmesg:
+> 
+> [   76.212690] usb 1-3.4.3: USB disconnect, device number 6
+> [   76.219765] device offline error, dev sdc, sector 2049 op 0x1:(WRITE) flags 0x100000 phys_seg 1 prio class 2
+> [   76.219791] Buffer I/O error on dev sdc1, logical block 1, lost async page write
+> [  242.764446] INFO: task kworker/0:7:1701 blocked for more than 120 seconds.
+> [  242.764463]       Tainted: G            E      6.0.0-rc3mj6 #239
+> [  242.764470] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> [  242.764474] task:kworker/0:7     state:D stack:    0 pid: 1701 ppid:     2 flags:0x00004000
+> [  242.764488] Workqueue: usb_hub_wq hub_event
+> [  242.764504] Call Trace:
+> [  242.764507]  <TASK>
+> [  242.764514]  __schedule+0x2c5/0xcd0
+> [  242.764527]  schedule+0x5d/0xf0
+> [  242.764535]  scsi_remove_host+0x163/0x1b0
+> [  242.764547]  ? var_wake_function+0x60/0x60
+> [  242.764559]  usb_stor_disconnect+0x50/0xd0 [usb_storage]
+> [  242.764571]  usb_unbind_interface+0x8c/0x240
+> [  242.764581]  device_remove+0x64/0x70
+> [  242.764590]  device_release_driver_internal+0xd1/0x160
+> [  242.764599]  device_release_driver+0x12/0x20
+> [  242.764608]  bus_remove_device+0xde/0x150
+> [  242.764616]  device_del+0x192/0x3e0
+> [  242.764621]  ? usb_remove_ep_devs+0x1f/0x30
+> [  242.764632]  usb_disable_device+0xab/0x240
+> [  242.764639]  usb_disconnect+0xc7/0x260
+> [  242.764647]  ? set_port_feature+0x37/0x40
+> [  242.764656]  hub_event+0xeb0/0x17c0
+> [  242.764668]  ? __schedule+0x2cd/0xcd0
+> [  242.764675]  ? queue_rcu_work+0x2c/0x40
+> [  242.764684]  process_one_work+0x21c/0x3c0
+> [  242.764693]  worker_thread+0x4a/0x3b0
+> [  242.764703]  ? process_one_work+0x3c0/0x3c0
+> [  242.764711]  kthread+0xcf/0xf0
+> [  242.764719]  ? kthread_complete_and_exit+0x20/0x20
+> [  242.764728]  ret_from_fork+0x22/0x30
+> [  242.764737]  </TASK>
+> 
+> The kernel is tainted AFAIK because of the following:
+> 
+> [    0.442486] backlight: module verification failed: signature and/or required key missing - tainting kernel
+> [...]
+> [    0.446462] Loading compiled-in X.509 certificates
+> [    0.447431] Loaded X.509 cert 'Build time autogenerated kernel key: cbf6b5d58385db4124f3ddd5fa0457b112415dcb'
+> 
+> The module was loaded before the signing keys were processed - which is an unrelated bug, present since a long time.
+> 
+> 
+> System information:
+> - Ubuntu 20.04 amd64,
+> - HP 17-by0001nw laptop,
+> - problem happens also when using an external USB 3.0 UNITEK hub.
+> 
+> Greetings,
+> 
+> Mateusz Jończyk
+> 
+
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced 16728aaba62e
+#regzbot title scsi: core: Disconnecting pendrive with opened files
+suddenly causes trouble
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
