@@ -1,33 +1,33 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2061.outbound.protection.outlook.com [40.107.243.61])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2068.outbound.protection.outlook.com [40.107.223.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C604C70
-	for <regressions@lists.linux.dev>; Fri,  9 Sep 2022 16:48:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268BB4C79
+	for <regressions@lists.linux.dev>; Fri,  9 Sep 2022 16:48:21 +0000 (UTC)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zga4wUq08CsccFgbvsVPsbYxejOuszCX/RceTTuSpkWSg61DywjUIE40IlApABBd1LjEZwRz4YNLXx/d+DJL46UNUQGpKxnto6N4TKx4ZGj3FSj3xEOYjOrEY/YWLwOd/VPBacUEfZulpyupcvAGSqQhqbeOd6WV3GoOk9PSrFMH7FUR01l5qpDCIWDhxVjHGJj2aSsH0eTcgleUHHT8GvaNnsdbu48VTRSZhjNhxEzxt/QsT6fpf6aLJxYBJpB0aZTUqphMM9Jqrt0VO6FNMNvCo6X8PdhpPg6h0P5YtcVqt9qwGuev6XOL6+pN9ykHCikyNJtaF4Nq8RXs2ZlOGw==
+ b=fVPsv+YjcKmlcc24+xVIASPyLrG7go8tXho+Tu5XpfCVcHPuPgkInpx81ASqlBJR6BENfmb87wQXBwov6uYmEpJVdGcTyu5ClSPHg/TjMuON0eM7Rtdkg/6Bb2DN3xaiA75I3WERJfuIj9c+s4rVvoHP8AlfuOL2/h6TJnHS14djbNFpMR4SxDOLHtAncLd3a/cSMngVodAso0sioB3Hu3EfZXyV+iLTbJsdcJ6B+JFFbVnA1VYBZQEut+svSEdeMtG7xaXbwZ7twqlKqeVuaQXsNZtQWw4hUF+ZssX1/bDD9YVn6oYtYE0+LM+Ai63dhjQTUxnHwMDXtrCmYWo4zg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oM5C4SO6ywgn0Fb/mEw2bOtQFiLTCLD7BCTHIBtSpq8=;
- b=L7ImBjSA2OhP+7Udi6/VpIfhVXmRntTYaFyCp3ZXibvBM5uCNdOUIgppXrDwDFJzEh3ZzN9MgOblXr/GkDWwIh6C+zszp1IciUb6vYnBnFLUfAJPyerzJFrDHDcHdJWo6ZjjmPXu6c6x+KfeyAfq/nAs9RMhv4rKQXc4m3+qumPfaGAiOILhcUQxGEI8mHFhr/IZOzqENQ6jV3/lGCn592XNKEwozqHBjLrU4JtCAsh63vuQcLR0wS/d3zZiuwNSl9c/MENZened+8HpXyMR/EeobOBKvOXe7VTauixQw9ufhHOcfM5/T1AV18lYMz/sn6QdbnEIFE+PCUP825+dFA==
+ bh=qc3gCklKkhMCMu7aSanYB4FwlktNeiGGlvsNGxIjqBk=;
+ b=jdHR7+iwK58wc2Ve9IMQG75K4swoVU8AiZS/XFID8voq9YGuzJIiJ96x12r3OjwIQiOzn7GlLL8CxS++OjO8WbwuJ/uw4FG7VQQt2hJbYJXrW+uMip5mStz6pC9rTw3I/o0JOmAhJ3A4TBvOUu/rnjDySVn4ar2eWm7TxQUMsYffSyseOi+z1pQNXp2PfGVFRTX3fTanabshKBw/R92Sdz2L/vrLORbVGo2An5iMo1XTJOD/JukiPj3LF3zxutcfxUdjulDzvNsydqPjYqTOs9qOGANOHZKXn6zcFmcWHhN08xSqn8M+1wEbU1E76XOVNc6W9YuUlctjCw5HOcb94A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oM5C4SO6ywgn0Fb/mEw2bOtQFiLTCLD7BCTHIBtSpq8=;
- b=zHbVj4SBtPvfqOA0ydewFl9MP0PeEAX5qP1mSMoeLazG7dXKB7iaImcIP+j0ZXlZlZ7ElRcRTo9Srv81ThgjR9QjbipQo4PPC4V/8FLaodmh3A3ts1Kk7Hn/LnUVpnogpCc/dBEk6mG+WToIj9aGdDNERDSmF60YxzuhoU+XdbU=
-Received: from BN9PR03CA0138.namprd03.prod.outlook.com (2603:10b6:408:fe::23)
- by SA0PR12MB4365.namprd12.prod.outlook.com (2603:10b6:806:96::22) with
+ bh=qc3gCklKkhMCMu7aSanYB4FwlktNeiGGlvsNGxIjqBk=;
+ b=oYFBWxh1YVEy5WxCDgYx+2atpwClLJfteyCUbhQC9oMn1C5te9KFv7/DmhYUqYHYx80ZJF+YDT8VBOmOpI00xr0JwIeJRmsDtPmHQYxtTIdx53a7HSnP8or47pRIs/uCPCNufQk92KiDidF//ZS3CncFaVYqUMzTkuFhqDyTChg=
+Received: from BN8PR03CA0023.namprd03.prod.outlook.com (2603:10b6:408:94::36)
+ by DM6PR12MB4354.namprd12.prod.outlook.com (2603:10b6:5:28f::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.14; Fri, 9 Sep
- 2022 16:48:16 +0000
-Received: from BN8NAM11FT056.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:fe:cafe::bf) by BN9PR03CA0138.outlook.office365.com
- (2603:10b6:408:fe::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.19 via Frontend
- Transport; Fri, 9 Sep 2022 16:48:16 +0000
+ 2022 16:48:19 +0000
+Received: from BN8NAM11FT071.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:94:cafe::2f) by BN8PR03CA0023.outlook.office365.com
+ (2603:10b6:408:94::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.12 via Frontend
+ Transport; Fri, 9 Sep 2022 16:48:18 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -35,22 +35,22 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT056.mail.protection.outlook.com (10.13.177.26) with Microsoft SMTP
+ BN8NAM11FT071.mail.protection.outlook.com (10.13.177.92) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5612.13 via Frontend Transport; Fri, 9 Sep 2022 16:48:16 +0000
+ 15.20.5612.13 via Frontend Transport; Fri, 9 Sep 2022 16:48:18 +0000
 Received: from tr4.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Fri, 9 Sep
- 2022 11:48:15 -0500
+ 2022 11:48:17 -0500
 From: Alex Deucher <alexander.deucher@amd.com>
 To: <amd-gfx@lists.freedesktop.org>, <helgaas@kernel.org>
 CC: <regressions@lists.linux.dev>, <airlied@linux.ie>,
 	<linux-pci@vger.kernel.org>, <tseewald@gmail.com>,
 	<kai.heng.feng@canonical.com>, <daniel@ffwll.ch>, <sr@denx.de>,
 	<m.seyfarth@gmail.com>, Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5/7] drm/amdgpu: move nbio ih_doorbell_range() into ih code for vega
-Date: Fri, 9 Sep 2022 12:47:56 -0400
-Message-ID: <20220909164758.5632-6-alexander.deucher@amd.com>
+Subject: [PATCH 7/7] drm/amdgpu: make sure to init common IP before gmc
+Date: Fri, 9 Sep 2022 12:47:58 -0400
+Message-ID: <20220909164758.5632-8-alexander.deucher@amd.com>
 X-Mailer: git-send-email 2.37.2
 In-Reply-To: <20220909164758.5632-1-alexander.deucher@amd.com>
 References: <20220909164758.5632-1-alexander.deucher@amd.com>
@@ -67,86 +67,71 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT056:EE_|SA0PR12MB4365:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a3ab4de-6992-485d-eafc-08da92831811
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT071:EE_|DM6PR12MB4354:EE_
+X-MS-Office365-Filtering-Correlation-Id: af494d37-e4b6-40f8-bcc2-08da92831928
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	TGgxaku6pXHfsyfwktUhdXSuhKcDWzB5qHS5uejLxKZz7O0E9ZnFa65zpj0m1aa7Gjfqhtlj7mViDFxGm8GiApFlDorbgH1oUy9pG6EMUk7XUHn4FjSkmMImmwHkrKvXat+pRRkw7EbttxVCkDndT9cGKDM2zBau7p4myVypZFSkQEL7bKYU61ivmSyJza3gAcx0oQDWpDuwPQ8/0WMbwahpFsNiWDWHPCPxz//ZtTtARBoK6WW6bd1Id3p5GYSuJvuwFi9xZSEPQV9pS3jLLmDsAATue92KoMLcBmb2XGZkeGSXkgceEnfUxcvpVfVZ7P1SZxIRSBZ+/nHIlFVerW62DbTt0yDHdeQ5cdYg5OQaqrfP0rBygXCXbVQoLIDwRYMEym4j7XqUQlA25o7FL75CL7MzcjdmpVfV4x6RuZApgI+M+lhkqMSaYpQRi6og16udH88TW2x3FBB3q3bgVh3gs6ee6t7/oW95S7ydKIbqzeVmBkGUJjouUnnW5ik3OIXoPF3DI8MxkKKynJ1bRi+RbtKXPRlm9RYj+R8YcWM3mhImj+b2A/JW6boG30cmWtFlwT++sy8F+AJFp6ekS9RX+sxK9Ar2ySGAKVEnX7O80n2LNMpGXgdJhH3my9j5Oh8I9zbOWTDHHLiB070T9tr3y+nU0+nQKznDz65fa2KVxC7QMY5J72i5amDpGf8KJ8rHJtsk2a3y1fR/YxYclzK3bvJBMERCH9f3PpZrq9+vPZNMLcsQe043UkDRFqbV1L2fw/KIuyqQkDv1Oi4I+xo7a5n4WuiDjM8ZXEJ/pR8=
+	DRtX2rR9cYSczVLB445qSpsc9r3QwNs2XPAWSTU7Uc6pQZCymkDNj2cHT2xZZSa7Zb4ac1wsrmilp5lQGYVKXAAQBfxBW7JeZLzv1KYVArB8u3rh99dKt1sBy3tC2nGxLZCjhmR/z7MQS9XomhhHaETNiX3hu8UVsc2Um+CgYTgJoozZIfzpJ1ZgdKIElSAuiseUEEJ/zRVCIC9vjwks6+5RtQwmnpUV4pqF5uKX/0PfXsYmBi8tFcI+LMK7YJqhY61l9mjLqehn8DTdRFrEeCdMyxK9g3xVRfRl9QEcR0mqbj+wriBg+E7S5Z03RtIvzlgbwrX57quX9SwgYo5dIH3AlDCZYbzv8x4lvOOHR8Rkl6T/CPu/oS6FHHi0pd4lTddFzx5lhcMZ3BSSqjRZRJiFxDvIyhV9Al/BKACAeddI6xXzVvacgPgEdus9XJX9UQw+uAaORC/FsiOT5GfR/t3pVt8fw1asHlxQqHqdiG6aHhd7oOlXbxanr3uT+N2A4IAq4QN6JHKRkAnqyhrdeB3ZEjH9GDwr83dQRP9aY5qZjpS4AcR+AtZ37G/dHug9VhBkszCPdf3yV9JPSRQL54VkHK3QH0+FolM8FmxT07KPY68q48Ero1HyZkRB5+KPT4+6ifRO1YVod+QOXawlsSVG4IZhc4b+2uPEhPbwmhXptdTtRrrREqplr4L0nBAqnjYYdpTAzOSuYzG7wn3CtDX4Bo7vwboru+v5ye3seY5cpab4ON0GVt6qLilkzwcKfdg8yAgyQjJo4P7K2s3zQMvGDHzI2PsoIFUgYLPs60uMEzAKfPgTf1NZLBwC4x8+
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(136003)(376002)(396003)(39860400002)(346002)(40470700004)(36840700001)(46966006)(7696005)(6666004)(478600001)(41300700001)(83380400001)(2616005)(426003)(47076005)(26005)(2906002)(16526019)(336012)(1076003)(7416002)(5660300002)(8936002)(316002)(40460700003)(82310400005)(110136005)(186003)(40480700001)(54906003)(4326008)(70586007)(70206006)(8676002)(86362001)(82740400003)(356005)(81166007)(36860700001)(36756003)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(396003)(136003)(376002)(346002)(40470700004)(36840700001)(46966006)(16526019)(336012)(1076003)(47076005)(4326008)(5660300002)(6666004)(426003)(8936002)(2616005)(7696005)(7416002)(70206006)(8676002)(2906002)(70586007)(82310400005)(26005)(36756003)(86362001)(41300700001)(83380400001)(40480700001)(478600001)(186003)(356005)(82740400003)(40460700003)(36860700001)(81166007)(110136005)(316002)(54906003)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2022 16:48:16.7763
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2022 16:48:18.6192
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a3ab4de-6992-485d-eafc-08da92831811
+X-MS-Exchange-CrossTenant-Network-Message-Id: af494d37-e4b6-40f8-bcc2-08da92831928
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BN8NAM11FT056.eop-nam11.prod.protection.outlook.com
+	BN8NAM11FT071.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4365
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4354
 
-This mirrors what we do for other asics and this way we are
-sure the ih doorbell range is properly initialized.
-
-There is a comment about the way doorbells on gfx9 work that
-requires that they are initialized for other IPs before GFX
-is initialized.  In this case IH is initialized before GFX,
-so there should be no issue.
+This is not strictly necessary at this point since
+we moved the HDP remap into GMC HW init, but at this
+point it doesn't seem to cause any problems and it may
+be beneficial to initialize the the common stuff before
+GMC.
 
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 ---
- drivers/gpu/drm/amd/amdgpu/soc15.c     | 3 ---
- drivers/gpu/drm/amd/amdgpu/vega10_ih.c | 4 ++++
- drivers/gpu/drm/amd/amdgpu/vega20_ih.c | 4 ++++
- 3 files changed, 8 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
-index 39c3c6d65aef..1dbb2a3ac4c4 100644
---- a/drivers/gpu/drm/amd/amdgpu/soc15.c
-+++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
-@@ -1224,9 +1224,6 @@ static void soc15_doorbell_range_init(struct amdgpu_device *adev)
- 				ring->use_doorbell, ring->doorbell_index,
- 				adev->doorbell_index.sdma_doorbell_range);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+index 899564ea8b4b..4da85ce9e3b1 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
+@@ -2375,8 +2375,16 @@ static int amdgpu_device_ip_init(struct amdgpu_device *adev)
  		}
--
--		adev->nbio.funcs->ih_doorbell_range(adev, adev->irq.ih.use_doorbell,
--						adev->irq.ih.doorbell_index);
- 	}
- }
+ 		adev->ip_blocks[i].status.sw = true;
  
-diff --git a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
-index 03b7066471f9..1e83db0c5438 100644
---- a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
-+++ b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
-@@ -289,6 +289,10 @@ static int vega10_ih_irq_init(struct amdgpu_device *adev)
- 		}
- 	}
+-		/* need to do gmc hw init early so we can allocate gpu mem */
+-		if (adev->ip_blocks[i].version->type == AMD_IP_BLOCK_TYPE_GMC) {
++		if (adev->ip_blocks[i].version->type == AMD_IP_BLOCK_TYPE_COMMON) {
++			/* need to do common hw init early so everything is set up for gmc */
++			r = adev->ip_blocks[i].version->funcs->hw_init((void *)adev);
++			if (r) {
++				DRM_ERROR("hw_init %d failed %d\n", i, r);
++				goto init_failed;
++			}
++			adev->ip_blocks[i].status.hw = true;
++		} else if (adev->ip_blocks[i].version->type == AMD_IP_BLOCK_TYPE_GMC) {
++			/* need to do gmc hw init early so we can allocate gpu mem */
+ 			/* Try to reserve bad pages early */
+ 			if (amdgpu_sriov_vf(adev))
+ 				amdgpu_virt_exchange_data(adev);
+@@ -3062,8 +3070,8 @@ static int amdgpu_device_ip_reinit_early_sriov(struct amdgpu_device *adev)
+ 	int i, r;
  
-+	if (!amdgpu_sriov_vf(adev))
-+		adev->nbio.funcs->ih_doorbell_range(adev, adev->irq.ih.use_doorbell,
-+						    adev->irq.ih.doorbell_index);
-+
- 	pci_set_master(adev->pdev);
- 
- 	/* enable interrupts */
-diff --git a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
-index 2022ffbb8dba..59dfca093155 100644
---- a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
-+++ b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
-@@ -340,6 +340,10 @@ static int vega20_ih_irq_init(struct amdgpu_device *adev)
- 		}
- 	}
- 
-+	if (!amdgpu_sriov_vf(adev))
-+		adev->nbio.funcs->ih_doorbell_range(adev, adev->irq.ih.use_doorbell,
-+						    adev->irq.ih.doorbell_index);
-+
- 	pci_set_master(adev->pdev);
- 
- 	/* enable interrupts */
+ 	static enum amd_ip_block_type ip_order[] = {
+-		AMD_IP_BLOCK_TYPE_GMC,
+ 		AMD_IP_BLOCK_TYPE_COMMON,
++		AMD_IP_BLOCK_TYPE_GMC,
+ 		AMD_IP_BLOCK_TYPE_PSP,
+ 		AMD_IP_BLOCK_TYPE_IH,
+ 	};
 -- 
 2.37.2
 
