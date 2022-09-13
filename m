@@ -1,146 +1,118 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2080.outbound.protection.outlook.com [40.107.94.80])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECD13C16
-	for <regressions@lists.linux.dev>; Tue, 13 Sep 2022 14:48:51 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VYW5dOSV2YJ/bEycTkgehVKuVbH6csf1NfO5pjEbfEPfQujgjC955rWRN8naR7Mk19TVlO4mSoRm2errgQVqqnUzitTcxwTQRPapFBVjP/+7tX0U7mI45dukAa7do1BmDrB86bgq7MUB5FNXxcrwg/zbhRTioCBpZpGObckI6FHkGYfyM9JVxURqADAebsfkVYPXZjSFiIRaRms0B8bZdNLVGGdzNbup1Ct/lGpy7da9bK5P2GCTCEOd+7lTY+zAohXGPeuhBcN7ddnnWqMXot6SV/+kyLxMtRY/4YVO1j2fYz2LX9oK/6piF9br/s6Vywj/1MNhGhxPp6swhoFUqA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LMvJ0cK1RtZ4HhvKKjbtYOgW4IAD+9M5R56NNR8pkoU=;
- b=IPtVNTjA7dMEDLljx5sgPP0MYJngVrm7mgO18oGjQ4f4JWkOaMrYdbMhYfVfHxz5b722czhY5A47jUElc9qkO9NNRXBs9LlviVPIiwdsDIiTNpnxM66hCU2Hvu7AsSiPAQ5pR3+XCfCr1BlV+5wxqVFuuSEHNaXtDkmmaCkwEnDbTAii1AmGV5O8w5hoDdH0CL/sQP8rMfwe8PW4pOUT9L/S3PlRWqBt4wiiV5CK0Dx4s58O3SWC5iSuFBwCiatPnjdMOJbJKDoa/sbybnd2VxgAa6JbmsekGZgBv4SJdwuzcfU+FRQRsccOY4h3zZyMtAMno4VosmwL6kUjzIBr5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LMvJ0cK1RtZ4HhvKKjbtYOgW4IAD+9M5R56NNR8pkoU=;
- b=CV6INuQN8jBAEXQKlU6PgB3pLmto6HGnY4RPbF32fhV+yiMYdcBbkR2QSoFHfn333aDTlVC21stedL5ACZPt1HXE49LaM7D3FXFklPBF5nR0gVj1t7Odf94TKEs7lY6b9tGNMIgtQSf42D+xC5D3vG3u5RchtAAUX3qwR++QMa0=
-Received: from DS7PR05CA0098.namprd05.prod.outlook.com (2603:10b6:8:56::8) by
- DS7PR12MB6288.namprd12.prod.outlook.com (2603:10b6:8:93::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5612.19; Tue, 13 Sep 2022 14:48:49 +0000
-Received: from CY4PEPF0000B8EF.namprd05.prod.outlook.com
- (2603:10b6:8:56:cafe::9c) by DS7PR05CA0098.outlook.office365.com
- (2603:10b6:8:56::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5632.5 via Frontend
- Transport; Tue, 13 Sep 2022 14:48:49 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000B8EF.mail.protection.outlook.com (10.167.241.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.5612.9 via Frontend Transport; Tue, 13 Sep 2022 14:48:48 +0000
-Received: from tr4.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.28; Tue, 13 Sep
- 2022 09:48:47 -0500
-From: Alex Deucher <alexander.deucher@amd.com>
-To: <amd-gfx@lists.freedesktop.org>, <helgaas@kernel.org>
-CC: <regressions@lists.linux.dev>, <airlied@linux.ie>,
-	<linux-pci@vger.kernel.org>, <tseewald@gmail.com>,
-	<kai.heng.feng@canonical.com>, <daniel@ffwll.ch>, <sr@denx.de>,
-	<m.seyfarth@gmail.com>, Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 3/3] drm/amdgpu: make sure to init common IP before gmc
-Date: Tue, 13 Sep 2022 10:48:32 -0400
-Message-ID: <20220913144832.2784012-4-alexander.deucher@amd.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220913144832.2784012-1-alexander.deucher@amd.com>
-References: <20220913144832.2784012-1-alexander.deucher@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1993C10
+	for <regressions@lists.linux.dev>; Tue, 13 Sep 2022 15:06:14 +0000 (UTC)
+Received: from [185.122.133.20] (helo=[172.16.40.43]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oY7UJ-0003Pb-Jo; Tue, 13 Sep 2022 17:06:11 +0200
+Message-ID: <e7c8127a-d561-3a3d-f208-770f3abbee17@leemhuis.info>
+Date: Tue, 13 Sep 2022 16:06:10 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000B8EF:EE_|DS7PR12MB6288:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19cb231a-9c84-4845-cef0-08da9597115f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	/muC4vf1lma2wu4hSTmKqdlCRdiUTwKxkiGbYiNHyDXjvtKRVhidamxH+X8lj5XrJtsP4sheF4RNccDqWdYokb4YbrzHaJdj510SbhaYCMxr4S5oSRSq5te4AFghyz15eoD8ChJtVYczgswmFC2U+oVp1CGpgHRke+hoafcQztb9QduPncV3G7GdbvNqlGVs0gNXYl0DA7SgEPrdbqfIa8Fqn+TzyEw5NPhZP6ZxjVekFeurvkWqCuUsqMy1HwKKDnDxhFjMVP3ROPW84JsnnxFqxzjK1rJAp/t9Q7Z/Ee1dRFSFsspFM/s4+cYyWTO2dD1I5T9IeMdsc0Q1X+cCGh+25+S3q/879IuMTFs6XzRtD1uH+vLYG3zEVQ6fZJd+q0UeM9ahFAYWEpl5Amz2/Y6Q+UqGihaxSZZZ/r1EHNFyA0Z+lAykDsMRDA23+ZMU8WPgqWiXqd3dStUbUYd0p+I8CZ8zXnRE0IGAjoWDqkOuafyIe/06EuQ+KL1TZ9va5AHboLslksIA3N1j6QiYmhOmFgdbTmOVbHUH1nKHKa75hNorDGDo6aB8w3qS//go7CUZskkNCFkD1UWLPREt5SH6MXZ/c90jSE/0Y+cSY11QgcPfJvJ9lu5peOlAcmwuVQ/TOhfS5ELvmxSm4Ulax31HZwKUX+W9JxreyNsD5h0EM12z2lzOndFhNOi7soerGEALek15x9CLSeJfPQ5iKFC979+Wigspj5fSZtWfUckfYAghUJnqhzCa+G/iEuLBwMdeN2YgZCQMZPC1Oa1ZgcwW4LDxmn00k1mZ87hlnzy1o9ESNQ0MsVR06+C4dqVgNazgyTGxRyJrs2eBjMRoHQ==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(396003)(376002)(136003)(451199015)(40470700004)(46966006)(36840700001)(356005)(8936002)(47076005)(70206006)(8676002)(2906002)(2616005)(86362001)(4326008)(478600001)(82310400005)(186003)(36756003)(41300700001)(26005)(16526019)(966005)(40460700003)(7696005)(36860700001)(336012)(81166007)(110136005)(1076003)(40480700001)(82740400003)(54906003)(316002)(7416002)(6666004)(5660300002)(426003)(83380400001)(70586007)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Sep 2022 14:48:48.9345
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19cb231a-9c84-4845-cef0-08da9597115f
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000B8EF.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6288
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Content-Language: en-US, de-DE
+To: Paul Menzel <pmenzel@molgen.mpg.de>,
+ Peter Sutton <peter@foxdogstudios.com>
+Cc: Desmond Cheong Zhi Xi <desmondcheongzx@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev
+References: <CAD+dNTsbuU4w+Y_P7o+VEN7BYCAbZuwZx2+tH+OTzCdcZF82YA@mail.gmail.com>
+ <24e95c8b-dc05-0d00-50bb-58b71c5baf94@molgen.mpg.de>
+ <CAD+dNTuRThoa2OSzQ27tENB29GJ4oD0j3D+P4k42HzopEeTJMw@mail.gmail.com>
+ <CAD+dNTsqBEjzG7BinKtxveH9faJqss89WPufbSsaB5FZRDgOPA@mail.gmail.com>
+ <ef7a1421-06c5-f3b7-8c7f-7fdfd7862c96@molgen.mpg.de>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [Bug] [Deadlock] Kernel thread deadlock in rfcomm socket release
+ when connect interrupted
+In-Reply-To: <ef7a1421-06c5-f3b7-8c7f-7fdfd7862c96@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663081574;23238027;
+X-HE-SMSGID: 1oY7UJ-0003Pb-Jo
 
-Move common IP init before GMC init so that HDP gets
-remapped before GMC init which uses it.
+On 12.09.22 07:23, Paul Menzel wrote:
+> [Cc: +regressions]
+> 
+> #regzbot ^introduced: b7ce436a5d798bc59e71797952566608a4b4626b
 
-This fixes the Unsupported Request error reported through
-AER during driver load. The error happens as a write happens
-to the remap offset before real remapping is done.
+thx for this
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216373
+> #regzbot title: [Bug] [Deadlock] Kernel thread deadlock in rfcomm socket
+> release when connect interrupted
 
-The error was unnoticed before and got visible because of the commit
-referenced below. This doesn't fix anything in the commit below, rather
-fixes the issue in amdgpu exposed by the commit. The reference is only
-to associate this commit with below one so that both go together.
+BTW & JFYI: regzbot will automatically use the mail's subject as title
+by default, so it seems in this case that "#regzbot title:" is superfluous.
 
-Fixes: 8795e182b02d ("PCI/portdrv: Don't disable AER reporting in get_port_device_capability()")
+> Am 11.09.22 um 17:42 schrieb Peter Sutton:
+>> Just following this up. Is there anything I can do to help fix this?
+>> Running a custom kernel is a real pain. I've been running with the
+>> commit revert and upgrading with Arch Linux kernel releases with no
+>> issue.
+> 
+> (Please do not top post.)
+> 
+> Have you tested bluetooth-next already? Regardless, the offending commit
+> present in Linux since 5.15-rc1 should be reverted.
 
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+Well, I'd be a bit more careful here, as reverting commits after so much
+time easily can cause other regressions.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index 899564ea8b4b..4da85ce9e3b1 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -2375,8 +2375,16 @@ static int amdgpu_device_ip_init(struct amdgpu_device *adev)
- 		}
- 		adev->ip_blocks[i].status.sw = true;
- 
--		/* need to do gmc hw init early so we can allocate gpu mem */
--		if (adev->ip_blocks[i].version->type == AMD_IP_BLOCK_TYPE_GMC) {
-+		if (adev->ip_blocks[i].version->type == AMD_IP_BLOCK_TYPE_COMMON) {
-+			/* need to do common hw init early so everything is set up for gmc */
-+			r = adev->ip_blocks[i].version->funcs->hw_init((void *)adev);
-+			if (r) {
-+				DRM_ERROR("hw_init %d failed %d\n", i, r);
-+				goto init_failed;
-+			}
-+			adev->ip_blocks[i].status.hw = true;
-+		} else if (adev->ip_blocks[i].version->type == AMD_IP_BLOCK_TYPE_GMC) {
-+			/* need to do gmc hw init early so we can allocate gpu mem */
- 			/* Try to reserve bad pages early */
- 			if (amdgpu_sriov_vf(adev))
- 				amdgpu_virt_exchange_data(adev);
-@@ -3062,8 +3070,8 @@ static int amdgpu_device_ip_reinit_early_sriov(struct amdgpu_device *adev)
- 	int i, r;
- 
- 	static enum amd_ip_block_type ip_order[] = {
--		AMD_IP_BLOCK_TYPE_GMC,
- 		AMD_IP_BLOCK_TYPE_COMMON,
-+		AMD_IP_BLOCK_TYPE_GMC,
- 		AMD_IP_BLOCK_TYPE_PSP,
- 		AMD_IP_BLOCK_TYPE_IH,
- 	};
--- 
-2.37.2
+>> On Mon, 30 May 2022 at 12:44, Peter Sutton <peter@foxdogstudios.com>
+>> wrote:
+>>>
+>>> Commit b7ce436a5d798bc59e71797952566608a4b4626b is the probable cause.
+>>> I compiled a custom Arch Linux kernel package [1] and the bug was
+>>> present. Reverting the commit fixed the bug. Below is the reply I was
+>>> writing before Matt found the suspect commit and I tested with the
+>>> custom kernel.
 
+Anyway, the main reason why I write this: I'm currently traveling and
+only took a very quick look into this, but a fix for a deadlock for
+RFCOMM sk state change was posted last year already:
+
+https://lore.kernel.org/all/20211004180734.434511-1-desmondcheongzx@gmail.com/
+
+It seems it never went anywhere, unless I'm missing something. Is that
+maybe the same problem or somehow related?
+
+>>>> What hardware is that?
+>>>
+>>> $ dmesg | grep iwlwifi
+>>> Me: Intel(R) Dual Band Wireless AC 8260, REV=0x204
+>>> Matt: Intel(R) Dual Band Wireless AC 8265, REV=0x230
+>>>
+>>> We both get:
+>>>
+>>> $ lsusb | grep Bluetooth
+>>> Me & Matt: Bus 001 Device 006: ID 8087:0a2b Intel Corp. Bluetooth
+>>> wireless interface
+>>>
+>>>> As a lot of patches are also applied to the stable series, do you know,
+>>>> if this is a regression? Does it work with Linux 5.15(.0) or 5.10?
+>>>
+>>> Bug is present on current Arch Linux LTS kernel:
+>>>
+>>> $ uname -a
+>>> Linux taffer 5.15.43-1-lts #1 SMP Wed, 25 May 2022 14:08:34 +0000
+>>> x86_64 GNU/Linux
+>>>
+>>> Matt tested on 5.10.115 and the bug is not present. So I guess it's a
+>>> regression. Anecdotally, we encountered this behaviour 1 yr ago
+>>> (difficult to say exactly), then it went away but came back about 1 or
+>>> 2 months ago. All of this is on Arch Linux, I update about once a
+>>> week.
+>>>
+>>> [1] https://wiki.archlinux.org/title/Kernel/Arch_Build_System
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
