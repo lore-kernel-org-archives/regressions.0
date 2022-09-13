@@ -1,17 +1,13 @@
-Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A427F
-	for <regressions@lists.linux.dev>; Mon, 12 Sep 2022 06:38:36 +0000 (UTC)
-Received: from [192.168.0.2] (ip5f5ae91f.dynamic.kabel-deutschland.de [95.90.233.31])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 0062E61EA1932;
-	Mon, 12 Sep 2022 08:23:28 +0200 (CEST)
-Message-ID: <ef7a1421-06c5-f3b7-8c7f-7fdfd7862c96@molgen.mpg.de>
-Date: Mon, 12 Sep 2022 08:23:28 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091BB23A3
+	for <regressions@lists.linux.dev>; Tue, 13 Sep 2022 04:56:24 +0000 (UTC)
+Received: from [89.101.6.116] (helo=[172.16.15.77]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oXxy4-0007id-P3; Tue, 13 Sep 2022 06:56:16 +0200
+Message-ID: <5ae8b539-9fed-523d-f510-766a47ef9789@leemhuis.info>
+Date: Tue, 13 Sep 2022 05:56:15 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -19,80 +15,41 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [Bug] [Deadlock] Kernel thread deadlock in rfcomm socket release
- when connect interrupted
-Content-Language: en-US
-To: Peter Sutton <peter@foxdogstudios.com>
-References: <CAD+dNTsbuU4w+Y_P7o+VEN7BYCAbZuwZx2+tH+OTzCdcZF82YA@mail.gmail.com>
- <24e95c8b-dc05-0d00-50bb-58b71c5baf94@molgen.mpg.de>
- <CAD+dNTuRThoa2OSzQ27tENB29GJ4oD0j3D+P4k42HzopEeTJMw@mail.gmail.com>
- <CAD+dNTsqBEjzG7BinKtxveH9faJqss89WPufbSsaB5FZRDgOPA@mail.gmail.com>
-Cc: Desmond Cheong Zhi Xi <desmondcheongzx@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- linux-bluetooth@vger.kernel.org, regressions@lists.linux.dev
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <CAD+dNTsqBEjzG7BinKtxveH9faJqss89WPufbSsaB5FZRDgOPA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ Thunderbird/102.2.1
+Subject: Re: [Regression] Bug 216421 - [regression] nl80211: kernel reports:
+ key addition failed #forregzbot
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+References: <dd37d8af-d7e4-daee-1f80-36c53fbac076@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <dd37d8af-d7e4-daee-1f80-36c53fbac076@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663044985;2ef5f66e;
+X-HE-SMSGID: 1oXxy4-0007id-P3
 
-[Cc: +regressions]
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-#regzbot ^introduced: b7ce436a5d798bc59e71797952566608a4b4626b
-#regzbot title: [Bug] [Deadlock] Kernel thread deadlock in rfcomm socket 
-release when connect interrupted
+On 28.08.22 12:22, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developer don't keep an eye on it, I decided to forward it:
+> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=216421
+> 
+>>  XiaoYan Li 2022-08-27 12:40:07 UTC
 
-Dear Pete,
+#regzbot invalid: bug is no longer reproducible for the reporter
+https://bugzilla.kernel.org/show_bug.cgi?id=216421#c4
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-Am 11.09.22 um 17:42 schrieb Peter Sutton:
-> Just following this up. Is there anything I can do to help fix this?
-> Running a custom kernel is a real pain. I've been running with the
-> commit revert and upgrading with Arch Linux kernel releases with no
-> issue.
-
-(Please do not top post.)
-
-Have you tested bluetooth-next already? Regardless, the offending commit 
-present in Linux since 5.15-rc1 should be reverted.
-
-
-Kind regards,
-
-Paul
-
-
-> On Mon, 30 May 2022 at 12:44, Peter Sutton <peter@foxdogstudios.com> wrote:
->>
->> Commit b7ce436a5d798bc59e71797952566608a4b4626b is the probable cause.
->> I compiled a custom Arch Linux kernel package [1] and the bug was
->> present. Reverting the commit fixed the bug. Below is the reply I was
->> writing before Matt found the suspect commit and I tested with the
->> custom kernel.
->>
->>> What hardware is that?
->>
->> $ dmesg | grep iwlwifi
->> Me: Intel(R) Dual Band Wireless AC 8260, REV=0x204
->> Matt: Intel(R) Dual Band Wireless AC 8265, REV=0x230
->>
->> We both get:
->>
->> $ lsusb | grep Bluetooth
->> Me & Matt: Bus 001 Device 006: ID 8087:0a2b Intel Corp. Bluetooth wireless interface
->>
->>> As a lot of patches are also applied to the stable series, do you know,
->>> if this is a regression? Does it work with Linux 5.15(.0) or 5.10?
->>
->> Bug is present on current Arch Linux LTS kernel:
->>
->> $ uname -a
->> Linux taffer 5.15.43-1-lts #1 SMP Wed, 25 May 2022 14:08:34 +0000 x86_64 GNU/Linux
->>
->> Matt tested on 5.10.115 and the bug is not present. So I guess it's a
->> regression. Anecdotally, we encountered this behaviour 1 yr ago
->> (difficult to say exactly), then it went away but came back about 1 or
->> 2 months ago. All of this is on Arch Linux, I update about once a
->> week.
->>
->> [1] https://wiki.archlinux.org/title/Kernel/Arch_Build_System
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
