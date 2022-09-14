@@ -1,129 +1,157 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A8D7F
-	for <regressions@lists.linux.dev>; Wed, 14 Sep 2022 09:03:57 +0000 (UTC)
-Received: by mail-ej1-f46.google.com with SMTP id y3so33215386ejc.1
-        for <regressions@lists.linux.dev>; Wed, 14 Sep 2022 02:03:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82323D7C
+	for <regressions@lists.linux.dev>; Wed, 14 Sep 2022 13:44:10 +0000 (UTC)
+Received: by mail-ot1-f51.google.com with SMTP id l7-20020a056830154700b0065563d564dfso10324179otp.0
+        for <regressions@lists.linux.dev>; Wed, 14 Sep 2022 06:44:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=2xFQv0dOdJKb95Wd52ZeBzrP/3JRmzYEfTP9dP/98H4=;
-        b=RLBIWqZnYnI3EjGAWujHA3PWk6TX04RgKH4IZiRrqrWoyEd1MT4hyALqpZgWuxSJkB
-         6xUSzA6vHNR8C6GDK1YylTSzAzYTHHNvbjX8x/je8Pn71yKcIrV2yqa986db/irSkf1G
-         IE2pmhpzSyr4ZUJYIjIOfraAdaHiX87A/5eFC9QdMCqLSPbLiV4I6wibbftpoPtK/z/s
-         gmdD6o/ema0uRR0VlSA0kR7K0hmioE69hK7F5o5U3f+hE+GbxUa8FIbiBEdlkTTC+RJ6
-         e+EPmlD3uFNWwMqpHboeCofe78a5FJIKoJyT6z2rE6y5CTTjAlS4oT5WrkSU8dUng4Te
-         5Q1A==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=0ejaHtJmK1pTKMJwOo46vUymgHPZdMfpHAV6DsH/TMU=;
+        b=E4BIeg3R3KxB4vs8m/L/Pu88tvq/dHT2vo5h9piTWPK/Kt8GbZjmoI/iM5xnK+GOu4
+         rbPaq2qFsjugwxPgG5nyUI3JJTx3bUdFkTVP0W5W4HN7Fxk2JU9QicKROwZkB+LlpbcJ
+         t3InAO14VvbdCRPb+OEmKY4tg6zAba9jhmRXa6dE225DKMbIjTmpgmr8IuPszWMW89S6
+         LewD9h2LK2dKvRUNv/CpZWoYkYjZdlZerYrt0Uaw/Ul0OXpx8mdjsLQkKdUbqyxYdUCK
+         TOCq55AK7EB4Gy70Ki3zcS/39tQZ1ED22dPDTrQsN4o0wsOaYqai5DNoSzilL6DRl6zc
+         E/ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=2xFQv0dOdJKb95Wd52ZeBzrP/3JRmzYEfTP9dP/98H4=;
-        b=bkXGCoWgxZ1eQZz3odt3axsQWbtitBSDAksCTCLxCj4RhV34+waYGglTJRNCmzndRX
-         fgz08UaCiehQbUQmaGEqDlP1N46inolk6SVstMSwkDq4BZaq3oR3Czo9NHuRUVlZJ5jo
-         bjHXH2InPrD5ilt3PBBSOss3vJ1cSQix0AUYcpc8xQ/RGh9uQK7hLpJA+Bij82KPfam4
-         0Onw1jI/0Jh+ap+OCYZ1DQh7lPE0BTuRonoNltrOb9CHJFv2q/bc+Sqa73ZRPk/prSqE
-         +tQAnKXpq3RgHEHrjRiU/LRXfPzU3jQPk1a7dJLrpB7HwiNLDRCKo1zyT2nsKAvrhM5F
-         LGZw==
-X-Gm-Message-State: ACgBeo1jQK8vPbrjj1okfTiuN1fyXDSO8kTnUJ6MJ9jgAJmyB6h9uxt+
-	55Ookt2Ik2HwAJrLs8VSups=
-X-Google-Smtp-Source: AA6agR5tOiQNQ/Vm7mTy5vmSrBVaYccu0A48CR07xMvtQNpHjOVB9mw/UrXPlA9nHeiFY3BQIqzNCQ==
-X-Received: by 2002:a17:907:6ea0:b0:77e:c2e5:a35b with SMTP id sh32-20020a1709076ea000b0077ec2e5a35bmr8047131ejc.566.1663146235575;
-        Wed, 14 Sep 2022 02:03:55 -0700 (PDT)
-Received: from ?IPV6:2a02:908:1256:79a0:158e:603b:8394:aba3? ([2a02:908:1256:79a0:158e:603b:8394:aba3])
-        by smtp.gmail.com with ESMTPSA id v17-20020aa7d9d1000000b0044f21c69608sm9443663eds.10.2022.09.14.02.03.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Sep 2022 02:03:55 -0700 (PDT)
-Message-ID: <0fdecd48-46ec-c69e-79d5-a2e0db3d5a37@gmail.com>
-Date: Wed, 14 Sep 2022 11:03:54 +0200
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=0ejaHtJmK1pTKMJwOo46vUymgHPZdMfpHAV6DsH/TMU=;
+        b=VVnyN/vRu75WyKZmW1NX7iuQy2sCndeXF8TroF5k8jy7zfHGldo1sNlFWvhzdz3PRJ
+         o6jeF4gHxI4qFekFqryMH4buRrUV0ZEvk0BYzCvalR4+wC5epTkSOXHhzxDcu5KYygL2
+         hJWoTfXvePz3Hd0yaFFlkjxC8OpKs5cjvA8HR0CxSxA0pY5VkYxHNpVDePMZr3OjUOiO
+         9XCQQBnTyeXbek83sXjFbUsgi71Kd/Rcmtzeaj252Wqi1qwNS/lfaEzq2CdXwWERi0jb
+         Fv3KW5/LSreFFCqFGOmBLxTsNW2nNYysfKlciBJk/GAUpTZtPvzjEuGVmUIAGBNHi/qQ
+         cJhw==
+X-Gm-Message-State: ACgBeo12GgP8zl0B9Pa66Ub94/+Sr2tB9n3G1uw3lm85cGVMpVlRQ1b4
+	eUh30LpDgyh9n7VvxLOY3BAaik2j66Db3Sui//w=
+X-Google-Smtp-Source: AA6agR700U7geaGD9CLh6djLAoJ4cdFKbv5Amsm6BAhiWdDeS2O5OHW7eUqdxA5+yT1mSZyeVep86SmMaMDCfurhj5E=
+X-Received: by 2002:a9d:376:0:b0:655:b4bc:fd6e with SMTP id
+ 109-20020a9d0376000000b00655b4bcfd6emr10229584otv.233.1663163049690; Wed, 14
+ Sep 2022 06:44:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH 3/3] drm/amdgpu: make sure to init common IP before gmc
-Content-Language: en-US
-To: Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org,
- helgaas@kernel.org
-Cc: regressions@lists.linux.dev, airlied@linux.ie, linux-pci@vger.kernel.org,
- m.seyfarth@gmail.com, tseewald@gmail.com, kai.heng.feng@canonical.com,
- daniel@ffwll.ch, sr@denx.de
 References: <20220913144832.2784012-1-alexander.deucher@amd.com>
- <20220913144832.2784012-4-alexander.deucher@amd.com>
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
-In-Reply-To: <20220913144832.2784012-4-alexander.deucher@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <20220913144832.2784012-2-alexander.deucher@amd.com> <6dd85297-76d0-07c6-bfd2-5795a339f032@amd.com>
+In-Reply-To: <6dd85297-76d0-07c6-bfd2-5795a339f032@amd.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Wed, 14 Sep 2022 09:43:58 -0400
+Message-ID: <CADnq5_M0mVZ1=wpWZD2c+CUrzqFwJmU7aadThcErUPf+tk0KmA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] drm/amdgpu: move nbio ih_doorbell_range() into ih
+ code for vega
+To: "Lazar, Lijo" <lijo.lazar@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org, 
+	helgaas@kernel.org, regressions@lists.linux.dev, airlied@linux.ie, 
+	linux-pci@vger.kernel.org, m.seyfarth@gmail.com, tseewald@gmail.com, 
+	kai.heng.feng@canonical.com, daniel@ffwll.ch, sr@denx.de
+Content-Type: text/plain; charset="UTF-8"
 
-Am 13.09.22 um 16:48 schrieb Alex Deucher:
-> Move common IP init before GMC init so that HDP gets
-> remapped before GMC init which uses it.
+On Wed, Sep 14, 2022 at 3:05 AM Lazar, Lijo <lijo.lazar@amd.com> wrote:
+>
+>
+>
+> On 9/13/2022 8:18 PM, Alex Deucher wrote:
+> > This mirrors what we do for other asics and this way we are
+> > sure the ih doorbell range is properly initialized.
+> >
+> > There is a comment about the way doorbells on gfx9 work that
+> > requires that they are initialized for other IPs before GFX
+> > is initialized.  In this case IH is initialized before GFX,
+> > so there should be no issue.
+> >
+>
+> Not sure about the association of patch 1 and 2 with AER as in the
+> comment below. I thought the access would go through (PCIE errors may
+> not be reported) and the only side effect is doorbell won't be hit/routed.
+>
+> The comments may not be relevant to patches 1/2, apart from that -
 
-At some point we should improve this so that we have the common and GMC 
-stuff in the hardware init as first thing without those hacks.
+Patches 1 and 2 don't fix the actual issue, but they are prerequisites
+for patch 3.  Without patches 1 and 2, patch 3 won't work on all
+cards.  Seemed prudent to just mark all 3, but I could clarify that 1
+and 2 are just prerequisites.
 
-But anyway Acked-by for now since this is higher level design work.
+Thanks,
 
-Regards,
-Christian.
+Alex
 
 >
-> This fixes the Unsupported Request error reported through
-> AER during driver load. The error happens as a write happens
-> to the remap offset before real remapping is done.
+> Series is:
+>         Reviewed-by: Lijo Lazar <lijo.lazar@amd.com>
 >
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216373
+> Thanks,
+> Lijo
 >
-> The error was unnoticed before and got visible because of the commit
-> referenced below. This doesn't fix anything in the commit below, rather
-> fixes the issue in amdgpu exposed by the commit. The reference is only
-> to associate this commit with below one so that both go together.
->
-> Fixes: 8795e182b02d ("PCI/portdrv: Don't disable AER reporting in get_port_device_capability()")
->
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> ---
->   drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 14 +++++++++++---
->   1 file changed, 11 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> index 899564ea8b4b..4da85ce9e3b1 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-> @@ -2375,8 +2375,16 @@ static int amdgpu_device_ip_init(struct amdgpu_device *adev)
->   		}
->   		adev->ip_blocks[i].status.sw = true;
->   
-> -		/* need to do gmc hw init early so we can allocate gpu mem */
-> -		if (adev->ip_blocks[i].version->type == AMD_IP_BLOCK_TYPE_GMC) {
-> +		if (adev->ip_blocks[i].version->type == AMD_IP_BLOCK_TYPE_COMMON) {
-> +			/* need to do common hw init early so everything is set up for gmc */
-> +			r = adev->ip_blocks[i].version->funcs->hw_init((void *)adev);
-> +			if (r) {
-> +				DRM_ERROR("hw_init %d failed %d\n", i, r);
-> +				goto init_failed;
-> +			}
-> +			adev->ip_blocks[i].status.hw = true;
-> +		} else if (adev->ip_blocks[i].version->type == AMD_IP_BLOCK_TYPE_GMC) {
-> +			/* need to do gmc hw init early so we can allocate gpu mem */
->   			/* Try to reserve bad pages early */
->   			if (amdgpu_sriov_vf(adev))
->   				amdgpu_virt_exchange_data(adev);
-> @@ -3062,8 +3070,8 @@ static int amdgpu_device_ip_reinit_early_sriov(struct amdgpu_device *adev)
->   	int i, r;
->   
->   	static enum amd_ip_block_type ip_order[] = {
-> -		AMD_IP_BLOCK_TYPE_GMC,
->   		AMD_IP_BLOCK_TYPE_COMMON,
-> +		AMD_IP_BLOCK_TYPE_GMC,
->   		AMD_IP_BLOCK_TYPE_PSP,
->   		AMD_IP_BLOCK_TYPE_IH,
->   	};
-
+> > This fixes the Unsupported Request error reported through
+> > AER during driver load. The error happens as a write happens
+> > to the remap offset before real remapping is done.
+> >
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216373
+> >
+> > The error was unnoticed before and got visible because of the commit
+> > referenced below. This doesn't fix anything in the commit below, rather
+> > fixes the issue in amdgpu exposed by the commit. The reference is only
+> > to associate this commit with below one so that both go together.
+> >
+> > Fixes: 8795e182b02d ("PCI/portdrv: Don't disable AER reporting in get_port_device_capability()")
+> >
+> > Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+> > ---
+> >   drivers/gpu/drm/amd/amdgpu/soc15.c     | 3 ---
+> >   drivers/gpu/drm/amd/amdgpu/vega10_ih.c | 4 ++++
+> >   drivers/gpu/drm/amd/amdgpu/vega20_ih.c | 4 ++++
+> >   3 files changed, 8 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
+> > index 5188da87428d..e6a4002fa67d 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/soc15.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
+> > @@ -1224,9 +1224,6 @@ static void soc15_doorbell_range_init(struct amdgpu_device *adev)
+> >                               ring->use_doorbell, ring->doorbell_index,
+> >                               adev->doorbell_index.sdma_doorbell_range);
+> >               }
+> > -
+> > -             adev->nbio.funcs->ih_doorbell_range(adev, adev->irq.ih.use_doorbell,
+> > -                                             adev->irq.ih.doorbell_index);
+> >       }
+> >   }
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+> > index 03b7066471f9..1e83db0c5438 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
+> > @@ -289,6 +289,10 @@ static int vega10_ih_irq_init(struct amdgpu_device *adev)
+> >               }
+> >       }
+> >
+> > +     if (!amdgpu_sriov_vf(adev))
+> > +             adev->nbio.funcs->ih_doorbell_range(adev, adev->irq.ih.use_doorbell,
+> > +                                                 adev->irq.ih.doorbell_index);
+> > +
+> >       pci_set_master(adev->pdev);
+> >
+> >       /* enable interrupts */
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
+> > index 2022ffbb8dba..59dfca093155 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
+> > @@ -340,6 +340,10 @@ static int vega20_ih_irq_init(struct amdgpu_device *adev)
+> >               }
+> >       }
+> >
+> > +     if (!amdgpu_sriov_vf(adev))
+> > +             adev->nbio.funcs->ih_doorbell_range(adev, adev->irq.ih.use_doorbell,
+> > +                                                 adev->irq.ih.doorbell_index);
+> > +
+> >       pci_set_master(adev->pdev);
+> >
+> >       /* enable interrupts */
+> >
