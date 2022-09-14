@@ -1,157 +1,135 @@
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gateway22.websitewelcome.com (gateway22.websitewelcome.com [192.185.46.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82323D7C
-	for <regressions@lists.linux.dev>; Wed, 14 Sep 2022 13:44:10 +0000 (UTC)
-Received: by mail-ot1-f51.google.com with SMTP id l7-20020a056830154700b0065563d564dfso10324179otp.0
-        for <regressions@lists.linux.dev>; Wed, 14 Sep 2022 06:44:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=0ejaHtJmK1pTKMJwOo46vUymgHPZdMfpHAV6DsH/TMU=;
-        b=E4BIeg3R3KxB4vs8m/L/Pu88tvq/dHT2vo5h9piTWPK/Kt8GbZjmoI/iM5xnK+GOu4
-         rbPaq2qFsjugwxPgG5nyUI3JJTx3bUdFkTVP0W5W4HN7Fxk2JU9QicKROwZkB+LlpbcJ
-         t3InAO14VvbdCRPb+OEmKY4tg6zAba9jhmRXa6dE225DKMbIjTmpgmr8IuPszWMW89S6
-         LewD9h2LK2dKvRUNv/CpZWoYkYjZdlZerYrt0Uaw/Ul0OXpx8mdjsLQkKdUbqyxYdUCK
-         TOCq55AK7EB4Gy70Ki3zcS/39tQZ1ED22dPDTrQsN4o0wsOaYqai5DNoSzilL6DRl6zc
-         E/ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=0ejaHtJmK1pTKMJwOo46vUymgHPZdMfpHAV6DsH/TMU=;
-        b=VVnyN/vRu75WyKZmW1NX7iuQy2sCndeXF8TroF5k8jy7zfHGldo1sNlFWvhzdz3PRJ
-         o6jeF4gHxI4qFekFqryMH4buRrUV0ZEvk0BYzCvalR4+wC5epTkSOXHhzxDcu5KYygL2
-         hJWoTfXvePz3Hd0yaFFlkjxC8OpKs5cjvA8HR0CxSxA0pY5VkYxHNpVDePMZr3OjUOiO
-         9XCQQBnTyeXbek83sXjFbUsgi71Kd/Rcmtzeaj252Wqi1qwNS/lfaEzq2CdXwWERi0jb
-         Fv3KW5/LSreFFCqFGOmBLxTsNW2nNYysfKlciBJk/GAUpTZtPvzjEuGVmUIAGBNHi/qQ
-         cJhw==
-X-Gm-Message-State: ACgBeo12GgP8zl0B9Pa66Ub94/+Sr2tB9n3G1uw3lm85cGVMpVlRQ1b4
-	eUh30LpDgyh9n7VvxLOY3BAaik2j66Db3Sui//w=
-X-Google-Smtp-Source: AA6agR700U7geaGD9CLh6djLAoJ4cdFKbv5Amsm6BAhiWdDeS2O5OHW7eUqdxA5+yT1mSZyeVep86SmMaMDCfurhj5E=
-X-Received: by 2002:a9d:376:0:b0:655:b4bc:fd6e with SMTP id
- 109-20020a9d0376000000b00655b4bcfd6emr10229584otv.233.1663163049690; Wed, 14
- Sep 2022 06:44:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0163FC2
+	for <regressions@lists.linux.dev>; Wed, 14 Sep 2022 15:48:18 +0000 (UTC)
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+	by gateway22.websitewelcome.com (Postfix) with ESMTP id BD732E8B
+	for <regressions@lists.linux.dev>; Wed, 14 Sep 2022 09:53:22 -0500 (CDT)
+Received: from 162-215-252-169.unifiedlayer.com ([208.91.199.152])
+	by cmsmtp with SMTP
+	id YTlSob0Y3QLX5YTlSoTDmy; Wed, 14 Sep 2022 09:53:22 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=roeck-us.net; s=default; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=yc4GbKCmfz1uq0X2PP3ip3zWoSdSKRh1Q7yx/y5ppGU=; b=DfXKRlMrMK5BK1o7cjMY16YfUH
+	UYERFMkgkHcsLlcYiyBB0pgBbpw7+ETkPzlTU0inw1+3DOQpzs/6csZLXgp/1i+QvqAg+C3knxy82
+	FovLEaIfNuo+T0xexJhch4shpNs3h3CPMOID5Va3LMayy19x91FSXOGtW5/tmP4mMxSsmOSwvaxAx
+	pnUkhFg+QniGLzq3r6rcYfJqqL38lNW8xzPcf6HFifIB4BklKkHI+ym85Q+v2X/bX9S7WOlE2XQdd
+	bUqiNQ2OCK8ur6FEOLg5N0ptMcm1azVFt+2p2R4gRrQHAg33MNJo7ocu0VMhc41u8d7gqU8SzuEWt
+	SOctVMJQ==;
+Received: from 108-223-40-66.lightspeed.sntcca.sbcglobal.net ([108.223.40.66]:39164 helo=localhost)
+	by bh-25.webhostbox.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <linux@roeck-us.net>)
+	id 1oYTlR-002cQR-FB;
+	Wed, 14 Sep 2022 14:53:21 +0000
+Date: Wed, 14 Sep 2022 07:53:17 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: =?iso-8859-1?B?Q3Pza+Fz?= Bence <csokas.bence@prolan.hu>
+Cc: netdev@vger.kernel.org, Richard Cochran <richardcochran@gmail.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	Andrew Lunn <andrew@lunn.ch>, kernel@pengutronix.de,
+	Marc Kleine-Budde <mkl@pengutronix.de>, regressions@lists.linux.dev
+Subject: [REGRESSION] Re: [PATCH v2] net: fec: Use a spinlock to guard
+ `fep->ptp_clk_on`
+Message-ID: <20220914145317.GA1868385@roeck-us.net>
+References: <20220901140402.64804-1-csokas.bence@prolan.hu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20220913144832.2784012-1-alexander.deucher@amd.com>
- <20220913144832.2784012-2-alexander.deucher@amd.com> <6dd85297-76d0-07c6-bfd2-5795a339f032@amd.com>
-In-Reply-To: <6dd85297-76d0-07c6-bfd2-5795a339f032@amd.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 14 Sep 2022 09:43:58 -0400
-Message-ID: <CADnq5_M0mVZ1=wpWZD2c+CUrzqFwJmU7aadThcErUPf+tk0KmA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] drm/amdgpu: move nbio ih_doorbell_range() into ih
- code for vega
-To: "Lazar, Lijo" <lijo.lazar@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>, amd-gfx@lists.freedesktop.org, 
-	helgaas@kernel.org, regressions@lists.linux.dev, airlied@linux.ie, 
-	linux-pci@vger.kernel.org, m.seyfarth@gmail.com, tseewald@gmail.com, 
-	kai.heng.feng@canonical.com, daniel@ffwll.ch, sr@denx.de
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220901140402.64804-1-csokas.bence@prolan.hu>
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - bh-25.webhostbox.net
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - roeck-us.net
+X-BWhitelist: no
+X-Source-IP: 108.223.40.66
+X-Source-L: No
+X-Exim-ID: 1oYTlR-002cQR-FB
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: 108-223-40-66.lightspeed.sntcca.sbcglobal.net (localhost) [108.223.40.66]:39164
+X-Source-Auth: guenter@roeck-us.net
+X-Email-Count: 19
+X-Source-Cap: cm9lY2s7YWN0aXZzdG07YmgtMjUud2ViaG9zdGJveC5uZXQ=
+X-Local-Domain: yes
 
-On Wed, Sep 14, 2022 at 3:05 AM Lazar, Lijo <lijo.lazar@amd.com> wrote:
->
->
->
-> On 9/13/2022 8:18 PM, Alex Deucher wrote:
-> > This mirrors what we do for other asics and this way we are
-> > sure the ih doorbell range is properly initialized.
-> >
-> > There is a comment about the way doorbells on gfx9 work that
-> > requires that they are initialized for other IPs before GFX
-> > is initialized.  In this case IH is initialized before GFX,
-> > so there should be no issue.
-> >
->
-> Not sure about the association of patch 1 and 2 with AER as in the
-> comment below. I thought the access would go through (PCIE errors may
-> not be reported) and the only side effect is doorbell won't be hit/routed.
->
-> The comments may not be relevant to patches 1/2, apart from that -
+On Thu, Sep 01, 2022 at 04:04:03PM +0200, Csókás Bence wrote:
+> Mutexes cannot be taken in a non-preemptible context,
+> causing a panic in `fec_ptp_save_state()`. Replacing
+> `ptp_clk_mutex` by `tmreg_lock` fixes this.
+> 
+> Fixes: 6a4d7234ae9a ("net: fec: ptp: avoid register access when ipg clock is disabled")
+> Fixes: f79959220fa5 ("fec: Restart PPS after link state change")
+> Reported-by: Marc Kleine-Budde <mkl@pengutronix.de>
+> Link: https://lore.kernel.org/all/20220827160922.642zlcd5foopozru@pengutronix.de/
+> Signed-off-by: Csókás Bence <csokas.bence@prolan.hu>
 
-Patches 1 and 2 don't fix the actual issue, but they are prerequisites
-for patch 3.  Without patches 1 and 2, patch 3 won't work on all
-cards.  Seemed prudent to just mark all 3, but I could clarify that 1
-and 2 are just prerequisites.
+For regzbot:
 
-Thanks,
+This patch results in the following backtrace.
 
-Alex
+[   18.401688] BUG: sleeping function called from invalid context at drivers/clk/imx/clk-pllv3.c:68
+[   18.402277] in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 1, name: swapper/0
+[   18.402531] preempt_count: 1, expected: 0
+[   18.402781] 3 locks held by swapper/0/1:
+[   18.402967]  #0: c423ac8c (&dev->mutex){....}-{3:3}, at: __driver_attach+0x80/0x158
+[   18.404364]  #1: c40dc8e8 (&fep->tmreg_lock){....}-{2:2}, at: fec_enet_clk_enable+0x58/0x250
+[   18.404752]  #2: c1a71af8 (prepare_lock){+.+.}-{3:3}, at: clk_prepare_lock+0xc/0xd4
+[   18.405246] irq event stamp: 129384
+[   18.405403] hardirqs last  enabled at (129383): [<c10850b0>] _raw_spin_unlock_irqrestore+0x50/0x64
+[   18.405667] hardirqs last disabled at (129384): [<c1084e70>] _raw_spin_lock_irqsave+0x64/0x68
+[   18.405915] softirqs last  enabled at (129218): [<c01017bc>] __do_softirq+0x2ac/0x604
+[   18.406255] softirqs last disabled at (129209): [<c012eee4>] __irq_exit_rcu+0x138/0x17c
+[   18.406792] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G                 N 6.0.0-rc5 #1
+[   18.407131] Hardware name: Freescale i.MX7 Dual (Device Tree)
+[   18.407590]  unwind_backtrace from show_stack+0x10/0x14
+[   18.407890]  show_stack from dump_stack_lvl+0x68/0x90
+[   18.408097]  dump_stack_lvl from __might_resched+0x17c/0x284
+[   18.408328]  __might_resched from clk_pllv3_wait_lock+0x4c/0xcc
+[   18.408557]  clk_pllv3_wait_lock from clk_core_prepare+0xc4/0x328
+[   18.408783]  clk_core_prepare from clk_core_prepare+0x50/0x328
+[   18.408986]  clk_core_prepare from clk_core_prepare+0x50/0x328
+[   18.409205]  clk_core_prepare from clk_core_prepare+0x50/0x328
+[   18.409416]  clk_core_prepare from clk_core_prepare+0x50/0x328
+[   18.409631]  clk_core_prepare from clk_core_prepare+0x50/0x328
+[   18.409847]  clk_core_prepare from clk_core_prepare+0x50/0x328
+[   18.410065]  clk_core_prepare from clk_core_prepare+0x50/0x328
+[   18.410284]  clk_core_prepare from clk_core_prepare+0x50/0x328
+[   18.410513]  clk_core_prepare from clk_core_prepare+0x50/0x328
+[   18.410729]  clk_core_prepare from clk_prepare+0x20/0x30
+[   18.410936]  clk_prepare from fec_enet_clk_enable+0x68/0x250
+[   18.411143]  fec_enet_clk_enable from fec_probe+0x32c/0x1430
+[   18.411352]  fec_probe from platform_probe+0x58/0xbc
+[   18.411558]  platform_probe from really_probe+0xc4/0x2f4
+[   18.411772]  really_probe from __driver_probe_device+0x80/0xe4
+[   18.411983]  __driver_probe_device from driver_probe_device+0x2c/0xc4
+[   18.412203]  driver_probe_device from __driver_attach+0x8c/0x158
+[   18.412418]  __driver_attach from bus_for_each_dev+0x74/0xc0
+[   18.412631]  bus_for_each_dev from bus_add_driver+0x154/0x1e8
+[   18.412844]  bus_add_driver from driver_register+0x88/0x11c
+[   18.413055]  driver_register from do_one_initcall+0x68/0x428
+[   18.413271]  do_one_initcall from kernel_init_freeable+0x18c/0x240
+[   18.413502]  kernel_init_freeable from kernel_init+0x14/0x144
+[   18.413721]  kernel_init from ret_from_fork+0x14/0x28
+[   18.414036] Exception stack(0xd0825fb0 to 0xd0825ff8)
+[   18.414523] 5fa0:                                     00000000 00000000 00000000 00000000
+[   18.414792] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   18.415032] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
 
->
-> Series is:
->         Reviewed-by: Lijo Lazar <lijo.lazar@amd.com>
->
-> Thanks,
-> Lijo
->
-> > This fixes the Unsupported Request error reported through
-> > AER during driver load. The error happens as a write happens
-> > to the remap offset before real remapping is done.
-> >
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216373
-> >
-> > The error was unnoticed before and got visible because of the commit
-> > referenced below. This doesn't fix anything in the commit below, rather
-> > fixes the issue in amdgpu exposed by the commit. The reference is only
-> > to associate this commit with below one so that both go together.
-> >
-> > Fixes: 8795e182b02d ("PCI/portdrv: Don't disable AER reporting in get_port_device_capability()")
-> >
-> > Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> > ---
-> >   drivers/gpu/drm/amd/amdgpu/soc15.c     | 3 ---
-> >   drivers/gpu/drm/amd/amdgpu/vega10_ih.c | 4 ++++
-> >   drivers/gpu/drm/amd/amdgpu/vega20_ih.c | 4 ++++
-> >   3 files changed, 8 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/soc15.c b/drivers/gpu/drm/amd/amdgpu/soc15.c
-> > index 5188da87428d..e6a4002fa67d 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/soc15.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/soc15.c
-> > @@ -1224,9 +1224,6 @@ static void soc15_doorbell_range_init(struct amdgpu_device *adev)
-> >                               ring->use_doorbell, ring->doorbell_index,
-> >                               adev->doorbell_index.sdma_doorbell_range);
-> >               }
-> > -
-> > -             adev->nbio.funcs->ih_doorbell_range(adev, adev->irq.ih.use_doorbell,
-> > -                                             adev->irq.ih.doorbell_index);
-> >       }
-> >   }
-> >
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
-> > index 03b7066471f9..1e83db0c5438 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/vega10_ih.c
-> > @@ -289,6 +289,10 @@ static int vega10_ih_irq_init(struct amdgpu_device *adev)
-> >               }
-> >       }
-> >
-> > +     if (!amdgpu_sriov_vf(adev))
-> > +             adev->nbio.funcs->ih_doorbell_range(adev, adev->irq.ih.use_doorbell,
-> > +                                                 adev->irq.ih.doorbell_index);
-> > +
-> >       pci_set_master(adev->pdev);
-> >
-> >       /* enable interrupts */
-> > diff --git a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
-> > index 2022ffbb8dba..59dfca093155 100644
-> > --- a/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
-> > +++ b/drivers/gpu/drm/amd/amdgpu/vega20_ih.c
-> > @@ -340,6 +340,10 @@ static int vega20_ih_irq_init(struct amdgpu_device *adev)
-> >               }
-> >       }
-> >
-> > +     if (!amdgpu_sriov_vf(adev))
-> > +             adev->nbio.funcs->ih_doorbell_range(adev, adev->irq.ih.use_doorbell,
-> > +                                                 adev->irq.ih.doorbell_index);
-> > +
-> >       pci_set_master(adev->pdev);
-> >
-> >       /* enable interrupts */
-> >
+
