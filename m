@@ -1,75 +1,64 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E595715AA
-	for <regressions@lists.linux.dev>; Thu, 15 Sep 2022 02:48:20 +0000 (UTC)
-Received: by mail-pj1-f45.google.com with SMTP id s14-20020a17090a6e4e00b0020057c70943so20978274pjm.1
-        for <regressions@lists.linux.dev>; Wed, 14 Sep 2022 19:48:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=iT4cNzTqaeWtOVogFt+yHUwJZZ1CJKXyTGfZWcy5x20=;
-        b=Nf6GZ1RQgveRdjNll35QbNXYbCGlEIS+Pcqw/xePSQfl54d9zLKQc2BFi4m9YpKzWR
-         mwYp/hAaZoXlDShhbSPcn3ajRjUImTSxp5g4Ly1C4l30nJlw5YnSqgIxc7vfPcPxnhHq
-         4/2KzhinXD7fnpatZAYCcVCcGV7tJ5sy3j7KAidSFxZZrQzJdE2x/+BeQYlHDBFdaR2N
-         nZKaVXB23qN4hiUthnusW6JXAKPQ5Xd+I9eG3Q2gk+PTy67XHH3ex6/qZTVkaQs7iqzC
-         Kn2JX+jjCU9bVN1bT7KUJJGhxMfviHtEvmsaFyHTDAiy9S414L135keAbRsYA9h4xuZg
-         D//Q==
-X-Gm-Message-State: ACrzQf0tCeLeyxK3jWJBKVvs3eBIyA6BAZRJS1mind/DzYD3qCdtgKnV
-	e2nSi2ZrEVPbvlAEfH2usPo=
-X-Google-Smtp-Source: AMsMyM4gngiPyMz2ZPiGEJ3aOuJoiPcAxSmx+pJYNvBI6fIM0Ii9K8bs69+CMbcVtf278yc5nwFljQ==
-X-Received: by 2002:a17:90b:4d07:b0:1ef:521c:f051 with SMTP id mw7-20020a17090b4d0700b001ef521cf051mr8210222pjb.164.1663210100258;
-        Wed, 14 Sep 2022 19:48:20 -0700 (PDT)
-Received: from [192.168.3.219] ([98.51.102.78])
-        by smtp.gmail.com with ESMTPSA id y10-20020a62640a000000b0053e6bda08e0sm10937487pfb.219.2022.09.14.19.48.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Sep 2022 19:48:19 -0700 (PDT)
-Message-ID: <350ec615-ffe8-2e0e-149d-4bf45932a585@acm.org>
-Date: Wed, 14 Sep 2022 19:48:17 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0EC7F
+	for <regressions@lists.linux.dev>; Thu, 15 Sep 2022 07:24:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94BAEC433D7;
+	Thu, 15 Sep 2022 07:24:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1663226694;
+	bh=0aoY9jAPeP1iaMtU9S62GisNAxOIxu+F67GJSsoRT7c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TrexW+Fu/l5QwrL7gje6PAlzhjF87HujHmCO4CCBUFvb3MaDb0Tda752b2bs+Vk0x
+	 +46xVX5Z7mXbVO4ug0uS5T3D6sU33TY49OkmyMS5uUxuFWoWfKlxSuk0RiY5UzEySI
+	 qUjco3SGK0vW60zFJm+SR9NxjZxO5DMx/riHJZDo=
+Date: Thu, 15 Sep 2022 09:25:18 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jason Wittlin-Cohen <jwittlincohen@gmail.com>
+Cc: regressions@lists.linux.dev, stable@vger.kernel.org,
+	linux-scsi@vger.kernel.org, alim.akhtar@samsung.com,
+	bvanassche@acm.org, Kiwoong Kim <kwmad.kim@samsung.com>
+Subject: Re: [REGRESSION] introduced in 5.10.140 causes drives to drop from
+ LSI SAS controller (Bisected to 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269)
+Message-ID: <YyLTXk4RlTcFgCQY@kroah.com>
+References: <CADy0EvLGJmZe-x9wzWSB6+tDKNuLHd8Km3J5MiWWYQRR2ctS3A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [REGRESSION] introduced in 5.10.140 causes drives to drop from
- LSI SAS controller (Bisected to 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269)
-Content-Language: en-US
-To: Jason Wittlin-Cohen <jwittlincohen@gmail.com>, regressions@lists.linux.dev
-Cc: stable@vger.kernel.org, linux-scsi@vger.kernel.org,
- alim.akhtar@samsung.com, Kiwoong Kim <kwmad.kim@samsung.com>
-References: <CADy0EvLGJmZe-x9wzWSB6+tDKNuLHd8Km3J5MiWWYQRR2ctS3A@mail.gmail.com>
-From: Bart Van Assche <bvanassche@acm.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <CADy0EvLGJmZe-x9wzWSB6+tDKNuLHd8Km3J5MiWWYQRR2ctS3A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 9/14/22 19:21, Jason Wittlin-Cohen wrote:
-> 8d5c106fe216bf16080d7070c37adf56a9227e60 is the first bad commit
-> commit 8d5c106fe216bf16080d7070c37adf56a9227e60
-> Author: Kiwoong Kim <kwmad.kim@samsung.com <mailto:kwmad.kim@samsung.com>>
-> Date: Tue Aug 2 10:42:31 2022 +0900
+On Wed, Sep 14, 2022 at 10:21:04PM -0400, Jason Wittlin-Cohen wrote:
+> #regzbot introduced 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269
 > 
-> scsi: ufs: core: Enable link lost interrupt
+> Issue: When running a 5.10.140 kernel compiled from kernel.org source, or a
+> bisected kernel with commit 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269, 6 of
+> the 48 drives attached to my LSI 9207-8e SAS HBA (P20 firmware, IT mode)
+> will drop from the controller shortly after the boot process completes.  At
+> this point, the drives are not visible to the LSI controller, verified
+> using LSI's lsiutil.x86_64 to list all attached devices, nor are the drives
+> enumerated in /dev/disk/by-id. Attempts to access the drives result in I/O
+> errors reported in syslog. At some point thereafter, the drives reappear
+> and are accessible.
 > 
-> commit 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269 upstream.
-> 
-> Link lost is treated as fatal error with commit c99b9b230149 ("scsi: ufs:
-> Treat link loss as fatal error"), but the event isn't registered as
-> interrupt source. Enable it.
+> Running a vanilla 5.10.139 kernel or a bisected kernel with commit
+> 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269 removed, all 48 drives appear
+> correctly, are listed in LSI's lsiutil tool, and appear in /dev/disk/by-id.
+> No I/O errors are reported from any drive and none of the drives drop off
+> the controller as experienced in 5.10.140.  SMART testing shows normal
+> results for all impacted drives.
 
-Hi Jason,
+Does this also have problems in the latest 5.15 and 5.19 release, or is
+it somehow limited to 5.10.y?
 
-Something must have gone wrong during the bisection process. Commit
-8d5c106fe216 ("scsi: ufs: core: Enable link lost interrupt") only 
-affects the UFS driver and hence cannot change the behavior of a SAS 
-controller. How about repeating the bisection process?
+Also, html emails are rejected by the mailing lists, so you might want
+to resend it all in text-only mode so that everyone can see the full
+details.
 
-Thanks,
+thanks,
 
-Bart.
-
+greg k-h
