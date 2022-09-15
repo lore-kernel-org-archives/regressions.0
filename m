@@ -1,86 +1,40 @@
-Received: from gateway22.websitewelcome.com (gateway22.websitewelcome.com [192.185.47.125])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43572F2C
-	for <regressions@lists.linux.dev>; Thu, 15 Sep 2022 08:49:51 +0000 (UTC)
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-	by gateway22.websitewelcome.com (Postfix) with ESMTP id 721FBA04C
-	for <regressions@lists.linux.dev>; Thu, 15 Sep 2022 03:25:16 -0500 (CDT)
-Received: from 162-215-252-169.unifiedlayer.com ([208.91.199.152])
-	by cmsmtp with SMTP
-	id YkBPoPNRi9ULXYkBQoCB7b; Thu, 15 Sep 2022 03:25:16 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=roeck-us.net; s=default; h=In-Reply-To:Content-Type:MIME-Version:References
-	:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding
-	:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=lIkX/rQ4hOCTEnWtvuRwJCKkdN6HwFRfJWeoCMpyD5w=; b=vXCX9yxPmztN0iX30qMbiDnEHL
-	sj/IrH/ZcuhrK0902dzDz3n0nXtcolH6Dri2ykCNIxCPX/PxDxyc5Pjmljyfq2Rqrq2HZTEpkLNpv
-	4AmpGD0vE83j8Z7jwIAhlhk2g7xjAIYbil3IXaHXiK5vBPXPFLI/7qcSKEerlTzn8EM8UY43u7zzz
-	9v7RrKh5cbTbYwg0a3vUVKUDsa7B580iBkKWcS0+STlZ74gKqSJaBdlEguWii1mZ4h51etYOYtlK1
-	4m0NN50smSvxY6R+Rd6UBmbeiDA9GWx690HIR+HoAaeh09OnzXieQAxpcF/bHGq3i9ZiwgR3/tDYS
-	id2mlDaw==;
-Received: from 108-223-40-66.lightspeed.sntcca.sbcglobal.net ([108.223.40.66]:55630 helo=localhost)
-	by bh-25.webhostbox.net with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <linux@roeck-us.net>)
-	id 1oYkBP-003RIK-D3;
-	Thu, 15 Sep 2022 08:25:15 +0000
-Date: Thu, 15 Sep 2022 01:25:11 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Eugene Shalygin <eugene.shalygin@gmail.com>
-Cc: Christopher Klooz <py0xc3@my.mail.de>, linux-hwmon@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: Issue in asus_ec_sensors in Fedora installations and other
- distributions
-Message-ID: <20220915082511.GA1313949@roeck-us.net>
-References: <6026b5e2-a8f5-1058-6112-f191bde333a6@my.mail.de>
- <47e41e8f-f6b2-4bc7-de3f-0c811ee6fdf7@my.mail.de>
- <20220906201035.GA3453623@roeck-us.net>
- <CAB95QAQRT5p5k=0D781aOra9uF3vw-92+T_CePd_7tzJDDH0Yg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DD64A1A
+	for <regressions@lists.linux.dev>; Thu, 15 Sep 2022 17:13:17 +0000 (UTC)
+Received: from [185.122.133.20] (helo=[172.16.40.43]); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oYrvx-0001jN-NH; Thu, 15 Sep 2022 18:41:49 +0200
+Message-ID: <6a566bbe-0f14-e8cc-808e-a3cecd7d6d04@leemhuis.info>
+Date: Thu, 15 Sep 2022 17:41:49 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAB95QAQRT5p5k=0D781aOra9uF3vw-92+T_CePd_7tzJDDH0Yg@mail.gmail.com>
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - bh-25.webhostbox.net
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - roeck-us.net
-X-BWhitelist: no
-X-Source-IP: 108.223.40.66
-X-Source-L: No
-X-Exim-ID: 1oYkBP-003RIK-D3
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: 108-223-40-66.lightspeed.sntcca.sbcglobal.net (localhost) [108.223.40.66]:55630
-X-Source-Auth: guenter@roeck-us.net
-X-Email-Count: 9
-X-Source-Cap: cm9lY2s7YWN0aXZzdG07YmgtMjUud2ViaG9zdGJveC5uZXQ=
-X-Local-Domain: yes
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Content-Language: en-US, de-DE
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CADy0EvL2XuWTjUdWHUHTpW3ZYaLWn0ftR-nUBioUqh-n-N=dXQ@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [REGRESSION] introduced in 5.10.140 causes drives to drop from
+ LSI SAS controller (Bisected to 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269)
+ #forregzbot
+In-Reply-To: <CADy0EvL2XuWTjUdWHUHTpW3ZYaLWn0ftR-nUBioUqh-n-N=dXQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663261998;7f825565;
+X-HE-SMSGID: 1oYrvx-0001jN-NH
 
-On Tue, Sep 06, 2022 at 10:23:08PM +0200, Eugene Shalygin wrote:
-> On Tue, 6 Sept 2022 at 22:10, Guenter Roeck <linux@roeck-us.net> wrote:
-> > Are we getting any closer to fixing this problem ? If not, I'll have to start
-> > reverting patches or even declare the driver as BROKEN.
-> 
-> Out of a few workarounds I've tried, none worked. I rework the module
-> autoloading back to plain dmi data. Sorry, I'm totally busy until this
-> Friday and can't prepare a patch until the end of the week. If that is
-> too late, removing just the module autoloading
-> (MODULE_DEVICE_TABLE(acpi, ...)) will fix the problem.
-> 
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-Let's see if this works:
+On 15.09.22 03:13, Jason Wittlin-Cohen wrote:
+> #regzbot introduced 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269
 
-#regzbot fixed-by: 88700d1396ba
-
-Guenter
+#regzbot dup-of:
+https://lore.kernel.org/r/CADy0EvLGJmZe-x9wzWSB6%2BtDKNuLHd8Km3J5MiWWYQRR2ctS3A@mail.gmail.com/
