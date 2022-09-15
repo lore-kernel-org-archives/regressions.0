@@ -1,38 +1,38 @@
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C992915A5
-	for <regressions@lists.linux.dev>; Thu, 15 Sep 2022 02:13:32 +0000 (UTC)
-Received: by mail-vs1-f54.google.com with SMTP id a129so17860098vsc.0
-        for <regressions@lists.linux.dev>; Wed, 14 Sep 2022 19:13:32 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BE515A5
+	for <regressions@lists.linux.dev>; Thu, 15 Sep 2022 02:21:18 +0000 (UTC)
+Received: by mail-vs1-f50.google.com with SMTP id k2so17837536vsk.8
+        for <regressions@lists.linux.dev>; Wed, 14 Sep 2022 19:21:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date;
-        bh=hAyCYXufSJZdQATIhbDke4oDUt1cImxVehw3lZXyhl8=;
-        b=TR1gFtF9hJbcT//C0oMS+O19DUCE184ivXUulSBSYDXSMHdfQ3n4tyr9Nb8WrgR0wD
-         tNRw9v/2BKoZ716XCbI+Af3XGSaPFCQZT738d2+pUOU+8bDEGmTO088pzM3H3jZL48iq
-         fXQh59Xmw9oAY5Zp/NmTIq2S2DTDUmzpbxW6gIWpe8vb6Jt8tGcO+YzkwG+AroRlh9Nr
-         orIBmoNLNifTWaYcgndlqvirHnycCxyYU9/idSQ+NF2NSl8jCrqAXxmOP4AJ8ciPx8a3
-         1ctZjYDCYHsHKvaJceem6M/KHyZAbhFHkIvwMz7bYvRfhniQwJNvuFhz+nqCO/Scf/Po
-         nwjw==
+        bh=2q9cX8yIZb4UrEup3IUsqzaGvYWjQ+qCp33aokHt/KY=;
+        b=nnvC3fRtVlxwhj+tWBBDoCfcdCAhvvcEbrJQQaMPbK5y+KUycFeZAaBLv5jwNVtnCe
+         fYx2aolTK62+wJmUAk+4eEhgA0VD+eSAcYKaH7sNBB2blq72BIU1jkRhabIWzaaEDtPG
+         o102+/QO2oAai/M1Vq+0DS/h84hykVlbA462IgThUclOkORtsUpaUHdcjWRx+kgPHHcU
+         gkCsgfs18heZss4Rr2NyikQCD5N+OyyVq52JDsIR8qVoQFkgkMwgxVpBBEl1Dq+NDRoN
+         njcmn+1m9QZfZd5GMA6IpIOLcCHGp41Y9QtFDZjpwHQI5JW6pj2nLjFiFGutYOvtDXPl
+         N+bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date;
-        bh=hAyCYXufSJZdQATIhbDke4oDUt1cImxVehw3lZXyhl8=;
-        b=Gz1szbDXizQJNCTqnNtKiaCadq5cx9tDgLTAspseF7c1qJei5qYAhNe96YkWYeyWnv
-         C3CfbqDO9QSYLlACSJwgGILn7AlwW/X1NUo+PlDV+98pySBEZlqkXFe/vNfkpJwqre3w
-         tJ6RKynxkjITuEvQ08hWuksz8Yy87TdKf0ynmsULl9TCfmXIJotK/7OrLfODpvRrC2ij
-         SSUcR1NMTGWEX4oWrNhek4GGR52Lf8rMLuaRhLOICA4egM2W1G9X0/P3IR19rCw+T7mB
-         FwJ9zvHeyj0AzJaLHTgZAslTxQcVZ84P/023Ky6CtZtKQ3Z1XwwthxcoIxVJbPpTlpN0
-         cz3Q==
-X-Gm-Message-State: ACgBeo1RplG0lMqxt0ByhXiZis1/paA7GzzLa2l9plcJSsJYWA/R3NqA
-	qcgaaTfrnWPAZUog2Ky/gmBf4yY6p3i84wLT6uAlWH79wU4=
-X-Google-Smtp-Source: AA6agR7ouboc2zKkWK5ouuprnbOcLc/EMvkaWVaCNrropRJUe1e5riKHWN9PkCUIDjSdDYgdOgvQiiKWa4MqRXpOz5E=
-X-Received: by 2002:a05:6102:367a:b0:398:b4fd:fdd7 with SMTP id
- bg26-20020a056102367a00b00398b4fdfdd7mr3892244vsb.74.1663208010894; Wed, 14
- Sep 2022 19:13:30 -0700 (PDT)
+        bh=2q9cX8yIZb4UrEup3IUsqzaGvYWjQ+qCp33aokHt/KY=;
+        b=4f3V42QBu1BFfPUbmgx44Vppf4ea8OAyQ4PtKI6bRu0rRL+FFApPup1g9cCdYeUa0A
+         5Dy5qfc/dbarWm9moK+bgWiZgDCC6gxlqIPaXNfJaND3euRwv8cQarfntEmpVgBVEh5/
+         3Q5Y0PpfM1waGjjfPBjVAJbhbaEhE6ChZ3dP8xe6gFkRFna0NVYRBJpI3Wt7vMVOXrvO
+         bVUtALuDBcESxP+gqflzbKpb4/0oNmoxq460h58tvq1FyI22w2RvSu+MA/ouwtxsr1vN
+         pg/xunjoUEKhnyxDYzSHD7CdML43hjc0QPqcfEiyQP9WshX47+foABT9C0XCE9WbBkup
+         V2cw==
+X-Gm-Message-State: ACgBeo0Q8iofpmauU7ihaO8i7YNhDq8NALzuQV0pivKhfRtBgbx1mMZc
+	fuX2HEecBB8lwdP+YCLsxOA9/7hzSYOKms7DOUdhBumVdH4=
+X-Google-Smtp-Source: AA6agR5lpDYCqUPnS5ajpt1cfFOVj8oJvjUtg/cCTzxCff/gbgFHYwi9EYyPjt9cj+AWi4y2GWEPTzLPxBTlp8mAFk0=
+X-Received: by 2002:a05:6102:1c2:b0:398:1c8a:ba4e with SMTP id
+ s2-20020a05610201c200b003981c8aba4emr13044394vsq.31.1663208477073; Wed, 14
+ Sep 2022 19:21:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,19 +40,20 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 From: Jason Wittlin-Cohen <jwittlincohen@gmail.com>
-Date: Wed, 14 Sep 2022 22:13:18 -0400
-Message-ID: <CADy0EvL2XuWTjUdWHUHTpW3ZYaLWn0ftR-nUBioUqh-n-N=dXQ@mail.gmail.com>
+Date: Wed, 14 Sep 2022 22:21:04 -0400
+Message-ID: <CADy0EvLGJmZe-x9wzWSB6+tDKNuLHd8Km3J5MiWWYQRR2ctS3A@mail.gmail.com>
 Subject: [REGRESSION] introduced in 5.10.140 causes drives to drop from LSI
  SAS controller (Bisected to 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269)
-To: regressions@lists.linux.dev, Kiwoong Kim <kwmad.kim@samsung.com>, 
-	stable@vger.kernel.org
-Cc: alim.akhtar@samsung.com, bvanassche@acm.org, linux-scsi@vger.kernel.org
-Content-Type: multipart/mixed; boundary="000000000000ad700c05e8adca39"
+To: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	alim.akhtar@samsung.com, bvanassche@acm.org, 
+	Kiwoong Kim <kwmad.kim@samsung.com>
+Content-Type: multipart/mixed; boundary="00000000000076ccbf05e8ade609"
 
---000000000000ad700c05e8adca39
-Content-Type: multipart/alternative; boundary="000000000000ad700905e8adca37"
+--00000000000076ccbf05e8ade609
+Content-Type: multipart/alternative; boundary="00000000000076ccbe05e8ade607"
 
---000000000000ad700905e8adca37
+--00000000000076ccbe05e8ade607
 Content-Type: text/plain; charset="UTF-8"
 
 #regzbot introduced 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269
@@ -68,11 +69,11 @@ errors reported in syslog. At some point thereafter, the drives reappear
 and are accessible.
 
 Running a vanilla 5.10.139 kernel or a bisected kernel with commit
-6d17a112e9a63ff6a5edffd1676b99e0ffbcd269
-removed, all 48 drives appear correctly, are listed in LSI's lsiutil tool,
-and appear in /dev/disk/by-id. No I/O errors are reported from any drive
-and none of the drives drop off the controller as experienced in 5.10.140.
-SMART testing shows normal results for all impacted drives.
+6d17a112e9a63ff6a5edffd1676b99e0ffbcd269 removed, all 48 drives appear
+correctly, are listed in LSI's lsiutil tool, and appear in /dev/disk/by-id.
+No I/O errors are reported from any drive and none of the drives drop off
+the controller as experienced in 5.10.140.  SMART testing shows normal
+results for all impacted drives.
 
 Determination of cause: I first noticed this issue during a system upgrade
 on my Debian Bullseye system which upgraded the kernel from 5.10.136 to
@@ -84,56 +85,58 @@ instructions to bisect the kernel as I knew 5.10.139 was good and 5.10.140
 was bad.
 
 Using git bisect to find the offending commit revealed that the issue is
-caused by commit  scsi: ufs: core: Enable link lost interrupt (
-6d17a112e9a63ff6a5edffd1676b99e0ffbcd269).
+caused by commit  scsi: ufs: core: Enable link lost interrupt
+(6d17a112e9a63ff6a5edffd1676b99e0ffbcd269).
+
+Note: Resending in plain-text mode due to receipt failures (HTML-formatted
+emails treated as spam).  Sorry!
 
 Steps used to bisect kernel:
 
-   1. git bisect start
-   2. # bad: [18ed766f3642fa75262885462d3052ad7c8c87a2] Linux 5.10.140
-   3. git bisect bad cc656e7275577e3527b8fe2fea34fe9bd4a83b3b
-   4. # good: [665ee746071bf02ce8b7b9d729c8beab704393c2] Linux 5.10.139
-   5. git bisect good 722106da9469536bef4015092d6fa19b6ca71cbc
-   6. # good: [c08a104a8bce832f6e7a4e8d9ac091777b9982ea] netfilter:
-   nf_tables: disallow binding to already bound chain
-   7. git bisect good c08a104a8bce832f6e7a4e8d9ac091777b9982ea
-   8. # good: [b2d352ed4d489f9fdfe5caf7d5e62bd2c310f0a8] btrfs: replace:
-   drop assert for suspended replace
-   9. git bisect good b2d352ed4d489f9fdfe5caf7d5e62bd2c310f0a8
-   10. # good: [62af37c5cd7f5fd071086cab645844bf5bcdc0ef] mm/hugetlb: fix
-   hugetlb not supporting softdirty tracking
-   11. git bisect good 62af37c5cd7f5fd071086cab645844bf5bcdc0ef
-   12. # good: [3ddbd0907f6d202e2cfd7d5b5f6ceed9361282fc] blk-mq: fix io
-   hung due to missing commit_rqs
-   13. git bisect good 3ddbd0907f6d202e2cfd7d5b5f6ceed9361282fc
-   14. # bad: [8d5c106fe216bf16080d7070c37adf56a9227e60] scsi: ufs: core:
-   Enable link lost interrupt
-   15. git bisect bad 8d5c106fe216bf16080d7070c37adf56a9227e60
-   16. jason@storage-server:~/linux-build/linux$ git bisect good
-   17. 8d5c106fe216bf16080d7070c37adf56a9227e60 is the first bad commit
-   18. commit 8d5c106fe216bf16080d7070c37adf56a9227e60
-   19. Author: Kiwoong Kim <kwmad.kim@samsung.com>
-   20. Date: Tue Aug 2 10:42:31 2022 +0900
-   21.
-   22. scsi: ufs: core: Enable link lost interrupt
-   23.
-   24. commit 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269 upstream.
-   25.
-   26. Link lost is treated as fatal error with commit c99b9b230149 ("scsi:
-   ufs:
-   27. Treat link loss as fatal error"), but the event isn't registered as
-   28. interrupt source. Enable it.
-   29.
-   30. Link:
-   https://lore.kernel.org/r/1659404551-160958-1-git-send-email-kwmad.kim@samsung.com
-   31. Fixes: c99b9b230149 ("scsi: ufs: Treat link loss as fatal error")
-   32. Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-   33. Signed-off-by: Kiwoong Kim <kwmad.kim@samsung.com>
-   34. Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-   35. Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-   36.
-   37. drivers/scsi/ufs/ufshci.h | 6 +-----
-   38. 1 file changed, 1 insertion(+), 5 deletions(-)
+git bisect start
+# bad: [18ed766f3642fa75262885462d3052ad7c8c87a2] Linux 5.10.140
+git bisect bad cc656e7275577e3527b8fe2fea34fe9bd4a83b3b
+# good: [665ee746071bf02ce8b7b9d729c8beab704393c2] Linux 5.10.139
+git bisect good 722106da9469536bef4015092d6fa19b6ca71cbc
+# good: [c08a104a8bce832f6e7a4e8d9ac091777b9982ea] netfilter: nf_tables:
+disallow binding to already bound chain
+git bisect good c08a104a8bce832f6e7a4e8d9ac091777b9982ea
+# good: [b2d352ed4d489f9fdfe5caf7d5e62bd2c310f0a8] btrfs: replace: drop
+assert for suspended replace
+git bisect good b2d352ed4d489f9fdfe5caf7d5e62bd2c310f0a8
+# good: [62af37c5cd7f5fd071086cab645844bf5bcdc0ef] mm/hugetlb: fix hugetlb
+not supporting softdirty tracking
+git bisect good 62af37c5cd7f5fd071086cab645844bf5bcdc0ef
+# good: [3ddbd0907f6d202e2cfd7d5b5f6ceed9361282fc] blk-mq: fix io hung due
+to missing commit_rqs
+git bisect good 3ddbd0907f6d202e2cfd7d5b5f6ceed9361282fc
+# bad: [8d5c106fe216bf16080d7070c37adf56a9227e60] scsi: ufs: core: Enable
+link lost interrupt
+git bisect bad 8d5c106fe216bf16080d7070c37adf56a9227e60
+jason@storage-server:~/linux-build/linux$ git bisect good
+8d5c106fe216bf16080d7070c37adf56a9227e60 is the first bad commit
+commit 8d5c106fe216bf16080d7070c37adf56a9227e60
+Author: Kiwoong Kim <kwmad.kim@samsung.com>
+Date: Tue Aug 2 10:42:31 2022 +0900
+
+scsi: ufs: core: Enable link lost interrupt
+
+commit 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269 upstream.
+
+Link lost is treated as fatal error with commit c99b9b230149 ("scsi: ufs:
+Treat link loss as fatal error"), but the event isn't registered as
+interrupt source. Enable it.
+
+Link:
+https://lore.kernel.org/r/1659404551-160958-1-git-send-email-kwmad.kim@samsung.com
+Fixes: c99b9b230149 ("scsi: ufs: Treat link loss as fatal error")
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Kiwoong Kim <kwmad.kim@samsung.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+drivers/scsi/ufs/ufshci.h | 6 +-----
+1 file changed, 1 insertion(+), 5 deletions(-)
 
 
 Hardware:
@@ -336,657 +339,289 @@ On an impacted kernel, the drives that drop off will be re-enumerated when
 they reappear with numbering above 1:0:48:0 as drives that are detached and
 reattached do not reuse their prior numbering.
 
---000000000000ad700905e8adca37
+--00000000000076ccbe05e8ade607
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div><pre style=3D"box-sizing:border-box;line-height:1.4;f=
-ont-family:SFMono-Regular,Menlo,Monaco,Consolas,&quot;Liberation Mono&quot;=
-,&quot;Courier New&quot;,Courier,monospace;font-size:12px;color:rgb(0,0,0);=
-margin-top:0px;margin-bottom:0px;padding:12px;overflow:auto">#regzbot intro=
-duced 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269</pre></div><div><font face=
-=3D"arial, sans-serif">Issue: When running a 5.10.140 kernel compiled from =
-<a href=3D"http://kernel.org">kernel.org</a> source, or a bisected kernel w=
-ith commit=C2=A0<span style=3D"color:rgb(0,0,0);font-size:12px">6d17a112e9a=
-63ff6a5edffd1676b99e0ffbcd269, 6 of the 48 drives attached to my LSI 9207-8=
-e SAS HBA (P20 firmware, IT mode) will drop from the controller shortly aft=
-er the boot process completes.=C2=A0 At this point, the drives are not visi=
-ble to the LSI controller, verified using LSI&#39;s lsiutil.x86_64 to list =
-all attached devices, nor are the drives enumerated in /dev/disk/by-id.=C2=
-=A0</span></font><span style=3D"color:rgb(0,0,0);font-family:arial,sans-ser=
-if;font-size:12px">Attempts to access the drives result in I/O errors repor=
-ted in syslog.=C2=A0</span><span style=3D"color:rgb(0,0,0);font-size:12px;f=
-ont-family:arial,sans-serif">At some point thereafter, the drives reappear =
-and are accessible.=C2=A0</span></div><div><span style=3D"color:rgb(0,0,0);=
-font-size:12px"><font face=3D"arial, sans-serif"><br></font></span></div><d=
-iv><font face=3D"arial, sans-serif"><font color=3D"#000000"><span style=3D"=
-font-size:12px">Running a vanilla 5.10.139 kernel or a bisected kernel with=
- commit=C2=A0</span></font><span style=3D"color:rgb(0,0,0);font-size:12px">=
-6d17a112e9a63ff6a5edffd1676b99e0ffbcd269 removed, all 48 drives appear corr=
-ectly, are listed in LSI&#39;s lsiutil tool, and appear in /dev/disk/by-id.=
- No I/O errors are reported from any drive and none of the drives drop off =
-the controller as experienced in 5.10.140.=C2=A0 SMART testing shows normal=
- results for all impacted drives.</span></font></div><div><span style=3D"co=
-lor:rgb(0,0,0);font-family:SFMono-Regular,Menlo,Monaco,Consolas,&quot;Liber=
-ation Mono&quot;,&quot;Courier New&quot;,Courier,monospace;font-size:12px">=
-<br></span></div><div><font face=3D"arial, sans-serif">Determination of cau=
-se: I first noticed this issue during a system upgrade on my Debian Bullsey=
-e system which upgraded the kernel from 5.10.136 to 5.10.140.=C2=A0 Booting=
- off the 5.10.136 Debian kernel resolved the issue.=C2=A0 I first compiled =
-5.10.139 from <a href=3D"http://kernel.org">kernel.org</a> which also did n=
-ot reproduce the issue.=C2=A0 I then followed the=C2=A0<a href=3D"https://w=
-ww.kernel.org/doc/html/latest/admin-guide/bug-bisect.html">https://www.kern=
-el.org/doc/html/latest/admin-guide/bug-bisect.html</a> instructions to bise=
-ct the kernel as I knew 5.10.139 was good and 5.10.140 was bad.</font></div=
-><div><br></div><div>Using git bisect to find the offending commit revealed=
- that the issue is caused by commit=C2=A0
-
-<span style=3D"color:rgb(0,0,0);font-family:Consolas,Menlo,Monaco,&quot;Luc=
-ida Console&quot;,&quot;Liberation Mono&quot;,&quot;DejaVu Sans Mono&quot;,=
-&quot;Bitstream Vera Sans Mono&quot;,monospace,serif;font-size:12px;white-s=
-pace:pre-wrap">scsi: ufs: core: Enable link lost interrupt (</span><span st=
-yle=3D"color:rgb(0,0,0);font-family:SFMono-Regular,Menlo,Monaco,Consolas,&q=
-uot;Liberation Mono&quot;,&quot;Courier New&quot;,Courier,monospace;font-si=
-ze:12px">6d17a112e9a63ff6a5edffd1676b99e0ffbcd269).=C2=A0</span></div><div>=
-<span style=3D"color:rgb(0,0,0);font-family:SFMono-Regular,Menlo,Monaco,Con=
-solas,&quot;Liberation Mono&quot;,&quot;Courier New&quot;,Courier,monospace=
-;font-size:12px"><br></span></div><div><span style=3D"color:rgb(0,0,0);font=
--family:SFMono-Regular,Menlo,Monaco,Consolas,&quot;Liberation Mono&quot;,&q=
-uot;Courier New&quot;,Courier,monospace;font-size:12px">Steps used to bisec=
-t kernel:</span></div><div><ol class=3D"gmail-text" style=3D"box-sizing:bor=
-der-box;padding:0px 10px;font-size:12px;vertical-align:baseline;color:rgb(5=
-1,51,51);background-image:initial;background-position:initial;background-si=
-ze:initial;background-repeat:initial;background-origin:initial;background-c=
-lip:initial;font-family:Consolas,Menlo,Monaco,&quot;Lucida Console&quot;,&q=
-uot;Liberation Mono&quot;,&quot;DejaVu Sans Mono&quot;,&quot;Bitstream Vera=
- Sans Mono&quot;,monospace,serif;margin:0px"><li class=3D"gmail-li1" style=
-=3D"box-sizing:border-box;padding:0px;vertical-align:baseline;list-style-ty=
-pe:decimal;background-image:initial;background-position:initial;background-=
-size:initial;background-repeat:initial;background-origin:initial;background=
--clip:initial;color:rgb(172,172,172)"><div class=3D"gmail-de1" style=3D"box=
--sizing:border-box;padding:0px 8px;vertical-align:top;color:rgb(0,0,0);bord=
-er-left:1px solid rgb(221,221,221);background-image:initial;background-posi=
-tion:initial;background-size:initial;background-repeat:initial;background-o=
-rigin:initial;background-clip:initial;white-space:pre-wrap">git bisect star=
-t
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap"># bad: [18ed766f3642fa75262885462d3052ad7c8c87a2] =
-Linux 5.10.140
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">git bisect bad cc656e7275577e3527b8fe2fea34fe9bd4a=
-83b3b
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap"># good: [665ee746071bf02ce8b7b9d729c8beab704393c2]=
- Linux 5.10.139
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">git bisect good 722106da9469536bef4015092d6fa19b6c=
-a71cbc</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;pad=
-ding:0px;vertical-align:baseline;list-style-type:decimal;background-image:i=
-nitial;background-position:initial;background-size:initial;background-repea=
-t:initial;background-origin:initial;background-clip:initial;color:rgb(172,1=
-72,172)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0p=
-x 8px;vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221=
-,221);background-image:initial;background-position:initial;background-size:=
-initial;background-repeat:initial;background-origin:initial;background-clip=
-:initial;white-space:pre-wrap"># good: [c08a104a8bce832f6e7a4e8d9ac091777b9=
-982ea] netfilter: nf_tables: disallow binding to already bound chain
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">git bisect good c08a104a8bce832f6e7a4e8d9ac091777b=
-9982ea
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap"># good: [b2d352ed4d489f9fdfe5caf7d5e62bd2c310f0a8]=
- btrfs: replace: drop assert for suspended replace
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">git bisect good b2d352ed4d489f9fdfe5caf7d5e62bd2c3=
-10f0a8
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap"># good: [62af37c5cd7f5fd071086cab645844bf5bcdc0ef]=
- mm/hugetlb: fix hugetlb not supporting softdirty tracking
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">git bisect good 62af37c5cd7f5fd071086cab645844bf5b=
-cdc0ef
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap"># good: [3ddbd0907f6d202e2cfd7d5b5f6ceed9361282fc]=
- blk-mq: fix io hung due to missing commit_rqs
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">git bisect good 3ddbd0907f6d202e2cfd7d5b5f6ceed936=
-1282fc
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap"># bad: [8d5c106fe216bf16080d7070c37adf56a9227e60] =
-scsi: ufs: core: Enable link lost interrupt
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">git bisect bad 8d5c106fe216bf16080d7070c37adf56a92=
-27e60
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">jason@storage-server:~/linux-build/linux$ git bise=
-ct good
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">8d5c106fe216bf16080d7070c37adf56a9227e60 is the fi=
-rst bad commit
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">commit 8d5c106fe216bf16080d7070c37adf56a9227e60
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">Author: Kiwoong Kim &lt;<a href=3D"mailto:kwmad.ki=
-m@samsung.com">kwmad.kim@samsung.com</a>&gt;
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">Date:   Tue Aug 2 10:42:31 2022 +0900
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">=C2=A0</div></li><li class=3D"gmail-li1" style=3D"=
-box-sizing:border-box;padding:0px;vertical-align:baseline;list-style-type:d=
-ecimal;background-image:initial;background-position:initial;background-size=
-:initial;background-repeat:initial;background-origin:initial;background-cli=
-p:initial;color:rgb(172,172,172)"><div class=3D"gmail-de1" style=3D"box-siz=
-ing:border-box;padding:0px 8px;vertical-align:top;color:rgb(0,0,0);border-l=
-eft:1px solid rgb(221,221,221);background-image:initial;background-position=
-:initial;background-size:initial;background-repeat:initial;background-origi=
-n:initial;background-clip:initial;white-space:pre-wrap">    scsi: ufs: core=
-: Enable link lost interrupt
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">=C2=A0</div></li><li class=3D"gmail-li1" style=3D"=
-box-sizing:border-box;padding:0px;vertical-align:baseline;list-style-type:d=
-ecimal;background-image:initial;background-position:initial;background-size=
-:initial;background-repeat:initial;background-origin:initial;background-cli=
-p:initial;color:rgb(172,172,172)"><div class=3D"gmail-de1" style=3D"box-siz=
-ing:border-box;padding:0px 8px;vertical-align:top;color:rgb(0,0,0);border-l=
-eft:1px solid rgb(221,221,221);background-image:initial;background-position=
-:initial;background-size:initial;background-repeat:initial;background-origi=
-n:initial;background-clip:initial;white-space:pre-wrap">    commit 6d17a112=
-e9a63ff6a5edffd1676b99e0ffbcd269 upstream.
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">=C2=A0</div></li><li class=3D"gmail-li1" style=3D"=
-box-sizing:border-box;padding:0px;vertical-align:baseline;list-style-type:d=
-ecimal;background-image:initial;background-position:initial;background-size=
-:initial;background-repeat:initial;background-origin:initial;background-cli=
-p:initial;color:rgb(172,172,172)"><div class=3D"gmail-de1" style=3D"box-siz=
-ing:border-box;padding:0px 8px;vertical-align:top;color:rgb(0,0,0);border-l=
-eft:1px solid rgb(221,221,221);background-image:initial;background-position=
-:initial;background-size:initial;background-repeat:initial;background-origi=
-n:initial;background-clip:initial;white-space:pre-wrap">    Link lost is tr=
-eated as fatal error with commit c99b9b230149 (&quot;scsi: ufs:
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">    Treat link loss as fatal error&quot;), but the=
- event isn&#39;t registered as
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">    interrupt source. Enable it.
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">=C2=A0</div></li><li class=3D"gmail-li1" style=3D"=
-box-sizing:border-box;padding:0px;vertical-align:baseline;list-style-type:d=
-ecimal;background-image:initial;background-position:initial;background-size=
-:initial;background-repeat:initial;background-origin:initial;background-cli=
-p:initial;color:rgb(172,172,172)"><div class=3D"gmail-de1" style=3D"box-siz=
-ing:border-box;padding:0px 8px;vertical-align:top;color:rgb(0,0,0);border-l=
-eft:1px solid rgb(221,221,221);background-image:initial;background-position=
-:initial;background-size:initial;background-repeat:initial;background-origi=
-n:initial;background-clip:initial;white-space:pre-wrap">    Link: <a href=
-=3D"https://lore.kernel.org/r/1659404551-160958-1-git-send-email-kwmad.kim@=
-samsung.com">https://lore.kernel.org/r/1659404551-160958-1-git-send-email-k=
-wmad.kim@samsung.com</a>
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">    Fixes: c99b9b230149 (&quot;scsi: ufs: Treat li=
-nk loss as fatal error&quot;)
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">    Reviewed-by: Bart Van Assche &lt;<a href=3D"ma=
-ilto:bvanassche@acm.org">bvanassche@acm.org</a>&gt;
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">    Signed-off-by: Kiwoong Kim &lt;<a href=3D"mail=
-to:kwmad.kim@samsung.com">kwmad.kim@samsung.com</a>&gt;
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">    Signed-off-by: Martin K. Petersen &lt;<a href=
-=3D"mailto:martin.petersen@oracle.com">martin.petersen@oracle.com</a>&gt;
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">    Signed-off-by: Greg Kroah-Hartman &lt;<a href=
-=3D"mailto:gregkh@linuxfoundation.org">gregkh@linuxfoundation.org</a>&gt;
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap">=C2=A0</div></li><li class=3D"gmail-li1" style=3D"=
-box-sizing:border-box;padding:0px;vertical-align:baseline;list-style-type:d=
-ecimal;background-image:initial;background-position:initial;background-size=
-:initial;background-repeat:initial;background-origin:initial;background-cli=
-p:initial;color:rgb(172,172,172)"><div class=3D"gmail-de1" style=3D"box-siz=
-ing:border-box;padding:0px 8px;vertical-align:top;color:rgb(0,0,0);border-l=
-eft:1px solid rgb(221,221,221);background-image:initial;background-position=
-:initial;background-size:initial;background-repeat:initial;background-origi=
-n:initial;background-clip:initial;white-space:pre-wrap"> drivers/scsi/ufs/u=
-fshci.h | 6 +-----
-</div></li><li class=3D"gmail-li1" style=3D"box-sizing:border-box;padding:0=
-px;vertical-align:baseline;list-style-type:decimal;background-image:initial=
-;background-position:initial;background-size:initial;background-repeat:init=
-ial;background-origin:initial;background-clip:initial;color:rgb(172,172,172=
-)"><div class=3D"gmail-de1" style=3D"box-sizing:border-box;padding:0px 8px;=
-vertical-align:top;color:rgb(0,0,0);border-left:1px solid rgb(221,221,221);=
-background-image:initial;background-position:initial;background-size:initia=
-l;background-repeat:initial;background-origin:initial;background-clip:initi=
-al;white-space:pre-wrap"> 1 file changed, 1 insertion(+), 5 deletions(-)</d=
-iv></li></ol><div><font color=3D"#000000" face=3D"Consolas, Menlo, Monaco, =
-Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono=
-, monospace, serif"><span style=3D"font-size:12px;white-space:pre-wrap"><br=
-></span></font></div></div><div>Hardware:</div><div>Dell R730xd</div><div>2=
- x E5-2667v4 CPUs</div><div>8 x 16GB DDR4-2400 Registered ECC DIMMs</div><d=
-iv>SAS Controller with impacted drives - LSI 9207-8e running P20 IT firmwar=
-e=C2=A0</div><div>07:00.0 Serial Attached SCSI controller: Broadcom / LSI S=
-AS2308 PCI-Express Fusion-MPT SAS-2 (rev 05)<br></div><div>The drives are a=
-ttached to two Netapp DS4246 4U 24-bay 3.5&quot; enclosures=C2=A0</div><div=
-><br></div><div>SMART output from one of the impacted drives:</div><div><br=
-></div><div>smartctl 7.2 2020-12-30 r5155 [x86_64-linux-5.10.139-custom6] (=
-local build)<br>Copyright (C) 2002-20, Bruce Allen, Christian Franke, <a hr=
-ef=3D"http://www.smartmontools.org">www.smartmontools.org</a><br><br>=3D=3D=
-=3D START OF INFORMATION SECTION =3D=3D=3D<br>Device Model: =C2=A0 =C2=A0 W=
-DC WD160EMFZ-11AFXA0<br>Serial Number: =C2=A0 =C2=A02BH4US9N<br>LU WWN Devi=
-ce Id: 5 000cca 295d049a8<br>Firmware Version: 81.00A81<br>User Capacity: =
-=C2=A0 =C2=A016,000,900,661,248 bytes [16.0 TB]<br>Sector Sizes: =C2=A0 =C2=
-=A0 512 bytes logical, 4096 bytes physical<br>Rotation Rate: =C2=A0 =C2=A05=
-400 rpm<br>Form Factor: =C2=A0 =C2=A0 =C2=A03.5 inches<br>Device is: =C2=A0=
- =C2=A0 =C2=A0 =C2=A0Not in smartctl database [for details use: -P showall]=
-<br>ATA Version is: =C2=A0 ACS-4 published, ANSI INCITS 529-2018<br>SATA Ve=
-rsion is: =C2=A0SATA 3.3, 6.0 Gb/s (current: 6.0 Gb/s)<br>Local Time is: =
-=C2=A0 =C2=A0Wed Sep 14 21:43:40 2022 EDT<br>SMART support is: Available - =
-device has SMART capability.<br>SMART support is: Enabled<br><br>=3D=3D=3D =
-START OF READ SMART DATA SECTION =3D=3D=3D<br>SMART overall-health self-ass=
-essment test result: PASSED<br><br>General SMART Values:<br>Offline data co=
-llection status: =C2=A0(0x80) Offline data collection activity<br>=C2=A0 =
+<div dir=3D"ltr">#regzbot introduced 6d17a112e9a63ff6a5edffd1676b99e0ffbcd2=
+69<br><br>Issue: When running a 5.10.140 kernel compiled from <a href=3D"ht=
+tp://kernel.org">kernel.org</a> source, or a bisected kernel with commit 6d=
+17a112e9a63ff6a5edffd1676b99e0ffbcd269, 6 of the 48 drives attached to my L=
+SI 9207-8e SAS HBA (P20 firmware, IT mode) will drop from the controller sh=
+ortly after the boot process completes.=C2=A0 At this point, the drives are=
+ not visible to the LSI controller, verified using LSI&#39;s lsiutil.x86_64=
+ to list all attached devices, nor are the drives enumerated in /dev/disk/b=
+y-id. Attempts to access the drives result in I/O errors reported in syslog=
+. At some point thereafter, the drives reappear and are accessible. <br><br=
+>Running a vanilla 5.10.139 kernel or a bisected kernel with commit 6d17a11=
+2e9a63ff6a5edffd1676b99e0ffbcd269 removed, all 48 drives appear correctly, =
+are listed in LSI&#39;s lsiutil tool, and appear in /dev/disk/by-id. No I/O=
+ errors are reported from any drive and none of the drives drop off the con=
+troller as experienced in 5.10.140.=C2=A0 SMART testing shows normal result=
+s for all impacted drives.<br><br>Determination of cause: I first noticed t=
+his issue during a system upgrade on my Debian Bullseye system which upgrad=
+ed the kernel from 5.10.136 to 5.10.140.=C2=A0 Booting off the 5.10.136 Deb=
+ian kernel resolved the issue.=C2=A0 I first compiled 5.10.139 from <a href=
+=3D"http://kernel.org">kernel.org</a> which also did not reproduce the issu=
+e.=C2=A0 I then followed the <a href=3D"https://www.kernel.org/doc/html/lat=
+est/admin-guide/bug-bisect.html">https://www.kernel.org/doc/html/latest/adm=
+in-guide/bug-bisect.html</a> instructions to bisect the kernel as I knew 5.=
+10.139 was good and 5.10.140 was bad.<br><br>Using git bisect to find the o=
+ffending commit revealed that the issue is caused by commit =C2=A0scsi: ufs=
+: core: Enable link lost interrupt (6d17a112e9a63ff6a5edffd1676b99e0ffbcd26=
+9).<div><br></div><div>Note: Resending in plain-text mode due to receipt fa=
+ilures (HTML-formatted emails treated as spam).=C2=A0 Sorry!=C2=A0=C2=A0<br=
+><br>Steps used to bisect kernel:<br><br>git bisect start<br># bad: [18ed76=
+6f3642fa75262885462d3052ad7c8c87a2] Linux 5.10.140<br>git bisect bad cc656e=
+7275577e3527b8fe2fea34fe9bd4a83b3b<br># good: [665ee746071bf02ce8b7b9d729c8=
+beab704393c2] Linux 5.10.139<br>git bisect good 722106da9469536bef4015092d6=
+fa19b6ca71cbc<br># good: [c08a104a8bce832f6e7a4e8d9ac091777b9982ea] netfilt=
+er: nf_tables: disallow binding to already bound chain<br>git bisect good c=
+08a104a8bce832f6e7a4e8d9ac091777b9982ea<br># good: [b2d352ed4d489f9fdfe5caf=
+7d5e62bd2c310f0a8] btrfs: replace: drop assert for suspended replace<br>git=
+ bisect good b2d352ed4d489f9fdfe5caf7d5e62bd2c310f0a8<br># good: [62af37c5c=
+d7f5fd071086cab645844bf5bcdc0ef] mm/hugetlb: fix hugetlb not supporting sof=
+tdirty tracking<br>git bisect good 62af37c5cd7f5fd071086cab645844bf5bcdc0ef=
+<br># good: [3ddbd0907f6d202e2cfd7d5b5f6ceed9361282fc] blk-mq: fix io hung =
+due to missing commit_rqs<br>git bisect good 3ddbd0907f6d202e2cfd7d5b5f6cee=
+d9361282fc<br># bad: [8d5c106fe216bf16080d7070c37adf56a9227e60] scsi: ufs: =
+core: Enable link lost interrupt<br>git bisect bad 8d5c106fe216bf16080d7070=
+c37adf56a9227e60<br>jason@storage-server:~/linux-build/linux$ git bisect go=
+od<br>8d5c106fe216bf16080d7070c37adf56a9227e60 is the first bad commit<br>c=
+ommit 8d5c106fe216bf16080d7070c37adf56a9227e60<br>Author: Kiwoong Kim &lt;<=
+a href=3D"mailto:kwmad.kim@samsung.com">kwmad.kim@samsung.com</a>&gt;<br>Da=
+te: Tue Aug 2 10:42:31 2022 +0900<br>=C2=A0<br>scsi: ufs: core: Enable link=
+ lost interrupt<br>=C2=A0<br>commit 6d17a112e9a63ff6a5edffd1676b99e0ffbcd26=
+9 upstream.<br>=C2=A0<br>Link lost is treated as fatal error with commit c9=
+9b9b230149 (&quot;scsi: ufs:<br>Treat link loss as fatal error&quot;), but =
+the event isn&#39;t registered as<br>interrupt source. Enable it.<br>=C2=A0=
+<br>Link: <a href=3D"https://lore.kernel.org/r/1659404551-160958-1-git-send=
+-email-kwmad.kim@samsung.com">https://lore.kernel.org/r/1659404551-160958-1=
+-git-send-email-kwmad.kim@samsung.com</a><br>Fixes: c99b9b230149 (&quot;scs=
+i: ufs: Treat link loss as fatal error&quot;)<br>Reviewed-by: Bart Van Assc=
+he &lt;<a href=3D"mailto:bvanassche@acm.org">bvanassche@acm.org</a>&gt;<br>=
+Signed-off-by: Kiwoong Kim &lt;<a href=3D"mailto:kwmad.kim@samsung.com">kwm=
+ad.kim@samsung.com</a>&gt;<br>Signed-off-by: Martin K. Petersen &lt;<a href=
+=3D"mailto:martin.petersen@oracle.com">martin.petersen@oracle.com</a>&gt;<b=
+r>Signed-off-by: Greg Kroah-Hartman &lt;<a href=3D"mailto:gregkh@linuxfound=
+ation.org">gregkh@linuxfoundation.org</a>&gt;<br>=C2=A0<br>drivers/scsi/ufs=
+/ufshci.h | 6 +-----<br>1 file changed, 1 insertion(+), 5 deletions(-)<br><=
+br><br>Hardware:<br>Dell R730xd<br>2 x E5-2667v4 CPUs<br>8 x 16GB DDR4-2400=
+ Registered ECC DIMMs<br>SAS Controller with impacted drives - LSI 9207-8e =
+running P20 IT firmware <br>07:00.0 Serial Attached SCSI controller: Broadc=
+om / LSI SAS2308 PCI-Express Fusion-MPT SAS-2 (rev 05)<br>The drives are at=
+tached to two Netapp DS4246 4U 24-bay 3.5&quot; enclosures <br><br>SMART ou=
+tput from one of the impacted drives:<br><br>smartctl 7.2 2020-12-30 r5155 =
+[x86_64-linux-5.10.139-custom6] (local build)<br>Copyright (C) 2002-20, Bru=
+ce Allen, Christian Franke, <a href=3D"http://www.smartmontools.org">www.sm=
+artmontools.org</a><br><br>=3D=3D=3D START OF INFORMATION SECTION =3D=3D=3D=
+<br>Device Model: =C2=A0 =C2=A0 WDC WD160EMFZ-11AFXA0<br>Serial Number: =C2=
+=A0 =C2=A02BH4US9N<br>LU WWN Device Id: 5 000cca 295d049a8<br>Firmware Vers=
+ion: 81.00A81<br>User Capacity: =C2=A0 =C2=A016,000,900,661,248 bytes [16.0=
+ TB]<br>Sector Sizes: =C2=A0 =C2=A0 512 bytes logical, 4096 bytes physical<=
+br>Rotation Rate: =C2=A0 =C2=A05400 rpm<br>Form Factor: =C2=A0 =C2=A0 =C2=
+=A03.5 inches<br>Device is: =C2=A0 =C2=A0 =C2=A0 =C2=A0Not in smartctl data=
+base [for details use: -P showall]<br>ATA Version is: =C2=A0 ACS-4 publishe=
+d, ANSI INCITS 529-2018<br>SATA Version is: =C2=A0SATA 3.3, 6.0 Gb/s (curre=
+nt: 6.0 Gb/s)<br>Local Time is: =C2=A0 =C2=A0Wed Sep 14 21:43:40 2022 EDT<b=
+r>SMART support is: Available - device has SMART capability.<br>SMART suppo=
+rt is: Enabled<br><br>=3D=3D=3D START OF READ SMART DATA SECTION =3D=3D=3D<=
+br>SMART overall-health self-assessment test result: PASSED<br><br>General =
+SMART Values:<br>Offline data collection status: =C2=A0(0x80) Offline data =
+collection activity<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 was never started.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 Auto Offline Data Collection: Enabled.<br>Self-=
+test execution status: =C2=A0 =C2=A0 =C2=A0( =C2=A0 0) The previous self-te=
+st routine completed<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 was never start=
-ed.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 A=
-uto Offline Data Collection: Enabled.<br>Self-test execution status: =C2=A0=
- =C2=A0 =C2=A0( =C2=A0 0) The previous self-test routine completed<br>=C2=
+=A0 =C2=A0 =C2=A0 without error or no self-test has ever<br>=C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 been run.<br>Total tim=
+e to complete Offline<br>data collection: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0( =C2=A0101) seconds.<br>Offline data collection<br=
+>capabilities: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0(0x5b) SMART execute Offline immediate.<br>=C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Auto Offline data collection =
+on/off support.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 Suspend Offline collection upon new<br>=C2=A0 =C2=A0 =C2=A0 =C2=
 =A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 without erro=
-r or no self-test has ever<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 been run.<br>Total time to complete Offline<br>data co=
-llection: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0( =C2=A010=
-1) seconds.<br>Offline data collection<br>capabilities: =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0(0x5b) SMART execute Of=
-fline immediate.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 command.<br>=C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Offline surface scan supporte=
+d.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Self=
+-test supported.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
  =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 Auto Offline data collection on/off support.<br>=C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Suspend Offline collec=
-tion upon new<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 command.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 No Conveyance Self-test supported.<br>=C2=A0 =C2=A0 =C2=A0 =C2=
 =A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 Offline surface scan supported.<br>=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Self-test supported.<br>=C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Selective Self-test supported.<br=
+>SMART capabilities: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0(0x0003) Save=
+s SMART data before entering<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 No Conveyance S=
-elf-test supported.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 Selective Self-test supported.<br>SMART capabilities: =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0(0x0003) Saves SMART data before entering=
-<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 power=
--saving mode.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=A0 =C2=A0 =C2=A0 =C2=A0 power-saving mode.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 Supports SMART auto save timer.<br>Error logging capability: =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0(0x01) Error logging supported.<br>=C2=A0 =C2=A0 =
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 Supports SMART auto save timer.<br>E=
+rror logging capability: =C2=A0 =C2=A0 =C2=A0 =C2=A0(0x01) Error logging su=
+pported.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 General Purpose Loggin=
-g supported.<br>Short self-test routine<br>recommended polling time: =C2=A0=
- =C2=A0 =C2=A0 =C2=A0( =C2=A0 2) minutes.<br>Extended self-test routine<br>=
-recommended polling time: =C2=A0 =C2=A0 =C2=A0 =C2=A0(1767) minutes.<br>SCT=
- capabilities: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0(0x003d) SCT=
- Status supported.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 General Purpose Logging supported.<br>Short self-test routine<br>recomm=
+ended polling time: =C2=A0 =C2=A0 =C2=A0 =C2=A0( =C2=A0 2) minutes.<br>Exte=
+nded self-test routine<br>recommended polling time: =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0(1767) minutes.<br>SCT capabilities: =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0(0x003d) SCT Status supported.<br>=C2=A0 =C2=A0 =C2=A0 =C2=
 =A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 SCT Error Recovery Control supported.<br>=C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 SCT Feature Control supported=
-.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 SCT D=
-ata Table supported.<br><br>SMART Attributes Data Structure revision number=
-: 16<br>Vendor Specific SMART Attributes with Thresholds:<br>ID# ATTRIBUTE_=
-NAME =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0FLAG =C2=A0 =C2=A0 VALUE WORST THRES=
-H TYPE =C2=A0 =C2=A0 =C2=A0UPDATED =C2=A0WHEN_FAILED RAW_VALUE<br>=C2=A0 1 =
-Raw_Read_Error_Rate =C2=A0 =C2=A0 0x000b =C2=A0 100 =C2=A0 100 =C2=A0 001 =
-=C2=A0 =C2=A0Pre-fail =C2=A0Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=
-=A0 0<br>=C2=A0 2 Throughput_Performance =C2=A00x0004 =C2=A0 133 =C2=A0 133=
- =C2=A0 054 =C2=A0 =C2=A0Old_age =C2=A0 Offline =C2=A0 =C2=A0 =C2=A0- =C2=
-=A0 =C2=A0 =C2=A0 108<br>=C2=A0 3 Spin_Up_Time =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A00x0007 =C2=A0 083 =C2=A0 083 =C2=A0 001 =C2=A0 =C2=A0Pre-fail =
-=C2=A0Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 353 (Average 352)<=
-br>=C2=A0 4 Start_Stop_Count =C2=A0 =C2=A0 =C2=A0 =C2=A00x0012 =C2=A0 100 =
-=C2=A0 100 =C2=A0 000 =C2=A0 =C2=A0Old_age =C2=A0 Always =C2=A0 =C2=A0 =C2=
-=A0 - =C2=A0 =C2=A0 =C2=A0 81<br>=C2=A0 5 Reallocated_Sector_Ct =C2=A0 0x00=
-33 =C2=A0 100 =C2=A0 100 =C2=A0 001 =C2=A0 =C2=A0Pre-fail =C2=A0Always =C2=
-=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 0<br>=C2=A0 7 Seek_Error_Rate =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 0x000a =C2=A0 100 =C2=A0 100 =C2=A0 001 =C2=A0 =C2=
-=A0Old_age =C2=A0 Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 0<br>=
-=C2=A0 8 Seek_Time_Performance =C2=A0 0x0004 =C2=A0 140 =C2=A0 140 =C2=A0 0=
-20 =C2=A0 =C2=A0Old_age =C2=A0 Offline =C2=A0 =C2=A0 =C2=A0- =C2=A0 =C2=A0 =
-=C2=A0 15<br>=C2=A0 9 Power_On_Hours =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00x00=
-12 =C2=A0 099 =C2=A0 099 =C2=A0 000 =C2=A0 =C2=A0Old_age =C2=A0 Always =C2=
-=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 12424<br>=C2=A010 Spin_Retry_Count=
- =C2=A0 =C2=A0 =C2=A0 =C2=A00x0012 =C2=A0 100 =C2=A0 100 =C2=A0 001 =C2=A0 =
-=C2=A0Old_age =C2=A0 Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 0<b=
-r>=C2=A012 Power_Cycle_Count =C2=A0 =C2=A0 =C2=A0 0x0032 =C2=A0 099 =C2=A0 =
-099 =C2=A0 000 =C2=A0 =C2=A0Old_age =C2=A0 Always =C2=A0 =C2=A0 =C2=A0 - =
-=C2=A0 =C2=A0 =C2=A0 81<br>=C2=A022 Unknown_Attribute =C2=A0 =C2=A0 =C2=A0 =
-0x0023 =C2=A0 100 =C2=A0 100 =C2=A0 025 =C2=A0 =C2=A0Pre-fail =C2=A0Always =
-=C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 100<br>192 Power-Off_Retract_Co=
-unt 0x0032 =C2=A0 100 =C2=A0 100 =C2=A0 000 =C2=A0 =C2=A0Old_age =C2=A0 Alw=
-ays =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 610<br>193 Load_Cycle_Count=
- =C2=A0 =C2=A0 =C2=A0 =C2=A00x0012 =C2=A0 100 =C2=A0 100 =C2=A0 000 =C2=A0 =
-=C2=A0Old_age =C2=A0 Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 610=
-<br>194 Temperature_Celsius =C2=A0 =C2=A0 0x0002 =C2=A0 050 =C2=A0 050 =C2=
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 SCT Error Recovery Control suppor=
+ted.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 S=
+CT Feature Control supported.<br>=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 SCT Data Table supported.<br><br>SMART Attributes =
+Data Structure revision number: 16<br>Vendor Specific SMART Attributes with=
+ Thresholds:<br>ID# ATTRIBUTE_NAME =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0FLAG =
+=C2=A0 =C2=A0 VALUE WORST THRESH TYPE =C2=A0 =C2=A0 =C2=A0UPDATED =C2=A0WHE=
+N_FAILED RAW_VALUE<br>=C2=A0 1 Raw_Read_Error_Rate =C2=A0 =C2=A0 0x000b =C2=
+=A0 100 =C2=A0 100 =C2=A0 001 =C2=A0 =C2=A0Pre-fail =C2=A0Always =C2=A0 =C2=
+=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 0<br>=C2=A0 2 Throughput_Performance =C2=
+=A00x0004 =C2=A0 133 =C2=A0 133 =C2=A0 054 =C2=A0 =C2=A0Old_age =C2=A0 Offl=
+ine =C2=A0 =C2=A0 =C2=A0- =C2=A0 =C2=A0 =C2=A0 108<br>=C2=A0 3 Spin_Up_Time=
+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00x0007 =C2=A0 083 =C2=A0 083 =C2=
+=A0 001 =C2=A0 =C2=A0Pre-fail =C2=A0Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =
+=C2=A0 =C2=A0 353 (Average 352)<br>=C2=A0 4 Start_Stop_Count =C2=A0 =C2=A0 =
+=C2=A0 =C2=A00x0012 =C2=A0 100 =C2=A0 100 =C2=A0 000 =C2=A0 =C2=A0Old_age =
+=C2=A0 Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 81<br>=C2=A0 5 Re=
+allocated_Sector_Ct =C2=A0 0x0033 =C2=A0 100 =C2=A0 100 =C2=A0 001 =C2=A0 =
+=C2=A0Pre-fail =C2=A0Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 0<b=
+r>=C2=A0 7 Seek_Error_Rate =C2=A0 =C2=A0 =C2=A0 =C2=A0 0x000a =C2=A0 100 =
+=C2=A0 100 =C2=A0 001 =C2=A0 =C2=A0Old_age =C2=A0 Always =C2=A0 =C2=A0 =C2=
+=A0 - =C2=A0 =C2=A0 =C2=A0 0<br>=C2=A0 8 Seek_Time_Performance =C2=A0 0x000=
+4 =C2=A0 140 =C2=A0 140 =C2=A0 020 =C2=A0 =C2=A0Old_age =C2=A0 Offline =C2=
+=A0 =C2=A0 =C2=A0- =C2=A0 =C2=A0 =C2=A0 15<br>=C2=A0 9 Power_On_Hours =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00x0012 =C2=A0 099 =C2=A0 099 =C2=A0 000 =C2=
+=A0 =C2=A0Old_age =C2=A0 Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0=
+ 12424<br>=C2=A010 Spin_Retry_Count =C2=A0 =C2=A0 =C2=A0 =C2=A00x0012 =C2=
+=A0 100 =C2=A0 100 =C2=A0 001 =C2=A0 =C2=A0Old_age =C2=A0 Always =C2=A0 =C2=
+=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 0<br>=C2=A012 Power_Cycle_Count =C2=A0 =
+=C2=A0 =C2=A0 0x0032 =C2=A0 099 =C2=A0 099 =C2=A0 000 =C2=A0 =C2=A0Old_age =
+=C2=A0 Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 81<br>=C2=A022 Un=
+known_Attribute =C2=A0 =C2=A0 =C2=A0 0x0023 =C2=A0 100 =C2=A0 100 =C2=A0 02=
+5 =C2=A0 =C2=A0Pre-fail =C2=A0Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =
+=C2=A0 100<br>192 Power-Off_Retract_Count 0x0032 =C2=A0 100 =C2=A0 100 =C2=
 =A0 000 =C2=A0 =C2=A0Old_age =C2=A0 Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =
-=C2=A0 =C2=A0 33 (Min/Max 20/47)<br>196 Reallocated_Event_Count 0x0032 =C2=
-=A0 100 =C2=A0 100 =C2=A0 000 =C2=A0 =C2=A0Old_age =C2=A0 Always =C2=A0 =C2=
-=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 0<br>197 Current_Pending_Sector =C2=A00x0=
-022 =C2=A0 100 =C2=A0 100 =C2=A0 000 =C2=A0 =C2=A0Old_age =C2=A0 Always =C2=
-=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 0<br>198 Offline_Uncorrectable =C2=
-=A0 0x0008 =C2=A0 100 =C2=A0 100 =C2=A0 000 =C2=A0 =C2=A0Old_age =C2=A0 Off=
-line =C2=A0 =C2=A0 =C2=A0- =C2=A0 =C2=A0 =C2=A0 0<br>199 UDMA_CRC_Error_Cou=
-nt =C2=A0 =C2=A00x000a =C2=A0 100 =C2=A0 100 =C2=A0 000 =C2=A0 =C2=A0Old_ag=
-e =C2=A0 Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 0<br><br>SMART =
-Error Log Version: 1<br>No Errors Logged<br><br>SMART Self-test log structu=
-re revision number 1<br>Num =C2=A0Test_Description =C2=A0 =C2=A0Status =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0Remaining =C2=A0=
-LifeTime(hours) =C2=A0LBA_of_first_error<br># 1 =C2=A0Extended offline =C2=
-=A0 =C2=A0Completed without error =C2=A0 =C2=A0 =C2=A0 00% =C2=A0 =C2=A0 =
-=C2=A0 =C2=A024 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -<br># 2 =C2=A0Short offline =
-=C2=A0 =C2=A0 =C2=A0 Completed without error =C2=A0 =C2=A0 =C2=A0 00% =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 -<br><br>SMART Selec=
-tive self-test log data structure revision number 1<br>=C2=A0SPAN =C2=A0MIN=
-_LBA =C2=A0MAX_LBA =C2=A0CURRENT_TEST_STATUS<br>=C2=A0 =C2=A0 1 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A00 =C2=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0Not_testing<br>=C2=A0=
- =C2=A0 2 =C2=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0N=
-ot_testing<br>=C2=A0 =C2=A0 3 =C2=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A00 =C2=A0Not_testing<br>=C2=A0 =C2=A0 4 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A00 =C2=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0Not_testing<br>=C2=A0 =C2=A0 5 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0Not_testing=
-<br>Selective self-test flags (0x0):<br>=C2=A0 After scanning selected span=
-s, do NOT read-scan remainder of disk.<br>If Selective self-test is pending=
- on power-up, resume after 0 minute delay.<br></div><div><br></div><div>LSI=
- utility output from good kernel:</div><div><br></div><div>LSI Logic MPT Co=
-nfiguration Utility, Version 1.71, Sep 18, 2013<br><br>1 MPT Port found<br>=
-<br>=C2=A0 =C2=A0 =C2=A0Port Name =C2=A0 =C2=A0 =C2=A0 =C2=A0 Chip Vendor/T=
-ype/Rev =C2=A0 =C2=A0MPT Rev =C2=A0Firmware Rev =C2=A0IOC<br>=C2=A01. =C2=
-=A0ioc0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0LSI Logic SAS2308 D=
-1 =C2=A0 =C2=A0 =C2=A0200 =C2=A0 =C2=A0 =C2=A014000700 =C2=A0 =C2=A0 0<br><=
-br></div><div>ioc0 is SCSI host 1<br><br>=C2=A0B___T___L =C2=A0Type =C2=A0 =
-=C2=A0 =C2=A0 Operating System Device Name<br>=C2=A00 =C2=A0 0 =C2=A0 0 =C2=
-=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdd =C2=A0 =C2=A0[1:0:0:0]<br>=C2=A00 =C2=
-=A0 1 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sde =C2=A0 =C2=A0[1:0:1=
-:0]<br>=C2=A00 =C2=A0 2 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdf =
-=C2=A0 =C2=A0[1:0:2:0]<br>=C2=A00 =C2=A0 3 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=
-=A0 =C2=A0 /dev/sdg =C2=A0 =C2=A0[1:0:3:0]<br>=C2=A00 =C2=A0 4 =C2=A0 0 =C2=
-=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdh =C2=A0 =C2=A0[1:0:4:0]<br>=C2=A00 =C2=
-=A0 5 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdi =C2=A0 =C2=A0[1:0:5=
-:0]<br>=C2=A00 =C2=A0 6 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdj =
-=C2=A0 =C2=A0[1:0:6:0]<br>=C2=A00 =C2=A0 7 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=
-=A0 =C2=A0 /dev/sdk =C2=A0 =C2=A0[1:0:7:0]<br>=C2=A00 =C2=A0 8 =C2=A0 0 =C2=
-=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdl =C2=A0 =C2=A0[1:0:8:0]<br>=C2=A00 =C2=
-=A0 9 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdm =C2=A0 =C2=A0[1:0:9=
-:0]<br>=C2=A00 =C2=A010 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdn =
-=C2=A0 =C2=A0[1:0:10:0]<br>=C2=A00 =C2=A011 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=
-=A0 =C2=A0 /dev/sdo =C2=A0 =C2=A0[1:0:11:0]<br>=C2=A00 =C2=A012 =C2=A0 0 =
-=C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdp =C2=A0 =C2=A0[1:0:12:0]<br>=C2=A00=
- =C2=A013 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdq =C2=A0 =C2=A0[1=
-:0:13:0]<br>=C2=A00 =C2=A014 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/=
-sdr =C2=A0 =C2=A0[1:0:14:0]<br>=C2=A00 =C2=A015 =C2=A0 0 =C2=A0Disk =C2=A0 =
-=C2=A0 =C2=A0 /dev/sds =C2=A0 =C2=A0[1:0:15:0]<br>=C2=A00 =C2=A016 =C2=A0 0=
- =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdt =C2=A0 =C2=A0[1:0:16:0]<br>=C2=A0=
-0 =C2=A017 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdu =C2=A0 =C2=A0[=
-1:0:17:0]<br>=C2=A00 =C2=A018 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev=
-/sdv =C2=A0 =C2=A0[1:0:18:0]<br>=C2=A00 =C2=A019 =C2=A0 0 =C2=A0Disk =C2=A0=
- =C2=A0 =C2=A0 /dev/sdw =C2=A0 =C2=A0[1:0:19:0]<br>=C2=A00 =C2=A020 =C2=A0 =
-0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdx =C2=A0 =C2=A0[1:0:20:0]<br>=C2=
-=A00 =C2=A021 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdy =C2=A0 =C2=
-=A0[1:0:21:0]<br>=C2=A00 =C2=A022 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 =
-/dev/sdz =C2=A0 =C2=A0[1:0:22:0]<br>=C2=A00 =C2=A023 =C2=A0 0 =C2=A0Disk =
-=C2=A0 =C2=A0 =C2=A0 /dev/sdaa =C2=A0 [1:0:23:0]<br>=C2=A00 =C2=A024 =C2=A0=
- 0 =C2=A0EnclServ<br>=C2=A00 =C2=A025 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=
-=A0 /dev/sdab =C2=A0 [1:0:25:0]<br>=C2=A00 =C2=A026 =C2=A0 0 =C2=A0Disk =C2=
-=A0 =C2=A0 =C2=A0 /dev/sdac =C2=A0 [1:0:26:0]<br>=C2=A00 =C2=A027 =C2=A0 0 =
-=C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdad =C2=A0 [1:0:27:0]<br>=C2=A00 =C2=
-=A028 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdae =C2=A0 [1:0:28:0]<=
-br>=C2=A00 =C2=A029 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdaf =C2=
-=A0 [1:0:29:0]<br>=C2=A00 =C2=A030 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0=
- /dev/sdag =C2=A0 [1:0:30:0]<br>=C2=A00 =C2=A031 =C2=A0 0 =C2=A0Disk =C2=A0=
- =C2=A0 =C2=A0 /dev/sdah =C2=A0 [1:0:31:0]<br>=C2=A00 =C2=A032 =C2=A0 0 =C2=
-=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdai =C2=A0 [1:0:32:0]<br>=C2=A00 =C2=A03=
-3 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdaj =C2=A0 [1:0:33:0]<br>=
-=C2=A00 =C2=A034 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdak =C2=A0 =
-[1:0:34:0]<br>=C2=A00 =C2=A035 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /de=
-v/sdal =C2=A0 [1:0:35:0]<br>=C2=A00 =C2=A036 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=
-=A0 =C2=A0 /dev/sdam =C2=A0 [1:0:36:0]<br>=C2=A00 =C2=A037 =C2=A0 0 =C2=A0D=
-isk =C2=A0 =C2=A0 =C2=A0 /dev/sdan =C2=A0 [1:0:37:0]<br>=C2=A00 =C2=A038 =
-=C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdao =C2=A0 [1:0:38:0]<br>=C2=
-=A00 =C2=A039 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdap =C2=A0 [1:=
-0:39:0]<br>=C2=A00 =C2=A040 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/s=
-daq =C2=A0 [1:0:40:0]<br>=C2=A00 =C2=A041 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0=
- =C2=A0 /dev/sdar =C2=A0 [1:0:41:0]<br>=C2=A00 =C2=A042 =C2=A0 0 =C2=A0Disk=
- =C2=A0 =C2=A0 =C2=A0 /dev/sdas =C2=A0 [1:0:42:0]<br>=C2=A00 =C2=A043 =C2=
-=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdat =C2=A0 [1:0:43:0]<br>=C2=A0=
-0 =C2=A044 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdau =C2=A0 [1:0:4=
-4:0]<br>=C2=A00 =C2=A045 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdav=
- =C2=A0 [1:0:45:0]<br>=C2=A00 =C2=A046 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =
-=C2=A0 /dev/sdaw =C2=A0 [1:0:46:0]<br>=C2=A00 =C2=A047 =C2=A0 0 =C2=A0Disk =
-=C2=A0 =C2=A0 =C2=A0 /dev/sdax =C2=A0 [1:0:47:0]<br>=C2=A00 =C2=A048 =C2=A0=
- 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sday =C2=A0 [1:0:48:0]<br>=C2=A00 =
-=C2=A049 =C2=A0 0 =C2=A0EnclServ<br></div><div><br></div><div>On an impacte=
-d kernel, the drives that drop off will be re-enumerated when they reappear=
- with numbering above 1:0:48:0 as drives that are detached and reattached=
-=C2=A0do not reuse their prior numbering.=C2=A0</div><div><br></div></div>
+=C2=A0 =C2=A0 610<br>193 Load_Cycle_Count =C2=A0 =C2=A0 =C2=A0 =C2=A00x0012=
+ =C2=A0 100 =C2=A0 100 =C2=A0 000 =C2=A0 =C2=A0Old_age =C2=A0 Always =C2=A0=
+ =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 610<br>194 Temperature_Celsius =C2=A0=
+ =C2=A0 0x0002 =C2=A0 050 =C2=A0 050 =C2=A0 000 =C2=A0 =C2=A0Old_age =C2=A0=
+ Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 33 (Min/Max 20/47)<br>1=
+96 Reallocated_Event_Count 0x0032 =C2=A0 100 =C2=A0 100 =C2=A0 000 =C2=A0 =
+=C2=A0Old_age =C2=A0 Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=A0 0<b=
+r>197 Current_Pending_Sector =C2=A00x0022 =C2=A0 100 =C2=A0 100 =C2=A0 000 =
+=C2=A0 =C2=A0Old_age =C2=A0 Always =C2=A0 =C2=A0 =C2=A0 - =C2=A0 =C2=A0 =C2=
+=A0 0<br>198 Offline_Uncorrectable =C2=A0 0x0008 =C2=A0 100 =C2=A0 100 =C2=
+=A0 000 =C2=A0 =C2=A0Old_age =C2=A0 Offline =C2=A0 =C2=A0 =C2=A0- =C2=A0 =
+=C2=A0 =C2=A0 0<br>199 UDMA_CRC_Error_Count =C2=A0 =C2=A00x000a =C2=A0 100 =
+=C2=A0 100 =C2=A0 000 =C2=A0 =C2=A0Old_age =C2=A0 Always =C2=A0 =C2=A0 =C2=
+=A0 - =C2=A0 =C2=A0 =C2=A0 0<br><br>SMART Error Log Version: 1<br>No Errors=
+ Logged<br><br>SMART Self-test log structure revision number 1<br>Num =C2=
+=A0Test_Description =C2=A0 =C2=A0Status =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A0 =C2=A0Remaining =C2=A0LifeTime(hours) =C2=A0LBA_of_fir=
+st_error<br># 1 =C2=A0Extended offline =C2=A0 =C2=A0Completed without error=
+ =C2=A0 =C2=A0 =C2=A0 00% =C2=A0 =C2=A0 =C2=A0 =C2=A024 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 -<br># 2 =C2=A0Short offline =C2=A0 =C2=A0 =C2=A0 Completed with=
+out error =C2=A0 =C2=A0 =C2=A0 00% =C2=A0 =C2=A0 =C2=A0 =C2=A0 0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 -<br><br>SMART Selective self-test log data structure rev=
+ision number 1<br>=C2=A0SPAN =C2=A0MIN_LBA =C2=A0MAX_LBA =C2=A0CURRENT_TEST=
+_STATUS<br>=C2=A0 =C2=A0 1 =C2=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A00 =C2=A0Not_testing<br>=C2=A0 =C2=A0 2 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A00 =C2=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0Not_testing<br>=C2=A0 =C2=A0 3 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0Not_testing<br=
+>=C2=A0 =C2=A0 4 =C2=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0 =C2=A0 =C2=A0 =C2=A00 =
+=C2=A0Not_testing<br>=C2=A0 =C2=A0 5 =C2=A0 =C2=A0 =C2=A0 =C2=A00 =C2=A0 =
+=C2=A0 =C2=A0 =C2=A00 =C2=A0Not_testing<br>Selective self-test flags (0x0):=
+<br>=C2=A0 After scanning selected spans, do NOT read-scan remainder of dis=
+k.<br>If Selective self-test is pending on power-up, resume after 0 minute =
+delay.<br><br>LSI utility output from good kernel:<br><br>LSI Logic MPT Con=
+figuration Utility, Version 1.71, Sep 18, 2013<br><br>1 MPT Port found<br><=
+br>=C2=A0 =C2=A0 =C2=A0Port Name =C2=A0 =C2=A0 =C2=A0 =C2=A0 Chip Vendor/Ty=
+pe/Rev =C2=A0 =C2=A0MPT Rev =C2=A0Firmware Rev =C2=A0IOC<br>=C2=A01. =C2=A0=
+ioc0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0LSI Logic SAS2308 D1 =
+=C2=A0 =C2=A0 =C2=A0200 =C2=A0 =C2=A0 =C2=A014000700 =C2=A0 =C2=A0 0<br><br=
+>ioc0 is SCSI host 1<br><br>=C2=A0B___T___L =C2=A0Type =C2=A0 =C2=A0 =C2=A0=
+ Operating System Device Name<br>=C2=A00 =C2=A0 0 =C2=A0 0 =C2=A0Disk =C2=
+=A0 =C2=A0 =C2=A0 /dev/sdd =C2=A0 =C2=A0[1:0:0:0]<br>=C2=A00 =C2=A0 1 =C2=
+=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sde =C2=A0 =C2=A0[1:0:1:0]<br>=
+=C2=A00 =C2=A0 2 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdf =C2=A0 =
+=C2=A0[1:0:2:0]<br>=C2=A00 =C2=A0 3 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=
+=A0 /dev/sdg =C2=A0 =C2=A0[1:0:3:0]<br>=C2=A00 =C2=A0 4 =C2=A0 0 =C2=A0Disk=
+ =C2=A0 =C2=A0 =C2=A0 /dev/sdh =C2=A0 =C2=A0[1:0:4:0]<br>=C2=A00 =C2=A0 5 =
+=C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdi =C2=A0 =C2=A0[1:0:5:0]<br=
+>=C2=A00 =C2=A0 6 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdj =C2=A0 =
+=C2=A0[1:0:6:0]<br>=C2=A00 =C2=A0 7 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=
+=A0 /dev/sdk =C2=A0 =C2=A0[1:0:7:0]<br>=C2=A00 =C2=A0 8 =C2=A0 0 =C2=A0Disk=
+ =C2=A0 =C2=A0 =C2=A0 /dev/sdl =C2=A0 =C2=A0[1:0:8:0]<br>=C2=A00 =C2=A0 9 =
+=C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdm =C2=A0 =C2=A0[1:0:9:0]<br=
+>=C2=A00 =C2=A010 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdn =C2=A0 =
+=C2=A0[1:0:10:0]<br>=C2=A00 =C2=A011 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=
+=A0 /dev/sdo =C2=A0 =C2=A0[1:0:11:0]<br>=C2=A00 =C2=A012 =C2=A0 0 =C2=A0Dis=
+k =C2=A0 =C2=A0 =C2=A0 /dev/sdp =C2=A0 =C2=A0[1:0:12:0]<br>=C2=A00 =C2=A013=
+ =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdq =C2=A0 =C2=A0[1:0:13:0]<=
+br>=C2=A00 =C2=A014 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdr =C2=
+=A0 =C2=A0[1:0:14:0]<br>=C2=A00 =C2=A015 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =
+=C2=A0 /dev/sds =C2=A0 =C2=A0[1:0:15:0]<br>=C2=A00 =C2=A016 =C2=A0 0 =C2=A0=
+Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdt =C2=A0 =C2=A0[1:0:16:0]<br>=C2=A00 =C2=
+=A017 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdu =C2=A0 =C2=A0[1:0:1=
+7:0]<br>=C2=A00 =C2=A018 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdv =
+=C2=A0 =C2=A0[1:0:18:0]<br>=C2=A00 =C2=A019 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=
+=A0 =C2=A0 /dev/sdw =C2=A0 =C2=A0[1:0:19:0]<br>=C2=A00 =C2=A020 =C2=A0 0 =
+=C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdx =C2=A0 =C2=A0[1:0:20:0]<br>=C2=A00=
+ =C2=A021 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdy =C2=A0 =C2=A0[1=
+:0:21:0]<br>=C2=A00 =C2=A022 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/=
+sdz =C2=A0 =C2=A0[1:0:22:0]<br>=C2=A00 =C2=A023 =C2=A0 0 =C2=A0Disk =C2=A0 =
+=C2=A0 =C2=A0 /dev/sdaa =C2=A0 [1:0:23:0]<br>=C2=A00 =C2=A024 =C2=A0 0 =C2=
+=A0EnclServ<br>=C2=A00 =C2=A025 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /d=
+ev/sdab =C2=A0 [1:0:25:0]<br>=C2=A00 =C2=A026 =C2=A0 0 =C2=A0Disk =C2=A0 =
+=C2=A0 =C2=A0 /dev/sdac =C2=A0 [1:0:26:0]<br>=C2=A00 =C2=A027 =C2=A0 0 =C2=
+=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdad =C2=A0 [1:0:27:0]<br>=C2=A00 =C2=A02=
+8 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdae =C2=A0 [1:0:28:0]<br>=
+=C2=A00 =C2=A029 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdaf =C2=A0 =
+[1:0:29:0]<br>=C2=A00 =C2=A030 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /de=
+v/sdag =C2=A0 [1:0:30:0]<br>=C2=A00 =C2=A031 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=
+=A0 =C2=A0 /dev/sdah =C2=A0 [1:0:31:0]<br>=C2=A00 =C2=A032 =C2=A0 0 =C2=A0D=
+isk =C2=A0 =C2=A0 =C2=A0 /dev/sdai =C2=A0 [1:0:32:0]<br>=C2=A00 =C2=A033 =
+=C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdaj =C2=A0 [1:0:33:0]<br>=C2=
+=A00 =C2=A034 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdak =C2=A0 [1:=
+0:34:0]<br>=C2=A00 =C2=A035 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/s=
+dal =C2=A0 [1:0:35:0]<br>=C2=A00 =C2=A036 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0=
+ =C2=A0 /dev/sdam =C2=A0 [1:0:36:0]<br>=C2=A00 =C2=A037 =C2=A0 0 =C2=A0Disk=
+ =C2=A0 =C2=A0 =C2=A0 /dev/sdan =C2=A0 [1:0:37:0]<br>=C2=A00 =C2=A038 =C2=
+=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdao =C2=A0 [1:0:38:0]<br>=C2=A0=
+0 =C2=A039 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdap =C2=A0 [1:0:3=
+9:0]<br>=C2=A00 =C2=A040 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdaq=
+ =C2=A0 [1:0:40:0]<br>=C2=A00 =C2=A041 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =
+=C2=A0 /dev/sdar =C2=A0 [1:0:41:0]<br>=C2=A00 =C2=A042 =C2=A0 0 =C2=A0Disk =
+=C2=A0 =C2=A0 =C2=A0 /dev/sdas =C2=A0 [1:0:42:0]<br>=C2=A00 =C2=A043 =C2=A0=
+ 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdat =C2=A0 [1:0:43:0]<br>=C2=A00 =
+=C2=A044 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdau =C2=A0 [1:0:44:=
+0]<br>=C2=A00 =C2=A045 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sdav =
+=C2=A0 [1:0:45:0]<br>=C2=A00 =C2=A046 =C2=A0 0 =C2=A0Disk =C2=A0 =C2=A0 =C2=
+=A0 /dev/sdaw =C2=A0 [1:0:46:0]<br>=C2=A00 =C2=A047 =C2=A0 0 =C2=A0Disk =C2=
+=A0 =C2=A0 =C2=A0 /dev/sdax =C2=A0 [1:0:47:0]<br>=C2=A00 =C2=A048 =C2=A0 0 =
+=C2=A0Disk =C2=A0 =C2=A0 =C2=A0 /dev/sday =C2=A0 [1:0:48:0]<br>=C2=A00 =C2=
+=A049 =C2=A0 0 =C2=A0EnclServ<br><br>On an impacted kernel, the drives that=
+ drop off will be re-enumerated when they reappear with numbering above 1:0=
+:48:0 as drives that are detached and reattached do not reuse their prior n=
+umbering. <br></div></div>
 
---000000000000ad700905e8adca37--
---000000000000ad700c05e8adca39
+--00000000000076ccbe05e8ade607--
+--00000000000076ccbf05e8ade609
 Content-Type: application/octet-stream; name=".config"
 Content-Disposition: attachment; filename=".config"
 Content-Transfer-Encoding: base64
-Content-ID: <f_l82ehly30>
-X-Attachment-Id: f_l82ehly30
+Content-ID: <f_l82fcu2f0>
+X-Attachment-Id: f_l82fcu2f0
 
 IwojIEF1dG9tYXRpY2FsbHkgZ2VuZXJhdGVkIGZpbGU7IERPIE5PVCBFRElULgojIExpbnV4L3g4
 NiA1LjEwLjEzOSBLZXJuZWwgQ29uZmlndXJhdGlvbgojCkNPTkZJR19DQ19WRVJTSU9OX1RFWFQ9
@@ -5131,4 +4766,4 @@ TkZJR19URVNUX0ZSRUVfUEFHRVMgaXMgbm90IHNldAojIENPTkZJR19URVNUX0ZQVSBpcyBub3Qg
 c2V0CkNPTkZJR19NRU1URVNUPXkKIyBDT05GSUdfSFlQRVJWX1RFU1RJTkcgaXMgbm90IHNldAoj
 IGVuZCBvZiBLZXJuZWwgVGVzdGluZyBhbmQgQ292ZXJhZ2UKIyBlbmQgb2YgS2VybmVsIGhhY2tp
 bmcK
---000000000000ad700c05e8adca39--
+--00000000000076ccbf05e8ade609--
