@@ -1,116 +1,134 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73522568
-	for <regressions@lists.linux.dev>; Sun, 18 Sep 2022 18:59:22 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oZzVg-0005NW-6f; Sun, 18 Sep 2022 20:59:20 +0200
-Message-ID: <f026b273-472a-8af9-c9be-c08be0f60d53@leemhuis.info>
-Date: Sun, 18 Sep 2022 20:59:17 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57712568
+	for <regressions@lists.linux.dev>; Sun, 18 Sep 2022 19:06:51 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1oZzcv-0007pJ-Lv; Sun, 18 Sep 2022 21:06:49 +0200
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2022-09-18]
+Date: Sun, 18 Sep 2022 19:06:48 +0000
+Message-Id: <166352773747.517659.4028966645485480297@leemhuis.info>
+X-Mailer: git-send-email 2.37.3
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Content-Language: en-US, de-DE
-To: regressions@lists.linux.dev
-Cc: netdev@vger.kernel.org
-References: <20220901140402.64804-1-csokas.bence@prolan.hu>
- <20220914145317.GA1868385@roeck-us.net>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [REGRESSION] Re: [PATCH v2] net: fec: Use a spinlock to guard
- `fep->ptp_clk_on` #forregzbot
-In-Reply-To: <20220914145317.GA1868385@roeck-us.net>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663527562;a7724bf2;
-X-HE-SMSGID: 1oZzVg-0005NW-6f
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663528011;13b3aec0;
+X-HE-SMSGID: 1oZzcv-0007pJ-Lv
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Hi Linus! Below is a slightly edited report from regzbot listing all
+regression from this cycle that the bot and I are currently aware of.
 
-On 14.09.22 15:53, Guenter Roeck wrote:
-> On Thu, Sep 01, 2022 at 04:04:03PM +0200, Csókás Bence wrote:
->> Mutexes cannot be taken in a non-preemptible context,
->> causing a panic in `fec_ptp_save_state()`. Replacing
->> `ptp_clk_mutex` by `tmreg_lock` fixes this.
->>
->> Fixes: 6a4d7234ae9a ("net: fec: ptp: avoid register access when ipg clock is disabled")
->> Fixes: f79959220fa5 ("fec: Restart PPS after link state change")
->> Reported-by: Marc Kleine-Budde <mkl@pengutronix.de>
->> Link: https://lore.kernel.org/all/20220827160922.642zlcd5foopozru@pengutronix.de/
->> Signed-off-by: Csókás Bence <csokas.bence@prolan.hu>
-> 
-> For regzbot:
+Many of the regressions I have been tracking that were introduced this
+cycle got resolved in the last week or two. There is just one that
+likely will be addressed by the network folks soon, and two that were
+reported in the past few days that need to be looked at closer by
+developers or reporters.
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
+HTH, Ciao, Thorsten
 
-#regzbot ^introduced b353b241f1eb9b626
-#regzbot title net: fec: backtrace: BUG: sleeping function called from
-invalid context at drivers/clk/imx/clk-pllv3.c
-#regzbot ignore-activity
-#regzbot monitor:
-https://lore.kernel.org/all/20220912073106.2544207-1-bence98@sch.bme.hu/
-#regzbot monitor:
-https://lore.kernel.org/all/20220912070143.98153-1-francesco.dolcini@toradex.com/
+---
 
-> This patch results in the following backtrace.
-> 
-> [   18.401688] BUG: sleeping function called from invalid context at drivers/clk/imx/clk-pllv3.c:68
-> [   18.402277] in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 1, name: swapper/0
-> [   18.402531] preempt_count: 1, expected: 0
-> [   18.402781] 3 locks held by swapper/0/1:
-> [   18.402967]  #0: c423ac8c (&dev->mutex){....}-{3:3}, at: __driver_attach+0x80/0x158
-> [   18.404364]  #1: c40dc8e8 (&fep->tmreg_lock){....}-{2:2}, at: fec_enet_clk_enable+0x58/0x250
-> [   18.404752]  #2: c1a71af8 (prepare_lock){+.+.}-{3:3}, at: clk_prepare_lock+0xc/0xd4
-> [   18.405246] irq event stamp: 129384
-> [   18.405403] hardirqs last  enabled at (129383): [<c10850b0>] _raw_spin_unlock_irqrestore+0x50/0x64
-> [   18.405667] hardirqs last disabled at (129384): [<c1084e70>] _raw_spin_lock_irqsave+0x64/0x68
-> [   18.405915] softirqs last  enabled at (129218): [<c01017bc>] __do_softirq+0x2ac/0x604
-> [   18.406255] softirqs last disabled at (129209): [<c012eee4>] __irq_exit_rcu+0x138/0x17c
-> [   18.406792] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G                 N 6.0.0-rc5 #1
-> [   18.407131] Hardware name: Freescale i.MX7 Dual (Device Tree)
-> [   18.407590]  unwind_backtrace from show_stack+0x10/0x14
-> [   18.407890]  show_stack from dump_stack_lvl+0x68/0x90
-> [   18.408097]  dump_stack_lvl from __might_resched+0x17c/0x284
-> [   18.408328]  __might_resched from clk_pllv3_wait_lock+0x4c/0xcc
-> [   18.408557]  clk_pllv3_wait_lock from clk_core_prepare+0xc4/0x328
-> [   18.408783]  clk_core_prepare from clk_core_prepare+0x50/0x328
-> [   18.408986]  clk_core_prepare from clk_core_prepare+0x50/0x328
-> [   18.409205]  clk_core_prepare from clk_core_prepare+0x50/0x328
-> [   18.409416]  clk_core_prepare from clk_core_prepare+0x50/0x328
-> [   18.409631]  clk_core_prepare from clk_core_prepare+0x50/0x328
-> [   18.409847]  clk_core_prepare from clk_core_prepare+0x50/0x328
-> [   18.410065]  clk_core_prepare from clk_core_prepare+0x50/0x328
-> [   18.410284]  clk_core_prepare from clk_core_prepare+0x50/0x328
-> [   18.410513]  clk_core_prepare from clk_core_prepare+0x50/0x328
-> [   18.410729]  clk_core_prepare from clk_prepare+0x20/0x30
-> [   18.410936]  clk_prepare from fec_enet_clk_enable+0x68/0x250
-> [   18.411143]  fec_enet_clk_enable from fec_probe+0x32c/0x1430
-> [   18.411352]  fec_probe from platform_probe+0x58/0xbc
-> [   18.411558]  platform_probe from really_probe+0xc4/0x2f4
-> [   18.411772]  really_probe from __driver_probe_device+0x80/0xe4
-> [   18.411983]  __driver_probe_device from driver_probe_device+0x2c/0xc4
-> [   18.412203]  driver_probe_device from __driver_attach+0x8c/0x158
-> [   18.412418]  __driver_attach from bus_for_each_dev+0x74/0xc0
-> [   18.412631]  bus_for_each_dev from bus_add_driver+0x154/0x1e8
-> [   18.412844]  bus_add_driver from driver_register+0x88/0x11c
-> [   18.413055]  driver_register from do_one_initcall+0x68/0x428
-> [   18.413271]  do_one_initcall from kernel_init_freeable+0x18c/0x240
-> [   18.413502]  kernel_init_freeable from kernel_init+0x14/0x144
-> [   18.413721]  kernel_init from ret_from_fork+0x14/0x28
-> [   18.414036] Exception stack(0xd0825fb0 to 0xd0825ff8)
-> [   18.414523] 5fa0:                                     00000000 00000000 00000000 00000000
-> [   18.414792] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [   18.415032] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> 
-> 
-> 
-> 
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 48 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+=======================================================
+current cycle (v5.19.. aka v6.0-rc), culprit identified
+=======================================================
+
+
+[ *NEW* ] Graphical issues on Lenovo Yoga 7 14ARB7 laptop since v6.0-rc1 (bisected)
+-----------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se/
+https://lore.kernel.org/lkml/c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se/
+
+By August Wikerfors; 1 days ago; 1 activities, latest 1 days ago.
+Introduced in 7cc191ee7621 (v6.0-rc1)
+
+Recent activities from: August Wikerfors (1)
+
+
+[ *NEW* ] introduced in 5.10.140 causes drives to drop from LSI SAS controller (Bisected to 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269)
+-------------------------------------------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CADy0EvLGJmZe-x9wzWSB6+tDKNuLHd8Km3J5MiWWYQRR2ctS3A@mail.gmail.com/
+https://lore.kernel.org/stable/CADy0EvL2XuWTjUdWHUHTpW3ZYaLWn0ftR-nUBioUqh-n-N=dXQ@mail.gmail.com/
+
+By Jason Wittlin-Cohen and Jason Wittlin-Cohen; 3 days ago; 3 activities, latest 3 days ago.
+Introduced in 6d17a112e9a6 (v6.0-rc3)
+
+Recent activities from: Greg KH (1), Bart Van Assche (1), Jason Wittlin-
+  Cohen (1)
+
+
+[ *NEW* ] net: fec: backtrace: BUG: sleeping function called from invalid context at drivers/clk/imx/clk-pllv3.c
+----------------------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/20220914145317.GA1868385@roeck-us.net/
+https://lore.kernel.org/netdev/20220914145317.GA1868385@roeck-us.net/
+
+By Guenter Roeck; 4 days ago; 19 activities, latest 4 days ago.
+Introduced in b353b241f1eb (v6.0-rc5)
+
+Recent activities from: Marc Kleine-Budde (6), Francesco Dolcini (5),
+  Bence Csókás (3), Csókás Bence (2), Andrew Lunn (2), Guenter Roeck (1)
+
+4 patch postings are associated with this regression, the latest is this:
+* Re: [PATCH 1/2] Revert "net: fec: Use a spinlock to guard `fep->ptp_clk_on`"
+  https://lore.kernel.org/netdev/20220912103818.j2u6afz66tcxvnr6@pengutronix.de/
+  6 days ago, by Marc Kleine-Budde
+
+Noteworthy links:
+* [PATCH net 0/2] Revert fec PTP changes
+  https://lore.kernel.org/lkml/20220912070143.98153-1-francesco.dolcini@toradex.com/
+  6 days ago, by Francesco Dolcini; thread monitored.
+* [PATCH 1/2] Revert "net: fec: Use a spinlock to guard `fep->ptp_clk_on`"
+  https://lore.kernel.org/netdev/20220912073106.2544207-1-bence98@sch.bme.hu/
+  6 days ago, by Bence Csókás; thread monitored.
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/166231521235.1982292.2102689915618920245@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
