@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC627F3
-	for <regressions@lists.linux.dev>; Sun, 18 Sep 2022 12:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C531375
+	for <regressions@lists.linux.dev>; Sun, 18 Sep 2022 16:24:50 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oZtF8-0000lT-4T; Sun, 18 Sep 2022 14:17:50 +0200
-Message-ID: <4deaa04b-f103-9cc4-7946-9ea69afd94d0@leemhuis.info>
-Date: Sun, 18 Sep 2022 14:17:49 +0200
+	id 1oZx68-0000Ja-Aw; Sun, 18 Sep 2022 18:24:48 +0200
+Message-ID: <b6aeaf85-c88f-c526-30c8-e040b99c66ea@leemhuis.info>
+Date: Sun, 18 Sep 2022 18:24:47 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,47 +16,47 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
+Subject: Re: [Regression] Bug 216371 - acpi wake up with black screen with msg
+ "amd_gpio AMDI0030:00: failed to get iomux index" #forregzbot
 Content-Language: en-US, de-DE
-Cc: Mikhail Rudenko <mike.rudenko@gmail.com>, Theodore Ts'o <tytso@mit.edu>,
- Eric Biggers <ebiggers@google.com>, LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- linux-crypto@vger.kernel.org
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: [REGESSION] Bug 216502 - slow crng initialization on Rockchip 3399
- (Friendyarm NanoPi M4)
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <849a07ba-a53c-3f10-e2ec-25421c1e40ee@leemhuis.info>
+In-Reply-To: <849a07ba-a53c-3f10-e2ec-25421c1e40ee@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663503479;fb34da13;
-X-HE-SMSGID: 1oZtF8-0000lT-4T
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663518290;daef1314;
+X-HE-SMSGID: 1oZx68-0000Ja-Aw
 
-Hi, this is your Linux kernel regression tracker speaking.
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developer don't keep an eye on it, I decided to forward it my
-mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216502 :
+On 25.08.22 11:42, Thorsten Leemhuis wrote:
 
-> Crng initialization time has significantly increased on Rockchip
-> 3399-based Friendyarm NanoPi M4 in v6.0.0-rc5 compared to v5.18.0 (from
-> 2.36s since rootfs mounted to 8.55s since rootfs mounted). Bisection
-> points at 78c768e619fb ("random: vary jitter iterations based on cycle
-> counter speed"). Manually reverting that commit on top of v6.0.0-rc5
-> fixes the issue. Attached dmesg logs correspond to vanilla v6.0.0-rc5
-> ("bad") and v6.0.0-rc5 with 78c768e619fb reverted ("good").
-See the ticket for more details. Apologies if I forwarded it to the
-wrong folks, I cover a lot of ground and thus sometimes get things
-wrong. :-/
+> To quote from https://bugzilla.kernel.org/show_bug.cgi?id=216371 :
+> 
+>>  neoe 2022-08-17 01:50:41 UTC
+>>
+>> just upgrade from 5.18 to 6.0.0-rc1
+>>
+>> `acpitool -s` 
+>> to set to sleep, it seems a little slow.
+>>
+>> then wake up, black screen,
+>>
+>> everything works fine before.
+>>
+>> AMD 3900X
+>>
+>> [reply] [−] Comment 1 neoe 2022-08-22 02:39:12 UTC
+>>
+>> dmesg
+>>
+>> amd_gpio AMDI0030:00: failed to get iomux index
+> See the ticket for details.
 
-BTW, I'd also like to add the report to the list of tracked regressions
-to ensure it's doesn't fall through the cracks in the end:
-
-#regzbot introduced: 78c768e619fb
-https://bugzilla.kernel.org/show_bug.cgi?id=216502
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+#regzbot backburner: likely bad bisect and reporter apparently ignoring
+the issue for now
