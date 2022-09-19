@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABC495A67
-	for <regressions@lists.linux.dev>; Mon, 19 Sep 2022 10:11:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DFD7C
+	for <regressions@lists.linux.dev>; Mon, 19 Sep 2022 15:18:59 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oaDkg-0003PC-Oo; Mon, 19 Sep 2022 12:11:46 +0200
-Message-ID: <b58be19a-7fa7-8b19-2f89-ed50056c5042@leemhuis.info>
-Date: Mon, 19 Sep 2022 12:11:46 +0200
+	id 1oaIXr-0000KX-7S; Mon, 19 Sep 2022 17:18:51 +0200
+Message-ID: <a46a1845-adab-1139-302c-3f4dd5adc2f0@leemhuis.info>
+Date: Mon, 19 Sep 2022 17:18:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,59 +16,90 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
+Subject: Re: perf top -p broken for multithreaded processes since 5.19
+ #forregzbot
 Content-Language: en-US, de-DE
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: amirali <nasrollahiamirali@gmail.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>
-Subject: [regression] Bug 216479 - systems hangs after "kvm : exiting hardware
- virtualization" during reboot or shutdown
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <10137382.nUPlyArG6x@mintaka.ncbr.muni.cz>
+ <5eca514c-2f05-2714-b496-233e8a39fe29@leemhuis.info>
+In-Reply-To: <5eca514c-2f05-2714-b496-233e8a39fe29@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663582308;6242ded6;
-X-HE-SMSGID: 1oaDkg-0003PC-Oo
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663600739;5a4b78b0;
+X-HE-SMSGID: 1oaIXr-0000KX-7S
 
-Hi, this is your Linux kernel regression tracker speaking.
-
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developer don't keep an eye on it, I decided to forward it by
-mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216479 :
-
->  amirali 2022-09-13 13:08:44 UTC
+On 04.09.22 12:15, Thorsten Leemhuis wrote:
+> TWIMC: this mail is primarily send for documentation purposes and for
+> regzbot, my Linux kernel regression tracking bot. These mails usually
+> contain '#forregzbot' in the subject, to make them easy to spot and filter.
 > 
-> hello
-> i have a problem when kernels updated from 5.17 to 5.18 in my arch , my pc show this error or better says show report that it is prevent to power offing system
+> [...]
+> On 02.09.22 16:46, Tomáš Trnka wrote:
+>>
+>> A bug in perf v5.19 and newer completely breaks monitoring multithreaded
+>> processes using "perf top -p". The tool fails to start with "Failed to mmap
+>> with 22 (Invalid argument)". It still seems to work fine on single-threaded
+>> processes. "perf record" is also unaffected.
+>>
+>> I have bisected the issue to the following commit:
+>>
+>> commit ae4f8ae16a07896403c90305d4b9be27f657c1fc
+>> Author: Adrian Hunter <adrian.hunter@intel.com>
+>> Date:   Tue May 24 10:54:31 2022 +0300
+>>
+>>     libperf evlist: Allow mixing per-thread and per-cpu mmaps
+>>     
+>>     mmap_per_evsel() will skip events that do not match the CPU, so all CPUs
+>>     can be iterated in any case.
+>>
+>> The issue can be easily reproduced using the following test:
+>>
+>> $ python - <<EOF
+>> import time
+>> import threading
+>> th = threading.Thread(target=time.sleep, args=(3600,))
+>> th.start()
+>> th.join()
+>> EOF
+>>
+>> stracing "perf top -p $(pgrep python)" yields this:
+>>
+>> 145184 perf_event_open({type=PERF_TYPE_HARDWARE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CPU_CYCLES, sample_freq=4000, sample_type=PERF_SAMPLE_IP|PERF_SAMPLE_TID|PERF_SAMPLE_TIME|PERF_SAMPLE_PERIOD, read_format=PERF_FORMAT_ID, disabled=1, exclude_kernel=1, mmap=1, comm=1, freq=1, task=1, precise_ip=0 /* arbitrary skid */, sample_id_all=1, mmap2=1, comm_exec=1, ksymbol=1, ...}, 92061, -1, -1, PERF_FLAG_FD_CLOEXEC) = 3
+>>  > tools/perf/perf(evsel__open_cpu+0x287) [0x4c8ad7]
+>>  > tools/perf/perf(cmd_top+0x1996) [0x439b26]
+>>  > tools/perf/perf(run_builtin+0x68) [0x4a91f8]
+>>  > tools/perf/perf(main+0x645) [0x40cad5]
+>> 145184 perf_event_open({type=PERF_TYPE_HARDWARE, size=PERF_ATTR_SIZE_VER7, config=PERF_COUNT_HW_CPU_CYCLES, sample_freq=4000, sample_type=PERF_SAMPLE_IP|PERF_SAMPLE_TID|PERF_SAMPLE_TIME|PERF_SAMPLE_PERIOD, read_format=PERF_FORMAT_ID, disabled=1, exclude_kernel=1, mmap=1, comm=1, freq=1, task=1, precise_ip=0 /* arbitrary skid */, sample_id_all=1, mmap2=1, comm_exec=1, ksymbol=1, ...}, 104619, -1, -1, PERF_FLAG_FD_CLOEXEC) = 5
+>>  > tools/perf/perf(evsel__open_cpu+0x287) [0x4c8ad7]
+>>  > tools/perf/perf(cmd_top+0x1996) [0x439b26]
+>>  > tools/perf/perf(run_builtin+0x68) [0x4a91f8]
+>>  > tools/perf/perf(main+0x645) [0x40cad5]
+>> …(snip)…
+>> 145184 ioctl(5, PERF_EVENT_IOC_SET_OUTPUT, 3) = -1 EINVAL (Invalid argument)
+>>  > tools/perf/perf(perf_evlist__mmap_ops+0x2cf) [0x5d497f]
+>>  > tools/perf/perf(evlist__mmap+0xa7) [0x4c09b7]
+>>  > perf/perf(cmd_top+0x1ccd) [0x439e5d]
+>>  > tools/perf/perf(run_builtin+0x68) [0x4a91f8]
+>>  > tools/perf/perf(main+0x645) [0x40cad5]
+>>
+>> Best regards,
+>>
+>> Tomáš
+>> --
+>> Tomáš Trnka
+>> Software for Chemistry & Materials B.V.
 > 
-> like this, i have same page when system to be reboot or shutdown => https://i.redd.it/ukqi6q6f8on41.jpg
+> Thanks for the report. To be sure below issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+> tracking bot:
 > 
-> even i have this problem in a new kernel (5.19) and in other distro.
-> 
-> This means that there is a problem with the kernel
-> I don't have the technical knowledge of this matter, but I just know that I can't use the new versions of Linux
-> 
-> [reply] [−] Comment 1 amirali 2022-09-13 13:12:49 UTC
-> 
-> my system config is => 
-> intel core i7 gen 10
-> gpu => 2Gig amd readon and intel onboard
-> 
+> #regzbot introduced ae4f8ae16a07896 ^
+> https://bugzilla.kernel.org/show_bug.cgi?id=216441
+> #regzbot title perf: perf top -p broken for multithreaded processes
+> since 5.19
+> #regzbot ignore-activity
 
-See the ticket for more details. I chose to forward this to the power
-management developers, as I assume the "kvm: exiting hardware
-virtualization" is simply the last thing that's printed. Hope that
-wasn't a stupid assumption.
+#regzbot fixed-by: 7864d8f7c088aad988c44c631f1ceed9179cf2cf
 
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: v5.17..v5.18
-https://bugzilla.kernel.org/show_bug.cgi?id=216479
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
