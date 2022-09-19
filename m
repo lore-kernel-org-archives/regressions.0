@@ -1,134 +1,101 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57712568
-	for <regressions@lists.linux.dev>; Sun, 18 Sep 2022 19:06:51 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1oZzcv-0007pJ-Lv; Sun, 18 Sep 2022 21:06:49 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2022-09-18]
-Date: Sun, 18 Sep 2022 19:06:48 +0000
-Message-Id: <166352773747.517659.4028966645485480297@leemhuis.info>
-X-Mailer: git-send-email 2.37.3
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1FAA45;
+	Mon, 19 Sep 2022 08:31:56 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oaCC1-0003Xw-MT; Mon, 19 Sep 2022 10:31:53 +0200
+Message-ID: <332ef1c8-2d83-f0ec-74b6-d485f5b15c2e@leemhuis.info>
+Date: Mon, 19 Sep 2022 10:31:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663528011;13b3aec0;
-X-HE-SMSGID: 1oZzcv-0007pJ-Lv
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: 5.19.9 regression: DMAR error on i7-8650U #forregzbot
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux1394-devel@lists.sourceforge.net"
+ <linux1394-devel@lists.sourceforge.net>
+References: <485A6EA5-6D58-42EA-B298-8571E97422DE@getmailspring.com>
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <485A6EA5-6D58-42EA-B298-8571E97422DE@getmailspring.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663576317;f2016df4;
+X-HE-SMSGID: 1oaCC1-0003Xw-MT
 
-Hi Linus! Below is a slightly edited report from regzbot listing all
-regression from this cycle that the bot and I are currently aware of.
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-Many of the regressions I have been tracking that were introduced this
-cycle got resolved in the last week or two. There is just one that
-likely will be addressed by the network folks soon, and two that were
-reported in the past few days that need to be looked at closer by
-developers or reporters.
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-HTH, Ciao, Thorsten
+Hi, this is your Linux kernel regression tracker.
 
----
+On 18.09.22 02:00, George Hilliard wrote:
+> I'm experiencing a regression on 5.19.9 from 5.19.8. Not sure if you are
+> already aware of this, apologies if it's noise.  My hunch is that this
+> is an iommu problem since there were quite a few iommu changes in .9,
+> but I have also Cc'd Firewire maintainers on the chance that I'm wrong.
+> 
+> My Apple Thunderbolt to Firewire adapter has quit working on 5.19.9 on
+> my Thinkpad T480s (i7-8650U), with the following log message while
+> enumerating the device (reformatted for email):
+> 
+>     [  318.263546] thunderbolt 0-1: new device found, vendor=0x1 device=0x8004
+>     [  318.263559] thunderbolt 0-1: Apple, Inc. Thunderbolt to FireWire Adapter
+>     [  318.342416] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
+>     [  318.342428] pcieport 0000:05:01.0: pciehp: Slot(1): Link Up
+>     (snip)
+>     [  318.503177] pcieport 0000:08:00.0: enabling device (0000 -> 0003)
+>     [  318.504976] firewire_ohci 0000:09:00.0: enabling device (0000 -> 0002)
+>     [  318.562000] firewire_ohci 0000:09:00.0: added OHCI v1.10 device
+>                    as card 4, 8 IR + 8 IT contexts, quirks 0x0, physUB
+>     [  318.562109] DMAR: DRHD: handling fault status reg 2
+>     [  318.562114] DMAR: [INTR-REMAP] Request device [09:00.0] fault
+>                    index 0x8080 [fault reason 0x25] Blocked a
+>                    compatibility format interrupt request
+> 
+> The last two lines are the new error.
+> 
+> Happy to provide more details or experiment; this happens nearly every time.
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
-Currently I'm aware of 48 regressions in linux-mainline. Find the
-current status below and the latest on the web:
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
+#regzbot introduced v5.19.8..v5.19.9 ^
+https://bugzilla.kernel.org/show_bug.cgi?id=216497
+#regzbot title iommu: DMAR errors
+#regzbot ignore-activity
 
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
 
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
 
-=======================================================
-current cycle (v5.19.. aka v6.0-rc), culprit identified
-=======================================================
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-
-[ *NEW* ] Graphical issues on Lenovo Yoga 7 14ARB7 laptop since v6.0-rc1 (bisected)
------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se/
-https://lore.kernel.org/lkml/c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se/
-
-By August Wikerfors; 1 days ago; 1 activities, latest 1 days ago.
-Introduced in 7cc191ee7621 (v6.0-rc1)
-
-Recent activities from: August Wikerfors (1)
-
-
-[ *NEW* ] introduced in 5.10.140 causes drives to drop from LSI SAS controller (Bisected to 6d17a112e9a63ff6a5edffd1676b99e0ffbcd269)
--------------------------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CADy0EvLGJmZe-x9wzWSB6+tDKNuLHd8Km3J5MiWWYQRR2ctS3A@mail.gmail.com/
-https://lore.kernel.org/stable/CADy0EvL2XuWTjUdWHUHTpW3ZYaLWn0ftR-nUBioUqh-n-N=dXQ@mail.gmail.com/
-
-By Jason Wittlin-Cohen and Jason Wittlin-Cohen; 3 days ago; 3 activities, latest 3 days ago.
-Introduced in 6d17a112e9a6 (v6.0-rc3)
-
-Recent activities from: Greg KH (1), Bart Van Assche (1), Jason Wittlin-
-  Cohen (1)
-
-
-[ *NEW* ] net: fec: backtrace: BUG: sleeping function called from invalid context at drivers/clk/imx/clk-pllv3.c
-----------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20220914145317.GA1868385@roeck-us.net/
-https://lore.kernel.org/netdev/20220914145317.GA1868385@roeck-us.net/
-
-By Guenter Roeck; 4 days ago; 19 activities, latest 4 days ago.
-Introduced in b353b241f1eb (v6.0-rc5)
-
-Recent activities from: Marc Kleine-Budde (6), Francesco Dolcini (5),
-  Bence Csókás (3), Csókás Bence (2), Andrew Lunn (2), Guenter Roeck (1)
-
-4 patch postings are associated with this regression, the latest is this:
-* Re: [PATCH 1/2] Revert "net: fec: Use a spinlock to guard `fep->ptp_clk_on`"
-  https://lore.kernel.org/netdev/20220912103818.j2u6afz66tcxvnr6@pengutronix.de/
-  6 days ago, by Marc Kleine-Budde
-
-Noteworthy links:
-* [PATCH net 0/2] Revert fec PTP changes
-  https://lore.kernel.org/lkml/20220912070143.98153-1-francesco.dolcini@toradex.com/
-  6 days ago, by Francesco Dolcini; thread monitored.
-* [PATCH 1/2] Revert "net: fec: Use a spinlock to guard `fep->ptp_clk_on`"
-  https://lore.kernel.org/netdev/20220912073106.2544207-1-bence98@sch.bme.hu/
-  6 days ago, by Bence Csókás; thread monitored.
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/166231521235.1982292.2102689915618920245@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
