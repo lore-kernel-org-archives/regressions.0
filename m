@@ -1,75 +1,58 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50F97C
-	for <regressions@lists.linux.dev>; Mon, 19 Sep 2022 15:23:13 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oaIc3-0001M2-Dm; Mon, 19 Sep 2022 17:23:11 +0200
-Message-ID: <b5271342-c804-70c1-9a81-d94efa59b203@leemhuis.info>
-Date: Mon, 19 Sep 2022 17:23:11 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B3B7462
+	for <regressions@lists.linux.dev>; Mon, 19 Sep 2022 19:40:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02F87C433D6;
+	Mon, 19 Sep 2022 19:40:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1663616426;
+	bh=vzHs6HImCbawWl0/lH97YDZV4vqQI59VYt7CEm6uy8I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qCYi9yt8oAF9w4DOJqJAwXrdg70FqfFe4OuUXXsPNVUpmdF6sw3X3QgkAuTRnkpap
+	 r2Clx8s6svSLh++t/o4C3NYfv/2KSNIcFIQY2WS/snK+VJNgtWGfm8yjgr/2b9t+q7
+	 zMe2hhtvGvS93PwXlfpmAYb/2YrB6fvQolFkRg+NOVp2px0vOuaSdjNz9Y0Z0+Mwx6
+	 Hz9nMO+SFGPZj8GxZlbqoIJX7yVwYIZfPedKL0oYorY44bfwjFiC+NH5dVSE21TVmr
+	 gfkXSR8hsDTZYAuFqf5cyhxOJm0eiZ3RZ7qLNleeVgkEUUpqQD/QlOIU9gwEjPmHzh
+	 uqU48AoigVYIg==
+Date: Mon, 19 Sep 2022 12:40:24 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: Chris Clayton <chris2553@googlemail.com>, Florian Westphal
+ <fw@strlen.de>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ regressions@lists.linux.dev, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org
+Subject: Re: removing conntrack helper toggle to enable auto-assignment [was
+ Re: b118509076b3 (probably) breaks my firewall]
+Message-ID: <20220919124024.0c341af4@kernel.org>
+In-Reply-To: <YxvwKlE+nyfUjHx8@salvia>
+References: <e5d757d7-69bc-a92a-9d19-0f7ed0a81743@googlemail.com>
+	<20220908191925.GB16543@breakpoint.cc>
+	<78611fbd-434e-c948-5677-a0bdb66f31a5@googlemail.com>
+	<20220908214859.GD16543@breakpoint.cc>
+	<YxsTMMFoaNSM9gLN@salvia>
+	<a3c79b7d-526f-92ce-144a-453ec3c200a5@googlemail.com>
+	<YxvwKlE+nyfUjHx8@salvia>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [REGRESSION 5.19.x] AMD HD-audio devices missing on 5.19
- #forregzbot
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: regressions@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org
-References: <874jy4cqok.wl-tiwai@suse.de>
- <c6ea56f5-05be-c9bb-4eda-a3c4a081326f@leemhuis.info>
-In-Reply-To: <c6ea56f5-05be-c9bb-4eda-a3c4a081326f@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663600993;48343573;
-X-HE-SMSGID: 1oaIc3-0001M2-Dm
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
-
-On 24.08.22 09:13, Thorsten Leemhuis wrote:
-
-> On 22.08.22 16:12, Takashi Iwai wrote:
->>
->> we've received regression reports about the missing HD-audio devices
->> on AMD platforms, and this turned out to be caused by the commit
->> 512881eacfa72c2136b27b9934b7b27504a9efc2
->>     bus: platform,amba,fsl-mc,PCI: Add device DMA ownership management
->>
->> The details are found in openSUSE bugzilla:
->>   https://bugzilla.suse.com/show_bug.cgi?id=1202492
->>
->> The problem seems to be that HD-audio (both onboard analog and HDMI)
->> PCI devices are assigned to the same IOMMU group as AMD graphics PCI
->> device, and once after the AMDGPU is initialized beforehand, those
->> audio devices can't be probed since iommu_device_use_default_domain()
->> returns -EBUSY.
->>
->> I'm not sure whether it's specific to PCI bus due to the assignment
->> logic of those IOMMU groups, or it's about the handling of the active
->> domain assignment.  In anyway, disabling IOMMU works around the
->> problem, and passing driver_managed_dma flag to the HD-audio driver
->> was also confirmed to work around it, too.
->>
->> The problem persists with 6.0-rc1 kernel.
->>
->> If you have / can give any fix patch or debug patch, let me know; I'll
->> build test kernels and ask the reporters.
+On Sat, 10 Sep 2022 04:02:18 +0200 Pablo Neira Ayuso wrote:
+> > > I'll update netfilter.org to host a copy of the github sources.
+> > > 
+> > > We have been announcing this going deprecated for 10 years...  
+> > 
+> > That may be the case, it should be broken before -rc1 is released. Breaking it at -rc4+ is, I think, a regression!
+> > Adding Thorsten Leemuis to cc list  
 > 
-> Thanks for the report. To be sure below issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-> tracking bot:
-> 
-> #regzbot introduced 512881eacfa72c2136b27b99 ^
-> https://bugzilla.suse.com/show_bug.cgi?id=1202492
-> #regzbot title AMD HD-audio devices missing on 5.19
-> #regzbot ignore-activity
+> Disagreed, reverting and waiting for one more release cycle will just
+> postpone the fact that users must adapt their policies, and that they
+> rely on a configuration which is not secure.
 
-#regzbot fixed-by: 2380f1e8195ef612deea
+What are the chances the firewall actually needs the functionality?
+Perhaps we can add the file back but have it do nothing?
