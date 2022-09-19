@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1FAA45;
-	Mon, 19 Sep 2022 08:31:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 156F7ED4
+	for <regressions@lists.linux.dev>; Mon, 19 Sep 2022 09:10:34 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oaCC1-0003Xw-MT; Mon, 19 Sep 2022 10:31:53 +0200
-Message-ID: <332ef1c8-2d83-f0ec-74b6-d485f5b15c2e@leemhuis.info>
-Date: Mon, 19 Sep 2022 10:31:53 +0200
+	id 1oaCnO-0003pY-UI; Mon, 19 Sep 2022 11:10:30 +0200
+Message-ID: <342fadc8-d902-3ada-fd61-67312d0da352@leemhuis.info>
+Date: Mon, 19 Sep 2022 11:10:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,82 +16,156 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
-Subject: Re: 5.19.9 regression: DMAR error on i7-8650U #forregzbot
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux1394-devel@lists.sourceforge.net"
- <linux1394-devel@lists.sourceforge.net>
-References: <485A6EA5-6D58-42EA-B298-8571E97422DE@getmailspring.com>
 Content-Language: en-US, de-DE
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <485A6EA5-6D58-42EA-B298-8571E97422DE@getmailspring.com>
+Subject: [regression] Bug 216475 - fbcon crashes during single gpu passthough
+ reattachment to host
+To: Daniel Vetter <daniel.vetter@intel.com>
+Cc: "Sergey V." <truesmb@gmail.com>,
+ DRI Development <dri-devel@lists.freedesktop.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663576317;f2016df4;
-X-HE-SMSGID: 1oaCC1-0003Xw-MT
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663578635;bab8de9c;
+X-HE-SMSGID: 1oaCnO-0003pY-UI
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Hi, this is your Linux kernel regression tracker speaking.
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216475 :
 
-Hi, this is your Linux kernel regression tracker.
-
-On 18.09.22 02:00, George Hilliard wrote:
-> I'm experiencing a regression on 5.19.9 from 5.19.8. Not sure if you are
-> already aware of this, apologies if it's noise.  My hunch is that this
-> is an iommu problem since there were quite a few iommu changes in .9,
-> but I have also Cc'd Firewire maintainers on the chance that I'm wrong.
+> Created attachment 301792 [details]
+> My dmesg right after VM shutdown
 > 
-> My Apple Thunderbolt to Firewire adapter has quit working on 5.19.9 on
-> my Thinkpad T480s (i7-8650U), with the following log message while
-> enumerating the device (reformatted for email):
+> Hello, after 5.19 kernel many VFIO users have problems with reattaching GPU from guest to host. It works well previously (5.18.16 for me).
 > 
->     [  318.263546] thunderbolt 0-1: new device found, vendor=0x1 device=0x8004
->     [  318.263559] thunderbolt 0-1: Apple, Inc. Thunderbolt to FireWire Adapter
->     [  318.342416] pcieport 0000:05:01.0: pciehp: Slot(1): Card present
->     [  318.342428] pcieport 0000:05:01.0: pciehp: Slot(1): Link Up
->     (snip)
->     [  318.503177] pcieport 0000:08:00.0: enabling device (0000 -> 0003)
->     [  318.504976] firewire_ohci 0000:09:00.0: enabling device (0000 -> 0002)
->     [  318.562000] firewire_ohci 0000:09:00.0: added OHCI v1.10 device
->                    as card 4, 8 IR + 8 IT contexts, quirks 0x0, physUB
->     [  318.562109] DMAR: DRHD: handling fault status reg 2
->     [  318.562114] DMAR: [INTR-REMAP] Request device [09:00.0] fault
->                    index 0x8080 [fault reason 0x25] Blocked a
->                    compatibility format interrupt request
+> More complains about the issue:
+> https://www.reddit.com/r/VFIO/comments/wp85ve/linux_519_kernel_single_gpu_passthough_black/
 > 
-> The last two lines are the new error.
+> My PC Spec:
+>   CPU: Ryzen 5950X
+>   RAM: 128GB
+>   GPU: NVIDIA RTX 3080
+>   OS: Arch Linux
 > 
-> Happy to provide more details or experiment; this happens nearly every time.
+> How to reproduce:
+>   1. You have to have properly configured VM with working GPU passthough (too complicated to explain it here)
+>   2. When VM starts it detaches GPU from host by 'start.sh' (see below)
+>   3. VM starts properly, Windows loads properly
+>   4. Shutdown VM regularly and GPU should be reattached by 'revert.sh' (see below)
+> Actual results (5.19.*):
+>   5. Windows shutdowns, and GPU is not reattaching to host only black screen present and monitors shutdown (no signal)
+>   5.1 dmesg contains error message - dmesg.txt in attachments
+>     WARNING: CPU: 30 PID: 12528 at drivers/video/fbdev/core/fbcon.c:999 fbcon_init+0x5ce/0x670
+>     ...
+>     BUG: kernel NULL pointer dereference, address: 0000000000000330
+> Expected Result (5.18.* and previous):
+>   5. Windows shutdowns, and GPU successfully reattached to host
+> 
+> I have tried to bisect git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git v5.18.16 as good and v5.19.2 as bad
+> (I've done it for the first time, maybe I've done something wrong)
+> 
+> During bisect after some point my Linux doesn't boot, and it trying to mark those commits as bad.
+> Commit below might be not real problem causer
+> 
+> Commit which I found by bisect:
+> 
+> commit 3647d6d3dbdafc55f8c4ca8225966963252abe7b (refs/bisect/bad)
+> Author: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Date:   Tue Apr 5 23:03:33 2022 +0200
+> 
+>     fbcon: Move more code into fbcon_release
+> 
+>     con2fb_release_oldinfo() has a bunch more kfree() calls than
+>     fbcon_exit(), but since kfree() on NULL is harmless doing that in both
+>     places should be ok. This is also a bit more symmetric now again with
+>     fbcon_open also allocating the fbcon_ops structure.
+> 
+>     Acked-by: Sam Ravnborg <sam@ravnborg.org>
+>     Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+>     Cc: Daniel Vetter <daniel@ffwll.ch>
+>     Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+>     Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>     Cc: Du Cheng <ducheng2@gmail.com>
+>     Cc: Claudio Suarez <cssk@net-c.es>
+>     Link: https://patchwork.freedesktop.org/patch/msgid/20220405210335.3434130-16-daniel.vetter@ffwll.ch
+> 
+> 
+> start.sh
+> ========
+> #!/bin/bash
+> set -x
+> 
+> systemctl stop display-manager.service
+> while systemctl is-active --quiet "display-manager.service" ; do
+>     sleep 1
+> done
+> 
+> killall gdm-x-session
+> killall -u bormor
+> 
+> echo 0 > /sys/class/vtconsole/vtcon0/bind
+> echo 0 > /sys/class/vtconsole/vtcon1/bind
+> 
+> # Unbind EFI-Framebuffer
+> echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/unbind
+> 
+> # Avoid a Race condition by waiting 2 seconds. This can be calibrated to be shorter or longer if required for your system
+> sleep 2
+> 
+> # Unload all Nvidia drivers
+> modprobe -r nvidia_drm
+> modprobe -r nvidia_modeset
+> modprobe -r nvidia_uvm
+> modprobe -r nvidia
+> modprobe -r nouveau
+> 
+> # Unbind the GPU from display driver
+> virsh nodedev-detach pci_0000_09_00_0
+> virsh nodedev-detach pci_0000_09_00_1
+> 
+> # Load VFIO Kernel Module  
+> modprobe vfio-pci
+> 
+> 
+> revert.sh
+> ========
+> #!/bin/bash
+> set -x
+> 
+> # Unload VFIO-PCI Kernel Driver
+> modprobe -r vfio-pci
+> modprobe -r vfio_iommu_type1
+> modprobe -r vfio
+> 
+> virsh nodedev-reattach pci_0000_09_00_1
+> virsh nodedev-reattach pci_0000_09_00_0
+> 
+> echo 1 > /sys/class/vtconsole/vtcon0/bind
+> echo 1 > /sys/class/vtconsole/vtcon1/bind
+> 
+> nvidia-xconfig --query-gpu-info > /dev/null 2>&1
+> echo "efi-framebuffer.0" > /sys/bus/platform/drivers/efi-framebuffer/bind
+> 
+> modprobe nvidia_drm
+> modprobe nvidia_modeset
+> modprobe nvidia_uvm
+> modprobe nvidia
+> modprobe nouveau
+> 
+> 
+> systemctl start display-manager.service
 
-CCing the regression mailing list, as it should be in the loop for all
-regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+See the ticket for more details.
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
 
-#regzbot introduced v5.19.8..v5.19.9 ^
-https://bugzilla.kernel.org/show_bug.cgi?id=216497
-#regzbot title iommu: DMAR errors
+#regzbot introduced: 3647d6d3dbdafc55f8c4ca8225966963252abe7b
+https://bugzilla.kernel.org/show_bug.cgi?id=216475
 #regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
