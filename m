@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C68B1119
-	for <regressions@lists.linux.dev>; Tue, 20 Sep 2022 09:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6C27C
+	for <regressions@lists.linux.dev>; Tue, 20 Sep 2022 09:11:56 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oaZ8W-0008Mk-G8; Tue, 20 Sep 2022 11:01:48 +0200
-Message-ID: <d6d6b208-aec0-a4c3-8350-dbe2f474e7c0@leemhuis.info>
-Date: Tue, 20 Sep 2022 11:01:47 +0200
+	id 1oaZIF-0003sr-Dh; Tue, 20 Sep 2022 11:11:51 +0200
+Message-ID: <f2c28043-59e6-0aee-b8bf-df38525ee899@leemhuis.info>
+Date: Tue, 20 Sep 2022 11:11:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,44 +16,83 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
+Subject: Re: regression caused by block: freeze the queue earlier in
+ del_gendisk
 Content-Language: en-US, de-DE
-To: Chris Clayton <chris2553@googlemail.com>, Jakub Kicinski
- <kuba@kernel.org>, Florian Westphal <fw@strlen.de>
-Cc: Pablo Neira Ayuso <pablo@netfilter.org>,
- "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- regressions@lists.linux.dev, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org
-References: <e5d757d7-69bc-a92a-9d19-0f7ed0a81743@googlemail.com>
- <20220908191925.GB16543@breakpoint.cc>
- <78611fbd-434e-c948-5677-a0bdb66f31a5@googlemail.com>
- <20220908214859.GD16543@breakpoint.cc> <YxsTMMFoaNSM9gLN@salvia>
- <a3c79b7d-526f-92ce-144a-453ec3c200a5@googlemail.com>
- <YxvwKlE+nyfUjHx8@salvia> <20220919124024.0c341af4@kernel.org>
- <20220919202310.GA3498@breakpoint.cc> <20220919135715.6057331d@kernel.org>
- <fc8792bf-2d67-496a-6d90-940de21694d9@googlemail.com>
+To: Dusty Mabe <dusty@dustymabe.com>, Ming Lei <ming.lei@redhat.com>,
+ Christoph Hellwig <hch@lst.de>
+Cc: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <017845ae-fbae-70f6-5f9e-29aff2742b8c@dustymabe.com>
+ <YxBZ4BBjxvAkvI2A@T590> <20220907073324.GB23826@lst.de>
+ <Yxr4SD4d0rZ9TZik@T590> <20220912071618.GA4971@lst.de>
+ <Yx/jLTknQm9VeHi4@T590> <95cbd47d-46ed-850e-7d4f-851b35d03069@dustymabe.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: removing conntrack helper toggle to enable auto-assignment [was
- Re: b118509076b3 (probably) breaks my firewall]
-In-Reply-To: <fc8792bf-2d67-496a-6d90-940de21694d9@googlemail.com>
+In-Reply-To: <95cbd47d-46ed-850e-7d4f-851b35d03069@dustymabe.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663664511;0de5c633;
-X-HE-SMSGID: 1oaZ8W-0008Mk-G8
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663665116;c8be03ba;
+X-HE-SMSGID: 1oaZIF-0003sr-Dh
 
-Chris, thx for CCing the regression list, I've been watching this thread.
+Hi, this is your Linux kernel regression tracker.
 
-On 20.09.22 08:49, Chris Clayton wrote:
->
-> So I guess I'm an unusual case in that I don't rely on distro maintainers to fix up stuff like this on the rare
-> occasions it comes along. On reflection, I'd say leave it be
+On 13.09.22 04:36, Dusty Mabe wrote:
+> On 9/12/22 21:55, Ming Lei wrote:
+>> On Mon, Sep 12, 2022 at 09:16:18AM +0200, Christoph Hellwig wrote:
+>>> On Fri, Sep 09, 2022 at 04:24:40PM +0800, Ming Lei wrote:
+>>>> On Wed, Sep 07, 2022 at 09:33:24AM +0200, Christoph Hellwig wrote:
+>>>>> On Thu, Sep 01, 2022 at 03:06:08PM +0800, Ming Lei wrote:
+>>>>>> It is a bit hard to associate the above commit with reported issue.
+>>>>>
+>>>>> So the messages clearly are about something trying to open a device
+>>>>> that went away at the block layer, but somehow does not get removed
+>>>>> in time by udev (which seems to be a userspace bug in CoreOS).  But
+>>>>> even with that we really should not hang.
+>>>>
+>>>> Xiao Ni provides one script[1] which can reproduce the issue more or less.
+>>>
+>>> I've run the reproduced 10000 times on current mainline, and while
+>>> it prints one of the autoloading messages per run, I've not actually
+>>> seen any kind of hang.
+>>
+>> I can't reproduce the hang too.
+> 
+> I obviously can reproduce the issue with the test in our Fedora CoreOS
+> test suite. It's part of a framework (i.e. it's not simple some script
+> you can run) but it is very reproducible so one can add some instrumentation
+> to the kernel and feed it through a build/test cycle to see different
+> results or logs.
+> 
+> I'm willing to share this with other people (maybe a screen share or
+> some written down instructions) if anyone would be interested.
 
-Okay. With a bit of luck only very few users are affected by this; if
-not we might need to revisit this.
+This thread looked stalled, or was there any progress in the past week?
+If not: Fedora apparently removed the patch in their kernels a while
+ago, as quite a few users where hitting it. What is preventing us from
+doing the same in mainline and 5.19.y until the issue can be resolved?
+The description of a09b314005f3 ("block: freeze the queue earlier in
+del_gendisk") doesn't sound like the change does something crucial that
+can't wait a bit. I might be totally wrong with that, but I think it's
+my duty to ask that question at this point.
 
-> - as I said earlier, it just seemed rather late in the 6.0
-> development cycle for this to pop up.
+>> What I meant is that new raid disk can be added by mdadm after stopping
+>> the imsm container and raid disk with the autoloading messages printed,
+>> I understand this behavior isn't correct, but I am not familiar with
+>> raid enough.
+>>
+>> It might be related with the delay deleting gendisk from wq & md kobj
+>> release handler.
+>>
+>> During reboot, if mdadm does this stupid thing without stopping, the hang
+>> could be caused.
+>>
+>> I think the root cause is that why mdadm tries to open/add new raid bdev
+>> crazily during reboot.
 
-With security fixes that can happen, as delaying the fix might the
-inferior of two choices. :-/
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-Ciao, Thorsten
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
