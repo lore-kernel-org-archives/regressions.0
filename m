@@ -1,125 +1,119 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE5B1C34
-	for <regressions@lists.linux.dev>; Tue, 20 Sep 2022 14:00:12 +0000 (UTC)
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1274ec87ad5so4398076fac.0
-        for <regressions@lists.linux.dev>; Tue, 20 Sep 2022 07:00:12 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4631C34
+	for <regressions@lists.linux.dev>; Tue, 20 Sep 2022 14:05:11 +0000 (UTC)
+Received: by mail-io1-f52.google.com with SMTP id d8so2290164iof.11
+        for <regressions@lists.linux.dev>; Tue, 20 Sep 2022 07:05:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date;
-        bh=anwJ1q9b14QesSLm4IQZ3eD0Se0ge7to/g7pHbX3jG0=;
-        b=bjlAlEIklUV7hPttdA8fDtvgyEyudwFcvTMbEssKiC6eBOZ2O2xFGl6XCcfc1SRiIE
-         P/HW32nak3/AIw3q5NBSb9foiDz5+hzuTrEbGwyWvDrVar82JqUksGtwB9Wj6YVnX5ON
-         RESLXA9eGCW8TdchEApJwPj07cv5HWqFSngD1AYH4BEJAVWe/BTDL/N7y9XqF8vbEg/A
-         LBJikXoE9bT7BEaOWOLwWt52owdDJjZr8s2DsRTuc7OwUSokcsYM4+onJnfGO0sEfb4r
-         NVIXIqtqiYYKv4ow15IcC2xT7DYCohO9dGIrJb9rr1BrRsBURg8/M7aBsepO1/bcxuRm
-         lWTQ==
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date;
+        bh=tSt+TIRAC+j8jmijeG7Slz9mQYvn4dIMqWXdxkZMwII=;
+        b=pDZq9O89zt5c9P9djLhNuRMJjotd1+aXB7XJH/VMdJC20UE3ZZEKnXAyGkCDIMuTKB
+         pVq/bjEuIwaRbDNl79xe2dlR5CUTvP1pB0uCV/YeONAnWgl3NkdaolR7MtLZnYr6acqi
+         sF+7P2OQWc794yd0Xg+vItcDjpARQig/FvYvRfkZ/gFUpl6rBH/4PoWVnZbfza2iTtbd
+         vPe04lTNR2oJamlEVQAn2RlSRO4Mho27ZdYCpH1CyUC4k6U2sGJIHYswO/PU3+CYiWGC
+         93ofJYWlivrPMce3nN19QiRVl1Pyo+dMpA9AE5ogYUheoxsyPr6YnbSoTLITZscuutWP
+         /PMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=anwJ1q9b14QesSLm4IQZ3eD0Se0ge7to/g7pHbX3jG0=;
-        b=pqMkMr44o9ZF4PUXHXwGkU6T5QfFkk4A6NBoY4wfEg2jUbuLxJQQf4mlNLCRWfH78R
-         o8FRQ5JciLSwAckoWt/U/W4lQmWb+pEX6IZ4X/p2h3ruqwBWBEtZyA7zhm1XdF1iBn5H
-         zvPn6O4idD0E/jmXYy8F1IEUYIocg1Bz1E3+I6gxcDGMnJcYL5HZ9gkXdwAjCrEk+p7y
-         zjVyHzpK/GcEM2v0+Vql9qY2TmW3nGdViJXr5ImhA2LF6BhrcGAo62nuxjlStANvgwT1
-         53jqkP2u/VDBCeEcbHItw8ahdV5JHIAf2eYbIJ2dmz93Xq+/w7OvIbqd4v62Qo3CJOqX
-         9tUw==
-X-Gm-Message-State: ACrzQf2NetnODR59kq2W2dDFq9rLXElm+uWbxOj8oB+y18NtYiskEAnJ
-	qK2iFKu5mx/Nr2ufF7ghjRy/GZ+t1nm8yU4i9ZU=
-X-Google-Smtp-Source: AMsMyM7M1YKMioaUgRWcbL23K4TaHKNh67DDfmsw8bUBSbp1bz0bgqIHBrVEMt51SFoqWOPTeCbJrP/ViUnRkbqN54M=
-X-Received: by 2002:a05:6870:c1c6:b0:12c:8311:8f3c with SMTP id
- i6-20020a056870c1c600b0012c83118f3cmr2206076oad.158.1663682411217; Tue, 20
- Sep 2022 07:00:11 -0700 (PDT)
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=tSt+TIRAC+j8jmijeG7Slz9mQYvn4dIMqWXdxkZMwII=;
+        b=U+TxWp+qVvgbV3D4mGXQAflkISFAQNn62RHlnZ/l3csrj5FRrqGFwFk2oT61oKXU8A
+         wct0MVRYJu3HrGXC8f7yc33XXAI/+IsVyzBT0TIhTduV8MP5Rri6mE+pu4rjphftNXh5
+         VUVxkJMw4kx2qpYzMKrtDtKKP8k56Oyc0Wl7QBjq/nUbg0Qp8aOjScsYfOpg85hPycyT
+         aFnkwdzSNMo2JG7YuQrs1Z7sqjh7LUAuqT9oezS+anXkfMQR7pKgkmx/19ilm6783osR
+         eqMuq92eO0QC00JMjxGDwpLpbvUn2D1yVRWqjFj6AgSLZCPfIasYoUoM0Bab1c+qS9ol
+         lMsg==
+X-Gm-Message-State: ACrzQf1s0VYCBrDJWi10LCiUzJWJju3Wgv7rjcljO+OO2lP67pJcnDpw
+	7a86bVGz/putGKWD46BTobhstw==
+X-Google-Smtp-Source: AMsMyM59GVInxWbQJpAoFsryT8RMGZ/gj3CIiidUTPZsyRhsYv7uE5TGbwRxR4macqcUYIT41f8uuA==
+X-Received: by 2002:a05:6638:140e:b0:35a:7a8e:86e5 with SMTP id k14-20020a056638140e00b0035a7a8e86e5mr10502979jad.276.1663682710679;
+        Tue, 20 Sep 2022 07:05:10 -0700 (PDT)
+Received: from [192.168.1.94] ([207.135.234.126])
+        by smtp.gmail.com with ESMTPSA id x10-20020a0566380caa00b00356726330a4sm640575jad.154.2022.09.20.07.05.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Sep 2022 07:05:10 -0700 (PDT)
+Message-ID: <d39e9149-fcb6-1f7c-4c19-234e74f286f8@kernel.dk>
+Date: Tue, 20 Sep 2022 08:05:06 -0600
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CACX6voDfcTQzQJj=5Q-SLi0in1hXpo=Ri28rX73Og3GTObPBWA@mail.gmail.com>
- <48bb6266-2d5c-ffcd-6982-4fd02bfdcfc3@leemhuis.info>
-In-Reply-To: <48bb6266-2d5c-ffcd-6982-4fd02bfdcfc3@leemhuis.info>
-From: hazem ahmed mohamed <hazem.ahmed.abuelfotoh@gmail.com>
-Date: Tue, 20 Sep 2022 14:59:34 +0100
-Message-ID: <CACX6voDhGxiyAxaEu0OL+hHFDD9kigso-YVrWTk4jcbvYZKVew@mail.gmail.com>
-Subject: Re: Ext4: Buffered random writes performance regression with
- dioread_nolock enabled
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>, "tytso@mit.edu" <tytso@mit.edu>, 
-	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: regression caused by block: freeze the queue earlier in
+ del_gendisk
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Dusty Mabe <dusty@dustymabe.com>, Ming Lei <ming.lei@redhat.com>,
+ Christoph Hellwig <hch@lst.de>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-raid@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <017845ae-fbae-70f6-5f9e-29aff2742b8c@dustymabe.com>
+ <YxBZ4BBjxvAkvI2A@T590> <20220907073324.GB23826@lst.de>
+ <Yxr4SD4d0rZ9TZik@T590> <20220912071618.GA4971@lst.de>
+ <Yx/jLTknQm9VeHi4@T590> <95cbd47d-46ed-850e-7d4f-851b35d03069@dustymabe.com>
+ <f2c28043-59e6-0aee-b8bf-df38525ee899@leemhuis.info>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <f2c28043-59e6-0aee-b8bf-df38525ee899@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Looks like I replied only on Thorsten insteading of replying to all so
-moving the discussion to the wider thread for better visibility.
+On 9/20/22 3:11 AM, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker.
+> 
+> On 13.09.22 04:36, Dusty Mabe wrote:
+>> On 9/12/22 21:55, Ming Lei wrote:
+>>> On Mon, Sep 12, 2022 at 09:16:18AM +0200, Christoph Hellwig wrote:
+>>>> On Fri, Sep 09, 2022 at 04:24:40PM +0800, Ming Lei wrote:
+>>>>> On Wed, Sep 07, 2022 at 09:33:24AM +0200, Christoph Hellwig wrote:
+>>>>>> On Thu, Sep 01, 2022 at 03:06:08PM +0800, Ming Lei wrote:
+>>>>>>> It is a bit hard to associate the above commit with reported issue.
+>>>>>>
+>>>>>> So the messages clearly are about something trying to open a device
+>>>>>> that went away at the block layer, but somehow does not get removed
+>>>>>> in time by udev (which seems to be a userspace bug in CoreOS).  But
+>>>>>> even with that we really should not hang.
+>>>>>
+>>>>> Xiao Ni provides one script[1] which can reproduce the issue more or less.
+>>>>
+>>>> I've run the reproduced 10000 times on current mainline, and while
+>>>> it prints one of the autoloading messages per run, I've not actually
+>>>> seen any kind of hang.
+>>>
+>>> I can't reproduce the hang too.
+>>
+>> I obviously can reproduce the issue with the test in our Fedora CoreOS
+>> test suite. It's part of a framework (i.e. it's not simple some script
+>> you can run) but it is very reproducible so one can add some instrumentation
+>> to the kernel and feed it through a build/test cycle to see different
+>> results or logs.
+>>
+>> I'm willing to share this with other people (maybe a screen share or
+>> some written down instructions) if anyone would be interested.
+> 
+> This thread looked stalled, or was there any progress in the past week?
+> If not: Fedora apparently removed the patch in their kernels a while
+> ago, as quite a few users where hitting it. What is preventing us from
+> doing the same in mainline and 5.19.y until the issue can be resolved?
+> The description of a09b314005f3 ("block: freeze the queue earlier in
+> del_gendisk") doesn't sound like the change does something crucial that
+> can't wait a bit. I might be totally wrong with that, but I think it's
+> my duty to ask that question at this point.
 
----------- Forwarded message ---------
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Date: Tue, 20 Sept 2022 at 14:31
-Subject: Re: Ext4: Buffered random writes performance regression with
-dioread_nolock enabled
-To: hazem ahmed mohamed <hazem.ahmed.abuelfotoh@gmail.com>
+Christoph and I discussed this one last week, and he has a plan to try
+a flag approach. Christoph, did you get a chance to bang that out? Would
+be nice to get this one wrapped up.
+
+-- 
+Jens Axboe
 
 
-On 20.09.22 15:21, hazem ahmed mohamed wrote:
-> Thanks Thorsten, I am surprised that we merged this commit while it
-> has been showing regression since Day-0, unless there is an objection
-> I will submit a revert patch until we know what's going on here.
-
-Please keep replies online, then others can learn from the conversation
-and weight in. In this particular case I'd explained that a quick revert
-after all this time is likely a bad thing, as there is always a risk
-that is creates regressions of its own. :-/
-
-Ciao, Thorsten
-> On 19.09.22 17:18, hazem ahmed mohamed wrote:
-> >
-> > I am sending this e-mail to report a performance regression that=E2=80=
-=99s
-> > caused by commit 244adf6426(ext4: make dioread_nolock the default) , I
-> > am listing the performance regression symptoms below & our analysis
-> > for the reported regression.
->
-> FWIW, that patch went into v5.6-rc1~113^2~12
->
-> And BTW: it seems 0-day back then noticed that 244adf6426 caused a
-> performance regression as well, but it seems that was ignored:
-> https://lore.kernel.org/all/20201024120829.GK31092@shao2-debian/
->
-> Anyway, now to the main reason why I write this mail:
->
-> [TLDR: I'm adding this regression report to the list of tracked
-> regressions; all text from me you find below is based on a few templates
-> paragraphs you might have encountered already already in similar form.]
->
-> Thanks for the report. To be sure below issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-> tracking bot:
->
-> #regzbot ^introduced 244adf6426
-> #regzbot ignore-activity
->
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply -- ideally with also
-> telling regzbot about it, as explained here:
-> https://linux-regtracking.leemhuis.info/tracked-regression/
->
-> Reminder for developers: When fixing the issue, add 'Link:' tags
-> pointing to the report (the mail this one replies to), as explained for
-> in the Linux kernel's documentation; the webpage mention at the end of
-> the last para explains why this is important for tracked regressions.
->
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->
-> P.S.: As the Linux kernel's regression tracker I deal with a lot of
-> reports and sometimes miss something important when writing mails like
-> this. If that's the case here, don't hesitate to tell me in a public
-> reply, it's in everyone's interest to set the public record straight.
