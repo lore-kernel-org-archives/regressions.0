@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1677C
-	for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 09:26:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400E87C
+	for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 09:48:51 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oavzT-0004S6-RL; Wed, 21 Sep 2022 11:25:59 +0200
-Message-ID: <6a3660b2-fa7d-14a2-6977-f50926ad369c@leemhuis.info>
-Date: Wed, 21 Sep 2022 11:25:59 +0200
+	id 1oawLY-0002vY-Ug; Wed, 21 Sep 2022 11:48:48 +0200
+Message-ID: <595451b2-fa7f-8ff0-6ffd-bebf6e76c577@leemhuis.info>
+Date: Wed, 21 Sep 2022 11:48:48 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,53 +16,32 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.1
-Subject: Re: regression caused by block: freeze the queue earlier in
- del_gendisk
 Content-Language: en-US, de-DE
-To: Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>
-Cc: Dusty Mabe <dusty@dustymabe.com>, Ming Lei <ming.lei@redhat.com>,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <017845ae-fbae-70f6-5f9e-29aff2742b8c@dustymabe.com>
- <YxBZ4BBjxvAkvI2A@T590> <20220907073324.GB23826@lst.de>
- <Yxr4SD4d0rZ9TZik@T590> <20220912071618.GA4971@lst.de>
- <Yx/jLTknQm9VeHi4@T590> <95cbd47d-46ed-850e-7d4f-851b35d03069@dustymabe.com>
- <f2c28043-59e6-0aee-b8bf-df38525ee899@leemhuis.info>
- <d39e9149-fcb6-1f7c-4c19-234e74f286f8@kernel.dk>
- <20220920141217.GA12560@lst.de>
- <9594af4b-eb16-0a51-9a4a-e21bbce3317d@kernel.dk>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <9594af4b-eb16-0a51-9a4a-e21bbce3317d@kernel.dk>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <a44901ff-9f4a-07ff-1187-250666679e97@leemhuis.info>
+Subject: Re: Bug 216340 - Kernel stuck on "Loading initial ramdisk" since 5.11
+ #forregzbot
+In-Reply-To: <a44901ff-9f4a-07ff-1187-250666679e97@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663752363;f6d66ad7;
-X-HE-SMSGID: 1oavzT-0004S6-RL
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1663753731;a356aca6;
+X-HE-SMSGID: 1oawLY-0002vY-Ug
 
-On 20.09.22 16:14, Jens Axboe wrote:
-> On 9/20/22 8:12 AM, Christoph Hellwig wrote:
->> On Tue, Sep 20, 2022 at 08:05:06AM -0600, Jens Axboe wrote:
->>> Christoph and I discussed this one last week, and he has a plan to try
->>> a flag approach. Christoph, did you get a chance to bang that out? Would
->>> be nice to get this one wrapped up.
->>
->> I gave up on that as it will be far too much change so late in
->> the cycle and sent you the revert yesterday.
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
+
+On 23.08.22 18:38, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
 > 
-> Gotcha, haven't made it all the way through the emails of the morning yet.
-> I'll queue it up.
+> There is a bug report in bugzilla.kernel.org that seems to be handled
+> there already, nevertheless I'd like to add to the tracking to ensure
+> it's not forgotten.
+> 
+> #regzbot introduced: f289041ed4cf9a3f6e8a32068fef9ffb2acc5662
+> https://bugzilla.kernel.org/show_bug.cgi?id=216340
 
-Thx to both of you for taking care of this.
-
-Nitpicking: that patch is missing a "CC: stable@..." tag to ensure
-automatic and quick backporting to 5.19.y. Or is the block layer among
-the subsystems that prefer to handle such things manually?
-
-Ohh, and a fixes tag might have been good as well; a "Link:" tag
-pointing to the report, too. If either would have been there, regzbot
-would have noticed Christoph's patch posting and I wouldn't have
-bothered you yesterday. :-) But whatever, not that important.
-
-#regzbot fixed-by: 4c66a326b5ab784cddd72d
-
-Ciao, Thorsten
+#regzbot invalid: odd corner case, workaround available, not a real
+regression; see https://bugzilla.kernel.org/show_bug.cgi?id=216340#c52
+and later for details
