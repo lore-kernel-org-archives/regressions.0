@@ -1,105 +1,66 @@
 Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8BD1365
-	for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 02:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02EC27E1E
+	for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 02:42:08 +0000 (UTC)
 Received: from cwcc.thunk.org (pool-173-48-120-46.bstnma.fios.verizon.net [173.48.120.46])
 	(authenticated bits=0)
         (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 28L27baS018728
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 28L2fupT001976
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Sep 2022 22:07:38 -0400
+	Tue, 20 Sep 2022 22:41:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1663726059; bh=3ohc6YQiQrAmEO861AamUK/Zf3us3MNirXCnBSsXsbs=;
+	t=1663728119; bh=t2Q8V+AEIFSC4FWyOVVZ3q/0L0fosOQqOKm2sowUgLU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UwUFSoEld8CG3BMMq8pop268EWXXWl1XoEpBqoW1h2Y3/OKaqBVVcY4ZnsdCIzpNg
-	 h91S3bupRx2elhJ4ZQ6C0hp9VDHoFtPW2Oy0X6VrfLIVrchUdGneOAqyJXXm29c8nm
-	 mgcVntkBtXyVfij06N60RpPVhHasNL+35Jh4Bv4rnkeCF3qB9zV3syjd2LkRR9AHjL
-	 MrAyZW7TXxLPZRNiUUW9P5RqmUoaIZjmBUO1ywCFx4IHVhviS6hMIz0MERfAoKKHjx
-	 Tg7YAFofyCxkThZCoIF0UJ6MIkPpZgwgtoz4H50gdVn3yXr/Gscphzhe0ClioeRmZV
-	 SOVmGH29H2w4w==
+	b=DBiS/xxerukulQL4UwQIAmdTUPF9ZSkwh0fPFFq45tIbzNTTWEtxhAsfkEW70KQS6
+	 qVQtcbPI6J+lJlpLcMN+MNpep3yeA+QiSlt78GuRjpM0NlbsRU7CUd8lClb5b+pepC
+	 DSS5we2t7YAFaleOQHG9zF1rC1W0QjD9Q0SMXgAHw2PHxAHAvVY8VlEORVR60ahCKx
+	 r9VUo+eHY2Tjmw1u8rvxxTfK//3CQeIm7I52ipSmSoYVorRjTXvjyhmM9IYSb+90KY
+	 ESIQQzwUFtn0JUDdW51LtlAvo1Y+u1sCQeYNRMUINshuUyBZAmigOj0rBhBZeJUCU6
+	 5zAPxOdZN1BPg==
 Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 166A815C526C; Tue, 20 Sep 2022 22:07:37 -0400 (EDT)
-Date: Tue, 20 Sep 2022 22:07:37 -0400
+	id C6C2515C526C; Tue, 20 Sep 2022 22:41:56 -0400 (EDT)
+Date: Tue, 20 Sep 2022 22:41:56 -0400
 From: "Theodore Ts'o" <tytso@mit.edu>
-To: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>
-Cc: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: hazem ahmed mohamed <hazem.ahmed.abuelfotoh@gmail.com>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
         "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
         "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>
 Subject: Re: Ext4: Buffered random writes performance regression with
  dioread_nolock enabled
-Message-ID: <Yypx6VQRbl3bFP2v@mit.edu>
-References: <28460B7B-F66E-4BDC-9F6E-B7E77A3FEE83@amazon.com>
+Message-ID: <Yyp59DELlYXpoCBC@mit.edu>
+References: <CACX6voDfcTQzQJj=5Q-SLi0in1hXpo=Ri28rX73Og3GTObPBWA@mail.gmail.com>
+ <48bb6266-2d5c-ffcd-6982-4fd02bfdcfc3@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <28460B7B-F66E-4BDC-9F6E-B7E77A3FEE83@amazon.com>
+In-Reply-To: <48bb6266-2d5c-ffcd-6982-4fd02bfdcfc3@leemhuis.info>
 
-On Mon, Sep 19, 2022 at 03:06:46PM +0000, Mohamed Abuelfotoh, Hazem wrote:
-> Hey Team,
-> 
-> 
->   *   I am sending this e-mail to report a performance regression that’s caused by commit 244adf6426(ext4: make dioread_nolock the default) , I am listing the performance regression symptoms below & our analysis for the reported regression.
+Hazem started separate e-mail threads on this issue (separated by
+about an hour), and I replied to the earlier one here:
 
-Performance regressions are always tricky; dioread_nolock improves on
-some workloads, and can cause regressions for others.  In this
-particular case, the choice to make it the default was to also fix a
-direct I/O vs. writeback race which can result in stale data being
-revealed (which is a security issue).
+    https://lore.kernel.org/all/Yypx6VQRbl3bFP2v@mit.edu/
 
-That being said...
+TL;DR:
 
-1)  as you've noted, this commit has been around since 5.6.
+1)  The patch landed in 5.6, and improved performance for some
+workloads, and also fixed a potential security problem (exposure of
+stale data caused by a race).
 
-2)  as you noted,
+2)  If you are using a storage device >= 128GB, and a version of
+e2fsprogs v1.43.2 (released six years ago), the journal size will be
+1GB, which Hazem reported resolved the problem.
 
-    Increasing the journal size from ext4 128 MiB to 1GiB will also
-    fix the problem .
-
-Since 2016, the commit bbd2f78cf63a ("libext2fs: allow the default
-journal size to go as large as a gigabyte") has been in e2fsprogs
-v1.43.2 and newer (the current version of e2fsprogs v1.46.5; v1.43.2
-was released in September 2016, six years ago).  Quoting the commit
-description:
-
-    Recent research has shown that for a metadata-heavy workload, a 128 MB
-    is journal be a bottleneck on HDD's, and that the optimal journal size
-    is proportional to number of unique metadata blocks that can be
-    modified (and written into the journal) in a 30 second window.  One
-    gigabyte should be sufficient for most workloads, which will be used
-    for file systems larger than 128 gigabytes.
-
-So this should not be a problem in practice, and if there are users
-who are using antedeluvian versions of e2fsprogs, or who have old file
-systems which were created many years ago, it's quite easy to adjust
-the journal size.  For example, to adjust the journal to be 2GiB (2048
-MiB), just run the commands:
-
-   tune2fs -O ^has_journal /dev/sdXX
-   tune2fs -O has_journal -J size=2048 /tmp/sdXX
-
-Hence, I disagree that we should revert commit 244adf6426.  It may be
-that for your workload and your file system configuration, using the
-mount option nodioread_nolock (or dioread_lock), may make sense.  But
-there were also workloads for which using dioread_nolock improved
-benchmark numbers, so the question of which is the better default is
-not at all obvious.
-
-That being said, I do have plans for a new writeback scheme which will
-replace dioread_nolock *and* dioread_lock, and which will hopefully be
-faster than either approach.
+3) I disagree that we should revert this commit, as it only changes a
+default.  If you prefer the older behavior, you can change it with a
+mount option.
 
 						- Ted
-
-P.S.  I'm puzzled by your comment, "we have to note that this should
-be only beneficial with extent-based files" --- while this is true,
-why does this matter?  Unless you're dealing with an ancient file
-system that was originally created as ext2 or ext3 and then converted
-to ext4, *all* ext4 files should be extent-based...
