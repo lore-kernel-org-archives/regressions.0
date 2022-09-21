@@ -1,64 +1,155 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991957C
-	for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 10:03:38 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oawZs-0007eK-Bn; Wed, 21 Sep 2022 12:03:36 +0200
-Message-ID: <d6dd7b47-2c32-2de2-7282-0112ab73dc15@leemhuis.info>
-Date: Wed, 21 Sep 2022 12:03:36 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4107E22
+	for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 10:35:52 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id y3so12656637ejc.1
+        for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 03:35:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date;
+        bh=vWTx9waxxwXRcamt4ePCJ74t1njaL9ZrGOeuhdI5nro=;
+        b=s3/zWeZf0K6JlcMz68yA4amBwBVAratLAs4TitSGSWrUF7jSEaercPgB435AdKIgST
+         sU8Cc96EMdJuaaW/RujVYHjga3Tr8y/70utRZgnSsbQzEop5DUn23X2gDJCY8SBXHfb1
+         ungajh15QI0Y7prHu+d6033i8RFixVFx3TmgGZsO43LhbV3MPeT96iQxUOjeVIr/3VD7
+         qzFQDhqSNN8OlLHWogZut17ZNQJVSkz70x03KufUaYFQQxgSKZlSvLx9K/HImbSUblo9
+         xajMFezGzHdmBMQlx7t5faxa12Fq5yMrTEJ8Ajo7QGcTvLQQtqcI08BvazMyGk7078ET
+         ZYTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=vWTx9waxxwXRcamt4ePCJ74t1njaL9ZrGOeuhdI5nro=;
+        b=RgJLlvm3KL21ksQ0X02myTCC77zynUhogqIFOwwtvnv3aTTMlSYcDb8MrhNJ3wgAlB
+         j4kfkJBCGgaAY2bZ8ELjkKL92lKTEeq4PEOAaE+U8Ta+4UBHs2jGYnjplMo/lVQArxB/
+         jp47oEZNBxmZuaMOjXvQ55/298328MyOf4xZnwPSa9VSpDbSOXb/2C5egS9bhtNlLJgR
+         /7qK0aOqRa2k59TISugyyXehxFdwt0L2d6FhDoYVNcTFUevda9C9n7bItGJ4dVF7Gvwm
+         Q8YHIabNX7+cjJB5Ih+qT8GBsWNAzP5303bb0pT+E2QqvPPk6mC7JxCJVCzig9/bJIE2
+         Z5lw==
+X-Gm-Message-State: ACrzQf23AjmqiHVXqLtF2vrv2LhZ0LWFlYQPvrN+Gpu2Xlam2aw534Gt
+	A0oXLxIRMNqZWXuEaYEdhR9VCYK7Wjl/4irIFZnr8Q==
+X-Google-Smtp-Source: AMsMyM6GsnvJLODMjJ0WjzFJpNLKJiNkDrnFRW/CCvYMgJEzL+qkZOkteO9eA3X5swG3BfiW9LgeeqdRo/NsYE3W/2w=
+X-Received: by 2002:a17:906:4fce:b0:780:e1d8:eacc with SMTP id
+ i14-20020a1709064fce00b00780e1d8eaccmr15423597ejw.366.1663756550698; Wed, 21
+ Sep 2022 03:35:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: "nvme nvmeX: IO queues not created" with "Amazon.com, Inc. NVMe
- SSD Controller" from 5.19.y (issue bisected) #forregzbot
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-nvme@lists.infradead.org
-References: <CAK8fFZ5vajOJGSwA53tU=Y2-jf0rnJWOjkadgqRCTf38bF0YXw@mail.gmail.com>
- <7883f05d-9ed8-2be3-3f9f-4f814aefe55a@leemhuis.info>
-In-Reply-To: <7883f05d-9ed8-2be3-3f9f-4f814aefe55a@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663754618;33b22517;
-X-HE-SMSGID: 1oawZs-0007eK-Bn
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 21 Sep 2022 16:05:39 +0530
+Message-ID: <CA+G9fYsZ_qypa=jHY_dJ=tqX4515+qrV9n2SWXVDHve826nF7Q@mail.gmail.com>
+Subject: drivers/net/wireless/ath/ath11k/mac.c:2238:29: warning:
+ 'ath11k_peer_assoc_h_he_limit' reading 16 bytes from a region of size 0
+To: Netdev <netdev@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	linux-wireless@vger.kernel.org
+Cc: Kalle Valo <kvalo@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	ath11k@lists.infradead.org, regressions@lists.linux.dev, 
+	lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 08.09.22 12:41, Thorsten Leemhuis wrote:
-> TWIMC: this mail is primarily send for documentation purposes and for
-> regzbot, my Linux kernel regression tracking bot. These mails usually
-> contain '#forregzbot' in the subject, to make them easy to spot and filter.
-> 
-> On 07.09.22 08:05, Jaroslav Pulchart wrote:
->> Hello,
->>
->> I would like to report a regression issue in 5.19.y in NVMe driver.
->>
->> The issue is reproducible at AWS EC2 instances with local NVMe storage
->> like "r5d.*". Kernel report "IO queues not created":
->> [    2.936641] nvme nvme0: 2/0/0 default/read/poll queues  <- EBS volume
->> [    2.939493] nvme nvme1: 2/0/0 default/read/poll queues  <- EBS volume
->> [    2.940797] nvme nvme2: IO queues not created              <- Local volume
->> with 5.19.y (kernel 5.19) and the nvme storage cannot be used.
->>
->> I bisected the issue to commit
->> "aa41d2fe60ee2e4452b0f9ca9f0f6d80a4ff9f9d" (nvme: set controller
->> enable bit in a separate write). Reverting it makes the nvme device
->> working again:
->> [    3.025599] nvme nvme0: 2/0/0 default/read/poll queues
->> [    3.032467] nvme nvme2: 8/0/0 default/read/poll queues
->> [    3.040040] nvme nvme1: 2/0/0 default/read/poll queues
-> 
-> #regzbot ^introduced aa41d2fe60ee2e4
-> #regzbot title block: nvme: AWS EC2 instances with local NVMe storage fail
-> #regzbot ignore-activity
+Following build warnings noticed while building arm64 on Linux next-20220921
 
-#regzbot invalid: will be fixed by a rollout of a new firmware, for
-details see the answers to this mail:
-https://lore.kernel.org/linux-nvme/18e67378-1365-5e36-981b-13cada73bcda@leemhuis.info/
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+In function 'ath11k_peer_assoc_h_he',
+    inlined from 'ath11k_peer_assoc_prepare' at
+drivers/net/wireless/ath/ath11k/mac.c:2662:2:
+drivers/net/wireless/ath/ath11k/mac.c:2238:29: warning:
+'ath11k_peer_assoc_h_he_limit' reading 16 bytes from a region of size
+0 [-Wstringop-overread]
+ 2238 |                         v = ath11k_peer_assoc_h_he_limit(v,
+he_mcs_mask);
+      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/ath/ath11k/mac.c: In function 'ath11k_peer_assoc_prepare':
+drivers/net/wireless/ath/ath11k/mac.c:2238:29: note: referencing
+argument 2 of type 'const u16 *' {aka 'const short unsigned int *'}
+drivers/net/wireless/ath/ath11k/mac.c:2019:12: note: in a call to
+function 'ath11k_peer_assoc_h_he_limit'
+ 2019 | static u16 ath11k_peer_assoc_h_he_limit(u16 tx_mcs_set,
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'ath11k_peer_assoc_h_he',
+    inlined from 'ath11k_peer_assoc_prepare' at
+drivers/net/wireless/ath/ath11k/mac.c:2662:2:
+drivers/net/wireless/ath/ath11k/mac.c:2251:21: warning:
+'ath11k_peer_assoc_h_he_limit' reading 16 bytes from a region of size
+0 [-Wstringop-overread]
+ 2251 |                 v = ath11k_peer_assoc_h_he_limit(v, he_mcs_mask);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/ath/ath11k/mac.c: In function 'ath11k_peer_assoc_prepare':
+drivers/net/wireless/ath/ath11k/mac.c:2251:21: note: referencing
+argument 2 of type 'const u16 *' {aka 'const short unsigned int *'}
+drivers/net/wireless/ath/ath11k/mac.c:2019:12: note: in a call to
+function 'ath11k_peer_assoc_h_he_limit'
+ 2019 | static u16 ath11k_peer_assoc_h_he_limit(u16 tx_mcs_set,
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'ath11k_peer_assoc_h_he',
+    inlined from 'ath11k_peer_assoc_prepare' at
+drivers/net/wireless/ath/ath11k/mac.c:2662:2:
+drivers/net/wireless/ath/ath11k/mac.c:2264:21: warning:
+'ath11k_peer_assoc_h_he_limit' reading 16 bytes from a region of size
+0 [-Wstringop-overread]
+ 2264 |                 v = ath11k_peer_assoc_h_he_limit(v, he_mcs_mask);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/ath/ath11k/mac.c: In function 'ath11k_peer_assoc_prepare':
+drivers/net/wireless/ath/ath11k/mac.c:2264:21: note: referencing
+argument 2 of type 'const u16 *' {aka 'const short unsigned int *'}
+drivers/net/wireless/ath/ath11k/mac.c:2019:12: note: in a call to
+function 'ath11k_peer_assoc_h_he_limit'
+ 2019 | static u16 ath11k_peer_assoc_h_he_limit(u16 tx_mcs_set,
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'ath11k_peer_assoc_h_he',
+    inlined from 'ath11k_peer_assoc_prepare' at
+drivers/net/wireless/ath/ath11k/mac.c:2662:2:
+drivers/net/wireless/ath/ath11k/mac.c:2264:21: warning:
+'ath11k_peer_assoc_h_he_limit' reading 16 bytes from a region of size
+0 [-Wstringop-overread]
+ 2264 |                 v = ath11k_peer_assoc_h_he_limit(v, he_mcs_mask);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/ath/ath11k/mac.c: In function 'ath11k_peer_assoc_prepare':
+drivers/net/wireless/ath/ath11k/mac.c:2264:21: note: referencing
+argument 2 of type 'const u16 *' {aka 'const short unsigned int *'}
+drivers/net/wireless/ath/ath11k/mac.c:2019:12: note: in a call to
+function 'ath11k_peer_assoc_h_he_limit'
+ 2019 | static u16 ath11k_peer_assoc_h_he_limit(u16 tx_mcs_set,
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'ath11k_peer_assoc_h_he',
+    inlined from 'ath11k_peer_assoc_prepare' at
+drivers/net/wireless/ath/ath11k/mac.c:2662:2:
+drivers/net/wireless/ath/ath11k/mac.c:2264:21: warning:
+'ath11k_peer_assoc_h_he_limit' reading 16 bytes from a region of size
+0 [-Wstringop-overread]
+ 2264 |                 v = ath11k_peer_assoc_h_he_limit(v, he_mcs_mask);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/ath/ath11k/mac.c: In function 'ath11k_peer_assoc_prepare':
+drivers/net/wireless/ath/ath11k/mac.c:2264:21: note: referencing
+argument 2 of type 'const u16 *' {aka 'const short unsigned int *'}
+drivers/net/wireless/ath/ath11k/mac.c:2019:12: note: in a call to
+function 'ath11k_peer_assoc_h_he_limit'
+ 2019 | static u16 ath11k_peer_assoc_h_he_limit(u16 tx_mcs_set,
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In function 'ath11k_peer_assoc_h_he',
+    inlined from 'ath11k_peer_assoc_prepare' at
+drivers/net/wireless/ath/ath11k/mac.c:2662:2:
+drivers/net/wireless/ath/ath11k/mac.c:2251:21: warning:
+'ath11k_peer_assoc_h_he_limit' reading 16 bytes from a region of size
+0 [-Wstringop-overread]
+ 2251 |                 v = ath11k_peer_assoc_h_he_limit(v, he_mcs_mask);
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/ath/ath11k/mac.c: In function 'ath11k_peer_assoc_prepare':
+drivers/net/wireless/ath/ath11k/mac.c:2251:21: note: referencing
+argument 2 of type 'const u16 *' {aka 'const short unsigned int *'}
+drivers/net/wireless/ath/ath11k/mac.c:2019:12: note: in a call to
+function 'ath11k_peer_assoc_h_he_limit'
+ 2019 | static u16 ath11k_peer_assoc_h_he_limit(u16 tx_mcs_set,
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Build log: https://builds.tuxbuild.com/2F4W7nZHNx3T88RB0gaCZ9hBX6c/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
