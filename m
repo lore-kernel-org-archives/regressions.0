@@ -1,53 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B093237;
-	Wed, 21 Sep 2022 16:46:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D6FBC433C1;
-	Wed, 21 Sep 2022 16:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1663778813;
-	bh=KO9/J/hUO8nnDy0M9Goj6pDfKn66gCx4G05aBn2ANZE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RN2hmiXX6cjXziPtgx/iY5Bg3NETvDCbt4S2Wzy7zoVkAJdavITiNaLB1cvE496Bx
-	 CYgB99QgC/PxyHvdNBH+yBkuwQ0K1iAEfnh+XB0e4UWAsqKMkwAz75u0Qzoyz47vLz
-	 J3CiO5nwbNX1P3MO9yW0lSVSIDxsnJfC861Hw9iU=
-Date: Wed, 21 Sep 2022 18:46:51 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Joerg Roedel <joro@8bytes.org>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Lu Baolu <baolu.lu@linux.intel.com>, iommu@lists.linux.dev,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Sasha Levin <sashal@kernel.org>
-Subject: Re: How to quickly resolve the IOMMU regression that currently
- plagues a lot of people in 5.19.y
-Message-ID: <Yys/+yXuINceZGbz@kroah.com>
-References: <1d1844f0-c773-6222-36c6-862e14f6020d@leemhuis.info>
- <fd672632-7935-14ff-e2be-0db8443b0907@leemhuis.info>
- <YyrI/qzx/EWapzck@8bytes.org>
- <CAHk-=wgU0PyYHut+8zV+kNCxOZiCXd5J29Eisiy8badzsk8Msw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD61B7C
+	for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 19:48:25 +0000 (UTC)
+Received: from zn.tnic (p200300ea9733e77f329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e77f:329c:23ff:fea6:a903])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 90A921EC04E4;
+	Wed, 21 Sep 2022 21:48:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+	t=1663789693;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+	bh=RQsSCmnaA3tja2xxzLfdQayRM2Puy3vWH21v7at91H8=;
+	b=BhqYk4Apw3euLWYnEfH1ZSXzy2nIQwCIItrx7JT1KgUH3QjrHXIXwWuIKzq4Jp6WS8bd4z
+	Ne0pLLDtHIF4r/o5rdtQyGdAlvopxks92MXl007Unbp6yDIM5qBV9U6fGkSyK2T0K+xpNr
+	FYsrp7QrFQ3xsziRJslwmeUfYvzN32Y=
+Date: Wed, 21 Sep 2022 21:48:13 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>, linux-kernel@vger.kernel.org,
+	rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org,
+	linux-pm@vger.kernel.org, dave.hansen@linux.intel.com,
+	tglx@linutronix.de, andi@lisas.de, puwen@hygon.cn,
+	mario.limonciello@amd.com, rui.zhang@intel.com, gpiccoli@igalia.com,
+	daniel.lezcano@linaro.org, ananth.narayan@amd.com,
+	gautham.shenoy@amd.com, Calvin Ong <calvin.ong@amd.com>,
+	stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [PATCH] ACPI: processor_idle: Skip dummy wait for processors
+ based on the Zen microarchitecture
+Message-ID: <YytqfVUCWfv0XyZO@zn.tnic>
+References: <20220921063638.2489-1-kprateek.nayak@amd.com>
+ <YysnE8rcZAOOj28A@hirez.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgU0PyYHut+8zV+kNCxOZiCXd5J29Eisiy8badzsk8Msw@mail.gmail.com>
+In-Reply-To: <YysnE8rcZAOOj28A@hirez.programming.kicks-ass.net>
 
-On Wed, Sep 21, 2022 at 09:15:12AM -0700, Linus Torvalds wrote:
-> On Wed, Sep 21, 2022 at 1:19 AM Joerg Roedel <joro@8bytes.org> wrote:
-> >
-> > Thanks for the noise :) I will queue the fix today and send it upstream.
+On Wed, Sep 21, 2022 at 05:00:35PM +0200, Peter Zijlstra wrote:
+> On Wed, Sep 21, 2022 at 12:06:38PM +0530, K Prateek Nayak wrote:
+> > Processors based on the Zen microarchitecture support IOPORT based deeper
+> > C-states. 
 > 
-> .. and it's in my tree now.
+> I've just gotta ask; why the heck are you using IO port based idle
+> states in 2022 ?!?! You have have MWAIT, right?
 
-And now added to the next 5.19-rc release that is out for review now.
+They have both. And both is Intel technology. And as I'm sure you
+know AMD can't do their own thing - they kinda have to follow Intel.
+Unfortunately.
 
-thanks for the quick response everyone,
+Are you saying modern Intel chipsets don't do IO-based C-states anymore?
 
-greg k-h
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
