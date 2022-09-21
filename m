@@ -1,90 +1,61 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994223211
-	for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 12:23:32 +0000 (UTC)
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-1279948d93dso8737436fac.10
-        for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 05:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date;
-        bh=3aJj791SFi8MBmk/3DDeNGs8qJFxgSOFtNXhCuwyFlE=;
-        b=gZm6pXwMq2/JC/UTzDilnXvNNyRSckcot0YJ/NTaLbwgqLHVdBCLiaVvIB0NkJ3bmZ
-         1nk1BYSkGZOBASjKxyjllVNk8cab+Hm+DELpIecZjGPDzX2v6JwuUZjXls2mHcirK/+e
-         GjHbLX+FHDyaNPWfCqF087+Pmtdly7g0V902It5/Dx8SAE/K1+IM5JFG6ucNTT+cOkQf
-         m8u3mwFCbWbPL8pqwWcIkjsxR8riTQ9TH/I8mBcIyfB08ZYi+DoeoHcsYYgHLNBEQyFC
-         KgihHc1TC+jck3iRBGiWUKBctERjn3cr1gNKfLL4FDlLcx9b8NBlZbFIrHHHViZYVUGz
-         VmkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=3aJj791SFi8MBmk/3DDeNGs8qJFxgSOFtNXhCuwyFlE=;
-        b=l/J7v16ClD6G2G6Hc5+4j5PybO2lDQu1fvBhMqpWP2qQB35/m5CLY1DY5oFpnJSGh/
-         asmpj7s2pQKLi1kbe1bzY7e9idzeQ1Lcuwd921vgBm1LNdUENlyB3fY1l6km171DrOmM
-         rMrV/DMx+U3qIYw81Af6rs6EYxKiQCbaLy0NPTvB9oWYXqPRyrumYyUumlOJI5sF55Ri
-         F0NUWQuqMLy2XguawyX8KmG6ok1j67saqn6UNtRNBAJiDEs2+31aaTcms8d6crIL1JM/
-         Cl1ZO6Pvj0D7OOmOGswG7jQwSMbEtN+1y0nBB6qtv8DBivbQVj/nU2syn/XNGsmq0nyq
-         HOdg==
-X-Gm-Message-State: ACrzQf0oCPRqJ/6dVQeWOSws3NF7TSWLJQ3VXybOycAClLDDbWBb7oBD
-	aTzLOgY5AMQDyu1oJL0/M35KqsqCdMQxYl6KncU=
-X-Google-Smtp-Source: AMsMyM5ErvoOnIfJMUuBO4BbuAQd4iK1fvd9USzMtEX4sLhb80TdK3rfkL+JCPZ9lgL8+EHwcHMCghXo3GDIFPNl3xA=
-X-Received: by 2002:a05:6870:a78e:b0:12b:542b:e5b2 with SMTP id
- x14-20020a056870a78e00b0012b542be5b2mr4900564oao.112.1663763011355; Wed, 21
- Sep 2022 05:23:31 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B69B2F56
+	for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 13:10:57 +0000 (UTC)
+Received: from zn.tnic (p200300ea9733e77f329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e77f:329c:23ff:fea6:a903])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 71DEB1EC04CB;
+	Wed, 21 Sep 2022 15:10:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+	t=1663765851;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+	bh=ozPGXkhQCcXW67WvAixWgantH6wjYoJ8SSScScLN3uU=;
+	b=nnLOflJ9Jx3vMjKoksPafVEanEjnJJxfxqTctRswLDb92r8jDPojepDJ7VUSEwZvg0npTy
+	Okm1+u9NG4eD7ypRILXypbMiQorbG9Y78qT5ykfLIpo0dWbYV/04byeaa1TodzozaA+lss
+	0Hc9lGo0eA+lzGV03I/a+2HY2B6LQsk=
+Date: Wed, 21 Sep 2022 15:10:51 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: linux-kernel@vger.kernel.org, rafael@kernel.org, lenb@kernel.org,
+	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
+	dave.hansen@linux.intel.com, tglx@linutronix.de, andi@lisas.de,
+	puwen@hygon.cn, mario.limonciello@amd.com, peterz@infradead.org,
+	rui.zhang@intel.com, gpiccoli@igalia.com, daniel.lezcano@linaro.org,
+	ananth.narayan@amd.com, gautham.shenoy@amd.com,
+	Calvin Ong <calvin.ong@amd.com>, stable@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] ACPI: processor_idle: Skip dummy wait for processors
+ based on the Zen microarchitecture
+Message-ID: <YysNW3+Fc2zOYcCq@zn.tnic>
+References: <20220921063638.2489-1-kprateek.nayak@amd.com>
+ <YyrPqlo/ysCeh4qU@zn.tnic>
+ <f927f969-028a-4ad4-7776-527ed537c77f@amd.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CACX6voDfcTQzQJj=5Q-SLi0in1hXpo=Ri28rX73Og3GTObPBWA@mail.gmail.com>
- <20220921044419.epojssm3g4j3qkup@riteshh-domain>
-In-Reply-To: <20220921044419.epojssm3g4j3qkup@riteshh-domain>
-From: hazem ahmed mohamed <hazem.ahmed.abuelfotoh@gmail.com>
-Date: Wed, 21 Sep 2022 13:22:55 +0100
-Message-ID: <CACX6voCxHGd46ehrsys+3sVrA2Stq++O2ofh7E6f4MTN59Z2NQ@mail.gmail.com>
-Subject: Re: Ext4: Buffered random writes performance regression with
- dioread_nolock enabled
-To: "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
-Cc: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>, "tytso@mit.edu" <tytso@mit.edu>, 
-	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f927f969-028a-4ad4-7776-527ed537c77f@amd.com>
 
-Thanks for sharing that unfortunately this patch has been merged to
-kernel 5.7 and I am still seeing that regression with later versions
-that include that patch.
+On Wed, Sep 21, 2022 at 04:09:16PM +0530, K Prateek Nayak wrote:
+> I was not aware of cpu_feature_enabled() and it makes perfect sense to
+> use it here.
 
-Hazem.
+It is no difference what the callers use - we simply want to unify the
+interfaces and not have boot_cpu* and cpu_feature_* and so on. One is
+enough and we want to use cpu_feature_enabled() everywhere possible.
 
-On Wed, 21 Sept 2022 at 05:44, Ritesh Harjani (IBM)
-<ritesh.list@gmail.com> wrote:
->
-> On 22/09/19 04:18PM, hazem ahmed mohamed wrote:
-> > Hey Team,
-> >
-> >
-> >
-> > I am sending this e-mail to report a performance regression that=E2=80=
-=99s
-> > caused by commit 244adf6426(ext4: make dioread_nolock the default) , I
-> > am listing the performance regression symptoms below & our analysis
-> > for the reported regression.
-> >
->
-> Although you did mention you already tested on the latest kernel too and =
-there
-> too you saw a similar performance regression.
-> But no harm in also double checking if you have this patch [1].
-> This does fixes a similar problem AFAIU.
->
->
-> [1]: https://lore.kernel.org/linux-ext4/20200520133119.1383-1-jack@suse.c=
-z/
->
-> -ritesh
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
