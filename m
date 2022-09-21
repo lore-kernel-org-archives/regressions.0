@@ -1,87 +1,105 @@
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DCF32562
-	for <regressions@lists.linux.dev>; Tue, 20 Sep 2022 14:14:34 +0000 (UTC)
-Received: by mail-io1-f51.google.com with SMTP id p3so2312886iof.13
-        for <regressions@lists.linux.dev>; Tue, 20 Sep 2022 07:14:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date;
-        bh=/yot0ov3usmKB3Zy+wkJUKPk22BQTuylnVUMZmxsCR4=;
-        b=lIXZTwlaHIbQQ9hNPvRV7HuGvm5RDJYX8qcUeX22OX83N0tkw9Xt13KdlC/anWINwm
-         GSdQCjuqFlnjXmK6d3quFgRZ7vkpgfhPiFdng2KG0u9ylgvfBvqMepItjYQ2ivjERQGp
-         8lbIhTvYiKoy9hpyPK3TjnPUEnO2JyjF2hhVOdKkuSRa0+4ZtVIZ0cplD7cmpKuDl69T
-         uqT78PPAKOllkkBpBIUzKAmALjQnSnksHUYVyAn5ydOljMtwsZEGwWrugEhmfOR/ZRxs
-         gaLDLph39qi7lQQj9HHR0xjlCHEUwJZ+rHe2pgOisLfuPgHb7r7OhEJ2DUDpVDTh2sgy
-         kqTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=/yot0ov3usmKB3Zy+wkJUKPk22BQTuylnVUMZmxsCR4=;
-        b=QrPTIShvXGF8hyzxKprjKF2bRKy8l6/uQVlGMRe7nmpheGJn8GRhcWVGLlC034iUED
-         L/YTY5+VZ7w/pUBn8/nv/LH9WnNvHu/ORV06sf5WM/cNTyK9I8yQ3IwEvrdUtamPYmjz
-         DNPHVq+g6zEhARsa3xnzmJo/1QItMwmsn/jHpgmKy43SNblYk0ZTAIYPFKG90JF0M2vm
-         N1k0gbAFXelj9FuauwyKao4uYj5QgtPiatc30JVS1lIpB26B2TFD1ETsEwPvkS/x/B7I
-         qmZL7uCiXwAIt7bHWlVztkWA5mRJHTBwKByPq97BfnBWV+u8QV+Yo5ZUoa14JKACycFw
-         P7RQ==
-X-Gm-Message-State: ACrzQf16HfoysCc/q2iA3fz6fLrbWBVnnlJpoBig7undVggSnZigLmUm
-	r0CRT06TVVsm/tUKYjtNwL/V+A==
-X-Google-Smtp-Source: AMsMyM4Fm0kTiShfxuAAb97HY9gCdOOBLEjpM6ZrfDeefAteWrULruA4zXYQ/fIChp4JLiLJB3BlqQ==
-X-Received: by 2002:a5d:9902:0:b0:6a2:f72d:4b21 with SMTP id x2-20020a5d9902000000b006a2f72d4b21mr5956574iol.113.1663683273188;
-        Tue, 20 Sep 2022 07:14:33 -0700 (PDT)
-Received: from [192.168.1.94] ([207.135.234.126])
-        by smtp.gmail.com with ESMTPSA id w16-20020a056e0213f000b002f5cd533b31sm125125ilj.0.2022.09.20.07.14.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Sep 2022 07:14:32 -0700 (PDT)
-Message-ID: <9594af4b-eb16-0a51-9a4a-e21bbce3317d@kernel.dk>
-Date: Tue, 20 Sep 2022 08:14:30 -0600
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8BD1365
+	for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 02:07:49 +0000 (UTC)
+Received: from cwcc.thunk.org (pool-173-48-120-46.bstnma.fios.verizon.net [173.48.120.46])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 28L27baS018728
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Sep 2022 22:07:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1663726059; bh=3ohc6YQiQrAmEO861AamUK/Zf3us3MNirXCnBSsXsbs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=UwUFSoEld8CG3BMMq8pop268EWXXWl1XoEpBqoW1h2Y3/OKaqBVVcY4ZnsdCIzpNg
+	 h91S3bupRx2elhJ4ZQ6C0hp9VDHoFtPW2Oy0X6VrfLIVrchUdGneOAqyJXXm29c8nm
+	 mgcVntkBtXyVfij06N60RpPVhHasNL+35Jh4Bv4rnkeCF3qB9zV3syjd2LkRR9AHjL
+	 MrAyZW7TXxLPZRNiUUW9P5RqmUoaIZjmBUO1ywCFx4IHVhviS6hMIz0MERfAoKKHjx
+	 Tg7YAFofyCxkThZCoIF0UJ6MIkPpZgwgtoz4H50gdVn3yXr/Gscphzhe0ClioeRmZV
+	 SOVmGH29H2w4w==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id 166A815C526C; Tue, 20 Sep 2022 22:07:37 -0400 (EDT)
+Date: Tue, 20 Sep 2022 22:07:37 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>
+Cc: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: Ext4: Buffered random writes performance regression with
+ dioread_nolock enabled
+Message-ID: <Yypx6VQRbl3bFP2v@mit.edu>
+References: <28460B7B-F66E-4BDC-9F6E-B7E77A3FEE83@amazon.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: regression caused by block: freeze the queue earlier in
- del_gendisk
-Content-Language: en-US
-To: Christoph Hellwig <hch@lst.de>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- Dusty Mabe <dusty@dustymabe.com>, Ming Lei <ming.lei@redhat.com>,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-raid@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <017845ae-fbae-70f6-5f9e-29aff2742b8c@dustymabe.com>
- <YxBZ4BBjxvAkvI2A@T590> <20220907073324.GB23826@lst.de>
- <Yxr4SD4d0rZ9TZik@T590> <20220912071618.GA4971@lst.de>
- <Yx/jLTknQm9VeHi4@T590> <95cbd47d-46ed-850e-7d4f-851b35d03069@dustymabe.com>
- <f2c28043-59e6-0aee-b8bf-df38525ee899@leemhuis.info>
- <d39e9149-fcb6-1f7c-4c19-234e74f286f8@kernel.dk>
- <20220920141217.GA12560@lst.de>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20220920141217.GA12560@lst.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <28460B7B-F66E-4BDC-9F6E-B7E77A3FEE83@amazon.com>
 
-On 9/20/22 8:12 AM, Christoph Hellwig wrote:
-> On Tue, Sep 20, 2022 at 08:05:06AM -0600, Jens Axboe wrote:
->> Christoph and I discussed this one last week, and he has a plan to try
->> a flag approach. Christoph, did you get a chance to bang that out? Would
->> be nice to get this one wrapped up.
+On Mon, Sep 19, 2022 at 03:06:46PM +0000, Mohamed Abuelfotoh, Hazem wrote:
+> Hey Team,
 > 
-> I gave up on that as it will be far too much change so late in
-> the cycle and sent you the revert yesterday.
+> 
+>   *   I am sending this e-mail to report a performance regression that’s caused by commit 244adf6426(ext4: make dioread_nolock the default) , I am listing the performance regression symptoms below & our analysis for the reported regression.
 
-Gotcha, haven't made it all the way through the emails of the morning yet.
-I'll queue it up.
+Performance regressions are always tricky; dioread_nolock improves on
+some workloads, and can cause regressions for others.  In this
+particular case, the choice to make it the default was to also fix a
+direct I/O vs. writeback race which can result in stale data being
+revealed (which is a security issue).
 
--- 
-Jens Axboe
+That being said...
 
+1)  as you've noted, this commit has been around since 5.6.
 
+2)  as you noted,
+
+    Increasing the journal size from ext4 128 MiB to 1GiB will also
+    fix the problem .
+
+Since 2016, the commit bbd2f78cf63a ("libext2fs: allow the default
+journal size to go as large as a gigabyte") has been in e2fsprogs
+v1.43.2 and newer (the current version of e2fsprogs v1.46.5; v1.43.2
+was released in September 2016, six years ago).  Quoting the commit
+description:
+
+    Recent research has shown that for a metadata-heavy workload, a 128 MB
+    is journal be a bottleneck on HDD's, and that the optimal journal size
+    is proportional to number of unique metadata blocks that can be
+    modified (and written into the journal) in a 30 second window.  One
+    gigabyte should be sufficient for most workloads, which will be used
+    for file systems larger than 128 gigabytes.
+
+So this should not be a problem in practice, and if there are users
+who are using antedeluvian versions of e2fsprogs, or who have old file
+systems which were created many years ago, it's quite easy to adjust
+the journal size.  For example, to adjust the journal to be 2GiB (2048
+MiB), just run the commands:
+
+   tune2fs -O ^has_journal /dev/sdXX
+   tune2fs -O has_journal -J size=2048 /tmp/sdXX
+
+Hence, I disagree that we should revert commit 244adf6426.  It may be
+that for your workload and your file system configuration, using the
+mount option nodioread_nolock (or dioread_lock), may make sense.  But
+there were also workloads for which using dioread_nolock improved
+benchmark numbers, so the question of which is the better default is
+not at all obvious.
+
+That being said, I do have plans for a new writeback scheme which will
+replace dioread_nolock *and* dioread_lock, and which will hopefully be
+faster than either approach.
+
+						- Ted
+
+P.S.  I'm puzzled by your comment, "we have to note that this should
+be only beneficial with extent-based files" --- while this is true,
+why does this matter?  Unless you're dealing with an ancient file
+system that was originally created as ext2 or ext3 and then converted
+to ext4, *all* ext4 files should be extent-based...
