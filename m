@@ -1,61 +1,71 @@
-Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B69B2F56
-	for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 13:10:57 +0000 (UTC)
-Received: from zn.tnic (p200300ea9733e77f329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ea:9733:e77f:329c:23ff:fea6:a903])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 71DEB1EC04CB;
-	Wed, 21 Sep 2022 15:10:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-	t=1663765851;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-	bh=ozPGXkhQCcXW67WvAixWgantH6wjYoJ8SSScScLN3uU=;
-	b=nnLOflJ9Jx3vMjKoksPafVEanEjnJJxfxqTctRswLDb92r8jDPojepDJ7VUSEwZvg0npTy
-	Okm1+u9NG4eD7ypRILXypbMiQorbG9Y78qT5ykfLIpo0dWbYV/04byeaa1TodzozaA+lss
-	0Hc9lGo0eA+lzGV03I/a+2HY2B6LQsk=
-Date: Wed, 21 Sep 2022 15:10:51 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: K Prateek Nayak <kprateek.nayak@amd.com>
-Cc: linux-kernel@vger.kernel.org, rafael@kernel.org, lenb@kernel.org,
-	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-	dave.hansen@linux.intel.com, tglx@linutronix.de, andi@lisas.de,
-	puwen@hygon.cn, mario.limonciello@amd.com, peterz@infradead.org,
-	rui.zhang@intel.com, gpiccoli@igalia.com, daniel.lezcano@linaro.org,
-	ananth.narayan@amd.com, gautham.shenoy@amd.com,
-	Calvin Ong <calvin.ong@amd.com>, stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] ACPI: processor_idle: Skip dummy wait for processors
- based on the Zen microarchitecture
-Message-ID: <YysNW3+Fc2zOYcCq@zn.tnic>
-References: <20220921063638.2489-1-kprateek.nayak@amd.com>
- <YyrPqlo/ysCeh4qU@zn.tnic>
- <f927f969-028a-4ad4-7776-527ed537c77f@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFEC93D86
+	for <regressions@lists.linux.dev>; Wed, 21 Sep 2022 14:15:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1663769709; x=1695305709;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kV8SvwzQDpNaPqI8Ad9CXg1aOsjOIFy6gAewf2bsPso=;
+  b=gdUw8sZLEtU6DNmYILEh7MxQoCsP8LvB8X80jz6Hc4Tx8hhmhIogVjfu
+   QgBBffKP7GjFEQup5WN/eqDvOBy4KqvDWZANbV2nm/lpsJuYP+lfC5M96
+   F43sumnDCAkJ8sxXwZ1fKDDin+pKtx7Xe1LYCQDxNArH3lYHy5RqC7s0S
+   zepxZAnHKNViktvghApQsoDfdHdFZmwFoYTuCY8bMQZvTz9pZZ88hECaF
+   OaLhy7WQGMc3M05Zyz1+g7n27bBPVgUndqrPP0LOq36DgNH11qn0QLaza
+   7KN+8GUd0DZ5sJHjgL1GaYgpIbTFCqWdNf+3mldnKZSx9yaJeBGMmRXYz
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10477"; a="300852500"
+X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
+   d="scan'208";a="300852500"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 07:15:09 -0700
+X-IronPort-AV: E=Sophos;i="5.93,333,1654585200"; 
+   d="scan'208";a="687890947"
+Received: from ryero-mobl.amr.corp.intel.com (HELO [10.209.89.231]) ([10.209.89.231])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Sep 2022 07:15:07 -0700
+Message-ID: <2b6143b6-9db4-05bc-1e8d-c5d129126f99@intel.com>
+Date: Wed, 21 Sep 2022 07:15:07 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f927f969-028a-4ad4-7776-527ed537c77f@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] ACPI: processor_idle: Skip dummy wait for processors
+ based on the Zen microarchitecture
+Content-Language: en-US
+To: K Prateek Nayak <kprateek.nayak@amd.com>, linux-kernel@vger.kernel.org
+Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org,
+ linux-pm@vger.kernel.org, dave.hansen@linux.intel.com, bp@alien8.de,
+ tglx@linutronix.de, andi@lisas.de, puwen@hygon.cn,
+ mario.limonciello@amd.com, peterz@infradead.org, rui.zhang@intel.com,
+ gpiccoli@igalia.com, daniel.lezcano@linaro.org, ananth.narayan@amd.com,
+ gautham.shenoy@amd.com, Calvin Ong <calvin.ong@amd.com>,
+ stable@vger.kernel.org, regressions@lists.linux.dev
+References: <20220921063638.2489-1-kprateek.nayak@amd.com>
+From: Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <20220921063638.2489-1-kprateek.nayak@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Sep 21, 2022 at 04:09:16PM +0530, K Prateek Nayak wrote:
-> I was not aware of cpu_feature_enabled() and it makes perfect sense to
-> use it here.
+On 9/20/22 23:36, K Prateek Nayak wrote:
+> +	/*
+> +	 * No delay is needed if we are in guest or on a processor
+> +	 * based on the Zen microarchitecture.
+> +	 */
+> +	if (boot_cpu_has(X86_FEATURE_HYPERVISOR) || boot_cpu_has(X86_FEATURE_ZEN))
+>  		return;
 
-It is no difference what the callers use - we simply want to unify the
-interfaces and not have boot_cpu* and cpu_feature_* and so on. One is
-enough and we want to use cpu_feature_enabled() everywhere possible.
+In the end, the delay is because of buggy, circa 2006 chipsets?  So, we
+use a CPU vendor specific check to approximate that the chipset is
+recent and not affected by the bug?  If so, is there no better way to
+check for a newer chipset than this?
 
-Thx.
+Do X86_FEATURE_ZEN CPUs just have unusually painful
+inl(acpi_fadt.xpm_tmr_blk.address) implementations?  Is that why we
+noticed all of a sudden?
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
