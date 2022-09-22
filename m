@@ -1,73 +1,66 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E17EA2560
-	for <regressions@lists.linux.dev>; Thu, 22 Sep 2022 08:17:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=qFznKR8LE1hs5qx50v8ZXbR+2FR7aIXxVNAOIFHaJP0=; b=YrrcmJKNHKRAJseBmsEUuL5P3G
-	tfTSPLqLeBO5/WHziL3uhgDlFMhOTjewoCtJnvnm6bdXdgbH0xr1d+fTXzDrom99AjhX+LT0V+AcL
-	0xZC/tXBVWZmm+0O3PAC+Piucm3c27rkwOYeiRXVsa9gIxoL0JcOI5iVr0/uHa28/Gtovc3QLM/Wp
-	GWT1bUpF3x/83YfLRs4nZW9i6azPMdGfQy+gNAoBsr/RQ2jBi7V7R9+vBfo4jt+qm+mq9apy5OORX
-	7RBPsus6LHbfNubhkk64o8Xtw+Y1YCjdrXjA3mq5T5NCoDdGA+4a4T2bJHHrU8T1vxXguuxsEXk4I
-	iOuArs4g==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1obHOP-006s1C-U4; Thu, 22 Sep 2022 08:17:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8C4413001FD;
-	Thu, 22 Sep 2022 10:17:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 3A529200FBDFB; Thu, 22 Sep 2022 10:17:05 +0200 (CEST)
-Date: Thu, 22 Sep 2022 10:17:05 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Borislav Petkov <bp@alien8.de>
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>, linux-kernel@vger.kernel.org,
-	rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org,
-	linux-pm@vger.kernel.org, dave.hansen@linux.intel.com,
-	tglx@linutronix.de, andi@lisas.de, puwen@hygon.cn,
-	mario.limonciello@amd.com, rui.zhang@intel.com, gpiccoli@igalia.com,
-	daniel.lezcano@linaro.org, ananth.narayan@amd.com,
-	gautham.shenoy@amd.com, Calvin Ong <calvin.ong@amd.com>,
-	stable@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [PATCH] ACPI: processor_idle: Skip dummy wait for processors
- based on the Zen microarchitecture
-Message-ID: <YywaAcTdLSuDlRfl@hirez.programming.kicks-ass.net>
-References: <20220921063638.2489-1-kprateek.nayak@amd.com>
- <YysnE8rcZAOOj28A@hirez.programming.kicks-ass.net>
- <YytqfVUCWfv0XyZO@zn.tnic>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39B22F33
+	for <regressions@lists.linux.dev>; Thu, 22 Sep 2022 10:59:01 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1obJuv-0004Hy-WC; Thu, 22 Sep 2022 12:58:54 +0200
+Message-ID: <fc761257-d8e2-8f3e-fd49-1584fe414c07@leemhuis.info>
+Date: Thu, 22 Sep 2022 12:58:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YytqfVUCWfv0XyZO@zn.tnic>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [REGRESSION] Re: [PATCH v2] net: fec: Use a spinlock to guard
+ `fep->ptp_clk_on` #forregzbot
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: regressions@lists.linux.dev
+Cc: netdev@vger.kernel.org
+References: <20220901140402.64804-1-csokas.bence@prolan.hu>
+ <20220914145317.GA1868385@roeck-us.net>
+ <f026b273-472a-8af9-c9be-c08be0f60d53@leemhuis.info>
+Content-Language: en-US, de-DE
+In-Reply-To: <f026b273-472a-8af9-c9be-c08be0f60d53@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663844341;0d3e4307;
+X-HE-SMSGID: 1obJuv-0004Hy-WC
 
-On Wed, Sep 21, 2022 at 09:48:13PM +0200, Borislav Petkov wrote:
-> On Wed, Sep 21, 2022 at 05:00:35PM +0200, Peter Zijlstra wrote:
-> > On Wed, Sep 21, 2022 at 12:06:38PM +0530, K Prateek Nayak wrote:
-> > > Processors based on the Zen microarchitecture support IOPORT based deeper
-> > > C-states. 
-> > 
-> > I've just gotta ask; why the heck are you using IO port based idle
-> > states in 2022 ?!?! You have have MWAIT, right?
+On 18.09.22 20:59, Thorsten Leemhuis wrote:
+> TWIMC: this mail is primarily send for documentation purposes and for
+> regzbot, my Linux kernel regression tracking bot. These mails usually
+> contain '#forregzbot' in the subject, to make them easy to spot and filter.
 > 
-> They have both. And both is Intel technology. And as I'm sure you
-> know AMD can't do their own thing - they kinda have to follow Intel.
-> Unfortunately.
+> On 14.09.22 15:53, Guenter Roeck wrote:
+>> On Thu, Sep 01, 2022 at 04:04:03PM +0200, Csókás Bence wrote:
+>>> Mutexes cannot be taken in a non-preemptible context,
+>>> causing a panic in `fec_ptp_save_state()`. Replacing
+>>> `ptp_clk_mutex` by `tmreg_lock` fixes this.
+>>>
+>>> Fixes: 6a4d7234ae9a ("net: fec: ptp: avoid register access when ipg clock is disabled")
+>>> Fixes: f79959220fa5 ("fec: Restart PPS after link state change")
+>>> Reported-by: Marc Kleine-Budde <mkl@pengutronix.de>
+>>> Link: https://lore.kernel.org/all/20220827160922.642zlcd5foopozru@pengutronix.de/
+>>> Signed-off-by: Csókás Bence <csokas.bence@prolan.hu>
+>>
+>> For regzbot:
 > 
-> Are you saying modern Intel chipsets don't do IO-based C-states anymore?
+> Thanks for the report. To be sure below issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+> tracking bot:
+> 
+> #regzbot ^introduced b353b241f1eb9b626
+> #regzbot title net: fec: backtrace: BUG: sleeping function called from
+> invalid context at drivers/clk/imx/clk-pllv3.c
+> #regzbot ignore-activity
+> #regzbot monitor:
+> https://lore.kernel.org/all/20220912073106.2544207-1-bence98@sch.bme.hu/
+> #regzbot monitor:
+> https://lore.kernel.org/all/20220912070143.98153-1-francesco.dolcini@toradex.com/
 
-I've no idea what they do, but Linux exclusively uses MWAIT on Intel as
-per intel_idle.c.
-
-MWAIT also cuts down on IPIs because it wakes from the TIF write.
-
+#regzbot fixed-by: 01b825f997ac28f
