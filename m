@@ -1,92 +1,85 @@
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+Received: from ach1ajh125.fra1.oracleemaildelivery.com (ach1ajh125.fra1.oracleemaildelivery.com [138.1.108.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221487C
-	for <regressions@lists.linux.dev>; Thu, 22 Sep 2022 18:17:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663870678; x=1695406678;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=irvpxRGJNiroM1fXkhuMmUhHwaH1jS9Bj7zSfZHS2YY=;
-  b=WlajE7fqj7vjW9r1adJ95RHuNjOK3QoDltrG337oxyeBaVhCZi4Ili1n
-   TzasjeQrK+8twXjnh5NY6ABpK06sNbTsrY+e0G/LNw5yr49RSMa9DNfVX
-   GJmNrZbGHU/uEfv2UeIms8FjFFOMDIkOO4V6wt5MWPLCG1nGYX8PgMwVm
-   AZYAhHSClypvD26+NCqrYG2s+Akxkuo14WQCRu80ud/BSlTaXD29dyuZz
-   IVyRxomvp2GZhZ9yjD5T5ZiDpxvhhOmBr3NfgLT4vPyUm7vN5UMRJb4hi
-   2KcSrttCpZlAxILucmAsKcgReUn0b9Pl0TvFuPFftnhFkdKVPZFkwfHlN
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10478"; a="287471472"
-X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
-   d="scan'208";a="287471472"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 11:17:55 -0700
-X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
-   d="scan'208";a="682328889"
-Received: from sponnura-mobl1.amr.corp.intel.com (HELO [10.209.58.200]) ([10.209.58.200])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 11:17:53 -0700
-Message-ID: <9d3d3424-a6d4-4076-87ff-a1c216de79c6@intel.com>
-Date: Thu, 22 Sep 2022 11:17:53 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCACA7C
+	for <regressions@lists.linux.dev>; Thu, 22 Sep 2022 18:18:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=oci-fra1-20220101;
+ d=augustwikerfors.se;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=hMbKnsDfGuZbST3+iKB8T0JJtGf8/ETxt5BDAqjyo60=;
+ b=FXYyBWbm2KZCo8oOR6GuTWocRwSDPxtgpRP3wQRSqj6UH+CXUwKn0LPuF2CjH6USA/+MeqV2Zizx
+   U9+pMzLzqaBxzwRzc5PmPqH4b5JhbGqXUcy84I1TWA1vWhcxn8b0pe+VznEEvUnUbr905lfohyQU
+   TGxfHCndMPqz/H3Gqd8jApa+GyiKXfPUkJGmMs5j8/VxPpv1BhZl+4y1T32SO3zZq+4gvAT3K04n
+   whg9no5siCSdLWdNbGvppr8zaT79aUwy4m2fSSkdUo7+qJNI5hTN2FhWB14/Qo/ZrKGM3uH/Szt7
+   F6egfWPLW9vM1jUqSU5YsH8zxqZy2iDcCYmWxA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=prod-fra-20191115;
+ d=fra1.rp.oracleemaildelivery.com;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=hMbKnsDfGuZbST3+iKB8T0JJtGf8/ETxt5BDAqjyo60=;
+ b=BijYoPiyAwNXbWmqegRJ5wx3OmVxM/8mrX1eSiLCvhaApKTQ48zk2zMv2xGmKxOdcWYwjDqzceE6
+   Iyf9H8ZbRBUDNy45K/bWsEW3wNARcd4A+mmDDGfxlnu3ETqOQ6cYNgpIZqqA979ivBnRNuXdqpra
+   eS5hCt4iVi3xmbd0Nrmy0lCc+6aTjmAq+B0W7R6qZ2vOcoZXi71BQ2q2qssF58Jt7FPkhdzTKnRV
+   X22K4t17tzudeZ3zo928Kb3vr5MsLsgiGh6QqAWMWq72jLPDxEvAtNTenqsTEFxdlaNuDri6zNOC
+   WmOtSybNYUJ5v0XgtmaAcOOiBIjzP7s1Uy1BIA==
+Received: by omta-ad1-fd3-101-eu-frankfurt-1.omtaad1.vcndpfra.oraclevcn.com
+ (Oracle Communications Messaging Server 8.1.0.1.20220826 64bit (built Aug 26
+ 2022))
+ with ESMTPS id <0RIM002UDIMZZH80@omta-ad1-fd3-101-eu-frankfurt-1.omtaad1.vcndpfra.oraclevcn.com>
+ for regressions@lists.linux.dev; Thu, 22 Sep 2022 18:13:47 +0000 (GMT)
+Message-id: <33cf5071-3157-a3c2-3252-3a8ab926c60d@augustwikerfors.se>
+Date: Thu, 22 Sep 2022 20:13:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH] ACPI: processor_idle: Skip dummy wait for processors
- based on the Zen microarchitecture
-Content-Language: en-US
-To: "Limonciello, Mario" <Mario.Limonciello@amd.com>,
- "Nayak, K Prateek" <KPrateek.Nayak@amd.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
- <lenb@kernel.org>, "linux-acpi@vger.kernel.org"
- <linux-acpi@vger.kernel.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "bp@alien8.de" <bp@alien8.de>, "tglx@linutronix.de" <tglx@linutronix.de>,
- "andi@lisas.de" <andi@lisas.de>, "puwen@hygon.cn" <puwen@hygon.cn>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "rui.zhang@intel.com" <rui.zhang@intel.com>,
- "gpiccoli@igalia.com" <gpiccoli@igalia.com>,
- "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
- "Narayan, Ananth" <Ananth.Narayan@amd.com>,
- "Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
- "Ong, Calvin" <Calvin.Ong@amd.com>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220921063638.2489-1-kprateek.nayak@amd.com>
- <20e78a49-25df-c83d-842e-1d624655cfd7@intel.com>
- <0885eecb-042f-3b74-2965-7d657de59953@amd.com>
- <88c17568-8694-940a-0f1f-9d345e8dcbdb@intel.com>
- <MN0PR12MB610110D90985366A4B952CCCE24E9@MN0PR12MB6101.namprd12.prod.outlook.com>
-From: Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <MN0PR12MB610110D90985366A4B952CCCE24E9@MN0PR12MB6101.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+MIME-version: 1.0
+From: August Wikerfors <git@augustwikerfors.se>
+Subject: Re: [REGRESSION] Graphical issues on Lenovo Yoga 7 14ARB7 laptop since
+ v6.0-rc1 (bisected)
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Harry Wentland <harry.wentland@amd.com>, Leo Li <sunpeng.li@amd.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>, linux-kernel@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev
+References: <c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se>
+ <eee82fb8-0fc5-98cb-e630-f86891574f21@leemhuis.info>
+ <CADnq5_PRP3ekHPLhdXALxt9GL3aHHZQUw5TNAwm4t+ggimUq7g@mail.gmail.com>
+Content-language: en-US
+In-reply-to:
+ <CADnq5_PRP3ekHPLhdXALxt9GL3aHHZQUw5TNAwm4t+ggimUq7g@mail.gmail.com>
+Content-type: text/plain; charset=UTF-8; format=flowed
+Content-transfer-encoding: 7bit
+Reporting-Meta:
+ AAHbDiOyw7PQ+YvQ6Tk2wL3boCy4Gse2rKd/OctvMwiREQdSmCjJhUzxDqPn50D4
+ b2YL7+qFbADcEhF5v3apKRWdW4C9GDLg1v3Z2naYt64v0Azn14/wtEx4shunoDcI
+ IbdK1eWsKiJLrV2J6LUIJffcUFFObs4EY73noxIs6n3AZf2n90693VAa9ggoaIzZ
+ M24jpLokOmBha7WSJfmR4PXWYoM7MC316yRsqIkhvhA6cF8Cko2aLuR1KSCjdMAD
+ hkbilDDdphEeEFHi1ky2gLto5KshWU4enTvLG7NNwh6ZAXlu70eZKF1johq0YSM9
+ DKXqtRbDeB7dtsJDYJzvwe5SYvqhXsk2SorZvAhOnDc0W/aRUuhilKtEaYl08PAp
+ s+jColYQTLbZkLduNQTj+byNU6OybuK3UrdxJ46M33orvN9SpjlkfEdJ7Upt+RSI zzIAVg==
 
-On 9/22/22 10:48, Limonciello, Mario wrote:
+Hi Alex,
+
+On 2022-09-22 15:59, Alex Deucher wrote:
+> On Thu, Sep 22, 2022 at 8:54 AM Thorsten Leemhuis
+> <regressions@leemhuis.info> wrote:
+>>
+>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
+>> to make this easily accessible to everyone.
+>>
+>> @amdgpu developers, what up here? August afaics didn't even get a single
+>> reply for his report that even identifies the change that's causing the
+>> problem. We're already late in the development cycle, so it would be
+>> good if someone could take a closer look into this before it's too late
+>> for 6.0.
 > 
-> 2) The title says to limit it to old intel systems, but nothing about this actually enforces that.
-> It actually is limited to all Intel systems, but effectively won't be used on anything but new
-> ones because of intel_idle.
-> 
-> As an idea for #2 you could check for CONFIG_INTEL_IDLE in the Intel case and
-> if it's not defined show a pr_notice_once() type of message trying to tell people to use
-> Intel Idle instead for better performance.
+> Been a busy week.  Haven't had a chance to look into this yet.  Does
+> the issue still happen with this patch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=66f99628eb24409cb8feb5061f78283c8b65f820
+Yes, the issue still happens with that patch, and also with the current 
+git master (dc164f4fb00a0abebdfff132f8bc7291a28f5401).
 
-What does that have to do with *this* patch, though?
-
-If you've got CONFIG_INTEL_IDLE disabled, you'll be slow before this
-patch.  You'll also be slow after this patch.  It's entirely orthogonal.
-
-I can add a "Practically" to the subject so folks don't confuse it with
-some hard limit that is being enforced:
-
-	ACPI: processor idle: Practically limit "Dummy wait" workaround to old
-Intel systems
-
-BTW, is there seriously a strong technical reason that AMD systems are
-still using this code?  Or is it pure inertia?
+Regards,
+August Wikerfors
