@@ -1,90 +1,110 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B3D323D6
-	for <regressions@lists.linux.dev>; Fri, 23 Sep 2022 07:42:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fJVkN3zl/CpWmP9dd2Lm5sbuLgWWweRXNMjf8rPwe/o=; b=SU9FA91wpTS50POPo2Bs9dgx7k
-	sgMOA/lj8s09GfcCjfXrtEGlVzZivBrNX5QoqVYQHJbkB8xaDWABSlHJ4y4Jn1Q22rc5DNStYHYGs
-	51/6Q8YLcRpxiK7XdQaRTSzAFy1gkkLXAa592KdQyUBiGSUcXry1DypZmhfi5amggg1HSQnkZJvNL
-	OfVum3geX4LdQk2ukKdS3wvPnWXPSEA+u5ePg/2L1vHABkx/yvwmzHQbD9lXQEQvi9fMpYTyDnLUq
-	6i0+fCKkH+qA+31iLJPZSqPpxNGRr6ojuGavOQSchM/LInAE8533HCYQbSPL2uKChV7HV+XyBnspa
-	w5t8EePg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1obdK4-00FAHm-Ju; Fri, 23 Sep 2022 07:42:09 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AD62F300074;
-	Fri, 23 Sep 2022 09:42:06 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8B8992BB8937C; Fri, 23 Sep 2022 09:42:06 +0200 (CEST)
-Date: Fri, 23 Sep 2022 09:42:06 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Andreas Mohr <andi@lisas.de>, K Prateek Nayak <kprateek.nayak@amd.com>,
-	linux-kernel@vger.kernel.org, rafael@kernel.org, lenb@kernel.org,
-	linux-acpi@vger.kernel.org, linux-pm@vger.kernel.org,
-	dave.hansen@linux.intel.com, bp@alien8.de, tglx@linutronix.de,
-	puwen@hygon.cn, mario.limonciello@amd.com, rui.zhang@intel.com,
-	gpiccoli@igalia.com, daniel.lezcano@linaro.org,
-	ananth.narayan@amd.com, gautham.shenoy@amd.com,
-	Calvin Ong <calvin.ong@amd.com>, stable@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [PATCH] ACPI: processor_idle: Skip dummy wait for processors
- based on the Zen microarchitecture
-Message-ID: <Yy1jTlviqANR/OT9@hirez.programming.kicks-ass.net>
-References: <20220921063638.2489-1-kprateek.nayak@amd.com>
- <20e78a49-25df-c83d-842e-1d624655cfd7@intel.com>
- <0885eecb-042f-3b74-2965-7d657de59953@amd.com>
- <88c17568-8694-940a-0f1f-9d345e8dcbdb@intel.com>
- <Yyy6l94G0O2B7Yh1@rhlx01.hs-esslingen.de>
- <YyzBLc+OFIN2BMz5@rhlx01.hs-esslingen.de>
- <4d61b9c0-ee00-c5f6-bef1-622b80c79714@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E0F52561
+	for <regressions@lists.linux.dev>; Fri, 23 Sep 2022 07:46:27 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1obdOC-0001G0-LO; Fri, 23 Sep 2022 09:46:24 +0200
+Message-ID: <d9a3460b-0ed6-4bfa-5bdd-032f4bc4ebce@leemhuis.info>
+Date: Fri, 23 Sep 2022 09:46:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d61b9c0-ee00-c5f6-bef1-622b80c79714@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Content-Language: en-US, de-DE
+References: <f6755107-b62c-a388-0ab5-0a6633bf9082@garloff.de>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, linux-nfs <linux-nfs@vger.kernel.org>,
+ Kurt Garloff <kurt@garloff.de>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Trond Myklebust <trond.myklebust@hammerspace.com>,
+ Anna Schumaker <anna@kernel.org>
+Subject: Re: linux-5.15.69 breaks nfs client
+In-Reply-To: <f6755107-b62c-a388-0ab5-0a6633bf9082@garloff.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1663919187;9ef4d2ba;
+X-HE-SMSGID: 1obdOC-0001G0-LO
 
-On Thu, Sep 22, 2022 at 02:21:31PM -0700, Dave Hansen wrote:
-> On 9/22/22 13:10, Andreas Mohr wrote:
-> >   (- but then what about other more modern chipsets?)
-> > 
-> > --> we need to achieve (hopefully sufficiently precisely) a solution which
-> > takes into account Zen3 STPCLK# improvements while
-> > preserving "accepted" behaviour/requirements on *all* STPCLK#-hampered chipsets
-> > ("STPCLK# I/O wait is default/traditional handling"?).
-> 
-> Ideally, sure.  But, we're talking about theoretically regressing the
-> idle behavior of some indeterminate set of old systems, the majority of
-> which are sitting in a puddle of capacitor goo at the bottom of a
-> landfill right now.  This is far from an ideal situation.
-> 
-> FWIW, I'd much rather do something like
-> 
-> 	if ((boot_cpu_data.x86_vendor == X86_VENDOR_AMD) &&
-> 	    (boot_cpu_data.x86_model >= 0xF))
-> 		return;
-> 
-> 	inl(slow_whatever);
-> 
-> than a Zen check.  AMD has, as far as I know, been a lot more sequential
-> and sane about model numbers than Intel, and there are some AMD model
-> number range checks in the codebase today.
-> 
-> A check like this would also be _relatively_ future-proof in the case
-> that X86_FEATURE_ZEN stops getting set on future AMD CPUs.  That's a lot
-> more likely than AMD going and reusing a <0xF model.
+Hi, this is your Linux kernel regression tracker. CCing the regression
+mailing list, as it should be in the loop for all regressions, as
+explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+Also CCing the stable ml, the NFS maintainers, and the authors of
+31b992b3c39b, too.
 
-Except you need to add VENDOR_HYGON at the very least. All of this turns
-into a trainwreck real quick.
+On 22.09.22 23:46, Kurt Garloff wrote:
+> 
+> a freshly compiled 5.15.69 kernel showed hangs with NFS.
+> Typically mkdir would end up in a 'D' process state, but I
+> have seen ls -l hanging as well.
+> Server is kernel NFS 5.15.69.
+> 
+> After reverting the last three NFS related commits,
+> a68a734b19af NFS: Fix WARN_ON due to unionization of nfs_inode.nrequests
+> 3b97deb4abf5 NFS: Fix another fsync() issue after a server reboot
+> 31b992b3c39b NFS: Save some space in the inode
+> 
+> things work normally again.
+> 
+> As you can see, I suspected 31b992b3c39b ...
+
+FWIW, that's e591b298d7ec in mainline.
+
+> I know this report is light on details; if nothing like this has been
+> reported yet, let me know and I'll try to find some time to investigate
+> further.
+> 
+> PS: Please keep me on Cc, I'm not subscribed to linux-nfs.
+
+I wonder if this is this is a dup of this report:
+
+https://lore.kernel.org/all/c5d8485b-0dbc-5192-4dc6-10ef2b86b520@molgen.mpg.de/
+
+In that thread Trond mentioned
+```
+I believe this is a dependency that was introduced by the back port of
+commit e591b298d7ec ("NFS: Save some space in the inode") into 5.15.68.
+So the reason it wasn't seen is because the change is very recent.
+
+FYI Greg and Sasha: please also consider pulling 6e176d47160c ("NFSv4:
+Fixes for nfs4_inode_return_delegation()") into that stable series.
+```
+
+Anyway, for the rest of this mail:
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
+
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced 31b992b3c39b
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
