@@ -1,115 +1,175 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1357C7B
-	for <regressions@lists.linux.dev>; Sun, 25 Sep 2022 16:18:17 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1ocUKd-00067l-Rx; Sun, 25 Sep 2022 18:18:15 +0200
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2022-09-25]
-Date: Sun, 25 Sep 2022 16:18:15 +0000
-Message-Id: <166412229677.822304.14973265664331660600@leemhuis.info>
-X-Mailer: git-send-email 2.37.3
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307FB366
+	for <regressions@lists.linux.dev>; Mon, 26 Sep 2022 04:38:31 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ocfst-0000Y3-E0; Mon, 26 Sep 2022 06:38:23 +0200
+Message-ID: <4e7992e2-c635-e571-faa3-08fd9ee5c975@leemhuis.info>
+Date: Mon, 26 Sep 2022 06:38:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664122698;04c86a0c;
-X-HE-SMSGID: 1ocUKd-00067l-Rx
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Content-Language: en-US, de-DE
+To: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, jelonek.jonas@gmail.com,
+ johannes.berg@intel.com, lorenzo.bianconi83@gmail.com, sean.wang@mediatek.com
+Cc: Linux List Kernel Mailing <linux-wireless@vger.kernel.org>,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CABXGCsP0znm9pS-MiKtyxTXR7XiyFVqen0qzNpicGHDZKCzbwg@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: After commit 44fa75f207d8a106bc75e6230db61e961fdbf8a8 Wi-Fi
+ (mt7921e) speed significantly decreased
+In-Reply-To: <CABXGCsP0znm9pS-MiKtyxTXR7XiyFVqen0qzNpicGHDZKCzbwg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664167111;ab18df52;
+X-HE-SMSGID: 1ocfst-0000Y3-E0
 
-Hi Linus! Below is a slightly edited report from regzbot listing all
-regression from this cycle that the bot and I are currently aware of.
+Hi, this is your Linux kernel regression tracker. CCing the regression
+mailing list, as it should be in the loop for all regressions, as
+explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
-I'm only aware of two regressions introduced this cycle. The kernel
-panic on arm64/rock960 was just reported yesterday and already
-investigated afaics; the one about graphical issues on Lenovo Yoga
-is more than a week old, but it's is now dealt with and it currently
-sounds like this won't hit many systems.
+On 26.09.22 02:41, Mikhail Gavrilov wrote:
+> 
+> I bisected the issue and found the first bad commit.
+> 
+> 44fa75f207d8a106bc75e6230db61e961fdbf8a8 is the first bad commit
 
-HTH, Ciao, Thorsten
+FWIW, there is a patch under discussion fixing a problem found in that
+commit:
 
----
+https://lore.kernel.org/all/20220829144147.484787-2-jelonek.jonas@gmail.com/
 
-Hi, this is regzbot, the Linux kernel regression tracking bot.
+To quote the first para:
 
-Currently I'm aware of 44 regressions in linux-mainline. Find the
-current status below and the latest on the web:
+```
+This patch modifies the annotation of supported tx-power levels for a
+wifi device in ieee80211_hw. This annotation was introduced with commit
+44fa75f207d8a106bc75e6230db61e961fdbf8a8 to be able to operate on power
+indices instead of absolute power values, providing better support for
+different hardware capabilities.
+```
 
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
+Not totally sure if that might be relevant to your problem
 
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
+Anyway, for the rest of this mail:
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
+> commit 44fa75f207d8a106bc75e6230db61e961fdbf8a8
+> Author: Jonas Jelonek <jelonek.jonas@gmail.com>
+> Date:   Mon May 9 19:39:57 2022 +0200
+> 
+>     mac80211: extend current rate control tx status API
+> 
+>     This patch adds the new struct ieee80211_rate_status and replaces
+>     'struct rate_info *rate' in ieee80211_tx_status with pointer and length
+>     annotation.
+> 
+>     The struct ieee80211_rate_status allows to:
+>     (1)     receive tx power status feedback for transmit power control (TPC)
+>             per packet or packet retry
+>     (2)     dynamic mapping of wifi chip specific multi-rate retry (mrr)
+>             chains with different lengths
+>     (3)     increase the limit of annotatable rate indices to support
+>             IEEE802.11ac rate sets and beyond
+> 
+>     ieee80211_tx_info, control and status buffer, and ieee80211_tx_rate
+>     cannot be used to achieve these goals due to fixed size limitations.
+> 
+>     Our new struct contains a struct rate_info to annotate the rate that was
+>     used, retry count of the rate and tx power. It is intended for all
+>     information related to RC and TPC that needs to be passed from driver to
+>     mac80211 and its RC/TPC algorithms like Minstrel_HT. It corresponds to
+>     one stage in an mrr. Multiple subsequent instances of this struct can be
+>     included in struct ieee80211_tx_status via a pointer and a length variable.
+>     Those instances can be allocated on-stack. The former reference to a single
+>     instance of struct rate_info is replaced with our new annotation.
+> 
+>     An extension is introduced to struct ieee80211_hw. There are two new
+>     members called 'tx_power_levels' and 'max_txpwr_levels_idx' acting as a
+>     tx power level table. When a wifi device is registered, the driver shall
+>     supply all supported power levels in this list. This allows to support
+>     several quirks like differing power steps in power level ranges or
+>     alike. TPC can use this for algorithm and thus be designed more abstract
+>     instead of handling all possible step widths individually.
+> 
+>     Further mandatory changes in status.c, mt76 and ath11k drivers due to the
+>     removal of 'struct rate_info *rate' are also included.
+>     status.c already uses the information in ieee80211_tx_status->rate in
+>     radiotap, this is now changed to use ieee80211_rate_status->rate_idx.
+>     mt76 driver already uses struct rate_info to pass the tx rate to status
+>     path. The new members of the ieee80211_tx_status are set to NULL and 0
+>     because the previously passed rate is not relevant to rate control and
+>     accurate information is passed via tx_info->status.rates.
+>     For ath11k, the txrate can be passed via this struct because ath11k uses
+>     firmware RC and thus the information does not interfere with software RC.
+> 
+>     Compile-Tested: current wireless-next tree with all flags on
+>     Tested-on: Xiaomi 4A Gigabit (MediaTek MT7603E, MT7612E) with OpenWrt
+>                     Linux 5.10.113
+> 
+>     Signed-off-by: Jonas Jelonek <jelonek.jonas@gmail.com>
+>     Link: https://lore.kernel.org/r/20220509173958.1398201-2-jelonek.jonas@gmail.com
+>     Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+> 
+>  drivers/net/wireless/ath/ath11k/dp_tx.c |  8 ++-
+>  drivers/net/wireless/mediatek/mt76/tx.c |  5 +-
+>  include/net/mac80211.h                  | 33 +++++++++++-
+>  net/mac80211/status.c                   | 91 +++++++++++++++++++--------------
+>  4 files changed, 92 insertions(+), 45 deletions(-)
+> 
+> 
+> Before 44fa75f207d8a106bc75e6230db61e961fdbf8a8 speed was:
+> Idle Latency:     1.86 ms   (jitter: 0.06ms, low: 1.79ms, high: 1.99ms)
+>     Download:   834.57 Mbps (data used: 698.7 MB)
+>                  25.53 ms   (jitter: 6.82ms, low: 4.79ms, high: 234.55ms)
+>       Upload:   818.72 Mbps (data used: 881.9 MB)
+>                  17.98 ms   (jitter: 5.49ms, low: 4.66ms, high: 53.61ms)
+> 
+> After 44fa75f207d8a106bc75e6230db61e961fdbf8a8 speed became:
+> Idle Latency:     1.86 ms   (jitter: 0.42ms, low: 1.63ms, high: 2.73ms)
+>     Download:   546.18 Mbps (data used: 629.1 MB)
+>                   5.89 ms   (jitter: 1.62ms, low: 2.64ms, high: 22.30ms)
+>       Upload:   171.69 Mbps (data used: 141.0 MB)
+>                   3.07 ms   (jitter: 1.06ms, low: 1.79ms, high: 7.98ms)
+> 
+> All measures I made by cli speedtest utility.
 
-=======================================================
-current cycle (v5.19.. aka v6.0-rc), culprit identified
-=======================================================
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
+#regzbot ^introduced 44fa75f207d8a106
+#regzbot title net: mt7921e: WiFi speed significantly decreased
+#regzbot monitor:
+https://lore.kernel.org/all/CABXGCsN8LHqz7=OSvBpKCqKdV4L_4FPXtQ32bgYveA9yP2_xiQ@mail.gmail.com/
+#regzbot ignore-activity
 
-[ *NEW* ] arm64 / rock960 : kernel panic (NULL pointer dereference)
--------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/4f398e4c-973b-7843-2f75-27324d109277@linaro.org/
-https://lore.kernel.org/lkml/4f398e4c-973b-7843-2f75-27324d109277@linaro.org/
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
 
-By Daniel Lezcano; 0 days ago; 6 activities, latest 0 days ago.
-Introduced in 14facbc1871a (v6.0-rc1)
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
 
-Recent activities from: Michael Nazzareno Trimarchi (4), Daniel
-  Lezcano (2)
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-One patch associated with this regression:
-* Re: v6.0-rc6 - arm64 / rock960 : kernel panic
-  https://lore.kernel.org/lkml/CAOf5uwnfCCwHjSXTurMtyEpZc_tF8bH=fxfwBzOtHcfM_S4tYg@mail.gmail.com/
-  0 days ago, by Michael Nazzareno Trimarchi
-
-
-Graphical issues on Lenovo Yoga 7 14ARB7 laptop since v6.0-rc1 (bisected)
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se/
-https://lore.kernel.org/lkml/c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se/
-
-By August Wikerfors; 7 days ago; 5 activities, latest 1 days ago.
-Introduced in 7cc191ee7621 (v6.0-rc1)
-
-Recent activities from: August Wikerfors (2), Leo Li (1), Alex
-  Deucher (1)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/166352773747.517659.4028966645485480297@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
