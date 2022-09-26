@@ -1,34 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608343FE4;
-	Mon, 26 Sep 2022 15:46:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90BC1C433D6;
-	Mon, 26 Sep 2022 15:46:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1664207175;
-	bh=yFOUSYy23Xn5rm/tomaoa4I3a2DtNrDG+KzB8W4AvW4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Lnlw1VsWlAVFSGUyhR3sWv/XSq7i5gt5MAIELyTizUZMT8I8twJlogN3XR4/RCwRl
-	 Tb/R00Cwci62SAyUdy4nnpXGhqcRZUqyOLRhX+OdceqU/Sq7Qgiy4zknCQN2cOcRqa
-	 Z4xltlhgFNZDr+CgRhEo90BLR3TATckk/CYavrQ+2sy0S+UrTUTW9KhvQb3fezPUws
-	 HC7WppU3OljpZndWLcsCPXAiNLDR3FyfRigQLVmJRnevLWDzs8AhfwlSBMroyHHNFT
-	 oin5ER/6Yi57ywuOJSuN2g/306pGj+wDu0lvRDK9HKBrmvhiD7LTEyAnNfSzWfKw+H
-	 ykoNSTMcimkfg==
-Date: Mon, 26 Sep 2022 08:46:12 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3203FE4
+	for <regressions@lists.linux.dev>; Mon, 26 Sep 2022 16:17:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=2g1jNd7RoCV8uaNvrD8hgkCyQ475E63SOZYup2mZQtI=; b=G3F1SnkTc9868BCk6viiQFXKMS
+	CByAduDNutveIsblq7R+qFhZedhpJa3fdDU94/FIzU6Nm0brW14fJADPEnVrEN1txtDwAtxvSfYEu
+	ozBkzI/OGFzJIhf8AIUZ/yUI6juo2KYewEwYT93obGHlc1isyN+YW2cVb4Pph6DiobdAd1sUzjFMq
+	gipgdWtVGVI5QwlOJD4Y9OYLgY4GwFBu4WhYPuMnizBqMb/fyAEhXElRwmvjfaBsFpoQJFCBq2ruL
+	kvgngOBSsTdRSvmPAMQmJiijz3Gwvd1geEWNL1zhpE8YMZ+HlH6ilsf2uesGH1JbFU333zTwkUIj7
+	Bx6aoPSw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34502)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1ocqhL-0000iR-5j; Mon, 26 Sep 2022 17:11:11 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1ocqhG-0005Gk-KV; Mon, 26 Sep 2022 17:11:06 +0100
+Date: Mon, 26 Sep 2022 17:11:06 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Chen Zhongjin <chenzhongjin@huawei.com>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>
 Cc: open list <linux-kernel@vger.kernel.org>,
 	Linux ARM <linux-arm-kernel@lists.infradead.org>,
 	Arnd Bergmann <arnd@arndb.de>,
-	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-	Masami Hiramatsu <mhiramat@kernel.org>, regressions@lists.linux.dev,
-	lkft-triage@lists.linaro.org, llvm@lists.linux.dev
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev,
+	lkft-triage@lists.linaro.org
 Subject: Re: arch/arm/probes/kprobes/core.c:409:30: error: .fnstart must
  precede .save or .vsave directives
-Message-ID: <YzHJRH9hO1lfjSPp@dev-arch.thelio-3990X>
+Message-ID: <YzHPGvhLkdQcDYzx@shell.armlinux.org.uk>
 References: <CA+G9fYvyD9OWF53ua2EZmyf+=YTx4f1mezDNkVLMxf3BKXW=_w@mail.gmail.com>
- <YzHIwvzhM9DSW9cF@dev-arch.thelio-3990X>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -37,77 +45,77 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YzHIwvzhM9DSW9cF@dev-arch.thelio-3990X>
+In-Reply-To: <CA+G9fYvyD9OWF53ua2EZmyf+=YTx4f1mezDNkVLMxf3BKXW=_w@mail.gmail.com>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
-+ our mailing list, I should have added it with that message.
+Looks to me like a failure caused by Chen Zhongjin's change:
+"Recover kretprobes return address for EABI stack unwinder"
 
-On Mon, Sep 26, 2022 at 08:44:05AM -0700, Nathan Chancellor wrote:
-> Hi Naresh,
+I will drop this patch; please submit a replacement that builds.
+
+Thanks.
+
+On Mon, Sep 26, 2022 at 06:57:00PM +0530, Naresh Kamboju wrote:
+> Following build warnings / errors noticed on arm with clang-13 / 14
+> on Linux next-20220923.
 > 
-> On Mon, Sep 26, 2022 at 06:57:00PM +0530, Naresh Kamboju wrote:
-> > Following build warnings / errors noticed on arm with clang-13 / 14
-> > on Linux next-20220923.
-> > 
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > 
-> > Regressions found on arm:
-> > 
-> >    - build-clang-13-bcm2835_defconfig
-> >    - build-clang-nightly-imx_v6_v7_defconfig
-> >    - build-clang-nightly-orion5x_defconfig
-> >    - build-clang-13-keystone_defconfig
-> >    - build-clang-13-omap2plus_defconfig
-> >    - build-clang-14-imx_v6_v7_defconfig
-> >    - build-clang-nightly-omap2plus_defconfig
-> >    - build-clang-nightly-multi_v5_defconfig
-> >    - build-clang-nightly-bcm2835_defconfig
-> >    - build-clang-13-imx_v6_v7_defconfig
-> >    - build-clang-13-imx_v4_v5_defconfig
-> >    - build-clang-14-imx_v4_v5_defconfig
-> >    - build-clang-13-orion5x_defconfig
-> >    - build-clang-14-multi_v5_defconfig-65236a87
-> >    - build-clang-14-lkftconfig
-> >    - build-clang-nightly-imx_v4_v5_defconfig
-> >    - build-clang-13-multi_v5_defconfig
-> >    - build-clang-13-lkftconfig
-> >    - build-clang-nightly-keystone_defconfig
-> >    - build-clang-14-multi_v5_defconfig
-> >    - build-clang-14-orion5x_defconfig
-> >    - build-clang-14-omap2plus_defconfig
-> >    - build-clang-nightly-multi_v5_defconfig-65236a87
-> >    - build-clang-14-bcm2835_defconfig
-> >    - build-clang-14-keystone_defconfig
-> >    - build-clang-nightly-lkftconfig
-> > 
-> > arch/arm/probes/kprobes/core.c:409:30: error: .fnstart must precede
-> > .save or .vsave directives
-> >                 "stmdb  sp, {sp, lr, pc}        \n\t"
-> >                                                   ^
-> > <inline asm>:3:2: note: instantiated into assembly here
-> >         .save   {sp, lr, pc}
-> >         ^
-> > /builds/linux/arch/arm/probes/kprobes/core.c:412:29: error: .fnstart
-> > must precede .pad directive
-> >                 "stmdb  sp!, {r0 - r11}         \n\t"
-> >                                                   ^
-> > <inline asm>:6:2: note: instantiated into assembly here
-> >         .pad    #52
-> >         ^
-> > 2 errors generated.
-> > make[5]: *** [/builds/linux/scripts/Makefile.build:250:
-> > arch/arm/probes/kprobes/core.o] Error 1
-> > 
-> > build log:
-> > https://builds.tuxbuild.com/2FAyD1qcTlzjIYE7mjrugjCsxu1/
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 > 
-> Thank you for the testing and report! I brought this up on GitHub on
-> Friday as I noticed this as well:
+> Regressions found on arm:
 > 
-> https://github.com/ClangBuiltLinux/linux/issues/1718
+>    - build-clang-13-bcm2835_defconfig
+>    - build-clang-nightly-imx_v6_v7_defconfig
+>    - build-clang-nightly-orion5x_defconfig
+>    - build-clang-13-keystone_defconfig
+>    - build-clang-13-omap2plus_defconfig
+>    - build-clang-14-imx_v6_v7_defconfig
+>    - build-clang-nightly-omap2plus_defconfig
+>    - build-clang-nightly-multi_v5_defconfig
+>    - build-clang-nightly-bcm2835_defconfig
+>    - build-clang-13-imx_v6_v7_defconfig
+>    - build-clang-13-imx_v4_v5_defconfig
+>    - build-clang-14-imx_v4_v5_defconfig
+>    - build-clang-13-orion5x_defconfig
+>    - build-clang-14-multi_v5_defconfig-65236a87
+>    - build-clang-14-lkftconfig
+>    - build-clang-nightly-imx_v4_v5_defconfig
+>    - build-clang-13-multi_v5_defconfig
+>    - build-clang-13-lkftconfig
+>    - build-clang-nightly-keystone_defconfig
+>    - build-clang-14-multi_v5_defconfig
+>    - build-clang-14-orion5x_defconfig
+>    - build-clang-14-omap2plus_defconfig
+>    - build-clang-nightly-multi_v5_defconfig-65236a87
+>    - build-clang-14-bcm2835_defconfig
+>    - build-clang-14-keystone_defconfig
+>    - build-clang-nightly-lkftconfig
 > 
-> It sounds like we can avoid this by rewriting __kretprobe_trampoline()
-> in out of line assembly but I have not had a chance to sit down and try
-> it.
+> arch/arm/probes/kprobes/core.c:409:30: error: .fnstart must precede
+> .save or .vsave directives
+>                 "stmdb  sp, {sp, lr, pc}        \n\t"
+>                                                   ^
+> <inline asm>:3:2: note: instantiated into assembly here
+>         .save   {sp, lr, pc}
+>         ^
+> /builds/linux/arch/arm/probes/kprobes/core.c:412:29: error: .fnstart
+> must precede .pad directive
+>                 "stmdb  sp!, {r0 - r11}         \n\t"
+>                                                   ^
+> <inline asm>:6:2: note: instantiated into assembly here
+>         .pad    #52
+>         ^
+> 2 errors generated.
+> make[5]: *** [/builds/linux/scripts/Makefile.build:250:
+> arch/arm/probes/kprobes/core.o] Error 1
 > 
-> Cheers,
-> Nathan
+> build log:
+> https://builds.tuxbuild.com/2FAyD1qcTlzjIYE7mjrugjCsxu1/
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
+> 
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
