@@ -1,111 +1,89 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9865C3217
-	for <regressions@lists.linux.dev>; Mon, 26 Sep 2022 13:27:13 +0000 (UTC)
-Received: by mail-ej1-f51.google.com with SMTP id r18so14022130eja.11
-        for <regressions@lists.linux.dev>; Mon, 26 Sep 2022 06:27:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date;
-        bh=u6JTozXkaxXd5dDyL6DdTZJyXx50+ggpWDL0I2wBcQU=;
-        b=SsQaJIKhxrx7j/q13DR0D47KqLq3az7r7OjFmvoOBxgW4wAo+yfwgdAWxnwmIqq3xH
-         NFdY8eZW3Y95qE+W1FCcsk8LqH4kRVzFclajptKCfPmhrmbWN4aShgLRSnqaefsZLbvu
-         yH8CMYZT6ggl5CV/d4uyoOVJGbvBMrL5ltNLvNwyFbdMxwma+vD+uOlDzhQS7gMTApyJ
-         pNWalA07zHjVmB6A7B/sj0k8M4DNc9MZwYrhGFurk7HkJ4SiO9C/sjNofByO22rpMfHm
-         6qV5NYrwWpQbkcXFbOfeIKqXSPeKHu1xNN3xrdamlZBstRnI8v1EG2w6P/CkKxKidoO2
-         2WdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=u6JTozXkaxXd5dDyL6DdTZJyXx50+ggpWDL0I2wBcQU=;
-        b=xi8yUByjdiF+cNS3xhYCRm1DfC5J+kCpT1/dCnoQ0AcuUrNIiCe+JjzSTYU0cisOBH
-         ocjBckYD/VWxg9bcfY4N+6OHdvsir1h3xcMagCQ9nMdA07mrB2dLeWp6zLfKPvrhO6Zn
-         japcV88nxa8qMmXraIoS4C3BwwU+Upt3oRCLillEmdFhMfN/ctTkYhgbEOJBScMRV5Bq
-         IM7snaZtQItzKRljguKUlQTumMLNFDlH+jG/5QMwM8RDKEXv/od2XSHd/hKjYMPDGVPd
-         TVkZZJXdGjcR8oRM7L3V9T5vO1sXQLeiC0CvGKKH7bZY62JvQPElWEaXwnayTGTQMmlx
-         r7XA==
-X-Gm-Message-State: ACrzQf1zhTmgHEd9pVd67XZVZG7jAgtCEbefaMjgqvUyfutdk7CA5l5d
-	J/0Eak1/kT68a9+Xipzpj1wlTLczQc8VqVnKso7K4A==
-X-Google-Smtp-Source: AMsMyM4xbs6QkPMZUssp96ywiRoPnHbhhDadj6GaYovJ1TEbuwTk7ysNh+k94OuaEnPAp92gPeMRgsrCipNQb+tXFcg=
-X-Received: by 2002:a17:906:fd85:b0:77b:b538:6472 with SMTP id
- xa5-20020a170906fd8500b0077bb5386472mr17913125ejb.48.1664198831674; Mon, 26
- Sep 2022 06:27:11 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9013217
+	for <regressions@lists.linux.dev>; Mon, 26 Sep 2022 13:37:15 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ocoIF-00061v-5a; Mon, 26 Sep 2022 15:37:07 +0200
+Message-ID: <ce38e824-2083-fcce-dc6c-2e6d58c132c2@leemhuis.info>
+Date: Mon, 26 Sep 2022 15:37:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Mon, 26 Sep 2022 18:57:00 +0530
-Message-ID: <CA+G9fYvyD9OWF53ua2EZmyf+=YTx4f1mezDNkVLMxf3BKXW=_w@mail.gmail.com>
-Subject: arch/arm/probes/kprobes/core.c:409:30: error: .fnstart must precede
- .save or .vsave directives
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev, 
-	lkft-triage@lists.linaro.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: tboot suspend broken on Lenovo T460p #forregzbot
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <0b09b35a-64d3-5ba3-dabc-1e36ace1c275@leemhuis.info>
+In-Reply-To: <0b09b35a-64d3-5ba3-dabc-1e36ace1c275@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664199435;0f4e02a1;
+X-HE-SMSGID: 1ocoIF-00061v-5a
 
-Following build warnings / errors noticed on arm with clang-13 / 14
-on Linux next-20220923.
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+On 29.04.22 14:03, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> About a week ago a regression was reported to bugzilla.kernel.org that
+> seems to be handled there already, nevertheless I'd like to add to the
+> tracking to ensure it's not forgotten.
+> 
+> #regzbot introduced: 453e41085183980087f8a80dada523caf1131c3c
+> #regzbot from: Derek Dolney <z23@posteo.net>
+> #regzbot title: tboot suspend broken on Lenovo T460p
+> #regzbot link: https://bugzilla.kernel.org/show_bug.cgi?id=215867
 
-Regressions found on arm:
 
-   - build-clang-13-bcm2835_defconfig
-   - build-clang-nightly-imx_v6_v7_defconfig
-   - build-clang-nightly-orion5x_defconfig
-   - build-clang-13-keystone_defconfig
-   - build-clang-13-omap2plus_defconfig
-   - build-clang-14-imx_v6_v7_defconfig
-   - build-clang-nightly-omap2plus_defconfig
-   - build-clang-nightly-multi_v5_defconfig
-   - build-clang-nightly-bcm2835_defconfig
-   - build-clang-13-imx_v6_v7_defconfig
-   - build-clang-13-imx_v4_v5_defconfig
-   - build-clang-14-imx_v4_v5_defconfig
-   - build-clang-13-orion5x_defconfig
-   - build-clang-14-multi_v5_defconfig-65236a87
-   - build-clang-14-lkftconfig
-   - build-clang-nightly-imx_v4_v5_defconfig
-   - build-clang-13-multi_v5_defconfig
-   - build-clang-13-lkftconfig
-   - build-clang-nightly-keystone_defconfig
-   - build-clang-14-multi_v5_defconfig
-   - build-clang-14-orion5x_defconfig
-   - build-clang-14-omap2plus_defconfig
-   - build-clang-nightly-multi_v5_defconfig-65236a87
-   - build-clang-14-bcm2835_defconfig
-   - build-clang-14-keystone_defconfig
-   - build-clang-nightly-lkftconfig
+#regzbot backburner: fix available, but maintainer didn't pick it up and
+developer of the fix is MIA for unkown reason
 
-arch/arm/probes/kprobes/core.c:409:30: error: .fnstart must precede
-.save or .vsave directives
-                "stmdb  sp, {sp, lr, pc}        \n\t"
-                                                  ^
-<inline asm>:3:2: note: instantiated into assembly here
-        .save   {sp, lr, pc}
-        ^
-/builds/linux/arch/arm/probes/kprobes/core.c:412:29: error: .fnstart
-must precede .pad directive
-                "stmdb  sp!, {r0 - r11}         \n\t"
-                                                  ^
-<inline asm>:6:2: note: instantiated into assembly here
-        .pad    #52
-        ^
-2 errors generated.
-make[5]: *** [/builds/linux/scripts/Makefile.build:250:
-arch/arm/probes/kprobes/core.o] Error 1
+For details see:
+https://lore.kernel.org/lkml/42237005-5a6e-9462-bfdd-f1ba0c725c72@leemhuis.info/
 
-build log:
-https://builds.tuxbuild.com/2FAyD1qcTlzjIYE7mjrugjCsxu1/
+Sigh. That's not how things should be, but happen anyway.
 
---
-Linaro LKFT
-https://lkft.linaro.org
+Ciao, Thorsten
+
+> Quote:
+> 
+>> I am using tboot (v1.10.5) to make use of intel-txt and all was
+>> working fine with the Linux kernel 5.10 series. However later in 5.12
+>> release candidates, I have  proper booting however suspend is broken.
+>> I am using a Lenovo T460p. Usually when suspending on this machine
+>> the power button LED will blink 8 times and then it goes into a sleep
+>> state. With newer kernels I get power LED and caps lock LED blinking,
+>> cpu fan runs fast, and can't get out of that state without hard
+>> powerdown.
+>>
+>> I did a git bisect on and found that commit
+>> 453e41085183980087f8a80dada523caf1131c3c is the one that breaks
+>> tboot+suspend to ram. It is part of a series of some cpu hotplug
+>> commits.
+>>
+>> Just to be clear: if I build a kernel from the commit just before
+>> this one, I can suspend and resume, but if I build with this commit I
+>> can not suspend, laptop gets stuck on blinking power LED. Let me also
+>> mention that, given the above commit, if I do not use tboot, I can
+>> suspend and resume ok. It is only within the tboot boot context that
+>> I have suspend&resume problems.
+> 
+> 
+> See the ticket for details, there were a few replies already.
+> 
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> 
+> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+> reports and sometimes miss something important when writing mails like
+> this. If that's the case here, don't hesitate to tell me in a public
+> reply, it's in everyone's interest to set the public record straight.
+> 
