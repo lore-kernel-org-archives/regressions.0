@@ -1,82 +1,111 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACB263A
-	for <regressions@lists.linux.dev>; Mon, 26 Sep 2022 10:27:18 +0000 (UTC)
-Received: by mail-pg1-f177.google.com with SMTP id 129so4721518pgc.5
-        for <regressions@lists.linux.dev>; Mon, 26 Sep 2022 03:27:18 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9865C3217
+	for <regressions@lists.linux.dev>; Mon, 26 Sep 2022 13:27:13 +0000 (UTC)
+Received: by mail-ej1-f51.google.com with SMTP id r18so14022130eja.11
+        for <regressions@lists.linux.dev>; Mon, 26 Sep 2022 06:27:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=C8rX11bO0E5A9d+MVyn6i3C/40tS4roRj787StsOFrw=;
-        b=lbODLGrycZbW3aySNFBK2tNaiw+EJ9Hs7QLs5p2ZS4dbB/I8xFEzRe9/44qLPmmg5o
-         YiZTJYC9CRsURi3DjHKUL8pzTk54WUrd7xki+q0dZhulhKrUhjKCq4WNL2ItD9ZdOPVz
-         qXUQYEuUtiSf0L56gO5+9PqCEbzhRFj12C3BgEYAjuV8b8YnhbbnWFjo8sZ9PHQ2Rl67
-         ztdRdL5z5izMfb3LaYymCDvsHN3slUfwQtckZ5V3GPXI33zJJn0zAmTTcV7Su6atEKr+
-         sPG6oVoVT2qf5HSHB45J+fPoPoi55hhovs38h18SeMJOzk+g9oeqoyTYraVphqOplFh/
-         MK7A==
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date;
+        bh=u6JTozXkaxXd5dDyL6DdTZJyXx50+ggpWDL0I2wBcQU=;
+        b=SsQaJIKhxrx7j/q13DR0D47KqLq3az7r7OjFmvoOBxgW4wAo+yfwgdAWxnwmIqq3xH
+         NFdY8eZW3Y95qE+W1FCcsk8LqH4kRVzFclajptKCfPmhrmbWN4aShgLRSnqaefsZLbvu
+         yH8CMYZT6ggl5CV/d4uyoOVJGbvBMrL5ltNLvNwyFbdMxwma+vD+uOlDzhQS7gMTApyJ
+         pNWalA07zHjVmB6A7B/sj0k8M4DNc9MZwYrhGFurk7HkJ4SiO9C/sjNofByO22rpMfHm
+         6qV5NYrwWpQbkcXFbOfeIKqXSPeKHu1xNN3xrdamlZBstRnI8v1EG2w6P/CkKxKidoO2
+         2WdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=C8rX11bO0E5A9d+MVyn6i3C/40tS4roRj787StsOFrw=;
-        b=T5Vrc4eeVdsbbyBf2Phx0Gx+rS5pIj120gPQKZjVozsOoI74zgWSkHXNb5LZTXLgiV
-         nIiHBLrp2HAQdpqNibx+i0BFPgTx6Lfg2CVC1X8VLyh8zYOJ1PuXpuVGjOVnr0scP4uM
-         rD4VpZuBffJAiIp0FKifT7reFxeYSrfU3brkZw1j3u0p0bpauq3UfEsz+4lCPCf2gkwX
-         bhAAcC5sDwFtybkJ7p2yGcCOsXRLxgV3/NsJ5jYowzWI3QY9X40w/nCGD+Eh0Qp3fW4q
-         qyZ/eVrGq++aby24EYqIMcM5mn0+m5wvkTDAhOAbh+0yC8GoN3FhQr58CSgN/fHNNVIR
-         0V6w==
-X-Gm-Message-State: ACrzQf0mQ7PQjf/9WfsIdw2NxdZi7dQtJa3fNySYRLInn5qtKZxFRczZ
-	nbzW602royoasQCahlOtf1/wBPs8Czm7ierZZLM=
-X-Google-Smtp-Source: AMsMyM5DrN3IbbsoTe5WI4Fp/tfb0WeoIEJzl3snUphNtI1RjqLbpPr1YKNGATrULX5M8to6GHbfEA8Shm8pZYH5vgU=
-X-Received: by 2002:a63:1f49:0:b0:43b:a2df:857 with SMTP id
- q9-20020a631f49000000b0043ba2df0857mr19845053pgm.137.1664188037524; Mon, 26
- Sep 2022 03:27:17 -0700 (PDT)
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=u6JTozXkaxXd5dDyL6DdTZJyXx50+ggpWDL0I2wBcQU=;
+        b=xi8yUByjdiF+cNS3xhYCRm1DfC5J+kCpT1/dCnoQ0AcuUrNIiCe+JjzSTYU0cisOBH
+         ocjBckYD/VWxg9bcfY4N+6OHdvsir1h3xcMagCQ9nMdA07mrB2dLeWp6zLfKPvrhO6Zn
+         japcV88nxa8qMmXraIoS4C3BwwU+Upt3oRCLillEmdFhMfN/ctTkYhgbEOJBScMRV5Bq
+         IM7snaZtQItzKRljguKUlQTumMLNFDlH+jG/5QMwM8RDKEXv/od2XSHd/hKjYMPDGVPd
+         TVkZZJXdGjcR8oRM7L3V9T5vO1sXQLeiC0CvGKKH7bZY62JvQPElWEaXwnayTGTQMmlx
+         r7XA==
+X-Gm-Message-State: ACrzQf1zhTmgHEd9pVd67XZVZG7jAgtCEbefaMjgqvUyfutdk7CA5l5d
+	J/0Eak1/kT68a9+Xipzpj1wlTLczQc8VqVnKso7K4A==
+X-Google-Smtp-Source: AMsMyM4xbs6QkPMZUssp96ywiRoPnHbhhDadj6GaYovJ1TEbuwTk7ysNh+k94OuaEnPAp92gPeMRgsrCipNQb+tXFcg=
+X-Received: by 2002:a17:906:fd85:b0:77b:b538:6472 with SMTP id
+ xa5-20020a170906fd8500b0077bb5386472mr17913125ejb.48.1664198831674; Mon, 26
+ Sep 2022 06:27:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CABXGCsP0znm9pS-MiKtyxTXR7XiyFVqen0qzNpicGHDZKCzbwg@mail.gmail.com>
- <4e7992e2-c635-e571-faa3-08fd9ee5c975@leemhuis.info>
-In-Reply-To: <4e7992e2-c635-e571-faa3-08fd9ee5c975@leemhuis.info>
-From: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date: Mon, 26 Sep 2022 15:27:06 +0500
-Message-ID: <CABXGCsPg4mEe0RfJeXCGQ_WatbHgGi16Xw9DFKxPLV8QNi777A@mail.gmail.com>
-Subject: Re: After commit 44fa75f207d8a106bc75e6230db61e961fdbf8a8 Wi-Fi
- (mt7921e) speed significantly decreased
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: jelonek.jonas@gmail.com, johannes.berg@intel.com, 
-	lorenzo.bianconi83@gmail.com, sean.wang@mediatek.com, 
-	Linux List Kernel Mailing <linux-wireless@vger.kernel.org>, 
-	Linux List Kernel Mailing <linux-kernel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Mon, 26 Sep 2022 18:57:00 +0530
+Message-ID: <CA+G9fYvyD9OWF53ua2EZmyf+=YTx4f1mezDNkVLMxf3BKXW=_w@mail.gmail.com>
+Subject: arch/arm/probes/kprobes/core.c:409:30: error: .fnstart must precede
+ .save or .vsave directives
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Nathan Chancellor <nathan@kernel.org>, regressions@lists.linux.dev, 
+	lkft-triage@lists.linaro.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Sep 26, 2022 at 9:38 AM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> FWIW, there is a patch under discussion fixing a problem found in that
-> commit:
->
-> https://lore.kernel.org/all/20220829144147.484787-2-jelonek.jonas@gmail.com/
->
-> To quote the first para:
->
-> ```
-> This patch modifies the annotation of supported tx-power levels for a
-> wifi device in ieee80211_hw. This annotation was introduced with commit
-> 44fa75f207d8a106bc75e6230db61e961fdbf8a8 to be able to operate on power
-> indices instead of absolute power values, providing better support for
-> different hardware capabilities.
-> ```
->
-> Not totally sure if that might be relevant to your problem
+Following build warnings / errors noticed on arm with clang-13 / 14
+on Linux next-20220923.
 
-I checked this patch and it did not solve my issue.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
--- 
-Best Regards,
-Mike Gavrilov.
+Regressions found on arm:
+
+   - build-clang-13-bcm2835_defconfig
+   - build-clang-nightly-imx_v6_v7_defconfig
+   - build-clang-nightly-orion5x_defconfig
+   - build-clang-13-keystone_defconfig
+   - build-clang-13-omap2plus_defconfig
+   - build-clang-14-imx_v6_v7_defconfig
+   - build-clang-nightly-omap2plus_defconfig
+   - build-clang-nightly-multi_v5_defconfig
+   - build-clang-nightly-bcm2835_defconfig
+   - build-clang-13-imx_v6_v7_defconfig
+   - build-clang-13-imx_v4_v5_defconfig
+   - build-clang-14-imx_v4_v5_defconfig
+   - build-clang-13-orion5x_defconfig
+   - build-clang-14-multi_v5_defconfig-65236a87
+   - build-clang-14-lkftconfig
+   - build-clang-nightly-imx_v4_v5_defconfig
+   - build-clang-13-multi_v5_defconfig
+   - build-clang-13-lkftconfig
+   - build-clang-nightly-keystone_defconfig
+   - build-clang-14-multi_v5_defconfig
+   - build-clang-14-orion5x_defconfig
+   - build-clang-14-omap2plus_defconfig
+   - build-clang-nightly-multi_v5_defconfig-65236a87
+   - build-clang-14-bcm2835_defconfig
+   - build-clang-14-keystone_defconfig
+   - build-clang-nightly-lkftconfig
+
+arch/arm/probes/kprobes/core.c:409:30: error: .fnstart must precede
+.save or .vsave directives
+                "stmdb  sp, {sp, lr, pc}        \n\t"
+                                                  ^
+<inline asm>:3:2: note: instantiated into assembly here
+        .save   {sp, lr, pc}
+        ^
+/builds/linux/arch/arm/probes/kprobes/core.c:412:29: error: .fnstart
+must precede .pad directive
+                "stmdb  sp!, {r0 - r11}         \n\t"
+                                                  ^
+<inline asm>:6:2: note: instantiated into assembly here
+        .pad    #52
+        ^
+2 errors generated.
+make[5]: *** [/builds/linux/scripts/Makefile.build:250:
+arch/arm/probes/kprobes/core.o] Error 1
+
+build log:
+https://builds.tuxbuild.com/2FAyD1qcTlzjIYE7mjrugjCsxu1/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
