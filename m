@@ -1,168 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from abi149hd125.arn1.oracleemaildelivery.com (abi149hd125.arn1.oracleemaildelivery.com [129.149.84.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991327E1
-	for <regressions@lists.linux.dev>; Tue, 27 Sep 2022 10:02:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 407F0C433D6;
-	Tue, 27 Sep 2022 10:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1664272948;
-	bh=dlgt8sTUOCFvaKMGVG7jt6xOPr5SYmh1UhVPSKkYzV8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SzSGGrMbrYCeDjltNrgrL3VG2omylsDXXWGmFRuKYPFnG2Xtt63azHAsuGowYidFD
-	 vuXsb1OH/s/KwBRrtO4U7PShzKeRUQ6r0e13xxx6bq+NTHfByi71P4P6tQvc7Z8p1W
-	 QQu/R2CHgWE0QRLqrRl6ANwMMZJClkApkeRIMNC7efj90M4T9lKE5uoFewIOEQmM/3
-	 Y6fCSR/7GnG+tEUZB8N1wSz/PUN49XvesX2YiFyZr2dYXU2ZRmA2geaiWFJLkpAPQk
-	 H1I6zN0LGrV0YwBi4275HtG2my1Kuu0KK1SzWnQ3lUfAapmKTlFxrXh+RWDZrb4ars
-	 KrO+qSy8Z1aVA==
-Message-ID: <54078150-3c22-3563-7731-5c7fda85987d@kernel.org>
-Date: Tue, 27 Sep 2022 12:02:23 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F7E023BE
+	for <regressions@lists.linux.dev>; Tue, 27 Sep 2022 14:27:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=oci-arn1-20220924;
+ d=augustwikerfors.se;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=Jvhm/TIuEM3MbFSywD/lO6kvNC6ioA9KTEm2/WvlxWs=;
+ b=pcu+k1UxuiKBY/ANP/l+Gu8iNx9ZLD8kVnwP8goJOpuBNh7Sr1ZEaM1gsEzTQi5YqH5sCCzYghpf
+   VVg2Zzy3I7M/bNqJgM0xu0rsbDR2ber41bVJpRDRz80Wlpxg0Z/liqqXZxel4WJGEcmJ8H0wdZEy
+   xFHFCl/ER/dDsqWWa2LxdVrdL2cxCSGJrpdFPupUARbplkLEZR56MtZfPhqCEpXL1y8W9jBe09AJ
+   wEdEln618ml5XQFMVrpS7ibsMd6xGyh31i902j0A2D1KNujhxQzTkRzlHzmdsG/DI7DuPCR/D6a8
+   ah821mFTSwpUcDmvTTBEK7L3PMtsDV15zDpq1A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=prod-arn-20211201;
+ d=arn1.rp.oracleemaildelivery.com;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=Jvhm/TIuEM3MbFSywD/lO6kvNC6ioA9KTEm2/WvlxWs=;
+ b=AHSIWBhGeYU2pbHx153qgw7wjk6FZxw+OmB/8N/tZlWharKw7JgrKAxBDZQ9x8zf44LZcP52H8Sq
+   DIiM9Yv1JCBJOvS6T+u9N27bCqSOFUxGCW1AfCeUu1CK1e8Y0sd1SsTsfV3Ls+M3uF2E/lyvXgzV
+   LNuEfcL+WYzdqJrKllLXCA6dGuVTCCXtzz3Qq/j4Qo/jodhbZFTFD4fGmDgflK8lB6tzr6iaqoj2
+   CZ5xb9mx2BqFiXDcX7mJM70k/ubaoYtYSQoSUBgFiyyqU8HODnrQlsuVwt60NUvXy/jRLUk8rfOt
+   BL9iOltwi0ucdxw/wgXpNz/RSFTJ3Xxiu+n9Yw==
+Received: by omta-ad1-fd1-101-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com
+ (Oracle Communications Messaging Server 8.1.0.1.20220914 64bit (built Sep 14
+ 2022))
+ with ESMTPS id <0RIV007MZH9KW7C0@omta-ad1-fd1-101-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com>
+ for regressions@lists.linux.dev; Tue, 27 Sep 2022 14:22:32 +0000 (GMT)
+Message-id: <f84e4956-293f-801d-6b9f-df4226df87d2@augustwikerfors.se>
+Date: Tue, 27 Sep 2022 16:22:28 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [PATCH] Revert "net: set proper memcg for net_init hooks
- allocations"
-Content-Language: en-US
-To: Shakeel Butt <shakeelb@google.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Michal Hocko <mhocko@kernel.org>, Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <songmuchun@bytedance.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
- cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Anatoly Pugachev <matorola@gmail.com>, Vasily Averin <vvs@openvz.org>,
- Jakub Kicinski <kuba@kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>, sparclinux@vger.kernel.org,
- regressions@lists.linux.dev
-References: <20220926195931.2497968-1-shakeelb@google.com>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-In-Reply-To: <20220926195931.2497968-1-shakeelb@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-version: 1.0
+Subject: Re: [REGRESSION] Graphical issues on Lenovo Yoga 7 14ARB7 laptop since
+ v6.0-rc1 (bisected)
+Content-language: en-US
+To: Leo Li <sunpeng.li@amd.com>, Alex Deucher <alexdeucher@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Harry Wentland <harry.wentland@amd.com>,
+ Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
+ Alex Deucher <alexander.deucher@amd.com>, linux-kernel@vger.kernel.org,
+ amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev
+References: <c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se>
+ <eee82fb8-0fc5-98cb-e630-f86891574f21@leemhuis.info>
+ <CADnq5_PRP3ekHPLhdXALxt9GL3aHHZQUw5TNAwm4t+ggimUq7g@mail.gmail.com>
+ <33cf5071-3157-a3c2-3252-3a8ab926c60d@augustwikerfors.se>
+ <f4818fc3-7015-29ed-95c5-ab6a18da33d7@amd.com>
+ <ea1f1d81-650b-768a-30ab-c9d7d9f9fa54@augustwikerfors.se>
+ <3ba218a3-8b6b-c0da-873b-53e1a8a082ae@amd.com>
+From: August Wikerfors <git@augustwikerfors.se>
+In-reply-to: <3ba218a3-8b6b-c0da-873b-53e1a8a082ae@amd.com>
+Content-type: text/plain; charset=UTF-8; format=flowed
+Content-transfer-encoding: 7bit
+Reporting-Meta:
+ AAGbJpr3NyLqWZHM6uELfmvsuJMi5ZNZQypbrRlArwbCKCICd6gU/Yml3uJOgk9C
+ zSaCWCHXTdOH4I2OUeF+PgO1sCOokynEZbLcrC4bk9CdRwo6pGlHuPgOyDAeYU7p
+ aLmN7VtyQ0zka2Tnf5ImlREsKnoht6zI8VMTmbKGP3fK0mmcJgca+iRmM24ANhCD
+ DbBNjKt3KV9WDUWXymWzj+d5Hh/8JZeOMKXKEIeWr2FgZyxIG5zwsdjJd7L6H83Y
+ D4Qv5gbXzQdJ1ic5RswGIlZlGGH+q0CFbueaU8qe06ubKh92XogCn9NXEykQjdhp
+ MrEcq7a063rnxpV+ZuZYzBJm0j7Iw4NODOUDpUIZOP4C5yt6tdVmipVPytxqt7iZ
+ TEOtzezWXhI8T9odzkuv8Ass46G408WKL+zfib8J0PW4zy4dJGpP3gnp0YvWgZUF pz0vIg==
 
-On 9/26/22 21:59, Shakeel Butt wrote:
-> This reverts commit 1d0403d20f6c281cb3d14c5f1db5317caeec48e9.
+Hi Leo,
+
+On 2022-09-27 00:29, Leo Li wrote:
 > 
-> Anatoly Pugachev reported that the commit 1d0403d20f6c ("net: set proper
-> memcg for net_init hooks allocations") is somehow causing the sparc64
-> VMs failed to boot and the VMs boot fine with that patch reverted. So,
-> revert the patch for now and later we can debug the issue.
+> Hi August, thanks for the log.
 > 
-
-Link: https://lore.kernel.org/all/20220918092849.GA10314@u164.east.ru/
-
-(mainly for regzbot reading this thread but should be valid usage for
-the report anyway)
-
-Fixes: 1d0403d20f6c ("net: set proper memcg for net_init hooks allocations")
-
-> Reported-by: Anatoly Pugachev <matorola@gmail.com>
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> Cc: Vasily Averin <vvs@openvz.org>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Michal Koutný <mkoutny@suse.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: cgroups@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  include/linux/memcontrol.h | 45 --------------------------------------
->  net/core/net_namespace.c   |  7 ------
->  2 files changed, 52 deletions(-)
+> It seems the eDP panel does not fully satisfy the amdgpu requirements
+> for enabling PSR SU, but we're enabling it anyways.
 > 
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index ef479e554253..e1644a24009c 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -1787,42 +1787,6 @@ static inline void count_objcg_event(struct obj_cgroup *objcg,
->  	rcu_read_unlock();
->  }
->  
-> -/**
-> - * get_mem_cgroup_from_obj - get a memcg associated with passed kernel object.
-> - * @p: pointer to object from which memcg should be extracted. It can be NULL.
-> - *
-> - * Retrieves the memory group into which the memory of the pointed kernel
-> - * object is accounted. If memcg is found, its reference is taken.
-> - * If a passed kernel object is uncharged, or if proper memcg cannot be found,
-> - * as well as if mem_cgroup is disabled, NULL is returned.
-> - *
-> - * Return: valid memcg pointer with taken reference or NULL.
-> - */
-> -static inline struct mem_cgroup *get_mem_cgroup_from_obj(void *p)
-> -{
-> -	struct mem_cgroup *memcg;
-> -
-> -	rcu_read_lock();
-> -	do {
-> -		memcg = mem_cgroup_from_obj(p);
-> -	} while (memcg && !css_tryget(&memcg->css));
-> -	rcu_read_unlock();
-> -	return memcg;
-> -}
-> -
-> -/**
-> - * mem_cgroup_or_root - always returns a pointer to a valid memory cgroup.
-> - * @memcg: pointer to a valid memory cgroup or NULL.
-> - *
-> - * If passed argument is not NULL, returns it without any additional checks
-> - * and changes. Otherwise, root_mem_cgroup is returned.
-> - *
-> - * NOTE: root_mem_cgroup can be NULL during early boot.
-> - */
-> -static inline struct mem_cgroup *mem_cgroup_or_root(struct mem_cgroup *memcg)
-> -{
-> -	return memcg ? memcg : root_mem_cgroup;
-> -}
->  #else
->  static inline bool mem_cgroup_kmem_disabled(void)
->  {
-> @@ -1879,15 +1843,6 @@ static inline void count_objcg_event(struct obj_cgroup *objcg,
->  {
->  }
->  
-> -static inline struct mem_cgroup *get_mem_cgroup_from_obj(void *p)
-> -{
-> -	return NULL;
-> -}
-> -
-> -static inline struct mem_cgroup *mem_cgroup_or_root(struct mem_cgroup *memcg)
-> -{
-> -	return NULL;
-> -}
->  #endif /* CONFIG_MEMCG_KMEM */
->  
->  #if defined(CONFIG_MEMCG_KMEM) && defined(CONFIG_ZSWAP)
-> diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-> index 6b9f19122ec1..0ec2f5906a27 100644
-> --- a/net/core/net_namespace.c
-> +++ b/net/core/net_namespace.c
-> @@ -18,7 +18,6 @@
->  #include <linux/user_namespace.h>
->  #include <linux/net_namespace.h>
->  #include <linux/sched/task.h>
-> -#include <linux/sched/mm.h>
->  #include <linux/uidgid.h>
->  #include <linux/cookie.h>
->  
-> @@ -1144,13 +1143,7 @@ static int __register_pernet_operations(struct list_head *list,
->  		 * setup_net() and cleanup_net() are not possible.
->  		 */
->  		for_each_net(net) {
-> -			struct mem_cgroup *old, *memcg;
-> -
-> -			memcg = mem_cgroup_or_root(get_mem_cgroup_from_obj(net));
-> -			old = set_active_memcg(memcg);
->  			error = ops_init(ops, net);
-> -			set_active_memcg(old);
-> -			mem_cgroup_put(memcg);
->  			if (error)
->  				goto out_undo;
->  			list_add_tail(&net->exit_list, &net_exit_list);
+> I suspect it may be due to the "DP_FORCE_PSRSU_CAPABILITY" bit being set
+> in it's DPCD registers, I'm checking with some devs to see if that is
+> expected.
+> 
+> In the meantime, can you give these two hacks a spin? Let me know if
+> this helps with the glitches and system hangs:
+> https://gitlab.freedesktop.org/-/snippets/7076
+Yes, the issues do not happen with those patches applied.
 
+> Also the dmesg, in particular this line:
+>> [drm] PSR support 1, DC PSR ver 1, sink PSR ver 3 DPCD caps 
+>> 0x70su_y_granularity 4 force_psrsu_cap **X**
+Here is that line:
+> [   12.085196] [drm] PSR support 1, DC PSR ver 1, sink PSR ver 3 DPCD caps 0x7b su_y_granularity 4 force_psrsu_cap 1
+
+Regards,
+August Wikerfors
