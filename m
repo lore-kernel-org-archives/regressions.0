@@ -1,161 +1,144 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2080.outbound.protection.outlook.com [40.107.100.80])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F334A04
-	for <regressions@lists.linux.dev>; Mon, 26 Sep 2022 22:29:26 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gii8mmQyJOrsd0jAWbOZpuBbg2i6mnI889uXmOLlx1vbB0AtIf53WDeojJMhB49Vq0d3yfb6/DjzjzV0ZE25oaOlbSwYCrqiVyCPQrU/Lb3Zzw+p3kiDnhsTn7aBLOqqKOEPq7ujTIsK8pFemA27IBWw1r+/yM9WlOeAVhso4HoDJPSf1ex0uH8nzas+Dv8oTuYuvoaUAlRLszRtfYWxAJpp4MXbFrM+RblKUOfxBIiFp37hrEFNH5n/yw8BWM8KqMGRFi0ROc3hUGDCHl1astJnNZ62juNSFR5t1N/8GIbh0y10E8ztfH1jMW8WpCLWOhpjxz0e1/s4wNqWIi2FKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GbYKjBKoyzNVAxBWO/Y8QN4vswp1Im4MQni+YNo3zdA=;
- b=fX9wp435diY2RWHRU+FaNKriwDctE3ysiB2Y7uqaaywt3OyDwk+LhKV4ghdfRT7pLH4rl4Db/U9OAAVS9wvafq5zWsduB7dPCsCowxB5JMWPhT2t9yaFJegXRZP3i3h8hwg7g0PUZCCRveJVs8N+vpnn4C7FlMxNYbv2AqJ56ZpoQryeu3qDlo5CstTVCv+9SLcloGeuKJ2OJXCSz+Nx3nOiq6HuzmmP9ppEtZekPr8Jfq1vKST10fGnKvMmgueDVH6a1iQz89a3UcuPDt2H7QOApDbSRE30gIMoUaqUcqEBkC7ODYd9eKVe2IdTQoUnr7oPDNDEwd9HUani1NseeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GbYKjBKoyzNVAxBWO/Y8QN4vswp1Im4MQni+YNo3zdA=;
- b=N0HsUyBn4uiXHDmhfY5FBlzPFQT6Acqp6aztou9CcsACZW9Xp8QVJSXorW8CU2uAuubKldfoEj6pDEDAH17RokOZ/wM/XKzdAHb1CT7ivMz3pDarwyOM7S7qCEUitExEj1s8U0R7gslPvrCxaIgc81hKiPzUzdMDIdrgXZ5sNrc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB5311.namprd12.prod.outlook.com (2603:10b6:5:39f::7) by
- SA1PR12MB7318.namprd12.prod.outlook.com (2603:10b6:806:2b3::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.25; Mon, 26 Sep
- 2022 22:29:22 +0000
-Received: from DM4PR12MB5311.namprd12.prod.outlook.com
- ([fe80::fc54:e514:e096:b243]) by DM4PR12MB5311.namprd12.prod.outlook.com
- ([fe80::fc54:e514:e096:b243%3]) with mapi id 15.20.5654.025; Mon, 26 Sep 2022
- 22:29:22 +0000
-Message-ID: <3ba218a3-8b6b-c0da-873b-53e1a8a082ae@amd.com>
-Date: Mon, 26 Sep 2022 18:29:19 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-From: Leo Li <sunpeng.li@amd.com>
-Subject: Re: [REGRESSION] Graphical issues on Lenovo Yoga 7 14ARB7 laptop
- since v6.0-rc1 (bisected)
-To: August Wikerfors <git@augustwikerfors.se>,
- Alex Deucher <alexdeucher@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- Harry Wentland <harry.wentland@amd.com>,
- Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
- Alex Deucher <alexander.deucher@amd.com>, linux-kernel@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev
-References: <c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se>
- <eee82fb8-0fc5-98cb-e630-f86891574f21@leemhuis.info>
- <CADnq5_PRP3ekHPLhdXALxt9GL3aHHZQUw5TNAwm4t+ggimUq7g@mail.gmail.com>
- <33cf5071-3157-a3c2-3252-3a8ab926c60d@augustwikerfors.se>
- <f4818fc3-7015-29ed-95c5-ab6a18da33d7@amd.com>
- <ea1f1d81-650b-768a-30ab-c9d7d9f9fa54@augustwikerfors.se>
-Content-Language: en-US
-In-Reply-To: <ea1f1d81-650b-768a-30ab-c9d7d9f9fa54@augustwikerfors.se>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH0PR08CA0012.namprd08.prod.outlook.com
- (2603:10b6:610:33::17) To DM4PR12MB5311.namprd12.prod.outlook.com
- (2603:10b6:5:39f::7)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658FB653
+	for <regressions@lists.linux.dev>; Tue, 27 Sep 2022 07:51:37 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1od5NM-0005jE-U3; Tue, 27 Sep 2022 09:51:32 +0200
+Message-ID: <bb11dc94-6878-9aac-96a3-f7c15566e0d3@leemhuis.info>
+Date: Tue, 27 Sep 2022 09:51:32 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB5311:EE_|SA1PR12MB7318:EE_
-X-MS-Office365-Filtering-Correlation-Id: 53b1eb25-9412-4a0d-77d0-08daa00e8fa0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Xtf66Z4eTFHEoKRAsNS+37EZoHsUxCOIfrQcDK+UGmKEu3fFVlRyqC2KjY4uClowLoYX96Im+3fPklWP4cAvjAjEwJb7bXlh9+TP0A+d90E6QNfgEDJSLKpO1WktD1SO7x4XPiXlackAQ4z+jW5eGCe7D4d5t1cBL8QYoaR1kebr3FGSLGwPRIDrE3ErMo1Wsfxy9Yb0oLGxWOOpnhvKClMsU2E7dtvjt6xuDhf1ROErkEAdvJyxu+l7Vtekg6S6dnrlX5evDV28mHUB7vohItqNUGXn/KoHXKTiRVjUqlH0fx/4VBhVdN4pYyHip04rzbAKROqta1naGt8+jnrx7BUQCIcv7LBV4FYLCsI4vUUEWEpNVicF4aFWCvUA/k2Y1HqxQW2pJbEjgp2oHPLzWAXBcd4tV9OyN6Ybm/fUErvtmicaWDGjV8uPSy/UIIsXLTmIwlG3JULrHhXPjZDLDsuhV3WHpFgmeOQ1DQWbnV0nkXH/q0mmgVU15wYri1r5XksVJMhrzUTI2S5IRf1uuJrxKtD0/nhyozvzZo1nPz9QuWGvWMn+COdb0ZpTGawoIp3agVRdY0ehvZJfWzqBlj8lFkcvyusqXrLxwrOEFrrrqNDibTDUb7BTq1LXsFRW036IFPjrE/4TMafCbSgy+uhgqQhBcc8KEzP50czc9yyyYD8aIhB1JTQHtyfcWYJlCWtBlgSq1YGhEeNoOrHG+fSljSg+O1wrLkovpu5yTYVwhu17vQXxjO2h9lxtnt3C
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5311.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(366004)(136003)(396003)(376002)(451199015)(110136005)(41300700001)(8936002)(31686004)(5660300002)(186003)(2616005)(54906003)(316002)(2906002)(36756003)(26005)(45080400002)(6486002)(966005)(478600001)(6506007)(6512007)(53546011)(6666004)(31696002)(83380400001)(66556008)(8676002)(66476007)(66946007)(4326008)(86362001)(38100700002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NU56dVFZeWkvc213T0VwQTB3Yng5OEhENnhxY0Rrdm40UVRvM2hvM2JRZm9P?=
- =?utf-8?B?bGRGRW44UkRlMlFtV0NTQjI2SkdoajV4eGhQYmRJaWMyN1ZNY2RmSnBBN1VQ?=
- =?utf-8?B?d0lEUnYvNHdYS1drOGdSM0NhYXJNSmFBVlF4azg4US9XVG1nZDk2REJkYVZG?=
- =?utf-8?B?N2RRV2xjZlBseFp1VHNhRUtBMGJBeUpNZEpxRDZaVDlPVDVWVGpyUzdnMExU?=
- =?utf-8?B?OTNzKzBhaWRFZXpMQVFxT3g5MXlHQzVteXA2TlpseDF3VzBlcmExQytnN0k0?=
- =?utf-8?B?SWRKNUhVNC9qL05DNjNrY0RWcFYwTkdnYTRGQVFuWk9YMU53dGlVOWZhaExa?=
- =?utf-8?B?bzNVbFlOWXhFemRRMGZJVTE4L21NZGdRMmhyb2k2NUM0MmxBUG1seElTbHdV?=
- =?utf-8?B?cjZUK1dzK2MzTWRpU3A2T2NhejNNazNkajBpbFlCVDJYMytFQXc2UWJNMkRp?=
- =?utf-8?B?ek8yUEx6UkN4ZzNmbnVTTWdwamVDZmlUUHZ0R3pOQzZtYnNBcys4OE5LT2Qv?=
- =?utf-8?B?YzAra1BicnpFdThyRWRwMjNzK2RERllGMjROd3pwOFFQaVRvdm9QbitCZllG?=
- =?utf-8?B?c0w5QlFwRktrZXZ4THRucjc1SXR2VVVRQURjWUdUNWZlektlTHNEbHdlRC9k?=
- =?utf-8?B?SnBVQ24zOHoySnJTdmh2Y2JjOEVnaFNpVkl2MEVVSHorOUZ0ZzAxYnVvL21j?=
- =?utf-8?B?S3NZVzM4aXNIM0s1TlhLbGplRXNSR2xNVzQ2aE43dXFnemlxZ2Y3ZkNQaUhZ?=
- =?utf-8?B?SGxQbVVqdHYzaVpDUkhSU2R6Qi9vNmVNc0h1RWFJa2liYVdvM2ltMXB5YUdE?=
- =?utf-8?B?MDMwMnhtV1kzUnQ4YTQ1RGRvZ1Fpdk80ZUF5Q1JVRi9tZmlBdVY1NXBVNjI5?=
- =?utf-8?B?dzgvSXpCUkpsMU4rbkF2dUt2djRRd0pKNXZPNFQzTm9hWFkrUFZWTUxsMWFM?=
- =?utf-8?B?S0pPK1RpU2d1bXBqYkdYVnI4TjZ2UHB6b3NQVVcwdS9RY2FOQkVHdXZIUC9I?=
- =?utf-8?B?azdpYkorUUcxQzZmWDNlOUFmUWdmK1NzL1NQVzR6YnZ4bVArb3hQTWxWV1BO?=
- =?utf-8?B?ZVAzMDYrUW1LcG9Tc0dDaHR6Y2o0TE83T3ZKMGtKUnloOVJoZjNzaG1UTDF4?=
- =?utf-8?B?U05tQ05RMmpxTWdGZkYyN0pMWUJSSS91dmVWL0M4TVJzeWxENWNoNngrNmFY?=
- =?utf-8?B?YWduOTRFbDhNZGx1Y1E1cTcvLzhnSVloVUtOMjlJRFRzYUYxWENEbHJHTU11?=
- =?utf-8?B?UE15VlZEVEE2dmNnM2w4bTVpSHROSTFab2cvNUtWQ0ZEYmhMUUNYcU01ek51?=
- =?utf-8?B?L0hOWG1CZ0QzTlJaUFdrd0x2K0dVRnBkNXNDZERzaStLaXUxd01kU05KT1NP?=
- =?utf-8?B?TDhtL3I2UWVWWUwzVnA4algycFRJS2V3VkRIK21QcGZ1QjhtdmUveWF2UzZN?=
- =?utf-8?B?NUpkMDl1YUR5K1hOVEllcmYwYjF5L1BLem00MHE4ZUp3S1prRE9GNVVKUHBk?=
- =?utf-8?B?MHdWUElsZUZoNGZkWWREQnBOeW10b2wvMVpKMlZyWWRKODF5TVFZb1Rsdmhq?=
- =?utf-8?B?bmZ5aWhiOW9Td1dNOEFzaWJFNi82UVN3NU5taFRWdmRKMWxQOE91TWFtZkxT?=
- =?utf-8?B?Sk9kcXVrdWxhR0ZlTXhHN1dDVmh1OVd6MGJQb1JhR0U4TFR2Ky94WkNYMDFn?=
- =?utf-8?B?eWFoc24zc0lSRlBkUnlyajRHY3J4OHY0ZlBzZ3hzUE5NUlBhZzUwMU81empo?=
- =?utf-8?B?M0hGc01qVFp0L3QwQmQwR3Z4enNVR1lMY3o5SGx3VkIvdEJuejVZNHNTWkRY?=
- =?utf-8?B?blNRcFBhMHVySk9UOWJRZW1tM1BDNDd0RllMS1d6TTdhSjhUUmVHcVJ2amNB?=
- =?utf-8?B?aEIyTzRxbjJXNFRpdW5NMDlLYzlkSlFaMFJkNTZvRXZHRjdxdW5ISWZEbnU1?=
- =?utf-8?B?WUlwYjh2V243Z2ozeFFjU2hwNk9hNnhJc2hNenFPZkQxTmo0bUlWUE5QdlYw?=
- =?utf-8?B?MUk0bzYveFZPVUhObmVWNjhjU0UyZlFhUUIyZmJkZHBlNGNqb283Ujg3bEp2?=
- =?utf-8?B?cmpnbHNYbktEeG1SNzV4aWFtSUZ1VkJnTWR2SkVtZGpiMG1zZHRRTUl1dW5U?=
- =?utf-8?Q?h2TQ=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53b1eb25-9412-4a0d-77d0-08daa00e8fa0
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5311.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Sep 2022 22:29:22.6929
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MrtM3w5zAWLnlO5JMTki3gABtfmFH/RhVwKTxhZvYRJ52hdKhzim+jTWXt14qEru
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7318
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: Raspberry Pi 3 Model B+ hangs in vc4_hdmi_runtime_resume()
+ #forregzbot
+Content-Language: en-US, de-DE
+To: dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220922145448.w3xfywkn5ecak2et@pengutronix.de>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20220922145448.w3xfywkn5ecak2et@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664265097;a9309715;
+X-HE-SMSGID: 1od5NM-0005jE-U3
 
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
-Hi August, thanks for the log.
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-It seems the eDP panel does not fully satisfy the amdgpu requirements
-for enabling PSR SU, but we're enabling it anyways.
+Hi, this is your Linux kernel regression tracker.
 
-I suspect it may be due to the "DP_FORCE_PSRSU_CAPABILITY" bit being set
-in it's DPCD registers, I'm checking with some devs to see if that is
-expected.
-
-In the meantime, can you give these two hacks a spin? Let me know if
-this helps with the glitches and system hangs:
-https://gitlab.freedesktop.org/-/snippets/7076
-
-Also the dmesg, in particular this line:
-> [drm] PSR support 1, DC PSR ver 1, sink PSR ver 3 DPCD caps 0x70su_y_granularity 4 force_psrsu_cap **X**
-
-Thanks,
-Leo
-
-On 2022-09-23 16:26, August Wikerfors wrote:
-> Hi Leo,
+On 22.09.22 16:54, Marc Kleine-Budde wrote:
+> Hello,
 > 
-> On 2022-09-23 20:41, Leo Li wrote:
->> Hi August,
->>
->> Can you provide a dmesg log with drm.debug=0x16 enabled in kernel 
->> cmdline?
-> Log is available here: 
-> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Ffiles.augustwikerfors.se%2Fdmesg.2022-09-23.txt&amp;data=05%7C01%7Csunpeng.li%40amd.com%7C261d31a0ac6844e40b2208da9da1ee82%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637995616061782958%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&amp;sdata=6LAMah8N%2FdEG6gl6u9HGcajwozrS7fwp%2FJDLZMKpcGU%3D&amp;reserved=0
+> I'm on a Raspberry Pi 3 Model B+ running current Debian testing ARM64,
+> using Debian's v5.19 kernel (Debian's v5.18 was working flawless).
 > 
-> This is what I did during that log:
-> 1. Boot the system
-> 2. Type into the password field in SDDM (this is when the problem occurs)
-> 3. Switch to a TTY to save the log (the problem doesn't happen there)
+> | [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd034]                                                                                                                          
+> | [    0.000000] Linux version 5.19.0-1-arm64 (debian-kernel@lists.debian.org) (gcc-11 (Debian 11.3.0-5) 11.3.0, GNU ld (GNU Binutils for Debian) 2.38.90.20220713) #1 SMP Debian 5.19.6-1 (2022-0
+> 9-01)                                                                                                                                                                                           
+> | [    0.000000] Machine model: Raspberry Pi 3 Model B+           
+> | [    3.747500] raspberrypi-firmware soc:firmware: Attached to firmware from 2022-03-24T13:21:11 
 > 
-> Regards,
-> August Wikerfors
+> As soon a the vc4 module is loaded the following warnings hits 4
+> times, then the machine stops.
+> 
+> | [   66.839210] Console: switching to colour dummy device 80x25
+> | [   66.861282] vc4-drm soc:gpu: bound 3f400000.hvs (ops vc4_hvs_ops [vc4])
+> | [   66.868418] ------------[ cut here ]------------
+> | [   66.873110] WARNING: CPU: 3 PID: 611 at drivers/gpu/drm/vc4/vc4_hdmi_regs.h:456 vc4_hdmi_reset+0x3e8/0x540 [vc4]
+> | [   66.883495] Modules linked in: vc4(+) ccm cpufreq_userspace cpufreq_powersave cpufreq_ondemand cpufreq_conservative nls_ascii nls_cp437 vfat fat ext4 mbcache jbd2 hci_uart btqca btrtl btbcm btintel btsdio bluetooth bcm2835_v4l2(C) bcm2835_mmal_vchiq(C) jitterentropy_rng
+> | videobuf2_vmalloc sha512_generic videobuf2_memops rt2800usb snd_soc_core videobuf2_v4l2 rt2x00usb microchip videobuf2_common snd_bcm2835(C) rt2800lib snd_pcm_dmaengine sha512_arm64 bridge videodev snd_pcm rt2x00lib snd_timer aes_neon_bs lan78xx mc cec stp snd mac80211 aes_n
+> | eon_blk rc_core brcmfmac llc drm_display_helper soundcore drm_cma_helper of_mdio cpufreq_dt drbg libarc4 fixed_phy drm_kms_helper brcmutil fwnode_mdio libphy ansi_cprng cfg80211 vchiq(C) ecdh_generic raspberrypi_cpufreq ecc bcm2835_rng crc16 bcm2835_thermal rng_core rfkill
+> | pwm_bcm2835 bcm2835_wdt leds_gpio fuse drm configfs lz4 lz4_compress zram zsmalloc ip_tables x_tables autofs4 btrfs blake2b_generic xor xor_neon raid6_pq zstd_compress libcrc32c
+> | [   66.883758]  crc32c_generic xxhash_generic dwc2 udc_core roles usbcore sdhci_iproc sdhci_pltfm crct10dif_ce crct10dif_common usb_common sdhci bcm2835 i2c_bcm2835 phy_generic
+> | [   66.987722] CPU: 3 PID: 611 Comm: insmod Tainted: G         C        5.19.0-1-arm64 #1  Debian 5.19.6-1
+> | [   66.997253] Hardware name: Raspberry Pi 3 Model B+ (DT)
+> | [   67.002549] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> | [   67.009610] pc : vc4_hdmi_reset+0x3e8/0x540 [vc4]
+> | [   67.014426] lr : vc4_hdmi_reset+0x24/0x540 [vc4]
+> | [   67.019153] sp : ffff80000ab83660
+> | [   67.022510] x29: ffff80000ab83660 x28: 00000000055fd460 x27: ffff000009465080
+> | [   67.029753] x26: 0000000000000000 x25: ffff800008fbe740 x24: ffff800009d582f0
+> | [   67.036995] x23: ffff00000dabb000 x22: ffff000005144000 x21: ffff000013dc7180
+> | [   67.044237] x20: 0000000000000000 x19: ffff000009465080 x18: ffffffffffffffff
+> | [   67.051479] x17: 0000000000000000 x16: 0000000000000000 x15: ffff000013dc7f14
+> | [   67.058721] x14: ffffffffffffffff x13: ffff000013dc7f10 x12: 0101010101010101
+> | [   67.065963] x11: 0000000000000040 x10: fffffffff8858c10 x9 : ffff80000173ceb4
+> | [   67.073205] x8 : 0101010101010101 x7 : 0000000000000000 x6 : ffff00000b3ad140
+> | [   67.080447] x5 : ffff000009465ca8 x4 : 0000000000000000 x3 : ffff000009465ca8
+> | [   67.087689] x2 : 0000000000000001 x1 : 0000000000000002 x0 : ffff800001753090
+> | [   67.094932] Call trace:
+> | [   67.097407]  vc4_hdmi_reset+0x3e8/0x540 [vc4]
+> | [   67.101869]  vc4_hdmi_runtime_resume+0x74/0x360 [vc4]
+> | [   67.107036]  vc4_hdmi_bind+0x218/0xa20 [vc4]
+> | [   67.111407]  component_bind_all+0x130/0x290
+> | [   67.115653]  vc4_drm_bind+0x10c/0x2e0 [vc4]
+> | [   67.119936]  try_to_bring_up_aggregate_device+0x230/0x320
+> | [   67.125411]  component_master_add_with_match+0xd4/0x11c
+> | [   67.130710]  vc4_platform_drm_probe+0xd0/0x110 [vc4]
+> | [   67.135787]  platform_probe+0x74/0xf0
+> | [   67.139501]  really_probe+0x19c/0x3f0
+> | [   67.143213]  __driver_probe_device+0x11c/0x190
+> | [   67.147719]  driver_probe_device+0x44/0xf4
+> | [   67.151872]  __driver_attach+0xd8/0x220
+> | [   67.155760]  bus_for_each_dev+0x7c/0xe0
+> | [   67.159649]  driver_attach+0x30/0x40
+> | [   67.163272]  bus_add_driver+0x154/0x240
+> | [   67.167162]  driver_register+0x84/0x140
+> | [   67.171051]  __platform_driver_register+0x34/0x40
+> | [   67.175821]  vc4_drm_register+0x5c/0x1000 [vc4]
+> | [   67.180456]  do_one_initcall+0x50/0x240
+> | [   67.184347]  do_init_module+0x50/0x1fc
+> | [   67.188150]  load_module+0x1c5c/0x2060
+> | [   67.191951]  __do_sys_finit_module+0xac/0x130
+> | [   67.196369]  __arm64_sys_finit_module+0x2c/0x40
+> | [   67.200964]  invoke_syscall+0x50/0x120
+> | [   67.204766]  el0_svc_common.constprop.0+0x4c/0x100
+> | [   67.209626]  do_el0_svc+0x3c/0xd0
+> | [   67.212987]  el0_svc+0x3c/0x100
+> | [   67.216174]  el0t_64_sync_handler+0xbc/0x140
+> | [   67.220502]  el0t_64_sync+0x18c/0x190
+> | [   67.224216] ---[ end trace 0000000000000000 ]---
+> | [   67.228942] ------------[ cut here ]------------
+> 
+> Is this a known problem?
+
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced v5.18..v5.19
+#regzbot title dri: vc4: Raspberry Pi 3 Model B+ hangs in
+vc4_hdmi_runtime_resume()
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
