@@ -1,85 +1,93 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from abi149hd126.arn1.oracleemaildelivery.com (abi149hd126.arn1.oracleemaildelivery.com [129.149.84.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E2CA51
-	for <regressions@lists.linux.dev>; Wed, 28 Sep 2022 08:34:12 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1odSW9-0006qO-R9; Wed, 28 Sep 2022 10:34:09 +0200
-Message-ID: <2128c845-c3d0-e5af-0f08-7e28ac946e52@leemhuis.info>
-Date: Wed, 28 Sep 2022 10:34:09 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9659EA2
+	for <regressions@lists.linux.dev>; Wed, 28 Sep 2022 09:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=oci-arn1-20220924;
+ d=augustwikerfors.se;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=xVfTte0TU0Tcn0VAkTnwLLU/ps8Np9562fwTrRsRgrk=;
+ b=Vy7H8oWIl2kIi0jrdnys7xLAF8doYhsDJ9wHHqZDfsxP5GbQjADYXUmrdn4cpsXvDEQnKLJMVeug
+   bz+GS2ZGprQtQuFoROP1VEUBt8QWxKfF1oolbh5vfcyCeCatXruRKN7aehRFEmhRiAwCnIbMSRXH
+   cru9rAhItLRr5RESGiNC37BhvyIEv85jtiesrxAz4jUozisxiarTanFwJ4V53qaUHtRbGWsRqoA+
+   PelrLyeqAIL31McT7ak5+211YosKN26f2ptp9F8j0+PjvcFp6nLJmsUDbEgUniK0bTCIL2AL9eT1
+   xY2zCVFNZVjMLDt2x8U01exiCYuwXEcS7TpJlg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=prod-arn-20211201;
+ d=arn1.rp.oracleemaildelivery.com;
+ h=Date:To:From:Subject:Message-Id:MIME-Version:Sender;
+ bh=xVfTte0TU0Tcn0VAkTnwLLU/ps8Np9562fwTrRsRgrk=;
+ b=fO4CtGhuhNYArk7RzgID8UWFHMnKzZ77lSKgp6l27XBPylRJ4x9klIHRkxEQzNDVL/sL8NhuP8uL
+   kgMFQUQEIpoLnZQ/7fpCBS7d1fojOkbB8sdnbT6ZyAerpoaaZ3Zz8C+1e2xs3MorCzuzXX63mGrB
+   s22uJvyR9l1Hon0dVW0KjfPKuDYJNe/z82jZXGyxCZXLYyFj923YqSfMwOh3NAfxLwJ4yiKVMgoN
+   O75F2b0euSL6K+/euhdMbfdrur124K6lmQwzROJi37JnP3sIfX16GpsmcsWJMAAAG8g43TCmnCeZ
+   WWQvEPrNO+v/WPgMH7lUdvjOJFBWciofRmUjxQ==
+Received: by omta-ad1-fd3-101-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com
+ (Oracle Communications Messaging Server 8.1.0.1.20220914 64bit (built Sep 14
+ 2022))
+ with ESMTPS id <0RIW00JK8XPO6M70@omta-ad1-fd3-101-eu-stockholm-1.omtaad1.vcndparn.oraclevcn.com>
+ for regressions@lists.linux.dev; Wed, 28 Sep 2022 09:15:24 +0000 (GMT)
+Message-id: <ca3b5557-26ec-9b07-6538-7db49b83fb2d@augustwikerfors.se>
+Date: Wed, 28 Sep 2022 11:15:21 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: boot interrupt quirk (also in 4.19.y) breaks serial ports (was:
- [PATCH v2 0/2] pci: Add boot interrupt quirk mechanism for Xeon chipsets)
- #forregzbot
-Content-Language: en-US, de-DE
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <b2da25c8-121a-b241-c028-68e49bab0081@tik.uni-stuttgart.de>
- <20220923192030.162412-1-ghalat@redhat.com>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20220923192030.162412-1-ghalat@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664354053;c38c68e3;
-X-HE-SMSGID: 1odSW9-0006qO-R9
+MIME-version: 1.0
+Subject: Re: [PATCH] drm/amd/display: Prevent OTG shutdown during PSR SU
+Content-language: en-US
+To: sunpeng.li@amd.com, amd-gfx@lists.freedesktop.org
+Cc: regressions@lists.linux.dev, harry.wentland@amd.com,
+ alexander.deucher@amd.com, Rodrigo.Siqueira@amd.com
+References: <20220927231339.187788-1-sunpeng.li@amd.com>
+From: August Wikerfors <git@augustwikerfors.se>
+In-reply-to: <20220927231339.187788-1-sunpeng.li@amd.com>
+Content-type: text/plain; charset=UTF-8; format=flowed
+Content-transfer-encoding: 7bit
+Reporting-Meta:
+ AAH+dbp7tNOscJiWiJdIpc+jwB9qJ/94Te3M3a/LCyF+wYxMUgx38a/xmLX5tHr1
+ Skdq2HFt3GyaxV2uWZbqrzc1tAG7PPQmhSsCg1GiaaFalEDBKr/k1cm53Ft4e8Bh
+ m4PhqJ7feL8ynaz/YLSJSGoaDyvINrXc+5dov1b9dB02StWY000VY0PCCzu5LxVr
+ K0cJtIb4meO8hhoVnd/IDNuXCA3N9ks20Y4uwI1KmS6urgzWouVF6UXDWWNMHTga
+ t64F2LjrUfm8G+XidbAHwUMs++FaBgyHDCOSwFNXunRCmZjioZwIDLW/CZNcwmao
+ 1sF492oRMLQp4ni/26c1priWwKcsuaCEq5DbYZBattkY5xhHAC2MUwt/OcO06Htv
+ j/yDSnx2zoqdivMIV0yOfRADioAYTD3V07L4q7Qm4tPPUJh9FZy5NUmo3BukKLdN WGki
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Hi Leo,
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
-
-Hi, this is your Linux kernel regression tracker.
-
-On 23.09.22 21:20, Grzegorz Halat wrote:
-> Hi,
+On 2022-09-28 01:13, sunpeng.li@amd.com wrote:
+> From: Leo Li <sunpeng.li@amd.com>
 > 
-> On Wed, Sep 16 2020 at 12:12, Stefan Bühler wrote:
->> this quirk breaks our serial ports PCIe card (i.e. we don't see any
->> output from the connected devices; no idea whether anything we send
->> reaches them):
+> [Why]
 > 
-> I have the same problem, also with a PCI serial adapter from Oxford Semiconductor.
-> I've bisected the kernel and it was introduced in b88bf6c3b6ff.
-> When the system is booted with "pci=noioapicquirk" then the PCI card works fine.
-> The CPU is Intel Xeon E5-2680 v3 @ 2.50GHz.
+> Enabling Z10 optimizations allows DMUB to disable the OTG during PSR
+> link-off. This theoretically saves power by putting more of the display
+> hardware to sleep. However, we observe that with PSR SU, it causes
+> visual artifacts, higher power usage, and potential system hang.
 > 
-> Sean, do you have any news about this issue?
+> This is partly due to an odd behavior with the VStartup interrupt used
+> to signal DRM vblank events. If the OTG is toggled on/off during a PSR
+> link on/off cycle, the vstartup interrupt fires twice in quick
+> succession. This generates incorrectly timed vblank events.
+> Additionally, it can cause cursor updates to generate visual artifacts.
+> 
+> Note that this is not observed with PSR1 since PSR is fully disabled
+> when there are vblank event requestors. Cursor updates are also
+> artifact-free, likely because there are no selectively-updated (SU)
+> frames that can generate artifacts.
+> 
+> [How]
+> 
+> A potential solution is to disable z10 idle optimizations only when fast
+> updates (flips & cursor updates) are committed. A mechanism to do so
+> would require some thoughtful design. Let's just disable idle
+> optimizations for PSR2 for now.
+I can confirm that this patch fixes the issues I had. Thanks!
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
+> Fixes: 7cc191ee7621 ("drm/amd/display: Implement MPO PSR SU")
+> Signed-off-by: Leo Li <sunpeng.li@amd.com>
+You can add:
+Tested-by: August Wikerfors <git@augustwikerfors.se>
 
-#regzbot ^introduced b88bf6c3b6ff77948
-#regzbot title boot interrupt quirk (also in 4.19.y) breaks serial ports
-#regzbot ignore-activity
-#regzbot backburner: known since 2020, original developer likely moved on
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+Regards,
+August Wikerfors
