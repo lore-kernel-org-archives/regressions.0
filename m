@@ -1,194 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7BD04A11
-	for <regressions@lists.linux.dev>; Wed, 28 Sep 2022 16:55:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 183EFC433C1;
-	Wed, 28 Sep 2022 16:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1664384131;
-	bh=tLOVuvqT/jso+IqBGmnpwLbxnw7RR/afyibgsZNw1Cs=;
-	h=Date:From:To:Subject:References:In-Reply-To:From;
-	b=p1SotuJMaAN9KCbiFbJnvxEYBga0oMGnHoSGPOUbvXyHXuhNKbgKnHFhl6M6l8JV6
-	 xkaXEnjsUWs6ct0Je86Fhv1lxAOYyht+Hm/ZKK14tRloGKFqghjT7MuIcsqQk1FVht
-	 xjPrEQNSm6U5te7dj28iur9ZoZBOkx4bxLgQCQf200vDTk4cccflMUqCV/IRun28uF
-	 e0IWAJ92rXc+RoA+Qol3XNOG9CVkEXqtFy/E7jl75wzC7PEX9dNFebGoyT8NmKvAv0
-	 L1pkWWf+TWQ2qPZMmGKIP7HwPxTtWjaoIBznkbBceon+eu4pDE2Cz161kVTbenn1Ny
-	 TKCiQ/wZ/tw5g==
-Date: Wed, 28 Sep 2022 17:55:27 +0100
-From: Conor Dooley <conor@kernel.org>
-To: pmladek@suse.com, senozhatsky@chromium.org, rostedt@goodmis.org,
-	john.ogness@linutronix.de, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [resend][bug] low-probability console lockups since 5.19
-Message-ID: <YzR8fzyjhggO+/tT@spud>
-References: <Yy3dsSgpDnovBdEn@spud>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF784A11
+	for <regressions@lists.linux.dev>; Wed, 28 Sep 2022 17:25:14 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YQJsG0d8MhGsE0DIcG/0WVUiEnpuda0Dy2g7O8H17Zrv1jWFJu1wTA6HSedHvvPeid9/7d9A9IHyMBUzOE8vrTbZST1ovIi601PyZYvJ8wVXKmYJ/kRx/yFuYJJkr6rdxjXZ/fxXw8iGDR2bwAi1CKpdM5l4XrjZnbMpYa7arjW6oAJj2lPc4/uPaTTgCxVHp9Zc/LqIju/deLNljSMhmgnOTqbvevRuVGOML3RhcooVgS0kCfrwj3JBCSGU+7I4iOVtpsJDoYyDC4RrLZk/787SGGlxFLAbtJfqEABZEOoG8AmuDSyUKw12ahEpmbj4KulqKoTe0u3j3VN7C6JyRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rM+aIc2QEfUGiTWNOEjaReCgXXYYJ4c6tFfg44qNk1A=;
+ b=L/AF0LvST92SFwnUmYL6mEaHn30O8Dfe8jGZ5tVCCCN/J+5+NfWe1wCeBm9O0gPlqg0qk2CDYTlzBoHv+Z+vFgEbZlOw6AaZmLv9Sqg5g6LdIq6+ZWTk6uHCBhpJarBZlGRoUVAmyzK+e7if0M16iPdBJuAZFncY2hBGtNFWhQi6RPc0FOc/tyuFiJf0Qozp68X9NK8CoGbbfJRKwu/Zq1TRekagYLMz5xbFiB+BLT+R0+Kzw4ulisDR3yMlnH0Zibt+eyPHW8WDymSxHSGy/0PT1iDBL9iIaBNnzPOrZPc8qC4ktxpu/aQNBc/WHaIsPUyaY34d40EXRfCWVqI4BQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rM+aIc2QEfUGiTWNOEjaReCgXXYYJ4c6tFfg44qNk1A=;
+ b=S3K5AonAvsGWzmHA7MEX+SuphXQbVFm/uBek9dwOk1Cgy8138FjuEOEo5/3fthWfEPkpcDExUWM0+FrRKJhR+Pm951hYRFyxvT4s95zRJd0sgtcc3u4imJkmPKb/Z/wKcjJM+Sfy/zvr4oDeFJoyN44BEEi7uyWFy1aQbrJekzU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5311.namprd12.prod.outlook.com (2603:10b6:5:39f::7) by
+ CH2PR12MB4215.namprd12.prod.outlook.com (2603:10b6:610:ab::24) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5676.17; Wed, 28 Sep 2022 17:25:12 +0000
+Received: from DM4PR12MB5311.namprd12.prod.outlook.com
+ ([fe80::fc54:e514:e096:b243]) by DM4PR12MB5311.namprd12.prod.outlook.com
+ ([fe80::fc54:e514:e096:b243%3]) with mapi id 15.20.5676.017; Wed, 28 Sep 2022
+ 17:25:12 +0000
+Message-ID: <13a71356-a8c4-683b-ab28-e239d838338e@amd.com>
+Date: Wed, 28 Sep 2022 13:25:08 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH] drm/amd/display: Prevent OTG shutdown during PSR SU
+Content-Language: en-US
+To: Harry Wentland <harry.wentland@amd.com>, amd-gfx@lists.freedesktop.org
+Cc: regressions@lists.linux.dev, alexander.deucher@amd.com,
+ Rodrigo.Siqueira@amd.com, git@augustwikerfors.se
+References: <20220927231339.187788-1-sunpeng.li@amd.com>
+ <fc7a63b3-9a45-d19f-3689-44ebc41aeb76@amd.com>
+From: Leo Li <sunpeng.li@amd.com>
+In-Reply-To: <fc7a63b3-9a45-d19f-3689-44ebc41aeb76@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR17CA0029.namprd17.prod.outlook.com
+ (2603:10b6:208:15e::42) To DM4PR12MB5311.namprd12.prod.outlook.com
+ (2603:10b6:5:39f::7)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yy3dsSgpDnovBdEn@spud>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5311:EE_|CH2PR12MB4215:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8ae229b3-19ad-4438-1454-08daa1766614
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	aWVHED9l4/9rRgrzmNnYC8fwnJvMpfLESlotrxGXNsSXywUXZW2qJ9gI6IMXEKGQGlv48Z2QnVgUQzS1SD23LSMjqg6n1ysbcYyle1CYHAzMJs2GB5QpnTJhetgZsKfUhQYlyq1/2VEd6oEDjOchD6vTs2AZMpjUt5SnINFEVEfHqqnPup/88Lb+cSn/OPTrx1tHt4vGEEymUBKxOhvUKGlxG8vo2z8IWP15EvIPjM9qdwAhukkWWMCSRRz1nusuNzwPv4VnHDm5z7+VZZmOlo/GL6hhRtr4SPl/Gg4A81vowjFPLk3jN8OJf1ayvp2CfIIpveri5Be42pB91iM3e8YtezYGKCaZLxUcWh+stu/A2foZYS+y4gHlavJObfMqISp9RMmHpttO/ImGRHG+yrQVaJjO5ZNoFlVXq8pCCoKzDjaNKcnC4U40zJ+bGFXdIDtzhDflwKeAvWrwnJFpaAK8Neq+XvX4wCzd8Knx9e5+JFw4tdnpAkPH8PBYFkNhXj3Ff8kzS4rp+3UdAyk8A1YS2r15HkURXxVE3R2/1oJ2aqYds26OVDZCGvSHKa6TkOQneIaXVyl1n/FOkg72YBoAy26ysEYr8gvIRUYSHCIDx6Dt0OFgYX3xKUo54cmxZUsRJKkj4N3VbkrWvFF8ZPPGSUSOAyjogmraAnFntP6PbiFf1HBNEHi90U3hmPbypTfMzxvN39I76mT/iDeOR1QdYtZRn93+hQSDHnzjKvGa4E7gUYH6wImwN7/HqHzJZW05wlGKyjVPxiCZ1HRadTJm/qqyQdGT2RI7dYIl2lo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5311.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(346002)(396003)(376002)(136003)(366004)(451199015)(478600001)(6486002)(31686004)(6506007)(53546011)(6666004)(186003)(316002)(2906002)(2616005)(38100700002)(8676002)(83380400001)(26005)(6512007)(36756003)(41300700001)(4326008)(66946007)(31696002)(66556008)(5660300002)(66476007)(8936002)(86362001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NW96bkhDRS81UnJHUnZ2YWpJYUpZc3VObVI5QnI2dVZBS3VBYk1Xa05SYVV2?=
+ =?utf-8?B?VHp2dkFETi8yKzdXUHpmc0NJbnNtbzFOSUh1ZUVtQkZtYXlhdkFHSTJXNFdE?=
+ =?utf-8?B?M3p0YzNubDhqT2xwSHBVQVRQaDQ5ZHd4cUpBYjVkMkJtMzlBbjFpOTI5R2pi?=
+ =?utf-8?B?NUtNRlpmWUZUMEgrRXAreUFBSU43Tk1lbCtmS3VFL09nK2RkNmlBLzRTNVhZ?=
+ =?utf-8?B?dG5mQTV3OVdGWGJtTHlwMk42K3hhTlBtYWJZMjNocFBqRDYrU2UyUTVqNUMv?=
+ =?utf-8?B?cVZDSFpJRTlOK044SXV0ampOWWNmUi93QmkrQTNHWktvNTBWYll3OUdhYlZq?=
+ =?utf-8?B?ZUFPdTgrMFJVaEgrVjNLVmNXZHg2NGVtRWhtaWs3czl1T0ZBUTZLa2dOWjN1?=
+ =?utf-8?B?VDJMeENmTnNpVjY5bGg0bGdUd0pHZW0rK0puM3kxMEk4V3NnTHNlOFhXNE1s?=
+ =?utf-8?B?TVA4ZjZQSE9lMHNCNkFMa0FYZ05VNjZmVlhkWkpRWDkzM013ZG52a0x3eVVZ?=
+ =?utf-8?B?MEJndFM0L3FlR001clFVRk1wYlRHUlF6QW0yZHV4cWN4YWZtSnFzZ2x6M25j?=
+ =?utf-8?B?eEZpVGI4RzFNVkEweXVZT3RBVDZYY1hUdldrWlU2QWlZdU5TN0F3aFJPU3Z3?=
+ =?utf-8?B?Y1ZNWnRUQS85NnF3eW5FZm9jc3lUbDA3djZEbTNPZkQxTTFqUWc1RXpSd0w4?=
+ =?utf-8?B?WTlDU1ErVTA2UVkvR1NzSVdHWElLOEc3eTZTdEd1ZzZGSWE1VzdkNXh2SEMy?=
+ =?utf-8?B?N09PUFJaVk5lTHlOZEZmb3JhNlFjRUo1VXYyQWlVa2t6NldKUDVhb0ZZQmUy?=
+ =?utf-8?B?UFIxUkhseFRWT3hWQ0NJUVpkckxUWWRuQ3ZOdk94MGRSb0NtdTFQRFNTR2J3?=
+ =?utf-8?B?TUxGa3hvN29raDJlS0hBcjZ1Y3JFeGlEQmJlQnRXcXZBbkNCQUU3Z0syQ1Vl?=
+ =?utf-8?B?STE2ZHczZUFYZldBM3RBd2VkK3dLSjNrVUp3SlptZ0tPa3FaajBFT0sxR2NI?=
+ =?utf-8?B?c1VHRzU2ZHV0ZmxQZHpWQ2FmcEx0MldkTk5ieUlLbEhoOGp5WVVhQ1Z0NTU5?=
+ =?utf-8?B?TVVyZFVFUkpnNW9FSTcyWEdSTWloRlFvcWxFT1BsakZ4ZGU1OHNmeDJ2TnZn?=
+ =?utf-8?B?SGZqby9TZVZUQjladG43ay9TZXRLeUpDcjNYUHRhZTVkaGRPWkc0SFliR3h0?=
+ =?utf-8?B?QUFtYWhXTzJURkVoYTR3VStEeURQRngwck9WbzZveXJjc0dyRm9SbFBCQURo?=
+ =?utf-8?B?bi9xajhRK1BoOHZQTFFydWVPY0ttOFlZT0dxMWZvL1AxK2ozMVh6R3pxUUVp?=
+ =?utf-8?B?YThMVXFjNnBXN3FIV2xqL3FWV2RYZlNVVmV5V1VWRkFRZjdIZWgyKzhSOU5R?=
+ =?utf-8?B?eWpRd2o5bmUvQ0x0ZGJndXJlTjlNYTNJR20vSG1heENjcmZwTUl6QmUzZVZq?=
+ =?utf-8?B?Q3NCVUdjWE9jUlAyY2tHYVl6bGFsMHhCM0FYZVNOK0VKL1Y2S2MzQ1EyMDVS?=
+ =?utf-8?B?RkxCNk9WS0RPeFNwTW9xcEMrODJhKzNEYXFrajNFUXU5WWliNllYQno4bjd5?=
+ =?utf-8?B?OGNXekVqT2V0Wmh2MWFOZDUzTTFKcVEwb2JiaHN4cW1jbS9iSjMzejJvLzVz?=
+ =?utf-8?B?MTVIRTRGdEdFZ3VSUGViRVpnUU1tZ00rWXNOdmhZMS9LZzEzNG1yZWN1cmlV?=
+ =?utf-8?B?SnYvOVRuelhBS01PR2lGYVloRnNoWmdxY0lmNFJVK0lscnpvRm9DRnFVYUxN?=
+ =?utf-8?B?TXRDbGw0OE1wZ0pEWkVVQW5ERzhwU2FDeTFoN1VkOUlaVTBLbzBzaWkvdWxl?=
+ =?utf-8?B?TzNiWm5DNnJDc25UTXcvaVQ2aXduTDVMZjVTT0RwMFJMSiszRlp2NEptSTlo?=
+ =?utf-8?B?VFpHUjZTbmFQRHFMeGovbmdyeExlSGxCQVVoWk54SVpqMmlXeG94L3pjQ25H?=
+ =?utf-8?B?bkluS2lQU0FGRTJBUndQQUY5em8zSW5TeWl3TmdwaTVoSHJud29rOGUzMStn?=
+ =?utf-8?B?MGJFVy9iZVowMms1Y29zSm95cm05bnUvZmRPNGNoTTRDSXlYQmZHckxqUHFX?=
+ =?utf-8?B?Z3dBWm5qV3lzQ08wNFZqVUxmQlZrQWRLWEcyWVNqNkR5amwzMXAwd3hPTjdp?=
+ =?utf-8?Q?rLK4=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8ae229b3-19ad-4438-1454-08daa1766614
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5311.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2022 17:25:11.9494
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mw1209YMGm1XePDG4ZfpJI8QT2+DwqXNz3IEVbhKIJBUVi0w5BPmeqWqMCQ+EB91
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4215
 
-On Fri, Sep 23, 2022 at 05:24:17PM +0100, Conor Dooley wrote:
-> Hey all,
-> 
-> Been bisecting a bug that is causing a boot failure in my CI & have
-> ended up here.. The bug in question is a low(ish) probability lock up
-> of the serial console, I would estimate about 1-in-5 chance on the
-> boards I could actually trigger it on which it has taken me so long
-> to realise that this was an actual problem. Thinking back on it, there
-> were other failures that I would retroactively attribute to this
-> problem too, but I had earlycon disabled and I chalked the hangs at
-> "Starting kernel" down to pre-release hardware since the other boots
-> in a CI job would not fail (we boot the same config multiple times),
-> Silly me I guess!
-> 
-> In a boot failure (with earlycon & keep_bootcon enabled) I see the
-> likes of [0]:
-> [    0.485063] NFS: Registering the id_resolver key type
-> [    0.491051] Key type id_resolver registered
-> [    0.495743] Key type id_legacy registered
-> [    0.500528] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
-> [    0.508010] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver Registering...
-> [    0.516857] 9p: Installing v9fs 9p2000 file system support
-> [    0.524032] NET: Registered PF_ALG protocol family
-> [    0.529562] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 247)
-> [    0.537817] io scheduler mq-deadline registered
-> [    0.542889] io scheduler kyber registered
-> [    0.559682] microchip-pcie 2000000000.pcie: host bridge /soc/pcie@2000000000 ranges:
-> [    0.568431] microchip-pcie 2000000000.pcie:      MEM 0x2008000000..0x2087ffffff -> 0x0008000000
-> [    0.635633] microchip-pcie 2000000000.pcie: axi read request error
-> [    0.642602] microchip-pcie 2000000000.pcie: axi read timeout
-> [    0.776630] microchip-pcie 2000000000.pcie: sec error in axi2pcie buffer
-> [    0.784133] microchip-pcie 2000000000.pcie: axi write request error
-> [    0.791100] microchip-pcie 2000000000.pcie: sec error in axi2pcie buffer
-> [    0.798543] microchip-pcie 2000000000.pcie: sec error in axi2pcie buffer
-> [    0.805981] microchip-pcie 2000000000.pcie: sec error in axi2pcie buffer
-> [    0.813421] microchip-pcie 2000000000.pcie: sec error in axi2pcie buffer
-> [    0.820859] microchip-pcie 2000000000.pcie: sec error in axi2pcie buffer
-> [    0.828295] microchip-pcie 2000000000.pcie: sec error in axi2pcie buffer
-> [    1.579668] Freeing initrd memory: 7316K
-> 
-> The sec error stuff is unrelated & happens on good boots too - although
-> there are far fewer lines of "sec error" there [1] (excuse the message
-> duplication from the bootcon).
-> 
-> I was able to bisect the behaviour to this set of reverts, but I have
-> low confidence as to which commit specifically caused it - it's hard
-> to know that doing 20+ reboots on every commmit I built is enough to
-> make sure I did not make a mistake. I had initially started the
-> bisection between v6.0-rc6 & v6.0-rc1, and that lead me down a sub-tree
-> of net which is why the bisect log starts at a "random" commit as that
-> merge commit was the one blamed by the inital bisection.
-> 
-> git bisect start
-> # status: waiting for both good and bad commits
-> # bad: [5e8379351dbde61ea383e514f0f9ecb2c047cf4e] Merge tag 'net-5.19-rc5' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-> git bisect bad 5e8379351dbde61ea383e514f0f9ecb2c047cf4e
-> # good: [4b0986a3613c92f4ec1bdc7f60ec66fea135991f] Linux 5.18
-> git bisect good 4b0986a3613c92f4ec1bdc7f60ec66fea135991f
-> # good: [fbe86daca0ba878b04fa241b85e26e54d17d4229] Merge tag 'scsi-misc' of git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi
-> git bisect good fbe86daca0ba878b04fa241b85e26e54d17d4229
-> # good: [2b8c612c6102f751e6e3e1bd425f64e9d3d3f638] kernel/reboot: Fix powering off using a non-syscall code paths
-> git bisect good 2b8c612c6102f751e6e3e1bd425f64e9d3d3f638
-> # good: [54c2cc79194c961a213c1d375fe3aa4165664cc4] Merge tag 'usb-5.19-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb
-> git bisect good 54c2cc79194c961a213c1d375fe3aa4165664cc4
-> # skip: [8f7ac50c97d30ae5ae48da3b516510d05a67b9e5] Merge tag 'sound-5.19-rc2' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
-> git bisect skip 8f7ac50c97d30ae5ae48da3b516510d05a67b9e5
-> # good: [cdd85786f4b3b9273e4376e69aa95a2d71722764] x86/tdx: Clarify RIP adjustments in #VE handler
-> git bisect good cdd85786f4b3b9273e4376e69aa95a2d71722764
-> # good: [8cc683833726912498130a0130fc3bd0d169ef59] Merge branch 'net-dp83822-fix-interrupt-floods'
-> git bisect good 8cc683833726912498130a0130fc3bd0d169ef59
-> # bad: [0840a7914caa14315a3191178a9f72c742477860] Merge tag 'char-misc-5.19-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
-> git bisect bad 0840a7914caa14315a3191178a9f72c742477860
-> # bad: [38bc4ac431684498126f9baa3a530e5a132f0173] Merge tag 'drm-fixes-2022-06-24' of git://anongit.freedesktop.org/drm/drm
-> git bisect bad 38bc4ac431684498126f9baa3a530e5a132f0173
-> # good: [399bd66e219e331976fe6fa6ab81a023c0c97870] Merge tag 'net-5.19-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-> git bisect good 399bd66e219e331976fe6fa6ab81a023c0c97870
-> # bad: [a237cfd6b7469d6f5eeaa45f30128ab78b5281a5] Merge tag 'block-5.19-2022-06-24' of git://git.kernel.dk/linux-block
-> git bisect bad a237cfd6b7469d6f5eeaa45f30128ab78b5281a5
-> # good: [92f20ff72066d8d7e2ffb655c2236259ac9d1c5d] Merge tag 'pm-5.19-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
-> git bisect good 92f20ff72066d8d7e2ffb655c2236259ac9d1c5d
-> # bad: [598f2404879336277a4320ac5000394b873e049a] Merge tag 'io_uring-5.19-2022-06-24' of git://git.kernel.dk/linux-block
-> git bisect bad 598f2404879336277a4320ac5000394b873e049a
-> # good: [386e4fb6962b9f248a80f8870aea0870ca603e89] io_uring: use original request task for inflight tracking
-> git bisect good 386e4fb6962b9f248a80f8870aea0870ca603e89
-> # good: [2d9ef940f89e0ab4fde7ba6f769d82f2a450c35a] Revert "printk: extend console_lock for per-console locking"
-> git bisect good 2d9ef940f89e0ab4fde7ba6f769d82f2a450c35a
-> # bad: [07a22b61946f0b80065b0ddcc703b715f84355f5] Revert "printk: add functions to prefer direct printing"
-> git bisect bad 07a22b61946f0b80065b0ddcc703b715f84355f5
-> # bad: [5831788afb17b89c5b531fb60cbd798613ccbb63] Revert "printk: add kthread console printers"
-> git bisect bad 5831788afb17b89c5b531fb60cbd798613ccbb63
-> # first bad commit: [5831788afb17b89c5b531fb60cbd798613ccbb63] Revert "printk: add kthread console printers"
-> 
-> On 5831788afb17 ("Revert "printk: add kthread console printers"") or on
-> 07a22b61946f ("Revert "printk: add functions to prefer direct printing"")
-> I was not able to reproduce the exact error conditions that I got on
-> the current HEAD or any of the commits along my bisection, but instead I
-> got something different [2]:
-> 
-> [    0.471992] 9p: Installing v9fs 9p2000 file system support
-> [    0.479049] NET: Registered PF_ALG protocol family
-> [    0.484585] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 247)
-> [    0.492813] io scheduler mq-deadline registered
-> [    0.497871] io scheduler kyber registered
-> [    0.513472] microchip-pcie 2000000000.pcie: host bridge /soc/pcie@2000000000 ranges:
-> [    0.522194] microchip-pcie 2000000000.pcie:      MEM 0x2008000000..0x2087ffffff -> 0x0008000000
-> [    0.588518] microchip-pcie 2000000000.pcie: sec error in pcie2axi buffer
-> [    0.596027] microchip-pcie 2000000000.pcie: ded error in pcie2axi buffer
-> [    0.603467] microchip-pcie 2000000000.pcie: axi read request error
-> [    0.610322] microchip-pcie 2000000000.pcie: axi read timeout
-> [    0.616603] microchip-pcie 2000000000.pcie: sec error in pcie2axi buffer
-> [    0.624025] microchip-pcie 2000000000.pcie: ded error in pcie2axi buffer
-> [    0.631450] microchip-pcie 2000000000.pcie: sec error in pcie2axi buffer
-> [    0.638877] microchip-pcie 2000000000.pcie: ded error in pcie2axi buffer
-> [    0.646300] microchip-pcie 2000000000.pcie: sec error in pcie2axi buffer
-> [    0.653725] microchip-pcie 2000000000.pcie: ded error in pcie2axi buffer
-> [    1.516378] Freeing initrd memory: 7336K
-> [    5.591881] mc_event_handler: 667402 callbacks suppressed
-> [    5.591909] microchip-pcie 2000000000.pcie: sec error in pcie2axi buffer
-> [    5.605290] microchip-pcie 2000000000.pcie: ded error in pcie2axi buffer
-> [    5.612704] microchip-pcie 2000000000.pcie: sec error in pcie2axi buffer
-> 
-> <truncated>
-> 
-> [   21.539878] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-> [   21.546651] rcu: 	0-...0: (1 GPs behind) idle=19f/1/0x4000000000000002 softirq=34/36 fqs=2626 
-> [   21.556177] 	(detected by 1, t=5256 jiffies, g=-1151, q=1143 ncpus=4)
-> [   21.563293] Task dump for CPU 0:
-> [   21.566860] task:swapper/0       state:R  running task     stack:    0 pid:    1 ppid:     0 flags:0x00000008
-> [   21.577823] Call Trace:
-> 
-> Unfortunately I do not really have any more information than that for
-> you, I am hoping that you (plural) could be of some help as to where
-> I should start looking - although after spending every evening this
-> week bisecting/setting up so that I could automate my bisection it'll
-> be a few days before I could really focus on this again.
-> 
-> My system is an embedded RISC-V dev board (PolarFire SoC Icicle kit).
-> 
-> There is also a failing build in the ClangBuiltLinux CI [3] that is
-> seeing similar symptoms, but I was unable to reproduce this problem
-> doing 1000s of reboots of a known-bad commit in QEMU myself.
-> 
-> LMK if you need any more info,
-> Conor.
-> 
-> [0] https://gist.githubusercontent.com/ConchuOD/575f4bfe3d68b9b32227740365b04401/raw/c69dfffd21183898edaeb223a9455ebc28edcf65/gistfile1.txt
-> [1] https://gist.github.com/ConchuOD/575f4bfe3d68b9b32227740365b04401?permalink_comment_id=4313185#gistcomment-4313185
-> [2] https://gist.github.com/ConchuOD/575f4bfe3d68b9b32227740365b04401?permalink_comment_id=4313202#gistcomment-4313202
-> [3] https://github.com/ClangBuiltLinux/continuous-integration2/actions/runs/3090070308/jobs/4999131449#step:5:270
->
 
-#regzbot introduced: 5831788afb17b89c5b531fb60cbd798613ccbb63 ^
-Hopefully I did this correctly...
 
-I picked that commit as that's where things start going haywire.
+On 2022-09-28 09:52, Harry Wentland wrote:
+> 
+> 
+> On 2022-09-27 19:13, sunpeng.li@amd.com wrote:
+>> From: Leo Li <sunpeng.li@amd.com>
+>>
+>> [Why]
+>>
+>> Enabling Z10 optimizations allows DMUB to disable the OTG during PSR
+>> link-off. This theoretically saves power by putting more of the display
+>> hardware to sleep. However, we observe that with PSR SU, it causes
+>> visual artifacts, higher power usage, and potential system hang.
+>>
+>> This is partly due to an odd behavior with the VStartup interrupt used
+>> to signal DRM vblank events. If the OTG is toggled on/off during a PSR
+>> link on/off cycle, the vstartup interrupt fires twice in quick
+>> succession. This generates incorrectly timed vblank events.
+>> Additionally, it can cause cursor updates to generate visual artifacts.
+>>
+>> Note that this is not observed with PSR1 since PSR is fully disabled
+>> when there are vblank event requestors. Cursor updates are also
+>> artifact-free, likely because there are no selectively-updated (SU)
+>> frames that can generate artifacts.
+>>
+>> [How]
+>>
+>> A potential solution is to disable z10 idle optimizations only when fast
+>> updates (flips & cursor updates) are committed. A mechanism to do so
+>> would require some thoughtful design. Let's just disable idle
+>> optimizations for PSR2 for now.
+>>
+> 
+> Great writeup. Wish every bugfix came with details like this.
+> 
+>> Fixes: 7cc191ee7621 ("drm/amd/display: Implement MPO PSR SU")
+>> Signed-off-by: Leo Li <sunpeng.li@amd.com>
+> 
+> With Thorsten's comments addressed this is
+> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+> 
+> Harry
+> 
 
-Thanks,
-Conor.
+Thanks all for the bug report, comments, and review. Will send out v2 
+and merge shortly.
 
+Leo
+
+>> ---
+>>   drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_psr.c | 8 +++++++-
+>>   1 file changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_psr.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_psr.c
+>> index c8da18e45b0e..8ca10ab3dfc1 100644
+>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_psr.c
+>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_psr.c
+>> @@ -170,7 +170,13 @@ bool amdgpu_dm_psr_enable(struct dc_stream_state *stream)
+>>   					   &stream, 1,
+>>   					   &params);
+>>   
+>> -	power_opt |= psr_power_opt_z10_static_screen;
+>> +	/*
+>> +	 * Only enable static-screen optimizations for PSR1. For PSR SU, this
+>> +	 * causes vstartup interrupt issues, used by amdgpu_dm to send vblank
+>> +	 * events.
+>> +	 */
+>> +	if (link->psr_settings.psr_version < DC_PSR_VERSION_SU_1)
+>> +		power_opt |= psr_power_opt_z10_static_screen;
+>>   
+>>   	return dc_link_set_psr_allow_active(link, &psr_enable, false, false, &power_opt);
+>>   }
+> 
