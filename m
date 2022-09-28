@@ -1,122 +1,83 @@
-Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C01A31
-	for <regressions@lists.linux.dev>; Wed, 28 Sep 2022 06:08:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1664345284; x=1695881284;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=hfA/jIQuPF2pQ333V4cR6Us72NBdPgNuEDPxXQyF/Wo=;
-  b=ENz36AyB7LTJX/1Z6V3I70UsAowXLIJXoMGK/+EbQgfoCWKxNdo49rvY
-   hnqJR9xwnwg2krrRf61i71mdCXQ/h1JY7zveCleKv4ns/EVOjQJjbR6rR
-   yMCvRobi7L4GEuv29YM4x0i4ivj71z+00xCL1KAaCeS5OnIbl3toB+qJr
-   Q=;
-X-IronPort-AV: E=Sophos;i="5.93,351,1654560000"; 
-   d="scan'208";a="134739786"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO email-inbound-relay-pdx-2c-d9fba5dd.us-west-2.amazon.com) ([10.25.36.214])
-  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Sep 2022 06:07:41 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-	by email-inbound-relay-pdx-2c-d9fba5dd.us-west-2.amazon.com (Postfix) with ESMTPS id 2C60E4597E;
-	Wed, 28 Sep 2022 06:07:37 +0000 (UTC)
-Received: from EX13D23UWC002.ant.amazon.com (10.43.162.22) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1497.38; Wed, 28 Sep 2022 06:07:34 +0000
-Received: from EX19D017UWC003.ant.amazon.com (10.13.139.227) by
- EX13D23UWC002.ant.amazon.com (10.43.162.22) with Microsoft SMTP Server (TLS)
- id 15.0.1497.38; Wed, 28 Sep 2022 06:07:34 +0000
-Received: from EX19D017UWC003.ant.amazon.com ([fe80::78e9:1d67:81fd:68c5]) by
- EX19D017UWC003.ant.amazon.com ([fe80::78e9:1d67:81fd:68c5%6]) with mapi id
- 15.02.1118.012; Wed, 28 Sep 2022 06:07:34 +0000
-From: "Lu, Davina" <davinalu@amazon.com>
-To: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>, "tytso@mit.edu"
-	<tytso@mit.edu>, "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, "Mohamed Abuelfotoh,
- Hazem" <abuehaze@amazon.com>, hazem ahmed mohamed
-	<hazem.ahmed.abuelfotoh@gmail.com>, "Ritesh Harjani (IBM)"
-	<ritesh.list@gmail.com>
-CC: "Kiselev, Oleg" <okiselev@amazon.com>, "Liu, Frank" <franklmz@amazon.com>
-Subject: significant drop  fio IOPS performance on v5.10
-Thread-Topic: significant drop  fio IOPS performance on v5.10
-Thread-Index: AdjO5vTzPItE0he4TsCHXHwBRGK6iAB1NzvQAJElJTA=
-Date: Wed, 28 Sep 2022 06:07:34 +0000
-Message-ID: <5c819c9d6190452f9b10bb78a72cb47f@amazon.com>
-References: <357ace228adf4e859df5e9f3f4f18b49@amazon.com>
- <1cdc68e6a98d4e93a95be5d887bcc75d@amazon.com>
-In-Reply-To: <1cdc68e6a98d4e93a95be5d887bcc75d@amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-originating-ip: [10.43.162.55]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51CD8A40
+	for <regressions@lists.linux.dev>; Wed, 28 Sep 2022 07:01:43 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1odR4Y-0003a8-C9; Wed, 28 Sep 2022 09:01:34 +0200
+Message-ID: <2e35ddaf-92c8-7289-31b0-4b85429a001a@leemhuis.info>
+Date: Wed, 28 Sep 2022 09:01:33 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: [PATCH] drm/amd/display: Prevent OTG shutdown during PSR SU
+Content-Language: en-US, de-DE
+To: sunpeng.li@amd.com, amd-gfx@lists.freedesktop.org
+Cc: regressions@lists.linux.dev, Rodrigo.Siqueira@amd.com,
+ git@augustwikerfors.se, alexander.deucher@amd.com, harry.wentland@amd.com
+References: <20220927231339.187788-1-sunpeng.li@amd.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20220927231339.187788-1-sunpeng.li@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664348503;424b2ddd;
+X-HE-SMSGID: 1odR4Y-0003a8-C9
 
-DQpIZWxsbywNCg0KSSB3YXMgcHJvZmlsaW5nIHRoZSA1LjEwIGtlcm5lbCBhbmQgY29tcGFyaW5n
-IGl0IHRvIDQuMTQuICBPbiBhIHN5c3RlbSB3aXRoIDY0IHZpcnR1YWwgQ1BVcyBhbmQgMjU2IEdp
-QiBvZiBSQU0sIEkgYW0gb2JzZXJ2aW5nIGEgc2lnbmlmaWNhbnQgZHJvcCBpbiBJTyBwZXJmb3Jt
-YW5jZS4gVXNpbmcgdGhlIGZvbGxvd2luZyBGSU8gd2l0aCB0aGUgc2NyaXB0ICJzdWRvIGZ0ZXN0
-X3dyaXRlLnNoIDxkZXZfbmFtZT4iIGluIGF0dGFjaG1lbnQsIEkgc2F3IEZJTyBpb3BzIHJlc3Vs
-dCBkcm9wIGZyb20gMjJLIHRvIGxlc3MgdGhhbiAxSy4gDQpUaGUgc2NyaXB0IHNpbXBseSBkb2Vz
-OiBtb3VudCBhIHRoZSBFWFQ0IDE2R2lCIHZvbHVtZSB3aXRoIG1heCBJT1BTIDY0MDAwSywgbW91
-bnRpbmcgb3B0aW9uIGlzICIgLW8gbm9hdGltZSxub2RpcmF0aW1lLGRhdGE9b3JkZXJlZCIsIHRo
-ZW4gcnVuIGZpbyB3aXRoIDIwNDggZmlvIHdyaW5nIHRocmVhZCB3aXRoIDI4ODAwMDAwIGZpbGUg
-c2l6ZSB3aXRoIHsgLS1uYW1lPTE2a2JfcmFuZF93cml0ZV9vbmx5XzIwNDhfam9icyAtLWRpcmVj
-dG9yeT0vcmRzZGJkYXRhMSAtLXJ3PXJhbmR3cml0ZSAtLWlvZW5naW5lPXN5bmMgLS1idWZmZXJl
-ZD0xIC0tYnM9MTZrIC0tbWF4LWpvYnM9MjA0OCAtLW51bWpvYnM9MjA0OCAtLXJ1bnRpbWU9NjAg
-LS10aW1lX2Jhc2VkIC0tdGhyZWFkIC0tZmlsZXNpemU9Mjg4MDAwMDAgLS1mc3luYz0xIC0tZ3Jv
-dXBfcmVwb3J0aW5nIH0uDQoNCk15IGFuYWx5emluZyBpcyB0aGF0IHRoZSBkZWdyYWRhdGlvbiBp
-cyBpbnRyb2R1Y2UgYnkgY29tbWl0IHsyNDRhZGY2NDI2ZWUzMWE4M2YzOTdiNzAwZDk2NGNmZjEy
-YTI0N2QzfSBhbmQgdGhlIGlzc3VlIGlzIHRoZSBjb250ZW50aW9uIG9uIHJzdl9jb252ZXJzaW9u
-X3dxLiAgVGhlIHNpbXBsZXN0IG9wdGlvbiBpcyB0byBpbmNyZWFzZSB0aGUgam91cm5hbCBzaXpl
-LCBidXQgdGhhdCBpbnRyb2R1Y2VzIG1vcmUgb3BlcmF0aW9uYWwgY29tcGxleGl0eS4gIEFub3Ro
-ZXIgb3B0aW9uIGlzIHRvIGFkZCB0aGUgZm9sbG93aW5nIGNoYW5nZSBpbiBhdHRhY2htZW50ICJh
-bGxvdyBtb3JlIGV4dDQtcnN2LWNvbnZlcnNpb24gd29ya3F1ZXVlLnBhdGNoIg0KDQpGcm9tIDI3
-ZTFiMGUxNDI3NWEyODFiMzUyOWY2YTYwYzdiMjNhODEzNTY3NTEgTW9uIFNlcCAxNyAwMDowMDow
-MCAyMDAxDQpGcm9tOiBkYXZpbmFsdSA8ZGF2aW5hbHVAYW1hem9uLmNvbT4NCkRhdGU6IEZyaSwg
-MjMgU2VwIDIwMjIgMDA6NDM6NTMgKzAwMDANClN1YmplY3Q6IFtQQVRDSF0gYWxsb3cgbW9yZSBl
-eHQ0LXJzdi1jb252ZXJzaW9uIHdvcmtxdWV1ZSB0byBzcGVlZHVwIGZpbyAgd3JpdGluZw0KLS0t
-DQogZnMvZXh0NC9zdXBlci5jIHwgMiArLQ0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigr
-KSwgMSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZnMvZXh0NC9zdXBlci5jIGIvZnMvZXh0
-NC9zdXBlci5jIGluZGV4IGEwYWY4MzNmN2RhNy4uNmIzNDI5OGNkYzNiIDEwMDY0NA0KLS0tIGEv
-ZnMvZXh0NC9zdXBlci5jDQorKysgYi9mcy9leHQ0L3N1cGVyLmMNCkBAIC00OTYzLDcgKzQ5NjMs
-NyBAQCBzdGF0aWMgaW50IGV4dDRfZmlsbF9zdXBlcihzdHJ1Y3Qgc3VwZXJfYmxvY2sgKnNiLCB2
-b2lkICpkYXRhLCBpbnQgc2lsZW50KQ0KICAgICAgICAgKiBjb25jdXJyZW5jeSBpc24ndCByZWFs
-bHkgbmVjZXNzYXJ5LiAgTGltaXQgaXQgdG8gMS4NCiAgICAgICAgICovDQogICAgICAgIEVYVDRf
-U0Ioc2IpLT5yc3ZfY29udmVyc2lvbl93cSA9DQotICAgICAgICAgICAgICAgYWxsb2Nfd29ya3F1
-ZXVlKCJleHQ0LXJzdi1jb252ZXJzaW9uIiwgV1FfTUVNX1JFQ0xBSU0gfCBXUV9VTkJPVU5ELCAx
-KTsNCisgICAgICAgICAgICAgICBhbGxvY193b3JrcXVldWUoImV4dDQtcnN2LWNvbnZlcnNpb24i
-LCBXUV9NRU1fUkVDTEFJTSB8IA0KKyBXUV9VTkJPVU5EIHwgX19XUV9PUkRFUkVELCAwKTsNCiAg
-ICAgICAgaWYgKCFFWFQ0X1NCKHNiKS0+cnN2X2NvbnZlcnNpb25fd3EpIHsNCiAgICAgICAgICAg
-ICAgICBwcmludGsoS0VSTl9FUlIgIkVYVDQtZnM6IGZhaWxlZCB0byBjcmVhdGUgd29ya3F1ZXVl
-XG4iKTsNCiAgICAgICAgICAgICAgICByZXQgPSAtRU5PTUVNOw0KDQpNeSB0aG91Z2h0IGlzOiBJ
-ZiB0aGUgbWF4X2FjdGl2ZSBpcyAxLCBpdCBtZWFucyB0aGUgIl9fV1FfT1JERVJFRCIgY29tYmlu
-ZWQgd2l0aCBXUV9VTkJPVU5EIHNldHRpbmcsIGJhc2VkIG9uIGFsbG9jX3dvcmtxdWV1ZSgpLiBT
-byBJIGFkZGVkIGl0IC4NCkkgYW0gbm90IHN1cmUgc2hvdWxkIHdlIG5lZWQgIl9fV1FfT1JERVJF
-RCIgb3Igbm90PyB3aXRob3V0ICJfX1dRX09SREVSRUQiIGl0IGxvb2tzIGFsc28gd29yayBhdCBt
-eSB0ZXN0YmVkLCBidXQgSSBhZGRlZCBzaW5jZSBub3QgbXVjaCBmaW8gVFAgZGlmZmVyZW5jZSBv
-biBteSB0ZXN0YmVkIHJlc3VsdCB3aXRoL291dCAiX19XUV9PUkRFUkVEIi4NCg0KRnJvbSBNeSB1
-bmRlcnN0YW5kaW5nIGFuZCBvYnNlcnZhdGlvbjogd2l0aCBkaW9yZWFkX3VubG9jayBhbmQgZGVs
-YXlfYWxsb2MgYm90aCBlbmFibGVkLCAgdGhlICBiaW9fZW5kaW8oKSBhbmQgZXh0NF93cml0ZXBh
-Z2VzKCkgd2lsbCB0cmlnZ2VyIHRoaXMgd29yayBxdWV1ZSB0byBleHQ0X2RvX2ZsdXNoX2NvbXBs
-ZXRlZF9JTygpLiBMb29rcyBsaWtlIHRoZSB3b3JrIHF1ZXVlIGlzIGFuIG9uZS1ieS1vbmUgdXBk
-YXRpbmc6IGF0IEVYVDQgZXh0ZW5kLmMgaW9fZW5kLT5saXN0X3ZlYyAgbGlzdCBvbmx5IGhhdmUg
-b25lIGlvX2VuZF92ZWMgZWFjaCB0aW1lLiBTbyBpZiB0aGUgQklPIGhhcyBoaWdoIHBlcmZvcm1h
-bmNlLCBhbmQgd2UgaGF2ZSBvbmx5IG9uZSB0aHJlYWQgdG8gZG8gRVhUNCBmbHVzaCB3aWxsIGJl
-IGFuIGJvdHRsZW5lY2sgaGVyZS4gVGhlICJleHQ0LXJzdi1jb252ZXJzaW9uIiB0aGlzIHdvcmtx
-dWV1ZSBpcyBtYWlubHkgZm9yIHVwZGF0ZSB0aGUgRVhUNF9JT19FTkRfVU5XUklUVEVOIGV4dGVu
-ZCBibG9jayhvbmx5IGV4aXN0IG9uIGRpb3JlYWRfdW5sb2NrIGFuZCBkZWxheV9hbGxvYyBvcHRp
-b25zIGFyZSBzZXQpIGFuZCBleHRlbmQgc3RhdHVzICBpZiBJIHVuZGVyc3RhbmQgY29ycmVjdGx5
-IGhlcmUuIEFtICBJIGNvcnJlY3Q/DQoNClRoaXMgd29ya3Mgb24gbXkgdGVzdCBzeXN0ZW0gYW5k
-IHBhc3NlcyB4ZnN0ZXN0cywgYnV0ICB3aWxsIHRoaXMgY2F1c2UgYW55IGNvcnJ1cHRpb24gb24g
-ZXh0NCBleHRlbmRzIGJsb2NrcyB1cGRhdGVzLCBub3QgZXZlbiBzdXJlIGFib3V0IHRoZSBqb3Vy
-bmFsIHRyYW5zYWN0aW9uIHVwZGF0ZXMgZWl0aGVyPw0KQ2FuIHlvdSB0ZWxsIG1lIHdoYXQgSSB3
-aWxsIGJyZWFrIGlmIHRoaXMgY2hhbmdlIGlzIG1hZGU/DQoNClRoYW5rcw0KRGF2aW5hDQoNCg==
+On 28.09.22 01:13, sunpeng.li@amd.com wrote:
+> From: Leo Li <sunpeng.li@amd.com>
+> 
+> [Why]
+> 
+> Enabling Z10 optimizations allows DMUB to disable the OTG during PSR
+> link-off. This theoretically saves power by putting more of the display
+> hardware to sleep. However, we observe that with PSR SU, it causes
+> visual artifacts, higher power usage, and potential system hang.
+>
+> [...]
+>
+> Fixes: 7cc191ee7621 ("drm/amd/display: Implement MPO PSR SU")
+
+Many thx for taking care of this. There is one small thing to improve,
+please add the following tags here:
+
+Reported-by: August Wikerfors <git@augustwikerfors.se>
+Link:
+https://lore.kernel.org/r/c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se/
+
+To explain: Linus[1] and others considered proper link tags in cases
+like important, as they allow anyone to look into the backstory weeks or
+years from now. That why they should be placed here, as outlined by the
+documentation[2]. I care personally, because these tags make my
+regression tracking efforts a whole lot easier, as they allow my
+tracking bot 'regzbot' to automatically connect reports with patches
+posted or committed to fix tracked regressions.
+
+Apropos regzbot, let me tell regzbot to monitor this thread:
+
+#regzbot ^backmonitor:
+https://lore.kernel.org/r/c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se/
+
+> [...]
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
+
+[1] for details, see:
+https://lore.kernel.org/all/CAHk-=wjMmSZzMJ3Xnskdg4+GGz=5p5p+GSYyFBTh0f-DgvdBWg@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wjxzafG-=J8oT30s7upn4RhBs6TX-uVFZ5rME+L5_DoJA@mail.gmail.com/
+
+[2] see Documentation/process/submitting-patches.rst
+(http://docs.kernel.org/process/submitting-patches.html) and
+Documentation/process/5.Posting.rst
+(https://docs.kernel.org/process/5.Posting.html)
