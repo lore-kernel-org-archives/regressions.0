@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27FDA40
-	for <regressions@lists.linux.dev>; Wed, 28 Sep 2022 07:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E2CA51
+	for <regressions@lists.linux.dev>; Wed, 28 Sep 2022 08:34:12 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1odRts-0007n0-5Z; Wed, 28 Sep 2022 09:54:36 +0200
-Message-ID: <a66880d7-fc2e-4fa7-0711-5d93b4304607@leemhuis.info>
-Date: Wed, 28 Sep 2022 09:54:35 +0200
+	id 1odSW9-0006qO-R9; Wed, 28 Sep 2022 10:34:09 +0200
+Message-ID: <2128c845-c3d0-e5af-0f08-7e28ac946e52@leemhuis.info>
+Date: Wed, 28 Sep 2022 10:34:09 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,59 +16,66 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.0
+Subject: Re: boot interrupt quirk (also in 4.19.y) breaks serial ports (was:
+ [PATCH v2 0/2] pci: Add boot interrupt quirk mechanism for Xeon chipsets)
+ #forregzbot
 Content-Language: en-US, de-DE
-To: Vlastimil Babka <vbabka@suse.cz>, Anatoly Pugachev <matorola@gmail.com>,
- Vasily Averin <vvs@openvz.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, kernel@openvz.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Shakeel Butt <shakeelb@google.com>, Roman Gushchin
- <roman.gushchin@linux.dev>, =?UTF-8?Q?Michal_Koutn=c3=bd?=
- <mkoutny@suse.com>, Michal Hocko <mhocko@suse.com>,
- Florian Westphal <fw@strlen.de>, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Eric Dumazet <edumazet@google.com>, cgroups@vger.kernel.org,
- sparclinux@vger.kernel.org, regressions@lists.linux.dev
-References: <6b362c6e-9c80-4344-9430-b831f9871a3c@openvz.org>
- <f9394752-e272-9bf9-645f-a18c56d1c4ec@openvz.org>
- <20220918092849.GA10314@u164.east.ru>
- <eca7d9b3-9831-5d04-1f39-8976765df87a@suse.cz>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <b2da25c8-121a-b241-c028-68e49bab0081@tik.uni-stuttgart.de>
+ <20220923192030.162412-1-ghalat@redhat.com>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [sparc64] fails to boot, (was: Re: [PATCH memcg v6] net: set
- proper memcg for net_init hooks allocations)
-In-Reply-To: <eca7d9b3-9831-5d04-1f39-8976765df87a@suse.cz>
+In-Reply-To: <20220923192030.162412-1-ghalat@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664351684;76dfcf38;
-X-HE-SMSGID: 1odRts-0007n0-5Z
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664354053;c38c68e3;
+X-HE-SMSGID: 1odSW9-0006qO-R9
 
-On 27.09.22 11:54, Vlastimil Babka wrote:
-> On 9/18/22 11:28, Anatoly Pugachev wrote:
->> On Fri, Jun 03, 2022 at 07:19:43AM +0300, Vasily Averin wrote:
->>> __register_pernet_operations() executes init hook of registered
->>> pernet_operation structure in all existing net namespaces.
->> [...]
->> I'm unable to boot my sparc64 VM anymore (5.19 still boots, 6.0-rc1 does not),
->> bisected up to this patch,
->>
->> mator@ttip:~/linux-2.6$ git bisect bad
->> 1d0403d20f6c281cb3d14c5f1db5317caeec48e9 is the first bad commit
->> commit 1d0403d20f6c281cb3d14c5f1db5317caeec48e9
->> [...]
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
+
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
+
+Hi, this is your Linux kernel regression tracker.
+
+On 23.09.22 21:20, Grzegorz Halat wrote:
+> Hi,
 > 
-> #regzbot introduced: 1d0403d20f6c
+> On Wed, Sep 16 2020 at 12:12, Stefan Bühler wrote:
+>> this quirk breaks our serial ports PCIe card (i.e. we don't see any
+>> output from the connected devices; no idea whether anything we send
+>> reaches them):
+> 
+> I have the same problem, also with a PCI serial adapter from Oxford Semiconductor.
+> I've bisected the kernel and it was introduced in b88bf6c3b6ff.
+> When the system is booted with "pci=noioapicquirk" then the PCI card works fine.
+> The CPU is Intel Xeon E5-2680 v3 @ 2.50GHz.
+> 
+> Sean, do you have any news about this issue?
 
-Thx for getting this regression tracked using regzbot. FWIW, that went
-sideways (as your already noticed and mentioned on IRC), as that made
-regzbot treat *your* mail as the report of the regressions. In cases
-like this you need "#regzbot ^introduced 1d0403d20f6c" (since recently
-"#regzbot introduced 1d0403d20f6c ^" works, too), as then regzbot will
-consider the *parent* mail the report (and then regzbot will look out
-for patches that link to them using a Link: tag).
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
-No worries, I did the same mistake a few time already :-D I send a mail
-with that command now, so let's resolve this subthread by marking it invalid
+#regzbot ^introduced b88bf6c3b6ff77948
+#regzbot title boot interrupt quirk (also in 4.19.y) breaks serial ports
+#regzbot ignore-activity
+#regzbot backburner: known since 2020, original developer likely moved on
 
-#regzbot invalid: mis-used regzbot command, now properly tracked
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -76,4 +83,3 @@ P.S.: As the Linux kernel's regression tracker I deal with a lot of
 reports and sometimes miss something important when writing mails like
 this. If that's the case here, don't hesitate to tell me in a public
 reply, it's in everyone's interest to set the public record straight.
-
