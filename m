@@ -1,119 +1,130 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02D2A1398
-	for <regressions@lists.linux.dev>; Thu, 29 Sep 2022 13:04:13 +0000 (UTC)
-Received: by mail-qt1-f182.google.com with SMTP id g23so696184qtu.2
-        for <regressions@lists.linux.dev>; Thu, 29 Sep 2022 06:04:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=qpdOjHoVeeBXawuhfGss23fD+10+rI0bqQ2kczWUCBE=;
-        b=G5+5vtHrOwCkZ1NKDM/wqQUQ1URVwqeIG62iNVHh68BtD5jU9DHjLQGOglsRV7k9QL
-         odkEPI5MJ6oy9/j9AW8BD1gdwGcGBS3MYWXx6f/OvhJR/XcdrdImKVshig0EcIBZIpHb
-         EOYhIZesKEbUMT7ki+TlhNL/ZXma/Wub52ozU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=qpdOjHoVeeBXawuhfGss23fD+10+rI0bqQ2kczWUCBE=;
-        b=hqfFDzDVYAds3YKkZEPJtgSzDxragppvECIOaHJu8OzthMS/6Uwfais6VzKeVNF9Rf
-         P0MeUVzeCXRWq3MBFehCQJtOoVkLcNplGPFRD6JxHYOba/Vikjts5zKzwkeZ3I59BRmp
-         9NeWSNqxIz7wVZoFh7/ub9sahh4/0fhIZjfmBDKX8fVRc5Pmt2BAAONGGeJgFUi2lE/j
-         DqXvQaZYdkoMKf41MMTg1dgbtPmkOun5/PuAs/9Q0m1DtnVntw0bCcwqUH7qvQRzbt0O
-         /PfF4PJJHw4x1CnoAQhVhsMqaTBGk7DNWfZ3aOEUUCWphCvuFBlFMZWO4lEFqcwmufSa
-         xDtQ==
-X-Gm-Message-State: ACrzQf3MSzsKNZyXq1DxWf4A/76/NHCHhmH/IhQGRWtfHHHP6U/adJ5V
-	NpPNQlaxzXg6d7+/CanWxaGRVSXoMzY6pA==
-X-Google-Smtp-Source: AMsMyM5MXuYjd1O59zouVYEcPOQV28TNv4ifR4ELIB2VcXSipLzGkZAbTBUDRw/04XgZ+YCRklN/dA==
-X-Received: by 2002:a05:622a:1492:b0:35c:b7e6:12ef with SMTP id t18-20020a05622a149200b0035cb7e612efmr2215287qtx.94.1664456652720;
-        Thu, 29 Sep 2022 06:04:12 -0700 (PDT)
-Received: from meerkat.local (bras-base-mtrlpq5031w-grc-33-142-113-79-147.dsl.bell.ca. [142.113.79.147])
-        by smtp.gmail.com with ESMTPSA id bj7-20020a05620a190700b006bad7a2964fsm5936297qkb.78.2022.09.29.06.04.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Sep 2022 06:04:12 -0700 (PDT)
-Date: Thu, 29 Sep 2022 09:04:10 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: "Artem S. Tashkinov" <aros@gmx.com>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, workflows@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	ksummit@lists.linux.dev
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-Message-ID: <20220929130410.hxtmwmoogzkwcey7@meerkat.local>
-References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
- <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
- <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BD411C13;
+	Thu, 29 Sep 2022 13:09:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1664456977;
+	bh=ZgFnvr+tO3Kg3sa9+Y1OtbNvBi5R8dQvED6XwNUy2hY=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=Dn3r6tbCE3lEOSDDRVFnb5FhZSrE2krtDhM87SObFutgPB6h5Q+4JYhKyy/ntBfQO
+	 U8L7c4NkUFpns065CKjqf4uoIrvT19oPAuufZyah6NjBrPODy0mNrtwY3HfE3gE8P0
+	 I4nPTJGF2I5HxpKvejixuNgjjFHx3G+D3LX+kBt8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.7.110.20] ([143.244.37.136]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1Md6Mt-1pDEB93BA3-00aDcf; Thu, 29
+ Sep 2022 15:09:36 +0200
+Message-ID: <92c43f2b-c89d-cb9b-a7ce-777171258185@gmx.com>
+Date: Thu, 29 Sep 2022 13:09:35 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+ workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ ksummit@lists.linux.dev
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+ <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com> <YzWVJpqNq4UeeaoH@kroah.com>
+From: "Artem S. Tashkinov" <aros@gmx.com>
+In-Reply-To: <YzWVJpqNq4UeeaoH@kroah.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:GMCFnZYbbXGMtXkE357kEuS1JgUdf9FhiUgCBubgt4MWrwszaJA
+ Kwfe6yrXXn0Rv9cKeyDJTWK0CXUoNvLcCax12f2tDZbPNTvbvOA95mqww/+QfJktON9JkU/
+ QwQ2k8Y+V6+bD/C73hLkgFYWemr7TR2cD+uqiVy5KpazPdpLAiRaGgwsWy0ojPQuDCO+PiW
+ boxzqz2DIdRDG5p59rdbQ==
+X-Spam-Flag: YES
+X-UI-Out-Filterresults: junk:10;V03:K0:9UBbDhxoGOg=:v1P5Cj0RkGkCg8smSvZz8oXb
+ TlxOIn+uko1hffMwT/Y0/9crPsMqFcKfn+H2HwsDDUqWGeuBRmxHoYvpWFuZsRSVTHF8IE4c5
+ wwIl0di+GmpUgOCueFWKRCt/ax+Y5Km6ND8Bjmirwu+XfgCwqtVYGykFjUzvUFnvi0FeCeER/
+ F6TxGDX4sU29HkMO05IYVDSGWlqY+yzBNpDEXkNp1IB3vpVS0ZPD8lpsm/qy0BYZF2eiSQcsO
+ pxoykyjm6X0eL/1iV96TgUuZwMH4r0toE9yKJ7SQTtWAlpEkBN69ShNjok6ZzDf57e/DfXvQd
+ j+lDT3CI1+55xAktR3jESZqOj91bV4d0I4PhBDqa/hNSlHxu469g+Y20vLQWFK/1+p5+eP+rq
+ TG29QYEo4yzSxC2sXtfmELw61mHhVV0w5A+XZK/YhsTli+xDfeVLmzJ/WYU0izVTkK6iPbPpq
+ 2li8jFDfO14SqlGoyOoDlKLnpe9JDaUzAVglyYWE9QpUWYCwm3robxXeTDCMrbl0cX/TRkB2S
+ l9XeDqNi+0/MNvepiOcm/D8qKj3r3aWJNG7foRiPY3jDGXWWXgJVRzMOC4GLEeq6HgtWJqFoV
+ P+Ed2iYflrhGsaU0VjbaeYIiw53d9J9TNcpDnWGTnz4RIKpCQP0Pn3TCDuaAkUnDkHo54Mnb8
+ qmjBf3/kX8zOGS7zOaPgbYdVnqmr/7tI0vS8XJb1MbZDYOBnovncEn0fyyyLkAdO21+GdC7MR
+ 3/R5Y4UHGbxP4X9yiZg2VG2HPWAdVxYICcQUUKhLoulJWcdsYmbQRijR+YeHJ20ytcZkXsYay
+ 0Ied7ZBBOWx/D9bYQBOukO9oNFsO/+y8fXgHMOWnnSSUM1VYIgG2IS44s/G3ly0Hceyve5FDx
+ RXIUYNsZ/QfgxeOJ3XH8Rqe7idjJPDFRbP3JuYt+fRTXqVv3vAGGesfXmYRufzSy8OkoI4Lco
+ Xi6fU8Y3cmwEjl7SmxMhpsWSLPaeBpV/N7Vo7tTEyvViHGa7HfG+exX1ojEy/2pcERdQn1+Ls
+ Wd2tozeMxfopg3yTt7LeybNsIhHDPs2IGvOW52nci5fxSdVLfKaBL0UC4ZYGYK3+GtglDnaF8
+ MhcC+gDBJuxu9natIRrKrBTrjgX8UpNVqcNyk35z6ZgaKBIrulUBBzESIMos3JEWc4VmqCvJN
+ zlrBaQ6pcdy6BnYDAh0D2aK1X1vfw5+BLXyg/AzrlMJRkg==
 
-On Thu, Sep 29, 2022 at 12:22:35PM +0000, Artem S. Tashkinov wrote:
-> AFAIK, the kernel bugzilla is a Linux Foundation project and the
-> organization receives funding from its very rich members including
-> Google, Meta, Intel, and even Microsoft. The fact that no one is
-> seriously working on it looks shameful and sad. We are not talking about
-> a minor odd library with a dozen users we are talking about the kernel.
 
-The bugzilla as a software platform is a Mozilla product, not Linux
-Foundation. Unfortunately, it's pretty much dead:
 
-1. all development has stopped years ago
-2. it doesn't even work with recent MySQL servers
-3. it is written in perl5 and can only pretty much run with mod_perl
+On 9/29/22 12:52, Greg KH wrote:
+> On Thu, Sep 29, 2022 at 12:22:35PM +0000, Artem S. Tashkinov wrote:
+>> Let me be brutally honest here, if you're working on the kernel,
+>> specially for a large company such as e.g. Intel, you're _expected_ to
+>> address the issues which are related to the kernel component[s] you're
+>> maintaining/developing otherwise it's not "development" it's "I'm
+>> dumping my code because my employer pays me to do that". That also mean=
+s
+>> you're expected to address bug reports.
+>
+> I wish that were the case, unfortunately it is quite rare that
+> maintainers of subsystems of the kernel are allowed to work on upstream
+> issues like this all the time.  Heck, part of the time would be
+> wonderful too, but that is also quite rare.  So while maintainers would
+> love to be able to work like this, getting their management to agree to
+> this is not very common, sadly.
 
-We're committed to running it as far as we can, but we all must also admit
-that the platform is near-death and probably will become an ever-increasing
-burden to keep it operating. Heck, one of our IT staff is currently trying to
-convert bugzilla.kernel.org to use Postgres just so we can keep operating it
-past the end of 2022.
+Understood but it's illogical and I cannot/will not accept it. For
+instance, here's a very common scenario: you work for company X. The
+company tells you to fix a bug/add a new feature/etc. You write the
+code, submit it and it results in a regression for other use cases. Are
+you saying it's alright and shouldn't be addressed? That's _exactly_ how
+many if not _most_ regressions in the kernel are introduced.
 
-The Linux Foundation IT is in charge of running infrastructure -- we're not a
-development shop. All of our software projects are pretty much "skunkworks"
-efforts (and yes, this includes b4).
+>
+>> AFAIK, the kernel bugzilla is a Linux Foundation project and the
+>> organization receives funding from its very rich members including
+>> Google, Meta, Intel, and even Microsoft. The fact that no one is
+>> seriously working on it looks shameful and sad. We are not talking abou=
+t
+>> a minor odd library with a dozen users we are talking about the kernel.
+>
+> bugzilla.kernel.org is _hosted_ by the LF, and does a great job of
+> keeping it running and alive.  The LF has nothing to do with the content
+> of the bugs in it, the reporting, the response of people to reported
+> bugs, assigning bugs to anyone, getting them fixed, or anything else
+> related to the content in the database at all.  Please don't get
+> confused with the resources provided to host the system vs. the people
+> who actually do the kernel development itself.
+>
+> Note, the LF does sponsor a few kernel developers to do work on the
+> kernel, including myself, but we are a tiny drop in the bucket compared
+> to the 4000+ developers who contribute to the kernel every year.
+ >
+ > thanks,
+ >
+ > greg k-h
 
-We do have ability to fund development efforts -- LF has been the primary
-sponsor behind public-inbox.org over the past 3 years. However, there must be
-a clear, strong, and well-articulated mandate from the community. From what I
-heard, the vast majority of maintainers simply want a web form that would
-allow someone to:
+Keeping the website up and running requires next to zero human
+time/resources, that's not proper maintenance. The
+components/subsystems/developers haven't been updated in over a decade
+which results in a bug tracker which is nearly useless. People often
+file bug reports under "Other/Other" and no one is notified of anything.
+I don't even want to touch on the fact that the  Bugzilla version the
+website is running is terribly outdated.
 
-1. clearly state what kernel version they are using
-2. clearly describe what they were trying to do
-3. explain what they expected vs. what they got
-4. attach any files
-5. give this bug report a unique identifier
+That's the issue I thought we're trying to resolve - making bugzilla
+useful. Under no circumstances I want to engage kernel developers or
+blame them for anything. I'm grateful you exist and do your work :-)
 
-Then a designated person would look through the bug report and either:
-
-a. quick-close it (with the usual "talk to your distro" or "don't use a
-   tainted kernel" etc)
-b. identify the responsible maintainers and notify them
-
-The hard part is not technical -- the hard part is that "designated person."
-Being a bugmaster is a thankless job that leads to burnout, regardless of how
-well you are paid. Everyone is constantly irate at you from both ends -- the
-users are annoyed because their stuff doesn't work, and the maintainers are
-annoyed because you keep yanking them to work on dull problems that require a
-ton of back-and-forth with people who aren't capable of applying patches and
-booting custom kernels.
-
-Before we try to fix/replace bugzilla, we really need to figure out the entire
-process and pinpoint who is going to be the one in charge of bug reports. If
-you think that LF should establish a fund for a position like that, then you
-should probably approach LF fellows (Greg KH, Shuah Khan), who can then talk
-to LF management. The IT team will be happy to support you with the tooling,
-but tooling should come second to that -- otherwise we'll just be replacing an
-old and rusty dumpster on fire with a new and shiny dumpster on fire.
-
--K
+Best regards,
+Artem
