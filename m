@@ -1,70 +1,96 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4771C13
-	for <regressions@lists.linux.dev>; Thu, 29 Sep 2022 14:22:37 +0000 (UTC)
-From: John Ogness <john.ogness@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1664460784;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U6eCrG1bH2S5fazyYRexbB2EWVUobKqy0ORHgIDtUYs=;
-	b=2g6I7PM7tVIp0xbIrsWRmMwSlnQSNBLRAtDvVxGvExqAsBrGpQzn7MU/FpE3DOEemN899Z
-	zcDBfbuXSdNPC83MBHqfUkpVQ7fu3VMOgYKUadQ+vjYZ2OAz1xjAp9e9QC5OQkzRVFgo9O
-	jJwFB7tNqtfRgXt5dUdcLaI4meMSFqoapyBbehk3304QKYdnnAEuA5TekI0Jz55QL3JSDc
-	1h1IVon9JkkT9y4wlyEiJ8bR9SK4uDV4yLs0nML54GpqErdpGulhsQ3Rze0vsn+obQbFvA
-	ItRD+EVC/YDU8vkW0kGiwasvUu2QNAKVUb2/ZB8XvZoVyAMM2+Gs9k7CfGz6Fg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1664460784;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=U6eCrG1bH2S5fazyYRexbB2EWVUobKqy0ORHgIDtUYs=;
-	b=jncNNLCbNfH8hPTqrL9DjDR3m8DpnXXaYuiHXNE0yLH7NCPMzcboRdAHe6567mUYhzlxud
-	L94aX1AGNyN7fKDw==
-To: Conor Dooley <conor.dooley@microchip.com>, Petr Mladek <pmladek@suse.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Conor Dooley
- <conor@kernel.org>, senozhatsky@chromium.org, rostedt@goodmis.org,
- linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [resend][bug] low-probability console lockups since 5.19
-In-Reply-To: <YzV40LbMHcW1S/9O@wendy>
-References: <Yy3dsSgpDnovBdEn@spud> <YzR8fzyjhggO+/tT@spud>
- <98f62903-3d6f-30b4-82ef-3b0460824907@leemhuis.info>
- <YzVlYaUPcRmlfE7c@wendy> <YzVvl+rv3iZS9vxk@alley> <YzV40LbMHcW1S/9O@wendy>
-Date: Thu, 29 Sep 2022 16:19:03 +0206
-Message-ID: <877d1m46c0.fsf@jogness.linutronix.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DED722579;
+	Thu, 29 Sep 2022 15:26:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1664465170;
+	bh=oOgcX0s8xJS2rgnvpBHiYekzzFcyDIbHRcoPvSVK0Zw=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=WaElFH607ESo42Y7tCgfGymk0uHSGARUyOP2qqvssVYYzTyVUnXxV+8pFgsZ1WhPx
+	 nl+VYXSkeTsPxWurMP8G7vIWEfYF295ehJV2Bxk9LNsMZZJDE9uaGHlBkbvwaP8Nh3
+	 enhze5aDzMDxxGq1M54hxb8W5hhop6GjGZTw6hog=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 4376A12886E3;
+	Thu, 29 Sep 2022 11:26:10 -0400 (EDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+	by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id X6BZT3-rZbUO; Thu, 29 Sep 2022 11:26:10 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1664465169;
+	bh=oOgcX0s8xJS2rgnvpBHiYekzzFcyDIbHRcoPvSVK0Zw=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=nHoTdAGWmcK1SDyXqr5/KC4re+Ex4xtUZi91ddeIPbRLGQfyV4A51a33QAbkbpQMt
+	 b1w8rJn/ydplI93mCAjHxQozhk127bK8iIJM4/01s/tA7PbeXta6wjICJ7gNltoh5T
+	 O4wKrOvZ1y9gvCeDXg+P25oPYBmCRikCfNhy8a6w=
+Received: from [IPv6:2601:5c4:4300:c551:a71:90ff:fec2:f05b] (unknown [IPv6:2601:5c4:4300:c551:a71:90ff:fec2:f05b])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 0DDBB12886E2;
+	Thu, 29 Sep 2022 11:26:08 -0400 (EDT)
+Message-ID: <238f5350125e618c323f42e3885b5ff887241ae0.camel@HansenPartnership.com>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: "Artem S. Tashkinov" <aros@gmx.com>, Thorsten Leemhuis
+ <linux@leemhuis.info>,  Konstantin Ryabitsev
+ <konstantin@linuxfoundation.org>
+Cc: workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Greg KH
+ <gregkh@linuxfoundation.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>,  "regressions@lists.linux.dev"
+ <regressions@lists.linux.dev>, ksummit@lists.linux.dev
+Date: Thu, 29 Sep 2022 11:26:07 -0400
+In-Reply-To: <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+	 <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+	 <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On 2022-09-29, Conor Dooley <conor.dooley@microchip.com> wrote:
-> I will, possibly tonight but probably not, run the bisection again
-> with the threaded printer merge reverted. Hopefully it is not filled
-> with conflicts if I go that way...
+On Thu, 2022-09-29 at 12:22 +0000, Artem S. Tashkinov wrote:
+> Let me be brutally honest here, if you're working on the kernel,
+> specially for a large company such as e.g. Intel, you're _expected_
+> to address the issues which are related to the kernel component[s]
+> you're maintaining/developing otherwise it's not "development" it's
+> "I'm dumping my code because my employer pays me to do that". That
+> also means you're expected to address bug reports.
+> 
+> It's correct I've tried to help people with bug reports posted on
+> bugzilla.kernel.org but it's a tough task considering that absolute
+> most kernel developers are not signed up, thus most bug reports are
+> never seen by respective developers.
 
-It might be easier for you to just apply the following patch to run your
-tests . This simple patch disables kthread usage.
+The never seen/never responded to metric is rather bogus.  The sad fact
+is that a lot of bug reports aren't actionable, meaning the reporter
+can't give a reproducer and also can't easily test patches  sometimes
+by luck the maintainers can work out what the issue is but a lot of the
+time they have no idea.  Then there are ton's of bug reports with
+responses like "I think xxx commit fixes your problem, can you test it"
+for which the conversation dies there.  There's also the thundering
+herd problem: some bugs get reported by many different people (as
+different bug reports) but usually the subsystem only engages with one
+to fix the issue.  In theory bugzilla can mark the latter as dups, but
+that requires someone to spend an enormous amount of time on evaluation
+and admin.
 
-John Ogness
+That's not to say we can't improve our process, it's just to set
+expectations that we're never going to approach anywhere near a perfect
+bug process.  Most of the improvements that worked so far involve
+having someone coach bug reporters through the process of either
+testing patches or reproducing the problem in a more generic
+environment ... which I think most people would agree can't really fall
+wholly on maintainers.
+
+Regards,
+
+James
 
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index b095fb5f5f61..9679887c0805 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -3605,6 +3605,10 @@ static int __init printk_activate_kthreads(void)
- {
- 	struct console *con;
- 
-+	/* hack: never activate kthreads */
-+	if (!printk_kthreads_available)
-+		return 0;
-+
- 	console_lock();
- 	printk_kthreads_available = true;
- 	for_each_console(con)
