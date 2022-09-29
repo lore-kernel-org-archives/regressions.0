@@ -1,50 +1,49 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from premium237-5.web-hosting.com (premium237-5.web-hosting.com [66.29.146.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6524C66
-	for <regressions@lists.linux.dev>; Thu, 29 Sep 2022 15:31:38 +0000 (UTC)
-Received: by mail-qv1-f54.google.com with SMTP id r14so1122647qvn.3
-        for <regressions@lists.linux.dev>; Thu, 29 Sep 2022 08:31:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=aDk5WhTWYMUS/Nso1zDY1vnbhdE3LxgEUkl0R9z8ikc=;
-        b=fPZW2E15BveHnk+U+E2xsZfNruZ86H0qoVWMvgoDRp8LH8O++N2Te7BG0k08r2OaLy
-         ftLEnS9PkDbmVxKsLnBgATVeGuFmaz+yhvNZHPRO/Lg/TsUROe30efvPXffm93CuJcoE
-         Afylt8OU1K6UECrE+L02k9cPxn5B/QVCsR1E0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=aDk5WhTWYMUS/Nso1zDY1vnbhdE3LxgEUkl0R9z8ikc=;
-        b=0L6Xs0uUXT9WOv/UIxp27nMJTAaoFsrf3ZWctrvObKgq8ngr7NnWFMGHKntGHAHexq
-         /dhbq4FXFd0Y1w5GL8eqZlfYtMl8uW6TXnxMYB14ByQtfShaLGeJjr4E1pHlx79X1nmE
-         Gw9gwtGYnDV0h4yVHvejRzINy411sOW9sJs7xq1iahusZ3SaGqHukKrjyp5IlBgkO8CV
-         KDUw5Z4QTPSlfCdWRg5iJ8GytXW6ThOE2BJ8X4AgWJFoicQ8mDwuykCQF/L+u//j4YvT
-         Xg+BY9H2woX6PBDgRKy3M6x5jBATVTMBhbSfNvSZ3TA05QQUqwafAGFiuzmzYA0Q6EL/
-         iKCw==
-X-Gm-Message-State: ACrzQf2GuqiNrL7GomeARX+ksz4pSHiJBiMVm+z5ciBx1kpmOCZZZ4pQ
-	tjyywgY1L3s7Onrc0Wg6fI75Kg==
-X-Google-Smtp-Source: AMsMyM7i7zIg+oSnI+5G7rUm05ea+Hzm8A3YgGg00fNvZsrGxIXxfIvcax1QpG3R8agfqkdKbfJFAQ==
-X-Received: by 2002:a05:6214:29e7:b0:4af:487d:c049 with SMTP id jv7-20020a05621429e700b004af487dc049mr3121459qvb.96.1664465497726;
-        Thu, 29 Sep 2022 08:31:37 -0700 (PDT)
-Received: from meerkat.local (bras-base-mtrlpq5031w-grc-33-142-113-79-147.dsl.bell.ca. [142.113.79.147])
-        by smtp.gmail.com with ESMTPSA id az11-20020a05620a170b00b006b615cd8c13sm6104418qkb.106.2022.09.29.08.31.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Sep 2022 08:31:37 -0700 (PDT)
-Date: Thu, 29 Sep 2022 11:31:35 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: "Artem S. Tashkinov" <aros@gmx.com>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, workflows@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	ksummit@lists.linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB0085395;
+	Thu, 29 Sep 2022 15:39:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sladewatkins.net; s=default; h=To:References:Message-Id:
+	Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
+	Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=bhJ9ijaSrg8Q+iqIaQe6wLGB9ZwmWZRAjaxAvMQnDDY=; b=TmfJx7SJEmrvukW5mmoQnYn35S
+	lfgwfPVrEFMbjnPKdUOEJY0kY2aD6VEChuL2+9nQiA23OFHvMPbfwniErdA8xfv109X4wK4K4paEw
+	ndbIVCPQiGGlKFE3o3xKUMkE+v8CJ/7nnbKzRQCNC7yNv9KqNET+Yha6bRSYk9di8sImT/Lysex0U
+	zrFExlNefn6xeoB2yjUK0iX5p+75PDOmGHI8roUJCPyPZWKr2PSVKMwD6kQ02L+DGvh5VzjhlDgIp
+	lTyDJXFgqP1P1ct9u+ITXKDujYtsYjV7LZA+t8iIUj9LMNUC9+xhtlLQHjjFUldbiNPRIPsVGDSUj
+	b5A63veg==;
+Received: from pool-108-4-135-94.albyny.fios.verizon.net ([108.4.135.94]:49863 helo=smtpclient.apple)
+	by premium237.web-hosting.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <srw@sladewatkins.net>)
+	id 1odvdC-00HRHw-Jt;
+	Thu, 29 Sep 2022 11:39:22 -0400
+Content-Type: text/plain;
+	charset=utf-8
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
 Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
  blues"
-Message-ID: <20220929153135.vu43n5kgdj4a3at6@meerkat.local>
+From: Slade Watkins <srw@sladewatkins.net>
+In-Reply-To: <20220929153135.vu43n5kgdj4a3at6@meerkat.local>
+Date: Thu, 29 Sep 2022 11:39:20 -0400
+Cc: "Artem S. Tashkinov" <aros@gmx.com>,
+ Thorsten Leemhuis <linux@leemhuis.info>,
+ workflows@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ ksummit@lists.linux.dev
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C4935ACC-65C8-4705-B9FF-A1CA0A648B9D@sladewatkins.net>
 References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
  <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
  <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
@@ -52,42 +51,62 @@ References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
  <7b427b41-9446-063d-3161-e43eb2e353f9@gmx.com>
  <20220929135325.4riz4ijva2vc7q5p@meerkat.local>
  <95c3384b-53d0-fd6c-6ec5-a7e03fdeddfc@gmx.com>
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <95c3384b-53d0-fd6c-6ec5-a7e03fdeddfc@gmx.com>
+ <20220929153135.vu43n5kgdj4a3at6@meerkat.local>
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - premium237.web-hosting.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - sladewatkins.net
+X-Get-Message-Sender-Via: premium237.web-hosting.com: authenticated_id: srw@sladewatkins.net
+X-Authenticated-Sender: premium237.web-hosting.com: srw@sladewatkins.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-From-Rewrite: unmodified, already matched
 
-On Thu, Sep 29, 2022 at 02:22:10PM +0000, Artem S. Tashkinov wrote:
-> * Delete all the components.
-> * Leave a catch-all one.
-> * Let bug reports rot because no one will ever see them. Almost just
-> like now. Don't remind me of mailing lists.
+Hey there,
 
-This is my proposal, except also:
+> On Sep 29, 2022, at 11:31 AM, Konstantin Ryabitsev =
+<konstantin@linuxfoundation.org> wrote:
+>=20
+> On Thu, Sep 29, 2022 at 02:22:10PM +0000, Artem S. Tashkinov wrote:
+>> * Delete all the components.
+>> * Leave a catch-all one.
+>> * Let bug reports rot because no one will ever see them. Almost just
+>> like now. Don't remind me of mailing lists.
+>=20
+> This is my proposal, except also:
+>=20
+> 1. post all new bugs and comments to a public-inbox feed that people =
+can query
+>   via lore.kernel.org and tooling like lei.
 
-1. post all new bugs and comments to a public-inbox feed that people can query
-   via lore.kernel.org and tooling like lei.
+Honestly, giving it a lot more thought, this is a brilliant idea.
 
-> Sarcasm and pain aside, Linus Torvalds himself _via Bugzilla_ has helped
-> me resolve critical issues on several occasions while my messages to
-> LKML were simply _ignored_. Think about that.
+>=20
+>> Mailing lists will not work for such a huge project. Period. In the
+>> early 90s they worked, but we are 25 years later with millions more
+>> users. With a ton more of a ton more complicated hardware.
+>=20
+> We've recognized this a while ago, which is why our efforts have been =
+targeted
+> at query-based message feeds. Hence, tools like lore.kernel.org and =
+lei. It's
+> a work in progress, for sure, but it doesn't require any "everyone =
+must switch
+> workflows today" kind of coordination, and avoids introducing single =
+points of
+> failure by making it easy to replicate everything to mirrored systems.
 
-In fact, he probably did this by replying to emails, not via the web
-interface.
+My parents taught me growing up that you can only ever _improve_: you =
+can never be perfect.=20
 
-> Mailing lists will not work for such a huge project. Period. In the
-> early 90s they worked, but we are 25 years later with millions more
-> users. With a ton more of a ton more complicated hardware.
+Needless to say, it=E2=80=99s worth a shot.
 
-We've recognized this a while ago, which is why our efforts have been targeted
-at query-based message feeds. Hence, tools like lore.kernel.org and lei. It's
-a work in progress, for sure, but it doesn't require any "everyone must switch
-workflows today" kind of coordination, and avoids introducing single points of
-failure by making it easy to replicate everything to mirrored systems.
 
--K
+Best,
+
+-srw
+
