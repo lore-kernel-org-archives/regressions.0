@@ -1,37 +1,32 @@
-Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.40])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5878E5395;
-	Thu, 29 Sep 2022 16:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1664467612;
-	bh=YnWkIqWh+3LQ4hERC7FwXLMumQkE9n7lG9QWXcIze4o=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=LCBMX2RyOKSE7T7FjqAMVC7nKd1ij/s2ZnY4cdxSUg7kLUITMfqVvbwcG6vaoQShW
-	 F5G+czRUVLeNc6TRp9ujogp1iefhoxxJl1iuYwaAYDWR8bmRC7cxrGd7YuEefBWD36
-	 nJ9DNPKZZySLTYfZbysCLMT6VFnsPjoKJ/kE2Xpo=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.7.110.20] ([143.244.37.136]) by mail.gmx.net (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MVvLB-1olKbh1oJB-00RsAX; Thu, 29
- Sep 2022 18:06:52 +0200
-Message-ID: <591ab7d4-b283-32bf-13d8-419a5b91c365@gmx.com>
-Date: Thu, 29 Sep 2022 16:06:50 +0000
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B18553A5;
+	Thu, 29 Sep 2022 16:42:21 +0000 (UTC)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 56E7347C;
+	Thu, 29 Sep 2022 18:42:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1664469738;
+	bh=Px3pAoyZFv/K9T1/keIuJOaFWik7BVMa7QB94t6qEaY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q2ZzK4gMg3E9B9ZR6xvzXzGvRf3wNBf8gkIZZr059sxmfRVfBU8xp0vaHNzlJLMo8
+	 x50e43DtCHTUF8iH8d1kUcvxt8SMSuNTgA7q3QIf4JU6ioZLwXYP6WW2nKKWRsq4L+
+	 IMAWZlBecfAB68wk9NZ6swRZZJN7HymAsoHeBOBg=
+Date: Thu, 29 Sep 2022 19:42:16 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Slade Watkins <srw@sladewatkins.net>
+Cc: "Artem S. Tashkinov" <aros@gmx.com>,
+	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+	Thorsten Leemhuis <linux@leemhuis.info>, workflows@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	ksummit@lists.linux.dev
 Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
  blues"
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, workflows@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- ksummit@lists.linux.dev
+Message-ID: <YzXK6Px+BrNuuMZH@pendragon.ideasonboard.com>
 References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
  <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
  <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
@@ -39,73 +34,86 @@ References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
  <7b427b41-9446-063d-3161-e43eb2e353f9@gmx.com>
  <20220929135325.4riz4ijva2vc7q5p@meerkat.local>
  <95c3384b-53d0-fd6c-6ec5-a7e03fdeddfc@gmx.com>
- <20220929153135.vu43n5kgdj4a3at6@meerkat.local>
-From: "Artem S. Tashkinov" <aros@gmx.com>
-In-Reply-To: <20220929153135.vu43n5kgdj4a3at6@meerkat.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:saJyJPn8PqIzQByG/rKBe2b89u6WU6DGo6IScjmTRLVj6tnx0bd
- GxRsCY5GX6dc8ps/wXXoa2mwbBvU3tu5dRy86hvZQi9Zd1yXZzPYbiTsDvZMxl57N8QpbC+
- S4J/3ielwbWQ7JAuR6R6HStpL1QXVbSExw46ME05Zaig3lrVnHB58VtfzJ/u+Eqbxjrtyf9
- EzITY7noJggmujpUfdiaA==
-X-Spam-Flag: YES
-X-UI-Out-Filterresults: junk:10;V03:K0:8TYXXS9cfNw=:954dzzyDfQB2Nl7wkjBn1iiU
- EI3zMysz4AZUdaZrMtpfOPIkrVPD/IIshSLRU+9SpC4TzOazAZvyDznNfQQ1D/LSmsgOdgX+E
- JUm4S6ofcJ1cUt+g8RIILyq6v/yNRSzCO4zhFBEUp/hm0xHTPdY61bzEnDwlpSdtqP2DFvvcf
- IK/kSuphb+d93izlZ+5Vk1wLMGqtmuyr3YZysjq0qYzjKYONRsyOur6m5IJ0b0E1Htk8KtzsP
- I+DdJarXHxQAKPfcfgqAD+bZwYVBwz2YISXTpcvBlojgf0m8LcNPnzPnjajnI/MGKNyMYuPdV
- +xnHRy42BB1tg1WUlU8edIuubDojtOUosMPworheBsOwmbg4qbxo/WYnuk6mQFllhj/G1zOXD
- S6e3XW4SlcbTouJUjt0n/IUw++073zQwPVxNoEEXHC7vPceqceAxfVMVQR4dC2sVBR7z3qbDY
- geBsDzTJ3nXO6pRdAH37rOt3hMwNrKTCCI5NlQ4E5o68bED4s4fxwsITfp/hB8e4V9lKurfxI
- JIqnRW7dFWMZSg0pXn8/HbTT0/R5NVX7gL+q+45CVXMc/HxBQ5JEILzmwfBMVZxJ4OExw1A27
- kIAIt7WhaGHCfSVINppWCq/WWzbVJGn8/iPl9JXFCWTQyjJWAxIYQDn1Vowiizmi5PUxoT8Mi
- M5K5T5OTRZJAAd0HONNQm6RkQ/FhGNXgepzg7LC6sLVXcRNZGle0VaUwHencyoVPS/ZEOCmk1
- EfqHnku0idIk1goIrcrAoOz2p/VseGYIPk3hoyEzTJS9/mZEm7zGqyEfb2akcPaK+HXoHzvPF
- 7zrxbKHtJEBfD1Fwk3HkpcPijohefLscHMiYkQrEtaSrJM1sLWNK7bKBCNOqJbVAljD/ONayG
- kp0F5lhVwxFr6TSG7rozdEvc3wZKwfO8toM8CAp9QpXKtl3NNFzSpU1TWrXMqylsF0YwuKNlu
- mapYTbBFtgWAnqmhZFl0mJ8F4O99de3VifO5oT4uYmVOnYREpR0CefNAK5qExd34sS4ZmPQwe
- KrQp0guCbuJvnMxxfEPWb/glTj6uBtX9J5BPudElgTNS6sTLtwRLRk+pERVfxsHgZWO+YfUpN
- a/tWxbQdRRwGA3dUl7OV2LU4fy9DNKe/C6Zu1gJ6u8XWto9CdeSngDzZLN7kd9DPX0xo7t8iV
- U2W0Fm1cJDpcQVX6IMO5g9h9pVleFP8FD32Zzihimqu25w==
+ <F300ED64-5E8E-4060-89DC-C98BC5FF08E6@sladewatkins.net>
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <F300ED64-5E8E-4060-89DC-C98BC5FF08E6@sladewatkins.net>
 
+On Thu, Sep 29, 2022 at 10:54:17AM -0400, Slade Watkins wrote:
+> Hey!
+> 
+> Jumping in here to offer my input...
+> 
+> > On Sep 29, 2022, at 10:22 AM, Artem S. Tashkinov <aros@gmx.com> wrote:
+> > 
+> > That leaves us with Bugzilla that no one wants to touch and some people
+> > actively want to delete altogether. In other words, no central place to
+> > report bugs or keep track of them.
+> 
+> This is the current problem that seems to be appearing here. I get why
+> no one wants to touch it, but it doesn’t solve the problem. 
+> 
+> As you said:
+> 
+> > I've mentioned several times already that mailing lists are _even worse_
+> > in terms of reporting issues. Developers get emails and simply ignore
+> > them (for a multitude of reasons).
+> 
+> It’s 100% true that emails get _buried_ as waves of them come in (LKML
+> itself gets hundreds upon hundreds a day, as I’m sure all of you know)
+> and it just isn’t something I personally see as viable, especially for
+> issues that may or may not be high priority.
 
+E-mails are not that bad to report issues, but they can't provide the
+core feature that any bug tracker oughts to have: tracking. There's no
+way, with the tools we have at the moment (including public-inbox, b4
+and lei), to track the status of bug reports and fixes. Even for patches
+we need to rely on patchwork, and that's far from perfect.
 
-On 9/29/22 15:31, Konstantin Ryabitsev wrote:
-> On Thu, Sep 29, 2022 at 02:22:10PM +0000, Artem S. Tashkinov wrote:
->> * Delete all the components.
->> * Leave a catch-all one.
->> * Let bug reports rot because no one will ever see them. Almost just
->> like now. Don't remind me of mailing lists.
->
-> This is my proposal, except also:
->
-> 1. post all new bugs and comments to a public-inbox feed that people can=
- query
->     via lore.kernel.org and tooling like lei.
->
->> Sarcasm and pain aside, Linus Torvalds himself _via Bugzilla_ has helpe=
-d
->> me resolve critical issues on several occasions while my messages to
->> LKML were simply _ignored_. Think about that.
->
-> In fact, he probably did this by replying to emails, not via the web
-> interface.
+When things fall through the cracks (and at the moment it's more of a
+sieve with very large holes, if not a bottom-less pot), we mostly assume
+that, if the problem is important enough, the submitter will ping time
+after time until a fix is produced and merged. There is no way to
+produce a list of open issues.
 
-Nope, I CC'ed him.
+I agree with the comment that was repeated multiple times: it's quite
+pointless to improve the tooling if we don't first improve the process,
+and find a way to allocate people and time to handling bug reports. Even
+if bugzilla has reached EOL upstream, and even if it isn't perfect, the
+instance runs today, and gives us a tracker that could be used to design
+a proper process and implement it, should we desire to do so. There's no
+chicken-and-egg issue to be solved where lack of tooling would prevent
+the implementation of a bug tracking process. I'm quite confident that,
+if we manage to implement a bug tracking process, we will find a way to
+get the tooling we need, be it through bugzilla or something else.
 
->
->> Mailing lists will not work for such a huge project. Period. In the
->> early 90s they worked, but we are 25 years later with millions more
->> users. With a ton more of a ton more complicated hardware.
->
-> We've recognized this a while ago, which is why our efforts have been ta=
-rgeted
-> at query-based message feeds. Hence, tools like lore.kernel.org and lei.=
- It's
-> a work in progress, for sure, but it doesn't require any "everyone must =
-switch
-> workflows today" kind of coordination, and avoids introducing single poi=
-nts of
-> failure by making it easy to replicate everything to mirrored systems.
->
-> -K
+> > Getting back to my first message in this discussion,
+> > 
+> > * Let's refresh all the components in Bugzilla
+> > * Components may not have any people responsible for them at all. Bug
+> > reporters will have to CC the people they are interested in.
+> > * Let's subscribe the past six months of developers (using git commit logs)
+> > * Whoever wants to unsubscribe is free to do so.
+> 
+> Not a terrible idea to me, though obviously, that’s up for debate.
+> 
+> > If not for bugzilla, let's use something more modern. I don't know any
+> > comparable projects however. Trac is truly horrible. You cannot even
+> > unsubscribe from bug reports. Maybe I've missed something. Discourse?
+> > Not a bug tracker per se but can certainly work this way.
+> 
+> Discourse probably isn’t the best fit here, in my opinion. Jira and
+> YouTrack are the only ones I personally know of that are similar to
+> Bugzilla, although as far as I know, they aren’t open source...
+
+-- 
+Regards,
+
+Laurent Pinchart
