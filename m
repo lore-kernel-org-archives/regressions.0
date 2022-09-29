@@ -1,89 +1,91 @@
-Received: from premium237-5.web-hosting.com (premium237-5.web-hosting.com [66.29.146.205])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C4D53B5;
-	Thu, 29 Sep 2022 20:26:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sladewatkins.net; s=default; h=To:References:Message-Id:
-	Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
-	Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+AfdzDbB6qFHwhHUz93W6CYPO+fA//BDSU2BSgua2ic=; b=f6tN5l7rsIrslJiGjUQ686RN10
-	E+xInOf2oYk4nJKU571gUNBhesBhcAG9uCYE+N6V0QRBFAVQjsS9r06z+Xfzxm57BjC7jUjVQVcDO
-	zQ+v+kWFDvFUaa96L88/t7KUb7TE9gtrCa5II5AmQBZEktvZSN/jIy0Li/szoCWNA0P1ksMrw2BIS
-	nnrv3O/TooLFtpzhtU18ruso1XDggw0ZK9IREQVe3h24qQByXQLaEv7aD1+fNWax+Kove7W/JAzk5
-	r7EQBhkFOLvJ5/7YxCShyNCliWWHVekfjIbUa/jHpu2w4jy8W/44fXMqrsCXNYMjU2l7Pkjms8Kwv
-	JMHb5jrg==;
-Received: from pool-108-4-135-94.albyny.fios.verizon.net ([108.4.135.94]:55375 helo=smtpclient.apple)
-	by premium237.web-hosting.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <srw@sladewatkins.net>)
-	id 1oe06s-004cQC-Bb;
-	Thu, 29 Sep 2022 16:26:18 -0400
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB255A66
+	for <regressions@lists.linux.dev>; Thu, 29 Sep 2022 21:22:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8B7BC433C1;
+	Thu, 29 Sep 2022 21:22:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1664486575;
+	bh=ZQBrV7Cm8QPG0bNDPWceRvng7omwE0U4ca+kAIHCPbU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=i+/oAj9nxCLSoekdUOdRgO4VR5NjohOWFkUcffpqOj0w0xbcl5XlmTWY5ZtvF0238
+	 ish+m54d+veEyHjM1JaececphWaQeYNAjoX7+plpPQ425D9qNrqsVL2AmcokaAn6QL
+	 JkUUSBjOCcBswXmGoW1uw/cyXU2SDsoNqWj+yaHvwItLeh2k4McbDSJFK8LlhHvGNj
+	 7K3Cl/3ALcBJ8Tg06hDSbDtX9MGgAgeJGMBqxbHKzKjrjcVsnzbKAho27bOKlJuS58
+	 JpJJ07MQgRTEoXVb4xKE8qExUrap1w8Nu9JYE5vxnL4DU3KET/ud/qcNSOFHQc+Cdm
+	 W5oIvQlxNwlqg==
+Date: Thu, 29 Sep 2022 22:22:50 +0100
+From: Conor Dooley <conor@kernel.org>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Thorsten Leemhuis <regressions@leemhuis.info>,
+	senozhatsky@chromium.org, rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [resend][bug] low-probability console lockups since 5.19
+Message-ID: <YzYMqr5kEsKJ3cwn@spud>
+References: <Yy3dsSgpDnovBdEn@spud>
+ <YzR8fzyjhggO+/tT@spud>
+ <98f62903-3d6f-30b4-82ef-3b0460824907@leemhuis.info>
+ <YzVlYaUPcRmlfE7c@wendy>
+ <YzVvl+rv3iZS9vxk@alley>
+ <YzV40LbMHcW1S/9O@wendy>
+ <877d1m46c0.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-From: Slade Watkins <srw@sladewatkins.net>
-In-Reply-To: <591ab7d4-b283-32bf-13d8-419a5b91c365@gmx.com>
-Date: Thu, 29 Sep 2022 16:26:15 -0400
-Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- Thorsten Leemhuis <linux@leemhuis.info>,
- workflows@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- ksummit@lists.linux.dev
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F6A94603-563D-4627-A62F-9B9A48F3A3AD@sladewatkins.net>
-References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
- <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
- <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
- <20220929130410.hxtmwmoogzkwcey7@meerkat.local>
- <7b427b41-9446-063d-3161-e43eb2e353f9@gmx.com>
- <20220929135325.4riz4ijva2vc7q5p@meerkat.local>
- <95c3384b-53d0-fd6c-6ec5-a7e03fdeddfc@gmx.com>
- <20220929153135.vu43n5kgdj4a3at6@meerkat.local>
- <591ab7d4-b283-32bf-13d8-419a5b91c365@gmx.com>
-To: "Artem S. Tashkinov" <aros@gmx.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - premium237.web-hosting.com
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - sladewatkins.net
-X-Get-Message-Sender-Via: premium237.web-hosting.com: authenticated_id: srw@sladewatkins.net
-X-Authenticated-Sender: premium237.web-hosting.com: srw@sladewatkins.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-From-Rewrite: unmodified, already matched
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <877d1m46c0.fsf@jogness.linutronix.de>
 
-Hi,
+On Thu, Sep 29, 2022 at 04:19:03PM +0206, John Ogness wrote:
+> On 2022-09-29, Conor Dooley <conor.dooley@microchip.com> wrote:
+> > I will, possibly tonight but probably not, run the bisection again
+> > with the threaded printer merge reverted. Hopefully it is not filled
+> > with conflicts if I go that way...
+> 
+> It might be easier for you to just apply the following patch to run your
+> tests . This simple patch disables kthread usage.
 
-> On Sep 29, 2022, at 12:06 PM, Artem S. Tashkinov <aros@gmx.com> wrote:
->=20
-> On 9/29/22 15:31, Konstantin Ryabitsev wrote:
->>=20
->>=20
->> In fact, he probably did this by replying to emails, not via the web
->> interface.
->=20
-> Nope, I CC'ed him.
+Thanks a million John, restarted bisection from master prior to the
+merge of the reverts & have ended up finding the actual issue thanks
+to your hack - a RISC-V specific clocksource change. I'll close the
+regzbot issue & open a new one against the actual source of my issues.
 
-I think you can still reply via email if you=E2=80=99re a Cc. Been a =
-while though.=20
+#regzbot invalid: bisection lead me up the garden path
 
-Regardless =E2=80=94 not the point of the thread so it=E2=80=99s not =
-worth arguing about.
+It looks like I have an issue that's caused by the PCI controller driver
+on this SoC* which triggers RCU stalls - but thanks to the clocksource
+issue the RCU stalls never get reported & the system just locks up. The
+system locked up in the same place on the kthreads branch so I guess I
+just got unlucky with my bisection because of that.
 
--srw
+Thanks again for the hack to bisect with,
+Conor.
 
+* likely due to running the wrong FPGA bitstream, the root port's
+connection to the cpus is configured by the FPGA fabric.
+
+> 
+> John Ogness
+> 
+> 
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index b095fb5f5f61..9679887c0805 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -3605,6 +3605,10 @@ static int __init printk_activate_kthreads(void)
+>  {
+>  	struct console *con;
+>  
+> +	/* hack: never activate kthreads */
+> +	if (!printk_kthreads_available)
+> +		return 0;
+> +
+>  	console_lock();
+>  	printk_kthreads_available = true;
+>  	for_each_console(con)
