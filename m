@@ -1,49 +1,37 @@
-Received: from premium237-5.web-hosting.com (premium237-5.web-hosting.com [66.29.146.205])
+Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 940695395;
-	Thu, 29 Sep 2022 15:47:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sladewatkins.net; s=default; h=To:References:Message-Id:
-	Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
-	Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=rOFIEq0S0Dx55y93OJZ2axvhLBMAn64hF3lTQA7ocec=; b=OGMBcdZ3MXf9Cw8Mdg/YDR00IQ
-	7Pp4sb8OLyWNcsHelI/FwskJ6Rs2fu8qN1F2U6uAqe32i+9G06XzZPraa3HtuqiDA0jY1pg7br0yT
-	zHkZV7vAbeJo/1bkiGSU0zJXH4vJ9lwuFyFaM5Mn7/bD/SA9Nnb9sopMT3A/vt8qeJ4wqek/ZMYNE
-	crO+Bq52Z38eN00KczS7AGJWWNLW5mUcFK31y1p0k7ceCR+p9nufmcfUOGXVzsrSGhH9V3lRJBRA7
-	6avKQ2qiC0NaeJlFbgxf7UPTxRyD97QUKJAkdCrZR2aoPAswodXSpPnAjqvsOkJ6iSRl6ntw/5nLt
-	h6gxyW3w==;
-Received: from pool-108-4-135-94.albyny.fios.verizon.net ([108.4.135.94]:63979 helo=smtpclient.apple)
-	by premium237.web-hosting.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <srw@sladewatkins.net>)
-	id 1oduvd-00GaOv-NC;
-	Thu, 29 Sep 2022 10:54:21 -0400
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5878E5395;
+	Thu, 29 Sep 2022 16:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1664467612;
+	bh=YnWkIqWh+3LQ4hERC7FwXLMumQkE9n7lG9QWXcIze4o=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=LCBMX2RyOKSE7T7FjqAMVC7nKd1ij/s2ZnY4cdxSUg7kLUITMfqVvbwcG6vaoQShW
+	 F5G+czRUVLeNc6TRp9ujogp1iefhoxxJl1iuYwaAYDWR8bmRC7cxrGd7YuEefBWD36
+	 nJ9DNPKZZySLTYfZbysCLMT6VFnsPjoKJ/kE2Xpo=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.7.110.20] ([143.244.37.136]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MVvLB-1olKbh1oJB-00RsAX; Thu, 29
+ Sep 2022 18:06:52 +0200
+Message-ID: <591ab7d4-b283-32bf-13d8-419a5b91c365@gmx.com>
+Date: Thu, 29 Sep 2022 16:06:50 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
 Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
  blues"
-From: Slade Watkins <srw@sladewatkins.net>
-In-Reply-To: <95c3384b-53d0-fd6c-6ec5-a7e03fdeddfc@gmx.com>
-Date: Thu, 29 Sep 2022 10:54:17 -0400
-Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- Thorsten Leemhuis <linux@leemhuis.info>,
- workflows@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>, workflows@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
  ksummit@lists.linux.dev
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <F300ED64-5E8E-4060-89DC-C98BC5FF08E6@sladewatkins.net>
 References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
  <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
  <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
@@ -51,69 +39,73 @@ References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
  <7b427b41-9446-063d-3161-e43eb2e353f9@gmx.com>
  <20220929135325.4riz4ijva2vc7q5p@meerkat.local>
  <95c3384b-53d0-fd6c-6ec5-a7e03fdeddfc@gmx.com>
-To: "Artem S. Tashkinov" <aros@gmx.com>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - premium237.web-hosting.com
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - sladewatkins.net
-X-Get-Message-Sender-Via: premium237.web-hosting.com: authenticated_id: srw@sladewatkins.net
-X-Authenticated-Sender: premium237.web-hosting.com: srw@sladewatkins.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-From-Rewrite: unmodified, already matched
+ <20220929153135.vu43n5kgdj4a3at6@meerkat.local>
+From: "Artem S. Tashkinov" <aros@gmx.com>
+In-Reply-To: <20220929153135.vu43n5kgdj4a3at6@meerkat.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:saJyJPn8PqIzQByG/rKBe2b89u6WU6DGo6IScjmTRLVj6tnx0bd
+ GxRsCY5GX6dc8ps/wXXoa2mwbBvU3tu5dRy86hvZQi9Zd1yXZzPYbiTsDvZMxl57N8QpbC+
+ S4J/3ielwbWQ7JAuR6R6HStpL1QXVbSExw46ME05Zaig3lrVnHB58VtfzJ/u+Eqbxjrtyf9
+ EzITY7noJggmujpUfdiaA==
+X-Spam-Flag: YES
+X-UI-Out-Filterresults: junk:10;V03:K0:8TYXXS9cfNw=:954dzzyDfQB2Nl7wkjBn1iiU
+ EI3zMysz4AZUdaZrMtpfOPIkrVPD/IIshSLRU+9SpC4TzOazAZvyDznNfQQ1D/LSmsgOdgX+E
+ JUm4S6ofcJ1cUt+g8RIILyq6v/yNRSzCO4zhFBEUp/hm0xHTPdY61bzEnDwlpSdtqP2DFvvcf
+ IK/kSuphb+d93izlZ+5Vk1wLMGqtmuyr3YZysjq0qYzjKYONRsyOur6m5IJ0b0E1Htk8KtzsP
+ I+DdJarXHxQAKPfcfgqAD+bZwYVBwz2YISXTpcvBlojgf0m8LcNPnzPnjajnI/MGKNyMYuPdV
+ +xnHRy42BB1tg1WUlU8edIuubDojtOUosMPworheBsOwmbg4qbxo/WYnuk6mQFllhj/G1zOXD
+ S6e3XW4SlcbTouJUjt0n/IUw++073zQwPVxNoEEXHC7vPceqceAxfVMVQR4dC2sVBR7z3qbDY
+ geBsDzTJ3nXO6pRdAH37rOt3hMwNrKTCCI5NlQ4E5o68bED4s4fxwsITfp/hB8e4V9lKurfxI
+ JIqnRW7dFWMZSg0pXn8/HbTT0/R5NVX7gL+q+45CVXMc/HxBQ5JEILzmwfBMVZxJ4OExw1A27
+ kIAIt7WhaGHCfSVINppWCq/WWzbVJGn8/iPl9JXFCWTQyjJWAxIYQDn1Vowiizmi5PUxoT8Mi
+ M5K5T5OTRZJAAd0HONNQm6RkQ/FhGNXgepzg7LC6sLVXcRNZGle0VaUwHencyoVPS/ZEOCmk1
+ EfqHnku0idIk1goIrcrAoOz2p/VseGYIPk3hoyEzTJS9/mZEm7zGqyEfb2akcPaK+HXoHzvPF
+ 7zrxbKHtJEBfD1Fwk3HkpcPijohefLscHMiYkQrEtaSrJM1sLWNK7bKBCNOqJbVAljD/ONayG
+ kp0F5lhVwxFr6TSG7rozdEvc3wZKwfO8toM8CAp9QpXKtl3NNFzSpU1TWrXMqylsF0YwuKNlu
+ mapYTbBFtgWAnqmhZFl0mJ8F4O99de3VifO5oT4uYmVOnYREpR0CefNAK5qExd34sS4ZmPQwe
+ KrQp0guCbuJvnMxxfEPWb/glTj6uBtX9J5BPudElgTNS6sTLtwRLRk+pERVfxsHgZWO+YfUpN
+ a/tWxbQdRRwGA3dUl7OV2LU4fy9DNKe/C6Zu1gJ6u8XWto9CdeSngDzZLN7kd9DPX0xo7t8iV
+ U2W0Fm1cJDpcQVX6IMO5g9h9pVleFP8FD32Zzihimqu25w==
 
-Hey!
 
-Jumping in here to offer my input...
 
-> On Sep 29, 2022, at 10:22 AM, Artem S. Tashkinov <aros@gmx.com> wrote:
->=20
-> That leaves us with Bugzilla that no one wants to touch and some =
-people
-> actively want to delete altogether. In other words, no central place =
-to
-> report bugs or keep track of them.
+On 9/29/22 15:31, Konstantin Ryabitsev wrote:
+> On Thu, Sep 29, 2022 at 02:22:10PM +0000, Artem S. Tashkinov wrote:
+>> * Delete all the components.
+>> * Leave a catch-all one.
+>> * Let bug reports rot because no one will ever see them. Almost just
+>> like now. Don't remind me of mailing lists.
+>
+> This is my proposal, except also:
+>
+> 1. post all new bugs and comments to a public-inbox feed that people can=
+ query
+>     via lore.kernel.org and tooling like lei.
+>
+>> Sarcasm and pain aside, Linus Torvalds himself _via Bugzilla_ has helpe=
+d
+>> me resolve critical issues on several occasions while my messages to
+>> LKML were simply _ignored_. Think about that.
+>
+> In fact, he probably did this by replying to emails, not via the web
+> interface.
 
-This is the current problem that seems to be appearing here. I get why =
-no one wants to touch it, but it doesn=E2=80=99t solve the problem.=20
+Nope, I CC'ed him.
 
-As you said:
-
-> I've mentioned several times already that mailing lists are _even =
-worse_
-> in terms of reporting issues. Developers get emails and simply ignore
-> them (for a multitude of reasons).
-
-It=E2=80=99s 100% true that emails get _buried_ as waves of them come in =
-(LKML itself gets hundreds upon hundreds a day, as I=E2=80=99m sure all =
-of you know) and it just isn=E2=80=99t something I personally see as =
-viable, especially for issues that may or may not be high priority.
-
-> Getting back to my first message in this discussion,
->=20
-> * Let's refresh all the components in Bugzilla
-> * Components may not have any people responsible for them at all. Bug
-> reporters will have to CC the people they are interested in.
-> * Let's subscribe the past six months of developers (using git commit =
-logs)
-> * Whoever wants to unsubscribe is free to do so.
-
-Not a terrible idea to me, though obviously, that=E2=80=99s up for =
-debate.
-
->=20
-> If not for bugzilla, let's use something more modern. I don't know any
-> comparable projects however. Trac is truly horrible. You cannot even
-> unsubscribe from bug reports. Maybe I've missed something. Discourse?
-> Not a bug tracker per se but can certainly work this way.
-
-Discourse probably isn=E2=80=99t the best fit here, in my opinion. Jira =
-and YouTrack are the only ones I personally know of that are similar to =
-Bugzilla, although as far as I know, they aren=E2=80=99t open source...
-
-Best,
--srw
-
+>
+>> Mailing lists will not work for such a huge project. Period. In the
+>> early 90s they worked, but we are 25 years later with millions more
+>> users. With a ton more of a ton more complicated hardware.
+>
+> We've recognized this a while ago, which is why our efforts have been ta=
+rgeted
+> at query-based message feeds. Hence, tools like lore.kernel.org and lei.=
+ It's
+> a work in progress, for sure, but it doesn't require any "everyone must =
+switch
+> workflows today" kind of coordination, and avoids introducing single poi=
+nts of
+> failure by making it easy to replicate everything to mirrored systems.
+>
+> -K
