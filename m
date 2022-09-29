@@ -1,26 +1,26 @@
 Received: from premium237-5.web-hosting.com (premium237-5.web-hosting.com [66.29.146.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF61653B5;
-	Thu, 29 Sep 2022 19:00:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62C4D53B5;
+	Thu, 29 Sep 2022 20:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=sladewatkins.net; s=default; h=To:References:Message-Id:
 	Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
 	Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
 	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=eb0khICbQDL4+jyyr8c6E6L4E4XS0/81ahtM8QIqTzo=; b=UrW1D3nlrRLAddd5YLM8QMUKUO
-	VJ6k9TO6qjLzi7BhaH49aB3G+Aqk0sS/ySSbtZmvVhxAJbX3JgZ/HO2KlOU4U9xQM/e67XmslWzkj
-	ZfxZ6POs9H2CgfQhQvtUm5baBZG5W70OvzoO2oBDSvR23QwlRWZ+L7ORm/RZJsN4MWg6MbKL0DnZT
-	cVgq+1PWpnsAfboZ+Hh5IDqejG0gA3hyt0A8M/Ry6FOK/Er5h0iAXnbPiJFFUJ/jONfz9We85iu8i
-	8mmH5jR4T6qFAafUvs9tSYEpJVfm5UhXT/X5J5BOZuDwyJyDFw7kmf5BWNRk6pWXBBxPo6sNyDzka
-	IuTIUnxg==;
-Received: from pool-108-4-135-94.albyny.fios.verizon.net ([108.4.135.94]:54336 helo=smtpclient.apple)
+	bh=+AfdzDbB6qFHwhHUz93W6CYPO+fA//BDSU2BSgua2ic=; b=f6tN5l7rsIrslJiGjUQ686RN10
+	E+xInOf2oYk4nJKU571gUNBhesBhcAG9uCYE+N6V0QRBFAVQjsS9r06z+Xfzxm57BjC7jUjVQVcDO
+	zQ+v+kWFDvFUaa96L88/t7KUb7TE9gtrCa5II5AmQBZEktvZSN/jIy0Li/szoCWNA0P1ksMrw2BIS
+	nnrv3O/TooLFtpzhtU18ruso1XDggw0ZK9IREQVe3h24qQByXQLaEv7aD1+fNWax+Kove7W/JAzk5
+	r7EQBhkFOLvJ5/7YxCShyNCliWWHVekfjIbUa/jHpu2w4jy8W/44fXMqrsCXNYMjU2l7Pkjms8Kwv
+	JMHb5jrg==;
+Received: from pool-108-4-135-94.albyny.fios.verizon.net ([108.4.135.94]:55375 helo=smtpclient.apple)
 	by premium237.web-hosting.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <srw@sladewatkins.net>)
-	id 1odylQ-003C8d-CP;
-	Thu, 29 Sep 2022 15:00:04 -0400
+	id 1oe06s-004cQC-Bb;
+	Thu, 29 Sep 2022 16:26:18 -0400
 Content-Type: text/plain;
 	charset=utf-8
 Precedence: bulk
@@ -32,10 +32,9 @@ Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
 Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
  blues"
 From: Slade Watkins <srw@sladewatkins.net>
-In-Reply-To: <YzXK6Px+BrNuuMZH@pendragon.ideasonboard.com>
-Date: Thu, 29 Sep 2022 15:00:00 -0400
-Cc: "Artem S. Tashkinov" <aros@gmx.com>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+In-Reply-To: <591ab7d4-b283-32bf-13d8-419a5b91c365@gmx.com>
+Date: Thu, 29 Sep 2022 16:26:15 -0400
+Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
  Thorsten Leemhuis <linux@leemhuis.info>,
  workflows@vger.kernel.org,
  LKML <linux-kernel@vger.kernel.org>,
@@ -44,7 +43,7 @@ Cc: "Artem S. Tashkinov" <aros@gmx.com>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
  ksummit@lists.linux.dev
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <49D9FA95-4C73-40BA-A112-93DDFD77D1A2@sladewatkins.net>
+Message-Id: <F6A94603-563D-4627-A62F-9B9A48F3A3AD@sladewatkins.net>
 References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
  <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
  <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
@@ -52,9 +51,9 @@ References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
  <7b427b41-9446-063d-3161-e43eb2e353f9@gmx.com>
  <20220929135325.4riz4ijva2vc7q5p@meerkat.local>
  <95c3384b-53d0-fd6c-6ec5-a7e03fdeddfc@gmx.com>
- <F300ED64-5E8E-4060-89DC-C98BC5FF08E6@sladewatkins.net>
- <YzXK6Px+BrNuuMZH@pendragon.ideasonboard.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+ <20220929153135.vu43n5kgdj4a3at6@meerkat.local>
+ <591ab7d4-b283-32bf-13d8-419a5b91c365@gmx.com>
+To: "Artem S. Tashkinov" <aros@gmx.com>
 X-Mailer: Apple Mail (2.3696.120.41.1.1)
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - premium237.web-hosting.com
@@ -68,55 +67,23 @@ X-Source-Args:
 X-Source-Dir: 
 X-From-Rewrite: unmodified, already matched
 
-Hey there,
+Hi,
 
-> On Sep 29, 2022, at 12:42 PM, Laurent Pinchart =
-<laurent.pinchart@ideasonboard.com> wrote:
+> On Sep 29, 2022, at 12:06 PM, Artem S. Tashkinov <aros@gmx.com> wrote:
 >=20
-> E-mails are not that bad to report issues, but they can't provide the
-> core feature that any bug tracker oughts to have: tracking. There's no
-> way, with the tools we have at the moment (including public-inbox, b4
-> and lei), to track the status of bug reports and fixes. Even for =
-patches
-> we need to rely on patchwork, and that's far from perfect.
-
-Yeah, I (sort of) changed my mind on this [1], but you=E2=80=99re right: =
-it lacks tracking issues from reported-to-fixed, and unless something =
-was engineered specifically for it, we=E2=80=99re out of luck.
-
+> On 9/29/22 15:31, Konstantin Ryabitsev wrote:
+>>=20
+>>=20
+>> In fact, he probably did this by replying to emails, not via the web
+>> interface.
 >=20
-> I agree with the comment that was repeated multiple times: it's quite
-> pointless to improve the tooling if we don't first improve the =
-process,
-> and find a way to allocate people and time to handling bug reports. =
-Even
-> if bugzilla has reached EOL upstream, and even if it isn't perfect, =
-the
-> instance runs today, and gives us a tracker that could be used to =
-design
-> a proper process and implement it, should we desire to do so. There's =
-no
-> chicken-and-egg issue to be solved where lack of tooling would prevent
-> the implementation of a bug tracking process. I'm quite confident =
-that,
-> if we manage to implement a bug tracking process, we will find a way =
-to
-> get the tooling we need, be it through bugzilla or something else.
+> Nope, I CC'ed him.
 
-Right.=20
+I think you can still reply via email if you=E2=80=99re a Cc. Been a =
+while though.=20
 
-To be honest, I think the best move from here is improve the process =
-first, then worry about everything else when the time comes. Can=E2=80=99t=
- really go any further without first addressing the process in my =
-opinion. The important thing to remember is that nothing implemented =
-will ever be "perfect.=E2=80=9D That=E2=80=99s just not possible. =
-However, we _can_ make something that=E2=80=99ll work and continue =
-refining it over time.=20
+Regardless =E2=80=94 not the point of the thread so it=E2=80=99s not =
+worth arguing about.
 
-[1] =
-https://lore.kernel.org/lkml/C4935ACC-65C8-4705-B9FF-A1CA0A648B9D@sladewat=
-kins.net/
-
-Cheers,
 -srw
 
