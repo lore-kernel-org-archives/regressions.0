@@ -1,89 +1,111 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C24367E
-	for <regressions@lists.linux.dev>; Wed, 28 Sep 2022 22:38:49 +0000 (UTC)
-Received: from cwcc.thunk.org (pool-173-48-120-46.bstnma.fios.verizon.net [173.48.120.46])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 28SMaNnQ009335
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 Sep 2022 18:36:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1664404586; bh=waAn/9TptkPRIHHi0yaeZ4FHiwjtqy03MqfpsbrfLiA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=aiflh8CWB4z83QjZadi3z6Fg3yVwENag9tSy1Ug1Z4rL08pXqdVQ3o3F9D4Nnn183
-	 41QhiwaVVcU0C247awyVjOKevaYCaAS/96gCwabtVY+0VmLsuSm+28u13U2E9cQr2b
-	 DcywfjnGFBYDZKSSMiVxRWSVxvD2vobi6HiU13MYqJiLtlriur6aMHdDwc4VWQNAoG
-	 ZKfMqTYDTci2/1hv8RwPPmPktHFs+QHV6b48Gl/A+gAzkyDnUSdBsLDrYZXwh0BCWC
-	 G9y+Pq9Z4+qHDwhOb42X6tNVNO4bytflVTxBaOgTAqdbK+ZVnNK+b4weE2qrVVlW8n
-	 sdnu+DS3UCnpw==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 1E5CD15C529A; Wed, 28 Sep 2022 18:36:23 -0400 (EDT)
-Date: Wed, 28 Sep 2022 18:36:23 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: "Lu, Davina" <davinalu@amazon.com>
-Cc: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>,
-        hazem ahmed mohamed <hazem.ahmed.abuelfotoh@gmail.com>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>,
-        "Kiselev, Oleg" <okiselev@amazon.com>,
-        "Liu, Frank" <franklmz@amazon.com>
-Subject: Re: significant drop  fio IOPS performance on v5.10
-Message-ID: <YzTMZ26AfioIbl27@mit.edu>
-References: <357ace228adf4e859df5e9f3f4f18b49@amazon.com>
- <1cdc68e6a98d4e93a95be5d887bcc75d@amazon.com>
- <5c819c9d6190452f9b10bb78a72cb47f@amazon.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13F110F7
+	for <regressions@lists.linux.dev>; Thu, 29 Sep 2022 07:03:43 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1odna3-0001iF-A2; Thu, 29 Sep 2022 09:03:35 +0200
+Message-ID: <9e3a4bf9-c909-d6aa-28c8-5fbbea9f5ae3@leemhuis.info>
+Date: Thu, 29 Sep 2022 09:03:34 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: significant drop fio IOPS performance on v5.10 #forregzbot
+Content-Language: en-US, de-DE
+To: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <357ace228adf4e859df5e9f3f4f18b49@amazon.com>
+ <1cdc68e6a98d4e93a95be5d887bcc75d@amazon.com>
+ <5c819c9d6190452f9b10bb78a72cb47f@amazon.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
 In-Reply-To: <5c819c9d6190452f9b10bb78a72cb47f@amazon.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664435023;873d70d8;
+X-HE-SMSGID: 1odna3-0001iF-A2
 
-On Wed, Sep 28, 2022 at 06:07:34AM +0000, Lu, Davina wrote:
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
+
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
+
+Hi, this is your Linux kernel regression tracker.
+
+On 28.09.22 08:07, Lu, Davina wrote:
 > 
 > Hello,
 > 
-> My analyzing is that the degradation is introduce by commit
-> {244adf6426ee31a83f397b700d964cff12a247d3} and the issue is the
-> contention on rsv_conversion_wq.  The simplest option is to increase
-> the journal size, but that introduces more operational complexity.
-> Another option is to add the following change in attachment "allow
-> more ext4-rsv-conversion workqueue.patch"
+> I was profiling the 5.10 kernel and comparing it to 4.14.  On a system with 64 virtual CPUs and 256 GiB of RAM, I am observing a significant drop in IO performance. Using the following FIO with the script "sudo ftest_write.sh <dev_name>" in attachment, I saw FIO iops result drop from 22K to less than 1K. 
+> The script simply does: mount a the EXT4 16GiB volume with max IOPS 64000K, mounting option is " -o noatime,nodiratime,data=ordered", then run fio with 2048 fio wring thread with 28800000 file size with { --name=16kb_rand_write_only_2048_jobs --directory=/rdsdbdata1 --rw=randwrite --ioengine=sync --buffered=1 --bs=16k --max-jobs=2048 --numjobs=2048 --runtime=60 --time_based --thread --filesize=28800000 --fsync=1 --group_reporting }.
+> 
+> My analyzing is that the degradation is introduce by commit {244adf6426ee31a83f397b700d964cff12a247d3} and the issue is the contention on rsv_conversion_wq.  The simplest option is to increase the journal size, but that introduces more operational complexity.  Another option is to add the following change in attachment "allow more ext4-rsv-conversion workqueue.patch"
+> 
+> From 27e1b0e14275a281b3529f6a60c7b23a81356751 Mon Sep 17 00:00:00 2001
+> From: davinalu <davinalu@amazon.com>
+> Date: Fri, 23 Sep 2022 00:43:53 +0000
+> Subject: [PATCH] allow more ext4-rsv-conversion workqueue to speedup fio  writing
+> ---
+>  fs/ext4/super.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c index a0af833f7da7..6b34298cdc3b 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -4963,7 +4963,7 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
+>          * concurrency isn't really necessary.  Limit it to 1.
+>          */
+>         EXT4_SB(sb)->rsv_conversion_wq =
+> -               alloc_workqueue("ext4-rsv-conversion", WQ_MEM_RECLAIM | WQ_UNBOUND, 1);
+> +               alloc_workqueue("ext4-rsv-conversion", WQ_MEM_RECLAIM | 
+> + WQ_UNBOUND | __WQ_ORDERED, 0);
+>         if (!EXT4_SB(sb)->rsv_conversion_wq) {
+>                 printk(KERN_ERR "EXT4-fs: failed to create workqueue\n");
+>                 ret = -ENOMEM;
+> 
+> My thought is: If the max_active is 1, it means the "__WQ_ORDERED" combined with WQ_UNBOUND setting, based on alloc_workqueue(). So I added it .
+> I am not sure should we need "__WQ_ORDERED" or not? without "__WQ_ORDERED" it looks also work at my testbed, but I added since not much fio TP difference on my testbed result with/out "__WQ_ORDERED".
+> 
+> From My understanding and observation: with dioread_unlock and delay_alloc both enabled,  the  bio_endio() and ext4_writepages() will trigger this work queue to ext4_do_flush_completed_IO(). Looks like the work queue is an one-by-one updating: at EXT4 extend.c io_end->list_vec  list only have one io_end_vec each time. So if the BIO has high performance, and we have only one thread to do EXT4 flush will be an bottleneck here. The "ext4-rsv-conversion" this workqueue is mainly for update the EXT4_IO_END_UNWRITTEN extend block(only exist on dioread_unlock and delay_alloc options are set) and extend status  if I understand correctly here. Am  I correct?
+> 
+> This works on my test system and passes xfstests, but  will this cause any corruption on ext4 extends blocks updates, not even sure about the journal transaction updates either?
+> Can you tell me what I will break if this change is made?
 
-Hi, thanks for the patch.  However, I don't believe as written it is
-safe.  That's because your patch will allow multiple CPU's to run
-ext4_flush_completed_IO(), and this function is not set up to be safe
-to be run concurrently.  That is, I don't see the necessary locking if
-we have two CPU's trying to convert unwritten extents on the same
-inode.
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
-It could be made safe, and certainly if the problem is that you are
-worried about contention across multiple inodes being written to by
-different FIO jobs, then certainly this could be a potential
-contention issue.
+#regzbot ^introduced 244adf6426ee31a8
+#regzbot title ext4: significant drop  fio IOPS performance on v5.10
+#regzbot backburner: performance regression introduced a while ago that
+will take some time to get analyzed and fixed
+#regzbot ignore-activity
 
-However, what doesn't make sense is that increasing the journal size
-also seems to fix the issue for you.  That implies the problem is one
-of the journal being to small, and so you are running into an issue of
-stalls caused by the need to do a synchronous checkpoint to clear
-space in the journal.  That is a different problem than one of there
-being a contention problem with rsv_conversion_wq.
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
 
-So I want to make sure we understand what you are seeing before we
-make such a change.  One potential concern is that will cause a large
-number of additional kernel threads.  Now, if these extra kernel
-threads are doing useful work, then that's not necessarily an issue.
-But if not, then it's going to be burning a large amount of kernel
-memory (especially for a system with a large number of CPU cores).
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
 
-Regards,
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-					- Ted
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
