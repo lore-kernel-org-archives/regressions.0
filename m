@@ -1,122 +1,149 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F501116
-	for <regressions@lists.linux.dev>; Thu, 29 Sep 2022 10:53:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1664448824; x=1695984824;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fmoOBHAV2Tp40plQ7Fv9kZvP8cn/AMixvXV0WF9c69Q=;
-  b=qFNq8sGD91LBhpKi9brRHCRg/aQOYR9k1kIX05yyA95vqGmtDQMg8MRs
-   wdnHdsUOsGkj8nvRwpdUfpZPvjay5l6Hcbzki3NuePKkc952J25aDW3bc
-   +4LvADnXAJsYOxROcWPFz4Z7Z7hYA1VjZKaIOvWofrtLNs4jNGUk1Fu6I
-   oVvjOZiDyuu2TEgjO5o94hrIInXtJYi0qzAoHhm00bCml8RcWjAitIGox
-   7AxE9c75fH1PQpZiFbfCZLBMafzp/ufqbpBsiwN8xQRrTy/rhfbyHB6wS
-   OtK/467HBh4Hq6ApzxRcYlpG2UxDrKz+tc/vyodU858CK935bgQiB8Ck0
-   g==;
-X-IronPort-AV: E=Sophos;i="5.93,354,1654585200"; 
-   d="scan'208";a="115997658"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 29 Sep 2022 03:52:33 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Thu, 29 Sep 2022 03:52:30 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12 via Frontend
- Transport; Thu, 29 Sep 2022 03:52:29 -0700
-Date: Thu, 29 Sep 2022 11:52:00 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Petr Mladek <pmladek@suse.com>
-CC: Thorsten Leemhuis <regressions@leemhuis.info>, Conor Dooley
-	<conor@kernel.org>, <senozhatsky@chromium.org>, <rostedt@goodmis.org>,
-	<john.ogness@linutronix.de>, <linux-kernel@vger.kernel.org>,
-	<regressions@lists.linux.dev>
-Subject: Re: [resend][bug] low-probability console lockups since 5.19
-Message-ID: <YzV40LbMHcW1S/9O@wendy>
-References: <Yy3dsSgpDnovBdEn@spud>
- <YzR8fzyjhggO+/tT@spud>
- <98f62903-3d6f-30b4-82ef-3b0460824907@leemhuis.info>
- <YzVlYaUPcRmlfE7c@wendy>
- <YzVvl+rv3iZS9vxk@alley>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A671F1116
+	for <regressions@lists.linux.dev>; Thu, 29 Sep 2022 11:19:28 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1odrZc-0002Qp-Ti; Thu, 29 Sep 2022 13:19:24 +0200
+Message-ID: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+Date: Thu, 29 Sep 2022 13:19:24 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <YzVvl+rv3iZS9vxk@alley>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Content-Language: en-US, de-DE
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: "Artem S. Tashkinov" <aros@gmx.com>,
+ ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+ workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1664450368;bc980fd9;
+X-HE-SMSGID: 1odrZc-0002Qp-Ti
 
-On Thu, Sep 29, 2022 at 12:12:39PM +0200, Petr Mladek wrote:
-> On Thu 2022-09-29 10:29:05, Conor Dooley wrote:
-> > On Thu, Sep 29, 2022 at 11:06:01AM +0200, Thorsten Leemhuis wrote:
-> > > Hi Conor
-> > > 
-> > > On 28.09.22 18:55, Conor Dooley wrote:
-> > > > On Fri, Sep 23, 2022 at 05:24:17PM +0100, Conor Dooley wrote:
-> > > >>
-> > > >> Been bisecting a bug that is causing a boot failure in my CI & have
-> > > >> ended up here.. The bug in question is a low(ish) probability lock up
-> > > >> of the serial console, I would estimate about 1-in-5 chance on the
-> > > >> boards I could actually trigger it on which it has taken me so long
-> > > >> to realise that this was an actual problem. Thinking back on it, there
-> > > >> were other failures that I would retroactively attribute to this
-> > > >> problem too, but I had earlycon disabled
-> > > 
-> > > There is one thing I wonder when skimming this thread: was there maybe
-> > > some other change somewhere in the kernel between the introduction and
-> > > the revert of the printk console kthreads patches that is the real
-> > > culprit here that makes existing, older races easier to hit? But I guess
-> > > in the end that would be very hard to find and it's easier to fix the
-> > > problem in the console driver... :-/
-> > 
-> > Entirely possible that something arrived in the middle, yeah. I've done
-> > 100s of reboots on that interim section, albeit with the threaded
-> > printers enabled, as I restarted the bisection several times & never hit
-> > this failure then.
-> 
-> Interesting. I wonder if the used console was fixed during the window
-> when the kthreads were enabled.
+Hi!
 
-I will, possibly tonight but probably not, run the bisection again with
-the threaded printer merge reverted. Hopefully it is not filled with
-conflicts if I go that way...
+TLDR: Core Linux kernel developers are unhappy with the state of
+bugzilla.kernel.org; to improve things I plan to change a few important
+aspects of its configuration, unless somebody comes up with better ideas
+to tackle current problems: (1) Create a catch-all product making it
+totally obvious to submitters that likely nobody will look into the
+ticket. (2) Remove or hide all products & components where the subsystem
+didn't fully commit to look into newly submitted reports. (3) Change the
+text on the front page to make it clear that most kernel bug reports
+need to be sent by mail.
 
-> 
-> > I don't know anything about console/printk/serial drivers unfortunately
-> > so I will almost certainly not be able to find the problem by
-> > inspection. I'd rather submit patches than send reports, but I really
-> > really need some help here. I looked at the two patterns Petr suggested,
-> > but the former I am not sure applies since the issue is present even
-> > when earlycon is disabled & the latter appears (to my untrained eye) to
-> > be accounted for in the 8250 driver.
-> 
-> The problem with the missing port->lock is visible only when the
-> early console is enabled. But It is really hard to hit without
-> the kthreads.
+I recently brought the state of bugzilla.kernel.org up for discussion on
+the kernel summit and the kernel maintainers summit in sessions about my
+regression tracking efforts. Long story short and rough: in both
+sessions attendees were quite unhappy about the current state and wanted
+things to change for the better. As I brought that topic up, I guess I
+have to get things rolling now.
 
-Right, so sounds like that can be excluded since my CI was hitting it
-with earlycon disabled. I'll triple check this, possibly later today.
+But before getting into the details, a quick & rough reminder about the
+current state of bugzilla.kernel.org:
 
-> 
-> The problem with enabled IRQs was visible only with kthreads. The
-> original code called console->write() callback already with IRQs
-> disabled.
-> 
-> The kthreads called console->write() callback with IRQs enabled.
-> It made sense. They need to be disabled only when really needed
-> and the tested drivers did this correctly.
+ * The server and the software running on it are well maintained by the
+the infrastructure team (Konstantin et al.); many thx for this!
 
-And that sounds like it can be also excluded, since my issue started
-post-revert. Unless there's still some kthreads code in there that was
-not reverted?
+ * Products, components, default assignees, et al. OTOH are heavily
+outdated, incomplete, or wrong: maintaining this is not the job of the
+infrastructure team and nobody else has stepped up to take care of this
+(for a few more details see:
+https://lore.kernel.org/lkml/20220420163223.kz32qomzj3y4hjj5@nitro.local/).
 
-Thanks,
-Conor.
+ * To the best of my knowledge bugzilla.kernel.org was never really
+sanctioned as the official place to report all sorts of kernel bugs:
+only 20 (most of them from the area of ACPI/PM and PCI) out of ~2500
+entries in MAINTAINERS currently tell users to report issues there; most
+other subsystems just mention email contacts, a few (like the DRM
+developers) point reporters to external bugtrackers.
 
- 
+ * Developers of subsystems committed to the bug-tracker afaics usually
+react to reports submitted in bugzilla.kernel.org. A few other
+developers & subsystems keep an eye on reports, too; some do this
+directly, others rely on bugzilla forwarding reports for certain
+products/components by mail to the subsystem's mailing list. Quite some
+or a lot of tickets are not forwarded to any developer or mailing list
+at all.
+
+ * In the end lots of bug and regression reports (even good ones!) never
+get a reply from a developer, as a brief analysis of mine showed
+(https://lore.kernel.org/lkml/6808cd17-b48c-657d-de60-ef9d8bfa151e@leemhuis.info/
+). I at least currently try to work a bit against this by briefly
+looking at each new report and forwarding any by mail that looks like a
+regression worth forwarding (I ignore everything else). Artem S.
+Tashkinov also looks into some (all?) reports and tries to help reporters.
+
+The sessions on kernel summit and the kernel maintainers summit
+discussed the current state only for a few minutes. It's hard to
+summarize these discussions, but let me try to mention the aspects that
+are important for now:
+
+ * In both sessions members of the audience seemed pretty unhappy to me
+about the current state of things.
+
+ * In the kernel summit sessions (recording:
+https://youtu.be/e2SZoUPhDRg?t=5370 ) Len Brown stated that he and
+fellow ACPI/PM developers rely on bugzilla.kernel.org and would need
+some replacement if it's decommissioned.
+
+ * On the maintainers summit (see the last section of
+https://lwn.net/Articles/908324/ for a brief write-up that coined the
+term "Bugzilla blues") someone brought up the upstream development of
+bugzilla the software seems to be dead; there was not even one strong
+advocate for bugzilla.kernel.org and the general vibe tented into the
+direction of "let's get rid of it". But it was also mentioned that
+bugzilla.kernel.org does something useful which will need a replacement:
+a place where reporters can upload big files needed for debugging problems.
+
+In the end that made me settle on this plan of action:
+
+ 1. Finding a replacement for bugzilla will take a while, so for now
+let's try to reduce some of its aspects that are bothering people:
+
+  1a. Create a new product/component that can act as a catch-all bug,
+but makes it pretty clear that nobody might see the report because it's
+not forwarded to anyone. People can use it to upload files for debugging
+and link to them in mailed reports. People unable or unwilling to report
+issues my mail (see 1c) could use it to submit issues, too. The outcome
+then is the same as before, but at least people were told upfront about
+the likely outcome; it also gives users a chance to help each other or
+to coordinate before properly reporting an issue.
+
+  1b. Go through the list of products and components and hide or remove
+*all* where the subsystem didn't fully commit to look into newly
+submitted reports. Minimum requirements to remain listed will be along
+these lines: subsystem mentions bugzilla.kernel.org in MAINTAINERS or a
+developer listed in MAINTAINERS is one of the default assignees in
+bugzilla. Subsystems where bugzilla forwards mails to a mailing list can
+remain listed as well, if the recent history shows the developers look
+into newly filed bugs. I'll use my best judgment in the transition
+process and will file "anyone listening?" bugs if in a doubt.
+
+  1c. Make it obvious on the front-page of bugzilla.kernel.org that most
+kernel developers want bug reports to be submitted by mail; mention the
+subsystems that accept reports there and point to the catch-all bug (see
+1a) as a last straw.
+
+ 2. See if everybody is happy with the new state for the time being; if
+not further fine-tune things or speed up step (3).
+
+ 3. Work out what we want as replacement.
+
+Anyone any comments on this or helpful ideas how to make things even
+better? Otherwise, I'll in a week or two get down and start working on
+realizing the points listed under step (1).
+
+Ciao, Thorsten
