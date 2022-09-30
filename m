@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D4E256A
-	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 12:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430AB256A
+	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 12:16:24 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oeEjm-0000JX-R5; Fri, 30 Sep 2022 14:03:26 +0200
-Message-ID: <e4557441-2c23-376a-39bf-cb02e70c6440@leemhuis.info>
-Date: Fri, 30 Sep 2022 14:03:26 +0200
+	id 1oeEwI-0003sR-IN; Fri, 30 Sep 2022 14:16:22 +0200
+Message-ID: <17a07226-722f-d98f-3641-0c1c768c3a46@leemhuis.info>
+Date: Fri, 30 Sep 2022 14:16:22 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,19 +16,19 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
+Subject: Re: [syzbot] possible deadlock in jbd2_journal_lock_updates
+ #forregzbot
 Content-Language: en-US, de-DE
-To: linux-kernel@vger.kernel.org, gpiccoli@igalia.com
-Cc: regressions@lists.linux.dev, linux-fsdevel@vger.kernel.org,
- kernel-dev@igalia.com
-References: <20220929215515.276486-1-gpiccoli@igalia.com>
+To: Thilo Fromm <t-lo@linux.microsoft.com>
+Cc: linux-ext4@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <c77bf00f-4618-7149-56f1-b8d1664b9d07@linux.microsoft.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [REGRESSION][PATCH] Revert "pstore: migrate to crypto acomp
- interface" #forregzbot
-In-Reply-To: <20220929215515.276486-1-gpiccoli@igalia.com>
+In-Reply-To: <c77bf00f-4618-7149-56f1-b8d1664b9d07@linux.microsoft.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664539410;87d83a3d;
-X-HE-SMSGID: 1oeEjm-0000JX-R5
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664540184;e2f80536;
+X-HE-SMSGID: 1oeEwI-0003sR-IN
 
 [Note: this mail is primarily send for documentation purposes and/or for
 regzbot, my Linux kernel regression tracking bot. That's why I removed
@@ -40,56 +40,46 @@ subject, to make them easy to spot and filter out.]
 regressions; all text from me you find below is based on a few templates
 paragraphs you might have encountered already already in similar form.]
 
-Hi, this is your Linux kernel regression tracker. Thx for the report.
+Hi, this is your Linux kernel regression tracker.
 
-On 29.09.22 23:55, Guilherme G. Piccoli wrote:
-> This reverts commit e4f0a7ec586b7644107839f5394fb685cf1aadcc.
+On 28.09.22 09:30, Thilo Fromm wrote:
+> Hello,
 > 
-> When using this new interface, both efi_pstore and ramoops
-> backends are unable to properly decompress dmesg if using
-> zstd, lz4 and lzo algorithms (and maybe more). It does succeed
-> with deflate though.
+>> So this seems like a real issue. Essentially, the problem is that
+>> ext4_bmap() acquires inode->i_rwsem while its caller
+>> jbd2_journal_flush() is holding journal->j_checkpoint_mutex. This
+>> looks like a real deadlock possibility.
 > 
-> The message observed in the kernel log is:
+> Flatcar Container Linux users have reported a kernel issue which might
+> be caused by commit 51ae846cff5. The issue is triggered under I/O load
+> in certain conditions and leads to a complete system hang. I've pasted a
+> typical kernel log below; please refer to
+> https://github.com/flatcar/Flatcar/issues/847 for more details.
 > 
-> [2.328828] pstore: crypto_acomp_decompress failed, ret = -22!
+> The issue can be triggered on Flatcar release 3227.2.2 / kernel version
+> 5.15.63 (we ship LTS kernels) but not on release 3227.2.1 / kernel
+> 5.15.58. 51ae846cff5 was introduced to 5.15 in 5.15.61.
 > 
-> The pstore infrastructure is able to collect the dmesg with
-> both backends tested, but since decompression fails it's
-> unreadable. With this revert everything is back to normal.
+>> Thinking about it some more, it does not seem locking i_rwsem in
+>> ext4_bmap() is really workable and as I've noted in one of my replies
+>> to this patch [1] it is not a complete solution to the problem anyway.
+>> So I would be for reverting 51ae846cff5 and thinking more about how we
+>> can make inline data locking suck less...
 > 
-> Fixes: e4f0a7ec586b ("pstore: migrate to crypto acomp interface")
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> 
-> ---
-> 
-> Hi Ard, Thorsten and pstore maintainers. I've found this yday
-> during pstore development - it was "hidden" since I was using
-> deflate. Tried some fixes (I plan to submit a cast fix for a
-> long-term issue later), but nothing I tried fixed this.
-> 
-> So, I thought in sending this revert - feel free to ignore it if
-> anybody comes with a proper fix for the async compress interface
-> proposed by Ard. The idea of the revert is because the 6.0-rc
-> cycle is nearly over, and would be nice to avoid introducing
-> this regression.
-> 
-> Also, I searched some mailing list discussions / submission of
-> the patch ("pstore: migrate to crypto acomp interface"), but
-> couldn't find it - can any of you point it to me in case it's
-> in some archive?
-> 
-> Thanks in advance, and sorry for reporting this so late in the
-> cycle, I wish I'd found it before.
+> Any thoughts on the revert? After a cursory glance at 51ae846cff5 this
+> commit merely seems to address a warning...
+
+CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
 Thanks for the report. To be sure below issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
+tracking bot (using the commit id from the stable tree where this occurs
+instead of 51ae846cff5):
 
-#regzbot ^introduced e4f0a7ec586b
-#regzbot title pstore: efi_pstore and ramoops backends are sometimes
-unable to properly decompress dmesg
+#regzbot ^introduced 30dfb75e1f86454
+#regzbot title ext4: system hangs on  Flatcar Container Linux
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
