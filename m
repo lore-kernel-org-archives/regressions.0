@@ -1,56 +1,46 @@
 Received: from premium237-5.web-hosting.com (premium237-5.web-hosting.com [66.29.146.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D63A1104;
-	Fri, 30 Sep 2022 10:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3B8D1FDC
+	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 11:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=sladewatkins.net; s=default; h=To:References:Message-Id:
 	Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
 	Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
 	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=MbUG2nwFZSur9xYNWjWHknIj8DJdh+OxYHZixEvitT0=; b=tabn7kxOq/aYH2/gkIRVSuoi2w
-	DQgpDbEUlRzByXGVGTwJG9TL5yii/uvz1ntEaxx8/0mLjUse7sWfXuypSP+OledxKA4vZ5dchbYMx
-	Vb8LRAeMJfW7/fyZPIpkNNR7RpWA+BWpmOsO8Es9brpx8pqGkiky02ogFUfSinHOZkqHK1iIkDx5E
-	94wr/3cFfTrRbsxNhc8JoDvTMJW+og+UJCjbF0iWUlHErtdd6OhUrYt3qRnNQfnInzVeuiVr7S5WM
-	B685jyt6jvG4e19Y7wCXbBDJuYN2GF6418/LLdzF0j/rok0w1MrCJwL8WnNjEvRlG32X7QjmxinPi
-	wbarR1pg==;
-Received: from pool-108-4-135-94.albyny.fios.verizon.net ([108.4.135.94]:61757 helo=smtpclient.apple)
+	bh=wYwXLKxFel9OtBvaifGAntl+vidc0DAlwXQv8644GeQ=; b=jNPtDuS+sD/QqMTaKWqG71mATu
+	QkIZHjx2ncIrytdvMfWb9UvX0+XhuFgxlf3ocm0nfD9No4xaGjrP/gx3epVPb463TUoPelSCaFo+w
+	GVViad3g4gUITcqcbpwaSgbpP+CYnC7RQRtTgYrh+eZI6LlmfRIajE4Ab1kpVSvpMcHr+L2/kDuQh
+	6LUw5O1M8+ONJhYuHjV+HCMs1u7dZnTFwTyjN+p5886eRxsm2TuvO6ei0aDXXDjS9AgezN3QOBlnM
+	eCTqOfddoVm3aykFvc5gS0dUJuJ8HHqmxY4kJ5zX1YndmdEcN/KjLHxvkllL5PlL0+QmrTw++CELW
+	m+2L8txQ==;
+Received: from pool-108-4-135-94.albyny.fios.verizon.net ([108.4.135.94]:64771 helo=smtpclient.apple)
 	by premium237.web-hosting.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.95)
 	(envelope-from <srw@sladewatkins.net>)
-	id 1oeDPB-0024Xh-5E;
-	Fri, 30 Sep 2022 06:38:05 -0400
+	id 1oeDvN-002WwY-W7;
+	Fri, 30 Sep 2022 07:11:22 -0400
 Content-Type: text/plain;
-	charset=utf-8
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
+Subject: Re: Regression on 5.19.12, display flickering on Framework laptop
 From: Slade Watkins <srw@sladewatkins.net>
-In-Reply-To: <52d93e6c-c6f0-81dd-07ca-cdae13dffba4@gmx.com>
-Date: Fri, 30 Sep 2022 06:37:47 -0400
-Cc: Thorsten Leemhuis <linux@leemhuis.info>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- workflows@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- ksummit@lists.linux.dev
+In-Reply-To: <YzaFq7fzw5TbrJyv@kroah.com>
+Date: Fri, 30 Sep 2022 07:11:19 -0400
+Cc: Jerry Ling <jiling@cern.ch>,
+ stable@vger.kernel.org,
+ regressions@lists.linux.dev
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <93802832-F5DA-45C3-B7DF-451D9086E4B5@sladewatkins.net>
-References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
- <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
- <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
- <20220929130410.hxtmwmoogzkwcey7@meerkat.local>
- <5d15ec50-e0b7-dc90-9060-3583633070e8@leemhuis.info>
- <52d93e6c-c6f0-81dd-07ca-cdae13dffba4@gmx.com>
-To: "Artem S. Tashkinov" <aros@gmx.com>
+Message-Id: <03147889-B21C-449B-B110-7E504C8B0EF4@sladewatkins.net>
+References: <55905860-adf9-312c-69cc-491ac8ce1a8b@cern.ch>
+ <YzZynE2FAMNQKm2E@kroah.com> <YzaFq7fzw5TbrJyv@kroah.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 X-Mailer: Apple Mail (2.3696.120.41.1.1)
 X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
 X-AntiAbuse: Primary Hostname - premium237.web-hosting.com
@@ -64,63 +54,38 @@ X-Source-Args:
 X-Source-Dir: 
 X-From-Rewrite: unmodified, already matched
 
-Hi,
+Hey Greg,
 
-> On Sep 30, 2022, at 5:03 AM, Artem S. Tashkinov <aros@gmx.com> wrote:
-> On 9/30/22 08:47, Thorsten Leemhuis wrote:
->> On 29.09.22 15:04, Konstantin Ryabitsev wrote:
-	[trimmed]
->> Sometimes there are days where I think "let's go down the 'do =
-everything
->> by mail' rabbit hole some more and couple a pastebin and a somewhat
->> improved regzbot with an app (usable both locally and on the web) =
+> On Sep 30, 2022, at 1:59 AM, Greg KH <gregkh@linuxfoundation.org> =
+wrote:
+>=20
+> On Fri, Sep 30, 2022 at 06:37:48AM +0200, Greg KH wrote:
+>> On Thu, Sep 29, 2022 at 10:26:25PM -0400, Jerry Ling wrote:
+>>> Hi,
+>>>=20
+>>> It has been reported by multiple users across a handful of distros =
 that
->> helps users preparing a report they can then send with their usual
->> mailer". And then there are days "ohh, no, that might be a totally
->> stupid thing to do". :-/
->=20
-> Emails are absolutely horrible in terms of keeping track of the state =
-of
-> the issue. Who has replied? Who has provided the necessary data? Where
-> can this data be found? What if a person has forgotten to "Reply All"
-> and instead clicked "Reply"? Hell, no. Then people get swamped with
-> their own emails, the previous email from this discussion went =
-straight
-> to SPAM for my email provider. It's too easy to lose track of =
-everything.
-
-Email deliverability and spam filters are certainly something to =
-consider. (Thanks email providers.)
-
->=20
-> The kernel bugzilla has helped resolve critical issues and add
-> impressive features with dozens of people collaborating. This is =
-nearly
-> impossible to carry out using email except for dedicated developers
-> working on something.
-
-Exactly.
-
+>>> there seems to be regression on Framework laptop (which presumably =
+is not
+>>> that special in terms of mobo and display)
+>>>=20
+>>> Ref: =
+https://community.frame.work/t/psa-dont-upgrade-to-linux-kernel-5-19-12-ar=
+ch1-1-on-arch-linux-gen-11-model/23171
 >>=20
->> we really need to figure out the entire
->> process and pinpoint who is going to be the one in charge of bug =
-reports. If
->> you think that LF should establish a fund for a position like that, =
-then you
->> should probably approach LF fellows (Greg KH, Shuah Khan), who can =
-then talk
->> to LF management. The IT team will be happy to support you with the =
-tooling,
->> but tooling should come second to that -- otherwise we'll just be =
-replacing an
->> old and rusty dumpster on fire with a new and shiny dumpster on fire.
+>> Can anyone do a 'git bisect' to find the offending commit?
 >=20
-> Bugzilla with all its issues is still super convenient.
+> Also, this works for me on a gen 12 framework laptop:
+> 	$ uname -a
+> 	Linux frame 5.19.12 #68 SMP PREEMPT_DYNAMIC Fri Sep 30 07:02:33 =
+CEST 2022 x86_64 GNU/Linux
+>=20
+> so there's something odd with the older hardware?
+>=20
+> greg k-h
 
+Could be. Running git bisect for 5.19.11 and 5.19.12 (as suggested by =
+the linked forum thread) returned nothing on gen 11 for me.
 
-+1, I don=E2=80=99t think the solution longterm is to _not_ have a =
-system like Bugzilla for this reason. Emails can certainly be sent from =
-the system but it should continue existing.
-
--srw
-
+This is very odd,
+-srw=
