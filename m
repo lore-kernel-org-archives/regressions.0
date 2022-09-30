@@ -1,257 +1,101 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
+Received: from CHE01-ZR0-obe.outbound.protection.outlook.com (mail-zr0che01on2078.outbound.protection.outlook.com [40.107.24.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7885A66
-	for <regressions@lists.linux.dev>; Thu, 29 Sep 2022 22:17:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject:
-	Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=yfSBUUb5PlM94Yw5THXJfR90UP8kJeqP7yQgjaw1P8Q=; b=qTLWjVJ2ulKzel6ORRabEzV7H8
-	7aPIIiojQX/MbK7yG9C+F/g3B9gD61Icq3nR2Vx2t9DnD7moFFE+RAz/CvwVhZv5K8SEFg4gT8bhD
-	h548indJgNGkEvTd13o/ZxkYeCdsXOejsFh9nT9fzNDr2kq/tUu3zRu/zIEHdRVlTIG7hkPNYWjFm
-	E78VATyRsONbvQcKd9FyvV+69+c0SsjXbIxlzltbKsdpZy4EUhtg0GCrq49o39e/YyARu7OS/2+5A
-	A5eq4tRX/mYM1PcZy3RZxnyv2di8mvTaVlGHCVmukW72JTdmOtGOxtrJgjq3LrbwplwugZWCBotZx
-	/aWytyVA==;
-Received: from [179.232.144.59] (helo=localhost)
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1oe1VP-00HDq3-7Q; Thu, 29 Sep 2022 23:55:44 +0200
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-To: linux-kernel@vger.kernel.org
-Cc: regressions@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	kernel-dev@igalia.com,
-	kernel@gpiccoli.net,
-	"Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-	Kees Cook <keescook@chromium.org>,
-	Anton Vorontsov <anton@enomsg.org>,
-	Colin Cross <ccross@android.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	Ard Biesheuvel <ardb@kernel.org>
-Subject: [REGRESSION][PATCH] Revert "pstore: migrate to crypto acomp interface"
-Date: Thu, 29 Sep 2022 18:55:15 -0300
-Message-Id: <20220929215515.276486-1-gpiccoli@igalia.com>
-X-Mailer: git-send-email 2.37.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4401363
+	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 02:26:31 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HiyPH9GHAGeRdvx+k/YIpqJu2XY0obLbtRj6ssqBfNZQgRHgXjFbgEEf5wthoDt2iTKTDXpZYJMkx22YmoAeKIy1nPVxShbWCXSTX25Iex/de51LPvGZSLq9h8hQMtXCbh1txOJlVBPvjnnWm9pmYo+nAo5zE3Lh04lnh0ZhuuxommXczMO42hrqtMCZhpdF37UHBglMn5PBmC+hLPZE1Q6ysoO6zQ/QOgdn2t6Ghng3o157kYe9A+yNPgtQP8ZxaG2U0wX9FZTpR38lBigI6nGWysLRGYuiE6xJlxlNPAqPvSAWsHHzuMQl6H6z+uOk0kYzLKTV5MnGl1yovqZMbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Q51M2Q98u0A8JNp2aDlXlcnKTSkLK0VEVR6nPZrnXaI=;
+ b=aRwgQuuYKF9BpvhTqGSQLLFBKp7SK9oFDjAGY9ouBSDpy2WF7mZHDPX0vWsINrDNLoqsfpW9Xl2ToruXPsc+hXeJUh69pIvDtekCCrocuoLMInaDJbQRfiAHczQdr+dN82D2PJGNvJ96z/vK3ooaqnIWvrHSlgueO5uMzP7Pffpa/iYTs73X5mLTwyNsLlAcDyWqXef8icXgGvHcHF7nPPg4ys3JWeFSWWjUJPhUHwTsgYmyWH6csDfQbUl2eDXlbZKg19LCZvjAToyyKW9stjCzzm0m11B7SF4S7ocRdHtk51yq5Ftd8o6suC/3zSOk0C2trUgsyFbuLanDb+wnHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 188.184.36.46) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=cern.ch;
+ dmarc=bestguesspass action=none header.from=cern.ch; dkim=none (message not
+ signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.onmicrosoft.com;
+ s=selector2-cern-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Q51M2Q98u0A8JNp2aDlXlcnKTSkLK0VEVR6nPZrnXaI=;
+ b=S5WktgYxRkj3m5XNTikfJLejRCuIVEySfuA9UadtO4DOgZXSzDvf2O7TjlKzbgSh9dnisFHWJPxAaTjFy38eIypF7cyD+r+7sGFOuKiHEyf5NHjejiXt4TKksMCUL6ZOgC48MfeKd2YyJU7VOwWcBxytIzLaSGwHVZPYJV5zp1Y=
+Received: from AS9PR06CA0483.eurprd06.prod.outlook.com (2603:10a6:20b:49b::8)
+ by ZRAP278MB0048.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:13::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.19; Fri, 30 Sep
+ 2022 02:26:28 +0000
+Received: from AM0EUR02FT040.eop-EUR02.prod.protection.outlook.com
+ (2603:10a6:20b:49b:cafe::65) by AS9PR06CA0483.outlook.office365.com
+ (2603:10a6:20b:49b::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.23 via Frontend
+ Transport; Fri, 30 Sep 2022 02:26:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 188.184.36.46)
+ smtp.mailfrom=cern.ch; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cern.ch;
+Received-SPF: Pass (protection.outlook.com: domain of cern.ch designates
+ 188.184.36.46 as permitted sender) receiver=protection.outlook.com;
+ client-ip=188.184.36.46; helo=cernmxgwlb4.cern.ch; pr=C
+Received: from cernmxgwlb4.cern.ch (188.184.36.46) by
+ AM0EUR02FT040.mail.protection.outlook.com (10.13.54.113) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.5676.17 via Frontend Transport; Fri, 30 Sep 2022 02:26:28 +0000
+Received: from cernfe04.cern.ch (188.184.36.41) by cernmxgwlb4.cern.ch
+ (188.184.36.46) with Microsoft SMTP Server (TLS) id 14.3.498.0; Fri, 30 Sep
+ 2022 04:26:27 +0200
+Received: from [192.168.1.25] (24.61.185.63) by smtp.cern.ch (188.184.36.52)
+ with Microsoft SMTP Server (TLS) id 14.3.498.0; Fri, 30 Sep 2022 04:26:27
+ +0200
+Message-ID: <55905860-adf9-312c-69cc-491ac8ce1a8b@cern.ch>
+Date: Thu, 29 Sep 2022 22:26:25 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Content-Language: en-US
+To: <stable@vger.kernel.org>
+CC: <regressions@lists.linux.dev>
+From: Jerry Ling <jiling@cern.ch>
+Subject: Regression on 5.19.12, display flickering on Framework laptop
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [24.61.185.63]
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0EUR02FT040:EE_|ZRAP278MB0048:EE_
+X-MS-Office365-Filtering-Correlation-Id: f37d3756-fb84-4bac-0bc2-08daa28b2e17
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	WvGOtEYBh3D3F3cQ3TvdclD/RrxygXqp801ngZPDCgqJAGFiguSjnSaZsHfdThlNukNIuC68bhrJXbbjllCaCIVye+Q6KTycI34RvOIwvGg2ZBp7Bq8vQjRc7sPcKVh7YKXcaRBUhP1huCnrYyMKAg+MNr33t0jTmrQ83iosiqFa2TqA8tKHi4eMZJ1sE/uefVkupemRoWTzmOlp5lfcM4mZnCrwV44puipeotBl8HFdu811KTso82MzOuWmbQYORmnPgviCR4Uzcr0urpfVC/HXHW3/GSniZ+9wecCCjzGusEjFmEMe73R5UDkvcm0XaCJGsbGs0bO5b9vRTR+8Wf5pyXiAI93lZIOq9GRQNkm3mimWWBaR+NZpGoWiH+cNndlq+ZW/zMVg0t9RKtHuYbf1IADiUpIJjV0Akq3rRM2RCaVXq5m2+Vyin/oEMNrFV0ITgTMFwfvNAYXASbMPVwtzzzuZ0dApdUItrmGnq/HeeHtvK0bQ0TIVTvEyrh1g0EI/U3smIK8lW9N6iUoUgd1cUGdy2zjK5g3YNOH0ybmoGEdk+aPRlNqFYMr6gDUsxgvwjnb/75Bz1660DpiqaMVuEzZYQ3yZITtktIVh155xUOitrJmT84OQhbufN7umkFHhdkXkFdkUQ9Jh11hOZcsk6eqHrlXb6S9g2gryfdOiRmOmNJJsNiVYerlojWtSTRso1eg/McYEdb2wXfjioVSySsi0S8Uq3VD4WhgJCvjMNg4Xji13GaLORMtXJnJ2XqcTw/Ooh3h1K3bsLKUIKF41zIcEv5kQ1vhQ5XK8bXGD+7uljYlMmhkbpZN2+ry8QjEKye/kLccZfyORVjyZiQ==
+X-Forefront-Antispam-Report:
+	CIP:188.184.36.46;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:cernmxgwlb4.cern.ch;PTR:cernmx13.cern.ch;CAT:NONE;SFS:(13230022)(4636009)(376002)(136003)(346002)(396003)(39860400002)(451199015)(40470700004)(36840700001)(46966006)(36756003)(31686004)(31696002)(36860700001)(83380400001)(2616005)(16526019)(186003)(426003)(956004)(47076005)(82740400003)(356005)(336012)(7636003)(40460700003)(478600001)(966005)(40480700001)(26005)(8676002)(16576012)(6916009)(786003)(316002)(82310400005)(41320700001)(4326008)(41300700001)(5660300002)(4744005)(8936002)(70586007)(70206006)(2906002)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: cern.ch
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2022 02:26:28.0794
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f37d3756-fb84-4bac-0bc2-08daa28b2e17
+X-MS-Exchange-CrossTenant-Id: c80d3499-4a40-4a8c-986e-abce017d6b19
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=c80d3499-4a40-4a8c-986e-abce017d6b19;Ip=[188.184.36.46];Helo=[cernmxgwlb4.cern.ch]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM0EUR02FT040.eop-EUR02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZRAP278MB0048
 
-This reverts commit e4f0a7ec586b7644107839f5394fb685cf1aadcc.
+Hi,
 
-When using this new interface, both efi_pstore and ramoops
-backends are unable to properly decompress dmesg if using
-zstd, lz4 and lzo algorithms (and maybe more). It does succeed
-with deflate though.
+It has been reported by multiple users across a handful of distros that 
+there seems to be regression on Framework laptop (which presumably is 
+not that special in terms of mobo and display)
 
-The message observed in the kernel log is:
+Ref: 
+https://community.frame.work/t/psa-dont-upgrade-to-linux-kernel-5-19-12-arch1-1-on-arch-linux-gen-11-model/23171
 
-[2.328828] pstore: crypto_acomp_decompress failed, ret = -22!
-
-The pstore infrastructure is able to collect the dmesg with
-both backends tested, but since decompression fails it's
-unreadable. With this revert everything is back to normal.
-
-Fixes: e4f0a7ec586b ("pstore: migrate to crypto acomp interface")
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-
----
-
-Hi Ard, Thorsten and pstore maintainers. I've found this yday
-during pstore development - it was "hidden" since I was using
-deflate. Tried some fixes (I plan to submit a cast fix for a
-long-term issue later), but nothing I tried fixed this.
-
-So, I thought in sending this revert - feel free to ignore it if
-anybody comes with a proper fix for the async compress interface
-proposed by Ard. The idea of the revert is because the 6.0-rc
-cycle is nearly over, and would be nice to avoid introducing
-this regression.
-
-Also, I searched some mailing list discussions / submission of
-the patch ("pstore: migrate to crypto acomp interface"), but
-couldn't find it - can any of you point it to me in case it's
-in some archive?
-
-Thanks in advance, and sorry for reporting this so late in the
-cycle, I wish I'd found it before.
 Cheers,
 
-
-Guilherme
-
-
- fs/pstore/platform.c | 63 +++++++++-----------------------------------
- 1 file changed, 12 insertions(+), 51 deletions(-)
-
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index b2fd3c20e7c2..0c034ea39954 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -28,14 +28,11 @@
- #include <linux/crypto.h>
- #include <linux/string.h>
- #include <linux/timer.h>
--#include <linux/scatterlist.h>
- #include <linux/slab.h>
- #include <linux/uaccess.h>
- #include <linux/jiffies.h>
- #include <linux/workqueue.h>
- 
--#include <crypto/acompress.h>
--
- #include "internal.h"
- 
- /*
-@@ -93,8 +90,7 @@ module_param(compress, charp, 0444);
- MODULE_PARM_DESC(compress, "compression to use");
- 
- /* Compression parameters */
--static struct crypto_acomp *tfm;
--static struct acomp_req *creq;
-+static struct crypto_comp *tfm;
- 
- struct pstore_zbackend {
- 	int (*zbufsize)(size_t size);
-@@ -272,21 +268,12 @@ static const struct pstore_zbackend zbackends[] = {
- static int pstore_compress(const void *in, void *out,
- 			   unsigned int inlen, unsigned int outlen)
- {
--	struct scatterlist src, dst;
- 	int ret;
- 
- 	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS))
- 		return -EINVAL;
- 
--	sg_init_table(&src, 1);
--	sg_set_buf(&src, in, inlen);
--
--	sg_init_table(&dst, 1);
--	sg_set_buf(&dst, out, outlen);
--
--	acomp_request_set_params(creq, &src, &dst, inlen, outlen);
--
--	ret = crypto_acomp_compress(creq);
-+	ret = crypto_comp_compress(tfm, in, inlen, out, &outlen);
- 	if (ret) {
- 		pr_err("crypto_comp_compress failed, ret = %d!\n", ret);
- 		return ret;
-@@ -297,7 +284,7 @@ static int pstore_compress(const void *in, void *out,
- 
- static void allocate_buf_for_compression(void)
- {
--	struct crypto_acomp *acomp;
-+	struct crypto_comp *ctx;
- 	int size;
- 	char *buf;
- 
-@@ -309,7 +296,7 @@ static void allocate_buf_for_compression(void)
- 	if (!psinfo || tfm)
- 		return;
- 
--	if (!crypto_has_acomp(zbackend->name, 0, CRYPTO_ALG_ASYNC)) {
-+	if (!crypto_has_comp(zbackend->name, 0, 0)) {
- 		pr_err("Unknown compression: %s\n", zbackend->name);
- 		return;
- 	}
-@@ -328,24 +315,16 @@ static void allocate_buf_for_compression(void)
- 		return;
- 	}
- 
--	acomp = crypto_alloc_acomp(zbackend->name, 0, CRYPTO_ALG_ASYNC);
--	if (IS_ERR_OR_NULL(acomp)) {
-+	ctx = crypto_alloc_comp(zbackend->name, 0, 0);
-+	if (IS_ERR_OR_NULL(ctx)) {
- 		kfree(buf);
- 		pr_err("crypto_alloc_comp('%s') failed: %ld\n", zbackend->name,
--		       PTR_ERR(acomp));
--		return;
--	}
--
--	creq = acomp_request_alloc(acomp);
--	if (!creq) {
--		crypto_free_acomp(acomp);
--		kfree(buf);
--		pr_err("acomp_request_alloc('%s') failed\n", zbackend->name);
-+		       PTR_ERR(ctx));
- 		return;
- 	}
- 
- 	/* A non-NULL big_oops_buf indicates compression is available. */
--	tfm = acomp;
-+	tfm = ctx;
- 	big_oops_buf_sz = size;
- 	big_oops_buf = buf;
- 
-@@ -355,8 +334,7 @@ static void allocate_buf_for_compression(void)
- static void free_buf_for_compression(void)
- {
- 	if (IS_ENABLED(CONFIG_PSTORE_COMPRESS) && tfm) {
--		acomp_request_free(creq);
--		crypto_free_acomp(tfm);
-+		crypto_free_comp(tfm);
- 		tfm = NULL;
- 	}
- 	kfree(big_oops_buf);
-@@ -693,8 +671,6 @@ static void decompress_record(struct pstore_record *record)
- 	int ret;
- 	int unzipped_len;
- 	char *unzipped, *workspace;
--	struct acomp_req *dreq;
--	struct scatterlist src, dst;
- 
- 	if (!IS_ENABLED(CONFIG_PSTORE_COMPRESS) || !record->compressed)
- 		return;
-@@ -718,30 +694,16 @@ static void decompress_record(struct pstore_record *record)
- 	if (!workspace)
- 		return;
- 
--	dreq = acomp_request_alloc(tfm);
--	if (!dreq) {
--		kfree(workspace);
--		return;
--	}
--
--	sg_init_table(&src, 1);
--	sg_set_buf(&src, record->buf, record->size);
--
--	sg_init_table(&dst, 1);
--	sg_set_buf(&dst, workspace, unzipped_len);
--
--	acomp_request_set_params(dreq, &src, &dst, record->size, unzipped_len);
--
- 	/* After decompression "unzipped_len" is almost certainly smaller. */
--	ret = crypto_acomp_decompress(dreq);
-+	ret = crypto_comp_decompress(tfm, record->buf, record->size,
-+					  workspace, &unzipped_len);
- 	if (ret) {
--		pr_err("crypto_acomp_decompress failed, ret = %d!\n", ret);
-+		pr_err("crypto_comp_decompress failed, ret = %d!\n", ret);
- 		kfree(workspace);
- 		return;
- 	}
- 
- 	/* Append ECC notice to decompressed buffer. */
--	unzipped_len = dreq->dlen;
- 	memcpy(workspace + unzipped_len, record->buf + record->size,
- 	       record->ecc_notice_size);
- 
-@@ -749,7 +711,6 @@ static void decompress_record(struct pstore_record *record)
- 	unzipped = kmemdup(workspace, unzipped_len + record->ecc_notice_size,
- 			   GFP_KERNEL);
- 	kfree(workspace);
--	acomp_request_free(dreq);
- 	if (!unzipped)
- 		return;
- 
--- 
-2.37.3
+Jerry
 
