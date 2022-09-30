@@ -1,118 +1,86 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C772B5A7C;
-	Fri, 30 Sep 2022 16:36:58 +0000 (UTC)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id E566747C;
-	Fri, 30 Sep 2022 18:36:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1664555816;
-	bh=tJCNisYnY6Ts5vkPZuOKe/LAPTUkvOYYFBovVF11zsc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Fgs48i+bO9l+BaBL0ZNmaiPmmxtYVktRK4/E0ddEoEa0JJboMYb3IqwczMF+B94+u
-	 HIoPH6Gt2QvXEY93hGLl4RNtRy5BCVegcudipZMG2V9OvM/MjVGIB0IgDogdAJGMZ/
-	 owVnvh6vpcCJ6Wq4W/oEfhsdQPu5czOsfmuixh3k=
-Date: Fri, 30 Sep 2022 19:36:54 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: "Bird, Tim" <Tim.Bird@sony.com>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>,
-	Slade Watkins <srw@sladewatkins.net>,
-	"Artem S. Tashkinov" <aros@gmx.com>,
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-	"workflows@vger.kernel.org" <workflows@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"ksummit@lists.linux.dev" <ksummit@lists.linux.dev>
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-Message-ID: <YzcbJsC9QfY/B8IZ@pendragon.ideasonboard.com>
-References: <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
- <20220929130410.hxtmwmoogzkwcey7@meerkat.local>
- <7b427b41-9446-063d-3161-e43eb2e353f9@gmx.com>
- <20220929135325.4riz4ijva2vc7q5p@meerkat.local>
- <95c3384b-53d0-fd6c-6ec5-a7e03fdeddfc@gmx.com>
- <F300ED64-5E8E-4060-89DC-C98BC5FF08E6@sladewatkins.net>
- <YzXK6Px+BrNuuMZH@pendragon.ideasonboard.com>
- <a86adc6d-05db-ec2e-c5de-d280aad9fb8a@leemhuis.info>
- <Yzbtuz6L1jlDCf9/@pendragon.ideasonboard.com>
- <BYAPR13MB250377AAFCC43AC34E244795FD569@BYAPR13MB2503.namprd13.prod.outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365C05A7C
+	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 16:41:20 +0000 (UTC)
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-13189cd5789so6061029fac.11
+        for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 09:41:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=vB5Cit1qlgwA4leXT66n18iypc7LDJDE0w8r4rLqzqc=;
+        b=VIrCOVi4X9YFy445rGJ4l2kgquwicILGfEndEovWbO5N4Lawl7mduwunTPdmsyfX5i
+         r5hd9dv7V+oaqTXGtLzEloU9J93ZTRQGQCA/kscKzZbt51fH0WDfnZwKecW2bA6TMzj8
+         orAGCNF6lve9To/lY0galgrf/5siuzYULgA9I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=vB5Cit1qlgwA4leXT66n18iypc7LDJDE0w8r4rLqzqc=;
+        b=SdpAruU/ZjqMd5zLGSFLJS/eOsX0SsQUSM93+qTVjhpE7ZDCuGbWbnW0BhnV/6Ddyx
+         cjnZTIUipZid4KMttoSfmYxKyfqloxQ7V994739tzTO6F/ZpXOWtATHJWq/a5WMMDNpJ
+         isSd3B111Zf1E3AAQSJv0vCqcmtX85prFrB93tyzbLD9HeMnJvuvR/GwZBdxJXQTgavT
+         yR/+Sx+ncG9uER/NWD9L5RHrjpmu4ODRfvhlBe3TK0DD4tDNSmVVPA0OA7fN+yqBeR85
+         HPoKEGjfRcLC0Dg5sT7YZPpO3GZZ2oYnIVogllFZ18Aas1zKVRRjUJsjBcKjw49YOrE8
+         pruw==
+X-Gm-Message-State: ACrzQf1pIZ3w2PvOy2XixTak0WaDFOTcWdL9K33ERC2ZwV/LmGn+AnM7
+	1rrT0YZLQQMdDgmX+yx3wx5/Xc050GYJVA==
+X-Google-Smtp-Source: AMsMyM4ARzakEWezEJOdqsEuTDyHZp16/hpTSmlAXHC7iiKUInLKOm8vrFoh4pKpDUnZFAVYt0xRMg==
+X-Received: by 2002:a05:6870:524a:b0:131:a017:3156 with SMTP id o10-20020a056870524a00b00131a0173156mr5068075oai.243.1664556078853;
+        Fri, 30 Sep 2022 09:41:18 -0700 (PDT)
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com. [209.85.160.49])
+        by smtp.gmail.com with ESMTPSA id s37-20020a0568302aa500b00636a8dafdc9sm673204otu.2.2022.09.30.09.41.18
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 30 Sep 2022 09:41:18 -0700 (PDT)
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-131fd187e35so2355995fac.7
+        for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 09:41:18 -0700 (PDT)
+X-Received: by 2002:a05:6870:c0c9:b0:127:c4df:5b50 with SMTP id
+ e9-20020a056870c0c900b00127c4df5b50mr5239613oad.126.1664556077774; Fri, 30
+ Sep 2022 09:41:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BYAPR13MB250377AAFCC43AC34E244795FD569@BYAPR13MB2503.namprd13.prod.outlook.com>
+References: <d78137ce-f6d0-e8d9-9248-2ec84b502b72@leemhuis.info>
+In-Reply-To: <d78137ce-f6d0-e8d9-9248-2ec84b502b72@leemhuis.info>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Fri, 30 Sep 2022 09:41:01 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wg233O80=VWhk+DQet=oqq7cxzwoZVFgbCmCJ_TQQ+Y7A@mail.gmail.com>
+Message-ID: <CAHk-=wg233O80=VWhk+DQet=oqq7cxzwoZVFgbCmCJ_TQQ+Y7A@mail.gmail.com>
+Subject: Re: Manual Linux regressions report for mainline [2022-09-30]
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Sep 30, 2022 at 04:19:56PM +0000, Bird, Tim wrote:
-> > -----Original Message-----
-> > From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > 
-> > Hi Thorsten,
-> > 
-> > On Fri, Sep 30, 2022 at 11:35:16AM +0200, Thorsten Leemhuis wrote:
-> > > On 29.09.22 18:42, Laurent Pinchart wrote:
-> > > > On Thu, Sep 29, 2022 at 10:54:17AM -0400, Slade Watkins wrote:
-> > > >>> On Sep 29, 2022, at 10:22 AM, Artem S. Tashkinov <aros@gmx.com> wrote:
-> > > >>>
-> > > >>> I've mentioned several times already that mailing lists are _even worse_
-> > > >>> in terms of reporting issues. Developers get emails and simply ignore
-> > > >>> them (for a multitude of reasons).
-> > > >>
-> > > >> It’s 100% true that emails get _buried_ as waves of them come in (LKML
-> > > >> itself gets hundreds upon hundreds a day, as I’m sure all of you know)
-> > > >> and it just isn’t something I personally see as viable, especially for
-> > > >> issues that may or may not be high priority.
-> > > >
-> > > > E-mails are not that bad to report issues, but they can't provide the
-> > > > core feature that any bug tracker oughts to have: tracking. There's no
-> > > > way, with the tools we have at the moment (including public-inbox, b4
-> > > > and lei), to track the status of bug reports and fixes.
-> > >
-> > > Well, I'd disagree partially with that, as my regression tracking bot
-> > > "regzbot"
-> > > (https://urldefense.com/v3/__https://gitlab.com/knurd42/regzbot/-
-> > /blob/main/docs/getting_started.md__;!!JmoZiZGBv3RvKRSx!7f8O2QaGyWgxASwg1_bxsV53uWPINzzBa_MLMZMooa6qL6jdk8ZBVYrB_
-> > mypjw0H3yv5IPdNJ2qQThzMLKbrOUQMFMO1x2V2$
-> > > ; https://urldefense.com/v3/__https://linux-
-> > regtracking.leemhuis.info/regzbot/mainline/__;!!JmoZiZGBv3RvKRSx!7f8O2QaGyWgxASwg1_bxsV53uWPINzzBa_MLMZMooa6qL6jdk8Z
-> > BVYrB_mypjw0H3yv5IPdNJ2qQThzMLKbrOUQMFKROzSJY$  ) does
-> > > exactly does that: tracking, by connect the dots (e.g. monitoring
-> > > replies to a report as well recording when patches are posted or
-> > > committed that link to the report using Link: tags), while making sure
-> > > nothing important is forgotten. But sure, it's still very rough and
-> > > definitely not a full bug-tracker (my goal is/was to not create yet
-> > > another one) and needs quite a bit of hand holding from my side. And I
-> > > only use it for regressions and not for bugs (on purpose).
-> > 
-> > Patchwork does something similar for patches, and I agree that it would
-> > be possible to use e-mail to manage and track bug reports with tools on
-> > top (and don't worry, I'm not asking for regzbot to be turned into a bug
-> > tracker :-)). It however has to rely on lots of heuristics at the
-> > moment, as the data we exchange over e-mail is free-formed and lacks
-> > structure. I've been dreaming of support for structured data in e-mails,
-> > but that's a pipe dream really.
-> 
-> E-mails sent from a web interface could have as much structure as you'd like.
-> So one avenue would be to set up a nice interface for bug reporting, that just
-> delivered the form data in e-mail format to the proposed bug-receiving mail list.
-> 
-> Also, if an e-mail receiver (something automated) gave a quick response on missing fields, I think
-> you could quickly train users (even first-time bug submitters) to provide required
-> data, even if they're sending from a free-form e-mail client.
+On Fri, Sep 30, 2022 at 4:44 AM Thorsten Leemhuis
+<regressions@leemhuis.info> wrote:
+>
+> Graphical issues on Lenovo Yoga 7 14ARB7 laptop since v6.0-rc1
+> --------------------------------------------------------------
+> https://lore.kernel.org/lkml/c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se/
+>
+> Unlikely to hit many people afaics. A fix is posted and somewhat
+> reviewed, but not yet merged by the maintainers afaics:
+> https://lore.kernel.org/amd-gfx/20220928172726.128863-1-sunpeng.li@amd.com/
 
-In my dream, we could even teach some mail clients to do so. There's a
-bit of chicken and egg issue of course, but if the form data is in a
-human-writable form, it may be possible to start on the server side
-first, and then address clients.
+Actually, it's already in my tree because it came in with the drm
+fixes pull this morning.
 
--- 
-Regards,
+> efi_pstore and ramoops backends are unable to properly decompress dmesg
+> sometimes
+> -----------------------------------------------------------------------
+> https://lore.kernel.org/all/20220929215515.276486-1-gpiccoli@igalia.com/
+>
+> Reported in the past 24 hours, includes a revert. Kees wasn't able to
+> reproduce the problem. Guess developers will look into this today.
 
-Laurent Pinchart
+The revert also made it to me this morning, so that people can look
+into it after 6.0.
+
+The others are still open.
+
+                   Linus
