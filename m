@@ -1,86 +1,93 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 365C05A7C
-	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 16:41:20 +0000 (UTC)
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-13189cd5789so6061029fac.11
-        for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 09:41:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=vB5Cit1qlgwA4leXT66n18iypc7LDJDE0w8r4rLqzqc=;
-        b=VIrCOVi4X9YFy445rGJ4l2kgquwicILGfEndEovWbO5N4Lawl7mduwunTPdmsyfX5i
-         r5hd9dv7V+oaqTXGtLzEloU9J93ZTRQGQCA/kscKzZbt51fH0WDfnZwKecW2bA6TMzj8
-         orAGCNF6lve9To/lY0galgrf/5siuzYULgA9I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=vB5Cit1qlgwA4leXT66n18iypc7LDJDE0w8r4rLqzqc=;
-        b=SdpAruU/ZjqMd5zLGSFLJS/eOsX0SsQUSM93+qTVjhpE7ZDCuGbWbnW0BhnV/6Ddyx
-         cjnZTIUipZid4KMttoSfmYxKyfqloxQ7V994739tzTO6F/ZpXOWtATHJWq/a5WMMDNpJ
-         isSd3B111Zf1E3AAQSJv0vCqcmtX85prFrB93tyzbLD9HeMnJvuvR/GwZBdxJXQTgavT
-         yR/+Sx+ncG9uER/NWD9L5RHrjpmu4ODRfvhlBe3TK0DD4tDNSmVVPA0OA7fN+yqBeR85
-         HPoKEGjfRcLC0Dg5sT7YZPpO3GZZ2oYnIVogllFZ18Aas1zKVRRjUJsjBcKjw49YOrE8
-         pruw==
-X-Gm-Message-State: ACrzQf1pIZ3w2PvOy2XixTak0WaDFOTcWdL9K33ERC2ZwV/LmGn+AnM7
-	1rrT0YZLQQMdDgmX+yx3wx5/Xc050GYJVA==
-X-Google-Smtp-Source: AMsMyM4ARzakEWezEJOdqsEuTDyHZp16/hpTSmlAXHC7iiKUInLKOm8vrFoh4pKpDUnZFAVYt0xRMg==
-X-Received: by 2002:a05:6870:524a:b0:131:a017:3156 with SMTP id o10-20020a056870524a00b00131a0173156mr5068075oai.243.1664556078853;
-        Fri, 30 Sep 2022 09:41:18 -0700 (PDT)
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com. [209.85.160.49])
-        by smtp.gmail.com with ESMTPSA id s37-20020a0568302aa500b00636a8dafdc9sm673204otu.2.2022.09.30.09.41.18
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Sep 2022 09:41:18 -0700 (PDT)
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-131fd187e35so2355995fac.7
-        for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 09:41:18 -0700 (PDT)
-X-Received: by 2002:a05:6870:c0c9:b0:127:c4df:5b50 with SMTP id
- e9-20020a056870c0c900b00127c4df5b50mr5239613oad.126.1664556077774; Fri, 30
- Sep 2022 09:41:17 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C13445A7C;
+	Fri, 30 Sep 2022 16:47:29 +0000 (UTC)
+Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5723247C;
+	Fri, 30 Sep 2022 18:47:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1664556447;
+	bh=J8D/Bn7Wpr/IjvMKlhrSxs1NNupaYj+LgM6dPb2NuX4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sdq6NxCDkbMg7Cl2rrYvx+omB+MnCQpnj5ag1p5guCzcn9X9kpfIcMxtL2wkR2DbP
+	 aEEtsGWZyU+VjjgtHK1hV4SIuNyPkLc0EcVx7kdp9VtOojItigKVZDbEL7gWuxb66s
+	 GpqkKuQRe2WcqLYnWufhjzy0S01zyG+QY8JPhRuA=
+Date: Fri, 30 Sep 2022 19:47:26 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: "Artem S. Tashkinov" <aros@gmx.com>
+Cc: "Bird, Tim" <Tim.Bird@sony.com>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	Slade Watkins <srw@sladewatkins.net>,
+	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+	"workflows@vger.kernel.org" <workflows@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"ksummit@lists.linux.dev" <ksummit@lists.linux.dev>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+Message-ID: <YzcdnnjJA4M09dNH@pendragon.ideasonboard.com>
+References: <20220929130410.hxtmwmoogzkwcey7@meerkat.local>
+ <7b427b41-9446-063d-3161-e43eb2e353f9@gmx.com>
+ <20220929135325.4riz4ijva2vc7q5p@meerkat.local>
+ <95c3384b-53d0-fd6c-6ec5-a7e03fdeddfc@gmx.com>
+ <F300ED64-5E8E-4060-89DC-C98BC5FF08E6@sladewatkins.net>
+ <YzXK6Px+BrNuuMZH@pendragon.ideasonboard.com>
+ <a86adc6d-05db-ec2e-c5de-d280aad9fb8a@leemhuis.info>
+ <Yzbtuz6L1jlDCf9/@pendragon.ideasonboard.com>
+ <BYAPR13MB250377AAFCC43AC34E244795FD569@BYAPR13MB2503.namprd13.prod.outlook.com>
+ <3cfaef48-744f-000f-1be5-6f96d64dea24@gmx.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <d78137ce-f6d0-e8d9-9248-2ec84b502b72@leemhuis.info>
-In-Reply-To: <d78137ce-f6d0-e8d9-9248-2ec84b502b72@leemhuis.info>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 30 Sep 2022 09:41:01 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg233O80=VWhk+DQet=oqq7cxzwoZVFgbCmCJ_TQQ+Y7A@mail.gmail.com>
-Message-ID: <CAHk-=wg233O80=VWhk+DQet=oqq7cxzwoZVFgbCmCJ_TQQ+Y7A@mail.gmail.com>
-Subject: Re: Manual Linux regressions report for mainline [2022-09-30]
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3cfaef48-744f-000f-1be5-6f96d64dea24@gmx.com>
 
-On Fri, Sep 30, 2022 at 4:44 AM Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> Graphical issues on Lenovo Yoga 7 14ARB7 laptop since v6.0-rc1
-> --------------------------------------------------------------
-> https://lore.kernel.org/lkml/c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se/
->
-> Unlikely to hit many people afaics. A fix is posted and somewhat
-> reviewed, but not yet merged by the maintainers afaics:
-> https://lore.kernel.org/amd-gfx/20220928172726.128863-1-sunpeng.li@amd.com/
+On Fri, Sep 30, 2022 at 04:34:08PM +0000, Artem S. Tashkinov wrote:
+> On 9/30/22 16:19, Bird, Tim wrote:
+> > E-mails sent from a web interface could have as much structure as you'd like.
+> > So one avenue would be to set up a nice interface for bug reporting, that just
+> > delivered the form data in e-mail format to the proposed bug-receiving mail list.
+> >
+> > Also, if an e-mail receiver (something automated) gave a quick response on missing fields, I think
+> > you could quickly train users (even first-time bug submitters) to provide required
+> > data, even if they're sending from a free-form e-mail client.
+> >
+> > Just my 2 cents.
+> >
+> >   -- Tim
+> 
+> Debian uses an email based bug tracker and you know what? Most people
+> avoid it like a plague. It's a hell on earth to use. Ubunutu's Launchpad
+> which looks and feels like Bugzilla is a hundred times more popular.
 
-Actually, it's already in my tree because it came in with the drm
-fixes pull this morning.
+It would be pretty sad if the only options we could come up with for bug
+tracking would be either popular with reporters and ignored by
+maintainers, or the other way around. Ideally we wouldn't have to decide
+which of those two classes of users to prioritize, but I fear that,
+given resource starvation, we'll have to make a decision there that will
+be unpopular with one of the two sides.
 
-> efi_pstore and ramoops backends are unable to properly decompress dmesg
-> sometimes
-> -----------------------------------------------------------------------
-> https://lore.kernel.org/all/20220929215515.276486-1-gpiccoli@igalia.com/
->
-> Reported in the past 24 hours, includes a revert. Kees wasn't able to
-> reproduce the problem. Guess developers will look into this today.
+> Sometimes programmers have to realize that most people around are not as
+> smart as they are.
 
-The revert also made it to me this morning, so that people can look
-into it after 6.0.
+I wouldn't equate familiarity with classes of tools (and related usage
+habbits) and intelligence. Some tools may be easier to learn and use,
+but it doesn't mean they're good for the problem at hand. I used to joke
+several years ago that the younger generation will force older
+maintainers to switch to doing code review on facebook (nowadays I would
+probably say tik-tok). And then
+https://github.blog/2021-05-13-video-uploads-available-github/ happened.
+And that https://www.videocode.review/ (meanwhile, git..b still don't
+support commenting on a commit message in a review).
 
-The others are still open.
+-- 
+Regards,
 
-                   Linus
+Laurent Pinchart
