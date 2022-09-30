@@ -1,158 +1,122 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2E74C6C;
-	Fri, 30 Sep 2022 15:32:06 +0000 (UTC)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 48FB647C;
-	Fri, 30 Sep 2022 17:32:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1664551922;
-	bh=mTuLYwADIeUGmGPOf0wEJTbdd0piiIq2iVXXQcEBpzg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=owlFLKksPQPXE3tX6XlEFkn0KHVB8N63xkjxLNBIl8QWyvS2Nsl+ilDWTbH6+I88+
-	 oRn0nKgb/yy1CWQ6EbE6Qh8gnqy4U8PYrWsDu4/2o/a/ayIUMkqqIhU7aH9m1MrrbM
-	 /0uyyrkVubXYXBH7y3YUkPGbYA18/nLBbYKJopOQ=
-Date: Fri, 30 Sep 2022 18:32:01 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: "Artem S. Tashkinov" <aros@gmx.com>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>,
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-	workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	ksummit@lists.linux.dev
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-Message-ID: <YzcL8VLpk00hC1so@pendragon.ideasonboard.com>
-References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
- <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
- <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
- <20220929130410.hxtmwmoogzkwcey7@meerkat.local>
- <5d15ec50-e0b7-dc90-9060-3583633070e8@leemhuis.info>
- <52d93e6c-c6f0-81dd-07ca-cdae13dffba4@gmx.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0B45A66
+	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 15:51:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CEF0C433D7
+	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 15:51:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1664553112;
+	bh=+eWM1THqIFbDHvQBPZTD+XciSZi/CQ/ZVgSibLCd7ko=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=so45NCRMIE4QgV4ZCL4L4VlMEGerkP4QbeRWVX5KOOGMGXBq1A+4EszKbB2VmuVfK
+	 GeJkKjEoTedBnESqkYloFdauwJJoolLNwntjO8k/xSX/m9bm6H6Zog16AHMbeBtBAZ
+	 ah4S7DGCs9rEWaenV/whcxtMmGiYpNhdEtWHogstDSYZHajrJWXBmxAQurl7gfUAZn
+	 AMf8HieAJSWbv5bnDoPLZtdYBuHk/nHK6RmALsowJgHcbiZumj+2X0mSbLybJJsFnW
+	 28sULD+YMapqS+rVb2Zuh6NnGH5KR/WUqpb1DgloE76lhzESNrQ2yDcxgAuaHmcmZa
+	 P2KXb3mQ68bww==
+Received: by mail-lf1-f45.google.com with SMTP id q14so774217lfo.11
+        for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 08:51:52 -0700 (PDT)
+X-Gm-Message-State: ACrzQf3V41fwM064z3tHCVTiGkdj98alS4FLrTtpjE82FJ0R57zm9MjF
+	Zw0r2cVIr+nQ270BHsF0kBDtilBKnyUtkQwoXAc=
+X-Google-Smtp-Source: AMsMyM4SRDdFD24WhA+SrN055GBOZGydhG6rT6py5SeVyiHZPpLiTS4D8qNvENQaXOpsAsr9k6rT9RsYZvqUl0zi1x4=
+X-Received: by 2002:a05:6512:150e:b0:492:d9fd:9bdf with SMTP id
+ bq14-20020a056512150e00b00492d9fd9bdfmr3382854lfb.583.1664553110088; Fri, 30
+ Sep 2022 08:51:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <52d93e6c-c6f0-81dd-07ca-cdae13dffba4@gmx.com>
+References: <20220929215515.276486-1-gpiccoli@igalia.com> <202209291951.134BE2409@keescook>
+ <56d85c70-80f6-aa73-ab10-20474244c7d7@igalia.com>
+In-Reply-To: <56d85c70-80f6-aa73-ab10-20474244c7d7@igalia.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Fri, 30 Sep 2022 17:51:38 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFnoqj+cn-0dT8fg0kgLvVx+Q2Ex-4CUjSnA9yRprmC-w@mail.gmail.com>
+Message-ID: <CAMj1kXFnoqj+cn-0dT8fg0kgLvVx+Q2Ex-4CUjSnA9yRprmC-w@mail.gmail.com>
+Subject: Re: [REGRESSION][PATCH] Revert "pstore: migrate to crypto acomp interface"
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Kees Cook <keescook@chromium.org>, linux-kernel@vger.kernel.org, 
+	regressions@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+	kernel-dev@igalia.com, kernel@gpiccoli.net, 
+	Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, 
+	Thorsten Leemhuis <linux@leemhuis.info>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Sep 30, 2022 at 09:03:39AM +0000, Artem S. Tashkinov wrote:
-> On 9/30/22 08:47, Thorsten Leemhuis wrote:
-> > On 29.09.22 15:04, Konstantin Ryabitsev wrote:
-> >> On Thu, Sep 29, 2022 at 12:22:35PM +0000, Artem S. Tashkinov wrote:
-> >> [...]
-> >> We do have ability to fund development efforts -- LF has been the primary
-> >> sponsor behind public-inbox.org over the past 3 years. However, there must be
-> >> a clear, strong, and well-articulated mandate from the community. From what I
-> >> heard, the vast majority of maintainers simply want a web form that would
-> >> allow someone to:
-> >>
-> >> 1. clearly state what kernel version they are using
-> >> 2. clearly describe what they were trying to do
-> >> 3. explain what they expected vs. what they got
-> >> 4. attach any files
-> >> 5. give this bug report a unique identifier
+On Fri, 30 Sept 2022 at 14:39, Guilherme G. Piccoli <gpiccoli@igalia.com> wrote:
+>
+> On 30/09/2022 00:29, Kees Cook wrote:
+> > [...]
 > >
-> > Sometimes there are days where I think "let's go down the 'do everything
-> > by mail' rabbit hole some more and couple a pastebin and a somewhat
-> > improved regzbot with an app (usable both locally and on the web) that
-> > helps users preparing a report they can then send with their usual
-> > mailer". And then there are days "ohh, no, that might be a totally
-> > stupid thing to do". :-/
-> 
-> Emails are absolutely horrible in terms of keeping track of the state of
-> the issue. Who has replied? Who has provided the necessary data? Where
-> can this data be found? What if a person has forgotten to "Reply All"
-> and instead clicked "Reply"?
+> > Hi!
+> >
+> > Thanks for looking at this. I wasn't able to reproduce the problem,
+> > initially. Booting with pstore.backend=ramoops pstore.compress=zstd and
+> > writing to /dev/pmsg0, after a reboot I'm able to read it back.
+> >
+>
+> Hi Kees, thanks a lot for your attention!
+> IIUC, compression applies to dmesg only, correct?
+>
+>
+> > [...]
+> > What's your setup for this? I'm using emulated NVDIMM through qemu for
+> > a ramoops backend. But trying this with the EFI backend (booting
+> > undef EFI with pstore.backend=efi), I _do_ see the problem. That's
+> > weird... I suspect there's some back interaction with buffer size
+> > differences between ramoops and EFI & deflate and zstd.
+> >
+> > And I can confirm EFI+zstd with the acomp change reverted fixes it.
+> >
+>
+> I'm using qemu but was able to use real HW (Steam Deck). In both cases,
+> kernel is not using the entire RAM ("mem=" parameter, for example) so we
+> can use a bit for ramoops. Also, both setups are UEFI, hence I can also
+> use efi_pstore.
+>
 
-E-mail *clients* are horrible to keep track of state. E-mail itself, as
-in RFC822 (and newer), SMTP and other protocols, only handle transport
-of data. As the data within the e-mail body is free-formed, and wasn't
-meant to track items and their state, clients never evolved in that
-direction. This could (possibly) be (partially) fixed, but likely at a
-very high development cost, and getting users on board would be very
-hard too. I do agree with Thorsten though, I'm often tempted to go
-through the "let's do everything by e-mail" path. More than 10 years
-ago, I worked for a large OEM that had an e-mail frontend for
-integration and testing. You would send a specially-crafted e-mail to a
-bot, with a base image version, plus a list of repositories and
-branches, and the bot would build a new image for you, run all the
-automated integration tests, and if you requested it (and had permission
-to do so), would push the image down a manual testing queue. It was just
-magic.
+Does this help?
 
-> Hell, no. Then people get swamped with their own emails,
+diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
+index b2fd3c20e7c2..c0b609d7d04e 100644
+--- a/fs/pstore/platform.c
++++ b/fs/pstore/platform.c
+@@ -292,7 +292,7 @@ static int pstore_compress(const void *in, void *out,
+                return ret;
+        }
 
-Bugzilla won't solve this. The huge elephant in the room is that most
-maintainers are overworked. Whether a bug report arrives in my mailbox
-as an e-mail straight from the reporter or from a bug tracker will make
-very little difference if I don't have time to look into it (I would
-even argue that bug trackers are even worse there: if I'm really short
-of time, I'm more likely to prioritize replying to e-mails instead of
-having to open a link in a web browser).
+-       return outlen;
++       return creq->dlen;
+ }
 
-As long as we don't address the maintainer bottleneck in the kernel, bug
-tracking will suffer.
+ static void allocate_buf_for_compression(void)
 
-> the previous email from this discussion went straight
-> to SPAM for my email provider. It's too easy to lose track of everything.
-> 
-> The kernel bugzilla has helped resolve critical issues and add
-> impressive features with dozens of people collaborating. This is nearly
-> impossible to carry out using email except for dedicated developers
-> working on something.
-> 
-> In the LKML and other Open Source mailing lists I've seen a ton of RFC
-> patches with no follow up. Even core developers themselves aren't
-> particularly enjoying the format. And those patches often perish and
-> work goes to waste.
-> 
-> >> Then a designated person would look through the bug report and either:
-> >>
-> >> a. quick-close it (with the usual "talk to your distro" or "don't use a
-> >>     tainted kernel" etc)
-> >
-> > I think having some app would be good here, as it could help gathering
-> > everything and catch problems early, to prevent users from spending a
-> > lot of time on preparing a report that will be ignored.
-> >
-> >> b. identify the responsible maintainers and notify them
-> >>
-> >> The hard part is not technical -- the hard part is that "designated person."
-> >
-> > +1
-> >
-> >> Being a bugmaster is a thankless job that leads to burnout, regardless of how
-> >> well you are paid. Everyone is constantly irate at you from both ends [...]
-> >
-> > Tell me about it. Nevertheless I sometimes wonder if I should give it a
-> > try once I got all this regression tracking thing established somewhat
-> > more, as in the end there I'm kind of a bugmaster for regressions already...
-> >
-> >> Before we try to fix/replace bugzilla,
-> >
-> > Just to be sure: I assume you meant "replacing bugzilla or fixing it for
-> > real" here, and not my band-aid efforts outlined at the start of this
-> > thread? Or do you have a problem with what I proposed to at least make
-> > things less bad for now?
-> >
-> >> we really need to figure out the entire
-> >> process and pinpoint who is going to be the one in charge of bug reports. If
-> >> you think that LF should establish a fund for a position like that, then you
-> >> should probably approach LF fellows (Greg KH, Shuah Khan), who can then talk
-> >> to LF management. The IT team will be happy to support you with the tooling,
-> >> but tooling should come second to that -- otherwise we'll just be replacing an
-> >> old and rusty dumpster on fire with a new and shiny dumpster on fire.
-> 
-> Bugzilla with all its issues is still super convenient.
 
--- 
-Regards,
+>
+> > [...]
+> > Hm, it's possible this was just sent directly to me? If that's true, I
+> > apologize for not re-posting it to lkml. I suspect I didn't notice at
+> > the time that it wasn't CCed to a list.
+>
+> No need for apologies, thanks for the clarification! How about if we add
+> a mailing list in the pstore entry on MAINTAINERS file, since it's just
+> composed for you and 3 other people now? I mean, "officially" speaking,
+> it should be enough to send a patch for the 4 maintainers with no list
+> in CC, and that's bad for achieving purposes. What list should be the
+> best, fsdevel? Lkml?
+>
 
-Laurent Pinchart
+Makes sense
+
+>
+> >
+> > No worries! Whatever the case, there's always -stable updates. :)
+>
+> Heheh you're right! But for something like this (pstore/dmesg
+> compression broke for the most backends), I'd be glad if we could fix it
+> before the release.
+
+Yeah better to revert - this was not a critical change anyway. But I
+think the tweak above should fix things (it works for me here)
