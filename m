@@ -1,52 +1,26 @@
-Received: from CHE01-GV0-obe.outbound.protection.outlook.com (mail-gv0che01on2064.outbound.protection.outlook.com [40.107.23.64])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD49256A
-	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 12:27:06 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oYOx/Tl4f1iw1TAxUy7bsU7uCOYQkQ++nPPkbkSjJPdOVqvhQhoFP8MbgUE6ZbJACnorkDsfFUNv1yPuB2JAYHRrv6EbtGxSqVPT07lcnMsr5dqOZ7YXLlkoY/RqhTDcghwwE4fWH5h4MaAlYP/yJPdeuaO1VWr3GtAm4CR7tbIUGLZXrURNNGd8i6kizLUNwRT1F3kCk6bcNSq6IZ42JTHywelWzCERkhgSatMF0EYKs/lN+wItQUWAhg+A3J0+RYJ8JFmCpZ2N5wDF+VogsNg/rW4P6sKRF9LEAHz1vuOK0+eQvsh9AkmwAoso7dmnYCd/fDwFe7tno3/WwWqEtA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3Mfus4qDagG27V2Zakgj8yK99LZRK4cZ05yOx23ggfk=;
- b=CRcyLc4oI254um1zRhh2KmiUXKmsURumrSOaOZTGIZihH8JRP690AbItbIzge6jEzgF9NSR41CC/BIrAXTMUpp9NaHgbDMF88oBX9dfizmRzjS+KoG8aq7EfoqeQDYJJxjHJ1/nRg816EstOFHJZdz84EIOWbCO2PipDBQwJyuqKQk9xQyY1Bq5p0U3NOlFs8mUQmgwWK2sTtEO9OljAgWRP54e5K+qqj2dsIXasIWa4SBEQiBsf6MzMn0XozRaNAryuOYs3frvORU2NQ8vD+vBxrB8wKkohnIzFYPcs3sqF19jlhhnCaSIIOnaromrlK6g4uBjdNX76WKqDFNWJAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 188.184.36.48) smtp.rcpttodomain=sladewatkins.net smtp.mailfrom=cern.ch;
- dmarc=bestguesspass action=none header.from=cern.ch; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cern.onmicrosoft.com;
- s=selector2-cern-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3Mfus4qDagG27V2Zakgj8yK99LZRK4cZ05yOx23ggfk=;
- b=PvUAGLXcBduQ9xaHLVPj9ywZglLPICfABigjVmNTiXmiyesyTZHzGYX2gY2NNDxx/A8cRj+7OZaLtD1c5s9kWG3inpW5ifCHB7TVCy5MUQic37yTxGP4qIL2B45uxDHzlSRXQf1iFZAHCx1376kdTNhoGZYv21LTkIJqTP+Wn1U=
-Received: from GV2PEPF000000ED.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:144:1:0:1:0:16) by ZR0P278MB0074.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:19::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.23; Fri, 30 Sep
- 2022 12:27:04 +0000
-Received: from HE1EUR02FT098.eop-EUR02.prod.protection.outlook.com
- (2a01:111:f400:7e05::205) by GV2PEPF000000ED.outlook.office365.com
- (2603:1026:900::3) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.23 via Frontend
- Transport; Fri, 30 Sep 2022 12:27:04 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 188.184.36.48)
- smtp.mailfrom=cern.ch; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cern.ch;
-Received-SPF: Pass (protection.outlook.com: domain of cern.ch designates
- 188.184.36.48 as permitted sender) receiver=protection.outlook.com;
- client-ip=188.184.36.48; helo=cernmxgwlb4.cern.ch; pr=C
-Received: from cernmxgwlb4.cern.ch (188.184.36.48) by
- HE1EUR02FT098.mail.protection.outlook.com (10.152.10.203) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.5676.17 via Frontend Transport; Fri, 30 Sep 2022 12:27:03 +0000
-Received: from cernfe04.cern.ch (188.184.36.41) by cernmxgwlb4.cern.ch
- (188.184.36.48) with Microsoft SMTP Server (TLS) id 14.3.498.0; Fri, 30 Sep
- 2022 14:26:43 +0200
-Received: from [192.168.1.25] (24.61.185.63) by smtp.cern.ch (188.184.36.52)
- with Microsoft SMTP Server (TLS) id 14.3.498.0; Fri, 30 Sep 2022 14:26:42
- +0200
-Message-ID: <aa8b9724-50c6-ae2e-062d-3791144ac97e@cern.ch>
-Date: Fri, 30 Sep 2022 08:26:40 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10A21102
+	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 12:39:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=lUTG+EmtFNfgk90oX9a54Dibc3TuSEy0wx0jrem7HIk=; b=aAxoS4eH2L4gINwLoHAstNk/hc
+	S0K19BNpJ1Q7htbb+G1i2YTrI2omwApLIdsa5MbWbwEclQQMr8hdu6vWemIhUc+j9O92pKB1kI5zh
+	aBushhVUs5AdhSWU8XmZLuzpkhNbGVVQuPcODDMsuxa5Qq9dFB8zQpsyiPUHHbKcnIbPMKmAPFLp/
+	rUN/4j9jEGRdOeMNhENvcY1DT7ko3fOK0q6D+vQwbEh8ZU0x2MbRbtom3pOogd3Ktw+fu3HvPWQVB
+	T5npz+RRzuQMY1jjjEyiWT6p5Iqid+De2GVqDHzGG9Xt6zLEauYJJj09tcVusbRljyhmDSih8X6vt
+	2ksyIv6A==;
+Received: from [179.232.144.59] (helo=[192.168.0.5])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1oeFId-000RTf-Ab; Fri, 30 Sep 2022 14:39:27 +0200
+Message-ID: <56d85c70-80f6-aa73-ab10-20474244c7d7@igalia.com>
+Date: Fri, 30 Sep 2022 09:39:10 -0300
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -54,76 +28,72 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: Regression on 5.19.12, display flickering on Framework laptop
-To: Slade Watkins <srw@sladewatkins.net>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>
-CC: <stable@vger.kernel.org>, <regressions@lists.linux.dev>
-References: <55905860-adf9-312c-69cc-491ac8ce1a8b@cern.ch>
- <YzZynE2FAMNQKm2E@kroah.com> <YzaFq7fzw5TbrJyv@kroah.com>
- <03147889-B21C-449B-B110-7E504C8B0EF4@sladewatkins.net>
+ Thunderbird/102.2.2
+Subject: Re: [REGRESSION][PATCH] Revert "pstore: migrate to crypto acomp
+ interface"
 Content-Language: en-US
-From: Jerry Ling <jiling@cern.ch>
-In-Reply-To: <03147889-B21C-449B-B110-7E504C8B0EF4@sladewatkins.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+To: Kees Cook <keescook@chromium.org>, Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, kernel-dev@igalia.com, kernel@gpiccoli.net,
+ Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>,
+ Tony Luck <tony.luck@intel.com>, Thorsten Leemhuis <linux@leemhuis.info>
+References: <20220929215515.276486-1-gpiccoli@igalia.com>
+ <202209291951.134BE2409@keescook>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+In-Reply-To: <202209291951.134BE2409@keescook>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [24.61.185.63]
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1EUR02FT098:EE_|ZR0P278MB0074:EE_
-X-MS-Office365-Filtering-Correlation-Id: c27ac56b-ae01-4d86-1946-08daa2df14b5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	FcVpk7ZfRIQsa0/jlfJSy9KOJmsokafSJ/7MRQvLVrHvWrEgrsBpaog/1kpvq5S0cgHKuf/+NkX+tNGer1REHIBYvRYQ7DiNW1d4jUlcl/ax7ZxaALj4VkSqAfyx547bzkKerz6UNNCD90T0U3gxO72k0PFugeqPzWtl/guJoTU4wGnLPbSDMA75Le9yQoTHnHe9xTkYCvsh+EXZmHuqlXVC3j8BY1wM6BNbHG4j1fwBubjFf07FJb3QKfk93IC0qG3X0FNEW/5jbMmbOSYHxhe+reYxTDf5csFsszP+nBD+B+onTmpieskRu7vB+pmqoP74PTVx1NzB/UZGZ0G2Bkymni6qJX6dGXaZZm5gyqr9I7VymBySGs/WCmAa9+GWlHz6UtlgwuxthiF/KwXP58w0ThIli2Yawfk9L+Nf2MURPwbserKfg66OrltBW52m3OLVrXNP7uaQpBjkLolac0OpD4Vb6jYAiXI5Z2GTf8kd136mZ1hb68mG8QarMRrSQpAOlGzqwoq6fvYa4IJPw7G5gCdcURMz72mktVS30tHY1EDid6GgzzJkuNBryNbNWCdjBn+3d/eh24v1FseBAcQTRkeKA89WlLSLDovwvzkfoXhoPQfeErDGZlLQasxABKyPpN4ABUTmNicyIIBdk+FsFoN34Z0gO3QFHw6jDXV1AB2Aa3QQJ4GaiNFU1i4Iu9dlX5WpHfncpJp/05KdKcYZ4hu/IKXfAXKO5ERgH64pJR+/sbF2bYUIM1eYveGUkqoBJn6h/+cJsTQwOPynlfN/1JS0hd5NOWfnSuFpnOwtaWR6128ae6Oh5Cwqmu8ue6wsJg5/AU4TG06jJToXIgzfpbZd2PggE8H1sHs+9AE=
-X-Forefront-Antispam-Report:
-	CIP:188.184.36.48;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:cernmxgwlb4.cern.ch;PTR:cernmx12.cern.ch;CAT:NONE;SFS:(13230022)(4636009)(136003)(346002)(39860400002)(396003)(376002)(451199015)(46966006)(36840700001)(40470700004)(2616005)(8936002)(26005)(5660300002)(356005)(82740400003)(82310400005)(41300700001)(53546011)(7636003)(336012)(16526019)(16799955002)(186003)(36756003)(47076005)(83380400001)(426003)(36860700001)(34070700002)(956004)(110136005)(16576012)(478600001)(316002)(54906003)(786003)(31686004)(70206006)(70586007)(8676002)(40460700003)(4326008)(40480700001)(966005)(41320700001)(31696002)(2906002)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: cern.ch
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Sep 2022 12:27:03.2509
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c27ac56b-ae01-4d86-1946-08daa2df14b5
-X-MS-Exchange-CrossTenant-Id: c80d3499-4a40-4a8c-986e-abce017d6b19
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=c80d3499-4a40-4a8c-986e-abce017d6b19;Ip=[188.184.36.48];Helo=[cernmxgwlb4.cern.ch]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HE1EUR02FT098.eop-EUR02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZR0P278MB0074
 
-Hi,
+On 30/09/2022 00:29, Kees Cook wrote:
+> [...]
+> 
+> Hi!
+> 
+> Thanks for looking at this. I wasn't able to reproduce the problem,
+> initially. Booting with pstore.backend=ramoops pstore.compress=zstd and
+> writing to /dev/pmsg0, after a reboot I'm able to read it back.
+> 
 
-looks like someone has done it: 
-https://bbs.archlinux.org/viewtopic.php?pid=2059823#p2059823
+Hi Kees, thanks a lot for your attention!
+IIUC, compression applies to dmesg only, correct?
 
-and the bisect points to:
 
-|# first bad commit: [fc6aff984b1c63d6b9e54f5eff9cc5ac5840bc8c] 
-drm/i915/bios: Split VBT data into per-panel vs. global parts Best, Jerry |
+> [...] 
+> What's your setup for this? I'm using emulated NVDIMM through qemu for
+> a ramoops backend. But trying this with the EFI backend (booting
+> undef EFI with pstore.backend=efi), I _do_ see the problem. That's
+> weird... I suspect there's some back interaction with buffer size
+> differences between ramoops and EFI & deflate and zstd.
+> 
+> And I can confirm EFI+zstd with the acomp change reverted fixes it.
+> 
 
-On 9/30/22 07:11, Slade Watkins wrote:
-> Hey Greg,
->
->> On Sep 30, 2022, at 1:59 AM, Greg KH <gregkh@linuxfoundation.org> wrote:
->>
->> On Fri, Sep 30, 2022 at 06:37:48AM +0200, Greg KH wrote:
->>> On Thu, Sep 29, 2022 at 10:26:25PM -0400, Jerry Ling wrote:
->>>> Hi,
->>>>
->>>> It has been reported by multiple users across a handful of distros that
->>>> there seems to be regression on Framework laptop (which presumably is not
->>>> that special in terms of mobo and display)
->>>>
->>>> Ref: https://community.frame.work/t/psa-dont-upgrade-to-linux-kernel-5-19-12-arch1-1-on-arch-linux-gen-11-model/23171
->>> Can anyone do a 'git bisect' to find the offending commit?
->> Also, this works for me on a gen 12 framework laptop:
->> 	$ uname -a
->> 	Linux frame 5.19.12 #68 SMP PREEMPT_DYNAMIC Fri Sep 30 07:02:33 CEST 2022 x86_64 GNU/Linux
->>
->> so there's something odd with the older hardware?
->>
->> greg k-h
-> Could be. Running git bisect for 5.19.11 and 5.19.12 (as suggested by the linked forum thread) returned nothing on gen 11 for me.
->
-> This is very odd,
-> -srw
+I'm using qemu but was able to use real HW (Steam Deck). In both cases,
+kernel is not using the entire RAM ("mem=" parameter, for example) so we
+can use a bit for ramoops. Also, both setups are UEFI, hence I can also
+use efi_pstore.
+
+
+> [...] 
+> Hm, it's possible this was just sent directly to me? If that's true, I
+> apologize for not re-posting it to lkml. I suspect I didn't notice at
+> the time that it wasn't CCed to a list.
+
+No need for apologies, thanks for the clarification! How about if we add
+a mailing list in the pstore entry on MAINTAINERS file, since it's just
+composed for you and 3 other people now? I mean, "officially" speaking,
+it should be enough to send a patch for the 4 maintainers with no list
+in CC, and that's bad for achieving purposes. What list should be the
+best, fsdevel? Lkml?
+
+
+> 
+> No worries! Whatever the case, there's always -stable updates. :)
+
+Heheh you're right! But for something like this (pstore/dmesg
+compression broke for the most backends), I'd be glad if we could fix it
+before the release.
+Cheers,
+
+
+Guilherme
