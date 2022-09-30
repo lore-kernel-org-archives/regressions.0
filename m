@@ -1,114 +1,112 @@
-Received: from premium237-5.web-hosting.com (premium237-5.web-hosting.com [66.29.146.205])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8ABF256A
-	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 11:56:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sladewatkins.net; s=default; h=To:References:Message-Id:
-	Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
-	Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=LJj4mKlEBcLfMkBKz3ZsW4f36QAglRn290JP7xXCOTA=; b=CGd6CBQUf5YGwZ3kdZCcwkS3GK
-	hYIF5yCMJEkTC6Pi75mbVhZ67GNv0TN63eKFj3xLTajpxA4TGW6wjIJHKJLl109klogkwz6xqM7l5
-	y7+aJ6F7uUOoWRpOAC3AHJmIdEYIUufVqQD1V4VS957cGwB1pSm+We9/CGxXjJRcsVwDT1PBN5jYP
-	BIrfZfzowLyBKgjceMqjPtYyrp/WRjkaXhVO7iayw9WNfA20/mQ5nk6cP37Siu4DYrdef/Szesei5
-	tmYRacdiXyKkyYnsYqsWiDJQY85B1Wersg4jLE/AKN3ngkm7SIkk5UsbUtrqtnjzdCChuZBJXedpK
-	gYCz6TfQ==;
-Received: from pool-108-4-135-94.albyny.fios.verizon.net ([108.4.135.94]:53094 helo=smtpclient.apple)
-	by premium237.web-hosting.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <srw@sladewatkins.net>)
-	id 1oeEct-003E7x-Jh;
-	Fri, 30 Sep 2022 07:56:19 -0400
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0D4E256A
+	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 12:03:29 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oeEjm-0000JX-R5; Fri, 30 Sep 2022 14:03:26 +0200
+Message-ID: <e4557441-2c23-376a-39bf-cb02e70c6440@leemhuis.info>
+Date: Fri, 30 Sep 2022 14:03:26 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: Regression on 5.19.12, display flickering on Framework laptop
-From: Slade Watkins <srw@sladewatkins.net>
-In-Reply-To: <YzbRcyi6Evu2RrNt@kroah.com>
-Date: Fri, 30 Sep 2022 07:56:17 -0400
-Cc: Jerry Ling <jiling@cern.ch>,
- stable@vger.kernel.org,
- regressions@lists.linux.dev
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <AC85817F-029E-4CDD-BFB8-9A9751D52532@sladewatkins.net>
-References: <55905860-adf9-312c-69cc-491ac8ce1a8b@cern.ch>
- <YzZynE2FAMNQKm2E@kroah.com> <YzaFq7fzw5TbrJyv@kroah.com>
- <03147889-B21C-449B-B110-7E504C8B0EF4@sladewatkins.net>
- <YzbRcyi6Evu2RrNt@kroah.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - premium237.web-hosting.com
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - sladewatkins.net
-X-Get-Message-Sender-Via: premium237.web-hosting.com: authenticated_id: srw@sladewatkins.net
-X-Authenticated-Sender: premium237.web-hosting.com: srw@sladewatkins.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-From-Rewrite: unmodified, already matched
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Content-Language: en-US, de-DE
+To: linux-kernel@vger.kernel.org, gpiccoli@igalia.com
+Cc: regressions@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+ kernel-dev@igalia.com
+References: <20220929215515.276486-1-gpiccoli@igalia.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [REGRESSION][PATCH] Revert "pstore: migrate to crypto acomp
+ interface" #forregzbot
+In-Reply-To: <20220929215515.276486-1-gpiccoli@igalia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664539410;87d83a3d;
+X-HE-SMSGID: 1oeEjm-0000JX-R5
 
-Greg,
+[Note: this mail is primarily send for documentation purposes and/or for
+regzbot, my Linux kernel regression tracking bot. That's why I removed
+most or all folks from the list of recipients, but left any that looked
+like a mailing lists. These mails usually contain '#forregzbot' in the
+subject, to make them easy to spot and filter out.]
 
-> On Sep 30, 2022, at 7:22 AM, Greg Kroah-Hartman =
-<gregkh@linuxfoundation.org> wrote:
->=20
-> On Fri, Sep 30, 2022 at 07:11:19AM -0400, Slade Watkins wrote:
->> Hey Greg,
->>=20
->>> On Sep 30, 2022, at 1:59 AM, Greg KH <gregkh@linuxfoundation.org> =
-wrote:
->>>=20
->>> On Fri, Sep 30, 2022 at 06:37:48AM +0200, Greg KH wrote:
->>>> On Thu, Sep 29, 2022 at 10:26:25PM -0400, Jerry Ling wrote:
->>>>> Hi,
->>>>>=20
->>>>> It has been reported by multiple users across a handful of distros =
-that
->>>>> there seems to be regression on Framework laptop (which presumably =
-is not
->>>>> that special in terms of mobo and display)
->>>>>=20
->>>>> Ref: =
-https://community.frame.work/t/psa-dont-upgrade-to-linux-kernel-5-19-12-ar=
-ch1-1-on-arch-linux-gen-11-model/23171
->>>>=20
->>>> Can anyone do a 'git bisect' to find the offending commit?
->>>=20
->>> Also, this works for me on a gen 12 framework laptop:
->>> 	$ uname -a
->>> 	Linux frame 5.19.12 #68 SMP PREEMPT_DYNAMIC Fri Sep 30 07:02:33 =
-CEST 2022 x86_64 GNU/Linux
->>>=20
->>> so there's something odd with the older hardware?
->>>=20
->>> greg k-h
->>=20
->> Could be. Running git bisect for 5.19.11 and 5.19.12 (as suggested by =
-the linked forum thread) returned nothing on gen 11 for me.
->>=20
->> This is very odd,
->=20
-> So 5.19.11 works for you, but 5.19.12 does not?
->=20
-> Or is it just the arch packaged kernel that does not work for you?
->=20
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-Oh, no no no. I was saying there weren't any issues. I myself haven=E2=80=99=
-t had any issues on gen 11 framework.
+Hi, this is your Linux kernel regression tracker. Thx for the report.
 
-I tested the arch-packaged versions, as well as the kernels directly =
-from source. Both didn=E2=80=99t have anything to report from bisect. =
-(Odd? Yeah.)
+On 29.09.22 23:55, Guilherme G. Piccoli wrote:
+> This reverts commit e4f0a7ec586b7644107839f5394fb685cf1aadcc.
+> 
+> When using this new interface, both efi_pstore and ramoops
+> backends are unable to properly decompress dmesg if using
+> zstd, lz4 and lzo algorithms (and maybe more). It does succeed
+> with deflate though.
+> 
+> The message observed in the kernel log is:
+> 
+> [2.328828] pstore: crypto_acomp_decompress failed, ret = -22!
+> 
+> The pstore infrastructure is able to collect the dmesg with
+> both backends tested, but since decompression fails it's
+> unreadable. With this revert everything is back to normal.
+> 
+> Fixes: e4f0a7ec586b ("pstore: migrate to crypto acomp interface")
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> 
+> ---
+> 
+> Hi Ard, Thorsten and pstore maintainers. I've found this yday
+> during pstore development - it was "hidden" since I was using
+> deflate. Tried some fixes (I plan to submit a cast fix for a
+> long-term issue later), but nothing I tried fixed this.
+> 
+> So, I thought in sending this revert - feel free to ignore it if
+> anybody comes with a proper fix for the async compress interface
+> proposed by Ard. The idea of the revert is because the 6.0-rc
+> cycle is nearly over, and would be nice to avoid introducing
+> this regression.
+> 
+> Also, I searched some mailing list discussions / submission of
+> the patch ("pstore: migrate to crypto acomp interface"), but
+> couldn't find it - can any of you point it to me in case it's
+> in some archive?
+> 
+> Thanks in advance, and sorry for reporting this so late in the
+> cycle, I wish I'd found it before.
 
-I=E2=80=99m really sorry for the confusion,
--srw
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
+#regzbot ^introduced e4f0a7ec586b
+#regzbot title pstore: efi_pstore and ramoops backends are sometimes
+unable to properly decompress dmesg
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
