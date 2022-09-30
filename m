@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A31557B
-	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 07:36:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA8F1FA7;
+	Fri, 30 Sep 2022 08:47:32 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oeAZS-00009H-SV; Fri, 30 Sep 2022 09:36:30 +0200
-Message-ID: <b11d08ee-d298-d11a-5caf-4a3c8860ddb4@leemhuis.info>
-Date: Fri, 30 Sep 2022 09:36:28 +0200
+	id 1oeBg9-0005wX-SR; Fri, 30 Sep 2022 10:47:29 +0200
+Message-ID: <5d15ec50-e0b7-dc90-9060-3583633070e8@leemhuis.info>
+Date: Fri, 30 Sep 2022 10:47:29 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,182 +17,85 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.0
 Content-Language: en-US, de-DE
-To: Mike Manning <mvrmanning@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Maximilien Cuony <maximilien.cuony@arcanite.ch>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <98348818-28c5-4cb2-556b-5061f77e112c@arcanite.ch>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [REGRESSION] Unable to NAT own TCP packets from another VRF with
- tcp_l3mdev_accept = 1
-In-Reply-To: <98348818-28c5-4cb2-556b-5061f77e112c@arcanite.ch>
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+ "Artem S. Tashkinov" <aros@gmx.com>
+Cc: workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ ksummit@lists.linux.dev
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+ <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
+ <20220929130410.hxtmwmoogzkwcey7@meerkat.local>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+In-Reply-To: <20220929130410.hxtmwmoogzkwcey7@meerkat.local>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664523402;a90f7e87;
-X-HE-SMSGID: 1oeAZS-00009H-SV
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1664527652;7b994490;
+X-HE-SMSGID: 1oeBg9-0005wX-SR
 
-Hi, this is your Linux kernel regression tracker.
+On 29.09.22 15:04, Konstantin Ryabitsev wrote:
+> On Thu, Sep 29, 2022 at 12:22:35PM +0000, Artem S. Tashkinov wrote:
+> [...]
+> We do have ability to fund development efforts -- LF has been the primary
+> sponsor behind public-inbox.org over the past 3 years. However, there must be
+> a clear, strong, and well-articulated mandate from the community. From what I
+> heard, the vast majority of maintainers simply want a web form that would
+> allow someone to:
+> 
+> 1. clearly state what kernel version they are using
+> 2. clearly describe what they were trying to do
+> 3. explain what they expected vs. what they got
+> 4. attach any files
+> 5. give this bug report a unique identifier
 
-CCing the regression mailing list, as it should be in the loop for all
-regressions, as explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+Sometimes there are days where I think "let's go down the 'do everything
+by mail' rabbit hole some more and couple a pastebin and a somewhat
+improved regzbot with an app (usable both locally and on the web) that
+helps users preparing a report they can then send with their usual
+mailer". And then there are days "ohh, no, that might be a totally
+stupid thing to do". :-/
 
-Also adding the author of the bisected commit, Mike Manning to the list
-of recipients.
+> Then a designated person would look through the bug report and either:
+> 
+> a. quick-close it (with the usual "talk to your distro" or "don't use a
+>    tainted kernel" etc)
 
-For the rest of this mail:
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
+I think having some app would be good here, as it could help gathering
+everything and catch problems early, to prevent users from spending a
+lot of time on preparing a report that will be ignored.
 
-On 28.09.22 16:02, Maximilien Cuony wrote:
+> b. identify the responsible maintainers and notify them
 > 
-> We're using VRF with a machine used as a router and have a specific
-> issue where the router doesn't handle his own packets correctly during
-> NATing if the packet is coming from a different VRF.
-> 
-> We had the issue with debian buster (4.19), but the issue solved itself
-> when we updated to debian bullseye (5.10.92).
-> 
-> However, during an upgrade of debian bullseye to the latest kernel, the
-> issue appeared again (5.10.140).
-> 
-> We did a bisection and this leaded us to
-> "b0d67ef5b43aedbb558b9def2da5b4fffeb19966 net: allow unbound socket for
-> packets in VRF when tcp_l3mdev_accept set [ Upstream commit
-> 944fd1aeacb627fa617f85f8e5a34f7ae8ea4d8e ]".
-> 
-> Simplified case setup:
-> 
-> There is two machines in the setup. They both forward packets
-> (net.ipv4.ip_forward = 1) and there is two interface between them.
-> 
-> The main machine has two VRF. The default VRF is using the second
-> machine as the default route, on a specific interface.
-> The second machine has as default route to main machine, on the other
-> VRF using the second pair of interfaces.
-> 
-> On the main machine, the second interface is in a specific VRF. In that
-> VRF, packets are NATed to the internet on a third interface.
-> 
-> A visual schema with the normal flow is available there:
-> https://etinacra.ch/kernel.png
-> 
-> Configuration command:
-> 
-> Main machine:
-> sysctl -w net.ipv4.tcp_l3mdev_accept = 1
-> sysctl -w systnet.ipv4.ip_forward = 1
-> iptables -t raw -A PREROUTING -i eth0 -j CT --zone 5
-> iptables -t raw -A OUTPUT -o eth0 -j CT --zone 5
-> iptables -t nat -A POSTROUTING -o eth2 -j SNAT --to 192.168.1.1
-> cat /etc/network/interfaces
-> 
-> auto firewall
-> iface firewall
->     vrf-table 1200
-> 
-> auto eth0
-> iface eth0
->     address 192.168.5.1/24
->     gateway 192.168.5.2
-> 
-> auto eth1
-> iface eth1
->     address 192.168.10.1/24
->     vrf firewall
->     up ip route add 192.168.5.0/24 via 192.168.10.2 vrf firewall
-> 
-> auto eth2
-> iface eth2
->     address 192.168.1.1/24
->     gateway 192.168.1.250
->     vrf firewall
-> 
-> ==
-> 
-> Second machine:
-> 
-> sysctl -w net.ipv4.ip_forward = 1
-> 
-> cat /etc/network/interfaces
-> 
-> auto eth0
-> iface eth0
->     address 192.168.5.2/24
-> 
-> auto eth1
-> iface eth1
->     address 192.168.10.2/24
->     gateway 192.168.10.1
-> 
-> ==
-> 
-> Without issue, if we look at a tcpdump on all interface on the main
-> machine, everything is fine (output truncated):
-> 
-> 10:28:32.811283 eth0 Out IP 192.168.5.1.55750 > 99.99.99.99.80: Flags
-> [S], seq 2216112145
-> 10:28:32.811666 eth1 In  IP 192.168.5.1.55750 > 99.99.99.99.80: Flags
-> [S], seq 2216112145
-> 10:28:32.811679 eth2 Out IP 192.168.1.1.55750 > 99.99.99.99.80: Flags
-> [S], seq 2216112145
-> 10:28:32.835138 eth2 In  IP 99.99.99.99.80 > 192.168.1.1.55750: Flags
-> [S.], seq 383992840, ack 2216112146
-> 10:28:32.835152 eth1 Out IP 99.99.99.99.80 > 192.168.5.1.55750: Flags
-> [S.], seq 383992840, ack 2216112146
-> 10:28:32.835457 eth0 In  IP 99.99.99.99.80 > 192.168.5.1.55750: Flags
-> [S.], seq 383992840, ack 2216112146
-> 10:28:32.835511 eth0 Out IP 192.168.5.1.55750 > 99.99.99.99.80: Flags
-> [.], ack 1, win 502
-> 
-> However when the issue is present, the SYNACK does arrives on eth2, but
-> is never "unNATed" back to eth1:
-> 
-> 10:25:07.644433 eth0 Out IP 192.168.5.1.48684 > 99.99.99.99.80: Flags
-> [S], seq 3207393154
-> 10:25:07.644782 eth1 In  IP 192.168.5.1.48684 > 99.99.99.99.80: Flags
-> [S], seq 3207393154
-> 10:25:07.644793 eth2 Out IP 192.168.1.1.48684 > 99.99.99.99.80: Flags
-> [S], seq 3207393154
-> 10:25:07.668551 eth2 In  IP 54.36.61.42.80 > 192.168.1.1.48684: Flags
-> [S.], seq 823335485, ack 3207393155
-> 
-> The issue is only with TCP connections. UDP or ICMP works fine.
-> 
-> Turing off net.ipv4.tcp_l3mdev_accept back to 0 also fix the issue, but
-> we need this flag since we use some sockets that does not understand VRFs.
-> 
-> We did have a look at the diff and the code of inet_bound_dev_eq, but we
-> didn't understand much the real problem - but it does seem now that
-> bound_dev_if if now checked not to be False before the bound_dev_if ==
-> dif || bound_dev_if == sdif comparison, something that was not the case
-> before (especially since it's dependent on l3mdev_accept).
-> 
-> Maybe our setup is wrong and we should not be able to route packets like
-> that?
-> 
-> Thanks a lot and have a nice day!
-> 
-> Maximilien Cuony
+> The hard part is not technical -- the hard part is that "designated person."
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
++1
 
-#regzbot ^introduced b0d67ef5b43aedbb558b9d
-#regzbot ignore-activity
+> Being a bugmaster is a thankless job that leads to burnout, regardless of how
+> well you are paid. Everyone is constantly irate at you from both ends [...]
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
+Tell me about it. Nevertheless I sometimes wonder if I should give it a
+try once I got all this regression tracking thing established somewhat
+more, as in the end there I'm kind of a bugmaster for regressions already...
 
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
+> Before we try to fix/replace bugzilla,
 
+Just to be sure: I assume you meant "replacing bugzilla or fixing it for
+real" here, and not my band-aid efforts outlined at the start of this
+thread? Or do you have a problem with what I proposed to at least make
+things less bad for now?
+
+> we really need to figure out the entire
+> process and pinpoint who is going to be the one in charge of bug reports. If
+> you think that LF should establish a fund for a position like that, then you
+> should probably approach LF fellows (Greg KH, Shuah Khan), who can then talk
+> to LF management. The IT team will be happy to support you with the tooling,
+> but tooling should come second to that -- otherwise we'll just be replacing an
+> old and rusty dumpster on fire with a new and shiny dumpster on fire.
+
++1
+
+Ciao, Thorsten
