@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56900256A
-	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 11:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7110256A
+	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 11:52:59 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oeERl-00044M-4V; Fri, 30 Sep 2022 13:44:49 +0200
-Message-ID: <d78137ce-f6d0-e8d9-9248-2ec84b502b72@leemhuis.info>
-Date: Fri, 30 Sep 2022 13:44:48 +0200
+	id 1oeEZd-0005wF-Di; Fri, 30 Sep 2022 13:52:57 +0200
+Message-ID: <99249078-2026-c76c-87eb-8e3ac5dde73d@leemhuis.info>
+Date: Fri, 30 Sep 2022 13:52:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,68 +16,129 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
+Subject: Re: Commit 'iomap: add support for dma aligned direct-io' causes
+ qemu/KVM boot failures
 Content-Language: en-US, de-DE
+To: linux-kernel@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: linux-fsdevel@vger.kernel.org, qemu-devel@nongnu.org, kvm@vger.kernel.org
+References: <fb869c88bd48ea9018e1cc349918aa7cdd524931.camel@redhat.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Manual Linux regressions report for mainline [2022-09-30]
+In-Reply-To: <fb869c88bd48ea9018e1cc349918aa7cdd524931.camel@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664538291;28c4f20e;
-X-HE-SMSGID: 1oeERl-00044M-4V
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664538779;0739a3e1;
+X-HE-SMSGID: 1oeEZd-0005wF-Di
 
-Hi Linus! A quick manual regression report because we're close to the
-end of this devel cycle:
+TWIMC: this mail is primarily send for documentation purposes and for
+regzbot, my Linux kernel regression tracking bot. These mails usually
+contain '#forregzbot' in the subject, to make them easy to spot and filter.
 
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-Graphical issues on Lenovo Yoga 7 14ARB7 laptop since v6.0-rc1
---------------------------------------------------------------
-https://lore.kernel.org/lkml/c1f8886a-5624-8f49-31b1-e42b6d20dcf5@augustwikerfors.se/
+Hi, this is your Linux kernel regression tracker. This might be a Qemu
+bug, but it's exposed by kernel change, so I at least want to have it in
+the tracking. I'll simply remove it in a few weeks, if it turns out that
+nobody except Maxim hits this.
 
-Unlikely to hit many people afaics. A fix is posted and somewhat
-reviewed, but not yet merged by the maintainers afaics:
-https://lore.kernel.org/amd-gfx/20220928172726.128863-1-sunpeng.li@amd.com/
+On 29.09.22 17:41, Maxim Levitsky wrote:
+> Hi!
+>  
+> Recently I noticed that this commit broke the boot of some of the VMs that I run on my dev machine.
+>  
+> It seems that I am not the first to notice this but in my case it is a bit different
+>  
+> https://lore.kernel.org/all/e0038866ac54176beeac944c9116f7a9bdec7019.camel@linux.ibm.com/
+>  
+> My VM is a normal x86 VM, and it uses virtio-blk in the guest to access the virtual disk,
+> which is a qcow2 file stored on ext4 filesystem which is stored on NVME drive with 4K sectors.
+> (however I was also able to reproduce this on a raw file)
+>  
+> It seems that the only two things that is needed to reproduce the issue are:
+>  
+> 1. The qcow2/raw file has to be located on a drive which has 4K hardware block size.
+> 2. Qemu needs to use direct IO (both aio and 'threads' reproduce this). 
+>  
+> I did some debugging and I isolated the kernel change in behavior from qemu point of view:
+>  
+>  
+> Qemu, when using direct IO, 'probes' the underlying file.
+>  
+> It probes two things:
+>  
+> 1. It probes the minimum block size it can read.
+>    It does so by trying to read 1, 512, 1024, 2048 and 4096 bytes at offset 0,
+>    using a 4096 bytes aligned buffer, and notes the first read that works as the hardware block size.
+>  
+>    (The relevant function is 'raw_probe_alignment' in src/block/file-posix.c in qemu source code).
+>  
+>  
+> 2. It probes the buffer alignment by reading 4096 bytes also at file offset 0,
+>    this time using a buffer that is 1, 512, 1024, 2048 and 4096 aligned
+>    (this is done by allocating a buffer which is 4K aligned and adding 1/512 and so on to its address)
+>  
+>    First successful read is saved as the required buffer alignment. 
+>  
+>  
+> Before the patch, both probes would yield 4096 and everything would work fine.
+> (The file in question is stored on 4K block device)
+>  
+>  
+> After the patch the buffer alignment probe succeeds at 512 bytes.
+> This means that the kernel now allows to read 4K of data at file offset 0 with a buffer that
+> is only 512 bytes aligned. 
+>  
+> It is worth to note that the probe was done using 'pread' syscall.
+>  
+>  
+> Later on, qemu likely reads the 1st 512 sector of the drive.
+>  
+> It uses preadv with 2 io vectors:
+>  
+> First one is for 512 bytes and it seems to have 0xC00 offset into page 
+> (likely depends on debug session but seems to be consistent)
+>  
+> Second one is for 3584 bytes and also has a buffer that is not 4K aligned.
+> (0x200 page offset this time)
+>  
+> This means that the qemu does respect the 4K block size but only respects 512 bytes buffer alignment,
+> which is consistent with the result of the probing.
+>  
+> And that preadv fails with -EINVAL
+>  
+> Forcing qemu to use 4K buffer size fixes the issue, as well as reverting the offending commit.
+>  
+> Any patches, suggestions are welcome.
+> 
+> I use 6.0-rc7, using mainline master branch as yesterday.
+>  
+> Best regards,
+> 	Maxim Levitsky
+> 
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
+#regzbot ^introduced bf8d08532bc1
+#regzbot ignore-activity
 
-arm64 / rock960 : kernel panic (NULL pointer dereference)
----------------------------------------------------------
-https://lore.kernel.org/lkml/4f398e4c-973b-7843-2f75-27324d109277@linaro.org/
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
 
-A fix for that one is in next and might be heading your way:
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=f340ed8664a55a467850ec1689996e63d9ee971a
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-qemu/KVM boot failures after commit 'iomap: add support for dma aligned
-direct-io'
----------------------------------------------------------------------
-https://lore.kernel.org/all/fb869c88bd48ea9018e1cc349918aa7cdd524931.camel@redhat.com/
-
-Reported yesterday, caused by bf8d08532bc1. A kernel change exposed a
-bug in Qemu:
-https://lore.kernel.org/all/32db4f89-a83f-aac4-5d27-0801bdca60bf@redhat.com/
-
-I wonder if that commit should be reverted for now.
-
-
-efi_pstore and ramoops backends are unable to properly decompress dmesg
-sometimes
------------------------------------------------------------------------
-https://lore.kernel.org/all/20220929215515.276486-1-gpiccoli@igalia.com/
-
-Reported in the past 24 hours, includes a revert. Kees wasn't able to
-reproduce the problem. Guess developers will look into this today.
-
-
-system hangs on Flatcar Container Linux
----------------------------------------
-https://lore.kernel.org/all/c77bf00f-4618-7149-56f1-b8d1664b9d07@linux.microsoft.com/
-
-Reported two days ago against stable (and thus not strictly a mainline
-regression), where it's caused by a backport of 51ae846cff5 (merged this
-cycle). The latter had also triggered a syzbot problem earlier (see
-thread). Investigation ongoing.
-
-
----
-That's all I'm aware of, HTH, Thorsten
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
