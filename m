@@ -1,315 +1,211 @@
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+Received: from mx07-001d1705.pphosted.com (mx07-001d1705.pphosted.com [185.132.183.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA695A7C;
-	Fri, 30 Sep 2022 16:57:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664557073; x=1696093073;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=wmA67nj+cytohD3Sb655DmsfEgO6M9TYB/fXpMMQ7BM=;
-  b=T462s8CqMa9XSNA+QVrIRJGyq864Wpsqe3Akvpd0dy/mvtPxS6+/CLTJ
-   G1zjAE/+rJdI0iez+U32KLBcIRFiZne1e+9YwYjMXhwaYGsdbmxN5X70o
-   MilXSZ4q3g4uNGuDeZZsOoUD6JwkRudAj0cLhnVyERWOAgVwyLRebs/b3
-   JhLqfjVTd05wCNMq5JYVFLYUGejYAPxY4eVD/H8guuyinRej5TeUjgPC4
-   XWOND+4gMdRvJXTWflnjhd/mhrBDEtabjif/jzEWUjaFKc1FqHShK+h0j
-   CbZjby/q8K6Qj6gvOXkREyQljRa4lCXrJhp1Y3zlCjaXwTdzGksaKd6lb
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10486"; a="299839200"
-X-IronPort-AV: E=Sophos;i="5.93,358,1654585200"; 
-   d="scan'208";a="299839200"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2022 09:57:53 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10486"; a="653606810"
-X-IronPort-AV: E=Sophos;i="5.93,358,1654585200"; 
-   d="scan'208";a="653606810"
-Received: from jkrzyszt-mobl1.ger.corp.intel.com ([10.213.7.180])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Sep 2022 09:57:50 -0700
-From: Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-To: Lucas De Marchi <lucas.demarchi@intel.com>, Robin Murphy <robin.murphy@arm.com>
-Cc: intel-gfx@lists.freedesktop.org, Chris Wilson <chris@chris-wilson.co.uk>, Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, iommu@lists.linux.dev, linux-kernel@vger.kernel.org, regressions@lists.linux.dev
-Subject: Re: [core-for-CI][PATCH] iommu: Remove iova cpu hotplugging flushing
-Date: Fri, 30 Sep 2022 18:57:47 +0200
-Message-ID: <3185079.N7aMVyhfb1@jkrzyszt-mobl1.ger.corp.intel.com>
-Organization: Intel Technology Poland sp. z o.o. - ul. Slowackiego 173, 80-298 Gdansk - KRS 101882 - NIP 957-07-52-316
-In-Reply-To: <1f4899d2-52ed-ae94-f681-3953c82b4799@arm.com>
-References: <20220922101036.87457-1-janusz.krzysztofik@linux.intel.com> <1f4899d2-52ed-ae94-f681-3953c82b4799@arm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0497A5A7C;
+	Fri, 30 Sep 2022 17:18:35 +0000 (UTC)
+Received: from pps.filterd (m0209329.ppops.net [127.0.0.1])
+	by mx08-001d1705.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28UFWfBm000942;
+	Fri, 30 Sep 2022 16:20:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sony.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=S1;
+ bh=dRU5VBXbxmttKDxEDNOcyBYd2LNfxtYqpRQX/zzjhLM=;
+ b=lB36wIW4SSL5qR02F42g+p6O1hHI82T55iNLE9rl/bIQWk3K+jITSD5h2M8Poo5Tlvp0
+ Q1EsANj5GM06tMM9MpfU1ANhL0FxwY70sIzZz3RlQQXDZ38T1+rc0fAkjSOVqZhrfr03
+ vgS8Fzy58TRanDFIhiwbiwRl4KoGwUAidwB89d6w6NhKNYWuwqHbS9HK/9dYoMHmK1e+
+ HST3b1JbmM2rwPfDWn6mD4Dtt82hfSl5zbAwcOd8w79U/BVaEMf+o8euDuxoYm5ULSiA
+ B9reuquZYvaOcB6/iaw/3GYZ+NTfckl6i/3N/YAc3bgmkTmWUW+2cloSxHg2b3KiYJkL Xw== 
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2101.outbound.protection.outlook.com [104.47.70.101])
+	by mx08-001d1705.pphosted.com (PPS) with ESMTPS id 3jst1jq4tf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 30 Sep 2022 16:20:02 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ih+ttU2iLLhdWo9HtwAU1oBASC0VUAx/DbISH6MnFLFv3m1R+s3gR86dNo4PNdciC+OoiRV6z6OWiMwYmbTsXM3a3IEOAD3upbsMWVM6FFjOk8rLvVjBwEC502ED0Jf9epb/7wlnDTwVQl2CqcertipwIQdDKh0Mf4op/B/4gQPLnbF1F4nVyiXNV1taWx4OWWTIHN7jHicHUdst3vNpyz8RAU2qjtTBA1dFqKTVilRlHmbGHSPmwl0CZS4GBWTKlThA6DvFEjhcLuleEG2yKXWA6r+vvQJijcdcFMqW6HYBPhtSD5h34Q4DE30ztoU5avks8EbicrxgR7hQR5nnMA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dRU5VBXbxmttKDxEDNOcyBYd2LNfxtYqpRQX/zzjhLM=;
+ b=aS6EOhpDt23frhTfsPsDADSub2cTJpLPmUJ2QFw/qyZa5Z7xU9HCZbGK7UMVZIAFl/HL5llUsQUx9Pg2OoEdVNoQ1Vv9ooC5fe3uTlyU+4PUwyABNbg021lsO4cp8J3F4wejaGfqQS0uALJEzSZDVe2cUbB8M/X1ymYpOg7D91F9GR+zqRl+tJ3DSsASNkrhwFkOQouPBU3jG9sOc8dHM39kxGfzsSrIprO04IxC0GOEHkk+mRwx0w6MVe4O9XZMQZwnBj1djuoAtVvGaOB922l0Y15k3e7IgRSh5aiWe80ypIptwIUi+InFVxgPNC7qUZ9R4JOBVExkcC+eyC/TEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sony.com; dmarc=pass action=none header.from=sony.com;
+ dkim=pass header.d=sony.com; arc=none
+Received: from BYAPR13MB2503.namprd13.prod.outlook.com (2603:10b6:a02:cd::33)
+ by SN4PR13MB5792.namprd13.prod.outlook.com (2603:10b6:806:21b::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.14; Fri, 30 Sep
+ 2022 16:19:56 +0000
+Received: from BYAPR13MB2503.namprd13.prod.outlook.com
+ ([fe80::41c:5c3b:bff:666f]) by BYAPR13MB2503.namprd13.prod.outlook.com
+ ([fe80::41c:5c3b:bff:666f%2]) with mapi id 15.20.5676.015; Fri, 30 Sep 2022
+ 16:19:56 +0000
+From: "Bird, Tim" <Tim.Bird@sony.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thorsten Leemhuis
+	<linux@leemhuis.info>
+CC: Slade Watkins <srw@sladewatkins.net>, "Artem S. Tashkinov" <aros@gmx.com>,
+        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        "workflows@vger.kernel.org" <workflows@vger.kernel.org>,
+        LKML
+	<linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        "ksummit@lists.linux.dev" <ksummit@lists.linux.dev>
+Subject: RE: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+Thread-Topic: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+Thread-Index: 
+ AQHY0/dmGxXfZ/3UJUWIh6R5VakqUK32VGCAgAALnwCAAAe5gIAABgmAgAAf8oyAAA87AIABGwgAgAA/qYCAADAi0A==
+Date: Fri, 30 Sep 2022 16:19:56 +0000
+Message-ID: 
+ <BYAPR13MB250377AAFCC43AC34E244795FD569@BYAPR13MB2503.namprd13.prod.outlook.com>
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+ <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
+ <20220929130410.hxtmwmoogzkwcey7@meerkat.local>
+ <7b427b41-9446-063d-3161-e43eb2e353f9@gmx.com>
+ <20220929135325.4riz4ijva2vc7q5p@meerkat.local>
+ <95c3384b-53d0-fd6c-6ec5-a7e03fdeddfc@gmx.com>
+ <F300ED64-5E8E-4060-89DC-C98BC5FF08E6@sladewatkins.net>
+ <YzXK6Px+BrNuuMZH@pendragon.ideasonboard.com>
+ <a86adc6d-05db-ec2e-c5de-d280aad9fb8a@leemhuis.info>
+ <Yzbtuz6L1jlDCf9/@pendragon.ideasonboard.com>
+In-Reply-To: <Yzbtuz6L1jlDCf9/@pendragon.ideasonboard.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR13MB2503:EE_|SN4PR13MB5792:EE_
+x-ms-office365-filtering-correlation-id: f71d3f5b-265a-49e6-7156-08daa2ff9cfc
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ CqEK7W2wPvPNNBcZ98r/uGOu1aIHKAtBZA77Lk79zs+wtdESifz8+umvml2sN9CIk6LvzHkvsYf3iIY2qtTTyRyzxNhgXRxqESruIcm/YquM2k60m+Q3yuywbhoT4WimV2rU0LR/zP6AWSBkAOHkPov7BvQitxGLd4DkCV8/pbdL982vcuRR2FmRjFbTYiw9ofqGWinGfMac+EPZAmoKmZkKf1Ke77XKZ7NibeMp7Gb8Q4t8BtY9sU7IGWEN7K74wqbSF9jDcb3nGcR9tClrFsWS6EWBPEkkLJKjkxSVJM5TE8w3Xd8HReUl/H/Y/IqRMYaXR0Tgido9EPXZuVskx6xiF0UJs8NCaEPujpfwVyscqPfEkuK7kKscx93CGgkONSDPKWaTUufQIEH2DqOGRnQbR6rs8YoxPVJTyktdNOuXFLfCw2YL+RE4F98F5KNSK33cXuPuVVdRI7/h01gTynLOFYzjzarxsQbSDucJ+vNdR0l04ju7StN18UlUcaVdEg8hYisHX04IS7CKF+qADGH3/jOSdYp2PVPfl8n6BVueYC8xhs8LsJXv5dPBDlx2WEzFr8UjqbjwHY9rrGbhkVrnetcG0ncLAWifjjEhluBwK4kpCB87Jk6x30zHaFtb4YSURWwi/XAR0YZev2hTNRHUihfXcmKWPOb3fDYcayeRMt0OOJXRWGIYHzuI+qL/algaH2kN8+2Zqh8Qce7M3V7NTkoCP4SsQVlMdf0JgHbBOGeHyJTpm1AOf1NQNof1Ito4U0SheMsIclEccVMczdy60fK8QrbyTjUvMpY3cQqYBn8wFZgnf+mTR6T/h2HMQgNtmTccLG2wZWGxdOxeew==
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR13MB2503.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(346002)(39860400002)(136003)(376002)(366004)(451199015)(122000001)(4326008)(38100700002)(86362001)(33656002)(82960400001)(38070700005)(5660300002)(7416002)(7696005)(186003)(55016003)(26005)(41300700001)(53546011)(478600001)(6506007)(71200400001)(966005)(316002)(9686003)(8936002)(66446008)(66946007)(54906003)(110136005)(64756008)(83380400001)(52536014)(2906002)(76116006)(66556008)(66476007)(8676002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?UlUrNGVRRThXZitKUng3WFAvcGNIajJaODdhYjM4NHJnNmNzODlIUFA4a2k0?=
+ =?utf-8?B?TjFEUXNram9Ob2Z5ZE0wMFNiRFBJSDVHUEhkUDNTWnNYZG16KzlmVHd0blJm?=
+ =?utf-8?B?b3dtRTBpZzFNdStLck1acmNRb3F4TUVNV0dsbWRZajVYNHdmRGFXaTQydE9H?=
+ =?utf-8?B?YWFia2U4YUtRMVVEM0VPblBkTDZ2WW53MklPZ0lRSkhDNy9JWHZQemVRb05m?=
+ =?utf-8?B?L3F3SWZ2UFpqTkhFTllhaVFyb1NBb0Y5SnU5WHIyb0xWbmpmRkxsZUJnUTRj?=
+ =?utf-8?B?MTRDVEZGWUhDK3hPK1hhRkZ3RVJxQzVkMSttdHRkaWxxRkpsK21sbXcvNlRR?=
+ =?utf-8?B?bzJvUERQQ0JLdWlHcU5XM3NpNkJGRWhNLzlNWGJKT1JmcWQrRndTd2pWZXFD?=
+ =?utf-8?B?RHE1anBaV0ZFMEdsS0psL1RMaFBtQ1pxazVZdTZZdGU3V0pHNEI5RHlTcExP?=
+ =?utf-8?B?c2tVdVgvai9RUy90K1AvOHh1UHdVVU96MytUTTEyYW1lZUFkQlUyeTNzT3lZ?=
+ =?utf-8?B?V0YySEhQUS8vSWxMaWVBN3lmRWJhQ0NERlFCVTJEajRXTzdkd21wN3BkUTNT?=
+ =?utf-8?B?VTBqZ1lPZVVrRFZxWmNzbGxxY2VVUXpmYkNNWWhNNVdUUVFwT2VXR0JnL3NS?=
+ =?utf-8?B?WDRxanRkckFhTXNUa0JqMVI1MldyZW52VEtVUlJBcE5VV0F5VDZJWTgvdUF1?=
+ =?utf-8?B?OHBrWFp5cEh0TENhSjl0L2pFTkI2ZUtxVEJVODd3V0p3S20wNW5ITzVYMUtl?=
+ =?utf-8?B?RExEU3pjTjBRazRkeFpqT3M0NmdUWitCN2hkbjV5WXl5dk9Xd3poQUtBbTFO?=
+ =?utf-8?B?Z1BBZXdhZ21LWHdmY1N2YUFTblFGRlpqYzFrSk5IUm4zcTcralBBVzFFSk83?=
+ =?utf-8?B?bjJYSGlCczdjUVNPbHQvRnJOZGxZZUtHa1NXVnJRckpXM25FTnFNTnRhVmlD?=
+ =?utf-8?B?ckRZZStiZ0h6U2hFaldUQkRUWFJtUFJ4RngrTktsSGV3M1VQdFNCSnRZcDhh?=
+ =?utf-8?B?dTNXcXNoc0tjWWMzQnptYjhNTE9MMzlNNFVBazdTb1VKSm9tT1FRR1poTjgr?=
+ =?utf-8?B?MlpnVFluSWFrSkdlUUlFYTgzZGNFS2FBMUJSd0dPdkRycU5iVFdMcXp3NFUx?=
+ =?utf-8?B?bVJyLzRKZENGSFhkdW90cURzcGp6dGhsUWZNNGNnUE9FQVRRL3k1Zktyd0k0?=
+ =?utf-8?B?RlBXbEJVUDh4dm5LMGlpN1RsOVpSemFMSStSS0dDdnJyMFludWFjRGJ2N0R4?=
+ =?utf-8?B?SWFJMWJoeG9zMTMxRWx3UENVRXc1K2p3SXJEUU95L1pVckRseG5PTG1KRFFW?=
+ =?utf-8?B?N1NvZ3lQaEJWc05ScEFiaVlNNWNERDNUZG1SbkpFcE1nVk92dGhmUitBN1hX?=
+ =?utf-8?B?Nyt1V3JOQXpvRm9vUksrWlFkUWV2WTNhQmlmZGJubVlxR0JoWHFwZ29GOEpJ?=
+ =?utf-8?B?WDI5Tmt5TzdaWUlDUE9lRlpmM3JKQ0tmL1YvMTFoMGJaVUwyK0RpOHhnM1E2?=
+ =?utf-8?B?NW10UnljOXZkblBWZUlrQlBKYmZic0x6MVk0Yko5YjZwdUlGL3pWQlU3L1Vh?=
+ =?utf-8?B?cHdEeEJSTlVWVHlteG5WOTAwR1ZZc3NjOG1KK3FwVTQvM1Rkenp2SjNHT0tm?=
+ =?utf-8?B?N3lkOVlBMWxybUJlKzF0V1NVdXJIWG0zaHZ6MDB2ME8zZEdvcEthdDBvcFpZ?=
+ =?utf-8?B?NktvbHJubGQ5aCthYmdhSmdSdzNjZG84QmU0dEs3eFJudjdUVWRWV2NCMnRP?=
+ =?utf-8?B?RjVlVS8yS2J2ZEZSQ3ZDRDdqVHBvdmZ6SEE5dC80YVRYaGNxU0hiYTRLV0dx?=
+ =?utf-8?B?anNteWZWVElBZmMyR3JhTmJNSkFyTUJRZldjVzFBTnpMSUFUNmYzMFlaODRQ?=
+ =?utf-8?B?ZUVtTDFwOUtaejlESnFoTTZpSmtVSzNhejc3aFM0ZTh2cDUvdlRiejlYS2dE?=
+ =?utf-8?B?MDh3ZXg1TDhFZ2lOTjd4NWYyOUJpTWxYeUg0Ung0bXcybHdhM0FlOW1VaTZD?=
+ =?utf-8?B?SlJGckI3Y0VCWlQyZWZPZXRVOWdZUzk0ZkFmWUwxN040UE5VYVpFdDA0VCtM?=
+ =?utf-8?B?dGdnNEVNakxzNFZTZXJYTW9Tam5GKytxeWFtaHFnYmVpSjZFVGd3cXFId056?=
+ =?utf-8?Q?xp2HNa+fCjwxwTkGpl2xlAjXr?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR13MB2503.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f71d3f5b-265a-49e6-7156-08daa2ff9cfc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Sep 2022 16:19:56.0340
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Yi0VxHjqEHFzRuyY23Ftz6cyzFaJg/Yv6RZTWjg6ClXDCuPxpKDmSGSpC2t08v2xXPwsHkhXVyjrfnTM99WsvQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR13MB5792
+X-Proofpoint-GUID: 81NQxBDdKnCTzHqw0eiGYJvnQh2bLq_l
+X-Proofpoint-ORIG-GUID: 81NQxBDdKnCTzHqw0eiGYJvnQh2bLq_l
+X-Sony-Outbound-GUID: 81NQxBDdKnCTzHqw0eiGYJvnQh2bLq_l
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-30_04,2022-09-29_03,2022-06-22_01
 
-I think this issue can hit any user with a platform that loads iommu and 
-coretemp drivers.  Adding regressions@lists.linux.dev to the loop.
-
-Thanks,
-Janusz
-
-On Thursday, 22 September 2022 14:09:35 CEST Robin Murphy wrote:
-> On 22/09/2022 11:10 am, Janusz Krzysztofik wrote:
-> > From: Chris Wilson <chris@chris-wilson.co.uk>
-> > 
-> > Manual revert of commit f598a497bc7d ("iova: Add CPU hotplug handler to
-> > flush rcaches").  It is trying to instantiate a cpuhp notifier from inside
-> > a cpuhp callback.  That code replaced intel_iommu implementation of
-> > flushing per-IOVA domain CPU rcaches which used a single instance of cpuhp
-> > held for the module lifetime.
-> 
-> OK, *now* I see what's going on. It doesn't seem unreasonable to me for 
-> bus notifiers to touch CPU hotplug - what seems more unexpected is the 
-> coretemp driver creating and adding a platform device from inside a 
-> hotplug callback.
-> 
-> Once we start trying to revert multiple unrelated bits of important 
-> functionality from other subsystems because one driver is doing a weird 
-> thing, maybe it's time to instead question whether that driver should be 
-> doing a weird thing?
-> 
-> Thanks,
-> Robin.
-> 
-> > <4>[    6.928112] ======================================================
-> > <4>[    6.928621] WARNING: possible circular locking dependency detected
-> > <4>[    6.929225] 6.0.0-rc6-CI_DRM_12164-ga1f63e144e54+ #1 Not tainted
-> > <4>[    6.929818] ------------------------------------------------------
-> > <4>[    6.930415] cpuhp/0/15 is trying to acquire lock:
-> > <4>[    6.931011] ffff888100e02a78 (&(&priv->bus_notifier)->rwsem){++++}-
-{3:3}, at: blocking_notifier_call_chain+0x20/0x50
-> > <4>[    6.931533]
-> >                    but task is already holding lock:
-> > <4>[    6.931534] ffffffff826490c0 (cpuhp_state-up){+.+.}-{0:0}, at: 
-cpuhp_thread_fun+0x48/0x1f0
-> > <4>[    6.933069]
-> >                    which lock already depends on the new lock.
-> > 
-> > <4>[    6.933070]
-> >                    the existing dependency chain (in reverse order) is:
-> > <4>[    6.933071]
-> >                    -> #2 (cpuhp_state-up){+.+.}-{0:0}:
-> > <4>[    6.933076]        lock_acquire+0xd3/0x310
-> > <4>[    6.933079]        cpuhp_thread_fun+0xa6/0x1f0
-> > <4>[    6.933082]        smpboot_thread_fn+0x1b5/0x260
-> > <4>[    6.933084]        kthread+0xed/0x120
-> > <4>[    6.933086]        ret_from_fork+0x1f/0x30
-> > <4>[    6.933089]
-> >                    -> #1 (cpu_hotplug_lock){++++}-{0:0}:
-> > <4>[    6.933092]        lock_acquire+0xd3/0x310
-> > <4>[    6.933094]        __cpuhp_state_add_instance+0x43/0x1c0
-> > <4>[    6.933096]        iova_domain_init_rcaches+0x199/0x1c0
-> > <4>[    6.933099]        iommu_setup_dma_ops+0x104/0x3d0
-> > <4>[    6.933101]        iommu_probe_device+0xa4/0x180
-> > <4>[    6.933103]        iommu_bus_notifier+0x2d/0x40
-> > <4>[    6.933105]        notifier_call_chain+0x31/0x90
-> > <4>[    6.933108]        blocking_notifier_call_chain+0x3a/0x50
-> > <4>[    6.933110]        device_add+0x3c1/0x900
-> > <4>[    6.933112]        pci_device_add+0x255/0x580
-> > <4>[    6.933115]        pci_scan_single_device+0xa6/0xd0
-> > <4>[    6.933117]        p2sb_bar+0x7f/0x220
-> > <4>[    6.933120]        i801_add_tco_spt.isra.18+0x2b/0xca [i2c_i801]
-> > <4>[    6.933124]        i801_add_tco+0xb1/0xfe [i2c_i801]
-> > <4>[    6.933126]        i801_probe.cold.25+0xa9/0x3a7 [i2c_i801]
-> > <4>[    6.933129]        pci_device_probe+0x95/0x110
-> > <4>[    6.933132]        really_probe+0xd6/0x350
-> > <4>[    6.933134]        __driver_probe_device+0x73/0x170
-> > <4>[    6.933137]        driver_probe_device+0x1a/0x90
-> > <4>[    6.933140]        __driver_attach+0xbc/0x190
-> > <4>[    6.933141]        bus_for_each_dev+0x72/0xc0
-> > <4>[    6.933143]        bus_add_driver+0x1bb/0x210
-> > <4>[    6.933146]        driver_register+0x66/0xc0
-> > <4>[    6.933147]        wmi_bmof_probe+0x3b/0xac [wmi_bmof]
-> > <4>[    6.933150]        do_one_initcall+0x53/0x2f0
-> > <4>[    6.933152]        do_init_module+0x45/0x1c0
-> > <4>[    6.933154]        load_module+0x1cd5/0x1ec0
-> > <4>[    6.933156]        __do_sys_finit_module+0xaf/0x120
-> > <4>[    6.933158]        do_syscall_64+0x37/0x90
-> > <4>[    6.933160]        entry_SYSCALL_64_after_hwframe+0x63/0xcd
-> > <4>[    6.953757]
-> >                    -> #0 (&(&priv->bus_notifier)->rwsem){++++}-{3:3}:
-> > <4>[    6.953779]        validate_chain+0xb3f/0x2000
-> > <4>[    6.953785]        __lock_acquire+0x5a4/0xb70
-> > <4>[    6.953786]        lock_acquire+0xd3/0x310
-> > <4>[    6.953787]        down_read+0x39/0x140
-> > <4>[    6.953790]        blocking_notifier_call_chain+0x20/0x50
-> > <4>[    6.953794]        device_add+0x3c1/0x900
-> > <4>[    6.953797]        platform_device_add+0x108/0x240
-> > <4>[    6.953799]        coretemp_cpu_online+0xe1/0x15e [coretemp]
-> > <4>[    6.953805]        cpuhp_invoke_callback+0x181/0x8a0
-> > <4>[    6.958244]        cpuhp_thread_fun+0x188/0x1f0
-> > <4>[    6.958267]        smpboot_thread_fn+0x1b5/0x260
-> > <4>[    6.958270]        kthread+0xed/0x120
-> > <4>[    6.958272]        ret_from_fork+0x1f/0x30
-> > <4>[    6.958274]
-> >                    other info that might help us debug this:
-> > 
-> > <4>[    6.958275] Chain exists of:
-> >                      &(&priv->bus_notifier)->rwsem --> cpu_hotplug_lock --
-> cpuhp_state-up
-> > 
-> > <4>[    6.961037]  Possible unsafe locking scenario:
-> > 
-> > <4>[    6.961038]        CPU0                    CPU1
-> > <4>[    6.961038]        ----                    ----
-> > <4>[    6.961039]   lock(cpuhp_state-up);
-> > <4>[    6.961040]                                lock(cpu_hotplug_lock);
-> > <4>[    6.961041]                                lock(cpuhp_state-up);
-> > <4>[    6.961042]   lock(&(&priv->bus_notifier)->rwsem);
-> > <4>[    6.961044]
-> >                     *** DEADLOCK ***
-> > 
-> > <4>[    6.961044] 2 locks held by cpuhp/0/15:
-> > <4>[    6.961046]  #0: ffffffff82648f10 (cpu_hotplug_lock){++++}-{0:0}, 
-at: cpuhp_thread_fun+0x48/0x1f0
-> > <4>[    6.961053]  #1: ffffffff826490c0 (cpuhp_state-up){+.+.}-{0:0}, at: 
-cpuhp_thread_fun+0x48/0x1f0
-> > <4>[    6.961058]
-> >                    stack backtrace:
-> > <4>[    6.961059] CPU: 0 PID: 15 Comm: cpuhp/0 Not tainted 6.0.0-rc6-
-CI_DRM_12164-ga1f63e144e54+ #1
-> > <4>[    6.961062] Hardware name: Intel Corporation NUC8i7HVK/NUC8i7HVB, 
-BIOS HNKBLi70.86A.0047.2018.0718.1706 07/18/2018
-> > <4>[    6.961063] Call Trace:
-> > <4>[    6.961064]  <TASK>
-> > <4>[    6.961065]  dump_stack_lvl+0x56/0x7f
-> > <4>[    6.961069]  check_noncircular+0x132/0x150
-> > <4>[    6.961078]  validate_chain+0xb3f/0x2000
-> > <4>[    6.961083]  __lock_acquire+0x5a4/0xb70
-> > <4>[    6.961087]  lock_acquire+0xd3/0x310
-> > <4>[    6.961088]  ? blocking_notifier_call_chain+0x20/0x50
-> > <4>[    6.961093]  down_read+0x39/0x140
-> > <4>[    6.961097]  ? blocking_notifier_call_chain+0x20/0x50
-> > <4>[    6.961099]  blocking_notifier_call_chain+0x20/0x50
-> > <4>[    6.961102]  device_add+0x3c1/0x900
-> > <4>[    6.961106]  ? dev_set_name+0x4e/0x70
-> > <4>[    6.961109]  platform_device_add+0x108/0x240
-> > <4>[    6.961112]  coretemp_cpu_online+0xe1/0x15e [coretemp]
-> > <4>[    6.961117]  ? create_core_data+0x550/0x550 [coretemp]
-> > <4>[    6.961120]  cpuhp_invoke_callback+0x181/0x8a0
-> > <4>[    6.961124]  cpuhp_thread_fun+0x188/0x1f0
-> > <4>[    6.961129]  ? smpboot_thread_fn+0x1e/0x260
-> > <4>[    6.961131]  smpboot_thread_fn+0x1b5/0x260
-> > <4>[    6.961134]  ? sort_range+0x20/0x20
-> > <4>[    6.961135]  kthread+0xed/0x120
-> > <4>[    6.961137]  ? kthread_complete_and_exit+0x20/0x20
-> > <4>[    6.961139]  ret_from_fork+0x1f/0x30
-> > <4>[    6.961145]  </TASK>
-> > 
-> > Closes: https://gitlab.freedesktop.org/drm/intel/issues/6641
-> > Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-> > Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>
-> > ---
-> >   drivers/iommu/iova.c       | 28 ----------------------------
-> >   include/linux/cpuhotplug.h |  1 -
-> >   include/linux/iova.h       |  1 -
-> >   3 files changed, 30 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-> > index 47d1983dfa2a4..f0136d0231f06 100644
-> > --- a/drivers/iommu/iova.c
-> > +++ b/drivers/iommu/iova.c
-> > @@ -31,16 +31,6 @@ unsigned long iova_rcache_range(void)
-> >   	return PAGE_SIZE << (IOVA_RANGE_CACHE_MAX_SIZE - 1);
-> >   }
-> >   
-> > -static int iova_cpuhp_dead(unsigned int cpu, struct hlist_node *node)
-> > -{
-> > -	struct iova_domain *iovad;
-> > -
-> > -	iovad = hlist_entry_safe(node, struct iova_domain, cpuhp_dead);
-> > -
-> > -	free_cpu_cached_iovas(cpu, iovad);
-> > -	return 0;
-> > -}
-> > -
-> >   static void free_global_cached_iovas(struct iova_domain *iovad);
-> >   
-> >   static struct iova *to_iova(struct rb_node *node)
-> > @@ -255,21 +245,10 @@ int iova_cache_get(void)
-> >   {
-> >   	mutex_lock(&iova_cache_mutex);
-> >   	if (!iova_cache_users) {
-> > -		int ret;
-> > -
-> > -		ret = cpuhp_setup_state_multi(CPUHP_IOMMU_IOVA_DEAD, 
-"iommu/iova:dead", NULL,
-> > -					iova_cpuhp_dead);
-> > -		if (ret) {
-> > -			mutex_unlock(&iova_cache_mutex);
-> > -			pr_err("Couldn't register cpuhp handler\n");
-> > -			return ret;
-> > -		}
-> > -
-> >   		iova_cache = kmem_cache_create(
-> >   			"iommu_iova", sizeof(struct iova), 0,
-> >   			SLAB_HWCACHE_ALIGN, NULL);
-> >   		if (!iova_cache) {
-> > -			
-cpuhp_remove_multi_state(CPUHP_IOMMU_IOVA_DEAD);
-> >   			mutex_unlock(&iova_cache_mutex);
-> >   			pr_err("Couldn't create iova cache\n");
-> >   			return -ENOMEM;
-> > @@ -292,7 +271,6 @@ void iova_cache_put(void)
-> >   	}
-> >   	iova_cache_users--;
-> >   	if (!iova_cache_users) {
-> > -		cpuhp_remove_multi_state(CPUHP_IOMMU_IOVA_DEAD);
-> >   		kmem_cache_destroy(iova_cache);
-> >   	}
-> >   	mutex_unlock(&iova_cache_mutex);
-> > @@ -495,8 +473,6 @@ EXPORT_SYMBOL_GPL(free_iova_fast);
-> >   
-> >   static void iova_domain_free_rcaches(struct iova_domain *iovad)
-> >   {
-> > -	cpuhp_state_remove_instance_nocalls(CPUHP_IOMMU_IOVA_DEAD,
-> > -					    &iovad-
->cpuhp_dead);
-> >   	free_iova_rcaches(iovad);
-> >   }
-> >   
-> > @@ -755,10 +731,6 @@ int iova_domain_init_rcaches(struct iova_domain 
-*iovad)
-> >   		}
-> >   	}
-> >   
-> > -	ret = cpuhp_state_add_instance_nocalls(CPUHP_IOMMU_IOVA_DEAD,
-> > -					       &iovad-
->cpuhp_dead);
-> > -	if (ret)
-> > -		goto out_err;
-> >   	return 0;
-> >   
-> >   out_err:
-> > diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> > index f61447913db97..8f541a6b63e41 100644
-> > --- a/include/linux/cpuhotplug.h
-> > +++ b/include/linux/cpuhotplug.h
-> > @@ -95,7 +95,6 @@ enum cpuhp_state {
-> >   	CPUHP_PAGE_ALLOC,
-> >   	CPUHP_NET_DEV_DEAD,
-> >   	CPUHP_PCI_XGENE_DEAD,
-> > -	CPUHP_IOMMU_IOVA_DEAD,
-> >   	CPUHP_LUSTRE_CFS_DEAD,
-> >   	CPUHP_AP_ARM_CACHE_B15_RAC_DEAD,
-> >   	CPUHP_PADATA_DEAD,
-> > diff --git a/include/linux/iova.h b/include/linux/iova.h
-> > index c6ba6d95d79c2..fd77cd5bfa333 100644
-> > --- a/include/linux/iova.h
-> > +++ b/include/linux/iova.h
-> > @@ -37,7 +37,6 @@ struct iova_domain {
-> >   	struct iova	anchor;		/* rbtree lookup anchor 
-*/
-> >   
-> >   	struct iova_rcache	*rcaches;
-> > -	struct hlist_node	cpuhp_dead;
-> >   };
-> >   
-> >   static inline unsigned long iova_size(struct iova *iova)
-> 
-
-
-
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMYXVyZW50IFBpbmNoYXJ0IDxs
+YXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+DQo+IA0KPiBIaSBUaG9yc3RlbiwNCj4g
+DQo+IE9uIEZyaSwgU2VwIDMwLCAyMDIyIGF0IDExOjM1OjE2QU0gKzAyMDAsIFRob3JzdGVuIExl
+ZW1odWlzIHdyb3RlOg0KPiA+IE9uIDI5LjA5LjIyIDE4OjQyLCBMYXVyZW50IFBpbmNoYXJ0IHdy
+b3RlOg0KPiA+ID4gT24gVGh1LCBTZXAgMjksIDIwMjIgYXQgMTA6NTQ6MTdBTSAtMDQwMCwgU2xh
+ZGUgV2F0a2lucyB3cm90ZToNCj4gPiA+Pj4gT24gU2VwIDI5LCAyMDIyLCBhdCAxMDoyMiBBTSwg
+QXJ0ZW0gUy4gVGFzaGtpbm92IDxhcm9zQGdteC5jb20+IHdyb3RlOg0KPiA+ID4+Pg0KPiA+ID4+
+PiBJJ3ZlIG1lbnRpb25lZCBzZXZlcmFsIHRpbWVzIGFscmVhZHkgdGhhdCBtYWlsaW5nIGxpc3Rz
+IGFyZSBfZXZlbiB3b3JzZV8NCj4gPiA+Pj4gaW4gdGVybXMgb2YgcmVwb3J0aW5nIGlzc3Vlcy4g
+RGV2ZWxvcGVycyBnZXQgZW1haWxzIGFuZCBzaW1wbHkgaWdub3JlDQo+ID4gPj4+IHRoZW0gKGZv
+ciBhIG11bHRpdHVkZSBvZiByZWFzb25zKS4NCj4gPiA+Pg0KPiA+ID4+IEl04oCZcyAxMDAlIHRy
+dWUgdGhhdCBlbWFpbHMgZ2V0IF9idXJpZWRfIGFzIHdhdmVzIG9mIHRoZW0gY29tZSBpbiAoTEtN
+TA0KPiA+ID4+IGl0c2VsZiBnZXRzIGh1bmRyZWRzIHVwb24gaHVuZHJlZHMgYSBkYXksIGFzIEni
+gJltIHN1cmUgYWxsIG9mIHlvdSBrbm93KQ0KPiA+ID4+IGFuZCBpdCBqdXN0IGlzbuKAmXQgc29t
+ZXRoaW5nIEkgcGVyc29uYWxseSBzZWUgYXMgdmlhYmxlLCBlc3BlY2lhbGx5IGZvcg0KPiA+ID4+
+IGlzc3VlcyB0aGF0IG1heSBvciBtYXkgbm90IGJlIGhpZ2ggcHJpb3JpdHkuDQo+ID4gPg0KPiA+
+ID4gRS1tYWlscyBhcmUgbm90IHRoYXQgYmFkIHRvIHJlcG9ydCBpc3N1ZXMsIGJ1dCB0aGV5IGNh
+bid0IHByb3ZpZGUgdGhlDQo+ID4gPiBjb3JlIGZlYXR1cmUgdGhhdCBhbnkgYnVnIHRyYWNrZXIg
+b3VnaHRzIHRvIGhhdmU6IHRyYWNraW5nLiBUaGVyZSdzIG5vDQo+ID4gPiB3YXksIHdpdGggdGhl
+IHRvb2xzIHdlIGhhdmUgYXQgdGhlIG1vbWVudCAoaW5jbHVkaW5nIHB1YmxpYy1pbmJveCwgYjQN
+Cj4gPiA+IGFuZCBsZWkpLCB0byB0cmFjayB0aGUgc3RhdHVzIG9mIGJ1ZyByZXBvcnRzIGFuZCBm
+aXhlcy4NCj4gPg0KPiA+IFdlbGwsIEknZCBkaXNhZ3JlZSBwYXJ0aWFsbHkgd2l0aCB0aGF0LCBh
+cyBteSByZWdyZXNzaW9uIHRyYWNraW5nIGJvdA0KPiA+ICJyZWd6Ym90Ig0KPiA+IChodHRwczov
+L3VybGRlZmVuc2UuY29tL3YzL19faHR0cHM6Ly9naXRsYWIuY29tL2tudXJkNDIvcmVnemJvdC8t
+DQo+IC9ibG9iL21haW4vZG9jcy9nZXR0aW5nX3N0YXJ0ZWQubWRfXzshIUptb1ppWkdCdjNSdktS
+U3ghN2Y4TzJRYUd5V2d4QVN3ZzFfYnhzVjUzdVdQSU56ekJhX01MTVpNb29hNnFMNmpkazhaQlZZ
+ckJfDQo+IG15cGp3MEgzeXY1SVBkTkoycVFUaHpNTEtick9VUU1GTU8xeDJWMiQNCj4gPiA7IGh0
+dHBzOi8vdXJsZGVmZW5zZS5jb20vdjMvX19odHRwczovL2xpbnV4LQ0KPiByZWd0cmFja2luZy5s
+ZWVtaHVpcy5pbmZvL3JlZ3pib3QvbWFpbmxpbmUvX187ISFKbW9aaVpHQnYzUnZLUlN4ITdmOE8y
+UWFHeVdneEFTd2cxX2J4c1Y1M3VXUElOenpCYV9NTE1aTW9vYTZxTDZqZGs4Wg0KPiBCVllyQl9t
+eXBqdzBIM3l2NUlQZE5KMnFRVGh6TUxLYnJPVVFNRktST3pTSlkkICApIGRvZXMNCj4gPiBleGFj
+dGx5IGRvZXMgdGhhdDogdHJhY2tpbmcsIGJ5IGNvbm5lY3QgdGhlIGRvdHMgKGUuZy4gbW9uaXRv
+cmluZw0KPiA+IHJlcGxpZXMgdG8gYSByZXBvcnQgYXMgd2VsbCByZWNvcmRpbmcgd2hlbiBwYXRj
+aGVzIGFyZSBwb3N0ZWQgb3INCj4gPiBjb21taXR0ZWQgdGhhdCBsaW5rIHRvIHRoZSByZXBvcnQg
+dXNpbmcgTGluazogdGFncyksIHdoaWxlIG1ha2luZyBzdXJlDQo+ID4gbm90aGluZyBpbXBvcnRh
+bnQgaXMgZm9yZ290dGVuLiBCdXQgc3VyZSwgaXQncyBzdGlsbCB2ZXJ5IHJvdWdoIGFuZA0KPiA+
+IGRlZmluaXRlbHkgbm90IGEgZnVsbCBidWctdHJhY2tlciAobXkgZ29hbCBpcy93YXMgdG8gbm90
+IGNyZWF0ZSB5ZXQNCj4gPiBhbm90aGVyIG9uZSkgYW5kIG5lZWRzIHF1aXRlIGEgYml0IG9mIGhh
+bmQgaG9sZGluZyBmcm9tIG15IHNpZGUuIEFuZCBJDQo+ID4gb25seSB1c2UgaXQgZm9yIHJlZ3Jl
+c3Npb25zIGFuZCBub3QgZm9yIGJ1Z3MgKG9uIHB1cnBvc2UpLg0KPiANCj4gUGF0Y2h3b3JrIGRv
+ZXMgc29tZXRoaW5nIHNpbWlsYXIgZm9yIHBhdGNoZXMsIGFuZCBJIGFncmVlIHRoYXQgaXQgd291
+bGQNCj4gYmUgcG9zc2libGUgdG8gdXNlIGUtbWFpbCB0byBtYW5hZ2UgYW5kIHRyYWNrIGJ1ZyBy
+ZXBvcnRzIHdpdGggdG9vbHMgb24NCj4gdG9wIChhbmQgZG9uJ3Qgd29ycnksIEknbSBub3QgYXNr
+aW5nIGZvciByZWd6Ym90IHRvIGJlIHR1cm5lZCBpbnRvIGEgYnVnDQo+IHRyYWNrZXIgOi0pKS4g
+SXQgaG93ZXZlciBoYXMgdG8gcmVseSBvbiBsb3RzIG9mIGhldXJpc3RpY3MgYXQgdGhlDQo+IG1v
+bWVudCwgYXMgdGhlIGRhdGEgd2UgZXhjaGFuZ2Ugb3ZlciBlLW1haWwgaXMgZnJlZS1mb3JtZWQg
+YW5kIGxhY2tzDQo+IHN0cnVjdHVyZS4gSSd2ZSBiZWVuIGRyZWFtaW5nIG9mIHN1cHBvcnQgZm9y
+IHN0cnVjdHVyZWQgZGF0YSBpbiBlLW1haWxzLA0KPiBidXQgdGhhdCdzIGEgcGlwZSBkcmVhbSBy
+ZWFsbHkuDQoNCkUtbWFpbHMgc2VudCBmcm9tIGEgd2ViIGludGVyZmFjZSBjb3VsZCBoYXZlIGFz
+IG11Y2ggc3RydWN0dXJlIGFzIHlvdSdkIGxpa2UuDQpTbyBvbmUgYXZlbnVlIHdvdWxkIGJlIHRv
+IHNldCB1cCBhIG5pY2UgaW50ZXJmYWNlIGZvciBidWcgcmVwb3J0aW5nLCB0aGF0IGp1c3QNCmRl
+bGl2ZXJlZCB0aGUgZm9ybSBkYXRhIGluIGUtbWFpbCBmb3JtYXQgdG8gdGhlIHByb3Bvc2VkIGJ1
+Zy1yZWNlaXZpbmcgbWFpbCBsaXN0Lg0KDQpBbHNvLCBpZiBhbiBlLW1haWwgcmVjZWl2ZXIgKHNv
+bWV0aGluZyBhdXRvbWF0ZWQpIGdhdmUgYSBxdWljayByZXNwb25zZSBvbiBtaXNzaW5nIGZpZWxk
+cywgSSB0aGluaw0KeW91IGNvdWxkIHF1aWNrbHkgdHJhaW4gdXNlcnMgKGV2ZW4gZmlyc3QtdGlt
+ZSBidWcgc3VibWl0dGVycykgdG8gcHJvdmlkZSByZXF1aXJlZA0KZGF0YSwgZXZlbiBpZiB0aGV5
+J3JlIHNlbmRpbmcgZnJvbSBhIGZyZWUtZm9ybSBlLW1haWwgY2xpZW50Lg0KDQpKdXN0IG15IDIg
+Y2VudHMuDQoNCiAtLSBUaW0NCg==
