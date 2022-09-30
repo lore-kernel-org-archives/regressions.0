@@ -1,144 +1,114 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from premium237-5.web-hosting.com (premium237-5.web-hosting.com [66.29.146.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7110256A
-	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 11:52:59 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oeEZd-0005wF-Di; Fri, 30 Sep 2022 13:52:57 +0200
-Message-ID: <99249078-2026-c76c-87eb-8e3ac5dde73d@leemhuis.info>
-Date: Fri, 30 Sep 2022 13:52:55 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8ABF256A
+	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 11:56:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sladewatkins.net; s=default; h=To:References:Message-Id:
+	Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
+	Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=LJj4mKlEBcLfMkBKz3ZsW4f36QAglRn290JP7xXCOTA=; b=CGd6CBQUf5YGwZ3kdZCcwkS3GK
+	hYIF5yCMJEkTC6Pi75mbVhZ67GNv0TN63eKFj3xLTajpxA4TGW6wjIJHKJLl109klogkwz6xqM7l5
+	y7+aJ6F7uUOoWRpOAC3AHJmIdEYIUufVqQD1V4VS957cGwB1pSm+We9/CGxXjJRcsVwDT1PBN5jYP
+	BIrfZfzowLyBKgjceMqjPtYyrp/WRjkaXhVO7iayw9WNfA20/mQ5nk6cP37Siu4DYrdef/Szesei5
+	tmYRacdiXyKkyYnsYqsWiDJQY85B1Wersg4jLE/AKN3ngkm7SIkk5UsbUtrqtnjzdCChuZBJXedpK
+	gYCz6TfQ==;
+Received: from pool-108-4-135-94.albyny.fios.verizon.net ([108.4.135.94]:53094 helo=smtpclient.apple)
+	by premium237.web-hosting.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <srw@sladewatkins.net>)
+	id 1oeEct-003E7x-Jh;
+	Fri, 30 Sep 2022 07:56:19 -0400
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: Commit 'iomap: add support for dma aligned direct-io' causes
- qemu/KVM boot failures
-Content-Language: en-US, de-DE
-To: linux-kernel@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-fsdevel@vger.kernel.org, qemu-devel@nongnu.org, kvm@vger.kernel.org
-References: <fb869c88bd48ea9018e1cc349918aa7cdd524931.camel@redhat.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <fb869c88bd48ea9018e1cc349918aa7cdd524931.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664538779;0739a3e1;
-X-HE-SMSGID: 1oeEZd-0005wF-Di
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
+Subject: Re: Regression on 5.19.12, display flickering on Framework laptop
+From: Slade Watkins <srw@sladewatkins.net>
+In-Reply-To: <YzbRcyi6Evu2RrNt@kroah.com>
+Date: Fri, 30 Sep 2022 07:56:17 -0400
+Cc: Jerry Ling <jiling@cern.ch>,
+ stable@vger.kernel.org,
+ regressions@lists.linux.dev
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AC85817F-029E-4CDD-BFB8-9A9751D52532@sladewatkins.net>
+References: <55905860-adf9-312c-69cc-491ac8ce1a8b@cern.ch>
+ <YzZynE2FAMNQKm2E@kroah.com> <YzaFq7fzw5TbrJyv@kroah.com>
+ <03147889-B21C-449B-B110-7E504C8B0EF4@sladewatkins.net>
+ <YzbRcyi6Evu2RrNt@kroah.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - premium237.web-hosting.com
+X-AntiAbuse: Original Domain - lists.linux.dev
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - sladewatkins.net
+X-Get-Message-Sender-Via: premium237.web-hosting.com: authenticated_id: srw@sladewatkins.net
+X-Authenticated-Sender: premium237.web-hosting.com: srw@sladewatkins.net
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-From-Rewrite: unmodified, already matched
 
-TWIMC: this mail is primarily send for documentation purposes and for
-regzbot, my Linux kernel regression tracking bot. These mails usually
-contain '#forregzbot' in the subject, to make them easy to spot and filter.
+Greg,
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
+> On Sep 30, 2022, at 7:22 AM, Greg Kroah-Hartman =
+<gregkh@linuxfoundation.org> wrote:
+>=20
+> On Fri, Sep 30, 2022 at 07:11:19AM -0400, Slade Watkins wrote:
+>> Hey Greg,
+>>=20
+>>> On Sep 30, 2022, at 1:59 AM, Greg KH <gregkh@linuxfoundation.org> =
+wrote:
+>>>=20
+>>> On Fri, Sep 30, 2022 at 06:37:48AM +0200, Greg KH wrote:
+>>>> On Thu, Sep 29, 2022 at 10:26:25PM -0400, Jerry Ling wrote:
+>>>>> Hi,
+>>>>>=20
+>>>>> It has been reported by multiple users across a handful of distros =
+that
+>>>>> there seems to be regression on Framework laptop (which presumably =
+is not
+>>>>> that special in terms of mobo and display)
+>>>>>=20
+>>>>> Ref: =
+https://community.frame.work/t/psa-dont-upgrade-to-linux-kernel-5-19-12-ar=
+ch1-1-on-arch-linux-gen-11-model/23171
+>>>>=20
+>>>> Can anyone do a 'git bisect' to find the offending commit?
+>>>=20
+>>> Also, this works for me on a gen 12 framework laptop:
+>>> 	$ uname -a
+>>> 	Linux frame 5.19.12 #68 SMP PREEMPT_DYNAMIC Fri Sep 30 07:02:33 =
+CEST 2022 x86_64 GNU/Linux
+>>>=20
+>>> so there's something odd with the older hardware?
+>>>=20
+>>> greg k-h
+>>=20
+>> Could be. Running git bisect for 5.19.11 and 5.19.12 (as suggested by =
+the linked forum thread) returned nothing on gen 11 for me.
+>>=20
+>> This is very odd,
+>=20
+> So 5.19.11 works for you, but 5.19.12 does not?
+>=20
+> Or is it just the arch packaged kernel that does not work for you?
+>=20
 
-Hi, this is your Linux kernel regression tracker. This might be a Qemu
-bug, but it's exposed by kernel change, so I at least want to have it in
-the tracking. I'll simply remove it in a few weeks, if it turns out that
-nobody except Maxim hits this.
+Oh, no no no. I was saying there weren't any issues. I myself haven=E2=80=99=
+t had any issues on gen 11 framework.
 
-On 29.09.22 17:41, Maxim Levitsky wrote:
-> Hi!
->  
-> Recently I noticed that this commit broke the boot of some of the VMs that I run on my dev machine.
->  
-> It seems that I am not the first to notice this but in my case it is a bit different
->  
-> https://lore.kernel.org/all/e0038866ac54176beeac944c9116f7a9bdec7019.camel@linux.ibm.com/
->  
-> My VM is a normal x86 VM, and it uses virtio-blk in the guest to access the virtual disk,
-> which is a qcow2 file stored on ext4 filesystem which is stored on NVME drive with 4K sectors.
-> (however I was also able to reproduce this on a raw file)
->  
-> It seems that the only two things that is needed to reproduce the issue are:
->  
-> 1. The qcow2/raw file has to be located on a drive which has 4K hardware block size.
-> 2. Qemu needs to use direct IO (both aio and 'threads' reproduce this). 
->  
-> I did some debugging and I isolated the kernel change in behavior from qemu point of view:
->  
->  
-> Qemu, when using direct IO, 'probes' the underlying file.
->  
-> It probes two things:
->  
-> 1. It probes the minimum block size it can read.
->    It does so by trying to read 1, 512, 1024, 2048 and 4096 bytes at offset 0,
->    using a 4096 bytes aligned buffer, and notes the first read that works as the hardware block size.
->  
->    (The relevant function is 'raw_probe_alignment' in src/block/file-posix.c in qemu source code).
->  
->  
-> 2. It probes the buffer alignment by reading 4096 bytes also at file offset 0,
->    this time using a buffer that is 1, 512, 1024, 2048 and 4096 aligned
->    (this is done by allocating a buffer which is 4K aligned and adding 1/512 and so on to its address)
->  
->    First successful read is saved as the required buffer alignment. 
->  
->  
-> Before the patch, both probes would yield 4096 and everything would work fine.
-> (The file in question is stored on 4K block device)
->  
->  
-> After the patch the buffer alignment probe succeeds at 512 bytes.
-> This means that the kernel now allows to read 4K of data at file offset 0 with a buffer that
-> is only 512 bytes aligned. 
->  
-> It is worth to note that the probe was done using 'pread' syscall.
->  
->  
-> Later on, qemu likely reads the 1st 512 sector of the drive.
->  
-> It uses preadv with 2 io vectors:
->  
-> First one is for 512 bytes and it seems to have 0xC00 offset into page 
-> (likely depends on debug session but seems to be consistent)
->  
-> Second one is for 3584 bytes and also has a buffer that is not 4K aligned.
-> (0x200 page offset this time)
->  
-> This means that the qemu does respect the 4K block size but only respects 512 bytes buffer alignment,
-> which is consistent with the result of the probing.
->  
-> And that preadv fails with -EINVAL
->  
-> Forcing qemu to use 4K buffer size fixes the issue, as well as reverting the offending commit.
->  
-> Any patches, suggestions are welcome.
-> 
-> I use 6.0-rc7, using mainline master branch as yesterday.
->  
-> Best regards,
-> 	Maxim Levitsky
-> 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
+I tested the arch-packaged versions, as well as the kernels directly =
+from source. Both didn=E2=80=99t have anything to report from bisect. =
+(Odd? Yeah.)
 
-#regzbot ^introduced bf8d08532bc1
-#regzbot ignore-activity
+I=E2=80=99m really sorry for the confusion,
+-srw
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
