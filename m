@@ -1,23 +1,13 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8F05A88;
-	Fri, 30 Sep 2022 20:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=gxAcXgV1LDV4vzBWpZ/qZt853xhT17W2/uV47tPaqec=; b=LI64qn7u3WVEHhykrURq5oQUi+
-	RZjHefVco06xCFv3XqVdv3rbhN4RFM2YjOHvpeQVpRwO/TpyyWNokGebc34K9/A2S6MLkOgVbBb8f
-	THhsbGenA+GcI6tkk55Bfb80Td5OUHDX2QVd2QLPmA3uus44kVsvhDye7aAhv6AZ4c1p8xd0W9+sM
-	oVpClL97m5g22SEbDskOTRk+QcXcw4o/A7f7VSlrFEYeyVPaR6RpRuqc5q/3Mk8goImg5Ji6NFqzk
-	Ni4POOTDsF50Y8tMtcRJk/IrZ1BQfI9pqiCKp6ZE83gYNQnZ06SLObfSp/Qc2lQe1mBPvHzVgtOKb
-	hgibOMzg==;
-Received: from [2601:1c2:d80:3110::a2e7]
-	by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1oeMFN-00BJGq-Vv; Fri, 30 Sep 2022 20:04:34 +0000
-Message-ID: <5c6a16c6-f762-9fcf-714e-3dd98137c556@infradead.org>
-Date: Fri, 30 Sep 2022 13:04:30 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CE4B5A88;
+	Fri, 30 Sep 2022 20:29:21 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oeMdD-0002Kj-6J; Fri, 30 Sep 2022 22:29:11 +0200
+Message-ID: <3a036077-2cad-45c5-c5a3-9f4cb3288b69@leemhuis.info>
+Date: Fri, 30 Sep 2022 22:29:08 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -25,13 +15,11 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-Content-Language: en-US
-To: "Luck, Tony" <tony.luck@intel.com>, "Bird, Tim" <Tim.Bird@sony.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Thorsten Leemhuis <linux@leemhuis.info>
+ Thunderbird/102.3.1
+Content-Language: en-US, de-DE
+To: Randy Dunlap <rdunlap@infradead.org>, "Luck, Tony" <tony.luck@intel.com>,
+ "Bird, Tim" <Tim.Bird@sony.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Slade Watkins <srw@sladewatkins.net>, "Artem S. Tashkinov"
  <aros@gmx.com>, Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
  "workflows@vger.kernel.org" <workflows@vger.kernel.org>,
@@ -53,32 +41,49 @@ References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
  <Yzbtuz6L1jlDCf9/@pendragon.ideasonboard.com>
  <BYAPR13MB250377AAFCC43AC34E244795FD569@BYAPR13MB2503.namprd13.prod.outlook.com>
  <SJ1PR11MB60836F8B9E045C5542D01ADAFC569@SJ1PR11MB6083.namprd11.prod.outlook.com>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <SJ1PR11MB60836F8B9E045C5542D01ADAFC569@SJ1PR11MB6083.namprd11.prod.outlook.com>
+ <5c6a16c6-f762-9fcf-714e-3dd98137c556@infradead.org>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+In-Reply-To: <5c6a16c6-f762-9fcf-714e-3dd98137c556@infradead.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1664569761;79702e7a;
+X-HE-SMSGID: 1oeMdD-0002Kj-6J
 
-
-
-On 9/30/22 10:28, Luck, Tony wrote:
->> E-mails sent from a web interface could have as much structure as you'd like.
->> So one avenue would be to set up a nice interface for bug reporting, that just
->> delivered the form data in e-mail format to the proposed bug-receiving mail list.
+On 30.09.22 22:04, Randy Dunlap wrote:
 > 
-> Web interfaces have the advantage that they can be full of boxes which indicate
-> useful details to supply. Like what kernel version? Did this work on an older version,
-> is so, which one? Which CPU vendor/model are you using? Is there an error message?
-> Are there warnings in the console log before the error? Can you upload a full console log?
-> Does this happen repeatably? What are the steps to reproduce?
 > 
-> Etc.etc.
+> On 9/30/22 10:28, Luck, Tony wrote:
+>>> E-mails sent from a web interface could have as much structure as you'd like.
+>>> So one avenue would be to set up a nice interface for bug reporting, that just
+>>> delivered the form data in e-mail format to the proposed bug-receiving mail list.
+>>
+>> Web interfaces have the advantage that they can be full of boxes which indicate
+>> useful details to supply. Like what kernel version? Did this work on an older version,
+>> is so, which one? Which CPU vendor/model are you using? Is there an error message?
+>> Are there warnings in the console log before the error? Can you upload a full console log?
+>> Does this happen repeatably? What are the steps to reproduce?
+>>
+>> Etc.etc.
+> 
+> We have Documentation for all of that, but (a) people don't read documentation
+> and/or (b) it's too longwinded (not brief).
 
-We have Documentation for all of that, but (a) people don't read documentation
-and/or (b) it's too longwinded (not brief).
+Yup. But as the one that is partly (mainly?) responsible for "(b)",
+please allow me to quote the last sentence of reporting-issues.rst here:
 
-> Sometimes it takes a few round trips by e-mail to establish the baseline facts.
+"""The main author of this text hopes documenting the state of the art
+will lay some groundwork to improve the situation over time."""
 
-Ack.
+IOW: I really hope we over time can shorten that text somewhat (or even
+a lot?) by...
 
--- 
-~Randy
+* making some things a lot easier that currently are unnecessarily hard
+
+* hiding some things in a reporting app or something like that (ideally
+usable on the web and locally) that only bothers reporters with tainted
+status, bisection, decoding of stack-traces, and things like that if
+they are relevant in the particular case
+
+Ciao, Thorsten
