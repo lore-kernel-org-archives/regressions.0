@@ -1,82 +1,51 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F790186B
-	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 05:10:15 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oe8Ht-0001Ba-4F; Fri, 30 Sep 2022 07:10:13 +0200
-Message-ID: <b85bc2cf-5ea5-c5fb-465c-cd6637f6d30f@leemhuis.info>
-Date: Fri, 30 Sep 2022 07:10:12 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E7F186B
+	for <regressions@lists.linux.dev>; Fri, 30 Sep 2022 05:58:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41A00C433D6;
+	Fri, 30 Sep 2022 05:58:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1664517510;
+	bh=MX7SYb4vy45NYzPRy+E4YlrZSouPYPalitZ97czaT4A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Jv4J32GgJaNufhN1gRA8h4Ixj4SRbWVvoFq06xFK0eaqZpjmuMHm5SwFa2n2rnTJu
+	 oDAcqr2P/kBWmdIC6EqLs72pzIDg/HOUURaM1fetywXw0YQk9mLKgLO/AKgtmHZZ5W
+	 A3pZ9YRvk0qguOC9xIYxgoxMaApQoYPbXXomOvO4=
+Date: Fri, 30 Sep 2022 07:59:07 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jerry Ling <jiling@cern.ch>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: Regression on 5.19.12, display flickering on Framework laptop
+Message-ID: <YzaFq7fzw5TbrJyv@kroah.com>
+References: <55905860-adf9-312c-69cc-491ac8ce1a8b@cern.ch>
+ <YzZynE2FAMNQKm2E@kroah.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: Regression on 5.19.12, display flickering on Framework laptop
-Content-Language: en-US, de-DE
-To: Jerry Ling <jiling@cern.ch>, stable@vger.kernel.org
-Cc: regressions@lists.linux.dev
-References: <55905860-adf9-312c-69cc-491ac8ce1a8b@cern.ch>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <55905860-adf9-312c-69cc-491ac8ce1a8b@cern.ch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664514615;508711ea;
-X-HE-SMSGID: 1oe8Ht-0001Ba-4F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YzZynE2FAMNQKm2E@kroah.com>
 
-Hi, this is your Linux kernel regression tracker.
-
-On 30.09.22 04:26, Jerry Ling wrote:
+On Fri, Sep 30, 2022 at 06:37:48AM +0200, Greg KH wrote:
+> On Thu, Sep 29, 2022 at 10:26:25PM -0400, Jerry Ling wrote:
+> > Hi,
+> > 
+> > It has been reported by multiple users across a handful of distros that
+> > there seems to be regression on Framework laptop (which presumably is not
+> > that special in terms of mobo and display)
+> > 
+> > Ref: https://community.frame.work/t/psa-dont-upgrade-to-linux-kernel-5-19-12-arch1-1-on-arch-linux-gen-11-model/23171
 > 
-> It has been reported by multiple users across a handful of distros that
-> there seems to be regression on Framework laptop (which presumably is
-> not that special in terms of mobo and display)
-> 
-> Ref:
-> https://community.frame.work/t/psa-dont-upgrade-to-linux-kernel-5-19-12-arch1-1-on-arch-linux-gen-11-model/23171
+> Can anyone do a 'git bisect' to find the offending commit?
 
-A bisect would be good, as Greg already mentioned.
+Also, this works for me on a gen 12 framework laptop:
+	$ uname -a
+	Linux frame 5.19.12 #68 SMP PREEMPT_DYNAMIC Fri Sep 30 07:02:33 CEST 2022 x86_64 GNU/Linux
 
-Not my area of expertise, so it's a wild guess, but display flickering
-made me wonder if this change is the culprit:
+so there's something odd with the older hardware?
 
-https://lore.kernel.org/all/20220926100814.131449678@linuxfoundation.org/
-
-If it is, simply starting with "i915.enable_psr=0" might already help.
-but as I said, just a wild guess after briefly looking into the problem.
-
-Anyway, for the rest of this mail:
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
-
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced v5.19.11..v5.19.12
-#regzbot title Display flickering on Framework laptop
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+greg k-h
