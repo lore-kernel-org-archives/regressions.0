@@ -1,129 +1,89 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5E1D23A7;
-	Sat,  1 Oct 2022 07:57:33 +0000 (UTC)
-Received: by mail-pl1-f172.google.com with SMTP id jo24so5199158plb.13;
-        Sat, 01 Oct 2022 00:57:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=KrBJ3OnNzeftZkiKUXUK07emKURterDHFpsjXpd7SC8=;
-        b=eDMWjlPOpE1dsLjQecDaGZnmw9fLcm/u4u0Ao85kTGzHERPlJLxvCQ7RzDsXW1LSMK
-         hY/t+keV+6kw5/EqY8rwlvGMzYHZWNg9KK4aGog4+k4/jNT5JwRgbJ0xG6jTDgpBiofc
-         qLFcZ4nqAYmxJm6xK0NpHQaazgkMJpdqoV8n3tXAZEnfDkYmS6Q0KS6vVZs5jAGiIAEi
-         KKnaa7om9DBKUoIk+59AETGB7bG6UXO+9WF4EORMh8/vrBfJ4656ezat5mFu2d/OJljr
-         F5YF6Y+ZDUit8nT1lzz/qPMaZTN7Tj3p67a2GyHqKQ0yNfV3jm6X9opYiPQuKeqm/XHO
-         SD9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=KrBJ3OnNzeftZkiKUXUK07emKURterDHFpsjXpd7SC8=;
-        b=qYXIdd3tI4s2zkdTVbH+LY83R8yri8+g3nCq9i6johR2Xuy5DTOf2YK7kjCNePs+I4
-         lFgoVmKbGkf6q5jnWIA62yaR0JCOk62JEAlkYWbJOcODXIZGszQ+cmRrcAvbRhrolioB
-         lVil0fnXMoB15hL67ui0b7tiaopmfeIScqBILGKAUuVSTBcJG/E6XQnc3RrnvriH37/w
-         VllbLaSxlDRgZF44iZyVE3MjZTdZPcnkvIvyZAbAEwfO808KVTmEgCZ732RBs8fsCUFS
-         qxvluO47wvG0R1ConXgYqzDP+jJn6AZyPyBKOe9NU34soDgrn4Sp29CvfjlWUv8LVt70
-         HeiQ==
-X-Gm-Message-State: ACrzQf1vtbF5z2u5UjKx0IXTsxn5uh/uSCChNYx3cVGwS6ZaXpqpAJHa
-	tTyFxvlc783TN2U0mQMjLu4=
-X-Google-Smtp-Source: AMsMyM6oK8+n9+z1Ng+fYKbMFK1uepblQ0jl38KIuxoxFLX0uGDr50qDVb2Lgj3zlMjPRtt3emJU5g==
-X-Received: by 2002:a17:90a:9c7:b0:205:ebc5:f592 with SMTP id 65-20020a17090a09c700b00205ebc5f592mr2237177pjo.153.1664611053158;
-        Sat, 01 Oct 2022 00:57:33 -0700 (PDT)
-Received: from debian.me (subs09a-223-255-225-74.three.co.id. [223.255.225.74])
-        by smtp.gmail.com with ESMTPSA id iw12-20020a170903044c00b0017cb3207855sm2478885plb.99.2022.10.01.00.57.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Oct 2022 00:57:32 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 43A4C103744; Sat,  1 Oct 2022 14:57:27 +0700 (WIB)
-Date: Sat, 1 Oct 2022 14:57:27 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Theodore Ts'o <tytso@mit.edu>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	"Artem S. Tashkinov" <aros@gmx.com>,
-	"Bird, Tim" <Tim.Bird@sony.com>,
-	Thorsten Leemhuis <linux@leemhuis.info>,
-	Slade Watkins <srw@sladewatkins.net>,
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-	"workflows@vger.kernel.org" <workflows@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"ksummit@lists.linux.dev" <ksummit@lists.linux.dev>
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-Message-ID: <Yzfy5wXuU0uxdIqr@debian.me>
-References: <20220929135325.4riz4ijva2vc7q5p@meerkat.local>
- <95c3384b-53d0-fd6c-6ec5-a7e03fdeddfc@gmx.com>
- <F300ED64-5E8E-4060-89DC-C98BC5FF08E6@sladewatkins.net>
- <YzXK6Px+BrNuuMZH@pendragon.ideasonboard.com>
- <a86adc6d-05db-ec2e-c5de-d280aad9fb8a@leemhuis.info>
- <Yzbtuz6L1jlDCf9/@pendragon.ideasonboard.com>
- <BYAPR13MB250377AAFCC43AC34E244795FD569@BYAPR13MB2503.namprd13.prod.outlook.com>
- <3cfaef48-744f-000f-1be5-6f96d64dea24@gmx.com>
- <YzcdnnjJA4M09dNH@pendragon.ideasonboard.com>
- <YzeVVV+nPaxsqS0V@mit.edu>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15F223D1
+	for <regressions@lists.linux.dev>; Sat,  1 Oct 2022 10:07:48 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oeZPI-0005yb-6G; Sat, 01 Oct 2022 12:07:40 +0200
+Message-ID: <e3e2915d-1411-a758-3991-48d6c2688a1e@leemhuis.info>
+Date: Sat, 1 Oct 2022 12:07:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="RFCm67F2aeOXrvQp"
-Content-Disposition: inline
-In-Reply-To: <YzeVVV+nPaxsqS0V@mit.edu>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Content-Language: en-US, de-DE
+To: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Slade Watkins <srw@sladewatkins.net>, Jerry Ling <jiling@cern.ch>
+References: <55905860-adf9-312c-69cc-491ac8ce1a8b@cern.ch>
+ <YzZynE2FAMNQKm2E@kroah.com> <YzaFq7fzw5TbrJyv@kroah.com>
+ <03147889-B21C-449B-B110-7E504C8B0EF4@sladewatkins.net>
+ <aa8b9724-50c6-ae2e-062d-3791144ac97e@cern.ch>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: Regression on 5.19.12, display flickering on Framework laptop
+In-Reply-To: <aa8b9724-50c6-ae2e-062d-3791144ac97e@cern.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664618868;097d12d5;
+X-HE-SMSGID: 1oeZPI-0005yb-6G
+
+On 30.09.22 14:26, Jerry Ling wrote:
+> 
+> looks like someone has done it:
+> https://bbs.archlinux.org/viewtopic.php?pid=2059823#p2059823
+> 
+> and the bisect points to:
+> 
+> |# first bad commit: [fc6aff984b1c63d6b9e54f5eff9cc5ac5840bc8c]
+> drm/i915/bios: Split VBT data into per-panel vs. global parts Best, Jerry |
+
+FWIW, that's 3cf050762534 in mainline. Adding Ville, its author to the
+list of recipients.
+
+Did anyone check if a revert on top of 5.19.12 works easily and solves
+the problem?
+
+And does anybody known if mainline affected, too?
+
+Ciao, Thorsten
 
 
---RFCm67F2aeOXrvQp
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Sep 30, 2022 at 09:18:13PM -0400, Theodore Ts'o wrote:
-> On Fri, Sep 30, 2022 at 07:47:26PM +0300, Laurent Pinchart wrote:
-> > > Debian uses an email based bug tracker and you know what? Most people
-> > > avoid it like a plague. It's a hell on earth to use. Ubunutu's Launch=
-pad
-> > > which looks and feels like Bugzilla is a hundred times more popular.
-> >=20
-> > It would be pretty sad if the only options we could come up with for bug
-> > tracking would be either popular with reporters and ignored by
-> > maintainers, or the other way around. Ideally we wouldn't have to decide
-> > which of those two classes of users to prioritize, but I fear that,
-> > given resource starvation, we'll have to make a decision there that will
-> > be unpopular with one of the two sides.
->=20
-> Funny thing.  I've largely given up on getting any kind of useful bug
-> report from Launchpad, so I've largely ignored it.  In contast, the
-> bug reports I get for e2fsprogs from Debian are generally far more
-> actionable, with bug reports that have all of the data so I can
-> actually root cause the problem, and help the user.
->=20
-
-So no matter how the bug tracker interface is, the etiquette is:
-Whenever something buggy happens, try to gather all information related
-to that event (reproduction steps and reproducer, logs, crash dumps,
-etc), then file the polished report. From your experience, it seems like
-Debian people knows it.
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---RFCm67F2aeOXrvQp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCYzfy3gAKCRD2uYlJVVFO
-owpKAQDqs3NaPzyJxecuSDu3seERfmPSXU7yhojYUK+ijxRcOQD+KOQZIAVxQI1m
-MdIgbD/Z+MU5jKPdPMY6FRc/vYLWWw8=
-=UwbF
------END PGP SIGNATURE-----
-
---RFCm67F2aeOXrvQp--
+> On 9/30/22 07:11, Slade Watkins wrote:
+>> Hey Greg,
+>>
+>>> On Sep 30, 2022, at 1:59 AM, Greg KH <gregkh@linuxfoundation.org> wrote:
+>>>
+>>> On Fri, Sep 30, 2022 at 06:37:48AM +0200, Greg KH wrote:
+>>>> On Thu, Sep 29, 2022 at 10:26:25PM -0400, Jerry Ling wrote:
+>>>>> Hi,
+>>>>>
+>>>>> It has been reported by multiple users across a handful of distros
+>>>>> that
+>>>>> there seems to be regression on Framework laptop (which presumably
+>>>>> is not
+>>>>> that special in terms of mobo and display)
+>>>>>
+>>>>> Ref:
+>>>>> https://community.frame.work/t/psa-dont-upgrade-to-linux-kernel-5-19-12-arch1-1-on-arch-linux-gen-11-model/23171
+>>>> Can anyone do a 'git bisect' to find the offending commit?
+>>> Also, this works for me on a gen 12 framework laptop:
+>>>     $ uname -a
+>>>     Linux frame 5.19.12 #68 SMP PREEMPT_DYNAMIC Fri Sep 30 07:02:33
+>>> CEST 2022 x86_64 GNU/Linux
+>>>
+>>> so there's something odd with the older hardware?
+>>>
+>>> greg k-h
+>> Could be. Running git bisect for 5.19.11 and 5.19.12 (as suggested by
+>> the linked forum thread) returned nothing on gen 11 for me.
+>>
+>> This is very odd,
+>> -srw
+> 
+> 
