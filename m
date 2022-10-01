@@ -1,13 +1,21 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A15F223D1
-	for <regressions@lists.linux.dev>; Sat,  1 Oct 2022 10:07:48 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oeZPI-0005yb-6G; Sat, 01 Oct 2022 12:07:40 +0200
-Message-ID: <e3e2915d-1411-a758-3991-48d6c2688a1e@leemhuis.info>
-Date: Sat, 1 Oct 2022 12:07:39 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4D71867;
+	Sat,  1 Oct 2022 10:30:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1664620224;
+	bh=1jutPDHRlPOr8rEfsKfO97RJKs8/j3QxO2kaIL58B8E=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=govxr0P4bnOQ49jS+wfQI5thAkxWeui+SckZ7Bv5XFMW/uxVocJMaLex+yH/uZFsW
+	 +griCNPu4HFXtZ3U7RmHlSuLneu+AA+hJGnft91UWGJXKAYINHJeFVcKbn5dGHrGiH
+	 uvyboQ9g1lIeT8JJYwkwm9A07k+1D4paZEqSfXhE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.30.110.10] ([143.244.37.31]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1Mk0NU-1p2xD53WkS-00kMX1; Sat, 01
+ Oct 2022 12:30:24 +0200
+Message-ID: <9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com>
+Date: Sat, 1 Oct 2022 10:30:22 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,74 +24,98 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Content-Language: en-US, de-DE
-To: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Slade Watkins <srw@sladewatkins.net>, Jerry Ling <jiling@cern.ch>
-References: <55905860-adf9-312c-69cc-491ac8ce1a8b@cern.ch>
- <YzZynE2FAMNQKm2E@kroah.com> <YzaFq7fzw5TbrJyv@kroah.com>
- <03147889-B21C-449B-B110-7E504C8B0EF4@sladewatkins.net>
- <aa8b9724-50c6-ae2e-062d-3791144ac97e@cern.ch>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: Regression on 5.19.12, display flickering on Framework laptop
-In-Reply-To: <aa8b9724-50c6-ae2e-062d-3791144ac97e@cern.ch>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1664618868;097d12d5;
-X-HE-SMSGID: 1oeZPI-0005yb-6G
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+To: Thorsten Leemhuis <linux@leemhuis.info>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ ksummit@lists.linux.dev
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+From: "Artem S. Tashkinov" <aros@gmx.com>
+In-Reply-To: <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:OIZKgNIoUzfXFxWRgy/Z1vaxIi9zGvMB/YQQlltEGHfMbUXcd3U
+ yWf0nypaNJYSt47WpQNIM4TkIjy2jo1eFpwomUnKk9ZzoIbW2QBCe3FGkYdUMfY9gcrlILE
+ 6qNZOdumdf3Sp4ihXDQwAQx+zCl0RAhmjFaanSY/i+/M5yf73+9nFeKlkBgtJPv89A2tUqL
+ YlBih/+zroXZ9c8xSDO3w==
+X-Spam-Flag: YES
+X-UI-Out-Filterresults: junk:10;V03:K0:XzkzykWyZ0s=:ZpHjeAs9hHVfzzZjOsnKoNic
+ cuzvCsCDV8Jd8MnT/MFk4BLDcEwigVChYAZ/+8VcNQ26yTkj3A5dTsfLaW5GTfSGqM6qPPyLg
+ 4etZVPrzlg2YL0OobK5r+Mlt1onRaBPQNb0eTRz2D83/3WHauAzxEJkju4uMH5SJMVIYSvUMy
+ c4OjYW3gWyD6pPOOIjqoW7cJKCoPMN9blBBSNxi6pBWd4yAl4mRcPywW0QpUwaF00sHO8mwm3
+ ETk7cehpk7E4DFmgmOBEjjf31mysGBVMboqUG9d5griI00T6CJC7nn2f1OQFT0+w251oznGRK
+ 4/6YhHwKZu58GmLuMoQuFFIcCF7IuCzDBJCSfcOENQdQPmXc6Y5TBksDlUjN/MrzW2wmAyVhh
+ 9oxJmI57MBnuc181VonHD0b7oQh9pRhboXMC6KI6Ym7jjbzUMu9VWuvJOqm1vNWJM3LsmDpnA
+ wj2Cwe1OeQokO3/FQZdPtC6tIPcOEYargvDUI4dk0BtRdPvdqu18cj/XEWHDewXjSJnS/absz
+ L0qSZ+CGAGJTPhzUdZHjIv6udMOgxipFd/y4m+v38ljPWICki1En83vMrGPyiuO5+icvH6fqh
+ Abw0pcRBOgFxhK9RJNfymxkV3AQMZUOgs8iJdahbk3qCBniyrNKHaNFXMV5wxhqy4MdSVCiui
+ qKEFAfFf5dUGLbJYbIRpu56izrwwLPYpUmChFTumltj0EPxoAd/x1BQ+ivU2vCiMHGHQVWoZy
+ kyapWIEfBQqVaG/mg3yedrUtb5D6e9ZBGAbKaU4XsvbqBK/HLC1HgYwKOFZucB+Vq82IulI5E
+ IeNXB4CPTYoa7uga5UAZlAhe0X5y1eAhlQQHL/qwUlGXEbhpnSNLkZ6mNG46I9/YNUWos/7Ao
+ xG7xIMkLR3gFV2yhIYcSpFJ1hxaaF1Tz3ZMoVjN8vcBMHiuCN9/5g3yVik7rbBScasKjQ8mQK
+ aPNXADwsbAC8yycoov6tmEU7rCc0D1YKGD3RBAP9SQMWys5zHfBOdcEBikKfnkERQAHVuv9fG
+ vM/EqGnOu2W/3ZOo8WYuUQZv38EjNFrK3nuJgnqVbVDhB7wRNYcSGqKaBVCUA4UoFV8U5l/fO
+ I95K1ghHkMOgZfTm1XRkGRHMzKPB9IDI0EPiqhrdnPEIRr9MXUIl/74gXG2Rex1JJYd34r1Ab
+ d/25OmF9cCj8+4FYI9xEDwxvKGoGEbkSKmjgU3ZeYzWppg==
 
-On 30.09.22 14:26, Jerry Ling wrote:
-> 
-> looks like someone has done it:
-> https://bbs.archlinux.org/viewtopic.php?pid=2059823#p2059823
-> 
-> and the bisect points to:
-> 
-> |# first bad commit: [fc6aff984b1c63d6b9e54f5eff9cc5ac5840bc8c]
-> drm/i915/bios: Split VBT data into per-panel vs. global parts Best, Jerry |
+Here are two other issues which absolutely suck in terms of dealing with
+the kernel.
 
-FWIW, that's 3cf050762534 in mainline. Adding Ville, its author to the
-list of recipients.
+- 1 -
 
-Did anyone check if a revert on top of 5.19.12 works easily and solves
-the problem?
+I have a 20+ years experience in IT and some kernel issues are just
+baffling in terms of trying to understand what to do about them.
 
-And does anybody known if mainline affected, too?
+Here's an example: https://bugzilla.kernel.org/show_bug.cgi?id=3D216274
 
-Ciao, Thorsten
+What should I do about that? Who's responsible for this? Who should I CC?
 
+And this is an issue which is easy to describe and identify.
 
-> On 9/30/22 07:11, Slade Watkins wrote:
->> Hey Greg,
->>
->>> On Sep 30, 2022, at 1:59 AM, Greg KH <gregkh@linuxfoundation.org> wrote:
->>>
->>> On Fri, Sep 30, 2022 at 06:37:48AM +0200, Greg KH wrote:
->>>> On Thu, Sep 29, 2022 at 10:26:25PM -0400, Jerry Ling wrote:
->>>>> Hi,
->>>>>
->>>>> It has been reported by multiple users across a handful of distros
->>>>> that
->>>>> there seems to be regression on Framework laptop (which presumably
->>>>> is not
->>>>> that special in terms of mobo and display)
->>>>>
->>>>> Ref:
->>>>> https://community.frame.work/t/psa-dont-upgrade-to-linux-kernel-5-19-12-arch1-1-on-arch-linux-gen-11-model/23171
->>>> Can anyone do a 'git bisect' to find the offending commit?
->>> Also, this works for me on a gen 12 framework laptop:
->>>     $ uname -a
->>>     Linux frame 5.19.12 #68 SMP PREEMPT_DYNAMIC Fri Sep 30 07:02:33
->>> CEST 2022 x86_64 GNU/Linux
->>>
->>> so there's something odd with the older hardware?
->>>
->>> greg k-h
->> Could be. Running git bisect for 5.19.11 and 5.19.12 (as suggested by
->> the linked forum thread) returned nothing on gen 11 for me.
->>
->> This is very odd,
->> -srw
-> 
-> 
+- 2 -
+
+Here's another one which is outright puzzling:
+
+You run: dmesg -t --level=3Demerg,crit,err
+
+And you see some non-descript errors of some kernel subsystems seemingly
+failing or being unhappy about your hardware. Errors are as cryptic as
+humanly possible, you don't even know what part of kernel has produced the=
+m.
+
+OK, as a "power" user I download the kernel source, run `grep -R message
+/tmp/linux-5.19` and there are _multiple_ different modules and places
+which contain this message.
+
+I'm lost. Send this to LKML? Did that in the long past, no one cared, I
+stopped.
+
+Here's what I'm getting with Linux 5.19.12:
+
+platform wdat_wdt: failed to claim resource 5: [mem
+0x00000000-0xffffffff7fffffff]
+ACPI: watchdog: Device creation failed: -16
+ACPI BIOS Error (bug): Could not resolve symbol
+[\_SB.PCI0.XHC.RHUB.TPLD], AE_NOT_FOUND (20220331/psargs-330)
+ACPI Error: Aborting method \_SB.UBTC.CR01._PLD due to previous error
+(AE_NOT_FOUND) (20220331/psparse-529)
+platform MSFT0101:00: failed to claim resource 1: [mem
+0xfed40000-0xfed40fff]
+acpi MSFT0101:00: platform device creation failed: -16
+lis3lv02d: unknown sensor type 0x0
+
+Are they serious? Should they be reported or not? Is my laptop properly
+working? I have no clue at all.
+
+=2D--
+
+While we've been talking about bugzilla I thought it would be pertinent
+to bring this up.
+
+Best regards,
+Artem
