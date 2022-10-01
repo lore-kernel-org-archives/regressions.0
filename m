@@ -1,121 +1,78 @@
-Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.42])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4D71867;
-	Sat,  1 Oct 2022 10:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1664620224;
-	bh=1jutPDHRlPOr8rEfsKfO97RJKs8/j3QxO2kaIL58B8E=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=govxr0P4bnOQ49jS+wfQI5thAkxWeui+SckZ7Bv5XFMW/uxVocJMaLex+yH/uZFsW
-	 +griCNPu4HFXtZ3U7RmHlSuLneu+AA+hJGnft91UWGJXKAYINHJeFVcKbn5dGHrGiH
-	 uvyboQ9g1lIeT8JJYwkwm9A07k+1D4paZEqSfXhE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.30.110.10] ([143.244.37.31]) by mail.gmx.net (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1Mk0NU-1p2xD53WkS-00kMX1; Sat, 01
- Oct 2022 12:30:24 +0200
-Message-ID: <9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com>
-Date: Sat, 1 Oct 2022 10:30:22 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E70D22569;
+	Sat,  1 Oct 2022 10:39:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BC8CC433D6;
+	Sat,  1 Oct 2022 10:39:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1664620792;
+	bh=2REZi1DSBxW54qHDdDsCh+oVeTCZ/Q7nmWOxEnkFZN4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HyTcFygilfek7CPy21CK17wZu7YMs8hHhJb0TH91zkH0Qad2O0TsZvqtzZjpBh40N
+	 h5X8kavAnzlgshPMPl2+ovWVmO4XrRuAPcpwWITzXOWBV4wJNXlRZ1rOmFJA6aPLsQ
+	 Km+js0MRZ/A2VjRXmYIvlK1C0Lb8evSA4K0Q7e64=
+Date: Sat, 1 Oct 2022 12:39:49 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Artem S. Tashkinov" <aros@gmx.com>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>,
+	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+	workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	ksummit@lists.linux.dev
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+Message-ID: <YzgY9X/DM9t/ZuJe@kroah.com>
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+ <9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-To: Thorsten Leemhuis <linux@leemhuis.info>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Greg KH <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- ksummit@lists.linux.dev
-References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
- <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
-From: "Artem S. Tashkinov" <aros@gmx.com>
-In-Reply-To: <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:OIZKgNIoUzfXFxWRgy/Z1vaxIi9zGvMB/YQQlltEGHfMbUXcd3U
- yWf0nypaNJYSt47WpQNIM4TkIjy2jo1eFpwomUnKk9ZzoIbW2QBCe3FGkYdUMfY9gcrlILE
- 6qNZOdumdf3Sp4ihXDQwAQx+zCl0RAhmjFaanSY/i+/M5yf73+9nFeKlkBgtJPv89A2tUqL
- YlBih/+zroXZ9c8xSDO3w==
-X-Spam-Flag: YES
-X-UI-Out-Filterresults: junk:10;V03:K0:XzkzykWyZ0s=:ZpHjeAs9hHVfzzZjOsnKoNic
- cuzvCsCDV8Jd8MnT/MFk4BLDcEwigVChYAZ/+8VcNQ26yTkj3A5dTsfLaW5GTfSGqM6qPPyLg
- 4etZVPrzlg2YL0OobK5r+Mlt1onRaBPQNb0eTRz2D83/3WHauAzxEJkju4uMH5SJMVIYSvUMy
- c4OjYW3gWyD6pPOOIjqoW7cJKCoPMN9blBBSNxi6pBWd4yAl4mRcPywW0QpUwaF00sHO8mwm3
- ETk7cehpk7E4DFmgmOBEjjf31mysGBVMboqUG9d5griI00T6CJC7nn2f1OQFT0+w251oznGRK
- 4/6YhHwKZu58GmLuMoQuFFIcCF7IuCzDBJCSfcOENQdQPmXc6Y5TBksDlUjN/MrzW2wmAyVhh
- 9oxJmI57MBnuc181VonHD0b7oQh9pRhboXMC6KI6Ym7jjbzUMu9VWuvJOqm1vNWJM3LsmDpnA
- wj2Cwe1OeQokO3/FQZdPtC6tIPcOEYargvDUI4dk0BtRdPvdqu18cj/XEWHDewXjSJnS/absz
- L0qSZ+CGAGJTPhzUdZHjIv6udMOgxipFd/y4m+v38ljPWICki1En83vMrGPyiuO5+icvH6fqh
- Abw0pcRBOgFxhK9RJNfymxkV3AQMZUOgs8iJdahbk3qCBniyrNKHaNFXMV5wxhqy4MdSVCiui
- qKEFAfFf5dUGLbJYbIRpu56izrwwLPYpUmChFTumltj0EPxoAd/x1BQ+ivU2vCiMHGHQVWoZy
- kyapWIEfBQqVaG/mg3yedrUtb5D6e9ZBGAbKaU4XsvbqBK/HLC1HgYwKOFZucB+Vq82IulI5E
- IeNXB4CPTYoa7uga5UAZlAhe0X5y1eAhlQQHL/qwUlGXEbhpnSNLkZ6mNG46I9/YNUWos/7Ao
- xG7xIMkLR3gFV2yhIYcSpFJ1hxaaF1Tz3ZMoVjN8vcBMHiuCN9/5g3yVik7rbBScasKjQ8mQK
- aPNXADwsbAC8yycoov6tmEU7rCc0D1YKGD3RBAP9SQMWys5zHfBOdcEBikKfnkERQAHVuv9fG
- vM/EqGnOu2W/3ZOo8WYuUQZv38EjNFrK3nuJgnqVbVDhB7wRNYcSGqKaBVCUA4UoFV8U5l/fO
- I95K1ghHkMOgZfTm1XRkGRHMzKPB9IDI0EPiqhrdnPEIRr9MXUIl/74gXG2Rex1JJYd34r1Ab
- d/25OmF9cCj8+4FYI9xEDwxvKGoGEbkSKmjgU3ZeYzWppg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com>
 
-Here are two other issues which absolutely suck in terms of dealing with
-the kernel.
+On Sat, Oct 01, 2022 at 10:30:22AM +0000, Artem S. Tashkinov wrote:
+> Here are two other issues which absolutely suck in terms of dealing with
+> the kernel.
+> 
+> - 1 -
+> 
+> I have a 20+ years experience in IT and some kernel issues are just
+> baffling in terms of trying to understand what to do about them.
+> 
+> Here's an example: https://bugzilla.kernel.org/show_bug.cgi?id=216274
+> 
+> What should I do about that? Who's responsible for this? Who should I CC?
 
-- 1 -
+Input subsystem.
 
-I have a 20+ years experience in IT and some kernel issues are just
-baffling in terms of trying to understand what to do about them.
+> Here's what I'm getting with Linux 5.19.12:
+> 
+> platform wdat_wdt: failed to claim resource 5: [mem
+> 0x00000000-0xffffffff7fffffff]
 
-Here's an example: https://bugzilla.kernel.org/show_bug.cgi?id=3D216274
+$ find . | grep wdat_wdt
+./drivers/watchdog/wdat_wdt.c
+$ ./scripts/get_maintainer.pl --file ./drivers/watchdog/wdat_wdt.c
+Wim Van Sebroeck <wim@linux-watchdog.org> (maintainer:WATCHDOG DEVICE DRIVERS)
+Guenter Roeck <linux@roeck-us.net> (maintainer:WATCHDOG DEVICE DRIVERS)
+linux-watchdog@vger.kernel.org (open list:WATCHDOG DEVICE DRIVERS)
+linux-kernel@vger.kernel.org (open list)
 
-What should I do about that? Who's responsible for this? Who should I CC?
+> ACPI: watchdog: Device creation failed: -16
+> ACPI BIOS Error (bug): Could not resolve symbol
+> [\_SB.PCI0.XHC.RHUB.TPLD], AE_NOT_FOUND (20220331/psargs-330)
+> ACPI Error: Aborting method \_SB.UBTC.CR01._PLD due to previous error
+> (AE_NOT_FOUND) (20220331/psparse-529)
 
-And this is an issue which is easy to describe and identify.
+Send to ACPI list as described in the MAINTAINERS file.
 
-- 2 -
+thanks,
 
-Here's another one which is outright puzzling:
-
-You run: dmesg -t --level=3Demerg,crit,err
-
-And you see some non-descript errors of some kernel subsystems seemingly
-failing or being unhappy about your hardware. Errors are as cryptic as
-humanly possible, you don't even know what part of kernel has produced the=
-m.
-
-OK, as a "power" user I download the kernel source, run `grep -R message
-/tmp/linux-5.19` and there are _multiple_ different modules and places
-which contain this message.
-
-I'm lost. Send this to LKML? Did that in the long past, no one cared, I
-stopped.
-
-Here's what I'm getting with Linux 5.19.12:
-
-platform wdat_wdt: failed to claim resource 5: [mem
-0x00000000-0xffffffff7fffffff]
-ACPI: watchdog: Device creation failed: -16
-ACPI BIOS Error (bug): Could not resolve symbol
-[\_SB.PCI0.XHC.RHUB.TPLD], AE_NOT_FOUND (20220331/psargs-330)
-ACPI Error: Aborting method \_SB.UBTC.CR01._PLD due to previous error
-(AE_NOT_FOUND) (20220331/psparse-529)
-platform MSFT0101:00: failed to claim resource 1: [mem
-0xfed40000-0xfed40fff]
-acpi MSFT0101:00: platform device creation failed: -16
-lis3lv02d: unknown sensor type 0x0
-
-Are they serious? Should they be reported or not? Is my laptop properly
-working? I have no clue at all.
-
-=2D--
-
-While we've been talking about bugzilla I thought it would be pertinent
-to bring this up.
-
-Best regards,
-Artem
+greg k-h
