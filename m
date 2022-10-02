@@ -1,121 +1,188 @@
-Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BA03D6A;
-	Sun,  2 Oct 2022 21:58:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1664747880;
-	bh=J9jOA1o1FXQdz62pKWAShl02oO5tEkASgfZtwTI+yQg=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=DJ+KGjghRt1tgyrDsO+ir5lZVfl7eUbR0U/sGC9puqd+sMDzovDXUDBLssJWwvSzi
-	 Yj9xl/qllS67rOZ3rNKWOnuD539SMczJxuTazUrUBY/no+hMybIIBY6E5zvW3/yFjf
-	 /MQ5BuZZ0656ZnM2LpkuvjwO5zwyco8yYdJDd4M4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.13.110.23] ([143.244.37.73]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MNsw4-1oqBhw0buq-00OIjY; Sun, 02
- Oct 2022 23:58:00 +0200
-Message-ID: <9f943dfb-66d7-396e-eb99-b6cd30647a7a@gmx.com>
-Date: Sun, 2 Oct 2022 21:57:58 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C473D6A;
+	Sun,  2 Oct 2022 22:08:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B9FAC433C1;
+	Sun,  2 Oct 2022 22:08:45 +0000 (UTC)
+Date: Sun, 2 Oct 2022 18:08:44 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: "Artem S. Tashkinov" <aros@gmx.com>
+Cc: Theodore Ts'o <tytso@mit.edu>, Thorsten Leemhuis <linux@leemhuis.info>,
+ Greg KH <gregkh@linuxfoundation.org>, Konstantin Ryabitsev
+ <konstantin@linuxfoundation.org>, workflows@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Linus Torvalds
+ <torvalds@linux-foundation.org>, "regressions@lists.linux.dev"
+ <regressions@lists.linux.dev>, ksummit@lists.linux.dev, Mario Limonciello
+ <mario.limonciello@amd.com>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+Message-ID: <20221002180844.2e91b1f1@rorschach.local.home>
+In-Reply-To: <6de0925c-a98a-219e-eed2-ba898ef974f8@gmx.com>
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+	<05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+	<9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com>
+	<YzgY9X/DM9t/ZuJe@kroah.com>
+	<f8cbb12c-590b-28a3-e3e9-d3fb0d7e3c90@gmx.com>
+	<d7798453-3105-7adf-a9a6-76e8cfe4d012@leemhuis.info>
+	<83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com>
+	<a676e5cf-c67b-7946-ce73-8fb8d63a5a0a@leemhuis.info>
+	<Yzg7pHspc72I7TAb@mit.edu>
+	<e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com>
+	<YzmBjgXq9geMnL1B@mit.edu>
+	<79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com>
+	<20221002141321.394de676@rorschach.local.home>
+	<6de0925c-a98a-219e-eed2-ba898ef974f8@gmx.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-To: Willy Tarreau <w@1wt.eu>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
- Greg KH <gregkh@linuxfoundation.org>, Theodore Ts'o <tytso@mit.edu>,
- Thorsten Leemhuis <linux@leemhuis.info>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- ksummit@lists.linux.dev, Mario Limonciello <mario.limonciello@amd.com>
-References: <Yzg7pHspc72I7TAb@mit.edu>
- <e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com> <YzmBjgXq9geMnL1B@mit.edu>
- <79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com> <YzmhoglDyEf3z0n8@kroah.com>
- <ce0b5780-a8cd-83fc-5b91-3acc574f426e@gmx.com>
- <CAHk-=wiGZEGY7kDXSD3ryL3yJ6fMp-+zzdyRFUc30kW+512-2w@mail.gmail.com>
- <7d57b7d2-b39a-881c-65e6-969c4f0948cc@gmx.com>
- <CAHk-=wjfAERC3XjZ=rF8HM+Q52LD-j_EEtv0hhiyhi6PC6MCUA@mail.gmail.com>
- <8f2ad360-8719-e275-050b-f279201a1616@gmx.com>
- <20221002214054.GB22532@1wt.eu>
-From: "Artem S. Tashkinov" <aros@gmx.com>
-In-Reply-To: <20221002214054.GB22532@1wt.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TEcJbSh9IZr7Wrh1il7g1QMgcs72RJ1b9EZUf+e4lEp10eEjms1
- Mjt6Ra3L2c8YegM61W0MMckC+d6RkGDeO8ZZyxAiNF2E12g0mKI92lW7ClmQUsL3VMBhvfS
- yXW2elD062hf5YJpDbL2vXlqsUtpP8ZrCksa6PD9Yt1QEw6d6l4QL/EYVSu8jCEPtUR8N+R
- dM26yJT9p8ZVoHM89Nb/g==
-X-Spam-Flag: YES
-X-UI-Out-Filterresults: junk:10;V03:K0:23qe81xX9kU=:ZuSzbdpVllOk8eT29yB046Ab
- Qval+jYhLuy4gkag5QiP53p74YdG7H7d8HEcx9qwoYSFCo2t82h4qDuPg03BuM7f3tO7vTHSP
- KmHbGQPZSAsHg+XDnv+fJK+WbNqsAS5JSoKH77FBiDy/Vw0ryTIC9qsomlt0viyQHIcyhqWYQ
- PETJC63A/kn9LT7aW13XBaqKTd4VQvGdtnpheZeWyC7a03QWVeCnlzdTGy+Uszi7OMZhts7dU
- wffeIBSfVuxhjMu6IIue7p6DL5OHiBlbgF2vS3mvQNErEIwbnwgXRlqCaW/LOFZkcV7Fh1npd
- 1VqyRMJeSPtCwKedVvLVNGxnKcusdf6OgQ6nBFU6gOCERwtU77zxxphm+ed9weJRQw6yrZmCa
- 2EJOtI0CpSsyyJxTsTrrzxakYq4P35Jh18ZPuhO/Kzt+B4qKAWEg0Kw+5nMc41Vzxj6h/VgVe
- rNASNt3tQDmK1RoYC9EwXq0KfiTJ+7sgD84d6mXbILN1Wf2pbKH1zxA5Cmkx8ua284fNhcoeG
- b4c4iiA52AavKYwh9Y8o3iXJw0RX60EsAwbKoDW528UV+Fh9EgoeQnCIP0xLNCc8H5p+5lS3h
- X5KbajcA2TWR30OAIKHFsFtd3vz3rBmiCpkM6AebtrwSNQRhVsTmXvk9ZIXAyszQCD1ZY4UiR
- wX/Epdgq557KVDs7oSc/M0vJ9rLzdskBUyzkHkCb39NHHeMfdZ1k3qzC+LjqL/xwbFtQpoUhr
- lOx1J/R68uVUeMuuS/0snr8eNdhfYCAy/4oi/L5Bx0gLSSeIqQFZQBf7ahQvks6mbSnvPaASH
- tOsWIhpfxb6hH1tqOR1YC5+4S+uUVwp3x3vtwTFKi8Kkv7oxs7KM2qq7KI9jfARLGv4G80BLu
- OElcvZUzxQULonnMb2mNugLkt4YcH+YsfXtSaIl85ZTyNHcJMZwk8R6oQu2GUXP5jPR6UQe/b
- 0Kwg+5i59GJw/lsSaW4PNYWShQzb+jhEeqwQCDtw3eoq/++DvcxGc9d0Lajou6N0ISlkNIODo
- DA0Pa2OagE7c5zyHzGEWsorIjBGMta66ys5rskdzQk9MzIQ/xTYF5u7abD4Q+F0Ex1pUG2wOR
- bCsErq7L62ug/xuqTpgDw51VNULJeJRV4qI9a7QQa+28TS+/TsLI2/RVpUrjlFY2y2rmymI8W
- TaG6xdYva2JTKfI6Hpybz5zNyL+TJPbkh7UJWAy57CSTxQ==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Sun, 2 Oct 2022 20:14:17 +0000
+"Artem S. Tashkinov" <aros@gmx.com> wrote:
+> > As one of the few kernel maintainers that actually likes bugzilla and I
+> > do not mind being subscribed to it, I too find the above an awful idea
+> > (and I agree with all those that explained why it is so).  
+> 
+> Good, exactly what I've been advocating for, those who like it and can
+> help are welcome, others can go unsubscribe in under a minute. No drama.
+
+No, why do they need to do something? It should be opt-in not opt-out.
+What is the reason you want to burden maintainers? Your' "they can just
+unsubscribe" is an insult to them.
+
+> 
+> >
+> > This really comes down to a manpower issue, which is common among most
+> > open source projects. Remember it is commonly said that the only
+> > warrantee you get from open source projects is that if it breaks, you
+> > get to keep the pieces.
+> >
+> > The issue is that the users of the Linux kernel mostly got it for free.
+> > And if they did pay for it, it is highly unlikely that they paid the
+> > kernel maintainer that owns the subsystem that they are having issues
+> > with. That means, for the maintainers to triage these bug reports, they
+> > are essentially doing it for free.  
+> 
+> I perfectly understand it. I've _not_ asked anyone to do anything yet,
+
+Yes you are! You are making people unsubscribe. That _is_ telling
+someone to do something that they do not want to do!
+
+> except maybe have their email in the bugzilla database, so that people
+> _could_ CC you.
+> 
+> They will _not_ do it right away. They first have to `git grep` commits,
+> find the relevant developers and then CC them.
+> 
+> >
+> > Some projects are better at this, and there are developers that are
+> > happy to give free work, but there are also other projects that have
+> > companies actively backing the work to debug these issues.
+> >
+> > If you are using fedora, go bug Red Hat, Ubuntu then Canonical. And
+> > again, it comes down to if you have a paid subscription or not if you
+> > are going to get anywhere with it.  
+> 
+> This does not work, period. Most kernel bug reports in Fedora and Ubuntu
+
+That's because it's a free service.
+
+> bug trackers linger for years, sometimes someone says, "Try the vanilla
+> kernel and if it's still an issue, please use the kernel bugzilla".
+
+Really? They are telling people to fill out the kernel bugzilla. Sounds
+like someone needs to tell them otherwise. When I worked for Red Hat, I
+don't recall anyone telling someone to fill out the kernel bugzilla
+when they are told to report it upstream. It was always email the
+maintainers involved.
+
+> 
+> My Fedora kernel bug reports have been dealt with exactly this way.
+> 
+> RedHat does solve kernel issues in the RHEL kernel if you have a paid
+> subscription and you spend quite some time providing them with a perfect
+> reproducible test case. This is far outside this conversation.
+
+Why? This is exactly the type of workflow we want. We don't need to be
+paid, but getting the perfect reproducer is something we ask a lot for.
+
+> 
+> >
+> > Can this be annoying, sure. But that's how the open source ecosystem
+> > works.
+> >
+> > If someone is not able to figure out how to use the mailing lists, it
+> > is unlikely that they will be able to be useful in working with the
+> > maintainer to solve their issue. As Ted mentioned, when asked to do
+> > something to help analyze the issue, many times there's no response
+> > from the reporter. Maybe because the reporter had no idea what the
+> > maintainer wanted them to do. Most kernel bugs requires a constant back
+> > and forth between the reporter and the developer. If you don't have
+> > that, then there's no reason to bother with trying to fix the issue.  
+> 
+> Mailing lists more often than not do not work, and maybe worked in the
+> early 90s.
+
+Cc the maintainers along with the mailing list works much more than
+just emailing the mailing list alone. And if you don't get anywhere
+when you Cc the maintainer directly, what makes you think it will do
+any better if it's part of bugzilla?
 
 
+> 
+> We don't need to resolve the issue right away. We don't have to deal
+> with it. We just need a place where people could find existing issues
+> and add their input. That's a lot better than chasing something in emails.
+> 
+> Here's the simplest example.
+> 
+> Person A installs kernel 6.0. They find a regression. They send an email
+> to maling list X. Not necessarily the relevant one and the email is
+> simply ignored.
+> 
+> Another person finds the same regression. This person B may not be aware
+> of the mailing list used earlier. They send a bug report elsewhere.
+> 
+> Now we have two completely disconnected bug reports which if luck allows
+> could be Googled. Oy, you must know what to google for. Not that many
+> people have a good Google foo.
 
-On 10/2/22 21:40, Willy Tarreau wrote:
-> On Sun, Oct 02, 2022 at 09:27:40PM +0000, Artem S. Tashkinov wrote:
->>> Which is why in the general case, you really should consider email to
->>> be the "lingua franca" of kernel development communication.  It
->>> doesn't have the fundamental limitations and management issues that
->>> bugzilla has. If you want to add more people to the Cc in an email,
->>> you just do it.
->>
->> Attention, Linus, the problem is attention.
->>
->> Once something is filed in bugzilla, it's public, it's easily
->> accessible, it can easily be found, you can easily add new info.
->>
->> Emails? You've flown to Japan to a conference for a week and you have
->> much better things than to check any email updates. A week worth of
->> emails have suddenly become worthless.
->
-> Serious ? Have you ever attended a conference and looked over the
-> shoulder of the person in front of you ? There are 3 types of interfaces
-> you see:
->    - code
->    - slides
->    - mails
->
-> The last thing people will look at during a conference definitely is a
-> painfully depressive bugtracker interface. However they will see bug
-> reports in their mailbox as they happen to read emails from their boss
-> or customers.
+Isn't this what Stack Overflow is for? ;-)
 
-I meant people who are at conferences or on vacation normally stop
-working with their work related mailing lists. I vividly remember Linus
-mailing something like this, "I've flown somewhere, I won't have
-[stable] Internet, please postpone this and that". At least a couple of
-times.
+> 
+> Now with bugzilla.
+> 
+> Anyone opens the last seven days of bug reports and instantly sees that
+> something similar has already been filed and dealt with. Collaboration
+> ensues. Maybe just maybe some developer will join it and actually offer
+> a fix. If not, OK, fine, no big deal but at least it's _known_,
+> _visible_ and can be _found_.
+> 
+> Random unreplied emails God knows where? Good luck with that.
 
->
->> Here's yet another issue, how would you send a follow up if you don't
->> know the reference ("References" email field)? Instead of a follow up
->> it'll end up being a new unrelated email.
->
-> You don't have such a problem with email. It only happens when you try
-> to respond via e-mail to stuff you find in a browser.
+I don't know. I find a lot of bug issues that are fixed via searching
+and getting lore links.
 
-That implies you've been subscribed to the mailing list earlier. Will
-not work for the vast majority of people.
+> 
+> >
+> > Ideally, someone (you?) would want to be a middle man and triage the
+> > bugzilla reports and find those that look promising to get a fix
+> > completed, and then be the liaison between bugzilla and the kernel
+> > maintainer, then I think that could work. But the issue comes back to
+> > manpower. Who's going to do that?  
+> 
+> I've already offered myself. The LF has no such position. And more
+> importantly I'm from a totalitarian country, so I'm unlikely to be ever
+> employed.
 
-Regards,
-Artem
+That's the issue I made in my first reply. That getting someone to do
+this is the hardest part. Although, Slade seems to be volunteering.
+
+-- Steve
+
