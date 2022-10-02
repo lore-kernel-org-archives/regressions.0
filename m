@@ -1,140 +1,149 @@
-Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0EAB28E2;
-	Sat,  1 Oct 2022 14:58:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1664636287;
-	bh=NvgCwQjTUGpaDRHF+TbZEl0vERpFRUrG7TUCO6mpSls=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=cejGEoXA2j834UrlarVRFIZmrjxRUJJPLMI8g3WhI8ITqzoIA11XZbM7I60cS+hsd
-	 5Z+QHdoDnjebQQDVwVMMc4+S4bB0FsVpfyMAZooC9Y5xPz1Fc8ENlknm5sXv2cKfMb
-	 6CPtCoSoahEVvV9I68bNfseYdZCg9m8qm6YeWKKc=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.30.110.10] ([143.244.37.31]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MQ5rU-1orkwI2rAW-00M6lj; Sat, 01
- Oct 2022 16:58:06 +0200
-Message-ID: <e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com>
-Date: Sat, 1 Oct 2022 14:58:04 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFF21FCC;
+	Sun,  2 Oct 2022 07:42:30 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DA460219DB;
+	Sun,  2 Oct 2022 07:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1664696238; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FzR5x3JUkUKvwUT994EkOblMSwWP5Qi2AF9tnTFvWkI=;
+	b=fnQaZ5DQyouylrjN7+ZTlPuyoA3v5tUv9BxYSP6LczMR4/5GTOD8Nyx++6GkMcYBb6Dffg
+	xu+a142U4wYtVKugsoEKqixGGaXZkBzDlEkBFFm6Ke0ZD2tsUwIYh5UO9ANyadYDptkPyv
+	H8H2HgC4cpI7KEJA6Y9vSJlA/wb0gws=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1664696238;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FzR5x3JUkUKvwUT994EkOblMSwWP5Qi2AF9tnTFvWkI=;
+	b=Loxg+Ly+4sdHcII0fcOctLmESYltf7MiXsLFHWABKtoz/xGWt+JqY8jaQqpKicOyVQB++0
+	7wkzozkIrhaT2BDQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9E9A213A5D;
+	Sun,  2 Oct 2022 07:37:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id wyf0Ja4/OWP/KwAAMHmgww
+	(envelope-from <tiwai@suse.de>); Sun, 02 Oct 2022 07:37:18 +0000
+Date: Sun, 02 Oct 2022 09:37:18 +0200
+Message-ID: <87pmfavfpt.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: "Artem S. Tashkinov" <aros@gmx.com>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>,
+	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+	workflows@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	ksummit@lists.linux.dev
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla blues"
+In-Reply-To: <9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com>
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+	<05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+	<9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-To: Theodore Ts'o <tytso@mit.edu>, Thorsten Leemhuis <linux@leemhuis.info>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- ksummit@lists.linux.dev
-References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
- <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
- <9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com> <YzgY9X/DM9t/ZuJe@kroah.com>
- <f8cbb12c-590b-28a3-e3e9-d3fb0d7e3c90@gmx.com>
- <d7798453-3105-7adf-a9a6-76e8cfe4d012@leemhuis.info>
- <83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com>
- <a676e5cf-c67b-7946-ce73-8fb8d63a5a0a@leemhuis.info>
- <Yzg7pHspc72I7TAb@mit.edu>
-From: "Artem S. Tashkinov" <aros@gmx.com>
-In-Reply-To: <Yzg7pHspc72I7TAb@mit.edu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ub+LRiOF6H3rAj+auoLNuKkkYjgV7oeZDzvEDGWdJSndBBYtFeg
- gdNrV1KxRsJ2WWNtXRquEKRrReXjAa3N3ncT0CULMdKCjQKx7/hjje5byEEKUdjh8TSjBJA
- 1PJ6367ovXwJdQGfg1ZwB6BBb0nRTXRdikJnMZqozHgkgAahxtzuior0+LBYl2mb9ScML+i
- kv4T9taLHxDWxd5Lb4FSQ==
-X-Spam-Flag: YES
-X-UI-Out-Filterresults: junk:10;V03:K0:V2n2slJShMc=:WgFWTJMRNKn3SrO8hy19PVlM
- AfBFRFIlUmXGEKK+rd7JMWLWoGjFmjDi55JVHoDygF9ECOcl2Io8IXI4g2s6vJtBKVVPOu3qH
- d17ii0JPlHRTrJXnS5248z05qEPoCAmV/ToSxd8yaQbVHDp+AWP+mLHMEPaAtl935Nmz45SX+
- 2rWouF5Pra8NbLxyVgWp1j7PRqy9MZkPB/lBcN69S1Vz1hB1j2SLdh3UrGwGLJrJruRirAsWS
- 0nJ1KzL+WIOSjQxna7j9+LsCX5t4h3+znnXAShknUcg8r3P3fjYb5RP0hbolBhsmbN+eH+P6m
- coy6ynhB+piu/icsk4OcEOg9Qtp4n97vYbax+1nP7KN0ayDYVZe1C+InZZcP+Cw5DIt9SRp9o
- BDpUzQvC2hwO0XzGGz3A+L+VZDitL0il7dcM4KwHfbCb9GY/9LfTyWQctm0ZMtLvtKaZDhELd
- qCsB4MS/IkjMMT80l0SzwQQQwcP2bsxVW0FVRyEn/bOPiU5R5BibWHbMOvEalhjmQktxlLRLk
- c6UlvR1J1RG60MlNMf6DhdTOEBZFSb3SBhO0YfP1YhxTy/wK9Rn4s0DUGL/46yDjbTKBtNuaM
- 7UgfAGTJhu4VmHsBR80OR4ssiiodqhbhZ/sQjGcGiE1Kq+hgKknp+tF/QDYaYLs1RWG2JyD8r
- sgQwudrSHT+5041atkIfcWIMN+ylDxxqLzfaxHuarSR4A7vQbUJCUIsDiAS0ZUtKjN1dNjMDQ
- HgLyrFAYxmJB0UT54Mi9viOd8J/C3V24KAcUcBZFhhZToDgYJgrO7XhOgzIwgw8Js9LmvlnPi
- vYrYRBPW/UVJUw5NfOdN7ulAQjGOrUQ6QAqogdgI5s6Ha+KF+CIInY3opipESUy8s47yL1ViQ
- PWBCt41yON2a/BuOmMniIg1FTGRvI2Nmx62jrXkGDg/yvO/p0xrKGUUZzkjwem9mcMoMtuxzj
- a9wvzmOGv4biDnmavX0U3Yb8CJSgwLqalvf2RtjYJSBbZLfCQc7tgSY1doN+gaV+CNVYkQyc8
- Jmjoimrbtd2RutT+rMHkgyTJCzfmiaHX76DX1AJCwhuVpCwiWgmONaoanqVPc06WFxiisXDNe
- VsqSSDTRgOp9K7Q9qgcTQLMgBuS1K84je7LIKdcb2cm2msGFs4GQ/saraJwSn4KpMDER9E+Pe
- H01b1QnBT2zGPnMvGNXeU6j+cutEpX5iBEX3eBYnaEryVQ==
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+
+On Sat, 01 Oct 2022 12:30:22 +0200,
+Artem S. Tashkinov wrote:
+> 
+> Here are two other issues which absolutely suck in terms of dealing with
+> the kernel.
+> 
+> - 1 -
+> 
+> I have a 20+ years experience in IT and some kernel issues are just
+> baffling in terms of trying to understand what to do about them.
+> 
+> Here's an example: https://bugzilla.kernel.org/show_bug.cgi?id=216274
+> 
+> What should I do about that? Who's responsible for this? Who should I CC?
+> 
+> And this is an issue which is easy to describe and identify.
+
+IMO, this indicates one of the big problems of bugzilla -- or a bug
+tracker in general -- with the complete lack of screening.
+
+An initial bug report is sent only to the bug assignees of the given
+component, and those are mostly destined to persons (usually
+maintainers), not to a public ML or group.  That doesn't work nor
+scale for lots of bug reports.  We need screening at the first place,
+before maintainers try to take a deeper look.
+
+One may change the default target of the bugzilla assignee to a ML,
+too.  However, this leads to sending lots of noises from unqualified
+bug reports straightly to ML, which shall upset developers, so it's no
+better choice.
+
+And, screening is a tiresome task; you'd have to deal sometimes with
+people have no clue and no etiquette.  I understand many companies
+trying to deploy AI for that place...
 
 
+> - 2 -
+> 
+> Here's another one which is outright puzzling:
+> 
+> You run: dmesg -t --level=emerg,crit,err
+> 
+> And you see some non-descript errors of some kernel subsystems seemingly
+> failing or being unhappy about your hardware. Errors are as cryptic as
+> humanly possible, you don't even know what part of kernel has produced them.
+> 
+> OK, as a "power" user I download the kernel source, run `grep -R message
+> /tmp/linux-5.19` and there are _multiple_ different modules and places
+> which contain this message.
+> 
+> I'm lost. Send this to LKML? Did that in the long past, no one cared, I
+> stopped.
+> 
+> Here's what I'm getting with Linux 5.19.12:
+> 
+> platform wdat_wdt: failed to claim resource 5: [mem
+> 0x00000000-0xffffffff7fffffff]
+> ACPI: watchdog: Device creation failed: -16
+> ACPI BIOS Error (bug): Could not resolve symbol
+> [\_SB.PCI0.XHC.RHUB.TPLD], AE_NOT_FOUND (20220331/psargs-330)
+> ACPI Error: Aborting method \_SB.UBTC.CR01._PLD due to previous error
+> (AE_NOT_FOUND) (20220331/psparse-529)
+> platform MSFT0101:00: failed to claim resource 1: [mem
+> 0xfed40000-0xfed40fff]
+> acpi MSFT0101:00: platform device creation failed: -16
+> lis3lv02d: unknown sensor type 0x0
+> 
+> Are they serious? Should they be reported or not? Is my laptop properly
+> working? I have no clue at all.
 
-On 10/1/22 13:07, Theodore Ts'o wrote:
-> On Sat, Oct 01, 2022 at 01:34:26PM +0200, Thorsten Leemhuis wrote:
->>
->> Is that perfect and will in work in 100% of the cases? No, definitely
->> not. Would it be good to have a a kind of first level support group tha=
-t
->> can help in this case? Sure. But we don't have one right now. I sooner
->> or later hope to work towards forming such a group, but there are other
->> things that are higher on my todo list for now.
->
-> I think the other thing which we really need to say is that if you
-> really want better support, there are plenty of places who will
-> happily accept your money and provide you that support.
->
-> Artem, it seems to me that you are hoping that volunteers will provide
-> a commercial level of support --- and that's just never going to
-> happen.
->
-> The users vastly outnumber us developers by orders of magnitude, and
-> if someone needs a huge amount of hand-holding, maybe they should be
-> paying for a support contract with Red Hat, or Suse or Canonical, or
-> CIQ.
->
-> Can we do better?  Sure!  But I think we need to clearly set
-> expectations for what upstream developers will and will not provide
-> support for.  (Example: bug reports for LTS kernels are not
-> interesting to me, unless you can also reproduce them in the latest
-> upstream kernel --- and if you can't build your own kernel from
-> scratch --- boo, hoo, maybe you need to pay someone to help you out.)
->
-> I also think that we need to clearly express that any kind of support
-> is best efforts only, and if someone has anything business-, mission-,
-> or life-critical, they should darned well pay $$$ for a proper support
-> contract.
+That's a dilemma.  The kernel can't know whether it's "properly"
+working, either -- that is, whether the lack of some functions matters
+for you or not.  In your case above, it's about a watchdog, something
+related with USB, TPM, and acceleration sensor, all of which likely
+come from a buggy BIOS.  Would you mind if those features are missing?
+Or even whether your device has a correct hardware implementation?
+Kernel doesn't know, hence it complains as an error.
 
-My expectations are actually quite low:
+In many drivers, there are mechanisms to shut off superfluous error
+messages for known devices.  So it's case-by-case solutions.
 
-* A central place to collect bugs (yeah, bugzilla)
-* Proper up to date components (they don't change too often, so there's
-not a lot of work to be done - you can refresh them probably every 12-24
-months and it's gonna be totally OK)
-* An ability to CC the relevant people/mailing lists (this is the only
-serious missing feature)
+Or you can completely hide those errors at boot by a boot option
+(e.g. loglevel=2).
 
-That's it. It's a billion times better than random emails sent to random
-mailing lists. Signing up once is easier that to keep track of whom and
-where you've emailed or not. And of course it's a ton lot easier to find
-the existing bug reports.
 
-Bugzilla as it is works nearly perfectly. We have a number of developers
-who don't want to touch it or get emails from it - it's their right.
-However it would be madness to take it from users. That will make filing
-and following up on bug reports an absolutely poor experience for
-absolute most users.
-
-Here's a recent fresh example:
-
-https://bugzilla.kernel.org/show_bug.cgi?id=3D204807
-
-255 comments along with patches, ideas, contributions, etc. etc. over
-the span of _two years_. Email will not work for such collabs, period.
-No email client can even show you more than a dozen emails in such a way
-you can easily follow the topic. Email is good maybe for slow-paced
-interchanges of a small circle of people working on a particular
-well-known issue. Even the issue we've been discussing here has become
-nearly impossible to reach consensus on or remember who said who.
-
-Best regards,
-Artem
+Takashi
