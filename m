@@ -1,141 +1,188 @@
-Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261FC2560;
-	Sun,  2 Oct 2022 09:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1664701621;
-	bh=PqGSxs4/w7tewH00w09AppSCiGB3tMkx+FCb9dz72WU=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=VezIpafB6rACnpjZZZz2ljMxJbFK0H/HOZTHm9iqcOZ7jIxJeuOpNLOtMXMvNIjR+
-	 D+OihCAtH8RJxTvdxJiyDmxgBCkxvBIq6FpY/JZmaV05dH5ywNS1RL2T4rAJIi5HkA
-	 Upn+CwuFnH3SIF4iUb58vhDrSflaAY+UBucW1Kt0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.40.110.21] ([143.244.36.77]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MiJVG-1pBTzn0puw-00fQ5x; Sun, 02
- Oct 2022 11:07:01 +0200
-Message-ID: <90b7db52-38c3-aafe-2b8e-c7ebd6a484c0@gmx.com>
-Date: Sun, 2 Oct 2022 09:06:59 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B819323D8;
+	Sun,  2 Oct 2022 09:14:25 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9642721991;
+	Sun,  2 Oct 2022 09:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1664702063; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=odn8KQneE0kpASZK9Ha3Rs5F6ddhOuSQVljDpnP08Qc=;
+	b=lITgmIrQDrZBn6sOI2UmxEiebHqFZGC4CXlFVmN50TPM8FGkiYBPS+ToCD/FH7vHcQ8458
+	bWkqmIgAzEEwlChybftPeoO59qXOkmUdvPPKRW7GPZkUfgk34JlRmwCwxkj3BfLlnYjC3V
+	lnz7Cw++0RbTReGcN0cBhfvrqJ8iWKQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1664702063;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=odn8KQneE0kpASZK9Ha3Rs5F6ddhOuSQVljDpnP08Qc=;
+	b=u9SU1g4HohgDeNbzWEXnAcXmLM/WXOUbYR1zepxWHCX0yNLDMG21bUAFnoWFJIvw0PLZQv
+	VuMhnWqwCGrRPyBQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 53F6313AA3;
+	Sun,  2 Oct 2022 09:14:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id E02BE29WOWO9SAAAMHmgww
+	(envelope-from <tiwai@suse.de>); Sun, 02 Oct 2022 09:14:23 +0000
+Date: Sun, 02 Oct 2022 11:14:22 +0200
+Message-ID: <87h70mvb81.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: "Artem S. Tashkinov" <aros@gmx.com>
+Cc: Takashi Iwai <tiwai@suse.de>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+	workflows@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	ksummit@lists.linux.dev
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla blues"
+In-Reply-To: <56a04cae-7240-9005-4931-5b3e9f598ffb@gmx.com>
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+	<05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+	<9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com>
+	<87pmfavfpt.wl-tiwai@suse.de>
+	<56a04cae-7240-9005-4931-5b3e9f598ffb@gmx.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>,
- Greg KH <gregkh@linuxfoundation.org>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- ksummit@lists.linux.dev
-References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
- <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
- <9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com> <YzgY9X/DM9t/ZuJe@kroah.com>
- <f8cbb12c-590b-28a3-e3e9-d3fb0d7e3c90@gmx.com>
- <d7798453-3105-7adf-a9a6-76e8cfe4d012@leemhuis.info>
- <83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com>
- <CAMuHMdUWontzcX=ww8HbVWc2j418SdyzoPyKa4HHFsxzijbVSw@mail.gmail.com>
-From: "Artem S. Tashkinov" <aros@gmx.com>
-In-Reply-To: <CAMuHMdUWontzcX=ww8HbVWc2j418SdyzoPyKa4HHFsxzijbVSw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:/OFvAW/ncK7MKc7xcAZb0oabkWorTZj/NhPPscZUap8y+SC4X36
- kmxokWjVqa/sjZJVX0hY1+WSYvLMZhe+1xGqUYXCoqOrQ0vAK+AE8DTqToioPNok2e6GDRU
- z2MRtb70t1IsbFR+Stn4RTazVf5IzvhgJHJ5I1ubPM93LDEWY8lb85vma4bOVgqZsk4WNrP
- Q/kgStgoa806AcDIEXEIg==
-X-Spam-Flag: YES
-X-UI-Out-Filterresults: junk:10;V03:K0:Xiol7dYWX+w=:XI4jLISyTahNS5yMly5nMQ+1
- uq4yVR63FaPF5NqKglEOg2fn8z0q79bwBKi82dsgnq2aOqMK14yNFS6l0zgUx7mdzj11fPIvt
- Jtprq5jRIiB7D+7tAv6+U9gtN4RdKxBYHpS4Z7HInetQBIAjH5txh/GpdbCTSyWbhOJUm2bMK
- yF6F5bPszD83CcyTlLCPCro/l1uvn034XzAatNnrvbBYzf8ez28+4ghZBNOAAPBzvv1rhtT8l
- nXb3BPbLLjrUi3/GoBlygB8kx2E+Ts3yYBaZaqg6IYNQ93vOxH+W1wLgkBrCw0UC7d+Pmpnpf
- XtNtgY8yyX88huDjQVd2Z2W9abTTSKSMgsAtqun/4h6c9FHzjFs1KfbZMe644G8yAoYikcNJj
- DHCkSDphRO6hanPTGoQAD0IwQYclswqFM5wDnsNmaIjXuYrUPvOCDgkOuwy7hYwN+GMC9Uh4j
- 0k0d5R4YeAmZnUTZqOJuZwUfmXuQogVvPJtEzhAHUJ0aPy+NxcAdpCV1LjIDqay5/QiYUT4D7
- XuYTCYIEYwrn1sBR/07SXVEb5qeThrpxgBScVBJpasZkYn8NaWA+c9/pTpffYW8A7i6nVFBAQ
- cI48SG1y3tyrf3W0Og719hrMwGqFctR4SM1GzWc/J9OwW3Na/WYSclDSdhZxvUUTin2c0rDXZ
- j6z1p6dHg2ytgzJm4DH5rqCll/XDy7FIXBMeVPi2LtxU5YM+XTqQVSVtPkrdQN/kHQXDyIRr7
- eklGPEfetqQfGfFhEo1C/+8m2OpuIMj8HQe0CUYryhIKMU8eGAo89LTU0u4wo/9bwMRV3Dtvz
- OfBk8Un1AJn7bD96q+OBfQ0s+CDrDqOoeQy55FsYSLieT0YecjFWLYLlygMLuO1fKy830lUVA
- chzOx0hlyjkv0k7fNitXLgz95yR7nYG04WE9e+ylnUrQICd91+WPzPmKImaaJHHI5/BLHHQ20
- ejnq8NVzgJ7lkrrb6f3552qAajypoVnGy6qECrMR3X9PghlMQbHurGLcbFfex9mA/0lB8AAN7
- KF0CsEU9f9KwEAWiHZA7yBHEeFOW/NIGAZjjZpUTL9vOfxmEqzZWbLBLQZ84uSkIToIRbXidn
- uEUDSO4LfyEnDrvTl/DlBVaNWgUzrL2XbxXLxTCKDcd8Gw1l4xpJGwP190vpTN67Y6VtopzeD
- lHdwlf9l0Z2hbOyPSt+kgmKKF3N93QOrWBfPd7DF+dqeNg==
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+
+On Sun, 02 Oct 2022 10:23:07 +0200,
+Artem S. Tashkinov wrote:
+> 
+> 
+> 
+> On 10/2/22 07:37, Takashi Iwai wrote:
+> > On Sat, 01 Oct 2022 12:30:22 +0200,
+> > Artem S. Tashkinov wrote:
+> >> - 2 -
+> >> 
+> >> Here's another one which is outright puzzling:
+> >> 
+> >> You run: dmesg -t --level=emerg,crit,err
+> >> 
+> >> And you see some non-descript errors of some kernel subsystems seemingly
+> >> failing or being unhappy about your hardware. Errors are as cryptic as
+> >> humanly possible, you don't even know what part of kernel has produced them.
+> >> 
+> >> OK, as a "power" user I download the kernel source, run `grep -R message
+> >> /tmp/linux-5.19` and there are _multiple_ different modules and places
+> >> which contain this message.
+> >> 
+> >> I'm lost. Send this to LKML? Did that in the long past, no one cared, I
+> >> stopped.
+> >> 
+> >> Here's what I'm getting with Linux 5.19.12:
+> >> 
+> >> platform wdat_wdt: failed to claim resource 5: [mem
+> >> 0x00000000-0xffffffff7fffffff]
+> >> ACPI: watchdog: Device creation failed: -16
+> >> ACPI BIOS Error (bug): Could not resolve symbol
+> >> [\_SB.PCI0.XHC.RHUB.TPLD], AE_NOT_FOUND (20220331/psargs-330)
+> >> ACPI Error: Aborting method \_SB.UBTC.CR01._PLD due to previous error
+> >> (AE_NOT_FOUND) (20220331/psparse-529)
+> >> platform MSFT0101:00: failed to claim resource 1: [mem
+> >> 0xfed40000-0xfed40fff]
+> >> acpi MSFT0101:00: platform device creation failed: -16
+> >> lis3lv02d: unknown sensor type 0x0
+> >> 
+> >> Are they serious? Should they be reported or not? Is my laptop properly
+> >> working? I have no clue at all.
+> > 
+> > That's a dilemma.  The kernel can't know whether it's "properly"
+> > working, either -- that is, whether the lack of some functions matters
+> > for you or not.  In your case above, it's about a watchdog, something
+> > related with USB, TPM, and acceleration sensor, all of which likely
+> > come from a buggy BIOS.  Would you mind if those features are missing?
+> > Or even whether your device has a correct hardware implementation?
+> > Kernel doesn't know, hence it complains as an error.
+> > 
+> > In many drivers, there are mechanisms to shut off superfluous error
+> > messages for known devices.  So it's case-by-case solutions.
+> > 
+> > Or you can completely hide those errors at boot by a boot option
+> > (e.g. loglevel=2).
+> 
+> The problem is some of such messages are indeed indicative of certain
+> real issues which result in HW not working properly, including:
+> 
+> 1) missing/incorrect firmware
+> 2) most importantly: not enabled power saving modes
+> 3) not enabled high performance modes
+> 4) not enabled devices
+> 5) not enabled devices' functions
+> 6) drivers conflicts (i.e. the wrong module gets loaded for the device)
+> 7) physically failing hardware
+> 
+> I'm quite sure you don't really know what half of those messages
+> actually mean.
+
+Of course: not because those messages are hardly understandable but
+because those messages indicate only the cause, and the exact end
+result can't be always known from the kernel at that point.  A lack of
+physical failing hardware?  Not enabled devices?  Who knows.  There
+might be some alternative, even a user-space driver.
+
+> Speaking of 7. Various kernel subsystems/drivers deal with e.g. mass
+> storage which is known to fail quite often. There's not a single driver
+> in the kernel which is actually brave enough to spew something like this:
+> 
+> "/dev/xxxx might be failing, please RMA or seek help online"
+> 
+> instead you get a dmesg choke full of "unable to read sector XXX" or
+> something like that.
+
+Oh you suggest that we should put "please RMA or seek help online" to
+each printk of KERN_ERR level, if it saves the world? ;)
+
+IMO, what matters for users is whether the system works or not.  It's
+not how the kernel message appears.  A kernel message may help for
+diagnose, but the message itself is no solution; that is, the most
+importance of a kernel message is that it indicates a real error that
+can be diagnosed by developers.
+
+If the end effect is pretty sure, a message may be more chatty.  OTOH,
+people are annoyed by such too verbosity, too.  So it needs a sensible
+choice.
+
+> To return to the previous errors: it's impossible for the user to assess
+> their severity and that sucks.
+
+Right, that's why I wrote it's a dilemma.
+
+> What is "platform device creation
+> failed"? What is "unknown sensor type"? What am I missing? Who's
+> responsible? The kernel? My HW vendor? Are those errors actionable?
+
+All those depend on the driver implementation and the hardware
+implementation.  There is no general answer at all, unfortunately.
+
+> In
+> my understanding a properly working computer must not produce
+> "emerg,crit,err" errors. I'm not even talking about "warn,info" and such.
+
+Yes, some errors can be downgraded to warn or even to info.
+I myself find ACPI is way too chatty, too.
+
+So I believe something we can improve is to define some more clear
+guideline for KERN_ERR level errors.
 
 
-
-On 10/2/22 09:03, Geert Uytterhoeven wrote:
-> Hi Artem,
->
-> On Sat, Oct 1, 2022 at 1:21 PM Artem S. Tashkinov <aros@gmx.com> wrote:
->> On 10/1/22 10:57, Thorsten Leemhuis wrote:
->>> On 01.10.22 12:47, Artem S. Tashkinov wrote:
->>>> On 10/1/22 10:39, Greg KH wrote:
->>>>> On Sat, Oct 01, 2022 at 10:30:22AM +0000, Artem S. Tashkinov wrote:
->>>
->>>>>> I have a 20+ years experience in IT and some kernel issues are just
->>>>>> baffling in terms of trying to understand what to do about them.
->>>>>>
->>>>>> Here's an example: https://bugzilla.kernel.org/show_bug.cgi?id=3D21=
-6274
->>>>>>
->>>>>> What should I do about that? Who's responsible for this? Who should=
- I
->>>>>> CC?
->>>>>
->>>>> Input subsystem.
->>>>
->>>> It's great you've replied immediately, what about hundreds or even
->>>> thousands of other bug reports where people have no clue who has to b=
-e
->>>> CC'ed?
->>>
->>> Quoting from https://docs.kernel.org/admin-guide/reporting-issues.html=
-:
->>>
->>> "[...] try your best guess which kernel part might be causing the issu=
-e.
->>> Check the MAINTAINERS file [...] In case tricks like these don=E2=80=
-=99t bring
->>> you any further, try to search the internet on how to narrow down the
->>> driver or subsystem in question. And if you are unsure which it is: ju=
-st
->>> try your best guess, somebody will help you if you guessed poorly. [..=
-.]"
->>>
->>> HTH, Ciao, Thorsten
->>
->> Absolute most people:
->>
->> * Will never read this document
->> * Will not be able to "search the internet on how to narrow down the
->> driver or subsystem in question"
->
-> So how did these people arrive at "bugzilla" in the first place? ;-)
-
-Google kernel bug -> bugzilla.kernel.org
-
->
-> Or is this a case of "if all you have is a hammer...", so you
-> actively start looking for a bugzilla?
-> I.e. people who are used to bugzilla/discourse/slack/irc/trac/... will
-> look for how to use bugzilla/discourse/slack/irc/trac/... to interact
-> with the developer and/or maintainer.
->
-> The definitive guide is the MAINTAINERS file.  If there is a (rare)
-> corresponding "B" entry, you can use that.  Else fall back to the
-> "M" and "L" entries.  "C" might be good for an initial query, but not
-> for the actual reporting, as there's even less traceability than with
-> mailing lists (the latter are archived by lore).
-
-Just like I said before email sucks terribly for bug reporting except
-for rare cases when the developer notices your email right away and
-promptly submits a patch. This happens once in a blue moon unfortunately.
-
-Best regards,
-Artem
+Takashi
