@@ -1,169 +1,99 @@
-Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6C33D6A;
-	Sun,  2 Oct 2022 21:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1664746062;
-	bh=3XR4RF6qxOPpohcyIVBACjMVCQ1syTtTe9tcw6Ot/xM=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=N0rj8hQfwx82yFZb5ZMIeCQ0GNJc/9/Wq42foBDoI990+CXKojDaQFbri0pNnwuOY
-	 tIY+lO5IyGHiDM2NlLtbVA9pdqSxaruUwjCNlc/bY6wbYy++wTMqd1+94clpGTp3TV
-	 RzLMRWOv7xBVyADoQSkQAYNmeMgEBuNJFurYXgCA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.13.110.23] ([143.244.37.73]) by mail.gmx.net (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1Mdvqg-1pEzXs0keU-00b2fY; Sun, 02
- Oct 2022 23:27:42 +0200
-Message-ID: <8f2ad360-8719-e275-050b-f279201a1616@gmx.com>
-Date: Sun, 2 Oct 2022 21:27:40 +0000
+Received: from 1wt.eu (wtarreau.pck.nerim.net [62.212.114.60])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACDFD3D6A;
+	Sun,  2 Oct 2022 21:32:45 +0000 (UTC)
+Received: (from willy@localhost)
+	by pcw.home.local (8.15.2/8.15.2/Submit) id 292LWZVR022607;
+	Sun, 2 Oct 2022 23:32:35 +0200
+Date: Sun, 2 Oct 2022 23:32:35 +0200
+From: Willy Tarreau <w@1wt.eu>
+To: "Artem S. Tashkinov" <aros@gmx.com>
+Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Thorsten Leemhuis <linux@leemhuis.info>,
+        Greg KH <gregkh@linuxfoundation.org>, workflows@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        ksummit@lists.linux.dev, Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+Message-ID: <20221002213235.GA22532@1wt.eu>
+References: <83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com>
+ <a676e5cf-c67b-7946-ce73-8fb8d63a5a0a@leemhuis.info>
+ <Yzg7pHspc72I7TAb@mit.edu>
+ <e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com>
+ <YzmBjgXq9geMnL1B@mit.edu>
+ <79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com>
+ <20221002150522.ul4nbtfawqjhnsag@meerkat.local>
+ <b594681b-6b8c-ffb7-f526-3da847d160a8@gmx.com>
+ <20221002205430.GC22129@1wt.eu>
+ <d1f99826-2a66-c2d5-c9cd-d2fadd35eca4@gmx.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, Theodore Ts'o <tytso@mit.edu>,
- Thorsten Leemhuis <linux@leemhuis.info>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- ksummit@lists.linux.dev, Mario Limonciello <mario.limonciello@amd.com>
-References: <9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com>
- <YzgY9X/DM9t/ZuJe@kroah.com> <f8cbb12c-590b-28a3-e3e9-d3fb0d7e3c90@gmx.com>
- <d7798453-3105-7adf-a9a6-76e8cfe4d012@leemhuis.info>
- <83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com>
- <a676e5cf-c67b-7946-ce73-8fb8d63a5a0a@leemhuis.info>
- <Yzg7pHspc72I7TAb@mit.edu> <e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com>
- <YzmBjgXq9geMnL1B@mit.edu> <79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com>
- <YzmhoglDyEf3z0n8@kroah.com> <ce0b5780-a8cd-83fc-5b91-3acc574f426e@gmx.com>
- <CAHk-=wiGZEGY7kDXSD3ryL3yJ6fMp-+zzdyRFUc30kW+512-2w@mail.gmail.com>
- <7d57b7d2-b39a-881c-65e6-969c4f0948cc@gmx.com>
- <CAHk-=wjfAERC3XjZ=rF8HM+Q52LD-j_EEtv0hhiyhi6PC6MCUA@mail.gmail.com>
-From: "Artem S. Tashkinov" <aros@gmx.com>
-In-Reply-To: <CAHk-=wjfAERC3XjZ=rF8HM+Q52LD-j_EEtv0hhiyhi6PC6MCUA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:iwwfmZCOuulqIGJ7oRSk32ZC6ykTfevf7ETj4l+8gUeU7qqEj0w
- TQA4WNhnnFWh3HPhflAv6MSHl+WWlbFTCGrBrPDIq7NiN+vuQc28mzn3hBD8BIXaPYROu/h
- Ul/pIRKDIoTNcL7Sb5Oznr1DF5VPQ2wW4K6i63MSELsjcEaM6mL4udpyk5Ef665l4v0kXHh
- ZJy3J8aDHcAfwjiXnJhZw==
-X-Spam-Flag: YES
-X-UI-Out-Filterresults: junk:10;V03:K0:dd2UfWbgR90=:454zkcTQ94YoYLCXmFdR+++a
- NEBbnCcptRZS4uIGhC6WS8g/p7tuXEFxwpNomu+tC+iWjQ4fiFUupMeH9KxRG5W108Sy2FJuJ
- Grm2g1IaEjHIaZjQipJEI1RX97n/hyig+UOzVe4aMc0kcC8HNbSGbSvwEGfeAmVfEuRfKpMJC
- V636cVebQTUop4GtbRd75pPOFXQvY1BE1pkzdx053lNJGoiWOnrkwW1DU+LDNglX3vyUift0m
- QcDXc/EIT1746nbAJCCA+pNqVbnYtd4xRrC68pibWkDcp9C/GK3bZtne4kca/n0xZ2ryDg2y6
- tPa/MY/qZ5J25y150Upq5moHRyMVRx3jyDDzkQh4TagLvfM+FfajJRPShL8PwosOIoVSpMkj3
- AyvneIOujExnxNrl89VuXIJJXkJzMIFhWsPluBIGpjGuww6mIiROIK73eygAuTO4CKrv/9Wmt
- NDBgjfPVMqvjbgLPDSf+vRMB1GOrhXDHTk3K+3pjYYozg6wZ6Kjh8oxvWHj7LwzeCTPTwnjeQ
- ihRWHXztnxE817ha37lpiOh0GFdrqU0L7UyqZ+hdCugnJ5bUPD9dk22hE3e7+ouK/EdRDWD0R
- RopSvG+N2jDq+Su2xpWJyzrCTcDIpwxSLFB3VIlZ6j9MUqiiydBqARehgIw/tldz6XAn8HlkI
- bHFIWaMLCLXXwQ7fDdeP6t5CN4E6v5Bta54k/+FyfUzzEud1XQr/GttPIGzQBd+HUGEOZlI/A
- sbNyVvCzvkdk53QYF9DZhXVFLgUsbSJZB3QMraQ3NngNltfYqGqYKSXbwGE3vCj+WfcE3Nny1
- blJuCbEteO/QKrdbcfblX2+es6bIHmNNDC9IbWYQx3n9W1QCHEPLXCr+YcnlF6AoFAsbMLbbs
- sVmKvoFTTj5BCcbbGgiGiBHGpJoDNWpS4FLIy1q5D7tf0GU0SEHc50oJMuYR4H/6cAndyl+1S
- NrSv5tacNIngKCFrS1wfLMsIsKxwBQxdOdvcLByEniRQkm/7kcz57s/NDSY3GG7b22x4jaBQF
- 48IdIS4G9M9f4foC0U4mqR6WlvMJJp9/FcSAkFxQ5SINWvacCo+5D7z1i1vqs7H8R09CybuYi
- beiwEN6RXDz0jLJ/5wOdZUcW62BQVF06llwcmUpNMTN7CEoWt/WqEV09hKJFaDc66JDKhr7KY
- xJMDef8tr5zIAMxZ5/6q4Bu5D3ue/mnzYXxkK/kcKHZ1Ng==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d1f99826-2a66-c2d5-c9cd-d2fadd35eca4@gmx.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
+On Sun, Oct 02, 2022 at 09:07:13PM +0000, Artem S. Tashkinov wrote:
+> > > Why are people are now blowing stuff out of proportion for no reason?
+> > 
+> > Because the approach is wrong. As I explained it gives a false sense to
+> > the reporter that their issue is being handled while the simple fact that
+> > a message was sent to a person is in no way an engagement to do anything
+> > about it. LKML is a broadcast area. Everyone hopes someone else will
+> > respond and that eventually happens. When the reports are targetted, it
+> 
+> No, it doesn't happen. Should I open LKML and send you a hundred of
+> unreplied emails over the past year alone?
 
+If that makes you feel better, feel free to do so. I'm not scared by
+only one hundred e-mails. What I'm impressed by, however, is that you're
+able to spot that many unreplied e-mails because I don't see as many. If
+you're that efficient at spotting them, maybe these are the ones you
+should just resend to make sure they're seen, and it would require less
+work (even on your side) than triaging issues.
 
-On 10/2/22 21:07, Linus Torvalds wrote:
-> On Sun, Oct 2, 2022 at 1:56 PM Artem S. Tashkinov <aros@gmx.com> wrote:
->>
->> I just want a bugzilla where I can CC _any_ developer _if_ and _only if=
-_
->> they are willing to work within its confounds. That's it.
->
-> Guess what that "add develooper to the Cc" is called?
->
-> Email.
->
-> What you do is fill in the bugzilla entry with all the data you want.
->
-> Then you use email to inform people about it.
->
-> Put enough data in the email that the developer knows whether it's
-> even worth looking at the bugzilla entry or not. Don't just put a link
-> to the bugzilla. Most developers will just go "oh, this looks like
-> spam"., Put the overview in the email, enough information that the
-> developer can go "Ahh, this is worth my time", _and_ the link to
-> bugzilla.
+> Just before I GTFO I will leave this bug report here (already posted it
+> here but maybe I need to do it again and again):
+> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=204807
+> 
+> Tell me honestly how ~255 comments, and a ton of collaboration over the
+> span of 2.5 years can be managed using email.
 
-That could work or could not work because e.g. my email provider,
-gmx.com, is blocked by a large number of companies/people because ...
-reasons. If I'm lucky I get a reply: "Mail cannot be delivered because
-reasons". Sometimes I get no reply, there's no way of knowing your email
-has been delivered.
+What makes you think it would have taken that long over e-mail ? Between
+your first report and the first reply "this is not a bug", 18 months had
+elapsed already. The most active part of the discussion happened grouped
+on 3 days (2021-03-19 -> 22), where there were already some "I'm removing
+myself from the CC because the discussion isn't productive", then a large
+number of "me too" happened. Not sure how much useful this has been
+overall to the involved developers, given that it's impossible to stay
+focused on that long a thread and sum up all the information spanning
+over that many kernel versions and that many different hardware.
 
-More importantly there's no way of knowing an email has been read or
-seen. You perfectly know that.
+My gut feeling is that handling this over the ML would have resulted in:
+  - a few "sorry, no solution, try to fix your BIOS"
+  - "try this" => "it works, thank you".
+  - "this fix above broke for me"
+  - and a few such iterations until a satisfying enough solution would
+    have been found. Maybe not in 2.5 years, maybe 6 months.
 
-An email from an official bug tracker, not some random Joe on the
-Internet? That will less likely be considered SPAM, fake, scam, etc.
-Some people have no idea that kernel developers prefer to deal with
-plain text and may simply ignore HTML messages which have long become
-the default for many email providers.
+But I could be wrong. I'm not claiming I know how people feel the most
+efficient. Just observing what we're seeing on the lists and what I'm
+used to dealing with in some bug trackers. If you want I can as well
+show you a bug I reported 19 years ago that's still in state "NEW",
+having seen little updates over the years. It had better been closed
+since then, TBH:
 
-You're asking people to know in advance the kernel developers email
-etiquette or know English well enough to communicate your problem.
-Bugzilla doesn't need that. You can dump whatever you want however you
-want even in your native language.
+   https://gcc.gnu.org/bugzilla/show_bug.cgi?format=multiple&id=11873
 
->
-> That gives you exactly what you ask for: you can CC _any_ developer.
-> And it doesn't force the developer to have to go to some bugzilla web
-> interface unless the developer thinks it actually adds value.
->
-> This is *literally* how I end up using bugzilla. As you say, I
-> actually do end up looking at bugzilla entries in the end, but I only
-> do it once it has hit my mailbox first, and I have some fairly good
-> indication that it's worth my time to look at it.
->
-> And yes, for some projects and for some developers you can do that
-> email integration from within bugzilla itself. That's how people reach
-> me.
->
-> But this is exactly the kind of part of bugzilla that is a TOTAL
-> HORROR-SHOW to manage, and it's impossible to expect every developer
-> to be somebody that can be listed on bugzilla, without bugzilla
-> becoming a prime way to send spam.
+Pretty close to your demo above except it lasted 8 times longer and
+has not seen progress by lack of interest. How's that different from
+what you complain about mailing lists ? Hmm ?
 
-There are many easier ways to SPAM people ;-) I've not heard of anyone
-complaining about SPAM coming from the kernel bugzilla yet.
-
->
-> Which is why in the general case, you really should consider email to
-> be the "lingua franca" of kernel development communication.  It
-> doesn't have the fundamental limitations and management issues that
-> bugzilla has. If you want to add more people to the Cc in an email,
-> you just do it.
-
-Attention, Linus, the problem is attention.
-
-Once something is filed in bugzilla, it's public, it's easily
-accessible, it can easily be found, you can easily add new info.
-
-Emails? You've flown to Japan to a conference for a week and you have
-much better things than to check any email updates. A week worth of
-emails have suddenly become worthless.
-
-Here's yet another issue, how would you send a follow up if you don't
-know the reference ("References" email field)? Instead of a follow up
-it'll end up being a new unrelated email.
-
-Lastly, if you're on bugzilla, your email address is a lot less likely
-to be leaked. Bugzilla doesn't publish emails. Public mailing lists are
-used to collect email address for SPAM databases all the time.
-
-Since kernel developers/Linux users love privacy so much, I guess it's a
-good argument for Bugzilla, not against it. Many email clients/providers
-leak a ton of information about you (email client version, timezone,
-even IP address) left and right.
-
-Regards,
-Artem
+Willy
