@@ -1,22 +1,25 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BAE62F2D;
-	Sun,  2 Oct 2022 22:41:44 +0000 (UTC)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 43A188B8;
-	Mon,  3 Oct 2022 00:41:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1664750501;
-	bh=9YHvVO0lZ8ECdX4IILvkBEPYkos2SyNsC+B9YsNgE1Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mlUNszvyy3Y3LRFMarsLXHPFkcVaPVn8G3cOXT7o10wikyFqsahgSubkZFq0v5y25
-	 WjffjuvTeyZycUuh9iEie+upJX/cxJyPeIwg3k4VAbrgUYnlj+idWSPptvB6KzWe4R
-	 6XA+euB+AdATRqGajlDSg6BKG18OvobphV7iKN6c=
-Date: Mon, 3 Oct 2022 01:41:40 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: "Artem S. Tashkinov" <aros@gmx.com>, Theodore Ts'o <tytso@mit.edu>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0884B3D8A;
+	Sun,  2 Oct 2022 23:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=kGCP8yNVzlc+4RMahfHxg09MCrNB/47vo8nl5oNIR+w=; b=dzWHjklMps7pTGMF/X2QpABXqI
+	cXovPL1IK0aTjkgWK7SLc1RROcUWOS73GB/r8MSAfQ3ANexsM1sj73auzqY2ZGDcSnCYrIGFR0MT1
+	gL3j2bHJjFze39UanPs7fUtgJHFHGN9l/SpVq/oSot8m2UzwlpSSZc20TatX0DWQT/FD3+sDGNODl
+	WHZFbTQ31/7BAlYWpRUx6L6vsv7w1lzWnEDPR7ySXXSSOOH9J069n63FwuVFx11vGpLw2d0o8W75Y
+	pVF0nUDmbi7b/JOciH8LWmVycQs9lbwVWrego7OUnGLMkY1q0/KivN9DTK/V28xLz8shBh6sCkq3Z
+	ZDRNrD0w==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+	id 1of80X-006BGR-2P;
+	Sun, 02 Oct 2022 23:04:25 +0000
+Date: Mon, 3 Oct 2022 00:04:25 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: "Artem S. Tashkinov" <aros@gmx.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Theodore Ts'o <tytso@mit.edu>,
 	Thorsten Leemhuis <linux@leemhuis.info>,
 	Greg KH <gregkh@linuxfoundation.org>,
 	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
@@ -27,151 +30,53 @@ Cc: "Artem S. Tashkinov" <aros@gmx.com>, Theodore Ts'o <tytso@mit.edu>,
 	Mario Limonciello <mario.limonciello@amd.com>
 Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
  blues"
-Message-ID: <YzoTpJ3m2EzerdSL@pendragon.ideasonboard.com>
-References: <d7798453-3105-7adf-a9a6-76e8cfe4d012@leemhuis.info>
- <83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com>
+Message-ID: <YzoY+dxLuCfOp0sL@ZenIV>
+References: <83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com>
  <a676e5cf-c67b-7946-ce73-8fb8d63a5a0a@leemhuis.info>
  <Yzg7pHspc72I7TAb@mit.edu>
  <e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com>
  <YzmBjgXq9geMnL1B@mit.edu>
  <79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com>
  <20221002141321.394de676@rorschach.local.home>
- <Yzn9ci/9urgTCF6h@pendragon.ideasonboard.com>
- <20221002181801.25b5ff77@rorschach.local.home>
+ <6de0925c-a98a-219e-eed2-ba898ef974f8@gmx.com>
+ <20221002180844.2e91b1f1@rorschach.local.home>
+ <3a3b9346-e243-e178-f8dd-f8e1eacdc6ae@gmx.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221002181801.25b5ff77@rorschach.local.home>
+In-Reply-To: <3a3b9346-e243-e178-f8dd-f8e1eacdc6ae@gmx.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Hi Steven,
+On Sun, Oct 02, 2022 at 10:20:40PM +0000, Artem S. Tashkinov wrote:
 
-On Sun, Oct 02, 2022 at 06:18:01PM -0400, Steven Rostedt wrote:
-> On Mon, 3 Oct 2022 00:06:58 +0300 Laurent Pinchart wrote:
-> > > 
-> > > If you are using fedora, go bug Red Hat, Ubuntu then Canonical. And
-> > > again, it comes down to if you have a paid subscription or not if you
-> > > are going to get anywhere with it.
-> > > 
-> > > Can this be annoying, sure. But that's how the open source ecosystem
-> > > works.  
-> > 
-> > The dichotomy between the community/hobbyist/free side and the
-> > commercial/professional/paid side is an argument I often hear, and often
-> > make myself. It is not, however, ineluctable.
+> Bugzilla hasn't been updated in a very long time so it's missing both
+> mailing lists and individual kernel developers.
 > 
-> But is still the essence of a community. Things only get done when it
-> benefits those that are doing it. The point of open source is that
-> collaborating has a benefit for all involved. But dealing with bugs
-> that do affect you directly, usually goes to the bottom of your
-> priority list. Not that you are not willing to do so, but it may only
-> get done when you have time to do it. And we all know how much time
-> kernel developers have.
+> AFAIK, some pieces of kernel have no appropriate mailing lists at all.
+> What about that? I've no clue.
 
-Absolutely, and that's why I think an efficient bug tracking *process*
-(regardless of the tooling) would require new people to handle it
-(obviously in collaboration with existing developers). I don't think we
-can expect developers and maintainers to expand beyond what they're
-already doing to new areas or to extend the amount of time they spend on
-bug handling without expanding at the same time the scope of the
-subsystems. The kernel started with technical maintainers, and over time
-we have seen the rise of community builders in some subsystems. I
-believe it would be possible to expand communities to cover a more
-professional style of bug tracking and handling, but not by just
-stretching the resources we have.
+There's that file, right in the root of the source tree.  Called "MAINTAINERS",
+in all-caps...  Could have something to do with locating maintainers, could it not?
 
-> > We have shown multiple times that this barrier doesn't have to exist.
-> > The kernel is an impressive example of how companies and communities can
-> > cooperate to reach a result that no single entity could have achieved.
-> > It started with the development model and how it scaled, and other areas
-> > were tackled along the way, such as automated testing and quality
-> > control in general for instance. Lots of efforts went into creating
-> > solutions that could fulfil the unique needs of our development model,
-> > and into convincing large and small companies to invest, either money or
-> > time.
-> > 
-> > Are we doing a great job ? Certainly not. But we are moving forward. As
-> > Jon Corbet said several years ago in one of his talks, now that the
-> > Linux kernel has reached a leading position in many areas, we have lost
-> > the comfort of following other industry actors and have to innovate
-> > ourselves. That often means (and this thought is mine, not Jon's)
-> > winging it along the way. As impressive as some of our achievements may
-> > be, our failures to maintain some areas of the kernel in a professional
-> > way is also astonishing (https://xkcd.com/2347/ comes to mind). It's not
-> > entirely surprising: the community and (part-time) volunteer model means
-> > that everybody will tackle problems that interest them. Building a
-> > community that can deliver professional support is not an interesting
-> > task for everybody. It is, however, a key factor in the difference
-> > between a kernel subsystem that strives and a subsystem that survives.
-> 
-> Exactly. The problem is that this is an issue (getting general bug
-> reporting from users), but it's not a fatal one if you don't get it
-> right. The community tends to do what it takes to survive. It's usually
-> not until there's a well established threat that everyone changes how
-> they do things. Major updates to the kernel at the end of an -rc
-> release is unheard of, until there's a meltdown/spectre threat.
-> 
-> > I believe the same holds true for bug tracking and support. At the end
-> > of the day, someone will need to pay for it, but we could shatter the
-> > traditional model here too. We could, given enough interest, bridge the
-> > gap between all involved parties and create a support model that would
-> > benefit everybody. It took years and huge efforts for Linux to evolve
-> > towards more professionalism in many areas, and it would take more years
-> > and more effort to continue and expand that, but I believe it would be
-> > feasible.
-> 
-> Linus went away and came back with git. Should we ask him to go away
-> and come back with a better bugzilla? :-D
+> Opt-in will work, except I've no idea how to make it work. Mass email
+> all the kernel developers and politely invite them to sign up? Most will
+> simply ignore it.
 
-I'm sure Linus could give it a try if he was interested, but that's the
-wrong approach. They key to a successful free software community is to
-be prepared to do all the work yourself, not expecting that throwing
-ideas around will result in someone jumping in to fix all your problems.
-It may happen, but relying on it will most often lead to disappointment.
-The same thing applies here. I believe something could be done to
-improve bug tracking very significantly, but I have no hope that sharing
-my ideas will magically result in any improvement (and when it comes to
-volunteering to fix the problem myself, I can't, I'm drowning under
-patch review and other tasks, in a perfect example of how things won't
-scale when the amount of work prevents people from making the necessary
-improvements that are key to lowering the workload).
+Sigh...   You really don't seem to appreciate just how deep a septic
+tank you've jumped into with your combination of "it should be opt-out"
+and "but unsubscribing takes just a minute, what are you unhappy about?!?"
 
-> > Linux didn't start because Linus complained about existing operating
-> > systems, ranted on usenet forums and waited for someone to fix the
-> > problem. Someone will need to step up and lead the effrot here too. If
-> > that person could ignore for a while that this is an impossible task, I
-> > think they could succeed.
-> > 
-> > > If someone is not able to figure out how to use the mailing lists, it
-> > > is unlikely that they will be able to be useful in working with the
-> > > maintainer to solve their issue. As Ted mentioned, when asked to do
-> > > something to help analyze the issue, many times there's no response
-> > > from the reporter. Maybe because the reporter had no idea what the
-> > > maintainer wanted them to do. Most kernel bugs requires a constant back
-> > > and forth between the reporter and the developer. If you don't have
-> > > that, then there's no reason to bother with trying to fix the issue.
-> > > 
-> > > Ideally, someone (you?) would want to be a middle man and triage the
-> > > bugzilla reports and find those that look promising to get a fix
-> > > completed, and then be the liaison between bugzilla and the kernel
-> > > maintainer, then I think that could work. But the issue comes back to
-> > > manpower. Who's going to do that?  
-> > 
-> > On the topic of triage, I've found that distro developers often do a
-> > pretty good job. I've received multiple bug reports of great quality
-> > following problems initially posted to distro bug trackers, after the
-> > distro developers took the time needed to hold reporters by the hand to
-> > get all the required information. Kudos for that !
-> 
-> This is what I was saying about having a liaison. It could work if we
-> have someone to do it. We have one volunteer (Slade), perhaps this
-> could turn out to be something more.
+Maybe you are not using email a lot, but for just about everyone who does...
+We have heard that.  Many, many times.  From many sources - spammers,
+"legitimate" companies' marketing departments, etc.
 
--- 
-Regards,
-
-Laurent Pinchart
+And you keep moving along the same track - the usual reaction of some
+company after having pulled back a bloody stump and enjoyed the pile of
+explanations of the reasons why opt-out is *NOT* *ACCEPTABLE*, *EVER*
+is along the lines of "OK, we'll just spam everyone in our database once
+and ask them to opt-in - that must be OK, right?"
