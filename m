@@ -1,129 +1,141 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BD9423D6;
-	Sun,  2 Oct 2022 09:03:23 +0000 (UTC)
-Received: by mail-qv1-f43.google.com with SMTP id i12so5453697qvs.2;
-        Sun, 02 Oct 2022 02:03:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=eqhMZWvXULuL578n1n0PalIWlRFdoHoI0gRbkp8SjOY=;
-        b=4W/Uh6cYcfik5GBa0JyIVo1TLzsbWiABSViRdXazxuf40MFoWM90z/3MRmNb+2WR9Q
-         GxA5wye6LcNXJlxrCgaL8NiJ/X4uxq62VZ37oKF2kOJaKDYuKwxmfQGRUVAbVIYiWBvF
-         57kZY5LxhcGrgn6qChvUvxLCUOw0nOGD6bUGMOK27GgL6TMwhrUcOMAW9VCV8uu9gS68
-         iz2bn5iXKmbrtiK1KbCqVahHZfxfa75sucRYi4QorQb6Rv0VeXhEeDypwF2ieFUlmHrN
-         eBE3DGhSX9Np+akvD77keX0Nu29HZGSzlvE+3vdx+X2APE93LxZFOXhEmJFl32sRF1/B
-         T3YQ==
-X-Gm-Message-State: ACrzQf2nK8iE/KZBgz+pzqr8gmEBQNM3woC7e+fVnqaZw1fYnTpr60GB
-	8dnKwXL5M5ALyIUhAQQDuhH0SQq48c1dtA==
-X-Google-Smtp-Source: AMsMyM7NXXrl8/KfCRimNiRWSU+x26WTt4w6iT1HiDZDRsIP+A51hcsOpPf7WCLNEbviReRORIOHjA==
-X-Received: by 2002:a0c:a79a:0:b0:49f:583f:5292 with SMTP id v26-20020a0ca79a000000b0049f583f5292mr12495046qva.116.1664701402077;
-        Sun, 02 Oct 2022 02:03:22 -0700 (PDT)
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com. [209.85.219.182])
-        by smtp.gmail.com with ESMTPSA id i68-20020a37b847000000b006bb49cfe147sm7550343qkf.84.2022.10.02.02.03.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Oct 2022 02:03:21 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 81so2565687ybf.7;
-        Sun, 02 Oct 2022 02:03:21 -0700 (PDT)
-X-Received: by 2002:a05:6902:45:b0:6ae:ce15:a08d with SMTP id
- m5-20020a056902004500b006aece15a08dmr14801571ybh.380.1664701401207; Sun, 02
- Oct 2022 02:03:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261FC2560;
+	Sun,  2 Oct 2022 09:07:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1664701621;
+	bh=PqGSxs4/w7tewH00w09AppSCiGB3tMkx+FCb9dz72WU=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=VezIpafB6rACnpjZZZz2ljMxJbFK0H/HOZTHm9iqcOZ7jIxJeuOpNLOtMXMvNIjR+
+	 D+OihCAtH8RJxTvdxJiyDmxgBCkxvBIq6FpY/JZmaV05dH5ywNS1RL2T4rAJIi5HkA
+	 Upn+CwuFnH3SIF4iUb58vhDrSflaAY+UBucW1Kt0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.40.110.21] ([143.244.36.77]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MiJVG-1pBTzn0puw-00fQ5x; Sun, 02
+ Oct 2022 11:07:01 +0200
+Message-ID: <90b7db52-38c3-aafe-2b8e-c7ebd6a484c0@gmx.com>
+Date: Sun, 2 Oct 2022 09:06:59 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+ workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ ksummit@lists.linux.dev
 References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
- <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info> <9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com>
- <YzgY9X/DM9t/ZuJe@kroah.com> <f8cbb12c-590b-28a3-e3e9-d3fb0d7e3c90@gmx.com>
- <d7798453-3105-7adf-a9a6-76e8cfe4d012@leemhuis.info> <83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com>
-In-Reply-To: <83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Sun, 2 Oct 2022 11:03:08 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUWontzcX=ww8HbVWc2j418SdyzoPyKa4HHFsxzijbVSw@mail.gmail.com>
-Message-ID: <CAMuHMdUWontzcX=ww8HbVWc2j418SdyzoPyKa4HHFsxzijbVSw@mail.gmail.com>
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla blues"
-To: "Artem S. Tashkinov" <aros@gmx.com>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, Greg KH <gregkh@linuxfoundation.org>, 
-	Konstantin Ryabitsev <konstantin@linuxfoundation.org>, workflows@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, ksummit@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+ <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+ <9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com> <YzgY9X/DM9t/ZuJe@kroah.com>
+ <f8cbb12c-590b-28a3-e3e9-d3fb0d7e3c90@gmx.com>
+ <d7798453-3105-7adf-a9a6-76e8cfe4d012@leemhuis.info>
+ <83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com>
+ <CAMuHMdUWontzcX=ww8HbVWc2j418SdyzoPyKa4HHFsxzijbVSw@mail.gmail.com>
+From: "Artem S. Tashkinov" <aros@gmx.com>
+In-Reply-To: <CAMuHMdUWontzcX=ww8HbVWc2j418SdyzoPyKa4HHFsxzijbVSw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:/OFvAW/ncK7MKc7xcAZb0oabkWorTZj/NhPPscZUap8y+SC4X36
+ kmxokWjVqa/sjZJVX0hY1+WSYvLMZhe+1xGqUYXCoqOrQ0vAK+AE8DTqToioPNok2e6GDRU
+ z2MRtb70t1IsbFR+Stn4RTazVf5IzvhgJHJ5I1ubPM93LDEWY8lb85vma4bOVgqZsk4WNrP
+ Q/kgStgoa806AcDIEXEIg==
+X-Spam-Flag: YES
+X-UI-Out-Filterresults: junk:10;V03:K0:Xiol7dYWX+w=:XI4jLISyTahNS5yMly5nMQ+1
+ uq4yVR63FaPF5NqKglEOg2fn8z0q79bwBKi82dsgnq2aOqMK14yNFS6l0zgUx7mdzj11fPIvt
+ Jtprq5jRIiB7D+7tAv6+U9gtN4RdKxBYHpS4Z7HInetQBIAjH5txh/GpdbCTSyWbhOJUm2bMK
+ yF6F5bPszD83CcyTlLCPCro/l1uvn034XzAatNnrvbBYzf8ez28+4ghZBNOAAPBzvv1rhtT8l
+ nXb3BPbLLjrUi3/GoBlygB8kx2E+Ts3yYBaZaqg6IYNQ93vOxH+W1wLgkBrCw0UC7d+Pmpnpf
+ XtNtgY8yyX88huDjQVd2Z2W9abTTSKSMgsAtqun/4h6c9FHzjFs1KfbZMe644G8yAoYikcNJj
+ DHCkSDphRO6hanPTGoQAD0IwQYclswqFM5wDnsNmaIjXuYrUPvOCDgkOuwy7hYwN+GMC9Uh4j
+ 0k0d5R4YeAmZnUTZqOJuZwUfmXuQogVvPJtEzhAHUJ0aPy+NxcAdpCV1LjIDqay5/QiYUT4D7
+ XuYTCYIEYwrn1sBR/07SXVEb5qeThrpxgBScVBJpasZkYn8NaWA+c9/pTpffYW8A7i6nVFBAQ
+ cI48SG1y3tyrf3W0Og719hrMwGqFctR4SM1GzWc/J9OwW3Na/WYSclDSdhZxvUUTin2c0rDXZ
+ j6z1p6dHg2ytgzJm4DH5rqCll/XDy7FIXBMeVPi2LtxU5YM+XTqQVSVtPkrdQN/kHQXDyIRr7
+ eklGPEfetqQfGfFhEo1C/+8m2OpuIMj8HQe0CUYryhIKMU8eGAo89LTU0u4wo/9bwMRV3Dtvz
+ OfBk8Un1AJn7bD96q+OBfQ0s+CDrDqOoeQy55FsYSLieT0YecjFWLYLlygMLuO1fKy830lUVA
+ chzOx0hlyjkv0k7fNitXLgz95yR7nYG04WE9e+ylnUrQICd91+WPzPmKImaaJHHI5/BLHHQ20
+ ejnq8NVzgJ7lkrrb6f3552qAajypoVnGy6qECrMR3X9PghlMQbHurGLcbFfex9mA/0lB8AAN7
+ KF0CsEU9f9KwEAWiHZA7yBHEeFOW/NIGAZjjZpUTL9vOfxmEqzZWbLBLQZ84uSkIToIRbXidn
+ uEUDSO4LfyEnDrvTl/DlBVaNWgUzrL2XbxXLxTCKDcd8Gw1l4xpJGwP190vpTN67Y6VtopzeD
+ lHdwlf9l0Z2hbOyPSt+kgmKKF3N93QOrWBfPd7DF+dqeNg==
 
-Hi Artem,
 
-On Sat, Oct 1, 2022 at 1:21 PM Artem S. Tashkinov <aros@gmx.com> wrote:
-> On 10/1/22 10:57, Thorsten Leemhuis wrote:
-> > On 01.10.22 12:47, Artem S. Tashkinov wrote:
-> >> On 10/1/22 10:39, Greg KH wrote:
-> >>> On Sat, Oct 01, 2022 at 10:30:22AM +0000, Artem S. Tashkinov wrote:
-> >
-> >>>> I have a 20+ years experience in IT and some kernel issues are just
-> >>>> baffling in terms of trying to understand what to do about them.
-> >>>>
-> >>>> Here's an example: https://bugzilla.kernel.org/show_bug.cgi?id=3D216=
-274
-> >>>>
-> >>>> What should I do about that? Who's responsible for this? Who should =
-I
-> >>>> CC?
-> >>>
-> >>> Input subsystem.
-> >>
-> >> It's great you've replied immediately, what about hundreds or even
-> >> thousands of other bug reports where people have no clue who has to be
-> >> CC'ed?
-> >
-> > Quoting from https://docs.kernel.org/admin-guide/reporting-issues.html:
-> >
-> > "[...] try your best guess which kernel part might be causing the issue=
-.
-> > Check the MAINTAINERS file [...] In case tricks like these don=E2=80=99=
-t bring
-> > you any further, try to search the internet on how to narrow down the
-> > driver or subsystem in question. And if you are unsure which it is: jus=
-t
-> > try your best guess, somebody will help you if you guessed poorly. [...=
-]"
-> >
-> > HTH, Ciao, Thorsten
+
+On 10/2/22 09:03, Geert Uytterhoeven wrote:
+> Hi Artem,
 >
-> Absolute most people:
+> On Sat, Oct 1, 2022 at 1:21 PM Artem S. Tashkinov <aros@gmx.com> wrote:
+>> On 10/1/22 10:57, Thorsten Leemhuis wrote:
+>>> On 01.10.22 12:47, Artem S. Tashkinov wrote:
+>>>> On 10/1/22 10:39, Greg KH wrote:
+>>>>> On Sat, Oct 01, 2022 at 10:30:22AM +0000, Artem S. Tashkinov wrote:
+>>>
+>>>>>> I have a 20+ years experience in IT and some kernel issues are just
+>>>>>> baffling in terms of trying to understand what to do about them.
+>>>>>>
+>>>>>> Here's an example: https://bugzilla.kernel.org/show_bug.cgi?id=3D21=
+6274
+>>>>>>
+>>>>>> What should I do about that? Who's responsible for this? Who should=
+ I
+>>>>>> CC?
+>>>>>
+>>>>> Input subsystem.
+>>>>
+>>>> It's great you've replied immediately, what about hundreds or even
+>>>> thousands of other bug reports where people have no clue who has to b=
+e
+>>>> CC'ed?
+>>>
+>>> Quoting from https://docs.kernel.org/admin-guide/reporting-issues.html=
+:
+>>>
+>>> "[...] try your best guess which kernel part might be causing the issu=
+e.
+>>> Check the MAINTAINERS file [...] In case tricks like these don=E2=80=
+=99t bring
+>>> you any further, try to search the internet on how to narrow down the
+>>> driver or subsystem in question. And if you are unsure which it is: ju=
+st
+>>> try your best guess, somebody will help you if you guessed poorly. [..=
+.]"
+>>>
+>>> HTH, Ciao, Thorsten
+>>
+>> Absolute most people:
+>>
+>> * Will never read this document
+>> * Will not be able to "search the internet on how to narrow down the
+>> driver or subsystem in question"
 >
-> * Will never read this document
-> * Will not be able to "search the internet on how to narrow down the
-> driver or subsystem in question"
+> So how did these people arrive at "bugzilla" in the first place? ;-)
 
-So how did these people arrive at "bugzilla" in the first place? ;-)
+Google kernel bug -> bugzilla.kernel.org
 
-Or is this a case of "if all you have is a hammer...", so you
-actively start looking for a bugzilla?
-I.e. people who are used to bugzilla/discourse/slack/irc/trac/... will
-look for how to use bugzilla/discourse/slack/irc/trac/... to interact
-with the developer and/or maintainer.
+>
+> Or is this a case of "if all you have is a hammer...", so you
+> actively start looking for a bugzilla?
+> I.e. people who are used to bugzilla/discourse/slack/irc/trac/... will
+> look for how to use bugzilla/discourse/slack/irc/trac/... to interact
+> with the developer and/or maintainer.
+>
+> The definitive guide is the MAINTAINERS file.  If there is a (rare)
+> corresponding "B" entry, you can use that.  Else fall back to the
+> "M" and "L" entries.  "C" might be good for an initial query, but not
+> for the actual reporting, as there's even less traceability than with
+> mailing lists (the latter are archived by lore).
 
-The definitive guide is the MAINTAINERS file.  If there is a (rare)
-corresponding "B" entry, you can use that.  Else fall back to the
-"M" and "L" entries.  "C" might be good for an initial query, but not
-for the actual reporting, as there's even less traceability than with
-mailing lists (the latter are archived by lore).
+Just like I said before email sucks terribly for bug reporting except
+for rare cases when the developer notices your email right away and
+promptly submits a patch. This happens once in a blue moon unfortunately.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Best regards,
+Artem
