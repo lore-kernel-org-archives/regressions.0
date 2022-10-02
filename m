@@ -1,145 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F423D6A;
-	Sun,  2 Oct 2022 22:18:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E95F4C433C1;
-	Sun,  2 Oct 2022 22:18:02 +0000 (UTC)
-Date: Sun, 2 Oct 2022 18:18:01 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "Artem S. Tashkinov" <aros@gmx.com>, Theodore Ts'o <tytso@mit.edu>,
- Thorsten Leemhuis <linux@leemhuis.info>, Greg KH
- <gregkh@linuxfoundation.org>, Konstantin Ryabitsev
- <konstantin@linuxfoundation.org>, workflows@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, Linus Torvalds
- <torvalds@linux-foundation.org>, "regressions@lists.linux.dev"
- <regressions@lists.linux.dev>, ksummit@lists.linux.dev, Mario Limonciello
- <mario.limonciello@amd.com>
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-Message-ID: <20221002181801.25b5ff77@rorschach.local.home>
-In-Reply-To: <Yzn9ci/9urgTCF6h@pendragon.ideasonboard.com>
-References: <YzgY9X/DM9t/ZuJe@kroah.com>
-	<f8cbb12c-590b-28a3-e3e9-d3fb0d7e3c90@gmx.com>
-	<d7798453-3105-7adf-a9a6-76e8cfe4d012@leemhuis.info>
-	<83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com>
-	<a676e5cf-c67b-7946-ce73-8fb8d63a5a0a@leemhuis.info>
-	<Yzg7pHspc72I7TAb@mit.edu>
-	<e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com>
-	<YzmBjgXq9geMnL1B@mit.edu>
-	<79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com>
-	<20221002141321.394de676@rorschach.local.home>
-	<Yzn9ci/9urgTCF6h@pendragon.ideasonboard.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FF13D6A;
+	Sun,  2 Oct 2022 22:20:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1664749242;
+	bh=wxcJ1oVVAgA7JG2CodhHq8sHP/Kq00NTKknAQPYnPoM=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=FV0GBs3XBLTYS1x2nKSOFiGLJSvECYlGxbZcYsohsbeNAxRO/sqiqbAc76SFJCalG
+	 RRX9RvLXRvTfBUuxiWV/T+SKkAWVTo80tMduaZ4Swxns+wrMwywpep1LCccZmnY/K+
+	 brsWIKHqbbmrgZJtxWuuA5QAeeRKyjNo4kNYPFUE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.13.110.23] ([143.244.37.73]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MOiHf-1or0tx0qEh-00QEmg; Mon, 03
+ Oct 2022 00:20:42 +0200
+Message-ID: <3a3b9346-e243-e178-f8dd-f8e1eacdc6ae@gmx.com>
+Date: Sun, 2 Oct 2022 22:20:40 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Theodore Ts'o <tytso@mit.edu>, Thorsten Leemhuis <linux@leemhuis.info>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+ workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ ksummit@lists.linux.dev, Mario Limonciello <mario.limonciello@amd.com>
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+ <9a2fdff8-d0d3-ebba-d344-3c1016237fe5@gmx.com> <YzgY9X/DM9t/ZuJe@kroah.com>
+ <f8cbb12c-590b-28a3-e3e9-d3fb0d7e3c90@gmx.com>
+ <d7798453-3105-7adf-a9a6-76e8cfe4d012@leemhuis.info>
+ <83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com>
+ <a676e5cf-c67b-7946-ce73-8fb8d63a5a0a@leemhuis.info>
+ <Yzg7pHspc72I7TAb@mit.edu> <e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com>
+ <YzmBjgXq9geMnL1B@mit.edu> <79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com>
+ <20221002141321.394de676@rorschach.local.home>
+ <6de0925c-a98a-219e-eed2-ba898ef974f8@gmx.com>
+ <20221002180844.2e91b1f1@rorschach.local.home>
+From: "Artem S. Tashkinov" <aros@gmx.com>
+In-Reply-To: <20221002180844.2e91b1f1@rorschach.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:hYH43PNKFMNifBbao336dksMqDiZ/1kccCI7/W5OQbB75JF4IMc
+ Jypay1VNx/0xXyxppt2hRRjJoOOEpe1K7WS/WZk+eMHH6fN3OdtamuoSI6+MD50UbP7d76u
+ J4rjgWD+3FVj5+b/v6D64oGaCV5OKSlONOr0ExR8Gcb4bcGFTmHMMBBezu2saaHhRv8ZPhS
+ F8yfGI8XJducGL8uJ/+MQ==
+X-Spam-Flag: YES
+X-UI-Out-Filterresults: junk:10;V03:K0:0mnP7+1aEvg=:MgcwMVAR2o2JHwpBDmt3KxaV
+ Ycrfj+CNxX+Lq8+jJogpUqOrgnCEpHUf6waHq1kKzTezUlchPFXQ3MeWY4n3he2biN5hKVU4l
+ 1KMrz9YqjsvExKRsjpG7to//oBLcs3aOzbKa2v6tzgT0Rh9pyybhqA7PFVgtepHdYT2G9ysZ5
+ GmTNrzfHO7axEyTs3H4/AbaRx2a19bF54PVhxkxMRcWuG6oYwFBTxarrTW8XVvageuyskQJ0r
+ I7KIn3yr3/8GOjDqy5FoNTO+OODu+e2AHmNC2P9qn7G5pKHw6YbbUwazzdwFlikFV8PDcsmWz
+ mIlFlD6B38PvkVBpVuXPtptRcytLykd5ZApFR5bh/cMguvHXHtqp3nGaaoPKPmSdlkkSUHzY/
+ xa59RtiXqy6RV+rWow7urGl/s91E8JzqzeCvBhRUsHsdn+4Vs4YNr0bxrYA3IpR5EbxIBrxzx
+ 0o2O9QPf+Df0otp4p7vxNoQ/BADZcxLduAQvA3c39fSsQoXUsa41ojwpQ3M0BL+PEoeKxgyCK
+ lwqtNIxoNq3Ow4MsdoE4WEKbVQcYlhbZG7LZ/FIvUymnz0L5LdeLeUH89x9jgIYNNeBvlYPDL
+ ZVeplWjwO+HSw8WHF6Aamrukw1904oCjfC2EeG9J39YB+HBq8DefA1ISwmespyCkIT0YUHesM
+ y8Ye+N7WGupI/WQIT9boW5syQtCJ7vIlnpgyPPVPPL3C8+UHfV057j67/z5zR9kgsBSuFbkII
+ FOFDLlqEHHOWYw3bGP8vd7atf2kKQmRPZ30M3LuPCxhFS+oMUa9afDMGdolGIU3Bf9gkA1HXX
+ OS6GY6tnZl4xSc2tJTVPzJlZ0uJtIKhEXcGAnylRXYpuHl2i3SNHH9bLPXWVvvO7PLixisZFj
+ 1h00qkfARtAu5NCaKfYnz1n07TGdInIF7/JJi7i2LMQaIihg1sGD6IVyOd/1hmzdD1/9QjOur
+ HBPUkndjpPhR82/gcuIbA8G7xJaUtTbb/NZi3rbN/0FrbKM9Xa/kIbhWGt6JCkjaFXsYEO/Kd
+ qHdLDFWO1tIcs6zP+IEDZ1Xi0CXf2pBiC6AmaiIAXQSQZH/bbNMhmbwnhmxOJN+TPkLLKe7fU
+ yPoGrqT2lEEadetx5PbnYAKV9Xq75kaPgJGYlg+gHfzVVrRqP5xVm1HoC+DS/xnLIpwuLhxGO
+ Z5cgl/D9nXIUcdiwtFuKfgjf2pMo+hb3J/mddlHBYpKd9A==
 
-On Mon, 3 Oct 2022 00:06:58 +0300
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 
-> > 
-> > If you are using fedora, go bug Red Hat, Ubuntu then Canonical. And
-> > again, it comes down to if you have a paid subscription or not if you
-> > are going to get anywhere with it.
-> > 
-> > Can this be annoying, sure. But that's how the open source ecosystem
-> > works.  
-> 
-> The dichotomy between the community/hobbyist/free side and the
-> commercial/professional/paid side is an argument I often hear, and often
-> make myself. It is not, however, ineluctable.
 
-But is still the essence of a community. Things only get done when it
-benefits those that are doing it. The point of open source is that
-collaborating has a benefit for all involved. But dealing with bugs
-that do affect you directly, usually goes to the bottom of your
-priority list. Not that you are not willing to do so, but it may only
-get done when you have time to do it. And we all know how much time
-kernel developers have.
+On 10/2/22 22:08, Steven Rostedt wrote:
 
-> 
-> We have shown multiple times that this barrier doesn't have to exist.
-> The kernel is an impressive example of how companies and communities can
-> cooperate to reach a result that no single entity could have achieved.
-> It started with the development model and how it scaled, and other areas
-> were tackled along the way, such as automated testing and quality
-> control in general for instance. Lots of efforts went into creating
-> solutions that could fulfil the unique needs of our development model,
-> and into convincing large and small companies to invest, either money or
-> time.
-> 
-> Are we doing a great job ? Certainly not. But we are moving forward. As
-> Jon Corbet said several years ago in one of his talks, now that the
-> Linux kernel has reached a leading position in many areas, we have lost
-> the comfort of following other industry actors and have to innovate
-> ourselves. That often means (and this thought is mine, not Jon's)
-> winging it along the way. As impressive as some of our achievements may
-> be, our failures to maintain some areas of the kernel in a professional
-> way is also astonishing (https://xkcd.com/2347/ comes to mind). It's not
-> entirely surprising: the community and (part-time) volunteer model means
-> that everybody will tackle problems that interest them. Building a
-> community that can deliver professional support is not an interesting
-> task for everybody. It is, however, a key factor in the difference
-> between a kernel subsystem that strives and a subsystem that survives.
+Sometime mailing lists are worth CC'ing, sometimes individual developers
+when you can easily find/bisect the bad commit.
 
-Exactly. The problem is that this is an issue (getting general bug
-reporting from users), but it's not a fatal one if you don't get it
-right. The community tends to do what it takes to survive. It's usually
-not until there's a well established threat that everyone changes how
-they do things. Major updates to the kernel at the end of an -rc
-release is unheard of, until there's a meltdown/spectre threat.
+Bugzilla hasn't been updated in a very long time so it's missing both
+mailing lists and individual kernel developers.
 
-> 
-> I believe the same holds true for bug tracking and support. At the end
-> of the day, someone will need to pay for it, but we could shatter the
-> traditional model here too. We could, given enough interest, bridge the
-> gap between all involved parties and create a support model that would
-> benefit everybody. It took years and huge efforts for Linux to evolve
-> towards more professionalism in many areas, and it would take more years
-> and more effort to continue and expand that, but I believe it would be
-> feasible.
+AFAIK, some pieces of kernel have no appropriate mailing lists at all.
+What about that? I've no clue.
 
-Linus went away and came back with git. Should we ask him to go away
-and come back with a better bugzilla? :-D
+Opt-in will work, except I've no idea how to make it work. Mass email
+all the kernel developers and politely invite them to sign up? Most will
+simply ignore it.
 
-> 
-> Linux didn't start because Linus complained about existing operating
-> systems, ranted on usenet forums and waited for someone to fix the
-> problem. Someone will need to step up and lead the effrot here too. If
-> that person could ignore for a while that this is an impossible task, I
-> think they could succeed.
-> 
-> > If someone is not able to figure out how to use the mailing lists, it
-> > is unlikely that they will be able to be useful in working with the
-> > maintainer to solve their issue. As Ted mentioned, when asked to do
-> > something to help analyze the issue, many times there's no response
-> > from the reporter. Maybe because the reporter had no idea what the
-> > maintainer wanted them to do. Most kernel bugs requires a constant back
-> > and forth between the reporter and the developer. If you don't have
-> > that, then there's no reason to bother with trying to fix the issue.
-> > 
-> > Ideally, someone (you?) would want to be a middle man and triage the
-> > bugzilla reports and find those that look promising to get a fix
-> > completed, and then be the liaison between bugzilla and the kernel
-> > maintainer, then I think that could work. But the issue comes back to
-> > manpower. Who's going to do that?  
-> 
-> On the topic of triage, I've found that distro developers often do a
-> pretty good job. I've received multiple bug reports of great quality
-> following problems initially posted to distro bug trackers, after the
-> distro developers took the time needed to hold reporters by the hand to
-> get all the required information. Kudos for that !
-> 
+It's been mentioned here several times already that even collecting
+their public email addresses in public git logs could be considered illega=
+l.
 
-This is what I was saying about having a liaison. It could work if we
-have someone to do it. We have one volunteer (Slade), perhaps this
-could turn out to be something more.
+There's too much resistance, too much "Mail will work for everyone"
+except when it doesn't. I've got a strong feeling inving me to this
+discussion was a bad mistake and no one even remotely likes my
+proposals. Sorry, I give up.
 
--- Steve
+
+Best regards,
+Artem
