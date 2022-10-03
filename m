@@ -1,77 +1,65 @@
-Received: from 1wt.eu (wtarreau.pck.nerim.net [62.212.114.60])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBF8517C1;
-	Mon,  3 Oct 2022 10:05:26 +0000 (UTC)
-Received: (from willy@localhost)
-	by pcw.home.local (8.15.2/8.15.2/Submit) id 293A432u025351;
-	Mon, 3 Oct 2022 12:04:03 +0200
-Date: Mon, 3 Oct 2022 12:04:03 +0200
-From: Willy Tarreau <w@1wt.eu>
-To: "Artem S. Tashkinov" <aros@gmx.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Thorsten Leemhuis <linux@leemhuis.info>,
-        Greg KH <gregkh@linuxfoundation.org>, workflows@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        ksummit@lists.linux.dev, Mario Limonciello <mario.limonciello@amd.com>,
-        Mike Rapoport <rppt@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-Message-ID: <20221003100403.GA25318@1wt.eu>
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1D817C1;
+	Mon,  3 Oct 2022 10:10:12 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ofIOo-0000U1-7o; Mon, 03 Oct 2022 12:10:10 +0200
+Message-ID: <63a8403d-b937-f870-3a9e-f92232d5306c@leemhuis.info>
+Date: Mon, 3 Oct 2022 12:10:09 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d3fdc6a-a98a-fe3b-2e3e-acc2ffa24f9d@gmx.com>
- <c828f525-8fdf-186a-2d18-582f534ecb61@gmx.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <linux@leemhuis.info>
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: "Artem S. Tashkinov" <aros@gmx.com>, workflows@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ ksummit@lists.linux.dev
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+In-Reply-To: <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1664791813;2542fa30;
+X-HE-SMSGID: 1ofIOo-0000U1-7o
 
-On Mon, Oct 03, 2022 at 07:49:38AM +0000, Artem S. Tashkinov wrote:
-> Lore looks alien to me and in my life I've worked with a dozen bug trackers.
-> 
-> * Where are open "issues"?
-> * Which issues are now resolved?
-> * What's the status of the "issue"?
+On 29.09.22 13:33, Thorsten Leemhuis wrote:
+> On 29.09.22 13:19, Thorsten Leemhuis wrote:
+>>
+>> TLDR: Core Linux kernel developers are unhappy with the state of
+>> bugzilla.kernel.org; to improve things I plan to change a few important
+>> aspects of its configuration, unless somebody comes up with better ideas
+>> to tackle current problems: (1) Create a catch-all product making it
+>> totally obvious to submitters that likely nobody will look into the
+>> ticket. (2) Remove or hide all products & components where the subsystem
+>> didn't fully commit to look into newly submitted reports. (3) Change the
+>> text on the front page to make it clear that most kernel bug reports
+>> need to be sent by mail.
 
-Very often this status is an issue by itself. It only serves to hide
-the less interesting junk to discover what's left behind, but when
-people continue to respond to resolved issues nobody sees that. And
-if you block them from continuing to feed a closed issue, it's even
-worse as it forces them to reopen a new one that causes duplication.
+Well, there are lots of interesting things discussed in this thread for
+a time when a bugzilla replacement needs to be found. But one thing
+afaics is pretty clear for the time being: we as the kernel development
+community are not going to double down on bugzilla now.
 
-With e-mails you can respond to an old message if you want and keep
-all the participants. And it does happen.
+Thing is: bugzilla.kernel.org is there and will be for a while, as it
+provides services that some developers rely on. And it has some
+problems, as widely known and outlined in my mail. Reducing those for
+now by performing a few small changes (aka applying some band-aids here
+and there) as outlined above IMHO is worth it to reduce the pain. There
+was no opposition to that plan from Konstantin or core Linux kernel
+developers afaics (please correct me if I'm wrong), so I'll likely start
+working on realizing it later this week, unless I get "no, please
+don't/please wait" from those people.
 
-> If you remove bugzilla I'll never use lore.kernel.org, I promise.
-
-It's a convincing argument, for sure!
-
-> > > Again the volume of bug reports is relatively low, fewer than two dozen
-> > > a week.
-> > 
-> > Which proves this tool is insignificant in the grant scheme of (Linux)
-> > things.
-> 
-> 
-> https://bugzilla.kernel.org/show_bug.cgi?id=204807
-> 
-> A very insignificant exchange of over 2 hundred comments, patches,
-> suggestions, etc. by the people absolute most of whom would have failed
-> to do that via email.
-
-You've already claimed that and we've also told you that it could very
-well have been the opposite and have been resolved in 6 months instead
-of 2.5 years, by having many more eyes on it. The thing is that you're
-only listening to yourself and not to the arguments that the people you
-accuse of not reading the lists gave you. At this point there's not much
-more that can be done, you've completely closed that discussion by
-refusing to listen, thus I think it's better to stop now.
-
-Willy
+Ciao, Thorsten
