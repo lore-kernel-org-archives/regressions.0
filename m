@@ -1,104 +1,93 @@
-Received: from premium237-5.web-hosting.com (premium237-5.web-hosting.com [66.29.146.205])
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D816C17C1;
-	Mon,  3 Oct 2022 11:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sladewatkins.net; s=default; h=To:References:Message-Id:
-	Content-Transfer-Encoding:Cc:Date:In-Reply-To:From:Subject:Mime-Version:
-	Content-Type:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=uY/FTuzgD5ZBJtXcZdlV+dYNviUu9lySaYt57vkBpAM=; b=HxgaRZaFi0NHZRJ2Mma4fFLfYc
-	Xru4Bz9cgJNQBvfWo4J4v2rcCzCfF8vih+6Dj1x/ujpHzxwoZ9I9Nvu0ccXSW+BJ72Il4CKepWgdq
-	8AhBn4HUPuTf7R/W/I6jAeybfqKGTX8FjTom9KG9iDI4y5yiQRi90Ju2Q+rmY3m+ayVdUvDtfAduP
-	0UwK/YKKVWcpBwNwsf7rRsPSJOKJzbaC+WD6QYyY6sRHE8E+qN8fkGiSFpHL8fO6lp+ERwlW+j+Jn
-	MPEmj/drylrKe3bMy4YXizJLDeXXtUm7wHyDRH1Od/f3PVnn9dWms6yMJ8CB8iwZxvwwHmXOvXGMF
-	UMErj/kw==;
-Received: from pool-108-4-135-94.albyny.fios.verizon.net ([108.4.135.94]:56618 helo=smtpclient.apple)
-	by premium237.web-hosting.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <srw@sladewatkins.net>)
-	id 1ofJTF-007b4C-FO;
-	Mon, 03 Oct 2022 07:18:49 -0400
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A0C8F70;
+	Mon,  3 Oct 2022 11:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664797502; x=1696333502;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=LHek2QVys//zPdkCoc7Ih96b13PllPOVQVjSU9pfDqk=;
+  b=OiZIy1j1E0UC4Hbxa344IosrG1kjlUWTQN9FGRjGBgLQXQphfsGQw7CJ
+   /o1ghrrMv0kv/Gg0ptBKl70eXNRa2lgdt5k80yMtk3gEfN96rgdwdapNo
+   GOiMC8W5jNAHhMqi7MurvSUR6Cs5ecuRQqmrtMQ1QBxsArsN5FhzBjnt6
+   TZAPR6CG5vkhnw2RhtvW/nmDF8pvprQwFiNkXOUE9DXeAMy5+vt82zKpj
+   8PrQe13AyW4Gv/4vgk2PnmcU8qLD5xYgJ2ZGNYGAxSykxwvvr6FA7MUyk
+   wxsOFz15R8Yv0yt+KRZwi/Xij4620Mv0qZoakq+00b1yyWLlcrjYAM9vd
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10488"; a="301334451"
+X-IronPort-AV: E=Sophos;i="5.93,365,1654585200"; 
+   d="scan'208";a="301334451"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2022 04:45:01 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10488"; a="686081568"
+X-IronPort-AV: E=Sophos;i="5.93,365,1654585200"; 
+   d="scan'208";a="686081568"
+Received: from zlukwins-mobl.ger.corp.intel.com (HELO localhost) ([10.252.60.249])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2022 04:44:58 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "Artem S.
+ Tashkinov" <aros@gmx.com>
+Cc: Thorsten Leemhuis <linux@leemhuis.info>, Konstantin Ryabitsev
+ <konstantin@linuxfoundation.org>, workflows@vger.kernel.org, LKML
+ <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ ksummit@lists.linux.dev
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+In-Reply-To: <YzcL8VLpk00hC1so@pendragon.ideasonboard.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+ <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
+ <20220929130410.hxtmwmoogzkwcey7@meerkat.local>
+ <5d15ec50-e0b7-dc90-9060-3583633070e8@leemhuis.info>
+ <52d93e6c-c6f0-81dd-07ca-cdae13dffba4@gmx.com>
+ <YzcL8VLpk00hC1so@pendragon.ideasonboard.com>
+Date: Mon, 03 Oct 2022 14:44:55 +0300
+Message-ID: <87y1txuo5k.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-From: Slade Watkins <srw@sladewatkins.net>
-In-Reply-To: <63a8403d-b937-f870-3a9e-f92232d5306c@leemhuis.info>
-Date: Mon, 3 Oct 2022 07:18:46 -0400
-Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- "Artem S. Tashkinov" <aros@gmx.com>,
- workflows@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- ksummit@lists.linux.dev
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <534EB870-3AAE-4986-95F3-0E9AD9FCE45B@sladewatkins.net>
-References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
- <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
- <63a8403d-b937-f870-3a9e-f92232d5306c@leemhuis.info>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-X-Mailer: Apple Mail (2.3696.120.41.1.1)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - premium237.web-hosting.com
-X-AntiAbuse: Original Domain - lists.linux.dev
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - sladewatkins.net
-X-Get-Message-Sender-Via: premium237.web-hosting.com: authenticated_id: srw@sladewatkins.net
-X-Authenticated-Sender: premium237.web-hosting.com: srw@sladewatkins.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-From-Rewrite: unmodified, already matched
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Hi Thorsten,
+On Fri, 30 Sep 2022, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
+> E-mail *clients* are horrible to keep track of state. E-mail itself,
+> as in RFC822 (and newer), SMTP and other protocols, only handle
+> transport of data. As the data within the e-mail body is free-formed,
+> and wasn't meant to track items and their state, clients never evolved
+> in that direction.
 
-> On Oct 3, 2022, at 6:10 AM, Thorsten Leemhuis <linux@leemhuis.info> =
-wrote:
->=20
-> Thing is: bugzilla.kernel.org is there and will be for a while, as it
-> provides services that some developers rely on. And it has some
-> problems, as widely known and outlined in my mail. Reducing those for
-> now by performing a few small changes (aka applying some band-aids =
-here
-> and there) as outlined above IMHO is worth it to reduce the pain. =
-There
-> was no opposition to that plan from Konstantin or core Linux kernel
-> developers afaics (please correct me if I'm wrong), so I'll likely =
-start
-> working on realizing it later this week, unless I get "no, please
-> don't/please wait" from those people.
+Email is a massively distributed software fuzzing project that lets you
+transmit messages in the sideband. :p
 
-With the band-aids you outline in place: do you think it would it be =
-beneficial to have a liaison holding users=E2=80=99s hands through the =
-process, _then_ triaging to developers by contacting them with the =
-information they need? (This is something proposed previously on this =
-thread[1], and something I=E2=80=99ve already said I=E2=80=99m willing =
-to do[2][3].)
+> Bugzilla won't solve this. The huge elephant in the room is that most
+> maintainers are overworked. Whether a bug report arrives in my mailbox
+> as an e-mail straight from the reporter or from a bug tracker will
+> make very little difference if I don't have time to look into it (I
+> would even argue that bug trackers are even worse there: if I'm really
+> short of time, I'm more likely to prioritize replying to e-mails
+> instead of having to open a link in a web browser).
 
-IOW, someone to bridge between end users and developers and (at least =
-try to) help bring some order to the chaos.
+I think a bug tracker helps in quantifying the problems you have,
+though, including the maintainer bandwidth. Email doesn't easily lend
+itself to that kind of analysis. I can't point managers at list emails
+and ask for help. And if you do get people to help, having a centralized
+place for the bug data helps them.
 
-Thanks,
--srw
+The flip side is that it's easier for me to ignore notification mails
+from a bug tracker because I know the info isn't lost in a sea of other
+mails.
 
-[1] =
-https://lore.kernel.org/lkml/20221002141321.394de676@rorschach.local.home/=
 
-[2] =
-https://lore.kernel.org/lkml/DA4EA2D8-0EA0-41FF-B495-68EC9E92CC30@sladewat=
-kins.net/
-[3] =
-https://lore.kernel.org/lkml/B0853C40-C19A-46D0-B151-84C9016745ED@sladewat=
-kins.net/
+BR,
+Jani.
 
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
