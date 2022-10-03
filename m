@@ -1,121 +1,70 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A772A17C1;
-	Mon,  3 Oct 2022 06:37:30 +0000 (UTC)
-Received: by mail-qv1-f52.google.com with SMTP id z18so6229399qvn.6;
-        Sun, 02 Oct 2022 23:37:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=Bk2C3u/t27y03cPLtgq1Q59OlKnnWoH0jHqzc388cwA=;
-        b=DcrHv21e8thhA0MwlhBnrRb0Nx3BFz2yp6oOZyHgDOOVXYgcqkgO2Vos6ayPqx19Gz
-         oiPhZKOUuUynZlyESf7jKrOXNfvRnJGoVITS9ROKbwxEg6B6uanut0qekRj1Y00cABwd
-         qVTSiclpJxD/PPkb/nnHoK5gJdRAXqqA8ho7XuDGfpNEkJbvnjhHvq/MMzuZ9TRTlIit
-         uChL70ZKj1lryfvkgZHWQgZFYOXz636190BrcK33SnRScyweKvB7maPL7wvPAxPM1Tse
-         lrHkMH/9Hgalq+2dBx7NfQYRCQCC81XBtQztzTY66yA8Ia9ONohYE1cfUec8licc7W1g
-         kNiQ==
-X-Gm-Message-State: ACrzQf1KoeF1ZOI7AZAR+9J5r53tvnq2tayQ8LQuivVzGI0ws9KwIP2Y
-	XujAJv+RySvndEv6a6L7H5Zcm+0PIHs+7w==
-X-Google-Smtp-Source: AMsMyM6Ad9qSCkgoEvbJ2RK6GwX7J7zx04MMxzTpXuzRkD3Wsavz4ce4o4P/9R47sq0JlCpiIvkqyQ==
-X-Received: by 2002:a05:6214:966:b0:4ac:79c8:d37e with SMTP id do6-20020a056214096600b004ac79c8d37emr15345130qvb.79.1664779049167;
-        Sun, 02 Oct 2022 23:37:29 -0700 (PDT)
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com. [209.85.128.170])
-        by smtp.gmail.com with ESMTPSA id ay43-20020a05620a17ab00b006b945519488sm9989734qkb.88.2022.10.02.23.37.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 02 Oct 2022 23:37:28 -0700 (PDT)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-357208765adso56044537b3.12;
-        Sun, 02 Oct 2022 23:37:27 -0700 (PDT)
-X-Received: by 2002:a81:848c:0:b0:356:e173:2c7a with SMTP id
- u134-20020a81848c000000b00356e1732c7amr10829162ywf.502.1664779047579; Sun, 02
- Oct 2022 23:37:27 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77BE8F53;
+	Mon,  3 Oct 2022 06:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zyB1B35xZgtQIx8vMJGKAY+ZN6kqhFqdH8GFiF/HPg8=; b=u5XrZEUPUQtuEJlDxqf/VHiaPx
+	1IjViOeH56mx2j3w4QDqPAFt2yxKJuIIhyALch5vsOqgTxEiSOigwUrzO7VCBa4jbcSVFwYNjqDoT
+	kjvwAdweXbSQuw5LKulwpMsJvugw4kjgLfUrgGpi1+SAzqdsMVcDRLZbYKVtiHgTvlioBsDIxnNMY
+	v/pLBOXkIs5J459poLzAyXit9GMxNNuFgGmm1ZI8nL1R0H2uRBMIoXmuxK/EnQdPzwms7mpBXjLAd
+	ILxy5PvteRMBKnNZv1qUPfJ14S1kpVacZEoyqmFB1fM/SnjOzWFQAuJdqpaBZ5sBELWDvOf9BX8X3
+	lGP+oBVA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1ofFMI-004GVH-MA; Mon, 03 Oct 2022 06:55:22 +0000
+Date: Sun, 2 Oct 2022 23:55:22 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Theodore Ts'o <tytso@mit.edu>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	"Artem S. Tashkinov" <aros@gmx.com>,
+	"Bird, Tim" <Tim.Bird@sony.com>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	Slade Watkins <srw@sladewatkins.net>,
+	Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+	"workflows@vger.kernel.org" <workflows@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"ksummit@lists.linux.dev" <ksummit@lists.linux.dev>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+Message-ID: <YzqHWtbmaYkkzIzw@infradead.org>
+References: <20220929135325.4riz4ijva2vc7q5p@meerkat.local>
+ <95c3384b-53d0-fd6c-6ec5-a7e03fdeddfc@gmx.com>
+ <F300ED64-5E8E-4060-89DC-C98BC5FF08E6@sladewatkins.net>
+ <YzXK6Px+BrNuuMZH@pendragon.ideasonboard.com>
+ <a86adc6d-05db-ec2e-c5de-d280aad9fb8a@leemhuis.info>
+ <Yzbtuz6L1jlDCf9/@pendragon.ideasonboard.com>
+ <BYAPR13MB250377AAFCC43AC34E244795FD569@BYAPR13MB2503.namprd13.prod.outlook.com>
+ <3cfaef48-744f-000f-1be5-6f96d64dea24@gmx.com>
+ <YzcdnnjJA4M09dNH@pendragon.ideasonboard.com>
+ <YzeVVV+nPaxsqS0V@mit.edu>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <83f6dd2b-784a-e6d3-ebaf-6ad9cfe4eefe@gmx.com> <a676e5cf-c67b-7946-ce73-8fb8d63a5a0a@leemhuis.info>
- <Yzg7pHspc72I7TAb@mit.edu> <e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com>
- <YzmBjgXq9geMnL1B@mit.edu> <79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com>
- <20221002150522.ul4nbtfawqjhnsag@meerkat.local> <b594681b-6b8c-ffb7-f526-3da847d160a8@gmx.com>
- <20221002205430.GC22129@1wt.eu> <d1f99826-2a66-c2d5-c9cd-d2fadd35eca4@gmx.com>
- <20221002213235.GA22532@1wt.eu> <867b35b7-da2b-fed0-1f75-b2021d9be499@gmx.com>
-In-Reply-To: <867b35b7-da2b-fed0-1f75-b2021d9be499@gmx.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 3 Oct 2022 08:37:09 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVkFdXiqV-k2X8yDh5VkR3cv0a4z78z+uCF_PfgHgGx=Q@mail.gmail.com>
-Message-ID: <CAMuHMdVkFdXiqV-k2X8yDh5VkR3cv0a4z78z+uCF_PfgHgGx=Q@mail.gmail.com>
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla blues"
-To: "Artem S. Tashkinov" <aros@gmx.com>
-Cc: Willy Tarreau <w@1wt.eu>, Konstantin Ryabitsev <konstantin@linuxfoundation.org>, 
-	"Theodore Ts'o" <tytso@mit.edu>, Thorsten Leemhuis <linux@leemhuis.info>, 
-	Greg KH <gregkh@linuxfoundation.org>, workflows@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, ksummit@lists.linux.dev, 
-	Mario Limonciello <mario.limonciello@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YzeVVV+nPaxsqS0V@mit.edu>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hi Artem,
+On Fri, Sep 30, 2022 at 09:18:13PM -0400, Theodore Ts'o wrote:
+> Funny thing.  I've largely given up on getting any kind of useful bug
+> report from Launchpad, so I've largely ignored it.  In contast, the
+> bug reports I get for e2fsprogs from Debian are generally far more
+> actionable, with bug reports that have all of the data so I can
+> actually root cause the problem, and help the user.
 
-On Sun, Oct 2, 2022 at 11:54 PM Artem S. Tashkinov <aros@gmx.com> wrote:
-> It's easy to join an existing bug report. Tell me how can I join an
-> existing email thread without being first subscribed to it? I certainly
-> can, absolute most people will not be able to.
-
-lore.kernel.org
-
-> What about sending large dump files? Should everyone on the mailing list
-> receive it?
-
-post a link
-
-> A bug report is a simple plain list of messages in a single place which
-> could be read with a web browser. An email thread is anything but.
-
-lore.kernel.org
-
-> Searching through many emails at once? Good luck with that.
-
-lore.kernel.org
-
-> Replying to a particular email? Good luck with that.
-
-lore.kernel.org
-
-> It looks like you're under the impression that every Linux user who is
-> willing to ever use Linux must:
->
-> 1) Subscribe to _all_ the existing mailing lists (just in case - what if
-> you need to work on something which was started by someone else)
-
-lore.kernel.org
-
-> 2) Know the email etiquette
-
-Just Be Polite
-
-> 3) Learn to be persistent and resend (an unknown number of times) your
-> concerns hoping they will eventually be addressed.
->
-> Bugzilla: sign up once. Follow up. If you file a dupe, hopefully it will
-> be marked as a dupe. Everyone's happy. No particular skills, email
-> clients, formatting, referencing, etc. etc. etc.
-
-Having at last the skill to provide a good rebug port would be nice...
-
-Now, back to work. The merge window has opened, so there will be
-bugs to report and/or fix...
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+As someone who uses the Debian BTS as a bug reported only these days,
+and a as maintainer (but not DD) in the past I love it.  For the
+developer the email interface is perfect for quick actions, while
+the website allows for a good overview.  And as a user the reportbug
+tools works really nicely and tends to collect the important information
+automatically.  Most importantly it does not require creating a user
+account with some random entity.
