@@ -1,93 +1,140 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A0C8F70;
-	Mon,  3 Oct 2022 11:45:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664797502; x=1696333502;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=LHek2QVys//zPdkCoc7Ih96b13PllPOVQVjSU9pfDqk=;
-  b=OiZIy1j1E0UC4Hbxa344IosrG1kjlUWTQN9FGRjGBgLQXQphfsGQw7CJ
-   /o1ghrrMv0kv/Gg0ptBKl70eXNRa2lgdt5k80yMtk3gEfN96rgdwdapNo
-   GOiMC8W5jNAHhMqi7MurvSUR6Cs5ecuRQqmrtMQ1QBxsArsN5FhzBjnt6
-   TZAPR6CG5vkhnw2RhtvW/nmDF8pvprQwFiNkXOUE9DXeAMy5+vt82zKpj
-   8PrQe13AyW4Gv/4vgk2PnmcU8qLD5xYgJ2ZGNYGAxSykxwvvr6FA7MUyk
-   wxsOFz15R8Yv0yt+KRZwi/Xij4620Mv0qZoakq+00b1yyWLlcrjYAM9vd
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10488"; a="301334451"
-X-IronPort-AV: E=Sophos;i="5.93,365,1654585200"; 
-   d="scan'208";a="301334451"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2022 04:45:01 -0700
-X-IronPort-AV: E=McAfee;i="6500,9779,10488"; a="686081568"
-X-IronPort-AV: E=Sophos;i="5.93,365,1654585200"; 
-   d="scan'208";a="686081568"
-Received: from zlukwins-mobl.ger.corp.intel.com (HELO localhost) ([10.252.60.249])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Oct 2022 04:44:58 -0700
-From: Jani Nikula <jani.nikula@intel.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "Artem S.
- Tashkinov" <aros@gmx.com>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>, Konstantin Ryabitsev
- <konstantin@linuxfoundation.org>, workflows@vger.kernel.org, LKML
- <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- ksummit@lists.linux.dev
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-In-Reply-To: <YzcL8VLpk00hC1so@pendragon.ideasonboard.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
- <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
- <93a37d72-9a88-2eec-5125-9db3d67f5b65@gmx.com>
- <20220929130410.hxtmwmoogzkwcey7@meerkat.local>
- <5d15ec50-e0b7-dc90-9060-3583633070e8@leemhuis.info>
- <52d93e6c-c6f0-81dd-07ca-cdae13dffba4@gmx.com>
- <YzcL8VLpk00hC1so@pendragon.ideasonboard.com>
-Date: Mon, 03 Oct 2022 14:44:55 +0300
-Message-ID: <87y1txuo5k.fsf@intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5A517C1;
+	Mon,  3 Oct 2022 13:00:06 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ofL3B-0005Sn-2N; Mon, 03 Oct 2022 15:00:01 +0200
+Message-ID: <e9dd6af0-37ef-1195-0d3b-95601d1ab902@leemhuis.info>
+Date: Mon, 3 Oct 2022 14:59:54 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Content-Language: en-US, de-DE
+To: Slade Watkins <srw@sladewatkins.net>
+Cc: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+ "Artem S. Tashkinov" <aros@gmx.com>, workflows@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ ksummit@lists.linux.dev
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+ <63a8403d-b937-f870-3a9e-f92232d5306c@leemhuis.info>
+ <534EB870-3AAE-4986-95F3-0E9AD9FCE45B@sladewatkins.net>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+In-Reply-To: <534EB870-3AAE-4986-95F3-0E9AD9FCE45B@sladewatkins.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1664802006;15f539c1;
+X-HE-SMSGID: 1ofL3B-0005Sn-2N
 
-On Fri, 30 Sep 2022, Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
-> E-mail *clients* are horrible to keep track of state. E-mail itself,
-> as in RFC822 (and newer), SMTP and other protocols, only handle
-> transport of data. As the data within the e-mail body is free-formed,
-> and wasn't meant to track items and their state, clients never evolved
-> in that direction.
+On 03.10.22 13:18, Slade Watkins wrote:
+> 
+>> On Oct 3, 2022, at 6:10 AM, Thorsten Leemhuis <linux@leemhuis.info>
+>> wrote:
+>> 
+>> Thing is: bugzilla.kernel.org is there and will be for a while, as
+>> it provides services that some developers rely on. And it has some 
+>> problems, as widely known and outlined in my mail. Reducing those
+>> for now by performing a few small changes (aka applying some
+>> band-aids here and there) as outlined above IMHO is worth it to
+>> reduce the pain. There was no opposition to that plan from
+>> Konstantin or core Linux kernel developers afaics (please correct
+>> me if I'm wrong), so I'll likely start working on realizing it
+>> later this week, unless I get "no, please don't/please wait" from
+>> those people.
+> 
+> With the band-aids you outline in place: do you think it would it be
+> beneficial to have a liaison holding users’s hands through the
+> process, _then_ triaging to developers by contacting them with the
+> information they need?
 
-Email is a massively distributed software fuzzing project that lets you
-transmit messages in the sideband. :p
+Well, yes and no. :-/
 
-> Bugzilla won't solve this. The huge elephant in the room is that most
-> maintainers are overworked. Whether a bug report arrives in my mailbox
-> as an e-mail straight from the reporter or from a bug tracker will
-> make very little difference if I don't have time to look into it (I
-> would even argue that bug trackers are even worse there: if I'm really
-> short of time, I'm more likely to prioritize replying to e-mails
-> instead of having to open a link in a web browser).
+Thing is: up to a point that's something I do already (and will likely
+continue to do at least for a while) when the reported issue is a
+regression. But to be fair, I often could help way more if I wanted to,
+but there are only so many hours in a day and other things to take care
+of (regression tracking is only a part-time thing for me currently). So
+some help there might be handy; would get load of the developers as
+well, as they often are more willing to help users when a report is
+about a regression.
 
-I think a bug tracker helps in quantifying the problems you have,
-though, including the maintainer bandwidth. Email doesn't easily lend
-itself to that kind of analysis. I can't point managers at list emails
-and ask for help. And if you do get people to help, having a centralized
-place for the bug data helps them.
+But for other issues (aka regular bugs) I don't think it's worth it,
+because why only help those users that report to bugzilla (you didn't
+say that, but it sounded to me like the focus is on it)? There are
+people that try to use the mailing lists, but do it badly and never get
+a reply (for example because they sent their report just to LKML). They
+could need help, too; maybe helping them should even be priority, as
+they at least tried to do what most kernel developers want them to do,
+hence their reports might be better, too.
 
-The flip side is that it's easier for me to ignore notification mails
-from a bug tracker because I know the info isn't lost in a sea of other
-mails.
+But there is a more important reason why I think having a liaison might
+not be worth it for now: It IMHO would be much better to spend the time
+and effort on other things that enable users submitting better bug
+reports in the first place. I have no concrete and well-thought-out
+ideas at hand what to do exactly, but here are a few vague ones:
 
+ * create an app (ideally usable locally and on the web) that guides
+users through generating a good bug report (let's leave the way of
+submission aside for now). That app could handle quite a few of the
+steps that https://docs.kernel.org/admin-guide/reporting-issues.html
+currently mentions. It for example could check if the kernel looks to be
+vanilla, if the kernel is fresh, if the kernel is tainted, if an Oops is
+the first one or just a follow-up error; maybe that app could even
+decode stack-traces locally in some environments; and it could collect
+and upload logs as well. It could also explain certain things to users
+when not fulfilled, for example why it's not worth to report a problem
+that happens with an old kernel.
 
-BR,
-Jani.
+   Sure, these apps never work perfect and doing it right is a lot of
+work, but I guess one could make things a lot easier for many users
+especially for our case. I assume other projects have done something
+like that so that we could learn from them.
 
+ * Improve https://docs.kernel.org/admin-guide/reporting-issues.html
+further. I have some ideas there, but other things are higher on my
+priority list currently. That document in the end somehow needs to
+become less scary looking while still providing all important details
+for situations where a reporter might need them.
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+ * Write new docs relevant for bug reporting. We for example still have
+no well written and simple to understand text that explains bisection to
+people that are new to git, bisection, or compiling kernels in general.
+Speaking of which: we iirc are also missing a text that properly
+explains how to quickly configure and compile a kernel using "make
+localmodconfig" (I mean something like
+http://www.h-online.com/open/features/Good-and-quick-kernel-configuration-creation-1403046.html)
+
+ * Not sure, maybe a list of things that known to be broken might be
+good to have? Like "yes, we know that nouveau is slow, but we can't do
+anything about this" or "driver 'wifi-foo' only supports a small subset
+of the features the hardware offers, so don't report bugs if bar, baz
+and foobar don't work".
+
+* Once things improved with steps like the above try to form a "kernel
+tester community" where people can help each other when they run into
+problems or want to report an issue. We should try to get distributions
+like Arch Linux, openSUSE Tumbleweed or Fedora on board here as well, as
+they and their users have an interest in ensuring new mainline releases
+work well, because they regularly rebase to the latest series.
+
+  At that point it likely would be good to have someone that is at least
+somewhat paid to act as "Community Manager"; that person then could also
+act as liaison between users and developers and fine-tune things (docs
+etc.) further when needed.
+
+Those were just the things that came from the top of my head that IMHO
+should be a priority.
+
+Ciao, Thorsten
