@@ -1,109 +1,128 @@
-Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBCCB33C1;
-	Tue,  4 Oct 2022 12:25:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1664886332;
-	bh=qgZLLV2aHolUAywGvI48mu/krYEdR9x8qhwAEtcjS30=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=Yr1N3GCEyxE01B9mikDVxPP+ehztXMVFiyQjzKMMNwFLfQh634cgAZAinMyEPztFm
-	 3kj4EMLj7vJqMjUJF6mG2MMiKrr/tHF8VsRJezxt9URDMoCbgdpbhHOpLdCMlOUstc
-	 Ll3iDZS8rJ0YDC+PFQnBavDIEO2JC8k9+aVj1VA8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.17.110.14] ([143.244.37.77]) by mail.gmx.net (mrgmx104
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1MMobU-1owFw00BL2-00Ioog; Tue, 04
- Oct 2022 14:25:32 +0200
-Message-ID: <b23586ae-3082-08dc-7bc7-94c3fecffbf9@gmx.com>
-Date: Tue, 4 Oct 2022 12:24:23 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BE42917;
+	Tue,  4 Oct 2022 12:32:40 +0000 (UTC)
+Received: by mail-qt1-f182.google.com with SMTP id gb14so7998916qtb.3;
+        Tue, 04 Oct 2022 05:32:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=mAm6cVyQiiO6vug+rJbXVrDQAEKK9J1ugo8edz5Ki04=;
+        b=32r3FvtxjzdeGVUUSEkOogwVByh8C4TvkXRsErVeNFauGeP8EG8lxD4hWEhjgWi9gA
+         rag78moPboh9kToAvFyyfZvQJC9UThdSUY86cOode0glFgldCgzqLrixq1JBRUP8cuNz
+         LQBXX0xPCWt085cDsU2enF/yLmoOTVkH/yByjG32eXn9iVyxXAKUVL1hlr3G4kfvkwmW
+         E4oq/zioi31z/uzCsRgEnYv8dDLWkteXvK86Onj+gagnspEEnbJ4g9BC7Nc+YlbT7Z1m
+         kNJnYPQ3thABDicc1PyMcBxy8b1DtQuLj9NNwo94R5mpN/si3oOdMAo870tNPB5OCtgb
+         HRSw==
+X-Gm-Message-State: ACrzQf1shrLtV3tF3lR+pb9QWD3VvwtPQXlH+KbnoKEVaA0FxAXqANNG
+	6C62I2wE7Yi++abzJld7XZl46y59Fry2wg==
+X-Google-Smtp-Source: AMsMyM5fABNP2OFKLaOgVxvjxzX1HKqpAMQF3HgnLJLrFVcZbT94BcC5kE+HC4FH6TZLipGh3+6qIw==
+X-Received: by 2002:ac8:5c8f:0:b0:35c:c6b5:9179 with SMTP id r15-20020ac85c8f000000b0035cc6b59179mr19585556qta.10.1664886758873;
+        Tue, 04 Oct 2022 05:32:38 -0700 (PDT)
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
+        by smtp.gmail.com with ESMTPSA id bm8-20020a05620a198800b006cfc7f9eea0sm13847317qkb.122.2022.10.04.05.32.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Oct 2022 05:32:38 -0700 (PDT)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-35711e5a5ceso94259117b3.13;
+        Tue, 04 Oct 2022 05:32:38 -0700 (PDT)
+X-Received: by 2002:a0d:de43:0:b0:349:31bd:e8d5 with SMTP id
+ h64-20020a0dde43000000b0034931bde8d5mr23626998ywe.283.1664886758049; Tue, 04
+ Oct 2022 05:32:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- Mike Rapoport <rppt@kernel.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, Steven Rostedt <rostedt@goodmis.org>,
- Theodore Ts'o <tytso@mit.edu>, Thorsten Leemhuis <linux@leemhuis.info>,
- Greg KH <gregkh@linuxfoundation.org>, workflows@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- ksummit@lists.linux.dev, Mario Limonciello <mario.limonciello@amd.com>
-References: <e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com>
+References: <Yzg7pHspc72I7TAb@mit.edu> <e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com>
  <YzmBjgXq9geMnL1B@mit.edu> <79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com>
- <20221002141321.394de676@rorschach.local.home>
- <6de0925c-a98a-219e-eed2-ba898ef974f8@gmx.com>
- <20221002180844.2e91b1f1@rorschach.local.home>
- <3a3b9346-e243-e178-f8dd-f8e1eacdc6ae@gmx.com> <YzoY+dxLuCfOp0sL@ZenIV>
- <b032e79a-a9e3-fc72-9ced-39411e5464c9@gmx.com> <YzqjfU66alRlGk5y@kernel.org>
- <20221003153718.o7fhrain5fnwwu3l@meerkat.local>
-From: "Artem S. Tashkinov" <aros@gmx.com>
-In-Reply-To: <20221003153718.o7fhrain5fnwwu3l@meerkat.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FFItU/whtuMQMf/VRXiFBX+iDYB40ULkQsUsptF9dFHoDW28zZr
- RqLq305Bxwqr49UymOCCiwHmGqyt26l0JxxLXwxhs9a2enOkImn104sdQxJNFyz4AM6mzHK
- KvHxqMvezQUZRd/7z/WBQwzWu3cuaA3Ap5vx1haHCjpT+xSJvAdG6qj6FUCbK+2oPYFr7jF
- JuuIW65C/juKq5542ALkA==
-X-Spam-Flag: YES
-X-UI-Out-Filterresults: junk:10;V03:K0:57+dta1fYB0=:6PreiOUc6q1/usH2KkjpXfSl
- LUVpqupnzJshXhr3Qav9S/ZKDCwYTwytjscdskLB5z/apwRh6Qe/8eZi294dGGofnbi0TQfqi
- TNRY8thL8kD0mKErr23ccDngLJRzBId9cK1VYYw3gn52LqnuPMORwHvHPDm52iTFMDRY6dCBb
- TLKzNGjIqJHFxsJkSOlh0sdQbPEqRnW0ALbAhe32McTw16feNeLEaBmFS5DGE5nZWq7XZHMYc
- GVr5VDwYuinaCLKAwxm0P3sJJd/urByAl0o6nTQiU1PECVz3VAGrhIA+O6vWM5Wimj7do6Oqe
- Z2L4NpoId7IbjNCbSL9u+EAL/PH4Ok8Uz9k+D/75l3UJh11BDoMfsaaX3HCdV2Te4GqIfYV58
- Az00chyh/q5Whv5CeerMcyy0ws1LExjba3c0d4FN7lwOgQFG3nWpafps4F39WcORGoWPurr/7
- qXycVOVxYHgIakw9dr/eeGgb3jnGEhqNvPm/kQTunVQ27a3k00n4lk1cl6QhivVdTpD2Sv5iH
- NdrUmtAfDjQAUxtyganmyp8deqIcRLO64qkZz0GqpExkQoBT21oNyw/YeWfvYbwmiYXwgLlXe
- FDjffVKCafWR/Jk2AcbBm9pYFJKLFN46cta2DYOvcINd7bQIEe5r4xflgBJOKfC8EOdFxmsYS
- dAVI/Tq4xbUPXYVYd5yBPZeOhUOB4w0gg0i37D9joGQWSFVt0ZB+Qy/KDg56WLKgOCpgodmSs
- uuAvN0PuG1Xrcu3MqxMfOMsEXujWKPN27FsCJoS5C3rElkO61MHncRLhJUNyp5/f4dC5vYF/z
- tpSisFP8Cd7NtE9FU7ixXt2SaMgZKUJNNSgKpoahYWnDVmFY/paBOTvFZLSiPQtaPCnLBPNke
- Sc+lzlbiuKBTnFnoMfmt4QDrSDtOnVgHoDRAIvMDdyy6kK3UhXqdV44mlNDekozMnuXEsIfp8
- khdyFI/wxGh0mZ2XkqEYCM75/Wqx6l8BbHWD065QeKAWg2RYMkcG0aklmUIcrIfDunl70GJEP
- jp+Btb/d1H3IUOCWlYybiuS3eOaCUN9T2xXu4Vsp9zlkm2rLyaQAYWVdYE3nIEL/oHPtkTC4M
- k2q6rIIiT62TfsdfT3qwH5WV99KTpTABgrfHdAHGT+gpTPZQL9AaoPx5A8OB4G6VxmXTRXEbz
- rvyx5yV0KP3Fgf+lnOaFgiI1oBYZaX46ZQj1GgI5Oc+KuA==
+ <20221002141321.394de676@rorschach.local.home> <6de0925c-a98a-219e-eed2-ba898ef974f8@gmx.com>
+ <20221002180844.2e91b1f1@rorschach.local.home> <3a3b9346-e243-e178-f8dd-f8e1eacdc6ae@gmx.com>
+ <YzoY+dxLuCfOp0sL@ZenIV> <b032e79a-a9e3-fc72-9ced-39411e5464c9@gmx.com>
+ <YzqjfU66alRlGk5y@kernel.org> <251201be-9552-3a51-749c-3daf4d181250@gmx.com>
+ <CAMuHMdX8Ko_LiqsWafzcqheW_7SZmtzEvgrpBbyoCLxyWqjqBg@mail.gmail.com>
+ <1d3fdc6a-a98a-fe3b-2e3e-acc2ffa24f9d@gmx.com> <20221003102029.1fe4f31b@gandalf.local.home>
+ <fde043f3-da34-9fc6-379b-922f29284e66@gmx.com>
+In-Reply-To: <fde043f3-da34-9fc6-379b-922f29284e66@gmx.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 4 Oct 2022 14:32:26 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdW1yp76X6xMFSXnpRNXPBVVLuyqm=UCOZ0uQem0_50poQ@mail.gmail.com>
+Message-ID: <CAMuHMdW1yp76X6xMFSXnpRNXPBVVLuyqm=UCOZ0uQem0_50poQ@mail.gmail.com>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla blues"
+To: "Artem S. Tashkinov" <aros@gmx.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Mike Rapoport <rppt@kernel.org>, 
+	Al Viro <viro@zeniv.linux.org.uk>, "Theodore Ts'o" <tytso@mit.edu>, 
+	Thorsten Leemhuis <linux@leemhuis.info>, Greg KH <gregkh@linuxfoundation.org>, 
+	Konstantin Ryabitsev <konstantin@linuxfoundation.org>, workflows@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, ksummit@lists.linux.dev, 
+	Mario Limonciello <mario.limonciello@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Artem,
 
-
-On 10/3/22 15:37, Konstantin Ryabitsev wrote:
-> On Mon, Oct 03, 2022 at 11:55:25AM +0300, Mike Rapoport wrote:
->> If I'm not mistaken, bugzilla lets CC people explicitly. How the databa=
-se
->> of emails in bugzilla would help choosing the right people to CC better
->> than MAINTAINERS?
+On Tue, Oct 4, 2022 at 2:16 PM Artem S. Tashkinov <aros@gmx.com> wrote:
+> On 10/3/22 14:20, Steven Rostedt wrote:
+> > On Mon, 3 Oct 2022 09:40:43 +0000
+> > "Artem S. Tashkinov" <aros@gmx.com> wrote:
+> >> For instance, I've CC'ed Linus Torvalds _privately_ from Bugzilla twice
+> >> and he _chimed_ in and _helped_ resolve the bugs.
+> >
+> > You didn't Cc Linus _privately_, because you Cc'd him from Bugzilla. I'm
+> > guessing that means it's a public conversation. Which is similar to Cc'ing
+> > a maintainer and a public mailing list.
 >
-> It can't, actually, which is I think is the crux of misunderstanding her=
-e. I
-> think what Artem is proposing is to *auto-create bugzilla accounts* for =
-anyone
-> who shows up in MAINTAINERS, so that they can be cc'd on a bug report.
-> However, everyone understood this as "add these people as default assign=
-ees,"
-> which is not the case.
+> I _did_ CC him privately by adding his _personal_ e-mail. I'm astonished
+> not only you don't believe me you turn my words inside out.
+
+I think there is a misunderstanding of the meaning of "CC privately".
+To me it means no public data disclosing entity (be it a public mailing
+list, or a public bug tracker) was CCed as well.
+To you, it seems to mean you used his personal email address instead
+of a mailing list address.
+
+> Wow, so pretty much the vast majority of people here advocate for
+> deprecating Bugzilla and asking non-IT people to use something which is
+> essentially a ... SPAM list?
 >
-> If we auto-create accounts for MAINTAINERS, that would allow them to be =
-cc'd
-> by an actual human being triaging bugs, but won't lead to any discernabl=
-e
-> increase of bugzilla mail.
+> Woah.
 >
-> Artem, please correct me if I'm wrong.
+> I've given almost a dozen reasons why mailing lists simply don't work as
+> a bug tracker in absolute most cases.
 
-Exactly. Only maintainers and mailing lists will be assigned
-automatically as it is _now_. Other developers need to be CC'ed _manually_=
-.
+And people disagree.  No amount of "Woah" will change that, only
+facts and figures can do.
 
-There's no SPAM issue or never has been about what I proposed. Absolute
-most people will never CC anyone 'cause bug reporters are normally quite
-lazy or not experienced enough to grep git logs.
+> BTW, this discussion is a perfect f-ing example of that. What could have
+> been easily read in a tracker needs to be repeated over and over and
+> over again because you didn't bother to read previous messages 'cause
+> you were busy, not paying attention, simply forgot and you don't want to
+> scroll days of messages in your inbox.
+>
+> God, this is so ugly it's cringe worthy.
+>
+> Most people here who advocate for killing off Bugzilla:
+>
+> 1) Have _never_ used it
+> 2) Have troubles even following _this_ conversation
+>
+> That' ridiculous.
 
-You're absolutely right.
+Thanks for your insults.
+This is not the way to convince people.
 
-Best regards,
-Artem
+P.S. I did read all of it, I may stop doing so soon...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
