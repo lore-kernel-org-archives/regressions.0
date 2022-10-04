@@ -1,82 +1,67 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9FF5440C
-	for <regressions@lists.linux.dev>; Tue,  4 Oct 2022 18:13:54 +0000 (UTC)
-Received: by mail-qt1-f180.google.com with SMTP id g23so8638492qtu.2
-        for <regressions@lists.linux.dev>; Tue, 04 Oct 2022 11:13:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=fO/JpHdHbnnGpQX04F/Oau78NLCRz1vfsBMEmZ0J96s=;
-        b=BW6Bo4ze8wD19cbDxt8TiUs9VLD1QqH9rpg3o/xgk1nPXJNcmTYJ64Rd6cDFQywsTL
-         9tGXIi++p5a+JHI0WzU183a9PAyucjUtwyfM2w6CJuW3Ek28NYppARmlAE5D3+6SdDhp
-         TNuq+7V6DGg/ZMrezLHgoUCs9CGAMXQ1iy/Eo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=fO/JpHdHbnnGpQX04F/Oau78NLCRz1vfsBMEmZ0J96s=;
-        b=JEnou3V7RDAi2A4ycqevOXY0AQYvZbUqDObwNcGuBI5V/FHF8HNDETDkmZKYx/zBWK
-         OSPxlGKg3X4M4IVhw3VqPYZ/CgiIUzWNnUZLetc9MR6QAKGLosSnRIQZDwpgVILVtM9t
-         kF4YI0Em4xpO0n25jrY+VRE9fUaVvJhr5qhP8FnbkCyxzSBi0Ej54/DFY2FsdQjzgADp
-         1BY0QmsS6J95jwtuSMT1+6FNBIZGu802DmmlIfeQzeszyg8FMMqId5hUd1tcUWMVcQRB
-         eiD9Bevdbbd9/XEzvy9X2T/z/5zLWc3RYdFheQMy8+CQBgajcmcKpwwoQzSMf3oIZIGa
-         UbWA==
-X-Gm-Message-State: ACrzQf1rFZSLf3RJBRvwy0QPXXCHEoUgy5oSEnDk7WJm2yW0vUVbyAUq
-	YtGApgyuvJjcBDqPmQnrZuIp/sm8/HufyA==
-X-Google-Smtp-Source: AMsMyM5JEAqaJhIKfRWcIEj6aYLtImfVjjElMtuKTwbwOWUWhsy7eLLseBrc+agUN30m1MLSUppbdQ==
-X-Received: by 2002:a05:622a:1146:b0:35b:afe8:5c9c with SMTP id f6-20020a05622a114600b0035bafe85c9cmr20301900qty.54.1664907233859;
-        Tue, 04 Oct 2022 11:13:53 -0700 (PDT)
-Received: from meerkat.local (bras-base-mtrlpq5031w-grc-33-142-113-79-147.dsl.bell.ca. [142.113.79.147])
-        by smtp.gmail.com with ESMTPSA id x188-20020a3795c5000000b006bad7a2964fsm14192403qkd.78.2022.10.04.11.13.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Oct 2022 11:13:53 -0700 (PDT)
-Date: Tue, 4 Oct 2022 14:13:51 -0400
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Thorsten Leemhuis <linux@leemhuis.info>,
-	"Artem S. Tashkinov" <aros@gmx.com>,
-	ksummit <ksummit@lists.linux.dev>, workflows@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7052F59
+	for <regressions@lists.linux.dev>; Tue,  4 Oct 2022 19:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1664911293; x=1696447293;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=Zg8xdnyfsZdNuvruzNB7XQ6E8sleAaO4vNo0suv9IoE=;
+  b=KTBL2xLqdaNlUs4CEX76MIAHMCbZFuMKI/8NC+o/3TAtQ9iLU+tOuwEd
+   bNgRhAuLyqq9ug3P8AGn7IX2MV2i8Aomba7JLBrBteRBBrabKMW21S9M0
+   xnbPNx17Y6eTj9Gw09lG7EUO5cE2T6nKZK1qAA3luMKKYnJbqgVbfvr8J
+   9OKyxtiUFQ7dEGjWrmwRE4GJR2UOXymifTEwZxvZb9l1lE8krQTWId2BH
+   GDnBPHKFTC3T44IRzyDBs15kYOI4pwxtAptSbvRDBuS+7WuCr1XKK/rf9
+   Sq28MMHqMCffoTwpe7Wf4IO0ypjK8f/qhwfuq1slczGpg76xKe9eF3LZl
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="304573699"
+X-IronPort-AV: E=Sophos;i="5.95,158,1661842800"; 
+   d="scan'208";a="304573699"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 12:21:33 -0700
+X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="575144544"
+X-IronPort-AV: E=Sophos;i="5.95,158,1661842800"; 
+   d="scan'208";a="575144544"
+Received: from pvarla-mobl4.gar.corp.intel.com (HELO localhost) ([10.252.39.104])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 12:21:30 -0700
+From: Jani Nikula <jani.nikula@intel.com>
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>, Thorsten Leemhuis
+ <linux@leemhuis.info>
+Cc: "Artem S. Tashkinov" <aros@gmx.com>, ksummit
+ <ksummit-discuss@lists.linuxfoundation.org>, workflows@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
  blues"
-Message-ID: <20221004181351.qyvu42ytkka3ep3m@meerkat.local>
+In-Reply-To: <20221004175354.bfvg3vhfqch35ib5@meerkat.local>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
  <20221004175354.bfvg3vhfqch35ib5@meerkat.local>
- <Yzx1T05Ut0of55KY@kroah.com>
+Date: Tue, 04 Oct 2022 22:21:27 +0300
+Message-ID: <87fsg3s8co.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Yzx1T05Ut0of55KY@kroah.com>
+Content-Type: text/plain
 
-On Tue, Oct 04, 2022 at 08:02:55PM +0200, Greg KH wrote:
-> On Tue, Oct 04, 2022 at 01:53:54PM -0400, Konstantin Ryabitsev wrote:
-> > As I have stated multiple times, the hard part will be keeping a team of
-> > people who are willing to do the bug triage work, but maybe we can start with
-> > Greg KH using his intern funds to hire someone (assuming he's not already
-> > using these funds for someone to help him with all the other tasks).
-> 
-> I have no interns anymore, and the ones that the LF does have in the
-> kernel program are using all of the remaining budget that we have, so
-> much so that we have a whole bunch of unpaid ones at the same time as we
-> have so many people applying for the process.
-> 
-> So I don't think you can use those funds, they are all spoken for,
-> sorry.
+On Tue, 04 Oct 2022, Konstantin Ryabitsev <konstantin@linuxfoundation.org> wrote:
+> I'm happy to take care of everything bot-related (apparently, programming bots
+> is what I do now -- I just wish it was the cool and glamorous kind).
 
+As to bots, one idea would be to go through old & unchanged bugs after
+every kernel release or so, ask to reproduce on the new kernel, and auto
+close if there's no response within some time frame. This could be very
+relaxed for starters, but would start closing all the stale and
+neglected bugs that have crept up that are of no use to anyone.
 
-Yeah, I wasn't actually serious about the interns. An effort like this needs
-to have a separate fund allocation that can't be cannibalized for any other
-purpose.
+BR,
+Jani.
 
--K
-[Fixing the ksummit address]
+-- 
+Jani Nikula, Intel Open Source Graphics Center
