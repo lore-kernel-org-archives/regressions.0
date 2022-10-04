@@ -1,113 +1,88 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F35933ED
-	for <regressions@lists.linux.dev>; Tue,  4 Oct 2022 13:44:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1664891080; x=1696427080;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=eSBe9smtoV7qkYQconvXq2pg50vA/fg0vgTMB4G1NN8=;
-  b=eKkuqxAPUL6LL8X0+3Vwonr9FHQeTrOOii9nwMBcsrHRz3EvsOnD6sGd
-   coq1zDkDbTZbr0zadsM0wMYJIwVuqiW398dwmQM5Bfldw9ix1kN8SzwI1
-   mDh0c2VqV8l8K6nfOuV4/maHksIym3tBoc+rKTE403twdKHRgrum1ocuv
-   0lk/ymS1nM64Mx1TxR6bB2w5eJ5Awhb9S742+US+l7ssUHejQn066Lzg9
-   uGxlisV1jPhIVJBiCZvbUn68IzHGeAZE+39OYlMaDTbQTsSmv2v+TPaS3
-   t8vHptH4JcZarRQ8opqnClmaF0790uXDusEMw3PN/dRPHQ+9y2tFO34U3
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="304454670"
-X-IronPort-AV: E=Sophos;i="5.95,158,1661842800"; 
-   d="scan'208";a="304454670"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Oct 2022 06:44:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10490"; a="713013640"
-X-IronPort-AV: E=Sophos;i="5.95,158,1661842800"; 
-   d="scan'208";a="713013640"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.191])
-  by FMSMGA003.fm.intel.com with SMTP; 04 Oct 2022 06:44:36 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Tue, 04 Oct 2022 16:44:35 +0300
-Date: Tue, 4 Oct 2022 16:44:35 +0300
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: David Matthew Mattli <dmm@mattli.us>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	stable@vger.kernel.org, regressions@lists.linux.dev,
-	Slade Watkins <srw@sladewatkins.net>, Jerry Ling <jiling@cern.ch>,
-	intel-gfx@lists.freedesktop.org
-Subject: Re: Regression on 5.19.12, display flickering on Framework laptop
-Message-ID: <Yzw4w6JQ2fKo9AE1@intel.com>
-References: <YzZynE2FAMNQKm2E@kroah.com>
- <YzaFq7fzw5TbrJyv@kroah.com>
- <03147889-B21C-449B-B110-7E504C8B0EF4@sladewatkins.net>
- <aa8b9724-50c6-ae2e-062d-3791144ac97e@cern.ch>
- <e3e2915d-1411-a758-3991-48d6c2688a1e@leemhuis.info>
- <YzsfrkJcwqKOO+E/@intel.com>
- <YzsgeXOK6JeVQGHF@intel.com>
- <714903fa-16c8-4247-d69d-74af6ef50bfa@leemhuis.info>
- <9aae6b15-265a-4ef9-87c1-83dfe5094378@smtp-relay.sendinblue.com>
- <Yzw3591mUb8b9Wst@kroah.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5433C1C
+	for <regressions@lists.linux.dev>; Tue,  4 Oct 2022 14:21:00 +0000 (UTC)
+Received: by mail-qk1-f180.google.com with SMTP id o7so8414479qkj.10
+        for <regressions@lists.linux.dev>; Tue, 04 Oct 2022 07:21:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=sksSxmDzq+l5y2JyJDEQ4qcmFgIzRvNW674+EJVW7qU=;
+        b=PxsQTV/IZTBcLJ4l4PRfGFGh7qibteRj70rhqlb2CHUdrRUdxIruJ/emzYCIL85n/0
+         22gXZZPQ1vVMf2UzqX/xxESSDyJsOrs0EMYjLV9ERZiR9ea67b7hBLyFwFxX0xbTo0qu
+         SPC4I6QYiL1KbL/KPYavrkxB1JamkVpwg+i20=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=sksSxmDzq+l5y2JyJDEQ4qcmFgIzRvNW674+EJVW7qU=;
+        b=KoHkgRIKi/Waa2N0dSDCjO5EQidwhfIoQ8Yl0OnM2B6RIlyt7vcHtLnE1+0OTfbDbe
+         f/uZ3DBf+kyXjwWf5mQ1UCXdtzkchPwgxlKXcdHbfD8zVb9ZkwhPYKr0Niz93SUfUT1b
+         ZIyXcNjiuVhfbY4BaJUGdmyXX3tDl6tntz3hLLVeTKU1UWGIwehcPQRKwUeKAWXbrCe5
+         HdaI27bdgSUITW6yThssigHOgkBaDJXH6xUyJiNtlybV0Y491fpUdbcy3ZymnoAF0Oz/
+         R7G944sRmg1vKcYbj3ZlfcU5y1AaPlfo3Fyip5DYntJRzEDsksfAo4VxSi0HO/s98W5P
+         /ZFA==
+X-Gm-Message-State: ACrzQf0kZ4Cm57+cAetz7zgC3u3HPvraSCI73hd8fMaibE+9nJ2ACKTy
+	v5muJ9f34271nAEyeoP5QXSTPg==
+X-Google-Smtp-Source: AMsMyM7fDhRaZSiO5q1BcaM4NzJ0ug0AjTwXSbG5zLt6H4mLje1qIIWYTGEGSFL/vgmRMh/Z0PQsPQ==
+X-Received: by 2002:ae9:e114:0:b0:6ce:33c9:5cc2 with SMTP id g20-20020ae9e114000000b006ce33c95cc2mr16369225qkm.388.1664893259526;
+        Tue, 04 Oct 2022 07:20:59 -0700 (PDT)
+Received: from meerkat.local (bras-base-mtrlpq5031w-grc-33-142-113-79-147.dsl.bell.ca. [142.113.79.147])
+        by smtp.gmail.com with ESMTPSA id h16-20020ac85690000000b0035bb8168daesm12287282qta.57.2022.10.04.07.20.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Oct 2022 07:20:59 -0700 (PDT)
+Date: Tue, 4 Oct 2022 10:20:57 -0400
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: "Artem S. Tashkinov" <aros@gmx.com>
+Cc: Mike Rapoport <rppt@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+	Steven Rostedt <rostedt@goodmis.org>, Theodore Ts'o <tytso@mit.edu>,
+	Thorsten Leemhuis <linux@leemhuis.info>,
+	Greg KH <gregkh@linuxfoundation.org>, workflows@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	ksummit@lists.linux.dev,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+Message-ID: <20221004142057.aornje2s5fxe7vac@meerkat.local>
+References: <20221002141321.394de676@rorschach.local.home>
+ <6de0925c-a98a-219e-eed2-ba898ef974f8@gmx.com>
+ <20221002180844.2e91b1f1@rorschach.local.home>
+ <3a3b9346-e243-e178-f8dd-f8e1eacdc6ae@gmx.com>
+ <YzoY+dxLuCfOp0sL@ZenIV>
+ <b032e79a-a9e3-fc72-9ced-39411e5464c9@gmx.com>
+ <YzqjfU66alRlGk5y@kernel.org>
+ <251201be-9552-3a51-749c-3daf4d181250@gmx.com>
+ <20221003142240.hu5gj7fms5wdoujk@meerkat.local>
+ <80457c88-7344-e362-9873-8460f0b75c19@gmx.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Yzw3591mUb8b9Wst@kroah.com>
-X-Patchwork-Hint: comment
+In-Reply-To: <80457c88-7344-e362-9873-8460f0b75c19@gmx.com>
 
-On Tue, Oct 04, 2022 at 03:40:55PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Oct 04, 2022 at 06:46:10AM -0500, David Matthew Mattli wrote:
-> > Thorsten Leemhuis writes:
+On Tue, Oct 04, 2022 at 12:21:32PM +0000, Artem S. Tashkinov wrote:
+> > It can't, actually. It only works with MySQL 5.7 or an equally ancient MariaDB.
+> > No, there is no official fix (because nobody is working on bugzilla).
+> > https://bugzilla.mozilla.org/show_bug.cgi?id=1592129
 > > 
-> > > On 03.10.22 19:48, Ville Syrjälä wrote:
-> > >> On Mon, Oct 03, 2022 at 08:45:18PM +0300, Ville Syrjälä wrote:
-> > >>> On Sat, Oct 01, 2022 at 12:07:39PM +0200, Thorsten Leemhuis wrote:
-> > >>>> On 30.09.22 14:26, Jerry Ling wrote:
-> > >>>>>
-> > >>>>> looks like someone has done it:
-> > >>>>> https://bbs.archlinux.org/viewtopic.php?pid=2059823#p2059823
-> > >>>>>
-> > >>>>> and the bisect points to:
-> > >>>>>
-> > >>>>> |# first bad commit: [fc6aff984b1c63d6b9e54f5eff9cc5ac5840bc8c]
-> > >>>>> drm/i915/bios: Split VBT data into per-panel vs. global parts Best, Jerry
-> > |
-> > >>>>
-> > >>>> FWIW, that's 3cf050762534 in mainline. Adding Ville, its author to the
-> > >>>> list of recipients.
-> > >>>
-> > >>> I definitely had no plans to backport any of that stuff,
-> > >>> but I guess the automagics did it anyway.
-> > >>>
-> > >>> Looks like stable is at least missing this pile of stuff:
-> > >>> 50759c13735d drm/i915/pps: Keep VDD enabled during eDP probe
-> > >>> 67090801489d drm/i915/pps: Reinit PPS delays after VBT has been fully
-> > parsed
-> > >>> 8e75e8f573e1 drm/i915/pps: Split PPS init+sanitize in two
-> > >>> 586294c3c186 drm/i915/pps: Stash away original BIOS programmed PPS delays
-> > >>> 89fcdf430599 drm/i915/pps: Don't apply quirks/etc. to the VBT PPS
-> > >>> delays if they haven't been initialized
-> > >>> 60b02a09598f drm/i915/pps: Introduce pps_delays_valid()
-> > >>>
-> > >>> But dunno if even that is enough.
-> > >
-> > > If you need testers: David (now CCed) apparently has a affected machine
-> > > and offered to test patches in a different subthread of this thread.
-> > >
-> > 
-> > I cherry-picked the six commits Thorsten listed onto 5.19.12 and it
-> > resolved the issue on my Framework laptop.
 > 
-> Thanks for testing, but I'm just going to revert the offending commits
-> as they probably shouldn't all be added to 5.19.y
+> What do you think about Bugzilla Harmony? Works with MariaDB:
+> 
+> https://github.com/bugzilla/harmony
+> 
+> A continuation of Bugzilla.
 
-Yeah, revert seems the safer route. Thanks.
+It doesn't look like there's enough momentum behind it, at last at this time.
+We do have a plan in place to avoid the MySQL problem by moving our DB to
+Postgres, so the software side of things isn't something we need to focus on
+fixing at this time.
 
--- 
-Ville Syrjälä
-Intel
+-K
