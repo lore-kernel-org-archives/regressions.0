@@ -1,21 +1,21 @@
-Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.40])
+Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B902C33C1;
-	Tue,  4 Oct 2022 12:16:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A8833C1;
+	Tue,  4 Oct 2022 12:21:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1664885791;
-	bh=bpj4hT8aKCM5j/PSqq2l+Mhtjnt1+/PxDY0aFNs17Cs=;
+	s=badeba3b8450; t=1664886095;
+	bh=MPzH+NitWg19hGsyMW4Um1kZpkM80tSd2o2crCp46E0=;
 	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=XaCpZHtgZZcIk8afsOe0AFcPyFP3S8cNcnJucbF/apJ6KM8zz2HmSQEeZqzzIwsVL
-	 bh+504f+eodqQA5p0vMEeVCE5kmiSaTZcyA9OJX1/+dZ/ITCFit6bvgkmqPVCRoUjD
-	 EmlEHXAKdyj/yqs9FkIoeCd01LoGKe9n+QMolCLg=
+	b=gub6kYpWk0pcM+CDv9eUFGTW3AeCQwWFbW95Q0WnTFqkCYLnUMGFRAdnQGGjWIIaO
+	 1WvTaMJQ67yb3FXZPniQsZxzjS5Eee1oak2qLUWCBty24zjwj6GZG7axKV8Wqg5bGY
+	 rC/KxEHfX7oZc1uzW0ROHlNXPbcnrU1BsOoUxQnQ=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.17.110.14] ([143.244.37.77]) by mail.gmx.net (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1M3DJl-1ocfdj438n-003dB9; Tue, 04
- Oct 2022 14:16:31 +0200
-Message-ID: <fde043f3-da34-9fc6-379b-922f29284e66@gmx.com>
-Date: Tue, 4 Oct 2022 12:16:28 +0000
+Received: from [10.17.110.14] ([143.244.37.77]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MgNh1-1p8AvB3IMR-00htz6; Tue, 04
+ Oct 2022 14:21:34 +0200
+Message-ID: <80457c88-7344-e362-9873-8460f0b75c19@gmx.com>
+Date: Tue, 4 Oct 2022 12:21:32 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -24,18 +24,16 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
  blues"
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Mike Rapoport
- <rppt@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
- Theodore Ts'o <tytso@mit.edu>, Thorsten Leemhuis <linux@leemhuis.info>,
- Greg KH <gregkh@linuxfoundation.org>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: Mike Rapoport <rppt@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ Steven Rostedt <rostedt@goodmis.org>, Theodore Ts'o <tytso@mit.edu>,
+ Thorsten Leemhuis <linux@leemhuis.info>, Greg KH
+ <gregkh@linuxfoundation.org>, workflows@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
  ksummit@lists.linux.dev, Mario Limonciello <mario.limonciello@amd.com>
-References: <Yzg7pHspc72I7TAb@mit.edu>
- <e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com> <YzmBjgXq9geMnL1B@mit.edu>
+References: <YzmBjgXq9geMnL1B@mit.edu>
  <79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com>
  <20221002141321.394de676@rorschach.local.home>
  <6de0925c-a98a-219e-eed2-ba898ef974f8@gmx.com>
@@ -43,91 +41,56 @@ References: <Yzg7pHspc72I7TAb@mit.edu>
  <3a3b9346-e243-e178-f8dd-f8e1eacdc6ae@gmx.com> <YzoY+dxLuCfOp0sL@ZenIV>
  <b032e79a-a9e3-fc72-9ced-39411e5464c9@gmx.com> <YzqjfU66alRlGk5y@kernel.org>
  <251201be-9552-3a51-749c-3daf4d181250@gmx.com>
- <CAMuHMdX8Ko_LiqsWafzcqheW_7SZmtzEvgrpBbyoCLxyWqjqBg@mail.gmail.com>
- <1d3fdc6a-a98a-fe3b-2e3e-acc2ffa24f9d@gmx.com>
- <20221003102029.1fe4f31b@gandalf.local.home>
+ <20221003142240.hu5gj7fms5wdoujk@meerkat.local>
 From: "Artem S. Tashkinov" <aros@gmx.com>
-In-Reply-To: <20221003102029.1fe4f31b@gandalf.local.home>
+In-Reply-To: <20221003142240.hu5gj7fms5wdoujk@meerkat.local>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:SLfgjVdlF7X2l/Rg+z8mjWCt4AvRLhhZPbCaKSNbyrV4j/6O0gj
- uk2033ABnu5nBei7NAIDbVgfLGxK5/Fh+BXc88Nw4CpMU/JCJbfcw3Lv6E4ZrjcaueKDtnJ
- BDZ+Khl6ICrWZ0D323ER/PZaeHYgVduAC5rOku2OHxS/i7vYSkLCpKBgnm90va2y5mqdw9L
- RKF8TM4TQgrKoHSISVnRA==
+X-Provags-ID: V03:K1:azUmYwr4mRCQksXJr3EndHWs2cFndxjbMqOKYw0ZKGeOa9cB42+
+ sETMQPj5RQ8heJMEsXQGQXyxqQjTOvkfaPpwJzlLpzCGj0bRn1Yly+XmJSBFwoxfMNIai3d
+ cNgfzbk+wzbpcXYPHfSoh4mQR+VcRvIoYoDUabHkWVbzubnSkRKFLHU6BTEF9NW4SocIu+X
+ UKKrSB1G1sGO4ABQPm7Ng==
 X-Spam-Flag: YES
-X-UI-Out-Filterresults: junk:10;V03:K0:TkA4SQZEqIQ=:VI+bDZS2UvDLj2IMmM+ofbOH
- PJr68FLrJFgSaJIT2PY/2K8MspuiefGLtIxN7rxW4LyYzFD67vFJQ9GvzLx7siIIvZ2rU/OvS
- r7c+B71IqGDHCmmJ+gmaT4lv6+O+rWl/YEn93X1PXg2VKvagZ04zCF5yeqfiJtUqEh3NSFtYF
- 3Lptld4ic7OIEG75xC7DhTgEaLSeJEQME2rP4MedTirZL2uHvWHq8l5pnffkMg3W42SuoEOA6
- BTElgax42aOtaXRduBevj05D/c0kvuKhWFQCmfNyFDe65kh5uXLB90/fsE1Hsrr2It650v9wK
- 0Xbw/TsqH8msdIKLKaHUc5+aqGuYELccEmA7v2+R17ZH+6cYEewf5mc9mIZfE8MgORYPfrRu7
- E1oTEaQFNNgU2MurWBrdsAbkKvMc55p8D9EgS0QQk+Z10J8UjvwNfoXZFZUcGYvjbTie/s4+m
- oO+eXSPkVr28g+IQWj1wuEE1zDBZGUWSJRMzb7WlQRY6JYIyje64VwkZ9a2nDS5AiGSVUNpga
- P7rlc94OmTScgQN04WAxaRWCeLusd4k3bH9V4PnCQvVMCdl7WgV0eyHDliD6cA15HuVeVo9CR
- 0NVmDpOi4PU37N+WoBc0k12vZeBoqHCOAm1KM2VNzHQHpw65zNbww9ypIiMWiI2gj+u4QDg+R
- EnL+rqbEjCVfdwFl8dUnXMl90PGhfvT8lwAoO0y5Lq/o/KTpo/8R8N3+cnBOOm+KFh0dxgv+O
- t5LQ0/dvEghPWwZpDobXOMpqetwTCVbaH8gXj07TnXU0Wu9nQRi5w9R9UeslvgxJiODBmcC24
- 9wLlVduDd/Nw7qDDkyGJgqHPAUrCPtLkXQRearVWm2bwhKWIeXeSLhlPrAWbcGzQfPlvUu7pB
- dhH7ORMfbefwnqSUzxG3qr/0oAx6t4HorYzLany6VG7Vhw5VsxctRLkR1pM2vMBY5hcz4/XtG
- k/SPvH+WBj56cmNvgi4M0QsLqV4VrJWYyMLO/9rpudLLNzqoUyuNAluCI+UjfusrXbDlsr14Z
- PRDKwf645+Fd/I9CYGhHDgVX6ZzjnVIZUF4akC+GnALGv6ejEWLGov8zmdt0LtDyn/BRwkjkd
- MkolhIMjrK6BboYAJCbGJbwetRMrxuybG3yRMZ7D2R1c4ULRyKRfvKc2e5q43+elnr3/2c3Ip
- HncEsiGEqaqPjRwd/ww9bjybnU1Qsnq3owKAHB+2fGCDnQ==
+X-UI-Out-Filterresults: junk:10;V03:K0:PHJojMtTAnw=:LTTZe1rYJQV6+tWLL5AfBuaK
+ H88OsaxAP84zZvMgjil533T7KRNh1m0n5DFPUjWbTxtfLKrvv+Wz9FE8ztN+WxHMmZ7WSH4m6
+ YY6ERh35q7G2ytcrzZJ2TwtNP22XXKII4I6NsPvy3Rg0IwEzRVp92fGRYwHKJk4eU8UpRLYYR
+ yr1NTqZO58SKf6isf95lrkybrTIS4traVooVuQ12zcJUqlHyXgVRw6FdgKCPaXvfVYAqNO8WG
+ EoXxm0ZRJU5gY135M4AV+xlkU3pJh4JwL0rHPlru+d+HqBaOp5SFVnlsytnQqtml+uLvmG4CT
+ hl/RH9c1eaWD/U6pJOQAxyjbskRoa64LBOCmwsckacqMYr+o6FHsSmKepSgRyMXmVKHVckOmI
+ H/LLYFXgCJXDJU4gS3P4u7vA/mFP/u/lxz96NTqFtyq2wg1a1MKGAEnNbG6HxbDPSgdDQ5dAR
+ WSORKpmbRP/umU2IG3xKaTYrko+DizAwq3MLpKxHyoAp/gVM7qlw0oTxhPvbD2M1xUMuyMyuW
+ y18IaYskxWqnSB/Vy676YvTf9KfWZFSWalGx2n/iQGRMwFVm+qxBQXskTFI6eiAWPzVYeGEh3
+ 3QtfP6i4MIeMb5q56jRWJfvVWFxkEfBUlcLZT3vs6rhJefIGZj0aY7KTIbsLFRYld1DeWsoQu
+ /Pr/is629SqTu6SlCvWjGmMRDnU1XO/bP+0hhRyW1FErq3n1FhQCVdl+Im69PnRZd/soUsrBH
+ Td4iFkvMs+9efg0YF/bkxmRYWE4RftWZMEHmC/yRnaenVyqOvji4shi5aSkR7b6FVMoh2bbsz
+ F45mh9klxTGjpNfCS89bz7zDSIYkNO2RSEKhxgS8V+YylSMShYWaMhACswxX+OVr8OiMgV+kR
+ XgiKv+3HJQq7ucAniiSr/zqE83ipbnPFGtwZDYy8Ml8lsF/akutmzUPTa5GcfX+ktDkD4U7RB
+ RJMbr3a4MyyNjJkvPqeiGzNPRexV6+tJqWxErwGZyRBDs0WSV+Lu+XK3G/05VGl/B/fxIbSh8
+ WXLSU61oyscrTfdWoQyQCxVmF5ZakQ6LrpkF+KfaJk3L90d3Ne5Iv7teJHY6QogQ+EGNBAFLz
+ LoJOCgaFQ7MNOSxRjusIkwBypyCF1iLWVSGbYS6C5PS+c2DYFusZR0slSXZ1QeyLJjFwSroNs
+ Hty7kTbF60xpIE0WHrvKVGVQvtUWd0PMRc8CndN5Ypl7IQ==
 
-On 10/3/22 14:20, Steven Rostedt wrote:
-> On Mon, 3 Oct 2022 09:40:43 +0000
-> "Artem S. Tashkinov" <aros@gmx.com> wrote:
+
+
+On 10/3/22 14:22, Konstantin Ryabitsev wrote:
+> On Mon, Oct 03, 2022 at 09:16:06AM +0000, Artem S. Tashkinov wrote:
+>> The initial conversation started with the fact that Bugzilla is old,
+>> semi-deprecated, requires MySQL [no idea what's bad about it, Bugzilla
+>> can work with MariaDB and Percona as well]
 >
->> For instance, I've CC'ed Linus Torvalds _privately_ from Bugzilla twice
->> and he _chimed_ in and _helped_ resolve the bugs.
+> It can't, actually. It only works with MySQL 5.7 or an equally ancient M=
+ariaDB.
+> No, there is no official fix (because nobody is working on bugzilla).
+> https://bugzilla.mozilla.org/show_bug.cgi?id=3D1592129
 >
-> You didn't Cc Linus _privately_, because you Cc'd him from Bugzilla. I'm
-> guessing that means it's a public conversation. Which is similar to Cc'i=
-ng
-> a maintainer and a public mailing list.
 
-I _did_ CC him privately by adding his _personal_ e-mail. I'm astonished
-not only you don't believe me you turn my words inside out.
+What do you think about Bugzilla Harmony? Works with MariaDB:
 
->
->> My messages to LKML
->> were _ignored_ by +1000 people subscribed to it.
->
-> LKML gets 800 emails a day. Nobody reads it (besides Jon Corbet and Andr=
-ew
-> Morton). But if you send email to a maintainer privately without Cc'ing =
-any
-> public mailing list (or Bugzilla), then it will likely be ignored.
+https://github.com/bugzilla/harmony
 
-Wow, so pretty much the vast majority of people here advocate for
-deprecating Bugzilla and asking non-IT people to use something which is
-essentially a ... SPAM list?
+A continuation of Bugzilla.
 
-Woah.
+Regards,
+Artem
 
-I've given almost a dozen reasons why mailing lists simply don't work as
-a bug tracker in absolute most cases.
 
-BTW, this discussion is a perfect f-ing example of that. What could have
-been easily read in a tracker needs to be repeated over and over and
-over again because you didn't bother to read previous messages 'cause
-you were busy, not paying attention, simply forgot and you don't want to
-scroll days of messages in your inbox.
-
-God, this is so ugly it's cringe worthy.
-
-Most people here who advocate for killing off Bugzilla:
-
-1) Have _never_ used it
-2) Have troubles even following _this_ conversation
-
-That' ridiculous.
-
->
-> What we are saying is, you need to do both. Cc the maintainer _and_ a
-> public mailing list. That way the maintainer knows others can see it, an=
-d
-> could point someone else to look at it if they do not have the time, or
-> they know someone who can better help.
->
-> -- Steve
