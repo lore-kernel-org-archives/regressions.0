@@ -1,85 +1,180 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8674820F7;
-	Tue,  4 Oct 2022 07:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1664870207; x=1696406207;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Qb9fbv/Io45XqXq5yw/xMnK70ks44Jqm3hPSzeSs3eY=;
-  b=EEn6pG2DZKxU3ajJyQZEG7zh3lBbXAOvzXSWj03WJgQa39fMWNp95ISn
-   UCwdvtOp18PZ0is4dCNwVNeclnofn2Z8k2UQv3mpbr0ECC+del7hlMdhS
-   1I/OKRLy6/ojWVw5bD78P8idi0eVsukFuJvNVZ8xovjoq9mqNVVSa2lxl
-   rWPL50dK78qXynmoYSkfe4Bk9u2ra9bvugRoUASbipLf3IoMCbKaUAXBY
-   UsEOhJ+fIr8htCDmz25gQ53aNMrH590myveoSvae0DN77N3VxncVO4ReB
-   dkk3O2W+eyFNEPUi74OGWQxv22Cum9bCP+6P7upYaRwTghB5gPcqMqqOZ
-   w==;
-X-IronPort-AV: E=Sophos;i="5.93,367,1654585200"; 
-   d="scan'208";a="180241548"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 04 Oct 2022 00:56:39 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.12; Tue, 4 Oct 2022 00:56:39 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.12 via Frontend
- Transport; Tue, 4 Oct 2022 00:56:36 -0700
-Date: Tue, 4 Oct 2022 08:56:15 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Thorsten Leemhuis <linux@leemhuis.info>
-CC: Konstantin Ryabitsev <konstantin@linuxfoundation.org>, Mike Rapoport
-	<rppt@kernel.org>, "Artem S. Tashkinov" <aros@gmx.com>, Al Viro
-	<viro@zeniv.linux.org.uk>, Steven Rostedt <rostedt@goodmis.org>, Theodore
- Ts'o <tytso@mit.edu>, Greg KH <gregkh@linuxfoundation.org>,
-	<workflows@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Linus
- Torvalds <torvalds@linux-foundation.org>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, <ksummit@lists.linux.dev>, Mario Limonciello
-	<mario.limonciello@amd.com>
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-Message-ID: <YzvnH3NROBu4U5kW@wendy>
-References: <79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com>
- <20221002141321.394de676@rorschach.local.home>
- <6de0925c-a98a-219e-eed2-ba898ef974f8@gmx.com>
- <20221002180844.2e91b1f1@rorschach.local.home>
- <3a3b9346-e243-e178-f8dd-f8e1eacdc6ae@gmx.com>
- <YzoY+dxLuCfOp0sL@ZenIV>
- <b032e79a-a9e3-fc72-9ced-39411e5464c9@gmx.com>
- <YzqjfU66alRlGk5y@kernel.org>
- <20221003153718.o7fhrain5fnwwu3l@meerkat.local>
- <109147a2-621d-d4ce-f4b3-8516664e138e@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC1317C2;
+	Tue,  4 Oct 2022 08:41:43 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ofdUi-0001Ci-3r; Tue, 04 Oct 2022 10:41:40 +0200
+Message-ID: <eb935178-995b-84f1-6cbe-3492ba74f85b@leemhuis.info>
+Date: Tue, 4 Oct 2022 10:41:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <109147a2-621d-d4ce-f4b3-8516664e138e@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Content-Language: en-US, de-DE
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Slade Watkins <srw@sladewatkins.net>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
+ "Artem S. Tashkinov" <aros@gmx.com>, workflows@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ ksummit@lists.linux.dev
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <05d149a0-e3de-8b09-ecc0-3ea73e080be3@leemhuis.info>
+ <63a8403d-b937-f870-3a9e-f92232d5306c@leemhuis.info>
+ <534EB870-3AAE-4986-95F3-0E9AD9FCE45B@sladewatkins.net>
+ <e9dd6af0-37ef-1195-0d3b-95601d1ab902@leemhuis.info>
+ <20221003112605.4d5ec4e9@gandalf.local.home>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+In-Reply-To: <20221003112605.4d5ec4e9@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1664872904;26143115;
+X-HE-SMSGID: 1ofdUi-0001Ci-3r
 
-On Tue, Oct 04, 2022 at 09:37:29AM +0200, Thorsten Leemhuis wrote:
-> On 03.10.22 17:37, Konstantin Ryabitsev wrote:
-> >
-> > If we auto-create accounts for MAINTAINERS, that would allow them to be cc'd
-> > by an actual human being triaging bugs, [...]
+On 03.10.22 17:26, Steven Rostedt wrote:
+> On Mon, 3 Oct 2022 14:59:54 +0200
+> Thorsten Leemhuis <linux@leemhuis.info> wrote:
 > 
-> For the record: that would not be enough, as for bisected regressions
-> you often want to CC the author of the culprit who might not be a
+>>> With the band-aids you outline in place: do you think it would it be
+>>> beneficial to have a liaison holding users’s hands through the
+>>> process, _then_ triaging to developers by contacting them with the
+>>> information they need?  
+>>
+>> Well, yes and no. :-/
+>>
+>> Thing is: up to a point that's something I do already (and will likely
+>> continue to do at least for a while) when the reported issue is a
+>> regression. But to be fair, I often could help way more if I wanted to,
+>> but there are only so many hours in a day and other things to take care
+>> of (regression tracking is only a part-time thing for me currently). So
+>> some help there might be handy; would get load of the developers as
+>> well, as they often are more willing to help users when a report is
+>> about a regression.
+> 
+> Are you asking for help in the regression tracking?
 
-And possibly those who provided a review for the original patch too.
+Well, like most people I have lots of ideas for things I'd like to work
+on in the domain I'm active in, as the stuff I mentioned in my previous
+mail show. But that's life, we all have todo and wish lists. Sooner or
+later I'll likely get down to some of that stuff. But if somebody said
+"we'd like you to work on this or that rather sooner than later", then
+sure, help would be great. Especially help with maintaining and
+improving regzbot would be great from my point of view.
 
-> maintainer. To catch that case as well, you'd have to create account for
-> everyone that contributes a change.
+But what right now would help most with regression tracking are two
+things that can only be solved by educating people:
 
-As someone blissfully unaware of the workings of bugzilla, it is
-possible to tie multiple emails to the same account? Not that I would be
-happy about having an account created for me, but I certainly would not
-want more than one account..
+ * It would help tremendously if reporters and developers would at least
+CC the regressions list on regression reports so I become aware of them;
+and ideally they would tell regzbot about the report themselves of
+course. Right now many people don't do either, so I have to scan various
+mails every day to even get aware of most regression reports (I do this
+with lei, which searches for things like "regress", "bisect", "revert",
+"first bad commit", which generates many false positives :-/ ).
 
-Thanks,
-Conor.
+ * It would help a lot if way more developers would use "Link:" tags as
+explained by our documentation (e.g. use them to link to reports), as I
+have to track things manually if they are missing.
+
+I'm working on educating people and I guess over time things will improve.
+
+>> But for other issues (aka regular bugs) I don't think it's worth it,
+>> because why only help those users that report to bugzilla (you didn't
+>> say that, but it sounded to me like the focus is on it)? There are
+>> people that try to use the mailing lists, but do it badly and never get
+>> a reply (for example because they sent their report just to LKML). They
+>> could need help, too; maybe helping them should even be priority, as
+>> they at least tried to do what most kernel developers want them to do,
+>> hence their reports might be better, too.
+> Could do both.
+
+Sure!
+
+>> But there is a more important reason why I think having a liaison might
+>> not be worth it for now: It IMHO would be much better to spend the time
+>> and effort on other things that enable users submitting better bug
+>> reports in the first place. I have no concrete and well-thought-out
+>> ideas at hand what to do exactly, but here are a few vague ones:
+>>
+>>  * create an app (ideally usable locally and on the web) that guides
+>> users through generating a good bug report (let's leave the way of
+>> submission aside for now). That app could handle quite a few of the
+>> steps that https://docs.kernel.org/admin-guide/reporting-issues.html
+>> currently mentions. It for example could check if the kernel looks to be
+>> vanilla, if the kernel is fresh, if the kernel is tainted, if an Oops is
+>> the first one or just a follow-up error; maybe that app could even
+>> decode stack-traces locally in some environments; and it could collect
+>> and upload logs as well. It could also explain certain things to users
+>> when not fulfilled, for example why it's not worth to report a problem
+>> that happens with an old kernel.
+> 
+> Christoph mentioned Debian's reportbug utility. That does a pretty good
+> job at walking people through how to report a bug. It could also get
+> information about the current environment that would be useful too. Perhaps
+> something like that?
+
+Never came in contact with it but will put "take a closer look at it" on
+my list.
+
+>>    Sure, these apps never work perfect and doing it right is a lot of
+>> work, but I guess one could make things a lot easier for many users
+>> especially for our case. I assume other projects have done something
+>> like that so that we could learn from them.
+>>
+>>  * Improve https://docs.kernel.org/admin-guide/reporting-issues.html
+>> further. I have some ideas there, but other things are higher on my
+>> priority list currently. That document in the end somehow needs to
+>> become less scary looking while still providing all important details
+>> for situations where a reporter might need them.
+>>
+>>  * Write new docs relevant for bug reporting. We for example still have
+>> no well written and simple to understand text that explains bisection to
+>> people that are new to git, bisection, or compiling kernels in general.
+>> Speaking of which: we iirc are also missing a text that properly
+>> explains how to quickly configure and compile a kernel using "make
+>> localmodconfig" (I mean something like
+>> http://www.h-online.com/open/features/Good-and-quick-kernel-configuration-creation-1403046.html)
+> 
+> The sad part is that most people that are going to report a bug is not
+> going to read a full document to figure out how to do it. Usually when
+> someone hits a bug, they are doing something else. And it's a burden to
+> report it. Obviously, they want it to be fixed, but it's viewed as a favor
+> to the developer and not the user to get it fixed, as it's likely seen as a
+> mistake by the developer that the bug exists in the first place.
+> 
+> Having a tool like reportbug that walks you through the steps of reporting
+> it would be the best way to do so. As the reporter doesn't need to think
+> too hard and just answer questions and let the tool do all the work.
+
+Yup, I'm all for such a tool (and would likely already have started one,
+but I need to get regzbot to a more mature state first; and I actually
+have no idea how to write a tool that ideally works locally and on the
+web...).
+
+But I consider explaining things like bisection and localmodconfig in
+the documentation as also important, as that's likely something the tool
+won't be able to automate any time soon (or never, as realizing that is
+likely hard and better left to a separate tool anyway).
+
+>>  * Not sure, maybe a list of things that known to be broken might be
+>> good to have? Like "yes, we know that nouveau is slow, but we can't do
+>> anything about this" or "driver 'wifi-foo' only supports a small subset
+>> of the features the hardware offers, so don't report bugs if bar, baz
+>> and foobar don't work".
+> 
+> The tool could possibly reply with known issues, and state something like
+> "We are aware of this issue, and are currently trying to figure it out."
+
++1
+
+Ciao, Thorsten
