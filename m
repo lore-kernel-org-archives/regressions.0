@@ -1,163 +1,68 @@
-Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D221C39E
-	for <regressions@lists.linux.dev>; Wed,  5 Oct 2022 07:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1664954680; x=1696490680;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-transfer-encoding:mime-version:subject;
-  bh=sAnwOBup503KhTsZYl8bBrVGrc8jgV4o1uRbH+z5bFA=;
-  b=NlvJOD+dl6cqfG/1H0MuPs18s3Ue3w+UlQLSOLLVhsBsC41MOgCjrv8C
-   dqTVetA03vjYGpK515Gf2lKIm17N4/kyDhmsYbO+kqJCnMFzVZZaoqm6n
-   V6lPEPS9IqFJ9dYWrMY0UsJJWHJm4QPu2Kk4fOBJVw/7oMus2b4nzuE7p
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.95,159,1661817600"; 
-   d="scan'208";a="251968327"
-Subject: RE: significant drop  fio IOPS performance on v5.10
-Thread-Topic: significant drop  fio IOPS performance on v5.10
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1d-1c3c2014.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2022 07:24:24 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
-	by email-inbound-relay-iad-1d-1c3c2014.us-east-1.amazon.com (Postfix) with ESMTPS id 393D7E018F;
-	Wed,  5 Oct 2022 07:24:21 +0000 (UTC)
-Received: from EX19D045UWC004.ant.amazon.com (10.13.139.203) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.38; Wed, 5 Oct 2022 07:24:21 +0000
-Received: from EX19D017UWC003.ant.amazon.com (10.13.139.227) by
- EX19D045UWC004.ant.amazon.com (10.13.139.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.12; Wed, 5 Oct 2022 07:24:21 +0000
-Received: from EX19D017UWC003.ant.amazon.com ([fe80::78e9:1d67:81fd:68c5]) by
- EX19D017UWC003.ant.amazon.com ([fe80::78e9:1d67:81fd:68c5%6]) with mapi id
- 15.02.1118.012; Wed, 5 Oct 2022 07:24:21 +0000
-From: "Lu, Davina" <davinalu@amazon.com>
-To: Theodore Ts'o <tytso@mit.edu>
-CC: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, "Mohamed Abuelfotoh,
- Hazem" <abuehaze@amazon.com>, hazem ahmed mohamed
-	<hazem.ahmed.abuelfotoh@gmail.com>, "Ritesh Harjani (IBM)"
-	<ritesh.list@gmail.com>, "Kiselev, Oleg" <okiselev@amazon.com>, "Liu, Frank"
-	<franklmz@amazon.com>
-Thread-Index: AdjO5vTzPItE0he4TsCHXHwBRGK6iAB1NzvQAJElJTAAIpWHgAE+4VbA
-Date: Wed, 5 Oct 2022 07:24:21 +0000
-Message-ID: <b7aaf155f80f4605aff2ccbc4067d9a6@amazon.com>
-References: <357ace228adf4e859df5e9f3f4f18b49@amazon.com>
- <1cdc68e6a98d4e93a95be5d887bcc75d@amazon.com>
- <5c819c9d6190452f9b10bb78a72cb47f@amazon.com> <YzTMZ26AfioIbl27@mit.edu>
-In-Reply-To: <YzTMZ26AfioIbl27@mit.edu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-originating-ip: [10.43.160.95]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B80463C;
+	Wed,  5 Oct 2022 09:00:55 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1og0Gr-0006G8-NF; Wed, 05 Oct 2022 11:00:53 +0200
+Message-ID: <89926f21-e172-9f3d-d08f-8d5eef812ee1@leemhuis.info>
+Date: Wed, 5 Oct 2022 11:00:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Content-Language: en-US, de-DE
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: "Artem S. Tashkinov" <aros@gmx.com>, ksummit <ksummit@lists.linux.dev>,
+ workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <20221004175354.bfvg3vhfqch35ib5@meerkat.local>
+ <c74d9d75-4428-e22d-1adb-334b1173d871@leemhuis.info>
+ <20221004202540.etokkm3jk6sk7z7y@meerkat.local>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+In-Reply-To: <20221004202540.etokkm3jk6sk7z7y@meerkat.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1664960456;19817fd4;
+X-HE-SMSGID: 1og0Gr-0006G8-NF
 
-Hi Ted,
+On 04.10.22 22:25, Konstantin Ryabitsev wrote:
+> On Tue, Oct 04, 2022 at 10:06:28PM +0200, Thorsten Leemhuis wrote:
+>> Your plan would afaics mean that we invest further into a software
+>> abandoned by its upstream and already becoming more and more of a
+>> maintenance burden. That investment would also further increase our
+>> dependency on that software by establishing workflows that rely on it.
+>> Is that really wise at this point? Wouldn't it be better to spend that
+>> time and effort to build something better that is more future proof?
+> 
+> Unfortunately, there's no such thing. ;) And maybe we'll even help tip the
+> course of history into the other direction -- Red Hat uses bugzilla, and so
+> does OpenSuse, so there's a pretty good core of well-funded companies that
+> would be in a position to help keep bugzilla going if it's looking like the
+> platform is still alive. Or that could all be wishful thinking and they'll all
+> migrate to Jira or something equally horrible, who knows.
 
-Thanks for your reply! Sorry for the late reply since I was busy on another=
- urgent EXT4 issue recently.
+Well, Red Hat apparently is already in the process of migrating to Jira
+in the long run:
+https://lists.fedoraproject.org/archives/list/epel-devel@lists.fedoraproject.org/thread/U7TZRWXVUGBCHS6EBJIBSFAVPFUHHV7J/
 
-Understood the concern about the patch here-- the patch is just a simple st=
-art and good suggestions on to make it safe update in multiple CPUs.
-1.  Max thread number could not really need 256. From my side, ~30 could be=
- good enough and this only apply with cpu_num >=3D some_threads (E.g. 16), =
-we can do this in a sysctl/mount option etc...
-2. Definitely agree that we need to make safe way and thanks for clear expl=
-anation.  A quick question, so if we make sure converting unwritten extents=
- on same inode  is in "atomic" way, then it should be a good patch to start=
- with?
+To quote that mail from March:
 
-About the larger the journal size -- which can help this IOPS issue, I foun=
-d is, with small journal size with bad IOPS, journal transaction are more f=
-requently (e.g. from 450 to 700 in a period of time) and each transaction h=
-as very less handlers (e.g from 1000 to 70).
-Tracing the code, I found: the reserved block exists in each journal update=
- in EXT4 which requires more blocks, then in=20
-add_transaction_credits()
-if (jbd2_log_space_left(journal) < journal->j_max_transaction_buffers) { //=
-since journal size is too small, it has less change to goes into this if to=
- start an journal update.
-            if (jbd2_log_space_left(journal) <
-                                                journal->j_max_transaction_=
-buffers)=20
-                   __jbd2_log_wait_for_space(journal); // good to trigger c=
-ommit->=20
-                   jbd2_log_do_checkpoint() ->  jbd2_log_start_commit() ->
-                    __jbd2_log_start_commit  -> journal->j_commit_request =
-=3D target;
+```
+As some of you may know, Red Hat has been using both Bugzilla and Jira
+via issues.redhat.com for RHEL development for several years.  Our
+intention is to move to using issues.redhat.com only for the major
+RHEL releases after RHEL 9.
+```
 
-So most of time, in this func, it has to wait for journal commit... The slo=
-wer journal update could affect the IO performance from my understanding (f=
-io test is like: one pwrite64 and then followed one fsync). Therefore if we=
- larger the journal size from 128M to 2GB, mostly the "if" condition can go=
- into to ease this problem.
-
-Thanks
-Davina
-
------Original Message-----
-From: Theodore Ts'o <tytso@mit.edu>=20
-Sent: Thursday, September 29, 2022 8:36 AM
-To: Lu, Davina <davinalu@amazon.com>
-Cc: linux-ext4@vger.kernel.org; adilger.kernel@dilger.ca; regressions@lists=
-.linux.dev; stable@vger.kernel.org; Mohamed Abuelfotoh, Hazem <abuehaze@ama=
-zon.com>; hazem ahmed mohamed <hazem.ahmed.abuelfotoh@gmail.com>; Ritesh Ha=
-rjani (IBM) <ritesh.list@gmail.com>; Kiselev, Oleg <okiselev@amazon.com>; L=
-iu, Frank <franklmz@amazon.com>
-Subject: RE: [EXTERNAL]significant drop fio IOPS performance on v5.10
-
-CAUTION: This email originated from outside of the organization. Do not cli=
-ck links or open attachments unless you can confirm the sender and know the=
- content is safe.
-
-
-
-On Wed, Sep 28, 2022 at 06:07:34AM +0000, Lu, Davina wrote:
->
-> Hello,
->
-> My analyzing is that the degradation is introduce by commit=20
-> {244adf6426ee31a83f397b700d964cff12a247d3} and the issue is the=20
-> contention on rsv_conversion_wq.  The simplest option is to increase=20
-> the journal size, but that introduces more operational complexity.
-> Another option is to add the following change in attachment "allow=20
-> more ext4-rsv-conversion workqueue.patch"
-
-Hi, thanks for the patch.  However, I don't believe as written it is safe. =
- That's because your patch will allow multiple CPU's to run ext4_flush_comp=
-leted_IO(), and this function is not set up to be safe to be run concurrent=
-ly.  That is, I don't see the necessary locking if we have two CPU's trying=
- to convert unwritten extents on the same inode.
-
-It could be made safe, and certainly if the problem is that you are worried=
- about contention across multiple inodes being written to by different FIO =
-jobs, then certainly this could be a potential contention issue.
-
-However, what doesn't make sense is that increasing the journal size also s=
-eems to fix the issue for you.  That implies the problem is one of the jour=
-nal being to small, and so you are running into an issue of stalls caused b=
-y the need to do a synchronous checkpoint to clear space in the journal.  T=
-hat is a different problem than one of there being a contention problem wit=
-h rsv_conversion_wq.
-
-So I want to make sure we understand what you are seeing before we make suc=
-h a change.  One potential concern is that will cause a large number of add=
-itional kernel threads.  Now, if these extra kernel threads are doing usefu=
-l work, then that's not necessarily an issue.
-But if not, then it's going to be burning a large amount of kernel memory (=
-especially for a system with a large number of CPU cores).
-
-Regards,
-
-                                        - Ted
+Ciao, Thorsten
