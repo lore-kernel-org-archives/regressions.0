@@ -1,64 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782BF3D7E;
-	Tue,  4 Oct 2022 22:45:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A64EC433D6;
-	Tue,  4 Oct 2022 22:45:41 +0000 (UTC)
-Date: Tue, 4 Oct 2022 18:45:44 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "Artem S. Tashkinov" <aros@gmx.com>, Mike Rapoport <rppt@kernel.org>, Al
- Viro <viro@zeniv.linux.org.uk>, "Theodore Ts'o" <tytso@mit.edu>, Thorsten
- Leemhuis <linux@leemhuis.info>, Greg KH <gregkh@linuxfoundation.org>,
- Konstantin Ryabitsev <konstantin@linuxfoundation.org>,
- workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Linus
- Torvalds <torvalds@linux-foundation.org>, "regressions@lists.linux.dev"
- <regressions@lists.linux.dev>, ksummit@lists.linux.dev, Mario Limonciello
- <mario.limonciello@amd.com>
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-Message-ID: <20221004184544.371daf46@gandalf.local.home>
-In-Reply-To: <CAMuHMdW1yp76X6xMFSXnpRNXPBVVLuyqm=UCOZ0uQem0_50poQ@mail.gmail.com>
-References: <Yzg7pHspc72I7TAb@mit.edu>
-	<e98597e8-9ddb-bbf0-7652-691327186a92@gmx.com>
-	<YzmBjgXq9geMnL1B@mit.edu>
-	<79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com>
-	<20221002141321.394de676@rorschach.local.home>
-	<6de0925c-a98a-219e-eed2-ba898ef974f8@gmx.com>
-	<20221002180844.2e91b1f1@rorschach.local.home>
-	<3a3b9346-e243-e178-f8dd-f8e1eacdc6ae@gmx.com>
-	<YzoY+dxLuCfOp0sL@ZenIV>
-	<b032e79a-a9e3-fc72-9ced-39411e5464c9@gmx.com>
-	<YzqjfU66alRlGk5y@kernel.org>
-	<251201be-9552-3a51-749c-3daf4d181250@gmx.com>
-	<CAMuHMdX8Ko_LiqsWafzcqheW_7SZmtzEvgrpBbyoCLxyWqjqBg@mail.gmail.com>
-	<1d3fdc6a-a98a-fe3b-2e3e-acc2ffa24f9d@gmx.com>
-	<20221003102029.1fe4f31b@gandalf.local.home>
-	<fde043f3-da34-9fc6-379b-922f29284e66@gmx.com>
-	<CAMuHMdW1yp76X6xMFSXnpRNXPBVVLuyqm=UCOZ0uQem0_50poQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D221C39E
+	for <regressions@lists.linux.dev>; Wed,  5 Oct 2022 07:24:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1664954680; x=1696490680;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version:subject;
+  bh=sAnwOBup503KhTsZYl8bBrVGrc8jgV4o1uRbH+z5bFA=;
+  b=NlvJOD+dl6cqfG/1H0MuPs18s3Ue3w+UlQLSOLLVhsBsC41MOgCjrv8C
+   dqTVetA03vjYGpK515Gf2lKIm17N4/kyDhmsYbO+kqJCnMFzVZZaoqm6n
+   V6lPEPS9IqFJ9dYWrMY0UsJJWHJm4QPu2Kk4fOBJVw/7oMus2b4nzuE7p
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.95,159,1661817600"; 
+   d="scan'208";a="251968327"
+Subject: RE: significant drop  fio IOPS performance on v5.10
+Thread-Topic: significant drop  fio IOPS performance on v5.10
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-iad-1d-1c3c2014.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Oct 2022 07:24:24 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
+	by email-inbound-relay-iad-1d-1c3c2014.us-east-1.amazon.com (Postfix) with ESMTPS id 393D7E018F;
+	Wed,  5 Oct 2022 07:24:21 +0000 (UTC)
+Received: from EX19D045UWC004.ant.amazon.com (10.13.139.203) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.38; Wed, 5 Oct 2022 07:24:21 +0000
+Received: from EX19D017UWC003.ant.amazon.com (10.13.139.227) by
+ EX19D045UWC004.ant.amazon.com (10.13.139.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.12; Wed, 5 Oct 2022 07:24:21 +0000
+Received: from EX19D017UWC003.ant.amazon.com ([fe80::78e9:1d67:81fd:68c5]) by
+ EX19D017UWC003.ant.amazon.com ([fe80::78e9:1d67:81fd:68c5%6]) with mapi id
+ 15.02.1118.012; Wed, 5 Oct 2022 07:24:21 +0000
+From: "Lu, Davina" <davinalu@amazon.com>
+To: Theodore Ts'o <tytso@mit.edu>
+CC: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, "Mohamed Abuelfotoh,
+ Hazem" <abuehaze@amazon.com>, hazem ahmed mohamed
+	<hazem.ahmed.abuelfotoh@gmail.com>, "Ritesh Harjani (IBM)"
+	<ritesh.list@gmail.com>, "Kiselev, Oleg" <okiselev@amazon.com>, "Liu, Frank"
+	<franklmz@amazon.com>
+Thread-Index: AdjO5vTzPItE0he4TsCHXHwBRGK6iAB1NzvQAJElJTAAIpWHgAE+4VbA
+Date: Wed, 5 Oct 2022 07:24:21 +0000
+Message-ID: <b7aaf155f80f4605aff2ccbc4067d9a6@amazon.com>
+References: <357ace228adf4e859df5e9f3f4f18b49@amazon.com>
+ <1cdc68e6a98d4e93a95be5d887bcc75d@amazon.com>
+ <5c819c9d6190452f9b10bb78a72cb47f@amazon.com> <YzTMZ26AfioIbl27@mit.edu>
+In-Reply-To: <YzTMZ26AfioIbl27@mit.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [10.43.160.95]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Tue, 4 Oct 2022 14:32:26 +0200
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+Hi Ted,
 
-> > I _did_ CC him privately by adding his _personal_ e-mail. I'm astonished
-> > not only you don't believe me you turn my words inside out.  
-> 
-> I think there is a misunderstanding of the meaning of "CC privately".
-> To me it means no public data disclosing entity (be it a public mailing
-> list, or a public bug tracker) was CCed as well.
-> To you, it seems to mean you used his personal email address instead
-> of a mailing list address.
+Thanks for your reply! Sorry for the late reply since I was busy on another=
+ urgent EXT4 issue recently.
 
-Exactly. If I can go find it, it wasn't "private".
+Understood the concern about the patch here-- the patch is just a simple st=
+art and good suggestions on to make it safe update in multiple CPUs.
+1.  Max thread number could not really need 256. From my side, ~30 could be=
+ good enough and this only apply with cpu_num >=3D some_threads (E.g. 16), =
+we can do this in a sysctl/mount option etc...
+2. Definitely agree that we need to make safe way and thanks for clear expl=
+anation.  A quick question, so if we make sure converting unwritten extents=
+ on same inode  is in "atomic" way, then it should be a good patch to start=
+ with?
 
--- Steve
+About the larger the journal size -- which can help this IOPS issue, I foun=
+d is, with small journal size with bad IOPS, journal transaction are more f=
+requently (e.g. from 450 to 700 in a period of time) and each transaction h=
+as very less handlers (e.g from 1000 to 70).
+Tracing the code, I found: the reserved block exists in each journal update=
+ in EXT4 which requires more blocks, then in=20
+add_transaction_credits()
+if (jbd2_log_space_left(journal) < journal->j_max_transaction_buffers) { //=
+since journal size is too small, it has less change to goes into this if to=
+ start an journal update.
+            if (jbd2_log_space_left(journal) <
+                                                journal->j_max_transaction_=
+buffers)=20
+                   __jbd2_log_wait_for_space(journal); // good to trigger c=
+ommit->=20
+                   jbd2_log_do_checkpoint() ->  jbd2_log_start_commit() ->
+                    __jbd2_log_start_commit  -> journal->j_commit_request =
+=3D target;
+
+So most of time, in this func, it has to wait for journal commit... The slo=
+wer journal update could affect the IO performance from my understanding (f=
+io test is like: one pwrite64 and then followed one fsync). Therefore if we=
+ larger the journal size from 128M to 2GB, mostly the "if" condition can go=
+ into to ease this problem.
+
+Thanks
+Davina
+
+-----Original Message-----
+From: Theodore Ts'o <tytso@mit.edu>=20
+Sent: Thursday, September 29, 2022 8:36 AM
+To: Lu, Davina <davinalu@amazon.com>
+Cc: linux-ext4@vger.kernel.org; adilger.kernel@dilger.ca; regressions@lists=
+.linux.dev; stable@vger.kernel.org; Mohamed Abuelfotoh, Hazem <abuehaze@ama=
+zon.com>; hazem ahmed mohamed <hazem.ahmed.abuelfotoh@gmail.com>; Ritesh Ha=
+rjani (IBM) <ritesh.list@gmail.com>; Kiselev, Oleg <okiselev@amazon.com>; L=
+iu, Frank <franklmz@amazon.com>
+Subject: RE: [EXTERNAL]significant drop fio IOPS performance on v5.10
+
+CAUTION: This email originated from outside of the organization. Do not cli=
+ck links or open attachments unless you can confirm the sender and know the=
+ content is safe.
+
+
+
+On Wed, Sep 28, 2022 at 06:07:34AM +0000, Lu, Davina wrote:
+>
+> Hello,
+>
+> My analyzing is that the degradation is introduce by commit=20
+> {244adf6426ee31a83f397b700d964cff12a247d3} and the issue is the=20
+> contention on rsv_conversion_wq.  The simplest option is to increase=20
+> the journal size, but that introduces more operational complexity.
+> Another option is to add the following change in attachment "allow=20
+> more ext4-rsv-conversion workqueue.patch"
+
+Hi, thanks for the patch.  However, I don't believe as written it is safe. =
+ That's because your patch will allow multiple CPU's to run ext4_flush_comp=
+leted_IO(), and this function is not set up to be safe to be run concurrent=
+ly.  That is, I don't see the necessary locking if we have two CPU's trying=
+ to convert unwritten extents on the same inode.
+
+It could be made safe, and certainly if the problem is that you are worried=
+ about contention across multiple inodes being written to by different FIO =
+jobs, then certainly this could be a potential contention issue.
+
+However, what doesn't make sense is that increasing the journal size also s=
+eems to fix the issue for you.  That implies the problem is one of the jour=
+nal being to small, and so you are running into an issue of stalls caused b=
+y the need to do a synchronous checkpoint to clear space in the journal.  T=
+hat is a different problem than one of there being a contention problem wit=
+h rsv_conversion_wq.
+
+So I want to make sure we understand what you are seeing before we make suc=
+h a change.  One potential concern is that will cause a large number of add=
+itional kernel threads.  Now, if these extra kernel threads are doing usefu=
+l work, then that's not necessarily an issue.
+But if not, then it's going to be burning a large amount of kernel memory (=
+especially for a system with a large number of CPU cores).
+
+Regards,
+
+                                        - Ted
