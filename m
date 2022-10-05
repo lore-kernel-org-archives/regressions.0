@@ -1,207 +1,318 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B59443D6B;
-	Wed,  5 Oct 2022 17:11:35 +0000 (UTC)
-Received: by mail-pl1-f169.google.com with SMTP id l4so515875plb.8;
-        Wed, 05 Oct 2022 10:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date;
-        bh=8OoqcTjHvpDh7UImDu8JviJ+QMlDrz/TgMfEYGIJzHc=;
-        b=FiIzdM4taxv76ttGrgcTmLiT9N5hi1FUQCFg0SW63GYQrvjgIXi5SWUOULSHOKVlcF
-         VD8FZ5b3bHxXL/BmfMocub/2HcksZLZSq3PzcSGaohFF/+nOZHevhV8CWqmE491GmyEh
-         aZhC2YKaE1S0efCEFXv5+1OHGnXVwYtADQsdwJB+1HNbL0hP6gVyFHE398JznNwdrOAX
-         ErH1canqjntGkN9AKU0t6JzLDNkFQrFNN21v1Q+Py7Wx40E2tcbwzGoxm3PZS5THRhKu
-         N8tr82t5g5qizwOccYXNsFLmLiGbJYK8Kv2RFSFEUF0b6v3+DAl8wG9ri0sCmQSrqrAr
-         ExGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=8OoqcTjHvpDh7UImDu8JviJ+QMlDrz/TgMfEYGIJzHc=;
-        b=0ZdkbaVD7vEBbuDEK6sefr1NWuzS3tbnCdTGzSHfPa34S0U5Cb+UW64rx0099/ZWph
-         oPPnElGA8T2UoO4hKGKr9b0tvZO2zZ6olTci0aeG9c8zEmqSy8YWK8wMwR25rvtZdSs0
-         IVncLRKvuFuA3wCRfJxIcw92jkSoRU9UwM4cA9ylfJ2NqnK3mP2xTR3UOSA+xhqom9D8
-         oy6OHybh5OR1VwViu+DIBaUwOa/MFumIk33tbrl7euYo7F1xXn86mL5sTaRieFPXnrRk
-         9W6CRJp7ga4aoXpaROoZI1rAfCQpPHBYtbDTKtuCBgHRfZQWcOMCdedUS1H5FPA9yAEs
-         f1CA==
-X-Gm-Message-State: ACrzQf3G4mLj5gVufkr4J89jftX2MpcSwXI5UvqtehztgwJ7u8ZT0Edb
-	3C3JwUlu+Xki5mSIziMxYWGLsOl2Ck3QCg==
-X-Google-Smtp-Source: AMsMyM5n7k13Mpk/urTfjW9daIc4Kw2lwyFWI19Nmzr7LuG4cCnOryG+J8dZRkhE0hBE6dCu2a+xZg==
-X-Received: by 2002:a17:90b:1d01:b0:203:2bda:abb1 with SMTP id on1-20020a17090b1d0100b002032bdaabb1mr5984963pjb.204.1664989895176;
-        Wed, 05 Oct 2022 10:11:35 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m7-20020a170902bb8700b0017bdfbfcf8dsm10700718pls.63.2022.10.05.10.11.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Oct 2022 10:11:34 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Wed, 5 Oct 2022 10:11:32 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Fenghua Yu <fenghua.yu@intel.com>, intel-gfx@lists.freedesktop.org,
-	Chris Wilson <chris@chris-wilson.co.uk>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	linux-hwmon@vger.kernel.org
-Subject: Re: [core-for-CI][PATCH] iommu: Remove iova cpu hotplugging flushing
-Message-ID: <20221005171132.GA519999@roeck-us.net>
-References: <20220922101036.87457-1-janusz.krzysztofik@linux.intel.com>
- <1f4899d2-52ed-ae94-f681-3953c82b4799@arm.com>
- <3185079.N7aMVyhfb1@jkrzyszt-mobl1.ger.corp.intel.com>
- <93eb2474-077f-2714-ccfb-77ff1a29a926@leemhuis.info>
- <20221005152537.GA2228081@roeck-us.net>
- <f4de969e-69a9-34dd-5637-50685d32738a@arm.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C0133F1;
+	Wed,  5 Oct 2022 22:59:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 860CCC433C1;
+	Wed,  5 Oct 2022 22:59:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1665010793;
+	bh=rEsBUoM6as5O5NE68AneNJulvIV8bh7APc5gzGTSh9c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=Tzl1pgYgpnY/90uUd4mxkL0cx3M5nQVaKd3h2wsorKBt0Kf1KcNCYS1ueOaH8aDuG
+	 kfb1Y7lB/etnN4Asil92Izs/8Y8JeLwXzBs/aunSfcSt2PrmoJxkZksPit1J1lgbDW
+	 MEhprXkQPmapSOLn+puxht//yl2tvOhfYG7NaerDb4qg01HejP8YB3+ao9o4foKllJ
+	 nVeh1E9AZRbxW5/RDyssZHq8PVP6/ui5OtJpz6f3CtEHzh95tCZefuh7uWm0Sac32Z
+	 QPjXtUwIXF8lcU8fjR1gZTgypaN1ya0jDaC+AdzjnJEhsdHqBTEQC+5wvcuzcyvgQ8
+	 73QICKFPIL3xg==
+Received: by mail-lj1-f172.google.com with SMTP id p5so273759ljc.13;
+        Wed, 05 Oct 2022 15:59:53 -0700 (PDT)
+X-Gm-Message-State: ACrzQf1MO18ZOoCReP+howBq4RBle3OP7qQL4OfVeS9eP7LpL8IfVZiJ
+	JoHYSUHY8zcsCPWDpJ/VfO1cE6GJi2bdBP34Wes=
+X-Google-Smtp-Source: AMsMyM7j+a9QGFjkrXJULvPg4LyZlo4d52eAiyuW9ZTdw6lUoxr9hd3DYQbq2T9V1HFGEWfJxNnsLlbeEnFSrOjnHtk=
+X-Received: by 2002:a05:651c:1a26:b0:26c:4c0d:b10a with SMTP id
+ by38-20020a05651c1a2600b0026c4c0db10amr620033ljb.415.1665010791465; Wed, 05
+ Oct 2022 15:59:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f4de969e-69a9-34dd-5637-50685d32738a@arm.com>
+References: <CAKwvOdkCCyP8W2pHf9ETKMgUtKCgcSwUb6=bMJ_8riwjyknpCw@mail.gmail.com>
+ <20220926183725.1112298-1-ndesaulniers@google.com>
+In-Reply-To: <20220926183725.1112298-1-ndesaulniers@google.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 6 Oct 2022 00:59:39 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXHCGjb-mWHh37wv2mgZvLEsRA=f_Y-7UMom-QiRjTJ_Nw@mail.gmail.com>
+Message-ID: <CAMj1kXHCGjb-mWHh37wv2mgZvLEsRA=f_Y-7UMom-QiRjTJ_Nw@mail.gmail.com>
+Subject: Re: [PATCH] ARM: kprobes: move __kretprobe_trampoline to out of line assembler
+To: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Russell King <rmk+kernel@armlinux.org.uk>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	"Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, 
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>, 
+	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, Tom Rix <trix@redhat.com>, 
+	sparkhuang <huangshaobo6@huawei.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Chen Zhongjin <chenzhongjin@huawei.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, llvm@lists.linux.dev, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, regressions@lists.linux.dev, 
+	lkft-triage@lists.linaro.org, 
+	Linux Kernel Functional Testing <lkft@linaro.org>, Logan Chien <loganchien@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Oct 05, 2022 at 05:15:49PM +0100, Robin Murphy wrote:
-> On 2022-10-05 16:25, Guenter Roeck wrote:
-> > On Wed, Oct 05, 2022 at 04:26:28PM +0200, Thorsten Leemhuis wrote:
-> > > [adding the coretemp maintainer (Fenghua Yu) and the appropriate mailing
-> > > list to the list of recipients, as there apparently is a coretemp bug
-> > > that results in a iommu change causing a regression]
-> > > 
-> > > On 30.09.22 18:57, Janusz Krzysztofik wrote:
-> > > > I think this issue can hit any user with a platform that loads iommu and
-> > > > coretemp drivers.  Adding regressions@lists.linux.dev to the loop.
-> > > 
-> > > f598a497bc7d was merged for 5.13-rc1, which is quite a while ago, so at
-> > > least a quick revert is out of question as it might do more harm than
-> > > good. The authors of the commit are kinda responsible for fixing
-> > > situations like this; but well, did anybody ask the developers of the
-> > > coretemp driver kindly if they are aware of the problem and maybe even
-> > > willing to fix it? Doesn't look like it from here from search lore (hope
-> > > I didn't miss anything), so let's give it a try.
-> > > 
-> > > Ciao, Thorsten
-> > > 
-> > > > On Thursday, 22 September 2022 14:09:35 CEST Robin Murphy wrote:
-> > > > > On 22/09/2022 11:10 am, Janusz Krzysztofik wrote:
-> > > > > > From: Chris Wilson <chris@chris-wilson.co.uk>
-> > > > > > 
-> > > > > > Manual revert of commit f598a497bc7d ("iova: Add CPU hotplug handler to
-> > > > > > flush rcaches").  It is trying to instantiate a cpuhp notifier from inside
-> > > > > > a cpuhp callback.  That code replaced intel_iommu implementation of
-> > > > > > flushing per-IOVA domain CPU rcaches which used a single instance of cpuhp
-> > > > > > held for the module lifetime.
-> > > > > 
-> > > > > OK, *now* I see what's going on. It doesn't seem unreasonable to me for
-> > > > > bus notifiers to touch CPU hotplug - what seems more unexpected is the
-> > > > > coretemp driver creating and adding a platform device from inside a
-> > > > > hotplug callback.
-> > 
-> > It is only unexpected if it is documented that creating a platform driver
-> > from a hotplug callback is off limits.
-> > 
-> > > > > 
-> > > > > Once we start trying to revert multiple unrelated bits of important
-> > > > > functionality from other subsystems because one driver is doing a weird
-> > > > > thing, maybe it's time to instead question whether that driver should be
-> > > > > doing a weird thing?
-> > 
-> > That isn't the point. This _used_ to work, after all. Maybe the functionality
-> > introduced with f598a497bc7d is important, but there is still a regression
-> > introduced by f598a497bc7d. Sure, maybe the coretemp driver is doing
-> > "a weird thing", but if some generic code is changed causing something to fail
-> > that previously worked, it is still a regression and the reponsibility of the
-> > person or team making the generic code change to fix the problems caused by
-> > that change.
-> 
-> Note that AFAICS I don't think anything's actually broken, and this is
-> merely a lockdep false-positive. The coretemp device itself will not be
-> associated with the IOMMU, so the IOMMU notifier will never get as far as
-> taking any further locks in that particular instance.
-> 
-> Of course I *can* try writing the patch to fix things properly if I have to,
-> but fair warning; I'm not familiar with this driver or the relevant hardware
-> or the subsystem, and from a brief look it will involve some significant
-> redesign that I have every chance of getting wrong. Plus I'm not sure I can
-> test the hotplug stuff at all since the x86 box I have to hand only seems to
-> have a single coretemp device.
-> 
-> The fact is, the wacky thing it's doing with platform_device_add() doesn't
-> actually work *all* that well anyway:
-> 
+Hi NIck,
 
-Hah, yes, that is obviously a bug. Unfortunately I don't have any systems
-with Intel CPU left, so I can not test myself. FWIW, on v5.18.x (which is
-what Google laptops use for whatever reason), I don't see the crash, but
-"modprobe -r coretemp" followed by "modprobe coretemp" doesn't work -
-the driver loads, but does not register with the hwmon subsystem.
-There has been no relevant change to the driver since v5.13, so all
-I can conclude at this point is that the driver is very likely still
-broken in the mainline kernel.
+On Mon, 26 Sept 2022 at 20:37, Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> commit 1069c1dd20a3 ("ARM: 9231/1: Recover kretprobes return address for
+> EABI stack unwinder")
+> tickled a bug in clang's integrated assembler where the .save and .pad
+> directives must have corresponding .fnstart directives. The integrated
+> assembler is unaware that the compiler will be generating the .fnstart
+> directive.
+>
+>   arch/arm/probes/kprobes/core.c:409:30: error: .fnstart must precede
+>   .save or .vsave directives
+>   <inline asm>:3:2: note: instantiated into assembly here
+>   .save   {sp, lr, pc}
+>   ^
+>   arch/arm/probes/kprobes/core.c:412:29: error: .fnstart must precede
+>   .pad directive
+>   <inline asm>:6:2: note: instantiated into assembly here
+>   .pad    #52
+>   ^
+>
+> __kretprobe_trampoline's definition is already entirely inline asm. Move
+> it to out-of-line asm to avoid breaking the build.
+>
 
-Guenter
+I think this is the right approach. I don't think is is even specified
+what exactly attribute((naked)) entails in the context of unwind
+information
 
-> $ sudo rmmod coretemp
-> $ echo 0 | sudo tee /sys/bus/platform/drivers_autoprobe
-> 0
-> $ sudo modprobe coretemp
-> 
-> [7169271.187103] BUG: kernel NULL pointer dereference, address:
-> 0000000000000418
-> [7169271.187127] #PF: supervisor write access in kernel mode
-> [7169271.187131] #PF: error_code(0x0002) - not-present page
-> [7169271.187134] PGD 0 P4D 0
-> [7169271.187139] Oops: 0002 [#1] SMP PTI
-> [7169271.187144] CPU: 0 PID: 16 Comm: cpuhp/0 Not tainted 5.13.0-52-generic
-> #59~20.04.1-Ubuntu
-> [7169271.187150] Hardware name: LENOVO 30B6S08J03/1030, BIOS S01KT29A
-> 06/20/2016
-> [7169271.187152] RIP: 0010:create_core_data+0x3cb/0x510 [coretemp]
-> [7169271.187163] Code: 44 89 e7 e8 67 99 7f c8 85 c0 75 17 0f b6 45 b9 41 83
-> 46 24 01 69 c0 18 fc ff ff 41 03 46 08 41 89 46 04 48 8b 45 b0 4c 63 fb <4e>
-> 89 b4 f8 10 04 00 00 48 8b 00 41 8b 56 24 48 89 45 a0 85 d2 7e
-> [7169271.187167] RSP: 0018:ffffa5ddc015fd98 EFLAGS: 00010203
-> [7169271.187172] RAX: 0000000000000000 RBX: 0000000000000001 RCX:
-> 0000000000000002
-> [7169271.187175] RDX: 0000000000000000 RSI: ffffffff89207b30 RDI:
-> ffffa5ddc015fd40
-> [7169271.187178] RBP: ffffa5ddc015fe00 R08: 0000000000000000 R09:
-> ffff8e049c04c800
-> [7169271.187181] R10: 0000000000019460 R11: 0000000000000000 R12:
-> 0000000000000000
-> [7169271.187184] R13: 000000000000005f R14: ffff8e049c04c800 R15:
-> 0000000000000001
-> [7169271.187187] FS:  0000000000000000(0000) GS:ffff8e0b5f600000(0000)
-> knlGS:0000000000000000
-> [7169271.187191] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [7169271.187194] CR2: 0000000000000418 CR3: 0000000190672002 CR4:
-> 00000000003706f0
-> [7169271.187198] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
-> 0000000000000000
-> [7169271.187200] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
-> 0000000000000400
-> [7169271.187203] Call Trace:
-> [7169271.187206]  <TASK>
-> [7169271.187212]  coretemp_cpu_online+0x14f/0x180 [coretemp]
-> [7169271.187220]  ? create_core_data+0x510/0x510 [coretemp]
-> [7169271.187226]  cpuhp_invoke_callback+0x10b/0x430
-> [7169271.187237]  cpuhp_thread_fun+0x92/0x150
-> [7169271.187244]  smpboot_thread_fn+0xd0/0x170
-> [7169271.187253]  ? sort_range+0x30/0x30
-> [7169271.187260]  kthread+0x12b/0x150
-> [7169271.187264]  ? set_kthread_struct+0x40/0x40
-> [7169271.187269]  ret_from_fork+0x22/0x30
-> [7169271.187280]  </TASK>
-> 
-> Consider that a bug report, unless of course it's documented somewhere that
-> users aren't allowed to turn off autoprobe ;)
-> 
-> Thanks,
-> Robin.
+Some nits below, but regardless:
+
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+
+
+> Link: https://github.com/llvm/llvm-project/issues/57993
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1718
+> Reported-by: Nathan Chancellor <nathan@kernel.org>
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> Suggested-by: Logan Chien <loganchien@google.com>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+> Note: I wasn't quite sure if a Fixes tag against 1069c1dd20a3 was
+> appropriate here? Either way, if 1069c1dd20a3 gets picked up for stable
+> without this, it will break clang builds.
+>
+>  arch/arm/probes/kprobes/Makefile              |  1 +
+>  arch/arm/probes/kprobes/core.c                | 54 ++----------------
+>  .../arm/probes/kprobes/kretprobe-trampoline.S | 55 +++++++++++++++++++
+>  include/asm-generic/kprobes.h                 | 13 +++--
+>  4 files changed, 69 insertions(+), 54 deletions(-)
+>  create mode 100644 arch/arm/probes/kprobes/kretprobe-trampoline.S
+>
+> diff --git a/arch/arm/probes/kprobes/Makefile b/arch/arm/probes/kprobes/Makefile
+> index 6159010dac4a..cdbe9dd99e28 100644
+> --- a/arch/arm/probes/kprobes/Makefile
+> +++ b/arch/arm/probes/kprobes/Makefile
+> @@ -3,6 +3,7 @@ KASAN_SANITIZE_actions-common.o := n
+>  KASAN_SANITIZE_actions-arm.o := n
+>  KASAN_SANITIZE_actions-thumb.o := n
+>  obj-$(CONFIG_KPROBES)          += core.o actions-common.o checkers-common.o
+> +obj-$(CONFIG_KPROBES)          += kretprobe-trampoline.o
+>  obj-$(CONFIG_ARM_KPROBES_TEST) += test-kprobes.o
+>  test-kprobes-objs              := test-core.o
+>
+> diff --git a/arch/arm/probes/kprobes/core.c b/arch/arm/probes/kprobes/core.c
+> index 1435b508aa36..17d7e0259e63 100644
+> --- a/arch/arm/probes/kprobes/core.c
+> +++ b/arch/arm/probes/kprobes/core.c
+> @@ -375,58 +375,10 @@ int __kprobes kprobe_exceptions_notify(struct notifier_block *self,
+>         return NOTIFY_DONE;
+>  }
+>
+> -/*
+> - * When a retprobed function returns, trampoline_handler() is called,
+> - * calling the kretprobe's handler. We construct a struct pt_regs to
+> - * give a view of registers r0-r11, sp, lr, and pc to the user
+> - * return-handler. This is not a complete pt_regs structure, but that
+> - * should be enough for stacktrace from the return handler with or
+> - * without pt_regs.
+> - */
+> -void __naked __kprobes __kretprobe_trampoline(void)
+> -{
+> -       __asm__ __volatile__ (
+> -               "ldr    lr, =__kretprobe_trampoline     \n\t"
+> -#ifdef CONFIG_FRAME_POINTER
+> -       /* __kretprobe_trampoline makes a framepointer on pt_regs. */
+> -#ifdef CONFIG_CC_IS_CLANG
+> -               "stmdb  sp, {sp, lr, pc}        \n\t"
+> -               "sub    sp, sp, #12             \n\t"
+> -               /* In clang case, pt_regs->ip = lr. */
+> -               "stmdb  sp!, {r0 - r11, lr}     \n\t"
+> -               /* fp points regs->r11 (fp) */
+> -               "add    fp, sp, #44             \n\t"
+> -#else /* !CONFIG_CC_IS_CLANG */
+> -               /* In gcc case, pt_regs->ip = fp. */
+> -               "stmdb  sp, {fp, sp, lr, pc}    \n\t"
+> -               "sub    sp, sp, #16             \n\t"
+> -               "stmdb  sp!, {r0 - r11}         \n\t"
+> -               /* fp points regs->r15 (pc) */
+> -               "add    fp, sp, #60             \n\t"
+> -#endif /* CONFIG_CC_IS_CLANG */
+> -#else /* !CONFIG_FRAME_POINTER */
+> -               /* store SP, LR on stack and add EABI unwind hint */
+> -               "stmdb  sp, {sp, lr, pc}        \n\t"
+> -               ".save  {sp, lr, pc}    \n\t"
+> -               "sub    sp, sp, #16             \n\t"
+> -               "stmdb  sp!, {r0 - r11}         \n\t"
+> -               ".pad   #52                             \n\t"
+> -#endif /* CONFIG_FRAME_POINTER */
+> -               "mov    r0, sp                  \n\t"
+> -               "bl     trampoline_handler      \n\t"
+> -               "mov    lr, r0                  \n\t"
+> -               "ldmia  sp!, {r0 - r11}         \n\t"
+> -               "add    sp, sp, #16             \n\t"
+> -#ifdef CONFIG_THUMB2_KERNEL
+> -               "bx     lr                      \n\t"
+> -#else
+> -               "mov    pc, lr                  \n\t"
+> -#endif
+> -               : : : "memory");
+> -}
+> +/*void __kretprobe_trampoline(void);*/
+>
+>  /* Called from __kretprobe_trampoline */
+> -static __used __kprobes void *trampoline_handler(struct pt_regs *regs)
+> +__kprobes void *trampoline_handler(struct pt_regs *regs)
+>  {
+>         return (void *)kretprobe_trampoline_handler(regs, (void *)regs->TRAMP_FP);
+>  }
+> @@ -434,6 +386,8 @@ static __used __kprobes void *trampoline_handler(struct pt_regs *regs)
+>  void __kprobes arch_prepare_kretprobe(struct kretprobe_instance *ri,
+>                                       struct pt_regs *regs)
+>  {
+> +       extern void __kretprobe_trampoline(void);
+> +
+>         ri->ret_addr = (kprobe_opcode_t *)regs->ARM_lr;
+>         ri->fp = (void *)regs->TRAMP_FP;
+>
+> diff --git a/arch/arm/probes/kprobes/kretprobe-trampoline.S b/arch/arm/probes/kprobes/kretprobe-trampoline.S
+> new file mode 100644
+> index 000000000000..261c99b8c17f
+> --- /dev/null
+> +++ b/arch/arm/probes/kprobes/kretprobe-trampoline.S
+> @@ -0,0 +1,55 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#include <linux/linkage.h>
+> +#include <asm/unwind.h>
+> +#include <asm-generic/kprobes.h>
+> +
+> +/*
+> + * When a retprobed function returns, trampoline_handler() is called,
+> + * calling the kretprobe's handler. We construct a struct pt_regs to
+> + * give a view of registers r0-r11, sp, lr, and pc to the user
+> + * return-handler. This is not a complete pt_regs structure, but that
+> + * should be enough for stacktrace from the return handler with or
+> + * without pt_regs.
+> + */
+> +__KPROBE
+> +SYM_FUNC_START(__kretprobe_trampoline)
+> +UNWIND(.fnstart)
+> +       ldr     lr, =__kretprobe_trampoline
+
+Nit: adr lr, __kretprobe_trampoline
+
+Now that you made a clean spot, might as well clean this up a bit
+(although perhaps not in the same patch). I'd merge the
+!CONFIG_FRAME_POINTER and CC_IS_CLANG cases, and just put the UNWIND()
+directives in there.
+
+> +#ifdef CONFIG_FRAME_POINTER
+
+Drop this
+
+> +       /* __kretprobe_trampoline makes a framepointer on pt_regs. */
+> +#ifdef CONFIG_CC_IS_CLANG
+
+|| !defined(CONFIG_FRAME_POINTER)
+
+> +       stmdb   sp, {sp, lr, pc}
+> +       sub     sp, sp, #12
+
+UNWIND(.save   {sp, lr, pc})
+
+> +       /* In clang case, pt_regs->ip = lr. */
+
+For .S, it is more idiomatic to put the comments in a column on the
+right. This reduces visual clutter a lot, so I think it would be worth
+the effort.
+
+> +       stmdb   sp!, {r0 - r11, lr}
+
+UNWIND(.pad    #52)
+
+> +       /* fp points regs->r11 (fp) */
+> +       add     fp, sp, #44
+> +#else /* !CONFIG_CC_IS_CLANG */
+> +       /* In gcc case, pt_regs->ip = fp. */
+> +       stmdb   sp, {fp, sp, lr, pc}
+> +       sub     sp, sp, #16
+> +       stmdb   sp!, {r0 - r11}
+> +       /* fp points regs->r15 (pc) */
+> +       add     fp, sp, #60
+> +#endif /* CONFIG_CC_IS_CLANG */
+> +#else /* !CONFIG_FRAME_POINTER */
+> +       /* store SP, LR on stack and add EABI unwind hint */
+> +       stmdb   sp, {sp, lr, pc}
+> +UNWIND(.save   {sp, lr, pc})
+> +       sub     sp, sp, #16
+> +       stmdb   sp!, {r0 - r11}
+> +UNWIND(.pad    #52)
+> +#endif /* CONFIG_FRAME_POINTER */
+> +       mov     r0, sp
+> +       bl      trampoline_handler
+> +       mov     lr, r0
+> +       ldmia   sp!, {r0 - r11}
+> +       add     sp, sp, #16
+> +#ifdef CONFIG_THUMB2_KERNEL
+> +       bx      lr
+> +#else
+> +       mov     pc, lr
+> +#endif
+
+Please use 'ret lr' here. Note that this code does not even compile
+for Thumb2, but 'bx lr' should be used at least on v6+ in any case.
+
+> +UNWIND(.fnend)
+> +SYM_FUNC_END(__kretprobe_trampoline)
+> diff --git a/include/asm-generic/kprobes.h b/include/asm-generic/kprobes.h
+> index 060eab094e5a..1509daa281b8 100644
+> --- a/include/asm-generic/kprobes.h
+> +++ b/include/asm-generic/kprobes.h
+> @@ -2,7 +2,11 @@
+>  #ifndef _ASM_GENERIC_KPROBES_H
+>  #define _ASM_GENERIC_KPROBES_H
+>
+> -#if defined(__KERNEL__) && !defined(__ASSEMBLY__)
+> +#ifdef __KERNEL__
+> +
+> +#ifdef __ASSEMBLY__
+> +# define __KPROBE .section ".kprobes.text", "ax"
+> +#else
+>  #ifdef CONFIG_KPROBES
+>  /*
+>   * Blacklist ganerating macro. Specify functions which is not probed
+> @@ -16,11 +20,12 @@ static unsigned long __used                                 \
+>  /* Use this to forbid a kprobes attach on very low level functions */
+>  # define __kprobes     __section(".kprobes.text")
+>  # define nokprobe_inline       __always_inline
+> -#else
+> +#else /* !defined(CONFIG_KPROBES) */
+>  # define NOKPROBE_SYMBOL(fname)
+>  # define __kprobes
+>  # define nokprobe_inline       inline
+> -#endif
+> -#endif /* defined(__KERNEL__) && !defined(__ASSEMBLY__) */
+> +#endif /* defined(CONFIG_KPROBES) */
+> +#endif /* defined(__ASSEMBLY__) */
+> +#endif /* defined(__KERNEL__) */
+>
+>  #endif /* _ASM_GENERIC_KPROBES_H */
+> --
+> 2.37.3.998.g577e59143f-goog
+>
