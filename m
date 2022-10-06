@@ -1,142 +1,103 @@
-Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.40])
+Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5F5654
-	for <regressions@lists.linux.dev>; Thu,  6 Oct 2022 07:56:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E968F7F6
+	for <regressions@lists.linux.dev>; Thu,  6 Oct 2022 10:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1665042986;
-	bh=UxqOWl+5Fnu5BtMbVy/UIVQ40JwvSPGP9jrVh2B1CO8=;
-	h=X-UI-Sender-Class:Date:Subject:Cc:References:From:In-Reply-To;
-	b=CZtDCWr9IbSPn/tM+zuzLY1JZnhRZH00lkKITVTEZVK+THtBe3QEMlUUlPVkeWcHM
-	 QJf8z86cSslIvvtCuEHOtMm00bAApWryE9p06pAJcTBPWIjcfQFe1kepW4a9wxnERL
-	 Zo7HmL8PU6iKlzVqdrBciINrTyPY5evWL3VD0ktc=
+	s=badeba3b8450; t=1665053190;
+	bh=CVAJNVccyTnvqFUKt2qhoZ3SSQTQEZAtvmO3iOKMZls=;
+	h=X-UI-Sender-Class:Date:From:Subject:Cc:References:In-Reply-To;
+	b=V5M1qQCo9OdHL8ak7bbmn4YXkX/f2K9NsVs+y+x3UgD62DLdN6AYxMz93DU8gJI7W
+	 MhkV3NeaJvaHj9qlbBmFjld0Figd9q1iVJ7cespd/EpIM7/GyWlF1FMLCfUTXyT7sG
+	 PyrwHORzRwTlCJZLHwUmNNMIKyaOEGV6oXL8ChQU=
 X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.24.110.15] ([143.244.37.25]) by mail.gmx.net (mrgmx105
- [212.227.17.174]) with ESMTPSA (Nemesis) id 1M6Daq-1oZl6Q2Iem-006eJS; Thu, 06
- Oct 2022 09:56:26 +0200
-Message-ID: <3ee2a3d6-5711-3240-c181-cd34426932ed@gmx.com>
-Date: Thu, 6 Oct 2022 07:56:24 +0000
+Received: from [10.24.110.15] ([143.244.37.25]) by mail.gmx.net (mrgmx104
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1MeU0q-1pEMEc2I9U-00aV83; Thu, 06
+ Oct 2022 12:46:30 +0200
+Message-ID: <6363db78-f676-427d-b479-7065091f3f59@gmx.com>
+Date: Thu, 6 Oct 2022 10:46:29 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+From: "Artem S. Tashkinov" <aros@gmx.com>
 Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
  blues"
-Cc: ksummit <ksummit-discuss@lists.linuxfoundation.org>,
- workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+Cc: workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
- <20221004175354.bfvg3vhfqch35ib5@meerkat.local>
-From: "Artem S. Tashkinov" <aros@gmx.com>
-In-Reply-To: <20221004175354.bfvg3vhfqch35ib5@meerkat.local>
+References: <YzmBjgXq9geMnL1B@mit.edu>
+ <79bb605a-dab8-972d-aa4a-a5e5ee49387c@gmx.com>
+ <20221002141321.394de676@rorschach.local.home>
+ <6de0925c-a98a-219e-eed2-ba898ef974f8@gmx.com>
+ <20221002180844.2e91b1f1@rorschach.local.home>
+ <3a3b9346-e243-e178-f8dd-f8e1eacdc6ae@gmx.com> <YzoY+dxLuCfOp0sL@ZenIV>
+ <b032e79a-a9e3-fc72-9ced-39411e5464c9@gmx.com> <YzqjfU66alRlGk5y@kernel.org>
+ <251201be-9552-3a51-749c-3daf4d181250@gmx.com>
+ <20221003142240.hu5gj7fms5wdoujk@meerkat.local>
+In-Reply-To: <20221003142240.hu5gj7fms5wdoujk@meerkat.local>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:pXQ1jKnLz0YSBlquK4q7D7JoQVjjVm62KF2orsKZYLNPYNAj+h3
- MVJJZhpolAu2PeU1r3bkYJozjk8FLElf36L9FQA3wWpdUoVsIAUY08Jiog+u4WiOBzh7V6/
- hQ0v2ifDq5S0tZzW4yQiwegFTtA5ckez8WhoTzEjMaOcWr7tPFz26arLSBcAhEE/PBr1SFC
- nwcegtu+eaHRIqjxn/Sag==
+X-Provags-ID: V03:K1:/T9qNnatvq6JAullCLcdS33+cIlq9WfwvAi1kVZ3kQ5n3x+m+fF
+ 4xpYW0LIkYE+oUf1WqHc2eTjn5PjevFKCr645WjI/WdsnAJmNBrqIJVJVw6B4iZqIuFoSme
+ 5pRpvpuBZ50cPcBFwwZXEqkXNW5iKlT2ikehn419q4seKiPRMA252Q3BvTtA/kkEmuFQQgQ
+ YTDX1pfAXNjtiYcT4nLJA==
 X-Spam-Flag: YES
-X-UI-Out-Filterresults: junk:10;V03:K0:wJa772Smk1s=:s2w1iITOWIn6kRqZiH1Oo2pZ
- tSwHrSi8YZS0GHfw/4Dwx+A3k+9M8JKHB+HpN/2tURgfnVvRWlj5t+n39p4I/IQ4B9g4IN1dI
- R8SE2cQN1sAE9NRgKB7TasMzQb0omodxG7smA3/lkjJjdp8Le6O2v8ncLSIUmsXbIZS9xYySx
- wOcEyCcvhy77OLHyj4reUihMknpSL8wLY23IDe3byzWnnhDE15Jk4rNyptUmdF1bBa3jmmzaP
- 67/wOSaQNL8SUY+QGYjFyVV2EbtjDmhebn+psljW7mRa+ly0aBqgbp3aeGP0auLxC/maI6pXA
- isUd84kbw9q+YY2U8wgBJk1SUH9dAq15f90NaMT8eB1FfGsJiSxfEPcRaXv7DaqoA4uyDUvBH
- +P8TSwYbPwzRZafqBD8UnFjuFzZ8xMYyNe+l8Q2jr8BGXXMoe0YsBK0uaAvix7NrxtPKQxJVF
- 5oXcwlfgOFxapb3lVXmMA8qp2CpUGHO3hnxQwFRNfLq0y0vJJORRp4tx1qOKznd7+lUMzAt9r
- O6htHm8AHW0awmjftmhciYGNvZf8q8J/QLbKQQrV4ZGplL585Xl5wXj6E4H2rWN7ZhTpaEzPX
- DsQHub/ffIvo8Wlo26Bf3I7zMu6UhTGNXYPS/aCO3ERyGTojU1WEVBxfloCIrfvQlEfOemeVQ
- PdP1eJBn7zBzkhy32/zxUz2YZByLOrWTMBH/W8Dyiaq/HfysIT6BWqgmbchthqPw+jMPwSv48
- 8YI7PCj97kbY2pQVFwnGx1Tigfb7rRSsR8MR1vE62CSe5ultFld1EFwejYv9OYzwFjLmDBhF7
- nzNpJSIBpYvz6B07boRqoKn/CAiymY/5MUxh0pI1L1ecgOunqvNeN/v9Xfzq15r9NtPhtx1o3
- OhcTb+s71dUoCcHN88RMdP+MmGH3Lu7VzSYbE/Io4gV3NaxdoTmtfbadwdRd7R9WvC6Usedtg
- ypHVmH5EY05W++soDvt3JTgBQ4uJyQZehNDiRCJMLWApij6IWoxgaPn0TyDaxaww03Y7S70TK
- D1mIXFiH/dgrjG7dNCApaGg/wlaOXWaWVn8a/X041ki6sGzbZyo91eImJ+L3McSOVAmDoxLgg
- NGeCJAeQ8giC97578l2bPMgyQQZzLhnx2zO1t7JdxXeyBW2k48Ii8ZfZANISrzV5sW7qM972x
- i0TP7yAnpbdEeLhLwj1ralEWsolG7TqoVQXnmdcCq43lggKRcqOGJrIQRWUDH2Y+xQaJ+lwGL
- rdnhxOeAt0Hq5Wprdc+oOCiLC7xsmvXXDd3iT/kvNwYqEiZZXm5LvkRIMHt6sDq5VY31b2feU
- N34UOdXwTB0YBvMlYPCJi6BAaPI3a26LE22hfpUENaxeQW0zDF+UmIQiFMaV48l75R+XW7Fz4
- doV5DsQ3UvaBfBsNKKEL+CUtFWViNlrE/i3EH/Wotp2f3lDz8trT/drPJ20wLO5nWj8nU/4tv
- Lqp7n0SGDNrRo9BpdQWOAcggiykV3qZ/DZAErwK1hvBuv7IZJcg2aZeIDs+NjlCFeR7O5+7KP
- u3Ne+i7UAYVn7ThkS0nQ0lxpGEyIfNcrQ7BGhcvgfw7/ZHD/46/m7sraWNzZtwVXw==
+X-UI-Out-Filterresults: junk:10;V03:K0:3sij++BXOwQ=:gAN+cI7T6MUJ63MzWulkflwB
+ e4jrmNcpwvcohQvEKcJTYbJxq9/HjJNGzCDXL+rTj1v7HFSFScqjcDoCqg32vdl8UkeoDRm6i
+ ziTosPjXnATs9SUZX9TtyG4P7tzQ4SKM3WcDKaYsWH8E0YRgqhwG+AMynrGno5pK3vVxhLaku
+ ROUUJPPsLtp6cQ4eg34KfBBEsPfsOpmR0hczj8b6GhxHw2+6ZRZsr50OT9ddvLbZDBQDPaZtp
+ ymBgzdMCkWZw0g1Y3/UZk3R2f91y3OOiCrId1E9o1eqxCgCN6zDfRPcgB1AR9AW+DKUqaQqBz
+ 6oJ31rrduemFVK8KfgOMsUwU6KKvm0cv2Cv6QhZZLBhgl8kfALxHHgog9NoYSB6Iu0aHOzKDe
+ FTri8erpMp6ZFcLcvIzu85QiZBS71cgofYM+uHRaZRfQgnRyMB0pyCXiHMvTxugUOpeRJ7B/K
+ hzLu8qKj0f6MAlaWzfZV79zA8b7YxSyZ8ox+rokq6WG/Qe3nBcS+eP1/NW/TOqT8Fo08YeYJx
+ 2nWQuVF11CsOOyUpEgHodfPWLr1DPJ7KxQb6COA11sr9JYK1oqjU5fA5spkLlBKtT//65tV9l
+ tejVqFobGVJj2lu8z3STcGSs4TJLYZx6qApgWgjriBe9L1hKoth5MFXzPZBz8kqBx0c81CtG+
+ Syxy3N9gIMJi4+r3KGbA9nwWP6yu4kUlmTfLTbS/sTr0nZRnnimcNXJ2QUqHQkz789RhNvVqb
+ 7al6PA7r333z8RgpDpxsRGvI3gReOhUW/yKIKSBTFsL5Q7PKJHSPFj9OvE5WEwObUvvdMwYXM
+ 2dfEnINY4/CnVNKYtCGuyfmnG/lPujO9CRHzjMZBZnUVWAsHJB6NR5BR+Uad0h+Om/awfwJwQ
+ AcElHBU4J+4s7jDGHdCMwV0lpZa7qHCIZgN+VcC7J9y+4sHifkPb5IQp1OPdGst6JEe52YZWP
+ 8xl3cKJSzI8PYlDNYHrax1ijFvZt05j41HZDVpep2lonAtDQG+Gq20weiTLYXDIxSBVvJif5K
+ iWeyEnq3x+6zxCc0BjW8DqIqjIo6qXzvSaOHOZiOQ+mBXougs+EqjjiStB0WWvLG0YNcY7v3n
+ Dat3H9abAyX+3DbHoG//wJJLoMMXXTLKAujwM28/myAqGavlB1e7yLB2o/++W0TKkFk+DYY8X
+ Zp37NHIVsxwFBjVLPhamgM0i1mVaUg7J37y1Z+etO/HV0g==
 
 
 
-On 10/4/22 17:53, Konstantin Ryabitsev wrote:
-> On Thu, Sep 29, 2022 at 01:19:24PM +0200, Thorsten Leemhuis wrote:
->> Hi!
->>
->> TLDR: Core Linux kernel developers are unhappy with the state of
->> bugzilla.kernel.org; to improve things I plan to change a few important
->> aspects of its configuration, unless somebody comes up with better idea=
-s
->> to tackle current problems: (1) Create a catch-all product making it
->> totally obvious to submitters that likely nobody will look into the
->> ticket. (2) Remove or hide all products & components where the subsyste=
-m
->> didn't fully commit to look into newly submitted reports. (3) Change th=
-e
->> text on the front page to make it clear that most kernel bug reports
->> need to be sent by mail.
+On 10/3/22 14:22, Konstantin Ryabitsev wrote:
+> On Mon, Oct 03, 2022 at 09:16:06AM +0000, Artem S. Tashkinov wrote:
+>> The initial conversation started with the fact that Bugzilla is old,
+>> semi-deprecated, requires MySQL [no idea what's bad about it, Bugzilla
+>> can work with MariaDB and Percona as well]
 >
-> Here's my counter-plan, which builds on top of yours.
+> It can't, actually. It only works with MySQL 5.7 or an equally ancient M=
+ariaDB.
+> No, there is no official fix (because nobody is working on bugzilla).
+> https://bugzilla.mozilla.org/show_bug.cgi?id=3D1592129
 >
-> 1. Create a Kernel/Kernel product that acts as a starting point for all =
-bug
->     submissions.
-> 2. Create and maintain a mapping from MAINTAINER subsystem entries to
->     Product/Component categories in Bugzilla (the scheme to be establish=
-ed).
-> 3. Establish and maintain a team of designated triage people who are wil=
-ling
->     to look at incoming bugs to either:
->
->     a. quick-close them as non-actionable (tainted kernel, distro kernel=
-, spam)
->     b. obtain missing information from the submitter as necessary
->     c. figure out the correct component to assign, to the best of their =
-ability
->     d. set a "triaged" flag
->
-> 4. a backend monitoring bot will track all bug changes and, when it sees=
- a bug
->     get the "triaged" state, it will:
->
->     a. create a useful bug summary from all bug comments
->     b. figure out who to notify based on the mapping (see #2 above)
->     c. send out the email to everyone identified
->
-> 5. the same backend monitoring bot will track responses and update the b=
-ug
->     comments as needed; any comments added via the bugzilla site will be
->     similarly sent out as follow-up messages.
->
-> 6. the bot can also monitor commits and other discussions via lore.kerne=
-l.org
->     and automatically add comments/links when it sees the bug mentioned
->     elsewhere.
->
-> I'm happy to take care of everything bot-related (apparently, programmin=
-g bots
-> is what I do now -- I just wish it was the cool and glamorous kind).
->
-> As I have stated multiple times, the hard part will be keeping a team of
-> people who are willing to do the bug triage work, but maybe we can start=
- with
-> Greg KH using his intern funds to hire someone (assuming he's not alread=
-y
-> using these funds for someone to help him with all the other tasks).
->
-> Does that sound like a plan for everyone?
 
-This looks fabulous.
+(I wanted to send this message two days ago but my email account was
+suspended at the time - I'm still sending it though it feels like it's
+no longer relevant).
 
-Except, I'd love to let users have an option of submitting bugs to the
-component they specify manually.
+Speaking of Bugzilla Harmony:
 
-(I've removed a ton of people from CC because my email provider
-absolutely hates when I send emails to many addresseses simultaneously -
-my account was completely blocked for five days while I tried hard to
-reach support).
+* KDE already uses it:
+https://invent.kde.org/websites/bugs-kde-org/-/merge_requests/1
+* Mozilla has been using it for quite time already
+* It has a docker container/image, so it's a breeze to install
+
+I've dealt with a dozen other bug trackers and to me Bugzilla remains
+the most powerful and featureful, while not being too complicated to set
+up and use.
+
+Lastly I've had a crazy idea for a second of maybe migrating the kernel
+bugzilla over to RedHat/IBM (by asking them whether they are willing to
+help) but on a second thought it's really really bad as the company is
+very large and there's a ton of bureaucracy, so managing it would become
+quite a hassle. Also, I wouldn't want the LF to hand control over it to
+RedHat.
+
+Best regards,
+Artem
