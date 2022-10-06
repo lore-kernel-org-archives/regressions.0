@@ -1,107 +1,142 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mout-xforward.gmx.net (mout-xforward.gmx.net [82.165.159.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB53D64C
-	for <regressions@lists.linux.dev>; Thu,  6 Oct 2022 05:45:10 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ogJgs-00044A-Os; Thu, 06 Oct 2022 07:45:02 +0200
-Message-ID: <2da7598f-26ae-3da2-2534-d843aae7140c@leemhuis.info>
-Date: Thu, 6 Oct 2022 07:45:00 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5F5654
+	for <regressions@lists.linux.dev>; Thu,  6 Oct 2022 07:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1665042986;
+	bh=UxqOWl+5Fnu5BtMbVy/UIVQ40JwvSPGP9jrVh2B1CO8=;
+	h=X-UI-Sender-Class:Date:Subject:Cc:References:From:In-Reply-To;
+	b=CZtDCWr9IbSPn/tM+zuzLY1JZnhRZH00lkKITVTEZVK+THtBe3QEMlUUlPVkeWcHM
+	 QJf8z86cSslIvvtCuEHOtMm00bAApWryE9p06pAJcTBPWIjcfQFe1kepW4a9wxnERL
+	 Zo7HmL8PU6iKlzVqdrBciINrTyPY5evWL3VD0ktc=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.24.110.15] ([143.244.37.25]) by mail.gmx.net (mrgmx105
+ [212.227.17.174]) with ESMTPSA (Nemesis) id 1M6Daq-1oZl6Q2Iem-006eJS; Thu, 06
+ Oct 2022 09:56:26 +0200
+Message-ID: <3ee2a3d6-5711-3240-c181-cd34426932ed@gmx.com>
+Date: Thu, 6 Oct 2022 07:56:24 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH] Revert "drm/amdgpu: use dirty framebuffer helper"
-Content-Language: en-US, de-DE
-To: Hamza Mahfooz <hamza.mahfooz@amd.com>, amd-gfx@lists.freedesktop.org
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <20221005154719.57566-1-hamza.mahfooz@amd.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20221005154719.57566-1-hamza.mahfooz@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1665035110;f296fe92;
-X-HE-SMSGID: 1ogJgs-00044A-Os
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+Cc: ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+ workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <20221004175354.bfvg3vhfqch35ib5@meerkat.local>
+From: "Artem S. Tashkinov" <aros@gmx.com>
+In-Reply-To: <20221004175354.bfvg3vhfqch35ib5@meerkat.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pXQ1jKnLz0YSBlquK4q7D7JoQVjjVm62KF2orsKZYLNPYNAj+h3
+ MVJJZhpolAu2PeU1r3bkYJozjk8FLElf36L9FQA3wWpdUoVsIAUY08Jiog+u4WiOBzh7V6/
+ hQ0v2ifDq5S0tZzW4yQiwegFTtA5ckez8WhoTzEjMaOcWr7tPFz26arLSBcAhEE/PBr1SFC
+ nwcegtu+eaHRIqjxn/Sag==
+X-Spam-Flag: YES
+X-UI-Out-Filterresults: junk:10;V03:K0:wJa772Smk1s=:s2w1iITOWIn6kRqZiH1Oo2pZ
+ tSwHrSi8YZS0GHfw/4Dwx+A3k+9M8JKHB+HpN/2tURgfnVvRWlj5t+n39p4I/IQ4B9g4IN1dI
+ R8SE2cQN1sAE9NRgKB7TasMzQb0omodxG7smA3/lkjJjdp8Le6O2v8ncLSIUmsXbIZS9xYySx
+ wOcEyCcvhy77OLHyj4reUihMknpSL8wLY23IDe3byzWnnhDE15Jk4rNyptUmdF1bBa3jmmzaP
+ 67/wOSaQNL8SUY+QGYjFyVV2EbtjDmhebn+psljW7mRa+ly0aBqgbp3aeGP0auLxC/maI6pXA
+ isUd84kbw9q+YY2U8wgBJk1SUH9dAq15f90NaMT8eB1FfGsJiSxfEPcRaXv7DaqoA4uyDUvBH
+ +P8TSwYbPwzRZafqBD8UnFjuFzZ8xMYyNe+l8Q2jr8BGXXMoe0YsBK0uaAvix7NrxtPKQxJVF
+ 5oXcwlfgOFxapb3lVXmMA8qp2CpUGHO3hnxQwFRNfLq0y0vJJORRp4tx1qOKznd7+lUMzAt9r
+ O6htHm8AHW0awmjftmhciYGNvZf8q8J/QLbKQQrV4ZGplL585Xl5wXj6E4H2rWN7ZhTpaEzPX
+ DsQHub/ffIvo8Wlo26Bf3I7zMu6UhTGNXYPS/aCO3ERyGTojU1WEVBxfloCIrfvQlEfOemeVQ
+ PdP1eJBn7zBzkhy32/zxUz2YZByLOrWTMBH/W8Dyiaq/HfysIT6BWqgmbchthqPw+jMPwSv48
+ 8YI7PCj97kbY2pQVFwnGx1Tigfb7rRSsR8MR1vE62CSe5ultFld1EFwejYv9OYzwFjLmDBhF7
+ nzNpJSIBpYvz6B07boRqoKn/CAiymY/5MUxh0pI1L1ecgOunqvNeN/v9Xfzq15r9NtPhtx1o3
+ OhcTb+s71dUoCcHN88RMdP+MmGH3Lu7VzSYbE/Io4gV3NaxdoTmtfbadwdRd7R9WvC6Usedtg
+ ypHVmH5EY05W++soDvt3JTgBQ4uJyQZehNDiRCJMLWApij6IWoxgaPn0TyDaxaww03Y7S70TK
+ D1mIXFiH/dgrjG7dNCApaGg/wlaOXWaWVn8a/X041ki6sGzbZyo91eImJ+L3McSOVAmDoxLgg
+ NGeCJAeQ8giC97578l2bPMgyQQZzLhnx2zO1t7JdxXeyBW2k48Ii8ZfZANISrzV5sW7qM972x
+ i0TP7yAnpbdEeLhLwj1ralEWsolG7TqoVQXnmdcCq43lggKRcqOGJrIQRWUDH2Y+xQaJ+lwGL
+ rdnhxOeAt0Hq5Wprdc+oOCiLC7xsmvXXDd3iT/kvNwYqEiZZXm5LvkRIMHt6sDq5VY31b2feU
+ N34UOdXwTB0YBvMlYPCJi6BAaPI3a26LE22hfpUENaxeQW0zDF+UmIQiFMaV48l75R+XW7Fz4
+ doV5DsQ3UvaBfBsNKKEL+CUtFWViNlrE/i3EH/Wotp2f3lDz8trT/drPJ20wLO5nWj8nU/4tv
+ Lqp7n0SGDNrRo9BpdQWOAcggiykV3qZ/DZAErwK1hvBuv7IZJcg2aZeIDs+NjlCFeR7O5+7KP
+ u3Ne+i7UAYVn7ThkS0nQ0lxpGEyIfNcrQ7BGhcvgfw7/ZHD/46/m7sraWNzZtwVXw==
 
-[CCing regression and stable lists, to make sure they are aware of the
-regression]
 
-On 05.10.22 17:47, Hamza Mahfooz wrote:
-> This reverts commit 10b6e91bd1ee9cd237ffbc244ad9c25b5fd3e167.
 
-/me can't find that id and wonders what he did wrong -- or is this not
-meant to refer to Linus tree?
+On 10/4/22 17:53, Konstantin Ryabitsev wrote:
+> On Thu, Sep 29, 2022 at 01:19:24PM +0200, Thorsten Leemhuis wrote:
+>> Hi!
+>>
+>> TLDR: Core Linux kernel developers are unhappy with the state of
+>> bugzilla.kernel.org; to improve things I plan to change a few important
+>> aspects of its configuration, unless somebody comes up with better idea=
+s
+>> to tackle current problems: (1) Create a catch-all product making it
+>> totally obvious to submitters that likely nobody will look into the
+>> ticket. (2) Remove or hide all products & components where the subsyste=
+m
+>> didn't fully commit to look into newly submitted reports. (3) Change th=
+e
+>> text on the front page to make it clear that most kernel bug reports
+>> need to be sent by mail.
+>
+> Here's my counter-plan, which builds on top of yours.
+>
+> 1. Create a Kernel/Kernel product that acts as a starting point for all =
+bug
+>     submissions.
+> 2. Create and maintain a mapping from MAINTAINER subsystem entries to
+>     Product/Component categories in Bugzilla (the scheme to be establish=
+ed).
+> 3. Establish and maintain a team of designated triage people who are wil=
+ling
+>     to look at incoming bugs to either:
+>
+>     a. quick-close them as non-actionable (tainted kernel, distro kernel=
+, spam)
+>     b. obtain missing information from the submitter as necessary
+>     c. figure out the correct component to assign, to the best of their =
+ability
+>     d. set a "triaged" flag
+>
+> 4. a backend monitoring bot will track all bug changes and, when it sees=
+ a bug
+>     get the "triaged" state, it will:
+>
+>     a. create a useful bug summary from all bug comments
+>     b. figure out who to notify based on the mapping (see #2 above)
+>     c. send out the email to everyone identified
+>
+> 5. the same backend monitoring bot will track responses and update the b=
+ug
+>     comments as needed; any comments added via the bugzilla site will be
+>     similarly sent out as follow-up messages.
+>
+> 6. the bot can also monitor commits and other discussions via lore.kerne=
+l.org
+>     and automatically add comments/links when it sees the bug mentioned
+>     elsewhere.
+>
+> I'm happy to take care of everything bot-related (apparently, programmin=
+g bots
+> is what I do now -- I just wish it was the cool and glamorous kind).
+>
+> As I have stated multiple times, the hard part will be keeping a team of
+> people who are willing to do the bug triage work, but maybe we can start=
+ with
+> Greg KH using his intern funds to hire someone (assuming he's not alread=
+y
+> using these funds for someone to help him with all the other tasks).
+>
+> Does that sound like a plan for everyone?
 
-And isn't this reverting both 66f99628eb24409cb8feb5061f78283c8b65f820
-and abbc7a3dafb91b9d4ec56b70ec9a7520f8e13334 in one go?
+This looks fabulous.
 
-> Unfortunately, this commit causes performance regressions on non-PSR
-> setups. So, just revert it until FB_DAMAGE_CLIPS support can be added.
-> 
-> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2189
-> Signed-off-by: Hamza Mahfooz <hamza.mahfooz@amd.com>
+Except, I'd love to let users have an option of submitting bugs to the
+component they specify manually.
 
-This seems to be missing a Reported-by tag, a CC: stable tag (needed to
-ensure backporting), and a Fixes: tag.
-
-But the reason why I started writing this mail is totally different from
-the comments above:
-
-In case you are not aware of it, that patch apparently broke amdgpu for
-some users of 5.4.215:
-https://bugzilla.kernel.org/show_bug.cgi?id=216554
-
-So more Link: and Reported-by: tags might would be nice.
-
-Ciao, Thorsten
-
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_display.c | 14 ++------------
->  1 file changed, 2 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-> index 23998f727c7f..1a06b8d724f3 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-> @@ -38,8 +38,6 @@
->  #include <linux/pci.h>
->  #include <linux/pm_runtime.h>
->  #include <drm/drm_crtc_helper.h>
-> -#include <drm/drm_damage_helper.h>
-> -#include <drm/drm_drv.h>
->  #include <drm/drm_edid.h>
->  #include <drm/drm_gem_framebuffer_helper.h>
->  #include <drm/drm_fb_helper.h>
-> @@ -500,12 +498,6 @@ static const struct drm_framebuffer_funcs amdgpu_fb_funcs = {
->  	.create_handle = drm_gem_fb_create_handle,
->  };
->  
-> -static const struct drm_framebuffer_funcs amdgpu_fb_funcs_atomic = {
-> -	.destroy = drm_gem_fb_destroy,
-> -	.create_handle = drm_gem_fb_create_handle,
-> -	.dirty = drm_atomic_helper_dirtyfb,
-> -};
-> -
->  uint32_t amdgpu_display_supported_domains(struct amdgpu_device *adev,
->  					  uint64_t bo_flags)
->  {
-> @@ -1108,10 +1100,8 @@ static int amdgpu_display_gem_fb_verify_and_init(struct drm_device *dev,
->  	if (ret)
->  		goto err;
->  
-> -	if (drm_drv_uses_atomic_modeset(dev))
-> -		ret = drm_framebuffer_init(dev, &rfb->base, &amdgpu_fb_funcs_atomic);
-> -	else
-> -		ret = drm_framebuffer_init(dev, &rfb->base, &amdgpu_fb_funcs);
-> +	ret = drm_framebuffer_init(dev, &rfb->base, &amdgpu_fb_funcs);
-> +
->  	if (ret)
->  		goto err;
->  
+(I've removed a ton of people from CC because my email provider
+absolutely hates when I send emails to many addresseses simultaneously -
+my account was completely blocked for five days while I tried hard to
+reach support).
