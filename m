@@ -1,54 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B45E33CF
-	for <regressions@lists.linux.dev>; Thu,  6 Oct 2022 19:28:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57DD3C433D6;
-	Thu,  6 Oct 2022 19:28:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1665084524;
-	bh=sRSk/H4zHpiuPMci286gZ86F9BQptTnmXwVSsHyJy7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uklQVp6T7OunVZ9cRlSqPHBx1K5FHD+0Ka859t/bAJllpIUF/vQ5/uNZQ2KQjhHJF
-	 SNLcqvZY5bCZIFrvJ8O4Hzwsn3/L9SUTKsZ4FbI7p2G630OT/114+5kADMqaxzANYZ
-	 9MbckqWr0gh+vhv6WvaR4yExH0HgfjCtoEo2KKFQ=
-Date: Thu, 6 Oct 2022 21:29:25 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: "Artem S. Tashkinov" <aros@gmx.com>
-Cc: workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
- blues"
-Message-ID: <Yz8slRMm3QBE0LNL@kroah.com>
-References: <20221002141321.394de676@rorschach.local.home>
- <6de0925c-a98a-219e-eed2-ba898ef974f8@gmx.com>
- <20221002180844.2e91b1f1@rorschach.local.home>
- <3a3b9346-e243-e178-f8dd-f8e1eacdc6ae@gmx.com>
- <YzoY+dxLuCfOp0sL@ZenIV>
- <b032e79a-a9e3-fc72-9ced-39411e5464c9@gmx.com>
- <YzqjfU66alRlGk5y@kernel.org>
- <251201be-9552-3a51-749c-3daf4d181250@gmx.com>
- <20221003142240.hu5gj7fms5wdoujk@meerkat.local>
- <6363db78-f676-427d-b479-7065091f3f59@gmx.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC094A09
+	for <regressions@lists.linux.dev>; Thu,  6 Oct 2022 20:35:16 +0000 (UTC)
+Received: by mail-pl1-f180.google.com with SMTP id h10so2754285plb.2
+        for <regressions@lists.linux.dev>; Thu, 06 Oct 2022 13:35:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=YrAC23faud15zS6eHd6bC3i2jrrjB6ysFBkxCYV0DUg=;
+        b=VnvmXZkP0hhSETFJ7/rWObNvgVlwQNsO9Q6Wr+CY5AhJLWqAxw5ymAu+d5E1rrq4qi
+         xtkMwQ6YDrHzIZayo7ZRhSzrDOrrFPnJhOXk4o7evz5s7x30Hn8I9naaZ0i069dQB/ph
+         cnMQ55FQ011gtIYFCTqyzmJZqzabfBru2us/cJbxwS7Jb7TSyZcJOK7aqO0uOmoTQAcH
+         GYFiGgWnKQU+ZbebJkkLcDLzUIDh8oQka9cmqiqC2XG21Fq/3L0j06kv3/yXoiZzN3Dc
+         NqeD9ebVrKYIEEnneSVmz+ISDsgVMRU1uRoqaUUyEVUz6KnTZG9lz9xnlm/sH0mgGJ4X
+         k7xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=YrAC23faud15zS6eHd6bC3i2jrrjB6ysFBkxCYV0DUg=;
+        b=I66J5dwOX4qvB6Z5/MmGdgPI+8pTr02uKMQRNazoGJHKGB1m8KBUTjboaEfCEdwzED
+         EMX3MNzMjpEpveIQCYXO2xjEO7xLoTV2uDUHfqX8Y1UzbfiLPLOVJkNOglpWwFpFVwHp
+         vo9Q+oow8je1El8+o+J5qB+/A1sLs8lkwEZPvKWq1POIVDverH0G+99IcfFvSoy3XbuX
+         3lquRuE/Dl6yzsyIdmgLC7w4QZoW5BmU19H8WTq8TLrDQtAUXXtcOeIL88E/re6aocLw
+         ZOgxivVQ1cPFz0f4yAv5BDeB43x9zy8nCbKAClHeUzHCwPFyHAZZFDoZcaR+9ItYoLEq
+         7sJQ==
+X-Gm-Message-State: ACrzQf3aBMJisn+RXgnHomR/FexxfYJsdZVrVv3FpJw3+4AtbrHnUHq5
+	wTDXHzk83+BIe5+MfAd8+OWyqpmGcatFgx25p8E9hA==
+X-Google-Smtp-Source: AMsMyM4v3+jebTsx8rta3oTKTPbj+0QFRpgOMqqHaIV7tcXGfBpXOUbUwwIMLxbH/aI5igVtVyqUZJViZkQhI48Gf94=
+X-Received: by 2002:a17:902:7404:b0:17f:7fe6:7197 with SMTP id
+ g4-20020a170902740400b0017f7fe67197mr1565798pll.94.1665088515406; Thu, 06 Oct
+ 2022 13:35:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6363db78-f676-427d-b479-7065091f3f59@gmx.com>
+References: <202209291607.0MlscIht-lkp@intel.com> <20220930211505.209939-1-ndesaulniers@google.com>
+In-Reply-To: <20220930211505.209939-1-ndesaulniers@google.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
+Date: Thu, 6 Oct 2022 13:35:03 -0700
+Message-ID: <CAKwvOd=0p31f-Yya6S-9xKEv6CtUWpOCRxHO=jG2uk-hZgZ1bQ@mail.gmail.com>
+Subject: Re: [PATCH v3] ARM: kprobes: move __kretprobe_trampoline to out of
+ line assembler
+To: Chen Zhongjin <chenzhongjin@huawei.com>
+Cc: "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, 
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>, 
+	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, Tom Rix <trix@redhat.com>, 
+	sparkhuang <huangshaobo6@huawei.com>, Ard Biesheuvel <ardb@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, llvm@lists.linux.dev, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, regressions@lists.linux.dev, 
+	lkft-triage@lists.linaro.org, 
+	Linux Kernel Functional Testing <lkft@linaro.org>, Logan Chien <loganchien@google.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Oct 06, 2022 at 10:46:29AM +0000, Artem S. Tashkinov wrote:
-> Lastly I've had a crazy idea for a second of maybe migrating the kernel
-> bugzilla over to RedHat/IBM (by asking them whether they are willing to
-> help) but on a second thought it's really really bad as the company is
-> very large and there's a ton of bureaucracy, so managing it would become
-> quite a hassle. Also, I wouldn't want the LF to hand control over it to
-> RedHat.
+On Fri, Sep 30, 2022 at 2:15 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> commit 1069c1dd20a3 ("ARM: 9231/1: Recover kretprobes return address for
+> EABI stack unwinder")
+> tickled a bug in clang's integrated assembler where the .save and .pad
+> directives must have corresponding .fnstart directives. The integrated
+> assembler is unaware that the compiler will be generating the .fnstart
+> directive.
+>
+>   arch/arm/probes/kprobes/core.c:409:30: error: .fnstart must precede
+>   .save or .vsave directives
+>   <inline asm>:3:2: note: instantiated into assembly here
+>   .save   {sp, lr, pc}
+>   ^
+>   arch/arm/probes/kprobes/core.c:412:29: error: .fnstart must precede
+>   .pad directive
+>   <inline asm>:6:2: note: instantiated into assembly here
+>   .pad    #52
+>   ^
+>
 
-bugzilla.kernel.org was originally created by IBM way back in the 2.5
-kernel days (by people at IBM at the time), and then the passed it off
-to the kernel.org admins.  I doubt they want it back :)
+Chen, I noticed that your patch was discarded; it's not in linux-next today.
+https://lore.kernel.org/linux-arm-kernel/YzHPGvhLkdQcDYzx@shell.armlinux.org.uk/
+https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=9231/1
+How would you like to proceed here?
 
+I think moving this out of line, incorporating Ard's feedback, then
+putting the UNWIND directives on top might be the way to go. What do
+you think?
+-- 
+Thanks,
+~Nick Desaulniers
