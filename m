@@ -1,95 +1,160 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC094A09
-	for <regressions@lists.linux.dev>; Thu,  6 Oct 2022 20:35:16 +0000 (UTC)
-Received: by mail-pl1-f180.google.com with SMTP id h10so2754285plb.2
-        for <regressions@lists.linux.dev>; Thu, 06 Oct 2022 13:35:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=YrAC23faud15zS6eHd6bC3i2jrrjB6ysFBkxCYV0DUg=;
-        b=VnvmXZkP0hhSETFJ7/rWObNvgVlwQNsO9Q6Wr+CY5AhJLWqAxw5ymAu+d5E1rrq4qi
-         xtkMwQ6YDrHzIZayo7ZRhSzrDOrrFPnJhOXk4o7evz5s7x30Hn8I9naaZ0i069dQB/ph
-         cnMQ55FQ011gtIYFCTqyzmJZqzabfBru2us/cJbxwS7Jb7TSyZcJOK7aqO0uOmoTQAcH
-         GYFiGgWnKQU+ZbebJkkLcDLzUIDh8oQka9cmqiqC2XG21Fq/3L0j06kv3/yXoiZzN3Dc
-         NqeD9ebVrKYIEEnneSVmz+ISDsgVMRU1uRoqaUUyEVUz6KnTZG9lz9xnlm/sH0mgGJ4X
-         k7xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=YrAC23faud15zS6eHd6bC3i2jrrjB6ysFBkxCYV0DUg=;
-        b=I66J5dwOX4qvB6Z5/MmGdgPI+8pTr02uKMQRNazoGJHKGB1m8KBUTjboaEfCEdwzED
-         EMX3MNzMjpEpveIQCYXO2xjEO7xLoTV2uDUHfqX8Y1UzbfiLPLOVJkNOglpWwFpFVwHp
-         vo9Q+oow8je1El8+o+J5qB+/A1sLs8lkwEZPvKWq1POIVDverH0G+99IcfFvSoy3XbuX
-         3lquRuE/Dl6yzsyIdmgLC7w4QZoW5BmU19H8WTq8TLrDQtAUXXtcOeIL88E/re6aocLw
-         ZOgxivVQ1cPFz0f4yAv5BDeB43x9zy8nCbKAClHeUzHCwPFyHAZZFDoZcaR+9ItYoLEq
-         7sJQ==
-X-Gm-Message-State: ACrzQf3aBMJisn+RXgnHomR/FexxfYJsdZVrVv3FpJw3+4AtbrHnUHq5
-	wTDXHzk83+BIe5+MfAd8+OWyqpmGcatFgx25p8E9hA==
-X-Google-Smtp-Source: AMsMyM4v3+jebTsx8rta3oTKTPbj+0QFRpgOMqqHaIV7tcXGfBpXOUbUwwIMLxbH/aI5igVtVyqUZJViZkQhI48Gf94=
-X-Received: by 2002:a17:902:7404:b0:17f:7fe6:7197 with SMTP id
- g4-20020a170902740400b0017f7fe67197mr1565798pll.94.1665088515406; Thu, 06 Oct
- 2022 13:35:15 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E573A28
+	for <regressions@lists.linux.dev>; Fri,  7 Oct 2022 06:09:32 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id 32D3D6050A;
+	Fri,  7 Oct 2022 08:09:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1665122965; bh=LqmfREN0Bf1qQESZX6VLXgUCmD1S5JVvfBYMPvqcMC4=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=TfOjpOWopc9dRS8tf/MSkZRQ7fIjp41MowtTX75mk0qrfK0OqPNP5az+KTvxEc0hY
+	 ug9HefUwIwqYr5cUrVm2nNWIERc1+Sjp0vaLXkbm4tZ+DL4D2OdgfoDelyyy2IdTsX
+	 VzfS994CZQVazsI6iqw1o6t3ATu91/FOBiiwkIwJL2WbqlnYPVwyGUE6iY/CFq34Vo
+	 7NPngFKtOy5fllT84tNdEGkkW4dL4itXzJnLX7lpYVSRCkX24vUyDl7FOUryZKfOkR
+	 2xitFq0kYgv2bkur/CoooEHXB3AUKbEskIfXD6rzTW40iFgbV/nJpnKTgO6FLBuP3e
+	 n9Ai4+8r80/ig==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id OvRwdqezS8bm; Fri,  7 Oct 2022 08:09:22 +0200 (CEST)
+Received: from [161.53.83.51] (pc-mtodorov.grf.hr [161.53.83.51])
+	by domac.alu.hr (Postfix) with ESMTPSA id 6697E60509;
+	Fri,  7 Oct 2022 08:09:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1665122962; bh=LqmfREN0Bf1qQESZX6VLXgUCmD1S5JVvfBYMPvqcMC4=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=x8hGZKrgIUM85evjEktBsYlawmnGNZqGqcJ4gAqFhrWMAM/nVctwUNcMl9FNpCiLg
+	 SDg37HoLOVVDaF/7sO51wpRcUMZF2w3100Job3DPead1dsOtaQ4nrlsD90k8lG6xhX
+	 IxwapdnslAmslHEdPDscncVDMLFkNt/hOnOahMPly4fjxNuQhKfEzZ2V3+NNIQHZwu
+	 biGyxKYdlLM2MJ0odTWcR77CGO4hHXGwPoxHz8q7z7YeQ/8sMtQDUbKfIh6V6Cr5sK
+	 KBJgJHh0P91uQpo0REuPaDwY/dIVjlDSeO4kv/EiUcRTgPNY6y4K66a2gtlJ/YJgM1
+	 8YO+VYLkNj2lg==
+Message-ID: <f092502a-1e1c-4aa2-c7bd-4e4a6d99ce9b@alu.unizg.hr>
+Date: Fri, 7 Oct 2022 08:09:12 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <202209291607.0MlscIht-lkp@intel.com> <20220930211505.209939-1-ndesaulniers@google.com>
-In-Reply-To: <20220930211505.209939-1-ndesaulniers@google.com>
-From: Nick Desaulniers <ndesaulniers@google.com>
-Date: Thu, 6 Oct 2022 13:35:03 -0700
-Message-ID: <CAKwvOd=0p31f-Yya6S-9xKEv6CtUWpOCRxHO=jG2uk-hZgZ1bQ@mail.gmail.com>
-Subject: Re: [PATCH v3] ARM: kprobes: move __kretprobe_trampoline to out of
- line assembler
-To: Chen Zhongjin <chenzhongjin@huawei.com>
-Cc: "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, 
-	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>, 
-	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, Tom Rix <trix@redhat.com>, 
-	sparkhuang <huangshaobo6@huawei.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Steven Rostedt <rostedt@goodmis.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, llvm@lists.linux.dev, 
-	Naresh Kamboju <naresh.kamboju@linaro.org>, regressions@lists.linux.dev, 
-	lkft-triage@lists.linaro.org, 
-	Linux Kernel Functional Testing <lkft@linaro.org>, Logan Chien <loganchien@google.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+Subject: Re: 6.0.0-RC kernels trigger Firefox snap bug with 6.0.0-rc3 through
+ 6.0.0-rc7
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ linux-kernel@vger.kernel.org
+Cc: Marc Miltenberger <marcmiltenberger@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr>
+ <5bb75cbc-a0db-537b-12d0-889230c865d8@leemhuis.info>
+ <0fb2a9ff-df76-8af9-e54a-c2dc6bfd9478@leemhuis.info>
+ <bdab45d3-c893-42ff-dbb9-5fa93d0dff55@alu.unizg.hr>
+ <dd62210d-d095-f971-2b7b-0ec54fd189a9@leemhuis.info>
+ <c05134cc-92fa-dac2-e738-cf6fae194521@alu.unizg.hr>
+ <6ba15505-1c04-df2b-237f-b3060f26d2e6@leemhuis.info>
+ <f23494b5-b4ea-a32a-e260-4541039dedc8@alu.unizg.hr>
+Content-Language: en-US
+In-Reply-To: <f23494b5-b4ea-a32a-e260-4541039dedc8@alu.unizg.hr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 30, 2022 at 2:15 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> commit 1069c1dd20a3 ("ARM: 9231/1: Recover kretprobes return address for
-> EABI stack unwinder")
-> tickled a bug in clang's integrated assembler where the .save and .pad
-> directives must have corresponding .fnstart directives. The integrated
-> assembler is unaware that the compiler will be generating the .fnstart
-> directive.
->
->   arch/arm/probes/kprobes/core.c:409:30: error: .fnstart must precede
->   .save or .vsave directives
->   <inline asm>:3:2: note: instantiated into assembly here
->   .save   {sp, lr, pc}
->   ^
->   arch/arm/probes/kprobes/core.c:412:29: error: .fnstart must precede
->   .pad directive
->   <inline asm>:6:2: note: instantiated into assembly here
->   .pad    #52
->   ^
->
+On 06. 10. 2022. 19:13, Mirsad Goran Todorovac wrote:
 
-Chen, I noticed that your patch was discarded; it's not in linux-next today.
-https://lore.kernel.org/linux-arm-kernel/YzHPGvhLkdQcDYzx@shell.armlinux.org.uk/
-https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=9231/1
-How would you like to proceed here?
+> On 06. 10. 2022. 18:58, Thorsten Leemhuis wrote:
+>
+>> On 06.10.22 18:43, Mirsad Goran Todorovac wrote:
+>>
+>> On 06. 10. 2022. 15:23, Thorsten Leemhuis wrote:
+>>>> On 06.10.22 14:43, Mirsad Todorovac wrote:
+>>>>> On 10/6/22 14:25, Thorsten Leemhuis wrote:
+>>>>>
+>>>>>> One more question:
+>>>>>>
+>>>>>> On 06.10.22 14:00, Thorsten Leemhuis wrote:
+>>>>>> Were those two vanilla kernels? I asked in #snappy on IRC and was told
+>>>>>> that "snapd simply expects some ubuntu bit in patched into the kernel if
+>>>>>> it detects that it runs on an official ubuntu install...". This was also
+>>>>>> suggested "it probably makes sense to file a but in LP to make the
+>>>>>> kernel team aware".
+>>>>>>
+>>>>> Yes, last time I tried it with git clone from linux_stable on kernel.org
+>>>>> and
+>>>>> config-6.0.0-060000-generic from the official Ubuntu mainline build
+>>>> You don't want to do that. Better take the config used to build a
+>>>> working kernel (say 5.19.y) and then build 6.0 with it (after running
+>>>> "make olddefconfig"), because it might be a new kernel option (say for a
+>>>> new security technique) that might cause the problem, as explained here:
+>>>> https://docs.kernel.org/admin-guide/reporting-regressions.html
+>>> If I understood well, that would mean buildingwww.kernel.org  git
+>>> linux_stable
+>>> source with Ubuntu's config-5.9.13-051903?
+>> I meant "please download Linux 6.0 (ideally through git, that you have
+>> everything to perform a bisection), add the config from a working kernel
+>> (if config-5.9.13-051903 is one, yeah, then take that) as .config and
+>> then run "make olddefconfig" before compiling and installing the kernel
+>> to see if 6.0 fails with that config that was working.
+>
+> Thank you for all your instructions.
+>
+> Yes, I can confirm I already did a git pull from 
+> git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
+> and a `git checkout linux6.0.y' with Ubuntu's config-5.19.13-051903, 
+> for that will, being a
+> generic build, surely cover all my devices.
+>
+> The build is already in progress, but it may take a couple of hours 
+> for the bud to show with
+> Firefox "tabs crashed" and consequential Verneed record mismatch, 
+> provided it hath not been
+> fixed already by something else.
+>
+> Still, I would be the happier version of myself if we could pinpoint 
+> the exact line of kernel source
+> that caused this. (And yes, all my builds were from kernel.org repos, 
+> whether Mr. Torvalds's or
+> the linux_stable line.)
+>
+Hi Thorsten, Marc,
 
-I think moving this out of line, incorporating Ard's feedback, then
-putting the UNWIND directives on top might be the way to go. What do
-you think?
+I can confirm that the "Firefox tab crashed" problem with Verneed record 
+version mismatch persisted in the
+official Ubuntu's 6.0.0-06000 mainline build:
+
+marvin@marvin-IdeaPad-3-15ITL6:~$ uname -rms
+Linux 6.0.0-060000-generic x86_64
+marvin@marvin-IdeaPad-3-15ITL6:~$ /snap/bin/firefox &
+[1] 45245
+marvin@marvin-IdeaPad-3-15ITL6:~$ /bin/bash: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/bin/bash: error while loading shared libraries: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verneed record
+
+[1]+  Exit 127                /snap/bin/firefox
+marvin@marvin-IdeaPad-3-15ITL6:~$
+
+The build with the Ubuntu's config-5.19.3-051903-generic config file an 
+linux_stable 6.0.0 source
+is currently in testing. To repeat, it usually took a couple of hours of 
+work in Firefox (especially playing Youtube
+videos in a tab) before the bug manifested.
+
+Regards,
+-mt
+
 -- 
-Thanks,
-~Nick Desaulniers
+
+Mirsad Goran Todorovac
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+-- 
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb, Republic of Croatia
+The European Union
+tel. +385 (0)1 3711 451
+mob. +385 91 57 88 355
+
