@@ -1,166 +1,80 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B64F7E
-	for <regressions@lists.linux.dev>; Fri,  7 Oct 2022 06:31:37 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id D278E60509;
-	Fri,  7 Oct 2022 08:31:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665124295; bh=Lb/gYO/pcJyyL/1XWFjZcmxyKcW9lS3EpW1Uz8rOdwk=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=PtRe6GxMZSadf/Q+8OtfOUorPpokjj22y3/5urAzDwRu4rslu3eIOTT2eJvJF3Lv6
-	 E8gUY/xdh+QkX82Iwt8+p8bcF4p4BJksUjyx/qutYPu9n5eKL1QE2RHBLi5v3uSI0B
-	 /Yty+k271Bv2gDAF7QJWSAVPXy+v5d+VY+hz3QwUcN6uyrFBBfsq1+wk5/rPeXxles
-	 /5Ox0dMcCXNizU8QSudZhaJgfKZUIGB6f7QymZhT5PLmNXXo8cgqQtN4ZEskleLO8W
-	 g2i+Z3g78Xp54z6FA+F/vIwayah0N1mvBb8HoMICXUQvlr68/8/Ahevo3rEMq8rfy5
-	 Ikhg18HeeHh/g==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Ju172bxK7Mv9; Fri,  7 Oct 2022 08:31:33 +0200 (CEST)
-Received: from [161.53.83.51] (pc-mtodorov.grf.hr [161.53.83.51])
-	by domac.alu.hr (Postfix) with ESMTPSA id D579A6050B;
-	Fri,  7 Oct 2022 08:31:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665124291; bh=Lb/gYO/pcJyyL/1XWFjZcmxyKcW9lS3EpW1Uz8rOdwk=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=I6dS3uHMH7ov+lYI45J6qd8t1OXuLEsaFaRO8cZQhtyKigcrppxgqZlN9cDXwtlFC
-	 d8kjNF/B+Ak3QnRydSdGitp1WPjeWy8+KY+xHedYma93A1wQseg8ku88MmitlcxyI1
-	 Q4ofCZfBkQd5DgrS76mHmjCP84zrpWx5AqwJwhbv7zoBFHfYzZSDW0KiXKh8VSUNji
-	 Hu9ScgfRbBgjw2tdIpqgSsr+KypMyKMiRFNK1hB04ZJ/xfVGwZCqDyl+1HDeRJ/rka
-	 qsJs6kKCwHCOGtvP5u4BsoCttzQmNCHPAN3nyubqPAMeIv7dxg/00iXDDTkW3hVUTB
-	 Q1zQjp39KlRsg==
-Message-ID: <e0cee124-1b39-d04f-1ab2-21dd19af1cab@alu.unizg.hr>
-Date: Fri, 7 Oct 2022 08:31:25 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A6FA4E
+	for <regressions@lists.linux.dev>; Fri,  7 Oct 2022 08:47:10 +0000 (UTC)
+Received: by mail-qt1-f177.google.com with SMTP id y20so2426128qtv.5
+        for <regressions@lists.linux.dev>; Fri, 07 Oct 2022 01:47:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sladewatkins.net; s=googled;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aBnpp0sDJqctU48vfQ6g+lgvjUgr8EqGIShTt9dMo7I=;
+        b=So2mOLRiFPO4IrylFWHZWJJk/3VXaTt2NPyoMnQ5A3MepDesWCkQbV6kUONBwbp232
+         lG23uhlEW9IjaW7lW6hmc0DEHQTJMmBU0UOFaKkziWQVFH7o2+MLVrIstILajKZWGz+i
+         7M1JHWf62GONh83LthHWw3fAHZjJ3kGzFUcQBjpekK3TOb/11+Ncnd1H3lqn5HuAARym
+         E3wyfIFV5lf+NPBJ8cT31Am1RW7D0tvG8cTfM1dl/w+h3qud3QjszwpFXmCpf+ndyr2N
+         gU5lri5hlIwyKffYK49ovERz570NCZbJhGcip6cV7TI4W/qmdu8WqbPVxElyJ2bCFZuo
+         5I1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=aBnpp0sDJqctU48vfQ6g+lgvjUgr8EqGIShTt9dMo7I=;
+        b=x5dppDJT5qFe3STl1G6txizdzSTN6HBnfzB9GBr1Xm+x6PkFCRaEct+xLBFiwaRKQG
+         4mlqLHdaExfs1rQixdRRD1YKRDuSd+qh9oNJl8p2d7oLcqhZ4GFlnjykATz8Ci9GPQPb
+         AYxcs9oTbpFThwcd5VrF0EV6OC3C8JzaJiLqfU1Ql9aLa4Pdh0kllzWGJFoHU/AhVtOR
+         ZqpPHhqFxdFHBYXXsZ/L8hsFsw8WHQC96M5NZjJTouXrDvB2gbLiLlZkmKImPEB9cppp
+         S5aBTeJMTn8haP8HxeRQgoMzaeXLrB4+GXgfdZzBJEFRmeYkrSUgX6VJGejKAbZavtz4
+         KK8w==
+X-Gm-Message-State: ACrzQf0gYTNW2DFCtjG2vwH4v3+Hxby3UbosDi0URcwEvof/BgKGRqvO
+	/t0G673612NbDM5zO5PRosy3IQ==
+X-Google-Smtp-Source: AMsMyM4DqMy2+MvS3ZdxcUPmFL9ihfz/PmQXU0cbt3KGiIblWWdaITB4N/ws3HzghR2EK3ZWvOExmg==
+X-Received: by 2002:a05:622a:58c:b0:394:d520:dba0 with SMTP id c12-20020a05622a058c00b00394d520dba0mr3375330qtb.664.1665132429281;
+        Fri, 07 Oct 2022 01:47:09 -0700 (PDT)
+Received: from [192.168.1.30] (pool-108-4-135-94.albyny.fios.verizon.net. [108.4.135.94])
+        by smtp.gmail.com with ESMTPSA id k11-20020a05620a0b8b00b006cbc6e1478csm1474410qkh.57.2022.10.07.01.47.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Oct 2022 01:47:08 -0700 (PDT)
+Message-ID: <43d5fd3c-dbe3-6090-8a56-c2ffb1f00e0d@sladewatkins.net>
+Date: Fri, 7 Oct 2022 04:47:07 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: 6.0.0-RC kernels trigger Firefox snap bug with 6.0.0-rc3 through
- 6.0.0-rc7
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.3.2
+Subject: Re: BUG: 6.0.0-RC kernels trigger Firefox snap bug with 6.0.0-rc3
+ through 6.0.0-rc7
 Content-Language: en-US
-From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- linux-kernel@vger.kernel.org
-Cc: Marc Miltenberger <marcmiltenberger@gmail.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+To: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+Cc: LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
+ regressions@leemhuis.info
 References: <b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr>
- <5bb75cbc-a0db-537b-12d0-889230c865d8@leemhuis.info>
- <0fb2a9ff-df76-8af9-e54a-c2dc6bfd9478@leemhuis.info>
- <bdab45d3-c893-42ff-dbb9-5fa93d0dff55@alu.unizg.hr>
- <dd62210d-d095-f971-2b7b-0ec54fd189a9@leemhuis.info>
- <c05134cc-92fa-dac2-e738-cf6fae194521@alu.unizg.hr>
- <6ba15505-1c04-df2b-237f-b3060f26d2e6@leemhuis.info>
- <f23494b5-b4ea-a32a-e260-4541039dedc8@alu.unizg.hr>
-In-Reply-To: <f23494b5-b4ea-a32a-e260-4541039dedc8@alu.unizg.hr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <1266113f-75a1-b276-bb8c-3cdfcbabf043@alu.unizg.hr>
+ <47CFBECB-AE3D-4252-972D-933D2DF4A8EB@sladewatkins.net>
+ <77bc5046-7b69-6100-f991-60b4d53994ee@alu.hr>
+ <0BD28445-7393-4153-B15C-59E5DA868E80@sladewatkins.net>
+ <2F9EDCCA-AB85-44CE-AD9F-44394C8663B8@sladewatkins.net>
+ <254f0b04-428e-cad8-02e3-0224b798b060@alu.unizg.hr>
+From: Slade Watkins <srw@sladewatkins.net>
+In-Reply-To: <254f0b04-428e-cad8-02e3-0224b798b060@alu.unizg.hr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 6.10.2022. 19:13, Mirsad Goran Todorovac wrote:
+Hey Mirsad,
 
-> On 06. 10. 2022. 18:58, Thorsten Leemhuis wrote:
->
->> On 06.10.22 18:43, Mirsad Goran Todorovac wrote:
->>
->> On 06. 10. 2022. 15:23, Thorsten Leemhuis wrote:
->>>> On 06.10.22 14:43, Mirsad Todorovac wrote:
->>>>> On 10/6/22 14:25, Thorsten Leemhuis wrote:
->>>>>
->>>>>> One more question:
->>>>>>
->>>>>> On 06.10.22 14:00, Thorsten Leemhuis wrote:
->>>>>> Were those two vanilla kernels? I asked in #snappy on IRC and was 
->>>>>> told
->>>>>> that "snapd simply expects some ubuntu bit in patched into the 
->>>>>> kernel if
->>>>>> it detects that it runs on an official ubuntu install...". This 
->>>>>> was also
->>>>>> suggested "it probably makes sense to file a but in LP to make the
->>>>>> kernel team aware".
->>>>>>
->>>>> Yes, last time I tried it with git clone from linux_stable on 
->>>>> kernel.org
->>>>> and
->>>>> config-6.0.0-060000-generic from the official Ubuntu mainline build
->>>> You don't want to do that. Better take the config used to build a
->>>> working kernel (say 5.19.y) and then build 6.0 with it (after running
->>>> "make olddefconfig"), because it might be a new kernel option (say 
->>>> for a
->>>> new security technique) that might cause the problem, as explained 
->>>> here:
->>>> https://docs.kernel.org/admin-guide/reporting-regressions.html
->>> If I understood well, that would mean buildingwww.kernel.org git
->>> linux_stable
->>> source with Ubuntu's config-5.9.13-051903?
->> I meant "please download Linux 6.0 (ideally through git, that you have
->> everything to perform a bisection), add the config from a working kernel
->> (if config-5.9.13-051903 is one, yeah, then take that) as .config and
->> then run "make olddefconfig" before compiling and installing the kernel
->> to see if 6.0 fails with that config that was working.
->
-> Thank you for all your instructions.
->
-> Yes, I can confirm I already did a git pull from 
-> git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git
-> and a `git checkout linux6.0.y' with Ubuntu's config-5.19.13-051903, 
-> for that will, being a
-> generic build, surely cover all my devices.
->
-> The build is already in progress, but it may take a couple of hours 
-> for the bud to show with
-> Firefox "tabs crashed" and consequential Verneed record mismatch, 
-> provided it hath not been
-> fixed already by something else.
->
-> Still, I would be the happier version of myself if we could pinpoint 
-> the exact line of kernel source
-> that caused this. (And yes, all my builds were from kernel.org repos, 
-> whether Mr. Torvalds's or
-> the linux_stable line.)
+On 10/3/22 at 4:18 AM, Mirsad Goran Todorovac wrote:
+> 
+> I'm sorry you couldn't reproduce the bug. I will try to provide the list of the installed pkgs the
+> next time, for both configs
+So, I'm able to reproduce this now on Ubuntu 22.04 with 6.0 mainline. Unfortunately, I won't be able to bisect and send that info to Thorsten and the Regressions list until Monday afternoon most likely. Both are Cc'd on this update.
 
-(Re-sending because the past message was rejected as mistakenly having 
-HTML - Thunderbird's default.)
+[+Thorsten, +Regressions List]
 
-Hi,
-
-I can confirm that the "Firefox tab crashed" problem with Verneed record 
-version mismatch persisted in the
-official Ubuntu's 6.0.0-06000 mainline build:
-
-marvin@marvin-IdeaPad-3-15ITL6:~$ uname -rms
-Linux 6.0.0-060000-generic x86_64
-marvin@marvin-IdeaPad-3-15ITL6:~$ /snap/bin/firefox &
-[1] 45245
-marvin@marvin-IdeaPad-3-15ITL6:~$ /bin/bash: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/bin/bash: error while loading shared libraries: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verneed record
-
-[1]+  Exit 127                /snap/bin/firefox
-marvin@marvin-IdeaPad-3-15ITL6:~$
-
-The build with the Ubuntu's config-5.19.3-051903-generic config file an 
-linux_stable 6.0.0 source
-is currently in testing. To repeat, it usually took a couple of hours of 
-work in Firefox (especially playing Youtube
-videos in a tab) before the bug manifested.
-
-Regards,
--mt
-
--- 
-Mirsad Todorovac
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb
-Republic of Croatia, the European Union
---
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
-
+Best,
+-srw
