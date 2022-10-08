@@ -1,38 +1,21 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89CC47E8
-	for <regressions@lists.linux.dev>; Fri,  7 Oct 2022 10:55:34 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id 353636050A;
-	Fri,  7 Oct 2022 12:55:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665140132; bh=bXvdXMnm+InQRtRTG5bHcIKbt083Dd6570UwomJFk+M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=d1FFpSRPyzksCpwfuMq5drYd4mDjg3p87EpfvXe3+dz36JRI5+rHhfKyw+gl5FleU
-	 jCpCcZsAJ2sK5YvDNWJUSxnuPSFNBJgego8vpsO0UDdluLMtqYFjYaZoLtGL9SWRCz
-	 tqlPtXUMOUll62zOaKtiVM0Hqqdnf7JlpziRZKKzYo4hHIsR3aY8lGi5bpGCQ/SzM2
-	 lUulVAns6pPdzq5/wefQJA6kx57Kur8maj6A+00XtJ6L78u/GHeWzuQs3M/EV191se
-	 uTgEBO246hTyGXwQDFqDlaU3GsSEaIvT8fTUzYe9jsMSqciHZ0tmmXICIGua4nc98Z
-	 rCAdhK24BR05Q==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id GDiupqYoVugF; Fri,  7 Oct 2022 12:55:30 +0200 (CEST)
-Received: from [161.53.83.51] (pc-mtodorov.grf.hr [161.53.83.51])
-	by domac.alu.hr (Postfix) with ESMTPSA id AFC556050E;
-	Fri,  7 Oct 2022 12:55:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665140130; bh=bXvdXMnm+InQRtRTG5bHcIKbt083Dd6570UwomJFk+M=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=xnjrEytFa38upDowIVzbcwUWrEUDarRqHd3J92kL9BShErryEAfktw1ET4DTpJIdF
-	 lAVigPH3k1M0LH39mM00Rd7MuMv0uZdBWYZi4xBJ6p0+DWtjO2eNf7pREq+ajArkEo
-	 O9jF2EMYgykjo5tO25+mK9Hzl0OiILombnekpG1o5vlI/QPBdZZ8LKEoY8+iSPozLE
-	 5FrqJQtuSAkPxYSHEclBKgBt0jCITAm4CWoqt4ZhHAkKvUKMdkb2aZMAsc1GI54+qL
-	 5lp5pZAsCTvRqoT1KY7m51YfrZRLHGD2THaQSJ76Qage+eFJDXYBfgCLlalMATq0qt
-	 YBvF6as8aPaFQ==
-Message-ID: <f05158fe-50fd-fe95-70e7-3bcf42717099@alu.unizg.hr>
-Date: Fri, 7 Oct 2022 12:55:29 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D9097E;
+	Sat,  8 Oct 2022 03:30:00 +0000 (UTC)
+Received: from dggpemm500024.china.huawei.com (unknown [172.30.72.54])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MkqnW5LF8zlXhx;
+	Sat,  8 Oct 2022 11:06:07 +0800 (CST)
+Received: from dggpemm500013.china.huawei.com (7.185.36.172) by
+ dggpemm500024.china.huawei.com (7.185.36.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Sat, 8 Oct 2022 11:10:36 +0800
+Received: from [10.67.108.67] (10.67.108.67) by dggpemm500013.china.huawei.com
+ (7.185.36.172) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Sat, 8 Oct
+ 2022 11:10:36 +0800
+Message-ID: <6b4ccb6b-c6c2-e0cc-1670-1776877ecf46@huawei.com>
+Date: Sat, 8 Oct 2022 11:10:36 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,60 +23,90 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: BUG: 6.0.0-RC kernels trigger Firefox snap bug with 6.0.0-rc3
- through 6.0.0-rc7
+ Thunderbird/102.0
+Subject: Re: [PATCH v3] ARM: kprobes: move __kretprobe_trampoline to out of
+ line assembler
 Content-Language: en-US
-To: Slade Watkins <srw@sladewatkins.net>
-Cc: LKML <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
- regressions@leemhuis.info
-References: <b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr>
- <1266113f-75a1-b276-bb8c-3cdfcbabf043@alu.unizg.hr>
- <47CFBECB-AE3D-4252-972D-933D2DF4A8EB@sladewatkins.net>
- <77bc5046-7b69-6100-f991-60b4d53994ee@alu.hr>
- <0BD28445-7393-4153-B15C-59E5DA868E80@sladewatkins.net>
- <2F9EDCCA-AB85-44CE-AD9F-44394C8663B8@sladewatkins.net>
- <254f0b04-428e-cad8-02e3-0224b798b060@alu.unizg.hr>
- <43d5fd3c-dbe3-6090-8a56-c2ffb1f00e0d@sladewatkins.net>
-From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <43d5fd3c-dbe3-6090-8a56-c2ffb1f00e0d@sladewatkins.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Nick Desaulniers <ndesaulniers@google.com>
+CC: "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy
+	<anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>,
+	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, Tom Rix
+	<trix@redhat.com>, sparkhuang <huangshaobo6@huawei.com>, Ard Biesheuvel
+	<ardb@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Linus Walleij
+	<linus.walleij@linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+	<llvm@lists.linux.dev>, Naresh Kamboju <naresh.kamboju@linaro.org>,
+	<regressions@lists.linux.dev>, <lkft-triage@lists.linaro.org>, "Linux Kernel
+ Functional Testing" <lkft@linaro.org>, Logan Chien <loganchien@google.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>, Russell King
+	<rmk+kernel@armlinux.org.uk>
+References: <202209291607.0MlscIht-lkp@intel.com>
+ <20220930211505.209939-1-ndesaulniers@google.com>
+ <CAKwvOd=0p31f-Yya6S-9xKEv6CtUWpOCRxHO=jG2uk-hZgZ1bQ@mail.gmail.com>
+From: Chen Zhongjin <chenzhongjin@huawei.com>
+In-Reply-To: <CAKwvOd=0p31f-Yya6S-9xKEv6CtUWpOCRxHO=jG2uk-hZgZ1bQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.108.67]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500013.china.huawei.com (7.185.36.172)
+X-CFilter-Loop: Reflected
 
-Hi Slate,
+Hi,
 
-On 7.10.2022. 10:47, Slade Watkins wrote:
-> Hey Mirsad,
->
-> On 10/3/22 at 4:18 AM, Mirsad Goran Todorovac wrote:
->> I'm sorry you couldn't reproduce the bug. I will try to provide the list of the installed pkgs the
->> next time, for both configs
-> So, I'm able to reproduce this now on Ubuntu 22.04 with 6.0 mainline. Unfortunately, I won't be able to bisect and send that info to Thorsten and the Regressions list until Monday afternoon most likely. Both are Cc'd on this update.
+Sorry for late reply because I just found this thread before the long 
+vacation so I didn't have much time to deal with it.
 
-This is a very good peace of news.
+On 2022/10/7 4:35, Nick Desaulniers wrote:
+> On Fri, Sep 30, 2022 at 2:15 PM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+>> commit 1069c1dd20a3 ("ARM: 9231/1: Recover kretprobes return address for
+>> EABI stack unwinder")
+>> tickled a bug in clang's integrated assembler where the .save and .pad
+>> directives must have corresponding .fnstart directives. The integrated
+>> assembler is unaware that the compiler will be generating the .fnstart
+>> directive.
+>>
+>>    arch/arm/probes/kprobes/core.c:409:30: error: .fnstart must precede
+>>    .save or .vsave directives
+>>    <inline asm>:3:2: note: instantiated into assembly here
+>>    .save   {sp, lr, pc}
+>>    ^
+>>    arch/arm/probes/kprobes/core.c:412:29: error: .fnstart must precede
+>>    .pad directive
+>>    <inline asm>:6:2: note: instantiated into assembly here
+>>    .pad    #52
+>>    ^
+>>
+> Chen, I noticed that your patch was discarded; it's not in linux-next today.
+> https://lore.kernel.org/linux-arm-kernel/YzHPGvhLkdQcDYzx@shell.armlinux.org.uk/
+> https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=9231/1
+> How would you like to proceed here?
 
-To repeat for clarity, I made a build with Ubuntu's 
-config-5.19.13-051913 and linux stable git pull from branch linux-6.0.y
-and now it is running as I am trying to reproduce the bug as Thorsten 
-recommended.
+Since 6.1 is closing now. Let's reorganize everything and queue it up 
+for -next for 6.2
 
-The bug usually isn't showing immediately, but after a couple of hours 
-of running (especially with multimedia running inside Firefox).
+> I think moving this out of line, incorporating Ard's feedback, then
+> putting the UNWIND directives on top might be the way to go. What do
+> you think?
 
-It occurred also with FF 105.x snap on AlmaLinux with 6.0-rc7 mainline 
-build, but not with 91.x esr version that runs from a rpm rather than snap.
+This way looks good to me.
 
-Regards,
--mt
+How about making a set for this,  to make everything more clear:
 
--- 
-Mirsad Todorovac
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb
-Republic of Croatia, the European Union
---
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
+1. Move this out of line
+
+2. Apply the feature, test with gcc & clang
+
+3. Other cleaning, or merge with 2 if the cleaning is tiny.
+
+I'll send another version for this, rebased to 6.1-rc1
+
+Thanks for your time!
+
+
+Best,
+
+Chen
+
 
