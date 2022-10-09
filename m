@@ -1,113 +1,96 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02E2A1876
-	for <regressions@lists.linux.dev>; Sun,  9 Oct 2022 16:39:46 +0000 (UTC)
-Received: by mail-pg1-f178.google.com with SMTP id r18so8528497pgr.12
-        for <regressions@lists.linux.dev>; Sun, 09 Oct 2022 09:39:46 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5523A1C2E
+	for <regressions@lists.linux.dev>; Sun,  9 Oct 2022 22:45:31 +0000 (UTC)
+Received: by mail-qk1-f171.google.com with SMTP id y1so5832063qky.12
+        for <regressions@lists.linux.dev>; Sun, 09 Oct 2022 15:45:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9K10cqEZNRqAr4Ah3Zj5uTQYY0fyx/i6nLqRBPmuxKE=;
-        b=YGcLzfWnQs+WR6WW8vmMtethQ/84yZTAS/I31DLiVko6nftcbr1AMZEzpgOYJmsEJ/
-         AeJdwmqH8ZdkSt/+c8h/JVHCKwkRqweLtVIt1J4v8r65FSBTF07Rq+SCJWcqDkBfSJG0
-         LUwftnuhUcTFaDeL+Ak0mOsuBqpe9Wgx1z4TYCN9SWVToJttmlUPbCdNSEYw3BlHtPLK
-         Su/lm8krP3VidFsEh+IWbJQF8ojZDqWukRpNA666fy4A/Gzr2o7b2CUJ6zT/qOQNHVGO
-         AI4DrNPQ5lVvoqJCKT6JzWPtkP3AxVStoKaMKjqZos20duj1rUNwmXF1Gkf0zkb4fhj6
-         7t3A==
+        d=sladewatkins.net; s=googled;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qoQaMugHvTPaZz2yjGnEv+QBAEt4uVbYTr3+LciFdvU=;
+        b=F5Vr6E650I+JLLUTWnewNpyX7fwWtKUsQa7o2NeiE7hJKD4TIDPtgMbDwSrXk8EHsG
+         wDTaP1m3rKboduR7qUdJ6yGvAB7JktS1Ds0vyNmdHDtez8eSeOPWfrmfXPAYOvnb/Kds
+         DQaRHftXs7HjqsCgseJ9tI+5GSM5VpcxUhBKFHum9qp2SJhLbSYj20RS5uR1a37AZcnE
+         q+klbA6cFYVQKkz/xdh5nu2GELn+B75niTJTr1DU9Y/7czUIkmo7Cl+KNZuJfJbSuYgB
+         cULKoINRmqFn5FQkHHJ8DPc8Ee5i3ywjMokG1YbCd4hJLmKCZfXvUsUVZ1J4hA1rRf73
+         xXVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9K10cqEZNRqAr4Ah3Zj5uTQYY0fyx/i6nLqRBPmuxKE=;
-        b=p0ebSOq9zg9x6yHBg9pprN+OLwJ6KkezBA5q2Si1XDmv7DHWcQFoMl/1mCirhsmbiQ
-         eEnvdMHkIBb9577o0sdRW1zman4rwqssJsQR1R2NeyyJUkAOZafBi2AZKhL7KoC7cfIP
-         U7Oh+m26LPfKv5Bjdz+nNeoOBSVR0gSQkeuVbmYY5F/2zr77TiZXSlBKUADcKX9TvdVJ
-         KrTumJ3NS3m896bTErwa9j8iuDNpYyLKFDecICQm/av/xXt4cF1FmV+59PRkngcL7sdd
-         1BDQcDm8Awt6TB3gsX3OCfE5TbOZyQdFH/hy3x75jVQKQOzXIWFeV9Bf5TUGyXnd7qCp
-         loKA==
-X-Gm-Message-State: ACrzQf3VhcwRNgeJ74UzKRpN+U5TxO+8tJPEbyh9HacJjMPuiWoKpxFF
-	NGHHSU+J86BNLCezFeDJnq0=
-X-Google-Smtp-Source: AMsMyM7Dsfo4/STdJ3JtqLkZjtDhbSE733mtcYQ/DQwB70M1uLo2JRsyqV3b1rr9OqSyuGNKKEXyYQ==
-X-Received: by 2002:a05:6a00:cd6:b0:546:d03:3dd7 with SMTP id b22-20020a056a000cd600b005460d033dd7mr15572944pfv.19.1665333586343;
-        Sun, 09 Oct 2022 09:39:46 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q13-20020aa7842d000000b0056234327070sm5366479pfn.95.2022.10.09.09.39.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Oct 2022 09:39:44 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sun, 9 Oct 2022 09:39:42 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>, regressions@lists.linux.dev
-Subject: Re: [PATCH v1 1/1] mfd: syscon: Remove repetition of the
- regmap_get_val_endian()
-Message-ID: <20221009163942.GA630814@roeck-us.net>
-References: <20220808140811.26734-1-andriy.shevchenko@linux.intel.com>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qoQaMugHvTPaZz2yjGnEv+QBAEt4uVbYTr3+LciFdvU=;
+        b=UP62JNLoPUd15RXJ106MV00eXN5QAd17XCSMAp3xhRPopkLpSTYRzCOO6c2eNkWsG+
+         Vof80LTLUeumNMNQabkEJPEAWqbIQDK7H1Js2LGYFbmQAVXUfzfO5hvREP4uXadZJKdC
+         vDz05J59jml5wh8mXMKK13m80vNu15QEkrIGoHO1n7roHERetqgwxJdg43K+CiSSdfqD
+         m39rtLcZnweTkp/fQkjS542veBx6Dn077YLuit09okxIiHAIuEmObP/v5vPQXCFPgB3M
+         qxWDYJVKLqb+oqCoCuK6A2LG7JmJoZE2bd1Vgf+1ChjW6F50lHwqfUOBavgtQrOJm47s
+         E+Kg==
+X-Gm-Message-State: ACrzQf3eVM/G25QfVI+iQM9XoLCnQQopzE/nhLIhosAKoxhM5N+rr1s0
+	dpUnVd7oSGbvv3hw0zupZkRvQw==
+X-Google-Smtp-Source: AMsMyM7ulVL1wQfBPElCtOauV4aLGfpZrVw7iXEYP13XRwFIAyE5UrLSubtIcvNXDYTQVVa5mQBEbA==
+X-Received: by 2002:a05:620a:1b89:b0:6ce:8b2b:7f0e with SMTP id dv9-20020a05620a1b8900b006ce8b2b7f0emr11158386qkb.15.1665355530077;
+        Sun, 09 Oct 2022 15:45:30 -0700 (PDT)
+Received: from [192.168.1.30] (pool-108-4-135-94.albyny.fios.verizon.net. [108.4.135.94])
+        by smtp.gmail.com with ESMTPSA id i17-20020ac871d1000000b00397c4528a5bsm4653726qtp.79.2022.10.09.15.45.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Oct 2022 15:45:29 -0700 (PDT)
+Message-ID: <b5deaa2e-8867-1e0e-6090-422248310dc1@sladewatkins.net>
+Date: Sun, 9 Oct 2022 18:45:28 -0400
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220808140811.26734-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.3.2
+Subject: Re: BUG reproduced: 6.0.0-RC kernels trigger Firefox snap bug with
+ 6.0.0-rc3 through 6.0.0-rc7
+Content-Language: en-US
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: linux-kernel@vger.kernel.org,
+ Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>,
+ Marc Miltenberger <marcmiltenberger@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr>
+ <5bb75cbc-a0db-537b-12d0-889230c865d8@leemhuis.info>
+ <0fb2a9ff-df76-8af9-e54a-c2dc6bfd9478@leemhuis.info>
+ <bdab45d3-c893-42ff-dbb9-5fa93d0dff55@alu.unizg.hr>
+ <dd62210d-d095-f971-2b7b-0ec54fd189a9@leemhuis.info>
+ <c05134cc-92fa-dac2-e738-cf6fae194521@alu.unizg.hr>
+ <6ba15505-1c04-df2b-237f-b3060f26d2e6@leemhuis.info>
+ <25cd0e21-ed8e-1836-b0ec-c052c2276cd8@alu.unizg.hr>
+ <c40786ab-8b3b-9b64-683f-dac589c024df@alu.unizg.hr>
+ <021de720-4a57-1a88-f456-fcaeaa3653de@leemhuis.info>
+From: Slade Watkins <srw@sladewatkins.net>
+In-Reply-To: <021de720-4a57-1a88-f456-fcaeaa3653de@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 08, 2022 at 05:08:11PM +0300, Andy Shevchenko wrote:
-> Since the commit 0dbdb76c0ca8 ("regmap: mmio: Parse endianness
-> definitions from DT") regmap MMIO parses DT itsef, no need to
-> repeat this in the caller(s).
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Hi all,
 
-This patch results in reboot failures for all big endian mips emulations.
+On 10/9/22 at 2:45 AM, Thorsten Leemhuis wrote:
+> Yeah, then it's pretty certain that his is a regression. But it could be
+> caused by all sorts of things and I have no idea where to start. We thus
+> really could need a bisection to find the root of the problem. This will
+> be hard, as this crash only happens infrequently. Thing is: the Ubuntu
+> developers likely have a strong interest in this particular issue and
+> due to their knowledge of snap have way better chances to pin-point the
+> root case quickly. So submitting a bug report to them might be the best
+> way forward in this situation, even if the kernel is likely at fault here.
 
-Sample log:
+Thorsten,
+Yeah, agreed. I haven't had time to bisect -- though it's on my list of
+things to do: I'm going to try and make time tomorrow. Wish we had more
+of an idea of what exactly was happening here.
 
-Network interface test passed
-Boot successful.
-Rebooting
-reboot: Restarting system
-Unable to restart system
-Reboot failed -- System halted
+Mirsad,
+I'd be happy to help with a report to the Ubuntu folks. :-)
 
-The problem is not seen with little endian mips emulations. Reverting
-this patch fixes the problem. Bisect log attached.
+Best,
+-srw
 
-#regzbot introduced: 72a95859728a
-#regzbot title: Reboot failure on big endian mips systems
-
-Guenter
-
----
-# bad: [a6afa4199d3d038fbfdff5511f7523b0e30cb774] Merge tag 'mailbox-v6.1' of git://git.linaro.org/landing-teams/working/fujitsu/integration
-# good: [4c86114194e644b6da9107d75910635c9e87179e] Merge tag 'iomap-6.1-merge-1' of git://git.kernel.org/pub/scm/fs/xfs/xfs-linux
-git bisect start 'HEAD' '4c86114194e6'
-# bad: [6181073dd6a7e5deafc60e7981bd765b6c93da8c] Merge tag 'tty-6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty
-git bisect bad 6181073dd6a7e5deafc60e7981bd765b6c93da8c
-# bad: [94e8ca6ebd1bc20a193eb552dee4de884a954938] Merge tag 'rproc-v6.1' of git://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux
-git bisect bad 94e8ca6ebd1bc20a193eb552dee4de884a954938
-# good: [9d84bb40bcb30a7fa16f33baa967aeb9953dda78] Merge tag 'drm-next-2022-10-07-1' of git://anongit.freedesktop.org/drm/drm
-git bisect good 9d84bb40bcb30a7fa16f33baa967aeb9953dda78
-# good: [5d435a3f7b6cb1db566d0f56f5f8dc33be0dde69] Merge tag 'media/v6.1-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
-git bisect good 5d435a3f7b6cb1db566d0f56f5f8dc33be0dde69
-# bad: [ae9559594cb851aff774d5bea243b84c6acf761d] Merge tag 'mfd-next-6.1' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd
-git bisect bad ae9559594cb851aff774d5bea243b84c6acf761d
-# good: [834382ea32865a4bdeae83ec2dcb9321dc9489f2] mfd: da9061: Fix Failed to set Two-Wire Bus Mode.
-git bisect good 834382ea32865a4bdeae83ec2dcb9321dc9489f2
-# good: [2f5b0059b31a3e554cb8c5a40682411a2f53f4d3] Merge branch 'for-6.1/nintendo' into for-linus
-git bisect good 2f5b0059b31a3e554cb8c5a40682411a2f53f4d3
-# good: [430257d8329b58170a92364597e474fa607e28b2] Merge branch 'for-6.1/uclogic' into for-linus
-git bisect good 430257d8329b58170a92364597e474fa607e28b2
-# good: [cb7c02e91c31f55d08760f04a09bf9334d809426] Merge branch 'for-6.1/google' into for-linus
-git bisect good cb7c02e91c31f55d08760f04a09bf9334d809426
-# good: [02010cf0093629b9eeadade1f2684d85eaa3390f] mfd: ocelot-spi: Add missing MODULE_DEVICE_TABLE
-git bisect good 02010cf0093629b9eeadade1f2684d85eaa3390f
-# bad: [72a95859728a7866522e6633818bebc1c2519b17] mfd: syscon: Remove repetition of the regmap_get_val_endian()
-git bisect bad 72a95859728a7866522e6633818bebc1c2519b17
-# first bad commit: [72a95859728a7866522e6633818bebc1c2519b17] mfd: syscon: Remove repetition of the regmap_get_val_endian()
