@@ -1,129 +1,86 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 013271FD9
-	for <regressions@lists.linux.dev>; Mon, 10 Oct 2022 06:05:23 +0000 (UTC)
-Received: by mail-pf1-f172.google.com with SMTP id 3so8381760pfw.4
-        for <regressions@lists.linux.dev>; Sun, 09 Oct 2022 23:05:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=nm7YKL49tk7wRZ/a00qBsDIN6e5MXIummpQ4woA5c14=;
-        b=aQKkENST6CPEq0eO3HKe4qKzPkPrnjeUPOrb5SdGU2Ra0Gvhw4P3PWtN5kaLi8/TqI
-         L8+PLC5sVLeEJwdGUwQvvYZHN+rzSdvK8Vjg22Kmn2Xrur8aE9yia3RWe3+y8O/4d/Z+
-         rGaUijoc659F133JvbySVKEufaxvBy2rEbQoSwq6IRxPRW0D/cr9s5ZraJ1m2F695Bye
-         Cphlv/J5fGJY+jpfT/DoVJeZ0jEg1EkRccyf1PVnqhsUxvmxpjoVjaW4mKftnN452UIv
-         gVZcQmUVBffXXlZOX96tF23slqg+TSF3StTblLue5arE0WPYfAFy35sJDgwUx+xRNhoR
-         ZXNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nm7YKL49tk7wRZ/a00qBsDIN6e5MXIummpQ4woA5c14=;
-        b=4gFE7rPS7HJ243vKDmUrNP/zu0wmP55/t118dUMR+UWn/OoUhkj75A/fQAQaV4D5X6
-         T0ALKSa8gUhmYxj4sI0zHZ5J96WEkbcSS31rXohKYLKSHt7q8bR5xiARzQr9WsCmgCO+
-         wHeEysSk5GldZAFg8ERmxB6AZeaxGuzQ07Z+53vP2eQQaXkLMF5frKxbwGQNtwATFCnj
-         l7wRgHrNUHDnb6dsDrfYTXP6vL6BS+hk8y6tBWyg6L1GzPvxqb7g1roR1rVVGFkqqYHb
-         A+daVeQAVCwaxyF+0wF4VjA6BQdnZVSRBwGY9RoGWLwu2yNLQtlKCNBt/ka5vLrljfly
-         5sFA==
-X-Gm-Message-State: ACrzQf3y168th4olLYkPrdc1s2gbg9ndZGuizv70d5RgbaFBDVSunnQi
-	zCtHONGURhvK/Z4US8fJVXk=
-X-Google-Smtp-Source: AMsMyM5eqpRu3hcShDlRN0xT43nRbWeP6tnG5AhlUAtINev9Y4zNBPEifY6RuMia1cixXaChZEvSnQ==
-X-Received: by 2002:a05:6a00:10cf:b0:563:34ce:4138 with SMTP id d15-20020a056a0010cf00b0056334ce4138mr6542532pfu.6.1665381923244;
-        Sun, 09 Oct 2022 23:05:23 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a5-20020a63e405000000b00462ae17a1c4sm803759pgi.33.2022.10.09.23.05.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Oct 2022 23:05:22 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-From: Guenter Roeck <linux@roeck-us.net>
-To: amd-gfx@lists.freedesktop.org
-Cc: regressions@lists.linux.dev,
-	Harry Wentland <harry.wentland@amd.com>,
-	Leo Li <sunpeng.li@amd.com>,
-	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Xinhui.Pan@amd.com,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Aurabindo Pillai <aurabindo.pillai@amd.com>,
-	Hamza Mahfooz <hamza.mahfooz@amd.com>
-Subject: [PATCH] drm/amd/display: fix array-bounds error in dc_stream_remove_writeback() [take 2]
-Date: Sun,  9 Oct 2022 23:05:12 -0700
-Message-Id: <20221010060512.3064524-1-linux@roeck-us.net>
-X-Mailer: git-send-email 2.36.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F4831C05
+	for <regressions@lists.linux.dev>; Mon, 10 Oct 2022 06:49:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665384581; x=1696920581;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dDQtaRTCnXAhK8VR9vgFzDe3WUSmC6hAYRMwNSjoqzg=;
+  b=Li3OJhPfWboDPSKognRm1j/aQ5+v+r5T/8ODaJUyAdBybMdi8Lf6lz0p
+   PEYsjT5B1zyJheDQS2cRPH6MyuhpIVXDiwyYpsNDVMGqjqS3vhJiJpO/m
+   iuljj4EiQD3bBRqtBm9TvFh5SU3WI1GaynPh2Ogu08ipg/8Qn0VtQ1706
+   j55vwcKXjUMj98S9TyFqG95nVXkoV3PqJMrRUV0u5LFzD7uSZgVDvhC9K
+   hmQmNVhQ/KXV634FjTLMlBv7FgEdq303NSRvIM8NCp1bYz2rfVybIb4Ck
+   paUfVcXxPqRLgD6CdiuRhkARnmP+kVLmxxPPFYKMjxzgOST6x6ihBRVFL
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10495"; a="301766150"
+X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
+   d="scan'208";a="301766150"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Oct 2022 23:49:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10495"; a="688680101"
+X-IronPort-AV: E=Sophos;i="5.95,173,1661842800"; 
+   d="scan'208";a="688680101"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Oct 2022 23:49:39 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1ohmbZ-004kvk-1x;
+	Mon, 10 Oct 2022 09:49:37 +0300
+Date: Mon, 10 Oct 2022 09:49:37 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>, regressions@lists.linux.dev
+Subject: Re: [PATCH v1 1/1] mfd: syscon: Remove repetition of the
+ regmap_get_val_endian()
+Message-ID: <Y0PAgTLg85No6e/Q@smile.fi.intel.com>
+References: <20220808140811.26734-1-andriy.shevchenko@linux.intel.com>
+ <20221009163942.GA630814@roeck-us.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221009163942.GA630814@roeck-us.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Commit 5d8c3e836fc2 ("drm/amd/display: fix array-bounds error in
-dc_stream_remove_writeback()") tried to fix an array bounds error seen
-with gcc 12.0. Unfortunately, that results in another array bounds error,
-seen with older versions of gcc.
+On Sun, Oct 09, 2022 at 09:39:42AM -0700, Guenter Roeck wrote:
+> On Mon, Aug 08, 2022 at 05:08:11PM +0300, Andy Shevchenko wrote:
+> > Since the commit 0dbdb76c0ca8 ("regmap: mmio: Parse endianness
+> > definitions from DT") regmap MMIO parses DT itsef, no need to
+> > repeat this in the caller(s).
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> This patch results in reboot failures for all big endian mips emulations.
+> 
+> Sample log:
+> 
+> Network interface test passed
+> Boot successful.
+> Rebooting
+> reboot: Restarting system
+> Unable to restart system
+> Reboot failed -- System halted
+> 
+> The problem is not seen with little endian mips emulations. Reverting
+> this patch fixes the problem. Bisect log attached.
+> 
+> #regzbot introduced: 72a95859728a
+> #regzbot title: Reboot failure on big endian mips systems
 
-Building csky:allmodconfig ... failed
---------------
-Error log:
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_stream.c:
-	In function 'dc_stream_remove_writeback':
-drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_stream.c:527:83:
-	error: array subscript 1 is above array bounds of 'struct dc_writeback_info[1]' [-Werror=array-bounds]
-  527 |                                 stream->writeback_info[j] = stream->writeback_info[i];
-      |                                                             ~~~~~~~~~~~~~~~~~~~~~~^~~
-In file included from drivers/gpu/drm/amd/amdgpu/../display/dc/dc.h:1269,
-                 from drivers/gpu/drm/amd/amdgpu/../display/dc/inc/core_types.h:29,
-                 from drivers/gpu/drm/amd/amdgpu/../display/dc/basics/dc_common.h:29,
-                 from drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_stream.c:27:
-drivers/gpu/drm/amd/amdgpu/../display/dc/dc_stream.h:241:34: note: while referencing 'writeback_info'
-  241 |         struct dc_writeback_info writeback_info[MAX_DWB_PIPES];
+Right, Jason sent a revert already, but Linus asked for the proper submission.
 
-We could check both i and j for overflow to fix the problem. That would,
-however, be not make much sense since it is known and provable that j <= i.
-Also, the check introduced with commit 5d8c3e836fc2 does not really add
-value since it checks if j < MAX_DWB_PIPES. Since it is known that j <= i,
-it would make more sense to check if i < MAX_DWB_PIPES. Unfortunately, that
-does not help to solve the problem observed here: gcc still complains.
-
-To solve the problem, replace the subsequent check for 'i != j' with
-'j < i'. This is identical to the original check since we know that j <= i,
-and it makes all versions of gcc happy. Drop the check introduced with
-commit 5d8c3e836fc2 since it is not really useful and does not solve the
-problem.
-
-Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
-Cc: Hamza Mahfooz <hamza.mahfooz@amd.com>
-Fixes: 5d8c3e836fc2 ("drm/amd/display: fix array-bounds error in dc_stream_remove_writeback()")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/gpu/drm/amd/display/dc/core/dc_stream.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-index ae13887756bf..9f568d618cd0 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-@@ -520,9 +520,9 @@ bool dc_stream_remove_writeback(struct dc *dc,
- 	}
- 
- 	/* remove writeback info for disabled writeback pipes from stream */
--	for (i = 0, j = 0; i < stream->num_wb_info && j < MAX_DWB_PIPES; i++) {
-+	for (i = 0, j = 0; i < stream->num_wb_info; i++) {
- 		if (stream->writeback_info[i].wb_enabled) {
--			if (i != j)
-+			if (j < i)
- 				/* trim the array */
- 				stream->writeback_info[j] = stream->writeback_info[i];
- 			j++;
 -- 
-2.36.2
+With Best Regards,
+Andy Shevchenko
+
 
