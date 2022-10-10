@@ -1,105 +1,125 @@
-Received: from wnew4-smtp.messagingengine.com (wnew4-smtp.messagingengine.com [64.147.123.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF5533CC
-	for <regressions@lists.linux.dev>; Mon, 10 Oct 2022 17:52:32 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailnew.west.internal (Postfix) with ESMTP id 85BC52B06F1B;
-	Mon, 10 Oct 2022 13:52:31 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Mon, 10 Oct 2022 13:52:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm2; t=1665424351; x=1665427951; bh=eIM+MeuDgl
-	5z58nSOwcRux9xgNdpNXrzM2SeDZwQsd8=; b=oYZS5cu/Rsvl0KB8JTLsGB3saF
-	kHTxa5Fkfk+2YZuUmW9S023XW9o0XZ0SDkanDwFAcRrfnfQSmXsoo5P3Ges1zjBL
-	xfvxLGE/PIRL1hIfssvk3zHIJO5gYIpw1Hq6FsGy6STG1EjMUm9xPrf7SoN0TbcM
-	lW+Pmrs07xyj6QAHa9a4A47TC+EdrpYC4ECJp1POmEvis5e7t0l4oRjLdzWpE/+5
-	huVbsRcM8F2DYQ/eWtpk1cO+0hEV+8sBDdZnEPKEY+8mR+FQsBIlQLr7ia0I79Yd
-	dx5VnCYxMOOy7K6aAa4zQAHfR+qG4OTopY2xqj0nZ6JexpQYsNFTfI+kIXDw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1665424351; x=1665427951; bh=eIM+MeuDgl5z58nSOwcRux9xgNdp
-	NXrzM2SeDZwQsd8=; b=U9A8Pr/nhJN0fRLBk0x5nsQOv7x3e+NiaeXMGoKz2X8C
-	yQizTYenqakkepNspG883KFpigUTTBod0GP0z/+BJxxLiGU15sBrf4DmuFOrB5pk
-	tZxoT7wGtBG/fZ0YVC+OysEa7hll+3SyB+TxTPCvtAPrpskNkj5QTzlCSC3k9q6A
-	ZoUONN2LuxiqmrA/hwV/Rn094kcd8rKbbbdNRghnqU3fEEXT86vBPrqf2i0KTOcC
-	zKbvN05lgLt0E8O6aiqU1FAunw7EKsjNbMzAxpi9HwBXV6KwODbKyvwEjeub96px
-	qKdbKSnAzV+joiEs4L4uLyufFYzCkEvf55D0zq+FcQ==
-X-ME-Sender: <xms:3ltEY_8b39mNjScYLdR4EksI10Dmr9dCKLpvYm0EqLHlUzUwYrVQEg>
-    <xme:3ltEY7shMHCvjx9dhS_CDkTBNypGWkHRDgUEBy8O590its7J_gEj6K6S0giUkpAxZ
-    wSvMi7sMKZIRecmb4Y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeejgedgudduvdcutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeelhfejffehveevjeduffegieffhfeihfekteetffdujedufeeghfekuedt
-    heetgeenucffohhmrghinhepthhugigsuhhilhgurdgtohhmpdhkvghrnhgvlhdrohhrgh
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhn
-    ugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:3ltEY9C2kDz3h37uVXomDacWmOvYYCjaELqRJgTzUtWZvHe_jBpX7Q>
-    <xmx:3ltEY7cigPoef-_K5NZhRVno0hk_IX7XGhKORG3mGpkbz6fDrvav1Q>
-    <xmx:3ltEY0P2trZKuLHGNKQ8enQ6dPvU7dVmK_jFfzTAbeHtGlKUXyeoqQ>
-    <xmx:3ltEYzpfzxKrcwSazZHRW6cp90WKwAXb278VbPYcPIlYN2rn4Q9OjnNW0SA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 933A0B60086; Mon, 10 Oct 2022 13:52:30 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1015-gaf7d526680-fm-20220929.001-gaf7d5266
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A1FC5C84
+	for <regressions@lists.linux.dev>; Mon, 10 Oct 2022 20:16:18 +0000 (UTC)
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-1324e7a1284so13647180fac.10
+        for <regressions@lists.linux.dev>; Mon, 10 Oct 2022 13:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zQo9CpEQOxd8V/Gnq9d1IqgBFMZ32QQpuKIj7r7NKWU=;
+        b=dSUXLhcRKIZVH3q5lAX9w1Sjipi2FBkD3S3AJw8zTLfOJybtcjQoPR1iTC7PLnVVuf
+         TpaUyfjZ7mwW/0WOfIdM/KQYj8DsRzcXOQWCRdFRAsaNjYx4LhHo9LGEr2BXQo9SVB4c
+         Vew7ExS55SDBCIQcUathisVLmkU5xfdBBZyByYFc59O2NtR/SFG3pELPoMILT7pHFkP2
+         E5c7mWZIDNSQj6OojMGL1tRz9EcOy82oNgC8XMaGSYGz3UFFBzowfv9SRchUaD5xIi+J
+         a5C4WmW5YAgqfam8iTjrfr7Zo6nPUor/YeKLZNRQvYWrPKTGKKqDY7E8tqE0SXPrLUJI
+         FZGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zQo9CpEQOxd8V/Gnq9d1IqgBFMZ32QQpuKIj7r7NKWU=;
+        b=qmZ30vym4PGowfzPkXCDZOi25/Fklh/QMxg+5OyaXK3be1r5bgJQDFksaIOMsMyQyi
+         0Dj6wZd+hl4ls6bqyPDbIXxKL3TeXRmxAdP339wYfeGT97hp2504ESELwApVQb0biM7W
+         uC1FyZ7ekIhgRLpkKownz9bbUz9O8sH1NvW7UNh5XQFeu3nTZgVJsfrj9H1pqA7rKHhd
+         y2obHs4+QtCzgaT4VC3l2HXWf+LC/QgB0sWzGu2jTXhO/l77QBpBwz3ja1+f36VWGgqP
+         5wCmHrqa5xuUyVoEoVO1npsMXvKeB3dzF6tEaW8tBgtlZrYgxTdi5zxy+mvtfG7o7Rmr
+         jfgQ==
+X-Gm-Message-State: ACrzQf3+RyCNQ+C5R8yUF6AEn+R/rPyq7CsqX9r2coEajBjMFRfteTcz
+	/DPqjnI+BwP/kXSj7Rc+hA4QGc221WeG5htZHSU=
+X-Google-Smtp-Source: AMsMyM4qJfDM7UUUcDtmV8h9gbgCQq1xrzkSI7eacitRYeX1RGvN1jyZLWCyX1jvdEm9guTjynYyZLTk48YwcyGMRtQ=
+X-Received: by 2002:a05:6870:40c8:b0:136:4389:1375 with SMTP id
+ l8-20020a05687040c800b0013643891375mr7561495oal.46.1665432977966; Mon, 10 Oct
+ 2022 13:16:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <158e9f4f-9929-4244-b040-78f2e54bc028@app.fastmail.com>
-In-Reply-To: <87ilkrpqka.fsf@kernel.org>
-References: 
- <CA+G9fYsZ_qypa=jHY_dJ=tqX4515+qrV9n2SWXVDHve826nF7Q@mail.gmail.com>
- <87ilkrpqka.fsf@kernel.org>
-Date: Mon, 10 Oct 2022 19:52:09 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kalle Valo" <kvalo@kernel.org>,
- "Naresh Kamboju" <naresh.kamboju@linaro.org>
-Cc: Netdev <netdev@vger.kernel.org>,
- "open list" <linux-kernel@vger.kernel.org>, linux-wireless@vger.kernel.org,
- "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, ath11k@lists.infradead.org,
- regressions@lists.linux.dev, lkft-triage@lists.linaro.org
-Subject: Re: drivers/net/wireless/ath/ath11k/mac.c:2238:29: warning:
- 'ath11k_peer_assoc_h_he_limit' reading 16 bytes from a region of size 0
-Content-Type: text/plain
+MIME-Version: 1.0
+References: <20221010060512.3064524-1-linux@roeck-us.net>
+In-Reply-To: <20221010060512.3064524-1-linux@roeck-us.net>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Mon, 10 Oct 2022 16:16:06 -0400
+Message-ID: <CADnq5_N5wLSnACnpuqVCMm7LGc20cdGdRhtnwRjUBq7vbrZn8A@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: fix array-bounds error in
+ dc_stream_remove_writeback() [take 2]
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: amd-gfx@lists.freedesktop.org, regressions@lists.linux.dev, 
+	Leo Li <sunpeng.li@amd.com>, Xinhui.Pan@amd.com, 
+	Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, Aurabindo Pillai <aurabindo.pillai@amd.com>, 
+	Hamza Mahfooz <hamza.mahfooz@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Oct 10, 2022, at 6:54 PM, Kalle Valo wrote:
-> Naresh Kamboju <naresh.kamboju@linaro.org> writes:
+Applied.  Thanks.
 
->>
->> Build log: https://builds.tuxbuild.com/2F4W7nZHNx3T88RB0gaCZ9hBX6c/
->
-> Thanks, I was able to reproduce it now and submitted a patch:
->
-> https://patchwork.kernel.org/project/linux-wireless/patch/20221010160638.20152-1-kvalo@kernel.org/
->
-> But it's strange that nobody else (myself included) didn't see this
-> earlier. Nor later for that matter, this is the only report I got about
-> this. Arnd, any ideas what could cause this only to happen on GCC 11?
->
-> -- 
-> https://patchwork.kernel.org/project/linux-wireless/list/
->
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Alex
 
-No idea here, though I have not tried to reproduce it. This looks
-like a false positive to me, which might be the result of some
-missed optimization in the compiler when building with certain
-options. I see in the .config that KASAN is enabled, and this sometimes
-causes odd behavior like this. If it does not happen without KASAN,
-maybe report it as a bug against the compiler.
-
-     Arnd
+On Mon, Oct 10, 2022 at 2:05 AM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> Commit 5d8c3e836fc2 ("drm/amd/display: fix array-bounds error in
+> dc_stream_remove_writeback()") tried to fix an array bounds error seen
+> with gcc 12.0. Unfortunately, that results in another array bounds error,
+> seen with older versions of gcc.
+>
+> Building csky:allmodconfig ... failed
+> --------------
+> Error log:
+> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_stream.c:
+>         In function 'dc_stream_remove_writeback':
+> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_stream.c:527:83:
+>         error: array subscript 1 is above array bounds of 'struct dc_writeback_info[1]' [-Werror=array-bounds]
+>   527 |                                 stream->writeback_info[j] = stream->writeback_info[i];
+>       |                                                             ~~~~~~~~~~~~~~~~~~~~~~^~~
+> In file included from drivers/gpu/drm/amd/amdgpu/../display/dc/dc.h:1269,
+>                  from drivers/gpu/drm/amd/amdgpu/../display/dc/inc/core_types.h:29,
+>                  from drivers/gpu/drm/amd/amdgpu/../display/dc/basics/dc_common.h:29,
+>                  from drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_stream.c:27:
+> drivers/gpu/drm/amd/amdgpu/../display/dc/dc_stream.h:241:34: note: while referencing 'writeback_info'
+>   241 |         struct dc_writeback_info writeback_info[MAX_DWB_PIPES];
+>
+> We could check both i and j for overflow to fix the problem. That would,
+> however, be not make much sense since it is known and provable that j <= i.
+> Also, the check introduced with commit 5d8c3e836fc2 does not really add
+> value since it checks if j < MAX_DWB_PIPES. Since it is known that j <= i,
+> it would make more sense to check if i < MAX_DWB_PIPES. Unfortunately, that
+> does not help to solve the problem observed here: gcc still complains.
+>
+> To solve the problem, replace the subsequent check for 'i != j' with
+> 'j < i'. This is identical to the original check since we know that j <= i,
+> and it makes all versions of gcc happy. Drop the check introduced with
+> commit 5d8c3e836fc2 since it is not really useful and does not solve the
+> problem.
+>
+> Cc: Aurabindo Pillai <aurabindo.pillai@amd.com>
+> Cc: Hamza Mahfooz <hamza.mahfooz@amd.com>
+> Fixes: 5d8c3e836fc2 ("drm/amd/display: fix array-bounds error in dc_stream_remove_writeback()")
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+>  drivers/gpu/drm/amd/display/dc/core/dc_stream.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+> index ae13887756bf..9f568d618cd0 100644
+> --- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
+> @@ -520,9 +520,9 @@ bool dc_stream_remove_writeback(struct dc *dc,
+>         }
+>
+>         /* remove writeback info for disabled writeback pipes from stream */
+> -       for (i = 0, j = 0; i < stream->num_wb_info && j < MAX_DWB_PIPES; i++) {
+> +       for (i = 0, j = 0; i < stream->num_wb_info; i++) {
+>                 if (stream->writeback_info[i].wb_enabled) {
+> -                       if (i != j)
+> +                       if (j < i)
+>                                 /* trim the array */
+>                                 stream->writeback_info[j] = stream->writeback_info[i];
+>                         j++;
+> --
+> 2.36.2
+>
