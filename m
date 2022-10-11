@@ -1,72 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244AD23A2
-	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 08:13:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46790C433C1;
-	Tue, 11 Oct 2022 08:13:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1665475982;
-	bh=hdV/HagkJ26SOAJFvJzmaF51kGu9RxKTWkSj9OFXJ9o=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=BipUaM7W4M0iTTaKjf/MvpWknYY7hihA0mTYx0uxRN29Mp/M0UejN70x+4LkrhLXJ
-	 WQUxO/lGsuQo/76gHn00sLWGFuLu/rtVqVdR/7q0w2YaxYfswVpqDcGaDn35fapdCc
-	 qI821XfCJXBwFnBC/ITOR9oWR6J3enqSOEZ4Oh+M2SdRxte0MXHeQXXyH89XVXnb5J
-	 WQtykTZ9/dMOg/MQNmq/wefEGYBki3JTAorcRujJGa5p+FBO8oVSFUO2aPidwQ0cr1
-	 HLz53LFGilK3SEzRKmNIeSP0mFQvy+BqPSaimShSBPYpL2PPOQMUjKR40F3dX+4VoO
-	 7sQdaiWbLjD3A==
-From: Kalle Valo <kvalo@kernel.org>
-To: "Arnd Bergmann" <arnd@arndb.de>
-Cc: "Naresh Kamboju" <naresh.kamboju@linaro.org>,  Netdev <netdev@vger.kernel.org>,  "open list" <linux-kernel@vger.kernel.org>,  linux-wireless@vger.kernel.org,  "David S . Miller" <davem@davemloft.net>,  "Eric Dumazet" <edumazet@google.com>,  "Jakub Kicinski" <kuba@kernel.org>,  "Paolo Abeni" <pabeni@redhat.com>,  ath11k@lists.infradead.org,  regressions@lists.linux.dev,  lkft-triage@lists.linaro.org
-Subject: Re: drivers/net/wireless/ath/ath11k/mac.c:2238:29: warning: 'ath11k_peer_assoc_h_he_limit' reading 16 bytes from a region of size 0
-References: <CA+G9fYsZ_qypa=jHY_dJ=tqX4515+qrV9n2SWXVDHve826nF7Q@mail.gmail.com>
-	<87ilkrpqka.fsf@kernel.org>
-	<158e9f4f-9929-4244-b040-78f2e54bc028@app.fastmail.com>
-Date: Tue, 11 Oct 2022 11:12:56 +0300
-In-Reply-To: <158e9f4f-9929-4244-b040-78f2e54bc028@app.fastmail.com> (Arnd
-	Bergmann's message of "Mon, 10 Oct 2022 19:52:09 +0200")
-Message-ID: <87tu4aok1j.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29AF2564
+	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 09:03:32 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oiBAb-0003LK-Jg; Tue, 11 Oct 2022 11:03:25 +0200
+Message-ID: <acc587a0-2c42-b039-fe2a-48f75e7ed462@leemhuis.info>
+Date: Tue, 11 Oct 2022 11:03:25 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: Fw: [Bug 216557] New: tcp connection not working over ip_vti
+ interface #forregzbot
+Content-Language: en-US, de-DE
+To: netdev@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20221007141751.1336e50b@hermes.local>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20221007141751.1336e50b@hermes.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1665479013;bc012c48;
+X-HE-SMSGID: 1oiBAb-0003LK-Jg
 
-"Arnd Bergmann" <arnd@arndb.de> writes:
+[Note: this mail is primarily send for documentation purposes and/or for
+regzbot, my Linux kernel regression tracking bot. That's why I removed
+most or all folks from the list of recipients, but left any that looked
+like a mailing lists. These mails usually contain '#forregzbot' in the
+subject, to make them easy to spot and filter out.]
 
-> On Mon, Oct 10, 2022, at 6:54 PM, Kalle Valo wrote:
->> Naresh Kamboju <naresh.kamboju@linaro.org> writes:
->
->>>
->>> Build log: https://builds.tuxbuild.com/2F4W7nZHNx3T88RB0gaCZ9hBX6c/
->>
->> Thanks, I was able to reproduce it now and submitted a patch:
->>
->> https://patchwork.kernel.org/project/linux-wireless/patch/20221010160638.20152-1-kvalo@kernel.org/
->>
->> But it's strange that nobody else (myself included) didn't see this
->> earlier. Nor later for that matter, this is the only report I got about
->> this. Arnd, any ideas what could cause this only to happen on GCC 11?
->>
->> -- 
->> https://patchwork.kernel.org/project/linux-wireless/list/
->>
->> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
->
-> No idea here, though I have not tried to reproduce it. This looks
-> like a false positive to me, which might be the result of some
-> missed optimization in the compiler when building with certain
-> options. I see in the .config that KASAN is enabled, and this sometimes
-> causes odd behavior like this. If it does not happen without KASAN,
-> maybe report it as a bug against the compiler.
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-You guessed correctly, disabling KASAN makes the warning go away. So no
-point of reporting this to GCC, thanks for the help!
+Hi, this is your Linux kernel regression tracker.
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+On 07.10.22 23:17, Stephen Hemminger wrote:
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> Begin forwarded message:
+> 
+> Date: Fri, 07 Oct 2022 20:51:12 +0000
+> From: bugzilla-daemon@kernel.org
+> To: stephen@networkplumber.org
+> Subject: [Bug 216557] New: tcp connection not working over ip_vti interface
+> 
+> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=216557
+> 
+>             Bug ID: 216557
+>            Summary: tcp connection not working over ip_vti interface
+>            Product: Networking
+>            Version: 2.5
+>     Kernel Version: 5.15.53
+>           Hardware: All
+>                 OS: Linux
+>               Tree: Mainline
+>             Status: NEW
+>           Severity: high
+>           Priority: P1
+>          Component: IPV4
+>           Assignee: stephen@networkplumber.org
+>           Reporter: monil191989@gmail.com
+>         Regression: No
+> 
+> TCP protocol is not working, when ipsec tunnel has been setup and ip_vti tunnel
+> is used for route based ipsec.
+> 
+> After the below changes merged with latest kernel. xfrm4_policy_check in
+> tcp_v4_rcv drops all packets except first syn packet under XfrmInTmplMismatch
+> when local destined packets are received over ip_vti tunnel.
+> 
+> author  Eyal Birger <eyal.birger@gmail.com>     2022-05-13 23:34:02 +0300
+> committer       Greg Kroah-Hartman <gregkh@linuxfoundation.org> 2022-05-25
+> 09:57:30 +0200
+> commit  952c2464963895271c31698970e7ec1ad6f0fe45 (patch)
+> tree    9e8300c45a0eb5a9555eae017f8ae561f3e8bc51 /include/net/xfrm.h
+> parent  36d8cca5b46fe41b59f8011553495ede3b693703 (diff)
+> download        linux-952c2464963895271c31698970e7ec1ad6f0fe45.tar.gz
+> xfrm: fix "disable_policy" flag use when arriving from different devices
+> 
+> 
+> setup:
+> 1) create road warrior ipsec tunnel with local ip x.x.x.x remote ip y.y.y.y.
+> 2) create vti interface using ip tunnel add vti_test local x.x.x.x remote
+> y.y.y.y mode vti 
+> 3) echo 1 > /proc/sys/net/ipv4/conf/vti_test/disable_policy
+> 4) Add default route over vti_test.
+> 5) ping remote ip, ping works.
+> 6) ssh remote ip, ssh dont work. check tcp connection not working.
+> 
+> Root cause:
+> -> with above mentioned commit, now xfrm4_policy_check depends on skb's  
+> IPSKB_NOPOLICY flag which need to be set per skb and it only gets set in
+> ip_route_input_noref .
+> 
+> -> before above change, xfrm4_policy_check was using DST_NOPOLICY which was  
+> checked against dst set in skb.
+> 
+> -> ip_rcv_finish_core calls ip_route_input_noref only if dst is not valid in  
+> skb.
+> 
+> -> By default in kernel sysctl_ip_early_demux = 1, which means when skb with  
+> syn is received, tcp stack will set DST from skb to sk and in subsequent
+> packets it will copy dst from sk to skb and skip calling ip_route_input_nore
+> inside ip_rcv_finish_core.
+> 
+> -> so for all the subsequent  received packets, IPSKB_NOPOLICY will not get set  
+> and they will get drop.
+> 
+> workaround:
+> only work-aroud is to disable early tcp demux.
+> echo 0 > /proc/sys/net/ipv4/ip_early_demux
+
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
+
+#regzbot introduced e6175a2ed1f1 ^
+https://bugzilla.kernel.org/show_bug.cgi?id=216557
+#regzbot title [Bug 216557] New: tcp connection not working over ip_vti
+interface
+#regzbot monitor:
+https://lore.kernel.org/all/20221009191643.297623-1-eyal.birger@gmail.com/
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
