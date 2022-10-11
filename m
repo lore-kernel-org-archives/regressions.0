@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29AF2564
-	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 09:03:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFC42564
+	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 09:49:44 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oiBAb-0003LK-Jg; Tue, 11 Oct 2022 11:03:25 +0200
-Message-ID: <acc587a0-2c42-b039-fe2a-48f75e7ed462@leemhuis.info>
-Date: Tue, 11 Oct 2022 11:03:25 +0200
+	id 1oiBtO-0002hh-32; Tue, 11 Oct 2022 11:49:42 +0200
+Message-ID: <c47b4831-597e-6876-6d53-24866c739237@leemhuis.info>
+Date: Tue, 11 Oct 2022 11:49:41 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,135 +16,68 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: Fw: [Bug 216557] New: tcp connection not working over ip_vti
- interface #forregzbot
 Content-Language: en-US, de-DE
-To: netdev@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20221007141751.1336e50b@hermes.local>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, regressions@lists.linux.dev
+References: <20220927191200.216488-1-hamza.mahfooz@amd.com>
+ <20221006064615.GA2817657@roeck-us.net>
+ <20221006172337.GA753466@roeck-us.net>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20221007141751.1336e50b@hermes.local>
+Subject: Re: [PATCH] drm/amd/display: fix array-bounds error in
+ dc_stream_remove_writeback()
+In-Reply-To: <20221006172337.GA753466@roeck-us.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1665479013;bc012c48;
-X-HE-SMSGID: 1oiBAb-0003LK-Jg
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1665481784;0ad9c39c;
+X-HE-SMSGID: 1oiBtO-0002hh-32
 
-[Note: this mail is primarily send for documentation purposes and/or for
-regzbot, my Linux kernel regression tracking bot. That's why I removed
-most or all folks from the list of recipients, but left any that looked
-like a mailing lists. These mails usually contain '#forregzbot' in the
-subject, to make them easy to spot and filter out.]
+[removed a lot of people from the list of recipients, as this is mainly
+for Guenter]
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
+Hi Guenter!
 
-Hi, this is your Linux kernel regression tracker.
+On 06.10.22 19:23, Guenter Roeck wrote:
+> On Wed, Oct 05, 2022 at 11:46:15PM -0700, Guenter Roeck wrote:
+>> On Tue, Sep 27, 2022 at 03:12:00PM -0400, Hamza Mahfooz wrote:
+>>> Address the following error:
+>>> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_stream.c: In function ‘dc_stream_remove_writeback’:
+>>> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_stream.c:527:55: error: array subscript [0, 0] is outside array bounds of ‘struct dc_writeback_info[1]’ [-Werror=array-bounds]
+>>>   527 |                                 stream->writeback_info[j] = stream->writeback_info[i];
+>>>       |                                 ~~~~~~~~~~~~~~~~~~~~~~^~~
+>>> In file included from ./drivers/gpu/drm/amd/amdgpu/../display/dc/dc.h:1269,
+>>>                  from ./drivers/gpu/drm/amd/amdgpu/../display/dc/inc/core_types.h:29,
+>>>                  from ./drivers/gpu/drm/amd/amdgpu/../display/dc/basics/dc_common.h:29,
+>>>                  from drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_stream.c:27:
+>>> ./drivers/gpu/drm/amd/amdgpu/../display/dc/dc_stream.h:241:34: note: while referencing ‘writeback_info’
+>>>   241 |         struct dc_writeback_info writeback_info[MAX_DWB_PIPES];
+>>>       |
+>>>
+>>> Currently, we aren't checking to see if j remains within
+>>> writeback_info[]'s bounds. So, add a check to make sure that we aren't
+>>> overflowing the buffer.
+>>>
+>>> Signed-off-by: Hamza Mahfooz <hamza.mahfooz@amd.com>
+>>
+>> With gcc 11.3, this patch doesn't fix a problem, it introduces one.
+>>
+>> Building csky:allmodconfig ... failed
+>> --------------
+>> Error log:
+>> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_stream.c: In function 'dc_stream_remove_writeback':
+>> drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_stream.c:527:83: error: array subscript 1 is above array bounds of 'struct dc_writeback_info[1]' [-Werror=array-bounds]
+>>   527 |                                 stream->writeback_info[j] = stream->writeback_info[i];
+>
+> [...]
+>
+> #regzbot introduced: 5d8c3e836fc2
 
-On 07.10.22 23:17, Stephen Hemminger wrote:
+Thx for using regzbot, much appreciated. JFYI, the initial report was
+your own mail you were replying to here, so a "#regzbot ^introduced:
+..."  would have been more appropriate. In this case it didn't matter
+anyway, as the fix didn't include a "Link:" tag to the initial report
+anyway. No worries, I just have to tell regzbot about the fix manually then:
 
-> Begin forwarded message:
-> 
-> Date: Fri, 07 Oct 2022 20:51:12 +0000
-> From: bugzilla-daemon@kernel.org
-> To: stephen@networkplumber.org
-> Subject: [Bug 216557] New: tcp connection not working over ip_vti interface
-> 
-> 
-> https://bugzilla.kernel.org/show_bug.cgi?id=216557
-> 
->             Bug ID: 216557
->            Summary: tcp connection not working over ip_vti interface
->            Product: Networking
->            Version: 2.5
->     Kernel Version: 5.15.53
->           Hardware: All
->                 OS: Linux
->               Tree: Mainline
->             Status: NEW
->           Severity: high
->           Priority: P1
->          Component: IPV4
->           Assignee: stephen@networkplumber.org
->           Reporter: monil191989@gmail.com
->         Regression: No
-> 
-> TCP protocol is not working, when ipsec tunnel has been setup and ip_vti tunnel
-> is used for route based ipsec.
-> 
-> After the below changes merged with latest kernel. xfrm4_policy_check in
-> tcp_v4_rcv drops all packets except first syn packet under XfrmInTmplMismatch
-> when local destined packets are received over ip_vti tunnel.
-> 
-> author  Eyal Birger <eyal.birger@gmail.com>     2022-05-13 23:34:02 +0300
-> committer       Greg Kroah-Hartman <gregkh@linuxfoundation.org> 2022-05-25
-> 09:57:30 +0200
-> commit  952c2464963895271c31698970e7ec1ad6f0fe45 (patch)
-> tree    9e8300c45a0eb5a9555eae017f8ae561f3e8bc51 /include/net/xfrm.h
-> parent  36d8cca5b46fe41b59f8011553495ede3b693703 (diff)
-> download        linux-952c2464963895271c31698970e7ec1ad6f0fe45.tar.gz
-> xfrm: fix "disable_policy" flag use when arriving from different devices
-> 
-> 
-> setup:
-> 1) create road warrior ipsec tunnel with local ip x.x.x.x remote ip y.y.y.y.
-> 2) create vti interface using ip tunnel add vti_test local x.x.x.x remote
-> y.y.y.y mode vti 
-> 3) echo 1 > /proc/sys/net/ipv4/conf/vti_test/disable_policy
-> 4) Add default route over vti_test.
-> 5) ping remote ip, ping works.
-> 6) ssh remote ip, ssh dont work. check tcp connection not working.
-> 
-> Root cause:
-> -> with above mentioned commit, now xfrm4_policy_check depends on skb's  
-> IPSKB_NOPOLICY flag which need to be set per skb and it only gets set in
-> ip_route_input_noref .
-> 
-> -> before above change, xfrm4_policy_check was using DST_NOPOLICY which was  
-> checked against dst set in skb.
-> 
-> -> ip_rcv_finish_core calls ip_route_input_noref only if dst is not valid in  
-> skb.
-> 
-> -> By default in kernel sysctl_ip_early_demux = 1, which means when skb with  
-> syn is received, tcp stack will set DST from skb to sk and in subsequent
-> packets it will copy dst from sk to skb and skip calling ip_route_input_nore
-> inside ip_rcv_finish_core.
-> 
-> -> so for all the subsequent  received packets, IPSKB_NOPOLICY will not get set  
-> and they will get drop.
-> 
-> workaround:
-> only work-aroud is to disable early tcp demux.
-> echo 0 > /proc/sys/net/ipv4/ip_early_demux
+#regzbot fixed-by: faf4d8e07f5b67
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
-
-#regzbot introduced e6175a2ed1f1 ^
-https://bugzilla.kernel.org/show_bug.cgi?id=216557
-#regzbot title [Bug 216557] New: tcp connection not working over ip_vti
-interface
-#regzbot monitor:
-https://lore.kernel.org/all/20221009191643.297623-1-eyal.birger@gmail.com/
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+Ciao, Thorsten
