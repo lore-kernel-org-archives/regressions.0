@@ -1,91 +1,60 @@
-Received: from wnew3-smtp.messagingengine.com (wnew3-smtp.messagingengine.com [64.147.123.17])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C0172CA2
-	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 10:53:27 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailnew.west.internal (Postfix) with ESMTP id B498C2B066B9;
-	Tue, 11 Oct 2022 06:53:25 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Tue, 11 Oct 2022 06:53:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm2; t=1665485605; x=1665489205; bh=5bI3YI3TxD
-	wB3OBrM9zXo72ykVPw/KrTh1LKAdTEzQI=; b=wvKNwKMxqrtAUNztuQlpfH9rp1
-	brYdNWsHKjW5fJGmq9KxBMWNgghy92WBf4MC7Df/2iyjxjmhvBS9lfU/852FLQBp
-	cwYxE7DKRf1odZT1cYvYmIOjaFXYHx1v9iQfOZ1r45PpQULyQ73bENRT2VQaF14n
-	YlSUTQWrnjdvMW5/vOFs1RpnahKqADuw8MKEfsOS7DOCiPl8jJUcMj54k+6YL/cP
-	Tldi28IarLCcK31EyloZYKNFdkDjGMo5sgbySgmeTpy7U14eqb6cErLRRWgnPBRL
-	5JF2BDvJFdUGJNEaZehLDR7ifkamlAlDo52ovoiZk8a6s4AnrGC4lGLa7D/Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1665485605; x=1665489205; bh=5bI3YI3TxDwB3OBrM9zXo72ykVPw
-	/KrTh1LKAdTEzQI=; b=QiyfXg4wplRnzHFR+cKAh/LuF+QhtxgGfaKaoB9f8dyO
-	41zuh4OCh3LAMg4AEswO0xUhCGhmzHV8pNpkmkRBcuTeFDIeiBfw464gNOdcqn4I
-	fFFPIYbZCGph4Y1DbFmnVdv7soycxHa2mLCXm1LiV2NLX5Ofs0QiFuHBNtEOyXcM
-	uSFkq7zJo2eoNmSWveue5aUznNqZ04sn7yu2lATDofJ0jSGdfILE6BQEBY2e32qg
-	H0XRSS/QYLFzQYuA4wig9W2u4LP2bAW4VtELDlZbNut75XPUyRQ5DeCUiiHM2elL
-	vp6jgsEcas+IeiCGy2bMpewivf1Zqz3ZMcf30umdXg==
-X-ME-Sender: <xms:JEtFY32lcooBYztdni67Wwmf0LubIg_dQcMQkf3jQrxQ-oDXKtPCUw>
-    <xme:JEtFY2HgsDD9Sbsgfw-Jy2gu8rI3E0Sl9eGDOrmslweQR1ZqSxMeUEs_-Yh-k0Swd
-    mPXzYddL1kPBGVBsoI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeejiedgvdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:JEtFY34Hs5N1C3qu7St5NaZMRwdLH8GqRYGVSNCkcjMa44U90zOy6Q>
-    <xmx:JEtFY83QAC37vCJ0ovUwIfvJSa_Vo9YEENl-M-JBNfvib88fBVKhGQ>
-    <xmx:JEtFY6HZMGQ9A2HNXL7dS-yvA5FZgAEJlvb5J-il0U7Y-PCW9C3p5A>
-    <xmx:JUtFY9C-zwgQtavNsqAMd3xx1ciDw6jSZur_Rm2SJnHJdxi7sCsWrmxdE6s>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id B75D1B60086; Tue, 11 Oct 2022 06:53:24 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1015-gaf7d526680-fm-20220929.001-gaf7d5266
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D302CA2
+	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 11:40:00 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oiDc6-0000Wf-6U; Tue, 11 Oct 2022 13:39:58 +0200
+Message-ID: <80835d45-b023-acc9-cd7e-25fa8d66be63@leemhuis.info>
+Date: Tue, 11 Oct 2022 13:39:57 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <e21a4eab-fe4f-4028-a22e-d60a6feb4dac@app.fastmail.com>
-In-Reply-To: <87tu4aok1j.fsf@kernel.org>
-References: 
- <CA+G9fYsZ_qypa=jHY_dJ=tqX4515+qrV9n2SWXVDHve826nF7Q@mail.gmail.com>
- <87ilkrpqka.fsf@kernel.org>
- <158e9f4f-9929-4244-b040-78f2e54bc028@app.fastmail.com>
- <87tu4aok1j.fsf@kernel.org>
-Date: Tue, 11 Oct 2022 12:53:04 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Kalle Valo" <kvalo@kernel.org>
-Cc: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- Netdev <netdev@vger.kernel.org>, "open list" <linux-kernel@vger.kernel.org>,
- linux-wireless@vger.kernel.org, "David S . Miller" <davem@davemloft.net>,
- "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
- "Paolo Abeni" <pabeni@redhat.com>, ath11k@lists.infradead.org,
- regressions@lists.linux.dev, lkft-triage@lists.linaro.org
-Subject: Re: drivers/net/wireless/ath/ath11k/mac.c:2238:29: warning:
- 'ath11k_peer_assoc_h_he_limit' reading 16 bytes from a region of size 0
-Content-Type: text/plain
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Subject: Re: CIFS: attempt to fix kernel bugzilla 215375
+Content-Language: en-US, de-DE
+To: Steve French <smfrench@gmail.com>, Ronnie Sahlberg <lsahlber@redhat.com>,
+ Davyd McColl <davydm@gmail.com>
+Cc: linux-cifs <linux-cifs@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220906054240.4148159-1-lsahlber@redhat.com>
+ <CAH2r5mu2sKKcf3H0wNYVUJgpVYLRSEPdu+PPiWZHJfNnV=aTNA@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CAH2r5mu2sKKcf3H0wNYVUJgpVYLRSEPdu+PPiWZHJfNnV=aTNA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1665488400;b6c08440;
+X-HE-SMSGID: 1oiDc6-0000Wf-6U
 
-On Tue, Oct 11, 2022, at 10:12 AM, Kalle Valo wrote:
-> "Arnd Bergmann" <arnd@arndb.de> writes:
+On 10.09.22 17:19, Steve French wrote:
+> Any thoughts about setting up VMs for Win98 to try this?  Any luck
+> trying to test with the fix?
 
->
-> You guessed correctly, disabling KASAN makes the warning go away. So no
-> point of reporting this to GCC, thanks for the help!
+Ronnie, Steve, any news on that patch and a way forward? More and more
+users are showing up in
+https://bugzilla.kernel.org/show_bug.cgi?id=215375 and complain about
+this regression. :-/ At least one of them apparently tested the patch
+now successfully: https://bugzilla.kernel.org/show_bug.cgi?id=215375#c43
 
-What I meant was that if the problem is specific to KASAN, it might
-be nice to report it in the gcc bug tracker with the KASAN component,
-ideally with some kind of minimized test case or at least preprocessed
-source.
+Ciao, Thorsten
 
-   Arnd
+> On Tue, Sep 6, 2022 at 12:42 AM Ronnie Sahlberg <lsahlber@redhat.com> wrote:
+>>
+>> Steve,
+>> Here is an attempt to fix kernel bz 215375.
+>> I can not test it, since I don't have access to servers this old but the change
+>> should be safe for modern users as it only affects the password field for
+>> "share mode" security, which we do not support anyway.
+>>
+>> It is only tested for regressions with user mode security on win98 and later systems, using ntlmssp
+>> authentication.
+>>
+>>
+>>
+> 
+> 
