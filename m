@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D302CA2
-	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 11:40:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 051673207
+	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 12:09:53 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oiDc6-0000Wf-6U; Tue, 11 Oct 2022 13:39:58 +0200
-Message-ID: <80835d45-b023-acc9-cd7e-25fa8d66be63@leemhuis.info>
-Date: Tue, 11 Oct 2022 13:39:57 +0200
+	id 1oiE50-0002YD-LE; Tue, 11 Oct 2022 14:09:50 +0200
+Message-ID: <8be1e839-2eb8-43d0-9ecb-6ff8c3aa3f2d@leemhuis.info>
+Date: Tue, 11 Oct 2022 14:09:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,45 +16,52 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: CIFS: attempt to fix kernel bugzilla 215375
 Content-Language: en-US, de-DE
-To: Steve French <smfrench@gmail.com>, Ronnie Sahlberg <lsahlber@redhat.com>,
- Davyd McColl <davydm@gmail.com>
-Cc: linux-cifs <linux-cifs@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220906054240.4148159-1-lsahlber@redhat.com>
- <CAH2r5mu2sKKcf3H0wNYVUJgpVYLRSEPdu+PPiWZHJfNnV=aTNA@mail.gmail.com>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+ linux-btrfs <linux-btrfs@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Viktor Kuzmin <kvaster@gmail.com>
+To: David Sterba <dsterba@suse.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAH2r5mu2sKKcf3H0wNYVUJgpVYLRSEPdu+PPiWZHJfNnV=aTNA@mail.gmail.com>
+Subject: Bug 216559 - btrfs crash root mount RAID0 caused by ac0677348f3c2
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1665488400;b6c08440;
-X-HE-SMSGID: 1oiDc6-0000Wf-6U
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1665490194;aef2bcee;
+X-HE-SMSGID: 1oiE50-0002YD-LE
 
-On 10.09.22 17:19, Steve French wrote:
-> Any thoughts about setting up VMs for Win98 to try this?  Any luck
-> trying to test with the fix?
+Hi, this is your Linux kernel regression tracker speaking.
 
-Ronnie, Steve, any news on that patch and a way forward? More and more
-users are showing up in
-https://bugzilla.kernel.org/show_bug.cgi?id=215375 and complain about
-this regression. :-/ At least one of them apparently tested the patch
-now successfully: https://bugzilla.kernel.org/show_bug.cgi?id=215375#c43
+David, I noticed a regression report in bugzilla.kernel.org apparently
+caused by a changed of yours. As many (most?) kernel developer don't
+keep an eye on the bug-tracker, I decided to forward the report by mail.
+Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216559 :
 
-Ciao, Thorsten
-
-> On Tue, Sep 6, 2022 at 12:42 AM Ronnie Sahlberg <lsahlber@redhat.com> wrote:
->>
->> Steve,
->> Here is an attempt to fix kernel bz 215375.
->> I can not test it, since I don't have access to servers this old but the change
->> should be safe for modern users as it only affects the password field for
->> "share mode" security, which we do not support anyway.
->>
->> It is only tested for regressions with user mode security on win98 and later systems, using ntlmssp
->> authentication.
->>
->>
->>
+> [reply] [−] Description Viktor Kuzmin 2022-10-08 20:41:32 UTC
 > 
+> In linux 6.0.0 there was change in block-group.c file in function btrfs_rmap_block:
+> [...]
+
+FWIW, the reporter (CCed) here meant change ac0677348f3c2 ("btrfs: merge
+calculations for simple striped profiles in btrfs_rmap_block").
+Reverting it fixes the problem.
+
+> After this change I have a crash with DIVIDE by ZERO error. It seems that map->sub_stripes can be zero.
 > 
+> My setup is 2x 1TB nvme with space_cache=v2 and discard=async btrfs raid0.
+
+See the ticket for more details and screenshots from the crash.
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: ac0677348f3c2
+https://bugzilla.kernel.org/show_bug.cgi?id=216559
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
