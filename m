@@ -1,156 +1,151 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739853C32
-	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 16:59:31 +0000 (UTC)
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE0233C32
+	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 17:28:39 +0000 (UTC)
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 22AD03F474
-	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 16:52:18 +0000 (UTC)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 437C13F481
+	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 17:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1665507138;
-	bh=G9FIrwOq5jqn12Do6LwEO9BHB3Wb2O5VwjjbsZsmfdg=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type;
-	b=HqZon7Y2oYwrILpVIyUEsOLJ3lCqHu2SAiHAfxrnFB7R3tSOEPfLnlEGynh8q2qec
-	 QSmNs2LhQePMMj5Yu4+5iTXLyz5it1SGHw34ddF1PZmtTDUEhM4TMqHG6czWg525hi
-	 eO7UMRCdQiUEPJonaxkO0VmM8PqT/2oBmSgXA/3xPzYmQ5OefdobUU2+3PPKzV6iXU
-	 XTC+ozbkmJ4lgwogHJOwOdI/AVIrnyeseJMkOrfcwsk1ni0S0j4X1isPr8/jz7ROvu
-	 93qWWx5LagfHFhFl0HffbVvYSstz8pB8KAP615myzAYAtXCtVSpYOIVIlcFhIm6KVs
-	 SVKcRORX/H0AA==
-Received: by mail-wr1-f72.google.com with SMTP id e11-20020adfa74b000000b0022e39e5c151so4042707wrd.3
-        for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 09:52:18 -0700 (PDT)
+	s=20210705; t=1665508771;
+	bh=my6sVOU8VtRYMa675sr9CNOS9J5JEpSv1gx/NSSrwBI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=ihB/HABPk5WS1QxpMam+eSfj+vmPxd+7ZJvdjoTbWo0U3ZqjazDnvZa7QJZvYjgdN
+	 sSNehad9fdxFSwWJocOfhvyrM1bhflM7AK3vfff6OsRy+/+IduPLIgQFWOjeumv17j
+	 9o568MEf9knwRH2qH3ajHM62GHEbSu4pVbELW27kY5ayhe0G1GCKAJJlX5q+a7Owfc
+	 Mt5XF7gtH7cOuST2I5MyncWnaH+UxXf8y0ei3Y9qT3NnW3s/sQOvOPulyDePtQO2Lc
+	 82df5DMVrISUfdmjoIljWuRaGM23Gk9SfEG5/L76T7grpeedoUIT4XdyLEujOS2aM7
+	 ktIp5q4+V9Cqg==
+Received: by mail-wm1-f70.google.com with SMTP id q14-20020a7bce8e000000b003c6b7debf22so1324233wmj.0
+        for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 10:19:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=subject:from:cc:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=G9FIrwOq5jqn12Do6LwEO9BHB3Wb2O5VwjjbsZsmfdg=;
-        b=S29mt81L9/WUzWCoHo34lBIeCtEcSEVVXr6m0Mu38J886LX4LuU75/bKM1jur8mMsn
-         K1seQ0VPANgKO1rf+VY3YR9vMqdN/zupHocOskGVyBQjFHxar2hRTH/dvzAaB3sgf3tk
-         XTAy99XP6srLANiA452wc0TihhkzC8ktPTQuG7bvcq8i27SxDLYaGsuJPn5Y90cdrb6z
-         p9yzl+ehhBzMRmKGkJAf12afEIYjKA6cxstYHu06FTqoRHPO7kROx/CcBb81F7N8C2XH
-         EUbTL8CbtYDb8PhwXmVs6N/0b9U/SbRRjqEIqOPNFyEB80OGhT3jVT98vPi0JEltbMH3
-         JRuw==
-X-Gm-Message-State: ACrzQf19LQO6NsXKQW2eZ/0E7IuaWWRERl+X/v/4+ohuvszmnDvwHrlJ
-	fUgkWcpmHbLobsUfWogHwXt10GDRTITnYrAUVILT05gn355hScpt9WQbkWeMDja9BGfil3l4SzO
-	UsSFGFBqsVAZ78O5OUwYUTEQslapNcqpbscq2TQxA
-X-Received: by 2002:adf:f710:0:b0:22c:d668:504e with SMTP id r16-20020adff710000000b0022cd668504emr15632060wrp.98.1665507136535;
-        Tue, 11 Oct 2022 09:52:16 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM62BZlONGt70hun353coJB4OjIYnf5wi5JUwzBGEIq0Tg3ZGZyL9z1pYmkcN1Mo6Ul5wy7zDA==
-X-Received: by 2002:adf:f710:0:b0:22c:d668:504e with SMTP id r16-20020adff710000000b0022cd668504emr15632042wrp.98.1665507136176;
-        Tue, 11 Oct 2022 09:52:16 -0700 (PDT)
-Received: from ?IPV6:2a01:4b00:85fd:d700:2160:31b3:dfc8:afef? ([2a01:4b00:85fd:d700:2160:31b3:dfc8:afef])
-        by smtp.gmail.com with ESMTPSA id az29-20020a05600c601d00b003c6b70a4d69sm5612846wmb.42.2022.10.11.09.52.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 11 Oct 2022 09:52:15 -0700 (PDT)
-Message-ID: <d6c9e249-08bd-4439-7dcc-371b32e7b851@canonical.com>
-Date: Tue, 11 Oct 2022 17:52:13 +0100
+        bh=my6sVOU8VtRYMa675sr9CNOS9J5JEpSv1gx/NSSrwBI=;
+        b=AgD0Cgh1/bB9eGYftbDKbBQuO5sxclYJKje+EgZwwOqWDBF9MI2A1qLKUOdelMWFAr
+         uWD2BT4t8uQoTerc6M1lR2mX+v3bD5s6mxdguOiNzRHRx4D/KKw6XEzmj2XHIA8nnC1O
+         Ekp2Y0v7dWBSwhfwFJncF6SmUbGJxdMhCZhBh/NqVCR7nFt8n7eis272lUkT6Bqresn+
+         DghKxgf6blTU4Vd0fpsNc1UsVEeWQhmn8xoqA2ZqS0i3bN/WfWPWS1iW0cD4MwHiblRU
+         0EUtF9wXdHkm3VaOrhDTLBLjnzZK81NBTasO6m9nwbYyfKOGThD6u7QVEUn328s3wbRl
+         726A==
+X-Gm-Message-State: ACrzQf19g6ZI6Xp7Hl2TecdTksvR3Lci7HpDc9xx/WwC9ZPQxcar0gMp
+	9bthCNC41B4JyjZkue1aerPMbmEbqKgdnpWppYyylr7URUXgHZng1KgZJY53AN4yGY+t8sZ6T+u
+	wzDDPMZC9ZtgYN8L0DFfDCyU5pon1O59ErRvUbwzSZug1XdWQ+ktBSGnn
+X-Received: by 2002:a05:600c:418b:b0:3c6:c1e6:b01c with SMTP id p11-20020a05600c418b00b003c6c1e6b01cmr113411wmh.118.1665508770791;
+        Tue, 11 Oct 2022 10:19:30 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6kEfxTPdaaZb76dTujH+ZaW2WgqT1q11a8LoW5U3WyutzRoB267icZUKz0P9CQZnC7l3DX49bwGyxx6kmMa2k=
+X-Received: by 2002:a05:600c:418b:b0:3c6:c1e6:b01c with SMTP id
+ p11-20020a05600c418b00b003c6c1e6b01cmr113396wmh.118.1665508770566; Tue, 11
+ Oct 2022 10:19:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Content-Language: en-US
-To: regressions@lists.linux.dev, stable@vger.kernel.org
-Cc: Eva Kotova <nyandarknessgirl@gmail.com>, linux-riscv@lists.infradead.org,
- coelacanthus@outlook.com, kernel-team@lists.ubuntu.com
+References: <d6c9e249-08bd-4439-7dcc-371b32e7b851@canonical.com> <Y0WgwBgenhnk7/O2@spud>
+In-Reply-To: <Y0WgwBgenhnk7/O2@spud>
 From: Dimitri John Ledkov <dimitri.ledkov@canonical.com>
-Subject: Regression: Fwd: Re: [PATCH] riscv: mmap with PROT_WRITE but no
+Date: Tue, 11 Oct 2022 18:18:54 +0100
+Message-ID: <CADWks+Y3xYc325x2_2jeRh-iyE6i0gi2Ldd_KKBLhB7s9nQhWA@mail.gmail.com>
+Subject: Re: Regression: Fwd: Re: [PATCH] riscv: mmap with PROT_WRITE but no
  PROT_READ is invalid
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------0DLPZ0BJGbltvhaCkZlcupAH"
+To: Conor Dooley <conor@kernel.org>
+Cc: regressions@lists.linux.dev, stable@vger.kernel.org, 
+	Eva Kotova <nyandarknessgirl@gmail.com>, linux-riscv@lists.infradead.org, 
+	coelacanthus@outlook.com, kernel-team@lists.ubuntu.com
+Content-Type: text/plain; charset="UTF-8"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------0DLPZ0BJGbltvhaCkZlcupAH
-Content-Type: multipart/mixed; boundary="------------TRztwcVpFhYexT6hLjgcH9mA";
- protected-headers="v1"
-From: Dimitri John Ledkov <dimitri.ledkov@canonical.com>
-To: regressions@lists.linux.dev, stable@vger.kernel.org
-Cc: Eva Kotova <nyandarknessgirl@gmail.com>, linux-riscv@lists.infradead.org,
- coelacanthus@outlook.com, kernel-team@lists.ubuntu.com
-Message-ID: <d6c9e249-08bd-4439-7dcc-371b32e7b851@canonical.com>
-Subject: Regression: Fwd: Re: [PATCH] riscv: mmap with PROT_WRITE but no
- PROT_READ is invalid
+On Tue, 11 Oct 2022 at 17:58, Conor Dooley <conor@kernel.org> wrote:
+>
+> On Tue, Oct 11, 2022 at 05:52:13PM +0100, Dimitri John Ledkov wrote:
+> > #regzbot ^introduced 2139619bcad7ac44cc8f6f749089120594056613
+> >
+> > Over at https://lore.kernel.org/linux-riscv/Yz80ewHKTPI5Rvuz@spud/T/#ebde47064434d4ca4807b4abb8eb39898c48a8de2
+> > it is reported that 2139619bcad7ac44cc8f6f749089120594056613
+> > regresses userspace (openjdk) on riscv64.
+> >
+> > This commit has already been released in v6.0 kernel upstream,
+> > but has also been included in the stable patch series all the
+> > way back to v4.19.y
+> >
+> > There is a proposed fix for this at
+> > https://lore.kernel.org/linux-riscv/20220915193702.2201018-1-abrestic@rivosinc.com/
+> > which has not yet been merged upstream or in stable series.
+> >
+> > Please review and merge above proposed fix, or please revert
+> > 2139619bcad7ac44cc8f6f749089120594056613 to stop the regression
+> > spreading to all the distributions.
+>
+> Out of curiosity, and given the CC list lacks a CC of the maintainer,
+> who are you actually asking to review and/or merge this?
+>
 
---------------TRztwcVpFhYexT6hLjgcH9mA
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Good point, this is my first time escalating a regression which is now
+in all the stable trees. I guess I should have CC'ed all the M: from
+RISC-V in the Maintainers file. Not just the riscv list.
 
-I3JlZ3pib3QgXmludHJvZHVjZWQgMjEzOTYxOWJjYWQ3YWM0NGNjOGY2Zjc0OTA4OTEyMDU5
-NDA1NjYxMw0KDQpPdmVyIGF0IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LXJpc2N2
-L1l6ODBld0hLVFBJNVJ2dXpAc3B1ZC9ULyNlYmRlNDcwNjQ0MzRkNGNhNDgwN2I0YWJiOGVi
-Mzk4OThjNDhhOGRlMiBpdCBpcyByZXBvcnRlZCB0aGF0IDIxMzk2MTliY2FkN2FjNDRjYzhm
-NmY3NDkwODkxMjA1OTQwNTY2MTMgcmVncmVzc2VzIHVzZXJzcGFjZSAob3Blbmpkaykgb24g
-cmlzY3Y2NC4NCg0KVGhpcyBjb21taXQgaGFzIGFscmVhZHkgYmVlbiByZWxlYXNlZCBpbiB2
-Ni4wIGtlcm5lbCB1cHN0cmVhbSwgYnV0IGhhcyBhbHNvIGJlZW4gaW5jbHVkZWQgaW4gdGhl
-IHN0YWJsZSBwYXRjaCBzZXJpZXMgYWxsIHRoZSB3YXkgYmFjayB0byB2NC4xOS55DQoNClRo
-ZXJlIGlzIGEgcHJvcG9zZWQgZml4IGZvciB0aGlzIGF0IGh0dHBzOi8vbG9yZS5rZXJuZWwu
-b3JnL2xpbnV4LXJpc2N2LzIwMjIwOTE1MTkzNzAyLjIyMDEwMTgtMS1hYnJlc3RpY0ByaXZv
-c2luYy5jb20vIHdoaWNoIGhhcyBub3QgeWV0IGJlZW4gbWVyZ2VkIHVwc3RyZWFtIG9yIGlu
-IHN0YWJsZSBzZXJpZXMuDQoNClBsZWFzZSByZXZpZXcgYW5kIG1lcmdlIGFib3ZlIHByb3Bv
-c2VkIGZpeCwgb3IgcGxlYXNlIHJldmVydCAyMTM5NjE5YmNhZDdhYzQ0Y2M4ZjZmNzQ5MDg5
-MTIwNTk0MDU2NjEzIHRvIHN0b3AgdGhlIHJlZ3Jlc3Npb24gc3ByZWFkaW5nIHRvIGFsbCB0
-aGUgZGlzdHJpYnV0aW9ucy4NCg0KSW4gVWJ1bnR1IHRoaXMgcmVncmVzc2lvbiB3aWxsIGJl
-IHRyYWNrZWQgYXMgaHR0cHM6Ly9idWdzLmxhdW5jaHBhZC5uZXQvYnVncy8rYnVnLzE5OTI0
-ODQNCg0KLS0tLS0tLS0gRm9yd2FyZGVkIE1lc3NhZ2UgLS0tLS0tLS0NClN1YmplY3Q6IFJl
-OiBbUEFUQ0hdIHJpc2N2OiBtbWFwIHdpdGggUFJPVF9XUklURSBidXQgbm8gUFJPVF9SRUFE
-IGlzIGludmFsaWQNCkRhdGU6IFRodSwgNiBPY3QgMjAyMiAyMjoyMDowMiArMDMwMA0KRnJv
-bTogRXZhIEtvdG92YSA8bnlhbmRhcmtuZXNzZ2lybEBnbWFpbC5jb20+DQpSZXBseS1Ubzog
-UEg3UFIxNE1CNTU5NDY0REJERDMxMEU3NTVGNUIyMUU4Q0VEQzlAUEg3UFIxNE1CNTU5NC5u
-YW1wcmQxNC5wcm9kLm91dGxvb2suY29tDQpUbzogY29lbGFjYW50aHVzQG91dGxvb2suY29t
-DQpDQzogYzE0MTAyOEBnbWFpbC5jb20sIGRyYW1mb3JldmVyQGxpdmUuY29tLCBsaW51eC1y
-aXNjdkBsaXN0cy5pbmZyYWRlYWQub3JnLCBwYWxtZXJAZGFiYmVsdC5jb20sIHhjLXRhbkBv
-dXRsb29rLmNvbQ0KDQpPbiBUdWUsIDMxIE1heSAyMDIyIDAwOjU2OjUyIFBEVCAoLTA3MDAp
-LCBjb2VsYWNhbnRodXNAb3V0bG9vay5jb20gd3JvdGU6DQo+IEFzIG1lbnRpb25lZCBpbiBU
-YWJsZSA0LjUgaW4gUklTQy1WIHNwZWMgVm9sdW1lIDIgU2VjdGlvbiA0LjMsIHdyaXRlDQo+
-IGJ1dCBub3QgcmVhZCBpcyAiUmVzZXJ2ZWQgZm9yIGZ1dHVyZSB1c2UuIi4gRm9yIG5vdywg
-dGhleSBhcmUgbm90IHZhbGlkLg0KPiBJbiB0aGUgY3VycmVudCBjb2RlLCAtd3ggaXMgbWFy
-a2VkIGFzIGludmFsaWQsIGJ1dCAtdy0gaXMgbm90IG1hcmtlZA0KPiBhcyBpbnZhbGlkLg0K
-DQpUaGlzIHBhdGNoIGJyZWFrcyBPcGVuSkRLL0phdmEgb24gUklTQy1WLCBhcyBpdCB0cmll
-cyB0byBjcmVhdGUgYSB3LW9ubHkNCnByb3RlY3RpdmUgcGFnZToNCg0KIw0KIyBUaGVyZSBp
-cyBpbnN1ZmZpY2llbnQgbWVtb3J5IGZvciB0aGUgSmF2YSBSdW50aW1lIEVudmlyb25tZW50
-IHRvIGNvbnRpbnVlLg0KIyBOYXRpdmUgbWVtb3J5IGFsbG9jYXRpb24gKG1tYXApIGZhaWxl
-ZCB0byBtYXAgNDA5NiBieXRlcyBmb3IgZmFpbGVkIHRvDQphbGxvY2F0ZSBtZW1vcnkgZm9y
-IFBhWCBjaGVjay4NCiMgQW4gZXJyb3IgcmVwb3J0IGZpbGUgd2l0aCBtb3JlIGluZm9ybWF0
-aW9uIGlzIHNhdmVkIGFzOg0KIyAvcm9vdC9oc19lcnJfcGlkMTA3LmxvZw0KDQpJIGJpc2Vj
-dGVkIHRvIHRoaXMgY29tbWl0IHNpbmNlIG9uIExpbnV4IDUuMTkrIGphdmEgbm8gbG9uZ2Vy
-IHdvcmtzLg0KUGVyaGFwcyBzb21lIGZhbGxiYWNrIHNob3VsZCBiZSBpbXBsZW1lbnRlZCwg
-dG8gcHJldmVudCB1c2Vyc3BhY2UNCmJyZWFrYWdlLiBJdCBpcyBjdXJyZW50bHkgZG9jdW1l
-bnRlZCwgdGhhdCBhdCBsZWFzdCBvbiBpMzg2IFBST1RfV1JJVEUNCm1hcHBpbmdzIGltcGx5
-IFBST1RfUkVBRCAoU2VlIG1hbiBtbWFwKDIpIE5PVEVTKSwgdGhpcyB3b3VsZCBiZSBhIGdv
-b2QNCnBsYWNlIHRvIHN0YXJ0Lg0KDQpCZXN0IHJlZ2FyZHMsDQpFdmENCg0KX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCmxpbnV4LXJpc2N2IG1h
-aWxpbmcgbGlzdA0KbGludXgtcmlzY3ZAbGlzdHMuaW5mcmFkZWFkLm9yZw0KaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1yaXNjdg0KDQo=
+> I'll go bump the fix itself.
 
---------------TRztwcVpFhYexT6hLjgcH9mA--
+Thanks.
 
---------------0DLPZ0BJGbltvhaCkZlcupAH
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+>
+> Thanks,
+> Conor.
+>
+> >
+> > In Ubuntu this regression will be tracked as https://bugs.launchpad.net/bugs/+bug/1992484
+> >
+> > -------- Forwarded Message --------
+> > Subject: Re: [PATCH] riscv: mmap with PROT_WRITE but no PROT_READ is invalid
+> > Date: Thu, 6 Oct 2022 22:20:02 +0300
+> > From: Eva Kotova <nyandarknessgirl@gmail.com>
+> > Reply-To: PH7PR14MB559464DBDD310E755F5B21E8CEDC9@PH7PR14MB5594.namprd14.prod.outlook.com
+> > To: coelacanthus@outlook.com
+> > CC: c141028@gmail.com, dramforever@live.com, linux-riscv@lists.infradead.org, palmer@dabbelt.com, xc-tan@outlook.com
+> >
+> > On Tue, 31 May 2022 00:56:52 PDT (-0700), coelacanthus@outlook.com wrote:
+> > > As mentioned in Table 4.5 in RISC-V spec Volume 2 Section 4.3, write
+> > > but not read is "Reserved for future use.". For now, they are not valid.
+> > > In the current code, -wx is marked as invalid, but -w- is not marked
+> > > as invalid.
+> >
+> > This patch breaks OpenJDK/Java on RISC-V, as it tries to create a w-only
+> > protective page:
+> >
+> > #
+> > # There is insufficient memory for the Java Runtime Environment to continue.
+> > # Native memory allocation (mmap) failed to map 4096 bytes for failed to
+> > allocate memory for PaX check.
+> > # An error report file with more information is saved as:
+> > # /root/hs_err_pid107.log
+> >
+> > I bisected to this commit since on Linux 5.19+ java no longer works.
+> > Perhaps some fallback should be implemented, to prevent userspace
+> > breakage. It is currently documented, that at least on i386 PROT_WRITE
+> > mappings imply PROT_READ (See man mmap(2) NOTES), this would be a good
+> > place to start.
+> >
+> > Best regards,
+> > Eva
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+> >
+>
+>
+>
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE7iQKBSojGtiSWEHXm47ISdXvcO0FAmNFnz4ACgkQm47ISdXv
-cO2QAg/9E5/mtzedG7WB1LjYn9B+0TCRo64FStswhZ7wA+vS5tVx05tGnMJ99UyQ
-5rQnw7f09PHiDyPRap1pMlDYlZa/3m4quhxVhzhGGkcZFk0ItQcr+JFfmc9p2z22
-WLa7rLgb63VTcStIlRTINSbTNSim7Tz4X6+8cVh+7pogd8chekMsI+/th/CjDPR/
-ubl915JTTEpwu9QTkjMj9Cc946PquVD9sPquPydIbpm4msT5qe91KPJ8HmQ5AB8l
-P1qR0MtRs3Uop1AFrOZ3orEgcmXvx61YN12TvhiJ01xnoTXkhjSAxoF/QUFP1wz2
-7mnVGhnsUPUKBHb3t9hvlQbFx3GepXqU5Agi1vdKtg+GsO9qGJ8PD7faLmuzi/xD
-rD7y32TTF+0tAAp/sfyeubjgYVV1WmqnnwARE1ebwsdKWN2aPwCRYk+e8D/Gv4xK
-bNdCTnzZH/RGNek/NhkyCgH33fJCE4cdydAYZUotIl5URsAi4O8+4v+HcMgfMmkN
-I3xEmnY9w6nh7Mf+51wNgrxBIS+BNuKBmn/uAk0Vdb5YorKfw3GHKOPsULKFGVjF
-3PgmfqTPFQ1LVkPBix/BWcDMCCpbLR24TKF3SS3DC67wd7/QVDSpvMklxQfFDfi0
-4TRFwP0pX/Nsy3KP/t0DaCcxyIYy1LqY4r0emeDIQ9YmxvD069c=
-=hkso
------END PGP SIGNATURE-----
+-- 
+okurrr,
 
---------------0DLPZ0BJGbltvhaCkZlcupAH--
+Dimitri
