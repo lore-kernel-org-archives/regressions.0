@@ -1,53 +1,55 @@
 Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4ECB3C32
-	for <regressions@lists.linux.dev>; Tue, 11 Oct 2022 17:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358DC8F51
+	for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 06:05:25 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id 69C66604F1;
-	Tue, 11 Oct 2022 19:53:55 +0200 (CEST)
+	by domac.alu.hr (Postfix) with ESMTP id 09027604ED;
+	Wed, 12 Oct 2022 08:05:23 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665510835; bh=51DdmvuAALYkdrgo3VfnoiAdxFmF/sc3TBmefjjxF38=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y3w/Hwq/Weal9Xsg6seGSsWraQOapxR5rnVli8ziCxWREFtqzH9PUG/tEkYf1hdj1
-	 WI4Ds8am3UeRA/x+CoRSZisYMvb+ER5OQVKtsngpDUHe3X0yEdisTYsv4l8EG59pl8
-	 zm9krkaXNkjxiZg9EzL3bAPOp0rjolpiLpxGlvnTrOe9h+ZwcdB/i4a2L7rNTq93AY
-	 LBsbO3SdRK7r+f7YkyGbuI9T82sUM5A6mZBWgZZO282+qyzVeO33iog7gAyQC1tLki
-	 WP+ON0oDqIXlldPO8oSf+woH+7UJC4/Cxsoaog7UNZEzdNf5NvmIuQ9Yw2OA2aplfC
-	 8w2HrWsvOAvZQ==
+	t=1665554723; bh=xuoJSukhYj9ZILJWRFf+VGISYqH3FXP6oaibbbYodUo=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=YhYWF3O5OotSlrKXEsah9GCbDWvcSvycMgT52U+ho1gHqMA1PkLcjwiFWptdseQ78
+	 OswWRAXLVdgHeQCEMj5IBkMp/lftpBP/gIMOj5u2CrMbNgG1FzXAQkbznqRcwUlj3/
+	 XypW2i9omn8thwDoXWUE/XQ3+gLUWnjNWS9VOHjLEksmXTcMP9UY+GY9LMOM8MTjgt
+	 3pbfN7f0nMuyDcoet6RyvVE9CZaiTKGjizRhJWMB2Dz2wofasBaQw1vkiLktM3vQqs
+	 4eAqjq9Cxs/nhnRDsSeQqFmBg7LzMZUN2mU1+ACLxK3ny+MAjpxntOIyHstBxIbD05
+	 03IGkQNFgZLQA==
 X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
 Received: from domac.alu.hr ([127.0.0.1])
 	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 8hEZ3nQnrdQ9; Tue, 11 Oct 2022 19:53:53 +0200 (CEST)
-Received: from [192.168.0.12] (unknown [188.252.196.246])
-	by domac.alu.hr (Postfix) with ESMTPSA id AF824604EC;
-	Tue, 11 Oct 2022 19:53:52 +0200 (CEST)
+	with ESMTP id TOEZg7Z8QhJ5; Wed, 12 Oct 2022 08:05:19 +0200 (CEST)
+Received: from [193.198.186.200] (pc-mtodorov.slava.alu.hr [193.198.186.200])
+	by domac.alu.hr (Postfix) with ESMTPSA id 423F9604EC;
+	Wed, 12 Oct 2022 08:05:19 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665510833; bh=51DdmvuAALYkdrgo3VfnoiAdxFmF/sc3TBmefjjxF38=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kxUc+QkSwAmt7lm0m5MwrWE6KTqyW5//Sh0KSq5NH6DOrKwb8eu2r0UH7kPKxrX1P
-	 MdqV/Cvpl2G2CipuRobeuSKkVIlFnq/7N5cMJPRp8jV3Fz6ZiLYprVM4D/orP4R0+0
-	 Gi18IqmyOpc00W92mgbNApJWwpwvRU1+2X4fbPOCoI+hfc/pw42S8bW8T11f+g+XWW
-	 wLJO6fPQ38s405XWvE+WU/foj2jTVx04+sx7UwpVL57AA3jiRyuEhy1s5Jlfb6vxA5
-	 h1Ye9vs78TcBH5uwnxrrqLWN9QA2U6ZsR+YPEYkXIdnR3n5UsIegU5jozH9qKsNbuz
-	 efySWUhZ79+7A==
-Message-ID: <4de7aabe-9c78-5f50-6662-3be99212a623@alu.unizg.hr>
-Date: Tue, 11 Oct 2022 19:53:50 +0200
+	t=1665554719; bh=xuoJSukhYj9ZILJWRFf+VGISYqH3FXP6oaibbbYodUo=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=HNwUUce73fMm3g49fRXg/biKE+SkncvH7fXQp2QLVHnt4xDxwBvVIPCrsMch6url5
+	 ygTwdbLQV2H5vBshmQ7G1Xbv51F6m6h5meC7jiLj57e7v5YjBF6RNn3bx6hYOJX3bI
+	 4iguI991pjeLany8S3rS2NdR5p3ghq4wgMUS92d62psR/OmXgANW/lUvWtvNWRdWeT
+	 ghlIdFc74mJvdjD+FCNxEQZTvOZlSB5N2bzp2OcjDvGyGtzY5YIMYFL0tebgeGfqnq
+	 8lH3WFDuWKMXmhUfEb43edmnItRpBNHNCbxH7cBIiY60Y+cJu7ja9uu/gVJRZLxQJy
+	 RRH5WeVzJTkiw==
+Message-ID: <e335e7cd-366f-7ced-2707-b6ef49cfe9eb@alu.unizg.hr>
+Date: Wed, 12 Oct 2022 08:05:18 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
 Subject: Re: BUG reproduced: 6.0.0-RC kernels trigger Firefox snap bug with
  6.0.0-rc3 through 6.0.0-rc7
-To: Slade Watkins <srw@sladewatkins.net>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: linux-kernel@vger.kernel.org,
- Marc Miltenberger <marcmiltenberger@gmail.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Language: en-US
+From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ linux-kernel@vger.kernel.org
+Cc: Marc Miltenberger <marcmiltenberger@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Slade Watkins <srw@sladewatkins.net>
 References: <b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr>
  <5bb75cbc-a0db-537b-12d0-889230c865d8@leemhuis.info>
  <0fb2a9ff-df76-8af9-e54a-c2dc6bfd9478@leemhuis.info>
@@ -57,46 +59,183 @@ References: <b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr>
  <6ba15505-1c04-df2b-237f-b3060f26d2e6@leemhuis.info>
  <25cd0e21-ed8e-1836-b0ec-c052c2276cd8@alu.unizg.hr>
  <c40786ab-8b3b-9b64-683f-dac589c024df@alu.unizg.hr>
- <021de720-4a57-1a88-f456-fcaeaa3653de@leemhuis.info>
- <b5deaa2e-8867-1e0e-6090-422248310dc1@sladewatkins.net>
-Content-Language: en-US
-From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <b5deaa2e-8867-1e0e-6090-422248310dc1@sladewatkins.net>
+In-Reply-To: <c40786ab-8b3b-9b64-683f-dac589c024df@alu.unizg.hr>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 10. 10. 2022. 00:45, Slade Watkins wrote:
+On 10/8/22 18:43, Mirsad Goran Todorovac wrote:
 
-> Hi all,
->
-> On 10/9/22 at 2:45 AM, Thorsten Leemhuis wrote:
->> Yeah, then it's pretty certain that his is a regression. But it could be
->> caused by all sorts of things and I have no idea where to start. We thus
->> really could need a bisection to find the root of the problem. This will
->> be hard, as this crash only happens infrequently. Thing is: the Ubuntu
->> developers likely have a strong interest in this particular issue and
->> due to their knowledge of snap have way better chances to pin-point the
->> root case quickly. So submitting a bug report to them might be the best
->> way forward in this situation, even if the kernel is likely at fault here.
-> Thorsten,
-> Yeah, agreed. I haven't had time to bisect -- though it's on my list of
-> things to do: I'm going to try and make time tomorrow. Wish we had more
-> of an idea of what exactly was happening here.
->
-> Mirsad,
-> I'd be happy to help with a report to the Ubuntu folks. :-)
+> On 10/6/22 14:25, Thorsten Leemhuis wrote:
+>>>>>>
+>>>>>>> One more question:
+>>>>>>>
+>>>>>>> On 06.10.22 14:00, Thorsten Leemhuis wrote:
+>>>>>>> Were those two vanilla kernels? I asked in #snappy on IRC and 
+>>>>>>> was told
+>>>>>>> that "snapd simply expects some ubuntu bit in patched into the 
+>>>>>>> kernel if
+>>>>>>> it detects that it runs on an official ubuntu install...". This 
+>>>>>>> was also
+>>>>>>> suggested "it probably makes sense to file a but in LP to make the
+>>>>>>> kernel team aware".
+>>>>>> Yes, last time I tried it with git clone from linux_stable on 
+>>>>>> kernel.org
+>>>>>> and
+>>>>>> config-6.0.0-060000-generic from the official Ubuntu mainline build
+>>>>> You don't want to do that. Better take the config used to build a
+>>>>> working kernel (say 5.19.y) and then build 6.0 with it (after running
+>>>>> "make olddefconfig"), because it might be a new kernel option (say 
+>>>>> for a
+>>>>> new security technique) that might cause the problem, as explained 
+>>>>> here:
+>>>>> https://docs.kernel.org/admin-guide/reporting-regressions.html
+>>>> If I understood well, that would mean building www.kernel.org git
+>>>> linux_stable
+>>>> source with Ubuntu's config-5.9.13-051903?
+>>> I meant "please download Linux 6.0 (ideally through git, that you have
+>>> everything to perform a bisection), add the config from a working 
+>>> kernel
+>>> (if config-5.9.13-051903 is one, yeah, then take that) as .config and
+>>> then run "make olddefconfig" before compiling and installing the kernel
+>>> to see if 6.0 fails with that config that was working.
+>>
+>> Hi, Thorsten,
+>>
+>> Having done this build with mentioned config-5.19.13-051903-config from
+>> Ubuntu's mainline build and your recommended make option
+>> had produced a kernel that so far did not exhibit the Firefox snap
+>> "tab crash/wrong Verneed record version" bug.
+>>
+>> However, the uptime is 1d 18h50min, so it might be too early to draw
+>> a definite general conclusion.
+>>
+>> Now, the brave conlusion seems to be that the culprit is one of the 
+>> modules
+>> added in config-6.0.0-060000-generic.
+>>
+>> I am new to this, but is seems that we should look at some compiled-in
+>> modules (147 loadable and 41 compiled-in):
 
-Hi, Slade,
+Hi, guys,
 
-Actually, I think I the project would benefit if you shared your 
-experiences with
-the Ubuntu folks. You know their English dialect.
+I can also confirm the bug with the official RPM build from elrepo stock 
+mainline kernel:
 
-This is not about the prestige, but about getting the bug fixed.
+[marvin@pc-mtodorov linux_torvalds]$ uname -rms
+Linux 6.0.0-1.el8.elrepo.x86_64 x86_64
+[marvin@pc-mtodorov linux_torvalds]$ /snap/bin/firefox &
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/snap/firefox/1883/usr/lib/firefox/firefox: no version information 
+available (required by /snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/snap/firefox/1883/usr/lib/firefox/firefox: no version information 
+available (required by /snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/snap/firefox/1883/usr/lib/firefox/firefox: no version information 
+available (required by /snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libpthread.so.0: version `' not found (required by 
+/snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libpthread.so.0: version `' not found (required by 
+/snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/librt.so.1: version `' not found (required by 
+/snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/librt.so.1: version `' not found (required by 
+/snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
+libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
+Verneed record
+/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
+libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
+Verneed record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
+libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
+Verneed record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
+libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
+Verneed record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
+libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
+Verneed record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
+libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
+Verneed record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
+libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
+Verneed record
+Missing chrome or resource URL: 
+resource://gre/modules/UpdateListener.sys.mjs
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
+libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
+Verneed record
+/snap/firefox/1883/usr/lib/firefox/pingsender: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/pingsender: 
+/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
+/snap/firefox/1883/usr/lib/firefox/pingsender: error while loading 
+shared libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 
+0 of Verneed record
+/snap/firefox/1883/usr/lib/firefox/firefox: symbol lookup error: 
+/snap/firefox/1883/usr/lib/firefox/libxul.so: undefined symbol: PL_strcmp
 
--mgt
+[1]+  Done                    /snap/bin/firefox  (wd: ~/Downloads)
+(wd now: ~/linux/kernel/linux_torvalds)
+[marvin@pc-mtodorov linux_torvalds]$
 
---
+However, I haven't yet done informing the Ubuntu developers.
+
+I will try to do that later today.
+
+-Mirsad
+
+-- 
 Mirsad Goran Todorovac
 Sistem inženjer
 Grafički fakultet | Akademija likovnih umjetnosti
@@ -105,5 +244,4 @@ Sveučilište u Zagrebu
 System engineer
 Faculty of Graphic Arts | Academy of Fine Arts
 University of Zagreb, Republic of Croatia
-The European Union
 
