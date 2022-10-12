@@ -1,39 +1,38 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5107195
-	for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 07:06:09 +0000 (UTC)
-Received: by mail-ej1-f54.google.com with SMTP id q9so31514713ejd.0
-        for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 00:06:09 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778938F58
+	for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 07:14:14 +0000 (UTC)
+Received: by mail-ej1-f53.google.com with SMTP id a26so36088187ejc.4
+        for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 00:14:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3FHxfaX0nUvU3yM6pdGDpraNdXFnmAEzWTxDZP6zVag=;
-        b=cffGMndeYEmELAI2l1vym18F2hWFwe93SbDFuJNsK2tN3mDwPR4EZnrhV1EDQ86JlF
-         oPPORGk/wOJ7GRnpblMJkW2fkc0Vpg83lyYrsWp3r68N1G9QuMe1hcVtSq8663uWEo6W
-         O6WlojTohjO6nTAaeSN416a8SyCidZa0xF2KWz/I5aPvDQ04a2K1xSP0zZz3llF3nOMI
-         MLHfW9ve+SZ+/llayySwVf41keulS2jXW30hXifWIztGNZhu1k/f+JysM8z9J62ouCAs
-         oTL55ao3P7wTCsYgZCR/k8UO78YseOVW2NJJjczVUOaS9pZgTOmuzCBnYo8Ok6O7rOgp
-         G7cQ==
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YrM9AXlV+Yjz/9a/UJEjVSeS2W/2GJxeJBViYwkeKi4=;
+        b=xx9DmA2R9fhxOFt5zZzL388ykcEA0OZ41CtirZW6S8buUf7v7owkLzNIxcXAHOi6Tz
+         l4pAVGmOtmds4fDSL5epMx/nRkLHo+aLiprPK+Jiv/0ur6h4IzZihW9xgX60NaE+hXJw
+         RexcrilSlSgOybR3f8r6U7Dd+HmvnhQOhwC1YPuLx4SBj1BEiln0fzV1R/x58XZ+7pK9
+         D8xhuyW0dAQquwB0Je+cUS4fOeScDefHBgc5viN1yxGWAj3bkdyOmv0vARimtoiEpUCY
+         XBAvUH8WjfpQC+4y7EHze82FIr2cXqCu0fX4drAdsfjMl1Bxq4sgUPE1iMwZLw8L8i4E
+         MWbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3FHxfaX0nUvU3yM6pdGDpraNdXFnmAEzWTxDZP6zVag=;
-        b=6t5pcbM7Wt6WKR1XEOgL6XhtrA/dFS8iI//HcpExBC0JKHGpnKnTxK8zQzpyaE2B+u
-         vmMuFr/z5xrW0o9pCEm4LTmxo5ElcXMtKrSWhegifLytDDrqqKGWerho+AoZ9k1HKkGA
-         zo1eP16HJ70dfc0I7SpbgJjN75sJ7cHTaF39n15SlVU2Kf9EBbcm/Stwz6EU6PXxeqBG
-         9WXiiSHmhkHZ//BFSE8NX/XKJZmjFYB9P2Nrsqz8V+aL9+N0xPbb9K6nixhNtI+GxgLm
-         j1H5OcB7KAHWqV85Hjc09cbw9GsXT5Wm8XZ0znGxScKLdmvaGgE4BvSDaTqofQgyLxW8
-         uvfQ==
-X-Gm-Message-State: ACrzQf1uyMvqJvvx9Lrs4D8abCKjeHDsF1AtSjzL8npsy9JvymJTgH6Z
-	cUdUkaSboOg1+Y5x3BgVBa1hXPds/F/w9Pk4ruBzow==
-X-Google-Smtp-Source: AMsMyM6Xi8F6DTgp4ZKvWbVbWHa1cM1s8X+vpij+0T/1ie3OxzN9LtD5fqXK74DtrKVmQ1uJyfPyoOMlh7NiSF/8Kdk=
-X-Received: by 2002:a17:907:7d8e:b0:78d:ed30:643b with SMTP id
- oz14-20020a1709077d8e00b0078ded30643bmr2862275ejc.253.1665558367879; Wed, 12
- Oct 2022 00:06:07 -0700 (PDT)
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YrM9AXlV+Yjz/9a/UJEjVSeS2W/2GJxeJBViYwkeKi4=;
+        b=qzzHT6G+mZ28/NkivN64/Z49PA17P4mdTNSNE4mge0ThUgkI7qSH+l9bumQOi1zXai
+         sl2dd43EZmFho4E4UBOAZUIjS3AYmfWj6XTDE9GHAC2PS4l4TObalReNXZ3/5KFRRTWI
+         cIdnMQb0RDlfq0lGYvCnQMKZrtTTgxzJNhHJyUgvo7srCvT4C5FkZnBANrux1NFQ7QVh
+         Ktq9CTkCYlJniduWn/nmhX7i05wdEYkE6xBAwitauTwmk5BDmbRqA5MN22C862SuNuE2
+         zCN9guKWAQwLTjjytQBpA7kBWSpbrIK4NYrBUrRgkjCVw5GwkpOCmm/xF8jNOYcb8nLV
+         Dmbg==
+X-Gm-Message-State: ACrzQf2Ym2URMcjkmZ63p7Gl1cM7T72tHte++ohzQ/PK8RuYGm18keaj
+	qQ/5GoRE2CBDxldvNyoocm3l+SiFyTUC4dgMh/ADTw==
+X-Google-Smtp-Source: AMsMyM6E4SM+zZlolmoE6H3BmvWqVXRVc5lrG4wh55M0bG/S+1eFG2HnwNgr10MxMz/k8FipbNygY2Kx2InJ1lRV+zI=
+X-Received: by 2002:a17:906:fe46:b0:73d:939a:ec99 with SMTP id
+ wz6-20020a170906fe4600b0073d939aec99mr22106337ejb.169.1665558852523; Wed, 12
+ Oct 2022 00:14:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -41,231 +40,105 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 12 Oct 2022 12:35:56 +0530
-Message-ID: <CA+G9fYui6--jhN1CFH6fXNK81sHNYgosTs2hyybFqPxFRvndpg@mail.gmail.com>
-Subject: BUG: sleeping function called from invalid context at kernel/locking/mutex.c:580
-To: open list <linux-kernel@vger.kernel.org>, rcu <rcu@vger.kernel.org>, 
-	linux-bluetooth@vger.kernel.org, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, Netdev <netdev@vger.kernel.org>
-Cc: "Paul E. McKenney" <paulmck@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+Date: Wed, 12 Oct 2022 12:44:01 +0530
+Message-ID: <CA+G9fYuB1-qmObe3L0A0oUDXXaWa=-UxOEGtEWWJ-=_wc791Uw@mail.gmail.com>
+Subject: db410c: WARNING: CPU: 1 PID: 272 at lib/list_debug.c:30 __list_add_valid
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux Media Mailing List <linux-media@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, 
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev
+Cc: Bjorn Andersson <andersson@kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, 
+	Andy Gross <agross@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@somainline.org>, 
 	Nicolas Dechesne <nicolas.dechesne@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Following kernel deadlock warnings and BUG noticed on arm64 Qcom db845c dev=
-ice
+Following kernel warnings noticed on arm64 Qcom db410c device
 While booting Linux next 20221012 tag kernel Image and kselftest configs.
 
 Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-[   18.690573] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-[   18.695938] WARNING: possible recursive locking detected
-[   18.701307] 6.0.0-next-20221012 #1 Not tainted
-[   18.705804] --------------------------------------------
-[   18.711168] kworker/u16:5/256 is trying to acquire lock:
-[   18.716544] ffff58730911e4f8 (&irq_desc_lock_class){-.-.}-{2:2},
-at: __irq_get_desc_lock+0x64/0xa4
-[   18.725629]
-[   18.725629] but task is already holding lock:
-[   18.731519] ffff5873071c64f8 (&irq_desc_lock_class){-.-.}-{2:2},
-at: __irq_get_desc_lock+0x64/0xa4
-[   18.733233] remoteproc remoteproc0: remote processor
-remoteproc-adsp is now up
-[   18.740563]
-[   18.740563] other info that might help us debug this:
-[   18.740566]  Possible unsafe locking scenario:
-[   18.740566]
-[   18.740569]        CPU0
-[   18.740571]        ----
-[   18.740573]   lock(&irq_desc_lock_class);
-[   18.740579]   lock(&irq_desc_lock_class);
-[   18.740585]
-[   18.740585]  *** DEADLOCK ***
-[   18.740585]
-[   18.740587]  May be due to missing lock nesting notation
-[   18.740587]
-[   18.757926] cfg80211: Loading compiled-in X.509 certificates for
-regulatory database
-[   18.760420] 6 locks held by kworker/u16:5/256:
-[   18.760424]  #0: ffff587300032938
-((wq_completion)events_unbound){+.+.}-{0:0}, at:
-process_one_work+0x1e8/0x6d4
-[   18.793798] cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
-[   18.794138]  #1: ffff800009a1bdd0
-(deferred_probe_work){+.+.}-{0:0}, at: process_one_work+0x1e8/0x6d4
-[   18.815528]  #2: ffff5873019e68f8 (&dev->mutex){....}-{3:3}, at:
-__device_attach+0x44/0x200
-[   18.833287]  #3: ffffdd47e98f1cf0 (cpu_hotplug_lock){++++}-{0:0},
-at: cpus_read_lock+0x18/0x24
-M[K[  *** ] (2 of 2) A start j[   18.842012]  #4: ffff587301248518
-(subsys mutex#8){+.ob is running for=C3=A2=E2=82=AC=C2=A6n to /usr/lib/rfsa=
- (9s / no
-limit)
-[   18.857511]  #5: ffff5873071c64f8
-(&irq_desc_lock_class){-.-.}-{2:2}, at: __irq_get_desc_lock+0x64/0xa4
-[   18.871877]
-[   18.871877] stack backtrace:
-[   18.876286] CPU: 4 PID: 256 Comm: kworker/u16:5 Not tainted
+[   29.295284] ------------[ cut here ]------------
+[   29.295685] list_add corruption. prev->next should be next
+(ffff000004735300), but was 0000000000000000. (prev=ffff000010693750).
+[   29.299665] WARNING: CPU: 1 PID: 272 at lib/list_debug.c:30
+__list_add_valid+0xdc/0x110
+[   29.310921] Modules linked in: snd_soc_msm8916_digital(+)
+qcom_pil_info(+) msm(+) qcom_q6v5 qcom_sysmon qcom_common
+venus_core(+) qcom_glink_smem qmi_helpers v4l2_mem2mem llcc_qcom
+qcom_camss qcom_stats qcom_rng qnoc_msm8916 mdt_loader
+videobuf2_dma_sg v4l2_fwnode ocmem v4l2_async gpu_sched
+videobuf2_memops drm_dp_aux_bus videobuf2_v4l2 i2c_qcom_cci
+videobuf2_common drm_display_helper icc_smd_rpm rpmsg_ctrl rpmsg_char
+display_connector drm_kms_helper rmtfs_mem sch_fq_codel socinfo fuse
+drm
+[   29.340698] CPU: 1 PID: 272 Comm: systemd-udevd Not tainted
 6.0.0-next-20221012 #1
-[   18.883936] Hardware name: Thundercomm Dragonboard 845c (DT)
-[   18.889655] Workqueue: events_unbound deferred_probe_work_func
-[   18.895566] Call trace:
-[   18.898046]  dump_backtrace+0xe4/0x140
-[   18.901847]  show_stack+0x30/0x60
-[   18.905203]  dump_stack_lvl+0x8c/0xb8
-[   18.908918]  dump_stack+0x18/0x34
-[   18.912274]  __lock_acquire+0x1154/0x2040
-[   18.916330]  lock_acquire.part.0+0xe8/0x24c
-[   18.920568]  lock_acquire+0x84/0xa0
-[   18.924102]  _raw_spin_lock_irqsave+0x70/0xb0
-[   18.928523]  __irq_get_desc_lock+0x64/0xa4
-[   18.928532]  enable_irq+0x40/0xb0
-[   18.928542]  lmh_enable_interrupt+0x3c/0x50 [lmh]
-Coldplug All udev De[   18.94080vices.
-[   18.952775]  __irq_startup+0x88/0xbc
-[K[   18.957451]  irq_startup+0x84/0x180
-[   18.961243]  __enable_irq+0x88/0xa0
-[   18.964776]  enable_irq+0x54/0xb0
-[   18.968140]  qcom_cpufreq_ready+0x2c/0x3c
-[   18.972200]  cpufreq_online+0x2f4/0xb24
-[   18.976083]  cpufreq_add_dev+0xdc/0x100
-[   18.979964]  subsys_interface_register+0x134/0x14c
-[   18.984819]  cpufreq_register_driver+0x16c/0x2e0
-[   18.989488]  qcom_cpufreq_hw_driver_probe+0xdc/0x150
-[   18.994510]  platform_probe+0x70/0x100
-[   18.998311]  really_probe+0xd4/0x3f4
-[   19.001936]  __driver_probe_device+0x8c/0x1a0
-[   19.006347]  driver_probe_device+0x4c/0x13c
-[   19.010584]  __device_attach_driver+0xd8/0x180
-[   19.015081]  bus_for_each_drv+0x88/0xe0
-[   19.018966]  __device_attach+0xb4/0x200
-[   19.022845]  device_initial_probe+0x28/0x40
-[   19.027081]  bus_probe_device+0xa8/0xb0
-[   19.030965]  deferred_probe_work_func+0xc0/0x120
-[   19.035637]  process_one_work+0x280/0x6d4
-[   19.039695]  worker_thread+0x7c/0x430
-[   19.043407]  kthread+0x110/0x114
-[   19.046677]  ret_from_fork+0x10/0x20
-[   19.108471] cpu cpu4: EM: created perf domain
-         Starting Wait for udev To =C3=A2=E2=82=AC=C2=A6plete Device Initia=
-lization.
-[   19.125768] remoteproc remoteproc1: remote processor
-remoteproc-cdsp is now up
-[   19.138140] xhci_hcd 0000:01:00.0: Adding to iommu group 6
-[   19.150419] coresight stm0: STM32 initialized
-[   19.254272] ath10k_snoc 18800000.wifi: Adding to iommu group 10
-[   19.372948] ath10k_snoc 18800000.wifi: supply vdd-3.3-ch1 not
-found, using dummy regulator
-[   19.472640] geni_spi 880000.spi: FIFO mode disabled, but couldn't
-get DMA, fall back to FIFO mode
-[   19.485178] gpi 800000.dma-controller: Adding to iommu group 11
-[  OK  ] Reached target [0;1;39mHardware activated USB gadget.
-[   19.528153] i2c 16-0010: Fixing up cyclic dependency with acb3000.camss
-[   19.559810] i2c 10-003b: Fixing up cyclic dependency with hdmi-out
-[   19.575396] gpi a00000.dma-controller: Adding to iommu group 12
-[   19.590779] qcom-venus aa00000.video-codec: Adding to iommu group 13
-[   19.608167] qcom-venus aa00000.video-codec: non legacy binding
-[   19.618073] remoteproc remoteproc2: 4080000.remoteproc is available
-[   19.629950] qcom-camss acb3000.camss: Adding to iommu group 14
-[   19.630180] Bluetooth: Core ver 2.22
-[   19.639713] NET: Registered PF_BLUETOOTH protocol family
-[   19.645247] Bluetooth: HCI device and connection manager initialized
-[   19.651711] Bluetooth: HCI socket layer initialized
-[   19.656813] Bluetooth: L2CAP socket layer initialized
-[   19.661960] Bluetooth: SCO socket layer initialized
-[   19.743786] adreno 5000000.gpu: Adding to iommu group 15
-[   19.764896] Bluetooth: HCI UART driver ver 2.3
-[   19.769470] Bluetooth: HCI UART protocol H4 registered
-[   19.778004] msm-mdss ae00000.mdss: Adding to iommu group 16
-[   19.783005] Bluetooth: HCI UART protocol LL registered
-[   19.809993] Bluetooth: HCI UART protocol Broadcom registered
-[   19.819508] Bluetooth: HCI UART protocol QCA registered
-[   19.829474] Bluetooth: HCI UART protocol Marvell registered
-[   19.858355] EXT4-fs (sde9): mounted filesystem with ordered data
-mode. Quota mode: none.
-[   19.893331] platform ae94000.dsi: Fixing up cyclic dependency with 10-00=
-3b
-[  OK  ] Finished Mount DSP partition to /usr/lib/rfsa.
-[   19.917937] platform ae94000.dsi: Fixing up cyclic dependency with
-ae01000.display-controller
-[  OK  ] Reached target Local File Systems.
-[  OK  ] Listening on Load/Save RF =C3=A2=E2=82=AC=C2=A6itch Status /dev/rf=
-kill Watch.
-[   19.950987] BUG: sleeping function called from invalid context at
-kernel/locking/mutex.c:580
-[   19.959591] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid:
-258, name: kworker/u16:7
-[   19.968096] preempt_count: 100, expected: 0
-[   19.972374] RCU nest depth: 0, expected: 0
-[   19.976562] INFO: lockdep is turned off.
-[   19.980574] CPU: 0 PID: 258 Comm: kworker/u16:7 Not tainted
-6.0.0-next-20221012 #1
-[   19.988245] Hardware name: Thundercomm Dragonboard 845c (DT)
-[   19.993986] Workqueue: events_unbound async_run_entry_fn
-[   19.999395] Call trace:
-[   20.001886]  dump_backtrace+0xe4/0x140
-[   20.005700]  show_stack+0x30/0x60
-[   20.009069]  dump_stack_lvl+0x8c/0xb8
-[   20.012798]  dump_stack+0x18/0x34
-[   20.016169]  __might_resched+0x1c4/0x240
-[   20.020155]  __might_sleep+0x58/0xb0
-[   20.020802] rtc-pm8xxx c440000.spmi:pmic@0:rtc@6000: registered as rtc0
-[   20.023766]  __mutex_lock+0x54/0x424
-[   20.023778]  mutex_lock_nested+0x50/0x6c
-[   20.030501] rtc-pm8xxx c440000.spmi:pmic@0:rtc@6000: setting system
-clock to 1970-01-01T00:00:30 UTC (30)
-[   20.033086] input: pm8941_pwrkey as
-/devices/platform/soc@0/c440000.spmi/spmi-0/0-00/c440000.spmi:pmic@0:pon@80=
-0/c440000.spmi:pmic@0:pon@800:pwrkey/input/input1
-[   20.034047]  lpg_brightness_single_set+0x48/0x9c [leds_qcom_lpg]
-[   20.034132] systemd-journald[295]: Time jumped backwards, rotating.
-[   20.074723]  led_set_brightness_nosleep+0x54/0x80
-[   20.079509]  led_heartbeat_function+0x88/0x180
-[   20.084024]  call_timer_fn+0xc0/0x3c4
-[   20.087751]  __run_timers.part.0+0x220/0x27c
-[   20.092085]  run_timer_softirq+0x44/0x80
-[   20.096073]  __do_softirq+0x1e4/0x62c
-[   20.099793]  ____do_softirq+0x18/0x24
-[   20.103520]  call_on_irq_stack+0x2c/0x58
-[   20.107511]  do_softirq_own_stack+0x24/0x3c
-[   20.111757]  __irq_exit_rcu+0x168/0x1a0
-[   20.115661]  irq_exit_rcu+0x18/0x40
-[   20.119203]  el1_interrupt+0x38/0x64
-[   20.122838]  el1h_64_irq_handler+0x18/0x2c
-[   20.127002]  el1h_64_irq+0x64/0x68
-[   20.130465]  arch_counter_get_cntvct+0x14/0x30
-[   20.134979]  __delay+0xa4/0x110
-[   20.138179]  __const_udelay+0x34/0x44
-[   20.141900]  qcom_geni_serial_poll_bit+0xc4/0x104
-[   20.146675]  qcom_geni_serial_stop_rx+0xc0/0x190
-[   20.151367]  qcom_geni_serial_set_termios+0x4c/0x360
-[   20.156410]  uart_change_speed+0x60/0x130
-[   20.160479]  uart_set_termios+0x90/0x190
-[   20.164460]  tty_set_termios+0x194/0x240
-[   20.168447]  ttyport_open+0x144/0x180
-[   20.172169]  serdev_device_open+0x38/0xe4
-[   20.176248]  hci_uart_register_device+0x68/0x3ac [hci_uart]
-[   20.181957]  qca_serdev_probe+0x2f4/0x530 [hci_uart]
-[   20.186753] input: pm8941_resin as
-/devices/platform/soc@0/c440000.spmi/spmi-0/0-00/c440000.spmi:pmic@0:pon@80=
-0/c440000.spmi:pmic@0:pon@800:resin/input/input2
-[   20.187003]  serdev_drv_probe+0x44/0x90
-[   20.187016]  really_probe+0xd4/0x3f4
-[   20.208885]  __driver_probe_device+0x8c/0x1a0
-[   20.213311]  driver_probe_device+0x4c/0x13c
-[   20.217555]  __driver_attach_async_helper+0x64/0x110
-[   20.222594]  async_run_entry_fn+0x40/0x180
-[   20.226759]  process_one_work+0x280/0x6d4
-[   20.230837]  worker_thread+0x7c/0x430
-[   20.234557]  kthread+0x110/0x114
-[   20.237849]  ret_from_fork+0x10/0x20
+[   29.362124] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[   29.369650] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[   29.376514] pc : __list_add_valid+0xdc/0x110
+[   29.383136] lr : __list_add_valid+0xdc/0x110
+[   29.387648] sp : ffff80000c70b3d0
+[   29.391879] x29: ffff80000c70b3d0 x28: ffff80000c70bb10 x27: ffff800037c6cdc8
+[   29.395178] x26: 0000000000000000 x25: ffff000005472010 x24: 0000000000000001
+[   29.402296] x23: ffff000010580818 x22: ffff000010693750 x21: ffff000010580818
+[   29.409418] x20: ffff000010693750 x19: ffff000004735300 x18: 0000000000000000
+[   29.416533] x17: 3030333533373430 x16: 3030303066666666 x15: 0720072007200720
+[   29.423652] x14: 072e072907300735 x13: 0720072007200720 x12: 072e072907300735
+[   29.430769] x11: ffff80000b510340 x10: 0720072007200720 x9 : ffff8000081d3c28
+[   29.437889] x8 : ffff80000c70b0a8 x7 : ffff80000aff78b8 x6 : 0000000000057fa8
+[   29.445007] x5 : 0000000000000fff x4 : ffff00003fc4cc50 x3 : ffff8000356cc000
+[   29.452125] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff00000a2e1b00
+[   29.459243] Call trace:
+[   29.466253]  __list_add_valid+0xdc/0x110
+[   29.468541]  kobject_add_internal+0x78/0x2c0
+[   29.472718]  kobject_add+0xa0/0x110
+[   29.476952]  device_add+0x108/0x930
+[   29.480165]  of_device_add+0x4c/0x70
+[   29.483640]  of_platform_device_create_pdata+0x9c/0x130
+[   29.487496]  of_platform_bus_create+0x1c4/0x4f0
+[   29.492428]  of_platform_populate+0x70/0x160
+[   29.496937]  venus_probe+0x314/0x4b4 [venus_core]
+[   29.501464]  platform_probe+0x70/0x100
+[   29.506041]  really_probe+0xd4/0x3f4
+[   29.509680]  __driver_probe_device+0x8c/0x1a0
+[   29.513430]  driver_probe_device+0x4c/0x13c
+[   29.517680]  __driver_attach+0xc8/0x250
+[   29.521666]  bus_for_each_dev+0x80/0xdc
+[   29.525485]  driver_attach+0x34/0x4c
+[   29.529300]  bus_add_driver+0x1a4/0x260
+[   29.533124]  driver_register+0x7c/0x13c
+[   29.536681]  __platform_driver_register+0x38/0x4c
+[   29.540522]  qcom_venus_driver_init+0x28/0x1000 [venus_core]
+[   29.545409]  do_one_initcall+0x80/0x43c
+[   29.551093]  do_init_module+0x50/0x210
+[   29.554648]  load_module+0x1de0/0x22b4
+[   29.558467]  __do_sys_finit_module+0xb0/0x130
+[   29.562214]  __arm64_sys_finit_module+0x2c/0x40
+[   29.566646]  invoke_syscall+0x8c/0x120
+[   29.570969]  el0_svc_common.constprop.0+0x104/0x124
+[   29.574814]  do_el0_svc+0x44/0xcc
+[   29.579554]  el0_svc+0x48/0xc0
+[   29.583020]  el0t_64_sync_handler+0xbc/0x13c
+[   29.585997]  el0t_64_sync+0x18c/0x190
+[   29.590413] irq event stamp: 149728
+[   29.593964] hardirqs last  enabled at (149727):
+[<ffff8000081d392c>] __up_console_sem+0x78/0x7c
+[   29.597389] hardirqs last disabled at (149728):
+[<ffff80000976df44>] el1_dbg+0x24/0x90
+[   29.606054] softirqs last  enabled at (148374):
+[<ffff800008090be4>] __do_softirq+0x514/0x62c
+[   29.614055] softirqs last disabled at (148365):
+[<ffff800008097558>] ____do_softirq+0x18/0x24
+[   29.622648] ---[ end trace 0000000000000000 ]---
+[   29.634248] ------------[ cut here ]------------
+[   29.635814] list_add corruption. prev->next should be next
+(ffff80000b348928), but was 0000000000000000. (prev=ffff0000106938e0).
+[   29.640666] WARNING: CPU: 1 PID: 272 at lib/list_debug.c:30
+__list_add_valid+0xdc/0x110
 
 Full boot log link,
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221012=
-/testrun/12361480/suite/log-parser-boot/test/check-kernel-bug/log
- - https://lkft.validation.linaro.org/scheduler/job/5660839#L3720
-
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221012/testrun/12360228/suite/log-parser-boot/test/check-kernel-exception/log
+ - https://lkft.validation.linaro.org/scheduler/job/5660724#L2717
 
 metadata:
   git_ref: master
@@ -273,17 +146,12 @@ metadata:
   git_sha: f843795727e4f5612c612cd178db1557978da742
   git_describe: next-20221012
   kernel_version: 6.0.0
-  kernel-config: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec/co=
-nfig
-  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipel=
-ines/664367901
-  artifact-location: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXde=
-c
+  kernel-config: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec/config
+  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/664367901
+  artifact-location: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec
   toolchain: gcc-11
-  System.map: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec/Syste=
-m.map
-  vmlinux.xz: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec/vmlin=
-ux.xz
+  System.map: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec/System.map
+  vmlinux.xz: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec/vmlinux.xz
 
 
 --
