@@ -1,89 +1,113 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDEF8F59
-	for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 07:24:42 +0000 (UTC)
-Received: by mail-ed1-f41.google.com with SMTP id s30so23311992eds.1
-        for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 00:24:42 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C444517CF
+	for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 14:05:23 +0000 (UTC)
+Received: by mail-pj1-f47.google.com with SMTP id d7-20020a17090a2a4700b0020d268b1f02so2088200pjg.1
+        for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 07:05:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QqX7TWBfdPQVg4fEx1BQ7sbR3W9tFyeiZ5DR5tT6eT8=;
-        b=fNjmT+XNAgLdf8CgJrhqLKcmsC2myZL4hIlsXKn83gc8c2MSQpsAI+YIZNIX86lnw+
-         BwupRVcHubAN1um2uZSrdXcY3TsGjO11UJVnNK026tzGz2zUrQpXbbNJCRtoILNp5+U2
-         ZjaHwprE9dz47eb1x04Drkq7eXbGOYvPj7WEHI45cJtoekQxNveglYomUNqXgM2jDMQB
-         AAbKlP8UVozYNQN7fcb4VAmGVPH5vk6Xo0c2vlX02p92k2Fd88O4SIClJm2ntRaMy0Sf
-         zD9MVreqhOWGby+BHocppu4YXnCKPQ9G7KbguQ5JLkaLqtb2RTAQ0IHvuDhxsEjsYDE7
-         mfrQ==
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LBlu7tPT0Tx5MrjvdiscmABwb2kCDpiFMguHWsE1qRI=;
+        b=TriEn0TBit/DhtfVmixexLUZ4cUN9xq7qt7CmMgifx0UYigJtkT8QUVnkhv34TEPqV
+         WvL7xPmd1PvCBxp4IEbGmJOfyAH3pw9dFJcFEaRY2ghKvoMiSon30uxminzvjSS6s1gh
+         7hRpGaqX7MCzROsRMGzLYNd4HM4lbnEdvkNPjgwYFRx8UzsZ28boB3Y09SiyEIJxxIQ3
+         ZRTs/GO0NM23bjGMkHwdX8dklDjz+orMbj+wRThAa0YxQyFPq02854mvleJ2oxRgHwRO
+         +8DR32cLkSVyBJuRrD27zQxAzzakPoSzrXiUuyMNBsSTwFKUhozZ1fbiJ0F9XNy8mSB/
+         Mn4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QqX7TWBfdPQVg4fEx1BQ7sbR3W9tFyeiZ5DR5tT6eT8=;
-        b=aZdmK58TTYx1bBtGhlJmcreS9ziV6axFKDWgq/Vlxs1Unr8Dr2fZ/nSDyVrmnGOvz8
-         H0SoE6WgDGZn6Z8IshRPX0Ku5qGWD+UEVcu5BcaEm2Yud2w2OI0LXt2Ju98DwS+2lp8e
-         6eyRv1JkofbJF6nEUulipo7GF04a5pzNcIgeqDKlH0RjudqH2tfE7/WnqaZ8dNAfJW17
-         JkJmnSqGoQFUEztYF5z0JqB4LZOn4B8mjy2VYvKn8hoqusRuveTyIIxioCXdH09L8yj4
-         UyJ5Df9TgqZtiHZnTYDcXz7ZK2HOBRgQ7zzoyh11Go8b2wbLrHCBRyys4eE6XZg7xASd
-         /JTw==
-X-Gm-Message-State: ACrzQf3TTixXI94N5em0p2AbrmeVqGu40jhh8Y0e/jNi6u2FXeOv5xBB
-	U+qCpXyP/xn8TnnKbdjGVU9GW4T/jpbXU+n53FZTOA==
-X-Google-Smtp-Source: AMsMyM4r5g5tiPQtlMYhEp8r2PlEJr8nKPirdj+Q0JtCL1W4mt3CoToyJxY2WG98D9uXUExqxQEWbNq6YFsC4RzH+zE=
-X-Received: by 2002:aa7:cb87:0:b0:43b:e650:6036 with SMTP id
- r7-20020aa7cb87000000b0043be6506036mr26286805edt.350.1665559480967; Wed, 12
- Oct 2022 00:24:40 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LBlu7tPT0Tx5MrjvdiscmABwb2kCDpiFMguHWsE1qRI=;
+        b=kCsxmD89ND+C8tAMbfpOUeU+cwUJ/quCAH2aThRDzzrl4YxIELVRubovksFNBGWkic
+         lv49JVBa2SbcMmpqF/s3S/QR04YXwwO1orlUCHK0kzraQvgRBCAkfF3TwgJ4gIjPGDWT
+         +Q+BHv2JSBOALtowE8ZfCfZAckjDpSzqX/PvWXdEIM6km3hsDqnijIAQchLHdfbJVt6T
+         JQvj94z3SZuF9XP8Xk0ZlztWz9yKFxs+6RISI7lzy3/N4t0QRGli8fQXY+fAlSGTAMqX
+         WybiQH4dAI7RFNmuGJrDNiKkTV76qEGfo+8Pjizxg31kLgGkA3CCHd3jIuWTd8lF6P/4
+         ZK8A==
+X-Gm-Message-State: ACrzQf3Zf9QZg27CrpY3Wk6pgZnRFDIEOc/bh6woQo/W5B/7l3nmr/eH
+	oI5AB0aZXezw1D0a1DSWb2U=
+X-Google-Smtp-Source: AMsMyM533bBiEubHIjupTgGRt7/XMfF4p3p2/+tATp4bKUGSSf5uOxbPfntEFeuulxdGlsyniGXYUA==
+X-Received: by 2002:a17:90b:4b42:b0:20d:954e:28d with SMTP id mi2-20020a17090b4b4200b0020d954e028dmr2205621pjb.93.1665583523209;
+        Wed, 12 Oct 2022 07:05:23 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f9-20020a636a09000000b004277f43b736sm9607783pgc.92.2022.10.12.07.05.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Oct 2022 07:05:21 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 12 Oct 2022 07:05:19 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>, linux-alpha@vger.kernel.org,
+	kernel test robot <lkp@intel.com>, Mark Brown <broonie@kernel.org>,
+	Linux-Arch <linux-arch@vger.kernel.org>,
+	regressions@lists.linux.dev
+Subject: Re: [PATCH] alpha: Use generic <asm-generic/io.h>
+Message-ID: <20221012140519.GA2405113@roeck-us.net>
+References: <20220818092059.103884-1-linus.walleij@linaro.org>
+ <20221002224521.GA968453@roeck-us.net>
+ <fd905ca5-fe0d-4cfb-a0d0-aea8af539cc7@app.fastmail.com>
+ <57200020-c460-74ec-c786-9a2c16f4870e@roeck-us.net>
+ <2e110666-7519-4693-8a89-240cbb118c7e@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 12 Oct 2022 12:54:29 +0530
-Message-ID: <CA+G9fYvRXkjeO+yDEQxwJ8+GjSmwhZ7XHHAaVWAsxAaSngj5gg@mail.gmail.com>
-Subject: TI: X15 the connected SSD is not detected on Linux next 20221006 tag
-To: open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	linux-block <linux-block@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
-	regressions@lists.linux.dev, 
-	"open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>, lkft-triage@lists.linaro.org
-Cc: Niklas Cassel <niklas.cassel@wdc.com>, 
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2e110666-7519-4693-8a89-240cbb118c7e@app.fastmail.com>
 
-On TI beagle board x15 the connected SSD is not detected on linux next
-20221006 tag.
+On Tue, Oct 04, 2022 at 10:28:24PM +0200, Arnd Bergmann wrote:
+> On Tue, Oct 4, 2022, at 9:42 PM, Guenter Roeck wrote:
+> > On 10/3/22 06:03, Arnd Bergmann wrote:
+> >> On Mon, Oct 3, 2022, at 12:45 AM, Guenter Roeck wrote:
+> >
+> > Looks like something was missed. When building alpha:allnoconfig
+> > in next-20221004:
+> >
+> > Building alpha:allnoconfig ... failed
+> > --------------
+> > Error log:
+> > <stdin>:1517:2: warning: #warning syscall clone3 not implemented [-Wcpp]
+> > arch/alpha/kernel/core_marvel.c:807:1: error: conflicting types for 
+> > 'marvel_ioread8'; have 'unsigned int(const void *)'
+> >    807 | marvel_ioread8(const void __iomem *xaddr)
+> >        | ^~~~~~~~~~~~~~
+> > In file included from arch/alpha/kernel/core_marvel.c:10:
+> > arch/alpha/include/asm/core_marvel.h:335:11: note: previous declaration 
+> > of 'marvel_ioread8' with type 'u8(const void *)' {aka 'unsigned 
+> > char(const void *)'}
+> >    335 | extern u8 marvel_ioread8(const void __iomem *);
+> >        |           ^~~~~~~~~~~~~~
+> 
+> Right, I already noticed this and uploaded a fixed branch earlier today.
+> Should be ok tomorrow.
+> 
 
-+ export STORAGE_DEV=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
-+ STORAGE_DEV=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
-+ test -n /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
-+ echo y
-+ mkfs.ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
-mke2fs 1.46.5 (30-Dec-2021)
-The file /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 does
-not exist and no size was specified.
-+ lava-test-raise 'mkfs.ext4
-/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 failed; job
-exit'
+Unfortunately that did not completely fix the problem, or maybe the fix got
+lost. In mainline, when building alpha:allnoconfig:
 
-Test log:
- - https://lkft.validation.linaro.org/scheduler/job/5634743#L2580
+arch/alpha/kernel/core_marvel.c:807:1: error: expected '=', ',', ';', 'asm' or '__attribute__' before 'marvel_ioread8'
+  807 | marvel_ioread8(const void __iomem *xaddr)
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+The code is:
 
-metadata:
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: 7da9fed0474b4cd46055dd92d55c42faf32c19ac
-  git_describe: next-20221006
-  kernel_version: 6.0.0
-  kernel-config: https://builds.tuxbuild.com/2FkkkZ51ZYhBL1G8D69YX8Pkt5F/config
-  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/659754170
-  artifact-location: https://builds.tuxbuild.com/2FkkkZ51ZYhBL1G8D69YX8Pkt5F
-  toolchain: gcc-10
+unsigned u8
+marvel_ioread8(const void __iomem *xaddr)
 
---
-Linaro LKFT
-https://lkft.linaro.org
+The compiler doesn't like "unsigned u8".
+
+#regzbot ^introduced: e19d4ebc536d
+#regzbot title: alpha:allnoconfig fails to build
+#regzbot monitor: https://lore.kernel.org/linux-arch/202210062117.wJypzBWL-lkp@intel.com/
+
+Guenter
