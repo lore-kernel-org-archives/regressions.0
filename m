@@ -1,38 +1,38 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 778938F58
-	for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 07:14:14 +0000 (UTC)
-Received: by mail-ej1-f53.google.com with SMTP id a26so36088187ejc.4
-        for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 00:14:14 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEDEF8F59
+	for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 07:24:42 +0000 (UTC)
+Received: by mail-ed1-f41.google.com with SMTP id s30so23311992eds.1
+        for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 00:24:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=YrM9AXlV+Yjz/9a/UJEjVSeS2W/2GJxeJBViYwkeKi4=;
-        b=xx9DmA2R9fhxOFt5zZzL388ykcEA0OZ41CtirZW6S8buUf7v7owkLzNIxcXAHOi6Tz
-         l4pAVGmOtmds4fDSL5epMx/nRkLHo+aLiprPK+Jiv/0ur6h4IzZihW9xgX60NaE+hXJw
-         RexcrilSlSgOybR3f8r6U7Dd+HmvnhQOhwC1YPuLx4SBj1BEiln0fzV1R/x58XZ+7pK9
-         D8xhuyW0dAQquwB0Je+cUS4fOeScDefHBgc5viN1yxGWAj3bkdyOmv0vARimtoiEpUCY
-         XBAvUH8WjfpQC+4y7EHze82FIr2cXqCu0fX4drAdsfjMl1Bxq4sgUPE1iMwZLw8L8i4E
-         MWbw==
+        bh=QqX7TWBfdPQVg4fEx1BQ7sbR3W9tFyeiZ5DR5tT6eT8=;
+        b=fNjmT+XNAgLdf8CgJrhqLKcmsC2myZL4hIlsXKn83gc8c2MSQpsAI+YIZNIX86lnw+
+         BwupRVcHubAN1um2uZSrdXcY3TsGjO11UJVnNK026tzGz2zUrQpXbbNJCRtoILNp5+U2
+         ZjaHwprE9dz47eb1x04Drkq7eXbGOYvPj7WEHI45cJtoekQxNveglYomUNqXgM2jDMQB
+         AAbKlP8UVozYNQN7fcb4VAmGVPH5vk6Xo0c2vlX02p92k2Fd88O4SIClJm2ntRaMy0Sf
+         zD9MVreqhOWGby+BHocppu4YXnCKPQ9G7KbguQ5JLkaLqtb2RTAQ0IHvuDhxsEjsYDE7
+         mfrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YrM9AXlV+Yjz/9a/UJEjVSeS2W/2GJxeJBViYwkeKi4=;
-        b=qzzHT6G+mZ28/NkivN64/Z49PA17P4mdTNSNE4mge0ThUgkI7qSH+l9bumQOi1zXai
-         sl2dd43EZmFho4E4UBOAZUIjS3AYmfWj6XTDE9GHAC2PS4l4TObalReNXZ3/5KFRRTWI
-         cIdnMQb0RDlfq0lGYvCnQMKZrtTTgxzJNhHJyUgvo7srCvT4C5FkZnBANrux1NFQ7QVh
-         Ktq9CTkCYlJniduWn/nmhX7i05wdEYkE6xBAwitauTwmk5BDmbRqA5MN22C862SuNuE2
-         zCN9guKWAQwLTjjytQBpA7kBWSpbrIK4NYrBUrRgkjCVw5GwkpOCmm/xF8jNOYcb8nLV
-         Dmbg==
-X-Gm-Message-State: ACrzQf2Ym2URMcjkmZ63p7Gl1cM7T72tHte++ohzQ/PK8RuYGm18keaj
-	qQ/5GoRE2CBDxldvNyoocm3l+SiFyTUC4dgMh/ADTw==
-X-Google-Smtp-Source: AMsMyM6E4SM+zZlolmoE6H3BmvWqVXRVc5lrG4wh55M0bG/S+1eFG2HnwNgr10MxMz/k8FipbNygY2Kx2InJ1lRV+zI=
-X-Received: by 2002:a17:906:fe46:b0:73d:939a:ec99 with SMTP id
- wz6-20020a170906fe4600b0073d939aec99mr22106337ejb.169.1665558852523; Wed, 12
- Oct 2022 00:14:12 -0700 (PDT)
+        bh=QqX7TWBfdPQVg4fEx1BQ7sbR3W9tFyeiZ5DR5tT6eT8=;
+        b=aZdmK58TTYx1bBtGhlJmcreS9ziV6axFKDWgq/Vlxs1Unr8Dr2fZ/nSDyVrmnGOvz8
+         H0SoE6WgDGZn6Z8IshRPX0Ku5qGWD+UEVcu5BcaEm2Yud2w2OI0LXt2Ju98DwS+2lp8e
+         6eyRv1JkofbJF6nEUulipo7GF04a5pzNcIgeqDKlH0RjudqH2tfE7/WnqaZ8dNAfJW17
+         JkJmnSqGoQFUEztYF5z0JqB4LZOn4B8mjy2VYvKn8hoqusRuveTyIIxioCXdH09L8yj4
+         UyJ5Df9TgqZtiHZnTYDcXz7ZK2HOBRgQ7zzoyh11Go8b2wbLrHCBRyys4eE6XZg7xASd
+         /JTw==
+X-Gm-Message-State: ACrzQf3TTixXI94N5em0p2AbrmeVqGu40jhh8Y0e/jNi6u2FXeOv5xBB
+	U+qCpXyP/xn8TnnKbdjGVU9GW4T/jpbXU+n53FZTOA==
+X-Google-Smtp-Source: AMsMyM4r5g5tiPQtlMYhEp8r2PlEJr8nKPirdj+Q0JtCL1W4mt3CoToyJxY2WG98D9uXUExqxQEWbNq6YFsC4RzH+zE=
+X-Received: by 2002:aa7:cb87:0:b0:43b:e650:6036 with SMTP id
+ r7-20020aa7cb87000000b0043be6506036mr26286805edt.350.1665559480967; Wed, 12
+ Oct 2022 00:24:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,119 +40,49 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 12 Oct 2022 12:44:01 +0530
-Message-ID: <CA+G9fYuB1-qmObe3L0A0oUDXXaWa=-UxOEGtEWWJ-=_wc791Uw@mail.gmail.com>
-Subject: db410c: WARNING: CPU: 1 PID: 272 at lib/list_debug.c:30 __list_add_valid
+Date: Wed, 12 Oct 2022 12:54:29 +0530
+Message-ID: <CA+G9fYvRXkjeO+yDEQxwJ8+GjSmwhZ7XHHAaVWAsxAaSngj5gg@mail.gmail.com>
+Subject: TI: X15 the connected SSD is not detected on Linux next 20221006 tag
 To: open list <linux-kernel@vger.kernel.org>, 
-	Linux Media Mailing List <linux-media@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, 
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev
-Cc: Bjorn Andersson <andersson@kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, 
-	Andy Gross <agross@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@somainline.org>, 
-	Nicolas Dechesne <nicolas.dechesne@linaro.org>
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	linux-block <linux-block@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	regressions@lists.linux.dev, 
+	"open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>, lkft-triage@lists.linaro.org
+Cc: Niklas Cassel <niklas.cassel@wdc.com>, 
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Anders Roxell <anders.roxell@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 
-Following kernel warnings noticed on arm64 Qcom db410c device
-While booting Linux next 20221012 tag kernel Image and kselftest configs.
+On TI beagle board x15 the connected SSD is not detected on linux next
+20221006 tag.
+
++ export STORAGE_DEV=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
++ STORAGE_DEV=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
++ test -n /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
++ echo y
++ mkfs.ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
+mke2fs 1.46.5 (30-Dec-2021)
+The file /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 does
+not exist and no size was specified.
++ lava-test-raise 'mkfs.ext4
+/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 failed; job
+exit'
+
+Test log:
+ - https://lkft.validation.linaro.org/scheduler/job/5634743#L2580
 
 Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-[   29.295284] ------------[ cut here ]------------
-[   29.295685] list_add corruption. prev->next should be next
-(ffff000004735300), but was 0000000000000000. (prev=ffff000010693750).
-[   29.299665] WARNING: CPU: 1 PID: 272 at lib/list_debug.c:30
-__list_add_valid+0xdc/0x110
-[   29.310921] Modules linked in: snd_soc_msm8916_digital(+)
-qcom_pil_info(+) msm(+) qcom_q6v5 qcom_sysmon qcom_common
-venus_core(+) qcom_glink_smem qmi_helpers v4l2_mem2mem llcc_qcom
-qcom_camss qcom_stats qcom_rng qnoc_msm8916 mdt_loader
-videobuf2_dma_sg v4l2_fwnode ocmem v4l2_async gpu_sched
-videobuf2_memops drm_dp_aux_bus videobuf2_v4l2 i2c_qcom_cci
-videobuf2_common drm_display_helper icc_smd_rpm rpmsg_ctrl rpmsg_char
-display_connector drm_kms_helper rmtfs_mem sch_fq_codel socinfo fuse
-drm
-[   29.340698] CPU: 1 PID: 272 Comm: systemd-udevd Not tainted
-6.0.0-next-20221012 #1
-[   29.362124] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-[   29.369650] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[   29.376514] pc : __list_add_valid+0xdc/0x110
-[   29.383136] lr : __list_add_valid+0xdc/0x110
-[   29.387648] sp : ffff80000c70b3d0
-[   29.391879] x29: ffff80000c70b3d0 x28: ffff80000c70bb10 x27: ffff800037c6cdc8
-[   29.395178] x26: 0000000000000000 x25: ffff000005472010 x24: 0000000000000001
-[   29.402296] x23: ffff000010580818 x22: ffff000010693750 x21: ffff000010580818
-[   29.409418] x20: ffff000010693750 x19: ffff000004735300 x18: 0000000000000000
-[   29.416533] x17: 3030333533373430 x16: 3030303066666666 x15: 0720072007200720
-[   29.423652] x14: 072e072907300735 x13: 0720072007200720 x12: 072e072907300735
-[   29.430769] x11: ffff80000b510340 x10: 0720072007200720 x9 : ffff8000081d3c28
-[   29.437889] x8 : ffff80000c70b0a8 x7 : ffff80000aff78b8 x6 : 0000000000057fa8
-[   29.445007] x5 : 0000000000000fff x4 : ffff00003fc4cc50 x3 : ffff8000356cc000
-[   29.452125] x2 : 0000000000000000 x1 : 0000000000000000 x0 : ffff00000a2e1b00
-[   29.459243] Call trace:
-[   29.466253]  __list_add_valid+0xdc/0x110
-[   29.468541]  kobject_add_internal+0x78/0x2c0
-[   29.472718]  kobject_add+0xa0/0x110
-[   29.476952]  device_add+0x108/0x930
-[   29.480165]  of_device_add+0x4c/0x70
-[   29.483640]  of_platform_device_create_pdata+0x9c/0x130
-[   29.487496]  of_platform_bus_create+0x1c4/0x4f0
-[   29.492428]  of_platform_populate+0x70/0x160
-[   29.496937]  venus_probe+0x314/0x4b4 [venus_core]
-[   29.501464]  platform_probe+0x70/0x100
-[   29.506041]  really_probe+0xd4/0x3f4
-[   29.509680]  __driver_probe_device+0x8c/0x1a0
-[   29.513430]  driver_probe_device+0x4c/0x13c
-[   29.517680]  __driver_attach+0xc8/0x250
-[   29.521666]  bus_for_each_dev+0x80/0xdc
-[   29.525485]  driver_attach+0x34/0x4c
-[   29.529300]  bus_add_driver+0x1a4/0x260
-[   29.533124]  driver_register+0x7c/0x13c
-[   29.536681]  __platform_driver_register+0x38/0x4c
-[   29.540522]  qcom_venus_driver_init+0x28/0x1000 [venus_core]
-[   29.545409]  do_one_initcall+0x80/0x43c
-[   29.551093]  do_init_module+0x50/0x210
-[   29.554648]  load_module+0x1de0/0x22b4
-[   29.558467]  __do_sys_finit_module+0xb0/0x130
-[   29.562214]  __arm64_sys_finit_module+0x2c/0x40
-[   29.566646]  invoke_syscall+0x8c/0x120
-[   29.570969]  el0_svc_common.constprop.0+0x104/0x124
-[   29.574814]  do_el0_svc+0x44/0xcc
-[   29.579554]  el0_svc+0x48/0xc0
-[   29.583020]  el0t_64_sync_handler+0xbc/0x13c
-[   29.585997]  el0t_64_sync+0x18c/0x190
-[   29.590413] irq event stamp: 149728
-[   29.593964] hardirqs last  enabled at (149727):
-[<ffff8000081d392c>] __up_console_sem+0x78/0x7c
-[   29.597389] hardirqs last disabled at (149728):
-[<ffff80000976df44>] el1_dbg+0x24/0x90
-[   29.606054] softirqs last  enabled at (148374):
-[<ffff800008090be4>] __do_softirq+0x514/0x62c
-[   29.614055] softirqs last disabled at (148365):
-[<ffff800008097558>] ____do_softirq+0x18/0x24
-[   29.622648] ---[ end trace 0000000000000000 ]---
-[   29.634248] ------------[ cut here ]------------
-[   29.635814] list_add corruption. prev->next should be next
-(ffff80000b348928), but was 0000000000000000. (prev=ffff0000106938e0).
-[   29.640666] WARNING: CPU: 1 PID: 272 at lib/list_debug.c:30
-__list_add_valid+0xdc/0x110
-
-Full boot log link,
- - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221012/testrun/12360228/suite/log-parser-boot/test/check-kernel-exception/log
- - https://lkft.validation.linaro.org/scheduler/job/5660724#L2717
 
 metadata:
   git_ref: master
   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: f843795727e4f5612c612cd178db1557978da742
-  git_describe: next-20221012
+  git_sha: 7da9fed0474b4cd46055dd92d55c42faf32c19ac
+  git_describe: next-20221006
   kernel_version: 6.0.0
-  kernel-config: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec/config
-  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/664367901
-  artifact-location: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec
-  toolchain: gcc-11
-  System.map: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec/System.map
-  vmlinux.xz: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec/vmlinux.xz
-
+  kernel-config: https://builds.tuxbuild.com/2FkkkZ51ZYhBL1G8D69YX8Pkt5F/config
+  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/659754170
+  artifact-location: https://builds.tuxbuild.com/2FkkkZ51ZYhBL1G8D69YX8Pkt5F
+  toolchain: gcc-10
 
 --
 Linaro LKFT
