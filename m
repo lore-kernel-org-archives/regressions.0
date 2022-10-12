@@ -1,130 +1,242 @@
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F74E17ED
-	for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 15:33:22 +0000 (UTC)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-	by mailout.nyi.internal (Postfix) with ESMTP id 4F14D5C00D6;
-	Wed, 12 Oct 2022 11:33:21 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute3.internal (MEProxy); Wed, 12 Oct 2022 11:33:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to; s=fm2; t=1665588801; x=1665675201; bh=p46JJgtAdn
-	om3Y0Add8r9JIUoWNZUEiLnPyZNJRpZL0=; b=grWUM07WK4ujl6DYMF2oCDykzc
-	R2YXZIK+2jB3phTxqA5kFcHsLaChyfa6wFn3WgiZ+UmygkFPRgjvD7Fst/M0TL2v
-	OtUg6YzMEGSjlW1/FFmhkXY4hQLkpXi+uEM8beKFx/cjx3LAV6lFs0Al5Wp+BXez
-	YKFvvL8HcZFOYSpGx+0/9fVBZkUAtIjib7MuBcy5a5ozl4XQrpogbG0fHnIC7+VI
-	s/GLRc+wn5ulBV10Q+ONwn1w7Jxng17EQ4XIP9UWFVcqlpVYXojrW4LIZebij5r6
-	c9Taq7bJrILbSRkPahh/1hBhPuLbh5fh1wD96rdSG5iH9v+DWXSTIJc5EwYw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:mime-version:references:reply-to:sender:subject:subject:to:to
-	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1665588801; x=1665675201; bh=p46JJgtAdnom3Y0Add8r9JIUoWNZ
-	UEiLnPyZNJRpZL0=; b=r8MRYbUFdGX2N0CSQslCsGokunE10rTGgPPhwrQaxasP
-	F1kGKq0kclUrE2MBRyWbvfJ+8Dxzg2sbc45bNIGTCSyewIK8d7yEXz3/qzuEsTSo
-	MQZaNNa8R5rd6XcHHyJdysG5QIvSmq9wypWlIkcYYEoqC1X4nZYccmVu2l298qFg
-	1B34GqRkkCnpbQX1u/MFq2TblhEVDZVSoEoxJDcbqATPz77766knTBj1SugdjFBx
-	hLrWdVVnHfn3571d31+BZSFnUC/57c1A8pB5Ltn0HdakpuRJmPIGdWFSMBEgFVNG
-	n4cJNb0MPrNHmdJyEw/KA6Y8kHCDi5JsYKC1L7JVFw==
-X-ME-Sender: <xms:P95GY7mexFwbDp5ju7nPMzw_fEYmfJ26oCj4skT5_8b5YNP4NogPkw>
-    <xme:P95GY-3m0y7QOQM18D0qvemnMrfCDKRSsWA8ITtVPObXiKkpwxMg588eo3ZZ9CA87
-    8JjiddEwsYJkXFf2TE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeejkedgledtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
-    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:P95GYxqZjrHW-bsevMX0QjgE2Pa_BYfH4A23Xz1Qtx_a2gRaaH_Bdg>
-    <xmx:P95GYzn4H6y8PRSNuFtCAgUThrxt-L-u5yqYFVAjal-OCicPm83Kqw>
-    <xmx:P95GY52qb4EvffvFOIfUw58Ev6fT-Tqx_WSet0E55uGTRiQJhSGF8Q>
-    <xmx:Qd5GY2kGaQGz9jZMxvPYvCizq-6ImEQuaWATbJ9RSqzZRFkpyjD1AA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 68F12B60086; Wed, 12 Oct 2022 11:33:19 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1047-g9e4af4ada4-fm-20221005.001-g9e4af4ad
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF3CF2561;
+	Wed, 12 Oct 2022 16:12:10 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oieKx-00007h-6g; Wed, 12 Oct 2022 18:12:03 +0200
+Message-ID: <8a743f72-1b81-20c3-a2fa-8196b5278fef@leemhuis.info>
+Date: Wed, 12 Oct 2022 18:12:02 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Message-Id: <e99d33ff-4bfe-4727-a5ca-f4987b871ccd@app.fastmail.com>
-In-Reply-To: <20221012140519.GA2405113@roeck-us.net>
-References: <20220818092059.103884-1-linus.walleij@linaro.org>
- <20221002224521.GA968453@roeck-us.net>
- <fd905ca5-fe0d-4cfb-a0d0-aea8af539cc7@app.fastmail.com>
- <57200020-c460-74ec-c786-9a2c16f4870e@roeck-us.net>
- <2e110666-7519-4693-8a89-240cbb118c7e@app.fastmail.com>
- <20221012140519.GA2405113@roeck-us.net>
-Date: Wed, 12 Oct 2022 17:32:59 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Guenter Roeck" <linux@roeck-us.net>
-Cc: "Linus Walleij" <linus.walleij@linaro.org>,
- "Richard Henderson" <richard.henderson@linaro.org>,
- "Ivan Kokshaysky" <ink@jurassic.park.msu.ru>,
- "Matt Turner" <mattst88@gmail.com>, linux-alpha@vger.kernel.org,
- "kernel test robot" <lkp@intel.com>, "Mark Brown" <broonie@kernel.org>,
- Linux-Arch <linux-arch@vger.kernel.org>, regressions@lists.linux.dev
-Subject: Re: [PATCH] alpha: Use generic <asm-generic/io.h>
-Content-Type: text/plain
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Content-Language: en-US, de-DE
+To: Hans de Goede <hdegoede@redhat.com>,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: "Artem S. Tashkinov" <aros@gmx.com>, ksummit <ksummit@lists.linux.dev>,
+ workflows@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <20221004175354.bfvg3vhfqch35ib5@meerkat.local>
+ <c74d9d75-4428-e22d-1adb-334b1173d871@leemhuis.info>
+ <20221004202540.etokkm3jk6sk7z7y@meerkat.local>
+ <89926f21-e172-9f3d-d08f-8d5eef812ee1@leemhuis.info>
+ <477635db-c89b-cfd3-cd26-fea51bb094a5@redhat.com>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+In-Reply-To: <477635db-c89b-cfd3-cd26-fea51bb094a5@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1665591130;ce8e9760;
+X-HE-SMSGID: 1oieKx-00007h-6g
 
-On Wed, Oct 12, 2022, at 4:05 PM, Guenter Roeck wrote:
-> On Tue, Oct 04, 2022 at 10:28:24PM +0200, Arnd Bergmann wrote:
->> On Tue, Oct 4, 2022, at 9:42 PM, Guenter Roeck wrote:
->> > On 10/3/22 06:03, Arnd Bergmann wrote:
->> >> On Mon, Oct 3, 2022, at 12:45 AM, Guenter Roeck wrote:
->> >
->> > Looks like something was missed. When building alpha:allnoconfig
->> > in next-20221004:
->> >
->> > Building alpha:allnoconfig ... failed
->> > --------------
->> > Error log:
->> > <stdin>:1517:2: warning: #warning syscall clone3 not implemented [-Wcpp]
->> > arch/alpha/kernel/core_marvel.c:807:1: error: conflicting types for 
->> > 'marvel_ioread8'; have 'unsigned int(const void *)'
->> >    807 | marvel_ioread8(const void __iomem *xaddr)
->> >        | ^~~~~~~~~~~~~~
->> > In file included from arch/alpha/kernel/core_marvel.c:10:
->> > arch/alpha/include/asm/core_marvel.h:335:11: note: previous declaration 
->> > of 'marvel_ioread8' with type 'u8(const void *)' {aka 'unsigned 
->> > char(const void *)'}
->> >    335 | extern u8 marvel_ioread8(const void __iomem *);
->> >        |           ^~~~~~~~~~~~~~
->> 
->> Right, I already noticed this and uploaded a fixed branch earlier today.
->> Should be ok tomorrow.
->> 
->
-> Unfortunately that did not completely fix the problem, or maybe the fix got
-> lost. In mainline, when building alpha:allnoconfig:
->
-> arch/alpha/kernel/core_marvel.c:807:1: error: expected '=', ',', ';', 
-> 'asm' or '__attribute__' before 'marvel_ioread8'
->   807 | marvel_ioread8(const void __iomem *xaddr)
->
-> The code is:
->
-> unsigned u8
-> marvel_ioread8(const void __iomem *xaddr)
->
-> The compiler doesn't like "unsigned u8".
+On 05.10.22 11:57, Hans de Goede wrote:
+> On 10/5/22 11:00, Thorsten Leemhuis wrote:
+>> On 04.10.22 22:25, Konstantin Ryabitsev wrote:
+>>> On Tue, Oct 04, 2022 at 10:06:28PM +0200, Thorsten Leemhuis wrote:
+>>>> Your plan would afaics mean that we invest further into a software
+>>>> abandoned by its upstream and already becoming more and more of a
+>>>> maintenance burden. That investment would also further increase our
+>>>> dependency on that software by establishing workflows that rely on it.
+>>>> Is that really wise at this point? Wouldn't it be better to spend that
+>>>> time and effort to build something better that is more future proof?
+>>>
+>>> Unfortunately, there's no such thing. ;) And maybe we'll even help tip the
+>>> course of history into the other direction -- Red Hat uses bugzilla, and so
+>>> does OpenSuse, so there's a pretty good core of well-funded companies that
+>>> would be in a position to help keep bugzilla going if it's looking like the
+>>> platform is still alive. Or that could all be wishful thinking and they'll all
+>>> migrate to Jira or something equally horrible, who knows.
+>>
+>> Well, Red Hat apparently is already in the process of migrating to Jira
+>> in the long run:
+>> https://lists.fedoraproject.org/archives/list/epel-devel@lists.fedoraproject.org/thread/U7TZRWXVUGBCHS6EBJIBSFAVPFUHHV7J/
+>>
+>> To quote that mail from March:
+>>
+>> ```
+>> As some of you may know, Red Hat has been using both Bugzilla and Jira
+>> via issues.redhat.com for RHEL development for several years.  Our
+>> intention is to move to using issues.redhat.com only for the major
+>> RHEL releases after RHEL 9.
+>> ```
+> 
+> That is for RHEL only though I'm not sure what the plans for Fedora are.
 
-Right, I fixed up a different bug and introduced this wrong type.
-I didn't catch my mistake until after the pull request was
-merged, but fixed it in
+FWIW & for completeness: at least Fedora's project leader Matthew Miller
+thinks that Fedora ```should plan to migrate [from bugzilla] to
+something else in the next three years. There are two reasons for this,
+and only one of them is that Red Hat is moving away. The second is that
+Bugzilla isn’t a great tool for what we need anyway.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git/commit/?id=2e21c1575208
+On the first part: yes, there’s a long, slow sunset, but I think
+realistically we’re going to see business-side attention drop
+significantly, and we’ll have correspondingly worse and worse service.
+Right now, there are basically only two people keeping it all going,
+which is heroic. I don’t think it’s too much
+pulling-back-the-corporate-curtain to guess that if one or both get
+tired of that and decide to go start a yak farm, Red Hat won’t
+prioritize hiring backfill dedicated in the same way. We could ask CPE
+to keep it going, but… there’s so much more I’d like to ask CPE. (And
+non-CPE volunteers? There’s so much that’s more interesting!)
 
-which should be in linux-next. I was giving it a little more
-time to be see if there are any other regressions I caused.
+So to the second part: Bugzilla isn’t what we really need anyway.[...]```
 
-     Arnd
+See his post from March here for links and the rest of his msg:
+https://discussion.fedoraproject.org/t/the-future-of-bugzilla-in-fedora/37735
+I quoted the msg fully at the end of this mail for completeness.
+
+Only learned about this msg now through a comment from Matthew
+(https://lwn.net/Articles/910966/ ) in an article about this thread
+(https://lwn.net/Articles/910740/ ). To quote from his lwn.net comment:
+
+```
+Tl;dr: many similar issues as in the above conversation. Triage is a big
+deal. "Bugs" aren't really the best place to start -- it's better to
+send people to a help forum first, file bugs second. [...]
+```
+
+Ciao, Thorsten
+
+P.S.: Here is the promised full quote of:
+https://discussion.fedoraproject.org/t/the-future-of-bugzilla-in-fedora/37735
+
+```
+> The Future of Bugzilla in Fedora
+> Project Discussion
+> council
+> engineering
+> quality-assurance
+> Matthew Miller
+> mattdm Fedora Council Member
+> Mar 22
+> 
+> I posted this on the Fedora Development mailing list 3, in the thread
+> RHEL moving to issues.redhat.com only long term 2, and am re-posting
+> here for broader discussion.
+> 
+> Here’s what I’m thinking: we should plan to migrate to something else
+> in the next three years. There are two reasons for this, and only one
+> of them is that Red Hat is moving away. The second is that Bugzilla
+> isn’t a great tool for what we need anyway.
+> 
+> On the first part: yes, there’s a long, slow sunset, but I think
+> realistically we’re going to see business-side attention drop
+> significantly, and we’ll have correspondingly worse and worse
+> service. Right now, there are basically only two people keeping it
+> all going, which is heroic. I don’t think it’s too much
+> pulling-back-the-corporate-curtain to guess that if one or both get
+> tired of that and decide to go start a yak farm, Red Hat won’t
+> prioritize hiring backfill dedicated in the same way. We could ask
+> CPE to keep it going, but… there’s so much more I’d like to ask CPE.
+> (And non-CPE volunteers? There’s so much that’s more interesting!)
+> 
+> So to the second part: Bugzilla isn’t what we really need anyway.
+> 
+> I’m not saying Bugzilla has been terrible — it’s served us well, in
+> fact. And I have personal fondness for it that, which I do not for,
+> say, the wiki. :classic_smiley: Buzilla is it’s deeply integrated in
+> a lot of our processes, and we’ve got a lot of automations and so on.
+> It’s important. But… there’s a lot that could be better. I think
+> specifically:
+> 
+> It doesn’t serve as a single place to track everything. We’ve got
+> stuff scattered around Bugzilla; issue trackers in Pagure GitLab, and
+> GitHub; pull requests in all of those places; and more. Not to
+> mention upstreams (and inconsistent approaches to tracking upstream
+> issues). I’m not arguing that we need ALL things in one place, but
+> it’s important that Bugzilla isn’t that now anyway.
+> 
+> Bugzilla a terrible experience for end users. Usually it’s the Wrong
+> Place. When a user has a problem, that may or may not be caused by a
+> software defect. This is a whole topic of its own, but in short, it’s
+> really better for most users to report problems at Ask Fedora, and
+> then possibly after triage a bug should be filed and tracked
+> somewhere.
+> 
+> Many of our users are advanced and recognize real defects and file
+> good reports, but this leads to even more frustration, because our
+> response is inconsistent. Maybe that report should actually be
+> upstream. Maybe it’s in a dependency package that’s really only
+> loosely maintained. For whatever reason, a lot of perfectly good
+> reports end up closed EOL, which is never a good outcome.
+> 
+> We’re inconsistent with PRs vs issues, which is confusing and makes
+> more duplication. I have seen cases where a packager complained that
+> someone filed a PR that they never noticed, saying “this should be a
+> bug so I’ll see it”, while others close bugs with “please send a PR”.
+> We could make stronger statements about policies, but as long as
+> these two things exist in separate places, that tension will keep
+> coming back.
+> 
+> Plus plenty of minor things: Our workflow still is shoehorned around
+> a bunch of RH-centric stuff (lots of fields, flags, and statuses that
+> we don’t really use or want). It’s not great for the review workflow,
+> or for some of the other things we’ve twisted it to. A
+> component-centric approach makes it hard to track larger issues. The
+> SCM workflow is … not good.
+> 
+> And I’m sure there’s more. But I’m not really here to complain about
+> Bugzilla. It’s just actually not filling our needs. I therefore think
+> that Jira / issues.redhat.com 5 wouldn’t either — although it’s got a
+> ton of features on top, it’s fundamentally the same kind of thing.
+> 
+> We need define exactly what we do need, and figure out how to get
+> that, in a sustainable way going forward. And fortunately, we DO have
+> a few years, so for once we could do this before it’s a crisis.
+> 
+> I think we should create a project to figure this out. In fact, I
+> think it should be a Fedora Objective. But, it also shouldn’t be a
+> completely blue-sky initiative — we should avoid trying to develop a
+> new gigantic piece of software that we own. (See past results on
+> that, sigh.)
+> 
+> We do have some pieces already in place that should be part of the
+> foundation (or at least other metaphorical bricks in the
+> construction):
+> 
+> Ask Fedora is the place for users to report and discuss problems.
+> This is our first-line of support, and it’s where we can do triage.
+> Then, software defects may or may not be tracked relating to those
+> conversations.
+> 
+> Package-specific issues should be next to the PRs. Let’s enable issue
+> tracking on src.fedoraproject.org (with whatever gitforge we end up
+> with that on). I think this makes sense for initial package review
+> too, although that would need some workflow changes.
+> 
+> Bodhi and the CI results system and all of that. This is
+> update-centric, but does also have a lot of issue-tracker-like
+> characteristcs in the “karma” system, and it is inherently close to
+> our release process. Maybe some of the process that currently goes
+> through Bugzilla could move here.
+> 
+> The Fedora account system and Fedora message bus, plus the packager
+> dashboard, the (under significant update!) Fedora notifications
+> system, and so on. We have a nice underlying infrastructure for tying
+> things together, and we can do more integrations. (Look at how Copr
+> uses Discourse, for example. Or the Blocker Bugs app and its
+> connections with Pagure and, um, Bugzilla.)
+> 
+> Obviously that’s not nearly sufficient. But we should look at all of
+> our needs around tracking issues, plans, projects, blockers, and
+> defects; consider different packaging cases with various
+> relationships with upstreams; and imagine ideal workflows for users,
+> packagers, project managers, spin and edition teams, QA, and all the
+> other stakeholders. The last time we did this was in 2013, so… it’s a
+> good 10-years-later exercise! (Infrastructure Fedora bug tracker -
+> Fedora Project Wiki 2)
+> 
+> Then, once we have a good shared understanding of what we want, start
+> fitting pieces like the above into that picture, define the gaps, and
+> then find exactly what we need to fill them.
+```
