@@ -1,247 +1,291 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 358DC8F51
-	for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 06:05:25 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id 09027604ED;
-	Wed, 12 Oct 2022 08:05:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665554723; bh=xuoJSukhYj9ZILJWRFf+VGISYqH3FXP6oaibbbYodUo=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=YhYWF3O5OotSlrKXEsah9GCbDWvcSvycMgT52U+ho1gHqMA1PkLcjwiFWptdseQ78
-	 OswWRAXLVdgHeQCEMj5IBkMp/lftpBP/gIMOj5u2CrMbNgG1FzXAQkbznqRcwUlj3/
-	 XypW2i9omn8thwDoXWUE/XQ3+gLUWnjNWS9VOHjLEksmXTcMP9UY+GY9LMOM8MTjgt
-	 3pbfN7f0nMuyDcoet6RyvVE9CZaiTKGjizRhJWMB2Dz2wofasBaQw1vkiLktM3vQqs
-	 4eAqjq9Cxs/nhnRDsSeQqFmBg7LzMZUN2mU1+ACLxK3ny+MAjpxntOIyHstBxIbD05
-	 03IGkQNFgZLQA==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id TOEZg7Z8QhJ5; Wed, 12 Oct 2022 08:05:19 +0200 (CEST)
-Received: from [193.198.186.200] (pc-mtodorov.slava.alu.hr [193.198.186.200])
-	by domac.alu.hr (Postfix) with ESMTPSA id 423F9604EC;
-	Wed, 12 Oct 2022 08:05:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665554719; bh=xuoJSukhYj9ZILJWRFf+VGISYqH3FXP6oaibbbYodUo=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=HNwUUce73fMm3g49fRXg/biKE+SkncvH7fXQp2QLVHnt4xDxwBvVIPCrsMch6url5
-	 ygTwdbLQV2H5vBshmQ7G1Xbv51F6m6h5meC7jiLj57e7v5YjBF6RNn3bx6hYOJX3bI
-	 4iguI991pjeLany8S3rS2NdR5p3ghq4wgMUS92d62psR/OmXgANW/lUvWtvNWRdWeT
-	 ghlIdFc74mJvdjD+FCNxEQZTvOZlSB5N2bzp2OcjDvGyGtzY5YIMYFL0tebgeGfqnq
-	 8lH3WFDuWKMXmhUfEb43edmnItRpBNHNCbxH7cBIiY60Y+cJu7ja9uu/gVJRZLxQJy
-	 RRH5WeVzJTkiw==
-Message-ID: <e335e7cd-366f-7ced-2707-b6ef49cfe9eb@alu.unizg.hr>
-Date: Wed, 12 Oct 2022 08:05:18 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5107195
+	for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 07:06:09 +0000 (UTC)
+Received: by mail-ej1-f54.google.com with SMTP id q9so31514713ejd.0
+        for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 00:06:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3FHxfaX0nUvU3yM6pdGDpraNdXFnmAEzWTxDZP6zVag=;
+        b=cffGMndeYEmELAI2l1vym18F2hWFwe93SbDFuJNsK2tN3mDwPR4EZnrhV1EDQ86JlF
+         oPPORGk/wOJ7GRnpblMJkW2fkc0Vpg83lyYrsWp3r68N1G9QuMe1hcVtSq8663uWEo6W
+         O6WlojTohjO6nTAaeSN416a8SyCidZa0xF2KWz/I5aPvDQ04a2K1xSP0zZz3llF3nOMI
+         MLHfW9ve+SZ+/llayySwVf41keulS2jXW30hXifWIztGNZhu1k/f+JysM8z9J62ouCAs
+         oTL55ao3P7wTCsYgZCR/k8UO78YseOVW2NJJjczVUOaS9pZgTOmuzCBnYo8Ok6O7rOgp
+         G7cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3FHxfaX0nUvU3yM6pdGDpraNdXFnmAEzWTxDZP6zVag=;
+        b=6t5pcbM7Wt6WKR1XEOgL6XhtrA/dFS8iI//HcpExBC0JKHGpnKnTxK8zQzpyaE2B+u
+         vmMuFr/z5xrW0o9pCEm4LTmxo5ElcXMtKrSWhegifLytDDrqqKGWerho+AoZ9k1HKkGA
+         zo1eP16HJ70dfc0I7SpbgJjN75sJ7cHTaF39n15SlVU2Kf9EBbcm/Stwz6EU6PXxeqBG
+         9WXiiSHmhkHZ//BFSE8NX/XKJZmjFYB9P2Nrsqz8V+aL9+N0xPbb9K6nixhNtI+GxgLm
+         j1H5OcB7KAHWqV85Hjc09cbw9GsXT5Wm8XZ0znGxScKLdmvaGgE4BvSDaTqofQgyLxW8
+         uvfQ==
+X-Gm-Message-State: ACrzQf1uyMvqJvvx9Lrs4D8abCKjeHDsF1AtSjzL8npsy9JvymJTgH6Z
+	cUdUkaSboOg1+Y5x3BgVBa1hXPds/F/w9Pk4ruBzow==
+X-Google-Smtp-Source: AMsMyM6Xi8F6DTgp4ZKvWbVbWHa1cM1s8X+vpij+0T/1ie3OxzN9LtD5fqXK74DtrKVmQ1uJyfPyoOMlh7NiSF/8Kdk=
+X-Received: by 2002:a17:907:7d8e:b0:78d:ed30:643b with SMTP id
+ oz14-20020a1709077d8e00b0078ded30643bmr2862275ejc.253.1665558367879; Wed, 12
+ Oct 2022 00:06:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: BUG reproduced: 6.0.0-RC kernels trigger Firefox snap bug with
- 6.0.0-rc3 through 6.0.0-rc7
-Content-Language: en-US
-From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- linux-kernel@vger.kernel.org
-Cc: Marc Miltenberger <marcmiltenberger@gmail.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Slade Watkins <srw@sladewatkins.net>
-References: <b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr>
- <5bb75cbc-a0db-537b-12d0-889230c865d8@leemhuis.info>
- <0fb2a9ff-df76-8af9-e54a-c2dc6bfd9478@leemhuis.info>
- <bdab45d3-c893-42ff-dbb9-5fa93d0dff55@alu.unizg.hr>
- <dd62210d-d095-f971-2b7b-0ec54fd189a9@leemhuis.info>
- <c05134cc-92fa-dac2-e738-cf6fae194521@alu.unizg.hr>
- <6ba15505-1c04-df2b-237f-b3060f26d2e6@leemhuis.info>
- <25cd0e21-ed8e-1836-b0ec-c052c2276cd8@alu.unizg.hr>
- <c40786ab-8b3b-9b64-683f-dac589c024df@alu.unizg.hr>
-In-Reply-To: <c40786ab-8b3b-9b64-683f-dac589c024df@alu.unizg.hr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 12 Oct 2022 12:35:56 +0530
+Message-ID: <CA+G9fYui6--jhN1CFH6fXNK81sHNYgosTs2hyybFqPxFRvndpg@mail.gmail.com>
+Subject: BUG: sleeping function called from invalid context at kernel/locking/mutex.c:580
+To: open list <linux-kernel@vger.kernel.org>, rcu <rcu@vger.kernel.org>, 
+	linux-bluetooth@vger.kernel.org, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, Netdev <netdev@vger.kernel.org>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 10/8/22 18:43, Mirsad Goran Todorovac wrote:
+Following kernel deadlock warnings and BUG noticed on arm64 Qcom db845c dev=
+ice
+While booting Linux next 20221012 tag kernel Image and kselftest configs.
 
-> On 10/6/22 14:25, Thorsten Leemhuis wrote:
->>>>>>
->>>>>>> One more question:
->>>>>>>
->>>>>>> On 06.10.22 14:00, Thorsten Leemhuis wrote:
->>>>>>> Were those two vanilla kernels? I asked in #snappy on IRC and 
->>>>>>> was told
->>>>>>> that "snapd simply expects some ubuntu bit in patched into the 
->>>>>>> kernel if
->>>>>>> it detects that it runs on an official ubuntu install...". This 
->>>>>>> was also
->>>>>>> suggested "it probably makes sense to file a but in LP to make the
->>>>>>> kernel team aware".
->>>>>> Yes, last time I tried it with git clone from linux_stable on 
->>>>>> kernel.org
->>>>>> and
->>>>>> config-6.0.0-060000-generic from the official Ubuntu mainline build
->>>>> You don't want to do that. Better take the config used to build a
->>>>> working kernel (say 5.19.y) and then build 6.0 with it (after running
->>>>> "make olddefconfig"), because it might be a new kernel option (say 
->>>>> for a
->>>>> new security technique) that might cause the problem, as explained 
->>>>> here:
->>>>> https://docs.kernel.org/admin-guide/reporting-regressions.html
->>>> If I understood well, that would mean building www.kernel.org git
->>>> linux_stable
->>>> source with Ubuntu's config-5.9.13-051903?
->>> I meant "please download Linux 6.0 (ideally through git, that you have
->>> everything to perform a bisection), add the config from a working 
->>> kernel
->>> (if config-5.9.13-051903 is one, yeah, then take that) as .config and
->>> then run "make olddefconfig" before compiling and installing the kernel
->>> to see if 6.0 fails with that config that was working.
->>
->> Hi, Thorsten,
->>
->> Having done this build with mentioned config-5.19.13-051903-config from
->> Ubuntu's mainline build and your recommended make option
->> had produced a kernel that so far did not exhibit the Firefox snap
->> "tab crash/wrong Verneed record version" bug.
->>
->> However, the uptime is 1d 18h50min, so it might be too early to draw
->> a definite general conclusion.
->>
->> Now, the brave conlusion seems to be that the culprit is one of the 
->> modules
->> added in config-6.0.0-060000-generic.
->>
->> I am new to this, but is seems that we should look at some compiled-in
->> modules (147 loadable and 41 compiled-in):
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Hi, guys,
+[   18.690573] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[   18.695938] WARNING: possible recursive locking detected
+[   18.701307] 6.0.0-next-20221012 #1 Not tainted
+[   18.705804] --------------------------------------------
+[   18.711168] kworker/u16:5/256 is trying to acquire lock:
+[   18.716544] ffff58730911e4f8 (&irq_desc_lock_class){-.-.}-{2:2},
+at: __irq_get_desc_lock+0x64/0xa4
+[   18.725629]
+[   18.725629] but task is already holding lock:
+[   18.731519] ffff5873071c64f8 (&irq_desc_lock_class){-.-.}-{2:2},
+at: __irq_get_desc_lock+0x64/0xa4
+[   18.733233] remoteproc remoteproc0: remote processor
+remoteproc-adsp is now up
+[   18.740563]
+[   18.740563] other info that might help us debug this:
+[   18.740566]  Possible unsafe locking scenario:
+[   18.740566]
+[   18.740569]        CPU0
+[   18.740571]        ----
+[   18.740573]   lock(&irq_desc_lock_class);
+[   18.740579]   lock(&irq_desc_lock_class);
+[   18.740585]
+[   18.740585]  *** DEADLOCK ***
+[   18.740585]
+[   18.740587]  May be due to missing lock nesting notation
+[   18.740587]
+[   18.757926] cfg80211: Loading compiled-in X.509 certificates for
+regulatory database
+[   18.760420] 6 locks held by kworker/u16:5/256:
+[   18.760424]  #0: ffff587300032938
+((wq_completion)events_unbound){+.+.}-{0:0}, at:
+process_one_work+0x1e8/0x6d4
+[   18.793798] cfg80211: Loaded X.509 cert 'sforshee: 00b28ddf47aef9cea7'
+[   18.794138]  #1: ffff800009a1bdd0
+(deferred_probe_work){+.+.}-{0:0}, at: process_one_work+0x1e8/0x6d4
+[   18.815528]  #2: ffff5873019e68f8 (&dev->mutex){....}-{3:3}, at:
+__device_attach+0x44/0x200
+[   18.833287]  #3: ffffdd47e98f1cf0 (cpu_hotplug_lock){++++}-{0:0},
+at: cpus_read_lock+0x18/0x24
+M[K[  *** ] (2 of 2) A start j[   18.842012]  #4: ffff587301248518
+(subsys mutex#8){+.ob is running for=C3=A2=E2=82=AC=C2=A6n to /usr/lib/rfsa=
+ (9s / no
+limit)
+[   18.857511]  #5: ffff5873071c64f8
+(&irq_desc_lock_class){-.-.}-{2:2}, at: __irq_get_desc_lock+0x64/0xa4
+[   18.871877]
+[   18.871877] stack backtrace:
+[   18.876286] CPU: 4 PID: 256 Comm: kworker/u16:5 Not tainted
+6.0.0-next-20221012 #1
+[   18.883936] Hardware name: Thundercomm Dragonboard 845c (DT)
+[   18.889655] Workqueue: events_unbound deferred_probe_work_func
+[   18.895566] Call trace:
+[   18.898046]  dump_backtrace+0xe4/0x140
+[   18.901847]  show_stack+0x30/0x60
+[   18.905203]  dump_stack_lvl+0x8c/0xb8
+[   18.908918]  dump_stack+0x18/0x34
+[   18.912274]  __lock_acquire+0x1154/0x2040
+[   18.916330]  lock_acquire.part.0+0xe8/0x24c
+[   18.920568]  lock_acquire+0x84/0xa0
+[   18.924102]  _raw_spin_lock_irqsave+0x70/0xb0
+[   18.928523]  __irq_get_desc_lock+0x64/0xa4
+[   18.928532]  enable_irq+0x40/0xb0
+[   18.928542]  lmh_enable_interrupt+0x3c/0x50 [lmh]
+Coldplug All udev De[   18.94080vices.
+[   18.952775]  __irq_startup+0x88/0xbc
+[K[   18.957451]  irq_startup+0x84/0x180
+[   18.961243]  __enable_irq+0x88/0xa0
+[   18.964776]  enable_irq+0x54/0xb0
+[   18.968140]  qcom_cpufreq_ready+0x2c/0x3c
+[   18.972200]  cpufreq_online+0x2f4/0xb24
+[   18.976083]  cpufreq_add_dev+0xdc/0x100
+[   18.979964]  subsys_interface_register+0x134/0x14c
+[   18.984819]  cpufreq_register_driver+0x16c/0x2e0
+[   18.989488]  qcom_cpufreq_hw_driver_probe+0xdc/0x150
+[   18.994510]  platform_probe+0x70/0x100
+[   18.998311]  really_probe+0xd4/0x3f4
+[   19.001936]  __driver_probe_device+0x8c/0x1a0
+[   19.006347]  driver_probe_device+0x4c/0x13c
+[   19.010584]  __device_attach_driver+0xd8/0x180
+[   19.015081]  bus_for_each_drv+0x88/0xe0
+[   19.018966]  __device_attach+0xb4/0x200
+[   19.022845]  device_initial_probe+0x28/0x40
+[   19.027081]  bus_probe_device+0xa8/0xb0
+[   19.030965]  deferred_probe_work_func+0xc0/0x120
+[   19.035637]  process_one_work+0x280/0x6d4
+[   19.039695]  worker_thread+0x7c/0x430
+[   19.043407]  kthread+0x110/0x114
+[   19.046677]  ret_from_fork+0x10/0x20
+[   19.108471] cpu cpu4: EM: created perf domain
+         Starting Wait for udev To =C3=A2=E2=82=AC=C2=A6plete Device Initia=
+lization.
+[   19.125768] remoteproc remoteproc1: remote processor
+remoteproc-cdsp is now up
+[   19.138140] xhci_hcd 0000:01:00.0: Adding to iommu group 6
+[   19.150419] coresight stm0: STM32 initialized
+[   19.254272] ath10k_snoc 18800000.wifi: Adding to iommu group 10
+[   19.372948] ath10k_snoc 18800000.wifi: supply vdd-3.3-ch1 not
+found, using dummy regulator
+[   19.472640] geni_spi 880000.spi: FIFO mode disabled, but couldn't
+get DMA, fall back to FIFO mode
+[   19.485178] gpi 800000.dma-controller: Adding to iommu group 11
+[  OK  ] Reached target [0;1;39mHardware activated USB gadget.
+[   19.528153] i2c 16-0010: Fixing up cyclic dependency with acb3000.camss
+[   19.559810] i2c 10-003b: Fixing up cyclic dependency with hdmi-out
+[   19.575396] gpi a00000.dma-controller: Adding to iommu group 12
+[   19.590779] qcom-venus aa00000.video-codec: Adding to iommu group 13
+[   19.608167] qcom-venus aa00000.video-codec: non legacy binding
+[   19.618073] remoteproc remoteproc2: 4080000.remoteproc is available
+[   19.629950] qcom-camss acb3000.camss: Adding to iommu group 14
+[   19.630180] Bluetooth: Core ver 2.22
+[   19.639713] NET: Registered PF_BLUETOOTH protocol family
+[   19.645247] Bluetooth: HCI device and connection manager initialized
+[   19.651711] Bluetooth: HCI socket layer initialized
+[   19.656813] Bluetooth: L2CAP socket layer initialized
+[   19.661960] Bluetooth: SCO socket layer initialized
+[   19.743786] adreno 5000000.gpu: Adding to iommu group 15
+[   19.764896] Bluetooth: HCI UART driver ver 2.3
+[   19.769470] Bluetooth: HCI UART protocol H4 registered
+[   19.778004] msm-mdss ae00000.mdss: Adding to iommu group 16
+[   19.783005] Bluetooth: HCI UART protocol LL registered
+[   19.809993] Bluetooth: HCI UART protocol Broadcom registered
+[   19.819508] Bluetooth: HCI UART protocol QCA registered
+[   19.829474] Bluetooth: HCI UART protocol Marvell registered
+[   19.858355] EXT4-fs (sde9): mounted filesystem with ordered data
+mode. Quota mode: none.
+[   19.893331] platform ae94000.dsi: Fixing up cyclic dependency with 10-00=
+3b
+[  OK  ] Finished Mount DSP partition to /usr/lib/rfsa.
+[   19.917937] platform ae94000.dsi: Fixing up cyclic dependency with
+ae01000.display-controller
+[  OK  ] Reached target Local File Systems.
+[  OK  ] Listening on Load/Save RF =C3=A2=E2=82=AC=C2=A6itch Status /dev/rf=
+kill Watch.
+[   19.950987] BUG: sleeping function called from invalid context at
+kernel/locking/mutex.c:580
+[   19.959591] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid:
+258, name: kworker/u16:7
+[   19.968096] preempt_count: 100, expected: 0
+[   19.972374] RCU nest depth: 0, expected: 0
+[   19.976562] INFO: lockdep is turned off.
+[   19.980574] CPU: 0 PID: 258 Comm: kworker/u16:7 Not tainted
+6.0.0-next-20221012 #1
+[   19.988245] Hardware name: Thundercomm Dragonboard 845c (DT)
+[   19.993986] Workqueue: events_unbound async_run_entry_fn
+[   19.999395] Call trace:
+[   20.001886]  dump_backtrace+0xe4/0x140
+[   20.005700]  show_stack+0x30/0x60
+[   20.009069]  dump_stack_lvl+0x8c/0xb8
+[   20.012798]  dump_stack+0x18/0x34
+[   20.016169]  __might_resched+0x1c4/0x240
+[   20.020155]  __might_sleep+0x58/0xb0
+[   20.020802] rtc-pm8xxx c440000.spmi:pmic@0:rtc@6000: registered as rtc0
+[   20.023766]  __mutex_lock+0x54/0x424
+[   20.023778]  mutex_lock_nested+0x50/0x6c
+[   20.030501] rtc-pm8xxx c440000.spmi:pmic@0:rtc@6000: setting system
+clock to 1970-01-01T00:00:30 UTC (30)
+[   20.033086] input: pm8941_pwrkey as
+/devices/platform/soc@0/c440000.spmi/spmi-0/0-00/c440000.spmi:pmic@0:pon@80=
+0/c440000.spmi:pmic@0:pon@800:pwrkey/input/input1
+[   20.034047]  lpg_brightness_single_set+0x48/0x9c [leds_qcom_lpg]
+[   20.034132] systemd-journald[295]: Time jumped backwards, rotating.
+[   20.074723]  led_set_brightness_nosleep+0x54/0x80
+[   20.079509]  led_heartbeat_function+0x88/0x180
+[   20.084024]  call_timer_fn+0xc0/0x3c4
+[   20.087751]  __run_timers.part.0+0x220/0x27c
+[   20.092085]  run_timer_softirq+0x44/0x80
+[   20.096073]  __do_softirq+0x1e4/0x62c
+[   20.099793]  ____do_softirq+0x18/0x24
+[   20.103520]  call_on_irq_stack+0x2c/0x58
+[   20.107511]  do_softirq_own_stack+0x24/0x3c
+[   20.111757]  __irq_exit_rcu+0x168/0x1a0
+[   20.115661]  irq_exit_rcu+0x18/0x40
+[   20.119203]  el1_interrupt+0x38/0x64
+[   20.122838]  el1h_64_irq_handler+0x18/0x2c
+[   20.127002]  el1h_64_irq+0x64/0x68
+[   20.130465]  arch_counter_get_cntvct+0x14/0x30
+[   20.134979]  __delay+0xa4/0x110
+[   20.138179]  __const_udelay+0x34/0x44
+[   20.141900]  qcom_geni_serial_poll_bit+0xc4/0x104
+[   20.146675]  qcom_geni_serial_stop_rx+0xc0/0x190
+[   20.151367]  qcom_geni_serial_set_termios+0x4c/0x360
+[   20.156410]  uart_change_speed+0x60/0x130
+[   20.160479]  uart_set_termios+0x90/0x190
+[   20.164460]  tty_set_termios+0x194/0x240
+[   20.168447]  ttyport_open+0x144/0x180
+[   20.172169]  serdev_device_open+0x38/0xe4
+[   20.176248]  hci_uart_register_device+0x68/0x3ac [hci_uart]
+[   20.181957]  qca_serdev_probe+0x2f4/0x530 [hci_uart]
+[   20.186753] input: pm8941_resin as
+/devices/platform/soc@0/c440000.spmi/spmi-0/0-00/c440000.spmi:pmic@0:pon@80=
+0/c440000.spmi:pmic@0:pon@800:resin/input/input2
+[   20.187003]  serdev_drv_probe+0x44/0x90
+[   20.187016]  really_probe+0xd4/0x3f4
+[   20.208885]  __driver_probe_device+0x8c/0x1a0
+[   20.213311]  driver_probe_device+0x4c/0x13c
+[   20.217555]  __driver_attach_async_helper+0x64/0x110
+[   20.222594]  async_run_entry_fn+0x40/0x180
+[   20.226759]  process_one_work+0x280/0x6d4
+[   20.230837]  worker_thread+0x7c/0x430
+[   20.234557]  kthread+0x110/0x114
+[   20.237849]  ret_from_fork+0x10/0x20
 
-I can also confirm the bug with the official RPM build from elrepo stock 
-mainline kernel:
+Full boot log link,
+ - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221012=
+/testrun/12361480/suite/log-parser-boot/test/check-kernel-bug/log
+ - https://lkft.validation.linaro.org/scheduler/job/5660839#L3720
 
-[marvin@pc-mtodorov linux_torvalds]$ uname -rms
-Linux 6.0.0-1.el8.elrepo.x86_64 x86_64
-[marvin@pc-mtodorov linux_torvalds]$ /snap/bin/firefox &
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/snap/firefox/1883/usr/lib/firefox/firefox: no version information 
-available (required by /snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/snap/firefox/1883/usr/lib/firefox/firefox: no version information 
-available (required by /snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/snap/firefox/1883/usr/lib/firefox/firefox: no version information 
-available (required by /snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libpthread.so.0: version `' not found (required by 
-/snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libpthread.so.0: version `' not found (required by 
-/snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/librt.so.1: version `' not found (required by 
-/snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/librt.so.1: version `' not found (required by 
-/snap/firefox/1883/usr/lib/firefox/libmozsandbox.so)
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
-libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
-Verneed record
-/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
-libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
-Verneed record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
-libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
-Verneed record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
-libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
-Verneed record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
-libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
-Verneed record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
-libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
-Verneed record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
-libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
-Verneed record
-Missing chrome or resource URL: 
-resource://gre/modules/UpdateListener.sys.mjs
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/firefox: error while loading shared 
-libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
-Verneed record
-/snap/firefox/1883/usr/lib/firefox/pingsender: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/pingsender: 
-/lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
-/snap/firefox/1883/usr/lib/firefox/pingsender: error while loading 
-shared libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 
-0 of Verneed record
-/snap/firefox/1883/usr/lib/firefox/firefox: symbol lookup error: 
-/snap/firefox/1883/usr/lib/firefox/libxul.so: undefined symbol: PL_strcmp
 
-[1]+  Done                    /snap/bin/firefox  (wd: ~/Downloads)
-(wd now: ~/linux/kernel/linux_torvalds)
-[marvin@pc-mtodorov linux_torvalds]$
+metadata:
+  git_ref: master
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: f843795727e4f5612c612cd178db1557978da742
+  git_describe: next-20221012
+  kernel_version: 6.0.0
+  kernel-config: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec/co=
+nfig
+  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipel=
+ines/664367901
+  artifact-location: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXde=
+c
+  toolchain: gcc-11
+  System.map: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec/Syste=
+m.map
+  vmlinux.xz: https://builds.tuxbuild.com/2G10hEBW0Cdgh2jzrxvNzlRXdec/vmlin=
+ux.xz
 
-However, I haven't yet done informing the Ubuntu developers.
 
-I will try to do that later today.
-
--Mirsad
-
--- 
-Mirsad Goran Todorovac
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
--- 
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb, Republic of Croatia
-
+--
+Linaro LKFT
+https://lkft.linaro.org
