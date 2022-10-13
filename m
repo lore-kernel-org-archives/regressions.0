@@ -1,74 +1,206 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC71417EB
-	for <regressions@lists.linux.dev>; Thu, 13 Oct 2022 12:36:51 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oixSC-00069y-7l; Thu, 13 Oct 2022 14:36:48 +0200
-Message-ID: <3c7c22f1-2e9d-8bdc-33b7-eb8dcb8a3593@leemhuis.info>
-Date: Thu, 13 Oct 2022 14:36:47 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBCA2C9C
+	for <regressions@lists.linux.dev>; Thu, 13 Oct 2022 12:39:46 +0000 (UTC)
+Received: by mail-ed1-f53.google.com with SMTP id m15so2389677edb.13
+        for <regressions@lists.linux.dev>; Thu, 13 Oct 2022 05:39:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GD5Q0fIlYFy9UgmSPGmxuwFTbHUtfpAAgAnjM1dUOhI=;
+        b=OjcVqnLYYMkA8IvE4mzGLx1ggf60Mdr2S81VA3jSR2/YIK+Z4RcpHYKbRazbSKCDna
+         2NjesK0/nrMTJlitm0X4DhPwt8F9DPVoImdHI8zWidu1c2HpteHlY6OCsR69ZFQscD61
+         nCISz4Yn2YXce4ZldUahcvzXXzAO0joUXR35Co+xVyt5ONyrwxVDZP5DvXHQGegOmBlw
+         iRlOCea2WWOEuiPTM4Cas8FTdwKxdjUnfW0ZFsz3mdV80P7Qxe02m+iagp/tvZ2kDtZd
+         HIS6JyK76Ks8WDf/hkjYugkvoCupr5PDSPy3kUGiy5PnYgI18jNxGuKPaAAyvw/Uitmz
+         kpXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GD5Q0fIlYFy9UgmSPGmxuwFTbHUtfpAAgAnjM1dUOhI=;
+        b=GeTAWnB/+Lo5hm1Y7/HV3UkDU/2ULYe1OMN7vnqeEh/M5MIw727Oa/XdKoNQFHmk7u
+         R6fVOYYA4B9xVTnVlnlgjyuWszJ+T7JvnxKxnO44wOKAsJ9R0Uv7K6qjrabPpoatCqVT
+         7dXmx5c9jA5lHwNaS+ZOp56gc9dU51HFXLPd45WU1EFzjdxxFNTG83Ly/fhDbinN0Re/
+         uVBe3VPq9qZ1i7sn3NviSUHzzF32nAXzGLzmZT6TnmyT6YGYi2W8mtJeT3n4rLrijzpe
+         eSTrVwonQtwSvmu3AKObhGJzur4x8c3xsJb4/wX+rV8p5oqZ3GcYiyhJW7TwXIADaKwK
+         Hq0g==
+X-Gm-Message-State: ACrzQf1h/CnFPtpxqhDUpozNe9f84dpizgb1PPKS3IAgfsK+2zLS8kDj
+	Pt2PDw2d6XCOlVYhyfLy04XSCExglyNCxL19IR8aoQ==
+X-Google-Smtp-Source: AMsMyM7LqebKv/Vg0TFf9NGRzOp//qKzV5yRcGJR9qiv0wViF6GF9Ih6o2EBzI/MLW2yjpk3ydnmYG0IkSo+IR/eGhU=
+X-Received: by 2002:a05:6402:2989:b0:44e:90d0:b9ff with SMTP id
+ eq9-20020a056402298900b0044e90d0b9ffmr31446858edb.110.1665664784554; Thu, 13
+ Oct 2022 05:39:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Content-Language: en-US, de-DE
-To: regressions@lists.linux.dev, Guenter Roeck <linux@roeck-us.net>
-Cc: linux-alpha@vger.kernel.org, kernel test robot <lkp@intel.com>,
- Linux-Arch <linux-arch@vger.kernel.org>
-References: <20220818092059.103884-1-linus.walleij@linaro.org>
- <20221002224521.GA968453@roeck-us.net>
- <fd905ca5-fe0d-4cfb-a0d0-aea8af539cc7@app.fastmail.com>
- <57200020-c460-74ec-c786-9a2c16f4870e@roeck-us.net>
- <2e110666-7519-4693-8a89-240cbb118c7e@app.fastmail.com>
- <20221012140519.GA2405113@roeck-us.net>
- <e99d33ff-4bfe-4727-a5ca-f4987b871ccd@app.fastmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [PATCH] alpha: Use generic <asm-generic/io.h> #forregzbot
-In-Reply-To: <e99d33ff-4bfe-4727-a5ca-f4987b871ccd@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1665664611;f146e137;
-X-HE-SMSGID: 1oixSC-00069y-7l
+References: <CA+G9fYvRXkjeO+yDEQxwJ8+GjSmwhZ7XHHAaVWAsxAaSngj5gg@mail.gmail.com>
+ <bf1b053d-ffa6-48ab-d2d2-d59ab21afc19@opensource.wdc.com>
+In-Reply-To: <bf1b053d-ffa6-48ab-d2d2-d59ab21afc19@opensource.wdc.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 13 Oct 2022 18:09:32 +0530
+Message-ID: <CA+G9fYvUnn0cS+_DZm8hAfi=FnMB08+6Xnhud6yvi9Bxh=DU+Q@mail.gmail.com>
+Subject: Re: TI: X15 the connected SSD is not detected on Linux next 20221006 tag
+To: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc: open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
+	linux-block <linux-block@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	regressions@lists.linux.dev, 
+	"open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Niklas Cassel <niklas.cassel@wdc.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-[Note: this mail is primarily send for documentation purposes and/or for
-regzbot, my Linux kernel regression tracking bot. That's why I removed
-most or all folks from the list of recipients, but left any that looked
-like a mailing lists. These mails usually contain '#forregzbot' in the
-subject, to make them easy to spot and filter out.]
+On Thu, 13 Oct 2022 at 12:41, Damien Le Moal
+<damien.lemoal@opensource.wdc.com> wrote:
+>
+> On 2022/10/12 16:24, Naresh Kamboju wrote:
+> > On TI beagle board x15 the connected SSD is not detected on linux next
+> > 20221006 tag.
+> >
+> > + export STORAGE_DEV=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
+> > + STORAGE_DEV=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
+> > + test -n /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
+> > + echo y
+> > + mkfs.ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
+> > mke2fs 1.46.5 (30-Dec-2021)
+> > The file /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 does
+> > not exist and no size was specified.
+> > + lava-test-raise 'mkfs.ext4
+> > /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 failed; job
+> > exit'
 
-On 12.10.22 17:32, Arnd Bergmann wrote:
-> On Wed, Oct 12, 2022, at 4:05 PM, Guenter Roeck wrote:
->> On Tue, Oct 04, 2022 at 10:28:24PM +0200, Arnd Bergmann wrote:
->> Unfortunately that did not completely fix the problem, or maybe the fix got
->> lost. In mainline, when building alpha:allnoconfig:
->>
->> arch/alpha/kernel/core_marvel.c:807:1: error: expected '=', ',', ';', 
->> 'asm' or '__attribute__' before 'marvel_ioread8'
->>   807 | marvel_ioread8(const void __iomem *xaddr)
->>
->> The code is:
->>
->> unsigned u8
->> marvel_ioread8(const void __iomem *xaddr)
->>
->> The compiler doesn't like "unsigned u8".
-> 
-> Right, I fixed up a different bug and introduced this wrong type.
-> I didn't catch my mistake until after the pull request was
-> merged, but fixed it in
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git/commit/?id=2e21c1575208
-> 
-> which should be in linux-next. I was giving it a little more
-> time to be see if there are any other regressions I caused.
+The reported issue is now noticed on the Linux mainline master branch.
 
-In that case:
+1)
+I see following config is missing on latest problematic builds
+  - CONFIG_HAVE_PATA_PLATFORM=y
 
-#regzbot fixed-by: 2e21c157520
+2)
+Following ahci sata kernel message are missing on problematic boots,
+[    1.408660] ahci 4a140000.sata: forcing port_map 0x0 -> 0x1
+[    1.408691] ahci 4a140000.sata: AHCI 0001.0300 32 slots 1 ports 3
+Gbps 0x1 impl platform mode
+[    1.408721] ahci 4a140000.sata: flags: 64bit ncq sntf pm led clo
+only pmp pio slum part ccc apst
+[    1.409820] scsi host0: ahci
+[    1.410064] ata1: SATA max UDMA/133 mmio [mem
+0x4a140000-0x4a1410ff] port 0x100 irq 98
 
-Ciao, Thorsten
+3)
+GOOD: 9d84bb40bcb30a7fa16f33baa967aeb9953dda78
+BAD:  e08466a7c00733a501d3c5328d29ec974478d717
+
+4)
+Here i am adding links working and not working test jobs and kernel configs,
+problematic test job:
+ - https://lkft.validation.linaro.org/scheduler/job/5641407#L2602
+Good test job:
+ - https://lkft.validation.linaro.org/scheduler/job/5640672#L2198
+
+5)
+metadata:
+  git_ref: master
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
+  git_sha: e08466a7c00733a501d3c5328d29ec974478d717
+  git_describe: v6.0-7220-ge08466a7c007
+  kernel_version: 6.0.0
+  kernel-config: https://builds.tuxbuild.com/2Fourpiqf1OrlPFFtKwhHV0wAiq/config
+  build-url: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline/-/pipelines/661424896
+  artifact-location: https://builds.tuxbuild.com/2Fourpiqf1OrlPFFtKwhHV0wAiq
+  toolchain: gcc-10
+
+
+6)
+For your information,
+--
+I see diff on good to bad commits,
+$ git log --oneline 9d84bb40bcb3..e08466a7c007  -- drivers/ata
+4078aa685097 Merge tag 'ata-6.1-rc1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/dlemoal/libata
+71d7b6e51ad3 ata: libata-eh: avoid needless hard reset when revalidating link
+e3b1fff6c051 ata: libata: drop superfluous ata_eh_analyze_tf() parameter
+b46c760e11c8 ata: libata: drop superfluous ata_eh_request_sense() parameter
+cb6e73aaadff ata: libata-eh: Remove the unneeded result variable
+ecf8322f464d ata: ahci_st: Enable compile test
+2d29dd108c78 ata: ahci_st: Fix compilation warning
+9628711aa649 ata: ahci-dwc: Add Baikal-T1 AHCI SATA interface support
+bc7af9100fa8 ata: ahci-dwc: Add platform-specific quirks support
+33629d35090f ata: ahci: Add DWC AHCI SATA controller support
+6ce73f3a6fc0 ata: libahci_platform: Add function returning a clock-handle by id
+18ee7c49f75b ata: ahci: Introduce firmware-specific caps initialization
+7cbbfbe01a72 ata: ahci: Convert __ahci_port_base to accepting hpriv as arguments
+fad64dc06579 ata: libahci: Don't read AHCI version twice in the
+save-config method
+88589772e80c ata: libahci: Discard redundant force_port_map parameter
+eb7cae0b6afd ata: libahci: Extend port-cmd flags set with port capabilities
+f67f12ff57bc ata: libahci_platform: Introduce reset
+assertion/deassertion methods
+3f74cd046fbe ata: libahci_platform: Parse ports-implemented property
+in resources getter
+3c132ea6508b ata: libahci_platform: Sanity check the DT child nodes number
+e28b3abf8020 ata: libahci_platform: Convert to using devm bulk clocks API
+82d437e6dcb1 ata: libahci_platform: Convert to using platform
+devm-ioremap methods
+d3243965f24a ata: make PATA_PLATFORM selectable only for suitable architectures
+3ebe59a54111 ata: clean up how architectures enable PATA_PLATFORM and
+PATA_OF_PLATFORM
+55d5ba550535 ata: libata-core: Check errors in sata_print_link_status()
+03070458d700 ata: libata-sff: Fix double word in comments
+0b2436d3d25f ata: pata_macio: Remove unneeded word in comments
+024811a2da45 ata: libata-core: Simplify ata_dev_set_xfermode()
+066de3b9d93b ata: libata-core: Simplify ata_build_rw_tf()
+e00923c59e68 ata: libata: Rename ATA_DFLAG_NCQ_PRIO_ENABLE
+614065aba704 ata: libata-core: remove redundant err_mask variable
+fee6073051c3 ata: ahci: Do not check ACPI_FADT_LOW_POWER_S0
+99ad3f9f829f ata: libata-core: improve parameter names for ata_dev_set_feature()
+16169fb78182 ata: libata-core: Print timeout value when internal command times
+
+
+
+
+> >
+> > Test log:
+> >  - https://lkft.validation.linaro.org/scheduler/job/5634743#L2580
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > metadata:
+> >   git_ref: master
+> >   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+> >   git_sha: 7da9fed0474b4cd46055dd92d55c42faf32c19ac
+> >   git_describe: next-20221006
+> >   kernel_version: 6.0.0
+> >   kernel-config: https://builds.tuxbuild.com/2FkkkZ51ZYhBL1G8D69YX8Pkt5F/config
+> >   build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/659754170
+> >   artifact-location: https://builds.tuxbuild.com/2FkkkZ51ZYhBL1G8D69YX8Pkt5F
+> >   toolchain: gcc-10
+
+7)
+> The kernel messages that are shown in the links above do not show any "libata
+> version 3.00 loaded." message nor any ata/ahci message that I can see. So I
+> think the eSATA adapter is not even being detected and libata/ahci driver not used.
+>
+> Was this working before ? If yes, can you try with the following patches reverted ?
+>
+> d3243965f24a ("ata: make PATA_PLATFORM selectable only for suitable architectures")
+> 3ebe59a54111 ("ata: clean up how architectures enable PATA_PLATFORM and
+> PATA_OF_PLATFORM")
+
+I have reverted above two patches and but the problem has not been solved.
+
+8)
+> If reverting these patches restores the eSATA port on this board, then you need
+> to fix the defconfig for that board.
+
+OTOH,
+Anders, enabled the new config CONFIG_AHCI_DWC=y  and tried but the
+device failed to boot.
+
+- Naresh
