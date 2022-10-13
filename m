@@ -1,71 +1,141 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2D7612F
-	for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 22:58:55 +0000 (UTC)
-Received: by mail-pf1-f175.google.com with SMTP id m6so399681pfb.0
-        for <regressions@lists.linux.dev>; Wed, 12 Oct 2022 15:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sladewatkins.net; s=googled;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DgFJeIB3oP3W9drjP/6hWGHdibrVVW8+X4R918qIIwk=;
-        b=X70KMAJy64U1sXNf0RXVAKW4S2O5hXzQECXnQoyY5yG7kv/DjNxYhewiS7sjIUmlNz
-         0vJMfNzYrtyuyRsDKSBePhLProotbrRTT9BRx4zIV52sybSWD63f9ZEEcpjbCi3V8fwC
-         ppZTarKngWbtia4HnLYruIVaYfgwIkkJLjWg8gv1bSZx9C/8eQvNXUkmHR2uDuMHXXpY
-         fJvqHvfNUjysC6a1Wu6Wn24GYc38FBSFz5qMp4VTDXnjvL8o40Eqv4fqcsL8Z6rCHXlK
-         jor76a+/Wha2wsTcqz3h6USRRZiUw4Hz2fG6WPMhx+MVGvgoNojm8jQxdeNjBTGctjG5
-         zC9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DgFJeIB3oP3W9drjP/6hWGHdibrVVW8+X4R918qIIwk=;
-        b=JfP/ewgZDyXy4bio1An75vZnRRGJRsQ8ON6aYl4nqdAS2Q0LU3Ai6+RICFBfLW51jR
-         JbdMYjQDsO9YbxLXuldSKgRa8Z4g6PbgQ9xcgflvB4rdf/2tJogpNo819mypoOTypd50
-         gWuw4ZufBc5uu0MnlWqf2BxF0lxx9WFHrmZ0gPPiljgsRBoDkYNcT9dmfYSQAe7nMRde
-         opsSj3eAUZx3vp2vmyolTEHqg6pFQ/KrMJ2Kj03zGmo6fMHuD4rmBid+gn6XurUx10BD
-         wchosLXzWecfDkUxBhzH6LGfYngNfMX2e/6ObzBmXrL+DfR39TlwPd2zuTHNC1UOV4+l
-         ykig==
-X-Gm-Message-State: ACrzQf2f3osnv+fgsZqSbrAaSnVREWPiYCwzmgNOpHHN+zuOLrxEe06L
-	+5BNE+Wq/UpHcmY6/V10/9EroM67fGH3h0l4PDekIA==
-X-Google-Smtp-Source: AMsMyM73mFIuAyRMpEQSPGuVITrQOYzUtmHsyTs/Aw33fg4i3Z2LR7QtB80pmVxD03dZ6LO9V/zUSjA6uKJuxVYt/hA=
-X-Received: by 2002:a63:444f:0:b0:464:3985:3c92 with SMTP id
- t15-20020a63444f000000b0046439853c92mr10364342pgk.412.1665615534822; Wed, 12
- Oct 2022 15:58:54 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2485920F8
+	for <regressions@lists.linux.dev>; Thu, 13 Oct 2022 07:12:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1665645166; x=1697181166;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=s9hcQcdAlAzyhKMWI+wdGejeFtAk0WjChyhpIcsu+pQ=;
+  b=liv3MYkntAq/BwPAqIXmeVK2QN7hJG71/4a4Ds7E3Q3UDbVYW8MKkwiB
+   DbYteQ1/En+h2lc+n/RCLelK99c1qYOM4vooCezHROmz1/J+rDDC0BR41
+   nPQ5C3CErZGyNNHyz7HHMKnESMhFExTh7GS7JYuEJh9xeNSVjW3Gn3H9m
+   Et7STt2yUe/abBJQ2QRWPoebREshnA3hbCKjDXt00yX+qmSHCPbI1f4xY
+   dX/6wrtdX9wBQUFULNWomcbrYlsSU2IIzT+z32t1cfOfv1AsmvZesILFh
+   QL0oFM9VIXRfWOcQU96r8fAkYND3YcStvrrVxyZ4dwyd8FMsj/XvY/6bm
+   g==;
+X-IronPort-AV: E=Sophos;i="5.95,180,1661788800"; 
+   d="scan'208";a="317980564"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 13 Oct 2022 15:11:34 +0800
+IronPort-SDR: Xb/TYbFOJ6I1jBVLR3TEM8d5Mq3X6fL4kherT4GhZTNhqPBWA62Ax/E6M6XlcL/HZokBELJO6L
+ VLp1C9/LZkdEMmAPemYCUk3vmcWOKLZofNWC2Ia+hxJJ559dj9Osvz4GD526sRQlrhmvyq7T0U
+ sb/MwRurI7V5oJwwwlU9vHqeT7ZYdKkpYQsN6tBjdvLwx4Nl1r4nSyJfih5XV2jUJYKORNhfuR
+ yroD0bcaqbtH4FMtZxFDvDdegp/9c8HZPq10vSqmLW6Nx8ZDvRqLY77EHfXEpGB6vkomFGmQpR
+ vcP6qIdEnMKpOiCQvYuk8pid
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 12 Oct 2022 23:31:12 -0700
+IronPort-SDR: or01uCaWTs6hjJFOPu7pRp1HBb0s/ck4b37u6KEkt0hqSoqyRfK2E9jNXHfjVYKsqTXVDcD3Gr
+ HQbJ2DvzzeFrZ4BhaBlMBU7Vu8yTKVWcoB56RCx9YWGDqBmxjvp5ZSaE7inc9Xkg4gZ54wzt+W
+ 5SlKUdBdaf/1KcKGd0A14EQ3XE3D7qDfxxKfAk6YH/p8/5dlLzPIwV6RGyI1KBUUigLFzRAO/M
+ 2aABLqdM/ONPLocAVYm9WZu9fjWOIwOBu8XqrQ/JzFCoLQPuiZBef88QqT74X8H7AQdTczEL3A
+ y7I=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 13 Oct 2022 00:11:35 -0700
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+	by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4Mp10Q0kVCz1Rwtm
+	for <regressions@lists.linux.dev>; Thu, 13 Oct 2022 00:11:34 -0700 (PDT)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+	reason="pass (just generated, assumed good)"
+	header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+	opensource.wdc.com; h=content-transfer-encoding:content-type
+	:in-reply-to:organization:from:references:to:content-language
+	:subject:user-agent:mime-version:date:message-id; s=dkim; t=
+	1665645093; x=1668237094; bh=s9hcQcdAlAzyhKMWI+wdGejeFtAk0WjChyh
+	pIcsu+pQ=; b=Jm7BAZerxx5v6gHfitNpZQJpv8yhR8Yz+0aNTdhqXMIfV0gn4TG
+	6+TBqREYVmRm0fsOf0P2tPfEbnuwWfT7OVo/a3Bbek/+s9jvrMUa2Xb2i10ghc/Y
+	HFWYEqvsVOeYJWY2tZ8/R2Sh3akv0gAH71JKPx1JTJ/I7nZemiHrqVJfvTGM4hwS
+	Jkm2agszLuKjBjr501zMV0icXH2rwWiypS9DcibKSZ9VOj/9eHQuglwkEfOoYfoM
+	P2aCHTQjerUy1B+jtxYnRrCfHKPvQwjr+IBSz8OnG/kCXGua9nxsTjPX0CsC713S
+	wQZo94NGIjDp/m31PhwSDq664N5zNeu7fRg==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+	by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id fD1cyScHhJNO for <regressions@lists.linux.dev>;
+	Thu, 13 Oct 2022 00:11:33 -0700 (PDT)
+Received: from [10.89.85.169] (c02drav6md6t.dhcp.fujisawa.hgst.com [10.89.85.169])
+	by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4Mp10L5vWSz1RvLy;
+	Thu, 13 Oct 2022 00:11:30 -0700 (PDT)
+Message-ID: <bf1b053d-ffa6-48ab-d2d2-d59ab21afc19@opensource.wdc.com>
+Date: Thu, 13 Oct 2022 16:11:29 +0900
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr>
- <5bb75cbc-a0db-537b-12d0-889230c865d8@leemhuis.info> <0fb2a9ff-df76-8af9-e54a-c2dc6bfd9478@leemhuis.info>
- <bdab45d3-c893-42ff-dbb9-5fa93d0dff55@alu.unizg.hr> <dd62210d-d095-f971-2b7b-0ec54fd189a9@leemhuis.info>
- <c05134cc-92fa-dac2-e738-cf6fae194521@alu.unizg.hr> <6ba15505-1c04-df2b-237f-b3060f26d2e6@leemhuis.info>
- <25cd0e21-ed8e-1836-b0ec-c052c2276cd8@alu.unizg.hr> <c40786ab-8b3b-9b64-683f-dac589c024df@alu.unizg.hr>
- <e335e7cd-366f-7ced-2707-b6ef49cfe9eb@alu.unizg.hr>
-In-Reply-To: <e335e7cd-366f-7ced-2707-b6ef49cfe9eb@alu.unizg.hr>
-From: Slade Watkins <srw@sladewatkins.net>
-Date: Wed, 12 Oct 2022 18:58:43 -0400
-Message-ID: <CA+pv=HMSw6iG0y3GWsfjXvBG66K6tkGVzoSmx34_=fAof2fgXg@mail.gmail.com>
-Subject: Re: BUG reproduced: 6.0.0-RC kernels trigger Firefox snap bug with
- 6.0.0-rc3 through 6.0.0-rc7
-To: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, linux-kernel@vger.kernel.org, 
-	Marc Miltenberger <marcmiltenberger@gmail.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.3.2
+Subject: Re: TI: X15 the connected SSD is not detected on Linux next 20221006
+ tag
+Content-Language: en-US
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ linux-block <linux-block@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+ regressions@lists.linux.dev,
+ "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)"
+ <linux-ide@vger.kernel.org>, lkft-triage@lists.linaro.org,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: Niklas Cassel <niklas.cassel@wdc.com>, Arnd Bergmann <arnd@arndb.de>,
+ Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYvRXkjeO+yDEQxwJ8+GjSmwhZ7XHHAaVWAsxAaSngj5gg@mail.gmail.com>
+From: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Organization: Western Digital Research
+In-Reply-To: <CA+G9fYvRXkjeO+yDEQxwJ8+GjSmwhZ7XHHAaVWAsxAaSngj5gg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Oct 12, 2022 at 2:05 AM Mirsad Todorovac
-<mirsad.todorovac@alu.unizg.hr> wrote:
->
-> However, I haven't yet done informing the Ubuntu developers.
->
-> I will try to do that later today.
+On 2022/10/12 16:24, Naresh Kamboju wrote:
+> On TI beagle board x15 the connected SSD is not detected on linux next
+> 20221006 tag.
+> 
+> + export STORAGE_DEV=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
+> + STORAGE_DEV=/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
+> + test -n /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
+> + echo y
+> + mkfs.ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
+> mke2fs 1.46.5 (30-Dec-2021)
+> The file /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 does
+> not exist and no size was specified.
+> + lava-test-raise 'mkfs.ext4
+> /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 failed; job
+> exit'
+> 
+> Test log:
+>  - https://lkft.validation.linaro.org/scheduler/job/5634743#L2580
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> metadata:
+>   git_ref: master
+>   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+>   git_sha: 7da9fed0474b4cd46055dd92d55c42faf32c19ac
+>   git_describe: next-20221006
+>   kernel_version: 6.0.0
+>   kernel-config: https://builds.tuxbuild.com/2FkkkZ51ZYhBL1G8D69YX8Pkt5F/config
+>   build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/659754170
+>   artifact-location: https://builds.tuxbuild.com/2FkkkZ51ZYhBL1G8D69YX8Pkt5F
+>   toolchain: gcc-10
 
-Please let me know once you do!
+The kernel messages that are shown in the links above do not show any "libata
+version 3.00 loaded." message nor any ata/ahci message that I can see. So I
+think the eSATA adapter is not even being detected and libata/ahci driver not used.
 
-Thanks,
--srw
+Was this working before ? If yes, can you try with the following patches reverted ?
+
+d3243965f24a ("ata: make PATA_PLATFORM selectable only for suitable architectures")
+3ebe59a54111 ("ata: clean up how architectures enable PATA_PLATFORM and
+PATA_OF_PLATFORM")
+
+If reverting these patches restores the eSATA port on this board, then you need
+to fix the defconfig for that board.
+
+-- 
+Damien Le Moal
+Western Digital Research
+
