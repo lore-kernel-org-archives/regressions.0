@@ -1,116 +1,157 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8A8440C
-	for <regressions@lists.linux.dev>; Fri, 14 Oct 2022 19:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1665777487;
-	bh=1Liwd8ZbCrocRKAWWRbi9j0+CfT3XqraqowX8PdsdaM=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=bcOD2fBAdkwQtcF9rvQD29RXNXyaGP610W4P7dt0rrYLF0c2w7YqkkF/Kwkb7ybPQ
-	 kMo+XM3zxILoVfC1Z2olTUNGfN5HmGrQlYlf9MWWwj6rXEGW/0tM4QEe91oG6q1suz
-	 S86oUA9rGadH/d8w1DeS+eOOXlbMH+UwP/V9POuE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [10.1.1.24] ([217.61.200.164]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MV67y-1ocJGj0jVm-00S7y8; Fri, 14
- Oct 2022 21:58:07 +0200
-Message-ID: <0259a530-32af-f6be-b2e5-fcfbda80a052@gmx.de>
-Date: Fri, 14 Oct 2022 21:58:06 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D864680
+	for <regressions@lists.linux.dev>; Fri, 14 Oct 2022 21:44:51 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id 79CF9604EC;
+	Fri, 14 Oct 2022 23:44:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1665783888; bh=CPcQoWOcZ9gt6nalJb1eiBI+9MY0NpiHdrfbf9ySmbs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dW0SnD0+dHwoJWKQzjffVJWND9qW996xd+HpVMybTUybZjQ7Z1XIOMs0Ci92uBGrj
+	 AWGT8WDQuf0Wox9ZYSly1i1iYuLOdCV10jtw2l2zModZ96G8m6poBpeRavywr4iP93
+	 IuvD9w9gKTQYOErrr9hTycrETfF3sHBG8KCOYjpxGCiJRFmSfVH+MGeNlD7WgciMZ/
+	 VJXem5PYBhmNrhUTUtXVgl3q8Rey1Fw9izRngr9nyLu6nfz1bWLlinykHI4MnFaUNP
+	 ZXRoEA8v6kfWG2q7xyBEWU6LJeXE6jI9idrn6uSqe0CyPvON4Yh901KTGH7PfBJ9sp
+	 AbSO6QMos3/6Q==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id OX1plE3Xq3pj; Fri, 14 Oct 2022 23:44:45 +0200 (CEST)
+Received: from [192.168.0.12] (unknown [188.252.197.142])
+	by domac.alu.hr (Postfix) with ESMTPSA id 56988604E6;
+	Fri, 14 Oct 2022 23:44:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1665783885; bh=CPcQoWOcZ9gt6nalJb1eiBI+9MY0NpiHdrfbf9ySmbs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=L9whf/8GdYuFl9lz0959yC3KF41CDip+V+g/SywqL46+CwLkgG4UAhM+FM4yUJ4SR
+	 GTfrBo+Ld3jpNcwaDtP8JVTlIlHjiXCUyUdVkd8NH694Rj6jCcNo8nU73yr4yUpOMY
+	 1U9wh0Z1MkN31Z8oDOtHayQgST3FgSupLd8M7PqhcVrUy2wZtMaLQqeOT8nMetsaOJ
+	 vq6aGtd8YcGquxAB3bt/fPZ63suZn9ggfsNJ1RMZjK4KJdAj7aBc9ddhXQbsey16PS
+	 enylrShUawLewDQJBcA+Hn2KEVIdZO6qS/WrNywphnhA98Ca+WLERtpU9txH8hLWK2
+	 alMAC8ydUjitg==
+Message-ID: <951eb72c-09b5-1832-3852-fa25e423b840@alu.unizg.hr>
+Date: Fri, 14 Oct 2022 23:44:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: Possible regression: unable to mount CIFS 1.0 shares from older
- machines since 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
-To: Steve French <smfrench@gmail.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Davyd McColl <davydm@gmail.com>, "lsahlber@redhat.com"
- <lsahlber@redhat.com>, "stfrench@microsoft.com" <stfrench@microsoft.com>,
- "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: 6.0.0-RC kernels trigger Firefox snap bug with 6.0.0-rc3 through
+ 6.0.0-rc7
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Slade Watkins <srw@sladewatkins.net>,
+ Marc Miltenberger <marcmiltenberger@gmail.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <D58238A4-F04E-458E-AB05-4A74235B2C65@getmailspring.com>
- <ff982786-4033-7450-c10c-8ce71c28d6eb@leemhuis.info>
- <CAH2r5mtE-EjNbF3OhCLmbGQFMbJgRZphQHS+hHLBiWRJPEBqKA@mail.gmail.com>
-From: Carsten Langer <carsten.langer@gmx.de>
-In-Reply-To: <CAH2r5mtE-EjNbF3OhCLmbGQFMbJgRZphQHS+hHLBiWRJPEBqKA@mail.gmail.com>
+References: <b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr>
+ <Y0Zw2eHEb1aZ9f4y@debian.me>
+ <29362d2e-eec6-5a23-4354-cf8868d50b2c@alu.unizg.hr>
+ <6375f31f-316a-bebc-6aec-c6241049e401@alu.unizg.hr>
+ <7e0b733d-db73-f9a7-0965-4744e63f1a33@gmail.com>
+Content-Language: en-US
+From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <7e0b733d-db73-f9a7-0965-4744e63f1a33@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:padXh2RnjollxFDOOtlrXsmY6HvQANRPS2yC3548meSi73n8W9t
- MfiI3oLEAWXBa9bXZPTEWAD5/xixcPcjJw/e927cNNgXjg4o6ZR7qc7UxEaT1bGkKwJr1x/
- mk9oaWA5Z2WkxXQ7xmUD8WUSfs1sBmoZ9u6mw/Vz+JTRmzB7aJbVCycI4ybLYiWMYrdoCz6
- WtubqOKuopzDeEAkdTlZg==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fgKoRaNZ/HI=:31OUKn8OUU6sjWVFJKwwxi
- ClCpNfUaRn8Rec54WYqSyq8yq3Y+qCpTwhSELn3MvN+w+ZHKqGEmqbGWTzkLhZEssDrJswHHN
- mWTCS+b+xaEFI4L9rQaFan+02LgMo3nXgHeh5qK8fYU5Lz6FsPfegdFl90sIDHYtXidq9Muty
- QGj9oTEvM+q2wz2MzbACEwvrGIhhQRDkAF8DJoQfhyiKaHISqGpI+0wLOyRX347fwtK0Xj3wJ
- o7TKGRr4RNhrwoCOvNYeecwsQ4WGeTABrOCx1lwP+BVWqfvK9Jix43FEx3eBLbks4urWlyvlI
- yCXzmvBHeqoT3Q/Yxg6yMZLKTiXU/1op9p2gkQLa4MJxjZx17guGkt8Flgsibho2Y9SECqfLS
- yiDl6JIv+lZPvkgkkimD8d80wtqk98eXGlUGaOyKxYJ3/HxImrsUzShzC4X8RAtdxO4vp1pxh
- EN78ZmlirX0XEORmjA4jL3gL4dvMgazbP4WFO7ayhbHc3tIEx+7bafkY7AYp/YYI5JuN2fviN
- oNU3Ni2AOu0nlbyb84+v4Qt4o983BZlrbP54jOon8EjJFeud67TFd0DRbuEMOVIkXbFAuajBd
- p9bv3zZRzPCujrr2ldSQPw+nnk0nTb1qh7zQOskhqcRWloqnVOK547/fSxGuBHfJU1Cnf7cm2
- CswkHDoxznOzZECsjVTu38avQKiKHolPP1TuAtgRiCsZ5kGnXotBk1xmDb70sZGz0JpvwEuSb
- h7unRK2vTQIdJd7IPNarqFausuNAQTSRrf3fnm29zEshQ7X7aVbFl0t9hORMvfsitugH7U0XF
- dZLv8AnywwgKduJ8g+zkoK1exudAbv9rwXejrbGFxxOIVVU6ow8vB0Ark+S+XUTJ9Wb0sf6eW
- zaZnHXs55BxQsFkPRp82EzkMDVV729/u8tFrOXUvKyyeY+3/6KKw2gq6b4luZbpahIB9bSfpG
- 8/wsgAJeIWIvZ9/5H1+VafbXFvjGGewyjQIUBCfyIG5N44LrOlh7SNCvy4AMVbYqKlbRMfbBZ
- NjStvk4Iqt9wC/1LTTYl0JOxYLOYTA/SeSnXK7Jb18EDxuv0JCu6Baa6m5ZdgRQNZHByslCFV
- 0x4JHo+POtzt2+IJiMLGlWPxMss4SglD/Nt5UToLWVq+V53rys/teqnugAzHZ8Uqo40aITa1e
- xrzn3KZohsVnmIvm6E/vY8DVrFIhKfErkBu1Zaq02EAchz2xV7ls4bqvzRrMnsdDCTpkqUs2l
- IWozvKXznKzmmT5DeXGwuTTx84SlViPQjEEcrIohweXMinjppSfdzg3cSQnAqQMAAbN/3W5xb
- 3pzSNuq8aT+NFaU9DOkQuAkf1EhOxzfSr3MDB9XCPr2iSwnxKRw6Lyl0R/R9brbJfSlRDqLFI
- LPv+JfxL5HiI6RGmqSbigQFmPH8TigOrLD3OcRxUDY7+nUxZtRwVH31c7RAeyruqpiNjtilY5
- TBikiE1iSDmbKnartTYjw5ugdePvh128Bbzk8UqMwSm4hq/IZIhJtx7ZU71grfWiN61addGPh
- UwHvV+GNGjJzoqj7fQbVvqEGk/7SUDeB6NtG81S/MQVuM
+Content-Transfer-Encoding: 8bit
 
- > We have been looking to see if we could setup some VMs for something
- > that old, and we are willing to test against it if it could
- > realistically be setup, but it has been harder than expected. Ronnie
- > had some ideas and we are willing to experiment more but realistically
- > it is very hard to deal with 'legacy museum style' unless we have some
- > VMs available for old systems.
- >
- > Feel free to contact Ronnie and me or Shyam etc (offline if easier) if
- > you have ideas on how to setup something like this.=C2=A0=C2=A0 We don'=
-t want to
- > be encouraging SMB1, but certainly not NTLMv1 auth with SMB1 given its
- > security weaknesses (especially given the particular uses hackers have
- > made of 25+ year old NTLMv1 weaknesses).
+On 14. 10. 2022. 14:28, Bagas Sanjaya wrote:
 
-I would be willing to try to set up a VM for testing.
+> On 10/14/22 17:32, Mirsad Todorovac wrote:
+>> I tried the "make localmodconfig" and provided the default answers ([ENTER]) to all questions
+>> the script asked as advised here: https://www.stolaf.edu/people/rab/os/linux-compile.html .
+>>
+>> However, though it built much faster, the stripped version did not trigger the bug.
+>>
+>> I am now trying to reproduce the bug with v6.0-rc[123] with config-{051913,060000}.
+>> This brings a lot of combinations, and though I am a newbie, I noticed that build scripts
+>> start with "make clean" for both deb-pkg and rpm-pkg.
+>>
+>> Is there a way to rebuild only the stuff that changed between the versions?
+>>
+> You can try building kernel with ccache enabled. However, you'll need
+> to unset build timestamp, since it will make builds non-deterministic:
+>
+> 	make CC="ccache gcc" KBUILD_BUILD_TIMESTAMP=""
+>
+> The first ccache build will be slower than normal build, because the
+> object files needs to be written twice (to the output directory and
+> to the cache), though.
 
-The issue was further discussed in
-https://bugzilla.kernel.org/show_bug.cgi?id=3D215375
-I think we could split the topic. The part important for me and others
-affected
-by this bug is that this regression introduced a protocol violation of
-the SMB1
-protocol, even for the case where users want to use SMB1 in guest mode,
-i.e. without any authentication. At least in this case IMHO we do not need
-to discuss NTLMv1 etc., but just make sure that the SMB1 protocol is
-again correctly
-followed for the case that no user/password is needed. That is what the
-proposed patch is
-about.
+Hi, Bagas,
 
-Thus my idea would be to set up an old-enough Samba server providing the
-SMB1 protocol
-(just) for guest mode, without user/password. If I could then prove that
-without patch
-the error against that VM occurs and with the patch it works fine, would
-that be enough?
+Unfortunately, the ccache command did not work as expected. It still 
+calls the gcc compiler proper,
+even in the second run ...
 
-But I wonder what you understand by VM? A VirtualBox OVA file? Vmware?
-Some Dockerfile
-to create an image?
-And as this will be a test against a simulated server in a network, are
-there standard
-requirements how the network is set up between test system and the VM?
+PID USER      PR  NI    VIRT    RES    SHR S %CPU  %MEM     TIME+ COMMAND
+29213 root      20   0   67420  55100  15676 R  98.1   0.3 0:02.42 
+/opt/alt/python38/bin/python3 /usr/bin/imunify360-agent rstatus
+29374 mtodorov  30  10  133932 110104  18408 R  98.1   0.7 0:01.46 
+/usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -nostdinc -I 
+./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./arc+
+  1079 root      20   0  589008 371700   2320 S  97.1   2.3 2343:20 
+/usr/sbin/bacula-fd -f -c /etc/bacula/bacula-fd.conf
+29425 mtodorov  30  10   95052  71520  16700 R  76.9   0.4 0:00.80 
+/usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -nostdinc -I 
+./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./arc+
+29459 mtodorov  30  10   79268  51432  12732 R  46.2   0.3 0:00.48 
+/usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -nostdinc -I 
+./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./arc+
+29462 mtodorov  30  10   65516  34828   9224 R  43.3   0.2 0:00.45 
+/usr/lib/gcc/x86_64-linux-gnu/8/cc1 -E -quiet -nostdinc -I 
+./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./+
+29505 mtodorov  30  10       0      0      0 R  32.7   0.0 0:00.34 [cc1]
+29506 mtodorov  30  10   65940  38560  12576 R  32.7   0.2 0:00.34 
+/usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -nostdinc -I 
+./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./arc+
+29523 mtodorov  30  10   52180  21572   9344 R  17.3   0.1 0:00.18 
+/usr/lib/gcc/x86_64-linux-gnu/8/cc1 -E -quiet -nostdinc -I 
+./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./+
+  5517 root      20   0  780956  77812  10052 S  11.5   0.5 466:39.30 
+/opt/alt/python38/bin/python3 -m im360.run
+29384 mtodorov  30  10    7132   3964   3568 S  11.5   0.0 0:00.12 
+/usr/local/bin/ccache gcc -Wp,-MMD,sound/i2c/other/.ak4114.o.d -nostdinc 
+-I./arch/x86/include -I./arch/x86/include/generated -I.+
+29407 mtodorov  30  10    7116   3748   3360 S  10.6   0.0 0:00.11 
+/usr/local/bin/ccache gcc -Wp,-MMD,fs/exfat/.nls.o.d -nostdinc 
+-I./arch/x86/include -I./arch/x86/include/generated -I./include -+
+29451 mtodorov  30  10    7132   3968   3568 S   9.6   0.0 0:00.10 
+/usr/local/bin/ccache gcc 
+-Wp,-MMD,drivers/pinctrl/intel/.pinctrl-tigerlake.o.d -nostdinc 
+-I./arch/x86/include -I./arch/x86/incl+
+29522 mtodorov  30  10    8288   7520   1468 R   8.7   0.0 0:00.09 
+scripts/genksyms/genksyms -r /dev/null
+29524 mtodorov  30  10   17008  12480   3204 R   4.8   0.1 0:00.05 as -I 
+./arch/x86/include -I ./arch/x86/include/generated -I ./include -I 
+./arch/x86/include/uapi -I ./arch/x86/include/generated+
+  8896 mtodorov  20   0   12212   4616   3348 R   3.8   0.0 0:04.58 top
 
-- Carsten
+29525 mtodorov  30  10   15028  10412 3248 R   3.8   0.1   0:00.04 as -I 
+./arch/x86/include -I ./arch/x86/include/generated -I ./include -I 
+./arch/x86/include/uapi -I ./arch/x86/include/generated+
+
+I used the command line:
+$ make CC="/usr/local/bin/ccache gcc" KBUILD_BUILD_TIMESTAMP="" -j10 deb-pkg
+
+I tried to install the latest ccache (version 4.6.3), but it silently 
+calls cc1, despite having 4GiB of cache in $HOME/.ccache ...
+
+I must be doing something wrong. Heavens are not aligned in favour to me 
+this day :-/
+
+--
+Mirsad Goran Todorovac
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+-- 
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb, Republic of Croatia
+The European Union
+
