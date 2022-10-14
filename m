@@ -1,61 +1,50 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1F220F8
-	for <regressions@lists.linux.dev>; Fri, 14 Oct 2022 13:25:45 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 28129219EF;
-	Fri, 14 Oct 2022 13:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1665753944; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VYGyYKY4kfrl3Y8WRctWhq19+xsfDBRbNo848N/HW5s=;
-	b=BiZKppnM/JBw5uvuc9m+zvA04230ppl6HfaH/OSQ4WzzwuxDDWv1VhR/L2dQ9A1VGmeDFY
-	dVihyOIRJp7rhmf+i1otpdKt2YE/ooCJOc5LsY/h2TYBsNyXwF5HTC5XKZmVDG7Ap8Df/g
-	mOmiV3x2EnEdvg5o9UDNZFJNQo3x0lQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1665753944;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VYGyYKY4kfrl3Y8WRctWhq19+xsfDBRbNo848N/HW5s=;
-	b=bxkMRQ8TXl9rWa1Z48QEhEtzxtWUrE1oGxXvlqj+4AUtPR/uEOUToP0nl0WMZIOK3JrR4+
-	R6TDw9UtDd2cHCDw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1A14F13451;
-	Fri, 14 Oct 2022 13:25:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id x2ZTBlhjSWMYKwAAMHmgww
-	(envelope-from <jack@suse.cz>); Fri, 14 Oct 2022 13:25:44 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 98FFFA06F1; Fri, 14 Oct 2022 15:25:43 +0200 (CEST)
-Date: Fri, 14 Oct 2022 15:25:43 +0200
-From: Jan Kara <jack@suse.cz>
-To: Thilo Fromm <t-lo@linux.microsoft.com>
-Cc: Jan Kara <jack@suse.cz>, Ye Bin <yebin10@huawei.com>, jack@suse.com,
-	tytso@mit.edu, linux-ext4@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-Subject: Re: [syzbot] possible deadlock in jbd2_journal_lock_updates
-Message-ID: <20221014132543.i3aiyx4ent4qwy4i@quack3>
-References: <20220824100652.227m7eq4zqq7luir@quack3>
- <c77bf00f-4618-7149-56f1-b8d1664b9d07@linux.microsoft.com>
- <20220929082716.5urzcfk4hnapd3cr@quack3>
- <d8b18ba8-ea12-b617-6b5e-455a1d7b5e21@linux.microsoft.com>
- <20221004063807.GA30205@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20221004091035.idjgo2xyscf6ovnv@quack3>
- <eeb17fca-4e79-b39f-c394-a6fa6873eb26@linux.microsoft.com>
- <20221005151053.7jjgc7uhvquo6a5n@quack3>
- <20221010142410.GA1689@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <2ede5fce-7077-6e64-93a9-a7d993bc498f@linux.microsoft.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B4820F8
+	for <regressions@lists.linux.dev>; Fri, 14 Oct 2022 13:30:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1665754217; x=1697290217;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BHE+r5s4VlK4YT9hQhAZhahgKkF55vGFXR2qoXrG0ps=;
+  b=DnGN94Wb0WFjBmY6iaEOTbNgsXjIoSn1+fqz7eBOAw8QE09wjRd2+L8j
+   M0r7nEIk8zYFRfcgKH9boZp8qdEkRLooaSu2Zhl/7cLHXdZSnQe9Vgcy2
+   59K94yGbjSoRCgD3s9noSV93X2i9Cg4QzYE+K0xluyKdGFKwQljiFgaaY
+   JZMxt3R8Ik2kr3ReKKW+eFJR71W3UWPk2+J4ECOGKIwJ9J4TCy46VisHO
+   cDj9g3FHJriJ+UU0+Uumr9eJygQo4T+q6Oy9vbZHvP74iC3/vlciQpDxI
+   EKClFpiM1vq/tDz1ByMDUpnOlglCuMRZbKpjCblbsCq/wub6CR3jJYUmv
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10500"; a="285101041"
+X-IronPort-AV: E=Sophos;i="5.95,184,1661842800"; 
+   d="scan'208";a="285101041"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Oct 2022 06:30:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10500"; a="629935035"
+X-IronPort-AV: E=Sophos;i="5.95,184,1661842800"; 
+   d="scan'208";a="629935035"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 14 Oct 2022 06:30:14 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 1A890109; Fri, 14 Oct 2022 16:30:35 +0300 (EEST)
+Date: Fri, 14 Oct 2022 16:30:34 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Chris Chiu <chris.chiu@canonical.com>, linux-pci@vger.kernel.org,
+	regressions@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linuxarm@huawei.com
+Subject: Re: Regression: Re: [PATCH v2 4/6] PCI: Distribute available
+ resources for root buses too
+Message-ID: <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
+References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
+ <20220905080232.36087-5-mika.westerberg@linux.intel.com>
+ <20221014124553.0000696f@huawei.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -64,55 +53,284 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2ede5fce-7077-6e64-93a9-a7d993bc498f@linux.microsoft.com>
+In-Reply-To: <20221014124553.0000696f@huawei.com>
 
-Hello!
+Hi,
 
-On Fri 14-10-22 08:42:57, Thilo Fromm wrote:
-> Just want to make sure this does not get lost - as mentioned earlier,
-> reverting 51ae846cff5 leads to a kernel build that does not have this issue.
-
-Yes, I'm aware of this and still cannot quite wrap my head how it could be
-given the stacktraces I see :) They do not seem to come anywhere near that
-code...
-
-> > Sure, I think this worked fine. It's the buffer lock but right before it we're
-> > opening a journal transaction. Symbolized it looks like this:
-> > 
-> >    ext4_mark_iloc_dirty (include/linux/buffer_head.h:308 fs/ext4/inode.c:5712) ext4
-> >    __schedule (kernel/sched/core.c:4994 kernel/sched/core.c:6341)
-> >    _raw_spin_lock_irqsave (arch/x86/include/asm/paravirt.h:585 arch/x86/include/asm/qspinlock.h:51 include/asm-generic/qspinlock.h:85 include/linux/spinlock.h:199 include/linux/spinlock_api_smp.h:119 kernel/locking/spinlock.c:162)
-> >    __ext4_journal_start_sb (fs/ext4/ext4_jbd2.c:105) ext4
-> >    __wait_on_bit_lock (arch/x86/include/asm/bitops.h:214 include/asm-generic/bitops/instrumented-non-atomic.h:135 kernel/sched/wait_bit.c:89)
-> >    out_of_line_wait_on_bit_lock (kernel/sched/wait_bit.c:118)
-> >    var_wake_function (kernel/sched/wait_bit.c:22)
-> >    ext4_xattr_block_set (include/linux/buffer_head.h:391 fs/ext4/xattr.c:2019) ext4
-> >    ext4_xattr_set_handle (fs/ext4/xattr.c:2395) ext4
-> >    ext4_initxattrs (fs/ext4/xattr_security.c:48) ext4
-> >    security_inode_init_security (security/security.c:1114)
-> >    ext4_init_acl (fs/ext4/xattr_security.c:38) ext4
-> >    __ext4_new_inode (fs/ext4/ialloc.c:1325) ext4
-> >    ext4_create (fs/ext4/namei.c:2796) ext4
-> >    path_openat (fs/namei.c:3334 fs/namei.c:3404 fs/namei.c:3612)
-> >    do_filp_open (fs/namei.c:3642)
-> >    vfs_statx (include/linux/namei.h:57 fs/stat.c:221)
-> >    __check_object_size (mm/usercopy.c:240 mm/usercopy.c:286 mm/usercopy.c:256)
-> >    do_sys_openat2 (fs/open.c:1214)
-> >    __x64_sys_openat (fs/open.c:1241)
-> >    do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80)
-> >    entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:118)
+On Fri, Oct 14, 2022 at 12:45:53PM +0100, Jonathan Cameron wrote:
+> On Mon,  5 Sep 2022 11:02:30 +0300
+> Mika Westerberg <mika.westerberg@linux.intel.com> wrote:
 > 
-> Is the symbolised stack trace Jeremi sent helpful to get to the bottom of
-> this issue? Can we do anything else to help?
+> > Currently we distribute the spare resources only upon hot-add so if
+> > there are PCI devices connected already when the initial root bus scan
+> > is done, and they have not been fully configured by the BIOS, we may end
+> > up allocating resources just enough to cover only what is currently
+> > there. If some of those devices are hotplug bridges themselves we do not
+> > leave any additional resource space for future expansion.
+> > 
+> > For this reason distribute the available resources for root buses too to
+> > make this work the same way we do in the normal hotplug case.
+> > 
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=216000
+> > Reported-by: Chris Chiu <chris.chiu@canonical.com>
+> > Tested-by: Chris Chiu <chris.chiu@canonical.com>
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > ---
+> 
+> Early days, but I have a regression that's bisecting to this patch
+> after I did an optimistic checkout of mainline mid merge window.
+> 
+> Initial platform was QEMU emulation of CXL on arm64 with EDK2 / ACPI etc.
+> That uses an extended version of the PCI eXpander Bus (PXB) with extended
+> version of the emulated pci root ports.  Particular test was
+> 
+> 1 PXB, 2 RP, below first RP switch USP, with two functions (USP and
+> a stand along switch CCI), below that 4 DSP each with a CXL type 3 device.
+> 
+> Clearly something wrong with the error handling in CXL code as it goes boom
+> spectacularly.  I'll address that separately.  Anyhow, setup way to complex
+> to debug easily. 
+> 
+> Anyhow to make this easier for others to poke I set up equivalent with pxb-pcie
+> etc and it happens there.  Everything works with the exception of additional
+> functions on USP.
+> 
+> Next up in minimal test case (could be more minimal but I'm lazy) is 
+> 
+> ../qemu/bin/native/aarch64-softmmu/qemu-system-aarch64 -M virt,nvdimm=on,gic-version=3,cxl=on -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
+>  -kernel Image \
+>  -drive if=none,file=full.qcow2,format=qcow2,id=hd \
+>  -device pcie-root-port,id=root_port1 -device virtio-blk-pci,drive=hd \
+>  -netdev type=user,id=mynet,hostfwd=tcp::5555-:22 \
+>  -device virtio-net-pci,netdev=mynet,id=bob \
+>  -nographic -no-reboot -append 'earlycon root=/dev/vda2 fsck.mode=skip tp_printk maxcpus=4' \
+>  -monitor telnet:127.0.0.1:1235,server,nowait -bios QEMU_EFI.fd \
+>  -object memory-backend-ram,size=4G,id=mem0 \
+>  -numa node,nodeid=0,cpus=0-3,memdev=mem0 \
+> # Interesting part follows:
+>  -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2 \
+>  -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on \
+>  -device e1000,bus=root_port13,addr=0.1 \
+>  -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3\
+>  -device e1000,bus=fun1
+> 
+> 
+> Error message on failure to probe my switch integrated e1000 (who doesn't have one of
+> those - lets pretend it's a more common switch PMU function or something like
+> that) is :
+>  e1000 0000:02:00.1: can't ioremap BAR 0: [??? 0x00000000 flags 0x0]
+> 
+> With this patch reverted it works as normal and the e1000 driver comes up.
+> 
+> Possibly useful stuff follows:
+> 
+> # lspci -tv
+> -[0000:00]-+-00.0  Red Hat, Inc. QEMU PCIe Host bridge
+>            +-01.0-[01]--
+>            +-02.0  Red Hat, Inc. Virtio block device
+>            +-03.0  Red Hat, Inc. Virtio network device
+>            \-04.0-[02-04]--+-00.0-[03-04]----00.0-[04]----00.0  Intel Corporation 82540EM Gigabit Ethernet Controller
+>                            \-00.1  Intel Corporation 82540EM Gigabit Ethernet Controller
+> 
+> with patch in place.
+> //without patch
+> Note I aligned by hand so may be errorr.
+> 
+> # dmesg | grep pci                                  
+> pci_bus 0000:00: root bus resource [mem 0x10000000-0x3efeffff window]
+> pci_bus 0000:00: root bus resource [io  0x0000-0xffff window]
+> pci_bus 0000:00: root bus resource [mem 0x8000000000-0xffffffffff window]
+> pci_bus 0000:00: root bus resource [bus 00-ff]
+> pci 0000:00:00.0: [1b36:0008] type 00 class 0x060000
+> pci 0000:00:01.0: [1b36:000c] type 01 class 0x060400
+> pci 0000:00:01.0: reg 0x10: [mem 0x10643000-0x10643fff]
+> pci 0000:00:02.0: [1af4:1001] type 00 class 0x010000
+> pci 0000:00:02.0: reg 0x10: [io  0x2200-0x227f]
+> pci 0000:00:02.0: reg 0x14: [mem 0x10642000-0x10642fff]
+> pci 0000:00:02.0: reg 0x20: [mem 0x8000000000-0x8000003fff 64bit pref]
+> pci 0000:00:03.0: [1af4:1000] type 00 class 0x020000
+> pci 0000:00:03.0: reg 0x10: [io  0x2280-0x229f]
+> pci 0000:00:03.0: reg 0x14: [mem 0x10641000-0x10641fff]
+> pci 0000:00:03.0: reg 0x20: [mem 0x8000004000-0x8000007fff 64bit pref]
+> pci 0000:00:03.0: reg 0x30: [mem 0xfffc0000-0xffffffff pref]
+> pci 0000:00:04.0: [1b36:000c] type 01 class 0x060400
+> pci 0000:00:04.0: reg 0x10: [mem 0x10640000-0x10640fff]
+> pci 0000:02:00.0: [104c:8232] type 01 class 0x060400
+> pci 0000:02:00.1: [8086:100e] type 00 class 0x020000
+> pci 0000:02:00.1: reg 0x10: [mem 0x10200000-0x1021ffff]
+> pci 0000:02:00.1: reg 0x14: [io  0x1000-0x103f]
+> pci 0000:02:00.1: reg 0x30: [mem 0xfffc0000-0xffffffff pref]
+> pci 0000:03:00.0: [104c:8233] type 01 class 0x060400
+> pci 0000:04:00.0: [8086:100e] type 00 class 0x020000
+> pci 0000:04:00.0: reg 0x10: [mem 0x10000000-0x1001ffff]
+> pci 0000:04:00.0: reg 0x14: [io  0x0000-0x003f]
+> pci 0000:04:00.0: reg 0x30: [mem 0xfffc0000-0xffffffff pref]
+> pci 0000:00:01.0: bridge window [io  0x1000-0x0fff] to [bus 01] add_size 1000
+> pci 0000:00:01.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 01] add_size 200000 add_align 100000
+> pci 0000:00:01.0: bridge window [mem 0x00100000-0x000fffff] to [bus 01] add_size 200000 add_align 100000
+> pci 0000:03:00.0: bridge window [mem 0x00100000-0x000fffff 64bit pref] to [bus 04] add_size 200000 add_align 100000
+> pci 0000:03:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 04] add_size 100000 add_align 100000
+> pci 0000:02:00.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 03-04] add_size 200000 add_align 100000
+> pci 0000:02:00.0: bridge window [mem 0x00100000-0x001fffff] to [bus 03-04] add_size 100000 add_align 100000
+> pci 0000:00:04.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 02-04] add_size 300000 add_align 100000
+> pci 0000:00:04.0: bridge window [mem 0x00100000-0x002fffff] to [bus 02-04] add_size 100000 add_align 100000
+> pci 0000:00:01.0: BAR 14: assigned [mem 0x10000000-0x101fffff]
+> pci 0000:00:01.0: BAR 15: assigned [mem 0x8000000000-0x80001fffff 64bit pref]
+> pci 0000:00:04.0: BAR 14: assigned [mem 0x10200000-0x103fffff]
+> // pci 0000:00:04.0: BAR 14: assigned [mem 0x10200000-0x104fffff]
+> pci 0000:00:04.0: BAR 15: assigned [mem 0x8000200000-0x80002fffff 64bit pref]
+> // pci 0000:00:04.0: BAR 15: assigned [mem 0x8000200000-0x80005fffff 64bit pref]
+> pci 0000:00:03.0: BAR 6: assigned [mem 0x10400000-0x1043ffff pref]
+> // pci 0000:00:03.0: BAR 6: assigned [mem 0x10500000-0x1053ffff pref]
+> pci 0000:00:02.0: BAR 4: assigned [mem 0x8000300000-0x8000303fff 64bit pref]
+> //  pci 0000:00:02.0: BAR 4: assigned [mem 0x8000600000-0x8000603fff 64bit pref]
+> pci 0000:00:03.0: BAR 4: assigned [mem 0x8000304000-0x8000307fff 64bit pref]
+> //  pci 0000:00:03.0: BAR 4: assigned [mem 0x8000604000-0x8000607fff 64bit pref]
+> pci 0000:00:01.0: BAR 0: assigned [mem 0x10440000-0x10440fff]
+> //  pci 0000:00:01.0: BAR 0: assigned [mem 0x10540000-0x10540fff]
+> pci 0000:00:01.0: BAR 13: assigned [io  0x1000-0x1fff]
+> pci 0000:00:02.0: BAR 1: assigned [mem 0x10441000-0x10441fff]
+> //  pci 0000:00:02.0: BAR 1: assigned [mem 0x10541000-0x10541fff]
+> pci 0000:00:03.0: BAR 1: assigned [mem 0x10442000-0x10442fff]
+> // pci 0000:00:03.0: BAR 1: assigned [mem 0x10542000-0x10542fff]
+> pci 0000:00:04.0: BAR 0: assigned [mem 0x10443000-0x10443fff]
+> // pci 0000:00:01.0: BAR 0: assigned [mem 0x10540000-0x10540fff]
+> pci 0000:00:04.0: BAR 13: assigned [io  0x2000-0x3fff]
+> pci 0000:00:02.0: BAR 0: assigned [io  0x4000-0x407f]
+> pci 0000:00:03.0: BAR 0: assigned [io  0x4080-0x409f]
+> pci 0000:00:01.0: PCI bridge to [bus 01]
+> pci 0000:00:01.0:   bridge window [io  0x1000-0x1fff]
+> pci 0000:00:01.0:   bridge window [mem 0x10000000-0x101fffff]
+> pci 0000:00:01.0:   bridge window [mem 0x8000000000-0x80001fffff 64bit pref]
+> pci 0000:02:00.0: BAR 14: assigned [mem 0x10200000-0x103fffff]
+> pci 0000:02:00.0: BAR 15: assigned [mem 0x8000200000-0x80002fffff 64bit pref]
+> // pci 0000:02:00.0: BAR 15: assigned [mem 0x8000200000-0x80004fffff 64bit pref]
+> pci 0000:02:00.1: BAR 6: no space for [mem size 0x00040000 pref]
+> pci 0000:02:00.1: BAR 6: failed to assign [mem size 0x00040000 pref]
+> // pci 0000:02:00.1: BAR 6: assigned [mem 0x10400000-0x1043ffff pref]
+> pci 0000:02:00.1: BAR 0: failed to assign [mem size 0x00020000]
+> // pci 0000:02:00.1: BAR 0: assigned [mem 0x10440000-0x1045ffff]
+> pci 0000:02:00.0: BAR 13: assigned [io  0x2000-0x3fff]
+> pci 0000:02:00.1: BAR 1: no space for [io  size 0x0040]
+> // pci 0000:02:00.1: BAR 1: assigned [io  0x3000-0x303f]
+> pci 0000:02:00.1: BAR 1: failed to assign [io  size 0x0040]
+> pci 0000:03:00.0: BAR 14: assigned [mem 0x10200000-0x103fffff]
+> pci 0000:03:00.0: BAR 15: assigned [mem 0x8000200000-0x80002fffff 64bit pref]
+> // pci 0000:03:00.0: BAR 15: assigned [mem 0x8000200000-0x80003fffff 64bit pref]
+> pci 0000:03:00.0: BAR 13: assigned [io  0x2000-0x3fff]
+> // pci 0000:03:00.0: BAR 13: assigned [io  0x2000-0x2fff]
+> pci 0000:04:00.0: BAR 6: assigned [mem 0x10200000-0x1023ffff pref]
+> pci 0000:04:00.0: BAR 0: assigned [mem 0x10240000-0x1025ffff]
+> pci 0000:04:00.0: BAR 1: assigned [io  0x2000-0x203f]
+> pci 0000:03:00.0: PCI bridge to [bus 04]
+> pci 0000:03:00.0:   bridge window [io  0x2000-0x3fff]
+> // pci 0000:03:00.0:   bridge window [io  0x2000-0x2fff]
+> pci 0000:03:00.0:   bridge window [mem 0x10200000-0x103fffff]
+> pci 0000:03:00.0:   bridge window [mem 0x8000200000-0x80002fffff 64bit pref]
+> // pci 0000:03:00.0:   bridge window [mem 0x8000200000-0x80003fffff 64bit pref]
+> pci 0000:02:00.0: PCI bridge to [bus 03-04]
+> pci 0000:02:00.0:   bridge window [io  0x2000-0x3fff]
+> // pci 0000:02:00.0:   bridge window [io  0x2000-0x2fff]
+> pci 0000:02:00.0:   bridge window [mem 0x10200000-0x103fffff]
+> pci 0000:02:00.0:   bridge window [mem 0x8000200000-0x80002fffff 64bit pref]
+> // pci 0000:02:00.0:   bridge window [mem 0x8000200000-0x80004fffff 64bit pref]
+> pci 0000:00:04.0: PCI bridge to [bus 02-04]
+> pci 0000:00:04.0:   bridge window [io  0x2000-0x3fff]
+> pci 0000:00:04.0:   bridge window [mem 0x10200000-0x103fffff]
+> // pci 0000:00:04.0:   bridge window [mem 0x10200000-0x104fffff]
+> pci 0000:00:04.0:   bridge window [mem 0x8000200000-0x80002fffff 64bit pref]
+> // pci 0000:00:04.0:   bridge window [mem 0x8000200000-0x80005fffff 64bit pref]
+> pci_bus 0000:00: Some PCI device resources are unassigned, try booting with pci=realloc
+> // LINE NOT PRESENT
+> pci_bus 0000:00: resource 4 [mem 0x10000000-0x3efeffff window]
+> pci_bus 0000:00: resource 5 [io  0x0000-0xffff window]
+> pci_bus 0000:00: resource 6 [mem 0x8000000000-0xffffffffff window]
+> pci_bus 0000:01: resource 0 [io  0x1000-0x1fff]
+> pci_bus 0000:01: resource 1 [mem 0x10000000-0x101fffff]
+> pci_bus 0000:01: resource 2 [mem 0x8000000000-0x80001fffff 64bit pref]
+> pci_bus 0000:02: resource 0 [io  0x2000-0x3fff]
+> pci_bus 0000:02: resource 1 [mem 0x10200000-0x103fffff]
+> // pci_bus 0000:02: resource 1 [mem 0x10200000-0x104fffff]
+> pci_bus 0000:02: resource 2 [mem 0x8000200000-0x80002fffff 64bit pref]
+> //  pci_bus 0000:02: resource 2 [mem 0x8000200000-0x80005fffff 64bit pref]
+> pci_bus 0000:03: resource 0 [io  0x2000-0x3fff]
+> // pci_bus 0000:03: resource 0 [io  0x2000-0x2fff]
+> pci_bus 0000:03: resource 1 [mem 0x10200000-0x103fffff]
+> pci_bus 0000:03: resource 2 [mem 0x8000200000-0x80002fffff 64bit pref]
+> // pci_bus 0000:03: resource 2 [mem 0x8000200000-0x80004fffff 64bit pref]
+> pci_bus 0000:04: resource 0 [io  0x2000-0x3fff]
+> // pci_bus 0000:04: resource 0 [io  0x2000-0x2fff]
+> pci_bus 0000:04: resource 1 [mem 0x10200000-0x103fffff]
+> // pci_bus 0000:04: resource 1 [mem 0x10200000-0x103fffff]
+> pci_bus 0000:04: resource 2 [mem 0x8000200000-0x80002fffff 64bit pref]
+> // pci_bus 0000:04: resource 2 [mem 0x8000200000-0x80003fffff 64bit pref]
+> pcieport 0000:00:01.0: PME: Signaling with IRQ 51
+> pcieport 0000:00:01.0: AER: enabled with IRQ 51
+> pcieport 0000:00:01.0: pciehp: Slot #0 AttnBtn+ PwrCtrl+ MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock+ NoCompl- IbPresDis- LLActRep+
+> pcieport 0000:00:04.0: PME: Signaling with IRQ 52
+> pcieport 0000:00:04.0: AER: enabled with IRQ 52
+> pcieport 0000:00:04.0: pciehp: Slot #2 AttnBtn+ PwrCtrl+ MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock+ NoCompl- IbPresDis- LLActRep+
+> pcieport 0000:03:00.0: pciehp: Slot #3 AttnBtn+ PwrCtrl+ MRL- AttnInd+ PwrInd+ HotPlug+ Surprise+ Interlock+ NoCompl- IbPresDis- LLActRep-
+> virtio-pci 0000:00:02.0: enabling device (0000 -> 0003)
+> virtio-pci 0000:00:03.0: enabling device (0000 -> 0003)
+> 
+> All suggestions of things to test and other useful info to provide welcome.
 
-Yes, thanks for the symbolized stacktraces and sorry for the delay. It made
-it clear we are hanging on buffer lock. So far I still don't understand the
-deadlock scenario (in particular who can be holding the buffer locked)
-and I'm busy with something else at SUSE to seriously dwelve into this but
-I'll get back to you :).
+Thanks for the detailed report! I wonder if you could try the below
+patch and see if it changes anything? I will be on vacation starting
+tomorrow for the whole next week so if nothing else helps then I suppose
+we should revert that commit for now.
 
-								Honza
+I can look at this further after I come back.
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index dc6a30ee6edf..637f1a1df409 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1939,7 +1939,7 @@ static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
+ 					       available_mmio_pref);
+ }
+ 
+-static bool pci_bridge_resources_not_assigned(struct pci_dev *dev)
++static bool pci_bridge_resources_assigned(struct pci_dev *dev)
+ {
+ 	const struct resource *r;
+ 
+@@ -1951,16 +1951,19 @@ static bool pci_bridge_resources_not_assigned(struct pci_dev *dev)
+ 	 * in the same way we do with the normal hotplug case.
+ 	 */
+ 	r = &dev->resource[PCI_BRIDGE_IO_WINDOW];
+-	if (!r->flags || !(r->flags & IORESOURCE_STARTALIGN))
+-		return false;
++	dev_info(dev->dev, "check %pR\n", r);
++	if (r->flags && !(r->flags & IORESOURCE_STARTALIGN))
++		return true;
+ 	r = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
+-	if (!r->flags || !(r->flags & IORESOURCE_STARTALIGN))
+-		return false;
++	dev_info(dev->dev, "check %pR\n", r);
++	if (r->flags && !(r->flags & IORESOURCE_STARTALIGN))
++		return true;
+ 	r = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+-	if (!r->flags || !(r->flags & IORESOURCE_STARTALIGN))
+-		return false;
++	dev_info(dev->dev, "check %pR\n", r);
++	if (r->flags && !(r->flags & IORESOURCE_STARTALIGN))
++		return true;
+ 
+-	return true;
++	return false;
+ }
+ 
+ static void pci_root_bus_distribute_available_resources(struct pci_bus *bus,
+@@ -1979,7 +1982,7 @@ static void pci_root_bus_distribute_available_resources(struct pci_bus *bus,
+ 		 * Need to check "bridge" here too because it is NULL
+ 		 * in case of root bus.
+ 		 */
+-		if (bridge && pci_bridge_resources_not_assigned(dev)) {
++		if (bridge && !pci_bridge_resources_assigned(dev)) {
+ 			pci_bridge_distribute_available_resources(bridge, add_list);
+ 			/*
+ 			 * There is only PCIe upstream port on the bus
+
