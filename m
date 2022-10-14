@@ -1,173 +1,138 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A8247B
-	for <regressions@lists.linux.dev>; Fri, 14 Oct 2022 06:43:08 +0000 (UTC)
-Received: from [10.254.254.111] (ip5b408877.dynamic.kabel-deutschland.de [91.64.136.119])
-	by linux.microsoft.com (Postfix) with ESMTPSA id E761C20FB18E;
-	Thu, 13 Oct 2022 23:42:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E761C20FB18E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1665729781;
-	bh=WHiFSdzXyBHbElO4L7fP/xZtQx63dmlgppe6tKbEBig=;
-	h=Date:To:Cc:References:From:Subject:In-Reply-To:From;
-	b=Z962JaOGZ2XNB/oTTnFw4oQiGByiqY7dqwVAlvPJl1BX+xe66D8Gr/lfvL2MbipcK
-	 QzQEOLoqW0ISbOvbU5nPSEujMhK1WYTY3WMUOAW0fVkbaadnOhYLhgCuoGeyCayMeJ
-	 CquY4meiLmET0E9Fgc+OfkQcU1btBDmtmyCUTNP0=
-Message-ID: <2ede5fce-7077-6e64-93a9-a7d993bc498f@linux.microsoft.com>
-Date: Fri, 14 Oct 2022 08:42:57 +0200
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC6E7B
+	for <regressions@lists.linux.dev>; Fri, 14 Oct 2022 07:32:20 +0000 (UTC)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.nyi.internal (Postfix) with ESMTP id D60585C00A7;
+	Fri, 14 Oct 2022 03:32:19 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute3.internal (MEProxy); Fri, 14 Oct 2022 03:32:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm2; t=1665732739; x=1665819139; bh=iYvmehNBlw
+	06CbCuBOD7St3FUBj4CVVluYujD7ayDLQ=; b=Ep1sOt8A+qbphOkwJNMS+bZLPI
+	fEDpw6wWBA0iKtWim8X/cGXLMdxzH9uDxaQeNqmOtXCrfXPx3DXYoI+hgJ0tmx0y
+	RVTnV7fN4/91vAfA4uaZHokKX++vPp73iEsHqaHk1jUw3Qyuv6Zz2+HeMgTOj2w/
+	tzJSbOqAzefr80yOxvWnlTnjd7L26tMKxr398379T+0MeJyfZyMoYc1fBcG4kWaT
+	2RZp/Onca1bJn4ICIhqQJXkjVuygoH25+5zSA7B64mTCpdsYLR7Xb/utpFBrtHpL
+	qL1hzHzLsflpqR9kgutHmYrAn/bni9PvxfBiCZWCkjgp7ccRMPIpnmAYa7ZA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1665732739; x=1665819139; bh=iYvmehNBlw06CbCuBOD7St3FUBj4
+	CVVluYujD7ayDLQ=; b=VGwd6u0xuftNgTZ8id3L5Cmu4x1grNfv49BGbEcLoSFC
+	MpftI5ayl0p/D9AxMHyu57NWqdJlZzRa3ubk+71v1jplmcoRo19QOSM5r+vkh4hh
+	qWYajAHaeT4Df2R/l0lKBRBuffHgdG2SwRjil88hNxLhHAj1lIarEvq+eiZzy4bN
+	AjHu73YPiMOQxIpr5oyW8bttA8Um5DlMIUKRB1zRY/yRJzfPQxsksf29YGpghAoy
+	/AHbCED/8jgEQCOk40nbaL2GGpqyJ8cidTtzZv7wQ1rjs2y5lFUKEq7VjrZhv1Hg
+	kaW+YUeGW8Yw8s4mZx3IuALE3CXPWtdY+uZxmytDzg==
+X-ME-Sender: <xms:ghBJY8rQQUX89VmEP719Vlga8mGPnIly6_zLHeQmJXF1-VcKbe8Ogg>
+    <xme:ghBJYyp-yYxDAFGGI_kbPfy9Da1sDiQF73MnMsQjynnn435wgmGgISPmtGbPWFYGi
+    w8UfK3KuAjaDU8dhH4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeekuddguddvvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:ghBJYxPMPKv6ivZxtF1uk9-anNwMvt76e7OgfhXmTRHxOkDeds3wiA>
+    <xmx:ghBJYz5io2gJQ1k5Q6b-nW7Okh-UaZSuOKWizh4QRqKxI7OBHL5QNQ>
+    <xmx:ghBJY75MQOlIccS_xJ_ua4u5VMX6D_PRyl0TjVOQX8z-8RpSXT6sOA>
+    <xmx:gxBJY1vfUsQ7_xS9EOI6dAmJGrvGYHEsWZh12MYIJS476czTtYI13Q>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id CF023B60086; Fri, 14 Oct 2022 03:32:18 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.7.0-alpha0-1047-g9e4af4ada4-fm-20221005.001-g9e4af4ad
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Content-Language: en-US
-To: Jan Kara <jack@suse.cz>, Ye Bin <yebin10@huawei.com>
-Cc: jack@suse.com, tytso@mit.edu, linux-ext4@vger.kernel.org,
+Mime-Version: 1.0
+Message-Id: <7ee4a1bd-0674-42d8-8980-8b029ca09e71@app.fastmail.com>
+In-Reply-To: <ca8d3fff-0365-24d9-fd53-5799ac34f336@opensource.wdc.com>
+References: 
+ <CA+G9fYvRXkjeO+yDEQxwJ8+GjSmwhZ7XHHAaVWAsxAaSngj5gg@mail.gmail.com>
+ <bf1b053d-ffa6-48ab-d2d2-d59ab21afc19@opensource.wdc.com>
+ <CA+G9fYvUnn0cS+_DZm8hAfi=FnMB08+6Xnhud6yvi9Bxh=DU+Q@mail.gmail.com>
+ <CADYN=9L8tt2T-8O+u5NSMSUOkZDvEggnvzxH6aMmd5Rn9yDeuw@mail.gmail.com>
+ <ca8d3fff-0365-24d9-fd53-5799ac34f336@opensource.wdc.com>
+Date: Fri, 14 Oct 2022 09:31:55 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Damien Le Moal" <damien.lemoal@opensource.wdc.com>,
+ "Anders Roxell" <anders.roxell@linaro.org>,
+ "Naresh Kamboju" <naresh.kamboju@linaro.org>,
+ Sergey.Semin@baikalelectronics.ru
+Cc: "open list" <linux-kernel@vger.kernel.org>,
+ "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
  regressions@lists.linux.dev,
- Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-References: <20220824100652.227m7eq4zqq7luir@quack3>
- <c77bf00f-4618-7149-56f1-b8d1664b9d07@linux.microsoft.com>
- <20220929082716.5urzcfk4hnapd3cr@quack3>
- <d8b18ba8-ea12-b617-6b5e-455a1d7b5e21@linux.microsoft.com>
- <20221004063807.GA30205@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20221004091035.idjgo2xyscf6ovnv@quack3>
- <eeb17fca-4e79-b39f-c394-a6fa6873eb26@linux.microsoft.com>
- <20221005151053.7jjgc7uhvquo6a5n@quack3>
- <20221010142410.GA1689@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-From: Thilo Fromm <t-lo@linux.microsoft.com>
-Subject: Re: [syzbot] possible deadlock in jbd2_journal_lock_updates
-In-Reply-To: <20221010142410.GA1689@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>,
+ lkft-triage@lists.linaro.org, "Lukas Bulwahn" <lukas.bulwahn@gmail.com>,
+ "Niklas Cassel" <niklas.cassel@wdc.com>
+Subject: Re: TI: X15 the connected SSD is not detected on Linux next 20221006 tag
+Content-Type: text/plain
 
-Hello Honza, hello Ye,
+On Fri, Oct 14, 2022, at 2:22 AM, Damien Le Moal wrote:
+> On 10/14/22 07:07, Anders Roxell wrote:
+> [...]
+>>> 8)
+>>>> If reverting these patches restores the eSATA port on this board, then you need
+>>>> to fix the defconfig for that board.
+>>>
+>>> OTOH,
+>>> Anders, enabled the new config CONFIG_AHCI_DWC=y  and tried but the
+>>> device failed to boot.
+>> 
+>> I thought it would work with enabling CONFIG_AHCI_DWC=y, but it didn't...
+>
+> As mentioned in my previous reply to Naresh, this is a new driver added in
+> 6.1. Your board was working before so this should not be the driver needed
+> for it.
+>
+>> However, reverting patch 33629d35090f ("ata: ahci: Add DWC AHCI SATA
+>> controller support")
+>> from next-20221013 was a success, kernel booted  and the 'mkfs.ext4' cmd was
+>> successful.
+>
+> Which is very strange... There is only one hunk in that commit that could
+> be considered suspicious:
+>
+> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+> index 9b56490ecbc3..8f5572a9f8f1 100644
+> --- a/drivers/ata/ahci_platform.c
+> +++ b/drivers/ata/ahci_platform.c
+> @@ -80,9 +80,7 @@ static SIMPLE_DEV_PM_OPS(ahci_pm_ops, ahci_platform_suspend,
+>  static const struct of_device_id ahci_of_match[] = {
+>         { .compatible = "generic-ahci", },
+>         /* Keep the following compatibles for device tree compatibility */
+> -       { .compatible = "snps,spear-ahci", },
+>         { .compatible = "ibm,476gtr-ahci", },
+> -       { .compatible = "snps,dwc-ahci", },
+>         { .compatible = "hisilicon,hisi-ahci", },
+>         { .compatible = "cavium,octeon-7130-ahci", },
+>         { /* sentinel */ }
+>
+> Is your board using one of these compatible string ?
 
-Just want to make sure this does not get lost - as mentioned earlier, 
-reverting 51ae846cff5 leads to a kernel build that does not have this issue.
+The x15 uses "snps,dwc-ahci". I would expect it to detect the device
+with the new driver if that is loaded, but it's possible that the
+driver does not work on all versions of the dwc-ahci hardware.
 
->>>>>>>>> So this seems like a real issue. Essentially, the problem is that
->>>>>>>>> ext4_bmap() acquires inode->i_rwsem while its caller
->>>>>>>>> jbd2_journal_flush() is holding journal->j_checkpoint_mutex. This
->>>>>>>>> looks like a real deadlock possibility.
->>>>>>>>
->>> [...]
->>>>>>>> The issue can be triggered on Flatcar release 3227.2.2 / kernel version
->>>>>>>> 5.15.63 (we ship LTS kernels) but not on release 3227.2.1 / kernel 5.15.58.
->>>>>>>> 51ae846cff5 was introduced to 5.15 in 5.15.61.
->>>>>>>
->>>>>>> Well, so far your stacktraces do not really show anything pointing to that
->>>>>>> particular commit. So we need to understand that hang some more.
->>>>>>
->>> [...]
->>>>> So our stacktraces were mangled because historically our kernel build used
->>>>> INSTALL_MOD_STRIP=--strip-unneeded, we've now switched it back to --strip-debug
->>>>> which is the default. We're still using CONFIG_UNWINDER_ORC=y.
->>>>>
->>>>> Here's the hung task output after the change to stripping:
->>>>
->>>> Yeah, the stacktraces now look as what I'd expect. Thanks for fixing that!
->>>> Sadly they don't point to the culprit of the problem. They show jbd2/sda9-8
->>>> is waiting for someone to drop its transaction handle. Other processes are
->>>> waiting for jbd2/sda9-8 to commit a transaction. And then a few processes
->>>> are waiting for locks held by these waiting processes. But I don't see
->>>> anywhere the process holding the transaction handle. Can you please
->>>> reproduce the problem once more and when the system hangs run:
->>>>
->>>> echo w >/proc/sysrq-trigger
->>>>
->>>> Unlike softlockup detector, this will dump all blocked task so hopefully
->>>> we'll see the offending task there. Thanks!
->>
->>> [ 3451.530765] sysrq: Show Blocked State
->>> [ 3451.534632] task:jbd2/sda9-8     state:D stack:    0 pid:  704 ppid:    2
->>> flags:0x00004000
->>> [ 3451.543107] Call Trace:
->>> [ 3451.545671]  <TASK>
->>> [ 3451.547888]  __schedule+0x2eb/0x8d0
->>> [ 3451.551491]  schedule+0x5b/0xd0
->>> [ 3451.554749]  jbd2_journal_commit_transaction+0x301/0x18e0 [jbd2]
->>> [ 3451.560881]  ? wait_woken+0x70/0x70
->>> [ 3451.564485]  ? lock_timer_base+0x61/0x80
->>> [ 3451.568524]  kjournald2+0xab/0x270 [jbd2]
->>> [ 3451.572657]  ? wait_woken+0x70/0x70
->>> [ 3451.576258]  ? load_superblock.part.0+0xb0/0xb0 [jbd2]
->>> [ 3451.581526]  kthread+0x124/0x150
->>> [ 3451.584874]  ? set_kthread_struct+0x50/0x50
->>> [ 3451.589177]  ret_from_fork+0x1f/0x30
->>> [ 3451.592887]  </TASK>
->>
->> So again jdb2 waiting for the transaction handle to be dropped. The task
->> having the handle open is:
->>
->>> [ 3473.580964] task:containerd      state:D stack:    0 pid:92591 ppid:
->>> 70946 flags:0x00004000
->>> [ 3473.589432] Call Trace:
->>> [ 3473.591997]  <TASK>
->>> [ 3473.594209]  ? ext4_mark_iloc_dirty+0x56a/0xaf0 [ext4]
->>> [ 3473.599518]  ? __schedule+0x2eb/0x8d0
->>> [ 3473.603301]  ? _raw_spin_lock_irqsave+0x36/0x50
->>> [ 3473.607947]  ? __ext4_journal_start_sb+0xf8/0x110 [ext4]
->>> [ 3473.613393]  ? __wait_on_bit_lock+0x40/0xb0
->>> [ 3473.617689]  ? out_of_line_wait_on_bit_lock+0x92/0xb0
->>> [ 3473.622854]  ? var_wake_function+0x30/0x30
->>> [ 3473.627062]  ? ext4_xattr_block_set+0x865/0xf00 [ext4]
->>> [ 3473.632346]  ? ext4_xattr_set_handle+0x48e/0x630 [ext4]
->>> [ 3473.637718]  ? ext4_initxattrs+0x43/0x60 [ext4]
->>> [ 3473.642389]  ? security_inode_init_security+0xab/0x140
->>> [ 3473.647640]  ? ext4_init_acl+0x170/0x170 [ext4]
->>> [ 3473.652315]  ? __ext4_new_inode+0x11f7/0x1710 [ext4]
->>> [ 3473.657430]  ? ext4_create+0x115/0x1d0 [ext4]
->>> [ 3473.661935]  ? path_openat+0xf48/0x1280
->>> [ 3473.665888]  ? do_filp_open+0xa9/0x150
->>> [ 3473.669751]  ? vfs_statx+0x74/0x130
->>> [ 3473.673359]  ? __check_object_size+0x146/0x160
->>> [ 3473.677917]  ? do_sys_openat2+0x9b/0x160
->>> [ 3473.681953]  ? __x64_sys_openat+0x54/0xa0
->>> [ 3473.686076]  ? do_syscall_64+0x38/0x90
->>> [ 3473.689942]  ? entry_SYSCALL_64_after_hwframe+0x61/0xcb
->>> [ 3473.695281]  </TASK>
->>
->> Which seems to be waiting on something in ext4_xattr_block_set(). This
->> "something" is not quite clear because the stacktrace looks a bit
->> unreliable at the top - either it is a buffer lock or we are waiting for
->> xattr block reference usecount to decrease (which would kind of make sense
->> because there were changes to ext4 xattr block handling in the time window
->> where the lockup started happening).
->>
->> Can you try to feed the stacktrace through addr2line utility (it will need
->> objects & debug symbols for the kernel)? Maybe it will show something
->> useful...
-> 
-> Sure, I think this worked fine. It's the buffer lock but right before it we're
-> opening a journal transaction. Symbolized it looks like this:
-> 
->    ext4_mark_iloc_dirty (include/linux/buffer_head.h:308 fs/ext4/inode.c:5712) ext4
->    __schedule (kernel/sched/core.c:4994 kernel/sched/core.c:6341)
->    _raw_spin_lock_irqsave (arch/x86/include/asm/paravirt.h:585 arch/x86/include/asm/qspinlock.h:51 include/asm-generic/qspinlock.h:85 include/linux/spinlock.h:199 include/linux/spinlock_api_smp.h:119 kernel/locking/spinlock.c:162)
->    __ext4_journal_start_sb (fs/ext4/ext4_jbd2.c:105) ext4
->    __wait_on_bit_lock (arch/x86/include/asm/bitops.h:214 include/asm-generic/bitops/instrumented-non-atomic.h:135 kernel/sched/wait_bit.c:89)
->    out_of_line_wait_on_bit_lock (kernel/sched/wait_bit.c:118)
->    var_wake_function (kernel/sched/wait_bit.c:22)
->    ext4_xattr_block_set (include/linux/buffer_head.h:391 fs/ext4/xattr.c:2019) ext4
->    ext4_xattr_set_handle (fs/ext4/xattr.c:2395) ext4
->    ext4_initxattrs (fs/ext4/xattr_security.c:48) ext4
->    security_inode_init_security (security/security.c:1114)
->    ext4_init_acl (fs/ext4/xattr_security.c:38) ext4
->    __ext4_new_inode (fs/ext4/ialloc.c:1325) ext4
->    ext4_create (fs/ext4/namei.c:2796) ext4
->    path_openat (fs/namei.c:3334 fs/namei.c:3404 fs/namei.c:3612)
->    do_filp_open (fs/namei.c:3642)
->    vfs_statx (include/linux/namei.h:57 fs/stat.c:221)
->    __check_object_size (mm/usercopy.c:240 mm/usercopy.c:286 mm/usercopy.c:256)
->    do_sys_openat2 (fs/open.c:1214)
->    __x64_sys_openat (fs/open.c:1241)
->    do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80)
->    entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:118)
+Anders, can you provide the boot log from a boot with the new driver
+built in? There should be some messages from dwc-ahci about finding
+the device, but then not ultimately working.
 
-Is the symbolised stack trace Jeremi sent helpful to get to the bottom 
-of this issue? Can we do anything else to help?
+Depending on which way it goes wrong, the safest fallback for 6.1 is
+probably to move the "snps,spear-ahci" and "snps,dwc-ahci" compatible
+strings back into the old driver, and leave the new one only for 
+the "baikal,bt1-ahci" implementation of it, until it has been
+successfully verified on TI am5/dra7, spear13xx and exynos.
 
-Best regards,
-Thilo
+     Arnd
