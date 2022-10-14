@@ -1,103 +1,116 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FE33205
-	for <regressions@lists.linux.dev>; Fri, 14 Oct 2022 15:06:42 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id 8C795604F1;
-	Fri, 14 Oct 2022 17:06:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665759993; bh=gTUm92Tm+xCh4Ca0ZE5dSUBkzGQeAUastbhcquLGQJ4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mRpu7uauVz0c3YTZ2stJQEwaKseXARhfZT8TddxfnIXfvWFoHCmSm1208MpJlVK1G
-	 V+9dLJSVA5F/LhOUtI4flt2cMvvkjeqHgiihFjajY6w6bc3VPMbJWhMRITNyWINFcJ
-	 LWIOYSyOjGRS3xn36dK50IJbFbeAwKHynlmf6GMgFENJHdZexDLBcF2nZ0967nl5Q2
-	 3kGp8Z2TFEDbpIK/TEfDF+rxDJzEjda/wtKxkH4PdWeIjEmMfuRmgUwsmrbeeDnyCX
-	 7cXjacX2N3PpvMfedmOMNX2AxMXDulE7es0tGMRL2q3/KV1ByU+Y+lWYXK4n/cAAy4
-	 jOVoofT2OM8ig==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id uqPI53zV6CBn; Fri, 14 Oct 2022 17:06:29 +0200 (CEST)
-Received: from [193.198.186.200] (pc-mtodorov.slava.alu.hr [193.198.186.200])
-	by domac.alu.hr (Postfix) with ESMTPSA id C0CCB604EC;
-	Fri, 14 Oct 2022 17:06:28 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665759989; bh=gTUm92Tm+xCh4Ca0ZE5dSUBkzGQeAUastbhcquLGQJ4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=xPWdQtexvjRjRj6HrzECLdfFnlRuHnqUyy/ScLNobH0u7f4rC5A91Pzcc4xZKBLGO
-	 vgITQhgV7mogpPYgvp/NtotzwAzxFjoBXOC4yiGTZv1+0AQc/MEIqK4pQczjlN6vpi
-	 I/8f8YdyGFPY4jOl6/dzWv5BITrN/OCUDCUSX4wkShHYXQHbGZ1ocw7JhO6o9gCvGI
-	 0dX8OncWU6gTZ+L8lwujGllB++gDfv+cg745oGdeqlTma5aMWAdgeuXka9pJCxlcbO
-	 Y2ThwADLBXoUFh2twC8sj/DjTDt7Xu50r8Bp6uk3S7iyn5neFtEXRJai+IeMsyCHZ1
-	 E45mQtYW+Vp4Q==
-Message-ID: <e3acecdc-c240-5c9a-8216-5dae0c6c0186@alu.unizg.hr>
-Date: Fri, 14 Oct 2022 17:06:28 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8A8440C
+	for <regressions@lists.linux.dev>; Fri, 14 Oct 2022 19:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1665777487;
+	bh=1Liwd8ZbCrocRKAWWRbi9j0+CfT3XqraqowX8PdsdaM=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=bcOD2fBAdkwQtcF9rvQD29RXNXyaGP610W4P7dt0rrYLF0c2w7YqkkF/Kwkb7ybPQ
+	 kMo+XM3zxILoVfC1Z2olTUNGfN5HmGrQlYlf9MWWwj6rXEGW/0tM4QEe91oG6q1suz
+	 S86oUA9rGadH/d8w1DeS+eOOXlbMH+UwP/V9POuE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [10.1.1.24] ([217.61.200.164]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MV67y-1ocJGj0jVm-00S7y8; Fri, 14
+ Oct 2022 21:58:07 +0200
+Message-ID: <0259a530-32af-f6be-b2e5-fcfbda80a052@gmx.de>
+Date: Fri, 14 Oct 2022 21:58:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: 6.0.0-RC kernels trigger Firefox snap bug with 6.0.0-rc3 through
- 6.0.0-rc7
-Content-Language: en-US
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Slade Watkins <srw@sladewatkins.net>,
- Marc Miltenberger <marcmiltenberger@gmail.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.2
+Subject: Re: Possible regression: unable to mount CIFS 1.0 shares from older
+ machines since 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c
+To: Steve French <smfrench@gmail.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Davyd McColl <davydm@gmail.com>, "lsahlber@redhat.com"
+ <lsahlber@redhat.com>, "stfrench@microsoft.com" <stfrench@microsoft.com>,
+ "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr>
- <Y0Zw2eHEb1aZ9f4y@debian.me>
- <29362d2e-eec6-5a23-4354-cf8868d50b2c@alu.unizg.hr>
- <6375f31f-316a-bebc-6aec-c6241049e401@alu.unizg.hr>
- <7e0b733d-db73-f9a7-0965-4744e63f1a33@gmail.com>
-From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <7e0b733d-db73-f9a7-0965-4744e63f1a33@gmail.com>
+References: <D58238A4-F04E-458E-AB05-4A74235B2C65@getmailspring.com>
+ <ff982786-4033-7450-c10c-8ce71c28d6eb@leemhuis.info>
+ <CAH2r5mtE-EjNbF3OhCLmbGQFMbJgRZphQHS+hHLBiWRJPEBqKA@mail.gmail.com>
+From: Carsten Langer <carsten.langer@gmx.de>
+In-Reply-To: <CAH2r5mtE-EjNbF3OhCLmbGQFMbJgRZphQHS+hHLBiWRJPEBqKA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:padXh2RnjollxFDOOtlrXsmY6HvQANRPS2yC3548meSi73n8W9t
+ MfiI3oLEAWXBa9bXZPTEWAD5/xixcPcjJw/e927cNNgXjg4o6ZR7qc7UxEaT1bGkKwJr1x/
+ mk9oaWA5Z2WkxXQ7xmUD8WUSfs1sBmoZ9u6mw/Vz+JTRmzB7aJbVCycI4ybLYiWMYrdoCz6
+ WtubqOKuopzDeEAkdTlZg==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fgKoRaNZ/HI=:31OUKn8OUU6sjWVFJKwwxi
+ ClCpNfUaRn8Rec54WYqSyq8yq3Y+qCpTwhSELn3MvN+w+ZHKqGEmqbGWTzkLhZEssDrJswHHN
+ mWTCS+b+xaEFI4L9rQaFan+02LgMo3nXgHeh5qK8fYU5Lz6FsPfegdFl90sIDHYtXidq9Muty
+ QGj9oTEvM+q2wz2MzbACEwvrGIhhQRDkAF8DJoQfhyiKaHISqGpI+0wLOyRX347fwtK0Xj3wJ
+ o7TKGRr4RNhrwoCOvNYeecwsQ4WGeTABrOCx1lwP+BVWqfvK9Jix43FEx3eBLbks4urWlyvlI
+ yCXzmvBHeqoT3Q/Yxg6yMZLKTiXU/1op9p2gkQLa4MJxjZx17guGkt8Flgsibho2Y9SECqfLS
+ yiDl6JIv+lZPvkgkkimD8d80wtqk98eXGlUGaOyKxYJ3/HxImrsUzShzC4X8RAtdxO4vp1pxh
+ EN78ZmlirX0XEORmjA4jL3gL4dvMgazbP4WFO7ayhbHc3tIEx+7bafkY7AYp/YYI5JuN2fviN
+ oNU3Ni2AOu0nlbyb84+v4Qt4o983BZlrbP54jOon8EjJFeud67TFd0DRbuEMOVIkXbFAuajBd
+ p9bv3zZRzPCujrr2ldSQPw+nnk0nTb1qh7zQOskhqcRWloqnVOK547/fSxGuBHfJU1Cnf7cm2
+ CswkHDoxznOzZECsjVTu38avQKiKHolPP1TuAtgRiCsZ5kGnXotBk1xmDb70sZGz0JpvwEuSb
+ h7unRK2vTQIdJd7IPNarqFausuNAQTSRrf3fnm29zEshQ7X7aVbFl0t9hORMvfsitugH7U0XF
+ dZLv8AnywwgKduJ8g+zkoK1exudAbv9rwXejrbGFxxOIVVU6ow8vB0Ark+S+XUTJ9Wb0sf6eW
+ zaZnHXs55BxQsFkPRp82EzkMDVV729/u8tFrOXUvKyyeY+3/6KKw2gq6b4luZbpahIB9bSfpG
+ 8/wsgAJeIWIvZ9/5H1+VafbXFvjGGewyjQIUBCfyIG5N44LrOlh7SNCvy4AMVbYqKlbRMfbBZ
+ NjStvk4Iqt9wC/1LTTYl0JOxYLOYTA/SeSnXK7Jb18EDxuv0JCu6Baa6m5ZdgRQNZHByslCFV
+ 0x4JHo+POtzt2+IJiMLGlWPxMss4SglD/Nt5UToLWVq+V53rys/teqnugAzHZ8Uqo40aITa1e
+ xrzn3KZohsVnmIvm6E/vY8DVrFIhKfErkBu1Zaq02EAchz2xV7ls4bqvzRrMnsdDCTpkqUs2l
+ IWozvKXznKzmmT5DeXGwuTTx84SlViPQjEEcrIohweXMinjppSfdzg3cSQnAqQMAAbN/3W5xb
+ 3pzSNuq8aT+NFaU9DOkQuAkf1EhOxzfSr3MDB9XCPr2iSwnxKRw6Lyl0R/R9brbJfSlRDqLFI
+ LPv+JfxL5HiI6RGmqSbigQFmPH8TigOrLD3OcRxUDY7+nUxZtRwVH31c7RAeyruqpiNjtilY5
+ TBikiE1iSDmbKnartTYjw5ugdePvh128Bbzk8UqMwSm4hq/IZIhJtx7ZU71grfWiN61addGPh
+ UwHvV+GNGjJzoqj7fQbVvqEGk/7SUDeB6NtG81S/MQVuM
 
-On 10/14/22 14:28, Bagas Sanjaya wrote:
+ > We have been looking to see if we could setup some VMs for something
+ > that old, and we are willing to test against it if it could
+ > realistically be setup, but it has been harder than expected. Ronnie
+ > had some ideas and we are willing to experiment more but realistically
+ > it is very hard to deal with 'legacy museum style' unless we have some
+ > VMs available for old systems.
+ >
+ > Feel free to contact Ronnie and me or Shyam etc (offline if easier) if
+ > you have ideas on how to setup something like this.=C2=A0=C2=A0 We don'=
+t want to
+ > be encouraging SMB1, but certainly not NTLMv1 auth with SMB1 given its
+ > security weaknesses (especially given the particular uses hackers have
+ > made of 25+ year old NTLMv1 weaknesses).
 
-> On 10/14/22 17:32, Mirsad Todorovac wrote:
->> I tried the "make localmodconfig" and provided the default answers ([ENTER]) to all questions
->> the script asked as advised here: https://www.stolaf.edu/people/rab/os/linux-compile.html .
->>
->> However, though it built much faster, the stripped version did not trigger the bug.
->>
->> I am now trying to reproduce the bug with v6.0-rc[123] with config-{051913,060000}.
->> This brings a lot of combinations, and though I am a newbie, I noticed that build scripts
->> start with "make clean" for both deb-pkg and rpm-pkg.
->>
->> Is there a way to rebuild only the stuff that changed between the versions?
->>
-> You can try building kernel with ccache enabled. However, you'll need
-> to unset build timestamp, since it will make builds non-deterministic:
->
-> 	make CC="ccache gcc" KBUILD_BUILD_TIMESTAMP=""
->
-> The first ccache build will be slower than normal build, because the
-> object files needs to be written twice (to the output directory and
-> to the cache), though.
->
-> Thanks.
+I would be willing to try to set up a VM for testing.
 
-Thank you!
-This will greatly speed up bisecting if it works ...
+The issue was further discussed in
+https://bugzilla.kernel.org/show_bug.cgi?id=3D215375
+I think we could split the topic. The part important for me and others
+affected
+by this bug is that this regression introduced a protocol violation of
+the SMB1
+protocol, even for the case where users want to use SMB1 in guest mode,
+i.e. without any authentication. At least in this case IMHO we do not need
+to discuss NTLMv1 etc., but just make sure that the SMB1 protocol is
+again correctly
+followed for the case that no user/password is needed. That is what the
+proposed patch is
+about.
 
-Have a nice evening.
+Thus my idea would be to set up an old-enough Samba server providing the
+SMB1 protocol
+(just) for guest mode, without user/password. If I could then prove that
+without patch
+the error against that VM occurs and with the patch it works fine, would
+that be enough?
 
-Mirsad
+But I wonder what you understand by VM? A VirtualBox OVA file? Vmware?
+Some Dockerfile
+to create an image?
+And as this will be a test against a simulated server in a network, are
+there standard
+requirements how the network is set up between test system and the VM?
 
--- 
-Mirsad Goran Todorovac
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
--- 
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb, Republic of Croatia
-
+- Carsten
