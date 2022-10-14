@@ -1,140 +1,145 @@
-Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97C263A
-	for <regressions@lists.linux.dev>; Fri, 14 Oct 2022 09:47:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1665740853; x=1697276853;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=iE5GUnFyeMBRQvMjHEXX2zn/Gp9BkuhhaBK9MtXM00k=;
-  b=UwgkT5XjSnlqsO4UeK4w/0MLIbsr1D3AMAFao0if2tgxiwHfVdk3WzFi
-   ppAUJKlpqK60Xk2JoJx6Wptuu6whonDFTNB3HdySCjwgdloWSYhlIzes9
-   E3IY9j4j2E4biczjqB+ifUADOkfxcWRJLjEO9UeBbcsAtpzGph6/hG02V
-   mls5ppTfgraeNztbmUNkCxulqGWvqe0x1PI3xsimcdp/8K3cJlUXpGgSm
-   ZvYFkCFUQAOI4cu1c1HBtxFBjw4p6+inODv6VZwfPUbEpJaqlO+vTwxtE
-   YMfkmEuCkRmdxMR2P4spkCQcp0n5hY1+L6JwY9/64SEuN//kyMV+kz/vZ
-   A==;
-X-IronPort-AV: E=Sophos;i="5.95,184,1661788800"; 
-   d="scan'208";a="325892165"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 14 Oct 2022 17:47:27 +0800
-IronPort-SDR: vynBSvH++4Tq0NzyAKyK2/l20qNzZyCA0MQyCmokjPhJDdME306CgZvlIA/VA+cwNNPHxV/KhO
- 8wq3DP+WbTr7w4q2pv994EIxBwbmcyKagGCKLDEkQg+lompegTlEY+Q6QaqB/u9E7XqPeqIToD
- NMXolEw+0DfGlCcIfSRFrrTpGYFigCeDu65Lk0Q9gdvcqO/b77VVaCJzuSdThMopglHE9ILhSf
- T8Vy3XgOoji/tf8wvtMmWpU7AuvZRCavVpmBHWdSTLrfODfGZLwnK13EkuweiABlRytjp/iVW5
- 8l+ihCKrd+3R9966RVZG8x7p
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Oct 2022 02:07:04 -0700
-IronPort-SDR: HCboEZR7b5YUoMaVFx5w2X2z52Gczt9aKqiNl7EzQX4IeDQ9Mxt2EndiMMGhxjjEy+RYGDggwE
- lPvmMbvtU3AnX3WojfvMgyhYVqSLcIrc3OQnM2BTWaFp+QgM6G8Kf1plv0O4Bfq70NKwZopOjC
- NlAdDw3XSU7pbTQJlm5Q2ac5vFVhxGYWKCgNR6LpzMlK7YBd3gdHGXEA52LgfadM7xfP2GauEy
- SrG+GiZzTJxiryPwwKoVXRCS4aWwK/wxgI/QFFHvrce+pyhLOHga4hIXVrVdxZwn8QipdZqrwa
- 3f0=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Oct 2022 02:47:27 -0700
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-	by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4MphPq282Nz1RwqL
-	for <regressions@lists.linux.dev>; Fri, 14 Oct 2022 02:47:27 -0700 (PDT)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-	reason="pass (just generated, assumed good)"
-	header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-	opensource.wdc.com; h=content-transfer-encoding:content-type
-	:in-reply-to:organization:from:references:to:content-language
-	:subject:user-agent:mime-version:date:message-id; s=dkim; t=
-	1665740846; x=1668332847; bh=iE5GUnFyeMBRQvMjHEXX2zn/Gp9BkuhhaBK
-	9MtXM00k=; b=PtF2czCRF+dp0VRC6dLZ04V+8DkQ37SQBwZgiOI+H7Mix1GMkT9
-	VPCsMXk2iDSfJkaeAhOOX3tXSwusMe5xZ9/nR7wGPHH3odYNCyqhy6lyB7x1ycJU
-	FYfsDRnvlvdXSUQrc5Elbx/BL5Ak8q/x7m2HPQHFepDlXHMb7Vn4RVzXTa7e/7zt
-	GK75GQRzAEUcJj6u8+RmwEkOnIqwf9gKV6pzRR3snzBlDEXH0efib4qSHDt0dN1i
-	XzwlvrRAZCVMI/9zh+BfjtoqIGEiZWDgTax8hmZHS+IGzNPskp8Z5INSEbPxFSm+
-	VXuJjsOSVTodq5+7zM/ZoxRK2f/pXRmSE3A==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-	by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id DLEIfEt9Rcll for <regressions@lists.linux.dev>;
-	Fri, 14 Oct 2022 02:47:26 -0700 (PDT)
-Received: from [10.225.163.119] (unknown [10.225.163.119])
-	by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4MphPm4nqjz1RvLy;
-	Fri, 14 Oct 2022 02:47:24 -0700 (PDT)
-Message-ID: <0ea781f8-6911-2850-16a2-cee230dd32b0@opensource.wdc.com>
-Date: Fri, 14 Oct 2022 18:47:23 +0900
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E92E366
+	for <regressions@lists.linux.dev>; Fri, 14 Oct 2022 10:33:03 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id E21C7604F1;
+	Fri, 14 Oct 2022 12:32:59 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1665743579; bh=HeyEgrL8tPwV+soJuA8PP5qyivTn5FZTvpsM2LlSirA=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=eKz8jCyTrN2IxF/GI0YNbE0Be4btg942xYeBIejqPTEmupn1Rl5qiA5SLRUyBSDMW
+	 H9AFUNLTB2wggtP/1MHyQBzNqamHRp8VyqtvwQ1SJAOroP5Q03U7MTwFY7iB6rxG2P
+	 nlUulFdaT8rEgSkGTY7F1FfvrphVoFymbMYQabVfCHkocrge9VtRNisLR0srZ1Grym
+	 VQgnDT7NCkS6OqwXy1Qwi7JwdxrMJAvhIcsXEVNlMPyBFpsiWSIHht4u58Q1CRGVId
+	 MXxM1SM5E4mjmPOFzS6wABphNFXP9Y2oH0y6gLnDoFe+miU5pswIRARSKXp6VbYZm8
+	 mFhAVkAHI+Bog==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id tfhYaGS8RhY3; Fri, 14 Oct 2022 12:32:56 +0200 (CEST)
+Received: from [193.198.186.200] (pc-mtodorov.slava.alu.hr [193.198.186.200])
+	by domac.alu.hr (Postfix) with ESMTPSA id ED279604EC;
+	Fri, 14 Oct 2022 12:32:55 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1665743576; bh=HeyEgrL8tPwV+soJuA8PP5qyivTn5FZTvpsM2LlSirA=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=J9mSNq5Ohl8Z2Y6uWe1FeLLLJy2CdciLhEvvY6/um+eiqtrWkUPtoc0n2jU6HYSBJ
+	 PWgu5/XT3YzL231jmBjUjL23HYzcnfBKj7miWREBIx1p0PwMABn1d/cziXvtQqyn6j
+	 lAQG7xLNwrZ4lWbNH4+2OhwPgLY/EqLdM4QuR1Z4CyhxyS1RUwt2k6hzYygiaUy2f8
+	 IfjxcF5k9Ue9aZ7ESDPJe5lcwn6ZO1ZP26Q4McQgL1tA+AzyoaqiC0E97OhpHuNe48
+	 n6R/84V08OSceBejpG2AXrTXlfsEzd4A7b3aRd3qXWoPBJO5kRTZd1LaF7FXxYY8BM
+	 3I5luVYNumfDA==
+Message-ID: <6375f31f-316a-bebc-6aec-c6241049e401@alu.unizg.hr>
+Date: Fri, 14 Oct 2022 12:32:55 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: TI: X15 the connected SSD is not detected on Linux next 20221006
- tag
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: 6.0.0-RC kernels trigger Firefox snap bug with 6.0.0-rc3 through
+ 6.0.0-rc7
 Content-Language: en-US
-To: Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
- Serge Semin <Sergey.Semin@baikalelectronics.ru>,
- open list <linux-kernel@vger.kernel.org>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- regressions@lists.linux.dev,
- "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)"
- <linux-ide@vger.kernel.org>, lkft-triage@lists.linaro.org,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>,
- Niklas Cassel <niklas.cassel@wdc.com>
-References: <CA+G9fYvRXkjeO+yDEQxwJ8+GjSmwhZ7XHHAaVWAsxAaSngj5gg@mail.gmail.com>
- <bf1b053d-ffa6-48ab-d2d2-d59ab21afc19@opensource.wdc.com>
- <CA+G9fYvUnn0cS+_DZm8hAfi=FnMB08+6Xnhud6yvi9Bxh=DU+Q@mail.gmail.com>
- <CADYN=9L8tt2T-8O+u5NSMSUOkZDvEggnvzxH6aMmd5Rn9yDeuw@mail.gmail.com>
- <ca8d3fff-0365-24d9-fd53-5799ac34f336@opensource.wdc.com>
- <7ee4a1bd-0674-42d8-8980-8b029ca09e71@app.fastmail.com>
- <75eaeab3-7781-d60a-ae61-ae837f5dcec9@opensource.wdc.com>
- <CADYN=9JiX-=PcKMzAcSm=p7Dh6kYT7Kbv-8kcNF0MQ4=1hFS5g@mail.gmail.com>
- <d087c831-1519-4b83-8cc1-5317659709be@app.fastmail.com>
-From: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital Research
-In-Reply-To: <d087c831-1519-4b83-8cc1-5317659709be@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Slade Watkins <srw@sladewatkins.net>,
+ Marc Miltenberger <marcmiltenberger@gmail.com>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr>
+ <Y0Zw2eHEb1aZ9f4y@debian.me>
+ <29362d2e-eec6-5a23-4354-cf8868d50b2c@alu.unizg.hr>
+In-Reply-To: <29362d2e-eec6-5a23-4354-cf8868d50b2c@alu.unizg.hr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 10/14/22 18:37, Arnd Bergmann wrote:
-> On Fri, Oct 14, 2022, at 11:22 AM, Anders Roxell wrote:
->> On Fri, 14 Oct 2022 at 09:53, Damien Le Moal
-> 
->> Tested this patch on todays linux-next tag: next-20221014 without enabling
->> CONFIG_AHCI_DWC and it worked as expected when booting [1].
->> On the other hand I also tried a build/boot with CONFIG_AHCI_DWC enabled
->> and it worked as expected to boot [2].
+Hi everybody,
 
-That is great news ! So the new driver is OK, good !
+On 10/13/22 15:24, Mirsad Goran Todorovac wrote:
 
-> 
-> Ok, great. Can you a patch to soc@kernel.org to enable the driver in the
-> relevant defconfigs?
-> 
->> However, during building a warning [3] popped up:
+> Thank you for the instruction for how to shorten the bisection time. 
+> My fastest build was almost 2 hours.
+>
+> This bug did appear with the mainline Ubuntu's and ElRepo's 6.0.0 
+> kernels, however not with the
+> /usr/bin/firefox build, but only that using snapd, squashfs and 
+> /snap/bin/firefox ...
+>
+> The Firefox 91.x esr was unaffected, indeed, in a couple of days of 
+> testing its work (on AL).
+>
+> However, please not that this bug is no deterministic, and that it can 
+> take from a couple of hours
+> to an overnight work to manifest.
+>
+> The "make localmodconfig" feature will probably help reducing the 
+> build time, but I am also doing
+> my day job stuff which by the Murphy's law surged right now ...
+>
+> You second request, to reproduce with Firefox from the dev site, is as 
+> you will understand impossible
+> to meet: the bug occurred only with Firefox 104.x and 105.0.1, 
+> 105.0.2, 105.0.3 in Ubuntu snap
+> release (and the snap release guest installed at AlmaLinux, the CentOS 
+> fork).
+>
+> I was able to confirm that AppArmor doesn't affect behaviour once the 
+> Firefox misbehaves.
+> After starting to crash tabs and refusing to connect to the Internet 
+> from inside Yahoo mail (Chrome
+> simultaneously connected), then it complained about libmozsandbox.so 
+> version and Verneed record.
+>
+> -Mirsad
+>
+> On 12.10.2022. 9:46, Bagas Sanjaya wrote:
+>> Hi Mirsad,
 >>
->> make --silent --keep-going --jobs=8
->> O=/home/tuxbuild/.cache/tuxmake/builds/2/build ARCH=arm
->> CROSS_COMPILE=arm-linux-gnueabihf- 'CC=sccache
->> arm-linux-gnueabihf-gcc' 'HOSTCC=sccache gcc'
->> /builds/linux/drivers/ata/ahci_dwc.c:462:34: warning: 'ahci_dwc_plat'
->> defined but not used [-Wunused-variable]
->>   462 | static struct ahci_dwc_plat_data ahci_dwc_plat = {
-> 
-> Strange, I can't reproduce this, and the ahci_dwc_plat symbol
-> looks like it is clearly used in ahci_dwc_of_match[], at least
-> in next-20221014. Do you also see this on mainline?
+>> The bug doesn't appear on 6.0 mainline release. However, in my case,
+>> Firefox is downloaded and installed from official Mozilla binary [1].
+>>
+>> Also, many developers here want to see bisection result. In order to
+>> shorten kernel build time (and thus time needed for bisection),
+>> you can strip out unneeded modules in your kernel configuration with
+>> "make localmodconfig". Ensure that all devices on your computer is
+>> plugged in before running that. And as other people pointed, base
+>> your localmodconfig from last working kernel.
+>>
+>> In any case, please reproduce with Firefox from [1].
+>>
+>> Thanks.
+>>
+>> [1]: https://www.mozilla.org/en-US/firefox/
+>>
+I tried the "make localmodconfig" and provided the default answers 
+([ENTER]) to all questions
+the script asked as advised here: 
+https://www.stolaf.edu/people/rab/os/linux-compile.html .
 
-This is with the trial fix diff I sent. My bad, it was not even compile
-tested :). Does not happen otherwise.
+However, though it built much faster, the stripped version did not 
+trigger the bug.
 
->       Arnd
+I am now trying to reproduce the bug with v6.0-rc[123] with 
+config-{051913,060000}.
+This brings a lot of combinations, and though I am a newbie, I noticed 
+that build scripts
+start with "make clean" for both deb-pkg and rpm-pkg.
 
-Thanks for helping with this !
+Is there a way to rebuild only the stuff that changed between the versions?
+
+Thank you.
 
 -- 
-Damien Le Moal
-Western Digital Research
+Mirsad Goran Todorovac
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+-- 
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb, Republic of Croatia
 
