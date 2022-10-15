@@ -1,38 +1,38 @@
 Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D864680
-	for <regressions@lists.linux.dev>; Fri, 14 Oct 2022 21:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB39D1FBB
+	for <regressions@lists.linux.dev>; Sat, 15 Oct 2022 14:59:50 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id 79CF9604EC;
-	Fri, 14 Oct 2022 23:44:48 +0200 (CEST)
+	by domac.alu.hr (Postfix) with ESMTP id E55AC604EC;
+	Sat, 15 Oct 2022 16:59:47 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665783888; bh=CPcQoWOcZ9gt6nalJb1eiBI+9MY0NpiHdrfbf9ySmbs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dW0SnD0+dHwoJWKQzjffVJWND9qW996xd+HpVMybTUybZjQ7Z1XIOMs0Ci92uBGrj
-	 AWGT8WDQuf0Wox9ZYSly1i1iYuLOdCV10jtw2l2zModZ96G8m6poBpeRavywr4iP93
-	 IuvD9w9gKTQYOErrr9hTycrETfF3sHBG8KCOYjpxGCiJRFmSfVH+MGeNlD7WgciMZ/
-	 VJXem5PYBhmNrhUTUtXVgl3q8Rey1Fw9izRngr9nyLu6nfz1bWLlinykHI4MnFaUNP
-	 ZXRoEA8v6kfWG2q7xyBEWU6LJeXE6jI9idrn6uSqe0CyPvON4Yh901KTGH7PfBJ9sp
-	 AbSO6QMos3/6Q==
+	t=1665845987; bh=Rt6hkQ3PVuxYxZlV6+4OWg3IkAf90/c8K/hRO2NmT8Q=;
+	h=Date:Subject:References:To:From:In-Reply-To:From;
+	b=SkC4rm6NbTrGCgHCuJMw92nzv6XNPKGItxjgzbJZGMO0xq8e98zaEtm1XiC499ZAV
+	 FnRb42jz3uh5Ur0aiFf1bzyxKJ2myc5jABugJ9cK8g5mMnIATr8xDjw9YnhFJuiltL
+	 p1+8SmGi881drEN5kxo9PQLF4nez20qVpp8oyYBtECbVt+FZFGq+QwDLuLvdD30dIg
+	 8k05+WL9XuAxVMqEnXfETg5kd1iPV3qdnmTCSkZL1mCDGMxL2ASm7yjAadqcT7yGHS
+	 4hZDCEH8zzgrEiQ8riNpnu2LtSjWW37ltx1n32jLuAxvvhrA1q7jK/t1eFt8EQNV23
+	 06udtkALyYfzw==
 X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
 Received: from domac.alu.hr ([127.0.0.1])
 	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id OX1plE3Xq3pj; Fri, 14 Oct 2022 23:44:45 +0200 (CEST)
-Received: from [192.168.0.12] (unknown [188.252.197.142])
-	by domac.alu.hr (Postfix) with ESMTPSA id 56988604E6;
-	Fri, 14 Oct 2022 23:44:44 +0200 (CEST)
+	with ESMTP id vSJ89-l1G8YE; Sat, 15 Oct 2022 16:59:45 +0200 (CEST)
+Received: from [192.168.0.12] (unknown [188.252.197.241])
+	by domac.alu.hr (Postfix) with ESMTPSA id F36DA604E6;
+	Sat, 15 Oct 2022 16:59:44 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665783885; bh=CPcQoWOcZ9gt6nalJb1eiBI+9MY0NpiHdrfbf9ySmbs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=L9whf/8GdYuFl9lz0959yC3KF41CDip+V+g/SywqL46+CwLkgG4UAhM+FM4yUJ4SR
-	 GTfrBo+Ld3jpNcwaDtP8JVTlIlHjiXCUyUdVkd8NH694Rj6jCcNo8nU73yr4yUpOMY
-	 1U9wh0Z1MkN31Z8oDOtHayQgST3FgSupLd8M7PqhcVrUy2wZtMaLQqeOT8nMetsaOJ
-	 vq6aGtd8YcGquxAB3bt/fPZ63suZn9ggfsNJ1RMZjK4KJdAj7aBc9ddhXQbsey16PS
-	 enylrShUawLewDQJBcA+Hn2KEVIdZO6qS/WrNywphnhA98Ca+WLERtpU9txH8hLWK2
-	 alMAC8ydUjitg==
-Message-ID: <951eb72c-09b5-1832-3852-fa25e423b840@alu.unizg.hr>
-Date: Fri, 14 Oct 2022 23:44:43 +0200
+	t=1665845985; bh=Rt6hkQ3PVuxYxZlV6+4OWg3IkAf90/c8K/hRO2NmT8Q=;
+	h=Date:Subject:References:To:From:In-Reply-To:From;
+	b=2LMmUP7AdD7tI4dC4TYghOZWUqHeW8gUGXe5mC/isUlpjNQmxYA5y1nw2jdUcbv89
+	 hiRBmNG5yTcuy/tUiBArQhnYa4YRAV5D3GEsXL4+HqoPCDq11HTe87jBcRbX468pjl
+	 rS448RDyVuXCXxkOEiNZY/o50jn9teStKSD7MVeN1h1Yuy6MxsHEOTvmxxyXbgDpZP
+	 7a5spmI0S5kOA3Z7m7KN3kYfTZvoJgCXBTlle9mIGB3H5idJCn+LacVuFLJYSWy3ST
+	 RSxwpgmO0cqYr3qsu4shkef/XZ3ptr7n9XumenMmqZfLhzwpzIoF35d4q4dj9Ait6o
+	 4KScDhamt/+eQ==
+Message-ID: <566afab7-946c-00c0-b286-5468771ac19f@alu.unizg.hr>
+Date: Sat, 15 Oct 2022 16:59:44 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -41,108 +41,179 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.2
-Subject: Re: 6.0.0-RC kernels trigger Firefox snap bug with 6.0.0-rc3 through
- 6.0.0-rc7
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Slade Watkins <srw@sladewatkins.net>,
- Marc Miltenberger <marcmiltenberger@gmail.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr>
- <Y0Zw2eHEb1aZ9f4y@debian.me>
- <29362d2e-eec6-5a23-4354-cf8868d50b2c@alu.unizg.hr>
- <6375f31f-316a-bebc-6aec-c6241049e401@alu.unizg.hr>
- <7e0b733d-db73-f9a7-0965-4744e63f1a33@gmail.com>
+Subject: Fwd: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
+ 6.0.0-rc3 through 6.0.0-rc7
 Content-Language: en-US
+References: <ddf13e46-c091-80b2-3b57-c43ac45435f0@alu.unizg.hr>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
 From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <7e0b733d-db73-f9a7-0965-4744e63f1a33@gmail.com>
+In-Reply-To: <ddf13e46-c091-80b2-3b57-c43ac45435f0@alu.unizg.hr>
+X-Forwarded-Message-Id: <ddf13e46-c091-80b2-3b57-c43ac45435f0@alu.unizg.hr>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 14. 10. 2022. 14:28, Bagas Sanjaya wrote:
-
-> On 10/14/22 17:32, Mirsad Todorovac wrote:
->> I tried the "make localmodconfig" and provided the default answers ([ENTER]) to all questions
->> the script asked as advised here: https://www.stolaf.edu/people/rab/os/linux-compile.html .
->>
->> However, though it built much faster, the stripped version did not trigger the bug.
->>
->> I am now trying to reproduce the bug with v6.0-rc[123] with config-{051913,060000}.
->> This brings a lot of combinations, and though I am a newbie, I noticed that build scripts
->> start with "make clean" for both deb-pkg and rpm-pkg.
->>
->> Is there a way to rebuild only the stuff that changed between the versions?
->>
-> You can try building kernel with ccache enabled. However, you'll need
-> to unset build timestamp, since it will make builds non-deterministic:
+On 14. 10. 2022. 23:44, Mirsad Goran Todorovac wrote:
+> On 14. 10. 2022. 14:28, Bagas Sanjaya wrote:
 >
-> 	make CC="ccache gcc" KBUILD_BUILD_TIMESTAMP=""
+>> On 10/14/22 17:32, Mirsad Todorovac wrote:
+>>> I tried the "make localmodconfig" and provided the default answers 
+>>> ([ENTER]) to all questions
+>>> the script asked as advised here: 
+>>> https://www.stolaf.edu/people/rab/os/linux-compile.html .
+>>>
+>>> However, though it built much faster, the stripped version did not 
+>>> trigger the bug.
+>>>
+>>> I am now trying to reproduce the bug with v6.0-rc[123] with 
+>>> config-{051913,060000}.
+>>> This brings a lot of combinations, and though I am a newbie, I 
+>>> noticed that build scripts
+>>> start with "make clean" for both deb-pkg and rpm-pkg.
+>>>
+>>> Is there a way to rebuild only the stuff that changed between the 
+>>> versions?
+>>>
+>> You can try building kernel with ccache enabled. However, you'll need
+>> to unset build timestamp, since it will make builds non-deterministic:
+>>
+>>     make CC="ccache gcc" KBUILD_BUILD_TIMESTAMP=""
+>>
+>> The first ccache build will be slower than normal build, because the
+>> object files needs to be written twice (to the output directory and
+>> to the cache), though.
 >
-> The first ccache build will be slower than normal build, because the
-> object files needs to be written twice (to the output directory and
-> to the cache), though.
+> Hi, Bagas,
+>
+> Unfortunately, the ccache command did not work as expected. It still 
+> calls the gcc compiler proper,
+> even in the second run ...
+>
+> PID USER      PR  NI    VIRT    RES    SHR S %CPU  %MEM TIME+ COMMAND
+> 29213 root      20   0   67420  55100  15676 R  98.1   0.3 0:02.42 
+> /opt/alt/python38/bin/python3 /usr/bin/imunify360-agent rstatus
+> 29374 mtodorov  30  10  133932 110104  18408 R  98.1   0.7 0:01.46 
+> /usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -nostdinc -I 
+> ./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./arc+
+>  1079 root      20   0  589008 371700   2320 S  97.1   2.3 2343:20 
+> /usr/sbin/bacula-fd -f -c /etc/bacula/bacula-fd.conf
+> 29425 mtodorov  30  10   95052  71520  16700 R  76.9   0.4 0:00.80 
+> /usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -nostdinc -I 
+> ./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./arc+
+> 29459 mtodorov  30  10   79268  51432  12732 R  46.2   0.3 0:00.48 
+> /usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -nostdinc -I 
+> ./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./arc+
+> 29462 mtodorov  30  10   65516  34828   9224 R  43.3   0.2 0:00.45 
+> /usr/lib/gcc/x86_64-linux-gnu/8/cc1 -E -quiet -nostdinc -I 
+> ./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./+
+> 29505 mtodorov  30  10       0      0      0 R  32.7   0.0 0:00.34 [cc1]
+> 29506 mtodorov  30  10   65940  38560  12576 R  32.7   0.2 0:00.34 
+> /usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -nostdinc -I 
+> ./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./arc+
+> 29523 mtodorov  30  10   52180  21572   9344 R  17.3   0.1 0:00.18 
+> /usr/lib/gcc/x86_64-linux-gnu/8/cc1 -E -quiet -nostdinc -I 
+> ./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./+
+>  5517 root      20   0  780956  77812  10052 S  11.5   0.5 466:39.30 
+> /opt/alt/python38/bin/python3 -m im360.run
+> 29384 mtodorov  30  10    7132   3964   3568 S  11.5   0.0 0:00.12 
+> /usr/local/bin/ccache gcc -Wp,-MMD,sound/i2c/other/.ak4114.o.d 
+> -nostdinc -I./arch/x86/include -I./arch/x86/include/generated -I.+
+> 29407 mtodorov  30  10    7116   3748   3360 S  10.6   0.0 0:00.11 
+> /usr/local/bin/ccache gcc -Wp,-MMD,fs/exfat/.nls.o.d -nostdinc 
+> -I./arch/x86/include -I./arch/x86/include/generated -I./include -+
+> 29451 mtodorov  30  10    7132   3968   3568 S   9.6   0.0 0:00.10 
+> /usr/local/bin/ccache gcc 
+> -Wp,-MMD,drivers/pinctrl/intel/.pinctrl-tigerlake.o.d -nostdinc 
+> -I./arch/x86/include -I./arch/x86/incl+
+> 29522 mtodorov  30  10    8288   7520   1468 R   8.7   0.0 0:00.09 
+> scripts/genksyms/genksyms -r /dev/null
+> 29524 mtodorov  30  10   17008  12480   3204 R   4.8   0.1 0:00.05 as 
+> -I ./arch/x86/include -I ./arch/x86/include/generated -I ./include -I 
+> ./arch/x86/include/uapi -I ./arch/x86/include/generated+
+>  8896 mtodorov  20   0   12212   4616   3348 R   3.8   0.0 0:04.58 top
+>
+> 29525 mtodorov  30  10   15028  10412 3248 R   3.8   0.1 0:00.04 as -I 
+> ./arch/x86/include -I ./arch/x86/include/generated -I ./include -I 
+> ./arch/x86/include/uapi -I ./arch/x86/include/generated+
+>
+> I used the command line:
+> $ make CC="/usr/local/bin/ccache gcc" KBUILD_BUILD_TIMESTAMP="" -j10 
+> deb-pkg
+>
+> I tried to install the latest ccache (version 4.6.3), but it silently 
+> calls cc1, despite having 4GiB of cache in $HOME/.ccache ...
+>
+> I must be doing something wrong. Heavens are not aligned in favour to 
+> me this day :-/
 
-Hi, Bagas,
+Here are the results of the requested bisect on the bug involving the 
+Firefox snap build 104.x, 105.0.x, squashfs and which was manifested on 
+both Ubuntu snap and with snapd in AlmaLinux 8.6 (CentOS fork):
 
-Unfortunately, the ccache command did not work as expected. It still 
-calls the gcc compiler proper,
-even in the second run ...
+mtodorov@domac:~/linux/kernel/linux_stable$ git bisect log
+git bisect start
+# bad: [568035b01cfb107af8d2e4bd2fb9aea22cf5b868] Linux 6.0-rc1
+git bisect bad 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+# good: [51dd976781da8c0b47e106ed59a96d7c28972ce4] Linux 5.19.15
+git bisect good 51dd976781da8c0b47e106ed59a96d7c28972ce4
+# good: [3d7cb6b04c3f3115719235cc6866b10326de34cd] Linux 5.19
+git bisect good 3d7cb6b04c3f3115719235cc6866b10326de34cd
+# good: [b44f2fd87919b5ae6e1756d4c7ba2cbba22238e1] Merge tag 
+'drm-next-2022-08-03' of git://anongit.freedesktop.org/drm/drm
+git bisect good b44f2fd87919b5ae6e1756d4c7ba2cbba22238e1
+# good: [6614a3c3164a5df2b54abb0b3559f51041cf705b] Merge tag 
+'mm-stable-2022-08-03' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+git bisect good 6614a3c3164a5df2b54abb0b3559f51041cf705b
+# bad: [eb5699ba31558bdb2cee6ebde3d0a68091e47dce] Merge tag 
+'mm-nonmm-stable-2022-08-06-2' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+git bisect bad eb5699ba31558bdb2cee6ebde3d0a68091e47dce
+# good: [24df5428ef9d1ca1edd54eca7eb667110f2dfae3] ALSA: hda/realtek: 
+Add quirk for HP Spectre x360 15-eb0xxx
+git bisect good 24df5428ef9d1ca1edd54eca7eb667110f2dfae3
+# good: [c993e07be023acdeec8e84e2e0743c52adb5fc94] Merge tag 
+'dma-mapping-5.20-2022-08-06' of 
+git://git.infradead.org/users/hch/dma-mapping
+git bisect good c993e07be023acdeec8e84e2e0743c52adb5fc94
+# good: [4cfa6ff24a9744ba484521c38bea613134fbfcb3] powerpc/64e: Fix 
+kexec build error
+git bisect good 4cfa6ff24a9744ba484521c38bea613134fbfcb3
+# good: [24cb958695724ffb4488ef4f65892c0767bcd2f2] Merge tag 
+'s390-5.20-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
+git bisect good 24cb958695724ffb4488ef4f65892c0767bcd2f2
+# good: [db98b43086275350294f5c6f797249b714d6316d] squashfs: always 
+build "file direct" version of page actor
+git bisect good db98b43086275350294f5c6f797249b714d6316d
+# good: [6ba592fa014f21f35a8ee8da4ca7b95a018f13e8] video: fbdev: s3fb: 
+Check the size of screen before memset_io()
+git bisect good 6ba592fa014f21f35a8ee8da4ca7b95a018f13e8
+# good: [b5a8466d37d30cfcc8015789f4a3f0c44b6c7bc6] Merge tag 
+'for-5.20/fbdev-1' of 
+git://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev
+git bisect good b5a8466d37d30cfcc8015789f4a3f0c44b6c7bc6
+# bad: [97d3b2676fc6bc4865eb825037f4492f0fb804eb] ocfs2: remove some 
+useless functions
+git bisect bad 97d3b2676fc6bc4865eb825037f4492f0fb804eb
+# bad: [591c32bddbe20ba0e172d9def3c7f22b9c926ad9] kernel/hung_task: fix 
+address space of proc_dohung_task_timeout_secs
+git bisect bad 591c32bddbe20ba0e172d9def3c7f22b9c926ad9
+# bad: [b09a7a036d2035b14636cd4c4c69518d73770f65] squashfs: support 
+reading fragments in readahead call
+git bisect bad b09a7a036d2035b14636cd4c4c69518d73770f65
+mtodorov@domac:~/linux/kernel/linux_stable$
 
-PID USER      PR  NI    VIRT    RES    SHR S %CPU  %MEM     TIME+ COMMAND
-29213 root      20   0   67420  55100  15676 R  98.1   0.3 0:02.42 
-/opt/alt/python38/bin/python3 /usr/bin/imunify360-agent rstatus
-29374 mtodorov  30  10  133932 110104  18408 R  98.1   0.7 0:01.46 
-/usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -nostdinc -I 
-./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./arc+
-  1079 root      20   0  589008 371700   2320 S  97.1   2.3 2343:20 
-/usr/sbin/bacula-fd -f -c /etc/bacula/bacula-fd.conf
-29425 mtodorov  30  10   95052  71520  16700 R  76.9   0.4 0:00.80 
-/usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -nostdinc -I 
-./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./arc+
-29459 mtodorov  30  10   79268  51432  12732 R  46.2   0.3 0:00.48 
-/usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -nostdinc -I 
-./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./arc+
-29462 mtodorov  30  10   65516  34828   9224 R  43.3   0.2 0:00.45 
-/usr/lib/gcc/x86_64-linux-gnu/8/cc1 -E -quiet -nostdinc -I 
-./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./+
-29505 mtodorov  30  10       0      0      0 R  32.7   0.0 0:00.34 [cc1]
-29506 mtodorov  30  10   65940  38560  12576 R  32.7   0.2 0:00.34 
-/usr/lib/gcc/x86_64-linux-gnu/8/cc1 -quiet -nostdinc -I 
-./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./arc+
-29523 mtodorov  30  10   52180  21572   9344 R  17.3   0.1 0:00.18 
-/usr/lib/gcc/x86_64-linux-gnu/8/cc1 -E -quiet -nostdinc -I 
-./arch/x86/include -I ./arch/x86/include/generated -I ./include -I ./+
-  5517 root      20   0  780956  77812  10052 S  11.5   0.5 466:39.30 
-/opt/alt/python38/bin/python3 -m im360.run
-29384 mtodorov  30  10    7132   3964   3568 S  11.5   0.0 0:00.12 
-/usr/local/bin/ccache gcc -Wp,-MMD,sound/i2c/other/.ak4114.o.d -nostdinc 
--I./arch/x86/include -I./arch/x86/include/generated -I.+
-29407 mtodorov  30  10    7116   3748   3360 S  10.6   0.0 0:00.11 
-/usr/local/bin/ccache gcc -Wp,-MMD,fs/exfat/.nls.o.d -nostdinc 
--I./arch/x86/include -I./arch/x86/include/generated -I./include -+
-29451 mtodorov  30  10    7132   3968   3568 S   9.6   0.0 0:00.10 
-/usr/local/bin/ccache gcc 
--Wp,-MMD,drivers/pinctrl/intel/.pinctrl-tigerlake.o.d -nostdinc 
--I./arch/x86/include -I./arch/x86/incl+
-29522 mtodorov  30  10    8288   7520   1468 R   8.7   0.0 0:00.09 
-scripts/genksyms/genksyms -r /dev/null
-29524 mtodorov  30  10   17008  12480   3204 R   4.8   0.1 0:00.05 as -I 
-./arch/x86/include -I ./arch/x86/include/generated -I ./include -I 
-./arch/x86/include/uapi -I ./arch/x86/include/generated+
-  8896 mtodorov  20   0   12212   4616   3348 R   3.8   0.0 0:04.58 top
+The git bisect stopped at the squashfs commit 
+b09a7a036d2035b14636cd4c4c69518d73770f65, so I included Phillip in Cc:, 
+according to the Code of Conduct.
 
-29525 mtodorov  30  10   15028  10412 3248 R   3.8   0.1   0:00.04 as -I 
-./arch/x86/include -I ./arch/x86/include/generated -I ./include -I 
-./arch/x86/include/uapi -I ./arch/x86/include/generated+
+Have a nice day!
 
-I used the command line:
-$ make CC="/usr/local/bin/ccache gcc" KBUILD_BUILD_TIMESTAMP="" -j10 deb-pkg
+Kind regards,
+Mirsad
 
-I tried to install the latest ccache (version 4.6.3), but it silently 
-calls cc1, despite having 4GiB of cache in $HOME/.ccache ...
-
-I must be doing something wrong. Heavens are not aligned in favour to me 
-this day :-/
+(This is a re-send because Thunderbird automatically send MIME unless I 
+explicitly set text/plain.)
 
 --
 Mirsad Goran Todorovac
