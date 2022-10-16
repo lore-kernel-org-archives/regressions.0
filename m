@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2E5EBF
-	for <regressions@lists.linux.dev>; Sun, 16 Oct 2022 11:30:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4BAEEBF
+	for <regressions@lists.linux.dev>; Sun, 16 Oct 2022 11:37:23 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ok1Vm-0004V4-1l; Sun, 16 Oct 2022 13:08:54 +0200
-Message-ID: <e2cf3207-e9e9-5585-1a6e-9b39d96b4b54@leemhuis.info>
-Date: Sun, 16 Oct 2022 13:08:53 +0200
+	id 1ok1xD-0003Xb-7L; Sun, 16 Oct 2022 13:37:15 +0200
+Message-ID: <a7c43527-1634-ff02-985e-4a6ad21b237c@leemhuis.info>
+Date: Sun, 16 Oct 2022 13:37:11 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,109 +16,141 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
+Subject: Re: [6.0.0] RIP: 0010:clmul_polyval_update+0x3e9/0x5d0
+ [polyval_clmulni]
 Content-Language: en-US, de-DE
-Cc: Denis Chancogne <denis.chancogne@free.fr>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: CKI Project <cki-project@redhat.com>,
+ Bruno Goncalves <bgoncalv@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+ "David S. Miller" <davem@davemloft.net>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CA+QYu4oK8D-89QZnBC8eYS9TxOU48hY5JazTvF=4N2qdeRepbw@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Bug 216581 - Kernel panic on /init as busybox symbolic link with xen
- efi
-To: Juergen Gross <jgross@suse.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>
+In-Reply-To: <CA+QYu4oK8D-89QZnBC8eYS9TxOU48hY5JazTvF=4N2qdeRepbw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1665919821;fd46554b;
-X-HE-SMSGID: 1ok1Vm-0004V4-1l
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1665920243;a8006e14;
+X-HE-SMSGID: 1ok1xD-0003Xb-7L
 
-Hi, this is your Linux kernel regression tracker speaking.
+Hi, this is your Linux kernel regression tracker. CCing the regression
+mailing list, as it should be in the loop for all regressions, as
+explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developer don't keep an eye on it, I decided to forward it by
-mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216581 :
+On 03.10.22 09:16, Bruno Goncalves wrote:
+> 
+> recently we are hitting the following issue when booting using kernel
+> with debug options enabled:
 
->  Denis Chancogne 2022-10-13 22:00:19 UTC
-> 
-> Created attachment 302995 [details]
-> /proc/cpuinfo, .config
-> 
-> Hi,
-> 
-> when I start Xen 4.15.3 in efi with kernel 5.18.19, all works well;
-> but since kernel 5.19, I have a kernel panic on my /init process as
-> busybox symbolic link inside initramfs.
-> 
-> This is the kernel log :
-> ...
-> [    6.265122] Run /init as init process
-> [    6.266027] traps: init[1] trap invalid opcode ip:5855d1 sp:7ffe5ceddeb0 error:0 in busybox[401000+1db000]
-> [    6.266553] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000004
-> [    6.267039] CPU: 3 PID: 1 Comm: init Tainted: G        W         5.19.0-dch #1
-> [    6.267522] Hardware name: Micro-Star International Co., Ltd. MS-7B84/B450M PRO-M2 (MS-7B84), BIOS 2.E0 06/12/2020
-> [    6.268010] Call Trace:
-> [    6.268495]  <TASK>
-> [    6.268974]  dump_stack_lvl+0x45/0x5e
-> [    6.269455]  panic+0x107/0x285
-> [    6.269923]  do_exit.cold+0x15/0x45
-> [    6.270389]  do_group_exit+0x28/0x90
-> [    6.270852]  get_signal+0x9f1/0xa40
-> [    6.271313]  arch_do_signal_or_restart+0x57/0x7b0
-> [    6.271771]  ? _raw_spin_unlock+0x10/0x30
-> [    6.272223]  ? finish_task_switch.isra.0+0x8e/0x270
-> [    6.272674]  ? __switch_to+0x186/0x400
-> [    6.273118]  exit_to_user_mode_prepare+0xc8/0x150
-> [    6.273564]  irqentry_exit_to_user_mode+0x5/0x20
-> [    6.274003]  asm_exc_invalid_op+0x16/0x20
-> [    6.274441] RIP: 0033:0x5855d1
-> [    6.274877] Code: f6 48 89 ef e8 90 79 03 00 48 c7 05 cd 2e 0c 00 01 00 00 00 48 89 2d 26 a2 0c 00 4c 8d 74 24 20 4c 8d 6c 24 40 4c 8d 64 24 18 <c5> f9 ef c0 48 b8 f6 75 ae 03 01 00 00 00 4c 8d 3d 8c 02 0a 00 c5
-> [    6.275776] RSP: 002b:00007ffe5ceddeb0 EFLAGS: 00010202
-> [    6.276221] RAX: 0000000000000000 RBX: 00000000004006c8 RCX: 0000000000000001
-> [    6.276670] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000648400
-> [    6.277116] RBP: 00000000009e0060 R08: 00007ffe5cfdf178 R09: 00000000effffef5
-> [    6.277561] R10: 0000000070000022 R11: 0000000000000032 R12: 00007ffe5ceddec8
-> [    6.278003] R13: 00007ffe5ceddef0 R14: 00007ffe5cedded0 R15: 000000006ffffeff
-> [    6.278442]  </TASK>
-> [    6.278903] Kernel Offset: disabled
-> 
-> I try to decode it :
-> 
-> All code
-> ========
->    0:   f6 48 89 ef             testb  $0xef,-0x77(%rax)
->    4:   e8 90 79 03 00          call   0x37999
->    9:   48 c7 05 cd 2e 0c 00    movq   $0x1,0xc2ecd(%rip)        # 0xc2ee1
->   10:   01 00 00 00 
->   14:   48 89 2d 26 a2 0c 00    mov    %rbp,0xca226(%rip)        # 0xca241
->   1b:   4c 8d 74 24 20          lea    0x20(%rsp),%r14
->   20:   4c 8d 6c 24 40          lea    0x40(%rsp),%r13
->   25:   4c 8d 64 24 18          lea    0x18(%rsp),%r12
->   2a:*  c5 f9 ef c0             vpxor  %xmm0,%xmm0,%xmm0                <-- trapping instruction
->   2e:   48 b8 f6 75 ae 03 01    movabs $0x103ae75f6,%rax
->   35:   00 00 00 
->   38:   4c 8d 3d 8c 02 0a 00    lea    0xa028c(%rip),%r15        # 0xa02cb
->   3f:   c5                      .byte 0xc5
-> 
-> Code starting with the faulting instruction
-> ===========================================
->    0:   c5 f9 ef c0             vpxor  %xmm0,%xmm0,%xmm0
->    4:   48 b8 f6 75 ae 03 01    movabs $0x103ae75f6,%rax
->    b:   00 00 00 
->    e:   4c 8d 3d 8c 02 0a 00    lea    0xa028c(%rip),%r15        # 0xa02a1
->   15:   c5                      .byte 0xc5
-> 
-> Regards,
-> Denis
-> PS:
->    denis@srv2 ~ $ gcc --version
->    gcc (Gentoo 11.3.0 p4) 11.3.0
+Bruno, FYI, reports sent just to LKML without CCing any actual people
+(or at least subsystem specific mailing list, but that often is not
+enough either) are most likely to be ignored, because nearly nobody
+reads LKML fully these days. That's why I added the crypto maintainers
+and the crypto list.
 
-See the ticket for more details.
+> [  126.821761] CPU: 1 PID: 296 Comm: cryptomgr_test Not tainted 6.0.0 #1
+> [  126.824021] Hardware name: Red Hat KVM, BIOS 1.15.0-1.el9 04/01/2014
+> [  126.825721] RIP: 0010:clmul_polyval_update+0x3e9/0x5d0 [polyval_clmulni]
 
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
+FWIW, I noticed a report that looked someone similar:
+https://bugzilla.kernel.org/show_bug.cgi?id=216587
+Then I searched lore, which brought me to this mail and made me send
+this reply to get the people that should deal with this into the loop,
+which hopefully should get things rolling now.
 
-#regzbot introduced: v5.18..v5.19
+For the rest of this mail:
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
+
+> [  126.827045] Code: df 11 c4 41 31 ef fb 48 83 c2 08 0f 84 eb 01 00
+> 00 48 89 d0 48 c1 e0 04 48 81 c7 80 00 00 00 48 29 c7 0f 10 06 66 41
+> 0f ef c7 <0f> 28 0f c4 63 71 44 f0 01 c4 e3 71 44 d0 10 c4 63 71 44 e0
+> 00 c4
+> [  126.831535] RSP: 0018:ffff88810ed779d8 EFLAGS: 00010282
+> [  126.832957] RAX: 0000000000000030 RBX: 0000000000000030 RCX: ffff88810ede19e8
+> [  126.834907] RDX: 0000000000000003 RSI: ffff8881094b8000 RDI: ffff88811483c408
+> [  126.836554] RBP: ffff8881094b8000 R08: ffffffffc0300835 R09: ffff88810ede19e8
+> [  126.838529] R10: ffffed1021dbc33f R11: 0000000000000000 R12: 0000000000000030
+> [  126.840526] R13: 0000000000000003 R14: ffff88810ede19e8 R15: ffff88810ede19e0
+> [  126.842702] FS:  0000000000000000(0000) GS:ffff888193d00000(0000)
+> knlGS:0000000000000000
+> [  126.844574] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  126.846796] CR2: 0000564f48e04178 CR3: 000000010be88002 CR4: 0000000000370ee0
+> [  126.848934] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [  126.850913] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [  126.852879] Call Trace:
+> [  126.853703]  <TASK>
+> [  126.854436]  polyval_x86_update+0x102/0x1e0 [polyval_clmulni]
+> [  126.856092]  test_shash_vec_cfg+0x523/0x9d0
+> [  126.857360]  ? alg_test_aead+0x170/0x170
+> [  126.858682]  ? pointer+0x6a0/0x6a0
+> [  126.859752]  ? ___slab_alloc+0x910/0xf70
+> [  126.860950]  ? __alg_test_hash.constprop.0+0x200/0x430
+> [  126.862140]  ? __kmalloc+0x64/0x380
+> [  126.863233]  ? sprintf+0xb3/0xe0
+> [  126.864159]  ? rcu_read_lock_sched_held+0x3f/0x80
+> [  126.865560]  ? trace_kmalloc+0x33/0xf0
+> [  126.866716]  __alg_test_hash.constprop.0+0x2e7/0x430
+> [  126.867995]  ? test_ahash_vec_cfg+0xca0/0xca0
+> [  126.869389]  ? lockdep_hardirqs_on_prepare+0x230/0x230
+> [  126.870906]  ? lockdep_hardirqs_on+0x7d/0x100
+> [  126.872221]  ? alg_test_hash+0x8e/0x130
+> [  126.873398]  alg_test+0x60d/0x7d0
+> [  126.874463]  ? alloc_cipher_test_sglists+0xb0/0xb0
+> [  126.875867]  ? lock_release+0x233/0x470
+> [  126.876726]  ? __kthread_parkme+0x65/0xf0
+> [  126.877654]  ? reacquire_held_locks+0x270/0x270
+> [  126.878984]  ? mark_held_locks+0x24/0x90
+> [  126.879985]  ? preempt_count_sub+0xb7/0x100
+> [  126.881260]  ? crypto_acomp_scomp_free_ctx+0x70/0x70
+> [  126.882649]  cryptomgr_test+0x36/0x60
+> [  126.883786]  kthread+0x17e/0x1b0
+> [  126.884564]  ? kthread_complete_and_exit+0x20/0x20
+> [  126.885975]  ret_from_fork+0x22/0x30
+> [  126.887086]  </TASK>
+> [  126.887858] Modules linked in: polyval_clmulni(+) polyval_generic
+> virtio_blk(+) ghash_clmulni_intel floppy virtio_console serio_raw
+> ata_generic pata_acpi qemu_fw_cfg
+> 
+> 
+> full console log:
+> https://s3.us-east-1.amazonaws.com/arr-cki-prod-datawarehouse-public/datawarehouse-public/2022/10/02/redhat:656405029/build_x86_64_redhat:656405029_x86_64_debug/tests/4/results_0001/console.log/console.log
+> 
+> test logs: https://datawarehouse.cki-project.org/kcidb/tests/5344697
+> cki issue tracker: https://datawarehouse.cki-project.org/issue/1626
+> 
+> kernel config: https://s3.amazonaws.com/arr-cki-prod-trusted-artifacts/trusted-artifacts/656405029/build%20x86_64%20debug/3116060967/artifacts/kernel-mainline.kernel.org-redhat_656405029_x86_64_debug.config
+> kernel tarball:
+> https://s3.amazonaws.com/arr-cki-prod-trusted-artifacts/trusted-artifacts/656405029/publish%20x86_64%20debug/3116060972/artifacts/kernel-mainline.kernel.org-redhat_656405029_x86_64_debug.tar.gz
+> 
+> We didn't bisect, but the first commit we tested that we hit the
+> problem is https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=46452d3786a82bd732ba73fb308ae5cbe4e1e591
+> 
+> The last commit we tested and didn't hit the problem is
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=a1375562c0a87f0fa2eaf3e8ce15824696d4170a
+
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
+
+#regzbot introduced a1375562c0a87..46452d3786a82 ^
+https://bugzilla.kernel.org/show_bug.cgi?id=216587
+#regzbot title crypto: kernel panic after "RIP:
+0010:clmul_polyval_update+0x3e9/0x5d0 [polyval_clmulni]"
 #regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
