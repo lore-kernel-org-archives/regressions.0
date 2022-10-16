@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF3DEBF
-	for <regressions@lists.linux.dev>; Sun, 16 Oct 2022 11:21:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2E5EBF
+	for <regressions@lists.linux.dev>; Sun, 16 Oct 2022 11:30:20 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ok1hr-0007OE-BF; Sun, 16 Oct 2022 13:21:23 +0200
-Message-ID: <8942d26d-1085-27f3-d15b-782d368e53b1@leemhuis.info>
-Date: Sun, 16 Oct 2022 13:21:22 +0200
+	id 1ok1Vm-0004V4-1l; Sun, 16 Oct 2022 13:08:54 +0200
+Message-ID: <e2cf3207-e9e9-5585-1a6e-9b39d96b4b54@leemhuis.info>
+Date: Sun, 16 Oct 2022 13:08:53 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -17,126 +17,107 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
 Content-Language: en-US, de-DE
-To: Trond Myklebust <trond.myklebust@hammerspace.com>,
- Anna Schumaker <anna@kernel.org>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
+Cc: Denis Chancogne <denis.chancogne@free.fr>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Daire Byrne <daire@dneg.com>
+ LKML <linux-kernel@vger.kernel.org>,
+ "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Bug 216582 - BUG: kernel NULL pointer dereference -
- nlmclnt_setlockargs
+Subject: Bug 216581 - Kernel panic on /init as busybox symbolic link with xen
+ efi
+To: Juergen Gross <jgross@suse.com>,
+ Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1665919285;0bde609a;
-X-HE-SMSGID: 1ok1hr-0007OE-BF
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1665919821;fd46554b;
+X-HE-SMSGID: 1ok1Vm-0004V4-1l
 
 Hi, this is your Linux kernel regression tracker speaking.
 
 I noticed a regression report in bugzilla.kernel.org. As many (most?)
 kernel developer don't keep an eye on it, I decided to forward it by
-mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216582 :
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216581 :
 
->  Daire Byrne 2022-10-13 22:04:19 UTC
+>  Denis Chancogne 2022-10-13 22:00:19 UTC
+> 
+> Created attachment 302995 [details]
+> /proc/cpuinfo, .config
 > 
 > Hi,
 > 
-> I've started seeing this crash at least once or twice a week with our
-> NFS re-export workloads (re-exporting a Linux NFsv3 server as
-> NFSv3).
+> when I start Xen 4.15.3 in efi with kernel 5.18.19, all works well;
+> but since kernel 5.19, I have a kernel panic on my /init process as
+> busybox symbolic link inside initramfs.
 > 
-> We have been stepping through kernel versions a bit on the server
-> recently so it feels like something new introduced somewhere around
-> v5.17 but I also can't rule out that our clients are doing something
-> "different" with their workloads to stress this code in some new way.
-> It still occurs in v6.0 too.
+> This is the kernel log :
+> ...
+> [    6.265122] Run /init as init process
+> [    6.266027] traps: init[1] trap invalid opcode ip:5855d1 sp:7ffe5ceddeb0 error:0 in busybox[401000+1db000]
+> [    6.266553] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000004
+> [    6.267039] CPU: 3 PID: 1 Comm: init Tainted: G        W         5.19.0-dch #1
+> [    6.267522] Hardware name: Micro-Star International Co., Ltd. MS-7B84/B450M PRO-M2 (MS-7B84), BIOS 2.E0 06/12/2020
+> [    6.268010] Call Trace:
+> [    6.268495]  <TASK>
+> [    6.268974]  dump_stack_lvl+0x45/0x5e
+> [    6.269455]  panic+0x107/0x285
+> [    6.269923]  do_exit.cold+0x15/0x45
+> [    6.270389]  do_group_exit+0x28/0x90
+> [    6.270852]  get_signal+0x9f1/0xa40
+> [    6.271313]  arch_do_signal_or_restart+0x57/0x7b0
+> [    6.271771]  ? _raw_spin_unlock+0x10/0x30
+> [    6.272223]  ? finish_task_switch.isra.0+0x8e/0x270
+> [    6.272674]  ? __switch_to+0x186/0x400
+> [    6.273118]  exit_to_user_mode_prepare+0xc8/0x150
+> [    6.273564]  irqentry_exit_to_user_mode+0x5/0x20
+> [    6.274003]  asm_exc_invalid_op+0x16/0x20
+> [    6.274441] RIP: 0033:0x5855d1
+> [    6.274877] Code: f6 48 89 ef e8 90 79 03 00 48 c7 05 cd 2e 0c 00 01 00 00 00 48 89 2d 26 a2 0c 00 4c 8d 74 24 20 4c 8d 6c 24 40 4c 8d 64 24 18 <c5> f9 ef c0 48 b8 f6 75 ae 03 01 00 00 00 4c 8d 3d 8c 02 0a 00 c5
+> [    6.275776] RSP: 002b:00007ffe5ceddeb0 EFLAGS: 00010202
+> [    6.276221] RAX: 0000000000000000 RBX: 00000000004006c8 RCX: 0000000000000001
+> [    6.276670] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000648400
+> [    6.277116] RBP: 00000000009e0060 R08: 00007ffe5cfdf178 R09: 00000000effffef5
+> [    6.277561] R10: 0000000070000022 R11: 0000000000000032 R12: 00007ffe5ceddec8
+> [    6.278003] R13: 00007ffe5ceddef0 R14: 00007ffe5cedded0 R15: 000000006ffffeff
+> [    6.278442]  </TASK>
+> [    6.278903] Kernel Offset: disabled
 > 
-> [106412.314663] BUG: kernel NULL pointer dereference, address: 0000000000000020
-> [106412.321879] #PF: supervisor read access in kernel mode
-> [106412.327237] #PF: error_code(0x0000) - not-present page
-> [106412.332599] PGD 0 P4D 0 
-> [106412.335353] Oops: 0000 [#1] PREEMPT SMP NOPTI
-> [106412.339935] CPU: 34 PID: 2382 Comm: lockd Tainted: G            E     5.18.10-1.dneg.x86_64 #1
-> [106412.348773] Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/26/2022
-> [106412.358223] RIP: 0010:nlmclnt_setlockargs+0x4a/0x100 [lockd]
-> [106412.364116] Code: 00 00 49 81 c0 88 00 00 00 f0 0f c1 05 bf 06 01 00 83 c0 01 c7 47 30 04 00 00 00 48 8d 4f 44 48 8d 7f 4c 89 47 c4 48 8b 46 78 <48> 8b 40 20 48 8b 90 60 fe ff ff 48 8d b0 60 fe ff ff 48 89 57 f8
-> [106412.383117] RSP: 0018:ffffb3db50cdfa80 EFLAGS: 00010202
-> [106412.388569] RAX: 0000000000000000 RBX: ffff8a36749c9400 RCX: ffff8a36749c9444
-> [106412.395924] RDX: ffff8a37f8696300 RSI: ffffb3db50cdfbd8 RDI: ffff8a36749c944c
-> [106412.403277] RBP: ffffb3db50cdfa90 R08: ffff8a750b49bc88 R09: ffff8a37f8696300
-> [106412.410634] R10: 0000000000000230 R11: ffffffffffffffff R12: ffffb3db50cdfbd8
-> [106412.417984] R13: ffff8a7508beac00 R14: ffffb3db50cdfca0 R15: ffffb3db50cdfbd8
-> [106412.425338] FS:  0000000000000000(0000) GS:ffff8a73ffa80000(0000) knlGS:0000000000000000
-> [106412.433649] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [106412.439611] CR2: 0000000000000020 CR3: 00000001118e6006 CR4: 00000000003706e0
-> [106412.446984] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [106412.454346] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [106412.461696] Call Trace:
-> [106412.464361]  <TASK>
-> [106412.466689]  nlmclnt_proc+0x1c6/0x5b0 [lockd]
-> [106412.471272]  nfs3_proc_lock+0x33/0xb0 [nfsv3]
-> [106412.475848]  ? nfs_put_lock_context+0x86/0x90 [nfs]
-> [106412.481008]  do_unlk+0x8f/0xd0 [nfs]
-> [106412.484837]  nfs_lock+0xcd/0x180 [nfs]
-> [106412.488815]  ? nlmsvc_mark_host+0x30/0x30 [lockd]
-> [106412.493752]  vfs_lock_file+0x1e/0x40
-> [106412.497547]  nlm_unlock_files.isra.0+0x6d/0xc0 [lockd]
-> [106412.502905]  nlm_traverse_files+0x163/0x2a0 [lockd]
-> [106412.508020]  nlmsvc_free_host_resources+0x2b/0x40 [lockd]
-> [106412.513648]  nlm_host_rebooted+0x2c/0x90 [lockd]
-> [106412.518483]  nlmsvc_proc_sm_notify+0xc0/0x130 [lockd]
-> [106412.523759]  ? nlmsvc_decode_reboot+0x7d/0xa0 [lockd]
-> [106412.529027]  nlmsvc_dispatch+0x8e/0x1a0 [lockd]
-> [106412.534312]  svc_process_common+0x484/0x620 [sunrpc]
-> [106412.539521]  ? lockd+0x1d0/0x1d0 [lockd]
-> [106412.543661]  ? set_grace_period+0xa0/0xa0 [lockd]
-> [106412.548582]  svc_process+0xbc/0xf0 [sunrpc]
-> [106412.553008]  lockd+0xd2/0x1d0 [lockd]
-> [106412.556906]  ? set_grace_period+0xa0/0xa0 [lockd]
-> [106412.561849]  kthread+0xee/0x120
-> [106412.565228]  ? kthread_complete_and_exit+0x20/0x20
-> [106412.570239]  ret_from_fork+0x1f/0x30
-> [106412.574033]  </TASK>
-> [106412.576436] Modules linked in: tcp_diag(E) inet_diag(E) nfsv3(E) nfs(E) cachefiles(E) fscache(E) netfs(E) ext4(E) mbcache(E) jbd2(E) intel_uncore_frequency_common(E) isst_if_common(E) sg(E) nfit(E) virtio_rng(E) rapl(E) i2c_piix4(E) input_leds(E) nfsd(E) sch_fq(E) auth_rpcgss(E) nfs_acl(E) lockd(E) grace(E) tcp_bbr(E) binfmt_misc(E) ip_tables(E) xfs(E) libcrc32c(E) sd_mod(E) t10_pi(E) crc64_rocksoft_generic(E) crc64_rocksoft(E) crc64(E) crct10dif_pclmul(E) crc32_pclmul(E) virtio_scsi(E) crc32c_intel(E) ghash_clmulni_intel(E) 8021q(E) garp(E) mrp(E) virtio_pci(E) scsi_transport_iscsi(E) virtio_pci_legacy_dev(E) aesni_intel(E) virtio_pci_modern_dev(E) crypto_simd(E) virtio_ring(E) cryptd(E) gve(E) serio_raw(E) virtio(E) sunrpc(E) dm_mirror(E) dm_region_hash(E) dm_log(E) dm_mod(E) fuse(E)
-> [106412.646242] CR2: 0000000000000020
-> [106412.649780] ---[ end trace 0000000000000000 ]---
-> [106412.654617] RIP: 0010:nlmclnt_setlockargs+0x4a/0x100 [lockd]
-> [106412.660495] Code: 00 00 49 81 c0 88 00 00 00 f0 0f c1 05 bf 06 01 00 83 c0 01 c7 47 30 04 00 00 00 48 8d 4f 44 48 8d 7f 4c 89 47 c4 48 8b 46 78 <48> 8b 40 20 48 8b 90 60 fe ff ff 48 8d b0 60 fe ff ff 48 89 57 f8
-> [106412.679481] RSP: 0018:ffffb3db50cdfa80 EFLAGS: 00010202
-> [106412.684922] RAX: 0000000000000000 RBX: ffff8a36749c9400 RCX: ffff8a36749c9444
-> [106412.692269] RDX: ffff8a37f8696300 RSI: ffffb3db50cdfbd8 RDI: ffff8a36749c944c
-> [106412.699617] RBP: ffffb3db50cdfa90 R08: ffff8a750b49bc88 R09: ffff8a37f8696300
-> [106412.706969] R10: 0000000000000230 R11: ffffffffffffffff R12: ffffb3db50cdfbd8
-> [106412.714329] R13: ffff8a7508beac00 R14: ffffb3db50cdfca0 R15: ffffb3db50cdfbd8
-> [106412.721676] FS:  0000000000000000(0000) GS:ffff8a73ffa80000(0000) knlGS:0000000000000000
-> [106412.729981] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [106412.736472] CR2: 0000000000000020 CR3: 00000001118e6006 CR4: 00000000003706e0
-> [106412.743821] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [106412.751171] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [106412.758520] Kernel panic - not syncing: Fatal exception
-> [106412.764850] Kernel Offset: 0x30000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
-> [106412.775850] ---[ end Kernel panic - not syncing: Fatal exception ]---
+> I try to decode it :
 > 
+> All code
+> ========
+>    0:   f6 48 89 ef             testb  $0xef,-0x77(%rax)
+>    4:   e8 90 79 03 00          call   0x37999
+>    9:   48 c7 05 cd 2e 0c 00    movq   $0x1,0xc2ecd(%rip)        # 0xc2ee1
+>   10:   01 00 00 00 
+>   14:   48 89 2d 26 a2 0c 00    mov    %rbp,0xca226(%rip)        # 0xca241
+>   1b:   4c 8d 74 24 20          lea    0x20(%rsp),%r14
+>   20:   4c 8d 6c 24 40          lea    0x40(%rsp),%r13
+>   25:   4c 8d 64 24 18          lea    0x18(%rsp),%r12
+>   2a:*  c5 f9 ef c0             vpxor  %xmm0,%xmm0,%xmm0                <-- trapping instruction
+>   2e:   48 b8 f6 75 ae 03 01    movabs $0x103ae75f6,%rax
+>   35:   00 00 00 
+>   38:   4c 8d 3d 8c 02 0a 00    lea    0xa028c(%rip),%r15        # 0xa02cb
+>   3f:   c5                      .byte 0xc5
 > 
-> All I know is that I didn't notice this crash from v5.12 to v5.16 but
-> I have not been able to test this qualitatively yet. The crash is
-> rare enough that it makes A/B testing quite tricky.
+> Code starting with the faulting instruction
+> ===========================================
+>    0:   c5 f9 ef c0             vpxor  %xmm0,%xmm0,%xmm0
+>    4:   48 b8 f6 75 ae 03 01    movabs $0x103ae75f6,%rax
+>    b:   00 00 00 
+>    e:   4c 8d 3d 8c 02 0a 00    lea    0xa028c(%rip),%r15        # 0xa02a1
+>   15:   c5                      .byte 0xc5
 > 
-> It's somewhat similar to
-> https://bugzilla.kernel.org/show_bug.cgi?id=213273 but that was for a
-> NFv4.2 re-export of NFSv3 and this is for a NFSv3 re-export of NFSv3
-> (for WAN caching).
-> 
-> We are using nfs-utils-2.5.4.
-> 
-> Daire
+> Regards,
+> Denis
+> PS:
+>    denis@srv2 ~ $ gcc --version
+>    gcc (Gentoo 11.3.0 p4) 11.3.0
 
 See the ticket for more details.
 
 BTW, let me use this mail to also add the report to the list of tracked
 regressions to ensure it's doesn't fall through the cracks:
 
-#regzbot introduced: v5.17..v5.18
+#regzbot introduced: v5.18..v5.19
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
