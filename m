@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FFC7F
-	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 12:00:35 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1okOnG-0006e3-Kz; Mon, 17 Oct 2022 14:00:30 +0200
-Message-ID: <13418d37-ebba-82d2-4e1b-4e48201342c7@leemhuis.info>
-Date: Mon, 17 Oct 2022 14:00:30 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B8BDA20
+	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 12:32:32 +0000 (UTC)
+Received: by mail-pg1-f171.google.com with SMTP id e129so10299151pgc.9
+        for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 05:32:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=h0pxyt/EKUK/MG4h+DBekx3KlQE3mxmmFg/7fznhJTI=;
+        b=SCgiftR9cblWOkQ3H14dm+Po7yBBMzZkgGcDfc2ct1IUJn4AG/PcN4+EoBcWuvW9RT
+         v3wuTMwpMPePXxDhCCGzIxTRnj1y5rGaZm+stjLF+iMqVEGhaiWWg1w9urzqa3fRE5pA
+         BjILXOXVc5wXPniPq1nmqlQhrJrR4lqDleBFBRR3yc2+onK0X7NWKC4M8I211Mm6DBSK
+         zLQdgFiULDOrDRZ+gOg6SYK5/7/Woj0q6rx6D09ftCWoZr8HgWH+UkQsiTKeXIoBM6I1
+         jaQudtyOQQBSZ5btGF525OGeHZODRC0Mtr+gvbeNV5m7kHRIituvzUy00qwpVfcwLVWm
+         hfWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h0pxyt/EKUK/MG4h+DBekx3KlQE3mxmmFg/7fznhJTI=;
+        b=dDnvlZbZJjnwK6eSXWJXY+MizDV4LFf3vzGZCgdg3pGUUCKXTQ1jdGIG+80dByHK0+
+         91vAj7YPHZDQ7ZGKO+1Ul6sUeqKmeJYFbEqCMg1JvKWpuViD/tk1WWNIugLdaN+cmdl7
+         vYC0RM0TavyFy514au4bhPWCwYEIPAKXFVILnZw/7gYW0pk1YLj6ovhT1YHxj0xpc6Uo
+         6LcHkXtSK+9Btsh6vurB0OW0BArWcVHceeEdfkrAzVdPvQjvqlaaeVppwxWtTN0l/zT7
+         P8fUkjtzb7uBsM62i+MWeoDDqWHBp8pDV1L76h7eYHxYPELfQZ2ko4aUT83SSQcV1d5x
+         xsuw==
+X-Gm-Message-State: ACrzQf03Wrzuw9unhh12Tgja6/vIcZdOwq4JLPRF/8EmqkheyauHs2GW
+	3/Lv+w4V/fzpmSEWdVuAEnA=
+X-Google-Smtp-Source: AMsMyM7HvJdx8QOn/eqVnmfTh5eLzM0viEj9FSk4U73Tb+3l+3qqzfm0PTXZan08EYGbWLP/Rk5ahg==
+X-Received: by 2002:a62:cf81:0:b0:566:e88d:5006 with SMTP id b123-20020a62cf81000000b00566e88d5006mr7380101pfg.86.1666009951931;
+        Mon, 17 Oct 2022 05:32:31 -0700 (PDT)
+Received: from [192.168.43.80] (subs03-180-214-233-13.three.co.id. [180.214.233.13])
+        by smtp.gmail.com with ESMTPSA id r8-20020aa79628000000b0056699fcdf6bsm6158979pfg.84.2022.10.17.05.32.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 17 Oct 2022 05:32:31 -0700 (PDT)
+Message-ID: <a1d46bd2-9603-f89a-ec85-ebcd25db8882@gmail.com>
+Date: Mon, 17 Oct 2022 19:32:25 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,63 +47,46 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: Bug 216559 - btrfs crash root mount RAID0 caused by ac0677348f3c2
-Content-Language: en-US, de-DE
-To: dsterba@suse.cz
-Cc: David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
- Josef Bacik <josef@toxicpanda.com>, linux-btrfs
- <linux-btrfs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Viktor Kuzmin <kvaster@gmail.com>
-References: <8be1e839-2eb8-43d0-9ecb-6ff8c3aa3f2d@leemhuis.info>
- <20221014110708.GE13389@suse.cz>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20221014110708.GE13389@suse.cz>
+ Thunderbird/102.3.3
+Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
+ 6.0.0-rc3 through 6.0.0-rc7
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Phillip Lougher <phillip@squashfs.org.uk>, regressions@leemhuis.info,
+ mirsad.todorovac@alu.unizg.hr
+Cc: linux-kernel@vger.kernel.org, marcmiltenberger@gmail.com,
+ regressions@lists.linux.dev, srw@sladewatkins.net
+References: <8702a833-e66c-e63a-bfc8-1007174c5b3d@leemhuis.info>
+ <20221015205936.5735-1-phillip@squashfs.org.uk>
+ <2d1ca80c-1023-9821-f401-43cff34cca86@gmail.com>
+ <c5980bcb-f345-ff2e-a29b-75e53a6b8708@gmail.com>
+Content-Language: en-US
+In-Reply-To: <c5980bcb-f345-ff2e-a29b-75e53a6b8708@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666008035;50f22087;
-X-HE-SMSGID: 1okOnG-0006e3-Kz
 
-On 14.10.22 13:07, David Sterba wrote:
-> On Tue, Oct 11, 2022 at 02:09:50PM +0200, Thorsten Leemhuis wrote:
->> Hi, this is your Linux kernel regression tracker speaking.
+On 10/17/22 16:45, Bagas Sanjaya wrote:
+> On 10/16/22 19:21, Bagas Sanjaya wrote:
 >>
->> David, I noticed a regression report in bugzilla.kernel.org apparently
->> caused by a changed of yours. As many (most?) kernel developer don't
->> keep an eye on the bug-tracker, I decided to forward the report by mail.
->> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216559 :
+>> No Verneed warnings so far. However, I need to test for a longer time
+>> (a day) to check if any warnings are reported.
+>>
 > 
-> Thanks, you don't need to forward the mails as I'm on CC of all bugzilla
-> updates where the btrfs virtual assignee is also present.
+> The regression still occurs with this patch applied. Let's see if
+> reverting the offending commit helps.
+> 
+Sorry for speaking late about my triggering cause.
 
-Hmmm. Do you want to make my life easier or want to get less mail? I
-thought about this for a while. Unless you strongly object, I would like
-to continue forwarding them for the following reasons:
+As the background, on my Debian 11 computer, I have lxd snap installed.
+I use lxd to channel my sysadmin side by spinning up containers and
+installing server applications there (LAMP, email, DNS).
 
-* you might be on vacation or AFK for other reasons; your Comaintainers
-that were CCed would know and likely then help out
-* CCing the list makes other people notice the issue and gives them a
-chance to help (Qu Wenruo replied in bugzilla shortly after I sent the
-mail you quoted, which might or might not be due to my mail).
-* regression tracking is hard already; it would make it a lot harder if
-I'm forced to make and maintain notes how each and every maintainer
-would like me to handle situations like this
-* right now I need to send one mail anyway to add a regression to the
-tracking
+Back to triggering cause. I can trigger the regression when the network
+connection drops (when Firefox shows connection problem page). Then
+I run `lxd list` to list container instances and I get the Verneed
+regression error.
 
-> But feel free
-> to ping regarding any regressions you're tracking and would like an
-> update.
+Thanks.
 
-Great, thx!
+-- 
+An old man doll... just what I always wanted! - Clara
 
-> Inspired by the LPC talk about bugzilla I went through all 650+ btrfs
-> bugs and closed what looked either fixed or not relevant anymore. The
-> rest are recent reports or bugs that may need to be moved elsewhere.
-> As kernel.org bugzilla is recommended for reports in our community
-> documentation I monitor new bugs but with variable reaction time.
-
-Thx for your work and good to know that you are referring to it.
-
-Ciao, Thorsten
