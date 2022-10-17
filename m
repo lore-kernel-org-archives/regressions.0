@@ -1,38 +1,45 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317927E4
-	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 02:42:05 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id 2038E604EC;
-	Mon, 17 Oct 2022 04:42:03 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665974523; bh=erSoy5SaBxVryCw8k7y6X6+A9fdXZfKrQRCn6TGYkqY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RgbBVm6eDpp5rMKOtWHuxBna08qipqb2iWMVaAZv2ND9DiuLpEtNcbTB8hlwQrHzS
-	 cRrlkSK9LIxT+URrw5dG/eTFKNi6Qbk0gbqIIeMHtaXY50zj/5us/5NqtR5/zxJWQs
-	 JGuU94335VrizUMuK0rpNclxgrygtc3el2qxgfIt/IG9y/azsNv62AIdtGHAJHFM+A
-	 1eie9s9loxsHsutq9JmHsAy2TE4seyAIKrF5S15DEE56KvyUL3DuvEqzMoQ0GVqJF2
-	 UOoDkIkfArR3ojrM36Hil9Q4uObo9M1ww1SAhXfrrYwQboATjmhepRrN+E1sMCgF18
-	 eGYMvBlB5DdPA==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id oGZEn_Q9rtPw; Mon, 17 Oct 2022 04:42:00 +0200 (CEST)
-Received: from [192.168.0.12] (unknown [188.252.197.215])
-	by domac.alu.hr (Postfix) with ESMTPSA id EDDF2604E6;
-	Mon, 17 Oct 2022 04:41:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665974520; bh=erSoy5SaBxVryCw8k7y6X6+A9fdXZfKrQRCn6TGYkqY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mWhy+4Xzd0dfseSPrSu9wyKxv/v6b1mMSkd4CU9+TjqKBT4+9UQ8h9CHFKXYQB0gp
-	 ms0rLOZzbmGHWvbivEVJMCXoqfl0ffE/MXYxp+enDzwFamI67yHEjPWAlhaKw0XpIT
-	 CfMItZiEaBXJU0IEko1hKUXOGMgu8G+1SMQmWBmaZoM9tPIcoC7CQn4juR6NWxswrZ
-	 p/X8Ix+dPWCm3AFf+hKeuwkrkUF6FERoTLFZO/SKczcBy33lxb/btqSsAVvqWLOmc2
-	 IYD3tKTH1Kk47pgg9fsYzuTuhLpiBxzQSMknESDwIVSuH7YvCRGEHs0yD1HJRXW5Zi
-	 tkwspAacyPqZw==
-Message-ID: <b7aefbcb-0038-d044-a1ea-64ad5b4d8888@alu.unizg.hr>
-Date: Mon, 17 Oct 2022 04:41:59 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7C8EC7
+	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 04:15:19 +0000 (UTC)
+Received: by mail-pg1-f173.google.com with SMTP id u71so9428745pgd.2
+        for <regressions@lists.linux.dev>; Sun, 16 Oct 2022 21:15:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZJV0FwVXHVDUtfEx1uj/obVmAiz5b1ilKz2Oe2cH3DM=;
+        b=VV/GGCh1ZpRXD4ojMik0RVa29xcFUNc0uXuYE//HQxHlUAIv5MVT7wPLyNA6IpsaGO
+         b/bnjQGOaTjr6Pwo1TpXgqaEL1FIn8E/TEd5u2bB2fubE62Xzy3NldjjC80bC4U/7AvN
+         KFYRaxKb/9Da3TBBtJPKnrbxFSQUizggOExnng65Emc6BfgM3vxDO1VW1mymxRN6SeRk
+         G1OPn/8JpEoGNG2ywNYjGCT4lcRXuwQe7m1Uc3USI4be9iJcErJPlX5HsdUPZjkQiwK5
+         Af+VYnd3MrX6ZhiDkSFSRdSZWN1zf8byVUUN1HKCQMWF7JB31GhdnISQiCKHF/WmJhiJ
+         WK6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZJV0FwVXHVDUtfEx1uj/obVmAiz5b1ilKz2Oe2cH3DM=;
+        b=mpoJxDN65mz+1ucnUlvtaqR4WG4gij//rGNrbeJ5vSZuxo7jFEq4x4CtdG3RwzFCQy
+         SHKlaj4z8Ji7DPSEgDD3sWVZF0wMmdQ86RneDaeq4NxqOtGHW5u3mBVh75aPZ7uvSDVS
+         kmN3n7j9pLhpWM4AdvDT740phS1LSLFBO3PRYEEQkrvHgcdWtoij8Lczs3vOTczW7ErK
+         SPqwN/RxJTgCC1Zh746mJoOzkQVnvS3GGAStOBT0k1XzSAYBgmUlSe6aTcIwVePFca9p
+         lWCzjTXdCOzxf2T6dJKEzZKlXCNWYVYQ59rt/8mIr6i+UNPLyH0onQXdzhHh2skvzw+L
+         EQAg==
+X-Gm-Message-State: ACrzQf3HrO9+0f00pmY2NoUItRVXADs4y7sZXY0ITM1iMXFfmFFpI+FB
+	R5RZF06haUmEpFip4dDBSA4=
+X-Google-Smtp-Source: AMsMyM4wAtkmQOUeh5seZ05cBVAyfp8ywzFUudGDAKmtCqcI6TJVEu+lTM4ebghcaOWVmZBsTXE42g==
+X-Received: by 2002:a05:6a00:1707:b0:563:235:769b with SMTP id h7-20020a056a00170700b005630235769bmr10507561pfc.19.1665980119039;
+        Sun, 16 Oct 2022 21:15:19 -0700 (PDT)
+Received: from [192.168.43.80] (subs03-180-214-233-89.three.co.id. [180.214.233.89])
+        by smtp.gmail.com with ESMTPSA id i18-20020a056a00005200b00561b02e3118sm5814390pfk.106.2022.10.16.21.15.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Oct 2022 21:15:18 -0700 (PDT)
+Message-ID: <928b701c-b35f-a621-b32f-edf9d8bf6696@gmail.com>
+Date: Mon, 17 Oct 2022 11:15:14 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,10 +47,11 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
+ Thunderbird/102.3.3
 Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
  6.0.0-rc3 through 6.0.0-rc7
-To: Bagas Sanjaya <bagasdotme@gmail.com>,
+Content-Language: en-US
+To: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>,
  Phillip Lougher <phillip@squashfs.org.uk>, regressions@leemhuis.info
 Cc: linux-kernel@vger.kernel.org, marcmiltenberger@gmail.com,
  regressions@lists.linux.dev, srw@sladewatkins.net, phillip.lougher@gmail.com
@@ -53,63 +61,18 @@ References: <8702a833-e66c-e63a-bfc8-1007174c5b3d@leemhuis.info>
  <b71f4e2d-23bb-3eb4-3928-fe66c4357e5b@squashfs.org.uk>
  <beba6259-6049-4f5b-6e54-a9c1faba0d5f@squashfs.org.uk>
  <32ee551f-5642-4efb-02a0-500e7c92be5f@gmail.com>
-Content-Language: en-US
-From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <32ee551f-5642-4efb-02a0-500e7c92be5f@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+ <b7aefbcb-0038-d044-a1ea-64ad5b4d8888@alu.unizg.hr>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <b7aefbcb-0038-d044-a1ea-64ad5b4d8888@alu.unizg.hr>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 17. 10. 2022. 04:03, Bagas Sanjaya wrote:
+On 10/17/22 09:41, Mirsad Goran Todorovac wrote:
+> I can only report that bug persisted in 6.1-rc1 with the latest Phillip's squashfs patch.
+> 
 
-> On 10/17/22 03:19, Phillip Lougher wrote:
->> On 16/10/2022 20:55, Phillip Lougher wrote:
->>> Tracking down bugs of this sort is always a process of elimination,
->>> and gathering information to pinpoint the exact circumstances of why
->>> it is triggering.
->>>
->>> Next step is to download the exact snap(s) where the problems are occurring, as this may provide some insights.
->>>
->>> I don't run Ubuntu, and I don't use snaps.  Can you provide the
->>> download link(s) of the snap(s) that cause problems?  If there's
->>> any firefox snaps that don't cause problems those will be useful
->>> too.
->>>
->> It appears there's a searchable "Snap Store" https://snapcraft.io,
->> but, it doesn't give any download links to the actual snaps which
->> is rather annoying.
->>
->> Does anyone know how to get the download link?  I have not run
->> Ubuntu for over 14 years and have absolutely no wish to do so
->> now either.
-> You need to have snapd installed, unfortunately.
->
-> You can start the testing with hello-world snap, which can be installed
-> with `snap install hello-world`. Then run the snap with `snap run
-> hello-world`. After that, reboot and repeat until the regression
-> occurs.
->
-> You can also try other snaps. For GUI applications, try krita, gimp,
-> gitkraken, and libreoffice. For server applications, try spinning up
-> containers with lxd or store data with nextcloud.
->
-> My guess is that the problem is in snapd when trying to execute
-> snaps, hence all snaps are affected.
+So the regression isn't solved yet with the patch, right?
 
-I can only report that bug persisted in 6.1-rc1 with the latest 
-Phillip's squashfs patch.
-
-Have a nice day.
-
-Mirsad
-
---
-Mirsad Goran Todorovac
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
 -- 
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb, Republic of Croatia
-The European Union
+An old man doll... just what I always wanted! - Clara
 
