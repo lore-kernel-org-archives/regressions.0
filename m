@@ -1,339 +1,240 @@
-Received: from p3plwbeout24-04.prod.phx3.secureserver.net (p3plsmtp24-04-2.prod.phx3.secureserver.net [68.178.252.188])
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4B602F28
-	for <regressions@lists.linux.dev>; Sun, 16 Oct 2022 20:22:42 +0000 (UTC)
-Received: from mailex.mailcore.me ([94.136.40.145])
-	by :WBEOUT: with ESMTP
-	id kA6vo4lLwZSSSkA6woAChW; Sun, 16 Oct 2022 13:19:51 -0700
-X-CMAE-Analysis: v=2.4 cv=B/18bMhM c=1 sm=1 tr=0 ts=634c6767
- a=7e6w4QD8YWtpVJ/7+iiidw==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
- a=ggZhUymU-5wA:10 a=IkcTkHD0fZMA:10 a=Qawa6l4ZSaYA:10 a=RK3ebuFzAAAA:8
- a=MXePCOTu_zqNRUNV2r4A:9 a=QEXdDO2ut3YA:10 a=MmWwAi3SEDLxan5u_6-u:22
-X-SECURESERVER-ACCT: phillip@squashfs.org.uk  
-X-SID: kA6vo4lLwZSSS
-Received: from 82-69-79-175.dsl.in-addr.zen.co.uk ([82.69.79.175] helo=[192.168.178.33])
-	by smtp04.mailcore.me with esmtpa (Exim 4.94.2)
-	(envelope-from <phillip@squashfs.org.uk>)
-	id 1okA6t-0002At-Ui; Sun, 16 Oct 2022 21:19:49 +0100
-Message-ID: <beba6259-6049-4f5b-6e54-a9c1faba0d5f@squashfs.org.uk>
-Date: Sun, 16 Oct 2022 21:19:40 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D687B
+	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 00:23:42 +0000 (UTC)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailout.west.internal (Postfix) with ESMTP id 58A5732000E5;
+	Sun, 16 Oct 2022 20:23:41 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Sun, 16 Oct 2022 20:23:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to; s=fm3; t=1665966220; x=
+	1666052620; bh=ZIUfdLEJM0ESSCfpLb2R/9KS4n4WMO0lvEA3/NHP6A8=; b=T
+	hYdeYXKl560bjMe3OlyucaVWmv/AjIGzk4nkOTXEmwX8LK47QAvg1q7VsMu3oVPG
+	1dG9xwZCpCbfm9MPZ5ug0p41OPKOnWDOqc6o+qZVOfbO/woQyVOx5Z6QzKO0ipX0
+	qQZ8+bo0V5O8GbHbAcM0I2m+cBp8Ne7FoAXZ1Dm+FpIDonoRJ++7jdPQ+watgM9w
+	F1W/ZWcIPXoNhrBFDHd+1eat1KDXCAxDCZWa008F5atJopgjh3qBda6Fi+7si1ly
+	lEJhqh+CopaNdnyoVy5ngOEMKLZfP+3Z3Z9giaW2WoHwYulQ9A6VXwex9NZQhImv
+	thW9R3PBviY0LqPwcfI+A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1665966220; x=1666052620; bh=ZIUfdLEJM0ESSCfpLb2R/9KS4n4W
+	MO0lvEA3/NHP6A8=; b=Ro0CozzNteOPB+Mq8IJ+ZTYksRC3E2G+n6a6PMxe4uSO
+	KfQXUJ6V4WuTrPBbZsoHwOK7g+JvaE/18u3CTtqH3iufAPgCkB7G3eIlKiIdOu9G
+	4gO1aOW1gMfUzZDMHGQ5S4U65otiychfYTsDfS9hY57C1yfLyQ6z+cs61otqAXPF
+	GDO4YPIrtDDPtDxmWZxvUqQduSUf4g+jJWRDncnrlVWYWz7P/rnAu/3SPThX7HWw
+	VIBOjD+BZD9YPF9cfMIBifB4eASZIO2q7P3WT6BVFpxSM8gW9rXZ/PTcdJ8y0RYb
+	EQRc/zERa8HPhfPHeIoBQc5kR9Kgb6OdM7mxQR5JVA==
+X-ME-Sender: <xms:jKBMY-6xzOUCJS1IE-LTLb1klukxYROoQ9mtJ7HTdU82P4h_4q6S7Q>
+    <xme:jKBMY36yYXN7akIQ8XvO_os_rjvtyoKnzSliZBU6_qEUb16k5WEQpkwrPIou5qGwA
+    EoqOcFUw86IEA>
+X-ME-Received: <xmr:jKBMY9eLfq7jbZll3ZpX2YUIsAh5aZi3O29bbkJnQKq7sUyJFA9twxNh5FCTR824csfnQdSGtRziPbV7q028Ts72WVQaKY6qe2El>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeekkedgfeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesghdtreertddtjeenucfhrhhomhepofgrrhgv
+    khcuofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinh
+    hvihhsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhepgfff
+    vdduieefueeiteeuleefhefhhffhheefvefhleekheevgfeludefuddvgfehnecuffhomh
+    grihhnpehorhhgrdgrshdpkhgvrhhnvghlrdhorhhgpdigvghnrdhorhhgnecuvehluhhs
+    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhmrghrvghkse
+    hinhhvihhsihgslhgvthhhihhnghhslhgrsgdrtghomh
+X-ME-Proxy: <xmx:jKBMY7IgnJ4npWQSoElk5FtBjNQLce4vm74SBBY6K7-EotlepdWa0Q>
+    <xmx:jKBMYyKcNYrsYdIAUQUYaO_QWrSXmyxVNw6Q1GWedF8c4qkdRDVD0g>
+    <xmx:jKBMY8yiWO8Z-XYp8zrhrjgOJ22JfyvyP4E87IG6He_DWDu0SAnO6g>
+    <xmx:jKBMY3Hj4a5HlIiejK0FiLP2UfCQgvLU-kBabu-fL2OsA3_om_3lnw>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 16 Oct 2022 20:23:39 -0400 (EDT)
+Date: Mon, 17 Oct 2022 02:23:35 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Denis Chancogne <denis.chancogne@free.fr>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: Bug 216581 - Kernel panic on /init as busybox symbolic link with
+ xen efi
+Message-ID: <Y0ygiO3kuazXWSfZ@mail-itl>
+References: <e2cf3207-e9e9-5585-1a6e-9b39d96b4b54@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
- 6.0.0-rc3 through 6.0.0-rc7
-From: Phillip Lougher <phillip@squashfs.org.uk>
-To: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>,
- regressions@leemhuis.info
-Cc: bagasdotme@gmail.com, linux-kernel@vger.kernel.org,
- marcmiltenberger@gmail.com, regressions@lists.linux.dev,
- srw@sladewatkins.net, phillip.lougher@gmail.com
-References: <8702a833-e66c-e63a-bfc8-1007174c5b3d@leemhuis.info>
- <20221015205936.5735-1-phillip@squashfs.org.uk>
- <ff2b901d-9491-c886-5330-a244101978ab@alu.unizg.hr>
- <b71f4e2d-23bb-3eb4-3928-fe66c4357e5b@squashfs.org.uk>
-In-Reply-To: <b71f4e2d-23bb-3eb4-3928-fe66c4357e5b@squashfs.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Mailcore-Auth: 439999529
-X-Mailcore-Domain: 1394945
-X-123-reg-Authenticated:  phillip@squashfs.org.uk  
-X-Originating-IP: 82.69.79.175
-X-CMAE-Envelope: MS4xfD3B/bwDpR3KuW1qpkwN/wrbBIfR7QDmW4h/4qBKrSZxpX74mtsS6qt1hA5p8t1GV2U8xlA31NeHXnVgJDH5K7X5QIwLwo743P7koUDJ33OIj1clriQ/
- TfTOX8esC0I1ShIviPTYdFgh5tHJl0oocClHaTKEF19GJlAgqjBbPeQECMIrWWP+JIVWbASqMEm0xRlQ5Ov/I4RwtaojKUUldBw=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dkVdQrOLWpDCDP3c"
+Content-Disposition: inline
+In-Reply-To: <e2cf3207-e9e9-5585-1a6e-9b39d96b4b54@leemhuis.info>
 
-On 16/10/2022 20:55, Phillip Lougher wrote:
-> 
-> Tracking down bugs of this sort is always a process of elimination,
-> and gathering information to pinpoint the exact circumstances of why
-> it is triggering.
-> 
-> Next step is to download the exact snap(s) where the problems are 
-> occurring, as this may provide some insights.
-> 
-> I don't run Ubuntu, and I don't use snaps.  Can you provide the
-> download link(s) of the snap(s) that cause problems?  If there's
-> any firefox snaps that don't cause problems those will be useful
-> too.
-> 
 
-It appears there's a searchable "Snap Store" https://snapcraft.io,
-but, it doesn't give any download links to the actual snaps which
-is rather annoying.
+--dkVdQrOLWpDCDP3c
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 17 Oct 2022 02:23:35 +0200
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Denis Chancogne <denis.chancogne@free.fr>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
+Subject: Re: Bug 216581 - Kernel panic on /init as busybox symbolic link with
+ xen efi
 
-Does anyone know how to get the download link?  I have not run
-Ubuntu for over 14 years and have absolutely no wish to do so
-now either.
+On Sun, Oct 16, 2022 at 01:08:53PM +0200, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+>=20
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developer don't keep an eye on it, I decided to forward it by
+> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=3D216581 :
+>=20
+> >  Denis Chancogne 2022-10-13 22:00:19 UTC
+> >=20
+> > Created attachment 302995 [details]
+> > /proc/cpuinfo, .config
+> >=20
+> > Hi,
+> >=20
+> > when I start Xen 4.15.3 in efi with kernel 5.18.19, all works well;
+> > but since kernel 5.19, I have a kernel panic on my /init process as
+> > busybox symbolic link inside initramfs.
+> >=20
+> > This is the kernel log :
+> > ...
+> > [    6.265122] Run /init as init process
+> > [    6.266027] traps: init[1] trap invalid opcode ip:5855d1 sp:7ffe5ced=
+deb0 error:0 in busybox[401000+1db000]
+> > [    6.266553] Kernel panic - not syncing: Attempted to kill init! exit=
+code=3D0x00000004
+> > [    6.267039] CPU: 3 PID: 1 Comm: init Tainted: G        W         5.1=
+9.0-dch #1
+> > [    6.267522] Hardware name: Micro-Star International Co., Ltd. MS-7B8=
+4/B450M PRO-M2 (MS-7B84), BIOS 2.E0 06/12/2020
+> > [    6.268010] Call Trace:
+> > [    6.268495]  <TASK>
+> > [    6.268974]  dump_stack_lvl+0x45/0x5e
+> > [    6.269455]  panic+0x107/0x285
+> > [    6.269923]  do_exit.cold+0x15/0x45
+> > [    6.270389]  do_group_exit+0x28/0x90
+> > [    6.270852]  get_signal+0x9f1/0xa40
+> > [    6.271313]  arch_do_signal_or_restart+0x57/0x7b0
+> > [    6.271771]  ? _raw_spin_unlock+0x10/0x30
+> > [    6.272223]  ? finish_task_switch.isra.0+0x8e/0x270
+> > [    6.272674]  ? __switch_to+0x186/0x400
+> > [    6.273118]  exit_to_user_mode_prepare+0xc8/0x150
+> > [    6.273564]  irqentry_exit_to_user_mode+0x5/0x20
+> > [    6.274003]  asm_exc_invalid_op+0x16/0x20
+> > [    6.274441] RIP: 0033:0x5855d1
+> > [    6.274877] Code: f6 48 89 ef e8 90 79 03 00 48 c7 05 cd 2e 0c 00 01=
+ 00 00 00 48 89 2d 26 a2 0c 00 4c 8d 74 24 20 4c 8d 6c 24 40 4c 8d 64 24 18=
+ <c5> f9 ef c0 48 b8 f6 75 ae 03 01 00 00 00 4c 8d 3d 8c 02 0a 00 c5
+> > [    6.275776] RSP: 002b:00007ffe5ceddeb0 EFLAGS: 00010202
+> > [    6.276221] RAX: 0000000000000000 RBX: 00000000004006c8 RCX: 0000000=
+000000001
+> > [    6.276670] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000=
+000648400
+> > [    6.277116] RBP: 00000000009e0060 R08: 00007ffe5cfdf178 R09: 0000000=
+0effffef5
+> > [    6.277561] R10: 0000000070000022 R11: 0000000000000032 R12: 00007ff=
+e5ceddec8
+> > [    6.278003] R13: 00007ffe5ceddef0 R14: 00007ffe5cedded0 R15: 0000000=
+06ffffeff
+> > [    6.278442]  </TASK>
+> > [    6.278903] Kernel Offset: disabled
+> >=20
+> > I try to decode it :
+> >=20
+> > All code
+> > =3D=3D=3D=3D=3D=3D=3D=3D
+> >    0:   f6 48 89 ef             testb  $0xef,-0x77(%rax)
+> >    4:   e8 90 79 03 00          call   0x37999
+> >    9:   48 c7 05 cd 2e 0c 00    movq   $0x1,0xc2ecd(%rip)        # 0xc2=
+ee1
+> >   10:   01 00 00 00=20
+> >   14:   48 89 2d 26 a2 0c 00    mov    %rbp,0xca226(%rip)        # 0xca=
+241
+> >   1b:   4c 8d 74 24 20          lea    0x20(%rsp),%r14
+> >   20:   4c 8d 6c 24 40          lea    0x40(%rsp),%r13
+> >   25:   4c 8d 64 24 18          lea    0x18(%rsp),%r12
+> >   2a:*  c5 f9 ef c0             vpxor  %xmm0,%xmm0,%xmm0               =
+ <-- trapping instruction
+> >   2e:   48 b8 f6 75 ae 03 01    movabs $0x103ae75f6,%rax
+> >   35:   00 00 00=20
+> >   38:   4c 8d 3d 8c 02 0a 00    lea    0xa028c(%rip),%r15        # 0xa0=
+2cb
+> >   3f:   c5                      .byte 0xc5
+> >=20
+> > Code starting with the faulting instruction
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >    0:   c5 f9 ef c0             vpxor  %xmm0,%xmm0,%xmm0
+> >    4:   48 b8 f6 75 ae 03 01    movabs $0x103ae75f6,%rax
+> >    b:   00 00 00=20
+> >    e:   4c 8d 3d 8c 02 0a 00    lea    0xa028c(%rip),%r15        # 0xa0=
+2a1
+> >   15:   c5                      .byte 0xc5
+> >=20
+> > Regards,
+> > Denis
+> > PS:
+> >    denis@srv2 ~ $ gcc --version
+> >    gcc (Gentoo 11.3.0 p4) 11.3.0
+>=20
+> See the ticket for more details.
 
-Thanks
+Thanks for forwarding.
 
-Phillip
+This is already fixed on the Xen side: https://xenbits.xen.org/gitweb/?p=3D=
+xen.git;a=3Dcommit;h=3Dc3bd0b83ea5b7c0da6542687436042eeea1e7909
+The commit is also in 4.15 branch already:
+https://xenbits.xen.org/gitweb/?p=3Dxen.git;a=3Dcommit;h=3D7923ea47e578bca3=
+0a6e45951a9da09e827ff028,
+to be included in 4.15.4 rather soon.
 
-> You don't mention if there's any errors present in "dmesg" when
-> this happens, and so I'm assuming there aren't any?
-> 
-> Phillip
-> 
-> 
->> marvin@marvin-IdeaPad-3-15ITL6:~$ sudo tail -300f /var/log/syslog | 
->> grep firefox
->> Oct 16 17:23:17 marvin-IdeaPad-3-15ITL6 systemd[1795]: Started 
->> snap.firefox.firefox.41ac7adc-efbd-4c47-bccb-06711efb7a2e.scope.
->> Oct 16 17:23:18 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[2556]: 
->> update.go:85: cannot change mount namespace according to change mount 
->> (/var/lib/snapd/hostfs/usr/share/cups/doc-root 
->> /usr/share/cups/doc-root none bind,ro 0 0): cannot create directory 
->> "/usr/share/cups/doc-root": permission denied
->> Oct 16 17:23:18 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[2556]: 
->> update.go:85: cannot change mount namespace according to change mount 
->> (/var/lib/snapd/hostfs/usr/share/gimp/2.0/help 
->> /usr/share/gimp/2.0/help none bind,ro 0 0): cannot create directory 
->> "/usr/share/gimp/2.0": permission denied
->> Oct 16 17:23:18 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[2556]: 
->> update.go:85: cannot change mount namespace according to change mount 
->> (/var/lib/snapd/hostfs/usr/share/libreoffice/help 
->> /usr/share/libreoffice/help none bind,ro 0 0): cannot create directory 
->> "/usr/share/libreoffice/help": permission denied
->> Oct 16 17:23:18 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[2556]: 
->> update.go:85: cannot change mount namespace according to change mount 
->> (/var/lib/snapd/hostfs/usr/share/xubuntu-docs /usr/share/xubuntu-docs 
->> none bind,ro 0 0): cannot open directory "/var/lib": permission denied
->> Oct 16 17:23:18 marvin-IdeaPad-3-15ITL6 kernel: [   25.654344] audit: 
->> type=1400 audit(1665933798.028:105): apparmor="DENIED" 
->> operation="mkdir" profile="snap-update-ns.firefox" 
->> name="/usr/share/cups/doc-root/" pid=2556 comm="5" requested_mask="c" 
->> denied_mask="c" fsuid=0 ouid=0
->> Oct 16 17:23:18 marvin-IdeaPad-3-15ITL6 kernel: [   25.655141] audit: 
->> type=1400 audit(1665933798.028:106): apparmor="DENIED" 
->> operation="mkdir" profile="snap-update-ns.firefox" 
->> name="/usr/share/gimp/2.0/" pid=2556 comm="5" requested_mask="c" 
->> denied_mask="c" fsuid=0 ouid=0
->> Oct 16 17:23:18 marvin-IdeaPad-3-15ITL6 kernel: [   25.655528] audit: 
->> type=1400 audit(1665933798.028:107): apparmor="DENIED" 
->> operation="mkdir" profile="snap-update-ns.firefox" 
->> name="/usr/share/libreoffice/help/" pid=2556 comm="5" 
->> requested_mask="c" denied_mask="c" fsuid=0 ouid=0
->> Oct 16 17:23:18 marvin-IdeaPad-3-15ITL6 kernel: [   25.655671] audit: 
->> type=1400 audit(1665933798.028:108): apparmor="DENIED" 
->> operation="open" profile="snap-update-ns.firefox" name="/var/lib/" 
->> pid=2556 comm="5" requested_mask="r" denied_mask="r" fsuid=0 ouid=0
->> Oct 16 17:23:19 marvin-IdeaPad-3-15ITL6 firefox[2527]: Failed to load 
->> module "canberra-gtk-module"
->> Oct 16 17:23:19 marvin-IdeaPad-3-15ITL6 firefox[2527]: Failed to load 
->> module "canberra-gtk-module"
->> Oct 16 17:23:19 marvin-IdeaPad-3-15ITL6 kernel: [   27.287722] audit: 
->> type=1326 audit(1665933799.660:110): auid=1000 uid=1000 gid=1000 ses=3 
->> subj=snap.firefox.firefox pid=2527 comm="firefox" 
->> exe="/snap/firefox/1943/usr/lib/firefox/firefox" sig=0 arch=c000003e 
->> syscall=314 compat=0 ip=0x7f54ec28673d code=0x50000
->> Oct 16 17:23:20 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[2527]: 
->> ATTENTION: default value of option mesa_glthread overridden by 
->> environment.
->> Oct 16 17:23:20 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[2527]: 
->> message repeated 2 times: [ ATTENTION: default value of option 
->> mesa_glthread overridden by environment.]
->> Oct 16 17:23:23 marvin-IdeaPad-3-15ITL6 snapd[817]: 
->> storehelpers.go:748: cannot refresh: snap has no updates available: 
->> "bare", "canonical-livepatch", "core", "core18", "core20", "firefox", 
->> "gnome-3-34-1804", "gnome-3-38-2004", "gtk-common-themes", "slack", 
->> "snap-store", "snapd", "zoom-client"
->> Oct 16 17:23:40 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[2527]: 
->> Missing chrome or resource URL: 
->> resource://gre/modules/UpdateListener.sys.mjs
->> Oct 16 17:23:55 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[3990]: 
->> [2022-10-16T15:23:55Z ERROR mp4parse] Found 2 nul bytes in "\0\0"
->> Oct 16 17:23:55 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[3990]: 
->> message repeated 3 times: [ [2022-10-16T15:23:55Z ERROR mp4parse] 
->> Found 2 nul bytes in "\0\0"]
->> Oct 16 17:23:56 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[3990]: 
->> [2022-10-16T15:23:56Z ERROR mp4parse] Found 2 nul bytes in "\0\0"
->> Oct 16 17:23:56 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[3990]: 
->> message repeated 3 times: [ [2022-10-16T15:23:56Z ERROR mp4parse] 
->> Found 2 nul bytes in "\0\0"]
->> Oct 16 17:23:58 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[3990]: 
->> [2022-10-16T15:23:58Z ERROR mp4parse] Found 2 nul bytes in "\0\0"
->> Oct 16 17:23:58 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[3990]: 
->> message repeated 3 times: [ [2022-10-16T15:23:58Z ERROR mp4parse] 
->> Found 2 nul bytes in "\0\0"]
->> Oct 16 17:24:14 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[4942]: 
->> XPCOMGlueLoad error for file 
->> /snap/firefox/1943/usr/lib/firefox/libmozgtk.so:
->> Oct 16 17:24:14 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[4942]: 
->> /snap/firefox/1943/gnome-platform/usr/lib/x86_64-linux-gnu/libXcomposite.so.1: unsupported version 0 of Verneed record
->> Oct 16 17:24:14 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[4942]: 
->> Couldn't load XPCOM.
->> Oct 16 17:24:19 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[4995]: 
->> XPCOMGlueLoad error for file 
->> /snap/firefox/1943/usr/lib/firefox/libmozgtk.so:
->> Oct 16 17:24:19 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[4995]: 
->> /snap/firefox/1943/gnome-platform/usr/lib/x86_64-linux-gnu/libXcomposite.so.1: unsupported version 0 of Verneed record
->> Oct 16 17:24:19 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[4995]: 
->> Couldn't load XPCOM.
->> Oct 16 17:24:21 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5033]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
->> Oct 16 17:24:21 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5033]: 
->> message repeated 2 times: [ 
->> /snap/firefox/1943/usr/lib/firefox/firefox: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record]
->> Oct 16 17:24:21 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5033]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: error while loading shared 
->> libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
->> Verneed record
->> Oct 16 17:24:27 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[4480]: 
->> Inconsistency detected by ld.so: ../elf/dl-runtime.c: 80: _dl_fixup: 
->> Assertion `ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT' failed!
->> Oct 16 17:24:31 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5163]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
->> Oct 16 17:24:31 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5163]: 
->> message repeated 2 times: [ 
->> /snap/firefox/1943/usr/lib/firefox/firefox: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record]
->> Oct 16 17:24:31 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5163]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: error while loading shared 
->> libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
->> Verneed record
->> Oct 16 17:24:36 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5205]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
->> Oct 16 17:24:36 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5205]: 
->> message repeated 2 times: [ 
->> /snap/firefox/1943/usr/lib/firefox/firefox: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record]
->> Oct 16 17:24:36 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5205]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: error while loading shared 
->> libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
->> Verneed record
->> Oct 16 17:24:42 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5372]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
->> Oct 16 17:24:42 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5372]: 
->> message repeated 2 times: [ 
->> /snap/firefox/1943/usr/lib/firefox/firefox: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record]
->> Oct 16 17:24:42 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5372]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: error while loading shared 
->> libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
->> Verneed record
->> Oct 16 17:24:45 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5396]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
->> Oct 16 17:24:45 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5396]: 
->> message repeated 2 times: [ 
->> /snap/firefox/1943/usr/lib/firefox/firefox: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record]
->> Oct 16 17:24:45 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5396]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: error while loading shared 
->> libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
->> Verneed record
->> Oct 16 17:24:53 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5483]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
->> Oct 16 17:24:53 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5483]: 
->> message repeated 2 times: [ 
->> /snap/firefox/1943/usr/lib/firefox/firefox: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record]
->> Oct 16 17:24:53 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5483]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: error while loading shared 
->> libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
->> Verneed record
->> Oct 16 17:25:02 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[2527]: 
->> Missing chrome or resource URL: 
->> resource://gre/modules/UpdateListener.sys.mjs
->> Oct 16 17:25:07 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5514]: 
->> /snap/firefox/1943/usr/lib/firefox/pingsender: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
->> Oct 16 17:25:07 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5514]: 
->> /snap/firefox/1943/usr/lib/firefox/pingsender: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verdef record
->> Oct 16 17:25:07 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5514]: 
->> /snap/firefox/1943/usr/lib/firefox/pingsender: error while loading 
->> shared libraries: /lib/x86_64-linux-gnu/libdl.so.2: unsupported 
->> version 0 of Verneed record
->> Oct 16 17:25:07 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[2764]: 
->> /snap/firefox/1943/usr/lib/firefox/firefox: symbol lookup error: 
->> /snap/firefox/1943/usr/lib/firefox/libmozsandbox.so: undefined symbol: 
->> , version
->> Oct 16 17:25:07 marvin-IdeaPad-3-15ITL6 systemd[1795]: 
->> snap.firefox.firefox.41ac7adc-efbd-4c47-bccb-06711efb7a2e.scope: 
->> Consumed 6min 11.938s CPU time.
->> Oct 16 17:26:22 marvin-IdeaPad-3-15ITL6 systemd[1795]: Started 
->> snap.firefox.firefox.8af6eb39-1ebc-4e81-a7c1-a6cc66e76eac.scope.
->> Oct 16 17:26:23 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5573]: 
->> /bin/bash: /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of 
->> Verdef record
->> Oct 16 17:26:23 marvin-IdeaPad-3-15ITL6 firefox_firefox.desktop[5573]: 
->> /bin/bash: error while loading shared libraries: 
->> /lib/x86_64-linux-gnu/libdl.so.2: unsupported version 0 of Verneed record
->>
->> I have double-checked that this version of the function is in my build 
->> tree:
->>
->> static int squashfs_readahead_fragment(struct page **page,
->>          unsigned int pages, unsigned int expected)
->> {
->>          struct inode *inode = page[0]->mapping->host;
->>          struct squashfs_cache_entry *buffer = 
->> squashfs_get_fragment(inode->i_sb,
->>                  squashfs_i(inode)->fragment_block,
->>                  squashfs_i(inode)->fragment_size);
->>          struct squashfs_sb_info *msblk = inode->i_sb->s_fs_info;
->>          unsigned int n, mask = (1 << (msblk->block_log - PAGE_SHIFT)) 
->> - 1;
->>          int error = buffer->error;
->>
->>          if (error)
->>                  goto out;
->>
->>          expected += squashfs_i(inode)->fragment_offset;
->>
->>          for (n = 0; n < pages; n++) {
->>                  unsigned int base = (page[n]->index & mask) << 
->> PAGE_SHIFT;
->>                  unsigned int offset = base + 
->> squashfs_i(inode)->fragment_offset;
->>
->>                  if (expected > offset) {
->>                          unsigned int avail = min_t(unsigned int, 
->> expected -
->>                                  offset, PAGE_SIZE);
->>
->>                          squashfs_fill_page(page[n], buffer, offset, 
->> avail);
->>                  }
->>
->>                  unlock_page(page[n]);
->>                  put_page(page[n]);
->>          }
->>
->> out:
->>          squashfs_cache_put(buffer);
->>          return error;
->> }
->>
->> The same set of Firefox windows and tabs loaded correctly once 
->> switching back to the 5.19.13 kernel image.
->>
->> The same applies for running the same setup with the home-built "Linux 
->> 5.19.15-20221014-conf051913ub x86_64": No Verdef nor Verneed error 
->> messages.
->>
->> Have a nice day, and good bug hunting!
->>
->> Regards,
->> Mirsad
->>
->> -- 
->> Mirsad Goran Todorovac
->> Sistem inženjer
->> Grafički fakultet | Akademija likovnih umjetnosti
->> Sveučilište u Zagrebu
-> 
+> BTW, let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+>=20
+> #regzbot introduced: v5.18..v5.19
+> #regzbot ignore-activity
+>=20
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>=20
+> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+> reports and sometimes miss something important when writing mails like
+> this. If that's the case here, don't hesitate to tell me in a public
+> reply, it's in everyone's interest to set the public record straight.
+>=20
 
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--dkVdQrOLWpDCDP3c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmNMoIgACgkQ24/THMrX
+1yzOPwgAmgb1Jv7o6emM9Sph12uByVIwpSzX34Ssad33eaHD4V2AtdeZoT4ZN321
+znX7WcK/ThI+lHkfPGdyKnNHrSNMLL/NXbT25XJ6UKduSPmky633Zb8JbN+lSKIE
+kQpFs3FwJ3Oen/78ct0FjhkpCgsIvXNvEz6yXlQ42qn5KBT0R+p4e+XQRMr/WSFu
+FyRziMOe4e3zhGbpmZCd2SEKZk5i2EiiqOeF+bI2KS6yyx9HztpTYKn1WdafqjYo
+fWdH32ZvSA5K53B1TiWFmB+qbvjsyS97U88cxiFEcQrqK0QNF5dvZEQhtZSac/7y
+KTwLUTIY8ad6uBSxPJgFQpW532aIoQ==
+=MEPX
+-----END PGP SIGNATURE-----
+
+--dkVdQrOLWpDCDP3c--
