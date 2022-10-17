@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A237F
-	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 10:51:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65FFC7F
+	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 12:00:35 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1okNin-0000rH-GA; Mon, 17 Oct 2022 12:51:49 +0200
-Message-ID: <402ab0ef-8bea-6210-1585-2e0e217a2e08@leemhuis.info>
-Date: Mon, 17 Oct 2022 12:51:48 +0200
+	id 1okOnG-0006e3-Kz; Mon, 17 Oct 2022 14:00:30 +0200
+Message-ID: <13418d37-ebba-82d2-4e1b-4e48201342c7@leemhuis.info>
+Date: Mon, 17 Oct 2022 14:00:30 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,60 +16,62 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.1
-Subject: Re: Bug 216581 - Kernel panic on /init as busybox symbolic link with
- xen efi
+Subject: Re: Bug 216559 - btrfs crash root mount RAID0 caused by ac0677348f3c2
 Content-Language: en-US, de-DE
-To: =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?=
- <marmarek@invisiblethingslab.com>
-Cc: Juergen Gross <jgross@suse.com>,
- Boris Ostrovsky <boris.ostrovsky@oracle.com>,
- Denis Chancogne <denis.chancogne@free.fr>,
+To: dsterba@suse.cz
+Cc: David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, linux-btrfs
+ <linux-btrfs@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-References: <e2cf3207-e9e9-5585-1a6e-9b39d96b4b54@leemhuis.info>
- <Y0ygiO3kuazXWSfZ@mail-itl>
+ Viktor Kuzmin <kvaster@gmail.com>
+References: <8be1e839-2eb8-43d0-9ecb-6ff8c3aa3f2d@leemhuis.info>
+ <20221014110708.GE13389@suse.cz>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <Y0ygiO3kuazXWSfZ@mail-itl>
+In-Reply-To: <20221014110708.GE13389@suse.cz>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666003919;e00e5b18;
-X-HE-SMSGID: 1okNin-0000rH-GA
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666008035;50f22087;
+X-HE-SMSGID: 1okOnG-0006e3-Kz
 
-On 17.10.22 02:23, Marek Marczykowski-Górecki wrote:
-> On Sun, Oct 16, 2022 at 01:08:53PM +0200, Thorsten Leemhuis wrote:
-
->>>  Denis Chancogne 2022-10-13 22:00:19 UTC
->>>
->>> when I start Xen 4.15.3 in efi with kernel 5.18.19, all works well;
->>> but since kernel 5.19, I have a kernel panic on my /init process as
->>> busybox symbolic link inside initramfs.
->>>
->>> This is the kernel log :
-> [...]
+On 14.10.22 13:07, David Sterba wrote:
+> On Tue, Oct 11, 2022 at 02:09:50PM +0200, Thorsten Leemhuis wrote:
+>> Hi, this is your Linux kernel regression tracker speaking.
+>>
+>> David, I noticed a regression report in bugzilla.kernel.org apparently
+>> caused by a changed of yours. As many (most?) kernel developer don't
+>> keep an eye on the bug-tracker, I decided to forward the report by mail.
+>> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216559 :
 > 
-> Thanks for forwarding.
-> 
-> This is already fixed on the Xen side: https://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=c3bd0b83ea5b7c0da6542687436042eeea1e7909
-> The commit is also in 4.15 branch already:
-> https://xenbits.xen.org/gitweb/?p=xen.git;a=commit;h=7923ea47e578bca30a6e45951a9da09e827ff028,
-> to be included in 4.15.4 rather soon.
+> Thanks, you don't need to forward the mails as I'm on CC of all bugzilla
+> updates where the btrfs virtual assignee is also present.
 
-Hmmm. Well, strictly speaking this is still a kernel regression that
-should be fixed (or worked around) on the kernel level. But 5.19 is out
-for a while already and this afaics was the first report of this problem
-in kernel land. Maybe it's not worth it, so let's leave everything as it
-is for now, if that's okay for Denis. We IMHO will need to reconsider if
-more users run into this.
+Hmmm. Do you want to make my life easier or want to get less mail? I
+thought about this for a while. Unless you strongly object, I would like
+to continue forwarding them for the following reasons:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+* you might be on vacation or AFK for other reasons; your Comaintainers
+that were CCed would know and likely then help out
+* CCing the list makes other people notice the issue and gives them a
+chance to help (Qu Wenruo replied in bugzilla shortly after I sent the
+mail you quoted, which might or might not be due to my mail).
+* regression tracking is hard already; it would make it a lot harder if
+I'm forced to make and maintain notes how each and every maintainer
+would like me to handle situations like this
+* right now I need to send one mail anyway to add a regression to the
+tracking
 
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+> But feel free
+> to ping regarding any regressions you're tracking and would like an
+> update.
 
-#regzbot introduced: 8ad7e8f69695
-#regzbot invalid: it is a kernel regression, but one that can be worked
-around by updating Xen hypervisor
+Great, thx!
 
+> Inspired by the LPC talk about bugzilla I went through all 650+ btrfs
+> bugs and closed what looked either fixed or not relevant anymore. The
+> rest are recent reports or bugs that may need to be moved elsewhere.
+> As kernel.org bugzilla is recommended for reports in our community
+> documentation I monitor new bugs but with variable reaction time.
+
+Thx for your work and good to know that you are referring to it.
+
+Ciao, Thorsten
