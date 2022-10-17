@@ -1,78 +1,203 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7C8EC7
-	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 04:15:19 +0000 (UTC)
-Received: by mail-pg1-f173.google.com with SMTP id u71so9428745pgd.2
-        for <regressions@lists.linux.dev>; Sun, 16 Oct 2022 21:15:19 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B96C10F0
+	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 07:43:35 +0000 (UTC)
+Received: by mail-pj1-f54.google.com with SMTP id pq16so10256975pjb.2
+        for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 00:43:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZJV0FwVXHVDUtfEx1uj/obVmAiz5b1ilKz2Oe2cH3DM=;
-        b=VV/GGCh1ZpRXD4ojMik0RVa29xcFUNc0uXuYE//HQxHlUAIv5MVT7wPLyNA6IpsaGO
-         b/bnjQGOaTjr6Pwo1TpXgqaEL1FIn8E/TEd5u2bB2fubE62Xzy3NldjjC80bC4U/7AvN
-         KFYRaxKb/9Da3TBBtJPKnrbxFSQUizggOExnng65Emc6BfgM3vxDO1VW1mymxRN6SeRk
-         G1OPn/8JpEoGNG2ywNYjGCT4lcRXuwQe7m1Uc3USI4be9iJcErJPlX5HsdUPZjkQiwK5
-         Af+VYnd3MrX6ZhiDkSFSRdSZWN1zf8byVUUN1HKCQMWF7JB31GhdnISQiCKHF/WmJhiJ
-         WK6w==
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rPe4UeCT4utjHaWsW73z6gTqrta8SnxVBVme5GLMWDo=;
+        b=XURPRulyI7GBQkDYjbL29j6b7fNvlGFidOglpITLHCDt5F+d3TwghzPEurh5SVX0pV
+         tXVr/4xjzWfQXw7n8X4tX0YytM5fZGaPEYpYqsaqrG2nP8qOqL3ONC+f+W3OACBskxHG
+         5g4qTa3vYKROE/9I1BwZC1NwRKXPCawbTS/1WbyFCehUzGwOs2FH+QhyyS0CWxCY0YwD
+         6RZ8MjFhYpzQXWQoAQLPz/VpOQLLE3JJb/Hdd3+hpDS5d2oTq30np5PkY4+eobDN6Wle
+         Tn6aB5DmbXLPAZ5lnnNtn8qUUXw61kawSCiInP1KYMCwimZCcfmXiqeG2SViSys2AZOS
+         WO7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZJV0FwVXHVDUtfEx1uj/obVmAiz5b1ilKz2Oe2cH3DM=;
-        b=mpoJxDN65mz+1ucnUlvtaqR4WG4gij//rGNrbeJ5vSZuxo7jFEq4x4CtdG3RwzFCQy
-         SHKlaj4z8Ji7DPSEgDD3sWVZF0wMmdQ86RneDaeq4NxqOtGHW5u3mBVh75aPZ7uvSDVS
-         kmN3n7j9pLhpWM4AdvDT740phS1LSLFBO3PRYEEQkrvHgcdWtoij8Lczs3vOTczW7ErK
-         SPqwN/RxJTgCC1Zh746mJoOzkQVnvS3GGAStOBT0k1XzSAYBgmUlSe6aTcIwVePFca9p
-         lWCzjTXdCOzxf2T6dJKEzZKlXCNWYVYQ59rt/8mIr6i+UNPLyH0onQXdzhHh2skvzw+L
-         EQAg==
-X-Gm-Message-State: ACrzQf3HrO9+0f00pmY2NoUItRVXADs4y7sZXY0ITM1iMXFfmFFpI+FB
-	R5RZF06haUmEpFip4dDBSA4=
-X-Google-Smtp-Source: AMsMyM4wAtkmQOUeh5seZ05cBVAyfp8ywzFUudGDAKmtCqcI6TJVEu+lTM4ebghcaOWVmZBsTXE42g==
-X-Received: by 2002:a05:6a00:1707:b0:563:235:769b with SMTP id h7-20020a056a00170700b005630235769bmr10507561pfc.19.1665980119039;
-        Sun, 16 Oct 2022 21:15:19 -0700 (PDT)
-Received: from [192.168.43.80] (subs03-180-214-233-89.three.co.id. [180.214.233.89])
-        by smtp.gmail.com with ESMTPSA id i18-20020a056a00005200b00561b02e3118sm5814390pfk.106.2022.10.16.21.15.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 16 Oct 2022 21:15:18 -0700 (PDT)
-Message-ID: <928b701c-b35f-a621-b32f-edf9d8bf6696@gmail.com>
-Date: Mon, 17 Oct 2022 11:15:14 +0700
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rPe4UeCT4utjHaWsW73z6gTqrta8SnxVBVme5GLMWDo=;
+        b=HESDzRUxIxBuL+az3Tp/RBADIfJS488AWurhZiUFALFZVqmQcauar6mqqqCAgQUc5N
+         gPajJmEVo2gE7B3mVDr5IQoAKNd8Jzli/PJJLDZzyp7nfqAx4O4f35z8GvGDMQa8tinH
+         GRkG4n8CHDWerSWj4PXuAI1IHZ9KoR1OVaw51uhvp3UN8CplXK/t+q/myAF8HuAkUOH8
+         W4+IbJiEruqr9hnnnmQTm17Rh7QCpBXbjsoUovQXn5j0zFObh6xCgZjVmNCDpRRJylJo
+         /d9n5n1YEsVDUFsfmbZR50K3L89POh6MzdshOEyUN41Kv9UQjhNVutkqYpcnwZp2+YNu
+         gW4g==
+X-Gm-Message-State: ACrzQf3IMVPU83Bf9ZXO9NyAq/c3sdhDRI+ZH1XAyAdTR+hWJHNa0Ryg
+	lJktdMND8zEW7AwtDjUNONT7Lm2vZrf9oK+wd9sFLA==
+X-Google-Smtp-Source: AMsMyM6zOiheEh4N7KSI0CXPvmDFJU1CBHXMIaYT5uIJkfwzlmGNQlwE0vxfa7DWYKMARCwt5PbD8BFew/kViQjETJQ=
+X-Received: by 2002:a17:90b:4f87:b0:20b:12e3:32ae with SMTP id
+ qe7-20020a17090b4f8700b0020b12e332aemr12370517pjb.236.1665992614969; Mon, 17
+ Oct 2022 00:43:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
- 6.0.0-rc3 through 6.0.0-rc7
-Content-Language: en-US
-To: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>,
- Phillip Lougher <phillip@squashfs.org.uk>, regressions@leemhuis.info
-Cc: linux-kernel@vger.kernel.org, marcmiltenberger@gmail.com,
- regressions@lists.linux.dev, srw@sladewatkins.net, phillip.lougher@gmail.com
-References: <8702a833-e66c-e63a-bfc8-1007174c5b3d@leemhuis.info>
- <20221015205936.5735-1-phillip@squashfs.org.uk>
- <ff2b901d-9491-c886-5330-a244101978ab@alu.unizg.hr>
- <b71f4e2d-23bb-3eb4-3928-fe66c4357e5b@squashfs.org.uk>
- <beba6259-6049-4f5b-6e54-a9c1faba0d5f@squashfs.org.uk>
- <32ee551f-5642-4efb-02a0-500e7c92be5f@gmail.com>
- <b7aefbcb-0038-d044-a1ea-64ad5b4d8888@alu.unizg.hr>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <b7aefbcb-0038-d044-a1ea-64ad5b4d8888@alu.unizg.hr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYvRXkjeO+yDEQxwJ8+GjSmwhZ7XHHAaVWAsxAaSngj5gg@mail.gmail.com>
+ <bf1b053d-ffa6-48ab-d2d2-d59ab21afc19@opensource.wdc.com> <CA+G9fYvUnn0cS+_DZm8hAfi=FnMB08+6Xnhud6yvi9Bxh=DU+Q@mail.gmail.com>
+ <CADYN=9L8tt2T-8O+u5NSMSUOkZDvEggnvzxH6aMmd5Rn9yDeuw@mail.gmail.com>
+ <ca8d3fff-0365-24d9-fd53-5799ac34f336@opensource.wdc.com> <7ee4a1bd-0674-42d8-8980-8b029ca09e71@app.fastmail.com>
+ <75eaeab3-7781-d60a-ae61-ae837f5dcec9@opensource.wdc.com> <CADYN=9JiX-=PcKMzAcSm=p7Dh6kYT7Kbv-8kcNF0MQ4=1hFS5g@mail.gmail.com>
+ <20221014140633.mlypet7skkxvt453@mobilestation>
+In-Reply-To: <20221014140633.mlypet7skkxvt453@mobilestation>
+From: Anders Roxell <anders.roxell@linaro.org>
+Date: Mon, 17 Oct 2022 09:43:24 +0200
+Message-ID: <CADYN=9LrKHRNMON3GA4piDvWeSWTASQ1u2=D30rXFdvo1L18bg@mail.gmail.com>
+Subject: Re: TI: X15 the connected SSD is not detected on Linux next 20221006 tag
+To: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Serge Semin <fancer.lancer@gmail.com>, 
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Naresh Kamboju <naresh.kamboju@linaro.org>, open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, regressions@lists.linux.dev, 
+	"open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Niklas Cassel <niklas.cassel@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 10/17/22 09:41, Mirsad Goran Todorovac wrote:
-> I can only report that bug persisted in 6.1-rc1 with the latest Phillip's squashfs patch.
-> 
+On Fri, 14 Oct 2022 at 16:06, Serge Semin
+<Sergey.Semin@baikalelectronics.ru> wrote:
+>
+> On Fri, Oct 14, 2022 at 11:22:38AM +0200, Anders Roxell wrote:
+> > On Fri, 14 Oct 2022 at 09:53, Damien Le Moal
+> > <damien.lemoal@opensource.wdc.com> wrote:
+> > >
+> > > On 10/14/22 16:31, Arnd Bergmann wrote:
+> > > > On Fri, Oct 14, 2022, at 2:22 AM, Damien Le Moal wrote:
+> > > >> On 10/14/22 07:07, Anders Roxell wrote:
+> > > >> [...]
+> > > >>>> 8)
+> > > >>>>> If reverting these patches restores the eSATA port on this board, then you need
+> > > >>>>> to fix the defconfig for that board.
+> > > >>>>
+> > > >>>> OTOH,
+> > > >>>> Anders, enabled the new config CONFIG_AHCI_DWC=y  and tried but the
+> > > >>>> device failed to boot.
+> > > >>>
+> > > >>> I thought it would work with enabling CONFIG_AHCI_DWC=y, but it didn't...
+> > > >>
+> > > >> As mentioned in my previous reply to Naresh, this is a new driver added in
+> > > >> 6.1. Your board was working before so this should not be the driver needed
+> > > >> for it.
+> > > >>
+> > > >>> However, reverting patch 33629d35090f ("ata: ahci: Add DWC AHCI SATA
+> > > >>> controller support")
+> > > >>> from next-20221013 was a success, kernel booted  and the 'mkfs.ext4' cmd was
+> > > >>> successful.
+> > > >>
+> > > >> Which is very strange... There is only one hunk in that commit that could
+> > > >> be considered suspicious:
+> > > >>
+> > > >> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+> > > >> index 9b56490ecbc3..8f5572a9f8f1 100644
+> > > >> --- a/drivers/ata/ahci_platform.c
+> > > >> +++ b/drivers/ata/ahci_platform.c
+> > > >> @@ -80,9 +80,7 @@ static SIMPLE_DEV_PM_OPS(ahci_pm_ops, ahci_platform_suspend,
+> > > >>  static const struct of_device_id ahci_of_match[] = {
+> > > >>         { .compatible = "generic-ahci", },
+> > > >>         /* Keep the following compatibles for device tree compatibility */
+> > > >> -       { .compatible = "snps,spear-ahci", },
+> > > >>         { .compatible = "ibm,476gtr-ahci", },
+> > > >> -       { .compatible = "snps,dwc-ahci", },
+> > > >>         { .compatible = "hisilicon,hisi-ahci", },
+> > > >>         { .compatible = "cavium,octeon-7130-ahci", },
+> > > >>         { /* sentinel */ }
+> > > >>
+> > > >> Is your board using one of these compatible string ?
+> > > >
+> > > > The x15 uses "snps,dwc-ahci". I would expect it to detect the device
+> > > > with the new driver if that is loaded, but it's possible that the
+> > > > driver does not work on all versions of the dwc-ahci hardware.
+> > > >
+> > > > Anders, can you provide the boot log from a boot with the new driver
+> > > > built in? There should be some messages from dwc-ahci about finding
+> > > > the device, but then not ultimately working.
+> > > >
+> > > > Depending on which way it goes wrong, the safest fallback for 6.1 is
+> > > > probably to move the "snps,spear-ahci" and "snps,dwc-ahci" compatible
+> > > > strings back into the old driver, and leave the new one only for
+> > > > the "baikal,bt1-ahci" implementation of it, until it has been
+> > > > successfully verified on TI am5/dra7, spear13xx and exynos.
+> > >
+> > > OK. So a fix patch until further tests/debug is completed would be this:
+> > >
+> > > diff --git a/drivers/ata/ahci_dwc.c b/drivers/ata/ahci_dwc.c
+> > > index 8fb66860db31..7a0cbab00843 100644
+> > > --- a/drivers/ata/ahci_dwc.c
+> > > +++ b/drivers/ata/ahci_dwc.c
+> > > @@ -469,8 +469,6 @@ static struct ahci_dwc_plat_data ahci_bt1_plat = {
+> > >  };
+> > >
+> > >  static const struct of_device_id ahci_dwc_of_match[] = {
+> > > -       { .compatible = "snps,dwc-ahci", &ahci_dwc_plat },
+> > > -       { .compatible = "snps,spear-ahci", &ahci_dwc_plat },
+> > >         { .compatible = "baikal,bt1-ahci", &ahci_bt1_plat },
+> > >         {},
+> > >  };
+> > > diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+> > > index 8f5572a9f8f1..9b56490ecbc3 100644
+> > > --- a/drivers/ata/ahci_platform.c
+> > > +++ b/drivers/ata/ahci_platform.c
+> > > @@ -80,7 +80,9 @@ static SIMPLE_DEV_PM_OPS(ahci_pm_ops, ahci_platform_suspend,
+> > >  static const struct of_device_id ahci_of_match[] = {
+> > >         { .compatible = "generic-ahci", },
+> > >         /* Keep the following compatibles for device tree compatibility */
+> > > +       { .compatible = "snps,spear-ahci", },
+> > >         { .compatible = "ibm,476gtr-ahci", },
+> > > +       { .compatible = "snps,dwc-ahci", },
+> > >         { .compatible = "hisilicon,hisi-ahci", },
+> > >         { .compatible = "cavium,octeon-7130-ahci", },
+> > >         { /* sentinel */ }
+> > >
+> > > Anders, Naresh,
+> > >
+> > > Can you try this ?
+> >
+>
+> > Tested this patch on todays linux-next tag: next-20221014 without enabling
+> > CONFIG_AHCI_DWC and it worked as expected when booting [1].
+> > On the other hand I also tried a build/boot with CONFIG_AHCI_DWC enabled
+> > and it worked as expected to boot [2].
+>
+> Expected result. The DWC driver will probe the device on our platform
+> only while your platform falls back to using the generic driver.
+> Anders, in order understand the root cause of the problem could you please
+> 1. upload the bogus boot log.
 
-So the regression isn't solved yet with the patch, right?
+This [1] is the bogus boot log.
 
--- 
-An old man doll... just what I always wanted! - Clara
+> 2. try what I suggested here
+> Link: https://lore.kernel.org/linux-ide/20221014133623.l6w4o7onoyhv2q34@mobilestation/
+> and if the system fails to boot at some point upload the boot log.
 
+Only doing this:
+
+--- a/drivers/ata/ahci_dwc.c
++++ b/drivers/ata/ahci_dwc.c
+@@ -316,12 +316,13 @@ static int ahci_dwc_init_host(struct
+ahci_host_priv *hpriv)
+  if (rc)
+  goto err_disable_resources;
+  }
+-
++/*
+  ahci_dwc_check_cap(hpriv);
+
+  ahci_dwc_init_timer(hpriv);
+
+  rc = ahci_dwc_init_dmacr(hpriv);
++*/
+  if (rc)
+  goto err_clear_platform;
+
+and enable CONFIG_AHCI_DWC made the mkfs to detect the SATA drive [2].
+
+Cheers,
+Anders
+[1] https://lkft.validation.linaro.org/scheduler/job/5634743#L2580
+[2] https://lkft.validation.linaro.org/scheduler/job/5679278#L2617
