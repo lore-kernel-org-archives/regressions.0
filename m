@@ -1,38 +1,45 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119B5A52
-	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 00:43:34 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id CCC6B604EF;
-	Mon, 17 Oct 2022 02:43:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665967411; bh=nDU1TF+7P9JYSotz148U6wL2fU3jQox5ewxQ7p68wHY=;
-	h=Date:Subject:References:To:From:In-Reply-To:From;
-	b=IxPpIiMa1lRQ4BFMB43MBdbiakaG+17mwa+Vk5Tn4HtcagHOnaAyHlo9/2wYlJy7o
-	 rvE3yPh4Wqf5t/j7/XxEJ7cRK5XtTPo8YAdYrioDD0TWrCWpoDCmDKFAav9sO7PpOm
-	 sqjoorufg+pgOWVupYHeLEHfxK5hfwMovDhVaqLA1EjtfBaiiVioacA8K6q4dsk6ai
-	 gJ3PnEFg4UvwuJKT0h9DXJBFSz3LX6Z0DYdVpZaIk01oCh+1X+Uh7QWj0OxxWF5uyg
-	 488a95hGvU5vNpgJoW35iQKFpLogtMTPdlZ9K+A3U41v6BfYnqkPW/xMmlxuHmjdmV
-	 KOJ3aaCI7SDzg==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id bL4mkLli08b3; Mon, 17 Oct 2022 02:43:29 +0200 (CEST)
-Received: from [192.168.0.12] (unknown [188.252.197.215])
-	by domac.alu.hr (Postfix) with ESMTPSA id 3BA07604E6;
-	Mon, 17 Oct 2022 02:43:29 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1665967409; bh=nDU1TF+7P9JYSotz148U6wL2fU3jQox5ewxQ7p68wHY=;
-	h=Date:Subject:References:To:From:In-Reply-To:From;
-	b=tnfrcfeosWPCwGfrVO3nv2iDLLNTPZHafFh+4XguEEsJLo0FVQgzpdCCOOlSJ9n/p
-	 Vvz3PXJ57zhC81QB/KO1KnclHWrKOPl/bMLdU8eHUUd0GC4lZOBdYZwYoE2WZDcPvC
-	 J9spG3wCWxMxyViGY37HUcN2gcBR99yK3i6TEyxE622DTsD69RA70sXvvyHDrCK6xX
-	 hn+JAIBNrXaMjJVmNM3MtmvdwnYFVMRh+mDDmNd/GSMgpQgsL08Az64GUKgc9JrjQh
-	 C0CL9uHZOQuDO0mWxrFQ3T0RB5mQ8xmbpj9IRASSsmtUgq0Z2tW+R7twpJOD0Cxp+Y
-	 6K5HpdWEkVsHQ==
-Message-ID: <08493510-4ed2-6c31-66b1-04cd8105e5ee@alu.unizg.hr>
-Date: Mon, 17 Oct 2022 02:43:29 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31564A52
+	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 02:03:19 +0000 (UTC)
+Received: by mail-pf1-f169.google.com with SMTP id i3so9773043pfc.11
+        for <regressions@lists.linux.dev>; Sun, 16 Oct 2022 19:03:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=h1BS7apVGydAoGXKK3mWx1ARgbYb7rbvDgjOAr00me8=;
+        b=gumgJxY0iWgaOgtxDWM4lbi1rxHRMJvLC1voY8Sg4GSvbUrTECdtotn2PqFeM4O7FW
+         e0shF8OMEmVtZ4LL406n8//jRr9qKoiQ7RF4/Vs5mKrYpmm4XP5KmH47AGiAi8f/RRGh
+         /tFB7XJdbfTiuwpt+daKechWqUJML1RnEka4jembFzta9OmRYWYXnfjRqkSJNWg1ZPz7
+         gJk+LTu7uQEy+9QrrvLNK/e30DQVYepr8XJu28HSXErrm3uLriH/n6J7Tea2c0uKYw33
+         bDrtk9eKF8JlGqV84wXqdzF4m2yQmGZAwHz7wUYf/YDso4IjzIOoZdug/XvhAAws8j4I
+         46CQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h1BS7apVGydAoGXKK3mWx1ARgbYb7rbvDgjOAr00me8=;
+        b=Cj+HP+3RZXcP2hB6XxuTqIRMQI0fkCgW0wtqY8UR47sZM0JioMJqgYYMPGEe3ERp1l
+         PKArqM7ITb7YBPOfmi1LSE9Bb+AC6/OPwRCdQU8vjbgq7aozsDFyYLU7D0xhHfKI3MpW
+         7HZe5ZwO5kL/OoZCY/Vqx2B2gQhd7xj0F6G6zgPflWq0Wiocau76fbGH+6gxcrkMzx40
+         YyaC18WK3yzf+BinLevJwXYh7nIhddViRD3KTQjhig/jAU0EzoJcIsioZXW3Ly9sJ5lT
+         fbwpmIgkNSSzEedV0lkgQlK2ij4XluI5HKou9EEwuq6WuuzyX5eF8FSszP39N0LYHUD/
+         bp/w==
+X-Gm-Message-State: ACrzQf2fYU0B1nEyRaVX0KBtV+y3lxTeqAkg6SGtc0UGDBBAC03ytjQU
+	a5FIAJi6qZGQdEuzVLUYHTQ=
+X-Google-Smtp-Source: AMsMyM7LE4fU3zgV59qA/N/CelhXcyazQi9dex79qO3Bmzf6whdrJrKvig02GYdrrVMgOQRLUa89VQ==
+X-Received: by 2002:a05:6a00:114c:b0:528:2c7a:6302 with SMTP id b12-20020a056a00114c00b005282c7a6302mr10148839pfm.37.1665972198533;
+        Sun, 16 Oct 2022 19:03:18 -0700 (PDT)
+Received: from [192.168.43.80] (subs03-180-214-233-87.three.co.id. [180.214.233.87])
+        by smtp.gmail.com with ESMTPSA id x4-20020aa79404000000b005614f8f0f43sm5654281pfo.125.2022.10.16.19.03.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 16 Oct 2022 19:03:18 -0700 (PDT)
+Message-ID: <32ee551f-5642-4efb-02a0-500e7c92be5f@gmail.com>
+Date: Mon, 17 Oct 2022 09:03:12 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -40,96 +47,65 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Fwd: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
+ Thunderbird/102.3.3
+Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
  6.0.0-rc3 through 6.0.0-rc7
+To: Phillip Lougher <phillip@squashfs.org.uk>,
+ Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>,
+ regressions@leemhuis.info
+Cc: linux-kernel@vger.kernel.org, marcmiltenberger@gmail.com,
+ regressions@lists.linux.dev, srw@sladewatkins.net, phillip.lougher@gmail.com
+References: <8702a833-e66c-e63a-bfc8-1007174c5b3d@leemhuis.info>
+ <20221015205936.5735-1-phillip@squashfs.org.uk>
+ <ff2b901d-9491-c886-5330-a244101978ab@alu.unizg.hr>
+ <b71f4e2d-23bb-3eb4-3928-fe66c4357e5b@squashfs.org.uk>
+ <beba6259-6049-4f5b-6e54-a9c1faba0d5f@squashfs.org.uk>
 Content-Language: en-US
-References: <fe5f21c7-40ec-92ab-8071-1f67461d44fe@alu.unizg.hr>
-To: LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <fe5f21c7-40ec-92ab-8071-1f67461d44fe@alu.unizg.hr>
-X-Forwarded-Message-Id: <fe5f21c7-40ec-92ab-8071-1f67461d44fe@alu.unizg.hr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <beba6259-6049-4f5b-6e54-a9c1faba0d5f@squashfs.org.uk>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 16. 10. 2022. 22:19, Phillip Lougher wrote:
+On 10/17/22 03:19, Phillip Lougher wrote:
 > On 16/10/2022 20:55, Phillip Lougher wrote:
 >>
 >> Tracking down bugs of this sort is always a process of elimination,
 >> and gathering information to pinpoint the exact circumstances of why
 >> it is triggering.
 >>
->> Next step is to download the exact snap(s) where the problems are 
->> occurring, as this may provide some insights.
+>> Next step is to download the exact snap(s) where the problems are occurring, as this may provide some insights.
 >>
 >> I don't run Ubuntu, and I don't use snaps.  Can you provide the
 >> download link(s) of the snap(s) that cause problems?  If there's
 >> any firefox snaps that don't cause problems those will be useful
 >> too.
 >>
->
+> 
 > It appears there's a searchable "Snap Store" https://snapcraft.io,
 > but, it doesn't give any download links to the actual snaps which
 > is rather annoying.
->
+> 
 > Does anyone know how to get the download link?  I have not run
 > Ubuntu for over 14 years and have absolutely no wish to do so
 > now either.
->
-> Thanks
->
-> Phillip
->
->> You don't mention if there's any errors present in "dmesg" when
->> this happens, and so I'm assuming there aren't any?
->>
->> Phillip
+> 
 
-Hi, Phillip,
+You need to have snapd installed, unfortunately.
 
-No, there weren't anynew iterms in dmesg -l err output other than these 
-usual ones, common to the situations
-where the Firefox in snap is working. Only the kernel version is different.
+You can start the testing with hello-world snap, which can be installed
+with `snap install hello-world`. Then run the snap with `snap run 
+hello-world`. After that, reboot and repeat until the regression
+occurs.
 
-I have managed to reproduce the situation on AlmaLinux 8.6 by installing 
-the snapd rpm and then running
-a regular "snap install firefox". NOTE: I had to manually enable 
-squashfs kernel module.
+You can also try other snaps. For GUI applications, try krita, gimp,
+gitkraken, and libreoffice. For server applications, try spinning up
+containers with lxd or store data with nextcloud.
 
-Otherwise, the Ubuntu 22.04 Firefox 104.x and 105.0.x snaps are also the 
-default Firefox snaps from the snap store.
+My guess is that the problem is in snapd when trying to execute
+snaps, hence all snaps are affected.
 
-The only exception is that I used 15+ windows and over 200 tabs in the 
-testing case, many multimedia Youtube
-channels, Yahoo mail, Outlook mail, and quite a few websites. This 
-combination triggers the Verdeen errors very
-quickly (only on vulnerable 6.0 kernels, on 5.19.x kernels it works like 
-a charm).
+Thanks.
 
-Thank you.
-
-It is obvious that the snapd + squashfs + Firefox combination triggers 
-the bug under heavy load (both on Ubuntu
-22.04 jammy and AlmaLinux 8.6.
-
-Hope this helps.
-
-Optionally, I could send the Firefox list of opened windows and tabs if 
-I knew where the snaps store it. With the
-/usr/bin/firefox version I knew it.
-
-Kind regards,
-Mirsad
-
---
-Mirsad Goran Todorovac
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
 -- 
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb, Republic of Croatia
-The European Union
+An old man doll... just what I always wanted! - Clara
 
