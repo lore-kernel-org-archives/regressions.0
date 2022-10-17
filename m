@@ -1,116 +1,107 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEE9137C
-	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 13:22:41 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id 51160604F3;
-	Mon, 17 Oct 2022 15:22:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1666012959; bh=7tDUxNQPZ96lKji4K0afOdf/2mnb+fkiVpxcHgObl4o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ySI6H/SK7VG7/Tob5Crf9x31Lu2iGV9JrdpTx7W7QoCwfi7tnq2xiD4J6bhXZeXNm
-	 8HpQkBwf936a+md+j/A+4IRkt8j7KVCRWQe0GqKQef/kDY+e3amcZzXJm7T5ofSS71
-	 0bliKvSdpOmqqhELQJX69HdtEC7lbE5iBB5MOwfPo+RW0pyo23HTwNP/Dnw4wIIqKI
-	 eps+HR6gdOfR4lgCaZ+LL9vZMQdCIYDG6f5Y+LW3mK+/MMRZuu3En6aZpinWq0vMs7
-	 /FaRL7qSS3wFYeB8DX4dC3FNZKe3KHLaPMH28Tx+CH5RD/xm89vdfsCiL76ZlbEfir
-	 hnW6htU/XROOA==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id OMospN1Vpizk; Mon, 17 Oct 2022 15:22:36 +0200 (CEST)
-Received: from [161.53.83.51] (pc-mtodorov.grf.hr [161.53.83.51])
-	by domac.alu.hr (Postfix) with ESMTPSA id 49C06604EF;
-	Mon, 17 Oct 2022 15:22:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1666012956; bh=7tDUxNQPZ96lKji4K0afOdf/2mnb+fkiVpxcHgObl4o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pc1SeahiGKraLSiku/Vjhw9LcU/lKoXJKswCg6PV3AEclXVmBAsGXsAwBtt+XdfWV
-	 gsVCltyfctAEXHErhCUwTKDw+sPYnQcmjELv4gN0Vhxhvw4g8tQZHrI7eFKA+KbJgp
-	 /8T/OQ4PslvDp0BFrkDijYAJ4ZjiaVUPkKo+MzD8Rr9+w9259CfPgAbHoNMtDaXqqQ
-	 GcEgMKp1QPodv7tv+N4gTTPVFLmRXZBRY90BQJCgvy4rrUp+Ui868dE2Byyluruk0/
-	 MdSl9l3UdVWImDMcYeyHaEEK9skiVC2QvzL7w37fpLxQ6PD9Xr8TzGWRhQP7MorQD5
-	 XRbfARWSEM9eQ==
-Message-ID: <cdf16572-1206-50b8-1ffe-48746cde00a4@alu.unizg.hr>
-Date: Mon, 17 Oct 2022 15:22:35 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918081C15;
+	Mon, 17 Oct 2022 13:57:20 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1okQcI-0004Li-5Q; Mon, 17 Oct 2022 15:57:18 +0200
+Message-ID: <f0412b37-fac0-c3f5-9877-0460a027e109@leemhuis.info>
+Date: Mon, 17 Oct 2022 15:57:17 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
- 6.0.0-rc3 through 6.0.0-rc7
-Content-Language: en-US
-To: Phillip Lougher <phillip@squashfs.org.uk>, regressions@leemhuis.info
-Cc: bagasdotme@gmail.com, linux-kernel@vger.kernel.org,
- marcmiltenberger@gmail.com, regressions@lists.linux.dev,
- srw@sladewatkins.net, phillip.lougher@gmail.com
-References: <8702a833-e66c-e63a-bfc8-1007174c5b3d@leemhuis.info>
- <20221015205936.5735-1-phillip@squashfs.org.uk>
- <ff2b901d-9491-c886-5330-a244101978ab@alu.unizg.hr>
- <b71f4e2d-23bb-3eb4-3928-fe66c4357e5b@squashfs.org.uk>
-From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <b71f4e2d-23bb-3eb4-3928-fe66c4357e5b@squashfs.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.1
+Content-Language: en-US, de-DE
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: "Artem S. Tashkinov" <aros@gmx.com>, workflows@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "ksummit@lists.linux.dev" <ksummit@lists.linux.dev>
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <20221004175354.bfvg3vhfqch35ib5@meerkat.local>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+In-Reply-To: <20221004175354.bfvg3vhfqch35ib5@meerkat.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1666015040;6857de73;
+X-HE-SMSGID: 1okQcI-0004Li-5Q
 
+On 04.10.22 19:53, Konstantin Ryabitsev wrote:
+> On Thu, Sep 29, 2022 at 01:19:24PM +0200, Thorsten Leemhuis wrote:
+>> TLDR: Core Linux kernel developers are unhappy with the state of
+>> bugzilla.kernel.org; to improve things I plan to change a few important
+>> aspects of its configuration, unless somebody comes up with better ideas
+>> to tackle current problems: (1) Create a catch-all product making it
+>> totally obvious to submitters that likely nobody will look into the
+>> ticket. (2) Remove or hide all products & components where the subsystem
+>> didn't fully commit to look into newly submitted reports. (3) Change the
+>> text on the front page to make it clear that most kernel bug reports
+>> need to be sent by mail.
 
-On 16.10.2022. 21:55, Phillip Lougher wrote:
-> On 16/10/2022 16:55, Mirsad Goran Todorovac wrote:
->> On 15. 10. 2022. 22:59, Phillip Lougher wrote:
->
-> Tracking down bugs of this sort is always a process of elimination,
-> and gathering information to pinpoint the exact circumstances of why
-> it is triggering.
->
-> Next step is to download the exact snap(s) where the problems are 
-> occurring, as this may provide some insights.
->
-> I don't run Ubuntu, and I don't use snaps.  Can you provide the
-> download link(s) of the snap(s) that cause problems?  If there's
-> any firefox snaps that don't cause problems those will be useful
-> too.
->
-> You don't mention if there's any errors present in "dmesg" when
-> this happens, and so I'm assuming there aren't any?
->
-> Phillip
+So, merge window is over. To avoid any doubt, I'd now like to get a
+clarification what the outcome of this discussion actually is.
 
-Snaps are originated in Ubuntu, and they heavily rely on snapd, and 
-squashfs for decompressing executables.
-Naturally, this also affects Linux Mint as Ubuntu's fork.
+FWIW, as most of you likely know, lwn.net has a write-up of this thread:
+https://lwn.net/Articles/910740/
 
-Those two comprise a large share of the Linux distros, and Firefox is 
-exclusively distributed in snaps.
+> Here's my counter-plan, which builds on top of yours.
 
-There is no way to install Firefox without snapd and squashfs, so the 
-distros are lobotomised from the point of
-the Firefox users.
+Is this the agreed on path forward by silent agreement? And if so: who
+will actually shepherd this? I just wonder, as it sounded to me that
+Konstantin would be happy to take care of the bot-related stuff, but
+leave the rest to somebody else.
 
-You should basically do what is described here: 
-https://snapcraft.io/install/firefox/centos
+Or do we have two proposals on the table that are kind of deadlocked so
+that nothing will happen until the next maintainers summit, where things
+like this are usually discussed and a way forward agreed on? Then the
+ugly situation with bugzilla.kernel.org would continue for afaics at
+least 11 more months, which I'd call "unfortunate". :-/
 
-and probably obvious to you: https://forums.centos.org/viewtopic.php?t=71485
+Ciao, Thorsten
 
-then it's easy:
-
-# snap install firefox
-
-it will install from the latest release.
-
-Thank you.
-
--- 
-Mirsad Todorovac
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb
-Republic of Croatia, the European Union
---
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
-
+> 1. Create a Kernel/Kernel product that acts as a starting point for all bug
+>    submissions.
+> 2. Create and maintain a mapping from MAINTAINER subsystem entries to
+>    Product/Component categories in Bugzilla (the scheme to be established).
+> 3. Establish and maintain a team of designated triage people who are willing
+>    to look at incoming bugs to either:
+> 
+>    a. quick-close them as non-actionable (tainted kernel, distro kernel, spam)
+>    b. obtain missing information from the submitter as necessary
+>    c. figure out the correct component to assign, to the best of their ability
+>    d. set a "triaged" flag
+> 
+> 4. a backend monitoring bot will track all bug changes and, when it sees a bug
+>    get the "triaged" state, it will:
+> 
+>    a. create a useful bug summary from all bug comments
+>    b. figure out who to notify based on the mapping (see #2 above)
+>    c. send out the email to everyone identified
+> 
+> 5. the same backend monitoring bot will track responses and update the bug
+>    comments as needed; any comments added via the bugzilla site will be
+>    similarly sent out as follow-up messages.
+> 
+> 6. the bot can also monitor commits and other discussions via lore.kernel.org
+>    and automatically add comments/links when it sees the bug mentioned
+>    elsewhere.
+> 
+> I'm happy to take care of everything bot-related (apparently, programming bots
+> is what I do now -- I just wish it was the cool and glamorous kind).
+> 
+> As I have stated multiple times, the hard part will be keeping a team of
+> people who are willing to do the bug triage work, but maybe we can start with
+> Greg KH using his intern funds to hire someone (assuming he's not already
+> using these funds for someone to help him with all the other tasks).
+> 
+> Does that sound like a plan for everyone?
+> 
+> -K
