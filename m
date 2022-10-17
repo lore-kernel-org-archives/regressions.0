@@ -1,92 +1,78 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 090EA4699
-	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 17:25:53 +0000 (UTC)
-Received: by mail-pf1-f178.google.com with SMTP id m6so11755475pfb.0
-        for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 10:25:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B96A4A02
+	for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 20:47:34 +0000 (UTC)
+Received: by mail-qt1-f175.google.com with SMTP id bb5so8513491qtb.11
+        for <regressions@lists.linux.dev>; Mon, 17 Oct 2022 13:47:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=U3yR8f2xGvnli4f6ljBEzHE0/kF8yCV4PFdQwKaLXf8=;
-        b=QoIvjpCnmFoa2ARcBy18v3g97+Kq4GhV1zgaEn3giz/25KAkeBFHrUCNRSwvStqAmd
-         HaKma3a8oi7+x+/YcpxgZ4dEJ2jjef28CRhb4FO31EozmCmi57Wizm5tgH9zQUohtgUb
-         XOEnpGoUGVKXgB6GIFDNXl5RfBqr6SWEK+pLuda/hu/D/VCHF7JTg2c/0mcv8zNc6BJp
-         IxrVPEB0NUKyUzerU+ve2lkP2ZV9xO+jftZs0fXAcyZVAxom2rzOGbsNeyZGPOn7DsKv
-         UosQM0bIlCRhIM626CItHXM8ZLbBUZByY6wQMKlimRqpqrYu4Pm8HaJawMQI55nzI5sn
-         718g==
+        d=linuxfoundation.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OtWVZweAAWnRcixYheN70Qvehd1+rrCwMcjYRhIlb2Y=;
+        b=MZVxUi2GZh5IohthQ9cj4T4ufBqhUpgZsikK5sJpm4pg+8AQjwDWGpXkFJbTK0IxOJ
+         4+857XGGY9ybPZsnTkZXdhYBMOf1bKa/N/gJacVtaAYmmr3/dZg3DlEzJswZjvaJ8j7W
+         hCWA8lZpfeCTBep9CjBOyraqrtb/Flf5GHbNc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=U3yR8f2xGvnli4f6ljBEzHE0/kF8yCV4PFdQwKaLXf8=;
-        b=rQotuNjhF5sevJWhOzhE+qcFNHlFJ36QA0MjAnIPviIWiGzTWywxOtUtMakuGDUf51
-         Dyg9xkKpIxMkN9K2IX6ICkKGNIqEzUQeoONGx36h+jggj3P9hwtR8Xa8Qu/5f6OM0r/u
-         8e3N5+6jR/V6DYBBkJ/ZEIVs2644yrvJh7ZH6SOltexF/2deL3/S51ZodK9dHSzNsoix
-         pBq3lG0xQFRtGm+iYleyx/Jst4fd0CYfGhfoPtVUZE5KKcJb/5Tn9cRdWFx4G5qxECR7
-         mvb8hnUl2D+3SJLcmH5XQnttt6O6/W16p20NY7LjbENJPgW1hK+uHKIHNpGa0ia0luL8
-         VJtQ==
-X-Gm-Message-State: ACrzQf2luV5Tg2RPRRI0B69CJRbVyCofkvK/cYMEc641tcXB/+ou0PB/
-	ox1n+p1ZdrBV5+uKe90akqKK4yqNMbFCCrYRxqM=
-X-Google-Smtp-Source: AMsMyM50HGv/JVPt9Mg/1/yqJb7RQkP63Y5aESVoSPDp5m6sqFcrlTPsLXWA8wnS7FJd/DQQNi7B/Ce1ADPrxbCb+fc=
-X-Received: by 2002:a05:6a00:27a0:b0:566:9cd9:3843 with SMTP id
- bd32-20020a056a0027a000b005669cd93843mr13605761pfb.17.1666027553549; Mon, 17
- Oct 2022 10:25:53 -0700 (PDT)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OtWVZweAAWnRcixYheN70Qvehd1+rrCwMcjYRhIlb2Y=;
+        b=ocl3TcnwwMqqU54FwZI8bTBZr9y1nbVXiVCMGBprC719sdG/Ooc4Jtv655AgcHUhJl
+         8nxnIOQC3pKt5TWc+lrkhpG/VwR6sv4wDKn6Oqhcs4vVktLBmRsLKYnlUBzwsy0PwyhP
+         sBQSpOlDQKCBdnW4djHePcO14z1WwHedX3HAD5iIFLxWjfH+CK61ZDuwfa2tzNfrKYZR
+         VHx/OmxPKNvV0n64f9vP1jBTFumB8QGXSISSmMqde6dkpdlDlkaw0pGLnwEI8w8fs3GC
+         2hkjDB9ycvu/NHSJw6djlD0njEy+UjJoOkJYFX485aIAmL3WS1fbBpOn3cxMey/QEeL/
+         0UFw==
+X-Gm-Message-State: ACrzQf2I0QRj+em7VEentnXX/LiiDl2t6r8MExwol90FabSLgzh8Y+GY
+	SQb/kTefDXrZbivRHSRRL0qQgw==
+X-Google-Smtp-Source: AMsMyM6bGvvUOBD+yB2ss1Ep6dXWrACiISmGohsGN3hvvqeUTPBZj3iH2hceHJFuDnSmiAUDaKUpFQ==
+X-Received: by 2002:a05:622a:1650:b0:391:b2cb:6d42 with SMTP id y16-20020a05622a165000b00391b2cb6d42mr10346836qtj.643.1666039653567;
+        Mon, 17 Oct 2022 13:47:33 -0700 (PDT)
+Received: from nitro.local (bras-base-mtrlpq5031w-grc-33-142-113-79-147.dsl.bell.ca. [142.113.79.147])
+        by smtp.gmail.com with ESMTPSA id f7-20020ac84707000000b003431446588fsm588639qtp.5.2022.10.17.13.47.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Oct 2022 13:47:32 -0700 (PDT)
+Date: Mon, 17 Oct 2022 16:47:31 -0400
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: "Artem S. Tashkinov" <aros@gmx.com>, workflows@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"ksummit@lists.linux.dev" <ksummit@lists.linux.dev>
+Subject: Re: Planned changes for bugzilla.kernel.org to reduce the "Bugzilla
+ blues"
+Message-ID: <20221017204731.a7rixhqlqmhlntvl@nitro.local>
+References: <aa876027-1038-3e4a-b16a-c144f674c0b0@leemhuis.info>
+ <20221004175354.bfvg3vhfqch35ib5@meerkat.local>
+ <f0412b37-fac0-c3f5-9877-0460a027e109@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <8702a833-e66c-e63a-bfc8-1007174c5b3d@leemhuis.info>
- <20221015205936.5735-1-phillip@squashfs.org.uk> <2d1ca80c-1023-9821-f401-43cff34cca86@gmail.com>
- <c5980bcb-f345-ff2e-a29b-75e53a6b8708@gmail.com> <a1d46bd2-9603-f89a-ec85-ebcd25db8882@gmail.com>
-In-Reply-To: <a1d46bd2-9603-f89a-ec85-ebcd25db8882@gmail.com>
-From: Phillip Lougher <phillip.lougher@gmail.com>
-Date: Mon, 17 Oct 2022 18:25:35 +0100
-Message-ID: <CAB3wodeqmuE0iZeSddWSGuJ49rKUjSPb9xxsx189hdL9aMn_pQ@mail.gmail.com>
-Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
- 6.0.0-rc3 through 6.0.0-rc7
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Phillip Lougher <phillip@squashfs.org.uk>, regressions@leemhuis.info, 
-	mirsad.todorovac@alu.unizg.hr, linux-kernel@vger.kernel.org, 
-	marcmiltenberger@gmail.com, regressions@lists.linux.dev, srw@sladewatkins.net
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f0412b37-fac0-c3f5-9877-0460a027e109@leemhuis.info>
 
-On Mon, Oct 17, 2022 at 1:37 PM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
->
-> On 10/17/22 16:45, Bagas Sanjaya wrote:
-> > On 10/16/22 19:21, Bagas Sanjaya wrote:
-> >>
-> >> No Verneed warnings so far. However, I need to test for a longer time
-> >> (a day) to check if any warnings are reported.
-> >>
-> >
-> > The regression still occurs with this patch applied. Let's see if
-> > reverting the offending commit helps.
-> >
-> Sorry for speaking late about my triggering cause.
->
-> As the background, on my Debian 11 computer, I have lxd snap installed.
-> I use lxd to channel my sysadmin side by spinning up containers and
-> installing server applications there (LAMP, email, DNS).
->
-> Back to triggering cause. I can trigger the regression when the network
-> connection drops (when Firefox shows connection problem page). Then
-> I run `lxd list` to list container instances and I get the Verneed
-> regression error.
->
+On Mon, Oct 17, 2022 at 03:57:17PM +0200, Thorsten Leemhuis wrote:
+> > Here's my counter-plan, which builds on top of yours.
+> 
+> Is this the agreed on path forward by silent agreement? And if so: who
+> will actually shepherd this? I just wonder, as it sounded to me that
+> Konstantin would be happy to take care of the bot-related stuff, but
+> leave the rest to somebody else.
 
-This appears to be both deterministic, and appears to show something
-happening in the Firefox snap triggers an error in the Lxd snap.
+Indeed, I need to do most of the preliminary legwork. I will start by creating
+a public-inbox feed of all bugzilla comments, which is something I was
+planning to do for a while anyway. Once that is in place, I can build on top
+of that to add a two-way bridge to replace bugzilla's native (and rather
+limited, in my experience) email bridge implementation.
 
-This will then not be a Squashfs issue.  Firefox running in one
-Squashfs filesystem
-can't trigger a failure in another Squashfs filesystem.  This has to be caused
-by something else.
+Once I have this in place, we can consider what next steps should be taken.
 
-Thanks
-
-Phillip
+-K
