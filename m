@@ -1,94 +1,209 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DAA10E5
-	for <regressions@lists.linux.dev>; Tue, 18 Oct 2022 06:33:46 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1okgAU-0001va-AP; Tue, 18 Oct 2022 08:33:38 +0200
-Message-ID: <b2be77b0-bafb-0519-33cb-359d83ded4d8@leemhuis.info>
-Date: Tue, 18 Oct 2022 08:33:37 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2D61FAF
+	for <regressions@lists.linux.dev>; Tue, 18 Oct 2022 06:52:18 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id 03390604F3;
+	Tue, 18 Oct 2022 08:52:16 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1666075936; bh=IQq8rEJKvbHqEnqkK7p+mGeuoMrNPTe3xZyIS0ZBKBE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OdwQ1ERLMVnpDQVWMP5HpciMzHk4DGrP+LVXoW8aU03KEXwoG6zmHhznPDoVQWkxz
+	 K3pfsHIbeI8W6Hc2H+SP2mRflTD5luPL0hrd+KGwpG8i8dYe8b7engZYL0MEcYQkjS
+	 b7JfWKpBRO/wlzxiieZH36DUwYt90mhkHDqlwjqQPbbsCLcTSJgdV9WChtWAh/PxQq
+	 EBAbMnVoEz6lekOGexRE84cT9js7t8irDJg6T1FnsAqdt2H53GY3zzj0+3q04sIPh2
+	 pYaUEE4HroTaLvxLLBN3gYEhTddMS/6ko9WfGNapPbtM9P7YtgmHOQXF/AORPkJrFp
+	 FOwFlV6t8NMTw==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id XScqepld4QCb; Tue, 18 Oct 2022 08:52:13 +0200 (CEST)
+Received: from [193.198.186.200] (pc-mtodorov.slava.alu.hr [193.198.186.200])
+	by domac.alu.hr (Postfix) with ESMTPSA id 5ADE7604E6;
+	Tue, 18 Oct 2022 08:52:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1666075933; bh=IQq8rEJKvbHqEnqkK7p+mGeuoMrNPTe3xZyIS0ZBKBE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lOOn8Bq02bJz0t+ckpVbAYyt7PgoaaOHU+QE/qzhoZ5jEIKzIfZhNQzVmmQboGGqp
+	 oi6D4JruPsgKR2F12UAzFCWpwVQMKB1ZxX7SnlTefBPkCnX3ZgExYmxjLUj1SxZY0k
+	 wuRbswNsBrgH6T6IXxJkbEnPcWqviEwTuGBdRE6kW7IOJXhGkHE4+NxnxwgIi4xc1n
+	 /tmN7x+vKeOQlgKQktAuF79cURyPe24b2APj8w3SaQAv6YvoFZhneg24DuqWnhnXCQ
+	 3ojag1hkZ986Ej1QwpifQwVZxiJJjx1dFIc4li2cDQc+YLgARc36PmGbtCp/6+crt8
+	 Hoo3DDbQEDu4g==
+Message-ID: <41c05ece-2e63-391a-e1ba-fc1acb235559@alu.unizg.hr>
+Date: Tue, 18 Oct 2022 08:52:12 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [REGRESSION v6.1-rc1] rtc: cmos: rtcwake broken on NUC8i7HVK
-Content-Language: en-US, de-DE
-To: Kalle Valo <kvalo@kernel.org>,
- "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>,
- Bjorn Helgaas <bhelgaas@google.com>, linux-rtc@vger.kernel.org,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <87edv6mlow.fsf@kernel.org>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <87edv6mlow.fsf@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666074826;9e894158;
-X-HE-SMSGID: 1okgAU-0001va-AP
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
+ 6.0.0-rc3 through 6.0.0-rc7
+Content-Language: en-US
+To: Jintao Yin <nicememory@gmail.com>, phillip@squashfs.org.uk
+Cc: bagasdotme@gmail.com, linux-kernel@vger.kernel.org,
+ marcmiltenberger@gmail.com, regressions@leemhuis.info,
+ regressions@lists.linux.dev, srw@sladewatkins.net,
+ Hsin-Yi Wang <hsinyi@chromium.org>
+References: <20221015205936.5735-1-phillip@squashfs.org.uk>
+ <20221018021507.612-1-nicememory@gmail.com>
+From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <20221018021507.612-1-nicememory@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi, this is your Linux kernel regression tracker.
+On 10/18/22 04:15, Jintao Yin wrote:
 
-On 17.10.22 18:58, Kalle Valo wrote:
-> 
-> I upgraded my NUC8i7HVK test box to v6.1-rc1 and noticed that my suspend
-> tests with ath11k were broken, the box never woke up from suspend
-> automatically and I had to manually push the power button to trigger
-> resume. This is the command I used:
-> 
-> sudo rtcwake -m mem -s 30
-> 
-> v6.0 works without problems and a bisect found this commit:
-> 
-> commit 4919d3eb2ec0ee364f7e3cf2d99646c1b224fae8
-> Author:     Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> AuthorDate: Wed Oct 12 20:07:01 2022 +0200
-> Commit:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-> CommitDate: Thu Oct 13 23:27:52 2022 +0200
-> 
->     rtc: cmos: Fix event handler registration ordering issue
+> On Sat, Oct 15, 2022 at 09:59:36PM +0100, Phillip Lougher wrote:
+>> Thorsten Leemhuis <regressions@leemhuis.info> wrote:
+>>> Topposting, to make this easier to access for everyone.
+>>>
+>>> @Mirsad, thx for bisecting.
+>>>
+>>> @Phillip: if you want to see a problem description and the whole
+>>> backstory of the problem that apparently is caused by 	b09a7a036d20
+>>> ("squashfs: support reading fragments in readahead call"), see this
+>>> thread (Mirsad sadly started a new one with the quoted mail below):
+>>> https://lore.kernel.org/all/b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr/
+>>>
+>> The above backstory tends to suggest data corruption which is happening
+>> after a couple of hours especially on heavy loads, e.g. the comment
+>>
+>>> On 10/3/22 at 4:18 AM, Mirsad Goran Todorovac wrote:
+>>> The bug usually isn't showing immediately, but after a couple of hours
+>>> of running (especially with multimedia running inside Firefox).
+>> Which is typically caused by double freed buffers or race conditions in
+>> freeing and reusing.
+>>
+>> Thanks Mirsad for the following
+>>
+>> On Sat, 15 Oct 2022 16:59:44 +0200, Mirsad Goran Todorovac wrote:
+>>> Here are the results of the requested bisect on the bug involving the
+>>> Firefox snap build 104.x, 105.0.x, squashfs and which was manifested on
+>>> both Ubuntu snap and with snapd in AlmaLinux 8.6 (CentOS fork):
+>>>
+>>> mtodorov@domac:~/linux/kernel/linux_stable$ git bisect log
+>>> git bisect start
+>>> # bad: [568035b01cfb107af8d2e4bd2fb9aea22cf5b868] Linux 6.0-rc1
+>>> git bisect bad 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+>>> # good: [51dd976781da8c0b47e106ed59a96d7c28972ce4] Linux 5.19.15
+>>> git bisect good 51dd976781da8c0b47e106ed59a96d7c28972ce4
+>>> # good: [3d7cb6b04c3f3115719235cc6866b10326de34cd] Linux 5.19
+>>> git bisect good 3d7cb6b04c3f3115719235cc6866b10326de34cd
+>>> # good: [b44f2fd87919b5ae6e1756d4c7ba2cbba22238e1] Merge tag
+>>> 'drm-next-2022-08-03' of git://anongit.freedesktop.org/drm/drm
+>>> git bisect good b44f2fd87919b5ae6e1756d4c7ba2cbba22238e1
+>>> # good: [6614a3c3164a5df2b54abb0b3559f51041cf705b] Merge tag
+>>> 'mm-stable-2022-08-03' of
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+>>> git bisect good 6614a3c3164a5df2b54abb0b3559f51041cf705b
+>>> # bad: [eb5699ba31558bdb2cee6ebde3d0a68091e47dce] Merge tag
+>>> 'mm-nonmm-stable-2022-08-06-2' of
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+>>> git bisect bad eb5699ba31558bdb2cee6ebde3d0a68091e47dce
+>>> # good: [24df5428ef9d1ca1edd54eca7eb667110f2dfae3] ALSA: hda/realtek:
+>>> Add quirk for HP Spectre x360 15-eb0xxx
+>>> git bisect good 24df5428ef9d1ca1edd54eca7eb667110f2dfae3
+>>> # good: [c993e07be023acdeec8e84e2e0743c52adb5fc94] Merge tag
+>>> 'dma-mapping-5.20-2022-08-06' of
+>>> git://git.infradead.org/users/hch/dma-mapping
+>>> git bisect good c993e07be023acdeec8e84e2e0743c52adb5fc94
+>>> # good: [4cfa6ff24a9744ba484521c38bea613134fbfcb3] powerpc/64e: Fix
+>>> kexec build error
+>>> git bisect good 4cfa6ff24a9744ba484521c38bea613134fbfcb3
+>>> # good: [24cb958695724ffb4488ef4f65892c0767bcd2f2] Merge tag
+>>> 's390-5.20-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
+>>> git bisect good 24cb958695724ffb4488ef4f65892c0767bcd2f2
+>>> # good: [db98b43086275350294f5c6f797249b714d6316d] squashfs: always
+>>> build "file direct" version of page actor
+>>> git bisect good db98b43086275350294f5c6f797249b714d6316d
+>>> # good: [6ba592fa014f21f35a8ee8da4ca7b95a018f13e8] video: fbdev: s3fb:
+>>> Check the size of screen before memset_io()
+>>> git bisect good 6ba592fa014f21f35a8ee8da4ca7b95a018f13e8
+>>> # good: [b5a8466d37d30cfcc8015789f4a3f0c44b6c7bc6] Merge tag
+>>> 'for-5.20/fbdev-1' of
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev
+>>> git bisect good b5a8466d37d30cfcc8015789f4a3f0c44b6c7bc6
+>>> # bad: [97d3b2676fc6bc4865eb825037f4492f0fb804eb] ocfs2: remove some
+>>> useless functions
+>>> git bisect bad 97d3b2676fc6bc4865eb825037f4492f0fb804eb
+>>> # bad: [591c32bddbe20ba0e172d9def3c7f22b9c926ad9] kernel/hung_task: fix
+>>> address space of proc_dohung_task_timeout_secs
+>>> git bisect bad 591c32bddbe20ba0e172d9def3c7f22b9c926ad9
+>>> # bad: [b09a7a036d2035b14636cd4c4c69518d73770f65]  squashfs: support
+>>> reading fragments in readahead call
+>>> git bisect bad b09a7a036d2035b14636cd4c4c69518d73770f65
+>>> mtodorov@domac:~/linux/kernel/linux_stable$
+>>>
+>>> The git bisect stopped at the squashfs commit
+>>> b09a7a036d2035b14636cd4c4c69518d73770f65, so I included Phillip in Cc:,
+>>> according to the Code of Conduct.
+>> Which identified the "squashfs: support reading fragments in readahead call"
+>> patch.
+>>
+>> There is a race-condition introduced in that patch, which involves cache
+>> releasing and reuse.
+>>
+>> The following diff will fix that race-condition.  It would be great if
+>> someone could test and verify before sending it out as a patch.
+>>
+>> Thanks
+>>
+>> Phillip
+> Hi Phillip,
+>    There is a logical bug in commit 8fc78b6fe24c36b151ac98d7546591ed92083d4f
+>    which is parent commit of commit b09a7a036d2035b14636cd4c4c69518d73770f65.
+>    
+>    In function squashfs_readahead(...),
+>    file_end is initialized with i_size_read(inode) >> msblk->block_log,
+>    which means the last block index of the file.
+>    But later in the logic to check if the page is last one or not the
+>    code is
+>      if (pages[nr_pages - 1]->index == file_end && bytes) {
+>        ...
+>      }
+>    , use file_end as the last page index of file but actually is the last
+>    block index, so for the common setup of page and block size, the first
+>    comparison is true only when pages[nr_pages - 1]->index is 0.
+>    Otherwise, the trailing bytes of last page won't be zeroed.
+>
+>    Maybe it's the real cause of the snap bug in some way.
+>
+>    Thanks,
+>
+>    Jintao
 
-FWIW, Todd also reported this yesterday:
-https://lore.kernel.org/all/967cfe4e2dba242352ccd1cd00bdbcfb48bdd697.camel@linux.intel.com/
-https://bugzilla.kernel.org/show_bug.cgi?id=216600
+Dear Jintao,
 
-And Zhang Rui provided a patch in bugzilla that should fix this.
+Forgive me for noticing that this is no longer Phillip's code, so I took the
+freedom as the original submitter of the bug to include Hsin-Yi into the Cc:
+list, so he'd be informed about the error in his code.
 
-HTH, Ciao, Thorsten
+Phillip:
+I usually stop myself at bisecting bugs, and not people, so if you think that
+I was demeaning your professional contribution, I will pull a halt on this and
+pull out of this thread.
 
-> And indeed reverting that commit fixed the issue and suspend works as
-> before. Here's some info about my hardware:
-> 
-> $ dmesg | grep rtc
-> [   10.884460] rtc_cmos 00:03: RTC can wake from S4
-> [   10.888439] rtc_cmos 00:03: registered as rtc0
-> [   10.888930] rtc_cmos 00:03: alarms up to one month, y3k, 242 bytes nvram
-> 
-> $ lshw
-> nuc2
->     description: Desktop Computer
->     product: NUC8i7HVK
->     vendor: Intel(R) Client Systems
->     version: J71485-504
-> [...]
->      *-cpu
->           description: CPU
->           product: Intel(R) Core(TM) i7-8809G CPU @ 3.10GHz
-> [...]
->      *-pnp00:03
->           product: PnP device PNP0b00
->           physical id: 4
->           capabilities: pnp
->           configuration: driver=rtc_cmos
-> 
-> Do let me know if more info is needed, I can also test patches. But next
-> week I'm travelling and do not have access to the box.
-> 
-> Kalle
-> 
-> 
+I am more like weeks than decades long in Linux kernel study, so I realise I
+haven't earned the right to give you lessons, and if I sounded like that, I
+apologise again.
+
+Owing to the Author of my story, it is more important for me to win hearts for
+my Saviour than points in bug hunting.
+
+Thank you.
+
+-- 
+Mirsad Goran Todorovac
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+-- 
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb, Republic of Croatia
+
