@@ -1,164 +1,139 @@
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAA81857;
-	Tue, 18 Oct 2022 03:52:22 +0000 (UTC)
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 8802F5C021E;
-	Mon, 17 Oct 2022 23:52:21 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute2.internal (MEProxy); Mon, 17 Oct 2022 23:52:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	invisiblethingslab.com; h=cc:cc:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:sender:subject
-	:subject:to:to; s=fm3; t=1666065141; x=1666151541; bh=W4YdM85rRr
-	G8oSndD/hIo0CDcv3F1jsFFOfc7EWctI4=; b=QHQht0C4dVlXl/FbBF9w7NG9o4
-	4UgJ8jOEvdug/MzJJ9yawQ2Q77WksxxyG4F6cmNvBRNWaZee4kxO8M8uVHjxTbmr
-	r4VNCeI2ideFuwp5rJugzV1+T7PLZ9faCVHQSv7esIKDbY/2FENPFRcsiFm9gozT
-	qcZM8xYq5hy8b0+8fFEgUuCtQ5FFS01tWWWGxJ4yqkYu6ER1+hFvX1YH03VoaoFI
-	ie5svNFkqEUybqyUJu+cs6Kt/T6v1vyeII04OOEN7+vr06JBHH+NSjIFqmi7k6Pf
-	Ldmeor+EMZ6EJoO4Vf0ZJx7YFC9KyOOdMVsHoCmED+x4Hqy/PLbi5/j0yAgA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:message-id:mime-version
-	:reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1666065141; x=
-	1666151541; bh=W4YdM85rRrG8oSndD/hIo0CDcv3F1jsFFOfc7EWctI4=; b=I
-	r2PL6lYzUUvpbh6Rkts4EO0ht4E+sf7lcSHJvbPy8vJCFhdS3itiRXhTAPuCbDkr
-	0FaBeLbEMqzg3ZYCzr80DkLJqXgsLwi8v6MICwzFkumS0abPydv/SiCZ+E8XlCzZ
-	taiWPK2yZPpAjpRJLMdflzzLlhQL2rUdlDZhAxluRu1Aq0ypYa73sHJxeIU6U6Zp
-	grwAH3BQF1bu1qmLv4EODp8YCn73YnXySP3p3XAYna2l+0IvwqlqI+sS0p6Pb4Zg
-	fvS02sp3lTLOW8ZQIvTxVk93h8YQgRmdWmdXZe4INI2y/xPAGcCAN6o7Ctvy43sh
-	x8kd6Aum1x3IUPnrNZOUg==
-X-ME-Sender: <xms:9CJOY-Hs1A2mbvw8Np9dZ86H7aWMvHikYIjhdixNFZEuttrDAByybg>
-    <xme:9CJOY_Ud3fUTNSujKSylqRCCEHASmm7N9--uMjO3Ve3tuvIUIRaht-ZrbVuESWIKp
-    JH0YlsVyzgPKA>
-X-ME-Received: <xmr:9CJOY4I3TGP0QG9t5gony9WuosjuBLsbUn-Qn-2VSsuPyzSqlCwP8-uCA1RFBYkOa9FQJs38Xzv3xMf06uXyDUuOME-YNQZAKocl>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrfeeltddgjeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkgggtugesghdtreertddtjeenucfhrhhomhepofgrrhgvkhcu
-    ofgrrhgtiiihkhhofihskhhiqdfikphrvggtkhhiuceomhgrrhhmrghrvghksehinhhvih
-    hsihgslhgvthhhihhnghhslhgrsgdrtghomheqnecuggftrfgrthhtvghrnhephefguedv
-    jeekieekleduleetveefgeffgeetfeffteehteffuddujeeuudfgvdetnecuffhomhgrih
-    hnpehquhgsvghsqdhoshdrohhrghdpghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfu
-    ihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhmrghrvghksehinhhvih
-    hsihgslhgvthhhihhnghhslhgrsgdrtghomh
-X-ME-Proxy: <xmx:9CJOY4HaDe7b7N0A0jNI3TuJE090tUi-F4_RDwJsUDnZUUEC4ZMqFw>
-    <xmx:9CJOY0WzZVfoqLtd1tMLezcf2RCqfXiZjjcNxWEJ1wTcJz7BbqW4Gg>
-    <xmx:9CJOY7Pu3y9Pv_iUc4RX-xmxM0gwJPxzLoy_uqj5I_1eFd6zKGyA6w>
-    <xmx:9SJOY2JMS45VDdmqfauwWh86z8TszdDU3rezAUI8tP5zQJNKUFe5vg>
-Feedback-ID: i1568416f:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 17 Oct 2022 23:52:19 -0400 (EDT)
-Date: Tue, 18 Oct 2022 05:52:16 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Christoph Hellwig <hch@lst.de>,
-	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	regressions@lists.linux.dev, xen-devel@lists.xenproject.org,
-	iommu@lists.linux.dev
-Subject: i915 "GPU HANG", bisected to a2daa27c0c61 "swiotlb: simplify
- swiotlb_max_segment"
-Message-ID: <Y04i8V7xamTkuqNA@mail-itl>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEC47F
+	for <regressions@lists.linux.dev>; Tue, 18 Oct 2022 05:49:57 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id 6509C604EF;
+	Tue, 18 Oct 2022 07:49:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1666072189; bh=NjZ5NivgK3QgvrD6YQwn4A0vxxSyHtxRC3G1VI1pft4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=FHRUeKb/Y+tNeOB9g3SqwxfBgBzUEJ5Us/hbQl+noEVlokSQmDnpSXZCtKDffyeYh
+	 TtdX00BdyhY+2Mwt23qcJF3EgTPGgVLPoO3Iidn7x9hlTr3pSLhghrO5tMOKdbGv2D
+	 mPQj1zXCfyJVmGPqgX+gtB+NlFMXpFdgabS/XKj6VsnczaigyMzRH3h1PgPkBuaZIF
+	 FBIuimdge3h8CWxLgX5oYO4b08rELCg2aTQAlclWvoFhxjGj10FUpcUHs06UEtWatz
+	 jU43pu6/JsFvm4LfpeucAS6DVdZSCrV1az3h7oO53odfxjh+KrpgVSr+ZC26gTIU2k
+	 VmT4gcVJir8zw==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id i7My1VEd3Ja8; Tue, 18 Oct 2022 07:49:47 +0200 (CEST)
+Received: from [193.198.186.200] (pc-mtodorov.slava.alu.hr [193.198.186.200])
+	by domac.alu.hr (Postfix) with ESMTPSA id A57FC604E6;
+	Tue, 18 Oct 2022 07:49:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1666072187; bh=NjZ5NivgK3QgvrD6YQwn4A0vxxSyHtxRC3G1VI1pft4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=1DHIkaZxKnrcx3v30LK2NbY7u74ORWUhH5IHyPBnBzNoafCtcmnxkJMeacjR/GxE6
+	 irK+K6Bey974Sq14F+SyyYvVK7ejEDc4kbQSMY6acm0ebiJ7VE2bZoEBL1gFrxeyEC
+	 jmyfKJrS439e2b2Y4Z8ICIfRsaNPNOIKPCXpuSteQ9sbbILAohh34J7Ih5SuYY6NZe
+	 NKKnTgjt7nJAcfKGb3sS34UJZM3O1Napbd1AKv54EwQOmqYUVq/+7xLslwt8Q2rP9f
+	 UOeAoxMt2jCs6Ee03/wP+jDv/TZM4eWBbIppU1KDQT3AMk1iypuUhCi4bKoB58/uh1
+	 VwEYZ1eZTHT7A==
+Message-ID: <65a8985e-af62-e2e6-bffb-6256071edd74@alu.unizg.hr>
+Date: Tue, 18 Oct 2022 07:49:39 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cFcJRBMRCFbBRw5w"
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
+ 6.0.0-rc3 through 6.0.0-rc7
+Content-Language: en-US
+To: Phillip Lougher <phillip@squashfs.org.uk>, regressions@leemhuis.info
+Cc: bagasdotme@gmail.com, linux-kernel@vger.kernel.org,
+ marcmiltenberger@gmail.com, regressions@lists.linux.dev,
+ srw@sladewatkins.net, phillip.lougher@gmail.com
+References: <8702a833-e66c-e63a-bfc8-1007174c5b3d@leemhuis.info>
+ <20221015205936.5735-1-phillip@squashfs.org.uk>
+ <ff2b901d-9491-c886-5330-a244101978ab@alu.unizg.hr>
+ <b71f4e2d-23bb-3eb4-3928-fe66c4357e5b@squashfs.org.uk>
+ <cdf16572-1206-50b8-1ffe-48746cde00a4@alu.unizg.hr>
+ <e6a42b36-aed0-88a0-4a9e-d042aa7f990a@squashfs.org.uk>
+From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <e6a42b36-aed0-88a0-4a9e-d042aa7f990a@squashfs.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
+On 10/17/22 15:59, Phillip Lougher wrote:
 
---cFcJRBMRCFbBRw5w
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 18 Oct 2022 05:52:16 +0200
-From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
-To: Christoph Hellwig <hch@lst.de>,
-	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	regressions@lists.linux.dev, xen-devel@lists.xenproject.org,
-	iommu@lists.linux.dev
-Subject: i915 "GPU HANG", bisected to a2daa27c0c61 "swiotlb: simplify
- swiotlb_max_segment"
+> On 17/10/2022 14:22, Mirsad Goran Todorovac wrote:
+>>
+>> On 16.10.2022. 21:55, Phillip Lougher wrote:
+>>> On 16/10/2022 16:55, Mirsad Goran Todorovac wrote:
+>>>> On 15. 10. 2022. 22:59, Phillip Lougher wrote:
+>>>
+>>> Tracking down bugs of this sort is always a process of elimination,
+>>> and gathering information to pinpoint the exact circumstances of why
+>>> it is triggering.
+>>>
+>>> Next step is to download the exact snap(s) where the problems are 
+>>> occurring, as this may provide some insights.
+>>>
+>>> I don't run Ubuntu, and I don't use snaps.  Can you provide the
+>>> download link(s) of the snap(s) that cause problems?  If there's
+>>> any firefox snaps that don't cause problems those will be useful
+>>> too.
+>>>
+>>> You don't mention if there's any errors present in "dmesg" when
+>>> this happens, and so I'm assuming there aren't any?
+>>>
+>>> Phillip
+>>
+>> Snaps are originated in Ubuntu, and they heavily rely on snapd, and 
+>> squashfs for decompressing executables.
+>> Naturally, this also affects Linux Mint as Ubuntu's fork.
+>>
+>> Those two comprise a large share of the Linux distros, and Firefox is 
+>> exclusively distributed in snaps.
+>
+> I know you meant well, but, don't talk to me as if I'm the village
+> idiot.
+>
+> I said I don't run snaps or Ubuntu, which is nothing to do with lack of
+> understanding (*)
+>
+> I'll contact a couple of people in Canonical to obtain what I need.
+>
+> (*) I worked as a kernel maintainer for Canonical (Ubuntu) from 2007/8
+> and I worked as a kernel maintainer for Redhat on RHEL (which Centos
+> is a free version) from 2011 - 2019.  This is addition to writing and
+> maintaining Squashfs in the upstream kernel.
 
-Hi,
+Dear Phillip,
 
-Since 5.19, I observe severe glitches (mostly horizontal black stripes, but
-not only) when using IGD in Xen PV dom0. After not very long time Xorg
-crashes, and dmesg contain messages like this:
+Thousand apologies. I had no intent to offend you.
+The village idiot is actually meant to be me :)
 
-    i915 0000:00:02.0: [drm] GPU HANG: ecode 7:1:01fffbfe, in Xorg [5337]
-    i915 0000:00:02.0: [drm] Resetting rcs0 for stopped heartbeat on rcs0
-    i915 0000:00:02.0: [drm] Xorg[5337] context reset due to GPU hang
+I've already read on Wikipedia about all the uses of SquashFS, and I do 
+not underestimate
+your work by no means.
 
-The issue can be observed on several different hardware (at least Ivy
-Bridge, Tiger Lake and Kaby Lake). It doesn't always happen immediately,
-sometimes I need to start several VMs first.
-Example how it looks like:
-https://openqa.qubes-os.org/tests/48187#step/qui_widgets_notifications/8
+I apologise again if I sounded like that. I don't feel superior or 
+gloating by bisecting
+the code to your commit. By no means.
 
-More screenshots and logs are linked at https://github.com/QubesOS/qubes-is=
-sues/issues/7813
+Still I somehow managed to underestimate your contribution to The Cause, 
+and I am
+new to this community, so please forgive me this error. I tried to sound 
+diplomatic
+rather than lecturing.
 
-I managed to git bisect the issue and ended up with this as the first
-bad commit:
+Obviously, I failed :(
 
-    commit a2daa27c0c6137481226aee5b3136e453c642929
-    Author: Christoph Hellwig <hch@lst.de>
-    Date:   Mon Feb 14 11:44:42 2022 +0100
+Mirsad
 
-        swiotlb: simplify swiotlb_max_segment
-       =20
-        Remove the bogus Xen override that was usually larger than the actu=
-al
-        size and just calculate the value on demand.  Note that
-        swiotlb_max_segment still doesn't make sense as an interface and sh=
-ould
-        eventually be removed.
-       =20
-        Signed-off-by: Christoph Hellwig <hch@lst.de>
-        Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
-        Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-        Tested-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+-- 
+Mirsad Goran Todorovac
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+-- 
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb, Republic of Croatia
 
-I tried reverting just this commit on top of 6.0.x, but the context
-changed significantly in subsequent commits, so after trying reverting
-it together with 3 or 4 more commits I gave up.
-
-What may be an important detail, the system heavily uses cross-VM shared
-memory (gntdev) to map window contents from VMs. This is Qubes OS, and
-it uses Xen 4.14.
-
-
---=20
-Best Regards,
-Marek Marczykowski-G=C3=B3recki
-Invisible Things Lab
-
---cFcJRBMRCFbBRw5w
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmNOIvEACgkQ24/THMrX
-1yycxQf+MDrI5t+yoFuj1FC3BntpCUVQRQlOwZpAQuuDMEZp7i0SQgELI+rr7AxM
-7hENZvEWiRVfcul01QkAIqJHtuNtRCjdIZre5ISRBsqgw8KHyD7SWxGcs9hsXOcU
-Z5r1dIX8FqROun1vYIhRVBOtIHIA1jXnHEttenNu2KnMEXstGU03X+Xri99PJPH/
-JaYf+re4ziOqYqWE6SkQlmo2iDVOIbbg9huOJTFjRBf4VCVQM3jMIh87i52V+U9W
-vhxvGK8cYRRo4DWQOdgNRMCqKG9w0xn2uB06E2KXqwenNv++EhWEQNCeR13otXY5
-Hh6jT1pbY3q76EOTjIYfvL5Pi0MXvA==
-=3u4/
------END PGP SIGNATURE-----
-
---cFcJRBMRCFbBRw5w--
