@@ -1,223 +1,272 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4567B23A8;
-	Tue, 18 Oct 2022 08:24:24 +0000 (UTC)
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 5CDBB68C4E; Tue, 18 Oct 2022 10:24:13 +0200 (CEST)
-Date: Tue, 18 Oct 2022 10:24:13 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: Marek =?iso-8859-1?Q?Marczykowski-G=F3recki?= <marmarek@invisiblethingslab.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	regressions@lists.linux.dev, xen-devel@lists.xenproject.org,
-	iommu@lists.linux.dev, Robert Beckett <bob.beckett@collabora.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Subject: Re: i915 "GPU HANG", bisected to a2daa27c0c61 "swiotlb: simplify
- swiotlb_max_segment"
-Message-ID: <20221018082413.GA25785@lst.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C8B823A8
+	for <regressions@lists.linux.dev>; Tue, 18 Oct 2022 08:25:13 +0000 (UTC)
+Received: by mail-pj1-f53.google.com with SMTP id pq16so13332277pjb.2
+        for <regressions@lists.linux.dev>; Tue, 18 Oct 2022 01:25:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AZpmCLR1hF5indS150MrkYZSlje/HXn7i2XKe1x9Dvs=;
+        b=dqdAVfvKOkLVI7zPqzC+N2JLRvbkWfaqyORvJvnFVSPo6LaptLQYpBQ91KFQsbAXOW
+         jOgrIDOh8nIFiw5DGIyHj/o9pVj7Nse24l7OIhuVX8yp23TIgf84aT1TXL+5egkp9IVo
+         jgZaJR+y8uwXBwfU0u5UA/yaFNpfViEtplgDI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AZpmCLR1hF5indS150MrkYZSlje/HXn7i2XKe1x9Dvs=;
+        b=NxIv5KLOjP09iGX5YSFbhzeIKbqaAD/UN8MaqL8HRA6Hd9ztXELt04HBVqJ7ZHeMcV
+         wO45ZAZCF3nomW2szfmoHKM8dZA63quTpZaMox+EPgI3YS+ZQgVS7K5Pa5+yxUsLhdgL
+         OLtM0Ui95q5CjRjBzoTRcwhNgf00Ub6OnyNE6G+uH6OgXepMiZ08Ei4Bg7ZUEwYfTNv+
+         KSkUUPk5pg1EMRQvXoWfv5f89s3dzhCFH9C3ZIUmnRhe21P+5wpK9UOuRn/qGCAQTw9i
+         c62bYNY6eW7x1xx+8PEEG4f2BtHLwbW18Myard5YZM/m0xZz9y9ZN7oswCXBpmUv/HBd
+         sAaw==
+X-Gm-Message-State: ACrzQf1CSBaQW7NQLLpSzR1OaMnOuPdCOj4TMW4Zron7iMeU7zPljdDF
+	CV9ZQeygw7tPhGyNZ6km9zu1GxbCJgFrGV8IrarUXg==
+X-Google-Smtp-Source: AMsMyM6y7VKicFgvVx8dsksOFGLsX2VUfi4dRPGOLeq53dJM1CPEac0ZO/++xgen87AYpJ193fAE/WjMbF414Xd92jU=
+X-Received: by 2002:a17:90b:4f4a:b0:20c:64e2:2bf1 with SMTP id
+ pj10-20020a17090b4f4a00b0020c64e22bf1mr2435342pjb.30.1666081512601; Tue, 18
+ Oct 2022 01:25:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Y04i8V7xamTkuqNA@mail-itl>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20221015205936.5735-1-phillip@squashfs.org.uk>
+ <20221018021507.612-1-nicememory@gmail.com> <41c05ece-2e63-391a-e1ba-fc1acb235559@alu.unizg.hr>
+In-Reply-To: <41c05ece-2e63-391a-e1ba-fc1acb235559@alu.unizg.hr>
+From: Hsin-Yi Wang <hsinyi@chromium.org>
+Date: Tue, 18 Oct 2022 16:24:46 +0800
+Message-ID: <CAJMQK-hgQEkhgpO9VFOCgn-cKtVsr7Hb_58pAYiGoDi5SzGZtA@mail.gmail.com>
+Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
+ 6.0.0-rc3 through 6.0.0-rc7
+To: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+Cc: Jintao Yin <nicememory@gmail.com>, phillip@squashfs.org.uk, bagasdotme@gmail.com, 
+	linux-kernel@vger.kernel.org, marcmiltenberger@gmail.com, 
+	regressions@leemhuis.info, regressions@lists.linux.dev, srw@sladewatkins.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Oct 18, 2022 at 05:52:16AM +0200, Marek Marczykowski-Górecki wrote:
-> not only) when using IGD in Xen PV dom0. After not very long time Xorg
-> crashes, and dmesg contain messages like this:
-> 
->     i915 0000:00:02.0: [drm] GPU HANG: ecode 7:1:01fffbfe, in Xorg [5337]
->     i915 0000:00:02.0: [drm] Resetting rcs0 for stopped heartbeat on rcs0
->     i915 0000:00:02.0: [drm] Xorg[5337] context reset due to GPU hang
+On Tue, Oct 18, 2022 at 2:52 PM Mirsad Todorovac
+<mirsad.todorovac@alu.unizg.hr> wrote:
+>
+> On 10/18/22 04:15, Jintao Yin wrote:
+>
+> > On Sat, Oct 15, 2022 at 09:59:36PM +0100, Phillip Lougher wrote:
+> >> Thorsten Leemhuis <regressions@leemhuis.info> wrote:
+> >>> Topposting, to make this easier to access for everyone.
+> >>>
+> >>> @Mirsad, thx for bisecting.
+> >>>
+> >>> @Phillip: if you want to see a problem description and the whole
+> >>> backstory of the problem that apparently is caused by       b09a7a036=
+d20
+> >>> ("squashfs: support reading fragments in readahead call"), see this
+> >>> thread (Mirsad sadly started a new one with the quoted mail below):
+> >>> https://lore.kernel.org/all/b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.=
+unizg.hr/
+> >>>
+> >> The above backstory tends to suggest data corruption which is happenin=
+g
+> >> after a couple of hours especially on heavy loads, e.g. the comment
+> >>
+> >>> On 10/3/22 at 4:18 AM, Mirsad Goran Todorovac wrote:
+> >>> The bug usually isn't showing immediately, but after a couple of hour=
+s
+> >>> of running (especially with multimedia running inside Firefox).
+> >> Which is typically caused by double freed buffers or race conditions i=
+n
+> >> freeing and reusing.
+> >>
+> >> Thanks Mirsad for the following
+> >>
+> >> On Sat, 15 Oct 2022 16:59:44 +0200, Mirsad Goran Todorovac wrote:
+> >>> Here are the results of the requested bisect on the bug involving the
+> >>> Firefox snap build 104.x, 105.0.x, squashfs and which was manifested =
+on
+> >>> both Ubuntu snap and with snapd in AlmaLinux 8.6 (CentOS fork):
+> >>>
+> >>> mtodorov@domac:~/linux/kernel/linux_stable$ git bisect log
+> >>> git bisect start
+> >>> # bad: [568035b01cfb107af8d2e4bd2fb9aea22cf5b868] Linux 6.0-rc1
+> >>> git bisect bad 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+> >>> # good: [51dd976781da8c0b47e106ed59a96d7c28972ce4] Linux 5.19.15
+> >>> git bisect good 51dd976781da8c0b47e106ed59a96d7c28972ce4
+> >>> # good: [3d7cb6b04c3f3115719235cc6866b10326de34cd] Linux 5.19
+> >>> git bisect good 3d7cb6b04c3f3115719235cc6866b10326de34cd
+> >>> # good: [b44f2fd87919b5ae6e1756d4c7ba2cbba22238e1] Merge tag
+> >>> 'drm-next-2022-08-03' of git://anongit.freedesktop.org/drm/drm
+> >>> git bisect good b44f2fd87919b5ae6e1756d4c7ba2cbba22238e1
+> >>> # good: [6614a3c3164a5df2b54abb0b3559f51041cf705b] Merge tag
+> >>> 'mm-stable-2022-08-03' of
+> >>> git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> >>> git bisect good 6614a3c3164a5df2b54abb0b3559f51041cf705b
+> >>> # bad: [eb5699ba31558bdb2cee6ebde3d0a68091e47dce] Merge tag
+> >>> 'mm-nonmm-stable-2022-08-06-2' of
+> >>> git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
+> >>> git bisect bad eb5699ba31558bdb2cee6ebde3d0a68091e47dce
+> >>> # good: [24df5428ef9d1ca1edd54eca7eb667110f2dfae3] ALSA: hda/realtek:
+> >>> Add quirk for HP Spectre x360 15-eb0xxx
+> >>> git bisect good 24df5428ef9d1ca1edd54eca7eb667110f2dfae3
+> >>> # good: [c993e07be023acdeec8e84e2e0743c52adb5fc94] Merge tag
+> >>> 'dma-mapping-5.20-2022-08-06' of
+> >>> git://git.infradead.org/users/hch/dma-mapping
+> >>> git bisect good c993e07be023acdeec8e84e2e0743c52adb5fc94
+> >>> # good: [4cfa6ff24a9744ba484521c38bea613134fbfcb3] powerpc/64e: Fix
+> >>> kexec build error
+> >>> git bisect good 4cfa6ff24a9744ba484521c38bea613134fbfcb3
+> >>> # good: [24cb958695724ffb4488ef4f65892c0767bcd2f2] Merge tag
+> >>> 's390-5.20-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/l=
+inux
+> >>> git bisect good 24cb958695724ffb4488ef4f65892c0767bcd2f2
+> >>> # good: [db98b43086275350294f5c6f797249b714d6316d] squashfs: always
+> >>> build "file direct" version of page actor
+> >>> git bisect good db98b43086275350294f5c6f797249b714d6316d
+> >>> # good: [6ba592fa014f21f35a8ee8da4ca7b95a018f13e8] video: fbdev: s3fb=
+:
+> >>> Check the size of screen before memset_io()
+> >>> git bisect good 6ba592fa014f21f35a8ee8da4ca7b95a018f13e8
+> >>> # good: [b5a8466d37d30cfcc8015789f4a3f0c44b6c7bc6] Merge tag
+> >>> 'for-5.20/fbdev-1' of
+> >>> git://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev
+> >>> git bisect good b5a8466d37d30cfcc8015789f4a3f0c44b6c7bc6
+> >>> # bad: [97d3b2676fc6bc4865eb825037f4492f0fb804eb] ocfs2: remove some
+> >>> useless functions
+> >>> git bisect bad 97d3b2676fc6bc4865eb825037f4492f0fb804eb
+> >>> # bad: [591c32bddbe20ba0e172d9def3c7f22b9c926ad9] kernel/hung_task: f=
+ix
+> >>> address space of proc_dohung_task_timeout_secs
+> >>> git bisect bad 591c32bddbe20ba0e172d9def3c7f22b9c926ad9
+> >>> # bad: [b09a7a036d2035b14636cd4c4c69518d73770f65]  squashfs: support
+> >>> reading fragments in readahead call
+> >>> git bisect bad b09a7a036d2035b14636cd4c4c69518d73770f65
+> >>> mtodorov@domac:~/linux/kernel/linux_stable$
+> >>>
+> >>> The git bisect stopped at the squashfs commit
+> >>> b09a7a036d2035b14636cd4c4c69518d73770f65, so I included Phillip in Cc=
+:,
+> >>> according to the Code of Conduct.
+> >> Which identified the "squashfs: support reading fragments in readahead=
+ call"
+> >> patch.
+> >>
+> >> There is a race-condition introduced in that patch, which involves cac=
+he
+> >> releasing and reuse.
+> >>
+> >> The following diff will fix that race-condition.  It would be great if
+> >> someone could test and verify before sending it out as a patch.
+> >>
+> >> Thanks
+> >>
+> >> Phillip
+> > Hi Phillip,
+> >    There is a logical bug in commit 8fc78b6fe24c36b151ac98d7546591ed920=
+83d4f
+> >    which is parent commit of commit b09a7a036d2035b14636cd4c4c69518d737=
+70f65.
+> >
+> >    In function squashfs_readahead(...),
+> >    file_end is initialized with i_size_read(inode) >> msblk->block_log,
+> >    which means the last block index of the file.
+> >    But later in the logic to check if the page is last one or not the
+> >    code is
+> >      if (pages[nr_pages - 1]->index =3D=3D file_end && bytes) {
+> >        ...
+> >      }
+> >    , use file_end as the last page index of file but actually is the la=
+st
+> >    block index, so for the common setup of page and block size, the fir=
+st
+> >    comparison is true only when pages[nr_pages - 1]->index is 0.
+> >    Otherwise, the trailing bytes of last page won't be zeroed.
+> >
+> >    Maybe it's the real cause of the snap bug in some way.
+> >
+Hi Jintao,
 
-<snip>
+Thanks for pointing out and sorry for missing this. Does the following
+diff improve the issue?
 
-> I tried reverting just this commit on top of 6.0.x, but the context
-> changed significantly in subsequent commits, so after trying reverting
-> it together with 3 or 4 more commits I gave up.
-> 
-> What may be an important detail, the system heavily uses cross-VM shared
-> memory (gntdev) to map window contents from VMs. This is Qubes OS, and
-> it uses Xen 4.14.
+diff --git a/fs/squashfs/file.c b/fs/squashfs/file.c
+index e56510964b229..7759bd70dfbf2 100644
+--- a/fs/squashfs/file.c
++++ b/fs/squashfs/file.c
+@@ -600,7 +600,7 @@ static void squashfs_readahead(struct
+readahead_control *ractl)
 
-Can you try the patch below?
+                        /* Last page (if present) may have trailing
+bytes not filled */
+                        bytes =3D res % PAGE_SIZE;
+-                       if (pages[nr_pages - 1]->index =3D=3D file_end && b=
+ytes)
++                       if ((pages[nr_pages - 1]->index >> shift) =3D=3D
+file_end && bytes)
+                                memzero_page(pages[nr_pages - 1], bytes,
+                                             PAGE_SIZE - bytes);
 
----
-From 26fe4749750f1bf843666ca777e297279994e33a Mon Sep 17 00:00:00 2001
-From: Robert Beckett <bob.beckett@collabora.com>
-Date: Tue, 26 Jul 2022 16:39:35 +0100
-Subject: drm/i915: stop abusing swiotlb_max_segment
 
-Calling swiotlb functions directly is nowadays considered harmful. See
-https://lore.kernel.org/intel-gfx/20220711082614.GA29487@lst.de/
+readahead only handles the case that the first page and the last page
+have the same block index:
+    index =3D pages[0]->index >> shift;
+    if ((pages[nr_pages - 1]->index >> shift) !=3D index)
+        goto skip_pages;
 
-Replace swiotlb_max_segment() calls with dma_max_mapping_size().
-In i915_gem_object_get_pages_internal() no longer consider max_segment
-only if CONFIG_SWIOTLB is enabled. There can be other (iommu related)
-causes of specific max segment sizes.
+The diff above makes a difference to SQUASHFS_INVALID_BLK case, which
+will not be handled by squashfs_readahead_fragment() if
+index=3D=3Dfile_end.
+With the above diff, it will now be memzero_page().
 
-Signed-off-by: Robert Beckett <bob.beckett@collabora.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-[hch: added the Xen hack]
----
- drivers/gpu/drm/i915/gem/i915_gem_internal.c | 19 +++----------
- drivers/gpu/drm/i915/gem/i915_gem_shmem.c    |  2 +-
- drivers/gpu/drm/i915/gem/i915_gem_ttm.c      |  4 +--
- drivers/gpu/drm/i915/gem/i915_gem_userptr.c  |  2 +-
- drivers/gpu/drm/i915/i915_scatterlist.h      | 30 +++++++++++---------
- 5 files changed, 25 insertions(+), 32 deletions(-)
+Hi Phillip,
+Does the SQUASHFS_INVALID_BLK case handling with index=3D=3Dfile_end
+sounds reasonable to you?
 
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_internal.c b/drivers/gpu/drm/i915/gem/i915_gem_internal.c
-index c698f95af15fe..629acb403a2c9 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_internal.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_internal.c
-@@ -6,7 +6,6 @@
- 
- #include <linux/scatterlist.h>
- #include <linux/slab.h>
--#include <linux/swiotlb.h>
- 
- #include "i915_drv.h"
- #include "i915_gem.h"
-@@ -38,22 +37,12 @@ static int i915_gem_object_get_pages_internal(struct drm_i915_gem_object *obj)
- 	struct scatterlist *sg;
- 	unsigned int sg_page_sizes;
- 	unsigned int npages;
--	int max_order;
-+	int max_order = MAX_ORDER;
-+	unsigned int max_segment;
- 	gfp_t gfp;
- 
--	max_order = MAX_ORDER;
--#ifdef CONFIG_SWIOTLB
--	if (is_swiotlb_active(obj->base.dev->dev)) {
--		unsigned int max_segment;
--
--		max_segment = swiotlb_max_segment();
--		if (max_segment) {
--			max_segment = max_t(unsigned int, max_segment,
--					    PAGE_SIZE) >> PAGE_SHIFT;
--			max_order = min(max_order, ilog2(max_segment));
--		}
--	}
--#endif
-+	max_segment = i915_sg_segment_size(i915->drm.dev) >> PAGE_SHIFT;
-+	max_order = min(max_order, get_order(max_segment));
- 
- 	gfp = GFP_KERNEL | __GFP_HIGHMEM | __GFP_RECLAIMABLE;
- 	if (IS_I965GM(i915) || IS_I965G(i915)) {
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-index f42ca1179f373..11125c32dd35d 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-@@ -194,7 +194,7 @@ static int shmem_get_pages(struct drm_i915_gem_object *obj)
- 	struct intel_memory_region *mem = obj->mm.region;
- 	struct address_space *mapping = obj->base.filp->f_mapping;
- 	const unsigned long page_count = obj->base.size / PAGE_SIZE;
--	unsigned int max_segment = i915_sg_segment_size();
-+	unsigned int max_segment = i915_sg_segment_size(i915->drm.dev);
- 	struct sg_table *st;
- 	struct sgt_iter sgt_iter;
- 	struct page *page;
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_ttm.c b/drivers/gpu/drm/i915/gem/i915_gem_ttm.c
-index e3fc38dd5db04..de5d0a7241027 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_ttm.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_ttm.c
-@@ -189,7 +189,7 @@ static int i915_ttm_tt_shmem_populate(struct ttm_device *bdev,
- 	struct drm_i915_private *i915 = container_of(bdev, typeof(*i915), bdev);
- 	struct intel_memory_region *mr = i915->mm.regions[INTEL_MEMORY_SYSTEM];
- 	struct i915_ttm_tt *i915_tt = container_of(ttm, typeof(*i915_tt), ttm);
--	const unsigned int max_segment = i915_sg_segment_size();
-+	const unsigned int max_segment = i915_sg_segment_size(i915->drm.dev);
- 	const size_t size = (size_t)ttm->num_pages << PAGE_SHIFT;
- 	struct file *filp = i915_tt->filp;
- 	struct sgt_iter sgt_iter;
-@@ -538,7 +538,7 @@ static struct i915_refct_sgt *i915_ttm_tt_get_st(struct ttm_tt *ttm)
- 	ret = sg_alloc_table_from_pages_segment(st,
- 			ttm->pages, ttm->num_pages,
- 			0, (unsigned long)ttm->num_pages << PAGE_SHIFT,
--			i915_sg_segment_size(), GFP_KERNEL);
-+			i915_sg_segment_size(i915_tt->dev), GFP_KERNEL);
- 	if (ret) {
- 		st->sgl = NULL;
- 		return ERR_PTR(ret);
-diff --git a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-index 8423df021b713..e4515d6acd43c 100644
---- a/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-+++ b/drivers/gpu/drm/i915/gem/i915_gem_userptr.c
-@@ -129,7 +129,7 @@ static void i915_gem_object_userptr_drop_ref(struct drm_i915_gem_object *obj)
- static int i915_gem_userptr_get_pages(struct drm_i915_gem_object *obj)
- {
- 	const unsigned long num_pages = obj->base.size >> PAGE_SHIFT;
--	unsigned int max_segment = i915_sg_segment_size();
-+	unsigned int max_segment = i915_sg_segment_size(obj->base.dev->dev);
- 	struct sg_table *st;
- 	unsigned int sg_page_sizes;
- 	struct page **pvec;
-diff --git a/drivers/gpu/drm/i915/i915_scatterlist.h b/drivers/gpu/drm/i915/i915_scatterlist.h
-index 9ddb3e743a3e5..c278888f71528 100644
---- a/drivers/gpu/drm/i915/i915_scatterlist.h
-+++ b/drivers/gpu/drm/i915/i915_scatterlist.h
-@@ -9,7 +9,8 @@
- 
- #include <linux/pfn.h>
- #include <linux/scatterlist.h>
--#include <linux/swiotlb.h>
-+#include <linux/dma-mapping.h>
-+#include <xen/xen.h>
- 
- #include "i915_gem.h"
- 
-@@ -127,19 +128,22 @@ static inline unsigned int i915_sg_dma_sizes(struct scatterlist *sg)
- 	return page_sizes;
- }
- 
--static inline unsigned int i915_sg_segment_size(void)
-+static inline unsigned int i915_sg_segment_size(struct device *dev)
- {
--	unsigned int size = swiotlb_max_segment();
--
--	if (size == 0)
--		size = UINT_MAX;
--
--	size = rounddown(size, PAGE_SIZE);
--	/* swiotlb_max_segment_size can return 1 byte when it means one page. */
--	if (size < PAGE_SIZE)
--		size = PAGE_SIZE;
--
--	return size;
-+	size_t max = min_t(size_t, UINT_MAX, dma_max_mapping_size(dev));
-+
-+	/*
-+	 * Xen on x86 can reshuffle pages under us.  The DMA API takes
-+	 * care of that both in dma_alloc_* (by calling into the hypervisor
-+	 * to make the pages contigous) and in dma_map_* (by bounce buffering).
-+	 * But i915 abuses ignores the coherency aspects of the DMA API and
-+	 * thus can't cope with bounce buffering actually happening, so add
-+	 * a hack here to force small allocations and mapping when running on
-+	 * Xen.  (good luck with TDX, btw --hch)
-+	 */
-+	if (IS_ENABLED(CONFIG_X86) && xen_domain())
-+		max = PAGE_SIZE;
-+	return round_down(max, PAGE_SIZE);
- }
- 
- bool i915_sg_trim(struct sg_table *orig_st);
--- 
-2.30.2
+Thanks.
 
+> >    Thanks,
+> >
+> >    Jintao
+>
+> Dear Jintao,
+>
+> Forgive me for noticing that this is no longer Phillip's code, so I took =
+the
+> freedom as the original submitter of the bug to include Hsin-Yi into the =
+Cc:
+> list, so he'd be informed about the error in his code.
+>
+> Phillip:
+> I usually stop myself at bisecting bugs, and not people, so if you think =
+that
+> I was demeaning your professional contribution, I will pull a halt on thi=
+s and
+> pull out of this thread.
+>
+> I am more like weeks than decades long in Linux kernel study, so I realis=
+e I
+> haven't earned the right to give you lessons, and if I sounded like that,=
+ I
+> apologise again.
+>
+> Owing to the Author of my story, it is more important for me to win heart=
+s for
+> my Saviour than points in bug hunting.
+>
+> Thank you.
+>
+> --
+> Mirsad Goran Todorovac
+> Sistem in=C5=BEenjer
+> Grafi=C4=8Dki fakultet | Akademija likovnih umjetnosti
+> Sveu=C4=8Dili=C5=A1te u Zagrebu
+> --
+> System engineer
+> Faculty of Graphic Arts | Academy of Fine Arts
+> University of Zagreb, Republic of Croatia
+>
