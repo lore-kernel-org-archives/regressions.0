@@ -1,45 +1,45 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F2A7B
-	for <regressions@lists.linux.dev>; Tue, 18 Oct 2022 08:33:32 +0000 (UTC)
-Received: by mail-pf1-f177.google.com with SMTP id 204so13411744pfx.10
-        for <regressions@lists.linux.dev>; Tue, 18 Oct 2022 01:33:32 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953017B
+	for <regressions@lists.linux.dev>; Tue, 18 Oct 2022 08:35:23 +0000 (UTC)
+Received: by mail-pl1-f180.google.com with SMTP id l1so13123999pld.13
+        for <regressions@lists.linux.dev>; Tue, 18 Oct 2022 01:35:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uTmm9dDQ2R4TsTNZChH1eu4CLKVneoMZu9n5+pM/NL8=;
-        b=F/eoVMCX224ee9hY7jtJCvjukzZUwpY3HTDiLaIYavMgI2g9VhUY/FdC/QDtm59ECs
-         qI/k4jjbbElQOQFQ/1p4GAJHabk2b9cFD6PCF4/uv+xTg1QX/QLYjR43to3On/UeFwvY
-         kdY2IX1tIsHgOEQu4RatmfMTmQYOZFy8ACoNy+JEjHxSONbcwGDiYZpH55i0p3LG+nSA
-         liI2XQ37DfQUgeOOBHUCSsC2UBvp7k7EqTsMKeeSx3SIhyES0iHvzI90R5E5bfSrvcwA
-         ffvhVEio+sV41/nFRkxUFwdqypgrl1ksKSC1GFyf32fJTJsT4Mj5Zh2sDMVC/SVjy2Qb
-         DBYw==
+        bh=wEe31S7OueGkq2ATsUWNgeMPrSgw0rLvjqo2xewOoPY=;
+        b=n0omaL6hS21R8l/phMUF9jY6xR7fhPqREWjC2oG2B51o/rj2Mpu1tatt4o4PF2nd/K
+         I2osJfdM7OmnocKcxnlwakiPoCFErGVROE4qb2PwzxMFKzSF+linGrJ+inqTc517Cgwl
+         fUgR12cS5zQmS2MY2Kd+u0swoep4JLojQK39p61ouF1rwzU6Yfy/qOZvf5YMi4rIrUEF
+         E5nryaZ0FWfVQbiQiLBwDpZLFzJCClDJepxouekIiYyV800JkHgLOlDf/uSlre4lKQB/
+         dE4Uec+qEyVeRa2yVV0Dk+vhs924cOIB2qtJ005eYcMs5AGpjcBfCZ8cs0QHc6CANqop
+         eClA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uTmm9dDQ2R4TsTNZChH1eu4CLKVneoMZu9n5+pM/NL8=;
-        b=pgde5PvbzFgC0kFPOR1wp2807EwP/kbbdKwA551LqvZsrrRsfDzrhEpyy5tUGfmnFF
-         AnYrgcZ64aMVhyt35mNl+g+RS3b8kbm08n5kXHfP5YP7eCdn71WFpbRsUw9mMNVFOGgv
-         Jml5UTVk7K+GMsm8QNZzFlwNHfiBlxHvt2dR3We0oZ0OKoRK58utb8w6nBS6Lj9uhQY/
-         DJ/U1oAGMB+mC3s6qVbvuAvmx6Ox59pBn4p8eam6RdcRDHZVkO9XNeOvR1nyHO2efLBf
-         HhdUNLlXDNhsMDDj/WNIPwEpPjF2jm8D6k7JH4KXoJGlht50lbwIIzv0qyq47ZL1iNzM
-         0x6A==
-X-Gm-Message-State: ACrzQf2p+eLy8/m1EiWrStF71U82960adCgr0dS9txurkwx4FGvwFRF8
-	bdDjK6d2linxbqwUL7a5LFs=
-X-Google-Smtp-Source: AMsMyM4xUjWNUgR78GDaZTJkM/SnbAiaykX60PbHtCfTuA1PFGKBy3U94bgYV+EHcHc3H0EH+gVpQA==
-X-Received: by 2002:a65:6148:0:b0:458:88cd:f46 with SMTP id o8-20020a656148000000b0045888cd0f46mr1702418pgv.303.1666082012029;
-        Tue, 18 Oct 2022 01:33:32 -0700 (PDT)
+        bh=wEe31S7OueGkq2ATsUWNgeMPrSgw0rLvjqo2xewOoPY=;
+        b=D4XTXnoXj2V1c8nttJDxN0ggQhpySudRdUbUSNpxQ7RUeG8jjsOc3ATMSyTapZOJ4e
+         ZQl9u6J7uq8qVWH/DnSWlzHXFhAGzCogF8IH8OB2PigcHpaG7wtF/rzs1DJejk58wQpg
+         76YzfJ3/J9p8gVs5rDXdVH4ItC5x75JsRy8k9JnWxWU62RsndYWUT4GubVIH8h73D91q
+         JdWyinQ6XtDqV7OBrbQu7dg/zPVqgfG6T1ZryLpsGAcmSIgRqoMZjlPe4nUphoHpThVm
+         4AxpLRCQbJPeM2fwdqPcwj65NNvQGMxFBgrXoyNBWPZ72Nw6DX2O0of79oKWDgh4KwBH
+         +rFw==
+X-Gm-Message-State: ACrzQf1i3aCJob8r9pOpEg4eA2k4oWO5sAb5snxsJEOTWlfMyg0o1l8L
+	NgAaXAyjNfKZWpiwR5EE6S4=
+X-Google-Smtp-Source: AMsMyM4RxVuZxAP3xMNpqCjeZKVZLVRruTKutnEPI6ngJu2UocmJu9YAzfuDjOP4IgCEEMsD5s81ag==
+X-Received: by 2002:a17:90b:3d85:b0:20c:8f6a:8298 with SMTP id pq5-20020a17090b3d8500b0020c8f6a8298mr38901757pjb.242.1666082123190;
+        Tue, 18 Oct 2022 01:35:23 -0700 (PDT)
 Received: from [192.168.43.80] (subs02-180-214-232-76.three.co.id. [180.214.232.76])
-        by smtp.gmail.com with ESMTPSA id nd16-20020a17090b4cd000b0020a821e97fbsm7481053pjb.13.2022.10.18.01.33.29
+        by smtp.gmail.com with ESMTPSA id c7-20020a621c07000000b005619afb745esm8613725pfc.113.2022.10.18.01.35.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Oct 2022 01:33:31 -0700 (PDT)
-Message-ID: <d1f6c2da-4473-d0ae-88a2-dc379a9857e8@gmail.com>
-Date: Tue, 18 Oct 2022 15:33:25 +0700
+        Tue, 18 Oct 2022 01:35:22 -0700 (PDT)
+Message-ID: <608e2363-1e51-7aef-746f-e93aac583a13@gmail.com>
+Date: Tue, 18 Oct 2022 15:35:19 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -52,45 +52,31 @@ Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
  6.0.0-rc3 through 6.0.0-rc7
 Content-Language: en-US
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Jintao Yin <nicememory@gmail.com>, phillip@squashfs.org.uk
+To: Phillip Lougher <phillip@squashfs.org.uk>, regressions@leemhuis.info,
+ mirsad.todorovac@alu.unizg.hr
 Cc: linux-kernel@vger.kernel.org, marcmiltenberger@gmail.com,
- mirsad.todorovac@alu.unizg.hr, regressions@leemhuis.info,
  regressions@lists.linux.dev, srw@sladewatkins.net
-References: <20221015205936.5735-1-phillip@squashfs.org.uk>
- <20221018021507.612-1-nicememory@gmail.com>
- <2522e5d5-5f8a-c5e9-4864-a82f0e6d2512@gmail.com>
-In-Reply-To: <2522e5d5-5f8a-c5e9-4864-a82f0e6d2512@gmail.com>
+References: <8702a833-e66c-e63a-bfc8-1007174c5b3d@leemhuis.info>
+ <20221015205936.5735-1-phillip@squashfs.org.uk>
+ <2d1ca80c-1023-9821-f401-43cff34cca86@gmail.com>
+ <c5980bcb-f345-ff2e-a29b-75e53a6b8708@gmail.com>
+In-Reply-To: <c5980bcb-f345-ff2e-a29b-75e53a6b8708@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/18/22 14:23, Bagas Sanjaya wrote:
-> On 10/18/22 09:15, Jintao Yin wrote:
->> Hi Phillip,
->>   There is a logical bug in commit 8fc78b6fe24c36b151ac98d7546591ed92083d4f
->>   which is parent commit of commit b09a7a036d2035b14636cd4c4c69518d73770f65.
->>   
->>   In function squashfs_readahead(...),
->>   file_end is initialized with i_size_read(inode) >> msblk->block_log,
->>   which means the last block index of the file.
->>   But later in the logic to check if the page is last one or not the
->>   code is 
->>     if (pages[nr_pages - 1]->index == file_end && bytes) {
->>       ...
->>     }
->>   , use file_end as the last page index of file but actually is the last
->>   block index, so for the common setup of page and block size, the first 
->>   comparison is true only when pages[nr_pages - 1]->index is 0.
->>   Otherwise, the trailing bytes of last page won't be zeroed.
+On 10/17/22 16:45, Bagas Sanjaya wrote:
+> On 10/16/22 19:21, Bagas Sanjaya wrote:
 >>
->>   Maybe it's the real cause of the snap bug in some way.
+>> No Verneed warnings so far. However, I need to test for a longer time
+>> (a day) to check if any warnings are reported.
 >>
 > 
-> Hi Jintao, thanks for explaining the real culprit. However, I'd like to
-> see the fixup patch from you so that we can test.
+> The regression still occurs with this patch applied. Let's see if
+> reverting the offending commit helps.
 > 
 
-Sorry for inconvenience. Hsin-Yi Wang have already submitted the candidate
-fix at [1]. Thanks anyway.
+No regressions with the offending commit reverted. Now I have to
+try the proposed fix ([1]).
 
 [1]: https://lore.kernel.org/lkml/CAJMQK-hgQEkhgpO9VFOCgn-cKtVsr7Hb_58pAYiGoDi5SzGZtA@mail.gmail.com/
 
