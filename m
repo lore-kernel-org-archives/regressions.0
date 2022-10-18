@@ -1,188 +1,82 @@
-Received: from p3plwbeout16-04.prod.phx3.secureserver.net (p3plsmtp16-04-2.prod.phx3.secureserver.net [173.201.193.60])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF6346AE
-	for <regressions@lists.linux.dev>; Tue, 18 Oct 2022 17:18:20 +0000 (UTC)
-Received: from mailex.mailcore.me ([94.136.40.142])
-	by :WBEOUT: with ESMTP
-	id kqBcoCoGaLDg0kqBdo384I; Tue, 18 Oct 2022 10:15:29 -0700
-X-CMAE-Analysis: v=2.4 cv=WfHJ12tX c=1 sm=1 tr=0 ts=634edf31
- a=s1hRAmXuQnGNrIj+3lWWVA==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
- a=ggZhUymU-5wA:10 a=IkcTkHD0fZMA:10 a=Qawa6l4ZSaYA:10 a=lAgNKBcoAAAA:8
- a=VwQbUJbxAAAA:8 a=e5mUnYsNAAAA:8 a=JfrnYn6hAAAA:8 a=ygIEzA4lYqtJ-tnP5d0A:9
- a=QEXdDO2ut3YA:10 a=drE6d5tx1tjNRBs8zHOc:22 a=AjGcO6oz07-iQ99wixmX:22
- a=Vxmtnl_E_bksehYqCbjh:22 a=1CNFftbPRP8L7MoqJWF3:22
-X-SECURESERVER-ACCT: phillip@squashfs.org.uk  
-X-SID: kqBcoCoGaLDg0
-Received: from 82-69-79-175.dsl.in-addr.zen.co.uk ([82.69.79.175] helo=[192.168.178.33])
-	by smtp05.mailcore.me with esmtpa (Exim 4.94.2)
-	(envelope-from <phillip@squashfs.org.uk>)
-	id 1okqBY-0000Nu-2a; Tue, 18 Oct 2022 18:15:27 +0100
-Message-ID: <cfe5dd3a-5820-98cf-ae31-b6a3ff3f0578@squashfs.org.uk>
-Date: Tue, 18 Oct 2022 18:15:23 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6A64C72
+	for <regressions@lists.linux.dev>; Tue, 18 Oct 2022 17:40:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0463BC433C1;
+	Tue, 18 Oct 2022 17:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1666114814;
+	bh=qpNCpRKE3Sj2P0Bl9ndscSsJCK0UZNDnbBHlhXRYp8U=;
+	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+	b=aCDKEnCRBZCgEXXGH1lV1s82cDWZJHnJ45aes63rV2j967JEXT33wiCbItGOC3viC
+	 Jd24ImQQV0+hodmr6UUg3dovWv3FFHgpiUw24J7WP/ZGVLVkjhfGsHFYLMd0GUDu9n
+	 iEyDHkidxHvPdTpxjc0J8bInF7nRnp3uKi0xijNyt02VdxYUpANUXOr8pEL2xM1fGt
+	 1V2Ij+DuceNviv8VmBznDsrtNS6pq5K+a+uV5O4xeiGwkDa/LIo8zaZHXEw3Z026zm
+	 OTiLIzMJT/nRkRWclkn1pET8h6k5dA4qK0n1G9FJMNARXcrmvKLvry1OIQ3sgYY05b
+	 JPNM4AayRXGGQ==
+From: Kalle Valo <kvalo@kernel.org>
+To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,  Alexandre Belloni <alexandre.belloni@bootlin.com>,  Mel Gorman <mgorman@techsingularity.net>,  Bjorn Helgaas <bhelgaas@google.com>,  <linux-rtc@vger.kernel.org>,  <regressions@lists.linux.dev>,  <linux-kernel@vger.kernel.org>
+Subject: Re: [REGRESSION v6.1-rc1] rtc: cmos: rtcwake broken on NUC8i7HVK
+References: <87edv6mlow.fsf@kernel.org>
+	<b2be77b0-bafb-0519-33cb-359d83ded4d8@leemhuis.info>
+	<87a65tmwuj.fsf@kernel.org>
+	<6b4aefb2-01a9-1489-8669-1af20e88f669@intel.com>
+Date: Tue, 18 Oct 2022 20:40:09 +0300
+In-Reply-To: <6b4aefb2-01a9-1489-8669-1af20e88f669@intel.com> (Rafael J.
+	Wysocki's message of "Tue, 18 Oct 2022 18:36:36 +0200")
+Message-ID: <8735blm3nq.fsf@kernel.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
- 6.0.0-rc3 through 6.0.0-rc7
-To: Jintao Yin <nicememory@gmail.com>
-Cc: bagasdotme@gmail.com, linux-kernel@vger.kernel.org,
- marcmiltenberger@gmail.com, mirsad.todorovac@alu.unizg.hr,
- regressions@leemhuis.info, regressions@lists.linux.dev,
- srw@sladewatkins.net, Hsin-Yi Wang <hsinyi@chromium.org>
-References: <20221015205936.5735-1-phillip@squashfs.org.uk>
- <20221018021507.612-1-nicememory@gmail.com>
-From: Phillip Lougher <phillip@squashfs.org.uk>
-In-Reply-To: <20221018021507.612-1-nicememory@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mailcore-Auth: 439999529
-X-Mailcore-Domain: 1394945
-X-123-reg-Authenticated:  phillip@squashfs.org.uk  
-X-Originating-IP: 82.69.79.175
-X-CMAE-Envelope: MS4xfAygc6Fb8agaJkfC4FMPgTHPRJONtMiTtuaOUdUESYUwYS/8pEuBO2b5irmxo9f0+iXcZ8/TD3CVoMzondBKdVNaJo5Jxi8AFTcr7U3Sf+GqKnaM8Se0
- +6iD+2WPEk5gpLDNaNxSly1jCg5N7soc6puTRxHbaoq3T9Q+hPbXdkYa/F8IUaauceA456HcP4rpMtYZuuGdZibVsNM8cx2HsJQ=
+Content-Type: text/plain
 
-On 18/10/2022 03:15, Jintao Yin wrote:
-> On Sat, Oct 15, 2022 at 09:59:36PM +0100, Phillip Lougher wrote:
->> Thorsten Leemhuis <regressions@leemhuis.info> wrote:
+"Rafael J. Wysocki" <rafael.j.wysocki@intel.com> writes:
+
+> On 10/18/2022 9:09 AM, Kalle Valo wrote:
+>
+>> Thorsten Leemhuis <regressions@leemhuis.info> writes:
+>>
+>>> On 17.10.22 18:58, Kalle Valo wrote:
+>>>> I upgraded my NUC8i7HVK test box to v6.1-rc1 and noticed that my suspend
+>>>> tests with ath11k were broken, the box never woke up from suspend
+>>>> automatically and I had to manually push the power button to trigger
+>>>> resume. This is the command I used:
+>>>>
+>>>> sudo rtcwake -m mem -s 30
+>>>>
+>>>> v6.0 works without problems and a bisect found this commit:
+>>>>
+>>>> commit 4919d3eb2ec0ee364f7e3cf2d99646c1b224fae8
+>>>> Author:     Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>> AuthorDate: Wed Oct 12 20:07:01 2022 +0200
+>>>> Commit:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+>>>> CommitDate: Thu Oct 13 23:27:52 2022 +0200
+>>>>
+>>>>      rtc: cmos: Fix event handler registration ordering issue
+>>> FWIW, Todd also reported this yesterday:
+>>> https://lore.kernel.org/all/967cfe4e2dba242352ccd1cd00bdbcfb48bdd697.camel@linux.intel.com/
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=216600
 >>>
->>> Topposting, to make this easier to access for everyone.
->>>
->>> @Mirsad, thx for bisecting.
->>>
->>> @Phillip: if you want to see a problem description and the whole
->>> backstory of the problem that apparently is caused by 	b09a7a036d20
->>> ("squashfs: support reading fragments in readahead call"), see this
->>> thread (Mirsad sadly started a new one with the quoted mail below):
->>> https://lore.kernel.org/all/b0c258c3-6dcf-aade-efc4-d62a8b3a1ce2@alu.unizg.hr/
->>>
+>>> And Zhang Rui provided a patch in bugzilla that should fix this.
+>> Thanks, this is good info. Strangely enough Zhang's workaround in [1]
+>> did not fix the issue for me, rtcwake is still broken. Unfortunately no
+>> time right now to investigate further.
 >>
->> The above backstory tends to suggest data corruption which is happening
->> after a couple of hours especially on heavy loads, e.g. the comment
->>
->>> On 10/3/22 at 4:18 AM, Mirsad Goran Todorovac wrote:
->>> The bug usually isn't showing immediately, but after a couple of hours
->>> of running (especially with multimedia running inside Firefox).
->>
->> Which is typically caused by double freed buffers or race conditions in
->> freeing and reusing.
->>
->> Thanks Mirsad for the following
->>
->> On Sat, 15 Oct 2022 16:59:44 +0200, Mirsad Goran Todorovac wrote:
->>>
->>> Here are the results of the requested bisect on the bug involving the
->>> Firefox snap build 104.x, 105.0.x, squashfs and which was manifested on
->>> both Ubuntu snap and with snapd in AlmaLinux 8.6 (CentOS fork):
->>>
->>> mtodorov@domac:~/linux/kernel/linux_stable$ git bisect log
->>> git bisect start
->>> # bad: [568035b01cfb107af8d2e4bd2fb9aea22cf5b868] Linux 6.0-rc1
->>> git bisect bad 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
->>> # good: [51dd976781da8c0b47e106ed59a96d7c28972ce4] Linux 5.19.15
->>> git bisect good 51dd976781da8c0b47e106ed59a96d7c28972ce4
->>> # good: [3d7cb6b04c3f3115719235cc6866b10326de34cd] Linux 5.19
->>> git bisect good 3d7cb6b04c3f3115719235cc6866b10326de34cd
->>> # good: [b44f2fd87919b5ae6e1756d4c7ba2cbba22238e1] Merge tag
->>> 'drm-next-2022-08-03' of git://anongit.freedesktop.org/drm/drm
->>> git bisect good b44f2fd87919b5ae6e1756d4c7ba2cbba22238e1
->>> # good: [6614a3c3164a5df2b54abb0b3559f51041cf705b] Merge tag
->>> 'mm-stable-2022-08-03' of
->>> git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
->>> git bisect good 6614a3c3164a5df2b54abb0b3559f51041cf705b
->>> # bad: [eb5699ba31558bdb2cee6ebde3d0a68091e47dce] Merge tag
->>> 'mm-nonmm-stable-2022-08-06-2' of
->>> git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
->>> git bisect bad eb5699ba31558bdb2cee6ebde3d0a68091e47dce
->>> # good: [24df5428ef9d1ca1edd54eca7eb667110f2dfae3] ALSA: hda/realtek:
->>> Add quirk for HP Spectre x360 15-eb0xxx
->>> git bisect good 24df5428ef9d1ca1edd54eca7eb667110f2dfae3
->>> # good: [c993e07be023acdeec8e84e2e0743c52adb5fc94] Merge tag
->>> 'dma-mapping-5.20-2022-08-06' of
->>> git://git.infradead.org/users/hch/dma-mapping
->>> git bisect good c993e07be023acdeec8e84e2e0743c52adb5fc94
->>> # good: [4cfa6ff24a9744ba484521c38bea613134fbfcb3] powerpc/64e: Fix
->>> kexec build error
->>> git bisect good 4cfa6ff24a9744ba484521c38bea613134fbfcb3
->>> # good: [24cb958695724ffb4488ef4f65892c0767bcd2f2] Merge tag
->>> 's390-5.20-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
->>> git bisect good 24cb958695724ffb4488ef4f65892c0767bcd2f2
->>> # good: [db98b43086275350294f5c6f797249b714d6316d] squashfs: always
->>> build "file direct" version of page actor
->>> git bisect good db98b43086275350294f5c6f797249b714d6316d
->>> # good: [6ba592fa014f21f35a8ee8da4ca7b95a018f13e8] video: fbdev: s3fb:
->>> Check the size of screen before memset_io()
->>> git bisect good 6ba592fa014f21f35a8ee8da4ca7b95a018f13e8
->>> # good: [b5a8466d37d30cfcc8015789f4a3f0c44b6c7bc6] Merge tag
->>> 'for-5.20/fbdev-1' of
->>> git://git.kernel.org/pub/scm/linux/kernel/git/deller/linux-fbdev
->>> git bisect good b5a8466d37d30cfcc8015789f4a3f0c44b6c7bc6
->>> # bad: [97d3b2676fc6bc4865eb825037f4492f0fb804eb] ocfs2: remove some
->>> useless functions
->>> git bisect bad 97d3b2676fc6bc4865eb825037f4492f0fb804eb
->>> # bad: [591c32bddbe20ba0e172d9def3c7f22b9c926ad9] kernel/hung_task: fix
->>> address space of proc_dohung_task_timeout_secs
->>> git bisect bad 591c32bddbe20ba0e172d9def3c7f22b9c926ad9
->>> # bad: [b09a7a036d2035b14636cd4c4c69518d73770f65]  squashfs: support
->>> reading fragments in readahead call
->>> git bisect bad b09a7a036d2035b14636cd4c4c69518d73770f65
->>> mtodorov@domac:~/linux/kernel/linux_stable$
->>>
->>> The git bisect stopped at the squashfs commit
->>> b09a7a036d2035b14636cd4c4c69518d73770f65, so I included Phillip in Cc:,
->>> according to the Code of Conduct.
->>
->> Which identified the "squashfs: support reading fragments in readahead call"
->> patch.
->>
->> There is a race-condition introduced in that patch, which involves cache
->> releasing and reuse.
->>
->> The following diff will fix that race-condition.  It would be great if
->> someone could test and verify before sending it out as a patch.
->>
->> Thanks
->>
->> Phillip
-> Hi Phillip,
->    There is a logical bug in commit 8fc78b6fe24c36b151ac98d7546591ed92083d4f
->    which is parent commit of commit b09a7a036d2035b14636cd4c4c69518d73770f65.
->    
->    In function squashfs_readahead(...),
->    file_end is initialized with i_size_read(inode) >> msblk->block_log,
->    which means the last block index of the file.
->    But later in the logic to check if the page is last one or not the
->    code is
->      if (pages[nr_pages - 1]->index == file_end && bytes) {
->        ...
->      }
->    , use file_end as the last page index of file but actually is the last
->    block index, so for the common setup of page and block size, the first
->    comparison is true only when pages[nr_pages - 1]->index is 0.
->    Otherwise, the trailing bytes of last page won't be zeroed.
-> 
->    Maybe it's the real cause of the snap bug in some way.
-> 
+>> [1] https://bugzilla.kernel.org/show_bug.cgi?id=216600#c3
+>
+> Please try https://lore.kernel.org/linux-acpi/5887691.lOV4Wx5bFT@kreacher/
 
-That code segment is indeed the cause of the bug.  But the logic to
-check if it is the last page is completely wrong and more broken than
-described.
+This works, thanks!
 
-I will send a diff.  This has aleady been shown to fix the issue with my
-reproducer.
+Tested-by: Kalle Valo <kvalo@kernel.org>
 
-Thanks
+-- 
+https://patchwork.kernel.org/project/linux-wireless/list/
 
-Phillip
-
->    Thanks,
-> 
->    Jintao
-
-
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
