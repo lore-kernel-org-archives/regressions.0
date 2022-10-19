@@ -1,105 +1,82 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709982F22
-	for <regressions@lists.linux.dev>; Wed, 19 Oct 2022 13:22:25 +0000 (UTC)
-Received: by mail-ej1-f45.google.com with SMTP id w18so39885702ejq.11
-        for <regressions@lists.linux.dev>; Wed, 19 Oct 2022 06:22:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1xeT1iLxWmll2HFnvRdJc4BDec5ldnrZaxMiO5DTNCE=;
-        b=q42c5u4WQI+XrEymaze9l3yVnZ7SRGt/txMEWq7CXqqBy/e7uxk9ROO3cINa9D636s
-         VuoVp6h+ZGDQMQCnLIIXToVmSE9Dk2sHfc3N7BMixH94Pc+EF/MfhUcUiWt75Un+LSs/
-         lz76Y8Ek3y5jv6RZuZxc9cFFWYxa7LsBAPvCyxXUurJetuGjp8meR/QoV01cMzxVkbEb
-         a7u+BNeWy+y7Tyy3Zma1vbnc0g6SptpFCTzHIrHZeHd87pb31ZHGPPLZZhexjsYP6X10
-         g1t3fJvtFsA0psuv3e4cfdl+l0m/LphO/Uw0uWUjEZ4mQSFrGSS9scrHUcn73vujHT6p
-         qyMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1xeT1iLxWmll2HFnvRdJc4BDec5ldnrZaxMiO5DTNCE=;
-        b=IEyfc19PAkfrbEP1nNQG+uKlE42/oRxBhckbKr1PU8fWxON5ky7OkBQeQ6aBvoaWWq
-         gElGOsm0cR+2AsbYgQUnIe+NN4wLLHImmpCzbeAztLtYI8rMFaTPZNy3GNKxV+o30cVG
-         R/p/9m8j4LLOI7KIE4HVEWcXnMlx9ibSmjW/7dGVThlW/I4auLRIngDrzSpPGxWWX0qg
-         JA6Vcqg9wUs5X+4Wm66d2ub2/pdkSvlYs8SU6CXgfU3MBSzjcVRMwvrHysFYj6O+MwML
-         P5zmPiim9ERBR/to6NT/+eqGE8f6878V1KqMRVBoX+ReM4Avmq5rs1VO0SHAqAyO3KJj
-         9Arw==
-X-Gm-Message-State: ACrzQf1jCEhrNkS1h7EgzdfQRHcvpBQ5/9iMi5iCzGpcUSNDh1VN069G
-	aCN1w9hcKDO8QbeS91cUQnO0skZEdSBRGdSpME7rgw==
-X-Google-Smtp-Source: AMsMyM4ZLCSXvj95s+I5Xd7tlFDjVR9orZQQgRo/cYNAheFAynKo+utl0lVXigSgQljtaTdnBDPcM9oTE1PnadYF8AM=
-X-Received: by 2002:a17:907:7b93:b0:770:1d4f:4de9 with SMTP id
- ne19-20020a1709077b9300b007701d4f4de9mr6791599ejc.201.1666185743528; Wed, 19
- Oct 2022 06:22:23 -0700 (PDT)
+Received: from smtpfb1-g21.free.fr (smtpfb1-g21.free.fr [212.27.42.9])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F5497E
+	for <regressions@lists.linux.dev>; Wed, 19 Oct 2022 16:24:01 +0000 (UTC)
+Received: from smtp4-g21.free.fr (smtp4-g21.free.fr [212.27.42.4])
+	by smtpfb1-g21.free.fr (Postfix) with ESMTP id D431283528B
+	for <regressions@lists.linux.dev>; Wed, 19 Oct 2022 18:18:15 +0200 (CEST)
+Received: from zimbra59-e10.priv.proxad.net (unknown [172.20.243.209])
+	by smtp4-g21.free.fr (Postfix) with ESMTP id 0C8D819F5AF;
+	Wed, 19 Oct 2022 18:18:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=free.fr;
+	s=smtp-20201208; t=1666196288;
+	bh=Pm/EqWEbJ0hJheqvBqZmNf9qn6cGXW/G7iT0GFcr5EY=;
+	h=Date:From:To:Cc:In-Reply-To:Subject:From;
+	b=G+SoyyooIx4gby1nJ7Fk7dFR/4C2USpgk9NFbtGHDXWEzc9oNrjBotZU43OtHCuh0
+	 dfan4nUiccPx3gvmxzP4KXk0Pjhamo5LoL82PvyNKt6+xcqLuu2nNMx9nXHlJLmqcu
+	 cHATROltxHcRaLTBRmVTO9oX7bVWTMlSkG+AfCXevWcHBENNkGsRmYUMgDkjWXYi6g
+	 p+DanzlxvvgzF171TxwxHs91Hy4OuzPHyMIPRP+n1peqjJQoYMZUOKINUX7QzFOrCn
+	 raQFH7s+Kzwz5XI5hmOyeUAC0/+whjpAc8EUbRXn9kAbgtVLbqIn8GE0HD3H8eSoHq
+	 McSgEXpsNcd+Q==
+Date: Wed, 19 Oct 2022 18:18:07 +0200 (CEST)
+From: denis.chancogne@free.fr
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Juergen Gross <jgross@suse.com>, 
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>, 
+	xen-devel@lists.xenproject.org, 
+	Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+Message-ID: <478267192.700718309.1666196287955.JavaMail.root@zimbra59-e10.priv.proxad.net>
+In-Reply-To: <402ab0ef-8bea-6210-1585-2e0e217a2e08@leemhuis.info>
+Subject: Re: Bug 216581 - Kernel panic on /init as busybox symbolic link
+ with xen efi
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 19 Oct 2022 18:52:12 +0530
-Message-ID: <CA+G9fYtSwz0ADnHdAt1mFy9DA_JB1+MV3HoOcH_FbSuJObTqsw@mail.gmail.com>
-Subject: selftests: gpio: gpio-sim test FAIL - gpio gpiochip2:
- (gpio-sim.0-node0): line cnt 34463 is greater than fast path cnt 512
-To: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [90.83.51.20]
+X-Mailer: Zimbra 7.2.0-GA2598 (ZimbraWebClient - GC80 (Win)/7.2.0-GA2598)
+X-Authenticated-User: denis.chancogne@free.fr
 
-The selftest gpio gpio-sim.sh started failing from Linux next-20221018 and
-also noticed on next-20221019 here is the test log [1] and [2].
+>On 17.10.22 02:23, Marek Marczykowski-G=C3=B3recki wrote:
+>> On Sun, Oct 16, 2022 at 01:08:53PM +0200, Thorsten Leemhuis wrote:
+>
+>>>>  Denis Chancogne 2022-10-13 22:00:19 UTC
+>>>>
+>>>> when I start Xen 4.15.3 in efi with kernel 5.18.19, all works well;
+>>>> but since kernel 5.19, I have a kernel panic on my /init process as
+>>>> busybox symbolic link inside initramfs.
+>>>>
+>>>> This is the kernel log :
+>> [...]
+>>=20
+>> Thanks for forwarding.
+>>=20
+>> This is already fixed on the Xen side: https://xenbits.xen.org/gitweb/?p=
+=3Dxen.git;a=3Dcommit;h=3Dc3bd0b83ea5b7c0da6542687436042eeea1e7909
+>> The commit is also in 4.15 branch already:
+>> https://xenbits.xen.org/gitweb/?p=3Dxen.git;a=3Dcommit;h=3D7923ea47e578b=
+ca30a6e45951a9da09e827ff028,
+>> to be included in 4.15.4 rather soon.
+>
+>Hmmm. Well, strictly speaking this is still a kernel regression that
+>should be fixed (or worked around) on the kernel level. But 5.19 is out
+>for a while already and this afaics was the first report of this problem
+>in kernel land. Maybe it's not worth it, so let's leave everything as it
+>is for now, if that's okay for Denis. We IMHO will need to reconsider if
+>more users run into this.
+>
+>Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>
+>#regzbot introduced: 8ad7e8f69695
+>#regzbot invalid: it is a kernel regression, but one that can be worked
+>around by updating Xen hypervisor
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-# selftests: gpio: gpio-sim.sh
-# 1. chip_name and dev_name attributes
-# 1.1. Chip name is communicated to user
-# 1.2. chip_name returns 'none' if the chip is still pending
-# 1.3. Device name is communicated to user
-# 2. Creating and configuring simulated chips
-# 2.1. Default number of lines is 1
-# 2.2. Number of lines can be specified
-# 2.3. Label can be set
-# 2.4. Label can be left empty
-# 2.5. Line names can be configured
-# 2.6. Line config can remain unused if offset is greater than number of lines
-# 2.7. Line configfs directory names are sanitized
-# 2.8. Multiple chips can be created
-# 2.9. Can't modify settings when chip is live
-# 2.10. Can't create line items when chip is live
-# 2.11. Probe errors are propagated to user-space
-[   74.861454] gpio gpiochip2: (gpio-sim.0-node0): line cnt 34463 is
-greater than fast path cnt 512
-[   78.907553] audit: type=1334 audit(1651167801.183:10): prog-id=0 op=UNLOAD
-[   78.914706] audit: type=1334 audit(1651167801.183:11): prog-id=0 op=UNLOAD
-# Probe error was not propagated
-# GPIO gpio-sim test FAIL
-not ok 2 selftests: gpio: gpio-sim.sh # exit=1
-
-
-## Build
-* kernel: 6.1.0-rc1
-* git: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-* git branch: master
-* git commit: a72b55bc981b62f7186600d06d1824f1d0612b27
-* git describe: next-20221019
-* test details:
-https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221019
-
-## Test Regressions (compared to next-20221017)
-* bcm2711-rpi-4-b, kselftest-gpio
-  - gpio.gpio-sim.sh
-
-
-[1] https://lkft.validation.linaro.org/scheduler/job/5702400#L1325
-
-Test results comparison link,
-[2] https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221019/testrun/12529653/suite/kselftest-gpio/test/gpio.gpio-sim.sh/history/
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Hi all,
+thanks a lot for your responses, it's very well for me.
+I will wait for xen-4.15.4 to use latest kernel release.
+Regards
+Denis
