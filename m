@@ -1,122 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CBE2577
-	for <regressions@lists.linux.dev>; Wed, 19 Oct 2022 08:59:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE96EC433B5;
-	Wed, 19 Oct 2022 08:59:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1666169985;
-	bh=ihGyUt66Xn5KkFVt2Ai5BlSmYAVmRhdfjWNm29R+RKM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WgUIMkYXmrYHZYC5wNczTProIVvFgcTKLWvQoHvRYHczvvPDg3rPnIBK7LzVmcE0n
-	 j2sWIpfaVOEez9QWrG3LbCZPn93/Z04LqPG+u6K4AjSGXT0dZhLC7iBmyQ1DvpCj8J
-	 aIlv/opynJ1eOvPJ9K4LLOXUrHBG2lt9e1cQvnVehAPKBdcaKc1HL2Ir+IF5zgSzeH
-	 nNEtrZjNjMOtD+XJSBiJucdgoFWP2WRI3gejTzHIRzWTGW6p6cv5w+BrjPJoHuUL2/
-	 QCfTZNU2whkEHUSEriBe7WBqf7wYu/CxIa9umei+JScUpMvYNN0TOFwd/DNjr2246H
-	 dS74ZGvaFkXYw==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-	(envelope-from <johan@kernel.org>)
-	id 1ol4vE-0004up-Tj; Wed, 19 Oct 2022 10:59:33 +0200
-Date: Wed, 19 Oct 2022 10:59:32 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Stefan Agner <stefan@agner.ch>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Matthias Kaehlcke <mka@chromium.org>, stable <stable@kernel.org>,
-	regressions@lists.linux.dev, m.szyprowski@samsung.com,
-	krzk@kernel.org
-Subject: Re: [PATCH stable-5.15 3/3] usb: dwc3: disable USB core PHY
- management
-Message-ID: <Y0+8dKESygFunXOu@hovoldconsulting.com>
-References: <20220906120702.19219-1-johan@kernel.org>
- <20220906120702.19219-4-johan@kernel.org>
- <808bdba846bb60456adf10a3016911ee@agner.ch>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16FBF28E8
+	for <regressions@lists.linux.dev>; Wed, 19 Oct 2022 11:08:02 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id 1319B604F9;
+	Wed, 19 Oct 2022 13:07:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1666177674; bh=8sAIj8odQ5e1am9z+Vak1jaFBV8NDsFDtcsN6NQeqM8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BDOzdWBOxCZGu/SPn+efqUGOLtkUc7kZgbtB7U4ORoamurnfJVL8dzV3KJxSeaPVf
+	 grkMEBiNlv/aW0NOxQMqkMnkg4UO/ZuMOgKVNXjvNDxvTpTmo7OKTSFwwGQgThKthD
+	 qjbQfNVDEdcjH6YBqV1vz/uw4V2RqKz9AWt1MYGmaAmACcD+K7fCIGNhpx38eW0B4R
+	 qE4yjls853SyRSfH9hBQR6aCj4WxEvO35nZlQTcoC+TJOIk/yeNhRg/NxlPsS2OVk1
+	 2ZKMBld/Xr7jw9GsZDSc+mzrKx3Hjlo03FZdDzcuxnb+qZDLyNs4OhznkINEJRXaUM
+	 rdPq736AsUA0g==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id Av5vfMaKX68O; Wed, 19 Oct 2022 13:07:51 +0200 (CEST)
+Received: from [161.53.83.51] (pc-mtodorov.grf.hr [161.53.83.51])
+	by domac.alu.hr (Postfix) with ESMTPSA id 0C28F604F4;
+	Wed, 19 Oct 2022 13:07:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1666177671; bh=8sAIj8odQ5e1am9z+Vak1jaFBV8NDsFDtcsN6NQeqM8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dNn0CUhnc7+MLaWWTQRJfkO5rGNhFMxXQS7c3cjiGE/FhzfBKv4zvjshHIeYaD/PI
+	 rIezUzuyh7wr3yndTljbxMgbsHbly6rQaTKCHiGG+03PinugpCJoqFREwQqjLihV1B
+	 ZvFFb0IGBPjGnH1dxtZByvLhd6eWrmRqVRb2IHYxP5hc/8AjcICYb6AoAXSSLrxkJW
+	 BNrxHlR6zbfgR7T8xF+V7yKP/kF+KRYbM+BQpTsLGrySuwVtDKZ2ooAPseqtk+FspK
+	 EcCQ8gLQl7BsuX9nMbovl1Djkqtv52HIUQfNvMp2RwKFXnsFfGYgtgMEoyx1BqSbRd
+	 XJHL0AkmoCX4Q==
+Message-ID: <74776beb-0de9-13d9-f31d-78b9fcc48d12@alu.unizg.hr>
+Date: Wed, 19 Oct 2022 13:07:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <808bdba846bb60456adf10a3016911ee@agner.ch>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
+ 6.0.0-rc3 through 6.0.0-rc7
+Content-Language: en-US
+To: Slade Watkins <srw@sladewatkins.net>,
+ Phillip Lougher <phillip@squashfs.org.uk>
+Cc: bagasdotme@gmail.com, hsinyi@chromium.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Marc Miltenberger <marcmiltenberger@gmail.com>, nicememory@gmail.com,
+ Thorsten Leemhuis <regressions@leemhuis.info>, regressions@lists.linux.dev
+References: <cfe5dd3a-5820-98cf-ae31-b6a3ff3f0578@squashfs.org.uk>
+ <20221018174157.1897-1-phillip@squashfs.org.uk>
+ <CA+pv=HNWZHrDBO9pp-3HoJ1qwRGaJMoZXt=iXRMUPz=-t7v8Qw@mail.gmail.com>
+From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <CA+pv=HNWZHrDBO9pp-3HoJ1qwRGaJMoZXt=iXRMUPz=-t7v8Qw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Oct 18, 2022 at 05:27:24PM +0200, Stefan Agner wrote:
-> Hi Johan,
-> 
-> On 2022-09-06 14:07, Johan Hovold wrote:
-> > From: Johan Hovold <johan+linaro@kernel.org>
-> > 
-> > commit 6000b8d900cd5f52fbcd0776d0cc396e88c8c2ea upstream.
-> > 
-> > The dwc3 driver manages its PHYs itself so the USB core PHY management
-> > needs to be disabled.
-> > 
-> > Use the struct xhci_plat_priv hack added by commits 46034a999c07 ("usb:
-> > host: xhci-plat: add platform data support") and f768e718911e ("usb:
-> > host: xhci-plat: add priv quirk for skip PHY initialization") to
-> > propagate the setting for now.
-> 
-> [adding also Samsung/ODROID device tree authors Krzysztof and Marek]
-> 
-> For some reason, this commit seems to break detection of the USB to
-> S-ATA controller on ODROID-HC1 devices (Exynos 5422).
-> 
-> We have a known to work OS release of v5.15.60, and known to not be
-> working of v5.15.67. By reverting suspicious commits, I was able to
-> pinpoint the problem to this particular commit.
-> 
-> From what I understand, on that particular hardware the S-ATA controller
-> power is controlled via the V-BUS signal VBUSCTRL_U2 (Schematic [1]).
-> Presumably this signal is no longer controlled with this change.
-> 
-> This came up in our HAOS issue #2153 [2].
+On 19.10.2022. 7:17, Slade Watkins wrote:
 
-Thanks for the report and sorry about the breakage. This wasn't supposed
-to go to stable but Greg thought otherwise (and I helped with the
-backporting to prevent autosel from pulling in even more changes).
+> Hi Phillip,
+>
+> On Tue, Oct 18, 2022 at 1:42 PM Phillip Lougher <phillip@squashfs.org.uk> wrote:
+>> This diff has fixed the problem with my repoducer.
+>> Please test and report your results.
+>>
+>> Phillip
+> Tested-by me just a few moments ago and can report this fixed the
+> problem. (I believe Mirsad also reported that this fixed it.)
+>
+> Yours,
+> -srw
 
-But at least this way we found out sooner that this platform depends on
-having both USB core and dwc3 managing the same PHY.
+Hi all,
 
-I think this may be related to the calibration calls added to dwc3 and
-later removed again by commits:
+If none of you experienced machine lockup with Phillip's fix, then it 
+must have
+been my overload of Firefox windows and tabs, Chrome and T-bird that exposed
+the bug in the first place ...
 
-	d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
-	a0a465569b45 ("usb: dwc3: remove generic PHY calibrate() calls")
+My build sequence was rather standard:
 
-The removal explicitly mentions that the expectation is that USB core
-will do the PHY calibration.
+  1053  10/17/2022 05:27:50 AM  git checkout v6.0.2
+  1125  10/18/2022 10:21:47 PM  cd ..
+  1126  10/18/2022 10:22:09 PM  time rm -rf linux_stable_build; \
+                     time cp -rp linux_stable linux_stable_build; \
+                     time diff -ur linux_stable linux_stable_build; \
+                     cd linux_stable_build
+  1127  10/18/2022 10:25:22 PM  df -k .
+  1128  10/18/2022 10:25:35 PM  git apply ../phillip-squashfs-20220215.patch
+  1129  10/18/2022 10:25:42 PM  git apply ../phillip-squashfs2.patch
+  1130  10/18/2022 10:26:00 PM  cp -p ../config-6.0.0-060000-generic 
+.config; \
+                     make olddefconfig; \
+                     time nice make CC="ccache gcc" 
+KBUILD_BUILD_TIMESTAMP="" -j10 deb-pkg; date
 
-There could be other changes in the sequencing of events that this
-platform has been implicitly relying on, but as a start, could try
-adding the missing calibration calls (patch below) and see if that makes a
-difference?
+Thanks.
 
-Johan
+-- 
+Mirsad Todorovac
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb
+Republic of Croatia, the European Union
+--
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
 
-
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index 46cf8edf7f93..f8a0e340eb63 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -198,6 +198,8 @@ static void __dwc3_set_mode(struct work_struct *work)
-                                otg_set_vbus(dwc->usb2_phy->otg, true);
-                        phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
-                        phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
-+                       phy_calibrate(dwc->usb2_generic_phy);
-+                       phy_calibrate(dwc->usb3_generic_phy);
-                        if (dwc->dis_split_quirk) {
-                                reg = dwc3_readl(dwc->regs, DWC3_GUCTL3);
-                                reg |= DWC3_GUCTL3_SPLITDISABLE;
-@@ -1369,6 +1371,8 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
-                        otg_set_vbus(dwc->usb2_phy->otg, true);
-                phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
-                phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
-+               phy_calibrate(dwc->usb2_generic_phy);
-+               phy_calibrate(dwc->usb3_generic_phy);
- 
-                ret = dwc3_host_init(dwc);
-                if (ret)
