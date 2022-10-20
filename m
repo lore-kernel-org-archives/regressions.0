@@ -1,38 +1,23 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from p3plwbeout21-05.prod.phx3.secureserver.net (p3plsmtp21-05-2.prod.phx3.secureserver.net [68.178.252.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBAC3D60
-	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 15:00:56 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id D3B92604F5;
-	Thu, 20 Oct 2022 17:00:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.hr; s=mail;
-	t=1666278047; bh=TuSnf7VH/47hLkihlYDkdztyFdIkxL/zMa9kMI+xFkE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZR40tnarJk1hlm9GzeXOk1DjYtO7zmkQ+47Y9CN/GAATNboHy/44NGPlZc6jOLjB8
-	 UhbWsSjidDeX2D3hWDEWLtuGs6raClBORgF5e0HA1NRaRDF10Mxjie0m+BLXCkNROb
-	 e9V81RUKOBx+nlM9VOoCXtSX9TU7W2VkYWTqOD1h8ejr2VysjviRPlte1vsO/N/IKX
-	 NSYpod561SPayBoIS8GNy3+0mFitoid7ZrUIu7OjRcoX7wJrL6Lb21wzQgskj6SIty
-	 4EQ2qoS7Af+0Age5j3cSVMVgaNViUFCMjWBfJ49WJcOmcY5kRF8d6PAxOiQfbE7zfc
-	 CsHQ2Z2dT1CmQ==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id FrEaZlACrjSK; Thu, 20 Oct 2022 17:00:44 +0200 (CEST)
-Received: from [193.198.186.200] (PC-MTODOROV.slava.alu.hr [193.198.186.200])
-	by domac.alu.hr (Postfix) with ESMTPSA id 376E9604EC;
-	Thu, 20 Oct 2022 17:00:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.hr; s=mail;
-	t=1666278044; bh=TuSnf7VH/47hLkihlYDkdztyFdIkxL/zMa9kMI+xFkE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EejsfYpodQwot8WAzX0A/xSMDzJYCyUqXvHFea40jMtGBwUwobV3SNBXuSLB1KLf1
-	 KnLrLxirSsWEU/mm+RPmX0MV011UtLdu+Djnsl2V/OfhzU33BxFwSu+XmXJU6uSTBL
-	 UFTTO7PpWILQQYxRX5oFDeRB8DmaGgvrUn9ehTvuPMt4oc/aOoYSjtifJXe3UxA0kP
-	 TSww8emD0RzXjbcK2D+67qzIkC8s4/Lrl9KxffTosQaguM5VSgnFhAbFxu/x7Mf70Q
-	 TlCQlZa0VA0FTd+VJ/j6obz70nZHzxd37DiO5TkyOiUTuxqxzGSJCNNfTJJ6kpCJ6q
-	 VHEXZDndtMOWw==
-Message-ID: <2858b6db-b3ff-b64a-1360-d65522ea3631@alu.hr>
-Date: Thu, 20 Oct 2022 17:00:43 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82AF3D60
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 15:48:52 +0000 (UTC)
+Received: from mailex.mailcore.me ([94.136.40.142])
+	by :WBEOUT: with ESMTP
+	id lXk7oIDbXo2VglXk8oowKd; Thu, 20 Oct 2022 08:46:00 -0700
+X-CMAE-Analysis: v=2.4 cv=HbbR8gI8 c=1 sm=1 tr=0 ts=63516d38
+ a=s1hRAmXuQnGNrIj+3lWWVA==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
+ a=ggZhUymU-5wA:10 a=IkcTkHD0fZMA:10 a=Qawa6l4ZSaYA:10
+ a=u-kXCg0vROs3Ngr0XrIA:9 a=QEXdDO2ut3YA:10
+X-SECURESERVER-ACCT: phillip@squashfs.org.uk  
+X-SID: lXk7oIDbXo2Vg
+Received: from 82-69-79-175.dsl.in-addr.zen.co.uk ([82.69.79.175] helo=[192.168.178.33])
+	by smtp10.mailcore.me with esmtpa (Exim 4.94.2)
+	(envelope-from <phillip@squashfs.org.uk>)
+	id 1olXk6-0001Nj-O3; Thu, 20 Oct 2022 16:45:59 +0100
+Message-ID: <41ef4b22-eea8-2d67-99d8-6aaae7d25ac1@squashfs.org.uk>
+Date: Thu, 20 Oct 2022 16:45:53 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -43,48 +28,49 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.3.3
 Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
  6.0.0-rc3 through 6.0.0-rc7
-Content-Language: en-US
-To: Jintao Yin <nicememory@gmail.com>, phillip@squashfs.org.uk
+To: Jintao Yin <nicememory@gmail.com>
 Cc: bagasdotme@gmail.com, hsinyi@chromium.org, linux-kernel@vger.kernel.org,
  marcmiltenberger@gmail.com, mirsad.todorovac@alu.unizg.hr,
  regressions@leemhuis.info, regressions@lists.linux.dev, srw@sladewatkins.net
 References: <20221018174157.1897-1-phillip@squashfs.org.uk>
  <20221020135545.586-1-nicememory@gmail.com>
-From: Mirsad Todorovac <mirsad.todorovac@alu.hr>
+From: Phillip Lougher <phillip@squashfs.org.uk>
 In-Reply-To: <20221020135545.586-1-nicememory@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Mailcore-Auth: 439999529
+X-Mailcore-Domain: 1394945
+X-123-reg-Authenticated:  phillip@squashfs.org.uk  
+X-Originating-IP: 82.69.79.175
+X-CMAE-Envelope: MS4xfKL4on+nCWJ94Qij5UXhVopckFNB31QJCqTbxZNY/jCsBDIcx0XUUn/QyrDWocbQBxKFeuNMEfK7x+0/fq8lkuMUMrAbJEXl34nN1K78yqhXfDcM4qEB
+ dmotQO03hpTUCksGEvM4VU106iscB6FpM1FUo7ZUVGrQx8gZ0Le5B7EgQLK+9B1MPSgvPSeBA6CRycNwpJ23k4te6jH1QE3JKDQ=
 
-On 10/20/2022 3:55 PM, Jintao Yin wrote:
+On 20/10/2022 14:55, Jintao Yin wrote:
 > Hi all,
->
+> 
 > After review the details of page actor, the tail bytes may be written to
 > a temp buffer instead the last used page. So before diff would wrongly
 > memzero a page which is not the tail bytes in.
->
+> 
 > In this diff fixes it by caculation of the real index the trailing bytes
 > in and check if the last used page matches this index. If the page is
 > the real tail bytes in, then memzero the trailing bypte of the page.
->
+> 
 > Please help test and any feedbacks are welcome.
->
+> 
 > Thanks,
->
+
+This is a rediculously complex patch.  Sorry, but, absolute NACK.
+
+Additionally, it is poor etiquette and pointless to fix an
+already fixed issue with a _more_ complex patch.
+
+Phillip
+
+> 
 > Jintao
-
-Hi, Jintao,
-
-Now you've obviously fixed something, as I get no core dumps, but manage 
-to start/stop
-Firefox with the bug reproduction set of windows and tabs.
-
-Congratulations, but I still need a couple of hours of testing before 
-saying anything conclusive.
-
-Thanks.
-
-Mirsad
-
+> 
+> 
 > diff --git a/fs/squashfs/file.c b/fs/squashfs/file.c
 > index e56510964b22..e1fafd10a850 100644
 > --- a/fs/squashfs/file.c
@@ -234,16 +220,4 @@ Mirsad
 >   }
 >   static inline void *squashfs_first_page(struct squashfs_page_actor *actor)
 >   {
-
--- 
-Mirsad Todorovac
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
---
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb, Republic of Croatia
-tel. +385 (0)1 3711 451
-mob. +385 91 57 88 355
 
