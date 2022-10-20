@@ -1,88 +1,94 @@
-Received: from p3plwbeout24-05.prod.phx3.secureserver.net (p3plsmtp24-05-2.prod.phx3.secureserver.net [68.178.252.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BD46110
-	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 22:39:35 +0000 (UTC)
-Received: from mailex.mailcore.me ([94.136.40.142])
-	by :WBEOUT: with ESMTP
-	id le9aoLGq6jhl4le9bovO03; Thu, 20 Oct 2022 15:36:43 -0700
-X-CMAE-Analysis: v=2.4 cv=WMe64lgR c=1 sm=1 tr=0 ts=6351cd7b
- a=s1hRAmXuQnGNrIj+3lWWVA==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
- a=ggZhUymU-5wA:10 a=Qawa6l4ZSaYA:10 a=VwQbUJbxAAAA:8 a=FXvPX3liAAAA:8
- a=NzQU21p7aw8KqXuY42AA:9 a=AjGcO6oz07-iQ99wixmX:22 a=UObqyxdv-6Yh2QiB9mM_:22
-X-SECURESERVER-ACCT: phillip@squashfs.org.uk  
-X-SID: le9aoLGq6jhl4
-Received: from 82-69-79-175.dsl.in-addr.zen.co.uk ([82.69.79.175] helo=phoenix.fritz.box)
-	by smtp12.mailcore.me with esmtpa (Exim 4.94.2)
-	(envelope-from <phillip@squashfs.org.uk>)
-	id 1ole9Z-0006zQ-Oa; Thu, 20 Oct 2022 23:36:42 +0100
-From: Phillip Lougher <phillip@squashfs.org.uk>
-To: linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org
-Cc: hsinyi@chromium.org,
-	regressions@leemhuis.info,
-	regressions@lists.linux.dev,
-	dimitri.ledkov@canonical.com,
-	michael.vogt@canonical.com,
-	phillip.lougher@gmail.com,
-	ogra@ubuntu.com,
-	olivier.tilloy@canonical.com,
-	Phillip Lougher <phillip@squashfs.org.uk>,
-	stable@vger.kernel.org
-Subject: [PATCH 3/3] squashfs: fix buffer release race condition in readahead code
-Date: Thu, 20 Oct 2022 23:36:16 +0100
-Message-Id: <20221020223616.7571-4-phillip@squashfs.org.uk>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221020223616.7571-1-phillip@squashfs.org.uk>
-References: <20221020223616.7571-1-phillip@squashfs.org.uk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906716110
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 23:23:24 +0000 (UTC)
+Received: by mail-pg1-f173.google.com with SMTP id bh13so956741pgb.4
+        for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 16:23:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CE6evqtIX+07t9cXGQPGwOH1py4DcBmEiVntfTOE+UA=;
+        b=DsYLC1odzvMybDOKm2hjUoY7g7UyfNQ9/CdHy1fupzg7ZV1mL78dpgznLgl5cEGy/1
+         Luw4PGzTeGt54qhMOgg1z6CIBjQRmKSe5SQcETMiCH6pb9slYyicgODC2ZJri1ABEagg
+         oiHmHrKwX/KamQtgITQVNGtoHIXfRtPqc5vBT0sqbC3rFF3ly++0dvKVweATlMftUf0T
+         P7OeZn8SLxTsYltgV6ohukrXbxFD7Rky8jZ4Js3tHWARiOA54uDO4yVEfAgr5cXUPaTZ
+         XXB7TQ/vaX2Tldv+2t1rHn881zREeW9LdbFgI2jLosEG5CpDg1d6DNEjwwT3lHVfz8Em
+         FI+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CE6evqtIX+07t9cXGQPGwOH1py4DcBmEiVntfTOE+UA=;
+        b=uMOGEDoylAiU/IHp37AD/fPGBzWYuMHbjA2nRtoWFSjMny2aTAGaHziDbBRSgAW+zU
+         uLAFBhh9V5Jbgc86RN44KR5C9wHXuK36I5pERNBfVemC1ocKRy+VMMaEwCHgKfyNs/Zw
+         ltma96FufRnx1sPHO9EKHt0qa31pldBzYmy2MdmIh2tFDZu0WTd0qJXBxca31zILfx5H
+         nZOuy6RYZLA8r0G+GHzKMvPfaK7dVrjhCkcc2WMHMN4spTzEVTpYNC76pp8Xj+6dPXkZ
+         b1bk1+vPGFCJfudimzsGVMR94Q9c/p6FaGvnWkk96vntQRqJ0KNXC4RC9mePNjhvWROf
+         Gzww==
+X-Gm-Message-State: ACrzQf0GAL/wuoONPN9nyM1wmHgsgb6lIdg7ThvcgUHXJfxgoRzxLcKp
+	hfNOf6uncyFKDEyIN0Hy7VM=
+X-Google-Smtp-Source: AMsMyM6SYRWDFAek8ZuBOMLzRnxVB7h7msJN8vNg0BbbLcyfagcKQhlV8lFGFt67DZf72OZkvjwlWA==
+X-Received: by 2002:a63:fc12:0:b0:45f:a6e3:7559 with SMTP id j18-20020a63fc12000000b0045fa6e37559mr13797009pgi.237.1666308203894;
+        Thu, 20 Oct 2022 16:23:23 -0700 (PDT)
+Received: from [192.168.43.80] (subs28-116-206-12-32.three.co.id. [116.206.12.32])
+        by smtp.gmail.com with ESMTPSA id 12-20020a170902c20c00b001750361f430sm13341444pll.155.2022.10.20.16.23.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Oct 2022 16:23:23 -0700 (PDT)
+Message-ID: <02b72b86-7240-5530-477a-c8bdcfd35ef5@gmail.com>
+Date: Fri, 21 Oct 2022 06:23:19 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
+ 6.0.0-rc3 through 6.0.0-rc7
+To: Phillip Lougher <phillip@squashfs.org.uk>,
+ Jintao Yin <nicememory@gmail.com>
+Cc: hsinyi@chromium.org, linux-kernel@vger.kernel.org,
+ marcmiltenberger@gmail.com, mirsad.todorovac@alu.unizg.hr,
+ regressions@leemhuis.info, regressions@lists.linux.dev, srw@sladewatkins.net
+References: <20221018174157.1897-1-phillip@squashfs.org.uk>
+ <20221020135545.586-1-nicememory@gmail.com>
+ <41ef4b22-eea8-2d67-99d8-6aaae7d25ac1@squashfs.org.uk>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <41ef4b22-eea8-2d67-99d8-6aaae7d25ac1@squashfs.org.uk>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Mailcore-Auth: 439999529
-X-Mailcore-Domain: 1394945
-X-123-reg-Authenticated:  phillip@squashfs.org.uk  
-X-Originating-IP: 82.69.79.175
-X-CMAE-Envelope: MS4xfAN9DSjG7nbX/cB8wTZrGoQqxKilJugOU2jMh90rj/5JYvfd/UM4KzUZCi+LP9zgAO4t1eU+cUcldDUnBpZAkkqLeBkiGrSiTZI/jOjLwQT5O47D90QR
- R6CWAgkWnVLsvWkB9okU44+mTQkPFMYHQdsVTyXOV6Lc83gNqIyB/2Ma3D/U3Z/P60EQJClYmMEOc3QsrCT6loE1Mu2gLatRXqE=
 
-Fix a buffer release race condition, where the error value was
-used after release.
+On 10/20/22 22:45, Phillip Lougher wrote:
+> On 20/10/2022 14:55, Jintao Yin wrote:
+>> Hi all,
+>>
+>> After review the details of page actor, the tail bytes may be written to
+>> a temp buffer instead the last used page. So before diff would wrongly
+>> memzero a page which is not the tail bytes in.
+>>
+>> In this diff fixes it by caculation of the real index the trailing bytes
+>> in and check if the last used page matches this index. If the page is
+>> the real tail bytes in, then memzero the trailing bypte of the page.
+>>
+>> Please help test and any feedbacks are welcome.
+>>
+>> Thanks,
+> 
+> This is a rediculously complex patch.  Sorry, but, absolute NACK.
+> 
+> Additionally, it is poor etiquette and pointless to fix an
+> already fixed issue with a _more_ complex patch.
+> 
 
-Fixes: b09a7a036d20 ("squashfs: support reading fragments in readahead call")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Phillip Lougher <phillip@squashfs.org.uk>
----
- fs/squashfs/file.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Ah! I was about to test his third fixup patch. I prefer to go
+with your fix instead (as the formal patch).
 
-diff --git a/fs/squashfs/file.c b/fs/squashfs/file.c
-index f0afd4d6fd30..8ba8c4c50770 100644
---- a/fs/squashfs/file.c
-+++ b/fs/squashfs/file.c
-@@ -506,8 +506,9 @@ static int squashfs_readahead_fragment(struct page **page,
- 		squashfs_i(inode)->fragment_size);
- 	struct squashfs_sb_info *msblk = inode->i_sb->s_fs_info;
- 	unsigned int n, mask = (1 << (msblk->block_log - PAGE_SHIFT)) - 1;
-+	int error = buffer->error;
- 
--	if (buffer->error)
-+	if (error)
- 		goto out;
- 
- 	expected += squashfs_i(inode)->fragment_offset;
-@@ -529,7 +530,7 @@ static int squashfs_readahead_fragment(struct page **page,
- 
- out:
- 	squashfs_cache_put(buffer);
--	return buffer->error;
-+	return error;
- }
- 
- static void squashfs_readahead(struct readahead_control *ractl)
 -- 
-2.35.1
+An old man doll... just what I always wanted! - Clara
 
