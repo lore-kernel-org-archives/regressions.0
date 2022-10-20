@@ -1,23 +1,23 @@
-Received: from p3plwbeout21-05.prod.phx3.secureserver.net (p3plsmtp21-05-2.prod.phx3.secureserver.net [68.178.252.70])
+Received: from p3plwbeout26-06.prod.phx3.secureserver.net (p3plsmtp26-06-2.prod.phx3.secureserver.net [216.69.139.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82AF3D60
-	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 15:48:52 +0000 (UTC)
-Received: from mailex.mailcore.me ([94.136.40.142])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900BF3D60
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 15:52:20 +0000 (UTC)
+Received: from mailex.mailcore.me ([94.136.40.145])
 	by :WBEOUT: with ESMTP
-	id lXk7oIDbXo2VglXk8oowKd; Thu, 20 Oct 2022 08:46:00 -0700
-X-CMAE-Analysis: v=2.4 cv=HbbR8gI8 c=1 sm=1 tr=0 ts=63516d38
- a=s1hRAmXuQnGNrIj+3lWWVA==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
+	id lXnToarrOjYPtlXnUoZowg; Thu, 20 Oct 2022 08:49:28 -0700
+X-CMAE-Analysis: v=2.4 cv=G8TZr/o5 c=1 sm=1 tr=0 ts=63516e08
+ a=7e6w4QD8YWtpVJ/7+iiidw==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
  a=ggZhUymU-5wA:10 a=IkcTkHD0fZMA:10 a=Qawa6l4ZSaYA:10
- a=u-kXCg0vROs3Ngr0XrIA:9 a=QEXdDO2ut3YA:10
+ a=Yzxdze0aanylUHrsbl4A:9 a=QEXdDO2ut3YA:10
 X-SECURESERVER-ACCT: phillip@squashfs.org.uk  
-X-SID: lXk7oIDbXo2Vg
+X-SID: lXnToarrOjYPt
 Received: from 82-69-79-175.dsl.in-addr.zen.co.uk ([82.69.79.175] helo=[192.168.178.33])
-	by smtp10.mailcore.me with esmtpa (Exim 4.94.2)
+	by smtp04.mailcore.me with esmtpa (Exim 4.94.2)
 	(envelope-from <phillip@squashfs.org.uk>)
-	id 1olXk6-0001Nj-O3; Thu, 20 Oct 2022 16:45:59 +0100
-Message-ID: <41ef4b22-eea8-2d67-99d8-6aaae7d25ac1@squashfs.org.uk>
-Date: Thu, 20 Oct 2022 16:45:53 +0100
+	id 1olXnS-00023O-13; Thu, 20 Oct 2022 16:49:26 +0100
+Message-ID: <0df684f9-b3c2-3511-fa12-b38fe5fee1a5@squashfs.org.uk>
+Date: Thu, 20 Oct 2022 16:49:21 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -42,8 +42,8 @@ X-Mailcore-Auth: 439999529
 X-Mailcore-Domain: 1394945
 X-123-reg-Authenticated:  phillip@squashfs.org.uk  
 X-Originating-IP: 82.69.79.175
-X-CMAE-Envelope: MS4xfKL4on+nCWJ94Qij5UXhVopckFNB31QJCqTbxZNY/jCsBDIcx0XUUn/QyrDWocbQBxKFeuNMEfK7x+0/fq8lkuMUMrAbJEXl34nN1K78yqhXfDcM4qEB
- dmotQO03hpTUCksGEvM4VU106iscB6FpM1FUo7ZUVGrQx8gZ0Le5B7EgQLK+9B1MPSgvPSeBA6CRycNwpJ23k4te6jH1QE3JKDQ=
+X-CMAE-Envelope: MS4xfM+MMOdNqxL9K6RxBVeeD3CkKvn1qOGPJuFTVmNbw20jrG9YRggnrR5U4kVBz1XG/QIKOev3eDZiNeN6oZ+u2norY/mbVHS5iA0E3aLhi0eeGjbRXsNH
+ Sx/DmovP9cmfvKICqaq024jI51ysbiouSkigowRa4cuWBWriPnQ3dpTg6YTKLxsiOcs0Hkt91veb98qlhSsUU1oBZPkjtk/3aSk=
 
 On 20/10/2022 14:55, Jintao Yin wrote:
 > Hi all,
@@ -51,6 +51,14 @@ On 20/10/2022 14:55, Jintao Yin wrote:
 > After review the details of page actor, the tail bytes may be written to
 > a temp buffer instead the last used page. So before diff would wrongly
 > memzero a page which is not the tail bytes in.
+
+If you *only* discovered that *after* writing the patch, it is clear
+you don't fully understand what is going on.
+
+Cheers
+
+Phillip
+
 > 
 > In this diff fixes it by caculation of the real index the trailing bytes
 > in and check if the last used page matches this index. If the page is
@@ -59,14 +67,6 @@ On 20/10/2022 14:55, Jintao Yin wrote:
 > Please help test and any feedbacks are welcome.
 > 
 > Thanks,
-
-This is a rediculously complex patch.  Sorry, but, absolute NACK.
-
-Additionally, it is poor etiquette and pointless to fix an
-already fixed issue with a _more_ complex patch.
-
-Phillip
-
 > 
 > Jintao
 > 
