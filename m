@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B96320F
-	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 12:43:31 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1olUtV-00068d-7Q; Thu, 20 Oct 2022 14:43:29 +0200
-Message-ID: <2ec00aa0-ccd0-d7f2-261a-3457745545a8@leemhuis.info>
-Date: Thu, 20 Oct 2022 14:43:26 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741B23C20
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 13:02:09 +0000 (UTC)
+Received: by mail-pf1-f178.google.com with SMTP id 204so20173797pfx.10
+        for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 06:02:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OyZV+5dHPEm9y2grR1cTVbSv6PIoW3rFM516q3trw+c=;
+        b=hYsLr5so2u6zRKph8E5hlUdCPTFdmUEsuA+JUsFndgKNpB1tZEOigIt6Rb/5RoRPHt
+         qKpNsT7hDrl61cITpT4k1OU7+QEIKd1bIkS5tE0+jeAmZ+ta0MGZpGWQ9TuBvz+EHo9m
+         vwrzgPNKcHCHHquWxkD+f3MJp9QtesaVsHA4GInnePmjyAZhdH5+8A0hCE6KT2ndRaTs
+         YOQ2BSXjvUq5WrfllUi2hwkxbafEjXe9zwBBHqmwNP6A65ZGoZArI9QRDLhpdWKygAh6
+         T/v0BhTH8swSJF3G3kiGzUpH2vZAH4pDJxG5iYMsCx0NDoupeUSEbza2bAgOHsA47UEv
+         Y4Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OyZV+5dHPEm9y2grR1cTVbSv6PIoW3rFM516q3trw+c=;
+        b=3XjhiuV8Wfl+emAJdleZL6vA51Zn9to2LaetKQzSYqMl4zot70YtoQBGNNePv+kZbp
+         n6doVnmx7/RFXj+DHOiy1F1Fsm6erYzuCXUX1019seSN86eYEvJgP7IJRf0U2U3sz922
+         kwnOyKUp0eJl5ZMgvf4g+e8JcvxittOqFQ0VodWyXWu7qXHThKIVmCxubprZXIbjGMRw
+         6iBqucBJhlPWI3Bcpt/yc9prMjpWom31CpVB8HDdFoX2pLuK9BO+KQAMt3Y0tb1q6KaN
+         iJ7mE4CPJuY4M52E82rmGNcA7IFgs/eIViObnLhwwFPagnqQCFnwfEDRe8WXoUUa5u3f
+         uoIQ==
+X-Gm-Message-State: ACrzQf3VStDh8tzFnRN97bFNk3DPG7V8Y9p2nmSUMGxRdEfict/Yit1o
+	MX6uKy2dBIf7qg/BqXAOXpA=
+X-Google-Smtp-Source: AMsMyM46qEZekBEhBsL2rQCglZLJDHG7q8ndkFW/p46TQddKcn21DGoW5OUV0AiB9/w7YBS/i3nxOA==
+X-Received: by 2002:a63:7e4d:0:b0:43c:8ce9:2a9f with SMTP id o13-20020a637e4d000000b0043c8ce92a9fmr11471320pgn.528.1666270928509;
+        Thu, 20 Oct 2022 06:02:08 -0700 (PDT)
+Received: from [192.168.43.80] (subs28-116-206-12-50.three.co.id. [116.206.12.50])
+        by smtp.gmail.com with ESMTPSA id h10-20020a170902680a00b0017300ec80b0sm12655901plk.308.2022.10.20.06.02.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Oct 2022 06:02:08 -0700 (PDT)
+Message-ID: <9e2e61c9-9d01-bb3a-1dc5-2f48fa7d94cd@gmail.com>
+Date: Thu, 20 Oct 2022 20:02:02 +0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,78 +47,179 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: v6.1-rc1: Regression in notification of sethostname changes
-Content-Language: en-US, de-DE
-To: Torsten Hilbrich <torsten.hilbrich@secunet.com>,
- Petr Vorel <pvorel@suse.cz>
-Cc: linux-kernel@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <0c2b92a6-0f25-9538-178f-eee3b06da23f@secunet.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <0c2b92a6-0f25-9538-178f-eee3b06da23f@secunet.com>
+ Thunderbird/102.3.3
+Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
+ 6.0.0-rc3 through 6.0.0-rc7
+Content-Language: en-US
+To: Jintao Yin <nicememory@gmail.com>, phillip@squashfs.org.uk
+Cc: hsinyi@chromium.org, linux-kernel@vger.kernel.org,
+ marcmiltenberger@gmail.com, mirsad.todorovac@alu.unizg.hr,
+ regressions@leemhuis.info, regressions@lists.linux.dev, srw@sladewatkins.net
+References: <20221018174157.1897-1-phillip@squashfs.org.uk>
+ <20221020074341.1431-1-nicememory@gmail.com>
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <20221020074341.1431-1-nicememory@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666269811;63a7901a;
-X-HE-SMSGID: 1olUtV-00068d-7Q
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
-
-Hi, this is your Linux kernel regression tracker. CCing the regression
-mailing list, as it should be in the loop for all regressions, as
-explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
-
-
-
-On 19.10.22 10:29, Torsten Hilbrich wrote:
-> Hello Petr,
+On 10/20/22 14:43, Jintao Yin wrote:
+> Ignore my before diff. I didn't notice the end_index caculation greater
+> than file_end part. Use the following diff instead.
 > 
-> your commit
+> This diff is based on Phillip's latest two patches and improves the logic
+> to update the status of pages only if page actor touches them.
 > 
-> commit bfca3dd3d0680fc2fc7f659a152234afbac26e4d
-> Author: Petr Vorel <pvorel@suse.cz>
-> Date:   Thu Sep 1 21:44:03 2022 +0200
+> Please help test and feedbacks are welcome.
 > 
->     kernel/utsname_sysctl.c: print kernel arch
->     
->     Print the machine hardware name (UTS_MACHINE) in /proc/sys/kernel/arch.
->     
->     This helps people who debug kernel with initramfs with minimal environment
->     (i.e.  without coreutils or even busybox) or allow to open sysfs file
->     instead of run 'uname -m' in high level languages.
+> Thanks,
 > 
-> broke the notification mechanism between the sethostname syscall and the pollers of /proc/sys/kernel/hostname.
+> Jintao
 > 
-> The table uts_kern_table is addressed within uts_proc_notify by the enum value, however no new enum value was added in "enum uts_proc".
-> 
-> I noticed the problem when journald-systemd failed to detect hostname changes made with the sethostname syscall (as used by the hostname tool).
-> When setting the hostname through /proc/sys/kernel/hostname the poll notification was working.
+> diff --git a/fs/squashfs/file.c b/fs/squashfs/file.c
+> index e56510964b22..5efa2a9f9630 100644
+> --- a/fs/squashfs/file.c
+> +++ b/fs/squashfs/file.c
+> @@ -506,8 +506,9 @@ static int squashfs_readahead_fragment(struct page **page,
+>  		squashfs_i(inode)->fragment_size);
+>  	struct squashfs_sb_info *msblk = inode->i_sb->s_fs_info;
+>  	unsigned int n, mask = (1 << (msblk->block_log - PAGE_SHIFT)) - 1;
+> +	int res = buffer->error;
+>  
+> -	if (buffer->error)
+> +	if (res)
+>  		goto out;
+>  
+>  	expected += squashfs_i(inode)->fragment_offset;
+> @@ -529,7 +530,7 @@ static int squashfs_readahead_fragment(struct page **page,
+>  
+>  out:
+>  	squashfs_cache_put(buffer);
+> -	return buffer->error;
+> +	return res;
+>  }
+>  
+>  static void squashfs_readahead(struct readahead_control *ractl)
+> @@ -557,6 +558,7 @@ static void squashfs_readahead(struct readahead_control *ractl)
+>  		int res, bsize;
+>  		u64 block = 0;
+>  		unsigned int expected;
+> +		int nr_used_pages;
+>  
+>  		nr_pages = __readahead_batch(ractl, pages, max_pages);
+>  		if (!nr_pages)
+> @@ -593,18 +595,18 @@ static void squashfs_readahead(struct readahead_control *ractl)
+>  
+>  		res = squashfs_read_data(inode->i_sb, block, bsize, NULL, actor);
+>  
+> -		squashfs_page_actor_free(actor);
+> +		nr_used_pages = squashfs_page_actor_free(actor);
+>  
+>  		if (res == expected) {
+>  			int bytes;
+>  
+>  			/* Last page (if present) may have trailing bytes not filled */
+>  			bytes = res % PAGE_SIZE;
+> -			if (pages[nr_pages - 1]->index == file_end && bytes)
+> -				memzero_page(pages[nr_pages - 1], bytes,
+> +			if (index == file_end && bytes && nr_used_pages > 0)
+> +				memzero_page(pages[nr_used_pages - 1], bytes,
+>  					     PAGE_SIZE - bytes);
+>  
+> -			for (i = 0; i < nr_pages; i++) {
+> +			for (i = 0; i < nr_used_pages; i++) {
+>  				flush_dcache_page(pages[i]);
+>  				SetPageUptodate(pages[i]);
+>  			}
+> diff --git a/fs/squashfs/file_direct.c b/fs/squashfs/file_direct.c
+> index f1ccad519e28..1bb0347f98b0 100644
+> --- a/fs/squashfs/file_direct.c
+> +++ b/fs/squashfs/file_direct.c
+> @@ -30,10 +30,9 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+>  	int mask = (1 << (msblk->block_log - PAGE_SHIFT)) - 1;
+>  	int start_index = target_page->index & ~mask;
+>  	int end_index = start_index | mask;
+> -	int i, n, pages, bytes, res = -ENOMEM;
+> +	int i, n, pages, used_pages, bytes, res = -ENOMEM;
+>  	struct page **page;
+>  	struct squashfs_page_actor *actor;
+> -	void *pageaddr;
+>  
+>  	if (end_index > file_end)
+>  		end_index = file_end;
+> @@ -74,7 +73,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+>  	/* Decompress directly into the page cache buffers */
+>  	res = squashfs_read_data(inode->i_sb, block, bsize, NULL, actor);
+>  
+> -	squashfs_page_actor_free(actor);
+> +	used_pages = squashfs_page_actor_free(actor);
+>  
+>  	if (res < 0)
+>  		goto mark_errored;
+> @@ -86,16 +85,18 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+>  
+>  	/* Last page (if present) may have trailing bytes not filled */
+>  	bytes = res % PAGE_SIZE;
+> -	if (page[pages - 1]->index == end_index && bytes) {
+> -		pageaddr = kmap_local_page(page[pages - 1]);
+> -		memset(pageaddr + bytes, 0, PAGE_SIZE - bytes);
+> -		kunmap_local(pageaddr);
+> +	if (used_pages > 0 && page[used_pages - 1]->index == end_index &&
+> +	    bytes) {
+> +		memzero_page(page[used_pages - 1], bytes,
+> +			     PAGE_SIZE - bytes);
+>  	}
+>  
+>  	/* Mark pages as uptodate, unlock and release */
+>  	for (i = 0; i < pages; i++) {
+> -		flush_dcache_page(page[i]);
+> -		SetPageUptodate(page[i]);
+> +		if (i < used_pages) {
+> +			flush_dcache_page(page[i]);
+> +			SetPageUptodate(page[i]);
+> +		}
+>  		unlock_page(page[i]);
+>  		if (page[i] != target_page)
+>  			put_page(page[i]);
+> @@ -112,8 +113,10 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+>  	for (i = 0; i < pages; i++) {
+>  		if (page[i] == NULL || page[i] == target_page)
+>  			continue;
+> -		flush_dcache_page(page[i]);
+> -		SetPageError(page[i]);
+> +		if (i < used_pages) {
+> +			flush_dcache_page(page[i]);
+> +			SetPageError(page[i]);
+> +		}
+>  		unlock_page(page[i]);
+>  		put_page(page[i]);
+>  	}
+> diff --git a/fs/squashfs/page_actor.h b/fs/squashfs/page_actor.h
+> index 95ffbb543d91..c2c5c3937ef9 100644
+> --- a/fs/squashfs/page_actor.h
+> +++ b/fs/squashfs/page_actor.h
+> @@ -29,10 +29,12 @@ extern struct squashfs_page_actor *squashfs_page_actor_init(void **buffer,
+>  extern struct squashfs_page_actor *squashfs_page_actor_init_special(
+>  				struct squashfs_sb_info *msblk,
+>  				struct page **page, int pages, int length);
+> -static inline void squashfs_page_actor_free(struct squashfs_page_actor *actor)
+> +static inline int squashfs_page_actor_free(struct squashfs_page_actor *actor)
+>  {
+> +	int res = actor->next_page;
+>  	kfree(actor->tmp_buffer);
+>  	kfree(actor);
+> +	return res;
+>  }
+>  static inline void *squashfs_first_page(struct squashfs_page_actor *actor)
+>  {
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
+Hi Jintao,
 
-#regzbot ^introduced bfca3dd3d0
-#regzbot ignore-activity
+Booting v6.1-rc1 with your patch applied, I got mixed results. On hello-world
+snap, it runs without errors. On lxd, I got the Verneed regression as
+originally reported. Sometimes I also get snapd panic.
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
+Thanks.
 
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
+-- 
+An old man doll... just what I always wanted! - Clara
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
