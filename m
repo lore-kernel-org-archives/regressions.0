@@ -1,94 +1,89 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 011.lax.mailroute.net (011.lax.mailroute.net [199.89.1.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 906716110
-	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 23:23:24 +0000 (UTC)
-Received: by mail-pg1-f173.google.com with SMTP id bh13so956741pgb.4
-        for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 16:23:24 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887CE6110
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 23:46:36 +0000 (UTC)
+Received: from 003.lax.mailroute.net (003.lax.mailroute.net [199.89.1.6])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by 011.lax.mailroute.net (Postfix) with ESMTPS id 4Mtkhr29RPz2lHwN
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 23:44:28 +0000 (UTC)
+Received: from localhost (003.lax.mailroute.net [127.0.0.1])
+	by 003.lax.mailroute.net (Postfix) with ESMTP id 4Mtkhh6m5Jz1spkh
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 23:44:20 +0000 (UTC)
+X-Virus-Scanned: by MailRoute
+Received: from 003.lax.mailroute.net ([199.89.1.6])
+	by localhost (003.lax [127.0.0.1]) (mroute_mailscanner, port 10026)
+	with LMTP id gHWqrkIYakv1 for <regressions@lists.linux.dev>;
+	Thu, 20 Oct 2022 23:44:20 +0000 (UTC)
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by 003.lax.mailroute.net (Postfix) with ESMTPS id 4Mtkhh1QSJz1spkf
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 23:44:20 +0000 (UTC)
+Received: by mail-pg1-f199.google.com with SMTP id k64-20020a638443000000b004620970e0dbso454184pgd.6
+        for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 16:44:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CE6evqtIX+07t9cXGQPGwOH1py4DcBmEiVntfTOE+UA=;
-        b=DsYLC1odzvMybDOKm2hjUoY7g7UyfNQ9/CdHy1fupzg7ZV1mL78dpgznLgl5cEGy/1
-         Luw4PGzTeGt54qhMOgg1z6CIBjQRmKSe5SQcETMiCH6pb9slYyicgODC2ZJri1ABEagg
-         oiHmHrKwX/KamQtgITQVNGtoHIXfRtPqc5vBT0sqbC3rFF3ly++0dvKVweATlMftUf0T
-         P7OeZn8SLxTsYltgV6ohukrXbxFD7Rky8jZ4Js3tHWARiOA54uDO4yVEfAgr5cXUPaTZ
-         XXB7TQ/vaX2Tldv+2t1rHn881zREeW9LdbFgI2jLosEG5CpDg1d6DNEjwwT3lHVfz8Em
-         FI+A==
+        d=sladewatkins.net; s=googled;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=YX1dOQSRsve78QezUb/eXdj5VKCyEMPTdvcMB3RYrOQ=;
+        b=WbIhvWU8CfHx8GVDZGCjoiNp8HwXpcmXBtrDYeXkgwCxun52M4sXTAU7fvjDWmQIDa
+         m14lf2Dkr9vaxUNBrV1dEzQyAjrofbS6nbkuPY5HluitUiRVsA2qCA63DDZQAz1pnhcb
+         9iZhdMitQh2kG5RWefsNKLOf+SolbgeiSnXrS0C/is8Ow+7OT2IKl2kPTbFABWHB3Zj8
+         m4OfxPhnXDMPtRJCcRHwL0c7694ItA0+ePqTw9SoCgg9RHlgnrw58FPqMZL0VrC+5tMf
+         ssP3zJa8OvnvQndg9B9LLvvpYWX/dCw8asU4LC2qxWe+v8RTas2J7rREyzqEQLYiMJ7C
+         rJ2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CE6evqtIX+07t9cXGQPGwOH1py4DcBmEiVntfTOE+UA=;
-        b=uMOGEDoylAiU/IHp37AD/fPGBzWYuMHbjA2nRtoWFSjMny2aTAGaHziDbBRSgAW+zU
-         uLAFBhh9V5Jbgc86RN44KR5C9wHXuK36I5pERNBfVemC1ocKRy+VMMaEwCHgKfyNs/Zw
-         ltma96FufRnx1sPHO9EKHt0qa31pldBzYmy2MdmIh2tFDZu0WTd0qJXBxca31zILfx5H
-         nZOuy6RYZLA8r0G+GHzKMvPfaK7dVrjhCkcc2WMHMN4spTzEVTpYNC76pp8Xj+6dPXkZ
-         b1bk1+vPGFCJfudimzsGVMR94Q9c/p6FaGvnWkk96vntQRqJ0KNXC4RC9mePNjhvWROf
-         Gzww==
-X-Gm-Message-State: ACrzQf0GAL/wuoONPN9nyM1wmHgsgb6lIdg7ThvcgUHXJfxgoRzxLcKp
-	hfNOf6uncyFKDEyIN0Hy7VM=
-X-Google-Smtp-Source: AMsMyM6SYRWDFAek8ZuBOMLzRnxVB7h7msJN8vNg0BbbLcyfagcKQhlV8lFGFt67DZf72OZkvjwlWA==
-X-Received: by 2002:a63:fc12:0:b0:45f:a6e3:7559 with SMTP id j18-20020a63fc12000000b0045fa6e37559mr13797009pgi.237.1666308203894;
-        Thu, 20 Oct 2022 16:23:23 -0700 (PDT)
-Received: from [192.168.43.80] (subs28-116-206-12-32.three.co.id. [116.206.12.32])
-        by smtp.gmail.com with ESMTPSA id 12-20020a170902c20c00b001750361f430sm13341444pll.155.2022.10.20.16.23.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Oct 2022 16:23:23 -0700 (PDT)
-Message-ID: <02b72b86-7240-5530-477a-c8bdcfd35ef5@gmail.com>
-Date: Fri, 21 Oct 2022 06:23:19 +0700
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YX1dOQSRsve78QezUb/eXdj5VKCyEMPTdvcMB3RYrOQ=;
+        b=mVoAtV594AXGdOo10XNqVdfA0VkRrIP9B2qetfIXNxwi34AuOzpxEcZbOaIimtO3ai
+         B7SqoOcWR5N9HmX6Mt9Jm/OyHQav4PXA+B9Dnc/q5scHOYsR2WDmBviUbTh/CFisCQQG
+         I+rB1XKYNz/Hy/O69FXzLPIX/zGn/VHvRrDnJ8XBq6VBPIfXn2ujdpp9+pDnc5lo3z0G
+         QgHNRWsz7Xz5AhVKj9IvREcTZwW1uCu838L8qYL7GmQk+C6R31OpuvXCU7w5bI7/vHL+
+         rWihazIchE3MWXf0Cy6TTcdkZpa/um15grQG1FuWbLEnzp8BeWm8BNV5tUbRk7/QeHvW
+         Gt/Q==
+X-Gm-Message-State: ACrzQf07uKNY3D3AogNT+kmD2gGfPCnF/+pByFRgdrmJ5hLb5VRSMsmT
+	xgaCCmNuLR675F/FRgmhEP54yHkU4VbRKVx0Me/8NHVTq2pEhh3B9Nc5sC1sVu6REH7oIF9zPcn
+	k4iCz6xgWbAG5U4XKJbRgh0eeO5qbWonIpyEW9YhwrZ8lkEB2LbAEIA==
+X-Received: by 2002:a63:df03:0:b0:462:cfa2:2871 with SMTP id u3-20020a63df03000000b00462cfa22871mr13685281pgg.225.1666309459076;
+        Thu, 20 Oct 2022 16:44:19 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM75NxUHYbQaS3LgwG5b/WXaDO1a4BYysaF3eePJ2McKsaOhV8OIsrv2zZdZ2WzF6btIac6cwDHaWtY7Ngc0h+A=
+X-Received: by 2002:a63:df03:0:b0:462:cfa2:2871 with SMTP id
+ u3-20020a63df03000000b00462cfa22871mr13685264pgg.225.1666309458800; Thu, 20
+ Oct 2022 16:44:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
+References: <20221018174157.1897-1-phillip@squashfs.org.uk>
+ <20221020135545.586-1-nicememory@gmail.com> <41ef4b22-eea8-2d67-99d8-6aaae7d25ac1@squashfs.org.uk>
+ <02b72b86-7240-5530-477a-c8bdcfd35ef5@gmail.com>
+In-Reply-To: <02b72b86-7240-5530-477a-c8bdcfd35ef5@gmail.com>
+From: Slade Watkins <srw@sladewatkins.net>
+Date: Thu, 20 Oct 2022 19:44:07 -0400
+Message-ID: <CA+pv=HO36vMH6Uqu412MF+Hmu-+57QeapGt6k+QDDxr-AsbJkw@mail.gmail.com>
 Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
  6.0.0-rc3 through 6.0.0-rc7
-To: Phillip Lougher <phillip@squashfs.org.uk>,
- Jintao Yin <nicememory@gmail.com>
-Cc: hsinyi@chromium.org, linux-kernel@vger.kernel.org,
- marcmiltenberger@gmail.com, mirsad.todorovac@alu.unizg.hr,
- regressions@leemhuis.info, regressions@lists.linux.dev, srw@sladewatkins.net
-References: <20221018174157.1897-1-phillip@squashfs.org.uk>
- <20221020135545.586-1-nicememory@gmail.com>
- <41ef4b22-eea8-2d67-99d8-6aaae7d25ac1@squashfs.org.uk>
-Content-Language: en-US
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <41ef4b22-eea8-2d67-99d8-6aaae7d25ac1@squashfs.org.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Phillip Lougher <phillip@squashfs.org.uk>, Jintao Yin <nicememory@gmail.com>, hsinyi@chromium.org, 
+	linux-kernel@vger.kernel.org, marcmiltenberger@gmail.com, 
+	mirsad.todorovac@alu.unizg.hr, regressions@leemhuis.info, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On 10/20/22 22:45, Phillip Lougher wrote:
-> On 20/10/2022 14:55, Jintao Yin wrote:
->> Hi all,
->>
->> After review the details of page actor, the tail bytes may be written to
->> a temp buffer instead the last used page. So before diff would wrongly
->> memzero a page which is not the tail bytes in.
->>
->> In this diff fixes it by caculation of the real index the trailing bytes
->> in and check if the last used page matches this index. If the page is
->> the real tail bytes in, then memzero the trailing bypte of the page.
->>
->> Please help test and any feedbacks are welcome.
->>
->> Thanks,
-> 
-> This is a rediculously complex patch.  Sorry, but, absolute NACK.
-> 
-> Additionally, it is poor etiquette and pointless to fix an
-> already fixed issue with a _more_ complex patch.
-> 
+[Resend due to formatting issue, thanks gmail.]
 
-Ah! I was about to test his third fixup patch. I prefer to go
-with your fix instead (as the formal patch).
+On Thu, Oct 20, 2022 at 7:23 PM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+>
+> Ah! I was about to test his third fixup patch. I prefer to go
+> with your fix instead (as the formal patch).
 
--- 
-An old man doll... just what I always wanted! - Clara
++1, agreed.
 
+-srw
