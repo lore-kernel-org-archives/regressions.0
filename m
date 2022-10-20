@@ -1,225 +1,93 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741B23C20
-	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 13:02:09 +0000 (UTC)
-Received: by mail-pf1-f178.google.com with SMTP id 204so20173797pfx.10
-        for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 06:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OyZV+5dHPEm9y2grR1cTVbSv6PIoW3rFM516q3trw+c=;
-        b=hYsLr5so2u6zRKph8E5hlUdCPTFdmUEsuA+JUsFndgKNpB1tZEOigIt6Rb/5RoRPHt
-         qKpNsT7hDrl61cITpT4k1OU7+QEIKd1bIkS5tE0+jeAmZ+ta0MGZpGWQ9TuBvz+EHo9m
-         vwrzgPNKcHCHHquWxkD+f3MJp9QtesaVsHA4GInnePmjyAZhdH5+8A0hCE6KT2ndRaTs
-         YOQ2BSXjvUq5WrfllUi2hwkxbafEjXe9zwBBHqmwNP6A65ZGoZArI9QRDLhpdWKygAh6
-         T/v0BhTH8swSJF3G3kiGzUpH2vZAH4pDJxG5iYMsCx0NDoupeUSEbza2bAgOHsA47UEv
-         Y4Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OyZV+5dHPEm9y2grR1cTVbSv6PIoW3rFM516q3trw+c=;
-        b=3XjhiuV8Wfl+emAJdleZL6vA51Zn9to2LaetKQzSYqMl4zot70YtoQBGNNePv+kZbp
-         n6doVnmx7/RFXj+DHOiy1F1Fsm6erYzuCXUX1019seSN86eYEvJgP7IJRf0U2U3sz922
-         kwnOyKUp0eJl5ZMgvf4g+e8JcvxittOqFQ0VodWyXWu7qXHThKIVmCxubprZXIbjGMRw
-         6iBqucBJhlPWI3Bcpt/yc9prMjpWom31CpVB8HDdFoX2pLuK9BO+KQAMt3Y0tb1q6KaN
-         iJ7mE4CPJuY4M52E82rmGNcA7IFgs/eIViObnLhwwFPagnqQCFnwfEDRe8WXoUUa5u3f
-         uoIQ==
-X-Gm-Message-State: ACrzQf3VStDh8tzFnRN97bFNk3DPG7V8Y9p2nmSUMGxRdEfict/Yit1o
-	MX6uKy2dBIf7qg/BqXAOXpA=
-X-Google-Smtp-Source: AMsMyM46qEZekBEhBsL2rQCglZLJDHG7q8ndkFW/p46TQddKcn21DGoW5OUV0AiB9/w7YBS/i3nxOA==
-X-Received: by 2002:a63:7e4d:0:b0:43c:8ce9:2a9f with SMTP id o13-20020a637e4d000000b0043c8ce92a9fmr11471320pgn.528.1666270928509;
-        Thu, 20 Oct 2022 06:02:08 -0700 (PDT)
-Received: from [192.168.43.80] (subs28-116-206-12-50.three.co.id. [116.206.12.50])
-        by smtp.gmail.com with ESMTPSA id h10-20020a170902680a00b0017300ec80b0sm12655901plk.308.2022.10.20.06.02.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Oct 2022 06:02:08 -0700 (PDT)
-Message-ID: <9e2e61c9-9d01-bb3a-1dc5-2f48fa7d94cd@gmail.com>
-Date: Thu, 20 Oct 2022 20:02:02 +0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F803C20
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 13:11:17 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id AB40C200A6;
+	Thu, 20 Oct 2022 13:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1666271475;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QeX08wDx4M8njk38nX6j0ccIHUKQ5jTw8jMRqQvxCE8=;
+	b=AlAD+9VUKKIr5ZvpKnA7Jc5T9Kod31Vk5cTyU6rWaIYhF/j+HwRaDLdmgS2AjRj9apfdjC
+	gx6/mbxf9ukwSrvMi+jM6AVnrFvBTEOMKiwsHQA4zRAxxdtqObd3W5V32tWvmMjz+OdNfs
+	3jPiVrM6oPA52iLEu/HHK1aRxctJLoY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1666271475;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QeX08wDx4M8njk38nX6j0ccIHUKQ5jTw8jMRqQvxCE8=;
+	b=uShp+i/LcjZ8KO/Xtf38nz/OAx1zzPkhFRnRGBAUIZX120qco9bml0UXdQHkdouYTKqyWn
+	wiZpBcIe/Q9tgADg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7285113AF5;
+	Thu, 20 Oct 2022 13:11:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id xQjpGvNIUWMZPAAAMHmgww
+	(envelope-from <dsterba@suse.cz>); Thu, 20 Oct 2022 13:11:15 +0000
+Date: Thu, 20 Oct 2022 15:11:04 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	linux-btrfs <linux-btrfs@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Viktor Kuzmin <kvaster@gmail.com>
+Subject: Re: Bug 216559 - btrfs crash root mount RAID0 caused by ac0677348f3c2
+Message-ID: <20221020131104.GF13389@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <8be1e839-2eb8-43d0-9ecb-6ff8c3aa3f2d@leemhuis.info>
+ <20221014110708.GE13389@suse.cz>
+ <13418d37-ebba-82d2-4e1b-4e48201342c7@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
- 6.0.0-rc3 through 6.0.0-rc7
-Content-Language: en-US
-To: Jintao Yin <nicememory@gmail.com>, phillip@squashfs.org.uk
-Cc: hsinyi@chromium.org, linux-kernel@vger.kernel.org,
- marcmiltenberger@gmail.com, mirsad.todorovac@alu.unizg.hr,
- regressions@leemhuis.info, regressions@lists.linux.dev, srw@sladewatkins.net
-References: <20221018174157.1897-1-phillip@squashfs.org.uk>
- <20221020074341.1431-1-nicememory@gmail.com>
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <20221020074341.1431-1-nicememory@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <13418d37-ebba-82d2-4e1b-4e48201342c7@leemhuis.info>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 
-On 10/20/22 14:43, Jintao Yin wrote:
-> Ignore my before diff. I didn't notice the end_index caculation greater
-> than file_end part. Use the following diff instead.
+On Mon, Oct 17, 2022 at 02:00:30PM +0200, Thorsten Leemhuis wrote:
+> On 14.10.22 13:07, David Sterba wrote:
+> > On Tue, Oct 11, 2022 at 02:09:50PM +0200, Thorsten Leemhuis wrote:
+> >> Hi, this is your Linux kernel regression tracker speaking.
+> >>
+> >> David, I noticed a regression report in bugzilla.kernel.org apparently
+> >> caused by a changed of yours. As many (most?) kernel developer don't
+> >> keep an eye on the bug-tracker, I decided to forward the report by mail.
+> >> Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216559 :
+> > 
+> > Thanks, you don't need to forward the mails as I'm on CC of all bugzilla
+> > updates where the btrfs virtual assignee is also present.
 > 
-> This diff is based on Phillip's latest two patches and improves the logic
-> to update the status of pages only if page actor touches them.
+> Hmmm. Do you want to make my life easier or want to get less mail? I
+> thought about this for a while. Unless you strongly object, I would like
+> to continue forwarding them for the following reasons:
 > 
-> Please help test and feedbacks are welcome.
-> 
-> Thanks,
-> 
-> Jintao
-> 
-> diff --git a/fs/squashfs/file.c b/fs/squashfs/file.c
-> index e56510964b22..5efa2a9f9630 100644
-> --- a/fs/squashfs/file.c
-> +++ b/fs/squashfs/file.c
-> @@ -506,8 +506,9 @@ static int squashfs_readahead_fragment(struct page **page,
->  		squashfs_i(inode)->fragment_size);
->  	struct squashfs_sb_info *msblk = inode->i_sb->s_fs_info;
->  	unsigned int n, mask = (1 << (msblk->block_log - PAGE_SHIFT)) - 1;
-> +	int res = buffer->error;
->  
-> -	if (buffer->error)
-> +	if (res)
->  		goto out;
->  
->  	expected += squashfs_i(inode)->fragment_offset;
-> @@ -529,7 +530,7 @@ static int squashfs_readahead_fragment(struct page **page,
->  
->  out:
->  	squashfs_cache_put(buffer);
-> -	return buffer->error;
-> +	return res;
->  }
->  
->  static void squashfs_readahead(struct readahead_control *ractl)
-> @@ -557,6 +558,7 @@ static void squashfs_readahead(struct readahead_control *ractl)
->  		int res, bsize;
->  		u64 block = 0;
->  		unsigned int expected;
-> +		int nr_used_pages;
->  
->  		nr_pages = __readahead_batch(ractl, pages, max_pages);
->  		if (!nr_pages)
-> @@ -593,18 +595,18 @@ static void squashfs_readahead(struct readahead_control *ractl)
->  
->  		res = squashfs_read_data(inode->i_sb, block, bsize, NULL, actor);
->  
-> -		squashfs_page_actor_free(actor);
-> +		nr_used_pages = squashfs_page_actor_free(actor);
->  
->  		if (res == expected) {
->  			int bytes;
->  
->  			/* Last page (if present) may have trailing bytes not filled */
->  			bytes = res % PAGE_SIZE;
-> -			if (pages[nr_pages - 1]->index == file_end && bytes)
-> -				memzero_page(pages[nr_pages - 1], bytes,
-> +			if (index == file_end && bytes && nr_used_pages > 0)
-> +				memzero_page(pages[nr_used_pages - 1], bytes,
->  					     PAGE_SIZE - bytes);
->  
-> -			for (i = 0; i < nr_pages; i++) {
-> +			for (i = 0; i < nr_used_pages; i++) {
->  				flush_dcache_page(pages[i]);
->  				SetPageUptodate(pages[i]);
->  			}
-> diff --git a/fs/squashfs/file_direct.c b/fs/squashfs/file_direct.c
-> index f1ccad519e28..1bb0347f98b0 100644
-> --- a/fs/squashfs/file_direct.c
-> +++ b/fs/squashfs/file_direct.c
-> @@ -30,10 +30,9 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
->  	int mask = (1 << (msblk->block_log - PAGE_SHIFT)) - 1;
->  	int start_index = target_page->index & ~mask;
->  	int end_index = start_index | mask;
-> -	int i, n, pages, bytes, res = -ENOMEM;
-> +	int i, n, pages, used_pages, bytes, res = -ENOMEM;
->  	struct page **page;
->  	struct squashfs_page_actor *actor;
-> -	void *pageaddr;
->  
->  	if (end_index > file_end)
->  		end_index = file_end;
-> @@ -74,7 +73,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
->  	/* Decompress directly into the page cache buffers */
->  	res = squashfs_read_data(inode->i_sb, block, bsize, NULL, actor);
->  
-> -	squashfs_page_actor_free(actor);
-> +	used_pages = squashfs_page_actor_free(actor);
->  
->  	if (res < 0)
->  		goto mark_errored;
-> @@ -86,16 +85,18 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
->  
->  	/* Last page (if present) may have trailing bytes not filled */
->  	bytes = res % PAGE_SIZE;
-> -	if (page[pages - 1]->index == end_index && bytes) {
-> -		pageaddr = kmap_local_page(page[pages - 1]);
-> -		memset(pageaddr + bytes, 0, PAGE_SIZE - bytes);
-> -		kunmap_local(pageaddr);
-> +	if (used_pages > 0 && page[used_pages - 1]->index == end_index &&
-> +	    bytes) {
-> +		memzero_page(page[used_pages - 1], bytes,
-> +			     PAGE_SIZE - bytes);
->  	}
->  
->  	/* Mark pages as uptodate, unlock and release */
->  	for (i = 0; i < pages; i++) {
-> -		flush_dcache_page(page[i]);
-> -		SetPageUptodate(page[i]);
-> +		if (i < used_pages) {
-> +			flush_dcache_page(page[i]);
-> +			SetPageUptodate(page[i]);
-> +		}
->  		unlock_page(page[i]);
->  		if (page[i] != target_page)
->  			put_page(page[i]);
-> @@ -112,8 +113,10 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
->  	for (i = 0; i < pages; i++) {
->  		if (page[i] == NULL || page[i] == target_page)
->  			continue;
-> -		flush_dcache_page(page[i]);
-> -		SetPageError(page[i]);
-> +		if (i < used_pages) {
-> +			flush_dcache_page(page[i]);
-> +			SetPageError(page[i]);
-> +		}
->  		unlock_page(page[i]);
->  		put_page(page[i]);
->  	}
-> diff --git a/fs/squashfs/page_actor.h b/fs/squashfs/page_actor.h
-> index 95ffbb543d91..c2c5c3937ef9 100644
-> --- a/fs/squashfs/page_actor.h
-> +++ b/fs/squashfs/page_actor.h
-> @@ -29,10 +29,12 @@ extern struct squashfs_page_actor *squashfs_page_actor_init(void **buffer,
->  extern struct squashfs_page_actor *squashfs_page_actor_init_special(
->  				struct squashfs_sb_info *msblk,
->  				struct page **page, int pages, int length);
-> -static inline void squashfs_page_actor_free(struct squashfs_page_actor *actor)
-> +static inline int squashfs_page_actor_free(struct squashfs_page_actor *actor)
->  {
-> +	int res = actor->next_page;
->  	kfree(actor->tmp_buffer);
->  	kfree(actor);
-> +	return res;
->  }
->  static inline void *squashfs_first_page(struct squashfs_page_actor *actor)
->  {
+> * you might be on vacation or AFK for other reasons; your Comaintainers
+> that were CCed would know and likely then help out
+> * CCing the list makes other people notice the issue and gives them a
+> chance to help (Qu Wenruo replied in bugzilla shortly after I sent the
+> mail you quoted, which might or might not be due to my mail).
+> * regression tracking is hard already; it would make it a lot harder if
+> I'm forced to make and maintain notes how each and every maintainer
+> would like me to handle situations like this
+> * right now I need to send one mail anyway to add a regression to the
+> tracking
 
-Hi Jintao,
-
-Booting v6.1-rc1 with your patch applied, I got mixed results. On hello-world
-snap, it runs without errors. On lxd, I got the Verneed regression as
-originally reported. Sometimes I also get snapd panic.
-
-Thanks.
-
--- 
-An old man doll... just what I always wanted! - Clara
-
+No problem with continuing the way it is, the reasons above make sense.
