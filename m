@@ -1,456 +1,212 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54AA17E1
-	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 06:54:37 +0000 (UTC)
-Received: by mail-ot1-f48.google.com with SMTP id r8-20020a056830120800b00661a0a236efso10875425otp.4
-        for <regressions@lists.linux.dev>; Wed, 19 Oct 2022 23:54:37 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFA223BF
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 07:00:50 +0000 (UTC)
+Received: by mail-pf1-f171.google.com with SMTP id y1so19463805pfr.3
+        for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 00:00:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=b0wm2NtVfhrsgLTdtmnY9qcuKY/ycj5YNMFLjfrfST0=;
-        b=pI9ayWrBWaqa0MlmTf/lcAkAAD9NGC3eezq/4DmxFz2oYBlDuUSmchzkDZLOa0yvBK
-         HnmXfm8yiHmX0yp+SeV5iLMXSYjEqxauqme4fXR5zxavQFV0wKO8WZ6IchgUhrfHuhaW
-         HMNaEMonK5Vj3BNdC5wm8dEwv8YO5DirJzzC8/Iuhh8td/8/a5RXa9qu7P6iQxt0Jxw9
-         FUu600AtLy+M7GFZPx/ObiONVw6HhjxYrBym5zk8JGs5DMA7z/1BWSpqeetNkNdomAV+
-         6WxF99ZKkZ2L/4wCu9nd8TnGhWv9R4kheL96j9zVI6lwX/9RK8MD5pzZrmAGmg9IA5fs
-         gugA==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A6Twp7uqupA7cKAAQAI5q7h15HGpc5k+vG5y6VE0a6Y=;
+        b=FovKRKTZn8KMohHQJ4hwLn/7GlKk3OXBN+oVAPYPtBM7diFdkDzB/fZLZSsJiTylvI
+         FvGvGaKUQo+U6Oyige+KS5pvAZEL4nwjFFkn8Ec7m2XL6hwKWLOsUF+vjltoejRSFIAp
+         dVSXoZud2/L2ejrxWKSbmvbjkjnWR+GvN5CCLvuB9NWeMtg4bQzl9hyUvUm9/aA2x0iH
+         pnpRevEcmkmd4ZrBOP4/xMTbfTriJO6FJ0cqC+OVB+HpN+CCHbnMPhs0U105kfA59YJc
+         iTS/QCVKX5gu7+OCBPLam09U3UNwFPPVO7TxXQk0kakVtMDHsm7dZiYv3l3vSvtsdhQe
+         xWLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=b0wm2NtVfhrsgLTdtmnY9qcuKY/ycj5YNMFLjfrfST0=;
-        b=SDB4Mdr+CyiNcgJwy0uBZg53y0c3VxRt87EswlWEnRkmKUktu6U1Om2CzqmxiKzkeX
-         LeStEjCYhsoydsWlR/Db5YNNHyDzuv6gMcVIt8ddD7oDe7AZzF54dZZE2jhyR8NwOOri
-         WmPUUDUF+l38TUaP9D2pIB/YxhXt1GoBWIEwU6ZgFSvq2WxLiCOmiyUoE4KzdGZnyR3+
-         7G/zNSDf3sokr/vSD2ORXmbA9n3TUNC/aoBuUNR+BrkYGl99jzVU1jZVMwmBccHrvWjB
-         MXvKkhzxYr9O3meV1u7zsInKwy5vA4p2WrhkrmLZ01eQBGNvUPUJGBh25D1PIovFEf+U
-         btxg==
-X-Gm-Message-State: ACrzQf3JUymbbABtIiT7QNIt7XbKAW8YUmXcqxTe/6lO7I4yZWoyASlv
-	0pHCPekowAcBjxEQgQrkH8iKqpDC1OFeN4IfbKyX2A==
-X-Google-Smtp-Source: AMsMyM7gZ+9fKG1sZy9BX3vOoLnLfbDALtO/Y8WntgO9IpvohQodhggChGUgD6gryvUv0yFORV+iOxVDOZWks0E6o2M=
-X-Received: by 2002:a05:6830:2044:b0:661:8f8f:ffa2 with SMTP id
- f4-20020a056830204400b006618f8fffa2mr6092538otp.142.1666248876598; Wed, 19
- Oct 2022 23:54:36 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A6Twp7uqupA7cKAAQAI5q7h15HGpc5k+vG5y6VE0a6Y=;
+        b=flHNGBy4sKuCCM1rS9LdFmkjSEtd+TaDUjiz2gf6I9YBx99rxbbwd/r1KtfVT2Bvde
+         K02cfHizXLDcNn1P9GgAXAK+7cGd9yDje9Q6coWSxiQR5FojD3UEUKgOZQh+M99Eqh2t
+         p0N+XaCzi+kMy01syO6KP74Bnbot6iYDXPOgGw/daf0F1MFc0zlS42JYomM4+PCGznma
+         MFgFBiepxf0GPzmoLAR5yxRdXihnCzBQi8RbEDfkxrNSiTPdLAIx2lLJ2YbpZU70XOHv
+         cjfpr+6fw1wnFXWZnSLJul8ac0374R9DJX0iuvKILwq4gcVyzrAkPTZFrCtrBO1AzAyC
+         rigQ==
+X-Gm-Message-State: ACrzQf1eE6xwGZsHP9jQ77ptsZzPKIt0IYdpAx+4Qm48kXJqP2jZKxPA
+	cLX9kgRjPwptNJDV/UAF8L8=
+X-Google-Smtp-Source: AMsMyM5wO2xm+MEn5lRlzCJa/K2DD4yWzaUon4J2ea2LCt8AegTrWyjaUHZ/qPMzPCMjZlFvN7rJVg==
+X-Received: by 2002:a62:2983:0:b0:54e:7cd5:adb3 with SMTP id p125-20020a622983000000b0054e7cd5adb3mr12517198pfp.38.1666249249418;
+        Thu, 20 Oct 2022 00:00:49 -0700 (PDT)
+Received: from localhost.localdomain ([111.203.234.211])
+        by smtp.googlemail.com with ESMTPSA id s21-20020a056a00195500b00562ef28aac6sm12733164pfk.185.2022.10.20.00.00.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Oct 2022 00:00:47 -0700 (PDT)
+From: Jintao Yin <nicememory@gmail.com>
+To: phillip@squashfs.org.uk
+Cc: bagasdotme@gmail.com,
+	hsinyi@chromium.org,
+	linux-kernel@vger.kernel.org,
+	marcmiltenberger@gmail.com,
+	mirsad.todorovac@alu.unizg.hr,
+	nicememory@gmail.com,
+	regressions@leemhuis.info,
+	regressions@lists.linux.dev,
+	srw@sladewatkins.net
+Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with 6.0.0-rc3 through 6.0.0-rc7
+Date: Thu, 20 Oct 2022 14:59:42 +0800
+Message-Id: <20221020065942.1828-1-nicememory@gmail.com>
+X-Mailer: git-send-email 2.38.0
+In-Reply-To: <20221018174157.1897-1-phillip@squashfs.org.uk>
+References: <20221018174157.1897-1-phillip@squashfs.org.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 20 Oct 2022 12:24:25 +0530
-Message-ID: <CA+G9fYtOP-spGS7gYyBB-8wpUDiKxd5e_Nk05J9gzWR_DLBeFA@mail.gmail.com>
-Subject: Perf: BUG: kernel NULL pointer dereference, address: 0000000000000198
-To: linux-perf-users@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Borislav Petkov <bp@alien8.de>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Following kernel BUG noticed while running perf testing on qemu-x86-64.
+This diff is based on Phillip's latest two patches and fixes another wrong
+check of last page in file_direct.c. At the same time, improve the logic
+to update the status of pages only if page actor touches them.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Please help test and feedbacks are welcome.
 
---- start ---
-test child forked, pid 528
-Using CPUID AuthenticAMD-23-1-2
-/usr/libexec/perf-core/tests/attr.py:142: DeprecationWarning: The
-SafeConfigParser class has been renamed to ConfigParser in Python 3.2.
-This alias will be removed in Python 3.12. Use ConfigParser directly
-instead.
-  parser = configparser.SafeConfigParser()
-running '/usr/libexec/perf-core/tests/attr/test-record-graph-default-aarch64'
-test limitation 'aarch64'
-/usr/libexec/perf-core/tests/attr.py:201: DeprecationWarning: The
-SafeConfigParser class has been renamed to ConfigParser in Python 3.2.
-This alias will be removed in Python 3.12. Use ConfigParser directly
-instead.
-  parser_event = configparser.SafeConfigParser()
-/usr/libexec/perf-core/tests/attr.py:215: DeprecationWarning: The
-SafeConfigParser class has been renamed to ConfigParser in Python 3.2.
-This alias will be removed in Python 3.12. Use ConfigParser directly
-instead.
-  parser_base = configparser.SafeConfigParser()
-skipped [x86_64]
-'/usr/libexec/perf-core/tests/attr/test-record-graph-default-aarch64'
-running '/usr/libexec/perf-core/tests/attr/test-record-group2'
-running '/usr/libexec/perf-core/tests/attr/test-record-C0'
-running '/usr/libexec/perf-core/tests/attr/test-record-spe-period'
-test limitation 'aarch64'
-skipped [x86_64] '/usr/libexec/perf-core/tests/attr/test-record-spe-period'
-running '/usr/libexec/perf-core/tests/attr/test-record-period'
-[  198.864607] perf: interrupt took too long (11296 > 11195), lowering
-kernel.perf_event_max_sample_rate to 17000
-[  198.867588] perf: interrupt took too long (14200 > 14120), lowering
-kernel.perf_event_max_sample_rate to 14000
-[  198.871230] perf: interrupt took too long (17803 > 17750), lowering
-kernel.perf_event_max_sample_rate to 11000
-[  198.878141] perf: interrupt took too long (22268 > 22253), lowering
-kernel.perf_event_max_sample_rate to 8000
-running '/usr/libexec/perf-core/tests/attr/test-record-branch-any'
-unsupp  '/usr/libexec/perf-core/tests/attr/test-record-branch-any'
-running '/usr/libexec/perf-core/tests/attr/test-record-branch-filter-any_call'
-unsupp  '/usr/libexec/perf-core/tests/attr/test-record-branch-filter-any_call'
-running '/usr/libexec/perf-core/tests/attr/test-stat-C0'
-running '/usr/libexec/perf-core/tests/attr/test-record-no-samples'
-running '/usr/libexec/perf-core/tests/attr/test-record-spe-period-term'
-test limitation 'aarch64'
-skipped [x86_64] '/usr/libexec/perf-core/tests/attr/test-record-spe-period-term'
-running '/usr/libexec/perf-core/tests/attr/test-stat-no-inherit'
-running '/usr/libexec/perf-core/tests/attr/test-stat-detailed-1'
-running '/usr/libexec/perf-core/tests/attr/test-record-count'
-running '/usr/libexec/perf-core/tests/attr/test-record-data'
-running '/usr/libexec/perf-core/tests/attr/test-record-raw'
-running '/usr/libexec/perf-core/tests/attr/test-stat-default'
-running '/usr/libexec/perf-core/tests/attr/test-record-branch-filter-ind_call'
-unsupp  '/usr/libexec/perf-core/tests/attr/test-record-branch-filter-ind_call'
-running '/usr/libexec/perf-core/tests/attr/test-record-group'
-[  204.124863] BUG: kernel NULL pointer dereference, address: 0000000000000198
-[  204.125878] #PF: supervisor read access in kernel mode
-[  204.126482] #PF: error_code(0x0000) - not-present page
-[  204.127127] PGD 0 P4D 0
-[  204.127435] Oops: 0000 [#1] PREEMPT SMP NOPTI
-[  204.127939] CPU: 3 PID: 574 Comm: perf-exec Not tainted 6.0.3-rc1 #1
-[  204.128711] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[  204.129619] RIP: 0010:x86_pmu_enable_event+0x43/0x130
-[  204.130246] Code: af e8 51 78 0e 01 65 8b 05 6a fe 40 52 85 c0 75
-0d 5b 41 5c 41 5d 41 5e 5d e9 69 dc 3f 01 48 c7 c7 6b b4 76 af e8 2d
-78 0e 01 <8b> 8b 98 01 00 00 65 4c 8b 25 47 0f 41 52 85 c9 0f 85 ab 00
-00 00
-[  204.132695] RSP: 0018:ffff9cc040857be8 EFLAGS: 00010092
-[  204.133418] RAX: 0000000000000003 RBX: 0000000000000000 RCX: 00000000c0010200
-[  204.134401] RDX: 0000000000000000 RSI: ffffffffaf76b46b RDI: ffffffffaf6bbc6f
-[  204.135398] RBP: ffff9cc040857c08 R08: 0000002f86b5dc60 R09: ffff9cc040857a38
-[  204.136413] R10: 0000000000000002 R11: ffffffffaff970a0 R12: ffff8f663bd95c20
-[  204.137385] R13: ffff8f663bd95e20 R14: 0000000000000002 R15: 00000000c0010201
-[  204.138235] FS:  00007fe3226d77c0(0000) GS:ffff8f663bd80000(0000)
-knlGS:0000000000000000
-[  204.139133] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  204.139842] CR2: 0000000000000198 CR3: 00000001056a2000 CR4: 00000000003506e0
-[  204.140801] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  204.141744] DR3: 0000000000000000 DR6: 00000000ffff4ff0 DR7: 0000000000000400
-[  204.142731] Call Trace:
-[  204.143082]  <TASK>
-[  204.143406]  amd_pmu_enable_all+0x4b/0x70
-[  204.143974]  x86_pmu_enable+0x17c/0x320
-[  204.144530]  ctx_resched+0xcb/0x110
-[  204.145016]  perf_event_exec+0x384/0x460
-[  204.145575]  begin_new_exec+0x5f7/0xb90
-[  204.146471]  load_elf_binary+0xa82/0x17a0
-[  204.147042]  ? __kernel_read+0x15a/0x250
-[  204.147661]  ? __kernel_read+0x15a/0x250
-[  204.148196]  ? trace_preempt_off+0x29/0xc0
-[  204.148764]  ? trace_preempt_on+0x29/0xc0
-[  204.149206]  ? load_misc_binary+0x215/0x290
-[  204.149656]  bprm_execve+0x283/0x680
-[  204.150054]  do_execveat_common.isra.0+0x19f/0x220
-[  204.150671]  __x64_sys_execve+0x37/0x50
-[  204.151204]  do_syscall_64+0x3b/0x90
-[  204.151703]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
-[  204.152450] RIP: 0033:0x7fe321cd925b
-[  204.152988] Code: Unable to access opcode bytes at RIP 0x7fe321cd9231.
-[  204.153870] RSP: 002b:00007ffc5a199828 EFLAGS: 00000202 ORIG_RAX:
-000000000000003b
-[  204.154865] RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fe321cd925b
-[  204.155828] RDX: 0000000002809980 RSI: 00007ffc5a19f100 RDI: 00007ffc5a199830
-[  204.156765] RBP: 00007ffc5a199940 R08: 0000000000000fff R09: 00000000027c9bff
-[  204.157768] R10: 00007fe321c14680 R11: 0000000000000202 R12: 00007ffc5a19f100
-[  204.158671] R13: 0000000002809980 R14: 00007ffc5a1a0d59 R15: 00000000027c9bfb
-[  204.159451]  </TASK>
-[  204.159749] Modules linked in:
-[  204.160204] CR2: 0000000000000198
-[  204.160696] ---[ end trace 0000000000000000 ]---
-[  204.161347] RIP: 0010:x86_pmu_enable_event+0x43/0x130
-[  204.162056] Code: af e8 51 78 0e 01 65 8b 05 6a fe 40 52 85 c0 75
-0d 5b 41 5c 41 5d 41 5e 5d e9 69 dc 3f 01 48 c7 c7 6b b4 76 af e8 2d
-78 0e 01 <8b> 8b 98 01 00 00 65 4c 8b 25 47 0f 41 52 85 c9 0f 85 ab 00
-00 00
-[  204.164521] RSP: 0018:ffff9cc040857be8 EFLAGS: 00010092
-[  204.165287] RAX: 0000000000000003 RBX: 0000000000000000 RCX: 00000000c0010200
-[  204.166284] RDX: 0000000000000000 RSI: ffffffffaf76b46b RDI: ffffffffaf6bbc6f
-[  204.167167] RBP: ffff9cc040857c08 R08: 0000002f86b5dc60 R09: ffff9cc040857a38
-[  204.167958] R10: 0000000000000002 R11: ffffffffaff970a0 R12: ffff8f663bd95c20
-[  204.168957] R13: ffff8f663bd95e20 R14: 0000000000000002 R15: 00000000c0010201
-[  204.170005] FS:  00007fe3226d77c0(0000) GS:ffff8f663bd80000(0000)
-knlGS:0000000000000000
-[  204.171106] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  204.171924] CR2: 00007fe321cd9231 CR3: 00000001056a2000 CR4: 00000000003506e0
-[  204.172942] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  204.173924] DR3: 0000000000000000 DR6: 00000000ffff4ff0 DR7: 0000000000000400
-[  204.174986] note: perf-exec[574] exited with preempt_count 2
-[  225.122265] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[  225.123795] rcu: 3-...0: (2 ticks this GP)
-idle=0cfc/1/0x4000000000000000 softirq=4348/4348 fqs=5211
-[  225.125479] (detected by 2, t=21004 jiffies, g=9861, q=182 ncpus=4)
-[  225.126647] Sending NMI from CPU 2 to CPUs 3:
-[  225.127690] NMI backtrace for cpu 3
-[  225.127728] CPU: 3 PID: 574 Comm: perf-exec Tainted: G      D
-     6.0.3-rc1 #1
-[  225.127748] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[  225.127769] RIP: 0010:queued_spin_lock_slowpath+0x3b/0x2f0
-[  225.127883] Code: fc 53 66 90 ba 01 00 00 00 41 8b 04 24 85 c0 75
-17 f0 41 0f b1 14 24 85 c0 75 ee 5b 41 5c 41 5d 41 5e 5d e9 c7 7f 1c
-01 f3 90 <eb> dd 81 fe 00 01 00 00 74 57 40 30 f6 85 f6 75 7b f0 41 0f
-ba 2c
-[  225.127887] RSP: 0018:ffff9cc040130dd8 EFLAGS: 00000002
-[  225.127901] RAX: 0000000000000001 RBX: ffff8f660089b400 RCX: ffff8f663bda6ac0
-[  225.127905] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffff8f660089b408
-[  225.127908] RBP: ffff9cc040130df8 R08: ffff8f66027f1900 R09: 000000000000010b
-[  225.127910] R10: 0000000000000033 R11: 0000000000000227 R12: ffff8f660089b408
-[  225.127913] R13: ffff8f663bda6a90 R14: 0000000000026ac0 R15: ffff8f660089b408
-[  225.127920] FS:  00007fe3226d77c0(0000) GS:ffff8f663bd80000(0000)
-knlGS:0000000000000000
-[  225.127927] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  225.127931] CR2: 00007fe321cd9231 CR3: 00000001056a2000 CR4: 00000000003506e0
-[  225.127933] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  225.127935] DR3: 0000000000000000 DR6: 00000000ffff4ff0 DR7: 0000000000000400
-[  225.127947] Call Trace:
-[  225.127952]  <IRQ>
-[  225.127969]  _raw_spin_lock+0x3b/0x50
-[  225.128018]  perf_event_task_tick+0xa2/0x3d0
-[  225.128059]  ? task_tick_fair+0x76/0x2d0
-[  225.128073]  scheduler_tick+0xda/0x280
-[  225.128082]  update_process_times+0x95/0xb0
-[  225.128116]  tick_sched_handle+0x38/0x50
-[  225.128138]  tick_sched_timer+0x7b/0xa0
-[  225.128144]  ? tick_sched_do_timer+0xa0/0xa0
-[  225.128149]  __hrtimer_run_queues+0xa7/0x300
-[  225.128157]  hrtimer_interrupt+0x110/0x230
-[  225.128163]  __sysvec_apic_timer_interrupt+0x84/0x170
-[  225.128187]  sysvec_apic_timer_interrupt+0xab/0xd0
-[  225.128210]  </IRQ>
-[  225.128213]  <TASK>
-[  225.128216]  asm_sysvec_apic_timer_interrupt+0x1b/0x20
-[  225.128222] RIP: 0010:_raw_spin_unlock_irq+0x17/0x40
-[  225.128230] Code: e9 be b8 30 00 66 66 2e 0f 1f 84 00 00 00 00 00
-0f 1f 00 0f 1f 44 00 00 55 48 89 e5 c6 07 00 e8 df 9d 1f ff fb bf 01
-00 00 00 <e8> 34 45 11 ff 65 8b 05 4d 29 32 51 85 c0 74 06 5d e9 83 b8
-30 00
-[  225.128235] RSP: 0018:ffff9cc040857ec8 EFLAGS: 00000246
-[  225.128239] RAX: 0000000000000000 RBX: ffff8f66021c2080 RCX: 0000000080000000
-[  225.128254] RDX: 0000000000000001 RSI: ffffffffaddd9a56 RDI: 0000000000000001
-[  225.128257] RBP: ffff9cc040857ec8 R08: ffffffffafb60cc8 R09: 00000000ffffdfff
-[  225.128270] R10: ffffffffafa80ce0 R11: ffffffffafb30ce0 R12: 0000000000000000
-[  225.128275] R13: 0000000000000009 R14: ffff9cc040857b38 R15: 0000000000000046
-[  225.128283]  ? do_exit+0x66/0xae0
-[  225.128331]  ? _raw_spin_unlock_irq+0x11/0x40
-[  225.128338]  do_exit+0x66/0xae0
-[  225.128347]  make_task_dead+0x5a/0x60
-[  225.128355]  rewind_stack_and_make_dead+0x17/0x20
-[  225.128384] RIP: 0033:0x7fe321cd925b
-[  225.128461] Code: Unable to access opcode bytes at RIP 0x7fe321cd9231.
-[  225.128463] RSP: 002b:00007ffc5a199828 EFLAGS: 00000202 ORIG_RAX:
-000000000000003b
-[  225.128469] RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fe321cd925b
-[  225.128472] RDX: 0000000002809980 RSI: 00007ffc5a19f100 RDI: 00007ffc5a199830
-[  225.128475] RBP: 00007ffc5a199940 R08: 0000000000000fff R09: 00000000027c9bff
-[  225.128477] R10: 00007fe321c14680 R11: 0000000000000202 R12: 00007ffc5a19f100
-[  225.128479] R13: 0000000002809980 R14: 00007ffc5a1a0d59 R15: 00000000027c9bfb
-[  225.128487]  </TASK>
-[  288.133586] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[  288.137745] rcu: 3-...0: (2 ticks this GP)
-idle=0cfc/1/0x4000000000000000 softirq=4348/4348 fqs=20510
-[  288.138774] (detected by 1, t=84019 jiffies, g=9861, q=349 ncpus=4)
-[  288.139441] Sending NMI from CPU 1 to CPUs 3:
-[  288.140110] NMI backtrace for cpu 3
-[  288.140118] CPU: 3 PID: 574 Comm: perf-exec Tainted: G      D
-     6.0.3-rc1 #1
-[  288.140124] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[  288.140129] RIP: 0010:queued_spin_lock_slowpath+0x3b/0x2f0
-[  288.140140] Code: fc 53 66 90 ba 01 00 00 00 41 8b 04 24 85 c0 75
-17 f0 41 0f b1 14 24 85 c0 75 ee 5b 41 5c 41 5d 41 5e 5d e9 c7 7f 1c
-01 f3 90 <eb> dd 81 fe 00 01 00 00 74 57 40 30 f6 85 f6 75 7b f0 41 0f
-ba 2c
-[  288.140143] RSP: 0018:ffff9cc040130dd8 EFLAGS: 00000002
-[  288.140146] RAX: 0000000000000001 RBX: ffff8f660089b400 RCX: ffff8f663bda6ac0
-[  288.140148] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffff8f660089b408
-[  288.140148] RBP: ffff9cc040130df8 R08: ffff8f66027f1900 R09: 000000000000010b
-[  288.140149] R10: 0000000000000033 R11: 0000000000000227 R12: ffff8f660089b408
-[  288.140150] R13: ffff8f663bda6a90 R14: 0000000000026ac0 R15: ffff8f660089b408
-[  288.140154] FS:  00007fe3226d77c0(0000) GS:ffff8f663bd80000(0000)
-knlGS:0000000000000000
-[  288.140157] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  288.140158] CR2: 00007fe321cd9231 CR3: 00000001056a2000 CR4: 00000000003506e0
-[  288.140159] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  288.140160] DR3: 0000000000000000 DR6: 00000000ffff4ff0 DR7: 0000000000000400
-[  288.140161] Call Trace:
-[  288.140165]  <IRQ>
-[  288.140170]  _raw_spin_lock+0x3b/0x50
-[  288.140174]  perf_event_task_tick+0xa2/0x3d0
-[  288.140179]  ? task_tick_fair+0x76/0x2d0
-[  288.140182]  scheduler_tick+0xda/0x280
-[  288.140185]  update_process_times+0x95/0xb0
-[  288.140189]  tick_sched_handle+0x38/0x50
-[  288.140197]  tick_sched_timer+0x7b/0xa0
-[  288.140199]  ? tick_sched_do_timer+0xa0/0xa0
-[  288.140202]  __hrtimer_run_queues+0xa7/0x300
-[  288.140204]  hrtimer_interrupt+0x110/0x230
-[  288.140206]  __sysvec_apic_timer_interrupt+0x84/0x170
-[  288.140211]  sysvec_apic_timer_interrupt+0xab/0xd0
-[  288.140224]  </IRQ>
-[  288.140224]  <TASK>
-[  288.140225]  asm_sysvec_apic_timer_interrupt+0x1b/0x20
-[  288.140227] RIP: 0010:_raw_spin_unlock_irq+0x17/0x40
-[  288.140229] Code: e9 be b8 30 00 66 66 2e 0f 1f 84 00 00 00 00 00
-0f 1f 00 0f 1f 44 00 00 55 48 89 e5 c6 07 00 e8 df 9d 1f ff fb bf 01
-00 00 00 <e8> 34 45 11 ff 65 8b 05 4d 29 32 51 85 c0 74 06 5d e9 83 b8
-30 00
-[  288.140231] RSP: 0018:ffff9cc040857ec8 EFLAGS: 00000246
-[  288.140232] RAX: 0000000000000000 RBX: ffff8f66021c2080 RCX: 0000000080000000
-[  288.140233] RDX: 0000000000000001 RSI: ffffffffaddd9a56 RDI: 0000000000000001
-[  288.140234] RBP: ffff9cc040857ec8 R08: ffffffffafb60cc8 R09: 00000000ffffdfff
-[  288.140235] R10: ffffffffafa80ce0 R11: ffffffffafb30ce0 R12: 0000000000000000
-[  288.140236] R13: 0000000000000009 R14: ffff9cc040857b38 R15: 0000000000000046
-[  288.140238]  ? do_exit+0x66/0xae0
-[  288.140242]  ? _raw_spin_unlock_irq+0x11/0x40
-[  288.140248]  do_exit+0x66/0xae0
-[  288.140251]  make_task_dead+0x5a/0x60
-[  288.140253]  rewind_stack_and_make_dead+0x17/0x20
-[  288.140256] RIP: 0033:0x7fe321cd925b
-[  288.140270] Code: Unable to access opcode bytes at RIP 0x7fe321cd9231.
-[  288.140271] RSP: 002b:00007ffc5a199828 EFLAGS: 00000202 ORIG_RAX:
-000000000000003b
-[  288.140273] RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fe321cd925b
-[  288.140274] RDX: 0000000002809980 RSI: 00007ffc5a19f100 RDI: 00007ffc5a199830
-[  288.140275] RBP: 00007ffc5a199940 R08: 0000000000000fff R09: 00000000027c9bff
-[  288.140276] R10: 00007fe321c14680 R11: 0000000000000202 R12: 00007ffc5a19f100
-[  288.140277] R13: 0000000002809980 R14: 00007ffc5a1a0d59 R15: 00000000027c9bfb
-[  288.140279]  </TASK>
-[  351.145086] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[  351.147106] rcu: 3-...0: (2 ticks this GP)
-idle=0cfc/1/0x4000000000000000 softirq=4348/4348 fqs=35304
-[  351.149375] (detected by 0, t=147026 jiffies, g=9861, q=650 ncpus=4)
-[  351.150955] Sending NMI from CPU 0 to CPUs 3:
-[  351.152253] NMI backtrace for cpu 3
-[  351.152273] CPU: 3 PID: 574 Comm: perf-exec Tainted: G      D
-     6.0.3-rc1 #1
-[  351.152282] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[  351.152296] RIP: 0010:queued_spin_lock_slowpath+0x3b/0x2f0
-[  351.152356] Code: fc 53 66 90 ba 01 00 00 00 41 8b 04 24 85 c0 75
-17 f0 41 0f b1 14 24 85 c0 75 ee 5b 41 5c 41 5d 41 5e 5d e9 c7 7f 1c
-01 f3 90 <eb> dd 81 fe 00 01 00 00 74 57 40 30 f6 85 f6 75 7b f0 41 0f
-ba 2c
-[  351.152359] RSP: 0018:ffff9cc040130dd8 EFLAGS: 00000002
-[  351.152365] RAX: 0000000000000001 RBX: ffff8f660089b400 RCX: ffff8f663bda6ac0
-[  351.152367] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffff8f660089b408
-[  351.152369] RBP: ffff9cc040130df8 R08: ffff8f66027f1900 R09: 000000000000010b
-[  351.152370] R10: 0000000000000033 R11: 0000000000000227 R12: ffff8f660089b408
-[  351.152371] R13: ffff8f663bda6a90 R14: 0000000000026ac0 R15: ffff8f660089b408
-[  351.152375] FS:  00007fe3226d77c0(0000) GS:ffff8f663bd80000(0000)
-knlGS:0000000000000000
-[  351.152381] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  351.152382] CR2: 00007fe321cd9231 CR3: 00000001056a2000 CR4: 00000000003506e0
-[  351.152384] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  351.152384] DR3: 0000000000000000 DR6: 00000000ffff4ff0 DR7: 0000000000000400
-[  351.152388] Call Trace:
-[  351.152392]  <IRQ>
-[  351.152399]  _raw_spin_lock+0x3b/0x50
-[  351.152421]  perf_event_task_tick+0xa2/0x3d0
-[  351.152439]  ? task_tick_fair+0x76/0x2d0
-[  351.152446]  scheduler_tick+0xda/0x280
-[  351.152451]  update_process_times+0x95/0xb0
-[  351.152463]  tick_sched_handle+0x38/0x50
-[  351.152471]  tick_sched_timer+0x7b/0xa0
-[  351.152473]  ? tick_sched_do_timer+0xa0/0xa0
-[  351.152475]  __hrtimer_run_queues+0xa7/0x300
-[  351.152478]  hrtimer_interrupt+0x110/0x230
-[  351.152480]  __sysvec_apic_timer_interrupt+0x84/0x170
-[  351.152490]  sysvec_apic_timer_interrupt+0xab/0xd0
-[  351.152494]  </IRQ>
-[  351.152495]  <TASK>
-[  351.152496]  asm_sysvec_apic_timer_interrupt+0x1b/0x20
-[  351.152498] RIP: 0010:_raw_spin_unlock_irq+0x17/0x40
-[  351.152500] Code: e9 be b8 30 00 66 66 2e 0f 1f 84 00 00 00 00 00
-0f 1f 00 0f 1f 44 00 00 55 48 89 e5 c6 07 00 e8 df 9d 1f ff fb bf 01
-00 00 00 <e8> 34 45 11 ff 65 8b 05 4d 29 32 51 85 c0 74 06 5d e9 83 b8
-30 00
-[  351.152501] RSP: 0018:ffff9cc040857ec8 EFLAGS: 00000246
-[  351.152503] RAX: 0000000000000000 RBX: ffff8f66021c2080 RCX: 0000000080000000
-[  351.152504] RDX: 0000000000000001 RSI: ffffffffaddd9a56 RDI: 0000000000000001
-[  351.152505] RBP: ffff9cc040857ec8 R08: ffffffffafb60cc8 R09: 00000000ffffdfff
-[  351.152506] R10: ffffffffafa80ce0 R11: ffffffffafb30ce0 R12: 0000000000000000
-[  351.152507] R13: 0000000000000009 R14: ffff9cc040857b38 R15: 0000000000000046
-[  351.152509]  ? do_exit+0x66/0xae0
-[  351.152524]  ? _raw_spin_unlock_irq+0x11/0x40
-[  351.152525]  do_exit+0x66/0xae0
-[  351.152528]  make_task_dead+0x5a/0x60
-[  351.152531]  rewind_stack_and_make_dead+0x17/0x20
-[  351.152540] RIP: 0033:0x7fe321cd925b
-[  351.152576] Code: Unable to access opcode bytes at RIP 0x7fe321cd9231.
-[  351.152581] RSP: 002b:00007ffc5a199828 EFLAGS: 00000202 ORIG_RAX:
-000000000000003b
-[  351.152583] RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00007fe321cd925b
-[  351.152584] RDX: 0000000002809980 RSI: 00007ffc5a19f100 RDI: 00007ffc5a199830
-[  351.152585] RBP: 00007ffc5a199940 R08: 0000000000000fff R09: 00000000027c9bff
-[  351.152586] R10: 00007fe321c14680 R11: 0000000000000202 R12: 00007ffc5a19f100
-[  351.152586] R13: 0000000002809980 R14: 00007ffc5a1a0d59 R15: 00000000027c9bfb
-[  351.152589]  </TASK>
-[  414.154511] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[  414.156284] rcu: 3-...0: (2 ticks this GP)
-idle=0cfc/1/0x4000000000000000 softirq=4348/4348 fqs=51040
-[  414.166067] (detected by 0, t=210046 jiffies, g=9861, q=959 ncpus=4)
-[  414.167261] Sending NMI from CPU 0 to CPUs 3:
-[  414.168168] NMI backtrace for cpu 3
-[  414.168180] CPU: 3 PID: 574 Comm: perf-exec Tainted: G      D
-     6.0.3-rc1 #1
-[  414.168192] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[  414.168196] RIP: 0010:queued_spin_lock_slowpath+0x3b/0x2f0
-[  414.168219] Code: fc 53 66 90 ba 01 00 00 00 41 8b 04 24 85 c0 75
-17 f0 41 0f b1 14 24 85 c0 75 ee 5b 41 5c 41 5d 41 5e 5d e9 c7 7f 1c
-01 f3 90 <eb> dd 81 fe 00 01 00 00 74 57 40 30 f6 85 f6 75 7b f0 41 0f
-ba 2c
-[  414.168222] RSP: 0018:ffff9cc040130dd8 EFLAGS: 00000002
-[  414.168225] RAX: 0000000000000001 RBX: ffff8f660089b400 RCX: ffff8f663bda6ac0
-[  414.168227] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffff8f660089b408
-[  414.168228] RBP: ffff9cc040130df8 R08: ffff8f66027f1900 R09: 000000000000010b
-[  414.168230] R10: 0000000000000033 R11: 0000000000000227 R12: ffff8f660089b408
-[  414.168231] R13: ffff8f663bda6a90 R14: 0000000000026ac0 R15: ffff8f660089b408
-[  414.168234] FS:  00007fe3226d77c0(0000) GS:ffff8f663bd80000(0000)
-knlGS:0000000000000000
-[  414.168237] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  414.168238] CR2: 00007fe321cd9231 CR3: 00000001056a2000 CR4: 00000000003506e0
-[  414.168239] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[  414.168241] DR3: 0000000000000000 DR6: 00000000ffff4ff0 DR7: 0000000000000400
-[  414.168242] Call Trace:
-[  414.168244]  <IRQ>
-[  414.168251]  _raw_spin_lock+0x3b/0x50
-[  414.168259]  perf_event_task_tick+0xa2/0x3d0
-[  414.168265]  ? task_tick_fair+0x76/0x2d0
-[  414.168270]  scheduler_tick+0xda/0x280
-[  414.168275]  update_process_times+0x95/0xb0
-[  414.168288]  tick_sched_handle+0x38/0x50
-[  414.168292]  tick_sched_timer+0x7b/0xa0
-[  414.168294]  ? tick_sched_do_timer+0xa0/0xa0
-[  414.168297]  __hrtimer_run_queues+0xa7/0x300
-[  414.168299]  hrtimer_interrupt+0x110/0x230
-[  414.168301]  __sysvec_apic_timer_interrupt+0x84/0x170
-[  414.168315]  sysvec_apic_timer_interrupt+0xab/0xd0
-[  414.168392]  </IRQ>
-[  414.168392]  <TASK>
-[  414.168393]  asm_sysvec_apic_timer_interrupt+0x1b/0x20
-[  414.168396] RIP: 0010:_raw_spin_unlock_irq+0x17/0x40
+Hi Phillip,
 
-[1] https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.0.y/build/v6.0-916-g844297340351/testrun/12536939/suite/log-parser-test/test/check-kernel-bug/log
-[2] https://lkft.validation.linaro.org/scheduler/job/5708609#L18779
+If check (bytes && used_pages > 0) is enough (since bytes is non-zero only
+when handling the last block) or should I caculate the real last page index
+from the file size and check the page index?
 
-metadata:
-  git_ref: linux-6.0.y
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-  git_sha: 84429734035197a6ab8e79c852d5e4e6ed744703
-  git_describe: v6.0-916-g844297340351
-  kernel_version: 6.0.3-rc1
-  kernel-config: https://builds.tuxbuild.com/2GMZJJEvy18jDgLO4utw6cOelj3/config
-  build-url: https://gitlab.com/mrchapp/linux/-/pipelines/671394419
-  artifact-location: https://builds.tuxbuild.com/2GMZJJEvy18jDgLO4utw6cOelj3
-  toolchain: gcc-11
+Thanks,
 
---
-Linaro LKFT
-https://lkft.linaro.org
+Jintao
+
+diff --git a/fs/squashfs/file.c b/fs/squashfs/file.c
+index e56510964b22..5efa2a9f9630 100644
+--- a/fs/squashfs/file.c
++++ b/fs/squashfs/file.c
+@@ -506,8 +506,9 @@ static int squashfs_readahead_fragment(struct page **page,
+ 		squashfs_i(inode)->fragment_size);
+ 	struct squashfs_sb_info *msblk = inode->i_sb->s_fs_info;
+ 	unsigned int n, mask = (1 << (msblk->block_log - PAGE_SHIFT)) - 1;
++	int res = buffer->error;
+ 
+-	if (buffer->error)
++	if (res)
+ 		goto out;
+ 
+ 	expected += squashfs_i(inode)->fragment_offset;
+@@ -529,7 +530,7 @@ static int squashfs_readahead_fragment(struct page **page,
+ 
+ out:
+ 	squashfs_cache_put(buffer);
+-	return buffer->error;
++	return res;
+ }
+ 
+ static void squashfs_readahead(struct readahead_control *ractl)
+@@ -557,6 +558,7 @@ static void squashfs_readahead(struct readahead_control *ractl)
+ 		int res, bsize;
+ 		u64 block = 0;
+ 		unsigned int expected;
++		int nr_used_pages;
+ 
+ 		nr_pages = __readahead_batch(ractl, pages, max_pages);
+ 		if (!nr_pages)
+@@ -593,18 +595,18 @@ static void squashfs_readahead(struct readahead_control *ractl)
+ 
+ 		res = squashfs_read_data(inode->i_sb, block, bsize, NULL, actor);
+ 
+-		squashfs_page_actor_free(actor);
++		nr_used_pages = squashfs_page_actor_free(actor);
+ 
+ 		if (res == expected) {
+ 			int bytes;
+ 
+ 			/* Last page (if present) may have trailing bytes not filled */
+ 			bytes = res % PAGE_SIZE;
+-			if (pages[nr_pages - 1]->index == file_end && bytes)
+-				memzero_page(pages[nr_pages - 1], bytes,
++			if (index == file_end && bytes && nr_used_pages > 0)
++				memzero_page(pages[nr_used_pages - 1], bytes,
+ 					     PAGE_SIZE - bytes);
+ 
+-			for (i = 0; i < nr_pages; i++) {
++			for (i = 0; i < nr_used_pages; i++) {
+ 				flush_dcache_page(pages[i]);
+ 				SetPageUptodate(pages[i]);
+ 			}
+diff --git a/fs/squashfs/file_direct.c b/fs/squashfs/file_direct.c
+index f1ccad519e28..8d875d8c5709 100644
+--- a/fs/squashfs/file_direct.c
++++ b/fs/squashfs/file_direct.c
+@@ -30,7 +30,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+ 	int mask = (1 << (msblk->block_log - PAGE_SHIFT)) - 1;
+ 	int start_index = target_page->index & ~mask;
+ 	int end_index = start_index | mask;
+-	int i, n, pages, bytes, res = -ENOMEM;
++	int i, n, pages, used_pages, bytes, res = -ENOMEM;
+ 	struct page **page;
+ 	struct squashfs_page_actor *actor;
+ 	void *pageaddr;
+@@ -74,7 +74,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+ 	/* Decompress directly into the page cache buffers */
+ 	res = squashfs_read_data(inode->i_sb, block, bsize, NULL, actor);
+ 
+-	squashfs_page_actor_free(actor);
++	used_pages = squashfs_page_actor_free(actor);
+ 
+ 	if (res < 0)
+ 		goto mark_errored;
+@@ -86,16 +86,18 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+ 
+ 	/* Last page (if present) may have trailing bytes not filled */
+ 	bytes = res % PAGE_SIZE;
+-	if (page[pages - 1]->index == end_index && bytes) {
+-		pageaddr = kmap_local_page(page[pages - 1]);
++	if (bytes && used_pages > 0) {
++		pageaddr = kmap_local_page(page[used_pages - 1]);
+ 		memset(pageaddr + bytes, 0, PAGE_SIZE - bytes);
+ 		kunmap_local(pageaddr);
+ 	}
+ 
+ 	/* Mark pages as uptodate, unlock and release */
+ 	for (i = 0; i < pages; i++) {
+-		flush_dcache_page(page[i]);
+-		SetPageUptodate(page[i]);
++		if (i < used_pages) {
++			flush_dcache_page(page[i]);
++			SetPageUptodate(page[i]);
++		}
+ 		unlock_page(page[i]);
+ 		if (page[i] != target_page)
+ 			put_page(page[i]);
+@@ -112,8 +114,10 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+ 	for (i = 0; i < pages; i++) {
+ 		if (page[i] == NULL || page[i] == target_page)
+ 			continue;
+-		flush_dcache_page(page[i]);
+-		SetPageError(page[i]);
++		if (i < used_pages) {
++			flush_dcache_page(page[i]);
++			SetPageError(page[i]);
++		}
+ 		unlock_page(page[i]);
+ 		put_page(page[i]);
+ 	}
+diff --git a/fs/squashfs/page_actor.h b/fs/squashfs/page_actor.h
+index 95ffbb543d91..c2c5c3937ef9 100644
+--- a/fs/squashfs/page_actor.h
++++ b/fs/squashfs/page_actor.h
+@@ -29,10 +29,12 @@ extern struct squashfs_page_actor *squashfs_page_actor_init(void **buffer,
+ extern struct squashfs_page_actor *squashfs_page_actor_init_special(
+ 				struct squashfs_sb_info *msblk,
+ 				struct page **page, int pages, int length);
+-static inline void squashfs_page_actor_free(struct squashfs_page_actor *actor)
++static inline int squashfs_page_actor_free(struct squashfs_page_actor *actor)
+ {
++	int res = actor->next_page;
+ 	kfree(actor->tmp_buffer);
+ 	kfree(actor);
++	return res;
+ }
+ static inline void *squashfs_first_page(struct squashfs_page_actor *actor)
+ {
