@@ -1,76 +1,92 @@
-Received: from p3plwbeout26-06.prod.phx3.secureserver.net (p3plsmtp26-06-2.prod.phx3.secureserver.net [216.69.139.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900BF3D60
-	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 15:52:20 +0000 (UTC)
-Received: from mailex.mailcore.me ([94.136.40.145])
-	by :WBEOUT: with ESMTP
-	id lXnToarrOjYPtlXnUoZowg; Thu, 20 Oct 2022 08:49:28 -0700
-X-CMAE-Analysis: v=2.4 cv=G8TZr/o5 c=1 sm=1 tr=0 ts=63516e08
- a=7e6w4QD8YWtpVJ/7+iiidw==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
- a=ggZhUymU-5wA:10 a=IkcTkHD0fZMA:10 a=Qawa6l4ZSaYA:10
- a=Yzxdze0aanylUHrsbl4A:9 a=QEXdDO2ut3YA:10
-X-SECURESERVER-ACCT: phillip@squashfs.org.uk  
-X-SID: lXnToarrOjYPt
-Received: from 82-69-79-175.dsl.in-addr.zen.co.uk ([82.69.79.175] helo=[192.168.178.33])
-	by smtp04.mailcore.me with esmtpa (Exim 4.94.2)
-	(envelope-from <phillip@squashfs.org.uk>)
-	id 1olXnS-00023O-13; Thu, 20 Oct 2022 16:49:26 +0100
-Message-ID: <0df684f9-b3c2-3511-fa12-b38fe5fee1a5@squashfs.org.uk>
-Date: Thu, 20 Oct 2022 16:49:21 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 407B53D60
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 16:00:21 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id 2AD50604EC;
+	Thu, 20 Oct 2022 18:00:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1666281618; bh=CzYRy/EWPgSDmfefAuI/k2p8qDZTTqwNwDOoNXDIWdw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Zhj3wBSlTvrNUzRWyi2Hgt5KTHRcNIV9T8CsxZ74ig7yWw6Fr6ugonQj06ytX9TE4
+	 WkDWQHCqialanxq67+4sY12exZsPtsqHgSksY7f3vjdgAoTsowpQw0XIMaUYXWJpxM
+	 XMqOB0lE+PnJmb/4sx+z2VNP8anOuG9SsKYOz7eAO/gmf92ORUQajNInDKeLgwtFJO
+	 HtcjXzWrQAhzC2PH6dybmeFyTJxZOa0Q1+mHTcjaZXj7dMPi+4Wc9VHIL2OnVmdtoA
+	 UyqIJ+7Mu8GWz7wLNmjchRUOxMQ1cyDfosWqkcG8qxVp46uvGUAW/DaDhZSrKTWXUr
+	 tZRa+kKBHfIsg==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id sxexlFeidS0A; Thu, 20 Oct 2022 18:00:14 +0200 (CEST)
+Received: from [193.198.186.200] (pc-mtodorov.slava.alu.hr [193.198.186.200])
+	by domac.alu.hr (Postfix) with ESMTPSA id 3C66B604E6;
+	Thu, 20 Oct 2022 18:00:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1666281614; bh=CzYRy/EWPgSDmfefAuI/k2p8qDZTTqwNwDOoNXDIWdw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Jxa4zmG8TRVvzrW1KafMgooXKD78eoTpM9s3/kldfNqANRedOnat9qOEMBcOUM/Nj
+	 XkObIN8WZGZ85XHc33bGHPiPBnUQovwVZHK7zAjQG3pqRrHDpUrAjQ+fjURVdwSxSz
+	 4Jop53EdH2ecoQDDIkxVAPnmXMt1AKFbp+ruxxt6GDF3Sy4NmTQk5yEjJGEpBOR0If
+	 0jnhCTJPQx6pL6ayB5FtEgxRdafPuy8+SWIXA+iDqq6aTLtf5ruVVMysPRm9LD6Nd1
+	 MxeipwePBSb+yf+ABEGMf9Yy6npDOXuuScmfL4Av8xjKKvuO+2voqx0yjqoba2SfD8
+	 rBkMdEwVdOxfg==
+Message-ID: <d2580643-f58e-c1b0-7671-c5bbb38c05d0@alu.unizg.hr>
+Date: Thu, 20 Oct 2022 18:00:06 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
 Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
  6.0.0-rc3 through 6.0.0-rc7
-To: Jintao Yin <nicememory@gmail.com>
+Content-Language: en-US
+To: Jintao Yin <nicememory@gmail.com>, phillip@squashfs.org.uk
 Cc: bagasdotme@gmail.com, hsinyi@chromium.org, linux-kernel@vger.kernel.org,
- marcmiltenberger@gmail.com, mirsad.todorovac@alu.unizg.hr,
- regressions@leemhuis.info, regressions@lists.linux.dev, srw@sladewatkins.net
+ marcmiltenberger@gmail.com, regressions@leemhuis.info,
+ regressions@lists.linux.dev, srw@sladewatkins.net
 References: <20221018174157.1897-1-phillip@squashfs.org.uk>
  <20221020135545.586-1-nicememory@gmail.com>
-From: Phillip Lougher <phillip@squashfs.org.uk>
+From: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
 In-Reply-To: <20221020135545.586-1-nicememory@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mailcore-Auth: 439999529
-X-Mailcore-Domain: 1394945
-X-123-reg-Authenticated:  phillip@squashfs.org.uk  
-X-Originating-IP: 82.69.79.175
-X-CMAE-Envelope: MS4xfM+MMOdNqxL9K6RxBVeeD3CkKvn1qOGPJuFTVmNbw20jrG9YRggnrR5U4kVBz1XG/QIKOev3eDZiNeN6oZ+u2norY/mbVHS5iA0E3aLhi0eeGjbRXsNH
- Sx/DmovP9cmfvKICqaq024jI51ysbiouSkigowRa4cuWBWriPnQ3dpTg6YTKLxsiOcs0Hkt91veb98qlhSsUU1oBZPkjtk/3aSk=
+Content-Transfer-Encoding: 8bit
 
-On 20/10/2022 14:55, Jintao Yin wrote:
+On 10/20/22 15:55, Jintao Yin wrote:
+
 > Hi all,
-> 
+>
 > After review the details of page actor, the tail bytes may be written to
 > a temp buffer instead the last used page. So before diff would wrongly
 > memzero a page which is not the tail bytes in.
-
-If you *only* discovered that *after* writing the patch, it is clear
-you don't fully understand what is going on.
-
-Cheers
-
-Phillip
-
-> 
+>
 > In this diff fixes it by caculation of the real index the trailing bytes
 > in and check if the last used page matches this index. If the page is
 > the real tail bytes in, then memzero the trailing bypte of the page.
-> 
+>
 > Please help test and any feedbacks are welcome.
-> 
+>
 > Thanks,
-> 
+>
 > Jintao
-> 
-> 
+
+Hi, Jintao,
+
+I have very good news. The bug reproducing Firefox windows and tabs 
+setup that
+crashed with core dump in your previous diff now works a OK.
+
+The build from the previous email was v6.0.2+ and this one is 6.1-rc1+.
+
+As a newbie I cannot say anything of importance, but I feel good about this
+being done.
+
+Have a nice day!
+Mirsad
+
 > diff --git a/fs/squashfs/file.c b/fs/squashfs/file.c
 > index e56510964b22..e1fafd10a850 100644
 > --- a/fs/squashfs/file.c
@@ -220,4 +236,14 @@ Phillip
 >   }
 >   static inline void *squashfs_first_page(struct squashfs_page_actor *actor)
 >   {
+
+-- 
+Mirsad Goran Todorovac
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+-- 
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb, Republic of Croatia
 
