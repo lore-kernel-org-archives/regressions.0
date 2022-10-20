@@ -1,139 +1,62 @@
-Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
+Received: from p3plwbeout16-01.prod.phx3.secureserver.net (p3plsmtp16-01-2.prod.phx3.secureserver.net [173.201.193.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D2FC7B
-	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 22:06:20 +0000 (UTC)
-Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
-	by mail.kmu-office.ch (Postfix) with ESMTPSA id 299DE5C30AD;
-	Fri, 21 Oct 2022 00:06:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
-	t=1666303572;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=25JEbdq0Y8j8gnFqBm3+CF/4d87gZR/hyOWMOMAnc/c=;
-	b=gtso8EpJeEaMs7yAK01uPwlTtkywecX7F/6hVe6F3Rct7iGC2sbFTRewBXxyGQjpPr4zgu
-	AQaYNoSib/2UMNQvBRiGd39euBHRkNU4lnEhxgU+8NkJihsU02saxLl6KuwozAN1+81ozQ
-	bsmYySA33t+jCiZmA/4qdZBNV9n4d+Q=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 819AE6110
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 22:39:20 +0000 (UTC)
+Received: from mailex.mailcore.me ([94.136.40.144])
+	by :WBEOUT: with ESMTP
+	id le9MojjV4ebATle9NooyxF; Thu, 20 Oct 2022 15:36:29 -0700
+X-CMAE-Analysis: v=2.4 cv=LIuj/La9 c=1 sm=1 tr=0 ts=6351cd6d
+ a=wXHyRMViKMYRd//SnbHIqA==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
+ a=ggZhUymU-5wA:10 a=Qawa6l4ZSaYA:10 a=yWIVPUuzvU3vGxsu7U8A:9
+X-SECURESERVER-ACCT: phillip@squashfs.org.uk  
+X-SID: le9MojjV4ebAT
+Received: from 82-69-79-175.dsl.in-addr.zen.co.uk ([82.69.79.175] helo=phoenix.fritz.box)
+	by smtp12.mailcore.me with esmtpa (Exim 4.94.2)
+	(envelope-from <phillip@squashfs.org.uk>)
+	id 1ole9M-0006zQ-4P; Thu, 20 Oct 2022 23:36:28 +0100
+From: Phillip Lougher <phillip@squashfs.org.uk>
+To: linux-kernel@vger.kernel.org,
+	akpm@linux-foundation.org
+Cc: hsinyi@chromium.org,
+	regressions@leemhuis.info,
+	regressions@lists.linux.dev,
+	dimitri.ledkov@canonical.com,
+	michael.vogt@canonical.com,
+	phillip.lougher@gmail.com,
+	ogra@ubuntu.com,
+	olivier.tilloy@canonical.com
+Subject: [0/3] squashfs: fix some regressions introduced in the readahead code
+Date: Thu, 20 Oct 2022 23:36:13 +0100
+Message-Id: <20221020223616.7571-1-phillip@squashfs.org.uk>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Fri, 21 Oct 2022 00:06:12 +0200
-From: Stefan Agner <stefan@agner.ch>
-To: Johan Hovold <johan@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
- linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>,
- Matthias Kaehlcke <mka@chromium.org>, stable <stable@kernel.org>,
- regressions@lists.linux.dev, m.szyprowski@samsung.com, krzk@kernel.org
-Subject: Re: [PATCH stable-5.15 3/3] usb: dwc3: disable USB core PHY
- management
-In-Reply-To: <Y0+8dKESygFunXOu@hovoldconsulting.com>
-References: <20220906120702.19219-1-johan@kernel.org>
- <20220906120702.19219-4-johan@kernel.org>
- <808bdba846bb60456adf10a3016911ee@agner.ch>
- <Y0+8dKESygFunXOu@hovoldconsulting.com>
-Message-ID: <86c0f1ee8ffc94f9a53690dda6a83fbb@agner.ch>
-X-Sender: stefan@agner.ch
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Mailcore-Auth: 439999529
+X-Mailcore-Domain: 1394945
+X-123-reg-Authenticated:  phillip@squashfs.org.uk  
+X-Originating-IP: 82.69.79.175
+X-CMAE-Envelope: MS4xfHCzMTlGxP8c1br1U6z8GFh+gSmFodHpA28Q/CW5xmIgvE1BLR9O7O9SMsMSbu0f0GW9Vh/91vc5bQ3mHR16gG3FuEYip5i+9DL9CrwaacOwRfDEjiu3
+ T4EocGINWM4P/m/OAOr86nhYglIxw4IfziIaOZhlF0piQO2wQ5e9sQ6nOoQ09rOwvgQ2zlQRVERxNQVgSzywWf5fZm6dP+R0DVc=
 
-Hi Johan,
+Hi,
 
-On 2022-10-19 10:59, Johan Hovold wrote:
-> On Tue, Oct 18, 2022 at 05:27:24PM +0200, Stefan Agner wrote:
->> Hi Johan,
->>
->> On 2022-09-06 14:07, Johan Hovold wrote:
->> > From: Johan Hovold <johan+linaro@kernel.org>
->> >
->> > commit 6000b8d900cd5f52fbcd0776d0cc396e88c8c2ea upstream.
->> >
->> > The dwc3 driver manages its PHYs itself so the USB core PHY management
->> > needs to be disabled.
->> >
->> > Use the struct xhci_plat_priv hack added by commits 46034a999c07 ("usb:
->> > host: xhci-plat: add platform data support") and f768e718911e ("usb:
->> > host: xhci-plat: add priv quirk for skip PHY initialization") to
->> > propagate the setting for now.
->>
->> [adding also Samsung/ODROID device tree authors Krzysztof and Marek]
->>
->> For some reason, this commit seems to break detection of the USB to
->> S-ATA controller on ODROID-HC1 devices (Exynos 5422).
->>
->> We have a known to work OS release of v5.15.60, and known to not be
->> working of v5.15.67. By reverting suspicious commits, I was able to
->> pinpoint the problem to this particular commit.
->>
->> From what I understand, on that particular hardware the S-ATA controller
->> power is controlled via the V-BUS signal VBUSCTRL_U2 (Schematic [1]).
->> Presumably this signal is no longer controlled with this change.
->>
->> This came up in our HAOS issue #2153 [2].
-> 
-> Thanks for the report and sorry about the breakage. This wasn't supposed
-> to go to stable but Greg thought otherwise (and I helped with the
-> backporting to prevent autosel from pulling in even more changes).
-> 
-> But at least this way we found out sooner that this platform depends on
-> having both USB core and dwc3 managing the same PHY.
-> 
-> I think this may be related to the calibration calls added to dwc3 and
-> later removed again by commits:
-> 
-> 	d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
-> 	a0a465569b45 ("usb: dwc3: remove generic PHY calibrate() calls")
-> 
-> The removal explicitly mentions that the expectation is that USB core
-> will do the PHY calibration.
-> 
-> There could be other changes in the sequencing of events that this
-> platform has been implicitly relying on, but as a start, could try
-> adding the missing calibration calls (patch below) and see if that makes a
-> difference?
+This patch-set fixes 3 regressions introduced by the recent readahead code.
+The first regression is causing "snaps" to randomly fail after a couple of
+hours or days, which how the regression came to light.
 
-The patch below did not apply to 5.15.74 directly, but I think I was
-able to get the corrected patch applied (see below)
+----------------------------------------------------------------
+Phillip Lougher (3):
+      squashfs: fix read regression introduced in readahead code
+      squashfs: fix extending readahead beyond end of file
+      squashfs: fix buffer release race condition in readahead code
 
-That said, I do not have direct access to that hardware, but I created a
-build and asked the user test it.
-
-Best regards,
-Stefan
-
-diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
-index c32ca691bcc7..964f512603ec 100644
---- a/drivers/usb/dwc3/core.c
-+++ b/drivers/usb/dwc3/core.c
-@@ -196,6 +196,8 @@ static void __dwc3_set_mode(struct work_struct
-*work)
-                                otg_set_vbus(dwc->usb2_phy->otg, true);
-                        phy_set_mode(dwc->usb2_generic_phy,
-PHY_MODE_USB_HOST);
-                        phy_set_mode(dwc->usb3_generic_phy,
-PHY_MODE_USB_HOST);
-+                       phy_calibrate(dwc->usb2_generic_phy);
-+                       phy_calibrate(dwc->usb3_generic_phy);
-                        if (dwc->dis_split_quirk) {
-                                reg = dwc3_readl(dwc->regs,
-DWC3_GUCTL3);
-                                reg |= DWC3_GUCTL3_SPLITDISABLE;
-@@ -1227,6 +1229,8 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
-                        otg_set_vbus(dwc->usb2_phy->otg, true);
-                phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
-                phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
-+               phy_calibrate(dwc->usb2_generic_phy);
-+               phy_calibrate(dwc->usb3_generic_phy);
- 
-                ret = dwc3_host_init(dwc);
-                if (ret)
-
-
-
---
-Stefan
-
+ fs/squashfs/file.c       | 23 ++++++++++++++---------
+ fs/squashfs/page_actor.c |  3 +++
+ fs/squashfs/page_actor.h |  6 +++++-
+ 3 files changed, 22 insertions(+), 10 deletions(-)
