@@ -1,43 +1,43 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BFA223BF
-	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 07:00:50 +0000 (UTC)
-Received: by mail-pf1-f171.google.com with SMTP id y1so19463805pfr.3
-        for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 00:00:50 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBC023BF
+	for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 07:44:46 +0000 (UTC)
+Received: by mail-pl1-f176.google.com with SMTP id k9so19127851pll.11
+        for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 00:44:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=A6Twp7uqupA7cKAAQAI5q7h15HGpc5k+vG5y6VE0a6Y=;
-        b=FovKRKTZn8KMohHQJ4hwLn/7GlKk3OXBN+oVAPYPtBM7diFdkDzB/fZLZSsJiTylvI
-         FvGvGaKUQo+U6Oyige+KS5pvAZEL4nwjFFkn8Ec7m2XL6hwKWLOsUF+vjltoejRSFIAp
-         dVSXoZud2/L2ejrxWKSbmvbjkjnWR+GvN5CCLvuB9NWeMtg4bQzl9hyUvUm9/aA2x0iH
-         pnpRevEcmkmd4ZrBOP4/xMTbfTriJO6FJ0cqC+OVB+HpN+CCHbnMPhs0U105kfA59YJc
-         iTS/QCVKX5gu7+OCBPLam09U3UNwFPPVO7TxXQk0kakVtMDHsm7dZiYv3l3vSvtsdhQe
-         xWLA==
+        bh=31xLf1EgDc/7pNYCx0W1lRbF7B/2EJqpAJLAQFhU4pA=;
+        b=hLZ4EDHn5e5XKZLeVGdrJAxjgo2nZdTH5hCZVq++yfNJpdyURRh6RvJVYPnshCuETM
+         yzWst8Wr1L1rKs70jLRlXhn5/rW6rs6eHGj4cgRdm3N8hDycDu6O1nnAoxQJdXAHyXGj
+         9lvhJYF5QStHcFV1dpQAph1WG3XbUgDkrBie+PSgBxA5Qjg9BeeXtO/JPrxbu3llWV5Y
+         J6Qr2uQeN5X05z2wvsLuDgAz41JRfA7SAAMBc8RQ/qfO/NC5xm2FdIEGPTxZlWzHaWk6
+         m7RMvWkJlz5vynYQ+il2NOTNduCoukyO91HcQ+NmgBqKY4iIaK3catuedAhdRLCMKhHi
+         08Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=A6Twp7uqupA7cKAAQAI5q7h15HGpc5k+vG5y6VE0a6Y=;
-        b=flHNGBy4sKuCCM1rS9LdFmkjSEtd+TaDUjiz2gf6I9YBx99rxbbwd/r1KtfVT2Bvde
-         K02cfHizXLDcNn1P9GgAXAK+7cGd9yDje9Q6coWSxiQR5FojD3UEUKgOZQh+M99Eqh2t
-         p0N+XaCzi+kMy01syO6KP74Bnbot6iYDXPOgGw/daf0F1MFc0zlS42JYomM4+PCGznma
-         MFgFBiepxf0GPzmoLAR5yxRdXihnCzBQi8RbEDfkxrNSiTPdLAIx2lLJ2YbpZU70XOHv
-         cjfpr+6fw1wnFXWZnSLJul8ac0374R9DJX0iuvKILwq4gcVyzrAkPTZFrCtrBO1AzAyC
-         rigQ==
-X-Gm-Message-State: ACrzQf1eE6xwGZsHP9jQ77ptsZzPKIt0IYdpAx+4Qm48kXJqP2jZKxPA
-	cLX9kgRjPwptNJDV/UAF8L8=
-X-Google-Smtp-Source: AMsMyM5wO2xm+MEn5lRlzCJa/K2DD4yWzaUon4J2ea2LCt8AegTrWyjaUHZ/qPMzPCMjZlFvN7rJVg==
-X-Received: by 2002:a62:2983:0:b0:54e:7cd5:adb3 with SMTP id p125-20020a622983000000b0054e7cd5adb3mr12517198pfp.38.1666249249418;
-        Thu, 20 Oct 2022 00:00:49 -0700 (PDT)
+        bh=31xLf1EgDc/7pNYCx0W1lRbF7B/2EJqpAJLAQFhU4pA=;
+        b=hDjckzhygS9dmYfsvu3SeOc62aQhoiAC+dyfxk8ALjyjX3vKcGoLDLGf1kRx9TN3rH
+         +uQKuTBSgxaL99Xw9Zoe5mhwXxxnL5TbrR0E8DiekJy2j9D6WbyqunIlsjmyfk6ubdHa
+         zzTUlT5IBPRZlZQbL/vNLXLi7ie0Ur2AnPc+TMCZgfwD04g8Yf6SUACJgO5vRvjJg5cR
+         E9voihruXbDg6IJzkMQR6UJ7fRKJJy0LdAmIKh6ZvOr31roKXIWmhP22lwJUFbTwRmhY
+         Zswjt0hP5BcWJy+arKFBP963Gdt1GabtbqKSjuusen9V0SlwCINs9rIWZLnClUZK+Dsp
+         s2IA==
+X-Gm-Message-State: ACrzQf3RL3uBwzHwajh+Uea9aQZD5MzxcAPp9/LMVbEYJaevMohxvtU+
+	DVq0QWu5E7upJ3xhjTYMVm0=
+X-Google-Smtp-Source: AMsMyM7wVOs3/7Syx3s4A6kSKGsTiOR9rIICIzDAw8ID7n1gMa/+w8G6qbSELt1FYXzFqfVchbnDSA==
+X-Received: by 2002:a17:902:e845:b0:184:8078:be88 with SMTP id t5-20020a170902e84500b001848078be88mr12550001plg.99.1666251886432;
+        Thu, 20 Oct 2022 00:44:46 -0700 (PDT)
 Received: from localhost.localdomain ([111.203.234.211])
-        by smtp.googlemail.com with ESMTPSA id s21-20020a056a00195500b00562ef28aac6sm12733164pfk.185.2022.10.20.00.00.42
+        by smtp.googlemail.com with ESMTPSA id m5-20020a17090a668500b002008d0e5cb5sm614278pjj.47.2022.10.20.00.44.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Oct 2022 00:00:47 -0700 (PDT)
+        Thu, 20 Oct 2022 00:44:46 -0700 (PDT)
 From: Jintao Yin <nicememory@gmail.com>
 To: phillip@squashfs.org.uk
 Cc: bagasdotme@gmail.com,
@@ -50,9 +50,9 @@ Cc: bagasdotme@gmail.com,
 	regressions@lists.linux.dev,
 	srw@sladewatkins.net
 Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with 6.0.0-rc3 through 6.0.0-rc7
-Date: Thu, 20 Oct 2022 14:59:42 +0800
-Message-Id: <20221020065942.1828-1-nicememory@gmail.com>
-X-Mailer: git-send-email 2.38.0
+Date: Thu, 20 Oct 2022 15:43:41 +0800
+Message-Id: <20221020074341.1431-1-nicememory@gmail.com>
+X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20221018174157.1897-1-phillip@squashfs.org.uk>
 References: <20221018174157.1897-1-phillip@squashfs.org.uk>
 Precedence: bulk
@@ -63,17 +63,13 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This diff is based on Phillip's latest two patches and fixes another wrong
-check of last page in file_direct.c. At the same time, improve the logic
+Ignore my before diff. I didn't notice the end_index caculation greater
+than file_end part. Use the following diff instead.
+
+This diff is based on Phillip's latest two patches and improves the logic
 to update the status of pages only if page actor touches them.
 
 Please help test and feedbacks are welcome.
-
-Hi Phillip,
-
-If check (bytes && used_pages > 0) is enough (since bytes is non-zero only
-when handling the last block) or should I caculate the real last page index
-from the file size and check the page index?
 
 Thanks,
 
@@ -135,10 +131,10 @@ index e56510964b22..5efa2a9f9630 100644
  				SetPageUptodate(pages[i]);
  			}
 diff --git a/fs/squashfs/file_direct.c b/fs/squashfs/file_direct.c
-index f1ccad519e28..8d875d8c5709 100644
+index f1ccad519e28..1bb0347f98b0 100644
 --- a/fs/squashfs/file_direct.c
 +++ b/fs/squashfs/file_direct.c
-@@ -30,7 +30,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+@@ -30,10 +30,9 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
  	int mask = (1 << (msblk->block_log - PAGE_SHIFT)) - 1;
  	int start_index = target_page->index & ~mask;
  	int end_index = start_index | mask;
@@ -146,8 +142,11 @@ index f1ccad519e28..8d875d8c5709 100644
 +	int i, n, pages, used_pages, bytes, res = -ENOMEM;
  	struct page **page;
  	struct squashfs_page_actor *actor;
- 	void *pageaddr;
-@@ -74,7 +74,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+-	void *pageaddr;
+ 
+ 	if (end_index > file_end)
+ 		end_index = file_end;
+@@ -74,7 +73,7 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
  	/* Decompress directly into the page cache buffers */
  	res = squashfs_read_data(inode->i_sb, block, bsize, NULL, actor);
  
@@ -156,16 +155,18 @@ index f1ccad519e28..8d875d8c5709 100644
  
  	if (res < 0)
  		goto mark_errored;
-@@ -86,16 +86,18 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+@@ -86,16 +85,18 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
  
  	/* Last page (if present) may have trailing bytes not filled */
  	bytes = res % PAGE_SIZE;
 -	if (page[pages - 1]->index == end_index && bytes) {
 -		pageaddr = kmap_local_page(page[pages - 1]);
-+	if (bytes && used_pages > 0) {
-+		pageaddr = kmap_local_page(page[used_pages - 1]);
- 		memset(pageaddr + bytes, 0, PAGE_SIZE - bytes);
- 		kunmap_local(pageaddr);
+-		memset(pageaddr + bytes, 0, PAGE_SIZE - bytes);
+-		kunmap_local(pageaddr);
++	if (used_pages > 0 && page[used_pages - 1]->index == end_index &&
++	    bytes) {
++		memzero_page(page[used_pages - 1], bytes,
++			     PAGE_SIZE - bytes);
  	}
  
  	/* Mark pages as uptodate, unlock and release */
@@ -179,7 +180,7 @@ index f1ccad519e28..8d875d8c5709 100644
  		unlock_page(page[i]);
  		if (page[i] != target_page)
  			put_page(page[i]);
-@@ -112,8 +114,10 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
+@@ -112,8 +113,10 @@ int squashfs_readpage_block(struct page *target_page, u64 block, int bsize,
  	for (i = 0; i < pages; i++) {
  		if (page[i] == NULL || page[i] == target_page)
  			continue;
