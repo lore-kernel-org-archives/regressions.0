@@ -1,90 +1,97 @@
-Received: from p3plwbeout27-03.prod.phx3.secureserver.net (p3plsmtp27-03-2.prod.phx3.secureserver.net [216.69.139.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 867C37E
-	for <regressions@lists.linux.dev>; Fri, 21 Oct 2022 01:51:43 +0000 (UTC)
-Received: from mailex.mailcore.me ([94.136.40.144])
-	by :WBEOUT: with ESMTP
-	id lh9XoQBCSeEaclh9XoyVip; Thu, 20 Oct 2022 18:48:52 -0700
-X-CMAE-Analysis: v=2.4 cv=SKuH6MjH c=1 sm=1 tr=0 ts=6351fa84
- a=wXHyRMViKMYRd//SnbHIqA==:117 a=84ok6UeoqCVsigPHarzEiQ==:17
- a=ggZhUymU-5wA:10 a=IkcTkHD0fZMA:10 a=Qawa6l4ZSaYA:10 a=pGLkceISAAAA:8
- a=VwQbUJbxAAAA:8 a=FXvPX3liAAAA:8 a=iYUCbxK1D4EDwxi5o2oA:9 a=QEXdDO2ut3YA:10
- a=AjGcO6oz07-iQ99wixmX:22 a=UObqyxdv-6Yh2QiB9mM_:22
-X-SECURESERVER-ACCT: phillip@squashfs.org.uk  
-X-SID: lh9XoQBCSeEac
-Received: from 82-69-79-175.dsl.in-addr.zen.co.uk ([82.69.79.175] helo=[192.168.178.33])
-	by smtp07.mailcore.me with esmtpa (Exim 4.94.2)
-	(envelope-from <phillip@squashfs.org.uk>)
-	id 1olh9W-0007gx-8q; Fri, 21 Oct 2022 02:48:50 +0100
-Message-ID: <3a6c0d0c-68ad-ffbb-0e56-c0282ac84149@squashfs.org.uk>
-Date: Fri, 21 Oct 2022 02:48:46 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66FE7B
+	for <regressions@lists.linux.dev>; Fri, 21 Oct 2022 03:10:09 +0000 (UTC)
+Received: by mail-pg1-f181.google.com with SMTP id q71so1356254pgq.8
+        for <regressions@lists.linux.dev>; Thu, 20 Oct 2022 20:10:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GVDeaTKoSrOeCfd6nCXKEY/GIy0Kyct0/tmYk1UcIUw=;
+        b=G7ifq2dkQ3DICOfSgmtHGTZ7dMZQvQ34Tb5+dVJfD2zOpDahc0SV/2oshuQWvCf6pt
+         9deeHDnwhW7MiA3yoVmNPYOXnzV4MwmD0GpkGPthCONqn2aTzTJK6wrMlUMhkykGEFvy
+         n2v9TZFznNTvYsGiPco24OZ6rOnhZmQStzhFXtETn52/E6Exb/I1FBrTGxQseO7oodpR
+         CooPpXLJRSt9+tkD84l6RjAPx+MEb//8Z8BnP7EtIeFZbYXN8/fpyPjGKHIp6DJVhzpl
+         e6SaUXP41JKGFksQx2qg3cU4m/93bp1oftck7u/xSdila5m8HCKaJ695CxvY0YofVh6J
+         Hxdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GVDeaTKoSrOeCfd6nCXKEY/GIy0Kyct0/tmYk1UcIUw=;
+        b=orYyt/KSISbj0rgKkwlpL6C50aW6ojYWaK64ab2xrVRlTt9tTbat88+cQ6foe6vQYo
+         rJ8s2Hcy8GkMbp3bezWo6Ssqs9NRBk9HbHIkPpygVwoGQlZEx3CffGRGagdWHIXTFXwg
+         B3yijwQ/xs1X7vxfgxv3JbXMRoquZ9+2H5kpiXDR2O8EUai4rmNSSXPED6eWr5ws7MnN
+         jMzAEVxivM4wp6gzCs9HfuJ+gQmtXDWmLZiBi3rDPThmfIkoChUbRhKcIy1+94Vnc46E
+         BDcZnLwt6tJc9voK4YZBSOWsXrtM7cPdbYeq8I2vcGLow9orFwcmwgaiZOCzA5PtYwTK
+         wQWg==
+X-Gm-Message-State: ACrzQf3wPV3M3O253WqNXkPTXxoMdiEgOBJ+i3JOTzzpNQEL0B7SmRbs
+	isCGDCNT8QT01CW6vbCA8lY=
+X-Google-Smtp-Source: AMsMyM6nZwydnbhiGjYYOg1vjURXDJppqkZDoIFpqjmqd3F6r8dH8h2ooGiNvrvceeA+xaHFsi1eUw==
+X-Received: by 2002:a63:8841:0:b0:461:24b7:a621 with SMTP id l62-20020a638841000000b0046124b7a621mr14679280pgd.277.1666321809230;
+        Thu, 20 Oct 2022 20:10:09 -0700 (PDT)
+Received: from localhost.localdomain ([111.203.234.211])
+        by smtp.googlemail.com with ESMTPSA id f26-20020aa7969a000000b00561879b0f3asm13743395pfk.203.2022.10.20.20.10.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Oct 2022 20:10:08 -0700 (PDT)
+From: Jintao Yin <nicememory@gmail.com>
+To: phillip@squashfs.org.uk
+Cc: bagasdotme@gmail.com,
+	hsinyi@chromium.org,
+	linux-kernel@vger.kernel.org,
+	marcmiltenberger@gmail.com,
+	mirsad.todorovac@alu.unizg.hr,
+	nicememory@gmail.com,
+	regressions@leemhuis.info,
+	regressions@lists.linux.dev,
+	srw@sladewatkins.net
+Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with 6.0.0-rc3 through 6.0.0-rc7
+Date: Fri, 21 Oct 2022 11:09:24 +0800
+Message-Id: <20221021030924.687-1-nicememory@gmail.com>
+X-Mailer: git-send-email 2.38.1
+In-Reply-To: <41ef4b22-eea8-2d67-99d8-6aaae7d25ac1@squashfs.org.uk>
+References: <41ef4b22-eea8-2d67-99d8-6aaae7d25ac1@squashfs.org.uk>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
- 6.0.0-rc3 through 6.0.0-rc7
-To: Slade Watkins <srw@sladewatkins.net>, Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: Jintao Yin <nicememory@gmail.com>, hsinyi@chromium.org,
- linux-kernel@vger.kernel.org, marcmiltenberger@gmail.com,
- mirsad.todorovac@alu.unizg.hr, regressions@leemhuis.info,
- regressions@lists.linux.dev
-References: <20221018174157.1897-1-phillip@squashfs.org.uk>
- <20221020135545.586-1-nicememory@gmail.com>
- <41ef4b22-eea8-2d67-99d8-6aaae7d25ac1@squashfs.org.uk>
- <02b72b86-7240-5530-477a-c8bdcfd35ef5@gmail.com>
- <CA+pv=HO36vMH6Uqu412MF+Hmu-+57QeapGt6k+QDDxr-AsbJkw@mail.gmail.com>
-From: Phillip Lougher <phillip@squashfs.org.uk>
-In-Reply-To: <CA+pv=HO36vMH6Uqu412MF+Hmu-+57QeapGt6k+QDDxr-AsbJkw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Mailcore-Auth: 439999529
-X-Mailcore-Domain: 1394945
-X-123-reg-Authenticated:  phillip@squashfs.org.uk  
-X-Originating-IP: 82.69.79.175
-X-CMAE-Envelope: MS4xfGRDMg9se9829Cph8jY9/bazs57m3Y9oWlWBFDs5ZaRNhA9bxoXcaYPO7d+9r9mhr0aXDqWjeFZH3W2d6/bc/Kf3XfCh/p4Btgcx3S4FJ3g3EZWPbewi
- cWhKvowB4QS7JBnB2amJ+p65sq7/g7Cy8DLiGmyTcRCHBvAWMuHlgQjKiRxMEg7MLljPgyZBHm7Dl0vuluZfcykJzAL4iFd5L5w=
+Content-Transfer-Encoding: 8bit
 
-On 21/10/2022 00:44, Slade Watkins wrote:
-> [Resend due to formatting issue, thanks gmail.]
+On Thu, Oct 20, 2022 at 04:45:53PM +0100, Phillip Lougher wrote:
+> On 20/10/2022 14:55, Jintao Yin wrote:
+> > Hi all,
+> > 
+> > After review the details of page actor, the tail bytes may be written to
+> > a temp buffer instead the last used page. So before diff would wrongly
+> > memzero a page which is not the tail bytes in.
+> > 
+> > In this diff fixes it by caculation of the real index the trailing bytes
+> > in and check if the last used page matches this index. If the page is
+> > the real tail bytes in, then memzero the trailing bypte of the page.
+> > 
+> > Please help test and any feedbacks are welcome.
+> > 
+> > Thanks,
 > 
-> On Thu, Oct 20, 2022 at 7:23 PM Bagas Sanjaya <bagasdotme@gmail.com> wrote:
->>
->> Ah! I was about to test his third fixup patch. I prefer to go
->> with your fix instead (as the formal patch).
+> This is a rediculously complex patch.  Sorry, but, absolute NACK.
 > 
-> +1, agreed.
+> Additionally, it is poor etiquette and pointless to fix an
+> already fixed issue with a _more_ complex patch.
 > 
-> -srw
+> Phillip
+>
 
-His patch is wrong, plus he's broken a number of rules of conduct, two 
-serious.  But, I will not reprimand him as kernel maintainer for what is
-probably extreme naivety, unless I have to.
+Dear Phillip,
 
-The link to the full set of patches is here
+I'd like to apologize to you for my serious breakages of code of conduct. And
+I had no intend to offend you. I'm new to this community and I will do my best to
+follow the code of conduct and keep with good etiquettes.
 
-https://lore.kernel.org/lkml/20221020223616.7571-1-phillip@squashfs.org.uk/
-
-The first patch fixes the regression reported here in the correct way.
-
-The second patch fixes another regression (which is separate to the
-regression causing the issue here).  This is where the code incorrectly
-extends readahead beyond the end of the file.  This is the reason for
-the unused trailing pages that Jintao Yin noticed.  But, this patch
-fixes the cause, rather than fixing the symptom.
-
-The third patch fixes the buffer release race condition that I
-posted a fix for earlier.
-
-Spitting this into three patches is one of the rules.  Each patch should
-do one thing, and one thing only.  Three separate regressions means
-three separate patches.  This is a requirement for "git bisect" to work
-effectively.
-
-Phillip
-
+Best Regards,
+Jintao
