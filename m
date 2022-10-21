@@ -1,91 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C514A8F51
-	for <regressions@lists.linux.dev>; Fri, 21 Oct 2022 06:54:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7008EC433C1;
-	Fri, 21 Oct 2022 06:54:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1666335278;
-	bh=lPK+4yk6wIaWs16XPlFFiwD0H7JQ/7cPrriZHPFIifM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Os+v4aeJRFpSrCJyKcU1UCOQNd0DZMuv+g4yEoXcbOnvBfmb6TZWArioYEWVXxLLg
-	 qRvleqXjwB+ghd9l2BgPQY1zQ/DIeTcg4tWk4N+WMvvMJ/z6tp+lkCDnShQZbGRQVh
-	 O7UG4sGPmuU73cpntnq8pO2bQFwpWYR42LapCMjZuTwEiGA+Fav2MYTlCg/K54maS2
-	 op7BSMCaRH8X+wgsDQhsuO745Ynhe4x5DDSxbhpwegHDm0EGLypq7sHm+UZeEng9HU
-	 KmmZv1+7+z/Nr3xkaOg6uC0qQ3UQ+fsoLuRbAFK8feu9OfEdDX+1Wj/lQ9qofsFp8o
-	 mxQUIVNgGAnXg==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-	(envelope-from <johan@kernel.org>)
-	id 1ollvE-0001m5-PI; Fri, 21 Oct 2022 08:54:24 +0200
-Date: Fri, 21 Oct 2022 08:54:24 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Stefan Agner <stefan@agner.ch>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Matthias Kaehlcke <mka@chromium.org>, stable <stable@kernel.org>,
-	regressions@lists.linux.dev, m.szyprowski@samsung.com,
-	krzk@kernel.org
-Subject: Re: [PATCH stable-5.15 3/3] usb: dwc3: disable USB core PHY
- management
-Message-ID: <Y1JCIKT80P9IysKD@hovoldconsulting.com>
-References: <20220906120702.19219-1-johan@kernel.org>
- <20220906120702.19219-4-johan@kernel.org>
- <808bdba846bb60456adf10a3016911ee@agner.ch>
- <Y0+8dKESygFunXOu@hovoldconsulting.com>
- <86c0f1ee8ffc94f9a53690dda6a83fbb@agner.ch>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 186FC17D7
+	for <regressions@lists.linux.dev>; Fri, 21 Oct 2022 07:12:09 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id D9D86604F6;
+	Fri, 21 Oct 2022 09:12:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1666336326; bh=/3PWYcnWXVIz8kqWweN+aE56j9N52ods25cY6FPuoko=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dFINKL1jhxgnngpAfyAsU0P2J3x7chBayHK20zTAOnMbMJyvjP4R60KqYgMc29YrF
+	 x+LrtvE9nRHxLtPvo6+nJgBDN07s+uWoDBFo62vmOkNDhDFkAbZ9rVtBneHMzrlFng
+	 w1Ezfd4oa/SNKksTpVU8y1Za4ZiemYLiMbqfV08hdCGOiANt88DyzRKUKLBS7YJgFx
+	 XNAqJv32ynbafYlHbZg0nhZoyQcZsZyIqfa7yZFhi7mTsZ35nDDjvooK8wdn7ha+jI
+	 Nagz7msbjNYn6de5FGy490JRZxOwtOk4D+EJvsnThKxR8MpLTFyvMcVULW04r8KFXg
+	 M+ZUEd1Cm/K9Q==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id nFOXzUTzzb2B; Fri, 21 Oct 2022 09:12:04 +0200 (CEST)
+Received: from [10.0.2.105] (grf-nat.grf.hr [161.53.83.23])
+	by domac.alu.hr (Postfix) with ESMTPSA id AA4E6604EC;
+	Fri, 21 Oct 2022 09:12:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1666336324; bh=/3PWYcnWXVIz8kqWweN+aE56j9N52ods25cY6FPuoko=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BREGvZnrSouo9uMQ7jrwaTnDjjWzHlCSS7PTC70SmZm8LY6pzDQZ3MSgfuYo+rTIT
+	 ueiNtG8IkwoM7qcWqSS7Dopyxt8cFLjORcRcbUokwD/rZ8CzGViOww1MeBn2zWq+my
+	 P8po+xk7H4av+XY279KuT5UMdNtxJJfhDxI+JrEfwnfv/WKBxrSNNt+oG7GBCeN4pt
+	 1YHTutt66iK9HDmnboIrBDKDOSfuWgY26aMOotQGW9eKOZHCBwTtLJT6Kmr7HUjgR9
+	 HjEmEtQQKDEnxfVjET+EVu20qgvDkv61YLWz9+Eas4PMsCuybsO31Ro/4HGg/W2pHX
+	 6ATukTq2DHNAA==
+Message-ID: <6b23f145-9bb3-281d-5d59-ccc73afd617d@alu.unizg.hr>
+Date: Fri, 21 Oct 2022 09:12:03 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86c0f1ee8ffc94f9a53690dda6a83fbb@agner.ch>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: BISECT result: 6.0.0-RC kernels trigger Firefox snap bug with
+ 6.0.0-rc3 through 6.0.0-rc7
+Content-Language: en-US
+To: Phillip Lougher <phillip@squashfs.org.uk>,
+ Slade Watkins <srw@sladewatkins.net>, Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Jintao Yin <nicememory@gmail.com>, hsinyi@chromium.org,
+ linux-kernel@vger.kernel.org, marcmiltenberger@gmail.com,
+ regressions@leemhuis.info, regressions@lists.linux.dev
+References: <20221018174157.1897-1-phillip@squashfs.org.uk>
+ <20221020135545.586-1-nicememory@gmail.com>
+ <41ef4b22-eea8-2d67-99d8-6aaae7d25ac1@squashfs.org.uk>
+ <02b72b86-7240-5530-477a-c8bdcfd35ef5@gmail.com>
+ <CA+pv=HO36vMH6Uqu412MF+Hmu-+57QeapGt6k+QDDxr-AsbJkw@mail.gmail.com>
+ <3a6c0d0c-68ad-ffbb-0e56-c0282ac84149@squashfs.org.uk>
+From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <3a6c0d0c-68ad-ffbb-0e56-c0282ac84149@squashfs.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Oct 21, 2022 at 12:06:12AM +0200, Stefan Agner wrote:
-> On 2022-10-19 10:59, Johan Hovold wrote:
-> > On Tue, Oct 18, 2022 at 05:27:24PM +0200, Stefan Agner wrote:
-> >> On 2022-09-06 14:07, Johan Hovold wrote:
-> >> > From: Johan Hovold <johan+linaro@kernel.org>
-> >> >
-> >> > commit 6000b8d900cd5f52fbcd0776d0cc396e88c8c2ea upstream.
-> >> >
-> >> > The dwc3 driver manages its PHYs itself so the USB core PHY management
-> >> > needs to be disabled.
-> >> >
-> >> > Use the struct xhci_plat_priv hack added by commits 46034a999c07 ("usb:
-> >> > host: xhci-plat: add platform data support") and f768e718911e ("usb:
-> >> > host: xhci-plat: add priv quirk for skip PHY initialization") to
-> >> > propagate the setting for now.
+On 21.10.2022. 3:48, Phillip Lougher wrote:
 
-> >> For some reason, this commit seems to break detection of the USB to
-> >> S-ATA controller on ODROID-HC1 devices (Exynos 5422).
+> On 21/10/2022 00:44, Slade Watkins wrote:
+>> [Resend due to formatting issue, thanks gmail.]
+>>
+>> On Thu, Oct 20, 2022 at 7:23 PM Bagas Sanjaya <bagasdotme@gmail.com> 
+>> wrote:
+>>>
+>>> Ah! I was about to test his third fixup patch. I prefer to go
+>>> with your fix instead (as the formal patch).
+>>
+>> +1, agreed.
+>>
+>> -srw
+>
+> His patch is wrong, plus he's broken a number of rules of conduct, two 
+> serious.  But, I will not reprimand him as kernel maintainer for what is
+> probably extreme naivety, unless I have to.
+>
+> The link to the full set of patches is here
+>
+> https://lore.kernel.org/lkml/20221020223616.7571-1-phillip@squashfs.org.uk/ 
+>
+>
+> The first patch fixes the regression reported here in the correct way.
+>
+> The second patch fixes another regression (which is separate to the
+> regression causing the issue here).  This is where the code incorrectly
+> extends readahead beyond the end of the file.  This is the reason for
+> the unused trailing pages that Jintao Yin noticed.  But, this patch
+> fixes the cause, rather than fixing the symptom.
+>
+> The third patch fixes the buffer release race condition that I
+> posted a fix for earlier.
+>
+> Spitting this into three patches is one of the rules.  Each patch should
+> do one thing, and one thing only.  Three separate regressions means
+> three separate patches.  This is a requirement for "git bisect" to work
+> effectively.
 
-> > I think this may be related to the calibration calls added to dwc3 and
-> > later removed again by commits:
-> > 
-> > 	d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
-> > 	a0a465569b45 ("usb: dwc3: remove generic PHY calibrate() calls")
-> > 
-> > The removal explicitly mentions that the expectation is that USB core
-> > will do the PHY calibration.
-> > 
-> > There could be other changes in the sequencing of events that this
-> > platform has been implicitly relying on, but as a start, could try
-> > adding the missing calibration calls (patch below) and see if that makes a
-> > difference?
-> 
-> The patch below did not apply to 5.15.74 directly, but I think I was
-> able to get the corrected patch applied (see below)
+Dear Mr. Phillip,
 
-Looks good to me.
+My squashfs learning curve isn't yet at the stage to verify what your 
+statements,
+however, separating each of the regression causes into different patches 
+seems
+logical even to me.
 
-> That said, I do not have direct access to that hardware, but I created a
-> build and asked the user test it.
+I can confirm a successful build of mainline vanilla 6.1-rc1 + your 
+patches-[012/3].
 
-Thanks, let me know how it goes.
+The snapped Firefox with the previously held windows and tabs that caused
+the initial regression reproduce now work seemingly OK.
 
-Johan
+Have a nice day.
+
+Best regards,
+Mirsad
+
+-- 
+Mirsad Todorovac
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb
+Republic of Croatia, the European Union
+--
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+
