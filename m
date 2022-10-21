@@ -1,110 +1,172 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571A08F70
-	for <regressions@lists.linux.dev>; Fri, 21 Oct 2022 12:43:01 +0000 (UTC)
-Received: by mail-pj1-f49.google.com with SMTP id ez6so2368191pjb.1
-        for <regressions@lists.linux.dev>; Fri, 21 Oct 2022 05:43:01 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2234C3D60
+	for <regressions@lists.linux.dev>; Fri, 21 Oct 2022 18:57:36 +0000 (UTC)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29LIs5HG031008;
+	Fri, 21 Oct 2022 18:57:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2022-7-12;
+ bh=O4/kjM6B9+5UoimDVVfGlVrdMUX76EMFgj4UY154nyY=;
+ b=fBhuAd+TTamzTnf5mSbhsokPIG+lodq2SFi0ypZWYQcwvE6LMdlUcxMZUmJCiAGw86wD
+ 5IAQ1g/gfY/mBoeqPVOjGnoAy0e5FEHU7/560rJ1wThJUlf3EDQIKbpBFGCpesokAGjk
+ WVWRHTnhue//YTrpn2TI7Hu8k+EmHB9ufKUSyDWsfuF1zrkXRCp2RxCvTgh29q3zhNnX
+ UUUij7FN4XQhHgrPAnAZx+lQV9epiVT/4YPOHTo/n3w6HSRvLxHf6+ck8z7oYQvsvBjV
+ mpyePC1jV51DcDuKhcoW2tAMtF5naM9m/K3haV/HOXk37F9/ZTfA94ymvswQWRHIJSE9 Qw== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3k9b7svhcr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Oct 2022 18:57:09 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29LIXNMO007263;
+	Fri, 21 Oct 2022 18:57:08 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2104.outbound.protection.outlook.com [104.47.55.104])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3k8hre3kte-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Oct 2022 18:57:08 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PRyPStRZiXoVtR7U4LKgTr5AgOGozM5yuv6rFVpj4MwJiDeqgCD4KK3UPkPV2+QRZPglCEGnLOJ8WPQawztbVs2RJHMgjvyO2XmMttOgGv6atD3JKXcRvk+h7uQM47m80kAgaHqK4U6VoVkqzrGqpuPsD4dsGP6SwZLvisL4UoHn3K7jD5nqIa6+5bkO6lOHBH85/U81tSqe36bOoE5r4O2SZSq8tNy56+1QB53fyS1lavzDVjFS38qw/rg2Nf43vSYmj299w9CnW+4FnA0N4l23x594a6+8eftM2JZvU7h0HoVPQSPCfF6T0FT6pfOWZ+rBkPVcP6hOGhFsMFNwpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=O4/kjM6B9+5UoimDVVfGlVrdMUX76EMFgj4UY154nyY=;
+ b=oU/eWDpMJrJUpfxwkcDunKHc9c0TEBbdozj1FInuMS0trBnwjXLxaHlrGwa7c7dSrMXCW7L2AcGT7dARiWrfoixUsKPiX2NTBBMiGSutBade6a2hq/YJ2wRcT6E3wP8HwfVbT6g13TStBB+nyCaRU/n6Mk2W50sqzlDxukYGjPVdB/Gya/aI+22oPquB2+EbDjmeiCEUGB+sYmPd7BK3qyfb299IUltphshb/ZYefiEatdUtGn1coebCuG9WSKdPoJVh45bKcSpVFpYksAdghyjo5TzGa2BAqMYamPwwUrPIEvs71zUcY6b1WI/t8imRLw7JKmndBJuxeKiU4RIpog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=h0RDr7X8enYPRgtIijt6W6MecVFMwU1GrniMgEKKoSs=;
-        b=jUcacOPaVFVEXRPxUx3iksnmpIM3r3xX24BY4Q4Ckg9tRwBdtjrm+Fqaa/QONVDk7f
-         pHV8fLSVEITs0Xl05kSsHLjuXAzhUsvo4VbLGjzEZGHgxPSRlo4L+xf0RWz777X/f4vS
-         JBG454DSCTP3b3UpMSF1NnqQxHOyQa5lBPmsX3eMAxcek8CJu5e89YhhMhnQPu4xlhxu
-         ajAVbT93VmeGJ2zaEA8EJ4aYAztYe69BTnVEO6Y7xVI+1v1j1T2OnOCjd6NlVSwhk/lM
-         5QPqxNugKgveF9Nx9PrK+13tu2QBMr4y3ido5IbTD6SACRHSRhBi5xbsIiouUrC5gsoU
-         mUWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h0RDr7X8enYPRgtIijt6W6MecVFMwU1GrniMgEKKoSs=;
-        b=LNcUflMSYlwpD5UOKcT38g3QfQue1isQxSUn2O3wGjgegHd7iU7TIgMoekY38mnz5C
-         9no+7gTTqwka+9z4T1h+S+Rh6Q+jWHVFlZLw+1XVb9HtsWxUQGq2fO84gA1rTXngvwwW
-         lAQ8InLJvZKrFhqUaODg3WyleVF171FlAsNDp0m+cCac+KmxmK6inMgulltYyuIJgrCn
-         zXplsN9LPMoEVs7zAeOt8OwnWDL7PrxgyNfqkmmN3Yy2ZvH91OYttWjxbi2gQS/kgNNM
-         EW05dfHKEgJIC5I1Fibam5SZJRrNxkZQHauo0J01asflT5Yhuw+q/a8Cp/YmHp2JvC/9
-         hw+Q==
-X-Gm-Message-State: ACrzQf0rtMhv55lUlhOh1/RxSwlgUXFTsgr4mncsWOZrC8tg2/IzWtVa
-	1Y90z2zK76t48+NvDRCamRk=
-X-Google-Smtp-Source: AMsMyM6fl7F8ZGP+lX5Ysz5l0bfjc0V1s9qkuHwWaw2QKSWmNosQe0hnoM4ogvqGeuV0kQxnpJM1cg==
-X-Received: by 2002:a17:902:8e84:b0:178:71f2:113c with SMTP id bg4-20020a1709028e8400b0017871f2113cmr18900771plb.79.1666356180664;
-        Fri, 21 Oct 2022 05:43:00 -0700 (PDT)
-Received: from debian.me (subs03-180-214-233-72.three.co.id. [180.214.233.72])
-        by smtp.gmail.com with ESMTPSA id w62-20020a623041000000b00565c8634e55sm15144046pfw.135.2022.10.21.05.42.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Oct 2022 05:43:00 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-	id 1B78D1004BB; Fri, 21 Oct 2022 19:42:55 +0700 (WIB)
-Date: Fri, 21 Oct 2022 19:42:55 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Phillip Lougher <phillip@squashfs.org.uk>
-Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-	hsinyi@chromium.org, regressions@leemhuis.info,
-	regressions@lists.linux.dev, dimitri.ledkov@canonical.com,
-	michael.vogt@canonical.com, phillip.lougher@gmail.com,
-	ogra@ubuntu.com, olivier.tilloy@canonical.com
-Subject: Re: [0/3] squashfs: fix some regressions introduced in the readahead
- code
-Message-ID: <Y1KTz7kTQqZNjwMe@debian.me>
-References: <20221020223616.7571-1-phillip@squashfs.org.uk>
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O4/kjM6B9+5UoimDVVfGlVrdMUX76EMFgj4UY154nyY=;
+ b=Dhds2iv82QQU9ug+iMb9QDZXUrdWBhcJvk5Nr9UXJo7pl9o59E6MfPS5mKsyz8C33CnTPUYvuA6XoSC+TN8Fp79sOgg8a6ctVgMJEkpKhXFVL4wnruIO5NB9eqZhhXGgg0YnlCNFOGY3Fi6fWlp9pZz7axlxePfbnmaUVcTcQoE=
+Received: from BY5PR10MB4196.namprd10.prod.outlook.com (2603:10b6:a03:20d::23)
+ by CO1PR10MB4434.namprd10.prod.outlook.com (2603:10b6:303:9a::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.34; Fri, 21 Oct
+ 2022 18:57:04 +0000
+Received: from BY5PR10MB4196.namprd10.prod.outlook.com
+ ([fe80::5f85:c22e:b7fa:21bd]) by BY5PR10MB4196.namprd10.prod.outlook.com
+ ([fe80::5f85:c22e:b7fa:21bd%5]) with mapi id 15.20.5746.021; Fri, 21 Oct 2022
+ 18:57:04 +0000
+Date: Fri, 21 Oct 2022 11:57:00 -0700
+From: Mike Kravetz <mike.kravetz@oracle.com>
+To: kernel test robot <yujie.liu@intel.com>
+Cc: lkp@lists.01.org, lkp@intel.com, Andrew Morton <akpm@linux-foundation.org>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Axel Rasmussen <axelrasmussen@google.com>,
+        David Hildenbrand <david@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        James Houghton <jthoughton@google.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@suse.com>, Mina Almasry <almasrymina@google.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Naoya Horiguchi <naoya.horiguchi@linux.dev>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Peter Xu <peterx@redhat.com>,
+        Prakash Sangappa <prakash.sangappa@oracle.com>,
+        Sven Schnelle <svens@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, regressions@lists.linux.dev
+Subject: Re: [hugetlbfs] 3a47c54f09:
+ kernel-selftests.vm.run_vmtests.sh../userfaultfd_hugetlb_256_32.fail
+Message-ID: <Y1LrfJ6ZECI0kniN@monkey>
+References: <202210211425.92ab6e9-yujie.liu@intel.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202210211425.92ab6e9-yujie.liu@intel.com>
+X-ClientProxiedBy: MW4PR03CA0326.namprd03.prod.outlook.com
+ (2603:10b6:303:dd::31) To BY5PR10MB4196.namprd10.prod.outlook.com
+ (2603:10b6:a03:20d::23)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xrLs7a11N8af3aPI"
-Content-Disposition: inline
-In-Reply-To: <20221020223616.7571-1-phillip@squashfs.org.uk>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4196:EE_|CO1PR10MB4434:EE_
+X-MS-Office365-Filtering-Correlation-Id: de8a1d7d-0723-4d25-ad79-08dab3960b07
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	QtS8L2LqQNEqPehMSU3LzDyUm4JTz/Pw9Qjfw7aR6sL/xpc9zexEAq2k5Sbgf2gq0hZ/BaTGcEEMMxEJ9jMPjnU6T+kp9NmqtxoqnwqVKUYKRlAtKpqFgiN1AGDShQUi0f2lXZLpOV72229/pHdgFZG6LHJc9TIpm6xxX2y6WFealQkZr4j4cIyrDl2vHxZXSyJodQ0u/8tMkt2UvyTTMga5hY/zsiUJ6fMQhsdpqxy8eoc5LXmlMPHAP8oLqb1Q01AsrioHoonWaM3ZXyqgOS/bCsYB9Vepw3SuSLU4pZmVY/C1/iFaJt0uAwXBYHUIjkHNdwgskkHkfng1Z0KKlMsrqR/+YmwBrWjVtcZ8cIhi/q3qIaCw+EFlauBv+AuGNjhVxxbR7S7p/DGv82zcQeGrB+LIQj7Ufrd9O6/arCFif37/N5/CHF2ZCPHDxCGWerGdCmG+Dzu3G1HvPF35QZ9hW7TRW1AWiFnm8LjJKeSL92NiqAF7uu/zo+dm0eOtjZIDXh6Q1PwgP+pxE6B9FLq9NrtFbJfLGieGiP+kNydQUPfaYxkxshoQ9hEKc52iREE5OwIJhGt2pFUKm+4x22X4Y3pYebZHS7aloFsHMJK/75CvM+6LvuyWghfOostwtwR2kOXhVeeTyT08iIcS79FSlwEQk9/Ksc5CWaTbKIC7WkbO/lJc//06MXRiGn9qZ1A7t35MFxaMkaIn+iPSZw==
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4196.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(7916004)(376002)(136003)(39860400002)(366004)(346002)(396003)(451199015)(6486002)(38100700002)(5660300002)(6666004)(54906003)(6916009)(2906002)(4001150100001)(478600001)(8936002)(33716001)(83380400001)(7416002)(41300700001)(26005)(86362001)(9686003)(316002)(6512007)(53546011)(186003)(6506007)(66946007)(4326008)(66476007)(66556008)(44832011)(8676002)(4744005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?/iOHyiPPq6ugWcba1kQpV3sUANeIphPnZMyB/MZDkWgSfmtGptmKkbpkGS5u?=
+ =?us-ascii?Q?jW41eaKw3e+190o8dI6GyDhCx58Q06Z4RyobaBucdhYwzhCm5LTYVNOSxbPK?=
+ =?us-ascii?Q?TLQib02dw0rp3xly/r6Hgrk6g249escYMewB6D6reOBJzD3m8lDwV1LFRc1Q?=
+ =?us-ascii?Q?3xXgLyBLnjru8/NJr40Xs7z9+6LxRme6dRvgN5naNcEGoOkDbkRNxoaje1wa?=
+ =?us-ascii?Q?WvUFkJFNsf72n9s3dDW6zztqM9fACJ5F5+aIQcUUdT1GkHQzWzUO9sAN7UhH?=
+ =?us-ascii?Q?1wzL6h90UE0WfJnfvP0HDZOu2aa+S6rIvxNxGkQp3Mvnis/HPPdR4pRITdHO?=
+ =?us-ascii?Q?RiXvfZIBB1A3V5zxxIHt/BFgbPZ+bGZpNeOZWYA7i6A0+tYi+2LN/QLO7Sj3?=
+ =?us-ascii?Q?ebpZyRXbdpFYVgTlaw47W6XpOFWBeJX45qG6keiL/4+cloLwO532cU0AP4pG?=
+ =?us-ascii?Q?gl6PpJnpH6B7TK7g7KsX0wUkOXnm2zoF4o9FSRoOCE5DEKYPlTY55VaUyGp3?=
+ =?us-ascii?Q?J3bD86/A3qYQjRMYP2CcjmjbDj1ZJbb8ZpwLzRHhWHT/i79TRD5JP6SUQDO4?=
+ =?us-ascii?Q?g1UY342dXUI/LYK4iSc9borvfdDy1mrybnpZA4Mf5I584nuVftzzSuuKSBBP?=
+ =?us-ascii?Q?TliHBrCuGYj2ztLRNH04cUAzekmpjvQF49xJXOM/M2QB1ylbGAyhFzz0eDpL?=
+ =?us-ascii?Q?H1kHo4+KfRipU+cOr22kwC1rsQoY6PbEx4tdo5hVcEvS2LOlg20OenuEpGyn?=
+ =?us-ascii?Q?MycXJPwbdIP77YX4kVIX8xyFkf8gdVEGG7Qs7jYYIjYYOfXUfFJH9WtFicbN?=
+ =?us-ascii?Q?pMvn09KSrxPiCKah3r4WHpnPWOyCdkhF4cRwjR9HZvcAEBimzLljxOeAy8No?=
+ =?us-ascii?Q?CTrosVQm7mQJBiBMfK6aX19REYuERY5lGsP2Pp/uC4kNnA+UAUGpRF5Qqcxp?=
+ =?us-ascii?Q?b4DOSc5iNN9JOIFDsh8do4fm5F2sn2ZItpqyH8iwtigw7fQFuhKdAng34wP6?=
+ =?us-ascii?Q?lNNRnPQeN/vYgyWQZYhUU2u8yWmiAN9iDORkcGzpSHvHNFa1Bc+dDUuI0Z36?=
+ =?us-ascii?Q?VXc1tGZy5Whn4yDPSUyGqay+LGjwzB4TDFOu1fX9veq1YPmfseR0P+TEuAbi?=
+ =?us-ascii?Q?QKKnN4hHMFRVaGTbGwDC1yJdvyCrAS5JIbCY2euO3eyHwLip+ehL6WoWMpW8?=
+ =?us-ascii?Q?lzrDf6mUzPIpX/22U9wkrg9e0IJGEJYvdpIXZ4cuK2Ly9YO5y5refjNcdnIq?=
+ =?us-ascii?Q?9alEaZL7WehxzyzMyfmJVg+QrKdliDYMqJaIpl3xJmEJYJ5x6gYyVemS1GmH?=
+ =?us-ascii?Q?OZC+e8f6/jQq1x+hKqC805x5SzuzDSArCm499DfqB3NtOd7RuvdMhEiAe0XF?=
+ =?us-ascii?Q?nbHGu0PdzzYanB9Z7BzyPcH5ru2cRrnxnT+yM6pVJSvYF9xY9w8P0nCuBog4?=
+ =?us-ascii?Q?yz1tmqaSPX+uKOxLFsRUtbzqqhj3XRuEQoGSKFAXuwJ7S2WZOjXNDwAqE2QW?=
+ =?us-ascii?Q?PfO187wa+LOXRBshsi8HVFDMvK8KCNIG+vxM2udCDQBLJqBUoWZCaxX00c3f?=
+ =?us-ascii?Q?aQoDos9llTsJA5yZdc4463zpEoPAceV/+oxgI9TpaYhkMkvIGygfJhqadawe?=
+ =?us-ascii?Q?KA=3D=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: de8a1d7d-0723-4d25-ad79-08dab3960b07
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4196.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2022 18:57:04.1302
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5Wy9j+Dz78Ie7uIOZ7vJ66n4EZ0KJBnB9CRRfWCWDI8O77h+sYN8RYWljf3XSy0f00UCMe389RETWpMIeqUPLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4434
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-10-21_04,2022-10-21_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxscore=0 phishscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
+ definitions=main-2210210111
+X-Proofpoint-GUID: F1_lxwsp6gFSAdwNl4h3EoiG1HxxuWUK
+X-Proofpoint-ORIG-GUID: F1_lxwsp6gFSAdwNl4h3EoiG1HxxuWUK
 
+On 10/21/22 16:04, kernel test robot wrote:
+> Hi Mike,
+> 
+> We noticed below commit reverts some hugetlb related code in fault path,
+> and we happened to catch a "userfaultfd hugetlb" selftests failure on
+> this commit. Could you please help check if this is an expected result?
+> 
+> The commit message mentions about:
+> 
+> "In subsequent patches, a new synchronization mechanism will be added to
+> coordinate pmd sharing and eliminate this race."
+> 
+> We noticed this failure still exists on the latest mainline head
+> e35184f321518 ("Merge tag 'drm-fixes-2022-10-21' of git://anongit.freedesktop.org/drm/drm")
+> 
+> Please kindly let us know if you'd like us to keep tracking this issue on
+> mainline, or please feel free to ignore this report if this issue is not
+> that important.
 
---xrLs7a11N8af3aPI
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Oct 20, 2022 at 11:36:13PM +0100, Phillip Lougher wrote:
-> Hi,
->=20
-> This patch-set fixes 3 regressions introduced by the recent readahead cod=
-e.
-> The first regression is causing "snaps" to randomly fail after a couple of
-> hours or days, which how the regression came to light.
->=20
-> ----------------------------------------------------------------
-> Phillip Lougher (3):
->       squashfs: fix read regression introduced in readahead code
->       squashfs: fix extending readahead beyond end of file
->       squashfs: fix buffer release race condition in readahead code
->=20
->  fs/squashfs/file.c       | 23 ++++++++++++++---------
->  fs/squashfs/page_actor.c |  3 +++
->  fs/squashfs/page_actor.h |  6 +++++-
->  3 files changed, 22 insertions(+), 10 deletions(-)
-
-The regression goes away with this series, thanks.
-
-For the series,
-
-Tested-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---xrLs7a11N8af3aPI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCY1KTygAKCRD2uYlJVVFO
-o4ugAP44cDAotKNStnaL01EGao1iGldQGIDkz/o+sDpup29RmwEA6RfZ8WgBU/c6
-PCBgzzpacjDD+a1ePJS7FHZXJTQKBQ0=
-=QLTt
------END PGP SIGNATURE-----
-
---xrLs7a11N8af3aPI--
+Fixed with commit 2ea7ff1e39cb "mm/hugetlb: fix race condition of uffd
+missing/minor handling"
+-- 
+Mike Kravetz
