@@ -1,294 +1,104 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D342636
-	for <regressions@lists.linux.dev>; Mon, 24 Oct 2022 10:41:46 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1omuts-0002An-Ch; Mon, 24 Oct 2022 12:41:44 +0200
-Message-ID: <958fd763-01b6-0167-ba6b-97cbd3bddcb6@leemhuis.info>
-Date: Mon, 24 Oct 2022 12:41:43 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB08809
+	for <regressions@lists.linux.dev>; Mon, 24 Oct 2022 10:46:36 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id EC8F822166;
+	Mon, 24 Oct 2022 10:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1666608394; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2FvHy61zNNsqFHsuY2jmJJqiKx6vhdiyCJYsyr/Sidg=;
+	b=eXh+WShiPYnDYKYQ6u0ryuOLEHmYI/11W0LGpSdT/qPMlMT2v29xXszs6xSMlSNSiDHI2h
+	p+5E6QVsFp8r5oMF+YrgxSeS37vQzJ9lxoqL94bTLf+KKIvRvtzNbRrnPqrKtmUv7lODjn
+	OFS5f7KixEhDDzWFRImFbBLWSa3X/vw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1666608394;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2FvHy61zNNsqFHsuY2jmJJqiKx6vhdiyCJYsyr/Sidg=;
+	b=ifyagaWfmcOvEz4qUSEN+bMJaHFbO1WYNzZpEcj3UkbGGH6tY419BT6Z0eO8cyKZ/I/NON
+	sW49orQPm2Yc7aDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3AFD313357;
+	Mon, 24 Oct 2022 10:46:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id vuZVDgptVmOAHgAAMHmgww
+	(envelope-from <jack@suse.cz>); Mon, 24 Oct 2022 10:46:34 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 2A7AFA06F6; Mon, 24 Oct 2022 12:46:28 +0200 (CEST)
+Date: Mon, 24 Oct 2022 12:46:28 +0200
+From: Jan Kara <jack@suse.cz>
+To: Thilo Fromm <t-lo@linux.microsoft.com>
+Cc: Jan Kara <jack@suse.cz>, Ye Bin <yebin10@huawei.com>, jack@suse.com,
+	tytso@mit.edu, linux-ext4@vger.kernel.org,
+	regressions@lists.linux.dev,
+	Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+Subject: Re: [syzbot] possible deadlock in jbd2_journal_lock_updates
+Message-ID: <20221024104628.ozxjtdrotysq2haj@quack3>
+References: <20220929082716.5urzcfk4hnapd3cr@quack3>
+ <d8b18ba8-ea12-b617-6b5e-455a1d7b5e21@linux.microsoft.com>
+ <20221004063807.GA30205@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20221004091035.idjgo2xyscf6ovnv@quack3>
+ <eeb17fca-4e79-b39f-c394-a6fa6873eb26@linux.microsoft.com>
+ <20221005151053.7jjgc7uhvquo6a5n@quack3>
+ <20221010142410.GA1689@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <2ede5fce-7077-6e64-93a9-a7d993bc498f@linux.microsoft.com>
+ <20221014132543.i3aiyx4ent4qwy4i@quack3>
+ <d30f4e74-aa75-743d-3c89-80ec61d67c6c@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [Regression] CPU stalls and eventually causes a complete system
- freeze with 6.0.3 due to "video/aperture: Disable and unregister sysfb
- devices via aperture helpers"
-Content-Language: en-US, de-DE
-To: Greg KH <gregkh@linuxfoundation.org>,
- Andreas <andreas.thalhammer@linux.com>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Javier Martinez Canillas <javierm@redhat.com>,
- ML dri-devel <dri-devel@lists.freedesktop.org>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Sasha Levin <sashal@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>
-References: <bbf7afe7-6ed2-6708-d302-4ba657444c45@leemhuis.info>
- <668a8ffd-ffc7-e1cc-28b4-1caca1bcc3d6@suse.de>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <668a8ffd-ffc7-e1cc-28b4-1caca1bcc3d6@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666608106;bc46e263;
-X-HE-SMSGID: 1omuts-0002An-Ch
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d30f4e74-aa75-743d-3c89-80ec61d67c6c@linux.microsoft.com>
 
-Hi! Thx for the reply.
-
-On 24.10.22 12:26, Thomas Zimmermann wrote:
-> Am 23.10.22 um 10:04 schrieb Thorsten Leemhuis:
->>
->> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->> kernel developer don't keep an eye on it, I decided to forward it by
->> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216616  :
->>
->>>   Andreas 2022-10-22 14:25:32 UTC
->>>
->>> Created attachment 303074 [details]
->>> dmesg
+On Fri 21-10-22 12:23:41, Thilo Fromm wrote:
+> Hello Honza,
 > 
-> I've looked at the kernel log and found that simpledrm has been loaded
-> *after* amdgpu, which should never happen. The problematic patch has
-> been taken from a long list of refactoring work on this code. No wonder
-> that it doesn't work as expected.
+> > > Just want to make sure this does not get lost - as mentioned earlier,
+> > > reverting 51ae846cff5 leads to a kernel build that does not have this issue.
+> > 
+> > Yes, I'm aware of this and still cannot quite wrap my head how it could be
+> > given the stacktraces I see :) They do not seem to come anywhere near that
+> > code...
 > 
-> Please cherry-pick commit 9d69ef183815 ("fbdev/core: Remove
-> remove_conflicting_pci_framebuffers()") into the 6.0 stable branch and
-> report on the results. It should fix the problem.
+> Just reaching out to let folks know that we see more reports on this issue
+> coming in for kernels >=5.15.63, see
+> https://github.com/flatcar/Flatcar/issues/847#issuecomment-1286523602.
 
-Greg, is that enough for you to pick this up? Or do you want Andreas to
-test first if it really fixes the reported problem?
+Yeah, I was pondering about this for some time but still I have no clue who
+could be holding the buffer lock (which blocks the task holding the
+transaction open) or how this could related to the commit you have
+identified. I have two things to try:
 
-Ciao, Thorsten
+1) Can you please check whether the deadlock reproduces also with 6.0
+kernel? The thing is that xattr handling code in ext4 has there some
+additional changes, commit 307af6c8793 ("mbcache: automatically delete
+entries from cache on freeing") in particular. 
 
+2) I have created a debug patch (against 5.15.x stable kernel). Can you
+please reproduce the failure with it and post the output of "echo w
+>/proc/sysrq-trigger" and also the output the debug patch will put into the
+kernel log? It will dump the information about buffer lock owner if we
+cannot get the lock for more than 32 seconds.
 
->>> 6.0.2 works.
->>>
->>> On 6.0.3 the system is very sluggish with graphic glitches all over
->>> the place in KDE Plasma Desktop X11 (no graphic glitches when using
->>> Wayland, but also sluggish). SDDM works fine.
->>>
->>> Hardware: Lenovo Legion 5 Pro 16ACH6H: AMD Ryzen 7 5800H "Cezanne",
->>> hybrid graphics AMD "Green Sardine" (Vega 8 GCN 5.1, AMDGPU) and
->>> Nvidia GeForce RTX 3070 Mobile (GA104M, not working with nouveau, I'm
->>> not using the proprietary nvidia driver).
->>>
->>> [reply] [−] Comment 1 Andreas 2022-10-22 14:27:15 UTC
->>>
->>> Created attachment 303075 [details]
->>> my kernel .config for 6.0.3
->>>
->>> Only was CONFIG_HID_TOPRE added in 6.0.3, otherwise it is identical
->>> as my .config for 6.0.2.
->>>
->>> [reply] [−] Comment 2 Andreas 2022-10-22 14:51:23 UTC
->>>
->>> In /var/log/Xorg.0.log the only obvious difference is the last line:
->>> ---- snap
->>> randr: falling back to unsynchronized pixmap sharing
->>> ---- snap
->>> The line is present when I boot with 6.0.3, but isn't when I boot 6.0.2.
->>>
->>> (Obviously this is when I login to KDE with X11, not with Wayland,
->>> from SDDM.)
->>>
->>> [reply] [−] Comment 3 Andreas 2022-10-22 22:10:19 UTC
->>>
->>> I did a git bisect on stable kernels 5.0.3 as bad and 5.0.2 as good,
->>> this is the result:
->>>
->>> cfecfc98a78d97a49807531b5b224459bda877de is the first bad commit
->>> commit cfecfc98a78d97a49807531b5b224459bda877de (HEAD, refs/bisect/bad)
->>> Author: Thomas Zimmermann <tzimmermann@suse.de>
->>> Date:   Mon Jul 18 09:23:18 2022 +0200
->>>
->>>      video/aperture: Disable and unregister sysfb devices via
->>> aperture helpers
->>>           [ Upstream commit 5e01376124309b4dbd30d413f43c0d9c2f60edea ]
->>>           Call sysfb_disable() before removing conflicting devices in
->>> aperture
->>>      helpers. Fixes sysfb state if fbdev has been disabled.
->>>           Signed-off-by: Thomas Zimmermann <tzimmermann@suse.de>
->>>      Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
->>>      Fixes: fb84efa28a48 ("drm/aperture: Run fbdev removal before
->>> internal helpers")
->>>
->>> [reply] [−] Comment 4 Andreas 2022-10-22 22:11:51 UTC
->>>
->>> Link to the suspect patch:
->>>
->>> https://patchwork.freedesktop.org/patch/msgid/20220718072322.8927-8-tzimmermann@suse.de
->>> (or https://patchwork.freedesktop.org/patch/494608/)
->>>
->>> [reply] [−] Comment 5 Andreas 2022-10-22 22:38:14 UTC
->>>
->>> Okay, so I reverted
->>> v2-07-11-video-aperture-Disable-and-unregister-sysfb-devices-via-aperture-helpers.patch on stable 5.0.3 and the fault is gone.
->>>
->>> I always logged out immediately, which worked (even though everything
->>> is very very sluggish). Also, when I killed the X session within a
->>> couple of seconds (15 or so), no error was shown (I used "systemctl
->>> stop sddm" from another virtual console).
->>>
->>> Noteworthy: I once compiled a kernel from within the Plasma Desktop,
->>> while it was sluggish. The kernel compiled alright. When it was
->>> finished I moved the mouse to reboot, at which point it completely
->>> froze and I had to hard-reset the system.
->>>
->>> While still running, after > 15 seconds, the fault looked like this
->>> (dmesg):
->>> ---- snap ----
->>> rcu: INFO: rcu_sched detected expedited stalls on CPUs/tasks: {
->>> 13-.... } 7 jiffies s: 165 root: 0x2000/.
->>> rcu: blocking rcu_node structures (internal RCU debug):
->>> Task dump for CPU 13:
->>> task:X               state:R  running task     stack:    0 pid: 4242
->>> ppid:  4228 flags:0x00000008
->>> Call Trace:
->>>   <TASK>
->>>   ? commit_tail+0xd7/0x130
->>>   ? drm_atomic_helper_commit+0x126/0x150
->>>   ? drm_atomic_commit+0xa4/0xe0
->>>   ? drm_plane_get_damage_clips.cold+0x1c/0x1c
->>>   ? drm_atomic_helper_dirtyfb+0x19e/0x280
->>>   ? drm_mode_dirtyfb_ioctl+0x10f/0x1e0
->>>   ? drm_mode_getfb2_ioctl+0x2d0/0x2d0
->>>   ? drm_ioctl_kernel+0xc4/0x150
->>>   ? drm_ioctl+0x246/0x3f0
->>>   ? drm_mode_getfb2_ioctl+0x2d0/0x2d0
->>>   ? __x64_sys_ioctl+0x91/0xd0
->>>   ? do_syscall_64+0x60/0xd0
->>>   ? entry_SYSCALL_64_after_hwframe+0x4b/0xb5
->>>   </TASK>
->>> rcu: INFO: rcu_sched detected expedited stalls on CPUs/tasks: {
->>> 13-.... } 29 jiffies s: 165 root: 0x2000/.
->>> rcu: blocking rcu_node structures (internal RCU debug):
->>> Task dump for CPU 13:
->>> task:X               state:R  running task     stack:    0 pid: 4242
->>> ppid:  4228 flags:0x00000008
->>> Call Trace:
->>>   <TASK>
->>>   ? commit_tail+0xd7/0x130
->>>   ? drm_atomic_helper_commit+0x126/0x150
->>>   ? drm_atomic_commit+0xa4/0xe0
->>>   ? drm_plane_get_damage_clips.cold+0x1c/0x1c
->>>   ? drm_atomic_helper_dirtyfb+0x19e/0x280
->>>   ? drm_mode_dirtyfb_ioctl+0x10f/0x1e0
->>>   ? drm_mode_getfb2_ioctl+0x2d0/0x2d0
->>>   ? drm_ioctl_kernel+0xc4/0x150
->>>   ? drm_ioctl+0x246/0x3f0
->>>   ? drm_mode_getfb2_ioctl+0x2d0/0x2d0
->>>   ? __x64_sys_ioctl+0x91/0xd0
->>>   ? do_syscall_64+0x60/0xd0
->>>   ? entry_SYSCALL_64_after_hwframe+0x4b/0xb5
->>>   </TASK>
->>> rcu: INFO: rcu_sched detected expedited stalls on CPUs/tasks: {
->>> 13-.... } 8 jiffies s: 169 root: 0x2000/.
->>> rcu: blocking rcu_node structures (internal RCU debug):
->>> Task dump for CPU 13:
->>> task:X               state:R  running task     stack:    0 pid: 4242
->>> ppid:  4228 flags:0x0000400e
->>> Call Trace:
->>>   <TASK>
->>>   ? memcpy_toio+0x76/0xc0
->>>   ? drm_fb_memcpy_toio+0x76/0xb0
->>>   ? drm_fb_blit_toio+0x75/0x2b0
->>>   ? simpledrm_simple_display_pipe_update+0x132/0x150
->>>   ? drm_atomic_helper_commit_planes+0xb6/0x230
->>>   ? drm_atomic_helper_commit_tail+0x44/0x80
->>>   ? commit_tail+0xd7/0x130
->>>   ? drm_atomic_helper_commit+0x126/0x150
->>>   ? drm_atomic_commit+0xa4/0xe0
->>>   ? drm_plane_get_damage_clips.cold+0x1c/0x1c
->>>   ? drm_atomic_helper_dirtyfb+0x19e/0x280
->>>   ? drm_mode_dirtyfb_ioctl+0x10f/0x1e0
->>>   ? drm_mode_getfb2_ioctl+0x2d0/0x2d0
->>>   ? drm_ioctl_kernel+0xc4/0x150
->>>   ? drm_ioctl+0x246/0x3f0
->>>   ? drm_mode_getfb2_ioctl+0x2d0/0x2d0
->>>   ? __x64_sys_ioctl+0x91/0xd0
->>>   ? do_syscall_64+0x60/0xd0
->>>   ? entry_SYSCALL_64_after_hwframe+0x4b/0xb5
->>>   </TASK>
->>> rcu: INFO: rcu_sched detected expedited stalls on CPUs/tasks: {
->>> 13-.... } 30 jiffies s: 169 root: 0x2000/.
->>> rcu: blocking rcu_node structures (internal RCU debug):
->>> Task dump for CPU 13:
->>> task:X               state:R  running task     stack:    0 pid: 4242
->>> ppid:  4228 flags:0x0000400e
->>> Call Trace:
->>>   <TASK>
->>>   ? memcpy_toio+0x76/0xc0
->>>   ? memcpy_toio+0x1b/0xc0
->>>   ? drm_fb_memcpy_toio+0x76/0xb0
->>>   ? drm_fb_blit_toio+0x75/0x2b0
->>>   ? simpledrm_simple_display_pipe_update+0x132/0x150
->>>   ? drm_atomic_helper_commit_planes+0xb6/0x230
->>>   ? drm_atomic_helper_commit_tail+0x44/0x80
->>>   ? commit_tail+0xd7/0x130
->>>   ? drm_atomic_helper_commit+0x126/0x150
->>>   ? drm_atomic_commit+0xa4/0xe0
->>>   ? drm_plane_get_damage_clips.cold+0x1c/0x1c
->>>   ? drm_atomic_helper_dirtyfb+0x19e/0x280
->>>   ? drm_mode_dirtyfb_ioctl+0x10f/0x1e0
->>>   ? drm_mode_getfb2_ioctl+0x2d0/0x2d0
->>>   ? drm_ioctl_kernel+0xc4/0x150
->>>   ? drm_ioctl+0x246/0x3f0
->>>   ? drm_mode_getfb2_ioctl+0x2d0/0x2d0
->>>   ? __x64_sys_ioctl+0x91/0xd0
->>>   ? do_syscall_64+0x60/0xd0
->>>   ? entry_SYSCALL_64_after_hwframe+0x4b/0xb5
->>>   </TASK>
->>> rcu: INFO: rcu_sched detected expedited stalls on CPUs/tasks: {
->>> 13-.... } 52 jiffies s: 169 root: 0x2000/.
->>> rcu: blocking rcu_node structures (internal RCU debug):
->>> Task dump for CPU 13:
->>> task:X               state:R  running task     stack:    0 pid: 4242
->>> ppid:  4228 flags:0x0000400e
->>> Call Trace:
->>>   <TASK>
->>>   ? memcpy_toio+0x76/0xc0
->>>   ? memcpy_toio+0x1b/0xc0
->>>   ? drm_fb_memcpy_toio+0x76/0xb0
->>>   ? drm_fb_blit_toio+0x75/0x2b0
->>>   ? simpledrm_simple_display_pipe_update+0x132/0x150
->>>   ? drm_atomic_helper_commit_planes+0xb6/0x230
->>>   ? drm_atomic_helper_commit_tail+0x44/0x80
->>>   ? commit_tail+0xd7/0x130
->>>   ? drm_atomic_helper_commit+0x126/0x150
->>>   ? drm_atomic_commit+0xa4/0xe0
->>>   ? drm_plane_get_damage_clips.cold+0x1c/0x1c
->>>   ? drm_atomic_helper_dirtyfb+0x19e/0x280
->>>   ? drm_mode_dirtyfb_ioctl+0x10f/0x1e0
->>>   ? drm_mode_getfb2_ioctl+0x2d0/0x2d0
->>>   ? drm_ioctl_kernel+0xc4/0x150
->>>   ? drm_ioctl+0x246/0x3f0
->>>   ? drm_mode_getfb2_ioctl+0x2d0/0x2d0
->>>   ? __x64_sys_ioctl+0x91/0xd0
->>>   ? do_syscall_64+0x60/0xd0
->>>   ? entry_SYSCALL_64_after_hwframe+0x4b/0xb5
->>>   </TASK>
->>> traps: avahi-ml[4447] general protection fault ip:7fdde6a37bc1
->>> sp:7fdde07fc920 error:0 in module-zeroconf-publish.so[7fdde6a37000+3000]
->>>
->>
->> See the ticket for more details.
->>
->> BTW, let me use this mail to also add the report to the list of tracked
->> regressions to ensure it's doesn't fall through the cracks:
->>
->> #regzbot introduced: cfecfc98a78d9
->> https://bugzilla.kernel.org/show_bug.cgi?id=216616
->> #regzbot ignore-activity
->>
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>
->> P.S.: As the Linux kernel's regression tracker I deal with a lot of
->> reports and sometimes miss something important when writing mails like
->> this. If that's the case here, don't hesitate to tell me in a public
->> reply, it's in everyone's interest to set the public record straight.
-> 
+Thanks for your help and patience.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
