@@ -1,22 +1,38 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A3B3D8A
-	for <regressions@lists.linux.dev>; Mon, 24 Oct 2022 16:53:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=badeba3b8450; t=1666630397;
-	bh=aQXL6HsBM0PBhw4P2ZBfupcRtHh2BCUCWB6pB0nA23A=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:Reply-To:From:
-	 In-Reply-To;
-	b=WCOSv/OaqIINzfZx0jBUUTkbXnykfxURG6ruovKabxfrCD6fNeVoVhmCq21VRSd++
-	 EdQbDbpUxlEjg7oWjpar//QTofPzNMoh6gM7CpfsBOFv8CGrEGAlf6G1SsdUu6XjUq
-	 PP41vWtYDNgsl1y/EnuiKNQm0ZkAtDoH673JQmL8=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.0.179] ([91.141.38.147]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MtwUm-1p5Vz70NpM-00uMMC; Mon, 24
- Oct 2022 18:53:17 +0200
-Message-ID: <d6afe54b-f8d7-beb2-3609-186e566cbfac@gmx.net>
-Date: Mon, 24 Oct 2022 18:53:15 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 526CD648
+	for <regressions@lists.linux.dev>; Mon, 24 Oct 2022 18:34:43 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id 3C178604E7;
+	Mon, 24 Oct 2022 20:34:41 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1666636481; bh=Uw5gaSbSu7XhJwkBClBqus7cuFL+RVHjC+Q1mmDKyF4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ww7Fljx4mYjKjiuH1VWEV+gNhga/Cf8G0f4shpk/wf7zkfiY5ECMaL9v78nOgpJ0D
+	 Wh0lqvZIPfTwKqdldrD5fo/oCaf1rJWaxPM0j0ADgvwGThLAB0nHhETTVCmQJWRb4h
+	 j4UNTF1FO6ExCmZyMr40qaxEyhpFa6oK8oNhfuVOkT2XTJfytW2CyDVWwFWdzihkl8
+	 2cAkKnCjT6cHGgLZbWWg6VmEXvpQoNdNIqavk1iwVb/3oPx+StjvRReXwbG/p6mzDu
+	 ROb4155FObLId3OE3rjzVe8mYADKQp2FgGs4zr0CFaq4fqPMpz5Knf+brnhqYLJ1PC
+	 D/4BB4ZIDgk7g==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id VDDG_wwS3LqI; Mon, 24 Oct 2022 20:34:38 +0200 (CEST)
+Received: from [192.168.0.12] (unknown [188.252.198.219])
+	by domac.alu.hr (Postfix) with ESMTPSA id D90F7604F3;
+	Mon, 24 Oct 2022 20:34:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1666636474; bh=Uw5gaSbSu7XhJwkBClBqus7cuFL+RVHjC+Q1mmDKyF4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NbZaETI3l5yIafvgzv+XKl8ofoMkywQNyDzytT+N7DGemAEnETpXHAWHGiz57L7Fi
+	 Miuo2pEZnRRASXFR75RU6v05bmSbjlvH8aEgyHZQY/mxmBi2G3JT+p3jX+kQBf5P4J
+	 jQ0e9RymSgY4QPE3Hq6q6dwnGJVx1qFhKP7bVmScx/bmioT6o6/1ML7vx5k5CpAf43
+	 vSpqoe7Uv0+SWUXMfpIQUMzhSyv0wy+LUvbXEMLUE+zxxZE4YvshJVTVvLFQa1NeiU
+	 03vCmnFqitqARxSr0ObUEMUpwIYEJVIgA+iCRk27l7oR7X2au7d5t5Is65V9/QVOnA
+	 Xm1b0PgWnrv9g==
+Message-ID: <bd1f0d2a-d456-92cc-ecca-23e480aea4b1@alu.unizg.hr>
+Date: Mon, 24 Oct 2022 20:34:31 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -24,55 +40,155 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [Regression] CPU stalls and eventually causes a complete system
- freeze with 6.0.3 due to "video/aperture: Disable and unregister sysfb
- devices via aperture helpers"
-To: Thomas Zimmermann <tzimmermann@suse.de>,
- Greg KH <gregkh@linuxfoundation.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Sasha Levin <sashal@kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Javier Martinez Canillas <javierm@redhat.com>,
- ML dri-devel <dri-devel@lists.freedesktop.org>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>
-References: <bbf7afe7-6ed2-6708-d302-4ba657444c45@leemhuis.info>
- <668a8ffd-ffc7-e1cc-28b4-1caca1bcc3d6@suse.de>
- <958fd763-01b6-0167-ba6b-97cbd3bddcb6@leemhuis.info>
- <Y1Z2sq9RyEnIdixD@kroah.com> <51651c2e-3706-37d7-01e7-5d473a412850@suse.de>
-Content-Language: de-AT
-Reply-To: andreas.thalhammer@linux.com
-From: Andreas Thalhammer <andreas.thalhammer-linux@gmx.net>
-In-Reply-To: <51651c2e-3706-37d7-01e7-5d473a412850@suse.de>
+ Thunderbird/102.2.2
+Subject: Re: BUG: bisected: thermald regression (MEMLEAK) in commit
+ c7ff29763989bd09c433f73fae3c1e1c15d9cda4
+To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
+ LKML <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net
+Cc: regressions@lists.linux.dev, regressions@leemhuis.info,
+ "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+ Robert Moore <robert.moore@intel.com>, devel@acpica.org
+References: <e0f06714-5a49-a4e6-24e6-c4103c820819@alu.unizg.hr>
+ <9ef3674afd370050b86a68e44c97e4f0257f1adf.camel@linux.intel.com>
+Content-Language: en-US
+From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <9ef3674afd370050b86a68e44c97e4f0257f1adf.camel@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:oXxMU3rv9x3UT4ue7ukIwZ6SdCPVZxqtw7T7v5iUBbb/swy8ZGW
- OEh7ZMfxoCabHFhNrQ+9g5tniFWizkiG8musEV22cHvnKWGv6TqOLtXFcVLdn05V4SAtO9B
- gSiuLrNIOEtwt0Kc1CQhB9OxWwfzXaRZjtbm1eVQ020qS/samJk8Ej2vDsEAn0XgA0Dij29
- MhQ/XUcxtLn9bZYYdsoOQ==
-X-Spam-Flag: NO
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ovny2x/YLUg=:Au3NRZZl4J3Ny7mGN4/4g4
- OZcGRDOsYyBxA9+kFLhVU52E95pp1of66zJbSWquO6JAV/8ot+98WgfqTy4tpon6cmXRkG2DL
- AP9GEJxvVoUUDiK2jin1rsH9nxUspn0bVgITIyqHoUxe5lNhJKDt2CX8X88TzSvtWVZsf/Y4n
- BWHLWN7uk/1flbEoH1YTM4mw5pfprRMbqYLP62UQNa+iv2KJn7Q16if0w+uv7tFYYokSQzEUX
- yOONXD6S8yCbRdvVk0opxB/Ku9D0mnUZZ6Lws4PAVQMq2MKrmLNOUg76BwNTCiXQPn5D7vbUW
- LHpQfepQCY/558yfOYg82xM8tYUrtVIJZhn8s1aF0zjv96gqqhnnNzGD9xBfpBQSrL6Tc6GIX
- iHvHOkINI+KkdIgwlT7FSyG1jEDTg1lrBQqjGkkFTB4wM8zMCsl8+Oavba2gdTXj+n8C0lZHR
- 9BZhSSsZDdxBaZv3P+ce0wQ+H1WEYT+iqwAZvwXLIbrYabCUcIUgLD4WOiJ8eSGRK6dDbLJoh
- 78KhsEYHmf+tDX6Wskqpz8pFDGGuvymKsxWM8UbmcQWBj9evlyhNAuv55QyjDCeTNveVCgJW2
- xlFqcq8OmEKJS85lTi5jThUy5j+ujO0Y3wDoN4UPKQykBhFpUhU+XZdP+yCAne2AojyzxLJqg
- i4NX3z1iRb0lGMg65DVNpcEb0IoTkNyoJzZuveRKoqjMng8oOcWoJ6c36eE1KdnPbjhNl8oQj
- qrqnOOYOBoY0EYttWVcsVgPXiMX5ANiZZuL7eZxZAwqhOPKuuOA1mJgsPc9WYrvJ/oGrvRjAa
- 3mMRMf/5wTaCOz4WePbU1xfGfbz/07RhphxydbMqwvORLbPRH57UvbCmNp8QJxU1vt0FlvoTH
- 0KwUG9vVjK/+DanWhhrEB0ywVyoVdXMBYSpVPOrPnuxDqJnViaOA6WmUJBk8ZwDuzQDxYNb3f
- AqphM44+eA55Ce1hDjmE5rkuMUDiw2BI5QS/fQCmQDzoiVlKl9AYY60XO5p/ycdAEtxR/7ED2
- qnGCFWVRF/pSxT0PRtxlE8RttwfrzGjd2BrssHlaogFEv6jk75EdoDwUD6aXFgiZsLG+SR1PB
- 3Ivz1CuNE1wQ8Th4nVeu+H0y2viQw/vP3gEawBucvvhen6VCXj3EOxA1Ccenuk32fZ8YRKS1+
- c4bGysCXyqQf94PvOU05Eymxa9W9O87MQFei3ZRAQr6JFMoLC04DDrvNq/ZD/22eiauFndT1Y
- yOU558RssfigXCnGg6cFUPTKSqCquzAOR+sWEwCOpgmLP5XmEu2fvJWY+t6166U9EuaiwL5Kp
- uKpEvZ/TFJzpzP9pVcPOpv71uZyTPhJST4F2rC0irjc2bEeBuMD4HkvIU3MlgX62omIkqBMLV
- MtR3S2CnkD67ksrx1UAJi4bUF1wN8c9FshYLb0xLVFDUYFT/6UVAr10uufLVRh2chTqHj4rVI
- 3cf0warK9QykkHhFlpAVJvU1pCvikgBx1q6G3ToJXjaKlqklQC8XaBtSBt++N6A6CuLf5+GNH
- YYGA9purb8BtmmZe/CsENEPHJX8GmnWmXPNpsi+rq7P51iXPAJh5m1P7/SuElnvvjpA==
+Content-Transfer-Encoding: 8bit
 
-Just tested with 6.1-rc2 (tarball from kernel.org), which works.
+Hi Srinivas,
+
+On 24. 10. 2022. 17:51, srinivas pandruvada wrote:
+> Hi Mirsad,
+>
+> Thanks for the bisect.
+>
+> On Mon, 2022-10-24 at 15:13 +0200, Mirsad Goran Todorovac wrote:
+>> Dear all,
+>>
+>> Around Sep 27th 2022 I've noticed in a mainline kernel built with
+>> CONFIG_DEBUG_KMEMLEAK=y
+>> that there actually is a leak:
+>>
+>>> sudo cat /sys/kernel/debug/kmemleak unreferenced object
+>> 0xffff8881095f3ee0 (size 80): comm "thermald", pid 837, jiffies
+>> 4294896698 (age 9867.428s) hex dump (first 32 bytes): 00 00 00 00 00
+>> 00
+>> 00 00 0d 01 2d 00 00 00 00 00 ..........-..... af 07 01 00 00 c9 ff
+>> ff
+>> 00 00 00 00 00 00 00 00 ................ backtrace:
+>> [<00000000b50b9dd6>]
+>> kmem_cache_alloc+0x184/0x380 [<00000000fa8428c0>]
+>> acpi_os_acquire_object+0x2c/0x32 [<000000002cc0099f>]
+>> acpi_ps_alloc_op+0x65/0xe6 [<00000000335faf1b>]
+>> acpi_ps_get_next_arg+0x842/0x9ed [<000000007afa2dee>]
+>> acpi_ps_parse_loop+0x718/0xee1 [<0000000010ce490e>]
+>> acpi_ps_parse_aml+0x261/0x7b2 [<00000000278d4c5f>]
+>> acpi_ps_execute_method+0x360/0x459 [<00000000ff7ad4ba>]
+>> acpi_ns_evaluate+0x595/0x810 [<0000000037ce3488>]
+>> acpi_evaluate_object+0x28b/0x5b2 [<000000001a800bbf>]
+>> acpi_run_osc+0x209/0x3d0 [<00000000776fbd43>]
+>> int3400_thermal_run_osc+0xed/0x180 [int3400_thermal]
+>> [<00000000d6ec2302>] current_uuid_store+0x17c/0x1d0 [int3400_thermal]
+>> [<00000000486cf3e6>] dev_attr_store+0x3e/0x60 [<00000000bf193027>]
+>> sysfs_kf_write+0x88/0xa0 [<00000000820b5cce>]
+>> kernfs_fop_write_iter+0x1c9/0x270 [<0000000062f8d35e>]
+>> vfs_write+0x5a5/0x750 Mr. Pandruvada required a bug bisect from me,
+>> so I
+>> have eventually made one. # first bad commit:
+>> [c7ff29763989bd09c433f73fae3c1e1c15d9cda4] thermal: int340x: Update
+>> OS
+> This will say this patch as this patch is calling acpi_run_osc in
+> response to thermald calls for the first time.
+>
+> But looking at code, this is freeing the memory allocated by
+> acpi_run_osc() call chain as any other caller.
+>
+> 	status = acpi_run_osc(handle, &context);
+> 	if (ACPI_SUCCESS(status)) {
+> 		ret = *((u32 *)(context.ret.pointer + 4));
+> 		if (ret != *enable)
+> 			result = -EPERM;
+>
+> 		kfree(context.ret.pointer);
+> 	} else
+> 		result = -EPERM;
+>
+> There is no kfree when call failed as at other places.
+> I think you are failing, you can search for "_OSC" in dmesg.
+> On some Dell systems this OSC setting fails because of some BIOS issue.
+> May be you are hitting that case.
+> Just for the sake of test, please apply the diff and see if the issue
+> is gone.
+
+Thank you for the patch. Unfortunately, when applied to v6.0.3 it didn't 
+fix the issue.
+
+marvin@marvin-IdeaPad-3-15ITL6:~$ uname -rms
+Linux 6.0.3-18-fix01-mlk+ x86_64
+marvin@marvin-IdeaPad-3-15ITL6:~$ sudo bash
+[sudo] password for marvin:
+root@marvin-IdeaPad-3-15ITL6:/home/marvin# cat /sys/kernel/debug/kmemleak
+root@marvin-IdeaPad-3-15ITL6:/home/marvin# echo scan > 
+/sys/kernel/debug/kmemleak
+root@marvin-IdeaPad-3-15ITL6:/home/marvin# cat /sys/kernel/debug/kmemleak
+unreferenced object 0xffff998b030c3370 (size 80):
+   comm "thermald", pid 824, jiffies 4294893654 (age 67.080s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 0d 01 2d 00 00 00 00 00 ..........-.....
+     af 07 01 c0 6f bc ff ff 00 00 00 00 00 00 00 00 ....o...........
+   backtrace:
+     [<00000000490225c2>] slab_post_alloc_hook+0x80/0x2e0
+     [<00000000dc142b33>] kmem_cache_alloc+0x166/0x2e0
+     [<00000000168f1071>] acpi_os_acquire_object+0x2c/0x32
+     [<00000000fcc615e1>] acpi_ps_alloc_op+0x4a/0x99
+     [<00000000fb475bb4>] acpi_ps_get_next_arg+0x611/0x761
+     [<000000009048d529>] acpi_ps_parse_loop+0x494/0x8d7
+     [<000000005b0bf086>] acpi_ps_parse_aml+0x1bb/0x561
+     [<000000007ab7e288>] acpi_ps_execute_method+0x20f/0x2d5
+     [<00000000c12fa6b7>] acpi_ns_evaluate+0x34d/0x4f3
+     [<000000001be94719>] acpi_evaluate_object+0x180/0x3ae
+     [<00000000423a7ad5>] acpi_run_osc+0x128/0x250
+     [<0000000040a72af8>] int3400_thermal_run_osc+0x6f/0xc0 
+[int3400_thermal]
+     [<00000000f8d59987>] current_uuid_store+0xe3/0x120 [int3400_thermal]
+     [<000000007e2e2d17>] dev_attr_store+0x14/0x30
+     [<00000000b824b589>] sysfs_kf_write+0x38/0x50
+     [<00000000beae69c1>] kernfs_fop_write_iter+0x146/0x1d0
+root@marvin-IdeaPad-3-15ITL6:/home/marvin#
+
+The build process was as follows:
+
+  1573  10/24/2022 06:41:53 PM  cd linux_stable
+  1574  10/24/2022 06:42:03 PM  git checkout v6.0.3
+  1575  10/24/2022 06:42:44 PM  cd ..
+  1576  10/24/2022 06:42:50 PM  time rm -rf linux_stable_build; time cp 
+-rp linux_stable linux_stable_build; \
+                     time diff -ur linux_stable linux_stable_build; cd 
+linux_stable_build
+  1577  10/24/2022 06:46:19 PM  git apply ../thermald-20221024-01.diff
+  1578  10/24/2022 06:46:28 PM  vi ../config-5.15.0-50-memleak
+  1579  10/24/2022 06:47:08 PM  cp ../config-5.15.0-50-memleak .config
+  1580  10/24/2022 06:47:16 PM  make olddefconfig
+  1581  10/24/2022 06:48:42 PM  time nice make CC="ccache gcc" 
+KBUILD_BUILD_TIMESTAMP="" -j10 deb-pkg; date
+
+I think your patch definitively makes sense, but there's more to this 
+than meets the eye :-/
+
+Hope this helps.
+
+Thanks
+Mirsad
+
+--
+Mirsad Goran Todorovac
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+-- 
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb, Republic of Croatia
+The European Union
+
