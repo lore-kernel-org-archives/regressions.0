@@ -1,13 +1,42 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC9607ED
-	for <regressions@lists.linux.dev>; Mon, 24 Oct 2022 10:18:06 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1omuWy-0000PJ-Jf; Mon, 24 Oct 2022 12:18:04 +0200
-Message-ID: <b0bf779e-6195-4fad-377a-ba1e63419c5d@leemhuis.info>
-Date: Mon, 24 Oct 2022 12:18:04 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6825F7ED
+	for <regressions@lists.linux.dev>; Mon, 24 Oct 2022 10:26:51 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 056322215D;
+	Mon, 24 Oct 2022 10:26:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1666607204; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6ccTuQwmExoOz2dpg0ihP5xHVoG9h+btM98aQvrX3W8=;
+	b=1IG7V9e9FTfXKtf5mr+l7dVyna34qBKdXwCHWtXIhgXcUVjFrx9ZWCHpsa3F/By19iQhCW
+	qNeOmuCb6n22oMXTH27TB1meJcoV8V/K4EuwJu3H4TrSPgbCJ9lRyDzHBXuHMyggiMTFhO
+	KQoDHPgsL16cQ2gCk80eT25UgXP8O9M=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1666607204;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6ccTuQwmExoOz2dpg0ihP5xHVoG9h+btM98aQvrX3W8=;
+	b=36jYXhDeqPdVxfH86Uc03Y8yLNT6ATAz3DUZd5ufic1p9u3dQ6uQQr1zHLomewlNmCM9bZ
+	vsKNva5q0zOZcSCg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C120813A79;
+	Mon, 24 Oct 2022 10:26:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id ONLeLWNoVmNvEgAAMHmgww
+	(envelope-from <tzimmermann@suse.de>); Mon, 24 Oct 2022 10:26:43 +0000
+Message-ID: <668a8ffd-ffc7-e1cc-28b4-1caca1bcc3d6@suse.de>
+Date: Mon, 24 Oct 2022 12:26:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,223 +44,261 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: (bug report) HWMON & Thermal interactions #forregzbot
-Content-Language: en-US, de-DE
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <Y1WHnJ6h1RSOipV4@e120937-lin>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <Y1WHnJ6h1RSOipV4@e120937-lin>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666606686;152cebbc;
-X-HE-SMSGID: 1omuWy-0000PJ-Jf
+ Thunderbird/102.3.3
+Subject: Re: [Regression] CPU stalls and eventually causes a complete system
+ freeze with 6.0.3 due to "video/aperture: Disable and unregister sysfb
+ devices via aperture helpers"
+Content-Language: en-US
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Andreas <andreas.thalhammer@linux.com>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
+References: <bbf7afe7-6ed2-6708-d302-4ba657444c45@leemhuis.info>
+From: Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <bbf7afe7-6ed2-6708-d302-4ba657444c45@leemhuis.info>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------901Mv1POe59TIu4nziYVHcHP"
 
-[Note: this mail is primarily send for documentation purposes and/or for
-regzbot, my Linux kernel regression tracking bot. That's why I removed
-most or all folks from the list of recipients, but left any that looked
-like a mailing lists. These mails usually contain '#forregzbot' in the
-subject, to make them easy to spot and filter out.]
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------901Mv1POe59TIu4nziYVHcHP
+Content-Type: multipart/mixed; boundary="------------I2Z1F49Ovlqn38HDkGlwwIcZ";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Andreas <andreas.thalhammer@linux.com>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
+Message-ID: <668a8ffd-ffc7-e1cc-28b4-1caca1bcc3d6@suse.de>
+Subject: Re: [Regression] CPU stalls and eventually causes a complete system
+ freeze with 6.0.3 due to "video/aperture: Disable and unregister sysfb
+ devices via aperture helpers"
+References: <bbf7afe7-6ed2-6708-d302-4ba657444c45@leemhuis.info>
+In-Reply-To: <bbf7afe7-6ed2-6708-d302-4ba657444c45@leemhuis.info>
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
+--------------I2Z1F49Ovlqn38HDkGlwwIcZ
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-Hi, this is your Linux kernel regression tracker. CCing the regression
-mailing list, as it should be in the loop for all regressions, as
-explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+SGkNCg0KQW0gMjMuMTAuMjIgdW0gMTA6MDQgc2NocmllYiBUaG9yc3RlbiBMZWVtaHVpczoN
+Cj4gSGksIHRoaXMgaXMgeW91ciBMaW51eCBrZXJuZWwgcmVncmVzc2lvbiB0cmFja2VyIHNw
+ZWFraW5nLg0KPiANCj4gSSBub3RpY2VkIGEgcmVncmVzc2lvbiByZXBvcnQgaW4gYnVnemls
+bGEua2VybmVsLm9yZy4gQXMgbWFueSAobW9zdD8pDQo+IGtlcm5lbCBkZXZlbG9wZXIgZG9u
+J3Qga2VlcCBhbiBleWUgb24gaXQsIEkgZGVjaWRlZCB0byBmb3J3YXJkIGl0IGJ5DQo+IG1h
+aWwuIFF1b3RpbmcgZnJvbSBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hvd19idWcu
+Y2dpP2lkPTIxNjYxNiAgOg0KPiANCj4+ICAgQW5kcmVhcyAyMDIyLTEwLTIyIDE0OjI1OjMy
+IFVUQw0KPj4NCj4+IENyZWF0ZWQgYXR0YWNobWVudCAzMDMwNzQgW2RldGFpbHNdDQo+PiBk
+bWVzZw0KDQpJJ3ZlIGxvb2tlZCBhdCB0aGUga2VybmVsIGxvZyBhbmQgZm91bmQgdGhhdCBz
+aW1wbGVkcm0gaGFzIGJlZW4gbG9hZGVkIA0KKmFmdGVyKiBhbWRncHUsIHdoaWNoIHNob3Vs
+ZCBuZXZlciBoYXBwZW4uIFRoZSBwcm9ibGVtYXRpYyBwYXRjaCBoYXMgDQpiZWVuIHRha2Vu
+IGZyb20gYSBsb25nIGxpc3Qgb2YgcmVmYWN0b3Jpbmcgd29yayBvbiB0aGlzIGNvZGUuIE5v
+IHdvbmRlciANCnRoYXQgaXQgZG9lc24ndCB3b3JrIGFzIGV4cGVjdGVkLg0KDQpQbGVhc2Ug
+Y2hlcnJ5LXBpY2sgY29tbWl0IDlkNjllZjE4MzgxNSAoImZiZGV2L2NvcmU6IFJlbW92ZSAN
+CnJlbW92ZV9jb25mbGljdGluZ19wY2lfZnJhbWVidWZmZXJzKCkiKSBpbnRvIHRoZSA2LjAg
+c3RhYmxlIGJyYW5jaCBhbmQgDQpyZXBvcnQgb24gdGhlIHJlc3VsdHMuIEl0IHNob3VsZCBm
+aXggdGhlIHByb2JsZW0uDQoNCkJlc3QgcmVnYXJkcw0KVGhvbWFzDQoNCg0KPj4NCj4+IDYu
+MC4yIHdvcmtzLg0KPj4NCj4+IE9uIDYuMC4zIHRoZSBzeXN0ZW0gaXMgdmVyeSBzbHVnZ2lz
+aCB3aXRoIGdyYXBoaWMgZ2xpdGNoZXMgYWxsIG92ZXIgdGhlIHBsYWNlIGluIEtERSBQbGFz
+bWEgRGVza3RvcCBYMTEgKG5vIGdyYXBoaWMgZ2xpdGNoZXMgd2hlbiB1c2luZyBXYXlsYW5k
+LCBidXQgYWxzbyBzbHVnZ2lzaCkuIFNERE0gd29ya3MgZmluZS4NCj4+DQo+PiBIYXJkd2Fy
+ZTogTGVub3ZvIExlZ2lvbiA1IFBybyAxNkFDSDZIOiBBTUQgUnl6ZW4gNyA1ODAwSCAiQ2V6
+YW5uZSIsIGh5YnJpZCBncmFwaGljcyBBTUQgIkdyZWVuIFNhcmRpbmUiIChWZWdhIDggR0NO
+IDUuMSwgQU1ER1BVKSBhbmQgTnZpZGlhIEdlRm9yY2UgUlRYIDMwNzAgTW9iaWxlIChHQTEw
+NE0sIG5vdCB3b3JraW5nIHdpdGggbm91dmVhdSwgSSdtIG5vdCB1c2luZyB0aGUgcHJvcHJp
+ZXRhcnkgbnZpZGlhIGRyaXZlcikuDQo+Pg0KPj4gW3JlcGx5XSBb4oiSXSBDb21tZW50IDEg
+QW5kcmVhcyAyMDIyLTEwLTIyIDE0OjI3OjE1IFVUQw0KPj4NCj4+IENyZWF0ZWQgYXR0YWNo
+bWVudCAzMDMwNzUgW2RldGFpbHNdDQo+PiBteSBrZXJuZWwgLmNvbmZpZyBmb3IgNi4wLjMN
+Cj4+DQo+PiBPbmx5IHdhcyBDT05GSUdfSElEX1RPUFJFIGFkZGVkIGluIDYuMC4zLCBvdGhl
+cndpc2UgaXQgaXMgaWRlbnRpY2FsIGFzIG15IC5jb25maWcgZm9yIDYuMC4yLg0KPj4NCj4+
+IFtyZXBseV0gW+KIkl0gQ29tbWVudCAyIEFuZHJlYXMgMjAyMi0xMC0yMiAxNDo1MToyMyBV
+VEMNCj4+DQo+PiBJbiAvdmFyL2xvZy9Yb3JnLjAubG9nIHRoZSBvbmx5IG9idmlvdXMgZGlm
+ZmVyZW5jZSBpcyB0aGUgbGFzdCBsaW5lOg0KPj4gLS0tLSBzbmFwDQo+PiByYW5kcjogZmFs
+bGluZyBiYWNrIHRvIHVuc3luY2hyb25pemVkIHBpeG1hcCBzaGFyaW5nDQo+PiAtLS0tIHNu
+YXANCj4+IFRoZSBsaW5lIGlzIHByZXNlbnQgd2hlbiBJIGJvb3Qgd2l0aCA2LjAuMywgYnV0
+IGlzbid0IHdoZW4gSSBib290IDYuMC4yLg0KPj4NCj4+IChPYnZpb3VzbHkgdGhpcyBpcyB3
+aGVuIEkgbG9naW4gdG8gS0RFIHdpdGggWDExLCBub3Qgd2l0aCBXYXlsYW5kLCBmcm9tIFNE
+RE0uKQ0KPj4NCj4+IFtyZXBseV0gW+KIkl0gQ29tbWVudCAzIEFuZHJlYXMgMjAyMi0xMC0y
+MiAyMjoxMDoxOSBVVEMNCj4+DQo+PiBJIGRpZCBhIGdpdCBiaXNlY3Qgb24gc3RhYmxlIGtl
+cm5lbHMgNS4wLjMgYXMgYmFkIGFuZCA1LjAuMiBhcyBnb29kLCB0aGlzIGlzIHRoZSByZXN1
+bHQ6DQo+Pg0KPj4gY2ZlY2ZjOThhNzhkOTdhNDk4MDc1MzFiNWIyMjQ0NTliZGE4NzdkZSBp
+cyB0aGUgZmlyc3QgYmFkIGNvbW1pdA0KPj4gY29tbWl0IGNmZWNmYzk4YTc4ZDk3YTQ5ODA3
+NTMxYjViMjI0NDU5YmRhODc3ZGUgKEhFQUQsIHJlZnMvYmlzZWN0L2JhZCkNCj4+IEF1dGhv
+cjogVGhvbWFzIFppbW1lcm1hbm4gPHR6aW1tZXJtYW5uQHN1c2UuZGU+DQo+PiBEYXRlOiAg
+IE1vbiBKdWwgMTggMDk6MjM6MTggMjAyMiArMDIwMA0KPj4NCj4+ICAgICAgdmlkZW8vYXBl
+cnR1cmU6IERpc2FibGUgYW5kIHVucmVnaXN0ZXIgc3lzZmIgZGV2aWNlcyB2aWEgYXBlcnR1
+cmUgaGVscGVycw0KPj4gICAgICANCj4+ICAgICAgWyBVcHN0cmVhbSBjb21taXQgNWUwMTM3
+NjEyNDMwOWI0ZGJkMzBkNDEzZjQzYzBkOWMyZjYwZWRlYSBdDQo+PiAgICAgIA0KPj4gICAg
+ICBDYWxsIHN5c2ZiX2Rpc2FibGUoKSBiZWZvcmUgcmVtb3ZpbmcgY29uZmxpY3RpbmcgZGV2
+aWNlcyBpbiBhcGVydHVyZQ0KPj4gICAgICBoZWxwZXJzLiBGaXhlcyBzeXNmYiBzdGF0ZSBp
+ZiBmYmRldiBoYXMgYmVlbiBkaXNhYmxlZC4NCj4+ICAgICAgDQo+PiAgICAgIFNpZ25lZC1v
+ZmYtYnk6IFRob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPg0KPj4gICAg
+ICBSZXZpZXdlZC1ieTogSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXJtQHJlZGhh
+dC5jb20+DQo+PiAgICAgIEZpeGVzOiBmYjg0ZWZhMjhhNDggKCJkcm0vYXBlcnR1cmU6IFJ1
+biBmYmRldiByZW1vdmFsIGJlZm9yZSBpbnRlcm5hbCBoZWxwZXJzIikNCj4+DQo+PiBbcmVw
+bHldIFviiJJdIENvbW1lbnQgNCBBbmRyZWFzIDIwMjItMTAtMjIgMjI6MTE6NTEgVVRDDQo+
+Pg0KPj4gTGluayB0byB0aGUgc3VzcGVjdCBwYXRjaDoNCj4+DQo+PiBodHRwczovL3BhdGNo
+d29yay5mcmVlZGVza3RvcC5vcmcvcGF0Y2gvbXNnaWQvMjAyMjA3MTgwNzIzMjIuODkyNy04
+LXR6aW1tZXJtYW5uQHN1c2UuZGUNCj4+IChvciBodHRwczovL3BhdGNod29yay5mcmVlZGVz
+a3RvcC5vcmcvcGF0Y2gvNDk0NjA4LykNCj4+DQo+PiBbcmVwbHldIFviiJJdIENvbW1lbnQg
+NSBBbmRyZWFzIDIwMjItMTAtMjIgMjI6Mzg6MTQgVVRDDQo+Pg0KPj4gT2theSwgc28gSSBy
+ZXZlcnRlZCB2Mi0wNy0xMS12aWRlby1hcGVydHVyZS1EaXNhYmxlLWFuZC11bnJlZ2lzdGVy
+LXN5c2ZiLWRldmljZXMtdmlhLWFwZXJ0dXJlLWhlbHBlcnMucGF0Y2ggb24gc3RhYmxlIDUu
+MC4zIGFuZCB0aGUgZmF1bHQgaXMgZ29uZS4NCj4+DQo+PiBJIGFsd2F5cyBsb2dnZWQgb3V0
+IGltbWVkaWF0ZWx5LCB3aGljaCB3b3JrZWQgKGV2ZW4gdGhvdWdoIGV2ZXJ5dGhpbmcgaXMg
+dmVyeSB2ZXJ5IHNsdWdnaXNoKS4gQWxzbywgd2hlbiBJIGtpbGxlZCB0aGUgWCBzZXNzaW9u
+IHdpdGhpbiBhIGNvdXBsZSBvZiBzZWNvbmRzICgxNSBvciBzbyksIG5vIGVycm9yIHdhcyBz
+aG93biAoSSB1c2VkICJzeXN0ZW1jdGwgc3RvcCBzZGRtIiBmcm9tIGFub3RoZXIgdmlydHVh
+bCBjb25zb2xlKS4NCj4+DQo+PiBOb3Rld29ydGh5OiBJIG9uY2UgY29tcGlsZWQgYSBrZXJu
+ZWwgZnJvbSB3aXRoaW4gdGhlIFBsYXNtYSBEZXNrdG9wLCB3aGlsZSBpdCB3YXMgc2x1Z2dp
+c2guIFRoZSBrZXJuZWwgY29tcGlsZWQgYWxyaWdodC4gV2hlbiBpdCB3YXMgZmluaXNoZWQg
+SSBtb3ZlZCB0aGUgbW91c2UgdG8gcmVib290LCBhdCB3aGljaCBwb2ludCBpdCBjb21wbGV0
+ZWx5IGZyb3plIGFuZCBJIGhhZCB0byBoYXJkLXJlc2V0IHRoZSBzeXN0ZW0uDQo+Pg0KPj4g
+V2hpbGUgc3RpbGwgcnVubmluZywgYWZ0ZXIgPiAxNSBzZWNvbmRzLCB0aGUgZmF1bHQgbG9v
+a2VkIGxpa2UgdGhpcyAoZG1lc2cpOg0KPj4gLS0tLSBzbmFwIC0tLS0NCj4+IHJjdTogSU5G
+TzogcmN1X3NjaGVkIGRldGVjdGVkIGV4cGVkaXRlZCBzdGFsbHMgb24gQ1BVcy90YXNrczog
+eyAxMy0uLi4uIH0gNyBqaWZmaWVzIHM6IDE2NSByb290OiAweDIwMDAvLg0KPj4gcmN1OiBi
+bG9ja2luZyByY3Vfbm9kZSBzdHJ1Y3R1cmVzIChpbnRlcm5hbCBSQ1UgZGVidWcpOg0KPj4g
+VGFzayBkdW1wIGZvciBDUFUgMTM6DQo+PiB0YXNrOlggICAgICAgICAgICAgICBzdGF0ZTpS
+ICBydW5uaW5nIHRhc2sgICAgIHN0YWNrOiAgICAwIHBpZDogNDI0MiBwcGlkOiAgNDIyOCBm
+bGFnczoweDAwMDAwMDA4DQo+PiBDYWxsIFRyYWNlOg0KPj4gICA8VEFTSz4NCj4+ICAgPyBj
+b21taXRfdGFpbCsweGQ3LzB4MTMwDQo+PiAgID8gZHJtX2F0b21pY19oZWxwZXJfY29tbWl0
+KzB4MTI2LzB4MTUwDQo+PiAgID8gZHJtX2F0b21pY19jb21taXQrMHhhNC8weGUwDQo+PiAg
+ID8gZHJtX3BsYW5lX2dldF9kYW1hZ2VfY2xpcHMuY29sZCsweDFjLzB4MWMNCj4+ICAgPyBk
+cm1fYXRvbWljX2hlbHBlcl9kaXJ0eWZiKzB4MTllLzB4MjgwDQo+PiAgID8gZHJtX21vZGVf
+ZGlydHlmYl9pb2N0bCsweDEwZi8weDFlMA0KPj4gICA/IGRybV9tb2RlX2dldGZiMl9pb2N0
+bCsweDJkMC8weDJkMA0KPj4gICA/IGRybV9pb2N0bF9rZXJuZWwrMHhjNC8weDE1MA0KPj4g
+ICA/IGRybV9pb2N0bCsweDI0Ni8weDNmMA0KPj4gICA/IGRybV9tb2RlX2dldGZiMl9pb2N0
+bCsweDJkMC8weDJkMA0KPj4gICA/IF9feDY0X3N5c19pb2N0bCsweDkxLzB4ZDANCj4+ICAg
+PyBkb19zeXNjYWxsXzY0KzB4NjAvMHhkMA0KPj4gICA/IGVudHJ5X1NZU0NBTExfNjRfYWZ0
+ZXJfaHdmcmFtZSsweDRiLzB4YjUNCj4+ICAgPC9UQVNLPg0KPj4gcmN1OiBJTkZPOiByY3Vf
+c2NoZWQgZGV0ZWN0ZWQgZXhwZWRpdGVkIHN0YWxscyBvbiBDUFVzL3Rhc2tzOiB7IDEzLS4u
+Li4gfSAyOSBqaWZmaWVzIHM6IDE2NSByb290OiAweDIwMDAvLg0KPj4gcmN1OiBibG9ja2lu
+ZyByY3Vfbm9kZSBzdHJ1Y3R1cmVzIChpbnRlcm5hbCBSQ1UgZGVidWcpOg0KPj4gVGFzayBk
+dW1wIGZvciBDUFUgMTM6DQo+PiB0YXNrOlggICAgICAgICAgICAgICBzdGF0ZTpSICBydW5u
+aW5nIHRhc2sgICAgIHN0YWNrOiAgICAwIHBpZDogNDI0MiBwcGlkOiAgNDIyOCBmbGFnczow
+eDAwMDAwMDA4DQo+PiBDYWxsIFRyYWNlOg0KPj4gICA8VEFTSz4NCj4+ICAgPyBjb21taXRf
+dGFpbCsweGQ3LzB4MTMwDQo+PiAgID8gZHJtX2F0b21pY19oZWxwZXJfY29tbWl0KzB4MTI2
+LzB4MTUwDQo+PiAgID8gZHJtX2F0b21pY19jb21taXQrMHhhNC8weGUwDQo+PiAgID8gZHJt
+X3BsYW5lX2dldF9kYW1hZ2VfY2xpcHMuY29sZCsweDFjLzB4MWMNCj4+ICAgPyBkcm1fYXRv
+bWljX2hlbHBlcl9kaXJ0eWZiKzB4MTllLzB4MjgwDQo+PiAgID8gZHJtX21vZGVfZGlydHlm
+Yl9pb2N0bCsweDEwZi8weDFlMA0KPj4gICA/IGRybV9tb2RlX2dldGZiMl9pb2N0bCsweDJk
+MC8weDJkMA0KPj4gICA/IGRybV9pb2N0bF9rZXJuZWwrMHhjNC8weDE1MA0KPj4gICA/IGRy
+bV9pb2N0bCsweDI0Ni8weDNmMA0KPj4gICA/IGRybV9tb2RlX2dldGZiMl9pb2N0bCsweDJk
+MC8weDJkMA0KPj4gICA/IF9feDY0X3N5c19pb2N0bCsweDkxLzB4ZDANCj4+ICAgPyBkb19z
+eXNjYWxsXzY0KzB4NjAvMHhkMA0KPj4gICA/IGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdm
+cmFtZSsweDRiLzB4YjUNCj4+ICAgPC9UQVNLPg0KPj4gcmN1OiBJTkZPOiByY3Vfc2NoZWQg
+ZGV0ZWN0ZWQgZXhwZWRpdGVkIHN0YWxscyBvbiBDUFVzL3Rhc2tzOiB7IDEzLS4uLi4gfSA4
+IGppZmZpZXMgczogMTY5IHJvb3Q6IDB4MjAwMC8uDQo+PiByY3U6IGJsb2NraW5nIHJjdV9u
+b2RlIHN0cnVjdHVyZXMgKGludGVybmFsIFJDVSBkZWJ1Zyk6DQo+PiBUYXNrIGR1bXAgZm9y
+IENQVSAxMzoNCj4+IHRhc2s6WCAgICAgICAgICAgICAgIHN0YXRlOlIgIHJ1bm5pbmcgdGFz
+ayAgICAgc3RhY2s6ICAgIDAgcGlkOiA0MjQyIHBwaWQ6ICA0MjI4IGZsYWdzOjB4MDAwMDQw
+MGUNCj4+IENhbGwgVHJhY2U6DQo+PiAgIDxUQVNLPg0KPj4gICA/IG1lbWNweV90b2lvKzB4
+NzYvMHhjMA0KPj4gICA/IGRybV9mYl9tZW1jcHlfdG9pbysweDc2LzB4YjANCj4+ICAgPyBk
+cm1fZmJfYmxpdF90b2lvKzB4NzUvMHgyYjANCj4+ICAgPyBzaW1wbGVkcm1fc2ltcGxlX2Rp
+c3BsYXlfcGlwZV91cGRhdGUrMHgxMzIvMHgxNTANCj4+ICAgPyBkcm1fYXRvbWljX2hlbHBl
+cl9jb21taXRfcGxhbmVzKzB4YjYvMHgyMzANCj4+ICAgPyBkcm1fYXRvbWljX2hlbHBlcl9j
+b21taXRfdGFpbCsweDQ0LzB4ODANCj4+ICAgPyBjb21taXRfdGFpbCsweGQ3LzB4MTMwDQo+
+PiAgID8gZHJtX2F0b21pY19oZWxwZXJfY29tbWl0KzB4MTI2LzB4MTUwDQo+PiAgID8gZHJt
+X2F0b21pY19jb21taXQrMHhhNC8weGUwDQo+PiAgID8gZHJtX3BsYW5lX2dldF9kYW1hZ2Vf
+Y2xpcHMuY29sZCsweDFjLzB4MWMNCj4+ICAgPyBkcm1fYXRvbWljX2hlbHBlcl9kaXJ0eWZi
+KzB4MTllLzB4MjgwDQo+PiAgID8gZHJtX21vZGVfZGlydHlmYl9pb2N0bCsweDEwZi8weDFl
+MA0KPj4gICA/IGRybV9tb2RlX2dldGZiMl9pb2N0bCsweDJkMC8weDJkMA0KPj4gICA/IGRy
+bV9pb2N0bF9rZXJuZWwrMHhjNC8weDE1MA0KPj4gICA/IGRybV9pb2N0bCsweDI0Ni8weDNm
+MA0KPj4gICA/IGRybV9tb2RlX2dldGZiMl9pb2N0bCsweDJkMC8weDJkMA0KPj4gICA/IF9f
+eDY0X3N5c19pb2N0bCsweDkxLzB4ZDANCj4+ICAgPyBkb19zeXNjYWxsXzY0KzB4NjAvMHhk
+MA0KPj4gICA/IGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsweDRiLzB4YjUNCj4+
+ICAgPC9UQVNLPg0KPj4gcmN1OiBJTkZPOiByY3Vfc2NoZWQgZGV0ZWN0ZWQgZXhwZWRpdGVk
+IHN0YWxscyBvbiBDUFVzL3Rhc2tzOiB7IDEzLS4uLi4gfSAzMCBqaWZmaWVzIHM6IDE2OSBy
+b290OiAweDIwMDAvLg0KPj4gcmN1OiBibG9ja2luZyByY3Vfbm9kZSBzdHJ1Y3R1cmVzIChp
+bnRlcm5hbCBSQ1UgZGVidWcpOg0KPj4gVGFzayBkdW1wIGZvciBDUFUgMTM6DQo+PiB0YXNr
+OlggICAgICAgICAgICAgICBzdGF0ZTpSICBydW5uaW5nIHRhc2sgICAgIHN0YWNrOiAgICAw
+IHBpZDogNDI0MiBwcGlkOiAgNDIyOCBmbGFnczoweDAwMDA0MDBlDQo+PiBDYWxsIFRyYWNl
+Og0KPj4gICA8VEFTSz4NCj4+ICAgPyBtZW1jcHlfdG9pbysweDc2LzB4YzANCj4+ICAgPyBt
+ZW1jcHlfdG9pbysweDFiLzB4YzANCj4+ICAgPyBkcm1fZmJfbWVtY3B5X3RvaW8rMHg3Ni8w
+eGIwDQo+PiAgID8gZHJtX2ZiX2JsaXRfdG9pbysweDc1LzB4MmIwDQo+PiAgID8gc2ltcGxl
+ZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGVfdXBkYXRlKzB4MTMyLzB4MTUwDQo+PiAgID8gZHJt
+X2F0b21pY19oZWxwZXJfY29tbWl0X3BsYW5lcysweGI2LzB4MjMwDQo+PiAgID8gZHJtX2F0
+b21pY19oZWxwZXJfY29tbWl0X3RhaWwrMHg0NC8weDgwDQo+PiAgID8gY29tbWl0X3RhaWwr
+MHhkNy8weDEzMA0KPj4gICA/IGRybV9hdG9taWNfaGVscGVyX2NvbW1pdCsweDEyNi8weDE1
+MA0KPj4gICA/IGRybV9hdG9taWNfY29tbWl0KzB4YTQvMHhlMA0KPj4gICA/IGRybV9wbGFu
+ZV9nZXRfZGFtYWdlX2NsaXBzLmNvbGQrMHgxYy8weDFjDQo+PiAgID8gZHJtX2F0b21pY19o
+ZWxwZXJfZGlydHlmYisweDE5ZS8weDI4MA0KPj4gICA/IGRybV9tb2RlX2RpcnR5ZmJfaW9j
+dGwrMHgxMGYvMHgxZTANCj4+ICAgPyBkcm1fbW9kZV9nZXRmYjJfaW9jdGwrMHgyZDAvMHgy
+ZDANCj4+ICAgPyBkcm1faW9jdGxfa2VybmVsKzB4YzQvMHgxNTANCj4+ICAgPyBkcm1faW9j
+dGwrMHgyNDYvMHgzZjANCj4+ICAgPyBkcm1fbW9kZV9nZXRmYjJfaW9jdGwrMHgyZDAvMHgy
+ZDANCj4+ICAgPyBfX3g2NF9zeXNfaW9jdGwrMHg5MS8weGQwDQo+PiAgID8gZG9fc3lzY2Fs
+bF82NCsweDYwLzB4ZDANCj4+ICAgPyBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUr
+MHg0Yi8weGI1DQo+PiAgIDwvVEFTSz4NCj4+IHJjdTogSU5GTzogcmN1X3NjaGVkIGRldGVj
+dGVkIGV4cGVkaXRlZCBzdGFsbHMgb24gQ1BVcy90YXNrczogeyAxMy0uLi4uIH0gNTIgamlm
+ZmllcyBzOiAxNjkgcm9vdDogMHgyMDAwLy4NCj4+IHJjdTogYmxvY2tpbmcgcmN1X25vZGUg
+c3RydWN0dXJlcyAoaW50ZXJuYWwgUkNVIGRlYnVnKToNCj4+IFRhc2sgZHVtcCBmb3IgQ1BV
+IDEzOg0KPj4gdGFzazpYICAgICAgICAgICAgICAgc3RhdGU6UiAgcnVubmluZyB0YXNrICAg
+ICBzdGFjazogICAgMCBwaWQ6IDQyNDIgcHBpZDogIDQyMjggZmxhZ3M6MHgwMDAwNDAwZQ0K
+Pj4gQ2FsbCBUcmFjZToNCj4+ICAgPFRBU0s+DQo+PiAgID8gbWVtY3B5X3RvaW8rMHg3Ni8w
+eGMwDQo+PiAgID8gbWVtY3B5X3RvaW8rMHgxYi8weGMwDQo+PiAgID8gZHJtX2ZiX21lbWNw
+eV90b2lvKzB4NzYvMHhiMA0KPj4gICA/IGRybV9mYl9ibGl0X3RvaW8rMHg3NS8weDJiMA0K
+Pj4gICA/IHNpbXBsZWRybV9zaW1wbGVfZGlzcGxheV9waXBlX3VwZGF0ZSsweDEzMi8weDE1
+MA0KPj4gICA/IGRybV9hdG9taWNfaGVscGVyX2NvbW1pdF9wbGFuZXMrMHhiNi8weDIzMA0K
+Pj4gICA/IGRybV9hdG9taWNfaGVscGVyX2NvbW1pdF90YWlsKzB4NDQvMHg4MA0KPj4gICA/
+IGNvbW1pdF90YWlsKzB4ZDcvMHgxMzANCj4+ICAgPyBkcm1fYXRvbWljX2hlbHBlcl9jb21t
+aXQrMHgxMjYvMHgxNTANCj4+ICAgPyBkcm1fYXRvbWljX2NvbW1pdCsweGE0LzB4ZTANCj4+
+ICAgPyBkcm1fcGxhbmVfZ2V0X2RhbWFnZV9jbGlwcy5jb2xkKzB4MWMvMHgxYw0KPj4gICA/
+IGRybV9hdG9taWNfaGVscGVyX2RpcnR5ZmIrMHgxOWUvMHgyODANCj4+ICAgPyBkcm1fbW9k
+ZV9kaXJ0eWZiX2lvY3RsKzB4MTBmLzB4MWUwDQo+PiAgID8gZHJtX21vZGVfZ2V0ZmIyX2lv
+Y3RsKzB4MmQwLzB4MmQwDQo+PiAgID8gZHJtX2lvY3RsX2tlcm5lbCsweGM0LzB4MTUwDQo+
+PiAgID8gZHJtX2lvY3RsKzB4MjQ2LzB4M2YwDQo+PiAgID8gZHJtX21vZGVfZ2V0ZmIyX2lv
+Y3RsKzB4MmQwLzB4MmQwDQo+PiAgID8gX194NjRfc3lzX2lvY3RsKzB4OTEvMHhkMA0KPj4g
+ICA/IGRvX3N5c2NhbGxfNjQrMHg2MC8weGQwDQo+PiAgID8gZW50cnlfU1lTQ0FMTF82NF9h
+ZnRlcl9od2ZyYW1lKzB4NGIvMHhiNQ0KPj4gICA8L1RBU0s+DQo+PiB0cmFwczogYXZhaGkt
+bWxbNDQ0N10gZ2VuZXJhbCBwcm90ZWN0aW9uIGZhdWx0IGlwOjdmZGRlNmEzN2JjMSBzcDo3
+ZmRkZTA3ZmM5MjAgZXJyb3I6MCBpbiBtb2R1bGUtemVyb2NvbmYtcHVibGlzaC5zb1s3ZmRk
+ZTZhMzcwMDArMzAwMF0NCj4+DQo+IA0KPiBTZWUgdGhlIHRpY2tldCBmb3IgbW9yZSBkZXRh
+aWxzLg0KPiANCj4gQlRXLCBsZXQgbWUgdXNlIHRoaXMgbWFpbCB0byBhbHNvIGFkZCB0aGUg
+cmVwb3J0IHRvIHRoZSBsaXN0IG9mIHRyYWNrZWQNCj4gcmVncmVzc2lvbnMgdG8gZW5zdXJl
+IGl0J3MgZG9lc24ndCBmYWxsIHRocm91Z2ggdGhlIGNyYWNrczoNCj4gDQo+ICNyZWd6Ym90
+IGludHJvZHVjZWQ6IGNmZWNmYzk4YTc4ZDkNCj4gaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwu
+b3JnL3Nob3dfYnVnLmNnaT9pZD0yMTY2MTYNCj4gI3JlZ3pib3QgaWdub3JlLWFjdGl2aXR5
+DQo+IA0KPiBDaWFvLCBUaG9yc3RlbiAod2VhcmluZyBoaXMgJ3RoZSBMaW51eCBrZXJuZWwn
+cyByZWdyZXNzaW9uIHRyYWNrZXInIGhhdCkNCj4gDQo+IFAuUy46IEFzIHRoZSBMaW51eCBr
+ZXJuZWwncyByZWdyZXNzaW9uIHRyYWNrZXIgSSBkZWFsIHdpdGggYSBsb3Qgb2YNCj4gcmVw
+b3J0cyBhbmQgc29tZXRpbWVzIG1pc3Mgc29tZXRoaW5nIGltcG9ydGFudCB3aGVuIHdyaXRp
+bmcgbWFpbHMgbGlrZQ0KPiB0aGlzLiBJZiB0aGF0J3MgdGhlIGNhc2UgaGVyZSwgZG9uJ3Qg
+aGVzaXRhdGUgdG8gdGVsbCBtZSBpbiBhIHB1YmxpYw0KPiByZXBseSwgaXQncyBpbiBldmVy
+eW9uZSdzIGludGVyZXN0IHRvIHNldCB0aGUgcHVibGljIHJlY29yZCBzdHJhaWdodC4NCg0K
+LS0gDQpUaG9tYXMgWmltbWVybWFubg0KR3JhcGhpY3MgRHJpdmVyIERldmVsb3Blcg0KU1VT
+RSBTb2Z0d2FyZSBTb2x1dGlvbnMgR2VybWFueSBHbWJIDQpNYXhmZWxkc3RyLiA1LCA5MDQw
+OSBOw7xybmJlcmcsIEdlcm1hbnkNCihIUkIgMzY4MDksIEFHIE7DvHJuYmVyZykNCkdlc2No
+w6RmdHNmw7xocmVyOiBJdm8gVG90ZXYNCg==
 
-On 23.10.22 20:27, Cristian Marussi wrote:
-> 
-> Starting with v6.1-rc1 the SCMI HWMON driver failed probing on my JUNO due
-> to the fact that no trip points were (ever !) defined in the DT; bisecting it
-> looks like that after:
+--------------I2Z1F49Ovlqn38HDkGlwwIcZ--
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
+--------------901Mv1POe59TIu4nziYVHcHP
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
-#regzbot ^introduced e51813313
-#regzbot title SCMI HWMON driver failed probing on JUNO
-#regzbot ignore-activity
+-----BEGIN PGP SIGNATURE-----
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmNWaGMFAwAAAAAACgkQlh/E3EQov+B1
+fg//V/lptchVKSJzy4ENqU251rVNr32B9fZWo4jrWxFbLqNs+48F5L9yeLJ53CUGnAJwfmeIcOeV
+JSZw+eAN6Y74riNGba56FjsCjPCknDEb33AlIOAREMymDY1mnn5wGEorbGM+2uEbmnt2vb4VmYcj
+7y01PcHvPyjxDBUB4uo8lWFfjTlWuN8bifmL+8g5jCNLIPi8fYYjoD7ZsOfC+A/8o1xComLEjDz0
+dVPlwo784kRM2+P/IM8jEeFVD7jhYJQ9L2M71D0znV/Ktm3ZMvRSFXeOSJqnty1tHWzqOyMmPmpM
+fVIsAquWgCeeboJ94O7ng3hlsWfizF9yylchKRdpb3se7YWDwcuGPXJ77wQx/ranetdxI3aar+UJ
+YPmXzu/XVE1IJkk6jhl52M3iG7+G3U8mfc/MjuOVOA0clc9hQgMaMcRvGjY9VEaSVGNkDroCNi1H
+4sBi5Zxvh3zf98bXlv9u3KFgH7PggmQVpaMREfTmlwUssfTBdWqQJ2eGVOKnZHIUIPlPAQEUxHdO
+RLD6YoCZyWhXmg79gJQrEde1MKPfrD66ZS61GOXcT/7Nz7HszBs1sHyYxCTZF5pQipfGz2ieEuuJ
+sicKW1o5M6A9jbbLW8EL8hp7vs4d4hGZUFGOiCE8sDGngSC8iaJhl+Bb0b+lTdX1xGU+gvRi7Mv5
+H4Y=
+=uXBB
+-----END PGP SIGNATURE-----
 
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
-
-> https://lore.kernel.org/all/20220804224349.1926752-28-daniel.lezcano@linexp.org/
-> 
-> the presence of the mandatory trips node within thermal zones is now
-> enforced.
-> 
-> So, this is NOT what this bug report is about (I'll post soon patches for
-> the JUNO DT missing trips) BUT once this problem was solved in the DT,
-> another issue appeared:
-> 
-> [    1.921929] hwmon hwmon0: temp2_input not attached to any thermal zone
-> 
-> that despite having now a goodi/valid DT describing 2 sensors and 2 thermal zones
-> embedding that sensors, only the first one is found as belonging to one ThermZ.
-> (this happens ALSO with v6.0 once I added the trips...)
-> 
-> Digging deep into this, it turned out that inside the call chain
-> 
-> devm_hwmon_device_register_with_info
->   hwmon_device_register_with_info
->     __hwmon_device_register
-> 	hwmon_thermal_register_sensors(dev)
-> 		--> hwmon_thermal_add_sensor(dev, j)
-> 			--> devm_thermal_of_zone_register(dev, sensor_id, tdata, )
-> 
-> the HWMON channel index j is passed to the Thermal framework in order to
-> search and bind sensors with defined thermal zone, but this lead to the
-> assumption that sequential HWMON channel indexes corresponds one-to-one to the
-> underlying real sensor IDs that the ThermalFramework uses for matching
-> within the DT.
-> 
-> On a system like my SCMI-based DT where I have 2 temp-sensors bound to 2
-> thermal zones like:
-> 
-> thernal_zones {
-> 	pmic {
-> 		...
-> 		thermal-sensors = <&scmi_sensors0 0>;
-> 		...
-> 		trips {
-> 			...
-> 		}
-> 	soc {
-> 		...
-> 		thermal-sensors = <&scmi_sensors0 3>;
-> 		...
-> 		trips {
-> 			...
-> 		}
-> 	}
-> }
-> 
-> This works fine by chance for the pmic (j=0, sensor_id=0) BUT cannot work for
-> the soc where J=1 BUT the real sensor ID is 3.
-> 
-> Note that there can be a number of sensors, not all of them of a type handled
-> by HWMON, and enumerated by SCMI in different ways depending on the
-> platform.
-> 
-> I suppose this is not an SCMI-only related issue, but maybe in non-SCMI
-> context, where sensors are purely defined in the DT, the solution can be
-> more easily attained (i.e. renumber the sensors).
-> 
-> At first I tried to solve this inside scmi-hwmon.c BUT I could not find
-> a way to present to the HWMON subsystem the list of sensors preserving
-> the above index/sensor_id matching (not even with a hack like passing
-> down dummy sensors to the HWMON subsystem to fill the 'holes' in the
-> numbering)
-> 
-> My tentative solution, which works fine for me in my context, was to add
-> an optional HWMON hwops, so that the core hwmon can retrieve if needed the
-> real sensor ID if different from the channel index (using an optional hwops
-> instead of some static hwinfo var let me avoid to have to patch all the
-> existent hwmon drivers that happens to just work fine as of today...but
-> maybe it is not necessarily the proper final solution...)
-> 
-> i.e.
-> 
-> ----8<----
-> 
-> Author: Cristian Marussi <cristian.marussi@arm.com>
-> Date:   Fri Oct 21 17:24:04 2022 +0100
-> 
->     hwmon: Add new .get_sensor_id hwops
->     
->     Add a new optional helper which can be defined to allow an hwmon chip to
->     provide the logic to map hwmon indexes to the real underlying sensor IDs.
->     
->     Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-> 
-> diff --git a/drivers/hwmon/hwmon.c b/drivers/hwmon/hwmon.c
-> index 4218750d5a66..45d3d5070cde 100644
-> --- a/drivers/hwmon/hwmon.c
-> +++ b/drivers/hwmon/hwmon.c
-> @@ -213,7 +213,8 @@ static void hwmon_thermal_remove_sensor(void *data)
->         list_del(data);
->  }
->  
-> -static int hwmon_thermal_add_sensor(struct device *dev, int index)
-> +static int hwmon_thermal_add_sensor(struct device *dev, int index,
-> 7+                                   unsigned int sensor_id)
->  {
->         struct hwmon_device *hwdev = to_hwmon_device(dev);
->         struct hwmon_thermal_data *tdata;
-> @@ -227,7 +228,7 @@ static int hwmon_thermal_add_sensor(struct device *dev, int index)
->         tdata->dev = dev;
->         tdata->index = index;
->  
-> -       tzd = devm_thermal_of_zone_register(dev, index, tdata,
-> +       tzd = devm_thermal_of_zone_register(dev, sensor_id, tdata,
->                                             &hwmon_thermal_ops);
->         if (IS_ERR(tzd)) {
->                 if (PTR_ERR(tzd) != -ENODEV)
-> @@ -264,13 +265,18 @@ static int hwmon_thermal_register_sensors(struct device *dev)
->  
->                 for (j = 0; info[i]->config[j]; j++) {
->                         int err;
-> +                       unsigned int id;
->  
->                         if (!(info[i]->config[j] & HWMON_T_INPUT) ||
->                             !chip->ops->is_visible(drvdata, hwmon_temp,
->                                                    hwmon_temp_input, j))
->                                 continue;
->  
-> -                       err = hwmon_thermal_add_sensor(dev, j);
-> +                       id = !chip->ops->get_sensor_id ? j :
-> +                               chip->ops->get_sensor_id(drvdata,
-> +                                                        hwmon_temp, j);
-> +
-> +                       err = hwmon_thermal_add_sensor(dev, j, id);
->                         if (err)
->                                 return err;
->                 }
-> diff --git a/include/linux/hwmon.h b/include/linux/hwmon.h
-> index 14325f93c6b2..e5dbab83f4d1 100644
-> --- a/include/linux/hwmon.h
-> +++ b/include/linux/hwmon.h
-> @@ -396,6 +396,9 @@ enum hwmon_intrusion_attributes {
->  struct hwmon_ops {
->         umode_t (*is_visible)(const void *drvdata, enum hwmon_sensor_types type,
->                               u32 attr, int channel);
-> +       unsigned int (*get_sensor_id)(const void *drvdata,
-> +                                     enum hwmon_sensor_types type,
-> +                                     int channel);
->         int (*read)(struct device *dev, enum hwmon_sensor_types type,
->                     u32 attr, int channel, long *val);
->         int (*read_string)(struct device *dev, enum hwmon_sensor_types type,
-> 
-> 
-> ----->8----
-> 
-> 
-> ... plus obviously the related scmi-hwmon.c patch to make use of this.
-> 
-> Any thought ? Am I missing something ?
-> (not really an expert on both subsystems really ... :P)
-> 
-> Thanks,
-> Cristian
-> 
+--------------901Mv1POe59TIu4nziYVHcHP--
