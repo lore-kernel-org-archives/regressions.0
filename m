@@ -1,19 +1,22 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F15A29A0
-	for <regressions@lists.linux.dev>; Mon, 24 Oct 2022 16:33:00 +0000 (UTC)
-Received: from [10.254.254.111] (ip5b408877.dynamic.kabel-deutschland.de [91.64.136.119])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 4B4D9204B53A;
-	Mon, 24 Oct 2022 09:32:53 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4B4D9204B53A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1666629174;
-	bh=GfElR9udXiQf3guZiHJL3KQoGri3nokfNdchhJSXkq0=;
-	h=Date:To:Cc:References:From:Subject:In-Reply-To:From;
-	b=sIIW+RgpIOOlNve3I28qgl1AvrcH63U+NDMr3zJmfZVi9t/Cj/mZ1lC6RPCo8yaCn
-	 XM8fXlKk/+w3uSsYoBgI9bB4X58Tu8QOlTheaTTwlAECoWkzM+NdVkZ5YA2wIhTwVi
-	 S41i/jv+iO4h+0zizN55H0CGzLu8F6RGTYJgNlLo=
-Message-ID: <643d007e-1041-4b3d-ed5e-ae47804f279d@linux.microsoft.com>
-Date: Mon, 24 Oct 2022 18:32:51 +0200
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A3B3D8A
+	for <regressions@lists.linux.dev>; Mon, 24 Oct 2022 16:53:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=badeba3b8450; t=1666630397;
+	bh=aQXL6HsBM0PBhw4P2ZBfupcRtHh2BCUCWB6pB0nA23A=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:Reply-To:From:
+	 In-Reply-To;
+	b=WCOSv/OaqIINzfZx0jBUUTkbXnykfxURG6ruovKabxfrCD6fNeVoVhmCq21VRSd++
+	 EdQbDbpUxlEjg7oWjpar//QTofPzNMoh6gM7CpfsBOFv8CGrEGAlf6G1SsdUu6XjUq
+	 PP41vWtYDNgsl1y/EnuiKNQm0ZkAtDoH673JQmL8=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.0.179] ([91.141.38.147]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MtwUm-1p5Vz70NpM-00uMMC; Mon, 24
+ Oct 2022 18:53:17 +0200
+Message-ID: <d6afe54b-f8d7-beb2-3609-186e566cbfac@gmx.net>
+Date: Mon, 24 Oct 2022 18:53:15 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -21,54 +24,55 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-To: Jan Kara <jack@suse.cz>
-Cc: Ye Bin <yebin10@huawei.com>, jack@suse.com, tytso@mit.edu,
- linux-ext4@vger.kernel.org, regressions@lists.linux.dev,
- Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-References: <20220929082716.5urzcfk4hnapd3cr@quack3>
- <d8b18ba8-ea12-b617-6b5e-455a1d7b5e21@linux.microsoft.com>
- <20221004063807.GA30205@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20221004091035.idjgo2xyscf6ovnv@quack3>
- <eeb17fca-4e79-b39f-c394-a6fa6873eb26@linux.microsoft.com>
- <20221005151053.7jjgc7uhvquo6a5n@quack3>
- <20221010142410.GA1689@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <2ede5fce-7077-6e64-93a9-a7d993bc498f@linux.microsoft.com>
- <20221014132543.i3aiyx4ent4qwy4i@quack3>
- <d30f4e74-aa75-743d-3c89-80ec61d67c6c@linux.microsoft.com>
- <20221024104628.ozxjtdrotysq2haj@quack3>
-Content-Language: en-US
-From: Thilo Fromm <t-lo@linux.microsoft.com>
-Subject: Re: [syzbot] possible deadlock in jbd2_journal_lock_updates
-In-Reply-To: <20221024104628.ozxjtdrotysq2haj@quack3>
+ Thunderbird/102.4.0
+Subject: Re: [Regression] CPU stalls and eventually causes a complete system
+ freeze with 6.0.3 due to "video/aperture: Disable and unregister sysfb
+ devices via aperture helpers"
+To: Thomas Zimmermann <tzimmermann@suse.de>,
+ Greg KH <gregkh@linuxfoundation.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Sasha Levin <sashal@kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Javier Martinez Canillas <javierm@redhat.com>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <bbf7afe7-6ed2-6708-d302-4ba657444c45@leemhuis.info>
+ <668a8ffd-ffc7-e1cc-28b4-1caca1bcc3d6@suse.de>
+ <958fd763-01b6-0167-ba6b-97cbd3bddcb6@leemhuis.info>
+ <Y1Z2sq9RyEnIdixD@kroah.com> <51651c2e-3706-37d7-01e7-5d473a412850@suse.de>
+Content-Language: de-AT
+Reply-To: andreas.thalhammer@linux.com
+From: Andreas Thalhammer <andreas.thalhammer-linux@gmx.net>
+In-Reply-To: <51651c2e-3706-37d7-01e7-5d473a412850@suse.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:oXxMU3rv9x3UT4ue7ukIwZ6SdCPVZxqtw7T7v5iUBbb/swy8ZGW
+ OEh7ZMfxoCabHFhNrQ+9g5tniFWizkiG8musEV22cHvnKWGv6TqOLtXFcVLdn05V4SAtO9B
+ gSiuLrNIOEtwt0Kc1CQhB9OxWwfzXaRZjtbm1eVQ020qS/samJk8Ej2vDsEAn0XgA0Dij29
+ MhQ/XUcxtLn9bZYYdsoOQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ovny2x/YLUg=:Au3NRZZl4J3Ny7mGN4/4g4
+ OZcGRDOsYyBxA9+kFLhVU52E95pp1of66zJbSWquO6JAV/8ot+98WgfqTy4tpon6cmXRkG2DL
+ AP9GEJxvVoUUDiK2jin1rsH9nxUspn0bVgITIyqHoUxe5lNhJKDt2CX8X88TzSvtWVZsf/Y4n
+ BWHLWN7uk/1flbEoH1YTM4mw5pfprRMbqYLP62UQNa+iv2KJn7Q16if0w+uv7tFYYokSQzEUX
+ yOONXD6S8yCbRdvVk0opxB/Ku9D0mnUZZ6Lws4PAVQMq2MKrmLNOUg76BwNTCiXQPn5D7vbUW
+ LHpQfepQCY/558yfOYg82xM8tYUrtVIJZhn8s1aF0zjv96gqqhnnNzGD9xBfpBQSrL6Tc6GIX
+ iHvHOkINI+KkdIgwlT7FSyG1jEDTg1lrBQqjGkkFTB4wM8zMCsl8+Oavba2gdTXj+n8C0lZHR
+ 9BZhSSsZDdxBaZv3P+ce0wQ+H1WEYT+iqwAZvwXLIbrYabCUcIUgLD4WOiJ8eSGRK6dDbLJoh
+ 78KhsEYHmf+tDX6Wskqpz8pFDGGuvymKsxWM8UbmcQWBj9evlyhNAuv55QyjDCeTNveVCgJW2
+ xlFqcq8OmEKJS85lTi5jThUy5j+ujO0Y3wDoN4UPKQykBhFpUhU+XZdP+yCAne2AojyzxLJqg
+ i4NX3z1iRb0lGMg65DVNpcEb0IoTkNyoJzZuveRKoqjMng8oOcWoJ6c36eE1KdnPbjhNl8oQj
+ qrqnOOYOBoY0EYttWVcsVgPXiMX5ANiZZuL7eZxZAwqhOPKuuOA1mJgsPc9WYrvJ/oGrvRjAa
+ 3mMRMf/5wTaCOz4WePbU1xfGfbz/07RhphxydbMqwvORLbPRH57UvbCmNp8QJxU1vt0FlvoTH
+ 0KwUG9vVjK/+DanWhhrEB0ywVyoVdXMBYSpVPOrPnuxDqJnViaOA6WmUJBk8ZwDuzQDxYNb3f
+ AqphM44+eA55Ce1hDjmE5rkuMUDiw2BI5QS/fQCmQDzoiVlKl9AYY60XO5p/ycdAEtxR/7ED2
+ qnGCFWVRF/pSxT0PRtxlE8RttwfrzGjd2BrssHlaogFEv6jk75EdoDwUD6aXFgiZsLG+SR1PB
+ 3Ivz1CuNE1wQ8Th4nVeu+H0y2viQw/vP3gEawBucvvhen6VCXj3EOxA1Ccenuk32fZ8YRKS1+
+ c4bGysCXyqQf94PvOU05Eymxa9W9O87MQFei3ZRAQr6JFMoLC04DDrvNq/ZD/22eiauFndT1Y
+ yOU558RssfigXCnGg6cFUPTKSqCquzAOR+sWEwCOpgmLP5XmEu2fvJWY+t6166U9EuaiwL5Kp
+ uKpEvZ/TFJzpzP9pVcPOpv71uZyTPhJST4F2rC0irjc2bEeBuMD4HkvIU3MlgX62omIkqBMLV
+ MtR3S2CnkD67ksrx1UAJi4bUF1wN8c9FshYLb0xLVFDUYFT/6UVAr10uufLVRh2chTqHj4rVI
+ 3cf0warK9QykkHhFlpAVJvU1pCvikgBx1q6G3ToJXjaKlqklQC8XaBtSBt++N6A6CuLf5+GNH
+ YYGA9purb8BtmmZe/CsENEPHJX8GmnWmXPNpsi+rq7P51iXPAJh5m1P7/SuElnvvjpA==
 
-Hello Honza,
-
-> Yeah, I was pondering about this for some time but still I have no clue who
-> could be holding the buffer lock (which blocks the task holding the
-> transaction open) or how this could related to the commit you have
-> identified. I have two things to try:
-> 
-> 1) Can you please check whether the deadlock reproduces also with 6.0
-> kernel? The thing is that xattr handling code in ext4 has there some
-> additional changes, commit 307af6c8793 ("mbcache: automatically delete
-> entries from cache on freeing") in particular.
-
-This would be complex; we currently do not integrate 6.0 with Flatcar 
-and would need to spend quite some effort ingesting it first (mostly, 
-make sure the new kernel does not break something unrelated). Flatcar is 
-an image-based distro, so kernel updates imply full distro updates.
-
-> 2) I have created a debug patch (against 5.15.x stable kernel). Can you
-> please reproduce the failure with it and post the output of "echo w
->> /proc/sysrq-trigger" and also the output the debug patch will put into the
-> kernel log? It will dump the information about buffer lock owner if we > cannot get the lock for more than 32 seconds.
-
-This would be more straightforward - I can reach out to one of our users 
-suffering from the issue; they can reliably reproduce it and don't shy 
-away from patching their kernel. Where can I find the patch?
-
-Best,
-Thilo
+Just tested with 6.1-rc2 (tarball from kernel.org), which works.
