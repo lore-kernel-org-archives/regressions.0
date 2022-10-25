@@ -1,109 +1,138 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3611F7479
-	for <regressions@lists.linux.dev>; Tue, 25 Oct 2022 17:16:17 +0000 (UTC)
-Received: by mail-ot1-f52.google.com with SMTP id t4-20020a9d7f84000000b00661c3d864f9so8142547otp.10
-        for <regressions@lists.linux.dev>; Tue, 25 Oct 2022 10:16:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wdbCZ4CHEVidOPRYp9p5sbBFoXVtuLvQpFWkZTNGqG8=;
-        b=AzlwddO6tQinP8jw4jAugqQY958HFAM6LfcjRoiQACNTNMIX6pJHJ1v1cmKrI92Vmi
-         3b/msy4x4LpoD+oS373Mu2FQv5mmIZVU70aVht9jHVZfbC8phTaMFtg0N4Fs5BZUOs1y
-         bzzjq+Lk67EZ+Rw5rGcf96sM5OKnl+kGeI9EqNUVRCrdqwVgPghm8yXIwiTWI7vs2DtC
-         Eyb35lZ9trThsZhe/7JQsCwFzJzLHbovlnpbkrEfXojNusXsrI0ND3ICxvHtsdt4nGxJ
-         PCBGVslVr617J8MUaB+Cug2pLY7o6xQ83SMEUgl7IbjNkWqUGoz88v0K6dmM5cuZv0qd
-         OFMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wdbCZ4CHEVidOPRYp9p5sbBFoXVtuLvQpFWkZTNGqG8=;
-        b=5fUYv0T0rijJsT3ASpGA1vW0TjnyTa7wekoQM4EyfiumkvhXznAnIyfsB8sfsFfDfQ
-         7sn3aMPmjOA3hOMxXqR5naEEDUmW+Id0vpTuIDjQsgFO2G8oGp8AQav6cz70m/RBGG7H
-         qxewd4GurTrmfbeKLK9op2XwXKsTiCBR63e5Q0sFh1o2ORwLh6dr5Fsrst8Khpjjpxjp
-         qCUrsVJGR2xzQAMvqW8rB8pNmw/vAwgTtY4vD9zUJfq51jmfXI5eiM4TRXwd6KXzEIQv
-         DrBj616RoplGXiPyDyIBCwVkBWJfquJd0/iCbWQPfTWzSPLi/FwjkxHJcPCJbOFlfrxe
-         ox0g==
-X-Gm-Message-State: ACrzQf3e18kqmoTRWa1lLIApFo6jiBUArkkGnm16WXQkg/AbgxNUNkUA
-	uGDiBnOSCU2BrhLJ5jSXXuc=
-X-Google-Smtp-Source: AMsMyM5/KJoKTe1dHpKJNs/RLAnLytdPfzAEdK77gcjqf5hxyWbZpZc8Td0gXqB29a0fZ/Cwzs/WtQ==
-X-Received: by 2002:a05:6830:4cb:b0:661:98d9:e2fd with SMTP id s11-20020a05683004cb00b0066198d9e2fdmr19965470otd.314.1666718176220;
-        Tue, 25 Oct 2022 10:16:16 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z33-20020a056870462100b0012c21a64a76sm1726981oao.24.2022.10.25.10.16.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Oct 2022 10:16:15 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 25 Oct 2022 10:16:14 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Christian Bach <christian.bach@scs.ch>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: Re: AW: tcpci module in Kernel 5.15.74 with PTN5110 not working
- correctly
-Message-ID: <20221025171614.GB968059@roeck-us.net>
-References: <ZR0P278MB0773545F02B32FAF648F968AEB319@ZR0P278MB0773.CHEP278.PROD.OUTLOOK.COM>
- <ZR0P278MB0773072DD153BA902AFE635AEB319@ZR0P278MB0773.CHEP278.PROD.OUTLOOK.COM>
- <Y1fYjmtQZa53dPfR@kroah.com>
- <ZR0P278MB077321F8565A4FF929B132A1EB319@ZR0P278MB0773.CHEP278.PROD.OUTLOOK.COM>
- <5373483d-adde-2884-6017-75f3bd25d6bc@roeck-us.net>
- <ZR0P278MB0773212E08AA1007241990FCEB319@ZR0P278MB0773.CHEP278.PROD.OUTLOOK.COM>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE806FB0
+	for <regressions@lists.linux.dev>; Tue, 25 Oct 2022 18:40:59 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1onOr5-0000mZ-6x; Tue, 25 Oct 2022 20:40:51 +0200
+Message-ID: <6e7f32f2-5397-e0cf-4271-a9826d318996@leemhuis.info>
+Date: Tue, 25 Oct 2022 20:40:50 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZR0P278MB0773212E08AA1007241990FCEB319@ZR0P278MB0773.CHEP278.PROD.OUTLOOK.COM>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Content-Language: en-US, de-DE
+To: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Subject: Regression: starting powertop crashes my machine hard since
+ 838d9bb62d13 ("perf: Use sample_flags for raw_data")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1666723260;e5cb76af;
+X-HE-SMSGID: 1onOr5-0000mZ-6x
 
-On Tue, Oct 25, 2022 at 04:17:27PM +0000, Christian Bach wrote:
-> Ok
-> 
-> I now tested the whole thing also with some of the v5.4.y kernels. Just to avoid misunderstandings I listed all my tests below:
-> 
-> Kernel    | Hash                                       | Bug     | Comment
-> Version   | (date)                                     | present |
-> ----------|--------------------------------------------|---------|--------------
+Hi! Since 838d9bb62d13 ("perf: Use sample_flags for raw_data") starting
+powertop makes my machine crash hard: keyboard is dead, Sysrq does not
+work, and most of the time there is not even a error message on the
+screen; only once in maybe ~20 cases I got the line "kernel NULL pointer
+dereference, address: 0000000000000010", but nothing else.
 
-> ----------|--------------------------------------------|---------|--------------
-> v5.10-rc1 | 3650b228f83adda7e5ee532e2b90429c03f7b9ec   | Yes     | This kernel behaves exactly like 5.15.74
->           | (25. October 2020)                         |         |
-> ----------|--------------------------------------------|---------|--------------
-> v5.4.219  | 35826e154ee014b64ccfa0d1f12d36b8f8a75939   | Yes     | This kernel performs segnificantly worse in
->           | (19. October 2022)                         | worse   |  nagotiating with the USP-PD power-supply and
->           |                                            |         |  even crashes about 50% of the tries. It then
->           |                                            |         |  gets stuck in the ISR just as it does 100%
->           |                                            |         |  of the time when connecting the USB-A to USB-C
->           |                                            |         |  cable. (and even when disconnecting the cable)
+This is on a Lenovo Thinkpad T14s Gen1 (AMD Ryzen 5 PRO 4650U) running
+Fedora 37 with a vanilla kernel. Master as of a six hours ago shows the
+problem (IOW: 21da7472a040 didn't fix this). Reverting 838d9bb62d13 on
+top of master makes the problem go away. Applying
+https://lore.kernel.org/lkml/20221020070657.21571-2-atrajeev@linux.vnet.ibm.com/
+(another fix for 838d9bb62d13) didn't help. My config file is based on
+the one from Fedora's 6.0.3 kernel, but stripped down with localmodconfig.
 
-Thanks a lot for the detailed report. It would be great if you can
-send actual crash logs. Maybe that problem is fixable in v5.4.y.
+Apparently I'm not the only one hitting this problem:
+https://github.com/fenrus75/powertop/issues/109
 
-Can you also test v5.0 .. v5.3 ? Mainline would be best (not v5.0.x but v5.0) ?
+Ciao, Thorsten.
 
-> I would love to send some kernel logs but I can not see any entry in dmesg. Can you instruct me how to get the corresponding kernel logs?
-> 
+P.S.: From /proc/cpuinfo
 
-This won't be in dmesg; that would be way too noisy since it logs
-each state machine action.
+> processor       : 0
+> vendor_id       : AuthenticAMD
+> cpu family      : 23
+> model           : 96
+> model name      : AMD Ryzen 5 PRO 4650U with Radeon Graphics
+> stepping        : 1
+> microcode       : 0x8600106
+> cpu MHz         : 1397.267
+> cache size      : 512 KB
+> physical id     : 0
+> siblings        : 12
+> core id         : 0
+> cpu cores       : 6
+> apicid          : 0
+> initial apicid  : 0
+> fpu             : yes
+> fpu_exception   : yes
+> cpuid level     : 16
+> wp              : yes
+> flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
+> mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext
+> fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid
+> extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1
+> sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm
+> extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit
+> wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb
+> cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1
+> avx2 smep bmi2 cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt
+> xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local
+> clzero irperf xsaveerptr rdpru wbnoinvd cppc arat npt lbrv svm_lock
+> nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter
+> pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip rdpid
+> overflow_recov succor smca
+>
+> bugs            : sysret_ss_attrs spectre_v1 spectre_v2 spec_store_bypass retbleed
+> bogomips        : 4191.92
+> TLB size        : 3072 4K pages
+> clflush size    : 64
+> cache_alignment : 64
+> address sizes   : 48 bits physical, 48 bits virtual
+> power management: ts ttp tm hwpstate cpb eff_freq_ro [13] [14]
 
-You should find the logs in /sys/debug/kernel/usb/tcpm-<index>.
-In older kernels it is just a file, in more recent kernels it is a
-directory with files in it. In really old kernels it is
-/sys/debug/kernel/tcpm/tcpm-<index>. If you don't immediately find
-the file(s), just search for files with "tcpm" in the name in
-/sys/kernel/debug.
+Bisect log:
 
-Hope this helps,
+> git bisect start
+> # status: waiting for both good and bad commits
+> # bad: [1a2dcbdde82e3a5f1db9b2f4c48aa1aeba534fb2] scsi: mpt3sas: re-do lost mpt3sas DMA mask fix
+> git bisect bad 1a2dcbdde82e3a5f1db9b2f4c48aa1aeba534fb2
+> # status: waiting for good commit(s), bad commit known
+> # good: [4fe89d07dcc2804c8b562f6c7896a45643d34b2f] Linux 6.0
+> git bisect good 4fe89d07dcc2804c8b562f6c7896a45643d34b2f
+> # good: [76e45035348c247a70ed50eb29a9906657e4444f] Merge tag 'for-6.1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
+> git bisect good 76e45035348c247a70ed50eb29a9906657e4444f
+> # bad: [52abb27abfff8c5ddf44eef4d759f3d1e9f166c5] Merge tag 'slab-for-6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab
+> git bisect bad 52abb27abfff8c5ddf44eef4d759f3d1e9f166c5
+> # good: [e8bc52cb8df80c31c73c726ab58ea9746e9ff734] Merge tag 'driver-core-6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
+> git bisect good e8bc52cb8df80c31c73c726ab58ea9746e9ff734
+> # good: [f01603979a4afaad7504a728918b678d572cda9e] Merge tag 'gpio-updates-for-v6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
+> git bisect good f01603979a4afaad7504a728918b678d572cda9e
+> # good: [2e64066dab157ffcd0e9ec2ff631862e6e222876] Merge tag 'riscv-for-linus-6.1-mw1' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux
+> git bisect good 2e64066dab157ffcd0e9ec2ff631862e6e222876
+> # good: [376b3275c19f83d373e841e9af2d7658693190b9] KVM: PPC: Book3S HV: Fix stack frame regs marker
+> git bisect good 376b3275c19f83d373e841e9af2d7658693190b9
+> # bad: [3871d93b82a4a6c1f4308064f046a544f16ada21] Merge tag 'perf-core-2022-10-07' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+> git bisect bad 3871d93b82a4a6c1f4308064f046a544f16ada21
+> # bad: [7be51cc1c68dfa180ef84e71bcb4204237bb5620] perf: Fix pmu_filter_match()
+> git bisect bad 7be51cc1c68dfa180ef84e71bcb4204237bb5620
+> # good: [ee9db0e14b0575aa827579dc2471a29ec5fc6877] perf: Use sample_flags for txn
+> git bisect good ee9db0e14b0575aa827579dc2471a29ec5fc6877
+> # good: [7b084630153152239d84990ac4540c2dd360186f] perf: Use sample_flags for addr
+> git bisect good 7b084630153152239d84990ac4540c2dd360186f
+> # bad: [ee3e88dfec23153d0675b5d00522297b9adf657c] perf/mem: Introduce PERF_MEM_LVLNUM_{EXTN_MEM|IO}
+> git bisect bad ee3e88dfec23153d0675b5d00522297b9adf657c
+> # bad: [a1ebcd59430236b336428bbf8e1da16fb87d56e4] Merge branch 'v6.0-rc7'
+> git bisect bad a1ebcd59430236b336428bbf8e1da16fb87d56e4
+> # bad: [4674ffe2fcad45a9b164401cc0794115702326cf] perf, hw_breakpoint: Fix use-after-free if perf_event_open() fails
+> git bisect bad 4674ffe2fcad45a9b164401cc0794115702326cf
+> # bad: [838d9bb62d132ec3baf1b5aba2e95ef9a7a9a3cd] perf: Use sample_flags for raw_data
+> git bisect bad 838d9bb62d132ec3baf1b5aba2e95ef9a7a9a3cd
+> # first bad commit: [838d9bb62d132ec3baf1b5aba2e95ef9a7a9a3cd] perf: Use sample_flags for raw_data
 
-Thanks,
-Guenter
+For regzbot:
+
+#regzbot introduced 838d9bb62d13
+#regzbot title perf: starting powertop crashes machines
+#regzbot link: https://github.com/fenrus75/powertop/issues/109
