@@ -1,54 +1,28 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292A0EDA
-	for <regressions@lists.linux.dev>; Tue, 25 Oct 2022 12:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666701348; x=1698237348;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NWtuBKIvAI5JY/GHIG0db5ifhbCnkmUNenneTorvLZY=;
-  b=WfjAmIYTEmd9zXxBccHr4i31TkAlyPsE4do/qzfniVpm2ChZ85+cA5lx
-   tGdgjGgN9aoemnoMF4STY40WQYYpni7CvbfiPibepYTeJGLCbllcyT9iD
-   mZp9AEKdmkQFW9dD28T0q3RhHeKj9318Uqc/adaXHt08gXr4XoJVCGS3/
-   2mYL5+IHaRC53evctbBTjbfeOqXoa40mVYMoUGAdsif/jRfpnJBeo/vBb
-   4IxgoUhCXkc41hom/fkED1JChlFqTQxx0Bbm0H49tYrXhZZU9X5D2FzjD
-   b3u6ekVrdqGAq+mq48n61oikLIkHbesJ1U0RaNy6RyJoeH5qPjdoRrnHg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="306390693"
-X-IronPort-AV: E=Sophos;i="5.95,212,1661842800"; 
-   d="scan'208";a="306390693"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Oct 2022 05:35:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10510"; a="631614369"
-X-IronPort-AV: E=Sophos;i="5.95,212,1661842800"; 
-   d="scan'208";a="631614369"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 25 Oct 2022 05:35:44 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id D7909291; Tue, 25 Oct 2022 15:36:06 +0300 (EEST)
-Date: Tue, 25 Oct 2022 15:36:06 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Chris Chiu <chris.chiu@canonical.com>, linux-pci@vger.kernel.org,
-	regressions@lists.linux.dev, linux-cxl@vger.kernel.org,
-	linuxarm@huawei.com
-Subject: Re: Regression: Re: [PATCH v2 4/6] PCI: Distribute available
- resources for root buses too
-Message-ID: <Y1fYNsjmUFZsvteT@black.fi.intel.com>
-References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
- <20220905080232.36087-5-mika.westerberg@linux.intel.com>
- <20221014124553.0000696f@huawei.com>
- <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
- <20221014154858.000079f2@huawei.com>
- <Y1ZzRmi9fL9yHf7I@black.fi.intel.com>
- <Y1Z2GGgfZyzC2d1N@black.fi.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BE6EDA
+	for <regressions@lists.linux.dev>; Tue, 25 Oct 2022 12:37:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BBC0C433D6;
+	Tue, 25 Oct 2022 12:37:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1666701457;
+	bh=5PsLnS67Su3bPOrJCspzFfoWK4Xe2eqkMNclBtSM6uY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=2ZApffJHQde9YV7oOTNdNRuRM2gpK4rZu8bYJslyB2IUfE4+zSMw9G7Fh2xgZr6PO
+	 jTPI2iCN+0hIGAqx9G95Syga9e9Lp7wr5SorrjSbgFDVOqU7xBwVGVAhg5HaExNBhU
+	 X7hU0XA/e5WTYOuioWihxo/VB8zxQc0m9Q3fbm5s=
+Date: Tue, 25 Oct 2022 14:37:34 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Christian Bach <christian.bach@scs.ch>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"linux@roeck-us.net" <linux@roeck-us.net>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: Re: tcpci module in Kernel 5.15.74 with PTN5110 not working correctly
+Message-ID: <Y1fYjmtQZa53dPfR@kroah.com>
+References: <ZR0P278MB0773545F02B32FAF648F968AEB319@ZR0P278MB0773.CHEP278.PROD.OUTLOOK.COM>
+ <ZR0P278MB0773072DD153BA902AFE635AEB319@ZR0P278MB0773.CHEP278.PROD.OUTLOOK.COM>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -57,136 +31,18 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y1Z2GGgfZyzC2d1N@black.fi.intel.com>
+In-Reply-To: <ZR0P278MB0773072DD153BA902AFE635AEB319@ZR0P278MB0773.CHEP278.PROD.OUTLOOK.COM>
 
-Hi,
-
-On Mon, Oct 24, 2022 at 02:25:12PM +0300, Mika Westerberg wrote:
-> On Mon, Oct 24, 2022 at 02:13:10PM +0300, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > On Fri, Oct 14, 2022 at 03:48:58PM +0100, Jonathan Cameron wrote:
-> > > > Thanks for the detailed report! I wonder if you could try the below
-> > > > patch and see if it changes anything?
-> > > Thanks for the quick response.
-> > > 
-> > > Doesn't fix it unfortunately.
-> > 
-> > I'm back now.
-> > 
-> > Trying to reproduce this with mainline kernel (arm64 defconfig) and the
-> > following command line:
-> > 
-> > qemu-system-aarch64 \
-> >         -M virt,nvdimm=on,gic-version=3 -m 4g,maxmem=8G,slots=8 -cpu max -smp 4 \
-> >         -bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd \
-> >         -nographic -no-reboot  \
-> >         -kernel Image \
-> >         -initrd rootfs.cpio.bz2 \
-> >         -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2 \
-> >         -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on \
-> >         -device e1000,bus=root_port13,addr=0.1 \
-> >         -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3 \
-> >         -device e1000,bus=fun1
-> > 
-> > But the resulting PCIe topology is pretty flat:
-> > 
-> > # lspci
-> > 00:00.0 Host bridge: Red Hat, Inc. QEMU PCIe Host bridge
-> > 00:01.0 Ethernet controller: Red Hat, Inc. Virtio network device
-> > 
-> > I wonder what I'm missing here? Do I need to enable additional drivers
-> > to get the topology to resemble yours?
+On Tue, Oct 25, 2022 at 12:19:39PM +0000, Christian Bach wrote:
+> Hello
 > 
-> Nevermind, I was missing one \ in the command line ;-) Now I can see the
-> topology similar to yours.
+> For a few weeks now I am trying to make the PTN5110 chip work with the new Kernel 5.15.74. The same hardware setup was working with the 4.19.72 Kernel. The steps I took so far are as follows:
 
-I think I know what the problem is now - there is a multifunction device
-with the switch upstream port and the resource distribution code is not
-prepared to handle such (not sure how common this is in real hardware
-but allowed by the PCIe spec).
+That is a huge jump.  Why not use 'git bisect'?
 
-Simple fix would be just ignore all resource distribution if we
-encounter such topologies but I think can still allow it, just by
-accounting the resources reserved for the multifunction device(s).
+Or start with a smaller jump.  Why not go to 5.4.y first, that's only a
+year's worth of changes, instead of 4 years of changes.
 
-Can you try on your side so that you revert this revert:
+thanks,
 
-  5632e2beaf9d ("Revert "PCI: Distribute available resources for root buses, too"")
-
-and then apply the below patch and see if the problem goes away? Thanks!
-
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index dc6a30ee6edf..a7ca3fecf259 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -1833,10 +1833,65 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
- 	 * bridges below.
- 	 */
- 	if (hotplug_bridges + normal_bridges == 1) {
--		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
--		if (dev->subordinate)
--			pci_bus_distribute_available_resources(dev->subordinate,
--				add_list, io, mmio, mmio_pref);
-+		/* Upstream port must be the first */
-+		bridge = list_first_entry(&bus->devices, struct pci_dev, bus_list);
-+		if (!bridge->subordinate)
-+			return;
-+
-+		/*
-+		 * It is possible to have switch upstream port as a part
-+		 * of multifunction device, although not too common. For
-+		 * this reason reduce the resources occupied by the
-+		 * other functions before distributing the rest.
-+		 */
-+		list_for_each_entry(dev, &bus->devices, bus_list) {
-+			int i;
-+
-+			if (dev == bridge)
-+				continue;
-+
-+			/*
-+			 * It should be multifunction but if not stop
-+			 * the distribution and bail out.
-+			 */
-+			if (!dev->multifunction)
-+				return;
-+
-+			for (i = 0; i < PCI_ROM_RESOURCE; i++) {
-+				const struct resource *dev_res = &dev->resource[i];
-+				resource_size_t dev_sz;
-+				struct resource *b_res;
-+
-+				if (dev_res->flags & IORESOURCE_IO) {
-+					b_res = &io;
-+				} else if (dev_res->flags & IORESOURCE_MEM) {
-+					if (dev_res->flags & IORESOURCE_PREFETCH)
-+						b_res = &mmio_pref;
-+					else
-+						b_res = &mmio;
-+				} else {
-+					continue;
-+				}
-+
-+				/* Size aligned to bridge window */
-+				align = pci_resource_alignment(bridge, b_res);
-+				dev_sz = ALIGN(resource_size(dev_res), align);
-+
-+				pci_dbg(dev, "%pR aligned to %llx\n", dev_res,
-+					dev_sz);
-+
-+				if (dev_sz >= resource_size(b_res))
-+					memset(b_res, 0, sizeof(*b_res));
-+				else
-+					b_res->end -= dev_sz;
-+
-+				pci_dbg(bridge, "updated available to %pR\n", b_res);
-+			}
-+		}
-+
-+		pci_bus_distribute_available_resources(bridge->subordinate,
-+						       add_list, io, mmio,
-+						       mmio_pref);
- 		return;
- 	}
- 
+greg k-h
