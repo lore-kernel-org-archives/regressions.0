@@ -1,190 +1,127 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2052.outbound.protection.outlook.com [40.107.92.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F714440E
-	for <regressions@lists.linux.dev>; Mon, 24 Oct 2022 18:56:48 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id 09A4B604EC;
-	Mon, 24 Oct 2022 20:56:46 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1666637806; bh=AcIPielNLpKnVsat7zTkYDaUsFursqeUBqR3yoMf+yY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SvcBgndn8By+L8BsTjBXX7m489jLfQvIRcHzu3poikSXMNzikPgyN9+T7fxlL6jIM
-	 abzbhIdeEeHM02fh3lvL/PSMB04G2WQ99WkHbok+xwHDkqDtbLafWgmoKFw13unLW8
-	 TATzi13Kw2QhHZvqokU/Z6PNd1gIsyLD4aGfTMVjnt9Msw3XYpyxkgP1Xv+GSPF9Yg
-	 WPnIP9HIz0XmN3rHYIhL721b0Zlo/zgm9u9Bxqe8La1jkdI7v+r9G8htDk392aOCKa
-	 6s+wJlQmWFGuGYT+hLWHjdmHib5I624TVidcUXBCRO9uZ9KYC1QIq5vxrWXMjisp9I
-	 OMKLRU3tgEemg==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id YXZMkYR2gjQc; Mon, 24 Oct 2022 20:56:43 +0200 (CEST)
-Received: from [192.168.0.12] (unknown [188.252.198.219])
-	by domac.alu.hr (Postfix) with ESMTPSA id ECDB2604E7;
-	Mon, 24 Oct 2022 20:56:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1666637803; bh=AcIPielNLpKnVsat7zTkYDaUsFursqeUBqR3yoMf+yY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XooIBdtTnlx9z9vJ8CT1afYzEDuRfLThvIt/k+FiqYM7WOz4Vj8cmySI8hPH2I3vw
-	 JB9i1Wigpx56jz8yVfG150mnjt16O/JCRJhH1X27ch+Qaifg4SA3Ad84cJWAG/lp5E
-	 6RvLXFiX2utVSvV9k2lOi1Ioek5DJTcOcw017SrE/7Ly39oBz4gz/kjtv331R4yrwp
-	 t+09kabuQl336fLx/KQRC4Q4P+4ugR2UC7Vffu9d710cM/EPsFAWZ8MIipQ3mqRksG
-	 I5Iw47OMqIT7IOJdCJ780JVBmzrkGrbHX52CGEPU1cw8WDI/0TJzYkVQ/w7Jl/oy/A
-	 veL6Ly+DUP7IA==
-Message-ID: <d034dbbc-613c-1a5e-df64-d0251453c8eb@alu.unizg.hr>
-Date: Mon, 24 Oct 2022 20:56:42 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7C9D800
+	for <regressions@lists.linux.dev>; Tue, 25 Oct 2022 04:29:40 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E13TWYPMnZTR+sJLx0Z6Wozn8XxEM9q624wG6tb1v9tYV0YlraaP8tfM/tlWM6mxXYd/IJ3Sv08AWVAu81GvBMvNkUXbHbKcDAE8selzF5e/JkJ1UpT4pZQrCgKYojFsePzi8zlV51+A0BVp10ytCxIhq9nHPPaZhFIxqUs3xtIlKdGWyKCCmFt0zpcTjIwLpkzT7Y03MZB4wfoIk5H9ibG3U3yHwPgLcCmBpkE6S5w55d1UTUvFzGF66EIbIKOWOJOaOu6wFaYzwMznMhmn2TJB6uVdHQ0KzH607SjdnIzAlmRyunvBaxnnBhlLis6j9G7HCukiX4nHTkhLA+EAVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=D42U1U9GbUqJSYfiIjzJvQ/kYwBr5r+v0RcJLQLmlLk=;
+ b=G7tsnvGjsaLaqICeb3CZR3tTMr5Vl+/p7Om+q2FH68AEstKafdJx2wiPI0DsPdNFtd0VbBaLuBsmgQcn69p8F3CRbUo5hqg++tunx+GTSP63ksVYOOndxpWMS4K/+yGhwUXwocRHDugLI5pdJDjt5OUl++XrWdVsN2OdRT/MifX+CFJoiIoZ21gT3llVBNjGmG8I/1XCaLNQd2ieicQeLmPPZ50cKVAAeBT8R34YMCyuGr8VTokAB/PjifxFEPBNjiLNBzefQf7rG/1oHCaLURw6QaSGZ2WFw5wWeZmPrP+ZMwCG2AilNx6nWK4Z1fju8w4k43ftQskokm4p/fNnzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D42U1U9GbUqJSYfiIjzJvQ/kYwBr5r+v0RcJLQLmlLk=;
+ b=VwWWtcLUEUH4oP5alZwABbyPAzZG3pOd0E4UNhNroZngvWu0jxs5lr7jiRExgTwiSh2I1LYvvIyUOAi2C/WHPvnpW5XsC+nZsmxqEvE+0jTJ1mDhSmY09HMPTZV9BtTSkgBdR9l/p8UuQabSdK8rDkDAbousvJII0oideK/3iqs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by PH7PR12MB5807.namprd12.prod.outlook.com (2603:10b6:510:1d3::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.30; Tue, 25 Oct
+ 2022 04:29:37 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::fa1e:a29e:2f2c:43d1]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::fa1e:a29e:2f2c:43d1%9]) with mapi id 15.20.5723.034; Tue, 25 Oct 2022
+ 04:29:37 +0000
+Message-ID: <4429582f-155a-04d2-d139-a834bb325612@amd.com>
+Date: Tue, 25 Oct 2022 09:59:26 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: Perf: BUG: kernel NULL pointer dereference, address:
+ 0000000000000198
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Borislav Petkov
+ <bp@alien8.de>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, linux-perf-users@vger.kernel.org,
+ open list <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
+ lkft-triage@lists.linaro.org, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <CA+G9fYtOP-spGS7gYyBB-8wpUDiKxd5e_Nk05J9gzWR_DLBeFA@mail.gmail.com>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <CA+G9fYtOP-spGS7gYyBB-8wpUDiKxd5e_Nk05J9gzWR_DLBeFA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0228.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:eb::16) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: BUG: bisected: thermald regression (MEMLEAK) in commit
- c7ff29763989bd09c433f73fae3c1e1c15d9cda4
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
- LKML <linux-kernel@vger.kernel.org>, rjw@rjwysocki.net
-Cc: regressions@lists.linux.dev, regressions@leemhuis.info,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- Robert Moore <robert.moore@intel.com>, devel@acpica.org
-References: <e0f06714-5a49-a4e6-24e6-c4103c820819@alu.unizg.hr>
- <9ef3674afd370050b86a68e44c97e4f0257f1adf.camel@linux.intel.com>
- <bd1f0d2a-d456-92cc-ecca-23e480aea4b1@alu.unizg.hr>
- <e5d3d561bb3a9c68bc903cfc35c27629a4a9225c.camel@linux.intel.com>
-Content-Language: en-US
-From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <e5d3d561bb3a9c68bc903cfc35c27629a4a9225c.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|PH7PR12MB5807:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1c7fae41-14e5-4fa0-1777-08dab641866c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	gT61uJusNGZSPwx5vTB6oZGnyfLRO+9XeqTcIZ8iX+68P+SKakPT0bX8iUS4gcRW4jyQi+J6i7lwhAyndbOz15LtbJn3r8iNbejN+7IY9Y82o80KiI3J4GLsumsadsWeN11ofVFvJ+EjqIVrM37r9jXJBBUMKo5+K+SS8zfj8AzCMW606dZ+7ZXJOigY6pD2AMiR5btKLvIx8QVL5CMp9aMj6qomiHqThDOtpgMRvSApstwI/yfO5f16HYdmvWpJ7m0RbvJD/f4i6nVmlbbQQ+e3N1ghYPE4IVhiR0BDcZepArOIJ13AE9xHlrxZH02AV+EJSLzRGGnM6Sm4mY3UnqbMzJWdKfj0bLTSOLJzua/XouhZalTQHw9TLfvEammT1Qr8aCUS5a6PYxudD+21NkSvS1YePf+XSRyxLseZebmhi8dK/nuoxmKPJozEH/+lY2/UmjBdQCzozGGBtP4F3SlFXRFO9vUFMWa5fdYT1FU7d0Yp39dN6/8V2b5EXB1ZTT9u5ChMICGnjhizUWNFMKgj9of6W7NFDYuD6h4JXtlilSkRKECkcUGn3EhqlPICeYZzGpVbUT0oYwMpfc7f94IV3MnpNxlIOIyiwPcSJUad/PpYjRuraBzNwEVPcTkp4gMR6zLMEsrPW0YRPCVWBeNnpTMBuOn7+N5ibaFRAyFpxPVE+FoBJzd7oU/ea+aTFaQom2PENerYYGcYHwuGQudprmCCeJGLHncyWxMVX7kuesWsvyC6ng+f56wbvwOZJOjTmBSvIa+TWYjpPF38fUE9DC70Yx/CJIX2/lnnSg6CwuouxL4PKnG4uZlNQ2Qn
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(376002)(39860400002)(366004)(136003)(396003)(451199015)(66476007)(36756003)(66556008)(966005)(6486002)(54906003)(6666004)(41300700001)(478600001)(4326008)(53546011)(66946007)(6506007)(44832011)(8676002)(2616005)(186003)(31696002)(38100700002)(6512007)(86362001)(316002)(83380400001)(8936002)(4744005)(6916009)(2906002)(31686004)(5660300002)(26005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eFladjNrVjVSRHBkUGluZHUzeW5uOGt6MjlFalNIUGpDOEFxaHNRMklhRjlp?=
+ =?utf-8?B?SVlWN3FsanFMRlVIVE53dUtKSXFqeWhyUnNrZHVuZFFzQ2JWRkxWNi9oRURs?=
+ =?utf-8?B?eDArcXJxRUthdGZVY3BwOThIRDNkUDdKS0RJNmRudExlSEU4WE9ycEtLVFNi?=
+ =?utf-8?B?TUFTRkNOVGJDZktJaWJ6Qkw4Zkwvd2wyWVg1MStmTHVDcFYyNTZNWmZraHZV?=
+ =?utf-8?B?VW9yRlUrRXZKU0U0Ky90WlpKOERKVmhneXBhb2dzQWNFZzhqd0ZIT2J4Tm82?=
+ =?utf-8?B?Uk8xWTBoZExFL3ArdmJBdHZtWjZmVXovY1RFTWhHSGx4ZHlJaUZobFQ3cGZU?=
+ =?utf-8?B?VUJzeE0zMlpsNk40OU5sZk9WNEpGL1M4T3pMQVU4L2E5ZkpKRnJoR2Q2L29Q?=
+ =?utf-8?B?YWdXQTkwMkFnUVo2NzdvTHltNkQ2T1FrNjR6V1VSZitxbnl6UkpyeXRrVUI3?=
+ =?utf-8?B?Y1AvL0VrYkUzVDd0TVpTU3pKZU1tSGRHaVk2OTNlRnA0SnpBV1ZsRkM3R3Ba?=
+ =?utf-8?B?MmxFM3lMR1NQU0RwRE5UYkxDNjloNGdKZnNNRHJwYlFkaEpXZG1ST2VOekNh?=
+ =?utf-8?B?bTRwOTNsajl2TFJFVlc0SDlEMzM2WGlEWTk0MHRMK2syNHZQZW5YUnZqaisz?=
+ =?utf-8?B?YUhHYjA2Y01VejhIcVVHSjFOSXRDb3dhcGIweXE4VythSmdibk1LT0hHaUJO?=
+ =?utf-8?B?eXRZYnFxSnQrR1ovdk56TjBOL0cxaXlGc21TMTBMTzVwbGlVTk80a3lsWXhu?=
+ =?utf-8?B?Y3JPYkZoSkI0RkR3VDNZQ3NLOFlhelhmSEFZVnN4WmVBVUdHQjB6bW0wcERU?=
+ =?utf-8?B?VVQ5d3JqUkpnbjJJNEtoM2ZXdjBaRGl5Mk94TEdHSGcvNzR0NWRhN1piQ3dr?=
+ =?utf-8?B?T0dNQUQ4ZXQrWElzMnRwQU1zdTBabk5URHJzUzg2L1ZBcWd3Z1UvL1AzNVBw?=
+ =?utf-8?B?UUswRDNEVVlRTWVTQUxsbGZheGZLRkxCeityNHdYU0U0bDJpRnMxZ2sxZ1ZF?=
+ =?utf-8?B?R1F1ak5VdXFNd3JKOTkzQ1l4YzNPQ2NDdFViNzZrTE9FSlBYSU5tM0VtalVE?=
+ =?utf-8?B?elRuU3h3dFpSRUZJLy9NT2k1Vlh1dUM3SHdVYXJ5MllMa3ZMR3pwUDdidXM0?=
+ =?utf-8?B?d08yL0IvcmZkbVN4VXRMaXNUbjU0TEErNGhpSDhGS0xtaGtXQ0ptSmlzY2R2?=
+ =?utf-8?B?Y2VpWVVLUzBSdVBZMmpvSmhQaUF3TiszQzNnLzUzQlNPbkYvYjhkU2JHV21n?=
+ =?utf-8?B?R0VENXl4SFY3aTdnbWRaV1dvdTFPanArNUZVbS9oeEgra2dhQ0VFMEdYUzNN?=
+ =?utf-8?B?UlVva0ZlT05OaHAzVzdSVldMYjU3KzAydkZTamF1bDJLMG16S1R0OVVRRlls?=
+ =?utf-8?B?TWl1NDdhenJUR1lVd09KY0JyMnRvYnJJVEwxTXBCaURXR2JnZ0wwelRER2pV?=
+ =?utf-8?B?TGVEWURPWktwcHk1d05LY1h4SVV6bllpWml0VGtRZ0ZnOGc0d3VPVFpienFa?=
+ =?utf-8?B?VnJOd2pEZjFwY1lmRW1pTWZvNjVDcUIxNXZBNnBWOHV4M0xveU5NTDBrK3FV?=
+ =?utf-8?B?WXVkdFZrdDkyQUpoMUJobXowbW8zNnhqWUhFVnhjbmUzK0lDL3RQTXg3OEt5?=
+ =?utf-8?B?N2lmdmxVRkxwVEowVUNUenU0b2l3QW5KS1JlemdpVU5iRUtsTWVQc2JYN1dR?=
+ =?utf-8?B?dnJuc25aM1ZZOHgvaUkxckIwZWNQLytYSm05eWhnUUFhZEhpQnpLMjY3US84?=
+ =?utf-8?B?bkZGS2pMM3BudnozZ1NvRVFoTDlGQ1JTMDhrTGQ5MU5pR1Q0QUxTNGY4aTFw?=
+ =?utf-8?B?cGVoZDZSQzFSMUVQQXZSRGk4MnQwWmVkL2VJMzJodDJtNlZiVDRBZzVITGsx?=
+ =?utf-8?B?Ty9UdVc5U3p5amtXN01PTjhyMC9oc2xsM2R3S3I5MFZSNGVPMGF3UVpueVRP?=
+ =?utf-8?B?R3RHcDJBcWxHMnFCUk5Ka0V2Mk1Wc2dzUlZFeE5zMjRHWWNaNVpPVGxWcnZC?=
+ =?utf-8?B?bFlWUks2YXc1VzRuNWdodHZmSlo1MkpLMnJrdzI2U0N5amROQ3ZrYlRJcjdG?=
+ =?utf-8?B?VHZ3dk5qclZBTVJPS21CYzZOMnJzeEFLOEgxU1NRNWZzMHZUSk94M3FZZ0FP?=
+ =?utf-8?Q?uiJeRbiftAAa7g7/26ZmQndPV?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c7fae41-14e5-4fa0-1777-08dab641866c
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Oct 2022 04:29:37.4924
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: X6i3mVrbKOXwuiroSIemzSYktf046YNB2ioHdCQ+Ma9QsC9GkKunAZ7prmmvu0i9ud0GFqtCCAEkpxu1pUFoUw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5807
 
-On 24. 10. 2022. 20:39, srinivas pandruvada wrote:
+On 20-Oct-22 12:24 PM, Naresh Kamboju wrote:
+> Following kernel BUG noticed while running perf testing on qemu-x86-64.
 
->> Thank you for the patch. Unfortunately, when applied to v6.0.3 it
->> didn't
->> fix the issue.
-> Thanks for the test. I copied to acpi and acpica mailing list. Someone
-> can tell us what is this call doing wrong here.
-Seems like a prudent thing to do. It must be heavy to provide support 
-for all of the
-hardware on the market ...
+Thanks Naresh. I'm aware of the crash[1] but haven't got a chance to
+root cause it. Let me try to spend some time on it.
 
-Maybe this will help (however, this dmesg -l err was the same in "git 
-bisect good" and "git bisect bad" kernels!):
+[1]: https://lore.kernel.org/lkml/5e69c472-b9d4-3813-70a4-f0d8bbaa14d3@amd.com
 
-root@marvin-IdeaPad-3-15ITL6:~# dmesg -l err
-[    0.121673] ACPI BIOS Error (bug): Could not resolve symbol 
-[\_SB.PCI0], AE_NOT_FOUND (20220331/dswload2-163)
-[    0.121688] ACPI Error: AE_NOT_FOUND, During name lookup/catalog 
-(20220331/psobject-221)
-[    0.142742] ACPI BIOS Error (bug): Could not resolve symbol 
-[\_SB.PC00.DGPV], AE_NOT_FOUND (20220331/psargs-330)
-[    0.142751] ACPI Error: Aborting method \_SB.PC00.PEG0.PCRP._ON due 
-to previous error (AE_NOT_FOUND) (20220331/psparse-531)
-[    0.308625] integrity: Problem loading X.509 certificate -65
-[    2.731846] mtd device must be supplied (device name is empty)
-[    3.226997] i801_smbus 0000:00:1f.4: Transaction timeout
-[    3.229085] i801_smbus 0000:00:1f.4: Failed terminating the transaction
-[    3.229194] i801_smbus 0000:00:1f.4: SMBus is busy, can't use it!
-[    3.515909] mtd device must be supplied (device name is empty)
-[    4.600624] ACPI BIOS Error (bug): Could not resolve symbol 
-[\_TZ.ETMD], AE_NOT_FOUND (20220331/psargs-330)
-[    4.600741] ACPI Error: Aborting method \_SB.IETM._OSC due to 
-previous error (AE_NOT_FOUND) (20220331/psparse-531)
-[    5.110999] Bluetooth: hci0: Malformed MSFT vendor event: 0x02
-[    5.173006] Bluetooth: hci0: HCI_REQ-0xfc1e
-root@marvin-IdeaPad-3-15ITL6:~# dmesg | grep _OSC
-[    0.131652] ACPI: \_SB_.PR00: _OSC native thermal LVT Acked
-[    0.167416] acpi PNP0A08:00: _OSC: OS supports [ExtendedConfig ASPM 
-ClockPM Segments MSI EDR HPX-Type3]
-[    0.169119] acpi PNP0A08:00: _OSC: platform does not support [AER]
-[    0.172500] acpi PNP0A08:00: _OSC: OS now controls [PCIeHotplug 
-SHPCHotplug PME PCIeCapability LTR DPC]
-[    4.600655] No Local Variables are initialized for Method [_OSC]
-[    4.600660] Initialized Arguments for Method [_OSC]:  (4 arguments 
-defined for method invocation)
-[    4.600741] ACPI Error: Aborting method \_SB.IETM._OSC due to 
-previous error (AE_NOT_FOUND) (20220331/psparse-531)
-root@marvin-IdeaPad-3-15ITL6:~#
-
->> marvin@marvin-IdeaPad-3-15ITL6:~$ uname -rms
->> Linux 6.0.3-18-fix01-mlk+ x86_64
->> marvin@marvin-IdeaPad-3-15ITL6:~$ sudo bash
->> [sudo] password for marvin:
->> root@marvin-IdeaPad-3-15ITL6:/home/marvin# cat
->> /sys/kernel/debug/kmemleak
->> root@marvin-IdeaPad-3-15ITL6:/home/marvin# echo scan >
->> /sys/kernel/debug/kmemleak
->> root@marvin-IdeaPad-3-15ITL6:/home/marvin# cat
->> /sys/kernel/debug/kmemleak
->> unreferenced object 0xffff998b030c3370 (size 80):
->>     comm "thermald", pid 824, jiffies 4294893654 (age 67.080s)
->>     hex dump (first 32 bytes):
->>       00 00 00 00 00 00 00 00 0d 01 2d 00 00 00 00 00 ..........-.....
->>       af 07 01 c0 6f bc ff ff 00 00 00 00 00 00 00 00 ....o...........
->>     backtrace:
->>       [<00000000490225c2>] slab_post_alloc_hook+0x80/0x2e0
->>       [<00000000dc142b33>] kmem_cache_alloc+0x166/0x2e0
->>       [<00000000168f1071>] acpi_os_acquire_object+0x2c/0x32
->>       [<00000000fcc615e1>] acpi_ps_alloc_op+0x4a/0x99
->>       [<00000000fb475bb4>] acpi_ps_get_next_arg+0x611/0x761
->>       [<000000009048d529>] acpi_ps_parse_loop+0x494/0x8d7
->>       [<000000005b0bf086>] acpi_ps_parse_aml+0x1bb/0x561
->>       [<000000007ab7e288>] acpi_ps_execute_method+0x20f/0x2d5
->>       [<00000000c12fa6b7>] acpi_ns_evaluate+0x34d/0x4f3
->>       [<000000001be94719>] acpi_evaluate_object+0x180/0x3ae
->>       [<00000000423a7ad5>] acpi_run_osc+0x128/0x250
->>       [<0000000040a72af8>] int3400_thermal_run_osc+0x6f/0xc0
->> [int3400_thermal]
->>       [<00000000f8d59987>] current_uuid_store+0xe3/0x120
->> [int3400_thermal]
->>       [<000000007e2e2d17>] dev_attr_store+0x14/0x30
->>       [<00000000b824b589>] sysfs_kf_write+0x38/0x50
->>       [<00000000beae69c1>] kernfs_fop_write_iter+0x146/0x1d0
->> root@marvin-IdeaPad-3-15ITL6:/home/marvin#
->>
->> The build process was as follows:
->>
->>    1573  10/24/2022 06:41:53 PM  cd linux_stable
->>    1574  10/24/2022 06:42:03 PM  git checkout v6.0.3
->>    1575  10/24/2022 06:42:44 PM  cd ..
->>    1576  10/24/2022 06:42:50 PM  time rm -rf linux_stable_build; time
->> cp
->> -rp linux_stable linux_stable_build; \
->>                       time diff -ur linux_stable linux_stable_build;
->> cd
->> linux_stable_build
->>    1577  10/24/2022 06:46:19 PM  git apply ../thermald-20221024-
->> 01.diff
->>    1578  10/24/2022 06:46:28 PM  vi ../config-5.15.0-50-memleak
->>    1579  10/24/2022 06:47:08 PM  cp ../config-5.15.0-50-memleak
->> .config
->>    1580  10/24/2022 06:47:16 PM  make olddefconfig
->>    1581  10/24/2022 06:48:42 PM  time nice make CC="ccache gcc"
->> KBUILD_BUILD_TIMESTAMP="" -j10 deb-pkg; date
->>
->> I think your patch definitively makes sense, but there's more to this
->> than meets the eye :-/
->>
->> Hope this helps.
->>
->> Thanks
->> Mirsad
->>
->> --
->> Mirsad Goran Todorovac
->> Sistem inženjer
->> Grafički fakultet | Akademija likovnih umjetnosti
->> Sveučilište u Zagrebu
-
---
-Mirsad Goran Todorovac
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
--- 
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb, Republic of Croatia
-The European Union
-
+Thanks,
+Ravi
