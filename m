@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221E029A8
-	for <regressions@lists.linux.dev>; Tue, 25 Oct 2022 18:57:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F837B
+	for <regressions@lists.linux.dev>; Wed, 26 Oct 2022 08:09:02 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1onP7S-0005EO-1n; Tue, 25 Oct 2022 20:57:46 +0200
-Message-ID: <b2b109f6-48a1-031d-2f4b-d618e678f2da@leemhuis.info>
-Date: Tue, 25 Oct 2022 20:57:45 +0200
+	id 1onbTA-00046G-8P; Wed, 26 Oct 2022 10:09:00 +0200
+Message-ID: <e75adcf8-68ce-e521-301c-177928d8aae9@leemhuis.info>
+Date: Wed, 26 Oct 2022 10:08:58 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,139 +16,150 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
-From: Thorsten Leemhuis <linux@leemhuis.info>
-To: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org
-References: <6e7f32f2-5397-e0cf-4271-a9826d318996@leemhuis.info>
+Subject: Re: BUG: bisected: thermald regression (MEMLEAK) in commit
+ c7ff29763989bd09c433f73fae3c1e1c15d9cda4 #forregzbot
 Content-Language: en-US, de-DE
-Subject: Re: Regression: starting powertop crashes my machine hard since
- 838d9bb62d13 ("perf: Use sample_flags for raw_data")
-In-Reply-To: <6e7f32f2-5397-e0cf-4271-a9826d318996@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: regressions@lists.linux.dev
+References: <e0f06714-5a49-a4e6-24e6-c4103c820819@alu.unizg.hr>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <e0f06714-5a49-a4e6-24e6-c4103c820819@alu.unizg.hr>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1666724268;2b653f29;
-X-HE-SMSGID: 1onP7S-0005EO-1n
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666771742;5e91b5fa;
+X-HE-SMSGID: 1onbTA-00046G-8P
 
-On 25.10.22 20:40, Thorsten Leemhuis wrote:
-> Hi! Since 838d9bb62d13 ("perf: Use sample_flags for raw_data") starting
-> powertop makes my machine crash hard: keyboard is dead, Sysrq does not
-> work, and most of the time there is not even a error message on the
-> screen; only once in maybe ~20 cases I got the line "kernel NULL pointer
-> dereference, address: 0000000000000010", but nothing else.
+[Note: this mail is primarily send for documentation purposes and/or for
+regzbot, my Linux kernel regression tracking bot. That's why I removed
+most or all folks from the list of recipients, but left any that looked
+like a mailing lists. These mails usually contain '#forregzbot' in the
+subject, to make them easy to spot and filter out.]
 
-Boris on another channel asked me to test "perf: Fix missing raw data on
-tracepoint events" (
-https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git/commit/?h=perf/urgent&id=d6e63577059a8207df764404f1c55a19ca0d8e24
-) which I somehow missed when search lore an hour ago
-(https://lore.kernel.org/all/20221012143857.48198-1-james.clark@arm.com/
-). Sorry.
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-That patches fixes the problem for me. Thx everyone.
+Hi, this is your Linux kernel regression tracker.
 
-Ciao, Thorsten
+On 24.10.22 15:13, Mirsad Goran Todorovac wrote:
+> Dear all,
+> 
+> Around Sep 27th 2022 I've noticed in a mainline kernel built with
+> CONFIG_DEBUG_KMEMLEAK=y
+> that there actually is a leak:
 
-> This is on a Lenovo Thinkpad T14s Gen1 (AMD Ryzen 5 PRO 4650U) running
-> Fedora 37 with a vanilla kernel. Master as of a six hours ago shows the
-> problem (IOW: 21da7472a040 didn't fix this). Reverting 838d9bb62d13 on
-> top of master makes the problem go away. Applying
-> https://lore.kernel.org/lkml/20221020070657.21571-2-atrajeev@linux.vnet.ibm.com/
-> (another fix for 838d9bb62d13) didn't help. My config file is based on
-> the one from Fedora's 6.0.3 kernel, but stripped down with localmodconfig.
-> 
-> Apparently I'm not the only one hitting this problem:
-> https://github.com/fenrus75/powertop/issues/109
-> 
-> Ciao, Thorsten.
-> 
-> P.S.: From /proc/cpuinfo
-> 
->> processor       : 0
->> vendor_id       : AuthenticAMD
->> cpu family      : 23
->> model           : 96
->> model name      : AMD Ryzen 5 PRO 4650U with Radeon Graphics
->> stepping        : 1
->> microcode       : 0x8600106
->> cpu MHz         : 1397.267
->> cache size      : 512 KB
->> physical id     : 0
->> siblings        : 12
->> core id         : 0
->> cpu cores       : 6
->> apicid          : 0
->> initial apicid  : 0
->> fpu             : yes
->> fpu_exception   : yes
->> cpuid level     : 16
->> wp              : yes
->> flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge 
->> mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext
->> fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl nonstop_tsc cpuid
->> extd_apicid aperfmperf rapl pni pclmulqdq monitor ssse3 fma cx16 sse4_1
->> sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm
->> extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit
->> wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb
->> cat_l3 cdp_l3 hw_pstate ssbd mba ibrs ibpb stibp vmmcall fsgsbase bmi1
->> avx2 smep bmi2 cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt
->> xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local
->> clzero irperf xsaveerptr rdpru wbnoinvd cppc arat npt lbrv svm_lock
->> nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter
->> pfthreshold avic v_vmsave_vmload vgif v_spec_ctrl umip rdpid
->> overflow_recov succor smca
->>
->> bugs            : sysret_ss_attrs spectre_v1 spectre_v2 spec_store_bypass retbleed
->> bogomips        : 4191.92
->> TLB size        : 3072 4K pages
->> clflush size    : 64
->> cache_alignment : 64
->> address sizes   : 48 bits physical, 48 bits virtual
->> power management: ts ttp tm hwpstate cpb eff_freq_ro [13] [14]
-> 
-> Bisect log:
-> 
->> git bisect start
->> # status: waiting for both good and bad commits
->> # bad: [1a2dcbdde82e3a5f1db9b2f4c48aa1aeba534fb2] scsi: mpt3sas: re-do lost mpt3sas DMA mask fix
->> git bisect bad 1a2dcbdde82e3a5f1db9b2f4c48aa1aeba534fb2
->> # status: waiting for good commit(s), bad commit known
->> # good: [4fe89d07dcc2804c8b562f6c7896a45643d34b2f] Linux 6.0
->> git bisect good 4fe89d07dcc2804c8b562f6c7896a45643d34b2f
->> # good: [76e45035348c247a70ed50eb29a9906657e4444f] Merge tag 'for-6.1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux
->> git bisect good 76e45035348c247a70ed50eb29a9906657e4444f
->> # bad: [52abb27abfff8c5ddf44eef4d759f3d1e9f166c5] Merge tag 'slab-for-6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/vbabka/slab
->> git bisect bad 52abb27abfff8c5ddf44eef4d759f3d1e9f166c5
->> # good: [e8bc52cb8df80c31c73c726ab58ea9746e9ff734] Merge tag 'driver-core-6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core
->> git bisect good e8bc52cb8df80c31c73c726ab58ea9746e9ff734
->> # good: [f01603979a4afaad7504a728918b678d572cda9e] Merge tag 'gpio-updates-for-v6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
->> git bisect good f01603979a4afaad7504a728918b678d572cda9e
->> # good: [2e64066dab157ffcd0e9ec2ff631862e6e222876] Merge tag 'riscv-for-linus-6.1-mw1' of git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux
->> git bisect good 2e64066dab157ffcd0e9ec2ff631862e6e222876
->> # good: [376b3275c19f83d373e841e9af2d7658693190b9] KVM: PPC: Book3S HV: Fix stack frame regs marker
->> git bisect good 376b3275c19f83d373e841e9af2d7658693190b9
->> # bad: [3871d93b82a4a6c1f4308064f046a544f16ada21] Merge tag 'perf-core-2022-10-07' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
->> git bisect bad 3871d93b82a4a6c1f4308064f046a544f16ada21
->> # bad: [7be51cc1c68dfa180ef84e71bcb4204237bb5620] perf: Fix pmu_filter_match()
->> git bisect bad 7be51cc1c68dfa180ef84e71bcb4204237bb5620
->> # good: [ee9db0e14b0575aa827579dc2471a29ec5fc6877] perf: Use sample_flags for txn
->> git bisect good ee9db0e14b0575aa827579dc2471a29ec5fc6877
->> # good: [7b084630153152239d84990ac4540c2dd360186f] perf: Use sample_flags for addr
->> git bisect good 7b084630153152239d84990ac4540c2dd360186f
->> # bad: [ee3e88dfec23153d0675b5d00522297b9adf657c] perf/mem: Introduce PERF_MEM_LVLNUM_{EXTN_MEM|IO}
->> git bisect bad ee3e88dfec23153d0675b5d00522297b9adf657c
->> # bad: [a1ebcd59430236b336428bbf8e1da16fb87d56e4] Merge branch 'v6.0-rc7'
->> git bisect bad a1ebcd59430236b336428bbf8e1da16fb87d56e4
->> # bad: [4674ffe2fcad45a9b164401cc0794115702326cf] perf, hw_breakpoint: Fix use-after-free if perf_event_open() fails
->> git bisect bad 4674ffe2fcad45a9b164401cc0794115702326cf
->> # bad: [838d9bb62d132ec3baf1b5aba2e95ef9a7a9a3cd] perf: Use sample_flags for raw_data
->> git bisect bad 838d9bb62d132ec3baf1b5aba2e95ef9a7a9a3cd
->> # first bad commit: [838d9bb62d132ec3baf1b5aba2e95ef9a7a9a3cd] perf: Use sample_flags for raw_data
-> 
-> For regzbot:
-> 
-> #regzbot introduced 838d9bb62d13
-> #regzbot title perf: starting powertop crashes machines
-> #regzbot link: https://github.com/fenrus75/powertop/issues/109
-> 
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced c7ff29763989bd
+#regzbot title thermald regression (MEMLEAK)
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
+
+
+> |sudo cat /sys/kernel/debug/kmemleak unreferenced object
+> 0xffff8881095f3ee0 (size 80): comm "thermald", pid 837, jiffies
+> 4294896698 (age 9867.428s) hex dump (first 32 bytes): 00 00 00 00 00 00
+> 00 00 0d 01 2d 00 00 00 00 00 ..........-..... af 07 01 00 00 c9 ff ff
+> 00 00 00 00 00 00 00 00 ................ backtrace: [<00000000b50b9dd6>]
+> kmem_cache_alloc+0x184/0x380 [<00000000fa8428c0>]
+> acpi_os_acquire_object+0x2c/0x32 [<000000002cc0099f>]
+> acpi_ps_alloc_op+0x65/0xe6 [<00000000335faf1b>]
+> acpi_ps_get_next_arg+0x842/0x9ed [<000000007afa2dee>]
+> acpi_ps_parse_loop+0x718/0xee1 [<0000000010ce490e>]
+> acpi_ps_parse_aml+0x261/0x7b2 [<00000000278d4c5f>]
+> acpi_ps_execute_method+0x360/0x459 [<00000000ff7ad4ba>]
+> acpi_ns_evaluate+0x595/0x810 [<0000000037ce3488>]
+> acpi_evaluate_object+0x28b/0x5b2 [<000000001a800bbf>]
+> acpi_run_osc+0x209/0x3d0 [<00000000776fbd43>]
+> int3400_thermal_run_osc+0xed/0x180 [int3400_thermal]
+> [<00000000d6ec2302>] current_uuid_store+0x17c/0x1d0 [int3400_thermal]
+> [<00000000486cf3e6>] dev_attr_store+0x3e/0x60 [<00000000bf193027>]
+> sysfs_kf_write+0x88/0xa0 [<00000000820b5cce>]
+> kernfs_fop_write_iter+0x1c9/0x270 [<0000000062f8d35e>]
+> vfs_write+0x5a5/0x750 Mr. Pandruvada required a bug bisect from me, so I
+> have eventually made one. # first bad commit:
+> [c7ff29763989bd09c433f73fae3c1e1c15d9cda4] thermal: int340x: Update OS
+> policy capability handshake Here is the git bisect log:
+> mtodorov@domac:~/linux/kernel/linux_stable$ git bisect log git bisect
+> start # good: [b6abb62daa5511c4a3eaa30cbdb02544d1f10fa2] Linux 5.15.1
+> git bisect good b6abb62daa5511c4a3eaa30cbdb02544d1f10fa2 # bad:
+> [e6f4ff3f91251f67b130c29f38673eb5702f88b9] Linux 6.0.3 git bisect bad
+> e6f4ff3f91251f67b130c29f38673eb5702f88b9 # good:
+> [8bb7eca972ad531c9b149c0a51ab43a417385813] Linux 5.15 git bisect good
+> 8bb7eca972ad531c9b149c0a51ab43a417385813 # bad:
+> [1464677662943738741500a6f16b85d36bbde2be] Merge tag
+> 'platform-drivers-x86-v5.18-1' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86
+> git bisect bad 1464677662943738741500a6f16b85d36bbde2be # good:
+> [8efd0d9c316af470377894a6a0f9ff63ce18c177] Merge tag '5.17-net-next' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next git bisect
+> good 8efd0d9c316af470377894a6a0f9ff63ce18c177 # good:
+> [aaa25a2fa7964d94690f6de5edd7164ca7d76555] Merge
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net git bisect good
+> aaa25a2fa7964d94690f6de5edd7164ca7d76555 # bad:
+> [b4bc93bd76d4da32600795cd323c971f00a2e788] Merge tag 'arm-drivers-5.18'
+> of git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc git bisect bad
+> b4bc93bd76d4da32600795cd323c971f00a2e788 # bad:
+> [ef510682af3dbe2f9cdae7126a1461c94e010967] Merge tag 'f2fs-for-5.18' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs git bisect
+> bad ef510682af3dbe2f9cdae7126a1461c94e010967 # good:
+> [a04b1bf574e1f4875ea91f5c62ca051666443200] Merge tag 'for-5.18/parisc-1'
+> of git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux git
+> bisect good a04b1bf574e1f4875ea91f5c62ca051666443200 # bad:
+> [b080cee72ef355669cbc52ff55dc513d37433600] Merge tag
+> 'for-5.18/io_uring-statx-2022-03-18' of git://git.kernel.dk/linux-block
+> git bisect bad b080cee72ef355669cbc52ff55dc513d37433600 # good:
+> [02b82b02c34321dde10d003aafcd831a769b2a8a] Merge tag 'pm-5.18-rc1' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm git bisect
+> good 02b82b02c34321dde10d003aafcd831a769b2a8a # good:
+> [0e03b8fd29363f2df44e2a7a176d486de550757a] crypto: xilinx - Turn SHA
+> into a tristate and allow COMPILE_TEST git bisect good
+> 0e03b8fd29363f2df44e2a7a176d486de550757a # good:
+> [3e504d2026eb6c8762cd6040ae57db166516824a] random: check for signal and
+> try earlier when generating entropy git bisect good
+> 3e504d2026eb6c8762cd6040ae57db166516824a # good:
+> [5e929367468c8f97cd1ffb0417316cecfebef94b] io_uring: terminate manual
+> loop iterator loop correctly for non-vecs git bisect good
+> 5e929367468c8f97cd1ffb0417316cecfebef94b # bad:
+> [2d6fc1455f3f383499e013ebc4b19ff49c53c15e] Merge branches
+> 'thermal-powerclamp', 'thermal-int340x' and 'thermal-docs' git bisect
+> bad 2d6fc1455f3f383499e013ebc4b19ff49c53c15e # good:
+> [1d6aab36a26ba44b114d7f8a857c430c9e0c32c9]
+> thermal/drivers/ti-soc-thermal: Remove unused function
+> ti_thermal_get_temp() git bisect good
+> 1d6aab36a26ba44b114d7f8a857c430c9e0c32c9 # bad:
+> [c7ff29763989bd09c433f73fae3c1e1c15d9cda4] thermal: int340x: Update OS
+> policy capability handshake git bisect bad
+> c7ff29763989bd09c433f73fae3c1e1c15d9cda4 # good:
+> [098c874e20be2a4cee3021aa9b3485ed5e1f4d5b] thermal: Replace
+> acpi_bus_get_device() git bisect good
+> 098c874e20be2a4cee3021aa9b3485ed5e1f4d5b # good:
+> [668f69a5f863b877bc3ae129efe9a80b6f055141] thermal: int340x: Increase
+> bitmap size git bisect good 668f69a5f863b877bc3ae129efe9a80b6f055141 #
+> first bad commit: [c7ff29763989bd09c433f73fae3c1e1c15d9cda4] thermal:
+> int340x: Update OS policy capability handshake You have new mail in
+> /var/mail/mtodorov mtodorov@domac:~/linux/kernel/linux_stable$ I was
+> unable to locate the culprit in the patch myself. Thank you very much
+> for your attention. I am available for all further questions. Have a
+> nice day :) Regards, |
 > 
