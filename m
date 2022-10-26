@@ -1,49 +1,95 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mail.kmu-office.ch (mail.kmu-office.ch [178.209.48.109])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6EA111E
-	for <regressions@lists.linux.dev>; Wed, 26 Oct 2022 12:40:07 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1onfhV-0006np-6n; Wed, 26 Oct 2022 14:40:05 +0200
-Message-ID: <156c9646-2cf6-ad32-56a7-d16342e87352@leemhuis.info>
-Date: Wed, 26 Oct 2022 14:40:04 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB5161374
+	for <regressions@lists.linux.dev>; Wed, 26 Oct 2022 13:11:08 +0000 (UTC)
+Received: from webmail.kmu-office.ch (unknown [IPv6:2a02:418:6a02::a3])
+	by mail.kmu-office.ch (Postfix) with ESMTPSA id 255C85C3ABB;
+	Wed, 26 Oct 2022 15:11:00 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=agner.ch; s=dkim;
+	t=1666789860;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QLFgExITwIN4lybw/UjaBeJn22b4fh+Q9W7AXp52SJY=;
+	b=NXnk3GNi1ceLZUXZtK/jPKqypVy8x6mNmwOgzfH+iUj3QQb6Z3ENK2E4RlUnXtjfKJVtqm
+	Wn5M1kNEE8cyHkU7FE42iFAuIiIAi43yeknhNOjcOrQglCHzKixmbrlc3Vq7Lz40BlGukP
+	g+eGl7/bauZiRChnA3yzqFLh/UxjCoo=
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [REGRESSION] Unable to NAT own TCP packets from another VRF with
- tcp_l3mdev_accept = 1 #forregzbot
-Content-Language: en-US, de-DE
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: netdev@vger.kernel.org, netfilter-devel@vger.kernel.org
-References: <98348818-28c5-4cb2-556b-5061f77e112c@arcanite.ch>
- <20220930174237.2e89c9e1@kernel.org>
- <1eca7cd0-ad6e-014f-d4e2-490b307ab61d@gmail.com>
- <d6c3cd78-741c-d528-129a-cf7ed7ef236d@arcanite.ch>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <d6c3cd78-741c-d528-129a-cf7ed7ef236d@arcanite.ch>
-Content-Type: text/plain; charset=UTF-8
+Date: Wed, 26 Oct 2022 15:11:00 +0200
+From: Stefan Agner <stefan@agner.ch>
+To: Johan Hovold <johan@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>,
+ Matthias Kaehlcke <mka@chromium.org>, stable <stable@kernel.org>,
+ regressions@lists.linux.dev, m.szyprowski@samsung.com, krzk@kernel.org
+Subject: Re: [PATCH stable-5.15 3/3] usb: dwc3: disable USB core PHY
+ management
+In-Reply-To: <Y1JCIKT80P9IysKD@hovoldconsulting.com>
+References: <20220906120702.19219-1-johan@kernel.org>
+ <20220906120702.19219-4-johan@kernel.org>
+ <808bdba846bb60456adf10a3016911ee@agner.ch>
+ <Y0+8dKESygFunXOu@hovoldconsulting.com>
+ <86c0f1ee8ffc94f9a53690dda6a83fbb@agner.ch>
+ <Y1JCIKT80P9IysKD@hovoldconsulting.com>
+Message-ID: <b2a1e70bda64cb741efe81c5b7e56707@agner.ch>
+X-Sender: stefan@agner.ch
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666788007;917e8db7;
-X-HE-SMSGID: 1onfhV-0006np-6n
 
-[Note: this mail is primarily send for documentation purposes and/or for
-regzbot, my Linux kernel regression tracking bot. That's why I removed
-most or all folks from the list of recipients, but left any that looked
-like a mailing lists. These mails usually contain '#forregzbot' in the
-subject, to make them easy to spot and filter out.]
-
-On 12.10.22 14:24, Maximilien Cuony wrote:
-
-> So we will try to not to have to use tcp_l3mdev_accept=1 to make it
-> working as expected.
+On 2022-10-21 08:54, Johan Hovold wrote:
+> On Fri, Oct 21, 2022 at 12:06:12AM +0200, Stefan Agner wrote:
+>> On 2022-10-19 10:59, Johan Hovold wrote:
+>> > On Tue, Oct 18, 2022 at 05:27:24PM +0200, Stefan Agner wrote:
+>> >> On 2022-09-06 14:07, Johan Hovold wrote:
+>> >> > From: Johan Hovold <johan+linaro@kernel.org>
+>> >> >
+>> >> > commit 6000b8d900cd5f52fbcd0776d0cc396e88c8c2ea upstream.
+>> >> >
+>> >> > The dwc3 driver manages its PHYs itself so the USB core PHY management
+>> >> > needs to be disabled.
+>> >> >
+>> >> > Use the struct xhci_plat_priv hack added by commits 46034a999c07 ("usb:
+>> >> > host: xhci-plat: add platform data support") and f768e718911e ("usb:
+>> >> > host: xhci-plat: add priv quirk for skip PHY initialization") to
+>> >> > propagate the setting for now.
 > 
-> Thanks for you help and have a nice day :)
+>> >> For some reason, this commit seems to break detection of the USB to
+>> >> S-ATA controller on ODROID-HC1 devices (Exynos 5422).
+> 
+>> > I think this may be related to the calibration calls added to dwc3 and
+>> > later removed again by commits:
+>> >
+>> > 	d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
+>> > 	a0a465569b45 ("usb: dwc3: remove generic PHY calibrate() calls")
+>> >
+>> > The removal explicitly mentions that the expectation is that USB core
+>> > will do the PHY calibration.
+>> >
+>> > There could be other changes in the sequencing of events that this
+>> > platform has been implicitly relying on, but as a start, could try
+>> > adding the missing calibration calls (patch below) and see if that makes a
+>> > difference?
+>> 
+>> The patch below did not apply to 5.15.74 directly, but I think I was
+>> able to get the corrected patch applied (see below)
+> 
+> Looks good to me.
+> 
+>> That said, I do not have direct access to that hardware, but I created a
+>> build and asked the user test it.
+> 
+> Thanks, let me know how it goes.
 
-#regzbot invalid: tricky situation, reporter will work around it
+The user reports the S-ATA disk is *not* recognized with that patch
+applied.
+
+--
+Stefan
 
