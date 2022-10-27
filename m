@@ -1,109 +1,131 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410BD1C13
-	for <regressions@lists.linux.dev>; Thu, 27 Oct 2022 12:06:47 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oo1el-00040M-M4; Thu, 27 Oct 2022 14:06:43 +0200
-Message-ID: <1db88d01-1004-0e42-b9aa-3e0bb2b22cdb@leemhuis.info>
-Date: Thu, 27 Oct 2022 14:06:43 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5587B
+	for <regressions@lists.linux.dev>; Thu, 27 Oct 2022 12:45:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13CF5C433C1;
+	Thu, 27 Oct 2022 12:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1666874731;
+	bh=VwK3xnv7tqr64wpARnMxEPqabn4IYyL5RaDxsRoawBs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GiogSBYXfJ0r9+KZxe55/GEemyJGjjCmHjQtUDgImzxG7bKDiuIoQwnwncIu5fRmA
+	 Vdgw8qZtdKPbF7cVmPqsTiXrY1hNfQgyjzM7r1xCXqi9T5u2DURIO1fwD7KIXred9x
+	 N8hwc7uVYVimOc+gQ3HgHg0JEboeKXr/FOtGSVvAUGmFFaU1BvWhiNYlH+QTtcRiuu
+	 97ykirTvwKbSF9pN1tyHyQwAv0dJk14Swxl/jDkawtwEniTwdVK88tO2pNQ6MZ4E5t
+	 nkqBtV8ZqTMxaqzwEIMBQ4A+zd4G9ShWctrswDE0x4DFzpj1y7p/8Ff39RjAaDj2MP
+	 OGtFcy8N1TNEA==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+	(envelope-from <johan@kernel.org>)
+	id 1oo2G3-0007iP-Cb; Thu, 27 Oct 2022 14:45:16 +0200
+Date: Thu, 27 Oct 2022 14:45:15 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Stefan Agner <stefan@agner.ch>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Matthias Kaehlcke <mka@chromium.org>, stable <stable@kernel.org>,
+	regressions@lists.linux.dev, m.szyprowski@samsung.com,
+	krzk@kernel.org
+Subject: Re: [PATCH stable-5.15 3/3] usb: dwc3: disable USB core PHY
+ management
+Message-ID: <Y1p9Wy9w5umMBC4V@hovoldconsulting.com>
+References: <20220906120702.19219-1-johan@kernel.org>
+ <20220906120702.19219-4-johan@kernel.org>
+ <808bdba846bb60456adf10a3016911ee@agner.ch>
+ <Y0+8dKESygFunXOu@hovoldconsulting.com>
+ <86c0f1ee8ffc94f9a53690dda6a83fbb@agner.ch>
+ <Y1JCIKT80P9IysKD@hovoldconsulting.com>
+ <b2a1e70bda64cb741efe81c5b7e56707@agner.ch>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Content-Language: en-US, de-DE
-To: Alexander Zhang <alex@alexyzhang.dev>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
-Cc: Torge Matthies <openglfreak@googlemail.com>,
- Jiri Kosina <jikos@kernel.org>,
- "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- Nikolai Kondrashov <spbnick@gmail.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220804151832.30373-1-openglfreak@googlemail.com>
- <20220804180038.GA8906@elementary>
- <CAO-hwJJsKC=fyeFLCmdXMRkxEQFVGZ189GKphTVK83QJWc=udA@mail.gmail.com>
- <2717adbe-e9b2-3c5a-7ccf-3d851a55744c@alexyzhang.dev>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [PATCH] HID: Accept Digitizers as input devices
-In-Reply-To: <2717adbe-e9b2-3c5a-7ccf-3d851a55744c@alexyzhang.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666872407;03e10e96;
-X-HE-SMSGID: 1oo1el-00040M-M4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b2a1e70bda64cb741efe81c5b7e56707@agner.ch>
 
-Hi, this is your Linux kernel regression tracker. CCing the regression
-mailing list, as it should be in the loop for all regressions, as
-explained here:
-https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+On Wed, Oct 26, 2022 at 03:11:00PM +0200, Stefan Agner wrote:
+> On 2022-10-21 08:54, Johan Hovold wrote:
+> > On Fri, Oct 21, 2022 at 12:06:12AM +0200, Stefan Agner wrote:
+> >> On 2022-10-19 10:59, Johan Hovold wrote:
+> >> > On Tue, Oct 18, 2022 at 05:27:24PM +0200, Stefan Agner wrote:
+> >> >> On 2022-09-06 14:07, Johan Hovold wrote:
+> >> >> > From: Johan Hovold <johan+linaro@kernel.org>
+> >> >> >
+> >> >> > commit 6000b8d900cd5f52fbcd0776d0cc396e88c8c2ea upstream.
+> >> >> >
+> >> >> > The dwc3 driver manages its PHYs itself so the USB core PHY management
+> >> >> > needs to be disabled.
+> >> >> >
+> >> >> > Use the struct xhci_plat_priv hack added by commits 46034a999c07 ("usb:
+> >> >> > host: xhci-plat: add platform data support") and f768e718911e ("usb:
+> >> >> > host: xhci-plat: add priv quirk for skip PHY initialization") to
+> >> >> > propagate the setting for now.
+> > 
+> >> >> For some reason, this commit seems to break detection of the USB to
+> >> >> S-ATA controller on ODROID-HC1 devices (Exynos 5422).
+> > 
+> >> > I think this may be related to the calibration calls added to dwc3 and
+> >> > later removed again by commits:
+> >> >
+> >> > 	d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
+> >> > 	a0a465569b45 ("usb: dwc3: remove generic PHY calibrate() calls")
+> >> >
+> >> > The removal explicitly mentions that the expectation is that USB core
+> >> > will do the PHY calibration.
+> >> >
+> >> > There could be other changes in the sequencing of events that this
+> >> > platform has been implicitly relying on, but as a start, could try
+> >> > adding the missing calibration calls (patch below) and see if that makes a
+> >> > difference?
+> >> 
+> >> The patch below did not apply to 5.15.74 directly, but I think I was
+> >> able to get the corrected patch applied (see below)
 
-On 27.10.22 00:42, Alexander Zhang wrote:
-> On 8/11/22 8:27 AM, Benjamin Tissoires wrote:
->> On Thu, Aug 4, 2022 at 8:00 PM José Expósito
->> <jose.exposito89@gmail.com> wrote:
->>> On Thu, Aug 04, 2022 at 05:18:32PM +0200, Torge Matthies wrote:
->>>> Commit f7d8e387d9ae ("HID: uclogic: Switch to Digitizer usage for
->>>> styluses") broke input from my XP-Pen Star G640. This is because the
->>>> "Digitizer" usage is not recognized as a valid usage for input devices.
->>>>
->>>> This patch changes the IS_INPUT_APPLICATION macro so that the
->>>> "Digitizer"
->>>> (HID_DG_DIGITIZER) usage is recognized as an input device usage.
->>>>
->>>> Fixes: f7d8e387d9ae ("HID: uclogic: Switch to Digitizer usage for
->>>> styluses")
->>>> Signed-off-by: Torge Matthies <openglfreak@googlemail.com>
->>>> ---
->>>> This patch could be risky, because any digitizer devices that were
->>>> previously not treated as input devices are now used for input.
->>>> Alternatively the linked commit could be reverted, but that would
->>>> re-introduce the problem detailed in its commit message.
->>>>
->>>>   include/linux/hid.h | 2 +-
->>>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> I hesitated about this when I sent the patch you mentioned. In the end,
->>> I didn't include any fix because the digitizer use was tested for 2
->>> years in DIGImend, so I (wrongly) assumed that it was safe enough.
->>>
->>> However, my initial thought was to add in uclogic_probe():
->>>
->>>          hdev->quirks |= HID_QUIRK_HIDINPUT_FORCE;
->>> +       hdev->quirks |= HID_QUIRK_HIDINPUT_FORCE;
->>>
->>> Let's see if we can hear more opinions, but if you are worried about
->>> affecting other drivers, that could be a good solution.
->>
->> Sadly, my automated regression tests are broken for a while and I
->> haven't checked if that patch is introducing errors in hid-multitouch.
->>
->> FWIW, this part has always been painful because some tablets were not
->> using the correct usages. And so that's why we are ending up in that
->> weird situation.
->>
->> Anyway, just to mention that any code that touches this part should be
->> tested against the hid regression tests suite[0], because that's the
->> only way to find out if the change is affecting other devices.
-> 
-> My XP-Pen Star G640 hasn't been working since commit f7d8e387d9ae and
-> this patch fixes it. Is there anything I can do to help get this issue
-> resolved? Should this be reported as a regression?
+> The user reports the S-ATA disk is *not* recognized with that patch
+> applied.
 
-What's the latest version you tested? This is not my area of expertise,
-but I noticed there was a patch with a fix for f7d8e387d9ae that went
-into 6.0.3:
-https://lore.kernel.org/all/20221019083311.156155236@linuxfoundation.org/
+I just noticed a mistake in the instrumentation patch I sent you. Could
+you try moving the calibrations calls after dwc3_host_init() (e.g. as in
+the second chunk in the diff below)?
 
-Maybe it helps, but maybe I'm just confusing everything with this mail.
+As mentioned in the commit message for a0a465569b45 ("usb: dwc3: remove
+generic PHY calibrate() calls"), this may not work if the xhci-plat
+driver is built as a module and there are some corner cases that it does
+not cover.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+It seems we should revert the offending commit and then try to find some
+time to untangle this mess, but please check if the below addresses the
+issue first so we know what the problem is.
 
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+I'll prepare a revert in the meantime.
+
+Johan
+
+
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 31156d4dec9f..37d49a394912 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -197,6 +197,8 @@ static void __dwc3_set_mode(struct work_struct *work)
+                                otg_set_vbus(dwc->usb2_phy->otg, true);
+                        phy_set_mode(dwc->usb2_generic_phy, PHY_MODE_USB_HOST);
+                        phy_set_mode(dwc->usb3_generic_phy, PHY_MODE_USB_HOST);
++                       phy_calibrate(dwc->usb2_generic_phy);
++                       phy_calibrate(dwc->usb3_generic_phy);
+                        if (dwc->dis_split_quirk) {
+                                reg = dwc3_readl(dwc->regs, DWC3_GUCTL3);
+                                reg |= DWC3_GUCTL3_SPLITDISABLE;
+@@ -1391,6 +1393,9 @@ static int dwc3_core_init_mode(struct dwc3 *dwc)
+                ret = dwc3_host_init(dwc);
+                if (ret)
+                        return dev_err_probe(dev, ret, "failed to initialize host\n");
++
++               phy_calibrate(dwc->usb2_generic_phy);
++               phy_calibrate(dwc->usb3_generic_phy);
+                break;
+        case USB_DR_MODE_OTG:
+                INIT_WORK(&dwc->drd_work, __dwc3_set_mode);
