@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8640F1C04
-	for <regressions@lists.linux.dev>; Thu, 27 Oct 2022 10:37:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410BD1C13
+	for <regressions@lists.linux.dev>; Thu, 27 Oct 2022 12:06:47 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oo0GH-0007ZP-7c; Thu, 27 Oct 2022 12:37:21 +0200
-Message-ID: <f380d104-456b-2c1e-87c4-0afe1868889e@leemhuis.info>
-Date: Thu, 27 Oct 2022 12:37:20 +0200
+	id 1oo1el-00040M-M4; Thu, 27 Oct 2022 14:06:43 +0200
+Message-ID: <1db88d01-1004-0e42-b9aa-3e0bb2b22cdb@leemhuis.info>
+Date: Thu, 27 Oct 2022 14:06:43 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,66 +16,94 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
-Subject: Re: [regression] Bug 216426 - USB-C port is incorrectly reporting
- that it's powered when Dell XPS 15-9500 is unplugged #forregzbot
 Content-Language: en-US, de-DE
+To: Alexander Zhang <alex@alexyzhang.dev>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
+Cc: Torge Matthies <openglfreak@googlemail.com>,
+ Jiri Kosina <jikos@kernel.org>,
+ "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+ Nikolai Kondrashov <spbnick@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220804151832.30373-1-openglfreak@googlemail.com>
+ <20220804180038.GA8906@elementary>
+ <CAO-hwJJsKC=fyeFLCmdXMRkxEQFVGZ189GKphTVK83QJWc=udA@mail.gmail.com>
+ <2717adbe-e9b2-3c5a-7ccf-3d851a55744c@alexyzhang.dev>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-References: <f28e3bdf-2add-574a-cf0a-5d0253ea708a@leemhuis.info>
- <ead18940-4e8b-f5c1-f1ac-16040b4bcddc@leemhuis.info>
- <c8d18046-0e43-0c2c-6ae6-92fe16163f4e@leemhuis.info>
-In-Reply-To: <c8d18046-0e43-0c2c-6ae6-92fe16163f4e@leemhuis.info>
+Subject: Re: [PATCH] HID: Accept Digitizers as input devices
+In-Reply-To: <2717adbe-e9b2-3c5a-7ccf-3d851a55744c@alexyzhang.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666867043;3c50bf0c;
-X-HE-SMSGID: 1oo0GH-0007ZP-7c
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666872407;03e10e96;
+X-HE-SMSGID: 1oo1el-00040M-M4
 
-[Note: this mail is primarily send for documentation purposes and/or for
-regzbot, my Linux kernel regression tracking bot. That's why I removed
-most or all folks from the list of recipients, but left any that looked
-like a mailing lists. These mails usually contain '#forregzbot' in the
-subject, to make them easy to spot and filter out.]
+Hi, this is your Linux kernel regression tracker. CCing the regression
+mailing list, as it should be in the loop for all regressions, as
+explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
 
-On 30.09.22 13:20, Thorsten Leemhuis wrote:
-> On 26.09.22 16:25, Thorsten Leemhuis wrote:
->> On 01.09.22 11:07, Thorsten Leemhuis wrote:
->>> https://bugzilla.kernel.org/show_bug.cgi?id=216426
->>>
->>>>  Mattia Orlandi 2022-08-29 17:04:21 UTC
+On 27.10.22 00:42, Alexander Zhang wrote:
+> On 8/11/22 8:27 AM, Benjamin Tissoires wrote:
+>> On Thu, Aug 4, 2022 at 8:00 PM José Expósito
+>> <jose.exposito89@gmail.com> wrote:
+>>> On Thu, Aug 04, 2022 at 05:18:32PM +0200, Torge Matthies wrote:
+>>>> Commit f7d8e387d9ae ("HID: uclogic: Switch to Digitizer usage for
+>>>> styluses") broke input from my XP-Pen Star G640. This is because the
+>>>> "Digitizer" usage is not recognized as a valid usage for input devices.
 >>>>
->>>> System
->>>> ------
->>>> - Dell XPS 15 9500
->>>> - 5.19.4 kernel
+>>>> This patch changes the IS_INPUT_APPLICATION macro so that the
+>>>> "Digitizer"
+>>>> (HID_DG_DIGITIZER) usage is recognized as an input device usage.
 >>>>
->>>> Problem description
->>>> -------------------
->>>> Whenever I plug and then unplug my laptop from AC power using the USB-C port, the system thinks it is still plugged in (i.e., the KDE applet reports "Plugged in but still discharging").
->>>> If I check in Dell's BIOS, it correctly reports when the power supply is plugged/unplugged; `acpi -V` also correctly shows `Adapter 0: off-line`.
+>>>> Fixes: f7d8e387d9ae ("HID: uclogic: Switch to Digitizer usage for
+>>>> styluses")
+>>>> Signed-off-by: Torge Matthies <openglfreak@googlemail.com>
+>>>> ---
+>>>> This patch could be risky, because any digitizer devices that were
+>>>> previously not treated as input devices are now used for input.
+>>>> Alternatively the linked commit could be reverted, but that would
+>>>> re-introduce the problem detailed in its commit message.
 >>>>
->>>> On the other hand, `upower -d` incorrectly reports `/org/freedesktop/UPower/devices/line_power_ucsi_source_psy_USBC000o002` as `online: yes`.
->>>> Moreover, `journalctl` reports `ucsi_acpi USBC000:00: ucsi_handle_connector_change: GET_CONNECTOR_STATUS failed (-110)`.
->>>>
->>>> I'm testing the LTS kernel (5.15.63) and the issue does not occur, so I assume it's a regression bug, possibly introduced in kernel 5.18 (I tried downgrading the kernel to version 5.18.16 and the issue was already present).
+>>>>   include/linux/hid.h | 2 +-
+>>>>   1 file changed, 1 insertion(+), 1 deletion(-)
 >>>
->>> See the ticket for more details. Apologies if I forwarded it to the
->>> wrong folks, I cover a lot of ground and thus sometimes get things
->>> wrong. :-/
+>>> I hesitated about this when I sent the patch you mentioned. In the end,
+>>> I didn't include any fix because the digitizer use was tested for 2
+>>> years in DIGImend, so I (wrongly) assumed that it was safe enough.
 >>>
->>> BTW, I'd also like to add the report to the list of tracked regressions
->>> to ensure it's doesn't fall through the cracks in the end:
+>>> However, my initial thought was to add in uclogic_probe():
 >>>
->>> #regzbot introduced: v5.15..v5.18
->>> https://bugzilla.kernel.org/show_bug.cgi?id=216426
->>> #regzbot ignore-activity
->> #regzbot introduced: f7090e0ef360d674f0
+>>>          hdev->quirks |= HID_QUIRK_HIDINPUT_FORCE;
+>>> +       hdev->quirks |= HID_QUIRK_HIDINPUT_FORCE;
+>>>
+>>> Let's see if we can hear more opinions, but if you are worried about
+>>> affecting other drivers, that could be a good solution.
+>>
+>> Sadly, my automated regression tests are broken for a while and I
+>> haven't checked if that patch is introducing errors in hid-multitouch.
+>>
+>> FWIW, this part has always been painful because some tablets were not
+>> using the correct usages. And so that's why we are ending up in that
+>> weird situation.
+>>
+>> Anyway, just to mention that any code that touches this part should be
+>> tested against the hid regression tests suite[0], because that's the
+>> only way to find out if the change is affecting other devices.
 > 
-> Looks like nobody yet check if the problem happens with mainline, so
-> let's stick to the backport for now:
-> 
-> #regzbot introduced: 0fbb5ce2f4267
+> My XP-Pen Star G640 hasn't been working since commit f7d8e387d9ae and
+> this patch fixes it. Is there anything I can do to help get this issue
+> resolved? Should this be reported as a regression?
 
-#regzbot invalid: not a regression, likely something related to hardware
-or firmware https://bugzilla.kernel.org/show_bug.cgi?id=216426#c22
+What's the latest version you tested? This is not my area of expertise,
+but I noticed there was a patch with a fix for f7d8e387d9ae that went
+into 6.0.3:
+https://lore.kernel.org/all/20221019083311.156155236@linuxfoundation.org/
+
+Maybe it helps, but maybe I'm just confusing everything with this mail.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
