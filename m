@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E75C7B
-	for <regressions@lists.linux.dev>; Thu, 27 Oct 2022 05:37:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8640F1C04
+	for <regressions@lists.linux.dev>; Thu, 27 Oct 2022 10:37:23 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1onvaA-00010u-Qi; Thu, 27 Oct 2022 07:37:34 +0200
-Message-ID: <fdca8918-730c-c36d-a3ca-4c95f16d1e8e@leemhuis.info>
-Date: Thu, 27 Oct 2022 07:37:34 +0200
+	id 1oo0GH-0007ZP-7c; Thu, 27 Oct 2022 12:37:21 +0200
+Message-ID: <f380d104-456b-2c1e-87c4-0afe1868889e@leemhuis.info>
+Date: Thu, 27 Oct 2022 12:37:20 +0200
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,65 +16,66 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
-Subject: Re: [Regression] Bug 216613 - Sound stopped working with v6.0.3 on
- Lenovo T14 Gen2i: ASoC: error at snd_soc_component_probe
+Subject: Re: [regression] Bug 216426 - USB-C port is incorrectly reporting
+ that it's powered when Dell XPS 15-9500 is unplugged #forregzbot
 Content-Language: en-US, de-DE
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: alsa-devel@alsa-project.org,
- "stable@vger.kernel.org" <stable@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.de>
-References: <2c028797-b313-be93-7b1e-8d838e694948@leemhuis.info>
- <f34cafd4-f224-ad10-6962-e8f6c709cb39@leemhuis.info>
- <3f207f82-e177-c833-b2b0-ca9e64a6e9a7@linux.intel.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <3f207f82-e177-c833-b2b0-ca9e64a6e9a7@linux.intel.com>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+References: <f28e3bdf-2add-574a-cf0a-5d0253ea708a@leemhuis.info>
+ <ead18940-4e8b-f5c1-f1ac-16040b4bcddc@leemhuis.info>
+ <c8d18046-0e43-0c2c-6ae6-92fe16163f4e@leemhuis.info>
+In-Reply-To: <c8d18046-0e43-0c2c-6ae6-92fe16163f4e@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666849063;cba2e81b;
-X-HE-SMSGID: 1onvaA-00010u-Qi
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1666867043;3c50bf0c;
+X-HE-SMSGID: 1oo0GH-0007ZP-7c
 
-[CCing Takashi in case he is interested in this and/or wants to make my
-life as regression tracker a little easier in the future]
+[Note: this mail is primarily send for documentation purposes and/or for
+regzbot, my Linux kernel regression tracking bot. That's why I removed
+most or all folks from the list of recipients, but left any that looked
+like a mailing lists. These mails usually contain '#forregzbot' in the
+subject, to make them easy to spot and filter out.]
 
-On 26.10.22 22:41, Pierre-Louis Bossart wrote:
-> On 10/26/22 07:08, Thorsten Leemhuis wrote:
->> On 22.10.22 08:35, Thorsten Leemhuis wrote:
+On 30.09.22 13:20, Thorsten Leemhuis wrote:
+> On 26.09.22 16:25, Thorsten Leemhuis wrote:
+>> On 01.09.22 11:07, Thorsten Leemhuis wrote:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=216426
 >>>
->>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->>> kernel developer don't keep an eye on it, I decided to forward it by
->>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216613 :
+>>>>  Mattia Orlandi 2022-08-29 17:04:21 UTC
+>>>>
+>>>> System
+>>>> ------
+>>>> - Dell XPS 15 9500
+>>>> - 5.19.4 kernel
+>>>>
+>>>> Problem description
+>>>> -------------------
+>>>> Whenever I plug and then unplug my laptop from AC power using the USB-C port, the system thinks it is still plugged in (i.e., the KDE applet reports "Plugged in but still discharging").
+>>>> If I check in Dell's BIOS, it correctly reports when the power supply is plugged/unplugged; `acpi -V` also correctly shows `Adapter 0: off-line`.
+>>>>
+>>>> On the other hand, `upower -d` incorrectly reports `/org/freedesktop/UPower/devices/line_power_ucsi_source_psy_USBC000o002` as `online: yes`.
+>>>> Moreover, `journalctl` reports `ucsi_acpi USBC000:00: ucsi_handle_connector_change: GET_CONNECTOR_STATUS failed (-110)`.
+>>>>
+>>>> I'm testing the LTS kernel (5.15.63) and the issue does not occur, so I assume it's a regression bug, possibly introduced in kernel 5.18 (I tried downgrading the kernel to version 5.18.16 and the issue was already present).
 >>>
->>>> After upgrade kernel from 6.0.2 to 6.0.3 on Lenovo T14 Gen2i, sound stopped working.
->>>> dmesg:
->>>>
->>>> paź 21 21:11:45 kernel: snd_hda_codec_hdmi ehdaudio0D2: failed to create hda codec -12
->>>> paź 21 21:11:45 kernel: snd_hda_codec_hdmi ehdaudio0D2: ASoC: error at snd_soc_component_probe on ehdaudio0D2: -12
->>>> paź 21 21:11:45 kernel: skl_hda_dsp_generic skl_hda_dsp_generic: ASoC: failed to instantiate card -12
->>>>
->>
->> #regzbot introduced: 7494e2e6c55ed19
->> #regzbot fixed-by: 02356311982b
+>>> See the ticket for more details. Apologies if I forwarded it to the
+>>> wrong folks, I cover a lot of ground and thus sometimes get things
+>>> wrong. :-/
+>>>
+>>> BTW, I'd also like to add the report to the list of tracked regressions
+>>> to ensure it's doesn't fall through the cracks in the end:
+>>>
+>>> #regzbot introduced: v5.15..v5.18
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=216426
+>>> #regzbot ignore-activity
+>> #regzbot introduced: f7090e0ef360d674f0
 > 
-> Revert on its way:
-> https://lore.kernel.org/r/20221024143931.15722-1-tiwai@suse.de
+> Looks like nobody yet check if the problem happens with mainline, so
+> let's stick to the backport for now:
+> 
+> #regzbot introduced: 0fbb5ce2f4267
 
-Thx, in fact it was already merged:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-6.0.y&id=02356311982bbb117310a27985fa8938e82c0b6e
-
-That "#regzbot fixed-by: 02356311982b" above told my regression tracking
-bot about the commit. I sadly had to do that manually, as Takashi used
-the non-standard "BugLink" tag to link to the report, which Linus
-doesn't want:
-
-https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
-
-To quote: ```please stop making up random tags that make no sense. Just
-use "Link:"```
-
-Maybe regzbot nevertheless should resolve a tracked regression as
-resolved, if it sees BugLink to a tracked regression. But I think the
-real solution is: checkpatch.pl should complain.
-
-Ciao, Thorsten
+#regzbot invalid: not a regression, likely something related to hardware
+or firmware https://bugzilla.kernel.org/show_bug.cgi?id=216426#c22
