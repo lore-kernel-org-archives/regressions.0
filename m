@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DC497B
-	for <regressions@lists.linux.dev>; Sun, 30 Oct 2022 16:46:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC967B
+	for <regressions@lists.linux.dev>; Sun, 30 Oct 2022 16:49:32 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1opBRw-0005y7-8Z; Sun, 30 Oct 2022 17:46:16 +0100
-Message-ID: <28bb92a2-851d-cccc-2c1b-2f5a21fc49c1@leemhuis.info>
-Date: Sun, 30 Oct 2022 17:46:15 +0100
+	id 1opBV3-0006eZ-0c; Sun, 30 Oct 2022 17:49:29 +0100
+Message-ID: <84860928-db02-b0f8-d13a-2bb8598d04dd@leemhuis.info>
+Date: Sun, 30 Oct 2022 17:49:28 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,18 +16,19 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
-Subject: Re: Issues with the first PowerPC updates for the kernel 6.1
- #forregzbot
+Subject: Re: [Issue] EFI runtime-wrapper is broken #forregzbot
 Content-Language: en-US, de-DE
-To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+To: linux-efi <linux-efi@vger.kernel.org>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <6C70D01A-B819-40BC-94F7-5BA6D8109134@xenosoft.de>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <d799b60c-ff4e-44ae-84be-d9ade761ec6d@redhat.com>
+ <CAMj1kXHDtwkMgqqwePEKdOdO=7-1_TYyuVNPJ7PkyreaMySjCw@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <6C70D01A-B819-40BC-94F7-5BA6D8109134@xenosoft.de>
+In-Reply-To: <CAMj1kXHDtwkMgqqwePEKdOdO=7-1_TYyuVNPJ7PkyreaMySjCw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667148385;ea500dd5;
-X-HE-SMSGID: 1opBRw-0005y7-8Z
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667148572;dad63ec8;
+X-HE-SMSGID: 1opBV3-0006eZ-0c
 
 [Note: this mail is primarily send for documentation purposes and/or for
 regzbot, my Linux kernel regression tracking bot. That's why I removed
@@ -41,28 +42,21 @@ paragraphs you might have encountered already already in similar form.]
 
 Hi, this is your Linux kernel regression tracker.
 
-On 12.10.22 08:51, Christian Zigotzky wrote:
-> Hi All,
-> 
-> I use the Nemo board with a PASemi PA6T CPU and have some issues since the first PowerPC updates for the kernel 6.1.
-> 
-> I successfully compiled the git kernel with the first PowerPC updates two days ago.
-> 
-> Unfortunately this kernel is really dangerous. Many things for example Network Manager and LightDM don't work anymore and produced several gigabyte of config files till the partition has been filled.
-> 
-> I deleted some files like the resolv.conf that had a size over 200 GB!
-> 
-> Unfortunately, MintPPC was still damaged. For example LightDM doesn't work anymore and the MATE desktop doesn't display any icons anymore because Caja wasn't able to reserve memory anymore.
-> 
-> In this case, bisecting isn't an option and I have to wait some weeks. It is really difficult to find the issue if the userland will damaged again and again.
+On 28.10.22 11:21, Ard Biesheuvel wrote:
+> On Fri, 28 Oct 2022 at 11:10, Gavin Shan <gshan@redhat.com> wrote:
+>>
+>> Hi Ard,
+>>
+>> I ran into the following crash with v6.1.rc2. I'm not sure if it's known
+>> issue. Last good version is v6.0.rc6/rc7. The kernel configuration is attached.
 
 Thanks for the report. To be sure below issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced c2e7a19827eec443a7cb
-#regzbot title ppc: PASemi PA6T CPU: Network Manager and LightDM and
-fill volume with data
+#regzbot ^introduced d3549a938b73f203e
+#regzbot title: efi: crashes due to broken runtime-wrapper
+#regzbot from: Gavin Shan <gshan@redhat.com>
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
