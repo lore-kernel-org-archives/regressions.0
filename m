@@ -1,72 +1,86 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B05BD17CCD
-	for <regressions@lists.linux.dev>; Mon, 31 Oct 2022 07:11:36 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 864B11F45B;
-	Mon, 31 Oct 2022 07:11:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1667200289; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=OJN0AIw8urlAT1fZfW3NdZEOZNsYyNMubtI/+K66Zxg=;
-	b=CwmZSX+rU4bLUcR94rOG7gcXkxM5hBYu3BacTiLEwoSoIPW6uQgfOFJ6iCqrfpyXUcn9wc
-	moVQIKouGbkWX6LegqtrlacrBGOG11H5HnXAWWeUjMgDcTHHa3eEIJEMUNCJB8DFUCwjH2
-	jKpcWedSETfGOwwzftVvAiI4wRLC4bs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1667200289;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type;
-	bh=OJN0AIw8urlAT1fZfW3NdZEOZNsYyNMubtI/+K66Zxg=;
-	b=BAx+LlOYgNlVGu1/uU9Wg1Gj0dtF6t6irfmNZ2Th/8VSPvnvyd4lpPuZoG+LWM5ga2+5cz
-	UhH+LO+OHN/FfaDw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 690BB13451;
-	Mon, 31 Oct 2022 07:11:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id QubrGCF1X2P8GAAAMHmgww
-	(envelope-from <tiwai@suse.de>); Mon, 31 Oct 2022 07:11:29 +0000
-Date: Mon, 31 Oct 2022 08:11:28 +0100
-Message-ID: <87h6zklb6n.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: regressions@lists.linux.dev,
-    linux-kernel@vger.kernel.org
-Subject: [REGRESSION 6.0.x / 6.1.x] NULL dereferencing at tracing
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A97D117CD0
+	for <regressions@lists.linux.dev>; Mon, 31 Oct 2022 07:39:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667201994; x=1698737994;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KunlMGY2/up5IfEsZKl1WSD35WH5qKwT2d8FLbQiDMc=;
+  b=Na4+kEcqtmF9CBthl7fLMlMJz8MATRwwKApGGJ1TMKZ0D2ffvb89AQMJ
+   4LN2Tjh2d7QQlo/qdC2toYdhz4SqB3CqgLHdbSruYqW4uc9JmVF0JUlmZ
+   3AV2Mf38TdZfm7zXBD6Bg+u8F92Kl+5dTqrgNTewURcc9seDK7PcocO7z
+   cSXlLq+3p/nrwn1RC+wLGYD5zH60+wf75dsbs4LrPSdNeLt8b1tRCcYwh
+   /BSQ0hMdgCvURGA6kym5O0FOyc9yrB0ZqnmHVjhk+PLp+rCiqQWuYSSf0
+   b2QLqWZdTRpWJXAirTmETOrRw2ZPBRcj/LlbidX3UdEXmgecpOZR6R456
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10516"; a="289228796"
+X-IronPort-AV: E=Sophos;i="5.95,227,1661842800"; 
+   d="scan'208";a="289228796"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Oct 2022 00:39:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10516"; a="758749258"
+X-IronPort-AV: E=Sophos;i="5.95,227,1661842800"; 
+   d="scan'208";a="758749258"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 31 Oct 2022 00:39:43 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 76B54155; Mon, 31 Oct 2022 09:40:06 +0200 (EET)
+Date: Mon, 31 Oct 2022 09:40:06 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+	Lukas Wunner <lukas@wunner.de>,
+	Chris Chiu <chris.chiu@canonical.com>, linux-pci@vger.kernel.org,
+	regressions@lists.linux.dev, linux-cxl@vger.kernel.org,
+	linuxarm@huawei.com
+Subject: Re: Regression: Re: [PATCH v2 4/6] PCI: Distribute available
+ resources for root buses too
+Message-ID: <Y1971qnaq6BJObDl@black.fi.intel.com>
+References: <20220905080232.36087-1-mika.westerberg@linux.intel.com>
+ <20220905080232.36087-5-mika.westerberg@linux.intel.com>
+ <20221014124553.0000696f@huawei.com>
+ <Y0lkeieF3WNV3P3Q@black.fi.intel.com>
+ <20221014154858.000079f2@huawei.com>
+ <Y1ZzRmi9fL9yHf7I@black.fi.intel.com>
+ <Y1Z2GGgfZyzC2d1N@black.fi.intel.com>
+ <Y1fYNsjmUFZsvteT@black.fi.intel.com>
+ <Y1fjT6eyV8KVlNRp@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y1fjT6eyV8KVlNRp@smile.fi.intel.com>
 
-Hi Steven,
+Hi Andy,
 
-we've got a bug report indicating the NULL dereference at the recent
-tracing changes, showing at the start of KDE.  The details including
-the dmesg are found at:
-  https://bugzilla.opensuse.org/show_bug.cgi?id=1204705
+On Tue, Oct 25, 2022 at 04:23:27PM +0300, Andy Shevchenko wrote:
+> On Tue, Oct 25, 2022 at 03:36:06PM +0300, Mika Westerberg wrote:
+> > On Mon, Oct 24, 2022 at 02:25:12PM +0300, Mika Westerberg wrote:
+> 
+> Just for the record in case this code will formally go out
+> 
+> ...
+> 
+> > +			for (i = 0; i < PCI_ROM_RESOURCE; i++) {
+> > +				const struct resource *dev_res = &dev->resource[i];
+> 
+> I believe this is a good candidate to have
+> 
+> #define for_each_pci_dev_resource(dev, res)			\
+> 	for (unsigned int i = 0;				\
+> 	     res = &(dev)->resource[i], i < PCI_ROM_RESOURCE;	\
+> 	     i++)
+> 
+> Since we have many places in the kernel with such a snippet.
 
-It was reported at first for 6.0.3, and confirmed that the problem
-persists with 6.1-rc, too.
-
-The culprit seems to be the commit
-f3ddb74ad0790030c9592229fb14d8c451f4e9a8
-    tracing: Wake up ring buffer waiters on closing of the file
-and reverting it seems fixing the problem.
-
-Could you take a look?
-
-
-thanks,
-
-Takashi
+Sure makes sense, but I think that should be a separate patch series.
