@@ -1,182 +1,71 @@
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50709364
-	for <regressions@lists.linux.dev>; Tue,  1 Nov 2022 08:32:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667291559; x=1698827559;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=knn1oLAwfIIL7icxHS5nRNahPFf2tYSjAdO5agJ5DQI=;
-  b=eYkGisWxpq8rcOc7PO5rVTZQotzF8wBclcuxUYGbRR6yhi/yw7SgoUby
-   L0pJCZD3q1mlRJi5rcKswNCst1v2hLecWX2UaKUJbk/wyvJzPxaZbQ3+N
-   Z6ZDLZemuNmnU7ZfT6HVln0+Rn8KIHSmoJSBcX9AF+Gu2GR5ZICxugaNB
-   Z1r5BwpEqfj2rNLR9H4QZu6/fT37Y3wxD4ROFCM2wF4hvhONELpYWlRBM
-   YVge9TByTb2To3DLFlbG+PlJeVS7BTI5ZoTVi3jNHzP66VPrb2RbriVvQ
-   TIFBpXX066uOH8qb8qj7GW9CtDe7cuoEKhDIKuwmIfLMsqQZ0ou0ZiiA/
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10517"; a="292396834"
-X-IronPort-AV: E=Sophos;i="5.95,230,1661842800"; 
-   d="scan'208";a="292396834"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2022 01:32:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10517"; a="723095713"
-X-IronPort-AV: E=Sophos;i="5.95,230,1661842800"; 
-   d="scan'208";a="723095713"
-Received: from sqa-gate.sh.intel.com (HELO robert-ivt.tsp.org) ([10.239.48.212])
-  by FMSMGA003.fm.intel.com with ESMTP; 01 Nov 2022 01:32:35 -0700
-Message-ID: <955799c72b6b825fcce104771ee7570d826faac5.camel@linux.intel.com>
-Subject: Re: [KVM] e923b0537d: kernel-selftests.kvm.rseq_test.fail
-From: Robert Hoo <robert.hu@linux.intel.com>
-To: Gavin Shan <gshan@redhat.com>, Sean Christopherson <seanjc@google.com>, 
-	kernel test robot <oliver.sang@intel.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Oliver Upton
- <oliver.upton@linux.dev>,  Andrew Jones <andrew.jones@linux.dev>, LKML
- <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,  lkp@lists.01.org,
- lkp@intel.com, xudong.hao@intel.com, regressions@lists.linux.dev
-Date: Tue, 01 Nov 2022 16:32:35 +0800
-In-Reply-To: <9bfeae26-b4b1-eedb-6cbd-b4f9f1e1cc55@redhat.com>
-References: <Yvn60W/JpPO8URLY@xsang-OptiPlex-9020>
-	 <Yvq9wzXNF4ZnlCdk@google.com>
-	 <5034abb9-e176-d480-c577-1ec5dd47182b@redhat.com>
-	 <9bfeae26-b4b1-eedb-6cbd-b4f9f1e1cc55@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-10.el7) 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6351E9EF
+	for <regressions@lists.linux.dev>; Tue,  1 Nov 2022 17:53:48 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1opvSG-0002CB-Mc; Tue, 01 Nov 2022 18:53:40 +0100
+Message-ID: <0fb9b48e-3bcc-5a5e-15fb-1d3e2752d80b@leemhuis.info>
+Date: Tue, 1 Nov 2022 18:53:40 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH] cifs: fix regression in very old smb1 mounts
+To: Ronnie Sahlberg <lsahlber@redhat.com>,
+ linux-cifs <linux-cifs@vger.kernel.org>
+Cc: Steve French <smfrench@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20221011231207.1458541-1-lsahlber@redhat.com>
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20221011231207.1458541-1-lsahlber@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667325229;4501b87e;
+X-HE-SMSGID: 1opvSG-0002CB-Mc
 
-On Tue, 2022-08-16 at 20:02 +1000, Gavin Shan wrote:
-> Hi Sean,
+On 12.10.22 01:12, Ronnie Sahlberg wrote:
+> BZ: 215375
 > 
-> On 8/16/22 3:02 PM, Gavin Shan wrote:
-> > On 8/16/22 7:42 AM, Sean Christopherson wrote:
-> > > On Mon, Aug 15, 2022, kernel test robot wrote:
-> > > > commit: e923b0537d28e15c9d31ce8b38f810b325816903 ("KVM:
-> > > > selftests: Fix target thread to be migrated in rseq_test")
-> > > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git
-> > > >  master
-> > > 
-> > > ...
-> > > 
-> > > > # selftests: kvm: rseq_test
-> > > > # ==== Test Assertion Failure ====
-> > > > #   rseq_test.c:278: i > (NR_TASK_MIGRATIONS / 2)
-> > > > #   pid=49599 tid=49599 errno=4 - Interrupted system call
-> > > > #      1    0x000000000040265d: main at rseq_test.c:278
-> > > > #      2    0x00007fe44eed07fc: ?? ??:0
-> > > > #      3    0x00000000004026d9: _start at ??:?
-> > > > #   Only performed 23174 KVM_RUNs, task stalled too much?
-> > > > #
-> > > > not ok 56 selftests: kvm: rseq_test # exit=254
-> > > 
-> > > ...
-> > > 
-> > > > # Automatically generated file; DO NOT EDIT.
-> > > > # Linux/x86_64 5.19.0-rc6 Kernel Configuration
-> > > > #
-> > > > CONFIG_CC_VERSION_TEXT="gcc-11 (Debian 11.3.0-3) 11.3.0"
-> > > > CONFIG_CC_IS_GCC=y
-> > > > CONFIG_GCC_VERSION=110300
-> > > > CONFIG_CLANG_VERSION=0
-> > > > CONFIG_AS_IS_GNU=y
-> > > > CONFIG_AS_VERSION=23800
-> > > > CONFIG_LD_IS_BFD=y
-> > > > CONFIG_LD_VERSION=23800
-> > > > CONFIG_LLD_VERSION=0
-> > > 
-> > > Assuming 23800 == 2.38, this is a known issue.
-> > > 
-> > > https://lore.kernel.org/all/20220810104114.6838-1-gshan@redhat.com
-> > > 
-> > 
-> > It's probably different story this time. The assert is triggered
-> > because
-> > of the following instructions. I would guess the reason is vcpu
-> > thread
-> > has been running on CPU where we has high CPU load. In this case,
-> > the
-> > vcpu thread can't be run in time. More specific, the vcpu thread
-> > can't
-> > be run in the 1 - 10us time window, which is specified by the
-> > migration
-> > worker (thread).
-> > 
-> >      TEST_ASSERT(i > (NR_TASK_MIGRATIONS / 2),
-> >                  "Only performed %d KVM_RUNs, task stalled too
-> > much?\n", i);
-> > 
-> > I think we need to improve the handshake mechanism between the vcpu
-> > thread
-> > and migration worker. In current implementation, the handshake is
-> > done through
-> > the atomic counter. The mechanism is simple enough, but vcpu thread
-> > can miss
-> > the aforementioned time window. Another issue is the test case much
-> > more time
-> > than expected to finish.
-> > 
-> > Sean, if you think it's reasonable, I can figure out something to
-> > do:
-> > 
-> > - Reuse the atomic counter for a full synchronization between these
-> > two
-> >    threads. Something like below:
-> > 
-> >    #define RSEQ_TEST_STATE_RUN_VCPU       0     // vcpu_run()
-> >    #define RSEQ_TEST_STATE_MIGRATE        1     //
-> > sched_setaffinity()
-> >    #define RSEQ_TEST_STATE_CHECK          2     // Check
-> > rseq.cpu_id and get_cpu()
-> > 
-> >    The atomic counter is reset to RSEQ_TEST_STATE_RUN_VCPU after
-> > RSEQ_TEST_STATE_RUN_VCPU
-> > 
-> > - Reduce NR_TASK_MIGRATIONS from 100000 to num_of_online_cpus().
-> > With this,
-> >    less time is needed to finish the test case.
-> > 
-> 
-> I'm able to recreate the issue on my local arm64 system.
-> 
-> - From the source code, the iteration count is changed from 100000 to
-> 1000
-> - Only CPU#0 and CPU#1 are exposed in calc_min_max_cpu, meaning other
-> CPUs
->    are cleared from @possible_mask
-> - Run some CPU bound task on CPU#0 and CPU#1
->    # while true; do taskset -c 0 ./a; done
->    # while true; do taskset -c 1 ./a; done
-> - Run 'rseq_test' and hit the issue
->    # ./rseq_test
->    calc_min_max_cpu: nproc=224
->    calc_min_max_cpu: min_cpu=0, max_cpu=1
->    main: Required tests: 1000   Succeeds: 1
->    ==== Test Assertion Failure ====
->      rseq_test.c:280: i > (NR_TASK_MIGRATIONS / 2)
->      pid=9624 tid=9624 errno=4 - Interrupted system call
->         1	0x0000000000401cf3: main at rseq_test.c:280
->         2	0x0000ffffbc64679b: ?? ??:0
->         3	0x0000ffffbc64686b: ?? ??:0
->         4	0x0000000000401def: _start at ??:?
->      Only performed 1 KVM_RUNs, task stalled too much?
-> 
-I met this as well, and can reproduce this easily on my Cascade-Lake
-machine, without heavy workload; before I find this mail.
-I'm wondering if it's because vcpu_run() has become much more time
-consuming than this test case was defined?
+> Fixes: 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c ("cifs: remove support for NTLM and weaker authentication algorithms")
+> Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
 
-BTW, if we substitute sys_getcpu(&cpu) with vdso_getcpu(), can reduce
-the reproduction odds.
+Ronnie, Steve, did this change create any trouble in 6.1 pre-releases so
+far? If not: could you please consider submitting this change for
+inclusion in 6.0 and 5.15, as this is a regression from the 5.15 days
+that according to the bugzilla ticket seem to annoy some people a lot.
 
-> Thanks,
-> Gavin
-> 
-> 
+Ciao, Thorsten
 
+> ---
+>  fs/cifs/connect.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
+> 
+> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
+> index 93e59b3b36c7..c77232096c12 100644
+> --- a/fs/cifs/connect.c
+> +++ b/fs/cifs/connect.c
+> @@ -3922,12 +3922,11 @@ CIFSTCon(const unsigned int xid, struct cifs_ses *ses,
+>  	pSMB->AndXCommand = 0xFF;
+>  	pSMB->Flags = cpu_to_le16(TCON_EXTENDED_SECINFO);
+>  	bcc_ptr = &pSMB->Password[0];
+> -	if (tcon->pipe || (ses->server->sec_mode & SECMODE_USER)) {
+> -		pSMB->PasswordLength = cpu_to_le16(1);	/* minimum */
+> -		*bcc_ptr = 0; /* password is null byte */
+> -		bcc_ptr++;              /* skip password */
+> -		/* already aligned so no need to do it below */
+> -	}
+> +
+> +	pSMB->PasswordLength = cpu_to_le16(1);	/* minimum */
+> +	*bcc_ptr = 0; /* password is null byte */
+> +	bcc_ptr++;              /* skip password */
+> +	/* already aligned so no need to do it below */
+>  
+>  	if (ses->server->sign)
+>  		smb_buffer->Flags2 |= SMBFLG2_SECURITY_SIGNATURE;
