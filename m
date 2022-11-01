@@ -1,117 +1,182 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E9162E
-	for <regressions@lists.linux.dev>; Tue,  1 Nov 2022 08:21:49 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id AF0DF1FE4D;
-	Tue,  1 Nov 2022 08:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1667290901; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CwmF+GF8TFJ1DJcjepgRHGxKQmBCUwUcD5eX9NLO3jQ=;
-	b=qvWgpbe/emohvXjwWNSBIyY5uNizh9A+X2Y/scGu9wtK6upAfM+ySEtC2zqYtbswgxG+hm
-	tqHn2snnoRvpFtOi+InpK6dZvkE+HMtKRWLypjWWXJLYmHHKpUu+VXHey01825DdUzmOou
-	29v0DuUskqHeaXByLr7f7bnHPQW6vx0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1667290901;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CwmF+GF8TFJ1DJcjepgRHGxKQmBCUwUcD5eX9NLO3jQ=;
-	b=8yBk+eGkgjLrqU3GH/7ug0JKi1BAZP3oLqWWN5VQESCK6/HveEoDb9p/WzezT1OA4Gsde+
-	gAsQHSjLIkiAGeCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 794911346F;
-	Tue,  1 Nov 2022 08:21:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id xp6pHBXXYGMaIQAAMHmgww
-	(envelope-from <tiwai@suse.de>); Tue, 01 Nov 2022 08:21:41 +0000
-Date: Tue, 01 Nov 2022 09:21:41 +0100
-Message-ID: <871qqn84q2.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Takashi Iwai <tiwai@suse.de>,
-	regressions@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	postix@posteo.eu
-Subject: Re: [REGRESSION 6.0.x / 6.1.x] NULL dereferencing at tracing
-In-Reply-To: <20221031144850.5522b036@rorschach.local.home>
-References: <87h6zklb6n.wl-tiwai@suse.de>
-	<20221031144850.5522b036@rorschach.local.home>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50709364
+	for <regressions@lists.linux.dev>; Tue,  1 Nov 2022 08:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1667291559; x=1698827559;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=knn1oLAwfIIL7icxHS5nRNahPFf2tYSjAdO5agJ5DQI=;
+  b=eYkGisWxpq8rcOc7PO5rVTZQotzF8wBclcuxUYGbRR6yhi/yw7SgoUby
+   L0pJCZD3q1mlRJi5rcKswNCst1v2hLecWX2UaKUJbk/wyvJzPxaZbQ3+N
+   Z6ZDLZemuNmnU7ZfT6HVln0+Rn8KIHSmoJSBcX9AF+Gu2GR5ZICxugaNB
+   Z1r5BwpEqfj2rNLR9H4QZu6/fT37Y3wxD4ROFCM2wF4hvhONELpYWlRBM
+   YVge9TByTb2To3DLFlbG+PlJeVS7BTI5ZoTVi3jNHzP66VPrb2RbriVvQ
+   TIFBpXX066uOH8qb8qj7GW9CtDe7cuoEKhDIKuwmIfLMsqQZ0ou0ZiiA/
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10517"; a="292396834"
+X-IronPort-AV: E=Sophos;i="5.95,230,1661842800"; 
+   d="scan'208";a="292396834"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Nov 2022 01:32:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10517"; a="723095713"
+X-IronPort-AV: E=Sophos;i="5.95,230,1661842800"; 
+   d="scan'208";a="723095713"
+Received: from sqa-gate.sh.intel.com (HELO robert-ivt.tsp.org) ([10.239.48.212])
+  by FMSMGA003.fm.intel.com with ESMTP; 01 Nov 2022 01:32:35 -0700
+Message-ID: <955799c72b6b825fcce104771ee7570d826faac5.camel@linux.intel.com>
+Subject: Re: [KVM] e923b0537d: kernel-selftests.kvm.rseq_test.fail
+From: Robert Hoo <robert.hu@linux.intel.com>
+To: Gavin Shan <gshan@redhat.com>, Sean Christopherson <seanjc@google.com>, 
+	kernel test robot <oliver.sang@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Oliver Upton
+ <oliver.upton@linux.dev>,  Andrew Jones <andrew.jones@linux.dev>, LKML
+ <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,  lkp@lists.01.org,
+ lkp@intel.com, xudong.hao@intel.com, regressions@lists.linux.dev
+Date: Tue, 01 Nov 2022 16:32:35 +0800
+In-Reply-To: <9bfeae26-b4b1-eedb-6cbd-b4f9f1e1cc55@redhat.com>
+References: <Yvn60W/JpPO8URLY@xsang-OptiPlex-9020>
+	 <Yvq9wzXNF4ZnlCdk@google.com>
+	 <5034abb9-e176-d480-c577-1ec5dd47182b@redhat.com>
+	 <9bfeae26-b4b1-eedb-6cbd-b4f9f1e1cc55@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-10.el7) 
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 
-On Mon, 31 Oct 2022 19:48:50 +0100,
-Steven Rostedt wrote:
+On Tue, 2022-08-16 at 20:02 +1000, Gavin Shan wrote:
+> Hi Sean,
 > 
-> On Mon, 31 Oct 2022 08:11:28 +0100
-> Takashi Iwai <tiwai@suse.de> wrote:
-> 
-> > Hi Steven,
+> On 8/16/22 3:02 PM, Gavin Shan wrote:
+> > On 8/16/22 7:42 AM, Sean Christopherson wrote:
+> > > On Mon, Aug 15, 2022, kernel test robot wrote:
+> > > > commit: e923b0537d28e15c9d31ce8b38f810b325816903 ("KVM:
+> > > > selftests: Fix target thread to be migrated in rseq_test")
+> > > > https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git
+> > > >  master
+> > > 
+> > > ...
+> > > 
+> > > > # selftests: kvm: rseq_test
+> > > > # ==== Test Assertion Failure ====
+> > > > #   rseq_test.c:278: i > (NR_TASK_MIGRATIONS / 2)
+> > > > #   pid=49599 tid=49599 errno=4 - Interrupted system call
+> > > > #      1    0x000000000040265d: main at rseq_test.c:278
+> > > > #      2    0x00007fe44eed07fc: ?? ??:0
+> > > > #      3    0x00000000004026d9: _start at ??:?
+> > > > #   Only performed 23174 KVM_RUNs, task stalled too much?
+> > > > #
+> > > > not ok 56 selftests: kvm: rseq_test # exit=254
+> > > 
+> > > ...
+> > > 
+> > > > # Automatically generated file; DO NOT EDIT.
+> > > > # Linux/x86_64 5.19.0-rc6 Kernel Configuration
+> > > > #
+> > > > CONFIG_CC_VERSION_TEXT="gcc-11 (Debian 11.3.0-3) 11.3.0"
+> > > > CONFIG_CC_IS_GCC=y
+> > > > CONFIG_GCC_VERSION=110300
+> > > > CONFIG_CLANG_VERSION=0
+> > > > CONFIG_AS_IS_GNU=y
+> > > > CONFIG_AS_VERSION=23800
+> > > > CONFIG_LD_IS_BFD=y
+> > > > CONFIG_LD_VERSION=23800
+> > > > CONFIG_LLD_VERSION=0
+> > > 
+> > > Assuming 23800 == 2.38, this is a known issue.
+> > > 
+> > > https://lore.kernel.org/all/20220810104114.6838-1-gshan@redhat.com
+> > > 
 > > 
-> > we've got a bug report indicating the NULL dereference at the recent
-> > tracing changes, showing at the start of KDE.  The details including
-> > the dmesg are found at:
-> >   https://bugzilla.opensuse.org/show_bug.cgi?id=1204705
+> > It's probably different story this time. The assert is triggered
+> > because
+> > of the following instructions. I would guess the reason is vcpu
+> > thread
+> > has been running on CPU where we has high CPU load. In this case,
+> > the
+> > vcpu thread can't be run in time. More specific, the vcpu thread
+> > can't
+> > be run in the 1 - 10us time window, which is specified by the
+> > migration
+> > worker (thread).
 > > 
-> > It was reported at first for 6.0.3, and confirmed that the problem
-> > persists with 6.1-rc, too.
+> >      TEST_ASSERT(i > (NR_TASK_MIGRATIONS / 2),
+> >                  "Only performed %d KVM_RUNs, task stalled too
+> > much?\n", i);
 > > 
-> > The culprit seems to be the commit
-> > f3ddb74ad0790030c9592229fb14d8c451f4e9a8
-> >     tracing: Wake up ring buffer waiters on closing of the file
-> > and reverting it seems fixing the problem.
+> > I think we need to improve the handshake mechanism between the vcpu
+> > thread
+> > and migration worker. In current implementation, the handshake is
+> > done through
+> > the atomic counter. The mechanism is simple enough, but vcpu thread
+> > can miss
+> > the aforementioned time window. Another issue is the test case much
+> > more time
+> > than expected to finish.
 > > 
-> > Could you take a look?
+> > Sean, if you think it's reasonable, I can figure out something to
+> > do:
 > > 
-> >
+> > - Reuse the atomic counter for a full synchronization between these
+> > two
+> >    threads. Something like below:
+> > 
+> >    #define RSEQ_TEST_STATE_RUN_VCPU       0     // vcpu_run()
+> >    #define RSEQ_TEST_STATE_MIGRATE        1     //
+> > sched_setaffinity()
+> >    #define RSEQ_TEST_STATE_CHECK          2     // Check
+> > rseq.cpu_id and get_cpu()
+> > 
+> >    The atomic counter is reset to RSEQ_TEST_STATE_RUN_VCPU after
+> > RSEQ_TEST_STATE_RUN_VCPU
+> > 
+> > - Reduce NR_TASK_MIGRATIONS from 100000 to num_of_online_cpus().
+> > With this,
+> >    less time is needed to finish the test case.
+> > 
 > 
-> Can you apply this to see if it fixes it?
+> I'm able to recreate the issue on my local arm64 system.
 > 
-> I'm guessing there's a path to the release of the file descriptor where
-> the ring buffer isn't allocated (and this expected it to be).
+> - From the source code, the iteration count is changed from 100000 to
+> 1000
+> - Only CPU#0 and CPU#1 are exposed in calc_min_max_cpu, meaning other
+> CPUs
+>    are cleared from @possible_mask
+> - Run some CPU bound task on CPU#0 and CPU#1
+>    # while true; do taskset -c 0 ./a; done
+>    # while true; do taskset -c 1 ./a; done
+> - Run 'rseq_test' and hit the issue
+>    # ./rseq_test
+>    calc_min_max_cpu: nproc=224
+>    calc_min_max_cpu: min_cpu=0, max_cpu=1
+>    main: Required tests: 1000   Succeeds: 1
+>    ==== Test Assertion Failure ====
+>      rseq_test.c:280: i > (NR_TASK_MIGRATIONS / 2)
+>      pid=9624 tid=9624 errno=4 - Interrupted system call
+>         1	0x0000000000401cf3: main at rseq_test.c:280
+>         2	0x0000ffffbc64679b: ?? ??:0
+>         3	0x0000ffffbc64686b: ?? ??:0
+>         4	0x0000000000401def: _start at ??:?
+>      Only performed 1 KVM_RUNs, task stalled too much?
 > 
-> I'll investigate further to see if I can find that path.
+I met this as well, and can reproduce this easily on my Cascade-Lake
+machine, without heavy workload; before I find this mail.
+I'm wondering if it's because vcpu_run() has become much more time
+consuming than this test case was defined?
 
-For avoiding confusion: the follow up post in this thread
-  https://lore.kernel.org/71829e56-a13f-0462-37a7-a4d64c16f561@posteo.de
-is from Alex, who is the original bug reporter on openSUSE Bugzilla.
+BTW, if we substitute sys_getcpu(&cpu) with vdso_getcpu(), can reduce
+the reproduction odds.
 
-The test result looks negative, unfortunately.
-
-
-Takashi
-
+> Thanks,
+> Gavin
 > 
-> -- Steve
 > 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 199759c73519..c1c7ce4c6ddb 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -937,6 +937,9 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
->  	struct ring_buffer_per_cpu *cpu_buffer;
->  	struct rb_irq_work *rbwork;
->  
-> +	if (!buffer)
-> +		return;
-> +
->  	if (cpu == RING_BUFFER_ALL_CPUS) {
->  
->  		/* Wake up individual ones too. One level recursion */
-> 
+
