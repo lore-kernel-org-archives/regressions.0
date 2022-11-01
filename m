@@ -1,71 +1,69 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6351E9EF
-	for <regressions@lists.linux.dev>; Tue,  1 Nov 2022 17:53:48 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1opvSG-0002CB-Mc; Tue, 01 Nov 2022 18:53:40 +0100
-Message-ID: <0fb9b48e-3bcc-5a5e-15fb-1d3e2752d80b@leemhuis.info>
-Date: Tue, 1 Nov 2022 18:53:40 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08837E
+	for <regressions@lists.linux.dev>; Tue,  1 Nov 2022 19:31:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 291B9C433C1;
+	Tue,  1 Nov 2022 19:31:37 +0000 (UTC)
+Date: Tue, 1 Nov 2022 15:31:35 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Roland Ruckerbauer <roland.rucky@gmail.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
+ Takashi Iwai <tiwai@suse.de>, regressions@lists.linux.dev, Steven Noonan
+ <steven.noonan@gmail.com>
+Subject: Re: [BUG] NULL pointer dereference probably caused by
+ kernel/trace/ring_buffer.c
+Message-ID: <20221101153135.5345c748@rorschach.local.home>
+In-Reply-To: <CAM6WdxeZbGmRopXqLtDNTwPOahnyC6GrCfv4H1m=mF41-J=VbA@mail.gmail.com>
+References: <CAM6Wdxc0KRJMXVAA0Y=u6Jh2V=uWB-_Fn6M4xRuNppfXzL1mUg@mail.gmail.com>
+	<20221031145046.2a7f9d32@rorschach.local.home>
+	<CAM6WdxeZbGmRopXqLtDNTwPOahnyC6GrCfv4H1m=mF41-J=VbA@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH] cifs: fix regression in very old smb1 mounts
-To: Ronnie Sahlberg <lsahlber@redhat.com>,
- linux-cifs <linux-cifs@vger.kernel.org>
-Cc: Steve French <smfrench@gmail.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20221011231207.1458541-1-lsahlber@redhat.com>
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20221011231207.1458541-1-lsahlber@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667325229;4501b87e;
-X-HE-SMSGID: 1opvSG-0002CB-Mc
 
-On 12.10.22 01:12, Ronnie Sahlberg wrote:
-> BZ: 215375
-> 
-> Fixes: 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c ("cifs: remove support for NTLM and weaker authentication algorithms")
-> Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+On Mon, 31 Oct 2022 21:20:33 +0100
+Roland Ruckerbauer <roland.rucky@gmail.com> wrote:
 
-Ronnie, Steve, did this change create any trouble in 6.1 pre-releases so
-far? If not: could you please consider submitting this change for
-inclusion in 6.0 and 5.15, as this is a regression from the 5.15 days
-that according to the bugzilla ticket seem to annoy some people a lot.
+> Unfortunately the same thing is still happening.
 
-Ciao, Thorsten
+Can you try this?
 
-> ---
->  fs/cifs/connect.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-> index 93e59b3b36c7..c77232096c12 100644
-> --- a/fs/cifs/connect.c
-> +++ b/fs/cifs/connect.c
-> @@ -3922,12 +3922,11 @@ CIFSTCon(const unsigned int xid, struct cifs_ses *ses,
->  	pSMB->AndXCommand = 0xFF;
->  	pSMB->Flags = cpu_to_le16(TCON_EXTENDED_SECINFO);
->  	bcc_ptr = &pSMB->Password[0];
-> -	if (tcon->pipe || (ses->server->sec_mode & SECMODE_USER)) {
-> -		pSMB->PasswordLength = cpu_to_le16(1);	/* minimum */
-> -		*bcc_ptr = 0; /* password is null byte */
-> -		bcc_ptr++;              /* skip password */
-> -		/* already aligned so no need to do it below */
-> -	}
-> +
-> +	pSMB->PasswordLength = cpu_to_le16(1);	/* minimum */
-> +	*bcc_ptr = 0; /* password is null byte */
-> +	bcc_ptr++;              /* skip password */
-> +	/* already aligned so no need to do it below */
->  
->  	if (ses->server->sign)
->  		smb_buffer->Flags2 |= SMBFLG2_SECURITY_SIGNATURE;
+If it stops the crash, it should trigger the warning, which hopefully
+will shed more light onto the issue.
+
+Thanks!
+
+-- Steve
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 199759c73519..8dd793833b51 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -937,6 +937,9 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct rb_irq_work *rbwork;
+ 
++	if (!buffer)
++		return;
++
+ 	if (cpu == RING_BUFFER_ALL_CPUS) {
+ 
+ 		/* Wake up individual ones too. One level recursion */
+@@ -945,6 +948,10 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+ 
+ 		rbwork = &buffer->irq_work;
+ 	} else {
++		if (WARN_ON_ONCE(!buffer->buffers))
++			return;
++		if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
++			return;
+ 		cpu_buffer = buffer->buffers[cpu];
+ 		rbwork = &cpu_buffer->irq_work;
+ 	}
