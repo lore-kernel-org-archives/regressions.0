@@ -1,11 +1,11 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959A11E9F9
-	for <regressions@lists.linux.dev>; Tue,  1 Nov 2022 22:35:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12C1DC433C1;
-	Tue,  1 Nov 2022 22:35:14 +0000 (UTC)
-Date: Tue, 1 Nov 2022 18:35:12 -0400
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68B2021D75
+	for <regressions@lists.linux.dev>; Tue,  1 Nov 2022 22:43:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF5D9C433C1;
+	Tue,  1 Nov 2022 22:43:48 +0000 (UTC)
+Date: Tue, 1 Nov 2022 18:43:47 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: Roland Ruckerbauer <roland.rucky@gmail.com>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
@@ -13,8 +13,8 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>, linux-kernel@vger.kernel.org,
  <steven.noonan@gmail.com>
 Subject: Re: [BUG] NULL pointer dereference probably caused by
  kernel/trace/ring_buffer.c
-Message-ID: <20221101183512.285cfd68@rorschach.local.home>
-In-Reply-To: <CAM6WdxfsP13aS62=xWNTFEEzAekAuDwFTpnONP9qF3br-65KWQ@mail.gmail.com>
+Message-ID: <20221101184347.2ecce20c@rorschach.local.home>
+In-Reply-To: <20221101183512.285cfd68@rorschach.local.home>
 References: <CAM6Wdxc0KRJMXVAA0Y=u6Jh2V=uWB-_Fn6M4xRuNppfXzL1mUg@mail.gmail.com>
 	<20221031145046.2a7f9d32@rorschach.local.home>
 	<CAM6WdxeZbGmRopXqLtDNTwPOahnyC6GrCfv4H1m=mF41-J=VbA@mail.gmail.com>
@@ -23,6 +23,7 @@ References: <CAM6Wdxc0KRJMXVAA0Y=u6Jh2V=uWB-_Fn6M4xRuNppfXzL1mUg@mail.gmail.com>
 	<20221101173802.7a476a04@rorschach.local.home>
 	<CAM6WdxdAF5X8v_tbL1LvNDXgEPY5veL_OtQv5CrADV9qH4um-g@mail.gmail.com>
 	<CAM6WdxfsP13aS62=xWNTFEEzAekAuDwFTpnONP9qF3br-65KWQ@mail.gmail.com>
+	<20221101183512.285cfd68@rorschach.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -33,24 +34,45 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 1 Nov 2022 23:01:38 +0100
-Roland Ruckerbauer <roland.rucky@gmail.com> wrote:
+On Tue, 1 Nov 2022 18:35:12 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Just figured out something, the poll() errors starting at fd 29 (which
-> is CPU 24).
-> But I only have 24 cores. Looked at
-> /sys/kernel/debug/tracing/instances/rasdaemon/per_cpu/, and voila, it
-> lists 32 cpus not 24.
+> OK, this is a great clue. I'll dig deeper.
 
-Ah, and this explains why I never triggered it. There's some machines
-that list nr_cpu_ids as more than what exists (I guess it is "possible
-CPUs" and not "actual CPUs").
+One more NULL check. And this one is legit, and I'm betting is the fix.
 
-OK, this is a great clue. I'll dig deeper.
-
-Thanks a lot for telling me this.
-
-Takashi, can you check if the problem machines have more CPUs listed in
-/sys/kernel/tracing/per_cpu/cpu* than is on the machine?
+The buffer->buffers is allocated to nr_cpu_ids, but are only
+initialized for online CPUs. If you have a CPU that is not yet
+initialized (or may never be), then the cpu_buffer will be NULL.
 
 -- Steve
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 199759c73519..4ffcc6e33258 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -937,6 +937,9 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct rb_irq_work *rbwork;
+ 
++	if (!buffer)
++		return;
++
+ 	if (cpu == RING_BUFFER_ALL_CPUS) {
+ 
+ 		/* Wake up individual ones too. One level recursion */
+@@ -945,7 +948,14 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+ 
+ 		rbwork = &buffer->irq_work;
+ 	} else {
++		if (WARN_ON_ONCE(!buffer->buffers))
++			return;
++		if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
++			return;
+ 		cpu_buffer = buffer->buffers[cpu];
++		/* The CPU buffer may not have been initialized yet */
++		if (!cpu_buffer)
++			return;
+ 		rbwork = &cpu_buffer->irq_work;
+ 	}
+ 
