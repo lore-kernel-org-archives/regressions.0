@@ -1,87 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2048.outbound.protection.outlook.com [40.107.95.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202207488
-	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 15:30:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB804C433D6;
-	Thu,  3 Nov 2022 15:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1667489401;
-	bh=6e8ruPJPD4sSHdabvzka5nsqzYWSReJCia4VC8DZ9CM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nOVFgG2pxHS9Fg7mzPDyqbmvyepYWB3Y3X2N8+EBwUlijrMPVpLJoiJVMBdgRwIXX
-	 4HlUO6GU3oDEA8CwPGikMMybTagUvLONlIkaMjNb4pfwti5A7CgmB83C0VgDGLGQ04
-	 sLfDc/20/O1uyAoz6AA6rYUmebq7/dyFlO0VSbNMa9/LUzSpMzOPBJShHu7PIUHJR9
-	 oc64zKZqnKMHvD5Hd8VNlefEKteotP4zD1oYVGGlA+UpsmMMxYd/WDi/t5SbEvXppc
-	 W72EuztIQUVG3z/pImAUg3kHwDydmv+jo3keWGktKNrlYeV68tvsEnKyr/HdlULtQ5
-	 ie6sLLiYT9Ztg==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-	(envelope-from <johan@kernel.org>)
-	id 1oqcA4-0004AX-C3; Thu, 03 Nov 2022 16:29:44 +0100
-Date: Thu, 3 Nov 2022 16:29:44 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Stefan Agner <stefan@agner.ch>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Matthias Kaehlcke <mka@chromium.org>, stable <stable@kernel.org>,
-	regressions@lists.linux.dev, krzk@kernel.org
-Subject: Re: [PATCH stable-5.15 3/3] usb: dwc3: disable USB core PHY
- management
-Message-ID: <Y2PeaP/dcaklXW+x@hovoldconsulting.com>
-References: <20220906120702.19219-4-johan@kernel.org>
- <808bdba846bb60456adf10a3016911ee@agner.ch>
- <Y0+8dKESygFunXOu@hovoldconsulting.com>
- <86c0f1ee8ffc94f9a53690dda6a83fbb@agner.ch>
- <Y1JCIKT80P9IysKD@hovoldconsulting.com>
- <b2a1e70bda64cb741efe81c5b7e56707@agner.ch>
- <Y1p9Wy9w5umMBC4V@hovoldconsulting.com>
- <CGME20221103145022eucas1p2218e78d51500c85b3cda59cc533a3631@eucas1p2.samsung.com>
- <Y2PVF/IJoKvSu3SM@hovoldconsulting.com>
- <53e543e8-f895-d4f1-da94-d0baca528e79@samsung.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBDA7488
+	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 16:13:12 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZcvF2ULoYJLx1M8Nmm1kmhf0vLWx30c1vEF8YETJN9p3SFqd9UMZW5dllG9nhAtyvE0UgcpIQEvrGZ1BVwx+IQgReICpiJHXtDkYd0MSGevImHUt5RheWkVvQxHsD9Pl/icRzNDFhogYno5d7jldR03B8ZLeiZwUptx/1zPNMvn47T3+8fhvzKWJzd3KCy90ixU8xrJ34AjoOe2KSmzyEA/UZV3kJNi2acKFQxnK+OeKuCp7p7AlZ3R1RMlLCSgIy4GD8UE0IU7RUsLWr+qaDpfnwHk/sR87BfwQUcJ5sKzjdKVa+DyxI79jZKiAN/EaL3ME1UZJST4ggv5p+6X7JA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IlhZ2bJZoQBEjJLOWausbWUdhELHAoLKU8vP+pfVq2g=;
+ b=JZfKwsyg+iTTljwJV1kn5Y1t5QlRTzChG2sMHBLycM1dfI2EIyVej0c7i7vVeixo4kz3dNZnmspMhUwgGyPDhx/j3EBn9HrgncsWJsv+SNH9Pmypl41GCjr9l/pR39qWf5KRoTZSVMcmmuG3bF5XceTAVlGNfoRnpFNhezJ31bYokZ8udZN+uOZLu1CYwui6mN81RUNuh8nHZWyhiA7zPTZrH3SbaeqRp15kejdTz9sW4xX0D8snhimOpz+IZgrnpuj6UJOqYBdMK0ShsitZqLg6VTW/8r+GhfHdtlMh0bJCf2dadZ/EJE/4TA4FQUFkNADZRPuDkGlOs+GQCE7YHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IlhZ2bJZoQBEjJLOWausbWUdhELHAoLKU8vP+pfVq2g=;
+ b=Fz28dejx+oAXyRQr9qcrTAIeF0YNp0l9oOUDaOxRGGGLVGFW4OeB/0LQDlubRviT9ZfBiWHWpHfgLmrkfY6Z9k9KoV05nFvCyehdCzf3595Kous3rnc1yKF1kS6/FaLdnpB8kBDeAgbwoyGHJLavJGHwsy3SA8Z1QE7cAcEUc3A=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by SJ0PR12MB7065.namprd12.prod.outlook.com (2603:10b6:a03:4ae::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.20; Thu, 3 Nov
+ 2022 16:13:10 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::f397:c6b1:a8a5:55f5]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::f397:c6b1:a8a5:55f5%6]) with mapi id 15.20.5791.020; Thu, 3 Nov 2022
+ 16:13:10 +0000
+Message-ID: <f00ecc51-a387-1801-0db6-e18060c620a7@amd.com>
+Date: Thu, 3 Nov 2022 21:42:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.3
+Subject: Re: Perf: BUG: kernel NULL pointer dereference, address:
+ 0000000000000198
+Content-Language: en-US
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Borislav Petkov <bp@alien8.de>,
+ Ingo Molnar <mingo@redhat.com>, linux-perf-users@vger.kernel.org,
+ open list <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
+ lkft-triage@lists.linaro.org, Stephane Eranian <eranian@google.com>,
+ Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <CA+G9fYtOP-spGS7gYyBB-8wpUDiKxd5e_Nk05J9gzWR_DLBeFA@mail.gmail.com>
+ <4429582f-155a-04d2-d139-a834bb325612@amd.com>
+ <d577887d-b86b-82be-8081-f7bebacd8067@amd.com>
+ <5bec4620-2e2b-abe0-1e82-528c084d4d16@amd.com>
+ <cb40c209-9c4c-f645-8454-bcd74cb72405@amd.com>
+ <Y2O1GDRrJqIu17vM@hirez.programming.kicks-ass.net>
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <Y2O1GDRrJqIu17vM@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0043.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:22::18) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <53e543e8-f895-d4f1-da94-d0baca528e79@samsung.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|SJ0PR12MB7065:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22b1b87e-e4d7-4626-1b44-08dabdb64cfa
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	AVpnJZM+BLiE50b4N7STIWBkpE7jMhd7yDo7pVedK+Oi+Hb9N5jSMwzweC3o9W6/eYxPWu+FpaEArL0FTsCdMPql/T4M9Ad3YffjWbFkxr985RzNd/jTCvy1BkAR4XYmYvyBx1CnU6ZPzXZ027KwmWJ1FmXLKNWCnDaLbwr0+G9BTS5Il9ETh5yMOcZse9yms745+sDPOkzoaJGgiE7Eml7alPNkCO2AY8a1sxg0MFbNgznOqe0DdqI0ye+ah1bBGMrmqFpNGaB2IY4SY57oQh5SshzDcDB+9e28ZC2ef0+2zWidmheZXabCLsomwmOAFFOkus51dnKNJHiQfDlqggekZ0ID3iufG/ky3N/GmW5eppJhiz/UiGDYje8u+P2yzFzKJYNSkM/cw/OeajWKaBIZiKpWXZ4s+wG3jCB+D0g5lSg/lh1N1bvP3bzRCWO1Ph4+vcG9fx9fyMsM0HjleizwELDpfhga9+WEY8qNg9QohmyRzYbhuGkKBXP77OG6d2oDQ5YOCh2bmJBHNZIGm9dhwRKr3F5WQP1hBWXGO2ksr+7mkJbP4ojNYD2sJCtsr8f+Ybgmrs1pPD2hlG0swVHRZVVhFbBnKUEb7yHqsGfEOlfFFcKqcBjsSd4f5fzIe1axM+KvvaiZLNnx4yGm9EqHMficnapaXH1uB+zYUZPBorfd9QxgZiC0QmrsSyISNSaEL49yJA7FrQqkxFsZuqmNnlQuqpi7KYSEepxaNUNo4DxyztU6HWtlpLz8Dtx4i9PgFUuNxxADC9iNo6qRJMe72YNitO3U142Ehn6jKf5fDBoH2Y5NyC0vm7kGeH3T
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(376002)(136003)(366004)(396003)(451199015)(66946007)(4326008)(54906003)(8676002)(66476007)(6916009)(66556008)(83380400001)(316002)(2906002)(6506007)(26005)(966005)(186003)(2616005)(6486002)(7416002)(5660300002)(36756003)(53546011)(38100700002)(31686004)(86362001)(478600001)(6512007)(31696002)(41300700001)(8936002)(6666004)(44832011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cXJJQzcxN2Rkd0FyS2hGNStDbS92Z0M1VXRnbGtsRHdkQVhxWXRxZU5qRkUv?=
+ =?utf-8?B?a0RYcmpZc2hxbG9zN2NVWVFFWEpnbkRMOVFpL3czOXA5Q0pCWjBmZ3NnVGY5?=
+ =?utf-8?B?VFVTb0czV0ZURVUrVXArcmRMQk1vTDdNTytUa3kvV1BaTWRVVFdYWUY5emhH?=
+ =?utf-8?B?bUduLzJmSkMvam1mYUk4WUovdTVnM0F3MVo0UUtnR05OYTlCY2w3UDJwV3Fw?=
+ =?utf-8?B?ay9HSWRyWktsQ1dhazdaOU5HZDZaYi8rM2QzaENjR0poK2lwZVhTTDI1UDlz?=
+ =?utf-8?B?Mm15ei9CeDEyUHdvQUwyM1ROaHowaGZvYUZBczZneFR1WWRCNUplaExsUU5U?=
+ =?utf-8?B?M0FvZUwyMGpnUm1kcDV0K2RCMTd5QXZkY2V6RFl1aEFJekVsSnVmdk1HT2x6?=
+ =?utf-8?B?ZUM2bjhPMTZ4N2E0eSs0Zm92MmxrbEV1UGhKTGgxL0VnSXJNWTJqcm12OE5i?=
+ =?utf-8?B?YXh5RGxEeW1PdExCY0hJWVZuNmt6WnJPWkRiSUZydHk0bUdyWUJiZzE4ZDlU?=
+ =?utf-8?B?b01zWHFPZmw5d3A3YVFJRU5lbUJIZmk1UEd6MXJENS9sUHZ4ZUwwVjVaZ2VE?=
+ =?utf-8?B?VDcySDFFaG9zbmpjY0lFZVRLOWFWYThQSXBvWFlucDRoQ2lCZjc4ckFqTmVT?=
+ =?utf-8?B?R1IrMzNxV2Y4aUkzbHBrMFFtbVhvVWdSdGZqdk8weEo3a3FlaWlINkNZT2l2?=
+ =?utf-8?B?TlJDanlFc084eGpTbWo4THpPbzlidVRLY2VYY05LV2krdGZMbHJ3RGJPc0Y4?=
+ =?utf-8?B?OVlFOWRSUS9Zd2xJS2tSMUpENVpUVDladG0ybWlBUTNnQktlT0U2dGpNMTNv?=
+ =?utf-8?B?aEJXSXFOUm9FbzQ0eWhtZk1SYVhvMUMzajIrcGJNV0pvazhGRHFaVU9VVGtw?=
+ =?utf-8?B?TDFmUkRYSCthTnZQUnhnZFFkTnBGcmJYVjE1cG9kMllXRk0rREp5YkNmSFJT?=
+ =?utf-8?B?dlNZR0E4WFBKbTIzZk55aVVmTGJlNmVtRTBCS1hHdDJUcUxFTldzTisvaU9F?=
+ =?utf-8?B?ZUZOYjUydlE1ZmEvd0V0WDRHeGhtdlF1WWV3Mk9wK3V0TS9iQ3crZ3NRci9w?=
+ =?utf-8?B?dzE0WDd4QkpwVEFQWHAvYVhPaWJnSmk0cjM5UEZmaWtVRVcyNXZMSzFuZkJa?=
+ =?utf-8?B?N09uWUhyOVRYUkRhV3NmQi83R1B3YktvU2N5SnNqYzEwWkNySjErYkZGemZK?=
+ =?utf-8?B?a2NQcnlsSFVqYkw2OXZhTmpCTWp6R1hlcEtjaDJJaW9pSjBnM0NKcElia2E4?=
+ =?utf-8?B?azNkT3RiV04xMXFkR1VkY3ZqV2J0TTZuSXBxMU5wWGo2dWxWRE5EaE9TWVJx?=
+ =?utf-8?B?eTFlNWd5SzhFQjF0M0hEOFVtWW1LSjYydVZVM1REVkY4aTBrL2xHeVZVcXNW?=
+ =?utf-8?B?S2NuNlJKV2UyMUlCb2o1b3kveWQ0Mk95YjYybDBxOHo2YVN2S2g1bFNhRnpt?=
+ =?utf-8?B?d3U5UGRKajlCemVONkpsRVlKMGNNWm9sQ0xpTW1GV0FVaGtKNjJqaXZBbUda?=
+ =?utf-8?B?MVJLNmFYbVdsTEh5V0E2cTF1ZVNQUlB3MGtMd2MzK3hTVkJLTkhRVDBCL1cv?=
+ =?utf-8?B?dndPc0RIeGFDTG9RdC82aDlvMkYxL2hOYWxudExsVUd2NDRvSHo4aXg3c21N?=
+ =?utf-8?B?akttdWJWZVZDbE5FaCt2S25RNnJ1RUZEMWF5VGZXYytxVW1DZXlWdXBVckF6?=
+ =?utf-8?B?SjM4VnpSN0QxTEZnaXhwVXV4YnNkS0NrT0Q0dFVmeDQvcEY5M0Y3ZFlyY1lB?=
+ =?utf-8?B?RkNZeWlZOXFHakdCbzdGelFwM0NmWnpicnpqNGdOdlNjSnVhTkpxK1lyQUNO?=
+ =?utf-8?B?ZlIwcjhDbytLVXdnMGttekhVak1NVE9DQ09FUlNvaGY3N1lVaVBOVWdieVls?=
+ =?utf-8?B?UDEzc0hyM0oreTVLaFU5T1hvLzRTM1dUMmR6azUwSmhQcGVvS0hhQk9WcktS?=
+ =?utf-8?B?Z0VLZ3ByOWVrcEh4d2RYekJUWGpvSU1yY1F0K2dyMFVBdUphUnBIbkt0VjZQ?=
+ =?utf-8?B?MGFDOTUwZTJBcmhLMlBjVFY5VEoxVGRaYTlITFJ1UFhpUU0rVjlKdTRXcVd1?=
+ =?utf-8?B?dVpIc3ZEMFJLRGpHZ3BxS1lvcVdwK3RKTk1sclp4UEFBSDJEMGo4NXZMWmdH?=
+ =?utf-8?Q?PXxz8jim+dfjm8X/RIVsZr4fM?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22b1b87e-e4d7-4626-1b44-08dabdb64cfa
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2022 16:13:10.3110
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YR6FwxTz+bAntxA0BRNHbQYzeLKRdhFnXvuefm4U+p7J6O3klxtNGln4/35P4Q7kprbja3BmS/PF4EwYrcekzg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7065
 
-On Thu, Nov 03, 2022 at 04:18:12PM +0100, Marek Szyprowski wrote:
-> Hi Johan,
+On 03-Nov-22 6:03 PM, Peter Zijlstra wrote:
+> On Thu, Nov 03, 2022 at 05:15:30PM +0530, Ravi Bangoria wrote:
 > 
-> On 03.11.2022 15:49, Johan Hovold wrote:
-> > On Thu, Oct 27, 2022 at 02:45:15PM +0200, Johan Hovold wrote:
-> >> On Wed, Oct 26, 2022 at 03:11:00PM +0200, Stefan Agner wrote:
-> >>> The user reports the S-ATA disk is *not* recognized with that patch
-> >>> applied.
-> >> I just noticed a mistake in the instrumentation patch I sent you. Could
-> >> you try moving the calibrations calls after dwc3_host_init() (e.g. as in
-> >> the second chunk in the diff below)?
-> >>
-> >> As mentioned in the commit message for a0a465569b45 ("usb: dwc3: remove
-> >> generic PHY calibrate() calls"), this may not work if the xhci-plat
-> >> driver is built as a module and there are some corner cases that it does
-> >> not cover.
-> >>
-> >> It seems we should revert the offending commit and then try to find some
-> >> time to untangle this mess, but please check if the below addresses the
-> >> issue first so we know what the problem is.
-> >>
-> >> I'll prepare a revert in the meantime.
-> > I've now posted the revert, but please do check if the below patch was
-> > enough to resolve the immediate issue.
+>> Sorry was distracted a bit. So, this seems to be happening because of
+>> race between amd_pmu_enable_all() and perf event NMI. Something like:
+>>
+>>   amd_pmu_enable_all()
+>>   {
+>>       if (!test_bit(idx, cpuc->active_mask))
+>>
+>>   --->/* perf NMI entry */
+>>       ...
+>>       x86_pmu_stop() {
+>>           __clear_bit(hwc->idx, cpuc->active_mask);
+>>           cpuc->events[hwc->idx] = NULL;
+>>       }
+>>       ...
+>>   <---/* perf NMI exit */
+>>
+>>       amd_pmu_enable_event(cpuc->events[idx]);
+>>   }
 > 
-> The below patch was a half-fix. It worked only if both dwc3 and 
-> xhci_plat_hcd were compiled into the kernel. Afair Debian-based distros 
-> used xhci compiled as a module, so this didn't work for that case due to 
-> timing issues.
+> Hmm, do you have more information?
 
-Yeah, I mentioned that above too. The intention here was just to confirm
-the hypothesis that the regression was due to the missing calibration
-calls.
+I've extracted function graph logs from crash dump and uploaded it here:
+https://github.com/BangoriaRavi/function_graph/blob/main/trace.function_graph.dat
 
-Johan
+crash was on CPU1.
+
+> Something like that would require
+> calling amd_pmu_enable_all() while it is already active -- and that
+> seems suspect at first glance.
+> 
+> That is, you shouldn't be getting an NMI for @idx before
+> amd_pmu_enable_event().
+
+I too was wondering about this. Will try to get some more data tomorrow.
+
+Thanks,
+Ravi
