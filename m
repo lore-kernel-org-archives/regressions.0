@@ -1,170 +1,116 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2062.outbound.protection.outlook.com [40.107.237.62])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B27C0ED5
-	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 09:53:16 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YfXfcxv1qMhUsAAa2XIjQxWnBZY7wlRgFg86m0hy2UEAP8WCqIrQadjuoBoHYRqQeQPLfoluvF17aPNGdrTR8rv4nj2spHQyLc/KAqspirjjHeGb8xCVWSkalf3bMrShsDQV8gFroylgs0SKjSuA3Ti2c/zRT/VKwKq4N9z0w6Q24nPMe6498zM1MjnQC5OqsB/8JJiNNbzKisfotE4bPmRtZdGhoReHYTmNIXKJcZhCG5P4kHAxZ1/mI3WcGSnkPITz+rSYms0BW6KqYZJBWk9n6AwnFDR/EbJMYbKr7W0OWKqE9dBFrV5x4BGL2uQwD/zAb+Xugt10LIT+Oge9hA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iEtxW+gtN+3XS3R23MHPtYf2YTI9nA7eQR+uFrsBQMc=;
- b=TcBPqWLlvI22ip5BAA9d4kX4nnvtOLK27GhOynmMkOluG89SIUHqN5SBGhcM43R7mJQnKXaMEsX517huwPkoAM/gST1zxxip5D8XPcc1XZB1NO6FkEmyyD+EPcJNoL9TG9pnPeK2Lf84prodBJW75j3NMqYaEeeDIT+46ZSDkKHpJS4GDSz5vklbsJtc/YwDJ+87+7rmUrrmXcZDl4HoTqLjcurQmpBdjzmJKK8wY5vexQT1avRoRldgDubbwUI8BB8Am8Ag/DSN4pYBskA3qsAGVFyQxl5z82FapofyKUuTfC5LQGg8G9DvdozMbq/N/ber68dT4VJVS7x223XFgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iEtxW+gtN+3XS3R23MHPtYf2YTI9nA7eQR+uFrsBQMc=;
- b=xWsJPNAA3r+Iu4stR0boAMen0UJerMkfO/DCQmA5sfJhTGNPGDGTK6Zh31f16p5GnFeEaW3zROOGGSlfFFEyxJqDJ0iuA7r3BAUxqzPE6ALgXSC8P8YsgexPOQaowSTt7fyqfIFmJ04HDJKxXIK03ftqyRms+yErcFQdSPmn6o8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by MN2PR12MB4239.namprd12.prod.outlook.com (2603:10b6:208:1d2::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.22; Thu, 3 Nov
- 2022 09:53:14 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::f397:c6b1:a8a5:55f5]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::f397:c6b1:a8a5:55f5%6]) with mapi id 15.20.5791.020; Thu, 3 Nov 2022
- 09:53:14 +0000
-Message-ID: <6d78caf0-cb4c-1a30-66ce-242df87656ef@amd.com>
-Date: Thu, 3 Nov 2022 15:23:00 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: qemu-i386: perf: BUG: kernel NULL pointer dereference, address:
- 00000148
-Content-Language: en-US
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, regressions@lists.linux.dev,
- lkft-triage@lists.linaro.org, Marco Elver <elver@google.com>,
- "Eric W. Biederman" <ebiederm@xmission.com>,
- linux-perf-users@vger.kernel.org, open list <linux-kernel@vger.kernel.org>,
- Ravi Bangoria <ravi.bangoria@amd.com>
-References: <CA+G9fYsGFoC5TciCuijZXLx48TZnoTSkq=iUgb+vFdi9EYTucw@mail.gmail.com>
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <CA+G9fYsGFoC5TciCuijZXLx48TZnoTSkq=iUgb+vFdi9EYTucw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0194.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:be::21) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBB2EDD
+	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 10:15:21 +0000 (UTC)
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2A38ROUw017318;
+	Thu, 3 Nov 2022 04:54:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=PODMain02222019;
+ bh=s5fn7UnHs2rik/6xyDDQcgIyHGMrOE+H5STIId2f7Tg=;
+ b=dg8tFkt5fanT2SXveudKjkn44gf7RcWp7xJr2sB7r8crs9OVSks9plr9HA70Xxd7U3vZ
+ 2lHZtp/8lsSnm4wvZqzLks8XpBPkUwQNTGGv4bvIM905NbZTdfb0TMiEcelo3J5T6G0y
+ YnfRB6ittmGKK/eh31gTCcm6/t9zKPv7Jot+uZ28xeQnFlwmvcTfxptdAmQapA8R/Cy+
+ ZsrUYPO1GLXVb0BPfwyJf246XnK7XqLQbhcqPAG5kTmS6VjeEZ3p8lgJz4OS9aDmLqm4
+ 5jIY9VZ8vpg9nypsAuPdXsgDq6aPjqSkgcFCGS2JrSpAISo6G10lC5lqNayk607F5xvz Tg== 
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3kh1k1e3pp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 03 Nov 2022 04:54:07 -0500
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.15; Thu, 3 Nov
+ 2022 04:54:05 -0500
+Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1118.15 via Frontend Transport; Thu, 3 Nov 2022 04:54:05 -0500
+Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
+	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id E62C746A;
+	Thu,  3 Nov 2022 09:54:04 +0000 (UTC)
+Date: Thu, 3 Nov 2022 09:54:04 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Takashi Iwai <tiwai@suse.de>
+CC: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Jason
+ Montleon <jmontleo@redhat.com>, <regressions@lists.linux.dev>,
+        <oder_chiou@realtek.com>, <cezary.rojewski@intel.com>,
+        <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>,
+        Takashi Iwai
+	<tiwai@suse.com>
+Subject: Re: [PATCH] Fix kbl_rt5663_rt5514_max98927 regression
+Message-ID: <20221103095404.GI92394@ediswmail.ad.cirrus.com>
+References: <20221102200527.4174076-1-jmontleo@redhat.com>
+ <2bbe7bed-21d4-018a-8957-10d9dbe0c661@linux.intel.com>
+ <87a658o4e0.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MN2PR12MB4239:EE_
-X-MS-Office365-Filtering-Correlation-Id: 00d4fd5d-2635-44b4-b95d-08dabd81393b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	FS4SSfQACoMNLGNP/bJ2Tv2EH/uoNWqXIf1GgjV5BM845NseH435VbAJ9O5dYKii9WdayXIM+JQdOwkW+uiYAtiFL+5Muwu40q+ROkzzA1HKHod2TeDfqr2C3inJ/pDTAzhYosfBNn3ZrPN1zefMbrIDptXrUyaqvo1kBB+XgkPL+8unbH2qapRtohlx7cGUIj1UQfEmEr1oi/NgfzC9O7ehDWYBiBC9BRX/pp/0/YQ7f+W2Zm+QleM6Lv7PhpOozC2vPc7K5cYFx08+udtDqqtItcHq2t7CkgrbbcvFeKVZkTpvgkkZG91ME3VpUs6AE+Eg6Hq4QcgCxNx/qvWiEk8opRnU1yrL52ugnprgFao4RjzM1ucKI8IcDyAWNFOX6DS5/pEGvYSVJGeSNsHoslRyTyS/7ZGBsJ9Ije4qXXNg8NmLOC3JSfXybFJeQmMQhkt3lcD5/fm/rl0k+u/a12KpfXh4rkJVcIhA4VexIzfCCWJkqZrsj4yEa3C0mEhNM31LM6HxETg1Py2W+kcv2Jj8d6yaXaOrAGuE5V669dNmcapUJdH+jkCnS0PG3sFUtIbEewnFdKhFX6Y0dqpn/fLh/2aLDQeLdPRSeMh5iBYNeAZs0crHX14ekiD9VZ2Xdug/6CGjas9P2M8Hgx+sifQxtohoIJarxOjiK322mQqubwrsKdiMHVH6Oqad7ly/u1u/SKO7eMWQM4JxjaOQ+GerT/pmZRnxWkniD5t2qBQ2Qg+ApDYgycfIRRBVYpDifXZ3x0Fpgq81JK9e78S9+JOdIw4Fk+PjaFFaxBGov9C0ov2X4R5yM4idZYTKYaKN
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(396003)(366004)(39860400002)(136003)(451199015)(44832011)(38100700002)(31686004)(41300700001)(2906002)(66476007)(66556008)(8676002)(66946007)(4326008)(6666004)(2616005)(36756003)(186003)(6506007)(45080400002)(8936002)(83380400001)(5660300002)(31696002)(86362001)(966005)(6486002)(478600001)(316002)(6916009)(54906003)(26005)(6512007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RERmL3Z2amtUN0Y1ZzJRZHlBbHJFZEx3ZXZPSlI0OVovUUlteXRuZVRoY3BN?=
- =?utf-8?B?LzQvYVllNU1FWWlFaWZjL1FSUnVtWEZsV1FkWlNHOThRZGRiYlFINzNZeU8y?=
- =?utf-8?B?TXNYVjNyWVExRXFYVjJGdlRvL3doQ2xNeVlVVTlLZlhRS1FCekY5Nk1JYitM?=
- =?utf-8?B?VDBDTUw5ZjVJWFJCRWphZUdPRnlhRkFhSDQrRVVua21JeGJrNnhBTzkyUHg2?=
- =?utf-8?B?WmlXdGN6TURJU2lwRUJVMWFGRTlZT3ZyMVIxZEExd2lMOEtzL2NoRFArN3pF?=
- =?utf-8?B?R1Q3RDFINXhKbUNkckJxdHoyNFNiTkp4d3AybllxcUV0eFN4bjhWay96VVBq?=
- =?utf-8?B?cG1ldEQxbUViZCtXNjN0Qy92V01XOHA3NXJUa0xBQjVyNUh2NmxodkhCWkdo?=
- =?utf-8?B?bks4RUxkcDVhWGFxcDErVFoyZktiOXAxRU5IRVRSMG12cHB1Z0l6dk00WnJq?=
- =?utf-8?B?M1VIbjN1RzBTNUlLRE9aSWNzRlNGTFJMdmNKbzE3eXFjWktPK1grbGd5Z3Rz?=
- =?utf-8?B?Wit5WkNzdzhtTDAzQkRMemE2UU1UWjJzQ1RGUDRXaU9aNWlmbHRTY09zcStj?=
- =?utf-8?B?TTdpY20wSkdxbnB2M3M0RkI3NW5wMGgvMkhqeWJuQTZHcWdJeWZpdVhOTzcv?=
- =?utf-8?B?M0dzSFdSTkVVODJGQVgyVHNLR01QOE5pODFHTy9WZ04ySm1XeEV0Q0FsUWpB?=
- =?utf-8?B?OTJNelZmVTZjaFRtVlZYVW0wRlIrQlNRM2hqRXRadjZubHdYOEp1SGNObjJ3?=
- =?utf-8?B?b1pZcEZYUmRjOFNtK2RyUUpCTjhKZkgzUGsxT1k5clVFeXVtOS8vcGFzbE01?=
- =?utf-8?B?OVEyM1BaVjd3dHp3S0NKcDNXQU1TUG10aThtZjdkUkJUV1o4emk0NGIzNmEz?=
- =?utf-8?B?N3RYTHI4dWdzNnNRU1pEUGdMVi96VkJ0dTYzUHJ5WGlBcnBTK0JUb3g5eXZZ?=
- =?utf-8?B?bDRPNDdaQWJ0S0sraWlxU2YwSUFwS2czUEg5Y1FmN0xMNDlMb21Vd3AxSFZ3?=
- =?utf-8?B?S2hHTWU0WDVVMGJud29mcVVzbU5wTHJZNXFweDVnT0tMOTlQOVdXQkNqSTNp?=
- =?utf-8?B?NW9OYklnZG5xYS90VXJWWUtTbjUzV0FCY1p4RzdENmJHY015OEYyVHplYzlt?=
- =?utf-8?B?ZXcvL0VpcnE2QnRWUTVzM2RVUXh5THM0emdSOFFNamY0U0FqOHNzdlFSNXA4?=
- =?utf-8?B?K1VwdFI0a1dKMzBIVzNFaVpwSVNBWm5MV0dicjJ5WWhWam94VENkcVlocWZx?=
- =?utf-8?B?b3FFYlhidnVDUGdBOW1CTlNUNzN6NStnVG1wYmFBdGVJMXVtZkpwaGIrakdM?=
- =?utf-8?B?VkJzRzlDSHlidGR5ZlJURnJpcXlBNzhDNVJBNFYzZVkrNDc1MVRvQXd5WHl1?=
- =?utf-8?B?L280T29nUjA2Q0t2U3BnRWRGc2FkTjBEeEJ3SGtRZ3J3M0t6b3h1dEErc1Zn?=
- =?utf-8?B?WklYV2lDcldKUFl1Z2hub3pNR0xOeG9IdzhrMllHdlAwaGlqU3JneVB0Z3Y1?=
- =?utf-8?B?cUswMVZWcGd4WEFjNFR4dG1JUWxOUzdneS91WDNkUWVpS0hXYVFvTkRINHhr?=
- =?utf-8?B?cHd5WXpXWXJZem5IWUxIVU56YmZSY09kQXpaZ2RYSTNhUUVYR2xiNkwxQ1l5?=
- =?utf-8?B?TURMbW8zeURHb1MxOFE2UkZ4TjRHckViMzVCYlJPL2RwR3ZmUmFEcUJQUDhj?=
- =?utf-8?B?dmNrTVIrMjI3VUxPTkx6ZmE1T2FiRmwxa3IxTFRLa1NJVHVBdkFaQXpldVdi?=
- =?utf-8?B?WnlUdThUdGJBcmJYbHZyckw5WDFaMUlyZk5BbU44V3RQdUZBUlBWTDZvbkl4?=
- =?utf-8?B?OE9TbTU4S2p2SW5wZmVlaCtGOHZmd29uSGZjRnpQZkZrQ1IzRWFKV3lwNzY2?=
- =?utf-8?B?TWZFTWMzMVZISTNMVVZnSGtPUTlRS1FCWE43UVZ3OWQ3MTBLeFUzQUY4VXVu?=
- =?utf-8?B?cXNRaVIvbHh3dEZSWG9WNVk1S0MvQWIyM2dlV2RiY2xmTGFuWE1QNE9oOFI1?=
- =?utf-8?B?SXo5VjEramxQZmhjSlJ1MjJQcHhuZ3l3WmdDNmU1L3lXZUZLVzgwdEUzVnJj?=
- =?utf-8?B?dEViVkpETFBrQlI0QnBQYWRWaHpqaEluemwyamJoZWZGY2JaZC9wMXI3LzE0?=
- =?utf-8?Q?OhD0iL8VRvhSKZWd3OxnMFYS9?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00d4fd5d-2635-44b4-b95d-08dabd81393b
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2022 09:53:13.9366
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dxN4Cs5VNpVGPJbNtiB0qJ8PAZT72nJLQYaOoO5rfkdIRg0mCKXIHoHRRE2fCQjPAUtQMUDyoRDXxYQEO1EZng==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4239
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <87a658o4e0.wl-tiwai@suse.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Proofpoint-ORIG-GUID: 7Ja-leyKq_N1BpJI7koX_atxgXwepwUw
+X-Proofpoint-GUID: 7Ja-leyKq_N1BpJI7koX_atxgXwepwUw
+X-Proofpoint-Spam-Reason: safe
 
-> [  116.006600] BUG: kernel NULL pointer dereference, address: 00000148
-> [  116.008309] #PF: supervisor read access in kernel mode
-> [  116.009527] #PF: error_code(0x0000) - not-present page
-> [  116.010809] *pde = 00000000
-> [  116.011454] Oops: 0000 [#1] PREEMPT SMP
-> [  116.012144] CPU: 2 PID: 449 Comm: perf-exec Not tainted 6.0.7-rc1 #1
-> [  116.013256] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-> BIOS 1.12.0-1 04/01/2014
-> [  116.014710] EIP: x86_pmu_enable_event+0x4a/0x190
-> [  116.015617] Code: 64 a1 10 2c 8d c6 85 c0 75 16 8b 5d f4 8b 75 f8
-> 8b 7d fc 89 ec 5d c3 8d b4 26 00 00 00 00 66 90 b8 43 bb 49 c6 e8 56
-> 13 fb 00 <8b> b3 48 01 00 00 b8 dc 39 8d c6 64 03 05 b0 28 8d c6 8b 38
-> 85 f6
-> [  116.018642] EAX: 00000002 EBX: 00000000 ECX: c0010200 EDX: c649bb43
-> [  116.019709] ESI: f51c6b00 EDI: f51c6c00 EBP: c34e1da4 ESP: c34e1d88
-> [  116.020744] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00210002
-> [  116.021847] CR0: 80050033 CR2: 00000148 CR3: 03e07000 CR4: 003506d0
-> [  116.022930] DR0: 00000000 DR1: 00000000 DR2: 00000000 DR3: 00000000
-> [  116.023674] DR6: ffff4ff0 DR7: 00000400
-> [  116.024078] Call Trace:
-> [  116.024348]  amd_pmu_enable_all+0x3d/0x50
-> [  116.024776]  x86_pmu_enable+0x17c/0x370
-> [  116.025179]  ctx_resched+0xad/0xf0
-> [  116.025542]  perf_event_exec+0x338/0x400
-> [  116.025956]  begin_new_exec+0x548/0xac0
-> [  116.026358]  load_elf_binary+0x2ad/0x1360
-> [  116.027063]  ? __kernel_read+0x12c/0x220
-> [  116.027520]  ? _raw_read_unlock+0x1d/0x40
-> [  116.027957]  ? load_misc_binary+0x1eb/0x290
-> [  116.028404]  ? trace_preempt_on+0x29/0xe0
-> [  116.028827]  ? load_misc_binary+0x1eb/0x290
-> [  116.029287]  ? preempt_count_sub+0xc1/0x110
-> [  116.029722]  ? bprm_execve+0x256/0x650
-> [  116.030122]  ? preempt_count_sub+0xc1/0x110
-> [  116.030600]  bprm_execve+0x260/0x650
-> [  116.031006]  do_execveat_common+0x13f/0x1b0
-> [  116.031482]  __ia32_sys_execve+0x35/0x40
-> [  116.031897]  __do_fast_syscall_32+0x4c/0xc0
-> [  116.032358]  do_fast_syscall_32+0x32/0x70
-> [  116.032777]  do_SYSENTER_32+0x15/0x20
-> [  116.033190]  entry_SYSENTER_32+0x98/0xf1
-> [  116.033601] EIP: 0xb7eda549
-> [  116.033903] Code: Unable to access opcode bytes at RIP 0xb7eda51f.
-> [  116.034576] EAX: ffffffda EBX: bfa6d940 ECX: bfa730f8 EDX: 08ea9dc0
-> [  116.035278] ESI: bfa73d61 EDI: bfa6d949 EBP: bfa6da38 ESP: bfa6d918
-> [  116.035927] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 007b EFLAGS: 00200296
-> [  116.036624] Modules linked in:
-> [  116.036961] CR2: 0000000000000148
-> [  116.037315] ---[ end trace 0000000000000000 ]---
-Seems like same as:
-https://lore.kernel.org/all/CA+G9fYtOP-spGS7gYyBB-8wpUDiKxd5e_Nk05J9gzWR_DLBeFA@mail.gmail.com
+On Thu, Nov 03, 2022 at 08:59:03AM +0100, Takashi Iwai wrote:
+> On Wed, 02 Nov 2022 23:05:14 +0100,
+> Pierre-Louis Bossart wrote:
+> > 
+> > On 11/2/22 16:05, Jason Montleon wrote:
+> > > Starting with 6.0-rc1 these messages are logged and the sound card
+> > > is unavailable. Adding legacy_dai_naming to the rt5514-spi causes
+> > > it to function properly again.
+> > > 
+> > > [   16.928454] kbl_r5514_5663_max kbl_r5514_5663_max: ASoC: CPU DAI
+> > > spi-PRP0001:00 not registered
+> > > [   16.928561] platform kbl_r5514_5663_max: deferred probe pending
+> > 
+> > Thanks for reporting this regression, much appreciated.
+> > 
+> > a) you need to CC: maintainers Mark Brown and Takashi Iwai
+> > b) the commit title should be something like "ASoC: rt5514: fix legacy
+> > dai naming".
+> > c) it's not clear if this is actually enough. there's no
+> > legacy_dai_naming for e.g. rt5663 and the .endianness member is not set.
+> 
+> IIUC, rt5663.c should be fine; it used to have non_legacy_dai_naming
+> flag and it was dropped after the switch.
+> 
+> But, through a quick glance, rt5677-spi.c seems to be the same pattern
+> as rt5514-spi.c.  The rt5677.c was covered properly but the *-spi.c
+> wan't.
+> 
 
+Yeah I think these got missed as they are effectively CPU side
+devices but living in the CODEC space. Looks like it would be
+reasonable to add legacy_dai_naming to both of them to me.
+
+Thanks,
+Charles
+
+> > >  static const struct snd_soc_component_driver rt5514_spi_component = {
+> > > -	.name		= DRV_NAME,
+> > > -	.probe		= rt5514_spi_pcm_probe,
+> > > -	.open		= rt5514_spi_pcm_open,
+> > > -	.hw_params	= rt5514_spi_hw_params,
+> > > -	.hw_free	= rt5514_spi_hw_free,
+> > > -	.pointer	= rt5514_spi_pcm_pointer,
+> > > -	.pcm_construct	= rt5514_spi_pcm_new,
+> > > +	.name			= DRV_NAME,
+> > > +	.probe			= rt5514_spi_pcm_probe,
+> > > +	.open			= rt5514_spi_pcm_open,
+> > > +	.hw_params		= rt5514_spi_hw_params,
+> > > +	.hw_free		= rt5514_spi_hw_free,
+> > > +	.pointer		= rt5514_spi_pcm_pointer,
+> > > +	.pcm_construct		= rt5514_spi_pcm_new,
+> > > +	.legacy_dai_naming	= 1,
+> > >  };
+> > >  
+> > >  /**
+> > 
