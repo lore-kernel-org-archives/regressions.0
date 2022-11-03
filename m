@@ -1,87 +1,118 @@
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12A3632
-	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 00:08:22 +0000 (UTC)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4N2kcH2x3gz4xG5;
-	Thu,  3 Nov 2022 11:08:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1667434095;
-	bh=ILQg5VedcQfB/c4FWJNZPXpdNmrSSO0UgPGkvpbhvZI=;
-	h=From:To:Subject:In-Reply-To:References:Date:From;
-	b=lxJ5g/+WcorWL00YxKGTRdVR9REcWq/V9G+TPTmOUGIy2H9QVTr0LTpYZ3UNCcfh9
-	 wUYsciKGhQj9S58Tn2ImpwiCW0Zt54/7c1Fj26Pt4CbRF0moLr0gNn+ce3EzYEDzEA
-	 32ctCg8eTAJELGjquaF0mESj032pYBlXrEWxYvfcQ1rIyFXB5VHp1br4B6KCysMTIb
-	 JOs4UU1sRB7LnWzA0y7MCjSCSmPe5HsuBnHPho+Ekx/n13Ei6r4rntUWNtpnNKV07v
-	 fl4lzq/sJa0yCaHInk+2PcVJ8OwU2pt23txRgRRcB9D6EugVeqR3DXLA944xXFUOtO
-	 gt5LxK4/mKfQw==
-From: Michael Ellerman <mpe@ellerman.id.au>
-To: Thorsten Leemhuis <regressions@leemhuis.info>, linuxppc-dev
- <linuxppc-dev@lists.ozlabs.org>, "regressions@lists.linux.dev"
- <regressions@lists.linux.dev>
-Subject: Re: Issues with the first PowerPC updates for the kernel 6.1
- #forregzbot
-In-Reply-To: <28bb92a2-851d-cccc-2c1b-2f5a21fc49c1@leemhuis.info>
-References: <6C70D01A-B819-40BC-94F7-5BA6D8109134@xenosoft.de>
- <28bb92a2-851d-cccc-2c1b-2f5a21fc49c1@leemhuis.info>
-Date: Thu, 03 Nov 2022 11:08:14 +1100
-Message-ID: <87r0yksxw1.fsf@mpe.ellerman.id.au>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEC07C
+	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 02:53:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84508C433D6;
+	Thu,  3 Nov 2022 02:53:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1667443991;
+	bh=tHC19MIoBGE2+d3PdgbHi+j8F7t5gEgI/znPL5d61eI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dgP8e8dnzHCqau1QRm+eE/8fhILU1r4Kzcu0Rhkmo4kKgWGehofONHk6vdcfR9xuh
+	 1OuQ/hLnapVsN+babK7USrSPVBdPiVzg22Mz2ystmu5iq+D7vPKrV+UbWci1zpV1CQ
+	 KLyMYX/CcacNcbfk0RR/g8nabne0VkqNszAWSR1hS0hG52kZtdGiDb5pY4RKMya8YV
+	 oAPPUJNmrZjxns7pIHxMobp+VgDTfh6/o5RBZYfu8/iYgwyY5ppjPxTBndbFu+SZ/v
+	 fOgrDkLjbE5wfbgy8yXmylapilKPHsRT0ih4fJfylMMBJMarDlbm0i0H6rJqbbyIOZ
+	 A740gT2+cBPgg==
+Date: Thu, 3 Nov 2022 11:53:07 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
+ <linux-trace-kernel@vger.kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Roland Ruckerbauer <roland.rucky@gmail.com>, Takashi
+ Iwai <tiwai@suse.de>, regressions@lists.linux.dev, Steven Noonan
+ <steven.noonan@gmail.com>
+Subject: Re: [PATCH] ring-buffer: Check for NULL cpu_buffer in
+ ring_buffer_wake_waiters()
+Message-Id: <20221103115307.3d253be73d1259dfa6417b3c@kernel.org>
+In-Reply-To: <20221101191009.1e7378c8@rorschach.local.home>
+References: <20221101191009.1e7378c8@rorschach.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Thorsten Leemhuis <regressions@leemhuis.info> writes:
-> [Note: this mail is primarily send for documentation purposes and/or for
-> regzbot, my Linux kernel regression tracking bot. That's why I removed
-> most or all folks from the list of recipients, but left any that looked
-> like a mailing lists. These mails usually contain '#forregzbot' in the
-> subject, to make them easy to spot and filter out.]
->
-> [TLDR: I'm adding this regression report to the list of tracked
-> regressions; all text from me you find below is based on a few templates
-> paragraphs you might have encountered already already in similar form.]
->
-> Hi, this is your Linux kernel regression tracker.
->
-> On 12.10.22 08:51, Christian Zigotzky wrote:
->> Hi All,
->> 
->> I use the Nemo board with a PASemi PA6T CPU and have some issues since the first PowerPC updates for the kernel 6.1.
->> 
->> I successfully compiled the git kernel with the first PowerPC updates two days ago.
->> 
->> Unfortunately this kernel is really dangerous. Many things for example Network Manager and LightDM don't work anymore and produced several gigabyte of config files till the partition has been filled.
->> 
->> I deleted some files like the resolv.conf that had a size over 200 GB!
->> 
->> Unfortunately, MintPPC was still damaged. For example LightDM doesn't work anymore and the MATE desktop doesn't display any icons anymore because Caja wasn't able to reserve memory anymore.
->> 
->> In this case, bisecting isn't an option and I have to wait some weeks. It is really difficult to find the issue if the userland will damaged again and again.
->
-> Thanks for the report. To be sure below issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-> tracking bot:
->
-> #regzbot ^introduced c2e7a19827eec443a7cb
-> #regzbot title ppc: PASemi PA6T CPU: Network Manager and LightDM and
-> fill volume with data
-> #regzbot ignore-activity
->
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply -- ideally with also
-> telling regzbot about it, as explained here:
-> https://linux-regtracking.leemhuis.info/tracked-regression/
+On Tue, 1 Nov 2022 19:10:09 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-#regzbot fixed-by: 40ff21432883
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> On some machines the number of listed CPUs may be bigger than the actual
+> CPUs that exist. The tracing subsystem allocates a per_cpu directory with
+> access to the per CPU ring buffer via a cpuX file. But to save space, the
+> ring buffer will only allocate buffers for online CPUs, even though the
+> CPU array will be as big as the nr_cpu_ids.
+> 
+> With the addition of waking waiters on the ring buffer when closing the
+> file, the ring_buffer_wake_waiters() now needs to make sure that the
+> buffer is allocated (with the irq_work allocated with it) before trying to
+> wake waiters, as it will cause a NULL pointer dereference.
+> 
+> While debugging this, I added a NULL check for the buffer itself (which is
+> OK to do), and also NULL pointer checks against buffer->buffers (which is
+> not fine, and will WARN) as well as making sure the CPU number passed in
+> is within the nr_cpu_ids (which is also not fine if it isn't).
+> 
+> Link: https://lore.kernel.org/all/87h6zklb6n.wl-tiwai@suse.de/
+> Link: https://lore.kernel.org/all/CAM6Wdxc0KRJMXVAA0Y=u6Jh2V=uWB-_Fn6M4xRuNppfXzL1mUg@mail.gmail.com/
+> 
 
-cheers
+This looks good to me.
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+> Cc: stable@vger.kernel.org
+> Bugzilla: https://bugzilla.opensuse.org/show_bug.cgi?id=1204705
+> Reported-by: Takashi Iwai <tiwai@suse.de>
+> Reported-by: Roland Ruckerbauer <roland.rucky@gmail.com>
+> Fixes: f3ddb74ad079 ("tracing: Wake up ring buffer waiters on closing of the file")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ring_buffer.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 199759c73519..9712083832f4 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -937,6 +937,9 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+>  	struct ring_buffer_per_cpu *cpu_buffer;
+>  	struct rb_irq_work *rbwork;
+>  
+> +	if (!buffer)
+> +		return;
+> +
+>  	if (cpu == RING_BUFFER_ALL_CPUS) {
+>  
+>  		/* Wake up individual ones too. One level recursion */
+> @@ -945,7 +948,15 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+>  
+>  		rbwork = &buffer->irq_work;
+>  	} else {
+> +		if (WARN_ON_ONCE(!buffer->buffers))
+> +			return;
+> +		if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
+> +			return;
+> +
+>  		cpu_buffer = buffer->buffers[cpu];
+> +		/* The CPU buffer may not have been initialized yet */
+> +		if (!cpu_buffer)
+> +			return;
+>  		rbwork = &cpu_buffer->irq_work;
+>  	}
+>  
+> -- 
+> 2.35.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
