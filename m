@@ -1,163 +1,192 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2048.outbound.protection.outlook.com [40.107.95.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BBDA7488
-	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 16:13:12 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZcvF2ULoYJLx1M8Nmm1kmhf0vLWx30c1vEF8YETJN9p3SFqd9UMZW5dllG9nhAtyvE0UgcpIQEvrGZ1BVwx+IQgReICpiJHXtDkYd0MSGevImHUt5RheWkVvQxHsD9Pl/icRzNDFhogYno5d7jldR03B8ZLeiZwUptx/1zPNMvn47T3+8fhvzKWJzd3KCy90ixU8xrJ34AjoOe2KSmzyEA/UZV3kJNi2acKFQxnK+OeKuCp7p7AlZ3R1RMlLCSgIy4GD8UE0IU7RUsLWr+qaDpfnwHk/sR87BfwQUcJ5sKzjdKVa+DyxI79jZKiAN/EaL3ME1UZJST4ggv5p+6X7JA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IlhZ2bJZoQBEjJLOWausbWUdhELHAoLKU8vP+pfVq2g=;
- b=JZfKwsyg+iTTljwJV1kn5Y1t5QlRTzChG2sMHBLycM1dfI2EIyVej0c7i7vVeixo4kz3dNZnmspMhUwgGyPDhx/j3EBn9HrgncsWJsv+SNH9Pmypl41GCjr9l/pR39qWf5KRoTZSVMcmmuG3bF5XceTAVlGNfoRnpFNhezJ31bYokZ8udZN+uOZLu1CYwui6mN81RUNuh8nHZWyhiA7zPTZrH3SbaeqRp15kejdTz9sW4xX0D8snhimOpz+IZgrnpuj6UJOqYBdMK0ShsitZqLg6VTW/8r+GhfHdtlMh0bJCf2dadZ/EJE/4TA4FQUFkNADZRPuDkGlOs+GQCE7YHg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IlhZ2bJZoQBEjJLOWausbWUdhELHAoLKU8vP+pfVq2g=;
- b=Fz28dejx+oAXyRQr9qcrTAIeF0YNp0l9oOUDaOxRGGGLVGFW4OeB/0LQDlubRviT9ZfBiWHWpHfgLmrkfY6Z9k9KoV05nFvCyehdCzf3595Kous3rnc1yKF1kS6/FaLdnpB8kBDeAgbwoyGHJLavJGHwsy3SA8Z1QE7cAcEUc3A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by SJ0PR12MB7065.namprd12.prod.outlook.com (2603:10b6:a03:4ae::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.20; Thu, 3 Nov
- 2022 16:13:10 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::f397:c6b1:a8a5:55f5]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::f397:c6b1:a8a5:55f5%6]) with mapi id 15.20.5791.020; Thu, 3 Nov 2022
- 16:13:10 +0000
-Message-ID: <f00ecc51-a387-1801-0db6-e18060c620a7@amd.com>
-Date: Thu, 3 Nov 2022 21:42:56 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: Perf: BUG: kernel NULL pointer dereference, address:
- 0000000000000198
-Content-Language: en-US
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Ingo Molnar <mingo@redhat.com>, linux-perf-users@vger.kernel.org,
- open list <linux-kernel@vger.kernel.org>, regressions@lists.linux.dev,
- lkft-triage@lists.linaro.org, Stephane Eranian <eranian@google.com>,
- Sandipan Das <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <CA+G9fYtOP-spGS7gYyBB-8wpUDiKxd5e_Nk05J9gzWR_DLBeFA@mail.gmail.com>
- <4429582f-155a-04d2-d139-a834bb325612@amd.com>
- <d577887d-b86b-82be-8081-f7bebacd8067@amd.com>
- <5bec4620-2e2b-abe0-1e82-528c084d4d16@amd.com>
- <cb40c209-9c4c-f645-8454-bcd74cb72405@amd.com>
- <Y2O1GDRrJqIu17vM@hirez.programming.kicks-ass.net>
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <Y2O1GDRrJqIu17vM@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0043.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:22::18) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D15E79C9
+	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 22:20:58 +0000 (UTC)
+Received: by mail-qk1-f180.google.com with SMTP id v8so2087557qkg.12
+        for <regressions@lists.linux.dev>; Thu, 03 Nov 2022 15:20:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20210112.gappssmtp.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pMN0/mJYGvzCnOyvxtCJFIOn1RUzuH2afiVlhl8BJN8=;
+        b=R6DRBzl5D7PmTiScz2q1QNrg5S/EVTQpn+C3LtM9SKPmz5cwA30hjj2kpsgOy9eZIa
+         Myw7XsEbkbNfN0tnrvY0/O563gK9D+y0wMqMrdjnsBy6lIZVn7MiXBaIMIsfDB704urv
+         fKP6U3VmiAXsIfqSTLdzXkih52xtbr96MBMR/pC7TTRGId/3MknjV3tU1EVNPCIn4xKI
+         5YLvUn4crDDl0m7eR8kbF5vfBiHAe6I525XruQUlEH0EePJhA5MXVI/wGhUDlxBRV30O
+         ADJH+Df8LJaWzNuMWaZamm1CxC0v1ci3yBoZFfYZv15out2MFkOVyQqJ5huIDjV9OnHg
+         vosg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pMN0/mJYGvzCnOyvxtCJFIOn1RUzuH2afiVlhl8BJN8=;
+        b=DYRRUwZqCORJjYQkWm82yoh3jRkqqUaCvFAf4svyWPRg6+Q/vkQcepIAMfguNIlpq0
+         5cWUjKJlyZA+huBLsPgr282vOZb6r0eAshi4y7LJCyWaOVFXcfeIcwMzsOc3Mb3yU5Ze
+         NeaI8C6+nyUXmNkK55RNXn9OtEP0u7h2x+bEag9qRd5qT8Rm7PXHM7TG5MFPZ/PeDBv6
+         IDUm+R9mKSET0BZYhOeilJqYImqdhh5mG0mwrp7vbxNBGzRZS0zFf98cyO3uPsxKaHnT
+         Fhd/Z54riWff5RG4j07bkWoBdDezJeJgU1BpMLWe/7c4Vo+9fNBhVbZFNDnrf2AWorC6
+         G8Aw==
+X-Gm-Message-State: ACrzQf1Q8E8e2DCyyZRXRozv1qrhnDnNZbCPKnUdwPMvXyU7PYyhG9A7
+	cy4gsLxNG7G4qAhBKGRKOIP0iw==
+X-Google-Smtp-Source: AMsMyM6xZDCV9zQJtAhUoSH5ufgDptRZU0dKTD699bnK6iH5NnhZ73hquRFyFxv1/SpheHjZZuwKeg==
+X-Received: by 2002:a05:620a:152e:b0:6fa:3cb8:dd9c with SMTP id n14-20020a05620a152e00b006fa3cb8dd9cmr15550460qkk.82.1667514057172;
+        Thu, 03 Nov 2022 15:20:57 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::25f1])
+        by smtp.gmail.com with ESMTPSA id x18-20020a05620a259200b006bc192d277csm1559048qko.10.2022.11.03.15.20.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Nov 2022 15:20:56 -0700 (PDT)
+Date: Thu, 3 Nov 2022 18:20:59 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+	Matthew Wilcox <willy@infradead.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+	linux-block@vger.kernel.org, linux-btrfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+	linux-mm@kvack.org,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGESSION] systemd-oomd overreacting due to PSI changes for
+ Btrfs (was: Re: [PATCH 3/5] btrfs: add manual PSI accounting for compressed
+ reads)
+Message-ID: <Y2Q+y8t9PV5nrjud@cmpxchg.org>
+References: <20220915094200.139713-1-hch@lst.de>
+ <20220915094200.139713-4-hch@lst.de>
+ <d20a0a85-e415-cf78-27f9-77dd7a94bc8d@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|SJ0PR12MB7065:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22b1b87e-e4d7-4626-1b44-08dabdb64cfa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	AVpnJZM+BLiE50b4N7STIWBkpE7jMhd7yDo7pVedK+Oi+Hb9N5jSMwzweC3o9W6/eYxPWu+FpaEArL0FTsCdMPql/T4M9Ad3YffjWbFkxr985RzNd/jTCvy1BkAR4XYmYvyBx1CnU6ZPzXZ027KwmWJ1FmXLKNWCnDaLbwr0+G9BTS5Il9ETh5yMOcZse9yms745+sDPOkzoaJGgiE7Eml7alPNkCO2AY8a1sxg0MFbNgznOqe0DdqI0ye+ah1bBGMrmqFpNGaB2IY4SY57oQh5SshzDcDB+9e28ZC2ef0+2zWidmheZXabCLsomwmOAFFOkus51dnKNJHiQfDlqggekZ0ID3iufG/ky3N/GmW5eppJhiz/UiGDYje8u+P2yzFzKJYNSkM/cw/OeajWKaBIZiKpWXZ4s+wG3jCB+D0g5lSg/lh1N1bvP3bzRCWO1Ph4+vcG9fx9fyMsM0HjleizwELDpfhga9+WEY8qNg9QohmyRzYbhuGkKBXP77OG6d2oDQ5YOCh2bmJBHNZIGm9dhwRKr3F5WQP1hBWXGO2ksr+7mkJbP4ojNYD2sJCtsr8f+Ybgmrs1pPD2hlG0swVHRZVVhFbBnKUEb7yHqsGfEOlfFFcKqcBjsSd4f5fzIe1axM+KvvaiZLNnx4yGm9EqHMficnapaXH1uB+zYUZPBorfd9QxgZiC0QmrsSyISNSaEL49yJA7FrQqkxFsZuqmNnlQuqpi7KYSEepxaNUNo4DxyztU6HWtlpLz8Dtx4i9PgFUuNxxADC9iNo6qRJMe72YNitO3U142Ehn6jKf5fDBoH2Y5NyC0vm7kGeH3T
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(346002)(39860400002)(376002)(136003)(366004)(396003)(451199015)(66946007)(4326008)(54906003)(8676002)(66476007)(6916009)(66556008)(83380400001)(316002)(2906002)(6506007)(26005)(966005)(186003)(2616005)(6486002)(7416002)(5660300002)(36756003)(53546011)(38100700002)(31686004)(86362001)(478600001)(6512007)(31696002)(41300700001)(8936002)(6666004)(44832011)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cXJJQzcxN2Rkd0FyS2hGNStDbS92Z0M1VXRnbGtsRHdkQVhxWXRxZU5qRkUv?=
- =?utf-8?B?a0RYcmpZc2hxbG9zN2NVWVFFWEpnbkRMOVFpL3czOXA5Q0pCWjBmZ3NnVGY5?=
- =?utf-8?B?VFVTb0czV0ZURVUrVXArcmRMQk1vTDdNTytUa3kvV1BaTWRVVFdYWUY5emhH?=
- =?utf-8?B?bUduLzJmSkMvam1mYUk4WUovdTVnM0F3MVo0UUtnR05OYTlCY2w3UDJwV3Fw?=
- =?utf-8?B?ay9HSWRyWktsQ1dhazdaOU5HZDZaYi8rM2QzaENjR0poK2lwZVhTTDI1UDlz?=
- =?utf-8?B?Mm15ei9CeDEyUHdvQUwyM1ROaHowaGZvYUZBczZneFR1WWRCNUplaExsUU5U?=
- =?utf-8?B?M0FvZUwyMGpnUm1kcDV0K2RCMTd5QXZkY2V6RFl1aEFJekVsSnVmdk1HT2x6?=
- =?utf-8?B?ZUM2bjhPMTZ4N2E0eSs0Zm92MmxrbEV1UGhKTGgxL0VnSXJNWTJqcm12OE5i?=
- =?utf-8?B?YXh5RGxEeW1PdExCY0hJWVZuNmt6WnJPWkRiSUZydHk0bUdyWUJiZzE4ZDlU?=
- =?utf-8?B?b01zWHFPZmw5d3A3YVFJRU5lbUJIZmk1UEd6MXJENS9sUHZ4ZUwwVjVaZ2VE?=
- =?utf-8?B?VDcySDFFaG9zbmpjY0lFZVRLOWFWYThQSXBvWFlucDRoQ2lCZjc4ckFqTmVT?=
- =?utf-8?B?R1IrMzNxV2Y4aUkzbHBrMFFtbVhvVWdSdGZqdk8weEo3a3FlaWlINkNZT2l2?=
- =?utf-8?B?TlJDanlFc084eGpTbWo4THpPbzlidVRLY2VYY05LV2krdGZMbHJ3RGJPc0Y4?=
- =?utf-8?B?OVlFOWRSUS9Zd2xJS2tSMUpENVpUVDladG0ybWlBUTNnQktlT0U2dGpNMTNv?=
- =?utf-8?B?aEJXSXFOUm9FbzQ0eWhtZk1SYVhvMUMzajIrcGJNV0pvazhGRHFaVU9VVGtw?=
- =?utf-8?B?TDFmUkRYSCthTnZQUnhnZFFkTnBGcmJYVjE1cG9kMllXRk0rREp5YkNmSFJT?=
- =?utf-8?B?dlNZR0E4WFBKbTIzZk55aVVmTGJlNmVtRTBCS1hHdDJUcUxFTldzTisvaU9F?=
- =?utf-8?B?ZUZOYjUydlE1ZmEvd0V0WDRHeGhtdlF1WWV3Mk9wK3V0TS9iQ3crZ3NRci9w?=
- =?utf-8?B?dzE0WDd4QkpwVEFQWHAvYVhPaWJnSmk0cjM5UEZmaWtVRVcyNXZMSzFuZkJa?=
- =?utf-8?B?N09uWUhyOVRYUkRhV3NmQi83R1B3YktvU2N5SnNqYzEwWkNySjErYkZGemZK?=
- =?utf-8?B?a2NQcnlsSFVqYkw2OXZhTmpCTWp6R1hlcEtjaDJJaW9pSjBnM0NKcElia2E4?=
- =?utf-8?B?azNkT3RiV04xMXFkR1VkY3ZqV2J0TTZuSXBxMU5wWGo2dWxWRE5EaE9TWVJx?=
- =?utf-8?B?eTFlNWd5SzhFQjF0M0hEOFVtWW1LSjYydVZVM1REVkY4aTBrL2xHeVZVcXNW?=
- =?utf-8?B?S2NuNlJKV2UyMUlCb2o1b3kveWQ0Mk95YjYybDBxOHo2YVN2S2g1bFNhRnpt?=
- =?utf-8?B?d3U5UGRKajlCemVONkpsRVlKMGNNWm9sQ0xpTW1GV0FVaGtKNjJqaXZBbUda?=
- =?utf-8?B?MVJLNmFYbVdsTEh5V0E2cTF1ZVNQUlB3MGtMd2MzK3hTVkJLTkhRVDBCL1cv?=
- =?utf-8?B?dndPc0RIeGFDTG9RdC82aDlvMkYxL2hOYWxudExsVUd2NDRvSHo4aXg3c21N?=
- =?utf-8?B?akttdWJWZVZDbE5FaCt2S25RNnJ1RUZEMWF5VGZXYytxVW1DZXlWdXBVckF6?=
- =?utf-8?B?SjM4VnpSN0QxTEZnaXhwVXV4YnNkS0NrT0Q0dFVmeDQvcEY5M0Y3ZFlyY1lB?=
- =?utf-8?B?RkNZeWlZOXFHakdCbzdGelFwM0NmWnpicnpqNGdOdlNjSnVhTkpxK1lyQUNO?=
- =?utf-8?B?ZlIwcjhDbytLVXdnMGttekhVak1NVE9DQ09FUlNvaGY3N1lVaVBOVWdieVls?=
- =?utf-8?B?UDEzc0hyM0oreTVLaFU5T1hvLzRTM1dUMmR6azUwSmhQcGVvS0hhQk9WcktS?=
- =?utf-8?B?Z0VLZ3ByOWVrcEh4d2RYekJUWGpvSU1yY1F0K2dyMFVBdUphUnBIbkt0VjZQ?=
- =?utf-8?B?MGFDOTUwZTJBcmhLMlBjVFY5VEoxVGRaYTlITFJ1UFhpUU0rVjlKdTRXcVd1?=
- =?utf-8?B?dVpIc3ZEMFJLRGpHZ3BxS1lvcVdwK3RKTk1sclp4UEFBSDJEMGo4NXZMWmdH?=
- =?utf-8?Q?PXxz8jim+dfjm8X/RIVsZr4fM?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22b1b87e-e4d7-4626-1b44-08dabdb64cfa
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2022 16:13:10.3110
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YR6FwxTz+bAntxA0BRNHbQYzeLKRdhFnXvuefm4U+p7J6O3klxtNGln4/35P4Q7kprbja3BmS/PF4EwYrcekzg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7065
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d20a0a85-e415-cf78-27f9-77dd7a94bc8d@leemhuis.info>
 
-On 03-Nov-22 6:03 PM, Peter Zijlstra wrote:
-> On Thu, Nov 03, 2022 at 05:15:30PM +0530, Ravi Bangoria wrote:
+On Thu, Nov 03, 2022 at 11:46:52AM +0100, Thorsten Leemhuis wrote:
+> Hi Christoph!
 > 
->> Sorry was distracted a bit. So, this seems to be happening because of
->> race between amd_pmu_enable_all() and perf event NMI. Something like:
->>
->>   amd_pmu_enable_all()
->>   {
->>       if (!test_bit(idx, cpuc->active_mask))
->>
->>   --->/* perf NMI entry */
->>       ...
->>       x86_pmu_stop() {
->>           __clear_bit(hwc->idx, cpuc->active_mask);
->>           cpuc->events[hwc->idx] = NULL;
->>       }
->>       ...
->>   <---/* perf NMI exit */
->>
->>       amd_pmu_enable_event(cpuc->events[idx]);
->>   }
+> On 15.09.22 11:41, Christoph Hellwig wrote:
+> > btrfs compressed reads try to always read the entire compressed chunk,
+> > even if only a subset is requested.  Currently this is covered by the
+> > magic PSI accounting underneath submit_bio, but that is about to go
+> > away. Instead add manual psi_memstall_{enter,leave} annotations.
+> > 
+> > Note that for readahead this really should be using readahead_expand,
+> > but the additionals reads are also done for plain ->read_folio where
+> > readahead_expand can't work, so this overall logic is left as-is for
+> > now.
 > 
-> Hmm, do you have more information?
-
-I've extracted function graph logs from crash dump and uploaded it here:
-https://github.com/BangoriaRavi/function_graph/blob/main/trace.function_graph.dat
-
-crash was on CPU1.
-
-> Something like that would require
-> calling amd_pmu_enable_all() while it is already active -- and that
-> seems suspect at first glance.
+> It seems this patch makes systemd-oomd overreact on my day-to-day
+> machine and aggressively kill applications. I'm not the only one that
+> noticed such a behavior with 6.1 pre-releases:
+> https://bugzilla.redhat.com/show_bug.cgi?id=2133829
+> https://bugzilla.redhat.com/show_bug.cgi?id=2134971
 > 
-> That is, you shouldn't be getting an NMI for @idx before
-> amd_pmu_enable_event().
+> I think I have a pretty reliable way to trigger the issue that involves
+> starting the apps that I normally use and a VM that I occasionally use,
+> which up to now never resulted in such a behaviour.
+> 
+> On master as of today (8e5423e991e8) I can trigger the problem within a
+> minute or two. But I fail to trigger it with v6.0.6 or when I revert
+> 4088a47e78f9 ("btrfs: add manual PSI accounting for compressed reads").
+> And yes, I use btrfs with compression for / and /home/.
+> 
+> See [1] for a log msg from systemd-oomd.
+> 
+> Note, I had some trouble with bisecting[2]. This series looked
+> suspicious, so I removed it completely ontop of master and the problem
+> went away. Then I tried reverting only 4088a47e78f9 which helped, too.
+> Let me know if you want me to try another combination or need more data.
 
-I too was wondering about this. Will try to get some more data tomorrow.
+Oh, I think I see the bug. We can leak pressure state from the bio
+submission, which causes the task to permanently drive up pressure.
 
-Thanks,
-Ravi
+Can you try this patch?
+
+From 499e5cab7b39fc4c90a0f96e33cdc03274b316fd Mon Sep 17 00:00:00 2001
+From: Johannes Weiner <hannes@cmpxchg.org>
+Date: Thu, 3 Nov 2022 17:34:31 -0400
+Subject: [PATCH] fs: btrfs: fix leaked psi pressure state
+
+When psi annotations were added to to btrfs compression reads, the psi
+state tracking over add_ra_bio_pages and btrfs_submit_compressed_read
+was faulty. The task can remain in a stall state after the read. This
+results in incorrectly elevated pressure, which triggers OOM kills.
+
+pflags record the *previous* memstall state when we enter a new
+one. The code tried to initialize pflags to 1, and then optimize the
+leave call when we either didn't enter a memstall, or were already
+inside a nested stall. However, there can be multiple PageWorkingset
+pages in the bio, at which point it's that path itself that re-enters
+the state and overwrites pflags. This causes us to miss the exit.
+
+Enter the stall only once if needed, then unwind correctly.
+
+Reported-by: Thorsten Leemhuis <linux@leemhuis.info>
+Fixes: 4088a47e78f9 btrfs: add manual PSI accounting for compressed reads
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ fs/btrfs/compression.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
+index f1f051ad3147..e6635fe70067 100644
+--- a/fs/btrfs/compression.c
++++ b/fs/btrfs/compression.c
+@@ -512,7 +512,7 @@ static u64 bio_end_offset(struct bio *bio)
+ static noinline int add_ra_bio_pages(struct inode *inode,
+ 				     u64 compressed_end,
+ 				     struct compressed_bio *cb,
+-				     unsigned long *pflags)
++				     int *memstall, unsigned long *pflags)
+ {
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	unsigned long end_index;
+@@ -581,8 +581,10 @@ static noinline int add_ra_bio_pages(struct inode *inode,
+ 			continue;
+ 		}
+ 
+-		if (PageWorkingset(page))
++		if (!*memstall && PageWorkingset(page)) {
+ 			psi_memstall_enter(pflags);
++			*memstall = 1;
++		}
+ 
+ 		ret = set_page_extent_mapped(page);
+ 		if (ret < 0) {
+@@ -670,8 +672,8 @@ void btrfs_submit_compressed_read(struct inode *inode, struct bio *bio,
+ 	u64 em_len;
+ 	u64 em_start;
+ 	struct extent_map *em;
+-	/* Initialize to 1 to make skip psi_memstall_leave unless needed */
+-	unsigned long pflags = 1;
++	unsigned long pflags;
++	int memstall = 0;
+ 	blk_status_t ret;
+ 	int ret2;
+ 	int i;
+@@ -727,7 +729,7 @@ void btrfs_submit_compressed_read(struct inode *inode, struct bio *bio,
+ 		goto fail;
+ 	}
+ 
+-	add_ra_bio_pages(inode, em_start + em_len, cb, &pflags);
++	add_ra_bio_pages(inode, em_start + em_len, cb, &memstall, &pflags);
+ 
+ 	/* include any pages we added in add_ra-bio_pages */
+ 	cb->len = bio->bi_iter.bi_size;
+@@ -807,7 +809,7 @@ void btrfs_submit_compressed_read(struct inode *inode, struct bio *bio,
+ 		}
+ 	}
+ 
+-	if (!pflags)
++	if (memstall)
+ 		psi_memstall_leave(&pflags);
+ 
+ 	if (refcount_dec_and_test(&cb->pending_ios))
+-- 
+2.38.1
