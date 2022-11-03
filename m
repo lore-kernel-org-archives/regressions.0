@@ -1,64 +1,113 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B5FC6FC7
-	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 12:54:08 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oqZjR-0007WA-Ov; Thu, 03 Nov 2022 13:54:06 +0100
-Message-ID: <2c6b195b-287c-c5de-8e22-72aed337af39@leemhuis.info>
-Date: Thu, 3 Nov 2022 13:54:04 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F916FD4
+	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 13:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1667481344;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Uxs3/q0q6AMOjvn/NBkbxt+h2qoRa/eYcqVm0+4ic8c=;
+	b=h6cnDoeQrlAXOFw996BqyoHeMx9K2VNnzzleuXtzH8+UEgVHs0fph0Hbrb4qwb8ll0EWbR
+	pUiZgjO5cKr53CfHU0IowwUhal0dw15G0fhiupJZnyXrIQG0jafCT9NnMbPxNyDKSyWRsq
+	yJ79PsHtY6p2xRCA2dnZgy79eJXV6VI=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-235-UwBaoobpNYewVgptCTrWdw-1; Thu, 03 Nov 2022 09:15:43 -0400
+X-MC-Unique: UwBaoobpNYewVgptCTrWdw-1
+Received: by mail-qt1-f197.google.com with SMTP id cd6-20020a05622a418600b003a54cb17ad9so1843796qtb.0
+        for <regressions@lists.linux.dev>; Thu, 03 Nov 2022 06:15:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Uxs3/q0q6AMOjvn/NBkbxt+h2qoRa/eYcqVm0+4ic8c=;
+        b=bsg41iV30clYFNxvxvBAJqtVoFGDRgXwjuDBXiIyQFmLfRgIXMGjYSPh/0Dom3KUND
+         WufsWzsA4kmE14JS31nlLqvPpIEI0eJbDf4ea/W3Qvt3j2gPpQO94Q7uz9ltXhI7X0Qw
+         Jd7EGxYJcpM0TJjV5gAoaHuTyG+yLWQaeT9IVilcwWSfUqvRhV6/1iNhxIVxy7CXS9Jt
+         QwYvVlCDtzGjQV/tIhTyCrGy1jGl5o6cPXyUcxjKE10YIbGivdXJiOHo7zWGPeASLhlr
+         d+nbzjnKRL4qCeFVcqtwlOwBxZU2kXMF/0Yk5ql1iZPG1zUhPX+0gfIJSMiO4QDG8CgM
+         4QvA==
+X-Gm-Message-State: ACrzQf0y+Oga77R3dAnaySjPSiXZtlyZ6CTuiKGJPch0lNbYLxLLu7lB
+	ve7qLn9V0qicXejn+McG4so2fjFwNzpruz4a6x+4O92eI8yC0cBgI+9bpF5V0cCC0BPyEvzWdc7
+	I4aHpPc6HE3nYaTO1b85PPYA=
+X-Received: by 2002:ad4:5763:0:b0:4af:b800:be6b with SMTP id r3-20020ad45763000000b004afb800be6bmr27135092qvx.70.1667481342669;
+        Thu, 03 Nov 2022 06:15:42 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7wkWwSvE6CHEup2Ef6gKWqj9ltK6zJLHkALp15tzqRFgB62fZSsYulXaxwOSpn1PVBkiMlpw==
+X-Received: by 2002:ad4:5763:0:b0:4af:b800:be6b with SMTP id r3-20020ad45763000000b004afb800be6bmr27135055qvx.70.1667481342442;
+        Thu, 03 Nov 2022 06:15:42 -0700 (PDT)
+Received: from p1.montleon.intra (066-026-073-226.inf.spectrum.com. [66.26.73.226])
+        by smtp.gmail.com with ESMTPSA id s8-20020a05620a16a800b006ed30a8fb21sm715086qkj.76.2022.11.03.06.15.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Nov 2022 06:15:41 -0700 (PDT)
+From: Jason Montleon <jmontleo@redhat.com>
+To: pierre-louis.bossart@linux.intel.com
+Cc: alsa-devel@alsa-project.org,
+	broonie@kernel.org,
+	cezary.rojewski@intel.com,
+	ckeepax@opensource.cirrus.com,
+	jmontleo@redhat.com,
+	oder_chiou@realtek.com,
+	regressions@lists.linux.dev,
+	tiwai@suse.com
+Subject: [PATCH v2 1/2] ASoC: rt5514: fix legacy dai naming
+Date: Thu,  3 Nov 2022 09:11:43 -0400
+Message-Id: <20221103131144.2942-1-jmontleo@redhat.com>
+X-Mailer: git-send-email 2.37.3
+In-Reply-To: <87v8nwmgso.wl-tiwai@suse.de>
+References: <87v8nwmgso.wl-tiwai@suse.de>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [REGRESSION 6.0.x / 6.1.x] NULL dereferencing at tracing
- #forregzbot
-Content-Language: en-US, de-DE
-Cc: linux-kernel@vger.kernel.org
-References: <87h6zklb6n.wl-tiwai@suse.de>
-To: regressions@lists.linux.dev
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <87h6zklb6n.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667480048;cde84bfd;
-X-HE-SMSGID: 1oqZjR-0007WA-Ov
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-[Note: this mail is primarily send for documentation purposes and/or for
-regzbot, my Linux kernel regression tracking bot. That's why I removed
-most or all folks from the list of recipients, but left any that looked
-like a mailing lists. These mails usually contain '#forregzbot' in the
-subject, to make them easy to spot and filter out.]
+Starting with 6.0-rc1 these messages are logged and the sound card
+is unavailable. Adding legacy_dai_naming to the rt5514-spi causes
+it to function properly again.
 
-On 31.10.22 08:11, Takashi Iwai wrote:
-> 
-> we've got a bug report indicating the NULL dereference at the recent
-> tracing changes, showing at the start of KDE.  The details including
-> the dmesg are found at:
->   https://bugzilla.opensuse.org/show_bug.cgi?id=1204705
-> 
-> It was reported at first for 6.0.3, and confirmed that the problem
-> persists with 6.1-rc, too.
-> 
-> The culprit seems to be the commit
-> f3ddb74ad0790030c9592229fb14d8c451f4e9a8
->     tracing: Wake up ring buffer waiters on closing of the file
-> and reverting it seems fixing the problem.
-> 
-> Could you take a look?
+[   16.928454] kbl_r5514_5663_max kbl_r5514_5663_max: ASoC: CPU DAI
+spi-PRP0001:00 not registered
+[   16.928561] platform kbl_r5514_5663_max: deferred probe pending
+---
+ sound/soc/codecs/rt5514-spi.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-Just adding this to the tracking:
+diff --git a/sound/soc/codecs/rt5514-spi.c b/sound/soc/codecs/rt5514-spi.c
+index 1a25a3787935..362663abcb89 100644
+--- a/sound/soc/codecs/rt5514-spi.c
++++ b/sound/soc/codecs/rt5514-spi.c
+@@ -298,13 +298,14 @@ static int rt5514_spi_pcm_new(struct snd_soc_component *component,
+ }
+ 
+ static const struct snd_soc_component_driver rt5514_spi_component = {
+-	.name		= DRV_NAME,
+-	.probe		= rt5514_spi_pcm_probe,
+-	.open		= rt5514_spi_pcm_open,
+-	.hw_params	= rt5514_spi_hw_params,
+-	.hw_free	= rt5514_spi_hw_free,
+-	.pointer	= rt5514_spi_pcm_pointer,
+-	.pcm_construct	= rt5514_spi_pcm_new,
++	.name			= DRV_NAME,
++	.probe			= rt5514_spi_pcm_probe,
++	.open			= rt5514_spi_pcm_open,
++	.hw_params		= rt5514_spi_hw_params,
++	.hw_free		= rt5514_spi_hw_free,
++	.pointer		= rt5514_spi_pcm_pointer,
++	.pcm_construct		= rt5514_spi_pcm_new,
++	.legacy_dai_naming	= 1,
+ };
+ 
+ /**
+-- 
+2.37.3
 
-#regzbot introduced f3ddb74ad07 ^
-https://bugzilla.opensuse.org/show_bug.cgi?id=1204705
-#regzbot title NULL dereferencing at tracing
-#regzbot ignore-activity
-#regzbot monitor:
-https://lore.kernel.org/all/20221101191009.1e7378c8@rorschach.local.home/
-
-Ciao, Thorsten
