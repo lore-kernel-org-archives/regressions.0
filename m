@@ -1,79 +1,126 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06F37E2
-	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 05:32:59 +0000 (UTC)
-Received: by mail-ej1-f41.google.com with SMTP id sc25so2344651ejc.12
-        for <regressions@lists.linux.dev>; Wed, 02 Nov 2022 22:32:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QxHwdNSRZxWkDQkg6uvUY0ujmFP08SAArZlQSADznoA=;
-        b=LICjpEJhenrB9iXeBKaktSOAa9LKw7Bcuk88goXAS2rIZYjDAJtvETrJ+FoanrXgAB
-         jDMd0lxbkdvDlDDFVGZIB1I+kzciAEHFftg7imFWmgora0eGPF77S8AemRQC0RMwgtvY
-         cC6pjvWylf9ocrry8Y7XIbMF2YHC2KD/L+PqX0FOppLS2bIIxDaL8+jQXn9Wr3zMqIZE
-         QD5p1/QV9VngYIimvpKq2ATIUALXnkJXkxlO/EmkubHSoM+rVx3OnaYtqfWijnYqEo2M
-         EPBoZPXWKeZ7VzLMTw0PhNR8G7khEbavKWyPu/Lcz7IfVs3V2k2NvOGfPQWfZscdAsec
-         Jqqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QxHwdNSRZxWkDQkg6uvUY0ujmFP08SAArZlQSADznoA=;
-        b=RVgtxKKmkvsz3fopbuRre+T+fBJkRVoIy4dmBz5UtZEHYR5Fun5IkzxpHs5BBsCVKW
-         6ltRuxRLVEevbVfusoR2D8h2XZz7rUbvJY8rYnQqKiYFuuQO34pOC/PsKOtXISSY5TOb
-         VcFXgcgUhHmK8faLQoHkz6Y4jkw63oQKkMyq33hikyZ0VnU9UrJQnYmvv56Sg9jdDcHV
-         YibeaGbbTsMXavFzMWT+gbsshaKHf0+LDw/Gp7fOm2DO5pOVGXk+193yaFa5auQ06m6m
-         HYPsvh75A8vX1BY4Tj8y5n+lxfB6gvlydoc03WRf8Avz8US1Nwx+lMWxIkeOjb2DT1mQ
-         WpTw==
-X-Gm-Message-State: ACrzQf028K9H2cst4FZwzag7utlm8bmBPPwtbmz321KT5pjeU4nklpm4
-	kVbbpcRod3ehvKW+jZRfuLKBlIDkAOMyiwU4Mau5WA==
-X-Google-Smtp-Source: AMsMyM4NmLQqfXH0oBGob4NJPJ7/M23favSgwhq8c2XXT62hem2CFukSGO7O+5fEi9nnXj/gzUeTvplpU4Ba/D10EcQ=
-X-Received: by 2002:a17:907:7b93:b0:770:1d4f:4de9 with SMTP id
- ne19-20020a1709077b9300b007701d4f4de9mr27740534ejc.201.1667453577739; Wed, 02
- Nov 2022 22:32:57 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119DEA31
+	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 07:59:11 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 734611F9E5;
+	Thu,  3 Nov 2022 07:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1667462344; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4H1fD4BTdPL3Y/bKoYtG9Wt8bt1+57sjE9PmOeD3ZMA=;
+	b=FHY1mHpXOb0bwTvA4gRMa4e6kePExIGVbFE9Gr3gt1GsnhrENy4WU2mLbcAzUwttWBGtBI
+	T1XgRguekNsB1WR200M2yqNcmzNdZIHNlg58Hw4jmdykkAlY5IsYTrH9TUt5rbLh3DhqB3
+	Cgszva6f4u97e4U5OHn+pk9aupTwm/o=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1667462344;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4H1fD4BTdPL3Y/bKoYtG9Wt8bt1+57sjE9PmOeD3ZMA=;
+	b=emFsONiOWem4PhqiCeT08Z97fLyU+icvC+EFrBybN+lGjoVACtg0fp0ImuZqvjqzkOhjLx
+	nHIqVef6/keVd1Dg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3DF5F13AAF;
+	Thu,  3 Nov 2022 07:59:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id uZw2Dsh0Y2O2KwAAMHmgww
+	(envelope-from <tiwai@suse.de>); Thu, 03 Nov 2022 07:59:04 +0000
+Date: Thu, 03 Nov 2022 08:59:03 +0100
+Message-ID: <87a658o4e0.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Jason Montleon <jmontleo@redhat.com>,
+	regressions@lists.linux.dev,
+	oder_chiou@realtek.com,
+	cezary.rojewski@intel.com,
+	alsa-devel@alsa-project.org,
+	Mark Brown <broonie@kernel.org>,
+	Takashi Iwai <tiwai@suse.com>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH] Fix kbl_rt5663_rt5514_max98927 regression
+In-Reply-To: <2bbe7bed-21d4-018a-8957-10d9dbe0c661@linux.intel.com>
+References: <20221102200527.4174076-1-jmontleo@redhat.com>
+	<2bbe7bed-21d4-018a-8957-10d9dbe0c661@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <CA+G9fYsGFoC5TciCuijZXLx48TZnoTSkq=iUgb+vFdi9EYTucw@mail.gmail.com>
- <Y2LgMYsgj8c7Aj1U@kroah.com>
-In-Reply-To: <Y2LgMYsgj8c7Aj1U@kroah.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 3 Nov 2022 11:02:46 +0530
-Message-ID: <CA+G9fYunBonRypu0QruuH23H0chET=sZH7FfbK8nGabkCFd9sg@mail.gmail.com>
-Subject: Re: qemu-i386: perf: BUG: kernel NULL pointer dereference, address: 00000148
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-perf-users@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, regressions@lists.linux.dev, 
-	lkft-triage@lists.linaro.org, Marco Elver <elver@google.com>, 
-	"Eric W. Biederman" <ebiederm@xmission.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 3 Nov 2022 at 02:54, Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Nov 02, 2022 at 06:42:52PM +0530, Naresh Kamboju wrote:
-> > Following kernel BUG: noticed on qemu-i386 while running perf test suite
-> > on stable-rc 6.0.7-rc1 the image was built with gcc-11.
-> >
-> > The System did not recover after the crash.
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> What is this a regression from?  Does this happen on older stable
-> kernels?  Linus's tree?
+On Wed, 02 Nov 2022 23:05:14 +0100,
+Pierre-Louis Bossart wrote:
+> 
+> On 11/2/22 16:05, Jason Montleon wrote:
+> > Starting with 6.0-rc1 these messages are logged and the sound card
+> > is unavailable. Adding legacy_dai_naming to the rt5514-spi causes
+> > it to function properly again.
+> > 
+> > [   16.928454] kbl_r5514_5663_max kbl_r5514_5663_max: ASoC: CPU DAI
+> > spi-PRP0001:00 not registered
+> > [   16.928561] platform kbl_r5514_5663_max: deferred probe pending
+> 
+> Thanks for reporting this regression, much appreciated.
+> 
+> a) you need to CC: maintainers Mark Brown and Takashi Iwai
+> b) the commit title should be something like "ASoC: rt5514: fix legacy
+> dai naming".
+> c) it's not clear if this is actually enough. there's no
+> legacy_dai_naming for e.g. rt5663 and the .endianness member is not set.
 
-This looks like an intermittent problem.
-I have tested multiple times and found that it is an intermittent crash
-with qemu-i386 while running stable-rc 6.x. That is the one of the reasons
-for not including the stable list and not reporting this as a regression.
+IIUC, rt5663.c should be fine; it used to have non_legacy_dai_naming
+flag and it was dropped after the switch.
 
-> How about 'git bisect'?
+But, through a quick glance, rt5677-spi.c seems to be the same pattern
+as rt5514-spi.c.  The rt5677.c was covered properly but the *-spi.c
+wan't.
 
-Since it is an intermittent crash it is hard to bisect.
 
-- Naresh
+Takashi
+
+> 
+> Adding Charles Keepax for comments.
+> 
+> > ---
+> >  sound/soc/codecs/rt5514-spi.c | 15 ++++++++-------
+> >  1 file changed, 8 insertions(+), 7 deletions(-)
+> > 
+> > diff --git a/sound/soc/codecs/rt5514-spi.c b/sound/soc/codecs/rt5514-spi.c
+> > index 1a25a3787935..362663abcb89 100644
+> > --- a/sound/soc/codecs/rt5514-spi.c
+> > +++ b/sound/soc/codecs/rt5514-spi.c
+> > @@ -298,13 +298,14 @@ static int rt5514_spi_pcm_new(struct snd_soc_component *component,
+> >  }
+> >  
+> >  static const struct snd_soc_component_driver rt5514_spi_component = {
+> > -	.name		= DRV_NAME,
+> > -	.probe		= rt5514_spi_pcm_probe,
+> > -	.open		= rt5514_spi_pcm_open,
+> > -	.hw_params	= rt5514_spi_hw_params,
+> > -	.hw_free	= rt5514_spi_hw_free,
+> > -	.pointer	= rt5514_spi_pcm_pointer,
+> > -	.pcm_construct	= rt5514_spi_pcm_new,
+> > +	.name			= DRV_NAME,
+> > +	.probe			= rt5514_spi_pcm_probe,
+> > +	.open			= rt5514_spi_pcm_open,
+> > +	.hw_params		= rt5514_spi_hw_params,
+> > +	.hw_free		= rt5514_spi_hw_free,
+> > +	.pointer		= rt5514_spi_pcm_pointer,
+> > +	.pcm_construct		= rt5514_spi_pcm_new,
+> > +	.legacy_dai_naming	= 1,
+> >  };
+> >  
+> >  /**
+> 
