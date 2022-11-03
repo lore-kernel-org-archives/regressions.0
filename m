@@ -1,116 +1,243 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BBB2EDD
-	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 10:15:21 +0000 (UTC)
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2A38ROUw017318;
-	Thu, 3 Nov 2022 04:54:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=s5fn7UnHs2rik/6xyDDQcgIyHGMrOE+H5STIId2f7Tg=;
- b=dg8tFkt5fanT2SXveudKjkn44gf7RcWp7xJr2sB7r8crs9OVSks9plr9HA70Xxd7U3vZ
- 2lHZtp/8lsSnm4wvZqzLks8XpBPkUwQNTGGv4bvIM905NbZTdfb0TMiEcelo3J5T6G0y
- YnfRB6ittmGKK/eh31gTCcm6/t9zKPv7Jot+uZ28xeQnFlwmvcTfxptdAmQapA8R/Cy+
- ZsrUYPO1GLXVb0BPfwyJf246XnK7XqLQbhcqPAG5kTmS6VjeEZ3p8lgJz4OS9aDmLqm4
- 5jIY9VZ8vpg9nypsAuPdXsgDq6aPjqSkgcFCGS2JrSpAISo6G10lC5lqNayk607F5xvz Tg== 
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3kh1k1e3pp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 03 Nov 2022 04:54:07 -0500
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.15; Thu, 3 Nov
- 2022 04:54:05 -0500
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.15 via Frontend Transport; Thu, 3 Nov 2022 04:54:05 -0500
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id E62C746A;
-	Thu,  3 Nov 2022 09:54:04 +0000 (UTC)
-Date: Thu, 3 Nov 2022 09:54:04 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Takashi Iwai <tiwai@suse.de>
-CC: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Jason
- Montleon <jmontleo@redhat.com>, <regressions@lists.linux.dev>,
-        <oder_chiou@realtek.com>, <cezary.rojewski@intel.com>,
-        <alsa-devel@alsa-project.org>, Mark Brown <broonie@kernel.org>,
-        Takashi Iwai
-	<tiwai@suse.com>
-Subject: Re: [PATCH] Fix kbl_rt5663_rt5514_max98927 regression
-Message-ID: <20221103095404.GI92394@ediswmail.ad.cirrus.com>
-References: <20221102200527.4174076-1-jmontleo@redhat.com>
- <2bbe7bed-21d4-018a-8957-10d9dbe0c661@linux.intel.com>
- <87a658o4e0.wl-tiwai@suse.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805C223D7
+	for <regressions@lists.linux.dev>; Thu,  3 Nov 2022 10:47:13 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1oqXkL-0003lj-L2; Thu, 03 Nov 2022 11:46:53 +0100
+Message-ID: <d20a0a85-e415-cf78-27f9-77dd7a94bc8d@leemhuis.info>
+Date: Thu, 3 Nov 2022 11:46:52 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <87a658o4e0.wl-tiwai@suse.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-ORIG-GUID: 7Ja-leyKq_N1BpJI7koX_atxgXwepwUw
-X-Proofpoint-GUID: 7Ja-leyKq_N1BpJI7koX_atxgXwepwUw
-X-Proofpoint-Spam-Reason: safe
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: [REGESSION] systemd-oomd overreacting due to PSI changes for Btrfs
+ (was: Re: [PATCH 3/5] btrfs: add manual PSI accounting for compressed reads)
+To: Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+ Matthew Wilcox <willy@infradead.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ Suren Baghdasaryan <surenb@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>, Gao Xiang <xiang@kernel.org>,
+ Chao Yu <chao@kernel.org>, linux-block@vger.kernel.org,
+ linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-erofs@lists.ozlabs.org, linux-mm@kvack.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220915094200.139713-1-hch@lst.de>
+ <20220915094200.139713-4-hch@lst.de>
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <linux@leemhuis.info>
+In-Reply-To: <20220915094200.139713-4-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1667472433;8d962e57;
+X-HE-SMSGID: 1oqXkL-0003lj-L2
 
-On Thu, Nov 03, 2022 at 08:59:03AM +0100, Takashi Iwai wrote:
-> On Wed, 02 Nov 2022 23:05:14 +0100,
-> Pierre-Louis Bossart wrote:
-> > 
-> > On 11/2/22 16:05, Jason Montleon wrote:
-> > > Starting with 6.0-rc1 these messages are logged and the sound card
-> > > is unavailable. Adding legacy_dai_naming to the rt5514-spi causes
-> > > it to function properly again.
-> > > 
-> > > [   16.928454] kbl_r5514_5663_max kbl_r5514_5663_max: ASoC: CPU DAI
-> > > spi-PRP0001:00 not registered
-> > > [   16.928561] platform kbl_r5514_5663_max: deferred probe pending
-> > 
-> > Thanks for reporting this regression, much appreciated.
-> > 
-> > a) you need to CC: maintainers Mark Brown and Takashi Iwai
-> > b) the commit title should be something like "ASoC: rt5514: fix legacy
-> > dai naming".
-> > c) it's not clear if this is actually enough. there's no
-> > legacy_dai_naming for e.g. rt5663 and the .endianness member is not set.
+Hi Christoph!
+
+On 15.09.22 11:41, Christoph Hellwig wrote:
+> btrfs compressed reads try to always read the entire compressed chunk,
+> even if only a subset is requested.  Currently this is covered by the
+> magic PSI accounting underneath submit_bio, but that is about to go
+> away. Instead add manual psi_memstall_{enter,leave} annotations.
 > 
-> IIUC, rt5663.c should be fine; it used to have non_legacy_dai_naming
-> flag and it was dropped after the switch.
+> Note that for readahead this really should be using readahead_expand,
+> but the additionals reads are also done for plain ->read_folio where
+> readahead_expand can't work, so this overall logic is left as-is for
+> now.
+
+It seems this patch makes systemd-oomd overreact on my day-to-day
+machine and aggressively kill applications. I'm not the only one that
+noticed such a behavior with 6.1 pre-releases:
+https://bugzilla.redhat.com/show_bug.cgi?id=2133829
+https://bugzilla.redhat.com/show_bug.cgi?id=2134971
+
+I think I have a pretty reliable way to trigger the issue that involves
+starting the apps that I normally use and a VM that I occasionally use,
+which up to now never resulted in such a behaviour.
+
+On master as of today (8e5423e991e8) I can trigger the problem within a
+minute or two. But I fail to trigger it with v6.0.6 or when I revert
+4088a47e78f9 ("btrfs: add manual PSI accounting for compressed reads").
+And yes, I use btrfs with compression for / and /home/.
+
+See [1] for a log msg from systemd-oomd.
+
+Note, I had some trouble with bisecting[2]. This series looked
+suspicious, so I removed it completely ontop of master and the problem
+went away. Then I tried reverting only 4088a47e78f9 which helped, too.
+Let me know if you want me to try another combination or need more data.
+
+Ciao, Thorsten
+
+
+[1] just one example:
+```
+> 10:52:29 t14s systemd-oomd[1261]: Considered 60 cgroups for killing, top candidates were:
+> 10:52:29 t14s systemd-oomd[1261]:         Path: /system.slice/packagekit.service
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Pressure Limit: 0.00%
+> 10:52:29 t14s systemd-oomd[1261]:                 Pressure: Avg10: 93.66 Avg60: 38.22 Avg300: 9.48 Total: 29s
+> 10:52:29 t14s systemd-oomd[1261]:                 Current Memory Usage: 276.9M
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Min: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Low: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Pgscan: 181098
+> 10:52:29 t14s systemd-oomd[1261]:                 Last Pgscan: 178926
+> 10:52:29 t14s systemd-oomd[1261]:         Path: /system.slice/firewalld.service
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Pressure Limit: 0.00%
+> 10:52:29 t14s systemd-oomd[1261]:                 Pressure: Avg10: 0.00 Avg60: 0.00 Avg300: 0.00 Total: 0
+> 10:52:29 t14s systemd-oomd[1261]:                 Current Memory Usage: 34.6M
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Min: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Low: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Pgscan: 13035
+> 10:52:29 t14s systemd-oomd[1261]:                 Last Pgscan: 12854
+> 10:52:29 t14s systemd-oomd[1261]:         Path: /system.slice/sssd-kcm.service
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Pressure Limit: 0.00%
+> 10:52:29 t14s systemd-oomd[1261]:                 Pressure: Avg10: 0.00 Avg60: 0.00 Avg300: 0.00 Total: 184us
+> 10:52:29 t14s systemd-oomd[1261]:                 Current Memory Usage: 32.9M
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Min: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Low: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Pgscan: 7667
+> 10:52:29 t14s systemd-oomd[1261]:                 Last Pgscan: 7501
+> 10:52:29 t14s systemd-oomd[1261]:         Path: /system.slice/systemd-journald.service
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Pressure Limit: 0.00%
+> 10:52:29 t14s systemd-oomd[1261]:                 Pressure: Avg10: 0.00 Avg60: 0.00 Avg300: 0.00 Total: 8ms
+> 10:52:29 t14s systemd-oomd[1261]:                 Current Memory Usage: 14.5M
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Min: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Low: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Pgscan: 13020
+> 10:52:29 t14s systemd-oomd[1261]:                 Last Pgscan: 12914
+> 10:52:29 t14s systemd-oomd[1261]:         Path: /system.slice/libvirtd.service
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Pressure Limit: 0.00%
+> 10:52:29 t14s systemd-oomd[1261]:                 Pressure: Avg10: 0.00 Avg60: 0.00 Avg300: 0.00 Total: 0
+> 10:52:29 t14s systemd-oomd[1261]:                 Current Memory Usage: 18.9M
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Min: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Low: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Pgscan: 12983
+> 10:52:29 t14s systemd-oomd[1261]:                 Last Pgscan: 12896
+> 10:52:29 t14s systemd-oomd[1261]:         Path: /system.slice/geoclue.service
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Pressure Limit: 0.00%
+> 10:52:29 t14s systemd-oomd[1261]:                 Pressure: Avg10: 0.00 Avg60: 0.00 Avg300: 0.00 Total: 0
+> 10:52:29 t14s systemd-oomd[1261]:                 Current Memory Usage: 18.0M
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Min: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Low: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Pgscan: 3625
+> 10:52:29 t14s systemd-oomd[1261]:                 Last Pgscan: 3550
+> 10:52:29 t14s systemd-oomd[1261]:         Path: /system.slice/polkit.service
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Pressure Limit: 0.00%
+> 10:52:29 t14s systemd-oomd[1261]:                 Pressure: Avg10: 0.00 Avg60: 0.00 Avg300: 0.00 Total: 2ms
+> 10:52:29 t14s systemd-oomd[1261]:                 Current Memory Usage: 15.9M
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Min: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Low: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Pgscan: 10664
+> 10:52:29 t14s systemd-oomd[1261]:                 Last Pgscan: 10596
+> 10:52:29 t14s systemd-oomd[1261]:         Path: /system.slice/NetworkManager.service
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Pressure Limit: 0.00%
+> 10:52:29 t14s systemd-oomd[1261]:                 Pressure: Avg10: 0.00 Avg60: 0.00 Avg300: 0.00 Total: 3ms
+> 10:52:29 t14s systemd-oomd[1261]:                 Current Memory Usage: 6.6M
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Min: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Low: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Pgscan: 2515
+> 10:52:29 t14s systemd-oomd[1261]:                 Last Pgscan: 2492
+> 10:52:29 t14s systemd-oomd[1261]:         Path: /system.slice/abrt-xorg.service
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Pressure Limit: 0.00%
+> 10:52:29 t14s systemd-oomd[1261]:                 Pressure: Avg10: 0.00 Avg60: 0.00 Avg300: 0.00 Total: 0
+> 10:52:29 t14s systemd-oomd[1261]:                 Current Memory Usage: 5.2M
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Min: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Low: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Pgscan: 35154
+> 10:52:29 t14s systemd-oomd[1261]:                 Last Pgscan: 35131
+> 10:52:29 t14s systemd-oomd[1261]:         Path: /system.slice/dbus-broker.service
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Pressure Limit: 0.00%
+> 10:52:29 t14s systemd-oomd[1261]:                 Pressure: Avg10: 0.00 Avg60: 0.00 Avg300: 0.00 Total: 0
+> 10:52:29 t14s systemd-oomd[1261]:                 Current Memory Usage: 7.5M
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Min: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Memory Low: 0B
+> 10:52:29 t14s systemd-oomd[1261]:                 Pgscan: 1183
+> 10:52:29 t14s systemd-oomd[1261]:                 Last Pgscan: 1161
+> 10:52:29 t14s systemd-oomd[1261]: Killed /system.slice/packagekit.service due to memory pressure for /system.slice being 91.73% > 50.00% for > 20s with reclaim activity
+```
+
+[2]
+
+I have no idea what went wrong. 0a78a376ef3c (the last merge before the
+one with this series) was fine, but c6ea70604249 (which afaics basically
+is the next commit if I understand things right) was not. I tried
+reverting it, which should give me the merge base (v6.0-rc2), but it was
+broken, too. I guess I must have done something wrong, but I have no
+idea what, but I tried again and got the same result. :-/
+
+/me must be missing something and/or not understand git properly...
+
+
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Acked-by: David Sterba <dsterba@suse.com>
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> ---
+>  fs/btrfs/compression.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
 > 
-> But, through a quick glance, rt5677-spi.c seems to be the same pattern
-> as rt5514-spi.c.  The rt5677.c was covered properly but the *-spi.c
-> wan't.
-> 
-
-Yeah I think these got missed as they are effectively CPU side
-devices but living in the CODEC space. Looks like it would be
-reasonable to add legacy_dai_naming to both of them to me.
-
-Thanks,
-Charles
-
-> > >  static const struct snd_soc_component_driver rt5514_spi_component = {
-> > > -	.name		= DRV_NAME,
-> > > -	.probe		= rt5514_spi_pcm_probe,
-> > > -	.open		= rt5514_spi_pcm_open,
-> > > -	.hw_params	= rt5514_spi_hw_params,
-> > > -	.hw_free	= rt5514_spi_hw_free,
-> > > -	.pointer	= rt5514_spi_pcm_pointer,
-> > > -	.pcm_construct	= rt5514_spi_pcm_new,
-> > > +	.name			= DRV_NAME,
-> > > +	.probe			= rt5514_spi_pcm_probe,
-> > > +	.open			= rt5514_spi_pcm_open,
-> > > +	.hw_params		= rt5514_spi_hw_params,
-> > > +	.hw_free		= rt5514_spi_hw_free,
-> > > +	.pointer		= rt5514_spi_pcm_pointer,
-> > > +	.pcm_construct		= rt5514_spi_pcm_new,
-> > > +	.legacy_dai_naming	= 1,
-> > >  };
-> > >  
-> > >  /**
-> > 
+> diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
+> index e84d22c5c6a83..370788b9b1249 100644
+> --- a/fs/btrfs/compression.c
+> +++ b/fs/btrfs/compression.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/string.h>
+>  #include <linux/backing-dev.h>
+>  #include <linux/writeback.h>
+> +#include <linux/psi.h>
+>  #include <linux/slab.h>
+>  #include <linux/sched/mm.h>
+>  #include <linux/log2.h>
+> @@ -519,7 +520,8 @@ static u64 bio_end_offset(struct bio *bio)
+>   */
+>  static noinline int add_ra_bio_pages(struct inode *inode,
+>  				     u64 compressed_end,
+> -				     struct compressed_bio *cb)
+> +				     struct compressed_bio *cb,
+> +				     unsigned long *pflags)
+>  {
+>  	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+>  	unsigned long end_index;
+> @@ -588,6 +590,9 @@ static noinline int add_ra_bio_pages(struct inode *inode,
+>  			continue;
+>  		}
+>  
+> +		if (PageWorkingset(page))
+> +			psi_memstall_enter(pflags);
+> +
+>  		ret = set_page_extent_mapped(page);
+>  		if (ret < 0) {
+>  			unlock_page(page);
+> @@ -674,6 +679,8 @@ void btrfs_submit_compressed_read(struct inode *inode, struct bio *bio,
+>  	u64 em_len;
+>  	u64 em_start;
+>  	struct extent_map *em;
+> +	/* Initialize to 1 to make skip psi_memstall_leave unless needed */
+> +	unsigned long pflags = 1;
+>  	blk_status_t ret;
+>  	int ret2;
+>  	int i;
+> @@ -729,7 +736,7 @@ void btrfs_submit_compressed_read(struct inode *inode, struct bio *bio,
+>  		goto fail;
+>  	}
+>  
+> -	add_ra_bio_pages(inode, em_start + em_len, cb);
+> +	add_ra_bio_pages(inode, em_start + em_len, cb, &pflags);
+>  
+>  	/* include any pages we added in add_ra-bio_pages */
+>  	cb->len = bio->bi_iter.bi_size;
+> @@ -810,6 +817,9 @@ void btrfs_submit_compressed_read(struct inode *inode, struct bio *bio,
+>  		}
+>  	}
+>  
+> +	if (!pflags)
+> +		psi_memstall_leave(&pflags);
+> +
+>  	if (refcount_dec_and_test(&cb->pending_ios))
+>  		finish_compressed_bio_read(cb);
+>  	return;
