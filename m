@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 455117C
-	for <regressions@lists.linux.dev>; Fri,  4 Nov 2022 11:59:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B838F7C
+	for <regressions@lists.linux.dev>; Fri,  4 Nov 2022 12:02:46 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1oqvMU-0004Ta-0v; Fri, 04 Nov 2022 12:59:50 +0100
-Message-ID: <db612736-1704-e2c0-0223-675f8ffacc76@leemhuis.info>
-Date: Fri, 4 Nov 2022 12:59:49 +0100
+	id 1oqvPH-0005aZ-60; Fri, 04 Nov 2022 13:02:43 +0100
+Message-ID: <464d46df-cad0-720a-9193-6e569d9c1d91@leemhuis.info>
+Date: Fri, 4 Nov 2022 13:02:42 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,20 +16,18 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
-Subject: Re: Commit 'iomap: add support for dma aligned direct-io' causes
- qemu/KVM boot failures #forregzbot
+Subject: Re: Regression: Fwd: Re: [PATCH] riscv: mmap with PROT_WRITE but no
+ PROT_READ is invalid #forregzbot
 Content-Language: en-US, de-DE
+To: regressions@lists.linux.dev
+Cc: linux-riscv@lists.infradead.org, stable@vger.kernel.org
+References: <d6c9e249-08bd-4439-7dcc-371b32e7b851@canonical.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: linux-kernel@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-fsdevel@vger.kernel.org, qemu-devel@nongnu.org, kvm@vger.kernel.org
-References: <fb869c88bd48ea9018e1cc349918aa7cdd524931.camel@redhat.com>
- <99249078-2026-c76c-87eb-8e3ac5dde73d@leemhuis.info>
-In-Reply-To: <99249078-2026-c76c-87eb-8e3ac5dde73d@leemhuis.info>
+In-Reply-To: <d6c9e249-08bd-4439-7dcc-371b32e7b851@canonical.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667563198;771d2dd7;
-X-HE-SMSGID: 1oqvMU-0004Ta-0v
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667563366;3d22cd8d;
+X-HE-SMSGID: 1oqvPH-0005aZ-60
 
 [Note: this mail is primarily send for documentation purposes and/or for
 regzbot, my Linux kernel regression tracking bot. That's why I removed
@@ -37,21 +35,7 @@ most or all folks from the list of recipients, but left any that looked
 like a mailing lists. These mails usually contain '#forregzbot' in the
 subject, to make them easy to spot and filter out.]
 
-On 30.09.22 13:52, Thorsten Leemhuis wrote:
-> 
-> Hi, this is your Linux kernel regression tracker. This might be a Qemu
-> bug, but it's exposed by kernel change, so I at least want to have it in
-> the tracking. I'll simply remove it in a few weeks, if it turns out that
-> nobody except Maxim hits this.
+On 11.10.22 18:52, Dimitri John Ledkov wrote:
+> #regzbot ^introduced 2139619bcad7ac44cc8f6f749089120594056613
 
-There was one more report:
-https://lore.kernel.org/all/20221020031725.7d01051a@xps.demsh.org/
-
-But that's it so far. I'll put this to rest for now:
-
-#regzbot monitor:
-https://lore.kernel.org/all/20221020031725.7d01051a@xps.demsh.org/
-#regzbot invalid: a kernel change exposed a bug in qemu that maybe still
-needs to be fixed, *if* more people run into this
-
-
+#regzbot fixed-by: 9e2e6042a7ec
