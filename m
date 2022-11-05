@@ -1,126 +1,56 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C21AD56
-	for <regressions@lists.linux.dev>; Fri,  4 Nov 2022 22:23:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667600626; x=1699136626;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=jyyE3UFh52oFOY3mzA8Q7BVvcDMLwn6B9acrscYPruM=;
-  b=f6KqY1C54s92AxCJr7DBeG2OjBgp9L/8kqMVxzcAYzaJy+VHKQ27mpm+
-   DXqe1jJUvZItrlLA4WNbofNmaOPQbu3JpznFPt5k+eK2jCQr9ADoj+eHq
-   hZljwRW3m61SFMNeMAoQi4fqXuARyARCqtvVW+lebS3oDldMDdhq9dMFX
-   AhIMaGoi4Uij9lndDrVlsbmJRUzwVq+U+elsYK5XsNn79rWDPm5jdamcE
-   zLG3Gra9eYhNpEgQzEPxUIJ+DngVdskcXTGYb1oCLvPOdhGkm93PaoU9e
-   RFscW4TrL6wV1pbTFZUY/PjJVuinPH96FCECi3QAUA1Tlpi5aezQav3vM
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="311838405"
-X-IronPort-AV: E=Sophos;i="5.96,138,1665471600"; 
-   d="scan'208";a="311838405"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Nov 2022 15:23:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10521"; a="613223490"
-X-IronPort-AV: E=Sophos;i="5.96,138,1665471600"; 
-   d="scan'208";a="613223490"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.191])
-  by orsmga006.jf.intel.com with SMTP; 04 Nov 2022 15:23:41 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Sat, 05 Nov 2022 00:23:40 +0200
-Date: Sat, 5 Nov 2022 00:23:40 +0200
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Naoya Horiguchi <naoya.horiguchi@linux.dev>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Mike Kravetz <mike.kravetz@oracle.com>,
-	Miaohe Lin <linmiaohe@huawei.com>,
-	Liu Shixin <liushixin2@huawei.com>, Yang Shi <shy828301@gmail.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Muchun Song <songmuchun@bytedance.com>,
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-	regressions@lists.linux.dev, naoya.horiguchi@nec.com
-Subject: Re: [mm-unstable PATCH v7 2/8] mm/hugetlb: make pud_huge() and
- follow_huge_pud() aware of non-present pud entry
-Message-ID: <Y2WQ7I4LXh8iUIRd@intel.com>
-References: <Y2LYXItKQyaJTv8j@intel.com>
- <20221104155930.GA527246@ik1-406-35019.vs.sakura.ne.jp>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FFF1FA6
+	for <regressions@lists.linux.dev>; Sat,  5 Nov 2022 10:13:26 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1orGB2-0007lr-7a; Sat, 05 Nov 2022 11:13:24 +0100
+Message-ID: <d4662501-c93e-bc17-e4f0-7bce6110d76f@leemhuis.info>
+Date: Sat, 5 Nov 2022 11:13:23 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20221104155930.GA527246@ik1-406-35019.vs.sakura.ne.jp>
-X-Patchwork-Hint: comment
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH] Fix kbl_rt5663_rt5514_max98927 regression #forregzbot
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: regressions@lists.linux.dev, alsa-devel@alsa-project.org
+References: <20221102200527.4174076-1-jmontleo@redhat.com>
+ <302e95d4-2a0d-7d2a-177c-82923c14c654@leemhuis.info>
+In-Reply-To: <302e95d4-2a0d-7d2a-177c-82923c14c654@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667643206;ba0b99f9;
+X-HE-SMSGID: 1orGB2-0007lr-7a
 
-On Sat, Nov 05, 2022 at 12:59:30AM +0900, Naoya Horiguchi wrote:
-> On Wed, Nov 02, 2022 at 10:51:40PM +0200, Ville Syrjälä wrote:
-> > On Thu, Jul 14, 2022 at 01:24:14PM +0900, Naoya Horiguchi wrote:
-> > > +/*
-> > > + * pud_huge() returns 1 if @pud is hugetlb related entry, that is normal
-> > > + * hugetlb entry or non-present (migration or hwpoisoned) hugetlb entry.
-> > > + * Otherwise, returns 0.
-> > > + */
-> > >  int pud_huge(pud_t pud)
-> > >  {
-> > > -	return !!(pud_val(pud) & _PAGE_PSE);
-> > > +	return !pud_none(pud) &&
-> > > +		(pud_val(pud) & (_PAGE_PRESENT|_PAGE_PSE)) != _PAGE_PRESENT;
-> > >  }
-> > 
-> > Hi,
-> > 
-> > This causes i915 to trip a BUG_ON() on x86-32 when I start X.
+On 03.11.22 12:57, Thorsten Leemhuis wrote:
+> [Note: this mail is primarily send for documentation purposes and/or for
+> regzbot, my Linux kernel regression tracking bot. That's why I removed
+> most or all folks from the list of recipients, but left any that looked
+> like a mailing lists. These mails usually contain '#forregzbot' in the
+> subject, to make them easy to spot and filter out.]
 > 
-> Hello,
+> On 02.11.22 21:05, Jason Montleon wrote:
+>> Starting with 6.0-rc1 these messages are logged and the sound card
+>> is unavailable. Adding legacy_dai_naming to the rt5514-spi causes
+>> it to function properly again.
+>>
+>> [   16.928454] kbl_r5514_5663_max kbl_r5514_5663_max: ASoC: CPU DAI
+>> spi-PRP0001:00 not registered
+>> [   16.928561] platform kbl_r5514_5663_max: deferred probe pending
 > 
-> Thank you for finding and reporting the issue.
+> Thanks for the report. To be sure below issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+> tracking bot:
 > 
-> x86-32 does not enable CONFIG_ARCH_HAS_GIGANTIC_PAGE, so pud_huge() is
-> supposed to be false on x86-32.  Doing like below looks to me a fix
-> (reverting to the original behavior for x86-32):
-> diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
-> index 6b3033845c6d..bf73f25aaa32 100644
-> --- a/arch/x86/mm/hugetlbpage.c
-> +++ b/arch/x86/mm/hugetlbpage.c
-> @@ -37,8 +37,12 @@ int pmd_huge(pmd_t pmd)
->   */
->  int pud_huge(pud_t pud)
->  {
-> +#ifdef CONFIG_ARCH_HAS_GIGANTIC_PAGE
->         return !pud_none(pud) &&
->                 (pud_val(pud) & (_PAGE_PRESENT|_PAGE_PSE)) != _PAGE_PRESENT;
-> +#else
-> +       return !!(pud_val(pud) & _PAGE_PSE);    // or "return 0;" ?
-> +#endif
->  }
-> 
->  #ifdef CONFIG_HUGETLB_PAGE
-> 
-> 
-> Let me guess what the PUD entry was there when triggering the issue.
-> Assuming that the original code (before 3a194f3f8ad0) was correct, the PSE
-> bit in pud_val(pud) should be always cleared.  So, when pud_huge() returns
-> true since 3a194f3f8ad0, the PRESENT bit should be clear and some other
-> bits (rather than PRESENT and PSE) are set so that pud_none() is false.
-> I'm not sure what such a non-present PUD entry does mean.
+> #regzbot introduced v5.19..v6.0 ^
+> https://bugzilla.kernel.org/show_bug.cgi?id=216641
+> #regzbot title sound: asoc: kbl_r5514_5663_max: sound broken
+> #regzbot ignore-activity
 
-pud_val()==0 when it blows up, and pud_none() is false because
-pgtable-nopmd.h says so with 2 level paging.
-
-And given that I just tested with PAE / 3 level paging, 
-and sure enough it no longer blows up.
-
-So looks to me like maybe this new code just doesn't understand
-how the levels get folded.
-
-I might also be missing something obvious, but why is it even
-necessary to treat PRESENT==0+PSE==0 as a huge entry?
-
--- 
-Ville Syrjälä
-Intel
+#regzbot fixed-by: a1dca8774faf3f77eb34fa0ac6f3e2b82
