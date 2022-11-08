@@ -1,128 +1,90 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40FC715AD
-	for <regressions@lists.linux.dev>; Mon,  7 Nov 2022 21:40:15 +0000 (UTC)
-Received: by mail-ej1-f50.google.com with SMTP id sc25so33623954ejc.12
-        for <regressions@lists.linux.dev>; Mon, 07 Nov 2022 13:40:15 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8833719E
+	for <regressions@lists.linux.dev>; Tue,  8 Nov 2022 00:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=a7Pu312VBrRa3fZpA2kIIB54gqaUtTzt/kFTpVj9Gyg=;
-        b=n5wjSnKDahfy6jokw7XFLSSk66A4Ob296f44tyNXmPenGjHHPloCpXMD1Ez/AkqESK
-         SLHykNycUc06VqR7N9BrpxYUZtNhvxyYPu5z0aNrhswA+iK7SMIJestecpQ/XTqyH6g0
-         zejJLg0rvbsQoFhSb8h5lbkKbsowOJbX/A0gPHQfRCEGjn8cowuBP3NdX6YGRFOQuF33
-         iS6lEvYdkVYPYHVB1ezKwL9pCCSoypVt6jZN0WlFa1XrjlSeg3nSBWW0Z/HD2nj9mBPQ
-         6IlnUzFioaelYmGCEpvGVCJxJ/Q+T+dHKlmZbGNk/qO/sSylhdfKk8n3naHnRxXN/0yo
-         d76A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=a7Pu312VBrRa3fZpA2kIIB54gqaUtTzt/kFTpVj9Gyg=;
-        b=yotWo0Vhy/dniuKyx8vSNg1pEb4ndnrPhldCYBM6muGZZzmZWw/Yo+MtV+Pnz14VZK
-         uTGdQ1hl7XEq4So2ItrnmPLdTK97uypPMxSkH+5AnNiuudq2oieuGXr6hta5s9piACZy
-         QfijQDuMoil7SeXxSMRULt5v+Eg0M6Cle8csfacp55OHAHEw3IyrMX728WGhxAWXHB/V
-         a3R1HbffWxJHwtBeOx5MrK45sqDyO/INtXQ6LB1KBTROf5OSvjKbb1qF+L96zOB4jOcf
-         q6cxcPAqabqSyJ9RNTOvkLHok2O8nUKXqswNJ5VNZrv3GtcEsxvmBcWC0DPcInmQDkHd
-         UvzQ==
-X-Gm-Message-State: ACrzQf00RBxjICtTuypWzBV/bnJRxSjgxYPdNR/gBcjmgKXbzgjyvAaZ
-	PX9UFvlbHQfRRaUvkDKjfBPZYeNHqESnVpxdQQ9T3JvA
-X-Google-Smtp-Source: AMsMyM675OVDVgKSw3ua7nw/asBTMb/aRORa1xk0sqS6j8Ja93NCFLWkXxRtCKVOaR7mYmsIB9DwvFVv+7bFcPtOBTE=
-X-Received: by 2002:a17:907:1de6:b0:7a5:ea4b:ddbb with SMTP id
- og38-20020a1709071de600b007a5ea4bddbbmr50075967ejc.757.1667857213303; Mon, 07
- Nov 2022 13:40:13 -0800 (PST)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1667868717; x=1699404717;
+  h=from:to:cc:subject:date:message-id:
+   content-transfer-encoding:mime-version;
+  bh=kzicRcG+TGEY2Z8XrFFSHck2JvbpK3yaDfDkTtu37vI=;
+  b=Vd0AaoGY9gfnW4Y6xY/Y1mz/hQKCX/QH0hHAd2p5sL2poCQjOb12sHDE
+   DP978IyqVV+kQM8LkE486EDIoQNtslkamvZZcPDyVuvuohhJsKDA9pOZj
+   YRwSLrd5LBm7GWNFr7x+6P9TMbpSItlgquBjhza3Yvs5TRI/ciQaUzWly
+   Y=;
+X-IronPort-AV: E=Sophos;i="5.96,145,1665446400"; 
+   d="scan'208";a="277860468"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-0aba4706.us-east-1.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 00:51:51 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
+	by email-inbound-relay-iad-1e-m6i4x-0aba4706.us-east-1.amazon.com (Postfix) with ESMTPS id EA302A0F97;
+	Tue,  8 Nov 2022 00:51:48 +0000 (UTC)
+Received: from EX19D045UWC001.ant.amazon.com (10.13.139.223) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.42; Tue, 8 Nov 2022 00:51:48 +0000
+Received: from EX19D017UWC003.ant.amazon.com (10.13.139.227) by
+ EX19D045UWC001.ant.amazon.com (10.13.139.223) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.15; Tue, 8 Nov 2022 00:51:48 +0000
+Received: from EX19D017UWC003.ant.amazon.com ([fe80::78e9:1d67:81fd:68c5]) by
+ EX19D017UWC003.ant.amazon.com ([fe80::78e9:1d67:81fd:68c5%6]) with mapi id
+ 15.02.1118.015; Tue, 8 Nov 2022 00:51:48 +0000
+From: "Lu, Davina" <davinalu@amazon.com>
+To: Theodore Ts'o <tytso@mit.edu>
+CC: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>, "Mohamed Abuelfotoh,
+ Hazem" <abuehaze@amazon.com>, hazem ahmed mohamed
+	<hazem.ahmed.abuelfotoh@gmail.com>, "Ritesh Harjani (IBM)"
+	<ritesh.list@gmail.com>, "Kiselev, Oleg" <okiselev@amazon.com>, "Liu, Frank"
+	<franklmz@amazon.com>
+Subject: configurable lazytime for EXT4, is name ok?
+Thread-Topic: configurable lazytime for EXT4, is name ok?
+Thread-Index: AdjzC8FGHNuLQ/rLSpuMIprsbw2tdw==
+Date: Tue, 8 Nov 2022 00:51:47 +0000
+Message-ID: <173aa5e092bc4f3a8a49be9c095a7d6e@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [10.43.143.133]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221011231207.1458541-1-lsahlber@redhat.com> <0fb9b48e-3bcc-5a5e-15fb-1d3e2752d80b@leemhuis.info>
- <b5badfe1-ccb8-f8b3-90b7-c05689e22776@leemhuis.info> <CAN05THSLqgRS9LwQMdSBY22YRYRoD6FDJUS1HZ+Ujzk=gZ+jHw@mail.gmail.com>
- <7a348025-8db3-449b-e92d-7033104d60d3@leemhuis.info>
-In-Reply-To: <7a348025-8db3-449b-e92d-7033104d60d3@leemhuis.info>
-From: ronnie sahlberg <ronniesahlberg@gmail.com>
-Date: Tue, 8 Nov 2022 07:40:00 +1000
-Message-ID: <CAN05THSP0N0QMTv5-csBjvHuO0PVgDBkC7xNMNfHUZmuMXLRnQ@mail.gmail.com>
-Subject: Re: [PATCH] cifs: fix regression in very old smb1 mounts
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Ronnie Sahlberg <lsahlber@redhat.com>, Steve French <smfrench@gmail.com>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, linux-cifs <linux-cifs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 
-On Mon, 7 Nov 2022 at 23:40, Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> On 07.11.22 14:31, ronnie sahlberg wrote:
-> > On Mon, 7 Nov 2022 at 23:20, Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> >>
-> >> On 01.11.22 18:53, Thorsten Leemhuis wrote:
-> >>> On 12.10.22 01:12, Ronnie Sahlberg wrote:
-> >>>> BZ: 215375
-> >>>>
-> >>>> Fixes: 76a3c92ec9e0668e4cd0e9ff1782eb68f61a179c ("cifs: remove support for NTLM and weaker authentication algorithms")
-> >>>> Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-> >>>
-> >>> Ronnie, Steve, did this change create any trouble in 6.1 pre-releases so
-> >>> far? If not: could you please consider submitting this change for
-> >>> inclusion in 6.0 and 5.15, as this is a regression from the 5.15 days
-> >>> that according to the bugzilla ticket seem to annoy some people a lot.
-> >>
-> >> Ronnie, Steve, if you have a minute, I would really appreciate your help
-> >> in this matter, you are the best people to judge here.
-> >
-> > Thanks for the reminder.  I don't think there were any issues in the
-> > pre-release so we should try to get it into the stable kernels.
->
-> Great.
->
-> > I am not sure how that process works since the patch is already in upstream.
-> > (I have only seen the process where you flag the patch with cc-stable.)
-> > Can you explain the process on how to flag this existing patch for backporting?
->
-> Documentation/process/stable-kernel-rules.rst (or
-> https://docs.kernel.org/process/stable-kernel-rules.html ) explains this
-> (see option 3 there) better than I can. The patch afaics needs to got to
-> 6.0 and 5.15.
+Hi Ted,
 
-Thanks. What we need here is option 2.
-Steve, can you send an email for option 2 so we get it in the older kernels?
+Sorry to bother you with a quick question: I am doing a patch for configura=
+ble lazytime for EXT4, Before submit the patch I would like to double check=
+ the names first. I added a "lazytime_flush=3Dxxx" in mount show options, n=
+ot sure if this is ok to continue.=20
 
+As far as I know, lazytime is an option for EXT4 and other file systems. My=
+ patch make ext4 can be supported as before: without any parameters E.g. mo=
+unt -o lazytime,...=20
+Or can be supported with parameters (in ms) E.g. mount -o lazytime=3D30, ..=
+.=20
 
->
-> Many thx for taking care of this!
->
-> Ciao, Thorsten
->
->
-> >>>> ---
-> >>>>  fs/cifs/connect.c | 11 +++++------
-> >>>>  1 file changed, 5 insertions(+), 6 deletions(-)
-> >>>>
-> >>>> diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-> >>>> index 93e59b3b36c7..c77232096c12 100644
-> >>>> --- a/fs/cifs/connect.c
-> >>>> +++ b/fs/cifs/connect.c
-> >>>> @@ -3922,12 +3922,11 @@ CIFSTCon(const unsigned int xid, struct cifs_ses *ses,
-> >>>>      pSMB->AndXCommand = 0xFF;
-> >>>>      pSMB->Flags = cpu_to_le16(TCON_EXTENDED_SECINFO);
-> >>>>      bcc_ptr = &pSMB->Password[0];
-> >>>> -    if (tcon->pipe || (ses->server->sec_mode & SECMODE_USER)) {
-> >>>> -            pSMB->PasswordLength = cpu_to_le16(1);  /* minimum */
-> >>>> -            *bcc_ptr = 0; /* password is null byte */
-> >>>> -            bcc_ptr++;              /* skip password */
-> >>>> -            /* already aligned so no need to do it below */
-> >>>> -    }
-> >>>> +
-> >>>> +    pSMB->PasswordLength = cpu_to_le16(1);  /* minimum */
-> >>>> +    *bcc_ptr = 0; /* password is null byte */
-> >>>> +    bcc_ptr++;              /* skip password */
-> >>>> +    /* already aligned so no need to do it below */
-> >>>>
-> >>>>      if (ses->server->sign)
-> >>>>              smb_buffer->Flags2 |= SMBFLG2_SECURITY_SIGNATURE;
-> >
+So when we show the options by mount -t ext4, if no parameter configured, t=
+he result shows as before:
+/dev/nvme1n1 on /rdsdbdata1 type ext4 (rw,noatime,nodiratime,lazytime,data=
+=3Dordered)
+
+If has parameters configured, the result shows as below, added one "lazytim=
+e_flush=3Dxxx". Not sure if this sound ok for you?=20
+/dev/nvme1n1 on /rdsdbdata1 type ext4 (rw,noatime,nodiratime,lazytime,lazyt=
+ime_flush=3D100ms,data=3Dordered)
+
+I tested "ext4/053"of latest xfstest-dev with my patch and it can pass the =
+result(I changed a bit 053 since I am running on 5.10, removed one mount op=
+tion" no_prefetch_block_bitmaps" that  5.10 doesn't support).
+
+Thanks
+Davina
