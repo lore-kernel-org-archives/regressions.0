@@ -1,90 +1,82 @@
-Received: from smtp-fw-9102.amazon.com (smtp-fw-9102.amazon.com [207.171.184.29])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8833719E
-	for <regressions@lists.linux.dev>; Tue,  8 Nov 2022 00:51:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1667868717; x=1699404717;
-  h=from:to:cc:subject:date:message-id:
-   content-transfer-encoding:mime-version;
-  bh=kzicRcG+TGEY2Z8XrFFSHck2JvbpK3yaDfDkTtu37vI=;
-  b=Vd0AaoGY9gfnW4Y6xY/Y1mz/hQKCX/QH0hHAd2p5sL2poCQjOb12sHDE
-   DP978IyqVV+kQM8LkE486EDIoQNtslkamvZZcPDyVuvuohhJsKDA9pOZj
-   YRwSLrd5LBm7GWNFr7x+6P9TMbpSItlgquBjhza3Yvs5TRI/ciQaUzWly
-   Y=;
-X-IronPort-AV: E=Sophos;i="5.96,145,1665446400"; 
-   d="scan'208";a="277860468"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-iad-1e-m6i4x-0aba4706.us-east-1.amazon.com) ([10.25.36.210])
-  by smtp-border-fw-9102.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Nov 2022 00:51:51 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad12-ws-svc-p26-lb9-vlan2.iad.amazon.com [10.40.163.34])
-	by email-inbound-relay-iad-1e-m6i4x-0aba4706.us-east-1.amazon.com (Postfix) with ESMTPS id EA302A0F97;
-	Tue,  8 Nov 2022 00:51:48 +0000 (UTC)
-Received: from EX19D045UWC001.ant.amazon.com (10.13.139.223) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1497.42; Tue, 8 Nov 2022 00:51:48 +0000
-Received: from EX19D017UWC003.ant.amazon.com (10.13.139.227) by
- EX19D045UWC001.ant.amazon.com (10.13.139.223) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.15; Tue, 8 Nov 2022 00:51:48 +0000
-Received: from EX19D017UWC003.ant.amazon.com ([fe80::78e9:1d67:81fd:68c5]) by
- EX19D017UWC003.ant.amazon.com ([fe80::78e9:1d67:81fd:68c5%6]) with mapi id
- 15.02.1118.015; Tue, 8 Nov 2022 00:51:48 +0000
-From: "Lu, Davina" <davinalu@amazon.com>
-To: Theodore Ts'o <tytso@mit.edu>
-CC: "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>, "Mohamed Abuelfotoh,
- Hazem" <abuehaze@amazon.com>, hazem ahmed mohamed
-	<hazem.ahmed.abuelfotoh@gmail.com>, "Ritesh Harjani (IBM)"
-	<ritesh.list@gmail.com>, "Kiselev, Oleg" <okiselev@amazon.com>, "Liu, Frank"
-	<franklmz@amazon.com>
-Subject: configurable lazytime for EXT4, is name ok?
-Thread-Topic: configurable lazytime for EXT4, is name ok?
-Thread-Index: AdjzC8FGHNuLQ/rLSpuMIprsbw2tdw==
-Date: Tue, 8 Nov 2022 00:51:47 +0000
-Message-ID: <173aa5e092bc4f3a8a49be9c095a7d6e@amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-originating-ip: [10.43.143.133]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E80A8F78
+	for <regressions@lists.linux.dev>; Tue,  8 Nov 2022 12:20:08 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1osNaA-0000q6-9s; Tue, 08 Nov 2022 13:19:58 +0100
+Message-ID: <76b09d3a-fe10-74b3-40a0-1aaa75b70ba6@leemhuis.info>
+Date: Tue, 8 Nov 2022 13:19:57 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [Possible BUG] arm64: efi: efi_runtime_fixup_exception() and
+ efi_call_virt_check_flags() both taint the kernel #forregzbot
+Content-Language: en-US, de-DE
+To: linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <Y2lAB508TrrjpDPi@monolith.localdoman>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <Y2lAB508TrrjpDPi@monolith.localdoman>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667910008;daa81194;
+X-HE-SMSGID: 1osNaA-0000q6-9s
 
-Hi Ted,
+[Note: this mail is primarily send for documentation purposes and/or for
+regzbot, my Linux kernel regression tracking bot. That's why I removed
+most or all folks from the list of recipients, but left any that looked
+like a mailing lists. These mails usually contain '#forregzbot' in the
+subject, to make them easy to spot and filter out.]
 
-Sorry to bother you with a quick question: I am doing a patch for configura=
-ble lazytime for EXT4, Before submit the patch I would like to double check=
- the names first. I added a "lazytime_flush=3Dxxx" in mount show options, n=
-ot sure if this is ok to continue.=20
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-As far as I know, lazytime is an option for EXT4 and other file systems. My=
- patch make ext4 can be supported as before: without any parameters E.g. mo=
-unt -o lazytime,...=20
-Or can be supported with parameters (in ms) E.g. mount -o lazytime=3D30, ..=
-.=20
+Hi, this is your Linux kernel regression tracker.
 
-So when we show the options by mount -t ext4, if no parameter configured, t=
-he result shows as before:
-/dev/nvme1n1 on /rdsdbdata1 type ext4 (rw,noatime,nodiratime,lazytime,data=
-=3Dordered)
+On 07.11.22 18:27, Alexandru Elisei wrote:
+> I'm going to preface this by saying that I'm extremely unfamiliar with the
+> EFI code.
+> 
+> Commit d3549a938b73 ("efi/arm64: libstub: avoid SetVirtualAddressMap() when
+> possible") skipped the call to SetVirtualAddressMap() for certain
+> configurations, and that started causing kernel panics on an Ampere Altra
+> machine due to an EFI synchronous exception.
+> 
+> Commit 23715a26c8d8 ("arm64: efi: Recover from synchronous exceptions
+> occurring in firmware") made the EFI exception non-fatal.
 
-If has parameters configured, the result shows as below, added one "lazytim=
-e_flush=3Dxxx". Not sure if this sound ok for you?=20
-/dev/nvme1n1 on /rdsdbdata1 type ext4 (rw,noatime,nodiratime,lazytime,lazyt=
-ime_flush=3D100ms,data=3Dordered)
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
-I tested "ext4/053"of latest xfstest-dev with my patch and it can pass the =
-result(I changed a bit 053 since I am running on 5.10, removed one mount op=
-tion" no_prefetch_block_bitmaps" that  5.10 doesn't support).
+#regzbot ^introduced d3549a938b73
+#regzbot title efi: arm64: updating the firmware is not feasible anymore
+#regzbot ignore-activity
 
-Thanks
-Davina
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
