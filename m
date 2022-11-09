@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C805A8F53
-	for <regressions@lists.linux.dev>; Wed,  9 Nov 2022 10:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821C08F62
+	for <regressions@lists.linux.dev>; Wed,  9 Nov 2022 10:48:23 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1osiEZ-0002Hd-H0; Wed, 09 Nov 2022 11:23:03 +0100
-Message-ID: <1197176f-3508-0405-fad8-3645c81f474e@leemhuis.info>
-Date: Wed, 9 Nov 2022 11:23:02 +0100
+	id 1osid3-0002Wm-8p; Wed, 09 Nov 2022 11:48:21 +0100
+Message-ID: <7ebd090d-4a6c-1a26-6e31-b0554c627e83@leemhuis.info>
+Date: Wed, 9 Nov 2022 11:48:20 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,17 +16,18 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.0
+Subject: Re: INFO: rcu_preempt detected expedited stalls on CPUs/tasks
+ (6.1.0-rc3): in cat /sys/kernel/debug/kmemleak #forregzbot
 Content-Language: en-US, de-DE
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-References: <20220731050342.56513-1-khuey@kylehuey.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <e048a5c5-dea5-a31a-1022-1b007e022adb@alu.unizg.hr>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: Re: [PATCH] x86/fpu: Allow PKRU to be (once again) written by ptrace.
-In-Reply-To: <20220731050342.56513-1-khuey@kylehuey.com>
+In-Reply-To: <e048a5c5-dea5-a31a-1022-1b007e022adb@alu.unizg.hr>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667989385;16c15d3c;
-X-HE-SMSGID: 1osiEZ-0002Hd-H0
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1667990903;5bf39c98;
+X-HE-SMSGID: 1osid3-0002Wm-8p
 
 [Note: this mail is primarily send for documentation purposes and/or for
 regzbot, my Linux kernel regression tracking bot. That's why I removed
@@ -40,23 +41,40 @@ paragraphs you might have encountered already already in similar form.]
 
 Hi, this is your Linux kernel regression tracker.
 
-On 31.07.22 07:03, Kyle Huey wrote:
-> From: Kyle Huey <me@kylehuey.com>
+On 04.11.22 23:01, Mirsad Goran Todorovac wrote:
 > 
-> When management of the PKRU register was moved away from XSTATE, emulation
-> of PKRU's existence in XSTATE was added for APIs that read XSTATE, but not
-> for APIs that write XSTATE. This can be seen by running gdb and executing
-> `p $pkru`, `set $pkru = 42`, and `p $pkru`. On affected kernels (5.14+) the
-> write to the PKRU register (which gdb performs through ptrace) is ignored.
+> When investigating thermald kmemleak, it occurred that the "cat
+> /sys/kernel/debug/kmemleak"
+> and "tail -20 /sys/kernel/debug/kmemleak" commands take unusual amount
+> of time.
+> 
+> Dmesg output showed expedited stalls that the commands caused NMIs and
+> NMI backtraces:
+> 
+> [ 8123.263464] rcu: INFO: rcu_preempt detected expedited stalls on
+> CPUs/tasks: { 0-.... } 26 jiffies s: 3829 root: 0x1/.
+> [ 8123.263500] rcu: blocking rcu_node structures (internal RCU debug):
+> [ 8123.263508] Sending NMI from CPU 7 to CPUs 0:
+> [ 8123.263528] NMI backtrace for cpu 0
+> [ 8123.263539] CPU: 0 PID: 27898 Comm: cat Not tainted 6.1.0-rc3 #1
+> [ 8123.263552] Hardware name: LENOVO 82H8/LNVNB161216, BIOS GGCN34WW
+> 03/08/2022
 
-Seem I missed this one, but apparently it needs tracking.
-
-#regzbot ^introduced e84ba47e313dbc
-#regzbot title x86/fpu: emulation of PKRU's existence in XSTATE missing
-for APIs that write XSTATE
+#regzbot ^introduced 28b3ae426598e
+#regzbot title rcu: thermald causes a kmemleak
 #regzbot ignore-activity
-#regzbot monitor
-https://lore.kernel.org/all/20221107063807.81774-1-khuey@kylehuey.com/
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
