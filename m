@@ -1,128 +1,211 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8EC625
-	for <regressions@lists.linux.dev>; Thu, 10 Nov 2022 09:20:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51241C433D6;
-	Thu, 10 Nov 2022 09:20:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1668072038;
-	bh=YFRAfTm6C+ZlOBvYjh/2TEJ/OXnJuqoAVu8O5lNu85c=;
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2FC512DBA
+	for <regressions@lists.linux.dev>; Thu, 10 Nov 2022 12:58:00 +0000 (UTC)
+Received: by linux.microsoft.com (Postfix, from userid 1112)
+	id 0413E20E67C1; Thu, 10 Nov 2022 04:57:59 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0413E20E67C1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1668085079;
+	bh=c/8yTwHNqIAZ34LBEK2zXKFNG3UMsuCzGQykXvc3lFU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nqaZUNyYM4y7YBGqObEYLvylKeqrdjivkItSHQ3miPrURDYtxUHetCE4msgNAIxRg
-	 i1LX8FHbwCY82rbnwRuQ3YwBtwrIESwmBcYfgwtQiIof9bjAdlHl9oth/IGraDOTJa
-	 6hRvluun8cWZMVgdc2LQ7khi688enOLV+2PYbNmw=
-Date: Thu, 10 Nov 2022 10:20:35 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-Cc: linux-kernel@vger.kernel.org,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Tejun Heo <tj@kernel.org>, Florian Mickler <florian@mickler.org>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	systemd-devel@lists.freedesktop.org
-Subject: Re: BUG: kworker + systemd-udevd memory leaks found in 6.1.0-rc4
-Message-ID: <Y2zCYwNNvQWppLWZ@kroah.com>
-References: <0d9c3f6c-3948-d5d1-bcc1-baf31141beaa@alu.unizg.hr>
- <a6b76ce0-0fb3-4434-cc3e-ab6f39fb1cf9@alu.unizg.hr>
+	b=IzaCO4LF4vdFmNycLWBPBnSa1krWdxasCclp3R574fgj75Y3i5gCzre8LtiFDPuad
+	 iEGXa19foEj7lJakk2aqu8Mkl6/R3u05Gji0q1ckIfzrRDfrftkXjEfnBszdb/oGN6
+	 udtKpydv+CzW4TVmEyxHBgVuDfqZ12LJWxP7F0Ao=
+Date: Thu, 10 Nov 2022 04:57:58 -0800
+From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+To: Jan Kara <jack@suse.cz>
+Cc: Thilo Fromm <t-lo@linux.microsoft.com>, Ye Bin <yebin10@huawei.com>,
+	jack@suse.com, tytso@mit.edu, linux-ext4@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [syzbot] possible deadlock in jbd2_journal_lock_updates
+Message-ID: <20221110125758.GA6919@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20221004091035.idjgo2xyscf6ovnv@quack3>
+ <eeb17fca-4e79-b39f-c394-a6fa6873eb26@linux.microsoft.com>
+ <20221005151053.7jjgc7uhvquo6a5n@quack3>
+ <20221010142410.GA1689@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <2ede5fce-7077-6e64-93a9-a7d993bc498f@linux.microsoft.com>
+ <20221014132543.i3aiyx4ent4qwy4i@quack3>
+ <d30f4e74-aa75-743d-3c89-80ec61d67c6c@linux.microsoft.com>
+ <20221024104628.ozxjtdrotysq2haj@quack3>
+ <643d007e-1041-4b3d-ed5e-ae47804f279d@linux.microsoft.com>
+ <20221026101854.k6qgunxexhxthw64@quack3>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a6b76ce0-0fb3-4434-cc3e-ab6f39fb1cf9@alu.unizg.hr>
+In-Reply-To: <20221026101854.k6qgunxexhxthw64@quack3>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-On Thu, Nov 10, 2022 at 05:57:57AM +0100, Mirsad Goran Todorovac wrote:
-> On 04. 11. 2022. 11:40, Mirsad Goran Todorovac wrote:
+On Wed, Oct 26, 2022 at 12:18:54PM +0200, Jan Kara wrote:
+> On Mon 24-10-22 18:32:51, Thilo Fromm wrote:
+> > Hello Honza,
+> > 
+> > > Yeah, I was pondering about this for some time but still I have no clue who
+> > > could be holding the buffer lock (which blocks the task holding the
+> > > transaction open) or how this could related to the commit you have
+> > > identified. I have two things to try:
+> > > 
+> > > 1) Can you please check whether the deadlock reproduces also with 6.0
+> > > kernel? The thing is that xattr handling code in ext4 has there some
+> > > additional changes, commit 307af6c8793 ("mbcache: automatically delete
+> > > entries from cache on freeing") in particular.
+> > 
+> > This would be complex; we currently do not integrate 6.0 with Flatcar and
+> > would need to spend quite some effort ingesting it first (mostly, make sure
+> > the new kernel does not break something unrelated). Flatcar is an
+> > image-based distro, so kernel updates imply full distro updates.
 > 
-> > Dear Sirs,
-> > 
-> > When building a RPM 6.1.0-rc3 for AlmaLinux 8.6, I have enabled
-> > CONFIG_DEBUG_KMEMLEAK=y
-> > and the result showed an unreferenced object in kworker process:
-> > 
-> > # cat /sys/kernel/debug/kmemleak
-> > unreferenced object 0xffffa01dabff6100 (size 16):
-> >   comm "kworker/u12:4", pid 400, jiffies 4294894771 (age 5284.956s)
-> >   hex dump (first 16 bytes):
-> >     6d 65 6d 73 74 69 63 6b 30 00 00 00 00 00 00 00 memstick0.......
-> >   backtrace:
-> >     [<000000009ff951f6>] __kmem_cache_alloc_node+0x380/0x4e0
-> >     [<00000000451f4268>] __kmalloc_node_track_caller+0x55/0x150
-> >     [<0000000005472512>] kstrdup+0x36/0x70
-> >     [<000000002f797ac4>] kstrdup_const+0x28/0x30
-> >     [<00000000e3f86581>] kvasprintf_const+0x78/0xa0
-> >     [<00000000e15920f7>] kobject_set_name_vargs+0x23/0xa0
-> >     [<000000004158a6c0>] dev_set_name+0x53/0x70
-> >     [<000000001a120541>] memstick_check+0xff/0x384 [memstick]
-> >     [<00000000122bb894>] process_one_work+0x214/0x3f0
-> >     [<00000000fcf282cc>] worker_thread+0x34/0x3d0
-> >     [<0000000002409855>] kthread+0xed/0x120
-> >     [<000000007b02b4a3>] ret_from_fork+0x1f/0x30
-> > unreferenced object 0xffffa01dabff6ec0 (size 16):
-> >   comm "kworker/u12:4", pid 400, jiffies 4294894774 (age 5284.944s)
-> >   hex dump (first 16 bytes):
-> >     6d 65 6d 73 74 69 63 6b 30 00 00 00 00 00 00 00 memstick0.......
-> >   backtrace:
-> >     [<000000009ff951f6>] __kmem_cache_alloc_node+0x380/0x4e0
-> >     [<00000000451f4268>] __kmalloc_node_track_caller+0x55/0x150
-> >     [<0000000005472512>] kstrdup+0x36/0x70
-> >     [<000000002f797ac4>] kstrdup_const+0x28/0x30
-> >     [<00000000e3f86581>] kvasprintf_const+0x78/0xa0
-> >     [<00000000e15920f7>] kobject_set_name_vargs+0x23/0xa0
-> >     [<000000004158a6c0>] dev_set_name+0x53/0x70
-> >     [<000000001a120541>] memstick_check+0xff/0x384 [memstick]
-> >     [<00000000122bb894>] process_one_work+0x214/0x3f0
-> >     [<00000000fcf282cc>] worker_thread+0x34/0x3d0
-> >     [<0000000002409855>] kthread+0xed/0x120
-> >     [<000000007b02b4a3>] ret_from_fork+0x1f/0x30
-> > #
-> > 
-> > Please fing the build config and lshw output attached.
-> > 
-> > dmesg is useless, as it is filled with events like:
-> > 
-> > [ 6068.996120] evbug: Event. Dev: input4, Type: 1, Code: 31, Value: 0
-> > [ 6068.996121] evbug: Event. Dev: input4, Type: 0, Code: 0, Value: 0
-> > [ 6069.124145] evbug: Event. Dev: input4, Type: 4, Code: 4, Value: 458762
-> > [ 6069.124149] evbug: Event. Dev: input4, Type: 1, Code: 34, Value: 1
-> > [ 6069.124150] evbug: Event. Dev: input4, Type: 0, Code: 0, Value: 0
-> > [ 6069.196003] evbug: Event. Dev: input4, Type: 4, Code: 4, Value: 458762
-> > [ 6069.196007] evbug: Event. Dev: input4, Type: 1, Code: 34, Value: 0
-> > [ 6069.196009] evbug: Event. Dev: input4, Type: 0, Code: 0, Value: 0
-> > [ 6069.788129] evbug: Event. Dev: input4, Type: 4, Code: 4, Value: 458792
-> > [ 6069.788133] evbug: Event. Dev: input4, Type: 1, Code: 28, Value: 1
-> > [ 6069.788135] evbug: Event. Dev: input4, Type: 0, Code: 0, Value: 0
+> OK, understood.
 > 
-> This bug is confirmed in 6.1-rc4, among the "thermald" and "systemd-dev"
-> kernel memory leaks, potentially exposing race conditions or other more
-> serious bug.
-
-How is a memory leak a race condition?
-
-> The bug is now also confirmed and now manifested also in the Ubuntu 22.04
-> LTS jammy 6.1-rc4 build.
+> > > 2) I have created a debug patch (against 5.15.x stable kernel). Can you
+> > > please reproduce the failure with it and post the output of "echo w
+> > > > /proc/sysrq-trigger" and also the output the debug patch will put into the
+> > > kernel log? It will dump the information about buffer lock owner if we > cannot get the lock for more than 32 seconds.
+> > 
+> > This would be more straightforward - I can reach out to one of our users
+> > suffering from the issue; they can reliably reproduce it and don't shy away
+> > from patching their kernel. Where can I find the patch?
 > 
-> Here is the kmemleak output:
+> Ha, my bad. I forgot to attach it. Here it is.
 > 
-> unreferenced object 0xffff9242b13b3980 (size 64):
->   comm "kworker/5:3", pid 43106, jiffies 4305052439 (age 71828.792s)
->   hex dump (first 32 bytes):
->     80 8b a0 f0 42 92 ff ff 00 00 00 00 00 00 00 00 ....B...........
->     20 86 a0 f0 42 92 ff ff 00 00 00 00 00 00 00 00 ...B...........
->   backtrace:
->     [<00000000c5dea4db>] __kmem_cache_alloc_node+0x380/0x4e0
->     [<000000002b17af47>] kmalloc_node_trace+0x27/0xa0
->     [<000000004c09eee5>] xhci_alloc_command+0x6e/0x180
 
-This is a totally different backtrace from above, how are they related?
+Unfortunately this patch produced no output, but I have been able to repro so I
+understand why: except for the hung tasks, we have 1+ tasks busy-looping through
+the following code in ext4_xattr_block_set():
 
-This looks like a potential xhci issue.  Can you use 'git bisect' to
-track down the offending change that caused this?
+inserted:
+        if (!IS_LAST_ENTRY(s->first)) {
+                new_bh = ext4_xattr_block_cache_find(inode, header(s->base),
+                                                     &ce);
+                if (new_bh) {
+                        /* We found an identical block in the cache. */
+                        if (new_bh == bs->bh)
+                                ea_bdebug(new_bh, "keeping");
+                        else {
+                                u32 ref;
 
-thanks,
+                                WARN_ON_ONCE(dquot_initialize_needed(inode));
 
-greg k-h
+                                /* The old block is released after updating
+                                   the inode. */
+                                error = dquot_alloc_block(inode,
+                                                EXT4_C2B(EXT4_SB(sb), 1));
+                                if (error)
+                                        goto cleanup;
+                                BUFFER_TRACE(new_bh, "get_write_access");
+                                error = ext4_journal_get_write_access(
+                                                handle, sb, new_bh,
+                                                EXT4_JTR_NONE);
+                                if (error)
+                                        goto cleanup_dquot;
+                                lock_buffer(new_bh);
+                                /*
+                                 * We have to be careful about races with
+                                 * adding references to xattr block. Once we
+                                 * hold buffer lock xattr block's state is
+                                 * stable so we can check the additional
+                                 * reference fits.
+                                 */
+                                ref = le32_to_cpu(BHDR(new_bh)->h_refcount) + 1;
+                                if (ref > EXT4_XATTR_REFCOUNT_MAX) {
+                                        /*
+                                         * Undo everything and check mbcache
+                                         * again.
+                                         */
+                                        unlock_buffer(new_bh);
+                                        dquot_free_block(inode,
+                                                         EXT4_C2B(EXT4_SB(sb),
+                                                                  1));
+                                        brelse(new_bh);
+                                        mb_cache_entry_put(ea_block_cache, ce);
+                                        ce = NULL;
+                                        new_bh = NULL;
+                                        goto inserted;
+                                }
+
+The tasks keep taking the 'goto inserted' branch, and never finish. I've been
+able to repro with kernel v6.0.7 as well.
+
+> 								Honza
+> -- 
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
+
+> >From feaf5e5ca0b22da6a285dc97eb756e0190fa7411 Mon Sep 17 00:00:00 2001
+> From: Jan Kara <jack@suse.cz>
+> Date: Mon, 24 Oct 2022 12:02:59 +0200
+> Subject: [PATCH] Debug buffer_head lock
+> 
+> Signed-off-by: Jan Kara <jack@suse.cz>
+> ---
+>  fs/buffer.c                 | 13 ++++++++++++-
+>  include/linux/buffer_head.h | 17 +++++++++++------
+>  2 files changed, 23 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/buffer.c b/fs/buffer.c
+> index f6d283579491..4514a810f072 100644
+> --- a/fs/buffer.c
+> +++ b/fs/buffer.c
+> @@ -66,7 +66,18 @@ EXPORT_SYMBOL(touch_buffer);
+>  
+>  void __lock_buffer(struct buffer_head *bh)
+>  {
+> -	wait_on_bit_lock_io(&bh->b_state, BH_Lock, TASK_UNINTERRUPTIBLE);
+> +	int loops = 0;
+> +
+> +	for (;;) {
+> +		wait_on_bit_timeout(&bh->b_state, BH_Lock, TASK_UNINTERRUPTIBLE, HZ);
+> +		if (trylock_buffer(bh))
+> +			return;
+> +		loops++;
+> +		if (WARN_ON(!(loops & 31))) {
+> +			printk("Waiting for buffer %llu state %lx page flags %lx for %d loops.\n", (unsigned long long)bh->b_blocknr, bh->b_state, bh->b_page->flags, loops);
+> +			printk("Owner: pid %u file %s:%d\n", bh->lock_pid, bh->lock_file, bh->lock_line);
+> +		}
+> +	}
+>  }
+>  EXPORT_SYMBOL(__lock_buffer);
+>  
+> diff --git a/include/linux/buffer_head.h b/include/linux/buffer_head.h
+> index 25b4263d66d7..67259a959bac 100644
+> --- a/include/linux/buffer_head.h
+> +++ b/include/linux/buffer_head.h
+> @@ -76,6 +76,9 @@ struct buffer_head {
+>  	spinlock_t b_uptodate_lock;	/* Used by the first bh in a page, to
+>  					 * serialise IO completion of other
+>  					 * buffers in the page */
+> +	char *lock_file;
+> +	unsigned int lock_line;
+> +	unsigned int lock_pid;
+>  };
+>  
+>  /*
+> @@ -395,12 +398,14 @@ static inline int trylock_buffer(struct buffer_head *bh)
+>  	return likely(!test_and_set_bit_lock(BH_Lock, &bh->b_state));
+>  }
+>  
+> -static inline void lock_buffer(struct buffer_head *bh)
+> -{
+> -	might_sleep();
+> -	if (!trylock_buffer(bh))
+> -		__lock_buffer(bh);
+> -}
+> +#define lock_buffer(bh) do {		\
+> +	might_sleep();			\
+> +	if (!trylock_buffer(bh))	\
+> +		__lock_buffer(bh);	\
+> +	(bh)->lock_line = __LINE__;	\
+> +	(bh)->lock_file = __FILE__;	\
+> +	(bh)->lock_pid = current->pid;	\
+> +} while (0)
+>  
+>  static inline struct buffer_head *getblk_unmovable(struct block_device *bdev,
+>  						   sector_t block,
+> -- 
+> 2.35.3
+> 
+
