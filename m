@@ -1,132 +1,176 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649A51A612
-	for <regressions@lists.linux.dev>; Thu, 10 Nov 2022 17:48:12 +0000 (UTC)
-Received: by mail-wm1-f46.google.com with SMTP id 187-20020a1c02c4000000b003cf9c3f3b80so4013394wmc.0
-        for <regressions@lists.linux.dev>; Thu, 10 Nov 2022 09:48:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ztUcoZwxxS4L3rEP12M4QSVDQliIB232GyZ8cQU3hfs=;
-        b=EM2UPKAzSIQO5A8fjI7qne7aQoEMryYsdrZqIJx67Fv1ynaIj1oTwbXU+bfxRrAbgV
-         +Qv9Sx3xBoWKWeIwNI7hE47YvKXPrl2B8Ev8oj9n+8frKKuh+BLI7Unb4SvGR8v60f35
-         pFyO/ahsIH0xh1od+9sPoESsGvbgnc9/bh62RH/2fGSFDbVZWxBVHhaD0j2VPwLLCeXD
-         mKjESLnFqdK5gWaoISGf+Q0DR0U68cPuwCZV5DJuQjIzAMkD/TRJEMxPFvsU2/BRRPjM
-         mX1QgzkV3IDCByhz4mtOkiqu7jkzUl7vEULWg07qO2o/ajRmD2RbdXsuJYHPDLFGB2zc
-         uC+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ztUcoZwxxS4L3rEP12M4QSVDQliIB232GyZ8cQU3hfs=;
-        b=YbXRdpF+oKqkv8kBRS7Tde7P+6w3++ixGq0p5L3Q91njOcFzuACYHfKtUaZj0ca55A
-         mLsOMaqlwS66jNDBvSf8mMGw5VOeUrxeNNh1Mu/CtuyVXbyZnvHTNl4TdFzwCyn2Ou1Q
-         cbta0OdkcUoPz7gYv9mZIem11kISXq5YI3nrW/F3nTdCUpuhy5HaBIFfqtwqQv1MWFG0
-         bjGGG5IT461n/2J7e+1ciWYZouVF+0uw+re0PmMTwIvOQF3X+7L0230DsBjHxGJ7afcz
-         4lK02FtiP0hy/hNH9O31lXycK1xyU8ndfKP28DuyfkaAsQ08vzwX3P726iFgi3Li3eVM
-         aENg==
-X-Gm-Message-State: ACrzQf2+Aah7jTajPIdnElZew8wg+0vKx5cC1Pj8Fw3STFieCYKSjDbf
-	R0n40hPTye+FYyldBsXix0o=
-X-Google-Smtp-Source: AMsMyM5A7UqaErRF+QBbccloM6AZxHcZ4KGKTbR2L2/Pi14M1oPz6/1kZa2iA2slwoPEQaEKTj+NJQ==
-X-Received: by 2002:a05:600c:2287:b0:3cf:4dfb:c223 with SMTP id 7-20020a05600c228700b003cf4dfbc223mr51117050wmf.19.1668102490581;
-        Thu, 10 Nov 2022 09:48:10 -0800 (PST)
-Received: from elementary ([94.73.35.109])
-        by smtp.gmail.com with ESMTPSA id g9-20020a05600c310900b003a2f2bb72d5sm7616974wmo.45.2022.11.10.09.48.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 09:48:10 -0800 (PST)
-Date: Thu, 10 Nov 2022 18:48:08 +0100
-From: =?iso-8859-1?Q?Jos=E9_Exp=F3sito?= <jose.exposito89@gmail.com>
-To: Alexander Zhang <alex@alexyzhang.dev>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Torge Matthies <openglfreak@googlemail.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-	Nikolai Kondrashov <spbnick@gmail.com>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [PATCH] HID: Accept Digitizers as input devices
-Message-ID: <20221110174808.GA396731@elementary>
-References: <20220804151832.30373-1-openglfreak@googlemail.com>
- <20220804180038.GA8906@elementary>
- <CAO-hwJJsKC=fyeFLCmdXMRkxEQFVGZ189GKphTVK83QJWc=udA@mail.gmail.com>
- <2717adbe-e9b2-3c5a-7ccf-3d851a55744c@alexyzhang.dev>
- <1db88d01-1004-0e42-b9aa-3e0bb2b22cdb@leemhuis.info>
- <b1536115-1d4b-67dd-197e-4b6ed8e5cbc6@alexyzhang.dev>
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58B961A629
+	for <regressions@lists.linux.dev>; Thu, 10 Nov 2022 19:27:07 +0000 (UTC)
+Received: by linux.microsoft.com (Postfix, from userid 1112)
+	id 931E120FFCBE; Thu, 10 Nov 2022 11:27:01 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 931E120FFCBE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1668108421;
+	bh=yHYCBIUipJov3H81o6PrzonqTm/WU1+IoeA1Oj+Fhek=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C4cI9sJrLqdjdnek9aselJUyIO7h+cfWwxNm/E6lvzfpsl6PmouR/RgeHel4faw54
+	 qmbEXkxKTNgGDwGJ6EmPOk4h5QUISFXTCgYcfN6LmmORpvc8XxIkojpHNBQYOuoiG4
+	 bh34zPMgrDeC04xQg3JACAhl53Pj4YiUvl/qWFvQ=
+Date: Thu, 10 Nov 2022 11:27:01 -0800
+From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+To: Jan Kara <jack@suse.cz>
+Cc: Thilo Fromm <t-lo@linux.microsoft.com>, Ye Bin <yebin10@huawei.com>,
+	jack@suse.com, tytso@mit.edu, linux-ext4@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: Re: [syzbot] possible deadlock in jbd2_journal_lock_updates
+Message-ID: <20221110192701.GA29083@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+References: <20221005151053.7jjgc7uhvquo6a5n@quack3>
+ <20221010142410.GA1689@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <2ede5fce-7077-6e64-93a9-a7d993bc498f@linux.microsoft.com>
+ <20221014132543.i3aiyx4ent4qwy4i@quack3>
+ <d30f4e74-aa75-743d-3c89-80ec61d67c6c@linux.microsoft.com>
+ <20221024104628.ozxjtdrotysq2haj@quack3>
+ <643d007e-1041-4b3d-ed5e-ae47804f279d@linux.microsoft.com>
+ <20221026101854.k6qgunxexhxthw64@quack3>
+ <20221110125758.GA6919@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20221110152637.g64p4hycnd7bfnnr@quack3>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b1536115-1d4b-67dd-197e-4b6ed8e5cbc6@alexyzhang.dev>
+In-Reply-To: <20221110152637.g64p4hycnd7bfnnr@quack3>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 
-Hi!
-
-> > On 27.10.22 00:42, Alexander Zhang wrote:
-> > > On 8/11/22 8:27 AM, Benjamin Tissoires wrote:
-> > > > On Thu, Aug 4, 2022 at 8:00 PM José Expósito
-> > > > <jose.exposito89@gmail.com> wrote:
-> > > > > On Thu, Aug 04, 2022 at 05:18:32PM +0200, Torge Matthies wrote:
-> > > > > > Commit f7d8e387d9ae ("HID: uclogic: Switch to Digitizer usage for
-> > > > > > styluses") broke input from my XP-Pen Star G640. This is because the
-> > > > > > "Digitizer" usage is not recognized as a valid usage for input devices.
-> > > > > > 
-> > > > > > This patch changes the IS_INPUT_APPLICATION macro so that the
-> > > > > > "Digitizer"
-> > > > > > (HID_DG_DIGITIZER) usage is recognized as an input device usage.
-> > > > > > 
-> > > > > > Fixes: f7d8e387d9ae ("HID: uclogic: Switch to Digitizer usage for
-> > > > > > styluses")
-> > > > > > Signed-off-by: Torge Matthies <openglfreak@googlemail.com>
-> > > > > > ---
-> > > > > > This patch could be risky, because any digitizer devices that were
-> > > > > > previously not treated as input devices are now used for input.
-> > > > > > Alternatively the linked commit could be reverted, but that would
-> > > > > > re-introduce the problem detailed in its commit message.
-> > > > > > 
-> > > > > >    include/linux/hid.h | 2 +-
-> > > > > >    1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > I hesitated about this when I sent the patch you mentioned. In the end,
-> > > > > I didn't include any fix because the digitizer use was tested for 2
-> > > > > years in DIGImend, so I (wrongly) assumed that it was safe enough.
-> > > > > 
-> > > > > However, my initial thought was to add in uclogic_probe():
-> > > > > 
-> > > > >           hdev->quirks |= HID_QUIRK_HIDINPUT_FORCE;
-> > > > > +       hdev->quirks |= HID_QUIRK_HIDINPUT_FORCE;
-> > > > > 
-> > > > > Let's see if we can hear more opinions, but if you are worried about
-> > > > > affecting other drivers, that could be a good solution.
+On Thu, Nov 10, 2022 at 04:26:37PM +0100, Jan Kara wrote:
+> On Thu 10-11-22 04:57:58, Jeremi Piotrowski wrote:
+> > On Wed, Oct 26, 2022 at 12:18:54PM +0200, Jan Kara wrote:
+> > > On Mon 24-10-22 18:32:51, Thilo Fromm wrote:
+> > > > Hello Honza,
 > > > > 
-> > > > Sadly, my automated regression tests are broken for a while and I
-> > > > haven't checked if that patch is introducing errors in hid-multitouch.
+> > > > > Yeah, I was pondering about this for some time but still I have no clue who
+> > > > > could be holding the buffer lock (which blocks the task holding the
+> > > > > transaction open) or how this could related to the commit you have
+> > > > > identified. I have two things to try:
+> > > > > 
+> > > > > 1) Can you please check whether the deadlock reproduces also with 6.0
+> > > > > kernel? The thing is that xattr handling code in ext4 has there some
+> > > > > additional changes, commit 307af6c8793 ("mbcache: automatically delete
+> > > > > entries from cache on freeing") in particular.
 > > > > 
-> > > > FWIW, this part has always been painful because some tablets were not
-> > > > using the correct usages. And so that's why we are ending up in that
-> > > > weird situation.
+> > > > This would be complex; we currently do not integrate 6.0 with Flatcar and
+> > > > would need to spend quite some effort ingesting it first (mostly, make sure
+> > > > the new kernel does not break something unrelated). Flatcar is an
+> > > > image-based distro, so kernel updates imply full distro updates.
+> > > 
+> > > OK, understood.
+> > > 
+> > > > > 2) I have created a debug patch (against 5.15.x stable kernel). Can you
+> > > > > please reproduce the failure with it and post the output of "echo w
+> > > > > > /proc/sysrq-trigger" and also the output the debug patch will put into the
+> > > > > kernel log? It will dump the information about buffer lock owner if we > cannot get the lock for more than 32 seconds.
 > > > > 
-> > > > Anyway, just to mention that any code that touches this part should be
-> > > > tested against the hid regression tests suite[0], because that's the
-> > > > only way to find out if the change is affecting other devices.
+> > > > This would be more straightforward - I can reach out to one of our users
+> > > > suffering from the issue; they can reliably reproduce it and don't shy away
+> > > > from patching their kernel. Where can I find the patch?
+> > > 
+> > > Ha, my bad. I forgot to attach it. Here it is.
+> > > 
+> > 
+> > Unfortunately this patch produced no output, but I have been able to repro so I
+> > understand why: except for the hung tasks, we have 1+ tasks busy-looping through
+> > the following code in ext4_xattr_block_set():
+> > 
+> > inserted:
+> >         if (!IS_LAST_ENTRY(s->first)) {
+> >                 new_bh = ext4_xattr_block_cache_find(inode, header(s->base),
+> >                                                      &ce);
+> >                 if (new_bh) {
+> >                         /* We found an identical block in the cache. */
+> >                         if (new_bh == bs->bh)
+> >                                 ea_bdebug(new_bh, "keeping");
+> >                         else {
+> >                                 u32 ref;
+> > 
+> >                                 WARN_ON_ONCE(dquot_initialize_needed(inode));
+> > 
+> >                                 /* The old block is released after updating
+> >                                    the inode. */
+> >                                 error = dquot_alloc_block(inode,
+> >                                                 EXT4_C2B(EXT4_SB(sb), 1));
+> >                                 if (error)
+> >                                         goto cleanup;
+> >                                 BUFFER_TRACE(new_bh, "get_write_access");
+> >                                 error = ext4_journal_get_write_access(
+> >                                                 handle, sb, new_bh,
+> >                                                 EXT4_JTR_NONE);
+> >                                 if (error)
+> >                                         goto cleanup_dquot;
+> >                                 lock_buffer(new_bh);
+> >                                 /*
+> >                                  * We have to be careful about races with
+> >                                  * adding references to xattr block. Once we
+> >                                  * hold buffer lock xattr block's state is
+> >                                  * stable so we can check the additional
+> >                                  * reference fits.
+> >                                  */
+> >                                 ref = le32_to_cpu(BHDR(new_bh)->h_refcount) + 1;
+> >                                 if (ref > EXT4_XATTR_REFCOUNT_MAX) {
+> >                                         /*
+> >                                          * Undo everything and check mbcache
+> >                                          * again.
+> >                                          */
+> >                                         unlock_buffer(new_bh);
+> >                                         dquot_free_block(inode,
+> >                                                          EXT4_C2B(EXT4_SB(sb),
+> >                                                                   1));
+> >                                         brelse(new_bh);
+> >                                         mb_cache_entry_put(ea_block_cache, ce);
+> >                                         ce = NULL;
+> >                                         new_bh = NULL;
+> >                                         goto inserted;
+> >                                 }
+> > 
+> > The tasks keep taking the 'goto inserted' branch, and never finish. I've been
+> > able to repro with kernel v6.0.7 as well.
+> 
+> Interesting! That makes is much clearer (and also makes my debug patch
+> unnecessary). So clearly the e_reusable variable in the mb_cache_entry got
+> out of sync with the number of references really in the xattr block - in
+> particular the block likely has h_refcount >= EXT4_XATTR_REFCOUNT_MAX but
+> e_reusable is set to true. Now I can see how e_reusable can stay at false due
+> to a race when refcount is actually smaller but I don't see how it could
+> stay at true when refcount is big enough - that part seems to be locked
+> properly. If you can reproduce reasonably easily, can you try reproducing
+> with attached patch? Thanks!
+> 
 
-Since it seems like this patch is kind of stuck, I sent you a different
-patch [1] that aims to fix the same issue but using a more conservative
-approach.
+Sure, with that patch I'm getting the following output, reusable is false on
+most items until we hit something with reusable true and then that loops
+indefinitely:
 
-Could you test it and confirm that it fixes your problem, please?
-
-Hopefully, we'd manage to get it merged as the risk of doing so would
-be smaller.
-
-Jose
-
-[1] https://lore.kernel.org/linux-input/20221110174056.393697-1-jose.exposito89@gmail.com/T/
-
+...
+[  218.947992] ce 00000000be9f0441 ref 1025 reusable 0
+[  219.932155] ce 0000000057dbfc7a ref 1025 reusable 0
+[  224.556261] ce 00000000555ee2ed ref 1025 reusable 0
+[  225.844042] ce 000000006e895e6b ref 1025 reusable 0
+[  226.088019] ce 000000009f8ba804 ref 1025 reusable 0
+[  226.375898] ce 00000000785d2449 ref 1025 reusable 0
+[  227.125387] ce 0000000047933e68 ref 1025 reusable 0
+[  227.837900] ce 00000000a18723bb ref 1025 reusable 0
+[  230.413104] ce 00000000bf25dd58 ref 1025 reusable 0
+[  235.041915] ce 00000000b6371d2e ref 1025 reusable 0
+[  236.605994] ce 00000000f59e23fd ref 1025 reusable 0
+[  239.560110] ce 000000003adcddfa ref 1025 reusable 0
+[  240.357104] ce 0000000019ce6812 ref 1025 reusable 0
+[  242.100579] ce 00000000487d05d4 ref 1025 reusable 1
+[  242.101028] ce 00000000487d05d4 ref 1025 reusable 1
+[  242.101410] ce 00000000487d05d4 ref 1025 reusable 1
+[  242.101790] ce 00000000487d05d4 ref 1025 reusable 1
+[  242.102254] ce 00000000487d05d4 ref 1025 reusable 1
+[  242.102667] ce 00000000487d05d4 ref 1025 reusable 1
+[  242.103151] ce 00000000487d05d4 ref 1025 reusable 1
+[  242.103519] ce 00000000487d05d4 ref 1025 reusable 1
+[  242.103895] ce 00000000487d05d4 ref 1025 reusable 1
+[  242.104312] ce 00000000487d05d4 ref 1025 reusable 1
+[  242.110017] ce 00000000487d05d4 ref 1025 reusable 1
+[  242.110388] ce 00000000487d05d4 ref 1025 reusable 1
+... (repeats forever)
