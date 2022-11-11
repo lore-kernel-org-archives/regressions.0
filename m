@@ -1,38 +1,38 @@
 Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84BB36A
-	for <regressions@lists.linux.dev>; Fri, 11 Nov 2022 08:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF61820E7
+	for <regressions@lists.linux.dev>; Fri, 11 Nov 2022 10:09:24 +0000 (UTC)
 Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id C56A1604F6;
-	Fri, 11 Nov 2022 09:44:08 +0100 (CET)
+	by domac.alu.hr (Postfix) with ESMTP id B69C2604F2;
+	Fri, 11 Nov 2022 11:09:21 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1668156248; bh=5Gq+pWXvlvlyukMht8Ezfdo6aGvQh8qweh+KwFXiV6E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TybZcZw3NhjGeFOC3UPjS499o3odNELvG2yQCi99tIGSV66M3+6RENQpAHVP712y5
-	 2P8hx9l/EH1Q6LT9EfXar8XtBgW9tYSId7g0klYxdrb0i2T4olmRU3ESOlP8TSWzdt
-	 uPpOH1EqiiBImJCJrTEaKvGqw51MVkPYgbljQofI+Dh7zIGlsSWN9+OlyPvPjQfosn
-	 ++oekYdSPKxmksWA9AxDzyxwTE5CZ39D6WGwQiRiBwUJkNuuXizqZ3SjMuhGHbEcWp
-	 1o37qsh09zLjmgfWgDJ1BnIOhAjxo11fSTksCLUqkW0LhzEuQ59Zm65KxI6frI68gX
-	 G//+5u3zkDfTg==
+	t=1668161361; bh=CElacBSfN4wYwRkOcJdp4SRDIGxK/pa4saNiSjR2T6A=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=TDND0Y7NQsnT3vUa/2NPldbHYgasnsVxootalHbDRWtYGiJJ8IW5kSLPgh3VssrHJ
+	 8kB4bNZPruwHk2EeCEI/0xFJxE1jcLU/QovLlTPkvsWBExYPaKK9aNJ35DISDADJVv
+	 O4c8YHVVyuUy+R9FiXX+RsVYvhg3bz0XNKnmOCtSHTobrXHpfvKIPJviwp7oAZEvEG
+	 0BB30laaF5yaFP1v3MQLRJfdxhIJgQBFpEVI8ugKfJWBEksyM1E9PgQoG4Wg8MeRkb
+	 9ZDWfwrXzdSkieCNjb/qXMSatM/KDoJ36tfHsuRKAml+nwEiu2VX6A87Sy0DNkoh06
+	 h+sjTqOeOF3Mg==
 X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
 Received: from domac.alu.hr ([127.0.0.1])
 	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id lne_zQnl8vpE; Fri, 11 Nov 2022 09:44:06 +0100 (CET)
+	with ESMTP id f4iIIzKqRJim; Fri, 11 Nov 2022 11:09:19 +0100 (CET)
 Received: from [10.0.2.211] (grf-nat.grf.hr [161.53.83.23])
-	by domac.alu.hr (Postfix) with ESMTPSA id E7D06604F3;
-	Fri, 11 Nov 2022 09:44:05 +0100 (CET)
+	by domac.alu.hr (Postfix) with ESMTPSA id 9065C604F3;
+	Fri, 11 Nov 2022 11:09:18 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1668156246; bh=5Gq+pWXvlvlyukMht8Ezfdo6aGvQh8qweh+KwFXiV6E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hSb+uRm0CdMAX9mLm8x3yF2Jl0GSRlNb0//L2mLcE3khZ/35bDyAnNa/N1TTU3id5
-	 0umA32vkw2ZmqOf+8UXnW9IomZ5xsUzF2ZGHu8TxgCT8oW1oBj2DG1wVDXziaA0yef
-	 Nu89LpRVIC6TVVJFvqrqREnBbwTnmXshVnQ9E6c2jWmmtL9shqjKnCeiUqk2h5aMTI
-	 ihUO+G1JsDX7Trof1Q3ZvTQabAaASHu91qSY2Pl32jtHsNOumUOWdJYgKvhTEEOOxi
-	 ccO4Z+LPeoS9c9gjCUGNHdXaFBFhPHQTnCH6CUuQHp5XOi75AHPDD7PrMyK57L17kq
-	 X2zpF3Jt4zPxA==
-Message-ID: <96903e75-63b4-8c59-6c78-0e641b1fc2c5@alu.unizg.hr>
-Date: Fri, 11 Nov 2022 09:44:05 +0100
+	t=1668161359; bh=CElacBSfN4wYwRkOcJdp4SRDIGxK/pa4saNiSjR2T6A=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=1hmfbliTVCDrcaqsjRAz/iXFo5VgQJhFULP43SIi3uQn4lEhWz+S674DDX3OP1TFg
+	 xEtVUWGe6erbW+2tLtwfYRC/z3/0Oj72y3TUjRCh1NoC3E384CqCYzytq9fDyBI0wy
+	 4RNCLTll+pJm/2HTcdt8e69LPC4e9XfSkrLv6qia5j35kSxW/Fg+5R6OMglL9XhdP2
+	 3Eq6riNFOLI7cKeGbGh5+nEggtvP31NtPcyZKUx2tOw3f0meVrtpuK4klPhPQLSq7i
+	 qu3IG27cZe2BmcOB0r2LasRL5O+ADYaX6zm5QANH3W51s/5uKHfUJNK6MxwfHU0k7r
+	 eBY7uR4VCSq0Q==
+Message-ID: <7d2c05b9-ca22-8cde-216b-b418da6c7428@alu.unizg.hr>
+Date: Fri, 11 Nov 2022 11:09:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -43,16 +43,16 @@ User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.1
 Subject: Re: BUG: kworker + systemd-udevd memory leaks found in 6.1.0-rc4
 Content-Language: en-US
+From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
 To: Thorsten Leemhuis <regressions@leemhuis.info>,
  linux-kernel@vger.kernel.org
 Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Tejun Heo <tj@kernel.org>, Florian Mickler <florian@mickler.org>,
- systemd-devel@lists.freedesktop.org
+ Tejun Heo <tj@kernel.org>, Florian Mickler <florian@mickler.org>
 References: <0d9c3f6c-3948-d5d1-bcc1-baf31141beaa@alu.unizg.hr>
  <a6b76ce0-0fb3-4434-cc3e-ab6f39fb1cf9@alu.unizg.hr>
  <3f1721d6-e5d9-8861-4e3c-802a711e71da@leemhuis.info>
-From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <3f1721d6-e5d9-8861-4e3c-802a711e71da@leemhuis.info>
+ <96903e75-63b4-8c59-6c78-0e641b1fc2c5@alu.unizg.hr>
+In-Reply-To: <96903e75-63b4-8c59-6c78-0e641b1fc2c5@alu.unizg.hr>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
@@ -97,6 +97,9 @@ $
 
 Cheers,
 Mirsad
+
+P.S. This mail is re-sent because of forgetting to set "Plain text" mode 
+to Thunderbird.
 
 -- 
 Mirsad Todorovac
