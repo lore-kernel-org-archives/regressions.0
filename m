@@ -1,176 +1,111 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58B961A629
-	for <regressions@lists.linux.dev>; Thu, 10 Nov 2022 19:27:07 +0000 (UTC)
-Received: by linux.microsoft.com (Postfix, from userid 1112)
-	id 931E120FFCBE; Thu, 10 Nov 2022 11:27:01 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 931E120FFCBE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1668108421;
-	bh=yHYCBIUipJov3H81o6PrzonqTm/WU1+IoeA1Oj+Fhek=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C4cI9sJrLqdjdnek9aselJUyIO7h+cfWwxNm/E6lvzfpsl6PmouR/RgeHel4faw54
-	 qmbEXkxKTNgGDwGJ6EmPOk4h5QUISFXTCgYcfN6LmmORpvc8XxIkojpHNBQYOuoiG4
-	 bh34zPMgrDeC04xQg3JACAhl53Pj4YiUvl/qWFvQ=
-Date: Thu, 10 Nov 2022 11:27:01 -0800
-From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-To: Jan Kara <jack@suse.cz>
-Cc: Thilo Fromm <t-lo@linux.microsoft.com>, Ye Bin <yebin10@huawei.com>,
-	jack@suse.com, tytso@mit.edu, linux-ext4@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [syzbot] possible deadlock in jbd2_journal_lock_updates
-Message-ID: <20221110192701.GA29083@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20221005151053.7jjgc7uhvquo6a5n@quack3>
- <20221010142410.GA1689@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <2ede5fce-7077-6e64-93a9-a7d993bc498f@linux.microsoft.com>
- <20221014132543.i3aiyx4ent4qwy4i@quack3>
- <d30f4e74-aa75-743d-3c89-80ec61d67c6c@linux.microsoft.com>
- <20221024104628.ozxjtdrotysq2haj@quack3>
- <643d007e-1041-4b3d-ed5e-ae47804f279d@linux.microsoft.com>
- <20221026101854.k6qgunxexhxthw64@quack3>
- <20221110125758.GA6919@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20221110152637.g64p4hycnd7bfnnr@quack3>
+Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84BB36A
+	for <regressions@lists.linux.dev>; Fri, 11 Nov 2022 08:44:17 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id C56A1604F6;
+	Fri, 11 Nov 2022 09:44:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1668156248; bh=5Gq+pWXvlvlyukMht8Ezfdo6aGvQh8qweh+KwFXiV6E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TybZcZw3NhjGeFOC3UPjS499o3odNELvG2yQCi99tIGSV66M3+6RENQpAHVP712y5
+	 2P8hx9l/EH1Q6LT9EfXar8XtBgW9tYSId7g0klYxdrb0i2T4olmRU3ESOlP8TSWzdt
+	 uPpOH1EqiiBImJCJrTEaKvGqw51MVkPYgbljQofI+Dh7zIGlsSWN9+OlyPvPjQfosn
+	 ++oekYdSPKxmksWA9AxDzyxwTE5CZ39D6WGwQiRiBwUJkNuuXizqZ3SjMuhGHbEcWp
+	 1o37qsh09zLjmgfWgDJ1BnIOhAjxo11fSTksCLUqkW0LhzEuQ59Zm65KxI6frI68gX
+	 G//+5u3zkDfTg==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id lne_zQnl8vpE; Fri, 11 Nov 2022 09:44:06 +0100 (CET)
+Received: from [10.0.2.211] (grf-nat.grf.hr [161.53.83.23])
+	by domac.alu.hr (Postfix) with ESMTPSA id E7D06604F3;
+	Fri, 11 Nov 2022 09:44:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1668156246; bh=5Gq+pWXvlvlyukMht8Ezfdo6aGvQh8qweh+KwFXiV6E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hSb+uRm0CdMAX9mLm8x3yF2Jl0GSRlNb0//L2mLcE3khZ/35bDyAnNa/N1TTU3id5
+	 0umA32vkw2ZmqOf+8UXnW9IomZ5xsUzF2ZGHu8TxgCT8oW1oBj2DG1wVDXziaA0yef
+	 Nu89LpRVIC6TVVJFvqrqREnBbwTnmXshVnQ9E6c2jWmmtL9shqjKnCeiUqk2h5aMTI
+	 ihUO+G1JsDX7Trof1Q3ZvTQabAaASHu91qSY2Pl32jtHsNOumUOWdJYgKvhTEEOOxi
+	 ccO4Z+LPeoS9c9gjCUGNHdXaFBFhPHQTnCH6CUuQHp5XOi75AHPDD7PrMyK57L17kq
+	 X2zpF3Jt4zPxA==
+Message-ID: <96903e75-63b4-8c59-6c78-0e641b1fc2c5@alu.unizg.hr>
+Date: Fri, 11 Nov 2022 09:44:05 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221110152637.g64p4hycnd7bfnnr@quack3>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: BUG: kworker + systemd-udevd memory leaks found in 6.1.0-rc4
+Content-Language: en-US
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ linux-kernel@vger.kernel.org
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Tejun Heo <tj@kernel.org>, Florian Mickler <florian@mickler.org>,
+ systemd-devel@lists.freedesktop.org
+References: <0d9c3f6c-3948-d5d1-bcc1-baf31141beaa@alu.unizg.hr>
+ <a6b76ce0-0fb3-4434-cc3e-ab6f39fb1cf9@alu.unizg.hr>
+ <3f1721d6-e5d9-8861-4e3c-802a711e71da@leemhuis.info>
+From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <3f1721d6-e5d9-8861-4e3c-802a711e71da@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Nov 10, 2022 at 04:26:37PM +0100, Jan Kara wrote:
-> On Thu 10-11-22 04:57:58, Jeremi Piotrowski wrote:
-> > On Wed, Oct 26, 2022 at 12:18:54PM +0200, Jan Kara wrote:
-> > > On Mon 24-10-22 18:32:51, Thilo Fromm wrote:
-> > > > Hello Honza,
-> > > > 
-> > > > > Yeah, I was pondering about this for some time but still I have no clue who
-> > > > > could be holding the buffer lock (which blocks the task holding the
-> > > > > transaction open) or how this could related to the commit you have
-> > > > > identified. I have two things to try:
-> > > > > 
-> > > > > 1) Can you please check whether the deadlock reproduces also with 6.0
-> > > > > kernel? The thing is that xattr handling code in ext4 has there some
-> > > > > additional changes, commit 307af6c8793 ("mbcache: automatically delete
-> > > > > entries from cache on freeing") in particular.
-> > > > 
-> > > > This would be complex; we currently do not integrate 6.0 with Flatcar and
-> > > > would need to spend quite some effort ingesting it first (mostly, make sure
-> > > > the new kernel does not break something unrelated). Flatcar is an
-> > > > image-based distro, so kernel updates imply full distro updates.
-> > > 
-> > > OK, understood.
-> > > 
-> > > > > 2) I have created a debug patch (against 5.15.x stable kernel). Can you
-> > > > > please reproduce the failure with it and post the output of "echo w
-> > > > > > /proc/sysrq-trigger" and also the output the debug patch will put into the
-> > > > > kernel log? It will dump the information about buffer lock owner if we > cannot get the lock for more than 32 seconds.
-> > > > 
-> > > > This would be more straightforward - I can reach out to one of our users
-> > > > suffering from the issue; they can reliably reproduce it and don't shy away
-> > > > from patching their kernel. Where can I find the patch?
-> > > 
-> > > Ha, my bad. I forgot to attach it. Here it is.
-> > > 
-> > 
-> > Unfortunately this patch produced no output, but I have been able to repro so I
-> > understand why: except for the hung tasks, we have 1+ tasks busy-looping through
-> > the following code in ext4_xattr_block_set():
-> > 
-> > inserted:
-> >         if (!IS_LAST_ENTRY(s->first)) {
-> >                 new_bh = ext4_xattr_block_cache_find(inode, header(s->base),
-> >                                                      &ce);
-> >                 if (new_bh) {
-> >                         /* We found an identical block in the cache. */
-> >                         if (new_bh == bs->bh)
-> >                                 ea_bdebug(new_bh, "keeping");
-> >                         else {
-> >                                 u32 ref;
-> > 
-> >                                 WARN_ON_ONCE(dquot_initialize_needed(inode));
-> > 
-> >                                 /* The old block is released after updating
-> >                                    the inode. */
-> >                                 error = dquot_alloc_block(inode,
-> >                                                 EXT4_C2B(EXT4_SB(sb), 1));
-> >                                 if (error)
-> >                                         goto cleanup;
-> >                                 BUFFER_TRACE(new_bh, "get_write_access");
-> >                                 error = ext4_journal_get_write_access(
-> >                                                 handle, sb, new_bh,
-> >                                                 EXT4_JTR_NONE);
-> >                                 if (error)
-> >                                         goto cleanup_dquot;
-> >                                 lock_buffer(new_bh);
-> >                                 /*
-> >                                  * We have to be careful about races with
-> >                                  * adding references to xattr block. Once we
-> >                                  * hold buffer lock xattr block's state is
-> >                                  * stable so we can check the additional
-> >                                  * reference fits.
-> >                                  */
-> >                                 ref = le32_to_cpu(BHDR(new_bh)->h_refcount) + 1;
-> >                                 if (ref > EXT4_XATTR_REFCOUNT_MAX) {
-> >                                         /*
-> >                                          * Undo everything and check mbcache
-> >                                          * again.
-> >                                          */
-> >                                         unlock_buffer(new_bh);
-> >                                         dquot_free_block(inode,
-> >                                                          EXT4_C2B(EXT4_SB(sb),
-> >                                                                   1));
-> >                                         brelse(new_bh);
-> >                                         mb_cache_entry_put(ea_block_cache, ce);
-> >                                         ce = NULL;
-> >                                         new_bh = NULL;
-> >                                         goto inserted;
-> >                                 }
-> > 
-> > The tasks keep taking the 'goto inserted' branch, and never finish. I've been
-> > able to repro with kernel v6.0.7 as well.
-> 
-> Interesting! That makes is much clearer (and also makes my debug patch
-> unnecessary). So clearly the e_reusable variable in the mb_cache_entry got
-> out of sync with the number of references really in the xattr block - in
-> particular the block likely has h_refcount >= EXT4_XATTR_REFCOUNT_MAX but
-> e_reusable is set to true. Now I can see how e_reusable can stay at false due
-> to a race when refcount is actually smaller but I don't see how it could
-> stay at true when refcount is big enough - that part seems to be locked
-> properly. If you can reproduce reasonably easily, can you try reproducing
-> with attached patch? Thanks!
-> 
+On 10.11.2022. 9:28, Thorsten Leemhuis wrote:
 
-Sure, with that patch I'm getting the following output, reusable is false on
-most items until we hit something with reusable true and then that loops
-indefinitely:
+> This bug is confirmed in 6.1-rc4, among the "thermald" and "systemd-dev"
+> kernel memory leaks, potentially exposing race conditions or other more
+> serious bug.
+>> Maybe, but that sadly is also true for a lot of other known issues, for
+>> example those in this quite long list:
+>> https://syzkaller.appspot.com/upstream#open
+>>
+>> It would help if you could pinpoint the problem, then we know who should
+>> look into this. You CCed me and the regression list, so I assume it's a
+>> regression. Hence: Could you try to bisect it?
+>>
+>> Ciao, Thorsten
 
-...
-[  218.947992] ce 00000000be9f0441 ref 1025 reusable 0
-[  219.932155] ce 0000000057dbfc7a ref 1025 reusable 0
-[  224.556261] ce 00000000555ee2ed ref 1025 reusable 0
-[  225.844042] ce 000000006e895e6b ref 1025 reusable 0
-[  226.088019] ce 000000009f8ba804 ref 1025 reusable 0
-[  226.375898] ce 00000000785d2449 ref 1025 reusable 0
-[  227.125387] ce 0000000047933e68 ref 1025 reusable 0
-[  227.837900] ce 00000000a18723bb ref 1025 reusable 0
-[  230.413104] ce 00000000bf25dd58 ref 1025 reusable 0
-[  235.041915] ce 00000000b6371d2e ref 1025 reusable 0
-[  236.605994] ce 00000000f59e23fd ref 1025 reusable 0
-[  239.560110] ce 000000003adcddfa ref 1025 reusable 0
-[  240.357104] ce 0000000019ce6812 ref 1025 reusable 0
-[  242.100579] ce 00000000487d05d4 ref 1025 reusable 1
-[  242.101028] ce 00000000487d05d4 ref 1025 reusable 1
-[  242.101410] ce 00000000487d05d4 ref 1025 reusable 1
-[  242.101790] ce 00000000487d05d4 ref 1025 reusable 1
-[  242.102254] ce 00000000487d05d4 ref 1025 reusable 1
-[  242.102667] ce 00000000487d05d4 ref 1025 reusable 1
-[  242.103151] ce 00000000487d05d4 ref 1025 reusable 1
-[  242.103519] ce 00000000487d05d4 ref 1025 reusable 1
-[  242.103895] ce 00000000487d05d4 ref 1025 reusable 1
-[  242.104312] ce 00000000487d05d4 ref 1025 reusable 1
-[  242.110017] ce 00000000487d05d4 ref 1025 reusable 1
-[  242.110388] ce 00000000487d05d4 ref 1025 reusable 1
-... (repeats forever)
+Hi, Thorsten!
+
+I am taking this task, however, it might not be a relatively easy bisect 
+like the past
+two or three (probably were beginner's luck).
+
+It appears to predate 4.19:
+
+$ head -13 memleak-kwork-4.19.0-08-84df9525b0c2-memlk-menu-al.log
+unreferenced object 0xffff8ff917c79c40 (size 16):
+   comm "kworker/u12:4", pid 422, jiffies 4294672757 (age 380.342s)
+   hex dump (first 16 bytes):
+     6d 65 6d 73 74 69 63 6b 30 00 00 00 00 00 00 00 memstick0.......
+   backtrace:
+     [<000000004f7bc99c>] kobject_set_name_vargs+0x1e/0x90
+     [<00000000f00ab312>] dev_set_name+0x57/0x70
+     [<000000001fd9518e>] memstick_check+0x99/0x330 [memstick]
+     [<000000008c797991>] process_one_work+0x1a7/0x3a0
+     [<00000000405c5133>] worker_thread+0x30/0x390
+     [<0000000060a58c2e>] kthread+0x112/0x130
+     [<000000004b138871>] ret_from_fork+0x35/0x40
+     [<0000000029f3e0aa>] 0xffffffffffffffff
+$
+
+Cheers,
+Mirsad
+
+-- 
+Mirsad Todorovac
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb
+Republic of Croatia, the European Union
+--
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
+
