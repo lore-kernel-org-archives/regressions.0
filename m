@@ -1,114 +1,237 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF61820E7
-	for <regressions@lists.linux.dev>; Fri, 11 Nov 2022 10:09:24 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id B69C2604F2;
-	Fri, 11 Nov 2022 11:09:21 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1668161361; bh=CElacBSfN4wYwRkOcJdp4SRDIGxK/pa4saNiSjR2T6A=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=TDND0Y7NQsnT3vUa/2NPldbHYgasnsVxootalHbDRWtYGiJJ8IW5kSLPgh3VssrHJ
-	 8kB4bNZPruwHk2EeCEI/0xFJxE1jcLU/QovLlTPkvsWBExYPaKK9aNJ35DISDADJVv
-	 O4c8YHVVyuUy+R9FiXX+RsVYvhg3bz0XNKnmOCtSHTobrXHpfvKIPJviwp7oAZEvEG
-	 0BB30laaF5yaFP1v3MQLRJfdxhIJgQBFpEVI8ugKfJWBEksyM1E9PgQoG4Wg8MeRkb
-	 9ZDWfwrXzdSkieCNjb/qXMSatM/KDoJ36tfHsuRKAml+nwEiu2VX6A87Sy0DNkoh06
-	 h+sjTqOeOF3Mg==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id f4iIIzKqRJim; Fri, 11 Nov 2022 11:09:19 +0100 (CET)
-Received: from [10.0.2.211] (grf-nat.grf.hr [161.53.83.23])
-	by domac.alu.hr (Postfix) with ESMTPSA id 9065C604F3;
-	Fri, 11 Nov 2022 11:09:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1668161359; bh=CElacBSfN4wYwRkOcJdp4SRDIGxK/pa4saNiSjR2T6A=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=1hmfbliTVCDrcaqsjRAz/iXFo5VgQJhFULP43SIi3uQn4lEhWz+S674DDX3OP1TFg
-	 xEtVUWGe6erbW+2tLtwfYRC/z3/0Oj72y3TUjRCh1NoC3E384CqCYzytq9fDyBI0wy
-	 4RNCLTll+pJm/2HTcdt8e69LPC4e9XfSkrLv6qia5j35kSxW/Fg+5R6OMglL9XhdP2
-	 3Eq6riNFOLI7cKeGbGh5+nEggtvP31NtPcyZKUx2tOw3f0meVrtpuK4klPhPQLSq7i
-	 qu3IG27cZe2BmcOB0r2LasRL5O+ADYaX6zm5QANH3W51s/5uKHfUJNK6MxwfHU0k7r
-	 eBY7uR4VCSq0Q==
-Message-ID: <7d2c05b9-ca22-8cde-216b-b418da6c7428@alu.unizg.hr>
-Date: Fri, 11 Nov 2022 11:09:16 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ABF41E9F9
+	for <regressions@lists.linux.dev>; Fri, 11 Nov 2022 14:24:32 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 10C252241A;
+	Fri, 11 Nov 2022 14:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1668176665; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D3UIxZQpc5Ytr6eLo8bbfQvKg2R72Jo8To0qXRFhxGg=;
+	b=vF9Q1xBIamw/b3ud1m7fiJckcFCrB1T6ZqqVvoydy4H+kkx4GnCAkpKwWumUf3KVTPRRJZ
+	GeuXuxK6jJuuzk1zJm/ZaJwAgxENd3GeKf/rt6WZbF5wgMIE+2ql6YgV7ZUT5HODaSLXtd
+	Pc8nhZZBNk/xyRJASrXz5hEO1zmTLek=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1668176665;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D3UIxZQpc5Ytr6eLo8bbfQvKg2R72Jo8To0qXRFhxGg=;
+	b=lYfvr+bwt2vv+/FDs0e/uW9q2QcbV4zq7qeCxt5GrEioT6+tfAur67EKaZ/XUDWKsxee8T
+	C1Ur7gxmMrs27oBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0227B13357;
+	Fri, 11 Nov 2022 14:24:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id REx9ABlbbmM2DgAAMHmgww
+	(envelope-from <jack@suse.cz>); Fri, 11 Nov 2022 14:24:25 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 8866CA06F6; Fri, 11 Nov 2022 15:24:24 +0100 (CET)
+Date: Fri, 11 Nov 2022 15:24:24 +0100
+From: Jan Kara <jack@suse.cz>
+To: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+Cc: Jan Kara <jack@suse.cz>, Thilo Fromm <t-lo@linux.microsoft.com>,
+	Ye Bin <yebin10@huawei.com>, jack@suse.com, tytso@mit.edu,
+	linux-ext4@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [syzbot] possible deadlock in jbd2_journal_lock_updates
+Message-ID: <20221111142424.vwt4khbtfzd5foiy@quack3>
+References: <20221010142410.GA1689@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <2ede5fce-7077-6e64-93a9-a7d993bc498f@linux.microsoft.com>
+ <20221014132543.i3aiyx4ent4qwy4i@quack3>
+ <d30f4e74-aa75-743d-3c89-80ec61d67c6c@linux.microsoft.com>
+ <20221024104628.ozxjtdrotysq2haj@quack3>
+ <643d007e-1041-4b3d-ed5e-ae47804f279d@linux.microsoft.com>
+ <20221026101854.k6qgunxexhxthw64@quack3>
+ <20221110125758.GA6919@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20221110152637.g64p4hycnd7bfnnr@quack3>
+ <20221110192701.GA29083@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: BUG: kworker + systemd-udevd memory leaks found in 6.1.0-rc4
-Content-Language: en-US
-From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- linux-kernel@vger.kernel.org
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Tejun Heo <tj@kernel.org>, Florian Mickler <florian@mickler.org>
-References: <0d9c3f6c-3948-d5d1-bcc1-baf31141beaa@alu.unizg.hr>
- <a6b76ce0-0fb3-4434-cc3e-ab6f39fb1cf9@alu.unizg.hr>
- <3f1721d6-e5d9-8861-4e3c-802a711e71da@leemhuis.info>
- <96903e75-63b4-8c59-6c78-0e641b1fc2c5@alu.unizg.hr>
-In-Reply-To: <96903e75-63b4-8c59-6c78-0e641b1fc2c5@alu.unizg.hr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="c4cf2aow43ugq76v"
+Content-Disposition: inline
+In-Reply-To: <20221110192701.GA29083@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 
-On 10.11.2022. 9:28, Thorsten Leemhuis wrote:
 
-> This bug is confirmed in 6.1-rc4, among the "thermald" and "systemd-dev"
-> kernel memory leaks, potentially exposing race conditions or other more
-> serious bug.
->> Maybe, but that sadly is also true for a lot of other known issues, for
->> example those in this quite long list:
->> https://syzkaller.appspot.com/upstream#open
->>
->> It would help if you could pinpoint the problem, then we know who should
->> look into this. You CCed me and the regression list, so I assume it's a
->> regression. Hence: Could you try to bisect it?
->>
->> Ciao, Thorsten
+--c4cf2aow43ugq76v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi, Thorsten!
+On Thu 10-11-22 11:27:01, Jeremi Piotrowski wrote:
+> On Thu, Nov 10, 2022 at 04:26:37PM +0100, Jan Kara wrote:
+> > On Thu 10-11-22 04:57:58, Jeremi Piotrowski wrote:
+> > > On Wed, Oct 26, 2022 at 12:18:54PM +0200, Jan Kara wrote:
+> > > > On Mon 24-10-22 18:32:51, Thilo Fromm wrote:
+> > > > > Hello Honza,
+> > > > > 
+> > > > > > Yeah, I was pondering about this for some time but still I have no clue who
+> > > > > > could be holding the buffer lock (which blocks the task holding the
+> > > > > > transaction open) or how this could related to the commit you have
+> > > > > > identified. I have two things to try:
+> > > > > > 
+> > > > > > 1) Can you please check whether the deadlock reproduces also with 6.0
+> > > > > > kernel? The thing is that xattr handling code in ext4 has there some
+> > > > > > additional changes, commit 307af6c8793 ("mbcache: automatically delete
+> > > > > > entries from cache on freeing") in particular.
+> > > > > 
+> > > > > This would be complex; we currently do not integrate 6.0 with Flatcar and
+> > > > > would need to spend quite some effort ingesting it first (mostly, make sure
+> > > > > the new kernel does not break something unrelated). Flatcar is an
+> > > > > image-based distro, so kernel updates imply full distro updates.
+> > > > 
+> > > > OK, understood.
+> > > > 
+> > > > > > 2) I have created a debug patch (against 5.15.x stable kernel). Can you
+> > > > > > please reproduce the failure with it and post the output of "echo w
+> > > > > > > /proc/sysrq-trigger" and also the output the debug patch will put into the
+> > > > > > kernel log? It will dump the information about buffer lock owner if we > cannot get the lock for more than 32 seconds.
+> > > > > 
+> > > > > This would be more straightforward - I can reach out to one of our users
+> > > > > suffering from the issue; they can reliably reproduce it and don't shy away
+> > > > > from patching their kernel. Where can I find the patch?
+> > > > 
+> > > > Ha, my bad. I forgot to attach it. Here it is.
+> > > > 
+> > > 
+> > > Unfortunately this patch produced no output, but I have been able to repro so I
+> > > understand why: except for the hung tasks, we have 1+ tasks busy-looping through
+> > > the following code in ext4_xattr_block_set():
+> > > 
+> > > inserted:
+> > >         if (!IS_LAST_ENTRY(s->first)) {
+> > >                 new_bh = ext4_xattr_block_cache_find(inode, header(s->base),
+> > >                                                      &ce);
+> > >                 if (new_bh) {
+> > >                         /* We found an identical block in the cache. */
+> > >                         if (new_bh == bs->bh)
+> > >                                 ea_bdebug(new_bh, "keeping");
+> > >                         else {
+> > >                                 u32 ref;
+> > > 
+> > >                                 WARN_ON_ONCE(dquot_initialize_needed(inode));
+> > > 
+> > >                                 /* The old block is released after updating
+> > >                                    the inode. */
+> > >                                 error = dquot_alloc_block(inode,
+> > >                                                 EXT4_C2B(EXT4_SB(sb), 1));
+> > >                                 if (error)
+> > >                                         goto cleanup;
+> > >                                 BUFFER_TRACE(new_bh, "get_write_access");
+> > >                                 error = ext4_journal_get_write_access(
+> > >                                                 handle, sb, new_bh,
+> > >                                                 EXT4_JTR_NONE);
+> > >                                 if (error)
+> > >                                         goto cleanup_dquot;
+> > >                                 lock_buffer(new_bh);
+> > >                                 /*
+> > >                                  * We have to be careful about races with
+> > >                                  * adding references to xattr block. Once we
+> > >                                  * hold buffer lock xattr block's state is
+> > >                                  * stable so we can check the additional
+> > >                                  * reference fits.
+> > >                                  */
+> > >                                 ref = le32_to_cpu(BHDR(new_bh)->h_refcount) + 1;
+> > >                                 if (ref > EXT4_XATTR_REFCOUNT_MAX) {
+> > >                                         /*
+> > >                                          * Undo everything and check mbcache
+> > >                                          * again.
+> > >                                          */
+> > >                                         unlock_buffer(new_bh);
+> > >                                         dquot_free_block(inode,
+> > >                                                          EXT4_C2B(EXT4_SB(sb),
+> > >                                                                   1));
+> > >                                         brelse(new_bh);
+> > >                                         mb_cache_entry_put(ea_block_cache, ce);
+> > >                                         ce = NULL;
+> > >                                         new_bh = NULL;
+> > >                                         goto inserted;
+> > >                                 }
+> > > 
+> > > The tasks keep taking the 'goto inserted' branch, and never finish. I've been
+> > > able to repro with kernel v6.0.7 as well.
+> > 
+> > Interesting! That makes is much clearer (and also makes my debug patch
+> > unnecessary). So clearly the e_reusable variable in the mb_cache_entry got
+> > out of sync with the number of references really in the xattr block - in
+> > particular the block likely has h_refcount >= EXT4_XATTR_REFCOUNT_MAX but
+> > e_reusable is set to true. Now I can see how e_reusable can stay at false due
+> > to a race when refcount is actually smaller but I don't see how it could
+> > stay at true when refcount is big enough - that part seems to be locked
+> > properly. If you can reproduce reasonably easily, can you try reproducing
+> > with attached patch? Thanks!
+> > 
+> 
+> Sure, with that patch I'm getting the following output, reusable is false on
+> most items until we hit something with reusable true and then that loops
+> indefinitely:
 
-I am taking this task, however, it might not be a relatively easy bisect 
-like the past
-two or three (probably were beginner's luck).
+Thanks. So that is what I've suspected. I'm still not 100% clear on how
+this inconsistency can happen although I have a suspicion - does attached
+patch fix the problem for you?
 
-It appears to predate 4.19:
+Also is it possible to share the reproducer or it needs some special
+infrastructure?
 
-$ head -13 memleak-kwork-4.19.0-08-84df9525b0c2-memlk-menu-al.log
-unreferenced object 0xffff8ff917c79c40 (size 16):
-   comm "kworker/u12:4", pid 422, jiffies 4294672757 (age 380.342s)
-   hex dump (first 16 bytes):
-     6d 65 6d 73 74 69 63 6b 30 00 00 00 00 00 00 00 memstick0.......
-   backtrace:
-     [<000000004f7bc99c>] kobject_set_name_vargs+0x1e/0x90
-     [<00000000f00ab312>] dev_set_name+0x57/0x70
-     [<000000001fd9518e>] memstick_check+0x99/0x330 [memstick]
-     [<000000008c797991>] process_one_work+0x1a7/0x3a0
-     [<00000000405c5133>] worker_thread+0x30/0x390
-     [<0000000060a58c2e>] kthread+0x112/0x130
-     [<000000004b138871>] ret_from_fork+0x35/0x40
-     [<0000000029f3e0aa>] 0xffffffffffffffff
-$
-
-Cheers,
-Mirsad
-
-P.S. This mail is re-sent because of forgetting to set "Plain text" mode 
-to Thunderbird.
-
+								Honza
 -- 
-Mirsad Todorovac
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb
-Republic of Croatia, the European Union
---
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
+--c4cf2aow43ugq76v
+Content-Type: text/x-patch; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-ext4-Lock-xattr-buffer-before-inserting-cache-entry.patch"
+
+From 6132433e400ff7be348fe04fdf8ee67eb105ec21 Mon Sep 17 00:00:00 2001
+From: Jan Kara <jack@suse.cz>
+Date: Thu, 10 Nov 2022 16:22:06 +0100
+Subject: [PATCH] ext4: Lock xattr buffer before inserting cache entry
+
+---
+ fs/ext4/xattr.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
+index 36d6ba7190b6..02e265bb94e2 100644
+--- a/fs/ext4/xattr.c
++++ b/fs/ext4/xattr.c
+@@ -2970,15 +2970,18 @@ ext4_xattr_block_cache_insert(struct mb_cache *ea_block_cache,
+ 			      struct buffer_head *bh)
+ {
+ 	struct ext4_xattr_header *header = BHDR(bh);
+-	__u32 hash = le32_to_cpu(header->h_hash);
+-	int reusable = le32_to_cpu(header->h_refcount) <
+-		       EXT4_XATTR_REFCOUNT_MAX;
++	__u32 hash;
++	int reusable;
+ 	int error;
+ 
+ 	if (!ea_block_cache)
+ 		return;
++	lock_buffer(bh);
++	hash = le32_to_cpu(header->h_hash);
++	reusable = le32_to_cpu(header->h_refcount) < EXT4_XATTR_REFCOUNT_MAX;
+ 	error = mb_cache_entry_create(ea_block_cache, GFP_NOFS, hash,
+ 				      bh->b_blocknr, reusable);
++	unlock_buffer(bh);
+ 	if (error) {
+ 		if (error == -EBUSY)
+ 			ea_bdebug(bh, "already in cache");
+-- 
+2.35.3
+
+
+--c4cf2aow43ugq76v--
