@@ -1,216 +1,126 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55FE424F2E
-	for <regressions@lists.linux.dev>; Fri, 11 Nov 2022 15:52:39 +0000 (UTC)
-Received: by linux.microsoft.com (Postfix, from userid 1112)
-	id E99DE20B717A; Fri, 11 Nov 2022 07:52:38 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E99DE20B717A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1668181958;
-	bh=YpxvktSqWwuUkvWeIEXUTMm+3ugzACkXLiT5QhLAjQ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T5xgFY+138mUatankYZhW7/LNn5RjJdurTjozHHL6Y12tKAZFMXSSKNercxCtIq7h
-	 mzkzj/QzqkcZZ+mhlRBfFu87kaAMtakNwP3ww6z7qVcMmwSftM1IaU09DVtriyaNK6
-	 NtXcdD/LvpMJoRGw2oty20prml2311cECAnCejJA=
-Date: Fri, 11 Nov 2022 07:52:38 -0800
-From: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
-To: Jan Kara <jack@suse.cz>
-Cc: Thilo Fromm <t-lo@linux.microsoft.com>, Ye Bin <yebin10@huawei.com>,
-	jack@suse.com, tytso@mit.edu, linux-ext4@vger.kernel.org,
-	regressions@lists.linux.dev
-Subject: Re: [syzbot] possible deadlock in jbd2_journal_lock_updates
-Message-ID: <20221111155238.GA32201@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-References: <20221014132543.i3aiyx4ent4qwy4i@quack3>
- <d30f4e74-aa75-743d-3c89-80ec61d67c6c@linux.microsoft.com>
- <20221024104628.ozxjtdrotysq2haj@quack3>
- <643d007e-1041-4b3d-ed5e-ae47804f279d@linux.microsoft.com>
- <20221026101854.k6qgunxexhxthw64@quack3>
- <20221110125758.GA6919@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20221110152637.g64p4hycnd7bfnnr@quack3>
- <20221110192701.GA29083@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
- <20221111142424.vwt4khbtfzd5foiy@quack3>
- <20221111151029.GA27244@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA557F5
+	for <regressions@lists.linux.dev>; Sat, 12 Nov 2022 02:45:56 +0000 (UTC)
+Received: from relay4-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::224])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id E6BFAC625E
+	for <regressions@lists.linux.dev>; Sat, 12 Nov 2022 02:45:03 +0000 (UTC)
+Received: (Authenticated sender: alex@alexyzhang.dev)
+	by mail.gandi.net (Postfix) with ESMTPSA id 54D3AE0002;
+	Sat, 12 Nov 2022 02:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alexyzhang.dev;
+	s=gm1; t=1668221096;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KNHXQH7G1uo0bb1rGKzbXIsnEpHoQzNrCzi26ZjRdRA=;
+	b=fNJONnALlGk3DqII+d1EmFQGB8P2Q9R459TNKtK2wwo4iTx2godAJfb3N0Q8S4TCtN+bKQ
+	6EeAsmT0ENhnui94f1dqMT549OaOabnFla1rBrF/dMGNZi4yjpId+GkYlXZuoDE4PxtZ4O
+	YYdKxo6wuTBOecGIY58VlS7iIrIPRWlgg/4ygt4XqBBPWiaXtgXf6OQhdykymCWnugOPiZ
+	9zSUn5Qr3beWTZhtm/N7D80Hnl3leEp3uYfb5yKTwR296q/9HTeiuBV9BaghWMejwmvsvD
+	H9zl+0e+Ekfj+0Z0EP2zR1QF6itCf1nO1DESWMRCaIqgvp23iXjYdsOFrPHs6g==
+Message-ID: <d0daeb38-e939-95e8-5191-9727adbdd278@alexyzhang.dev>
+Date: Fri, 11 Nov 2022 18:44:50 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221111151029.GA27244@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Content-Language: en-US
+To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Torge Matthies <openglfreak@googlemail.com>, Jiri Kosina <jikos@kernel.org>,
+ "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+ Nikolai Kondrashov <spbnick@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220804151832.30373-1-openglfreak@googlemail.com>
+ <20220804180038.GA8906@elementary>
+ <CAO-hwJJsKC=fyeFLCmdXMRkxEQFVGZ189GKphTVK83QJWc=udA@mail.gmail.com>
+ <2717adbe-e9b2-3c5a-7ccf-3d851a55744c@alexyzhang.dev>
+ <1db88d01-1004-0e42-b9aa-3e0bb2b22cdb@leemhuis.info>
+ <b1536115-1d4b-67dd-197e-4b6ed8e5cbc6@alexyzhang.dev>
+ <20221110174808.GA396731@elementary>
+From: Alexander Zhang <alex@alexyzhang.dev>
+Subject: Re: [PATCH] HID: Accept Digitizers as input devices
+In-Reply-To: <20221110174808.GA396731@elementary>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Nov 11, 2022 at 07:10:29AM -0800, Jeremi Piotrowski wrote:
-> On Fri, Nov 11, 2022 at 03:24:24PM +0100, Jan Kara wrote:
-> > On Thu 10-11-22 11:27:01, Jeremi Piotrowski wrote:
-> > > On Thu, Nov 10, 2022 at 04:26:37PM +0100, Jan Kara wrote:
-> > > > On Thu 10-11-22 04:57:58, Jeremi Piotrowski wrote:
-> > > > > On Wed, Oct 26, 2022 at 12:18:54PM +0200, Jan Kara wrote:
-> > > > > > On Mon 24-10-22 18:32:51, Thilo Fromm wrote:
-> > > > > > > Hello Honza,
-> > > > > > > 
-> > > > > > > > Yeah, I was pondering about this for some time but still I have no clue who
-> > > > > > > > could be holding the buffer lock (which blocks the task holding the
-> > > > > > > > transaction open) or how this could related to the commit you have
-> > > > > > > > identified. I have two things to try:
-> > > > > > > > 
-> > > > > > > > 1) Can you please check whether the deadlock reproduces also with 6.0
-> > > > > > > > kernel? The thing is that xattr handling code in ext4 has there some
-> > > > > > > > additional changes, commit 307af6c8793 ("mbcache: automatically delete
-> > > > > > > > entries from cache on freeing") in particular.
-> > > > > > > 
-> > > > > > > This would be complex; we currently do not integrate 6.0 with Flatcar and
-> > > > > > > would need to spend quite some effort ingesting it first (mostly, make sure
-> > > > > > > the new kernel does not break something unrelated). Flatcar is an
-> > > > > > > image-based distro, so kernel updates imply full distro updates.
-> > > > > > 
-> > > > > > OK, understood.
-> > > > > > 
-> > > > > > > > 2) I have created a debug patch (against 5.15.x stable kernel). Can you
-> > > > > > > > please reproduce the failure with it and post the output of "echo w
-> > > > > > > > > /proc/sysrq-trigger" and also the output the debug patch will put into the
-> > > > > > > > kernel log? It will dump the information about buffer lock owner if we > cannot get the lock for more than 32 seconds.
-> > > > > > > 
-> > > > > > > This would be more straightforward - I can reach out to one of our users
-> > > > > > > suffering from the issue; they can reliably reproduce it and don't shy away
-> > > > > > > from patching their kernel. Where can I find the patch?
-> > > > > > 
-> > > > > > Ha, my bad. I forgot to attach it. Here it is.
-> > > > > > 
-> > > > > 
-> > > > > Unfortunately this patch produced no output, but I have been able to repro so I
-> > > > > understand why: except for the hung tasks, we have 1+ tasks busy-looping through
-> > > > > the following code in ext4_xattr_block_set():
-> > > > > 
-> > > > > inserted:
-> > > > >         if (!IS_LAST_ENTRY(s->first)) {
-> > > > >                 new_bh = ext4_xattr_block_cache_find(inode, header(s->base),
-> > > > >                                                      &ce);
-> > > > >                 if (new_bh) {
-> > > > >                         /* We found an identical block in the cache. */
-> > > > >                         if (new_bh == bs->bh)
-> > > > >                                 ea_bdebug(new_bh, "keeping");
-> > > > >                         else {
-> > > > >                                 u32 ref;
-> > > > > 
-> > > > >                                 WARN_ON_ONCE(dquot_initialize_needed(inode));
-> > > > > 
-> > > > >                                 /* The old block is released after updating
-> > > > >                                    the inode. */
-> > > > >                                 error = dquot_alloc_block(inode,
-> > > > >                                                 EXT4_C2B(EXT4_SB(sb), 1));
-> > > > >                                 if (error)
-> > > > >                                         goto cleanup;
-> > > > >                                 BUFFER_TRACE(new_bh, "get_write_access");
-> > > > >                                 error = ext4_journal_get_write_access(
-> > > > >                                                 handle, sb, new_bh,
-> > > > >                                                 EXT4_JTR_NONE);
-> > > > >                                 if (error)
-> > > > >                                         goto cleanup_dquot;
-> > > > >                                 lock_buffer(new_bh);
-> > > > >                                 /*
-> > > > >                                  * We have to be careful about races with
-> > > > >                                  * adding references to xattr block. Once we
-> > > > >                                  * hold buffer lock xattr block's state is
-> > > > >                                  * stable so we can check the additional
-> > > > >                                  * reference fits.
-> > > > >                                  */
-> > > > >                                 ref = le32_to_cpu(BHDR(new_bh)->h_refcount) + 1;
-> > > > >                                 if (ref > EXT4_XATTR_REFCOUNT_MAX) {
-> > > > >                                         /*
-> > > > >                                          * Undo everything and check mbcache
-> > > > >                                          * again.
-> > > > >                                          */
-> > > > >                                         unlock_buffer(new_bh);
-> > > > >                                         dquot_free_block(inode,
-> > > > >                                                          EXT4_C2B(EXT4_SB(sb),
-> > > > >                                                                   1));
-> > > > >                                         brelse(new_bh);
-> > > > >                                         mb_cache_entry_put(ea_block_cache, ce);
-> > > > >                                         ce = NULL;
-> > > > >                                         new_bh = NULL;
-> > > > >                                         goto inserted;
-> > > > >                                 }
-> > > > > 
-> > > > > The tasks keep taking the 'goto inserted' branch, and never finish. I've been
-> > > > > able to repro with kernel v6.0.7 as well.
-> > > > 
-> > > > Interesting! That makes is much clearer (and also makes my debug patch
-> > > > unnecessary). So clearly the e_reusable variable in the mb_cache_entry got
-> > > > out of sync with the number of references really in the xattr block - in
-> > > > particular the block likely has h_refcount >= EXT4_XATTR_REFCOUNT_MAX but
-> > > > e_reusable is set to true. Now I can see how e_reusable can stay at false due
-> > > > to a race when refcount is actually smaller but I don't see how it could
-> > > > stay at true when refcount is big enough - that part seems to be locked
-> > > > properly. If you can reproduce reasonably easily, can you try reproducing
-> > > > with attached patch? Thanks!
-> > > > 
-> > > 
-> > > Sure, with that patch I'm getting the following output, reusable is false on
-> > > most items until we hit something with reusable true and then that loops
-> > > indefinitely:
-> > 
-> > Thanks. So that is what I've suspected. I'm still not 100% clear on how
-> > this inconsistency can happen although I have a suspicion - does attached
-> > patch fix the problem for you?
-> > 
-> > Also is it possible to share the reproducer or it needs some special
-> > infrastructure?
-> > 
-> > 								Honza
-> 
-> I'll test the patch and report back.
-> 
-> Attached you'll find the reproducer, for me it reproduces within a few minutes.
-> It brings up a k8s node and then runs 3 instances of the application which
-> creates a lot of small files in a loop. The OS we run it on has selinux enabled
-> in permissive mode, that might play a role.
-> 
+Hi José,
 
-I can still reproduce it with the patch.
-
-> > -- 
-> > Jan Kara <jack@suse.com>
-> > SUSE Labs, CR
+On 11/10/22 9:48 AM, José Expósito wrote:
+> Hi!
 > 
-> > >From 6132433e400ff7be348fe04fdf8ee67eb105ec21 Mon Sep 17 00:00:00 2001
-> > From: Jan Kara <jack@suse.cz>
-> > Date: Thu, 10 Nov 2022 16:22:06 +0100
-> > Subject: [PATCH] ext4: Lock xattr buffer before inserting cache entry
-> > 
-> > ---
-> >  fs/ext4/xattr.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
-> > index 36d6ba7190b6..02e265bb94e2 100644
-> > --- a/fs/ext4/xattr.c
-> > +++ b/fs/ext4/xattr.c
-> > @@ -2970,15 +2970,18 @@ ext4_xattr_block_cache_insert(struct mb_cache *ea_block_cache,
-> >  			      struct buffer_head *bh)
-> >  {
-> >  	struct ext4_xattr_header *header = BHDR(bh);
-> > -	__u32 hash = le32_to_cpu(header->h_hash);
-> > -	int reusable = le32_to_cpu(header->h_refcount) <
-> > -		       EXT4_XATTR_REFCOUNT_MAX;
-> > +	__u32 hash;
-> > +	int reusable;
-> >  	int error;
-> >  
-> >  	if (!ea_block_cache)
-> >  		return;
-> > +	lock_buffer(bh);
-> > +	hash = le32_to_cpu(header->h_hash);
-> > +	reusable = le32_to_cpu(header->h_refcount) < EXT4_XATTR_REFCOUNT_MAX;
-> >  	error = mb_cache_entry_create(ea_block_cache, GFP_NOFS, hash,
-> >  				      bh->b_blocknr, reusable);
-> > +	unlock_buffer(bh);
-> >  	if (error) {
-> >  		if (error == -EBUSY)
-> >  			ea_bdebug(bh, "already in cache");
-> > -- 
-> > 2.35.3
-> > 
+>>> On 27.10.22 00:42, Alexander Zhang wrote:
+>>>> On 8/11/22 8:27 AM, Benjamin Tissoires wrote:
+>>>>> On Thu, Aug 4, 2022 at 8:00 PM José Expósito
+>>>>> <jose.exposito89@gmail.com> wrote:
+>>>>>> On Thu, Aug 04, 2022 at 05:18:32PM +0200, Torge Matthies wrote:
+>>>>>>> Commit f7d8e387d9ae ("HID: uclogic: Switch to Digitizer usage for
+>>>>>>> styluses") broke input from my XP-Pen Star G640. This is because the
+>>>>>>> "Digitizer" usage is not recognized as a valid usage for input devices.
+>>>>>>>
+>>>>>>> This patch changes the IS_INPUT_APPLICATION macro so that the
+>>>>>>> "Digitizer"
+>>>>>>> (HID_DG_DIGITIZER) usage is recognized as an input device usage.
+>>>>>>>
+>>>>>>> Fixes: f7d8e387d9ae ("HID: uclogic: Switch to Digitizer usage for
+>>>>>>> styluses")
+>>>>>>> Signed-off-by: Torge Matthies <openglfreak@googlemail.com>
+>>>>>>> ---
+>>>>>>> This patch could be risky, because any digitizer devices that were
+>>>>>>> previously not treated as input devices are now used for input.
+>>>>>>> Alternatively the linked commit could be reverted, but that would
+>>>>>>> re-introduce the problem detailed in its commit message.
+>>>>>>>
+>>>>>>>     include/linux/hid.h | 2 +-
+>>>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>
+>>>>>> I hesitated about this when I sent the patch you mentioned. In the end,
+>>>>>> I didn't include any fix because the digitizer use was tested for 2
+>>>>>> years in DIGImend, so I (wrongly) assumed that it was safe enough.
+>>>>>>
+>>>>>> However, my initial thought was to add in uclogic_probe():
+>>>>>>
+>>>>>>            hdev->quirks |= HID_QUIRK_HIDINPUT_FORCE;
+>>>>>> +       hdev->quirks |= HID_QUIRK_HIDINPUT_FORCE;
+>>>>>>
+>>>>>> Let's see if we can hear more opinions, but if you are worried about
+>>>>>> affecting other drivers, that could be a good solution.
+>>>>>
+>>>>> Sadly, my automated regression tests are broken for a while and I
+>>>>> haven't checked if that patch is introducing errors in hid-multitouch.
+>>>>>
+>>>>> FWIW, this part has always been painful because some tablets were not
+>>>>> using the correct usages. And so that's why we are ending up in that
+>>>>> weird situation.
+>>>>>
+>>>>> Anyway, just to mention that any code that touches this part should be
+>>>>> tested against the hid regression tests suite[0], because that's the
+>>>>> only way to find out if the change is affecting other devices.
 > 
+> Since it seems like this patch is kind of stuck, I sent you a different
+> patch [1] that aims to fix the same issue but using a more conservative
+> approach.
+> 
+> Could you test it and confirm that it fixes your problem, please?
 
+I tested the patch on commit 4bbf3422df78 and it fixes the issue. 
+(Sending this again to make sure it reaches everyone.)
 
+Thank you,
+Alexander Zhang
+
+> Hopefully, we'd manage to get it merged as the risk of doing so would
+> be smaller.
+> 
+> Jose
+> 
+> [1] https://lore.kernel.org/linux-input/20221110174056.393697-1-jose.exposito89@gmail.com/T/
+> 
