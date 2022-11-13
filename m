@@ -1,88 +1,129 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D2B6FC7
-	for <regressions@lists.linux.dev>; Sun, 13 Nov 2022 18:48:52 +0000 (UTC)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id AE3A284FB3;
-	Sun, 13 Nov 2022 19:48:42 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1668365324;
-	bh=u6LjaDcZN7FiuqGgRMUt8yy4yxHrbqA4kHRpJaldoxM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=o2NlBs8DjFfYHgVQtjQwssKNVVIc+OjnhFsvu/mUxxby8OTnaqggFQeBhkrsOzIJ/
-	 Uzf1uR+WLKlY63yllym4UW81XxSjRj4js55P54yGDpH6WbpISySQ1gy5zJ8WOMKiEG
-	 BpQ87HroneQVj9p03su2n+xdEWeDe3GskvQV7siHQdW7oKOPSXYFFKPCv0ejq0MIA3
-	 1VQHHqAPpVJ1fiKazJdaGa2RFyws5Nlq2S+rDsoI1ZHlOV5lgNYH1fgi8K4SlQ9HXO
-	 kQW8ztG69dvg9ZDUZ2e5UOf642Pbb+TCZVh8BBecQb3+33SsCrJg6Ui0b6H8lLeff2
-	 Kas6CctfXvltg==
-Message-ID: <576b2fe7-4753-73c3-f2f1-0387da175ad9@denx.de>
-Date: Sun, 13 Nov 2022 19:48:42 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F188F6FC5
+	for <regressions@lists.linux.dev>; Sun, 13 Nov 2022 18:53:51 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1ouI71-0005oS-76; Sun, 13 Nov 2022 19:53:47 +0100
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2022-11-13]
+Date: Sun, 13 Nov 2022 18:53:46 +0000
+Message-Id: <166836521992.605503.16264140239924937400@leemhuis.info>
+X-Mailer: git-send-email 2.38.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH 2/2] extcon: usbc-tusb320: Add USB TYPE-C support
-To: Peter Rosin <peda@axentia.se>, linux-usb@vger.kernel.org
-Cc: Chanwoo Choi <cw00.choi@samsung.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Yassine Oudjana <y.oudjana@protonmail.com>,
- =?UTF-8?Q?Alvin_=c5=a0ipraga?= <ALSI@bang-olufsen.dk>,
- regressions@lists.linux.dev
-References: <fd0f2d56-495e-6fdd-d1e8-ff40b558101e@axentia.se>
-Content-Language: en-US
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <fd0f2d56-495e-6fdd-d1e8-ff40b558101e@axentia.se>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1668365632;e98d6e12;
+X-HE-SMSGID: 1ouI71-0005oS-76
 
-On 11/13/22 17:59, Peter Rosin wrote:
-> On Sat, Jul 30, 2022 at 08:05:00PM +0200, Marek Vasut wrote:
->> The TI TUSB320 seems like a better fit for USB TYPE-C subsystem,
->> which can expose details collected by the TUSB320 in a far more
->> precise way than extcon. Since there are existing users in the
->> kernel and in DT which depend on the extcon interface, keep it
->> for now.
->>
->> Add TYPE-C interface and expose the supported supply current,
->> direction and connector polarity via the TYPE-C interface.
->>
->> Signed-off-by: Marek Vasut <marex@denx.de>
-> 
-> Hi!
-> 
-> I'm very sad to report that this patch has caused a severe
-> regression for our devices. They can no longer be powered by simply
-> sticking a USB cable into their USB ports (they keep resetting
-> when the tusb320 driver probes), and they reset (and keep resetting)
-> if a USB cable is connected while the device is powered by other
-> means.
-> 
-> We have no connector node nor any typec-power-opmode property
-> in the device tree, so the mere touching of the new registers
-> happening in this patch is enough to cause the resets.
-> 
-> The devices were fine before this patch, and reverting on top
-> of a recent linus master (4bbf3422df78, from 11/11) makes the
-> problem go away.
-> 
-> Any suggestions?
+Hi Linus! Below is a slightly edited report from regzbot listing all
+regression from this cycle that the bot and I are currently aware of.
 
-Can you test:
+3 of the tracked regressions were just reported in the past 3 days.
 
-341fd15e2e18c ("extcon: usbc-tusb320: Call the Type-C IRQ handler only 
-if a port is registered")
+The fourth issue ("drm: amdgpu: some games hang at start") looks
+stalled, will inquiry tomorrow what's up there; maybe I just missed a
+patch to fix this (should have done that on Friday, sorry :-/ ).
 
-https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-linus&id=341fd15e2e18c24d5c738496cfc3d7a272241201
+HTH, Ciao, Thorsten
 
-?
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 55 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+======================================================
+current cycle (v6.0.. aka v6.1-rc), culprit identified
+======================================================
+
+
+[ *NEW* ] usb: devices are not powered anymore and sometimes reset
+------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/fd0f2d56-495e-6fdd-d1e8-ff40b558101e@axentia.se/
+https://lore.kernel.org/linux-usb/fd0f2d56-495e-6fdd-d1e8-ff40b558101e@axentia.se/
+
+By Peter Rosin; 0 days ago; 1 activities, latest 0 days ago.
+Introduced in bf7571c00dca (v6.1-rc1)
+
+Recent activities from: Peter Rosin (1)
+
+
+[ *NEW* ] drm: msm: DSI controller being switched off before the panel unprepare hook is called
+-----------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/1892d0af-8aa4-dc03-887a-e44bb623b836@linaro.org/
+https://lore.kernel.org/dri-devel/1892d0af-8aa4-dc03-887a-e44bb623b836@linaro.org/
+
+By Caleb Connolly; 2 days ago; 2 activities, latest 0 days ago.
+Introduced in 007ac0262b0d (v6.1-rc1)
+
+Recent activities from: Dmitry Baryshkov (1), Caleb Connolly (1)
+
+
+[ *NEW* ] drm: amdgpu: No payload for [MST PORT:0000000006da5d29] found in mst state 00000000b0e556d6" on system resume with TBT dock connected.
+------------------------------------------------------------------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/ghwn827862.fsf@gouders.net/
+https://lore.kernel.org/lkml/ghwn827862.fsf@gouders.net/
+https://gitlab.freedesktop.org/drm/amd/-/issues/2171
+
+By Dirk Gouders and Unkown; 2 days ago; 3 activities, latest 1 days ago.
+Introduced in 4d07b0bc4034 (v6.1-rc1)
+
+Recent activities from: Dirk Gouders (2), Lyude Paul (1)
+
+
+drm: amdgpu: some games (Cyberpunk 2077, Forza Horizon 4/5) hang at start
+-------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CABXGCsOeQ7VYm98jRVaYp6KaNsFVsAnSb33ZT8JvZxcTcEGW0w@mail.gmail.com/
+https://lore.kernel.org/lkml/CABXGCsOeQ7VYm98jRVaYp6KaNsFVsAnSb33ZT8JvZxcTcEGW0w@mail.gmail.com/
+
+By Mikhail Gavrilov; 23 days ago; 8 activities, latest 11 days ago.
+Introduced in dd80d9c8eeca (v6.1-rc1)
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/166776472694.309600.9987230244979099462@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
