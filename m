@@ -1,28 +1,13 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA557F5
-	for <regressions@lists.linux.dev>; Sat, 12 Nov 2022 02:45:56 +0000 (UTC)
-Received: from relay4-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::224])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id E6BFAC625E
-	for <regressions@lists.linux.dev>; Sat, 12 Nov 2022 02:45:03 +0000 (UTC)
-Received: (Authenticated sender: alex@alexyzhang.dev)
-	by mail.gandi.net (Postfix) with ESMTPSA id 54D3AE0002;
-	Sat, 12 Nov 2022 02:44:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alexyzhang.dev;
-	s=gm1; t=1668221096;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KNHXQH7G1uo0bb1rGKzbXIsnEpHoQzNrCzi26ZjRdRA=;
-	b=fNJONnALlGk3DqII+d1EmFQGB8P2Q9R459TNKtK2wwo4iTx2godAJfb3N0Q8S4TCtN+bKQ
-	6EeAsmT0ENhnui94f1dqMT549OaOabnFla1rBrF/dMGNZi4yjpId+GkYlXZuoDE4PxtZ4O
-	YYdKxo6wuTBOecGIY58VlS7iIrIPRWlgg/4ygt4XqBBPWiaXtgXf6OQhdykymCWnugOPiZ
-	9zSUn5Qr3beWTZhtm/N7D80Hnl3leEp3uYfb5yKTwR296q/9HTeiuBV9BaghWMejwmvsvD
-	H9zl+0e+Ekfj+0Z0EP2zR1QF6itCf1nO1DESWMRCaIqgvp23iXjYdsOFrPHs6g==
-Message-ID: <d0daeb38-e939-95e8-5191-9727adbdd278@alexyzhang.dev>
-Date: Fri, 11 Nov 2022 18:44:50 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E898E7B
+	for <regressions@lists.linux.dev>; Sun, 13 Nov 2022 08:22:19 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ou8Fo-0007QA-6g; Sun, 13 Nov 2022 09:22:12 +0100
+Message-ID: <83b28e2d-7af7-f91a-7e67-7f224bcf0557@leemhuis.info>
+Date: Sun, 13 Nov 2022 09:22:11 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -31,96 +16,193 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.1
-Content-Language: en-US
-To: =?UTF-8?B?Sm9zw6kgRXhww7NzaXRv?= <jose.exposito89@gmail.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Torge Matthies <openglfreak@googlemail.com>, Jiri Kosina <jikos@kernel.org>,
- "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- Nikolai Kondrashov <spbnick@gmail.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220804151832.30373-1-openglfreak@googlemail.com>
- <20220804180038.GA8906@elementary>
- <CAO-hwJJsKC=fyeFLCmdXMRkxEQFVGZ189GKphTVK83QJWc=udA@mail.gmail.com>
- <2717adbe-e9b2-3c5a-7ccf-3d851a55744c@alexyzhang.dev>
- <1db88d01-1004-0e42-b9aa-3e0bb2b22cdb@leemhuis.info>
- <b1536115-1d4b-67dd-197e-4b6ed8e5cbc6@alexyzhang.dev>
- <20221110174808.GA396731@elementary>
-From: Alexander Zhang <alex@alexyzhang.dev>
-Subject: Re: [PATCH] HID: Accept Digitizers as input devices
-In-Reply-To: <20221110174808.GA396731@elementary>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: [Regression] Bug 216672 - soft lockup in ieee80211_select_queue --
+ system freezing random time on msi laptop
+To: Johannes Berg <johannes@sipsolutions.net>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ netdev <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ misac1987@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1668327740;1d047c89;
+X-HE-SMSGID: 1ou8Fo-0007QA-6g
 
-Hi José,
+Hi, this is your Linux kernel regression tracker speaking.
 
-On 11/10/22 9:48 AM, José Expósito wrote:
-> Hi!
-> 
->>> On 27.10.22 00:42, Alexander Zhang wrote:
->>>> On 8/11/22 8:27 AM, Benjamin Tissoires wrote:
->>>>> On Thu, Aug 4, 2022 at 8:00 PM José Expósito
->>>>> <jose.exposito89@gmail.com> wrote:
->>>>>> On Thu, Aug 04, 2022 at 05:18:32PM +0200, Torge Matthies wrote:
->>>>>>> Commit f7d8e387d9ae ("HID: uclogic: Switch to Digitizer usage for
->>>>>>> styluses") broke input from my XP-Pen Star G640. This is because the
->>>>>>> "Digitizer" usage is not recognized as a valid usage for input devices.
->>>>>>>
->>>>>>> This patch changes the IS_INPUT_APPLICATION macro so that the
->>>>>>> "Digitizer"
->>>>>>> (HID_DG_DIGITIZER) usage is recognized as an input device usage.
->>>>>>>
->>>>>>> Fixes: f7d8e387d9ae ("HID: uclogic: Switch to Digitizer usage for
->>>>>>> styluses")
->>>>>>> Signed-off-by: Torge Matthies <openglfreak@googlemail.com>
->>>>>>> ---
->>>>>>> This patch could be risky, because any digitizer devices that were
->>>>>>> previously not treated as input devices are now used for input.
->>>>>>> Alternatively the linked commit could be reverted, but that would
->>>>>>> re-introduce the problem detailed in its commit message.
->>>>>>>
->>>>>>>     include/linux/hid.h | 2 +-
->>>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> I hesitated about this when I sent the patch you mentioned. In the end,
->>>>>> I didn't include any fix because the digitizer use was tested for 2
->>>>>> years in DIGImend, so I (wrongly) assumed that it was safe enough.
->>>>>>
->>>>>> However, my initial thought was to add in uclogic_probe():
->>>>>>
->>>>>>            hdev->quirks |= HID_QUIRK_HIDINPUT_FORCE;
->>>>>> +       hdev->quirks |= HID_QUIRK_HIDINPUT_FORCE;
->>>>>>
->>>>>> Let's see if we can hear more opinions, but if you are worried about
->>>>>> affecting other drivers, that could be a good solution.
->>>>>
->>>>> Sadly, my automated regression tests are broken for a while and I
->>>>> haven't checked if that patch is introducing errors in hid-multitouch.
->>>>>
->>>>> FWIW, this part has always been painful because some tablets were not
->>>>> using the correct usages. And so that's why we are ending up in that
->>>>> weird situation.
->>>>>
->>>>> Anyway, just to mention that any code that touches this part should be
->>>>> tested against the hid regression tests suite[0], because that's the
->>>>> only way to find out if the change is affecting other devices.
-> 
-> Since it seems like this patch is kind of stuck, I sent you a different
-> patch [1] that aims to fix the same issue but using a more conservative
-> approach.
-> 
-> Could you test it and confirm that it fixes your problem, please?
+I noticed a slightly vague regression report in bugzilla.kernel.org. As
+many (most?) kernel developer don't keep an eye on it, I decided to
+forward it by mail. Quoting from
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216672 :
 
-I tested the patch on commit 4bbf3422df78 and it fixes the issue. 
-(Sending this again to make sure it reaches everyone.)
+>  misac1987@gmail.com 2022-11-08 17:14:07 UTC
+>=20
+> =E2=94=80$ uname -a
+> Linux MSI-CR61-3M 6.0.6-060006-generic #202210290932 SMP PREEMPT_DYNAMI=
+C Sat Oct 29 09:37:56 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+>=20
+> dmesg log
+>=20
+> Nov  8 19:31:24 MSI-CR61-3M kernel: [   21.272059] Bluetooth: RFCOMM TT=
+Y layer initialized
+> Nov  8 19:31:24 MSI-CR61-3M kernel: [   21.272103] Bluetooth: RFCOMM so=
+cket layer initialized
+> Nov  8 19:31:24 MSI-CR61-3M kernel: [   21.272140] Bluetooth: RFCOMM ve=
+r 1.11
+> Nov  8 19:31:27 MSI-CR61-3M kernel: [   24.797928] rfkill: input handle=
+r disabled
+> Nov  8 19:31:37 MSI-CR61-3M kernel: [   34.430707] rfkill: input handle=
+r enabled
+> Nov  8 19:31:46 MSI-CR61-3M kernel: [   43.680775] rfkill: input handle=
+r disabled
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.479443] watchdog: BUG: soft =
+lockup - CPU#1 stuck for 26s! [ksoftirqd/1:23]
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.479464] Modules linked in: r=
+fcomm snd_seq_dummy snd_hrtimer xt_CHECKSUM xt_MASQUERADE ccm nft_chain_n=
+at nf_nat bridge stp llc amdgpu iommu_v2 gpu_sched drm_buddy ip6t_REJECT =
+nf_reject_ipv6 cmac xt_hl ip6_tables algif_hash ip6t_rt algif_skcipher ip=
+t_REJECT nf_reject_ipv4 af_alg xt_comment bnep xt_multiport nft_limit snd=
+_hda_codec_realtek xt_limit xt_addrtype xt_tcpudp snd_hda_codec_generic a=
+md_freq_sensitivity snd_hda_codec_hdmi ledtrig_audio xt_conntrack edac_mc=
+e_amd snd_hda_intel nf_conntrack crct10dif_pclmul nf_defrag_ipv6 snd_inte=
+l_dspcfg polyval_clmulni kvm_amd ccp nf_defrag_ipv4 nft_compat snd_intel_=
+sdw_acpi polyval_generic kvm nf_tables ghash_clmulni_intel snd_hda_codec =
+nfnetlink aesni_intel snd_hda_core btusb nls_iso8859_1 rtl8723ae crypto_s=
+imd cryptd psmouse btrtl btcoexist serio_raw msi_wmi radeon snd_hwdep btb=
+cm sparse_keymap btintel rtl8723_common snd_pcm btmtk joydev input_leds r=
+tl_pci drm_ttm_helper snd_seq_midi bluetooth rtlwifi snd_seq_midi_event t=
+tm ecdh_generic ecc
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.479669]  fam15h_power k10tem=
+p drm_display_helper snd_rawmidi mac80211 snd_seq snd_seq_device snd_time=
+r cec rc_core cfg80211 drm_kms_helper snd i2c_algo_bit fb_sys_fops mac_hi=
+d libarc4 syscopyarea soundcore sysfillrect sysimgblt msr parport_pc ppde=
+v lp parport ramoops reed_solomon pstore_blk pstore_zone drm mtd efi_psto=
+re ip_tables x_tables autofs4 btrfs blake2b_generic xor raid6_pq zstd_com=
+press libcrc32c hid_generic usbhid hid sdhci_pci cqhci ahci crc32_pclmul =
+alx sdhci i2c_piix4 libahci xhci_pci xhci_pci_renesas mdio wmi video
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.479808] CPU: 1 PID: 23 Comm:=
+ ksoftirqd/1 Not tainted 6.0.6-060006-generic #202210290932
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.479817] Hardware name: Micro=
+-Star International Co., Ltd. CR61 3M/MS-16GP, BIOS E16GPAMS.10A 11/25/20=
+13
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.479822] RIP: 0010:ieee80211_=
+select_queue+0x1b/0x110 [mac80211]
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.479982] Code: 31 ff e9 48 cf=
+ ca d6 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 8b 87 88 07 00 00 48 8b =
+90 c0 01 00 00 48 83 ba e0 02 00 00 00 <74> 0d 31 c0 31 d2 31 f6 31 ff e9=
+ 16 cf ca d6 55 48 89 e5 41 54 49
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.479989] RSP: 0018:ffffb35d80=
+10b5b0 EFLAGS: 00000246
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.479996] RAX: ffff96c14aee08e=
+0 RBX: ffff96c14c810000 RCX: 0000000000000000
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480001] RDX: ffffffffc0f755a=
+0 RSI: ffff96c0423eb100 RDI: ffff96c14c8109c0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480005] RBP: ffffb35d8010b5b=
+8 R08: 0000000000000000 R09: 0000000000000000
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480010] R10: 000000000000000=
+0 R11: 0000000000000000 R12: ffff96c0423eb100
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480013] R13: ffff96c14c81000=
+0 R14: 0000000000000000 R15: 0000000000000010
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480018] FS:  000000000000000=
+0(0000) GS:ffff96c277480000(0000) knlGS:0000000000000000
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480024] CS:  0010 DS: 0000 E=
+S: 0000 CR0: 0000000080050033
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480028] CR2: 000055f37b7070a=
+c CR3: 00000001108aa000 CR4: 00000000000406e0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480034] Call Trace:
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480038]  <TASK>
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480042]  ? ieee80211_netdev_=
+select_queue+0x15/0x20 [mac80211]
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480163]  netdev_core_pick_tx=
++0x58/0xc0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480176]  __dev_queue_xmit+0x=
+f2/0x6d0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480187]  neigh_hh_output+0x9=
+3/0x110
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480195]  ip_finish_output2+0=
+x1ea/0x490
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480203]  __ip_finish_output+=
+0xb6/0x180
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480211]  ip_finish_output+0x=
+2d/0xe0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480218]  ip_output+0x73/0x12=
+0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480224]  ? __ip_finish_outpu=
+t+0x180/0x180
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480231]  ip_push_pending_fra=
+mes+0xbb/0xd0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480238]  ip_send_unicast_rep=
+ly+0x357/0x490
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480244]  ? nft_counter_eval+=
+0x54/0x70 [nf_tables]
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480286]  tcp_v4_send_reset+0=
+x3ad/0x840
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480295]  ? tcp_v4_send_reset=
++0x3ad/0x840
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480307]  tcp_v4_rcv+0x9dd/0x=
+ee0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480314]  ? tcp_v4_rcv+0x9dd/=
+0xee0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480323]  ip_protocol_deliver=
+_rcu+0x3c/0x2b0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480332]  ? ipv4_confirm+0x5f=
+/0xf0 [nf_conntrack]
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480365]  ip_local_deliver_fi=
+nish+0x77/0xa0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480374]  ip_local_deliver+0x=
+6e/0x120
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480382]  ? ip_protocol_deliv=
+er_rcu+0x2b0/0x2b0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480391]  ip_rcv+0x177/0x1a0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480398]  ? ip_sublist_rcv+0x=
+220/0x220
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480407]  __netif_receive_skb=
+_core.constprop.0+0x4f4/0xd20
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480419]  __netif_receive_skb=
+_list_core+0xfd/0x250
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480427]  netif_receive_skb_l=
+ist_internal+0x1a3/0x2d0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480436]  netif_receive_skb_l=
+ist+0x25/0xe0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480442]  ieee80211_rx_napi+0=
+xc2/0xd0 [mac80211]
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480564]  ieee80211_tasklet_h=
+andler+0xc9/0xd0 [mac80211]
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480673]  tasklet_action_comm=
+on.constprop.0+0xd5/0x100
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480683]  tasklet_action+0x22=
+/0x30
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480688]  __do_softirq+0xdd/0=
+x34f
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480698]  ? find_next_bit+0x3=
+0/0x30
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480705]  run_ksoftirqd+0x37/=
+0x60
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480711]  smpboot_thread_fn+0=
+xe3/0x1e0
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480719]  kthread+0xe9/0x110
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480727]  ? kthread_complete_=
+and_exit+0x20/0x20
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480735]  ret_from_fork+0x22/=
+0x30
+> Nov  8 19:38:07 MSI-CR61-3M kernel: [  424.480747]  </TASK>
+> Nov  8 19:38:22 MSI-CR61-3M kernel: [  439.491084] rfkill: input handle=
+r enabled
 
-Thank you,
-Alexander Zhang
+See the ticket for more details.
 
-> Hopefully, we'd manage to get it merged as the risk of doing so would
-> be smaller.
-> 
-> Jose
-> 
-> [1] https://lore.kernel.org/linux-input/20221110174056.393697-1-jose.exposito89@gmail.com/T/
-> 
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v5.19..v6.0
+https://bugzilla.kernel.org/show_bug.cgi?id=3D216672
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
