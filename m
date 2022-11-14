@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9101864
-	for <regressions@lists.linux.dev>; Mon, 14 Nov 2022 05:56:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C4E8469
+	for <regressions@lists.linux.dev>; Mon, 14 Nov 2022 18:59:14 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ouSSd-0000XQ-Dd; Mon, 14 Nov 2022 06:56:47 +0100
-Message-ID: <f941605e-a8ae-84d5-3306-ad74086b828e@leemhuis.info>
-Date: Mon, 14 Nov 2022 06:56:46 +0100
+	id 1ouefj-0007cG-5m; Mon, 14 Nov 2022 19:59:07 +0100
+Message-ID: <49ab0931-0d45-7884-e7b6-5c7d4de82ee2@leemhuis.info>
+Date: Mon, 14 Nov 2022 19:59:06 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,48 +16,99 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.1
-Subject: Re: [PATCH 2/2] extcon: usbc-tusb320: Add USB TYPE-C support
- #forregzbot
+Subject: Re: [GIT PULL] arm64 updates for 6.1-rc1 #forregzbot
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20221005144116.2256580-1-catalin.marinas@arm.com>
+ <CAMi1Hd38YB2m_r=m0wuDz+wErii37fUq1BJnvN9=y6opDzo_Fw@mail.gmail.com>
+ <Y0aq8y5mEZi14lJ/@arm.com>
+ <CAMi1Hd3Y9AibeVnh9_KYJ2EXar7bBSypKm4Tixj47htM7ZOURw@mail.gmail.com>
+ <CAMi1Hd1VBCFhf7+EXWHQWcGy4k=tcyLa7RGiFdprtRnegSG0Mw@mail.gmail.com>
 Content-Language: en-US, de-DE
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: linux-usb@vger.kernel.org
-Cc: regressions@lists.linux.dev, Peter Rosin <peda@axentia.se>
-References: <fd0f2d56-495e-6fdd-d1e8-ff40b558101e@axentia.se>
- <0d7b7d44-e2b9-9ea8-86b2-cf0f4b53eedd@leemhuis.info>
-In-Reply-To: <0d7b7d44-e2b9-9ea8-86b2-cf0f4b53eedd@leemhuis.info>
+In-Reply-To: <CAMi1Hd1VBCFhf7+EXWHQWcGy4k=tcyLa7RGiFdprtRnegSG0Mw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1668405410;e855e54b;
-X-HE-SMSGID: 1ouSSd-0000XQ-Dd
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1668452355;6f6a148f;
+X-HE-SMSGID: 1ouefj-0007cG-5m
 
-On 13.11.22 18:38, Thorsten Leemhuis wrote:
-> [Note: this mail is primarily send for documentation purposes and/or for
-> regzbot, my Linux kernel regression tracking bot. That's why I removed
-> most or all folks from the list of recipients, but left any that looked
-> like a mailing lists. These mails usually contain '#forregzbot' in the
-> subject, to make them easy to spot and filter out.]
+[Note: this mail is primarily send for documentation purposes and/or for
+regzbot, my Linux kernel regression tracking bot. That's why I removed
+most or all folks from the list of recipients, but left any that looked
+like a mailing lists. These mails usually contain '#forregzbot' in the
+subject, to make them easy to spot and filter out.]
 
->> I'm very sad to report that this patch has caused a severe
->> regression for our devices. They can no longer be powered by simply
->> sticking a USB cable into their USB ports (they keep resetting
->> when the tusb320 driver probes), and they reset (and keep resetting)
->> if a USB cable is connected while the device is powered by other
->> means.
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
+
+Hi, this is your Linux kernel regression tracker.
+
+On 08.11.22 18:28, Amit Pundir wrote:
+> On Tue, 25 Oct 2022 at 18:08, Amit Pundir <amit.pundir@linaro.org> wrote:
 >>
->> We have no connector node nor any typec-power-opmode property
->> in the device tree, so the mere touching of the new registers
->> happening in this patch is enough to cause the resets.
+>> On Wed, 12 Oct 2022 at 17:24, Catalin Marinas <catalin.marinas@arm.com> wrote:
+>>>
+>>> Hi Amit,
+>>>
+>>> On Sat, Oct 08, 2022 at 08:28:26PM +0530, Amit Pundir wrote:
+>>>> On Wed, 5 Oct 2022 at 20:11, Catalin Marinas <catalin.marinas@arm.com> wrote:
+>>>>> Will Deacon (2):
+>>>>>       arm64: dma: Drop cache invalidation from arch_dma_prep_coherent()
+>>>>
+>>>> Hi Will,
+>>>>
+>>>> This patch broke AOSP on Dragonboard 845c (SDM845). I don't see any
+>>>> relevant crash in the attached log and device silently reboots into
+>>>> USB crash dump mode. The crash is fairly reproducible on db845c. I
+>>>> could trigger it twice in 5 reboots and it always crash at the same
+>>>> point during the boot process. Reverting this patch fixes the crash.
+>>>>
+>>>> I'm happy to test run any debug patche(s), that would help narrow
+>>>> down this breakage.
+>>>
+>>> Cc'ing Robin, maybe he has a better idea (that's commit c44094eee32f).
+>>> Architecturally the change shouldn't make any difference since the cache
+>>> lines can be brought in via the linear mapping at any point. It's just
+>>> less likely to hit a real bug (software or hardware). It's also possible
+>>> that arch_dma_prep_coherent() is used outside the DMA API (if you have
+>>> out of tree drivers).
+>>>
+>>> Leaving the original log in place for Robin. A question I have, with a
+>>> successful boot, what's normally after the bpfloader lines are printed?
+>>> We should try to pinpoint which device/driver causes this. It looks like
+>>> it's well into user-space at that point (graphics about to start?)
 >>
->> The devices were fine before this patch, and reverting on top
->> of a recent linus master (4bbf3422df78, from 11/11) makes the
->> problem go away.
->
->> regzbot: introduced bf7571c00dca
-> 
-> Peter, many thx for getting regzbot in the loop, there was a small typo,
-> let me take care of that:
-> 
-> #regzbot ^introduced bf7571c00dca
-> #regzbot title usb: devices are not powered anymore and sometimes reset
+>> Further narrowed down the breakage to the userspace daemon rmtfs
+>> https://github.com/andersson/rmtfs. Is there anything specific in the
+>> userspace code that I should be paying attention to?
 
-#regzbot fixed-by 341fd15e2e18c24d5c738496cfc3d7a272241201
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced c44094eee32f
+#regzbot title arm64: crash on the Qualcomm SM8250
+#regzbot monitor
+https://lore.kernel.org/all/20221114110329.68413-1-manivannan.sadhasivam@linaro.org/
+
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
