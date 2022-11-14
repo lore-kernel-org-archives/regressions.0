@@ -1,13 +1,15 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C4E8469
-	for <regressions@lists.linux.dev>; Mon, 14 Nov 2022 18:59:14 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ouefj-0007cG-5m; Mon, 14 Nov 2022 19:59:07 +0100
-Message-ID: <49ab0931-0d45-7884-e7b6-5c7d4de82ee2@leemhuis.info>
-Date: Mon, 14 Nov 2022 19:59:06 +0100
+Received: from ns2.wdyn.eu (ns2.wdyn.eu [5.252.227.236])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 370C279F3
+	for <regressions@lists.linux.dev>; Mon, 14 Nov 2022 21:38:40 +0000 (UTC)
+Message-ID: <00e8e836-7a5e-3c65-b09b-b1e71d79a6c6@wetzel-home.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=wetzel-home.de;
+	s=wetzel-home; t=1668461912;
+	bh=CaEb5TL7mi3Z7BL8t/8RHyqhrExer6WZWRCfyITK1C8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=tDBtN0PM1x8QOQ6yKExzpG8AX7MTCVMXcnV/vP9Dbw6MqAKXvoHuWIlZBNPVqd9ue
+	 dA1szTe4LhYRK9vPuMQCBtsyi9a5I13o6MEBB8RlzmBKzs+WPDWVkuOOePnH86/gjz
+	 gOylCDAbNNdpebsxs3YDYS8uRG/FaY9Z1C4bHAL4=
+Date: Mon, 14 Nov 2022 22:38:29 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,100 +17,86 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [GIT PULL] arm64 updates for 6.1-rc1 #forregzbot
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20221005144116.2256580-1-catalin.marinas@arm.com>
- <CAMi1Hd38YB2m_r=m0wuDz+wErii37fUq1BJnvN9=y6opDzo_Fw@mail.gmail.com>
- <Y0aq8y5mEZi14lJ/@arm.com>
- <CAMi1Hd3Y9AibeVnh9_KYJ2EXar7bBSypKm4Tixj47htM7ZOURw@mail.gmail.com>
- <CAMi1Hd1VBCFhf7+EXWHQWcGy4k=tcyLa7RGiFdprtRnegSG0Mw@mail.gmail.com>
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAMi1Hd1VBCFhf7+EXWHQWcGy4k=tcyLa7RGiFdprtRnegSG0Mw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+ Thunderbird/102.4.2
+Subject: Re: [Regression] Bug 216672 - soft lockup in ieee80211_select_queue
+ -- system freezing random time on msi laptop
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Johannes Berg <johannes@sipsolutions.net>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ netdev <netdev@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ misac1987@gmail.com
+References: <83b28e2d-7af7-f91a-7e67-7f224bcf0557@leemhuis.info>
+Content-Language: en-US
+From: Alexander Wetzel <alexander@wetzel-home.de>
+In-Reply-To: <83b28e2d-7af7-f91a-7e67-7f224bcf0557@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1668452355;6f6a148f;
-X-HE-SMSGID: 1ouefj-0007cG-5m
 
-[Note: this mail is primarily send for documentation purposes and/or for
-regzbot, my Linux kernel regression tracking bot. That's why I removed
-most or all folks from the list of recipients, but left any that looked
-like a mailing lists. These mails usually contain '#forregzbot' in the
-subject, to make them easy to spot and filter out.]
+On 13.11.22 09:22, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> I noticed a slightly vague regression report in bugzilla.kernel.org. As
+> many (most?) kernel developer don't keep an eye on it, I decided to
+> forward it by mail. Quoting from
+> https://bugzilla.kernel.org/show_bug.cgi?id=216672 :
+> 
 
-[TLDR: I'm adding this regression report to the list of tracked
-regressions; all text from me you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.]
+I've tried to extrapolate the info in mail/ticket to get something we 
+can work with. But the result is insane: The CPU can't get stuck where 
+the trace claims it does. Not without some really strange and unlikely 
+HW defect.
 
-Hi, this is your Linux kernel regression tracker.
+Based on the loaded modules the issue must be with the rtl8723ae card 
+and - according to the bug content - affect at least the kernels 5.19 
+and 6.0.6. (which are not supporting wake_tx_queue in 6.0.6)
 
-On 08.11.22 18:28, Amit Pundir wrote:
-> On Tue, 25 Oct 2022 at 18:08, Amit Pundir <amit.pundir@linaro.org> wrote:
->>
->> On Wed, 12 Oct 2022 at 17:24, Catalin Marinas <catalin.marinas@arm.com> wrote:
->>>
->>> Hi Amit,
->>>
->>> On Sat, Oct 08, 2022 at 08:28:26PM +0530, Amit Pundir wrote:
->>>> On Wed, 5 Oct 2022 at 20:11, Catalin Marinas <catalin.marinas@arm.com> wrote:
->>>>> Will Deacon (2):
->>>>>       arm64: dma: Drop cache invalidation from arch_dma_prep_coherent()
->>>>
->>>> Hi Will,
->>>>
->>>> This patch broke AOSP on Dragonboard 845c (SDM845). I don't see any
->>>> relevant crash in the attached log and device silently reboots into
->>>> USB crash dump mode. The crash is fairly reproducible on db845c. I
->>>> could trigger it twice in 5 reboots and it always crash at the same
->>>> point during the boot process. Reverting this patch fixes the crash.
->>>>
->>>> I'm happy to test run any debug patche(s), that would help narrow
->>>> down this breakage.
->>>
->>> Cc'ing Robin, maybe he has a better idea (that's commit c44094eee32f).
->>> Architecturally the change shouldn't make any difference since the cache
->>> lines can be brought in via the linear mapping at any point. It's just
->>> less likely to hit a real bug (software or hardware). It's also possible
->>> that arch_dma_prep_coherent() is used outside the DMA API (if you have
->>> out of tree drivers).
->>>
->>> Leaving the original log in place for Robin. A question I have, with a
->>> successful boot, what's normally after the bpfloader lines are printed?
->>> We should try to pinpoint which device/driver causes this. It looks like
->>> it's well into user-space at that point (graphics about to start?)
->>
->> Further narrowed down the breakage to the userspace daemon rmtfs
->> https://github.com/andersson/rmtfs. Is there anything specific in the
->> userspace code that I should be paying attention to?
+The core error message from a 6.0.6 (Ubuntu?) kernel is:
+   watchdog: BUG: soft lockup - CPU#1 stuck for 26s! [ksoftirqd/1:23]
+   RIP: 0010:ieee80211_select_queue+0x1b/0x110 [mac80211]
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
+According to the trace history and the identified driver the problematic 
+softirg should be a scheduled run of _rtl_pci_irq_tasklet().
+And it looks like a RX packet triggered a TCP RST reply. Which then 
+triggered the issue.
 
-#regzbot ^introduced c44094eee32f
-#regzbot title arm64: crash on the Qualcomm SM8250
-#regzbot monitor
-https://lore.kernel.org/all/20221114110329.68413-1-manivannan.sadhasivam@linaro.org/
+I ten checked with a Gentoo 6.0.6 mac80211 module the reference to 
+ieee80211_select_queue+0x1b:
 
-#regzbot ignore-activity
+And at least in my build that's the local->ops->wake_tx_queue *check* in 
+ieee80211_select_queue(). Which of course does not make any sense short 
+of some fundamental assumption to be wrong...
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
+185             struct sta_info *sta = NULL;
+186             const u8 *ra = NULL;
+187             u16 ret;
+188
+189             /* when using iTXQ, we can do this later */
+190             if (local->ops->wake_tx_queue)
+191                     return 0;
+192
 
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
+Now my module is for sure far from the original but 
+ieee80211_select_queue() looks pretty harmless:
+No obvious way how we can get stuck in there...
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+CPU broken? Strange compiler bug?
+Some stupid error from my site reading the trace?
 
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+Are the traces all looking the same? Any other strange errors on the system?
+
+And can you verify that the error is indeed a regression by going back 
+to a kernel "known" to be not affected in the past?
+
+Other extreme would be to try the wireless development kernel 
+git://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-testing.git 
+and hope, that it also shows a more sane problem.
+(ieee80211_select_queue() has been dropped, changing the tx flow 
+drastically when compared to 6.0.6)
+
+In short, I'm also stuck what that can be. We can try some different 
+angles and hope to hit something.
+
+
+Alexander
+
