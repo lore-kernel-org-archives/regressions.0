@@ -1,26 +1,13 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35502F5F
-	for <regressions@lists.linux.dev>; Sun, 13 Nov 2022 20:47:47 +0000 (UTC)
-Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
-	(No client certificate requested)
-	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 445B184D45;
-	Sun, 13 Nov 2022 21:47:45 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1668372465;
-	bh=jImBli5LfZ8bX2tRK99P5tRwfOlRR3XM91OxmoOhzxo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J+ZilaYV44yF8EIqjrgAoBr16E3xWWNfKoMMImiobLwnePpZm5HUdjCTubpo36wGM
-	 M+lJcGwylZ6Ia9DKImJ+6SONQqD3t9QkCTnXYi4up4MwOSYNZYOaBI50CX4tiD1vWz
-	 dron32NRQ5lXbabPKQLZ28Y3gckltDjdsWNs5DK1vW+PAemeG0EJNuAz4wzap/8Q52
-	 9dr3pd4UGIImv93r050Bj6Wxs+1j4YoZbJfq7d3pyqoEXaMUJKF8ST88a/Sd2KOvFQ
-	 GqUVH5kfD9SqKJyLX3uv44bC5YHKvkl5TPQRUQOufGJeHkuluhP3W8YB3gp4Cmugum
-	 RfGhhSuMjbXpQ==
-Message-ID: <d5584c93-08e4-d468-e78c-a43edc9e271a@denx.de>
-Date: Sun, 13 Nov 2022 21:47:44 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9101864
+	for <regressions@lists.linux.dev>; Mon, 14 Nov 2022 05:56:49 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1ouSSd-0000XQ-Dd; Mon, 14 Nov 2022 06:56:47 +0100
+Message-ID: <f941605e-a8ae-84d5-3306-ad74086b828e@leemhuis.info>
+Date: Mon, 14 Nov 2022 06:56:46 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -30,73 +17,47 @@ MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.1
 Subject: Re: [PATCH 2/2] extcon: usbc-tusb320: Add USB TYPE-C support
-Content-Language: en-US
-To: Peter Rosin <peda@axentia.se>, linux-usb@vger.kernel.org
-Cc: Chanwoo Choi <cw00.choi@samsung.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Heikki Krogerus <heikki.krogerus@linux.intel.com>,
- Yassine Oudjana <y.oudjana@protonmail.com>,
- =?UTF-8?Q?Alvin_=c5=a0ipraga?= <ALSI@bang-olufsen.dk>,
- regressions@lists.linux.dev
+ #forregzbot
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: linux-usb@vger.kernel.org
+Cc: regressions@lists.linux.dev, Peter Rosin <peda@axentia.se>
 References: <fd0f2d56-495e-6fdd-d1e8-ff40b558101e@axentia.se>
- <576b2fe7-4753-73c3-f2f1-0387da175ad9@denx.de>
- <db6f1bb6-d681-345f-f0fa-c652c44c8e52@axentia.se>
-From: Marek Vasut <marex@denx.de>
-In-Reply-To: <db6f1bb6-d681-345f-f0fa-c652c44c8e52@axentia.se>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <0d7b7d44-e2b9-9ea8-86b2-cf0f4b53eedd@leemhuis.info>
+In-Reply-To: <0d7b7d44-e2b9-9ea8-86b2-cf0f4b53eedd@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.103.6 at phobos.denx.de
-X-Virus-Status: Clean
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1668405410;e855e54b;
+X-HE-SMSGID: 1ouSSd-0000XQ-Dd
 
-On 11/13/22 20:41, Peter Rosin wrote:
-> Hi!
+On 13.11.22 18:38, Thorsten Leemhuis wrote:
+> [Note: this mail is primarily send for documentation purposes and/or for
+> regzbot, my Linux kernel regression tracking bot. That's why I removed
+> most or all folks from the list of recipients, but left any that looked
+> like a mailing lists. These mails usually contain '#forregzbot' in the
+> subject, to make them easy to spot and filter out.]
 
-Hi,
-
-> 2022-11-13 at 19:48, Marek Vasut wrote:
->> On 11/13/22 17:59, Peter Rosin wrote:
->>> On Sat, Jul 30, 2022 at 08:05:00PM +0200, Marek Vasut wrote:
->>>> The TI TUSB320 seems like a better fit for USB TYPE-C subsystem,
->>>> which can expose details collected by the TUSB320 in a far more
->>>> precise way than extcon. Since there are existing users in the
->>>> kernel and in DT which depend on the extcon interface, keep it
->>>> for now.
->>>>
->>>> Add TYPE-C interface and expose the supported supply current,
->>>> direction and connector polarity via the TYPE-C interface.
->>>>
->>>> Signed-off-by: Marek Vasut <marex@denx.de>
->>>
->>> Hi!
->>>
->>> I'm very sad to report that this patch has caused a severe
->>> regression for our devices. They can no longer be powered by simply
->>> sticking a USB cable into their USB ports (they keep resetting
->>> when the tusb320 driver probes), and they reset (and keep resetting)
->>> if a USB cable is connected while the device is powered by other
->>> means.
->>>
->>> We have no connector node nor any typec-power-opmode property
->>> in the device tree, so the mere touching of the new registers
->>> happening in this patch is enough to cause the resets.
->>>
->>> The devices were fine before this patch, and reverting on top
->>> of a recent linus master (4bbf3422df78, from 11/11) makes the
->>> problem go away.
->>>
->>> Any suggestions?
+>> I'm very sad to report that this patch has caused a severe
+>> regression for our devices. They can no longer be powered by simply
+>> sticking a USB cable into their USB ports (they keep resetting
+>> when the tusb320 driver probes), and they reset (and keep resetting)
+>> if a USB cable is connected while the device is powered by other
+>> means.
 >>
->> Can you test:
+>> We have no connector node nor any typec-power-opmode property
+>> in the device tree, so the mere touching of the new registers
+>> happening in this patch is enough to cause the resets.
 >>
->> 341fd15e2e18c ("extcon: usbc-tusb320: Call the Type-C IRQ handler only if a port is registered")
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-linus&id=341fd15e2e18c24d5c738496cfc3d7a272241201
->>
->> ?
+>> The devices were fine before this patch, and reverting on top
+>> of a recent linus master (4bbf3422df78, from 11/11) makes the
+>> problem go away.
+>
+>> regzbot: introduced bf7571c00dca
 > 
-> Yup, that solves it. Thanks!
+> Peter, many thx for getting regzbot in the loop, there was a small typo,
+> let me take care of that:
+> 
+> #regzbot ^introduced bf7571c00dca
+> #regzbot title usb: devices are not powered anymore and sometimes reset
 
-You're welcome.
-
-Since it has a Fixes: tag, it will land in stable releases shortly too I 
-think.
+#regzbot fixed-by 341fd15e2e18c24d5c738496cfc3d7a272241201
