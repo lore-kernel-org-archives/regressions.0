@@ -1,187 +1,130 @@
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C419E23CD
-	for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 11:31:49 +0000 (UTC)
-Received: by mail-yb1-f182.google.com with SMTP id g127so1498995ybg.8
-        for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 03:31:49 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03F4611E
+	for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 13:58:46 +0000 (UTC)
+Received: by mail-wm1-f47.google.com with SMTP id m7-20020a05600c090700b003cf8a105d9eso1844275wmp.5
+        for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 05:58:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=i16ycnAEmJ+xybZKFB6Q2+GrX06wVG/BMACMYkIBt2s=;
-        b=C47Xa9ZW/5/L8ez5vm/hz58W4yel04RsHFY0oVHQZstuW5uC7albeNC8iI0FsNoa4r
-         mo8Xup1ZK3+s+CXSxW46r7pETxXCIw+Lm+MNSY1LPAmbtPI1ZUu8PlPT/RwC2Uc5LkyZ
-         S97PATVg0e1M+tny2W4/rQ7EbgBus6GSlISfrOedhxoO77I8WRRfVJjXXvwAD2B35vME
-         bMrXLTk/U7l07NvZUwaS5VR8sg+VMF5/b43SgK0BfIIIGhg/xAZXU63L4cfdLILmcoqy
-         GcBS8obuq7T7m53mEfZYXl0cmyn608I+w0FeWXr0o5QRiFGokCKJbHX3KyPOAzlXlFKw
-         FFhA==
+        d=google.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1PQ5ws+dl8HGBcphz45G0mKTEEpJ4QfuhaudxhaD3+4=;
+        b=Bsf2m3MvbEn/8XlgvsgW5JoESOTFjhJMfQGF2lQzwZWRI2+U8rmt31ZkpwmzciX3gQ
+         4j+E93VrCZNGODCTWUcMXYY5pbmaJwnHw+UdBmOxw+8NpVtAPtlx/YF5qnr5k19uDjAI
+         hQsd2Rpf2Tf+rz3eywQyEVXwTnMfthpQL8fSQ025Pf4PC56p5cK3v3T1/6uvpLy1Paxo
+         dNc1zIVzrK/5aiMtvDT3oznp7ozyqzD0S1ZJ8ufVEhHb4WxBHh36Kk2mnoekb4Srp2Tt
+         IA3QGXQaAolTdPXvkHcJUQvqhyRl5sqciU2nf5szQT9gDc3GcZ7dtyBwTpT9x33SwaqY
+         TvRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=i16ycnAEmJ+xybZKFB6Q2+GrX06wVG/BMACMYkIBt2s=;
-        b=iHbOZr4UFQDoEbQ8GVb+Ru+eYi7OFufTEjhEGhOgOPvacdXPCUHTXERoxLVQywxgg5
-         g940QqIUxIHPxFhK91syKnT0jRxVGpnIWSAYveafnaJ5mwqJGVGEmRfsJQFpe2Eu/Au1
-         J89Fabf9MNdjAXJ5klpulTxCCQyAqFlOvaKvxebepIZAUbwXMuX7tGxuhAZzk1WUinTK
-         xUsl+pv/TsOrJbXCdZ0k1/o2z0bS+C2/15qcpYpcgTf014u+kJ64VsAy56nCVaRdqWMj
-         5A06unefYbbOaQNqQDmV18JkbM4K5zGHBdhKvxmmtZb6O6dD8T8EzsLwmKo04pJVlR5q
-         2emQ==
-X-Gm-Message-State: ANoB5pkK2qGHyBcp2C+jAQMu0frMLoIiqmK6aqn8nVlVd/wLJTf48lfo
-	hWB2mjPg14FU0q32CnaFaTDKNFL+8/RrUetJPR8Vsw==
-X-Google-Smtp-Source: AA0mqf7dhQQoI+FNvfR2xXV2mX0PkabHdBgu77T4ArCRJbxRgdck4UFHQikdcC+sAw1loDrTnI1azfn+sU6Lfi0j1AE=
-X-Received: by 2002:a25:880e:0:b0:6e6:e31e:3dc5 with SMTP id
- c14-20020a25880e000000b006e6e31e3dc5mr1685536ybl.534.1668684708480; Thu, 17
- Nov 2022 03:31:48 -0800 (PST)
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1PQ5ws+dl8HGBcphz45G0mKTEEpJ4QfuhaudxhaD3+4=;
+        b=kfFqd+QTPOcYKLU0w3Y5TCgX5yxEVSpnZ1LBswnBWdr4Oq0akGi7kQcUE3578pzxjQ
+         9A//MPpLeJL+my/J0uJzyNncD30r+rcTKrX3nE/YgTfgEus54usBgf8Tj/q9/EgC1f7S
+         TRsUqCm/x5E5sI5hn4QrzD79q1C9RT60b7CZQSyZvmGg+pHbyw5SbdlXkEt3wDrTM9z6
+         2LTQrhifU1gpKd+9KricbnpwtNZZ4ukRie8mwP3ndeVTsSli5dXsBzHb2lufN1aA9V1T
+         gxLUpe0OHXnUxo+Rv+V6OMvZ414vQjMVrzM+dmvC+gZgftkep3B9INzcgTCnW5Ut81y/
+         3pzQ==
+X-Gm-Message-State: ANoB5pmsESat8hedfXKUWoaZgVHneDpTwB9LXVYLocwMu6VK2fQ0LoUi
+	oyU+p70WhpmHNliLe2vU0DCF9w==
+X-Google-Smtp-Source: AA0mqf5mWk6NiG18cPmnqbdN+rMZijqr8d6POOWkXXJ7U3JHI2JxQeypVTt8Zt40vyCYMSpJ0ixc2g==
+X-Received: by 2002:a05:600c:220b:b0:3cf:f747:71f with SMTP id z11-20020a05600c220b00b003cff747071fmr3728421wml.147.1668693524809;
+        Thu, 17 Nov 2022 05:58:44 -0800 (PST)
+Received: from elver.google.com ([2a00:79e0:9c:201:92f0:1ec9:e9f2:5cbe])
+        by smtp.gmail.com with ESMTPSA id 4-20020a05600c020400b003b492753826sm1226279wmi.43.2022.11.17.05.58.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 05:58:43 -0800 (PST)
+Date: Thu, 17 Nov 2022 14:58:37 +0100
+From: Marco Elver <elver@google.com>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Dave Hansen <dave.hansen@intel.com>
+Cc: kasan-dev <kasan-dev@googlegroups.com>, X86 ML <x86@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	linux-mm <linux-mm@kvack.org>, regressions@lists.linux.dev,
+	lkft-triage@lists.linaro.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Potapenko <glider@google.com>
+Subject: Re: WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/kfence.h:46
+ kfence_protect
+Message-ID: <Y3Y+DQsWa79bNuKj@elver.google.com>
+References: <CA+G9fYuFxZTxkeS35VTZMXwQvohu73W3xbZ5NtjebsVvH6hCuA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 17 Nov 2022 17:01:37 +0530
-Message-ID: <CA+G9fYuFxZTxkeS35VTZMXwQvohu73W3xbZ5NtjebsVvH6hCuA@mail.gmail.com>
-Subject: WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/kfence.h:46 kfence_protect
-To: kasan-dev <kasan-dev@googlegroups.com>, X86 ML <x86@kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
-	regressions@lists.linux.dev, lkft-triage@lists.linaro.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Marco Elver <elver@google.com>, 
-	Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYuFxZTxkeS35VTZMXwQvohu73W3xbZ5NtjebsVvH6hCuA@mail.gmail.com>
+User-Agent: Mutt/2.2.7 (2022-08-07)
 
-Kunit test cases failed and found warnings while booting Linux next
-version 6.1.0-rc5-next-20221117 on qemu-x86_64 [1].
+On Thu, Nov 17, 2022 at 05:01PM +0530, Naresh Kamboju wrote:
+> Kunit test cases failed and found warnings while booting Linux next
+> version 6.1.0-rc5-next-20221117 on qemu-x86_64 [1].
+> 
+> It was working on Linux next-20221116 tag.
+> 
+> [    0.663761] WARNING: CPU: 0 PID: 0 at
+> arch/x86/include/asm/kfence.h:46 kfence_protect+0x7b/0x120
+> [    0.664033] WARNING: CPU: 0 PID: 0 at mm/kfence/core.c:234
+> kfence_protect+0x7d/0x120
+> [    0.664465] kfence: kfence_init failed
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+[...]
+> [    0.663758] ------------[ cut here ]------------
+> [    0.663761] WARNING: CPU: 0 PID: 0 at
+> arch/x86/include/asm/kfence.h:46 kfence_protect+0x7b/0x120
+[...]
+> [    0.664465] kfence: kfence_init failed
+> 
+> metadata:
+>   git_ref: master
+>   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+>   git_sha: af37ad1e01c72483c4ee8453d9d9bac95d35f023
+>   git_describe: next-20221117
+>   kernel_version: 6.1.0-rc5
+>   kernel-config: https://builds.tuxbuild.com/2Hfb6n1z0frt4iBlIvqUzjMHiLm/config
+>   build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/697483979
+>   artifact-location: https://builds.tuxbuild.com/2Hfb6n1z0frt4iBlIvqUzjMHiLm
+>   toolchain: gcc-11
 
-It was working on Linux next-20221116 tag.
+I bisected this to:
 
-[    0.663761] WARNING: CPU: 0 PID: 0 at
-arch/x86/include/asm/kfence.h:46 kfence_protect+0x7b/0x120
-[    0.664033] WARNING: CPU: 0 PID: 0 at mm/kfence/core.c:234
-kfence_protect+0x7d/0x120
-[    0.664465] kfence: kfence_init failed
+	commit 127960a05548ea699a95791669e8112552eb2452
+	Author: Peter Zijlstra <peterz@infradead.org>
+	Date:   Thu Nov 10 13:33:57 2022 +0100
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+	    x86/mm: Inhibit _PAGE_NX changes from cpa_process_alias()
 
-Regressions found on qemu_x86_64:[2]
+	    There is a cludge in change_page_attr_set_clr() that inhibits
+	    propagating NX changes to the aliases (directmap and highmap) -- this
+	    is a cludge twofold:
 
-    - kunit/test_use_after_free_read
-    - kunit/test_invalid_access
-    - kunit/test_double_free-memcache
-    - kunit/test_krealloc
-    - kunit/test_shrink_memcache
-    - kunit/test_memcache_typesafe_by_rcu
-    - kunit/test_use_after_free_read-memcache
-    - kunit/test_invalid_addr_free-memcache
-    - kunit/test_out_of_bounds_read-memcache
-    - kunit/test_memcache_alloc_bulk
-    - kunit/test_out_of_bounds_read
-    - kunit/test_memcache_ctor
-    - kunit/test_corruption-memcache
-    - kunit/test_gfpzero
-    - kunit/test_out_of_bounds_write
-    - kunit/test_out_of_bounds_write-memcache
-    - kunit/test_kmalloc_aligned_oob_read
-    - kunit/test_free_bulk-memcache
+	     - it also inhibits the primary checks in __change_page_attr();
+	     - it hard depends on single bit changes.
 
-[    0.663758] ------------[ cut here ]------------
-[    0.663761] WARNING: CPU: 0 PID: 0 at
-arch/x86/include/asm/kfence.h:46 kfence_protect+0x7b/0x120
-[    0.663782] Modules linked in:
-[    0.663788] CPU: 0 PID: 0 Comm: swapper/0 Not tainted
-6.1.0-rc5-next-20221117 #1
-[    0.663795] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[    0.663801] RIP: 0010:kfence_protect+0x7b/0x120
-[    0.663811] Code: f1 f1 f1 f1 c7 40 04 04 f3 f3 f3 65 48 8b 04 25
-28 00 00 00 48 89 45 d8 31 c0 e8 e0 0d ba ff 48 85 c0 74 06 83 7d a0
-01 74 17 <0f> 0b 0f 0b c6 05 cb 97 1d 03 00 45 31 c0 c6 05 c0 97 1d 03
-01 eb
-[    0.663819] RSP: 0000:ffffffff9c407d98 EFLAGS: 00010002
-[    0.663826] RAX: ffff8880adc01020 RBX: 00000000000001ff RCX: 80000001000001e3
-[    0.663830] RDX: dffffc0000000000 RSI: ffff88811ac00000 RDI: ffff8880adc01020
-[    0.663836] RBP: ffffffff9c407e18 R08: ffffffff997c8ef8 R09: ffffea00046b7f87
-[    0.663841] R10: fffff940008d6ff0 R11: 0000000000000001 R12: 1ffffffff3880fb3
-[    0.663845] R13: ffff88811ac00000 R14: ffffea00046b7fc0 R15: 0000000000000200
-[    0.663852] FS:  0000000000000000(0000) GS:ffff88811b400000(0000)
-knlGS:0000000000000000
-[    0.663859] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.663864] CR2: ffff88813ffff000 CR3: 00000000ac814000 CR4: 00000000000406b0
-[    0.663869] Call Trace:
-[    0.663871]  <TASK>
-[    0.663876]  ? __pfx_kfence_protect+0x10/0x10
-[    0.663886]  ? __pfx_set_memory_4k+0x10/0x10
-[    0.663899]  kfence_init_pool+0x1ea/0x350
-[    0.663909]  ? __pfx_kfence_init_pool+0x10/0x10
-[    0.663919]  ? random_init+0xe9/0x13b
-[    0.663930]  ? __pfx_random_init+0x10/0x10
-[    0.663936]  ? _find_next_bit+0x46/0xe0
-[    0.663947]  kfence_init+0x42/0x1e8
-[    0.663959]  start_kernel+0x1fd/0x3a6
-[    0.663970]  x86_64_start_reservations+0x28/0x2e
-[    0.663978]  x86_64_start_kernel+0x96/0xa0
-[    0.663986]  secondary_startup_64_no_verify+0xe0/0xeb
-[    0.664001]  </TASK>
-[    0.664003] ---[ end trace 0000000000000000 ]---
-[    0.664032] ------------[ cut here ]------------
-[    0.664033] WARNING: CPU: 0 PID: 0 at mm/kfence/core.c:234
-kfence_protect+0x7d/0x120
-[    0.664045] Modules linked in:
-[    0.664049] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
-   6.1.0-rc5-next-20221117 #1
-[    0.664055] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS 1.12.0-1 04/01/2014
-[    0.664058] RIP: 0010:kfence_protect+0x7d/0x120
-[    0.664068] Code: f1 f1 c7 40 04 04 f3 f3 f3 65 48 8b 04 25 28 00
-00 00 48 89 45 d8 31 c0 e8 e0 0d ba ff 48 85 c0 74 06 83 7d a0 01 74
-17 0f 0b <0f> 0b c6 05 cb 97 1d 03 00 45 31 c0 c6 05 c0 97 1d 03 01 eb
-4a 48
-[    0.664074] RSP: 0000:ffffffff9c407d98 EFLAGS: 00010002
-[    0.664080] RAX: ffff8880adc01020 RBX: 00000000000001ff RCX: 80000001000001e3
-[    0.664085] RDX: dffffc0000000000 RSI: ffff88811ac00000 RDI: ffff8880adc01020
-[    0.664090] RBP: ffffffff9c407e18 R08: ffffffff997c8ef8 R09: ffffea00046b7f87
-[    0.664095] R10: fffff940008d6ff0 R11: 0000000000000001 R12: 1ffffffff3880fb3
-[    0.664099] R13: ffff88811ac00000 R14: ffffea00046b7fc0 R15: 0000000000000200
-[    0.664105] FS:  0000000000000000(0000) GS:ffff88811b400000(0000)
-knlGS:0000000000000000
-[    0.664112] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    0.664116] CR2: ffff88813ffff000 CR3: 00000000ac814000 CR4: 00000000000406b0
-[    0.664121] Call Trace:
-[    0.664123]  <TASK>
-[    0.664126]  ? __pfx_kfence_protect+0x10/0x10
-[    0.664136]  ? __pfx_set_memory_4k+0x10/0x10
-[    0.664146]  kfence_init_pool+0x1ea/0x350
-[    0.664156]  ? __pfx_kfence_init_pool+0x10/0x10
-[    0.664166]  ? random_init+0xe9/0x13b
-[    0.664172]  ? __pfx_random_init+0x10/0x10
-[    0.664179]  ? _find_next_bit+0x46/0xe0
-[    0.664186]  kfence_init+0x42/0x1e8
-[    0.664196]  start_kernel+0x1fd/0x3a6
-[    0.664205]  x86_64_start_reservations+0x28/0x2e
-[    0.664213]  x86_64_start_kernel+0x96/0xa0
-[    0.664221]  secondary_startup_64_no_verify+0xe0/0xeb
-[    0.664232]  </TASK>
-[    0.664235] ---[ end trace 0000000000000000 ]---
-[    0.664465] kfence: kfence_init failed
+	    The introduction of set_memory_rox() triggered this last issue for
+	    clearing both _PAGE_RW and _PAGE_NX.
 
-metadata:
-  git_ref: master
-  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
-  git_sha: af37ad1e01c72483c4ee8453d9d9bac95d35f023
-  git_describe: next-20221117
-  kernel_version: 6.1.0-rc5
-  kernel-config: https://builds.tuxbuild.com/2Hfb6n1z0frt4iBlIvqUzjMHiLm/config
-  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/697483979
-  artifact-location: https://builds.tuxbuild.com/2Hfb6n1z0frt4iBlIvqUzjMHiLm
-  toolchain: gcc-11
+	    Explicitly ignore _PAGE_NX in cpa_process_alias() instead.
 
+	    Fixes: b38994948567 ("x86/mm: Implement native set_memory_rox()")
+	    Reported-by: kernel test robot <oliver.sang@intel.com>
+	    Debugged-by: Dave Hansen <dave.hansen@intel.com>
+	    Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+	    Link: https://lkml.kernel.org/r/20221110125544.594991716%40infradead.org
 
-[1] https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221117/testrun/13045566/suite/kunit/test/kfence/log
-[2] https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221117/testrun/13045566/suite/kunit/tests/
-[3] https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221117/testrun/13045566/suite/kunit/test/test_invalid_access/history/
+A simple revert of this commit fixes the issue.
 
+Since all this seems to be about set_memory_rox(), and this is a fix
+commit, the fix itself missed something?
 
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Thanks,
+-- Marco
