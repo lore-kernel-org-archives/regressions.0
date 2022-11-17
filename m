@@ -1,120 +1,187 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6192633C7
-	for <regressions@lists.linux.dev>; Tue, 15 Nov 2022 11:17:36 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id E6BB9604F1;
-	Tue, 15 Nov 2022 12:17:26 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1668511046; bh=h3hy+6tg6TT/Zz13V3q7yRmUwdY8nS3qe0cl8HhX6pk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FaztWP/PQ5zlP+891bfECIHcrLf23KbOrBpKH/ZSgjHK0Xmf0QdH9ZCn6fEZdpXUa
-	 dtiT1ITch2fxHFjGK4LPIh8BW4FgjwA5TCx3R/jsLeXCxLznz6GGKullWUBzJCgk1b
-	 8xgKYHuvB6w94VwOhXnVhl40s1Aol+GjGdaCkphg6zZezavcVlKjEKfvsWPTV+3JpA
-	 /zwC+OTv6ksq5f18QERwLjl5JqS1J5IsXpufxBTrD2FcgPAY+yWUCg2imfGxyHZA4j
-	 FHXb8eE1f+LZtNl1wmA/leRLm9rzyl9BKRn0U9qZtrcb4T8UmOaPCWfTOkK+/cujyi
-	 n4GrW7E/p27+w==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 0g9pTHMAaV_h; Tue, 15 Nov 2022 12:17:24 +0100 (CET)
-Received: from [10.0.1.33] (grf-nat.grf.hr [161.53.83.23])
-	by domac.alu.hr (Postfix) with ESMTPSA id CEB24604F0;
-	Tue, 15 Nov 2022 12:17:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1668511044; bh=h3hy+6tg6TT/Zz13V3q7yRmUwdY8nS3qe0cl8HhX6pk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jq+2iMtbmcz7A+W7qdUbWTqAAlMcBEY679+O1B0rfzviCD2s6Qupg5gA3MMtCS9G1
-	 cWK4kxMOWLGfpmoSWCxu9k9jOhMNysAWjbljjCQ81Lh86PJUbPjJecHghwU6MqC2xZ
-	 M/C/jIj1cgCe3BcRffqSlehc/8jLJZmkeX4S9kLb6wbbFa1CNtPxHpsm1MbDYvvKAp
-	 1Lqnv8lN38KywCh2B2Ysu/uq793bv5zCY4iK9CrK1FzPCQNRRaMM8BI0R9uDf4m1S3
-	 DR2vexNMd2x05sBI2b7Qla7vLatZ2UqGgIrR+ttg23w6zw2gBxm2XdRX4ocuuOQoZp
-	 bl7ondwVWeZ2w==
-Message-ID: <ea0f43bc-c5ca-de6a-f9f2-9ce3730110a2@alu.unizg.hr>
-Date: Tue, 15 Nov 2022 12:17:23 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C419E23CD
+	for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 11:31:49 +0000 (UTC)
+Received: by mail-yb1-f182.google.com with SMTP id g127so1498995ybg.8
+        for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 03:31:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=i16ycnAEmJ+xybZKFB6Q2+GrX06wVG/BMACMYkIBt2s=;
+        b=C47Xa9ZW/5/L8ez5vm/hz58W4yel04RsHFY0oVHQZstuW5uC7albeNC8iI0FsNoa4r
+         mo8Xup1ZK3+s+CXSxW46r7pETxXCIw+Lm+MNSY1LPAmbtPI1ZUu8PlPT/RwC2Uc5LkyZ
+         S97PATVg0e1M+tny2W4/rQ7EbgBus6GSlISfrOedhxoO77I8WRRfVJjXXvwAD2B35vME
+         bMrXLTk/U7l07NvZUwaS5VR8sg+VMF5/b43SgK0BfIIIGhg/xAZXU63L4cfdLILmcoqy
+         GcBS8obuq7T7m53mEfZYXl0cmyn608I+w0FeWXr0o5QRiFGokCKJbHX3KyPOAzlXlFKw
+         FFhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=i16ycnAEmJ+xybZKFB6Q2+GrX06wVG/BMACMYkIBt2s=;
+        b=iHbOZr4UFQDoEbQ8GVb+Ru+eYi7OFufTEjhEGhOgOPvacdXPCUHTXERoxLVQywxgg5
+         g940QqIUxIHPxFhK91syKnT0jRxVGpnIWSAYveafnaJ5mwqJGVGEmRfsJQFpe2Eu/Au1
+         J89Fabf9MNdjAXJ5klpulTxCCQyAqFlOvaKvxebepIZAUbwXMuX7tGxuhAZzk1WUinTK
+         xUsl+pv/TsOrJbXCdZ0k1/o2z0bS+C2/15qcpYpcgTf014u+kJ64VsAy56nCVaRdqWMj
+         5A06unefYbbOaQNqQDmV18JkbM4K5zGHBdhKvxmmtZb6O6dD8T8EzsLwmKo04pJVlR5q
+         2emQ==
+X-Gm-Message-State: ANoB5pkK2qGHyBcp2C+jAQMu0frMLoIiqmK6aqn8nVlVd/wLJTf48lfo
+	hWB2mjPg14FU0q32CnaFaTDKNFL+8/RrUetJPR8Vsw==
+X-Google-Smtp-Source: AA0mqf7dhQQoI+FNvfR2xXV2mX0PkabHdBgu77T4ArCRJbxRgdck4UFHQikdcC+sAw1loDrTnI1azfn+sU6Lfi0j1AE=
+X-Received: by 2002:a25:880e:0:b0:6e6:e31e:3dc5 with SMTP id
+ c14-20020a25880e000000b006e6e31e3dc5mr1685536ybl.534.1668684708480; Thu, 17
+ Nov 2022 03:31:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: BUG: bisected: thermald regression (MEMLEAK) in commit
- c7ff29763989bd09c433f73fae3c1e1c15d9cda4
-Content-Language: en-US
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- devel@acpica.org, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <e0f06714-5a49-a4e6-24e6-c4103c820819@alu.unizg.hr>
- <9ef3674afd370050b86a68e44c97e4f0257f1adf.camel@linux.intel.com>
- <bd1f0d2a-d456-92cc-ecca-23e480aea4b1@alu.unizg.hr>
- <e5d3d561bb3a9c68bc903cfc35c27629a4a9225c.camel@linux.intel.com>
- <d034dbbc-613c-1a5e-df64-d0251453c8eb@alu.unizg.hr>
- <6c2f47c8-d6b5-074a-4c8f-e9cd04f62ef4@alu.unizg.hr>
- <180b1a4fb9cf78c8905f275e0373e009224d4639.camel@linux.intel.com>
- <78e347e9-c8b1-f228-ca32-0ad6186a6285@alu.unizg.hr>
- <a4457f46-72c9-f9b0-b87a-cb3dd5cd066f@alu.unizg.hr>
- <CAJZ5v0jfHtOXDFUFYj8EOGMT74iWfkQqEW3L2D2dZv6Y1jFSrw@mail.gmail.com>
- <761ee287-99d7-9695-6e10-44a2080ae6d9@leemhuis.info>
-From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <761ee287-99d7-9695-6e10-44a2080ae6d9@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Thu, 17 Nov 2022 17:01:37 +0530
+Message-ID: <CA+G9fYuFxZTxkeS35VTZMXwQvohu73W3xbZ5NtjebsVvH6hCuA@mail.gmail.com>
+Subject: WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/kfence.h:46 kfence_protect
+To: kasan-dev <kasan-dev@googlegroups.com>, X86 ML <x86@kernel.org>, 
+	open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, 
+	regressions@lists.linux.dev, lkft-triage@lists.linaro.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Marco Elver <elver@google.com>, 
+	Alexander Potapenko <glider@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 15.11.2022. 11:36, Thorsten Leemhuis wrote:
-> 
-> 
-> On 28.10.22 20:25, Rafael J. Wysocki wrote:
->> On Thu, Oct 27, 2022 at 8:20 PM Mirsad Goran Todorovac
->> <mirsad.todorovac@alu.unizg.hr> wrote:
->>>
->>> Re-sending compressed attachments to fit into the size limit.
->>>
->>> On 27. 10. 2022. 20:03, Mirsad Goran Todorovac wrote:
->>>> P.S.
->>>>
->>>> Forgot another useful thing you've mentioned: please find attached the
->>>> dmesg output.
->>>>
->>>> Good luck!
->>
->> I'm wondering if the problem is reproducible with this patch applied:
->>
->> https://patchwork.kernel.org/project/linux-acpi/patch/20221019073443.248215-1-chenzhongjin@huawei.com/
-> 
-> Mirsad, did you ever give that a try?
-> 
-> Side note: while looking into this, I noticed that Rafael proposed and
-> merged a different fix:
-> https://lore.kernel.org/all/2669303.mvXUDI8C0e@kreacher/
-> https://patchwork.kernel.org/project/linux-acpi/patch/2669303.mvXUDI8C0e@kreacher/
-> 
-> Ciao, Thorsten
+Kunit test cases failed and found warnings while booting Linux next
+version 6.1.0-rc5-next-20221117 on qemu-x86_64 [1].
 
-Hi, Thorsten,
+It was working on Linux next-20221116 tag.
 
-Yes, I gave it considerable effort, however four of my kernels {4.14, 
-4.9, 4.4 and 4.0} did not boot at all, now I have the problem that the 
-menu config doesn't respect CONFIG_DEBUG_KMEMLEAK=y.
+[    0.663761] WARNING: CPU: 0 PID: 0 at
+arch/x86/include/asm/kfence.h:46 kfence_protect+0x7b/0x120
+[    0.664033] WARNING: CPU: 0 PID: 0 at mm/kfence/core.c:234
+kfence_protect+0x7d/0x120
+[    0.664465] kfence: kfence_init failed
 
-I am serious about this and I had some 80 builds in the last month.
-Right now I have problems with my day job. :-/
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Hope to catch up with you soon.
+Regressions found on qemu_x86_64:[2]
 
-Cheers,
-Mirsad
+    - kunit/test_use_after_free_read
+    - kunit/test_invalid_access
+    - kunit/test_double_free-memcache
+    - kunit/test_krealloc
+    - kunit/test_shrink_memcache
+    - kunit/test_memcache_typesafe_by_rcu
+    - kunit/test_use_after_free_read-memcache
+    - kunit/test_invalid_addr_free-memcache
+    - kunit/test_out_of_bounds_read-memcache
+    - kunit/test_memcache_alloc_bulk
+    - kunit/test_out_of_bounds_read
+    - kunit/test_memcache_ctor
+    - kunit/test_corruption-memcache
+    - kunit/test_gfpzero
+    - kunit/test_out_of_bounds_write
+    - kunit/test_out_of_bounds_write-memcache
+    - kunit/test_kmalloc_aligned_oob_read
+    - kunit/test_free_bulk-memcache
 
--- 
-Mirsad Todorovac
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb
-Republic of Croatia, the European Union
+[    0.663758] ------------[ cut here ]------------
+[    0.663761] WARNING: CPU: 0 PID: 0 at
+arch/x86/include/asm/kfence.h:46 kfence_protect+0x7b/0x120
+[    0.663782] Modules linked in:
+[    0.663788] CPU: 0 PID: 0 Comm: swapper/0 Not tainted
+6.1.0-rc5-next-20221117 #1
+[    0.663795] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.12.0-1 04/01/2014
+[    0.663801] RIP: 0010:kfence_protect+0x7b/0x120
+[    0.663811] Code: f1 f1 f1 f1 c7 40 04 04 f3 f3 f3 65 48 8b 04 25
+28 00 00 00 48 89 45 d8 31 c0 e8 e0 0d ba ff 48 85 c0 74 06 83 7d a0
+01 74 17 <0f> 0b 0f 0b c6 05 cb 97 1d 03 00 45 31 c0 c6 05 c0 97 1d 03
+01 eb
+[    0.663819] RSP: 0000:ffffffff9c407d98 EFLAGS: 00010002
+[    0.663826] RAX: ffff8880adc01020 RBX: 00000000000001ff RCX: 80000001000001e3
+[    0.663830] RDX: dffffc0000000000 RSI: ffff88811ac00000 RDI: ffff8880adc01020
+[    0.663836] RBP: ffffffff9c407e18 R08: ffffffff997c8ef8 R09: ffffea00046b7f87
+[    0.663841] R10: fffff940008d6ff0 R11: 0000000000000001 R12: 1ffffffff3880fb3
+[    0.663845] R13: ffff88811ac00000 R14: ffffea00046b7fc0 R15: 0000000000000200
+[    0.663852] FS:  0000000000000000(0000) GS:ffff88811b400000(0000)
+knlGS:0000000000000000
+[    0.663859] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.663864] CR2: ffff88813ffff000 CR3: 00000000ac814000 CR4: 00000000000406b0
+[    0.663869] Call Trace:
+[    0.663871]  <TASK>
+[    0.663876]  ? __pfx_kfence_protect+0x10/0x10
+[    0.663886]  ? __pfx_set_memory_4k+0x10/0x10
+[    0.663899]  kfence_init_pool+0x1ea/0x350
+[    0.663909]  ? __pfx_kfence_init_pool+0x10/0x10
+[    0.663919]  ? random_init+0xe9/0x13b
+[    0.663930]  ? __pfx_random_init+0x10/0x10
+[    0.663936]  ? _find_next_bit+0x46/0xe0
+[    0.663947]  kfence_init+0x42/0x1e8
+[    0.663959]  start_kernel+0x1fd/0x3a6
+[    0.663970]  x86_64_start_reservations+0x28/0x2e
+[    0.663978]  x86_64_start_kernel+0x96/0xa0
+[    0.663986]  secondary_startup_64_no_verify+0xe0/0xeb
+[    0.664001]  </TASK>
+[    0.664003] ---[ end trace 0000000000000000 ]---
+[    0.664032] ------------[ cut here ]------------
+[    0.664033] WARNING: CPU: 0 PID: 0 at mm/kfence/core.c:234
+kfence_protect+0x7d/0x120
+[    0.664045] Modules linked in:
+[    0.664049] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W
+   6.1.0-rc5-next-20221117 #1
+[    0.664055] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS 1.12.0-1 04/01/2014
+[    0.664058] RIP: 0010:kfence_protect+0x7d/0x120
+[    0.664068] Code: f1 f1 c7 40 04 04 f3 f3 f3 65 48 8b 04 25 28 00
+00 00 48 89 45 d8 31 c0 e8 e0 0d ba ff 48 85 c0 74 06 83 7d a0 01 74
+17 0f 0b <0f> 0b c6 05 cb 97 1d 03 00 45 31 c0 c6 05 c0 97 1d 03 01 eb
+4a 48
+[    0.664074] RSP: 0000:ffffffff9c407d98 EFLAGS: 00010002
+[    0.664080] RAX: ffff8880adc01020 RBX: 00000000000001ff RCX: 80000001000001e3
+[    0.664085] RDX: dffffc0000000000 RSI: ffff88811ac00000 RDI: ffff8880adc01020
+[    0.664090] RBP: ffffffff9c407e18 R08: ffffffff997c8ef8 R09: ffffea00046b7f87
+[    0.664095] R10: fffff940008d6ff0 R11: 0000000000000001 R12: 1ffffffff3880fb3
+[    0.664099] R13: ffff88811ac00000 R14: ffffea00046b7fc0 R15: 0000000000000200
+[    0.664105] FS:  0000000000000000(0000) GS:ffff88811b400000(0000)
+knlGS:0000000000000000
+[    0.664112] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.664116] CR2: ffff88813ffff000 CR3: 00000000ac814000 CR4: 00000000000406b0
+[    0.664121] Call Trace:
+[    0.664123]  <TASK>
+[    0.664126]  ? __pfx_kfence_protect+0x10/0x10
+[    0.664136]  ? __pfx_set_memory_4k+0x10/0x10
+[    0.664146]  kfence_init_pool+0x1ea/0x350
+[    0.664156]  ? __pfx_kfence_init_pool+0x10/0x10
+[    0.664166]  ? random_init+0xe9/0x13b
+[    0.664172]  ? __pfx_random_init+0x10/0x10
+[    0.664179]  ? _find_next_bit+0x46/0xe0
+[    0.664186]  kfence_init+0x42/0x1e8
+[    0.664196]  start_kernel+0x1fd/0x3a6
+[    0.664205]  x86_64_start_reservations+0x28/0x2e
+[    0.664213]  x86_64_start_kernel+0x96/0xa0
+[    0.664221]  secondary_startup_64_no_verify+0xe0/0xeb
+[    0.664232]  </TASK>
+[    0.664235] ---[ end trace 0000000000000000 ]---
+[    0.664465] kfence: kfence_init failed
+
+metadata:
+  git_ref: master
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: af37ad1e01c72483c4ee8453d9d9bac95d35f023
+  git_describe: next-20221117
+  kernel_version: 6.1.0-rc5
+  kernel-config: https://builds.tuxbuild.com/2Hfb6n1z0frt4iBlIvqUzjMHiLm/config
+  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/697483979
+  artifact-location: https://builds.tuxbuild.com/2Hfb6n1z0frt4iBlIvqUzjMHiLm
+  toolchain: gcc-11
+
+
+[1] https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221117/testrun/13045566/suite/kunit/test/kfence/log
+[2] https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221117/testrun/13045566/suite/kunit/tests/
+[3] https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221117/testrun/13045566/suite/kunit/test/test_invalid_access/history/
+
+
+
 --
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
+Linaro LKFT
+https://lkft.linaro.org
