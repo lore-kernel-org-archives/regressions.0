@@ -1,129 +1,198 @@
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCE63208
-	for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 14:34:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1668695663; x=1700231663;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to;
-  bh=FUaqxpNOUtBFK9yqPq0EtJNjrRCYpDB/RJdLe9Np1/M=;
-  b=LGwoec3kZe6GQt0mPzQzzV2BuR2jUsD8A5+wOEV44WDdLvCBwbJAsqmi
-   NDW6PeWCR40r64vlwtexh5cvwo1lJyG4RdzWVjEH5S9IMGhDlnYia9qO9
-   X+mkQk2JTsJzChUvbW3fCrQQZkr7YbqK0pTWxOfVBCJEHW3GtfJJgy4gy
-   AsJo4ZFKh5rCsOUS+dNa+mMVlWCab/aWiHnB6H0jC1IxPstHoJ+F3+YrU
-   RLnX+PvlWysd5ZFakDYt76+13nieqMXA8fcrlX2eiNnkOoFMgwTJV4ms1
-   O3/w374pQO7lEoujvdT60xfagOxBrSMRyeWHyQ9TC703hieLr9I8jhici
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="311568588"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="311568588"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 06:34:16 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="814534057"
-X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
-   d="scan'208";a="814534057"
-Received: from vrgatne-mobl4.amr.corp.intel.com (HELO [10.209.115.197]) ([10.209.115.197])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 06:34:15 -0800
-Content-Type: multipart/mixed; boundary="------------5Ob6KInVGuG0YbX9A7MUQQSR"
-Message-ID: <4208866d-338f-4781-7ff9-023f016c5b07@intel.com>
-Date: Thu, 17 Nov 2022 06:34:15 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6016138
+	for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 15:34:57 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by domac.alu.hr (Postfix) with ESMTP id 695B8604F5;
+	Thu, 17 Nov 2022 16:34:49 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1668699289; bh=OzZ3e0q+8Q3gk97BCSnxrfpEF9cLcEA1xakdNiYCsC0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Yj04Of7GnsTzvBTa/XCwKmeSbF5FC2s9O9/hGlgQCdh+MYBN58NaFp+juzhFO/FGZ
+	 2/7MJATDTcBCKtMieoO1jWrFohRQVusCtRE7CQDEnv//DsY7JOolkIixUfm0ybaATW
+	 qEI6+hNh/CEC550if53v7MPjh1FQrsQo7hV/LPD8n6G+xFt9Dga1P453hoVRYFQ3rm
+	 ZWZgmageQmWnbTEbr/nelScgMEs97SlM4NPItHHYAA9wNiwSere+cytXoVOAxwEt9U
+	 ++bgxirROmIv0ew5tZVmHtqWEE3nSUOU28U4ZDH6kr/k1v3eHvP0qtz+tDI2rx7vu3
+	 g29z/9K7YTtjA==
+X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
+Received: from domac.alu.hr ([127.0.0.1])
+	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id E85dYaBrOm6a; Thu, 17 Nov 2022 16:34:47 +0100 (CET)
+Received: from [10.0.1.10] (grf-nat.grf.hr [161.53.83.23])
+	by domac.alu.hr (Postfix) with ESMTPSA id 6FE3E604F4;
+	Thu, 17 Nov 2022 16:34:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
+	t=1668699287; bh=OzZ3e0q+8Q3gk97BCSnxrfpEF9cLcEA1xakdNiYCsC0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=N32gJitdPzw0I1VXFjkYRyKoWJXRW4geC9AsrMXZchyzTgt4slX52GPkrbfghvMtw
+	 MgSJz0bonWoRKIIO782NgBMuHpwMeOUVdEi2MAl7FNJR/MinSHBjvnXI9c/njGoCpj
+	 FSNzULdLWnVyyxOm7PKE+Op7E1o/ANwHpnmf/Omkdzn+YbHgAAcHot0tzP4QD0ByJ3
+	 voKoR286mkWsNpB9HqgDgl1DOnLAV120p/MhlXJx2R68G9oPodY6jdhWcekfjhyB0x
+	 oqGcaYQ+EtL4MGAfZpU6yX29TVPdndkqsTAtEwBLGxrzY7/g5JwT/3JL4pxksVeeCU
+	 sURNhjI6rNLaQ==
+Message-ID: <2234838f-1213-09be-d887-1ad398d29c01@alu.unizg.hr>
+Date: Thu, 17 Nov 2022 16:34:45 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/kfence.h:46
- kfence_protect
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: BUG: kworker + systemd-udevd memory leaks found in 6.1.0-rc4
 Content-Language: en-US
-To: Marco Elver <elver@google.com>, Naresh Kamboju
- <naresh.kamboju@linaro.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: kasan-dev <kasan-dev@googlegroups.com>, X86 ML <x86@kernel.org>,
- open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
- regressions@lists.linux.dev, lkft-triage@lists.linaro.org,
- Andrew Morton <akpm@linux-foundation.org>,
- Alexander Potapenko <glider@google.com>
-References: <CA+G9fYuFxZTxkeS35VTZMXwQvohu73W3xbZ5NtjebsVvH6hCuA@mail.gmail.com>
- <Y3Y+DQsWa79bNuKj@elver.google.com>
-From: Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <Y3Y+DQsWa79bNuKj@elver.google.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Tejun Heo <tj@kernel.org>, Florian Mickler <florian@mickler.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ systemd-devel@lists.freedesktop.org
+References: <0d9c3f6c-3948-d5d1-bcc1-baf31141beaa@alu.unizg.hr>
+ <a6b76ce0-0fb3-4434-cc3e-ab6f39fb1cf9@alu.unizg.hr>
+ <Y2zCYwNNvQWppLWZ@kroah.com>
+From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
+In-Reply-To: <Y2zCYwNNvQWppLWZ@kroah.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-This is a multi-part message in MIME format.
---------------5Ob6KInVGuG0YbX9A7MUQQSR
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 11/17/22 05:58, Marco Elver wrote:
-> [    0.663761] WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/kfence.h:46 kfence_protect+0x7b/0x120
-> [    0.664033] WARNING: CPU: 0 PID: 0 at mm/kfence/core.c:234 kfence_protect+0x7d/0x120
-> [    0.664465] kfence: kfence_init failed
-
-Any chance you could add some debugging and figure out what actually
-made kfence call over?  Was it the pte or the level?
-
-        if (WARN_ON(!pte || level != PG_LEVEL_4K))
-                return false;
-
-I can see how the thing you bisected to might lead to a page table not
-being split, which could mess with the 'level' check.
-
-Also, is there a reason this code is mucking with the page tables
-directly?  It seems, uh, rather wonky.  This, for instance:
-
->         if (protect)
->                 set_pte(pte, __pte(pte_val(*pte) & ~_PAGE_PRESENT));
->         else
->                 set_pte(pte, __pte(pte_val(*pte) | _PAGE_PRESENT));
+On 10.11.2022. 10:20, Greg KH wrote:
+> On Thu, Nov 10, 2022 at 05:57:57AM +0100, Mirsad Goran Todorovac wrote:
+>> On 04. 11. 2022. 11:40, Mirsad Goran Todorovac wrote:
+>>
+>>> Dear Sirs,
+>>>
+>>> When building a RPM 6.1.0-rc3 for AlmaLinux 8.6, I have enabled
+>>> CONFIG_DEBUG_KMEMLEAK=y
+>>> and the result showed an unreferenced object in kworker process:
+>>>
+>>> # cat /sys/kernel/debug/kmemleak
+>>> unreferenced object 0xffffa01dabff6100 (size 16):
+>>>    comm "kworker/u12:4", pid 400, jiffies 4294894771 (age 5284.956s)
+>>>    hex dump (first 16 bytes):
+>>>      6d 65 6d 73 74 69 63 6b 30 00 00 00 00 00 00 00 memstick0.......
+>>>    backtrace:
+>>>      [<000000009ff951f6>] __kmem_cache_alloc_node+0x380/0x4e0
+>>>      [<00000000451f4268>] __kmalloc_node_track_caller+0x55/0x150
+>>>      [<0000000005472512>] kstrdup+0x36/0x70
+>>>      [<000000002f797ac4>] kstrdup_const+0x28/0x30
+>>>      [<00000000e3f86581>] kvasprintf_const+0x78/0xa0
+>>>      [<00000000e15920f7>] kobject_set_name_vargs+0x23/0xa0
+>>>      [<000000004158a6c0>] dev_set_name+0x53/0x70
+>>>      [<000000001a120541>] memstick_check+0xff/0x384 [memstick]
+>>>      [<00000000122bb894>] process_one_work+0x214/0x3f0
+>>>      [<00000000fcf282cc>] worker_thread+0x34/0x3d0
+>>>      [<0000000002409855>] kthread+0xed/0x120
+>>>      [<000000007b02b4a3>] ret_from_fork+0x1f/0x30
+>>> unreferenced object 0xffffa01dabff6ec0 (size 16):
+>>>    comm "kworker/u12:4", pid 400, jiffies 4294894774 (age 5284.944s)
+>>>    hex dump (first 16 bytes):
+>>>      6d 65 6d 73 74 69 63 6b 30 00 00 00 00 00 00 00 memstick0.......
+>>>    backtrace:
+>>>      [<000000009ff951f6>] __kmem_cache_alloc_node+0x380/0x4e0
+>>>      [<00000000451f4268>] __kmalloc_node_track_caller+0x55/0x150
+>>>      [<0000000005472512>] kstrdup+0x36/0x70
+>>>      [<000000002f797ac4>] kstrdup_const+0x28/0x30
+>>>      [<00000000e3f86581>] kvasprintf_const+0x78/0xa0
+>>>      [<00000000e15920f7>] kobject_set_name_vargs+0x23/0xa0
+>>>      [<000000004158a6c0>] dev_set_name+0x53/0x70
+>>>      [<000000001a120541>] memstick_check+0xff/0x384 [memstick]
+>>>      [<00000000122bb894>] process_one_work+0x214/0x3f0
+>>>      [<00000000fcf282cc>] worker_thread+0x34/0x3d0
+>>>      [<0000000002409855>] kthread+0xed/0x120
+>>>      [<000000007b02b4a3>] ret_from_fork+0x1f/0x30
+>>> #
+>>>
+>>> Please fing the build config and lshw output attached.
+>>>
+>>> dmesg is useless, as it is filled with events like:
+>>>
+>>> [ 6068.996120] evbug: Event. Dev: input4, Type: 1, Code: 31, Value: 0
+>>> [ 6068.996121] evbug: Event. Dev: input4, Type: 0, Code: 0, Value: 0
+>>> [ 6069.124145] evbug: Event. Dev: input4, Type: 4, Code: 4, Value: 458762
+>>> [ 6069.124149] evbug: Event. Dev: input4, Type: 1, Code: 34, Value: 1
+>>> [ 6069.124150] evbug: Event. Dev: input4, Type: 0, Code: 0, Value: 0
+>>> [ 6069.196003] evbug: Event. Dev: input4, Type: 4, Code: 4, Value: 458762
+>>> [ 6069.196007] evbug: Event. Dev: input4, Type: 1, Code: 34, Value: 0
+>>> [ 6069.196009] evbug: Event. Dev: input4, Type: 0, Code: 0, Value: 0
+>>> [ 6069.788129] evbug: Event. Dev: input4, Type: 4, Code: 4, Value: 458792
+>>> [ 6069.788133] evbug: Event. Dev: input4, Type: 1, Code: 28, Value: 1
+>>> [ 6069.788135] evbug: Event. Dev: input4, Type: 0, Code: 0, Value: 0
+>>
+>> This bug is confirmed in 6.1-rc4, among the "thermald" and "systemd-dev"
+>> kernel memory leaks, potentially exposing race conditions or other more
+>> serious bug.
 > 
->         /*
->          * Flush this CPU's TLB, assuming whoever did the allocation/free is
->          * likely to continue running on this CPU.
->          */
->         preempt_disable();
->         flush_tlb_one_kernel(addr);
->         preempt_enable();
+> How is a memory leak a race condition?
+Probably I connected it with spurious memleak in thermald that occurs 
+only under the torture tests.
 
-Seems rather broken.  I assume the preempt_disable() is there to get rid
-of some warnings.  But, there is nothing I can see to *keep* the CPU
-that did the free from being different from the one where the TLB flush
-is performed until the preempt_disable().  That makes the
-flush_tlb_one_kernel() mostly useless.
+>> The bug is now also confirmed and now manifested also in the Ubuntu 22.04
+>> LTS jammy 6.1-rc4 build.
+>>
+>> Here is the kmemleak output:
+>>
+>> unreferenced object 0xffff9242b13b3980 (size 64):
+>>    comm "kworker/5:3", pid 43106, jiffies 4305052439 (age 71828.792s)
+>>    hex dump (first 32 bytes):
+>>      80 8b a0 f0 42 92 ff ff 00 00 00 00 00 00 00 00 ....B...........
+>>      20 86 a0 f0 42 92 ff ff 00 00 00 00 00 00 00 00 ...B...........
+>>    backtrace:
+>>      [<00000000c5dea4db>] __kmem_cache_alloc_node+0x380/0x4e0
+>>      [<000000002b17af47>] kmalloc_node_trace+0x27/0xa0
+>>      [<000000004c09eee5>] xhci_alloc_command+0x6e/0x180
+> 
+> This is a totally different backtrace from above, how are they related?
+> 
+> This looks like a potential xhci issue.  Can you use 'git bisect' to
+> track down the offending change that caused this?
+> 
+> thanks,
+> 
+> greg k-h
 
-Is there a reason this code isn't using the existing page table
-manipulation functions and tries to code its own?  What prevents it from
-using something like the attached patch?
---------------5Ob6KInVGuG0YbX9A7MUQQSR
-Content-Type: text/x-patch; charset=UTF-8; name="kfence.patch"
-Content-Disposition: attachment; filename="kfence.patch"
-Content-Transfer-Encoding: base64
+Hi, Greg, I saw this email only now. I will try to bisect the bug.
+I was trying to bisect the first instance that occurs only on AlmaLinux 
+and it is introduced before 4.17. Here is the progress of the bisect on 
+AlmaLinux 8.6 (a.k.a. Centos 8):
 
-ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2tmZW5jZS5oIGIvYXJjaC94ODYv
-aW5jbHVkZS9hc20va2ZlbmNlLmgKaW5kZXggZmY1YzcxMzRhMzdhLi41Y2RiM2ExZjM5OTUg
-MTAwNjQ0Ci0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2tmZW5jZS5oCisrKyBiL2FyY2gv
-eDg2L2luY2x1ZGUvYXNtL2tmZW5jZS5oCkBAIC0zNywzNCArMzcsMTMgQEAgc3RhdGljIGlu
-bGluZSBib29sIGFyY2hfa2ZlbmNlX2luaXRfcG9vbCh2b2lkKQogCXJldHVybiB0cnVlOwog
-fQogCi0vKiBQcm90ZWN0IHRoZSBnaXZlbiBwYWdlIGFuZCBmbHVzaCBUTEIuICovCiBzdGF0
-aWMgaW5saW5lIGJvb2wga2ZlbmNlX3Byb3RlY3RfcGFnZSh1bnNpZ25lZCBsb25nIGFkZHIs
-IGJvb2wgcHJvdGVjdCkKIHsKLQl1bnNpZ25lZCBpbnQgbGV2ZWw7Ci0JcHRlX3QgKnB0ZSA9
-IGxvb2t1cF9hZGRyZXNzKGFkZHIsICZsZXZlbCk7Ci0KLQlpZiAoV0FSTl9PTighcHRlIHx8
-IGxldmVsICE9IFBHX0xFVkVMXzRLKSkKLQkJcmV0dXJuIGZhbHNlOwotCi0JLyoKLQkgKiBX
-ZSBuZWVkIHRvIGF2b2lkIElQSXMsIGFzIHdlIG1heSBnZXQgS0ZFTkNFIGFsbG9jYXRpb25z
-IG9yIGZhdWx0cwotCSAqIHdpdGggaW50ZXJydXB0cyBkaXNhYmxlZC4gVGhlcmVmb3JlLCB0
-aGUgYmVsb3cgaXMgYmVzdC1lZmZvcnQsIGFuZAotCSAqIGRvZXMgbm90IGZsdXNoIFRMQnMg
-b24gYWxsIENQVXMuIFdlIGNhbiB0b2xlcmF0ZSBzb21lIGluYWNjdXJhY3k7Ci0JICogbGF6
-eSBmYXVsdCBoYW5kbGluZyB0YWtlcyBjYXJlIG9mIGZhdWx0cyBhZnRlciB0aGUgcGFnZSBp
-cyBQUkVTRU5ULgotCSAqLwotCiAJaWYgKHByb3RlY3QpCi0JCXNldF9wdGUocHRlLCBfX3B0
-ZShwdGVfdmFsKCpwdGUpICYgfl9QQUdFX1BSRVNFTlQpKTsKKwkJc2V0X21lbW9yeV9ucChh
-ZGRyLCBhZGRyICsgUEFHRV9TSVpFKTsKIAllbHNlCi0JCXNldF9wdGUocHRlLCBfX3B0ZShw
-dGVfdmFsKCpwdGUpIHwgX1BBR0VfUFJFU0VOVCkpOworCQlzZXRfbWVtb3J5X3AoYWRkciwg
-YWRkciArIFBBR0VfU0laRSk7CiAKLQkvKgotCSAqIEZsdXNoIHRoaXMgQ1BVJ3MgVExCLCBh
-c3N1bWluZyB3aG9ldmVyIGRpZCB0aGUgYWxsb2NhdGlvbi9mcmVlIGlzCi0JICogbGlrZWx5
-IHRvIGNvbnRpbnVlIHJ1bm5pbmcgb24gdGhpcyBDUFUuCi0JICovCi0JcHJlZW1wdF9kaXNh
-YmxlKCk7Ci0JZmx1c2hfdGxiX29uZV9rZXJuZWwoYWRkcik7Ci0JcHJlZW1wdF9lbmFibGUo
-KTsKIAlyZXR1cm4gdHJ1ZTsKIH0KIAo=
+mtodorov@domac:~/linux/kernel/linux_stable$ git bisect log
+git bisect start
+# bad: [f0c4d9fc9cc9462659728d168387191387e903cc] Linux 6.1-rc4
+git bisect bad f0c4d9fc9cc9462659728d168387191387e903cc
+# bad: [fbd56ddcecab5a3623a89c8e941fdbcc55b41045] Linux 6.0.1
+git bisect bad fbd56ddcecab5a3623a89c8e941fdbcc55b41045
+# bad: [7e18e42e4b280c85b76967a9106a13ca61c16179] Linux 6.0-rc4
+git bisect bad 7e18e42e4b280c85b76967a9106a13ca61c16179
+# bad: [568035b01cfb107af8d2e4bd2fb9aea22cf5b868] Linux 6.0-rc1
+git bisect bad 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
+# bad: [84df9525b0c27f3ebc2ebb1864fa62a97fdedb7d] Linux 4.19
+git bisect bad 84df9525b0c27f3ebc2ebb1864fa62a97fdedb7d
+# bad: [94710cac0ef4ee177a63b5227664b38c95bbf703] Linux 4.18
+git bisect bad 94710cac0ef4ee177a63b5227664b38c95bbf703
+# bad: [29dcea88779c856c7dc92040a0c01233263101d4] Linux 4.17
+git bisect bad 29dcea88779c856c7dc92040a0c01233263101d4
+mtodorov@domac:~/linux/kernel/linux_stable$
 
---------------5Ob6KInVGuG0YbX9A7MUQQSR--
+I failed to notice the different nature of the second memory leak.
+Of course, if it is reproducible always in the same way, I'd agree that 
+it doesn't look like a race condition, but from one occurrence it is 
+hard to tell (I generalised from thermald/acpi bug bisect).
+
+Please give me some grace period for I am only 2 1/2 months in the 
+kernel bisecting ...
+
+Cheers,
+Mirsad
+
+-- 
+Mirsad Todorovac
+System engineer
+Faculty of Graphic Arts | Academy of Fine Arts
+University of Zagreb
+Republic of Croatia, the European Union
+--
+Sistem inženjer
+Grafički fakultet | Akademija likovnih umjetnosti
+Sveučilište u Zagrebu
