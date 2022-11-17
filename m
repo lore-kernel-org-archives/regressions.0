@@ -1,198 +1,167 @@
-Received: from domac.alu.hr (domac.alu.hr [161.53.235.3])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6016138
-	for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 15:34:57 +0000 (UTC)
-Received: from localhost (localhost [127.0.0.1])
-	by domac.alu.hr (Postfix) with ESMTP id 695B8604F5;
-	Thu, 17 Nov 2022 16:34:49 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1668699289; bh=OzZ3e0q+8Q3gk97BCSnxrfpEF9cLcEA1xakdNiYCsC0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Yj04Of7GnsTzvBTa/XCwKmeSbF5FC2s9O9/hGlgQCdh+MYBN58NaFp+juzhFO/FGZ
-	 2/7MJATDTcBCKtMieoO1jWrFohRQVusCtRE7CQDEnv//DsY7JOolkIixUfm0ybaATW
-	 qEI6+hNh/CEC550if53v7MPjh1FQrsQo7hV/LPD8n6G+xFt9Dga1P453hoVRYFQ3rm
-	 ZWZgmageQmWnbTEbr/nelScgMEs97SlM4NPItHHYAA9wNiwSere+cytXoVOAxwEt9U
-	 ++bgxirROmIv0ew5tZVmHtqWEE3nSUOU28U4ZDH6kr/k1v3eHvP0qtz+tDI2rx7vu3
-	 g29z/9K7YTtjA==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-	by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id E85dYaBrOm6a; Thu, 17 Nov 2022 16:34:47 +0100 (CET)
-Received: from [10.0.1.10] (grf-nat.grf.hr [161.53.83.23])
-	by domac.alu.hr (Postfix) with ESMTPSA id 6FE3E604F4;
-	Thu, 17 Nov 2022 16:34:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-	t=1668699287; bh=OzZ3e0q+8Q3gk97BCSnxrfpEF9cLcEA1xakdNiYCsC0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=N32gJitdPzw0I1VXFjkYRyKoWJXRW4geC9AsrMXZchyzTgt4slX52GPkrbfghvMtw
-	 MgSJz0bonWoRKIIO782NgBMuHpwMeOUVdEi2MAl7FNJR/MinSHBjvnXI9c/njGoCpj
-	 FSNzULdLWnVyyxOm7PKE+Op7E1o/ANwHpnmf/Omkdzn+YbHgAAcHot0tzP4QD0ByJ3
-	 voKoR286mkWsNpB9HqgDgl1DOnLAV120p/MhlXJx2R68G9oPodY6jdhWcekfjhyB0x
-	 oqGcaYQ+EtL4MGAfZpU6yX29TVPdndkqsTAtEwBLGxrzY7/g5JwT/3JL4pxksVeeCU
-	 sURNhjI6rNLaQ==
-Message-ID: <2234838f-1213-09be-d887-1ad398d29c01@alu.unizg.hr>
-Date: Thu, 17 Nov 2022 16:34:45 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59ECCA464
+	for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 23:23:13 +0000 (UTC)
+Received: by mail-wr1-f46.google.com with SMTP id d9so6382606wrm.13
+        for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 15:23:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=To+1hKZHNGliAAsi3sjlLMbkRpr0UyHLDkyr8XsSEH4=;
+        b=qpqdZ0sqb/StH3lCysYFk74dHUJh7EZV2fUhEEVHMn80HcqT9aJ8kHz28WVtNYnon7
+         iVPoihuR+QYXMiA7Ak+I3j+7ZZukwg/8E4VqY2WibVFfszYGO3Q43ZLIJoI44o8mHdWA
+         5E15D3LyRolOWgZGiC16oXnyv64RBOgy+sd/WTsdf6pr9swHoqqmSmTP5pYtd3WUdqqA
+         A5SjgOZrJxCzWiTq/8M91jgz2jw7FIa/lSmu6zbmJO46o39gOeN5tQ2M2BV1hAo0yEmK
+         +v/dJI/Q0Le/WyZsqDRpwTaLC4CoEjRfw1LE7Mhy/g22lh1f86JVRp1D77JPTcfHzo4y
+         sPdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=To+1hKZHNGliAAsi3sjlLMbkRpr0UyHLDkyr8XsSEH4=;
+        b=ZbOPBodpiqeFA6OWdx37w6Wcc3oPVm8M7LG9ltww6qe+31Xrl2abfPVL8CUJmGvLtz
+         wbJzzf1wITjWm2vsbGL06YD32sK4o8C8Oded/uDqEainKdbULDEtX9CVlJ/huDh8W1Yx
+         D7DnfRWt6b0NrWvi+F5RtUNqNvcf3IcDsEjXcdmXPZebJWetomoQI9hG6u/r/rxoGQ57
+         +Y4P7fs2poJhoHekO8fGsbuOrECDRmt7KHB8LNYdWAYlKSO6HT0VueWP8iE7N+EW2AnT
+         x69SFQZnsrNKod7XxE+O8j+0UE9fDK9tLrEHnBLFt7smJ6R03ko62OqlsqohFYEu3eMe
+         0/xQ==
+X-Gm-Message-State: ANoB5pnltLgBeJa0y4kYVmpSscYxwsIqh59xZjnz/RBlRLTP6UygN0Nh
+	L1Cw5PQ50z15NxW9xhDevDDOYw==
+X-Google-Smtp-Source: AA0mqf5MqYZmGGq4x1Tmt014mbnl6hcoMvKbKayoFXRl6fajhYj0DuK6Sfc8tc7ZgsN7NJ0Qjpo9cA==
+X-Received: by 2002:adf:e103:0:b0:22e:3180:f75a with SMTP id t3-20020adfe103000000b0022e3180f75amr2743740wrz.340.1668727391387;
+        Thu, 17 Nov 2022 15:23:11 -0800 (PST)
+Received: from elver.google.com ([2a00:79e0:9c:201:4799:a943:410e:976])
+        by smtp.gmail.com with ESMTPSA id k1-20020a5d6281000000b0022ae0965a8asm2062148wru.24.2022.11.17.15.23.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Nov 2022 15:23:10 -0800 (PST)
+Date: Fri, 18 Nov 2022 00:23:03 +0100
+From: Marco Elver <elver@google.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	kasan-dev <kasan-dev@googlegroups.com>, X86 ML <x86@kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	linux-mm <linux-mm@kvack.org>, regressions@lists.linux.dev,
+	lkft-triage@lists.linaro.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Potapenko <glider@google.com>
+Subject: Re: WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/kfence.h:46
+ kfence_protect
+Message-ID: <Y3bCV6VckVUEF7Pq@elver.google.com>
+References: <CA+G9fYuFxZTxkeS35VTZMXwQvohu73W3xbZ5NtjebsVvH6hCuA@mail.gmail.com>
+ <Y3Y+DQsWa79bNuKj@elver.google.com>
+ <4208866d-338f-4781-7ff9-023f016c5b07@intel.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: BUG: kworker + systemd-udevd memory leaks found in 6.1.0-rc4
-Content-Language: en-US
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Tejun Heo <tj@kernel.org>, Florian Mickler <florian@mickler.org>,
- Thorsten Leemhuis <regressions@leemhuis.info>,
- systemd-devel@lists.freedesktop.org
-References: <0d9c3f6c-3948-d5d1-bcc1-baf31141beaa@alu.unizg.hr>
- <a6b76ce0-0fb3-4434-cc3e-ab6f39fb1cf9@alu.unizg.hr>
- <Y2zCYwNNvQWppLWZ@kroah.com>
-From: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-In-Reply-To: <Y2zCYwNNvQWppLWZ@kroah.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4208866d-338f-4781-7ff9-023f016c5b07@intel.com>
+User-Agent: Mutt/2.2.7 (2022-08-07)
 
-On 10.11.2022. 10:20, Greg KH wrote:
-> On Thu, Nov 10, 2022 at 05:57:57AM +0100, Mirsad Goran Todorovac wrote:
->> On 04. 11. 2022. 11:40, Mirsad Goran Todorovac wrote:
->>
->>> Dear Sirs,
->>>
->>> When building a RPM 6.1.0-rc3 for AlmaLinux 8.6, I have enabled
->>> CONFIG_DEBUG_KMEMLEAK=y
->>> and the result showed an unreferenced object in kworker process:
->>>
->>> # cat /sys/kernel/debug/kmemleak
->>> unreferenced object 0xffffa01dabff6100 (size 16):
->>>    comm "kworker/u12:4", pid 400, jiffies 4294894771 (age 5284.956s)
->>>    hex dump (first 16 bytes):
->>>      6d 65 6d 73 74 69 63 6b 30 00 00 00 00 00 00 00 memstick0.......
->>>    backtrace:
->>>      [<000000009ff951f6>] __kmem_cache_alloc_node+0x380/0x4e0
->>>      [<00000000451f4268>] __kmalloc_node_track_caller+0x55/0x150
->>>      [<0000000005472512>] kstrdup+0x36/0x70
->>>      [<000000002f797ac4>] kstrdup_const+0x28/0x30
->>>      [<00000000e3f86581>] kvasprintf_const+0x78/0xa0
->>>      [<00000000e15920f7>] kobject_set_name_vargs+0x23/0xa0
->>>      [<000000004158a6c0>] dev_set_name+0x53/0x70
->>>      [<000000001a120541>] memstick_check+0xff/0x384 [memstick]
->>>      [<00000000122bb894>] process_one_work+0x214/0x3f0
->>>      [<00000000fcf282cc>] worker_thread+0x34/0x3d0
->>>      [<0000000002409855>] kthread+0xed/0x120
->>>      [<000000007b02b4a3>] ret_from_fork+0x1f/0x30
->>> unreferenced object 0xffffa01dabff6ec0 (size 16):
->>>    comm "kworker/u12:4", pid 400, jiffies 4294894774 (age 5284.944s)
->>>    hex dump (first 16 bytes):
->>>      6d 65 6d 73 74 69 63 6b 30 00 00 00 00 00 00 00 memstick0.......
->>>    backtrace:
->>>      [<000000009ff951f6>] __kmem_cache_alloc_node+0x380/0x4e0
->>>      [<00000000451f4268>] __kmalloc_node_track_caller+0x55/0x150
->>>      [<0000000005472512>] kstrdup+0x36/0x70
->>>      [<000000002f797ac4>] kstrdup_const+0x28/0x30
->>>      [<00000000e3f86581>] kvasprintf_const+0x78/0xa0
->>>      [<00000000e15920f7>] kobject_set_name_vargs+0x23/0xa0
->>>      [<000000004158a6c0>] dev_set_name+0x53/0x70
->>>      [<000000001a120541>] memstick_check+0xff/0x384 [memstick]
->>>      [<00000000122bb894>] process_one_work+0x214/0x3f0
->>>      [<00000000fcf282cc>] worker_thread+0x34/0x3d0
->>>      [<0000000002409855>] kthread+0xed/0x120
->>>      [<000000007b02b4a3>] ret_from_fork+0x1f/0x30
->>> #
->>>
->>> Please fing the build config and lshw output attached.
->>>
->>> dmesg is useless, as it is filled with events like:
->>>
->>> [ 6068.996120] evbug: Event. Dev: input4, Type: 1, Code: 31, Value: 0
->>> [ 6068.996121] evbug: Event. Dev: input4, Type: 0, Code: 0, Value: 0
->>> [ 6069.124145] evbug: Event. Dev: input4, Type: 4, Code: 4, Value: 458762
->>> [ 6069.124149] evbug: Event. Dev: input4, Type: 1, Code: 34, Value: 1
->>> [ 6069.124150] evbug: Event. Dev: input4, Type: 0, Code: 0, Value: 0
->>> [ 6069.196003] evbug: Event. Dev: input4, Type: 4, Code: 4, Value: 458762
->>> [ 6069.196007] evbug: Event. Dev: input4, Type: 1, Code: 34, Value: 0
->>> [ 6069.196009] evbug: Event. Dev: input4, Type: 0, Code: 0, Value: 0
->>> [ 6069.788129] evbug: Event. Dev: input4, Type: 4, Code: 4, Value: 458792
->>> [ 6069.788133] evbug: Event. Dev: input4, Type: 1, Code: 28, Value: 1
->>> [ 6069.788135] evbug: Event. Dev: input4, Type: 0, Code: 0, Value: 0
->>
->> This bug is confirmed in 6.1-rc4, among the "thermald" and "systemd-dev"
->> kernel memory leaks, potentially exposing race conditions or other more
->> serious bug.
+On Thu, Nov 17, 2022 at 06:34AM -0800, Dave Hansen wrote:
+> On 11/17/22 05:58, Marco Elver wrote:
+> > [    0.663761] WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/kfence.h:46 kfence_protect+0x7b/0x120
+> > [    0.664033] WARNING: CPU: 0 PID: 0 at mm/kfence/core.c:234 kfence_protect+0x7d/0x120
+> > [    0.664465] kfence: kfence_init failed
 > 
-> How is a memory leak a race condition?
-Probably I connected it with spurious memleak in thermald that occurs 
-only under the torture tests.
-
->> The bug is now also confirmed and now manifested also in the Ubuntu 22.04
->> LTS jammy 6.1-rc4 build.
->>
->> Here is the kmemleak output:
->>
->> unreferenced object 0xffff9242b13b3980 (size 64):
->>    comm "kworker/5:3", pid 43106, jiffies 4305052439 (age 71828.792s)
->>    hex dump (first 32 bytes):
->>      80 8b a0 f0 42 92 ff ff 00 00 00 00 00 00 00 00 ....B...........
->>      20 86 a0 f0 42 92 ff ff 00 00 00 00 00 00 00 00 ...B...........
->>    backtrace:
->>      [<00000000c5dea4db>] __kmem_cache_alloc_node+0x380/0x4e0
->>      [<000000002b17af47>] kmalloc_node_trace+0x27/0xa0
->>      [<000000004c09eee5>] xhci_alloc_command+0x6e/0x180
+> Any chance you could add some debugging and figure out what actually
+> made kfence call over?  Was it the pte or the level?
 > 
-> This is a totally different backtrace from above, how are they related?
+>         if (WARN_ON(!pte || level != PG_LEVEL_4K))
+>                 return false;
 > 
-> This looks like a potential xhci issue.  Can you use 'git bisect' to
-> track down the offending change that caused this?
+> I can see how the thing you bisected to might lead to a page table not
+> being split, which could mess with the 'level' check.
+
+Yes - it's the 'level != PG_LEVEL_4K'.
+
+We do actually try to split the pages in arch_kfence_init_pool() (above
+this function) - so with "x86/mm: Inhibit _PAGE_NX changes from
+cpa_process_alias()" this somehow fails...
+
+> Also, is there a reason this code is mucking with the page tables
+> directly?  It seems, uh, rather wonky.  This, for instance:
 > 
-> thanks,
+> >         if (protect)
+> >                 set_pte(pte, __pte(pte_val(*pte) & ~_PAGE_PRESENT));
+> >         else
+> >                 set_pte(pte, __pte(pte_val(*pte) | _PAGE_PRESENT));
+> > 
+> >         /*
+> >          * Flush this CPU's TLB, assuming whoever did the allocation/free is
+> >          * likely to continue running on this CPU.
+> >          */
+> >         preempt_disable();
+> >         flush_tlb_one_kernel(addr);
+> >         preempt_enable();
 > 
-> greg k-h
+> Seems rather broken.  I assume the preempt_disable() is there to get rid
+> of some warnings.  But, there is nothing I can see to *keep* the CPU
+> that did the free from being different from the one where the TLB flush
+> is performed until the preempt_disable().  That makes the
+> flush_tlb_one_kernel() mostly useless.
+> 
+> Is there a reason this code isn't using the existing page table
+> manipulation functions and tries to code its own?  What prevents it from
+> using something like the attached patch?
 
-Hi, Greg, I saw this email only now. I will try to bisect the bug.
-I was trying to bisect the first instance that occurs only on AlmaLinux 
-and it is introduced before 4.17. Here is the progress of the bisect on 
-AlmaLinux 8.6 (a.k.a. Centos 8):
+Yes, see the comment below - it's to avoid the IPIs and TLB shoot-downs,
+because KFENCE _can_ tolerate the inaccuracy even if we hit the wrong
+TLB or other CPUs' TLBs aren't immediately flushed - we trade a few
+false negatives for minimizing performance impact.
 
-mtodorov@domac:~/linux/kernel/linux_stable$ git bisect log
-git bisect start
-# bad: [f0c4d9fc9cc9462659728d168387191387e903cc] Linux 6.1-rc4
-git bisect bad f0c4d9fc9cc9462659728d168387191387e903cc
-# bad: [fbd56ddcecab5a3623a89c8e941fdbcc55b41045] Linux 6.0.1
-git bisect bad fbd56ddcecab5a3623a89c8e941fdbcc55b41045
-# bad: [7e18e42e4b280c85b76967a9106a13ca61c16179] Linux 6.0-rc4
-git bisect bad 7e18e42e4b280c85b76967a9106a13ca61c16179
-# bad: [568035b01cfb107af8d2e4bd2fb9aea22cf5b868] Linux 6.0-rc1
-git bisect bad 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
-# bad: [84df9525b0c27f3ebc2ebb1864fa62a97fdedb7d] Linux 4.19
-git bisect bad 84df9525b0c27f3ebc2ebb1864fa62a97fdedb7d
-# bad: [94710cac0ef4ee177a63b5227664b38c95bbf703] Linux 4.18
-git bisect bad 94710cac0ef4ee177a63b5227664b38c95bbf703
-# bad: [29dcea88779c856c7dc92040a0c01233263101d4] Linux 4.17
-git bisect bad 29dcea88779c856c7dc92040a0c01233263101d4
-mtodorov@domac:~/linux/kernel/linux_stable$
+> diff --git a/arch/x86/include/asm/kfence.h b/arch/x86/include/asm/kfence.h
+> index ff5c7134a37a..5cdb3a1f3995 100644
+> --- a/arch/x86/include/asm/kfence.h
+> +++ b/arch/x86/include/asm/kfence.h
+> @@ -37,34 +37,13 @@ static inline bool arch_kfence_init_pool(void)
+>  	return true;
+>  }
+>  
+> -/* Protect the given page and flush TLB. */
+>  static inline bool kfence_protect_page(unsigned long addr, bool protect)
+>  {
+> -	unsigned int level;
+> -	pte_t *pte = lookup_address(addr, &level);
+> -
+> -	if (WARN_ON(!pte || level != PG_LEVEL_4K))
+> -		return false;
+> -
+> -	/*
+> -	 * We need to avoid IPIs, as we may get KFENCE allocations or faults
+> -	 * with interrupts disabled. Therefore, the below is best-effort, and
+> -	 * does not flush TLBs on all CPUs. We can tolerate some inaccuracy;
+> -	 * lazy fault handling takes care of faults after the page is PRESENT.
+> -	 */
+> -
 
-I failed to notice the different nature of the second memory leak.
-Of course, if it is reproducible always in the same way, I'd agree that 
-it doesn't look like a race condition, but from one occurrence it is 
-hard to tell (I generalised from thermald/acpi bug bisect).
+^^ See this comment. Additionally there's a real performance concern,
+and the inaccuracy is something that we deliberately accept.
 
-Please give me some grace period for I am only 2 1/2 months in the 
-kernel bisecting ...
+>  	if (protect)
+> -		set_pte(pte, __pte(pte_val(*pte) & ~_PAGE_PRESENT));
+> +		set_memory_np(addr, addr + PAGE_SIZE);
+>  	else
+> -		set_pte(pte, __pte(pte_val(*pte) | _PAGE_PRESENT));
+> +		set_memory_p(addr, addr + PAGE_SIZE);
 
-Cheers,
-Mirsad
+Isn't this going to do tons of IPIs and shoot down other CPU's TLBs?
+KFENCE shouldn't incur this overhead on large machines with >100 CPUs if
+we can avoid it.
 
--- 
-Mirsad Todorovac
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb
-Republic of Croatia, the European Union
---
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
+What does "x86/mm: Inhibit _PAGE_NX changes from cpa_process_alias()" do
+that suddenly makes all this fail?
+
+What solution do you prefer that both fixes the issue and avoids the
+IPIs?
+
+Thanks,
+-- Marco
