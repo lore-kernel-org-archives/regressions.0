@@ -1,130 +1,129 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03F4611E
-	for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 13:58:46 +0000 (UTC)
-Received: by mail-wm1-f47.google.com with SMTP id m7-20020a05600c090700b003cf8a105d9eso1844275wmp.5
-        for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 05:58:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1PQ5ws+dl8HGBcphz45G0mKTEEpJ4QfuhaudxhaD3+4=;
-        b=Bsf2m3MvbEn/8XlgvsgW5JoESOTFjhJMfQGF2lQzwZWRI2+U8rmt31ZkpwmzciX3gQ
-         4j+E93VrCZNGODCTWUcMXYY5pbmaJwnHw+UdBmOxw+8NpVtAPtlx/YF5qnr5k19uDjAI
-         hQsd2Rpf2Tf+rz3eywQyEVXwTnMfthpQL8fSQ025Pf4PC56p5cK3v3T1/6uvpLy1Paxo
-         dNc1zIVzrK/5aiMtvDT3oznp7ozyqzD0S1ZJ8ufVEhHb4WxBHh36Kk2mnoekb4Srp2Tt
-         IA3QGXQaAolTdPXvkHcJUQvqhyRl5sqciU2nf5szQT9gDc3GcZ7dtyBwTpT9x33SwaqY
-         TvRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1PQ5ws+dl8HGBcphz45G0mKTEEpJ4QfuhaudxhaD3+4=;
-        b=kfFqd+QTPOcYKLU0w3Y5TCgX5yxEVSpnZ1LBswnBWdr4Oq0akGi7kQcUE3578pzxjQ
-         9A//MPpLeJL+my/J0uJzyNncD30r+rcTKrX3nE/YgTfgEus54usBgf8Tj/q9/EgC1f7S
-         TRsUqCm/x5E5sI5hn4QrzD79q1C9RT60b7CZQSyZvmGg+pHbyw5SbdlXkEt3wDrTM9z6
-         2LTQrhifU1gpKd+9KricbnpwtNZZ4ukRie8mwP3ndeVTsSli5dXsBzHb2lufN1aA9V1T
-         gxLUpe0OHXnUxo+Rv+V6OMvZ414vQjMVrzM+dmvC+gZgftkep3B9INzcgTCnW5Ut81y/
-         3pzQ==
-X-Gm-Message-State: ANoB5pmsESat8hedfXKUWoaZgVHneDpTwB9LXVYLocwMu6VK2fQ0LoUi
-	oyU+p70WhpmHNliLe2vU0DCF9w==
-X-Google-Smtp-Source: AA0mqf5mWk6NiG18cPmnqbdN+rMZijqr8d6POOWkXXJ7U3JHI2JxQeypVTt8Zt40vyCYMSpJ0ixc2g==
-X-Received: by 2002:a05:600c:220b:b0:3cf:f747:71f with SMTP id z11-20020a05600c220b00b003cff747071fmr3728421wml.147.1668693524809;
-        Thu, 17 Nov 2022 05:58:44 -0800 (PST)
-Received: from elver.google.com ([2a00:79e0:9c:201:92f0:1ec9:e9f2:5cbe])
-        by smtp.gmail.com with ESMTPSA id 4-20020a05600c020400b003b492753826sm1226279wmi.43.2022.11.17.05.58.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Nov 2022 05:58:43 -0800 (PST)
-Date: Thu, 17 Nov 2022 14:58:37 +0100
-From: Marco Elver <elver@google.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Dave Hansen <dave.hansen@intel.com>
-Cc: kasan-dev <kasan-dev@googlegroups.com>, X86 ML <x86@kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	linux-mm <linux-mm@kvack.org>, regressions@lists.linux.dev,
-	lkft-triage@lists.linaro.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Alexander Potapenko <glider@google.com>
-Subject: Re: WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/kfence.h:46
- kfence_protect
-Message-ID: <Y3Y+DQsWa79bNuKj@elver.google.com>
-References: <CA+G9fYuFxZTxkeS35VTZMXwQvohu73W3xbZ5NtjebsVvH6hCuA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCE63208
+	for <regressions@lists.linux.dev>; Thu, 17 Nov 2022 14:34:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668695663; x=1700231663;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to;
+  bh=FUaqxpNOUtBFK9yqPq0EtJNjrRCYpDB/RJdLe9Np1/M=;
+  b=LGwoec3kZe6GQt0mPzQzzV2BuR2jUsD8A5+wOEV44WDdLvCBwbJAsqmi
+   NDW6PeWCR40r64vlwtexh5cvwo1lJyG4RdzWVjEH5S9IMGhDlnYia9qO9
+   X+mkQk2JTsJzChUvbW3fCrQQZkr7YbqK0pTWxOfVBCJEHW3GtfJJgy4gy
+   AsJo4ZFKh5rCsOUS+dNa+mMVlWCab/aWiHnB6H0jC1IxPstHoJ+F3+YrU
+   RLnX+PvlWysd5ZFakDYt76+13nieqMXA8fcrlX2eiNnkOoFMgwTJV4ms1
+   O3/w374pQO7lEoujvdT60xfagOxBrSMRyeWHyQ9TC703hieLr9I8jhici
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="311568588"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="311568588"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 06:34:16 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10534"; a="814534057"
+X-IronPort-AV: E=Sophos;i="5.96,171,1665471600"; 
+   d="scan'208";a="814534057"
+Received: from vrgatne-mobl4.amr.corp.intel.com (HELO [10.209.115.197]) ([10.209.115.197])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Nov 2022 06:34:15 -0800
+Content-Type: multipart/mixed; boundary="------------5Ob6KInVGuG0YbX9A7MUQQSR"
+Message-ID: <4208866d-338f-4781-7ff9-023f016c5b07@intel.com>
+Date: Thu, 17 Nov 2022 06:34:15 -0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYuFxZTxkeS35VTZMXwQvohu73W3xbZ5NtjebsVvH6hCuA@mail.gmail.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.2
+Subject: Re: WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/kfence.h:46
+ kfence_protect
+Content-Language: en-US
+To: Marco Elver <elver@google.com>, Naresh Kamboju
+ <naresh.kamboju@linaro.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: kasan-dev <kasan-dev@googlegroups.com>, X86 ML <x86@kernel.org>,
+ open list <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+ regressions@lists.linux.dev, lkft-triage@lists.linaro.org,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Alexander Potapenko <glider@google.com>
+References: <CA+G9fYuFxZTxkeS35VTZMXwQvohu73W3xbZ5NtjebsVvH6hCuA@mail.gmail.com>
+ <Y3Y+DQsWa79bNuKj@elver.google.com>
+From: Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <Y3Y+DQsWa79bNuKj@elver.google.com>
 
-On Thu, Nov 17, 2022 at 05:01PM +0530, Naresh Kamboju wrote:
-> Kunit test cases failed and found warnings while booting Linux next
-> version 6.1.0-rc5-next-20221117 on qemu-x86_64 [1].
-> 
-> It was working on Linux next-20221116 tag.
-> 
-> [    0.663761] WARNING: CPU: 0 PID: 0 at
-> arch/x86/include/asm/kfence.h:46 kfence_protect+0x7b/0x120
-> [    0.664033] WARNING: CPU: 0 PID: 0 at mm/kfence/core.c:234
-> kfence_protect+0x7d/0x120
+This is a multi-part message in MIME format.
+--------------5Ob6KInVGuG0YbX9A7MUQQSR
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+On 11/17/22 05:58, Marco Elver wrote:
+> [    0.663761] WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/kfence.h:46 kfence_protect+0x7b/0x120
+> [    0.664033] WARNING: CPU: 0 PID: 0 at mm/kfence/core.c:234 kfence_protect+0x7d/0x120
 > [    0.664465] kfence: kfence_init failed
+
+Any chance you could add some debugging and figure out what actually
+made kfence call over?  Was it the pte or the level?
+
+        if (WARN_ON(!pte || level != PG_LEVEL_4K))
+                return false;
+
+I can see how the thing you bisected to might lead to a page table not
+being split, which could mess with the 'level' check.
+
+Also, is there a reason this code is mucking with the page tables
+directly?  It seems, uh, rather wonky.  This, for instance:
+
+>         if (protect)
+>                 set_pte(pte, __pte(pte_val(*pte) & ~_PAGE_PRESENT));
+>         else
+>                 set_pte(pte, __pte(pte_val(*pte) | _PAGE_PRESENT));
 > 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-[...]
-> [    0.663758] ------------[ cut here ]------------
-> [    0.663761] WARNING: CPU: 0 PID: 0 at
-> arch/x86/include/asm/kfence.h:46 kfence_protect+0x7b/0x120
-[...]
-> [    0.664465] kfence: kfence_init failed
-> 
-> metadata:
->   git_ref: master
->   git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
->   git_sha: af37ad1e01c72483c4ee8453d9d9bac95d35f023
->   git_describe: next-20221117
->   kernel_version: 6.1.0-rc5
->   kernel-config: https://builds.tuxbuild.com/2Hfb6n1z0frt4iBlIvqUzjMHiLm/config
->   build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/697483979
->   artifact-location: https://builds.tuxbuild.com/2Hfb6n1z0frt4iBlIvqUzjMHiLm
->   toolchain: gcc-11
+>         /*
+>          * Flush this CPU's TLB, assuming whoever did the allocation/free is
+>          * likely to continue running on this CPU.
+>          */
+>         preempt_disable();
+>         flush_tlb_one_kernel(addr);
+>         preempt_enable();
 
-I bisected this to:
+Seems rather broken.  I assume the preempt_disable() is there to get rid
+of some warnings.  But, there is nothing I can see to *keep* the CPU
+that did the free from being different from the one where the TLB flush
+is performed until the preempt_disable().  That makes the
+flush_tlb_one_kernel() mostly useless.
 
-	commit 127960a05548ea699a95791669e8112552eb2452
-	Author: Peter Zijlstra <peterz@infradead.org>
-	Date:   Thu Nov 10 13:33:57 2022 +0100
+Is there a reason this code isn't using the existing page table
+manipulation functions and tries to code its own?  What prevents it from
+using something like the attached patch?
+--------------5Ob6KInVGuG0YbX9A7MUQQSR
+Content-Type: text/x-patch; charset=UTF-8; name="kfence.patch"
+Content-Disposition: attachment; filename="kfence.patch"
+Content-Transfer-Encoding: base64
 
-	    x86/mm: Inhibit _PAGE_NX changes from cpa_process_alias()
+ZGlmZiAtLWdpdCBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2tmZW5jZS5oIGIvYXJjaC94ODYv
+aW5jbHVkZS9hc20va2ZlbmNlLmgKaW5kZXggZmY1YzcxMzRhMzdhLi41Y2RiM2ExZjM5OTUg
+MTAwNjQ0Ci0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2tmZW5jZS5oCisrKyBiL2FyY2gv
+eDg2L2luY2x1ZGUvYXNtL2tmZW5jZS5oCkBAIC0zNywzNCArMzcsMTMgQEAgc3RhdGljIGlu
+bGluZSBib29sIGFyY2hfa2ZlbmNlX2luaXRfcG9vbCh2b2lkKQogCXJldHVybiB0cnVlOwog
+fQogCi0vKiBQcm90ZWN0IHRoZSBnaXZlbiBwYWdlIGFuZCBmbHVzaCBUTEIuICovCiBzdGF0
+aWMgaW5saW5lIGJvb2wga2ZlbmNlX3Byb3RlY3RfcGFnZSh1bnNpZ25lZCBsb25nIGFkZHIs
+IGJvb2wgcHJvdGVjdCkKIHsKLQl1bnNpZ25lZCBpbnQgbGV2ZWw7Ci0JcHRlX3QgKnB0ZSA9
+IGxvb2t1cF9hZGRyZXNzKGFkZHIsICZsZXZlbCk7Ci0KLQlpZiAoV0FSTl9PTighcHRlIHx8
+IGxldmVsICE9IFBHX0xFVkVMXzRLKSkKLQkJcmV0dXJuIGZhbHNlOwotCi0JLyoKLQkgKiBX
+ZSBuZWVkIHRvIGF2b2lkIElQSXMsIGFzIHdlIG1heSBnZXQgS0ZFTkNFIGFsbG9jYXRpb25z
+IG9yIGZhdWx0cwotCSAqIHdpdGggaW50ZXJydXB0cyBkaXNhYmxlZC4gVGhlcmVmb3JlLCB0
+aGUgYmVsb3cgaXMgYmVzdC1lZmZvcnQsIGFuZAotCSAqIGRvZXMgbm90IGZsdXNoIFRMQnMg
+b24gYWxsIENQVXMuIFdlIGNhbiB0b2xlcmF0ZSBzb21lIGluYWNjdXJhY3k7Ci0JICogbGF6
+eSBmYXVsdCBoYW5kbGluZyB0YWtlcyBjYXJlIG9mIGZhdWx0cyBhZnRlciB0aGUgcGFnZSBp
+cyBQUkVTRU5ULgotCSAqLwotCiAJaWYgKHByb3RlY3QpCi0JCXNldF9wdGUocHRlLCBfX3B0
+ZShwdGVfdmFsKCpwdGUpICYgfl9QQUdFX1BSRVNFTlQpKTsKKwkJc2V0X21lbW9yeV9ucChh
+ZGRyLCBhZGRyICsgUEFHRV9TSVpFKTsKIAllbHNlCi0JCXNldF9wdGUocHRlLCBfX3B0ZShw
+dGVfdmFsKCpwdGUpIHwgX1BBR0VfUFJFU0VOVCkpOworCQlzZXRfbWVtb3J5X3AoYWRkciwg
+YWRkciArIFBBR0VfU0laRSk7CiAKLQkvKgotCSAqIEZsdXNoIHRoaXMgQ1BVJ3MgVExCLCBh
+c3N1bWluZyB3aG9ldmVyIGRpZCB0aGUgYWxsb2NhdGlvbi9mcmVlIGlzCi0JICogbGlrZWx5
+IHRvIGNvbnRpbnVlIHJ1bm5pbmcgb24gdGhpcyBDUFUuCi0JICovCi0JcHJlZW1wdF9kaXNh
+YmxlKCk7Ci0JZmx1c2hfdGxiX29uZV9rZXJuZWwoYWRkcik7Ci0JcHJlZW1wdF9lbmFibGUo
+KTsKIAlyZXR1cm4gdHJ1ZTsKIH0KIAo=
 
-	    There is a cludge in change_page_attr_set_clr() that inhibits
-	    propagating NX changes to the aliases (directmap and highmap) -- this
-	    is a cludge twofold:
-
-	     - it also inhibits the primary checks in __change_page_attr();
-	     - it hard depends on single bit changes.
-
-	    The introduction of set_memory_rox() triggered this last issue for
-	    clearing both _PAGE_RW and _PAGE_NX.
-
-	    Explicitly ignore _PAGE_NX in cpa_process_alias() instead.
-
-	    Fixes: b38994948567 ("x86/mm: Implement native set_memory_rox()")
-	    Reported-by: kernel test robot <oliver.sang@intel.com>
-	    Debugged-by: Dave Hansen <dave.hansen@intel.com>
-	    Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-	    Link: https://lkml.kernel.org/r/20221110125544.594991716%40infradead.org
-
-A simple revert of this commit fixes the issue.
-
-Since all this seems to be about set_memory_rox(), and this is a fix
-commit, the fix itself missed something?
-
-Thanks,
--- Marco
+--------------5Ob6KInVGuG0YbX9A7MUQQSR--
