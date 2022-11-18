@@ -1,89 +1,165 @@
-Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-eopbgr150121.outbound.protection.outlook.com [40.107.15.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E5C18F
-	for <regressions@lists.linux.dev>; Fri, 18 Nov 2022 20:40:59 +0000 (UTC)
-Received: from in01.mta.xmission.com ([166.70.13.51]:41930)
-	by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <dominic@xmission.com>)
-	id 1ow71z-00GjYH-J5; Fri, 18 Nov 2022 12:28:07 -0700
-Received: from 75-169-132-183.slkc.qwest.net ([75.169.132.183]:33748 helo=mail.xmission.com)
-	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.93)
-	(envelope-from <dominic@xmission.com>)
-	id 1ow71y-001VPa-JZ; Fri, 18 Nov 2022 12:28:07 -0700
-Date: Fri, 18 Nov 2022 19:25:05 +0000
-Message-ID: <1c69774a5721e5d916791f545666b7da.dominic@xmission.com>
-From: Dominic Jones <jonesd@xmission.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev
-Content-Type: text/plain
-X-XM-SPF: eid=1ow71y-001VPa-JZ;;;mid=<1c69774a5721e5d916791f545666b7da.dominic@xmission.com>;;;hst=in01.mta.xmission.com;;;ip=75.169.132.183;;;frm=dominic@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX1+gg0LTinpTWiKVBhJebXrf
-X-SA-Exim-Connect-IP: 75.169.132.183
-X-SA-Exim-Mail-From: dominic@xmission.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on sa05.xmission.com
-X-Spam-Level: 
-X-Spam-Status: No, score=0.5 required=8.0 tests=ALL_TRUSTED,BAYES_50,
-	DCC_CHECK_NEGATIVE,TVD_RCVD_IP,T_TM2_M_HEADER_IN_MSG,XMSubLong
-	shortcircuit=no autolearn=disabled version=3.4.2
-X-Spam-Report: 
-	* -1.0 ALL_TRUSTED Passed through trusted hosts only via SMTP
-	*  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-	*      [score: 0.5001]
-	*  0.0 TVD_RCVD_IP Message was received from an IP address
-	*  0.7 XMSubLong Long Subject
-	*  0.0 T_TM2_M_HEADER_IN_MSG BODY: No description available.
-	* -0.0 DCC_CHECK_NEGATIVE Not listed in DCC
-	*      [sa05 1397; Body=1 Fuz1=1 Fuz2=1]
-X-Spam-DCC: XMission; sa05 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: ;Greg KH <gregkh@linuxfoundation.org>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 484 ms - load_scoreonly_sql: 0.05 (0.0%),
-	signal_user_changed: 11 (2.3%), b_tie_ro: 9 (2.0%), parse: 1.14 (0.2%),
-	 extract_message_metadata: 19 (3.9%), get_uri_detail_list: 1.90 (0.4%),
-	 tests_pri_-1000: 22 (4.5%), tests_pri_-950: 1.79 (0.4%),
-	tests_pri_-900: 1.32 (0.3%), tests_pri_-200: 1.07 (0.2%),
-	tests_pri_-100: 10 (2.0%), tests_pri_-90: 197 (40.8%), check_bayes:
-	195 (40.3%), b_tokenize: 7 (1.4%), b_tok_get_all: 6 (1.3%),
-	b_comp_prob: 2.9 (0.6%), b_tok_touch_all: 175 (36.1%), b_finish: 1.22
-	(0.3%), tests_pri_0: 201 (41.6%), check_dkim_signature: 0.64 (0.1%),
-	check_dkim_adsp: 3.5 (0.7%), poll_dns_idle: 0.76 (0.2%), tests_pri_10:
-	2.8 (0.6%), tests_pri_500: 11 (2.2%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [REGRESSION] v6.0.x fails to boot after updating from v5.19.x
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620B6A492
+	for <regressions@lists.linux.dev>; Fri, 18 Nov 2022 21:39:02 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y7MNB0Fxr4ZMI/z44Z69qnGTx7xlM4TZnKQDhJ/VaxNfv6dlEM1qVRPQCPcRfHV6mlRoqnReRRAzqlT1My9X76783u3lDCNVceskV52Z74FrmIJMTKYXGHiLjLwBxBWcqsg8oqjPUnsxx6esmq+pxiFLbbIb3GFdNxVBx+5dedzJ7kR7wT7vwMsr/6+t7YWXxCPZg0HaVJTod+PAwTVOLMfgJzejtbZsmG0MXlKol2twEnLBqjEV/l99/u39GSCVWIyhEiKYy5joCibgvdYwgK1azMalStmSZTgfJH6Do3q2DJxgar1EKWAfl1/K5/k6Dq7KxcpYPcy9CJGp/f+A7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ixdr2hodg9kQm1ddCoB1k+vt8XTEH9FHMggoZ7fVdVM=;
+ b=ZKkXmjow+1qDn2YwT2Z2rqUs8hjOHn0AoBDH7Zcarto6537Bn+vjZ25x+7XR3sK/kXy2w8TuFrmSay8sWU9x/uhjTNlVCLO7sLzQ3DWRf2bwY4BYYKEhyzqAK4DOyMsvAM2RQrP+ENTgbi1zWqr/guF0/4VWI+08+jG/VELRj/0T7lpQmRXsgbE6jcwBhiJguP6F8PEs7G9/wgTzcwGsON6lVNpjKXfGoJbqmRDdkd9/MHet86xM3TrVF33lDdmTLbjOf+KVQqmDrhPRRkU4W1eS/V+gMVj2yZE4YMqXDASqQonlnImAZhZLKAqc0e9vAyQMgPyfaqnUI/D+u+OqDQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
+ dkim=pass header.d=axentia.se; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ixdr2hodg9kQm1ddCoB1k+vt8XTEH9FHMggoZ7fVdVM=;
+ b=EYJXKlKtkBbI5xUqAeiou0nC3ujcIyl3Vw56N6L+CndpLmqraZ022Zv08KLGHhOHrUsJVlhxxIAQHBYeYm4D5bV2nEddw8RfvGBHPvS1dzK1cehD78S/B+WsbIxi/pWdOn6OLNUZb0mz0tkugzafnx0j7bd9e/91IC2sgMH6B5I=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=axentia.se;
+Received: from AM0PR02MB4436.eurprd02.prod.outlook.com (2603:10a6:208:ed::15)
+ by DB4PR02MB8581.eurprd02.prod.outlook.com (2603:10a6:10:387::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.16; Fri, 18 Nov
+ 2022 21:38:59 +0000
+Received: from AM0PR02MB4436.eurprd02.prod.outlook.com
+ ([fe80::a30:dce8:eaa4:7687]) by AM0PR02MB4436.eurprd02.prod.outlook.com
+ ([fe80::a30:dce8:eaa4:7687%6]) with mapi id 15.20.5813.020; Fri, 18 Nov 2022
+ 21:38:58 +0000
+Message-ID: <08c5bdb1-c105-2f84-66f0-22f7f4fe968c@axentia.se>
+Date: Fri, 18 Nov 2022 22:38:56 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] ARM: at91: fix build for SAMA5D3 w/o L2 cache
+Content-Language: en-US
+From: Peter Rosin <peda@axentia.se>
+To: linux-kernel@vger.kernel.org
+Cc: Russell King <linux@armlinux.org.uk>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@microchip.com>,
+ =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
+ linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev
+References: <b7f8dacc-5e1f-0eb2-188e-3ad9a9f7613d@axentia.se>
+In-Reply-To: <b7f8dacc-5e1f-0eb2-188e-3ad9a9f7613d@axentia.se>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: GV3P280CA0057.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:150:9::25) To AM0PR02MB4436.eurprd02.prod.outlook.com
+ (2603:10a6:208:ed::15)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR02MB4436:EE_|DB4PR02MB8581:EE_
+X-MS-Office365-Filtering-Correlation-Id: b2f340c3-8e41-426b-ab75-08dac9ad4d17
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	Sf0aBuBN4bpUbrWfbcRiG6P15ImgxJ9g8ZMQE4+4LLbYQsZacHW4tPI1KWZDnBQWr11Tu9JRmK3FJms0+xdT4D+XMUZ4tHq1tgf8OngFY/N8UWtn28BMO7ouIaEZSPFWlnABaek+Bj0P2xeXIcVf0H62rtCIxfiPXvJJbxB/9TA2h7IlfsFdZZGyoUAXkrMweHYx0RmFE/lAyjTC7ETj3njmLtpWdZYEBj9uH9HjjIMMZAaTnfFtsbkL7WlUgNKhX3UZWPgWgvUdzX2HmOvBSJTsc4GgDoFTVMPinpdCV9n/KQBwZKAgLCdCl5p3N1LxfDv2JLpL6YwAgkTZe96LNnX3/qhYEMtfv+NzYM9VRyUjNosODx+ATgej1mcB2Mjmt0ZLnuxvfgYi2vFkTac9dTbUwHczGKfrZEGMdw8sJU37ARYmyfIyoPZg671T/kaNrswCjcqgLQe1d/pXwmdPmjuewNRf/jL/jBOlx60XCoJzDXZLDByTCAFhFEiJwh6aW2XEwLl+IvhEPAt8HECEH6cER9XWZqbY3f9yTTz9yHwJ3UyybsjFRgae/vYXCC+2dQTeHn0oInlpNycSSUzvUIG9a8RjNihqxiJu1DesNuLFZMygHgves8GMvXNaMJ2g1mH4ZFCBZbtyc3zMCNTYvO0KOF+EmzU5DkRViNLAQNxfCPsEofRkSsQXCipPQBMdvgrJYEskqC5pSkzNntz/TG6YknqmmXzhkn0yDU/Dbms=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR02MB4436.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(396003)(376002)(366004)(136003)(39840400004)(451199015)(31686004)(36756003)(38100700002)(41300700001)(2906002)(4001150100001)(83380400001)(86362001)(31696002)(66476007)(66946007)(6486002)(26005)(6916009)(186003)(54906003)(5660300002)(4326008)(6512007)(316002)(8676002)(8936002)(2616005)(6506007)(66556008)(478600001)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SHVkZVVVdVdkbnVaRysxNkY4NUMxNTZoamtqWWRVcElSRmhxZk9BUEk5azV4?=
+ =?utf-8?B?aTI3bEJFOHFMOVhUTlRsZ25uYVEvY0ROOGNaQW1JdlFYNHozUndVcWw4OGxV?=
+ =?utf-8?B?cWRPUExpcmJMRzlMT0VoZkZRTTJteU9pNUowcWJZQTkyVmpSVVFEL0ZPejQw?=
+ =?utf-8?B?bE1KTjdzTDd3U1liTVAvRkhvOURVcWdacUZtMWh1Z1hVdkJpTGpocUdBQVdU?=
+ =?utf-8?B?c0o0MzJITHdZMDBDSjlSN1FuU3lUd3JNbW9TVWtPN1JVdEZqN2NVT3RvWlRD?=
+ =?utf-8?B?Rm5HN2xCckFvbldOMFo1NlhYSS9lZFNhMWVBVXRjSkJaR2hFMlErSjJXQkx5?=
+ =?utf-8?B?TnJPYks4bUNzNndseFBiUmFFK1BJZDRWZ3g3NFdES1MxMEpHeEQ1NjA0RktT?=
+ =?utf-8?B?cUZYT2ZOemNtTmxpbUZXYmlUNjBZczdPV2I5TWNTVm5mMTROeG1sMi9qcEEz?=
+ =?utf-8?B?QjhUUHIvKzFOR2NNNCttRGJrL1drbXFHRDM4eG4zOU9pNHdWYysrMThoQ2hO?=
+ =?utf-8?B?U2FjbkxLdVJXM0FCTXZFOWNQd2FCaTJSQTZ4VzJLYjNSRGxwNWdNS1p4LzVr?=
+ =?utf-8?B?SlpCSS94eHhXRS9HRE9oVjViQmJrZ1ZKcldyL0RiZTJSVmcwOVAxdDdZVDdL?=
+ =?utf-8?B?Z3NVZjhBQTVzVlduU2REbGtLQkw5R01pUElUVTRWbVBqeU8vdHlGN0owY2lM?=
+ =?utf-8?B?V0dMUVYyTDEzYUxYWWRobjVMVnBVd09vYnFPekFGTnl6S00vcHp3UVZZS1Vh?=
+ =?utf-8?B?YWVNRHB2bEFydVVvcXkzdklFTzJ2M0VzMHBDYlpoNTVmbFZKeDdPRWcrZHdv?=
+ =?utf-8?B?NFpPZW1IcUQyaGw0dlQzaFJiT3UwaWF2Z2hxVDBDU0NzWmV1d0pvZWMwSEpy?=
+ =?utf-8?B?VzI5NDVUcUNERjJIVGxKN2o4b2t2UlVmejVFV3EwQ0VwMUxxUnJFSXJMUWhr?=
+ =?utf-8?B?RXlrZ2RoNXBHUFlZT2RxeFVNd3NnYVRMMmpNSlpjZEx2UW93UE5VRGdxUURy?=
+ =?utf-8?B?TVNLcEJNN3l2cmk0SGxSSDVVNHMyaEM4TkRsTzV6UVFYVGVKbjMyT1ZIclBJ?=
+ =?utf-8?B?L2JrbEYvNzVVVFFySEI1WG9Fb05WVDVJVWFQdFZSMFFXT2dpSVlRR3QzejN6?=
+ =?utf-8?B?Wkk0Rjd0OHlUcWhkZ0V1RUlHQ0QwalJ4M0JRN29pR1ZaUzViSlljQ1NMRnYv?=
+ =?utf-8?B?cmNxSkEzbll0UlNzWnhYMDdiNDNtNmt6VUpURzJuYVlVeS9TK0VvOEt0bUl6?=
+ =?utf-8?B?YmZMY0xVZFVhVXFuUnJSdWJVQUQ0aFUvcTRNVTVRNXlnYTQvdFdTZUluc0Js?=
+ =?utf-8?B?WncxSW9RTzFVclQ0YlNxbWpZMXN2ckZOeE03bzJFMXlxTXp3VmZvbXZGRXNM?=
+ =?utf-8?B?djgxQmd2Z2lmOHhZNFAwamVUVW9pSzlwcXA0VGNZR1E0NWl2YWJmamc3TWg4?=
+ =?utf-8?B?L29TUU4ybUxIRXFaWXBJRFpUZEx0SzlXd1hWNUg3Tmc5M0F6Ry8ra3JwSkls?=
+ =?utf-8?B?WXQ4aFMvTittc2dISGdtcVBDblRGVE1BU21UMXBVSURRanVSdkc4aUtKVTcw?=
+ =?utf-8?B?T0ZCb3RsSGh4YUJSQXVWelY3UDZvT0ltdDBCY2RiS29zSUR3eUNaeXBRTTIv?=
+ =?utf-8?B?Tko5eWpZdGwvdXZiaHRkU0ZCWVg5U3AzL3N3SmZZYXp5UCs1NVVjMzVpZ3lz?=
+ =?utf-8?B?eUlaZzBnaHhiaVNaZGgvR3hwQldxbGlzbEdKVmNUY2Z3VmN2dEI5VllyVk0z?=
+ =?utf-8?B?ekUwUkcrTmQvcXpkSDJrakJvMFcrc3R6aVNFS0xjNG9SWjU5MlQ0VWNNbklu?=
+ =?utf-8?B?cS9jbHo5cFYzUXA3bVJiam95dXU4WFdjaFZQMERjbmVtTTdPbjVYZENlNkcv?=
+ =?utf-8?B?QmJWam9nRUt4RWc2ZFpzcDBUUTc0S0E2NFFvTndRQTdQczJNdW8rSWlaYVVR?=
+ =?utf-8?B?OVJxZXdETTEyTWpEU2dtVHF5My9qS0JUbXFib3FYbTV2czNRdDNTZENvRWg1?=
+ =?utf-8?B?dzFXWWlHL0UzdE9RY1hkQjBXbmEwNjdMVy9PdStHcURIYVdYNk92NWtNKzUw?=
+ =?utf-8?B?eWwvOHhzOFR6Rm1HcVE4cWhhZEpPbFVaT0haang1RS9EUllSbnlFUEZXV1RY?=
+ =?utf-8?Q?YElcrfz3K91dSBDKgV4SsWkGv?=
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2f340c3-8e41-426b-ab75-08dac9ad4d17
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR02MB4436.eurprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2022 21:38:58.7674
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FQVp1LY9qf1J0ppwZXb+9CAgc07vCHnwEWZS5iNkjJdToHeJGQLQ9wQLzPINjnWU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB4PR02MB8581
 
-> On Fri, Oct 28, 2022 at 02:51:43PM +0000, Dominic Jones wrote:
-> > Updating the machine's kernel from v5.19.x to v6.0.x causes the machine to not
-> > successfully boot. The machine boots successfully (and exhibits stable operation)
-> > with version v5.19.17 and multiple earlier releases in the 5.19 line. Multiple releases
-> > from the 6.0 line (including 6.0.0, 6.0.3, and 6.0.5), with no other changes to the
-> > software environment, do not boot. Instead, the machine hangs after loading services
-> > but before presenting a display manager; the machine instead shows repetitive hard
-> > drive activity at this point and then no apparent activity.
-> > 
-> > ''uname'' output for the machine successfully running v5.19.17 is:
-> > 
-> >     Linux [MACHINE_NAME] 5.19.17 #1 SMP PREEMPT_DYNAMIC Mon Oct 24 13:32:29 2022 i686 Intel(R) Atom(TM) CPU N270 @ 1.60GHz GenuineIntel GNU/Linux
-> > 
-> > The machine is an OCZ Neutrino netbook, running a custom OS build largely similar to
-> > LFS development. The kernel update uses ''make olddefconfig''.
+Hi!
+
+2022-11-12 at 16:40, Peter Rosin wrote:
+> The L2 cache is present on the newer SAMA5D2 and SAMA5D4 families, but
+> apparently not for the older SAMA5D3. At least not always.
 > 
-> Can you use 'git bisect' to find the offending change that causes this
-> to happen?
+> Solves a build-time regression with the following symptom:
+> 
+> sama5.c:(.init.text+0x48): undefined reference to `outer_cache'
+> 
+> Fixes: 3b5a7ca7d252 ("ARM: at91: setup outer cache .write_sec() callback if needed")
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  arch/arm/mach-at91/sama5.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Hi!
+> 
+> I'm not sure this is the correct solution? Maybe SAMA5D3 should bring
+> in CONFIG_OUTER_CACHE unconditionally instead? But that seems like a
+> bigger change, and not just a tweak of the regressing commit...
+> 
+> Cheers,
+> Peter
+> 
+> diff --git a/arch/arm/mach-at91/sama5.c b/arch/arm/mach-at91/sama5.c
+> index 67ed68fbe3a5..bf2b5c6a18c6 100644
+> --- a/arch/arm/mach-at91/sama5.c
+> +++ b/arch/arm/mach-at91/sama5.c
+> @@ -26,7 +26,7 @@ static void sama5_l2c310_write_sec(unsigned long val, unsigned reg)
+>  static void __init sama5_secure_cache_init(void)
+>  {
+>  	sam_secure_init();
+> -	if (sam_linux_is_optee_available())
+> +	if (IS_ENABLED(CONFIG_OUTER_CACHE) && sam_linux_is_optee_available())
+>  		outer_cache.write_sec = sama5_l2c310_write_sec;
+>  }
+>  
 
-Wanted to follow up here. I got up to speed on ''git bisect'' and am currently
-running the process. It looks like I have about six iterations to go and I'm
-typically building/testing 1-3 kernels per day. I can also verify that the issue
-occurs under 6.1rc4 as a side effect of the process.
+It's been a week or so of silence, thus CC:ing the regression bot so
+that this issue is not lost.
 
+Cheers,
+Peter
 
-Dominic Jones
-jonesd@xmission.com
+#regzbot ^introduced: 3b5a7ca7d252 
+#regzbot title: Build-time failure for SAMA5D3
