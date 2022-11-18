@@ -1,165 +1,205 @@
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-eopbgr150121.outbound.protection.outlook.com [40.107.15.121])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620B6A492
-	for <regressions@lists.linux.dev>; Fri, 18 Nov 2022 21:39:02 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y7MNB0Fxr4ZMI/z44Z69qnGTx7xlM4TZnKQDhJ/VaxNfv6dlEM1qVRPQCPcRfHV6mlRoqnReRRAzqlT1My9X76783u3lDCNVceskV52Z74FrmIJMTKYXGHiLjLwBxBWcqsg8oqjPUnsxx6esmq+pxiFLbbIb3GFdNxVBx+5dedzJ7kR7wT7vwMsr/6+t7YWXxCPZg0HaVJTod+PAwTVOLMfgJzejtbZsmG0MXlKol2twEnLBqjEV/l99/u39GSCVWIyhEiKYy5joCibgvdYwgK1azMalStmSZTgfJH6Do3q2DJxgar1EKWAfl1/K5/k6Dq7KxcpYPcy9CJGp/f+A7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ixdr2hodg9kQm1ddCoB1k+vt8XTEH9FHMggoZ7fVdVM=;
- b=ZKkXmjow+1qDn2YwT2Z2rqUs8hjOHn0AoBDH7Zcarto6537Bn+vjZ25x+7XR3sK/kXy2w8TuFrmSay8sWU9x/uhjTNlVCLO7sLzQ3DWRf2bwY4BYYKEhyzqAK4DOyMsvAM2RQrP+ENTgbi1zWqr/guF0/4VWI+08+jG/VELRj/0T7lpQmRXsgbE6jcwBhiJguP6F8PEs7G9/wgTzcwGsON6lVNpjKXfGoJbqmRDdkd9/MHet86xM3TrVF33lDdmTLbjOf+KVQqmDrhPRRkU4W1eS/V+gMVj2yZE4YMqXDASqQonlnImAZhZLKAqc0e9vAyQMgPyfaqnUI/D+u+OqDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=axentia.se; dmarc=pass action=none header.from=axentia.se;
- dkim=pass header.d=axentia.se; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ixdr2hodg9kQm1ddCoB1k+vt8XTEH9FHMggoZ7fVdVM=;
- b=EYJXKlKtkBbI5xUqAeiou0nC3ujcIyl3Vw56N6L+CndpLmqraZ022Zv08KLGHhOHrUsJVlhxxIAQHBYeYm4D5bV2nEddw8RfvGBHPvS1dzK1cehD78S/B+WsbIxi/pWdOn6OLNUZb0mz0tkugzafnx0j7bd9e/91IC2sgMH6B5I=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=axentia.se;
-Received: from AM0PR02MB4436.eurprd02.prod.outlook.com (2603:10a6:208:ed::15)
- by DB4PR02MB8581.eurprd02.prod.outlook.com (2603:10a6:10:387::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.16; Fri, 18 Nov
- 2022 21:38:59 +0000
-Received: from AM0PR02MB4436.eurprd02.prod.outlook.com
- ([fe80::a30:dce8:eaa4:7687]) by AM0PR02MB4436.eurprd02.prod.outlook.com
- ([fe80::a30:dce8:eaa4:7687%6]) with mapi id 15.20.5813.020; Fri, 18 Nov 2022
- 21:38:58 +0000
-Message-ID: <08c5bdb1-c105-2f84-66f0-22f7f4fe968c@axentia.se>
-Date: Fri, 18 Nov 2022 22:38:56 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] ARM: at91: fix build for SAMA5D3 w/o L2 cache
-Content-Language: en-US
-From: Peter Rosin <peda@axentia.se>
-To: linux-kernel@vger.kernel.org
-Cc: Russell King <linux@armlinux.org.uk>,
- Nicolas Ferre <nicolas.ferre@microchip.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Claudiu Beznea <claudiu.beznea@microchip.com>,
- =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
- linux-arm-kernel@lists.infradead.org, regressions@lists.linux.dev
-References: <b7f8dacc-5e1f-0eb2-188e-3ad9a9f7613d@axentia.se>
-In-Reply-To: <b7f8dacc-5e1f-0eb2-188e-3ad9a9f7613d@axentia.se>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: GV3P280CA0057.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:150:9::25) To AM0PR02MB4436.eurprd02.prod.outlook.com
- (2603:10a6:208:ed::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290A83D61
+	for <regressions@lists.linux.dev>; Fri, 18 Nov 2022 22:43:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 092D0C433D6;
+	Fri, 18 Nov 2022 22:43:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1668811413;
+	bh=7qzMQP+JcAvgprPRUI0bd8n6yMcyc+AiU1H9YYaDdh8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=upBs/BOqN2W85D5gbHTDav7kC6xLIUlNvwQcBEDpOzxg/so9FcsXzv2VMd/yZeBy4
+	 Coiv87aNwzQl9HNNZLpxJ5CeSIqkSL0bYCRmjrfWa8CcDSkRyjFk4SCNQpDOE6IkRM
+	 YkqOHd938oNjr4pqykPfBs9S+SHUDaq9VIDCSuM/V+kuxK0gO+Ga/iOzPEzTml1uLq
+	 TGLbgeDduYuJG//VVCYYLMKrH1dqp1nJMHeHv5NHK/9b3caaDnUfKUiNT28Q6yBIV1
+	 oFELIN+kk3EZyqNzK6UiQB4qeU3CrVQug0oK2aYksUp5c/QEJjRke5oeOWDGFA9IjT
+	 3I5LcKII8M0CA==
+Date: Fri, 18 Nov 2022 22:43:29 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Ivan Smirnov <isgsmirnov@gmail.com>
+Cc: "Neftin, Sasha" <sasha.neftin@intel.com>,
+	"Fuxbrumer, Devora" <devora.fuxbrumer@intel.com>,
+	intel-wired-lan@lists.osuosl.org, Jakub Kicinski <kuba@kernel.org>,
+	"Ruinskiy, Dima" <dima.ruinskiy@intel.com>,
+	"Avivi, Amir" <amir.avivi@intel.com>, regressions@lists.linux.dev
+Subject: Re: [Intel-wired-lan] igc kernel module crashes on new hardware
+ (Intel Ethernet I225-V)
+Message-ID: <Y3gKkYeijrAIhxjc@spud>
+References: <CAPAtJa_o5q-sU+AD=G3y43H_5pBKnOZTQGXM99uszPXNkn8Z9A@mail.gmail.com>
+ <20221031170535.77be0eb5@kernel.org>
+ <03f7dc73-3e7c-1e6d-275f-85539493cd7f@intel.com>
+ <CAPAtJa8qupPZZ0AiMWSxNKSd-WMg0MQDQeZcCO_Z-GGBu3jZCg@mail.gmail.com>
+ <CAPAtJa_-yMusW5-C3BDivMu=MOyfKF9VQkxQotX3L_P+Q48oMA@mail.gmail.com>
+ <CAPAtJa_nL5edyiN61ghXZxVUSDBFQQR3uiYJM0uo9mEao=RC0w@mail.gmail.com>
+ <CAPAtJa_hbFbVXQbiNnb_byLqtZ-Dy_EBcvTFH9GyPqt__dFmLQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR02MB4436:EE_|DB4PR02MB8581:EE_
-X-MS-Office365-Filtering-Correlation-Id: b2f340c3-8e41-426b-ab75-08dac9ad4d17
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	Sf0aBuBN4bpUbrWfbcRiG6P15ImgxJ9g8ZMQE4+4LLbYQsZacHW4tPI1KWZDnBQWr11Tu9JRmK3FJms0+xdT4D+XMUZ4tHq1tgf8OngFY/N8UWtn28BMO7ouIaEZSPFWlnABaek+Bj0P2xeXIcVf0H62rtCIxfiPXvJJbxB/9TA2h7IlfsFdZZGyoUAXkrMweHYx0RmFE/lAyjTC7ETj3njmLtpWdZYEBj9uH9HjjIMMZAaTnfFtsbkL7WlUgNKhX3UZWPgWgvUdzX2HmOvBSJTsc4GgDoFTVMPinpdCV9n/KQBwZKAgLCdCl5p3N1LxfDv2JLpL6YwAgkTZe96LNnX3/qhYEMtfv+NzYM9VRyUjNosODx+ATgej1mcB2Mjmt0ZLnuxvfgYi2vFkTac9dTbUwHczGKfrZEGMdw8sJU37ARYmyfIyoPZg671T/kaNrswCjcqgLQe1d/pXwmdPmjuewNRf/jL/jBOlx60XCoJzDXZLDByTCAFhFEiJwh6aW2XEwLl+IvhEPAt8HECEH6cER9XWZqbY3f9yTTz9yHwJ3UyybsjFRgae/vYXCC+2dQTeHn0oInlpNycSSUzvUIG9a8RjNihqxiJu1DesNuLFZMygHgves8GMvXNaMJ2g1mH4ZFCBZbtyc3zMCNTYvO0KOF+EmzU5DkRViNLAQNxfCPsEofRkSsQXCipPQBMdvgrJYEskqC5pSkzNntz/TG6YknqmmXzhkn0yDU/Dbms=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR02MB4436.eurprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(396003)(376002)(366004)(136003)(39840400004)(451199015)(31686004)(36756003)(38100700002)(41300700001)(2906002)(4001150100001)(83380400001)(86362001)(31696002)(66476007)(66946007)(6486002)(26005)(6916009)(186003)(54906003)(5660300002)(4326008)(6512007)(316002)(8676002)(8936002)(2616005)(6506007)(66556008)(478600001)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SHVkZVVVdVdkbnVaRysxNkY4NUMxNTZoamtqWWRVcElSRmhxZk9BUEk5azV4?=
- =?utf-8?B?aTI3bEJFOHFMOVhUTlRsZ25uYVEvY0ROOGNaQW1JdlFYNHozUndVcWw4OGxV?=
- =?utf-8?B?cWRPUExpcmJMRzlMT0VoZkZRTTJteU9pNUowcWJZQTkyVmpSVVFEL0ZPejQw?=
- =?utf-8?B?bE1KTjdzTDd3U1liTVAvRkhvOURVcWdacUZtMWh1Z1hVdkJpTGpocUdBQVdU?=
- =?utf-8?B?c0o0MzJITHdZMDBDSjlSN1FuU3lUd3JNbW9TVWtPN1JVdEZqN2NVT3RvWlRD?=
- =?utf-8?B?Rm5HN2xCckFvbldOMFo1NlhYSS9lZFNhMWVBVXRjSkJaR2hFMlErSjJXQkx5?=
- =?utf-8?B?TnJPYks4bUNzNndseFBiUmFFK1BJZDRWZ3g3NFdES1MxMEpHeEQ1NjA0RktT?=
- =?utf-8?B?cUZYT2ZOemNtTmxpbUZXYmlUNjBZczdPV2I5TWNTVm5mMTROeG1sMi9qcEEz?=
- =?utf-8?B?QjhUUHIvKzFOR2NNNCttRGJrL1drbXFHRDM4eG4zOU9pNHdWYysrMThoQ2hO?=
- =?utf-8?B?U2FjbkxLdVJXM0FCTXZFOWNQd2FCaTJSQTZ4VzJLYjNSRGxwNWdNS1p4LzVr?=
- =?utf-8?B?SlpCSS94eHhXRS9HRE9oVjViQmJrZ1ZKcldyL0RiZTJSVmcwOVAxdDdZVDdL?=
- =?utf-8?B?Z3NVZjhBQTVzVlduU2REbGtLQkw5R01pUElUVTRWbVBqeU8vdHlGN0owY2lM?=
- =?utf-8?B?V0dMUVYyTDEzYUxYWWRobjVMVnBVd09vYnFPekFGTnl6S00vcHp3UVZZS1Vh?=
- =?utf-8?B?YWVNRHB2bEFydVVvcXkzdklFTzJ2M0VzMHBDYlpoNTVmbFZKeDdPRWcrZHdv?=
- =?utf-8?B?NFpPZW1IcUQyaGw0dlQzaFJiT3UwaWF2Z2hxVDBDU0NzWmV1d0pvZWMwSEpy?=
- =?utf-8?B?VzI5NDVUcUNERjJIVGxKN2o4b2t2UlVmejVFV3EwQ0VwMUxxUnJFSXJMUWhr?=
- =?utf-8?B?RXlrZ2RoNXBHUFlZT2RxeFVNd3NnYVRMMmpNSlpjZEx2UW93UE5VRGdxUURy?=
- =?utf-8?B?TVNLcEJNN3l2cmk0SGxSSDVVNHMyaEM4TkRsTzV6UVFYVGVKbjMyT1ZIclBJ?=
- =?utf-8?B?L2JrbEYvNzVVVFFySEI1WG9Fb05WVDVJVWFQdFZSMFFXT2dpSVlRR3QzejN6?=
- =?utf-8?B?Wkk0Rjd0OHlUcWhkZ0V1RUlHQ0QwalJ4M0JRN29pR1ZaUzViSlljQ1NMRnYv?=
- =?utf-8?B?cmNxSkEzbll0UlNzWnhYMDdiNDNtNmt6VUpURzJuYVlVeS9TK0VvOEt0bUl6?=
- =?utf-8?B?YmZMY0xVZFVhVXFuUnJSdWJVQUQ0aFUvcTRNVTVRNXlnYTQvdFdTZUluc0Js?=
- =?utf-8?B?WncxSW9RTzFVclQ0YlNxbWpZMXN2ckZOeE03bzJFMXlxTXp3VmZvbXZGRXNM?=
- =?utf-8?B?djgxQmd2Z2lmOHhZNFAwamVUVW9pSzlwcXA0VGNZR1E0NWl2YWJmamc3TWg4?=
- =?utf-8?B?L29TUU4ybUxIRXFaWXBJRFpUZEx0SzlXd1hWNUg3Tmc5M0F6Ry8ra3JwSkls?=
- =?utf-8?B?WXQ4aFMvTittc2dISGdtcVBDblRGVE1BU21UMXBVSURRanVSdkc4aUtKVTcw?=
- =?utf-8?B?T0ZCb3RsSGh4YUJSQXVWelY3UDZvT0ltdDBCY2RiS29zSUR3eUNaeXBRTTIv?=
- =?utf-8?B?Tko5eWpZdGwvdXZiaHRkU0ZCWVg5U3AzL3N3SmZZYXp5UCs1NVVjMzVpZ3lz?=
- =?utf-8?B?eUlaZzBnaHhiaVNaZGgvR3hwQldxbGlzbEdKVmNUY2Z3VmN2dEI5VllyVk0z?=
- =?utf-8?B?ekUwUkcrTmQvcXpkSDJrakJvMFcrc3R6aVNFS0xjNG9SWjU5MlQ0VWNNbklu?=
- =?utf-8?B?cS9jbHo5cFYzUXA3bVJiam95dXU4WFdjaFZQMERjbmVtTTdPbjVYZENlNkcv?=
- =?utf-8?B?QmJWam9nRUt4RWc2ZFpzcDBUUTc0S0E2NFFvTndRQTdQczJNdW8rSWlaYVVR?=
- =?utf-8?B?OVJxZXdETTEyTWpEU2dtVHF5My9qS0JUbXFib3FYbTV2czNRdDNTZENvRWg1?=
- =?utf-8?B?dzFXWWlHL0UzdE9RY1hkQjBXbmEwNjdMVy9PdStHcURIYVdYNk92NWtNKzUw?=
- =?utf-8?B?eWwvOHhzOFR6Rm1HcVE4cWhhZEpPbFVaT0haang1RS9EUllSbnlFUEZXV1RY?=
- =?utf-8?Q?YElcrfz3K91dSBDKgV4SsWkGv?=
-X-OriginatorOrg: axentia.se
-X-MS-Exchange-CrossTenant-Network-Message-Id: b2f340c3-8e41-426b-ab75-08dac9ad4d17
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR02MB4436.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Nov 2022 21:38:58.7674
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4ee68585-03e1-4785-942a-df9c1871a234
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FQVp1LY9qf1J0ppwZXb+9CAgc07vCHnwEWZS5iNkjJdToHeJGQLQ9wQLzPINjnWU
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB4PR02MB8581
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPAtJa_hbFbVXQbiNnb_byLqtZ-Dy_EBcvTFH9GyPqt__dFmLQ@mail.gmail.com>
 
-Hi!
+Hey,
 
-2022-11-12 at 16:40, Peter Rosin wrote:
-> The L2 cache is present on the newer SAMA5D2 and SAMA5D4 families, but
-> apparently not for the older SAMA5D3. At least not always.
+On Wed, Nov 16, 2022 at 02:23:57PM -0800, Ivan Smirnov wrote:
+> Hi folks,
 > 
-> Solves a build-time regression with the following symptom:
-> 
-> sama5.c:(.init.text+0x48): undefined reference to `outer_cache'
-> 
-> Fixes: 3b5a7ca7d252 ("ARM: at91: setup outer cache .write_sec() callback if needed")
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  arch/arm/mach-at91/sama5.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Hi!
-> 
-> I'm not sure this is the correct solution? Maybe SAMA5D3 should bring
-> in CONFIG_OUTER_CACHE unconditionally instead? But that seems like a
-> bigger change, and not just a tweak of the regressing commit...
-> 
-> Cheers,
-> Peter
-> 
-> diff --git a/arch/arm/mach-at91/sama5.c b/arch/arm/mach-at91/sama5.c
-> index 67ed68fbe3a5..bf2b5c6a18c6 100644
-> --- a/arch/arm/mach-at91/sama5.c
-> +++ b/arch/arm/mach-at91/sama5.c
-> @@ -26,7 +26,7 @@ static void sama5_l2c310_write_sec(unsigned long val, unsigned reg)
->  static void __init sama5_secure_cache_init(void)
->  {
->  	sam_secure_init();
-> -	if (sam_linux_is_optee_available())
-> +	if (IS_ENABLED(CONFIG_OUTER_CACHE) && sam_linux_is_optee_available())
->  		outer_cache.write_sec = sama5_l2c310_write_sec;
->  }
->  
+> Is there any update for the community? More and more folks are asking. We
+> are all techies and happy to help debug.
 
-It's been a week or so of silence, thus CC:ing the regression bot so
-that this issue is not lost.
+Vested interest since I am suffering from the same issue (X670E-F
+Gaming), but is it okay to add this to regzbot? Not sure whether it
+counts as a regression or not since it's new hw with the existing driver,
+but this seems to be falling through the cracks without a response for
+several weeks.
 
-Cheers,
-Peter
+Thanks,
+Conor.
 
-#regzbot ^introduced: 3b5a7ca7d252 
-#regzbot title: Build-time failure for SAMA5D3
+> On Thu, Nov 10, 2022 at 03:44 Ivan Smirnov <isgsmirnov@gmail.com> wrote:
+> 
+> > Some more data from another user. Do you guys have any preliminary
+> > investigation you could share back with the community?
+> >
+> > Same issue, been struggling with it for a last month or so: both with
+> > Ubuntu and Arch Linux. I have a dual-boot system with Windows 11, and did
+> > not notice any issues with ethernet or wifi on Windows. So this indeed
+> > seems like a firmware issue, particularly in igc. Not the adapter itself
+> >
+> > Running on Arch Linux kernel 6.0.7, same motherboard as in your post
+> >
+> > https://gist.github.com/LilDojd/2f030ecc5c5b6f8c3285725adfb8c456
+> >
+> >
+> >
+> >
+> > On Thu, Nov 3, 2022 at 05:53 Ivan Smirnov <isgsmirnov@gmail.com> wrote:
+> >
+> >> Here is the gist from one reddit user:
+> >> https://gist.github.com/DarkArc/50ffca5fc343e2ff8166bc81d3ff8335
+> >>
+> >> Here are my gists (crash free for now):
+> >> https://gist.github.com/issmirnov/b9ac74d232e1865ae849a3e64dce2afe
+> >>
+> >> --
+> >> Ivan Smirnov
+> >> https://ivans.io/ | https://blog.ivansmirnov.name/
+> >> https://www.linkedin.com/in/ismirnov |
+> >> *https://ivansmirnov.name/ <https://ivansmirnov.name/>*
+> >> *https://github.com/issmirnov <https://ivansmirnov.name/>*
+> >>
+> >>
+> >> On Wed, Nov 2, 2022 at 10:54 AM Ivan Smirnov <isgsmirnov@gmail.com>
+> >> wrote:
+> >>
+> >>> Hi folks,
+> >>>
+> >>> As usual, the computers know when the experts join the chat... I haven't
+> >>> been able to reproduce the issue for the past few days. Yay for stability,
+> >>> boo for debugging.
+> >>>
+> >>> I posted on the reddit thread
+> >>> <https://www.reddit.com/r/buildapc/comments/xypn1m/network_card_intel_ethernet_controller_i225v_igc/> asking
+> >>> other users to post their output. I'll do my best to keep an eye out for
+> >>> this issue and get you the logs ASAP once I repro the crash.
+> >>>
+> >>> Thank you for your responsiveness - will keep you posted!
+> >>>
+> >>> Best,
+> >>> - Ivan
+> >>> --
+> >>> Ivan Smirnov
+> >>> https://ivans.io/ | https://blog.ivansmirnov.name/
+> >>> https://www.linkedin.com/in/ismirnov |
+> >>> *https://ivansmirnov.name/ <https://ivansmirnov.name/>*
+> >>> *https://github.com/issmirnov <https://ivansmirnov.name/>*
+> >>>
+> >>>
+> >>> On Tue, Nov 1, 2022 at 10:21 AM Neftin, Sasha <sasha.neftin@intel.com>
+> >>> wrote:
+> >>>
+> >>>> On 11/1/2022 02:05, Jakub Kicinski wrote:
+> >>>> > CC: intel-wired
+> >>>> >
+> >>>> > On Sun, 30 Oct 2022 14:44:57 -0600 Ivan Smirnov wrote:
+> >>>> >> Hi folks,
+> >>>> >>
+> >>>> >> I found your commits on the linux kernel igc
+> >>>> >> <
+> >>>> https://github.com/torvalds/linux/commits/master/drivers/net/ethernet/intel/igc
+> >>>> >
+> >>>> >> folder. There appears to be a bug with the igc kernel module on Intel
+> >>>> >> I225-V chips.
+> >>>> >>
+> >>>> >> Specifically, the probe fails at startup with error: "igc: probe of
+> >>>> >> 0000:06:00.0 failed with error -13". When it does load, it crashes
+> >>>> after a
+> >>>> >> few hours with error "igc failed to read reg 0xc030".
+> >>>> >>
+> >>>> Could you provide dmesg -w -T | grep -i igc on the boot stage? ethtool
+> >>>> -i?
+> >>>> I've cc'd our PAE expert Amir who also could try to look at this
+> >>>> problem.
+> >>>>
+> >>>> >> There are several affected users posting on
+> >>>> >>
+> >>>> https://www.reddit.com/r/buildapc/comments/xypn1m/network_card_intel_ethernet_controller_i225v_igc/
+> >>>> >> with more details.
+> >>>> >>
+> >>>> >> Could I help you debug this? This problem has been reproduced on the
+> >>>> >> following setups:
+> >>>> >>
+> >>>> >> 1. Asus TUF-GAMING-Z690-PLUS-WIFI-D4
+> >>>> >> <
+> >>>> https://www.asus.com/motherboards-components/motherboards/tuf-gaming/tuf-gaming-z690-plus-wifi-d4/
+> >>>> >
+> >>>> >> on
+> >>>> >> Arch Linux, kernel 6.0.2-arch1-1
+> >>>> >> 2. rog strix x670e-e gaming wifi
+> >>>> >> <
+> >>>> https://rog.asus.com/us/motherboards/rog-strix/rog-strix-x670e-e-gaming-wifi-model/
+> >>>> >
+> >>>> >> on
+> >>>> >> Proxmox 7, as well as Ubuntu Linux (kernel 5.19, I believe)
+> >>>> >>
+> >>>> >> I'm happy to load any debug modules or provide additional logs as per
+> >>>> >> your request.
+> >>>> >>
+> >>>> >> Thank you
+> >>>> >>
+> >>>> >>
+> >>>> >>
+> >>>> >>
+> >>>> >> --
+> >>>> >> Ivan Smirnov
+> >>>> >> https://ivans.io/ | https://blog.ivansmirnov.name/
+> >>>> >> https://www.linkedin.com/in/ismirnov |
+> >>>> >> *https://ivansmirnov.name/ <https://ivansmirnov.name/>*
+> >>>> >> *https://github.com/issmirnov <https://ivansmirnov.name/>*
+> >>>> >
+> >>>>
+> >>>> --
+> > --
+> > Ivan Smirnov
+> > https://ivans.io/ | https://blog.ivansmirnov.name/
+> > https://www.linkedin.com/in/ismirnov |
+> > *https://ivansmirnov.name/ <https://ivansmirnov.name/>*
+> > *https://github.com/issmirnov <https://ivansmirnov.name/>*
+> >
+> -- 
+> --
+> Ivan Smirnov
+> https://ivans.io/ | https://blog.ivansmirnov.name/
+> https://www.linkedin.com/in/ismirnov |
+> *https://ivansmirnov.name/ <https://ivansmirnov.name/>*
+> *https://github.com/issmirnov <https://ivansmirnov.name/>*
+
+> _______________________________________________
+> Intel-wired-lan mailing list
+> Intel-wired-lan@osuosl.org
+> https://lists.osuosl.org/mailman/listinfo/intel-wired-lan
+
