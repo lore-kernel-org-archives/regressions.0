@@ -1,48 +1,34 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711242CA2
-	for <regressions@lists.linux.dev>; Fri, 18 Nov 2022 09:19:32 +0000 (UTC)
-Received: by mail-wr1-f46.google.com with SMTP id k8so8377818wrh.1
-        for <regressions@lists.linux.dev>; Fri, 18 Nov 2022 01:19:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ywmGO6HZoPeDk5pta/Zgi0l/H8NSLfPp6KexyZfvyDg=;
-        b=XPRDdbxSOzJuW1tJt8/WHHpRnL8IMglbnT7xSVVogruEXcIywo6nDWDMXJnhsh0Til
-         +nQRhwutmq5nZmv8aI9NOzyY7aB/KemObkTtxVM8iPd54uYQwHa5VhbuNEG9JdA0/SrL
-         FtFdJhWtJBOqEGSYQiJHuSZPgdwXaf49DGFIzFP7h9d3Ht6cLtqQsnN0EvnpT/jWWLOp
-         U53ZDhnVotci6ISnopHFOrEe3RpHuPBKHfX+fFnHH/H4x4eDlURpDi2FoNBvgeFugSCo
-         2VU81DsEDzHP38mJ3akPjnbGRTBIKdmpcIKti0fFUr6f6iilXuI6bF572+m+jUp+zKMY
-         eMYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ywmGO6HZoPeDk5pta/Zgi0l/H8NSLfPp6KexyZfvyDg=;
-        b=3APsZTg5KgSbiIYVhH/733+6SFLH872GrL/56PHBMEK+Nwe1RdJYYdYoGxPLo0qtvd
-         okka0NX52dcRJ+jPNC3ltvvNT5nFVJ4fpr33oq9ShuDaxbU3gVHwSEggAl/y3uq5N6oR
-         RwuthdjEz4CGkI/YNvw6kIx5Jn3fofu89/mPAnUluPjE3F8QGrl16Gyfi0JH2i2JfpvL
-         faFYPU5NNNWaL9kGMvWXFuGfoWHEQM5Io4j2rPYsUArPcB//DGc//OMuRR9ZO4ieW4oG
-         tHQrqNhGMjb9DIARoGD5WkF9rZugey6nZ/21C0bxE95QA683fQMEwERAOXQUDloKjB3Y
-         CWow==
-X-Gm-Message-State: ANoB5pki1InZlpm86YlbJDCzrFwcCdobDbxsa50L+Fwa5l5ZeKwRBCQf
-	fHpPAUdXdQFFJol2wobEOc3dww==
-X-Google-Smtp-Source: AA0mqf4IvIt8ecYfLqqdpfe2Ie8mTRQ05q6WdL2M9MInxr9ONrK62RPNSh4FwljtDFBhkb48MVrNJQ==
-X-Received: by 2002:a5d:53cd:0:b0:231:355b:211c with SMTP id a13-20020a5d53cd000000b00231355b211cmr3562614wrw.509.1668763170487;
-        Fri, 18 Nov 2022 01:19:30 -0800 (PST)
-Received: from elver.google.com ([2a00:79e0:9c:201:4799:a943:410e:976])
-        by smtp.gmail.com with ESMTPSA id l8-20020adfa388000000b002417f35767asm3200743wrb.40.2022.11.18.01.19.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Nov 2022 01:19:29 -0800 (PST)
-Date: Fri, 18 Nov 2022 10:19:24 +0100
-From: Marco Elver <elver@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A073E29AD
+	for <regressions@lists.linux.dev>; Fri, 18 Nov 2022 10:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ery4e7DXynGUHcFDdPwXSq/cHJt8hNQ6mXrrfbI6xLk=; b=EIGeQOPHkYWExKKZj8puEdHFeG
+	3uF7oA7oIK4hx+OZebNmAvZGuL3ecRuBR9gvsGIjdiUJ4yC4uURrDvGR5k+ITrfnIN4oHVlgyPR5I
+	D9nZ0xZyxdjb+JrMOYqCiin876QRJQN+hx3l3Kdd7sf95yKGzo+idh+uVVmFnzn/hzMNR5/urvAlT
+	dI0QMG5YBg+sT7jGX8Y/UcIR9S5TIJaVeN4N+oByK2TayIcf1aO/CQna0NxS+JOnz/bXR8zP7S7nx
+	rwBIlkL8NIzGToNjO6PMoZIv2z3mfsN649W0Rk7hDNd6kOEMR2AtDQYZ3UWuq2cV9hf8p6LN//MVv
+	nrWWxBEQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1ovyg3-001x27-EE; Fri, 18 Nov 2022 10:32:55 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(Client did not present a certificate)
+	by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6F817300462;
+	Fri, 18 Nov 2022 11:32:54 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 527C520C9821C; Fri, 18 Nov 2022 11:32:54 +0100 (CET)
+Date: Fri, 18 Nov 2022 11:32:54 +0100
+From: Peter Zijlstra <peterz@infradead.org>
 To: Dave Hansen <dave.hansen@intel.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
+Cc: Marco Elver <elver@google.com>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
 	kasan-dev <kasan-dev@googlegroups.com>, X86 ML <x86@kernel.org>,
 	open list <linux-kernel@vger.kernel.org>,
 	linux-mm <linux-mm@kvack.org>, regressions@lists.linux.dev,
@@ -51,7 +37,7 @@ Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
 	Alexander Potapenko <glider@google.com>
 Subject: Re: WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/kfence.h:46
  kfence_protect
-Message-ID: <Y3dOHNh82NQboctR@elver.google.com>
+Message-ID: <Y3dfVtYINF/u7Sar@hirez.programming.kicks-ass.net>
 References: <CA+G9fYuFxZTxkeS35VTZMXwQvohu73W3xbZ5NtjebsVvH6hCuA@mail.gmail.com>
  <Y3Y+DQsWa79bNuKj@elver.google.com>
  <4208866d-338f-4781-7ff9-023f016c5b07@intel.com>
@@ -66,9 +52,8 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <41ac24c4-6c95-d946-2679-c1be2cb20536@intel.com>
-User-Agent: Mutt/2.2.7 (2022-08-07)
 
-On Thu, Nov 17, 2022 at 03:54PM -0800, Dave Hansen wrote:
+On Thu, Nov 17, 2022 at 03:54:21PM -0800, Dave Hansen wrote:
 > On 11/17/22 15:23, Marco Elver wrote:
 > > Yes - it's the 'level != PG_LEVEL_4K'.
 > 
@@ -76,9 +61,7 @@ On Thu, Nov 17, 2022 at 03:54PM -0800, Dave Hansen wrote:
 > 
 > Could you double-check that the attached patch fixes it?  It seemed to
 > for me.
-
-Yes, that works - thanks!
-
+> 
 > The issue was that the new "No changes, easy!" check in the suspect
 > commit didn't check the cpa->force_split option.  It didn't split down
 > to 4k and then all hell broke loose.
@@ -97,8 +80,12 @@ Yes, that works - thanks!
 > -	if (!(pgprot_val(cpa->mask_set) | pgprot_val(cpa->mask_clr)))
 > +	if (!(pgprot_val(cpa->mask_set) | pgprot_val(cpa->mask_clr))
 > +	    && !cpa->force_split)
+
+(operators go at the end of the previous line)
+
 >  		return ret;
 >  
 >  	while (rempages) {
 
-Tested-by: Marco Elver <elver@google.com>
+Urgh.. sorry about that.
+
