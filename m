@@ -1,72 +1,215 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F137C
-	for <regressions@lists.linux.dev>; Sat, 19 Nov 2022 06:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=G3xskPM8jfoABNGxzLyHhOV5euslpnXfadNrBV38bOM=; b=vgTPs9MPdLO/2sOYbSYE5NT2xV
-	4dUrBIno+9FrSsJivU8/Z452+TVMrCOLZmmYWocPEobawvvMX51y6gXmU1Ndoo4wVJnotdpEfG7eD
-	9poYwjXUKNoWLaUSzj3wLTMwCMDSj/w9Y97BNjJi6s6AKvDR7DRnKO0n0iuZ9qSbML8qgpJf3nRfa
-	A4baTIPsjgIVkZlRXaSwXz9j6FEl0POcxD+BfiVPFQdaYDAI5RRIPrd5RfRVNwaRoO71UsgV166CF
-	7YhWe0E77ZbfAaSX3mkOEFiCoYqHKHG5xEbf1rW3ovVY4GSd5JnGTY5bXaqtVStFYk+Bh4Fpm29W/
-	/pWdPIXA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1owHDz-0031wA-Es; Sat, 19 Nov 2022 06:21:11 +0000
-Date: Sat, 19 Nov 2022 06:21:11 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Jorropo <jorropo.pgm@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	nborisov@suse.com, regressions@lists.linux.dev,
-	stable@vger.kernel.org
-Subject: Re: [REGRESSION] XArray commit prevents booting with 6.0-rc1 or later
-Message-ID: <Y3h118oIDsvclZHM@casper.infradead.org>
-References: <CAHWihb_EYWKXOqdN0iDBDygk+EGbhaxWHTKVRhtpm_TihbCjtw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E904C3C36
+	for <regressions@lists.linux.dev>; Sat, 19 Nov 2022 18:06:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1668881177; x=1700417177;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=0riH3yP1Cc10X6VlU/pqelG1ODpZndOOEnFdx+m/rNA=;
+  b=ZOqSKPIepdPrI+7zZvyKvaAc4OQQcs375FTVAROCjyfo37oNHX9I62aP
+   UbFMyLtoIKMvmN9GvEN7YrZFe3UHh6IHvWYpDdkIQNt6awElwmITDIz6O
+   oAFHPB8u9M5OS+aQ4QBcQdDLQYrbRbvWW/MEJq3XHeI/D/+9nzxPbSg49
+   8D63yzrQBu0AOiqJJPd1mHzZfGxqZRaiazB5VnIif694y5V2nHMiWoI9Q
+   xN0mUdqR39ywOkN5OvVyCjYQoEoaL8/bdYS/uzGUvOBK1HkAzIWCGcCFO
+   Jhpe011HvUvFknFj/VBxL0N0hxIgTA81Z/l6bmL9TJQJF6Xa6FKQmt5i2
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10536"; a="312038012"
+X-IronPort-AV: E=Sophos;i="5.96,176,1665471600"; 
+   d="scan'208";a="312038012"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Nov 2022 10:06:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10536"; a="704105073"
+X-IronPort-AV: E=Sophos;i="5.96,176,1665471600"; 
+   d="scan'208";a="704105073"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga008.fm.intel.com with ESMTP; 19 Nov 2022 10:06:16 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Sat, 19 Nov 2022 10:06:15 -0800
+Received: from orsmsx603.amr.corp.intel.com (10.22.229.16) by
+ ORSMSX612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Sat, 19 Nov 2022 10:06:15 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31 via Frontend Transport; Sat, 19 Nov 2022 10:06:15 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.174)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.31; Sat, 19 Nov 2022 10:06:14 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E3IgYTFl8DS9IWxB0IW16N1ModnH/85C3nB2tnsDmb4TB5Q4++oiHgoZ6jD3kUWBxrqJrsATxIHoLHcHOdZ3JXr0A17jwfu4Z78YToBW/QxrDlcY7MPjl8y3Et+vH7Bj5OjiIM//R3xF8mzxLSALESd7YnRSHG3sEV2ZxE/UhrruTc/H6xB954koPX5hd1DyzwzLAG4Ng5U3ul862ysj49+xpY4SR2OWWPX1EsefQn/uBqc8M0N+pBfIxhqI/H+NEsMKGKS9B+mmkvrLUwPpwha7oGq//Jt/pqWhvUbvWKnRubzeET+ghSoQ6mQltj1SxALCyZ5Bg6CESEDYAl6VKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=u44wxO3NCtOQiXG5qfCF5iNea5GzeOhN6ogGZC80YIk=;
+ b=LXZGuGTZEt+I0JR2ifOTSsYYBQSlM/JrE/6306ouoQO/EsDqt2cNZcFyofNB4u7YXj4UUg7VHrQf6oa9LLl2glgVQWnC/gHbb0DGNreh6yjebSWrBIr9K0QhzgCAHUicAwlOHYPwBJOcfsyBOBVluUbkBDDjzBqiiVT+6SlDQlfvIudWijJPiCv8cbfWdzMy2cgug3CJp4lt3DfSZv9Jv3oZQyRZVr1ITP+BjRH9znlinx6l69UeDVwq3yts+h3e+6NJiY6TJBviqK8Bri7UUQC0PYb9vjddhQ1Wfucz3vxSECyRmOoNuM7WeUsdQtHfu2MG1fBmkd7OvIIiaAc5FA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DM5PR1101MB2235.namprd11.prod.outlook.com (2603:10b6:4:52::15)
+ by BL3PR11MB6388.namprd11.prod.outlook.com (2603:10b6:208:3b8::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5834.11; Sat, 19 Nov
+ 2022 18:06:13 +0000
+Received: from DM5PR1101MB2235.namprd11.prod.outlook.com
+ ([fe80::4dcc:8fe4:623f:4f9c]) by DM5PR1101MB2235.namprd11.prod.outlook.com
+ ([fe80::4dcc:8fe4:623f:4f9c%6]) with mapi id 15.20.5834.009; Sat, 19 Nov 2022
+ 18:06:13 +0000
+Message-ID: <a15508df-eab4-ce00-7340-69323c462fdc@intel.com>
+Date: Sat, 19 Nov 2022 20:06:05 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.4.2
+Subject: Re: [Intel-wired-lan] igc kernel module crashes on new hardware
+ (Intel Ethernet I225-V)
+To: Conor Dooley <conor@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+CC: Ivan Smirnov <isgsmirnov@gmail.com>, "Fuxbrumer, Devora"
+	<devora.fuxbrumer@intel.com>, <intel-wired-lan@lists.osuosl.org>, "Ruinskiy,
+ Dima" <dima.ruinskiy@intel.com>, "Avivi, Amir" <amir.avivi@intel.com>,
+	<regressions@lists.linux.dev>, "Lifshits, Vitaly"
+	<vitaly.lifshits@intel.com>, naamax.meir <naamax.meir@linux.intel.com>,
+	"Meir, NaamaX" <naamax.meir@intel.com>
+References: <CAPAtJa_o5q-sU+AD=G3y43H_5pBKnOZTQGXM99uszPXNkn8Z9A@mail.gmail.com>
+ <20221031170535.77be0eb5@kernel.org>
+ <03f7dc73-3e7c-1e6d-275f-85539493cd7f@intel.com>
+ <CAPAtJa8qupPZZ0AiMWSxNKSd-WMg0MQDQeZcCO_Z-GGBu3jZCg@mail.gmail.com>
+ <CAPAtJa_-yMusW5-C3BDivMu=MOyfKF9VQkxQotX3L_P+Q48oMA@mail.gmail.com>
+ <CAPAtJa_nL5edyiN61ghXZxVUSDBFQQR3uiYJM0uo9mEao=RC0w@mail.gmail.com>
+ <CAPAtJa_hbFbVXQbiNnb_byLqtZ-Dy_EBcvTFH9GyPqt__dFmLQ@mail.gmail.com>
+ <Y3gKkYeijrAIhxjc@spud> <20221118145443.427ecf10@kernel.org>
+ <Y3gTdsg4l71L0vz9@spud>
+Content-Language: en-US
+From: "Neftin, Sasha" <sasha.neftin@intel.com>
+In-Reply-To: <Y3gTdsg4l71L0vz9@spud>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR3P281CA0017.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:1d::20) To DM5PR1101MB2235.namprd11.prod.outlook.com
+ (2603:10b6:4:52::15)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHWihb_EYWKXOqdN0iDBDygk+EGbhaxWHTKVRhtpm_TihbCjtw@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM5PR1101MB2235:EE_|BL3PR11MB6388:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9907a69d-9f0b-4bda-823a-08daca58bdfc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: EPjjdpxg56NOYSuwgpizBvrggidHnzsoQdDKNa3Kzakj1o1+YnaB6SerU0Rno+kxz/6RzmEz86SVu4wU4KASZobFCi+2AkuuHtGhF2K88jZ9tpYNRDhV9RBZuir+97GfeVKVcPidVR84nhHRCi9So4NtL2MkUoSDtf6NR+hFzbVhUgPRxYgM4JiUajrgA66Rsdy1EIyuXhS1BZ8cxCk0sZcCpzqkmT/W2PM93u2yrGRIDotv1lqS3KMb1mNZFalZ6gYxKw6HJkkHmvkwN1vYTwhNDeXojujXYLRhXPvNb/WL9aca5NaH7BgSc8XSYjpdYbb34E/jzswmqnhDs+A9jblGJARnb0Sbguz/kfEwQwGnG7hXM2prbCYZPB2myPE6/x1twhj1VElaPsYbQ3Y//s5+nV1KLvjY3u4llLfhhKLUnzFgxD8Wbr9piUxbTBT9dpl4Kl9WLUY3SvDxxq3dFrlnfByiTlAAXWtg5EBm/oqYYeGJ4nrixlEkJIgMjRDxkrvEqrgKc0/byVSZHdkv6faFN+rY2rVL2F/uJJ2LP0l9R2z9XW+8QxXlVck8INcZAR754JfQstR9LBHJsbXOtcjKZ6o1otWbRBR691RPshaQLmkUHFzQnFf4r2iP75emrvond2cstIRA4DINOrb33PyFSEavLw3l905iipEd1rTtOYezsRoyZeBFz5zOFolAk8izg+1neHzWydOSQDBq12WYcSWta5NUatNY0rD3Kj6oGSdAMr2L7i3qYesdCjHN48W8LkFhdVQPSxczpdbXf33IkCiytxVTRzYGQfQWpWQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR1101MB2235.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(39860400002)(376002)(366004)(396003)(136003)(451199015)(6486002)(26005)(6512007)(6506007)(6666004)(2906002)(110136005)(478600001)(82960400001)(36756003)(31696002)(86362001)(83380400001)(38100700002)(53546011)(966005)(2616005)(186003)(8936002)(41300700001)(31686004)(66556008)(8676002)(66476007)(4326008)(66946007)(5660300002)(316002)(54906003)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VG5XOERiLzAraHRmWEF4ZEpWTGVGb0dFYTZlUGEraXJ0cm5pZVRoZytuRlVH?=
+ =?utf-8?B?SlBYK1JmT2V0WSsveGFJN3pHVkkrcXVyRTM3Qm1Dd1krN1ZWWVQzVCtFTjMx?=
+ =?utf-8?B?NVhpdEFndUxOeVFBTWYxVWVNdmFOeGNUNmh4RXI1NXVXY2gvQXNpMTNUQm5w?=
+ =?utf-8?B?eEtkdUw0MEIwTzZGZzR5LzMzb3B0TGtmTGgxYUlGSG4wTWpXU3Y2QWRXOXpi?=
+ =?utf-8?B?NHg1VkV3VjB0QlZGV0xGTUVGRUlENHZ4dUMzUDFmb0kvWnVQV1FjY0hTdStM?=
+ =?utf-8?B?YzFZTW1oZVlJOE5YYWxRb3EwWHBsVWNDbllkZjlGRTlZWDV4Z0RLZVlEcFN0?=
+ =?utf-8?B?ZVcxMHRycjZWSG1kZURhTDVGOFdUcFpYb003c3d0V1l1RVhTL0JNSTYvVXB2?=
+ =?utf-8?B?U1UyakJMU2Z4TmJPYit6ak9xamVwN3hLZnF3VjJaUHlVYWJSdXI2Q2dkRnc2?=
+ =?utf-8?B?V3paMTZreGxQSFE4bk81T3BQcmduNStKTmtHTktUR0NtNlh5WldDNUI4dVU1?=
+ =?utf-8?B?WDhrKzZRT0ZXaEZZbGZHc2VHTlF2Sm1hOE1zSTIzZWtZUFNpWndqRGVGNWIy?=
+ =?utf-8?B?Qkd5MjYzSHV1RUV1bmhGWS9oR25kbWpFSWRidVNhbDB3dXNwdVV3L2tyeG5y?=
+ =?utf-8?B?WmF1ZnhsY2JIeEFjMXV2NGdJSnBHbDV3NW5YM05ZL3o3a3JkdDJpZHdKZDk0?=
+ =?utf-8?B?YkNMTURLdjhLVEQ0TmpWY1laVXA0OFB6KzArcFROemRmZ25wN29Pd2Z1TmQx?=
+ =?utf-8?B?Mml5cXl1Um5yUWlqbmx3RW90Mkp6ZlYra1FVNnExU1NiUHBnS2pWZUJudHI3?=
+ =?utf-8?B?MlhIeUtXeFV3dWU0ZXg0WGhvNXArU2pjUFBLbGVQSlpZdWR6ek9RbGpqNGZN?=
+ =?utf-8?B?akNDbXJ6ZzVNMHJaWGFheEZwQXdHa3lDZnR0MHJLKy9xVEExelUvYmVvN20z?=
+ =?utf-8?B?amRTNjBrQXRma2NnQW1tanNEUFdXdXExcGxSNG5oekNkSmU4Ky9Udi95LzRk?=
+ =?utf-8?B?V1E3bWxJTnlhcHNYajB4dTBLYU5EYnV3eDVjL256bWFENEdrbzBLSUtyS08v?=
+ =?utf-8?B?dmxnVGpqOUJQYUxTRE5SaFVRdStkRUpGZzk1MHFCQkJUNHNEODkrRkVzYWg5?=
+ =?utf-8?B?cDJBWkhtWEtCYjdrbkJlQUJvL3VzclUyZG9mMGF6SG9USDdMM1FSMEhDYUpw?=
+ =?utf-8?B?Wko2aitkTXBZL1daUzZvN1FEMnZJYXVGT1IyR09HRHp5aDdhU2JBTTFhajYz?=
+ =?utf-8?B?bjNVQS8yUy9kTTJqSEdNRHhrVWx5VTlGbUdUSGgrK0lwdTBqTXZEWGJSR0JO?=
+ =?utf-8?B?QnJNNDFZVUtiSVBPZENXUGYxdDlwM2ZwZ2pJTHRRSmZ3Z3h5SmpzK3Rta21h?=
+ =?utf-8?B?a2Y1T1IxS2FGdDlVdmR5NWZaTmRHUE11eHp2THJsUnl1OHoyZXNDZDFueldw?=
+ =?utf-8?B?TzdaOVdRNS92MDJFekI0eGtYb00xbVE5ZkJFMzFCblE2WUhzTkFBa2NmVjlK?=
+ =?utf-8?B?amxobmoxK0FXODhnZkJXWTNNYWZGaTA0Y1habXZTRDd4c3FIL1NsV1B1OEJr?=
+ =?utf-8?B?d1UweUhqUUVEcCt5b3g5d0tEdjRuTzdpbFg1ZldvdTQxenFHRlMrZCtSMnk3?=
+ =?utf-8?B?enpDMWROMjFlMmxqNkEyREJ3d1pONHFCZGZ3bEd3dk53eDN5RjZFbVpDM1U5?=
+ =?utf-8?B?anpyM3YwNTZUSHV0MDJ5MXM4Qkw0Ujg0WmF4T2JHVjlDdzVsb1NjbHBSTkFj?=
+ =?utf-8?B?akJ1dnJsV3RSZjhqV21TVTFvZEhiMU1FbERzbUo4QXJjeHlhRFNJa3R6dXFH?=
+ =?utf-8?B?YUswNXFxTDV3MlFSV1NmaUZrSU5hcnlvd2hCZHZPUC9ZZkY5ckJnZUNTK213?=
+ =?utf-8?B?eTBoSmxDZFpkNlYwWEpVd2plbDBsMGJqZEgzdkU4TXhNU3hROUJtQ0lLd3RY?=
+ =?utf-8?B?NVRKSnlvU3AwbURyOXhGd3hOMDZXTDdzeDI1TWNNRjBtYUF6WVYveWlhYmN4?=
+ =?utf-8?B?eS9haVVWQytVZjY0eHFCMTlPeHVMZHF6UjRrTys4aWF5NEdQQUdnNnJyL3Zz?=
+ =?utf-8?B?VEx6ZnI1L2ZYVWRLejFNYXVwUUFJTXdOQ0h2VlBGTjV0SUlPQ2d4QWllSnQ5?=
+ =?utf-8?Q?o2HKY7F21wGzrHikJYWbG01/s?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9907a69d-9f0b-4bda-823a-08daca58bdfc
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR1101MB2235.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Nov 2022 18:06:13.3626
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ytiDPmargpVvApZbK5S31yuFgpWr+cDMXZ8C5g4qvHpbkggnYbTuQ7XGDal1xWY87ySvZ+sa+EXaTk7kQfe1Bw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR11MB6388
+X-OriginatorOrg: intel.com
 
-On Sat, Nov 19, 2022 at 05:07:45AM +0100, Jorropo wrote:
-> #regzbot introduced v5.19-rc6..1dd685c414a7b9fdb3d23aca3aedae84f0b998ae
+On 11/19/2022 01:21, Conor Dooley wrote:
+> On Fri, Nov 18, 2022 at 02:54:43PM -0800, Jakub Kicinski wrote:
+>> On Fri, 18 Nov 2022 22:43:29 +0000 Conor Dooley wrote:
+>>>> Is there any update for the community? More and more folks are asking. We
+>>>> are all techies and happy to help debug.
+>>>
+>>> Vested interest since I am suffering from the same issue (X670E-F
+>>> Gaming), but is it okay to add this to regzbot? Not sure whether it
+>>> counts as a regression or not since it's new hw with the existing driver,
+>>> but this seems to be falling through the cracks without a response for
+>>> several weeks.
+>>
+>> Dunno, Thorsten's will decide. The line has to be drawn somewhere
+>> on "vendor doesn't care about Linux support" vs "we broke uAPI".
+>> This is the kind of situation I was alluding to in my line of
+>> questioning at the maintainer summit: https://lwn.net/Articles/908324/
 > 
-> Hi, I recently tried to upgrade to linux v6.0.x but when trying to
-> boot it fails with "error: out of memory" when or after loading
-> initramfs (which then kpanics because the vfs root is missing).
-> The latest releases I tested are v6.0.9 and v6.1-rc5 and it's broken there too.
+> Yeah & it is /regression/ tracking which I don't (or rather didn't)
+> consider this situation to be. I'm generally a little unsure as to when
+> I should trigger regzbot in general:
+> - immediately when I find something?
+> - only if it goes a while with nothing constructive?
+> - is it okay to use it outside of "this used to work and now doesnt"?
 > 
-> I bisected the error to this patch:
-> 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae "XArray: Add calls to
-> might_alloc()" is the first bad commit.
-> I've confirmed this is not a side effect of a poor bitsect because
-> 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae~1 (v5.19-rc6) works.
+> Either way, but I did some more googling and found this reddit thread:
+> https://www.reddit.com/r/intel/comments/lqb4km/for_people_having_i225v_connection_issues/
+> 
+> That's being reported against windows & I dunno if the dude is using
+> firmware and driver interchangeably etc. But the disabling power saving
+> etc sounds oddly like the issue we have here, since that was a proposed
+> workaround in Ivan's 2022 reddit thread.
+> 
+> Supposedly I am on firmware-version 1082:8770, but /I/ I have no idea
+> how that corresponds to windows versioning. That may lend some credence
+> to your assertion about firmware being the source of many issues.
+> 
+>> Finding a kernel release which does not suffer from the problem
+>> would certainly strengthen your case.
+> 
+> Aye, likely to be a little difficult to do a meaningful bisection for
+> me at least, since the motherboard I have with the problem is an AM5
+> one for the new Zen4 stuff. I'm not an x86 person, so not entirely
+> sure when that support landed. I may do some poking tomorrow..
+> 
+I do not think we can resolve this problem on this forum.
+In early Ivan's report was reported error to netdev "PCIe link lost, 
+device now detached"). Since the PCIe link unexpectedly drops it could 
+lead to many problems (not only crashes).
+Before you go to SW/FW bisection (change FW(NVM), go back with a kernel 
+version) - please, contact your board vendor (ASUS). Why PCIe link drop?
+Circuit problem on board, the system performs power management flows and 
+does not stop the driver.
 
-That makes no sense.  I can't look into this until Wednesday, but I
-suggest that what you have is an intermittent failure to boot, and
-the bisect has led you down the wrong path.
+"failed to read reg 0xc030" (just symptom) happen after PCIe link lost.
 
-> I've tried reverting the failing commit on top of v6.0.9 and it didn't fixed it.
-> 
-> My system is:
-> CPU: Ryzen 3600
-> Motherboard: B550 AORUS ELITE V2
-> Ram: 48GB (16+32) of unmatched DDR4
-> GPU: AMD rx580
-> Various ssds, hdds and network cards plugged with various buses.
-> 
-> You can find a folder with my .config, bisect logs and screenshots of
-> the error messages there:
-> https://jorropo.net/ipfs/QmaWH84UPEen4E9n69KZiLjPDaTi2aJvizv3JYiL7Gfmnr/
-> https://ipfs.io/ipfs/QmaWH84UPEen4E9n69KZiLjPDaTi2aJvizv3JYiL7Gfmnr/
-> 
-> I'll be happy to assist you if you need help reproducing this issue
-> and or testing fixes.
-> 
-> Thx, Jorropo
+
