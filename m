@@ -1,157 +1,95 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138A328FA
-	for <regressions@lists.linux.dev>; Sun, 20 Nov 2022 18:26:13 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1owp19-0007X4-Ut; Sun, 20 Nov 2022 19:26:12 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2022-11-20]
-Date: Sun, 20 Nov 2022 18:26:11 +0000
-Message-Id: <166896848178.941482.1410650446316360950@leemhuis.info>
-X-Mailer: git-send-email 2.38.1
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B6727EA
+	for <regressions@lists.linux.dev>; Sun, 20 Nov 2022 18:40:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15309C433D6;
+	Sun, 20 Nov 2022 18:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1668969627;
+	bh=IL6rbRNqWxYXvYNDrx+68DN7TWq/FY/OdkWzWHkpV2s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J9ME5e+Lds3R1igTMhhQWGqWEHVIxE/Hn6VqHoOz9n06GoleaYryMSD4mkCGiSAJX
+	 QeDPdytlp+t5ivYYF+B0C++oOkeSZBCEbuvVF2MK8OSTvdSEaQy/SzjrHkwwpKMPZC
+	 H2ywU2bJSDhkdrvQaI5t+JumQFaAmk2uatCIa+rsq+QXkSHQznOGRAqXVS1n6n/Dt1
+	 OjmCHi9Ol+aydv/BBcEwpMpSQ7XU6tLq0QX7AXuducHt6gELqOkImZ4bNpKolqTOTt
+	 DGsKJaiZuaqiNz8N4AoI+C/4ll2Y8EPZM/Da+alUd3fyWIzRJ/2YKx4i7pEpL5vtN8
+	 EJnAVKZUYw3CQ==
+Date: Sun, 20 Nov 2022 18:40:22 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Jakub Kicinski <kuba@kernel.org>, Ivan Smirnov <isgsmirnov@gmail.com>,
+	"Neftin, Sasha" <sasha.neftin@intel.com>,
+	"Fuxbrumer, Devora" <devora.fuxbrumer@intel.com>,
+	intel-wired-lan@lists.osuosl.org,
+	"Ruinskiy, Dima" <dima.ruinskiy@intel.com>,
+	"Avivi, Amir" <amir.avivi@intel.com>, regressions@lists.linux.dev
+Subject: Re: [Intel-wired-lan] igc kernel module crashes on new hardware
+ (Intel Ethernet I225-V)
+Message-ID: <Y3p0lsVBMK8Ge8Qp@spud>
+References: <20221031170535.77be0eb5@kernel.org>
+ <03f7dc73-3e7c-1e6d-275f-85539493cd7f@intel.com>
+ <CAPAtJa8qupPZZ0AiMWSxNKSd-WMg0MQDQeZcCO_Z-GGBu3jZCg@mail.gmail.com>
+ <CAPAtJa_-yMusW5-C3BDivMu=MOyfKF9VQkxQotX3L_P+Q48oMA@mail.gmail.com>
+ <CAPAtJa_nL5edyiN61ghXZxVUSDBFQQR3uiYJM0uo9mEao=RC0w@mail.gmail.com>
+ <CAPAtJa_hbFbVXQbiNnb_byLqtZ-Dy_EBcvTFH9GyPqt__dFmLQ@mail.gmail.com>
+ <Y3gKkYeijrAIhxjc@spud>
+ <20221118145443.427ecf10@kernel.org>
+ <Y3gTdsg4l71L0vz9@spud>
+ <8117aac8-947e-49ca-c2b1-ef45c2914975@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1668968774;70d8808c;
-X-HE-SMSGID: 1owp19-0007X4-Ut
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8117aac8-947e-49ca-c2b1-ef45c2914975@leemhuis.info>
 
-Hi Linus! Below is a slightly edited report from regzbot listing all
-regression from this cycle that the bot and I are currently aware of.
+On Sun, Nov 20, 2022 at 11:32:36AM +0100, Thorsten Leemhuis wrote:
+> On 19.11.22 00:21, Conor Dooley wrote:
+> > On Fri, Nov 18, 2022 at 02:54:43PM -0800, Jakub Kicinski wrote:
+> >> On Fri, 18 Nov 2022 22:43:29 +0000 Conor Dooley wrote:
+> >>>> Is there any update for the community? More and more folks are asking. We
+> >>>> are all techies and happy to help debug.  
+> >>>
+> >>> Vested interest since I am suffering from the same issue (X670E-F
+> >>> Gaming), but is it okay to add this to regzbot? Not sure whether it
+> >>> counts as a regression or not since it's new hw with the existing driver,
+> >>> but this seems to be falling through the cracks without a response for
+> >>> several weeks.
+> >>
+> >> Dunno, Thorsten's will decide. The line has to be drawn somewhere
+> >> on "vendor doesn't care about Linux support" vs "we broke uAPI".
+> >> This is the kind of situation I was alluding to in my line of
+> >> questioning at the maintainer summit: https://lwn.net/Articles/908324/
+> > 
+> > Yeah & it is /regression/ tracking which I don't (or rather didn't)
+> > consider this situation to be.
+> 
+> Yeah, looks like this is not something that look track-worthy for
+> regzbot -- at least for now, maybe it one day makes sense to use and
+> improved regzbot for bug reports as well, but I'd like to focus on
+> establishing regression tracking properly first, which still requires a
+> lot of work.
+> 
+> > I'm generally a little unsure as to when
+> > I should trigger regzbot in general:
+> > - immediately when I find something?
+> 
+> Yes, ideally, as documented here:
+> https://docs.kernel.org/admin-guide/reporting-regressions.html
+> 
+> > - only if it goes a while with nothing constructive?
+> 
+> But that is fine as well. But FWIW, we all don't want bureaucracy. Even
+> I don't add each and every regression I see to the tracking yet.
+> 
+> > - is it okay to use it outside of "this used to work and now doesnt"?
+> 
+> Guess I should clarify that this is unwanted in above doc.
 
-For most of them there was recent activity and fixes will likely be
-heading your way over the next few days. The exception here is "drm:
-msm: DSI controller being switched off before the panel unprepare hook
-is called", that looks somewhat stalled.
+Right. I wasn't sure if it was okay to use it for "this never worked"
+type of issues. Thanks Thorsten!
 
-HTH, Ciao, Thorsten
-
----
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 5 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.0.. aka v6.1-rc), culprit identified
-======================================================
-
-
-drm: amdgpu: some games (Cyberpunk 2077, Forza Horizon 4/5) hang at start
--------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CABXGCsOeQ7VYm98jRVaYp6KaNsFVsAnSb33ZT8JvZxcTcEGW0w@mail.gmail.com/
-https://lore.kernel.org/lkml/CABXGCsOeQ7VYm98jRVaYp6KaNsFVsAnSb33ZT8JvZxcTcEGW0w@mail.gmail.com/
-
-By Mikhail Gavrilov; 30 days ago; 17 activities, latest 0 days ago.
-Introduced in dd80d9c8eeca (v6.1-rc1)
-
-Fix incoming:
-* drm/amdgpu: fix userptr HMM range handling v2
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=fec8fdb54e8f74d88951c9f998f47bf4f2031fe0
-
-
-drm: amdgpu: No payload for [MST PORT:0000000006da5d29] found in mst state 00000000b0e556d6" on system resume with TBT dock connected.
---------------------------------------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/ghwn827862.fsf@gouders.net/
-https://lore.kernel.org/lkml/ghwn827862.fsf@gouders.net/
-https://gitlab.freedesktop.org/drm/amd/-/issues/2171
-
-By Dirk Gouders and Unkown; 9 days ago; 15 activities, latest 1 days ago.
-Introduced in 4d07b0bc4034 (v6.1-rc1)
-
-Recent activities from: Lyude Paul (9), Alex Deucher (2), Lin, Wayne (1)
-
-4 patch postings are associated with this regression, the latest is this:
-* [PATCH v2 4/4] drm/amdgpu/dm/dp_mst: Don't grab mst_mgr->lock when computing DSC state
-  https://lore.kernel.org/lkml/20221114221754.385090-5-lyude@redhat.com/
-  5 days ago, by Lyude Paul
-
-Noteworthy links:
-* [PATCH v2 0/4] drm/amdgpu: Regression fixes from MST atomic-only conversion
-  https://lore.kernel.org/amd-gfx/20221114221754.385090-1-lyude@redhat.com/
-  5 days ago, by Lyude Paul; thread monitored.
-
-
-[ *NEW* ] arm64: crash on the Qualcomm SM8250
----------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAMi1Hd1VBCFhf7+EXWHQWcGy4k=tcyLa7RGiFdprtRnegSG0Mw@mail.gmail.com/
-https://lore.kernel.org/lkml/CAMi1Hd1VBCFhf7%2BEXWHQWcGy4k=tcyLa7RGiFdprtRnegSG0Mw@mail.gmail.com/
-
-By Amit Pundir; 12 days ago; 14 activities, latest 2 days ago.
-Introduced in c44094eee32f (v6.1-rc1)
-
-Recent activities from: Will Deacon (3), Manivannan Sadhasivam (3),
-  Catalin Marinas (2), Robin Murphy (1)
-
-Noteworthy links:
-* [PATCH] Revert "arm64: dma: Drop cache invalidation from arch_dma_prep_coherent()"
-  https://lore.kernel.org/lkml/20221114110329.68413-1-manivannan.sadhasivam@linaro.org/
-  6 days ago, by Manivannan Sadhasivam; thread monitored.
-
-
-[ *NEW* ] cpufreq: schedutil: improved latency on Pixel 6
----------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20221110195732.1382314-1-wusamuel@google.com/
-https://lore.kernel.org/lkml/20221110195732.1382314-1-wusamuel@google.com/
-
-By Sam Wu; 9 days ago; 6 activities, latest 2 days ago.
-Introduced in 6d5afdc97ea7 (v6.1-rc1)
-
-Recent activities from: Lukasz Luba (2), Sam Wu (1), Rafael J.
-  Wysocki (1), Saravana Kannan (1)
-
-
-drm: msm: DSI controller being switched off before the panel unprepare hook is called
--------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/1892d0af-8aa4-dc03-887a-e44bb623b836@linaro.org/
-https://lore.kernel.org/dri-devel/1892d0af-8aa4-dc03-887a-e44bb623b836@linaro.org/
-
-By Caleb Connolly; 9 days ago; 2 activities, latest 7 days ago.
-Introduced in 007ac0262b0d (v6.1-rc1)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/166836521992.605503.16264140239924937400@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
