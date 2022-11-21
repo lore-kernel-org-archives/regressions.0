@@ -1,41 +1,207 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87957A4F
-	for <regressions@lists.linux.dev>; Mon, 21 Nov 2022 08:58:25 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ox2dD-0004m4-BH; Mon, 21 Nov 2022 09:58:23 +0100
-Message-ID: <337d2a4e-332f-909f-5035-7090c2d7691e@leemhuis.info>
-Date: Mon, 21 Nov 2022 09:58:22 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A283D84
+	for <regressions@lists.linux.dev>; Mon, 21 Nov 2022 13:36:07 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8806222030;
+	Mon, 21 Nov 2022 13:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1669037760; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7TfGo5S1vmokIgyDxIt6BtjFkJISVWv2OjlkPE7pwt8=;
+	b=y8661Tjf/sFi54mITKEwPoZNmFdDkVWSqC8Ay8XSseBU2KAvFx7WDt7awux8kTSUpqW7oq
+	ohtD8Nr0mjHtd4lrN3AunpoaimCBDqeICmJ03f053t+ipWZZ3tg4A9V27U3eIabCU65HGz
+	ruLMV+YjNrxySUyO0qw9cxmWntF5SDs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1669037760;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7TfGo5S1vmokIgyDxIt6BtjFkJISVWv2OjlkPE7pwt8=;
+	b=GJf+0Y+l5NwLkw1/kN55KDE5jk2myQ00gUbBPSEUgeWHrgBKRbrqXKailo/LwhP+jdHiA8
+	ElKyC0OZWBQmK6CQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6AC821376E;
+	Mon, 21 Nov 2022 13:36:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id LgEGGsB+e2McfgAAMHmgww
+	(envelope-from <jack@suse.cz>); Mon, 21 Nov 2022 13:36:00 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 01537A070A; Mon, 21 Nov 2022 14:35:59 +0100 (CET)
+Date: Mon, 21 Nov 2022 14:35:59 +0100
+From: Jan Kara <jack@suse.cz>
+To: Jeremi Piotrowski <jpiotrowski@linux.microsoft.com>
+Cc: Jan Kara <jack@suse.cz>, Thilo Fromm <t-lo@linux.microsoft.com>,
+	Ye Bin <yebin10@huawei.com>, jack@suse.com, tytso@mit.edu,
+	linux-ext4@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [syzbot] possible deadlock in jbd2_journal_lock_updates
+Message-ID: <20221121133559.srie6oy47udavj52@quack3>
+References: <d30f4e74-aa75-743d-3c89-80ec61d67c6c@linux.microsoft.com>
+ <20221024104628.ozxjtdrotysq2haj@quack3>
+ <643d007e-1041-4b3d-ed5e-ae47804f279d@linux.microsoft.com>
+ <20221026101854.k6qgunxexhxthw64@quack3>
+ <20221110125758.GA6919@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20221110152637.g64p4hycnd7bfnnr@quack3>
+ <20221110192701.GA29083@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20221111142424.vwt4khbtfzd5foiy@quack3>
+ <20221111151029.GA27244@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
+ <20221111155238.GA32201@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [REGRESSION] XArray commit prevents booting with 6.0-rc1 or later
- #forregzbot
-Content-Language: en-US, de-DE
-To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, stable@vger.kernel.org
-References: <CAHWihb_EYWKXOqdN0iDBDygk+EGbhaxWHTKVRhtpm_TihbCjtw@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAHWihb_EYWKXOqdN0iDBDygk+EGbhaxWHTKVRhtpm_TihbCjtw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669021105;7f55216c;
-X-HE-SMSGID: 1ox2dD-0004m4-BH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221111155238.GA32201@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net>
 
-[Note: this mail is primarily send for documentation purposes and/or for
-regzbot, my Linux kernel regression tracking bot. That's why I removed
-most or all folks from the list of recipients, but left any that looked
-like a mailing lists. These mails usually contain '#forregzbot' in the
-subject, to make them easy to spot and filter out.]
+On Fri 11-11-22 07:52:38, Jeremi Piotrowski wrote:
+> On Fri, Nov 11, 2022 at 07:10:29AM -0800, Jeremi Piotrowski wrote:
+> > On Fri, Nov 11, 2022 at 03:24:24PM +0100, Jan Kara wrote:
+> > > On Thu 10-11-22 11:27:01, Jeremi Piotrowski wrote:
+> > > > On Thu, Nov 10, 2022 at 04:26:37PM +0100, Jan Kara wrote:
+> > > > > On Thu 10-11-22 04:57:58, Jeremi Piotrowski wrote:
+> > > > > > On Wed, Oct 26, 2022 at 12:18:54PM +0200, Jan Kara wrote:
+> > > > > > > On Mon 24-10-22 18:32:51, Thilo Fromm wrote:
+> > > > > > > > Hello Honza,
+> > > > > > > > 
+> > > > > > > > > Yeah, I was pondering about this for some time but still I have no clue who
+> > > > > > > > > could be holding the buffer lock (which blocks the task holding the
+> > > > > > > > > transaction open) or how this could related to the commit you have
+> > > > > > > > > identified. I have two things to try:
+> > > > > > > > > 
+> > > > > > > > > 1) Can you please check whether the deadlock reproduces also with 6.0
+> > > > > > > > > kernel? The thing is that xattr handling code in ext4 has there some
+> > > > > > > > > additional changes, commit 307af6c8793 ("mbcache: automatically delete
+> > > > > > > > > entries from cache on freeing") in particular.
+> > > > > > > > 
+> > > > > > > > This would be complex; we currently do not integrate 6.0 with Flatcar and
+> > > > > > > > would need to spend quite some effort ingesting it first (mostly, make sure
+> > > > > > > > the new kernel does not break something unrelated). Flatcar is an
+> > > > > > > > image-based distro, so kernel updates imply full distro updates.
+> > > > > > > 
+> > > > > > > OK, understood.
+> > > > > > > 
+> > > > > > > > > 2) I have created a debug patch (against 5.15.x stable kernel). Can you
+> > > > > > > > > please reproduce the failure with it and post the output of "echo w
+> > > > > > > > > > /proc/sysrq-trigger" and also the output the debug patch will put into the
+> > > > > > > > > kernel log? It will dump the information about buffer lock owner if we > cannot get the lock for more than 32 seconds.
+> > > > > > > > 
+> > > > > > > > This would be more straightforward - I can reach out to one of our users
+> > > > > > > > suffering from the issue; they can reliably reproduce it and don't shy away
+> > > > > > > > from patching their kernel. Where can I find the patch?
+> > > > > > > 
+> > > > > > > Ha, my bad. I forgot to attach it. Here it is.
+> > > > > > > 
+> > > > > > 
+> > > > > > Unfortunately this patch produced no output, but I have been able to repro so I
+> > > > > > understand why: except for the hung tasks, we have 1+ tasks busy-looping through
+> > > > > > the following code in ext4_xattr_block_set():
+> > > > > > 
+> > > > > > inserted:
+> > > > > >         if (!IS_LAST_ENTRY(s->first)) {
+> > > > > >                 new_bh = ext4_xattr_block_cache_find(inode, header(s->base),
+> > > > > >                                                      &ce);
+> > > > > >                 if (new_bh) {
+> > > > > >                         /* We found an identical block in the cache. */
+> > > > > >                         if (new_bh == bs->bh)
+> > > > > >                                 ea_bdebug(new_bh, "keeping");
+> > > > > >                         else {
+> > > > > >                                 u32 ref;
+> > > > > > 
+> > > > > >                                 WARN_ON_ONCE(dquot_initialize_needed(inode));
+> > > > > > 
+> > > > > >                                 /* The old block is released after updating
+> > > > > >                                    the inode. */
+> > > > > >                                 error = dquot_alloc_block(inode,
+> > > > > >                                                 EXT4_C2B(EXT4_SB(sb), 1));
+> > > > > >                                 if (error)
+> > > > > >                                         goto cleanup;
+> > > > > >                                 BUFFER_TRACE(new_bh, "get_write_access");
+> > > > > >                                 error = ext4_journal_get_write_access(
+> > > > > >                                                 handle, sb, new_bh,
+> > > > > >                                                 EXT4_JTR_NONE);
+> > > > > >                                 if (error)
+> > > > > >                                         goto cleanup_dquot;
+> > > > > >                                 lock_buffer(new_bh);
+> > > > > >                                 /*
+> > > > > >                                  * We have to be careful about races with
+> > > > > >                                  * adding references to xattr block. Once we
+> > > > > >                                  * hold buffer lock xattr block's state is
+> > > > > >                                  * stable so we can check the additional
+> > > > > >                                  * reference fits.
+> > > > > >                                  */
+> > > > > >                                 ref = le32_to_cpu(BHDR(new_bh)->h_refcount) + 1;
+> > > > > >                                 if (ref > EXT4_XATTR_REFCOUNT_MAX) {
+> > > > > >                                         /*
+> > > > > >                                          * Undo everything and check mbcache
+> > > > > >                                          * again.
+> > > > > >                                          */
+> > > > > >                                         unlock_buffer(new_bh);
+> > > > > >                                         dquot_free_block(inode,
+> > > > > >                                                          EXT4_C2B(EXT4_SB(sb),
+> > > > > >                                                                   1));
+> > > > > >                                         brelse(new_bh);
+> > > > > >                                         mb_cache_entry_put(ea_block_cache, ce);
+> > > > > >                                         ce = NULL;
+> > > > > >                                         new_bh = NULL;
+> > > > > >                                         goto inserted;
+> > > > > >                                 }
+> > > > > > 
+> > > > > > The tasks keep taking the 'goto inserted' branch, and never finish. I've been
+> > > > > > able to repro with kernel v6.0.7 as well.
+> > > > > 
+> > > > > Interesting! That makes is much clearer (and also makes my debug patch
+> > > > > unnecessary). So clearly the e_reusable variable in the mb_cache_entry got
+> > > > > out of sync with the number of references really in the xattr block - in
+> > > > > particular the block likely has h_refcount >= EXT4_XATTR_REFCOUNT_MAX but
+> > > > > e_reusable is set to true. Now I can see how e_reusable can stay at false due
+> > > > > to a race when refcount is actually smaller but I don't see how it could
+> > > > > stay at true when refcount is big enough - that part seems to be locked
+> > > > > properly. If you can reproduce reasonably easily, can you try reproducing
+> > > > > with attached patch? Thanks!
+> > > > > 
+> > > > 
+> > > > Sure, with that patch I'm getting the following output, reusable is false on
+> > > > most items until we hit something with reusable true and then that loops
+> > > > indefinitely:
+> > > 
+> > > Thanks. So that is what I've suspected. I'm still not 100% clear on how
+> > > this inconsistency can happen although I have a suspicion - does attached
+> > > patch fix the problem for you?
+> > > 
+> > > Also is it possible to share the reproducer or it needs some special
+> > > infrastructure?
+> > > 
+> > > 								Honza
+> > 
+> > I'll test the patch and report back.
+> > 
+> > Attached you'll find the reproducer, for me it reproduces within a few minutes.
+> > It brings up a k8s node and then runs 3 instances of the application which
+> > creates a lot of small files in a loop. The OS we run it on has selinux enabled
+> > in permissive mode, that might play a role.
+> > 
+> 
+> I can still reproduce it with the patch.
 
-On 19.11.22 05:07, Jorropo wrote:
-> #regzbot introduced v5.19-rc6..1dd685c414a7b9fdb3d23aca3aedae84f0b998ae
+Thanks for the answer! So I was trying to make your reproducer work on my
+system but it was not so easy on openSUSE ;). Anyway, when working on this
+I've realized there may be a simpler way to tickle the bug and indeed, I
+can now trigger it with a simple C program. So thanks for your help, I'm
+now debugging the issue on my system.
 
-#regzbot introduced 1dd685c414a7b9fdb3d23aca3aedae84f
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
