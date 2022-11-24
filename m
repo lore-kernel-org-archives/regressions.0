@@ -1,92 +1,179 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706FD79E3
-	for <regressions@lists.linux.dev>; Thu, 24 Nov 2022 20:34:07 +0000 (UTC)
-Received: by mail-ed1-f49.google.com with SMTP id m19so2615269edj.8
-        for <regressions@lists.linux.dev>; Thu, 24 Nov 2022 12:34:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+zbdt+3aJ/puBsqwQA0QSSEIHoZCeyYKLKFOfyKPSpI=;
-        b=QLUMjAXQ2fEkphOSVbRVLpIQyWa0NhYO3SAX0XGU1tP14KCRI6rg5di8LGjlRorP7u
-         Fv6zFzIDcQfAy0wmSaWmoFXzVM0TTmzlS2Gsu2nyw8cvtfNzBliPOQeMV7qGPJfuFbLC
-         Ulc8QldPJBMRfb9bpYCSt+MDLB+PP+cQJ+8W4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+zbdt+3aJ/puBsqwQA0QSSEIHoZCeyYKLKFOfyKPSpI=;
-        b=CsECkUa6HU5nKIakJIcp41BoW9eO2KFsfkBc8xR2aHt8TfXad18kwxYr2KlET0IfeJ
-         i5XeBUSyjuY5KEweFy3s+k1uk2C4gtoPLgu92yNbk2KKz7YukYou2T7lqqi8cq+QP/H2
-         MuftZoH9Z78nwSgZe6gSOxQVtsl2Bn46cSwDjkjeI8X6k6C2BbvqR1xK8ee1OVFMTLaq
-         i3b+InFMwdXteu2NUMJ1CLKvKOnzQzA5a+DvCjayYbYFTpb0PAOmIu/kzM39ZoH+NQaQ
-         dk5hIZc3GIDh64EFUiUpxaLoDmhnIW/oq/1WoETPs7I2vf0+QzhEYdPeOib2fD0Cc22w
-         9RcA==
-X-Gm-Message-State: ANoB5plrm5cBY14aZCAOc3vwSRf20tteVUXlJmSxyPwgGv/w/xFMUY9G
-	vL+ZyWCkNA1xRxMfrTJM7ZvEQpWD5cvJW10IW0HSZA==
-X-Google-Smtp-Source: AA0mqf6fdqwI0cS8RCosBZkrrlkXrH2sw8vgJawRYCTTkV6ECf84oA86pFY3q/0Ilo9qtsPH7028ypyDVo6RoIoCXC0=
-X-Received: by 2002:a05:6402:e04:b0:469:e6ef:9164 with SMTP id
- h4-20020a0564020e0400b00469e6ef9164mr13510155edh.185.1669322045392; Thu, 24
- Nov 2022 12:34:05 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80B979E3
+	for <regressions@lists.linux.dev>; Thu, 24 Nov 2022 21:07:00 +0000 (UTC)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+	by mailout.west.internal (Postfix) with ESMTP id EF5613200A6B;
+	Thu, 24 Nov 2022 16:06:58 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Thu, 24 Nov 2022 16:07:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:sender:subject
+	:subject:to:to; s=fm1; t=1669324018; x=1669410418; bh=8CEj2REjt/
+	Cpu9PVrcS0Ej8RlkM0BRcAByk9q/BqXCU=; b=saKmVkfpZdHEX5KQDqmUxhnhIP
+	F4zPAv7kBxLWx654QigXeb/aWQkonkpQB/pwniedEPvG8pxx3M/PurZ24xkA4TZj
+	FQIw9t+eNUI/Ya7YTTcLeYEFu3U8R9chwFmA6ay65Ne+DSM3I8ldTp3wNPP79ony
+	5ZkTJEkJwAttKgy3stgRjnOmLzy92wN5R2shi3HlIPVIWXrwo1qWHAmtxQ2s59Yc
+	FpgCXHupmVtw/uexzpbsNs5ubkHuiqQTOeRU8I0E+ojCLHjsk7LwV77jp5KdwEk3
+	76oy6CnmOuddIS+aXP/VCQqnOWX8Mg6N8YoPYpAuysSBYNi/Fbe4dQncx95w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1669324018; x=1669410418; bh=8CEj2REjt/Cpu9PVrcS0Ej8RlkM0
+	BRcAByk9q/BqXCU=; b=RyI2/btNOsKbFyTyHllXwmdgsgr0SQJJlNsUpq69LXbp
+	VVcju08yMZlRZz5g1F0bYJ66vfmMp0K/vsl6/n9fNuAuWNYzzSrnobZl3xaCtbFP
+	rm6xfk2zkjiQJgMYkScogUKGADUre3FaRMVgXnqDuqctCAr42eXl+mo9+bY+P2oC
+	eOQshYWkT4kpsE2w6gzqaqq/rK1MX0Q93HF6+IdYfzsrI9joiruueGYMOYmPH/xv
+	AZBCqG9IqpiqP5WDoI0mtwnI3DA70DZW72kj+F5oh9grBIwHCdkqIUa+e2GQUinj
+	3CzGCebcDAEqNmWDxpWyc428/7RxrcSUKTDHeK+Siw==
+X-ME-Sender: <xms:8tx_Y008CyJxDq6suS6TQP6_AI6pAAYODdLbjc413_nyPhCAkWXWgw>
+    <xme:8tx_Y_H25zusX9iZphZJ1BgtLRpIBW32ye6T_m78nWmBTGW_ySTfUC3odnhZkygeV
+    m1ameFRdFOOOg>
+X-ME-Received: <xmr:8tx_Y84CLYWK464bAh0CwhLUMCddtP_ozrXuZSmluzrMs668weHa7q4I96Gvlmfly_m_Dh8GCSWngsIqmcvPRLJOrHHuHZUx>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrieefgddugeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
+    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepheegvd
+    evvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeufefhgfehkeetnecuvehluhhs
+    thgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhrvghgsehkrhhorg
+    hhrdgtohhm
+X-ME-Proxy: <xmx:8tx_Y92xeqODs91Ot-CHQfBlFmgDH1WjNji57QJhbePcuq7B5vrIjw>
+    <xmx:8tx_Y3ENCrF0RI26tTUG_KsOObWLC3uUG-LPSeTMBcqLIgYs_juHCw>
+    <xmx:8tx_Y2_bbUwylathgJkWWJhl--JUsqwdU2G26zzkfQyJonY8ZiK-OQ>
+    <xmx:8tx_Y__dQg-VST0nsJSzyiwqBW4MS7DqAwrFPl4FfokqTnLbhI3LiQ>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 24 Nov 2022 16:06:57 -0500 (EST)
+Date: Thu, 24 Nov 2022 22:06:55 +0100
+From: Greg KH <greg@kroah.com>
+To: John Aron <john@aronetics.com>
+Cc: stable@vger.kernel.org, 'Mark Salter' <mark.salter@canonical.com>,
+	Mark Lewis <mark.lewis@canonical.com>, regressions@lists.linux.dev,
+	kernelnewbies@kernelnewbies.org
+Subject: Re: OBJTOOL Build error
+Message-ID: <Y3/c73nZVdHCBdZo@kroah.com>
+References: <041601d90035$4f738de0$ee5aa9a0$@aronetics.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <2505800d-8625-dab0-576a-3a0221954ba3@leemhuis.info> <Y3+jz5CVA9S+h2+b@ZenIV>
-In-Reply-To: <Y3+jz5CVA9S+h2+b@ZenIV>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Thu, 24 Nov 2022 21:33:54 +0100
-Message-ID: <CAJfpeguqCrEbvv4d4jdOnczQ9VOf4u9sSghvnDOWvUb84fv6OQ@mail.gmail.com>
-Subject: Re: [regression, bisected] Bug 216738 - Adding O_APPEND to O_RDWR
- with fcntl(fd, F_SETFL) does not work on overlayfs
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
-	"Christian Brauner (Microsoft)" <brauner@kernel.org>, Pierre Labastie <pierre.labastie@neuf.fr>, 
-	linux-unionfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <041601d90035$4f738de0$ee5aa9a0$@aronetics.com>
 
-On Thu, 24 Nov 2022 at 18:03, Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Thu, Nov 24, 2022 at 01:48:08PM -0500, John Aron wrote:
+> Hello -
+> 
+>  
+> 
+> I have an idea of where to begin: our kernel code compiles and works on Red
+> Hat, CentOS, and Fedora. In Ubuntu 20.04, I have an error.
+> 
+>  
+> 
+> root@form:/home/john/thor-linux/Kernel/ubuntu20.04# make
+> 
+> rmmod: ERROR: Module thor is not currently loaded
+> 
+> make: [Makefile:7: all] Error 1 (ignored)
+> 
+> make[1]: Entering directory '/usr/src/linux-headers-5.4.0-131-generic'
+> 
+>   CC [M]  /home/john/thor-linux/Kernel/ubuntu22.04/thor.o
+> 
+> /home/john/thor-linux/Kernel/ubuntu22.04/thor.o: warning: objtool:
+> _Controller_process_response_map()+0x1b3:    unreachable instruction
+> 
+>   Building modules, stage 2.
+> 
+>   MODPOST 1 modules
+> 
+>   CC [M]  /home/john/thor-linux/Kernel/ubuntu22.04/thor.mod.o
+> 
+>   LD [M]  /home/john/thor-linux/Kernel/ubuntu22.04/thor.ko
+> 
+> make[1]: Leaving directory '/usr/src/linux-headers-5.4.0-131-generic'
+> 
+> make[1]: Entering directory '/usr/src/linux-headers-5.4.0-131-generic'
+> 
+>   CLEAN   /home/john/thor-linux/Kernel/ubuntu22.04/Module.symvers
+> 
+> make[1]: Leaving directory '/usr/src/linux-headers-5.4.0-131-generic'
+> 
+> #@sudo dmesg -C
+> 
+> #@sudo insmod /usr/local/etc/thor.ko
+> 
+> filename:       /usr/local/etc/thor.ko
+> 
+> version:        0.1
+> 
+> description:    THOR KMOD
+> 
+> author:         Aronetics
+> 
+> license:        GPL
+> 
+> srcversion:     BC856FA85DB2FEFD38A1B2A
+> 
+> depends:
+> 
+> retpoline:      Y
+> 
+> name:           thor
+> 
+> vermagic:       5.4.0-131-generic SMP mod_unload modversions
+> 
+> #@sudo dmesg
+> 
+> root@form:/home/john/thor-linux/Kernel/ubuntu20.04#
+> <mailto:root@form:/home/john/thor-linux/Kernel/ubuntu20.04#> 
+> 
+>  
+> 
+> Every 2.0s: tail -n30 /var/lib/dkms/thor/1.0.1/build/make.log
+> 
+>  
+> 
+> DKMS make.log for thor-1.0.1 for kernel 5.4.0-131-generic (x86_64)
+> 
+> Thu 24 Nov 2022 01:10:33 PM EST
+> 
+> make: Entering directory '/usr/src/linux-headers-5.4.0-131-generic'
+> 
+>   CC [M]  /var/lib/dkms/thor/1.0.1/build/thor.o
+> 
+> /var/lib/dkms/thor/1.0.1/build/thor.o: warning: objtool:
+> _Controller_process_response_map()+0x1b3: unreachable instruction
+> 
+>   Building modules, stage 2.
+> 
+>   MODPOST 1 modules
+> 
+>   CC [M]  /var/lib/dkms/thor/1.0.1/build/thor.mod.o
+> 
+>   LD [M]  /var/lib/dkms/thor/1.0.1/build/thor.ko
+> 
+> make: Leaving directory '/usr/src/linux-headers-5.4.0-131-generic'
+> 
+>  
+> 
+> Is this an error in objtool on Ubuntu within
+> /usr/src/linux-headers-5.4.0-${26-130}/tools/objtool ?
 
-> So basically we have this
-> static int ovl_change_flags(struct file *file, unsigned int flags)
-> {
->         struct inode *inode = file_inode(file);
->         int err;
->
->         flags &= OVL_SETFL_MASK;
->
->         if (((flags ^ file->f_flags) & O_APPEND) && IS_APPEND(inode))
->                 return -EPERM;
->
->         if ((flags & O_DIRECT) && !(file->f_mode & FMODE_CAN_ODIRECT))
->                 return -EINVAL;
->
->         if (file->f_op->check_flags) {
->                 err = file->f_op->check_flags(flags);
->                 if (err)
->                         return err;
->         }
->
->         spin_lock(&file->f_lock);
->         file->f_flags = (file->f_flags & ~OVL_SETFL_MASK) | flags;
->         spin_unlock(&file->f_lock);
->
->         return 0;
-> }
-> open-coding what setfl() would've done, without updating ->f_iocb_flags...
-> Not hard to deal with...
->
-> I could pick it in vfs.git #fixes, or Miklos could put it through his tree.
-> Miklos, which way would you prefer that to go?
+Do you have a pointer to your code anywhere?  Do you have .S files in
+it, or is it all C files?
 
-I'll pick this into #overlayfs-next, as a PR for this cycle is needed anyway.
+And did you ask the Canonical developers about this?  You should have a
+support contract you are paying for with them, so why not use that?
 
-Thanks,
-Miklos
+thanks,
+
+greg k-h
