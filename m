@@ -1,68 +1,112 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B323214
-	for <regressions@lists.linux.dev>; Mon, 28 Nov 2022 12:18:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=0jTjPnEXF9rvIRpE8DHNiBs/FGP8+7Q4ANL2wupzRnQ=; b=hWIFkQXDePyN3yKlfK7LM7fukb
-	WXti2Z6NTUVKJ5YgB5mkZ4Z2oC5dEV+hOBTeiZcw6pk7Nb1o5pwaVToQRPj8Oyu77fwhoCeCpkBSk
-	RQI211NAaYIViiRkmRe21+yJDeTuf4EoNQRwvVYUYFc7f/Nk+n+DjDXre/7AR2M+Gf9aunw0DQ+jT
-	f/3ojFWNjL3imou0P94bNd0gduEXn0P4yGYfD8h/GcHOoidwUpGdFnPWbASmjNOvCLXuTRaDU2Jkb
-	sLXQEGuOJL5XqNwS5Apa+s02RaiZeWeYKOzTubcY4GFSCPbP14dyhnh0C+tnQZZgQwUsx8j2RYNK4
-	l26G5nGA==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1ozd61-00CiHL-3C; Mon, 28 Nov 2022 12:18:49 +0000
-Date: Mon, 28 Nov 2022 12:18:49 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: Jorropo <jorropo.pgm@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, nborisov@suse.com
-Subject: Re: [REGRESSION] XArray commit prevents booting with 6.0-rc1 or later
-Message-ID: <Y4SnKWCWZt0LtYVN@casper.infradead.org>
-References: <CAHWihb_EYWKXOqdN0iDBDygk+EGbhaxWHTKVRhtpm_TihbCjtw@mail.gmail.com>
- <Y3h118oIDsvclZHM@casper.infradead.org>
- <CAHWihb_HugpV44NdvUc2CV_0q2wk-XWyhmGdQhwCP6nDmo1k7g@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187FA8BF0
+	for <regressions@lists.linux.dev>; Mon, 28 Nov 2022 13:35:56 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 25F571F381;
+	Mon, 28 Nov 2022 13:35:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1669642555; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TY7/7AgLrq4nTnUbMFstKjsYLVXpbbNEZVUDr1fnyEo=;
+	b=Z64fkzaQ1NzT1oE7SOTCu/aiWrW21a0pepwxqTitNRD+x3vPFnsCXOQv9k26wu10KW2lst
+	+/+lgGlpWCsEUs+jAWcfJF4cAKBM8fTmYcONmxL6TjMUrlwYrDgsAZDvo2/uhKBpPYxrUH
+	/H7eshMzTlA/MHZQm6/hOXvF+rNmzu4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1669642555;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TY7/7AgLrq4nTnUbMFstKjsYLVXpbbNEZVUDr1fnyEo=;
+	b=8PcQ3RitgPSEuNjx/4GFpmHA640HgCeS40CwkL+layZUdqOaa63xV7mTs8j+I/24VfCjm/
+	II1gZvdj8ywebMCg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EFDD413273;
+	Mon, 28 Nov 2022 13:35:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id M/fIOTq5hGOfCQAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Mon, 28 Nov 2022 13:35:54 +0000
+Message-ID: <d659c6cc-9c32-1e0b-4fc9-986f124e987b@suse.cz>
+Date: Mon, 28 Nov 2022 14:35:54 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHWihb_HugpV44NdvUc2CV_0q2wk-XWyhmGdQhwCP6nDmo1k7g@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [REGRESSION] suspend to ram fails in 6.1 due to tpm errors
+Content-Language: en-US
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Jan Dabros <jsd@semihalf.com>,
+ regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+ linux-integrity@vger.kernel.org,
+ Dominik Brodowski <linux@dominikbrodowski.net>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <c5ba47ef-393f-1fba-30bd-1230d1b4b592@suse.cz>
+ <Y4Sjk+Fibcsihg4Y@zx2c4.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <Y4Sjk+Fibcsihg4Y@zx2c4.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sun, Nov 20, 2022 at 12:20:13AM +0100, Jorropo wrote:
-> Matthew Wilcox <willy@infradead.org> wrote :
-> >
-> > On Sat, Nov 19, 2022 at 05:07:45AM +0100, Jorropo wrote:
-> > > #regzbot introduced v5.19-rc6..1dd685c414a7b9fdb3d23aca3aedae84f0b998ae
-> > >
-> > > Hi, I recently tried to upgrade to linux v6.0.x but when trying to
-> > > boot it fails with "error: out of memory" when or after loading
-> > > initramfs (which then kpanics because the vfs root is missing).
-> > > The latest releases I tested are v6.0.9 and v6.1-rc5 and it's broken there too.
-> > >
-> > > I bisected the error to this patch:
-> > > 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae "XArray: Add calls to
-> > > might_alloc()" is the first bad commit.
-> > > I've confirmed this is not a side effect of a poor bitsect because
-> > > 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae~1 (v5.19-rc6) works.
-> >
-> > That makes no sense.  I can't look into this until Wednesday, but I
-> > suggest that what you have is an intermittent failure to boot, and
-> > the bisect has led you down the wrong path.
+On 11/28/22 13:03, Jason A. Donenfeld wrote:
+> Hi Vlastimil,
 > 
-> I rebuilt both 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae and
-> the parent commit (v5.19-rc6), then tried to start each one 8 times
-> (shuffled in a Thue morse sequence).
-> 0 successes for 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae
-> 8 successes for v5.19-rc6
+> Thanks for CC'ing me.
 > 
-> This really does not look like an intermittent issue.
+> On Mon, Nov 28, 2022 at 09:15:33AM +0100, Vlastimil Babka wrote:
+>> Dominik on IRC pointed me to commit b006c439d58d ("hwrng: core - start hwrng
+>> kthread also for untrusted sources"), which could make sense if the TPM was not
+>> used at all before and now it's used for randomness. But then it probably "just"
+>> uncovered a pre-existing issue? Maybe there's a race with getting the randomness
+>> and suspend? Could it be exactly what this patch is attempting to fix?
+>> https://lore.kernel.org/all/20221103145450.1409273-2-jsd@semihalf.com/
+> 
+> The commit you referenced just turns on some functionality that most
+> people previously didn't have (but maybe could have, manually). So this
+> is a case of a new commit unearthing a bug in some old code. We had
+> something similar happen with a raspi driver and fixed the bug there.
 
-OK, you convinced me.  Can you boot 1dd685c414 with the command line
-parameters "debug initcall_debug" so we get more information?
+Right, I suspected as much.
+
+> From the looks of the lore link you provided, it sounds like the same
+> thing has happened already there to tpm? That this is already fixed by
+> that commit? I think if you have a system that's readily exhibiting the
+
+Well it was a patch series where a v3 was promised with more info about the
+bug it fixes, but I haven't found a v3. So if the author or TPM maintainers
+can confirm that it does (or can) indeed fix such a bug I'm observing, I'd
+hope for it to be fasttracked to 6.1.
+
+> issue, the best thing to do would be to try that series, and report
+> back, maybe even providing your `Tested-by:` line if it works.
+
+Yeah, I have compiled rc7 with patch 1/3, without the rest as that didn't
+seem necessary, and there was some review feedback that some parts need
+fixing. So far it didn't exhibit the bug when suspending/resuming 10 times,
+but that's not yet a guarantee due to nondeterministic nature of the issue
+and usually the suspends weren't happening in such rapid succession... I'll
+keep using that kernel for now on the laptop, fwiw.
+
+> I'll play around and see if I can repro too. Looks like you have a T460?
+> I don't have exactly that but maybe something close enough.
+
+Great, thanks!
+
+> Jason
+
