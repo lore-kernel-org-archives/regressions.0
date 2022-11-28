@@ -1,70 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE722F5E
-	for <regressions@lists.linux.dev>; Mon, 28 Nov 2022 12:03:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2ADEBC433C1;
-	Mon, 28 Nov 2022 12:03:37 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="YeseauXB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1669637015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Deg2zp7dwT9o3e/HySvPJHslvn3AjSP4JHQTJYiaB/k=;
-	b=YeseauXBsvMz5Okw2aUPDHv/z2Z2pedguidoFR1Oak/sJdZ2xKe1BQ/5R53pACPZEgm8aY
-	LAa8kSyngl3hU5oe7fUF/NPr563SSZyqNOJ8eD2/l84YtG2Uc/RvzLLeHVeNdW6kOhkMsv
-	gB1GP5vjzDTNm2b0Jyv4v0dvADG9iT4=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 64c5fbf5 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Mon, 28 Nov 2022 12:03:35 +0000 (UTC)
-Date: Mon, 28 Nov 2022 13:03:31 +0100
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Jan Dabros <jsd@semihalf.com>,
-	regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
-	linux-integrity@vger.kernel.org,
-	Dominik Brodowski <linux@dominikbrodowski.net>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [REGRESSION] suspend to ram fails in 6.1 due to tpm errors
-Message-ID: <Y4Sjk+Fibcsihg4Y@zx2c4.com>
-References: <c5ba47ef-393f-1fba-30bd-1230d1b4b592@suse.cz>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B323214
+	for <regressions@lists.linux.dev>; Mon, 28 Nov 2022 12:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=0jTjPnEXF9rvIRpE8DHNiBs/FGP8+7Q4ANL2wupzRnQ=; b=hWIFkQXDePyN3yKlfK7LM7fukb
+	WXti2Z6NTUVKJ5YgB5mkZ4Z2oC5dEV+hOBTeiZcw6pk7Nb1o5pwaVToQRPj8Oyu77fwhoCeCpkBSk
+	RQI211NAaYIViiRkmRe21+yJDeTuf4EoNQRwvVYUYFc7f/Nk+n+DjDXre/7AR2M+Gf9aunw0DQ+jT
+	f/3ojFWNjL3imou0P94bNd0gduEXn0P4yGYfD8h/GcHOoidwUpGdFnPWbASmjNOvCLXuTRaDU2Jkb
+	sLXQEGuOJL5XqNwS5Apa+s02RaiZeWeYKOzTubcY4GFSCPbP14dyhnh0C+tnQZZgQwUsx8j2RYNK4
+	l26G5nGA==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1ozd61-00CiHL-3C; Mon, 28 Nov 2022 12:18:49 +0000
+Date: Mon, 28 Nov 2022 12:18:49 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: Jorropo <jorropo.pgm@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, nborisov@suse.com
+Subject: Re: [REGRESSION] XArray commit prevents booting with 6.0-rc1 or later
+Message-ID: <Y4SnKWCWZt0LtYVN@casper.infradead.org>
+References: <CAHWihb_EYWKXOqdN0iDBDygk+EGbhaxWHTKVRhtpm_TihbCjtw@mail.gmail.com>
+ <Y3h118oIDsvclZHM@casper.infradead.org>
+ <CAHWihb_HugpV44NdvUc2CV_0q2wk-XWyhmGdQhwCP6nDmo1k7g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c5ba47ef-393f-1fba-30bd-1230d1b4b592@suse.cz>
+In-Reply-To: <CAHWihb_HugpV44NdvUc2CV_0q2wk-XWyhmGdQhwCP6nDmo1k7g@mail.gmail.com>
 
-Hi Vlastimil,
+On Sun, Nov 20, 2022 at 12:20:13AM +0100, Jorropo wrote:
+> Matthew Wilcox <willy@infradead.org> wrote :
+> >
+> > On Sat, Nov 19, 2022 at 05:07:45AM +0100, Jorropo wrote:
+> > > #regzbot introduced v5.19-rc6..1dd685c414a7b9fdb3d23aca3aedae84f0b998ae
+> > >
+> > > Hi, I recently tried to upgrade to linux v6.0.x but when trying to
+> > > boot it fails with "error: out of memory" when or after loading
+> > > initramfs (which then kpanics because the vfs root is missing).
+> > > The latest releases I tested are v6.0.9 and v6.1-rc5 and it's broken there too.
+> > >
+> > > I bisected the error to this patch:
+> > > 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae "XArray: Add calls to
+> > > might_alloc()" is the first bad commit.
+> > > I've confirmed this is not a side effect of a poor bitsect because
+> > > 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae~1 (v5.19-rc6) works.
+> >
+> > That makes no sense.  I can't look into this until Wednesday, but I
+> > suggest that what you have is an intermittent failure to boot, and
+> > the bisect has led you down the wrong path.
+> 
+> I rebuilt both 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae and
+> the parent commit (v5.19-rc6), then tried to start each one 8 times
+> (shuffled in a Thue morse sequence).
+> 0 successes for 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae
+> 8 successes for v5.19-rc6
+> 
+> This really does not look like an intermittent issue.
 
-Thanks for CC'ing me.
-
-On Mon, Nov 28, 2022 at 09:15:33AM +0100, Vlastimil Babka wrote:
-> Dominik on IRC pointed me to commit b006c439d58d ("hwrng: core - start hwrng
-> kthread also for untrusted sources"), which could make sense if the TPM was not
-> used at all before and now it's used for randomness. But then it probably "just"
-> uncovered a pre-existing issue? Maybe there's a race with getting the randomness
-> and suspend? Could it be exactly what this patch is attempting to fix?
-> https://lore.kernel.org/all/20221103145450.1409273-2-jsd@semihalf.com/
-
-The commit you referenced just turns on some functionality that most
-people previously didn't have (but maybe could have, manually). So this
-is a case of a new commit unearthing a bug in some old code. We had
-something similar happen with a raspi driver and fixed the bug there.
-From the looks of the lore link you provided, it sounds like the same
-thing has happened already there to tpm? That this is already fixed by
-that commit? I think if you have a system that's readily exhibiting the
-issue, the best thing to do would be to try that series, and report
-back, maybe even providing your `Tested-by:` line if it works.
-
-I'll play around and see if I can repro too. Looks like you have a T460?
-I don't have exactly that but maybe something close enough.
-
-Jason
+OK, you convinced me.  Can you boot 1dd685c414 with the command line
+parameters "debug initcall_debug" so we get more information?
