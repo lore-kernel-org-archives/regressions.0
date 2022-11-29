@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 577667E0
-	for <regressions@lists.linux.dev>; Tue, 29 Nov 2022 08:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D7F7E0
+	for <regressions@lists.linux.dev>; Tue, 29 Nov 2022 08:59:44 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ozwNK-0005sb-Ad; Tue, 29 Nov 2022 09:53:58 +0100
-Message-ID: <fca2e6df-6c00-8fa4-808c-5021ab5b26d0@leemhuis.info>
-Date: Tue, 29 Nov 2022 09:53:57 +0100
+	id 1ozwSr-0007IJ-OX; Tue, 29 Nov 2022 09:59:41 +0100
+Message-ID: <84964891-5a39-adb2-3093-54b716ca94ae@leemhuis.info>
+Date: Tue, 29 Nov 2022 09:59:39 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,53 +16,67 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.1
-Subject: Re: INFO: rcu_preempt detected expedited stalls on CPUs/tasks
- (6.1.0-rc3): in cat /sys/kernel/debug/kmemleak #forregzbot
+Subject: Re: [mm] f35b5d7d67: will-it-scale.per_process_ops -95.5% regression
+ #forregzbot
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <e048a5c5-dea5-a31a-1022-1b007e022adb@alu.unizg.hr>
- <7ebd090d-4a6c-1a26-6e31-b0554c627e83@leemhuis.info>
-In-Reply-To: <7ebd090d-4a6c-1a26-6e31-b0554c627e83@leemhuis.info>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <202210181535.7144dd15-yujie.liu@intel.com>
+ <87edv4r2ip.fsf@yhuang6-desk2.ccr.corp.intel.com>
+ <Y1DNQaoPWxE+rGce@dev-arch.thelio-3990X>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <Y1DNQaoPWxE+rGce@dev-arch.thelio-3990X>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669712040;feed0507;
-X-HE-SMSGID: 1ozwNK-0005sb-Ad
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669712384;b0c3c300;
+X-HE-SMSGID: 1ozwSr-0007IJ-OX
 
-On 09.11.22 11:48, Thorsten Leemhuis wrote:
-> [Note: this mail is primarily send for documentation purposes and/or for
-> regzbot, my Linux kernel regression tracking bot. That's why I removed
-> most or all folks from the list of recipients, but left any that looked
-> like a mailing lists. These mails usually contain '#forregzbot' in the
-> subject, to make them easy to spot and filter out.]
->
-> On 04.11.22 23:01, Mirsad Goran Todorovac wrote:
->>
->> When investigating thermald kmemleak, it occurred that the "cat
->> /sys/kernel/debug/kmemleak"
->> and "tail -20 /sys/kernel/debug/kmemleak" commands take unusual amount
->> of time.
->>
->> Dmesg output showed expedited stalls that the commands caused NMIs and
->> NMI backtraces:
->>
->> [ 8123.263464] rcu: INFO: rcu_preempt detected expedited stalls on
->> CPUs/tasks: { 0-.... } 26 jiffies s: 3829 root: 0x1/.
->> [ 8123.263500] rcu: blocking rcu_node structures (internal RCU debug):
->> [ 8123.263508] Sending NMI from CPU 7 to CPUs 0:
->> [ 8123.263528] NMI backtrace for cpu 0
->> [ 8123.263539] CPU: 0 PID: 27898 Comm: cat Not tainted 6.1.0-rc3 #1
->> [ 8123.263552] Hardware name: LENOVO 82H8/LNVNB161216, BIOS GGCN34WW
->> 03/08/2022
-> 
-> #regzbot ^introduced 28b3ae426598e
-> #regzbot title rcu: thermald causes a kmemleak
-> #regzbot ignore-activity
+[Note: this mail is primarily send for documentation purposes and/or for
+regzbot, my Linux kernel regression tracking bot. That's why I removed
+most or all folks from the list of recipients, but left any that looked
+like a mailing lists. These mails usually contain '#forregzbot' in the
+subject, to make them easy to spot and filter out.]
 
-#regzbot invalid: likely not a regression and just a odd config
+[TLDR: I'm adding this regression report to the list of tracked
+regressions; all text from me you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-For details see the discussion ending here:
-https://lore.kernel.org/all/20221124201552.GV4001@paulmck-ThinkPad-P17-Gen-1/
+Hi, this is your Linux kernel regression tracker.
 
-Ciao, Thorsten
+On 20.10.22 06:23, Nathan Chancellor wrote:
+> [...]
+> For what it's worth, I just bisected a massive and visible performance
+> regression on my Threadripper 3990X workstation to commit f35b5d7d676e
+> ("mm: align larger anonymous mappings on THP boundaries"), which seems
+> directly related to this report/analysis. I initially noticed this
+> because my full set of kernel builds against mainline went from 2 hours
+> and 20 minutes or so to over 3 hours. Zeroing in on x86_64 allmodconfig,
+> which I used for the bisect:
+
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced f35b5d7d676e59e4
+#regzbot title performance: mm: building Linux with clang takes a lot
+longer (~27 %)
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
