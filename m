@@ -1,167 +1,189 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3CB811
-	for <regressions@lists.linux.dev>; Tue, 29 Nov 2022 11:38:26 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1ozywR-0001gv-O2; Tue, 29 Nov 2022 12:38:23 +0100
-Message-ID: <22ea8381-1292-6b8c-873b-309195b54595@leemhuis.info>
-Date: Tue, 29 Nov 2022 12:38:23 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164B4A42
+	for <regressions@lists.linux.dev>; Wed, 30 Nov 2022 09:40:50 +0000 (UTC)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-3691e040abaso165308227b3.9
+        for <regressions@lists.linux.dev>; Wed, 30 Nov 2022 01:40:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=AQat4vhVRPhTXaZs0nu09wTFQazHaXBzXg5iczgp6mA=;
+        b=ofFQSuVu5ajzpYIwE9gi63qtctlx+tugjpXcFVn+OQ8mO6YwPj9HI58bKcWk7zumYv
+         XNR0qwORgC9sVXJ8gS14hgXIuQX8R3T8Ty3x79W5OrEDVZXE/Hw+0SqKfo/DDFINBgOl
+         uSSNAS9yprw0w9JhW/8PqKPmaRAxXg02jlaX60YgdzWMsybxxa9YLHCOHapdm6JrJ0n7
+         R2fRFhtzZp2vpSnTTFTSz9SS30ly920A3drIJqME4jrl3Ys6ImIlW3q5wiJ7BYc2yL9d
+         +MuoEm8iDljhVIhZfrXBl+DYv7dp+gMoh3EmxUyvWA10PS7G1W0JdqeZUgkSTEtWRH0Q
+         Vktw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AQat4vhVRPhTXaZs0nu09wTFQazHaXBzXg5iczgp6mA=;
+        b=viVGk92lZfnSz7E4MvztADlsPfJHR6foZ8MLNzmpgv0iiIxtD5DLeSymryg7VMSN+n
+         1yKY4DuAxZ8KBlZdYDX/MBbn1Ku2e2u5Cq039rtfpChpY+JSKxDqbVQzr6yZHXfuz/tr
+         IW3nWAroNOjEWTMW1Es0WUGt5ARPWsftrB1T++orRzwq9BlN40TzMvZ44FkfdHD7TaV6
+         YLh8D3KZ7+8hMg7vFhbeKNgboZWxxjLNMLy4rFwllEsEjSuGZvT3O1Qcsf4e0mDEq8BT
+         H2laWkIitEuOAeCgW/FcJsl3ev/F69nq7s68zGVLlgM6W6KV8zqCODOTjZbmTwNK2HGY
+         kBQA==
+X-Gm-Message-State: ANoB5pnwXqcr52oSFvJNN9Rmp8ZjeFFgNmbGUsfZSqOOSLQHX6bsZoe7
+	+w/vavj21Wz7LtCyeWZi/1b7e3w4aNx/8mx7syAh6Q==
+X-Google-Smtp-Source: AA0mqf6KMymJRYnHxHiIkx2KBXzxnTi84c6jLxC5Bl8eM1MzMjI5A7O9pao3Le/GrwP90CJWMmj8xmmzuINsuhzPysc=
+X-Received: by 2002:a0d:cbcb:0:b0:3c5:469e:b93 with SMTP id
+ n194-20020a0dcbcb000000b003c5469e0b93mr15813361ywd.443.1669801249762; Wed, 30
+ Nov 2022 01:40:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Subject: RFC: considering adding a predefined statement to newly filed kernel
- bugs in bugzilla.kernel.org
-To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- "workflows@vger.kernel.org" <workflows@vger.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669721907;5670a070;
-X-HE-SMSGID: 1ozywR-0001gv-O2
+References: <CA+G9fYvRXkjeO+yDEQxwJ8+GjSmwhZ7XHHAaVWAsxAaSngj5gg@mail.gmail.com>
+ <bf1b053d-ffa6-48ab-d2d2-d59ab21afc19@opensource.wdc.com> <CA+G9fYvUnn0cS+_DZm8hAfi=FnMB08+6Xnhud6yvi9Bxh=DU+Q@mail.gmail.com>
+ <CADYN=9L8tt2T-8O+u5NSMSUOkZDvEggnvzxH6aMmd5Rn9yDeuw@mail.gmail.com>
+ <ca8d3fff-0365-24d9-fd53-5799ac34f336@opensource.wdc.com> <7ee4a1bd-0674-42d8-8980-8b029ca09e71@app.fastmail.com>
+ <75eaeab3-7781-d60a-ae61-ae837f5dcec9@opensource.wdc.com> <CADYN=9JiX-=PcKMzAcSm=p7Dh6kYT7Kbv-8kcNF0MQ4=1hFS5g@mail.gmail.com>
+ <20221014140633.mlypet7skkxvt453@mobilestation> <CADYN=9LrKHRNMON3GA4piDvWeSWTASQ1u2=D30rXFdvo1L18bg@mail.gmail.com>
+ <20221017155246.zxal2cfehjgaajcu@mobilestation>
+In-Reply-To: <20221017155246.zxal2cfehjgaajcu@mobilestation>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 30 Nov 2022 15:10:37 +0530
+Message-ID: <CA+G9fYtYetV5sZVD14WkZxCE_tgTC4VVKm8BcBw5_NwXD6U=Sw@mail.gmail.com>
+Subject: Re: TI: X15 the connected SSD is not detected on Linux next 20221006 tag
+To: Serge Semin <fancer.lancer@gmail.com>, Praneeth Bajjuri <praneeth@ti.com>, 
+	Arnd Bergmann <arnd@arndb.de>
+Cc: Anders Roxell <anders.roxell@linaro.org>, 
+	Serge Semin <Sergey.Semin@baikalelectronics.ru>, 
+	Damien Le Moal <damien.lemoal@opensource.wdc.com>, open list <linux-kernel@vger.kernel.org>, 
+	Linux ARM <linux-arm-kernel@lists.infradead.org>, regressions@lists.linux.dev, 
+	"open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>, Niklas Cassel <niklas.cassel@wdc.com>, 
+	Carlos Hernandez <ceh@ti.com>, Sumit Semwal <sumit.semwal@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Konstantin!
-
-The bugzilla.kernel.org situation still bugs me, as I every few days see
-a report or two that at least from a quick look seems valid and good,
-but nevertheless is ignored (for a recent example see
-https://bugzilla.kernel.org/show_bug.cgi?id=216736 ). I can't help each
-of them individually. Hence as a stopgap measure I'm considering adding
-a comment with a predefined statement to any reasonable Linux kernel bug
-report I notice (I look at most of them anyway to check for regressions,
-so quickly adding a comment is not that much trouble for me).
-
-Find the proposed text for the predefined statement below. It's supposed
-to link to a page on the web with even more details; the proposed text
-for that is below, too.
-
-Is it okay for you if I start doing this? Are the texts okay from your
-perspective, too? I tried to be careful with my wording, but maybe I
-didn't find the right tone in some places or forgot something important.
-
-I'm asking as I don't want to undermine your efforts at all, I just want
-to enable users to help themselves *now* until your efforts to improve
-the situation are in place.
-
-Ciao, Thorsten
-
-################# propose statement to be used as comment
-
-Many thanks for your report. There is something important you might not
-be aware of(¹): some, many, or most kernel bug reports submitted here
-will never reach suitable developers. You hence might not get any
-replies from them here. If that’s the outcome after roundabout a week,
-resubmit your report to the place where the developers of the subsystem
-in question expect reports; the document
-https://docs.kernel.org/admin-guide/reporting-issues.html explains how
-to find that place in the section "Check where you need to report your
-issue". Please add a comment here when you go down that route.
-
-There are plans to improve things over the next few months, as explained
-here: <fixme: link to the page in the web with below text>; that page
-also provides a few additional details why things happen to be as
-briefly outlined above.
-
-(¹) Please don't shoot the messenger, I’m quite unhappy about this state
-of things myself. But they are outside of my control. And I think it’s
-better to tell you about the situation now, as you otherwise might be
-waiting weeks or months for a reaction here that might be pretty
-unlikely to happen in the first place.
-
-
-################# text for a webpage
-
-# On the state of bugzilla kernel
-
-## TLDR
-
-Some, many, or most bug reports submitted in bugzilla.kernel.org will
-never reach suitable kernel developers. If you don’t receive a reply
-from them, you might want to re-submit your report to the place where
-developers actually expect bug reports. There are plans to improve this
-situation – a situation which came into being due to various unfortunate
-developments a long time ago.
-
-## What this is about
-
-An unknown quantity of bug reports submitted to bugzilla.kernel.org will
-never reach kernel developers that take care of the code that might
-cause the particular issue. That’s among the reasons why some, many, or
-most of those reports never get a reply. This page will explain what you
-can do in that case, what is planned to improve the situation, and how
-this state of things came to be.
-
-### What can I do if my report in bugzilla.kernel.org is ignored
-
-If your bug report in bugzilla.kernel.org within a week receives no
-replies at all or none from developers working on the code in question,
-consider re-submitting your report to the place where those developers
-expect reports; how to find that place is explained by the document
-“Reporting issues”
-(https://docs.kernel.org/admin-guide/reporting-issues.html) in the
-section “Check where you need to report your issue”. Please add a
-comment to your report in bugzilla when you go down this route.
-
-Side note: you might also want to read and follow the “Reporting issues”
-document as a whole, as that will avoid many other pitfalls that might
-lead to your bug report being ignored. Quite a few or many kernel
-developers for example only handle reports about issues with the latest
-mainline codebase or the latest stable release; reports about issues in
-longterm (aka LTS) kernels or any version more than two weeks old thus
-might not be acted upon. The same fate often happens to reports about
-issues with distro kernels, as most of them are heavily modified or
-enhanced, which might cause the issue you face; that’s also why
-reporting issues with kernels that use any drivers not build straight
-from the Linux kernel sources (like those from Nvidia) are often ignored
-and thus a waste of time.
-
-### What is planned to improve the situation
-
-Konstantin Ryabitsev plans to realize his proposal from early October
-2022:
-https://lore.kernel.org/lkml/20221004175354.bfvg3vhfqch35ib5@meerkat.local/
+On Mon, 17 Oct 2022 at 21:22, Serge Semin <fancer.lancer@gmail.com> wrote:
+>
+> On Mon, Oct 17, 2022 at 09:43:24AM +0200, Anders Roxell wrote:
+> > On Fri, 14 Oct 2022 at 16:06, Serge Semin
+> > <Sergey.Semin@baikalelectronics.ru> wrote:
+> > >
+> > > On Fri, Oct 14, 2022 at 11:22:38AM +0200, Anders Roxell wrote:
+> > > > On Fri, 14 Oct 2022 at 09:53, Damien Le Moal
+> > > > <damien.lemoal@opensource.wdc.com> wrote:
+> > > > >
+> > > > > On 10/14/22 16:31, Arnd Bergmann wrote:
+> > > > > > On Fri, Oct 14, 2022, at 2:22 AM, Damien Le Moal wrote:
+> > > > > >> On 10/14/22 07:07, Anders Roxell wrote:
+> > > > > >> [...]
+> > > > > >>>> 8)
+> > > > > >>>>> If reverting these patches restores the eSATA port on this board, then you need
+> > > > > >>>>> to fix the defconfig for that board.
+> > > > > >>>>
+> > > > > >>>> OTOH,
+> > > > > >>>> Anders, enabled the new config CONFIG_AHCI_DWC=y  and tried but the
+> > > > > >>>> device failed to boot.
+> > > > > >>>
+> > > > > >>> I thought it would work with enabling CONFIG_AHCI_DWC=y, but it didn't...
+> > > > > >>
+> > > > > >> As mentioned in my previous reply to Naresh, this is a new driver added in
+> > > > > >> 6.1. Your board was working before so this should not be the driver needed
+> > > > > >> for it.
+> > > > > >>
+> > > > > >>> However, reverting patch 33629d35090f ("ata: ahci: Add DWC AHCI SATA
+> > > > > >>> controller support")
+> > > > > >>> from next-20221013 was a success, kernel booted  and the 'mkfs.ext4' cmd was
+> > > > > >>> successful.
+> > > > > >>
+> > > > > >> Which is very strange... There is only one hunk in that commit that could
+> > > > > >> be considered suspicious:
+> > > > > >>
+> > > > > >> diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+> > > > > >> index 9b56490ecbc3..8f5572a9f8f1 100644
+> > > > > >> --- a/drivers/ata/ahci_platform.c
+> > > > > >> +++ b/drivers/ata/ahci_platform.c
+> > > > > >> @@ -80,9 +80,7 @@ static SIMPLE_DEV_PM_OPS(ahci_pm_ops, ahci_platform_suspend,
+> > > > > >>  static const struct of_device_id ahci_of_match[] = {
+> > > > > >>         { .compatible = "generic-ahci", },
+> > > > > >>         /* Keep the following compatibles for device tree compatibility */
+> > > > > >> -       { .compatible = "snps,spear-ahci", },
+> > > > > >>         { .compatible = "ibm,476gtr-ahci", },
+> > > > > >> -       { .compatible = "snps,dwc-ahci", },
+> > > > > >>         { .compatible = "hisilicon,hisi-ahci", },
+> > > > > >>         { .compatible = "cavium,octeon-7130-ahci", },
+> > > > > >>         { /* sentinel */ }
+> > > > > >>
+> > > > > >> Is your board using one of these compatible string ?
+> > > > > >
+> > > > > > The x15 uses "snps,dwc-ahci". I would expect it to detect the device
+> > > > > > with the new driver if that is loaded, but it's possible that the
+> > > > > > driver does not work on all versions of the dwc-ahci hardware.
+> > > > > >
+> > > > > > Anders, can you provide the boot log from a boot with the new driver
+> > > > > > built in? There should be some messages from dwc-ahci about finding
+> > > > > > the device, but then not ultimately working.
+> > > > > >
+> > > > > > Depending on which way it goes wrong, the safest fallback for 6.1 is
+> > > > > > probably to move the "snps,spear-ahci" and "snps,dwc-ahci" compatible
+> > > > > > strings back into the old driver, and leave the new one only for
+> > > > > > the "baikal,bt1-ahci" implementation of it, until it has been
+> > > > > > successfully verified on TI am5/dra7, spear13xx and exynos.
+> > > > >
+> > > > > OK. So a fix patch until further tests/debug is completed would be this:
+> > > > >
+> > > > > diff --git a/drivers/ata/ahci_dwc.c b/drivers/ata/ahci_dwc.c
+> > > > > index 8fb66860db31..7a0cbab00843 100644
+> > > > > --- a/drivers/ata/ahci_dwc.c
+> > > > > +++ b/drivers/ata/ahci_dwc.c
+> > > > > @@ -469,8 +469,6 @@ static struct ahci_dwc_plat_data ahci_bt1_plat = {
+> > > > >  };
+> > > > >
+> > > > >  static const struct of_device_id ahci_dwc_of_match[] = {
+> > > > > -       { .compatible = "snps,dwc-ahci", &ahci_dwc_plat },
+> > > > > -       { .compatible = "snps,spear-ahci", &ahci_dwc_plat },
+> > > > >         { .compatible = "baikal,bt1-ahci", &ahci_bt1_plat },
+> > > > >         {},
+> > > > >  };
+> > > > > diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
+> > > > > index 8f5572a9f8f1..9b56490ecbc3 100644
+> > > > > --- a/drivers/ata/ahci_platform.c
+> > > > > +++ b/drivers/ata/ahci_platform.c
+> > > > > @@ -80,7 +80,9 @@ static SIMPLE_DEV_PM_OPS(ahci_pm_ops, ahci_platform_suspend,
+> > > > >  static const struct of_device_id ahci_of_match[] = {
+> > > > >         { .compatible = "generic-ahci", },
+> > > > >         /* Keep the following compatibles for device tree compatibility */
+> > > > > +       { .compatible = "snps,spear-ahci", },
+> > > > >         { .compatible = "ibm,476gtr-ahci", },
+> > > > > +       { .compatible = "snps,dwc-ahci", },
+> > > > >         { .compatible = "hisilicon,hisi-ahci", },
+> > > > >         { .compatible = "cavium,octeon-7130-ahci", },
+> > > > >         { /* sentinel */ }
 
 
-For the backstory on how that proposal came into being, see the
-following text and the sources it links to: https://lwn.net/Articles/910740/
+FYI,
 
-### Why are developers free to ignoring bug reports in bugzilla.kernel.org
+We have been noticing this problem [a] & [b] on Linux mainline master 6.1.0-rc7
 
-Because participation has always been and still is optional for the
-developers of the Linux kernel. That's because well-intended people a
-long time ago thought Linux kernel development would benefit from having
-a bugtracker and set up bugzilla.kernel.org; they did that despite the
-fact that many core Linux developer's beforehand had made it clear they
-didn't like or even opposed the idea -- and thus were unwilling to
-participate.
+    Test error: mkfs.ext4
+/dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 failed; job
+exit
 
-Many components and products bugzilla.kernel.org lists for the Linux
-kernel thus not even initially had developers on board that looked at
-newly submitted bugs. The idea was to have volunteers for these areas
-that checked the reports and forwarded the good ones to the actual
-kernel developers – but that never really worked out for real on a large
-scale. Many after some time also left without any successors. This is
-why some bug reports are never forwarded to suitable kernel developers.
+Please suggest a way forward on this reported issue on arm32 TI BeagleBoard X15
+device. Build and Kernel configs details provided in the metadata section.
 
-The people who set up and cared about the bug tracker over time moved on
-to other endeavors. But by then the bugtacker could not simply be
-decommissioned, as a tiny number of kernel developers and the subsystems
-they maintained had started relying on it for internal development. In
-the end as of this writing in 2022 around 20 out of 1500 maintainers and
-subsystems listed in the kernel's MAINTAINERS file officially committed
-to handle bug filled in bugzilla.kernel.org (mainly those from the areas
-of ACPI, Power Management, and PCI). A few other subsystems and an
-unknown number of individual developers keep a close or loose eye on it
-as well; there are also some that participate when pointed to reports
-about their code. But in the end some or many kernel developers don’t
-care about it at all and never receive copies of bugs occurring in the
-they maintain.
+metadata:
+  git_ref: master
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
+  git_sha: b7b275e60bcd5f89771e865a8239325f86d9927d
+  git_describe: v6.1-rc7
+  kernel_version: 6.1.0-rc7
+  kernel-config: https://builds.tuxbuild.com/2I9I42JhhQqS9GOpFppfRiuqtRW/config
+  build-url: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline/-/pipelines/706371149
+  artifact-location: https://builds.tuxbuild.com/2I9I42JhhQqS9GOpFppfRiuqtRW
+  toolchain: gcc-10
+
+[a] https://lkft.validation.linaro.org/scheduler/job/5892099
+[b] https://lore.kernel.org/all/20221017155246.zxal2cfehjgaajcu@mobilestation/
+
+- Naresh
