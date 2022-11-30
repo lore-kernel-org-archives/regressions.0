@@ -1,57 +1,97 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A255645;
-	Wed, 30 Nov 2022 10:30:45 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p0KMV-00077a-7B; Wed, 30 Nov 2022 11:30:43 +0100
-Message-ID: <da90b96d-ef1e-4827-b983-15d103a3a1ef@leemhuis.info>
-Date: Wed, 30 Nov 2022 11:30:42 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96ED63DB
+	for <regressions@lists.linux.dev>; Wed, 30 Nov 2022 16:42:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AE7DC433C1;
+	Wed, 30 Nov 2022 16:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1669826525;
+	bh=PdngSx0MOEeD4SWGEFmFkY6/t0cbih5OhVsmr75ybxY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=1RjWCHr6jrWiTZMB7WtJU23oaUDfFIrGj0QgTEK4S8hzQwdNxmeD0qq80OEXKuObM
+	 8xyDOfxQ5MjkbEMP3oB982KgHPrfsObEunaJoSRlTZdXOdU0RwwUJCQvU6iHC1SZ3w
+	 lHQuECqm7G8cRtTsk7cgbjjioJgDsHrE1zBh8xN0=
+Date: Wed, 30 Nov 2022 17:42:03 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Dominic Jones <jonesd@xmission.com>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: [REGRESSION] v6.0.x fails to boot after updating from v5.19.x
+Message-ID: <Y4eH2xhXUWDp/XeL@kroah.com>
+References: <709b163021b2608789dab55eb3f9724c.dominic@xmission.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH 0/2] fsdax,xfs: fix warning messages #forregzbot
-Content-Language: en-US, de-DE
-To: linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
- nvdimm@lists.linux.dev, linux-fsdevel@vger.kernel.org
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <1669301694-16-1-git-send-email-ruansy.fnst@fujitsu.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <1669301694-16-1-git-send-email-ruansy.fnst@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669804245;cde9a49c;
-X-HE-SMSGID: 1p0KMV-00077a-7B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <709b163021b2608789dab55eb3f9724c.dominic@xmission.com>
 
-[Note: this mail is primarily send for documentation purposes and/or for
-regzbot, my Linux kernel regression tracking bot. That's why I removed
-most or all folks from the list of recipients, but left any that looked
-like a mailing lists. These mails usually contain '#forregzbot' in the
-subject, to make them easy to spot and filter out.]
+On Thu, Nov 24, 2022 at 01:08:57AM +0000, Dominic Jones wrote:
+> > On Fri, Oct 28, 2022 at 02:51:43PM +0000, Dominic Jones wrote:
+> > > Updating the machine's kernel from v5.19.x to v6.0.x causes the machine to not
+> > > successfully boot. The machine boots successfully (and exhibits stable operation)
+> > > with version v5.19.17 and multiple earlier releases in the 5.19 line. Multiple releases
+> > > from the 6.0 line (including 6.0.0, 6.0.3, and 6.0.5), with no other changes to the
+> > > software environment, do not boot. Instead, the machine hangs after loading services
+> > > but before presenting a display manager; the machine instead shows repetitive hard
+> > > drive activity at this point and then no apparent activity.
+> > > 
+> > > ''uname'' output for the machine successfully running v5.19.17 is:
+> > > 
+> > >     Linux [MACHINE_NAME] 5.19.17 #1 SMP PREEMPT_DYNAMIC Mon Oct 24 13:32:29 2022 i686 Intel(R) Atom(TM) CPU N270 @ 1.60GHz GenuineIntel GNU/Linux
+> > > 
+> > > The machine is an OCZ Neutrino netbook, running a custom OS build largely similar to
+> > > LFS development. The kernel update uses ''make olddefconfig''.
+> > 
+> > Can you use 'git bisect' to find the offending change that causes this
+> > to happen?
+> 
+> Bisection is complete. Here's what it returned.
+> 
+> ---
+> 
+> 3a194f3f8ad01bce00bd7174aaba1563bcc827eb is the first bad commit
+> commit 3a194f3f8ad01bce00bd7174aaba1563bcc827eb
+> Author: Naoya Horiguchi <naoya.horiguchi@nec.com>
+> Date:   Thu Jul 14 13:24:14 2022 +0900
+> 
+>     mm/hugetlb: make pud_huge() and follow_huge_pud() aware of non-present pud entry
+>     
+>     follow_pud_mask() does not support non-present pud entry now.  As long as
+>     I tested on x86_64 server, follow_pud_mask() still simply returns
+>     no_page_table() for non-present_pud_entry() due to pud_bad(), so no severe
+>     user-visible effect should happen.  But generally we should call
+>     follow_huge_pud() for non-present pud entry for 1GB hugetlb page.
+>     
+>     Update pud_huge() and follow_huge_pud() to handle non-present pud entries.
+>     The changes are similar to previous works for pud entries commit
+>     e66f17ff7177 ("mm/hugetlb: take page table lock in follow_huge_pmd()") and
+>     commit cbef8478bee5 ("mm/hugetlb: pmd_huge() returns true for non-present
+>     hugepage").
+>     
+>     Link: https://lkml.kernel.org/r/20220714042420.1847125-3-naoya.horiguchi@linux.dev
+>     Signed-off-by: Naoya Horiguchi <naoya.horiguchi@nec.com>
+>     Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
+>     Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+>     Cc: David Hildenbrand <david@redhat.com>
+>     Cc: kernel test robot <lkp@intel.com>
+>     Cc: Liu Shixin <liushixin2@huawei.com>
+>     Cc: Muchun Song <songmuchun@bytedance.com>
+>     Cc: Oscar Salvador <osalvador@suse.de>
+>     Cc: Yang Shi <shy828301@gmail.com>
+>     Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> 
+>  arch/x86/mm/hugetlbpage.c |  8 +++++++-
+>  mm/hugetlb.c              | 32 ++++++++++++++++++++++++++++++--
+>  2 files changed, 37 insertions(+), 3 deletions(-)
+> 
 
-On 24.11.22 15:54, Shiyang Ruan wrote:
-> Many testcases failed in dax+reflink mode with warning message in dmesg.
-> This also effects dax+noreflink mode if we run the test after a
-> dax+reflink test.  So, the most urgent thing is solving the warning
-> messages.
+Great!  Please work with those developers to figure out why this is
+causing a problem for your system.
 
-Darrick in https://lore.kernel.org/all/Y4bZGvP8Ozp+4De%2F@magnolia/
-wrote "dax and reflink are totally broken on 6.1". Hence, add this to
-the tracking to be sure it's not forgotten.
+thanks,
 
-#regzbot ^introduced 35fcd75af3ed
-#regzbot title xfs/dax/reflink are totally broken on 6.1
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+greg k-h
