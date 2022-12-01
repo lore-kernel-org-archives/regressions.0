@@ -1,164 +1,70 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFEB71116
-	for <regressions@lists.linux.dev>; Thu,  1 Dec 2022 11:48:44 +0000 (UTC)
-Received: by mail-io1-f50.google.com with SMTP id 135so852518iou.7
-        for <regressions@lists.linux.dev>; Thu, 01 Dec 2022 03:48:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Im8aG2HhGlxgZH4iTquAT2HFHDXCKd8y8vkv6lHhFXg=;
-        b=JYyHDRbO2aW4UmEejNSdCo2szLux+7Zcot5vDKhMJdFx0dBPGVgx6DYXoXYkf194He
-         4B4181TOme1f5FLctjIw9UzccRsiGczbfdoJHuF/hUvJ1scdx6fyaCwrxW9cu1JMHAnx
-         dEuHB9zesWjrBR9mynIWox4PQQfdRXTOGYz/SZp3TXmpfO1tG7lS3P1q8yesWxfLlQ0/
-         bkjoEbCL/7YyK7Gq3cE/JguBp/n4c5zQxEXUOzplpdIGmkCu/tMun9Bkv/vVQk9BjcnF
-         iUE7XqXcfpNRHkUL4uz7XpSTLqFte23BxXh+s5eV5WNv3FbbRnjf/3snn0PiPfSansIf
-         EDig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Im8aG2HhGlxgZH4iTquAT2HFHDXCKd8y8vkv6lHhFXg=;
-        b=YBNiuoye47pfQjFWPy25D0qeP2Qk9N0SDwECC494zIPIu+6gnCpnpSlNrcsBQskYNY
-         /VJ5+YARN576M6dUPjGh8H8AcmuRHkeLlB8JmutLPTzD+8a+Ct1Wj9jRAY95Aue21j3l
-         5PB7ajBv5DNClwQ7TURVgTvgUMlaZsoX/OzcfEr/iHMrHiEibpojmpjow8kU6RfMXzFf
-         MIlEbnYsyAT15J84/bAwPRv67nu1Z34FIqjghxCPAyb3+GBzL+mGHJUKDWoG5Zfx7iu6
-         j9VdMoThp/G8QxHVvvkVTg3p/5s42+A23Ar8FgPFAe6Vcuo15AEDtF7+jEtJKa8H9xzI
-         j47w==
-X-Gm-Message-State: ANoB5pn5ZyG3S7+IbXLSehq3DbeW4LeiK9+UOAQJixE9Ho/Cg0gI65GA
-	wuALNKr79dLZ17xLRxuCq+bojEbUpFnbm7i+X3455A==
-X-Google-Smtp-Source: AA0mqf41hMKwtkf4xbRGiRzWBrltGwtbsUvrrqiCOCed4fhJhU6zzDCcb/toEsxMj7xcuXoUo4C5eWh/jY9KyVI1Iik=
-X-Received: by 2002:a6b:6109:0:b0:6df:c08d:2760 with SMTP id
- v9-20020a6b6109000000b006dfc08d2760mr3407964iob.209.1669895323749; Thu, 01
- Dec 2022 03:48:43 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1DC185C
+	for <regressions@lists.linux.dev>; Thu,  1 Dec 2022 12:06:25 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1p0iKc-0002PQ-MH; Thu, 01 Dec 2022 13:06:22 +0100
+Message-ID: <877f72a1-289d-1c39-e413-7332baa35dd1@leemhuis.info>
+Date: Thu, 1 Dec 2022 13:06:22 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYvUnn0cS+_DZm8hAfi=FnMB08+6Xnhud6yvi9Bxh=DU+Q@mail.gmail.com>
- <CADYN=9L8tt2T-8O+u5NSMSUOkZDvEggnvzxH6aMmd5Rn9yDeuw@mail.gmail.com>
- <ca8d3fff-0365-24d9-fd53-5799ac34f336@opensource.wdc.com> <7ee4a1bd-0674-42d8-8980-8b029ca09e71@app.fastmail.com>
- <75eaeab3-7781-d60a-ae61-ae837f5dcec9@opensource.wdc.com> <CADYN=9JiX-=PcKMzAcSm=p7Dh6kYT7Kbv-8kcNF0MQ4=1hFS5g@mail.gmail.com>
- <20221014140633.mlypet7skkxvt453@mobilestation> <CADYN=9LrKHRNMON3GA4piDvWeSWTASQ1u2=D30rXFdvo1L18bg@mail.gmail.com>
- <20221017155246.zxal2cfehjgaajcu@mobilestation> <CA+G9fYtYetV5sZVD14WkZxCE_tgTC4VVKm8BcBw5_NwXD6U=Sw@mail.gmail.com>
- <Y4cqcTRcni5H7UAU@x1-carbon>
-In-Reply-To: <Y4cqcTRcni5H7UAU@x1-carbon>
-From: Anders Roxell <anders.roxell@linaro.org>
-Date: Thu, 1 Dec 2022 12:48:32 +0100
-Message-ID: <CADYN=9KKGBXn-YkiiFxsUzsanTALbDV1c+tB0oUQPouE1idnuQ@mail.gmail.com>
-Subject: Re: TI: X15 the connected SSD is not detected on Linux next 20221006 tag
-To: Niklas Cassel <Niklas.Cassel@wdc.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, Serge Semin <fancer.lancer@gmail.com>, 
-	Praneeth Bajjuri <praneeth@ti.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Serge Semin <Sergey.Semin@baikalelectronics.ru>, 
-	Damien Le Moal <damien.lemoal@opensource.wdc.com>, open list <linux-kernel@vger.kernel.org>, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
-	"open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>, 
-	"lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>, Lukas Bulwahn <lukas.bulwahn@gmail.com>, 
-	Carlos Hernandez <ceh@ti.com>, Sumit Semwal <sumit.semwal@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: Boot failure regression on 6.0.10 stable kernel on iMX7
+ #forregzbot
+Content-Language: en-US, de-DE
+To: linux-arm-kernel@lists.infradead.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: devicetree@vger.kernel.org, stable@vger.kernel.org
+References: <Y4dgBTGNWpM6SQXI@francesco-nb.int.toradex.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <Y4dgBTGNWpM6SQXI@francesco-nb.int.toradex.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669896385;41a87b1f;
+X-HE-SMSGID: 1p0iKc-0002PQ-MH
 
-On Wed, 30 Nov 2022 at 11:03, Niklas Cassel <Niklas.Cassel@wdc.com> wrote:
->
-> On Wed, Nov 30, 2022 at 03:10:37PM +0530, Naresh Kamboju wrote:
-> > On Mon, 17 Oct 2022 at 21:22, Serge Semin <fancer.lancer@gmail.com> wrote:
-> >
-> > FYI,
-> >
-> > We have been noticing this problem [a] & [b] on Linux mainline master 6.1.0-rc7
-> >
-> >     Test error: mkfs.ext4
-> > /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 failed; job
-> > exit
-> >
-> > Please suggest a way forward on this reported issue on arm32 TI BeagleBoard X15
-> > device. Build and Kernel configs details provided in the metadata section.
-> >
-> > metadata:
-> >   git_ref: master
-> >   git_repo: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline
-> >   git_sha: b7b275e60bcd5f89771e865a8239325f86d9927d
-> >   git_describe: v6.1-rc7
-> >   kernel_version: 6.1.0-rc7
-> >   kernel-config: https://builds.tuxbuild.com/2I9I42JhhQqS9GOpFppfRiuqtRW/config
-> >   build-url: https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline/-/pipelines/706371149
-> >   artifact-location: https://builds.tuxbuild.com/2I9I42JhhQqS9GOpFppfRiuqtRW
-> >   toolchain: gcc-10
-> >
-> > [a] https://lkft.validation.linaro.org/scheduler/job/5892099
-> > [b] https://lore.kernel.org/all/20221017155246.zxal2cfehjgaajcu@mobilestation/
-> >
-> > - Naresh
->
-> Hello Naresh,
->
->
-> Looking at the error from the log:
->
-> + mkfs.ext4 /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84
-> mke2fs 1.46.5 (30-Dec-2021)
-> The file /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 does not exist and no size was specified.
->
-> It seems like the device that you are trying to format does not exist.
->
->
->
-> On October 17th Serge suggested that you guys should try to enable:
-> CONFIG_AHCI_DWC
-> and see if that does solve your problem.
->
-> There was never any reply to his suggestion.
+[Note: this mail contains only information relevant for regzbot, the
+Linux kernel regression tracking bot. That's why I removed most
+recipients of the quoted mail and only left what looked like a mailing
+lists. These mails contain '#forregzbot' in the subject, to make them
+easy to spot and filter out.]
 
-I re-tested this on todays linux tree v6.1-rc7-103-gef4d3ea40565.
+On 30.11.22 14:52, Francesco Dolcini wrote:
+> it looks like commit 753395ea1e45 ("ARM: dts: imx7: Fix NAND controller
+> size-cells"), that was backported to stable 6.0.10, introduce a boot
+> regression on colibri-imx7, at least.
+> [...]
 
-With CONFIG_AHCI_DWC=y the kernel fell on its back and no output was produced
-So changing  the ahci_dwc_init to be a late_initcall [1] made me see
-what was going on [2].
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
-The kernel booted fine with CONFIG_AHCI_DWC=y + this patch [3]
+#regzbot ^introduced 753395ea1e45
+#regzbot title ARM: dts: imx7: Boot failure on iMX7
+#regzbot ignore-activity
 
---- a/drivers/ata/libahci_platform.c
-+++ b/drivers/ata/libahci_platform.c
-@@ -109,7 +109,8 @@ struct clk *ahci_platform_find_clk(struct
-ahci_host_priv *hpriv, const char *con
-  int i;
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply -- ideally with also
+telling regzbot about it, as explained here:
+https://linux-regtracking.leemhuis.info/tracked-regression/
 
-  for (i = 0; i < hpriv->n_clks; i++) {
-- if (!strcmp(hpriv->clks[i].id, con_id))
-+ if (hpriv->clks && hpriv->clks[i].id &&
-+    !strcmp(hpriv->clks[i].id, con_id))
-  return hpriv->clks[i].clk;
-  }
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (the mail this one replies to), as explained for
+in the Linux kernel's documentation; above webpage explains why this is
+important for tracked regressions.
 
-Bootlog [4].
-Thank you Arnd for helping out with the investigation and for
-proposing the patch for me to test.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
->
->
->
-> Looking at the config in:
-> >   kernel-config: https://builds.tuxbuild.com/2I9I42JhhQqS9GOpFppfRiuqtRW/config
->
-> # CONFIG_AHCI_DWC is not set
->
-> This Kconfig is indeed not enabled.
->
-> Could you guys please try the suggestion from Serge?
-
-The patch was also tested [5] without enabling CONFIG_AHCI_DWC, this
-also worked fine.
-
-Cheers,
-Anders
-[1] http://ix.io/4hmt
-[2] https://lkft.validation.linaro.org/scheduler/job/5902935
-[3] http://ix.io/4hmv
-[4] https://lkft.validation.linaro.org/scheduler/job/5903220
-[5] http://ix.io/4hmw
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
