@@ -1,325 +1,269 @@
-Received: from fudo.makrotopia.org (fudo.makrotopia.org [185.142.180.71])
+Received: from smtpauth.rollernet.us (smtpauth.rollernet.us [208.79.240.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E500D6FD7
-	for <regressions@lists.linux.dev>; Thu,  1 Dec 2022 15:40:42 +0000 (UTC)
-Received: from local
-	by fudo.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.94.2)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1p0lSo-0002JZ-28; Thu, 01 Dec 2022 16:27:02 +0100
-Date: Thu, 1 Dec 2022 15:26:54 +0000
-From: Daniel Golle <daniel@makrotopia.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Nick <vincent@systemli.org>, Matthias Brugger <matthias.bgg@gmail.com>,
-	jia-wei.chang@mediatek.com, rex-bc.chen@mediatek.com,
-	angelogioacchino.delregno@collabora.com, viresh.kumar@linaro.org,
-	Frank Wunderlich <frank-w@public-files.de>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Project_Global_Chrome_Upstream_Group@mediatek.com,
-	=?iso-8859-1?B?SPxobiw=?= Thomas <thomas.huehn@hs-nordhausen.de>
-Subject: Re: Kernel Kernel bug caused by (cpufreq: mediatek: Refine
- mtk_cpufreq_voltage_tracking()) on Banana Pi R64 (MT7622)
-Message-ID: <Y4jHvomTrU8guBox@makrotopia.org>
-References: <930778a1-5e8b-6df6-3276-42dcdadaf682@systemli.org>
- <eb142a22-b35e-ec3f-ee0a-9e3e7b24cea6@gmail.com>
- <bf8d2a8f-7654-29be-1104-a842c6657b5e@systemli.org>
- <02c2c955-940b-b315-0474-85d0eddad7a3@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E99C6FD7
+	for <regressions@lists.linux.dev>; Thu,  1 Dec 2022 15:52:33 +0000 (UTC)
+Received: from smtpauth.rollernet.us (localhost [127.0.0.1])
+	by smtpauth.rollernet.us (Postfix) with ESMTP id E27CC280004E;
+	Thu,  1 Dec 2022 07:52:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aronetics.com;
+	 h=from:to:cc:references:in-reply-to:subject:date:message-id
+	:mime-version:content-type; s=roll2210; t=1669909952; bh=7ztrzaD
+	NVG93s25z7Fx5+VOK4GRN+2ZQvzf2HJvpnN8=; b=IXjaJGYOkp3R9xs7QqbmzSW
+	qnNlE1oIeEvyDxKtux9EaBl6emfm4PX4k2Gt6vEgtFM/3r8dKDzhT055X2Q1GLpX
+	oSx3lxcV8NKlmlUbRp2mKyc2XcbQUHFLupG64zxrT3JiazqDs4QpeIajbiag06P/
+	ZglI2JI9zLak5fpH2+7zoTNDLvRT7L1OXmSUlU+6kHYtf3PpANQWENgcLb2LnV0S
+	tYgXp6IHqOLyPNo1DD0bR0IGwF8IEUo+Z1iBktg25Eo2KhcOooMLmE/xjQL+TRB4
+	X92l9B8vW9fkghQQfmjII1kvfUtqTK+VHvLzYTJi6H3g5VMIoFlyzBSlxD5Y2yQ=
+	=
+From: "John Aron" <john@aronetics.com>
+To: "'Greg KH'" <gregkh@linuxfoundation.org>
+Cc: "'Mark Salter'" <mark.salter@canonical.com>,
+	"'Mark Lewis'" <mark.lewis@canonical.com>,
+	<regressions@lists.linux.dev>,
+	<stable@vger.kernel.org>,
+	<kernelnewbies@kernelnewbies.org>
+References: <041601d90035$4f738de0$ee5aa9a0$@aronetics.com> <Y3/c73nZVdHCBdZo@kroah.com> <0be301d90514$9250bd70$b6f23850$@aronetics.com> <Y4hCVMrg9oZt+YAL@kroah.com>
+In-Reply-To: <Y4hCVMrg9oZt+YAL@kroah.com>
+Subject: RE: OBJTOOL Build error
+Date: Thu, 1 Dec 2022 10:52:16 -0500
+Message-ID: <002e01d9059c$eb052400$c10f6c00$@aronetics.com>
+X-Mailer: Microsoft Outlook 16.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <02c2c955-940b-b315-0474-85d0eddad7a3@leemhuis.info>
+Thread-Index: AQKf6RgJ5J/J2MTr/YB4gdWkzgfzGAHVZOk2AlzVO6oCMYW+yqyYR34g
+Content-Language: en-us
+Content-Type: multipart/signed;
+	protocol="application/x-pkcs7-signature";
+	micalg=SHA1;
+	boundary="----=_NextPart_000_0029_01D90572.F8F1FF40"
+X-Rollernet-Modified: Received headers cleared at submission by user request
+X-Rollernet-Abuse: Contact abuse@rollernet.us to report. Abuse policy: http://www.rollernet.us/policy
+X-Rollernet-Submit: Submit ID 5bbe.6388cdb5.7fb78.0
 
-On Thu, Dec 01, 2022 at 04:08:50PM +0100, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker. Top-posting for once,
-> to make this easily accessible to everyone.
-> 
-> I noticed this regression didn't make any progress
-> 
-> Matthias, is that because Nick didn't exactly do what you asked for (he
-> afaics tried -next, but nevertheless patches it)? Or is there another
-> reason?
+This is a multipart message in MIME format.
 
-I've also tried this on plain linux-next, also using the BPi-R64 and
-can confirm the issue exists also there, without any additional patches
-applied.
+------=_NextPart_000_0029_01D90572.F8F1FF40
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
-Reverting commit 6a17b3876b ("cpufreq: mediatek: Refine mtk_cpufreq_voltage_tracking()")
-fixes the issue. Unfortunately, by now it no longer reverts cleanly and
-requires a tiny amount of manual clean-up...
+Oh Dear -
 
+This wiki page brings my mind back to a hacker listserv conversation about
+semantics of discourse and Kevin Mitnick isms. Please accept my inline or
+outline apologies.
 
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I deal with a lot of
-> reports and sometimes miss something important when writing mails like
-> this. If that's the case here, don't hesitate to tell me in a public
-> reply, it's in everyone's interest to set the public record straight.
-> 
-> On 15.11.22 20:44, Nick wrote:
-> > I used now the linux-next kernel tree (with
-> > https://patchwork.ozlabs.org/project/linux-mtd/list/?series=327227 so
-> > single uImage.FIT will work).
-> >
-> > Same issue:
-> > 
-> >> [ 0.886209] Kernel BUG at regulator_check_voltage+0xb0/0xf0 [verbose
-> >> debug info unavailable]
-> >>
-> >> [ 0.894663] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
-> >>
-> >> [ 0.900759] Modules linked in:
-> >>
-> >> [ 0.903819] CPU: 1 PID: 79 Comm: kworker/1:1 Tainted: G S
-> >> 6.1.0-rc5-next-20221115+ #0
-> >>
-> >> [ 0.904360] pstore: Using crash dump compression: deflate
-> >>
-> >> [ 0.913038] Hardware name: Bananapi BPI-R64 (DT)
-> >>
-> >> [ 0.913043] Workqueue: events dbs_work_handler
-> >>
-> >> [ 0.913056] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS
-> >> BTYPE=--)
-> >>
-> >> [ 0.913063] pc : regulator_check_voltage+0xb0/0xf0
-> >>
-> >> [ 0.913070] lr : regulator_set_voltage_unlocked+0x88/0x110
-> >>
-> >> [ 0.913077] sp : ffffffc00cef3b30
-> >>
-> >> [ 0.913080] x29: ffffffc00cef3b30 x28: ffffff8006f6f800 x27:
-> >> ffffff8006f6fa00
-> >>
-> >> [ 0.931243] mtk-pcie 1a143000.pcie: host bridge /pcie@1a143000 ranges:
-> >>
-> >> [ 0.934474]
-> >>
-> >> [ 0.934475] x26: 00000000001312d0 x25: 0000000000000024
-> >>
-> >> [ 0.939298] mtk-pcie 1a143000.pcie: Parsing ranges property...
-> >>
-> >> [ 0.944730] x24: 0000000000118c30
-> >>
-> >> [ 0.948038] mtk-pcie 1a143000.pcie: MEM 0x0020000000..0x0027ffffff ->
-> >> 0x0020000000
-> >>
-> >> [ 0.955155]
-> >>
-> >> [ 0.955157] x23: 0000000000149970 x22: ffffff8000861800 x21:
-> >> ffffff8006f6f800
-> >>
-> >> [ 0.955166] x20: 00000000001312d0 x19: 0000000000000000 x18:
-> >> 00000000cfad1bd3
-> >>
-> >> [ 0.955174] x17: 000000000000000c x16: 0000000000000005 x15:
-> >> 0000000000000000
-> >>
-> >> [ 1.008473] x14: 0000000000000000 x13: 0000000000000165 x12:
-> >> 0101010101010101
-> >>
-> >> [ 1.015608] x11: 00000000017d7840 x10: 0000000000000850 x9 :
-> >> ffffffc00cef3900
-> >>
-> >> [ 1.017014] mmc0: new HS200 MMC card at address 0001
-> >>
-> >> [ 1.022740] x8 : ffffff8005ee9f30 x7 : 0000000000000001 x6 :
-> >> 00000000001312d0
-> >>
-> >> [ 1.022748] x5 : 0000000000118c30 x4 : 0000000000000000 x3 :
-> >> 0000000000000000
-> >>
-> >> [ 1.022756] x2 : ffffffc00cef3b68 x1 : ffffffc00cef3b6c
-> >>
-> >> [ 1.029034] mmcblk0: mmc0:0001 008G30 7.28 GiB
-> >>
-> >> [ 1.034833] x0 : ffffff8000861800
-> >>
-> >> [ 1.034838] Call trace:
-> >>
-> >> [ 1.044528] Alternate GPT is invalid, using primary GPT.
-> >>
-> >> [ 1.047175] regulator_check_voltage+0xb0/0xf0
-> >>
-> >> [ 1.052603] FIT: Selected configuration: "config-1" (OpenWrt
-> >> bananapi_bpi-r64)
-> >>
-> >> [ 1.055090] regulator_set_voltage+0x3c/0x64
-> >>
-> >> [ 1.057539] FIT: kernel sub-image 0x00001000..0x005200f9 "kernel-1"
-> >> (ARM64 OpenWrt Linux-6.1-rc2)
-> >>
-> >> [ 1.062824] mtk_cpufreq_voltage_tracking+0x12c/0x27c
-> >>
-> >> [ 1.062831] mtk_cpufreq_set_target+0x1c4/0x350
-> >>
-> >> [ 1.062837] __cpufreq_driver_target+0x2dc/0x660
-> >>
-> >> [ 1.067289] FIT: flat_dt sub-image 0x00521000..0x005272d9 "fdt-1"
-> >> (ARM64 OpenWrt bananapi_bpi-r64 device tree blob)
-> >>
-> >> [ 1.074484] od_dbs_update+0xb8/0x19c
-> >>
-> >> [ 1.074490] dbs_work_handler+0x3c/0x7c
-> >>
-> >> [ 1.078774] FIT: filesystem sub-image 0x00528000..0x00829fff
-> >> "rootfs-1" (ARM64 OpenWrt bananapi_bpi-r64 rootfs)
-> >>
-> >> [ 1.088560] process_one_work+0x200/0x3a0
-> >>
-> >> [ 1.093624] mmcblk0: p1 p2 p3 p4 p65(rootfs-1) p66(rootfs_data) p128
-> >>
-> >> [ 1.098116] worker_thread+0x170/0x4c0
-> >>
-> >> [ 1.104575] mmcblk0boot0: mmc0:0001 008G30 4.00 MiB
-> >>
-> >> [ 1.114009] kthread+0xd4/0xe0
-> >>
-> >> [ 1.114016] ret_from_fork+0x10/0x20
-> >>
-> >> [ 1.114028] Code: 6b04001f 54fffe6b 2a0003e4 17fffff3 (d4210000)
-> >>
-> >> [ 1.114033] ---[ end trace 0000000000000000 ]---
-> >> [ 0.878926] ------------[ cut here ]------------
-> >>
-> > 
-> > Full log:
-> > https://gist.github.com/PolynomialDivision/4a555079887b288f4795b28eb3607aa9
-> > 
-> > Big thanks to Daniel helping me to build a vanilla kernel with OpenWrt
-> > build system.
-> > 
-> > Bests
-> > Nick
-> > 
-> > On 11/10/22 12:26, Matthias Brugger wrote:
-> >> Hi Nick,
-> >>
-> >> On 09/11/2022 14:35, Nick wrote:
-> >>> Hi,
-> >>> while trying to bump OpenWrt Kernel to 6.1rc2 I noticed that the
-> >>> kernel is crashing while booting on a Banana Pi R64 (MT7622):
-> >>>
-> >>>> [    1.055565] ------------[ cut here ]------------
-> >>>> [    1.060204] Kernel BUG at regulator_check_voltage+0xb0/0xf0
-> >>>> [verbose debug info unavailable]
-> >>>> [    1.062418] mtk-pcie 1a143000.pcie: host bridge /pcie@1a143000
-> >>>> ranges:
-> >>>> [    1.068656] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
-> >>>> [    1.075248] mtk-pcie 1a143000.pcie: Parsing ranges property...
-> >>>> [    1.081257] Modules linked in:
-> >>>> [    1.081264] CPU: 1 PID: 328 Comm: kworker/1:7 Tainted: G
-> >>>> S                 6.1-rc2 #0
-> >>>> [    1.087088] mtk-pcie 1a143000.pcie:      MEM
-> >>>> 0x0020000000..0x0027ffffff -> 0x0020000000
-> >>>> [    1.090126] Hardware name: Bananapi BPI-R64 (DT)
-> >>>> [    1.110541] Workqueue: events dbs_work_handler
-> >>>> [    1.114988] pstate: 20000005 (nzCv daif -PAN -UAO -TCO -DIT -SSBS
-> >>>> BTYPE=--)
-> >>>> [    1.121944] pc : regulator_check_voltage+0xb0/0xf0
-> >>>> [    1.126728] lr : regulator_set_voltage_unlocked+0x88/0x110
-> >>>> [    1.129638] mmc1: host does not support reading read-only switch,
-> >>>> assuming write-enable
-> >>>> [    1.132207] sp : ffffffc00956bb30
-> >>>> [    1.132209] x29: ffffffc00956bb30 x28: ffffff8000efb400 x27:
-> >>>> 0000000000000024
-> >>>> [    1.132219] x26: 00000000001312d0 x25: 0000000000118c30 x24:
-> >>>> 00000000001312d0
-> >>>> [    1.132227] x23: 0000000000149970
-> >>>> [    1.146036] mmc1: new high speed SDHC card at address e624
-> >>>> [    1.150642]  x22: ffffff800038f800
-> >>>> [    1.159192] mmcblk1: mmc1:e624 SL16G 14.8 GiB
-> >>>> [    1.161068]  x21: ffffff8000efb100
-> >>>> [    1.161072] x20: 00000000001312d0
-> >>>> [    1.175424] GPT:partition_entry_array_crc32 values don't match:
-> >>>> 0xa0b5ce6d != 0xab54d286
-> >>>> [    1.177757]  x19: 0000000000000000 x18: 00000000799b2550
-> >>>> [    1.181067] GPT:Primary header thinks Alt. header is not at the
-> >>>> end of the disk.
-> >>>> [    1.189143] x17: 0000000000000003 x16: 0000000000000001 x15:
-> >>>> 0000000000000000
-> >>>> [    1.189151] x14: 0000000000000000 x13: 0000000000000146 x12:
-> >>>> 00000000fa83b2da
-> >>>> [    1.189159] x11: 000000000000013d x10: 0000000000000850
-> >>>> [    1.194472] GPT:305184 != 31116287
-> >>>> [    1.201842]  x9 : ffffffc00956b910
-> >>>> [    1.201846] x8 : ffffff8000b9edf0 x7 : 0000000000000001
-> >>>> [    1.208970] GPT:Alternate GPT header not at the end of the disk.
-> >>>> [    1.216092]  x6 : 00000000001312d0
-> >>>> [    1.216095] x5 : 0000000000118c30 x4 : 0000000000000000 x3 :
-> >>>> 0000000000000000
-> >>>> [    1.216103] x2 : ffffffc00956bb68 x1 : ffffffc00956bb6c
-> >>>> [    1.221321] GPT:305184 != 31116287
-> >>>> [    1.224706]  x0 : ffffff800038f800
-> >>>> [    1.228095] GPT: Use GNU Parted to correct GPT errors.
-> >>>> [    1.233307]
-> >>>> [    1.233309] Call trace:
-> >>>> [    1.233312]  regulator_check_voltage+0xb0/0xf0
-> >>>> [    1.242680] FIT: Selected configuration:
-> >>>> "config-mt7622-bananapi-bpi-r64-pcie1" (OpenWrt bananapi_bpi-r64
-> >>>> with mt7622-bananapi-bpi-r64-pcie1)
-> >>>> [    1.242694]  regulator_set_voltage+0x3c/0x64
-> >>>> [    1.249831] FIT:           kernel sub-image
-> >>>> 0x00001000..0x0052fd0a "kernel-1" (ARM64 OpenWrt Linux-6.1-rc2)
-> >>>> [    1.255030]  mtk_cpufreq_voltage_tracking+0x11c/0x26c
-> >>>> [    1.255039]  mtk_cpufreq_set_target+0x1c4/0x350
-> >>>> [    1.258444] FIT:          flat_dt sub-image
-> >>>> 0x00530000..0x005380c5 "fdt-1" (ARM64 OpenWrt bananapi_bpi-r64
-> >>>> device tree blob)
-> >>>> [    1.261820]  __cpufreq_driver_target+0x2f4/0x674
-> >>>> [    1.261826]  od_dbs_update+0xb8/0x19c
-> >>>> [    1.266969] FIT:          flat_dt sub-image
-> >>>> 0x00539000..0x0053911a "fdt-mt7622-bananapi-bpi-r64-pcie1" (ARM64
-> >>>> OpenWrt bananapi_bpi-r64 device tree overlay
-> >>>> mt7622-bananapi-bpi-r64-pcie1)
-> >>>> [    1.268431]  dbs_work_handler+0x3c/0x7c
-> >>>> [    1.270883] FIT:          flat_dt sub-image
-> >>>> 0x0053a000..0x0053a20f "fdt-mt7622-bananapi-bpi-r64-sata" (ARM64
-> >>>> OpenWrt bananapi_bpi-r64 device tree overlay
-> >>>> mt7622-bananapi-bpi-r64-sata)
-> >>>> [    1.275297]  process_one_work+0x200/0x3a0
-> >>>> [    1.287998] FIT:       filesystem sub-image
-> >>>> 0x0053b000..0x00859fff "rootfs-1" (ARM64 OpenWrt bananapi_bpi-r64
-> >>>> rootfs)
-> >>>> [    1.292237]  worker_thread+0x170/0x4c0
-> >>>> [    1.292244]  kthread+0xd4/0xe0
-> >>>> [    1.302066] FIT: selecting configured loadable "rootfs-1" to be
-> >>>> root filesystem
-> >>>> [    1.307092]  ret_from_fork+0x10/0x20
-> >>>> [    1.311631]  mmcblk1: p1 p2 p3 p4 p5 p6 p65(rootfs-1)
-> >>>> p66(rootfs_data) p128
-> >>>> [    1.322903] Code: 6b04001f 54fffe6b 2a0003e4 17fffff3 (d4210000)
-> >>>> [    1.413322] ---[ end trace 0000000000000000 ]---
-> >>> The complete log can be found here:
-> >>> https://gist.githubusercontent.com/PolynomialDivision/395d009c84b426d780549c5fa1f64ff1/raw/886d621d2bf6f03429586adf8a14a6c37c8d8a7d/mt7622-6-1.log
-> >>>
-> >>> Reverting commit "cpufreq: mediatek: Refine
-> >>> mtk_cpufreq_voltage_tracking()" fixes the kernel bug:
-> >>> https://github.com/torvalds/linux/commit/6a17b3876bc8303612d7ad59ecf7cbc0db418bcd
-> >>>
-> >>> The revert commit can be found here:
-> >>> https://github.com/PolynomialDivision/openwrt/commit/1df941d0334000e3aced43b7d50cdac0da8bf427
-> >>>
-> >>> The branch I use to build the 6.1rc2 on a Banana Pi R64 can be found
-> >>> here:
-> >>> https://github.com/PolynomialDivision/openwrt/commits/bump-mt7622-rebase
-> >>>
-> >>
-> >> Thanks for the report.
-> >> Could you test with a plain upstream kernel? That would help us to
-> >> verify that this is a upstream problem and not introduced by some
-> >> openwrt patches.
-> >>
-> >> Regards,
-> >> Matthias
-> 
-> #regzbot ignore-activity
+John
+
+-----Original Message-----
+From: Greg KH <gregkh@linuxfoundation.org> 
+Sent: Thursday, December 1, 2022 12:58 AM
+To: John Aron <john@aronetics.com>
+Cc: 'Mark Salter' <mark.salter@canonical.com>; 'Mark Lewis'
+<mark.lewis@canonical.com>; regressions@lists.linux.dev;
+stable@vger.kernel.org; kernelnewbies@kernelnewbies.org
+Subject: Re: OBJTOOL Build error
+
+A: http://en.wikipedia.org/wiki/Top_post
+Q: Were do I find info about this thing called top-posting?
+A: Because it messes up the order in which people normally read text.
+Q: Why is top-posting such a bad thing?
+A: Top-posting.
+Q: What is the most annoying thing in e-mail?
+
+A: No.
+Q: Should I include quotations after my reply?
+
+http://daringfireball.net/2007/07/on_top
+
+On Wed, Nov 30, 2022 at 06:36:19PM -0500, John Aron wrote:
+> One C file and a few header files.
+
+Can you provide a link to them so that we can see what might be the problem?
+Without that, it's impossible to help, sorry.
+--
+The repo is in a private repo online, the entry is:
+static int __init kernel_module_start(void)
+{
+    Configuration* configuration = NULL;
+    // enable the logger
+    Logger_set_enabled(true);
+    log_info("Starting Aronetics kernel module (configuration file name:
+\"%s\")...\n", _FILE_NAME_CONFIGURATION);
+    controller = Controller_new(_FILE_NAME_CONFIGURATION);
+    if (controller != NULL)
+    {
+        configuration = Controller_get_configuration(controller);
+        String_dump_and_delete(Configuration_to_string(configuration));
+        log_verbose("    Initializing mutex...\n");
+        mutex_init(&controller_mutex);
+        switch (Configuration_get_execution_mode(configuration))
+        {
+//          case TestExecutionMode:
+//              run_tests();
+//              break;
+            default:
+                log_verbose("    Initializing controller...\n");
+                if (Controller_initialize(controller) == 0)
+                {
+                    log_verbose("    Setting up timer...\n");
+                    timer_setup(&controller_timer, on_timer, 0);
+                    log_verbose("    Initalizing timer...\n");
+                    mod_timer(&controller_timer, jiffies +
+msecs_to_jiffies(DELAY_ITERATION));
+                    log_verbose("Aronetics kernel module started\n");
+                }
+                else
+                {
+                    log_error("Initialization failed.");
+                }
+                break;
+        }
+    }
+    return 0;
+}
+
+thanks,
+
+greg k-h
+
+------=_NextPart_000_0029_01D90572.F8F1FF40
+Content-Type: application/pkcs7-signature;
+	name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+	filename="smime.p7s"
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIIXlzCCA1cw
+ggI/oAMCAQICAQEwDQYJKoZIhvcNAQELBQAwTTELMAkGA1UEBhMCVVMxGDAWBgNVBAoTD1UuUy4g
+R292ZXJubWVudDEMMAoGA1UECxMDRUNBMRYwFAYDVQQDEw1FQ0EgUm9vdCBDQSA0MB4XDTEyMDMy
+MDE2MTMwNFoXDTI5MTIzMDE2MTMwNFowTTELMAkGA1UEBhMCVVMxGDAWBgNVBAoTD1UuUy4gR292
+ZXJubWVudDEMMAoGA1UECxMDRUNBMRYwFAYDVQQDEw1FQ0EgUm9vdCBDQSA0MIIBIjANBgkqhkiG
+9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuHBpV72AWkHAGeaV59SCE9wsOEuKgsociF2OfjwMb2Xh2rgc
+cRi23hQIedvGipnt+iHdYhgALfAUzFpOd57y6HcUAxTGqf2yEqBn/x83etBwj5bXcCQOLZ1FXjwA
+E+6gOjEakCBXZeQwF8bJBHndHv+gyO9frAAlOgG/lpwElY6tUrORcPT07DPhDwgXgriGCj850dyQ
+Occ+uTMpg9kK6BPgXj0NJYDEbM8sLoAq0C1ASRvEnLbzNikm7DEAcxrNd5Wt5SxL8RQpNugxXN71
+XI92W6sB1s/nzSer9LRzUEI0JYdXWh5UmTubAerF3ZWjsHK27HChKqqF+vGpOJQVBwIDAQABo0Iw
+QDAdBgNVHQ4EFgQUM1ulb3pVYCuBSyYUzHm/SrqLMr0wDgYDVR0PAQH/BAQDAgGGMA8GA1UdEwEB
+/wQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEBALYfYXiGvrV6cReK8ddFAhX3uiDF5ZNpJV4VcTlO
+wdHY6HtDu40Z0cAg3+dNq4pdf4AgjY3vAmiK1QCcIbcFrOe3j7GUUz25bvj36IJV0SgkZYDlFsew
+RAvThFJDI8ja+172AYbZN7/9brhQyA3mPHT6C26P8ozD31C3nyj4rlAcmsy+dm5K2vS1KDWhHXKR
+dhog7zrIRJDAHQZ7sM24weayW09IFVojo2rJBlp8jIhEcYma52rePQmv0cu8lacIV45RoTER03Hw
+g+9Qx+55bDsjY/iaZm4OKSAbrSXNubi/G9JzQADDTayJZPFzoIOJDhp0mKiUPLZ07JROAhXrMW4w
+ggSSMIIDeqADAgECAgIC9TANBgkqhkiG9w0BAQsFADBNMQswCQYDVQQGEwJVUzEYMBYGA1UEChMP
+VS5TLiBHb3Zlcm5tZW50MQwwCgYDVQQLEwNFQ0ExFjAUBgNVBAMTDUVDQSBSb290IENBIDQwHhcN
+MTkwNTA3MTI1NTI4WhcNMjUwNTA3MTI1NTI4WjB1MQswCQYDVQQGEwJVUzEYMBYGA1UEChMPVS5T
+LiBHb3Zlcm5tZW50MQwwCgYDVQQLEwNFQ0ExIjAgBgNVBAsTGUNlcnRpZmljYXRpb24gQXV0aG9y
+aXRpZXMxGjAYBgNVBAMTEUlkZW5UcnVzdCBFQ0EgUzIyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A
+MIIBCgKCAQEAt6DTxW5yDAER5mqwNjBumWj29f1myTOf5jY+hFnWGTHaJd/V9DcX12FxPaAgOsj8
+q3k9NOOYIPQO6woEVFFf31rNmuE7b5lmhOtjGP8BUUOQIq0lBZxH+Kx6yXQ0gDtDZkpVQMDkxMOx
+Ko8cRcc65DjecWG006CCLcTBN/nIhykX8cXlxIk8klIkkuC7j6ymjTnMHCAhKGpu1AbDIjyC+RhF
+hkrhuYNsw9Bpqm941owaLCeiHky8K/mWLfYYv3Yysz6aUJcWdwZUoEStjClzMDPsRyJD9CbxQ0ZC
+rSa1NK9HSGc0teT088t21uLDvkWBzGr7hCOPXJqQGZ4F3oS4IQIDAQABo4IBUjCCAU4wHwYDVR0j
+BBgwFoAUM1ulb3pVYCuBSyYUzHm/SrqLMr0wHQYDVR0OBBYEFOikBAKeSdIV0aVfu+uUOQS7gilu
+MA4GA1UdDwEB/wQEAwIBhjAzBgNVHSAELDAqMAwGCmCGSAFlAwIBDAQwDAYKYIZIAWUDAgEMBTAM
+BgpghkgBZQMCAQwKMBIGA1UdEwEB/wQIMAYBAf8CAQAwDAYDVR0kBAUwA4ABADA3BgNVHR8EMDAu
+MCygKqAohiZodHRwOi8vY3JsLmRpc2EubWlsL2NybC9FQ0FST09UQ0E0LmNybDBsBggrBgEFBQcB
+AQRgMF4wOgYIKwYBBQUHMAKGLmh0dHA6Ly9jcmwuZGlzYS5taWwvaXNzdWVkdG8vRUNBUk9PVENB
+NF9JVC5wN2MwIAYIKwYBBQUHMAGGFGh0dHA6Ly9vY3NwLmRpc2EubWlsMA0GCSqGSIb3DQEBCwUA
+A4IBAQBIB/AYjrPQr2Jh/qkcECcjetqBrhU8SsNRI42IW2xdfRqBODnKxWDFkkBtfNd/8+g5/76e
+6c8f0Zw9fn8UTqdMaU0H9ylZt9ngc8aM6BhcaOyK1ClZwHohTpZHemhlI8nw6o7VRgIWl8E0Om/A
+OOuNxPOYJ1DeG4XfGKqbTMwXVLVYE1M9PO3kNQpVFiXzwtw5WxCoQjkXd6aq1PWWehMF+r54/O4+
+Ycu/Gr5y66EEFPnqLKXjJnJcOVDzwQ/k/7sGpQW7kxHeY/+YbBVdG0R0MvCyKIBWgIwimt0viqqq
+a3oOCnYP3J1vB7vu+GH9d1bZKB64WZGknXyHK3QS8DArMIIHqDCCBpCgAwIBAgIQQAFu/9vH1Hi9
+faHFlIkOwDANBgkqhkiG9w0BAQsFADB1MQswCQYDVQQGEwJVUzEYMBYGA1UEChMPVS5TLiBHb3Zl
+cm5tZW50MQwwCgYDVQQLEwNFQ0ExIjAgBgNVBAsTGUNlcnRpZmljYXRpb24gQXV0aG9yaXRpZXMx
+GjAYBgNVBAMTEUlkZW5UcnVzdCBFQ0EgUzIyMB4XDTE5MTIxMzE1MjM0M1oXDTIyMTIxMjE1MjM0
+M1owgZUxCzAJBgNVBAYTAlVTMRgwFgYDVQQKEw9VLlMuIEdvdmVybm1lbnQxDDAKBgNVBAsTA0VD
+QTESMBAGA1UECxMJSWRlblRydXN0MRYwFAYDVQQLEw1Bcm9uZXRpY3MgTExDMTIwMAYDVQQDEylK
+b2huIEFyb246QTAxMDlCMzAwMDAwMTZFQTg2RjNGMjMwMDAwMUQyNTCCASIwDQYJKoZIhvcNAQEB
+BQADggEPADCCAQoCggEBALEOcknUWWvkkaX1oKZfNlKj3CgBICGb1GoeE1rnUQvcEDuVeAtP+zsW
+5rxqusImavijhTwckMzo6QFNkUaInis462cAK+fDVL8btNBl0RatZuW6LJpFwYJBJ9mI5yXVAv+Q
+tQ3USTwDU29OH5E4s1+SUrX31Ts2P+iq3nEc4XFNYjBn8KAeDBkJg9rrxvqZh5mxMpuUkDNfH+ZM
+pVXVHvRk7sTYLYJXc6mG8EKk1tllw8czhaLvxQxse1w+PPWbVsluf2Bqv5eU1JvS5MXHnK2A/NmS
+aa/chm46GdRr9Jh32rKCQcw+BCEa4HG4NyvibXiSD/OKasb6/U+xnIAjnsUCAwEAAaOCBBEwggQN
+MA4GA1UdDwEB/wQEAwIFIDCCATEGCCsGAQUFBwEBBIIBIzCCAR8wKwYIKwYBBQUHMAGGH2h0dHA6
+Ly9lY2FzMi5vY3NwLmlkZW50cnVzdC5jb20wgagGCCsGAQUFBzAChoGbbGRhcDovL2xkYXBlY2Eu
+aWRlbnRydXN0LmNvbS9jbiUzRElkZW5UcnVzdCUyMEVDQSUyMFMyMiUyQ291JTNEQ2VydGlmaWNh
+dGlvbiUyMEF1dGhvcml0aWVzJTJDb3UlM0RFQ0ElMkNvJTNEVS5TLiUyMEdvdmVybm1lbnQlMkNj
+JTNEVVM/Y0FDZXJ0aWZpY2F0ZTtiaW5hcnkwRQYIKwYBBQUHMAKGOWh0dHA6Ly92YWxpZGF0aW9u
+LmlkZW50cnVzdC5jb20vY2VydHMvaWRlbnRydXN0ZWNhczIyLmNlcjAfBgNVHSMEGDAWgBTopAQC
+nknSFdGlX7vrlDkEu4IpbjAbBgNVHQkEFDASMBAGCCsGAQUFBwkEMQQTAlVTMIIBMwYDVR0gBIIB
+KjCCASYwggEiBgpghkgBZQMCAQwFMIIBEjBLBggrBgEFBQcCARY/aHR0cHM6Ly9zZWN1cmUuaWRl
+bnRydXN0LmNvbS9jZXJ0aWZpY2F0ZXMvcG9saWN5L2VjYS9pbmRleC5odG1sMIHCBggrBgEFBQcC
+AjCBtQyBskNlcnRpZmljYXRlIHVzZSByZXN0cmljdGVkIHRvIFJlbHlpbmcgUGFydHkocykgaW4g
+YWNjb3JkYW5jZSB3aXRoIEVDQS1DUCAoc2VlIGh0dHBzOi8vc2VjdXJlLmlkZW50cnVzdC5jb20v
+Y2VydGlmaWNhdGVzL3BvbGljeS9FQ0EvaW5kZXguaHRtbCkuIEVDQS1DUFMgaW5jb3Jwb3JhdGVk
+IGJ5IHJlZmVyZW5jZS4wgf0GA1UdHwSB9TCB8jCBsKCBraCBqoaBp2xkYXA6Ly9sZGFwZWNhLmlk
+ZW50cnVzdC5jb20vY24lM0RJZGVuVHJ1c3QlMjBFQ0ElMjBTMjIlMkNvdSUzRENlcnRpZmljYXRp
+b24lMjBBdXRob3JpdGllcyUyQ291JTNERUNBJTJDbyUzRFUuUy4lMjBHb3Zlcm5tZW50JTJDYyUz
+RFVTP2NlcnRpZmljYXRlUmV2b2NhdGlvbkxpc3Q7YmluYXJ5MD2gO6A5hjdodHRwOi8vdmFsaWRh
+dGlvbi5pZGVudHJ1c3QuY29tL2NybC9pZGVudHJ1c3RlY2FzMjIuY3JsMB0GA1UdEQQWMBSBEmpv
+aG5AYXJvbmV0aWNzLmNvbTAdBgNVHQ4EFgQUubvtwtL7mOqQ4xQAAHBOKiFE0VQwEwYDVR0lBAww
+CgYIKwYBBQUHAwQwDQYJKoZIhvcNAQELBQADggEBAB3CQjE6kc6J1T0nCka4EQPQbHrrjEYcoY26
+oX1gtxgpkmL7V3NakWycjwzLOIFD9PipfK61TT/j6UNvNHg2GUatdipfIZ+oXGEkq3LG16dOl/On
+FpY6qTT2PF1hZUrUAPXTSq6syomsTzP4BNc02+X5BNNIn6302q63+RfjZFUUKEozP+XEFANxwccJ
+Z6w9oB6w+nk+u55dCRmPxEw+6iPVEpn/V1BDt/9wu7GR6kbne0n9JUs0ChT6lGYsd1OZGyWb4L5i
+BeZ8433zFdeaMQMgZNFEpzcYtTLOOV94KVdsQbEAVjuy5ys3LueB+TmHp54Sek2jm76gzVR8EF0F
+os4wggf2MIIG3qADAgECAhBAAW7/3NMKJM1U1yqHjdeXMA0GCSqGSIb3DQEBCwUAMHUxCzAJBgNV
+BAYTAlVTMRgwFgYDVQQKEw9VLlMuIEdvdmVybm1lbnQxDDAKBgNVBAsTA0VDQTEiMCAGA1UECxMZ
+Q2VydGlmaWNhdGlvbiBBdXRob3JpdGllczEaMBgGA1UEAxMRSWRlblRydXN0IEVDQSBTMjIwHhcN
+MTkxMjEzMTUyNDUyWhcNMjIxMjEyMTUyNDUyWjCBlTELMAkGA1UEBhMCVVMxGDAWBgNVBAoTD1Uu
+Uy4gR292ZXJubWVudDEMMAoGA1UECxMDRUNBMRIwEAYDVQQLEwlJZGVuVHJ1c3QxFjAUBgNVBAsT
+DUFyb25ldGljcyBMTEMxMjAwBgNVBAMTKUpvaG4gQXJvbjpBMDEwOUIzMDAwMDAxNkVBODZGM0Yy
+MzAwMDAxRDI1MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy3NpPOFjY6VLGiFUeCtC
+iOyNmDyeV3lOnaDNRsdk603M+o6f+ZFinFnp2bvBt1WfOz4zGu2Nd7Mk5c788MOSk26M2KzpjS10
+giyYYEaCDbBE9Z/owhySIRLVeSo1A6CiRHcTEBAaNfYpLGqXYXbELZDk2E1H5vmnVKcrWRxG2YZR
+lxw4sAhLi8fmHQDvYPofsDKcebAUAbf7gpsMhtXFimCna3YgJvpGTR+BZ0ipONkp5wjz8l8V4b6g
+1xFGdWufwEd0ct33ZY3BZVIaRypc3Jr3T6IcvjA4k9HwUzkcjSuCLe+So2ur7gTmY2FO6yoEDfIw
+pBQU06QD5Pot7BnzdQIDAQABo4IEXzCCBFswDgYDVR0PAQH/BAQDAgbAMIIBMQYIKwYBBQUHAQEE
+ggEjMIIBHzArBggrBgEFBQcwAYYfaHR0cDovL2VjYXMyLm9jc3AuaWRlbnRydXN0LmNvbTCBqAYI
+KwYBBQUHMAKGgZtsZGFwOi8vbGRhcGVjYS5pZGVudHJ1c3QuY29tL2NuJTNESWRlblRydXN0JTIw
+RUNBJTIwUzIyJTJDb3UlM0RDZXJ0aWZpY2F0aW9uJTIwQXV0aG9yaXRpZXMlMkNvdSUzREVDQSUy
+Q28lM0RVLlMuJTIwR292ZXJubWVudCUyQ2MlM0RVUz9jQUNlcnRpZmljYXRlO2JpbmFyeTBFBggr
+BgEFBQcwAoY5aHR0cDovL3ZhbGlkYXRpb24uaWRlbnRydXN0LmNvbS9jZXJ0cy9pZGVudHJ1c3Rl
+Y2FzMjIuY2VyMB8GA1UdIwQYMBaAFOikBAKeSdIV0aVfu+uUOQS7giluMBsGA1UdCQQUMBIwEAYI
+KwYBBQUHCQQxBBMCVVMwggEzBgNVHSAEggEqMIIBJjCCASIGCmCGSAFlAwIBDAUwggESMEsGCCsG
+AQUFBwIBFj9odHRwczovL3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kv
+ZWNhL2luZGV4Lmh0bWwwgcIGCCsGAQUFBwICMIG1DIGyQ2VydGlmaWNhdGUgdXNlIHJlc3RyaWN0
+ZWQgdG8gUmVseWluZyBQYXJ0eShzKSBpbiBhY2NvcmRhbmNlIHdpdGggRUNBLUNQIChzZWUgaHR0
+cHM6Ly9zZWN1cmUuaWRlbnRydXN0LmNvbS9jZXJ0aWZpY2F0ZXMvcG9saWN5L0VDQS9pbmRleC5o
+dG1sKS4gRUNBLUNQUyBpbmNvcnBvcmF0ZWQgYnkgcmVmZXJlbmNlLjCB/QYDVR0fBIH1MIHyMIGw
+oIGtoIGqhoGnbGRhcDovL2xkYXBlY2EuaWRlbnRydXN0LmNvbS9jbiUzRElkZW5UcnVzdCUyMEVD
+QSUyMFMyMiUyQ291JTNEQ2VydGlmaWNhdGlvbiUyMEF1dGhvcml0aWVzJTJDb3UlM0RFQ0ElMkNv
+JTNEVS5TLiUyMEdvdmVybm1lbnQlMkNjJTNEVVM/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDti
+aW5hcnkwPaA7oDmGN2h0dHA6Ly92YWxpZGF0aW9uLmlkZW50cnVzdC5jb20vY3JsL2lkZW50cnVz
+dGVjYXMyMi5jcmwwVQYDVR0RBE4wTIESam9obkBhcm9uZXRpY3MuY29toDYGCisGAQQBgjcUAgOg
+KAwmQTAxMDlCMzAwMDAwMTZFQTg2RjNGMjMwMDAwMUQyNUBET0RFQ0EwHQYDVR0OBBYEFNxheynV
+IGu32/+BAJUls+Xd5lguMCkGA1UdJQQiMCAGCCsGAQUFBwMCBggrBgEFBQcDBAYKKwYBBAGCNxQC
+AjANBgkqhkiG9w0BAQsFAAOCAQEAZ5P1oC44GLasrCz7mLzBbu8EcBtVK2drq7Kr0b1HBt/YS+MZ
+egtyCcoQeutwheALquDsTm4BcaIBo5kxghOjm+cTQLPfthDbi7gjM36vdFtlysSiFjiPLgqWN+yA
+uJjbdc3oXfE+FyPDbo8nMBJN8PQc2v77/OYPJ0UhYuvdsNt+t3NHhJVjDCOLuSEQAZw32D05nhiY
+E/GmF2CLmWQMyuxKQVaT+H2bjp8/2MSqD0BWffXN7RJJWPIO1xhj6DVYJW93IYWTJwcomrK0GxFy
+cR4+SQEkY+ImADwdNNxkHgCvU8ej4Jv2aFYVfVGZ8W4B7KumCFTYAdte8OgA2xwS7TGCA+QwggPg
+AgEBMIGJMHUxCzAJBgNVBAYTAlVTMRgwFgYDVQQKEw9VLlMuIEdvdmVybm1lbnQxDDAKBgNVBAsT
+A0VDQTEiMCAGA1UECxMZQ2VydGlmaWNhdGlvbiBBdXRob3JpdGllczEaMBgGA1UEAxMRSWRlblRy
+dXN0IEVDQSBTMjICEEABbv/c0wokzVTXKoeN15cwCQYFKw4DAhoFAKCCAi8wGAYJKoZIhvcNAQkD
+MQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjIxMjAxMTU1MjE0WjAjBgkqhkiG9w0BCQQx
+FgQUkXCPwt6VIiOSXj9ImQsbD0BgOt8wgZMGCSqGSIb3DQEJDzGBhTCBgjALBglghkgBZQMEASow
+CwYJYIZIAWUDBAEWMAoGCCqGSIb3DQMHMAsGCWCGSAFlAwQBAjAOBggqhkiG9w0DAgICAIAwDQYI
+KoZIhvcNAwICAUAwBwYFKw4DAhowCwYJYIZIAWUDBAIDMAsGCWCGSAFlAwQCAjALBglghkgBZQME
+AgEwgZoGCSsGAQQBgjcQBDGBjDCBiTB1MQswCQYDVQQGEwJVUzEYMBYGA1UEChMPVS5TLiBHb3Zl
+cm5tZW50MQwwCgYDVQQLEwNFQ0ExIjAgBgNVBAsTGUNlcnRpZmljYXRpb24gQXV0aG9yaXRpZXMx
+GjAYBgNVBAMTEUlkZW5UcnVzdCBFQ0EgUzIyAhBAAW7/28fUeL19ocWUiQ7AMIGcBgsqhkiG9w0B
+CRACCzGBjKCBiTB1MQswCQYDVQQGEwJVUzEYMBYGA1UEChMPVS5TLiBHb3Zlcm5tZW50MQwwCgYD
+VQQLEwNFQ0ExIjAgBgNVBAsTGUNlcnRpZmljYXRpb24gQXV0aG9yaXRpZXMxGjAYBgNVBAMTEUlk
+ZW5UcnVzdCBFQ0EgUzIyAhBAAW7/28fUeL19ocWUiQ7AMA0GCSqGSIb3DQEBAQUABIIBAGq+NUvD
+ERx2w7+slToNo/620RlHot8iKhblo7Kq8M4A87XCADKBANTJEzatJ5NGZszLCw4HwQl4sa6bqS+/
+l9humP2jzqTI/JJlzcmLOKJk6skeaijVi4C8Xpp+6AksT2K4glFCRGro21VGltjjv3H5k52bBQdQ
+osGizHR8kjEtApWk8bZPwvcomV1PAF4/7FCoG1TZYrjNcM7Npl6l+uBzkhtEnzuOMaRtz0C1ImqM
+NBmBGCDe1bqB0HNWT/PzjsWrsoEefar5UhFLLYVrfI2nud4ipIWjNGHmPnwNnfRXTld23/y+5Jmk
+mMT3lvJaWVDS64KzXPX+wkbTHEHVD9QAAAAAAAA=
+
+------=_NextPart_000_0029_01D90572.F8F1FF40--
+
