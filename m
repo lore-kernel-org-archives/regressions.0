@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1DC185C
-	for <regressions@lists.linux.dev>; Thu,  1 Dec 2022 12:06:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1583187A
+	for <regressions@lists.linux.dev>; Thu,  1 Dec 2022 13:02:42 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p0iKc-0002PQ-MH; Thu, 01 Dec 2022 13:06:22 +0100
-Message-ID: <877f72a1-289d-1c39-e413-7332baa35dd1@leemhuis.info>
-Date: Thu, 1 Dec 2022 13:06:22 +0100
+	id 1p0jD6-00068i-Ku; Thu, 01 Dec 2022 14:02:40 +0100
+Message-ID: <201c873d-83a9-a006-f5b9-368135e8dadd@leemhuis.info>
+Date: Thu, 1 Dec 2022 14:02:39 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,38 +16,56 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.1
-Subject: Re: Boot failure regression on 6.0.10 stable kernel on iMX7
- #forregzbot
+Subject: Re: TI: X15 the connected SSD is not detected on Linux next 20221006
+ tag #forregzbot
 Content-Language: en-US, de-DE
-To: linux-arm-kernel@lists.infradead.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: devicetree@vger.kernel.org, stable@vger.kernel.org
-References: <Y4dgBTGNWpM6SQXI@francesco-nb.int.toradex.com>
+To: regressions@lists.linux.dev
+Cc: open list <linux-kernel@vger.kernel.org>,
+ Linux ARM <linux-arm-kernel@lists.infradead.org>,
+ "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)"
+ <linux-ide@vger.kernel.org>
+References: <CA+G9fYvRXkjeO+yDEQxwJ8+GjSmwhZ7XHHAaVWAsxAaSngj5gg@mail.gmail.com>
+ <bf1b053d-ffa6-48ab-d2d2-d59ab21afc19@opensource.wdc.com>
+ <CA+G9fYvUnn0cS+_DZm8hAfi=FnMB08+6Xnhud6yvi9Bxh=DU+Q@mail.gmail.com>
+ <CADYN=9L8tt2T-8O+u5NSMSUOkZDvEggnvzxH6aMmd5Rn9yDeuw@mail.gmail.com>
+ <ca8d3fff-0365-24d9-fd53-5799ac34f336@opensource.wdc.com>
+ <7ee4a1bd-0674-42d8-8980-8b029ca09e71@app.fastmail.com>
+ <75eaeab3-7781-d60a-ae61-ae837f5dcec9@opensource.wdc.com>
+ <CADYN=9JiX-=PcKMzAcSm=p7Dh6kYT7Kbv-8kcNF0MQ4=1hFS5g@mail.gmail.com>
+ <20221014140633.mlypet7skkxvt453@mobilestation>
+ <CADYN=9LrKHRNMON3GA4piDvWeSWTASQ1u2=D30rXFdvo1L18bg@mail.gmail.com>
+ <20221017155246.zxal2cfehjgaajcu@mobilestation>
+ <CA+G9fYtYetV5sZVD14WkZxCE_tgTC4VVKm8BcBw5_NwXD6U=Sw@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <Y4dgBTGNWpM6SQXI@francesco-nb.int.toradex.com>
+In-Reply-To: <CA+G9fYtYetV5sZVD14WkZxCE_tgTC4VVKm8BcBw5_NwXD6U=Sw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669896385;41a87b1f;
-X-HE-SMSGID: 1p0iKc-0002PQ-MH
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669899762;ccf80a75;
+X-HE-SMSGID: 1p0jD6-00068i-Ku
 
-[Note: this mail contains only information relevant for regzbot, the
-Linux kernel regression tracking bot. That's why I removed most
-recipients of the quoted mail and only left what looked like a mailing
-lists. These mails contain '#forregzbot' in the subject, to make them
-easy to spot and filter out.]
+[Note: this mail contains only information for Linux kernel regression
+tracking. Mails like these contain '#forregzbot' in the subject to make
+then easy to spot and filter out. The author also tried to remove most
+or all individuals from the list of recipients to spare them the hassle.]
 
-On 30.11.22 14:52, Francesco Dolcini wrote:
-> it looks like commit 753395ea1e45 ("ARM: dts: imx7: Fix NAND controller
-> size-cells"), that was backported to stable 6.0.10, introduce a boot
-> regression on colibri-imx7, at least.
-> [...]
+On 30.11.22 10:40, Naresh Kamboju wrote:
+
+> 
+> We have been noticing this problem [a] & [b] on Linux mainline master 6.1.0-rc7
+> 
+>     Test error: mkfs.ext4
+> /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 failed; job
+> exit
+> 
+> Please suggest a way forward on this reported issue on arm32 TI BeagleBoard X15
+> device. Build and Kernel configs details provided in the metadata section.
 
 Thanks for the report. To be sure below issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced 753395ea1e45
-#regzbot title ARM: dts: imx7: Boot failure on iMX7
+#regzbot ^introduced v6.0..v6.1-rc7
+#regzbot title ata/arm32: TI BeagleBoard X15 doesn't boot
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
