@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1583187A
-	for <regressions@lists.linux.dev>; Thu,  1 Dec 2022 13:02:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31FBD6FCB
+	for <regressions@lists.linux.dev>; Thu,  1 Dec 2022 14:41:08 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p0jD6-00068i-Ku; Thu, 01 Dec 2022 14:02:40 +0100
-Message-ID: <201c873d-83a9-a006-f5b9-368135e8dadd@leemhuis.info>
-Date: Thu, 1 Dec 2022 14:02:39 +0100
+	id 1p0kkL-0006Jb-Px; Thu, 01 Dec 2022 15:41:05 +0100
+Message-ID: <726685b5-5533-4279-c38a-b8b9cde2f705@leemhuis.info>
+Date: Thu, 1 Dec 2022 15:41:05 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,69 +16,52 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.4.1
-Subject: Re: TI: X15 the connected SSD is not detected on Linux next 20221006
- tag #forregzbot
+Subject: Re: [Regression] Cambridge Silicon Radio, Ltd Bluetooth Dongle
+ unusable again with kernel 6.0 #forregzbot
 Content-Language: en-US, de-DE
-To: regressions@lists.linux.dev
-Cc: open list <linux-kernel@vger.kernel.org>,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)"
- <linux-ide@vger.kernel.org>
-References: <CA+G9fYvRXkjeO+yDEQxwJ8+GjSmwhZ7XHHAaVWAsxAaSngj5gg@mail.gmail.com>
- <bf1b053d-ffa6-48ab-d2d2-d59ab21afc19@opensource.wdc.com>
- <CA+G9fYvUnn0cS+_DZm8hAfi=FnMB08+6Xnhud6yvi9Bxh=DU+Q@mail.gmail.com>
- <CADYN=9L8tt2T-8O+u5NSMSUOkZDvEggnvzxH6aMmd5Rn9yDeuw@mail.gmail.com>
- <ca8d3fff-0365-24d9-fd53-5799ac34f336@opensource.wdc.com>
- <7ee4a1bd-0674-42d8-8980-8b029ca09e71@app.fastmail.com>
- <75eaeab3-7781-d60a-ae61-ae837f5dcec9@opensource.wdc.com>
- <CADYN=9JiX-=PcKMzAcSm=p7Dh6kYT7Kbv-8kcNF0MQ4=1hFS5g@mail.gmail.com>
- <20221014140633.mlypet7skkxvt453@mobilestation>
- <CADYN=9LrKHRNMON3GA4piDvWeSWTASQ1u2=D30rXFdvo1L18bg@mail.gmail.com>
- <20221017155246.zxal2cfehjgaajcu@mobilestation>
- <CA+G9fYtYetV5sZVD14WkZxCE_tgTC4VVKm8BcBw5_NwXD6U=Sw@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CA+G9fYtYetV5sZVD14WkZxCE_tgTC4VVKm8BcBw5_NwXD6U=Sw@mail.gmail.com>
+To: linux-bluetooth@vger.kernel.org,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <RJ4W7HKW.X5Y4H63W.RFY63IY6@7AFBARQQ.HKEIB7DO.6ME2HPJY>
+ <818a55d5-ea65-a962-d83d-0186bd666c2d@leemhuis.info>
+In-Reply-To: <818a55d5-ea65-a962-d83d-0186bd666c2d@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669899762;ccf80a75;
-X-HE-SMSGID: 1p0jD6-00068i-Ku
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669905668;e594cdd7;
+X-HE-SMSGID: 1p0kkL-0006Jb-Px
 
-[Note: this mail contains only information for Linux kernel regression
-tracking. Mails like these contain '#forregzbot' in the subject to make
-then easy to spot and filter out. The author also tried to remove most
-or all individuals from the list of recipients to spare them the hassle.]
+On 26.10.22 11:17, Thorsten Leemhuis wrote:
+> [Note: this mail is primarily send for documentation purposes and/or for
+> regzbot, my Linux kernel regression tracking bot. That's why I removed
+> most or all folks from the list of recipients, but left any that looked
+> like a mailing lists. These mails usually contain '#forregzbot' in the
+> subject, to make them easy to spot and filter out.]
 
-On 30.11.22 10:40, Naresh Kamboju wrote:
-
+> Hi, this is your Linux kernel regression tracker.
 > 
-> We have been noticing this problem [a] & [b] on Linux mainline master 6.1.0-rc7
+> On 24.10.22 23:11, Jack wrote:
+>> Cheap USB BT dongles that are bad clones of CSR  "ID 0a12:0001 Cambridge
+>> Silicon Radio, Ltd Bluetooth Dongle (HCI mode)" have had historic
+>> problems, due to various bad behaviors.  See [Bug 60824]
+>> [PATCH][regression] Cambridge Silicon Radio, Ltd Bluetooth Dongle
+>> unusable (https://bugzilla.kernel.org/show_bug.cgi) for more details and
+>> background.  The patch in that bug was initially mainlined in 5.9, and
+>> underwent several revisions since then.  It has continued to work
+>> through all of the 5.19 series, but it does not work with any of the 6.0
+>> kernels.
+>> [...]
 > 
->     Test error: mkfs.ext4
-> /dev/disk/by-id/ata-SanDisk_SSD_PLUS_120GB_190702A00D84 failed; job
-> exit
+> Thanks for the report. To be sure below issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+> tracking bot:
 > 
-> Please suggest a way forward on this reported issue on arm32 TI BeagleBoard X15
-> device. Build and Kernel configs details provided in the metadata section.
+> #regzbot ^introduced 766ae2422b4312
+> #regzbot title net: bluetooth: Cambridge Silicon Radio, Ltd Bluetooth
+> Dongle unusable again with kernel 6.0
+> #regzbot ignore-activity
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced v6.0..v6.1-rc7
-#regzbot title ata/arm32: TI BeagleBoard X15 doesn't boot
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply -- ideally with also
-telling regzbot about it, as explained here:
-https://linux-regtracking.leemhuis.info/tracked-regression/
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (the mail this one replies to), as explained for
-in the Linux kernel's documentation; above webpage explains why this is
-important for tracked regressions.
+#regzbot inconclusive: some of this was fixed, some might still needs
+fixing, but it'S tricky; the bluetooth people are working on it afaics
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
