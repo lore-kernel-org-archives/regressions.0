@@ -1,27 +1,13 @@
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACBD1FA9
-	for <regressions@lists.linux.dev>; Fri,  2 Dec 2022 10:02:40 +0000 (UTC)
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madras.collabora.co.uk (Postfix) with ESMTPSA id 68DE86602BB8;
-	Fri,  2 Dec 2022 10:02:37 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1669975358;
-	bh=poI1DdXBGmBKMUaqisonZlBsnUTOhLk7p//2IBOv5KA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=F+95N8g09sJEqWdOUCBPf1gVr+C9BGexRNdiI7ZSTBtxQWES+WBcmXus0D7tXM+Er
-	 tNkYZZwWk+VdrKxY4sgD5OBDxO2EMGUhaQgI5ZIwsgPOtl1WjEYjHgq8y7Df0Ys2sa
-	 1Obbdvy2RF/FIOPlbpZ+ZHcT2Wz7uKocEa2Le1H3yoBjsvnQxDbEiM8YwSuMHXs96L
-	 DhTkdfIa6veQlL6cmW9+3JIY9DC9ZhRs28sAyt6grM4Iso0kzaQuB8jSIh516H/y8Z
-	 Jzf4yuBtKT/7ZTwDe9GJ8EdGtfJ02hYK3WVsIGQr39ToFfPUIoRGYX5hjGX1rmPePf
-	 5Nhbg8mW0znfA==
-Message-ID: <8be3e050-f32a-6761-8ebd-49c38dfcf9eb@collabora.com>
-Date: Fri, 2 Dec 2022 11:02:34 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75767B
+	for <regressions@lists.linux.dev>; Fri,  2 Dec 2022 10:41:31 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1p13Tp-0001WJ-76; Fri, 02 Dec 2022 11:41:17 +0100
+Message-ID: <c186d104-43e0-ca10-3ce2-c2f922acd8bf@leemhuis.info>
+Date: Fri, 2 Dec 2022 11:41:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -32,10 +18,10 @@ User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
 Subject: Re: Kernel Kernel bug caused by (cpufreq: mediatek: Refine
  mtk_cpufreq_voltage_tracking()) on Banana Pi R64 (MT7622)
-Content-Language: en-US
-To: =?UTF-8?B?QWxsZW4tS0ggQ2hlbmcgKOeoi+WGoOWLsyk=?=
+Content-Language: en-US, de-DE
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ =?UTF-8?B?QWxsZW4tS0ggQ2hlbmcgKOeoi+WGoOWLsyk=?=
  <Allen-KH.Cheng@mediatek.com>,
- "regressions@leemhuis.info" <regressions@leemhuis.info>,
  "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
 Cc: "linux-mediatek@lists.infradead.org"
  <linux-mediatek@lists.infradead.org>,
@@ -63,86 +49,111 @@ References: <930778a1-5e8b-6df6-3276-42dcdadaf682@systemli.org>
  <0ebef1a2-6b5a-04b9-a79b-79eb3349c32b@collabora.com>
  <c76bd301-0e8d-2d2b-0d3e-a57ece9b496f@collabora.com>
  <b1822bbc3775730c4cedf9652323c7d72e663e4b.camel@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <b1822bbc3775730c4cedf9652323c7d72e663e4b.camel@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ <8be3e050-f32a-6761-8ebd-49c38dfcf9eb@collabora.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <8be3e050-f32a-6761-8ebd-49c38dfcf9eb@collabora.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669977692;ed3cbcc9;
+X-HE-SMSGID: 1p13Tp-0001WJ-76
 
-Il 02/12/22 10:43, Allen-KH Cheng (程冠勳) ha scritto:
-> Hi Angelo,
+On 02.12.22 11:02, AngeloGioacchino Del Regno wrote:
+> Il 02/12/22 10:43, Allen-KH Cheng (程冠勳) ha scritto:
+>>
+>> Jia-wei is working on this issue.
+>> We will update progress ASAP.
+>>
 > 
-> Jia-wei is working on this issue.
-> 
-> We will update progress ASAP.
-> 
+> I think I've found something: the MT7622/7623 voltage constraints
+> set in mediatek-cpufreq's platform data seem to be wrong.
 
-I think I've found something: the MT7622/7623 voltage constraints
-set in mediatek-cpufreq's platform data seem to be wrong.
+Thx for looking into this.
+> I've sent a commit to fix those [1]
 
-I've sent a commit to fix those [1] and that should solve the issue
-that was seen on MT7622, but the code in the voltage tracking algorithm
-is unsafe: this crash should be happening because we may be calling
-regulator_set_voltage() with max_uV < min_uV --- and this is not legal.
+Quick question: is that relative to apply at this point of the 6.1 devel
+cycle? Or would it be better to revert the culprit (already introduced
+in 5.19) for now and reapply it together with that fix for 6.2 (and then
+backport to 6.1 stable later)?
 
-That's happening due to the OPP tables in devicetree asking for a voltage
-that is higher than the {proc,sram}_max_volt declared by the platform data
-in the mediatek-cpufreq driver: the solution would be to either check the
-validity of the constraints everytime se call regulator_set_voltage there,
-which wouldn't be optimal IMO, or walk the OPP table at mediatek-cpufreq
-probe time (or init time) to either:
+> and that should solve the issue
+> that was seen on MT7622, but the code in the voltage tracking algorithm
+> is unsafe: this crash should be happening because we may be calling
+> regulator_set_voltage() with max_uV < min_uV --- and this is not legal.
 
-1. Print a big warning in kmsg and always ignore all of the OPP entries
-    that request a voltage that's higher than the maximum that we declared; or
-2. Fail probe/init with an error explicitly saying that the OPP entries
-    are declaring an out of range voltage for sram/proc.
+[...]
 
-Anyway, thanks for the response, hope that Jia-wei confirms, or denies
-my findings and makes this driver more robust ASAP.
+> [1]:
+> https://lore.kernel.org/lkml/20221202095227.167492-1-angelogioacchino.delregno@collabora.com/
 
-Thank you!
-Angelo
+Side note, that patch afaics should have:
 
-[1]: 
-https://lore.kernel.org/lkml/20221202095227.167492-1-angelogioacchino.delregno@collabora.com/
+Reported-by: Nick <vincent@systemli.org>
+Link:
+https://lore.kernel.org/r/930778a1-5e8b-6df6-3276-42dcdadaf682@systemli.org/
 
-> Thanks,
-> Allen
-> 
-> On Fri, 2022-12-02 at 10:19 +0100, AngeloGioacchino Del Regno wrote:
->> Il 02/12/22 09:57, AngeloGioacchino Del Regno ha scritto:
->>> Il 02/12/22 06:27, Viresh Kumar ha scritto:
->>>> On 01-12-22, 16:39, Thorsten Leemhuis wrote:
->>>>> Thx for clarifying. And I noticed I made a mistake: I should
->>>>> have
->>>>> directed my earlier question wrt to any progress here more into
->>>>> the
->>>>> direction of Jia-Wei Chang (who authored 6a17b3876b) and Viresh
->>>>> Kumar
->>>>> (who committed it).
+To explain: Linus[1] and others considered proper link tags important in
+cases like this, as they allow anyone to look into the backstory of a
+commit weeks or years later. That's nothing new, the documentation[2]
+for some time says to place tags in cases like this. I care personally
+(and made it a bit more explicit in the docs a while ago), because these
+tags make my regression tracking efforts a whole lot easier, as they
+allow my tracking bot 'regzbot' to automatically connect reports with
+patches posted or committed to fix tracked regressions.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+[1] for details, see:
+https://lore.kernel.org/all/CAHk-=wjMmSZzMJ3Xnskdg4+GGz=5p5p+GSYyFBTh0f-DgvdBWg@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
+https://lore.kernel.org/all/CAHk-=wjxzafG-=J8oT30s7upn4RhBs6TX-uVFZ5rME+L5_DoJA@mail.gmail.com/
+
+[2] see Documentation/process/submitting-patches.rst
+(http://docs.kernel.org/process/submitting-patches.html) and
+Documentation/process/5.Posting.rst
+(https://docs.kernel.org/process/5.Posting.html)
+
+
+
+>> Thanks,
+>> Allen
+>>
+>> On Fri, 2022-12-02 at 10:19 +0100, AngeloGioacchino Del Regno wrote:
+>>> Il 02/12/22 09:57, AngeloGioacchino Del Regno ha scritto:
+>>>> Il 02/12/22 06:27, Viresh Kumar ha scritto:
+>>>>> On 01-12-22, 16:39, Thorsten Leemhuis wrote:
+>>>>>> Thx for clarifying. And I noticed I made a mistake: I should
+>>>>>> have
+>>>>>> directed my earlier question wrt to any progress here more into
+>>>>>> the
+>>>>>> direction of Jia-Wei Chang (who authored 6a17b3876b) and Viresh
+>>>>>> Kumar
+>>>>>> (who committed it).
+>>>>>
+>>>>> I was waiting for the platform maintainers to come up with a fix.
+>>>>> I
+>>>>> have sent a patch now to revert this, in-reply-to this thread.
+>>>>>
+>>>>> Please confirm this is working fine. Thanks.
+>>>>>
 >>>>
->>>> I was waiting for the platform maintainers to come up with a fix.
->>>> I
->>>> have sent a patch now to revert this, in-reply-to this thread.
+>>>> Can you guys try this patch that I've sent a while ago?
 >>>>
->>>> Please confirm this is working fine. Thanks.
 >>>>
+>> https://lore.kernel.org/lkml/20220909093724.40078-1-angelogioacchino.delregno@collabora.com/T/#u
+>>>>
+>>>> There were comments on it, but if that solves your issue I can push
+>>>> a v2
+>>>> to solve what was reported.
+>>>>
+>>>> Regards,
+>>>> Angelo
 >>>
->>> Can you guys try this patch that I've sent a while ago?
+>>> Wait, sorry, I've re-read the stacktrace and that won't help at all.
+>>> MediaTek, can you please look at this issue?
+>>>
+>>> Reverting the proposed commit will make MT8183 unstable.
 >>>
 >>>
-> https://lore.kernel.org/lkml/20220909093724.40078-1-angelogioacchino.delregno@collabora.com/T/#u
->>>
->>> There were comments on it, but if that solves your issue I can push
->>> a v2
->>> to solve what was reported.
->>>
->>> Regards,
->>> Angelo
->>
->> Wait, sorry, I've re-read the stacktrace and that won't help at all.
->> MediaTek, can you please look at this issue?
->>
->> Reverting the proposed commit will make MT8183 unstable.
->>
->>
 
+#regzbot monitor:
+https://lore.kernel.org/r/930778a1-5e8b-6df6-3276-42dcdadaf682@systemli.org/
