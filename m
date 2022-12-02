@@ -1,63 +1,52 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail1.systemli.org (mail1.systemli.org [93.190.126.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 007A07B
-	for <regressions@lists.linux.dev>; Fri,  2 Dec 2022 11:01:42 +0000 (UTC)
-Received: by mail-pg1-f170.google.com with SMTP id q71so4084797pgq.8
-        for <regressions@lists.linux.dev>; Fri, 02 Dec 2022 03:01:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M8oIXI7Gl5Ev+i5ApjJf4B1139RK0U5wYzKaGEnlId8=;
-        b=avwdmFPuRneeA3KhE8NokWJqbXBFQUFRt+Le0emrAqH6JCX9m2f+I4qwYEG9qWBHfT
-         WJknGmyBaCWEHq/PHJ8dJ6dJQto1+pHiS3GieU+GSesq7ex+DgozS86v37eb9Kb+qs9q
-         Yb2rM6b+8cNY9aJFqDBHIDHe+eXtG9+MiCXKLZs0x/70mg1lS+FF2IBaofX+SQWF50J6
-         l00EgXHKzbSW5ZcI3w+YDo8WgdAAvI3wy1Y545B985jl6vDhXjqwAFVTlaaX4bREP+fX
-         nteliqkMaovhvS9EdCcEjIf8Nk75NJTZADRKgLmQ0JxKUarxgwQQ3+oEGB1nOk5rHP4d
-         mhEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M8oIXI7Gl5Ev+i5ApjJf4B1139RK0U5wYzKaGEnlId8=;
-        b=03SKD2EWlbWoyGRqvrJCptC7iHzA6KEQu8AWtfjwBz8NWC3aRb5X2gceC9ME5uWIEx
-         ctq4JBTBpmzh9IN0KyXG45GnvIx2PU/UFdx0Sw1Eo9o91aV8BbaLQ8SGh/09MYSP5HA/
-         ycqk+Bf+z0dwCrjUMF6WakZsznC4Z3ETFdF+Qr45vqZ4HZ3T6Vhob06UnfP/ZNC4urPC
-         cZLVQZI5vfxJ0EeQlyBCoEZoDzK6x8tUYZkG9nUAQFEqz+wF39ynTGnoJFgFTqm1WH9g
-         kaGEiERK8MTVsG2E3EI0AaokOseCHK7iA2MQshlQpRUM2wkEt29pXGo1kYsxPQJu+XFl
-         idHg==
-X-Gm-Message-State: ANoB5pk7G/1h88cmDUy2DVK6Y7Xx67Ras8YNGF7M0q3iZvULWCTug6lP
-	LnMbou2x1YOF6dLcoViQu9OGJg==
-X-Google-Smtp-Source: AA0mqf6krRyOgR/NF3iJ1mIRdAiblHmqLcgvZJ/2SOOQuX//EFRr0Lv9KilgJukZF+G+kVQsuFqUdQ==
-X-Received: by 2002:a63:ed46:0:b0:476:e11d:8d51 with SMTP id m6-20020a63ed46000000b00476e11d8d51mr47557303pgk.252.1669978902476;
-        Fri, 02 Dec 2022 03:01:42 -0800 (PST)
-Received: from localhost ([122.172.87.149])
-        by smtp.gmail.com with ESMTPSA id y2-20020a623202000000b00574740c99e9sm4834948pfy.129.2022.12.02.03.01.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Dec 2022 03:01:41 -0800 (PST)
-Date: Fri, 2 Dec 2022 16:31:39 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Allen-KH Cheng =?utf-8?B?KOeoi+WGoOWLsyk=?= <Allen-KH.Cheng@mediatek.com>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"vincent@systemli.org" <vincent@systemli.org>,
-	"frank-w@public-files.de" <frank-w@public-files.de>,
-	Project_Global_Chrome_Upstream_Group <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	Jia-wei Chang =?utf-8?B?KOW8teS9s+WBiSk=?= <Jia-wei.Chang@mediatek.com>,
-	Rex-BC Chen =?utf-8?B?KOmZs+afj+i+sCk=?= <Rex-BC.Chen@mediatek.com>,
-	"thomas.huehn@hs-nordhausen.de" <thomas.huehn@hs-nordhausen.de>,
-	"daniel@makrotopia.org" <daniel@makrotopia.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E6F27B
+	for <regressions@lists.linux.dev>; Fri,  2 Dec 2022 12:25:38 +0000 (UTC)
+Message-ID: <cb0f0500-fb8a-2a01-1dd4-ab50714f595a@systemli.org>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=systemli.org;
+	s=default; t=1669983934;
+	bh=YTGNx4NCeKJU4fs8LfpcSENPzliYiuPpYxnwWXBphdM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LoRXeBe8rc2rAqLoxHYOfYxt1KWheZkWGYLPv786F17jnfI7WwEK6MrY13y4F1uKh
+	 h/KQm7qX/fNgPwuvU7GQpHJ66QuAn0VmuMkwq+TcGbt1ragwj5OIr+9ntfYe/2L5a3
+	 Vr9dwo8JIC/pyUrchvJwTuD+einYbK2Fcoqf/escuzca7lWrsNNYOWZolftpCpB/5d
+	 UwkhFju4UHL0/YscTOH+qhDC/JJ2DX+Ch6uFTwTUDKkyb3g1rZp4rp3rQDN4CdZje+
+	 gV+CwvfzaDRax4aVaFy2TsDe6UFtoEtFuqS1/pJJDpsUFrk8Z5C0B52RB1hG38gfoa
+	 UXre3yk8/AatA==
+Date: Fri, 2 Dec 2022 13:25:31 +0100
+Precedence: bulk
+X-Mailing-List: regressions@lists.linux.dev
+List-Id: <regressions.lists.linux.dev>
+List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
+List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
 Subject: Re: Kernel Kernel bug caused by (cpufreq: mediatek: Refine
  mtk_cpufreq_voltage_tracking()) on Banana Pi R64 (MT7622)
-Message-ID: <20221202110139.vmwcmoudakm2nap4@vireshk-i7>
-References: <02c2c955-940b-b315-0474-85d0eddad7a3@leemhuis.info>
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ =?UTF-8?B?QWxsZW4tS0ggQ2hlbmcgKOeoi+WGoOWLsyk=?=
+ <Allen-KH.Cheng@mediatek.com>,
+ "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>
+Cc: "linux-mediatek@lists.infradead.org"
+ <linux-mediatek@lists.infradead.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+ "frank-w@public-files.de" <frank-w@public-files.de>,
+ Project_Global_Chrome_Upstream_Group
+ <Project_Global_Chrome_Upstream_Group@mediatek.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ =?UTF-8?B?SmlhLXdlaSBDaGFuZyAo5by15L2z5YGJKQ==?=
+ <Jia-wei.Chang@mediatek.com>, =?UTF-8?B?UmV4LUJDIENoZW4gKOmZs+afj+i+sCk=?=
+ <Rex-BC.Chen@mediatek.com>,
+ "thomas.huehn@hs-nordhausen.de" <thomas.huehn@hs-nordhausen.de>,
+ "daniel@makrotopia.org" <daniel@makrotopia.org>
+References: <930778a1-5e8b-6df6-3276-42dcdadaf682@systemli.org>
+ <eb142a22-b35e-ec3f-ee0a-9e3e7b24cea6@gmail.com>
+ <bf8d2a8f-7654-29be-1104-a842c6657b5e@systemli.org>
+ <02c2c955-940b-b315-0474-85d0eddad7a3@leemhuis.info>
  <Y4jHvomTrU8guBox@makrotopia.org>
  <47a4665e-333d-a6e7-a2da-96cb06c2d87b@leemhuis.info>
  <20221202052716.uj3kzkunazmgazeq@vireshk-i7>
@@ -66,22 +55,14 @@ References: <02c2c955-940b-b315-0474-85d0eddad7a3@leemhuis.info>
  <b1822bbc3775730c4cedf9652323c7d72e663e4b.camel@mediatek.com>
  <8be3e050-f32a-6761-8ebd-49c38dfcf9eb@collabora.com>
  <c186d104-43e0-ca10-3ce2-c2f922acd8bf@leemhuis.info>
- <37468027-6a27-dcb8-9c14-8f8426ec50d1@collabora.com>
-Precedence: bulk
-X-Mailing-List: regressions@lists.linux.dev
-List-Id: <regressions.lists.linux.dev>
-List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
-List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <37468027-6a27-dcb8-9c14-8f8426ec50d1@collabora.com>
+Content-Language: en-US
+From: Nick <vincent@systemli.org>
+In-Reply-To: <c186d104-43e0-ca10-3ce2-c2f922acd8bf@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 02-12-22, 12:00, AngeloGioacchino Del Regno wrote:
-> If Viresh can add those while applying the patch, that's fine for me - otherwise
-> I can send a v2 adding the two suggested missing tags.
+On 12/2/22 11:41, Thorsten Leemhuis wrote:
 
-Sure, no problem.
+> Reported-by: Nick<vincent@systemli.org>
+You can also use "Reported-by: Nick Hainke <vincent@systemli.org>" ;)
 
--- 
-viresh
