@@ -1,13 +1,27 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA3710E6
-	for <regressions@lists.linux.dev>; Fri,  2 Dec 2022 06:43:20 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p0zlV-0000PL-Kq; Fri, 02 Dec 2022 07:43:17 +0100
-Message-ID: <8d2dbbb5-5816-c1e9-e98c-6c64a8d85f81@leemhuis.info>
-Date: Fri, 2 Dec 2022 07:43:17 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE73E1866
+	for <regressions@lists.linux.dev>; Fri,  2 Dec 2022 08:57:37 +0000 (UTC)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madras.collabora.co.uk (Postfix) with ESMTPSA id 35D3D6602BB8;
+	Fri,  2 Dec 2022 08:57:29 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1669971449;
+	bh=OrDMOSV8uH0KduyAMN/BeF+KC/jxUhgHd2Ke2DRSG1U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dZEsN+VBDv2402MqbMKURyMx4YPV5scscHhWtEiCIsLUi+ht9xiULoOvnhy5UnljJ
+	 lIcMX7iKT3oybil8AZOZkEPne55FOuvQsHPvlZrOqiRuzMpZ9pGSepsiSGDIQ71qXv
+	 M1aA/bSbPCN7Kniqg6QhTn7RfjN3sVRzR0eOicsdj5rbgm1rbnkUUHutvajFQ3lb7o
+	 X3xnxbkH7/IWMoqDqs9vSQUJckdfYuZRmmd2d/Nd/3ThNXsY8kKzdZPcyo372N2vmy
+	 qReSfEKeUG4ItnjOu+an0J70FRJgZFKAaBwqIzzj6t7z0U68gwBCvoyCf6J0LcXpWu
+	 Jb84WVyc7Ku7Q==
+Message-ID: <0ebef1a2-6b5a-04b9-a79b-79eb3349c32b@collabora.com>
+Date: Fri, 2 Dec 2022 09:57:26 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,54 +29,52 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [mm] f35b5d7d67: will-it-scale.per_process_ops -95.5% regression
- #forregzbot
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <202210181535.7144dd15-yujie.liu@intel.com>
- <87edv4r2ip.fsf@yhuang6-desk2.ccr.corp.intel.com>
- <Y1DNQaoPWxE+rGce@dev-arch.thelio-3990X>
- <84964891-5a39-adb2-3093-54b716ca94ae@leemhuis.info>
-In-Reply-To: <84964891-5a39-adb2-3093-54b716ca94ae@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
+ Thunderbird/102.5.0
+Subject: Re: Kernel Kernel bug caused by (cpufreq: mediatek: Refine
+ mtk_cpufreq_voltage_tracking()) on Banana Pi R64 (MT7622)
+To: Viresh Kumar <viresh.kumar@linaro.org>,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: jia-wei.chang@mediatek.com, Nick <vincent@systemli.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>, rex-bc.chen@mediatek.com,
+ Frank Wunderlich <frank-w@public-files.de>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ =?UTF-8?Q?H=c3=bchn=2c_Thomas?= <thomas.huehn@hs-nordhausen.de>,
+ Daniel Golle <daniel@makrotopia.org>
+References: <930778a1-5e8b-6df6-3276-42dcdadaf682@systemli.org>
+ <eb142a22-b35e-ec3f-ee0a-9e3e7b24cea6@gmail.com>
+ <bf8d2a8f-7654-29be-1104-a842c6657b5e@systemli.org>
+ <02c2c955-940b-b315-0474-85d0eddad7a3@leemhuis.info>
+ <Y4jHvomTrU8guBox@makrotopia.org>
+ <47a4665e-333d-a6e7-a2da-96cb06c2d87b@leemhuis.info>
+ <20221202052716.uj3kzkunazmgazeq@vireshk-i7>
+Content-Language: en-US
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20221202052716.uj3kzkunazmgazeq@vireshk-i7>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669963400;f597bf89;
-X-HE-SMSGID: 1p0zlV-0000PL-Kq
 
-On 29.11.22 09:59, Thorsten Leemhuis wrote:
-> [Note: this mail is primarily send for documentation purposes and/or for
-> regzbot, my Linux kernel regression tracking bot. That's why I removed
-> most or all folks from the list of recipients, but left any that looked
-> like a mailing lists. These mails usually contain '#forregzbot' in the
-> subject, to make them easy to spot and filter out.]
+Il 02/12/22 06:27, Viresh Kumar ha scritto:
+> On 01-12-22, 16:39, Thorsten Leemhuis wrote:
+>> Thx for clarifying. And I noticed I made a mistake: I should have
+>> directed my earlier question wrt to any progress here more into the
+>> direction of Jia-Wei Chang (who authored 6a17b3876b) and Viresh Kumar
+>> (who committed it).
 > 
-> On 20.10.22 06:23, Nathan Chancellor wrote:
->> [...]
->> For what it's worth, I just bisected a massive and visible performance
->> regression on my Threadripper 3990X workstation to commit f35b5d7d676e
->> ("mm: align larger anonymous mappings on THP boundaries"), which seems
->> directly related to this report/analysis. I initially noticed this
->> because my full set of kernel builds against mainline went from 2 hours
->> and 20 minutes or so to over 3 hours. Zeroing in on x86_64 allmodconfig,
->> which I used for the bisect:
+> I was waiting for the platform maintainers to come up with a fix. I
+> have sent a patch now to revert this, in-reply-to this thread.
 > 
-> Thanks for the report. To be sure below issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-> tracking bot:
+> Please confirm this is working fine. Thanks.
 > 
-> #regzbot ^introduced f35b5d7d676e59e4
-> #regzbot title performance: mm: building Linux with clang takes a lot
-> longer (~27 %)
-> #regzbot ignore-activity
 
-#regzbot fix: revert "mm: align larger anonymous mappings on THP boundaries"
+Can you guys try this patch that I've sent a while ago?
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+https://lore.kernel.org/lkml/20220909093724.40078-1-angelogioacchino.delregno@collabora.com/T/#u
 
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+There were comments on it, but if that solves your issue I can push a v2
+to solve what was reported.
+
+Regards,
+Angelo
