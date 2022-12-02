@@ -1,117 +1,72 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8CF4C71
-	for <regressions@lists.linux.dev>; Fri,  2 Dec 2022 16:02:55 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p18Ux-0005Di-Pr; Fri, 02 Dec 2022 17:02:47 +0100
-Message-ID: <9a03c244-adff-afaf-7385-d8e89cd3f338@leemhuis.info>
-Date: Fri, 2 Dec 2022 17:02:47 +0100
+Received: from mail.holtmann.org (coyote.holtmann.net [212.227.132.17])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28B234C89
+	for <regressions@lists.linux.dev>; Fri,  2 Dec 2022 16:55:34 +0000 (UTC)
+Received: from smtpclient.apple (p4fefca0f.dip0.t-ipconnect.de [79.239.202.15])
+	by mail.holtmann.org (Postfix) with ESMTPSA id 4E9A4CECFF;
+	Fri,  2 Dec 2022 17:46:19 +0100 (CET)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
 Subject: Re: [regression] Bug 216753 - 6e 6 ghz bands are disabled since 5.16
  on intel ax211
-Content-Language: en-US, de-DE
-To: Dave Chiluk <chiluk@ubuntu.com>,
- "Coelho, Luciano" <luciano.coelho@intel.com>
-Cc: "Greenman, Gregory" <gregory.greenman@intel.com>,
+From: Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <9a03c244-adff-afaf-7385-d8e89cd3f338@leemhuis.info>
+Date: Fri, 2 Dec 2022 17:46:18 +0100
+Cc: Dave Chiluk <chiluk@ubuntu.com>,
+ "Coelho, Luciano" <luciano.coelho@intel.com>,
+ "Greenman, Gregory" <gregory.greenman@intel.com>,
  "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- "johannes@sipsolutions.net" <johannes@sipsolutions.net>,
+ Johannes Berg <johannes@sipsolutions.net>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
  "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <02F8DDF1-EC0D-4EBD-88F5-7E000841C337@holtmann.org>
 References: <14722778-dda0-cb9f-8647-892493d94a5c@leemhuis.info>
  <2026016246ef719605c9932feeb56b105833593b.camel@intel.com>
  <CAMfi-DRE-u5TNu2zAL-7A-ENHM9EiJeYJ38BL_FMdk6QmW7c9w@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAMfi-DRE-u5TNu2zAL-7A-ENHM9EiJeYJ38BL_FMdk6QmW7c9w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1669996975;e7be166b;
-X-HE-SMSGID: 1p18Ux-0005Di-Pr
+ <9a03c244-adff-afaf-7385-d8e89cd3f338@leemhuis.info>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
 
-On 02.12.22 16:37, Dave Chiluk wrote:
-> The other possibility is that this is actually a bios bug, as the DSM
-> is being read out of ACPI.  In which case that would be Dell's fault.
+Hi Thorsten,
 
-Yes and no, but no:
+>> The other possibility is that this is actually a bios bug, as the DSM
+>> is being read out of ACPI.  In which case that would be Dell's fault.
+>=20
+> Yes and no, but no:
+>=20
+> A kernel change exposed this problem, hence it doesn't matter if the
+> BIOS is faulty: it's makes it a kernel regression and those are not
+> allowed. For more on this see
+> https://docs.kernel.org/admin-guide/reporting-issues.html
+>=20
+> That at least would be the normal approach. But the thing is: the =
+legal
+> implications when it comes to things like wifi make this somewhat
+> trickier. :-/
 
-A kernel change exposed this problem, hence it doesn't matter if the
-BIOS is faulty: it's makes it a kernel regression and those are not
-allowed. For more on this see
-https://docs.kernel.org/admin-guide/reporting-issues.html
+so you need to set your country code first before any of the regulatory
+enabled channels on 6Ghz get used. Otherwise you are stuck in the world
+domain that doesn=E2=80=99t allow 6Ghz at all.
 
-That at least would be the normal approach. But the thing is: the legal
-implications when it comes to things like wifi make this somewhat
-trickier. :-/
+Two choices, either you run iwd and just set Country=3DDE where this =
+than
+would be persistent; see iwd.config(5). Or you do this via iw reg set DE
+manually. wpa_supplicant has a set_country wrapper, but I don=E2=80=99t =
+see it
+being used anywhere, so I assume you have to do this manually when using
+wpa_supplicant.
 
-> On Thu, Dec 1, 2022 at 5:33 AM Coelho, Luciano <luciano.coelho@intel.com> wrote:
->>
->> On Thu, 2022-12-01 at 11:14 +0100, Thorsten Leemhuis wrote:
->>> Hi, this is your Linux kernel regression tracker.
->>>
->>> Luca, I noticed a regression report in bugzilla where I'd like your
->>> advice on. To quote https://bugzilla.kernel.org/show_bug.cgi?id=216753
->>
->> Hi Thorsten wearing-the-regression-hat, 🙂
+And of course tools like crda etc. need to be fully functional to load
+the appropriate regulatory information. Since any 6Ghz operation is
+blocked by default.
 
-:-D
+Regards
 
->> I'm not the maintainer of iwlwifi anymore, so I'm adding the new
->> maintainer here, Gregory Greenman.
+Marcel
 
-Well, you where the author of the commit, that's why I addressed you.
-But if Gregory or someone else steps in that's of course totally fine
-for me as well. :-D
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
-
->> Gregory, can you take a look?
->>
->>
->>>> It looks like the self-managed regulatory information is causing the 6ghz band to be disabled on my AX211 (in the US).
->>>> iw reg get shows no 6ghz bands (output at the bottom).
->>>>
->>>> $ sudo iw phy0 channel
->>>> ...
->>>> Band 4:
->>>>     * 5955 MHz [1] (disabled)
->>>>     * 5975 MHz [5] (disabled)
->>>>     * 5995 MHz [9] (disabled)
->>>>         ....(continues with all disabled
->>>>         * 7115 MHz [233] (disabled)
->>>> ...
->>>>
->>>> I was able to narrow this down to having been introduced during the 5.16 development window, as 5.15.79 linux-stable kernel works and the 5.16.12 does
->>>> not (earlier builds of 5.16 kernel fail to boot on my machine for some reason).
->>>>
->>>> I found https://community.frame.work/t/kernel-5-16-6ghz-disabled-ax210/15675/5
->>>> and they imply that this regression was introduced by
->>>> 698b166ed3464e1604a0e6a3e23cc1b529a5adc1
->>>> I haven't independently verified this commit as the definitive issue.
->>>
->>> You authored 698b166ed346 ("iwlwifi: mvm: read 6E enablement flags from
->>> DSM and pass to FW"). As it is a regressions is ideally should be dealt
->>> with. But this area in tricky due to the legal implications. Hence I
->>> wonder: is there anything we can do about this, or is this simply a case
->>> where we have to bite the bullet and live with this regression?
->>>
->>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>
->>> P.S.: As the Linux kernel's regression tracker I deal with a lot of
->>> reports and sometimes miss something important when writing mails like
->>> this. If that's the case here, don't hesitate to tell me in a public
->>> reply, it's in everyone's interest to set the public record straight.
-> 
-> 
