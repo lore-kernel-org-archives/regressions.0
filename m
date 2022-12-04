@@ -1,75 +1,232 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F8F2560
-	for <regressions@lists.linux.dev>; Sun,  4 Dec 2022 09:37:53 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p1lRP-0005zX-FS; Sun, 04 Dec 2022 10:37:43 +0100
-Message-ID: <0611323c-2088-e6f3-1c38-7cf742dfb60d@leemhuis.info>
-Date: Sun, 4 Dec 2022 10:37:42 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234F27C
+	for <regressions@lists.linux.dev>; Sun,  4 Dec 2022 14:16:47 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1p1pnR-0002GH-H6; Sun, 04 Dec 2022 15:16:45 +0100
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>
+Subject: Linux regressions report  for mainline [2022-12-04]
+Date: Sun,  4 Dec 2022 14:16:42 +0000
+Message-Id: <167016324121.413036.10816787460130337195@leemhuis.info>
+X-Mailer: git-send-email 2.38.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [regression] Bug 216753 - 6e 6 ghz bands are disabled since 5.16
- on intel ax211
-Content-Language: en-US, de-DE
-To: mbizon@freebox.fr, Dave Chiluk <chiluk@ubuntu.com>,
- Marcel Holtmann <marcel@holtmann.org>
-Cc: "Coelho, Luciano" <luciano.coelho@intel.com>,
- "Greenman, Gregory" <gregory.greenman@intel.com>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- Johannes Berg <johannes@sipsolutions.net>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <14722778-dda0-cb9f-8647-892493d94a5c@leemhuis.info>
- <2026016246ef719605c9932feeb56b105833593b.camel@intel.com>
- <CAMfi-DRE-u5TNu2zAL-7A-ENHM9EiJeYJ38BL_FMdk6QmW7c9w@mail.gmail.com>
- <9a03c244-adff-afaf-7385-d8e89cd3f338@leemhuis.info>
- <02F8DDF1-EC0D-4EBD-88F5-7E000841C337@holtmann.org>
- <CAMfi-DQfuro4c_VUrFHBTv8sPnwuV8XhTV_W7qswGeCC2t-wzg@mail.gmail.com>
- <19ea39c87df3c54cbc487466f806bc157d0bf563.camel@freebox.fr>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <19ea39c87df3c54cbc487466f806bc157d0bf563.camel@freebox.fr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670146673;1f414052;
-X-HE-SMSGID: 1p1lRP-0005zX-FS
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670163408;bb0a5206;
+X-HE-SMSGID: 1p1pnR-0002GH-H6
 
-On 02.12.22 18:42, Maxime Bizon wrote:
-> On Fri, 2022-12-02 at 11:18 -0600, Dave Chiluk wrote:
-> 
->> The 6ghz band becomes disabled as soon as I upgrade to the 5.16+
->> linux-stable kernels. So from a user perspective this really is a
->> case of a kernel upgrade breaking user-space.  This is what led me
->> down this rabbit hole here.
->  
-> FWIW
-> 
-> I have the same issue on a Lenovo T14 gen2 laptop with built-in ax210
-> card, and sold as Wifi-6E compliant.
-> 
-> The exact patch you mention causes the issue, so it seems my bios does
-> not return the correct values either.
+Hi Linus! Below you'll find regzbot's report about regression from this
+cycle the bot and I became aware of. But first let me highlight a few:
 
-That makes me (as a outsider that has no real knowledge about the inner
-workings of the Linux Wifi subsystem) wonder: Does it work in Windows?
-Because if that's the case I wonder how Windows ensures everything
-confirms to regulatory requirements & standards. If that handled on the
-software level if the info is missing in the firmware? Or is there a
-another place in the firmware structures where Windows looks for details
-(and we don't).
+###
+tmp/suspend problems reported by vbabka
+https://lore.kernel.org/all/c5ba47ef-393f-1fba-30bd-1230d1b4b592@suse.cz/
 
-Or is that a Linux-only machine that might even use a different firmware?
+Jason thankfully already[1] wrote a mail about this to you (
+https://lore.kernel.org/all/Y4sj%2FknxLqqF2Tqr@zx2c4.com/
+) and from what I can see he's right: you might want to pick up the
+following patch directly for rc8, as the maintainers are MIA:
+https://lore.kernel.org/all/20221128195651.322822-1-Jason@zx2c4.com/
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+###
+performance/mm: building Linux with clang takes a lot longer by Nathan
+https://lore.kernel.org/lkml/Y1DNQaoPWxE%2BrGce@dev-arch.thelio-3990X/
+
+It recently was agreed on to revert the culprit for this regression, but
+akpm didn't include the revert in yesterdays pull afaics. You'll find it
+in next as 6de770be9266 ("revert "mm: align larger anonymous mappings on
+THP boundaries"") in case you want to pick it up for rc8 to prevent
+getting this as a last minute change next week.
+
+
+###
+arm64: crash on Qualcomm SM8250
+https://lore.kernel.org/lkml/CAMi1Hd1VBCFhf7%2BEXWHQWcGy4k=tcyLa7RGiFdprtRnegSG0Mw@mail.gmail.com/
+
+Long story short: c44094eee32f ("arm64: dma: Drop cache invalidation
+from arch_dma_prep_coherent()") exposed existing problems in at least
+one in-tree driver (drivers/remoteproc/qcom_q6v5_mss.c; Qualcomm
+Q6V5_MSS remoteproc) which now crashes during boot. A fix apparently is
+finally in the works now, but will take some time to get ready.
+Reverting c44094eee32f for now was proposed, but Will is against it:
+https://lore.kernel.org/lkml/20221202100357.GB29396@willie-the-truck/
+
+
+###
+There are two others things you might want to know about:
+
+* A regression causing boot failures on iMX7 (due to a backport this is
+also affecting 6.0.y already) could be fixed with a quick revert. But
+looks like there is no need for it, after some back and forth the
+developers that care are close to come to an agreement how to fix the
+problem properly soonish:
+https://lore.kernel.org/linux-arm-kernel/Y4dgBTGNWpM6SQXI@francesco-nb.int.toradex.com/
+https://lore.kernel.org/linux-arm-kernel/e80377c9-1542-d47d-6d35-2efdc15bcbf8@denx.de/
+
+* I noticed a discussion mentioning that apparently "dax and reflink are
+totally broken on 6.1" -- but it the same in 6.0, too:
+https://lore.kernel.org/lkml/638700ba5db1_c95729435@dwillia2-mobl3.amr.corp.intel.com.notmuch/
+
+HTH, Ciao, Thorsten
+
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 6 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+======================================================
+current cycle (v6.0.. aka v6.1-rc), culprit identified
+======================================================
+
+
+[ *NEW* ] ARM: dts: imx7: Boot failure on iMX7
+----------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/Y4dgBTGNWpM6SQXI@francesco-nb.int.toradex.com/
+https://lore.kernel.org/linux-arm-kernel/Y4dgBTGNWpM6SQXI@francesco-nb.int.toradex.com/
+
+By Francesco Dolcini; 4 days ago; 32 activities, latest 0 days ago.
+Introduced in 753395ea1e45 (v6.1-rc6)
+
+Recent activities from: Marek Vasut (10), Francesco Dolcini (10), Miquel
+  Raynal (9), Thorsten Leemhuis (2), Greg KH (1)
+
+2 patch postings are associated with this regression, the latest is this:
+* Re: [PATCH v1] mtd: parsers: ofpart: Fix parsing when size-cells is 0
+  https://lore.kernel.org/linux-arm-kernel/Y4ngOaKq224LIpQc@francesco-nb.int.toradex.com/
+  2 days ago, by Francesco Dolcini
+
+Noteworthy links:
+* [PATCH v1] mtd: parsers: ofpart: Fix parsing when size-cells is 0
+  https://lore.kernel.org/stable/20221202071900.1143950-1-francesco@dolcini.it/
+  2 days ago, by Francesco Dolcini; thread monitored.
+
+
+[ *NEW* ] performance: mm: building Linux with clang takes a lot longer (~27 %)
+-------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/Y1DNQaoPWxE+rGce@dev-arch.thelio-3990X/
+https://lore.kernel.org/lkml/Y1DNQaoPWxE%2BrGce@dev-arch.thelio-3990X/
+
+By Nathan Chancellor; 45 days ago; 14 activities, latest 1 days ago.
+Introduced in f35b5d7d676e (v6.1-rc1)
+
+Fix incoming:
+* revert "mm: align larger anonymous mappings on THP boundaries"
+  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=6de770be926680e2523296a449b4e6dad599634a
+
+
+arm64: crash on the Qualcomm SM8250
+-----------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CAMi1Hd1VBCFhf7+EXWHQWcGy4k=tcyLa7RGiFdprtRnegSG0Mw@mail.gmail.com/
+https://lore.kernel.org/lkml/CAMi1Hd1VBCFhf7%2BEXWHQWcGy4k=tcyLa7RGiFdprtRnegSG0Mw@mail.gmail.com/
+
+By Amit Pundir; 25 days ago; 30 activities, latest 1 days ago.
+Introduced in c44094eee32f (v6.1-rc1)
+
+Recent activities from: Thorsten Leemhuis (5), Manivannan
+  Sadhasivam (3), Greg KH (2), Will Deacon (1), Amit Pundir (1), Catalin
+  Marinas (1)
+
+Noteworthy links:
+* [PATCH] Revert "arm64: dma: Drop cache invalidation from arch_dma_prep_coherent()"
+  https://lore.kernel.org/lkml/20221114110329.68413-1-manivannan.sadhasivam@linaro.org/
+  20 days ago, by Manivannan Sadhasivam; thread monitored.
+
+
+drm: msm: DSI controller being switched off before the panel unprepare hook is called
+-------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/1892d0af-8aa4-dc03-887a-e44bb623b836@linaro.org/
+https://lore.kernel.org/dri-devel/1892d0af-8aa4-dc03-887a-e44bb623b836@linaro.org/
+
+By Caleb Connolly; 22 days ago; 2 activities, latest 21 days ago.
+Introduced in 007ac0262b0d (v6.1-rc1)
+
+
+==================================================
+current cycle (v6.0.. aka v6.1-rc), unkown culprit
+==================================================
+
+
+[ *NEW* ] suspend to ram fails in 6.1 due to tpm errors
+-------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/c5ba47ef-393f-1fba-30bd-1230d1b4b592@suse.cz/
+https://lore.kernel.org/lkml/c5ba47ef-393f-1fba-30bd-1230d1b4b592@suse.cz/
+
+By Vlastimil Babka; 6 days ago; 10 activities, latest 1 days ago.
+Introduced in v6.0..v6.1-rc4
+
+Recent activities from: Jason A. Donenfeld (5), Vlastimil Babka (3), Jan
+  Dąbroś (1), Thorsten Leemhuis (1)
+
+Noteworthy links:
+* [PATCH v3] char: tpm: Protect tpm_pm_suspend with locks
+  https://lore.kernel.org/lkml/20221128195651.322822-1-Jason@zx2c4.com/
+  5 days ago, by Jason A. Donenfeld; thread monitored.
+
+
+[ *NEW* ] ata/arm32: TI BeagleBoard X15 doesn't boot
+----------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CA+G9fYtYetV5sZVD14WkZxCE_tgTC4VVKm8BcBw5_NwXD6U=Sw@mail.gmail.com/
+https://lore.kernel.org/lkml/CA%2BG9fYtYetV5sZVD14WkZxCE_tgTC4VVKm8BcBw5_NwXD6U=Sw@mail.gmail.com/
+
+By Naresh Kamboju; 4 days ago; 3 activities, latest 3 days ago.
+Introduced in v6.0..v6.1-rc7
+
+Recent activities from: Anders Roxell (1), Niklas Cassel (1), Naresh
+  Kamboju (1)
+
+One patch associated with this regression:
+* Re: TI: X15 the connected SSD is not detected on Linux next 20221006 tag
+  https://lore.kernel.org/lkml/CADYN=9KKGBXn-YkiiFxsUzsanTALbDV1c%2BtB0oUQPouE1idnuQ@mail.gmail.com/
+  3 days ago, by Anders Roxell
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/166956961686.104691.2021186998003391429@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
