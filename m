@@ -1,77 +1,124 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D542520EC;
-	Tue,  6 Dec 2022 05:54:52 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p2Qud-0007tz-Vq; Tue, 06 Dec 2022 06:54:40 +0100
-Message-ID: <6fd52cbe-4cb0-d7a2-9f55-1e56c07843fe@leemhuis.info>
-Date: Tue, 6 Dec 2022 06:54:39 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98BC6257B
+	for <regressions@lists.linux.dev>; Tue,  6 Dec 2022 08:46:44 +0000 (UTC)
+Received: by mail-lj1-f179.google.com with SMTP id l8so16396711ljh.13
+        for <regressions@lists.linux.dev>; Tue, 06 Dec 2022 00:46:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2CyyvjWQb02aPEt6EJDci069U7CWH+geZeCwCy/8e20=;
+        b=I+SStnl653eOmW8BMVQ/Tq8EK24wPKeeaGU1aOoS4G9kBdSpYdJhRAM8cp5PaLGWYa
+         +zduL0zCugd9tRq1FRpK6P50hXzOvdUQXOQzRo9K+jqXxzXktSa6mnoOdMd/16fAHqGv
+         0sTAswz0qZe0dY34nK3K+GWke9YD9igfEV2DxU4AyBP+tEqdwsiFjcB4jupizbI4QaA1
+         TcJqpfZGuxO13mD5a/x87Cp1JElEpH/RthZLLTjiewe7MesJXJFxWAEQCBhy98n74MWK
+         CvX2qaB1tD7i2XNCuuIyj6b1xCq21Idmwr9SA8kwm2gri8ZGG94D525h15RuseAUvZ8d
+         3DhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2CyyvjWQb02aPEt6EJDci069U7CWH+geZeCwCy/8e20=;
+        b=Kh6rSZcJ0FiFH0Kt7X7+oYhF0ySDihhuB3lYgDmR5o0+2wKftkTZCRCvQ25pNgRsOx
+         xXmfyBj9XatA/yZbhAmD7AOzXjXPG2HFbYcUvc9ouZFuv7+0XRuaNuPAsZU9FgEipp6U
+         jTn+dCgKNmf+aH83zpxF0Qbl8kg3eA/7vb2eoLNywhsunjSXz7pIWIerIy6LexkTvuHj
+         2JMQKlXiHWzSiYtakmwOM+YhVyULSzbzYy4iESWvDrENxi7S9ed+Tz0mihltL+YvamTA
+         oBUu9jbUongjg5DpdAOYgCS1euMYtRfLPZVxIqJKhT0vSJEtgvWmBxrIAfPgwtY7GaZw
+         RO5w==
+X-Gm-Message-State: ANoB5pnZrQk+oEEIIFr6CCHC9+jVzNPXRk/E46h/TeGq+J+ZzRlZdCKm
+	3PpTWz8c/qQ+3jSv32szMWw=
+X-Google-Smtp-Source: AA0mqf7YoXZId1IhidLJeAaGq6aSihedIXUqlNVlouCax97Js2CL00K/X717vD3cW272hddh+6p/ew==
+X-Received: by 2002:a2e:a806:0:b0:277:4b35:d94a with SMTP id l6-20020a2ea806000000b002774b35d94amr18572615ljq.21.1670316402439;
+        Tue, 06 Dec 2022 00:46:42 -0800 (PST)
+Received: from mobilestation ([95.79.133.202])
+        by smtp.gmail.com with ESMTPSA id z5-20020a2eb525000000b0027973ba8718sm1577134ljm.37.2022.12.06.00.46.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Dec 2022 00:46:41 -0800 (PST)
+Date: Tue, 6 Dec 2022 11:46:37 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Damien Le Moal <damien.lemoal@opensource.wdc.com>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: Anders Roxell <anders.roxell@linaro.org>,
+	Niklas Cassel <Niklas.Cassel@wdc.com>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	Praneeth Bajjuri <praneeth@ti.com>,
+	Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>,
+	"lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+	Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+	Carlos Hernandez <ceh@ti.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>
+Subject: Re: TI: X15 the connected SSD is not detected on Linux next 20221006
+ tag
+Message-ID: <20221206084637.olaflvqmxwoo467a@mobilestation>
+References: <CADYN=9JiX-=PcKMzAcSm=p7Dh6kYT7Kbv-8kcNF0MQ4=1hFS5g@mail.gmail.com>
+ <20221014140633.mlypet7skkxvt453@mobilestation>
+ <CADYN=9LrKHRNMON3GA4piDvWeSWTASQ1u2=D30rXFdvo1L18bg@mail.gmail.com>
+ <20221017155246.zxal2cfehjgaajcu@mobilestation>
+ <CA+G9fYtYetV5sZVD14WkZxCE_tgTC4VVKm8BcBw5_NwXD6U=Sw@mail.gmail.com>
+ <Y4cqcTRcni5H7UAU@x1-carbon>
+ <CADYN=9KKGBXn-YkiiFxsUzsanTALbDV1c+tB0oUQPouE1idnuQ@mail.gmail.com>
+ <20221205011105.4do4trbytq4bfw5b@mobilestation>
+ <98670e23-6553-4788-8662-9403c480af82@app.fastmail.com>
+ <f440a8ff-7657-c1be-e733-4ad69b6b7b0b@opensource.wdc.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH] hwmon/coretemp: Simplify platform device antics
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Robin Murphy <robin.murphy@arm.com>, janusz.krzysztofik@linux.intel.com
-Cc: fenghua.yu@intel.com, jdelvare@suse.com, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
- lucas.demarchi@intel.com, Guenter Roeck <linux@roeck-us.net>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <898dbb76a54aae6ca58ceefcab9ab18beeee2fff.1668096928.git.robin.murphy@arm.com>
- <20221111213753.GA1059841@roeck-us.net>
- <ac2e553f-fa8b-8b08-aba9-e04529adad34@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <ac2e553f-fa8b-8b08-aba9-e04529adad34@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670306092;a018b135;
-X-HE-SMSGID: 1p2Qud-0007tz-Vq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f440a8ff-7657-c1be-e733-4ad69b6b7b0b@opensource.wdc.com>
 
-On 01.12.22 16:02, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker. I wondered what
-> happened to this regression fix, as things looks stalled from here --
-> but maybe I'm missing something.
+On Mon, Dec 05, 2022 at 10:24:22PM +0900, Damien Le Moal wrote:
+> On 12/5/22 19:08, Arnd Bergmann wrote:
+> > On Mon, Dec 5, 2022, at 02:11, Serge Semin wrote:
+> >> On Thu, Dec 01, 2022 at 12:48:32PM +0100, Anders Roxell wrote:
+> > 
+> >>>
+> >>>   for (i = 0; i < hpriv->n_clks; i++) {
+> >>> - if (!strcmp(hpriv->clks[i].id, con_id))
+> >>> + if (hpriv->clks && hpriv->clks[i].id &&
+> >>> +    !strcmp(hpriv->clks[i].id, con_id))
+> >>>   return hpriv->clks[i].clk;
+> >>>   }
+> >>
+> >> Indeed I should have taken into account that devm_clk_bulk_get_all()
+> >> can get unnamed clocks too. But checking the hpriv->clks pointer for
+> >> being not null is redundant, since the ahci_platform_get_resources()
+> >> procedure makes sure that the array is always allocated. At the very
+> >> least you shouldn't check the pointer in the loop, but can make sure
+> >> that the clks array is available before it.
+> > 
 
-This still looks stalled; hope someone will tell me if I missed any
-progress.
+> > Do you think this is otherwise the correct fix then? Any chance we
+> > can still get a version of it into 6.1?
 
-> On 11.11.22 22:37, Guenter Roeck wrote:
->> On Thu, Nov 10, 2022 at 04:20:25PM +0000, Robin Murphy wrote:
->>> Coretemp's vestigial platform driver is odd. All the real work is done
->>> globally by the initcall and CPU hotplug notifiers, while the "driver"
->>> effectively just wraps an allocation and the registration of the hwmon
->>> interface in a long-winded round-trip through the driver core. The whole
->>> logic of dynamically creating and destroying platform devices to bring
->>> the interfaces up and down is fatally flawed right away, since it
->>> notifier from a platform bus notifier.
->> [...]
->>> I haven't been able to fully test hotplug since I only have a
->>> single-socket Intel system to hand.
->> Someone with access to hardware will have to validate this.
-> That afaics has happened.
+I'll think of a better solution. But at this stage it seems like the
+best choice seeing the bindings permit having unnamed clocks
+specified.
+
 > 
->> For both subject and description, please avoid terms like "antics",
->> "odd", or "questionable". Please describe the problem in neutral terms.
-> Robin, did you take care of that?
+> If someone sends me a proper patch to apply, I can send a last PR for 6.1
+> to Linus before week end.
 
-Robin, are you busy, or is there some other reason why this regression
-fix afaics isn't making any progress?
+I'll submit the patch today. Thanks.
 
-Janusz Krzysztofik, as you seemed to care: if you have a minute and
-Robin doesn't show up within a day or wo, could you maybe improve
-subject and description to make Guenter happy?
+-Serge(y)
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
-
-#regzbot poke
+> 
+> 
+> > 
+> >      Arnd
+> 
+> -- 
+> Damien Le Moal
+> Western Digital Research
+> 
