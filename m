@@ -1,18 +1,18 @@
-Received: from out-239.mta0.migadu.com (out-239.mta0.migadu.com [91.218.175.239])
+Received: from out2.migadu.com (out2.migadu.com [188.165.223.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A845215C8B
-	for <regressions@lists.linux.dev>; Mon,  5 Dec 2022 20:17:12 +0000 (UTC)
-Date: Mon, 5 Dec 2022 12:08:24 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EAC17D0
+	for <regressions@lists.linux.dev>; Tue,  6 Dec 2022 02:15:19 +0000 (UTC)
+Date: Mon, 5 Dec 2022 18:15:04 -0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1670270910;
+	t=1670292910;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=RM7CfezPPGUav4Lu0t/qwJdsYnLC3YJVlzAQP3YTuPI=;
-	b=GiQWgTJ6UTtJOmb5w3cPc9P2E7cWItMRPqs8Se1Z6wFfmT+yiKILuinJ1nWYlLc9UCuonp
-	1rquDwpn88+qs6w3Qt79G2pnr9tNFJm/uC31fX+nnJMTXpA5RkxtLTg3iISSilDgk9Sxo+
-	8hR4g/SU4Ba738nIjpy4oa7S/9CpuS8=
+	bh=3g+90RvlwUB9ZlXAss9NsspXI02DqqGD0/yx03JWUmE=;
+	b=PAxFhp8rf/GPlK9H28H7nejs1R7o5VHMTtVp3+7gAP4CvZlM6zGhGkY3v7eJdywvoqPi4P
+	fhsrnbPBiYizeXRuI7irNmXlDRLuZ8OOj8KG6Mq2z88gClKMbxPMR4Lk4dEIOQFrL3p7EW
+	kFv2HhiRbu47Z/1GEbxJMst7VJ1nriA=
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Roman Gushchin <roman.gushchin@linux.dev>
 To: "Luther, Sven" <Sven.Luther@windriver.com>
@@ -34,7 +34,7 @@ Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	"Bonn, Jonas" <Jonas.Bonn@windriver.com>
 Subject: Re: [Regression] mqueue performance degradation after "The new
  cgroup slab memory controller" patchset.
-Message-ID: <Y45PuH2C8VdHbrzD@P9FQF9L96D>
+Message-ID: <Y46lqCToUa/Bgt/c@P9FQF9L96D>
 References: <PH0PR11MB562641BC03630B4B7A227FD7E9189@PH0PR11MB5626.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -90,19 +90,331 @@ On Mon, Dec 05, 2022 at 02:55:48PM +0000, Luther, Sven wrote:
 > | 5.15     | 431 444  8440  -13,96%   | 425 437  6170   -6,18%  | 171   -12,87%  |
 > | 6.03     | 474 614  3881  -37,79%   | 482 693   931  -40,84%  | 171   -12,87%  |
 > +----------+--------------------------+-------------------------+-----------------
+>
 
 Hi Sven!
 
-Thank you for the report! As Waiman said, it's not a secret that per-object tracking
-makes individual allocations slower, but for the majority of workloads it's well
-compensated by significant memory savings and a lower fragmentation.
+To prove a concept of local msg caching, I'm mastered a patch (attached below).
+In my test setup it seems to resolve most of the regression. Would you mind to
+give it a try? (It's only tested on my local vm, don't treat it as a production
+code). If it will fix the regression, I can invest more time into it and post
+it in an umpstreamble form.
 
-It seems there is another regression between 5.15 and 6.03, which is a separate
-topic, but how big is the real regression between 4.18 and 5.15? The benchmark
-shows about 14%, but is you real workload suffering at the same level?
-If the answer is yes, the right thing to do is to introduce some sort of
-mqueue-specific caching for allocated objects.
+Here are my results (5 runs each):
+
+Original (current mm tree, 6.1+):
+RX: 1122/1202/114001 1197/1267/26517 1109/1173/29613 1091/1165/54434 1091/1160/26302
+TX: 1176/1255/38168  1252/1360/27683 1165/1226/41454 1145/1222/90040 1146/1214/26595
+
+No accounting:
+RX: 984/1053/31268    1024/1091/39105 1018/1077/61515  999/1065/30423  1008/1060/115284
+TX: 1020/1097/137690  1065/1143/31448 1055/1130/133278 1032/1106/52372 1043/1099/25705
+
+Patched:
+RX: 1033/1165/38579 1030/1108/43703 1022/1114/25653 1008/1110/38462 1089/1136/29120
+TX: 1047/1184/25373 1048/1116/25425 1034/1122/61275 1022/1121/24636 1105/1155/46600
 
 Thanks!
 
-Roman
+--
+
+From 7742e074c25eb51d8e606585f0f8b06228d907f5 Mon Sep 17 00:00:00 2001
+From: Roman Gushchin <roman.gushchin@linux.dev>
+Date: Mon, 5 Dec 2022 18:13:15 -0800
+Subject: [PATCH] ipc/mqueue: introduce msg cache
+
+Signed-off-by: Roman Gushchin <roman.gushchin@linux.dev>
+---
+ ipc/mqueue.c  | 20 ++++++++++---
+ ipc/msg.c     | 12 ++++----
+ ipc/msgutil.c | 79 +++++++++++++++++++++++++++++++++++++++++++++++----
+ ipc/util.h    |  8 ++++--
+ 4 files changed, 101 insertions(+), 18 deletions(-)
+
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index 467a194b8a2e..5c6fec8e9701 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -131,6 +131,11 @@ struct ext_wait_queue {		/* queue of sleeping tasks */
+ 	int state;		/* one of STATE_* values */
+ };
+ 
++struct pcpu_msg_cache;
++struct msg_cache {
++	struct pcpu_msg_cache __percpu *pcpu_cache;
++};
++
+ struct mqueue_inode_info {
+ 	spinlock_t lock;
+ 	struct inode vfs_inode;
+@@ -152,6 +157,8 @@ struct mqueue_inode_info {
+ 	/* for tasks waiting for free space and messages, respectively */
+ 	struct ext_wait_queue e_wait_q[2];
+ 
++	struct msg_cache msg_cache;
++
+ 	unsigned long qsize; /* size of queue in memory (sum of all msgs) */
+ };
+ 
+@@ -368,6 +375,9 @@ static struct inode *mqueue_get_inode(struct super_block *sb,
+ 		mq_bytes = info->attr.mq_maxmsg * info->attr.mq_msgsize;
+ 		if (mq_bytes + mq_treesize < mq_bytes)
+ 			goto out_inode;
++		ret = init_msg_cache(&info->msg_cache);
++		if (ret)
++			goto out_inode;
+ 		mq_bytes += mq_treesize;
+ 		info->ucounts = get_ucounts(current_ucounts());
+ 		if (info->ucounts) {
+@@ -531,9 +541,11 @@ static void mqueue_evict_inode(struct inode *inode)
+ 
+ 	list_for_each_entry_safe(msg, nmsg, &tmp_msg, m_list) {
+ 		list_del(&msg->m_list);
+-		free_msg(msg);
++		free_msg(msg, &info->msg_cache);
+ 	}
+ 
++	free_msg_cache(&info->msg_cache);
++
+ 	if (info->ucounts) {
+ 		unsigned long mq_bytes, mq_treesize;
+ 
+@@ -1108,7 +1120,7 @@ static int do_mq_timedsend(mqd_t mqdes, const char __user *u_msg_ptr,
+ 
+ 	/* First try to allocate memory, before doing anything with
+ 	 * existing queues. */
+-	msg_ptr = load_msg(u_msg_ptr, msg_len);
++	msg_ptr = load_msg(u_msg_ptr, msg_len, &info->msg_cache);
+ 	if (IS_ERR(msg_ptr)) {
+ 		ret = PTR_ERR(msg_ptr);
+ 		goto out_fput;
+@@ -1170,7 +1182,7 @@ static int do_mq_timedsend(mqd_t mqdes, const char __user *u_msg_ptr,
+ 	wake_up_q(&wake_q);
+ out_free:
+ 	if (ret)
+-		free_msg(msg_ptr);
++		free_msg(msg_ptr, &info->msg_cache);
+ out_fput:
+ 	fdput(f);
+ out:
+@@ -1273,7 +1285,7 @@ static int do_mq_timedreceive(mqd_t mqdes, char __user *u_msg_ptr,
+ 			store_msg(u_msg_ptr, msg_ptr, msg_ptr->m_ts)) {
+ 			ret = -EFAULT;
+ 		}
+-		free_msg(msg_ptr);
++		free_msg(msg_ptr, &info->msg_cache);
+ 	}
+ out_fput:
+ 	fdput(f);
+diff --git a/ipc/msg.c b/ipc/msg.c
+index fd08b3cb36d7..fcc09f848490 100644
+--- a/ipc/msg.c
++++ b/ipc/msg.c
+@@ -287,7 +287,7 @@ static void freeque(struct ipc_namespace *ns, struct kern_ipc_perm *ipcp)
+ 
+ 	list_for_each_entry_safe(msg, t, &msq->q_messages, m_list) {
+ 		percpu_counter_sub_local(&ns->percpu_msg_hdrs, 1);
+-		free_msg(msg);
++		free_msg(msg, NULL);
+ 	}
+ 	percpu_counter_sub_local(&ns->percpu_msg_bytes, msq->q_cbytes);
+ 	ipc_update_pid(&msq->q_lspid, NULL);
+@@ -861,7 +861,7 @@ static long do_msgsnd(int msqid, long mtype, void __user *mtext,
+ 	if (mtype < 1)
+ 		return -EINVAL;
+ 
+-	msg = load_msg(mtext, msgsz);
++	msg = load_msg(mtext, msgsz, NULL);
+ 	if (IS_ERR(msg))
+ 		return PTR_ERR(msg);
+ 
+@@ -954,7 +954,7 @@ static long do_msgsnd(int msqid, long mtype, void __user *mtext,
+ out_unlock1:
+ 	rcu_read_unlock();
+ 	if (msg != NULL)
+-		free_msg(msg);
++		free_msg(msg, NULL);
+ 	return err;
+ }
+ 
+@@ -1049,7 +1049,7 @@ static inline struct msg_msg *prepare_copy(void __user *buf, size_t bufsz)
+ 	/*
+ 	 * Create dummy message to copy real message to.
+ 	 */
+-	copy = load_msg(buf, bufsz);
++	copy = load_msg(buf, bufsz, NULL);
+ 	if (!IS_ERR(copy))
+ 		copy->m_ts = bufsz;
+ 	return copy;
+@@ -1058,7 +1058,7 @@ static inline struct msg_msg *prepare_copy(void __user *buf, size_t bufsz)
+ static inline void free_copy(struct msg_msg *copy)
+ {
+ 	if (copy)
+-		free_msg(copy);
++		free_msg(copy, NULL);
+ }
+ #else
+ static inline struct msg_msg *prepare_copy(void __user *buf, size_t bufsz)
+@@ -1256,7 +1256,7 @@ static long do_msgrcv(int msqid, void __user *buf, size_t bufsz, long msgtyp, in
+ 	}
+ 
+ 	bufsz = msg_handler(buf, msg, bufsz);
+-	free_msg(msg);
++	free_msg(msg, NULL);
+ 
+ 	return bufsz;
+ }
+diff --git a/ipc/msgutil.c b/ipc/msgutil.c
+index d0a0e877cadd..8fe64bb3f48d 100644
+--- a/ipc/msgutil.c
++++ b/ipc/msgutil.c
+@@ -39,16 +39,65 @@ struct msg_msgseg {
+ 	/* the next part of the message follows immediately */
+ };
+ 
++struct pcpu_msg_cache {
++	struct msg_msg *msg;
++	struct task_struct *curr;
++	size_t len;
++};
++
++struct msg_cache {
++	struct pcpu_msg_cache __percpu *pcpu_cache;
++};
++
+ #define DATALEN_MSG	((size_t)PAGE_SIZE-sizeof(struct msg_msg))
+ #define DATALEN_SEG	((size_t)PAGE_SIZE-sizeof(struct msg_msgseg))
+ 
++int init_msg_cache(struct msg_cache *cache)
++{
++	cache->pcpu_cache = alloc_percpu(struct pcpu_msg_cache);
++	if (!cache->pcpu_cache)
++		return -ENOMEM;
+ 
+-static struct msg_msg *alloc_msg(size_t len)
++	return 0;
++}
++
++void free_msg_cache(struct msg_cache *cache)
++{
++	int cpu;
++
++	if (!cache->pcpu_cache)
++		return;
++
++	for_each_possible_cpu(cpu) {
++		struct pcpu_msg_cache *pc = per_cpu_ptr(cache->pcpu_cache, cpu);
++
++		if (pc->msg)
++			free_msg(pc->msg, NULL);
++	}
++
++	free_percpu(cache->pcpu_cache);
++}
++
++static struct msg_msg *alloc_msg(size_t len, struct msg_cache *cache)
+ {
+ 	struct msg_msg *msg;
+ 	struct msg_msgseg **pseg;
+ 	size_t alen;
+ 
++	if (cache) {
++		struct pcpu_msg_cache *pc;
++
++		msg = NULL;
++		pc = get_cpu_ptr(cache->pcpu_cache);
++		if (pc->msg && pc->curr == get_current() && pc->len == len) {
++			msg = pc->msg;
++			pc->msg = NULL;
++		}
++		put_cpu_ptr(cache->pcpu_cache);
++		if (msg)
++			return msg;
++	}
++
+ 	alen = min(len, DATALEN_MSG);
+ 	msg = kmalloc(sizeof(*msg) + alen, GFP_KERNEL_ACCOUNT);
+ 	if (msg == NULL)
+@@ -77,18 +126,19 @@ static struct msg_msg *alloc_msg(size_t len)
+ 	return msg;
+ 
+ out_err:
+-	free_msg(msg);
++	free_msg(msg, cache);
+ 	return NULL;
+ }
+ 
+-struct msg_msg *load_msg(const void __user *src, size_t len)
++struct msg_msg *load_msg(const void __user *src, size_t len,
++			 struct msg_cache *cache)
+ {
+ 	struct msg_msg *msg;
+ 	struct msg_msgseg *seg;
+ 	int err = -EFAULT;
+ 	size_t alen;
+ 
+-	msg = alloc_msg(len);
++	msg = alloc_msg(len, cache);
+ 	if (msg == NULL)
+ 		return ERR_PTR(-ENOMEM);
+ 
+@@ -111,7 +161,7 @@ struct msg_msg *load_msg(const void __user *src, size_t len)
+ 	return msg;
+ 
+ out_err:
+-	free_msg(msg);
++	free_msg(msg, cache);
+ 	return ERR_PTR(err);
+ }
+ #ifdef CONFIG_CHECKPOINT_RESTORE
+@@ -166,10 +216,27 @@ int store_msg(void __user *dest, struct msg_msg *msg, size_t len)
+ 	return 0;
+ }
+ 
+-void free_msg(struct msg_msg *msg)
++void free_msg(struct msg_msg *msg, struct msg_cache *cache)
+ {
+ 	struct msg_msgseg *seg;
+ 
++	if (cache) {
++		struct pcpu_msg_cache *pc;
++		bool cached = false;
++
++		pc = get_cpu_ptr(cache->pcpu_cache);
++		if (!pc->msg) {
++			pc->curr = get_current();
++			pc->len = msg->m_ts;
++			pc->msg = msg;
++			cached = true;
++		}
++		put_cpu_ptr(cache->pcpu_cache);
++
++		if (cached)
++			return;
++	}
++
+ 	security_msg_msg_free(msg);
+ 
+ 	seg = msg->next;
+diff --git a/ipc/util.h b/ipc/util.h
+index b2906e366539..a2da266386aa 100644
+--- a/ipc/util.h
++++ b/ipc/util.h
+@@ -196,8 +196,12 @@ static inline void ipc_update_pid(struct pid **pos, struct pid *pid)
+ int ipc_parse_version(int *cmd);
+ #endif
+ 
+-extern void free_msg(struct msg_msg *msg);
+-extern struct msg_msg *load_msg(const void __user *src, size_t len);
++struct msg_cache;
++extern int init_msg_cache(struct msg_cache *cache);
++extern void free_msg_cache(struct msg_cache *cache);
++extern void free_msg(struct msg_msg *msg, struct msg_cache *cache);
++extern struct msg_msg *load_msg(const void __user *src, size_t len,
++				struct msg_cache *cache);
+ extern struct msg_msg *copy_msg(struct msg_msg *src, struct msg_msg *dst);
+ extern int store_msg(void __user *dest, struct msg_msg *msg, size_t len);
+ 
+-- 
+2.38.1
+
