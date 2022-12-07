@@ -1,78 +1,99 @@
-Received: from mail1.systemli.org (mail1.systemli.org [93.190.126.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2D32102
-	for <regressions@lists.linux.dev>; Wed,  7 Dec 2022 15:34:46 +0000 (UTC)
-Message-ID: <f70d7c09-df0d-4fa9-92c9-63f31cf56483@systemli.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=systemli.org;
-	s=default; t=1670427276;
-	bh=zRMPmx2g25b+oz+4Mu5sled5OxjCCJuBKdM0iCwdVr0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bLmXw34wygi9IeMNToIo0OUgRMES3iZz5BKgSQyYWcZMw24MUENAxbOCbdj1/nysB
-	 93SDqY+t0EZAC3Sf4ONqJNaKRhXxakVMJuZp113XkDNgdsjMwtVjwg7Nh+oBzVIaXx
-	 /jAMidL4GPsHJUrpcbaBfr4QqiezlLHtQyJFBbZoRtnfpS9oobEa7B7pildvD/Hf6g
-	 vUDPXSAXmwktv+NJvbEOIn8itSn2MFeEClcv/pHdrTacYx9Uyu6TQcZg7llUqaPLu1
-	 a7kqKRWFT/reUwg24YdLruFOVoapoVgnqDpWHd7SWTOHlE5ImRgplZ8tiJiO0wlF9h
-	 Bi9OviGvQyd9w==
-Date: Wed, 7 Dec 2022 16:34:33 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4395F2102
+	for <regressions@lists.linux.dev>; Wed,  7 Dec 2022 15:58:17 +0000 (UTC)
+Received: by mail-qk1-f173.google.com with SMTP id j13so8735997qka.3
+        for <regressions@lists.linux.dev>; Wed, 07 Dec 2022 07:58:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qs0nZ1rFh/s7MTR6+29xGDMlHk1tahA90qx6nUbU6w0=;
+        b=W3sB3oJvRoNx0VC2yM2FQ6Ev/+nc13R58IJFJndvG5zrSCt4KXWHdZ6zV2f5P04vwC
+         coYp7i/4L0D6qBB2/mM6gC8B5Hap5ikN4lYCxc3NuIUa5HEE4oGDq26/N2dHmz2j+6xW
+         xTvds0opU2zCXTeoD7kWOdDY+WZHi3NFuBZ84RxKKSv84sq/tsjhKfs3IHaizDPOd9Ps
+         ZV90N1vR/8LTGEYyr62UIaXclWH/qK1088y+O21hgS7g6HBOCXlupU4IX/C1w/UMEYSB
+         Na7a2jWUpQbOwmVLiE8yXlpyo/WKygc+zlp4rghG9CldbdiwoayMt8s+1pKTrPW6y9vh
+         Oq6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qs0nZ1rFh/s7MTR6+29xGDMlHk1tahA90qx6nUbU6w0=;
+        b=XdLJvCqoXCYa4eCbz/Piy7oY/FGGlNg6Sn3dznKBX9myJf9/6CoYgVJAqBmjf8yQuz
+         VBADTZr0pcjwdmnbhkXaHACb0nTKj+EnzewRxUWKf7EOQB07ol/GS+OTh+P/ZycuPdbu
+         KjRQhzsxOkZSqIa4BecNaPAyeKrRrjzfSWgkD8lYgYflqoSFrm/GqJNFxf7x7HpTlr/7
+         oJUo30hzcu6GhE8FIv8r5QP69QeY241YFPcQ4L1egdEJ/YKhD+mxe2Ve1Do5+nDb/8Gr
+         EYhHs6rrj4pplDkU3BFeqcESdZhmRwsCCbtUlNBmWLu+FBpO9gf0POYYEr8UUd9F+814
+         Tsjg==
+X-Gm-Message-State: ANoB5pmBoM+kGfmIzPukptoj3DA85iqm8Z0ItSHsnseOWekABFlesQuA
+	RrfKWb1i7wRasjGI0YmKUWPMceyTw1HNUxPmYHCE8A==
+X-Google-Smtp-Source: AA0mqf6MVYwoYOhFT0gxk5rqGIihkNKVqwUwRwH46llz3gEgyDjhmfIbn9BLQr53oVvP6jd52Fdnrhp6onLZcC0LK/g=
+X-Received: by 2002:a05:620a:cf5:b0:6fe:c37b:880e with SMTP id
+ c21-20020a05620a0cf500b006fec37b880emr9851138qkj.221.1670428695952; Wed, 07
+ Dec 2022 07:58:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: Kernel Kernel bug caused by (cpufreq: mediatek: Refine
- mtk_cpufreq_voltage_tracking()) on Banana Pi R64 (MT7622)
-To: Viresh Kumar <viresh.kumar@linaro.org>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- =?UTF-8?B?QWxsZW4tS0ggQ2hlbmcgKOeoi+WGoOWLsyk=?=
- <Allen-KH.Cheng@mediatek.com>,
- "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "frank-w@public-files.de" <frank-w@public-files.de>,
- Project_Global_Chrome_Upstream_Group
- <Project_Global_Chrome_Upstream_Group@mediatek.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- =?UTF-8?B?SmlhLXdlaSBDaGFuZyAo5by15L2z5YGJKQ==?=
- <Jia-wei.Chang@mediatek.com>, =?UTF-8?B?UmV4LUJDIENoZW4gKOmZs+afj+i+sCk=?=
- <Rex-BC.Chen@mediatek.com>,
- "thomas.huehn@hs-nordhausen.de" <thomas.huehn@hs-nordhausen.de>,
- "daniel@makrotopia.org" <daniel@makrotopia.org>
-References: <02c2c955-940b-b315-0474-85d0eddad7a3@leemhuis.info>
- <Y4jHvomTrU8guBox@makrotopia.org>
- <47a4665e-333d-a6e7-a2da-96cb06c2d87b@leemhuis.info>
- <20221202052716.uj3kzkunazmgazeq@vireshk-i7>
- <0ebef1a2-6b5a-04b9-a79b-79eb3349c32b@collabora.com>
- <c76bd301-0e8d-2d2b-0d3e-a57ece9b496f@collabora.com>
- <b1822bbc3775730c4cedf9652323c7d72e663e4b.camel@mediatek.com>
- <8be3e050-f32a-6761-8ebd-49c38dfcf9eb@collabora.com>
- <c186d104-43e0-ca10-3ce2-c2f922acd8bf@leemhuis.info>
- <37468027-6a27-dcb8-9c14-8f8426ec50d1@collabora.com>
- <20221202110139.vmwcmoudakm2nap4@vireshk-i7>
-Content-Language: en-US
-From: Nick <vincent@systemli.org>
-In-Reply-To: <20221202110139.vmwcmoudakm2nap4@vireshk-i7>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 7 Dec 2022 21:28:04 +0530
+Message-ID: <CA+G9fYv_UU+oVUbd8Mzt8FkXscenX2kikRSCZ7DPXif9i5erNg@mail.gmail.com>
+Subject: next: LTP: syscalls: epoll_clt() if fd is an invalid fd expected
+ EBADF: EINVAL (22)
+To: open list <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org, 
+	regressions@lists.linux.dev, lkft-triage@lists.linaro.org, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, LTP List <ltp@lists.linux.it>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Jens Axboe <axboe@kernel.dk>, 
+	Anders Roxell <anders.roxell@linaro.org>, Arnd Bergmann <arnd@arndb.de>, chrubis <chrubis@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 
-Did something changed on master? I compiled now the image I use on the 
-BPI-R64 a bit differently.
-I used the openwrt toolchain "aarch64-openwrt-linux-musl-" to 
-cross-compile the original linux repository on current master. Than I 
-compiled with OpenWrt-Buildsystem a initramfs, put that together with 
-mkimage to a "itb" and booted it. Suddenly it works:
-https://gist.githubusercontent.com/PolynomialDivision/5e49529206ba5d273bf6a416c42c6234/raw/7ecff7be397a6e9a41ef120c3fa61060c488cf5b/mt7622-bpi-vanilla
+LTP syscalls epoll_ctl02 is failing on Linux next master.
+The reported problem is always reproducible and starts from next-20221205.
 
-Bests
-Nick
+GOOD tag: next-20221202
+BAD tag: next-20221205
 
-On 12/2/22 12:01, Viresh Kumar wrote:
-> On 02-12-22, 12:00, AngeloGioacchino Del Regno wrote:
->> If Viresh can add those while applying the patch, that's fine for me - otherwise
->> I can send a v2 adding the two suggested missing tags.
-> Sure, no problem.
->
+tst_test.c:1524: TINFO: Timeout per run is 0h 05m 00s
+epoll_ctl02.c:87: TPASS: epoll_clt(...) if epfd is an invalid fd : EBADF (9)
+epoll_ctl02.c:87: TPASS: epoll_clt(...) if fd does not support epoll : EPERM (1)
+epoll_ctl02.c:87: TFAIL: epoll_clt(...) if fd is an invalid fd
+expected EBADF: EINVAL (22)
+epoll_ctl02.c:87: TPASS: epoll_clt(...) if op is not supported : EINVAL (22)
+epoll_ctl02.c:87: TPASS: epoll_clt(...) if fd is the same as epfd : EINVAL (22)
+epoll_ctl02.c:87: TPASS: epoll_clt(...) if events is NULL : EFAULT (14)
+epoll_ctl02.c:87: TPASS: epoll_clt(...) if fd is not registered with
+EPOLL_CTL_DEL : ENOENT (2)
+epoll_ctl02.c:87: TPASS: epoll_clt(...) if fd is not registered with
+EPOLL_CTL_MOD : ENOENT (2)
+epoll_ctl02.c:87: TPASS: epoll_clt(...) if fd is already registered
+with EPOLL_CTL_ADD : EEXIST (17)
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+
+Test results:
+https://lkft.validation.linaro.org/scheduler/job/5931196#L1367
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221207/testrun/13492039/suite/ltp-syscalls/test/epoll_ctl02/log
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221205/testrun/13412113/suite/ltp-syscalls/test/epoll_ctl02/details/
+
+Test results comparison:
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221207/testrun/13492039/suite/ltp-syscalls/test/epoll_ctl02/history/
+
+metadata:
+  git_ref: master
+  git_repo: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next
+  git_sha: ee9bda616d36d2dc864aa294c2656fad88c9efa0
+  git_describe: next-20221205
+  kernel_version: 6.1.0-rc7
+  kernel-config: https://builds.tuxbuild.com/2ITqQKvBJSwcIYKcYvEdPjjrw64/config
+  build-url: https://gitlab.com/Linaro/lkft/mirrors/next/linux-next/-/pipelines/713047540
+  artifact-location: https://builds.tuxbuild.com/2ITqQKvBJSwcIYKcYvEdPjjrw64
+  toolchain: gcc-11
+
+--
+Linaro LKFT
+https://lkft.linaro.org
