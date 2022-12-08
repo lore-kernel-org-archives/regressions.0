@@ -1,121 +1,58 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 370CD621
-	for <regressions@lists.linux.dev>; Thu,  8 Dec 2022 01:36:10 +0000 (UTC)
-Received: by mail-pj1-f53.google.com with SMTP id n65-20020a17090a2cc700b0021bc5ef7a14so76274pjd.0
-        for <regressions@lists.linux.dev>; Wed, 07 Dec 2022 17:36:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z7fsxClu+Jd0NjsKaMgykMd0B6rUNb/ikhiPp8Ecv50=;
-        b=jSOCGFfQXTv7C6fiSj3keLmm2Sq4F2mY9D9nO4IYVKX1hPEC61qXF+irZ0+ybvsab5
-         ek9riN+E1ArwCXK9mkJ/u/01U8/LVzcpI9XLH6lQrfE1hurbZsz9u1XOGHytDPmYVFtn
-         U+0okgzsa5kX6h846rbZAlzgLKkDoih61YnNOxdzvKiYjjg4kOxZNskp+OBHpmYbo7TN
-         JeXcNfP9k34kF4B7S3eMfEJ9U4FJNYW6qjEGmIglAmpoEHci+8wxtqmcVF5C+en5q4YJ
-         HBh2DBmLyg6kXgDZ9nb0iu9WiGqW8sQNlnBSm5ZLrnFk9Pj0VOHd6tPnxqbV2rYR0zLC
-         k/KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z7fsxClu+Jd0NjsKaMgykMd0B6rUNb/ikhiPp8Ecv50=;
-        b=R3nHicmPAr2/O8M2N7T97tZ5UgtYqxUaerYib75qn5IGeoC0ufajS4aF39smOihPMQ
-         JXCafewIMCj7TaCcYZu45DJjz0gT2uPSWbpfNK+yqQmhkI8cx49eK1OpsdHNpcVgN1e3
-         2sxHxpv7PZ/DuLH/ZYD6AlSr/caGyIzAe0LwBy60LBVyg9XP7c8uOQQaAV5fXnPxAf+e
-         INn1GpW1eaMGcQQFIf3EBZZaeUbcEacUgpAX4Dtbe1Q0Z+15vtgo8bQgbEYwASPcgOxg
-         eiM6c8zzsfiJbRxd3a6IAkecmWS7YKRsGbGOvDKy8hHmb8LZoKtB4Tn6thadny5LinDf
-         d+zw==
-X-Gm-Message-State: ANoB5pmkOw1E6yUEAMF4U5BLILISEhMeeKIYk3C2+pOC7MtedY817xra
-	dGolD4K2Ul5ADGoxoklJXJymCw==
-X-Google-Smtp-Source: AA0mqf5lVcwscHjcTHlexgdjucEx1RkH82KSuPvdJV0UjV2u7ZYNBp0UlKILRUfrDVy0Stgnws+aig==
-X-Received: by 2002:a17:902:b416:b0:186:a22a:177e with SMTP id x22-20020a170902b41600b00186a22a177emr76022166plr.163.1670463369398;
-        Wed, 07 Dec 2022 17:36:09 -0800 (PST)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id f29-20020aa79d9d000000b00576ee69c130sm6464039pfq.4.2022.12.07.17.36.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Dec 2022 17:36:08 -0800 (PST)
-Message-ID: <e05d3b3d-223f-ecf9-0e41-25bbae33eb54@kernel.dk>
-Date: Wed, 7 Dec 2022 18:36:07 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1F48657
+	for <regressions@lists.linux.dev>; Thu,  8 Dec 2022 07:03:20 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1p3Aw4-0001g8-TQ; Thu, 08 Dec 2022 08:03:12 +0100
+Message-ID: <abf9b7a0-8de4-76e9-bbbf-4630932949e9@leemhuis.info>
+Date: Thu, 8 Dec 2022 08:03:12 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: next: LTP: syscalls: epoll_clt() if fd is an invalid fd expected
- EBADF: EINVAL (22)
-Content-Language: en-US
-To: Anders Roxell <anders.roxell@linaro.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
- open list <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
- regressions@lists.linux.dev, lkft-triage@lists.linaro.org,
- Linux-Next Mailing List <linux-next@vger.kernel.org>,
- LTP List <ltp@lists.linux.it>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Arnd Bergmann <arnd@arndb.de>, chrubis <chrubis@suse.cz>
-References: <CA+G9fYv_UU+oVUbd8Mzt8FkXscenX2kikRSCZ7DPXif9i5erNg@mail.gmail.com>
- <b7d8193c-7e15-f5cd-08d4-8ef788d9bb36@kernel.dk>
- <CADYN=9LaiBU-Q5=FSvFKTi_qzE1C45DkdUAfbaZH7FZhn2tbYw@mail.gmail.com>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <CADYN=9LaiBU-Q5=FSvFKTi_qzE1C45DkdUAfbaZH7FZhn2tbYw@mail.gmail.com>
+Subject: Re: [Regression] Logitech BT mouse unusable after commit 532223c8ac57
+ (still in 6.1-rc8) #forregzbot
+Content-Language: en-US, de-DE
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <2262737.ElGaqSPkdT@kreacher>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <2262737.ElGaqSPkdT@kreacher>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670483000;6bc3d1da;
+X-HE-SMSGID: 1p3Aw4-0001g8-TQ
 
-On 12/7/22 3:27 PM, Anders Roxell wrote:
-> On Wed, 7 Dec 2022 at 17:22, Jens Axboe <axboe@kernel.dk> wrote:
->>
->> On 12/7/22 8:58?AM, Naresh Kamboju wrote:
->>> LTP syscalls epoll_ctl02 is failing on Linux next master.
->>> The reported problem is always reproducible and starts from next-20221205.
->>>
->>> GOOD tag: next-20221202
->>> BAD tag: next-20221205
->>>
->>> tst_test.c:1524: TINFO: Timeout per run is 0h 05m 00s
->>> epoll_ctl02.c:87: TPASS: epoll_clt(...) if epfd is an invalid fd : EBADF (9)
->>> epoll_ctl02.c:87: TPASS: epoll_clt(...) if fd does not support epoll : EPERM (1)
->>> epoll_ctl02.c:87: TFAIL: epoll_clt(...) if fd is an invalid fd
->>> expected EBADF: EINVAL (22)
->>> epoll_ctl02.c:87: TPASS: epoll_clt(...) if op is not supported : EINVAL (22)
->>> epoll_ctl02.c:87: TPASS: epoll_clt(...) if fd is the same as epfd : EINVAL (22)
->>> epoll_ctl02.c:87: TPASS: epoll_clt(...) if events is NULL : EFAULT (14)
->>> epoll_ctl02.c:87: TPASS: epoll_clt(...) if fd is not registered with
->>> EPOLL_CTL_DEL : ENOENT (2)
->>> epoll_ctl02.c:87: TPASS: epoll_clt(...) if fd is not registered with
->>> EPOLL_CTL_MOD : ENOENT (2)
->>> epoll_ctl02.c:87: TPASS: epoll_clt(...) if fd is already registered
->>> with EPOLL_CTL_ADD : EEXIST (17)
->>
->> This should fix it:
->>
->>
->> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
->> index ec7ffce8265a..de9c551e1993 100644
->> --- a/fs/eventpoll.c
->> +++ b/fs/eventpoll.c
->> @@ -2195,6 +2195,7 @@ int do_epoll_ctl(int epfd, int op, int fd, struct epoll_event *epds,
->>         }
->>
->>         /* Get the "struct file *" for the target file */
->> +       error = -EBADF;
->>         tf = fdget(fd);
->>         if (!tf.file)
->>                 goto error_fput;
+[Note: this mail contains only information for Linux kernel regression
+tracking. Mails like these contain '#forregzbot' in the subject to make
+then easy to spot and filter out. The author also tried to remove most
+or all individuals from the list of recipients to spare them the hassle.]
+
+On 06.12.22 15:58, Rafael J. Wysocki wrote:
 > 
-> Yes this patch fixed the issue [1].
-> 
-> Cheers,
-> Anders
-> [1] https://lkft.validation.linaro.org/scheduler/job/5931365#L1371
+> Commit 532223c8ac57 ("HID: logitech-hidpp: Enable HID++ for all the Logitech
+> Bluetooth devices") caused my Logitech Bluetooth mouse to become unusable.
+> [...]
 
-Great, thanks for confirming. I did queue up the fix.
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
--- 
-Jens Axboe
+#regzbot ^introduced 532223c8ac57
+#regzbot title hid: Logitech BT mouse unusable
+#regzbot monitor:
+https://lore.kernel.org/all/20221207142433.1158329-1-benjamin.tissoires@redhat.com/
+#regzbot ignore-activity
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
