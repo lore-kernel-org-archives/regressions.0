@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0427F1
-	for <regressions@lists.linux.dev>; Thu,  8 Dec 2022 08:44:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79F97E3
+	for <regressions@lists.linux.dev>; Thu,  8 Dec 2022 14:43:26 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p3CVd-0005TO-LV; Thu, 08 Dec 2022 09:44:01 +0100
-Message-ID: <96ee7141-f09c-4df9-015b-6ae8f3588091@leemhuis.info>
-Date: Thu, 8 Dec 2022 09:44:01 +0100
+	id 1p3I7Q-0004OQ-Gd; Thu, 08 Dec 2022 15:43:24 +0100
+Message-ID: <5e8317f7-170a-588b-7a94-e0a546fbc9f3@leemhuis.info>
+Date: Thu, 8 Dec 2022 15:43:24 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,39 +16,23 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: BUG: unable to handle kernel paging request in bpf_dispatcher_xdp
- #forregzbot
 Content-Language: en-US, de-DE
-To: bpf <bpf@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- netdev <netdev@vger.kernel.org>
-References: <CACkBjsYioeJLhJAZ=Sq4CAL2O_W+5uqcJynFgLSizWLqEjNrjw@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CACkBjsYioeJLhJAZ=Sq4CAL2O_W+5uqcJynFgLSizWLqEjNrjw@mail.gmail.com>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: =?UTF-8?Q?=5bregression=5d_Bug=c2=a0216782_-_resume_from_suspend_br?=
+ =?UTF-8?Q?oken_on_Asus_UX305FA?=
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670489044;1776c5eb;
-X-HE-SMSGID: 1p3CVd-0005TO-LV
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670510607;99e66389;
+X-HE-SMSGID: 1p3I7Q-0004OQ-Gd
 
-[Note: this mail contains only information for Linux kernel regression
-tracking. Mails like these contain '#forregzbot' in the subject to make
-then easy to spot and filter out. The author also tried to remove most
-or all individuals from the list of recipients to spare them the hassle.]
+Hi, this is your Linux kernel regression tracker speaking.
 
-On 06.12.22 04:28, Hao Sun wrote:
-> 
-> The following crash can be triggered with the BPF prog provided.
-> It seems the verifier passed some invalid progs. I will try to simplify
-> the C reproducer, for now, the following can reproduce this:
+I noticed a regression report in bugzilla.kernel.org. It afaics needs
+more debugging, but I nevertheless want add it to the tracking.
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced c86df29d11df
-#regzbot title net/bpf: BUG: unable to handle kernel paging request in
-bpf_dispatcher_xdp
+#regzbot introduced: v6.0..v6.1-rc1
+https://bugzilla.kernel.org/show_bug.cgi?id=216782
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
