@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340316ADE
-	for <regressions@lists.linux.dev>; Thu,  8 Dec 2022 15:34:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29109320D
+	for <regressions@lists.linux.dev>; Thu,  8 Dec 2022 18:41:30 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p3Iua-0001PI-Fy; Thu, 08 Dec 2022 16:34:12 +0100
-Message-ID: <dba06713-a873-e6ae-9aa9-32941924b22f@leemhuis.info>
-Date: Thu, 8 Dec 2022 16:34:12 +0100
+	id 1p3Lpn-00007C-NX; Thu, 08 Dec 2022 19:41:27 +0100
+Message-ID: <dec37fc9-1a69-74dc-d613-d806c732ffd7@leemhuis.info>
+Date: Thu, 8 Dec 2022 19:41:27 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,67 +16,61 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: BUG: bisected: thermald regression (MEMLEAK) in commit
- c7ff29763989bd09c433f73fae3c1e1c15d9cda4 #forregzbot
+Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216782_-_resume_from_susp?=
+ =?UTF-8?Q?end_broken_on_Asus_UX305FA?=
 Content-Language: en-US, de-DE
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: regressions@lists.linux.dev
-References: <e0f06714-5a49-a4e6-24e6-c4103c820819@alu.unizg.hr>
- <e75adcf8-68ce-e521-301c-177928d8aae9@leemhuis.info>
- <f045aaa8-0c14-10e4-f8dd-50abbe5a3f17@alu.unizg.hr>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <f045aaa8-0c14-10e4-f8dd-50abbe5a3f17@alu.unizg.hr>
+To: Bjorn Helgaas <bhelgaas@google.com>
+References: <5e8317f7-170a-588b-7a94-e0a546fbc9f3@leemhuis.info>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Linux PCI <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ Linux PM <linux-pm@vger.kernel.org>,
+ Tasev Nikola <tasev.stefanoska@skynet.be>
+In-Reply-To: <5e8317f7-170a-588b-7a94-e0a546fbc9f3@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670513654;755683bd;
-X-HE-SMSGID: 1p3Iua-0001PI-Fy
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670524890;41b10add;
+X-HE-SMSGID: 1p3Lpn-00007C-NX
 
+Hi, this is your Linux kernel regression tracker.
 
-
-On 26.10.22 14:32, Mirsad Goran Todorovac wrote:
-> On 10/26/2022 10:08 AM, Thorsten Leemhuis wrote:
+On 08.12.22 15:43, Thorsten Leemhuis wrote:
 > 
->> [Note: this mail is primarily send for documentation purposes and/or for
->> regzbot, my Linux kernel regression tracking bot. That's why I removed
->> most or all folks from the list of recipients, but left any that looked
->> like a mailing lists. These mails usually contain '#forregzbot' in the
->> subject, to make them easy to spot and filter out.]
->>
->> [TLDR: I'm adding this regression report to the list of tracked
->> regressions; all text from me you find below is based on a few templates
->> paragraphs you might have encountered already already in similar form.]
->>
->> Hi, this is your Linux kernel regression tracker.
->>
->> On 24.10.22 15:13, Mirsad Goran Todorovac wrote:
->>> Dear all,
->>>
->>> Around Sep 27th 2022 I've noticed in a mainline kernel built with
->>> CONFIG_DEBUG_KMEMLEAK=y
->>> that there actually is a leak:
->> Thanks for the report. To be sure below issue doesn't fall through the
->> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
->> tracking bot:
->>
->> #regzbot ^introduced c7ff29763989bd
->> #regzbot title thermald regression (MEMLEAK)
->> #regzbot ignore-activity
->>
->> This isn't a regression? This issue or a fix for it are already
->> discussed somewhere else? It was fixed already? You want to clarify when
->> the regression started to happen? Or point out I got the title or
->> something else totally wrong? Then just reply -- ideally with also
->> telling regzbot about it, as explained here:
->> https://linux-regtracking.leemhuis.info/tracked-regression/
+> I noticed a regression report in bugzilla.kernel.org. It afaics needs
+> more debugging, but I nevertheless want add it to the tracking.
+
+Bjorn, if you have a minute, could you please take a quick look at this
+please: https://bugzilla.kernel.org/show_bug.cgi?id=216782
+
+To quote
+
+```
+> Starting from kernel 6.1-rc1 for the first time in 8 years the
+> resume
+> from suspend is broken on my Asus UX305FA. After resume the sysrsq keys
+> do not work and a hard reset is the only solution for shutdown, the
+> screen is black, keyboard and mouse do not respond.
 > 
-> You're welcome, no thanks needed.
+> After bisecting the first bad commit is:
 > 
-> Is this really a regression? I can't tell if this is a one-time memory
-> leak in thermald, or can it be
-> exploited for causing memory leaks in a loop, exhausting kernel memory
-> and producing denial-of-service
-> or kernel crash.
+> commit a47126ec29f538e1197862919f94d3b6668144a4
+> Author: Bjorn Helgaas <bhelgaas@google.com>
+> Date:   Fri Sep 9 15:24:57 2022 -0500
+> 
+>     PCI/PTM: Cache PTM Capability offset
+>     
+>     Cache the PTM Capability offset instead of searching for it every time we
+>     enable/disable PTM or save/restore PTM state.  No functional change
+>     intended.
+```
 
-#regzbot inconclusive: likely wasn't a regression
+The reporter has some trouble with the bisection (see the ticket for
+details), but it looks a bit like the problems are actually caused by
+that patch or something in that series.
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
