@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29109320D
-	for <regressions@lists.linux.dev>; Thu,  8 Dec 2022 18:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C513816
+	for <regressions@lists.linux.dev>; Fri,  9 Dec 2022 06:34:36 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p3Lpn-00007C-NX; Thu, 08 Dec 2022 19:41:27 +0100
-Message-ID: <dec37fc9-1a69-74dc-d613-d806c732ffd7@leemhuis.info>
-Date: Thu, 8 Dec 2022 19:41:27 +0100
+	id 1p3Wxu-0000EU-L7; Fri, 09 Dec 2022 07:34:34 +0100
+Message-ID: <94dc3a77-738f-d801-9e5a-e3a61498e43b@leemhuis.info>
+Date: Fri, 9 Dec 2022 07:34:34 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,61 +16,40 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216782_-_resume_from_susp?=
- =?UTF-8?Q?end_broken_on_Asus_UX305FA?=
+Subject: Re: [Regression] Logitech BT mouse unusable after commit 532223c8ac57
+ (still in 6.1-rc8) #forregzbot
 Content-Language: en-US, de-DE
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Bjorn Helgaas <bhelgaas@google.com>
-References: <5e8317f7-170a-588b-7a94-e0a546fbc9f3@leemhuis.info>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Linux PCI <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
- Linux PM <linux-pm@vger.kernel.org>,
- Tasev Nikola <tasev.stefanoska@skynet.be>
-In-Reply-To: <5e8317f7-170a-588b-7a94-e0a546fbc9f3@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <2262737.ElGaqSPkdT@kreacher>
+ <abf9b7a0-8de4-76e9-bbbf-4630932949e9@leemhuis.info>
+In-Reply-To: <abf9b7a0-8de4-76e9-bbbf-4630932949e9@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670524890;41b10add;
-X-HE-SMSGID: 1p3Lpn-00007C-NX
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670567677;f7b2dc58;
+X-HE-SMSGID: 1p3Wxu-0000EU-L7
 
-Hi, this is your Linux kernel regression tracker.
-
-On 08.12.22 15:43, Thorsten Leemhuis wrote:
+On 08.12.22 08:03, Thorsten Leemhuis wrote:
+> [Note: this mail contains only information for Linux kernel regression
+> tracking. Mails like these contain '#forregzbot' in the subject to make
+> then easy to spot and filter out. The author also tried to remove most
+> or all individuals from the list of recipients to spare them the hassle.]
 > 
-> I noticed a regression report in bugzilla.kernel.org. It afaics needs
-> more debugging, but I nevertheless want add it to the tracking.
-
-Bjorn, if you have a minute, could you please take a quick look at this
-please: https://bugzilla.kernel.org/show_bug.cgi?id=216782
-
-To quote
-
-```
-> Starting from kernel 6.1-rc1 for the first time in 8 years the
-> resume
-> from suspend is broken on my Asus UX305FA. After resume the sysrsq keys
-> do not work and a hard reset is the only solution for shutdown, the
-> screen is black, keyboard and mouse do not respond.
+> On 06.12.22 15:58, Rafael J. Wysocki wrote:
+>>
+>> Commit 532223c8ac57 ("HID: logitech-hidpp: Enable HID++ for all the Logitech
+>> Bluetooth devices") caused my Logitech Bluetooth mouse to become unusable.
+>> [...]
 > 
-> After bisecting the first bad commit is:
+> Thanks for the report. To be sure below issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+> tracking bot:
 > 
-> commit a47126ec29f538e1197862919f94d3b6668144a4
-> Author: Bjorn Helgaas <bhelgaas@google.com>
-> Date:   Fri Sep 9 15:24:57 2022 -0500
-> 
->     PCI/PTM: Cache PTM Capability offset
->     
->     Cache the PTM Capability offset instead of searching for it every time we
->     enable/disable PTM or save/restore PTM state.  No functional change
->     intended.
-```
+> #regzbot ^introduced 532223c8ac57
+> #regzbot title hid: Logitech BT mouse unusable
+> #regzbot monitor:
+> https://lore.kernel.org/all/20221207142433.1158329-1-benjamin.tissoires@redhat.com/
+> #regzbot ignore-activity
 
-The reporter has some trouble with the bisection (see the ticket for
-details), but it looks a bit like the problems are actually caused by
-that patch or something in that series.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+#regzbot fix: a9d9e46c755a1
