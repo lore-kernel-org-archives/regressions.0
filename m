@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C513816
-	for <regressions@lists.linux.dev>; Fri,  9 Dec 2022 06:34:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C9E3A23
+	for <regressions@lists.linux.dev>; Sat, 10 Dec 2022 12:35:39 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p3Wxu-0000EU-L7; Fri, 09 Dec 2022 07:34:34 +0100
-Message-ID: <94dc3a77-738f-d801-9e5a-e3a61498e43b@leemhuis.info>
-Date: Fri, 9 Dec 2022 07:34:34 +0100
+	id 1p3z4g-00033k-Vs; Sat, 10 Dec 2022 13:35:27 +0100
+Message-ID: <b1b7935d-0785-2e57-bad9-ab2476f0acf2@leemhuis.info>
+Date: Sat, 10 Dec 2022 13:35:26 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,40 +16,144 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: [Regression] Logitech BT mouse unusable after commit 532223c8ac57
- (still in 6.1-rc8) #forregzbot
+Subject: Re: Fwd: nvmem-cells regression after adding 'call
+ of_platform_populate() for MTD partitions'
 Content-Language: en-US, de-DE
+To: Maxim Kiselev <bigunclemax@gmail.com>, linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
+ Richard Weinberger <richard@nod.at>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Maxim Kochetkov <fido_max@inbox.ru>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <rafal@milecki.pl>, "regressions@lists.linux.dev"
+ <regressions@lists.linux.dev>
+References: <CALHCpMgSZOZdOGpLwTYf0sFD5EMNL7CuqHuFJV_6w5VPSWZnUw@mail.gmail.com>
+ <CALHCpMgEZjnR39upkR6iozSk-b5A_GHRo9rcDSPXzzQi6x_qCw@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-input@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-References: <2262737.ElGaqSPkdT@kreacher>
- <abf9b7a0-8de4-76e9-bbbf-4630932949e9@leemhuis.info>
-In-Reply-To: <abf9b7a0-8de4-76e9-bbbf-4630932949e9@leemhuis.info>
+In-Reply-To: <CALHCpMgEZjnR39upkR6iozSk-b5A_GHRo9rcDSPXzzQi6x_qCw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670567677;f7b2dc58;
-X-HE-SMSGID: 1p3Wxu-0000EU-L7
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1670675740;6df95ed1;
+X-HE-SMSGID: 1p3z4g-00033k-Vs
 
-On 08.12.22 08:03, Thorsten Leemhuis wrote:
-> [Note: this mail contains only information for Linux kernel regression
-> tracking. Mails like these contain '#forregzbot' in the subject to make
-> then easy to spot and filter out. The author also tried to remove most
-> or all individuals from the list of recipients to spare them the hassle.]
-> 
-> On 06.12.22 15:58, Rafael J. Wysocki wrote:
->>
->> Commit 532223c8ac57 ("HID: logitech-hidpp: Enable HID++ for all the Logitech
->> Bluetooth devices") caused my Logitech Bluetooth mouse to become unusable.
->> [...]
-> 
-> Thanks for the report. To be sure below issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-> tracking bot:
-> 
-> #regzbot ^introduced 532223c8ac57
-> #regzbot title hid: Logitech BT mouse unusable
-> #regzbot monitor:
-> https://lore.kernel.org/all/20221207142433.1158329-1-benjamin.tissoires@redhat.com/
-> #regzbot ignore-activity
+[CCing the regression mailing list, as it should be in the loop for all
+regressions, as explained in
+https://docs.kernel.org/admin-guide/reporting-regressions.html ]
 
-#regzbot fix: a9d9e46c755a1
+Hi, this is your Linux kernel regression tracker. Thx for the report.
+
+On 10.12.22 10:52, Maxim Kiselev wrote:
+> 
+> After applying
+
+This makes me wonder: "applying" as in "applying it to some version that
+doesn't contain this change normally" or as it "after it was applied to
+mainline I have the following problem with vanilla kernel version <???>"?
+
+> this commit 'mtd: call of_platform_populate() for MTD
+> partitions' (bcdf0315),
+
+CCing Rafał, who authored bcdf0315.
+
+> I faced with a problem that my ethernet device can't be probed because it
+> wait when 'nvmem-cells' device will be probed first.
+
+FWIW, there is a discussion about a problems that at least to my
+untrained eyes looks similar:
+https://lore.kernel.org/all/Yyj7wJlqJkCwObRn@lx2k/
+
+Rafał, has some progress been made to resolve this?
+
+To me it sounds like this might warrant a "revert, and reapply later
+when the cause for the regression was addressed". Rafał, it seems you
+suggested something like that, but it doesn't look like that happened
+for one reason or another. Or am I missing something?
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
+
+> But there is no such driver which is compatible with 'nvmem-cells' because
+> 'nvmem-cells' is just a mark used by the 'mtd_nvmem_add' function.
+> 
+> So this leads to appeating of unresolved dependency for the ethernet device.
+> And that's why the ethernet device can't be added and probed.
+> 
+> Here is a part of kernel log when spi flash probe start:
+> 
+>> device: 'spi0': device_add
+>> device: 'spi0.0': device_add
+>> spi-nor spi0.0: mx66l51235f (65536 Kbytes)
+>> 7 fixed-partitions partitions found on MTD device spi0.0
+> 
+> After 'm25p80' probe 'f1070000.ethernet' linked to 'partition@1' :
+> 
+>> device: 'f1010600.spi:m25p80@0:
+> partitions:partition@1': device_add
+>> device: 'platform:f1010600.spi:m25p80@0:partitions:partition@1--platform:f1070000.ethernet': device_add
+>> devices_kset: Moving f1070000.ethernet to end of list
+>> platform f1070000.ethernet: Linked as a consumer to f1010600.spi:m25p80@0:partitions:partition@1
+>> ethernet@70000 Dropping the fwnode link to partition@1
+> 
+> And as a result I got `-EPROBE_DEFER` for `f1070000.ethernet`
+> 
+>> platform f1070000.ethernet: error -EPROBE_DEFER: supplier f1010600.spi:m25p80@0:partitions:partition@1 not ready
+> 
+> Here is a part of my device tree:
+> 
+>     enet1: ethernet@70000 {
+>         status = "okay";
+>         nvmem-cells = <&macaddr>;
+>         nvmem-cell-names = "mac-address";
+>         phy-mode = "rgmii";
+>         phy = <&phy0>;
+>     };
+> 
+>     spi@10600 {
+>         status = "okay";
+> 
+>         m25p80@0 {
+>             compatible = "mx66l51235l";
+>             reg = <0>;
+>             #address-cells = <1>;
+>             #size-cells = <1>;
+> 
+>             partitions {
+>                 compatible = "fixed-partitions";
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+> 
+>                 partition@0 {
+>                     reg = <0x00000000 0x000080000>;
+>                     label = "SPI.U_BOOT";
+>                 };
+> 
+>                 partition@1 {
+>                     compatible = "nvmem-cells";
+>                     reg = <0x000A0000 0x00020000>;
+>                     label = "SPI.INV_INFO";
+>                     #address-cells = <1>;
+>                     #size-cells = <1>;
+>                     ranges = <0 0x000A0000 0x00020000>;
+> 
+>                     macaddr: mac@6 {
+>                         reg = <0x6 0x6>;
+>                     };
+>                 };
+> 
+>             };
+>         };
+>     };
+> 
+> In the example above 'ethernet@70000' requires 'macaddr: mac@6' which is
+> located inside mtd 'partition@1' of 'm25p80@0' spi flash.
+
+P.P.S.: let me add this to the regression tracking:
+
+#regzbot ^introduced bcdf0315
+#regzbot title mtd: ethernet device can't be probed anymore due to
+broken nvmem-cells dep
+#regzbot monitor: https://lore.kernel.org/all/Yyj7wJlqJkCwObRn@lx2k/
+#regzbot ignore-activity
