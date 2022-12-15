@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786CB5692
-	for <regressions@lists.linux.dev>; Thu, 15 Dec 2022 17:33:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF715692
+	for <regressions@lists.linux.dev>; Thu, 15 Dec 2022 17:53:35 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p5s74-0007KV-Hd; Thu, 15 Dec 2022 18:33:42 +0100
-Message-ID: <c1ff5cae-7f56-7fdb-c832-ffbcc177535b@leemhuis.info>
-Date: Thu, 15 Dec 2022 18:33:41 +0100
+	id 1p5sQC-0003bG-9B; Thu, 15 Dec 2022 18:53:28 +0100
+Message-ID: <338128fa-69dc-1eaa-3a18-c94565ec8380@leemhuis.info>
+Date: Thu, 15 Dec 2022 18:53:27 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,34 +16,64 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: regression: insmod module failed in VM with nvdimm on
+Subject: Re: Regression: at24 eeprom writing times out on sama5d3
 Content-Language: en-US, de-DE
-To: Ard Biesheuvel <ardb@kernel.org>,
- "chenxiang (M)" <chenxiang66@hisilicon.com>
-Cc: Marc Zyngier <maz@kernel.org>, will@kernel.org, mark.rutland@arm.com,
- linux-arm-kernel@lists.infradead.org, chenxiang via <qemu-devel@nongnu.org>,
- "linuxarm@huawei.com" <linuxarm@huawei.com>,
+To: Peter Rosin <peda@axentia.se>, Codrin.Ciubotariu@microchip.com,
+ linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kamel.bouhara@bootlin.com, alexandre.belloni@bootlin.com, wsa@kernel.org,
+ Ludovic.Desroches@microchip.com, robh+dt@kernel.org,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <e6a804de-a5f7-c551-ffba-e09d04e438fc@hisilicon.com>
- <87r0xkubcp.wl-maz@kernel.org>
- <CAMj1kXE4Z-rc0-NqbOCt+m5d6mK5wF365-vWTuaRk7sf2TyG1A@mail.gmail.com>
- <706965d2-60cb-847d-b30e-6074c8ca5fe4@hisilicon.com>
- <CAMj1kXHF1EMT0Y=S=tM9_THfKCt4QGnrFs6b4ieDqADzg5jeRw@mail.gmail.com>
- <CAMj1kXGF=DuQSgf8FbW98WTX94U7rB0hq_cFAc0+AfVn=HHsFg@mail.gmail.com>
- <21cf7de2-27e8-8d1f-9efc-aa68cefbad50@hisilicon.com>
- <CAMj1kXFUso6CdDa3jMCrdHOBmOim0Z8YxB00a=kF5BbVxw9Xxw@mail.gmail.com>
+References: <074b39c5-55fc-2bc1-072d-aef1070e284d@axentia.se>
+ <2bb4868b-90ab-887e-bf13-9de8b79231bd@microchip.com>
+ <38dedc92-62a2-7365-6fda-95d6404be749@axentia.se>
+ <3503471d-2d5e-572b-39e7-d715a909749d@axentia.se>
+ <5800be99-3569-6edd-5c71-9e6f1498dc3b@leemhuis.info>
+ <2fcfa811-ce5c-9fc8-9837-753299794560@axentia.se>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAMj1kXFUso6CdDa3jMCrdHOBmOim0Z8YxB00a=kF5BbVxw9Xxw@mail.gmail.com>
+In-Reply-To: <2fcfa811-ce5c-9fc8-9837-753299794560@axentia.se>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671125636;81a8718f;
-X-HE-SMSGID: 1p5s74-0007KV-Hd
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671126815;f02643b1;
+X-HE-SMSGID: 1p5sQC-0003bG-9B
 
-Hi, this is your Linux kernel regression tracker. Top-posting for once,
-to make this easily accessible to everyone.
+Hi, this is your Linux kernel regression tracker.
 
-Was there some progress to get this regression resolved? From here it
-looks stalled, but maybe I missed something.
+On 08.09.22 15:59, Peter Rosin wrote:
+> Hi!
+> 
+> 2022-09-08 at 14:06, Thorsten Leemhuis wrote:
+>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
+>> to make this easily accessible to everyone.
+>>
+>> Peter, Codrin, could you help me out here please: I still have the
+>> regression report from Peter that started this thread in the list of
+>> tracked issues. From Peter's last msg quoted below it seems the thread
+>> just faded out without the regression being fixed. Or was it? If not:
+>> what can we do to finally get this resolved?
+> 
+> No, it is not resolved that I know of. We are only writing during
+> production, but are working around it by verifying and looping back.
+> Sometimes it takes surprisingly long for the loop to finish, but
+> it's not a huge deal. But it is of course not completely satisfying
+> either...
+> 
+> Reading is never a problem, so post-production behavior is sane.
+
+I still have this regression that Peter reported in late July on my
+list. :-(
+
+Codrin (and maybe Wolfram), could you provide a update please? Afaics
+this is the state of things (please correct me if I'm wrong!): In an
+earlier mail
+(https://lore.kernel.org/lkml/38dedc92-62a2-7365-6fda-95d6404be749@axentia.se/
+) of this thread Peter stated that the following patch set Codrin posted
+mid 2021 helped:
+https://lore.kernel.org/all/20210727111554.1338832-1-codrin.ciubotariu@microchip.com/
+
+There where a few review comments from Wolfram, but looks like then
+things stalled. Can we somehow get this rolling again to finally get
+this regression fixed?
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -52,115 +82,203 @@ reports and sometimes miss something important when writing mails like
 this. If that's the case here, don't hesitate to tell me in a public
 reply, it's in everyone's interest to set the public record straight.
 
-On 02.12.22 14:44, Ard Biesheuvel wrote:
-> On Fri, 2 Dec 2022 at 03:48, chenxiang (M) <chenxiang66@hisilicon.com> wrote:
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 >>
->> Hi Ard,
+>> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+>> reports and sometimes miss something important when writing mails like
+>> this. If that's the case here, don't hesitate to tell me in a public
+>> reply, it's in everyone's interest to set the public record straight.
 >>
->>
->> 在 2022/12/1 19:07, Ard Biesheuvel 写道:
->>> On Thu, 1 Dec 2022 at 09:07, Ard Biesheuvel <ardb@kernel.org> wrote:
->>>> On Thu, 1 Dec 2022 at 08:15, chenxiang (M) <chenxiang66@hisilicon.com> wrote:
->>>>> Hi Ard,
->>>>>
->>>>>
->>>>> 在 2022/11/30 16:18, Ard Biesheuvel 写道:
->>>>>> On Wed, 30 Nov 2022 at 08:53, Marc Zyngier <maz@kernel.org> wrote:
->>>>>>> On Wed, 30 Nov 2022 02:52:35 +0000,
->>>>>>> "chenxiang (M)" <chenxiang66@hisilicon.com> wrote:
->>>>>>>> Hi,
->>>>>>>>
->>>>>>>> We boot the VM using following commands (with nvdimm on)  (qemu
->>>>>>>> version 6.1.50, kernel 6.0-r4):
->>>>>>> How relevant is the presence of the nvdimm? Do you observe the failure
->>>>>>> without this?
->>>>>>>
->>>>>>>> qemu-system-aarch64 -machine
->>>>>>>> virt,kernel_irqchip=on,gic-version=3,nvdimm=on  -kernel
->>>>>>>> /home/kernel/Image -initrd /home/mini-rootfs/rootfs.cpio.gz -bios
->>>>>>>> /root/QEMU_EFI.FD -cpu host -enable-kvm -net none -nographic -m
->>>>>>>> 2G,maxmem=64G,slots=3 -smp 4 -append 'rdinit=init console=ttyAMA0
->>>>>>>> ealycon=pl0ll,0x90000000 pcie_ports=native pciehp.pciehp_debug=1'
->>>>>>>> -object memory-backend-ram,id=ram1,size=10G -device
->>>>>>>> nvdimm,id=dimm1,memdev=ram1  -device ioh3420,id=root_port1,chassis=1
->>>>>>>> -device vfio-pci,host=7d:01.0,id=net0,bus=root_port1
->>>>>>>>
->>>>>>>> Then in VM we insmod a module, vmalloc error occurs as follows (kernel
->>>>>>>> 5.19-rc4 is normal, and the issue is still on kernel 6.1-rc4):
->>>>>>>>
->>>>>>>> estuary:/$ insmod /lib/modules/$(uname -r)/hnae3.ko
->>>>>>>> [    8.186563] vmap allocation for size 20480 failed: use
->>>>>>>> vmalloc=<size> to increase size
->>>>>>> Have you tried increasing the vmalloc size to check that this is
->>>>>>> indeed the problem?
->>>>>>>
->>>>>>> [...]
->>>>>>>
->>>>>>>> We git bisect the code, and find the patch c5a89f75d2a ("arm64: kaslr:
->>>>>>>> defer initialization to initcall where permitted").
->>>>>>> I guess you mean commit fc5a89f75d2a instead, right?
->>>>>>>
->>>>>>>> Do you have any idea about the issue?
->>>>>>> I sort of suspect that the nvdimm gets vmap-ed and consumes a large
->>>>>>> portion of the vmalloc space, but you give very little information
->>>>>>> that could help here...
->>>>>>>
->>>>>> Ouch. I suspect what's going on here: that patch defers the
->>>>>> randomization of the module region, so that we can decouple it from
->>>>>> the very early init code.
+>> On 30.06.22 09:44, Peter Rosin wrote:
+>>> 2022-06-10 at 22:51, Peter Rosin wrote:
+>>>> 2022-06-10 at 09:35, Codrin.Ciubotariu@microchip.com wrote:
+>>>>> On 09.06.2022 17:28, Peter Rosin wrote:
 >>>>>>
->>>>>> Obviously, it is happening too late now, and the randomized module
->>>>>> region is overlapping with a vmalloc region that is in use by the time
->>>>>> the randomization occurs.
+>>>>>> I have not actually bisected this issue but reverting the effects of
+>>>>>> patch a4bd8da893a3 ("ARM: dts: at91: sama5d3: add i2c gpio pinctrl")
+>>>>>> makes the problem go away.
 >>>>>>
->>>>>> Does the below fix the issue?
->>>>> The issue still occurs, but it seems decrease the probability, before it
->>>>> occured almost every time, after the change, i tried 2-3 times, and it
->>>>> occurs.
->>>>> But i change back "subsys_initcall" to "core_initcall", and i test more
->>>>> than 20 times, and it is still ok.
+>>>>>> I.e. I need something like this in my dts
+>>>>>>
+>>>>>> &i2c2 {
+>>>>>>          status = "okay";
+>>>>>>
+>>>>>>          pinctrl-names = "default";
+>>>>>>          /delete-property/ pinctrl-1;
+>>>>>>          /delete-property/ sda-gpios;
+>>>>>>          /delete-property/ scl-gpios;
+>>>>>>
+>>>>>>          eeprom@50 {
+>>>>>>                  compatible = "st,24c64", "atmel,24c64";
+>>>>>>                  reg = <0x50>;
+>>>>>>                  wp-gpios = <&filter_gpio 7 GPIO_ACTIVE_HIGH>;
+>>>>>>          };
+>>>>>> };
+>>>>>>
+>>>>>> for multi-page eeprom writes to not time out (a page is 32 bytes on this
+>>>>>> eeprom).
+>>>>>>
+>>>>>> For reference, the current defaults for this SoC/I2C-bus, that I modify,
+>>>>>> are:
+>>>>>>
+>>>>>>          pinctrl-names = "default", "gpio";
+>>>>>>          pinctrl-0 = <&pinctrl_i2c2>;
+>>>>>>          pinctrl-1 = <&pinctrl_i2c2_gpio>;
+>>>>>>          sda-gpios = <&pioA 18 GPIO_ACTIVE_HIGH>;
+>>>>>>          scl-gpios = <&pioA 19 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
+>>>>>>
+>>>>>> I suspect that the underlying reason is that the bus recovery takes
+>>>>>> too long and that the at24 eeprom driver gives up prematurely. I doubt
+>>>>>> that this is chip specific, but I don't know that.
+>>>>>>
+>>>>>> I can work around the issue in user space with by writing in 4 byte
+>>>>>> chunks, like so
+>>>>>>
+>>>>>> dd if=source.file of=/sys/bus/i2c/devices/2-0050/eeprom obs=4
+>>>>>>
+>>>>>> but that is really ugly and gets slow too, about 20 seconds to program
+>>>>>> the full 8kB eeprom. With the above in my dts it takes a second or
+>>>>>> so (a bit more with dynamic debug active).
+>>>>>>
+>>>>>>
+>>>>>> If I run
+>>>>>>
+>>>>>> dd if=source.file of=/sys/bus/i2c/devices/2-0050/eeprom
+>>>>>>
+>>>>>> with a source.file of 8kB and the upstream dts properties in place, I can
+>>>>>> collect the following debug output from at24, i2c-core and i2c-at91:
+>>>>>>
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+>>>>>> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@0 --> 0 (-23170)
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: received nack
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
+>>>>>> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@32 --> -121 (-23169)
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+>>>>>> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@32 --> 0 (-23168)
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: received nack
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
+>>>>>> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@64 --> -121 (-23168)
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+>>>>>> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@64 --> 0 (-23167)
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: received nack
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
+>>>>>> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@96 --> -121 (-23167)
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: controller timed out
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
+>>>>>> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@96 --> -110 (-23155)
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:56:34 me20 kernel: at91_i2c f801c000.i2c: controller timed out
+>>>>>> Jun  9 15:56:34 me20 kernel: i2c i2c-2: Trying i2c bus recovery
+>>>>>> Jun  9 15:56:34 me20 kernel: at24 2-0050: write 32@96 --> -110 (-23143)
+>>>>>>
+>>>>>> And then there is no more action. I.e. only a couple of 32 byte pages
+>>>>>> are written.
+>>>>>>
+>>>>>> With the above mentioned dts override in place I instead get this, which is
+>>>>>> a lot more sensible:
+>>>>>>
+>>>>>> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+>>>>>> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@0 --> 0 (753629)
+>>>>>> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
+>>>>>> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@32 --> -121 (753629)
+>>>>>> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+>>>>>> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@32 --> 0 (753630)
+>>>>>> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
+>>>>>> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@64 --> -121 (753630)
+>>>>>> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+>>>>>> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@64 --> 0 (753631)
+>>>>>> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
+>>>>>> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@96 --> -121 (753631)
+>>>>>> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+>>>>>> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@96 --> 0 (753632)
+>>>>>> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
+>>>>>> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@128 --> -121 (753632)
+>>>>>> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+>>>>>> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@128 --> 0 (753633)
+>>>>>> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: received nack
+>>>>>> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@160 --> -121 (753633)
+>>>>>> Jun  9 15:48:53 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:53 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+>>>>>> Jun  9 15:48:53 me20 kernel: at24 2-0050: write 32@160 --> 0 (753634)
+>>>>>> ... snip ...
+>>>>>> Jun  9 15:48:55 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: received nack
+>>>>>> Jun  9 15:48:55 me20 kernel: at24 2-0050: write 32@8128 --> -121 (753883)
+>>>>>> Jun  9 15:48:55 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+>>>>>> Jun  9 15:48:55 me20 kernel: at24 2-0050: write 32@8128 --> 0 (753884)
+>>>>>> Jun  9 15:48:55 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: received nack
+>>>>>> Jun  9 15:48:55 me20 kernel: at24 2-0050: write 32@8160 --> -121 (753884)
+>>>>>> Jun  9 15:48:55 me20 kernel: i2c i2c-2: at91_xfer: processing 1 messages:
+>>>>>> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer: write 34 bytes.
+>>>>>> Jun  9 15:48:55 me20 kernel: at91_i2c f801c000.i2c: transfer complete
+>>>>>> Jun  9 15:48:55 me20 kernel: at24 2-0050: write 32@8160 --> 0 (753885)
 >>>>>
->>>> Thank you for confirming. I will send out a patch today.
+>>>>> could you please apply this patch-set [1] and let us know if it 
+>>>>> addresses your issue?
+>>>>>
+>>>>> Thanks and best regards,
+>>>>> Codrin
+>>>>>
+>>>>> https://patchwork.ozlabs.org/project/linux-i2c/list/?series=255408
 >>>>
->>> ...but before I do that, could you please check whether the change
->>> below fixes your issue as well?
+>>>> That series does indeed help! I'll reply with a tested-by etc on the
+>>>> first two patches, I can't test patch 3/3 with my sama5d3 board...
+>>>>
+>>>> Thank you very much!
 >>>
->>> diff --git a/arch/arm64/kernel/kaslr.c b/arch/arm64/kernel/kaslr.c
->>> index 6ccc7ef600e7c1e1..c8c205b630da1951 100644
->>> --- a/arch/arm64/kernel/kaslr.c
->>> +++ b/arch/arm64/kernel/kaslr.c
->>> @@ -20,7 +20,11 @@
->>>   #include <asm/sections.h>
->>>   #include <asm/setup.h>
+>>> Since replying to the actual patches do not work for me, I'm writing here
+>>> instead. Sorry about that. As stated above, it /seems/ to work much better
+>>> with these patches. But I fooled myself and there is still some remaining
+>>> trouble. It is not uncommon that the second (32-byte) page in the eeprom
+>>> is not written correctly for whatever reason. I do not know why it's
+>>> always the second page that gets corrupted, but this is a bad problem since
+>>> the failure is completely silent.
 >>>
->>> -u64 __ro_after_init module_alloc_base;
->>> +/*
->>> + * Set a reasonable default for module_alloc_base in case
->>> + * we end up running with module randomization disabled.
->>> + */
->>> +u64 __ro_after_init module_alloc_base = (u64)_etext - MODULES_VSIZE;
->>>   u16 __initdata memstart_offset_seed;
->>>
->>>   struct arm64_ftr_override kaslr_feature_override __initdata;
->>> @@ -30,12 +34,6 @@ static int __init kaslr_init(void)
->>>          u64 module_range;
->>>          u32 seed;
->>>
->>> -       /*
->>> -        * Set a reasonable default for module_alloc_base in case
->>> -        * we end up running with module randomization disabled.
->>> -        */
->>> -       module_alloc_base = (u64)_etext - MODULES_VSIZE;
->>> -
->>>          if (kaslr_feature_override.val & kaslr_feature_override.mask & 0xf) {
->>>                  pr_info("KASLR disabled on command line\n");
->>>                  return 0;
->>> .
+>>> Cheers,
+>>> Peter
 >>
->> We have tested this change, the issue is still and it doesn't fix the issue.
->>
-> 
-> Thanks for the report.
+>> #regzbot poke
 > 
 > _______________________________________________
 > linux-arm-kernel mailing list
