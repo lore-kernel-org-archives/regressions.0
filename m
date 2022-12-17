@@ -1,234 +1,341 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AB908BE0
-	for <regressions@lists.linux.dev>; Fri, 16 Dec 2022 21:21:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-	t=1671225684; bh=aUOSQEhCMR/62w3hhkuJ9BsB1wW4vOhU1ddyczTpHTc=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=rpUj14RuTxPXnlnwLehw+nouQjJwRkStKnC+FATbjevuT2NLvO3vHB4e84GpHSy25
-	 fF+d6hEHRkic1YKcmS6xfFyFJSk9j2g2W0yRA8bSff6+tEEup+EDtf6VdEiAgyMs5B
-	 8RXJhwBrJZ0/GmlIoCIZrZUp/1UKYrxG6gIrSQ2ENHeQnPh7IDAYNTrl7VG7OYJPvS
-	 SXfzNwKVG9rFsbz9XRv1kjUzYIX2qs62spJ6J9XEiSPI0SGWaeBpK28Cuu49/uSZNc
-	 +2MuiBsYrwH8qn3CCg+8wvwlndxZS3zuFjUCnF3FNhkXuj2MIZhJ4hS147KCrD7v/y
-	 F7bxWnOP6DCkg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from p100 ([92.116.155.237]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mof9P-1oZQEv1CZN-00p8Wn; Fri, 16
- Dec 2022 22:21:24 +0100
-Date: Fri, 16 Dec 2022 22:21:22 +0100
-From: Helge Deller <deller@gmx.de>
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Helge Deller <deller@gmx.de>, "Z. Liu" <liuzx@knownsec.com>,
-	linux-fbdev@vger.kernel.org, it+linux-fbdev@molgen.mpg.de,
-	regressions@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: matroxfb: cannot determine memory size
-Message-ID: <Y5zhUl7r9z0lFJxc@p100>
-References: <5da53ec5-3a9c-ec87-da20-69f140aaaa6b@molgen.mpg.de>
- <6ef71be5-def9-4578-3f73-c43c35d7e4a9@gmx.de>
- <dc0b1487-04f9-5a2f-e0f8-d157a74b6bcb@molgen.mpg.de>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF8C622
+	for <regressions@lists.linux.dev>; Sat, 17 Dec 2022 01:45:28 +0000 (UTC)
+Received: by mail-pg1-f175.google.com with SMTP id 79so2884197pgf.11
+        for <regressions@lists.linux.dev>; Fri, 16 Dec 2022 17:45:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8AEqmLzluogB6qkPMPi7E/oHuV6NfkJN47xW3/CF99k=;
+        b=Q/N21QD+0kmeg8opa5tbzsVXkY9C7QLsO+OeJQfMlbYNlT3I4oqVLTCihMVHuGCegU
+         TbKDbcMbyDZ7WSlLEUDQSymdGmbs5xwwNiWgBrBZyMVtSZpsQgyoKHQfaos9DWYBBdS9
+         KLF5eKe93hoFDkyfs2SkM6x8Gv8Rd9R0CyetpesLpgUwbdqE7e9vPzmYP5KaiOSvuKl6
+         +kKByI00YXb9jAoh1APD5D3Q4ENrrwf0t1jWbAec+Hc7CJEHgT7M0AYAC/iq6b+uvCPE
+         OLQ7X+30WrVRQWVkjnRK3ok1yRXnDwQRA13YT5IUN4GaLlf0TKZeLgCatbTsacHDlQep
+         /HMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8AEqmLzluogB6qkPMPi7E/oHuV6NfkJN47xW3/CF99k=;
+        b=Zryov/x+yGOyvkdGrxFDvaVX8vO9Xwx4a0ku87jrZqTxsPVw3LpzmX8ruzMFbceqSE
+         /Fk1A0zzAcbaiJ05/pLO3C3Nq2lNFAJZQL1+V6n4mv3TfxekIGtyjMMBPT2Wz2wDVg/i
+         QaQf6v4WMaWF7Mnbz9WLeGKVfzhAWDFfF7QflptzEJi/lDRM+W0vynhm+HGP027VHoW/
+         Whgdeugxk2xHqKoxb7e/6mZDVxqwCCDvknqiQs9XXQr3pKARcjNqHT9rvW1lScR3q2Uk
+         94M19nNuw8M0kfjIKSDnaVFNbnrMa4hy068VH7lu470DNI6SCaZOge1/QhM1coOr8yq9
+         q+WA==
+X-Gm-Message-State: ANoB5pl+np+xUm0LAXe1TbSKG6RG/vgCOlmh/STfepgOKOGnZ7GxJMw2
+	EU+kxZzf32RAPWcO89JUPoFk0FdaYUtFobl8uX/czQ==
+X-Google-Smtp-Source: AA0mqf4ePZcQV5up/Xu5VO9aErWugiSCsg3siXXJX58Bc8VYvxLhA1SCs7ZbJtvoBIbp/dToXXX2sBSsBiiVEiEyUVo=
+X-Received: by 2002:a63:2f02:0:b0:479:2109:43e with SMTP id
+ v2-20020a632f02000000b004792109043emr1540604pgv.495.1671241528068; Fri, 16
+ Dec 2022 17:45:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <CALHCpMgSZOZdOGpLwTYf0sFD5EMNL7CuqHuFJV_6w5VPSWZnUw@mail.gmail.com>
+ <CALHCpMgEZjnR39upkR6iozSk-b5A_GHRo9rcDSPXzzQi6x_qCw@mail.gmail.com>
+ <b1b7935d-0785-2e57-bad9-ab2476f0acf2@leemhuis.info> <CALHCpMhsM2j=bSXEDC9BWYpOAyvCccgJpJmqXfiRTHvp6=y3tA@mail.gmail.com>
+ <20221212101449.4e465181@xps-13> <CALHCpMimCqZB0bnHaOdCzucey+92NcRRZXCHXYYH5c9vj0nZaQ@mail.gmail.com>
+ <20221212173730.64224599@xps-13> <b75a8769-0cc8-beb3-931a-6755aede3af0@inbox.ru>
+ <20221213104643.052d4a06@xps-13> <CALHCpMhOku2b+1y5Z=N5RJ6SvCvNakD2rSyRAqp6Gz3JWVvXGg@mail.gmail.com>
+ <20221213175424.79895b63@xps-13> <CAGETcx8YvD5JABuJhah_6oOAUe=QgnOG5gWNL7Hcfxbvq0C2YQ@mail.gmail.com>
+ <20221216120456.52072f9f@xps-13> <CALHCpMhEdq=Zxsj10cUNoi7Z56bqPORf1dztRKXgOL3O9C7bBQ@mail.gmail.com>
+ <CALHCpMidP8L98mM3WOkqk82V0BC5g0Awu0EB62eHKZEpzEL7Vg@mail.gmail.com>
+In-Reply-To: <CALHCpMidP8L98mM3WOkqk82V0BC5g0Awu0EB62eHKZEpzEL7Vg@mail.gmail.com>
+From: Saravana Kannan <saravanak@google.com>
+Date: Fri, 16 Dec 2022 17:44:51 -0800
+Message-ID: <CAGETcx-4cjfeW3TNguxjbDZn==jniUrU=5sk3i-yioW135pF_g@mail.gmail.com>
+Subject: Re: nvmem-cells regression after adding 'call of_platform_populate()
+ for MTD partitions'
+To: Maxim Kiselev <bigunclemax@gmail.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>, Maxim Kochetkov <fido_max@inbox.ru>, 
+	Thorsten Leemhuis <regressions@leemhuis.info>, linux-mtd@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Richard Weinberger <richard@nod.at>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <dc0b1487-04f9-5a2f-e0f8-d157a74b6bcb@molgen.mpg.de>
-X-Provags-ID: V03:K1:j5u2j/ROt/Uxz6zlMZOTjJBO8Y4Gu9BJJtWwaigPJOdbthEddOb
- Be2ItH11ei7KaK/q7ndqOxc/HnEmBXBKgpZnUhTzbKJiRfPhRX1//KF/MRofUIad0L9snI3
- qrLBAJBjTGcMrrc9fYIzpfZKLtU+DTX34ylv9QCQf1gZOOUyvYNYxZUKOz8QPjKq8PTx2ZH
- 1n1SVtrUa5VDxnYJZ0x4w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:GIlZc3KVv24=;t1dMMnP4aDlcDvDO/jXP6ipS2M3
- YHfRwIQeBVqArP/e+NecUU1XMyyT/Ym/4XRF9Ux4faD6CDAEfcPRlXtWXQZm6oXEVX9iigxPu
- 0HEVcpVg5DESnyZ79laSey+4VOTksMp8+YyGvLHNl8541YitVoN5hs04BTB++smibsJXaHQXQ
- 8nen4GZabKd+BAymucFKhaV5k2sfHMTfMlzaOH2M3yHa0hYEIYc7CtDRpMuodnhotyaekESOD
- S/P3dU+zwGh7T9OWAAEmq3aHhJzHPR/Iu9KgmcS8oBcPQWmUOqBBQ5fXf01lXfdyVt3sEyV72
- JNaHwzGzrYgmaqNGlLvxhJ03VsP4eP6FETaZK9GKDiq6d/RbVAwkUWsUpfL0OaVjSxW3PukzK
- rAqmNxFLskxoMqy8605VHqZiSzdtsKHelLW9g/EulNHCo5kQyKnN+iA7m7hr/PTvLamh2aaSJ
- XM+GIC9cNVbbpo+0bBdXNLeLxU22ourFfNjYvxuDLg3fjFB3qVnx1t3fKQZobNRygv1hjJnzn
- dzHFBXyl5ng6gwDr/AyDPA1Z6Ypuvff8kH+zxapAj549v2Xpa2QnxcMJLI+78IXGdl3vCxjZx
- PxtPpYhgnWepJ2oyhyelVQ4PPz63GPClYgCRDOlPeKBXTYexrKnIC0Id/+Df3wYfsYnBqOZx2
- YB5BKu8QjM1NFmb9MDQDPEsRH2VdYg38Gda5kyFUwbDrf6GtzCGFO795n7QAAg7sLeYGGiRiR
- VGOmkEO/13EHm6mCfMaEGQFZEvLhuFZ2qjjrmBEGG6q+auGfG/7OqbSsC8snbLXaRe2FFQz/O
- qxV0Wy333bcA0bVfhk/0QndZlRM+WwgTRiZdp/TxuTbrHXS2Klv9S4BCcvbY8imKl/CkKoVLD
- 5fE3JD4oRLY1TLHwr5skGKpjs2H/0wbkvNiHthF4JZKOjFBmvLc3ri+fSH9i9TRH822bHBLoI
- kw3WhQ==
 
-* Paul Menzel <pmenzel@molgen.mpg.de>:
-> [Cc: +regressions@, +stable@]
->
-> #regzbot ^introduced: 62d89a7d49afe46e6b9bbe9e23b004ad848dbde4
->
->
-> Dear Helge,
->
->
-> Thank you for your prompt reply.
->
-> Am 16.12.22 um 00:02 schrieb Helge Deller:
-> > On 12/15/22 17:39, Paul Menzel wrote:
->
-> > > Between Linux 5.10.103 and 5.10.110/5.15.77, matrixfb fails to load.
-> > >
-> > > ## Working:
-> > >
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0=C2=A0 0.000000] Linux version=
- 5.10.103.mx64.429 (root@theinternet.molgen.mpg.de) (gcc (GCC) 7.5.0, GNU =
-ld (GNU Binutils) 2.37) #1 SMP Mon Mar 7 16:41:58 CET 2022
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0=C2=A0 0.000000] Command line:=
- BOOT_IMAGE=3D/boot/bzImage-5.10.103.mx64.429 root=3DLABEL=3Droot ro crash=
-kernel=3D64G-:256M console=3DttyS0,115200n8 console=3Dtty0 init=3D/bin/sys=
-temd audit=3D0 random.trust_cpu=3Don systemd.unified_cgroup_hierarchy
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=E2=80=A6]
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0=C2=A0 0.000000] DMI: Dell Inc=
-. PowerEdge R910/0KYD3D, BIOS 2.10.0 08/29/2013
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=E2=80=A6]
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 48.045530] matroxfb: Matrox M=
-GA-G200eW (PCI) detected
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 48.054675] matroxfb: 640x480x=
-8bpp (virtual: 640x13107)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 48.059966] matroxfb: framebuf=
-fer at 0xC5000000, mapped to 0x00000000ca7238fa, size 8388608
-> > >
-> > > ## Non-working:
-> > >
-> > > ### 5.10.110
-> > >
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0=C2=A0 0.000000] Linux version=
- 5.10.110.mx64.433
-> > > (root@theinternet.molgen.mpg.de) (gcc (GCC) 7.5.0, GNU ld (GNU
-> > > Binutils) 2.37) #1 SMP Thu Apr 14 15:28:53 CEST 2022
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0=C2=A0 0.000000] Command line:=
- root=3DLABEL=3Droot ro crashkernel=3D64G-:256M console=3DttyS0,115200n8 c=
-onsole=3Dtty0 init=3D/bin/systemd audit=3D0 random.trust_cpu=3Don systemd.=
-unified_cgroup_hierarchy
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=E2=80=A6]
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0=C2=A0 0.000000] DMI: Dell Inc=
-. PowerEdge R910/0KYD3D, BIOS 2.10.0 08/29/2013
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=E2=80=A6]
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 35.225987] matroxfb: Matrox M=
-GA-G200eW (PCI) detected
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 35.234088] matroxfb: cannot d=
-etermine memory size
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0 35.238931] matroxfb: probe of=
- 0000:09:03.0 failed with error -1
-> > >
-> > > ### 5.15.77
-> > >
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0=C2=A0 0.000000] Linux version=
- 5.15.77.mx64.440 (root@theinternet.molgen.mpg.de) (gcc (GCC) 10.4.0, GNU =
-ld (GNU Binutils) 2.37) #1 SMP Tue Nov 8 15:42:33 CET 2022
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0=C2=A0 0.000000] Command line:=
- root=3DLABEL=3Droot ro crashkernel=3D64G-:256M console=3DttyS0,115200n8 c=
-onsole=3Dtty0 init=3D/bin/systemd audit=3D0 random.trust_cpu=3Don systemd.=
-unified_cgroup_hierarchy
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=E2=80=A6]
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0=C2=A0 0.000000] DMI: Dell Inc=
-. PowerEdge R715/0G2DP3, BIOS 1.5.2 04/19/2011
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=E2=80=A6]
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0=C2=A0 9.436420] matroxfb: Mat=
-rox MGA-G200eW (PCI) detected
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0=C2=A0 9.444502] matroxfb: can=
-not determine memory size
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 [=C2=A0=C2=A0=C2=A0 9.449316] matroxfb: pro=
-be of 0000:0a:03.0 failed with error -1
-> > >
-> > > We see it on several systems:
-> > >
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 $ lspci -nn -s 0a:03.0 # Dell PowerEdge R71=
-5
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 0a:03.0 VGA compatible controller [0300]: M=
-atrox Electronics Systems Ltd. MGA G200eW WPCM450 [102b:0532] (rev 0a)
-> > >
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 $ lspci -nn -s 09:03.0 # Dell PowerEdge R91=
-0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0 09:03.0 VGA compatible controller [0300]: M=
-atrox Electronics Systems Ltd. MGA G200eW WPCM450 [102b:0532] (rev 0a)
-> > >
-> > > I found some old log from April 2022, where I booted 5.10.109, and
-> > > the error is not there, pointing toward the regression to be
-> > > introduced between 5.10.109 and 5.10.110.
-> > >
-> > > ```
-> > > $ git log --oneline v5.10.109..v5.10.110 --grep fbdev
->
-> [=E2=80=A6]
->
-> > > ```
-> > >
-> > > Is it worthwhile to test commit f8bf19f7f311 (video: fbdev:
-> > > matroxfb: set maxvram of vbG200eW to the same as vbG200 to avoid
-> > > black screen)?
-> >
-> > Yes, it is.
-> > Please try and report back.
-> > It seems to be the only relevant patch, and it fits with the name of
-> > your card.
->
-> I tested Linus=E2=80=99 master with commit 84e57d292203 (Merge tag
-> 'exfat-for-6.2-rc1' of
-> git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat) and the
-> error is still there. Reverting commit fixes the issue.
->
-> Tested on:
->
->     DMI: Dell Inc. PowerEdge R910/0KYD3D, BIOS 2.10.0 08/29/2013
->
-> Current master:
->
->     [   36.221595] matroxfb 0000:09:03.0: vgaarb: deactivate vga console
->     [   36.228355] Console: switching to colour dummy device 80x25
->     [   36.234069] matroxfb: Matrox MGA-G200eW (PCI) detected
->     [   36.239316] PInS memtype =3D 7
->     [   36.242198] matroxfb: cannot determine memory size
->     [   36.242209] matroxfb: probe of 0000:09:03.0 failed with error -1
->
-> After reverting 62d89a7d49af (video: fbdev: matroxfb: set maxvram of
-> vbG200eW to the same as vbG200 to avoid black screen):
->
->     [   38.140763] matroxfb 0000:09:03.0: vgaarb: deactivate vga console
->     [   38.148057] Console: switching to colour dummy device 80x25
->     [   38.153789] matroxfb: Matrox MGA-G200eW (PCI) detected
->     [   38.159042] PInS memtype =3D 7
->     [   38.161953] matroxfb: 640x480x8bpp (virtual: 640x13107)
-> 2022-12-16T12:26:11.301999+01:00 invidia kernel: [   38.167175] matroxfb=
+On Fri, Dec 16, 2022 at 5:13 AM Maxim Kiselev <bigunclemax@gmail.com> wrote=
 :
-> framebuffer at 0xC5000000, mapped to 0x000000006f41c38c, size 8388608
 >
-> > > The master commit 62d89a7d49a was added to v5.18-rc1, and was also
-> > > backported to the Linux 5.15 series in 5.15.33.
+> > Maxim, any chance you give this a try?
+> > [1] - https://lore.kernel.org/lkml/20220810060040.321697-1-saravanak@go=
+ogle.com/
+>
+> OK, I tried it and it didn't seem to help me.
 
-Good.
+Did you include the fixes to the v1 series I gave as replies to some
+of the emails in that thread?
 
-Could you test if the patch below works for you as well (on top of git mas=
-ter) ?
-I believe the commit f8bf19f7f311 (video: fbdev: matroxfb: set maxvram of =
-vbG200eW to the same as vbG200 to avoid black screen)
-changed the wrong value...
+-Saravana
 
-If it works, can you send a patch?
-
-Helge
-
-
-diff --git a/drivers/video/fbdev/matrox/matroxfb_base.c b/drivers/video/fb=
-dev/matrox/matroxfb_base.c
-index 0d3cee7ae726..5192c7ac459a 100644
-=2D-- a/drivers/video/fbdev/matrox/matroxfb_base.c
-+++ b/drivers/video/fbdev/matrox/matroxfb_base.c
-@@ -1378,8 +1378,8 @@ static struct video_board vbG200 =3D {
- 	.lowlevel =3D &matrox_G100
- };
- static struct video_board vbG200eW =3D {
--	.maxvram =3D 0x100000,
--	.maxdisplayable =3D 0x800000,
-+	.maxvram =3D 0x800000,
-+	.maxdisplayable =3D 0x100000,
- 	.accelID =3D FB_ACCEL_MATROX_MGAG200,
- 	.lowlevel =3D &matrox_G100
- };
-
+> I'm still getting an unresolved dependence for 'f1070000.ethernet'
+> from 'mac@6' nvmem-cell.
+> Here is a related part of kernel log:
+>
+> [    0.035553] ethernet@70000 Linked as a fwnode consumer to
+> main-interrupt-ctrl@20200
+> [    0.035601] ethernet@70000 Linked as a fwnode consumer to
+> clock-gating-control@1821c
+> [    0.035713] ethernet@70000 Linked as a fwnode consumer to mac@6
+>
+> [    0.046423] device: 'f1070000.ethernet': device_add
+> [    0.046689] platform f1070000.ethernet: Not linking
+> /ocp@f1000000/clock-gating-control@1821c - dev might never probe
+> [    0.046747] ethernet@70000 Dropping the fwnode link to
+> clock-gating-control@1821c
+> [    0.046788] platform f1070000.ethernet: Not linking
+> /ocp@f1000000/main-interrupt-ctrl@20200 - might never become dev
+> [    0.046835] ethernet@70000 Dropping the fwnode link to
+> main-interrupt-ctrl@20200
+>
+> [    0.113759] device: 'spi0': device_add
+> [    0.114523] device: 'spi0.0': device_add
+> [    0.115349] spi-nor spi0.0: mx66l51235f (65536 Kbytes)
+> [    0.116833] 7 fixed-partitions partitions found on MTD device spi0.0
+> [    0.117026] device: 'f1010600.spi:m25p80@0:partitions:partition@1':
+> device_add
+> [    0.117416] Creating 7 MTD partitions on "spi0.0":
+>
+> [    3.537102] devices_kset: Moving f1070000.ethernet to end of list
+> [    3.537391] platform f1070000.ethernet: error -EPROBE_DEFER: wait
+> for supplier mac@6
+>
+> =D0=BF=D1=82, 16 =D0=B4=D0=B5=D0=BA. 2022 =D0=B3. =D0=B2 14:33, Maxim Kis=
+elev <bigunclemax@gmail.com>:
+> >
+> > > Maxim, any chance you give this a try?
+> > Ok, I'll try it as soon as possible.
+> >
+> > =D0=BF=D1=82, 16 =D0=B4=D0=B5=D0=BA. 2022 =D0=B3. =D0=B2 14:04, Miquel =
+Raynal <miquel.raynal@bootlin.com>:
+> > >
+> > > Hi Saravana, Maxim, Maxim,
+> > >
+> > > saravanak@google.com wrote on Wed, 14 Dec 2022 13:53:54 -0800:
+> > >
+> > > > On Tue, Dec 13, 2022 at 8:54 AM Miquel Raynal <miquel.raynal@bootli=
+n.com> wrote:
+> > > > >
+> > > > > Hi Maxim,
+> > > > >
+> > > > > bigunclemax@gmail.com wrote on Tue, 13 Dec 2022 14:02:34 +0300:
+> > > > >
+> > > > > > I looked closer at commit 658c4448bbbf and bcdf0315a61a, 5db1c2=
+dbc04c16 commits.
+> > > > > > Looks like we have two different features binded to one propert=
+y - "compatible".
+> > > > > >
+> > > > > > From one side it is the ability to forward the subnode of the m=
+td
+> > > > > > partition to the nvmem subsystem (658c4448bbbf and ac42c46f983e=
+).
+> > > > > > And from another side is the ability to use custom initializati=
+on of
+> > > > > > the mtd partition (bcdf0315a61a and 5db1c2dbc04c16).
+> > > > > >
+> > > > > > What I mean:
+> > > > > > According to ac42c46f983e I can create DT like this:
+> > > > > >  - |
+> > > > > >     partitions {
+> > > > > >         compatible =3D "fixed-partitions";
+> > > > > >         #address-cells =3D <1>;
+> > > > > >         #size-cells =3D <1>;
+> > > > > >
+> > > > > >         partition@0 {
+> > > > > >             compatible =3D "nvmem-cells";
+> > > > > >             reg =3D <0x40000 0x10000>;
+> > > > > >             #address-cells =3D <1>;
+> > > > > >             #size-cells =3D <1>;
+> > > > > >             macaddr_gmac1: macaddr_gmac1@0 {
+> > > > > >                 reg =3D <0x0 0x6>;
+> > > > > >             };
+> > > > > >         };
+> > > > > >     };
+> > > > > >
+> > > > > >
+> > > > > > And according to 5db1c2dbc04c16 I can create DT like this:
+> > > > > >  - |
+> > > > > >     partitions {
+> > > > > >         compatible =3D "fixed-partitions";
+> > > > > >         #address-cells =3D <1>;
+> > > > > >         #size-cells =3D <1>;
+> > > > > >
+> > > > > >         partition@0 {
+> > > > > >             compatible =3D "u-boot,env";
+> > > > > >             reg =3D <0x40000 0x10000>;
+> > > > > >         };
+> > > > > >     };
+> > > > > >
+> > > > > > But I can not use them both, because only one "compatible" prop=
+erty allowed.
+> > > > > > This will be incorrect:
+> > > > > >  - |
+> > > > > >     partitions {
+> > > > > >         compatible =3D "fixed-partitions";
+> > > > > >         #address-cells =3D <1>;
+> > > > > >         #size-cells =3D <1>;
+> > > > > >
+> > > > > >         partition@0 {
+> > > > > >             compatible =3D "u-boot,env";  # from ac42c46f983e
+> > > > > >             compatible =3D "nvmem-cells"; # from 5db1c2dbc04c
+> > > > >
+> > > > > What about:
+> > > > >
+> > > > >               compatible =3D "u-boot,env", "nvmem-cells";
+> > > > >
+> > > > > instead? that should actually work.
+> > > > >
+> > > > > >             reg =3D <0x40000 0x10000>;
+> > > > > >             #address-cells =3D <1>;
+> > > > > >             #size-cells =3D <1>;
+> > > > > >             macaddr_gmac1: macaddr_gmac1@0 {
+> > > > > >                 reg =3D <0x0 0x6>;
+> > > > > >             };
+> > > > > >         };
+> > > > > >     };
+> > > > > >
+> > > > > > > compatible: Duplicate property name
+> > > > > >
+> > > > > > =D0=B2=D1=82, 13 =D0=B4=D0=B5=D0=BA. 2022 =D0=B3. =D0=B2 12:46,=
+ Miquel Raynal <miquel.raynal@bootlin.com>:
+> > > > > > >
+> > > > > > > Hi Maxim,
+> > > > > > >
+> > > > > > > fido_max@inbox.ru wrote on Mon, 12 Dec 2022 20:57:49 +0300:
+> > > > > > >
+> > > > > > > > Hi, Miquel!
+> > > > > > > >
+> > > > > > > > On 12.12.2022 19:37, Miquel Raynal wrote:
+> > > > > > > >
+> > > > > > > > > Let me try to recap the situation for all the people I ju=
+st involved:
+> > > > > > > > >
+> > > > > > > > > * An Ethernet driver gets its mac address from an nvmem c=
+ell. The
+> > > > > > > > >    Ethernet controller DT node then has an "nvmem-cells" =
+property
+> > > > > > > > >    pointing towards an nvmem cell.
+> > > > > > > > > * The nvmem cell comes from an mtd partition.
+> > > > > > > > > * The mtd partition is flagged with a particular compatib=
+le
+> > > > > > > > >    (which is also named "nvmem-cells") to tell the kernel=
+ that the node
+> > > > > > > > >    produces nvmem cells.
+> > > > > > > > > * The mtd partition itself has no driver, but is the chil=
+d node of a
+> > > > > > > > >    "partitions" container which has one (in this case,
+> > > > > > > > >    "fixed-partitions", see the snippet below).
+> > > > > > > > >
+> > > > > > > > > Because the "nvmem-cells" property of the Ethernet node p=
+oints at the
+> > > > > > > > > nvmem-cell node, the core create a device link between th=
+e Ethernet
+> > > > > > > > > controller (consumer) and the mtd partition (producer).
+> > > > > > > > >
+> > > > > > > > > The device link in this case will never be satisfied beca=
+use no driver
+> > > > > > > > > matches the "nvmem-cells" compatible of the partition nod=
+e.
+> > > > > > > > >
+> > > > > > > > > Reverting commit bcdf0315a61a ("mtd: call of_platform_pop=
+ulate() for MTD
+> > > > > > > > > partitions") would IMHO not make much sense, the problem =
+comes from the
+> > > > > > > > > device link side and even there, there is nothing really =
+"wrong",
+> > > > > > > > > because I really expect the mtd device to be ready before=
+ the
+> > > > > > > > > Ethernet controller probe, the device link is legitimate.
+> > > > > > > > >
+> > > > > > > > > So I would like to explore other alternatives. Here are a=
+ bunch of
+> > > > > > > > > ideas, but I'm open:
+> > > > > > > >
+> > > > > > > > How about to create simple driver with compatible=3D"nvmem-=
+cell" and to move all the suff from main mtd driver which serves nvmem-cell=
+ to the probe function?
+> > > > > > >
+> > > > > > > This is probably worth the try but I doubt you can make it wo=
+rk without
+> > > > > > > regressions because IIRC the nvmem registration happens no ma=
+tter the
+> > > > > > > compatible (not mentioning the user-otp and factory-otp cases=
+). You can
+> > > > > > > definitely try this out if you think you can come up with som=
+ething
+> > > > > > > though.
+> > > > > > >
+> > > > > > > But I would like to hear from the device-link gurus :) becaus=
+e even if
+> > > > > > > we fix mtd with a "trick" like above, I guess we'll very like=
+ly find
+> > > > > > > other corner cases like that and I am interested in understan=
+ding the
+> > > > > > > rationale of what could be a proper fix.
+> > > > > > >
+> > > >
+> > > > Responding to the whole thread.
+> > > >
+> > > > I'm going by Miquel's first email in which he cc'ed me and haven't
+> > > > actually looked at the mtd code. Couple of comments:
+> > > >
+> > > > Independent of mtd/nvmem-cell, I generally frown on having a
+> > > > compatible string for a child node that you don't treat as a device=
+.
+> > > > Even more so if you actually create a struct device for it and then
+> > > > don't do anything else with it. That's just a waste of memory. So, =
+in
+> > > > general try to avoid that in the future if you can.
+> > >
+> > > Agreed, it didn't triggered any warnings in my head in the first plac=
+e,
+> > > sorry about that.
+> > >
+> > > > Also, there are flags the parent device's driver can set that'll te=
+ll
+> > > > fw_devlink not to treat a specific DT node as a real device. So, if=
+ we
+> > > > really need that I'll dig up and suggest a fix.
+> > >
+> > > Interesting, that would indeed very likely fix it.
+> > >
+> > > > Lastly and more importantly, I've a series[1] that stops depending =
+on
+> > > > the compatible property for fw_devlink to work. So it should be
+> > > > smarter than it is today. But that series has known bugs for which =
+I
+> > > > gave test fixes in that thread. I plan to make a v2 of that series
+> > > > with that fix and I'm expecting it'll fix a bunch of fw_devlink
+> > > > issues.
+> > > >
+> > > > Feel free to give v1 + squashing the fixes a shot if you are excite=
+d
+> > > > to try it. Otherwise, I'll try my best to get around to it this wee=
+k
+> > > > (kinda swamped though + holidays coming up, so no promises).
+> > >
+> > > Can you please include us in your next submission?
+> > > * Maxim Kiselev <bigunclemax@gmail.com>
+> > > * Maxim Kochetkov <fido_max@inbox.ru>
+> > > * Miquel Raynal <miquel.raynal@bootlin.com>
+> > >
+> > > > [1] - https://lore.kernel.org/lkml/20220810060040.321697-1-saravana=
+k@google.com/
+> > >
+> > > Maxim, any chance you give this a try?
+> > >
+> > > Thanks,
+> > > Miqu=C3=A8l
