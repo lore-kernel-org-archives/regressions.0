@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126E67E
-	for <regressions@lists.linux.dev>; Mon, 19 Dec 2022 10:41:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F047E
+	for <regressions@lists.linux.dev>; Mon, 19 Dec 2022 11:10:05 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p7DZy-0003XI-0p; Mon, 19 Dec 2022 11:41:06 +0100
-Message-ID: <4d8f77ab-d5e9-7366-a823-0e6a620d6374@leemhuis.info>
-Date: Mon, 19 Dec 2022 11:41:05 +0100
+	id 1p7E1z-0004IE-OX; Mon, 19 Dec 2022 12:10:03 +0100
+Message-ID: <12c40aac-8f3b-fea2-17bb-d6a954d26597@leemhuis.info>
+Date: Mon, 19 Dec 2022 12:10:03 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,49 +16,68 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: Regression: onboard-usb-hub breaks USB on RPi 3 #forregzbot
 Content-Language: en-US, de-DE
-To: regressions@lists.linux.dev
-Cc: linux-usb@vger.kernel.org
-References: <d04bcc45-3471-4417-b30b-5cf9880d785d@i2se.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <d04bcc45-3471-4417-b30b-5cf9880d785d@i2se.com>
+To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: Andrew M <quantumphazor@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>
+Subject: =?UTF-8?Q?=5bregression=5d_Bug=c2=a0216817_-_btusb_device_with_ID_0?=
+ =?UTF-8?Q?489=3ae0d0_no_longer_working_after_v6=2e0?=
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671446468;4b637afd;
-X-HE-SMSGID: 1p7DZy-0003XI-0p
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671448205;e76b99f4;
+X-HE-SMSGID: 1p7E1z-0004IE-OX
 
-[Note: this mail contains only information for Linux kernel regression
-tracking. Mails like these contain '#forregzbot' in the subject to make
-then easy to spot and filter out. The author also tried to remove most
-or all individuals from the list of recipients to spare them the hassle.]
+Hi, this is your Linux kernel regression tracker speaking.
 
-On 18.12.22 14:35, Stefan Wahren wrote:
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216817 :
+
+>  Andrew M 2022-12-18 04:28:43 UTC
 > 
-> unfortunately i didn't notice this regression sooner, but the following
-> commits breaks USB on Raspberry Pi 3:
+> The internal USB Bluetooth device in my laptop no longer works since v6.0
 > 
-> usb: misc: Add onboard_usb_hub driver
+> Device in question:
+> ID 0489:e0d0 Foxconn / Hon Hai
+> 
+> Works fine in 5.19.x and fails after 6.0
+> I ran a bisect that resulted in it breaking after this commit:
+> 26afbd826ee326e63a334c37fd45e82e50a615ec Bluetooth: Add initial implementation of CIS connections
+> 
+> System: Lenovo ThinkPad T14 (AMD) Gen 2
+> 
+> dmesg output:
+> 
+> [    0.978396] usb 5-4: new full-speed USB device number 2 using xhci_hcd
+> [    1.142461] usb 5-4: New USB device found, idVendor=0489, idProduct=e0d0, bcdDevice= 0.01
+> [    1.142467] usb 5-4: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> [    4.591285] Bluetooth: Core ver 2.22
+> [    4.591304] Bluetooth: HCI device and connection manager initialized
+> [    4.591308] Bluetooth: HCI socket layer initialized
+> [    4.591309] Bluetooth: L2CAP socket layer initialized
+> [    4.591315] Bluetooth: SCO socket layer initialized
+> [    4.871972] usbcore: registered new interface driver btusb
+> [    4.883484] Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is advertised, but not supported.
+> [    4.973465] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
+> [    4.973468] Bluetooth: BNEP filters: protocol multicast
+> [    4.973472] Bluetooth: BNEP socket layer initialized
+> [    4.975525] Bluetooth: hci0: unexpected cc 0x2060 length: 1 < 7
+> [    4.975537] Bluetooth: hci0: Opcode 0x2060 failed: -38
+> [    6.985714] Bluetooth: hci0: command tx timeout
+> 
+> Attached is output of lsusb -v -d 0489:e0d0
 
-that's 43993626de00
+See the ticket for more details.
 
-> usb: misc: onboard-hub: add support for Microchip USB2514B USB 2.0 hub
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
 
-that's 8bc063641ceb
-
-/me wonders which of this it actually is and assumes it's the latter
-
-> After these commits (and this new driver enabled like in
-> multi_v7_defconfig) the connected USB devices doesn't work anymore
-> (mouse is powered, but no function of keyboard and mouse). Reconnecting
-> doesn't help. Running lsusb hangs forever.
-
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced 8bc063641ceb
-#regzbot title usb: onboard-usb-hub breaks USB on RPi3
+#regzbot introduced: 26afbd826ee3
+https://bugzilla.kernel.org/show_bug.cgi?id=216817
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
@@ -67,63 +86,3 @@ P.S.: As the Linux kernel's regression tracker I deal with a lot of
 reports and sometimes miss something important when writing mails like
 this. If that's the case here, don't hesitate to tell me in a public
 reply, it's in everyone's interest to set the public record straight.
-
-> Here is the relevant dmesg in error case:
-> 
-> [    0.078446] usbcore: registered new interface driver usbfs
-> [    0.078516] usbcore: registered new interface driver hub
-> [    0.078574] usbcore: registered new device driver usb
-> [    0.078827] usb_phy_generic phy: supply vcc not found, using dummy
-> regulator
-> [    0.078990] usb_phy_generic phy: dummy supplies not allowed for
-> exclusive requests
-> [    2.897258] usbcore: registered new interface driver pegasus
-> [    2.903161] usbcore: registered new interface driver asix
-> [    2.908809] usbcore: registered new interface driver ax88179_178a
-> [    2.915185] usbcore: registered new interface driver cdc_ether
-> [    2.921281] usbcore: registered new interface driver smsc75xx
-> [    2.927305] usbcore: registered new interface driver smsc95xx
-> [    2.933298] usbcore: registered new interface driver net1080
-> [    2.939219] usbcore: registered new interface driver cdc_subset
-> [    2.945407] usbcore: registered new interface driver zaurus
-> [    2.951238] usbcore: registered new interface driver cdc_ncm
-> [    3.030909] usbcore: registered new interface driver usb-storage
-> [    3.178104] usbcore: registered new interface driver usbhid
-> [    3.191022] usbhid: USB HID core driver
-> [    3.981848] dwc2 3f980000.usb: supply vusb_d not found, using dummy
-> regulator
-> [    3.992467] dwc2 3f980000.usb: supply vusb_a not found, using dummy
-> regulator
-> [    4.053728] dwc2 3f980000.usb: DWC OTG Controller
-> [    4.065343] dwc2 3f980000.usb: new USB bus registered, assigned bus
-> number 1
-> [    4.079415] dwc2 3f980000.usb: irq 66, io mem 0x3f980000
-> [    4.463447] usb 1-1: new high-speed USB device number 2 using dwc2
-> [    5.063444] usb 1-1.1: new high-speed USB device number 3 using dwc2
-> [    5.523440] usb 1-1.3: new low-speed USB device number 4 using dwc2
-> [    5.685546] input: HID 046a:0011 as
-> /devices/platform/soc/3f980000.usb/usb1/1-1/1-1.3/1-1.3:1.0/0003:046A:0011.0001/input/input0
-> [    5.763446] usb 1-1.1.2: new low-speed USB device number 5 using dwc2
-> [    5.777968] hid-generic 0003:046A:0011.0001: input: USB HID v1.11
-> Keyboard [HID 046a:0011] on usb-3f980000.usb-1.3/input0
-> [    5.931991] input: PixArt Microsoft USB Optical Mouse as
-> /devices/platform/soc/3f980000.usb/usb1/1-1/1-1.1/1-1.1.2/1-1.1.2:1.0/0003:045E:00CB.0002/input/input1
-> [    5.954668] hid-generic 0003:045E:00CB.0002: input: USB HID v1.11
-> Mouse [PixArt Microsoft USB Optical Mouse] on usb-3f980000.usb-1.1.2/input0
-> [    6.263459] usb 1-1.1.1: new high-speed USB device number 6 using dwc2
-> [   14.828915] onboard-usb-hub 3f980000.usb:usb-port@1: supply vdd not
-> found, using dummy regulator
-> [   14.829493] onboard-usb-hub 3f980000.usb:usb-port@1:usb-port@1:
-> supply vdd not found, using dummy regulator
-> [   14.829729] usbcore: registered new device driver onboard-usb-hub
-> [   14.829945] usb 1-1.1: USB disconnect, device number 3
-> [   14.829958] usb 1-1.1.1: USB disconnect, device number 6
-> [   14.830419] usb 1-1.1.2: USB disconnect, device number 5
-> [   14.854725] usb 1-1.3: USB disconnect, device number 4
-> [   14.896865] usbcore: registered new interface driver lan78xx
-> 
-> Unfortunately i'm not that USB expert, so please tell me if you need
-> more information.
-> 
-> 
-> 
