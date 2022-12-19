@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D10410EF
-	for <regressions@lists.linux.dev>; Mon, 19 Dec 2022 10:27:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 126E67E
+	for <regressions@lists.linux.dev>; Mon, 19 Dec 2022 10:41:07 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p7DMM-0007WS-Fn; Mon, 19 Dec 2022 11:27:02 +0100
-Message-ID: <9f0e95d1-5057-93f0-ad9e-985eaeed0226@leemhuis.info>
-Date: Mon, 19 Dec 2022 11:27:01 +0100
+	id 1p7DZy-0003XI-0p; Mon, 19 Dec 2022 11:41:06 +0100
+Message-ID: <4d8f77ab-d5e9-7366-a823-0e6a620d6374@leemhuis.info>
+Date: Mon, 19 Dec 2022 11:41:05 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,87 +16,50 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216818_-_The_microphone_m?=
- =?UTF-8?Q?ute_led_not_working_after_linux_6?=
+Subject: Re: Regression: onboard-usb-hub breaks USB on RPi 3 #forregzbot
 Content-Language: en-US, de-DE
-To: Hans de Goede <hdegoede@redhat.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>
-Cc: sonic82003@gmail.com, plum <plumerlis@gmail.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>
-References: <bf52f4c5-5cca-26d7-7fb2-ac8ecb5b24c5@leemhuis.info>
- <572159b3-a1a4-8735-d435-ea574c07851f@redhat.com>
+To: regressions@lists.linux.dev
+Cc: linux-usb@vger.kernel.org
+References: <d04bcc45-3471-4417-b30b-5cf9880d785d@i2se.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <572159b3-a1a4-8735-d435-ea574c07851f@redhat.com>
+In-Reply-To: <d04bcc45-3471-4417-b30b-5cf9880d785d@i2se.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671445626;7c78547b;
-X-HE-SMSGID: 1p7DMM-0007WS-Fn
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671446468;4b637afd;
+X-HE-SMSGID: 1p7DZy-0003XI-0p
 
-On 19.12.22 11:00, Hans de Goede wrote:
-> On 12/19/22 10:17, Thorsten Leemhuis wrote:
->> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->> kernel developer don't keep an eye on it, I decided to forward it by
->> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216818 :
->>
->>>  sonic82003@gmail.com 2022-12-18 08:52:32 UTC
->>>
->>> The mic mute led of my ThinkPad X1 Carbon Gen 9 doesn't work anymore after updating linux to version 6.
->>> I can still turn it on by  running 
->>>
->>> echo 1 > /sys/class/leds/platform::micmute/brightness
->>>
->>> With linux-lts it still works fine.
->>
->> See the ticket for more details.
->>
->> Note, I found a similar report that (despite my attempts to prevent
->> things like this from happening) fell through the cracks here:
->> https://bugzilla.kernel.org/show_bug.cgi?id=216355
->>
->>>  plum 2022-08-13 02:11:01 UTC
->>>
->>> I upgrade to kernel 5.19.1 but found my thinkpad x1 carbon 2021's mute led stop working.
->>>
->>> Function is okay but LED won't light up.
->>>
->>> Back to kernel 5.18 and it's normal and working again.
->>>
->>> Fedora 36 64 bit 
->>> Gnome-shell 42
->>
->> From a quick research it looks to me like this is an issue for the
->> sounds maintainers, as the LED itself apparently works. If that is
->> something for the platform people instead please speak up.
+[Note: this mail contains only information for Linux kernel regression
+tracking. Mails like these contain '#forregzbot' in the subject to make
+then easy to spot and filter out. The author also tried to remove most
+or all individuals from the list of recipients to spare them the hassle.]
+
+On 18.12.22 14:35, Stefan Wahren wrote:
 > 
-> Thanks for bringing this up, we recently hit this in Fedora too
-> and we have a fix/workaround there. Let me copy and paste what
-> I just added to bko216355 :
-
-Many thx for sharing these details, really helpful.
-
-> This is caused by a behavior change of the kernel code controlling the LED to only turn on the LED when all inputs, including e.g. the jack mic input are turned off in the alsa-mixer settings.
+> unfortunately i didn't notice this regression sooner, but the following
+> commits breaks USB on Raspberry Pi 3:
 > 
-> But most userspace code only turns the mic which it is actually using on/off when you hit the mic-mute hotkey.
-> 
-> Also see: https://bugzilla.redhat.com/show_bug.cgi?id=2134824
+> usb: misc: Add onboard_usb_hub driver
 
-Ahh, lot's of helpful information and even a bisect there. :-D
+that's 43993626de00
 
-#regzbot introduced: 9b014266ef8ad0159
+> usb: misc: onboard-hub: add support for Microchip USB2514B USB 2.0 hub
 
-> Which is the same bug.
-> 
-> There is a set of fixes available in the form of an alsa-ucm update which tells the kernel to ignore the state of the jack mic input restoring the old behavior:
-> 
-> https://git.alsa-project.org/?p=alsa-ucm-conf.git;a=commitdiff;h=79a8ec44d3dcf097f4a4492c506cbcf338324175
-> https://git.alsa-project.org/?p=alsa-ucm-conf.git;a=commitdiff;h=9ce9ddb4a84fb467602b716575ea1d8f2bab0c39
+that's 8bc063641ceb
 
-Hmmm, that's nice, but well, by Linux' "no regressions rule" the issue
-is caused by kernel change and thus must be fixed in the kernel, e.g.
-without forcing users to update anything in userspace.
+/me wonders which of this it actually is and assumes it's the latter
 
-Jaroslav, are there any plans to do that?
+> After these commits (and this new driver enabled like in
+> multi_v7_defconfig) the connected USB devices doesn't work anymore
+> (mouse is powered, but no function of keyboard and mouse). Reconnecting
+> doesn't help. Running lsusb hangs forever.
+
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced 8bc063641ceb
+#regzbot title usb: onboard-usb-hub breaks USB on RPi3
+#regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
@@ -104,3 +67,63 @@ P.S.: As the Linux kernel's regression tracker I deal with a lot of
 reports and sometimes miss something important when writing mails like
 this. If that's the case here, don't hesitate to tell me in a public
 reply, it's in everyone's interest to set the public record straight.
+
+> Here is the relevant dmesg in error case:
+> 
+> [    0.078446] usbcore: registered new interface driver usbfs
+> [    0.078516] usbcore: registered new interface driver hub
+> [    0.078574] usbcore: registered new device driver usb
+> [    0.078827] usb_phy_generic phy: supply vcc not found, using dummy
+> regulator
+> [    0.078990] usb_phy_generic phy: dummy supplies not allowed for
+> exclusive requests
+> [    2.897258] usbcore: registered new interface driver pegasus
+> [    2.903161] usbcore: registered new interface driver asix
+> [    2.908809] usbcore: registered new interface driver ax88179_178a
+> [    2.915185] usbcore: registered new interface driver cdc_ether
+> [    2.921281] usbcore: registered new interface driver smsc75xx
+> [    2.927305] usbcore: registered new interface driver smsc95xx
+> [    2.933298] usbcore: registered new interface driver net1080
+> [    2.939219] usbcore: registered new interface driver cdc_subset
+> [    2.945407] usbcore: registered new interface driver zaurus
+> [    2.951238] usbcore: registered new interface driver cdc_ncm
+> [    3.030909] usbcore: registered new interface driver usb-storage
+> [    3.178104] usbcore: registered new interface driver usbhid
+> [    3.191022] usbhid: USB HID core driver
+> [    3.981848] dwc2 3f980000.usb: supply vusb_d not found, using dummy
+> regulator
+> [    3.992467] dwc2 3f980000.usb: supply vusb_a not found, using dummy
+> regulator
+> [    4.053728] dwc2 3f980000.usb: DWC OTG Controller
+> [    4.065343] dwc2 3f980000.usb: new USB bus registered, assigned bus
+> number 1
+> [    4.079415] dwc2 3f980000.usb: irq 66, io mem 0x3f980000
+> [    4.463447] usb 1-1: new high-speed USB device number 2 using dwc2
+> [    5.063444] usb 1-1.1: new high-speed USB device number 3 using dwc2
+> [    5.523440] usb 1-1.3: new low-speed USB device number 4 using dwc2
+> [    5.685546] input: HID 046a:0011 as
+> /devices/platform/soc/3f980000.usb/usb1/1-1/1-1.3/1-1.3:1.0/0003:046A:0011.0001/input/input0
+> [    5.763446] usb 1-1.1.2: new low-speed USB device number 5 using dwc2
+> [    5.777968] hid-generic 0003:046A:0011.0001: input: USB HID v1.11
+> Keyboard [HID 046a:0011] on usb-3f980000.usb-1.3/input0
+> [    5.931991] input: PixArt Microsoft USB Optical Mouse as
+> /devices/platform/soc/3f980000.usb/usb1/1-1/1-1.1/1-1.1.2/1-1.1.2:1.0/0003:045E:00CB.0002/input/input1
+> [    5.954668] hid-generic 0003:045E:00CB.0002: input: USB HID v1.11
+> Mouse [PixArt Microsoft USB Optical Mouse] on usb-3f980000.usb-1.1.2/input0
+> [    6.263459] usb 1-1.1.1: new high-speed USB device number 6 using dwc2
+> [   14.828915] onboard-usb-hub 3f980000.usb:usb-port@1: supply vdd not
+> found, using dummy regulator
+> [   14.829493] onboard-usb-hub 3f980000.usb:usb-port@1:usb-port@1:
+> supply vdd not found, using dummy regulator
+> [   14.829729] usbcore: registered new device driver onboard-usb-hub
+> [   14.829945] usb 1-1.1: USB disconnect, device number 3
+> [   14.829958] usb 1-1.1.1: USB disconnect, device number 6
+> [   14.830419] usb 1-1.1.2: USB disconnect, device number 5
+> [   14.854725] usb 1-1.3: USB disconnect, device number 4
+> [   14.896865] usbcore: registered new interface driver lan78xx
+> 
+> Unfortunately i'm not that USB expert, so please tell me if you need
+> more information.
+> 
+> 
+> 
