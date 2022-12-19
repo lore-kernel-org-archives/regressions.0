@@ -1,77 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.perex.cz (mail1.perex.cz [77.48.224.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDBA1398
-	for <regressions@lists.linux.dev>; Mon, 19 Dec 2022 13:04:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D238C433D2;
-	Mon, 19 Dec 2022 13:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1671455059;
-	bh=/I4Kb7hC8uOUuswynbcWKvpfRKg1AKsJ8i1itOIMgNM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BG2+K+xYYC9R2EJR9LrAcE7VbEA78z7mrhopFIdT+aCu4zUHpmniLrhoMxHYQV0yZ
-	 74Ph1aMRO83yS8UAWWUCQv/usAUeB976hfoR5Ug0eqconlMbDogpR9cupYKqtgGzjx
-	 hBYiBKOd+MbNKkhB7haTMR+Eu/KWlcujQqAw1nxE2OJ+ACNMthN/WdRE6olT26otJJ
-	 hcY3rz2RKWS/8EQXUNXas3QeGh9Hd8q+i1IfXyQl6vT34uzFsdjtuMVG7/aBbIReV7
-	 LGfuSiI229qmvNJv2NRi6BSCjDjn+HTpOUw7YIQSdF3E+UfELU364lEk4hwlbARDe7
-	 7jsxWAu8gInyA==
-Date: Mon, 19 Dec 2022 13:04:13 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: alsa-devel@alsa-project.org,
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-	yung-chuan.liao@linux.intel.com, tiwai@suse.de,
-	daniel.baluta@nxp.com, Oliver Neukum <oneukum@suse.com>,
-	lgirdwood@gmail.com, pierre-louis.bossart@linux.intel.com,
-	Zhen Ni <nizhen@uniontech.com>, ranjani.sridharan@linux.intel.com,
-	Ricardo Ribalda <ribalda@chromium.org>,
-	Archana Patni <archana.patni@intel.com>,
-	peter.ujfalusi@linux.intel.com,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [PATCH 0/2] ASoC: SOF: remove unregister calls from shutdown
-Message-ID: <Y6BhTWGUp2D5hhbE@sirena.org.uk>
-References: <20221209114529.3909192-1-kai.vehmanen@linux.intel.com>
- <167102472177.27755.10161077455234852195.b4-ty@kernel.org>
- <e23ec080-9fe4-ee28-1d4c-879127803660@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E22DC63D4
+	for <regressions@lists.linux.dev>; Mon, 19 Dec 2022 17:11:00 +0000 (UTC)
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+	by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id B3F23A0047;
+	Mon, 19 Dec 2022 18:01:19 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz B3F23A0047
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+	t=1671469279; bh=gOcbNBGz+ANluLxaB4+FuyF+gaxrZE+jftjvvZfCJWA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QYhB8taCi8E+kQKiQhN+21vd98T5h+UvNvyTbkbE3m9TU2+PKE+UJSa7r4R7VgLyj
+	 bc3bQKXYrh30oQE/yzJKYm+Qg5e8mjB2DCGEOX5knDwYTo7Wv1AxWwuJguKgHamesi
+	 n46IxOq3P3Urk19OvefKnezPXFV0J3vt3TiOpiBo=
+Received: from [192.168.100.98] (unknown [192.168.100.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: perex)
+	by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+	Mon, 19 Dec 2022 18:01:10 +0100 (CET)
+Message-ID: <7ab2be50-11c6-f79f-e3f5-a5dc5ec41708@perex.cz>
+Date: Mon, 19 Dec 2022 18:01:10 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="z24uizcIcNefEU/8"
-Content-Disposition: inline
-In-Reply-To: <e23ec080-9fe4-ee28-1d4c-879127803660@leemhuis.info>
-X-Cookie: Pay toll ahead.
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216818_-_The_microphone_m?=
+ =?UTF-8?Q?ute_led_not_working_after_linux_6?=
+Content-Language: en-US
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Hans de Goede <hdegoede@redhat.com>, Takashi Iwai <tiwai@suse.com>,
+ Pierre-louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: sonic82003@gmail.com, plum <plumerlis@gmail.com>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>
+References: <bf52f4c5-5cca-26d7-7fb2-ac8ecb5b24c5@leemhuis.info>
+ <572159b3-a1a4-8735-d435-ea574c07851f@redhat.com>
+ <9f0e95d1-5057-93f0-ad9e-985eaeed0226@leemhuis.info>
+From: Jaroslav Kysela <perex@perex.cz>
+In-Reply-To: <9f0e95d1-5057-93f0-ad9e-985eaeed0226@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 19. 12. 22 11:27, Thorsten Leemhuis wrote:
+> On 19.12.22 11:00, Hans de Goede wrote:
+>> On 12/19/22 10:17, Thorsten Leemhuis wrote:
+>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>>> kernel developer don't keep an eye on it, I decided to forward it by
+>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216818 :
+>>>
+>>>>   sonic82003@gmail.com 2022-12-18 08:52:32 UTC
+>>>>
+>>>> The mic mute led of my ThinkPad X1 Carbon Gen 9 doesn't work anymore after updating linux to version 6.
+>>>> I can still turn it on by  running
+>>>>
+>>>> echo 1 > /sys/class/leds/platform::micmute/brightness
+>>>>
+>>>> With linux-lts it still works fine.
+>>>
+>>> See the ticket for more details.
+>>>
+>>> Note, I found a similar report that (despite my attempts to prevent
+>>> things like this from happening) fell through the cracks here:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=216355
+>>>
+>>>>   plum 2022-08-13 02:11:01 UTC
+>>>>
+>>>> I upgrade to kernel 5.19.1 but found my thinkpad x1 carbon 2021's mute led stop working.
+>>>>
+>>>> Function is okay but LED won't light up.
+>>>>
+>>>> Back to kernel 5.18 and it's normal and working again.
+>>>>
+>>>> Fedora 36 64 bit
+>>>> Gnome-shell 42
+>>>
+>>>  From a quick research it looks to me like this is an issue for the
+>>> sounds maintainers, as the LED itself apparently works. If that is
+>>> something for the platform people instead please speak up.
+>>
+>> Thanks for bringing this up, we recently hit this in Fedora too
+>> and we have a fix/workaround there. Let me copy and paste what
+>> I just added to bko216355 :
+> 
+> Many thx for sharing these details, really helpful.
+> 
+>> This is caused by a behavior change of the kernel code controlling the LED to only turn on the LED when all inputs, including e.g. the jack mic input are turned off in the alsa-mixer settings.
+>>
+>> But most userspace code only turns the mic which it is actually using on/off when you hit the mic-mute hotkey.
+>>
+>> Also see: https://bugzilla.redhat.com/show_bug.cgi?id=2134824
+> 
+> Ahh, lot's of helpful information and even a bisect there. :-D
+> 
+> #regzbot introduced: 9b014266ef8ad0159
 
---z24uizcIcNefEU/8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It's not a regression from my view.
 
-On Mon, Dec 19, 2022 at 10:41:41AM +0100, Thorsten Leemhuis wrote:
+>> Which is the same bug.
+>>
+>> There is a set of fixes available in the form of an alsa-ucm update which tells the kernel to ignore the state of the jack mic input restoring the old behavior:
+>>
+>> https://git.alsa-project.org/?p=alsa-ucm-conf.git;a=commitdiff;h=79a8ec44d3dcf097f4a4492c506cbcf338324175
+>> https://git.alsa-project.org/?p=alsa-ucm-conf.git;a=commitdiff;h=9ce9ddb4a84fb467602b716575ea1d8f2bab0c39
+> 
+> Hmmm, that's nice, but well, by Linux' "no regressions rule" the issue
+> is caused by kernel change and thus must be fixed in the kernel, e.g.
+> without forcing users to update anything in userspace.
+> 
+> Jaroslav, are there any plans to do that?
 
-> * there are no "CC: <stable..." tags in these patches. Is the plan to
-> manually ask for a backport? Or how can we get the regression fixed in
-> older releases?
+I wrote all relevant information to https://bugzilla.redhat.com/show_bug.cgi?id=2134824 . The problem exists from the initial microphone LED support in the SOF HDA driver, because two drivers control the microphone LED simultaneously (sof-hda-dsp + hda-intel). My recent update just made this thing more visible - the LED state may be updated wrongly in all previous kernels. Original behavior: last write wins. New behavior: all off = LED ON. The UCM fix (update the default kernel runtime configuration from the user space) is sufficient in my eyes for now because even the use case when the microphone LED follows the state when all internal inputs are turned off makes sense.
 
-Speak to the stable maintainers I guess, or hope their bot picks the
-commits up.
+I think that the sof-hda-dsp driver maintainer may decide to change the default settings in the HDA driver when the digital microphone is detected. Adding Pierre-Louis to the chain.
 
---z24uizcIcNefEU/8
-Content-Type: application/pgp-signature; name="signature.asc"
+					Jaroslav
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmOgYUwACgkQJNaLcl1U
-h9CJiAf+LFKoxKrnzbInjPMtZRBK99rFEvMVdssNVJslU5cTUDwpSv+36pXZuOQH
-+dqHk715zIBic2CIlYArrY0jr1Z5eDIGSVgpn9kxTl3GNiOdHH1pIG9+Cf2ZSdL8
-m5iUPKQRWAGGqtep02hodZtMatdTBBhN+goepgcnKwudoggltP83SiGHBwxRivvM
-Gd/XMN6puIcpXsYe+UWnTAAYshOAHchTandsJ9kmWfPJwtHMIJqzZ5XxVIRRGqk8
-kmRRzX1iXq/w5h8fAWIYK/ZZ3aWn/YVXjdBxKQhuVXAc10TCoGIIMxgxY0KDKl7A
-7fvb3XroltdaVX33fP/BFYRehJLGBg==
-=H6ZP
------END PGP SIGNATURE-----
-
---z24uizcIcNefEU/8--
+-- 
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
