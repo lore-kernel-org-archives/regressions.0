@@ -1,13 +1,17 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx1.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9F047E
-	for <regressions@lists.linux.dev>; Mon, 19 Dec 2022 11:10:05 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p7E1z-0004IE-OX; Mon, 19 Dec 2022 12:10:03 +0100
-Message-ID: <12c40aac-8f3b-fea2-17bb-d6a954d26597@leemhuis.info>
-Date: Mon, 19 Dec 2022 12:10:03 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03654111C
+	for <regressions@lists.linux.dev>; Mon, 19 Dec 2022 11:59:06 +0000 (UTC)
+Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id CC4B860293A85;
+	Mon, 19 Dec 2022 12:58:56 +0100 (CET)
+Message-ID: <48e83fa7-00a6-ba11-0db3-a165ce3c0699@molgen.mpg.de>
+Date: Mon, 19 Dec 2022 12:58:55 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,74 +19,139 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Andrew M <quantumphazor@gmail.com>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- "linux-bluetooth@vger.kernel.org" <linux-bluetooth@vger.kernel.org>
-Subject: =?UTF-8?Q?=5bregression=5d_Bug=c2=a0216817_-_btusb_device_with_ID_0?=
- =?UTF-8?Q?489=3ae0d0_no_longer_working_after_v6=2e0?=
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671448205;e76b99f4;
-X-HE-SMSGID: 1p7E1z-0004IE-OX
+ Thunderbird/102.6.0
+Subject: Re: matroxfb: cannot determine memory size
+Content-Language: en-US
+To: Helge Deller <deller@gmx.de>
+Cc: "Z. Liu" <liuzx@knownsec.com>, linux-fbdev@vger.kernel.org,
+ it+linux-fbdev@molgen.mpg.de, regressions@lists.linux.dev,
+ stable@vger.kernel.org
+References: <5da53ec5-3a9c-ec87-da20-69f140aaaa6b@molgen.mpg.de>
+ <6ef71be5-def9-4578-3f73-c43c35d7e4a9@gmx.de>
+ <dc0b1487-04f9-5a2f-e0f8-d157a74b6bcb@molgen.mpg.de> <Y5zhUl7r9z0lFJxc@p100>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <Y5zhUl7r9z0lFJxc@p100>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi, this is your Linux kernel regression tracker speaking.
 
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developer don't keep an eye on it, I decided to forward it by
-mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216817 :
+Dear Helge,
 
->  Andrew M 2022-12-18 04:28:43 UTC
+
+Am 16.12.22 um 22:21 schrieb Helge Deller:
+> * Paul Menzel <pmenzel@molgen.mpg.de>:
+>> [Cc: +regressions@, +stable@]
+>>
+>> #regzbot ^introduced: 62d89a7d49afe46e6b9bbe9e23b004ad848dbde4
+
+>> Am 16.12.22 um 00:02 schrieb Helge Deller:
+>>> On 12/15/22 17:39, Paul Menzel wrote:
+>>
+>>>> Between Linux 5.10.103 and 5.10.110/5.15.77, matrixfb fails to load.
+
+[…]
+
+>>>> ### 5.15.77
+>>>>
+>>>>       [    0.000000] Linux version 5.15.77.mx64.440 (root@theinternet.molgen.mpg.de) (gcc (GCC) 10.4.0, GNU ld (GNU Binutils) 2.37) #1 SMP Tue Nov 8 15:42:33 CET 2022
+>>>>       [    0.000000] Command line: root=LABEL=root ro crashkernel=64G-:256M console=ttyS0,115200n8 console=tty0 init=/bin/systemd audit=0 random.trust_cpu=on systemd.unified_cgroup_hierarchy
+>>>>       […]
+>>>>       [    0.000000] DMI: Dell Inc. PowerEdge R715/0G2DP3, BIOS 1.5.2 04/19/2011
+>>>>       […]
+>>>>       [    9.436420] matroxfb: Matrox MGA-G200eW (PCI) detected
+>>>>       [    9.444502] matroxfb: cannot determine memory size
+>>>>       [    9.449316] matroxfb: probe of 0000:0a:03.0 failed with error -1
+>>>>
+>>>> We see it on several systems:
+>>>>
+>>>>       $ lspci -nn -s 0a:03.0 # Dell PowerEdge R715
+>>>>       0a:03.0 VGA compatible controller [0300]: Matrox Electronics Systems Ltd. MGA G200eW WPCM450 [102b:0532] (rev 0a)
+>>>>
+>>>>       $ lspci -nn -s 09:03.0 # Dell PowerEdge R910
+>>>>       09:03.0 VGA compatible controller [0300]: Matrox Electronics Systems Ltd. MGA G200eW WPCM450 [102b:0532] (rev 0a)
+
+Also Dell PowerEdge R815.
+
+[…]
+
+>> I tested Linus’ master with commit 84e57d292203 (Merge tag
+>> 'exfat-for-6.2-rc1' of
+>> git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat) and the
+>> error is still there. Reverting commit fixes the issue.
+>>
+>> Tested on:
+>>
+>>      DMI: Dell Inc. PowerEdge R910/0KYD3D, BIOS 2.10.0 08/29/2013
+>>
+>> Current master:
+>>
+>>      [   36.221595] matroxfb 0000:09:03.0: vgaarb: deactivate vga console
+>>      [   36.228355] Console: switching to colour dummy device 80x25
+>>      [   36.234069] matroxfb: Matrox MGA-G200eW (PCI) detected
+>>      [   36.239316] PInS memtype = 7
+>>      [   36.242198] matroxfb: cannot determine memory size
+>>      [   36.242209] matroxfb: probe of 0000:09:03.0 failed with error -1
+>>
+>> After reverting 62d89a7d49af (video: fbdev: matroxfb: set maxvram of
+>> vbG200eW to the same as vbG200 to avoid black screen):
+>>
+>>      [   38.140763] matroxfb 0000:09:03.0: vgaarb: deactivate vga console
+>>      [   38.148057] Console: switching to colour dummy device 80x25
+>>      [   38.153789] matroxfb: Matrox MGA-G200eW (PCI) detected
+>>      [   38.159042] PInS memtype = 7
+>>      [   38.161953] matroxfb: 640x480x8bpp (virtual: 640x13107)
+>>      [   38.167175] matroxfb: framebuffer at 0xC5000000, mapped to 0x000000006f41c38c, size 8388608
+>>
+>>>> The master commit 62d89a7d49a was added to v5.18-rc1, and was also
+>>>> backported to the Linux 5.15 series in 5.15.33.
 > 
-> The internal USB Bluetooth device in my laptop no longer works since v6.0
+> Good.
 > 
-> Device in question:
-> ID 0489:e0d0 Foxconn / Hon Hai
-> 
-> Works fine in 5.19.x and fails after 6.0
-> I ran a bisect that resulted in it breaking after this commit:
-> 26afbd826ee326e63a334c37fd45e82e50a615ec Bluetooth: Add initial implementation of CIS connections
-> 
-> System: Lenovo ThinkPad T14 (AMD) Gen 2
-> 
-> dmesg output:
-> 
-> [    0.978396] usb 5-4: new full-speed USB device number 2 using xhci_hcd
-> [    1.142461] usb 5-4: New USB device found, idVendor=0489, idProduct=e0d0, bcdDevice= 0.01
-> [    1.142467] usb 5-4: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> [    4.591285] Bluetooth: Core ver 2.22
-> [    4.591304] Bluetooth: HCI device and connection manager initialized
-> [    4.591308] Bluetooth: HCI socket layer initialized
-> [    4.591309] Bluetooth: L2CAP socket layer initialized
-> [    4.591315] Bluetooth: SCO socket layer initialized
-> [    4.871972] usbcore: registered new interface driver btusb
-> [    4.883484] Bluetooth: hci0: HCI Enhanced Setup Synchronous Connection command is advertised, but not supported.
-> [    4.973465] Bluetooth: BNEP (Ethernet Emulation) ver 1.3
-> [    4.973468] Bluetooth: BNEP filters: protocol multicast
-> [    4.973472] Bluetooth: BNEP socket layer initialized
-> [    4.975525] Bluetooth: hci0: unexpected cc 0x2060 length: 1 < 7
-> [    4.975537] Bluetooth: hci0: Opcode 0x2060 failed: -38
-> [    6.985714] Bluetooth: hci0: command tx timeout
-> 
-> Attached is output of lsusb -v -d 0489:e0d0
+> Could you test if the patch below works for you as well (on top of
+> git master) ? I believe the commit f8bf19f7f311 (video: fbdev:
+> matroxfb: set maxvram of vbG200eW to the same as vbG200 to avoid
+> black screen) changed the wrong value...
 
-See the ticket for more details.
+> diff --git a/drivers/video/fbdev/matrox/matroxfb_base.c b/drivers/video/fbdev/matrox/matroxfb_base.c
+> index 0d3cee7ae726..5192c7ac459a 100644
+> --- a/drivers/video/fbdev/matrox/matroxfb_base.c
+> +++ b/drivers/video/fbdev/matrox/matroxfb_base.c
+> @@ -1378,8 +1378,8 @@ static struct video_board vbG200 = {
+>   	.lowlevel = &matrox_G100
+>   };
+>   static struct video_board vbG200eW = {
+> -	.maxvram = 0x100000,
+> -	.maxdisplayable = 0x800000,
+> +	.maxvram = 0x800000,
+> +	.maxdisplayable = 0x100000,
+>   	.accelID = FB_ACCEL_MATROX_MGAG200,
+>   	.lowlevel = &matrox_G100
+>   };
 
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
+Thank you. That worked.
 
-#regzbot introduced: 26afbd826ee3
-https://bugzilla.kernel.org/show_bug.cgi?id=216817
-#regzbot ignore-activity
+     $ dmesg | grep -e matroxfb -e "Linux version" -e "DMI:"
+     [    0.000000] Linux version 6.1.0.mx64.440-13147-gfa99506bedb1 
+(pmenzel@dontpanic.molgen.mpg.de) (gcc (GCC) 11.1.0, GNU ld (GNU 
+Binutils) 2.37) #1 SMP PREEMPT_DYNAMIC Mon Dec 19 12:13:21 CET 2022
+     [    0.000000] DMI: Dell Inc. PowerEdge R815/04Y8PT, BIOS 3.4.0 
+03/23/2018
+     [   29.033666] matroxfb 0000:0a:03.0: vgaarb: deactivate vga console
+     [   29.046608] matroxfb: Matrox MGA-G200eW (PCI) detected
+     [   29.054769] matroxfb: 640x480x8bpp (virtual: 640x1638)
+     [   29.059901] matroxfb: framebuffer at 0xE4000000, mapped to 
+0x00000000d36c9776, size 8388608
+     [   34.917829] matroxfb: Pixel PLL not locked after 5 secs
+     $ lspci -nn -s 0a:03.0
+     0a:03.0 VGA compatible controller [0300]: Matrox Electronics 
+Systems Ltd. MGA G200eW WPCM450 [102b:0532] (rev 0a)
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> If it works, can you send a patch?
 
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+Will do. If you have some explanation though, I could add to the commit 
+message, that’d be great.
+
+
+Kind regards,
+
+Paul
