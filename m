@@ -1,187 +1,145 @@
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A86EA1
-	for <regressions@lists.linux.dev>; Tue, 20 Dec 2022 00:30:43 +0000 (UTC)
-Received: by mail-io1-f48.google.com with SMTP id v2so5629609ioe.4
-        for <regressions@lists.linux.dev>; Mon, 19 Dec 2022 16:30:43 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63E071876
+	for <regressions@lists.linux.dev>; Tue, 20 Dec 2022 09:22:07 +0000 (UTC)
+Received: by mail-vs1-f43.google.com with SMTP id b189so11190267vsc.10
+        for <regressions@lists.linux.dev>; Tue, 20 Dec 2022 01:22:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VDLVeWnO1UxvUjv+YmjDInuic2FVNFQh/dxjg46HNYs=;
-        b=ckRdOcbEE9Ve6+cFAkzmmsJqQw6nkuTAXMRFm5COcESKyvDjtckf6LvC97/bEkwnvP
-         tS3WbxZ+2upt5Vqd4KGH0T7tawfgasc7RwJx/w0CvtWL/ZGNcN7kw1EkIpuDFvziwWf1
-         e9YztahFiq1ooRIdN1DOEwK77PXgD/1VGXt0M=
+        d=linaro.org; s=google;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KFQTAT/Y/60qxMnDWgQSQgFguHHrFxnQFd4R9n+cgwQ=;
+        b=fDruKdJjIappxyO0bzmBnEqjUIfEAjnfPQA73B0kiOjE/GOX+KPSdwbaVtmxKXyXr7
+         0AJcnipRsjURUEqzwnYP1oyPbb6Pzt89SJfiC3av0YAXniickpVH5etVv5hMMMD9NuPN
+         mdEfNhoOnsbPOWUQREXFuEBV/70xHNLoqvJURnsC505NJPeVmeQnH3J//M8q/k7oKfC7
+         CqXf/2BZF9e+Ew7qbhlLUM8r32xRzFM/fFwg6S2eNGaBBns+ODeBMkN2CMoj+kCnU/xJ
+         03aMXsMOgyYGhJDSUNBMlphEYCSQbF1mIET+CFSaDHf5WojOF436J9kim6om2Oi3PaL/
+         yUhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VDLVeWnO1UxvUjv+YmjDInuic2FVNFQh/dxjg46HNYs=;
-        b=uhWqryvUGRy+UdecgMzV81v/t8vGTrdsamEYYnYRsbqTwRJ5GOoOkaMq9Z3w/FstlG
-         Mbpk8cUSu2VRtwaPQ+OgePscLrK8fc6GvtrxHGrVeGg5eaSRRuLU/ol736f5D1QhJBpv
-         zp6Ly4UVIqs7fwSjwrrwOg5crzqMx0GKd2vIuNdQMKCn43d1xmbuyb9YpYdqfbJYJZf6
-         rHcYTXGoFtsQdj+OQHF9KpJQ+tdAElU7y3wP77/tMP8ZSXhJs3TUGWQwyJfmQ3D6G//N
-         uEQQfIsLmQqUf637XZhfrAT7EbxVKmYFiNfoqmar8BCMNyhY4XsG46iz5dY5w7FZDQ8c
-         wcBw==
-X-Gm-Message-State: ANoB5pnDANY6X9ztQ7OwkwRCbPUjObhkKs0IOwixvi9ra/qeFmitlu+Z
-	hNhJqrMUqHURO7IPSCp6gNW3EQ==
-X-Google-Smtp-Source: AA0mqf7WmNMoK1WVdvdISNb78RH0trr7/rjbV65ycHc0F6dtdpS57yAa4rHUn3wPsF+CQfX2btZv0w==
-X-Received: by 2002:a6b:8b55:0:b0:6e0:2521:8123 with SMTP id n82-20020a6b8b55000000b006e025218123mr25627627iod.13.1671496242252;
-        Mon, 19 Dec 2022 16:30:42 -0800 (PST)
-Received: from localhost (30.23.70.34.bc.googleusercontent.com. [34.70.23.30])
-        by smtp.gmail.com with UTF8SMTPSA id d4-20020a0566022be400b006e00ddb4517sm4488579ioy.48.2022.12.19.16.30.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 19 Dec 2022 16:30:41 -0800 (PST)
-Date: Tue, 20 Dec 2022 00:30:41 +0000
-From: Matthias Kaehlcke <mka@chromium.org>
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org, regressions@lists.linux.dev,
-	Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: Regression: onboard-usb-hub breaks USB on RPi 3
-Message-ID: <Y6ECMZeh7G9bH8Fi@google.com>
-References: <d04bcc45-3471-4417-b30b-5cf9880d785d@i2se.com>
- <Y6Ci7wWvbBRRQkR6@google.com>
- <97c9b305-86f4-5918-54bf-4057e99eae3d@i2se.com>
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KFQTAT/Y/60qxMnDWgQSQgFguHHrFxnQFd4R9n+cgwQ=;
+        b=bSjHyB7OgM4JlAr7jYJgwJnWagAlXN3ocKRVgPmLGZ9kITs5LD1SesSjFfwW76lF+K
+         cgSP+gZRPg3J53EiczrLj0aLhhZf8y0tbPoJ3A0vSuRSJ06/Upc2B2300Jkk0MdWWhnD
+         SN37f0PZHZaf7yEbyl6q5Fv879UO9eofvHR2fhHTufj15kd8OmkvEHcY4V9dhg+0dMCX
+         M9OUlQuLf/LflVN0gapjqJamZQ82gRjM1qvuwJSEwxGgnpbRiBpXUwk0tXc+yRF8af3+
+         cUwelRGVpuR8VMT2qv+5aXxOjROBIbxx4rQ5+HXssCM7yyWQ1cofJwPGtvuC+RiQu+xV
+         pcGA==
+X-Gm-Message-State: AFqh2konADx45kYMnmny7gEb5m0Fxz+qj7QJhfwBpchlSjqLZmx5AKzs
+	Em62DwCNFrJqyosJo29pPZHdVQ/OX5n+jbxJ6oKa5g==
+X-Google-Smtp-Source: AMrXdXsbkpwFnYm6AgtUU1IDrJMmQSRHrWbZB/qPQ3q2OYwrwaY15vqHADvqo0o+q6XruFRguq8F2Kfv9cPOdtS/hzk=
+X-Received: by 2002:a67:fa4b:0:b0:3b9:8fcd:5258 with SMTP id
+ j11-20020a67fa4b000000b003b98fcd5258mr1764059vsq.3.1671528126055; Tue, 20 Dec
+ 2022 01:22:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <97c9b305-86f4-5918-54bf-4057e99eae3d@i2se.com>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 20 Dec 2022 14:51:54 +0530
+Message-ID: <CA+G9fYvz1eNS5fw1Wg5f4HqwdWPNg3EQyrGZVEOJ=OQzYzZ_YQ@mail.gmail.com>
+Subject: next: kernel BUG at drivers/virtio/virtio.c:122!
+To: open list <linux-kernel@vger.kernel.org>, 
+	Linux-Next Mailing List <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org, 
+	regressions@lists.linux.dev, virtualization@lists.linux-foundation.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Shaoqin Huang <shaoqin.huang@intel.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Angus Chen <angus.chen@jaguarmicro.com>, =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>, 
+	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Dec 19, 2022 at 11:32:58PM +0100, Stefan Wahren wrote:
-> Hi Matthias,
-> 
-> Am 19.12.22 um 18:44 schrieb Matthias Kaehlcke:
-> > Hi Stefan,
-> > 
-> > Sorry for the regression.
-> > 
-> > What seems to happen is this:
-> > 
-> > arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi specifies device nodes for the
-> > two (nested) USB hubs (which is done rarely since USB devices (including
-> > hubs) are autodetected). The DT nodes were most likely only added to be
-> > able to configure the LED modes of the USB to Ethernet adapter. With
-> > 43993626de00 ("usb: misc: onboard-hub: add support for Microchip USB2514B
-> > USB 2.0 hub") the onboard_usb_hub driver gained support for the hubs on
-> > the RPi3. The onboard_usb_hub driver expects a regulator ("vdd") in the DT
-> > node of the USB hub, which isn't present for the RPi3 (this isn't an error
-> > per se). Without the regulator the onboard_hub platform driver fails to
-> > probe, when the USB driver of the hub is probed (onboard_hub_usbdev_probe())
-> > it doesn't find the corresponding platform driver instance
-> > (_find_onboard_hub()) and defers probing. When the deferred probe runs it
-> > encounters the same situation, rinse and repeat.
-> I forgot to mention that in error case /sys/kernel/debug/devices_deferred
-> was empty.
-> > One possible fix would be to specify the 'missing' "vdd" property, however
-> > that wouln't fix the issue for other boards with a similar configurations.
-> > Instead the driver could check if "vdd" exists in the DT node of the hub,
-> > and not defer probing if it doesn't.
-> > 
-> > Could you please try if the below patch fixes the issue on the Rpi 3?
-> Yes, this prevents probing of onboard-usb-hub and the issue.
+The qemu-x86_64 and qemu-arm64 boot failed with Linux next-20221220 tag.
+It is always reproducible with gcc-11/ gcc-12 and clang tool chains.
 
-Thanks for the confirmation, I'll send out a proper patch to get this fixed
-upstream.
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-> > diff --git a/drivers/usb/misc/onboard_usb_hub.c b/drivers/usb/misc/onboard_usb_hub.c
-> > index d63c63942af1..4d2a27afb09c 100644
-> > --- a/drivers/usb/misc/onboard_usb_hub.c
-> > +++ b/drivers/usb/misc/onboard_usb_hub.c
-> > @@ -363,6 +363,15 @@ static struct onboard_hub *_find_onboard_hub(struct device *dev)
-> >   	hub = dev_get_drvdata(&pdev->dev);
-> >   	put_device(&pdev->dev);
-> > +	/*
-> > +	 * Some boards have device tree nodes for USB hubs supported by this
-> > +	 * driver, but the nodes don't have all properties needed for the driver
-> > +	 * to work properly. Use the absence of the "vdd" regulator as an
-> > +	 * indicator of such nodes.
-> > +	 */
-> > +	if (!of_get_property(pdev->dev.of_node, "vdd", NULL))
-> > +		return ERR_PTR(-ENODEV);
-> > +
-> >   	/*
-> >   	 * The presence of drvdata ('hub') indicates that the platform driver
-> >   	 * finished probing. This handles the case where (conceivably) we could
-> > 
-> > 
-> > 
-> > On Sun, Dec 18, 2022 at 02:35:43PM +0100, Stefan Wahren wrote:
-> > > Hi,
-> > > 
-> > > unfortunately i didn't notice this regression sooner, but the following
-> > > commits breaks USB on Raspberry Pi 3:
-> > > 
-> > > usb: misc: Add onboard_usb_hub driver
-> > > usb: misc: onboard-hub: add support for Microchip USB2514B USB 2.0 hub
-> > > 
-> > > After these commits (and this new driver enabled like in multi_v7_defconfig)
-> > > the connected USB devices doesn't work anymore (mouse is powered, but no
-> > > function of keyboard and mouse). Reconnecting doesn't help. Running lsusb
-> > > hangs forever.
-> > > 
-> > > Here is the relevant dmesg in error case:
-> > > 
-> > > [    0.078446] usbcore: registered new interface driver usbfs
-> > > [    0.078516] usbcore: registered new interface driver hub
-> > > [    0.078574] usbcore: registered new device driver usb
-> > > [    0.078827] usb_phy_generic phy: supply vcc not found, using dummy
-> > > regulator
-> > > [    0.078990] usb_phy_generic phy: dummy supplies not allowed for exclusive
-> > > requests
-> > > [    2.897258] usbcore: registered new interface driver pegasus
-> > > [    2.903161] usbcore: registered new interface driver asix
-> > > [    2.908809] usbcore: registered new interface driver ax88179_178a
-> > > [    2.915185] usbcore: registered new interface driver cdc_ether
-> > > [    2.921281] usbcore: registered new interface driver smsc75xx
-> > > [    2.927305] usbcore: registered new interface driver smsc95xx
-> > > [    2.933298] usbcore: registered new interface driver net1080
-> > > [    2.939219] usbcore: registered new interface driver cdc_subset
-> > > [    2.945407] usbcore: registered new interface driver zaurus
-> > > [    2.951238] usbcore: registered new interface driver cdc_ncm
-> > > [    3.030909] usbcore: registered new interface driver usb-storage
-> > > [    3.178104] usbcore: registered new interface driver usbhid
-> > > [    3.191022] usbhid: USB HID core driver
-> > > [    3.981848] dwc2 3f980000.usb: supply vusb_d not found, using dummy
-> > > regulator
-> > > [    3.992467] dwc2 3f980000.usb: supply vusb_a not found, using dummy
-> > > regulator
-> > > [    4.053728] dwc2 3f980000.usb: DWC OTG Controller
-> > > [    4.065343] dwc2 3f980000.usb: new USB bus registered, assigned bus
-> > > number 1
-> > > [    4.079415] dwc2 3f980000.usb: irq 66, io mem 0x3f980000
-> > > [    4.463447] usb 1-1: new high-speed USB device number 2 using dwc2
-> > > [    5.063444] usb 1-1.1: new high-speed USB device number 3 using dwc2
-> > > [    5.523440] usb 1-1.3: new low-speed USB device number 4 using dwc2
-> > > [    5.685546] input: HID 046a:0011 as /devices/platform/soc/3f980000.usb/usb1/1-1/1-1.3/1-1.3:1.0/0003:046A:0011.0001/input/input0
-> > > [    5.763446] usb 1-1.1.2: new low-speed USB device number 5 using dwc2
-> > > [    5.777968] hid-generic 0003:046A:0011.0001: input: USB HID v1.11
-> > > Keyboard [HID 046a:0011] on usb-3f980000.usb-1.3/input0
-> > > [    5.931991] input: PixArt Microsoft USB Optical Mouse as /devices/platform/soc/3f980000.usb/usb1/1-1/1-1.1/1-1.1.2/1-1.1.2:1.0/0003:045E:00CB.0002/input/input1
-> > > [    5.954668] hid-generic 0003:045E:00CB.0002: input: USB HID v1.11 Mouse
-> > > [PixArt Microsoft USB Optical Mouse] on usb-3f980000.usb-1.1.2/input0
-> > > [    6.263459] usb 1-1.1.1: new high-speed USB device number 6 using dwc2
-> > > [   14.828915] onboard-usb-hub 3f980000.usb:usb-port@1: supply vdd not
-> > > found, using dummy regulator
-> > > [   14.829493] onboard-usb-hub 3f980000.usb:usb-port@1:usb-port@1: supply
-> > > vdd not found, using dummy regulator
-> > > [   14.829729] usbcore: registered new device driver onboard-usb-hub
-> > > [   14.829945] usb 1-1.1: USB disconnect, device number 3
-> > > [   14.829958] usb 1-1.1.1: USB disconnect, device number 6
-> > > [   14.830419] usb 1-1.1.2: USB disconnect, device number 5
-> > > [   14.854725] usb 1-1.3: USB disconnect, device number 4
-> > > [   14.896865] usbcore: registered new interface driver lan78xx
-> > > 
-> > > Unfortunately i'm not that USB expert, so please tell me if you need more
-> > > information.
-> > > 
+<6>[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x000f0510]
+<5>[    0.000000] Linux version 6.1.0-next-20221220 (tuxmake@tuxmake)
+(Debian clang version 16.0.0
+(++20221218072110+9c1b82599dac-1~exp1~20221218072217.501), Debian LLD
+16.0.0) #1 SMP PREEMPT @1671498176
+<5>[    0.000000] random: crng init done
+<6>[    0.000000] Machine model: linux,dummy-virt
+....
+<6>[    3.571098] loop: module loaded
+<6>[    3.573410] virtio_blk virtio0: 1/0/0 default/read/poll queues
+<5>[    3.578816] virtio_blk virtio0: [vda] 2816420 512-byte logical
+blocks (1.44 GB/1.34 GiB)
+<4>[    3.581234] ------------[ cut here ]------------
+<2>[    3.581595] kernel BUG at drivers/virtio/virtio.c:122!
+<0>[    3.582906] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+<4>[    3.583672] Modules linked in:
+<4>[    3.584905] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+6.1.0-next-20221220 #1
+<4>[    3.585801] Hardware name: linux,dummy-virt (DT)
+<4>[    3.586591] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT
+-SSBS BTYPE=--)
+<4>[    3.587349] pc : virtio_check_driver_offered_feature+0x60/0x6c
+<4>[    3.588613] lr : virtblk_probe+0x7cc/0x8f0
+<4>[    3.588915] sp : ffff80000802b840
+<4>[    3.589314] x29: ffff80000802b850 x28: 0000000000000000 x27:
+0000000000000001
+<4>[    3.590509] x26: 0000000000000001 x25: 0000000000000200 x24:
+ffff0000c1699b00
+<4>[    3.590832] x23: 00000000000000fe x22: ffff0000c0313c30 x21:
+ffff0000c0313c00
+<4>[    3.591568] x20: ffff0000c02f4080 x19: 0000000000000000 x18:
+ffffffffffffffff
+<4>[    3.592056] x17: 00000000ffffffea x16: 00000000fffffffe x15:
+0000000000000004
+<4>[    3.592632] x14: 0000000000000fff x13: ffff800008028000 x12:
+ffff80000802c000
+<4>[    3.593157] x11: 000000000000000f x10: 000000000000000f x9 :
+ffffae66eee314d8
+<4>[    3.594048] x8 : 0000000000000000 x7 : 3631383837352e33 x6 :
+202020205b3e353c
+<4>[    3.594429] x5 : 0000000000000001 x4 : 0000000000000000 x3 :
+ffff80000802b780
+<4>[    3.594956] x2 : ffff80000802b6f8 x1 : 0000000000000011 x0 :
+ffff0000c02f4080
+<4>[    3.595811] Call trace:
+<4>[    3.596120]  virtio_check_driver_offered_feature+0x60/0x6c
+<4>[    3.596632]  virtio_dev_probe+0x274/0x320
+<4>[    3.597064]  really_probe+0x178/0x418
+<4>[    3.597547]  __driver_probe_device+0x120/0x188
+<4>[    3.597820]  driver_probe_device+0x48/0x22c
+<4>[    3.598189]  __driver_attach+0xf8/0x250
+<4>[    3.598656]  bus_for_each_dev+0x8c/0xd8
+<4>[    3.599151]  driver_attach+0x30/0x3c
+<4>[    3.599321]  bus_add_driver+0x11c/0x22c
+<4>[    3.599684]  driver_register+0x84/0x120
+<4>[    3.600175]  register_virtio_driver+0x38/0x48
+<4>[    3.600575]  virtio_blk_init+0x6c/0xb4
+<4>[    3.600759]  do_one_initcall+0xe0/0x2f8
+<4>[    3.601197]  do_initcall_level+0xa8/0x150
+<4>[    3.601703]  do_initcalls+0x60/0xa0
+<4>[    3.601892]  do_basic_setup+0x28/0x34
+<4>[    3.602229]  kernel_init_freeable+0x100/0x178
+<4>[    3.602706]  kernel_init+0x2c/0x1b4
+<4>[    3.603162]  ret_from_fork+0x10/0x20
+<0>[    3.604398] Code: 540000a0 91001129 f1000508 54ffff61 (d4210000)
+<4>[    3.606108] ---[ end trace 0000000000000000 ]---
+<6>[    3.606714] note: swapper/0[1] exited with preempt_count 1
+<0>[    3.608155] Kernel panic - not syncing: Attempted to kill init!
+exitcode=0x0000000b
+<2>[    3.609173] SMP: stopping secondary CPUs
+<0>[    3.610506] Kernel Offset: 0x2e66e4800000 from 0xffff800008000000
+<0>[    3.610970] PHYS_OFFSET: 0x40000000
+<0>[    3.611428] CPU features: 0x00000,003a612f,cd22773f
+<0>[    3.612277] Memory Limit: none
+<0>[    3.613192] ---[ end Kernel panic - not syncing: Attempted to
+kill init! exitcode=0x0000000b ]---
+
+Ref Links,
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221220/testrun/13764099/suite/log-parser-test/test/check-kernel-bug/details/
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20221220/testrun/13766814/suite/boot/test/clang-nightly-lkftconfig/details/
+https://storage.tuxsuite.com/public/linaro/lkft/builds/2J9l3qxSBmPWVa1S2uWn0Xuwl1J/config
+
+
+--
+Linaro LKFT
+https://lkft.linaro.org
