@@ -1,122 +1,129 @@
-Received: from mail1.systemli.org (mail1.systemli.org [93.190.126.36])
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EAA1859
-	for <regressions@lists.linux.dev>; Tue, 20 Dec 2022 14:43:49 +0000 (UTC)
-Message-ID: <3599ec46-20d2-a233-a7c0-d2e363ebdf93@systemli.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=systemli.org;
-	s=default; t=1671547032;
-	bh=yP0BJycuMz69XX36ckvDbYRjSenHxDRGxNn7G1F0iiU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=O7+QOtBFOqXxrZErlWzwB4rO0Hnd3Im8G5/JdmIvB1WYH2T9hZtm38tVuj0IvZGSO
-	 4HeMPY9OIlYKc5FXHedygciJgJlLX0rd5a86uivEWi4zexWNglhKrEAkN3CFRarJp1
-	 yShcf91jPYOXHkAYQG1+jxwxM5ibWFW6e4jprP5Slu3ZKPJ27zj0zv2knxENIGYUr8
-	 WLqQy3prK8JDz5uwlaj5S6XKCmi+WbKzqh69Vkzp5bNsbjS+OhQyk9E9T1ZpmOUEI/
-	 ETVRPM4I2E2fwEFSJ0MjUsSQ4rK6SOtX+02+70dLtxf2v8dzslfKewb8BINwcM9zIw
-	 5YH2kdhIw8eKw==
-Date: Tue, 20 Dec 2022 15:37:10 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3726B4C75
+	for <regressions@lists.linux.dev>; Tue, 20 Dec 2022 16:19:40 +0000 (UTC)
+Received: from [192.168.1.139] ([37.4.248.22]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1M2w0K-1pAyj51sgG-003MZU; Tue, 20 Dec 2022 17:19:35 +0100
+Message-ID: <db6f59bf-33a1-776e-b52c-4818ff9114e3@i2se.com>
+Date: Tue, 20 Dec 2022 17:19:34 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: Kernel Kernel bug caused by (cpufreq: mediatek: Refine
- mtk_cpufreq_voltage_tracking()) on Banana Pi R64 (MT7622)
-To: =?UTF-8?B?QWxsZW4tS0ggQ2hlbmcgKOeoi+WGoOWLsyk=?=
- <Allen-KH.Cheng@mediatek.com>,
- "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
- "angelogioacchino.delregno@collabora.com"
- <angelogioacchino.delregno@collabora.com>
-Cc: "linux-mediatek@lists.infradead.org"
- <linux-mediatek@lists.infradead.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- "regressions@leemhuis.info" <regressions@leemhuis.info>,
- Project_Global_Chrome_Upstream_Group
- <Project_Global_Chrome_Upstream_Group@mediatek.com>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
- "daniel@makrotopia.org" <daniel@makrotopia.org>,
- =?UTF-8?B?UmV4LUJDIENoZW4gKOmZs+afj+i+sCk=?= <Rex-BC.Chen@mediatek.com>,
- "thomas.huehn@hs-nordhausen.de" <thomas.huehn@hs-nordhausen.de>,
- =?UTF-8?B?SmlhLXdlaSBDaGFuZyAo5by15L2z5YGJKQ==?= <Jia-wei.Chang@mediatek.com>
-References: <02c2c955-940b-b315-0474-85d0eddad7a3@leemhuis.info>
- <Y4jHvomTrU8guBox@makrotopia.org>
- <47a4665e-333d-a6e7-a2da-96cb06c2d87b@leemhuis.info>
- <20221202052716.uj3kzkunazmgazeq@vireshk-i7>
- <0ebef1a2-6b5a-04b9-a79b-79eb3349c32b@collabora.com>
- <c76bd301-0e8d-2d2b-0d3e-a57ece9b496f@collabora.com>
- <b1822bbc3775730c4cedf9652323c7d72e663e4b.camel@mediatek.com>
- <8be3e050-f32a-6761-8ebd-49c38dfcf9eb@collabora.com>
- <c186d104-43e0-ca10-3ce2-c2f922acd8bf@leemhuis.info>
- <37468027-6a27-dcb8-9c14-8f8426ec50d1@collabora.com>
- <20221202110139.vmwcmoudakm2nap4@vireshk-i7>
- <f70d7c09-df0d-4fa9-92c9-63f31cf56483@systemli.org>
- <5e07eb07de0fea2232c32f58691ffb7cfd2303f8.camel@mediatek.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: Regression: onboard-usb-hub breaks USB on RPi 3
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
+ regressions@lists.linux.dev, Florian Fainelli <f.fainelli@gmail.com>
+References: <d04bcc45-3471-4417-b30b-5cf9880d785d@i2se.com>
+ <Y6Ci7wWvbBRRQkR6@google.com> <97c9b305-86f4-5918-54bf-4057e99eae3d@i2se.com>
+ <Y6ECMZeh7G9bH8Fi@google.com>
 Content-Language: en-US
-From: Nick <vincent@systemli.org>
-In-Reply-To: <5e07eb07de0fea2232c32f58691ffb7cfd2303f8.camel@mediatek.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+In-Reply-To: <Y6ECMZeh7G9bH8Fi@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:rppBP7ELZeC/w1L9EmkgsbH5XfXYSiTeMWLQD9ZCSxlBWUYEuBE
+ XAflW9rnSQPasoN/3+nnAk0hyvYOw3hNvC+6z9qvY6KiWhpR8/F1W/McIE247VIf2cicq21
+ 3FFWGzg45IonhPqa+nUq0zO1glALyosKjpjOcYGAvdOvju/cPRvJHoHkJ4ZCIsNZL3VgUmh
+ BRmxkFfMtVEOt9pv88hbw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:1iAib5eTT0s=;x0hQWWyMfPNJK4kh4PDTtegdJDK
+ Z/H2L1xryUTg3rdYlT3rXIL7c0o+ozLYi8ITEok2BvF2wz5m8CfUUh5VLOQo9xbx1+XH6ie4q
+ oddJ/K3pQ2+zKmV6RZ+1StXoL2IEoFal9S9j9E0HvWnzCPpRFTcpxUL6c2lDiNuASAdPr5T8M
+ tcVqUYrgpDhUL0Mg708+O/O6t+X3sEGxQDjnBPE/CGNia4CyeE572p31uR7vdhGGiFKy4kyLd
+ z8d+6ykJtUxwWTE1fXvQt3weW1eKa/WhWpAUPWgz6lev6hFioOu7VJ4lPSX5BszJ8UjpZ1Dd9
+ BQip7V71/Cu1worhHzkPiyL8QeOZd2tsfv3W8ahJagF1wyAH8dz04AwEAEeibYcllXb2Eb4kp
+ 43crMg6cZkyXkoTSD4OEFcu0r/uiTovo+47Ow963y/Ghpmco/rBw6eScwz89vp0VaN0DcDYut
+ geKE7FsMMZ+/ybvogQlvpKuIv5BaaIDdaJ4kruGJ9G2m+W/RnlZYQKwY7P8wqqebB5mjnL5vL
+ d7ph6qDsvSyhm/f9XfWgXpk3XJuTkwTurb1jwD73wIR9G4obG5+ngkftS6GjpZ9Ocke0pdQVO
+ ojrCqesq85ClTSJwkgk7A9l6ZVoGv88X6vfj2UDwcBm5LXg/in5TwD2J1GclZxG67vqtgtfXt
+ feoT3goAXdvt9A7SPMCa1j4dhY1kDjqqUY3sYP8slg==
 
-Hey,
-thanks for all your help. I guess it's fine now.
-If someone wants to reproduce my setup, I published the exact steps here:
-https://forum.openwrt.org/t/running-vanilla-kernel-on-banana-pi-r64/145351
+Hi Matthias,
 
-I still wonder why my initial try using the OpenWrt build-environment 
-together with the 6.1 kernel failed.
-
-Bests
-Nick
-
-On 12/19/22 13:21, Allen-KH Cheng (程冠勳) wrote:
-> Hi Nick,
->
-> This issue doesn't seem to be going to happen.
-> Is there anything else we need help confirming?
->
-> Thanks,
-> Allen
->
-> -----Original Message-----
-> From: Linux-mediatek <linux-mediatek-bounces@lists.infradead.org> On
-> Behalf Of Nick
-> Sent: Wednesday, December 7, 2022 11:35 PM
-> To: Viresh Kumar <viresh.kumar@linaro.org>; AngeloGioacchino Del Regno
-> <angelogioacchino.delregno@collabora.com>
-> Cc: Allen-KH Cheng (程冠勳) <Allen-KH.Cheng@mediatek.com>;
-> linux-pm@vger.kernel.org; daniel@makrotopia.org;
-> Project_Global_Chrome_Upstream_Group <
-> Project_Global_Chrome_Upstream_Group@mediatek.com>; Rex-BC Chen (陳柏辰) <
-> Rex-BC.Chen@mediatek.com>; Thorsten Leemhuis <regressions@leemhuis.info
->> ; linux-mediatek@lists.infradead.org; matthias.bgg@gmail.com;
-> thomas.huehn@hs-nordhausen.de; Jia-wei Chang (張佳偉) <
-> Jia-wei.Chang@mediatek.com>; linux-arm-kernel@lists.infradead.org;
-> regressions@lists.linux.dev
-> Subject: Re: Kernel Kernel bug caused by (cpufreq: mediatek: Refine
-> mtk_cpufreq_voltage_tracking()) on Banana Pi R64 (MT7622)
->
-> Did something changed on master? I compiled now the image I use on the
-> BPI-R64 a bit differently.
-> I used the openwrt toolchain "aarch64-openwrt-linux-musl-" to cross-
-> compile the original linux repository on current master. Than I
-> compiled with OpenWrt-Buildsystem a initramfs, put that together with
-> mkimage to a "itb" and booted it. Suddenly it works:
->
-> https://urldefense.com/v3/__https://gist.githubusercontent.com/PolynomialDivision/5e49529206ba5d273bf6a416c42c6234/raw/7ecff7be397a6e9a41ef120c3fa61060c488cf5b/mt7622-bpi-vanilla__;!!CTRNKA9wMg0ARbw!glNhziJx8pjvVsVoRm0LO8wshXJL_b2P_jYV5vO_9uhe1EnbMpWRnIEcj_561Ijxurd8C-Fjc7uCbBNIM_E-7YYc$
->   
->
-> Bests
-> Nick
->
-> On 12/2/22 12:01, Viresh Kumar wrote:
->> On 02-12-22, 12:00, AngeloGioacchino Del Regno wrote:
->>> If Viresh can add those while applying the patch, that's fine for
->>> me
->>> - otherwise I can send a v2 adding the two suggested missing tags.
->> Sure, no problem.
+Am 20.12.22 um 01:30 schrieb Matthias Kaehlcke:
+> On Mon, Dec 19, 2022 at 11:32:58PM +0100, Stefan Wahren wrote:
+>> Hi Matthias,
 >>
->
+>> Am 19.12.22 um 18:44 schrieb Matthias Kaehlcke:
+>>> Hi Stefan,
+>>>
+>>> Sorry for the regression.
+>>>
+>>> What seems to happen is this:
+>>>
+>>> arch/arm/boot/dts/bcm283x-rpi-lan7515.dtsi specifies device nodes for the
+>>> two (nested) USB hubs (which is done rarely since USB devices (including
+>>> hubs) are autodetected). The DT nodes were most likely only added to be
+>>> able to configure the LED modes of the USB to Ethernet adapter. With
+>>> 43993626de00 ("usb: misc: onboard-hub: add support for Microchip USB2514B
+>>> USB 2.0 hub") the onboard_usb_hub driver gained support for the hubs on
+>>> the RPi3. The onboard_usb_hub driver expects a regulator ("vdd") in the DT
+>>> node of the USB hub, which isn't present for the RPi3 (this isn't an error
+>>> per se). Without the regulator the onboard_hub platform driver fails to
+>>> probe, when the USB driver of the hub is probed (onboard_hub_usbdev_probe())
+>>> it doesn't find the corresponding platform driver instance
+>>> (_find_onboard_hub()) and defers probing. When the deferred probe runs it
+>>> encounters the same situation, rinse and repeat.
+>> I forgot to mention that in error case /sys/kernel/debug/devices_deferred
+>> was empty.
+>>> One possible fix would be to specify the 'missing' "vdd" property, however
+>>> that wouln't fix the issue for other boards with a similar configurations.
+>>> Instead the driver could check if "vdd" exists in the DT node of the hub,
+>>> and not defer probing if it doesn't.
+>>>
+>>> Could you please try if the below patch fixes the issue on the Rpi 3?
+>> Yes, this prevents probing of onboard-usb-hub and the issue.
+> Thanks for the confirmation, I'll send out a proper patch to get this fixed
+> upstream.
+
+sorry, i accidentally disabled this driver during testing of the patch. 
+So i erroneously assumed the patch is working, but it's not. I seems 
+that the change is never reached (add dev_info around your change).
+
+The following worked on my Raspberry Pi 3 B+
+
+diff --git a/drivers/usb/misc/onboard_usb_hub.c 
+b/drivers/usb/misc/onboard_usb_hub.c
+index de3627af3c84..570e9f3d2d89 100644
+--- a/drivers/usb/misc/onboard_usb_hub.c
++++ b/drivers/usb/misc/onboard_usb_hub.c
+@@ -227,6 +227,9 @@ static int onboard_hub_probe(struct platform_device 
+*pdev)
+      if (!hub)
+          return -ENOMEM;
+
++    if (!of_get_property(dev->of_node, "vdd", NULL))
++        return -ENODEV;
++
+      hub->vdd = devm_regulator_get(dev, "vdd");
+      if (IS_ERR(hub->vdd))
+          return PTR_ERR(hub->vdd);
+@@ -340,6 +343,15 @@ static struct onboard_hub *_find_onboard_hub(struct 
+device *dev)
+      hub = dev_get_drvdata(&pdev->dev);
+      put_device(&pdev->dev);
+
++    /*
++     * Some boards have device tree nodes for USB hubs supported by this
++     * driver, but the nodes don't have all properties needed for the 
+driver
++     * to work properly. Use the absence of the "vdd" regulator as an
++     * indicator of such nodes.
++     */
++    if (!of_get_property(pdev->dev.of_node, "vdd", NULL))
++        return ERR_PTR(-ENODEV);
++
+      /*
+       * The presence of drvdata ('hub') indicates that the platform driver
+       * finished probing. This handles the case where (conceivably) we 
+couldThe following changes worked for me:
+
+
