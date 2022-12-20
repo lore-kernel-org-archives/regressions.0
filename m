@@ -1,64 +1,62 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from ns.iliad.fr (ns.iliad.fr [212.27.33.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125297E
-	for <regressions@lists.linux.dev>; Tue, 20 Dec 2022 12:20:42 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p7bBg-0005om-AI; Tue, 20 Dec 2022 12:53:36 +0100
-Message-ID: <7043e971-c320-b1aa-8e7c-35df0eceb16c@leemhuis.info>
-Date: Tue, 20 Dec 2022 12:53:33 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 523E923B7
+	for <regressions@lists.linux.dev>; Tue, 20 Dec 2022 13:24:15 +0000 (UTC)
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+	by ns.iliad.fr (Postfix) with ESMTP id E6CF52012F;
+	Tue, 20 Dec 2022 14:16:17 +0100 (CET)
+Received: from sakura (freebox.vlq16.iliad.fr [213.36.7.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ns.iliad.fr (Postfix) with ESMTPS id D5642200B9;
+	Tue, 20 Dec 2022 14:16:17 +0100 (CET)
+Date: Tue, 20 Dec 2022 14:16:16 +0100
+From: Maxime Bizon <mbizon@freebox.fr>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Dave Chiluk <chiluk@ubuntu.com>, Marcel Holtmann <marcel@holtmann.org>,
+	"Coelho, Luciano" <luciano.coelho@intel.com>,
+	"Greenman, Gregory" <gregory.greenman@intel.com>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [regression] Bug 216753 - 6e 6 ghz bands are disabled since 5.16
+ on intel ax211
+Message-ID: <20221220131616.GE25155@sakura>
+References: <14722778-dda0-cb9f-8647-892493d94a5c@leemhuis.info>
+ <2026016246ef719605c9932feeb56b105833593b.camel@intel.com>
+ <CAMfi-DRE-u5TNu2zAL-7A-ENHM9EiJeYJ38BL_FMdk6QmW7c9w@mail.gmail.com>
+ <9a03c244-adff-afaf-7385-d8e89cd3f338@leemhuis.info>
+ <02F8DDF1-EC0D-4EBD-88F5-7E000841C337@holtmann.org>
+ <CAMfi-DQfuro4c_VUrFHBTv8sPnwuV8XhTV_W7qswGeCC2t-wzg@mail.gmail.com>
+ <19ea39c87df3c54cbc487466f806bc157d0bf563.camel@freebox.fr>
+ <0611323c-2088-e6f3-1c38-7cf742dfb60d@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH 0/2] ASoC: SOF: remove unregister calls from shutdown
-Content-Language: en-US, de-DE
-To: Kai Vehmanen <kai.vehmanen@linux.intel.com>,
- Mark Brown <broonie@kernel.org>
-Cc: Alsa-devel <alsa-devel@alsa-project.org>,
- yung-chuan.liao@linux.intel.com, Takashi Iwai <tiwai@suse.de>,
- daniel.baluta@nxp.com, Oliver Neukum <oneukum@suse.com>,
- lgirdwood@gmail.com, pierre-louis.bossart@linux.intel.com,
- Zhen Ni <nizhen@uniontech.com>, ranjani.sridharan@linux.intel.com,
- Ricardo Ribalda <ribalda@chromium.org>,
- Archana Patni <archana.patni@intel.com>, peter.ujfalusi@linux.intel.com,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20221209114529.3909192-1-kai.vehmanen@linux.intel.com>
- <167102472177.27755.10161077455234852195.b4-ty@kernel.org>
- <e23ec080-9fe4-ee28-1d4c-879127803660@leemhuis.info>
- <Y6BhTWGUp2D5hhbE@sirena.org.uk>
- <alpine.DEB.2.22.394.2212201334340.3532114@eliteleevi.tm.intel.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <alpine.DEB.2.22.394.2212201334340.3532114@eliteleevi.tm.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671538843;063cd66c;
-X-HE-SMSGID: 1p7bBg-0005om-AI
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0611323c-2088-e6f3-1c38-7cf742dfb60d@leemhuis.info>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-On 20.12.22 12:41, Kai Vehmanen wrote:
-> 
-> On Mon, 19 Dec 2022, Mark Brown wrote:
-> 
->> On Mon, Dec 19, 2022 at 10:41:41AM +0100, Thorsten Leemhuis wrote:
->>
->>> * there are no "CC: <stable..." tags in these patches. Is the plan to
->>> manually ask for a backport? Or how can we get the regression fixed in
->>> older releases?
->>
->> Speak to the stable maintainers I guess, or hope their bot picks the
->> commits up.
-> 
-> thanks Thorsten for the notice. These patches do lack the "Fixes:" tag, so 
-> it's possible the bots will not pick these up. I can follow up and send 
-> these to stable if this does not happen.
 
-Thanks, that would be great, I try to stay out of that business, as
-actual developers of the code in question are in the best position to
-judge and handle things like this.
+On Sunday 04 Dec 2022 à 10:37:42 (+0100), Thorsten Leemhuis wrote:
 
-Ciao, Thorsten
+> That makes me (as a outsider that has no real knowledge about the inner
+> workings of the Linux Wifi subsystem) wonder: Does it work in Windows?
+
+No it does not.
+
+More precisely, it used to work with older Intel drivers that (I
+suppose) ignored this.
+
+But starting from I don't remember which version it stopped working,
+same behaviour as Linux.
+
+-- 
+Maxime
