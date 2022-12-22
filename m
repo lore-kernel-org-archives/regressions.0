@@ -1,159 +1,64 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 380902F25
-	for <regressions@lists.linux.dev>; Thu, 22 Dec 2022 11:53:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD8A8C433D2
-	for <regressions@lists.linux.dev>; Thu, 22 Dec 2022 11:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1671710016;
-	bh=dwRgGhvkMsp229h+rO5gqtrhdXxrFhA631KDq6GCycY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WifJDlvxmHu39qI6F+fDSJ5b1cObtwXpINE6FUABMBEy0GM/b8I4BYqJKUOvrl/Ws
-	 SpRbSnqddfHC9RohYxVrBf2oZ9WyphQhtOb0T+h3nYNZm4/SNZEYTm31Xkak0N5kIr
-	 WTvYcPiVEaufsYUtmZj2LiyCI1Q5setZj6fTkkjBcIxfmkmvEu0qH/mwrx1wR/kg3k
-	 v+I7niKR0Iwa1jrd03hAzn6pCnLFZHrk3eELuFxwOam/vXZRhWSY1ckDQWqZdLyaMP
-	 XYtZns5zGWWcIkQthsXtJb5UKcGdymf10jv1nxZDn00mvP+wg0v9kPSsFobNVRfaw3
-	 xdK/9aOin6M1g==
-Received: by mail-lf1-f49.google.com with SMTP id x11so2439706lfn.0
-        for <regressions@lists.linux.dev>; Thu, 22 Dec 2022 03:53:36 -0800 (PST)
-X-Gm-Message-State: AFqh2kr6mQpp0YjSXUMFLlN2hHpwPq51DJ4pdr/vKEc7YA8/+0RqzMDI
-	Pd69L4xRzD59PlxymiI4o61Cp8nczpWfn4R6gvQ=
-X-Google-Smtp-Source: AMrXdXvrt9G9hSeWg+GElY+cYYoH6hbx0Lc+3N6i5piAcI92l/HeoPS1Z81DFG39t0aA0cn/00XO87rpCaoY9xDesuQ=
-X-Received: by 2002:a05:6512:15a3:b0:4bc:bdf5:f163 with SMTP id
- bp35-20020a05651215a300b004bcbdf5f163mr310195lfb.583.1671710014879; Thu, 22
- Dec 2022 03:53:34 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57D733D2
+	for <regressions@lists.linux.dev>; Thu, 22 Dec 2022 12:06:03 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1p8KKn-0004Lk-6t; Thu, 22 Dec 2022 13:06:01 +0100
+Message-ID: <962eff8e-8417-1096-f72b-4238ca4b0713@leemhuis.info>
+Date: Thu, 22 Dec 2022 13:06:00 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAABkxwuQoz1CTbyb57n0ZX65eSYiTonFCU8-LCQc=74D=xE=rA@mail.gmail.com>
- <26bd2928-9d62-32b3-4f9f-9dd9293cefeb@leemhuis.info> <CAK7LNAQ5VVRdrewtxrBdw561LL=yY8fdr=i1e7pp4DRht=r_Ww@mail.gmail.com>
- <0ab93345-18e1-15c9-a4a3-066ea1cd862b@leemhuis.info>
-In-Reply-To: <0ab93345-18e1-15c9-a4a3-066ea1cd862b@leemhuis.info>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 22 Dec 2022 12:53:23 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXE+LBOBavOre1O8LTGPCmB8m58fbfo92Sx4WukyNAur-A@mail.gmail.com>
-Message-ID: <CAMj1kXE+LBOBavOre1O8LTGPCmB8m58fbfo92Sx4WukyNAur-A@mail.gmail.com>
-Subject: Re: BUG: arm64: missing build-id from vmlinux
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org, 
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org, 
-	Dennis Gilmore <dennis@ausil.us>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Catalin Marinas <catalin.marinas@arm.com>, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: mainline build failure due to e240e53ae0ab ("mm, slub: add
+ CONFIG_SLUB_TINY") #forregzbot
+Content-Language: en-US, de-DE
+Cc: kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org
+References: <Y5hTTGf/RA2kpqOF@debian>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+In-Reply-To: <Y5hTTGf/RA2kpqOF@debian>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671710763;60933c3e;
+X-HE-SMSGID: 1p8KKn-0004Lk-6t
 
-On Wed, 21 Dec 2022 at 17:29, Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
-> On 21.12.22 16:39, Masahiro Yamada wrote:
-> > On Wed, Dec 21, 2022 at 5:23 PM Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> >>
-> >> Hi, this is your Linux kernel regression tracker. CCing the regression
-> >> mailing list, as it should be in the loop for all regressions:
-> >> https://docs.kernel.org/admin-guide/reporting-regressions.html
-> >>
-> >> On 18.12.22 21:51, Dennis Gilmore wrote:
-> >>> The changes in https://lore.kernel.org/linux-arm-kernel/166783716442.=
-32724.935158280857906499.b4-ty@kernel.org/T/
-> >>> result in vmlinux no longer having a build-id.
-> >>
-> >> FWIW, that's 994b7ac1697b ("arm64: remove special treatment for the li=
-nk
-> >> order of head.o") from Masahiro merged through Will this cycle.
-> >>
-> >>> At the least, this
-> >>> causes rpm builds to fail. Reverting the patch does bring back a
-> >>> build-id, but there may be a different way to fix the regression
-> >>
-> >> Makes me wonder if other distros or CIs relying on the build-id are
-> >> broken, too.
-> >>
-> >> Anyway, the holiday season is upon us, hence I also wonder if it would
-> >> be best to revert above change quickly and leave further debugging for=
- 2023.
-> >>
-> >> Masahiro, Will, what's your option on this?
->
-> Masahiro, many thx for looking into this.
->
-> > I do not understand why you rush into the revert so quickly.
-> > We are before -rc1.
-> > We have 7 weeks before the 6.2 release
-> > (assuming we will have up to -rc7).
-> >
-> > If we get -rc6 or -rc7 and we still do not
-> > solve the issue, we should consider reverting it.
->
-> Because it looked like a regression that makes it harder for people and
-> CI systems to build and test mainline. To quote
-> Documentation/process/handling-regressions.rst (
-> https://docs.kernel.org/process/handling-regressions.html ):
->
-> """
->  * Fix regressions within two or three days, if they are critical for
-> some reason =E2=80=93 for example, if the issue is likely to affect many =
-users
-> of the kernel series in question on all or certain architectures. Note,
-> this includes mainline, as issues like compile errors otherwise might
-> prevent many testers or continuous integration systems from testing the
-> series.
-> """
->
-> I suspect that other distros rely on the build-id as well. Maybe I'm
-> wrong with that, but even if only Fedora and derivatives are effected it
-> will annoy some people. Sure, each can apply the revert, but before that
-> everyone affected will spend time debugging the issue first. A quick
-> revert in mainline (with a reapply later together with a fix) thus IMHO
-> is the most efficient approach afaics.
->
+[Note: this mail contains only information for Linux kernel regression
+tracking. Mails like these contain '#forregzbot' in the subject to make
+then easy to spot and filter out. The author also tried to remove most
+or all individuals from the list of recipients to spare them the hassle.]
 
-Agree with Masahiro here.
+On 13.12.22 11:26, Sudip Mukherjee (Codethink) wrote:
+> Hi All,
+> 
+> The latest mainline kernel branch fails to build xtensa allmodconfig 
+> with gcc-11 with the error:
+> 
+> kernel/kcsan/kcsan_test.c: In function '__report_matches':
+> kernel/kcsan/kcsan_test.c:257:1: error: the frame size of 1680 bytes is larger than 1536 bytes [-Werror=frame-larger-than=]
+>   257 | }
+>       | ^
+> 
+> git bisect pointed to e240e53ae0ab ("mm, slub: add CONFIG_SLUB_TINY")
 
-The issue seems to be caused by the fact that whichever object gets
-linked first gets to decide the type of a section, and so the .notes
-section will be of type NOTE if head.o gets linked first, or PROGBITS
-otherwise. The latter PROGBITS type seems to be the result of the
-compiler emitting .note.GNU-stack as PROGBITS rather than NOTE.
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
-The hunk below fixes it for me, by avoiding notes emitted as PROGBITS.
-I'll leave it to Masahiro to decide whether this should be fixed for
-arm64 only or for all architectures, but I suspect the latter would be
-most appropriate.
+#regzbot ^introduced e240e53ae0ab
+#regzbot title mm, slub: CONFIG_SLUB_TINY causes various build errors
+#regzbot ignore-activity
 
-Note that the kernel's rpm-pkg and binrpm-pkg targets seem to be
-unaffected by this.
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-diff --git a/arch/arm64/include/asm/assembler.h
-b/arch/arm64/include/asm/assembler.h
-index 376a980f2bad08bb..10a172601fe7f53f 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -818,7 +818,7 @@ alternative_endif
-
- #ifdef GNU_PROPERTY_AARCH64_FEATURE_1_DEFAULT
- .macro emit_aarch64_feature_1_and, feat=3DGNU_PROPERTY_AARCH64_FEATURE_1_D=
-EFAULT
--       .pushsection .note.gnu.property, "a"
-+       .pushsection .note.gnu.property, "a", %note
-        .align  3
-        .long   2f - 1f
-        .long   6f - 3f
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.ld=
-s.S
-index 4c13dafc98b8400f..8a8044dea71b0609 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -160,6 +160,7 @@ SECTIONS
-        /DISCARD/ : {
-                *(.interp .dynamic)
-                *(.dynsym .dynstr .hash .gnu.hash)
-+               *(.note.GNU-stack) # emitted as PROGBITS
-        }
-
-        . =3D KIMAGE_VADDR;
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
