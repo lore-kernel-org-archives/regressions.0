@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508F623A2
-	for <regressions@lists.linux.dev>; Fri, 23 Dec 2022 08:08:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AF417CD
+	for <regressions@lists.linux.dev>; Fri, 23 Dec 2022 12:20:01 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p8d6Q-00066H-Et; Fri, 23 Dec 2022 09:08:26 +0100
-Message-ID: <4563bddb-8c44-8d3f-93e3-a1433dc3af3f@leemhuis.info>
-Date: Fri, 23 Dec 2022 09:08:25 +0100
+	id 1p8h1r-0004Kz-Do; Fri, 23 Dec 2022 13:19:59 +0100
+Message-ID: <e46e349f-1eb8-7cc8-f369-8616e6467950@leemhuis.info>
+Date: Fri, 23 Dec 2022 13:19:59 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,52 +16,47 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.1
-Subject: Re: [PATCH for v6.1 regression] mm, mremap: fix mremap() expanding
- vma with addr inside vma #forregzbot
+Subject: Re: Repression on lseek (holes) on 1-byte files since Linux 6.1-rc1
+ #forregzbot
 Content-Language: en-US, de-DE
 To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20221216163227.24648-1-vbabka@suse.cz>
+Cc: linux-btrfs@vger.kernel.org
+References: <20221223020509.457113-1-joanbrugueram@gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20221216163227.24648-1-vbabka@suse.cz>
+In-Reply-To: <20221223020509.457113-1-joanbrugueram@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671782915;a806733e;
-X-HE-SMSGID: 1p8d6Q-00066H-Et
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671798001;3f425b70;
+X-HE-SMSGID: 1p8h1r-0004Kz-Do
 
 [Note: this mail contains only information for Linux kernel regression
 tracking. Mails like these contain '#forregzbot' in the subject to make
 then easy to spot and filter out. The author also tried to remove most
 or all individuals from the list of recipients to spare them the hassle.]
 
-On 16.12.22 17:32, Vlastimil Babka wrote:
-> Since 6.1 we have noticed random rpm install failures that were tracked
-> to mremap() returning -ENOMEM and to commit ca3d76b0aa80 ("mm: add
-> merging after mremap resize").
+On 23.12.22 03:05, Joan Bruguera wrote:
+> From: Joan Bruguera Micó <joanbrugueram@gmail.com>
 > 
-> The problem occurs when mremap() expands a VMA in place, but using an
-> starting address that's not vma->vm_start, but somewhere in the middle.
-> The extension_pgoff calculation introduced by the commit is wrong in
-> that case, so vma_merge() fails due to pgoffs not being compatible.
-> Fix the calculation.
+> Hello,
 > 
-> By the way it seems that the situations, where rpm now expands a vma
-> from the middle, were made possible also due to that commit, thanks to
-> the improved vma merging. Yet it should work just fine, except for the
-> buggy calculation.
+> I believe I have found a regression related to seeking file data and holes on
+> 1-byte files since Linux 6.1-rc1:
 > 
-> Reported-by: Jiri Slaby <jirislaby@kernel.org>
-> Link: https://bugzilla.suse.com/show_bug.cgi?id=1206359
-> Fixes: ca3d76b0aa80 ("mm: add merging after mremap resize")
+> Since Linux 6.1-rc1 I observe that, if I create a (non-sparse) 1-byte file and
+> immediately run `lseek(SEEK_DATA, 0)` or `lseek(SEEK_HOLE, 0)` on it, it will
+> act as if it was a sparse file, i.e. as if it had a hole from offset 0 to 1.
+> [...]
+> I've bisected the change in behaviour to commit
+> b6e833567ea12bc47d91e4b6497d49ba60d4f95f
+> "btrfs: make hole and data seeking a lot more efficient".
 
-This is just for the record, the fix will soon land, but I want to have
-this in the report I plan to send later.
+Thanks for the report. To be sure below issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+tracking bot:
 
-#regzbot ^introduced ca3d76b0aa80
-#regzbot from: Jiri Slaby <jirislaby@kernel.org>
-#regzbot title mm: random rpm install failures that were tracked to
-mremap() returning -ENOMEM
-#regzbot fix mm, mremap: fix mremap() expanding vma with addr inside vma
+#regzbot ^introduced b6e833567ea12bc47d91e4b6497d49ba60d4f95f
+#regzbot title btrfs: seeking file data and holes on 1-byte files since
+Linux 6.1-rc1 acts differently
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
