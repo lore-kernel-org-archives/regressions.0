@@ -1,67 +1,209 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3AF417CD
-	for <regressions@lists.linux.dev>; Fri, 23 Dec 2022 12:20:01 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p8h1r-0004Kz-Do; Fri, 23 Dec 2022 13:19:59 +0100
-Message-ID: <e46e349f-1eb8-7cc8-f369-8616e6467950@leemhuis.info>
-Date: Fri, 23 Dec 2022 13:19:59 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC988476
+	for <regressions@lists.linux.dev>; Fri, 23 Dec 2022 12:40:42 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1p8hLs-0001Cb-JF; Fri, 23 Dec 2022 13:40:40 +0100
+From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
+To: LKML <linux-kernel@vger.kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Linux regressions report  for mainline [2022-12-23]
+Date: Fri, 23 Dec 2022 12:40:39 +0000
+Message-Id: <167179914593.1360994.17503278527422432544@leemhuis.info>
+X-Mailer: git-send-email 2.38.1
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: Repression on lseek (holes) on 1-byte files since Linux 6.1-rc1
- #forregzbot
-Content-Language: en-US, de-DE
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-btrfs@vger.kernel.org
-References: <20221223020509.457113-1-joanbrugueram@gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20221223020509.457113-1-joanbrugueram@gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671798001;3f425b70;
-X-HE-SMSGID: 1p8h1r-0004Kz-Do
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1671799242;739de44b;
+X-HE-SMSGID: 1p8hLs-0001Cb-JF
 
-[Note: this mail contains only information for Linux kernel regression
-tracking. Mails like these contain '#forregzbot' in the subject to make
-then easy to spot and filter out. The author also tried to remove most
-or all individuals from the list of recipients to spare them the hassle.]
+Hi Linus! Below you'll find regzbot's report about regression from this
+cycle the bot was told about or I became aware of. This is a kind of
+"extra report" now that the end of the merge window is close and the
+festival season is about to go into full swing. A few notes from my side:
 
-On 23.12.22 03:05, Joan Bruguera wrote:
-> From: Joan Bruguera Micó <joanbrugueram@gmail.com>
-> 
-> Hello,
-> 
-> I believe I have found a regression related to seeking file data and holes on
-> 1-byte files since Linux 6.1-rc1:
-> 
-> Since Linux 6.1-rc1 I observe that, if I create a (non-sparse) 1-byte file and
-> immediately run `lseek(SEEK_DATA, 0)` or `lseek(SEEK_HOLE, 0)` on it, it will
-> act as if it was a sparse file, i.e. as if it had a hole from offset 0 to 1.
-> [...]
-> I've bisected the change in behaviour to commit
-> b6e833567ea12bc47d91e4b6497d49ba60d4f95f
-> "btrfs: make hole and data seeking a lot more efficient".
+* The fix for "drm: amdgpu: use-after-free and random computer hangs" is
+in the drm pull Dave send in the past 24h:
+https://lore.kernel.org/amd-gfx/20221219104718.21677-1-christian.koenig@amd.com/
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
+* Christoph two days ago merged the fix for "dma-mapping: audio devices
+disappeared", not sure if it's heading your way already:
+https://lore.kernel.org/alsa-devel/20221220082009.569785-1-hch@lst.de/
 
-#regzbot ^introduced b6e833567ea12bc47d91e4b6497d49ba60d4f95f
-#regzbot title btrfs: seeking file data and holes on 1-byte files since
-Linux 6.1-rc1 acts differently
-#regzbot ignore-activity
+* The revert to fix the "usb: ulpi: various qemu test failures" issue is
+in the works:
+https://lore.kernel.org/lkml/20221222205302.45761-1-ftoth@exalondelft.nl/
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+* I wondered if the issue "arm64: missing build-id in vmlinux breaks at
+least Fedora's kernel packaging" (on arm64) was worth a quick revert,
+but Masahiro and Ard don't think so:
+https://lore.kernel.org/lkml/CAABkxwuQoz1CTbyb57n0ZX65eSYiTonFCU8-LCQc=74D=xE=rA@mail.gmail.com/
 
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+* "wifi: mt76: wifi stopped working" needs more debugging and a simple
+revert afaics is not possible
+https://lore.kernel.org/lkml/CABXGCsMEnQd=gYKTd1knRsWuxCb=Etv5nAre%2BXJS_s5FgVteYA@mail.gmail.com/
+
+* "mm, slub: CONFIG_SLUB_TINY causes various build errors": this new
+option disables KASAN which allows other stuff to be enabled, that
+apparently were already broken; looks like the discussion stalled and
+needs a restart in the new year.
+https://lore.kernel.org/lkml/Y5hTTGf%2FRA2kpqOF@debian/
+
+BTW, a fix for a 6.1 regression causing random rpm install failures (
+https://lore.kernel.org/lkml/20221216163227.24648-1-vbabka@suse.cz/
+) is in the pile of changes Andrew's send your way in the past 24h. To
+me it feels kinda wrong that it took about one week to get this change
+into mainline, but maybe that's just me.
+
+Another revert to fix a input regression on one particular laptop sits
+in next (3c44e2b6cde6 ("Revert "Input: synaptics - switch touchpad on HP
+Laptop 15-da3001TU to RMI mode"")),
+
+The fix for the regression "net: regression tests of
+python-ephemeral-port-reserve fail" reported by Jiri is still discussed.
+
+HTH, Ciao, Thorsten
+
+
+---
+
+Hi, this is regzbot, the Linux kernel regression tracking bot.
+
+Currently I'm aware of 6 regressions in linux-mainline. Find the
+current status below and the latest on the web:
+
+https://linux-regtracking.leemhuis.info/regzbot/mainline/
+
+Bye bye, hope to see you soon for the next report.
+   Regzbot (on behalf of Thorsten Leemhuis)
+
+
+========================================================
+current cycle (v6.1.. aka v6.1-post), culprit identified
+========================================================
+
+
+[ *NEW* ] drm: amdgpu: use-after-free and random computer hangs
+---------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CABXGCsNryN9Koz48DiSTPwTBSOKo0U0B3PnW3+gEf2B8n8u0GA@mail.gmail.com/
+https://lore.kernel.org/lkml/CABXGCsNryN9Koz48DiSTPwTBSOKo0U0B3PnW3%2BgEf2B8n8u0GA@mail.gmail.com/
+
+By Mikhail Gavrilov; 4 days ago; 6 activities, latest 0 days ago.
+Introduced in aab9cf7b6954
+
+Fix incoming:
+* drm/amdgpu: grab extra fence reference for drm_sched_job_add_dependency
+  https://lore.kernel.org/lkml/28c5c38b-de13-b2b5-0ffa-8a08d96391df@leemhuis.info/
+
+
+[ *NEW* ] usb: ulpi: various qemu test failures
+-----------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/20221220194334.GA942039@roeck-us.net/
+https://lore.kernel.org/lkml/20221220194334.GA942039@roeck-us.net/
+
+By Guenter Roeck; 2 days ago; 11 activities, latest 0 days ago.
+Introduced in 8a7b31d545d3
+
+Fix incoming:
+* Revert "usb: ulpi: defer ulpi_register on ulpi_read_id timeout"
+  https://lore.kernel.org/lkml/a858f1fc-1927-c4d1-3efe-f2aff23a2cbb@leemhuis.info/
+
+
+[ *NEW* ] arm64: missing build-id in vmlinux breaks at leas Fedora's kernel packaging
+-------------------------------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CAABkxwuQoz1CTbyb57n0ZX65eSYiTonFCU8-LCQc=74D=xE=rA@mail.gmail.com/
+https://lore.kernel.org/lkml/CAABkxwuQoz1CTbyb57n0ZX65eSYiTonFCU8-LCQc=74D=xE=rA@mail.gmail.com/
+
+By Dennis Gilmore; 4 days ago; 4 activities, latest 1 days ago.
+Introduced in 994b7ac1697b
+
+Recent activities from: Ard Biesheuvel (1), Thorsten Leemhuis (1),
+  Masahiro Yamada (1), Dennis Gilmore (1)
+
+One patch associated with this regression:
+* Re: BUG: arm64: missing build-id from vmlinux
+  https://lore.kernel.org/lkml/CAMj1kXE%2BLBOBavOre1O8LTGPCmB8m58fbfo92Sx4WukyNAur-A@mail.gmail.com/
+  1 days ago, by Ard Biesheuvel
+
+
+[ *NEW* ] wifi: mt76: wifi stopped working
+------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CABXGCsMEnQd=gYKTd1knRsWuxCb=Etv5nAre+XJS_s5FgVteYA@mail.gmail.com/
+https://lore.kernel.org/lkml/CABXGCsMEnQd=gYKTd1knRsWuxCb=Etv5nAre%2BXJS_s5FgVteYA@mail.gmail.com/
+https://bugzilla.kernel.org/show_bug.cgi?id=216829
+
+By Mikhail Gavrilov and Mike Lothian; 2 days ago; 9 activities, latest 1 days ago.
+Introduced in cd372b8c99c5
+
+Recent activities from: Mikhail Gavrilov (4), Felix Fietkau (3), Lorenzo
+  Bianconi (2)
+
+4 patch postings are associated with this regression, the latest is this:
+* Re: [6.2][regression] after commit cd372b8c99c5a5cf6a464acebb7e4a79af7ec8ae stopping working wifi mt7921e
+  https://lore.kernel.org/lkml/3cb53fbd-0bee-22f9-bba2-6ac4a87db521@nbd.name/
+  1 days ago, by Felix Fietkau
+
+
+[ *NEW* ] dma-mapping: audio devices disappeared
+------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/CABXGCsPnpu0TGHnvXM1we7q1t3tJAOYW2rA=AMvf7ZahcYvpRQ@mail.gmail.com/
+https://lore.kernel.org/lkml/CABXGCsPnpu0TGHnvXM1we7q1t3tJAOYW2rA=AMvf7ZahcYvpRQ@mail.gmail.com/
+
+By Mikhail Gavrilov; 7 days ago; 14 activities, latest 2 days ago.
+Introduced in ffcb75458460
+
+Fix incoming:
+* dma-mapping: reject GFP_COMP for noncohernt allocaions
+  https://lore.kernel.org/lkml/5dff36ee-bfe5-4596-b01d-0eaca1b552bd@leemhuis.info/
+
+
+[ *NEW* ] mm, slub: CONFIG_SLUB_TINY causes various build errors
+----------------------------------------------------------------
+https://linux-regtracking.leemhuis.info/regzbot/regression/Y5hTTGf/RA2kpqOF@debian/
+https://lore.kernel.org/lkml/Y5hTTGf%2FRA2kpqOF@debian/
+
+By Sudip Mukherjee (Codethink); 10 days ago; 7 activities, latest 9 days ago.
+Introduced in e240e53ae0ab
+
+Recent activities from: Guenter Roeck (3), Vlastimil Babka (2), Sudip
+  Mukherjee (1), Sudip Mukherjee (Codethink) (1)
+
+
+=============
+End of report
+=============
+
+All regressions marked '[ *NEW* ]' were added since the previous report,
+which can be found here:
+https://lore.kernel.org/r/167077682369.767290.4323979751797298970@leemhuis.info
+
+Thanks for your attention, have a nice day!
+
+  Regzbot, your hard working Linux kernel regression tracking robot
+
+
+P.S.: Wanna know more about regzbot or how to use it to track regressions
+for your subsystem? Then check out the getting started guide or the
+reference documentation:
+
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The short version: if you see a regression report you want to see
+tracked, just send a reply to the report where you Cc
+regressions@lists.linux.dev with a line like this:
+
+#regzbot introduced: v5.13..v5.14-rc1
+
+If you want to fix a tracked regression, just do what is expected
+anyway: add a 'Link:' tag with the url to the report, e.g.:
+
+Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
