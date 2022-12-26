@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE9BE1367;
-	Mon, 26 Dec 2022 13:29:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F5861367
+	for <regressions@lists.linux.dev>; Mon, 26 Dec 2022 13:37:21 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1p9nXv-0006WF-Vk; Mon, 26 Dec 2022 14:29:40 +0100
-Message-ID: <4eac7a29-fed2-6493-a604-17fcba2a13ba@leemhuis.info>
-Date: Mon, 26 Dec 2022 14:29:39 +0100
+	id 1p9nfL-00088C-EJ; Mon, 26 Dec 2022 14:37:19 +0100
+Message-ID: <985064d2-fe9c-a02b-21f1-e6ce93c594c0@leemhuis.info>
+Date: Mon, 26 Dec 2022 14:37:19 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,41 +16,55 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH 1/2] iommu/vt-d: Fix PCI device reference count leak in
- has_external pci() #forregzbot
+Subject: Re: [6.2][regression] after commit
+ 947a629988f191807d2d22ba63ae18259bb645c5 btrfs volume periodical forced
+ switch to readonly after a lot of disk writes #forregzbot
 Content-Language: en-US, de-DE
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: iommu@lists.linux.dev
-References: <D41A3A42-2412-4722-9090-01565058E525@gmail.com>
+To: Btrfs BTRFS <linux-btrfs@vger.kernel.org>,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <CABXGCsNzVxo4iq-tJSGm_kO1UggHXgq6CdcHDL=z5FL4njYXSQ@mail.gmail.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <D41A3A42-2412-4722-9090-01565058E525@gmail.com>
+In-Reply-To: <CABXGCsNzVxo4iq-tJSGm_kO1UggHXgq6CdcHDL=z5FL4njYXSQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672061381;1b4ccdef;
-X-HE-SMSGID: 1p9nXv-0006WF-Vk
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672061841;69dd5f64;
+X-HE-SMSGID: 1p9nfL-00088C-EJ
 
 [Note: this mail contains only information for Linux kernel regression
 tracking. Mails like these contain '#forregzbot' in the subject to make
 then easy to spot and filter out. The author also tried to remove most
 or all individuals from the list of recipients to spare them the hassle.]
 
-On 25.12.22 13:11, Zeno Davatz wrote:
-> Hi
+On 25.12.22 22:32, Mikhail Gavrilov wrote:
+> Hi,
+> It is curious but it happens only on machine which have BTRFS volume
+> combined from two high speed nvme (pcie 4) SSD in RAID 0. On machines
+> with BTRFS volume from one HDD the bug does not appear.
 > 
-> I am getting this hang with kernel 6.1. See attachment.
+> To bisect the problematic commit, I had to sweat a lot. At each step,
+> I downloaded the 150 GB game "Assassin's Creed Valhalla" 4 times and
+> deleted it. For make sure that the commit previous to
+> 947a629988f191807d2d22ba63ae18259bb645c5 is definitely not affected by
+> the bug, I downloaded this game 10 times, which should have provided
+> more than 1.5 Tb of data writing to the btrfs volume.
 > 
-> Is this related to your patch?
+> Here is result of my bisection:
+> 947a629988f191807d2d22ba63ae18259bb645c5 is the first bad commit
+> [...]
+> Before going to readonly, the preceding line in kernel log display a message:
+> [ 1908.029663] BTRFS: error (device nvme0n1p3: state A) in
+> btrfs_run_delayed_refs:2147: errno=-5 IO failure
 > 
-> Kernel 6.1 does not boot for me. Kernel 6.0 was fine.
-> 
-> Thank you for your reply.
+> I also attached a full kernel log.
 
 Thanks for the report. To be sure below issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced v6.0..v6.1-rc1
-#regzbot title pci(?)/iommu(?): hang with kernel 6.1
+#regzbot ^introduced 947a629988f191807d2d22ba63ae18259bb64
+#regzbot title btrfs: volume periodical forced switch to readonly after
+a lot of disk writes
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
