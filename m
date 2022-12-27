@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B1323AF
-	for <regressions@lists.linux.dev>; Tue, 27 Dec 2022 14:29:52 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pAAxi-0003rR-3J; Tue, 27 Dec 2022 15:29:50 +0100
-Message-ID: <b76fca16-9a7a-e8a7-6d4a-36fd88ea15ac@leemhuis.info>
-Date: Tue, 27 Dec 2022 15:29:49 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC96801
+	for <regressions@lists.linux.dev>; Tue, 27 Dec 2022 14:46:41 +0000 (UTC)
+Received: by mail-ej1-f44.google.com with SMTP id u19so32350854ejm.8
+        for <regressions@lists.linux.dev>; Tue, 27 Dec 2022 06:46:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jftR37JDPZhhDCefSRbq5JLiyo4/OB0mmFtDa14MfrU=;
+        b=Ut1jV9fiZF0EMh/I5rK/wNnrD9neIh4Mbz2by75q5UwOVQQq/9ybjJwCLiBv1WZb37
+         2doyUY03hhrSZ3/2ZH9kJueWq4X6jgNX7rv5cxwxNTiV09JwIezBr1BKfn7xpwwf95H7
+         WPWRc/WsGa5EiV3sJNeE9S0YpFWCbaZb/NTPQ006NVCbERIQgRuhsX2Y7JMNagBe8ni2
+         Z04Co1GNVr/CkTjjCq1FBNLgc+DsuEMypS4nMO7kkWUltxQzgbjYoLZ3qHR4jQilUkWq
+         5QnqoQjzYXRyCnVsMLzRH7QvPrpJEB3oqjOW19exQlzFIdtRQSMZvoRSgXWVwlpsx0Iv
+         cSMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jftR37JDPZhhDCefSRbq5JLiyo4/OB0mmFtDa14MfrU=;
+        b=zdGE12LlV7vOgqZJO4ZCLZ5AI4YKkFKwtBimCUAG1qGlwFZQ9YyM5r/wYE4XzHsOjo
+         ESqA5LuH97Ttf62B3uI19DtXo/s2+yDM2u1KZrPAFXN51TdGvYoV9IrPD+KMC6NfGMvW
+         w1iEjzKtpMyhCF2puyJLEkxAc6FGWltQhsXMqS33V7JY6DO2qzNZLJ3o9Pvip5y7zkt0
+         uxpAxhb+zKYrU7tu3Bi8U0S/EFFnGeJE8mh7tu0dHARroV8C1/23/eY7c5/veuYxUM6D
+         Zip9krosqw1w55GmUCR2HdnSSgMFhtNYS4VxAikdnVfoF15Qg6XhLckgMDQ88+U3e3RE
+         Z9BA==
+X-Gm-Message-State: AFqh2koPmNFz0Vyeuggi43akbRPCyGBETDeRhCX78pmwJACmnFlmKO3C
+	TYLM96pcZmhoPLmiwCiEvek=
+X-Google-Smtp-Source: AMrXdXt/FMi8HPCMHBv/HJkH/IEj0UADwY03Mkk9wmrMngAqf1d9p0CQgGlX37N3xI9Gp1ww366a0w==
+X-Received: by 2002:a17:906:724b:b0:7c1:7669:629 with SMTP id n11-20020a170906724b00b007c176690629mr18581452ejk.49.1672152399480;
+        Tue, 27 Dec 2022 06:46:39 -0800 (PST)
+Received: from [192.168.10.127] (net-188-216-175-96.cust.vodafonedsl.it. [188.216.175.96])
+        by smtp.gmail.com with ESMTPSA id t20-20020a170906949400b007c10bb5b4b8sm6131867ejx.224.2022.12.27.06.46.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 27 Dec 2022 06:46:38 -0800 (PST)
+Message-ID: <18216b2c-d5f8-ada5-6110-192895772cbf@gmail.com>
+Date: Tue, 27 Dec 2022 15:46:37 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,52 +47,46 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [BUG] 6.2-rc1 spi-mt65xx broken on mt7986 #forregzbot
-Content-Language: en-US, de-DE
-To: linux-mediatek@lists.infradead.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <trinity-bd6bf7f8-5dbc-42fc-891b-8bfc802a1a2c-1672136902605@3c-app-gmx-bap27>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <trinity-bd6bf7f8-5dbc-42fc-891b-8bfc802a1a2c-1672136902605@3c-app-gmx-bap27>
-Content-Type: text/plain; charset=UTF-8
+ Thunderbird/102.6.1
+Subject: Re: Possible regression with kernel 6.1.0 freezing (6.0.14 is fine)
+ on haswell laptop (issue identified and patch already available)
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, regressions@lists.linux.dev
+References: <cb697d4e-406b-169b-c595-6521f8481304@gmail.com>
+ <Y6W6Qxwq94y9QGFl@kroah.com> <38cd1c38-b469-f25d-369e-57877865fdbb@gmail.com>
+ <8c3034f1-bedd-0e43-46e5-1e1fdca238a5@leemhuis.info>
+Content-Language: en-US
+From: Sergio Callegari <sergio.callegari@gmail.com>
+In-Reply-To: <8c3034f1-bedd-0e43-46e5-1e1fdca238a5@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672151392;cb02a5ba;
-X-HE-SMSGID: 1pAAxi-0003rR-3J
 
-[Note: this mail contains only information for Linux kernel regression
-tracking. Mails like these contain '#forregzbot' in the subject to make
-then easy to spot and filter out. The author also tried to remove most
-or all individuals from the list of recipients to spare them the hassle.]
+My issue was the one described in 
+https://patchwork.kernel.org/project/linux-wireless/patch/20221217085624.52077-1-nbd@nbd.name/
 
-On 27.12.22 11:28, Frank Wunderlich wrote:
-> Hi,
-> 
-> the following commit breaks SPIM-NOR on mt7986:
-> 
-> c6f7874687f7 2022-11-28 spi: mediatek: Enable irq when pdata is ready
-> 
->> [    2.145931] pc : mtk_spi_can_dma+0x0/0x34
->> [    2.155212] lr : mtk_spi_interrupt+0x74/0x360
+Thanks!
+
+Sergio
+
+On 24/12/2022 06:22, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker.
+>
+> On 23.12.22 20:51, Sergio Callegari wrote:
+>> On 23/12/2022 15:25, Greg KH wrote:
 >>
->> [    2.091801] mtk-spi 1100a000.spi: spi-mem transfer timeout
->> [    2.097310] spi-nor: probe of spi0.0 failed with error -110
->> [    2.102930] Unable to handle kernel read from unreadable memory at virtual address 0000000000000010
-> 
-> after reverting the commit, no trace happens and nor is recognized on my board
-> 
-
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced c6f7874687f7
-#regzbot title spi: spi-mt65xx broken on mt7986
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
+>>> Reported to the distro, but seems serious enough to report here too.
+> Out of curiosity: where?
+>
+>>> Can you use 'git bisect' to find the offending commit?
+>> Must learn a bit more about the distro I am using and what it requires
+>> for a custom kernel but I may try.
+> I'm writing a document I plan to submit for inclusion that might be of
+> help for you:
+>
+> http://www.leemhuis.info/files/misc/How%20to%20quickly%20build%20a%20Linux%20kernel%20%e2%80%94%20The%20Linux%20Kernel%20documentation.html
+>
+> It doesn't cover bisection, I left that for later (and maybe separate
+> document), as I want this one reviewed and merged first.
+>
+> Ciao, Thorsten
