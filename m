@@ -1,13 +1,13 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735DA1392
-	for <regressions@lists.linux.dev>; Tue, 27 Dec 2022 13:15:46 +0000 (UTC)
-Received: from [192.168.1.139] ([37.4.248.41]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MPXpS-1pVYGZ1rV4-00MZ1Z; Tue, 27 Dec 2022 14:15:29 +0100
-Message-ID: <0b7fadf3-7409-acc0-e722-e6bdfa4bf6c9@i2se.com>
-Date: Tue, 27 Dec 2022 14:15:28 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC88E2108
+	for <regressions@lists.linux.dev>; Tue, 27 Dec 2022 14:01:43 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pAAWN-0003Vx-5D; Tue, 27 Dec 2022 15:01:35 +0100
+Message-ID: <ae169fc6-f504-28f0-a098-6fa6a4dfb612@leemhuis.info>
+Date: Tue, 27 Dec 2022 15:01:34 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,152 +15,118 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: Regression: onboard-usb-hub breaks USB on RPi 3
-From: Stefan Wahren <stefan.wahren@i2se.com>
-To: Matthias Kaehlcke <mka@chromium.org>,
- Doug Anderson <dianders@chromium.org>, Icenowy Zheng <uwu@icenowy.me>,
- Johan Hovold <johan@kernel.org>
-Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org,
- regressions@lists.linux.dev, Florian Fainelli <f.fainelli@gmail.com>
-References: <d04bcc45-3471-4417-b30b-5cf9880d785d@i2se.com>
- <Y6Ci7wWvbBRRQkR6@google.com> <97c9b305-86f4-5918-54bf-4057e99eae3d@i2se.com>
- <Y6ECMZeh7G9bH8Fi@google.com> <db6f59bf-33a1-776e-b52c-4818ff9114e3@i2se.com>
- <Y6I8L45rDhqBMfUZ@google.com> <dde8b5e1-fbce-dd6c-6047-09e03ff2c00d@i2se.com>
- <Y6M5SPBpp/xMzUz7@google.com> <4a170314-6082-f3ba-cfb4-c19d7eb576c0@i2se.com>
- <Y6NYK4/jp/QmusOX@google.com> <8503cdb5-6089-b9e4-25ff-f3ac294b7a79@i2se.com>
-Content-Language: en-US
-In-Reply-To: <8503cdb5-6089-b9e4-25ff-f3ac294b7a79@i2se.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:hM3x2b0bXO1vS4Iq8j6MEuV++26dyy9Oh6gRmo0TPOTqDoVmWjQ
- 7oI+nT6R0b47AaAAkJI6sxVjpKqjQvBQC7N8HCzTyYjpdkPUzcFsbY9J/yh40Sbu6gQuYmr
- 7oUTyDspPFlRzqGBOp/Em/YyiMA7c4mz9go4Lym4gmYjlkL7T2b8W7m8TfL7zSeb/Y/XQ+J
- 7GuxCjZNj2YRIzwfy+KnQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:zPvkTrhQOkU=;jClq5aR2JWaVWJVqdzPO288OB8B
- +RGivz0aFGNQxJpBUrW1VSGGOQ9lcVE0ZbkPGDgW4/W3SghDzUjyUIlHD2VyLQJLQpXnikLlY
- K0FPwJJBcqI2Vatf+OFA53iEmjnE9wZJi1pvhtgnHE1ujvUDc3CnAVAl1PNPQxnWWCwyrKsNP
- EOydRCDl/n5Ed6TuRBbl/0KmmTiqJaaoea/96v83ACBjbAJ9H8AWjqogHOQnLRYMAS6v1Rjcn
- gzNcoVrrMJNemPlF992bIRBD3wSDCiizLn/KLCU6bs+epdQHBzo8urxCVrWFZDcz1Vq6f7IeD
- GOiStdSuk9viChkMwXw2g2/16gcu7aUaC1qtrBmO7nI48wGEU6Fi8EByG1OA6iGgeuFq4DY/U
- vMRwJ6JHiMlTsr9N58x/MgZgGEs1HZqWG25RCMX6+9K4i/eSexmbahRfhdWBMsKIo2ld9tBcb
- HeaWy3U1NZXivTgn2u6/Cd0T097KwhaHAqX0yF2TaWLG0VLQHuuX6OfWC00pYVM2/hY5vlTQ4
- 7Dz8u8WrZRXrijT9nZxpwNYjC3dO8iZzPKEYRc3vGHzGb/iVIzgqet2Y/V+IUZOftTuz07mFO
- S+L2D45TplU0r2jYXfOa6TkTdV0x0x3fuJJxhrk4rg77lUfkPGLrGomFx1DSLyzTR9FAwa/6x
- EBQbP5sQPJV9qUAI/eSPtLs+vJ9HQvYlDI5UP7Uspg==
+ Thunderbird/102.6.0
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: linux-btrfs <linux-btrfs@vger.kernel.org>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>, LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: =?UTF-8?Q?=5bregression=5d_Bug=c2=a0216851_-_btrfs_write_time_corru?=
+ =?UTF-8?Q?pting_for_log_tree?=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672149704;d284ac51;
+X-HE-SMSGID: 1pAAWN-0003Vx-5D
 
-Hi,
+Hi, this is your Linux kernel regression tracker speaking.
 
-[add Doug, Icenowy and Johan]
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216851 :
 
-Am 21.12.22 um 22:31 schrieb Stefan Wahren:
-> Hi Matthias,
->
-> Am 21.12.22 um 20:02 schrieb Matthias Kaehlcke:
->> Hi Stefan,
->>
->> On Wed, Dec 21, 2022 at 07:00:41PM +0100, Stefan Wahren wrote:
->>> I will try to play with lock debugging.
->> Thanks, hopefully that can provide some hint.
->>
-> DETECT_HUNG_TASK reveals this in error case:
->
-> [  243.676253] INFO: task kworker/2:1:44 blocked for more than 122 
-> seconds.
-> [  243.676284]       Not tainted 6.1.0-00007-g22fada783b9f #32
-> [  243.676294] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-> disables this message.
-> [  243.676303] task:kworker/2:1     state:D stack:0     pid:44 
-> ppid:2      flags:0x00000000
-> [  243.676329] Workqueue: events onboard_hub_attach_usb_driver 
-> [onboard_usb_hub]
-> [  243.676388]  __schedule from schedule+0x58/0xf8
-> [  243.676419]  schedule from schedule_preempt_disabled+0x1c/0x2c
-> [  243.676445]  schedule_preempt_disabled from 
-> __mutex_lock.constprop.0+0x29c/0x948
-> [  243.676474]  __mutex_lock.constprop.0 from __driver_attach+0x74/0x188
-> [  243.676503]  __driver_attach from bus_for_each_dev+0x70/0xb0
-> [  243.676532]  bus_for_each_dev from 
-> onboard_hub_attach_usb_driver+0xc/0x28 [onboard_usb_hub]
-> [  243.676587]  onboard_hub_attach_usb_driver [onboard_usb_hub] from 
-> process_one_work+0x1f8/0x520
-> [  243.676637]  process_one_work from worker_thread+0x40/0x55c
-> [  243.676663]  worker_thread from kthread+0xf0/0x110
-> [  243.676685]  kthread from ret_from_fork+0x14/0x2c
-> [  243.676705] Exception stack(0xf091dfb0 to 0xf091dff8)
-> [  243.676720] dfa0:                                     00000000 
-> 00000000 00000000 00000000
-> [  243.676737] dfc0: 00000000 00000000 00000000 00000000 00000000 
-> 00000000 00000000 00000000
-> [  243.676752] dfe0: 00000000 00000000 00000000 00000000 00000013 
-> 00000000
-> [  243.676788] INFO: task systemd-udevd:148 blocked for more than 122 
-> seconds.
-> [  243.676800]       Not tainted 6.1.0-00007-g22fada783b9f #32
-> [  243.676809] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" 
-> disables this message.
-> [  243.676817] task:systemd-udevd   state:D stack:0     pid:148 
-> ppid:144    flags:0x00000081
-> [  243.676839]  __schedule from schedule+0x58/0xf8
-> [  243.676864]  schedule from schedule_timeout+0xb4/0x15c
-> [  243.676893]  schedule_timeout from __wait_for_common+0xc4/0x228
-> [  243.676922]  __wait_for_common from __flush_work+0x1a8/0x360
-> [  243.676949]  __flush_work from __cancel_work_timer+0x10c/0x1e4
-> [  243.676975]  __cancel_work_timer from onboard_hub_remove+0x28/0xbc 
-> [onboard_usb_hub]
-> [  243.677021]  onboard_hub_remove [onboard_usb_hub] from 
-> platform_remove+0x20/0x4c
-> [  243.677067]  platform_remove from 
-> device_release_driver_internal+0x194/0x21c
-> [  243.677092]  device_release_driver_internal from 
-> bus_remove_device+0xcc/0xf8
-> [  243.677124]  bus_remove_device from device_del+0x16c/0x468
-> [  243.677159]  device_del from platform_device_del.part.0+0x10/0x74
-> [  243.677187]  platform_device_del.part.0 from 
-> platform_device_unregister+0x18/0x24
-> [  243.677216]  platform_device_unregister from 
-> of_platform_device_destroy+0x98/0xa8
-> [  243.677249]  of_platform_device_destroy from 
-> onboard_hub_destroy_pdevs+0x48/0x6c
-> [  243.677287]  onboard_hub_destroy_pdevs from hub_disconnect+0x104/0x174
-> [  243.677321]  hub_disconnect from usb_unbind_interface+0x78/0x26c
-> [  243.677356]  usb_unbind_interface from 
-> device_release_driver_internal+0x194/0x21c
-> [  243.677388]  device_release_driver_internal from 
-> bus_remove_device+0xcc/0xf8
-> [  243.677419]  bus_remove_device from device_del+0x16c/0x468
-> [  243.677452]  device_del from usb_disable_device+0xcc/0x178
-> [  243.677486]  usb_disable_device from usb_set_configuration+0x4ec/0x8d0
-> [  243.677523]  usb_set_configuration from usb_unbind_device+0x24/0x7c
-> [  243.677560]  usb_unbind_device from 
-> device_release_driver_internal+0x194/0x21c
-> [  243.677590]  device_release_driver_internal from 
-> device_reprobe+0x18/0x90
-> [  243.677620]  device_reprobe from __usb_bus_reprobe_drivers+0x40/0x6c
-> [  243.677648]  __usb_bus_reprobe_drivers from bus_for_each_dev+0x70/0xb0
-> [  243.677676]  bus_for_each_dev from 
-> usb_register_device_driver+0x9c/0xd0
-> [  243.677713]  usb_register_device_driver from 
-> onboard_hub_init+0x30/0x1000 [onboard_usb_hub]
-> [  243.677765]  onboard_hub_init [onboard_usb_hub] from 
-> do_one_initcall+0x40/0x204
-> [  243.677811]  do_one_initcall from do_init_module+0x44/0x1d4
-> [  243.677840]  do_init_module from sys_finit_module+0xbc/0xf8
-> [  243.677865]  sys_finit_module from __sys_trace_return+0x0/0x10
-> [  243.677887] Exception stack(0xf4659fa8 to 0xf4659ff0)
-> [  243.677904] 9fa0:                   bf369800 0051dba8 00000006 
-> b6e438e0 00000000 b6e443f4
-> [  243.677921] 9fc0: bf369800 0051dba8 00000000 0000017b 00531658 
-> 0051a1dc 00526398 00000000
-> [  243.677935] 9fe0: befbb160 befbb150 b6e3a9d8 b6f2aae0
->
-since Matthias patch [1] has been rejected any ideas to this issue would 
-be helpful.
+> I am experiencing btrfs file system errors followed by a switch to readony with kernel 6.1 and 6.1.1. It never happened with kernel versions before.
+> 
+> A btrfs scrub and a btrfs check --readonly returned 0 errors.
+> 
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS critical (device sda2): corrupt leaf: root=18446744073709551610 block=203366612992 slot=73, bad key order, prev (484119 96 1312873) current (484119 96 1312849)
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS info (device sda2): leaf 203366612992 gen 5068802 total ptrs 105 free space 10820 owner 18446744073709551610
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 0 key (484119 1 0) itemoff 16123 itemsize 160
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09inode generation 45 size 2250 mode 40700
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 1 key (484119 12 484118) itemoff 16097 itemsize 26
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 2 key (484119 72 15) itemoff 16089 itemsize 8
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 3 key (484119 72 20) itemoff 16081 itemsize 8
+> ...
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 82 key (484119 96 1312873) itemoff 14665 itemsize 51
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 83 key (484119 96 1312877) itemoff 14609 itemsize 56
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 84 key (484128 1 0) itemoff 14449 itemsize 160
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09inode generation 45 size 98304 mode 100644
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 85 key (484128 108 0) itemoff 14396 itemsize 53
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data disk bytenr 10674830381056 nr 65536
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data offset 0 nr 65536 ram 65536
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 86 key (484129 1 0) itemoff 14236 itemsize 160
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09inode generation 45 size 26214400 mode 100644
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 87 key (484129 108 589824) itemoff 14183 itemsize 53
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data disk bytenr 10665699962880 nr 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data offset 0 nr 32768 ram 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 88 key (484129 108 2850816) itemoff 14130 itemsize 53
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data disk bytenr 10665848733696 nr 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data offset 0 nr 32768 ram 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 89 key (484129 108 11042816) itemoff 14077 itemsize 53
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data disk bytenr 10660869349376 nr 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data offset 0 nr 32768 ram 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 90 key (484129 108 13402112) itemoff 14024 itemsize 53
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data disk bytenr 10660207378432 nr 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data offset 0 nr 32768 ram 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 91 key (484129 108 19628032) itemoff 13971 itemsize 53
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data disk bytenr 10665835618304 nr 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data offset 0 nr 32768 ram 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 92 key (484129 108 21266432) itemoff 13918 itemsize 53
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data disk bytenr 10661222666240 nr 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data offset 0 nr 32768 ram 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 93 key (484129 108 22740992) itemoff 13865 itemsize 53
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data disk bytenr 10665565814784 nr 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data offset 0 nr 32768 ram 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 94 key (484129 108 23101440) itemoff 13812 itemsize 53
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data disk bytenr 10665836371968 nr 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data offset 0 nr 32768 ram 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 95 key (484129 108 24084480) itemoff 13759 itemsize 53
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data disk bytenr 10665836404736 nr 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data offset 0 nr 32768 ram 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 96 key (484129 108 24150016) itemoff 13706 itemsize 53
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data disk bytenr 10665849159680 nr 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data offset 0 nr 32768 ram 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 97 key (484129 108 24313856) itemoff 13653 itemsize 53
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data disk bytenr 10665849192448 nr 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09extent data offset 0 nr 32768 ram 32768
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 98 key (484147 1 0) itemoff 13493 itemsize 160
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09\x09inode generation 45 size 886 mode 40755
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 99 key (484147 72 4) itemoff 13485 itemsize 8
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 100 key (484147 72 27) itemoff 13477 itemsize 8
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 101 key (484147 72 35) itemoff 13469 itemsize 8
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 102 key (484147 72 40) itemoff 13461 itemsize 8
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 103 key (484147 72 45) itemoff 13453 itemsize 8
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 104 key (484147 72 52) itemoff 13445 itemsize 8
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS error (device sda2): block=203366612992 write time tree block corruption detected
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS: error (device sda2: state AL) in free_log_tree:3284: errno=-5 IO failure
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS info (device sda2: state EAL): forced readonly
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS warning (device sda2: state EAL): Skipping commit of aborted transaction.
+> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS: error (device sda2: state EAL) in cleanup_transaction:1958: errno=-5 IO failure
+> 
+> 
+> There are no SSD access errors in the kernel logs. Smart data for the SSD is normal. I also did a 12 hour memtest to rule out bad RAM.
+> 
+> The filesystem consists of a single 480GB SATA SSD (Corsair Neutron XTI). The problems occurs only on one machine.
+> 
+> The error appears about every few days and seems to be triggered by a cspecially under high cpu utilization combined with some disk IO. CPU temperature never exceeds 60 degrees.
 
-Best regards
+See the ticket for more details.
 
-[1] - 
-https://lore.kernel.org/lkml/9f42f88f-26bc-1e82-03a0-659c85c40469@i2se.com/T/
+For the record, the issue is apparently different from the 6.2-rc
+regression currently discussed, as stated here:
+https://lore.kernel.org/lkml/462e7bd3-d1f2-3718-fde9-77b418e9fd91@gmx.com/
 
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.0..v6.1
+https://bugzilla.kernel.org/show_bug.cgi?id=216851
+#regzbot title: btrfs: write time corrupting for log tree in 6.1
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
