@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD28806
-	for <regressions@lists.linux.dev>; Wed, 28 Dec 2022 08:40:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A92910E9
+	for <regressions@lists.linux.dev>; Wed, 28 Dec 2022 08:43:42 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pARzE-00014n-Ay; Wed, 28 Dec 2022 09:40:32 +0100
-Message-ID: <2aa5cc7e-ca00-22a7-5e2f-7eb73556181e@leemhuis.info>
-Date: Wed, 28 Dec 2022 09:40:31 +0100
+	id 1pAS2G-0001j4-DE; Wed, 28 Dec 2022 09:43:40 +0100
+Message-ID: <40ce69e8-04ed-2b5b-741c-ef7409a7005a@leemhuis.info>
+Date: Wed, 28 Dec 2022 09:43:40 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,39 +16,39 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [GIT PULL] acl updates for v6.2 #forregzbot
+Subject: Re: WLAN broken on Nokia N900 with v6.2-rc1 #forregzbot
 Content-Language: en-US, de-DE
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Cc: linux-fsdevel@vger.kernel.org
-References: <20221212111919.98855-1-brauner@kernel.org>
- <29161.1672154875@jrobl>
+To: linux-wireless@vger.kernel.org
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <Y6tTLPvsxh/Im4Ed@tp440p.steeds.sam>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <29161.1672154875@jrobl>
+In-Reply-To: <Y6tTLPvsxh/Im4Ed@tp440p.steeds.sam>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672216834;359ba8da;
-X-HE-SMSGID: 1pARzE-00014n-Ay
+Content-Transfer-Encoding: quoted-printable
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672217022;d2cba2d4;
+X-HE-SMSGID: 1pAS2G-0001j4-DE
 
 [Note: this mail contains only information for Linux kernel regression
 tracking. Mails like these contain '#forregzbot' in the subject to make
 then easy to spot and filter out. The author also tried to remove most
-or all individuals from the list of recipients to spare them the hassle.]
+or all individuals from the list of recipients to spare them the hassle.]=
 
-On 27.12.22 16:27, J. R. Okajima wrote:
-> 
-> Christian Brauner:
->> This series passes the LTP and xfstests suites without any regressions. For
->> xfstests the following combinations were tested:
-> 
-> I've found a behaviour got changed from v6.1 to v6.2-rc1 on ext3 (ext4).
+
+On 27.12.22 21:18, Sicelo wrote:
+> Hi
+>=20
+> With linux 6.2-rc1, wlan is broken on the Nokia N900 with wl1251, while=
+
+> it was working up to at least 6.1-rc7. The driver probes fine and I can=
+
+> scan for networks. However it is not possible to connect to any.
 
 Thanks for the report. To be sure below issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced v6.1..v6.2-rc1
-#regzbot title fs: ext3/acl: behavior changed (ls and getact show
-slightly different output)
+#regzbot ^introduced a790cc3a4fad75048295571a350b95b87e022a5a
+#regzbot title net: wifi: WLAN broken on Nokia N900
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
@@ -58,42 +58,115 @@ reports and sometimes miss something important when writing mails like
 this. If that's the case here, don't hesitate to tell me in a public
 reply, it's in everyone's interest to set the public record straight.
 
-> ----------------------------------------
-> on v6.1
-> + ls -ld /dev/shm/rw/hd-test/newdir
-> drwxrwsr-x 2 nobody nogroup 1024 Dec 27 14:46 /dev/shm/rw/hd-test/newdir
-> 
-> + getfacl -d /dev/shm/rw/hd-test/newdir
-> # file: dev/shm/rw/hd-test/newdir
-> # owner: nobody
-> # group: nogroup
-> # flags: -s-
-> 
-> ----------------------------------------
-> on v6.2-rc1
-> + ls -ld /dev/shm/rw/hd-test/newdir
-> drwxrwsr-x+ 2 nobody nogroup 1024 Dec 27 23:51 /dev/shm/rw/hd-test/newdir
-> 
-> + getfacl -d /dev/shm/rw/hd-test/newdir
-> # file: dev/shm/rw/hd-test/newdir
-> # owner: nobody
-> # group: nogroup
-> # flags: -s-
-> user::rwx
-> user:root:rwx
-> group::r-x
-> mask::rwx
-> other::r-x
-> 
-> ----------------------------------------
-> 
-> - in the output from 'ls -l', the extra '+' appears
-> - in the output from 'getfacl -d', some lines are appended
-> - in those lines, I am not sure whether 'user:root:rwx' is correct or
->   not. Even it is correct, getfacl on v6.1 didn't produce such lines.
-> 
-> Is this change intentional?
-> In other words, is this patch series for a bugfix?
-> 
-> 
-> J. R. Okajima
+> dmesg contains the following:
+>=20
+>=20
+> [  143.202484] WARNING: CPU: 0 PID: 1300 at net/wireless/core.c:1463 cf=
+g80211_netdev_notifier_call+0x26d/0x30c [cfg80211]
+> [  143.203613] Modules linked in: nft_reject_inet nf_reject_ipv4 nf_rej=
+ect_ipv6 nft_reject nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_=
+tables nfnetlink bnep cmt_speech nokia_modem ssi_protocol phonet radio_pl=
+atform_si4713 joydev mousedev hsi_char wl1251_spi wl1251 mac80211 libarc4=
+ omap3_rom_rng rng_core ir_rx51 pwm_omap_dmtimer rc_core snd_soc_rx51 rx5=
+1_battery isp1704_charger cpufreq_dt snd_soc_omap_mcbsp snd_soc_ti_sdma o=
+map_wdt cfg80211 omap3_isp videobuf2_dma_contig videobuf2_memops videobuf=
+2_v4l2 videobuf2_common omap_sham crypto_engine snd_soc_tlv320aic3x_i2c s=
+nd_soc_tlv320aic3x snd_soc_tpa6130a2 tsc2005 snd_soc_core regmap_spi snd_=
+pcm_dmaengine tsc200x_core snd_pcm omap_mailbox snd_timer leds_lp5523 bq2=
+7xxx_battery_i2c snd si4713 leds_lp55xx_common bq27xxx_battery soundcore =
+led_class tsl2563 twl4030_wdt hci_nokia rtc_twl hci_uart btbcm bluetooth =
+twl4030_vibra pwm_twl_led pwm_twl ff_memless ecdh_generic twl4030_madc ec=
+c rfkill libaes et8ek8 ad5820 v4l2_fwnode v4l2_async
+> [  143.205780]  st_accel_i2c st_sensors_i2c st_accel industrialio_trigg=
+ered_buffer kfifo_buf st_sensors videodev industrialio omap_ssi mc hsi
+> [  143.206146] CPU: 0 PID: 1300 Comm: NetworkManager Tainted: G        =
+W          6.2.0-rc1-nokia-n900+ #1
+> [  143.206207] Hardware name: Nokia RX-51 board
+> [  143.206268]  unwind_backtrace from show_stack+0xb/0xc
+> [  143.206390]  show_stack from dump_stack_lvl+0x2b/0x34
+> [  143.206512]  dump_stack_lvl from __warn+0xdb/0xe8
+> [  143.206604]  __warn from warn_slowpath_fmt+0x3f/0x76
+> [  143.206726]  warn_slowpath_fmt from cfg80211_netdev_notifier_call+0x=
+26d/0x30c [cfg80211]
+> [  143.207519]  cfg80211_netdev_notifier_call [cfg80211] from raw_notif=
+ier_call_chain+0x31/0x3c
+> [  143.208282]  raw_notifier_call_chain from __dev_notify_flags+0x3f/0x=
+90
+> [  143.208404]  __dev_notify_flags from dev_change_flags+0x2d/0x34
+> [  143.208496]  dev_change_flags from do_setlink+0x20f/0xa98
+> [  143.208587]  do_setlink from rtnl_newlink+0x341/0x5f0
+> [  143.208679]  rtnl_newlink from rtnetlink_rcv_msg+0x193/0x218
+> [  143.208770]  rtnetlink_rcv_msg from netlink_rcv_skb+0x75/0xb0
+> [  143.208892]  netlink_rcv_skb from netlink_unicast+0x113/0x1b4
+> [  143.208984]  netlink_unicast from netlink_sendmsg+0x161/0x31c
+> [  143.209106]  netlink_sendmsg from ____sys_sendmsg+0x123/0x158
+> [  143.209228]  ____sys_sendmsg from ___sys_sendmsg+0x43/0x68
+> [  143.209350]  ___sys_sendmsg from sys_sendmsg+0x33/0x60
+> [  143.209442]  sys_sendmsg from ret_fast_syscall+0x1/0x5c
+> [  143.209564] Exception stack(0xd0149fa8 to 0xd0149ff0)
+> [  143.209625] 9fa0:                   00000000 00000000 0000000d beabf=
+550 00000000 00000000
+> [  143.209686] 9fc0: 00000000 00000000 00000001 00000128 beabf67c beabf=
+678 00000000 beabf674
+> [  143.209747] 9fe0: beabf508 beabf4f8 b6fadcdb b6fad994
+> [  143.209808] ---[ end trace 0000000000000000 ]---
+> [  143.241180] ------------[ cut here ]------------
+> [  143.241241] WARNING: CPU: 0 PID: 25 at net/wireless/scan.c:1021 cfg8=
+0211_scan_done+0x6b/0x124 [cfg80211]
+> [  143.241912] Modules linked in: nft_reject_inet nf_reject_ipv4 nf_rej=
+ect_ipv6 nft_reject nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_=
+tables nfnetlink bnep cmt_speech nokia_modem ssi_protocol phonet radio_pl=
+atform_si4713 joydev mousedev hsi_char wl1251_spi wl1251 mac80211 libarc4=
+ omap3_rom_rng rng_core ir_rx51 pwm_omap_dmtimer rc_core snd_soc_rx51 rx5=
+1_battery isp1704_charger cpufreq_dt snd_soc_omap_mcbsp snd_soc_ti_sdma o=
+map_wdt cfg80211 omap3_isp videobuf2_dma_contig videobuf2_memops videobuf=
+2_v4l2 videobuf2_common omap_sham crypto_engine snd_soc_tlv320aic3x_i2c s=
+nd_soc_tlv320aic3x snd_soc_tpa6130a2 tsc2005 snd_soc_core regmap_spi snd_=
+pcm_dmaengine tsc200x_core snd_pcm omap_mailbox snd_timer leds_lp5523 bq2=
+7xxx_battery_i2c snd si4713 leds_lp55xx_common bq27xxx_battery soundcore =
+led_class tsl2563 twl4030_wdt hci_nokia rtc_twl hci_uart btbcm bluetooth =
+twl4030_vibra pwm_twl_led pwm_twl ff_memless ecdh_generic twl4030_madc ec=
+c rfkill libaes et8ek8 ad5820 v4l2_fwnode v4l2_async
+> [  143.243041]  st_accel_i2c st_sensors_i2c st_accel industrialio_trigg=
+ered_buffer kfifo_buf st_sensors videodev industrialio omap_ssi mc hsi
+> [  143.243225] CPU: 0 PID: 25 Comm: kworker/u2:2 Tainted: G        W   =
+       6.2.0-rc1-nokia-n900+ #1
+> [  143.243255] Hardware name: Nokia RX-51 board
+> [  143.243286] Workqueue: phy0 ieee80211_scan_work [mac80211]
+> [  143.243865]  unwind_backtrace from show_stack+0xb/0xc
+> [  143.243927]  show_stack from dump_stack_lvl+0x2b/0x34
+> [  143.243988]  dump_stack_lvl from __warn+0xdb/0xe8
+> [  143.244049]  __warn from warn_slowpath_fmt+0x3f/0x76
+> [  143.244110]  warn_slowpath_fmt from cfg80211_scan_done+0x6b/0x124 [c=
+fg80211]
+> [  143.244598]  cfg80211_scan_done [cfg80211] from __ieee80211_scan_com=
+pleted+0x85/0x2d8 [mac80211]
+> [  143.245269]  __ieee80211_scan_completed [mac80211] from ieee80211_sc=
+an_work+0xdf/0x3b4 [mac80211]
+> [  143.245849]  ieee80211_scan_work [mac80211] from process_one_work+0x=
+153/0x35c
+> [  143.246185]  process_one_work from worker_thread+0xd9/0x3d4
+> [  143.246246]  worker_thread from kthread+0xad/0xc0
+> [  143.246276]  kthread from ret_from_fork+0x11/0x20
+> [  143.246337] Exception stack(0xd0085fb0 to 0xd0085ff8)
+> [  143.246368] 5fa0:                                     00000000 00000=
+000 00000000 00000000
+> [  143.246398] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000=
+000 00000000 00000000
+> [  143.246429] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000=
+000
+> [  143.246459] ---[ end trace 0000000000000000 ]---
+>=20
+>=20
+>=20
+> I tried to bisect with v6.2-rc1 as bad and v6.1-rc7 as good commits, an=
+d
+> it suggested a790cc3a4fad75048295571a350b95b87e022a5a as the first bad
+> commit. However I am not entirely sure yet what the real cause is, and
+> the correct fix.
+>=20
+> I will appreciate assistance with this issue, and/or ideas how to
+> troubleshoot it further.
+>=20
+> Regards
+> Sicelo
