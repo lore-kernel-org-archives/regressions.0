@@ -1,119 +1,86 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C3F1868
-	for <regressions@lists.linux.dev>; Wed, 28 Dec 2022 14:58:17 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id D721C6008775;
-	Wed, 28 Dec 2022 14:50:49 +0000 (WET)
-X-Virus-Scanned: by amavisd-new-2.11.0 (20160426) (Debian) at
-	tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
-	by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavisd-new, port 10025)
-	with LMTP id HQFEh9eA__YI; Wed, 28 Dec 2022 14:50:46 +0000 (WET)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id C49DE600876F;
-	Wed, 28 Dec 2022 14:50:46 +0000 (WET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tecnico.ulisboa.pt;
-	s=mail; t=1672239046;
-	bh=1HO4Euafnc3ATG0WLfDkiuUVCgo90WriGTavAR16hUY=;
-	h=Date:From:To:Cc:Subject;
-	b=KL4BZIRAdPdUIOiqIBxUYZv/G2GM/dz0gLzls8Q/Z380lvMaG3gkaJpapim4aKqVg
-	 CLk037AggI/XDTjxSVJ4PcEcr4nrxJEylm2W91WH0aeFkS1ZsL5q0eKr38e/uyMJ2Z
-	 mi/mKUOiyDvJdIiZpWBaXRhRprfhJgK42ZOEWjFc=
-Received: from wslaptop (unknown [IPv6:2001:8a0:fbe7:6700:65be:d034:d2ec:60ff])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id DE47B360071;
-	Wed, 28 Dec 2022 14:50:45 +0000 (WET)
-Date: Wed, 28 Dec 2022 14:49:14 +0000
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-To: diogo.ivo@tecnico.ulisboa.pt
-Cc: regressions@lists.linux.dev, bskeggs@redhat.com,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-	airlied@redhat.com
-Subject: [REGRESSION] GM20B probe fails after commit 2541626cfb79
-Message-ID: <20221228144914.z7t7a4fdwvbblnak@wslaptop>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E656D24
+	for <regressions@lists.linux.dev>; Wed, 28 Dec 2022 20:24:52 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id BBA5C21A21;
+	Wed, 28 Dec 2022 20:24:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1672259084; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PNZQeMoVy7KGBZd3TY/hjBMsT8Wahi2q2P3jL0HXUCM=;
+	b=tM2qJZhfi+SXzV27m5JEZd9GV5wClY52zAhFoccQlN8dpIzzvNouvfILmLE8cQzFBjYvVM
+	Up8RcjucQd8KQncfBVF95Rg7GDne7MDMkFzQrY7GZqjh3YsvAq3svw8ba8J0AJSonHr6nO
+	/18RRjOBU7cGfGUGEH/FzUPKCKsWyxI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1672259084;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=PNZQeMoVy7KGBZd3TY/hjBMsT8Wahi2q2P3jL0HXUCM=;
+	b=FXKd3ScYdOkNc6F3uKQe/h4ql4UCQ6G+bOr0MMaKzWX4QuYZRE2kDI+6DyTGkmuOehsMUE
+	pbMZ/jPF58AUBODw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6F496134F5;
+	Wed, 28 Dec 2022 20:24:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id 6y7VGQymrGNrRQAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Wed, 28 Dec 2022 20:24:44 +0000
+Message-ID: <7cbe96cf-e0b5-ba63-d1b4-f63d2e826efa@suse.cz>
+Date: Wed, 28 Dec 2022 21:22:56 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+From: Vlastimil Babka <vbabka@suse.cz>
+Subject: [REGRESSION] suspend to ram fails in 6.2-rc1 due to tpm errors
+To: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Jan Dabros <jsd@semihalf.com>
+Cc: regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+ linux-integrity@vger.kernel.org,
+ Dominik Brodowski <linux@dominikbrodowski.net>,
+ "Jason A. Donenfeld" <Jason@zx2c4.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Linus Torvalds <torvalds@linux-foundation.org>
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Ugh, while the problem [1] was fixed in 6.1, it's now happening again on
+the T460 with 6.2-rc1. Except I didn't see any oops message or
+"tpm_try_transmit" error this time. The first indication of a problem is
+this during a resume from suspend to ram:
 
-Commit 2541626cfb79 breaks GM20B probe with
-the following kernel log:
+tpm tpm0: A TPM error (28) occurred continue selftest
 
-[    2.153892] ------------[ cut here ]------------
-[    2.153897] WARNING: CPU: 1 PID: 36 at drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgf100.c:273 gf100_vmm_valid+0x2c4/0x390
-[    2.153916] Modules linked in:
-[    2.153922] CPU: 1 PID: 36 Comm: kworker/u8:1 Not tainted 6.1.0+ #1
-[    2.153929] Hardware name: Google Pixel C (DT)
-[    2.153933] Workqueue: events_unbound deferred_probe_work_func
-[    2.153943] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    2.153950] pc : gf100_vmm_valid+0x2c4/0x390
-[    2.153959] lr : gf100_vmm_valid+0xb4/0x390
-[    2.153966] sp : ffffffc009e134b0
-[    2.153969] x29: ffffffc009e134b0 x28: 0000000000000000 x27: ffffffc008fd44c8
-[    2.153979] x26: 00000000ffffffea x25: ffffffc0087b98d0 x24: ffffff8080f89038
-[    2.153987] x23: ffffff8081fadc08 x22: 0000000000000000 x21: 0000000000000000
-[    2.153995] x20: ffffff8080f8a000 x19: ffffffc009e13678 x18: 0000000000000000
-[    2.154003] x17: f37a8b93418958e6 x16: ffffffc009f0d000 x15: 0000000000000000
-[    2.154011] x14: 0000000000000002 x13: 000000000003a020 x12: ffffffc008000000
-[    2.154019] x11: 0000000102913000 x10: 0000000000000000 x9 : 0000000000000000
-[    2.154026] x8 : ffffffc009e136d8 x7 : ffffffc008fd44c8 x6 : ffffff80803d0f00
-[    2.154034] x5 : 0000000000000000 x4 : ffffff8080f88c00 x3 : 0000000000000010
-[    2.154041] x2 : 000000000000000c x1 : 00000000ffffffea x0 : 00000000ffffffea
-[    2.154050] Call trace:
-[    2.154053]  gf100_vmm_valid+0x2c4/0x390
-[    2.154061]  nvkm_vmm_map_valid+0xd4/0x204
-[    2.154069]  nvkm_vmm_map_locked+0xa4/0x344
-[    2.154076]  nvkm_vmm_map+0x50/0x84
-[    2.154083]  nvkm_firmware_mem_map+0x84/0xc4
-[    2.154094]  nvkm_falcon_fw_oneinit+0xc8/0x320
-[    2.154101]  nvkm_acr_oneinit+0x428/0x5b0
-[    2.154109]  nvkm_subdev_oneinit_+0x50/0x104
-[    2.154114]  nvkm_subdev_init_+0x3c/0x12c
-[    2.154119]  nvkm_subdev_init+0x60/0xa0
-[    2.154125]  nvkm_device_init+0x14c/0x2a0
-[    2.154133]  nvkm_udevice_init+0x60/0x9c
-[    2.154140]  nvkm_object_init+0x48/0x1b0
-[    2.154144]  nvkm_ioctl_new+0x168/0x254
-[    2.154149]  nvkm_ioctl+0xd0/0x220
-[    2.154153]  nvkm_client_ioctl+0x10/0x1c
-[    2.154162]  nvif_object_ctor+0xf4/0x22c
-[    2.154168]  nvif_device_ctor+0x28/0x70
-[    2.154174]  nouveau_cli_init+0x150/0x590
-[    2.154180]  nouveau_drm_device_init+0x60/0x2a0
-[    2.154187]  nouveau_platform_device_create+0x90/0xd0
-[    2.154193]  nouveau_platform_probe+0x3c/0x9c
-[    2.154200]  platform_probe+0x68/0xc0
-[    2.154207]  really_probe+0xbc/0x2dc
-[    2.154211]  __driver_probe_device+0x78/0xe0
-[    2.154216]  driver_probe_device+0xd8/0x160
-[    2.154221]  __device_attach_driver+0xb8/0x134
-[    2.154226]  bus_for_each_drv+0x78/0xd0
-[    2.154230]  __device_attach+0x9c/0x1a0
-[    2.154234]  device_initial_probe+0x14/0x20
-[    2.154239]  bus_probe_device+0x98/0xa0
-[    2.154243]  deferred_probe_work_func+0x88/0xc0
-[    2.154247]  process_one_work+0x204/0x40c
-[    2.154256]  worker_thread+0x230/0x450
-[    2.154261]  kthread+0xc8/0xcc
-[    2.154266]  ret_from_fork+0x10/0x20
-[    2.154273] ---[ end trace 0000000000000000 ]---
-[    2.154278] nouveau 57000000.gpu: pmu: map -22
-[    2.154285] nouveau 57000000.gpu: acr: one-time init failed, -22
-[    2.154559] nouveau 57000000.gpu: init failed with -22
-[    2.154564] nouveau: DRM-master:00000000:00000080: init failed with -22
-[    2.154574] nouveau 57000000.gpu: DRM-master: Device allocation failed: -22
-[    2.162905] nouveau: probe of 57000000.gpu failed with error -22
+and then periodically 
 
-#regzbot introduced: 2541626cfb79
+tpm tpm0: A TPM error (28) occurred attempting get random
 
-Thanks,
+and further suspend to ram attempts fail:
 
-Diogo Ivo
+tpm tpm0: Error (28) sending savestate before suspend
+tpm_tis 00:08: PM: __pnp_bus_suspend(): tpm_pm_suspend+0x0/0x80 returns 28
+tpm_tis 00:08: PM: dpm_run_callback(): pnp_bus_suspend+0x0/0x10 returns 28
+tpm_tis 00:08: PM: failed to suspend: error 28
+PM: Some devices failed to suspend, or early wake event detected
+
+Unfortunately I doubt I would be able to bisect it as any "good" kernel might
+be a false negative.
+
+[1] https://lore.kernel.org/all/c5ba47ef-393f-1fba-30bd-1230d1b4b592@suse.cz/
+
+#regzbot introduced: v6.1..v6.2-rc1
