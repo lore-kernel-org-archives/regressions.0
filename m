@@ -1,172 +1,119 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A92910E9
-	for <regressions@lists.linux.dev>; Wed, 28 Dec 2022 08:43:42 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pAS2G-0001j4-DE; Wed, 28 Dec 2022 09:43:40 +0100
-Message-ID: <40ce69e8-04ed-2b5b-741c-ef7409a7005a@leemhuis.info>
-Date: Wed, 28 Dec 2022 09:43:40 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C3F1868
+	for <regressions@lists.linux.dev>; Wed, 28 Dec 2022 14:58:17 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id D721C6008775;
+	Wed, 28 Dec 2022 14:50:49 +0000 (WET)
+X-Virus-Scanned: by amavisd-new-2.11.0 (20160426) (Debian) at
+	tecnico.ulisboa.pt
+Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
+	by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavisd-new, port 10025)
+	with LMTP id HQFEh9eA__YI; Wed, 28 Dec 2022 14:50:46 +0000 (WET)
+Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
+	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id C49DE600876F;
+	Wed, 28 Dec 2022 14:50:46 +0000 (WET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tecnico.ulisboa.pt;
+	s=mail; t=1672239046;
+	bh=1HO4Euafnc3ATG0WLfDkiuUVCgo90WriGTavAR16hUY=;
+	h=Date:From:To:Cc:Subject;
+	b=KL4BZIRAdPdUIOiqIBxUYZv/G2GM/dz0gLzls8Q/Z380lvMaG3gkaJpapim4aKqVg
+	 CLk037AggI/XDTjxSVJ4PcEcr4nrxJEylm2W91WH0aeFkS1ZsL5q0eKr38e/uyMJ2Z
+	 mi/mKUOiyDvJdIiZpWBaXRhRprfhJgK42ZOEWjFc=
+Received: from wslaptop (unknown [IPv6:2001:8a0:fbe7:6700:65be:d034:d2ec:60ff])
+	(Authenticated sender: ist187313)
+	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id DE47B360071;
+	Wed, 28 Dec 2022 14:50:45 +0000 (WET)
+Date: Wed, 28 Dec 2022 14:49:14 +0000
+From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+To: diogo.ivo@tecnico.ulisboa.pt
+Cc: regressions@lists.linux.dev, bskeggs@redhat.com,
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+	airlied@redhat.com
+Subject: [REGRESSION] GM20B probe fails after commit 2541626cfb79
+Message-ID: <20221228144914.z7t7a4fdwvbblnak@wslaptop>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: WLAN broken on Nokia N900 with v6.2-rc1 #forregzbot
-Content-Language: en-US, de-DE
-To: linux-wireless@vger.kernel.org
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <Y6tTLPvsxh/Im4Ed@tp440p.steeds.sam>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <Y6tTLPvsxh/Im4Ed@tp440p.steeds.sam>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672217022;d2cba2d4;
-X-HE-SMSGID: 1pAS2G-0001j4-DE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[Note: this mail contains only information for Linux kernel regression
-tracking. Mails like these contain '#forregzbot' in the subject to make
-then easy to spot and filter out. The author also tried to remove most
-or all individuals from the list of recipients to spare them the hassle.]=
+Hello,
 
+Commit 2541626cfb79 breaks GM20B probe with
+the following kernel log:
 
-On 27.12.22 21:18, Sicelo wrote:
-> Hi
->=20
-> With linux 6.2-rc1, wlan is broken on the Nokia N900 with wl1251, while=
+[    2.153892] ------------[ cut here ]------------
+[    2.153897] WARNING: CPU: 1 PID: 36 at drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgf100.c:273 gf100_vmm_valid+0x2c4/0x390
+[    2.153916] Modules linked in:
+[    2.153922] CPU: 1 PID: 36 Comm: kworker/u8:1 Not tainted 6.1.0+ #1
+[    2.153929] Hardware name: Google Pixel C (DT)
+[    2.153933] Workqueue: events_unbound deferred_probe_work_func
+[    2.153943] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    2.153950] pc : gf100_vmm_valid+0x2c4/0x390
+[    2.153959] lr : gf100_vmm_valid+0xb4/0x390
+[    2.153966] sp : ffffffc009e134b0
+[    2.153969] x29: ffffffc009e134b0 x28: 0000000000000000 x27: ffffffc008fd44c8
+[    2.153979] x26: 00000000ffffffea x25: ffffffc0087b98d0 x24: ffffff8080f89038
+[    2.153987] x23: ffffff8081fadc08 x22: 0000000000000000 x21: 0000000000000000
+[    2.153995] x20: ffffff8080f8a000 x19: ffffffc009e13678 x18: 0000000000000000
+[    2.154003] x17: f37a8b93418958e6 x16: ffffffc009f0d000 x15: 0000000000000000
+[    2.154011] x14: 0000000000000002 x13: 000000000003a020 x12: ffffffc008000000
+[    2.154019] x11: 0000000102913000 x10: 0000000000000000 x9 : 0000000000000000
+[    2.154026] x8 : ffffffc009e136d8 x7 : ffffffc008fd44c8 x6 : ffffff80803d0f00
+[    2.154034] x5 : 0000000000000000 x4 : ffffff8080f88c00 x3 : 0000000000000010
+[    2.154041] x2 : 000000000000000c x1 : 00000000ffffffea x0 : 00000000ffffffea
+[    2.154050] Call trace:
+[    2.154053]  gf100_vmm_valid+0x2c4/0x390
+[    2.154061]  nvkm_vmm_map_valid+0xd4/0x204
+[    2.154069]  nvkm_vmm_map_locked+0xa4/0x344
+[    2.154076]  nvkm_vmm_map+0x50/0x84
+[    2.154083]  nvkm_firmware_mem_map+0x84/0xc4
+[    2.154094]  nvkm_falcon_fw_oneinit+0xc8/0x320
+[    2.154101]  nvkm_acr_oneinit+0x428/0x5b0
+[    2.154109]  nvkm_subdev_oneinit_+0x50/0x104
+[    2.154114]  nvkm_subdev_init_+0x3c/0x12c
+[    2.154119]  nvkm_subdev_init+0x60/0xa0
+[    2.154125]  nvkm_device_init+0x14c/0x2a0
+[    2.154133]  nvkm_udevice_init+0x60/0x9c
+[    2.154140]  nvkm_object_init+0x48/0x1b0
+[    2.154144]  nvkm_ioctl_new+0x168/0x254
+[    2.154149]  nvkm_ioctl+0xd0/0x220
+[    2.154153]  nvkm_client_ioctl+0x10/0x1c
+[    2.154162]  nvif_object_ctor+0xf4/0x22c
+[    2.154168]  nvif_device_ctor+0x28/0x70
+[    2.154174]  nouveau_cli_init+0x150/0x590
+[    2.154180]  nouveau_drm_device_init+0x60/0x2a0
+[    2.154187]  nouveau_platform_device_create+0x90/0xd0
+[    2.154193]  nouveau_platform_probe+0x3c/0x9c
+[    2.154200]  platform_probe+0x68/0xc0
+[    2.154207]  really_probe+0xbc/0x2dc
+[    2.154211]  __driver_probe_device+0x78/0xe0
+[    2.154216]  driver_probe_device+0xd8/0x160
+[    2.154221]  __device_attach_driver+0xb8/0x134
+[    2.154226]  bus_for_each_drv+0x78/0xd0
+[    2.154230]  __device_attach+0x9c/0x1a0
+[    2.154234]  device_initial_probe+0x14/0x20
+[    2.154239]  bus_probe_device+0x98/0xa0
+[    2.154243]  deferred_probe_work_func+0x88/0xc0
+[    2.154247]  process_one_work+0x204/0x40c
+[    2.154256]  worker_thread+0x230/0x450
+[    2.154261]  kthread+0xc8/0xcc
+[    2.154266]  ret_from_fork+0x10/0x20
+[    2.154273] ---[ end trace 0000000000000000 ]---
+[    2.154278] nouveau 57000000.gpu: pmu: map -22
+[    2.154285] nouveau 57000000.gpu: acr: one-time init failed, -22
+[    2.154559] nouveau 57000000.gpu: init failed with -22
+[    2.154564] nouveau: DRM-master:00000000:00000080: init failed with -22
+[    2.154574] nouveau 57000000.gpu: DRM-master: Device allocation failed: -22
+[    2.162905] nouveau: probe of 57000000.gpu failed with error -22
 
-> it was working up to at least 6.1-rc7. The driver probes fine and I can=
+#regzbot introduced: 2541626cfb79
 
-> scan for networks. However it is not possible to connect to any.
+Thanks,
 
-Thanks for the report. To be sure below issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-tracking bot:
-
-#regzbot ^introduced a790cc3a4fad75048295571a350b95b87e022a5a
-#regzbot title net: wifi: WLAN broken on Nokia N900
-#regzbot ignore-activity
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-P.S.: As the Linux kernel's regression tracker I deal with a lot of
-reports and sometimes miss something important when writing mails like
-this. If that's the case here, don't hesitate to tell me in a public
-reply, it's in everyone's interest to set the public record straight.
-
-> dmesg contains the following:
->=20
->=20
-> [  143.202484] WARNING: CPU: 0 PID: 1300 at net/wireless/core.c:1463 cf=
-g80211_netdev_notifier_call+0x26d/0x30c [cfg80211]
-> [  143.203613] Modules linked in: nft_reject_inet nf_reject_ipv4 nf_rej=
-ect_ipv6 nft_reject nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_=
-tables nfnetlink bnep cmt_speech nokia_modem ssi_protocol phonet radio_pl=
-atform_si4713 joydev mousedev hsi_char wl1251_spi wl1251 mac80211 libarc4=
- omap3_rom_rng rng_core ir_rx51 pwm_omap_dmtimer rc_core snd_soc_rx51 rx5=
-1_battery isp1704_charger cpufreq_dt snd_soc_omap_mcbsp snd_soc_ti_sdma o=
-map_wdt cfg80211 omap3_isp videobuf2_dma_contig videobuf2_memops videobuf=
-2_v4l2 videobuf2_common omap_sham crypto_engine snd_soc_tlv320aic3x_i2c s=
-nd_soc_tlv320aic3x snd_soc_tpa6130a2 tsc2005 snd_soc_core regmap_spi snd_=
-pcm_dmaengine tsc200x_core snd_pcm omap_mailbox snd_timer leds_lp5523 bq2=
-7xxx_battery_i2c snd si4713 leds_lp55xx_common bq27xxx_battery soundcore =
-led_class tsl2563 twl4030_wdt hci_nokia rtc_twl hci_uart btbcm bluetooth =
-twl4030_vibra pwm_twl_led pwm_twl ff_memless ecdh_generic twl4030_madc ec=
-c rfkill libaes et8ek8 ad5820 v4l2_fwnode v4l2_async
-> [  143.205780]  st_accel_i2c st_sensors_i2c st_accel industrialio_trigg=
-ered_buffer kfifo_buf st_sensors videodev industrialio omap_ssi mc hsi
-> [  143.206146] CPU: 0 PID: 1300 Comm: NetworkManager Tainted: G        =
-W          6.2.0-rc1-nokia-n900+ #1
-> [  143.206207] Hardware name: Nokia RX-51 board
-> [  143.206268]  unwind_backtrace from show_stack+0xb/0xc
-> [  143.206390]  show_stack from dump_stack_lvl+0x2b/0x34
-> [  143.206512]  dump_stack_lvl from __warn+0xdb/0xe8
-> [  143.206604]  __warn from warn_slowpath_fmt+0x3f/0x76
-> [  143.206726]  warn_slowpath_fmt from cfg80211_netdev_notifier_call+0x=
-26d/0x30c [cfg80211]
-> [  143.207519]  cfg80211_netdev_notifier_call [cfg80211] from raw_notif=
-ier_call_chain+0x31/0x3c
-> [  143.208282]  raw_notifier_call_chain from __dev_notify_flags+0x3f/0x=
-90
-> [  143.208404]  __dev_notify_flags from dev_change_flags+0x2d/0x34
-> [  143.208496]  dev_change_flags from do_setlink+0x20f/0xa98
-> [  143.208587]  do_setlink from rtnl_newlink+0x341/0x5f0
-> [  143.208679]  rtnl_newlink from rtnetlink_rcv_msg+0x193/0x218
-> [  143.208770]  rtnetlink_rcv_msg from netlink_rcv_skb+0x75/0xb0
-> [  143.208892]  netlink_rcv_skb from netlink_unicast+0x113/0x1b4
-> [  143.208984]  netlink_unicast from netlink_sendmsg+0x161/0x31c
-> [  143.209106]  netlink_sendmsg from ____sys_sendmsg+0x123/0x158
-> [  143.209228]  ____sys_sendmsg from ___sys_sendmsg+0x43/0x68
-> [  143.209350]  ___sys_sendmsg from sys_sendmsg+0x33/0x60
-> [  143.209442]  sys_sendmsg from ret_fast_syscall+0x1/0x5c
-> [  143.209564] Exception stack(0xd0149fa8 to 0xd0149ff0)
-> [  143.209625] 9fa0:                   00000000 00000000 0000000d beabf=
-550 00000000 00000000
-> [  143.209686] 9fc0: 00000000 00000000 00000001 00000128 beabf67c beabf=
-678 00000000 beabf674
-> [  143.209747] 9fe0: beabf508 beabf4f8 b6fadcdb b6fad994
-> [  143.209808] ---[ end trace 0000000000000000 ]---
-> [  143.241180] ------------[ cut here ]------------
-> [  143.241241] WARNING: CPU: 0 PID: 25 at net/wireless/scan.c:1021 cfg8=
-0211_scan_done+0x6b/0x124 [cfg80211]
-> [  143.241912] Modules linked in: nft_reject_inet nf_reject_ipv4 nf_rej=
-ect_ipv6 nft_reject nft_ct nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nf_=
-tables nfnetlink bnep cmt_speech nokia_modem ssi_protocol phonet radio_pl=
-atform_si4713 joydev mousedev hsi_char wl1251_spi wl1251 mac80211 libarc4=
- omap3_rom_rng rng_core ir_rx51 pwm_omap_dmtimer rc_core snd_soc_rx51 rx5=
-1_battery isp1704_charger cpufreq_dt snd_soc_omap_mcbsp snd_soc_ti_sdma o=
-map_wdt cfg80211 omap3_isp videobuf2_dma_contig videobuf2_memops videobuf=
-2_v4l2 videobuf2_common omap_sham crypto_engine snd_soc_tlv320aic3x_i2c s=
-nd_soc_tlv320aic3x snd_soc_tpa6130a2 tsc2005 snd_soc_core regmap_spi snd_=
-pcm_dmaengine tsc200x_core snd_pcm omap_mailbox snd_timer leds_lp5523 bq2=
-7xxx_battery_i2c snd si4713 leds_lp55xx_common bq27xxx_battery soundcore =
-led_class tsl2563 twl4030_wdt hci_nokia rtc_twl hci_uart btbcm bluetooth =
-twl4030_vibra pwm_twl_led pwm_twl ff_memless ecdh_generic twl4030_madc ec=
-c rfkill libaes et8ek8 ad5820 v4l2_fwnode v4l2_async
-> [  143.243041]  st_accel_i2c st_sensors_i2c st_accel industrialio_trigg=
-ered_buffer kfifo_buf st_sensors videodev industrialio omap_ssi mc hsi
-> [  143.243225] CPU: 0 PID: 25 Comm: kworker/u2:2 Tainted: G        W   =
-       6.2.0-rc1-nokia-n900+ #1
-> [  143.243255] Hardware name: Nokia RX-51 board
-> [  143.243286] Workqueue: phy0 ieee80211_scan_work [mac80211]
-> [  143.243865]  unwind_backtrace from show_stack+0xb/0xc
-> [  143.243927]  show_stack from dump_stack_lvl+0x2b/0x34
-> [  143.243988]  dump_stack_lvl from __warn+0xdb/0xe8
-> [  143.244049]  __warn from warn_slowpath_fmt+0x3f/0x76
-> [  143.244110]  warn_slowpath_fmt from cfg80211_scan_done+0x6b/0x124 [c=
-fg80211]
-> [  143.244598]  cfg80211_scan_done [cfg80211] from __ieee80211_scan_com=
-pleted+0x85/0x2d8 [mac80211]
-> [  143.245269]  __ieee80211_scan_completed [mac80211] from ieee80211_sc=
-an_work+0xdf/0x3b4 [mac80211]
-> [  143.245849]  ieee80211_scan_work [mac80211] from process_one_work+0x=
-153/0x35c
-> [  143.246185]  process_one_work from worker_thread+0xd9/0x3d4
-> [  143.246246]  worker_thread from kthread+0xad/0xc0
-> [  143.246276]  kthread from ret_from_fork+0x11/0x20
-> [  143.246337] Exception stack(0xd0085fb0 to 0xd0085ff8)
-> [  143.246368] 5fa0:                                     00000000 00000=
-000 00000000 00000000
-> [  143.246398] 5fc0: 00000000 00000000 00000000 00000000 00000000 00000=
-000 00000000 00000000
-> [  143.246429] 5fe0: 00000000 00000000 00000000 00000000 00000013 00000=
-000
-> [  143.246459] ---[ end trace 0000000000000000 ]---
->=20
->=20
->=20
-> I tried to bisect with v6.2-rc1 as bad and v6.1-rc7 as good commits, an=
-d
-> it suggested a790cc3a4fad75048295571a350b95b87e022a5a as the first bad
-> commit. However I am not entirely sure yet what the real cause is, and
-> the correct fix.
->=20
-> I will appreciate assistance with this issue, and/or ideas how to
-> troubleshoot it further.
->=20
-> Regards
-> Sicelo
+Diogo Ivo
