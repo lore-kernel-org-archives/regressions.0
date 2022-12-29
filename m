@@ -1,78 +1,99 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011BD256F
-	for <regressions@lists.linux.dev>; Thu, 29 Dec 2022 13:05:01 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pAsab-0003m7-Qf; Thu, 29 Dec 2022 14:04:53 +0100
-Message-ID: <e8d819e0-10c4-89c0-6b13-d1ceb01da0fc@leemhuis.info>
-Date: Thu, 29 Dec 2022 14:04:53 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C2E1FAF
+	for <regressions@lists.linux.dev>; Thu, 29 Dec 2022 16:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1672332309;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=uE1P5Bdwlwa4H9qvumuO6cO/f01N5gt3QNmApvjrJ90=;
+	b=P1LQpUAFdn9f/zPgngpatiG+bfbfr0WbbCCAtYfRkQU0uwXqEmREzh8VRly895qusmXPGk
+	Iexq8KByNft/AMXVFTe88O6ZwWLQYwidIFvcWC0NSqhwFkgiVj48hVgJnqtFxBxNY/8oWJ
+	oFz1pQjkpvWAaUO9mhxaPDN2h4sBbVw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-612-5iRBfx7aM--DWanDil9SkA-1; Thu, 29 Dec 2022 11:45:04 -0500
+X-MC-Unique: 5iRBfx7aM--DWanDil9SkA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0E9C4185A794;
+	Thu, 29 Dec 2022 16:45:04 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.28])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7FEAE4010D42;
+	Thu, 29 Dec 2022 16:45:02 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	"regressions @ lists . linux . dev" <regressions@lists.linux.dev>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: [PATCH 6.2 regression fix] gpiolib: Fix using uninitialized lookup-flags on ACPI platforms
+Date: Thu, 29 Dec 2022 17:45:01 +0100
+Message-Id: <20221229164501.76044-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH 6.1 0000/1146] 6.1.2-rc1 review
-Content-Language: en-US, de-DE
-To: Vlastimil Babka <vbabka@suse.cz>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
-Cc: stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20221228144330.180012208@linuxfoundation.org>
- <2bf086f8-aa9d-b576-ba8b-1fcfbc9a4ff1@applied-asynchrony.com>
- <Y6xkpmqxRQwDyLAb@kroah.com> <d5534922-0b33-268d-cfad-c175ff4f676e@suse.cz>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <d5534922-0b33-268d-cfad-c175ff4f676e@suse.cz>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672319102;e3c82b68;
-X-HE-SMSGID: 1pAsab-0003m7-Qf
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 
-On 28.12.22 19:57, Vlastimil Babka wrote:
-> On 12/28/22 16:45, Greg Kroah-Hartman wrote:
->> On Wed, Dec 28, 2022 at 04:02:57PM +0100, Holger Hoffstätte wrote:
->>> On 2022-12-28 15:25, Greg Kroah-Hartman wrote:
->>>> This is the start of the stable review cycle for the 6.1.2 release.
->>>> There are 1146 patches in this series, all will be posted as a response
->>>> to this one.  If anyone has any issues with these being applied, please
->>>> let me know.
->>>
->>> I know this is already a large set of updates, but it would be great if
->>> commit 6f12be792fde994ed934168f93c2a0d2a0cf0bc5 ("mm, mremap: fix mremap()
->>> expanding vma with addr inside vma") could be added as well; it applies and
->>> works fine on top of 6.1.1.
->>> This fixes quite a few annoying mmap-related out-of-memory failures.
->>
->> It's set up for future releases.  If this was such a big issue for
->> 6.1-final, why wasn't it sent to Linus before 6.2-rc1?
-> 
-> Thorsten did question its upstreaming speed elsewhere. But it actually
-> is in 6.2-rc1. Andrew sent the PR on 22th and Linus merged on 23th [1].
-> I didn't try to accelerate it to stable as IIRC people already pointed
-> it out and you acknowledged it's on your radar, and it was a tracked
-> regression. Sucks that it didn't make it to 6.1.2.
+Commit 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups") refactors
+fwnode_get_named_gpiod() and gpiod_get_index() into a unified
+gpiod_find_and_request() helper.
 
-Yup. I've been thinking somewhat what I could or should do to ensure
-things work more smoothly when similar situations arise in the future;
-ideally without me stepping on maintainer's toes too much. ;)
+The old functions both initialized their local lookupflags variable to
+GPIO_LOOKUP_FLAGS_DEFAULT, but the new code leaves it uninitialized.
 
-Currently I consider doing the following two things:
+This is a problem for at least ACPI platforms, where acpi_find_gpio()
+only does a bunch of *lookupflags |= GPIO_* statements and thus relies
+on the variable being initialized.
 
-(1) if I notice something that looks like an important regression fix,
-reply with a "how fast do you think this fix should process through the
-ranks" inquiry to the developer. With such information I'd feel way more
-comfortable sending a "Linus, could you maybe pick this up directly"
-after some time in case the maintainer leaves the patch longer in -next.
+The variable not being initialized leads to:
 
-(2) once Linus merged the fix, send a quick mail to Greg/the stable team
-asking them to immediately queue it for the next release (in case
-problems show up it can still be de-queued).
+1. Potentially the wrong flags getting used
+2. The check for conflicting lookup flags in gpiod_configure_flags():
+   "multiple pull-up, pull-down or pull-disable enabled, invalid config"
+   sometimes triggering, making the GPIO unavailable
 
-Does that sound sane? Or anyone any better idea?
+Restore the initialization of lookupflags to GPIO_LOOKUP_FLAGS_DEFAULT
+to fix this.
 
-Ciao, Thorsten
+Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Note I'm not working and not reading work email until Monday January 9th.
+I hit this while doing some hobby stuff and I decided to send this out
+right away to avoid others potentially wasting time debugging this, but
+I will not see any replies until Monday January 9th.
+---
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 5a66d9616d7c..939c776b9488 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -3905,8 +3905,8 @@ static struct gpio_desc *gpiod_find_and_request(struct device *consumer,
+ 						const char *label,
+ 						bool platform_lookup_allowed)
+ {
++	unsigned long lookupflags = GPIO_LOOKUP_FLAGS_DEFAULT;
+ 	struct gpio_desc *desc = ERR_PTR(-ENOENT);
+-	unsigned long lookupflags;
+ 	int ret;
+ 
+ 	if (!IS_ERR_OR_NULL(fwnode))
+-- 
+2.38.1
+
