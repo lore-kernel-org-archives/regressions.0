@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935877E
-	for <regressions@lists.linux.dev>; Fri, 30 Dec 2022 10:11:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E1567E
+	for <regressions@lists.linux.dev>; Fri, 30 Dec 2022 10:14:59 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pBCMc-0003A1-Im; Fri, 30 Dec 2022 11:11:46 +0100
-Message-ID: <702e11a8-f38b-8f99-8d8a-6342e90fddd7@leemhuis.info>
-Date: Fri, 30 Dec 2022 11:11:44 +0100
+	id 1pBCPh-0003yK-Na; Fri, 30 Dec 2022 11:14:57 +0100
+Message-ID: <0cf0fddb-f2e7-80b8-1c08-cf9919a391bd@leemhuis.info>
+Date: Fri, 30 Dec 2022 11:14:57 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,62 +16,65 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH 6.2 regression fix] gpiolib: Fix using uninitialized
- lookup-flags on ACPI platforms #forregzbot
+Subject: Re: [linus:master] [kbuild] 3bc753c06d: xfstests.generic.454.fail
+ #forregzbot
 Content-Language: en-US, de-DE
-To: "regressions @ lists . linux . dev" <regressions@lists.linux.dev>
-Cc: linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20221229164501.76044-1-hdegoede@redhat.com>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+References: <202212291509.704a11c9-oliver.sang@intel.com>
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20221229164501.76044-1-hdegoede@redhat.com>
+In-Reply-To: <202212291509.704a11c9-oliver.sang@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672395108;95780a6b;
-X-HE-SMSGID: 1pBCMc-0003A1-Im
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672395299;f1484e7f;
+X-HE-SMSGID: 1pBCPh-0003yK-Na
 
 [Note: this mail contains only information for Linux kernel regression
 tracking. Mails like these contain '#forregzbot' in the subject to make
 then easy to spot and filter out. The author also tried to remove most
 or all individuals from the list of recipients to spare them the hassle.]
 
-On 29.12.22 17:45, Hans de Goede wrote:
-> Commit 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups") refactors
-> fwnode_get_named_gpiod() and gpiod_get_index() into a unified
-> gpiod_find_and_request() helper.
+On 29.12.22 09:49, kernel test robot wrote:
 > 
-> The old functions both initialized their local lookupflags variable to
-> GPIO_LOOKUP_FLAGS_DEFAULT, but the new code leaves it uninitialized.
+> please be noted we felt quite strange why this change could cause
+>   xfstests.generic.454.fail
+> but even by rebuild and rerun, the issue seems persistent while keeping clean
+> on parent
 > 
-> This is a problem for at least ACPI platforms, where acpi_find_gpio()
-> only does a bunch of *lookupflags |= GPIO_* statements and thus relies
-> on the variable being initialized.
+> daf4218bf8dd9750 3bc753c06dd02a3517c9b498e38
+> ---------------- ---------------------------
+>        fail:runs  %reproduction    fail:runs
+>            |             |             |
+>            :10         100%          10:10    xfstests.generic.454.fail
 > 
-> The variable not being initialized leads to:
+> so we just report out FYI to seek any insights about this.
 > 
-> 1. Potentially the wrong flags getting used
-> 2. The check for conflicting lookup flags in gpiod_configure_flags():
->    "multiple pull-up, pull-down or pull-disable enabled, invalid config"
->    sometimes triggering, making the GPIO unavailable
 > 
-> Restore the initialization of lookupflags to GPIO_LOOKUP_FLAGS_DEFAULT
-> to fix this.
+> Greeting,
 > 
-> Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
-> Note I'm not working and not reading work email until Monday January 9th.
-> I hit this while doing some hobby stuff and I decided to send this out
-> right away to avoid others potentially wasting time debugging this, but
-> I will not see any replies until Monday January 9th.
+> FYI, we noticed xfstests.generic.454.fail due to commit (built with gcc-11):
+> 
+> commit: 3bc753c06dd02a3517c9b498e3846ebfc94ac3ee ("kbuild: treat char as always unsigned")
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> 
+> [test failed on linux-next/master c76083fac3bae1a87ae3d005b5cb1cbc761e31d5]
+> 
+> in testcase: xfstests
+> version: xfstests-x86_64-fb6575e-1_20221226
+> with following parameters:
+> 
+> 	disk: 4HDD
+> 	fs: ext4
+> 	test: generic-group-22
+> 
 
 Thanks for the report. To be sure below issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced 8eb1f71e7acc
-#regzbot title gpiolib: potentially the wrong flags getting used
-#regzbot fix: gpiolib: Fix using uninitialized lookup-flags on ACPI
-platforms
+#regzbot ^introduced 3bc753c06dd02a
+#regzbot title ext4/acls: xfstests.generic.454 suddenly fails for the
+kernel test robot
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
