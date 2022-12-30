@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5EC1FA8
-	for <regressions@lists.linux.dev>; Fri, 30 Dec 2022 08:09:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE6C1FA8;
+	Fri, 30 Dec 2022 08:19:00 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pBARm-0001HW-3W; Fri, 30 Dec 2022 09:08:58 +0100
-Message-ID: <bebd692d-7d21-6648-6b7a-c91063bb51c2@leemhuis.info>
-Date: Fri, 30 Dec 2022 09:08:57 +0100
+	id 1pBAbQ-0003Oo-SD; Fri, 30 Dec 2022 09:18:56 +0100
+Message-ID: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
+Date: Fri, 30 Dec 2022 09:18:56 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,76 +18,108 @@ User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
 Content-Language: en-US, de-DE
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Sergey <zagagyka@basealt.ru>, Alsa-devel <alsa-devel@alsa-project.org>,
+To: Lu Baolu <baolu.lu@linux.intel.com>
+Cc: Joerg Roedel <jroedel@suse.de>, Matt Fagnani <matt.fagnani@bell.net>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
  LKML <linux-kernel@vger.kernel.org>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
- Mark Brown <broonie@kernel.org>
-Subject: =?UTF-8?Q?=5bregression=2c_5=2e10=2ey=5d_Bug=c2=a0216861_-_sound_di?=
- =?UTF-8?Q?sappearance_on_Acer_Swift_3_SF314-59-78UR_after_update_to_5=2e10?=
- =?UTF-8?Q?=2e157?=
-To: Richard Fitzgerald <rf@opensource.cirrus.com>
+ Linux PCI <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: =?UTF-8?Q?=5bregression=2c_bisected=2c_pci/iommu=5d_Bug=c2=a0216865?=
+ =?UTF-8?Q?_-_Black_screen_when_amdgpu_started_during_6=2e2-rc1_boot_with_AM?=
+ =?UTF-8?Q?D_IOMMU_enabled?=
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672387741;3f2add6f;
-X-HE-SMSGID: 1pBARm-0001HW-3W
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672388340;85de40be;
+X-HE-SMSGID: 1pBAbQ-0003Oo-SD
 
 Hi, this is your Linux kernel regression tracker speaking.
 
 I noticed a regression report in bugzilla.kernel.org. As many (most?)
 kernel developer don't keep an eye on it, I decided to forward it by
-mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216861 :
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216865 :
 
->  Sergey 2022-12-29 10:07:51 UTC
+>  Matt Fagnani 2022-12-29 18:39:56 UTC
 > 
-> Created attachment 303497 [details]
-> pulseaudio.log
+> I booted the Fedora Rawhide KDE Plasma live image
+> Fedora-KDE-Live-x86_64-Rawhide-20221227.n.0.iso
+> https://koji.fedoraproject.org/koji/buildinfo?buildID=2104562 from a USB
+> flash drive written with Fedora Media Writer on an hp laptop with an
+> integrated Radeon R5 GPU. The system froze with a black screen when
+> amdgpu started during 6.2-rc1 kernel boot. When I booted with quiet rhgb
+> removed from the kernel command line the last line shown before the
+> black screen was
+>
+> kernel: [drm] amdgpu kernel modesetting enabled.
 > 
-> Sudden sound disappearance was reported for some laptops, e.g.
+> This problem happened each of several boots when using the amdgpu
+> driver (the default). This problem didn't happen when I booted the same
+> image using Troubleshooting > Boot Fedora-KDE-Plasma-live in basic
+> graphics mode which used the simpledrm driver and started Plasma on X
+> normally. This problem also didn't happen when I booted the image in a
+> QEMU/KVM VM in GNOME Boxes with 3 GB RAM using the virtio-gpu driver.
 > 
-> Acer Swift 3 SF314-59-78UR 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+> The data from the previous boots using live images aren't saved by
+> default so I couldn't get the journal that way as far as I knew. I
+> installed kernel-6.2.0-0.rc1.14.fc38 in my Fedora 37 KDE Plasma
+> installation and reproduced the problem 3 times with quiet rhgb removed
+> from the kernel command line and sysrq_always_enabled drm.debug=14 added
+> to it. I used sysrq+alt+r,s,u,b which rebooted the system so the kernel
+> wasn't completely frozen. The journals from the boots with the problem
+> weren't shown in journalctl. I booted with amdgpu.dc=0 on the kernel
+> command line and the screen froze with the last line
+> kernel: [drm] amdgpu kernel modesetting enabled. and the black
+> screen
+> didn't happen. I booted with drm.debug=94 on the kernel command line and
+> the screen's drm settings were shown repeatedly until I rebooted after
+> 2-3 minutes.
 > 
-> # lspci
-> 0000:00:1f.3 Multimedia audio controller: Intel Corporation Tiger Lake-LP Smart Sound Technology Audio Controller (rev 20)
->         Subsystem: Acer Incorporated [ALI] Device 148c
->         Flags: bus master, fast devsel, latency 32, IRQ 197, IOMMU group 12
->         Memory at 601f270000 (64-bit, non-prefetchable) [size=16K]
->         Memory at 601f000000 (64-bit, non-prefetchable) [size=1M]
->         Capabilities: [50] Power Management version 3
->         Capabilities: [80] Vendor Specific Information: Len=14 <?>
->         Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
->         Kernel driver in use: sof-audio-pci
+> This problem didn't happen with kernel-6.1.0-65.fc38 or earlier in
+> the
+> Fedora Rawhide live image
+> Fedora-KDE-Live-x86_64-Rawhide-20221217.n.0.iso. The first Fedora
+> Rawhide kernel with this problem was
+> 6.2.0-0.rc0.20221215git041fae9c105a.5.fc38, while
+> 6.2.0-0.rc0.20221214gite2ca6ba6ba01.3.fc38 was the last one without the
+> problem. I bisected the mainline kernel between e2ca6ba6ba01 and
+> 041fae9c105a. The first bad commit was the following involving PCI and
+> IOMMUs.
 > 
-> I am attaching the pulseaudio and dmesg logs
+> 201007ef707a8bb5592cd07dd46fc9222c48e0b9 is the first bad commit
+> commit 201007ef707a8bb5592cd07dd46fc9222c48e0b9
+> Author: Lu Baolu <baolu.lu@linux.intel.com>
+> Date:   Mon Oct 31 08:59:08 2022 +0800
 > 
-> This bug started reproducing after updating the kernel from 5.10.156 to 5.10.157
-> 
-> Bisection revealed the commit being reverted:
-> 
-> c34db0d6b88b1da95e7ab3353e674f4f574cccee is the first bad commit
-> commit c34db0d6b88b1da95e7ab3353e674f4f574cccee
-> Author: Richard Fitzgerald <rf@opensource.cirrus.com>
-> Date:   Fri Nov 4 13:22:13 2022 +0000
-> 
->     ASoC: soc-pcm: Don't zero TDM masks in __soc_pcm_open()
+>     PCI: Enable PASID only when ACS RR & UF enabled on upstream path
 >     
->     [ Upstream commit 39bd801d6908900e9ab0cdc2655150f95ddd4f1a ]
->     
->     The DAI tx_mask and rx_mask are set by snd_soc_dai_set_tdm_slot()
->     and used by later code that depends on the TDM settings. So
->     __soc_pcm_open() should not be obliterating those mask values.
+>     The Requester ID/Process Address Space ID (PASID) combination
+>     identifies an address space distinct from the PCI bus address space,
+>     e.g., an address space defined by an IOMMU.
 >     
 > [...]
-> Original bug report: https://bugzilla.altlinux.org/44690
+> 
+> My system has an AMD IOMMU enabled. When I booted 6.2-rc1 with
+> amd_iommu=off on the kernel command line, the problem didn't happen and
+> the boot completed. There were IOMMU-related errors when amdgpu started
+> with amd_iommu=off. So the problem appears to involve amdgpu not
+> starting properly when the IOMMU is enabled after that change. When I
+> booted with quiet rhgb removed from the kernel command line, I noted
+> that the AMD IOMMU started about 3 seconds before the problem happened
+> when amdgpu started with a line like kernel: AMD-Vi: AMD IOMMUv2 loaded
+> and initialized
+> 
+> I reported this problem at
+> https://gitlab.freedesktop.org/drm/amd/-/issues/2319 where Alex Deucher
+> wrote "Please report this upstream to the IOMMU subsystem:
+> https://bugzilla.kernel.org/" I reported it for Fedora at
+> https://bugzilla.redhat.com/show_bug.cgi?id=2156691
 
 See the ticket for more details.
 
 BTW, let me use this mail to also add the report to the list of tracked
 regressions to ensure it's doesn't fall through the cracks:
 
-#regzbot introduced: c34db0d6b88b1d
-https://bugzilla.kernel.org/show_bug.cgi?id=216861
-#regzbot title: sound: asoc: sudden sound disappearance
+#regzbot introduced: 201007ef707a8bb
+https://bugzilla.kernel.org/show_bug.cgi?id=216865
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
