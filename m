@@ -1,131 +1,98 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2118.outbound.protection.outlook.com [40.107.215.118])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E691FA8
-	for <regressions@lists.linux.dev>; Fri, 30 Dec 2022 07:16:04 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BzRN6mlGdvvXAa5YudUQc2SQS5LBnB24lup5tS5kTZrtee8dJYgXsZ1K5YBIBhfIqaaSIBymTBpiUmNobhvb6mRkCOJl8zQJX56C7SPFnUY6D7kY2UBhBlApYDC3Rbu3UycwiklbadXl5PaArtcelnNG9InMOcTYMH+Nyd34CH3v1fF1JHzofUwq/EAJ5goofeRTj0Om8hxl4VOULmCkpiYjE5i5BkgRl2MGKDf9w6K7Hr4CARX3yWorqY224UGzKQRq9hFI0gQDa5GeUkbyZWI/Fvy4vulDiVK49pBHn0MCc1cZmbcXmuZaZf+qI+TDkT/n6rcHDNy0pUrdRGncPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cUGNjQ666r4BsIJIniUKiM5v39nRx149/s/osbac260=;
- b=HdY5Ny10kErCLiW8ntvwSnWgHQf3ZhMLf3xyy+zEVBZZM0CQ7XrHwTuqoW9ndlQGPbLIVPz1bcJwSggX4PE+tcNjGJg/G1gRNlAfYYja8/iXljqX2GSayXLhZT2abxHXFbT4RIqgwIWsRjnxuUVoAUzHHQ8WX9145TmUilbXh6K4JFQdHgWxBjheu3wTlaX0+XX6R4aHte0pV2TUaograQSwOfvfyJzfTTN/8F9bUubNfT6qAdKz76quhlpDydwQk7s7u6XZ/CwgU8/+zlm3ITC7oZXvQqEpk7nBGXt0AtxYYH3VQuN3GBwL4e2TZHNRLJ34izBUo5wwvbDAGAzpfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cUGNjQ666r4BsIJIniUKiM5v39nRx149/s/osbac260=;
- b=ZM+5MkGH8pe7hY72B0sIAuwGCFjMw1utDVFK3ZbxWcX9V1mGJyMssdbldNtElPRH/O0eMusslBcFEFI7hNvNGO7k4WxI2fAUGxoPVsM+OLRX4TvpbTqbw/zY0+BrBPkBBAIHv3WmZGT5KJmnwWFYwAhwD9CAMVQGYaZgIkTatbsODndZ/awGgJ86xLiFmA+0oo54rxmNaeLJApfa5LpC7AtWqAnT85izrgdYM0c/4lSTvsLTyXzh8NJJrk3Hc2agOPeQPwHYvTIqe/lABDvlIwM/8DOtNbojCwFNaWeZxK7u+18EC+0do+/BR6GVa6ZAhN2XnnEQaPNxPpD9zeCtzw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
- by SI2PR06MB3963.apcprd06.prod.outlook.com (2603:1096:4:f2::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.16; Fri, 30 Dec
- 2022 07:16:01 +0000
-Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::7969:5a45:8509:7d80]) by SEZPR06MB5269.apcprd06.prod.outlook.com
- ([fe80::7969:5a45:8509:7d80%5]) with mapi id 15.20.5944.018; Fri, 30 Dec 2022
- 07:16:00 +0000
-From: Yangtao Li <frank.li@vivo.com>
-To: ebiggers@kernel.org
-Cc: bagasdotme@gmail.com,
-	chao@kernel.org,
-	jaegeuk@kernel.org,
-	jeff.chua.linux@gmail.com,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	regressions@leemhuis.info,
-	regressions@lists.linux.dev,
-	torvalds@linux-foundation.org
-Subject: Re: Fwd: f2fs write error Linux v6.2
-Date: Fri, 30 Dec 2022 15:15:51 +0800
-Message-Id: <20221230071551.61833-1-frank.li@vivo.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <Y66Hk6waTeXQDz1/@sol.localdomain>
-References: <Y66Hk6waTeXQDz1/@sol.localdomain>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SI2PR02CA0041.apcprd02.prod.outlook.com
- (2603:1096:4:196::20) To SEZPR06MB5269.apcprd06.prod.outlook.com
- (2603:1096:101:78::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD5EC1FA8
+	for <regressions@lists.linux.dev>; Fri, 30 Dec 2022 08:09:01 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pBARm-0001HW-3W; Fri, 30 Dec 2022 09:08:58 +0100
+Message-ID: <bebd692d-7d21-6648-6b7a-c91063bb51c2@leemhuis.info>
+Date: Fri, 30 Dec 2022 09:08:57 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|SI2PR06MB3963:EE_
-X-MS-Office365-Filtering-Correlation-Id: 073477bb-044d-4416-3003-08daea35b3f3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	wfW5oExTavigjs8MN1KJbOydQo/tdjcqEWS6MpW5mWAMW/QFHJzBHtcF9W71bQsSTA34fQvkr9xNes9RTpzwN+tub8iaK9CXtrDmSGe1OAeECnY+bAY5dlx+n556wLuZ1acEyGHdnZTIffaZV3O64UVyofwyhQVy0jApQPrXS5c6n8hJqR9BMwsFZWPDVwYxOLwDoUeaz7ib6eZu72x26AJhXJlhIssaQfiW9Ms7kWgNI/HL2fIhBaPxsIxFVGN7Nhol2BW8SOQl6dgD4TXF2bBDHozKQ99QNfOySk6xeSTy+Fr6JU7XQPffrMA6Uv4Pw8V5LT+BLzVG7rlQRvIdYR8coepKJbEfKqM1THLgvWfNQb13pJ+/lwFQehrBHpgUNYmk6zTxpbBWXnRZ8G2DIHfEzKkLfatsG/FLjYPu5Z89JlfLHrkP5kQWYFr4Yo/e1LikQZWgiS0Qp2YtQwXcPfDxHF0vceXAycRGswW0hUV3XpFJvshgPcS6vKlxJJjoSj189PlAl5vEfhmtagZ61KIvbELV/5VviU/SYQl+YrUwR+8kRwhUMl47uxFAeDncl65P2LgKB8BM4fiNS8ftiqSCWU87aIMERoO3sYaXBeYVFQZry6+/mhlNb7nrsBMzT7TVH4xHWCs0/ZRQOO+xxDfiAF86P47tDZ6nq2Fh0hPeCDl2Vrfs1rHFPq2saFp8kMo2sy68dzUpOkykR1WoqA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(396003)(376002)(366004)(39860400002)(346002)(451199015)(66946007)(6512007)(5660300002)(66556008)(4326008)(66476007)(8676002)(4744005)(41300700001)(7416002)(8936002)(26005)(186003)(2616005)(36756003)(52116002)(6916009)(2906002)(478600001)(6486002)(316002)(86362001)(6666004)(1076003)(6506007)(38350700002)(38100700002)(83380400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bS9CM0d5YkwwNHBLem8vdGFNTzMwYitneGdSQ21zdlU2WFNrNnlKWGVIRHla?=
- =?utf-8?B?amFpVURKOEJvemg4dzdYd1M5RHI2MFpubG0vc085NVhBU2RjVC8remVOMm9D?=
- =?utf-8?B?Um1uVmxiUTNna0xDV3JFd0ZXemI0aW8yUmZ1Zkg1UmUyTndtTWlHeG1YVHpm?=
- =?utf-8?B?bklTbVI1dXFkZndTOGNkdmlFMU5yOEVMb0YyRGt2bStab2xkKys1MnRmQjZV?=
- =?utf-8?B?QTV5VTBTU2ZiQ0dUa0twcjZLVi9qeW1JN3IwLzY0d01PL3Nqb2VWU2JQcHlk?=
- =?utf-8?B?VXdNcXdGOVlESTZwSFdmY2c4c1NHdTNLS1g0Q3hGS084QXFrQ2RuaVpEMitr?=
- =?utf-8?B?UjVodmc2N3dMK0dORWdIcEJLVFNvUmtLbXAzWGtIVzY2WTVrMEp4WEtnZmV3?=
- =?utf-8?B?T05nUThkS0hkSDl4Mzc3Nm1yNnVZQUdEemtkL1RIWmpBOFFZNWRtMERGcllG?=
- =?utf-8?B?czloNXR2and2bzRwY2U4dG5LemxhN29iV3FyaWt4UmE3bjg2Z3dmU2NJK2cr?=
- =?utf-8?B?WVNRRFJWcGxRR2NNSHJmVEtDSlhjdEFCeWNFQk9IY3hWaWo2bWRxYjhqbmxD?=
- =?utf-8?B?OHpYVUVGdllsT2w0dGhpTVpZMkxpci9nRW5aVEhnZU52bFZ5S0ppSDNpaVBj?=
- =?utf-8?B?VTlDWU0xZkY0VytZUUo2UEdNdWl1czB2Vng0bVlTb1E4dnZ1VjcwY0U3cVps?=
- =?utf-8?B?TTVBZXdjUVpoYkhDNzF0QXNsRTJ3emVlQTlGak1KQjRUa0JyRTQ0dzZLWHph?=
- =?utf-8?B?UWFGMmNQd0dMZTJHaXFDTEEzNm94TEd2aDV2N25wdzNHcUNJU203Zm5SMXEv?=
- =?utf-8?B?TENJWW4rY3hyaVJUdEVPUGI1V1FpQ1dxd05jc1VQRGJEaVEweUllUU5nUmxL?=
- =?utf-8?B?QVRrdDlsalRuNHdZVUZMM0VSTE5BOWZxdzRkbDJSaDZQSmJJQkkvZXltbVZw?=
- =?utf-8?B?bStkeW93QVVGZXViU2JUOHlhWlhQZURQZlJXaEUvdWZKREcrZ25JeUliekp0?=
- =?utf-8?B?cUdVVGpjRml3aGd1VzM5d3RvbzV4c1lEYzkwaGNLbVl1d1NoS2tuY0Q3ZEQ4?=
- =?utf-8?B?d2lyY2t4OTF3VE1vdTlqenY5YkV4bkVwdUpKTzVJQUZOM2Q4Q0x1Nk5pejFC?=
- =?utf-8?B?TVlPRkZuejk5R2xGc1g2Mzg3WitJeHVkd0dVTk4xbk0xcjMzZS9CWndIU1g0?=
- =?utf-8?B?cUk1elgzekpFSkpnSFZiTGFBOUI4QTRlUEd1M3N6TTRPYk82U0hBQ3dFejJU?=
- =?utf-8?B?Nm1jTmIwNTA4dllMaUVjNUNmZjlNNEVpMEVPelFmTVcycmx1WDhqY1lzdzhU?=
- =?utf-8?B?QlVmZ25CVlhaRlhMelhBRHMxcFRZN1kxK2x2aTBrbXpjWU9RSU5WamdROXNa?=
- =?utf-8?B?Q1hldytYWEw1WmZzMEwrWWloUjJ6Z2VGTFczdmx3WEpidVphRlcyMGxlTGV4?=
- =?utf-8?B?dlpYc3p5dWFlMjdFZlNIaGxWc05SM3JXakRCcjNSTm92T1pJZ3J2NzZWbGpL?=
- =?utf-8?B?OFI5bnREOWFKakZ1ZTFZV2JHNHRGdVBlVkVmSEtTY2JjbGdTdk5NbmR3a3d5?=
- =?utf-8?B?RXlrNWdpU1pLbEJjc04wRHlsSjIvSUV6RUpZWG4wTzAzV2VwNk1abDdxUGoz?=
- =?utf-8?B?ZFB1N09EUGZ4ZStpMENIK2JxemRPa0gvYW5yQUZrdTh5c2NVeE1mTGVUZkdX?=
- =?utf-8?B?dXhJVEt3WkN2REJCc2I0Vnd2ZmRNY2JCQUJLSXRud01VZFBIRlBkd3d4dDRJ?=
- =?utf-8?B?VXh4bS95RHRaamFJa3JPWmRUbC9LOExDbWFnSWFrcFZBZ2xyVFJaV25wR1JY?=
- =?utf-8?B?Z2s2b3Z1enByczdqYUk2SVgrUVVIRDZyNXZvZ1Zobm1kbE0vN1ZtMkJZMmdB?=
- =?utf-8?B?SEMvRlZVb3Z1bG9oVjJyLzEvbmc0cmtrVXJWRVlRSEZGRzdxdHNmbklSTkVu?=
- =?utf-8?B?Nlg2ck9aenlLYnRtS20rRXhtdWhQVXJCUUtBU2V4alZsZUtUZlMwQys4L1Y4?=
- =?utf-8?B?YWlXamZvU2JiRytyckhZV1g3akRaVHBTdDRkT3lMY2poSDdObTcvNTJRWllv?=
- =?utf-8?B?VExKdmRyeHlrRWpRa29DMXg3dlZtcmxNZ1hTZkRodG1tS1NHLytKT1FTd1h5?=
- =?utf-8?Q?UzdfBCbFqBEuSIeCQDRn0/XyZ?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 073477bb-044d-4416-3003-08daea35b3f3
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2022 07:16:00.2987
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NVn+UphOpgn2jCvZbv85pABF+3Twq+sid/pWudhv7SSqRycM0C92pLS7vFqnjvNeuRdMGPs7RWpPMgI8l336xg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB3963
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Sergey <zagagyka@basealt.ru>, Alsa-devel <alsa-devel@alsa-project.org>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
+ Mark Brown <broonie@kernel.org>
+Subject: =?UTF-8?Q?=5bregression=2c_5=2e10=2ey=5d_Bug=c2=a0216861_-_sound_di?=
+ =?UTF-8?Q?sappearance_on_Acer_Swift_3_SF314-59-78UR_after_update_to_5=2e10?=
+ =?UTF-8?Q?=2e157?=
+To: Richard Fitzgerald <rf@opensource.cirrus.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672387741;3f2add6f;
+X-HE-SMSGID: 1pBARm-0001HW-3W
 
-> What happened to the f2fs developers? No response from anyone yet. Am
-> I the only one facing this? Linux-6.2 is unusable until this is fixed.
-> What can I do to help?
+Hi, this is your Linux kernel regression tracker speaking.
 
-It's been a long time since I saw Kim and Chao respond to messages. I think
-it may be because of the holiday in the US，and China loosened restrictions
-on COVID-19 (lots of people got sick, I just recovered today).
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216861 :
 
-BTW, the log you uploaded corresponds to which kernel git is, and which
-commit it corresponds to.
+>  Sergey 2022-12-29 10:07:51 UTC
+> 
+> Created attachment 303497 [details]
+> pulseaudio.log
+> 
+> Sudden sound disappearance was reported for some laptops, e.g.
+> 
+> Acer Swift 3 SF314-59-78UR 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+> 
+> # lspci
+> 0000:00:1f.3 Multimedia audio controller: Intel Corporation Tiger Lake-LP Smart Sound Technology Audio Controller (rev 20)
+>         Subsystem: Acer Incorporated [ALI] Device 148c
+>         Flags: bus master, fast devsel, latency 32, IRQ 197, IOMMU group 12
+>         Memory at 601f270000 (64-bit, non-prefetchable) [size=16K]
+>         Memory at 601f000000 (64-bit, non-prefetchable) [size=1M]
+>         Capabilities: [50] Power Management version 3
+>         Capabilities: [80] Vendor Specific Information: Len=14 <?>
+>         Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>         Kernel driver in use: sof-audio-pci
+> 
+> I am attaching the pulseaudio and dmesg logs
+> 
+> This bug started reproducing after updating the kernel from 5.10.156 to 5.10.157
+> 
+> Bisection revealed the commit being reverted:
+> 
+> c34db0d6b88b1da95e7ab3353e674f4f574cccee is the first bad commit
+> commit c34db0d6b88b1da95e7ab3353e674f4f574cccee
+> Author: Richard Fitzgerald <rf@opensource.cirrus.com>
+> Date:   Fri Nov 4 13:22:13 2022 +0000
+> 
+>     ASoC: soc-pcm: Don't zero TDM masks in __soc_pcm_open()
+>     
+>     [ Upstream commit 39bd801d6908900e9ab0cdc2655150f95ddd4f1a ]
+>     
+>     The DAI tx_mask and rx_mask are set by snd_soc_dai_set_tdm_slot()
+>     and used by later code that depends on the TDM settings. So
+>     __soc_pcm_open() should not be obliterating those mask values.
+>     
+> [...]
+> Original bug report: https://bugzilla.altlinux.org/44690
 
-Thx,
-Yangtao
+See the ticket for more details.
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: c34db0d6b88b1d
+https://bugzilla.kernel.org/show_bug.cgi?id=216861
+#regzbot title: sound: asoc: sudden sound disappearance
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
