@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE6C1FA8;
-	Fri, 30 Dec 2022 08:19:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EC461FB7
+	for <regressions@lists.linux.dev>; Fri, 30 Dec 2022 08:27:08 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pBAbQ-0003Oo-SD; Fri, 30 Dec 2022 09:18:56 +0100
-Message-ID: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
-Date: Fri, 30 Dec 2022 09:18:56 +0100
+	id 1pBAjK-0005s0-03; Fri, 30 Dec 2022 09:27:06 +0100
+Message-ID: <0e77436c-9f0a-15b6-697a-7b879e4abc4a@leemhuis.info>
+Date: Fri, 30 Dec 2022 09:27:05 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -18,108 +18,69 @@ User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
 Content-Language: en-US, de-DE
 From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Lu Baolu <baolu.lu@linux.intel.com>
-Cc: Joerg Roedel <jroedel@suse.de>, Matt Fagnani <matt.fagnani@bell.net>,
- "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+Cc: Eric Pilmore <epilmore@gigaio.com>, dmaengine@vger.kernel.org,
  LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Linux PCI <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Subject: =?UTF-8?Q?=5bregression=2c_bisected=2c_pci/iommu=5d_Bug=c2=a0216865?=
- =?UTF-8?Q?_-_Black_screen_when_amdgpu_started_during_6=2e2-rc1_boot_with_AM?=
- =?UTF-8?Q?D_IOMMU_enabled?=
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: =?UTF-8?Q?=5bregression=5d_Bug=c2=a0216856_-_=5bptdma=5d_NULL_point?=
+ =?UTF-8?Q?er_dereference_in_pt=5fcmd=5fcallback_during_server_shutdown?=
+To: Sanjay R Mehta <sanju.mehta@amd.com>, Vinod Koul <vkoul@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672388340;85de40be;
-X-HE-SMSGID: 1pBAbQ-0003Oo-SD
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672388828;b58f5342;
+X-HE-SMSGID: 1pBAjK-0005s0-03
 
 Hi, this is your Linux kernel regression tracker speaking.
 
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developer don't keep an eye on it, I decided to forward it by
-mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216865 :
+I noticed a bug report in bugzilla.kernel.org that looks a lot like a
+regression to my untrained eyes (it's not entirely clear). As many
+(most?) kernel developer don't keep an eye on it, I decided to forward
+it by mail. Quoting from
+https://bugzilla.kernel.org/show_bug.cgi?id=216856 :
 
->  Matt Fagnani 2022-12-29 18:39:56 UTC
+>  Eric Pilmore 2022-12-27 22:23:50 UTC
 > 
-> I booted the Fedora Rawhide KDE Plasma live image
-> Fedora-KDE-Live-x86_64-Rawhide-20221227.n.0.iso
-> https://koji.fedoraproject.org/koji/buildinfo?buildID=2104562 from a USB
-> flash drive written with Fedora Media Writer on an hp laptop with an
-> integrated Radeon R5 GPU. The system froze with a black screen when
-> amdgpu started during 6.2-rc1 kernel boot. When I booted with quiet rhgb
-> removed from the kernel command line the last line shown before the
-> black screen was
->
-> kernel: [drm] amdgpu kernel modesetting enabled.
+> Observed kernel panic during host shutdown on a AMD (Milan CPU) based
+> server. The issue ended up being a NULL pointer dereference in
+> pt_cmd_callback() when
+> called from pt_issue_pending(). If you follow the flow in
+> pt_issue_pending() you will note that if pt_next_dma_desc() returns
+> NULL, then engine_is_idle will remain as TRUE, including if
+> pt_next_dma_desc() is still returning NULL in the 2nd call just prior to
+> doing the call to pt_cmd_callback().
 > 
-> This problem happened each of several boots when using the amdgpu
-> driver (the default). This problem didn't happen when I booted the same
-> image using Troubleshooting > Boot Fedora-KDE-Plasma-live in basic
-> graphics mode which used the simpledrm driver and started Plasma on X
-> normally. This problem also didn't happen when I booted the image in a
-> QEMU/KVM VM in GNOME Boxes with 3 GB RAM using the virtio-gpu driver.
+> The stack flow leading up to the panic was:
+> dma_sync_wait() -> dma_async_issue_pending() -> pt_issue_pending() ->
+> pt_cmd_callback()
 > 
-> The data from the previous boots using live images aren't saved by
-> default so I couldn't get the journal that way as far as I knew. I
-> installed kernel-6.2.0-0.rc1.14.fc38 in my Fedora 37 KDE Plasma
-> installation and reproduced the problem 3 times with quiet rhgb removed
-> from the kernel command line and sysrq_always_enabled drm.debug=14 added
-> to it. I used sysrq+alt+r,s,u,b which rebooted the system so the kernel
-> wasn't completely frozen. The journals from the boots with the problem
-> weren't shown in journalctl. I booted with amdgpu.dc=0 on the kernel
-> command line and the screen froze with the last line
-> kernel: [drm] amdgpu kernel modesetting enabled. and the black
-> screen
-> didn't happen. I booted with drm.debug=94 on the kernel command line and
-> the screen's drm settings were shown repeatedly until I rebooted after
-> 2-3 minutes.
+> Temporarily I worked around the issue by simply changing the IF
+> condition for the call to pt_cmd_callback() to also check for a non-NULL
+> desc, i.e.
 > 
-> This problem didn't happen with kernel-6.1.0-65.fc38 or earlier in
-> the
-> Fedora Rawhide live image
-> Fedora-KDE-Live-x86_64-Rawhide-20221217.n.0.iso. The first Fedora
-> Rawhide kernel with this problem was
-> 6.2.0-0.rc0.20221215git041fae9c105a.5.fc38, while
-> 6.2.0-0.rc0.20221214gite2ca6ba6ba01.3.fc38 was the last one without the
-> problem. I bisected the mainline kernel between e2ca6ba6ba01 and
-> 041fae9c105a. The first bad commit was the following involving PCI and
-> IOMMUs.
+>    if (engine_is_idle && desc)
+>       pt_cmd_callback(desc, 0);
 > 
-> 201007ef707a8bb5592cd07dd46fc9222c48e0b9 is the first bad commit
-> commit 201007ef707a8bb5592cd07dd46fc9222c48e0b9
-> Author: Lu Baolu <baolu.lu@linux.intel.com>
-> Date:   Mon Oct 31 08:59:08 2022 +0800
-> 
->     PCI: Enable PASID only when ACS RR & UF enabled on upstream path
->     
->     The Requester ID/Process Address Space ID (PASID) combination
->     identifies an address space distinct from the PCI bus address space,
->     e.g., an address space defined by an IOMMU.
->     
-> [...]
-> 
-> My system has an AMD IOMMU enabled. When I booted 6.2-rc1 with
-> amd_iommu=off on the kernel command line, the problem didn't happen and
-> the boot completed. There were IOMMU-related errors when amdgpu started
-> with amd_iommu=off. So the problem appears to involve amdgpu not
-> starting properly when the IOMMU is enabled after that change. When I
-> booted with quiet rhgb removed from the kernel command line, I noted
-> that the AMD IOMMU started about 3 seconds before the problem happened
-> when amdgpu started with a line like kernel: AMD-Vi: AMD IOMMUv2 loaded
-> and initialized
-> 
-> I reported this problem at
-> https://gitlab.freedesktop.org/drm/amd/-/issues/2319 where Alex Deucher
-> wrote "Please report this upstream to the IOMMU subsystem:
-> https://bugzilla.kernel.org/" I reported it for Fedora at
-> https://bugzilla.redhat.com/show_bug.cgi?id=2156691
+> This resolved the issue for me, however I don't know enough about the
+> driver or the context here to know if this is really the desirable fix,
+> and so I'm submitting this bug rather than attempting to patch myself. I
+> wasn't sure if the secondary pt_next_dma_desc() call was mistakenly
+> leftover from the change that introduced the engine_is_idle variable or
+> not. Note that vchan_issue_pending() will return a boolean as to whether
+> there are any descriptors on the Issue list, i.e. active descriptors.
+> So, maybe that could be used to qualify the need to take some action?
+> Also, if pt_cmd_callback() is really going to start processing on the
+> next descriptor, I wonder if it should be called under the chan->vc.lock
+> lock. I'm not sure of the safety of this, but if you are peeking at
+> descriptors on the Issue list that you might want to ensure they're
+> protected from being accessed/removed by some other thread.
 
 See the ticket for more details.
 
 BTW, let me use this mail to also add the report to the list of tracked
 regressions to ensure it's doesn't fall through the cracks:
 
-#regzbot introduced: 201007ef707a8bb
-https://bugzilla.kernel.org/show_bug.cgi?id=216865
+#regzbot introduced: v6.1..v6.2-rc1
+https://bugzilla.kernel.org/show_bug.cgi?id=216856
+#regzbot title: ptdma: kernel panic during host shutdown
 #regzbot ignore-activity
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
