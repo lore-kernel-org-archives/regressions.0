@@ -1,89 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2118.outbound.protection.outlook.com [40.107.215.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC01F10F2
-	for <regressions@lists.linux.dev>; Fri, 30 Dec 2022 06:39:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 371DAC433EF;
-	Fri, 30 Dec 2022 06:39:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1672382357;
-	bh=q8wxwX0wZcFLGiE0Owq5Y55vjOPnnvuF0IJnjlUHQQc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E1QqX7mvBwvtYiYgzlRKkx5+AdvXwNKskV3hb9gbn7BlLtvHHgNkDaGINPa0KOFTp
-	 Kz6m0liioTY55DRPiX80Ya8/CZqDPG++A9ZtT85jub05Eo90wr0krBVKPsGgCnFCqB
-	 p4zmHmuBtRHIUAEwecBLrnlOtbU53Y+XKWpkBPwzkUGwZW+BZoP0fh11FtIJuRQZhT
-	 ECO5b15lPjeo7pMZVkHwuCVuNDp5XD0qn8Dj7XVcGsUKBxDGXtCRGdKHTfWH34aJTU
-	 tmgTufFBfcLc3p8nCHk2RYwoeub31f0ynX4EjSQQC8IyWDvoLZ2IYKWrjpxUs31mJ6
-	 jmaQLdRjXK5Yw==
-Date: Thu, 29 Dec 2022 22:39:15 -0800
-From: Eric Biggers <ebiggers@kernel.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Jeff Chua <jeff.chua.linux@gmail.com>,
-	lkml <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Bagas Sanjaya <bagasdotme@gmail.com>,
-	Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-	F2FS Development <linux-f2fs-devel@lists.sourceforge.net>,
-	Linux Regressions <regressions@lists.linux.dev>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E691FA8
+	for <regressions@lists.linux.dev>; Fri, 30 Dec 2022 07:16:04 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BzRN6mlGdvvXAa5YudUQc2SQS5LBnB24lup5tS5kTZrtee8dJYgXsZ1K5YBIBhfIqaaSIBymTBpiUmNobhvb6mRkCOJl8zQJX56C7SPFnUY6D7kY2UBhBlApYDC3Rbu3UycwiklbadXl5PaArtcelnNG9InMOcTYMH+Nyd34CH3v1fF1JHzofUwq/EAJ5goofeRTj0Om8hxl4VOULmCkpiYjE5i5BkgRl2MGKDf9w6K7Hr4CARX3yWorqY224UGzKQRq9hFI0gQDa5GeUkbyZWI/Fvy4vulDiVK49pBHn0MCc1cZmbcXmuZaZf+qI+TDkT/n6rcHDNy0pUrdRGncPA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cUGNjQ666r4BsIJIniUKiM5v39nRx149/s/osbac260=;
+ b=HdY5Ny10kErCLiW8ntvwSnWgHQf3ZhMLf3xyy+zEVBZZM0CQ7XrHwTuqoW9ndlQGPbLIVPz1bcJwSggX4PE+tcNjGJg/G1gRNlAfYYja8/iXljqX2GSayXLhZT2abxHXFbT4RIqgwIWsRjnxuUVoAUzHHQ8WX9145TmUilbXh6K4JFQdHgWxBjheu3wTlaX0+XX6R4aHte0pV2TUaograQSwOfvfyJzfTTN/8F9bUubNfT6qAdKz76quhlpDydwQk7s7u6XZ/CwgU8/+zlm3ITC7oZXvQqEpk7nBGXt0AtxYYH3VQuN3GBwL4e2TZHNRLJ34izBUo5wwvbDAGAzpfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cUGNjQ666r4BsIJIniUKiM5v39nRx149/s/osbac260=;
+ b=ZM+5MkGH8pe7hY72B0sIAuwGCFjMw1utDVFK3ZbxWcX9V1mGJyMssdbldNtElPRH/O0eMusslBcFEFI7hNvNGO7k4WxI2fAUGxoPVsM+OLRX4TvpbTqbw/zY0+BrBPkBBAIHv3WmZGT5KJmnwWFYwAhwD9CAMVQGYaZgIkTatbsODndZ/awGgJ86xLiFmA+0oo54rxmNaeLJApfa5LpC7AtWqAnT85izrgdYM0c/4lSTvsLTyXzh8NJJrk3Hc2agOPeQPwHYvTIqe/lABDvlIwM/8DOtNbojCwFNaWeZxK7u+18EC+0do+/BR6GVa6ZAhN2XnnEQaPNxPpD9zeCtzw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com (2603:1096:101:78::6)
+ by SI2PR06MB3963.apcprd06.prod.outlook.com (2603:1096:4:f2::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.16; Fri, 30 Dec
+ 2022 07:16:01 +0000
+Received: from SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::7969:5a45:8509:7d80]) by SEZPR06MB5269.apcprd06.prod.outlook.com
+ ([fe80::7969:5a45:8509:7d80%5]) with mapi id 15.20.5944.018; Fri, 30 Dec 2022
+ 07:16:00 +0000
+From: Yangtao Li <frank.li@vivo.com>
+To: ebiggers@kernel.org
+Cc: bagasdotme@gmail.com,
+	chao@kernel.org,
+	jaegeuk@kernel.org,
+	jeff.chua.linux@gmail.com,
+	linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	regressions@leemhuis.info,
+	regressions@lists.linux.dev,
+	torvalds@linux-foundation.org
 Subject: Re: Fwd: f2fs write error Linux v6.2
-Message-ID: <Y66Hk6waTeXQDz1/@sol.localdomain>
-References: <CAAJw_Ztzyh-GNTJYpXbA0CeJv2Rz=fLZKE6_Q=7JMmM+s9yHXQ@mail.gmail.com>
- <CAAJw_Ztb0mJVkHtBhryf=9g8CA0fZZRa8HVio8GCGUSLOvqa7A@mail.gmail.com>
- <Y6bz4wOC0nwu2yGU@debian.me>
- <0c70ba66-ef00-7242-d198-844f803662fa@gmail.com>
- <CAAJw_Zv0iBg4rkzxQ2UOOLS9JQZ4cCmM7gSoDXec_gm-GggB6A@mail.gmail.com>
- <f500d64b-c26d-ee34-092a-421c64c69f9e@leemhuis.info>
+Date: Fri, 30 Dec 2022 15:15:51 +0800
+Message-Id: <20221230071551.61833-1-frank.li@vivo.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <Y66Hk6waTeXQDz1/@sol.localdomain>
+References: <Y66Hk6waTeXQDz1/@sol.localdomain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SI2PR02CA0041.apcprd02.prod.outlook.com
+ (2603:1096:4:196::20) To SEZPR06MB5269.apcprd06.prod.outlook.com
+ (2603:1096:101:78::6)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f500d64b-c26d-ee34-092a-421c64c69f9e@leemhuis.info>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5269:EE_|SI2PR06MB3963:EE_
+X-MS-Office365-Filtering-Correlation-Id: 073477bb-044d-4416-3003-08daea35b3f3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	wfW5oExTavigjs8MN1KJbOydQo/tdjcqEWS6MpW5mWAMW/QFHJzBHtcF9W71bQsSTA34fQvkr9xNes9RTpzwN+tub8iaK9CXtrDmSGe1OAeECnY+bAY5dlx+n556wLuZ1acEyGHdnZTIffaZV3O64UVyofwyhQVy0jApQPrXS5c6n8hJqR9BMwsFZWPDVwYxOLwDoUeaz7ib6eZu72x26AJhXJlhIssaQfiW9Ms7kWgNI/HL2fIhBaPxsIxFVGN7Nhol2BW8SOQl6dgD4TXF2bBDHozKQ99QNfOySk6xeSTy+Fr6JU7XQPffrMA6Uv4Pw8V5LT+BLzVG7rlQRvIdYR8coepKJbEfKqM1THLgvWfNQb13pJ+/lwFQehrBHpgUNYmk6zTxpbBWXnRZ8G2DIHfEzKkLfatsG/FLjYPu5Z89JlfLHrkP5kQWYFr4Yo/e1LikQZWgiS0Qp2YtQwXcPfDxHF0vceXAycRGswW0hUV3XpFJvshgPcS6vKlxJJjoSj189PlAl5vEfhmtagZ61KIvbELV/5VviU/SYQl+YrUwR+8kRwhUMl47uxFAeDncl65P2LgKB8BM4fiNS8ftiqSCWU87aIMERoO3sYaXBeYVFQZry6+/mhlNb7nrsBMzT7TVH4xHWCs0/ZRQOO+xxDfiAF86P47tDZ6nq2Fh0hPeCDl2Vrfs1rHFPq2saFp8kMo2sy68dzUpOkykR1WoqA==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5269.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(396003)(376002)(366004)(39860400002)(346002)(451199015)(66946007)(6512007)(5660300002)(66556008)(4326008)(66476007)(8676002)(4744005)(41300700001)(7416002)(8936002)(26005)(186003)(2616005)(36756003)(52116002)(6916009)(2906002)(478600001)(6486002)(316002)(86362001)(6666004)(1076003)(6506007)(38350700002)(38100700002)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bS9CM0d5YkwwNHBLem8vdGFNTzMwYitneGdSQ21zdlU2WFNrNnlKWGVIRHla?=
+ =?utf-8?B?amFpVURKOEJvemg4dzdYd1M5RHI2MFpubG0vc085NVhBU2RjVC8remVOMm9D?=
+ =?utf-8?B?Um1uVmxiUTNna0xDV3JFd0ZXemI0aW8yUmZ1Zkg1UmUyTndtTWlHeG1YVHpm?=
+ =?utf-8?B?bklTbVI1dXFkZndTOGNkdmlFMU5yOEVMb0YyRGt2bStab2xkKys1MnRmQjZV?=
+ =?utf-8?B?QTV5VTBTU2ZiQ0dUa0twcjZLVi9qeW1JN3IwLzY0d01PL3Nqb2VWU2JQcHlk?=
+ =?utf-8?B?VXdNcXdGOVlESTZwSFdmY2c4c1NHdTNLS1g0Q3hGS084QXFrQ2RuaVpEMitr?=
+ =?utf-8?B?UjVodmc2N3dMK0dORWdIcEJLVFNvUmtLbXAzWGtIVzY2WTVrMEp4WEtnZmV3?=
+ =?utf-8?B?T05nUThkS0hkSDl4Mzc3Nm1yNnVZQUdEemtkL1RIWmpBOFFZNWRtMERGcllG?=
+ =?utf-8?B?czloNXR2and2bzRwY2U4dG5LemxhN29iV3FyaWt4UmE3bjg2Z3dmU2NJK2cr?=
+ =?utf-8?B?WVNRRFJWcGxRR2NNSHJmVEtDSlhjdEFCeWNFQk9IY3hWaWo2bWRxYjhqbmxD?=
+ =?utf-8?B?OHpYVUVGdllsT2w0dGhpTVpZMkxpci9nRW5aVEhnZU52bFZ5S0ppSDNpaVBj?=
+ =?utf-8?B?VTlDWU0xZkY0VytZUUo2UEdNdWl1czB2Vng0bVlTb1E4dnZ1VjcwY0U3cVps?=
+ =?utf-8?B?TTVBZXdjUVpoYkhDNzF0QXNsRTJ3emVlQTlGak1KQjRUa0JyRTQ0dzZLWHph?=
+ =?utf-8?B?UWFGMmNQd0dMZTJHaXFDTEEzNm94TEd2aDV2N25wdzNHcUNJU203Zm5SMXEv?=
+ =?utf-8?B?TENJWW4rY3hyaVJUdEVPUGI1V1FpQ1dxd05jc1VQRGJEaVEweUllUU5nUmxL?=
+ =?utf-8?B?QVRrdDlsalRuNHdZVUZMM0VSTE5BOWZxdzRkbDJSaDZQSmJJQkkvZXltbVZw?=
+ =?utf-8?B?bStkeW93QVVGZXViU2JUOHlhWlhQZURQZlJXaEUvdWZKREcrZ25JeUliekp0?=
+ =?utf-8?B?cUdVVGpjRml3aGd1VzM5d3RvbzV4c1lEYzkwaGNLbVl1d1NoS2tuY0Q3ZEQ4?=
+ =?utf-8?B?d2lyY2t4OTF3VE1vdTlqenY5YkV4bkVwdUpKTzVJQUZOM2Q4Q0x1Nk5pejFC?=
+ =?utf-8?B?TVlPRkZuejk5R2xGc1g2Mzg3WitJeHVkd0dVTk4xbk0xcjMzZS9CWndIU1g0?=
+ =?utf-8?B?cUk1elgzekpFSkpnSFZiTGFBOUI4QTRlUEd1M3N6TTRPYk82U0hBQ3dFejJU?=
+ =?utf-8?B?Nm1jTmIwNTA4dllMaUVjNUNmZjlNNEVpMEVPelFmTVcycmx1WDhqY1lzdzhU?=
+ =?utf-8?B?QlVmZ25CVlhaRlhMelhBRHMxcFRZN1kxK2x2aTBrbXpjWU9RSU5WamdROXNa?=
+ =?utf-8?B?Q1hldytYWEw1WmZzMEwrWWloUjJ6Z2VGTFczdmx3WEpidVphRlcyMGxlTGV4?=
+ =?utf-8?B?dlpYc3p5dWFlMjdFZlNIaGxWc05SM3JXakRCcjNSTm92T1pJZ3J2NzZWbGpL?=
+ =?utf-8?B?OFI5bnREOWFKakZ1ZTFZV2JHNHRGdVBlVkVmSEtTY2JjbGdTdk5NbmR3a3d5?=
+ =?utf-8?B?RXlrNWdpU1pLbEJjc04wRHlsSjIvSUV6RUpZWG4wTzAzV2VwNk1abDdxUGoz?=
+ =?utf-8?B?ZFB1N09EUGZ4ZStpMENIK2JxemRPa0gvYW5yQUZrdTh5c2NVeE1mTGVUZkdX?=
+ =?utf-8?B?dXhJVEt3WkN2REJCc2I0Vnd2ZmRNY2JCQUJLSXRud01VZFBIRlBkd3d4dDRJ?=
+ =?utf-8?B?VXh4bS95RHRaamFJa3JPWmRUbC9LOExDbWFnSWFrcFZBZ2xyVFJaV25wR1JY?=
+ =?utf-8?B?Z2s2b3Z1enByczdqYUk2SVgrUVVIRDZyNXZvZ1Zobm1kbE0vN1ZtMkJZMmdB?=
+ =?utf-8?B?SEMvRlZVb3Z1bG9oVjJyLzEvbmc0cmtrVXJWRVlRSEZGRzdxdHNmbklSTkVu?=
+ =?utf-8?B?Nlg2ck9aenlLYnRtS20rRXhtdWhQVXJCUUtBU2V4alZsZUtUZlMwQys4L1Y4?=
+ =?utf-8?B?YWlXamZvU2JiRytyckhZV1g3akRaVHBTdDRkT3lMY2poSDdObTcvNTJRWllv?=
+ =?utf-8?B?VExKdmRyeHlrRWpRa29DMXg3dlZtcmxNZ1hTZkRodG1tS1NHLytKT1FTd1h5?=
+ =?utf-8?Q?UzdfBCbFqBEuSIeCQDRn0/XyZ?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 073477bb-044d-4416-3003-08daea35b3f3
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5269.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Dec 2022 07:16:00.2987
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NVn+UphOpgn2jCvZbv85pABF+3Twq+sid/pWudhv7SSqRycM0C92pLS7vFqnjvNeuRdMGPs7RWpPMgI8l336xg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB3963
 
-On Fri, Dec 30, 2022 at 06:56:36AM +0100, Thorsten Leemhuis wrote:
-> On 30.12.22 05:04, Jeff Chua wrote:
-> > On 12/24/22 19:43, Bagas Sanjaya wrote:
-> >> On Sat, Dec 24, 2022 at 01:48:55PM +0800, Jeff Chua wrote:
-> >>> Got the following error in latest linux-6.2-git with just vim (:w
-> >>> file1). No problem with linux-6.1.1
-> > 
-> > What happened to the f2fs developers? No response from anyone yet.
-> 
-> Well, that indeed is unfortunate and ideally shouldn't happen, but the
-> simple reality is: that can happen this time of the year due to this
-> thing called "festive season".
-> 
-> > Am
-> > I the only one facing this? Linux-6.2 is unusable until this is fixed.
-> > What can I do to help?
-> 
-> The usual: bisect the issue, as then (a) we know exactly which developer
-> caused it, (b) which subsystem/maintainer is responsible (issues in a fs
-> might be caused by the VFS, block layer, mm, ...), and (c) might be able
-> to quickly revert that culprit, even if the people normally responsible
-> are MIA for some reason.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> 
-> P.S.: As the Linux kernel's regression tracker I deal with a lot of
-> reports and sometimes miss something important when writing mails like
-> this. If that's the case here, don't hesitate to tell me in a public
-> reply, it's in everyone's interest to set the public record straight.
-> 
+> What happened to the f2fs developers? No response from anyone yet. Am
+> I the only one facing this? Linux-6.2 is unusable until this is fixed.
+> What can I do to help?
 
-FWIW, I've tested f2fs on mainline in the last few days, and I haven't seen
-this.  The following works fine, for example:
+It's been a long time since I saw Kim and Chao respond to messages. I think
+it may be because of the holiday in the US，and China loosened restrictions
+on COVID-19 (lots of people got sick, I just recovered today).
 
-    mkfs.f2fs -f /dev/vdb
-    mount /dev/vdb /mnt
-    vim
-    # write something, then ':w /mnt/file'
+BTW, the log you uploaded corresponds to which kernel git is, and which
+commit it corresponds to.
 
-If you could provide the mkfs and mount options you are using, and any other
-relevant details, that would be helpful.  Bisection would also be very helpful,
-as Thorsten mentioned.
-
-- Eric
+Thx,
+Yangtao
