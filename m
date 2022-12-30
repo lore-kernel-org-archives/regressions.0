@@ -1,87 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C893D7E
-	for <regressions@lists.linux.dev>; Fri, 30 Dec 2022 09:13:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 246DFC433EF;
-	Fri, 30 Dec 2022 09:13:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1672391610;
-	bh=9Ekj92sUMRHtTg8IYszSI09n7I4PuwXjweegdaPvvr4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DtqeJhVTypzKq7grO37qbbggLoq8NNvc3rSWOIFerlyUGxHTsAVwFx5Qn4RNdikRY
-	 tZQMtNZVMze6YgBeEkSaxIkVYEeAgIqVYyWciP43OA8mhKLwlXXeP7Lx5szBDY3H4k
-	 G0E8KE1ga0kiar9Jm4Ogg6vji6M+ZiMFbQKwvrkc=
-Date: Fri, 30 Dec 2022 10:13:27 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Vlastimil Babka <vbabka@suse.cz>,
-	Holger =?iso-8859-1?Q?Hoffst=E4tte?= <holger@applied-asynchrony.com>,
-	stable@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [PATCH 6.1 0000/1146] 6.1.2-rc1 review
-Message-ID: <Y66rt1YahFBSyFKF@kroah.com>
-References: <20221228144330.180012208@linuxfoundation.org>
- <2bf086f8-aa9d-b576-ba8b-1fcfbc9a4ff1@applied-asynchrony.com>
- <Y6xkpmqxRQwDyLAb@kroah.com>
- <d5534922-0b33-268d-cfad-c175ff4f676e@suse.cz>
- <e8d819e0-10c4-89c0-6b13-d1ceb01da0fc@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA147E
+	for <regressions@lists.linux.dev>; Fri, 30 Dec 2022 09:15:11 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pBBTp-0002ty-6V; Fri, 30 Dec 2022 10:15:09 +0100
+Message-ID: <82364292-666b-c275-37b2-18afe401c06c@leemhuis.info>
+Date: Fri, 30 Dec 2022 10:15:08 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e8d819e0-10c4-89c0-6b13-d1ceb01da0fc@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: en-US, de-DE
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: =?UTF-8?Q?Bug=c2=a0216859_-_PCI_bridge_to_bus_boot_hang_at_enumerat?=
+ =?UTF-8?Q?ion?=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672391711;3d76d13e;
+X-HE-SMSGID: 1pBBTp-0002ty-6V
 
-On Thu, Dec 29, 2022 at 02:04:53PM +0100, Thorsten Leemhuis wrote:
-> On 28.12.22 19:57, Vlastimil Babka wrote:
-> > On 12/28/22 16:45, Greg Kroah-Hartman wrote:
-> >> On Wed, Dec 28, 2022 at 04:02:57PM +0100, Holger Hoffstätte wrote:
-> >>> On 2022-12-28 15:25, Greg Kroah-Hartman wrote:
-> >>>> This is the start of the stable review cycle for the 6.1.2 release.
-> >>>> There are 1146 patches in this series, all will be posted as a response
-> >>>> to this one.  If anyone has any issues with these being applied, please
-> >>>> let me know.
-> >>>
-> >>> I know this is already a large set of updates, but it would be great if
-> >>> commit 6f12be792fde994ed934168f93c2a0d2a0cf0bc5 ("mm, mremap: fix mremap()
-> >>> expanding vma with addr inside vma") could be added as well; it applies and
-> >>> works fine on top of 6.1.1.
-> >>> This fixes quite a few annoying mmap-related out-of-memory failures.
-> >>
-> >> It's set up for future releases.  If this was such a big issue for
-> >> 6.1-final, why wasn't it sent to Linus before 6.2-rc1?
-> > 
-> > Thorsten did question its upstreaming speed elsewhere. But it actually
-> > is in 6.2-rc1. Andrew sent the PR on 22th and Linus merged on 23th [1].
-> > I didn't try to accelerate it to stable as IIRC people already pointed
-> > it out and you acknowledged it's on your radar, and it was a tracked
-> > regression. Sucks that it didn't make it to 6.1.2.
-> 
-> Yup. I've been thinking somewhat what I could or should do to ensure
-> things work more smoothly when similar situations arise in the future;
-> ideally without me stepping on maintainer's toes too much. ;)
-> 
-> Currently I consider doing the following two things:
-> 
-> (1) if I notice something that looks like an important regression fix,
-> reply with a "how fast do you think this fix should process through the
-> ranks" inquiry to the developer. With such information I'd feel way more
-> comfortable sending a "Linus, could you maybe pick this up directly"
-> after some time in case the maintainer leaves the patch longer in -next.
-> 
-> (2) once Linus merged the fix, send a quick mail to Greg/the stable team
-> asking them to immediately queue it for the next release (in case
-> problems show up it can still be de-queued).
-> 
-> Does that sound sane? Or anyone any better idea?
+Hi, this is your Linux kernel regression tracker speaking.
 
-Sounds sane to me!
+I noticed a regression reported in bugzilla.kernel.org that seems to be
+handled already, nevertheless I'd like to add to the tracking to ensure
+it's doesn't fall through the cracks in the end:
 
-thanks,
+#regzbot introduced: v6.0..v6.1
+https://bugzilla.kernel.org/show_bug.cgi?id=216859
+#regzbot title: pci(?): boot hang at PCI enumeration
+#regzbot monitor:
+https://lore.kernel.org/all/20221228120248.GA508080@bhelgaas/
+#regzbot ignore-activity
 
-greg k-h
+See the ticket for details, there were a few replies already.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
