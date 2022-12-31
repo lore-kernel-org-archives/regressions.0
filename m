@@ -1,101 +1,75 @@
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE1A7E
-	for <regressions@lists.linux.dev>; Sat, 31 Dec 2022 12:41:46 +0000 (UTC)
-Received: by mail-vs1-f44.google.com with SMTP id o63so18843013vsc.10
-        for <regressions@lists.linux.dev>; Sat, 31 Dec 2022 04:41:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Dhd/1RDPWdGhndisco2GPJg8lagzsvfapqotzaFZeN0=;
-        b=KlA6GR9uSv47bhi4irs+lJ4qtPQXyHlhcdsEplotgdA8ieXoiqtcqMlxIAyrX/s3mH
-         gvETGpe5A9WF70ZvC1D2WGI+Q65qrB891YSRIJR5/PIOhjARH4NzsHQUqMqtz1HaNCM3
-         OI35+HdTcKpNWFXdH5/5nd7L5P4gYz9N6wNz5QmQfgCuuV9tCmoTlV5t+9VQTAtSCePk
-         3WvXlOQaWd53SMvgvV0d2AjQpyd9ak9OAJ8vq1Az9YpailVU6xAIfeIJ8f3tgDUBlVBj
-         0trUHKAazvVf2iQUTV6b8xyLM6b6/FkIpAc92DqPQve3g64iJLw2Cui6h41Fxiq9xtwA
-         sTBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Dhd/1RDPWdGhndisco2GPJg8lagzsvfapqotzaFZeN0=;
-        b=lzStPKICICxFv/vFSR+qM7b+BwbPqQoIMywz9x45m7xFRoU+jffuNCkwvrzEO+QwBF
-         pdyAjhOfMBKV0vS8bcLqu/4tLYYHwiIyw9ztPqOYqU3P7tPeZdGZ1Omk92ehZTIuKKsA
-         CKNS8fS5Ta2UTEaGpNEgovFV6qdgywkK/1yBgf7gLD0QyLeJAjW8ckvitWFCOeaxkUMp
-         eA3f6wfOltNbU9X9faCr4m/vlrHHMIFxHG9vZINcJmU9KOneqB1zRKlRZGqEM4eGjHco
-         Y8/Eq7CFuSIySKEZuiASKL8BKw2WTXMlaTnu6ihuUVCNfadV+9L4NzAG4YC3KdJ8TzG3
-         mzbQ==
-X-Gm-Message-State: AFqh2koD+CZqEgl4oge6K3iy+gBlaHS6v58vVQlT1vgT7o/LOM0vij7J
-	FUnoYY1ZYCrLJFf+KhmzfknYkH4xd9kyryJWXdw=
-X-Google-Smtp-Source: AMrXdXssK+4FN6JAbwXkx/gRsPfboiOtjxI12zKDRLjV4MNwgLqRUEvHm2L2Mw5x7Vn2TeD4PxatDeWhe7wfdR2sQ7M=
-X-Received: by 2002:a67:fd48:0:b0:3c9:59f7:2486 with SMTP id
- g8-20020a67fd48000000b003c959f72486mr1795232vsr.50.1672490505235; Sat, 31 Dec
- 2022 04:41:45 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 389227E
+	for <regressions@lists.linux.dev>; Sat, 31 Dec 2022 14:20:21 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pBciZ-0000Sl-R6; Sat, 31 Dec 2022 15:20:11 +0100
+Message-ID: <7bbfd1b7-4615-0766-76e4-086861f68a08@leemhuis.info>
+Date: Sat, 31 Dec 2022 15:20:11 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAAJw_Ztzyh-GNTJYpXbA0CeJv2Rz=fLZKE6_Q=7JMmM+s9yHXQ@mail.gmail.com>
- <CAAJw_Ztb0mJVkHtBhryf=9g8CA0fZZRa8HVio8GCGUSLOvqa7A@mail.gmail.com>
- <Y6bz4wOC0nwu2yGU@debian.me> <0c70ba66-ef00-7242-d198-844f803662fa@gmail.com>
- <CAAJw_Zv0iBg4rkzxQ2UOOLS9JQZ4cCmM7gSoDXec_gm-GggB6A@mail.gmail.com>
- <f500d64b-c26d-ee34-092a-421c64c69f9e@leemhuis.info> <Y66Hk6waTeXQDz1/@sol.localdomain>
- <3dd9808e-ffbd-7959-2111-a9f13f2031f1@kernel.org> <CAAJw_ZsLjw=+_oju-8Mxy-nEErUYc9ZPfDyX204yiJ7mA8u5gA@mail.gmail.com>
-In-Reply-To: <CAAJw_ZsLjw=+_oju-8Mxy-nEErUYc9ZPfDyX204yiJ7mA8u5gA@mail.gmail.com>
-From: Jeff Chua <jeff.chua.linux@gmail.com>
-Date: Sat, 31 Dec 2022 20:41:34 +0800
-Message-ID: <CAAJw_ZvFvKx+mVd+pWMPVvEnOPkmBBETMqrA_P-3wRGW5HRkDw@mail.gmail.com>
-Subject: Re: Fwd: f2fs write error Linux v6.2
-To: Chao Yu <chao@kernel.org>, Yangtao Li <frank.li@vivo.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Eric Biggers <ebiggers@kernel.org>, 
-	lkml <linux-kernel@vger.kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Bagas Sanjaya <bagasdotme@gmail.com>, 
-	Jaegeuk Kim <jaegeuk@kernel.org>, 
-	F2FS Development <linux-f2fs-devel@lists.sourceforge.net>, 
-	Linux Regressions <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: Regression in brcmfmac for 6.1/6.2-rc1 for SDIO devices
+Content-Language: en-US, de-DE
+To: Peter Robinson <pbrobinson@gmail.com>,
+ Arend van Spriel <aspriel@gmail.com>, Franky Lin <franky.lin@broadcom.com>,
+ Hante Meuleman <hante.meuleman@broadcom.com>, Kalle Valo <kvalo@kernel.org>,
+ linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
+ regressions@lists.linux.dev, "Justin M. Forbes" <jforbes@fedoraproject.org>
+References: <CALeDE9O1+qgn_9z=zTVKbWx3FphEa4y8Dn9f5ORoQgW_gL1dqg@mail.gmail.com>
+From: "Linux kernel regression tracking (#info)" <regressions@leemhuis.info>
+Reply-To: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CALeDE9O1+qgn_9z=zTVKbWx3FphEa4y8Dn9f5ORoQgW_gL1dqg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672496421;feeee230;
+X-HE-SMSGID: 1pBciZ-0000Sl-R6
 
-On Sat, Dec 31, 2022 at 7:57 PM Jeff Chua <jeff.chua.linux@gmail.com> wrote:
->
-> On Sat, Dec 31, 2022 at 10:51 AM Chao Yu <chao@kernel.org> wrote:
-> >
-> > Hi Jeff,
-> >
-> > On 2022/12/30 14:39, Eric Biggers wrote:
-> > > If you could provide the mkfs and mount options you are using, and any other
-> > > relevant details, that would be helpful.  Bisection would also be very helpful,
-> > > as Thorsten mentioned.
->
-> I was just preparing my environment so I could hit the same issue
-> before I go for the bisect, so I don't need to reboot every time. Got
-> to a point where I could just qemu kvm + initrd ramdisk with / (f2fs)
-> and I could hit the problem almost every 8/10 runs just by doing
-> "mount -o remount /" and the system would freeze. That's good. I've a
-> good test case! ... and then I see Chao Yu's patch ...
->
-> > Other than that, I found some cases which can cause similar issue, so I figure
-> > out a patch for possible fixing, if you can have a try with it to check whether
-> > it can fix your issue, that would be helpful as well.
-> >
-> > https://lore.kernel.org/linux-f2fs-devel/20221230154332.5082-1-chao@kernel.org/T/#u
->
-> Ok, the patch seems to fix the problem. I'll run my qemu kvm
-> environment a few more times before I switch the real system. Because
-> it's not a that I could cause a real "mount -o remount /" freeze or
-> "vi /etc/passwd" fault all the time,
->
-> Will feedback soon. This would a very nice year end celebration so I
-> could move to 6.2.0-rc1.
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; all text you find below is based on a few templates
+paragraphs you might have encountered already already in similar form.]
 
-Ok, no more freeze, no more errors! All good. I'm finally on the
-latest linux-6.2.0-rc1 with the patch.
+On 31.12.22 02:00, Peter Robinson wrote:
+> 
+> I'm seeing a regression in the brcmfmac driver which appeared in the
+> 6.1 dev cycle, I didn't pick it up until around rc8 but with deadlines
+> and travel I've not had a chance to bisect it but wanted to report it
+> to make people aware. I've seen in on a number of devices with
+> brcmfmac wifi over SDIO including at least the Raspberry Pi (zero2w,
+> rpi4, rpi400, rpi3B+) and other devices like  the Rock960, Pinebook
+> Pro etc.
+> [...]
 
-Happy new year!
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-My best,
-Jeff
+#regzbot introduced v6.0..v6.1 ^
+https://bugzilla.suse.com/show_bug.cgi?id=1206697
+#regzbot title net: wifi: brcmfmac over SDIO broken on various Raspberry Pi
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Reminder for developers: When fixing the issue, add 'Link:' tags
+pointing to the report (see page linked in footer for details).
+
+Ciao, Thorsten
+-- 
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+
+Annoyed by mails like this? Feel free to send them to /dev/null:
+https://linux-regtracking.leemhuis.info/about/#infomails
