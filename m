@@ -1,60 +1,95 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C1E92599
-	for <regressions@lists.linux.dev>; Sat, 31 Dec 2022 11:11:47 +0000 (UTC)
-Received: from [192.168.1.139] ([37.4.248.41]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MOiU5-1pSwyL11l1-00Q9bA; Sat, 31 Dec 2022 12:11:38 +0100
-Message-ID: <d88f4aff-45ad-db10-ada3-f7f5b34a6620@i2se.com>
-Date: Sat, 31 Dec 2022 12:11:37 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD7028E2
+	for <regressions@lists.linux.dev>; Sat, 31 Dec 2022 11:58:10 +0000 (UTC)
+Received: by mail-vs1-f52.google.com with SMTP id o63so18779418vsc.10
+        for <regressions@lists.linux.dev>; Sat, 31 Dec 2022 03:58:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cOrnvI0ab6Sjve5sOQHxemo9n/r3kg6EiJp9vkQUJjM=;
+        b=MtKezjvPIsHhRoyFqHNbSAluvUbAQU6kH+LAM/3u5vWixb6DiaWyZerKZFFQAg0LTQ
+         fuO9GKZZprt6hTT+8iQS2E4OTIg0FmmmGdjk4MehZlxsd+OTZe+QYa9n10Skw5HAJUfA
+         mQ5C1IIVo/HURbj1GJZ3nezHvleoDkvknhKsnHKiof3DXn/DfRQSAF0VpY1sCLZgXzv5
+         9U/uasy4pimNgWibwyjcskQFYzAKTU+GKJyPr1S4MVedrfCugz67m6ao+9ukPscUHInX
+         GCg8NoPMirml/W5MORry72hXqJDdQgWYsFNtsjNv0MkAdEVCvZ2WwUSbC7P/mCGKSRlN
+         hFbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cOrnvI0ab6Sjve5sOQHxemo9n/r3kg6EiJp9vkQUJjM=;
+        b=LW5mYjz1jDlyUfkOWhVSJGXknH6U68TiiODc5eVCJLGE5uTsHDTl1glacscYJsrY9T
+         hp4k8fCnDllzXkgc3Imcb0ovNjGtx9PDpNRMmbrtRJo7ya9JuNK+e0+nCFmU8ds94N9a
+         HltxtK6NDwJyGQGrM/biwtZEqZMzVYQ87nnI+JU6aTOqKTn7NlE9ThrhehopnqosCTYl
+         pC5P2ULaWzdZfRRqUeUtQQm1ecopuNhkh0428kAHE85UCJbNtozTFgBIkS26IMzPwH3r
+         e17qmmd0j84FRmZECbh566B4lawLf7oLZe39bBl+7Lrs5JKT0H9M+laQVNgxJk6DgrAN
+         txKg==
+X-Gm-Message-State: AFqh2ko/nlqwjBprJiRtdp96vlhOOTGptccTFJGLHrcIFefmqirRyKVW
+	UcqpzxtE7wA3JxEqlEbbLceWJsTkkHYCcKDaTi4=
+X-Google-Smtp-Source: AMrXdXvmrFy/BahM6IhJ/dZcwp0qFkpovr9HhfOLOhDeYWbvUZXOjO5a/9D8fhZSd28YTNZEJ7ujRNGogWc/fSYVlSE=
+X-Received: by 2002:a67:ee93:0:b0:3b2:a92d:a1f0 with SMTP id
+ n19-20020a67ee93000000b003b2a92da1f0mr4111536vsp.46.1672487888989; Sat, 31
+ Dec 2022 03:58:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Content-Language: en-US
-In-Reply-To: <CALeDE9O1+qgn_9z=zTVKbWx3FphEa4y8Dn9f5ORoQgW_gL1dqg@mail.gmail.com>
-To: Peter Robinson <pbrobinson@gmail.com>
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Justin Forbes <jforbes@fedoraproject.org>, regressions@lists.linux.dev,
- linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
- Hante Meuleman <hante.meuleman@broadcom.com>,
- Franky Lin <franky.lin@broadcom.com>, Arend van Spriel <aspriel@gmail.com>,
- "Ivan T. Ivanov" <iivanov@suse.de>
-Subject: Re: Regression in brcmfmac for 6.1/6.2-rc1 for SDIO devices
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:7Ues6t1etCmr5j4yisEOHoGD6Zi8Qh4rKHglnzBCHRs51ETj0r3
- MvITO0uT+j1spVYgHcegCg8RTaama8VhsRI3twkkkEZ6DN0Hy/oUVoH76TtHUDq12YwlKF2
- f8W4BTBEocjAKoEu2xuUAA5lIlvqR83GatvmgFBFB7frd/rYC602ORfXKmqvfOUBRtpbWsw
- UNtTw3KBwrYoGKsOGzMpg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:+HZZZhb51+E=;ZGUkJZ0ZS7Ra/mVgOr7/Q4AJTlQ
- 4uRBMi0Qum7qyTKHCzdw4o+XrTO6DGjhSrUV+KbRtxV4gQ6BhsTgAd8VAfzoy39iUwo5pNww3
- Y+1ksKjRhUeLNlyhf0h5cU1a8Qvc1y0TJVwpHwCSLU8uYwSbqxD63sowS7PBG1Ib52yd5co6j
- 702q906vnRWPl8CrfxKUN/5rIlNSgkA/yNwzm2NWLO84OeuZ0lBWnP7oJ0aosQFUXFwhyDoK4
- 0EPUwwltw6eQnVRf04UJCcH9oFxK8aatiRKe8RpPVhICpq2TnUnlNi7atb3K5Vwa8rgrSoioz
- 0pcq4z7i49iNriz3V7LvpZc3VScKUDp0bbCT/rqwc4bTSAqdb8eMU4E/hiiEzKTWkVBQd7TRp
- WUTCHs4WT3xtCW1jCWO6ehRDZY9qVyYod8+6SVmXs6pe9tv2gQx7U2nDBrliABRKSGw0ChlKr
- 43JilMK2pGtHD+z1Pc1tsOD+zCxe66sUj1iiZjblWvQ1yyGti5WtQ71tHpmtXk7lX/z15WCuL
- hTetCEhLcvvxENnBfVLolZlta+u7JujToiwW6+qBmVTOD72zZ3FpMNZ45ssz1x8Wig//gE2B0
- pseORzxPctHyxrMWRIru/2s7pjZvpeuJ0sDZDb4u7DeyKzK23Lzpx+rH5y6SCppames85j8WS
- 4UDRpT64bvl41K3q0Ro6K7IKqbusXFKD9N8BhBJvjw==
+References: <CAAJw_Ztzyh-GNTJYpXbA0CeJv2Rz=fLZKE6_Q=7JMmM+s9yHXQ@mail.gmail.com>
+ <CAAJw_Ztb0mJVkHtBhryf=9g8CA0fZZRa8HVio8GCGUSLOvqa7A@mail.gmail.com>
+ <Y6bz4wOC0nwu2yGU@debian.me> <0c70ba66-ef00-7242-d198-844f803662fa@gmail.com>
+ <CAAJw_Zv0iBg4rkzxQ2UOOLS9JQZ4cCmM7gSoDXec_gm-GggB6A@mail.gmail.com>
+ <f500d64b-c26d-ee34-092a-421c64c69f9e@leemhuis.info> <Y66Hk6waTeXQDz1/@sol.localdomain>
+ <3dd9808e-ffbd-7959-2111-a9f13f2031f1@kernel.org>
+In-Reply-To: <3dd9808e-ffbd-7959-2111-a9f13f2031f1@kernel.org>
+From: Jeff Chua <jeff.chua.linux@gmail.com>
+Date: Sat, 31 Dec 2022 19:57:58 +0800
+Message-ID: <CAAJw_ZsLjw=+_oju-8Mxy-nEErUYc9ZPfDyX204yiJ7mA8u5gA@mail.gmail.com>
+Subject: Re: Fwd: f2fs write error Linux v6.2
+To: Chao Yu <chao@kernel.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>, Eric Biggers <ebiggers@kernel.org>, 
+	lkml <linux-kernel@vger.kernel.org>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Jaegeuk Kim <jaegeuk@kernel.org>, 
+	F2FS Development <linux-f2fs-devel@lists.sourceforge.net>, 
+	Linux Regressions <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Peter,
+On Sat, Dec 31, 2022 at 10:51 AM Chao Yu <chao@kernel.org> wrote:
+>
+> Hi Jeff,
+>
+> On 2022/12/30 14:39, Eric Biggers wrote:
+> > If you could provide the mkfs and mount options you are using, and any other
+> > relevant details, that would be helpful.  Bisection would also be very helpful,
+> > as Thorsten mentioned.
 
-could you please provide a "bad case" file list of all firmware files 
-for the Raspberry Pi 3 B+ which worked before Linux 6.1, so i can 
-reproduce it?
+I was just preparing my environment so I could hit the same issue
+before I go for the bisect, so I don't need to reboot every time. Got
+to a point where I could just qemu kvm + initrd ramdisk with / (f2fs)
+and I could hit the problem almost every 8/10 runs just by doing
+"mount -o remount /" and the system would freeze. That's good. I've a
+good test case! ... and then I see Chao Yu's patch ...
 
-Also OpenSuSE seems to be affected [1].
+> Other than that, I found some cases which can cause similar issue, so I figure
+> out a patch for possible fixing, if you can have a try with it to check whether
+> it can fix your issue, that would be helpful as well.
+>
+> https://lore.kernel.org/linux-f2fs-devel/20221230154332.5082-1-chao@kernel.org/T/#u
 
-[1] - https://bugzilla.suse.com/show_bug.cgi?id=1206697
+Ok, the patch seems to fix the problem. I'll run my qemu kvm
+environment a few more times before I switch the real system. Because
+it's not a that I could cause a real "mount -o remount /" freeze or
+"vi /etc/passwd" fault all the time,
 
-Regards
-Stefan
+Will feedback soon. This would a very nice year end celebration so I
+could move to 6.2.0-rc1.
 
+Thank you!
+
+Jeff
