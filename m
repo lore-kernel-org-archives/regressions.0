@@ -1,115 +1,70 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA2223A7
-	for <regressions@lists.linux.dev>; Sat, 31 Dec 2022 16:56:44 +0000 (UTC)
-Received: from [192.168.1.139] ([37.4.248.41]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M42fG-1pBf9z0bIG-00013c; Sat, 31 Dec 2022 17:56:39 +0100
-Message-ID: <a0eb448d-07b5-1b39-2bc5-7b804d78340d@i2se.com>
-Date: Sat, 31 Dec 2022 17:56:38 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9549823AA
+	for <regressions@lists.linux.dev>; Sun,  1 Jan 2023 20:07:48 +0000 (UTC)
+Received: by mail-pf1-f170.google.com with SMTP id e21so7986871pfl.1
+        for <regressions@lists.linux.dev>; Sun, 01 Jan 2023 12:07:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:date:content-id:mime-version:references:in-reply-to:cc
+         :to:subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Xxl7U3B1v3NJ8oz4U1/+05qRwO05QIEsUJJ/AFZS/M=;
+        b=L6GI1YFEFRAmMw9jqMVlI6Egep5AfuWi8WMwMUXGqbdaTofmSQ+w1kqzbs2DmGXa6H
+         ZW/+9B3RNafnvQOkbB63odteG8JyghrNn3wLlPkeSDFsYkOXw2Jv/bcPLIZaM+SlXDAG
+         ugDSYh96aikluExYIvE14HWjczYBtDGf4GNZuPjadOhGgh4hnLGxVhnOPsHvsIayYOmB
+         KDZUf8fXWJGYHOd41NXJKbiiOsgFKNdI8cWqj2abp9ScFbbxrFnMfHLzFebDHVdlWUjy
+         gXbxjTk3DySUh5yDw9UbI4MYFtcpDs92vG1Zh4dUTjr4+CdfxsWHWDqtc3L7/SZuGHE3
+         ikKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:content-id:mime-version:references:in-reply-to:cc
+         :to:subject:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1Xxl7U3B1v3NJ8oz4U1/+05qRwO05QIEsUJJ/AFZS/M=;
+        b=uWp5/A3QIbRwd8Zs9pi6c/KsIoG5V/MAhJYhD471iqQBRDfuOTGJKZ5ZDTo9IKuibv
+         sTlfcHdr6q6avM3WPiVhtxDFYKRe3tlUK76l9UN3pDkiYVBOwdcfjWuG0QAJxaAj+jUj
+         eWLOQHAH5JPvwbFjjUiLGnaw9uDQEQIyFV3hIvPtRTIZC8KGX/6Zy0cfzpc6iLpE9bhq
+         DOkCKUGkios6OoXyprKbF/ZqefbOLu8bnnKj4jT1/lKRHud+Qc82Sqhk1veriUmymNn1
+         xNKx61CBLPHlbPbeWdoWnQObPKe/S+LDVyiNv2/nQ5LsOn7NoIrkHNqPy0eZeFny0fT8
+         Js6A==
+X-Gm-Message-State: AFqh2krQBQRkVq9kqTFcYHWVpdf6Fpr7cCDIprH1//XhJtnJjJzJqT5T
+	s2Fd+dJm/XGRtoSFkS3e61SneVteXoU=
+X-Google-Smtp-Source: AMrXdXt3X+5NylHJvAHXJRwLUECR8D49Z++uadQ7xQHMuOjcVivMVDc3DRKN9u6JzWdBOaPDp5qMWQ==
+X-Received: by 2002:a62:1614:0:b0:580:dd4d:43bc with SMTP id 20-20020a621614000000b00580dd4d43bcmr29268291pfw.26.1672603668006;
+        Sun, 01 Jan 2023 12:07:48 -0800 (PST)
+Received: from jromail.nowhere (h219-110-108-104.catv02.itscom.jp. [219.110.108.104])
+        by smtp.gmail.com with ESMTPSA id 199-20020a6216d0000000b00580f224cdf6sm13568481pfw.203.2023.01.01.12.07.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jan 2023 12:07:47 -0800 (PST)
+Received: from localhost ([127.0.0.1] helo=jrobl) by jrobl id 1pC4cU-0006l9-5E ; Mon, 02 Jan 2023 05:07:46 +0900
+From: "J. R. Okajima" <hooanon05g@gmail.com>
+Subject: Re: [GIT PULL] acl updates for v6.2 #forregzbot
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+    linux-fsdevel@vger.kernel.org
+In-Reply-To: <2aa5cc7e-ca00-22a7-5e2f-7eb73556181e@leemhuis.info>
+References: <20221212111919.98855-1-brauner@kernel.org> <29161.1672154875@jrobl> <2aa5cc7e-ca00-22a7-5e2f-7eb73556181e@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: Regression in brcmfmac for 6.1/6.2-rc1 for SDIO devices
-Content-Language: en-US
-To: Peter Robinson <pbrobinson@gmail.com>
-Cc: Justin Forbes <jforbes@fedoraproject.org>, regressions@lists.linux.dev,
- linux-wireless@vger.kernel.org, brcm80211-dev-list.pdl@broadcom.com,
- Hante Meuleman <hante.meuleman@broadcom.com>,
- Franky Lin <franky.lin@broadcom.com>, Arend van Spriel <aspriel@gmail.com>,
- "Ivan T. Ivanov" <iivanov@suse.de>
-References: <CALeDE9O1+qgn_9z=zTVKbWx3FphEa4y8Dn9f5ORoQgW_gL1dqg@mail.gmail.com>
- <d88f4aff-45ad-db10-ada3-f7f5b34a6620@i2se.com>
- <CALeDE9O_qX_Gu1vwCLW_PbMdgnSoHTA5LhxYQrsUqwGHRwv-Eg@mail.gmail.com>
- <9229905f-e7a5-aa86-c3f6-887046b8e663@i2se.com>
- <CALeDE9OFbrf5x-3CRecXkYxb-2Z1YgH7d4Yk4RPv4Wn+zinhbw@mail.gmail.com>
-From: Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <CALeDE9OFbrf5x-3CRecXkYxb-2Z1YgH7d4Yk4RPv4Wn+zinhbw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:3iDbC2LBuo+Q2WJlLOVSf8XVVaU1eHwA9XCQLpbKoanGBxHNLEY
- 4tG41f3Iod1mHV7HfYOwj+XabTUCwAbEA6Ge+BNh3yLPrCKYWIL3UT49urcxBTP1Cmr4T56
- /BMoE0MTar1H7NA+xuNH1ll93hZgTUnVX19sQY8JBn32TeOWjtBCzlW4Di5qBb50GBmLPak
- ts8HJ6+gXrdHjsJXyehgw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:BfCx6XawqTA=;TTNX1ZM6LxypurmXfMSvzwVftCO
- QZ9RQi+Gz7xhGTHm+J9bu3jjYVwsmwowjNEGjE9q01Xvv2BhSGYJWbxrC6rC1M0F2GsVw+3Rq
- mXOEhAbOi82dEpKd/Ht+0scICSXfhPmeJPXjNwo7sKx5NAQSJ6FGTppntT4uV+8iljlVGE8vw
- XnYCqmc31NJ8UQLWax0b/hrLaD9EwZdaeiXSWy8/5/UiaIqtZj3B17tGd+6Y6pvara3LgnaDw
- Q62g4if1/C+a2q2ye1YaFJ2wPSL6hsxd4JecZIzrzB5PbopJDj5vsPvSnfIbIftXdvbIqo01v
- tKomrdu6inIRwan7kO6zS9aU7cTAQw7SHhLDbKEA2VU8XpevKQzeUDTMSI6ZJMThx7yZqurfW
- u1Mnd7TGwD067kOqMCGs3J87ThF1eA1NGKHw/GHr/0y7kyQh2huRTMdnMDg4lGSJxgcO4XQcm
- GlrK+U6z4nqMDZTgqRRBMAaW19n8n2Yv+ABKfM1yxYh30daWhYVH5CU/aKgFTSmLgRGm+ihbr
- miRTPv1JOGqHYtzTlt5mJxkQugt/tLJweSTVjmdS83MIvQa8kMHEJAXVr/uSycC4XkB7wSnCX
- 5cY+EmpAZIvs+/du79KPDR+KozeyTJQNcK9ckAQX4F1SlqUbuHT89O678o8DR/zdfRCCGzknF
- n/yOlyk4kSfWLuCXZITr3v1h3bSzU/X/735kG2EhYg==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <25985.1672603666.1@jrobl>
+Date: Mon, 02 Jan 2023 05:07:46 +0900
+Message-ID: <25986.1672603666@jrobl>
 
-Hi Peter,
+Thorsten Leemhuis:
+> Thanks for the report. To be sure below issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
+> tracking bot:
 
-Am 31.12.22 um 16:58 schrieb Peter Robinson:
-> Hi Stefan,
->
->>>> could you please provide a "bad case" file list of all firmware files
->>>> for the Raspberry Pi 3 B+ which worked before Linux 6.1, so i can
->>>> reproduce it?
->>> What do you mean by the file list?
->> if you look into the firmware directory which files for
->> brcmfmac43455-sdio do you have? Just the bin file?
->>
->> I'm using the rootfs of Raspberry Pi OS which contains:
->>
->> $ ls brcmfmac43455-sdio*
->> brcmfmac43455-sdio.bin  brcmfmac43455-sdio.clm_blob brcmfmac43455-sdio.txt
+Hold it!
+I'm not sure whether this is a regression or a bugfix. Or even it maybe
+a problem on my side. I'm still struggling to find out the reproducible
+way.
 
-i temporary moved the clm_blob and txt file from the directory and 
-switched to Linux v6.0 (multi_v7_defconfig), but the driver doesn't probe:
 
-[   25.943350] brcmfmac: brcmf_fw_alloc_request: using 
-brcm/brcmfmac43455-sdio for chip BCM4345/6
-[   25.943550] brcmfmac mmc1:0001:1: Direct firmware load for 
-brcm/brcmfmac43455-sdio.raspberrypi,3-model-b-plus.bin failed with error -2
-[   26.071070] brcmfmac mmc1:0001:1: Direct firmware load for 
-brcm/brcmfmac43455-sdio.raspberrypi,3-model-b-plus.txt failed with error -2
-[   26.071133] brcmfmac mmc1:0001:1: Direct firmware load for 
-brcm/brcmfmac43455-sdio.txt failed with error -2
-[   27.078481] brcmfmac: brcmf_sdio_htclk: HT Avail timeout (1000000): 
-clkctl 0x50
-
->> [   25.943350] brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac43455-sdio for chip BCM4345/6
->> [   25.943550] brcmfmac mmc1:0001:1: Direct firmware load for brcm/brcmfmac43455-sdio.raspberrypi,3-model-b-plus.bin failed with error -2
->> [   26.071070] brcmfmac mmc1:0001:1: Direct firmware load for brcm/brcmfmac43455-sdio.raspberrypi,3-model-b-plus.txt failed with error -2
->> [   26.071133] brcmfmac mmc1:0001:1: Direct firmware load for brcm/brcmfmac43455-sdio.txt failed with error -2
->> [   27.078481] brcmfmac: brcmf_sdio_htclk: HT Avail timeout (1000000): clkctl 0x50
-> As shipped in https://mirrors.edge.kernel.org/pub/linux/kernel/firmware/
-> either the Nov or Dec releases
->
-> The kernel supports compressing firmware with: xz -C crc32 "$f"
->
-> Regards,
-> Peter
->
->> I didn't say please add some files, i only need a test scenario :-)
->>
->>>    We're running the latest upstream
->>> firmware, we do used compressed firmware but that hasn't regressed
->>> with any of the other firmware, this is very much brcmfmac. With the
->>> same firmware it was working on 6.0.x and reboot into a 6.1+ kernel
->>> and it stops with nothing else changed.
->> Yes, i agree this is a regression and yes it's definitely brcmfmac, but
->> based on your bug report i wasn't able to reproduce.
->>
->> Regards
->>
->>>> Also OpenSuSE seems to be affected [1].
->>>>
->>>> [1] - https://bugzilla.suse.com/show_bug.cgi?id=1206697
->>>>
->>>> Regards
->>>> Stefan
->>>>
+J. R. Okajima
