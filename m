@@ -1,142 +1,83 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812552587
-	for <regressions@lists.linux.dev>; Mon,  2 Jan 2023 10:43:39 +0000 (UTC)
-Received: by mail-wr1-f45.google.com with SMTP id bs20so23861337wrb.3
-        for <regressions@lists.linux.dev>; Mon, 02 Jan 2023 02:43:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2EBVPG1vtBPkeRqY7DBzxLu5riwQmsAJMfyM/nogB2w=;
-        b=OsyM0VYn9ltZFlrIl5D55eSMrUGkOGg0szNCLdU7NF7ZbYwhPGSrjgmcYMzTcLuxIf
-         sZpBII9aOq6RfZD4TfNrEhapAkvMqjJc6LoNU2sGk6+gyqSqHSpC7lEVReJdE9u+yRUn
-         U+E1z/YSIURWuX+2gZyCv5lupJZNGi6Dv14IR0q95iOzNqSh5TyB7sn4wtrx7y+hYLYB
-         xrCbu3cGRNzxDflxfsCXTjKEOFdD4zwEA3VY7iRvVg8kioAPiaBpNymh4AYNpB+JFLnv
-         3IFwVdeINyltK971XMLNu/16uePH2exDqS4I/SMKq5//bxCvN1euMB0z9lllJtkEak78
-         x4rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2EBVPG1vtBPkeRqY7DBzxLu5riwQmsAJMfyM/nogB2w=;
-        b=K2urTzfuK4qnKr7FYQzx7q5zsTjf4LWKbFPpF2g+P9dVIhB5YmItLdt1/n5B2iV4GS
-         YKk5h7g/vPTROsjU7tfvVLul5QzpYsnxKPCl0UrbnijQ+uZs9cwkG0rj3LbEir8eEGuk
-         aicZFQmPKJY/DvkMpZtLK6eiO/YZQC3DYi8PjQbNb0EJVKgrntg/hpo1vyKSEKyCUpzE
-         PloDpU/t4hHnpljn583Iee7CmmmMqqd1GHpxz7ai2u8BO089M4NttXVlyU9v5XKHKMtH
-         XYQWOzjull2er8Nf8W62xUHy0fTT7FfTb8FGl8MjlVCGGVwHVtOeHrFp32c6+d7KldoG
-         M9xQ==
-X-Gm-Message-State: AFqh2kokbSNrh1W6hfHdZBDxZBcqD3aHa+ZFiVwbq8ccb7S8/EZO71U+
-	NHqC7jz7wpNCvhFId64xT00=
-X-Google-Smtp-Source: AMrXdXuu0YuRfTkb5MbAOBAyI/KCaXcjJ0SusBa1+gM7rk+L7/zrsiOAOUhIfzoGg8KOAjVj7wfebw==
-X-Received: by 2002:a5d:5908:0:b0:279:4938:eb98 with SMTP id v8-20020a5d5908000000b002794938eb98mr18824452wrd.11.1672656217665;
-        Mon, 02 Jan 2023 02:43:37 -0800 (PST)
-Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id r14-20020a5d4e4e000000b002549b649b62sm27819475wrt.50.2023.01.02.02.43.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Jan 2023 02:43:37 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Received: by eldamar.lan (Postfix, from userid 1000)
-	id 7E219BE2DE0; Mon,  2 Jan 2023 11:43:36 +0100 (CET)
-Date: Mon, 2 Jan 2023 11:43:36 +0100
-From: Salvatore Bonaccorso <carnil@debian.org>
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Richard Fitzgerald <rf@opensource.cirrus.com>,
-	Sergey <zagagyka@basealt.ru>,
-	Alsa-devel <alsa-devel@alsa-project.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
-	Mark Brown <broonie@kernel.org>,
-	=?iso-8859-1?Q?P=C1LFFY_D=E1niel?= <dpalffy@gmail.com>
-Subject: Re: [regression, 5.10.y] =?iso-8859-1?Q?Bu?=
- =?iso-8859-1?Q?g=A0216861_-_sound_disappearanc?= =?iso-8859-1?Q?e?= on Acer
- Swift 3 SF314-59-78UR after update to 5.10.157
-Message-ID: <Y7K1WDmPYi3EMOn1@eldamar.lan>
-References: <bebd692d-7d21-6648-6b7a-c91063bb51c2@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C112587
+	for <regressions@lists.linux.dev>; Mon,  2 Jan 2023 11:09:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 798E0C433EF;
+	Mon,  2 Jan 2023 11:09:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1672657754;
+	bh=M9mDbZVR4CRey6FhrL7S9PcXw0pAxu7wRACcaKmZbF4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p20FkhyetNfhmN9vt1etJmkIVFdmtV575r2xgg+z9Id9fMFuwdXdloNFgJtNvmaIE
+	 n4yr+BR4s4FEECvZ+HwzL2xIcx/SFZBRB84vccJvIVx5A7zK/Al0G2dVODBACeSPvG
+	 YqoA1CQhoTe2q3JTYq4+sfPg6gTh/gg/x6TRov9Gy7RQ7/EX+gy+an+KNCTjXZHzu9
+	 A9/GPFdXvA0mRFCt5RZejnoBtCnJYooNvuAYe4/xV9KC7ikYsOP2tPbZ+mSWar86rw
+	 EWYcoxhd55UuMW4Hlqff7q55kM56Iml1lcLCJ2uJUTLy7pmvU2vSdDh11GrGWKH96t
+	 6ny4QgJeFuxRQ==
+Date: Mon, 2 Jan 2023 11:09:10 +0000
+From: Conor Dooley <conor@kernel.org>
+To: "Neftin, Sasha" <sasha.neftin@intel.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Ivan Smirnov <isgsmirnov@gmail.com>,
+	"Fuxbrumer, Devora" <devora.fuxbrumer@intel.com>,
+	intel-wired-lan@lists.osuosl.org,
+	"Ruinskiy, Dima" <dima.ruinskiy@intel.com>,
+	"Avivi, Amir" <amir.avivi@intel.com>, regressions@lists.linux.dev,
+	"Lifshits, Vitaly" <vitaly.lifshits@intel.com>,
+	"naamax.meir" <naamax.meir@linux.intel.com>,
+	"Meir, NaamaX" <naamax.meir@intel.com>, helgaas@kernel.org
+Subject: Re: [Intel-wired-lan] igc kernel module crashes on new hardware
+ (Intel Ethernet I225-V)
+Message-ID: <Y7K7VgArVFijJMY4@spud>
+References: <CAPAtJa_-yMusW5-C3BDivMu=MOyfKF9VQkxQotX3L_P+Q48oMA@mail.gmail.com>
+ <CAPAtJa_nL5edyiN61ghXZxVUSDBFQQR3uiYJM0uo9mEao=RC0w@mail.gmail.com>
+ <CAPAtJa_hbFbVXQbiNnb_byLqtZ-Dy_EBcvTFH9GyPqt__dFmLQ@mail.gmail.com>
+ <Y3gKkYeijrAIhxjc@spud>
+ <20221118145443.427ecf10@kernel.org>
+ <Y3gTdsg4l71L0vz9@spud>
+ <a15508df-eab4-ce00-7340-69323c462fdc@intel.com>
+ <Y3qGHROcvdL1vKip@spud>
+ <Y6NCzgXZzv+oJKV1@spud>
+ <Y7BPIYsBXN0ivoLE@spud>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="8hopDFj/ehSmCprM"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bebd692d-7d21-6648-6b7a-c91063bb51c2@leemhuis.info>
+In-Reply-To: <Y7BPIYsBXN0ivoLE@spud>
 
-Hi,
 
-[Adding as well Richard Fitzgerald and PÁLFFY Dániel to recipients]
+--8hopDFj/ehSmCprM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, Dec 30, 2022 at 09:08:57AM +0100, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker speaking.
-> 
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developer don't keep an eye on it, I decided to forward it by
-> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216861 :
-> 
-> >  Sergey 2022-12-29 10:07:51 UTC
-> > 
-> > Created attachment 303497 [details]
-> > pulseaudio.log
-> > 
-> > Sudden sound disappearance was reported for some laptops, e.g.
-> > 
-> > Acer Swift 3 SF314-59-78UR 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
-> > 
-> > # lspci
-> > 0000:00:1f.3 Multimedia audio controller: Intel Corporation Tiger Lake-LP Smart Sound Technology Audio Controller (rev 20)
-> >         Subsystem: Acer Incorporated [ALI] Device 148c
-> >         Flags: bus master, fast devsel, latency 32, IRQ 197, IOMMU group 12
-> >         Memory at 601f270000 (64-bit, non-prefetchable) [size=16K]
-> >         Memory at 601f000000 (64-bit, non-prefetchable) [size=1M]
-> >         Capabilities: [50] Power Management version 3
-> >         Capabilities: [80] Vendor Specific Information: Len=14 <?>
-> >         Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
-> >         Kernel driver in use: sof-audio-pci
-> > 
-> > I am attaching the pulseaudio and dmesg logs
-> > 
-> > This bug started reproducing after updating the kernel from 5.10.156 to 5.10.157
-> > 
-> > Bisection revealed the commit being reverted:
-> > 
-> > c34db0d6b88b1da95e7ab3353e674f4f574cccee is the first bad commit
-> > commit c34db0d6b88b1da95e7ab3353e674f4f574cccee
-> > Author: Richard Fitzgerald <rf@opensource.cirrus.com>
-> > Date:   Fri Nov 4 13:22:13 2022 +0000
-> > 
-> >     ASoC: soc-pcm: Don't zero TDM masks in __soc_pcm_open()
-> >     
-> >     [ Upstream commit 39bd801d6908900e9ab0cdc2655150f95ddd4f1a ]
-> >     
-> >     The DAI tx_mask and rx_mask are set by snd_soc_dai_set_tdm_slot()
-> >     and used by later code that depends on the TDM settings. So
-> >     __soc_pcm_open() should not be obliterating those mask values.
-> >     
-> > [...]
-> > Original bug report: https://bugzilla.altlinux.org/44690
-> 
-> See the ticket for more details.
-> 
-> BTW, let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
-> 
-> #regzbot introduced: c34db0d6b88b1d
-> https://bugzilla.kernel.org/show_bug.cgi?id=216861
-> #regzbot title: sound: asoc: sudden sound disappearance
-> #regzbot ignore-activity
+On Sat, Dec 31, 2022 at 03:02:57PM +0000, Conor Dooley wrote:
 
-FWIW, we had as well reports in Debian after having updated the kernel
-from 5.10.149 based one to 5.10.158 based one in the last point
-releases, they are at least:
+> I didn't actually give the bios stuff a go in the end. I figured that
+> changing everything at once would likely not be a good idea - but what I
+> did do was try v6.1.1 & have now been running for 50-something hours
+> without any issues while using the igc iface.
 
-https://bugs.debian.org/1027483
-https://bugs.debian.org/1027430
+Bah, it died last night about about the 90 hour mark. Still an order of
+magnitude longer than I had got it to work sequentially for before, but
+not fixed :(
 
-Regards,
-Salvatore
+I'll give the bios a go I suppose, sorry for the noise!
+
+
+--8hopDFj/ehSmCprM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCY7K7UQAKCRB4tDGHoIJi
+0gFdAP4g2vChgwslMx2MWMfdhclDOxjbUsxyd8/8aDrM7rj9swEAhBqFoO9Vdsn2
+Fznui7KAoQoajxBUUyGebuOvJFX6PA4=
+=zYkj
+-----END PGP SIGNATURE-----
+
+--8hopDFj/ehSmCprM--
