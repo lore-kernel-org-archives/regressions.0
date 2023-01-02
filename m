@@ -1,73 +1,142 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E3820EC
-	for <regressions@lists.linux.dev>; Mon,  2 Jan 2023 08:09:47 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pCFtA-0004Td-9z; Mon, 02 Jan 2023 09:09:44 +0100
-Message-ID: <4d3afaf9-1511-5eb0-0c84-7897c0beca4e@leemhuis.info>
-Date: Mon, 2 Jan 2023 09:09:43 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812552587
+	for <regressions@lists.linux.dev>; Mon,  2 Jan 2023 10:43:39 +0000 (UTC)
+Received: by mail-wr1-f45.google.com with SMTP id bs20so23861337wrb.3
+        for <regressions@lists.linux.dev>; Mon, 02 Jan 2023 02:43:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2EBVPG1vtBPkeRqY7DBzxLu5riwQmsAJMfyM/nogB2w=;
+        b=OsyM0VYn9ltZFlrIl5D55eSMrUGkOGg0szNCLdU7NF7ZbYwhPGSrjgmcYMzTcLuxIf
+         sZpBII9aOq6RfZD4TfNrEhapAkvMqjJc6LoNU2sGk6+gyqSqHSpC7lEVReJdE9u+yRUn
+         U+E1z/YSIURWuX+2gZyCv5lupJZNGi6Dv14IR0q95iOzNqSh5TyB7sn4wtrx7y+hYLYB
+         xrCbu3cGRNzxDflxfsCXTjKEOFdD4zwEA3VY7iRvVg8kioAPiaBpNymh4AYNpB+JFLnv
+         3IFwVdeINyltK971XMLNu/16uePH2exDqS4I/SMKq5//bxCvN1euMB0z9lllJtkEak78
+         x4rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2EBVPG1vtBPkeRqY7DBzxLu5riwQmsAJMfyM/nogB2w=;
+        b=K2urTzfuK4qnKr7FYQzx7q5zsTjf4LWKbFPpF2g+P9dVIhB5YmItLdt1/n5B2iV4GS
+         YKk5h7g/vPTROsjU7tfvVLul5QzpYsnxKPCl0UrbnijQ+uZs9cwkG0rj3LbEir8eEGuk
+         aicZFQmPKJY/DvkMpZtLK6eiO/YZQC3DYi8PjQbNb0EJVKgrntg/hpo1vyKSEKyCUpzE
+         PloDpU/t4hHnpljn583Iee7CmmmMqqd1GHpxz7ai2u8BO089M4NttXVlyU9v5XKHKMtH
+         XYQWOzjull2er8Nf8W62xUHy0fTT7FfTb8FGl8MjlVCGGVwHVtOeHrFp32c6+d7KldoG
+         M9xQ==
+X-Gm-Message-State: AFqh2kokbSNrh1W6hfHdZBDxZBcqD3aHa+ZFiVwbq8ccb7S8/EZO71U+
+	NHqC7jz7wpNCvhFId64xT00=
+X-Google-Smtp-Source: AMrXdXuu0YuRfTkb5MbAOBAyI/KCaXcjJ0SusBa1+gM7rk+L7/zrsiOAOUhIfzoGg8KOAjVj7wfebw==
+X-Received: by 2002:a5d:5908:0:b0:279:4938:eb98 with SMTP id v8-20020a5d5908000000b002794938eb98mr18824452wrd.11.1672656217665;
+        Mon, 02 Jan 2023 02:43:37 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id r14-20020a5d4e4e000000b002549b649b62sm27819475wrt.50.2023.01.02.02.43.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Jan 2023 02:43:37 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+	id 7E219BE2DE0; Mon,  2 Jan 2023 11:43:36 +0100 (CET)
+Date: Mon, 2 Jan 2023 11:43:36 +0100
+From: Salvatore Bonaccorso <carnil@debian.org>
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Sergey <zagagyka@basealt.ru>,
+	Alsa-devel <alsa-devel@alsa-project.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>,
+	Mark Brown <broonie@kernel.org>,
+	=?iso-8859-1?Q?P=C1LFFY_D=E1niel?= <dpalffy@gmail.com>
+Subject: Re: [regression, 5.10.y] =?iso-8859-1?Q?Bu?=
+ =?iso-8859-1?Q?g=A0216861_-_sound_disappearanc?= =?iso-8859-1?Q?e?= on Acer
+ Swift 3 SF314-59-78UR after update to 5.10.157
+Message-ID: <Y7K1WDmPYi3EMOn1@eldamar.lan>
+References: <bebd692d-7d21-6648-6b7a-c91063bb51c2@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v5] wifi: mac80211: fix initialization of rx->link and
- rx->link_sta
-Content-Language: en-US, de-DE
-To: Felix Fietkau <nbd@nbd.name>, linux-wireless@vger.kernel.org
-Cc: johannes@sipsolutions.net, quic_srirrama@quicinc.com,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20221230200747.19040-1-nbd@nbd.name>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <20221230200747.19040-1-nbd@nbd.name>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672646987;62c4c879;
-X-HE-SMSGID: 1pCFtA-0004Td-9z
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <bebd692d-7d21-6648-6b7a-c91063bb51c2@leemhuis.info>
 
-Hi, this is your Linux kernel regression tracker.
+Hi,
 
-On 30.12.22 21:07, Felix Fietkau wrote:
-> There are some codepaths that do not initialize rx->link_sta properly. This
-> causes a crash in places which assume that rx->link_sta is valid if rx->sta
-> is valid.
-> One known instance is triggered by __ieee80211_rx_h_amsdu being called from
-> fast-rx. It results in a crash like this one:
+[Adding as well Richard Fitzgerald and PÁLFFY Dániel to recipients]
 
-Many thx for working on this.
+On Fri, Dec 30, 2022 at 09:08:57AM +0100, Thorsten Leemhuis wrote:
+> Hi, this is your Linux kernel regression tracker speaking.
+> 
+> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> kernel developer don't keep an eye on it, I decided to forward it by
+> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216861 :
+> 
+> >  Sergey 2022-12-29 10:07:51 UTC
+> > 
+> > Created attachment 303497 [details]
+> > pulseaudio.log
+> > 
+> > Sudden sound disappearance was reported for some laptops, e.g.
+> > 
+> > Acer Swift 3 SF314-59-78UR 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+> > 
+> > # lspci
+> > 0000:00:1f.3 Multimedia audio controller: Intel Corporation Tiger Lake-LP Smart Sound Technology Audio Controller (rev 20)
+> >         Subsystem: Acer Incorporated [ALI] Device 148c
+> >         Flags: bus master, fast devsel, latency 32, IRQ 197, IOMMU group 12
+> >         Memory at 601f270000 (64-bit, non-prefetchable) [size=16K]
+> >         Memory at 601f000000 (64-bit, non-prefetchable) [size=1M]
+> >         Capabilities: [50] Power Management version 3
+> >         Capabilities: [80] Vendor Specific Information: Len=14 <?>
+> >         Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
+> >         Kernel driver in use: sof-audio-pci
+> > 
+> > I am attaching the pulseaudio and dmesg logs
+> > 
+> > This bug started reproducing after updating the kernel from 5.10.156 to 5.10.157
+> > 
+> > Bisection revealed the commit being reverted:
+> > 
+> > c34db0d6b88b1da95e7ab3353e674f4f574cccee is the first bad commit
+> > commit c34db0d6b88b1da95e7ab3353e674f4f574cccee
+> > Author: Richard Fitzgerald <rf@opensource.cirrus.com>
+> > Date:   Fri Nov 4 13:22:13 2022 +0000
+> > 
+> >     ASoC: soc-pcm: Don't zero TDM masks in __soc_pcm_open()
+> >     
+> >     [ Upstream commit 39bd801d6908900e9ab0cdc2655150f95ddd4f1a ]
+> >     
+> >     The DAI tx_mask and rx_mask are set by snd_soc_dai_set_tdm_slot()
+> >     and used by later code that depends on the TDM settings. So
+> >     __soc_pcm_open() should not be obliterating those mask values.
+> >     
+> > [...]
+> > Original bug report: https://bugzilla.altlinux.org/44690
+> 
+> See the ticket for more details.
+> 
+> BTW, let me use this mail to also add the report to the list of tracked
+> regressions to ensure it's doesn't fall through the cracks:
+> 
+> #regzbot introduced: c34db0d6b88b1d
+> https://bugzilla.kernel.org/show_bug.cgi?id=216861
+> #regzbot title: sound: asoc: sudden sound disappearance
+> #regzbot ignore-activity
 
-> [...]
-> Fixes: ccdde7c74ffd ("wifi: mac80211: properly implement MLO key handling")
-> Fixes: b320d6c456ff ("wifi: mac80211: use correct rx link_sta instead of default")
-> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+FWIW, we had as well reports in Debian after having updated the kernel
+from 5.10.149 based one to 5.10.158 based one in the last point
+releases, they are at least:
 
-Shouldn't this have a Cc: stable@vger.kernel.org to ensure it's
-backported (no, Fixes: tags are not enough for that, as Greg
-occasionally clarified).
+https://bugs.debian.org/1027483
+https://bugs.debian.org/1027430
 
-And also a few link and reported-by tags to all the bug reports that
-apparently are fixed by this change? These are the ones I'm aware of,
-there might be more:
-
-https://lore.kernel.org/linux-wireless/CAFktD2fRnSbNgWRRoGbQzG5_Mw7=zFJKTVBHS_3D+mNUYcv9hQ@mail.gmail.com/
-https://bugzilla.kernel.org/show_bug.cgi?id=216839
-https://bugzilla.kernel.org/show_bug.cgi?id=216844
-
-This indicates that quite a few users are hit by problems this patch
-fixes, hence from my point of view it obviously would be ideal if this
-patch could make it to mainline quickly.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-
-Did I miss something or do something stupid? Then reply and tell me:
-https://linux-regtracking.leemhuis.info/about/#stupid
-
-#regzbot ^backmonitor: https://bugzilla.kernel.org/show_bug.cgi?id=216844
+Regards,
+Salvatore
