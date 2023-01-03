@@ -1,62 +1,61 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DEF8466
-	for <regressions@lists.linux.dev>; Tue,  3 Jan 2023 16:03:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EBE8483
+	for <regressions@lists.linux.dev>; Tue,  3 Jan 2023 16:26:52 +0000 (UTC)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 84561227DF;
-	Tue,  3 Jan 2023 16:03:56 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 6045B67E98;
+	Tue,  3 Jan 2023 16:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1672761836; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1672763210; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xx94thxYeaPJ0cWVKCcjoVjusmkFByzZznJxWr7hfT4=;
-	b=BW2LgrNhYB/ShUvELE79mF0CDNpC/1UxnHuJ5ofyumkB58w07djt2IUZ2T94QxkhKo72WA
-	fYhi1FgY4L1WeV4RtzvlCQg1KKO/xxyTLzpzHWGsQRP5O5vosT8CL2F3kTVpPdQObGiXmg
-	LEGH0FLzn9UBwdx4WsTFcDI+VTxjMW0=
+	bh=pY3jzxaENXIf/F3kBvSDUUjACo7aZEQ2xT84WOtvWIk=;
+	b=n5WwMClmrUr7C2YCBNPycTpVcSloPJI1OglbHOsK8t9WzilezolS7QWZrQ8qqTqIkN5rDj
+	snD0mmlZq3QycW75tvRiXjGuoaTGbo1sPkm4/nPkC0l7JZnLw3SueSgfojywtwV56AqG6j
+	L4nxwqvz/gJ9SNhB4M8XQoFPf9N970o=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1672761836;
+	s=susede2_ed25519; t=1672763210;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xx94thxYeaPJ0cWVKCcjoVjusmkFByzZznJxWr7hfT4=;
-	b=QuuooW3Y+yKAIbetYivAGGAoQby9xZ7Vt4VgVLNDHXAkhGW9C/B9AS7Td3xJaMyjz2wMSZ
-	LsT7uMnQZ3ZgmuCw==
+	bh=pY3jzxaENXIf/F3kBvSDUUjACo7aZEQ2xT84WOtvWIk=;
+	b=l6rnYthXUigefSFln7FGpieHONOnzIhQMunHWDr38i7I1JNuE6waHuv8b58c60K3lFj73P
+	h0tt/TNEVtLMUfCw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
 	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5B9201390C;
-	Tue,  3 Jan 2023 16:03:56 +0000 (UTC)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 23E581392B;
+	Tue,  3 Jan 2023 16:26:50 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
 	by imap2.suse-dmz.suse.de with ESMTPSA
-	id VR2MFexRtGP8fgAAMHmgww
-	(envelope-from <tiwai@suse.de>); Tue, 03 Jan 2023 16:03:56 +0000
-Date: Tue, 03 Jan 2023 17:03:55 +0100
-Message-ID: <87zgazppuc.wl-tiwai@suse.de>
+	id zvP5B0pXtGPjDAAAMHmgww
+	(envelope-from <tiwai@suse.de>); Tue, 03 Jan 2023 16:26:50 +0000
+Date: Tue, 03 Jan 2023 17:26:49 +0100
+Message-ID: <87sfgrpos6.wl-tiwai@suse.de>
 From: Takashi Iwai <tiwai@suse.de>
-To: Michael Ralston <michael@ralston.id.au>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	alsa-devel@alsa-project.org,
-	regressions@lists.linux.dev,
-	stable@vger.kernel.org,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>
-Subject: Re: USB-Audio regression on behringer UMC404HD
-In-Reply-To: <CAC2975+Ybz2-jyJAwAUEu5S1XKfp0B-p4s-gAsMPfZdD61uNfQ@mail.gmail.com>
-References: <CAC2975JXkS1A5Tj9b02G_sy25ZWN-ys+tc9wmkoS=qPgKCogSg@mail.gmail.com>
-	<bf646395-1231-92f6-7c5a-5b7765596358@leemhuis.info>
-	<87zgb0q7x4.wl-tiwai@suse.de>
-	<CAC2975K24Gt3rGieAToHjb7FEHv84aqiRSQx7EOuR2Q7KByUXw@mail.gmail.com>
-	<87sfgrrb5f.wl-tiwai@suse.de>
-	<CAC2975+cUqiFC0LO-D-fi0swH+x=_FMuG+==mhg6HH4pc_YDRA@mail.gmail.com>
-	<87bknfr6rd.wl-tiwai@suse.de>
-	<CAC2975+CP0WKmXouX_8TffT1+VpU3EuOzyGHMv+VsAOBjCyhnA@mail.gmail.com>
-	<878rijr6dz.wl-tiwai@suse.de>
-	<CAC2975+Ybz2-jyJAwAUEu5S1XKfp0B-p4s-gAsMPfZdD61uNfQ@mail.gmail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org,    =?ISO-8859-1?Q?P=C1LFFY_D=E1niel?=
+ <dpalffy@gmail.com>,	Alsa-devel <alsa-devel@alsa-project.org>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,	Mark Brown
+ <broonie@kernel.org>,	LKML <linux-kernel@vger.kernel.org>,	Takashi Iwai
+ <tiwai@suse.com>,	Richard Fitzgerald <rf@opensource.cirrus.com>,	Thorsten
+ Leemhuis <regressions@leemhuis.info>,	Sergey <zagagyka@basealt.ru>,
+	Salvatore Bonaccorso <carnil@debian.org>
+Subject: Re: [regression, 5.10.y] Bug 216861 - sound disappearance on Acer Swift 3 SF314-59-78UR after update to 5.10.157
+In-Reply-To: <87h6x7r7w6.wl-tiwai@suse.de>
+References: <bebd692d-7d21-6648-6b7a-c91063bb51c2@leemhuis.info>
+	<Y7K1WDmPYi3EMOn1@eldamar.lan>
+	<87wn65umye.wl-tiwai@suse.de>
+	<CALp6mkJhM1zDcNr9X_7WL09+uqcaAhNFFMhrjme0r7584O+Lgw@mail.gmail.com>
+	<CALp6mk+rdqGXySUowxZv3kEEVWrh96m_x-h8xcFNQ9YZPkbc5w@mail.gmail.com>
+	<87h6x7r7w6.wl-tiwai@suse.de>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
@@ -64,65 +63,136 @@ List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
 
-On Tue, 03 Jan 2023 16:31:13 +0100,
-Michael Ralston wrote:
+On Tue, 03 Jan 2023 15:48:41 +0100,
+Takashi Iwai wrote:
 > 
-> On Wed, 4 Jan 2023 at 02:21, Takashi Iwai <tiwai@suse.de> wrote:
-> >
-> > Hrm...  Try to reload snd_usb_audio module with the dyndbg=+p option,
-> > e.g.
-> >
-> >   # modprobe -r snd-usb-audio
-> >   # modprobe snd_usb_audio dyndbg=+p
-> >
-> > Or you can try to put your own debug printk(); we need to make sure
-> > whether it's really the right code you're testing at first.
-> >
+> On Tue, 03 Jan 2023 14:04:50 +0100,
+> PÁLFFY Dániel wrote:
+> > 
+> > And confirming, 5.10.161 with e8444560b4d9302a511f0996f4cfdf85b628f4ca
+> > and 636110411ca726f19ef8e87b0be51bb9a4cdef06 cherry-picked works for
+> > me.
 > 
-> Ok, it looks like it was ignoring the kernel command line for some
-> reason. modprobing it with the option brought up debug messages again.
-> 
-> I'm still running kernel 6.1.2 vanilla with the revert and the patches.
-> 
-> aplay hung again when I ran it, the kernel was stuck on:
-> Jan 04 02:25:59 leatherback kernel: usb 1-4: 1:1 Start Playback PCM
-> 
-> and didn't output another line until I ctrl+c aplay.
+> That's a good news.  Then we can ask stable people to pick up those
+> commits for 5.10.y and 5.15.y.
 
-OK, thanks.  Then it's not about the USB interface reset.
-It must be subtle and nasty difference.
+I confirmed that the latest 5.15.y requires those fixes, too.
 
-Could you apply the change below on the top?
-It essentially reverts the hw_params/prepare split again.
+Greg, could you cherry-pick the following two commits to both 5.10.y
+and 5.15.y stable trees?  This fixes the recent regression caused by
+the backport of 39bd801d6908.
 
+e8444560b4d9302a511f0996f4cfdf85b628f4ca
+    ASoC/SoundWire: dai: expand 'stream' concept beyond SoundWire
+
+636110411ca726f19ef8e87b0be51bb9a4cdef06
+    ASoC: Intel/SOF: use set_stream() instead of set_tdm_slots() for HDAudio
+
+
+Thanks!
 
 Takashi
 
--- 8< --
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -564,6 +564,21 @@ static int snd_usb_hw_params(struct snd_pcm_substream *substream,
- 	}
- 
- 	ret = snd_usb_endpoint_set_params(chip, subs->data_endpoint);
-+	if (ret < 0)
-+		goto unlock;
-+
-+	if (subs->sync_endpoint) {
-+		ret = snd_usb_endpoint_prepare(chip, subs->sync_endpoint);
-+		if (ret < 0)
-+			goto unlock;
-+	}
-+
-+	ret = snd_usb_endpoint_prepare(chip, subs->data_endpoint);
-+	if (ret < 0)
-+		goto unlock;
-+	else if (ret > 0)
-+		snd_usb_set_format_quirk(subs, subs->cur_audiofmt);
-+	ret = 0;
- 
-  unlock:
- 	if (ret < 0)
-
+> 
+> 
+> Takashi
+> 
+> > 
+> > On Tue, Jan 3, 2023 at 1:05 PM PÁLFFY Dániel <dpalffy@gmail.com> wrote:
+> > >
+> > > Another report: https://bugs.archlinux.org/task/76795
+> > > Apparently, folks at alsa-devel traced down the dependencies of that patch, see the mail thread at https://lore.kernel.org/all/dc65501c-c2fd-5608-c3d9-7cea184c3989%40opensource.cirrus.com/
+> > >
+> > > On Mon, Jan 2, 2023 at 1:42 PM Takashi Iwai <tiwai@suse.de> wrote:
+> > >>
+> > >> On Mon, 02 Jan 2023 11:43:36 +0100,
+> > >> Salvatore Bonaccorso wrote:
+> > >> >
+> > >> > Hi,
+> > >> >
+> > >> > [Adding as well Richard Fitzgerald and PÁLFFY Dániel to recipients]
+> > >> >
+> > >> > On Fri, Dec 30, 2022 at 09:08:57AM +0100, Thorsten Leemhuis wrote:
+> > >> > > Hi, this is your Linux kernel regression tracker speaking.
+> > >> > >
+> > >> > > I noticed a regression report in bugzilla.kernel.org. As many (most?)
+> > >> > > kernel developer don't keep an eye on it, I decided to forward it by
+> > >> > > mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216861 :
+> > >> > >
+> > >> > > >  Sergey 2022-12-29 10:07:51 UTC
+> > >> > > >
+> > >> > > > Created attachment 303497 [details]
+> > >> > > > pulseaudio.log
+> > >> > > >
+> > >> > > > Sudden sound disappearance was reported for some laptops, e.g.
+> > >> > > >
+> > >> > > > Acer Swift 3 SF314-59-78UR 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+> > >> > > >
+> > >> > > > # lspci
+> > >> > > > 0000:00:1f.3 Multimedia audio controller: Intel Corporation Tiger Lake-LP Smart Sound Technology Audio Controller (rev 20)
+> > >> > > >         Subsystem: Acer Incorporated [ALI] Device 148c
+> > >> > > >         Flags: bus master, fast devsel, latency 32, IRQ 197, IOMMU group 12
+> > >> > > >         Memory at 601f270000 (64-bit, non-prefetchable) [size=16K]
+> > >> > > >         Memory at 601f000000 (64-bit, non-prefetchable) [size=1M]
+> > >> > > >         Capabilities: [50] Power Management version 3
+> > >> > > >         Capabilities: [80] Vendor Specific Information: Len=14 <?>
+> > >> > > >         Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
+> > >> > > >         Kernel driver in use: sof-audio-pci
+> > >> > > >
+> > >> > > > I am attaching the pulseaudio and dmesg logs
+> > >> > > >
+> > >> > > > This bug started reproducing after updating the kernel from 5.10.156 to 5.10.157
+> > >> > > >
+> > >> > > > Bisection revealed the commit being reverted:
+> > >> > > >
+> > >> > > > c34db0d6b88b1da95e7ab3353e674f4f574cccee is the first bad commit
+> > >> > > > commit c34db0d6b88b1da95e7ab3353e674f4f574cccee
+> > >> > > > Author: Richard Fitzgerald <rf@opensource.cirrus.com>
+> > >> > > > Date:   Fri Nov 4 13:22:13 2022 +0000
+> > >> > > >
+> > >> > > >     ASoC: soc-pcm: Don't zero TDM masks in __soc_pcm_open()
+> > >> > > >
+> > >> > > >     [ Upstream commit 39bd801d6908900e9ab0cdc2655150f95ddd4f1a ]
+> > >> > > >
+> > >> > > >     The DAI tx_mask and rx_mask are set by snd_soc_dai_set_tdm_slot()
+> > >> > > >     and used by later code that depends on the TDM settings. So
+> > >> > > >     __soc_pcm_open() should not be obliterating those mask values.
+> > >> > > >
+> > >> > > > [...]
+> > >> > > > Original bug report: https://bugzilla.altlinux.org/44690
+> > >> > >
+> > >> > > See the ticket for more details.
+> > >> > >
+> > >> > > BTW, let me use this mail to also add the report to the list of tracked
+> > >> > > regressions to ensure it's doesn't fall through the cracks:
+> > >> > >
+> > >> > > #regzbot introduced: c34db0d6b88b1d
+> > >> > > https://bugzilla.kernel.org/show_bug.cgi?id=216861
+> > >> > > #regzbot title: sound: asoc: sudden sound disappearance
+> > >> > > #regzbot ignore-activity
+> > >> >
+> > >> > FWIW, we had as well reports in Debian after having updated the kernel
+> > >> > from 5.10.149 based one to 5.10.158 based one in the last point
+> > >> > releases, they are at least:
+> > >> >
+> > >> > https://bugs.debian.org/1027483
+> > >> > https://bugs.debian.org/1027430
+> > >>
+> > >> I got another report while the commit was backported to 5.14-based
+> > >> openSUSE Leap kernel, and I ended up with dropping it.
+> > >>
+> > >> So, IMO, it's safer to drop this patch from the older stable trees.
+> > >> As far as I see, 5.15.y and 5.10.y got this.
+> > >>
+> > >> Unless anyone gives a better fix, I'm going to submit a revert patch
+> > >> for those trees.
+> > >>
+> > >>
+> > >> thanks,
+> > >>
+> > >> Takashi
+> > 
+> 
