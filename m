@@ -1,68 +1,80 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFD5B8466
-	for <regressions@lists.linux.dev>; Tue,  3 Jan 2023 15:20:18 +0000 (UTC)
-Received: by mail-oi1-f182.google.com with SMTP id j130so21687211oif.4
-        for <regressions@lists.linux.dev>; Tue, 03 Jan 2023 07:20:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ralston.id.au; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=z8vVarhYQXZ9Qhz5mKvhwtmR7SHZZ/LNj7oEL18OVmc=;
-        b=hyeNGChJOIyeBdeAor9LyYJDIbYuztx7eQPHqVLU/cYmveo63Dounjfo3BQ16he9mC
-         H2PBFm462b6aeUnMdHKBadoPpjesWMEruUkoYYlOuMKBK+5N+2CD3+Wr5xhnwXRMPl4c
-         mMdw5sImTu+yhVbE1H9hYFjKdg7u/cJfIJmPQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z8vVarhYQXZ9Qhz5mKvhwtmR7SHZZ/LNj7oEL18OVmc=;
-        b=E+Gx7TdIoUKhfrqeMvEAn9rkTT9zSALp7fip8WWwSlDmYc4zlz23pzL5Q6zemVT0bU
-         adpbn8Lv+2n3tP3WS5Tyn2AxoeYbWGkPk2endbVW8tTLfsk90ltzgJjV+60KGCTz+ySV
-         BvwO1uZcyyDK652kdk/7Ew5FmeuIMemMXOklIwp5ITkcMwLNhDEfocmpdsaTbMd4/ktY
-         Vi6d6FkKUrrXhrW1Qd5Y3E5fJ7lobp/ZHJapKi00OBjDVfXIClRfdN8ShZTNxWzJE+0b
-         bQnp4xOnpP7V1POr5PHxdeMKYWCTMMW9mxbYWqE0wdzFJr3EIKOPSkKalOJl7U6gcn/m
-         n4MA==
-X-Gm-Message-State: AFqh2kru1nc4s72iGPke2TMj7JNSE4nVW16XDB0P0Rq12CGcvM1m/8S8
-	VX9idb7Sbiyya68H4YO6YfMnZBjXi14BB4CzVxunNw==
-X-Google-Smtp-Source: AMrXdXu0SPE09PX79YJPOiZzyF40E/NRTrYM3mQEXId4MTVPUHDeIvG66xX/A8ZFkefsBYcMYb0vO3fCepWpRm7CMVI=
-X-Received: by 2002:a05:6808:48d:b0:35c:3327:ecf0 with SMTP id
- z13-20020a056808048d00b0035c3327ecf0mr2266171oid.220.1672759217823; Tue, 03
- Jan 2023 07:20:17 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2188466
+	for <regressions@lists.linux.dev>; Tue,  3 Jan 2023 15:21:14 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id B51F167ABE;
+	Tue,  3 Jan 2023 15:21:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1672759272; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NtxpHQ7TaTAmosc6jmIS1bPQpzkWk/ISgTElsh2Pu9s=;
+	b=ocdLnXHjejl2MiIg3/Zm1xzvA8Q8ZlPJwUvP4LKxDvEwFPHP19yiGC2TeD61HnJPLRBNEj
+	LorI5yTwGQpx1/yPDh4WzgrirSADs/EielIP5g8WxiKnyKqlJDpg7p1KfZu7Wr0WzCGmDG
+	sD2Xkuz3oXFH3GVrbU0FWv6NE5+J5LI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1672759272;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NtxpHQ7TaTAmosc6jmIS1bPQpzkWk/ISgTElsh2Pu9s=;
+	b=WrCMbReRpGXHUXRyu+nKoWJbcGqNBCKul00nISjLsPzZMs2IP5TK1okDYfLhjn/4WXSKk7
+	1zS6kHP4BRWGRCCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 897C41390C;
+	Tue,  3 Jan 2023 15:21:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id EUrEIOhHtGM5ZwAAMHmgww
+	(envelope-from <tiwai@suse.de>); Tue, 03 Jan 2023 15:21:12 +0000
+Date: Tue, 03 Jan 2023 16:21:12 +0100
+Message-ID: <878rijr6dz.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Michael Ralston <michael@ralston.id.au>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	alsa-devel@alsa-project.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Subject: Re: USB-Audio regression on behringer UMC404HD
+In-Reply-To: <CAC2975+CP0WKmXouX_8TffT1+VpU3EuOzyGHMv+VsAOBjCyhnA@mail.gmail.com>
+References: <CAC2975JXkS1A5Tj9b02G_sy25ZWN-ys+tc9wmkoS=qPgKCogSg@mail.gmail.com>
+	<bf646395-1231-92f6-7c5a-5b7765596358@leemhuis.info>
+	<87zgb0q7x4.wl-tiwai@suse.de>
+	<CAC2975K24Gt3rGieAToHjb7FEHv84aqiRSQx7EOuR2Q7KByUXw@mail.gmail.com>
+	<87sfgrrb5f.wl-tiwai@suse.de>
+	<CAC2975+cUqiFC0LO-D-fi0swH+x=_FMuG+==mhg6HH4pc_YDRA@mail.gmail.com>
+	<87bknfr6rd.wl-tiwai@suse.de>
+	<CAC2975+CP0WKmXouX_8TffT1+VpU3EuOzyGHMv+VsAOBjCyhnA@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <CAC2975JXkS1A5Tj9b02G_sy25ZWN-ys+tc9wmkoS=qPgKCogSg@mail.gmail.com>
- <bf646395-1231-92f6-7c5a-5b7765596358@leemhuis.info> <87zgb0q7x4.wl-tiwai@suse.de>
- <CAC2975K24Gt3rGieAToHjb7FEHv84aqiRSQx7EOuR2Q7KByUXw@mail.gmail.com>
- <87sfgrrb5f.wl-tiwai@suse.de> <CAC2975+cUqiFC0LO-D-fi0swH+x=_FMuG+==mhg6HH4pc_YDRA@mail.gmail.com>
- <87bknfr6rd.wl-tiwai@suse.de> <CAC2975+CP0WKmXouX_8TffT1+VpU3EuOzyGHMv+VsAOBjCyhnA@mail.gmail.com>
-In-Reply-To: <CAC2975+CP0WKmXouX_8TffT1+VpU3EuOzyGHMv+VsAOBjCyhnA@mail.gmail.com>
-From: Michael Ralston <michael@ralston.id.au>
-Date: Wed, 4 Jan 2023 02:19:41 +1100
-Message-ID: <CAC2975LNYcsW1zAohijLtziXLbUyBjxHY3grD5=HjHcWBH_LPA@mail.gmail.com>
-Subject: Re: USB-Audio regression on behringer UMC404HD
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, alsa-devel@alsa-project.org, 
-	regressions@lists.linux.dev, stable@vger.kernel.org, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, 4 Jan 2023 at 02:14, Michael Ralston <michael@ralston.id.au> wrote:
->
+On Tue, 03 Jan 2023 16:14:57 +0100,
+Michael Ralston wrote:
+> 
 > On Wed, 4 Jan 2023 at 02:13, Takashi Iwai <tiwai@suse.de> wrote:
 > >
 > > That's weird.  Is snd_usb_audio driver bound with the device at all?
 > > That is, does it appear in /proc/asound/cards?
 > >
->
+> 
 > Yes, it's there.
->
+> 
 > 0 [V49            ]: USB-Audio - V49
 >                      Alesis V49 at usb-0000:08:00.1-3, full speed
 > 1 [NVidia         ]: HDA-Intel - HDA NVidia
@@ -72,26 +84,14 @@ On Wed, 4 Jan 2023 at 02:14, Michael Ralston <michael@ralston.id.au> wrote:
 > 3 [Generic        ]: HDA-Intel - HD-Audio Generic
 >                      HD-Audio Generic at 0xfca00000 irq 156
 
-Also lsusb shows this...
+Hrm...  Try to reload snd_usb_audio module with the dyndbg=+p option,
+e.g.
 
-    |__ Port 4: Dev 5, If 0, Class=Audio, Driver=snd-usb-audio, 480M
-       ID 1397:0509 BEHRINGER International GmbH
-       /sys/bus/usb/devices/1-4  /dev/bus/usb/001/005
-   |__ Port 4: Dev 5, If 1, Class=Audio, Driver=snd-usb-audio, 480M
-       ID 1397:0509 BEHRINGER International GmbH
-       /sys/bus/usb/devices/1-4  /dev/bus/usb/001/005
-   |__ Port 4: Dev 5, If 2, Class=Audio, Driver=snd-usb-audio, 480M
-       ID 1397:0509 BEHRINGER International GmbH
-       /sys/bus/usb/devices/1-4  /dev/bus/usb/001/005
-   |__ Port 4: Dev 5, If 3, Class=Audio, Driver=snd-usb-audio, 480M
-       ID 1397:0509 BEHRINGER International GmbH
-       /sys/bus/usb/devices/1-4  /dev/bus/usb/001/005
-   |__ Port 4: Dev 5, If 4, Class=Audio, Driver=snd-usb-audio, 480M
-       ID 1397:0509 BEHRINGER International GmbH
-       /sys/bus/usb/devices/1-4  /dev/bus/usb/001/005
-   |__ Port 4: Dev 5, If 5, Class=Vendor Specific Class, Driver=, 480M
-       ID 1397:0509 BEHRINGER International GmbH
-       /sys/bus/usb/devices/1-4  /dev/bus/usb/001/005
+  # modprobe -r snd-usb-audio
+  # modprobe snd_usb_audio dyndbg=+p
+  
+Or you can try to put your own debug printk(); we need to make sure
+whether it's really the right code you're testing at first.
 
---
-Michael
+
+Takashi
