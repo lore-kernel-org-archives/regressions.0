@@ -1,198 +1,98 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30EBE8483
-	for <regressions@lists.linux.dev>; Tue,  3 Jan 2023 16:26:52 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6045B67E98;
-	Tue,  3 Jan 2023 16:26:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1672763210; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pY3jzxaENXIf/F3kBvSDUUjACo7aZEQ2xT84WOtvWIk=;
-	b=n5WwMClmrUr7C2YCBNPycTpVcSloPJI1OglbHOsK8t9WzilezolS7QWZrQ8qqTqIkN5rDj
-	snD0mmlZq3QycW75tvRiXjGuoaTGbo1sPkm4/nPkC0l7JZnLw3SueSgfojywtwV56AqG6j
-	L4nxwqvz/gJ9SNhB4M8XQoFPf9N970o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1672763210;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pY3jzxaENXIf/F3kBvSDUUjACo7aZEQ2xT84WOtvWIk=;
-	b=l6rnYthXUigefSFln7FGpieHONOnzIhQMunHWDr38i7I1JNuE6waHuv8b58c60K3lFj73P
-	h0tt/TNEVtLMUfCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 23E581392B;
-	Tue,  3 Jan 2023 16:26:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id zvP5B0pXtGPjDAAAMHmgww
-	(envelope-from <tiwai@suse.de>); Tue, 03 Jan 2023 16:26:50 +0000
-Date: Tue, 03 Jan 2023 17:26:49 +0100
-Message-ID: <87sfgrpos6.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org,    =?ISO-8859-1?Q?P=C1LFFY_D=E1niel?=
- <dpalffy@gmail.com>,	Alsa-devel <alsa-devel@alsa-project.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,	Mark Brown
- <broonie@kernel.org>,	LKML <linux-kernel@vger.kernel.org>,	Takashi Iwai
- <tiwai@suse.com>,	Richard Fitzgerald <rf@opensource.cirrus.com>,	Thorsten
- Leemhuis <regressions@leemhuis.info>,	Sergey <zagagyka@basealt.ru>,
-	Salvatore Bonaccorso <carnil@debian.org>
-Subject: Re: [regression, 5.10.y] Bug 216861 - sound disappearance on Acer Swift 3 SF314-59-78UR after update to 5.10.157
-In-Reply-To: <87h6x7r7w6.wl-tiwai@suse.de>
-References: <bebd692d-7d21-6648-6b7a-c91063bb51c2@leemhuis.info>
-	<Y7K1WDmPYi3EMOn1@eldamar.lan>
-	<87wn65umye.wl-tiwai@suse.de>
-	<CALp6mkJhM1zDcNr9X_7WL09+uqcaAhNFFMhrjme0r7584O+Lgw@mail.gmail.com>
-	<CALp6mk+rdqGXySUowxZv3kEEVWrh96m_x-h8xcFNQ9YZPkbc5w@mail.gmail.com>
-	<87h6x7r7w6.wl-tiwai@suse.de>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C07E0362
+	for <regressions@lists.linux.dev>; Tue,  3 Jan 2023 17:37:32 +0000 (UTC)
+Received: by mail-vk1-f172.google.com with SMTP id z190so11411178vka.4
+        for <regressions@lists.linux.dev>; Tue, 03 Jan 2023 09:37:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=snuAeqrKkcnHwzA0AdwomJTJESrNdqyAgQMbGE4/gOc=;
+        b=7NqV5jfakndFS5gJCSLNkhdDe/7VnLVtsZ0f8MHQDP0PxJsBbIVszoAk8pdyEJbZMW
+         6e7F+hJp5bjg1Ce0KWstIhGCceK65s8pov6KrLsjmo6bTnj+oLE3IFoUFfuuEN3V+BDi
+         QxSvRJQG2MNN5XQG2eUFCxSdAKpOnS81djC/xxHS3GhRicQj4gYugC4Iboj5+Z5DTChH
+         InqNPY5mTQVfT5dtMHYI7LFeyKTinZGdDaBaGaBr3Au3bTT4sA7cO+Wm+TZGLWwYpwuQ
+         9AzLbGueFdCc0vtCGwTzJDeXRPItgK8oo1sOP2ANIgzZ4onhfijZAdQ03WKGpK8Xae+y
+         +XsA==
+X-Gm-Message-State: AFqh2krg28jgmgLrF79tg+vjmUh0Lke1BGBcgASvzuiEnkT2PuPAq7S0
+	kGbuON1Z8/Aj5uSQTER349/rpYSqH1EiYQ==
+X-Google-Smtp-Source: AMrXdXvW0xIsSx1N720roXkOWz+ghPcrnfNXV7KAcmlPcNxlj8KQRUYTiza5nK0VC8AxGU0Gn/rFhA==
+X-Received: by 2002:a1f:abd2:0:b0:3d5:b3df:4ef9 with SMTP id u201-20020a1fabd2000000b003d5b3df4ef9mr4185655vke.9.1672767451306;
+        Tue, 03 Jan 2023 09:37:31 -0800 (PST)
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
+        by smtp.gmail.com with ESMTPSA id u5-20020a05620a0c4500b006cfc1d827cbsm22406189qki.9.2023.01.03.09.37.30
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Jan 2023 09:37:30 -0800 (PST)
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-46d4840b51fso386536527b3.12
+        for <regressions@lists.linux.dev>; Tue, 03 Jan 2023 09:37:30 -0800 (PST)
+X-Received: by 2002:a81:ae0e:0:b0:388:941:23a8 with SMTP id
+ m14-20020a81ae0e000000b00388094123a8mr5281814ywh.152.1672767450539; Tue, 03
+ Jan 2023 09:37:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+References: <14722778-dda0-cb9f-8647-892493d94a5c@leemhuis.info> <2026016246ef719605c9932feeb56b105833593b.camel@intel.com>
+In-Reply-To: <2026016246ef719605c9932feeb56b105833593b.camel@intel.com>
+From: Dave Chiluk <chiluk@ubuntu.com>
+Date: Tue, 3 Jan 2023 11:37:19 -0600
+X-Gmail-Original-Message-ID: <CAMfi-DTwX2nvP58FRb6NaGMyWO0SBo9W=Fpdtr=XfNRzkqAwHw@mail.gmail.com>
+Message-ID: <CAMfi-DTwX2nvP58FRb6NaGMyWO0SBo9W=Fpdtr=XfNRzkqAwHw@mail.gmail.com>
+Subject: Re: [regression] Bug 216753 - 6e 6 ghz bands are disabled since 5.16
+ on intel ax211
+To: "Coelho, Luciano" <luciano.coelho@intel.com>
+Cc: "regressions@leemhuis.info" <regressions@leemhuis.info>, 
+	"Greenman, Gregory" <gregory.greenman@intel.com>, 
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
+	"johannes@sipsolutions.net" <johannes@sipsolutions.net>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marcel Holtmann <marcel@holtmann.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 03 Jan 2023 15:48:41 +0100,
-Takashi Iwai wrote:
-> 
-> On Tue, 03 Jan 2023 14:04:50 +0100,
-> PÁLFFY Dániel wrote:
-> > 
-> > And confirming, 5.10.161 with e8444560b4d9302a511f0996f4cfdf85b628f4ca
-> > and 636110411ca726f19ef8e87b0be51bb9a4cdef06 cherry-picked works for
-> > me.
-> 
-> That's a good news.  Then we can ask stable people to pick up those
-> commits for 5.10.y and 5.15.y.
+On Thu, Dec 1, 2022 at 5:33 AM Coelho, Luciano <luciano.coelho@intel.com> w=
+rote:
+>
+> On Thu, 2022-12-01 at 11:14 +0100, Thorsten Leemhuis wrote:
+> > Hi, this is your Linux kernel regression tracker.
+> >
+> > Luca, I noticed a regression report in bugzilla where I'd like your
+> > advice on. To quote https://bugzilla.kernel.org/show_bug.cgi?id=3D21675=
+3
+>
+> Hi Thorsten wearing-the-regression-hat, =F0=9F=99=82
+>
+> I'm not the maintainer of iwlwifi anymore, so I'm adding the new
+> maintainer here, Gregory Greenman.
+>
+> Gregory, can you take a look?
+>
 
-I confirmed that the latest 5.15.y requires those fixes, too.
+@Gregory Greenman as I'm sure this got buried over the holidays, can
+you take a look at this and advise?  This is definitely a regression,
+but I don't think a lot of people are noticing it or don't yet have
+6ghz access points.  I can write up a patch removing the offending
+commit (698b166ed), or I can add an iwlwifi option to ignore the 6e
+ACPI bit.  Which would you prefer?
 
-Greg, could you cherry-pick the following two commits to both 5.10.y
-and 5.15.y stable trees?  This fixes the recent regression caused by
-the backport of 39bd801d6908.
+Dell has been of little help which I pretty much expected.
 
-e8444560b4d9302a511f0996f4cfdf85b628f4ca
-    ASoC/SoundWire: dai: expand 'stream' concept beyond SoundWire
+@Luciano, as you were the author of the original change, and I'm not
+familiar enough with ACPI, is the below code reading the enable bits
+from the BIOS ACPI table or is this somehow coming out of the network
+card through some UEFI extensions?  I'm trying to figure out which of
+Dell or Intel need to update their firmware?  I think some Lenovo's
+have similar problems, so I suspect it's a BIOS ACPI table problem.
 
-636110411ca726f19ef8e87b0be51bb9a4cdef06
-    ASoC: Intel/SOF: use set_stream() instead of set_tdm_slots() for HDAudio
+ ret =3D iwl_acpi_get_dsm_u32(mvm->fwrt.dev, 0,
+                                   DSM_FUNC_ENABLE_6E,
+                                   &iwl_guid, &value);
 
-
-Thanks!
-
-Takashi
-
-> 
-> 
-> Takashi
-> 
-> > 
-> > On Tue, Jan 3, 2023 at 1:05 PM PÁLFFY Dániel <dpalffy@gmail.com> wrote:
-> > >
-> > > Another report: https://bugs.archlinux.org/task/76795
-> > > Apparently, folks at alsa-devel traced down the dependencies of that patch, see the mail thread at https://lore.kernel.org/all/dc65501c-c2fd-5608-c3d9-7cea184c3989%40opensource.cirrus.com/
-> > >
-> > > On Mon, Jan 2, 2023 at 1:42 PM Takashi Iwai <tiwai@suse.de> wrote:
-> > >>
-> > >> On Mon, 02 Jan 2023 11:43:36 +0100,
-> > >> Salvatore Bonaccorso wrote:
-> > >> >
-> > >> > Hi,
-> > >> >
-> > >> > [Adding as well Richard Fitzgerald and PÁLFFY Dániel to recipients]
-> > >> >
-> > >> > On Fri, Dec 30, 2022 at 09:08:57AM +0100, Thorsten Leemhuis wrote:
-> > >> > > Hi, this is your Linux kernel regression tracker speaking.
-> > >> > >
-> > >> > > I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> > >> > > kernel developer don't keep an eye on it, I decided to forward it by
-> > >> > > mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216861 :
-> > >> > >
-> > >> > > >  Sergey 2022-12-29 10:07:51 UTC
-> > >> > > >
-> > >> > > > Created attachment 303497 [details]
-> > >> > > > pulseaudio.log
-> > >> > > >
-> > >> > > > Sudden sound disappearance was reported for some laptops, e.g.
-> > >> > > >
-> > >> > > > Acer Swift 3 SF314-59-78UR 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
-> > >> > > >
-> > >> > > > # lspci
-> > >> > > > 0000:00:1f.3 Multimedia audio controller: Intel Corporation Tiger Lake-LP Smart Sound Technology Audio Controller (rev 20)
-> > >> > > >         Subsystem: Acer Incorporated [ALI] Device 148c
-> > >> > > >         Flags: bus master, fast devsel, latency 32, IRQ 197, IOMMU group 12
-> > >> > > >         Memory at 601f270000 (64-bit, non-prefetchable) [size=16K]
-> > >> > > >         Memory at 601f000000 (64-bit, non-prefetchable) [size=1M]
-> > >> > > >         Capabilities: [50] Power Management version 3
-> > >> > > >         Capabilities: [80] Vendor Specific Information: Len=14 <?>
-> > >> > > >         Capabilities: [60] MSI: Enable+ Count=1/1 Maskable- 64bit+
-> > >> > > >         Kernel driver in use: sof-audio-pci
-> > >> > > >
-> > >> > > > I am attaching the pulseaudio and dmesg logs
-> > >> > > >
-> > >> > > > This bug started reproducing after updating the kernel from 5.10.156 to 5.10.157
-> > >> > > >
-> > >> > > > Bisection revealed the commit being reverted:
-> > >> > > >
-> > >> > > > c34db0d6b88b1da95e7ab3353e674f4f574cccee is the first bad commit
-> > >> > > > commit c34db0d6b88b1da95e7ab3353e674f4f574cccee
-> > >> > > > Author: Richard Fitzgerald <rf@opensource.cirrus.com>
-> > >> > > > Date:   Fri Nov 4 13:22:13 2022 +0000
-> > >> > > >
-> > >> > > >     ASoC: soc-pcm: Don't zero TDM masks in __soc_pcm_open()
-> > >> > > >
-> > >> > > >     [ Upstream commit 39bd801d6908900e9ab0cdc2655150f95ddd4f1a ]
-> > >> > > >
-> > >> > > >     The DAI tx_mask and rx_mask are set by snd_soc_dai_set_tdm_slot()
-> > >> > > >     and used by later code that depends on the TDM settings. So
-> > >> > > >     __soc_pcm_open() should not be obliterating those mask values.
-> > >> > > >
-> > >> > > > [...]
-> > >> > > > Original bug report: https://bugzilla.altlinux.org/44690
-> > >> > >
-> > >> > > See the ticket for more details.
-> > >> > >
-> > >> > > BTW, let me use this mail to also add the report to the list of tracked
-> > >> > > regressions to ensure it's doesn't fall through the cracks:
-> > >> > >
-> > >> > > #regzbot introduced: c34db0d6b88b1d
-> > >> > > https://bugzilla.kernel.org/show_bug.cgi?id=216861
-> > >> > > #regzbot title: sound: asoc: sudden sound disappearance
-> > >> > > #regzbot ignore-activity
-> > >> >
-> > >> > FWIW, we had as well reports in Debian after having updated the kernel
-> > >> > from 5.10.149 based one to 5.10.158 based one in the last point
-> > >> > releases, they are at least:
-> > >> >
-> > >> > https://bugs.debian.org/1027483
-> > >> > https://bugs.debian.org/1027430
-> > >>
-> > >> I got another report while the commit was backported to 5.14-based
-> > >> openSUSE Leap kernel, and I ended up with dropping it.
-> > >>
-> > >> So, IMO, it's safer to drop this patch from the older stable trees.
-> > >> As far as I see, 5.15.y and 5.10.y got this.
-> > >>
-> > >> Unless anyone gives a better fix, I'm going to submit a revert patch
-> > >> for those trees.
-> > >>
-> > >>
-> > >> thanks,
-> > >>
-> > >> Takashi
-> > 
-> 
+Thanks,
+Dave.
