@@ -1,36 +1,36 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8EF58F57
-	for <regressions@lists.linux.dev>; Tue,  3 Jan 2023 19:24:53 +0000 (UTC)
-Received: by mail-oi1-f171.google.com with SMTP id r205so27884599oib.9
-        for <regressions@lists.linux.dev>; Tue, 03 Jan 2023 11:24:53 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64A9C8F57
+	for <regressions@lists.linux.dev>; Tue,  3 Jan 2023 19:28:10 +0000 (UTC)
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-1442977d77dso37938732fac.6
+        for <regressions@lists.linux.dev>; Tue, 03 Jan 2023 11:28:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ralston.id.au; s=google;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=a1Pvovz6KD/rGdi5Cr+RhhTptgsnk7UiVcQNAM8+eBU=;
-        b=A3iZHMq1qX7BLuv8LOjD2/WgSAjRCflHSb5ljgUjZXfI8UO7kxCSKjMML05dAGROBq
-         Brk9fkjqudbKAi0IhPSRvRw8xF/XcmKn2bWbYCmQCa+KKDylcfx7e0By5aHaOZYzMbB/
-         Q3T4Oeed30ocfaOtl6ejPaxlyYYpEkjoNQ5Hk=
+        bh=Q7FkXH+HLYkkiLIkG++WmN41rS8wCnFY7c3NQ2brhNE=;
+        b=UxfExVhNTzqtD3r49kPu0KJ4JLMh/spcsFzusux4NKHMSWkEgPVo8y3T+xGOdeej7q
+         U7JUKmtw/wjXmBuMdMvjd2TyAJiofimRHFHVLycx/WPTGy6bBaSWbnvwiAVuAhYNAIk/
+         +LAQxW4vgmemwCGTNb4D3E7K15qC4T3I41M0E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=a1Pvovz6KD/rGdi5Cr+RhhTptgsnk7UiVcQNAM8+eBU=;
-        b=ydJkwzGpKAcZ/e+jWo39BOdUQetWSxbq8pUIV3UD1mrFpYn0zbctBt0FxcupUGRU1o
-         LM8rZMgUER0ejNRld+ChSHaMPyA1s12QSFoKCwrjMpO4G912ymeGGQg1muZH1Ofbg92m
-         z0+zW0yW+QDucJnkcdkcpk6DrNY+HTKlM4Q7UTslAg0mwi0UnyAPFAp3A8zMOZNlcHZK
-         KmY4ukw3MqmEjjEm2CtN3WYj2LW5cS2dCELYPkwPmJp9Xy1J5WkgIjnAe10LMD0KHq6M
-         eQJ9TfL34EUYQutXCRfT+CpxXKHkhMe28ymNBFlvdGgMh9tx90IjyBtHFszWM0mkXM6N
-         +UVQ==
-X-Gm-Message-State: AFqh2koN4eGNif5AvasVut7z9e57Ij/x7X8pmRy4ciCJ5oF5kukG83Oa
-	aZsiUeqeSMAoYK7PXXAOH5vpGu66V/kyHiKKqawgBg==
-X-Google-Smtp-Source: AMrXdXsSrUBgeuZr11V5MVDq1ahDjM3YnzlwexugjDHVzjW3s/niOCBfKCmmzgVetZXBqZkQUi4GfRfYldJc0F2Ls1w=
-X-Received: by 2002:a05:6808:48d:b0:35c:3327:ecf0 with SMTP id
- z13-20020a056808048d00b0035c3327ecf0mr2314709oid.220.1672773892807; Tue, 03
- Jan 2023 11:24:52 -0800 (PST)
+        bh=Q7FkXH+HLYkkiLIkG++WmN41rS8wCnFY7c3NQ2brhNE=;
+        b=aRhq3deJGQ/P4ZVyfYb3rC1W2PJmXnXsjMYZbpfVZOoDP3ghByzZyfQzdPBQkZuwOs
+         /1x1svuawy/r9vPv7xc4o53fqeJk0UORLbu1V41KjC4N+nPQnoDwqPgJUhk1/lMZJlL0
+         NjEsIesP57lHDRjBxuDoetPugA/qlpyhVg7RQ+t53RstkP4+b/G7fvXdNCbNnEiRa0Pg
+         +84gm6w/jDF6PUlniVitvMYs+0zFfOyPT/FXu2Y50YHvflFVL+hv9VjM02fgIe+y2HPy
+         ACfb4gfYcd2flxxwC5t2wBBzk/4Y6iXkCHLS2hsQ+Qry5SIaQx9Vgg7OMD4gmJj8Ln6j
+         e17w==
+X-Gm-Message-State: AFqh2kofWcnx32MlnIb2ZcAxcDstJruw80Ev7OUSGtUzPReoa8bUW6J4
+	4bO9xofMD5hSvtScq4p56HdLXcUfWO8D/dUlPYGppg==
+X-Google-Smtp-Source: AMrXdXsr5JqGLy/gQerxGWjdW2dJmjj/bKkvNd+/Bzb9oiK1VgH2DEO9re36zS2VcdGKT4NqC2y5QX3Jcchnro4gHK8=
+X-Received: by 2002:a05:6870:8dcf:b0:150:a904:9f9a with SMTP id
+ lq15-20020a0568708dcf00b00150a9049f9amr762343oab.235.1672774089369; Tue, 03
+ Jan 2023 11:28:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -44,10 +44,11 @@ References: <CAC2975JXkS1A5Tj9b02G_sy25ZWN-ys+tc9wmkoS=qPgKCogSg@mail.gmail.com>
  <87bknfr6rd.wl-tiwai@suse.de> <CAC2975+CP0WKmXouX_8TffT1+VpU3EuOzyGHMv+VsAOBjCyhnA@mail.gmail.com>
  <878rijr6dz.wl-tiwai@suse.de> <CAC2975+Ybz2-jyJAwAUEu5S1XKfp0B-p4s-gAsMPfZdD61uNfQ@mail.gmail.com>
  <87zgazppuc.wl-tiwai@suse.de> <CAC2975+476CHDL3YM=uExHu96UB2rodAng9PVYHX+vGnSCppGA@mail.gmail.com>
-In-Reply-To: <CAC2975+476CHDL3YM=uExHu96UB2rodAng9PVYHX+vGnSCppGA@mail.gmail.com>
+ <CAC2975Ja-o6-qCWv2bUkt3ps7BcKvb96rao_De4SGVW1v8uE=A@mail.gmail.com>
+In-Reply-To: <CAC2975Ja-o6-qCWv2bUkt3ps7BcKvb96rao_De4SGVW1v8uE=A@mail.gmail.com>
 From: Michael Ralston <michael@ralston.id.au>
-Date: Wed, 4 Jan 2023 06:24:16 +1100
-Message-ID: <CAC2975Ja-o6-qCWv2bUkt3ps7BcKvb96rao_De4SGVW1v8uE=A@mail.gmail.com>
+Date: Wed, 4 Jan 2023 06:27:33 +1100
+Message-ID: <CAC2975KFqvTitbJHJZ6a4Tuxsq=nPGvW3vjAAtkQxw=sBgeDqw@mail.gmail.com>
 Subject: Re: USB-Audio regression on behringer UMC404HD
 To: Takashi Iwai <tiwai@suse.de>
 Cc: Thorsten Leemhuis <regressions@leemhuis.info>, alsa-devel@alsa-project.org, 
@@ -55,23 +56,85 @@ Cc: Thorsten Leemhuis <regressions@leemhuis.info>, alsa-devel@alsa-project.org,
 	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Wed, 4 Jan 2023 at 06:09, Michael Ralston <michael@ralston.id.au> wrote:
+On Wed, 4 Jan 2023 at 06:24, Michael Ralston <michael@ralston.id.au> wrote:
 >
-> On Wed, 4 Jan 2023 at 03:03, Takashi Iwai <tiwai@suse.de> wrote:
-> >
-> > OK, thanks.  Then it's not about the USB interface reset.
-> > It must be subtle and nasty difference.
-> >
-> > Could you apply the change below on the top?
-> > It essentially reverts the hw_params/prepare split again.
-> >
+> I did a diff between the sound/usb directory for 6.0.16 and 6.1.2 and
+> reverted that entire directory.
 >
-> Very sorry to say this still hasn't fixed the problem :(
+> It is working with that change, so there must be something else.
 >
 
-I did a diff between the sound/usb directory for 6.0.16 and 6.1.2 and
-reverted that entire directory.
+Logs below...
 
-It is working with that change, so there must be something else.
-
-Michael
+Jan 04 06:20:27 leatherback kernel: mc: Linux media interface: v0.10
+Jan 04 06:20:27 leatherback kernel: usb 1-3: Found last interface = 1
+Jan 04 06:20:27 leatherback kernel: usb 1-4: Set quirk_flags 0x20010
+for device 1397:0509
+Jan 04 06:20:27 leatherback kernel: usb 1-4: Found last interface = 4
+Jan 04 06:20:27 leatherback kernel: usb 1-4: 1:1: added playback
+implicit_fb sync_ep 88, iface 2:1
+Jan 04 06:20:27 leatherback kernel: usb 1-4: 1:1: add audio endpoint 0x8
+Jan 04 06:20:27 leatherback kernel: usb 1-4: Creating new data endpoint #8
+Jan 04 06:20:27 leatherback kernel: usb 1-4: Creating new data endpoint #88
+Jan 04 06:20:27 leatherback kernel: usb 1-4: 1:1 Set sample rate
+192000, clock 40
+Jan 04 06:20:27 leatherback kernel: usb 1-4: 2:1: add audio endpoint 0x88
+Jan 04 06:20:27 leatherback kernel: usb 1-4: 2:1 Set sample rate
+192000, clock 40
+Jan 04 06:20:27 leatherback kernel: usb 1-4: clock source 41 is not
+valid, cannot use
+Jan 04 06:20:27 leatherback kernel: usb 1-4: [10] FU [PCM Playback
+Switch] ch = 4, val = 0/1/1
+Jan 04 06:20:27 leatherback kernel: usb 1-4: [10] FU [PCM Playback
+Switch] ch = 1, val = 0/1/1
+Jan 04 06:20:27 leatherback kernel: usb 1-4: [10] FU [PCM Playback
+Volume] ch = 4, val = -32512/0/256
+Jan 04 06:20:27 leatherback kernel: usb 1-4: [10] FU [PCM Playback
+Volume] ch = 1, val = -32512/0/256
+Jan 04 06:20:27 leatherback kernel: usb 1-4: [11] FU [Mic Capture
+Switch] ch = 4, val = 0/1/1
+Jan 04 06:20:27 leatherback kernel: usb 1-4: [11] FU [Mic Capture
+Switch] ch = 1, val = 0/1/1
+Jan 04 06:20:27 leatherback kernel: usb 1-4: [11] FU [Mic Capture
+Volume] ch = 4, val = -32512/0/256
+Jan 04 06:20:27 leatherback kernel: usb 1-4: [11] FU [Mic Capture
+Volume] ch = 1, val = -32512/0/256
+Jan 04 06:20:27 leatherback kernel: usbcore: registered new interface
+driver snd-usb-audio
+Jan 04 06:20:31 leatherback kernel: usb 1-4: Open EP 0x8, iface=1:1, idx=0
+Jan 04 06:20:31 leatherback kernel: usb 1-4:   channels=4, rate=48000,
+format=S32_LE, period_bytes=96000, periods=4, implicit_fb=1
+Jan 04 06:20:31 leatherback kernel: usb 1-4: Open EP 0x88, iface=2:1, idx=0
+Jan 04 06:20:31 leatherback kernel: usb 1-4:   channels=4, rate=48000,
+format=S32_LE, period_bytes=96000, periods=4, implicit_fb=0
+Jan 04 06:20:31 leatherback kernel: usb 1-4: Setting usb interface 2:0
+for EP 0x88
+Jan 04 06:20:31 leatherback kernel: usb 1-4: 2:1 Set sample rate 48000, clock 40
+Jan 04 06:20:31 leatherback kernel: usb 1-4: Setting params for data
+EP 0x88, pipe 0x40580
+Jan 04 06:20:31 leatherback kernel: usb 1-4: Set up 12 URBS, ret=0
+Jan 04 06:20:31 leatherback kernel: usb 1-4: Setting usb interface 2:1
+for EP 0x88
+Jan 04 06:20:31 leatherback kernel: usb 1-4: Setting usb interface 1:0
+for EP 0x8
+Jan 04 06:20:31 leatherback kernel: usb 1-4: Setting params for data
+EP 0x8, pipe 0x40500
+Jan 04 06:20:31 leatherback kernel: usb 1-4: Set up 12 URBS, ret=0
+Jan 04 06:20:31 leatherback kernel: usb 1-4: Setting usb interface 1:1
+for EP 0x8
+Jan 04 06:20:31 leatherback kernel: usb 1-4: Starting data EP 0x8 (running 0)
+Jan 04 06:20:31 leatherback kernel: usb 1-4: 12 URBs submitted for EP 0x8
+Jan 04 06:20:31 leatherback kernel: usb 1-4: Starting data EP 0x88 (running 0)
+Jan 04 06:20:31 leatherback kernel: usb 1-4: 12 URBs submitted for EP 0x88
+Jan 04 06:20:31 leatherback kernel: usb 1-4: 1:1 Start Playback PCM
+Jan 04 06:20:32 leatherback kernel: usb 1-4: Stopping data EP 0x88 (running 1)
+Jan 04 06:20:32 leatherback kernel: usb 1-4: Stopping data EP 0x8 (running 1)
+Jan 04 06:20:32 leatherback kernel: usb 1-4: 1:1 Stop Playback PCM
+Jan 04 06:20:32 leatherback kernel: usb 1-4: Closing EP 0x8 (count 1)
+Jan 04 06:20:32 leatherback kernel: usb 1-4: Setting usb interface 1:0
+for EP 0x8
+Jan 04 06:20:32 leatherback kernel: usb 1-4: EP 0x8 closed
+Jan 04 06:20:32 leatherback kernel: usb 1-4: Closing EP 0x88 (count 1)
+Jan 04 06:20:32 leatherback kernel: usb 1-4: Setting usb interface 2:0
+for EP 0x88
+Jan 04 06:20:32 leatherback kernel: usb 1-4: EP 0x88 closed
