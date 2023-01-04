@@ -1,73 +1,94 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EA7AD38
-	for <regressions@lists.linux.dev>; Wed,  4 Jan 2023 14:56:52 +0000 (UTC)
-Received: by mail-oi1-f172.google.com with SMTP id d127so28319250oif.12
-        for <regressions@lists.linux.dev>; Wed, 04 Jan 2023 06:56:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ralston.id.au; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ofz/y3FhP6VUDywdGg5+DJeyYF7KJW5MeQOUiXDEaj8=;
-        b=L/nIXdSXduxZ/CNHNbtBEPIlDS8BzYT2DeIXy3mW2Pt/OM21X1+fcLV/lCxGmORHIk
-         VXn5hZpuZkSydB4qvfGjQezIK48g6AZBJpMyFtQqoCU0MzC38meMDqPPrew7Vv1OtrO3
-         TWAhVm/iAcQApq/25z0ekru/NK5WAtSj1XeRQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ofz/y3FhP6VUDywdGg5+DJeyYF7KJW5MeQOUiXDEaj8=;
-        b=INfGvLR88SpQ/szYDcVyG06/Qh4sxJ8cYUlfCxGFijYTl5TLN44tXRQ4eNa8dbmu6C
-         9jH9MeOquEKk0wyWFlcAUao7T+ofxzliUeMUD4jIZIlf6TB/JMbFSZEfAF4eFUXC0wcP
-         oXshaFmlbxUqtZXN2esmPpkpookHfJDGB31Grs8qbh7zcCeFcALb6CGtNEyXlEAtUjXo
-         xuZh4lKavBliZx4jbHHxH3Kc+qcPUQ93M4I+YBYv9sAFau8lnlZ/dyZPwdE2vrirr0Bk
-         0ENLa1fjhrpVIK30OGjxMrnLvS2vRb1xLDiGxbedfmwd16yT4PN2NzQ6AHt6VI/gF8vp
-         N0rQ==
-X-Gm-Message-State: AFqh2krhqlnNeh+Imu6xFzHpfy3DuSwR5li5sbydlA1S7qTMRE2Wl/O6
-	7W5UksJ43ZuDpu5B0ns9277assBKRYnV3XBpvVpeiQ==
-X-Google-Smtp-Source: AMrXdXuQzlkjEsymLTUFsBgrJPzGoYT2zReCDRWDPCTePLIEVE1m+BDYNcJFe+60I5hy8VdLVN3u5MqJx+87kHBXUJM=
-X-Received: by 2002:a05:6808:48d:b0:35c:3327:ecf0 with SMTP id
- z13-20020a056808048d00b0035c3327ecf0mr2487333oid.220.1672844211273; Wed, 04
- Jan 2023 06:56:51 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DE3AD3F
+	for <regressions@lists.linux.dev>; Wed,  4 Jan 2023 15:17:35 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id CE267203A0;
+	Wed,  4 Jan 2023 15:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1672845453; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hQt8Ns9hrVQtbt/3qPLQNKSUBHTrXGXtHSbVhuM8/CE=;
+	b=v37ARmvrOOQT2u4KNf7CNJylgnhLrVJe+fCa3Rx4+w46Dz2TeqddoXLbrCjR3uvtHBog68
+	+Z1hn+fVRtRepcvHeMNH/bRkwIKDtcagMw7TyCNub6dL8UxD5uIK+EkAgwiSmGvC6T7/oh
+	cWPlufPkSC/VO/x3nyWySPdiIK1BiBc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1672845453;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hQt8Ns9hrVQtbt/3qPLQNKSUBHTrXGXtHSbVhuM8/CE=;
+	b=k031qfI1t1TiX4FhcJ6NLO9UY4NjcDTuI3NAr9yckfHak4nTaoEDvyfrESqMtGF7+31gb1
+	qU+jkuJpsPSGIUAg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A85EA1342C;
+	Wed,  4 Jan 2023 15:17:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id TUwjKI2YtWN0bAAAMHmgww
+	(envelope-from <tiwai@suse.de>); Wed, 04 Jan 2023 15:17:33 +0000
+Date: Wed, 04 Jan 2023 16:17:33 +0100
+Message-ID: <87v8lmmir6.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Michael Ralston <michael@ralston.id.au>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	alsa-devel@alsa-project.org,
+	regressions@lists.linux.dev,
+	stable@vger.kernel.org,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>
+Subject: Re: USB-Audio regression on behringer UMC404HD
+In-Reply-To: <CAC2975+dBD9ox0qu0Km_5g=7zifH4GCACdWMh=kXSgGimmyO7A@mail.gmail.com>
+References: <CAC2975JXkS1A5Tj9b02G_sy25ZWN-ys+tc9wmkoS=qPgKCogSg@mail.gmail.com>
+	<bf646395-1231-92f6-7c5a-5b7765596358@leemhuis.info>
+	<87zgb0q7x4.wl-tiwai@suse.de>
+	<CAC2975K24Gt3rGieAToHjb7FEHv84aqiRSQx7EOuR2Q7KByUXw@mail.gmail.com>
+	<87sfgrrb5f.wl-tiwai@suse.de>
+	<CAC2975+cUqiFC0LO-D-fi0swH+x=_FMuG+==mhg6HH4pc_YDRA@mail.gmail.com>
+	<87bknfr6rd.wl-tiwai@suse.de>
+	<CAC2975+CP0WKmXouX_8TffT1+VpU3EuOzyGHMv+VsAOBjCyhnA@mail.gmail.com>
+	<878rijr6dz.wl-tiwai@suse.de>
+	<CAC2975+Ybz2-jyJAwAUEu5S1XKfp0B-p4s-gAsMPfZdD61uNfQ@mail.gmail.com>
+	<87zgazppuc.wl-tiwai@suse.de>
+	<CAC2975+476CHDL3YM=uExHu96UB2rodAng9PVYHX+vGnSCppGA@mail.gmail.com>
+	<CAC2975Ja-o6-qCWv2bUkt3ps7BcKvb96rao_De4SGVW1v8uE=A@mail.gmail.com>
+	<CAC2975KFqvTitbJHJZ6a4Tuxsq=nPGvW3vjAAtkQxw=sBgeDqw@mail.gmail.com>
+	<CAC2975Jw63j26DhvDjiLc7dXwaRz=eK0aWNuErQ8dkEn_Gemjg@mail.gmail.com>
+	<87ilhmpvdt.wl-tiwai@suse.de>
+	<CAC2975LFWnK6f05j5my4=ebmhS0bVhigz8VH6cbaUtVT+ADxbA@mail.gmail.com>
+	<87zgaymkcx.wl-tiwai@suse.de>
+	<CAC2975LK6xuQ_PaD9vk_5Uwi4ZmZa30TZKfstyAhx2tv0YU9xQ@mail.gmail.com>
+	<87y1qimjsw.wl-tiwai@suse.de>
+	<CAC2975+dBD9ox0qu0Km_5g=7zifH4GCACdWMh=kXSgGimmyO7A@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <CAC2975JXkS1A5Tj9b02G_sy25ZWN-ys+tc9wmkoS=qPgKCogSg@mail.gmail.com>
- <bf646395-1231-92f6-7c5a-5b7765596358@leemhuis.info> <87zgb0q7x4.wl-tiwai@suse.de>
- <CAC2975K24Gt3rGieAToHjb7FEHv84aqiRSQx7EOuR2Q7KByUXw@mail.gmail.com>
- <87sfgrrb5f.wl-tiwai@suse.de> <CAC2975+cUqiFC0LO-D-fi0swH+x=_FMuG+==mhg6HH4pc_YDRA@mail.gmail.com>
- <87bknfr6rd.wl-tiwai@suse.de> <CAC2975+CP0WKmXouX_8TffT1+VpU3EuOzyGHMv+VsAOBjCyhnA@mail.gmail.com>
- <878rijr6dz.wl-tiwai@suse.de> <CAC2975+Ybz2-jyJAwAUEu5S1XKfp0B-p4s-gAsMPfZdD61uNfQ@mail.gmail.com>
- <87zgazppuc.wl-tiwai@suse.de> <CAC2975+476CHDL3YM=uExHu96UB2rodAng9PVYHX+vGnSCppGA@mail.gmail.com>
- <CAC2975Ja-o6-qCWv2bUkt3ps7BcKvb96rao_De4SGVW1v8uE=A@mail.gmail.com>
- <CAC2975KFqvTitbJHJZ6a4Tuxsq=nPGvW3vjAAtkQxw=sBgeDqw@mail.gmail.com>
- <CAC2975Jw63j26DhvDjiLc7dXwaRz=eK0aWNuErQ8dkEn_Gemjg@mail.gmail.com>
- <87ilhmpvdt.wl-tiwai@suse.de> <CAC2975LFWnK6f05j5my4=ebmhS0bVhigz8VH6cbaUtVT+ADxbA@mail.gmail.com>
- <87zgaymkcx.wl-tiwai@suse.de> <CAC2975LK6xuQ_PaD9vk_5Uwi4ZmZa30TZKfstyAhx2tv0YU9xQ@mail.gmail.com>
- <87y1qimjsw.wl-tiwai@suse.de>
-In-Reply-To: <87y1qimjsw.wl-tiwai@suse.de>
-From: Michael Ralston <michael@ralston.id.au>
-Date: Thu, 5 Jan 2023 01:56:15 +1100
-Message-ID: <CAC2975+dBD9ox0qu0Km_5g=7zifH4GCACdWMh=kXSgGimmyO7A@mail.gmail.com>
-Subject: Re: USB-Audio regression on behringer UMC404HD
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>, alsa-devel@alsa-project.org, 
-	regressions@lists.linux.dev, stable@vger.kernel.org, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 
-On Thu, 5 Jan 2023 at 01:54, Takashi Iwai <tiwai@suse.de> wrote:
->
-> OK, thanks for confirmation.  Then we should revert this, as it was
-> meant only as a minor optimization.
->
+On Wed, 04 Jan 2023 15:56:15 +0100,
+Michael Ralston wrote:
+> 
+> On Thu, 5 Jan 2023 at 01:54, Takashi Iwai <tiwai@suse.de> wrote:
+> >
+> > OK, thanks for confirmation.  Then we should revert this, as it was
+> > meant only as a minor optimization.
+> >
+> 
+> I'm glad I could help find the issue! Keep up the good work.
 
-I'm glad I could help find the issue! Keep up the good work.
+And I thank you for your patient testing!
 
---
-Michael
+
+Takashi
