@@ -1,189 +1,103 @@
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869F37EA
-	for <regressions@lists.linux.dev>; Wed,  4 Jan 2023 08:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1672822213; x=1704358213;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=KqJSzy5iL11h1E1JVErqP1MCBNpk+1IE+z7GIqEUtJk=;
-  b=GfWH5n8sibOE9duk0BtB8iwSp2Onj7Gjmm3o4bbn+03qAWJJCc+Aj07g
-   iuqOz3kJ9puUF3efC4tOldIc2QkHyUi/IWwbaSiY0Aj1NeWwQohS/9BoR
-   G/lROdQ9787o/1AgHhwEayFSLwAqQ9r/MGeQrlSP4BH1UdiR5Hg4o1/Wh
-   VxKVRo58ryfE/2S7N4R3/HeMZKszIOC3RtNfyIdUu9gBAvEa4yn8u6Oix
-   TIwwm5msBHsNQqorhScVsNyXw3clJfdJAJ+LrYBHVNrfOvOfDUjMlPcVD
-   2J4Rz4XVIh1MeaRqeQ7FQWgOhNwpph2+RcHVVFyAZ5XkdAIbqT9wPqt7M
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="323121858"
-X-IronPort-AV: E=Sophos;i="5.96,299,1665471600"; 
-   d="scan'208";a="323121858"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2023 00:50:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10579"; a="797459091"
-X-IronPort-AV: E=Sophos;i="5.96,299,1665471600"; 
-   d="scan'208";a="797459091"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Jan 2023 00:50:12 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Wed, 4 Jan 2023 00:50:11 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Wed, 4 Jan 2023 00:50:11 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.174)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Wed, 4 Jan 2023 00:50:11 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=leHx4yGw90khXL6lVvBsLmxoGfd4PpheMtJbnDM65vjbcAHByBatIrrlLj0ygDEQdPOGeEbwBrgNV8DPBlK58++G31T1hcB+yV0ZqQtS9RicCDLI8aW11SGgyJLB+jCRX/5xDy6Yzsc6RkgaGXI4ZFawsI5QXODYeClJlvcsbi9Qr6UrzayfQGF3tHYk6Suce8g0hIXdVGAMhlMk18ihAb35Yn3dZLobs937/3EYfvNRi+xHDCtD2lCdqQMal1emzGnkrbj9GyabyRnyKmx1qlP95WFFicwfeScc4SgcI2Y9mmUFIC0Ybp8rZ4LLQPoyQ14RqYPXweLqZsXUXtIusQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KqJSzy5iL11h1E1JVErqP1MCBNpk+1IE+z7GIqEUtJk=;
- b=NcNGxzSuXj6k/WNje58s6jkX792znVtg4OzqUTr7aaFLHcrSt5sDYJnhr67vzI/WMMPHOXDIfCkgYHDrhbRYzZ47S7cCxp4df9x0W448LFozfxCkKLAq7OW76xL2CWVYKfNIWZpmIYa1ki+kCLbcSvPH9t5knpjXguTsyYXy0wXKSdNlFe+xzH/mD4/M/8pEUoBTPqsY1+HwrJHcniftUGEQ0vLMaJ9UcMFV6OfATNVRSIzBBFEcmtnyzewVZSodD8wbbrd1DXylksy4nfKI0kfAxCdqa/aVegtOvKCQqvoPA1f3THwb8iH+EU8Md3+cKeLgK0W0BKEXfl6Oaqrx3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BYAPR11MB3207.namprd11.prod.outlook.com (2603:10b6:a03:7c::14)
- by PH0PR11MB7522.namprd11.prod.outlook.com (2603:10b6:510:289::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.19; Wed, 4 Jan
- 2023 08:50:10 +0000
-Received: from BYAPR11MB3207.namprd11.prod.outlook.com
- ([fe80::5546:ea97:1beb:cb5f]) by BYAPR11MB3207.namprd11.prod.outlook.com
- ([fe80::5546:ea97:1beb:cb5f%6]) with mapi id 15.20.5944.019; Wed, 4 Jan 2023
- 08:50:10 +0000
-From: "Coelho, Luciano" <luciano.coelho@intel.com>
-To: "chiluk@ubuntu.com" <chiluk@ubuntu.com>
-CC: "regressions@leemhuis.info" <regressions@leemhuis.info>,
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "Greenman,
- Gregory" <gregory.greenman@intel.com>, "johannes@sipsolutions.net"
-	<johannes@sipsolutions.net>, "regressions@lists.linux.dev"
-	<regressions@lists.linux.dev>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "marcel@holtmann.org" <marcel@holtmann.org>
-Subject: Re: [regression] Bug 216753 - 6e 6 ghz bands are disabled since 5.16
- on intel ax211
-Thread-Topic: [regression] Bug 216753 - 6e 6 ghz bands are disabled since 5.16
- on intel ax211
-Thread-Index: AQHZH5oWPk7vfFm5q0SuLPXUasNaNK6N8+WA
-Date: Wed, 4 Jan 2023 08:50:10 +0000
-Message-ID: <d8e69f9c91efc5d2529082a7dcee3fedef3211db.camel@intel.com>
-References: <14722778-dda0-cb9f-8647-892493d94a5c@leemhuis.info>
-	 <2026016246ef719605c9932feeb56b105833593b.camel@intel.com>
-	 <CAMfi-DTwX2nvP58FRb6NaGMyWO0SBo9W=Fpdtr=XfNRzkqAwHw@mail.gmail.com>
-In-Reply-To: <CAMfi-DTwX2nvP58FRb6NaGMyWO0SBo9W=Fpdtr=XfNRzkqAwHw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-user-agent: Evolution 3.46.2-1 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR11MB3207:EE_|PH0PR11MB7522:EE_
-x-ms-office365-filtering-correlation-id: 5f0e8494-2175-4104-5b02-08daee30afc4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yPiL+C821WJkNPn6XE7LoOevXY5Y94qQUJtqD91j7rEBN6w5UR9uLB8BJQIrXOI72/5nMi5Kp7Rkzco31OgY89VkObGnS8LomhP2xvpcZYNAIj+8IbylLFVcJCeB+VBskiGtY+7WTRKugriDSMeMUxiMwM7sxc6XPYxxMF2+vK6aIH4qEQS0vwAKLzDLb3lKq3sj/2o/NWh9fLJl7hLjKJ69JkcwgnF/n7hMcrXZeZffOl/g+EN/5PXDWHVXecWbljCvrUxS59oH0ya6yuV6F0Sra0PyBCZqGjCGDl7z9yJigYFSWzsoYGexb2P+GbVDIStqoJfs3JUpFatquWWyTy4UdYfaBgu4Dh3djNVjivyRgdlL0g96GQRew1BeSmmlvG7qJQ/3P2p+Ibd7ba+7+TGU7mlAT2S7G+K7iXywHxv+wvKaJiQKpRBHucwIrOnoUXbefQEQn8ildkuA7l7/Lbc9dUzFpKXzwjyn1FgD5LgnFzWU5l4h2HN17PqzgmEXpiOou8f0DzhUHenHTHrVGGysTWaUmHtpd0xucME/GxVBcZp9Lo/A56hZ5GsgpMbfX8vYe9T6aikh0CYoa9t8q+1yP1iFnCXoTMIUU/Qw4lB/M8TDbr9wRohft87FSra7GCJy87mPlB4XvIg6V8ICXydVxut/Dqo/Sec3L6ECfw+DJYSO15pa9EvaIjwAnfdzc47hfENLhD2fEV4cXaY3mfR2cvJdazuz7tZo6Qc5z4c=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3207.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(366004)(346002)(136003)(39860400002)(396003)(451199015)(186003)(6512007)(83380400001)(26005)(2616005)(86362001)(36756003)(122000001)(38100700002)(82960400001)(38070700005)(54906003)(6916009)(2906002)(316002)(4326008)(66946007)(91956017)(41300700001)(8936002)(5660300002)(8676002)(66446008)(66476007)(76116006)(478600001)(64756008)(71200400001)(66556008)(6486002)(53546011)(6506007)(966005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MElsbzlqL1kva1ZIdTUxSnN2MFFMS0NQdEFXZW9FVUtDZjc2a1pwL1daVTIr?=
- =?utf-8?B?RGtZTlhWWEpUVjBRblRkKzViQm9lcjV1bXNKVFIzdmo4VC9HZmkyYjNFOEIy?=
- =?utf-8?B?OXdzSmZ4UFNoTjFsczRkUjdjeG96WGUrRHE1M2tQbXc3VWpIYkJpSGVmYS9p?=
- =?utf-8?B?SDAraUltUHRvZTFvaVBRV0JPRis3ajlFdjBFMzJVQnNJWGVuYkg3UU55L1g0?=
- =?utf-8?B?TEtMaHFVQUhiWlBCeU9COTdwTzBzbVFyc2JGekhXbStzd3NBcFF5ampHeHpM?=
- =?utf-8?B?bVZxdzVVNUY1MVdoazB4SHNaWVUzNlJpaGFZL1c3Zk8rZUxneGRvZEF1UmJk?=
- =?utf-8?B?NmloMVR0N2VCNnMxVUlwaEU2SUJINmZhRCtXWE11OVJHV2tpZlNRc3BaN3E4?=
- =?utf-8?B?VWxjSk5qeUR4NDRMQm1xZlRqVHRaVFhDeXpoRGt3TFpsZWhrNUZ0bUgzTGVS?=
- =?utf-8?B?ZmswNFRwdTI5UHJDRnpDL2NTcnJHOUFhVHk4SWowRG5FZWxXZHlxWFF2OGhy?=
- =?utf-8?B?ZC9POUdvSWJWVmN4T2dMME83MzI5enhwNXZ3UzBYM1doNjl5M3RvZ1ByeGlG?=
- =?utf-8?B?dWhZTE9aOUFxaFZ2VFc4NFR3bEFXMFpETG5hVjlSRmtiUTZtMFF5ajRKeGdo?=
- =?utf-8?B?Mmc1Z0p1VXBiT3RDNFg3UTc5VmE3bzV5aERaNDZlY21DdW5JZGVQOXNYaEhN?=
- =?utf-8?B?MWFBNndZTTQwcHhVV2xaNHNIN1IzaklaeWRVdmtXbkRacjVOL0luRlNxMmFR?=
- =?utf-8?B?Rlh3KzRMUWVPekVSVnpNSjRReTBPWndWdEkyRHJramJIN2VVMVAzRkZ4VzdQ?=
- =?utf-8?B?aXFJZHNoelp2dFl6b1l3ZXlFV0IxVjJkRmpNcmZSSEJKaDBOTVBOajVEOXF2?=
- =?utf-8?B?OENzdzV4alBWUUczRVhFZ3JPVml6V2VDdGFUTTQ4cko3L1paSjRZUHVhVU9l?=
- =?utf-8?B?SjlDU3IwakcyakNPck1FS2hjRnBwNzV5WXJSTGFwSHFIRkJjK1ZBdzFJWUt3?=
- =?utf-8?B?TzBiR3NieTlWS0tCK05oTGJxRWhGNW53elpzNWIvOVZmbkdTbml3ZmlIaFRQ?=
- =?utf-8?B?blB6Y0FGbUxvbmM5Vk9kMzVFdTBKV2pyekF5aklpQkRzSzZhd3JFL21DL3lI?=
- =?utf-8?B?N2EvQUlqYmhnZThBSTJHSk9TUHRPNUEwRUpOc2FITVlrdmx0Sk11czIvdGg0?=
- =?utf-8?B?V3JqWGlQRTVsSm5aMjJmL1ZnaU4yS2hOcDFDQVUzQSt6UTJNTHBZaDRxQmsy?=
- =?utf-8?B?QWczUDJvQVRBNGFtWHdYT05VZWlXOHdyTWpING1DSFlEUERFWHk0WHE3YXZz?=
- =?utf-8?B?YUpLcyt5M1RrcGFQWHdrVFFScWk3N1djNVFNZElzUVVLN04zNGpXMjYxejhI?=
- =?utf-8?B?YVFuNUdLWGJsNXdiSm5LU2ZuQjFIQWhxcllKbHJuWXlJTVhjZ0o1bDVvU1gx?=
- =?utf-8?B?aTBkYlh3ZDkrN0NBQ0lrSDF6V1VqaUU1Z3RZZ3dySmV0bHhXRHRHcEo4bUQr?=
- =?utf-8?B?d2M4S3VCMWlmVDQzbmxybFloZnZLYmpPb05MOWh0Tng2R0d0aUhXSXovelpa?=
- =?utf-8?B?cWJVUlUrSGJvWXFMaG1RdW5TK00rZXl5S2ZGVVgreDVDOGlOZm5vajNVZTl0?=
- =?utf-8?B?a0ZRUmdVeHY2U1FsZ2xWVEk4ZjdXSU8wQ0FwTDhiYmJoYjBWUFVLSVNIMXho?=
- =?utf-8?B?SWhmN3QycTB4NjUrTEk5RkNpTTJwaXhGYWpMYk5YQ1BtUEh1a2ZWUlF0aXJv?=
- =?utf-8?B?ZHFDSmJQU21EZElveXFYYWFRM1grT1Rta2hCTTN0ZkVkUjFHWUJXbmlVUGN3?=
- =?utf-8?B?V29pZStmbTZaY3dibjBDVGg0OHNBTHdWZC81RktDcnVrS3ZxMzhRT2FFRk9n?=
- =?utf-8?B?WDRmdDcvWkVxbGhEN0JzNU1MQVV4K2xVZDFVOUJxWDIxYXk1U3JrNCt4dzNF?=
- =?utf-8?B?K094QTVOTUM3YTFVN2tmZTJyUHl5MGl4Y1ZOdnF0L2Q3cy9sZ2kwT0xURER2?=
- =?utf-8?B?UU04YjRzcU9RN2M5OU9sbmx1L2hsZTErL043Nm9DTmVwbUV6QndwdVgzaE1F?=
- =?utf-8?B?cnZWcXQ3dkxJUGdBczc5RFozR2tESmtrRGZOcVZnSXFPWnczUWQ3N0RIbnVJ?=
- =?utf-8?B?aFVUMDZkR3kxWnIycTUvVVNZODY4bmFOUjE0NmZUSit6VjZiNzl4bU5yZytE?=
- =?utf-8?B?K0E9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <56C508E28DB47D45BEFBC2E57E114EDC@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B337EA
+	for <regressions@lists.linux.dev>; Wed,  4 Jan 2023 09:11:16 +0000 (UTC)
+Received: by mail-ed1-f49.google.com with SMTP id m21so47610323edc.3
+        for <regressions@lists.linux.dev>; Wed, 04 Jan 2023 01:11:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EwljbFY9Lfjs8WqYNdIuIbwZd1SqYR0YdLKGV8vB66I=;
+        b=BLHa+qhetCVIaxZ2fzWLFOSv3sXntflfxV9QOIndkE6ywBBR19tqJHGiYB4lqLjMXR
+         7xaQSvuPe4qMZ89saXEr8cwls4o+8WC2oxDOeM592v31F8qq9Q+3l3DEgjh16d1zyngT
+         qsPG3QgGoKOGaXbuMY36Dzue08wDJIJGLTp+hLsNvrhi8eKWsjjbH/4ZgCR2a8iTmSB9
+         /PmCXya7qZ4bWjEoN08GBX+V8J1/WJLz88ldudVNIWUbo2biFgFaHQLcSy8IQcNew2wD
+         Cur3zHsjL2DOXfuqYRZqh3T5vRnOXDnwyTyGQUVN7vvSOU2E6ZQOUshcFuYQqB8ZqXjr
+         ucwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EwljbFY9Lfjs8WqYNdIuIbwZd1SqYR0YdLKGV8vB66I=;
+        b=EXLMDLz1EuWqM5Feui7YvKCB4gJQvmsKCgrK7WIAF9WzDJM5seA/IZSoAKlpCO80aT
+         OWs7FN3MUpqzhyI7bkw7L16KHKENWQo1hhJH+gTqA7/82EP5GMZtoQbkCxsjNpIsDvqI
+         654+uJs4QL/NUlDBctbZPCidBYj9pQse1FwWdPSfQMg7hPDc+9MMf0s9sZvSwLWY1Hq1
+         ophgWHCFUscH9j2cyn1nrwLpf+4/KqHg7j2CB2QDS3IEiz68rETor6O2sjSLvRUfgMHS
+         BSqP6hRKKJ0j3WJR26jtyRXblIyX9T72QnL1qazekyBhB/piVJPHQB4yk83VQgvw7OEN
+         W2NA==
+X-Gm-Message-State: AFqh2kqRckiTOpFZG43hnJ54DxaOZt261Jtpdlb5Jyl3oGQ4doUGc3+O
+	aW6xxm/loUJ6nmvZ7DJ+Kn0=
+X-Google-Smtp-Source: AMrXdXvwM+6Mbb80KUkrXkmtrQ9IxQGbERV+Bjh6Dt31qvk4eaOptGabK546Ivunu0L1ByeYK6Exdw==
+X-Received: by 2002:a05:6402:538f:b0:45c:835c:1ebb with SMTP id ew15-20020a056402538f00b0045c835c1ebbmr49094439edb.9.1672823474738;
+        Wed, 04 Jan 2023 01:11:14 -0800 (PST)
+Received: from gmail.com (cpe90-146-206-21.liwest.at. [90.146.206.21])
+        by smtp.gmail.com with ESMTPSA id h13-20020a0564020e0d00b0046b00a9eeb5sm14571437edh.49.2023.01.04.01.11.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Jan 2023 01:11:14 -0800 (PST)
+Date: Wed, 4 Jan 2023 10:10:10 +0100
+From: Johannes Altmanninger <aclopte@gmail.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>, Jan Dabros <jsd@semihalf.com>,
+	regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+	linux-integrity@vger.kernel.org,
+	Dominik Brodowski <linux@dominikbrodowski.net>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [REGRESSION] suspend to ram fails in 6.2-rc1 due to tpm errors
+Message-ID: <Y7VCcgHUC6JtnO2b@gmail.com>
+References: <7cbe96cf-e0b5-ba63-d1b4-f63d2e826efa@suse.cz>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3207.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f0e8494-2175-4104-5b02-08daee30afc4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2023 08:50:10.0443
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: f0/oUFfuKNbBhTujPkQ/4kso0eBTYStK6pBXL0pcM3ocDdXgDuKNbgZUPJGI1MqnpRmHBQwiULUOy+7WgFkVf6SYuIjhoKMPpH4nHWTpBMs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB7522
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7cbe96cf-e0b5-ba63-d1b4-f63d2e826efa@suse.cz>
 
-T24gVHVlLCAyMDIzLTAxLTAzIGF0IDExOjM3IC0wNjAwLCBEYXZlIENoaWx1ayB3cm90ZToNCj4g
-T24gVGh1LCBEZWMgMSwgMjAyMiBhdCA1OjMzIEFNIENvZWxobywgTHVjaWFubyA8bHVjaWFuby5j
-b2VsaG9AaW50ZWwuY29tPiB3cm90ZToNCj4gPiANCj4gPiBPbiBUaHUsIDIwMjItMTItMDEgYXQg
-MTE6MTQgKzAxMDAsIFRob3JzdGVuIExlZW1odWlzIHdyb3RlOg0KPiA+ID4gSGksIHRoaXMgaXMg
-eW91ciBMaW51eCBrZXJuZWwgcmVncmVzc2lvbiB0cmFja2VyLg0KPiA+ID4gDQo+ID4gPiBMdWNh
-LCBJIG5vdGljZWQgYSByZWdyZXNzaW9uIHJlcG9ydCBpbiBidWd6aWxsYSB3aGVyZSBJJ2QgbGlr
-ZSB5b3VyDQo+ID4gPiBhZHZpY2Ugb24uIFRvIHF1b3RlIGh0dHBzOi8vYnVnemlsbGEua2VybmVs
-Lm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MjE2NzUzDQo+ID4gDQo+ID4gSGkgVGhvcnN0ZW4gd2Vhcmlu
-Zy10aGUtcmVncmVzc2lvbi1oYXQsIPCfmYINCj4gPiANCj4gPiBJJ20gbm90IHRoZSBtYWludGFp
-bmVyIG9mIGl3bHdpZmkgYW55bW9yZSwgc28gSSdtIGFkZGluZyB0aGUgbmV3DQo+ID4gbWFpbnRh
-aW5lciBoZXJlLCBHcmVnb3J5IEdyZWVubWFuLg0KPiA+IA0KPiA+IEdyZWdvcnksIGNhbiB5b3Ug
-dGFrZSBhIGxvb2s/DQo+ID4gDQo+IA0KPiBAR3JlZ29yeSBHcmVlbm1hbiBhcyBJJ20gc3VyZSB0
-aGlzIGdvdCBidXJpZWQgb3ZlciB0aGUgaG9saWRheXMsIGNhbg0KPiB5b3UgdGFrZSBhIGxvb2sg
-YXQgdGhpcyBhbmQgYWR2aXNlPyAgVGhpcyBpcyBkZWZpbml0ZWx5IGEgcmVncmVzc2lvbiwNCj4g
-YnV0IEkgZG9uJ3QgdGhpbmsgYSBsb3Qgb2YgcGVvcGxlIGFyZSBub3RpY2luZyBpdCBvciBkb24n
-dCB5ZXQgaGF2ZQ0KPiA2Z2h6IGFjY2VzcyBwb2ludHMuICBJIGNhbiB3cml0ZSB1cCBhIHBhdGNo
-IHJlbW92aW5nIHRoZSBvZmZlbmRpbmcNCj4gY29tbWl0ICg2OThiMTY2ZWQpLCBvciBJIGNhbiBh
-ZGQgYW4gaXdsd2lmaSBvcHRpb24gdG8gaWdub3JlIHRoZSA2ZQ0KPiBBQ1BJIGJpdC4gIFdoaWNo
-IHdvdWxkIHlvdSBwcmVmZXI/DQo+IA0KPiBEZWxsIGhhcyBiZWVuIG9mIGxpdHRsZSBoZWxwIHdo
-aWNoIEkgcHJldHR5IG11Y2ggZXhwZWN0ZWQuDQo+IA0KPiBATHVjaWFubywgYXMgeW91IHdlcmUg
-dGhlIGF1dGhvciBvZiB0aGUgb3JpZ2luYWwgY2hhbmdlLCBhbmQgSSdtIG5vdA0KPiBmYW1pbGlh
-ciBlbm91Z2ggd2l0aCBBQ1BJLCBpcyB0aGUgYmVsb3cgY29kZSByZWFkaW5nIHRoZSBlbmFibGUg
-Yml0cw0KPiBmcm9tIHRoZSBCSU9TIEFDUEkgdGFibGUgb3IgaXMgdGhpcyBzb21laG93IGNvbWlu
-ZyBvdXQgb2YgdGhlIG5ldHdvcmsNCj4gY2FyZCB0aHJvdWdoIHNvbWUgVUVGSSBleHRlbnNpb25z
-PyAgSSdtIHRyeWluZyB0byBmaWd1cmUgb3V0IHdoaWNoIG9mDQo+IERlbGwgb3IgSW50ZWwgbmVl
-ZCB0byB1cGRhdGUgdGhlaXIgZmlybXdhcmU/ICBJIHRoaW5rIHNvbWUgTGVub3ZvJ3MNCj4gaGF2
-ZSBzaW1pbGFyIHByb2JsZW1zLCBzbyBJIHN1c3BlY3QgaXQncyBhIEJJT1MgQUNQSSB0YWJsZSBw
-cm9ibGVtLg0KPiANCj4gIHJldCA9IGl3bF9hY3BpX2dldF9kc21fdTMyKG12bS0+ZndydC5kZXYs
-IDAsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRFNNX0ZVTkNfRU5BQkxF
-XzZFLA0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICZpd2xfZ3VpZCwgJnZh
-bHVlKTsNCg0KRGF2ZSwgdGhpcyBjb2RlIHdhcyBhZGRlZCB0aGVyZSBmb3IgYSByZWFzb24uICBC
-dXQgYXMgSSBzYWlkLCBJJ20gbm90DQp3b3JraW5nIHdpdGggV2lGaSBhbnltb3JlLCBzbyBJIHJh
-aXNlZCB0aGUgcXVlc3Rpb24gaW50ZXJuYWxseSBhbmQNCkdyZWdvcnkgb3Igc29tZW9uZSBlbHNl
-IHdpbGwgcmVzcG9uZCB0byB5b3Ugd2l0aCB0aGUgZGV0YWlscyBzb29uLg0KDQotLQ0KQ2hlZXJz
-LA0KTHVjYS4NCg==
+On Wed, Dec 28, 2022 at 09:22:56PM +0100, Vlastimil Babka wrote:
+> Ugh, while the problem [1] was fixed in 6.1, it's now happening again on
+> the T460 with 6.2-rc1. Except I didn't see any oops message or
+> "tpm_try_transmit" error this time. The first indication of a problem is
+> this during a resume from suspend to ram:
+> 
+> tpm tpm0: A TPM error (28) occurred continue selftest
+> 
+> and then periodically 
+> 
+> tpm tpm0: A TPM error (28) occurred attempting get random
+> 
+> and further suspend to ram attempts fail:
+> 
+> tpm tpm0: Error (28) sending savestate before suspend
+> tpm_tis 00:08: PM: __pnp_bus_suspend(): tpm_pm_suspend+0x0/0x80 returns 28
+> tpm_tis 00:08: PM: dpm_run_callback(): pnp_bus_suspend+0x0/0x10 returns 28
+> tpm_tis 00:08: PM: failed to suspend: error 28
+> PM: Some devices failed to suspend, or early wake event detected
+> 
+> Unfortunately I doubt I would be able to bisect it as any "good" kernel might
+> be a false negative.
+> 
+> [1] https://lore.kernel.org/all/c5ba47ef-393f-1fba-30bd-1230d1b4b592@suse.cz/
+> 
+> #regzbot introduced: v6.1..v6.2-rc1
+
+I see almost exactly the same symptoms with v6.1.1 on a T460s.
+No "tpm_try_transmit" etc. The only difference is that I get 0x20 instead
+of 0x10 (that's probably immaterial).
+
+Also, I have this line immediately before the tpm error.
+
+	psmouse serio2: Failed to disable mouse on synaptics-pt/serio0
+	tpm tpm0: Error (28) sending savestate before suspend
+	[...]
+
+In the past I have had similar problems on another Thinkpad where a touchpad
+driver prevented suspend.  Unloading the module (I think psmouse, not sure)
+helped. I haven't tried this here since it only happens sometimes.
