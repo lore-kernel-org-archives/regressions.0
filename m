@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4876D80F
-	for <regressions@lists.linux.dev>; Thu,  5 Jan 2023 08:12:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA893A2C
+	for <regressions@lists.linux.dev>; Thu,  5 Jan 2023 08:23:33 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pDLMC-0001qp-Dj; Thu, 05 Jan 2023 09:12:12 +0100
-Message-ID: <1bb93259-1c9f-5335-a0bf-fc8641b26650@leemhuis.info>
-Date: Thu, 5 Jan 2023 09:12:11 +0100
+	id 1pDLX6-0004ow-0d; Thu, 05 Jan 2023 09:23:28 +0100
+Message-ID: <311733fe-cd0d-5afb-b189-835d9ab92aa2@leemhuis.info>
+Date: Thu, 5 Jan 2023 09:23:27 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,72 +16,69 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
+Subject: Re: [REGRESSION] XArray commit prevents booting with 6.0-rc1 or later
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Bastien Nocera <hadess@hadess.net>
-Cc: David Roth <davidroth9@gmail.com>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>,
- Jiri Kosina <jikos@kernel.org>,
- "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
-Subject: =?UTF-8?Q?=5bRegression=5d_Bug=c2=a0216885_-_HID++_Logitech_G903_ge?=
- =?UTF-8?Q?nerates_full_scroll_wheel_events_with_every_hi-res_tick_when_atta?=
- =?UTF-8?Q?ched_via_USB?=
+From: "Linux kernel regression tracking (#update)" <regressions@leemhuis.info>
+To: Jorropo <jorropo.pgm@gmail.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, nborisov@suse.com,
+ Matthew Wilcox <willy@infradead.org>
+References: <CAHWihb_EYWKXOqdN0iDBDygk+EGbhaxWHTKVRhtpm_TihbCjtw@mail.gmail.com>
+ <Y3h118oIDsvclZHM@casper.infradead.org>
+ <CAHWihb_HugpV44NdvUc2CV_0q2wk-XWyhmGdQhwCP6nDmo1k7g@mail.gmail.com>
+ <Y4SnKWCWZt0LtYVN@casper.infradead.org>
+ <f2ff04c7-fbae-6343-a9cb-10a9c681463b@leemhuis.info>
+Reply-To: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <f2ff04c7-fbae-6343-a9cb-10a9c681463b@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672906335;f737be4f;
-X-HE-SMSGID: 1pDLMC-0001qp-Dj
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672907013;47d936b1;
+X-HE-SMSGID: 1pDLX6-0004ow-0d
 
-Hi, this is your Linux kernel regression tracker speaking.
+On 12.12.22 08:03, Thorsten Leemhuis wrote:
+> On 28.11.22 13:18, Matthew Wilcox wrote:
+>> On Sun, Nov 20, 2022 at 12:20:13AM +0100, Jorropo wrote:
+>>> Matthew Wilcox <willy@infradead.org> wrote :
+>>>> On Sat, Nov 19, 2022 at 05:07:45AM +0100, Jorropo wrote:
+>>>>>
+>>>>> Hi, I recently tried to upgrade to linux v6.0.x but when trying to
+>>>>> boot it fails with "error: out of memory" when or after loading
+>>>>> initramfs (which then kpanics because the vfs root is missing).
+>>>>> The latest releases I tested are v6.0.9 and v6.1-rc5 and it's broken there too.
+>>>>>
+>>>>> I bisected the error to this patch:
+>>>>> 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae "XArray: Add calls to
+>>>>> might_alloc()" is the first bad commit.
+>>>>> I've confirmed this is not a side effect of a poor bitsect because
+>>>>> 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae~1 (v5.19-rc6) works.
+>>>>
+>>>> That makes no sense.  I can't look into this until Wednesday, but I
+>>>> suggest that what you have is an intermittent failure to boot, and
+>>>> the bisect has led you down the wrong path.
+>>>
+>>> I rebuilt both 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae and
+>>> the parent commit (v5.19-rc6), then tried to start each one 8 times
+>>> (shuffled in a Thue morse sequence).
+>>> 0 successes for 1dd685c414a7b9fdb3d23aca3aedae84f0b998ae
+>>> 8 successes for v5.19-rc6
+>>>
+>>> This really does not look like an intermittent issue.
+>>
+>> OK, you convinced me.  Can you boot 1dd685c414 with the command line
+>> parameters "debug initcall_debug" so we get more information?
+> 
+> Jorropo, did you ever provide the information Matthew asked for? I'm
+> asking, as this looks stalled -- and I wonder why. Or was progress made
+> somewhere and I just missed it?
 
-I noticed a regression report in bugzilla.kernel.org. As many (most?)
-kernel developer don't keep an eye on it, I decided to forward it by
-mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216885 :
+For the record: Jorropo sent me a private mail where he states "this is
+some installation issue because after some updates the previous release
+that used to work does not anymore. You can close this.". Hence:
 
->  David Roth 2023-01-04 20:37:22 UTC
-> 
-> Created attachment 303526 [details]
-> Libinput record with G903 attached directly to USB
-> 
-> Since
-> https://lore.kernel.org/linux-input/20220914132146.6435-1-hadess@hadess.net/T/#u
-> my Logitech G903 has gained hi res support. While normally a good
-> thing, it seems that in this case it leads to generating one normal
-> REL_WHEEL with each REL_WHEEL_HI_RES event instead of just a couple
-> of REL_WHEEL_HI_RES, followed by the standard REL_WHEEL once a
-> notch/tick is reached. This leads to overly sensitive scrolling and
-> makes the wheel basically useless.
-> 
-> Interestingly this only happens when the mouse is connected directly via
-> cable (PID:0xC091) and not via the Lightspeed wireless dongle
-> (PID:0x4087) where it will lead to correctly applying the times 8
-> multiplier and the relevant set of HI_RES and REL_WHEEL event once a
-> notch is reached.
-> 
-> I originally thought about patching the module/adding a param to simple
-> disable high res support in general, assuming this might be something
-> people might want to configure, but seeing that this can be "fixed" that
-> way I decided to hold off on the thought.
-> 
-> However it seems like we'd need to trade one set of quirks for another,
-> so not sure what the correct approach might be.
-> 
-> I'll attach some libinput debug logs when the issue happens.
-
-See the ticket for more details.
-
-BTW, let me use this mail to also add the report to the list of tracked
-regressions to ensure it's doesn't fall through the cracks:
-
-#regzbot introduced: 908d325e1665
-https://bugzilla.kernel.org/show_bug.cgi?id=216885
-#regzbot title: hid: overly sensitive scrolling with Logitech G903 that
-makes the wheel basically useless
-#regzbot ignore-activity
+#regzbot resolve: not a regression according to the reporter
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
