@@ -1,122 +1,143 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039138BE0
-	for <regressions@lists.linux.dev>; Thu,  5 Jan 2023 14:26:05 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7D29D2434D;
-	Thu,  5 Jan 2023 14:25:41 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4799C13338;
-	Thu,  5 Jan 2023 14:25:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id J9S5EOXdtmMLCwAAMHmgww
-	(envelope-from <vbabka@suse.cz>); Thu, 05 Jan 2023 14:25:41 +0000
-Message-ID: <370a2808-a19b-b512-4cd3-72dc69dfe8b0@suse.cz>
-Date: Thu, 5 Jan 2023 15:25:40 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B802F27
+	for <regressions@lists.linux.dev>; Thu,  5 Jan 2023 14:36:38 +0000 (UTC)
+Received: by mail-pf1-f176.google.com with SMTP id a30so9829945pfr.6
+        for <regressions@lists.linux.dev>; Thu, 05 Jan 2023 06:36:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=FBneq5lt5MOzMjewVE4OSFgwS9aqC54CXzL7Ey/uWbo=;
+        b=D0J+pYxxg/nL6w72HzCmO9Ju7tFJr4HZGEtqpo9TfMRjcP1AmxD4BLEjDniCvxM3h6
+         gTn90rVDA3LHWD+a30UHcObPY+SaSgjvTrTAABZ2VI3Bz0dnaOeLF0J2GHQpl5/4Nrzh
+         +81yW445LEssZAeIdPgqdLgB50qWVNDkiGB8M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FBneq5lt5MOzMjewVE4OSFgwS9aqC54CXzL7Ey/uWbo=;
+        b=laxUYaxOo4UxHUvu03kaDvUBVzwY2ZxkaVj5H0yo0P1+A0FKorERjUNH23V1VvUJho
+         y2sNrHfdI2tuG2j95Q9cKuMEs1eJflol8Cb6RAz/MBAdhU+LYTdIXoj8VDR0x4dd6uWX
+         FlBX/GAW4M3Lfm9RgmnItnfk4RFzgMn4eHscyqfC4njzXU7Uc4q5IF1SAaaW8niiRsYw
+         ++wOHsbRBaFoKh4GwCLmiL+hZEt15NtLryRu8eZGySbji+Dbw7KYR6+gVsIGg0wXSo56
+         k5IUy+ZBhgyuofCXtkMrjTOtUiKXQ0Zse7MKChnv8MbZVboPbimCXVm4jLxhGPVaRT34
+         MXNw==
+X-Gm-Message-State: AFqh2ko4ROaw1yR0HbastpqotOlG7r9IGBxeZB5tTuoBTD1+IwUJmyMm
+	7QVSa6B5019mIPf7Uvz7+cE6TBpcI970NN1sycE=
+X-Google-Smtp-Source: AMrXdXus9TQM14sHyoqrnaN1NhpxmzEV+8ATWiW9+LxPiAUMZ+UYIFXXFwM0IA1DVX/GK5Om8+wIXg==
+X-Received: by 2002:a62:1554:0:b0:581:7d45:799f with SMTP id 81-20020a621554000000b005817d45799fmr30826326pfv.9.1672929398104;
+        Thu, 05 Jan 2023 06:36:38 -0800 (PST)
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com. [209.85.214.182])
+        by smtp.gmail.com with ESMTPSA id r25-20020aa79639000000b00574ab0e053bsm17552619pfg.187.2023.01.05.06.36.37
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Jan 2023 06:36:37 -0800 (PST)
+Received: by mail-pl1-f182.google.com with SMTP id d15so39522025pls.6
+        for <regressions@lists.linux.dev>; Thu, 05 Jan 2023 06:36:37 -0800 (PST)
+X-Received: by 2002:a17:902:f682:b0:186:9cf4:e53b with SMTP id
+ l2-20020a170902f68200b001869cf4e53bmr2678978plg.50.1672929396954; Thu, 05 Jan
+ 2023 06:36:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [REGRESSION] suspend to ram fails in 6.2-rc1 due to tpm errors
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
- James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
- Jason Gunthorpe <jgg@ziepe.ca>, Jan Dabros <jsd@semihalf.com>,
- regressions@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
- linux-integrity@vger.kernel.org,
- Dominik Brodowski <linux@dominikbrodowski.net>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- "Jason A. Donenfeld" <Jason@zx2c4.com>,
- Johannes Altmanninger <aclopte@gmail.com>
-References: <7cbe96cf-e0b5-ba63-d1b4-f63d2e826efa@suse.cz>
- <c39cc02da9f60412a0f7f7772ef3d89e4a081d38.camel@HansenPartnership.com>
- <Y60RoP77HnwaukEA@zx2c4.com>
- <7ebab1ff-48f1-2737-f0d3-25c72666d041@leemhuis.info>
-Content-Language: en-US
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <7ebab1ff-48f1-2737-f0d3-25c72666d041@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -0.10
-X-Spamd-Result: default: False [-0.10 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com,gmx.de];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_TWELVE(0.00)[14];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_COUNT_TWO(0.00)[2];
-	 RCVD_TLS_ALL(0.00)[];
-	 MID_RHS_MATCH_FROM(0.00)[];
-	 FREEMAIL_CC(0.00)[gmx.de,kernel.org,ziepe.ca,semihalf.com,lists.linux.dev,vger.kernel.org,dominikbrodowski.net,gondor.apana.org.au,linux-foundation.org,zx2c4.com,gmail.com]
-X-Spam-Flag: NO
+References: <trinity-bd6bf7f8-5dbc-42fc-891b-8bfc802a1a2c-1672136902605@3c-app-gmx-bap27>
+ <24ef21b2-d1db-1525-7d3f-2c978e73c25b@leemhuis.info> <CANiDSCunU4dqiDgNr2mz=MxD+wzTu6V2vZWqY+AC4DqQvwVh4w@mail.gmail.com>
+ <752823ee-1aec-7536-095d-6a018e1dd909@leemhuis.info> <1cbfec6f-1f93-379e-608e-17a0d904834d@leemhuis.info>
+In-Reply-To: <1cbfec6f-1f93-379e-608e-17a0d904834d@leemhuis.info>
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Thu, 5 Jan 2023 15:36:25 +0100
+X-Gmail-Original-Message-ID: <CANiDSCs4HQwX6PG-62yonO8Pfo+N5XZN2zv-bA7=zqMDG0Arwg@mail.gmail.com>
+Message-ID: <CANiDSCs4HQwX6PG-62yonO8Pfo+N5XZN2zv-bA7=zqMDG0Arwg@mail.gmail.com>
+Subject: Re: [BUG] 6.2-rc1 spi-mt65xx broken on mt7986
+To: Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Frank Wunderlich <frank-w@public-files.de>, linux-mediatek@lists.infradead.org, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Mark Brown <broonie@kernel.org>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-On 1/5/23 14:59, Thorsten Leemhuis wrote:
-> On 29.12.22 05:03, Jason A. Donenfeld wrote:
->> On Wed, Dec 28, 2022 at 06:07:25PM -0500, James Bottomley wrote:
->>> On Wed, 2022-12-28 at 21:22 +0100, Vlastimil Babka wrote:
->>>> Ugh, while the problem [1] was fixed in 6.1, it's now happening again
->>>> on the T460 with 6.2-rc1. Except I didn't see any oops message or
->>>> "tpm_try_transmit" error this time. The first indication of a problem
->>>> is this during a resume from suspend to ram:
->>>>
->>>> tpm tpm0: A TPM error (28) occurred continue selftest
->>>>
->>>> and then periodically 
->>>>
->>>> tpm tpm0: A TPM error (28) occurred attempting get random
->>>
->>> That's a TPM 1.2 error which means the TPM failed the selftest.  The
->>> original problem was reported against TPM 2.0  because of a missing
->>> try_get_ops().
->> 
->> No, I'm pretty sure the original bug, which was fixed by "char: tpm:
->> Protect tpm_pm_suspend with locks" regards 1.2 as well, especially
->> considering it's the same hardware from Vlastimil causing this. I also
->> recall seeing this in 1.2 when I ran this with the TPM emulator. So
->> that's not correct.
-> 
-> James, are you or some other TPM developer looking into this? Or is this
-> deadlocked now? And if so: how can we get this unstuck to get this
-> regression solved?
-> 
-> Side note: I wonder if the problem that Johannes reported yesterday in
-> this thread (
-> https://lore.kernel.org/all/Y7VCcgHUC6JtnO2b@gmail.com/
-> ) is related or something else, as it seems his issue happens with 6.1,
-> while Vlastimil's problems should be fixed there. Or am I missing something?
+Hi Thorsten
 
-Yaeh, as Jason noted, the fix in 6.1 probably covered only the most common
-race scenario, yet other(s) were still possible, just more rare. So most
-likely I just happened not to trigger it anymore with 6.1, only after
-switching to 6.2 - but it's not really a new bug in 6.2. And 6.1 also only
-started to exhibit it because hwrng started using the tpm, which would just
-sit unused before that.
+On Thu, 5 Jan 2023 at 14:34, Linux kernel regression tracking
+(#update) <regressions@leemhuis.info> wrote:
+>
+> On 05.01.23 13:59, Thorsten Leemhuis wrote:
+> > On 05.01.23 13:40, Ricardo Ribalda wrote:
+> >>
+> >> I replied on my phone, so the mail came out in html and the list did
+> >> not pick it up, then Frank also answered in html.
+> >>
+> >> I believe we are good with this:
+> >> https://lore.kernel.org/all/Y7WOlkuLaLt1DdY+@sirena.org.uk/
+> >
+> > Ohh, that was the same issue? I had missed that (and it's pretty obvious
+> > when I look at it now :-/ ). Sorry for the noise then, but these things
+> > happen when dealing with so many different regressions.
+> >
 
+Absolutely no worries. Thanks again!
+
+> >> Thanks for headsup anyway
+> >
+> > Many thx for clarifying!
+> >
+> > #regzbot fix: spi: mediatek: Enable irq when pdata is ready
+>
+> Sigh, seem I'm too stupid for proper copy'n'paste today and want to fix
+> it up now; sorry for the noise:
+>
+> #regzbot fix: spi: mediatek: Enable irq before the spi registration
+>
 > Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 > --
 > Everything you wanna know about Linux kernel regression tracking:
 > https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
-> 
+> That page also explains what to do if mails like this annoy you.
+>
+> >> On Thu, 5 Jan 2023 at 13:21, Thorsten Leemhuis
+> >> <regressions@leemhuis.info> wrote:
+> >>>
+> >>> [CCing the regression mailing list, as it should be in the loop:
+> >>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
+> >>>
+> >>> On 27.12.22 11:28, Frank Wunderlich wrote:
+> >>>> Hi,
+> >>>>
+> >>>> the following commit breaks SPIM-NOR on mt7986:
+> >>>>
+> >>>> c6f7874687f7 2022-11-28 spi: mediatek: Enable irq when pdata is ready
+> >>>
+> >>> Ricardo, do you have this report on your radar? Just wondering, as it
+> >>> was posted a week ago and didn't even get a single reply afaics. This of
+> >>> course can happen at this time of the year, but I thought a quick status
+> >>> inquiry wouldn't hurt.
+> >>>
+> >>>>> [    2.145931] pc : mtk_spi_can_dma+0x0/0x34
+> >>>>> [    2.155212] lr : mtk_spi_interrupt+0x74/0x360
+> >>>>>
+> >>>>> [    2.091801] mtk-spi 1100a000.spi: spi-mem transfer timeout
+> >>>>> [    2.097310] spi-nor: probe of spi0.0 failed with error -110
+> >>>>> [    2.102930] Unable to handle kernel read from unreadable memory at virtual address 0000000000000010
+> >>>>
+> >>>> after reverting the commit, no trace happens and nor is recognized on my board
+> >>>
+> >>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> >>> --
+> >>> Everything you wanna know about Linux kernel regression tracking:
+> >>> https://linux-regtracking.leemhuis.info/about/#tldr
+> >>> If I did something stupid, please tell me, as explained on that page.
+> >>>
+> >>> #regzbot poke
+> >>
+> >>
+> >>
 
+
+
+-- 
+Ricardo Ribalda
