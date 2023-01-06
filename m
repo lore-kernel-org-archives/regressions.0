@@ -1,113 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63B27B
-	for <regressions@lists.linux.dev>; Fri,  6 Jan 2023 03:02:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 170B1C433EF;
-	Fri,  6 Jan 2023 03:02:09 +0000 (UTC)
-Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="R4BcOF1Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1672974126;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=efZSHt3YcBRsaUeR6mOr7PEUQW1tGnk6xcgIkVA9P44=;
-	b=R4BcOF1QA8mj1a+6y7oEGCzd6sbEa8PsR9N/ECutO2ta5Mh8weq4/jjAA1D2vLFyffHB5v
-	p+HV7w5Ydj4ZLXFu4fr2sJjgIJNf6O8uxYml0nO1ESo5Y0cHbuBC5b0W9zqtwIhr+6u7ke
-	XUE7xCY89+EX3PJv8QbQ//54E+N58qI=
-Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 7620b3ca (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Fri, 6 Jan 2023 03:02:06 +0000 (UTC)
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Thorsten Leemhuis <regressions@leemhuis.info>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Jan Dabros <jsd@semihalf.com>,
-	regressions@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-integrity@vger.kernel.org,
-	Dominik Brodowski <linux@dominikbrodowski.net>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Johannes Altmanninger <aclopte@gmail.com>,
-	stable@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Subject: [PATCH v2] tpm: Allow system suspend to continue when TPM suspend fails
-Date: Fri,  6 Jan 2023 04:01:56 +0100
-Message-Id: <20230106030156.3258307-1-Jason@zx2c4.com>
-In-Reply-To: <Y7dPV5BK6jk1KvX+@zx2c4.com>
-References: <Y7dPV5BK6jk1KvX+@zx2c4.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7D97B;
+	Fri,  6 Jan 2023 05:56:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1672984563; x=1704520563;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5FYmc733b78fRd3B3tStq5rzw45ZjZPIs3hLf607W+U=;
+  b=gmbIJdMVD4n3JHNJWK4MWGHxq3Y2msb78GiTMWh74xcV5DA6Wk6wnufu
+   rzNItmB8nv8tBOOCTGaVBYolTmKThMZ5f6ZglhtVKZ4mPEEGMIpRGv43s
+   aHDsruxTIEGlPXc+nxv1Q+nwsPpfhaQQxUZHWYzee2u3gplAucBGtwvP2
+   rUQvKloKZm2u+2w3iU/JGXPwvmxPXdXHebj0P8V+Wlsa5pRQR7aic8iea
+   oQ6PV0v7WHSPY3LX5g85DqpEryc77WrYMdzbyBID4uHiAOh6UQ5/R75DP
+   3QgE0K24/m0brJEMm4pFDptPN8W7I9z4eE6WnsJKJO4ojTBHDiFEq1Eci
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="323663147"
+X-IronPort-AV: E=Sophos;i="5.96,304,1665471600"; 
+   d="scan'208";a="323663147"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2023 21:56:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10581"; a="724333183"
+X-IronPort-AV: E=Sophos;i="5.96,304,1665471600"; 
+   d="scan'208";a="724333183"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.48]) ([10.239.159.48])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Jan 2023 21:55:58 -0800
+Message-ID: <7bbc0f65-e1c6-f388-29a8-390b8c9c92c8@linux.intel.com>
+Date: Fri, 6 Jan 2023 13:48:11 +0800
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Cc: baolu.lu@linux.intel.com, "iommu@lists.linux.dev"
+ <iommu@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Linux PCI <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Subject: =?UTF-8?Q?Re=3a_=5bregression=2c_bisected=2c_pci/iommu=5d_Bug=c2=a0?=
+ =?UTF-8?Q?216865_-_Black_screen_when_amdgpu_started_during_6=2e2-rc1_boot_w?=
+ =?UTF-8?Q?ith_AMD_IOMMU_enabled?=
+Content-Language: en-US
+To: Felix Kuehling <felix.kuehling@amd.com>,
+ "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+ "Hegde, Vasant" <Vasant.Hegde@amd.com>, Matt Fagnani
+ <matt.fagnani@bell.net>, Thorsten Leemhuis <regressions@leemhuis.info>,
+ Joerg Roedel <jroedel@suse.de>, Jason Gunthorpe <jgg@nvidia.com>
+References: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
+ <5aa0e698-f715-0481-36e5-46505024ebc1@bell.net>
+ <aea57c5f-2d20-c589-ad44-a63f1133a3db@linux.intel.com>
+ <157c4ca4-370a-5d7e-fe32-c64d934f6979@amd.com>
+ <223ee6d6-70ea-1d53-8bc2-2d22201d8dde@bell.net>
+ <6fff9d10-f77f-e55a-9020-8a1bd34cf508@amd.com>
+ <6b5baa30-c218-0845-d6c2-32ac21ed6a6d@linux.intel.com>
+ <86099ef0-5a8d-bd1e-4e38-a3b361a68f10@amd.com>
+ <BL1PR12MB51448996E36254ADC80B5BF6F7FA9@BL1PR12MB5144.namprd12.prod.outlook.com>
+ <12db77f6-736d-a423-4cc0-e536eb7bb712@amd.com>
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <12db77f6-736d-a423-4cc0-e536eb7bb712@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-TPM 1 is sometimes broken across system suspends, due to races or
-locking issues or something else that haven't been diagnosed or fixed
-yet, most likely having to do with concurrent reads from the TPM's
-hardware random number generator driver. These issues prevent the system
-from actually suspending, with errors like:
++Jason
 
-  tpm tpm0: A TPM error (28) occurred continue selftest
-  ...
-  tpm tpm0: A TPM error (28) occurred attempting get random
-  ...
-  tpm tpm0: Error (28) sending savestate before suspend
-  tpm_tis 00:08: PM: __pnp_bus_suspend(): tpm_pm_suspend+0x0/0x80 returns 28
-  tpm_tis 00:08: PM: dpm_run_callback(): pnp_bus_suspend+0x0/0x10 returns 28
-  tpm_tis 00:08: PM: failed to suspend: error 28
-  PM: Some devices failed to suspend, or early wake event detected
+On 1/5/23 11:27 PM, Felix Kuehling wrote:
+> Am 2023-01-05 um 09:46 schrieb Deucher, Alexander:
+>> [AMD Official Use Only - General]
+>>
+>>> -----Original Message-----
+>>> From: Hegde, Vasant <Vasant.Hegde@amd.com>
+>>> Sent: Thursday, January 5, 2023 5:46 AM
+>>> To: Baolu Lu <baolu.lu@linux.intel.com>; Matt Fagnani
+>>> <matt.fagnani@bell.net>; Thorsten Leemhuis <regressions@leemhuis.info>;
+>>> Deucher, Alexander <Alexander.Deucher@amd.com>; Joerg Roedel
+>>> <jroedel@suse.de>
+>>> Cc: iommu@lists.linux.dev; LKML <linux-kernel@vger.kernel.org>;
+>>> regressions@lists.linux.dev; Linux PCI <linux-pci@vger.kernel.org>; 
+>>> Bjorn
+>>> Helgaas <bhelgaas@google.com>
+>>> Subject: Re: [regression, bisected, pci/iommu] Bug 216865 - Black screen
+>>> when amdgpu started during 6.2-rc1 boot with AMD IOMMU enabled
+>>>
+>>> Baolu,
+>>>
+>>>
+>>> On 1/5/2023 4:07 PM, Baolu Lu wrote:
+>>>> On 2023/1/5 18:27, Vasant Hegde wrote:
+>>>>> On 1/5/2023 6:39 AM, Matt Fagnani wrote:
+>>>>>> I built 6.2-rc2 with the patch applied. The same black screen
+>>>>>> problem happened with 6.2-rc2 with the patch. I tried to use early
+>>>>>> kdump with 6.2-rc2 with the patch twice by panicking the kernel with
+>>>>>> sysrq+alt+c after the black screen happened. The system rebooted
+>>>>>> after about 10-20 seconds both times, but no kdump and dmesg files
+>>>>>> were saved in /var/crash. I'm attaching the lspci -vvv output as
+>>> requested.
+>>>>> Thanks for testing. As mentioned earlier I was not expecting this
+>>>>> patch to fix the black screen issue. It should fix kernel warnings
+>>>>> and IOMMU page fault related call traces. By any chance do you have 
+>>>>> the
+>>> kernel boot logs?
+>>>>> @Baolu,
+>>>>>     Looking into lspci output, it doesn't list ACS feature for
+>>>>> Graphics card. So with your fix it didn't enable PASID and hence it 
+>>>>> failed to
+>>> boot.
+>>>> So do you mind telling why does the PASID need to be enabled for the
+>>>> graphic device? Or in another word, what does the graphic driver use
+>>>> the PASID for?
+>>> Honestly I don't know the complete details of how PASID works with 
+>>> graphics
+>>> card. May be Alex or Joerg can explain it better.
+>> + Felix
+>>
+>> The GPU driver uses the pasid for shared virtual memory between the 
+>> CPU and GPU.  I.e., so that the user apps can use the same virtual 
+>> address space on the GPU and the CPU.  It also uses pasid to take 
+>> advantage of recoverable device page faults using PRS.
+> 
+> Agreed. This applies to GPU computing on some older AMD APUs that take 
+> advantage of memory coherence and IOMMUv2 address translation to create 
+> a shared virtual address space between the CPU and GPU. In this case it 
+> seems to be a Carrizo APU. It is also true for Raven APUs.
 
-This issue was partially fixed by 23393c646142 ("char: tpm: Protect
-tpm_pm_suspend with locks"), in a last minute 6.1 commit that Linus took
-directly because the TPM maintainers weren't available. However, it
-seems like this just addresses the most common cases of the bug, rather
-than addressing it entirely. So there are more things to fix still,
-apparently.
+Thanks for the explanation.
 
-In lieu of actually fixing the underlying bug, just allow system suspend
-to continue, so that laptops still go to sleep fine. Later, this can be
-reverted when the real bug is fixed.
+This is actually the problem that commit 201007ef707a was trying to fix.
+The PCIe fabric routes Memory Requests based on the TLP address,
+ignoring any PASID (PCIe r6.0, sec 2.2.10.4), so a TLP with PASID that
+should go upstream to the IOMMU may instead be routed as a P2P
+Request if its address falls in a bridge window.
 
-Link: https://lore.kernel.org/lkml/7cbe96cf-e0b5-ba63-d1b4-f63d2e826efa@suse.cz/
-Cc: stable@vger.kernel.org # 6.1+
-Reported-by: Vlastimil Babka <vbabka@suse.cz>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
----
-This is basically untested and I haven't worked out if there are any
-awful implications of letting the system sleep when TPM suspend fails.
-Maybe some PCRs get cleared and that will make everything explode on
-resume? Maybe it doesn't matter? Somebody well versed in TPMology should
-probably [n]ack this approach.
+In SVA case, the IOMMU shares the address space of a user application.
+The user application side has no knowledge about the PCI bridge window.
+It is entirely possible that the device is programed with a P2P address
+and results in a disaster.
 
- drivers/char/tpm/tpm-interface.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-index d69905233aff..6df9067ef7f9 100644
---- a/drivers/char/tpm/tpm-interface.c
-+++ b/drivers/char/tpm/tpm-interface.c
-@@ -412,7 +412,10 @@ int tpm_pm_suspend(struct device *dev)
- 	}
- 
- suspended:
--	return rc;
-+	if (rc)
-+		pr_err("Unable to suspend tpm-%d (error %d), but continuing system suspend\n",
-+		       chip->dev_num, rc);
-+	return 0;
- }
- EXPORT_SYMBOL_GPL(tpm_pm_suspend);
- 
--- 
-2.39.0
-
+--
+Best regards,
+baolu
