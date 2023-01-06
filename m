@@ -1,82 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82E8107A3
-	for <regressions@lists.linux.dev>; Thu,  5 Jan 2023 22:29:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B0FDC433EF;
-	Thu,  5 Jan 2023 22:29:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D63B27B
+	for <regressions@lists.linux.dev>; Fri,  6 Jan 2023 03:02:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 170B1C433EF;
+	Fri,  6 Jan 2023 03:02:09 +0000 (UTC)
 Authentication-Results: smtp.kernel.org;
-	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="QpBB4pwU"
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="R4BcOF1Q"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
-	t=1672957786;
+	t=1672974126;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=mMldSeIA7qWoDB1sx6P/v3uvnTNOCNV9Im/Ue9FmzFU=;
-	b=QpBB4pwU2wEZ2yl5XVSF8mYLnd3NmfAVe/m2DxszOjivDyR1t+oAmAjfXb9/LnZft8M8Sm
-	tfyMpwX8w1ub8ByD/S+prDNIPhgnJLkTf3MoS+QWRKds0cASzWvEhSX/Bk+RZunpaPP8+3
-	zaDdmKSp9EPrhaXg2F5QU1PKN05ae+s=
+	bh=efZSHt3YcBRsaUeR6mOr7PEUQW1tGnk6xcgIkVA9P44=;
+	b=R4BcOF1QA8mj1a+6y7oEGCzd6sbEa8PsR9N/ECutO2ta5Mh8weq4/jjAA1D2vLFyffHB5v
+	p+HV7w5Ydj4ZLXFu4fr2sJjgIJNf6O8uxYml0nO1ESo5Y0cHbuBC5b0W9zqtwIhr+6u7ke
+	XUE7xCY89+EX3PJv8QbQ//54E+N58qI=
 Received: 
-	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 843725ac (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-	Thu, 5 Jan 2023 22:29:46 +0000 (UTC)
-Date: Thu, 5 Jan 2023 23:29:43 +0100
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 7620b3ca (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 6 Jan 2023 03:02:06 +0000 (UTC)
 From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+To: Thorsten Leemhuis <regressions@leemhuis.info>,
 	James Bottomley <James.Bottomley@hansenpartnership.com>,
 	Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jan Dabros <jsd@semihalf.com>, regressions@lists.linux.dev,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Jan Dabros <jsd@semihalf.com>,
+	regressions@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-integrity@vger.kernel.org,
 	Dominik Brodowski <linux@dominikbrodowski.net>,
 	Herbert Xu <herbert@gondor.apana.org.au>,
-	Johannes Altmanninger <aclopte@gmail.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] tpm: Disable hwrng for TPM 1 if PM_SLEEP is enabled
-Message-ID: <Y7dPV5BK6jk1KvX+@zx2c4.com>
-References: <370a2808-a19b-b512-4cd3-72dc69dfe8b0@suse.cz>
- <20230105144742.3219571-1-Jason@zx2c4.com>
- <CAHk-=whxaSHcHeo10JGz3EMJZBfC1LarcrerLos7uHbE1URhtQ@mail.gmail.com>
+	Johannes Altmanninger <aclopte@gmail.com>,
+	stable@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Subject: [PATCH v2] tpm: Allow system suspend to continue when TPM suspend fails
+Date: Fri,  6 Jan 2023 04:01:56 +0100
+Message-Id: <20230106030156.3258307-1-Jason@zx2c4.com>
+In-Reply-To: <Y7dPV5BK6jk1KvX+@zx2c4.com>
+References: <Y7dPV5BK6jk1KvX+@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whxaSHcHeo10JGz3EMJZBfC1LarcrerLos7uHbE1URhtQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 05, 2023 at 01:58:48PM -0800, Linus Torvalds wrote:
-> On Thu, Jan 5, 2023 at 6:48 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
-> >
-> > TPM 1's support for its hardware RNG is broken across system suspends,
-> > due to races or locking issues or something else that haven't been
-> > diagnosed or fixed yet. These issues prevent the system from actually
-> > suspending. So disable the driver in this case. Later, when this is
-> > fixed properly, we can remove this.
-> 
-> How about just keeping it enabled, but not making it a fatal error if
-> the TPM saving doesn't work? IOW, just print the warning, and then
-> "return 0" from the suspend function.
+TPM 1 is sometimes broken across system suspends, due to races or
+locking issues or something else that haven't been diagnosed or fixed
+yet, most likely having to do with concurrent reads from the TPM's
+hardware random number generator driver. These issues prevent the system
+from actually suspending, with errors like:
 
-You're right that returning 0 from the pm notifier would make the
-problem that users actually care about -- laptop doesn't sleep when you
-close the lid -- go away.
+  tpm tpm0: A TPM error (28) occurred continue selftest
+  ...
+  tpm tpm0: A TPM error (28) occurred attempting get random
+  ...
+  tpm tpm0: Error (28) sending savestate before suspend
+  tpm_tis 00:08: PM: __pnp_bus_suspend(): tpm_pm_suspend+0x0/0x80 returns 28
+  tpm_tis 00:08: PM: dpm_run_callback(): pnp_bus_suspend+0x0/0x10 returns 28
+  tpm_tis 00:08: PM: failed to suspend: error 28
+  PM: Some devices failed to suspend, or early wake event detected
 
-From a random.c perspective, the RNG is already initialized when the
-driver loads, which will be before suspend bricks the driver. So even if
-the behavior afterwards is a buggy driver handing all zeros to random.c,
-it won't really matter much; random.c can deal with that
-cryptographically. I have no idea if this is actually the case with the
-driver's error condition. But if it is, it's good that it doesn't
-matter.
+This issue was partially fixed by 23393c646142 ("char: tpm: Protect
+tpm_pm_suspend with locks"), in a last minute 6.1 commit that Linus took
+directly because the TPM maintainers weren't available. However, it
+seems like this just addresses the most common cases of the bug, rather
+than addressing it entirely. So there are more things to fix still,
+apparently.
 
-So okay, I'll roll a patch to do that when I get home. I'm writing on my
-phone now, but from memory it's just changing a 'return rc;' into
-'return 0;'.
+In lieu of actually fixing the underlying bug, just allow system suspend
+to continue, so that laptops still go to sleep fine. Later, this can be
+reverted when the real bug is fixed.
 
-Then the TPM folks can fix the underlying issue at their leisure
-whenever.
+Link: https://lore.kernel.org/lkml/7cbe96cf-e0b5-ba63-d1b4-f63d2e826efa@suse.cz/
+Cc: stable@vger.kernel.org # 6.1+
+Reported-by: Vlastimil Babka <vbabka@suse.cz>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
+This is basically untested and I haven't worked out if there are any
+awful implications of letting the system sleep when TPM suspend fails.
+Maybe some PCRs get cleared and that will make everything explode on
+resume? Maybe it doesn't matter? Somebody well versed in TPMology should
+probably [n]ack this approach.
 
-Jason
+ drivers/char/tpm/tpm-interface.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index d69905233aff..6df9067ef7f9 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -412,7 +412,10 @@ int tpm_pm_suspend(struct device *dev)
+ 	}
+ 
+ suspended:
+-	return rc;
++	if (rc)
++		pr_err("Unable to suspend tpm-%d (error %d), but continuing system suspend\n",
++		       chip->dev_num, rc);
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(tpm_pm_suspend);
+ 
+-- 
+2.39.0
+
