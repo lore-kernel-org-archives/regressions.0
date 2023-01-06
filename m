@@ -1,171 +1,83 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B1A63D9;
-	Fri,  6 Jan 2023 14:14:48 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cdf3ZZ8NZ0EgDL4jGSE9/CMsYXf0Hk1N1JVLaloZfQHYJZazhT7XVQvc2JyTgLz2QDFV6h08wbbKU3D/vDw5ORC57uC5D3J3whvcj5giVwd+EoksiwGMxnQ2CyKFEj34MCaps6rGv0nnsgWgDNvF2JShjpCGFF2VttaixodAY9XuyadJWb69IWHtDEQ1BifewlQ8UkXw3kEsMcOJtFAigCOtiiL1iWQnZc6rq73/5X1UShS7V6ZCRU1+r8tSvlPzC3UGf28iDtbKd6OSeXumZL1/GrC4c3ml6dNxdbq8NisWg9Oc/NCgjHspc0OlgGaxA/JBt7LSDpdeP9GlgUsgfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/Us5ISKgFT3EjCiT3xyMAh29/heBtKCsItGahZCzSnc=;
- b=P7uZ7lYBLu1lHIUm9uoDPgxNBdqe2gR9v31MX+M+49YZOR6DrZf/7tAbThVfv3wpFmRjw9KT1TEMdU9Brb6y5ZPxhhzU6qg5wryMlWC/J1wiHiKK9yO7cM3m+eEGOumOAeHhoO8aMF1H1BK3nL7rE6XF/Qe7ljRIDQvevQlXRTALiaQDeb7YJU+v+DPbJN4cCDwK+hgrTcEFWC6OdE5JpuFsTFxO/NWfcfeJDSaE8hSuwle1QPMq1SLtppF8+2IOOZ9Y8Sd7rj0wUKSY6xW0mt3LlqsefNXe0uEFzUtfWN9Evd/En67PtsEoprjikXKs/D+3qCy8JxIbIzX2GeW5sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/Us5ISKgFT3EjCiT3xyMAh29/heBtKCsItGahZCzSnc=;
- b=rGp9EqPJ2fDEtwH03wp0xJIrG4eWT/mcpEicm8n7/ccrL8Ck9M7+Ib72wQ9cLEfyIpFq5FreXEHY+hxxX2F/nwck1SVOCHKx7xjU/E/h4qCEHJ8ugk8DRcyLcoKVf/O4r4RKBk91JoPHS0AiiNZcgNBgAG14llMOI9dmHY3P8ynDkM/DCF0ErxQ4ilomtMn9XpPxyOpzoHtYVAD3CEppZSiJ/C7snTNGhPEiD+rw13u7H2kRZl/gGuORSVzMBVhCrZGsxxrPFut82Jgpd8iNbSYxnJJFqhmmKfvOT3VJ+5OJSYcvOadwEZAJ2212odvMMafrFdI/n9V8xvEduQZN0A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by PH0PR12MB5420.namprd12.prod.outlook.com (2603:10b6:510:e8::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.19; Fri, 6 Jan
- 2023 14:14:45 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::f8b0:df13:5f8d:12a]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::f8b0:df13:5f8d:12a%9]) with mapi id 15.20.5944.019; Fri, 6 Jan 2023
- 14:14:44 +0000
-Date: Fri, 6 Jan 2023 10:14:43 -0400
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: Vasant Hegde <vasant.hegde@amd.com>
-Cc: Matt Fagnani <matt.fagnani@bell.net>,
-	Baolu Lu <baolu.lu@linux.intel.com>,
-	Thorsten Leemhuis <regressions@leemhuis.info>,
-	Joerg Roedel <jroedel@suse.de>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-	Linux PCI <linux-pci@vger.kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [regression, bisected, =?utf-8?Q?pci?=
- =?utf-8?Q?=2Fiommu=5D_Bug=C2=A0216865_-_Black_screen_whe?= =?utf-8?Q?n?=
- amdgpu started during 6.2-rc1 boot with AMD IOMMU enabled
-Message-ID: <Y7gs0zYKp/VXACBi@nvidia.com>
-References: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
- <5aa0e698-f715-0481-36e5-46505024ebc1@bell.net>
- <aea57c5f-2d20-c589-ad44-a63f1133a3db@linux.intel.com>
- <157c4ca4-370a-5d7e-fe32-c64d934f6979@amd.com>
- <223ee6d6-70ea-1d53-8bc2-2d22201d8dde@bell.net>
- <6fff9d10-f77f-e55a-9020-8a1bd34cf508@amd.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6fff9d10-f77f-e55a-9020-8a1bd34cf508@amd.com>
-X-ClientProxiedBy: MN2PR17CA0008.namprd17.prod.outlook.com
- (2603:10b6:208:15e::21) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD557460
+	for <regressions@lists.linux.dev>; Fri,  6 Jan 2023 15:38:09 +0000 (UTC)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-4a2f8ad29d5so27240897b3.8
+        for <regressions@lists.linux.dev>; Fri, 06 Jan 2023 07:38:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S+ZK+xldlBv3g2AO74GvzA01lQCjrDMywdlfRiZz/Z0=;
+        b=RhGEO33ZJ/RgJLHuGmQlqW/ByxEma7e+yWT5P7NMyVVQh2YoPM1F3WG+kikJkJelSV
+         OcPpcy79uvoAVuwKJbCgU4pBb1H/VeIDon0JZn1/wmg/0shh+OzjBqXFkcXMU0LgoxgU
+         EyhNBTON6u25LdvZ1TwSLg8WjjfGfpV8vK0tjmQXNYBHubzBcneUaN9h5JrGbLm5zWLw
+         VGaXyHBB28gs8ykXXlDD4TQpoRpa8172uXepROid12dbP2c0/Z3OOqE6m4af0R20XWt7
+         sX4uWxYbEetNOb+YL7HEsfmhe9rUoFbnq37m8lzRNPrKbzD5mK5KAgYyYXB8Ox++ii/6
+         KH3w==
+X-Gm-Message-State: AFqh2kp0vElJZDv4ZRqxdp5nru0oap7gb5DUPGmEQa7gUH6LKzqsHBly
+	4alcgCFfYQH/gNahBrbnCGfeMC7nZlHo1g==
+X-Google-Smtp-Source: AMrXdXuqaEb9Z7q4LRACa8+biWW40RbhKowxCwdO4IzvjROROh1Ga44bJIjuRCWVOQUSV3WM6KFY1w==
+X-Received: by 2002:a05:7500:548f:b0:f0:34c9:a77e with SMTP id z15-20020a057500548f00b000f034c9a77emr222169gab.31.1673019487756;
+        Fri, 06 Jan 2023 07:38:07 -0800 (PST)
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com. [209.85.219.169])
+        by smtp.gmail.com with ESMTPSA id w12-20020a05620a444c00b006f9ddaaf01esm676454qkp.102.2023.01.06.07.38.07
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 06 Jan 2023 07:38:07 -0800 (PST)
+Received: by mail-yb1-f169.google.com with SMTP id e76so2216759ybh.11
+        for <regressions@lists.linux.dev>; Fri, 06 Jan 2023 07:38:07 -0800 (PST)
+X-Received: by 2002:a25:8182:0:b0:75a:6c58:ac5d with SMTP id
+ p2-20020a258182000000b0075a6c58ac5dmr6429676ybk.91.1673019486809; Fri, 06 Jan
+ 2023 07:38:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|PH0PR12MB5420:EE_
-X-MS-Office365-Filtering-Correlation-Id: fcb4ed69-346c-4c6d-1d95-08daeff05bbe
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	R5MlJ4ApRI3XBwKBS55S7MFphbPkeFLAOJHsXLM8qnXu8kBE3fGQd+Eax6GdS5HTSittgt/Mlukjo7QU0iDoiu3ZFONXT4AnarGMR4BexsYtI+jo3Ukbhu5DM1MacMxqpGdSVr5cwuSNqwtDZ3EtO8f/AjrIDOi5YPHUClvsQGW7q5Mvj3De0w9v0vOJ1j89t+94tCh0tzij2EckS4pV7Vlx2I6aQ6soG9S4Cxw5HclRCpFDrT7utcKvqlVtgwqFrjVhFfGPhh0wkaBQPt1kgb8s1+24GNm2WMme7P5XAxRKGuq9AACcf6x5H1qpAED/NgpHdu3nl+AAbNbcRgoMX4Hmc4FCuTo5Ug4RtIFTaynb6nwZJthRrHzbZXp2Z2Fec4qtj2y/QoS42bda4HlSpcc1x/KADLe2mgwSfo3UpHEq3YTJ0R2daOaUdOmXm+0hGqa2zQ5ppHA/JoUI+JLPCmFrNQAAPo5LxJ7q3g6zp9QMjR+3b8Il0gUOCJ1NvIYaIQrRGQqw92YlF0bFHcpmm9l5ppz49QylutaTs18h7uFMlWUGl0VXqao4hXs1YgNAeD3hcGBspf/f2fH02TgsxZBLT8peiuWSGgJXnWC2T2UNILuGXl0N/ULk4AqixS3hCJbP2XR9+9x94yO4SAND1g==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(376002)(346002)(39860400002)(396003)(136003)(451199015)(5660300002)(2906002)(7416002)(8936002)(41300700001)(316002)(478600001)(4326008)(54906003)(66556008)(66476007)(66946007)(6916009)(6486002)(6512007)(26005)(6506007)(83380400001)(186003)(53546011)(38100700002)(2616005)(86362001)(36756003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?NrnXR9PmFtTNJYKBqrLNfpAoj1k32AT6bC5FlYrhFiQTIU+DpK80FjsoMxVC?=
- =?us-ascii?Q?BiUvIiBLJ6EB/ivOR7IjrTEZl7jJudpb9sqWto1ERWl7si03SEgpBtujg96y?=
- =?us-ascii?Q?krSgBh1z3DyLd/vulPfjlpmjr1mVBfDNmNC30uzeLIwEK81735tV0MC6xbz6?=
- =?us-ascii?Q?iKOP2jebrFMBcp3wOzDvvbnlqlZnXph0CG5SdWmju3+jHRUGwSe+6E67RKZr?=
- =?us-ascii?Q?LN11ubSNqnU+mfkVMFqGWZgW5lZqZkSyUKNyfvSybGPaTzJ4e6FayQE47mOm?=
- =?us-ascii?Q?5wlwmYsGUqSOJn99PZ0ZpqQVxityzDiOQs0fjxNiapk/koehFBeHXMSlLrbm?=
- =?us-ascii?Q?BRuITp2X31BwR7ZxRoR0PzfQ+ybp92NH2/J684LZljkOzOB6+T9b23o1BncE?=
- =?us-ascii?Q?eq3uPlhJMrXK+02bIl6RCVXHoROwKOKO5AxiwV1zPxPD2wbJUFWXlSmYsk23?=
- =?us-ascii?Q?TuD9m32oFqlQid+79DBNLQNVLkxa4wCAP5XO95EEGvWOBYOpMuG0etP5kPZG?=
- =?us-ascii?Q?NsT/rCnkbuYFRtALGp+644XfBuJb3SqEZJn2JRUey5LYo2YuXr8sqLe6jAtK?=
- =?us-ascii?Q?aCAe0qDR8SY6xwZdkyO/xK64DnpoeKuiB0ylD6Ey2PE/p+kd5ieTiaQpsWE4?=
- =?us-ascii?Q?Qg3qq4F7Up/FlMcG11KC9Ra6/6BL16xuuqnFqn/ycKmK+f5jGPNUpUiNMDbG?=
- =?us-ascii?Q?mOJ6DZEBlcMUsdMzE881jo2zeNc/alsOyQ+NORxInc7tgc7JwRJvW++NM/SO?=
- =?us-ascii?Q?wjnkwdKSjA1Tvt7qYIIg3s5HpaBh1N+yszmtRkn3gI6WzkKhe30iZkmcsK/P?=
- =?us-ascii?Q?OxKQulSYZuiCu9aLkeJwHN4L/8ZDVnmQuNPGbS6dOdUbyKs+hoBnuGpjxYno?=
- =?us-ascii?Q?kBNOcl0W1pw+2ReHCArAAQKicWJuNBTBcJzVQAADBoB17qXMbPkx37PWNK25?=
- =?us-ascii?Q?BXYONZKkFuSvlaHvM+4gDbDVa3lgKehPwk50S2N4Jprd2AAseSFZwVowngc/?=
- =?us-ascii?Q?DytFgZ8azEiWoK6kIGYMbB7gJwTrFyOcjLoJV7RAesoL3ptKa2JAheDVEh3f?=
- =?us-ascii?Q?5keMFmqFrz3ML6jFXf4WJjHK8PS9bGoHGEzDa1jQl5mXoTRpmucUaC08xRHF?=
- =?us-ascii?Q?ODgBlsRtSYDeGjlFDyPmsmR1GaqZkk49lkMMDNZ5Zi3UsvgQd/o+DmDjJiu3?=
- =?us-ascii?Q?EVptVlvqxviY+HUXGW+vPdn0Rb1rDGMKs1xbNHYbiCvrZpZrFnd79/7UlrQd?=
- =?us-ascii?Q?9rShzuu9G71UAIP7O1VtysK+DWBppkf35JZsdTG5eiVQbNiw3A++xs0GJo31?=
- =?us-ascii?Q?e0mwg1Fsku4RtRZESxpd7oFN2CkJgf4xdWP47yJZ09YjXj35c1EUjSkPnWBI?=
- =?us-ascii?Q?2a2tWr/6aQatIXyPw4MgjD4mrlpmN17O9tf8B7qu1TaHbTJdGpn4zj8knXPv?=
- =?us-ascii?Q?bGoJM5NiCrK3RIImt+lItKQeUVhNjo4/5tkBLfyzz8yn3yFJznlI76Ba/+6N?=
- =?us-ascii?Q?Zf3pUht2QnkNBRZE8JUypQPqjir0V0BViH0TcQ5HpqwVpmZBbIunZi8JLFeD?=
- =?us-ascii?Q?OHZnqADUuS/ItiD6Mnm7YhC0Ukyqkx3Sm8tHuINi?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcb4ed69-346c-4c6d-1d95-08daeff05bbe
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2023 14:14:44.0002
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ELeGo5ygYDR7Wd1LnWvH+SP6yR92Jx5yzJCb1JH7qivrJN8Gxa2rdKTbj5xOmt0d
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5420
+References: <14722778-dda0-cb9f-8647-892493d94a5c@leemhuis.info>
+ <2026016246ef719605c9932feeb56b105833593b.camel@intel.com>
+ <CAMfi-DTwX2nvP58FRb6NaGMyWO0SBo9W=Fpdtr=XfNRzkqAwHw@mail.gmail.com> <b5e9c8911a46802ddb017554f266c92a7a0b2605.camel@intel.com>
+In-Reply-To: <b5e9c8911a46802ddb017554f266c92a7a0b2605.camel@intel.com>
+From: Dave Chiluk <chiluk@ubuntu.com>
+Date: Fri, 6 Jan 2023 09:37:55 -0600
+X-Gmail-Original-Message-ID: <CAMfi-DQYU3WQk8x-GFieexEE_enRDe4J0AzyZHk9rtRykpUEnA@mail.gmail.com>
+Message-ID: <CAMfi-DQYU3WQk8x-GFieexEE_enRDe4J0AzyZHk9rtRykpUEnA@mail.gmail.com>
+Subject: Re: [regression] Bug 216753 - 6e 6 ghz bands are disabled since 5.16
+ on intel ax211
+To: "Greenman, Gregory" <gregory.greenman@intel.com>
+Cc: "Coelho, Luciano" <luciano.coelho@intel.com>, 
+	"regressions@leemhuis.info" <regressions@leemhuis.info>, 
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
+	"johannes@sipsolutions.net" <johannes@sipsolutions.net>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "marcel@holtmann.org" <marcel@holtmann.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jan 05, 2023 at 03:57:28PM +0530, Vasant Hegde wrote:
-> Matt,
-> 
-> On 1/5/2023 6:39 AM, Matt Fagnani wrote:
-> > I built 6.2-rc2 with the patch applied. The same black screen problem happened
-> > with 6.2-rc2 with the patch. I tried to use early kdump with 6.2-rc2 with the
-> > patch twice by panicking the kernel with sysrq+alt+c after the black screen
-> > happened. The system rebooted after about 10-20 seconds both times, but no kdump
-> > and dmesg files were saved in /var/crash. I'm attaching the lspci -vvv output as
-> > requested.
-> > 
-> 
-> Thanks for testing. As mentioned earlier I was not expecting this patch to fix
-> the black screen issue. It should fix kernel warnings and IOMMU page fault
-> related call traces. By any chance do you have the kernel boot logs?
-> 
-> 
-> @Baolu,
->   Looking into lspci output, it doesn't list ACS feature for Graphics card. So
-> with your fix it didn't enable PASID and hence it failed to boot.
+On Thu, Jan 5, 2023 at 12:15 AM Greenman, Gregory
+<gregory.greenman@intel.com> wrote:
+>
+> I'll try to explain, the problem here is not technical. After some
+> internal checks, it appears that we (wifi driver) aren't allowed to
+> decide if 6E should be enabled or not. Because of the legal restrictions,
+> OEM should make this decision and enable/disable 6E in the BIOS. This
+> commit only gets the value from the BIOS and configures the firmware
+> accordingly. So, unfortunately, legal restriction is the reason we cannot
+> revert/overwrite 6E enablement...
+>
+Thank you Gregory, I've been reading between the lines, and this is
+pretty much what I expected you to say.  So in the past when
+OEMs/systems manufacturers have been irresponsible/inept like this we
+have implemented flags to force ignore the values coming out of the
+bios.  As it's now obvious that the problem here is a legal/regulatory
+issue, I'd hope that having a force flag would be acceptable from a
+that perspective.  I'm no lawyer, but I expect once a user decides to
+explicitly set a force flag to ignore the bios values I'd suspect the
+responsibility would shift from the manufacturers and back onto the
+user.
 
-The ACS checks being done are feature of the path not the end point or
-root port.
-
-If we are expecting ACS on the end port then it is just a bug in how
-the test was written.. The test should be a NOP because there are no
-switches in this topology.
-
-Looking at it, this seems to just be because pci_enable_pasid is
-calling pci_acs_path_enabled wrong, the only other user is here:
-
-	for (bus = pdev->bus; !pci_is_root_bus(bus); bus = bus->parent) {
-		if (!bus->self)
-			continue;
-
-		if (pci_acs_path_enabled(bus->self, NULL, REQ_ACS_FLAGS))
-			break;
-
-		pdev = bus->self;
-
-		group = iommu_group_get(&pdev->dev);
-		if (group)
-			return group;
-	}
-
-And notice it is calling it on pdev->bus not on pdev itself which
-naturally excludes the end point from the ACS validation.
-
-So try something like:
-
-	if (!pci_acs_path_enabled(pdev->bus->self, NULL, PCI_ACS_RR | PCI_ACS_UF))
-
-(and probably need to check for null ?)
-
-Jason
+Would such a patch be theoretically acceptable?  If so I'll write up a
+patch to do this and submit it next week hopefully.
