@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F13A10EE
-	for <regressions@lists.linux.dev>; Fri,  6 Jan 2023 09:56:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680B51103
+	for <regressions@lists.linux.dev>; Fri,  6 Jan 2023 10:57:55 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pDjSG-00082O-Cl; Fri, 06 Jan 2023 10:56:04 +0100
-Message-ID: <366a47b4-b530-68c2-992d-c2861a8add5c@leemhuis.info>
-Date: Fri, 6 Jan 2023 10:56:03 +0100
+	id 1pDkPy-0008Jr-N3; Fri, 06 Jan 2023 11:57:46 +0100
+Message-ID: <f1ca3cea-01ae-998a-2aa8-c3e40cf46975@leemhuis.info>
+Date: Fri, 6 Jan 2023 11:57:46 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,39 +16,67 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
+Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216785_-_=22memcpy=3a_det?=
+ =?UTF-8?Q?ected_field-spanning_write=2e=2e=2e=22_warnings_with_bcache_=23fo?=
+ =?UTF-8?Q?rregzbot?=
 Content-Language: en-US, de-DE
-From: "Linux kernel regression tracking (#adding)" <regressions@leemhuis.info>
-Reply-To: Thorsten Leemhuis <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: =?UTF-8?Q?Bug=c2=a0216889_-_CIFS_1=2e0_mount_succeeds_but_any_attem?=
- =?UTF-8?Q?pt_to_read_from_/_write_to_the_share_fails?=
+To: Kees Cook <keescook@chromium.org>
+Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ linux-bcache@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <19200730-a3ba-6f4f-bb81-71339bdbbf73@leemhuis.info>
+ <2e4e65a8-87b4-fac6-ef89-76b118b0cec4@leemhuis.info>
+ <202301052218.042D2BFE@keescook>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <202301052218.042D2BFE@keescook>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672998966;c616a2e1;
-X-HE-SMSGID: 1pDjSG-00082O-Cl
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673002675;629eb990;
+X-HE-SMSGID: 1pDkPy-0008Jr-N3
 
-[TLDR: Just adding a regression reported to bko to the tracking]
+On 06.01.23 07:22, Kees Cook wrote:
+> On Thu, Dec 15, 2022 at 08:11:06AM +0100, Thorsten Leemhuis wrote:
+>> [Note: this mail contains only information for Linux kernel regression
+>> tracking. Mails like these contain '#forregzbot' in the subject to make
+>> then easy to spot and filter out. The author also tried to remove most
+>> or all individuals from the list of recipients to spare them the hassle.]
+>>
+>> On 08.12.22 15:53, Thorsten Leemhuis wrote:
+>>> https://bugzilla.kernel.org/show_bug.cgi?id=216785 :
+>>>
+>>>>  Alexandre Pereira 2022-12-07 18:51:55 UTC
+>>>>
+>>>> Testing linux kernel 6.1-rc8, I have several kernel erros regarding bcache.
+>>>>
+>>>> For context, I have a bcache configuration that is working without issues on 6.0.x and previous versions.
+>>>>
+>>>> The errors:
+>>>>
+>>>> dez 07 18:33:45 stormtrooper kernel: ------------[ cut here ]------------
+>>>> dez 07 18:33:45 stormtrooper kernel: memcpy: detected field-spanning write (size 264) of single field "&i->j" at drivers/md/bcache/journal.c:152 (size 240)
+>>
+>> #regzbot inconclusive: stop tracking field-spanning write warnings, they
+>> come from a new security feature
+>>
+>> https://lore.kernel.org/all/20210727205855.411487-1-keescook@chromium.org/
+>>
+>> Tracking them would cost time I better spend on more important things
+>> for now
+> 
+> FWIW, I'd find it handy to see these. I've been trying to track and fix
+> them. 
 
-I noticed a regression reported in bugzilla.kernel.org that seems to be
-handled there already, nevertheless I'd like to add to the tracking to
-ensure it's doesn't fall through the cracks in the end:
+In that case I'd suggest: I forward any I see to you, but don't add them
+ to the regressions tracked with regzbot.
 
-#regzbot introduced: v6.0..v6.1
-https://bugzilla.kernel.org/show_bug.cgi?id=216889
-#regzbot title: cifs: CIFS 1.0 mount succeeds but any attempt to read
-from / write to the share fails
-#regzbot ignore-activity
+Does that sound fine for you? Or is there a strong reason why I should
+track them? Then they would be in the weekly reports to Linus, but I
+wonder if he cares. At least for now now I guess he does not -- at some
+later point where of the problems that are still hiding surfaced and
+were fixed it might be something different. But then I could start
+tracking them.
 
-Regression is also in stable, to quote:
+> To that end, I've just sent out the following patches:
 
-> 6.0.15 works fine - 6.0.16 doesn't.
+Great!
 
-/me sooner or later needs to modify regzbot to handle such situations better
-
-See the ticket for details, there were a few replies already.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Ciao, Thorsten
