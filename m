@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E13A10EE
-	for <regressions@lists.linux.dev>; Fri,  6 Jan 2023 09:44:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B5B10EE
+	for <regressions@lists.linux.dev>; Fri,  6 Jan 2023 09:49:51 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pDjH0-0005Ky-LS; Fri, 06 Jan 2023 10:44:26 +0100
-Message-ID: <7d7774d4-cbda-de9e-13f1-fcd734ac2aba@leemhuis.info>
-Date: Fri, 6 Jan 2023 10:44:25 +0100
+	id 1pDjMD-0006dY-Az; Fri, 06 Jan 2023 10:49:49 +0100
+Message-ID: <a1081b61-c066-153d-2ec3-1f86ce68c0e6@leemhuis.info>
+Date: Fri, 6 Jan 2023 10:49:48 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,71 +16,53 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: Bug report: the extended PCI config space is missed with 6.2-rc2
 Content-Language: en-US, de-DE
-To: "Liang, Kan" <kan.liang@linux.intel.com>, bhelgaas@google.com
-Cc: hdegoede@redhat.com, kernelorg@undead.fr, kjhambrick@gmail.com,
- 2lprbe78@duck.com, nicholas.johnson-opensource@outlook.com.au,
- benoitg@coeus.ca, mika.westerberg@linux.intel.com, wse@tuxedocomputers.com,
- mumblingdrunkard@protonmail.com, linux-pci@vger.kernel.org,
- linux-kernel@vger.kernel.org, david.e.box@intel.com, yunying.sun@intel.com,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <ac2693d8-8ba3-72e0-5b66-b3ae008d539d@linux.intel.com>
-From: "Linux kernel regression tracking (#adding)" <regressions@leemhuis.info>
-Reply-To: Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <ac2693d8-8ba3-72e0-5b66-b3ae008d539d@linux.intel.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+To: Steve French <sfrench@samba.org>
+Cc: Kim Scarborough <kim@scarborough.kim>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>
+Subject: =?UTF-8?Q?=5bRegression=5d_Bug=c2=a0216881_-_CIFS_1=2e0_mounts_fail?=
+ =?UTF-8?Q?_with_=22VFS=3a_bogus_file_nlink_value_0=22?=
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672998280;195d787f;
-X-HE-SMSGID: 1pDjH0-0005Ky-LS
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1672998592;324c32ae;
+X-HE-SMSGID: 1pDjMD-0006dY-Az
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; all text you find below is based on a few templates
-paragraphs you might have encountered already already in similar form.
-See link in footer if these mails annoy you.]
+Hi, this is your Linux kernel regression tracker.
 
-On 04.01.23 15:39, Liang, Kan wrote:
-> Hi Bjorn,
-> 
-> Happy new year!
-> 
-> We found some PCI issues with the latest 6.2-rc2.
-> 
-> - Using the lspci -xxxx, the extended PCI config space of all PCI
-> devices are missed with the latest 6.2-rc2. The system we used had 932
-> PCI devices, at least 800 which have extended space as seen when booted
-> into a 5.15 kernel. But none of them appeared in 6.2-rc2.
-> - The drivers which rely on the information in the extended PCI config
-> space don't work anymore. We have confirmed that the perf uncore driver
-> (uncore performance monitoring) and Intel VSEC driver (telemetry) don't
-> work in 6.2-rc2. There could be more drivers which are impacted.
-> 
-> After a bisect, we found the regression is caused by the below commit
-> 07eab0901ede ("efi/x86: Remove EfiMemoryMappedIO from E820 map").
-> After reverting the commit, the issues are gone.
-> 
-> Could you please take a look at the issues?
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216881 :
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+>  Kim Scarborough 2023-01-04 07:00:50 UTC
+> 
+> An SMB mount to a Windows XP machine in my fstab no longer works. It last worked with 6.0.9. fstab line:
+> 
+> //server/D /remote/server/D cifs noauto,_netdev,username=example,password=example,uid=1000,vers=1.0,nomultichannel 0 0
+> 
+> When I attempt to mount this now, I get the following error:
+> 
+> mount error(20): Not a directory
+> 
+> dmesg shows:
+> 
+> CIFS: VFS: bogus file nlink value 0
 
-#regzbot ^introduced 07eab0901ede
-#regzbot title x86/pci:  extended PCI config space is missed
+See the ticket for more details.
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.0..v6.1
+https://bugzilla.kernel.org/show_bug.cgi?id=216881
+#regzbot title: cifs: cifs 1.0 mounts fail with "VFS: bogus file nlink
+value 0"
 #regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Reminder for developers: When fixing the issue, add 'Link:' tags
-pointing to the report (see page linked in footer for details).
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
