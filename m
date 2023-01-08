@@ -1,13 +1,45 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C4A1FAF
-	for <regressions@lists.linux.dev>; Sun,  8 Jan 2023 08:52:58 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pERQF-0006lI-8O; Sun, 08 Jan 2023 09:52:55 +0100
-Message-ID: <65ae10cd-a086-47c6-c881-d1385d7fcf42@leemhuis.info>
-Date: Sun, 8 Jan 2023 09:52:54 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7017A1FD0
+	for <regressions@lists.linux.dev>; Sun,  8 Jan 2023 13:25:41 +0000 (UTC)
+Received: by mail-wm1-f43.google.com with SMTP id ay40so4396394wmb.2
+        for <regressions@lists.linux.dev>; Sun, 08 Jan 2023 05:25:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gDnBglhmzrQ+ClSXJPmLD7+J1IxdL5cQgOysiOvvUiw=;
+        b=eNEHVpDt9oHcojHcitkH0RCFZbeCHiKuUEagDi9ApI0PQk7B6q6TOUmIbbLEdM1o1c
+         lrTJWPTi9nP3BTxC4nE+BQ3kpUS9/WmalhvXEVg3Ixw8aSv5GGpOww4ujobdhkNLmzW4
+         JLypJU8j7d6X7lL5kUfl7yWzn+04gMiE41Ny3txm70Rts0Zr8I2Ax+qoorYRoTD1Vg7H
+         5j7zosyfyOD9XwWxIm4VIqAe3vHRg1aw/lP8LC8BvDenCovDeKCMm8/N+slPLTRRnPUE
+         u3jBE9/Sw2cH6tHHcNG6wpuBpbPxEe+onr6Kh69FHruG98LFVJcVQfkBr4ZuTXuNczSt
+         /ShQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gDnBglhmzrQ+ClSXJPmLD7+J1IxdL5cQgOysiOvvUiw=;
+        b=yF1UcuV9+wpmRmwPriwlm+UEj2qE6nDpU1hncNuzAOWo/al9jJgamfFCsDcvktCJ2k
+         3NoYJR1f7QphoQPHL9aLiLUPVJvVrTO+9pHKqFhY0ZzlR2WPGh6SLgpO72ZZ3pc6bKMg
+         4tcFxFGvmKYF7X5lfPgltTP9ndhWcH6W/I2no0+56MOtJx/3+1cxDf5rqRIfSIE6Mw7U
+         p145zjpRvdOF0gYrro6CgC/ycOUs5SmP5PlWc5CfBSox+22QWSEcA666KJWFjT/5F29S
+         wN/hY+M9I5zc3i7WlzgQhW3MupiopcQtx/HzAk2oDdvlZma79imq2bGh6IwmfnVC4BiQ
+         QwOw==
+X-Gm-Message-State: AFqh2krgXoZZODoujrh3EGP/Zei41MziuP4l033A+k36e10vyrSX10Sk
+	ZrSOBkaQnCc1PId1P950SWBJ0Q==
+X-Google-Smtp-Source: AMrXdXvmxxT+2bZviglEVMaCStY9tOI31zWc9TENsTM9uSLk3EaKSggauRRgvpQ6d98KRB5ltb90jA==
+X-Received: by 2002:a05:600c:4e04:b0:3d2:381f:2db5 with SMTP id b4-20020a05600c4e0400b003d2381f2db5mr42893495wmq.22.1673184339665;
+        Sun, 08 Jan 2023 05:25:39 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id t9-20020a05600c198900b003d9e74dd9b2sm4060240wmq.9.2023.01.08.05.25.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 08 Jan 2023 05:25:39 -0800 (PST)
+Message-ID: <82526863-d07a-0a5d-2990-1555b1387f26@linaro.org>
+Date: Sun, 8 Jan 2023 14:25:37 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,31 +47,22 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
+ Thunderbird/102.6.1
 Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
  (commit 7fd461c47)
-Content-Language: en-US, de-DE
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Anna Schumaker <Anna.Schumaker@Netapp.com>,
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Anna Schumaker <Anna.Schumaker@Netapp.com>,
  Trond Myklebust <trond.myklebust@hammerspace.com>
 Cc: linux-nfs@vger.kernel.org,
  Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
 References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
-From: "Linux kernel regression tracking (#adding)" <regressions@leemhuis.info>
-Reply-To: Thorsten Leemhuis <regressions@leemhuis.info>
 In-Reply-To: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673167979;3913fac3;
-X-HE-SMSGID: 1pERQF-0006lI-8O
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 07.01.23 16:44, Krzysztof Kozlowski wrote:
+On 07/01/2023 16:44, Krzysztof Kozlowski wrote:
 > Hi,
 > 
 > Bisect identified commit 7fd461c47c6c ("NFSv4.2: Change the default
@@ -65,40 +88,44 @@ On 07.01.23 16:44, Krzysztof Kozlowski wrote:
 > 
 > I did not make the bisect yet which commit introduced it, if every
 > config includes NFS_V4_2_READ_PLUS.
-> 
-> 
-> Some details about platform:
-> 
-> 1. Arch ARM Linux
-> 2. exynos_defconfig
-> 3. Odroid HC1 board with ARMv7, octa-core (Cortex-A7+A15), Exynos5422 SoC
-> 4. systemd, boot up with static IP set in kernel command line
-> 5. No swap
-> 6. Kernel, DTB and initramfs are downloaded with TFTP
-> 7. NFS root (NFS client) mounted from a NFSv4 server
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+When every kernel is built with NFS_V4_2_READ_PLUS, bisect pointed to:
+d3b00a802c84 ("NFS: Replace the READ_PLUS decoding code")
 
-#regzbot ^introduced 7fd461c47
-#regzbot title nfs: NULL pointer dereference since NFS_V4_2_READ_PLUS is
-enabled by default
-#regzbot ignore-activity
+commit d3b00a802c845a6021148ce2e669b5a0b5729959
+Author: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Date:   Thu Jul 21 14:21:34 2022 -0400
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+    NFS: Replace the READ_PLUS decoding code
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+    We now take a 2-step process that allows us to place data and hole
+    segments directly at their final position in the xdr_stream without
+    needing to do a bunch of redundant copies to expand holes. Due to the
+    variable lengths of each segment, the xdr metadata might cross page
+    boundaries which I account for by setting a small scratch buffer so
+    xdr_inline_decode() won't fail.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+    Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+    Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+
+With a trace:
+[   25.898462] systemd[1]: Set hostname to <odroidhc1>.
+[   25.933746] systemd[1]: Failed to bump fs.file-max, ignoring: Invalid
+argument
+[   25.986237] random: crng init done
+[   26.264564] 8<--- cut here ---
+[   26.266823] Unable to handle kernel NULL pointer dereference at
+virtual address 00000fe8
+...
+[   26.597263]  nfs4_xdr_dec_read_plus from call_decode+0x204/0x304
+[   26.603222]  call_decode from __rpc_execute+0xd0/0x890
+[   26.608328]  __rpc_execute from rpc_async_schedule+0x1c/0x34
+[   26.613960]  rpc_async_schedule from process_one_work+0x294/0x790
+[   26.620030]  process_one_work from worker_thread+0x54/0x518
+[   26.625570]  worker_thread from kthread+0xf4/0x128
+[   26.630336]  kthread from ret_from_fork+0x14/0x2c
+
+
+Best regards,
+Krzysztof
+
