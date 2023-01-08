@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7321FAA
-	for <regressions@lists.linux.dev>; Sun,  8 Jan 2023 08:20:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9A01FAF
+	for <regressions@lists.linux.dev>; Sun,  8 Jan 2023 08:51:00 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pEQuk-00071S-Dt; Sun, 08 Jan 2023 09:20:22 +0100
-Message-ID: <d073942d-f6b6-81c4-5058-04d99185929a@leemhuis.info>
-Date: Sun, 8 Jan 2023 09:20:21 +0100
+	id 1pEROJ-0005my-Fr; Sun, 08 Jan 2023 09:50:55 +0100
+Message-ID: <094d2d21-7a89-4368-09c2-4d84100598a1@leemhuis.info>
+Date: Sun, 8 Jan 2023 09:50:54 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,93 +16,143 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216894_-_brcmfmac_stopped?=
- =?UTF-8?Q?_working_due_to_missing_firmware=3b_brcmf=5fpcie=5finit=5fringbuf?=
- =?UTF-8?Q?fers=3a_invalid_max=5fflowrings=28264=29?=
+Subject: Re: NFSD: refcount_t: underflow; use-after-free from nfsd_file_free
 Content-Language: en-US, de-DE
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-To: Wright Feng <wright.feng@infineon.com>
-Cc: Ian Lin <ian.lin@infineon.com>, Kalle Valo <kvalo@kernel.org>,
- "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- "brcm80211-dev-list.pdl@broadcom.com" <brcm80211-dev-list.pdl@broadcom.com>,
- Christian Marillat <marillat@debian.org>,
- Hante Meuleman <hante.meuleman@broadcom.com>,
- Franky Lin <franky.lin@broadcom.com>, Arend van Spriel <aspriel@gmail.com>,
- Double Lo <double.lo@infineon.com>, Kurt Lee <kurt.lee@infineon.com>
-References: <ef8861dc-33df-0e35-4205-c8c666a3f4ba@leemhuis.info>
-In-Reply-To: <ef8861dc-33df-0e35-4205-c8c666a3f4ba@leemhuis.info>
+To: dai.ngo@oracle.com, Chuck Lever III <chuck.lever@oracle.com>,
+ Jeff Layton <jlayton@redhat.com>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <3c525b04-ef64-2bee-efc9-9a43069306f7@oracle.com>
+ <830543ab-10e0-3a62-c683-8bd95292db4b@oracle.com>
+From: "Linux kernel regression tracking (#adding)" <regressions@leemhuis.info>
+Reply-To: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <830543ab-10e0-3a62-c683-8bd95292db4b@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673166025;dd4d3aab;
-X-HE-SMSGID: 1pEQuk-00071S-Dt
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673167860;5fe97454;
+X-HE-SMSGID: 1pEROJ-0005my-Fr
 
-Sending this once more as a reply to myself, as I forgot to CC the
-maintainers for the driver. And now I'm also using the current email
-address for Wright Feng (my earlier mail used the one used for the
-culprit, but that bounced).
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-Sorry for the noise, seem I need more tea.
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; all text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-On 08.01.23 08:59, Thorsten Leemhuis wrote:
-> Hi, this is your Linux kernel regression tracker.
+On 07.01.23 23:04, dai.ngo@oracle.com wrote:
+> Hi,
 > 
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developer don't keep an eye on it, I decided to forward it by
-> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216894 :
+> This is a regression in 6.2.0-rc1.
+> 
+> The problem can be reproduced with a simple test:
+> . client mounts server's export using 4.1
+> . client cats a file on server's export
+> . on server stop nfs-server service
+> 
+> Bisect points to commit ac3a2585f018 (nfsd: rework refcounting in
+> filecache)
 
-Subject for that bug report is "Regression in commit
-2aca4f3734bd717e04943ddf340d49ab62299a00"
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
->>  Christian Marillat 2023-01-06 10:58:26 UTC
->>
->> Hi,
->>
->> With this commit the kernel doesn't load the firmware and I lost my wifi device, But without this commit the firmware load fine without a kernel panic.
->>
->> kernel 6.0.15/6.1.3
->> brcmfmac 0000:02:00.0: brcmf_pcie_init_ringbuffers: invalid max_flowrings(264)
->>
->> kernel 6.0.17
->> brcmfmac: brcmf_fw_alloc_request: using brcm/brcmfmac4366c-pcie for chip BCM4366/4
->> brcmfmac: brcmf_c_process_clm_blob: no clm_blob available (err=-2), device may have limited channels available
->> brcmfmac: brcmf_c_preinit_dcmds: Firmware: BCM4366/4 wl0: Nov  5 2018 03:19:56 version 10.28.2 (r769115) FWID 01-d2cbb8fd
->>
->> PCI info :
->>
->> 02:00.0 Network controller: Broadcom Inc. and subsidiaries Device 43c3 (rev 04)
->> 	Subsystem: ASUSTeK Computer Inc. Device 86fb
->> 	Flags: bus master, fast devsel, latency 0, IRQ 45
->> 	Memory at f7000000 (64-bit, non-prefetchable) [size=32K]
->> 	Memory at f6800000 (64-bit, non-prefetchable) [size=8M]
->> 	Memory at f2400000 (64-bit, prefetchable) [size=4M]
->> 	Capabilities: <access denied>
->> 	Kernel driver in use: brcmfmac
->> 	Kernel modules: brcmfmac
->>
->> Christian
->>
->> [reply] [−] Comment 1 Christian Marillat 2023-01-06 11:00:21 UTC
->>
->> kernel version should be  6.0.17/6.1.3 and 6.0.15
->>
->> Christian
->>
+#regzbot ^introduced ac3a2585f018
+#regzbot title NFSD: refcount_t: underflow; use-after-free from
+nfsd_file_free
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
+
+> Jan  7 12:15:56 nfsvmf14 kernel: ------------[ cut here ]------------
+> Jan  7 12:15:56 nfsvmf14 kernel: refcount_t: underflow; use-after-free.
+> Jan  7 12:15:56 nfsvmf14 kernel: WARNING: CPU: 0 PID: 10420 at
+> lib/refcount.c:28 refcount_warn_saturate+0xb3/0x100
+> Jan  7 12:15:56 nfsvmf14 kernel: Modules linked in: rpcsec_gss_krb5
+> btrfs blake2b_generic xor raid6_pq zstd_compress intel_powerclamp sg
+> nfsd nfs_acl auth_rpcgss lockd grace sunrpc xfs dm_mirror dm_region_hash
+> dm_log dm_mod
+> Jan  7 12:15:56 nfsvmf14 kernel: CPU: 0 PID: 10420 Comm: rpc.nfsd Kdump:
+> loaded Tainted: G        W          6.2.0-rc1 #1
+> Jan  7 12:15:56 nfsvmf14 kernel: Hardware name: innotek GmbH
+> VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+> Jan  7 12:15:56 nfsvmf14 kernel: RIP:
+> 0010:refcount_warn_saturate+0xb3/0x100
+> Jan  7 12:15:56 nfsvmf14 kernel: Code: 01 01 e8 3f 21 65 00 0f 0b c3 cc
+> cc cc cc 80 3d f5 d1 4a 01 00 75 5b 48 c7 c7 c3 4b 22 82 c6 05 e5 d1 4a
+> 01 01 e8 1c 21 65 00 <0f> 0b c3 cc cc cc cc 80 3d d1 d1 4a 01 00 75 38
+> 48 c7 c7 eb 4b 22
+> Jan  7 12:15:56 nfsvmf14 kernel: RSP: 0018:ffffc9000078fc98 EFLAGS:
+> 00010282
+> Jan  7 12:15:56 nfsvmf14 kernel: RAX: 0000000000000000 RBX:
+> ffff88810e8a9930 RCX: 0000000000000027
+> Jan  7 12:15:56 nfsvmf14 kernel: RDX: 00000000ffff7fff RSI:
+> 0000000000000003 RDI: ffff888217c1c640
+> Jan  7 12:15:56 nfsvmf14 kernel: RBP: ffff88810cbd7870 R08:
+> 0000000000000000 R09: ffffffff827d9f88
+> Jan  7 12:15:56 nfsvmf14 kernel: R10: 00000000756f6366 R11:
+> 0000000063666572 R12: ffff888111c9c000
+> Jan  7 12:15:56 nfsvmf14 kernel: R13: ffff88810fb5fa00 R14:
+> ffff88810f980058 R15: ffff88810e6d68b0
+> Jan  7 12:15:56 nfsvmf14 kernel: FS:  00007fa614d16840(0000)
+> GS:ffff888217c00000(0000) knlGS:0000000000000000
+> Jan  7 12:15:56 nfsvmf14 kernel: CS:  0010 DS: 0000 ES: 0000 CR0:
+> 0000000080050033
+> Jan  7 12:15:56 nfsvmf14 kernel: CR2: 0000559a53e66908 CR3:
+> 0000000110c72000 CR4: 00000000000406f0
+> Jan  7 12:15:56 nfsvmf14 kernel: Call Trace:
+> Jan  7 12:15:56 nfsvmf14 kernel: <TASK>
+> Jan  7 12:15:56 nfsvmf14 kernel:
+> __refcount_sub_and_test.constprop.0+0x2b/0x36 [nfsd]
+> Jan  7 12:15:56 nfsvmf14 kernel: nfsd_file_free+0x119/0x182 [nfsd]
+> Jan  7 12:15:56 nfsvmf14 kernel: destroy_unhashed_deleg+0x65/0x8e [nfsd]
+> Jan  7 12:15:56 nfsvmf14 kernel: __destroy_client+0xc3/0x1ea [nfsd]
+> Jan  7 12:15:56 nfsvmf14 kernel: nfs4_state_shutdown_net+0x12c/0x236 [nfsd]
+> Jan  7 12:15:56 nfsvmf14 kernel: nfsd_shutdown_net+0x35/0x58 [nfsd]
+> Jan  7 12:15:56 nfsvmf14 kernel: nfsd_put+0xbf/0x117 [nfsd]
+> Jan  7 12:15:56 nfsvmf14 kernel: nfsd_svc+0x2d0/0x2f2 [nfsd]
+> Jan  7 12:15:56 nfsvmf14 kernel: write_threads+0x6d/0xb9 [nfsd]
+> Jan  7 12:15:56 nfsvmf14 kernel: ? write_versions+0x333/0x333 [nfsd]
+> Jan  7 12:15:56 nfsvmf14 kernel: nfsctl_transaction_write+0x4f/0x6b [nfsd]
+> Jan  7 12:15:56 nfsvmf14 kernel: vfs_write+0xdb/0x1e5
+> Jan  7 12:15:56 nfsvmf14 kernel: ? kmem_cache_free+0xf1/0x186
+> Jan  7 12:15:56 nfsvmf14 kernel: ? do_sys_openat2+0xcd/0xf5
+> Jan  7 12:15:56 nfsvmf14 kernel: ? __fget_light+0x2d/0x78
+> Jan  7 12:15:56 nfsvmf14 kernel: ksys_write+0x76/0xc3
+> Jan  7 12:15:56 nfsvmf14 kernel: do_syscall_64+0x56/0x71
+> Jan  7 12:15:56 nfsvmf14 kernel: entry_SYSCALL_64_after_hwframe+0x63/0xcd
+> Jan  7 12:15:56 nfsvmf14 kernel: RIP: 0033:0x7fa6142efa00
+> Jan  7 12:15:56 nfsvmf14 kernel: Code: 73 01 c3 48 8b 0d 70 74 2d 00 f7
+> d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d bd d5 2d 00 00 75 10
+> b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 ee cb
+> 01 00 48 89 04 24
+> Jan  7 12:15:56 nfsvmf14 kernel: RSP: 002b:00007ffc79bf4748 EFLAGS:
+> 00000246 ORIG_RAX: 0000000000000001
+> Jan  7 12:15:56 nfsvmf14 kernel: RAX: ffffffffffffffda RBX:
+> 0000000000000003 RCX: 00007fa6142efa00
+> Jan  7 12:15:56 nfsvmf14 kernel: RDX: 0000000000000002 RSI:
+> 000055d4cb8093e0 RDI: 0000000000000003
+> Jan  7 12:15:56 nfsvmf14 kernel: RBP: 000055d4cb8093e0 R08:
+> 0000000000000000 R09: 00007fa61424d2cd
+> Jan  7 12:15:56 nfsvmf14 kernel: R10: 0000000000000004 R11:
+> 0000000000000246 R12: 0000000000000000
+> Jan  7 12:15:56 nfsvmf14 kernel: R13: 0000000000000000 R14:
+> 0000000000000000 R15: 000000000000001f
+> Jan  7 12:15:56 nfsvmf14 kernel: </TASK>
+> Jan  7 12:15:56 nfsvmf14 kernel: ---[ end trace 0000000000000000 ]---
 > 
-> See the ticket for more details.
-> 
-> BTW, let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
-> 
-> #regzbot introduced: 2aca4f3734bd717e04943
-> https://bugzilla.kernel.org/show_bug.cgi?id=216894
-> #regzbot title: net: wifi: brcmfmac stopped working as firmware is not
-> loaded anymore
-> #regzbot ignore-activity
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
