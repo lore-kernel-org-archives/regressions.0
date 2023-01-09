@@ -1,45 +1,13 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D941F2571
-	for <regressions@lists.linux.dev>; Mon,  9 Jan 2023 08:42:33 +0000 (UTC)
-Received: by mail-wm1-f44.google.com with SMTP id o15so5690698wmr.4
-        for <regressions@lists.linux.dev>; Mon, 09 Jan 2023 00:42:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uDNqtXzc1k5JQX+5JmREIHtLjz5O91JN1ujAKPT/qRs=;
-        b=xpqWwCHHW4ovQD4zDO88o6zcHbCIBCNQbysQOiw6VisUPPSCqGrgJspH8xdUAWrKX7
-         X6if6R8bnFVxYJpGylaiUPzi2cFm+6+rzjCQFf1hQRYYfs6SzIc66SjAvfi1qe9my/bg
-         B3LS60rZ/jSK4MUs8yeuBSEwwLUY2mABUbWx+QPE9XIbgzHtGdEETBVgu96JQcvHBF0e
-         xPmWKjPBI95RTtrBba+wFJrgTOjXyUhPIl6dejo8/eEinOs0qUrddLh95IFvtQPosw9a
-         9CLHAgDqc4btZQoNTdupqaXAp1Y7dmqOvLDzDhGEuMRfqnPCwq4LiYZhPkdkiAU36Nw0
-         /4og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uDNqtXzc1k5JQX+5JmREIHtLjz5O91JN1ujAKPT/qRs=;
-        b=Bs4T/MEQkS+yvt+ybp4wdF3Kd0ptGObu1n67ZCGOik6c5xFoX02A9jgm+5klhM5smg
-         mrhOitq+rBLa9/AXYgDSZWsZLnZnZx7xPOHJpa27mAsrT/y0d08uxLlXH/0YRMDbtqas
-         W9JSdB1HViv3IcNAytJDpPZieunBmvikA/bm414oM26WDVgsLvnrCxGFiRd4uos122ws
-         TmHl6Bf2mrVbkecStsANUtd+MWGDCoGeq65PZi6Tl/xfalYDXp4zwiiRbMe4Z4t0E4J6
-         riQ2rjx9NevEQ1F6q8s8CJESd+zZY1BtgFvBHKgOh6HhENsqZ1HiZXt6bVKs9fwUqOlr
-         VFzg==
-X-Gm-Message-State: AFqh2kooqT8t0hw/Zq62tzqflgf2RmrJ+8r+aKVPCgjXi3bLhAWYvTGG
-	bfRsKDqegu62YkFaLuzS86tYwg==
-X-Google-Smtp-Source: AMrXdXs74Hl49op2dbDkPETVxdYir/RFfSNCaTDjwTZAvf1XlwniEiIe42JcO/fF72xSWzZtXpEqRQ==
-X-Received: by 2002:a05:600c:5108:b0:3d1:ce35:4224 with SMTP id o8-20020a05600c510800b003d1ce354224mr45314615wms.11.1673253752193;
-        Mon, 09 Jan 2023 00:42:32 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id n7-20020a05600c4f8700b003c6bd12ac27sm11944698wmq.37.2023.01.09.00.42.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Jan 2023 00:42:31 -0800 (PST)
-Message-ID: <51430925-8046-7066-84ed-2ff0db835347@linaro.org>
-Date: Mon, 9 Jan 2023 09:42:30 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DB92599
+	for <regressions@lists.linux.dev>; Mon,  9 Jan 2023 09:14:50 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pEoEo-00030V-8i; Mon, 09 Jan 2023 10:14:38 +0100
+Message-ID: <b74f4337-2e52-fe01-666c-d08335e9f4f4@leemhuis.info>
+Date: Mon, 9 Jan 2023 10:14:37 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,115 +15,82 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
- (commit 7fd461c47)
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Trond Myklebust <trondmy@hammerspace.com>
-Cc: Anna Schumaker <Anna.Schumaker@Netapp.com>,
- linux-nfs <linux-nfs@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Thunderbird/102.6.0
+Content-Language: en-US, de-DE
+From: "Linux kernel regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: =?UTF-8?Q?Filipe_La=c3=adns?= <lains@riseup.net>,
+ Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+ Bastien Nocera <hadess@hadess.net>
+Cc: Jiri Kosina <jikos@kernel.org>,
+ "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, berilko@gmail.com,
+ =?UTF-8?Q?Stefan_Br=c3=bcns?= <stefan.bruens@rwth-aachen.de>,
  "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
- <82526863-d07a-0a5d-2990-1555b1387f26@linaro.org>
- <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com>
- <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org>
-In-Reply-To: <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: =?UTF-8?Q?=5bRegression=5d_Bug=c2=a0216903_-_HiRes_Scroll_for_Perfo?=
+ =?UTF-8?Q?rmance_Mouse_MX_broken_in_6=2e1?=
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673255690;096cc6bc;
+X-HE-SMSGID: 1pEoEo-00030V-8i
 
-On 09/01/2023 09:14, Krzysztof Kozlowski wrote:
-> On 08/01/2023 18:09, Trond Myklebust wrote:
->> Hi Krzysztof,
->>
->>> On Jan 8, 2023, at 08:25, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
->>>
->>> [You don't often get email from krzysztof.kozlowski@linaro.org. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification]
->>>
->>> On 07/01/2023 16:44, Krzysztof Kozlowski wrote:
->>>> Hi,
->>>>
->>>> Bisect identified commit 7fd461c47c6c ("NFSv4.2: Change the default
->>>> KConfig value for READ_PLUS") as one leading to NULL pointer exception
->>>> when mounting NFS root on NFSv4 client:
->>>>
->>>> [   25.739003] systemd[1]: Set hostname to <odroidhc1>.
->>>> [   25.771714] systemd[1]: Failed to bump fs.file-max, ignoring: Invalid
->>>> argument
->>>> [   26.199478] 8<--- cut here ---
->>>> [   26.201366] Unable to handle kernel NULL pointer dereference at
->>>> virtual address 00000004
->>>> ...
->>>> [   26.555522]  mmiocpy from xdr_inline_decode+0xec/0x16c
->>>> [   26.560628]  xdr_inline_decode from nfs4_xdr_dec_read_plus+0x178/0x358
->>>> [   26.567130]  nfs4_xdr_dec_read_plus from call_decode+0x204/0x304
->>>>
->>>> Full OOPS attached. Full log available here:
->>>> https://krzk.eu/#/builders/21/builds/3901/steps/15/logs/serial0
->>>>
->>>> Disabling NFS_V4_2_READ_PLUS fixes the issue, so obviously the commit is
->>>> not the cause, but rather making it default caused the regression.
->>>>
->>>> I did not make the bisect yet which commit introduced it, if every
->>>> config includes NFS_V4_2_READ_PLUS.
->>>
->>> When every kernel is built with NFS_V4_2_READ_PLUS, bisect pointed to:
->>> d3b00a802c84 ("NFS: Replace the READ_PLUS decoding code")
->>>
->>> commit d3b00a802c845a6021148ce2e669b5a0b5729959
->>> Author: Anna Schumaker <Anna.Schumaker@Netapp.com>
->>> Date:   Thu Jul 21 14:21:34 2022 -0400
->>>
->>>    NFS: Replace the READ_PLUS decoding code
->>>
->>>    We now take a 2-step process that allows us to place data and hole
->>>    segments directly at their final position in the xdr_stream without
->>>    needing to do a bunch of redundant copies to expand holes. Due to the
->>>    variable lengths of each segment, the xdr metadata might cross page
->>>    boundaries which I account for by setting a small scratch buffer so
->>>    xdr_inline_decode() won't fail.
->>>
->>>    Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
->>>    Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
->>>
->>> With a trace:
->>> [   25.898462] systemd[1]: Set hostname to <odroidhc1>.
->>> [   25.933746] systemd[1]: Failed to bump fs.file-max, ignoring: Invalid
->>> argument
->>> [   25.986237] random: crng init done
->>> [   26.264564] 8<--- cut here ---
->>> [   26.266823] Unable to handle kernel NULL pointer dereference at
->>> virtual address 00000fe8
->>> ...
->>> [   26.597263]  nfs4_xdr_dec_read_plus from call_decode+0x204/0x304
->>> [   26.603222]  call_decode from __rpc_execute+0xd0/0x890
->>> [   26.608328]  __rpc_execute from rpc_async_schedule+0x1c/0x34
->>> [   26.613960]  rpc_async_schedule from process_one_work+0x294/0x790
->>> [   26.620030]  process_one_work from worker_thread+0x54/0x518
->>> [   26.625570]  worker_thread from kthread+0xf4/0x128
->>> [   26.630336]  kthread from ret_from_fork+0x14/0x2c
->>>
->>
->> Is this test being run against a 6.2-rc2 server, or is it an older server platform? We know there were bugs in older server implementations, so the question is whether this might be a problem with handling a bad/corrupt RPC reply from the server, or whether it is happening against code that is supposed to have been fixed?
+Hi, this is your Linux kernel regression tracker.
+
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216903 :
+
+>  berilko@gmail.com 2023-01-08 19:14:21 UTC
 > 
-> I would say that buggy server should not cause NULL pointer dereferences
-> on the client. Otherwise this is a perfect recipe for a rogue server in
-> the network to start crashing clients and running exploits... Imagine a
-> compromised machine (through some other means) in a local company
-> network running now a server with NFS share "HR salary data" or "HR
-> planned layoffs", where unsuspected people in that network access it
-> leading to exploit of NFS code on their side...
+> Since 6.1 Kernel driver for hid-logitech-hidpp no more detect Performance MX as FastScroll
 > 
-> Server is Raspberry Pi 3 kernel: 5.10.92-2-rpi-legacy-ARCH
+> Self-made patch is:
+> --- archlinux-linux/drivers/hid/hid-logitech-hidpp.c	2023-01-09 00:41:25.310773805 +0700
+> +++ archlinux-linux/drivers/hid/hid-logitech-hidpp.c	2023-01-09 01:09:10.844967608 +0700
+> @@ -3479,7 +3479,7 @@
+>  						  HIDPP_GET_REGISTER,
+>  						  HIDPP_ENABLE_FAST_SCROLL,
+>  						  NULL, 0, &response);
+> -		if (!ret) {
+> +		if (!ret || /* Patch for Performance MX */ hidpp->hid_dev->product == 0x101a) {
+>  			hidpp->capabilities |= HIDPP_CAPABILITY_HIDPP10_FAST_SCROLL;
+>  			hid_dbg(hidpp->hid_dev, "Detected HID++ 1.0 fast scroll\n");
+>  		}
 > 
-> Which points that it is not latest stable, so anyway I need to update.
+> [reply] [−] Comment 1 Stefan Brüns 2023-01-08 23:39:50 UTC
+> 
+> Unfortunately, the hires auto detection is broken for HID++1.0 devices.
+> 
+> https://elixir.bootlin.com/linux/latest/source/drivers/hid/hid-logitech-hidpp.c#L3477
+> 
+> ```
+> 		ret = hidpp_send_rap_command_sync(hidpp,
+> 						  REPORT_ID_HIDPP_SHORT,
+> 						  HIDPP_GET_REGISTER,
+> 						  HIDPP_ENABLE_FAST_SCROLL,
+> 						  NULL, 0, &response);
+> ```
+> 
+> This command tries to read from register 0x40, while the FAST_SCROLL feature is BIT(6) (0x40) in register 0x01.
+> 
+> For my M705, enabling and disabling of FAST_SCROLL is possible (writing 0x42/0x02 to register 0x1), and the current setting can be read back.
+> 
+> I don't think auto-detection is possible for HID++1.0 devices.
+> 
 
-I updated the kernel to 5.15.84-3-rpi-ARCH which is pretty close to
-latest stable and I can reproduce the issue. Therefore:
-1. It is visible on two stable (one new, one old) kernels on the server,
-2. Buggy or rogue server should not cause NULL pointer on remote devices...
+See the ticket for more details.
 
-Best regards,
-Krzysztof
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
 
+#regzbot introduced: v6.0..v6.1
+https://bugzilla.kernel.org/show_bug.cgi?id=216903
+#regzbot title: hid: HiRes Scroll for Performance Mouse MX broken
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
