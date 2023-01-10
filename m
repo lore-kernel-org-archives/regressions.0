@@ -1,77 +1,85 @@
-Received: from cmx-mtlrgo002.bell.net (mta-mtl-005.bell.net [209.71.208.25])
+Received: from nbd.name (nbd.name [46.4.11.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2A8A28F8;
-	Tue, 10 Jan 2023 08:10:50 +0000 (UTC)
-X-RG-CM-BuS: 0
-X-RG-CM-SC: 0
-X-RG-CM: Clean
-X-Originating-IP: [70.54.80.171]
-X-RG-Env-Sender: matt.fagnani@bell.net
-X-RG-Rigid: 63B600CD009937F6
-X-CM-Envelope: MS4xfCUGo27GhQgcr70sf442nrT2B06JG7JQm4Oo8WeAVI9/mwH+42A9EtzIcaAz/Z409dfEdYCjUrK/DxGZbrK4YAjwOkun/Ymxbn7R/AsKWZxR64kPD0kd
- cvjkrud2NELDAx2JCY1URQMKLYsVKv0heaods7dV9V30vwqcL3BO60Cz+uoPJzPtrkiUzGqzNzAxprKsvsheAcC7jOrvr2xD+kNKQJdg9NLdWHZaG3QyifnS
- C+JNo9k1yMAGDylXuTQUMvZPc4DnGhHXdat8ywuPXvFF43qQrI5CWSt3T/SGIrwln6/EUsoiWfJSQ2QmelgnNTSNx+JF+FV0k33ck/Vs5T4FVN78z2/HZ6wW
- qpDQyjYLlSlbtO6mZCUoicQ6u1nAlY1YY/U+JQS6wGya9etMUQAht3y2D1ta7xsOxyOhFNxyo3W8megGhMipVdC/LEd9eAnF06ecL73Y7xpgTShbwSdeUWOp
- ORE+y58BGvjcJzS6idZVZgkNQqbe+taPyuSOc0EC3VrZolI1LC40FpD1t6M=
-X-CM-Analysis: v=2.4 cv=d6kzizvE c=1 sm=1 tr=0 ts=63bd1c9e
- a=I0QgvDUx5pjUA0xIX2H+Tw==:117 a=I0QgvDUx5pjUA0xIX2H+Tw==:17
- a=IkcTkHD0fZMA:10 a=5KLPUuaC_9wA:10 a=fc0oe9_eLKIsakoo4NEA:9
- a=QEXdDO2ut3YA:10
-Received: from [192.168.2.10] (70.54.80.171) by cmx-mtlrgo002.bell.net (5.8.807) (authenticated as matt.fagnani@bell.net)
-        id 63B600CD009937F6; Tue, 10 Jan 2023 03:06:54 -0500
-Message-ID: <be2b2dfc-ed6c-f762-7e4c-9d22b13717fe@bell.net>
-Date: Tue, 10 Jan 2023 03:06:53 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164BD28F8
+	for <regressions@lists.linux.dev>; Tue, 10 Jan 2023 08:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+	s=20160729; h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:
+	Mime-Version:From:Content-Transfer-Encoding:Content-Type:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=gU/VJ5Mdn7PSnhvkQdK4tRBqeI9KBkt7N2uzd23CmJ0=; b=PNgK3aL6KTo1Z4AEEr+PqpuCEI
+	1ZPtDvPFqTy3zm6COzd+wqSTy+tBp4Kv4hkAk7VYMpj/cJYjBZIthrREbkykCpcdQDKlzFtX14eJK
+	74M6Yx9R9NrHBNjlTixrbxKVAy1CHQnyNwVIiOsP+hQzel5BZoa/LKsbx40N649j9AXA=;
+Received: from [2a01:598:d03c:4bb9:2908:576:b220:c1cd] (helo=smtpclient.apple)
+	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.94.2)
+	(envelope-from <nbd@nbd.name>)
+	id 1pF9YT-00FYr2-QC; Tue, 10 Jan 2023 09:00:21 +0100
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From: Felix Fietkau <nbd@nbd.name>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101
- Firefox/110.0 Thunderbird/110.0a1
-From: Matt Fagnani <matt.fagnani@bell.net>
-Subject: =?UTF-8?Q?Re=3A_=5Bregression=2C_bisected=2C_pci/iommu=5D_Bug=C2=A0?=
- =?UTF-8?Q?216865_-_Black_screen_when_amdgpu_started_during_6=2E2-rc1_boot_w?=
- =?UTF-8?Q?ith_AMD_IOMMU_enabled?=
-To: Baolu Lu <baolu.lu@linux.intel.com>, Jason Gunthorpe <jgg@nvidia.com>,
- Vasant Hegde <vasant.hegde@amd.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
- Joerg Roedel <jroedel@suse.de>, "iommu@lists.linux.dev"
- <iommu@lists.linux.dev>, LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Linux PCI <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-References: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
- <5aa0e698-f715-0481-36e5-46505024ebc1@bell.net>
- <aea57c5f-2d20-c589-ad44-a63f1133a3db@linux.intel.com>
- <157c4ca4-370a-5d7e-fe32-c64d934f6979@amd.com>
- <223ee6d6-70ea-1d53-8bc2-2d22201d8dde@bell.net>
- <6fff9d10-f77f-e55a-9020-8a1bd34cf508@amd.com> <Y7gs0zYKp/VXACBi@nvidia.com>
- <f96b1cf3-6865-663d-f1cd-466a71519b08@linux.intel.com>
-Content-Language: en-US
-In-Reply-To: <f96b1cf3-6865-663d-f1cd-466a71519b08@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Baolu,
-
-I tried to apply your patch after checking out 6.2-rc3 and origin/master 
-but there were there the following errors.
-
-git apply amd-iommu-amdgpu-boot-crash-2.patch
-error: patch failed: drivers/pci/ats.c:382
-error: drivers/pci/ats.c: patch does not apply
-
-I manually changed drivers/pci/ats.c as shown in the patch. I built 
-6.2-rc3 + the patch. 6.2-rc3 with the patch had the same black screen 
-problem when booting. I added rd.driver.blacklist=amdgpu on the kernel 
-command line to prevent amdgpu from being started while the initramfs 
-was in use, and the black screen happened later in the boot as I 
-described in my previous email. The journal showed the same two warnings 
-and null pointer dereference which made amdgpu crash as I reported.
-
-Thanks,
-
-Matt
+Mime-Version: 1.0 (1.0)
+Subject: Re: [6.2][regression] after commit cd372b8c99c5a5cf6a464acebb7e4a79af7ec8ae stopping working wifi mt7921e
+Date: Tue, 10 Jan 2023 09:00:11 +0100
+Message-Id: <BD7074C5-20BE-4D70-824B-0994892C995D@nbd.name>
+References: <252b1fe4-ccc2-4ea8-1da5-9a60f7378fd6@leemhuis.info>
+Cc: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>, lorenzo@kernel.org,
+ sujuan.chen@mediatek.com,
+ Linux List Kernel Mailing <linux-wireless@vger.kernel.org>,
+ Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+ "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, spasswolf@web.de
+In-Reply-To: <252b1fe4-ccc2-4ea8-1da5-9a60f7378fd6@leemhuis.info>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+X-Mailer: iPhone Mail (20C65)
 
 
+> On 10. Jan 2023, at 08:17, Linux kernel regression tracking (Thorsten Leem=
+huis) <regressions@leemhuis.info> wrote:
+>=20
+> =EF=BB=BF[CCing spasswolf@web.de]
+>=20
+>> On 09.01.23 08:32, Linux kernel regression tracking (Thorsten Leemhuis)
+>> wrote:
+>>> On 04.01.23 15:20, Thorsten Leemhuis wrote:
+>>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
+>>> to make this easily accessible to everyone.
+>>>=20
+>>> Felix, Lorenzo, did below fix for the regression
+>>=20
+>> There is another report about an issue with mediatek wifi in 6.2-rc:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=3D216901
+>=20
+> FWIW, "spasswolf" in that ticket posted a patch that according to the
+> reporter of that bug fixes the issue:
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D216901#c5
+>=20
+> I only took a brief look, but it seems it does a subset of what Felix
+> patch does.
+>=20
+>> To me this looks like a duplicate of the report that started this thread.=
+
+>>=20
+>> (side note: there was another, earlier report that might be a dupe, too:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=3D216829 )>
+>>> Mikhail reported make
+>>> any progress to get mainlined? It doesn't look like it from here, but I
+>>> suspect I missed something, that's why I'm asking.
+>>=20
+>> No reply. :-((
+>=20
+> Still no reply. I wonder if I'm holding things wrong. But well, let's
+> wait one more day before escalating this further.
+
+Johannes told me on IRC that he will review my patch soon. He simply has too=
+ many things to do at the moment.
+
+- Felix=
