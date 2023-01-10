@@ -1,225 +1,167 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2081.outbound.protection.outlook.com [40.107.95.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678C57481
-	for <regressions@lists.linux.dev>; Tue, 10 Jan 2023 15:28:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1673364480;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tz1ODqtO/pyjNIGyJ5IXgKVn1n2OvObUhEhg2Owq9aQ=;
-	b=Rq3F80Ff54kc8IbQu6ajET1A39wJYjZN4N0Qhp/DesgiSSXsaa+dMJ51JieNLhKh4xks5B
-	+KKcHZYCz4bRZu1PJdl/PRRFIS5ie67ABJOp9wVpXTxzUGFUWwKW4A3XTFec1k6ogUVDrz
-	QlE57cMu3HvEYUI8hQbgN/aB7FtDSWQ=
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
- [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-184-lQJ8lV4KMu2Z6fITPm4zoQ-1; Tue, 10 Jan 2023 10:27:59 -0500
-X-MC-Unique: lQJ8lV4KMu2Z6fITPm4zoQ-1
-Received: by mail-ej1-f71.google.com with SMTP id qw20-20020a1709066a1400b007c1727f7c55so7941447ejc.2
-        for <regressions@lists.linux.dev>; Tue, 10 Jan 2023 07:27:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tz1ODqtO/pyjNIGyJ5IXgKVn1n2OvObUhEhg2Owq9aQ=;
-        b=5YmX8kMZAB03ZYBkUcX3eOj2xZzfQI+x/gq7ce1G6rgp7K1BXHx8lAnNHc4leHJaZq
-         V5Qa38sMVizDwhKFxdh3JdXblbGNpqaFam1xHpA9ezyL7F/rgI53GB4EF8R4dCpa6mYA
-         oKpYTjJIJXKYUtskyt6T4kwqJMrkFmWz0YQb91FHKFFDYQ3vodDGgGSi6wn15R/imrnQ
-         iSefNc9DV5gb0JDjyIqIDW6673kaIvpUm5LN9aHL8u5g3ZzXorNO/99TvHNQwRWwT7fo
-         ujC7ARc6tpPsNnjPQT5DKpCJ/I8SE1sGK1rhlE7ryHshJyj0pBiTwM2ILBqtPPYwih6H
-         rEnQ==
-X-Gm-Message-State: AFqh2kocQeFy08T8ubz7617dkeel6dzWr6w02IplBaUwV2v9yo40FU+M
-	KMnH7Fz0CTLdklRH2AkPowu3H1mITcKuOQ5eUOQbb/Dz5PHUot8RB1CUdQVRK1uZ/v8tceLs31a
-	oqB/PBuu3tu4omLb2uimrGKU=
-X-Received: by 2002:a17:907:ca1d:b0:84d:4e77:6453 with SMTP id uk29-20020a170907ca1d00b0084d4e776453mr5408252ejc.38.1673364477834;
-        Tue, 10 Jan 2023 07:27:57 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXt72/ydNP6DCYNYO7EuwnIDJpPk85PbAF5KFRNl8asL/zAzchlVIYgLr/XScyEZWtNCnRerYw==
-X-Received: by 2002:a17:907:ca1d:b0:84d:4e77:6453 with SMTP id uk29-20020a170907ca1d00b0084d4e776453mr5408239ejc.38.1673364477590;
-        Tue, 10 Jan 2023 07:27:57 -0800 (PST)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id g9-20020a17090604c900b0085ca279966esm83546eja.119.2023.01.10.07.27.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Jan 2023 07:27:57 -0800 (PST)
-Message-ID: <16fde015-73d7-8169-3fc5-7a4915508c05@redhat.com>
-Date: Tue, 10 Jan 2023 16:27:56 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56CF9A921;
+	Tue, 10 Jan 2023 16:08:29 +0000 (UTC)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VipFV5XYCDU8cVk/uXK1pfh5YwoeDXh58qNF/A8yr6ZVf65Sd/kcde2AGpI/bSPBADGpKIJOp9gg687rIKur1ZCXHsgcwps69OxwBYzTjELxTeAihNYMcJJfZSCUuJ0494Z4hb3iFdmOirvC6p6eo3bkTXJWwH7ipSKzv5ssAxXTVps18m///rnQvWVAbc3aVgqMFTpFmrBecQxjMH60f5c9DFnVmDJetni6FfDKH+6DAFM0SGk7RQR1JkpSj/sdkQ+b9vemgjrIkl/UevY6YJbwgpJMcuikq7iDzuBKtSDAvUMjgLJmfGaPU3SfkHzK/Bh9lWKUWsgtWkSSiv60jw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kLBbCpuys48xfolXMdNcWLIsMhJGoDfuJ1mZ4HaBPd0=;
+ b=d1sJyrSlJKuRCOr8yWxb/+D+fXiaTVhGIbICiV26uEYDctO0dpCFqm3JWvTnZ/4F5p3al7xEMMvvppKsGiQezOYKOfSvBRlj0Q1PZ5lgcFKKsJhPaDiuAmI3Z6k7yEmGboTYv2koc0vWlO5zCtllKNZzqkI9Yi49nYYhQcfPixePH7H8J41LmhmE7OT8fDi2INezvslUD3Xn2Yl+pKnCQD53oQvhR2QtaI8dv4SU+cIDfQNYHcnLTt0f1ybk0VPQ4oDUZVVippb5bWhOFjiP+P+rZGWYiBPDO3aGYiAhtautA+V4KYz8SmRZkqeVGi2hQYkpsQX4dF2XQxvMm4Wrgg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kLBbCpuys48xfolXMdNcWLIsMhJGoDfuJ1mZ4HaBPd0=;
+ b=dnf2q3Y74wycVlzskMnXBnBBnUA6J4qVGd9O/f3ANEatOnYZZoqs6pzR+ZZQ6PQ9jksB09+0fv3ugQNr21uK/nQgBcH2/yQ/+FKXlWpcAYcz9v7anRxARpn5S/ZtWtYKGaJEMTpfggbkdstbRxQayv8C0HI5HA8G1wB0/39J45w=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
+ IA0PR12MB7508.namprd12.prod.outlook.com (2603:10b6:208:440::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5986.18; Tue, 10 Jan 2023 16:08:27 +0000
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::4014:79ea:392b:b4f6]) by DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::4014:79ea:392b:b4f6%4]) with mapi id 15.20.5986.018; Tue, 10 Jan 2023
+ 16:08:27 +0000
+Message-ID: <525730fd-5982-fea7-b6d5-2da69f225f04@amd.com>
+Date: Tue, 10 Jan 2023 21:38:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.1
+Subject: =?UTF-8?Q?Re=3a_=5bregression=2c_bisected=2c_pci/iommu=5d_Bug=c2=a0?=
+ =?UTF-8?Q?216865_-_Black_screen_when_amdgpu_started_during_6=2e2-rc1_boot_w?=
+ =?UTF-8?Q?ith_AMD_IOMMU_enabled?=
+Content-Language: en-US
+To: Matt Fagnani <matt.fagnani@bell.net>, Baolu Lu
+ <baolu.lu@linux.intel.com>, Thorsten Leemhuis <regressions@leemhuis.info>
+Cc: Joerg Roedel <jroedel@suse.de>,
+ "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Linux PCI <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+References: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
+ <5aa0e698-f715-0481-36e5-46505024ebc1@bell.net>
+ <aea57c5f-2d20-c589-ad44-a63f1133a3db@linux.intel.com>
+ <157c4ca4-370a-5d7e-fe32-c64d934f6979@amd.com>
+ <223ee6d6-70ea-1d53-8bc2-2d22201d8dde@bell.net>
+ <6fff9d10-f77f-e55a-9020-8a1bd34cf508@amd.com>
+ <ff26929d-9fb0-3c85-2594-dc2937c1ba9a@bell.net>
+From: Vasant Hegde <vasant.hegde@amd.com>
+In-Reply-To: <ff26929d-9fb0-3c85-2594-dc2937c1ba9a@bell.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN0PR01CA0031.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:4e::21) To DS7PR12MB6048.namprd12.prod.outlook.com
+ (2603:10b6:8:9f::5)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [REGRESSION] Backlight control broken on Dell G15 5515 since 6.1
-To: Youssef Aly <youssefaswad@gmail.com>, Daniel Dadap <ddadap@nvidia.com>
-References: <CAKsK3AkWhAx6cvt5ABRecun+24FVQa441OrYfzYQ5fJpJHCqmw@mail.gmail.com>
- <166f50f5-6034-d644-86ed-c41a8636263a@redhat.com>
- <CAKsK3Ak8bKF5RM+5Xtp2doE4N8BwEKVQG_qbujD526SjGqzmYQ@mail.gmail.com>
- <CAKsK3A=3QbFfO4mmetD+CUJdJDawmfzazi_w9+fi-mX9tLaHGA@mail.gmail.com>
- <2d7c08c8-8f95-9591-d7bd-87b9f1a9b657@redhat.com>
- <CAKsK3An_b_FAZxJzTk9GZZ41-9+_Ym2icWVaN41WV6qEySWx4A@mail.gmail.com>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <CAKsK3An_b_FAZxJzTk9GZZ41-9+_Ym2icWVaN41WV6qEySWx4A@mail.gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US, nl
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|IA0PR12MB7508:EE_
+X-MS-Office365-Filtering-Correlation-Id: c13f972d-adc5-4fe9-5cb6-08daf324e82b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	hxcp7F2wADe/vxy/rRDB9F4YZO0BhHmD8BCD0BUM/pTHcFe7XmfAKaSwcOeEhyBeyW8Smnm3UKD8wbRo4hmkFUsEf7yevlgBAOi6UPPYX4hkM4fun/vqH/BJa8nYOPOEq2V3JrCTNja5KrLM78kknbS31nj6EPHTZ0nfgTEsjF7BR/0//Uu3jYRg1A+xwb/bRk73+aaGDnj/+plHjTijmyWeqmtrTs0qmm5Ruv9QJU4W8ryRavv2c39x1qJ+Wcdz6qvg8jliGacAm6UBfxTdz23vWeqU4uybkwGvGHTMK73AuKE1cQ4lEiInRHxpWn/4gDO8ytHj/wjetAXw7dca6rF2T+wi/2sAHy5DzH+/yQ7yksn9k6XfhNyKJxSuq47dw0aQcIhn1aFDo7rq8n2k8tmgk8SiDjV4FGjdA4MNVUVF0f7LOz8ls2Kg8gCme6mQs1cyS8nGBsVxOtpbGSkkeBZvDaiVmZXYKME+TDlr5MyhQpo3LtSFK2kcBaRYyoyf2iR3eSNiDygQz/d6y8L/roxHRa3eRFXC/DUBRkPboyZ5b9Fbh35OpomgX2zzkEstPudpbps9gJmaQGzxtK9yismIF8gN2iv6TnMF7b444LjZBt+MoKOmoBhgbTRPU01z8CLjdUFsqcO+xk/fCaIRHyunvXbFbRe58wCWwSpAZypjc+dk6vSRZStHNBtghUXTu+MCeYWdVeL5qsIqSicSHOCydvkxaA0zDzlcaUsmfLE=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(396003)(136003)(346002)(376002)(39860400002)(451199015)(316002)(5660300002)(6512007)(186003)(44832011)(6486002)(478600001)(2616005)(31696002)(41300700001)(66946007)(54906003)(4326008)(66556008)(66476007)(110136005)(8936002)(83380400001)(86362001)(36756003)(6666004)(53546011)(31686004)(6506007)(38100700002)(2906002)(66899015)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?aXdXZDJIMHl2VE0wM2N5VStqVzZDQjBWWGxjUnJ5OUQzaHRLYmQwZWZYM3Fi?=
+ =?utf-8?B?ZG8vSHFSVlJZTmZ0WHZDR24wR3BENU5HZzlKcFJtSkxoY1c0eHFEeGtTRTlM?=
+ =?utf-8?B?RzFqMm9Sd1NXc0gva2dPNXhXNmx1ZWdpWlMzWGdacjl5dVVLZjN2VHJmcGU1?=
+ =?utf-8?B?S01ReWZVYVVES29TSGpsdE5STmowbEdIMURjeC9IZVFVa01iZ2tZdWY5OGJk?=
+ =?utf-8?B?UzhYZEZQWHBHRWs5M1d0YmNoSXh6SVJJWTUvMGVWQVlGRGZ4N3d2amZ3L2p5?=
+ =?utf-8?B?Y09haFA2RzdJcHZ1VmxRWSthZHNVc21WUi9PY1p6Y3RCVFRvMUpYTGg2bjhQ?=
+ =?utf-8?B?aUVEVGthS2xMTVFETjJ2MTl0OEliYjlZbVNzRzRicnYrZE1ONk92WUw0amo0?=
+ =?utf-8?B?Tm0wdkFnUWt3KzMwT0VEb0ZmTFY1Z2UvMnF2VUpMREkrdUlvYzAvaktqbkdE?=
+ =?utf-8?B?SG5YWjJ5L1FPT09sQVlhU3ZGRXNDUUd4VFRQZDZ3dmUvZzdEQTlHL052U0Rt?=
+ =?utf-8?B?Q0FQSmxjL3dNUlFHK25tQ2hOWVlOZVZ3ckN3c1ovdS8rVkhuZnpHelQvdVhl?=
+ =?utf-8?B?Zld4cDllNWtIUU5DaWMzVG9VMlF5QlZLS2p5ZU0wT2ZSeGw1eVZUTjdubzFI?=
+ =?utf-8?B?d3BlQWx5K3ZrYnlzYWdhUFg4UFBLaTdsdFRiTkhUNFdpeGFJSThDRVpwY3l4?=
+ =?utf-8?B?OEE5c3RERVROSEdINGNLano0K0FDcmNDRFhURmp5UWp3OUV5RmRIdWh4Vno1?=
+ =?utf-8?B?cTJLRmpHQ0JhR0FqUmIxZzE0bU5jUVc3OW9HUUphaEFTZlRrQlFSaTByNzZT?=
+ =?utf-8?B?NUI4MWpIWUxVT3NheE1LOEQ0Q0lkaDdkaDI5VE5MUDlkbjFMaC8rYnVzRUhl?=
+ =?utf-8?B?WHE2MEgycjQ0cWJ1TUNmSDN5V28zbTBZYkpoK3pwKzN4Tll0bEVEcEZodTVO?=
+ =?utf-8?B?Z3lvaWpuQUs2c3dGTktEOW4wUWpZbitxMVE2OHZmdWpLdFpobnREdnVYVWhQ?=
+ =?utf-8?B?b0V1cEpYMWFndWE2bU43Qkdxc0twMzhHMDJDQ3pKeE92R0FDYkl1eHZtdFdB?=
+ =?utf-8?B?ZzBOQS9Ta3hXY1g2UFZZRGJrdG1hZEowQlZNUG9uMnN4UlJvaHJKVGRrSXVV?=
+ =?utf-8?B?dXdGVFlPZjBMWk5heDVTdHhPRFlFSzNjTDljYWxPSEYwZlFZTDRHTVJmOFo5?=
+ =?utf-8?B?NUYvQ3ppRWNSS05xeWRFNU9kZUJrWEczRkZDMGFmRGs2eCtGL1l4blFxTVhN?=
+ =?utf-8?B?N3puY3B0L3QzdHJDS3RmR0o4MXdaakJKWmtBTCtBeHZCK1VQMlNYbDN1WlNF?=
+ =?utf-8?B?TmRmYzNhRjVhWHlOZXpoNjNydFVQUjRUaDA2anB5cXFRWURZNVdiOTFodzds?=
+ =?utf-8?B?QkNSL1BiUzR2emxuVm9YWjhlU0lIUmMvQllOU3RpZEpaRmZjV3kwd0c3clY1?=
+ =?utf-8?B?SWh5L1F6UXdSbmFGVzdwaHRCdWxxc0ltQ2ZnY2ttdEpLOE5jL0k3N3ZQU2hl?=
+ =?utf-8?B?eHZZZmJ1cW1ja01MQkdWTzNjbmpjS1dpa09vZ3F6S1h4QitSbDdlbFJJdEtS?=
+ =?utf-8?B?MWdiSXRRMVNwdlJRc3d3dUNiVGh4YkpLeVlvZitJT0h6ZzNFVkhRVVFRT3Jn?=
+ =?utf-8?B?N3Rqc09kT1J1UWttU2VLRGdGVmNjNXFacW5wMGN6RXVOaUxvaWgybTc2MHdY?=
+ =?utf-8?B?dmZMYXZEUm9oTzc3RmdwUXcrVXVHdFlTUW9keXhQUThuekpjY05DNGtDNHJV?=
+ =?utf-8?B?R01IWWo3b2NYYU9aaGh6YWlVeUJLZURuNHpGOFk0S1FIZForRU9JdnhCQWtq?=
+ =?utf-8?B?ZkQ3SytyR2FBYmdoZUJwSXUwNjUyU3YrNVNCWk5CUUxlcUxhQXdxMUJwMEJR?=
+ =?utf-8?B?MXhPVmhuQnU4eC9mVkp4aDlzZE9mMVpzeTdiT0dSWjRWK2tWdG1BYnd2Tmd2?=
+ =?utf-8?B?RjFNb1MrQ1BkNUVNY0QwUTRVVmR5Snc0bVlmZDdPdE0xbUdFaUxsNXRqQW1Y?=
+ =?utf-8?B?UVBjU3F2L1JYOWdxR2lXODJLVThUOTNpYmJiTU9UU01OR0JZeGNheFJveEpY?=
+ =?utf-8?B?NS9TdXQzVklGLytIQ04raGV6LzFwZStMcjdTRDlIVnJqOVZtdlM1ejZDdnQw?=
+ =?utf-8?B?VGFJM0t4TnM5cm8rYmp2N0FJeEs4Z0VVc1Y4SERpZFR2YnpZRE02NGpGbXFV?=
+ =?utf-8?Q?fPsE9avORRNuu3+0bjsdF6+ZDrSEzKKZ2i9Aj7tCA3xf?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c13f972d-adc5-4fe9-5cb6-08daf324e82b
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2023 16:08:26.9780
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: s2zDj3r5HtXs3vykKX9HgFguyNAz67EyxYYsPzH0qDxr5jycZiSRezbhM7Ufhf3YM9wvlQs5wdnRsHCmdau32w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7508
 
-Hi,
-
-On 1/10/23 16:19, Youssef Aly wrote:
-> Hi Hans,
-> 
-> Yes, I added "acpi_backlight=nvidia_wmi_ec" to
-> the kernel commandline for the patched kernel, it doesn't work without it.
-> 
-> I have 2 modes in the bios Hybrid on/off (hybrid / discrete). I tried
-> the modes with "acpi_backlight=nvidia_wmi_ec" and
-> "acpi_backlight=native" using the patched kernel (v6.1.4):
-> 
-> Hybrid:
-> "acpi_backlight=native": Does not work, /sys/class/backlight contains
-> amdgpu_bl1.
-> "acpi_backlight=nvidia_wmi_ec": Works as expected,
-> /sys/class/backlight contains nvidia_wmi_ec_backlight.
-> 
-> Discrete:
-> "acpi_backlight=native": Works but when brightness from 0-10 is the
-> same as 0-100, for example 10 is full brightness like 100, 8 is the
-> same as 80, etc... ,
-> /sys/class/backlight contains nvidia_0.
-> "acpi_backlight=nvidia_wmi_ec": Does not work, /sys/class/backlight
-> contains nvidia_wmi_ec_backlight.
-
-Thank you for testing!
-
-Ok so it seems there are 2 issues at play here:
-
-1. Depending on the BIOS setting we need to use either native (discrete mode)
-   or nvidia_wmi_ec (hybrid mode)
-
-2. There is a bug in the nvidia binary drivers backlight control in native
-   mode on this system causing the range to be wrong
-
-Daniel, we really need help from NVidia with fixing 1. can you see if
-there is a way to check the BIOS setting/mode from inside the kernel ?
-
-Regards,
-
-Hans
-
-p.s.
-
-Youssef, for your next email please use reply to all. You keep dropping
-Daniel and the regressions-list from the To/Cc, using reply-to-all should
-keep these in the To/Cc.
+Matt,
 
 
-
-
-> On Tue, 10 Jan 2023 at 10:39, Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Hi,
->>
->> On 1/10/23 02:07, Youssef Aly wrote:
->>> Hello,
->>>
->>> Just reporting back, building with the patch fixed the issue.
->>
->> I assume that you also added "acpi_backlight=nvidia_wmi_ec" to
->> the kernel commandline for the patched kernel, right ?
->>
->> If you have time, can you please also check the other BIOS
->> (hybrid / discrete / ...) modes in the BIOS?
->>
->> Based on the previous bug report, I would expect you to need
->> to pass "acpi_backlight=native" in at least some of the other
->> modes ...
->>
->> Regards,
->>
->> Hans
->>
->>
->>
->>> On Mon, 9 Jan 2023 at 22:23, Youssef Aly <youssefaswad@gmail.com> wrote:
->>>>
->>>> Hello Hans,
->>>>
->>>> Ok, I'll try building with the patch you provided, and report back.
->>>>
->>>> Thanks,
->>>>
->>>> Youssef
->>>>
->>>> On Mon, 9 Jan 2023 at 21:19, Hans de Goede <hdegoede@redhat.com> wrote:
->>>>>
->>>>> Hi Youssef,
->>>>>
->>>>> On 1/9/23 17:18, Youssef Aly wrote:
->>>>>> Hello,
->>>>>>
->>>>>> The backlight control has been broken on Dell G15 5515 since 6.1, it
->>>>>> is always at full brightness, this is only the case in hybrid (mux)
->>>>>> graphics mode.
->>>>>>
->>>>>> As per the output of lsmod the nvidia_wmi_ec_backlight is loaded:
->>>>>> nvidia_wmi_ec_backlight    16384  0
->>>>>> video                  61440  5
->>>>>> nvidia_wmi_ec_backlight,dell_wmi,amdgpu,dell_laptop,nvidia_modeset
->>>>>> wmi                    36864  7
->>>>>> video,nvidia_wmi_ec_backlight,alienware_wmi,dell_wmi,wmi_bmof,dell_smbios,dell_wmi_descriptor
->>>>>>
->>>>>> but it is not present in /sys/class/backlight, only amdgpu_bl1 is
->>>>>> present which is not functional
->>>>>> contents of /sys/class/backlight
->>>>>> total 0
->>>>>> lrwxrwxrwx 1 root root 0 Jan  9 00:49 amdgpu_bl1 ->
->>>>>> ../../devices/pci0000:00/0000:00:08.1/0000:06:00.0/backlight/amdgpu_bl1/
->>>>>>
->>>>>> this is the content on 6.0.12
->>>>>> total 0
->>>>>> lrwxrwxrwx 1 root root 0 Jan  8 20:59 amdgpu_bl1 ->
->>>>>> ../../devices/pci0000:00/0000:00:08.1/0000:06:00.0/backlight/amdgpu_bl1/
->>>>>> lrwxrwxrwx 1 root root 0 Jan  8 20:59 nvidia_wmi_ec_backlight ->
->>>>>> ../../devices/pci0000:00/PNP0C14:00/wmi_bus/wmi_bus-PNP0C14:00/603E9613-EF25-4338-A3D0-C46177516DB7/backlight/nvidia_wmi_ec_backlight/
->>>>>>
->>>>>> Distro: Endeavour OS
->>>>>> Kernel: 6.1.4-arch1-1
->>>>>> GPU: RTX 3060 Using nvidia proprietary drivers version 525.78.01
->>>>>>
->>>>>> #regzbot introduced v6.1..v6.1.4
->>>>>
->>>>> Hmm, this is likely caused by:
->>>>>
->>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f46acc1efd4b5846de9fa05f966e504f328f34a6
->>>>>
->>>>> Which was added because according to the reporter on their G15 5515
->>>>> backlight control only works in native mode ...
->>>>>
->>>>> I'm getting the feeling that we need to detect the BIOS setting
->>>>> and use a different backlight device depending on the setting...
->>>>>
->>>>> Daniel, any ideas?
->>>>>
->>>>> For now can you try building a kernel with the attached patch
->>>>> (which I've also just submitted upstream) and with:
->>>>>
->>>>> acpi_backlight=nvidia_wmi_ec
->>>>>
->>>>> added to your kernel commandline. That should work around this
->>>>> for now...
->>>>>
->>>>> Regards,
->>>>>
->>>>> Hans
->>>
->>
+On 1/6/2023 12:58 PM, Matt Fagnani wrote:
+> I booted 6.2-rc2 + patch with rd.driver.blacklist=amdgpu on the kernel command
+> line to prevent amdgpu from being started while the initramfs was in use. The
+> black screen problem happened later in the boot. I pressed sysrq+alt+s,u,b to do
+> an emergency sync, remount read-only, and reboot. The journal for that boot was
+> shown on the next boot. The two warnings which I previously reported weren't
+> shown in the journal, but the same null pointer dereference which made amdgpu
+> crash happened. I'm attaching the kernel log from the journal of that boot.
 > 
 
+Thanks for your effort to get boot log. This is helpful.
+
+Looking into the code further,
+  iommu_detach_group() didn't attach devices back to default_domain. So IOMMU
+point of view device group was left in inconsistent state. This resulted in
+IOMMU throwing page fault errors and amd IOMMU event handler code always assumes
+that domain is setup properly. That resulted in below NULL pointer dereference
+issue.
+
+  Jan 06 02:07:52 kernel: BUG: kernel NULL pointer dereference, address:
+0000000000000058
+  Jan 06 02:07:52 kernel: #PF: supervisor read access in kernel mode
+  Jan 06 02:07:53 kernel: #PF: error_code(0x0000) - not-present page
+  Jan 06 02:07:53 kernel: PGD 0 P4D 0
+  Jan 06 02:07:53 kernel: Oops: 0000 [#1] PREEMPT SMP NOPTI
+  Jan 06 02:07:53 kernel: CPU: 2 PID: 56 Comm: irq/24-AMD-Vi Not tainted
+6.2.0-rc2+ #89
+  Jan 06 02:07:53 kernel: Hardware name: HP HP Laptop 15-bw0xx/8332, BIOS F.52
+12/03/2019
+  Jan 06 02:07:53 kernel: RIP: 0010:report_iommu_fault+0x11/0x90
+
+Ideally if domain attach fails (in this case its because pasid capability check
+returned error) we should put devices back to original domain.. so that it can
+continue without PASID capability.
+
+I have a patch to handle these error conditions (not the fix for original
+issue). I will try to post it soon.
+
+-Vasant
