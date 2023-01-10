@@ -1,871 +1,691 @@
-Received: from cmx-mtlrgo001.bell.net (mta-mtl-002.bell.net [209.71.208.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5FA4A95D;
-	Tue, 10 Jan 2023 20:52:14 +0000 (UTC)
-X-RG-CM-BuS: 0
-X-RG-CM-SC: 0
-X-RG-CM: Clean
-X-Originating-IP: [70.54.81.208]
-X-RG-Env-Sender: matt.fagnani@bell.net
-X-RG-Rigid: 63B45E0E00DBC72D
-X-CM-Envelope: MS4xfL0vYIMpMisJg0AjcUe9SLIHTf5Ut9lumZnsEYr9xrSlQZJNKNbJkqWFAOeHEIT2367FAyN8bLwHU/gTYJzmkaoUBk8EfCRWkQfPSqgE5+bom+DklaZ+
- XBMhvI4oiwDYWOI0LLG58UT0r2Ydu/wkLApq5hB3dIQdLB6MYg613lY282v126UpjAr5kMwPOCQwPsF9YLiastSC3vr5xyWrrrChUxWwpNKBcFcwFuqaOHbo
- U7p3/mxhwM0NzenwzEo2HXQJWUxXD7HK8ZZSXr9zTCdVwzXRZh2q4ksBdbGtImuoLVrNtGkaIOIegGPYqcM8Me6HYfc4/eZhimAFwcPWeaJ+/2xRWhiQ3Pdg
- eOgGCJ8axd18EqzbnfCqfuBl88cf7OMCP75QGwxCAjk7vaxMmc2WvIhX3jFNUxGi3HxmzlhmMEpi4RcdNVv69llDxrMuv5dXFVBDY7RbSmDyIBpUhHNSR1cv
- dPbuPX/7h6zIjGiugsQEbGPLv/lSpvErsgwpRC1dUKz0cFesAZuKufjJUPSqGQaemotDdDI1P/7c/Ng3Xvcce00HCiWTMbcRDUwpjB75qeEuUSQyVwWu4wVh
- H/d4A7CdTSfrsfrCXrOUCNxoOUyYez/mOl7flbMiPoYoAjTpNwBZT6yVK3dkHx50/AU9TfRtgzF4hGXfpF4nhhD3
-X-CM-Analysis: v=2.4 cv=drYdSXs4 c=1 sm=1 tr=0 ts=63bdcff0
- a=VAF2WxvY40ACr1akS5K0ng==:117 a=VAF2WxvY40ACr1akS5K0ng==:17
- a=5KLPUuaC_9wA:10 a=r77TgQKjGQsHNAKrUKIA:9 a=VwQbUJbxAAAA:8 a=FBHGMhGWAAAA:8
- a=8pif782wAAAA:8 a=z4DaMepkI_nGVuvA9wUA:9 a=QEXdDO2ut3YA:10
- a=txFp-0BicvisZNSp5UMA:9 a=m-Z_27IZkzAA:10 a=AjGcO6oz07-iQ99wixmX:22
- a=9gvnlMMaQFpL9xblJ6ne:22
-Received: from [192.168.2.10] (70.54.81.208) by cmx-mtlrgo001.bell.net (5.8.807) (authenticated as matt.fagnani@bell.net)
-        id 63B45E0E00DBC72D; Tue, 10 Jan 2023 15:52:00 -0500
-Content-Type: multipart/mixed; boundary="------------uhObI78hNnEW5fjmrCRvcgIh"
-Message-ID: <134da31d-2cf4-431f-2739-aa2940087245@bell.net>
-Date: Tue, 10 Jan 2023 15:51:59 -0500
+Received: from ns2.prnet.org (ns2.prnet.org [188.165.43.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F0592908
+	for <regressions@lists.linux.dev>; Tue, 10 Jan 2023 21:12:54 +0000 (UTC)
+Received: from secure.prnet.org (mail.intern.prnet.org [192.168.1.206])
+	by ns2.prnet.org (Postfix) with ESMTP id 4F561FAB19;
+	Tue, 10 Jan 2023 22:13:30 +0100 (CET)
+Received: from [IPV6:2001:7e8:cf00:bc01:9441:d7ff:fede:982a] (unknown [IPv6:2001:7e8:cf00:bc01:9441:d7ff:fede:982a])
+	by secure.prnet.org (Postfix) with ESMTPSA id A48B3163950;
+	Tue, 10 Jan 2023 22:12:45 +0100 (CET)
+Message-ID: <d4f0758b-d11c-aee8-43df-885233a14a80@prnet.org>
+Date: Tue, 10 Jan 2023 22:12:45 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101
- Firefox/110.0 Thunderbird/110.0a1
-Subject: =?UTF-8?Q?Re=3A_=5Bregression=2C_bisected=2C_pci/iommu=5D_Bug=C2=A0?=
- =?UTF-8?Q?216865_-_Black_screen_when_amdgpu_started_during_6=2E2-rc1_boot_w?=
- =?UTF-8?Q?ith_AMD_IOMMU_enabled?=
-To: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Jason Gunthorpe <jgg@nvidia.com>
-Cc: Baolu Lu <baolu.lu@linux.intel.com>,
- Alex Deucher <alexander.deucher@amd.com>, "Pan, Xinhui"
- <Xinhui.Pan@amd.com>, Vasant Hegde <vasant.hegde@amd.com>,
- Thorsten Leemhuis <regressions@leemhuis.info>, Joerg Roedel
- <jroedel@suse.de>, "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [regression] Bug 216851 - btrfs write time corrupting for log
+ tree
+To: Filipe Manana <fdmanana@kernel.org>
+Cc: Qu Wenruo <quwenruo.btrfs@gmx.com>, dsterba@suse.cz,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ linux-btrfs <linux-btrfs@vger.kernel.org>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
  LKML <linux-kernel@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- Linux PCI <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- amd-gfx@lists.freedesktop.org
-References: <15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info>
- <5aa0e698-f715-0481-36e5-46505024ebc1@bell.net>
- <aea57c5f-2d20-c589-ad44-a63f1133a3db@linux.intel.com>
- <157c4ca4-370a-5d7e-fe32-c64d934f6979@amd.com>
- <223ee6d6-70ea-1d53-8bc2-2d22201d8dde@bell.net>
- <6fff9d10-f77f-e55a-9020-8a1bd34cf508@amd.com> <Y7gs0zYKp/VXACBi@nvidia.com>
- <f96b1cf3-6865-663d-f1cd-466a71519b08@linux.intel.com>
- <Y71nZuF5wQp3eqmn@nvidia.com> <2d1b2183-7e93-f8a5-3c74-8f66824bc8f2@amd.com>
- <Y71tTdm/f+uxsTKj@nvidia.com> <35b0f7db-e248-18ed-3e26-3f9f4f14f8c4@amd.com>
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <ae169fc6-f504-28f0-a098-6fa6a4dfb612@leemhuis.info>
+ <20230102154050.GJ11562@twin.jikos.cz>
+ <ac2f141b-b03a-6054-8250-d27a5b568027@gmx.com>
+ <03ad09d2-0c0e-ed82-509a-9758fbc81f64@prnet.org>
+ <CAL3q7H75DScFAnUGHFn9x=ZmnCbd_u3+KsLU6qKOGPeVogOQwg@mail.gmail.com>
+ <544a0942-d505-148e-9b65-f5b366a3a0e3@prnet.org>
+ <CAL3q7H7b+hrro9weiE2fLFMwvUm0PBjKPqetpQyGHUFqQd8s=w@mail.gmail.com>
+ <ec38dc9b-6e54-7166-402a-fe92c38170d0@prnet.org>
+ <CAL3q7H7anKa6ova5MYx4ZDsz6gwaq-K0OSRZuNEo-hNft7pZHQ@mail.gmail.com>
+ <3b5c7161-1a48-619b-b6b3-1868b7695c97@prnet.org>
+ <CAL3q7H7pEYNpzZYgNRxXwMz6ftCK53u46CQjPAh8nTO4ixgYwg@mail.gmail.com>
+ <CAL3q7H5bdpH621LRO+mr98r_MBhNFLU3q1NQ8erOjZFkFAzf-A@mail.gmail.com>
 Content-Language: en-US
-From: Matt Fagnani <matt.fagnani@bell.net>
-In-Reply-To: <35b0f7db-e248-18ed-3e26-3f9f4f14f8c4@amd.com>
-
-This is a multi-part message in MIME format.
---------------uhObI78hNnEW5fjmrCRvcgIh
+From: David Arendt <admin@prnet.org>
+In-Reply-To: <CAL3q7H5bdpH621LRO+mr98r_MBhNFLU3q1NQ8erOjZFkFAzf-A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Christian,
-
-I'm attaching the output of sudo lspci -vvvv. I'm not sure what $bus_id 
-is in this case. I guess it might be 00 in 00:00.0. I attached the dmesg 
-from previous boots with 6.2-rc1 at 
-https://bugzilla.kernel.org/show_bug.cgi?id=216865#c2 as I mentioned at 
-https://lore.kernel.org/all/52583644-d875-a454-7288-8b00ea0566ae@bell.net/ 
-and 6.2-rc2 + Vasant's patch with rd.driver.blacklist=amdgpu on the 
-kernel command line at 
-https://lore.kernel.org/all/ff26929d-9fb0-3c85-2594-dc2937c1ba9a@bell.net/ 
-I'm using the Radeon R5 integrated GPU which is called Wani in lspci and 
-Carrizo in dmesg. The CPU is AMD A10-9620P which is Bristol Ridge or 
-Excavator+ according to 
-https://en.wikipedia.org/wiki/List_of_AMD_accelerated_processing_units 
-I'm using the internal Elan touchscreen in the laptop. I'm not using the 
-HDMI port for an external monitor or audio which I think is called 
-Kabini HDMI/DP Audio in lspci
-
-Thanks,
-
-Matt
-
-On 1/10/23 08:56, Christian König wrote:
-> Am 10.01.23 um 14:51 schrieb Jason Gunthorpe:
->> On Tue, Jan 10, 2023 at 02:45:30PM +0100, Christian König wrote:
+On 1/10/23 16:10, Filipe Manana wrote:
+> On Thu, Jan 5, 2023 at 9:11 PM Filipe Manana <fdmanana@kernel.org> wrote:
+>> On Thu, Jan 5, 2023 at 6:24 PM David Arendt <admin@prnet.org> wrote:
+>>> On 1/5/23 18:04, Filipe Manana wrote:
+>>>> On Thu, Jan 5, 2023 at 4:49 PM David Arendt <admin@prnet.org> wrote:
+>>>>> On 1/5/23 11:22, Filipe Manana wrote:
+>>>>>> On Wed, Jan 4, 2023 at 7:35 PM David Arendt <admin@prnet.org> wrote:
+>>>>>>> On 1/4/23 20:29, Filipe Manana wrote:
+>>>>>>>> On Wed, Jan 4, 2023 at 7:26 PM David Arendt <admin@prnet.org> wrote:
+>>>>>>>>> On 1/3/23 00:38, Qu Wenruo wrote:
+>>>>>>>>>> On 2023/1/2 23:40, David Sterba wrote:
+>>>>>>>>>>> On Tue, Dec 27, 2022 at 03:01:34PM +0100, Thorsten Leemhuis wrote:
+>>>>>>>>>>>> Hi, this is your Linux kernel regression tracker speaking.
+>>>>>>>>>>>>
+>>>>>>>>>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>>>>>>>>>>>> kernel developer don't keep an eye on it, I decided to forward it by
+>>>>>>>>>>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216851 :
+>>>>>>>>>>>>
+>>>>>>>>>>>>> I am experiencing btrfs file system errors followed by a switch to
+>>>>>>>>>>>>> readony with kernel 6.1 and 6.1.1. It never happened with kernel
+>>>>>>>>>>>>> versions before.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> A btrfs scrub and a btrfs check --readonly returned 0 errors.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS
+>>>>>>>>>>>>> critical (device sda2): corrupt leaf: root=18446744073709551610
+>>>>>>>>>>>>> block=203366612992 slot=73, bad key order, prev (484119 96 1312873)
+>>>>>>>>>>>>> current (484119 96 1312849)
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS info
+>>>>>>>>>>>>> (device sda2): leaf 203366612992 gen 5068802 total ptrs 105 free
+>>>>>>>>>>>>> space 10820 owner 18446744073709551610
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 0
+>>>>>>>>>>>>> key (484119 1 0) itemoff 16123 itemsize 160
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09inode generation 45 size 2250 mode 40700
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 1
+>>>>>>>>>>>>> key (484119 12 484118) itemoff 16097 itemsize 26
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 2
+>>>>>>>>>>>>> key (484119 72 15) itemoff 16089 itemsize 8
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 3
+>>>>>>>>>>>>> key (484119 72 20) itemoff 16081 itemsize 8
+>>>>>>>>>>>>> ...
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 82
+>>>>>>>>>>>>> key (484119 96 1312873) itemoff 14665 itemsize 51
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 83
+>>>>>>>>>>>>> key (484119 96 1312877) itemoff 14609 itemsize 56
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 84
+>>>>>>>>>>>>> key (484128 1 0) itemoff 14449 itemsize 160
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09inode generation 45 size 98304 mode 100644
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 85
+>>>>>>>>>>>>> key (484128 108 0) itemoff 14396 itemsize 53
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data disk bytenr 10674830381056 nr 65536
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data offset 0 nr 65536 ram 65536
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 86
+>>>>>>>>>>>>> key (484129 1 0) itemoff 14236 itemsize 160
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09inode generation 45 size 26214400 mode 100644
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 87
+>>>>>>>>>>>>> key (484129 108 589824) itemoff 14183 itemsize 53
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data disk bytenr 10665699962880 nr 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data offset 0 nr 32768 ram 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 88
+>>>>>>>>>>>>> key (484129 108 2850816) itemoff 14130 itemsize 53
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data disk bytenr 10665848733696 nr 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data offset 0 nr 32768 ram 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 89
+>>>>>>>>>>>>> key (484129 108 11042816) itemoff 14077 itemsize 53
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data disk bytenr 10660869349376 nr 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data offset 0 nr 32768 ram 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 90
+>>>>>>>>>>>>> key (484129 108 13402112) itemoff 14024 itemsize 53
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data disk bytenr 10660207378432 nr 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data offset 0 nr 32768 ram 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 91
+>>>>>>>>>>>>> key (484129 108 19628032) itemoff 13971 itemsize 53
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data disk bytenr 10665835618304 nr 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data offset 0 nr 32768 ram 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 92
+>>>>>>>>>>>>> key (484129 108 21266432) itemoff 13918 itemsize 53
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data disk bytenr 10661222666240 nr 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data offset 0 nr 32768 ram 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 93
+>>>>>>>>>>>>> key (484129 108 22740992) itemoff 13865 itemsize 53
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data disk bytenr 10665565814784 nr 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data offset 0 nr 32768 ram 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 94
+>>>>>>>>>>>>> key (484129 108 23101440) itemoff 13812 itemsize 53
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data disk bytenr 10665836371968 nr 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data offset 0 nr 32768 ram 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 95
+>>>>>>>>>>>>> key (484129 108 24084480) itemoff 13759 itemsize 53
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data disk bytenr 10665836404736 nr 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data offset 0 nr 32768 ram 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 96
+>>>>>>>>>>>>> key (484129 108 24150016) itemoff 13706 itemsize 53
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data disk bytenr 10665849159680 nr 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data offset 0 nr 32768 ram 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 97
+>>>>>>>>>>>>> key (484129 108 24313856) itemoff 13653 itemsize 53
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data disk bytenr 10665849192448 nr 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09extent data offset 0 nr 32768 ram 32768
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 98
+>>>>>>>>>>>>> key (484147 1 0) itemoff 13493 itemsize 160
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - -
+>>>>>>>>>>>>> \x09\x09inode generation 45 size 886 mode 40755
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 99
+>>>>>>>>>>>>> key (484147 72 4) itemoff 13485 itemsize 8
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 100
+>>>>>>>>>>>>> key (484147 72 27) itemoff 13477 itemsize 8
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 101
+>>>>>>>>>>>>> key (484147 72 35) itemoff 13469 itemsize 8
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 102
+>>>>>>>>>>>>> key (484147 72 40) itemoff 13461 itemsize 8
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 103
+>>>>>>>>>>>>> key (484147 72 45) itemoff 13453 itemsize 8
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - \x09item 104
+>>>>>>>>>>>>> key (484147 72 52) itemoff 13445 itemsize 8
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS error
+>>>>>>>>>>>>> (device sda2): block=203366612992 write time tree block corruption
+>>>>>>>>>>>>> detected
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS: error
+>>>>>>>>>>>>> (device sda2: state AL) in free_log_tree:3284: errno=-5 IO failure
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS info
+>>>>>>>>>>>>> (device sda2: state EAL): forced readonly
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS
+>>>>>>>>>>>>> warning (device sda2: state EAL): Skipping commit of aborted
+>>>>>>>>>>>>> transaction.
+>>>>>>>>>>>>> 2022-12-26T07:44:45.000000+01:00 server02 kernel - - - BTRFS: error
+>>>>>>>>>>>>> (device sda2: state EAL) in cleanup_transaction:1958: errno=-5 IO
+>>>>>>>>>>>>> failure
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> There are no SSD access errors in the kernel logs. Smart data for
+>>>>>>>>>>>>> the SSD is normal. I also did a 12 hour memtest to rule out bad RAM.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> The filesystem consists of a single 480GB SATA SSD (Corsair Neutron
+>>>>>>>>>>>>> XTI). The problems occurs only on one machine.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> The error appears about every few days and seems to be triggered by
+>>>>>>>>>>>>> a cspecially under high cpu utilization combined with some disk IO.
+>>>>>>>>>>>>> CPU temperature never exceeds 60 degrees.
+>>>>>>>>>>>> See the ticket for more details.
+>>>>>>>>>>>>
+>>>>>>>>>>>> For the record, the issue is apparently different from the 6.2-rc
+>>>>>>>>>>>> regression currently discussed, as stated here:
+>>>>>>>>>>>> https://lore.kernel.org/lkml/462e7bd3-d1f2-3718-fde9-77b418e9fd91@gmx.com/
+>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> BTW, let me use this mail to also add the report to the list of tracked
+>>>>>>>>>>>> regressions to ensure it's doesn't fall through the cracks:
+>>>>>>>>>>>>
+>>>>>>>>>>>> #regzbot introduced: v6.0..v6.1
+>>>>>>>>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=216851
+>>>>>>>>>>>> #regzbot title: btrfs: write time corrupting for log tree in 6.1
+>>>>>>>>>>>> #regzbot ignore-activity
+>>>>>>>>>>> #regzbot fix: 'btrfs: fix false alert on bad tree level check'
+>>>>>>>>>> Oh no, this is a different one, this one is not level mismatch.
+>>>>>>>>>>
+>>>>>>>>>> Thanks,
+>>>>>>>>>> Qu
+>>>>>>>>> Hi,
+>>>>>>>>>
+>>>>>>>>> Here the logging from another crash, this time on kernel 6.1.3, about 1
+>>>>>>>>> hour after boot. Again during high CPU usage combined with lots of io.
+>>>>>>>>>
+>>>>>>>>> [ 1989.025015] BTRFS critical (device sda2): corrupt leaf:
+>>>>>>>>> root=18446744073709551610 block=574078976 slot=70, bad key order, prev
+>>>>>>>>> (484119 96 1328571) current (484119 96 1328553)
+>>>>>>>>> [ 1989.025022] BTRFS info (device sda2): leaf 574078976 gen 5089233
+>>>>>>>>> total ptrs 108 free space 10370 owner 18446744073709551610
+>>>>>>>>> [ 1989.025024]  item 0 key (484119 1 0) itemoff 16123 itemsize 160
+>>>>>>>>> [ 1989.025025]          inode generation 45 size 2198 mode 40700
+>>>>>>>>> [ 1989.025026]  item 1 key (484119 12 484118) itemoff 16097 itemsize 26
+>>>>>>>>> [ 1989.025027]  item 2 key (484119 72 15) itemoff 16089 itemsize 8
+>>>>>>>>> [ 1989.025027]  item 3 key (484119 72 20) itemoff 16081 itemsize 8
+>>>>>>>>>
+>>>>>>>>> ...
+>>>>>>>> Can you please paste the full message?
+>>>>>>>> If an error/warning, don't just paste a section of the message, paste
+>>>>>>>> the full thing.
+>>>>>>>>
+>>>>>>>> I've previously commented on that in the other thread:
+>>>>>>>>
+>>>>>>>> https://lore.kernel.org/linux-btrfs/CAL3q7H6RbPsa9Ff9or6+0d4R5vzVcR=RPxHA0=3A_KeSmf7hcQ@mail.gmail.com/
+>>>>>>>>
+>>>>>>>> Thanks.
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>> [ 1989.025135]  item 105 key (484147 1 0) itemoff 13086 itemsize 160
+>>>>>>>>> [ 1989.025137]          inode generation 45 size 886 mode 40755
+>>>>>>>>> [ 1989.025138]  item 106 key (484147 72 4) itemoff 13078 itemsize 8
+>>>>>>>>> [ 1989.025139]  item 107 key (484147 72 27) itemoff 13070 itemsize 8
+>>>>>>>>> [ 1989.025140] BTRFS error (device sda2): block=574078976 write time
+>>>>>>>>> tree block corruption detected
+>>>>>>>>> [ 1989.053710] BTRFS: error (device sda2: state AL) in
+>>>>>>>>> free_log_tree:3284: errno=-5 IO failure
+>>>>>>>>> [ 1989.053717] BTRFS info (device sda2: state EAL): forced readonly
+>>>>>>>>> [ 1989.055442] BTRFS warning (device sda2: state EAL): Skipping commit
+>>>>>>>>> of aborted transaction.
+>>>>>>>>> [ 1989.055444] BTRFS: error (device sda2: state EAL) in
+>>>>>>>>> cleanup_transaction:1958: errno=-5 IO failure
+>>>>>>>>>
+>>>>>>>>> Thanks in advance,
+>>>>>>>>>
+>>>>>>>>> David Arendt
+>>>>>>>>>
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> here is the full message:
+>>>>>> Ok, this is intriguing. Same set of keys is added twice to a leaf.
+>>>>>>
+>>>>>> Are you able to apply a debug patch which adds extra logging when the
+>>>>>> issue happens?
+>>>>>> That would be the fastest way to figure where and why the issue is happening.
+>>>>>>
+>>>>>> Thanks.
+>>>>>>
+>>>>>>
+>>>>>>> [ 1989.025015] BTRFS critical (device sda2): corrupt leaf:
+>>>>>>> root=18446744073709551610 block=574078976 slot=70, bad key order, prev
+>>>>>>> (484119 96 1328571) current (484119 96 1328553)
+>>>>>>> [ 1989.025022] BTRFS info (device sda2): leaf 574078976 gen 5089233
+>>>>>>> total ptrs 108 free space 10370 owner 18446744073709551610
+>>>>>>> [ 1989.025024]     item 0 key (484119 1 0) itemoff 16123 itemsize 160
+>>>>>>> [ 1989.025025]         inode generation 45 size 2198 mode 40700
+>>>>>>> [ 1989.025026]     item 1 key (484119 12 484118) itemoff 16097 itemsize 26
+>>>>>>> [ 1989.025027]     item 2 key (484119 72 15) itemoff 16089 itemsize 8
+>>>>>>> [ 1989.025027]     item 3 key (484119 72 20) itemoff 16081 itemsize 8
+>>>>>>> [ 1989.025028]     item 4 key (484119 72 25) itemoff 16073 itemsize 8
+>>>>>>> [ 1989.025029]     item 5 key (484119 72 30) itemoff 16065 itemsize 8
+>>>>>>> [ 1989.025029]     item 6 key (484119 72 32630) itemoff 16057 itemsize 8
+>>>>>>> [ 1989.025030]     item 7 key (484119 72 40332) itemoff 16049 itemsize 8
+>>>>>>> [ 1989.025031]     item 8 key (484119 72 40335) itemoff 16041 itemsize 8
+>>>>>>> [ 1989.025031]     item 9 key (484119 72 93630) itemoff 16033 itemsize 8
+>>>>>>> [ 1989.025032]     item 10 key (484119 72 101741) itemoff 16025 itemsize 8
+>>>>>>> [ 1989.025033]     item 11 key (484119 72 131485) itemoff 16017 itemsize 8
+>>>>>>> [ 1989.025034]     item 12 key (484119 72 183799) itemoff 16009 itemsize 8
+>>>>>>> [ 1989.025034]     item 13 key (484119 72 183801) itemoff 16001 itemsize 8
+>>>>>>> [ 1989.025035]     item 14 key (484119 72 203038) itemoff 15993 itemsize 8
+>>>>>>> [ 1989.025036]     item 15 key (484119 72 254997) itemoff 15985 itemsize 8
+>>>>>>> [ 1989.025036]     item 16 key (484119 72 255172) itemoff 15977 itemsize 8
+>>>>>>> [ 1989.025037]     item 17 key (484119 72 255208) itemoff 15969 itemsize 8
+>>>>>>> [ 1989.025037]     item 18 key (484119 72 256848) itemoff 15961 itemsize 8
+>>>>>>> [ 1989.025038]     item 19 key (484119 72 264839) itemoff 15953 itemsize 8
+>>>>>>> [ 1989.025039]     item 20 key (484119 72 266090) itemoff 15945 itemsize 8
+>>>>>>> [ 1989.025039]     item 21 key (484119 72 266976) itemoff 15937 itemsize 8
+>>>>>>> [ 1989.025040]     item 22 key (484119 72 267056) itemoff 15929 itemsize 8
+>>>>>>> [ 1989.025040]     item 23 key (484119 72 302340) itemoff 15921 itemsize 8
+>>>>>>> [ 1989.025041]     item 24 key (484119 72 513980) itemoff 15913 itemsize 8
+>>>>>>> [ 1989.025042]     item 25 key (484119 72 848319) itemoff 15905 itemsize 8
+>>>>>>> [ 1989.025042]     item 26 key (484119 72 848845) itemoff 15897 itemsize 8
+>>>>>>> [ 1989.025043]     item 27 key (484119 72 938962) itemoff 15889 itemsize 8
+>>>>>>> [ 1989.025044]     item 28 key (484119 72 1001565) itemoff 15881 itemsize 8
+>>>>>>> [ 1989.025044]     item 29 key (484119 72 1217319) itemoff 15873 itemsize 8
+>>>>>>> [ 1989.025045]     item 30 key (484119 72 1217321) itemoff 15865 itemsize 8
+>>>>>>> [ 1989.025046]     item 31 key (484119 72 1268172) itemoff 15857 itemsize 8
+>>>>>>> [ 1989.025046]     item 32 key (484119 72 1298657) itemoff 15849 itemsize 8
+>>>>>>> [ 1989.025047]     item 33 key (484119 72 1299762) itemoff 15841 itemsize 8
+>>>>>>> [ 1989.025048]     item 34 key (484119 72 1322969) itemoff 15833 itemsize 8
+>>>>>>> [ 1989.025048]     item 35 key (484119 72 1326818) itemoff 15825 itemsize 8
+>>>>>>> [ 1989.025049]     item 36 key (484119 72 1327157) itemoff 15817 itemsize 8
+>>>>>>> [ 1989.025050]     item 37 key (484119 72 1327930) itemoff 15809 itemsize 8
+>>>>>>> [ 1989.025050]     item 38 key (484119 72 1327934) itemoff 15801 itemsize 8
+>>>>>>> [ 1989.025051]     item 39 key (484119 72 1328324) itemoff 15793 itemsize 8
+>>>>>>> [ 1989.025052]     item 40 key (484119 72 1328423) itemoff 15785 itemsize 8
+>>>>>>> [ 1989.025052]     item 41 key (484119 72 1328486) itemoff 15777 itemsize 8
+>>>>>>> [ 1989.025053]     item 42 key (484119 72 1328506) itemoff 15769 itemsize 8
+>>>>>>> [ 1989.025054]     item 43 key (484119 72 1328507) itemoff 15761 itemsize 8
+>>>>>>> [ 1989.025054]     item 44 key (484119 72 1328509) itemoff 15753 itemsize 8
+>>>>>>> [ 1989.025055]     item 45 key (484119 72 1328510) itemoff 15745 itemsize 8
+>>>>>>> [ 1989.025055]     item 46 key (484119 72 1328511) itemoff 15737 itemsize 8
+>>>>>>> [ 1989.025056]     item 47 key (484119 72 1328514) itemoff 15729 itemsize 8
+>>>>>>> [ 1989.025057]     item 48 key (484119 72 1328515) itemoff 15721 itemsize 8
+>>>>>>> [ 1989.025057]     item 49 key (484119 72 1328518) itemoff 15713 itemsize 8
+>>>>>>> [ 1989.025058]     item 50 key (484119 72 1328519) itemoff 15705 itemsize 8
+>>>>>>> [ 1989.025059]     item 51 key (484119 72 1328520) itemoff 15697 itemsize 8
+>>>>>>> [ 1989.025059]     item 52 key (484119 72 1328521) itemoff 15689 itemsize 8
+>>>>>>> [ 1989.025060]     item 53 key (484119 72 1328523) itemoff 15681 itemsize 8
+>>>>>>> [ 1989.025060]     item 54 key (484119 72 1328525) itemoff 15673 itemsize 8
+>>>>>>> [ 1989.025061]     item 55 key (484119 72 1328528) itemoff 15665 itemsize 8
+>>>>>>> [ 1989.025062]     item 56 key (484119 72 1328529) itemoff 15657 itemsize 8
+>>>>>>> [ 1989.025062]     item 57 key (484119 72 1328532) itemoff 15649 itemsize 8
+>>>>>>> [ 1989.025063]     item 58 key (484119 72 1328561) itemoff 15641 itemsize 8
+>>>>>>> [ 1989.025063]     item 59 key (484119 72 1328564) itemoff 15633 itemsize 8
+>>>>>>> [ 1989.025064]     item 60 key (484119 72 1328566) itemoff 15625 itemsize 8
+>>>>>>> [ 1989.025065]     item 61 key (484119 72 1328570) itemoff 15617 itemsize 8
+>>>>>>> [ 1989.025065]     item 62 key (484119 96 1328553) itemoff 15566 itemsize 51
+>>>>>>> [ 1989.025066]     item 63 key (484119 96 1328555) itemoff 15523 itemsize 43
+>>>>>>> [ 1989.025067]     item 64 key (484119 96 1328559) itemoff 15489 itemsize 34
+>>>>>>> [ 1989.025067]     item 65 key (484119 96 1328563) itemoff 15441 itemsize 48
+>>>>>>> [ 1989.025068]     item 66 key (484119 96 1328565) itemoff 15388 itemsize 53
+>>>>>>> [ 1989.025069]     item 67 key (484119 96 1328568) itemoff 15341 itemsize 47
+>>>>>>> [ 1989.025069]     item 68 key (484119 96 1328569) itemoff 15292 itemsize 49
+>>>>>>> [ 1989.025070]     item 69 key (484119 96 1328571) itemoff 15254 itemsize 38
+>>>>>>> [ 1989.025071]     item 70 key (484119 96 1328553) itemoff 15203 itemsize 51
+>>>>>>> [ 1989.025071]     item 71 key (484119 96 1328555) itemoff 15160 itemsize 43
+>>>>>>> [ 1989.025072]     item 72 key (484119 96 1328559) itemoff 15126 itemsize 34
+>>>>>>> [ 1989.025073]     item 73 key (484119 96 1328563) itemoff 15078 itemsize 48
+>>>>>>> [ 1989.025073]     item 74 key (484119 96 1328565) itemoff 15025 itemsize 53
+>>>>>>> [ 1989.025074]     item 75 key (484119 96 1328568) itemoff 14978 itemsize 47
+>>>>>>> [ 1989.025074]     item 76 key (484119 96 1328569) itemoff 14929 itemsize 49
+>>>>>>> [ 1989.025076]     item 77 key (484119 96 1328571) itemoff 14891 itemsize 38
+>>>>>>> [ 1989.025077]     item 78 key (484128 1 0) itemoff 14731 itemsize 160
+>>>>>>> [ 1989.025078]         inode generation 45 size 98304 mode 100644
+>>>>>>> [ 1989.025079]     item 79 key (484128 108 0) itemoff 14678 itemsize 53
+>>>>>>> [ 1989.025080]         extent data disk bytenr 10698843275264 nr 65536
+>>>>>>> [ 1989.025081]         extent data offset 0 nr 65536 ram 65536
+>>>>>>> [ 1989.025081]     item 80 key (484129 1 0) itemoff 14518 itemsize 160
+>>>>>>> [ 1989.025082]         inode generation 45 size 26214400 mode 100644
+>>>>>>> [ 1989.025083]     item 81 key (484129 108 589824) itemoff 14465 itemsize 53
+>>>>>>> [ 1989.025084]         extent data disk bytenr 10697670373376 nr 32768
+>>>>>>> [ 1989.025085]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025086]     item 82 key (484129 108 1310720) itemoff 14412
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025087]         extent data disk bytenr 10697126309888 nr 32768
+>>>>>>> [ 1989.025087]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025088]     item 83 key (484129 108 3670016) itemoff 14359
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025089]         extent data disk bytenr 10697672445952 nr 32768
+>>>>>>> [ 1989.025090]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025090]     item 84 key (484129 108 10944512) itemoff 14306
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025091]         extent data disk bytenr 10697673764864 nr 65536
+>>>>>>> [ 1989.025092]         extent data offset 0 nr 65536 ram 65536
+>>>>>>> [ 1989.025093]     item 85 key (484129 108 11304960) itemoff 14253
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025094]         extent data disk bytenr 10697154973696 nr 32768
+>>>>>>> [ 1989.025095]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025095]     item 86 key (484129 108 11370496) itemoff 14200
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025096]         extent data disk bytenr 10697160564736 nr 32768
+>>>>>>> [ 1989.025097]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025098]     item 87 key (484129 108 11730944) itemoff 14147
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025099]         extent data disk bytenr 10697672478720 nr 32768
+>>>>>>> [ 1989.025100]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025100]     item 88 key (484129 108 12156928) itemoff 14094
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025102]         extent data disk bytenr 10697673052160 nr 32768
+>>>>>>> [ 1989.025102]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025103]     item 89 key (484129 108 12353536) itemoff 14041
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025104]         extent data disk bytenr 10697160597504 nr 32768
+>>>>>>> [ 1989.025105]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025106]     item 90 key (484129 108 12582912) itemoff 13988
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025107]         extent data disk bytenr 10697677389824 nr 32768
+>>>>>>> [ 1989.025108]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025108]     item 91 key (484129 108 13139968) itemoff 13935
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025110]         extent data disk bytenr 10697681383424 nr 65536
+>>>>>>> [ 1989.025110]         extent data offset 0 nr 65536 ram 65536
+>>>>>>> [ 1989.025111]     item 92 key (484129 108 13467648) itemoff 13882
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025111]         extent data disk bytenr 10697743683584 nr 65536
+>>>>>>> [ 1989.025112]         extent data offset 0 nr 65536 ram 65536
+>>>>>>> [ 1989.025112]     item 93 key (484129 108 13697024) itemoff 13829
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025113]         extent data disk bytenr 10697160630272 nr 32768
+>>>>>>> [ 1989.025113]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025114]     item 94 key (484129 108 13795328) itemoff 13776
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025114]         extent data disk bytenr 10697160663040 nr 32768
+>>>>>>> [ 1989.025115]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025115]     item 95 key (484129 108 14090240) itemoff 13723
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025116]         extent data disk bytenr 10697160695808 nr 32768
+>>>>>>> [ 1989.025116]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025117]     item 96 key (484129 108 14548992) itemoff 13670
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025117]         extent data disk bytenr 10697677422592 nr 32768
+>>>>>>> [ 1989.025118]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025118]     item 97 key (484129 108 17694720) itemoff 13617
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025119]         extent data disk bytenr 10697686274048 nr 32768
+>>>>>>> [ 1989.025119]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025120]     item 98 key (484129 108 19726336) itemoff 13564
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025121]         extent data disk bytenr 10697688305664 nr 32768
+>>>>>>> [ 1989.025121]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025122]     item 99 key (484129 108 20185088) itemoff 13511
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025122]         extent data disk bytenr 10697690374144 nr 32768
+>>>>>>> [ 1989.025123]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025124]     item 100 key (484129 108 20971520) itemoff 13458
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025125]         extent data disk bytenr 10697714982912 nr 32768
+>>>>>>> [ 1989.025126]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025126]     item 101 key (484129 108 22151168) itemoff 13405
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025127]         extent data disk bytenr 10697718345728 nr 32768
+>>>>>>> [ 1989.025128]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025129]     item 102 key (484129 108 23363584) itemoff 13352
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025129]         extent data disk bytenr 10697768124416 nr 65536
+>>>>>>> [ 1989.025130]         extent data offset 0 nr 65536 ram 65536
+>>>>>>> [ 1989.025131]     item 103 key (484129 108 23461888) itemoff 13299
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025132]         extent data disk bytenr 10697730711552 nr 32768
+>>>>>>> [ 1989.025133]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025133]     item 104 key (484129 108 23527424) itemoff 13246
+>>>>>>> itemsize 53
+>>>>>>> [ 1989.025134]         extent data disk bytenr 10697164943360 nr 32768
+>>>>>>> [ 1989.025135]         extent data offset 0 nr 32768 ram 32768
+>>>>>>> [ 1989.025135]     item 105 key (484147 1 0) itemoff 13086 itemsize 160
+>>>>>>> [ 1989.025137]         inode generation 45 size 886 mode 40755
+>>>>>>> [ 1989.025138]     item 106 key (484147 72 4) itemoff 13078 itemsize 8
+>>>>>>> [ 1989.025139]     item 107 key (484147 72 27) itemoff 13070 itemsize 8
+>>>>>>> [ 1989.025140] BTRFS error (device sda2): block=574078976 write time
+>>>>>>> tree block corruption detected
+>>>>>>> [ 1989.053710] BTRFS: error (device sda2: state AL) in
+>>>>>>> free_log_tree:3284: errno=-5 IO failure
+>>>>>>> [ 1989.053717] BTRFS info (device sda2: state EAL): forced readonly
+>>>>>>> [ 1989.055442] BTRFS warning (device sda2: state EAL): Skipping commit
+>>>>>>> of aborted transaction.
+>>>>>>> [ 1989.055444] BTRFS: error (device sda2: state EAL) in
+>>>>>>> cleanup_transaction:1958: errno=-5 IO failure
+>>>>>>>
+>>>>>>> Sorry, I didn't notice your message in the other thread.
+>>>>>>>
+>>>>>>> Thanks in advance,
+>>>>>>>
+>>>>>>> David Arendt
+>>>>>>>
+>>>>> Hi,
+>>>>>
+>>>>> Yes, if you send me a debug patch, I can apply it. However it might take
+>>>>> between 1 hour and 2 weeks until the next crash.
+>>>> That would be very helpful.
+>>>> So here's a debug patch (against 6.2-rc, but should apply to 6.1 as
+>>>> well) attached.
+>>>>
+>>>> Thanks a lot!
+>>>>
+>>>>> Thanks in advance,
+>>>>>
+>>>>> David Arendt
+>>>>>
+>>> Hi,
+>>>
+>>> The patch did not apply to 6.1.3, so I tried using 6.2-rc2. I did my
+>>> best to do much IO and different load as possible and was having this
+>>> output:
+>>>
+>>> [ 1716.050035] BTRFS error (device sda2): corrupt leaf batch insert
+>>> (count 6), slot 75, leaf before:
+>>> [ 1716.050037] BTRFS info (device sda2): leaf 713932800 gen 5091428
+>>> total ptrs 106 free space 11639 owner 18446744073709551610
+>>> [ 1716.050040]  item 0 key (484119 1 0) itemoff 16123 itemsize 160
+>>> [ 1716.050041]          inode generation 45 size 2238 mode 40700
+>>> [ 1716.050042]  item 1 key (484119 12 484118) itemoff 16097 itemsize 26
+>>> [ 1716.050044]  item 2 key (484119 72 15) itemoff 16089 itemsize 8
+>>> [ 1716.050045]  item 3 key (484119 72 20) itemoff 16081 itemsize 8
+>>> [ 1716.050046]  item 4 key (484119 72 25) itemoff 16073 itemsize 8
+>>> [ 1716.050048]  item 5 key (484119 72 30) itemoff 16065 itemsize 8
+>>> [ 1716.050049]  item 6 key (484119 72 32630) itemoff 16057 itemsize 8
+>>> [ 1716.050050]  item 7 key (484119 72 40332) itemoff 16049 itemsize 8
+>>> [ 1716.050051]  item 8 key (484119 72 40335) itemoff 16041 itemsize 8
+>>> [ 1716.050052]  item 9 key (484119 72 93630) itemoff 16033 itemsize 8
+>>> [ 1716.050053]  item 10 key (484119 72 101741) itemoff 16025 itemsize 8
+>>> [ 1716.050054]  item 11 key (484119 72 131485) itemoff 16017 itemsize 8
+>>> [ 1716.050056]  item 12 key (484119 72 183799) itemoff 16009 itemsize 8
+>>> [ 1716.050057]  item 13 key (484119 72 183801) itemoff 16001 itemsize 8
+>>> [ 1716.050058]  item 14 key (484119 72 203038) itemoff 15993 itemsize 8
+>>> [ 1716.050059]  item 15 key (484119 72 254997) itemoff 15985 itemsize 8
+>>> [ 1716.050060]  item 16 key (484119 72 255172) itemoff 15977 itemsize 8
+>>> [ 1716.050062]  item 17 key (484119 72 255208) itemoff 15969 itemsize 8
+>>> [ 1716.050063]  item 18 key (484119 72 256848) itemoff 15961 itemsize 8
+>>> [ 1716.050064]  item 19 key (484119 72 264839) itemoff 15953 itemsize 8
+>>> [ 1716.050065]  item 20 key (484119 72 266090) itemoff 15945 itemsize 8
+>>> [ 1716.050066]  item 21 key (484119 72 266976) itemoff 15937 itemsize 8
+>>> [ 1716.050067]  item 22 key (484119 72 267056) itemoff 15929 itemsize 8
+>>> [ 1716.050068]  item 23 key (484119 72 302340) itemoff 15921 itemsize 8
+>>> [ 1716.050070]  item 24 key (484119 72 513980) itemoff 15913 itemsize 8
+>>> [ 1716.050071]  item 25 key (484119 72 848319) itemoff 15905 itemsize 8
+>>> [ 1716.050072]  item 26 key (484119 72 848845) itemoff 15897 itemsize 8
+>>> [ 1716.050073]  item 27 key (484119 72 938962) itemoff 15889 itemsize 8
+>>> [ 1716.050074]  item 28 key (484119 72 1001565) itemoff 15881 itemsize 8
+>>> [ 1716.050076]  item 29 key (484119 72 1217319) itemoff 15873 itemsize 8
+>>> [ 1716.050077]  item 30 key (484119 72 1217321) itemoff 15865 itemsize 8
+>>> [ 1716.050078]  item 31 key (484119 72 1268172) itemoff 15857 itemsize 8
+>>> [ 1716.050079]  item 32 key (484119 72 1298657) itemoff 15849 itemsize 8
+>>> [ 1716.050080]  item 33 key (484119 72 1299762) itemoff 15841 itemsize 8
+>>> [ 1716.050081]  item 34 key (484119 72 1328486) itemoff 15833 itemsize 8
+>>> [ 1716.050082]  item 35 key (484119 72 1329021) itemoff 15825 itemsize 8
+>>> [ 1716.050083]  item 36 key (484119 72 1329328) itemoff 15817 itemsize 8
+>>> [ 1716.050085]  item 37 key (484119 72 1329330) itemoff 15809 itemsize 8
+>>> [ 1716.050086]  item 38 key (484119 72 1329857) itemoff 15801 itemsize 8
+>>> [ 1716.050087]  item 39 key (484119 72 1330009) itemoff 15793 itemsize 8
+>>> [ 1716.050089]  item 40 key (484119 72 1330037) itemoff 15785 itemsize 8
+>>> [ 1716.050091]  item 41 key (484119 72 1330038) itemoff 15777 itemsize 8
+>>> [ 1716.050092]  item 42 key (484119 72 1330041) itemoff 15769 itemsize 8
+>>> [ 1716.050093]  item 43 key (484119 72 1330042) itemoff 15761 itemsize 8
+>>> [ 1716.050094]  item 44 key (484119 72 1330046) itemoff 15753 itemsize 8
+>>> [ 1716.050096]  item 45 key (484119 72 1330048) itemoff 15745 itemsize 8
+>>> [ 1716.050097]  item 46 key (484119 72 1330054) itemoff 15737 itemsize 8
+>>> [ 1716.050098]  item 47 key (484119 72 1330055) itemoff 15729 itemsize 8
+>>> [ 1716.050099]  item 48 key (484119 72 1330059) itemoff 15721 itemsize 8
+>>> [ 1716.050101]  item 49 key (484119 72 1330062) itemoff 15713 itemsize 8
+>>> [ 1716.050102]  item 50 key (484119 72 1330066) itemoff 15705 itemsize 8
+>>> [ 1716.050103]  item 51 key (484119 72 1330080) itemoff 15697 itemsize 8
+>>> [ 1716.050104]  item 52 key (484119 72 1330081) itemoff 15689 itemsize 8
+>>> [ 1716.050105]  item 53 key (484119 72 1330087) itemoff 15681 itemsize 8
+>>> [ 1716.050107]  item 54 key (484119 72 1330088) itemoff 15673 itemsize 8
+>>> [ 1716.050108]  item 55 key (484119 72 1330089) itemoff 15665 itemsize 8
+>>> [ 1716.050109]  item 56 key (484119 72 1330090) itemoff 15657 itemsize 8
+>>> [ 1716.050111]  item 57 key (484119 72 1330091) itemoff 15649 itemsize 8
+>>> [ 1716.050112]  item 58 key (484119 72 1330092) itemoff 15641 itemsize 8
+>>> [ 1716.050114]  item 59 key (484119 72 1330105) itemoff 15633 itemsize 8
+>>> [ 1716.050115]  item 60 key (484119 72 1330107) itemoff 15625 itemsize 8
+>>> [ 1716.050116]  item 61 key (484119 72 1330110) itemoff 15617 itemsize 8
+>>> [ 1716.050117]  item 62 key (484119 72 1330112) itemoff 15609 itemsize 8
+>>> [ 1716.050118]  item 63 key (484119 72 1330113) itemoff 15601 itemsize 8
+>>> [ 1716.050119]  item 64 key (484119 72 1330115) itemoff 15593 itemsize 8
+>>> [ 1716.050120]  item 65 key (484119 72 1330118) itemoff 15585 itemsize 8
+>>> [ 1716.050122]  item 66 key (484119 72 1330120) itemoff 15577 itemsize 8
+>>> [ 1716.050123]  item 67 key (484119 72 1330122) itemoff 15569 itemsize 8
+>>> [ 1716.050124]  item 68 key (484119 72 1330124) itemoff 15561 itemsize 8
+>>> [ 1716.050125]  item 69 key (484119 72 1330126) itemoff 15553 itemsize 8
+>>> [ 1716.050126]  item 70 key (484119 72 1330129) itemoff 15545 itemsize 8
+>>> [ 1716.050127]  item 71 key (484119 72 1330131) itemoff 15537 itemsize 8
+>>> [ 1716.050128]  item 72 key (484119 72 1330136) itemoff 15529 itemsize 8
+>>> [ 1716.050130]  item 73 key (484119 72 1330139) itemoff 15521 itemsize 8
+>>> [ 1716.050131]  item 74 key (484119 72 1330141) itemoff 15513 itemsize 8
+>>> [ 1716.050132]  item 75 key (484119 96 1330116) itemoff 15463 itemsize 50
+>>> [ 1716.050133]  item 76 key (484119 96 1330128) itemoff 15405 itemsize 58
+>>> [ 1716.050134]  item 77 key (484119 96 1330130) itemoff 15362 itemsize 43
+>>> [ 1716.050136]  item 78 key (484129 1 0) itemoff 15202 itemsize 160
+>>> [ 1716.050137]          inode generation 45 size 26214400 mode 100644
+>>> [ 1716.050138]  item 79 key (484129 108 589824) itemoff 15149 itemsize 53
+>>> [ 1716.050140]          extent data disk bytenr 10701807767552 nr 32768
+>>> [ 1716.050141]          extent data offset 0 nr 32768 ram 32768
+>>> [ 1716.050142]  item 80 key (484129 108 1310720) itemoff 15096 itemsize 53
+>>> [ 1716.050144]          extent data disk bytenr 10701808283648 nr 32768
+>>> [ 1716.050144]          extent data offset 0 nr 32768 ram 32768
+>>> [ 1716.050145]  item 81 key (484129 108 1769472) itemoff 15043 itemsize 53
+>>> [ 1716.050146]          extent data disk bytenr 10701828988928 nr 32768
+>>> [ 1716.050147]          extent data offset 0 nr 32768 ram 32768
+>>> [ 1716.050148]  item 82 key (484129 108 11763712) itemoff 14990 itemsize 53
+>>> [ 1716.050150]          extent data disk bytenr 10701830090752 nr 32768
+>>> [ 1716.050150]          extent data offset 0 nr 32768 ram 32768
+>>> [ 1716.050151]  item 83 key (484129 108 13139968) itemoff 14937 itemsize 53
+>>> [ 1716.050153]          extent data disk bytenr 10701269446656 nr 32768
+>>> [ 1716.050153]          extent data offset 0 nr 32768 ram 32768
+>>> [ 1716.050154]  item 84 key (484129 108 13467648) itemoff 14884 itemsize 53
+>>> [ 1716.050156]          extent data disk bytenr 10701904338944 nr 32768
+>>> [ 1716.050156]          extent data offset 0 nr 32768 ram 32768
+>>> [ 1716.050157]  item 85 key (484129 108 13795328) itemoff 14831 itemsize 53
+>>> [ 1716.050159]          extent data disk bytenr 10701904437248 nr 32768
+>>> [ 1716.050159]          extent data offset 0 nr 32768 ram 32768
+>>> [ 1716.050160]  item 86 key (484129 108 17694720) itemoff 14778 itemsize 53
+>>> [ 1716.050161]          extent data disk bytenr 10701806407680 nr 32768
+>>> [ 1716.050162]          extent data offset 0 nr 32768 ram 32768
+>>> [ 1716.050163]  item 87 key (484129 108 19726336) itemoff 14725 itemsize 53
+>>> [ 1716.050164]          extent data disk bytenr 10701806505984 nr 32768
+>>> [ 1716.050165]          extent data offset 0 nr 32768 ram 32768
+>>> [ 1716.050166]  item 88 key (484129 108 20185088) itemoff 14672 itemsize 53
+>>> [ 1716.050167]          extent data disk bytenr 10701806538752 nr 32768
+>>> [ 1716.050168]          extent data offset 0 nr 32768 ram 32768
+>>> [ 1716.050168]  item 89 key (484129 108 21168128) itemoff 14619 itemsize 53
+>>> [ 1716.050170]          extent data disk bytenr 10701807833088 nr 32768
+>>> [ 1716.050170]          extent data offset 0 nr 32768 ram 32768
+>>> [ 1716.050171]  item 90 key (484129 108 23396352) itemoff 14566 itemsize 53
+>>> [ 1716.050172]          extent data disk bytenr 10701807865856 nr 32768
+>>> [ 1716.050173]          extent data offset 0 nr 32768 ram 32768
+>>> [ 1716.050174]  item 91 key (484147 1 0) itemoff 14406 itemsize 160
+>>> [ 1716.050175]          inode generation 45 size 1096 mode 40755
+>>> [ 1716.050176]  item 92 key (484147 12 484145) itemoff 14393 itemsize 13
+>>> [ 1716.050177]  item 93 key (484147 72 4) itemoff 14385 itemsize 8
+>>> [ 1716.050179]  item 94 key (484147 72 27) itemoff 14377 itemsize 8
+>>> [ 1716.050180]  item 95 key (484147 72 35) itemoff 14369 itemsize 8
+>>> [ 1716.050181]  item 96 key (484147 72 40) itemoff 14361 itemsize 8
+>>> [ 1716.050183]  item 97 key (484147 72 45) itemoff 14353 itemsize 8
+>>> [ 1716.050184]  item 98 key (484147 72 52) itemoff 14345 itemsize 8
+>>> [ 1716.050185]  item 99 key (484147 72 61) itemoff 14337 itemsize 8
+>>> [ 1716.050186]  item 100 key (484147 72 65) itemoff 14329 itemsize 8
+>>> [ 1716.050187]  item 101 key (484147 72 88) itemoff 14321 itemsize 8
+>>> [ 1716.050189]  item 102 key (484147 72 92) itemoff 14313 itemsize 8
+>>> [ 1716.050190]  item 103 key (484147 72 350) itemoff 14305 itemsize 8
+>>> [ 1716.050192]  item 104 key (484147 72 351) itemoff 14297 itemsize 8
+>>> [ 1716.050193]  item 105 key (484147 72 352) itemoff 14289 itemsize 8
+>>> [ 1716.050194] BTRFS error (device sda2): batch items:
+>>> [ 1716.050195] BTRFS error (device sda2): item 0 index 1330094
+>>> [ 1716.050197] BTRFS error (device sda2): item 1 index 1330116
+>>> [ 1716.050198] BTRFS error (device sda2): item 2 index 1330127
+>>> [ 1716.050199] BTRFS error (device sda2): item 3 index 1330128
+>>> [ 1716.050200] BTRFS error (device sda2): item 4 index 1330130
+>>> [ 1716.050201] BTRFS error (device sda2): item 5 index 1330132
+>> Wow, that was fast!
 >>
->>> Since this is a device integrated in the CPU it could be that the 
->>> ACS/ATS
->>> functionalities are controlled by the BIOS and can be enabled/disabled
->>> there. But this should always enable/disable both.
->> This sounds like a GPU driver bug then, it should tolerate PASID being
->> unavailable because of BIOS issues/whatever and not black screen on
->> boot?
->
-> Yeah, potentially. Could I get a full "sudo lspci -vvvv -s $bus_id" + 
-> dmesg of that device?
->
-> Thanks,
-> Christian.
->
+>>> However this time the filesystem didn't switch to readonly.
+>> Yes, the debug patch changed that too. It's actually not a critical
+>> situation to turn the fs to readonly.
 >>
->> Jason
+>> Ok, I see now what's going on. I will work on a fix for that plus a
+>> few other things I noticed are not right.
+>> I'll likely submit the changes to the list by monday or tuesday, and
+>> let you know in case you want/can test them.
+> Ok, here they are:
 >
---------------uhObI78hNnEW5fjmrCRvcgIh
-Content-Type: text/plain; charset=UTF-8; name="lspci-vvvv-1.txt"
-Content-Disposition: attachment; filename="lspci-vvvv-1.txt"
-Content-Transfer-Encoding: base64
+> https://lore.kernel.org/linux-btrfs/cover.1673361215.git.fdmanana@suse.com/
+>
+>> Thanks a lot for the testing and reporting.
+>>
+>>> Thanks in advance,
+>>>
+>>> David Arendt
+>>>
+Hi,
 
-MDA6MDAuMCBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1E
-XSBGYW1pbHkgMTVoIChNb2RlbHMgNjBoLTZmaCkgUHJvY2Vzc29yIFJvb3QgQ29tcGxleAog
-ICAgICAgIFN1YnN5c3RlbTogSGV3bGV0dC1QYWNrYXJkIENvbXBhbnkgRGV2aWNlIDgzMzIK
-ICAgICAgICBDb250cm9sOiBJL08tIE1lbS0gQnVzTWFzdGVyKyBTcGVjQ3ljbGUtIE1lbVdJ
-TlYtIFZHQVNub29wLSBQYXJFcnItIFN0ZXBwaW5nLSBTRVJSLSBGYXN0QjJCLSBEaXNJTlR4
-LQogICAgICAgIFN0YXR1czogQ2FwLSA2Nk1Iei0gVURGLSBGYXN0QjJCLSBQYXJFcnItIERF
-VlNFTD1mYXN0ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQtID5TRVJSLSA8UEVSUi0gSU5U
-eC0KICAgICAgICBMYXRlbmN5OiAwCgowMDowMC4yIElPTU1VOiBBZHZhbmNlZCBNaWNybyBE
-ZXZpY2VzLCBJbmMuIFtBTURdIEZhbWlseSAxNWggKE1vZGVscyA2MGgtNmZoKSBJL08gTWVt
-b3J5IE1hbmFnZW1lbnQgVW5pdAogICAgICAgIFN1YnN5c3RlbTogSGV3bGV0dC1QYWNrYXJk
-IENvbXBhbnkgRGV2aWNlIDgzMzIKICAgICAgICBDb250cm9sOiBJL08tIE1lbS0gQnVzTWFz
-dGVyKyBTcGVjQ3ljbGUtIE1lbVdJTlYtIFZHQVNub29wLSBQYXJFcnItIFN0ZXBwaW5nLSBT
-RVJSLSBGYXN0QjJCLSBEaXNJTlR4KwogICAgICAgIFN0YXR1czogQ2FwKyA2Nk1Iei0gVURG
-LSBGYXN0QjJCLSBQYXJFcnItIERFVlNFTD1mYXN0ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJv
-cnQtID5TRVJSLSA8UEVSUi0gSU5UeC0KICAgICAgICBMYXRlbmN5OiAwCiAgICAgICAgSW50
-ZXJydXB0OiBwaW4gQSByb3V0ZWQgdG8gSVJRIDI0CiAgICAgICAgQ2FwYWJpbGl0aWVzOiBb
-NDBdIFNlY3VyZSBkZXZpY2UgPD8+CiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbNjRdIE1TSTog
-RW5hYmxlKyBDb3VudD0xLzQgTWFza2FibGUtIDY0Yml0KwogICAgICAgICAgICAgICAgQWRk
-cmVzczogMDAwMDAwMDBmZWUwNDAwNCAgRGF0YTogMDAyMQogICAgICAgIENhcGFiaWxpdGll
-czogWzc0XSBIeXBlclRyYW5zcG9ydDogTVNJIE1hcHBpbmcgRW5hYmxlKyBGaXhlZCsKCjAw
-OjAxLjAgVkdBIGNvbXBhdGlibGUgY29udHJvbGxlcjogQWR2YW5jZWQgTWljcm8gRGV2aWNl
-cywgSW5jLiBbQU1EL0FUSV0gV2FuaSBbUmFkZW9uIFI1L1I2L1I3IEdyYXBoaWNzXSAocmV2
-IGNhKSAocHJvZy1pZiAwMCBbVkdBIGNvbnRyb2xsZXJdKQogICAgICAgIERldmljZU5hbWU6
-IEFUSSBFRyBCUk9BRFdBWQogICAgICAgIFN1YnN5c3RlbTogSGV3bGV0dC1QYWNrYXJkIENv
-bXBhbnkgRGV2aWNlIDgzMzIKICAgICAgICBDb250cm9sOiBJL08rIE1lbSsgQnVzTWFzdGVy
-KyBTcGVjQ3ljbGUtIE1lbVdJTlYtIFZHQVNub29wLSBQYXJFcnItIFN0ZXBwaW5nLSBTRVJS
-LSBGYXN0QjJCLSBEaXNJTlR4KwogICAgICAgIFN0YXR1czogQ2FwKyA2Nk1Iei0gVURGLSBG
-YXN0QjJCLSBQYXJFcnItIERFVlNFTD1mYXN0ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQt
-ID5TRVJSLSA8UEVSUi0gSU5UeC0KICAgICAgICBMYXRlbmN5OiAwLCBDYWNoZSBMaW5lIFNp
-emU6IDY0IGJ5dGVzCiAgICAgICAgSW50ZXJydXB0OiBwaW4gQSByb3V0ZWQgdG8gSVJRIDM4
-CiAgICAgICAgSU9NTVUgZ3JvdXA6IDAKICAgICAgICBSZWdpb24gMDogTWVtb3J5IGF0IGUw
-MDAwMDAwICg2NC1iaXQsIHByZWZldGNoYWJsZSkgW3NpemU9MjU2TV0KICAgICAgICBSZWdp
-b24gMjogTWVtb3J5IGF0IGYwODAwMDAwICg2NC1iaXQsIHByZWZldGNoYWJsZSkgW3NpemU9
-OE1dCiAgICAgICAgUmVnaW9uIDQ6IEkvTyBwb3J0cyBhdCA0MDAwIFtzaXplPTI1Nl0KICAg
-ICAgICBSZWdpb24gNTogTWVtb3J5IGF0IGYwNDAwMDAwICgzMi1iaXQsIG5vbi1wcmVmZXRj
-aGFibGUpIFtzaXplPTI1NktdCiAgICAgICAgRXhwYW5zaW9uIFJPTSBhdCAwMDBjMDAwMCBb
-ZGlzYWJsZWRdIFtzaXplPTEyOEtdCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbNDhdIFZlbmRv
-ciBTcGVjaWZpYyBJbmZvcm1hdGlvbjogTGVuPTA4IDw/PgogICAgICAgIENhcGFiaWxpdGll
-czogWzUwXSBQb3dlciBNYW5hZ2VtZW50IHZlcnNpb24gMwogICAgICAgICAgICAgICAgRmxh
-Z3M6IFBNRUNsay0gRFNJLSBEMSsgRDIrIEF1eEN1cnJlbnQ9MG1BIFBNRShEMC0sRDErLEQy
-KyxEM2hvdCssRDNjb2xkLSkKICAgICAgICAgICAgICAgIFN0YXR1czogRDAgTm9Tb2Z0UnN0
-LSBQTUUtRW5hYmxlLSBEU2VsPTAgRFNjYWxlPTAgUE1FLQogICAgICAgIENhcGFiaWxpdGll
-czogWzU4XSBFeHByZXNzICh2MikgUm9vdCBDb21wbGV4IEludGVncmF0ZWQgRW5kcG9pbnQs
-IE1TSSAwMAogICAgICAgICAgICAgICAgRGV2Q2FwOiBNYXhQYXlsb2FkIDI1NiBieXRlcywg
-UGhhbnRGdW5jIDAKICAgICAgICAgICAgICAgICAgICAgICAgRXh0VGFnKyBSQkUrIEZMUmVz
-ZXQtCiAgICAgICAgICAgICAgICBEZXZDdGw6IENvcnJFcnItIE5vbkZhdGFsRXJyLSBGYXRh
-bEVyci0gVW5zdXBSZXEtCiAgICAgICAgICAgICAgICAgICAgICAgIFJseGRPcmQrIEV4dFRh
-ZysgUGhhbnRGdW5jLSBBdXhQd3ItIE5vU25vb3ArCiAgICAgICAgICAgICAgICAgICAgICAg
-IE1heFBheWxvYWQgMjU2IGJ5dGVzLCBNYXhSZWFkUmVxIDUxMiBieXRlcwogICAgICAgICAg
-ICAgICAgRGV2U3RhOiBDb3JyRXJyLSBOb25GYXRhbEVyci0gRmF0YWxFcnItIFVuc3VwUmVx
-LSBBdXhQd3ItIFRyYW5zUGVuZC0KICAgICAgICAgICAgICAgIERldkNhcDI6IENvbXBsZXRp
-b24gVGltZW91dDogTm90IFN1cHBvcnRlZCwgVGltZW91dERpcy0gTlJPUHJQclAtIExUUi0K
-ICAgICAgICAgICAgICAgICAgICAgICAgIDEwQml0VGFnQ29tcC0gMTBCaXRUYWdSZXEtIE9C
-RkYgTm90IFN1cHBvcnRlZCwgRXh0Rm10KyBFRVRMUFByZWZpeCssIE1heEVFVExQUHJlZml4
-ZXMgMQogICAgICAgICAgICAgICAgICAgICAgICAgRW1lcmdlbmN5UG93ZXJSZWR1Y3Rpb24g
-Tm90IFN1cHBvcnRlZCwgRW1lcmdlbmN5UG93ZXJSZWR1Y3Rpb25Jbml0LQogICAgICAgICAg
-ICAgICAgICAgICAgICAgRlJTLQogICAgICAgICAgICAgICAgICAgICAgICAgQXRvbWljT3Bz
-Q2FwOiAzMmJpdC0gNjRiaXQtIDEyOGJpdENBUy0KICAgICAgICAgICAgICAgIERldkN0bDI6
-IENvbXBsZXRpb24gVGltZW91dDogNTB1cyB0byA1MG1zLCBUaW1lb3V0RGlzLSBMVFItIDEw
-Qml0VGFnUmVxLSBPQkZGIERpc2FibGVkLAogICAgICAgICAgICAgICAgICAgICAgICAgQXRv
-bWljT3BzQ3RsOiBSZXFFbi0KICAgICAgICBDYXBhYmlsaXRpZXM6IFthMF0gTVNJOiBFbmFi
-bGUrIENvdW50PTEvMSBNYXNrYWJsZS0gNjRiaXQrCiAgICAgICAgICAgICAgICBBZGRyZXNz
-OiAwMDAwMDAwMGZlZTAwMDAwICBEYXRhOiAwMDAwCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBb
-MTAwIHYxXSBWZW5kb3IgU3BlY2lmaWMgSW5mb3JtYXRpb246IElEPTAwMDEgUmV2PTEgTGVu
-PTAxMCA8Pz4KICAgICAgICBDYXBhYmlsaXRpZXM6IFsyNzAgdjFdIFNlY29uZGFyeSBQQ0kg
-RXhwcmVzcwogICAgICAgICAgICAgICAgTG5rQ3RsMzogTG5rRXF1SW50cnJ1cHRFbi0gUGVy
-Zm9ybUVxdS0KICAgICAgICAgICAgICAgIExhbmVFcnJTdGF0OiAwCiAgICAgICAgQ2FwYWJp
-bGl0aWVzOiBbMmIwIHYxXSBBZGRyZXNzIFRyYW5zbGF0aW9uIFNlcnZpY2UgKEFUUykKICAg
-ICAgICAgICAgICAgIEFUU0NhcDogSW52YWxpZGF0ZSBRdWV1ZSBEZXB0aDogMDAKICAgICAg
-ICAgICAgICAgIEFUU0N0bDogRW5hYmxlKywgU21hbGxlc3QgVHJhbnNsYXRpb24gVW5pdDog
-MDAKICAgICAgICBDYXBhYmlsaXRpZXM6IFsyYzAgdjFdIFBhZ2UgUmVxdWVzdCBJbnRlcmZh
-Y2UgKFBSSSkKICAgICAgICAgICAgICAgIFBSSUN0bDogRW5hYmxlKyBSZXNldC0KICAgICAg
-ICAgICAgICAgIFBSSVN0YTogUkYtIFVQUkdJLSBTdG9wcGVkKwogICAgICAgICAgICAgICAg
-UGFnZSBSZXF1ZXN0IENhcGFjaXR5OiAwMDAwMDAyMCwgUGFnZSBSZXF1ZXN0IEFsbG9jYXRp
-b246IDAwMDAwMDIwCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbMmQwIHYxXSBQcm9jZXNzIEFk
-ZHJlc3MgU3BhY2UgSUQgKFBBU0lEKQogICAgICAgICAgICAgICAgUEFTSURDYXA6IEV4ZWMt
-IFByaXYtLCBNYXggUEFTSUQgV2lkdGg6IDEwCiAgICAgICAgICAgICAgICBQQVNJREN0bDog
-RW5hYmxlKyBFeGVjLSBQcml2LQogICAgICAgIEtlcm5lbCBkcml2ZXIgaW4gdXNlOiBhbWRn
-cHUKICAgICAgICBLZXJuZWwgbW9kdWxlczogYW1kZ3B1CgowMDowMS4xIEF1ZGlvIGRldmlj
-ZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EL0FUSV0gS2FiaW5pIEhETUkv
-RFAgQXVkaW8KICAgICAgICBTdWJzeXN0ZW06IEhld2xldHQtUGFja2FyZCBDb21wYW55IERl
-dmljZSA4MzMyCiAgICAgICAgQ29udHJvbDogSS9PKyBNZW0rIEJ1c01hc3RlcisgU3BlY0N5
-Y2xlLSBNZW1XSU5WLSBWR0FTbm9vcC0gUGFyRXJyLSBTdGVwcGluZy0gU0VSUi0gRmFzdEIy
-Qi0gRGlzSU5UeCsKICAgICAgICBTdGF0dXM6IENhcCsgNjZNSHotIFVERi0gRmFzdEIyQi0g
-UGFyRXJyLSBERVZTRUw9ZmFzdCA+VEFib3J0LSA8VEFib3J0LSA8TUFib3J0LSA+U0VSUi0g
-PFBFUlItIElOVHgtCiAgICAgICAgTGF0ZW5jeTogMCwgQ2FjaGUgTGluZSBTaXplOiA2NCBi
-eXRlcwogICAgICAgIEludGVycnVwdDogcGluIEIgcm91dGVkIHRvIElSUSA0MgogICAgICAg
-IElPTU1VIGdyb3VwOiAwCiAgICAgICAgUmVnaW9uIDA6IE1lbW9yeSBhdCBmMDQ2MDAwMCAo
-NjQtYml0LCBub24tcHJlZmV0Y2hhYmxlKSBbc2l6ZT0xNktdCiAgICAgICAgQ2FwYWJpbGl0
-aWVzOiBbNDhdIFZlbmRvciBTcGVjaWZpYyBJbmZvcm1hdGlvbjogTGVuPTA4IDw/PgogICAg
-ICAgIENhcGFiaWxpdGllczogWzUwXSBQb3dlciBNYW5hZ2VtZW50IHZlcnNpb24gMwogICAg
-ICAgICAgICAgICAgRmxhZ3M6IFBNRUNsay0gRFNJLSBEMSsgRDIrIEF1eEN1cnJlbnQ9MG1B
-IFBNRShEMC0sRDEtLEQyLSxEM2hvdC0sRDNjb2xkLSkKICAgICAgICAgICAgICAgIFN0YXR1
-czogRDAgTm9Tb2Z0UnN0LSBQTUUtRW5hYmxlLSBEU2VsPTAgRFNjYWxlPTAgUE1FLQogICAg
-ICAgIENhcGFiaWxpdGllczogWzU4XSBFeHByZXNzICh2MikgUm9vdCBDb21wbGV4IEludGVn
-cmF0ZWQgRW5kcG9pbnQsIE1TSSAwMAogICAgICAgICAgICAgICAgRGV2Q2FwOiBNYXhQYXls
-b2FkIDI1NiBieXRlcywgUGhhbnRGdW5jIDAKICAgICAgICAgICAgICAgICAgICAgICAgRXh0
-VGFnKyBSQkUrIEZMUmVzZXQtCiAgICAgICAgICAgICAgICBEZXZDdGw6IENvcnJFcnItIE5v
-bkZhdGFsRXJyLSBGYXRhbEVyci0gVW5zdXBSZXEtCiAgICAgICAgICAgICAgICAgICAgICAg
-IFJseGRPcmQrIEV4dFRhZysgUGhhbnRGdW5jLSBBdXhQd3ItIE5vU25vb3ArCiAgICAgICAg
-ICAgICAgICAgICAgICAgIE1heFBheWxvYWQgMjU2IGJ5dGVzLCBNYXhSZWFkUmVxIDUxMiBi
-eXRlcwogICAgICAgICAgICAgICAgRGV2U3RhOiBDb3JyRXJyLSBOb25GYXRhbEVyci0gRmF0
-YWxFcnItIFVuc3VwUmVxLSBBdXhQd3ItIFRyYW5zUGVuZC0KICAgICAgICAgICAgICAgIERl
-dkNhcDI6IENvbXBsZXRpb24gVGltZW91dDogTm90IFN1cHBvcnRlZCwgVGltZW91dERpcy0g
-TlJPUHJQclAtIExUUi0KICAgICAgICAgICAgICAgICAgICAgICAgIDEwQml0VGFnQ29tcC0g
-MTBCaXRUYWdSZXEtIE9CRkYgTm90IFN1cHBvcnRlZCwgRXh0Rm10KyBFRVRMUFByZWZpeCss
-IE1heEVFVExQUHJlZml4ZXMgMQogICAgICAgICAgICAgICAgICAgICAgICAgRW1lcmdlbmN5
-UG93ZXJSZWR1Y3Rpb24gTm90IFN1cHBvcnRlZCwgRW1lcmdlbmN5UG93ZXJSZWR1Y3Rpb25J
-bml0LQogICAgICAgICAgICAgICAgICAgICAgICAgRlJTLQogICAgICAgICAgICAgICAgICAg
-ICAgICAgQXRvbWljT3BzQ2FwOiAzMmJpdC0gNjRiaXQtIDEyOGJpdENBUy0KICAgICAgICAg
-ICAgICAgIERldkN0bDI6IENvbXBsZXRpb24gVGltZW91dDogNTB1cyB0byA1MG1zLCBUaW1l
-b3V0RGlzLSBMVFItIDEwQml0VGFnUmVxLSBPQkZGIERpc2FibGVkLAogICAgICAgICAgICAg
-ICAgICAgICAgICAgQXRvbWljT3BzQ3RsOiBSZXFFbi0KICAgICAgICBDYXBhYmlsaXRpZXM6
-IFthMF0gTVNJOiBFbmFibGUrIENvdW50PTEvMSBNYXNrYWJsZS0gNjRiaXQrCiAgICAgICAg
-ICAgICAgICBBZGRyZXNzOiAwMDAwMDAwMGZlZTAwMDAwICBEYXRhOiAwMDAwCiAgICAgICAg
-Q2FwYWJpbGl0aWVzOiBbMTAwIHYxXSBWZW5kb3IgU3BlY2lmaWMgSW5mb3JtYXRpb246IElE
-PTAwMDEgUmV2PTEgTGVuPTAxMCA8Pz4KICAgICAgICBLZXJuZWwgZHJpdmVyIGluIHVzZTog
-c25kX2hkYV9pbnRlbAogICAgICAgIEtlcm5lbCBtb2R1bGVzOiBzbmRfaGRhX2ludGVsCgow
-MDowMi4wIEhvc3QgYnJpZGdlOiBBZHZhbmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtBTURd
-IEZhbWlseSAxNWggKE1vZGVscyA2MGgtNmZoKSBIb3N0IEJyaWRnZQogICAgICAgIENvbnRy
-b2w6IEkvTy0gTWVtLSBCdXNNYXN0ZXItIFNwZWNDeWNsZS0gTWVtV0lOVi0gVkdBU25vb3At
-IFBhckVyci0gU3RlcHBpbmctIFNFUlItIEZhc3RCMkItIERpc0lOVHgtCiAgICAgICAgU3Rh
-dHVzOiBDYXAtIDY2TUh6LSBVREYtIEZhc3RCMkItIFBhckVyci0gREVWU0VMPWZhc3QgPlRB
-Ym9ydC0gPFRBYm9ydC0gPE1BYm9ydC0gPlNFUlItIDxQRVJSLSBJTlR4LQogICAgICAgIElP
-TU1VIGdyb3VwOiAxCgowMDowMi4yIFBDSSBicmlkZ2U6IEFkdmFuY2VkIE1pY3JvIERldmlj
-ZXMsIEluYy4gW0FNRF0gRmFtaWx5IDE1aCAoTW9kZWxzIDYwaC02ZmgpIFByb2Nlc3NvciBS
-b290IFBvcnQgKHByb2ctaWYgMDAgW05vcm1hbCBkZWNvZGVdKQogICAgICAgIFN1YnN5c3Rl
-bTogSGV3bGV0dC1QYWNrYXJkIENvbXBhbnkgRGV2aWNlIDgzMzIKICAgICAgICBDb250cm9s
-OiBJL08rIE1lbSsgQnVzTWFzdGVyKyBTcGVjQ3ljbGUtIE1lbVdJTlYtIFZHQVNub29wLSBQ
-YXJFcnItIFN0ZXBwaW5nLSBTRVJSLSBGYXN0QjJCLSBEaXNJTlR4KwogICAgICAgIFN0YXR1
-czogQ2FwKyA2Nk1Iei0gVURGLSBGYXN0QjJCLSBQYXJFcnItIERFVlNFTD1mYXN0ID5UQWJv
-cnQtIDxUQWJvcnQtIDxNQWJvcnQtID5TRVJSLSA8UEVSUi0gSU5UeC0KICAgICAgICBMYXRl
-bmN5OiAwLCBDYWNoZSBMaW5lIFNpemU6IDY0IGJ5dGVzCiAgICAgICAgSW50ZXJydXB0OiBw
-aW4gQSByb3V0ZWQgdG8gSVJRIDI2CiAgICAgICAgSU9NTVUgZ3JvdXA6IDEKICAgICAgICBC
-dXM6IHByaW1hcnk9MDAsIHNlY29uZGFyeT0wMSwgc3Vib3JkaW5hdGU9MDEsIHNlYy1sYXRl
-bmN5PTAKICAgICAgICBJL08gYmVoaW5kIGJyaWRnZTogMzAwMC0zZmZmIFtzaXplPTRLXSBb
-MTYtYml0XQogICAgICAgIE1lbW9yeSBiZWhpbmQgYnJpZGdlOiBmMDMwMDAwMC1mMDNmZmZm
-ZiBbc2l6ZT0xTV0gWzMyLWJpdF0KICAgICAgICBQcmVmZXRjaGFibGUgbWVtb3J5IGJlaGlu
-ZCBicmlkZ2U6IDAwMDAwMDAwZmZmMDAwMDAtMDAwMDAwMDAwMDBmZmZmZiBbZGlzYWJsZWRd
-IFs2NC1iaXRdCiAgICAgICAgU2Vjb25kYXJ5IHN0YXR1czogNjZNSHotIEZhc3RCMkItIFBh
-ckVyci0gREVWU0VMPWZhc3QgPlRBYm9ydC0gPFRBYm9ydC0gPE1BYm9ydC0gPFNFUlItIDxQ
-RVJSLQogICAgICAgIEJyaWRnZUN0bDogUGFyaXR5LSBTRVJSKyBOb0lTQS0gVkdBLSBWR0Ex
-Ni0gTUFib3J0LSA+UmVzZXQtIEZhc3RCMkItCiAgICAgICAgICAgICAgICBQcmlEaXNjVG1y
-LSBTZWNEaXNjVG1yLSBEaXNjVG1yU3RhdC0gRGlzY1RtclNFUlJFbi0KICAgICAgICBDYXBh
-YmlsaXRpZXM6IFs1MF0gUG93ZXIgTWFuYWdlbWVudCB2ZXJzaW9uIDMKICAgICAgICAgICAg
-ICAgIEZsYWdzOiBQTUVDbGstIERTSS0gRDEtIEQyLSBBdXhDdXJyZW50PTBtQSBQTUUoRDAr
-LEQxLSxEMi0sRDNob3QrLEQzY29sZCspCiAgICAgICAgICAgICAgICBTdGF0dXM6IEQwIE5v
-U29mdFJzdC0gUE1FLUVuYWJsZS0gRFNlbD0wIERTY2FsZT0wIFBNRS0KICAgICAgICBDYXBh
-YmlsaXRpZXM6IFs1OF0gRXhwcmVzcyAodjIpIFJvb3QgUG9ydCAoU2xvdCspLCBNU0kgMDAK
-ICAgICAgICAgICAgICAgIERldkNhcDogTWF4UGF5bG9hZCA1MTIgYnl0ZXMsIFBoYW50RnVu
-YyAwCiAgICAgICAgICAgICAgICAgICAgICAgIEV4dFRhZysgUkJFKwogICAgICAgICAgICAg
-ICAgRGV2Q3RsOiBDb3JyRXJyLSBOb25GYXRhbEVyci0gRmF0YWxFcnItIFVuc3VwUmVxLQog
-ICAgICAgICAgICAgICAgICAgICAgICBSbHhkT3JkKyBFeHRUYWcrIFBoYW50RnVuYy0gQXV4
-UHdyLSBOb1Nub29wKwogICAgICAgICAgICAgICAgICAgICAgICBNYXhQYXlsb2FkIDEyOCBi
-eXRlcywgTWF4UmVhZFJlcSA1MTIgYnl0ZXMKICAgICAgICAgICAgICAgIERldlN0YTogQ29y
-ckVycisgTm9uRmF0YWxFcnItIEZhdGFsRXJyLSBVbnN1cFJlcS0gQXV4UHdyLSBUcmFuc1Bl
-bmQtCiAgICAgICAgICAgICAgICBMbmtDYXA6IFBvcnQgIzAsIFNwZWVkIDIuNUdUL3MsIFdp
-ZHRoIHg0LCBBU1BNIEwwcyBMMSwgRXhpdCBMYXRlbmN5IEwwcyA8NTEybnMsIEwxIDw2NHVz
-CiAgICAgICAgICAgICAgICAgICAgICAgIENsb2NrUE0tIFN1cnByaXNlLSBMTEFjdFJlcCsg
-QndOb3QrIEFTUE1PcHRDb21wKwogICAgICAgICAgICAgICAgTG5rQ3RsOiBBU1BNIEwxIEVu
-YWJsZWQ7IFJDQiA2NCBieXRlcywgRGlzYWJsZWQtIENvbW1DbGsrCiAgICAgICAgICAgICAg
-ICAgICAgICAgIEV4dFN5bmNoLSBDbG9ja1BNLSBBdXRXaWREaXMtIEJXSW50LSBBdXRCV0lu
-dC0KICAgICAgICAgICAgICAgIExua1N0YTogU3BlZWQgMi41R1QvcywgV2lkdGggeDEKICAg
-ICAgICAgICAgICAgICAgICAgICAgVHJFcnItIFRyYWluLSBTbG90Q2xrKyBETEFjdGl2ZSsg
-QldNZ210KyBBQldNZ210LQogICAgICAgICAgICAgICAgU2x0Q2FwOiBBdHRuQnRuLSBQd3JD
-dHJsLSBNUkwtIEF0dG5JbmQtIFB3ckluZC0gSG90UGx1Zy0gU3VycHJpc2UtCiAgICAgICAg
-ICAgICAgICAgICAgICAgIFNsb3QgIzAsIFBvd2VyTGltaXQgMFc7IEludGVybG9jay0gTm9D
-b21wbCsKICAgICAgICAgICAgICAgIFNsdEN0bDogRW5hYmxlOiBBdHRuQnRuLSBQd3JGbHQt
-IE1STC0gUHJlc0RldC0gQ21kQ3BsdC0gSFBJcnEtIExpbmtDaGctCiAgICAgICAgICAgICAg
-ICAgICAgICAgIENvbnRyb2w6IEF0dG5JbmQgVW5rbm93biwgUHdySW5kIFVua25vd24sIFBv
-d2VyLSBJbnRlcmxvY2stCiAgICAgICAgICAgICAgICBTbHRTdGE6IFN0YXR1czogQXR0bkJ0
-bi0gUG93ZXJGbHQtIE1STC0gQ21kQ3BsdC0gUHJlc0RldCsgSW50ZXJsb2NrLQogICAgICAg
-ICAgICAgICAgICAgICAgICBDaGFuZ2VkOiBNUkwtIFByZXNEZXQtIExpbmtTdGF0ZSsKICAg
-ICAgICAgICAgICAgIFJvb3RDYXA6IENSU1Zpc2libGUrCiAgICAgICAgICAgICAgICBSb290
-Q3RsOiBFcnJDb3JyZWN0YWJsZS0gRXJyTm9uLUZhdGFsLSBFcnJGYXRhbC0gUE1FSW50RW5h
-KyBDUlNWaXNpYmxlKwogICAgICAgICAgICAgICAgUm9vdFN0YTogUE1FIFJlcUlEIDAwMDAs
-IFBNRVN0YXR1cy0gUE1FUGVuZGluZy0KICAgICAgICAgICAgICAgIERldkNhcDI6IENvbXBs
-ZXRpb24gVGltZW91dDogUmFuZ2UgQUJDRCwgVGltZW91dERpcysgTlJPUHJQclAtIExUUi0K
-ICAgICAgICAgICAgICAgICAgICAgICAgIDEwQml0VGFnQ29tcC0gMTBCaXRUYWdSZXEtIE9C
-RkYgTm90IFN1cHBvcnRlZCwgRXh0Rm10KyBFRVRMUFByZWZpeCssIE1heEVFVExQUHJlZml4
-ZXMgMQogICAgICAgICAgICAgICAgICAgICAgICAgRW1lcmdlbmN5UG93ZXJSZWR1Y3Rpb24g
-Tm90IFN1cHBvcnRlZCwgRW1lcmdlbmN5UG93ZXJSZWR1Y3Rpb25Jbml0LQogICAgICAgICAg
-ICAgICAgICAgICAgICAgRlJTLSBMTiBTeXN0ZW0gQ0xTIE5vdCBTdXBwb3J0ZWQsIFRQSENv
-bXAtIEV4dFRQSENvbXAtIEFSSUZ3ZC0KICAgICAgICAgICAgICAgICAgICAgICAgIEF0b21p
-Y09wc0NhcDogUm91dGluZy0gMzJiaXQtIDY0Yml0LSAxMjhiaXRDQVMtCiAgICAgICAgICAg
-ICAgICBEZXZDdGwyOiBDb21wbGV0aW9uIFRpbWVvdXQ6IDY1bXMgdG8gMjEwbXMsIFRpbWVv
-dXREaXMtIExUUi0gMTBCaXRUYWdSZXEtIE9CRkYgRGlzYWJsZWQsIEFSSUZ3ZC0KICAgICAg
-ICAgICAgICAgICAgICAgICAgIEF0b21pY09wc0N0bDogUmVxRW4tIEVncmVzc0JsY2stCiAg
-ICAgICAgICAgICAgICBMbmtDYXAyOiBTdXBwb3J0ZWQgTGluayBTcGVlZHM6IDIuNS04R1Qv
-cywgQ3Jvc3NsaW5rLSBSZXRpbWVyLSAyUmV0aW1lcnMtIERSUy0KICAgICAgICAgICAgICAg
-IExua0N0bDI6IFRhcmdldCBMaW5rIFNwZWVkOiAyLjVHVC9zLCBFbnRlckNvbXBsaWFuY2Ut
-IFNwZWVkRGlzKwogICAgICAgICAgICAgICAgICAgICAgICAgVHJhbnNtaXQgTWFyZ2luOiBO
-b3JtYWwgT3BlcmF0aW5nIFJhbmdlLCBFbnRlck1vZGlmaWVkQ29tcGxpYW5jZS0gQ29tcGxp
-YW5jZVNPUy0KICAgICAgICAgICAgICAgICAgICAgICAgIENvbXBsaWFuY2UgUHJlc2V0L0Rl
-LWVtcGhhc2lzOiAtNmRCIGRlLWVtcGhhc2lzLCAwZEIgcHJlc2hvb3QKICAgICAgICAgICAg
-ICAgIExua1N0YTI6IEN1cnJlbnQgRGUtZW1waGFzaXMgTGV2ZWw6IC02ZEIsIEVxdWFsaXph
-dGlvbkNvbXBsZXRlLSBFcXVhbGl6YXRpb25QaGFzZTEtCiAgICAgICAgICAgICAgICAgICAg
-ICAgICBFcXVhbGl6YXRpb25QaGFzZTItIEVxdWFsaXphdGlvblBoYXNlMy0gTGlua0VxdWFs
-aXphdGlvblJlcXVlc3QtCiAgICAgICAgICAgICAgICAgICAgICAgICBSZXRpbWVyLSAyUmV0
-aW1lcnMtIENyb3NzbGlua1JlczogdW5zdXBwb3J0ZWQKICAgICAgICBDYXBhYmlsaXRpZXM6
-IFthMF0gTVNJOiBFbmFibGUrIENvdW50PTEvMSBNYXNrYWJsZS0gNjRiaXQrCiAgICAgICAg
-ICAgICAgICBBZGRyZXNzOiAwMDAwMDAwMGZlZTAwMDAwICBEYXRhOiAwMDAwCiAgICAgICAg
-Q2FwYWJpbGl0aWVzOiBbYzBdIFN1YnN5c3RlbTogSGV3bGV0dC1QYWNrYXJkIENvbXBhbnkg
-RGV2aWNlIDgzMzIKICAgICAgICBDYXBhYmlsaXRpZXM6IFtjOF0gSHlwZXJUcmFuc3BvcnQ6
-IE1TSSBNYXBwaW5nIEVuYWJsZSsgRml4ZWQrCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbMTAw
-IHYxXSBWZW5kb3IgU3BlY2lmaWMgSW5mb3JtYXRpb246IElEPTAwMDEgUmV2PTEgTGVuPTAx
-MCA8Pz4KICAgICAgICBDYXBhYmlsaXRpZXM6IFsyNzAgdjFdIFNlY29uZGFyeSBQQ0kgRXhw
-cmVzcwogICAgICAgICAgICAgICAgTG5rQ3RsMzogTG5rRXF1SW50cnJ1cHRFbi0gUGVyZm9y
-bUVxdS0KICAgICAgICAgICAgICAgIExhbmVFcnJTdGF0OiAwCiAgICAgICAgS2VybmVsIGRy
-aXZlciBpbiB1c2U6IHBjaWVwb3J0CgowMDowMi40IFBDSSBicmlkZ2U6IEFkdmFuY2VkIE1p
-Y3JvIERldmljZXMsIEluYy4gW0FNRF0gRmFtaWx5IDE1aCAoTW9kZWxzIDYwaC02ZmgpIFBy
-b2Nlc3NvciBSb290IFBvcnQgKHByb2ctaWYgMDAgW05vcm1hbCBkZWNvZGVdKQogICAgICAg
-IFN1YnN5c3RlbTogSGV3bGV0dC1QYWNrYXJkIENvbXBhbnkgRGV2aWNlIDgzMzIKICAgICAg
-ICBDb250cm9sOiBJL08rIE1lbSsgQnVzTWFzdGVyKyBTcGVjQ3ljbGUtIE1lbVdJTlYtIFZH
-QVNub29wLSBQYXJFcnItIFN0ZXBwaW5nLSBTRVJSLSBGYXN0QjJCLSBEaXNJTlR4KwogICAg
-ICAgIFN0YXR1czogQ2FwKyA2Nk1Iei0gVURGLSBGYXN0QjJCLSBQYXJFcnItIERFVlNFTD1m
-YXN0ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQtID5TRVJSLSA8UEVSUi0gSU5UeC0KICAg
-ICAgICBMYXRlbmN5OiAwLCBDYWNoZSBMaW5lIFNpemU6IDY0IGJ5dGVzCiAgICAgICAgSW50
-ZXJydXB0OiBwaW4gQSByb3V0ZWQgdG8gSVJRIDI3CiAgICAgICAgSU9NTVUgZ3JvdXA6IDEK
-ICAgICAgICBCdXM6IHByaW1hcnk9MDAsIHNlY29uZGFyeT0wMiwgc3Vib3JkaW5hdGU9MDQs
-IHNlYy1sYXRlbmN5PTAKICAgICAgICBJL08gYmVoaW5kIGJyaWRnZTogMjAwMC0yZmZmIFtz
-aXplPTRLXSBbMTYtYml0XQogICAgICAgIE1lbW9yeSBiZWhpbmQgYnJpZGdlOiBmMTAwMDAw
-MC1mMTBmZmZmZiBbc2l6ZT0xTV0gWzMyLWJpdF0KICAgICAgICBQcmVmZXRjaGFibGUgbWVt
-b3J5IGJlaGluZCBicmlkZ2U6IGYwMDAwMDAwLWYwMGZmZmZmIFtzaXplPTFNXSBbMzItYml0
-XQogICAgICAgIFNlY29uZGFyeSBzdGF0dXM6IDY2TUh6LSBGYXN0QjJCLSBQYXJFcnItIERF
-VlNFTD1mYXN0ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQrIDxTRVJSLSA8UEVSUi0KICAg
-ICAgICBCcmlkZ2VDdGw6IFBhcml0eS0gU0VSUisgTm9JU0EtIFZHQS0gVkdBMTYtIE1BYm9y
-dC0gPlJlc2V0LSBGYXN0QjJCLQogICAgICAgICAgICAgICAgUHJpRGlzY1Rtci0gU2VjRGlz
-Y1Rtci0gRGlzY1RtclN0YXQtIERpc2NUbXJTRVJSRW4tCiAgICAgICAgQ2FwYWJpbGl0aWVz
-OiBbNTBdIFBvd2VyIE1hbmFnZW1lbnQgdmVyc2lvbiAzCiAgICAgICAgICAgICAgICBGbGFn
-czogUE1FQ2xrLSBEU0ktIEQxLSBEMi0gQXV4Q3VycmVudD0wbUEgUE1FKEQwKyxEMS0sRDIt
-LEQzaG90KyxEM2NvbGQrKQogICAgICAgICAgICAgICAgU3RhdHVzOiBEMCBOb1NvZnRSc3Qt
-IFBNRS1FbmFibGUtIERTZWw9MCBEU2NhbGU9MCBQTUUtCiAgICAgICAgQ2FwYWJpbGl0aWVz
-OiBbNThdIEV4cHJlc3MgKHYyKSBSb290IFBvcnQgKFNsb3QrKSwgTVNJIDAwCiAgICAgICAg
-ICAgICAgICBEZXZDYXA6IE1heFBheWxvYWQgNTEyIGJ5dGVzLCBQaGFudEZ1bmMgMAogICAg
-ICAgICAgICAgICAgICAgICAgICBFeHRUYWcrIFJCRSsKICAgICAgICAgICAgICAgIERldkN0
-bDogQ29yckVyci0gTm9uRmF0YWxFcnItIEZhdGFsRXJyLSBVbnN1cFJlcS0KICAgICAgICAg
-ICAgICAgICAgICAgICAgUmx4ZE9yZCsgRXh0VGFnKyBQaGFudEZ1bmMtIEF1eFB3ci0gTm9T
-bm9vcCsKICAgICAgICAgICAgICAgICAgICAgICAgTWF4UGF5bG9hZCAxMjggYnl0ZXMsIE1h
-eFJlYWRSZXEgNTEyIGJ5dGVzCiAgICAgICAgICAgICAgICBEZXZTdGE6IENvcnJFcnItIE5v
-bkZhdGFsRXJyLSBGYXRhbEVyci0gVW5zdXBSZXEtIEF1eFB3ci0gVHJhbnNQZW5kLQogICAg
-ICAgICAgICAgICAgTG5rQ2FwOiBQb3J0ICMxLCBTcGVlZCAyLjVHVC9zLCBXaWR0aCB4NCwg
-QVNQTSBMMHMgTDEsIEV4aXQgTGF0ZW5jeSBMMHMgPDUxMm5zLCBMMSA8NjR1cwogICAgICAg
-ICAgICAgICAgICAgICAgICBDbG9ja1BNLSBTdXJwcmlzZS0gTExBY3RSZXArIEJ3Tm90KyBB
-U1BNT3B0Q29tcCsKICAgICAgICAgICAgICAgIExua0N0bDogQVNQTSBMMSBFbmFibGVkOyBS
-Q0IgNjQgYnl0ZXMsIERpc2FibGVkLSBDb21tQ2xrKwogICAgICAgICAgICAgICAgICAgICAg
-ICBFeHRTeW5jaC0gQ2xvY2tQTS0gQXV0V2lkRGlzLSBCV0ludC0gQXV0QldJbnQtCiAgICAg
-ICAgICAgICAgICBMbmtTdGE6IFNwZWVkIDIuNUdUL3MsIFdpZHRoIHgxCiAgICAgICAgICAg
-ICAgICAgICAgICAgIFRyRXJyLSBUcmFpbi0gU2xvdENsaysgRExBY3RpdmUrIEJXTWdtdCsg
-QUJXTWdtdC0KICAgICAgICAgICAgICAgIFNsdENhcDogQXR0bkJ0bi0gUHdyQ3RybC0gTVJM
-LSBBdHRuSW5kLSBQd3JJbmQtIEhvdFBsdWctIFN1cnByaXNlLQogICAgICAgICAgICAgICAg
-ICAgICAgICBTbG90ICMwLCBQb3dlckxpbWl0IDBXOyBJbnRlcmxvY2stIE5vQ29tcGwrCiAg
-ICAgICAgICAgICAgICBTbHRDdGw6IEVuYWJsZTogQXR0bkJ0bi0gUHdyRmx0LSBNUkwtIFBy
-ZXNEZXQtIENtZENwbHQtIEhQSXJxLSBMaW5rQ2hnLQogICAgICAgICAgICAgICAgICAgICAg
-ICBDb250cm9sOiBBdHRuSW5kIFVua25vd24sIFB3ckluZCBVbmtub3duLCBQb3dlci0gSW50
-ZXJsb2NrLQogICAgICAgICAgICAgICAgU2x0U3RhOiBTdGF0dXM6IEF0dG5CdG4tIFBvd2Vy
-Rmx0LSBNUkwtIENtZENwbHQtIFByZXNEZXQrIEludGVybG9jay0KICAgICAgICAgICAgICAg
-ICAgICAgICAgQ2hhbmdlZDogTVJMLSBQcmVzRGV0LSBMaW5rU3RhdGUrCiAgICAgICAgICAg
-ICAgICBSb290Q2FwOiBDUlNWaXNpYmxlKwogICAgICAgICAgICAgICAgUm9vdEN0bDogRXJy
-Q29ycmVjdGFibGUtIEVyck5vbi1GYXRhbC0gRXJyRmF0YWwtIFBNRUludEVuYSsgQ1JTVmlz
-aWJsZSsKICAgICAgICAgICAgICAgIFJvb3RTdGE6IFBNRSBSZXFJRCAwMDAwLCBQTUVTdGF0
-dXMtIFBNRVBlbmRpbmctCiAgICAgICAgICAgICAgICBEZXZDYXAyOiBDb21wbGV0aW9uIFRp
-bWVvdXQ6IFJhbmdlIEFCQ0QsIFRpbWVvdXREaXMrIE5ST1ByUHJQLSBMVFItCiAgICAgICAg
-ICAgICAgICAgICAgICAgICAxMEJpdFRhZ0NvbXAtIDEwQml0VGFnUmVxLSBPQkZGIE5vdCBT
-dXBwb3J0ZWQsIEV4dEZtdCsgRUVUTFBQcmVmaXgrLCBNYXhFRVRMUFByZWZpeGVzIDEKICAg
-ICAgICAgICAgICAgICAgICAgICAgIEVtZXJnZW5jeVBvd2VyUmVkdWN0aW9uIE5vdCBTdXBw
-b3J0ZWQsIEVtZXJnZW5jeVBvd2VyUmVkdWN0aW9uSW5pdC0KICAgICAgICAgICAgICAgICAg
-ICAgICAgIEZSUy0gTE4gU3lzdGVtIENMUyBOb3QgU3VwcG9ydGVkLCBUUEhDb21wLSBFeHRU
-UEhDb21wLSBBUklGd2QtCiAgICAgICAgICAgICAgICAgICAgICAgICBBdG9taWNPcHNDYXA6
-IFJvdXRpbmctIDMyYml0LSA2NGJpdC0gMTI4Yml0Q0FTLQogICAgICAgICAgICAgICAgRGV2
-Q3RsMjogQ29tcGxldGlvbiBUaW1lb3V0OiA2NW1zIHRvIDIxMG1zLCBUaW1lb3V0RGlzLSBM
-VFItIDEwQml0VGFnUmVxLSBPQkZGIERpc2FibGVkLCBBUklGd2QtCiAgICAgICAgICAgICAg
-ICAgICAgICAgICBBdG9taWNPcHNDdGw6IFJlcUVuLSBFZ3Jlc3NCbGNrLQogICAgICAgICAg
-ICAgICAgTG5rQ2FwMjogU3VwcG9ydGVkIExpbmsgU3BlZWRzOiAyLjUtOEdUL3MsIENyb3Nz
-bGluay0gUmV0aW1lci0gMlJldGltZXJzLSBEUlMtCiAgICAgICAgICAgICAgICBMbmtDdGwy
-OiBUYXJnZXQgTGluayBTcGVlZDogMi41R1QvcywgRW50ZXJDb21wbGlhbmNlLSBTcGVlZERp
-cysKICAgICAgICAgICAgICAgICAgICAgICAgIFRyYW5zbWl0IE1hcmdpbjogTm9ybWFsIE9w
-ZXJhdGluZyBSYW5nZSwgRW50ZXJNb2RpZmllZENvbXBsaWFuY2UtIENvbXBsaWFuY2VTT1Mt
-CiAgICAgICAgICAgICAgICAgICAgICAgICBDb21wbGlhbmNlIFByZXNldC9EZS1lbXBoYXNp
-czogLTZkQiBkZS1lbXBoYXNpcywgMGRCIHByZXNob290CiAgICAgICAgICAgICAgICBMbmtT
-dGEyOiBDdXJyZW50IERlLWVtcGhhc2lzIExldmVsOiAtNmRCLCBFcXVhbGl6YXRpb25Db21w
-bGV0ZS0gRXF1YWxpemF0aW9uUGhhc2UxLQogICAgICAgICAgICAgICAgICAgICAgICAgRXF1
-YWxpemF0aW9uUGhhc2UyLSBFcXVhbGl6YXRpb25QaGFzZTMtIExpbmtFcXVhbGl6YXRpb25S
-ZXF1ZXN0LQogICAgICAgICAgICAgICAgICAgICAgICAgUmV0aW1lci0gMlJldGltZXJzLSBD
-cm9zc2xpbmtSZXM6IHVuc3VwcG9ydGVkCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbYTBdIE1T
-STogRW5hYmxlKyBDb3VudD0xLzEgTWFza2FibGUtIDY0Yml0KwogICAgICAgICAgICAgICAg
-QWRkcmVzczogMDAwMDAwMDBmZWUwMDAwMCAgRGF0YTogMDAwMAogICAgICAgIENhcGFiaWxp
-dGllczogW2MwXSBTdWJzeXN0ZW06IEhld2xldHQtUGFja2FyZCBDb21wYW55IERldmljZSA4
-MzMyCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbYzhdIEh5cGVyVHJhbnNwb3J0OiBNU0kgTWFw
-cGluZyBFbmFibGUrIEZpeGVkKwogICAgICAgIENhcGFiaWxpdGllczogWzEwMCB2MV0gVmVu
-ZG9yIFNwZWNpZmljIEluZm9ybWF0aW9uOiBJRD0wMDAxIFJldj0xIExlbj0wMTAgPD8+CiAg
-ICAgICAgQ2FwYWJpbGl0aWVzOiBbMjcwIHYxXSBTZWNvbmRhcnkgUENJIEV4cHJlc3MKICAg
-ICAgICAgICAgICAgIExua0N0bDM6IExua0VxdUludHJydXB0RW4tIFBlcmZvcm1FcXUtCiAg
-ICAgICAgICAgICAgICBMYW5lRXJyU3RhdDogMAogICAgICAgIEtlcm5lbCBkcml2ZXIgaW4g
-dXNlOiBwY2llcG9ydAoKMDA6MDMuMCBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2
-aWNlcywgSW5jLiBbQU1EXSBGYW1pbHkgMTVoIChNb2RlbHMgNjBoLTZmaCkgSG9zdCBCcmlk
-Z2UKICAgICAgICBDb250cm9sOiBJL08tIE1lbS0gQnVzTWFzdGVyLSBTcGVjQ3ljbGUtIE1l
-bVdJTlYtIFZHQVNub29wLSBQYXJFcnItIFN0ZXBwaW5nLSBTRVJSLSBGYXN0QjJCLSBEaXNJ
-TlR4LQogICAgICAgIFN0YXR1czogQ2FwLSA2Nk1Iei0gVURGLSBGYXN0QjJCLSBQYXJFcnIt
-IERFVlNFTD1mYXN0ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQtID5TRVJSLSA8UEVSUi0g
-SU5UeC0KICAgICAgICBJT01NVSBncm91cDogMgoKMDA6MDMuMSBQQ0kgYnJpZGdlOiBBZHZh
-bmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtBTURdIEZhbWlseSAxNWggKE1vZGVscyA2MGgt
-NmZoKSBQcm9jZXNzb3IgUm9vdCBQb3J0IChwcm9nLWlmIDAwIFtOb3JtYWwgZGVjb2RlXSkK
-ICAgICAgICBTdWJzeXN0ZW06IEhld2xldHQtUGFja2FyZCBDb21wYW55IERldmljZSA4MzMy
-CiAgICAgICAgQ29udHJvbDogSS9PKyBNZW0rIEJ1c01hc3RlcisgU3BlY0N5Y2xlLSBNZW1X
-SU5WLSBWR0FTbm9vcC0gUGFyRXJyLSBTdGVwcGluZy0gU0VSUi0gRmFzdEIyQi0gRGlzSU5U
-eCsKICAgICAgICBTdGF0dXM6IENhcCsgNjZNSHotIFVERi0gRmFzdEIyQi0gUGFyRXJyLSBE
-RVZTRUw9ZmFzdCA+VEFib3J0LSA8VEFib3J0LSA8TUFib3J0LSA+U0VSUi0gPFBFUlItIElO
-VHgtCiAgICAgICAgTGF0ZW5jeTogMCwgQ2FjaGUgTGluZSBTaXplOiA2NCBieXRlcwogICAg
-ICAgIEludGVycnVwdDogcGluIEEgcm91dGVkIHRvIElSUSAyOQogICAgICAgIElPTU1VIGdy
-b3VwOiAyCiAgICAgICAgQnVzOiBwcmltYXJ5PTAwLCBzZWNvbmRhcnk9MDUsIHN1Ym9yZGlu
-YXRlPTA1LCBzZWMtbGF0ZW5jeT0wCiAgICAgICAgSS9PIGJlaGluZCBicmlkZ2U6IDEwMDAt
-MWZmZiBbc2l6ZT00S10gWzE2LWJpdF0KICAgICAgICBNZW1vcnkgYmVoaW5kIGJyaWRnZTog
-ZjA1MDAwMDAtZjA2ZmZmZmYgW3NpemU9Mk1dIFszMi1iaXRdCiAgICAgICAgUHJlZmV0Y2hh
-YmxlIG1lbW9yeSBiZWhpbmQgYnJpZGdlOiBmMTEwMDAwMC1mMTJmZmZmZiBbc2l6ZT0yTV0g
-WzMyLWJpdF0KICAgICAgICBTZWNvbmRhcnkgc3RhdHVzOiA2Nk1Iei0gRmFzdEIyQi0gUGFy
-RXJyLSBERVZTRUw9ZmFzdCA+VEFib3J0LSA8VEFib3J0LSA8TUFib3J0LSA8U0VSUi0gPFBF
-UlItCiAgICAgICAgQnJpZGdlQ3RsOiBQYXJpdHktIFNFUlIrIE5vSVNBLSBWR0EtIFZHQTE2
-LSBNQWJvcnQtID5SZXNldC0gRmFzdEIyQi0KICAgICAgICAgICAgICAgIFByaURpc2NUbXIt
-IFNlY0Rpc2NUbXItIERpc2NUbXJTdGF0LSBEaXNjVG1yU0VSUkVuLQogICAgICAgIENhcGFi
-aWxpdGllczogWzUwXSBQb3dlciBNYW5hZ2VtZW50IHZlcnNpb24gMwogICAgICAgICAgICAg
-ICAgRmxhZ3M6IFBNRUNsay0gRFNJLSBEMS0gRDItIEF1eEN1cnJlbnQ9MG1BIFBNRShEMCss
-RDEtLEQyLSxEM2hvdCssRDNjb2xkKykKICAgICAgICAgICAgICAgIFN0YXR1czogRDAgTm9T
-b2Z0UnN0LSBQTUUtRW5hYmxlLSBEU2VsPTAgRFNjYWxlPTAgUE1FLQogICAgICAgIENhcGFi
-aWxpdGllczogWzU4XSBFeHByZXNzICh2MikgUm9vdCBQb3J0IChTbG90KyksIE1TSSAwMAog
-ICAgICAgICAgICAgICAgRGV2Q2FwOiBNYXhQYXlsb2FkIDUxMiBieXRlcywgUGhhbnRGdW5j
-IDAKICAgICAgICAgICAgICAgICAgICAgICAgRXh0VGFnKyBSQkUrCiAgICAgICAgICAgICAg
-ICBEZXZDdGw6IENvcnJFcnItIE5vbkZhdGFsRXJyLSBGYXRhbEVyci0gVW5zdXBSZXEtCiAg
-ICAgICAgICAgICAgICAgICAgICAgIFJseGRPcmQrIEV4dFRhZysgUGhhbnRGdW5jLSBBdXhQ
-d3ItIE5vU25vb3ArCiAgICAgICAgICAgICAgICAgICAgICAgIE1heFBheWxvYWQgMTI4IGJ5
-dGVzLCBNYXhSZWFkUmVxIDUxMiBieXRlcwogICAgICAgICAgICAgICAgRGV2U3RhOiBDb3Jy
-RXJyLSBOb25GYXRhbEVyci0gRmF0YWxFcnItIFVuc3VwUmVxLSBBdXhQd3ItIFRyYW5zUGVu
-ZC0KICAgICAgICAgICAgICAgIExua0NhcDogUG9ydCAjMjQ3LCBTcGVlZCAyLjVHVC9zLCBX
-aWR0aCB4OCwgQVNQTSBMMHMgTDEsIEV4aXQgTGF0ZW5jeSBMMHMgPDUxMm5zLCBMMSA8NjR1
-cwogICAgICAgICAgICAgICAgICAgICAgICBDbG9ja1BNLSBTdXJwcmlzZS0gTExBY3RSZXAr
-IEJ3Tm90KyBBU1BNT3B0Q29tcCsKICAgICAgICAgICAgICAgIExua0N0bDogQVNQTSBEaXNh
-YmxlZDsgUkNCIDY0IGJ5dGVzLCBEaXNhYmxlZC0gQ29tbUNsay0KICAgICAgICAgICAgICAg
-ICAgICAgICAgRXh0U3luY2gtIENsb2NrUE0tIEF1dFdpZERpcy0gQldJbnQtIEF1dEJXSW50
-LQogICAgICAgICAgICAgICAgTG5rU3RhOiBTcGVlZCAyLjVHVC9zLCBXaWR0aCB4MTYgKG92
-ZXJkcml2ZW4pCiAgICAgICAgICAgICAgICAgICAgICAgIFRyRXJyLSBUcmFpbi0gU2xvdENs
-aysgRExBY3RpdmUtIEJXTWdtdC0gQUJXTWdtdC0KICAgICAgICAgICAgICAgIFNsdENhcDog
-QXR0bkJ0bi0gUHdyQ3RybC0gTVJMLSBBdHRuSW5kLSBQd3JJbmQtIEhvdFBsdWcrIFN1cnBy
-aXNlLQogICAgICAgICAgICAgICAgICAgICAgICBTbG90ICMwLCBQb3dlckxpbWl0IDBXOyBJ
-bnRlcmxvY2stIE5vQ29tcGwrCiAgICAgICAgICAgICAgICBTbHRDdGw6IEVuYWJsZTogQXR0
-bkJ0bi0gUHdyRmx0LSBNUkwtIFByZXNEZXQrIENtZENwbHQtIEhQSXJxKyBMaW5rQ2hnKwog
-ICAgICAgICAgICAgICAgICAgICAgICBDb250cm9sOiBBdHRuSW5kIFVua25vd24sIFB3cklu
-ZCBVbmtub3duLCBQb3dlci0gSW50ZXJsb2NrLQogICAgICAgICAgICAgICAgU2x0U3RhOiBT
-dGF0dXM6IEF0dG5CdG4tIFBvd2VyRmx0LSBNUkwtIENtZENwbHQtIFByZXNEZXQtIEludGVy
-bG9jay0KICAgICAgICAgICAgICAgICAgICAgICAgQ2hhbmdlZDogTVJMLSBQcmVzRGV0LSBM
-aW5rU3RhdGUtCiAgICAgICAgICAgICAgICBSb290Q2FwOiBDUlNWaXNpYmxlKwogICAgICAg
-ICAgICAgICAgUm9vdEN0bDogRXJyQ29ycmVjdGFibGUtIEVyck5vbi1GYXRhbC0gRXJyRmF0
-YWwtIFBNRUludEVuYSsgQ1JTVmlzaWJsZSsKICAgICAgICAgICAgICAgIFJvb3RTdGE6IFBN
-RSBSZXFJRCAwMDAwLCBQTUVTdGF0dXMtIFBNRVBlbmRpbmctCiAgICAgICAgICAgICAgICBE
-ZXZDYXAyOiBDb21wbGV0aW9uIFRpbWVvdXQ6IFJhbmdlIEFCQ0QsIFRpbWVvdXREaXMrIE5S
-T1ByUHJQLSBMVFItCiAgICAgICAgICAgICAgICAgICAgICAgICAxMEJpdFRhZ0NvbXAtIDEw
-Qml0VGFnUmVxLSBPQkZGIE5vdCBTdXBwb3J0ZWQsIEV4dEZtdCsgRUVUTFBQcmVmaXgrLCBN
-YXhFRVRMUFByZWZpeGVzIDEKICAgICAgICAgICAgICAgICAgICAgICAgIEVtZXJnZW5jeVBv
-d2VyUmVkdWN0aW9uIE5vdCBTdXBwb3J0ZWQsIEVtZXJnZW5jeVBvd2VyUmVkdWN0aW9uSW5p
-dC0KICAgICAgICAgICAgICAgICAgICAgICAgIEZSUy0gTE4gU3lzdGVtIENMUyBOb3QgU3Vw
-cG9ydGVkLCBUUEhDb21wLSBFeHRUUEhDb21wLSBBUklGd2QtCiAgICAgICAgICAgICAgICAg
-ICAgICAgICBBdG9taWNPcHNDYXA6IFJvdXRpbmctIDMyYml0LSA2NGJpdC0gMTI4Yml0Q0FT
-LQogICAgICAgICAgICAgICAgRGV2Q3RsMjogQ29tcGxldGlvbiBUaW1lb3V0OiA2NW1zIHRv
-IDIxMG1zLCBUaW1lb3V0RGlzLSBMVFItIDEwQml0VGFnUmVxLSBPQkZGIERpc2FibGVkLCBB
-UklGd2QtCiAgICAgICAgICAgICAgICAgICAgICAgICBBdG9taWNPcHNDdGw6IFJlcUVuLSBF
-Z3Jlc3NCbGNrLQogICAgICAgICAgICAgICAgTG5rQ2FwMjogU3VwcG9ydGVkIExpbmsgU3Bl
-ZWRzOiAyLjUtOEdUL3MsIENyb3NzbGluay0gUmV0aW1lci0gMlJldGltZXJzLSBEUlMtCiAg
-ICAgICAgICAgICAgICBMbmtDdGwyOiBUYXJnZXQgTGluayBTcGVlZDogMi41R1QvcywgRW50
-ZXJDb21wbGlhbmNlLSBTcGVlZERpcysKICAgICAgICAgICAgICAgICAgICAgICAgIFRyYW5z
-bWl0IE1hcmdpbjogTm9ybWFsIE9wZXJhdGluZyBSYW5nZSwgRW50ZXJNb2RpZmllZENvbXBs
-aWFuY2UtIENvbXBsaWFuY2VTT1MtCiAgICAgICAgICAgICAgICAgICAgICAgICBDb21wbGlh
-bmNlIFByZXNldC9EZS1lbXBoYXNpczogLTZkQiBkZS1lbXBoYXNpcywgMGRCIHByZXNob290
-CiAgICAgICAgICAgICAgICBMbmtTdGEyOiBDdXJyZW50IERlLWVtcGhhc2lzIExldmVsOiAt
-NmRCLCBFcXVhbGl6YXRpb25Db21wbGV0ZS0gRXF1YWxpemF0aW9uUGhhc2UxLQogICAgICAg
-ICAgICAgICAgICAgICAgICAgRXF1YWxpemF0aW9uUGhhc2UyLSBFcXVhbGl6YXRpb25QaGFz
-ZTMtIExpbmtFcXVhbGl6YXRpb25SZXF1ZXN0LQogICAgICAgICAgICAgICAgICAgICAgICAg
-UmV0aW1lci0gMlJldGltZXJzLSBDcm9zc2xpbmtSZXM6IHVuc3VwcG9ydGVkCiAgICAgICAg
-Q2FwYWJpbGl0aWVzOiBbYTBdIE1TSTogRW5hYmxlKyBDb3VudD0xLzEgTWFza2FibGUtIDY0
-Yml0KwogICAgICAgICAgICAgICAgQWRkcmVzczogMDAwMDAwMDBmZWUwMDAwMCAgRGF0YTog
-MDAwMAogICAgICAgIENhcGFiaWxpdGllczogW2MwXSBTdWJzeXN0ZW06IEhld2xldHQtUGFj
-a2FyZCBDb21wYW55IERldmljZSA4MzMyCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbYzhdIEh5
-cGVyVHJhbnNwb3J0OiBNU0kgTWFwcGluZyBFbmFibGUrIEZpeGVkKwogICAgICAgIENhcGFi
-aWxpdGllczogWzEwMCB2MV0gVmVuZG9yIFNwZWNpZmljIEluZm9ybWF0aW9uOiBJRD0wMDAx
-IFJldj0xIExlbj0wMTAgPD8+CiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbMjcwIHYxXSBTZWNv
-bmRhcnkgUENJIEV4cHJlc3MKICAgICAgICAgICAgICAgIExua0N0bDM6IExua0VxdUludHJy
-dXB0RW4tIFBlcmZvcm1FcXUtCiAgICAgICAgICAgICAgICBMYW5lRXJyU3RhdDogMAogICAg
-ICAgIEtlcm5lbCBkcml2ZXIgaW4gdXNlOiBwY2llcG9ydAoKMDA6MDguMCBFbmNyeXB0aW9u
-IGNvbnRyb2xsZXI6IEFkdmFuY2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gQ2Fycml6
-byBQbGF0Zm9ybSBTZWN1cml0eSBQcm9jZXNzb3IKICAgICAgICBTdWJzeXN0ZW06IEhld2xl
-dHQtUGFja2FyZCBDb21wYW55IERldmljZSA4MzMyCiAgICAgICAgQ29udHJvbDogSS9PLSBN
-ZW0rIEJ1c01hc3RlcisgU3BlY0N5Y2xlLSBNZW1XSU5WLSBWR0FTbm9vcC0gUGFyRXJyLSBT
-dGVwcGluZy0gU0VSUi0gRmFzdEIyQi0gRGlzSU5UeC0KICAgICAgICBTdGF0dXM6IENhcCsg
-NjZNSHotIFVERi0gRmFzdEIyQi0gUGFyRXJyLSBERVZTRUw9ZmFzdCA+VEFib3J0LSA8VEFi
-b3J0LSA8TUFib3J0LSA+U0VSUi0gPFBFUlItIElOVHgtCiAgICAgICAgTGF0ZW5jeTogMAog
-ICAgICAgIEludGVycnVwdDogcGluIEEgcm91dGVkIHRvIElSUSAyNTUKICAgICAgICBJT01N
-VSBncm91cDogMwogICAgICAgIFJlZ2lvbiAwOiBNZW1vcnkgYXQgZjA0NDAwMDAgKDY0LWJp
-dCwgcHJlZmV0Y2hhYmxlKSBbc2l6ZT0xMjhLXQogICAgICAgIFJlZ2lvbiAyOiBNZW1vcnkg
-YXQgZjAyMDAwMDAgKDMyLWJpdCwgbm9uLXByZWZldGNoYWJsZSkgW3NpemU9MU1dCiAgICAg
-ICAgUmVnaW9uIDM6IE1lbW9yeSBhdCBmMDQ2ZjAwMCAoMzItYml0LCBub24tcHJlZmV0Y2hh
-YmxlKSBbc2l6ZT00S10KICAgICAgICBSZWdpb24gNTogTWVtb3J5IGF0IGYwNDZhMDAwICgz
-Mi1iaXQsIG5vbi1wcmVmZXRjaGFibGUpIFtzaXplPThLXQogICAgICAgIENhcGFiaWxpdGll
-czogWzUwXSBNU0ktWDogRW5hYmxlLSBDb3VudD0yIE1hc2tlZC0KICAgICAgICAgICAgICAg
-IFZlY3RvciB0YWJsZTogQkFSPTUgb2Zmc2V0PTAwMDAwMDAwCiAgICAgICAgICAgICAgICBQ
-QkE6IEJBUj01IG9mZnNldD0wMDAwMTAwMAogICAgICAgIENhcGFiaWxpdGllczogWzVjXSBI
-eXBlclRyYW5zcG9ydDogTVNJIE1hcHBpbmcgRW5hYmxlKyBGaXhlZCsKICAgICAgICBDYXBh
-YmlsaXRpZXM6IFs2MF0gUG93ZXIgTWFuYWdlbWVudCB2ZXJzaW9uIDMKICAgICAgICAgICAg
-ICAgIEZsYWdzOiBQTUVDbGstIERTSS0gRDEtIEQyLSBBdXhDdXJyZW50PTBtQSBQTUUoRDAt
-LEQxLSxEMi0sRDNob3QtLEQzY29sZC0pCiAgICAgICAgICAgICAgICBTdGF0dXM6IEQwIE5v
-U29mdFJzdCsgUE1FLUVuYWJsZS0gRFNlbD0wIERTY2FsZT0wIFBNRS0KICAgICAgICBDYXBh
-YmlsaXRpZXM6IFthNF0gUENJIEFkdmFuY2VkIEZlYXR1cmVzCiAgICAgICAgICAgICAgICBB
-RkNhcDogVFArIEZMUi0KICAgICAgICAgICAgICAgIEFGQ3RybDogRkxSLQogICAgICAgICAg
-ICAgICAgQUZTdGF0dXM6IFRQLQoKMDA6MDkuMCBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWlj
-cm8gRGV2aWNlcywgSW5jLiBbQU1EXSBDYXJyaXpvIEF1ZGlvIER1bW15IEhvc3QgQnJpZGdl
-CiAgICAgICAgQ29udHJvbDogSS9PLSBNZW0tIEJ1c01hc3Rlci0gU3BlY0N5Y2xlLSBNZW1X
-SU5WLSBWR0FTbm9vcC0gUGFyRXJyLSBTdGVwcGluZy0gU0VSUi0gRmFzdEIyQi0gRGlzSU5U
-eC0KICAgICAgICBTdGF0dXM6IENhcC0gNjZNSHotIFVERi0gRmFzdEIyQi0gUGFyRXJyLSBE
-RVZTRUw9ZmFzdCA+VEFib3J0LSA8VEFib3J0LSA8TUFib3J0LSA+U0VSUi0gPFBFUlItIElO
-VHgtCiAgICAgICAgSU9NTVUgZ3JvdXA6IDQKCjAwOjA5LjIgQXVkaW8gZGV2aWNlOiBBZHZh
-bmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtBTURdIEZhbWlseSAxNWggKE1vZGVscyA2MGgt
-NmZoKSBBdWRpbyBDb250cm9sbGVyCiAgICAgICAgU3Vic3lzdGVtOiBIZXdsZXR0LVBhY2th
-cmQgQ29tcGFueSBEZXZpY2UgODMzMgogICAgICAgIENvbnRyb2w6IEkvTy0gTWVtKyBCdXNN
-YXN0ZXIrIFNwZWNDeWNsZS0gTWVtV0lOVi0gVkdBU25vb3AtIFBhckVyci0gU3RlcHBpbmct
-IFNFUlItIEZhc3RCMkItIERpc0lOVHgtCiAgICAgICAgU3RhdHVzOiBDYXArIDY2TUh6LSBV
-REYtIEZhc3RCMkItIFBhckVyci0gREVWU0VMPWZhc3QgPlRBYm9ydC0gPFRBYm9ydC0gPE1B
-Ym9ydC0gPlNFUlItIDxQRVJSLSBJTlR4LQogICAgICAgIExhdGVuY3k6IDAKICAgICAgICBJ
-bnRlcnJ1cHQ6IHBpbiBBIHJvdXRlZCB0byBJUlEgNDMKICAgICAgICBJT01NVSBncm91cDog
-NAogICAgICAgIFJlZ2lvbiAwOiBNZW1vcnkgYXQgZjA0NjQwMDAgKDMyLWJpdCwgbm9uLXBy
-ZWZldGNoYWJsZSkgW3NpemU9MTZLXQogICAgICAgIENhcGFiaWxpdGllczogWzYwXSBQb3dl
-ciBNYW5hZ2VtZW50IHZlcnNpb24gMwogICAgICAgICAgICAgICAgRmxhZ3M6IFBNRUNsay0g
-RFNJLSBEMS0gRDItIEF1eEN1cnJlbnQ9MG1BIFBNRShEMCssRDEtLEQyLSxEM2hvdCssRDNj
-b2xkKykKICAgICAgICAgICAgICAgIFN0YXR1czogRDMgTm9Tb2Z0UnN0KyBQTUUtRW5hYmxl
-KyBEU2VsPTAgRFNjYWxlPTAgUE1FLQogICAgICAgIENhcGFiaWxpdGllczogW2E0XSBQQ0kg
-QWR2YW5jZWQgRmVhdHVyZXMKICAgICAgICAgICAgICAgIEFGQ2FwOiBUUCsgRkxSLQogICAg
-ICAgICAgICAgICAgQUZDdHJsOiBGTFItCiAgICAgICAgICAgICAgICBBRlN0YXR1czogVFAt
-CiAgICAgICAgS2VybmVsIGRyaXZlciBpbiB1c2U6IHNuZF9oZGFfaW50ZWwKICAgICAgICBL
-ZXJuZWwgbW9kdWxlczogc25kX2hkYV9pbnRlbAoKMDA6MTAuMCBVU0IgY29udHJvbGxlcjog
-QWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBGQ0ggVVNCIFhIQ0kgQ29udHJv
-bGxlciAocmV2IDIwKSAocHJvZy1pZiAzMCBbWEhDSV0pCiAgICAgICAgU3Vic3lzdGVtOiBI
-ZXdsZXR0LVBhY2thcmQgQ29tcGFueSBEZXZpY2UgODMzMgogICAgICAgIENvbnRyb2w6IEkv
-Ty0gTWVtKyBCdXNNYXN0ZXIrIFNwZWNDeWNsZS0gTWVtV0lOVi0gVkdBU25vb3AtIFBhckVy
-ci0gU3RlcHBpbmctIFNFUlItIEZhc3RCMkItIERpc0lOVHgrCiAgICAgICAgU3RhdHVzOiBD
-YXArIDY2TUh6LSBVREYtIEZhc3RCMkItIFBhckVyci0gREVWU0VMPWZhc3QgPlRBYm9ydC0g
-PFRBYm9ydC0gPE1BYm9ydC0gPlNFUlItIDxQRVJSLSBJTlR4LQogICAgICAgIExhdGVuY3k6
-IDAsIENhY2hlIExpbmUgU2l6ZTogNjQgYnl0ZXMKICAgICAgICBJbnRlcnJ1cHQ6IHBpbiBB
-IHJvdXRlZCB0byBJUlEgMTgKICAgICAgICBJT01NVSBncm91cDogNQogICAgICAgIFJlZ2lv
-biAwOiBNZW1vcnkgYXQgZjA0NjgwMDAgKDY0LWJpdCwgbm9uLXByZWZldGNoYWJsZSkgW3Np
-emU9OEtdCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbNTBdIFBvd2VyIE1hbmFnZW1lbnQgdmVy
-c2lvbiAzCiAgICAgICAgICAgICAgICBGbGFnczogUE1FQ2xrLSBEU0ktIEQxLSBEMi0gQXV4
-Q3VycmVudD0wbUEgUE1FKEQwKyxEMS0sRDItLEQzaG90KyxEM2NvbGQrKQogICAgICAgICAg
-ICAgICAgU3RhdHVzOiBEMCBOb1NvZnRSc3QrIFBNRS1FbmFibGUtIERTZWw9MCBEU2NhbGU9
-MCBQTUUtCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbNzBdIE1TSTogRW5hYmxlLSBDb3VudD0x
-LzggTWFza2FibGUtIDY0Yml0KwogICAgICAgICAgICAgICAgQWRkcmVzczogMDAwMDAwMDAw
-MDAwMDAwMCAgRGF0YTogMDAwMAogICAgICAgIENhcGFiaWxpdGllczogWzkwXSBNU0ktWDog
-RW5hYmxlKyBDb3VudD04IE1hc2tlZC0KICAgICAgICAgICAgICAgIFZlY3RvciB0YWJsZTog
-QkFSPTAgb2Zmc2V0PTAwMDAxMDAwCiAgICAgICAgICAgICAgICBQQkE6IEJBUj0wIG9mZnNl
-dD0wMDAwMTA4MAogICAgICAgIENhcGFiaWxpdGllczogW2EwXSBFeHByZXNzICh2MikgUm9v
-dCBDb21wbGV4IEludGVncmF0ZWQgRW5kcG9pbnQsIE1TSSAwMAogICAgICAgICAgICAgICAg
-RGV2Q2FwOiBNYXhQYXlsb2FkIDEyOCBieXRlcywgUGhhbnRGdW5jIDAKICAgICAgICAgICAg
-ICAgICAgICAgICAgRXh0VGFnLSBSQkUrIEZMUmVzZXQtCiAgICAgICAgICAgICAgICBEZXZD
-dGw6IENvcnJFcnItIE5vbkZhdGFsRXJyLSBGYXRhbEVyci0gVW5zdXBSZXEtCiAgICAgICAg
-ICAgICAgICAgICAgICAgIFJseGRPcmQtIEV4dFRhZy0gUGhhbnRGdW5jLSBBdXhQd3ItIE5v
-U25vb3ArCiAgICAgICAgICAgICAgICAgICAgICAgIE1heFBheWxvYWQgMTI4IGJ5dGVzLCBN
-YXhSZWFkUmVxIDUxMiBieXRlcwogICAgICAgICAgICAgICAgRGV2U3RhOiBDb3JyRXJyLSBO
-b25GYXRhbEVyci0gRmF0YWxFcnItIFVuc3VwUmVxLSBBdXhQd3IrIFRyYW5zUGVuZC0KICAg
-ICAgICAgICAgICAgIERldkNhcDI6IENvbXBsZXRpb24gVGltZW91dDogTm90IFN1cHBvcnRl
-ZCwgVGltZW91dERpcysgTlJPUHJQclAtIExUUisKICAgICAgICAgICAgICAgICAgICAgICAg
-IDEwQml0VGFnQ29tcC0gMTBCaXRUYWdSZXEtIE9CRkYgTm90IFN1cHBvcnRlZCwgRXh0Rm10
-LSBFRVRMUFByZWZpeC0KICAgICAgICAgICAgICAgICAgICAgICAgIEVtZXJnZW5jeVBvd2Vy
-UmVkdWN0aW9uIE5vdCBTdXBwb3J0ZWQsIEVtZXJnZW5jeVBvd2VyUmVkdWN0aW9uSW5pdC0K
-ICAgICAgICAgICAgICAgICAgICAgICAgIEZSUy0KICAgICAgICAgICAgICAgICAgICAgICAg
-IEF0b21pY09wc0NhcDogMzJiaXQtIDY0Yml0LSAxMjhiaXRDQVMtCiAgICAgICAgICAgICAg
-ICBEZXZDdGwyOiBDb21wbGV0aW9uIFRpbWVvdXQ6IDUwdXMgdG8gNTBtcywgVGltZW91dERp
-cy0gTFRSLSAxMEJpdFRhZ1JlcS0gT0JGRiBEaXNhYmxlZCwKICAgICAgICAgICAgICAgICAg
-ICAgICAgIEF0b21pY09wc0N0bDogUmVxRW4tCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbMTAw
-IHYxXSBMYXRlbmN5IFRvbGVyYW5jZSBSZXBvcnRpbmcKICAgICAgICAgICAgICAgIE1heCBz
-bm9vcCBsYXRlbmN5OiAwbnMKICAgICAgICAgICAgICAgIE1heCBubyBzbm9vcCBsYXRlbmN5
-OiAwbnMKICAgICAgICBLZXJuZWwgZHJpdmVyIGluIHVzZTogeGhjaV9oY2QKCjAwOjExLjAg
-U0FUQSBjb250cm9sbGVyOiBBZHZhbmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtBTURdIEZD
-SCBTQVRBIENvbnRyb2xsZXIgW0FIQ0kgbW9kZV0gKHJldiA0OSkgKHByb2ctaWYgMDEgW0FI
-Q0kgMS4wXSkKICAgICAgICBTdWJzeXN0ZW06IEhld2xldHQtUGFja2FyZCBDb21wYW55IERl
-dmljZSA4MzMyCiAgICAgICAgQ29udHJvbDogSS9PKyBNZW0rIEJ1c01hc3RlcisgU3BlY0N5
-Y2xlLSBNZW1XSU5WLSBWR0FTbm9vcC0gUGFyRXJyLSBTdGVwcGluZy0gU0VSUi0gRmFzdEIy
-Qi0gRGlzSU5UeC0KICAgICAgICBTdGF0dXM6IENhcCsgNjZNSHorIFVERi0gRmFzdEIyQi0g
-UGFyRXJyLSBERVZTRUw9bWVkaXVtID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQtID5TRVJS
-LSA8UEVSUi0gSU5UeC0KICAgICAgICBMYXRlbmN5OiA2NCwgQ2FjaGUgTGluZSBTaXplOiA2
-NCBieXRlcwogICAgICAgIEludGVycnVwdDogcGluIEEgcm91dGVkIHRvIElSUSAxOQogICAg
-ICAgIElPTU1VIGdyb3VwOiA2CiAgICAgICAgUmVnaW9uIDA6IEkvTyBwb3J0cyBhdCA0MTE4
-IFtzaXplPThdCiAgICAgICAgUmVnaW9uIDE6IEkvTyBwb3J0cyBhdCA0MTI0IFtzaXplPTRd
-CiAgICAgICAgUmVnaW9uIDI6IEkvTyBwb3J0cyBhdCA0MTEwIFtzaXplPThdCiAgICAgICAg
-UmVnaW9uIDM6IEkvTyBwb3J0cyBhdCA0MTIwIFtzaXplPTRdCiAgICAgICAgUmVnaW9uIDQ6
-IEkvTyBwb3J0cyBhdCA0MTAwIFtzaXplPTE2XQogICAgICAgIFJlZ2lvbiA1OiBNZW1vcnkg
-YXQgZjA0NmMwMDAgKDMyLWJpdCwgbm9uLXByZWZldGNoYWJsZSkgW3NpemU9MUtdCiAgICAg
-ICAgQ2FwYWJpbGl0aWVzOiBbNjBdIFBvd2VyIE1hbmFnZW1lbnQgdmVyc2lvbiAzCiAgICAg
-ICAgICAgICAgICBGbGFnczogUE1FQ2xrLSBEU0krIEQxLSBEMi0gQXV4Q3VycmVudD0wbUEg
-UE1FKEQwLSxEMS0sRDItLEQzaG90KyxEM2NvbGQtKQogICAgICAgICAgICAgICAgU3RhdHVz
-OiBEMCBOb1NvZnRSc3QtIFBNRS1FbmFibGUtIERTZWw9MCBEU2NhbGU9MCBQTUUtCiAgICAg
-ICAgQ2FwYWJpbGl0aWVzOiBbNzBdIFNBVEEgSEJBIHYxLjAgSW5DZmdTcGFjZQogICAgICAg
-IEtlcm5lbCBkcml2ZXIgaW4gdXNlOiBhaGNpCgowMDoxMi4wIFVTQiBjb250cm9sbGVyOiBB
-ZHZhbmNlZCBNaWNybyBEZXZpY2VzLCBJbmMuIFtBTURdIEZDSCBVU0IgRUhDSSBDb250cm9s
-bGVyIChyZXYgNDkpIChwcm9nLWlmIDIwIFtFSENJXSkKICAgICAgICBTdWJzeXN0ZW06IEhl
-d2xldHQtUGFja2FyZCBDb21wYW55IERldmljZSA4MzMyCiAgICAgICAgQ29udHJvbDogSS9P
-KyBNZW0rIEJ1c01hc3RlcisgU3BlY0N5Y2xlLSBNZW1XSU5WKyBWR0FTbm9vcC0gUGFyRXJy
-LSBTdGVwcGluZy0gU0VSUi0gRmFzdEIyQi0gRGlzSU5UeC0KICAgICAgICBTdGF0dXM6IENh
-cCsgNjZNSHorIFVERi0gRmFzdEIyQisgUGFyRXJyLSBERVZTRUw9bWVkaXVtID5UQWJvcnQt
-IDxUQWJvcnQtIDxNQWJvcnQtID5TRVJSLSA8UEVSUi0gSU5UeC0KICAgICAgICBMYXRlbmN5
-OiAzMiwgQ2FjaGUgTGluZSBTaXplOiA2NCBieXRlcwogICAgICAgIEludGVycnVwdDogcGlu
-IEEgcm91dGVkIHRvIElSUSAxOAogICAgICAgIElPTU1VIGdyb3VwOiA3CiAgICAgICAgUmVn
-aW9uIDA6IE1lbW9yeSBhdCBmMDQ2ZDAwMCAoMzItYml0LCBub24tcHJlZmV0Y2hhYmxlKSBb
-c2l6ZT0yNTZdCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbYzBdIFBvd2VyIE1hbmFnZW1lbnQg
-dmVyc2lvbiAyCiAgICAgICAgICAgICAgICBGbGFnczogUE1FQ2xrLSBEU0ktIEQxKyBEMisg
-QXV4Q3VycmVudD0wbUEgUE1FKEQwKyxEMSssRDIrLEQzaG90KyxEM2NvbGQrKQogICAgICAg
-ICAgICAgICAgU3RhdHVzOiBEMCBOb1NvZnRSc3QtIFBNRS1FbmFibGUtIERTZWw9MCBEU2Nh
-bGU9MCBQTUUtCiAgICAgICAgICAgICAgICBCcmlkZ2U6IFBNLSBCMy0KICAgICAgICBDYXBh
-YmlsaXRpZXM6IFtlNF0gRGVidWcgcG9ydDogQkFSPTEgb2Zmc2V0PTAwZTAKICAgICAgICBL
-ZXJuZWwgZHJpdmVyIGluIHVzZTogZWhjaS1wY2kKCjAwOjE0LjAgU01CdXM6IEFkdmFuY2Vk
-IE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gRkNIIFNNQnVzIENvbnRyb2xsZXIgKHJldiA0
-YSkKICAgICAgICBTdWJzeXN0ZW06IEhld2xldHQtUGFja2FyZCBDb21wYW55IERldmljZSA4
-MzMyCiAgICAgICAgQ29udHJvbDogSS9PKyBNZW0rIEJ1c01hc3Rlci0gU3BlY0N5Y2xlLSBN
-ZW1XSU5WLSBWR0FTbm9vcC0gUGFyRXJyLSBTdGVwcGluZy0gU0VSUi0gRmFzdEIyQi0gRGlz
-SU5UeCsKICAgICAgICBTdGF0dXM6IENhcC0gNjZNSHorIFVERi0gRmFzdEIyQi0gUGFyRXJy
-LSBERVZTRUw9bWVkaXVtID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQtID5TRVJSLSA8UEVS
-Ui0gSU5UeC0KICAgICAgICBJT01NVSBncm91cDogOAogICAgICAgIEtlcm5lbCBkcml2ZXIg
-aW4gdXNlOiBwaWl4NF9zbWJ1cwogICAgICAgIEtlcm5lbCBtb2R1bGVzOiBpMmNfcGlpeDQs
-IHNwNTEwMF90Y28KCjAwOjE0LjMgSVNBIGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNl
-cywgSW5jLiBbQU1EXSBGQ0ggTFBDIEJyaWRnZSAocmV2IDExKQogICAgICAgIFN1YnN5c3Rl
-bTogSGV3bGV0dC1QYWNrYXJkIENvbXBhbnkgRGV2aWNlIDgzMzIKICAgICAgICBDb250cm9s
-OiBJL08rIE1lbSsgQnVzTWFzdGVyKyBTcGVjQ3ljbGUrIE1lbVdJTlYtIFZHQVNub29wLSBQ
-YXJFcnItIFN0ZXBwaW5nLSBTRVJSLSBGYXN0QjJCLSBEaXNJTlR4LQogICAgICAgIFN0YXR1
-czogQ2FwLSA2Nk1IeisgVURGLSBGYXN0QjJCLSBQYXJFcnItIERFVlNFTD1tZWRpdW0gPlRB
-Ym9ydC0gPFRBYm9ydC0gPE1BYm9ydC0gPlNFUlItIDxQRVJSLSBJTlR4LQogICAgICAgIExh
-dGVuY3k6IDAKICAgICAgICBJT01NVSBncm91cDogOAoKMDA6MTguMCBIb3N0IGJyaWRnZTog
-QWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBGYW1pbHkgMTVoIChNb2RlbHMg
-NjBoLTZmaCkgUHJvY2Vzc29yIEZ1bmN0aW9uIDAKICAgICAgICBDb250cm9sOiBJL08tIE1l
-bS0gQnVzTWFzdGVyLSBTcGVjQ3ljbGUtIE1lbVdJTlYtIFZHQVNub29wLSBQYXJFcnItIFN0
-ZXBwaW5nLSBTRVJSLSBGYXN0QjJCLSBEaXNJTlR4LQogICAgICAgIFN0YXR1czogQ2FwKyA2
-Nk1Iei0gVURGLSBGYXN0QjJCLSBQYXJFcnItIERFVlNFTD1mYXN0ID5UQWJvcnQtIDxUQWJv
-cnQtIDxNQWJvcnQtID5TRVJSLSA8UEVSUi0gSU5UeC0KICAgICAgICBJT01NVSBncm91cDog
-OQoKMDA6MTguMSBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBb
-QU1EXSBGYW1pbHkgMTVoIChNb2RlbHMgNjBoLTZmaCkgUHJvY2Vzc29yIEZ1bmN0aW9uIDEK
-ICAgICAgICBDb250cm9sOiBJL08tIE1lbS0gQnVzTWFzdGVyLSBTcGVjQ3ljbGUtIE1lbVdJ
-TlYtIFZHQVNub29wLSBQYXJFcnItIFN0ZXBwaW5nLSBTRVJSLSBGYXN0QjJCLSBEaXNJTlR4
-LQogICAgICAgIFN0YXR1czogQ2FwLSA2Nk1Iei0gVURGLSBGYXN0QjJCLSBQYXJFcnItIERF
-VlNFTD1mYXN0ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQtID5TRVJSLSA8UEVSUi0gSU5U
-eC0KICAgICAgICBJT01NVSBncm91cDogOQoKMDA6MTguMiBIb3N0IGJyaWRnZTogQWR2YW5j
-ZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBGYW1pbHkgMTVoIChNb2RlbHMgNjBoLTZm
-aCkgUHJvY2Vzc29yIEZ1bmN0aW9uIDIKICAgICAgICBDb250cm9sOiBJL08tIE1lbS0gQnVz
-TWFzdGVyLSBTcGVjQ3ljbGUtIE1lbVdJTlYtIFZHQVNub29wLSBQYXJFcnItIFN0ZXBwaW5n
-LSBTRVJSLSBGYXN0QjJCLSBEaXNJTlR4LQogICAgICAgIFN0YXR1czogQ2FwLSA2Nk1Iei0g
-VURGLSBGYXN0QjJCLSBQYXJFcnItIERFVlNFTD1mYXN0ID5UQWJvcnQtIDxUQWJvcnQtIDxN
-QWJvcnQtID5TRVJSLSA8UEVSUi0gSU5UeC0KICAgICAgICBJT01NVSBncm91cDogOQoKMDA6
-MTguMyBIb3N0IGJyaWRnZTogQWR2YW5jZWQgTWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBG
-YW1pbHkgMTVoIChNb2RlbHMgNjBoLTZmaCkgUHJvY2Vzc29yIEZ1bmN0aW9uIDMKICAgICAg
-ICBDb250cm9sOiBJL08tIE1lbS0gQnVzTWFzdGVyLSBTcGVjQ3ljbGUtIE1lbVdJTlYtIFZH
-QVNub29wLSBQYXJFcnItIFN0ZXBwaW5nLSBTRVJSLSBGYXN0QjJCLSBEaXNJTlR4LQogICAg
-ICAgIFN0YXR1czogQ2FwKyA2Nk1Iei0gVURGLSBGYXN0QjJCLSBQYXJFcnItIERFVlNFTD1m
-YXN0ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQtID5TRVJSLSA8UEVSUi0gSU5UeC0KICAg
-ICAgICBJT01NVSBncm91cDogOQogICAgICAgIENhcGFiaWxpdGllczogW2YwXSBTZWN1cmUg
-ZGV2aWNlIDw/PgogICAgICAgIEtlcm5lbCBkcml2ZXIgaW4gdXNlOiBrMTB0ZW1wCiAgICAg
-ICAgS2VybmVsIG1vZHVsZXM6IGsxMHRlbXAKCjAwOjE4LjQgSG9zdCBicmlkZ2U6IEFkdmFu
-Y2VkIE1pY3JvIERldmljZXMsIEluYy4gW0FNRF0gRmFtaWx5IDE1aCAoTW9kZWxzIDYwaC02
-ZmgpIFByb2Nlc3NvciBGdW5jdGlvbiA0CiAgICAgICAgQ29udHJvbDogSS9PLSBNZW0tIEJ1
-c01hc3Rlci0gU3BlY0N5Y2xlLSBNZW1XSU5WLSBWR0FTbm9vcC0gUGFyRXJyLSBTdGVwcGlu
-Zy0gU0VSUi0gRmFzdEIyQi0gRGlzSU5UeC0KICAgICAgICBTdGF0dXM6IENhcC0gNjZNSHot
-IFVERi0gRmFzdEIyQi0gUGFyRXJyLSBERVZTRUw9ZmFzdCA+VEFib3J0LSA8VEFib3J0LSA8
-TUFib3J0LSA+U0VSUi0gPFBFUlItIElOVHgtCiAgICAgICAgSU9NTVUgZ3JvdXA6IDkKICAg
-ICAgICBLZXJuZWwgZHJpdmVyIGluIHVzZTogZmFtMTVoX3Bvd2VyCiAgICAgICAgS2VybmVs
-IG1vZHVsZXM6IGZhbTE1aF9wb3dlcgoKMDA6MTguNSBIb3N0IGJyaWRnZTogQWR2YW5jZWQg
-TWljcm8gRGV2aWNlcywgSW5jLiBbQU1EXSBGYW1pbHkgMTVoIChNb2RlbHMgNjBoLTZmaCkg
-UHJvY2Vzc29yIEZ1bmN0aW9uIDUKICAgICAgICBDb250cm9sOiBJL08tIE1lbS0gQnVzTWFz
-dGVyLSBTcGVjQ3ljbGUtIE1lbVdJTlYtIFZHQVNub29wLSBQYXJFcnItIFN0ZXBwaW5nLSBT
-RVJSLSBGYXN0QjJCLSBEaXNJTlR4LQogICAgICAgIFN0YXR1czogQ2FwLSA2Nk1Iei0gVURG
-LSBGYXN0QjJCLSBQYXJFcnItIERFVlNFTD1mYXN0ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJv
-cnQtID5TRVJSLSA8UEVSUi0gSU5UeC0KICAgICAgICBJT01NVSBncm91cDogOQoKMDE6MDAu
-MCBFdGhlcm5ldCBjb250cm9sbGVyOiBSZWFsdGVrIFNlbWljb25kdWN0b3IgQ28uLCBMdGQu
-IFJUTDgxMTEvODE2OC84NDExIFBDSSBFeHByZXNzIEdpZ2FiaXQgRXRoZXJuZXQgQ29udHJv
-bGxlciAocmV2IDE1KQogICAgICAgIFN1YnN5c3RlbTogSGV3bGV0dC1QYWNrYXJkIENvbXBh
-bnkgRGV2aWNlIDgzMzIKICAgICAgICBDb250cm9sOiBJL08rIE1lbSsgQnVzTWFzdGVyKyBT
-cGVjQ3ljbGUtIE1lbVdJTlYtIFZHQVNub29wLSBQYXJFcnItIFN0ZXBwaW5nLSBTRVJSLSBG
-YXN0QjJCLSBEaXNJTlR4KwogICAgICAgIFN0YXR1czogQ2FwKyA2Nk1Iei0gVURGLSBGYXN0
-QjJCLSBQYXJFcnItIERFVlNFTD1mYXN0ID5UQWJvcnQtIDxUQWJvcnQtIDxNQWJvcnQtID5T
-RVJSLSA8UEVSUi0gSU5UeC0KICAgICAgICBMYXRlbmN5OiAwLCBDYWNoZSBMaW5lIFNpemU6
-IDY0IGJ5dGVzCiAgICAgICAgSW50ZXJydXB0OiBwaW4gQSByb3V0ZWQgdG8gSVJRIDM1CiAg
-ICAgICAgSU9NTVUgZ3JvdXA6IDEKICAgICAgICBSZWdpb24gMDogSS9PIHBvcnRzIGF0IDMw
-MDAgW3NpemU9MjU2XQogICAgICAgIFJlZ2lvbiAyOiBNZW1vcnkgYXQgZjAzMDQwMDAgKDY0
-LWJpdCwgbm9uLXByZWZldGNoYWJsZSkgW3NpemU9NEtdCiAgICAgICAgUmVnaW9uIDQ6IE1l
-bW9yeSBhdCBmMDMwMDAwMCAoNjQtYml0LCBub24tcHJlZmV0Y2hhYmxlKSBbc2l6ZT0xNktd
-CiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbNDBdIFBvd2VyIE1hbmFnZW1lbnQgdmVyc2lvbiAz
-CiAgICAgICAgICAgICAgICBGbGFnczogUE1FQ2xrLSBEU0ktIEQxKyBEMisgQXV4Q3VycmVu
-dD0zNzVtQSBQTUUoRDArLEQxKyxEMissRDNob3QrLEQzY29sZCspCiAgICAgICAgICAgICAg
-ICBTdGF0dXM6IEQwIE5vU29mdFJzdCsgUE1FLUVuYWJsZS0gRFNlbD0wIERTY2FsZT0wIFBN
-RS0KICAgICAgICBDYXBhYmlsaXRpZXM6IFs1MF0gTVNJOiBFbmFibGUtIENvdW50PTEvMSBN
-YXNrYWJsZS0gNjRiaXQrCiAgICAgICAgICAgICAgICBBZGRyZXNzOiAwMDAwMDAwMDAwMDAw
-MDAwICBEYXRhOiAwMDAwCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbNzBdIEV4cHJlc3MgKHYy
-KSBFbmRwb2ludCwgTVNJIDAxCiAgICAgICAgICAgICAgICBEZXZDYXA6IE1heFBheWxvYWQg
-MTI4IGJ5dGVzLCBQaGFudEZ1bmMgMCwgTGF0ZW5jeSBMMHMgPDUxMm5zLCBMMSA8NjR1cwog
-ICAgICAgICAgICAgICAgICAgICAgICBFeHRUYWctIEF0dG5CdG4tIEF0dG5JbmQtIFB3cklu
-ZC0gUkJFKyBGTFJlc2V0LSBTbG90UG93ZXJMaW1pdCAwVwogICAgICAgICAgICAgICAgRGV2
-Q3RsOiBDb3JyRXJyKyBOb25GYXRhbEVycisgRmF0YWxFcnIrIFVuc3VwUmVxKwogICAgICAg
-ICAgICAgICAgICAgICAgICBSbHhkT3JkKyBFeHRUYWctIFBoYW50RnVuYy0gQXV4UHdyLSBO
-b1Nub29wLQogICAgICAgICAgICAgICAgICAgICAgICBNYXhQYXlsb2FkIDEyOCBieXRlcywg
-TWF4UmVhZFJlcSA0MDk2IGJ5dGVzCiAgICAgICAgICAgICAgICBEZXZTdGE6IENvcnJFcnIr
-IE5vbkZhdGFsRXJyLSBGYXRhbEVyci0gVW5zdXBSZXEtIEF1eFB3cisgVHJhbnNQZW5kLQog
-ICAgICAgICAgICAgICAgTG5rQ2FwOiBQb3J0ICMwLCBTcGVlZCAyLjVHVC9zLCBXaWR0aCB4
-MSwgQVNQTSBMMHMgTDEsIEV4aXQgTGF0ZW5jeSBMMHMgdW5saW1pdGVkLCBMMSA8NjR1cwog
-ICAgICAgICAgICAgICAgICAgICAgICBDbG9ja1BNKyBTdXJwcmlzZS0gTExBY3RSZXAtIEJ3
-Tm90LSBBU1BNT3B0Q29tcCsKICAgICAgICAgICAgICAgIExua0N0bDogQVNQTSBMMHMgTDEg
-RW5hYmxlZDsgUkNCIDY0IGJ5dGVzLCBEaXNhYmxlZC0gQ29tbUNsaysKICAgICAgICAgICAg
-ICAgICAgICAgICAgRXh0U3luY2gtIENsb2NrUE0rIEF1dFdpZERpcy0gQldJbnQtIEF1dEJX
-SW50LQogICAgICAgICAgICAgICAgTG5rU3RhOiBTcGVlZCAyLjVHVC9zLCBXaWR0aCB4MQog
-ICAgICAgICAgICAgICAgICAgICAgICBUckVyci0gVHJhaW4tIFNsb3RDbGsrIERMQWN0aXZl
-LSBCV01nbXQtIEFCV01nbXQtCiAgICAgICAgICAgICAgICBEZXZDYXAyOiBDb21wbGV0aW9u
-IFRpbWVvdXQ6IFJhbmdlIEFCQ0QsIFRpbWVvdXREaXMrIE5ST1ByUHJQLSBMVFIrCiAgICAg
-ICAgICAgICAgICAgICAgICAgICAxMEJpdFRhZ0NvbXAtIDEwQml0VGFnUmVxLSBPQkZGIFZp
-YSBtZXNzYWdlL1dBS0UjLCBFeHRGbXQtIEVFVExQUHJlZml4LQogICAgICAgICAgICAgICAg
-ICAgICAgICAgRW1lcmdlbmN5UG93ZXJSZWR1Y3Rpb24gTm90IFN1cHBvcnRlZCwgRW1lcmdl
-bmN5UG93ZXJSZWR1Y3Rpb25Jbml0LQogICAgICAgICAgICAgICAgICAgICAgICAgRlJTLSBU
-UEhDb21wLSBFeHRUUEhDb21wLQogICAgICAgICAgICAgICAgICAgICAgICAgQXRvbWljT3Bz
-Q2FwOiAzMmJpdC0gNjRiaXQtIDEyOGJpdENBUy0KICAgICAgICAgICAgICAgIERldkN0bDI6
-IENvbXBsZXRpb24gVGltZW91dDogNTB1cyB0byA1MG1zLCBUaW1lb3V0RGlzLSBMVFItIDEw
-Qml0VGFnUmVxLSBPQkZGIERpc2FibGVkLAogICAgICAgICAgICAgICAgICAgICAgICAgQXRv
-bWljT3BzQ3RsOiBSZXFFbi0KICAgICAgICAgICAgICAgIExua0NhcDI6IFN1cHBvcnRlZCBM
-aW5rIFNwZWVkczogMi41R1QvcywgQ3Jvc3NsaW5rLSBSZXRpbWVyLSAyUmV0aW1lcnMtIERS
-Uy0KICAgICAgICAgICAgICAgIExua0N0bDI6IFRhcmdldCBMaW5rIFNwZWVkOiAyLjVHVC9z
-LCBFbnRlckNvbXBsaWFuY2UtIFNwZWVkRGlzLQogICAgICAgICAgICAgICAgICAgICAgICAg
-VHJhbnNtaXQgTWFyZ2luOiBOb3JtYWwgT3BlcmF0aW5nIFJhbmdlLCBFbnRlck1vZGlmaWVk
-Q29tcGxpYW5jZS0gQ29tcGxpYW5jZVNPUy0KICAgICAgICAgICAgICAgICAgICAgICAgIENv
-bXBsaWFuY2UgUHJlc2V0L0RlLWVtcGhhc2lzOiAtNmRCIGRlLWVtcGhhc2lzLCAwZEIgcHJl
-c2hvb3QKICAgICAgICAgICAgICAgIExua1N0YTI6IEN1cnJlbnQgRGUtZW1waGFzaXMgTGV2
-ZWw6IC02ZEIsIEVxdWFsaXphdGlvbkNvbXBsZXRlLSBFcXVhbGl6YXRpb25QaGFzZTEtCiAg
-ICAgICAgICAgICAgICAgICAgICAgICBFcXVhbGl6YXRpb25QaGFzZTItIEVxdWFsaXphdGlv
-blBoYXNlMy0gTGlua0VxdWFsaXphdGlvblJlcXVlc3QtCiAgICAgICAgICAgICAgICAgICAg
-ICAgICBSZXRpbWVyLSAyUmV0aW1lcnMtIENyb3NzbGlua1JlczogdW5zdXBwb3J0ZWQKICAg
-ICAgICBDYXBhYmlsaXRpZXM6IFtiMF0gTVNJLVg6IEVuYWJsZSsgQ291bnQ9NCBNYXNrZWQt
-CiAgICAgICAgICAgICAgICBWZWN0b3IgdGFibGU6IEJBUj00IG9mZnNldD0wMDAwMDAwMAog
-ICAgICAgICAgICAgICAgUEJBOiBCQVI9NCBvZmZzZXQ9MDAwMDA4MDAKICAgICAgICBDYXBh
-YmlsaXRpZXM6IFsxMDAgdjJdIEFkdmFuY2VkIEVycm9yIFJlcG9ydGluZwogICAgICAgICAg
-ICAgICAgVUVTdGE6ICBETFAtIFNERVMtIFRMUC0gRkNQLSBDbXBsdFRPLSBDbXBsdEFicnQt
-IFVueENtcGx0LSBSeE9GLSBNYWxmVExQLSBFQ1JDLSBVbnN1cFJlcS0gQUNTVmlvbC0KICAg
-ICAgICAgICAgICAgIFVFTXNrOiAgRExQLSBTREVTLSBUTFAtIEZDUC0gQ21wbHRUTy0gQ21w
-bHRBYnJ0LSBVbnhDbXBsdC0gUnhPRi0gTWFsZlRMUC0gRUNSQy0gVW5zdXBSZXEtIEFDU1Zp
-b2wtCiAgICAgICAgICAgICAgICBVRVN2cnQ6IERMUCsgU0RFUysgVExQLSBGQ1ArIENtcGx0
-VE8tIENtcGx0QWJydC0gVW54Q21wbHQtIFJ4T0YrIE1hbGZUTFArIEVDUkMtIFVuc3VwUmVx
-LSBBQ1NWaW9sLQogICAgICAgICAgICAgICAgQ0VTdGE6ICBSeEVyci0gQmFkVExQLSBCYWRE
-TExQLSBSb2xsb3Zlci0gVGltZW91dC0gQWR2Tm9uRmF0YWxFcnItCiAgICAgICAgICAgICAg
-ICBDRU1zazogIFJ4RXJyLSBCYWRUTFAtIEJhZERMTFAtIFJvbGxvdmVyLSBUaW1lb3V0LSBB
-ZHZOb25GYXRhbEVycisKICAgICAgICAgICAgICAgIEFFUkNhcDogRmlyc3QgRXJyb3IgUG9p
-bnRlcjogMDAsIEVDUkNHZW5DYXArIEVDUkNHZW5Fbi0gRUNSQ0Noa0NhcCsgRUNSQ0Noa0Vu
-LQogICAgICAgICAgICAgICAgICAgICAgICBNdWx0SGRyUmVjQ2FwLSBNdWx0SGRyUmVjRW4t
-IFRMUFBmeFByZXMtIEhkckxvZ0NhcC0KICAgICAgICAgICAgICAgIEhlYWRlckxvZzogMDAw
-MDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAKICAgICAgICBDYXBhYmlsaXRpZXM6
-IFsxNDAgdjFdIFZpcnR1YWwgQ2hhbm5lbAogICAgICAgICAgICAgICAgQ2FwczogICBMUEVW
-Qz0wIFJlZkNsaz0xMDBucyBQQVRFbnRyeUJpdHM9MQogICAgICAgICAgICAgICAgQXJiOiAg
-ICBGaXhlZC0gV1JSMzItIFdSUjY0LSBXUlIxMjgtCiAgICAgICAgICAgICAgICBDdHJsOiAg
-IEFyYlNlbGVjdD1GaXhlZAogICAgICAgICAgICAgICAgU3RhdHVzOiBJblByb2dyZXNzLQog
-ICAgICAgICAgICAgICAgVkMwOiAgICBDYXBzOiAgIFBBVE9mZnNldD0wMCBNYXhUaW1lU2xv
-dHM9MSBSZWpTbm9vcFRyYW5zLQogICAgICAgICAgICAgICAgICAgICAgICBBcmI6ICAgIEZp
-eGVkLSBXUlIzMi0gV1JSNjQtIFdSUjEyOC0gVFdSUjEyOC0gV1JSMjU2LQogICAgICAgICAg
-ICAgICAgICAgICAgICBDdHJsOiAgIEVuYWJsZSsgSUQ9MCBBcmJTZWxlY3Q9Rml4ZWQgVEMv
-VkM9ZmYKICAgICAgICAgICAgICAgICAgICAgICAgU3RhdHVzOiBOZWdvUGVuZGluZy0gSW5Q
-cm9ncmVzcy0KICAgICAgICBDYXBhYmlsaXRpZXM6IFsxNjAgdjFdIERldmljZSBTZXJpYWwg
-TnVtYmVyIDAxLTAwLTAwLTAwLTY4LTRjLWUwLTAwCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBb
-MTcwIHYxXSBMYXRlbmN5IFRvbGVyYW5jZSBSZXBvcnRpbmcKICAgICAgICAgICAgICAgIE1h
-eCBzbm9vcCBsYXRlbmN5OiAwbnMKICAgICAgICAgICAgICAgIE1heCBubyBzbm9vcCBsYXRl
-bmN5OiAwbnMKICAgICAgICBDYXBhYmlsaXRpZXM6IFsxNzggdjFdIEwxIFBNIFN1YnN0YXRl
-cwogICAgICAgICAgICAgICAgTDFTdWJDYXA6IFBDSS1QTV9MMS4yKyBQQ0ktUE1fTDEuMSsg
-QVNQTV9MMS4yKyBBU1BNX0wxLjErIEwxX1BNX1N1YnN0YXRlcysKICAgICAgICAgICAgICAg
-ICAgICAgICAgICBQb3J0Q29tbW9uTW9kZVJlc3RvcmVUaW1lPTE1MHVzIFBvcnRUUG93ZXJP
-blRpbWU9MTUwdXMKICAgICAgICAgICAgICAgIEwxU3ViQ3RsMTogUENJLVBNX0wxLjItIFBD
-SS1QTV9MMS4xLSBBU1BNX0wxLjItIEFTUE1fTDEuMS0KICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgVF9Db21tb25Nb2RlPTB1cyBMVFIxLjJfVGhyZXNob2xkPTBucwogICAgICAgICAg
-ICAgICAgTDFTdWJDdGwyOiBUX1B3ck9uPTEwdXMKICAgICAgICBLZXJuZWwgZHJpdmVyIGlu
-IHVzZTogcjgxNjkKICAgICAgICBLZXJuZWwgbW9kdWxlczogcjgxNjkKCjAyOjAwLjAgTmV0
-d29yayBjb250cm9sbGVyOiBJbnRlbCBDb3Jwb3JhdGlvbiBEdWFsIEJhbmQgV2lyZWxlc3Mt
-QUMgMzE2OE5HVyBbU3RvbmUgUGVha10gKHJldiAxMCkKICAgICAgICBTdWJzeXN0ZW06IElu
-dGVsIENvcnBvcmF0aW9uIERldmljZSAyMTEwCiAgICAgICAgQ29udHJvbDogSS9PLSBNZW0r
-IEJ1c01hc3RlcisgU3BlY0N5Y2xlLSBNZW1XSU5WLSBWR0FTbm9vcC0gUGFyRXJyLSBTdGVw
-cGluZy0gU0VSUi0gRmFzdEIyQi0gRGlzSU5UeCsKICAgICAgICBTdGF0dXM6IENhcCsgNjZN
-SHotIFVERi0gRmFzdEIyQi0gUGFyRXJyLSBERVZTRUw9ZmFzdCA+VEFib3J0LSA8VEFib3J0
-LSA8TUFib3J0LSA+U0VSUi0gPFBFUlItIElOVHgtCiAgICAgICAgTGF0ZW5jeTogMCwgQ2Fj
-aGUgTGluZSBTaXplOiA2NCBieXRlcwogICAgICAgIEludGVycnVwdDogcGluIEEgcm91dGVk
-IHRvIElSUSA0MAogICAgICAgIElPTU1VIGdyb3VwOiAxCiAgICAgICAgUmVnaW9uIDA6IE1l
-bW9yeSBhdCBmMTAwMDAwMCAoNjQtYml0LCBub24tcHJlZmV0Y2hhYmxlKSBbc2l6ZT04S10K
-ICAgICAgICBDYXBhYmlsaXRpZXM6IFtjOF0gUG93ZXIgTWFuYWdlbWVudCB2ZXJzaW9uIDMK
-ICAgICAgICAgICAgICAgIEZsYWdzOiBQTUVDbGstIERTSSsgRDEtIEQyLSBBdXhDdXJyZW50
-PTBtQSBQTUUoRDArLEQxLSxEMi0sRDNob3QrLEQzY29sZCspCiAgICAgICAgICAgICAgICBT
-dGF0dXM6IEQwIE5vU29mdFJzdC0gUE1FLUVuYWJsZS0gRFNlbD0wIERTY2FsZT0wIFBNRS0K
-ICAgICAgICBDYXBhYmlsaXRpZXM6IFtkMF0gTVNJOiBFbmFibGUrIENvdW50PTEvMSBNYXNr
-YWJsZS0gNjRiaXQrCiAgICAgICAgICAgICAgICBBZGRyZXNzOiAwMDAwMDAwMGZlZTAwMDAw
-ICBEYXRhOiAwMDAwCiAgICAgICAgQ2FwYWJpbGl0aWVzOiBbNDBdIEV4cHJlc3MgKHYyKSBF
-bmRwb2ludCwgTVNJIDAwCiAgICAgICAgICAgICAgICBEZXZDYXA6IE1heFBheWxvYWQgMTI4
-IGJ5dGVzLCBQaGFudEZ1bmMgMCwgTGF0ZW5jeSBMMHMgPDUxMm5zLCBMMSB1bmxpbWl0ZWQK
-ICAgICAgICAgICAgICAgICAgICAgICAgRXh0VGFnLSBBdHRuQnRuLSBBdHRuSW5kLSBQd3JJ
-bmQtIFJCRSsgRkxSZXNldCsgU2xvdFBvd2VyTGltaXQgMFcKICAgICAgICAgICAgICAgIERl
-dkN0bDogQ29yckVycisgTm9uRmF0YWxFcnIrIEZhdGFsRXJyKyBVbnN1cFJlcSsKICAgICAg
-ICAgICAgICAgICAgICAgICAgUmx4ZE9yZCsgRXh0VGFnLSBQaGFudEZ1bmMtIEF1eFB3cisg
-Tm9Tbm9vcCsgRkxSZXNldC0KICAgICAgICAgICAgICAgICAgICAgICAgTWF4UGF5bG9hZCAx
-MjggYnl0ZXMsIE1heFJlYWRSZXEgMTI4IGJ5dGVzCiAgICAgICAgICAgICAgICBEZXZTdGE6
-IENvcnJFcnIrIE5vbkZhdGFsRXJyLSBGYXRhbEVyci0gVW5zdXBSZXErIEF1eFB3cisgVHJh
-bnNQZW5kLQogICAgICAgICAgICAgICAgTG5rQ2FwOiBQb3J0ICMxLCBTcGVlZCAyLjVHVC9z
-LCBXaWR0aCB4MSwgQVNQTSBMMSwgRXhpdCBMYXRlbmN5IEwxIDwzMnVzCiAgICAgICAgICAg
-ICAgICAgICAgICAgIENsb2NrUE0rIFN1cnByaXNlLSBMTEFjdFJlcC0gQndOb3QtIEFTUE1P
-cHRDb21wKwogICAgICAgICAgICAgICAgTG5rQ3RsOiBBU1BNIEwxIEVuYWJsZWQ7IFJDQiA2
-NCBieXRlcywgRGlzYWJsZWQtIENvbW1DbGsrCiAgICAgICAgICAgICAgICAgICAgICAgIEV4
-dFN5bmNoLSBDbG9ja1BNLSBBdXRXaWREaXMtIEJXSW50LSBBdXRCV0ludC0KICAgICAgICAg
-ICAgICAgIExua1N0YTogU3BlZWQgMi41R1QvcywgV2lkdGggeDEKICAgICAgICAgICAgICAg
-ICAgICAgICAgVHJFcnItIFRyYWluLSBTbG90Q2xrKyBETEFjdGl2ZS0gQldNZ210LSBBQldN
-Z210LQogICAgICAgICAgICAgICAgRGV2Q2FwMjogQ29tcGxldGlvbiBUaW1lb3V0OiBSYW5n
-ZSBCLCBUaW1lb3V0RGlzKyBOUk9QclByUC0gTFRSKwogICAgICAgICAgICAgICAgICAgICAg
-ICAgMTBCaXRUYWdDb21wLSAxMEJpdFRhZ1JlcS0gT0JGRiBWaWEgV0FLRSMsIEV4dEZtdC0g
-RUVUTFBQcmVmaXgtCiAgICAgICAgICAgICAgICAgICAgICAgICBFbWVyZ2VuY3lQb3dlclJl
-ZHVjdGlvbiBOb3QgU3VwcG9ydGVkLCBFbWVyZ2VuY3lQb3dlclJlZHVjdGlvbkluaXQtCiAg
-ICAgICAgICAgICAgICAgICAgICAgICBGUlMtIFRQSENvbXAtIEV4dFRQSENvbXAtCiAgICAg
-ICAgICAgICAgICAgICAgICAgICBBdG9taWNPcHNDYXA6IDMyYml0LSA2NGJpdC0gMTI4Yml0
-Q0FTLQogICAgICAgICAgICAgICAgRGV2Q3RsMjogQ29tcGxldGlvbiBUaW1lb3V0OiAxNm1z
-IHRvIDU1bXMsIFRpbWVvdXREaXMtIExUUi0gMTBCaXRUYWdSZXEtIE9CRkYgRGlzYWJsZWQs
-CiAgICAgICAgICAgICAgICAgICAgICAgICBBdG9taWNPcHNDdGw6IFJlcUVuLQogICAgICAg
-ICAgICAgICAgTG5rQ3RsMjogVGFyZ2V0IExpbmsgU3BlZWQ6IDIuNUdUL3MsIEVudGVyQ29t
-cGxpYW5jZS0gU3BlZWREaXMtCiAgICAgICAgICAgICAgICAgICAgICAgICBUcmFuc21pdCBN
-YXJnaW46IE5vcm1hbCBPcGVyYXRpbmcgUmFuZ2UsIEVudGVyTW9kaWZpZWRDb21wbGlhbmNl
-LSBDb21wbGlhbmNlU09TLQogICAgICAgICAgICAgICAgICAgICAgICAgQ29tcGxpYW5jZSBQ
-cmVzZXQvRGUtZW1waGFzaXM6IC02ZEIgZGUtZW1waGFzaXMsIDBkQiBwcmVzaG9vdAogICAg
-ICAgICAgICAgICAgTG5rU3RhMjogQ3VycmVudCBEZS1lbXBoYXNpcyBMZXZlbDogLTMuNWRC
-LCBFcXVhbGl6YXRpb25Db21wbGV0ZS0gRXF1YWxpemF0aW9uUGhhc2UxLQogICAgICAgICAg
-ICAgICAgICAgICAgICAgRXF1YWxpemF0aW9uUGhhc2UyLSBFcXVhbGl6YXRpb25QaGFzZTMt
-IExpbmtFcXVhbGl6YXRpb25SZXF1ZXN0LQogICAgICAgICAgICAgICAgICAgICAgICAgUmV0
-aW1lci0gMlJldGltZXJzLSBDcm9zc2xpbmtSZXM6IHVuc3VwcG9ydGVkCiAgICAgICAgQ2Fw
-YWJpbGl0aWVzOiBbMTAwIHYxXSBBZHZhbmNlZCBFcnJvciBSZXBvcnRpbmcKICAgICAgICAg
-ICAgICAgIFVFU3RhOiAgRExQLSBTREVTLSBUTFAtIEZDUC0gQ21wbHRUTy0gQ21wbHRBYnJ0
-LSBVbnhDbXBsdC0gUnhPRi0gTWFsZlRMUC0gRUNSQy0gVW5zdXBSZXEtIEFDU1Zpb2wtCiAg
-ICAgICAgICAgICAgICBVRU1zazogIERMUC0gU0RFUy0gVExQLSBGQ1AtIENtcGx0VE8tIENt
-cGx0QWJydC0gVW54Q21wbHQtIFJ4T0YtIE1hbGZUTFAtIEVDUkMtIFVuc3VwUmVxLSBBQ1NW
-aW9sLQogICAgICAgICAgICAgICAgVUVTdnJ0OiBETFArIFNERVMrIFRMUC0gRkNQKyBDbXBs
-dFRPLSBDbXBsdEFicnQtIFVueENtcGx0LSBSeE9GKyBNYWxmVExQKyBFQ1JDLSBVbnN1cFJl
-cS0gQUNTVmlvbC0KICAgICAgICAgICAgICAgIENFU3RhOiAgUnhFcnItIEJhZFRMUC0gQmFk
-RExMUC0gUm9sbG92ZXItIFRpbWVvdXQtIEFkdk5vbkZhdGFsRXJyKwogICAgICAgICAgICAg
-ICAgQ0VNc2s6ICBSeEVyci0gQmFkVExQLSBCYWRETExQLSBSb2xsb3Zlci0gVGltZW91dC0g
-QWR2Tm9uRmF0YWxFcnIrCiAgICAgICAgICAgICAgICBBRVJDYXA6IEZpcnN0IEVycm9yIFBv
-aW50ZXI6IDAwLCBFQ1JDR2VuQ2FwLSBFQ1JDR2VuRW4tIEVDUkNDaGtDYXAtIEVDUkNDaGtF
-bi0KICAgICAgICAgICAgICAgICAgICAgICAgTXVsdEhkclJlY0NhcC0gTXVsdEhkclJlY0Vu
-LSBUTFBQZnhQcmVzLSBIZHJMb2dDYXAtCiAgICAgICAgICAgICAgICBIZWFkZXJMb2c6IDAw
-MDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwCiAgICAgICAgQ2FwYWJpbGl0aWVz
-OiBbMTQwIHYxXSBEZXZpY2UgU2VyaWFsIE51bWJlciA4OC1iMS0xMS1mZi1mZi01ZC0wMS04
-OAogICAgICAgIENhcGFiaWxpdGllczogWzE0YyB2MV0gTGF0ZW5jeSBUb2xlcmFuY2UgUmVw
-b3J0aW5nCiAgICAgICAgICAgICAgICBNYXggc25vb3AgbGF0ZW5jeTogMG5zCiAgICAgICAg
-ICAgICAgICBNYXggbm8gc25vb3AgbGF0ZW5jeTogMG5zCiAgICAgICAgQ2FwYWJpbGl0aWVz
-OiBbMTU0IHYxXSBMMSBQTSBTdWJzdGF0ZXMKICAgICAgICAgICAgICAgIEwxU3ViQ2FwOiBQ
-Q0ktUE1fTDEuMisgUENJLVBNX0wxLjErIEFTUE1fTDEuMisgQVNQTV9MMS4xKyBMMV9QTV9T
-dWJzdGF0ZXMrCiAgICAgICAgICAgICAgICAgICAgICAgICAgUG9ydENvbW1vbk1vZGVSZXN0
-b3JlVGltZT0zMHVzIFBvcnRUUG93ZXJPblRpbWU9NjB1cwogICAgICAgICAgICAgICAgTDFT
-dWJDdGwxOiBQQ0ktUE1fTDEuMi0gUENJLVBNX0wxLjEtIEFTUE1fTDEuMi0gQVNQTV9MMS4x
-LQogICAgICAgICAgICAgICAgICAgICAgICAgICBUX0NvbW1vbk1vZGU9MHVzIExUUjEuMl9U
-aHJlc2hvbGQ9MG5zCiAgICAgICAgICAgICAgICBMMVN1YkN0bDI6IFRfUHdyT249MTB1cwog
-ICAgICAgIEtlcm5lbCBkcml2ZXIgaW4gdXNlOiBpd2x3aWZpCiAgICAgICAgS2VybmVsIG1v
-ZHVsZXM6IGl3bHdpZmkKCg==
+Many thanks.
 
---------------uhObI78hNnEW5fjmrCRvcgIh--
+I have applied the patches to 6.2-rc3 and tried to do everything to 
+reproduce the problem so the problem seems to be fixed by the patches, 
+but for sure only time will tell.
+
+Bye,
+
+David Arendt
+
