@@ -1,197 +1,369 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44DD1360
-	for <regressions@lists.linux.dev>; Wed, 11 Jan 2023 10:34:44 +0000 (UTC)
-Received: by mail-wm1-f41.google.com with SMTP id k22-20020a05600c1c9600b003d1ee3a6289so12271873wms.2
-        for <regressions@lists.linux.dev>; Wed, 11 Jan 2023 02:34:44 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB2620FF
+	for <regressions@lists.linux.dev>; Wed, 11 Jan 2023 10:42:36 +0000 (UTC)
+Received: by mail-pf1-f181.google.com with SMTP id 20so5674172pfu.13
+        for <regressions@lists.linux.dev>; Wed, 11 Jan 2023 02:42:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=s3KqGObhsHrRbnSdUxruE0y4nmn0w6bjS57+0xuPZcw=;
-        b=nGcDPPgC2WNOGZZX/rmF0U0iF7x/ue7sd1UMOIHUj1uob1tYj7ae2czwU/aivZKVgX
-         IPIeb1sYJVOH+GBZc53rnGhZ98KHkGnJCjQZLswPLSyZR1q66lGzwNETb3tII+ZGZFQ4
-         /V4ZPz+uwruLwi2sll7x7vFuPNuIec0MYiGCriDXfiQHgUdOJWVSUzHxvGYQ4DLv63pC
-         1Vwlbgp0Z3v52gJLbVaP5fbwtGMjOjt62iOUEj323zu6uX45OGXisPUgNxsJSQdJTzEk
-         hqUzwMxsuVh0xJz+aseAYFCe6L2pdUefKpb+oAwgL4D3VgaPro/O25YRfIKWirwtz/o9
-         ltLg==
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VG2hK4fXuI9MZy3cYzeA1FQsWjHkS+jwa0Q9cf7Fwy8=;
+        b=PIHVcOJHPAng3Q2u9gu70zvnVU5Db0HPLzRiARdD97Y9o8tLgosZ2KW8XDU1M1WqUQ
+         nY5TDa7qMYPusmKojKCRujE133PRxRmesjtT9rlIsyRlmVF7S0ceA2vY9MQvamMpbBmK
+         KKxJ3iJsHSxI82AQFqNuETayI8J20YHV0Na436KjQw3TbnH2l7J5ZilUMj8bz2hSABds
+         iTvWRr2qczLEQY+02tF9cFN6kt0hVaF5gRnw3ZH208s3D36SkIKbSak8Br/AZOp3FrdR
+         Lv0mwlBwzwY+g8V4++NS3Qu6dFhm86rUz1HSA4ybW3BDZOBF/G9Xfy2s9RQjFwoPXuLp
+         mFNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :content-language:subject:reply-to:from:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=s3KqGObhsHrRbnSdUxruE0y4nmn0w6bjS57+0xuPZcw=;
-        b=aElS1yBQyGeLSqiWILFxipxcFj0X30DbIbd9Yy0hQBS2xRH/YWoqEZmtwRoqYDOzs4
-         lLLjhVr6t19moSVAjACPWvrCuoai6gifj9q4mALFl5fpa708GBAPn4pcUW6QuThC7L8l
-         /5+Jary0g0gv+XgeaqUX92GIZp7Ncz7Da0QKPBRgWBiBv1+yT4w3G1bD9zrFj/ifQaMv
-         lwy3A1W0x6UAnpc+Rchy3gQaSKNGJkdps/EWpiInQIcyojzVvuqH/O9N8iDHAsQVNOBM
-         Si9x//30IhakZ35QhuMuUgiHnZ0TlUcXapyOFNzqoMLKTYMa6UCY9edAvTSTHvPxby/f
-         TcWw==
-X-Gm-Message-State: AFqh2krX+Kmcdnveu72piAiBRrRrPu/HY0xj1GLUFzvtfVp0vJv9DacD
-	ggHCpwx+hYKGofy9t7trIQ6sNw==
-X-Google-Smtp-Source: AMrXdXsiVT2Ik4PaTpMH4v3+Fd28GSMuNrgLUSmkBeKKRGAbgp7CrBXwz6c9B180jCrYSRemQSQTXw==
-X-Received: by 2002:a05:600c:3506:b0:3cf:803b:d7cc with SMTP id h6-20020a05600c350600b003cf803bd7ccmr55084313wmq.33.1673433282477;
-        Wed, 11 Jan 2023 02:34:42 -0800 (PST)
-Received: from ?IPV6:2a01:e0a:982:cbb0:d95d:43b7:d6a9:39a5? ([2a01:e0a:982:cbb0:d95d:43b7:d6a9:39a5])
-        by smtp.gmail.com with ESMTPSA id n14-20020a05600c3b8e00b003b49bd61b19sm25394292wms.15.2023.01.11.02.34.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jan 2023 02:34:42 -0800 (PST)
-Message-ID: <19423616-79d4-9478-c6df-4f226f87a27f@linaro.org>
-Date: Wed, 11 Jan 2023 11:34:41 +0100
+        bh=VG2hK4fXuI9MZy3cYzeA1FQsWjHkS+jwa0Q9cf7Fwy8=;
+        b=1UHw3l9McsOA09EBvcOyOhqQPXtPx0kzaU//fMlxThddh0tk5yJsCE7y4rV4Tnys/u
+         cn2+aWDSVN91vuLuJSLi4ctlEPYeq8vI7VgAcEkPUitKHKHc7uYx/e9yalfgA036hLQq
+         nCO2gro6jOGF+xF7AyikCBO03vvA1nvi5Nhkj1ZXXP/wdlHQlYPFL6R5bZhXhcgYgRxc
+         v/Ki+O5macOsVOaEnzUAl0t21Uvy3G0sZOCXbnDcP8KheS05YCSE7QdBV+lopM1/VRj8
+         QwGHZF5WI1bUuGU/I3P1h9iL52vIce4FVeknNuC8fcjHj+42UOpDAhYETqFfn7FUnNZh
+         zABQ==
+X-Gm-Message-State: AFqh2kqkqXbHVUK4sV13DwALSyRcUIwdQaH23PMdWSTVsfvFwinKqIzG
+	xPdoVOeahHH5fTCspN6kkw0IrLtG3LSpgaRXrTQ=
+X-Google-Smtp-Source: AMrXdXtkwJhGyb9OD9oTaZuYObMjbwYmO3VnjjAOKmo0Hr8o9zAd35TXqj31YAkDAUDIdZgqo0S9anSF1tU0JD8jVlo=
+X-Received: by 2002:a63:571d:0:b0:478:c48d:9321 with SMTP id
+ l29-20020a63571d000000b00478c48d9321mr4256527pgb.617.1673433755011; Wed, 11
+ Jan 2023 02:42:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: next-20230110: arm64: defconfig+kselftest config boot failed -
- Unable to handle kernel paging request at virtual address fffffffffffffff8
-Content-Language: en-US
-To: Arnd Bergmann <arnd@arndb.de>, Naresh Kamboju
- <naresh.kamboju@linaro.org>, linux-next <linux-next@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org,
- Linux ARM <linux-arm-kernel@lists.infradead.org>,
- lkft-triage@lists.linaro.org, regressions@lists.linux.dev
-Cc: Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Mark Rutland <mark.rutland@arm.com>, Aishwarya TCV <aishwarya.tcv@arm.com>,
- Anders Roxell <anders.roxell@linaro.org>, Ard Biesheuvel <ardb@kernel.org>,
- linux-amlogic@lists.infradead.org
-References: <CA+G9fYsns3krivbPSjQ1c1EQpVyd-bkW84MaUvqMTQr9c=iEaw@mail.gmail.com>
- <77342621-d67f-4d47-a33b-6f721576bf9d@app.fastmail.com>
-Organization: Linaro Developer Services
-In-Reply-To: <77342621-d67f-4d47-a33b-6f721576bf9d@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CAKsK3AkWhAx6cvt5ABRecun+24FVQa441OrYfzYQ5fJpJHCqmw@mail.gmail.com>
+ <166f50f5-6034-d644-86ed-c41a8636263a@redhat.com> <CAKsK3Ak8bKF5RM+5Xtp2doE4N8BwEKVQG_qbujD526SjGqzmYQ@mail.gmail.com>
+ <CAKsK3A=3QbFfO4mmetD+CUJdJDawmfzazi_w9+fi-mX9tLaHGA@mail.gmail.com>
+ <2d7c08c8-8f95-9591-d7bd-87b9f1a9b657@redhat.com> <CAKsK3An_b_FAZxJzTk9GZZ41-9+_Ym2icWVaN41WV6qEySWx4A@mail.gmail.com>
+ <16fde015-73d7-8169-3fc5-7a4915508c05@redhat.com> <Y74FfQmjN8WJcCIG@lenny> <328548ff-e95e-9a19-25e1-248c5d7d841f@redhat.com>
+In-Reply-To: <328548ff-e95e-9a19-25e1-248c5d7d841f@redhat.com>
+From: Youssef Aly <youssefaswad@gmail.com>
+Date: Wed, 11 Jan 2023 12:42:23 +0200
+Message-ID: <CAKsK3Ak7sXf2CFoJDA_fV=jPrzqmA5dn3C-CK9o__KNN+rwpYg@mail.gmail.com>
+Subject: Re: [REGRESSION] Backlight control broken on Dell G15 5515 since 6.1
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Daniel Dadap <ddadap@nvidia.com>, 
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Hello,
 
-On 10/01/2023 17:41, Arnd Bergmann wrote:
-> On Tue, Jan 10, 2023, at 17:14, Naresh Kamboju wrote:
->> [ please ignore this email if this regression already reported ]
->>
->> Today's Linux next tag next-20230110 boot passes with defconfig but
->> boot fails with
->> defconfig + kselftest merge config on arm64 devices and qemu-arm64.
->>
->> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->>
->> We are bisecting this problem and get back to you shortly.
->>
->> GOOD: next-20230109  (defconfig + kselftests configs)
->> BAD: next-20230110 (defconfig + kselftests configs)
->>
->> kernel crash log [1]:
->>
->> [   15.302140] Unable to handle kernel paging request at virtual
->> address fffffffffffffff8
->> [   15.309906] Mem abort info:
->> [   15.312659]   ESR = 0x0000000096000004
->> [   15.316365]   EC = 0x25: DABT (current EL), IL = 32 bits
->> [   15.321626]   SET = 0, FnV = 0
->> [   15.324644]   EA = 0, S1PTW = 0
->> [   15.327744]   FSC = 0x04: level 0 translation fault
->> [   15.332619] Data abort info:
->> [   15.335422]   ISV = 0, ISS = 0x00000004
->> [   15.339226]   CM = 0, WnR = 0
->> [   15.342154] swapper pgtable: 4k pages, 48-bit VAs, pgdp=000000001496c000
->> [   15.348795] [fffffffffffffff8] pgd=0000000000000000, p4d=0000000000000000
->> [   15.355524] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
->> [   15.361729] Modules linked in: meson_gxl dwmac_generic
->> snd_soc_meson_gx_sound_card snd_soc_meson_card_utils lima gpu_sched
->> drm_shmem_helper meson_drm drm_dma_helper crct10dif_ce meson_ir
->> rc_core meson_dw_hdmi dw_hdmi meson_canvas dwmac_meson8b
->> stmmac_platform meson_rng stmmac rng_core cec meson_gxbb_wdt
->> drm_display_helper snd_soc_meson_aiu snd_soc_meson_codec_glue pcs_xpcs
->> snd_soc_meson_t9015 amlogic_gxl_crypto crypto_engine display_connector
->> snd_soc_simple_amplifier drm_kms_helper drm nvmem_meson_efuse
->> [   15.405976] CPU: 1 PID: 9 Comm: kworker/u8:0 Not tainted
->> 6.2.0-rc3-next-20230110 #1
->> [   15.413563] Hardware name: Libre Computer AML-S905X-CC (DT)
->> [   15.419086] Workqueue: events_unbound deferred_probe_work_func
->> [   15.424863] pstate: 00000005 (nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->> [   15.431762] pc : of_drm_find_bridge+0x38/0x70 [drm]
->> [   15.436594] lr : of_drm_find_bridge+0x20/0x70 [drm]
-> 
-> The line is
-> 
-> drivers/gpu/drm/drm_bridge.c:1310:      if (bridge->of_node == np) {
-> 
-> The list_head here is a NULL pointer, so ->of_node points
-> to address negative 8, i.e. fffffffffffffff8
-> 
-> This is linked list corruption, which typically happens as
-> part of a use-after-free, and could be the result of a
-> failed registration causing an object to be freed after
-> it is added to the list.
-> 
-> Unfortunately, there are no patches to this file between
-> next-20230109 and next-20230110, so the bug probably is
-> not actually in this file.
-> 
->> [   15.515426] Call trace:
->> [   15.517863] Insufficient stack space to handle exception!
->> [   15.517867] ESR: 0x0000000096000047 -- DABT (current EL)
->> [   15.517871] FAR: 0xffff80000a047ff0
->> [   15.517873] Task stack:     [0xffff80000a048000..0xffff80000a04c000]
->> [   15.517877] IRQ stack:      [0xffff800008008000..0xffff80000800c000]
->> [   15.517880] Overflow stack: [0xffff00007d9c1320..0xffff00007d9c2320]
->> [   15.517884] CPU: 1 PID: 9 Comm: kworker/u8:0 Not tainted
->> 6.2.0-rc3-next-20230110 #1
->> [   15.517890] Hardware name: Libre Computer AML-S905X-CC (DT)
->> [   15.517895] Workqueue: events_unbound deferred_probe_work_func
->> [   15.517915] pstate: 800003c5 (Nzcv DAIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
->> [   15.517923] pc : el1_abort+0x4/0x5c
->> [   15.517932] lr : el1h_64_sync_handler+0x60/0xac
->> [   15.517939] sp : ffff80000a048020
-> 
-> Not sure about the missing stack trace: I can see that the stack
-> pointer is on a task stack, which is reported as having overflown,
-> but I don't see why it's unable to print the stack while running
-> from the overflow stack.
-> 
-> A stack overflow is often caused by unbounded recursion, which
-> can happen when a device driver binds itself to a device that it
-> has just created. The log does look a bit suspicious here,
-> with multiple registrations for c883a000.hdmi-tx:
-> 
->    986 08:02:56.487871  [   15.141218] meson-drm d0100000.vpu: Queued 2 outputs on vpu
->    987 08:02:56.493572  [   15.141615] meson8b-dwmac c9410000.ethernet: Ring mode enabled
->    988 08:02:56.504769  [   15.150744] meson-drm d0100000.vpu: bound c883a000.hdmi-tx (ops meson_dw_hdmi_ops [meson_dw_hdmi])
->    989 08:02:56.515743  [   15.154970] meson8b-dwmac c9410000.ethernet: Enable RX Mitigation via HW Watchdog Timer
->    990 08:02:56.521531  [   15.159175] lima d00c0000.gpu: pp0 - mali450 version major 0 minor 0
->    991 08:02:56.526718  [   15.161436] meson-drm d0100000.vpu: Failed to find HDMI transceiver bridge
->    992 08:02:56.532417  [   15.168933] lima d00c0000.gpu: pp1 - mali450 version major 0 minor 0
->    993 08:02:56.537747  [   15.206102] meson-drm d0100000.vpu: Queued 2 outputs on vpu
->    994 08:02:56.543435  [   15.209608] lima d00c0000.gpu: pp2 - mali450 version major 0 minor 0
->    995 08:02:56.554307  [   15.217027] meson-drm d0100000.vpu: bound c883a000.hdmi-tx (ops meson_dw_hdmi_ops [meson_dw_hdmi])
->    996 08:02:56.559929  [   15.221169] lima d00c0000.gpu: l2 cache 8K, 4-way, 64byte cache line, 128bit external bus
->    997 08:02:56.565229  [   15.231561] meson-drm d0100000.vpu: Failed to find HDMI transceiver bridge
->    998 08:02:56.576490  [   15.238133] lima d00c0000.gpu: l2 cache 64K, 4-way, 64byte cache line, 128bit external bus
->    999 08:02:56.581759  [   15.253879] lima d00c0000.gpu: bus rate = 166666667
->   1000 08:02:56.587248  [   15.257128] lima d00c0000.gpu: mod rate = 24000000
->   1001 08:02:56.593344  [   15.261862] lima d00c0000.gpu: error -ENODEV: _opp_set_regulators: no regulator (mali) found
->   1002 08:02:56.612809  [   15.286143] [drm] Initialized lima 1.1.0 20191231 for d00c0000.gpu on minor 1
->   1003 08:02:56.618428  [   15.292259] meson-drm d0100000.vpu: Queued 2 outputs on vpu
->   1004 08:02:56.623866  [   15.293715] meson-drm d0100000.vpu: bound c883a000.hdmi-tx (ops meson_dw_hdmi_ops [meson_dw_hdmi])
->   1005 08:02:56.634771  [   15.302140] Unable to handle kernel paging request at virtual address fffffffffffffff8
-> 
-> Again, I don't see any recent changes in that driver or the
-> corresponding dts file.
+Testing with no "acpi_backlight" in the kernel commandline. Hybrid
+mode works, "nvidia_wmi_ec_backlight" is used. Discrete mode also
+works with the range issue mentioned earlier, "nvidia_0" is used.
 
-I merged a fix that could be related: https://lore.kernel.org/all/20230109220033.31202-1-m.szyprowski@samsung.com/
+The output of "lspci -nn":
 
-This could make the driver to return from probe while not totally probed, and explain such error.
+00:00.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD]
+Renoir/Cezanne Root Complex [1022:1630]
+00:00.2 IOMMU [0806]: Advanced Micro Devices, Inc. [AMD]
+Renoir/Cezanne IOMMU [1022:1631]
+00:01.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Renoir
+PCIe Dummy Host Bridge [1022:1632]
+00:01.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Renoir
+PCIe GPP Bridge [1022:1633]
+00:01.2 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD]
+Renoir/Cezanne PCIe GPP Bridge [1022:1634]
+00:01.3 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD]
+Renoir/Cezanne PCIe GPP Bridge [1022:1634]
+00:02.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Renoir
+PCIe Dummy Host Bridge [1022:1632]
+00:02.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD]
+Renoir/Cezanne PCIe GPP Bridge [1022:1634]
+00:02.4 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD]
+Renoir/Cezanne PCIe GPP Bridge [1022:1634]
+00:08.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Renoir
+PCIe Dummy Host Bridge [1022:1632]
+00:08.1 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Renoir
+Internal PCIe GPP Bridge to Bus [1022:1635]
+00:08.2 PCI bridge [0604]: Advanced Micro Devices, Inc. [AMD] Renoir
+Internal PCIe GPP Bridge to Bus [1022:1635]
+00:14.0 SMBus [0c05]: Advanced Micro Devices, Inc. [AMD] FCH SMBus
+Controller [1022:790b] (rev 51)
+00:14.3 ISA bridge [0601]: Advanced Micro Devices, Inc. [AMD] FCH LPC
+Bridge [1022:790e] (rev 51)
+00:18.0 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Cezanne
+Data Fabric; Function 0 [1022:166a]
+00:18.1 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Cezanne
+Data Fabric; Function 1 [1022:166b]
+00:18.2 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Cezanne
+Data Fabric; Function 2 [1022:166c]
+00:18.3 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Cezanne
+Data Fabric; Function 3 [1022:166d]
+00:18.4 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Cezanne
+Data Fabric; Function 4 [1022:166e]
+00:18.5 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Cezanne
+Data Fabric; Function 5 [1022:166f]
+00:18.6 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Cezanne
+Data Fabric; Function 6 [1022:1670]
+00:18.7 Host bridge [0600]: Advanced Micro Devices, Inc. [AMD] Cezanne
+Data Fabric; Function 7 [1022:1671]
+01:00.0 VGA compatible controller [0300]: NVIDIA Corporation GA106M
+[GeForce RTX 3060 Mobile / Max-Q] [10de:2560] (rev a1)
+01:00.1 Audio device [0403]: NVIDIA Corporation GA106 High Definition
+Audio Controller [10de:228e] (rev a1)
+02:00.0 Non-Volatile memory controller [0108]: SK hynix Gold P31/PC711
+NVMe Solid State Drive [1c5c:174a]
+03:00.0 Ethernet controller [0200]: Realtek Semiconductor Co., Ltd.
+RTL8125 2.5GbE Controller [10ec:8125] (rev 05)
+04:00.0 Network controller [0280]: Intel Corporation Wi-Fi 6 AX200
+[8086:2723] (rev 1a)
+05:00.0 Non-Volatile memory controller [0108]: Samsung Electronics Co
+Ltd NVMe SSD Controller 980 [144d:a809]
+- Hybrid: 06:00.0 VGA compatible controller [0300]: Advanced Micro
+Devices, Inc. [AMD/ATI] Cezanne [Radeon Vega Series / Radeon Vega
+Mobile Series] [1002:1638] (rev c5)
+- Discrete: 06:00.0 Non-Essential Instrumentation [1300]: Advanced
+Micro Devices, Inc. [AMD] Zeppelin/Raven/Raven2 PCIe Dummy Function
+[1022:145a] (rev c5)
+06:00.2 Encryption controller [1080]: Advanced Micro Devices, Inc.
+[AMD] Family 17h (Models 10h-1fh) Platform Security Processor
+[1022:15df]
+06:00.3 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD]
+Renoir/Cezanne USB 3.1 [1022:1639]
+06:00.4 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD]
+Renoir/Cezanne USB 3.1 [1022:1639]
+06:00.5 Multimedia controller [0480]: Advanced Micro Devices, Inc.
+[AMD] ACP/ACP3X/ACP6x Audio Coprocessor [1022:15e2] (rev 01)
+06:00.6 Audio device [0403]: Advanced Micro Devices, Inc. [AMD] Family
+17h/19h HD Audio Controller [1022:15e3]
+07:00.0 SATA controller [0106]: Advanced Micro Devices, Inc. [AMD] FCH
+SATA Controller [AHCI mode] [1022:7901] (rev 81)
+07:00.1 SATA controller [0106]: Advanced Micro Devices, Inc. [AMD] FCH
+SATA Controller [AHCI mode] [1022:7901] (rev 81)
 
-Neil
+Regards,
 
-> 
->        Arnd
+Youssef
 
+
+
+
+
+On Wed, 11 Jan 2023 at 11:52, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 1/11/23 01:40, Daniel Dadap wrote:
+> > On Tue, Jan 10, 2023 at 04:27:56PM +0100, Hans de Goede wrote:
+> >> Hi,
+> >>
+> >> On 1/10/23 16:19, Youssef Aly wrote:
+> >>> Hi Hans,
+> >>>
+> >>> Yes, I added "acpi_backlight=nvidia_wmi_ec" to
+> >>> the kernel commandline for the patched kernel, it doesn't work without it.
+> >>>
+> >>> I have 2 modes in the bios Hybrid on/off (hybrid / discrete). I tried
+> >>> the modes with "acpi_backlight=nvidia_wmi_ec" and
+> >>> "acpi_backlight=native" using the patched kernel (v6.1.4):
+> >>>
+> >>> Hybrid:
+> >>> "acpi_backlight=native": Does not work, /sys/class/backlight contains
+> >>> amdgpu_bl1.
+> >>> "acpi_backlight=nvidia_wmi_ec": Works as expected,
+> >>> /sys/class/backlight contains nvidia_wmi_ec_backlight.
+> >>>
+> >>> Discrete:
+> >>> "acpi_backlight=native": Works but when brightness from 0-10 is the
+> >>> same as 0-100, for example 10 is full brightness like 100, 8 is the
+> >>> same as 80, etc... ,
+> >>> /sys/class/backlight contains nvidia_0.
+> >>> "acpi_backlight=nvidia_wmi_ec": Does not work, /sys/class/backlight
+> >>> contains nvidia_wmi_ec_backlight.
+> >>
+> >> Thank you for testing!
+> >>
+> >> Ok so it seems there are 2 issues at play here:
+> >>
+> >> 1. Depending on the BIOS setting we need to use either native (discrete mode)
+> >>    or nvidia_wmi_ec (hybrid mode)
+> >>
+> >> 2. There is a bug in the nvidia binary drivers backlight control in native
+> >>    mode on this system causing the range to be wrong
+> >>
+> >> Daniel, we really need help from NVidia with fixing 1. can you see if
+> >> there is a way to check the BIOS setting/mode from inside the kernel ?
+> >
+> > Yes, the ACPI MXDM method should be able to do this. However, querying
+> > WMI_BRIGHTNESS_METHOD_SOURCE is supposed to be the canonical way to
+> > determine whether the backlight is supposed to be EC-driven, since there
+> > are EC-driven and non-EC-driven designs, so the BIOS mode is supposed to
+> > be orthogonal to whether or not the EC driver should be used. It sounds
+> > like the BIOS is possibly reporting a wrong value for that query.
+> >
+> > I guess we could wire up a quirk that checks MXDM and overrides the
+> > WMI_BRIGHTNESS_METHOD_SOURCE query with a value derived from the current
+> > mux operation mode. Then that quirk could be applied to this system.
+> > I can put together a patch for that.
+>
+> If you can write a patch for this that would be great, thank you,
+> but I think we first need to root-cause this better:
+>
+> Currently the Dell G15 5515 is DMI quirked inside: drivers/apci/video_detect.c
+> to always use the native backlight. So I've gone back to the original email
+> thread which lead to me adding that quirk.
+>
+> We (I forwarded a mail from you to the reporter this was not on the list)
+> did ask to test with different BIOS settings their to and the reporter's
+> reply was:
+>
+> "Daniel wanted me to check different GPU modes, but my BIOS has no options
+> for GPU. It's always in hybrid mode with PRIME render offload."
+>
+> And perhaps even more interesting in their case with acpi_backlight=native
+> to disable nvidia-wmi-ec they have a working amdgpu_bl# device. Where as
+> in Youssef's case when running in discrete mode there is an nvidia backlight
+> device and in Youssef's case the amdgpu_bl# device never works.
+>
+> The Dell G15 5515 always uses an AMD Ryzen 5 5600H or 5800H CPU (with iGPU)
+>
+> While the dGPU can be one of:
+> NVIDIA GeForce RTX 3060
+> NVIDIA GeForce GTX 3050 Ti
+> NVIDIA GeForce GTX 3050
+>
+> I'm guessing that the dynamic-mux mode / nvidia-wmi-ec code may only
+> be relevant to the model with the 3060 and that nvidia-wmi-ec should
+> maybe not load at all on the model with the 3050 versions.
+>
+> Maybe the Windows Nvidia drivers only even try to use the WMI EC
+> interface with certain generations of GPUs ?
+>
+> Daniel might that be what is going on here ?
+>
+>
+> Youssef, can you try/test 2 things for us please? :
+>
+> 1. Provide the output of running "lspci -nn"
+>
+> 2. Try a kernel with the attached patch (can be applied on top
+>    of the previous patch). This removes the quirk, so that we
+>    can let the nvidia_wmi_ec auto-detect code do its thing,
+>    because maybe it does work on your model G15 5515.
+>    When testing this you should *not* have any acpi_backlight=xxx
+>    argument on your kernel commandline.
+>
+> > As for the native range bug, that does sound like a scaling issue. I'll
+> > take a look at how the NVIDIA driver determines the range of possible
+> > backlight values and see if Ican find an obvious way that might fail on
+> > a particular system.
+>
+> Ok.
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+> >>> On Tue, 10 Jan 2023 at 10:39, Hans de Goede <hdegoede@redhat.com> wrote:
+> >>>>
+> >>>> Hi,
+> >>>>
+> >>>> On 1/10/23 02:07, Youssef Aly wrote:
+> >>>>> Hello,
+> >>>>>
+> >>>>> Just reporting back, building with the patch fixed the issue.
+> >>>>
+> >>>> I assume that you also added "acpi_backlight=nvidia_wmi_ec" to
+> >>>> the kernel commandline for the patched kernel, right ?
+> >>>>
+> >>>> If you have time, can you please also check the other BIOS
+> >>>> (hybrid / discrete / ...) modes in the BIOS?
+> >>>>
+> >>>> Based on the previous bug report, I would expect you to need
+> >>>> to pass "acpi_backlight=native" in at least some of the other
+> >>>> modes ...
+> >>>>
+> >>>> Regards,
+> >>>>
+> >>>> Hans
+> >>>>
+> >>>>
+> >>>>
+> >>>>> On Mon, 9 Jan 2023 at 22:23, Youssef Aly <youssefaswad@gmail.com> wrote:
+> >>>>>>
+> >>>>>> Hello Hans,
+> >>>>>>
+> >>>>>> Ok, I'll try building with the patch you provided, and report back.
+> >>>>>>
+> >>>>>> Thanks,
+> >>>>>>
+> >>>>>> Youssef
+> >>>>>>
+> >>>>>> On Mon, 9 Jan 2023 at 21:19, Hans de Goede <hdegoede@redhat.com> wrote:
+> >>>>>>>
+> >>>>>>> Hi Youssef,
+> >>>>>>>
+> >>>>>>> On 1/9/23 17:18, Youssef Aly wrote:
+> >>>>>>>> Hello,
+> >>>>>>>>
+> >>>>>>>> The backlight control has been broken on Dell G15 5515 since 6.1, it
+> >>>>>>>> is always at full brightness, this is only the case in hybrid (mux)
+> >>>>>>>> graphics mode.
+> >>>>>>>>
+> >>>>>>>> As per the output of lsmod the nvidia_wmi_ec_backlight is loaded:
+> >>>>>>>> nvidia_wmi_ec_backlight    16384  0
+> >>>>>>>> video                  61440  5
+> >>>>>>>> nvidia_wmi_ec_backlight,dell_wmi,amdgpu,dell_laptop,nvidia_modeset
+> >>>>>>>> wmi                    36864  7
+> >>>>>>>> video,nvidia_wmi_ec_backlight,alienware_wmi,dell_wmi,wmi_bmof,dell_smbios,dell_wmi_descriptor
+> >>>>>>>>
+> >>>>>>>> but it is not present in /sys/class/backlight, only amdgpu_bl1 is
+> >>>>>>>> present which is not functional
+> >>>>>>>> contents of /sys/class/backlight
+> >>>>>>>> total 0
+> >>>>>>>> lrwxrwxrwx 1 root root 0 Jan  9 00:49 amdgpu_bl1 ->
+> >>>>>>>> ../../devices/pci0000:00/0000:00:08.1/0000:06:00.0/backlight/amdgpu_bl1/
+> >>>>>>>>
+> >>>>>>>> this is the content on 6.0.12
+> >>>>>>>> total 0
+> >>>>>>>> lrwxrwxrwx 1 root root 0 Jan  8 20:59 amdgpu_bl1 ->
+> >>>>>>>> ../../devices/pci0000:00/0000:00:08.1/0000:06:00.0/backlight/amdgpu_bl1/
+> >>>>>>>> lrwxrwxrwx 1 root root 0 Jan  8 20:59 nvidia_wmi_ec_backlight ->
+> >>>>>>>> ../../devices/pci0000:00/PNP0C14:00/wmi_bus/wmi_bus-PNP0C14:00/603E9613-EF25-4338-A3D0-C46177516DB7/backlight/nvidia_wmi_ec_backlight/
+> >>>>>>>>
+> >>>>>>>> Distro: Endeavour OS
+> >>>>>>>> Kernel: 6.1.4-arch1-1
+> >>>>>>>> GPU: RTX 3060 Using nvidia proprietary drivers version 525.78.01
+> >>>>>>>>
+> >>>>>>>> #regzbot introduced v6.1..v6.1.4
+> >>>>>>>
+> >>>>>>> Hmm, this is likely caused by:
+> >>>>>>>
+> >>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f46acc1efd4b5846de9fa05f966e504f328f34a6
+> >>>>>>>
+> >>>>>>> Which was added because according to the reporter on their G15 5515
+> >>>>>>> backlight control only works in native mode ...
+> >>>>>>>
+> >>>>>>> I'm getting the feeling that we need to detect the BIOS setting
+> >>>>>>> and use a different backlight device depending on the setting...
+> >>>>>>>
+> >>>>>>> Daniel, any ideas?
+> >>>>>>>
+> >>>>>>> For now can you try building a kernel with the attached patch
+> >>>>>>> (which I've also just submitted upstream) and with:
+> >>>>>>>
+> >>>>>>> acpi_backlight=nvidia_wmi_ec
+> >>>>>>>
+> >>>>>>> added to your kernel commandline. That should work around this
+> >>>>>>> for now...
+> >>>>>>>
+> >>>>>>> Regards,
+> >>>>>>>
+> >>>>>>> Hans
+> >>>>>
+> >>>>
+> >>>
+> >>
+> >
