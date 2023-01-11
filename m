@@ -1,219 +1,108 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD023209
-	for <regressions@lists.linux.dev>; Wed, 11 Jan 2023 17:04:32 +0000 (UTC)
-Received: by mail-pf1-f172.google.com with SMTP id s3so9353536pfd.12
-        for <regressions@lists.linux.dev>; Wed, 11 Jan 2023 09:04:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxtx.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P78j3kGdgbF9v+wVhjVXmiioDAvHYt+bU3WJdRcxjVc=;
-        b=C2UHUU75bCsITqXMa69Uq2TNgTJ3Znhtsr+7JDI2XoJ6CCtRsvdhRA9ITmF95/igPs
-         kL8F+gGvg1t+nD5/mspHv+XVGXY2JRu7wpx84uZiNW+r4I0YfWmFfp+y+4WNsXsm07P2
-         M45Dc/AwtLaQASmTND4j4dJnx6DPqiwAMefAE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P78j3kGdgbF9v+wVhjVXmiioDAvHYt+bU3WJdRcxjVc=;
-        b=dXsR4EU5nkxEYu/QixJ18UFy7W9PFxPkuK9+F9L4GdllAN/DocBJ79UtFDn5aTmTfH
-         dXvMkkEYD8s7YK8FVKLG1ORmTuBHNhfj7wj/XTZOfQ/27F0ZtzPsSWhGwLc1PT2bfD20
-         2KRlqjS4A4FcDtj6seWlFYsjukUd9BvJEQ69DBKgJP8Qwmj0psOijz7xsNRU/lqas7Eq
-         xWhs2yBPVQRSDw5U81X4CvuCBO2yeWfhVPqkpj59QfuKNp60ocPLUeMnxoKhZ24o6ql1
-         C0HZ4T8Tvy8aQm0VcnEBn1Ce16HPNQyxs+Z6Rm1YU8+jO0uvnAqRfPpHXKzQCWVUY5mH
-         0gXw==
-X-Gm-Message-State: AFqh2krN9P+1x1yHi/kt6wwOXfTKBzaSsSF93rEU8L90VRW/6EQnGwMe
-	AKWAZgCo6GVmNwtVPzOINpjySlkgizLbWYr9UtACAg==
-X-Google-Smtp-Source: AMrXdXuWvmJNAU7a++adQ+TBpesZus/OcSWjKd5zaXgS/SxyQcz0yAMStzIxmwYW+Xwfe/cW6ws0Jfe1BEVp978x/NA=
-X-Received: by 2002:aa7:9584:0:b0:582:46a4:87dc with SMTP id
- z4-20020aa79584000000b0058246a487dcmr3290795pfj.2.1673456672340; Wed, 11 Jan
- 2023 09:04:32 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BEC33D2
+	for <regressions@lists.linux.dev>; Wed, 11 Jan 2023 17:44:09 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pFf8s-0001z2-GB; Wed, 11 Jan 2023 18:44:02 +0100
+Message-ID: <df34778b-3bae-f4dd-32dd-b874654e6fbe@leemhuis.info>
+Date: Wed, 11 Jan 2023 18:44:02 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAABkxwuQoz1CTbyb57n0ZX65eSYiTonFCU8-LCQc=74D=xE=rA@mail.gmail.com>
- <26bd2928-9d62-32b3-4f9f-9dd9293cefeb@leemhuis.info> <CAK7LNAQ5VVRdrewtxrBdw561LL=yY8fdr=i1e7pp4DRht=r_Ww@mail.gmail.com>
- <0ab93345-18e1-15c9-a4a3-066ea1cd862b@leemhuis.info> <CAMj1kXE+LBOBavOre1O8LTGPCmB8m58fbfo92Sx4WukyNAur-A@mail.gmail.com>
- <CAK7LNATQ-NjYxPvGf4o6N5mp9kS07fpphcEn4_9LOMtS2nTbmQ@mail.gmail.com>
-In-Reply-To: <CAK7LNATQ-NjYxPvGf4o6N5mp9kS07fpphcEn4_9LOMtS2nTbmQ@mail.gmail.com>
-From: Justin Forbes <jmforbes@linuxtx.org>
-Date: Wed, 11 Jan 2023 11:04:21 -0600
-Message-ID: <CAFxkdAowJuVu_XGDQsWGqm_ofA+GVjz6jNsgUnskSsAydmgLhQ@mail.gmail.com>
-Subject: Re: BUG: arm64: missing build-id from vmlinux
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>, Thorsten Leemhuis <regressions@leemhuis.info>, 
-	Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org, 
-	Nicolas Schier <nicolas@fjasle.eu>, linux-kernel@vger.kernel.org, 
-	Dennis Gilmore <dennis@ausil.us>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Catalin Marinas <catalin.marinas@arm.com>, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: WLAN broken on Nokia N900 with v6.2-rc1
+Content-Language: en-US, de-DE
+To: Alexander Wetzel <alexander@wetzel-home.de>, Sicelo <absicsz@gmail.com>
+Cc: Kalle Valo <kvalo@kernel.org>, Johannes Berg <johannes.berg@intel.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <Y6tTLPvsxh/Im4Ed@tp440p.steeds.sam>
+ <a115fbb8-1048-9ae9-fcfb-ac1fd7d33449@wetzel-home.de>
+ <Y7RdQqBQx58dIMAP@tp440p.steeds.sam>
+ <f528de6f-2737-8560-3542-051d2d8f3654@wetzel-home.de>
+ <Y723mvhkubsvuA3R@tp440p.steeds.sam>
+ <6a21d548-9833-0f4d-c3fe-61e28fc66da5@wetzel-home.de>
+ <be5db3aa-d284-f77c-9870-a702633a5a2a@wetzel-home.de>
+From: "Linux kernel regression tracking (#update)" <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <be5db3aa-d284-f77c-9870-a702633a5a2a@wetzel-home.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673459050;14433c7a;
+X-HE-SMSGID: 1pFf8s-0001z2-GB
 
-On Sat, Dec 24, 2022 at 8:17 PM Masahiro Yamada <masahiroy@kernel.org> wrot=
-e:
->
-> On Thu, Dec 22, 2022 at 8:53 PM Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Wed, 21 Dec 2022 at 17:29, Thorsten Leemhuis
-> > <regressions@leemhuis.info> wrote:
-> > >
-> > > On 21.12.22 16:39, Masahiro Yamada wrote:
-> > > > On Wed, Dec 21, 2022 at 5:23 PM Thorsten Leemhuis
-> > > > <regressions@leemhuis.info> wrote:
-> > > >>
-> > > >> Hi, this is your Linux kernel regression tracker. CCing the regres=
-sion
-> > > >> mailing list, as it should be in the loop for all regressions:
-> > > >> https://docs.kernel.org/admin-guide/reporting-regressions.html
-> > > >>
-> > > >> On 18.12.22 21:51, Dennis Gilmore wrote:
-> > > >>> The changes in https://lore.kernel.org/linux-arm-kernel/166783716=
-442.32724.935158280857906499.b4-ty@kernel.org/T/
-> > > >>> result in vmlinux no longer having a build-id.
-> > > >>
-> > > >> FWIW, that's 994b7ac1697b ("arm64: remove special treatment for th=
-e link
-> > > >> order of head.o") from Masahiro merged through Will this cycle.
-> > > >>
-> > > >>> At the least, this
-> > > >>> causes rpm builds to fail. Reverting the patch does bring back a
-> > > >>> build-id, but there may be a different way to fix the regression
-> > > >>
-> > > >> Makes me wonder if other distros or CIs relying on the build-id ar=
-e
-> > > >> broken, too.
-> > > >>
-> > > >> Anyway, the holiday season is upon us, hence I also wonder if it w=
-ould
-> > > >> be best to revert above change quickly and leave further debugging=
- for 2023.
-> > > >>
-> > > >> Masahiro, Will, what's your option on this?
-> > >
-> > > Masahiro, many thx for looking into this.
-> > >
-> > > > I do not understand why you rush into the revert so quickly.
-> > > > We are before -rc1.
-> > > > We have 7 weeks before the 6.2 release
-> > > > (assuming we will have up to -rc7).
-> > > >
-> > > > If we get -rc6 or -rc7 and we still do not
-> > > > solve the issue, we should consider reverting it.
-> > >
-> > > Because it looked like a regression that makes it harder for people a=
-nd
-> > > CI systems to build and test mainline. To quote
-> > > Documentation/process/handling-regressions.rst (
-> > > https://docs.kernel.org/process/handling-regressions.html ):
-> > >
-> > > """
-> > >  * Fix regressions within two or three days, if they are critical for
-> > > some reason =E2=80=93 for example, if the issue is likely to affect m=
-any users
-> > > of the kernel series in question on all or certain architectures. Not=
-e,
-> > > this includes mainline, as issues like compile errors otherwise might
-> > > prevent many testers or continuous integration systems from testing t=
-he
-> > > series.
-> > > """
-> > >
-> > > I suspect that other distros rely on the build-id as well. Maybe I'm
-> > > wrong with that, but even if only Fedora and derivatives are effected=
- it
-> > > will annoy some people. Sure, each can apply the revert, but before t=
-hat
-> > > everyone affected will spend time debugging the issue first. A quick
-> > > revert in mainline (with a reapply later together with a fix) thus IM=
-HO
-> > > is the most efficient approach afaics.
-> > >
-> >
-> > Agree with Masahiro here.
-> >
-> > The issue seems to be caused by the fact that whichever object gets
-> > linked first gets to decide the type of a section, and so the .notes
-> > section will be of type NOTE if head.o gets linked first, or PROGBITS
-> > otherwise. The latter PROGBITS type seems to be the result of the
-> > compiler emitting .note.GNU-stack as PROGBITS rather than NOTE.
-> >
-> > The hunk below fixes it for me, by avoiding notes emitted as PROGBITS.
-> > I'll leave it to Masahiro to decide whether this should be fixed for
-> > arm64 only or for all architectures, but I suspect the latter would be
-> > most appropriate.
-> >
-> > Note that the kernel's rpm-pkg and binrpm-pkg targets seem to be
-> > unaffected by this.
->
->
-> Thanks for root-causing this.
->
->
-> I like to fix this for all architectures because riscv is also broken.
->
-> https://lore.kernel.org/lkml/20221224192751.810363-1-masahiroy@kernel.org=
-/
 
-Appreciate the patch, this does indeed fix the aarch64 issue as well
-and has allowed me to drop the original revert from Fedora.
 
-Jusitn
+On 11.01.23 17:49, Alexander Wetzel wrote:
+> For regression tracking only:
+> 
+> +CC regressions@lists.linux.dev
+> 
+> Issue is solved with a patch already on the way into mainline.
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=next-20230111&id=4444bc2116aecdcde87dce80373540adc8bd478b
+> 
+> Issue was found and fixed independently of the regression report, so no
+> regression tags in the commit.
 
->
-> > diff --git a/arch/arm64/include/asm/assembler.h
-> > b/arch/arm64/include/asm/assembler.h
-> > index 376a980f2bad08bb..10a172601fe7f53f 100644
-> > --- a/arch/arm64/include/asm/assembler.h
-> > +++ b/arch/arm64/include/asm/assembler.h
-> > @@ -818,7 +818,7 @@ alternative_endif
-> >
-> >  #ifdef GNU_PROPERTY_AARCH64_FEATURE_1_DEFAULT
-> >  .macro emit_aarch64_feature_1_and, feat=3DGNU_PROPERTY_AARCH64_FEATURE=
-_1_DEFAULT
-> > -       .pushsection .note.gnu.property, "a"
-> > +       .pushsection .note.gnu.property, "a", %note
-> >         .align  3
-> >         .long   2f - 1f
-> >         .long   6f - 3f
->
->
-> I did not fold this hunk in my patch.
->
-> I compiled with CONFIG_ARM64_BTI_KERNEL=3Dy.
->
-> .note.gnu.property section in VDSO was already NOTE
-> without this hunk.
->
->
->
->
->
->
->
-> > diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinu=
-x.lds.S
-> > index 4c13dafc98b8400f..8a8044dea71b0609 100644
-> > --- a/arch/arm64/kernel/vmlinux.lds.S
-> > +++ b/arch/arm64/kernel/vmlinux.lds.S
-> > @@ -160,6 +160,7 @@ SECTIONS
-> >         /DISCARD/ : {
-> >                 *(.interp .dynamic)
-> >                 *(.dynsym .dynstr .hash .gnu.hash)
-> > +               *(.note.GNU-stack) # emitted as PROGBITS
-> >         }
-> >
-> >         . =3D KIMAGE_VADDR;
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
+Happens, thx for letting me know. Now regzbot will know about it as well:
+
+#regzbot fix: wifi: mac80211: Proper mark iTXQs for resumption
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
+
+> On 11.01.23 17:21, Alexander Wetzel wrote:
+>> On 10.01.23 20:08, Sicelo wrote:
+>>> Hello
+>>>
+>>> On Tue, Jan 10, 2023 at 07:59:24PM +0100, Alexander Wetzel wrote:
+>>>> Should have seen the potential sooner, but can you please check if the
+>>>> following patch fixes the issue?
+>>>> https://patchwork.kernel.org/project/linux-wireless/patch/20221230121850.218810-1-alexander@wetzel-home.de/
+>>>>
+>>>> This patch seems to be a perfect fit to what you are describing...
+>>>>
+>>>
+>>> Yes, someone pointed me to this patch a day ago, and it does fix the
+>>> issue indeed.
+>>>
+>>> Apologies for not responding sooner.
+>>>
+>> That was fast:-)
+>> Thanks for testing and reporting back.
+>>
+>>>> FYI:
+>>>> There is another regression report which has that as a very likely
+>>>> but not
+>>>> yet confirmed fix:
+>>>> https://lore.kernel.org/linux-wireless/7cff27f8-d363-bbfb-241e-8d6fc0009c40@leemhuis.info/T/#t
+>>>>
+>>>> (The discussion above has another patch you really want to have when
+>>>> AMPDU
+>>>> is supported.)
+>>>>
+>>>
+>>> I will give this a try as well during the course of the week. I noticed
+>>> the speeds were low, but that could just be the weak hardware itself
+>>> (1x600MHz ARM CPU), and I have not had time to compare performance from
+>>> before the commits in question.
+>>
+>> Please keep me posted on the outcome. I expect no relevant change but
+>> then I did not test the patch on weak HW so far...
+>>
+>> Alexander
+>>
+>>
+> 
+> 
+> 
