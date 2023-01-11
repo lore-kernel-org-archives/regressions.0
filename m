@@ -1,138 +1,82 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3856F17D0
-	for <regressions@lists.linux.dev>; Wed, 11 Jan 2023 14:53:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98F16C433EF;
-	Wed, 11 Jan 2023 14:53:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1673448821;
-	bh=l7h8mYJZuBhMPhN7LKosUL1aDMOSgDxgaeg5YFv9Bu0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ktliF64bXUV/uUQ51zJ3jzem+3h4Q7TxUMIOfZb1j/6hyoNhdE2flmwqFqrmcAFkR
-	 m2X3D7VNyrPbO8jrGYX9dJgElhxlK0uqRiid/TX18hBF8+mRjQkPPlWcWN1UBmYLac
-	 xjLq3ckuxBLIB/0HuaB6Oq0YwrS384j7HMwXeLfAgNO6hEZrLMsvLZz0IN4Di+5Y4b
-	 x7PjRUnn9q3X9Pc5ERSgidOob5M50C6l1g1J4PttZBzuMkPQRV4pDc2UDk8RvMxMAX
-	 1rAet2ojt3SwUJhgQzXAW4wJ9NhjmA2GifaxYQFk5HSOXDtq8pQAA3Me3ysXo+Vjc6
-	 +bFU5pLaD/ljg==
-Date: Wed, 11 Jan 2023 14:53:35 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	linux-next <linux-next@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	dri-devel@lists.freedesktop.org,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
-	Will Deacon <will@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Aishwarya TCV <aishwarya.tcv@arm.com>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Ard Biesheuvel <ardb@kernel.org>, linux-amlogic@lists.infradead.org
-Subject: Re: next-20230110: arm64: defconfig+kselftest config boot failed -
- Unable to handle kernel paging request at virtual address fffffffffffffff8
-Message-ID: <Y77Nb7SJzd6sSB5/@sirena.org.uk>
-References: <CA+G9fYsns3krivbPSjQ1c1EQpVyd-bkW84MaUvqMTQr9c=iEaw@mail.gmail.com>
- <77342621-d67f-4d47-a33b-6f721576bf9d@app.fastmail.com>
- <19423616-79d4-9478-c6df-4f226f87a27f@linaro.org>
- <Y76rijHJ3KAZ6D9C@sirena.org.uk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14722F38
+	for <regressions@lists.linux.dev>; Wed, 11 Jan 2023 15:52:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1673452354;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=ryrrVULoscZ1riSGOM9SabdXBEw/UV56TVFRHhdk8Hk=;
+	b=OeG/wFkoFBUl7kBMrY3aX6Q7SHhR2FsIkPoFWljbStLgdBSGkYfQK/1Wb2RGYLOlqDf3cB
+	TcFL+f7PdeMRZAVErvKIiI51T+AtMUnou2ugOgp+7JrErtFNg7X/UEl5lUs0TMwHJlwkhC
+	7lHsgvHkvb5/zWJfTCdEyL0UClTMjdU=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-8-2PUzgezaMKuXBbAPVouo_Q-1; Wed, 11 Jan 2023 10:52:33 -0500
+X-MC-Unique: 2PUzgezaMKuXBbAPVouo_Q-1
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-4c2d68b6969so154790617b3.7
+        for <regressions@lists.linux.dev>; Wed, 11 Jan 2023 07:52:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ryrrVULoscZ1riSGOM9SabdXBEw/UV56TVFRHhdk8Hk=;
+        b=xRjUbiZEJn55SrgqdmbU28tZItEQk8MXcV2WYPTBHN+DDkJmalRtdng1gpi1nTaTzN
+         KrkMOZ9G5urY7s9H1KQjBKqvS/ZAYn1cpluebTNJ+GehvBZw5a9q4goUDb7ErDo9IuQ2
+         2IT5r6KcS1yxlvHWi8BWEKR+JHicw++7gtYySMx5i38vVwysPbaziCTx7FJ0qXz2gTqM
+         kh7A48QZ+dKAiA/TowbnyJLvX+RPzmLQDCMfjQY4Ojxr1vAIe9ZcE7vD5N+Gg04NBvaf
+         aoN9pM2XHtwVVMef7b8UzRDRFog+siFm9SBB8xmMEFE6dTr9U4GoOIDkcj4blkinCzV9
+         ruSQ==
+X-Gm-Message-State: AFqh2koMRjkuzwMCfttfoAOJ861bBZGgd5Qg5RCPK4jRWDh7g50YV2Nq
+	t60anOm2cW5YuFM6+au6cj1afQwf4rhzKYfaQiZN4iKcbG0wOon36yjseRoPWL+/UrvxFr2Qdng
+	lCRwels3gihGR0X33c+8+z/EliUFO6vPl6ZSMGTc=
+X-Received: by 2002:a05:690c:fd5:b0:4a4:7135:9214 with SMTP id dg21-20020a05690c0fd500b004a471359214mr6355352ywb.378.1673452352788;
+        Wed, 11 Jan 2023 07:52:32 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXtStWXR+38RfXxzFTVMcf7hzA0i9hXKSpLyfi0CZB2+pYusTRUJDWvXhu+YWgsAtexBs1T/Ku+QZ43JZuHtbu8=
+X-Received: by 2002:a05:690c:fd5:b0:4a4:7135:9214 with SMTP id
+ dg21-20020a05690c0fd500b004a471359214mr6355349ywb.378.1673452352610; Wed, 11
+ Jan 2023 07:52:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NyJhWMMx1H0jFDH9"
-Content-Disposition: inline
-In-Reply-To: <Y76rijHJ3KAZ6D9C@sirena.org.uk>
-X-Cookie: I am NOMAD!
+From: Paul Holzinger <pholzing@redhat.com>
+Date: Wed, 11 Jan 2023 16:52:21 +0100
+Message-ID: <CAFsF8vL4CGFzWMb38_XviiEgxoKX0GYup=JiUFXUOmagdk9CRg@mail.gmail.com>
+Subject: [Regression] 6.0.16-6.0.18 kernel no longer return EADDRINUSE from bind
+To: stable@vger.kernel.org
+Cc: regressions@lists.linux.dev, netdev@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
+Hi all,
 
---NyJhWMMx1H0jFDH9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Since updating to 6.0.16 the bind() system call no longer fails with
+EADDRINUSE when the address is already in use.
+Instead bind() returns 1 in such a case, which is not a valid return
+value for this system call.
 
-On Wed, Jan 11, 2023 at 12:29:04PM +0000, Mark Brown wrote:
+It works with the 6.0.15 kernel and earlier, 6.1.4 and 6.2-rc3 also
+seem to work.
 
-> We're seeing issues in all configs on meson-gxl-s905x-libretech-cc
-> today, not just with the kselftest fragment.  The initial failuire seems
-> to be:
+Fedora bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=2159066
 
-> [   17.337253] WARNING: CPU: 3 PID: 123 at drivers/gpu/drm/drm_bridge.c:1257 drm_bridge_hpd_enable+0x8c/0x94 [drm]
+To reproduce you can just run `ncat -l 5000` two times, the second one
+should fail. However it just uses a random port instead.
 
-> full log at:
+As far as I can tell this problem is caused by
+https://lore.kernel.org/stable/20221228144337.512799851@linuxfoundation.org/
+which did not backport commit 7a7160edf1bf properly.
+The line `int ret = -EADDRINUSE, port = snum, l3mdev;` is missing in
+net/ipv4/inet_connection_sock.c.
+This is the working 6.1 patch:
+https://lore.kernel.org/all/20221228144339.969733443@linuxfoundation.org/
 
->    https://storage.kernelci.org/next/master/next-20230111/arm64/defconfig/gcc-10/lab-broonie/baseline-meson-gxl-s905x-libretech-cc.txt
+Best regards,
+Paul
 
-> and links to other logs at:
-
->   https://linux.kernelci.org/test/job/next/branch/master/kernel/next-20230111/plan/baseline/
-
-> Today's -next does have that fix in it so it's not fixing whatever the
-> original issue was, I suspect it might even be exposing other issues.
-> We are however still seeing the stack filling up, even with a GCC 10
-> defconfig build.
-
-A bisect landed on 0e4dcffd331fa7d ("drm/panel: raspberrypi-touchscreen:
-Convert to i2c's .probe_new()") which is obviously not credible.  I
-suspect that what's happening here is that the fix you applied is making
-an issue somewhere else visible in defconfig and is as a result
-confusing the bisect.  Ard mentioned an issue with non-EFI biits
-introduced by EFI changes here:
-
-https://lore.kernel.org/linux-arm-kernel/CAMj1kXGFa=Zriyp_mS7bbQr0wiwikt0ObjOKUSNGpJtFvLmnkg@mail.gmail.com/
-
-which seems like a plausible culprit,
-
-bisect log:
-
-git bisect start
-# bad: [c9e9cdd8bdcc3e1ea330d49ea587ec71884dd0f5] Add linux-next specific files for 20230111
-git bisect bad c9e9cdd8bdcc3e1ea330d49ea587ec71884dd0f5
-# good: [7dd4b804e08041ff56c88bdd8da742d14b17ed25] Merge tag 'nfsd-6.2-3' of git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux
-git bisect good 7dd4b804e08041ff56c88bdd8da742d14b17ed25
-# good: [ecf8827ab7dd5731813f90146d9936165b170f32] Merge branch 'drm-next' of git://git.freedesktop.org/git/drm/drm.git
-git bisect good ecf8827ab7dd5731813f90146d9936165b170f32
-# bad: [64208e4940ede76709f1ff5b01d1b78efc2951cf] Merge branch 'rcu/next' of git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
-git bisect bad 64208e4940ede76709f1ff5b01d1b78efc2951cf
-# bad: [1077dd31ba60b39a231560beec24b97eadf8bd8f] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git
-git bisect bad 1077dd31ba60b39a231560beec24b97eadf8bd8f
-# bad: [1577a2c2aad943fbc6a5e959ae83c4ef8bc3d4de] Merge branch 'drm-next' of https://gitlab.freedesktop.org/agd5f/linux
-git bisect bad 1577a2c2aad943fbc6a5e959ae83c4ef8bc3d4de
-# good: [ec787deb2ddffc6cd6afe0e2fbbbd490ddc383ed] drm/amd: Use `amdgpu_ucode_*` helpers for GFX9
-git bisect good ec787deb2ddffc6cd6afe0e2fbbbd490ddc383ed
-# bad: [0e4dcffd331fa7d2a6ae628b51a7f418dfa90367] drm/panel: raspberrypi-touchscreen: Convert to i2c's .probe_new()
-git bisect bad 0e4dcffd331fa7d2a6ae628b51a7f418dfa90367
-# good: [c702545e19ebb6113d607f2a30ba2ee6cf881a3a] drm/gud: use new debugfs device-centered functions
-git bisect good c702545e19ebb6113d607f2a30ba2ee6cf881a3a
-# good: [977374cf481d3bea916b2775e6ecc682b9689550] drm/vc4: plane: Add 3:3:2 and 4:4:4:4 RGB/RGBX/RGBA formats
-git bisect good 977374cf481d3bea916b2775e6ecc682b9689550
-# good: [67d0a30128c9f644595dfe67ac0fb941a716a6c9] drm/meson: dw-hdmi: Fix devm_regulator_*get_enable*() conversion
-git bisect good 67d0a30128c9f644595dfe67ac0fb941a716a6c9
-# good: [29ef7605e2fd44038a70df0f46b7821464081b22] drm/i2c/sil164: Convert to i2c's .probe_new()
-git bisect good 29ef7605e2fd44038a70df0f46b7821464081b22
-# good: [307259952625798fbea89b04aebbc5106ff18c68] drm/i2c/tda998x: Convert to i2c's .probe_new()
-git bisect good 307259952625798fbea89b04aebbc5106ff18c68
-# good: [446757576a646eba6fae085396bdfbd74245ff28] drm/panel: olimex-lcd-olinuxino: Convert to i2c's .probe_new()
-git bisect good 446757576a646eba6fae085396bdfbd74245ff28
-# first bad commit: [0e4dcffd331fa7d2a6ae628b51a7f418dfa90367] drm/panel: raspberrypi-touchscreen: Convert to i2c's .probe_new()
-
---NyJhWMMx1H0jFDH9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmO+zW4ACgkQJNaLcl1U
-h9AHxwf7BIatpjLOKRRwSZ6vH/lCXj5Af5JfwhejQkMbMaJQjABJCa1CkiRZ3sPX
-J3gj8vQg98ni2fWKtuCgQMH+9Zz342rciBN0A82EON8QDeRAlyDgnrapkvDxxEvD
-yEHbC+Uc7jer377/QGxkzbYYuoY6H74OAFjnM7wYwuy3o8e/SKZgUgxk/H9+VWzP
-f/VBTWJNmU9gFRoh/SnHgDu90V4Aa6HzkNQyaDvlK33fMpHO+4tuRKDPHWg2vQyJ
-h5CthYdC5GnTAvwh6Kjhasv7GBuqSp0Cc9Xv4DPGb8sYv6meszd2gCMb6hczoxsJ
-XNR+frbS/QAt7PFbucr+amCmHxgodA==
-=l6iC
------END PGP SIGNATURE-----
-
---NyJhWMMx1H0jFDH9--
