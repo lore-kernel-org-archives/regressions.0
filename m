@@ -1,85 +1,97 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B8720FF
-	for <regressions@lists.linux.dev>; Wed, 11 Jan 2023 10:54:44 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pFYkj-0005L4-PZ; Wed, 11 Jan 2023 11:54:42 +0100
-Message-ID: <df59eaf6-ae77-adb7-295a-15997950f1f5@leemhuis.info>
-Date: Wed, 11 Jan 2023 11:54:41 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1471123A6
+	for <regressions@lists.linux.dev>; Wed, 11 Jan 2023 12:29:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7004FC433D2;
+	Wed, 11 Jan 2023 12:29:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1673440144;
+	bh=Zscbi5g8KaLoxtqKTYTy4v+bGIgrfP5nEZUwDmWu4fk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q/JK1rDKHYHvhajygf8w2mRW7bMgVgUH371tQZ88bFcNbixMBZAxLFSALrT2UDs3U
+	 6K8/8oxZLnMz3x7nh2jq3/MZ+CUaRUaFJYW7Q7lH0eSBnQdanynH3q02mFxJ4y/Xpx
+	 ddxMtPWrOJGgLsZ1UMh0wbHwaEKw69eDLBaHEDQ+X8jpgLHTK5qyboL8RW79Ymp+sV
+	 p3BzBmpCthJfVLY02wHyti3OQ7na5Y027dZ+vDHqN9gNq0te3IBkBl1g1bStQgJVCi
+	 j/NyxJqDNJm2CSXGEcHXG8wj7sWDGcPdnotZZkDNhNtg6vHzuhzisPWlGNUUFasEoj
+	 BAwxQQCCLgU9g==
+Date: Wed, 11 Jan 2023 12:28:58 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Neil Armstrong <neil.armstrong@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Naresh Kamboju <naresh.kamboju@linaro.org>,
+	linux-next <linux-next@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	dri-devel@lists.freedesktop.org,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+	Will Deacon <will@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Aishwarya TCV <aishwarya.tcv@arm.com>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Ard Biesheuvel <ardb@kernel.org>, linux-amlogic@lists.infradead.org
+Subject: Re: next-20230110: arm64: defconfig+kselftest config boot failed -
+ Unable to handle kernel paging request at virtual address fffffffffffffff8
+Message-ID: <Y76rijHJ3KAZ6D9C@sirena.org.uk>
+References: <CA+G9fYsns3krivbPSjQ1c1EQpVyd-bkW84MaUvqMTQr9c=iEaw@mail.gmail.com>
+ <77342621-d67f-4d47-a33b-6f721576bf9d@app.fastmail.com>
+ <19423616-79d4-9478-c6df-4f226f87a27f@linaro.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: =?UTF-8?Q?Re=3a_=5bRegression=5d_Bug=c2=a0216911_-_get=5funmapped?=
- =?UTF-8?Q?=5farea_returns_addresses_below_mmap=5fmin=5faddr?=
-Content-Language: en-US, de-DE
-From: "Linux kernel regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-To: "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
- Amanieu d'Antras <amanieu@gmail.com>,
- "maple-tree@lists.infradead.org" <maple-tree@lists.infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <0b9f5425-08d4-8013-aa4c-e620c3b10bb2@leemhuis.info>
-In-Reply-To: <0b9f5425-08d4-8013-aa4c-e620c3b10bb2@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673434485;8080f0c6;
-X-HE-SMSGID: 1pFYkj-0005L4-PZ
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="OZN5I8D63BKoaTA7"
+Content-Disposition: inline
+In-Reply-To: <19423616-79d4-9478-c6df-4f226f87a27f@linaro.org>
+X-Cookie: Life is not for everyone.
 
-[resent with akpm's proper email address (either me or my mailer did
-something stupid; sorry for the noise)]
 
-On 11.01.23 11:46, Linux kernel regression tracking (Thorsten Leemhuis)
-wrote:
-> Hi, I noticed a regression report in bugzilla.kernel.org. As many
-> (most?) kernel developer don't keep an eye on it, I decided to forward
-> it by mail. Quoting from
-> https://bugzilla.kernel.org/show_bug.cgi?id=216911 :
-> 
->>  Amanieu d'Antras 2023-01-11 02:10:02 UTC
->>
->> Created attachment 303572 [details]
->> Program which demonstrates this issue
->>
->> The vm_unmapped_area function doesn't seem to respect info.low_limit and will sometimes return an address below this limit. This can result in addresses below mmap_min_addr being returned.
->>
->> I bisected it down to this range of commits (I stopped since I was hitting kernel crashes):
->> 3499a13168da mm/mmap: use maple tree for unmapped_area{_topdown}
->> 7fdbd37da5c6 mm/mmap: use the maple tree for find_vma_prev() instead of the rbtree
->> be8432e7166e mm/mmap: use the maple tree in find_vma() instead of the rbtree.
->> 2e3af1db1744 mmap: use the VMA iterator in count_vma_pages_range()
->> f39af05949a4 mm: add VMA iterator
->> d4af56c5c7c6 mm: start tracking VMAs with maple tree
-> 
-> [those are all from the Maple Tree introduction series]
-> 
->> I've attached a test program which attempts to allocate the entire address space. On affected kernels, this triggers one of the 2 assertions (depending on whether you are running as root):
->> - NULL is returned, which means memory below mmap_min_addr was allocated.
->> - EPERM is returned, which really shouldn't happen when MAP_FIXED is not used (ENOMEM should be returned instead).
-> 
-> See the ticket for more details.
-> 
-> BTW, let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
-> 
-> #regzbot introduced: d4af56c5c7c6..3499a13168da
-> https://bugzilla.kernel.org/show_bug.cgi?id=216911
-> #regzbot title: mm: get_unmapped_area returns addresses below mmap_min_addr
-> #regzbot ignore-activity
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
+--OZN5I8D63BKoaTA7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jan 11, 2023 at 11:34:41AM +0100, Neil Armstrong wrote:
+
+> I merged a fix that could be related: https://lore.kernel.org/all/20230109220033.31202-1-m.szyprowski@samsung.com/
+
+> This could make the driver to return from probe while not totally probed, and explain such error.
+
+We're seeing issues in all configs on meson-gxl-s905x-libretech-cc
+today, not just with the kselftest fragment.  The initial failuire seems
+to be:
+
+[   17.337253] WARNING: CPU: 3 PID: 123 at drivers/gpu/drm/drm_bridge.c:1257 drm_bridge_hpd_enable+0x8c/0x94 [drm]
+
+full log at:
+
+   https://storage.kernelci.org/next/master/next-20230111/arm64/defconfig/gcc-10/lab-broonie/baseline-meson-gxl-s905x-libretech-cc.txt
+
+and links to other logs at:
+
+  https://linux.kernelci.org/test/job/next/branch/master/kernel/next-20230111/plan/baseline/
+
+Today's -next does have that fix in it so it's not fixing whatever the
+original issue was, I suspect it might even be exposing other issues.
+We are however still seeing the stack filling up, even with a GCC 10
+defconfig build.
+
+--OZN5I8D63BKoaTA7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmO+q4kACgkQJNaLcl1U
+h9Dk9ggAgiyNXp8FESi8ST8bCJzfxxMvylBdG+Z+1Q2//2usTBZ89jQ94M9CVgZr
+AHSsut/qzDLYBEQQ9VnLXutGV1MEWqwl+K0vILqKKTV2+uwAcbpWOENJwnbGzN7+
+fz8MtV05xlt9M1K7qtQnRb01xgt7zXr0lY1HVOpQyJzInoCypdlp9laV/nsQDYh+
+X5WPh12TqUbzc1LBqHBV1xpOZ8C+NNptsRuyLM3IJex6Am6xcNTnH4OcEL1vAuWp
+ASrh9a7w1rxfYBYVUMJIhdCNHZZmaj+NuB2hAEJNnQ7NNGPeaCYMvpe8S5DE4/Uz
+owLmp0WY+mpnbwzg6IPpQHjNeFiqJA==
+=gr7z
+-----END PGP SIGNATURE-----
+
+--OZN5I8D63BKoaTA7--
