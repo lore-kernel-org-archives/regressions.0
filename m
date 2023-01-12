@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA88746A
-	for <regressions@lists.linux.dev>; Thu, 12 Jan 2023 13:54:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068F4749D
+	for <regressions@lists.linux.dev>; Thu, 12 Jan 2023 14:14:49 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pFy1s-0001To-HW; Thu, 12 Jan 2023 14:54:04 +0100
-Message-ID: <7f25442f-b121-2a3a-5a3d-22bcaae83cd4@leemhuis.info>
-Date: Thu, 12 Jan 2023 14:54:03 +0100
+	id 1pFyLt-0008E1-HX; Thu, 12 Jan 2023 15:14:45 +0100
+Message-ID: <57e2f165-4d4a-d8bc-47c0-1b0609cd2147@leemhuis.info>
+Date: Thu, 12 Jan 2023 15:14:45 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -19,86 +19,45 @@ User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
 Content-Language: en-US, de-DE
 From: "Linux kernel regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>
-Cc: Matthias Schoepfer <matthias.schoepfer@googlemail.com>,
- Boris Burkov <boris@bur.io>, Qu Wenruo <wqu@suse.com>,
- linux-btrfs <linux-btrfs@vger.kernel.org>,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
+To: Hans de Goede <hdegoede@redhat.com>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: =?UTF-8?Q?=5bregression=5d_Bug=c2=a0216908_-_General_Protection_Fau?=
- =?UTF-8?Q?lt_in_btrfs=5ffile=5fllseek?=
+Cc: walter59 <walter.moeller@moeller-it.net>, Adrien <kernel@asdrip.fr>,
+ LKML <linux-kernel@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: =?UTF-8?Q?=5bregression=5d_Bug=c2=a0216904_-_backlight_brighness_co?=
+ =?UTF-8?Q?ntrol_with_video_missing_/sys/class/backlight_interface?=
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673531648;968e6908;
-X-HE-SMSGID: 1pFy1s-0001To-HW
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673532890;39a34e20;
+X-HE-SMSGID: 1pFyLt-0008E1-HX
 
 Hi, this is your Linux kernel regression tracker.
 
 I noticed a regression report in bugzilla.kernel.org. As many (most?)
 kernel developer don't keep an eye on it, I decided to forward it by
-mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216908 :
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216904 :
 
->  Matthias Schoepfer 2023-01-10 13:58:06 UTC
+>  walter59 2023-01-09 11:31:18 UTC
 > 
-> When creating a large file (i.e. mkfs.ext4 within yocto embedded linux task, which means, 8+GB file), mkfs.ext4 will report a segfault and I get a general protection fault, the system becomes more or less unstable after this. 
+> backlight brighness control with video missing /sys/class/backlight interface
 > 
-> I can reproduce this 100%, when I do the same with 6.0.6 kernel, it works fine. 
+> kernel 6.1 it is ok --- kernel 6.2 not
 > 
-> Here is the Kernel dump:
-> Jan 10 14:12:38 michelle kernel: BTRFS warning (device nvme0n1p5): bad eb member end: ptr 0x3fea start 2704543268864 member offset 16383 size 8
-> Jan 10 14:12:38 michelle kernel: general protection fault, probably for non-canonical address 0x85d8740000000: 0000 [#1] PREEMPT SMP
-> Jan 10 14:12:38 michelle kernel: CPU: 21 PID: 2143606 Comm: mkfs.ext4.real Tainted: P           O    T  6.1.4-gentoo #2
-> Jan 10 14:12:38 michelle kernel: Hardware name: Micro-Star International Co., Ltd. MS-7C37/X570-A PRO (MS-7C37), BIOS H.70 01/09/2020
-> Jan 10 14:12:38 michelle kernel: RIP: 0010:btrfs_get_64+0xe7/0x100
-> Jan 10 14:12:38 michelle kernel: Code: 40 08 48 2b 15 b2 3a 15 01 48 8d 0c 04 48 c1 fa 06 48 c1 e2 0c 48 03 15 af 3a 15 01 81 eb f8 0f 00 00 74 12 31 c0 89 c6 ff c0 <0f> b6 3c 32 40 88 3c 3>
-> Jan 10 14:12:38 michelle kernel: RSP: 0018:ffffb2d4ca4c3dd0 EFLAGS: 00010202
-> Jan 10 14:12:38 michelle kernel: RAX: 0000000000000001 RBX: 0000000000000007 RCX: ffffb2d4ca4c3dd9
-> Jan 10 14:12:38 michelle kernel: RDX: 00085d8740000000 RSI: 0000000000000000 RDI: 000000000000000a
-> Jan 10 14:12:38 michelle kernel: RBP: ffff96fbbfd9c600 R08: 0000000000000001 R09: 00000000ffffdfff
-> Jan 10 14:12:38 michelle kernel: R10: ffffffff94a3a700 R11: ffffffff94aea700 R12: 0000000000000003
-> Jan 10 14:12:38 michelle kernel: R13: ffff96fbbfd9c600 R14: 0000000000000003 R15: 0000000000003fea
-> Jan 10 14:12:38 michelle kernel: FS:  00007f6ac90e5780(0000) GS:ffff97071ed40000(0000) knlGS:0000000000000000
-> Jan 10 14:12:38 michelle kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> Jan 10 14:12:38 michelle kernel: CR2: 0000557c6f245760 CR3: 000000019a64a000 CR4: 0000000000350ee0
-> Jan 10 14:12:38 michelle kernel: Call Trace:
-> Jan 10 14:12:38 michelle kernel:  <TASK>
-> Jan 10 14:12:38 michelle kernel:  btrfs_file_llseek+0x269/0x670
-> Jan 10 14:12:38 michelle kernel:  ksys_lseek+0x61/0xa0
-> Jan 10 14:12:38 michelle kernel:  do_syscall_64+0x56/0x80
-> Jan 10 14:12:38 michelle kernel:  entry_SYSCALL_64_after_hwframe+0x46/0xb0
-> Jan 10 14:12:38 michelle kernel: RIP: 0033:0x7f6ac91e4d3b
-> Jan 10 14:12:38 michelle kernel: Code: ff ff c3 0f 1f 40 00 48 8b 15 e1 90 0d 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb ba 0f 1f 00 f3 0f 1e fa b8 08 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 0>
-> Jan 10 14:12:38 michelle kernel: RSP: 002b:00007fff68e04038 EFLAGS: 00000297 ORIG_RAX: 0000000000000008
-> Jan 10 14:12:38 michelle kernel: RAX: ffffffffffffffda RBX: 000056367d4ffea0 RCX: 00007f6ac91e4d3b
-> Jan 10 14:12:38 michelle kernel: RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000004
-> Jan 10 14:12:38 michelle kernel: RBP: 0000000000000004 R08: 00007f6ac92bef90 R09: 000056367d4f6160
-> Jan 10 14:12:38 michelle kernel: R10: 0000000000000000 R11: 0000000000000297 R12: 0000000000000000
-> Jan 10 14:12:38 michelle kernel: R13: 000056367d4c0eb0 R14: 000056367d50d620 R15: 000056367d4ebab0
-> Jan 10 14:12:38 michelle kernel:  </TASK>
-> Jan 10 14:12:38 michelle kernel: Modules linked in: xt_CHECKSUM xt_MASQUERADE nvidia_drm(PO) nvidia_modeset(PO) ip6table_nat iptable_nat bpfilter nvidia(PO) uvcvideo videobuf2_vmalloc video>
-> Jan 10 14:12:38 michelle kernel: ---[ end trace 0000000000000000 ]---
-> Jan 10 14:12:38 michelle kernel: RIP: 0010:btrfs_get_64+0xe7/0x100
-> Jan 10 14:12:38 michelle kernel: Code: 40 08 48 2b 15 b2 3a 15 01 48 8d 0c 04 48 c1 fa 06 48 c1 e2 0c 48 03 15 af 3a 15 01 81 eb f8 0f 00 00 74 12 31 c0 89 c6 ff c0 <0f> b6 3c 32 40 88 3c 3>
-> Jan 10 14:12:38 michelle kernel: RSP: 0018:ffffb2d4ca4c3dd0 EFLAGS: 00010202
-> Jan 10 14:12:38 michelle kernel: RAX: 0000000000000001 RBX: 0000000000000007 RCX: ffffb2d4ca4c3dd9
-> Jan 10 14:12:38 michelle kernel: RDX: 00085d8740000000 RSI: 0000000000000000 RDI: 000000000000000a
-> Jan 10 14:12:38 michelle kernel: RBP: ffff96fbbfd9c600 R08: 0000000000000001 R09: 00000000ffffdfff
-> Jan 10 14:12:38 michelle kernel: R10: ffffffff94a3a700 R11: ffffffff94aea700 R12: 0000000000000003
-> Jan 10 14:12:38 michelle kernel: R13: ffff96fbbfd9c600 R14: 0000000000000003 R15: 0000000000003fea
-> Jan 10 14:12:38 michelle kernel: FS:  00007f6ac90e5780(0000) GS:ffff97071ed40000(0000) knlGS:0000000000000000
-> Jan 10 14:12:38 michelle kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> Jan 10 14:12:38 michelle kernel: CR2: 0000557c6f245760 CR3: 000000019a64a000 CR4: 0000000000350ee0
+> [reply] [−] Comment 1 The Linux kernel's regression tracker (Thorsten Leemhuis) 2023-01-10 06:24:45 UTC
+> 
+> What kind of machine is this? Could you please attach the output of `lspci -nn`  and `dmidecode`
+> 
+> [reply] [−] Comment 2 Adrien 2023-01-11 21:47:24 UTC
+> 
+> Hi,
+> 
+> Same here. Everything is fine on 6.1.3 and the issue seems to happen starting 6.1.4. 
+> `ls /sys/class/backlight/` returns nothing.
+> I can't adjust the brightness with Fn+F3/F4 (dmesg returns acer_wmi: Unknown function number - 4 - 0).
+> I'll try to do a bisect.
+> 
 
 See the ticket for more details.
-
-I first assumed (see the ticket) it might be the same problem that was
-fixed by "btrfs: fix resolving backrefs for inline extent followed by
-prealloc"
-(https://lore.kernel.org/all/20230104160512.620453792@linuxfoundation.org/
-) -- but that is already in 6.1.4, so I better keep my nose out of it
-and let the experts look into this.
 
 
 [TLDR for the rest of this mail: I'm adding this report to the list of
@@ -109,9 +68,10 @@ form.]
 BTW, let me use this mail to also add the report to the list of tracked
 regressions to ensure it's doesn't fall through the cracks:
 
-#regzbot introduced: v6.0..v6.1.4
-https://bugzilla.kernel.org/show_bug.cgi?id=216908
-#regzbot title: btrfs: General Protection Fault in btrfs_file_llseek
+#regzbot introduced: v6.1..v6.2-rc4
+https://bugzilla.kernel.org/show_bug.cgi?id=216904
+#regzbot title: brightness: /sys/class/backlight interface is missing
+(in 6.1.3->6.1.4, too?)
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
