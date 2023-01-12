@@ -1,85 +1,99 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6780179C9
-	for <regressions@lists.linux.dev>; Thu, 12 Jan 2023 14:54:26 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pFyyE-0003z5-5G; Thu, 12 Jan 2023 15:54:22 +0100
-Message-ID: <78f2cd63-2c58-68c4-9d4b-a587974b7108@leemhuis.info>
-Date: Thu, 12 Jan 2023 15:54:21 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450D218D
+	for <regressions@lists.linux.dev>; Thu, 12 Jan 2023 16:42:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBE85C433EF;
+	Thu, 12 Jan 2023 16:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1673541726;
+	bh=F609UnYf0WMG5QfHIvhOUjsUndJBWWCnct0nm6EhNSM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=OPsjwdv4nwXuXqDGZ+Grn5wxcXDYn9RTtehvqMpkLU44l/jIIjLHEeLJglh3X32Vw
+	 zk40TZLH73wxhMWeRaB7cwvF8cyRdMfmc1R5gDhcH0keIHTS5CNYEEuWIkc82okltr
+	 hizJFSnMs8oyj3vSvvwBJ/giPdIuMoRLIrM+LipXifeGxnnYKEZK2U4fvjsq4TmSyG
+	 /IvtdslpbWYDh4o6Rw0bCq3GcVflqAKEBxOkt96H8Ss/38ALdrOzhY+PNappYNAVFh
+	 SNGAuGpcMsrpwHp3a/KayLg8FoowcfN1tbkgGVPBPDW3A12rbOdVid5+7T0IU8WqVW
+	 Oy3o9fbvnfJjg==
+Date: Thu, 12 Jan 2023 10:42:04 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Julian =?iso-8859-1?Q?Gro=DF?= <julian.g@posteo.de>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: Regression in Kernel 6.0: System partially freezes with "nvme
+ controller is down"
+Message-ID: <20230112164204.GA1768006@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: EXT4 IOPS degradation in 5.10 compared to 5.4
-Content-Language: en-US, de-DE
-To: "Bhatnagar, Rishabh" <risbhat@amazon.com>, tytso@mit.edu,
- adilger.kernel@dilger.ca, jack@suse.cz
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
- abuehaze@amazon.com,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <03d52010-06a8-9bff-0565-b698b48850a9@amazon.com>
-From: "Linux kernel regression tracking (#adding)" <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <03d52010-06a8-9bff-0565-b698b48850a9@amazon.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673535266;02abb5b1;
-X-HE-SMSGID: 1pFyyE-0003z5-5G
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9d46a35f-5830-9761-ca2c-eaa640e9cc86@leemhuis.info>
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+On Thu, Jan 12, 2023 at 03:48:46PM +0100, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
+> ...
+> On 11.01.23 23:11, Julian Groß wrote:
+> > Dear Maintainer,
+> > 
+> > when running Linux Kernel version 6.0.12, 6.0.10, 6.0-rc7, or 6.1.4, my
+> > system seemingly randomly freezes due to the file system being set to
+> > read-only due to an issue with my NVMe controller.
+> > The issue does *not* appear on Linux Kernel version 5.19.11 or lower.
+> > 
+> > Through network logging I am able to catch the issue:
+> > ```
+> > Jan  8 14:50:16 x299-desktop kernel: [ 1461.259288] nvme nvme0:
+> > controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
+> > Jan  8 14:50:16 x299-desktop kernel: [ 1461.259293] nvme nvme0: Does
+> > your device have a faulty power saving mode enabled?
+> > Jan  8 14:50:16 x299-desktop kernel: [ 1461.259293] nvme nvme0: Try
+> > "nvme_core.default_ps_max_latency_us=0 pcie_aspm=off" and report a bug
+> > Jan  8 14:50:16 x299-desktop kernel: [ 1461.331360] nvme 0000:01:00.0:
+> > enabling device (0000 -> 0002)
+> > ...
+> > 
+> > I have tried the suggestion in the log without luck.
+> > 
+> > Attached is a log that includes two system freezes, as well as a list of
+> > PCI(e) devices created by Debian reportbug.
+> > The first freeze happens at "Jan  8 04:26:28" and the second freeze
+> > happens at "Jan  8 14:50:16".
+> > 
+> > Currently, I am using git bisect to narrow down the window of possible
+> > commits, but since the issue appears seemingly random, it will take many
+> > months to identify the offending commit this way.
+> > 
+> > The original Debian bug report is here:
+> > https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1028309
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+For some reason the log [1] has very little of the kernel dmesg log.
+It does seem like the freeze is partial (I see messages for hundreds
+or thousands of seconds after the nvme reset), but requires a reboot
+to recover.
 
-On 12.01.23 03:06, Bhatnagar, Rishabh wrote:
-> Hi Theodore/Jan
-> 
-> Please ignore the previous mail which isn't formatted well.
-> 
-> 
-> We have been seeing a consistent 3% degradation in IOPS score between
-> 5.4 and 5.10 stable kernels while running fio tests.
-> 
-> I'm running test case on m6g.8xlarge AWS instances using arm64. The test
-> involves:
-> 
-> [...]>
-> After doing some kernel bisecting between we were able to pinpoint this
-> commit that drops the iops score by 10~15 points (~3%).
-> ext4: avoid unnecessary transaction starts during writeback
-> (6b8ed62008a49751fc71fefd2a4f89202a7c2d4d)
-> [...]
+The lspci information [2] shows the 00:1b.0 Root Port leading to the
+01:00.0 NVMe device.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+Is it possible to collect lspci output after the nvme freeze?  If so,
+please save the output of:
 
-#regzbot ^introduced 6b8ed62008a49751fc71
-#regzbot title ext4: consistent 3% degradation in IOPS score
-#regzbot ignore-activity
+  sudo lspci -vv -s00:1b.0
+  sudo lspci -vv -s01:00.0
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+Make sure to run lspci as root so we can see the error logging
+registers for these devices.
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+If you can collect more of the dmesg log after the freeze, e.g., via
+the "dmesg" command, that might be helpful, too.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Bjorn
+
+[1] https://bugs.debian.org/cgi-bin/bugreport.cgi?att=1;bug=1028309;filename=x299-desktop_crash.log.xz;msg=5
+[2] https://bugs.debian.org/cgi-bin/bugreport.cgi?att=0;bug=1028309;msg=5
