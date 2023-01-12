@@ -1,111 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D97F746A
-	for <regressions@lists.linux.dev>; Thu, 12 Jan 2023 13:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1673530039;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5SwCX7Huvx8oV/VYW9LER1EPQspAcx1PfzypYxIzJto=;
-	b=T4czuQ6gvQLZ+C5fy+SDvTWIoi9+NBVqrbnAKKUgDszZIcA6zbvesHiYz3KIxcH5XRtG8d
-	HvMBdpk7o4xqeDIDqwZdoM+Tvh99GdxVi7Bh6VBn7rsCqAvU0EXm6EdPUK1UDBPljNLZhI
-	GsfmTe3lucumkIdKagD63rEt/aAuxh0=
-Received: from mail-yw1-f197.google.com (mail-yw1-f197.google.com
- [209.85.128.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-189-9nepBmj4MQ-IbtI_D570_g-1; Thu, 12 Jan 2023 08:27:18 -0500
-X-MC-Unique: 9nepBmj4MQ-IbtI_D570_g-1
-Received: by mail-yw1-f197.google.com with SMTP id 00721157ae682-4d952e13250so24170767b3.5
-        for <regressions@lists.linux.dev>; Thu, 12 Jan 2023 05:27:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5SwCX7Huvx8oV/VYW9LER1EPQspAcx1PfzypYxIzJto=;
-        b=2jIX2i/5O4K5Z3ehmM1AnhjNlxDL1YUgGp7YYPKOYeo43ENClxkM7t2/eodG+ymj21
-         F14m1bSIEUCUTQKOmRSczyyxUey4+pH6TggvOt/fCqQHglzxr/+7LVLGAgfpZX5Le3H2
-         hcSbVMpNp2sfXMpYtHct2JHsnUpX69fwtH35Oiy+/gT9v6qQ+c3bWQR6/qTrzU6wFifw
-         XmwCP/fCx4wh4vOry4PQDpoqRLwUP8yqC2wAMKlkLYhBjby7ojrxXI5KAZtqShSrTCDv
-         KdtVAPWz/Bz6GM1sahxBVdBo3SCrfmZ6iIagRpvt7qd+OFpchTGRUcZRrP/UQDYzalzu
-         Di+A==
-X-Gm-Message-State: AFqh2koeROY2w0h8H0WlHgh9CwGqT9GnXnsVJNDpQZP9suAFQCMsoGa9
-	C5saGHqmEQIvYKFZelrqBXh32OiwHDN8OJMsNc2qDAkHx/wohhv13NskP77oBoz1+9pA1ou8MYN
-	yIHCAnZ9awkcl6xfN2WUnSjs6jMYKMrMzIh02A6Y=
-X-Received: by 2002:a5b:786:0:b0:6ea:e952:4d4a with SMTP id b6-20020a5b0786000000b006eae9524d4amr6296896ybq.120.1673530037566;
-        Thu, 12 Jan 2023 05:27:17 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXtyOluOky0VeYg6LB6YQwZwMb0OVdTOzhBlpfKzH0UseRfHNA97+68mSuoqnzkDPCWFly5dk2mXj+jGqmluQZU=
-X-Received: by 2002:a5b:786:0:b0:6ea:e952:4d4a with SMTP id
- b6-20020a5b0786000000b006eae9524d4amr6296892ybq.120.1673530037385; Thu, 12
- Jan 2023 05:27:17 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CA88746A
+	for <regressions@lists.linux.dev>; Thu, 12 Jan 2023 13:54:08 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pFy1s-0001To-HW; Thu, 12 Jan 2023 14:54:04 +0100
+Message-ID: <7f25442f-b121-2a3a-5a3d-22bcaae83cd4@leemhuis.info>
+Date: Thu, 12 Jan 2023 14:54:03 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAFsF8vL4CGFzWMb38_XviiEgxoKX0GYup=JiUFXUOmagdk9CRg@mail.gmail.com>
- <Y7/xwk9lmaNwrDwo@kroah.com>
-In-Reply-To: <Y7/xwk9lmaNwrDwo@kroah.com>
-From: Paul Holzinger <pholzing@redhat.com>
-Date: Thu, 12 Jan 2023 14:27:06 +0100
-Message-ID: <CAFsF8vJ3wS-Yoy9tNZD2ZESevGenvYKqieD4F8+UztRsrJ=png@mail.gmail.com>
-Subject: Re: [Regression] 6.0.16-6.0.18 kernel no longer return EADDRINUSE
- from bind
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, regressions@lists.linux.dev, 
-	netdev@vger.kernel.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: en-US, de-DE
+From: "Linux kernel regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>
+Cc: Matthias Schoepfer <matthias.schoepfer@googlemail.com>,
+ Boris Burkov <boris@bur.io>, Qu Wenruo <wqu@suse.com>,
+ linux-btrfs <linux-btrfs@vger.kernel.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ LKML <linux-kernel@vger.kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: =?UTF-8?Q?=5bregression=5d_Bug=c2=a0216908_-_General_Protection_Fau?=
+ =?UTF-8?Q?lt_in_btrfs=5ffile=5fllseek?=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673531648;968e6908;
+X-HE-SMSGID: 1pFy1s-0001To-HW
 
-Hi Greg,
+Hi, this is your Linux kernel regression tracker.
 
-Nothing particular is keeping me on this kernel, it is currently
-shipped in fedora.
-I assume fedora will update to 6.1 as usual so updating is not a problem for me.
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216908 :
 
-I wasn't sure how long the 6.0 series gets updates so I decided to
-report it here. If it is EOL that is fine for me.
+>  Matthias Schoepfer 2023-01-10 13:58:06 UTC
+> 
+> When creating a large file (i.e. mkfs.ext4 within yocto embedded linux task, which means, 8+GB file), mkfs.ext4 will report a segfault and I get a general protection fault, the system becomes more or less unstable after this. 
+> 
+> I can reproduce this 100%, when I do the same with 6.0.6 kernel, it works fine. 
+> 
+> Here is the Kernel dump:
+> Jan 10 14:12:38 michelle kernel: BTRFS warning (device nvme0n1p5): bad eb member end: ptr 0x3fea start 2704543268864 member offset 16383 size 8
+> Jan 10 14:12:38 michelle kernel: general protection fault, probably for non-canonical address 0x85d8740000000: 0000 [#1] PREEMPT SMP
+> Jan 10 14:12:38 michelle kernel: CPU: 21 PID: 2143606 Comm: mkfs.ext4.real Tainted: P           O    T  6.1.4-gentoo #2
+> Jan 10 14:12:38 michelle kernel: Hardware name: Micro-Star International Co., Ltd. MS-7C37/X570-A PRO (MS-7C37), BIOS H.70 01/09/2020
+> Jan 10 14:12:38 michelle kernel: RIP: 0010:btrfs_get_64+0xe7/0x100
+> Jan 10 14:12:38 michelle kernel: Code: 40 08 48 2b 15 b2 3a 15 01 48 8d 0c 04 48 c1 fa 06 48 c1 e2 0c 48 03 15 af 3a 15 01 81 eb f8 0f 00 00 74 12 31 c0 89 c6 ff c0 <0f> b6 3c 32 40 88 3c 3>
+> Jan 10 14:12:38 michelle kernel: RSP: 0018:ffffb2d4ca4c3dd0 EFLAGS: 00010202
+> Jan 10 14:12:38 michelle kernel: RAX: 0000000000000001 RBX: 0000000000000007 RCX: ffffb2d4ca4c3dd9
+> Jan 10 14:12:38 michelle kernel: RDX: 00085d8740000000 RSI: 0000000000000000 RDI: 000000000000000a
+> Jan 10 14:12:38 michelle kernel: RBP: ffff96fbbfd9c600 R08: 0000000000000001 R09: 00000000ffffdfff
+> Jan 10 14:12:38 michelle kernel: R10: ffffffff94a3a700 R11: ffffffff94aea700 R12: 0000000000000003
+> Jan 10 14:12:38 michelle kernel: R13: ffff96fbbfd9c600 R14: 0000000000000003 R15: 0000000000003fea
+> Jan 10 14:12:38 michelle kernel: FS:  00007f6ac90e5780(0000) GS:ffff97071ed40000(0000) knlGS:0000000000000000
+> Jan 10 14:12:38 michelle kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Jan 10 14:12:38 michelle kernel: CR2: 0000557c6f245760 CR3: 000000019a64a000 CR4: 0000000000350ee0
+> Jan 10 14:12:38 michelle kernel: Call Trace:
+> Jan 10 14:12:38 michelle kernel:  <TASK>
+> Jan 10 14:12:38 michelle kernel:  btrfs_file_llseek+0x269/0x670
+> Jan 10 14:12:38 michelle kernel:  ksys_lseek+0x61/0xa0
+> Jan 10 14:12:38 michelle kernel:  do_syscall_64+0x56/0x80
+> Jan 10 14:12:38 michelle kernel:  entry_SYSCALL_64_after_hwframe+0x46/0xb0
+> Jan 10 14:12:38 michelle kernel: RIP: 0033:0x7f6ac91e4d3b
+> Jan 10 14:12:38 michelle kernel: Code: ff ff c3 0f 1f 40 00 48 8b 15 e1 90 0d 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb ba 0f 1f 00 f3 0f 1e fa b8 08 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 0>
+> Jan 10 14:12:38 michelle kernel: RSP: 002b:00007fff68e04038 EFLAGS: 00000297 ORIG_RAX: 0000000000000008
+> Jan 10 14:12:38 michelle kernel: RAX: ffffffffffffffda RBX: 000056367d4ffea0 RCX: 00007f6ac91e4d3b
+> Jan 10 14:12:38 michelle kernel: RDX: 0000000000000003 RSI: 0000000000000000 RDI: 0000000000000004
+> Jan 10 14:12:38 michelle kernel: RBP: 0000000000000004 R08: 00007f6ac92bef90 R09: 000056367d4f6160
+> Jan 10 14:12:38 michelle kernel: R10: 0000000000000000 R11: 0000000000000297 R12: 0000000000000000
+> Jan 10 14:12:38 michelle kernel: R13: 000056367d4c0eb0 R14: 000056367d50d620 R15: 000056367d4ebab0
+> Jan 10 14:12:38 michelle kernel:  </TASK>
+> Jan 10 14:12:38 michelle kernel: Modules linked in: xt_CHECKSUM xt_MASQUERADE nvidia_drm(PO) nvidia_modeset(PO) ip6table_nat iptable_nat bpfilter nvidia(PO) uvcvideo videobuf2_vmalloc video>
+> Jan 10 14:12:38 michelle kernel: ---[ end trace 0000000000000000 ]---
+> Jan 10 14:12:38 michelle kernel: RIP: 0010:btrfs_get_64+0xe7/0x100
+> Jan 10 14:12:38 michelle kernel: Code: 40 08 48 2b 15 b2 3a 15 01 48 8d 0c 04 48 c1 fa 06 48 c1 e2 0c 48 03 15 af 3a 15 01 81 eb f8 0f 00 00 74 12 31 c0 89 c6 ff c0 <0f> b6 3c 32 40 88 3c 3>
+> Jan 10 14:12:38 michelle kernel: RSP: 0018:ffffb2d4ca4c3dd0 EFLAGS: 00010202
+> Jan 10 14:12:38 michelle kernel: RAX: 0000000000000001 RBX: 0000000000000007 RCX: ffffb2d4ca4c3dd9
+> Jan 10 14:12:38 michelle kernel: RDX: 00085d8740000000 RSI: 0000000000000000 RDI: 000000000000000a
+> Jan 10 14:12:38 michelle kernel: RBP: ffff96fbbfd9c600 R08: 0000000000000001 R09: 00000000ffffdfff
+> Jan 10 14:12:38 michelle kernel: R10: ffffffff94a3a700 R11: ffffffff94aea700 R12: 0000000000000003
+> Jan 10 14:12:38 michelle kernel: R13: ffff96fbbfd9c600 R14: 0000000000000003 R15: 0000000000003fea
+> Jan 10 14:12:38 michelle kernel: FS:  00007f6ac90e5780(0000) GS:ffff97071ed40000(0000) knlGS:0000000000000000
+> Jan 10 14:12:38 michelle kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> Jan 10 14:12:38 michelle kernel: CR2: 0000557c6f245760 CR3: 000000019a64a000 CR4: 0000000000350ee0
 
-Thanks,
-Paul
+See the ticket for more details.
+
+I first assumed (see the ticket) it might be the same problem that was
+fixed by "btrfs: fix resolving backrefs for inline extent followed by
+prealloc"
+(https://lore.kernel.org/all/20230104160512.620453792@linuxfoundation.org/
+) -- but that is already in 6.1.4, so I better keep my nose out of it
+and let the experts look into this.
 
 
-On Thu, Jan 12, 2023 at 12:50 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Jan 11, 2023 at 04:52:21PM +0100, Paul Holzinger wrote:
-> > Hi all,
-> >
-> > Since updating to 6.0.16 the bind() system call no longer fails with
-> > EADDRINUSE when the address is already in use.
-> > Instead bind() returns 1 in such a case, which is not a valid return
-> > value for this system call.
-> >
-> > It works with the 6.0.15 kernel and earlier, 6.1.4 and 6.2-rc3 also
-> > seem to work.
-> >
-> > Fedora bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=2159066
-> >
-> > To reproduce you can just run `ncat -l 5000` two times, the second one
-> > should fail. However it just uses a random port instead.
-> >
-> > As far as I can tell this problem is caused by
-> > https://lore.kernel.org/stable/20221228144337.512799851@linuxfoundation.org/
-> > which did not backport commit 7a7160edf1bf properly.
-> > The line `int ret = -EADDRINUSE, port = snum, l3mdev;` is missing in
-> > net/ipv4/inet_connection_sock.c.
-> > This is the working 6.1 patch:
-> > https://lore.kernel.org/all/20221228144339.969733443@linuxfoundation.org/
->
-> As 6.0.y is now end-of-life, is there anything keeping you on that
-> kernel tree?  If you send a fix-up patch for this, I'll gladly apply it
-> and push out one more 6.0 release with it.
->
-> thanks,
-> g
-> reg k-h
->
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
 
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.0..v6.1.4
+https://bugzilla.kernel.org/show_bug.cgi?id=216908
+#regzbot title: btrfs: General Protection Fault in btrfs_file_llseek
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
