@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF75979C9
-	for <regressions@lists.linux.dev>; Thu, 12 Jan 2023 14:48:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6780179C9
+	for <regressions@lists.linux.dev>; Thu, 12 Jan 2023 14:54:26 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pFyso-0000Xu-Nn; Thu, 12 Jan 2023 15:48:46 +0100
-Message-ID: <9d46a35f-5830-9761-ca2c-eaa640e9cc86@leemhuis.info>
-Date: Thu, 12 Jan 2023 15:48:46 +0100
+	id 1pFyyE-0003z5-5G; Thu, 12 Jan 2023 15:54:22 +0100
+Message-ID: <78f2cd63-2c58-68c4-9d4b-a587974b7108@leemhuis.info>
+Date: Thu, 12 Jan 2023 15:54:21 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,100 +16,55 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: Regression in Kernel 6.0: System partially freezes with "nvme
- controller is down"
+Subject: Re: EXT4 IOPS degradation in 5.10 compared to 5.4
 Content-Language: en-US, de-DE
-To: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>
-References: <d5d8d106-acce-e20c-827d-1b37de2b2188@posteo.de>
- <0d3206be-fae8-4bbd-4b6c-a5d1f038356d@posteo.de>
-From: "Linux kernel regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Cc: =?UTF-8?Q?Julian_Gro=c3=9f?= <julian.g@posteo.de>,
- linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>
+To: "Bhatnagar, Rishabh" <risbhat@amazon.com>, tytso@mit.edu,
+ adilger.kernel@dilger.ca, jack@suse.cz
+Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+ abuehaze@amazon.com,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <03d52010-06a8-9bff-0565-b698b48850a9@amazon.com>
+From: "Linux kernel regression tracking (#adding)" <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <0d3206be-fae8-4bbd-4b6c-a5d1f038356d@posteo.de>
+In-Reply-To: <03d52010-06a8-9bff-0565-b698b48850a9@amazon.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673534934;ad046a82;
-X-HE-SMSGID: 1pFyso-0000Xu-Nn
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673535266;02abb5b1;
+X-HE-SMSGID: 1pFyyE-0003z5-5G
 
-[adding the nvme maintainers and the regressions mailing list to the
-list of recipients]
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
 [TLDR: I'm adding this report to the list of tracked Linux kernel
 regressions; the text you find below is based on a few templates
 paragraphs you might have encountered already in similar form.
 See link in footer if these mails annoy you.]
 
-On 11.01.23 23:11, Julian Groß wrote:
-> Dear Maintainer,
+On 12.01.23 03:06, Bhatnagar, Rishabh wrote:
+> Hi Theodore/Jan
 > 
-> when running Linux Kernel version 6.0.12, 6.0.10, 6.0-rc7, or 6.1.4, my
-> system seemingly randomly freezes due to the file system being set to
-> read-only due to an issue with my NVMe controller.
-> The issue does *not* appear on Linux Kernel version 5.19.11 or lower.
+> Please ignore the previous mail which isn't formatted well.
 > 
-> Through network logging I am able to catch the issue:
-> ```
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.259288] nvme nvme0:
-> controller is down; will reset: CSTS=0xffffffff, PCI_STATUS=0x10
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.259293] nvme nvme0: Does
-> your device have a faulty power saving mode enabled?
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.259293] nvme nvme0: Try
-> "nvme_core.default_ps_max_latency_us=0 pcie_aspm=off" and report a bug
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.331360] nvme 0000:01:00.0:
-> enabling device (0000 -> 0002)
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.331458] nvme nvme0: Removing
-> after probe failure status: -19
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.371389] nvme0n1: detected
-> capacity change from 1953525168 to 0
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.371389] BTRFS error (device
-> nvme0n1p4): bdev /dev/nvme0n1p4 errs: wr 1, rd 0, flush 0, corrupt 0, gen 0
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.371389] BTRFS error (device
-> nvme0n1p4): bdev /dev/nvme0n1p4 errs: wr 2, rd 0, flush 0, corrupt 0, gen 0
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.371392] BTRFS error (device
-> nvme0n1p4): bdev /dev/nvme0n1p4 errs: wr 3, rd 0, flush 0, corrupt 0, gen 0
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.371394] BTRFS error (device
-> nvme0n1p4): bdev /dev/nvme0n1p4 errs: wr 5, rd 0, flush 0, corrupt 0, gen 0
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.371405] BTRFS error (device
-> nvme0n1p4): bdev /dev/nvme0n1p4 errs: wr 6, rd 0, flush 0, corrupt 0, gen 0
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.371406] BTRFS error (device
-> nvme0n1p4): bdev /dev/nvme0n1p4 errs: wr 7, rd 0, flush 0, corrupt 0, gen 0
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.371411] BTRFS error (device
-> nvme0n1p4): bdev /dev/nvme0n1p4 errs: wr 8, rd 0, flush 0, corrupt 0, gen 0
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.371419] BTRFS error (device
-> nvme0n1p4): bdev /dev/nvme0n1p4 errs: wr 9, rd 0, flush 0, corrupt 0, gen 0
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.371425] BTRFS error (device
-> nvme0n1p4): bdev /dev/nvme0n1p4 errs: wr 10, rd 0, flush 0, corrupt 0,
-> gen 0
-> Jan  8 14:50:16 x299-desktop kernel: [ 1461.371426] BTRFS error (device
-> nvme0n1p4): bdev /dev/nvme0n1p4 errs: wr 11, rd 0, flush 0, corrupt 0,
-> gen 0
-> ```
 > 
-> I have tried the suggestion in the log without luck.
+> We have been seeing a consistent 3% degradation in IOPS score between
+> 5.4 and 5.10 stable kernels while running fio tests.
 > 
-> Attached is a log that includes two system freezes, as well as a list of
-> PCI(e) devices created by Debian reportbug.
-> The first freeze happens at "Jan  8 04:26:28" and the second freeze
-> happens at "Jan  8 14:50:16".
+> I'm running test case on m6g.8xlarge AWS instances using arm64. The test
+> involves:
 > 
-> Currently, I am using git bisect to narrow down the window of possible
-> commits, but since the issue appears seemingly random, it will take many
-> months to identify the offending commit this way.
-> 
-> The original Debian bug report is here:
-> https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1028309
+> [...]>
+> After doing some kernel bisecting between we were able to pinpoint this
+> commit that drops the iops score by 10~15 points (~3%).
+> ext4: avoid unnecessary transaction starts during writeback
+> (6b8ed62008a49751fc71fefd2a4f89202a7c2d4d)
+> [...]
 
 Thanks for the report. To be sure the issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced v5.19..v6.0-rc7
-#regzbot title nvme: system partially freezes with "nvme controller is down"
+#regzbot ^introduced 6b8ed62008a49751fc71
+#regzbot title ext4: consistent 3% degradation in IOPS score
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
