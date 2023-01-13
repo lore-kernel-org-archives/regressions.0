@@ -1,206 +1,91 @@
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9D897EF
-	for <regressions@lists.linux.dev>; Fri, 13 Jan 2023 16:41:30 +0000 (UTC)
-Received: by mail-ua1-f41.google.com with SMTP id z3so5447843uao.9
-        for <regressions@lists.linux.dev>; Fri, 13 Jan 2023 08:41:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=C6Lr+L/LblDc+yJNt4wnXXxJYLKQypjal3HX7Zk/JBs=;
-        b=IQFN/OGInODCXa4DHXL6w34lhdPc1uMskQ5g7tFJ0oHfQYVPZoDjRMxAFWls6ofeWI
-         Cc192jIOfJM4wAyYcKAzsILPmuH/oreySiel5v2C3xqH4k0ub7n9d9vDVs5g9waeUXgX
-         kxFNOB1d1SEzSPi1CiaUfgjIUzSpfz0061je3FuODY/reLKaXtqBRgCCv2bNKGY0kgDu
-         kg0ue1bkJsKsUnApNAYnZK2GQkeZzEiLoL3zVScbH/htfTDt4RbLoXpGVSjVF0K9pZkk
-         M/oghv0bs48g7pHRF1czjSowPm9mhKnPNjFmkrPVvHGuHD6SMZykgiyvnpewOvDcA/mV
-         eT2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C6Lr+L/LblDc+yJNt4wnXXxJYLKQypjal3HX7Zk/JBs=;
-        b=auibF2rcZbzCNzFGnw+LeLccaNCvTpP9AQkVmqkt9GfZzq8O3ldOu4UojMPSYO/NPb
-         zjUe3wJKfXfR0yVRIORSA+b766SMV8SjHVpBcoQa+rsY/9PFKTG3ZPnfO9n6OQDbcjBb
-         lXV79liONfXyPzPvvriO37tKIC6/D/9KjJ6esgHSF+u7sTPgt2BZtq01q/5dIrtIrzOA
-         cHSHa5T/6Nq1Ki6qDfleexD06xQdY3uaP0ehnH025y1X1EHOd0+JG0DKxdDE2DVOC7CM
-         QAMxqHzQwJscwKIUad5FVyFsgL6jreL8TWoiEUQ2axEjcMOodYHfLIfglcqeNVtmXrtY
-         rnrg==
-X-Gm-Message-State: AFqh2kop4kEdLTpdsBd6ns2Mhano3wSG4GGvnCLjhieA6K0UBoBAaD4Q
-	f/QN5nmYtOeCm4pWsvfBQG3Uc7R9JR5TmULDsrKaSg==
-X-Google-Smtp-Source: AMrXdXtVG2JMg8EoGuXDL5LQN7a3JNnSQdhfCX0+6p234rz4v8CaD7VeNzcirdl6I82sSO6ix0hQ+qTpmi9ko3osxlU=
-X-Received: by 2002:ab0:3102:0:b0:5a4:c264:fb05 with SMTP id
- e2-20020ab03102000000b005a4c264fb05mr5531047ual.22.1673628089580; Fri, 13 Jan
- 2023 08:41:29 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC716AD4A
+	for <regressions@lists.linux.dev>; Fri, 13 Jan 2023 17:29:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35C65C433EF;
+	Fri, 13 Jan 2023 17:29:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1673630962;
+	bh=wHTzxLTSWIWcmvmjm8HxsOOrxP/zpZaqZsO3pYaP3PQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RfMMpuLL52GwyfuIE4Byu78vWrHe+aDNzSfAQpkJk1YS92uABw45T0K+vhzy7zAoC
+	 kVU20RfTNSxjkom8K97OOcrzd6kzJnTZABZn5wpzgcTbt2AItUZDdvfPp5zC68WQSt
+	 tX+BHKQsBWwwaWNE3HJxYUo7sEmasjzZpSziEQ7eXBwdQjVILVTbOcQA10DlG75H9Z
+	 Sr9wdrAPF/WkxKAsvzNa3T2JXGGhPmSnlaRntkcc3wjAlE0GzyJHdDISaLxjVJf/VH
+	 lBzgG3e3BXnwP0mlEXQCIqzhGzpogYDxRvRL1pclxHXz+YBvlRwmI1eDZpoXOoC0iZ
+	 MYNthL8mvfjuQ==
+Date: Fri, 13 Jan 2023 17:29:16 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	Linux-Next Mailing List <linux-next@vger.kernel.org>,
+	lkft-triage@lists.linaro.org, regressions@lists.linux.dev,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: next: BUG: kernel NULL pointer dereference, address:
+ 0000000000000008 - RIP: 0010:do_wp_page
+Message-ID: <Y8GU7Pqq/z0wxwgs@sirena.org.uk>
+References: <CA+G9fYt_b04YNCCv-iTZTtwb5fmNEQ0abiO46qW_-SrA1GQX8w@mail.gmail.com>
+ <Y8Fkjxsq5EOtGiql@casper.infradead.org>
+ <CA+G9fYuahjaNs6ia1UOeF98hUhonAt0Z4YOFGcqOKt3J4tRvTw@mail.gmail.com>
+ <Y8F+iKuJWAFsUg2m@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYt_b04YNCCv-iTZTtwb5fmNEQ0abiO46qW_-SrA1GQX8w@mail.gmail.com>
- <Y8Fkjxsq5EOtGiql@casper.infradead.org> <CA+G9fYuahjaNs6ia1UOeF98hUhonAt0Z4YOFGcqOKt3J4tRvTw@mail.gmail.com>
- <Y8F+iKuJWAFsUg2m@casper.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TMhMJ435BNU2n88d"
+Content-Disposition: inline
 In-Reply-To: <Y8F+iKuJWAFsUg2m@casper.infradead.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Fri, 13 Jan 2023 22:11:18 +0530
-Message-ID: <CA+G9fYsNyEttKsfMu5G+ZWA74HRp77ZOanom35ooFOpvVUgNbg@mail.gmail.com>
-Subject: Re: next: BUG: kernel NULL pointer dereference, address:
- 0000000000000008 - RIP: 0010:do_wp_page
-To: Matthew Wilcox <willy@infradead.org>
-Cc: open list <linux-kernel@vger.kernel.org>, 
-	Linux-Next Mailing List <linux-next@vger.kernel.org>, lkft-triage@lists.linaro.org, 
-	regressions@lists.linux.dev, Kefeng Wang <wangkefeng.wang@huawei.com>, 
-	Mark Brown <broonie@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Cookie: I know how to do SPECIAL EFFECTS!!
 
-On Fri, 13 Jan 2023 at 21:23, Matthew Wilcox <willy@infradead.org> wrote:
->
+
+--TMhMJ435BNU2n88d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Jan 13, 2023 at 03:53:44PM +0000, Matthew Wilcox wrote:
 > On Fri, Jan 13, 2023 at 09:14:15PM +0530, Naresh Kamboju wrote:
-> > Hi Matthew,
-> >
-> > On Fri, 13 Jan 2023 at 19:32, Matthew Wilcox <willy@infradead.org> wrote:
-> > >
-> > > On Fri, Jan 13, 2023 at 06:53:01PM +0530, Naresh Kamboju wrote:
-> > > > Linux next tag 20230113 boot failed on x86_64, arm64, arm and i386.
-> > >
-> > > Why are you still not running these stack dumps through
-> > > scripts/decode_stacktrace.sh ?  That seems like it's much easier for you
-> > > to do than expecting everybody who might be interested in investigating
-> > > your reports to pull down enough of the build artifacts to make it work.
-> >
-> > Hope this will help you.
-> >
-> > # ./scripts/decode_stacktrace.sh vmlinux  < input.txt > output.txt
-> >
-> > stack dumps:
-> > ------------------
-> > [   15.945626] BUG: kernel NULL pointer dereference, address: 0000000000000008
-> > [   15.952588] #PF: supervisor read access in kernel mode
-> > [   15.957720] #PF: error_code(0x0000) - not-present page
-> > [   15.962850] PGD 8000000103213067 P4D 8000000103213067 PUD 103212067 PMD 0
-> > [   15.969724] Oops: 0000 [#1] PREEMPT SMP PTI
-> > [   15.973909] CPU: 3 PID: 1 Comm: init Not tainted 6.2.0-rc3-next-20230113 #1
+
 > > [   15.980869] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
 > > 2.0b 07/27/2017
 > > [   15.988336] RIP: 0010:do_wp_page (memory.c:?)
->
-> Uh, are you compiling your kernels without debuginfo?
 
-We have a large set of build combinations with and without debug info.
-
-> The results
+> Uh, are you compiling your kernels without debuginfo?  The results
 > from syzbot & 0day are much more useful:
->
+
 > https://lore.kernel.org/linux-mm/Y8FnAwWOxLrfoWTN@casper.infradead.org/T/#u
->
+
 > for an example.
->
-> > [   16.087446] Call Trace:
-> > [   16.089893]  <TASK>
-> > [   16.091991] ? trace_preempt_off (??:?)
-> > [   16.096087] ? __handle_mm_fault (memory.c:?)
-> > [   16.100439] __handle_mm_fault (memory.c:?)
-> > [   16.104617] handle_mm_fault (??:?)
-> > [   16.108457] do_user_addr_fault (fault.c:?)
-> > [   16.112642] exc_page_fault (??:?)
-> > [   16.116394] asm_exc_page_fault (??:?)
-> > [   16.120408] RIP: 0033:0x7fe169dbf31e
->
-> > Call Trace:
-> >  <TASK>
-> >  wp_page_copy mm/memory.c:3047 [inline]
-> >  do_wp_page+0x749/0x3880 mm/memory.c:3425
-> >  handle_pte_fault mm/memory.c:4937 [inline]
-> >  __handle_mm_fault+0x2183/0x3eb0 mm/memory.c:5061
-> >  handle_mm_fault+0x1b6/0x850 mm/memory.c:5207
-> >  do_user_addr_fault+0x475/0x1210 arch/x86/mm/fault.c:1407
-> >  handle_page_fault arch/x86/mm/fault.c:1498 [inline]
-> >  exc_page_fault+0x98/0x170 arch/x86/mm/fault.c:1554
-> >  asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:570
-> > RIP: 0033:0x7f92c0e2df98
->
-> See how much more useful that is?
 
-From next time I will send regression email reports with decode_stacktrace.sh
+This will be a consequence of x86 not including DEBUG_INFO in defconfig
+- a lot of the testing systems cover unmodified upstream configs as a
+baseline, it tends to make life easier and be an indication of what
+people want covering.  A quick survey says most architectures are
+setting at least DEBUG_INFO_REDUCED, it'd probably be a good idea for
+x86 to do so as well.  The logs from arm64 and probably also arm
+(depending on exactly which config was being covered)  should be more
+usefully decodable, Naresh you mentioned that those were also failing?
 
-For example:
-Here is the decode stack trace from arm64 with filename and line number,
+--TMhMJ435BNU2n88d
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[    0.288009] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000008
-[    0.288618] Mem abort info:
-[    0.288812]   ESR = 0x0000000096000006
-[    0.289069]   EC = 0x25: DABT (current EL), IL = 32 bits
-[    0.289427]   SET = 0, FnV = 0
-[    0.289634]   EA = 0, S1PTW = 0
-[    0.289851]   FSC = 0x06: level 2 translation fault
-[    0.290181] Data abort info:
-[    0.290382]   ISV = 0, ISS = 0x00000006
-[    0.290640]   CM = 0, WnR = 0
-[    0.290846] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000100931000
-[    0.291273] [0000000000000008] pgd=0800000101910003,
-p4d=0800000101910003, pud=0800000101911003, pmd=0000000000000000
-[    0.292007] Internal error: Oops: 0000000096000006 [#1] PREEMPT SMP
-[    0.292428] Modules linked in:
-[    0.292639] CPU: 1 PID: 1 Comm: init Not tainted 6.2.0-rc3-next-20230113 #1
-[    0.293100] Hardware name: linux,dummy-virt (DT)
-[    0.293409] pstate: 40400005 (nZcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    0.293874] pc : _compound_head (include/linux/page-flags.h:251)
-[    0.294186] lr : do_wp_page (include/linux/rmap.h:156
-mm/memory.c:3057 mm/memory.c:3425)
-[    0.294443] sp : ffff80000803bbf0
-[    0.294669] x29: ffff80000803bbf0 x28: ffff0000c02d0000 x27: 0000000000000a55
-[    0.295140] x26: ffff0000c0980000 x25: ffff0000c0980000 x24: 0000000000000000
-[    0.295621] x23: 0000000000000a55 x22: ffff0000c0932c60 x21: ffff0000c0932c60
-[    0.296122] x20: 0000000000000000 x19: ffff80000803bd18 x18: 0000000000000000
-[    0.296620] x17: 0000000000000000 x16: 0000000000000000 x15: ffff0000c1938400
-[    0.297121] x14: ffff0000c0980000 x13: ffffdec19c918600 x12: 0000ffff86e83fff
-[    0.297621] x11: 0000ffff86c86000 x10: 1fffe00018327081 x9 : ffffdec19c3ec4e8
-[    0.298124] x8 : ffff80000803bb38 x7 : 0000000000000000 x6 : 0000000000000001
-[    0.298624] x5 : ffffdec19dbbf000 x4 : ffffdec19dbbf2e8 x3 : 0000000000000000
-[    0.299125] x2 : ffff0000c02d0000 x1 : ffff0000c02d0000 x0 : 0000000000000000
-[    0.299627] Call trace:
-[    0.299804] _compound_head (include/linux/page-flags.h:251)
-[    0.300059] __handle_mm_fault (mm/memory.c:4937 mm/memory.c:5061)
-[    0.300359] handle_mm_fault (mm/memory.c:5207)
-[    0.300640] do_page_fault (arch/arm64/mm/fault.c:512
-arch/arm64/mm/fault.c:612)
-[    0.300909] do_mem_abort (arch/arm64/mm/fault.c:831)
-[    0.301161] el0_da (arch/arm64/include/asm/daifflags.h:28
-arch/arm64/kernel/entry-common.c:133
-arch/arm64/kernel/entry-common.c:142
-arch/arm64/kernel/entry-common.c:516)
-[    0.301379] el0t_64_sync_handler (arch/arm64/kernel/entry-common.c:659)
-[    0.301684] el0t_64_sync (arch/arm64/kernel/entry.S:584)
-[ 0.301952] Code: d65f03c0 d4210000 d503201f d503201f (f9400401)
-All code
-========
-   0:* c0 03 5f              rolb   $0x5f,(%rbx) <-- trapping instruction
-   3: d6                    (bad)
-   4: 00 00                add    %al,(%rax)
-   6: 21 d4                and    %edx,%esp
-   8: 1f                    (bad)
-   9: 20 03                and    %al,(%rbx)
-   b: d5                    (bad)
-   c: 1f                    (bad)
-   d: 20 03                and    %al,(%rbx)
-   f: d5                    (bad)
-  10: 01 04 40              add    %eax,(%rax,%rax,2)
-  13: f9                    stc
+-----BEGIN PGP SIGNATURE-----
 
-Code starting with the faulting instruction
-===========================================
-   0: 01 04 40              add    %eax,(%rax,%rax,2)
-   3: f9                    stc
-[    0.302379] ---[ end trace 0000000000000000 ]---
-[    0.302718] Kernel panic - not syncing: Attempted to kill init!
-exitcode=0x0000000b
+iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmPBlOwACgkQJNaLcl1U
+h9DLYgf3YlPfc1pcH0HO6HljwMCx4N5dyA5iHuN02tOpucDFEofh4Ca72a+QwHbV
+w6c7eGAk+WTO+HaPHSpSRxgvT67Xnk/8s4r5xnTAXvb3CC0cUcPob3zBa8aNH2ms
+ZbQm4dd6fva7sVJFzD1NhlTd/lOeyWIK0bZ+rWtHb2uEmbroBtyyJMYOy9KBCA5i
+0vC3rXkfGeyk2bab8Io9sAx4BJbg4cSdeSX3Fg3xXgspTpuz8xr9/UKKESkZ85yB
+C/Kr98r0EmRg+5BIVdtdesDUE1+5PkpXi5mp6zCOUVe0OhebQ6Wy8rHsVqE+sddM
+zMRKyHRObgl5CJISgH0PDTJUhKtQ
+=9Dfl
+-----END PGP SIGNATURE-----
 
-Thank you.
-
-Best regards
-Naresh Kamboju
+--TMhMJ435BNU2n88d--
