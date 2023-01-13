@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A38F6ADE
-	for <regressions@lists.linux.dev>; Fri, 13 Jan 2023 13:07:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FAD979CE
+	for <regressions@lists.linux.dev>; Fri, 13 Jan 2023 13:19:10 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pGJm0-000111-I3; Fri, 13 Jan 2023 14:07:08 +0100
-Message-ID: <43b15899-c976-fa45-aae8-1f381dc4150a@leemhuis.info>
-Date: Fri, 13 Jan 2023 14:07:08 +0100
+	id 1pGJxb-0005Fy-Kp; Fri, 13 Jan 2023 14:19:07 +0100
+Message-ID: <481f19ba-da7e-6900-0bb2-64ba92d59ce6@leemhuis.info>
+Date: Fri, 13 Jan 2023 14:19:06 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,38 +16,127 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: =?UTF-8?Q?Re=3a_Bug=c2=a0216839_-_Connecting_a_MT76_device_causes_c?=
- =?UTF-8?Q?omputer_to_hang_since_linux_6=2e1?=
+Subject: Re: [REGRESSION] GM20B probe fails after commit 2541626cfb79
 Content-Language: en-US, de-DE
-From: "Linux kernel regression tracking (#update)" <regressions@leemhuis.info>
-To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <e85d24d1-0ac5-f580-bb89-907ee77e65ea@leemhuis.info>
+From: "Linux kernel regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: bskeggs@redhat.com, Karol Herbst <kherbst@redhat.com>,
+ Lyude Paul <lyude@redhat.com>
+Cc: regressions@lists.linux.dev, dri-devel@lists.freedesktop.org,
+ nouveau@lists.freedesktop.org, airlied@redhat.com,
+ Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>, Daniel Vetter <daniel@ffwll.ch>
+References: <20221228144914.z7t7a4fdwvbblnak@wslaptop>
+ <c32ea02c-d706-ea2f-aa13-660b8db958ef@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <e85d24d1-0ac5-f580-bb89-907ee77e65ea@leemhuis.info>
+In-Reply-To: <c32ea02c-d706-ea2f-aa13-660b8db958ef@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673615236;171ac948;
-X-HE-SMSGID: 1pGJm0-000111-I3
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673615950;3633a95f;
+X-HE-SMSGID: 1pGJxb-0005Fy-Kp
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
+[CCing Daniel]
 
-On 26.12.22 13:46, Thorsten Leemhuis wrote:
+On 05.01.23 13:28, Thorsten Leemhuis wrote:
+> [adding Karol and Lyude to the list of recipients]
 > 
-> I noticed a regression reported in bugzilla.kernel.org that seems to be
-> handled there already, nevertheless I'd like to add to the tracking to
-> ensure it's doesn't fall through the cracks in the end:
-> 
-> #regzbot ^introduced v6.0..v6.1
-> https://bugzilla.kernel.org/show_bug.cgi?id=216839
-> #regzbot title hang with mediatek MT76 device during boot
-> #regzbot ignore-activity
+> On 28.12.22 15:49, Diogo Ivo wrote:
+>> Hello,
+>>
+>> Commit 2541626cfb79 breaks GM20B probe with
+>> the following kernel log:
+> Just wondering: is anyone looking on this? The report was posted more
+> than a week ago and didn't even get a single reply yet afaics. This of
+> course can happen at this time of the year, but I nevertheless thought a
+> quick status inquiry might be a good idea at this point.
 
-#regzbot fix: wifi: mac80211: fix initialization of rx->link and
-rx->link_sta
+Hmmm, the report is now more that two weeks old and didn't get a single
+reply. My prodding about a week ago also didn't help. Then I guess I
+have to bring this to Linus attention, unless something happens in the
+next 2 days.
+
+Diogo, for that it would be really helpful to known: is the issue still
+happening with latest mainline? Is it possible to revert 2541626cfb79
+easily? And if so: do things work afterwards again?
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+>> [    2.153892] ------------[ cut here ]------------
+>> [    2.153897] WARNING: CPU: 1 PID: 36 at drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgf100.c:273 gf100_vmm_valid+0x2c4/0x390
+>> [    2.153916] Modules linked in:
+>> [    2.153922] CPU: 1 PID: 36 Comm: kworker/u8:1 Not tainted 6.1.0+ #1
+>> [    2.153929] Hardware name: Google Pixel C (DT)
+>> [    2.153933] Workqueue: events_unbound deferred_probe_work_func
+>> [    2.153943] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>> [    2.153950] pc : gf100_vmm_valid+0x2c4/0x390
+>> [    2.153959] lr : gf100_vmm_valid+0xb4/0x390
+>> [    2.153966] sp : ffffffc009e134b0
+>> [    2.153969] x29: ffffffc009e134b0 x28: 0000000000000000 x27: ffffffc008fd44c8
+>> [    2.153979] x26: 00000000ffffffea x25: ffffffc0087b98d0 x24: ffffff8080f89038
+>> [    2.153987] x23: ffffff8081fadc08 x22: 0000000000000000 x21: 0000000000000000
+>> [    2.153995] x20: ffffff8080f8a000 x19: ffffffc009e13678 x18: 0000000000000000
+>> [    2.154003] x17: f37a8b93418958e6 x16: ffffffc009f0d000 x15: 0000000000000000
+>> [    2.154011] x14: 0000000000000002 x13: 000000000003a020 x12: ffffffc008000000
+>> [    2.154019] x11: 0000000102913000 x10: 0000000000000000 x9 : 0000000000000000
+>> [    2.154026] x8 : ffffffc009e136d8 x7 : ffffffc008fd44c8 x6 : ffffff80803d0f00
+>> [    2.154034] x5 : 0000000000000000 x4 : ffffff8080f88c00 x3 : 0000000000000010
+>> [    2.154041] x2 : 000000000000000c x1 : 00000000ffffffea x0 : 00000000ffffffea
+>> [    2.154050] Call trace:
+>> [    2.154053]  gf100_vmm_valid+0x2c4/0x390
+>> [    2.154061]  nvkm_vmm_map_valid+0xd4/0x204
+>> [    2.154069]  nvkm_vmm_map_locked+0xa4/0x344
+>> [    2.154076]  nvkm_vmm_map+0x50/0x84
+>> [    2.154083]  nvkm_firmware_mem_map+0x84/0xc4
+>> [    2.154094]  nvkm_falcon_fw_oneinit+0xc8/0x320
+>> [    2.154101]  nvkm_acr_oneinit+0x428/0x5b0
+>> [    2.154109]  nvkm_subdev_oneinit_+0x50/0x104
+>> [    2.154114]  nvkm_subdev_init_+0x3c/0x12c
+>> [    2.154119]  nvkm_subdev_init+0x60/0xa0
+>> [    2.154125]  nvkm_device_init+0x14c/0x2a0
+>> [    2.154133]  nvkm_udevice_init+0x60/0x9c
+>> [    2.154140]  nvkm_object_init+0x48/0x1b0
+>> [    2.154144]  nvkm_ioctl_new+0x168/0x254
+>> [    2.154149]  nvkm_ioctl+0xd0/0x220
+>> [    2.154153]  nvkm_client_ioctl+0x10/0x1c
+>> [    2.154162]  nvif_object_ctor+0xf4/0x22c
+>> [    2.154168]  nvif_device_ctor+0x28/0x70
+>> [    2.154174]  nouveau_cli_init+0x150/0x590
+>> [    2.154180]  nouveau_drm_device_init+0x60/0x2a0
+>> [    2.154187]  nouveau_platform_device_create+0x90/0xd0
+>> [    2.154193]  nouveau_platform_probe+0x3c/0x9c
+>> [    2.154200]  platform_probe+0x68/0xc0
+>> [    2.154207]  really_probe+0xbc/0x2dc
+>> [    2.154211]  __driver_probe_device+0x78/0xe0
+>> [    2.154216]  driver_probe_device+0xd8/0x160
+>> [    2.154221]  __device_attach_driver+0xb8/0x134
+>> [    2.154226]  bus_for_each_drv+0x78/0xd0
+>> [    2.154230]  __device_attach+0x9c/0x1a0
+>> [    2.154234]  device_initial_probe+0x14/0x20
+>> [    2.154239]  bus_probe_device+0x98/0xa0
+>> [    2.154243]  deferred_probe_work_func+0x88/0xc0
+>> [    2.154247]  process_one_work+0x204/0x40c
+>> [    2.154256]  worker_thread+0x230/0x450
+>> [    2.154261]  kthread+0xc8/0xcc
+>> [    2.154266]  ret_from_fork+0x10/0x20
+>> [    2.154273] ---[ end trace 0000000000000000 ]---
+>> [    2.154278] nouveau 57000000.gpu: pmu: map -22
+>> [    2.154285] nouveau 57000000.gpu: acr: one-time init failed, -22
+>> [    2.154559] nouveau 57000000.gpu: init failed with -22
+>> [    2.154564] nouveau: DRM-master:00000000:00000080: init failed with -22
+>> [    2.154574] nouveau 57000000.gpu: DRM-master: Device allocation failed: -22
+>> [    2.162905] nouveau: probe of 57000000.gpu failed with error -22
+>>
+>> #regzbot introduced: 2541626cfb79
+>>
+>> Thanks,
+>>
+>> Diogo Ivo
+>>
+>>
+> 
+> #regzbot poke
