@@ -1,119 +1,256 @@
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97B7479CE
-	for <regressions@lists.linux.dev>; Fri, 13 Jan 2023 13:38:59 +0000 (UTC)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4Ntj4p4vgFz9sRG;
-	Fri, 13 Jan 2023 14:31:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1673616714;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=V7Nld5EJfMpaert1YqgOWHv//qfUsulktx6QLNZ9ITo=;
-	b=vD5fQKO50ymFVCHDMY0JuS+s3tV11whrhMV5VIma6gOfzcARJHfBfEOuCWuFLbfOHvKTn8
-	kLuW1c3SU8+yH6Fn4pFQAPd/OKAAXwIMW2zrGY4vr02nT7mhdyp8UtMFq2PZlB+JkdwpFg
-	jrRHKokABOC9/gOF78k84rIUzN1ygmhPgkQGjObsujRzITHr+FbLhrplUH2F8fHmO9SD3w
-	wfNptALv07cCbkmxvztvvXXZ/cvtZzvFZpSlRYpf5mKIFfPyZzYJj13JFKS1PTEXntK/aX
-	FK/wBbiagVWXXpQ72TePgwNrjygS4MSi1N4IORAc6Y5hIG7CxURxOZfLf2uUJw==
-Subject: Re: Kernel v6.0.18: Resume from hibernate fails, system hangs;
- bisected
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>
-References: <2d59ed2b-ba8f-6695-9764-fd3b109acd4c@mailbox.org>
- <21fdd6fe-c8f8-2ab6-fb73-3a2883cb1679@leemhuis.info>
-From: Rainer Fiebig <jrf@mailbox.org>
-Autocrypt: addr=jrf@mailbox.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <c0530440-9252-2704-9107-aa14afe2b4c9@mailbox.org>
-Date: Fri, 13 Jan 2023 14:30:31 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ADFC79CE
+	for <regressions@lists.linux.dev>; Fri, 13 Jan 2023 13:44:40 +0000 (UTC)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailout.nyi.internal (Postfix) with ESMTP id 400CD5C00DB;
+	Fri, 13 Jan 2023 08:44:39 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Fri, 13 Jan 2023 08:44:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	invisiblethingslab.com; h=cc:cc:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:sender:subject:subject:to:to; s=fm2; t=1673617479; x=
+	1673703879; bh=0Z133yuNnDBtJv8nz69dJpUcuCn5DG8cpUPCJWQzx8A=; b=z
+	l4553zvD8JYgHFG3wMoYiQQ2JhzeU1uWwpxFdQjm3MCuSGKGkCw1kLXfYU2b9m4a
+	1i81lTazVLPSqKhGyogcWIhBXZ33mrIjV4yd4GJyIVcByGlqqVOJ1sgBuciNA5gP
+	uYM7iauI9KzNJFSaJW9hpVmKk5f0yy4ICNompnsm4np+B80gYh3ydo1EDJjzkI4V
+	JhnP1DjKYWWtkd3mzgxAl7jLzggIJCxMY0dHVpD4pIzqTS54wTJz1qSX43vfJezQ
+	a4d+RH0IXGzmJ9x6a9fVvd0PxkTX0hdLK/q/xCpeiB1Pq42jFSgvewrJ9jQOmoOS
+	J45dPikxQTPjJvBt6uGiQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:mime-version:references:reply-to:sender:subject:subject:to:to
+	:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1673617479; x=1673703879; bh=0Z133yuNnDBtJv8nz69dJpUcuCn5
+	DG8cpUPCJWQzx8A=; b=m4F9K0EXrmeN2vQtWb1amWESEdiE60I8XU7vN0KpEfJT
+	25nElse4vJ0Kk6abAP99IPqrLocNSDkxKpv0T7KzC3iw3frus1uylV6b2AVwZUPj
+	BrWVL2xsMH6fCkD6nUk4w4eqFxiRExGaPPVXxX4elbNbiX6wrBQ/HiGQnZ1XY4tp
+	3FztOBSg8oJElwwOlKXQRIdGht1aDBpypVnH7gRQu+KZOcE4zCNoa2VxiXGI+LD1
+	Q4viKCiz4r8yhlSmIVuirDJ5hE2E3VKisQK+o4RXNQBPD5ATwBg4KoSdUl/9c/v6
+	xg2KITBJ7myEeghEi4lnQMnzNbqJ0S/hRFZmjwg8nQ==
+X-ME-Sender: <xms:R2DBY0I3h9yXTkJlUI97v08oYK-PTd7ODCjB2iGoSc-PnTXbOajZGw>
+    <xme:R2DBY0LvBdb1RV0NLWgtYIfn4OPai_408fi2hqTEYS9i0AMfdIV6tbc8FwYf4W86B
+    -kEL4ohx-3hzg>
+X-ME-Received: <xmr:R2DBY0uDtDlzg7dFypURUO7VGgCNIkiVConBzwFc1NN_2NYhkDwymKN7GGTiubcnHprfYoI16R2_4R7e6QJbHMpGJwQIeOmqrA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrleekgdehvdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvvefukfhfgggtuggjsehgtderredttdejnecuhfhrohhmpeforghrvghk
+    ucforghrtgiihihkohifshhkihdqifpkrhgvtghkihcuoehmrghrmhgrrhgvkhesihhnvh
+    hishhisghlvghthhhinhhgshhlrggsrdgtohhmqeenucggtffrrghtthgvrhhnpeduteev
+    leevffdvteeludeljeeiieeufffhgfdvfeekudeihfehteehkeekfeffieenucffohhmrg
+    hinhepmhgrihhlqdgrrhgthhhivhgvrdgtohhmnecuvehluhhsthgvrhfuihiivgeptden
+    ucfrrghrrghmpehmrghilhhfrhhomhepmhgrrhhmrghrvghksehinhhvihhsihgslhgvth
+    hhihhnghhslhgrsgdrtghomh
+X-ME-Proxy: <xmx:R2DBYxa12BeO9P5CAMlPB2YE70IVMP1oq-Ok-lTtTtd-y3ZtfyfEAQ>
+    <xmx:R2DBY7aighrGYPTUQ3esH7nA8ozd6PmzRb-UddaFmhwN30rhm0eLdQ>
+    <xmx:R2DBY9BnffzYOF5S5KrV8P8n7r19FtsCfflo9hUjbRYMBo5hVSrpDw>
+    <xmx:R2DBY8Ce9ESwC2p7_P9AcGdnECsqObGzd9V5dfYgTnVVrWwS-YgOuw>
+Feedback-ID: i1568416f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 13 Jan 2023 08:44:38 -0500 (EST)
+Date: Fri, 13 Jan 2023 14:44:33 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Juergen Gross <jgross@suse.com>
+Cc: xen-devel <xen-devel@lists.xenproject.org>, regressions@lists.linux.dev
+Subject: Re: S3 under Xen regression between 6.1.1 and 6.1.3
+Message-ID: <Y8FgQyVvpUXqumvS@mail-itl>
+References: <Y8DIodWQGm99RA+E@mail-itl>
+ <bdea54df-59dc-3d4d-dd0c-8c45403dea24@suse.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <21fdd6fe-c8f8-2ab6-fb73-3a2883cb1679@leemhuis.info>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: rh6ismk5wyea7a4ki3ukn9m3n6hzxyoj
-X-MBO-RS-ID: 82ddac08892d7a91968
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="a1z64RtYn87d7j8p"
+Content-Disposition: inline
+In-Reply-To: <bdea54df-59dc-3d4d-dd0c-8c45403dea24@suse.com>
 
-Am 13.01.23 um 10:20 schrieb Linux kernel regression tracking (Thorsten
-Leemhuis):
-> [ccing Alex and the regressions list]
-> 
-> Hi, this is your Linux kernel regression tracker.
-> 
-> On 12.01.23 22:03, Rainer Fiebig wrote:
->> Hi! Since kernel 6.0.18
-> 
-> Note, 6.0.y is now EOL, you should move to 6.1.y.
-> 
->> resume from hibernate fails, the system hangs
->> and a hard reset is necessary.  The CPU is a Ryzen 5600G, the system is
->> Linux From Scratch-11.1.
-> 
-> FWIW, there is a report with a problems that looks somewhat similar here:
-> 
-> https://bugzilla.kernel.org/show_bug.cgi?id=216917
-> 
-> But the reporter doesn't care anymore, as 6.1 works.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-Thanks for the info.  6.1.5 works here, too.
 
-I clung to 6.0 as I use VirtualBox-6.1.38 and according to the changelog
-it doesn't support linux-6.1.  VirtualBox-7.0.x supports linux-6.1 but
-doesn't start on my system - and I couldn't yet figure out why.
+--a1z64RtYn87d7j8p
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 13 Jan 2023 14:44:33 +0100
+From: Marek =?utf-8?Q?Marczykowski-G=C3=B3recki?= <marmarek@invisiblethingslab.com>
+To: Juergen Gross <jgross@suse.com>
+Cc: xen-devel <xen-devel@lists.xenproject.org>, regressions@lists.linux.dev
+Subject: Re: S3 under Xen regression between 6.1.1 and 6.1.3
 
-But although the changelog for Virtual-Box 6.1.38 says otherwise, it
-*does* support kernel 6.1 which was a nice surprise on Friday 13th. ;)
+On Fri, Jan 13, 2023 at 09:08:35AM +0100, Juergen Gross wrote:
+> On 13.01.23 03:57, Marek Marczykowski-G=C3=B3recki wrote:
+> > Hi,
+> >=20
+> > 6.1.3 as PV dom0 crashes when attempting to suspend. 6.1.1 works. The
+> > crash:
+> >=20
+> >      [  348.284004] PM: suspend entry (deep)
+> >      [  348.289532] Filesystems sync: 0.005 seconds
+> >      [  348.291545] Freezing user space processes ... (elapsed 0.000 se=
+conds) done.
+> >      [  348.292457] OOM killer disabled.
+> >      [  348.292462] Freezing remaining freezable tasks ... (elapsed 0.1=
+04 seconds) done.
+> >      [  348.396612] printk: Suspending console(s) (use no_console_suspe=
+nd to debug)
+> >      [  348.749228] PM: suspend devices took 0.352 seconds
+> >      [  348.769713] ACPI: EC: interrupt blocked
+> >      [  348.816077] BUG: kernel NULL pointer dereference, address: 0000=
+00000000001c
+> >      [  348.816080] #PF: supervisor read access in kernel mode
+> >      [  348.816081] #PF: error_code(0x0000) - not-present page
+> >      [  348.816083] PGD 0 P4D 0
+> >      [  348.816086] Oops: 0000 [#1] PREEMPT SMP NOPTI
+> >      [  348.816089] CPU: 0 PID: 6764 Comm: systemd-sleep Not tainted 6.=
+1.3-1.fc32.qubes.x86_64 #1
+> >      [  348.816092] Hardware name: Star Labs StarBook/StarBook, BIOS 8.=
+01 07/03/2022
+> >      [  348.816093] RIP: e030:acpi_get_wakeup_address+0xc/0x20
+> >      [  348.816100] Code: 44 00 00 48 8b 05 04 a3 82 02 c3 cc cc cc cc =
+cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 48 8b 05 fc 9d =
+82 02 <8b> 40 1c c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 0f 1f
+> >      [  348.816103] RSP: e02b:ffffc90042537d08 EFLAGS: 00010246
+> >      [  348.816105] RAX: 0000000000000000 RBX: 0000000000000003 RCX: 20=
+c49ba5e353f7cf
+> >      [  348.816106] RDX: 000000000000cd19 RSI: 000000000002ee9a RDI: 00=
+2a051ed42d7694
+> >      [  348.816108] RBP: 0000000000000003 R08: ffffc90042537ca0 R09: ff=
+ffffff82c5e468
+> >      [  348.816110] R10: 0000000000007ff0 R11: 0000000000000000 R12: 00=
+00000000000000
+> >      [  348.816111] R13: fffffffffffffff2 R14: ffff88812206e6c0 R15: ff=
+ff88812206e6e0
+> >      [  348.816121] FS:  00007cb49b01eb80(0000) GS:ffff888189400000(000=
+0) knlGS:0000000000000000
+> >      [  348.816123] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >      [  348.816124] CR2: 000000000000001c CR3: 000000012231a000 CR4: 00=
+00000000050660
+> >      [  348.816131] Call Trace:
+> >      [  348.816133]  <TASK>
+> >      [  348.816134]  acpi_pm_prepare+0x1a/0x50
+> >      [  348.816141]  suspend_enter+0x94/0x360
+> >      [  348.816146]  suspend_devices_and_enter+0x198/0x2b0
+> >      [  348.816150]  enter_state+0x18d/0x1f5
+> >      [  348.816155]  pm_suspend.cold+0x20/0x6b
+> >      [  348.816159]  state_store+0x27/0x60
+> >      [  348.816163]  kernfs_fop_write_iter+0x125/0x1c0
+> >      [  348.816169]  new_sync_write+0x105/0x190
+> >      [  348.816176]  vfs_write+0x211/0x2a0
+> >      [  348.816180]  ksys_write+0x67/0xe0
+> >      [  348.816183]  do_syscall_64+0x59/0x90
+> >      [  348.816188]  ? do_syscall_64+0x69/0x90
+> >      [  348.816192]  ? exc_page_fault+0x76/0x170
+> >      [  348.816195]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+> >      [  348.816200] RIP: 0033:0x7cb49c1412f7
+> >      [  348.816203] Code: 0d 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb =
+b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 =
+0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+> >      [  348.816204] RSP: 002b:00007ffc125f63f8 EFLAGS: 00000246 ORIG_RA=
+X: 0000000000000001
+> >      [  348.816206] RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00=
+007cb49c1412f7
+> >      [  348.816208] RDX: 0000000000000004 RSI: 00007ffc125f64e0 RDI: 00=
+00000000000004
+> >      [  348.816209] RBP: 00007ffc125f64e0 R08: 00005c83d772bca0 R09: 00=
+0000000000000d
+> >      [  348.816210] R10: 00005c83d7727eb0 R11: 0000000000000246 R12: 00=
+00000000000004
+> >      [  348.816211] R13: 00005c83d77272d0 R14: 0000000000000004 R15: 00=
+007cb49c213700
+> >      [  348.816213]  </TASK>
+> >      [  348.816214] Modules linked in: loop vfat fat snd_hda_codec_hdmi=
+ snd_sof_pci_intel_tgl snd_sof_intel_hda_common soundwire_intel soundwire_g=
+eneric_allocation soundwire_cadence snd_sof_intel_hda snd_sof_pci snd_sof_x=
+tensa_dsp snd_sof snd_sof_utils snd_soc_hdac_hda snd_hda_ext_core snd_soc_a=
+cpi_intel_match snd_soc_acpi soundwire_bus snd_hda_codec_realtek snd_hda_co=
+dec_generic ledtrig_audio snd_soc_core snd_compress ac97_bus snd_pcm_dmaeng=
+ine snd_hda_intel snd_intel_dspcfg snd_intel_sdw_acpi iTCO_wdt intel_pmc_bx=
+t ee1004 iTCO_vendor_support intel_rapl_msr snd_hda_codec snd_hda_core snd_=
+hwdep snd_seq snd_seq_device iwlwifi snd_pcm pcspkr joydev processor_therma=
+l_device_pci_legacy processor_thermal_device snd_timer snd cfg80211 process=
+or_thermal_rfim i2c_i801 processor_thermal_mbox i2c_smbus idma64 rfkill pro=
+cessor_thermal_rapl soundcore intel_rapl_common int340x_thermal_zone intel_=
+soc_dts_iosf igen6_edac intel_hid intel_pmc_core intel_scu_pltdrv sparse_ke=
+ymap fuse xenfs ip_tables dm_thin_pool
+> >      ic#2 Part1
+> >      [  348.816259]  dm_persistent_data dm_bio_prison dm_crypt i915 crc=
+t10dif_pclmul crc32_pclmul crc32c_intel polyval_clmulni polyval_generic drm=
+_buddy nvme video wmi drm_display_helper nvme_core xhci_pci xhci_pci_renesa=
+s ghash_clmulni_intel hid_multitouch sha512_ssse3 serio_raw nvme_common cec=
+ xhci_hcd ttm i2c_hid_acpi i2c_hid pinctrl_tigerlake xen_acpi_processor xen=
+_privcmd xen_pciback xen_blkback xen_gntalloc xen_gntdev xen_evtchn uinput
+> >      [  348.816281] CR2: 000000000000001c
+> >      [  348.816283] ---[ end trace 0000000000000000 ]---
+> >      [  348.867991] RIP: e030:acpi_get_wakeup_address+0xc/0x20
+> >      [  348.867996] Code: 44 00 00 48 8b 05 04 a3 82 02 c3 cc cc cc cc =
+cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 48 8b 05 fc 9d =
+82 02 <8b> 40 1c c3 cc cc cc cc 66 66 2e 0f 1f 84 00 00 00 00 00 90 0f 1f
+> >      [  348.867998] RSP: e02b:ffffc90042537d08 EFLAGS: 00010246
+> >      [  348.867999] RAX: 0000000000000000 RBX: 0000000000000003 RCX: 20=
+c49ba5e353f7cf
+> >      [  348.868000] RDX: 000000000000cd19 RSI: 000000000002ee9a RDI: 00=
+2a051ed42d7694
+> >      [  348.868001] RBP: 0000000000000003 R08: ffffc90042537ca0 R09: ff=
+ffffff82c5e468
+> >      [  348.868001] R10: 0000000000007ff0 R11: 0000000000000000 R12: 00=
+00000000000000
+> >      [  348.868002] R13: fffffffffffffff2 R14: ffff88812206e6c0 R15: ff=
+ff88812206e6e0
+> >      [  348.868008] FS:  00007cb49b01eb80(0000) GS:ffff888189400000(000=
+0) knlGS:0000000000000000
+> >      [  348.868009] CS:  e030 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >      [  348.868009] CR2: 000000000000001c CR3: 000000012231a000 CR4: 00=
+00000000050660
+> >      [  348.868014] Kernel panic - not syncing: Fatal exception
+> >      [  348.868031] Kernel Offset: disabled
+> >=20
+> > Looking at git log between those two versions, and the
+> > acpi_get_wakeup_address() function, I suspect it's this change (but I
+> > have _not_ tested it):
+> >=20
+> > commit b1898793777fe10a31c160bb8bc385d6eea640c6
+> > Author: Juergen Gross <jgross@suse.com>
+> > Date:   Wed Nov 23 12:45:23 2022 +0100
+> >=20
+> >      x86/boot: Skip realmode init code when running as Xen PV guest
+> >      [ Upstream commit f1e525009493cbd569e7c8dd7d58157855f8658d ]
+>=20
+> Yes, you are right.
+>=20
+> Could you please test the attached patch? It is for upstream, but I think=
+ it
+> should apply to 6.1.3, too.
 
-Rainer
+Yes, this works (you can take it as my T-by), thanks!
+
+But, unrelated to this bug, it did get message like in https://www.mail-arc=
+hive.com/xen-devel@lists.xenproject.org/msg107609.html
+(WARNING: CPU: 1 PID: 0 at arch/x86/mm/tlb.c:523 switch_mm_irqs_off+0x230/0=
+x4a0)
+
+--=20
+Best Regards,
+Marek Marczykowski-G=C3=B3recki
+Invisible Things Lab
+
+--a1z64RtYn87d7j8p
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhrpukzGPukRmQqkK24/THMrX1ywFAmPBYEMACgkQ24/THMrX
+1yyepAgAgdsyrMMt7iaX4Kyw4pymNgdTRjfqKW6Zceoe/eAINqWrShQhy/d04HBc
+5ilg1AIRDn1+yyUUjxc4aN1LHPy96QGomL/X8cCM7JapbTFS8NlBYW10PQmrgCLf
+ylBbdv9BR9yOJxBA4RDjyGZvl1gTrn5bMPPM9vW3v3UUAiK2AQNwyIdlgSNNIaUK
+pJU7g0aNqPNjpe1S0eZwetfhtDspLk6JOLovCxwLQCy9twkEoPbiGWP5wjuVDSjT
+WJgGLXsg0/N5OgI+0Uj4EfKHYJrLMy3EANL37UeWm7HgvNtTkb4RGQvSKB9Irr4V
+bhAQSwhvXH2IjLvAWXEq8Oll1ocAMQ==
+=7ybj
+-----END PGP SIGNATURE-----
+
+--a1z64RtYn87d7j8p--
