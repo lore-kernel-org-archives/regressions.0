@@ -1,71 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B7279CE
-	for <regressions@lists.linux.dev>; Fri, 13 Jan 2023 14:11:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BCDAC433D2;
-	Fri, 13 Jan 2023 14:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1673619078;
-	bh=/6SY5e2kNWppkEIR3acALAnQslTESItpdK+KN1H9IXg=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=T1gOx8LPBJsOyUYJmRb65xURUnZhWEotYE4Yvx5yXVs74Df+ODWOogKlyWQgJik7C
-	 jhAvPsMHo4dUkwyQhzUNnrMNB9TJBIbsgcoS5oOAUgQYLn3gHzwcl0r828iLCq0062
-	 gemUb4fGGZtmjAiLd5/k5jTwfzmkYQF4/hT4q9IhrOOoeerf6aVZZA0RWK2YHuXA3z
-	 ff/n0K5hh3Hk8e6id/fL85KwPP5+YNnAiA07/CI1XYRIgcFcUpqBoIZ9OfuTS2XLLo
-	 ididtk00E2oWpK1nkKFqU3lHNlE0Z9pV1hhfS7WQt0qDgp3PEdWgL3Bf/KwS3SQ619
-	 MtXPTXnmRDwzg==
-From: Kalle Valo <kvalo@kernel.org>
-To: "Linux kernel regression tracking \(Thorsten Leemhuis\)" <regressions@leemhuis.info>
-Cc: Felix Fietkau <nbd@nbd.name>,  Linux regressions mailing list <regressions@lists.linux.dev>,  Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,  lorenzo@kernel.org,  sujuan.chen@mediatek.com,  Linux List Kernel Mailing <linux-wireless@vger.kernel.org>,  Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,  "David S. Miller" <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,  spasswolf@web.de
-Subject: Re: [6.2][regression] after commit cd372b8c99c5a5cf6a464acebb7e4a79af7ec8ae stopping working wifi mt7921e
-References: <252b1fe4-ccc2-4ea8-1da5-9a60f7378fd6@leemhuis.info>
-	<BD7074C5-20BE-4D70-824B-0994892C995D@nbd.name>
-	<0078a5ff-2bc5-4b14-2735-1641feb46544@leemhuis.info>
-Date: Fri, 13 Jan 2023 16:11:10 +0200
-In-Reply-To: <0078a5ff-2bc5-4b14-2735-1641feb46544@leemhuis.info> (Linux
-	kernel regression tracking's message of "Tue, 10 Jan 2023 09:41:10
-	+0100")
-Message-ID: <87358ecyo1.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85710880C
+	for <regressions@lists.linux.dev>; Fri, 13 Jan 2023 14:20:40 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id CE4B16B5B2;
+	Fri, 13 Jan 2023 14:20:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1673619637; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M55lXHF5YsSdUG/Me3dcSgrQaqLgE3puKEayCSDhibc=;
+	b=KvvrhBhBCxHA+uo+pnzMYt6lyxfpHUn58mvV21jqWKoKcZqS1vDCEjig02RMrXWDwtgD2S
+	v9QBA/inqJt46/e2EXnj3//KuLirBLkxSyWzq3LUra6yOolqYJJp1hz/w/SPSfngXGHCD+
+	NYSLY0hmlIQZbf4rBlTeh37LRv+yjrA=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AEFEA1358A;
+	Fri, 13 Jan 2023 14:20:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id CvoaKbVowWM7FQAAMHmgww
+	(envelope-from <jgross@suse.com>); Fri, 13 Jan 2023 14:20:37 +0000
+Message-ID: <47ae3bbb-6468-4282-1789-72eedaa54814@suse.com>
+Date: Fri, 13 Jan 2023 15:20:37 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: S3 under Xen regression between 6.1.1 and 6.1.3
+Content-Language: en-US
+To: =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?=
+ <marmarek@invisiblethingslab.com>
+Cc: xen-devel <xen-devel@lists.xenproject.org>, regressions@lists.linux.dev
+References: <Y8DIodWQGm99RA+E@mail-itl>
+ <bdea54df-59dc-3d4d-dd0c-8c45403dea24@suse.com> <Y8FgQyVvpUXqumvS@mail-itl>
+From: Juergen Gross <jgross@suse.com>
+In-Reply-To: <Y8FgQyVvpUXqumvS@mail-itl>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------6kkXqBrUY0FyOXKni8Ph3nMz"
 
-"Linux kernel regression tracking (Thorsten Leemhuis)"
-<regressions@leemhuis.info> writes:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------6kkXqBrUY0FyOXKni8Ph3nMz
+Content-Type: multipart/mixed; boundary="------------0ddX8tnnEtC6EZA20X32Cia6";
+ protected-headers="v1"
+From: Juergen Gross <jgross@suse.com>
+To: =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?=
+ <marmarek@invisiblethingslab.com>
+Cc: xen-devel <xen-devel@lists.xenproject.org>, regressions@lists.linux.dev
+Message-ID: <47ae3bbb-6468-4282-1789-72eedaa54814@suse.com>
+Subject: Re: S3 under Xen regression between 6.1.1 and 6.1.3
+References: <Y8DIodWQGm99RA+E@mail-itl>
+ <bdea54df-59dc-3d4d-dd0c-8c45403dea24@suse.com> <Y8FgQyVvpUXqumvS@mail-itl>
+In-Reply-To: <Y8FgQyVvpUXqumvS@mail-itl>
 
-> On 10.01.23 09:00, Felix Fietkau wrote:
->
->>> Still no reply. I wonder if I'm holding things wrong. But well, let's
->>> wait one more day before escalating this further.
->> 
->> Johannes told me on IRC that he will review my patch soon. He simply has too many things to do at the moment.
->
-> Great, thx. And sorry for prodding so much, but that is part of the job
-> when it takes so long to fix regressions -- even in cases where that's
-> mainly caused by a holiday season (which I took into account, otherwise
-> I likely would have made more noise earlier already).
+--------------0ddX8tnnEtC6EZA20X32Cia6
+Content-Type: multipart/mixed; boundary="------------BtFof0gK3r9ZHyWf2ElM4AQq"
 
-Thorsten, I value your work A LOT, tracking regressions is important and
-makes our work easier. Thank you for that. But when tracking bugs please
-be reasonable as well. Most of the people in the community are
-volunteers, we have our normal lives/work as well and things don't
-always move so fast. For example, I just came from a long vacation this
-Monday and have a lot to catch up. That's why the release cycle is so
-long as it is.
+--------------BtFof0gK3r9ZHyWf2ElM4AQq
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-We are in -rc3 at the moment and I don't see the need to push the panic
-button so early in the cycle. If we take fixes in a rush that might
-break even more stuff. And anyone using release candidates ("rc") should
-understand that things can be broken and it might take some time to get
-them fixed, especially on holiday periods.
+T24gMTMuMDEuMjMgMTQ6NDQsIE1hcmVrIE1hcmN6eWtvd3NraS1Hw7NyZWNraSB3cm90ZToN
+Cj4gQnV0LCB1bnJlbGF0ZWQgdG8gdGhpcyBidWcsIGl0IGRpZCBnZXQgbWVzc2FnZSBsaWtl
+IGluIGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20veGVuLWRldmVsQGxpc3RzLnhlbnBy
+b2plY3Qub3JnL21zZzEwNzYwOS5odG1sDQo+IChXQVJOSU5HOiBDUFU6IDEgUElEOiAwIGF0
+IGFyY2gveDg2L21tL3RsYi5jOjUyMyBzd2l0Y2hfbW1faXJxc19vZmYrMHgyMzAvMHg0YTAp
+DQo+IA0KDQpIbW0sIGlzIGFwcGx5aW5nIHRoZSBhdHRhY2hlZCBwYXRjaCBtYWtpbmcgYW55
+IGRpZmZlcmVuY2UgaGVyZT8NCg0KDQpKdWVyZ2VuDQo=
+--------------BtFof0gK3r9ZHyWf2ElM4AQq
+Content-Type: text/x-patch; charset=UTF-8;
+ name="0001-x86-xen-don-t-let-xen_pv_play_dead-return.patch"
+Content-Disposition: attachment;
+ filename="0001-x86-xen-don-t-let-xen_pv_play_dead-return.patch"
+Content-Transfer-Encoding: base64
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+RnJvbSBhNGNiMDQyOWUxZDZkNGNhNDI3MDVkOTcyMTY4MjQyMGFlMDUzODUxIE1vbiBTZXAg
+MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBKdWVyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+
+ClRvOiB4ODZAa2VybmVsLm9yZwpUbzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZwpD
+YzogSnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuY29tPgpDYzogQm9yaXMgT3N0cm92c2t5
+IDxib3Jpcy5vc3Ryb3Zza3lAb3JhY2xlLmNvbT4KQ2M6IFRob21hcyBHbGVpeG5lciA8dGds
+eEBsaW51dHJvbml4LmRlPgpDYzogSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhhdC5jb20+CkNj
+OiBCb3Jpc2xhdiBQZXRrb3YgPGJwQGFsaWVuOC5kZT4KQ2M6IERhdmUgSGFuc2VuIDxkYXZl
+LmhhbnNlbkBsaW51eC5pbnRlbC5jb20+CkNjOiAiSC4gUGV0ZXIgQW52aW4iIDxocGFAenl0
+b3IuY29tPgpDYzogeGVuLWRldmVsQGxpc3RzLnhlbnByb2plY3Qub3JnCkRhdGU6IFRodSwg
+MjQgTm92IDIwMjIgMDg6MDk6NDUgKzAxMDAKU3ViamVjdDogW1BBVENIIDEvMl0geDg2L3hl
+bjogZG9uJ3QgbGV0IHhlbl9wdl9wbGF5X2RlYWQoKSByZXR1cm4KCkEgZnVuY3Rpb24gY2Fs
+bGVkIHZpYSB0aGUgcGFyYXZpcnQgcGxheV9kZWFkKCkgaG9vayBzaG91bGQgbm90IHJldHVy
+bgp0byB0aGUgY2FsbGVyLgoKeGVuX3B2X3BsYXlfZGVhZCgpIGhhcyBhIHByb2JsZW0gaW4g
+dGhpcyByZWdhcmQsIGFzIGl0IGN1cnJlbnRseSB3aWxsCnJldHVybiBpbiBjYXNlIGFuIG9m
+ZmxpbmVkIGNwdSBpcyBicm91Z2h0IHRvIGxpZmUgYWdhaW4uIFRoaXMgY2FuIGJlCmNoYW5n
+ZWQgb25seSBieSBkb2luZyBiYXNpY2FsbHkgYSBsb25nam1wKCkgdG8gY3B1X2JyaW5ndXBf
+YW5kX2lkbGUoKSwKYXMgdGhlIGh5cGVyY2FsbCBmb3IgYnJpbmdpbmcgZG93biB0aGUgY3B1
+IHdpbGwganVzdCByZXR1cm4gd2hlbiB0aGUKY3B1IGlzIGNvbWluZyB1cCBhZ2Fpbi4gSnVz
+dCByZS1pbml0aWFsaXppbmcgdGhlIGNwdSBpc24ndCBwb3NzaWJsZSwKYXMgdGhlIFhlbiBo
+eXBlcnZpc29yIHdpbGwgZGVueSB0aGF0IG9wZXJhdGlvbi4KClNvIGludHJvZHVjZSB4ZW5f
+Y3B1X2JyaW5ndXBfYWdhaW4oKSByZXNldHRpbmcgdGhlIHN0YWNrIGFuZCBjYWxsaW5nCmNw
+dV9icmluZ3VwX2FuZF9pZGxlKCksIHdoaWNoIGNhbiBiZSBjYWxsZWQgYWZ0ZXIgSFlQRVJW
+SVNPUl92Y3B1X29wKCkKaW4geGVuX3B2X3BsYXlfZGVhZCgpLgoKU2lnbmVkLW9mZi1ieTog
+SnVlcmdlbiBHcm9zcyA8amdyb3NzQHN1c2UuY29tPgotLS0KIGFyY2gveDg2L3hlbi9zbXAu
+aCAgICAgIHwgIDIgKysKIGFyY2gveDg2L3hlbi9zbXBfcHYuYyAgIHwgMTMgKystLS0tLS0t
+LS0tLQogYXJjaC94ODYveGVuL3hlbi1oZWFkLlMgfCAgNyArKysrKysrCiAzIGZpbGVzIGNo
+YW5nZWQsIDExIGluc2VydGlvbnMoKyksIDExIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBh
+L2FyY2gveDg2L3hlbi9zbXAuaCBiL2FyY2gveDg2L3hlbi9zbXAuaAppbmRleCBiZDAyZjlk
+NTAxMDcuLjZlOTBhMzEyMDY3YiAxMDA2NDQKLS0tIGEvYXJjaC94ODYveGVuL3NtcC5oCisr
+KyBiL2FyY2gveDg2L3hlbi9zbXAuaApAQCAtMjEsNiArMjEsOCBAQCB2b2lkIHhlbl9zbXBf
+c2VuZF9yZXNjaGVkdWxlKGludCBjcHUpOwogdm9pZCB4ZW5fc21wX3NlbmRfY2FsbF9mdW5j
+dGlvbl9pcGkoY29uc3Qgc3RydWN0IGNwdW1hc2sgKm1hc2spOwogdm9pZCB4ZW5fc21wX3Nl
+bmRfY2FsbF9mdW5jdGlvbl9zaW5nbGVfaXBpKGludCBjcHUpOwogCit2b2lkIHhlbl9jcHVf
+YnJpbmd1cF9hZ2Fpbih1bnNpZ25lZCBsb25nIHN0YWNrKTsKKwogc3RydWN0IHhlbl9jb21t
+b25faXJxIHsKIAlpbnQgaXJxOwogCWNoYXIgKm5hbWU7CmRpZmYgLS1naXQgYS9hcmNoL3g4
+Ni94ZW4vc21wX3B2LmMgYi9hcmNoL3g4Ni94ZW4vc21wX3B2LmMKaW5kZXggNDgwYmU4MmU5
+YjdiLi5iNDBiMjQzODJmZTMgMTAwNjQ0Ci0tLSBhL2FyY2gveDg2L3hlbi9zbXBfcHYuYwor
+KysgYi9hcmNoL3g4Ni94ZW4vc21wX3B2LmMKQEAgLTM4NSwxNyArMzg1LDggQEAgc3RhdGlj
+IHZvaWQgeGVuX3B2X3BsYXlfZGVhZCh2b2lkKSAvKiB1c2VkIG9ubHkgd2l0aCBIT1RQTFVH
+X0NQVSAqLwogewogCXBsYXlfZGVhZF9jb21tb24oKTsKIAlIWVBFUlZJU09SX3ZjcHVfb3Ao
+VkNQVU9QX2Rvd24sIHhlbl92Y3B1X25yKHNtcF9wcm9jZXNzb3JfaWQoKSksIE5VTEwpOwot
+CWNwdV9icmluZ3VwKCk7Ci0JLyoKLQkgKiBjb21taXQgNGIwYzBmMjk0ICh0aWNrOiBDbGVh
+bnVwIE5PSFogcGVyIGNwdSBkYXRhIG9uIGNwdSBkb3duKQotCSAqIGNsZWFycyBjZXJ0YWlu
+IGRhdGEgdGhhdCB0aGUgY3B1X2lkbGUgbG9vcCAod2hpY2ggY2FsbGVkIHVzCi0JICogYW5k
+IHRoYXQgd2UgcmV0dXJuIGZyb20pIGV4cGVjdHMuIFRoZSBvbmx5IHdheSB0byBnZXQgdGhh
+dAotCSAqIGRhdGEgYmFjayBpcyB0byBjYWxsOgotCSAqLwotCXRpY2tfbm9oel9pZGxlX2Vu
+dGVyKCk7Ci0JdGlja19ub2h6X2lkbGVfc3RvcF90aWNrX3Byb3RlY3RlZCgpOwotCi0JY3B1
+aHBfb25saW5lX2lkbGUoQ1BVSFBfQVBfT05MSU5FX0lETEUpOworCXhlbl9jcHVfYnJpbmd1
+cF9hZ2FpbigodW5zaWduZWQgbG9uZyl0YXNrX3B0X3JlZ3MoY3VycmVudCkpOworCUJVRygp
+OwogfQogCiAjZWxzZSAvKiAhQ09ORklHX0hPVFBMVUdfQ1BVICovCmRpZmYgLS1naXQgYS9h
+cmNoL3g4Ni94ZW4veGVuLWhlYWQuUyBiL2FyY2gveDg2L3hlbi94ZW4taGVhZC5TCmluZGV4
+IGZmYWE2MjE2N2Y2ZS4uZTM2ZWE0MjY4YmQyIDEwMDY0NAotLS0gYS9hcmNoL3g4Ni94ZW4v
+eGVuLWhlYWQuUworKysgYi9hcmNoL3g4Ni94ZW4veGVuLWhlYWQuUwpAQCAtNzYsNiArNzYs
+MTMgQEAgU1lNX0NPREVfU1RBUlQoYXNtX2NwdV9icmluZ3VwX2FuZF9pZGxlKQogCiAJY2Fs
+bCBjcHVfYnJpbmd1cF9hbmRfaWRsZQogU1lNX0NPREVfRU5EKGFzbV9jcHVfYnJpbmd1cF9h
+bmRfaWRsZSkKKworU1lNX0NPREVfU1RBUlQoeGVuX2NwdV9icmluZ3VwX2FnYWluKQorCVVO
+V0lORF9ISU5UX0ZVTkMKKwltb3YJJXJkaSwgJXJzcAorCVVOV0lORF9ISU5UX1JFR1MKKwlj
+YWxsCWNwdV9icmluZ3VwX2FuZF9pZGxlCitTWU1fQ09ERV9FTkQoeGVuX2NwdV9icmluZ3Vw
+X2FnYWluKQogLnBvcHNlY3Rpb24KICNlbmRpZgogI2VuZGlmCi0tIAoyLjM1LjMKCg==
+--------------BtFof0gK3r9ZHyWf2ElM4AQq
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+jR/i1DG86lem3iBDXzXsZDn8R38=3D
+=3D2wuH
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------BtFof0gK3r9ZHyWf2ElM4AQq--
+
+--------------0ddX8tnnEtC6EZA20X32Cia6--
+
+--------------6kkXqBrUY0FyOXKni8Ph3nMz
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmPBaLUFAwAAAAAACgkQsN6d1ii/Ey+k
+fwf+OdNpyCt6DMLy99a9gW+UhF27kdatyu7MnA5mGXxbNBnr0ZfUsg1M0VFJkeM2e0C0STU7DBJG
+vDdQKFZ572UQguil51eXR+oQjarRxzuIqsrhEguyZEiwEa1vnDTXS2aUBxYXBjyKIUzUyGNS9DZu
+hMZF+eGGRIvy+515Y4KmZL1t+IuMBogSDzxDHTeh6f2ee2N+2BxTbzTCiPdODnkoneKAuJrlyEPV
+OSaP23Qo26JOWaOXj3cMMVpraSgMdy7xwjHx2qUDUyLJIVoBD6h0C9BNDILvFfGsikfSmOVrzNIh
+u408UF4+M3aAzZacLkdCP8SAn4nmdYb+yYl0YpMCGQ==
+=fJb/
+-----END PGP SIGNATURE-----
+
+--------------6kkXqBrUY0FyOXKni8Ph3nMz--
