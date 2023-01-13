@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D018233ED
-	for <regressions@lists.linux.dev>; Fri, 13 Jan 2023 12:07:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A38F6ADE
+	for <regressions@lists.linux.dev>; Fri, 13 Jan 2023 13:07:16 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pGIqh-0007Sr-8b; Fri, 13 Jan 2023 13:07:55 +0100
-Message-ID: <ce9a1141-810a-491a-1293-67beb46efb1f@leemhuis.info>
-Date: Fri, 13 Jan 2023 13:07:54 +0100
+	id 1pGJm0-000111-I3; Fri, 13 Jan 2023 14:07:08 +0100
+Message-ID: <43b15899-c976-fa45-aae8-1f381dc4150a@leemhuis.info>
+Date: Fri, 13 Jan 2023 14:07:08 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,78 +16,38 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH wireless 3/3] wifi: mt76: dma: fix a regression in adding
- rx buffers
+Subject: =?UTF-8?Q?Re=3a_Bug=c2=a0216839_-_Connecting_a_MT76_device_causes_c?=
+ =?UTF-8?Q?omputer_to_hang_since_linux_6=2e1?=
 Content-Language: en-US, de-DE
-To: Felix Fietkau <nbd@nbd.name>, linux-wireless@vger.kernel.org
-Cc: Kalle Valo <kvalo@kernel.org>,
- Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230113105848.34642-1-nbd@nbd.name>
- <20230113105848.34642-3-nbd@nbd.name>
-From: "Linux kernel regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
+From: "Linux kernel regression tracking (#update)" <regressions@leemhuis.info>
+To: "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <e85d24d1-0ac5-f580-bb89-907ee77e65ea@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230113105848.34642-3-nbd@nbd.name>
+In-Reply-To: <e85d24d1-0ac5-f580-bb89-907ee77e65ea@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673611678;44f4e21f;
-X-HE-SMSGID: 1pGIqh-0007Sr-8b
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673615236;171ac948;
+X-HE-SMSGID: 1pGJm0-000111-I3
 
-On 13.01.23 11:58, Felix Fietkau wrote:
-> When adding WED support, mt76_dma_add_buf was accidentally changed to set
-> the skip_buf0 flag for tx buffers on the wrong queue descriptor entry.
-> Additionally, there is a rxwi leak when rx buffer allocation fails.
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-thx for working on this
-
-> Fix this and make the code more readable by adding a separate function for
-> adding rx buffers.
+On 26.12.22 13:46, Thorsten Leemhuis wrote:
 > 
-> Reported-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-> Tested-by: Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
+> I noticed a regression reported in bugzilla.kernel.org that seems to be
+> handled there already, nevertheless I'd like to add to the tracking to
+> ensure it's doesn't fall through the cracks in the end:
+> 
+> #regzbot ^introduced v6.0..v6.1
+> https://bugzilla.kernel.org/show_bug.cgi?id=216839
+> #regzbot title hang with mediatek MT76 device during boot
+> #regzbot ignore-activity
 
-Many thx for taking care of this. There is one small thing to improve,
-please add the following tags here to make things easier for future code
-archaeologists and give proper credit:
-
-Link:
-https://lore.kernel.org/r/CABXGCsMEnQd=gYKTd1knRsWuxCb=Etv5nAre%2BXJS_s5FgVteYA@mail.gmail.com/
-Reported-by: Mike Lothian <mike@fireburn.co.uk>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216829
-Reported-by: AngeloGioacchino Del Regno
-Link:
-https://lore.kernel.org/lkml/20230112171706.294550-1-angelogioacchino.delregno@collabora.com/
-
-To explain: Linus[1] and others considered proper link tags important in
-cases like this, as they allow anyone to look into the backstory of a
-fix weeks or years later. That's nothing new, the documentation[2] for
-some time says to place such tags in cases like this. I care personally
-(and made it a bit more explicit in the docs a while ago), because these
-tags make my regression tracking efforts a whole lot easier, as they
-allow my tracking bot 'regzbot' to automatically connect reports with
-patches posted or committed to fix tracked regressions.
-
-Apropos regzbot, let me tell regzbot to monitor this thread:
-
-#regzbot ^backmonitor:
-https://lore.kernel.org/r/CABXGCsMEnQd=gYKTd1knRsWuxCb=Etv5nAre%2BXJS_s5FgVteYA@mail.gmail.com/
-
-> [...]
+#regzbot fix: wifi: mac80211: fix initialization of rx->link and
+rx->link_sta
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-
-[1] for details, see:
-https://lore.kernel.org/all/CAHk-=wjMmSZzMJ3Xnskdg4+GGz=5p5p+GSYyFBTh0f-DgvdBWg@mail.gmail.com/
-https://lore.kernel.org/all/CAHk-=wgs38ZrfPvy=nOwVkVzjpM3VFU1zobP37Fwd_h9iAD5JQ@mail.gmail.com/
-https://lore.kernel.org/all/CAHk-=wjxzafG-=J8oT30s7upn4RhBs6TX-uVFZ5rME+L5_DoJA@mail.gmail.com/
-
-[2] see Documentation/process/submitting-patches.rst
-(http://docs.kernel.org/process/submitting-patches.html) and
-Documentation/process/5.Posting.rst
-(https://docs.kernel.org/process/5.Posting.html)
-
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
