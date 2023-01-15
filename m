@@ -1,107 +1,112 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA5E7E7
-	for <regressions@lists.linux.dev>; Sun, 15 Jan 2023 00:55:50 +0000 (UTC)
-Received: by mail-qt1-f173.google.com with SMTP id g9so7487354qtu.2
-        for <regressions@lists.linux.dev>; Sat, 14 Jan 2023 16:55:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8um7jzfdZofjaGhbaEiPIgthhZTY/B5b/SUEq3CZJf4=;
-        b=HDJDHEipGxwIomQUQCLkGwGUP4yS8GLbVRqadszvgYX8dn4vzaYaznNeHG1irvUOos
-         p8FmFA961/qlcIfcgaKyQ4LjRJvOB/xB6PEaGjYpFATE/A97b1Guyvlh892mjX195xzH
-         A0z9sM4t4mh/+O6Xu1D8h4eTtjLEaIAoUYJlrndVAMZDzyaNkBxVTAxMs9yV1faX8DW3
-         32+fXTtVDeyEpGvfLZmBchaNtcAQ8aXggFE31VXi6fVJ8eUN6gIOhEQhp6uV+6qwAr8a
-         XE0F4lyhS61PbYG1Mzc3dRkw2o0vHH7HXckYpb4BsR+w1JzrduDyz9lf3zoqOqTnJ8Wz
-         +TVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8um7jzfdZofjaGhbaEiPIgthhZTY/B5b/SUEq3CZJf4=;
-        b=5tmyf8cqJ9jg6fvnblYW+2O+E1LtGrwREy0ZJYs5BqT35WsfNQT0gdEgWSaofuQ1CI
-         3+5F3iyZyKM7+wZgI6dekrFMxd56GmWnew3eGIZbbY3D56B3LQ0w+KTsgPmMJ6IkI1MZ
-         4U43PRYaWuDFMF+5tmAN93viwZoiTOJnnzHAGBdYPiFM8QaX0je3FMkX5LCPofYBz4Fb
-         hp1EELXJW5dzLPssEpH9WF+cY4ofRbswK8JPZChYLv1DNm2N0/LAyWGt1y5MiANKwqPi
-         ttljDSea+IEKZFF6xlkQincpZ5PxdXF7A3l06tj+fYd7hkzEl577Gkw8qHBN7RtTpVuC
-         qLjA==
-X-Gm-Message-State: AFqh2krS3/CyE6iICHscb+BoIGqbpJlWQR/xqApk4qmFV/C/jXGr5dbL
-	nMraml+c+jUbUFIXmz0rjfPfSTVzZRrpvu48CUQ=
-X-Google-Smtp-Source: AMrXdXsQGkUMZ8iBNXUVVEwGHKbvQdbC1HGvyKlUxXcx0TYs/3XfWyeGKRkis57wQFhk4N4H/Z0O7eRaYAfRd4B+KR8=
-X-Received: by 2002:a05:622a:5d83:b0:3b6:2bb2:216c with SMTP id
- fu3-20020a05622a5d8300b003b62bb2216cmr54608qtb.616.1673744149172; Sat, 14 Jan
- 2023 16:55:49 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1B40139A
+	for <regressions@lists.linux.dev>; Sun, 15 Jan 2023 14:21:30 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pH3sx-0000Vt-7T; Sun, 15 Jan 2023 15:21:23 +0100
+Message-ID: <029045a9-5006-e663-571f-b67344fa3a50@leemhuis.info>
+Date: Sun, 15 Jan 2023 15:21:22 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CADsncqR2mTUArTv2HhRnsfmQx5iNgUZo=JVgkUcZT7MtjxEoYw@mail.gmail.com>
- <Y8JSMlMgnggwOYl0@kroah.com> <Y8LByXvibutD79au@eldamar.lan>
-In-Reply-To: <Y8LByXvibutD79au@eldamar.lan>
-From: Matthew Fahner <mdfahner@gmail.com>
-Date: Sat, 14 Jan 2023 19:55:38 -0500
-Message-ID: <CADsncqRgM17CEnKpwORz0_1n62-QgH74HZRO2yx5awvB6ULiBw@mail.gmail.com>
-Subject: Re: Second Monitor Issue on Kernel 6.1.5
-To: Salvatore Bonaccorso <carnil@debian.org>
-Cc: Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: Missing sriov_numvfs after removal of EfiMemoryMappedIO from E820
+ map
+Content-Language: en-US, de-DE
+To: Peifeng Qiu <linux@qiupf.dev>, bhelgaas@google.com,
+ linux-pci@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <CAPH51bc1ZoP2ukJJh8nfrNY1FCp1nk7AP0jGGCvoskq2XbmAoA@mail.gmail.com>
+From: "Linux kernel regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CAPH51bc1ZoP2ukJJh8nfrNY1FCp1nk7AP0jGGCvoskq2XbmAoA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673792490;24be92a9;
+X-HE-SMSGID: 1pH3sx-0000Vt-7T
 
-Hi Salvatore,
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-Thanks, yes, that does appear to match my issue.
+Hi, this is your Linux kernel regression tracker.
 
-The Debian bug report seems to have identified as commit
-4d07b0bc403403438d9cf88450506240c5faf92f
+On 15.01.23 10:21, Peifeng Qiu wrote:
+> 
+> I'm using a dual Xeon system with Intel e810 25G network card and make use
+> of SRIOV feature heavily. I have a script to setup the NIC the first step is
+> echo $VFS > /sys/class/net/$DEVNAME/device/sriov_numvfs
+> 
+> After switching from v6.1 to v6.2-rc1 "sriov_numvfs" is no longer present. If I
+> switch back to v6.1 it's back. Command line parameters are the same so it's
+> most likely kernel changes. I did git bisect and found the culprit to be
+> 07eab0901ed(efi/x86: Remove EfiMemoryMappedIO from E820 map)
 
-I'll keep an eye on those threads and test again once it's believed to
-be updated.
+This is not my area of expertise, but there is another report about an
+issue that was bisected to that particular commit:
 
--Matt
+https://lore.kernel.org/lkml/ac2693d8-8ba3-72e0-5b66-b3ae008d539d@linux.intel.com/
 
-On Sat, 14 Jan 2023 at 09:52, Salvatore Bonaccorso <carnil@debian.org> wrote:
->
-> Hi,
->
-> On Sat, Jan 14, 2023 at 07:56:50AM +0100, Greg KH wrote:
-> > On Fri, Jan 13, 2023 at 11:58:47PM -0500, Matthew Fahner wrote:
-> > > Hello,
-> > >
-> > > I'm running Ubuntu 20.10 and experienced a regression when trying
-> > > kernel 6.1.5 that was not present in previous kernels such as 6.0.19
-> > > or 6.0.9
-> > >
-> > > I have two monitors attached using DisplayPort MST (daisy chaining the
-> > > displays).
-> > >
-> > > Normally, this works without issue and both monitors are detected and
-> > > display properly.
-> > >
-> > > With kernel 6.1.5, the second monitor (the monitor that's not directly
-> > > connected to the computer) was detected but would not display.  I
-> > > didn't spend much time troubleshooting the issue and instead reverted
-> > > to 6.0.19 where it again worked without issue.  The first monitor
-> > > worked without issue.
-> > >
-> > > Let me know what steps I can take to help identify the root cause.
-> >
-> > Can you use 'git bisect' to track down the offending commit?
->
-> Not the reporter, but I suspect this is
-> https://gitlab.freedesktop.org/drm/amd/-/issues/2171 .
->
-> Matthew can you verify this matches? There is as well context on this
-> issue on this thread:
->
-> https://lore.kernel.org/stable/8502e5d8-8444-e256-54f3-0c488b54686a@amd.com/
->
-> FWIW, we had a similar bugreport downstream in Debian:
-> https://bugs.debian.org/1028451
->
-> Regards,
-> Salvatore
+A fix for that one was posted here:
+
+https://lore.kernel.org/lkml/20230110180243.1590045-1-helgaas@kernel.org/
+
+You might want to look into the report and if it looks like a possible
+duplicate give the proposed fix a try.
+
+But as I said, this is not my area of expertise, you hence might want to
+wait for the expert to share their view of things.
+
+Anyway, to be sure the issue doesn't fall through the cracks unnoticed,
+I'm adding it to regzbot, the Linux kernel regression tracking bot:
+
+#regzbot ^introduced 07eab0901ed
+#regzbot title pci: sriov_numvfs missing after removal of
+EfiMemoryMappedIO from E820 map (possible duplicate)
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+> I tested v6.2-rc3 and it's the same. I reverted this commit on top of v6.2-rc3
+> then sriov_numvfs is back again. Comparing the dmesg output, I found that
+> with commit 07eab0901ed these lines are present:
+> [    0.000000] efi: Remove mem94: MMIO range=[0x80000000-0x8fffffff]
+> (256MB) from e820 map
+> [    0.000000] e820: remove [mem 0x80000000-0x8fffffff] reserved
+> [    0.000000] efi: Remove mem95: MMIO range=[0xfd000000-0xfe7fffff]
+> (24MB) from e820 map
+> [    0.000000] e820: remove [mem 0xfd000000-0xfe7fffff] reserved
+> [    0.000000] efi: Not removing mem96: MMIO
+> range=[0xfed20000-0xfed44fff] (148KB) from e820 map
+> [    0.000000] efi: Remove mem97: MMIO range=[0xff000000-0xffffffff]
+> (16MB) from e820 map
+> [    0.000000] e820: remove [mem 0xff000000-0xffffffff] reserved
+> [    0.000000] efi: Remove mem99: MMIO
+> range=[0x1ffc00000000-0x1fffffffffff] (16384MB) from e820 map
+> [    0.000000] e820: remove [mem 0x1ffc00000000-0x1fffffffffff] reserved
+> 
+> I think that's what the commit actually does. But the following are missing:
+> [    2.516119] pci 0000:ca:00.0: reg 0x184: [mem
+> 0x208ffd000000-0x208ffd01ffff 64bit pref]
+> [    2.516121] pci 0000:ca:00.0: VF(n) BAR0 space: [mem
+> 0x208ffd000000-0x208ffdffffff 64bit pref] (contains BAR0 for 128 VFs)
+> [    2.516134] pci 0000:ca:00.0: reg 0x190: [mem
+> 0x208ffe220000-0x208ffe223fff 64bit pref]
+> [    2.516136] pci 0000:ca:00.0: VF(n) BAR3 space: [mem
+> 0x208ffe220000-0x208ffe41ffff 64bit pref] (contains BAR3 for 128 VFs)
+> 
+> Not sure whether this is a driver issue specific to Intel e810(module ice) or
+> a more general one. Any thoughts on this issue?
+> 
+> Best regards,
+> Peifeng Qiu
