@@ -1,293 +1,147 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F9C1871
-	for <regressions@lists.linux.dev>; Sun, 15 Jan 2023 15:52:52 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:5054:ff:feb3:8f48] (helo=regzbot.fritz.box); authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	id 1pH5JS-0004vM-33; Sun, 15 Jan 2023 16:52:50 +0100
-From: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-To: LKML <linux-kernel@vger.kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Linux regressions report  for mainline [2023-01-15]
-Date: Sun, 15 Jan 2023 15:52:49 +0000
-Message-Id: <167379759525.730024.5229816811013521088@leemhuis.info>
-X-Mailer: git-send-email 2.39.0
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582287B
+	for <regressions@lists.linux.dev>; Sun, 15 Jan 2023 21:45:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1673819119;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=itG3ZF4MAETUDAKR3A/Ih1TMp9lYsHlIkkE2cbFYorM=;
+	b=QV2FFSvuxWFVtaumXZEzNZ36MlQhAoX7rb9i7L7clTFCfh7+7PCp61uQ4uigjXg6dR4Zi7
+	RYRvD6qMgx09n1Q5g32WMpmMQnscquG7yX10yViyCoPpqK214lJjOv55d9KN6LmxOxFU9j
+	biYk5vtBIso98GkDMwxjJHJEwVebUw0=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-584-bAlm-ZzHN4Chh23ER-xI_g-1; Sun, 15 Jan 2023 16:45:17 -0500
+X-MC-Unique: bAlm-ZzHN4Chh23ER-xI_g-1
+Received: by mail-qt1-f200.google.com with SMTP id k7-20020ac84747000000b003a87ca26200so12227657qtp.6
+        for <regressions@lists.linux.dev>; Sun, 15 Jan 2023 13:45:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=itG3ZF4MAETUDAKR3A/Ih1TMp9lYsHlIkkE2cbFYorM=;
+        b=Vx+2XcN96tmQ1rWziY/Dwry10gI3pP5bxEHS1Q6JK22dHALWM/rzV8dJCpcBQ0VK0V
+         JW+SPzIdaDgpS5sp72iRirN7FIGP2Chvv6REhQX8OOyD3s0B+OcDoKhf0o7hnmEWd5s7
+         ZnChvW37noNYYmetGUn/1rNi22D5mcS9scaGgwEzI6J/N24YgvYn6maDbZLlilja8VM2
+         pKqRQPotp2/0sExWQtnE+EVoQImvv1vKt+hSeukEj54WQKFsuBcQ4eJT5DMP+qVZPTte
+         1Lu1Xr4Cz721m/NYFImGk1xoN4iL/Q/Bl3vvcR11beaO9WuUADQjMPDPxTPAL/PwPjO2
+         uPSA==
+X-Gm-Message-State: AFqh2kq32/wSP1fZ+5WNA96ncoDCca3yJyyKB7j6cqJ2RX0MjBuexA5Q
+	BCDNEW5Rp5K+aIoxf0bL+8qPDFnMgSCaI11JoUEbBqawu5gJjYB/YlCZl/8cSP1Y6s83COp6ecr
+	zfnmeGli2y6rcpIJKeBbWCvGqpu/b2qTozrQxCFM=
+X-Received: by 2002:ad4:46c6:0:b0:531:bf0f:74e9 with SMTP id pm6-20020ad446c6000000b00531bf0f74e9mr3851562qvb.16.1673819116964;
+        Sun, 15 Jan 2023 13:45:16 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXtfUw/WKxs1P5lWECd2XEfFTLxO8sx4RmRDJZvTFCEjlwRQcOTU3yuKkD11Yo130rqXWwfmlcP/EzkffuCj6aU=
+X-Received: by 2002:ad4:46c6:0:b0:531:bf0f:74e9 with SMTP id
+ pm6-20020ad446c6000000b00531bf0f74e9mr3851560qvb.16.1673819116738; Sun, 15
+ Jan 2023 13:45:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673797972;6cb7dab1;
-X-HE-SMSGID: 1pH5JS-0004vM-33
+References: <20221228144914.z7t7a4fdwvbblnak@wslaptop>
+In-Reply-To: <20221228144914.z7t7a4fdwvbblnak@wslaptop>
+From: David Airlie <airlied@redhat.com>
+Date: Mon, 16 Jan 2023 07:45:05 +1000
+Message-ID: <CAMwc25rY4xpn0yvCScMr6Hk9pFSdvt=9QOypSQDfj1d5tWmtvA@mail.gmail.com>
+Subject: Re: [REGRESSION] GM20B probe fails after commit 2541626cfb79
+To: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+Cc: regressions@lists.linux.dev, bskeggs@redhat.com, 
+	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+
+On Thu, Dec 29, 2022 at 12:58 AM Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt> wrote:
+>
+> Hello,
+>
+> Commit 2541626cfb79 breaks GM20B probe with
+> the following kernel log:
+>
+> [    2.153892] ------------[ cut here ]------------
+> [    2.153897] WARNING: CPU: 1 PID: 36 at drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgf100.c:273 gf100_vmm_valid+0x2c4/0x390
+> [    2.153916] Modules linked in:
+> [    2.153922] CPU: 1 PID: 36 Comm: kworker/u8:1 Not tainted 6.1.0+ #1
+> [    2.153929] Hardware name: Google Pixel C (DT)
+> [    2.153933] Workqueue: events_unbound deferred_probe_work_func
+> [    2.153943] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+> [    2.153950] pc : gf100_vmm_valid+0x2c4/0x390
+> [    2.153959] lr : gf100_vmm_valid+0xb4/0x390
+> [    2.153966] sp : ffffffc009e134b0
+> [    2.153969] x29: ffffffc009e134b0 x28: 0000000000000000 x27: ffffffc008fd44c8
+> [    2.153979] x26: 00000000ffffffea x25: ffffffc0087b98d0 x24: ffffff8080f89038
+> [    2.153987] x23: ffffff8081fadc08 x22: 0000000000000000 x21: 0000000000000000
+> [    2.153995] x20: ffffff8080f8a000 x19: ffffffc009e13678 x18: 0000000000000000
+> [    2.154003] x17: f37a8b93418958e6 x16: ffffffc009f0d000 x15: 0000000000000000
+> [    2.154011] x14: 0000000000000002 x13: 000000000003a020 x12: ffffffc008000000
+> [    2.154019] x11: 0000000102913000 x10: 0000000000000000 x9 : 0000000000000000
+> [    2.154026] x8 : ffffffc009e136d8 x7 : ffffffc008fd44c8 x6 : ffffff80803d0f00
+> [    2.154034] x5 : 0000000000000000 x4 : ffffff8080f88c00 x3 : 0000000000000010
+> [    2.154041] x2 : 000000000000000c x1 : 00000000ffffffea x0 : 00000000ffffffea
+> [    2.154050] Call trace:
+> [    2.154053]  gf100_vmm_valid+0x2c4/0x390
+> [    2.154061]  nvkm_vmm_map_valid+0xd4/0x204
+> [    2.154069]  nvkm_vmm_map_locked+0xa4/0x344
+> [    2.154076]  nvkm_vmm_map+0x50/0x84
+> [    2.154083]  nvkm_firmware_mem_map+0x84/0xc4
+> [    2.154094]  nvkm_falcon_fw_oneinit+0xc8/0x320
+> [    2.154101]  nvkm_acr_oneinit+0x428/0x5b0
+> [    2.154109]  nvkm_subdev_oneinit_+0x50/0x104
+> [    2.154114]  nvkm_subdev_init_+0x3c/0x12c
+> [    2.154119]  nvkm_subdev_init+0x60/0xa0
+> [    2.154125]  nvkm_device_init+0x14c/0x2a0
+> [    2.154133]  nvkm_udevice_init+0x60/0x9c
+> [    2.154140]  nvkm_object_init+0x48/0x1b0
+> [    2.154144]  nvkm_ioctl_new+0x168/0x254
+> [    2.154149]  nvkm_ioctl+0xd0/0x220
+> [    2.154153]  nvkm_client_ioctl+0x10/0x1c
+> [    2.154162]  nvif_object_ctor+0xf4/0x22c
+> [    2.154168]  nvif_device_ctor+0x28/0x70
+> [    2.154174]  nouveau_cli_init+0x150/0x590
+> [    2.154180]  nouveau_drm_device_init+0x60/0x2a0
+> [    2.154187]  nouveau_platform_device_create+0x90/0xd0
+> [    2.154193]  nouveau_platform_probe+0x3c/0x9c
+> [    2.154200]  platform_probe+0x68/0xc0
+> [    2.154207]  really_probe+0xbc/0x2dc
+> [    2.154211]  __driver_probe_device+0x78/0xe0
+> [    2.154216]  driver_probe_device+0xd8/0x160
+> [    2.154221]  __device_attach_driver+0xb8/0x134
+> [    2.154226]  bus_for_each_drv+0x78/0xd0
+> [    2.154230]  __device_attach+0x9c/0x1a0
+> [    2.154234]  device_initial_probe+0x14/0x20
+> [    2.154239]  bus_probe_device+0x98/0xa0
+> [    2.154243]  deferred_probe_work_func+0x88/0xc0
+> [    2.154247]  process_one_work+0x204/0x40c
+> [    2.154256]  worker_thread+0x230/0x450
+> [    2.154261]  kthread+0xc8/0xcc
+> [    2.154266]  ret_from_fork+0x10/0x20
+> [    2.154273] ---[ end trace 0000000000000000 ]---
+> [    2.154278] nouveau 57000000.gpu: pmu: map -22
+> [    2.154285] nouveau 57000000.gpu: acr: one-time init failed, -22
+> [    2.154559] nouveau 57000000.gpu: init failed with -22
+> [    2.154564] nouveau: DRM-master:00000000:00000080: init failed with -22
+> [    2.154574] nouveau 57000000.gpu: DRM-master: Device allocation failed: -22
+> [    2.162905] nouveau: probe of 57000000.gpu failed with error -22
+>
+> #regzbot introduced: 2541626cfb79
+
+As a quick check can you try changing
+
+drivers/gpu/drm/nouveau/nvkm/core/firmware.c:nvkm_firmware_mem_target
+from NVKM_MEM_TARGET_HOST to NVKM_MEM_TARGET_NCOH ?
+
+Dave.
+>
+> Thanks,
+>
+> Diogo Ivo
+>
 
-Hi Linus! Below you'll find regzbot's report about regression from this
-cycle me or someone else told the bot about. Things are slowly becoming
-normal again, but we're not there yet, as some fixes are only in -next
-because reviews were late; but I guess next week it will look better again.
-
-HTH, Ciao, Thorsten
-
----
-
-Hi, this is regzbot, the Linux kernel regression tracking bot.
-
-Currently I'm aware of 13 regressions in linux-mainline. Find the
-current status below and the latest on the web:
-
-https://linux-regtracking.leemhuis.info/regzbot/mainline/
-
-Bye bye, hope to see you soon for the next report.
-   Regzbot (on behalf of Thorsten Leemhuis)
-
-
-======================================================
-current cycle (v6.1.. aka v6.2-rc), culprit identified
-======================================================
-
-
-[ *NEW* ] pci: sriov_numvfs missing after removal of EfiMemoryMappedIO from E820 map (possible duplicate)
----------------------------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CAPH51bc1ZoP2ukJJh8nfrNY1FCp1nk7AP0jGGCvoskq2XbmAoA@mail.gmail.com/
-https://lore.kernel.org/linux-pci/CAPH51bc1ZoP2ukJJh8nfrNY1FCp1nk7AP0jGGCvoskq2XbmAoA@mail.gmail.com/
-
-By Peifeng Qiu; 0 days ago; 1 activities, latest 0 days ago.
-Introduced in 07eab0901ed (v6.2-rc1)
-
-Recent activities from: Peifeng Qiu (1)
-
-
-[ *NEW* ] GM20B probe fails after commit 2541626cfb79
------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20221228144914.z7t7a4fdwvbblnak@wslaptop/
-https://lore.kernel.org/dri-devel/20221228144914.z7t7a4fdwvbblnak@wslaptop/
-
-By Diogo Ivo; 18 days ago; 5 activities, latest 0 days ago.
-Introduced in 2541626cfb79 (v6.2-rc1)
-
-Recent activities from: Diogo Ivo (3), Karol Herbst (2)
-
-
-[ *NEW* ] v6.2-rc1 on Turris Omnia: DSA switch ports stuck in NO-CARRIER state
-------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/f24474e70c1a4e9692bd596ef6d97ceda9511245.camel@gmail.com/
-https://lore.kernel.org/linux-arm-kernel/f24474e70c1a4e9692bd596ef6d97ceda9511245.camel@gmail.com/
-
-By Klaus Kudielka; 17 days ago; 13 activities, latest 0 days ago.
-Introduced in c4de4667f15d (v6.2-rc1)
-
-Fix incoming:
-* Revert "ARM: dts: armada-38x: Fix compatible string for gpios"
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=75b58cf5ce21650c1b3b88d8310f3415ce905018
-
-
-[ *NEW* ] Black screen when amdgpu started during 6.2-rc1 boot with AMD IOMMU enabled
--------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/216865/
-https://bugzilla.kernel.org/show_bug.cgi?id=216865
-https://lore.kernel.org/lkml/15d0f9ff-2a56-b3e9-5b45-e6b23300ae3b@leemhuis.info/
-
-By Matt Fagnani and Matt Fagnani; 16 days ago; 30 activities, latest 1 days ago.
-Introduced in 201007ef707a (v6.2-rc1)
-
-Recent activities from: Baolu Lu (7), Jason Gunthorpe (7), Christian
-  König (6), Matt Fagnani (5), Lu Baolu (3), Tian, Kevin (1), Bjorn
-  Helgaas (1)
-
-Noteworthy links:
-* [PATCH] PCI: revert "Enable PASID only when ACS RR & UF enabled on upstream path"
-  https://lore.kernel.org/linux-pci/20230111085745.401710-1-christian.koenig@amd.com/
-  4 days ago, by Christian König; thread monitored.
-* [PATCH 1/1] PCI: Add translated request only opt-in for pci_enable_pasid()
-  https://bugzilla.kernel.org/show_bug.cgi?id=20230112084629.737653-1-baolu.lu@linux.intel.com
-  3 days ago, by Lu Baolu; thread monitored.
-* [PATCH v2 1/1] PCI: Add translated request only flag for pci_enable_pasid()
-  https://bugzilla.kernel.org/show_bug.cgi?id=20230113014409.752405-1-baolu.lu@linux.intel.com
-  2 days ago, by Lu Baolu; thread monitored.
-* [PATCH v3 1/1] PCI: Add translated request only flag for pci_enable_pasid()
-  https://bugzilla.kernel.org/show_bug.cgi?id=20230114073420.759989-1-baolu.lu@linux.intel.com
-  1 days ago, by Lu Baolu; thread monitored.
-
-
-wifi: mt76: wifi stopped working
---------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/CABXGCsMEnQd=gYKTd1knRsWuxCb=Etv5nAre+XJS_s5FgVteYA@mail.gmail.com/
-https://lore.kernel.org/lkml/CABXGCsMEnQd=gYKTd1knRsWuxCb=Etv5nAre%2BXJS_s5FgVteYA@mail.gmail.com/
-https://bugzilla.kernel.org/show_bug.cgi?id=216829
-
-By Mikhail Gavrilov and Mike Lothian; 25 days ago; 16 activities, latest 2 days ago.
-Introduced in cd372b8c99c5 (v6.2-rc1)
-
-Recent activities from: Linux kernel regression tracking (Thorsten
-  Leemhuis) (2), Thorsten Leemhuis (2), Kalle Valo (1), Mikhail
-  Gavrilov (1), Felix Fietkau (1)
-
-4 patch postings are associated with this regression, the latest is this:
-* Re: [6.2][regression] after commit cd372b8c99c5a5cf6a464acebb7e4a79af7ec8ae stopping working wifi mt7921e
-  https://lore.kernel.org/lkml/3cb53fbd-0bee-22f9-bba2-6ac4a87db521@nbd.name/
-  24 days ago, by Felix Fietkau
-
-
-[ *NEW* ] net: wifi: most packets are dropped instead of transmitted
---------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/19015168-c747-17b7-f0ae-9d2ee27d221c@linaro.org/
-https://lore.kernel.org/lkml/19015168-c747-17b7-f0ae-9d2ee27d221c@linaro.org/
-
-By Bryan O'Donoghue; 5 days ago; 9 activities, latest 2 days ago.
-Introduced in a790cc3a4fad (v6.2-rc1)
-
-Fix incoming:
-* wifi: mac80211: Proper mark iTXQs for resumption
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=4444bc2116aecdcde87dce80373540adc8bd478b
-
-
-[ *NEW* ] net: wifi: brcmfmac stopped working as firmware is not loaded anymore
--------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/216894/
-https://bugzilla.kernel.org/show_bug.cgi?id=216894
-https://lore.kernel.org/lkml/ef8861dc-33df-0e35-4205-c8c666a3f4ba@leemhuis.info/
-
-By Christian Marillat and Christian Marillat; 9 days ago; 16 activities, latest 3 days ago.
-Introduced in 2aca4f3734bd (v6.2-rc1)
-
-Recent activities from: Arend van Spriel (7), Christian Marillat (6),
-  Artem S. Tashkinov (2), Kalle Valo (1)
-
-One patch associated with this regression:
-* bugzilla.kernel.org bug 216894: new comment(#7)
-  https://bugzilla.kernel.org/show_bug.cgi?id=216894#c7
-  6 days ago, by Arend van Spriel
-
-Noteworthy links:
-* [PATCH for-6.2] wifi: brcmfmac: fix regression for Broadcom PCIe wifi devices
-  https://lore.kernel.org/linux-wireless/20230109095020.412475-1-arend.vanspriel@broadcom.com/
-  6 days ago, by Arend van Spriel; thread monitored.
-* [PATCH V2] wifi: brcmfmac: fix regression for Broadcom PCIe wifi devices
-  https://bugzilla.kernel.org/show_bug.cgi?id=20230111112419.24185-1-arend.vanspriel@broadcom.com
-  4 days ago, by Arend van Spriel; thread monitored.
-
-
-[ *NEW* ] net: wifi: WLAN broken on Nokia N900
-----------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/Y6tTLPvsxh/Im4Ed@tp440p.steeds.sam/
-https://lore.kernel.org/linux-wireless/Y6tTLPvsxh%2FIm4Ed@tp440p.steeds.sam/
-
-By Sicelo; 18 days ago; 9 activities, latest 3 days ago.
-Introduced in a790cc3a4fad (v6.2-rc1)
-
-Fix incoming:
-* wifi: mac80211: Proper mark iTXQs for resumption
-  https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?h=master&id=4444bc2116aecdcde87dce80373540adc8bd478b
-
-
-[ *NEW* ] nvme: resume broken on apple nvme controller
-------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/20230110174745.GA3576@jannau.net/
-https://lore.kernel.org/linux-nvme/20230110174745.GA3576@jannau.net/
-
-By Janne Grunau; 4 days ago; 11 activities, latest 4 days ago.
-Introduced in c76b8308e4c9 (v6.2-rc1)
-
-Recent activities from: Hector Martin (6), Christoph Hellwig (4), Janne
-  Grunau (1)
-
-2 patch postings are associated with this regression, the latest is this:
-* [PATCH 2/2] nvme: Handle shut down controllers during initialization
-  https://lore.kernel.org/lkml/20230111043614.27087-3-marcan@marcan.st/
-  4 days ago, by Hector Martin
-
-Noteworthy links:
-* [PATCH 0/2] nvme-apple: Fix suspend-resume regression
-  https://lore.kernel.org/lkml/20230111043614.27087-1-marcan@marcan.st/
-  4 days ago, by Hector Martin; thread monitored.
-
-
-[ *NEW* ] nfs: NULL pointer dereference since NFS_V4_2_READ_PLUS is enabled by default
---------------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org/
-https://lore.kernel.org/lkml/f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org/
-
-By Krzysztof Kozlowski; 7 days ago; 12 activities, latest 5 days ago.
-Introduced in 7fd461c47 (v6.2-rc1)
-
-Recent activities from: Chuck Lever III (4), Krzysztof Kozlowski (4),
-  Trond Myklebust (3), Anna Schumaker (1)
-
-
-[ *NEW* ] ext4/acls: xfstests.generic.454 suddenly fails for the kernel test robot
-----------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/202212291509.704a11c9-oliver.sang@intel.com/
-https://lore.kernel.org/lkml/202212291509.704a11c9-oliver.sang@intel.com/
-
-By kernel test robot; 17 days ago; 5 activities, latest 13 days ago.
-Introduced in 3bc753c06dd0 (v6.2-rc1)
-
-Recent activities from: Thorsten Leemhuis (1), Christian Brauner (1),
-  Jason A. Donenfeld (1), Linus Torvalds (1), kernel test robot (1)
-
-
-==================================================
-current cycle (v6.1.. aka v6.2-rc), unkown culprit
-==================================================
-
-
-[ *NEW* ] net: r8169: NETDEV WATCHDOG: enp6s0 (r8169): transmit queue 0 timed out
----------------------------------------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/216884/
-https://bugzilla.kernel.org/show_bug.cgi?id=216884
-https://lore.kernel.org/regressions/f5b100c0-cdeb-59d1-5c82-e1df59ee3773@leemhuis.info/
-
-By HougeLangley and HougeLangley; 10 days ago; 11 activities, latest 8 days ago.
-Introduced in v6.1..v6.2-rc2
-
-Fix incoming:
-* PCI: loongson: Improve the MRRS quirk for LS7A
-  https://lore.kernel.org/regressions/2a9140bb-8c4f-dda8-cf43-92db792a29db@leemhuis.info/
-
-
-[ *NEW* ] ptdma: kernel panic during host shutdown
---------------------------------------------------
-https://linux-regtracking.leemhuis.info/regzbot/regression/216856/
-https://bugzilla.kernel.org/show_bug.cgi?id=216856
-https://lore.kernel.org/lkml/0e77436c-9f0a-15b6-697a-7b879e4abc4a@leemhuis.info/
-
-By Eric Pilmore and Eric Pilmore; 18 days ago; 1 activities, latest 18 days ago.
-Introduced in v6.1..v6.2-rc1
-
-Recent activities from: Eric Pilmore (1)
-
-
-=============
-End of report
-=============
-
-All regressions marked '[ *NEW* ]' were added since the previous report,
-which can be found here:
-https://lore.kernel.org/r/167179914593.1360994.17503278527422432544@leemhuis.info
-
-Thanks for your attention, have a nice day!
-
-  Regzbot, your hard working Linux kernel regression tracking robot
-
-
-P.S.: Wanna know more about regzbot or how to use it to track regressions
-for your subsystem? Then check out the getting started guide or the
-reference documentation:
-
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
-https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
-
-The short version: if you see a regression report you want to see
-tracked, just send a reply to the report where you Cc
-regressions@lists.linux.dev with a line like this:
-
-#regzbot introduced: v5.13..v5.14-rc1
-
-If you want to fix a tracked regression, just do what is expected
-anyway: add a 'Link:' tag with the url to the report, e.g.:
-
-Link: https://lore.kernel.org/all/30th.anniversary.repost@klaava.Helsinki.FI/
