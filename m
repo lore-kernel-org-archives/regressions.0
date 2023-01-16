@@ -1,123 +1,183 @@
-Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA391FA1
-	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 12:27:10 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 11F0E6008768;
-	Mon, 16 Jan 2023 12:27:03 +0000 (WET)
-X-Virus-Scanned: by amavisd-new-2.11.0 (20160426) (Debian) at
-	tecnico.ulisboa.pt
-Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
-	by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavisd-new, port 10025)
-	with LMTP id 7cdRpeg_D0dx; Mon, 16 Jan 2023 12:27:00 +0000 (WET)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
-	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id DB48C6008767;
-	Mon, 16 Jan 2023 12:26:59 +0000 (WET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=tecnico.ulisboa.pt;
-	s=mail; t=1673872020;
-	bh=XkE1A2YnrbrU2WIxkcPZ+PORJqR8hAkePFOr8rxfZuE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=a8Xo4bkmsvTuqonsY4ekcnc5dvWH3mlZRjabBlWJkbOAWhp3rdDaUNODmHarhe2TH
-	 H7Go9Ii3nCMaTd4Sd+q5JKYVxcOiaBrFMkQ2Lf5zBefVAuViUjOY0seSUGsOYEmhfx
-	 7qpXOISRmKIcZZ9Ro8jMZa1ERBnEr5r0BQs6JiUo=
-Received: from wslaptop (unknown [IPv6:2001:818:dcb5:dc00:d990:b664:f16:4cb2])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 4A87C360078;
-	Mon, 16 Jan 2023 12:26:59 +0000 (WET)
-Date: Mon, 16 Jan 2023 12:24:37 +0000
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-To: David Airlie <airlied@redhat.com>
-Cc: regressions@lists.linux.dev, bskeggs@redhat.com,
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-Subject: Re: [REGRESSION] GM20B probe fails after commit 2541626cfb79
-Message-ID: <20230116122403.upk5ci4mbebw23m7@wslaptop>
-References: <20221228144914.z7t7a4fdwvbblnak@wslaptop>
- <CAMwc25rY4xpn0yvCScMr6Hk9pFSdvt=9QOypSQDfj1d5tWmtvA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E0D1FB4
+	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 13:17:35 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pHPMj-0004pk-I5; Mon, 16 Jan 2023 14:17:33 +0100
+Message-ID: <74347fe1-ac68-2661-500d-b87fab6994f7@leemhuis.info>
+Date: Mon, 16 Jan 2023 14:17:32 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMwc25rY4xpn0yvCScMr6Hk9pFSdvt=9QOypSQDfj1d5tWmtvA@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Content-Language: en-US, de-DE
+From: "Linux kernel regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ io-uring@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>,
+ "Sergey V." <truesmb@gmail.com>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+To: Jens Axboe <axboe@kernel.dk>
+Subject: =?UTF-8?Q?=5bregression=5d_Bug=c2=a0216932_-_io=5furing_with_libvir?=
+ =?UTF-8?Q?t_cause_kernel_NULL_pointer_dereference_since_6=2e1=2e5?=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673875056;32149990;
+X-HE-SMSGID: 1pHPMj-0004pk-I5
 
-On Mon, Jan 16, 2023 at 07:45:05AM +1000, David Airlie wrote:
-> On Thu, Dec 29, 2022 at 12:58 AM Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt> wrote:
-> As a quick check can you try changing
+Hi, this is your Linux kernel regression tracker.
+
+I noticed a regression report in bugzilla.kernel.org. As many (most?)
+kernel developer don't keep an eye on it, I decided to forward it by
+mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216932 :
+
+>  Sergey V. 2023-01-15 06:41:03 UTC
 > 
-> drivers/gpu/drm/nouveau/nvkm/core/firmware.c:nvkm_firmware_mem_target
-> from NVKM_MEM_TARGET_HOST to NVKM_MEM_TARGET_NCOH ?
+> Created attachment 303605 [details]
+> My dmesg
+> 
+> After 6.1.5 kernel update my vm locks up at boot, and dmesg says "BUG: kernel NULL pointer dereference, address: 0000000000000005" (more details in attachment)
+> 
+> I have few drives attached to vm with io_uring
+> 
+> <driver name="qemu" type="raw" cache="none" io="io_uring" discard="unmap" detect_zeroes="off"/>
+> 
+> [reply] [−] Comment 1 Sergey V. 2023-01-15 06:51:54 UTC
+> 
+> After update from 6.1.4 to 6.1.5, rollback to 6.1.4 solve the problem
+> 
 
-Hello!
+From the attached dmesg:
 
-Applying this change breaks probing in a different way, with a
-bad PC=0x0. From a quick look at nvkm_falcon_load_dmem it looks like this
-could happen due to the .load_dmem() callback not being properly
-initialized. This is the kernel log I got:
+> [   70.298276] vfio-pci 0000:04:00.0: vfio_ecap_init: hiding ecap 0x25@0x3a0
+> [   90.429090] BUG: kernel NULL pointer dereference, address: 0000000000000005
+> [   90.429097] #PF: supervisor write access in kernel mode
+> [   90.429099] #PF: error_code(0x0002) - not-present page
+> [   90.429101] PGD 0 P4D 0 
+> [   90.429104] Oops: 0002 [#1] PREEMPT SMP NOPTI
+> [   90.429106] CPU: 23 PID: 4674 Comm: qemu-system-x86 Tainted: P           OE      6.1.6-arch1-1 #1 7a22e7c094ebed7938b5cf37e842437a2188b39a
+> [   90.429111] Hardware name: System manufacturer System Product Name/ROG STRIX X570-E GAMING, BIOS 4403 04/27/2022
+> [   90.429113] RIP: 0010:__bio_split_to_limits+0x2a4/0x480
+> [   90.429119] Code: 48 8b 5c 24 10 4c 8b 74 24 08 44 8b 7c 24 30 45 89 3e e9 29 ff ff ff c6 43 18 0c 48 89 df 49 c7 c4 f5 ff ff ff e8 4c 30 ff ff <41> 81 4c 24 10 00 40 00 00 45 8b 6c 24 28 49 be 00 00 00 00 00 00
+> [   90.429122] RSP: 0018:ffffad8501857a30 EFLAGS: 00010202
+> [   90.429124] RAX: ffff8e475e9a2001 RBX: ffff8e475e9a11c0 RCX: 0000000000002817
+> [   90.429126] RDX: 0000000000002617 RSI: 2f0bdc6175ca72c6 RDI: 000000000003bae0
+> [   90.429127] RBP: ffffad8501857ab8 R08: ffff8e4616989000 R09: 0000000000001000
+> [   90.429128] R10: 0000000000001000 R11: 0000000000001000 R12: fffffffffffffff5
+> [   90.429130] R13: 0000000000200000 R14: ffffad8501857acc R15: ffff8e4616989a80
+> [   90.429132] FS:  00007fa9099b3e40(0000) GS:ffff8e64aefc0000(0000) knlGS:0000000000000000
+> [   90.429134] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   90.429135] CR2: 0000000000000005 CR3: 0000000104526000 CR4: 0000000000750ee0
+> [   90.429137] PKRU: 55555554
+> [   90.429138] Call Trace:
+> [   90.429139]  <TASK>
+> [   90.429142]  blk_mq_submit_bio+0x9d/0x5e0
+> [   90.429145]  ? bio_associate_blkg_from_css+0xcd/0x340
+> [   90.429148]  __submit_bio+0xf5/0x180
+> [   90.429150]  submit_bio_noacct_nocheck+0x20e/0x2c0
+> [   90.429152]  __blkdev_direct_IO_async+0x104/0x1b0
+> [   90.429155]  blkdev_read_iter+0x127/0x1e0
+> [   90.429158]  io_read+0xe6/0x4e0
+> [   90.429162]  io_issue_sqe+0x66/0x3c0
+> [   90.429165]  ? io_prep_rw+0x5e/0x1c0
+> [   90.429167]  io_submit_sqes+0x201/0x610
+> [   90.429170]  __do_sys_io_uring_enter+0x3d0/0xa50
+> [   90.429173]  do_syscall_64+0x5c/0x90
+> [   90.429176]  ? syscall_exit_to_user_mode+0x1b/0x40
+> [   90.429179]  ? do_syscall_64+0x6b/0x90
+> [   90.429180]  ? exit_to_user_mode_prepare+0x16f/0x1d0
+> [   90.429184]  ? syscall_exit_to_user_mode+0x1b/0x40
+> [   90.429186]  ? do_syscall_64+0x6b/0x90
+> [   90.429187]  ? do_syscall_64+0x6b/0x90
+> [   90.429188]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+> [   90.429192] RIP: 0033:0x7fa90ac10865
+> [   90.429220] Code: 00 00 00 44 89 d0 41 b9 08 00 00 00 83 c8 10 f6 87 d0 00 00 00 01 8b bf cc 00 00 00 44 0f 45 d0 45 31 c0 b8 aa 01 00 00 0f 05 <c3> 66 2e 0f 1f 84 00 00 00 00 00 41 83 e2 02 74 c2 f0 48 83 0c 24
+> [   90.429223] RSP: 002b:00007ffd7b86b0d8 EFLAGS: 00000246 ORIG_RAX: 00000000000001aa
+> [   90.429226] RAX: ffffffffffffffda RBX: 00005572c9a6a800 RCX: 00007fa90ac10865
+> [   90.429227] RDX: 0000000000000000 RSI: 0000000000000001 RDI: 000000000000000d
+> [   90.429229] RBP: 00005572c9a6a808 R08: 0000000000000000 R09: 0000000000000008
+> [   90.429230] R10: 0000000000000000 R11: 0000000000000246 R12: 00005572c9a6a8f0
+> [   90.429231] R13: 00007ffd7b86b160 R14: 0000000000000001 R15: 0000000000000000
+> [   90.429235]  </TASK>
+> [   90.429236] Modules linked in: ip_vs_rr xt_ipvs ip_vs overlay
+> rfcomm vhost_net vhost vhost_iotlb tap tun snd_seq_dummy snd_hrtimer
+> snd_seq xt_nat vxlan ip6_udp_tunnel udp_tunnel xt_policy xt_mark xt_u32
+> xt_CHECKSUM ipt_REJECT nf_reject_ipv4 xt_tcpudp xt_conntrack
+> ip6table_mangle ip6table_nat ip6table_filter xt_MASQUERADE ip6_tables
+> nf_conntrack_netlink nfnetlink iptable_mangle xt_addrtype iptable_filter
+> iptable_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
+> br_netfilter cmac algif_hash veth algif_skcipher af_alg nct6775 bnep
+> nct6775_core hwmon_vid scsi_transport_iscsi f2fs snd_usb_audio
+> snd_usbmidi_lib crc32_generic lz4hc_compress snd_rawmidi hid_sony
+> snd_seq_device ff_memless mc xfs intel_rapl_msr intel_rapl_common
+> edac_mce_amd snd_hda_codec_realtek kvm_amd btusb btrtl
+> snd_hda_codec_generic snd_hda_codec_hdmi btbcm snd_hda_intel kvm btintel
+> snd_intel_dspcfg btmtk snd_intel_sdw_acpi joydev mousedev
+> crct10dif_pclmul snd_hda_codec bluetooth crc32_pclmul dm_thin_pool
+> polyval_clmulni
+> [   90.429270]  polyval_generic dm_persistent_data gf128mul
+> hid_apple
+> ecdh_generic snd_hda_core dm_bio_prison crc16 asus_ec_sensors
+> ghash_clmulni_intel dm_bufio bridge snd_hwdep eeepc_wmi sha512_ssse3
+> snd_pcm asus_wmi aesni_intel stp llc snd_timer crypto_simd ledtrig_audio
+> sp5100_tco sparse_keymap snd cryptd apple_mfi_fastcharge rapl usbhid
+> platform_profile pcspkr igb ccp wmi_bmof k10temp i2c_piix4 soundcore
+> vfat cfg80211 dca fat rfkill acpi_cpufreq mac_hid dm_multipath dm_mod sg
+> crypto_user fuse bpf_preload ip_tables x_tables btrfs blake2b_generic
+> libcrc32c crc32c_generic xor raid6_pq nvme crc32c_intel nvme_core
+> xhci_pci xhci_pci_renesas nvme_common mxm_wmi video wmi vfio_pci
+> vfio_pci_core irqbypass vfio_virqfd vfio_iommu_type1 vfio
+> [   90.429308] Unloaded tainted modules: nvidia(POE):1 nvidia_uvm(POE):1 nvidia_modeset(POE):1 nvidia_drm(POE):1 [last unloaded: nvidia(POE)]
+> [   90.429320] CR2: 0000000000000005
+> [   90.429321] ---[ end trace 0000000000000000 ]---
+> [   90.429323] RIP: 0010:__bio_split_to_limits+0x2a4/0x480
+> [   90.429325] Code: 48 8b 5c 24 10 4c 8b 74 24 08 44 8b 7c 24 30 45 89 3e e9 29 ff ff ff c6 43 18 0c 48 89 df 49 c7 c4 f5 ff ff ff e8 4c 30 ff ff <41> 81 4c 24 10 00 40 00 00 45 8b 6c 24 28 49 be 00 00 00 00 00 00
+> [   90.429328] RSP: 0018:ffffad8501857a30 EFLAGS: 00010202
+> [   90.429329] RAX: ffff8e475e9a2001 RBX: ffff8e475e9a11c0 RCX: 0000000000002817
+> [   90.429331] RDX: 0000000000002617 RSI: 2f0bdc6175ca72c6 RDI: 000000000003bae0
+> [   90.429332] RBP: ffffad8501857ab8 R08: ffff8e4616989000 R09: 0000000000001000
+> [   90.429334] R10: 0000000000001000 R11: 0000000000001000 R12: fffffffffffffff5
+> [   90.429335] R13: 0000000000200000 R14: ffffad8501857acc R15: ffff8e4616989a80
+> [   90.429337] FS:  00007fa9099b3e40(0000) GS:ffff8e64aefc0000(0000) knlGS:0000000000000000
+> [   90.429338] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   90.429340] CR2: 0000000000000005 CR3: 0000000104526000 CR4: 0000000000750ee0
+> [   90.429341] PKRU: 55555554
 
-[    2.010601] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[    2.019436] Mem abort info:
-[    2.022273]   ESR = 0x0000000086000005
-[    2.026066]   EC = 0x21: IABT (current EL), IL = 32 bits
-[    2.031429]   SET = 0, FnV = 0
-[    2.034528]   EA = 0, S1PTW = 0
-[    2.037694]   FSC = 0x05: level 1 translation fault
-[    2.042572] [0000000000000000] user address but active_mm is swapper
-[    2.048961] Internal error: Oops: 0000000086000005 [#1] SMP
-[    2.054529] Modules linked in:
-[    2.057582] CPU: 0 PID: 36 Comm: kworker/u8:1 Not tainted 6.2.0-rc3+ #2
-[    2.064190] Hardware name: Google Pixel C (DT)
-[    2.068628] Workqueue: events_unbound deferred_probe_work_func
-[    2.074463] pstate: 40000005 (nZcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[    2.081417] pc : 0x0
-[    2.083600] lr : nvkm_falcon_load_dmem+0x58/0x80
-[    2.088218] sp : ffffffc009ddb6f0
-[    2.091526] x29: ffffffc009ddb6f0 x28: ffffff808028a008 x27: ffffff8081e43c38
-[    2.098658] x26: 00000000000000ff x25: ffffff808028a0a0 x24: 0000000000000000
-[    2.105788] x23: ffffff8080c328f8 x22: 000000000000002c x21: 0000000000005fd4
-[    2.112917] x20: ffffffc009ddb76c x19: ffffff8080c328b8 x18: 0000000000000000
-[    2.120047] x17: 2e74696e695f646f x16: 6874656d5f77732f x15: 0000000000000000
-[    2.127176] x14: 0000000002f546c2 x13: 0000000000000000 x12: 00000000000001ce
-[    2.134306] x11: 0000000000000001 x10: 0000000000000a90 x9 : ffffffc009ddb600
-[    2.141436] x8 : ffffff80803d19f0 x7 : ffffff80bf971180 x6 : 00000000000001b9
-[    2.148565] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 000000000000002c
-[    2.155693] x2 : 0000000000005fd4 x1 : ffffffc009ddb76c x0 : ffffff8080c328b8
-[    2.162822] Call trace:
-[    2.165264]  0x0
-[    2.167099]  gm20b_pmu_init+0x78/0xb4
-[    2.170762]  nvkm_pmu_init+0x20/0x34
-[    2.174334]  nvkm_subdev_init_+0x60/0x12c
-[    2.178339]  nvkm_subdev_init+0x60/0xa0
-[    2.182171]  nvkm_device_init+0x14c/0x2a0
-[    2.186178]  nvkm_udevice_init+0x60/0x9c
-[    2.190097]  nvkm_object_init+0x48/0x1b0
-[    2.194013]  nvkm_ioctl_new+0x168/0x254
-[    2.197843]  nvkm_ioctl+0xd0/0x220
-[    2.201239]  nvkm_client_ioctl+0x10/0x1c
-[    2.205160]  nvif_object_ctor+0xf4/0x22c
-[    2.209079]  nvif_device_ctor+0x28/0x70
-[    2.212910]  nouveau_cli_init+0x150/0x590
-[    2.216916]  nouveau_drm_device_init+0x60/0x2a0
-[    2.221442]  nouveau_platform_device_create+0x90/0xd0
-[    2.226489]  nouveau_platform_probe+0x3c/0x9c
-[    2.230841]  platform_probe+0x68/0xc0
-[    2.234500]  really_probe+0xbc/0x2dc
-[    2.238070]  __driver_probe_device+0x78/0xe0
-[    2.242334]  driver_probe_device+0xd8/0x160
-[    2.246511]  __device_attach_driver+0xb8/0x134
-[    2.250948]  bus_for_each_drv+0x78/0xd0
-[    2.254782]  __device_attach+0x9c/0x1a0
-[    2.258612]  device_initial_probe+0x14/0x20
-[    2.262789]  bus_probe_device+0x98/0xa0
-[    2.266619]  deferred_probe_work_func+0x88/0xc0
-[    2.271142]  process_one_work+0x204/0x40c
-[    2.275150]  worker_thread+0x230/0x450
-[    2.278894]  kthread+0xc8/0xcc
-[    2.281946]  ret_from_fork+0x10/0x20
-[    2.285525] Code: bad PC value
-[    2.288576] ---[ end trace 0000000000000000 ]---
+See the ticket for more details.
 
-Diogo
+[TLDR for the rest of this mail: I'm adding this report to the list of
+tracked Linux kernel regressions; the text you find below is based on a
+few templates paragraphs you might have encountered already in similar
+form.]
+
+BTW, let me use this mail to also add the report to the list of tracked
+regressions to ensure it's doesn't fall through the cracks:
+
+#regzbot introduced: v6.1.4..v6.1.5
+https://bugzilla.kernel.org/show_bug.cgi?id=216932
+#regzbot title: io_uring: NULL pointer dereference
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
+this thread sees some discussion). See page linked in footer for details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
