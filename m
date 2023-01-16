@@ -1,94 +1,78 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083F51FB4
-	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 13:42:30 +0000 (UTC)
-Received: by mail-pf1-f177.google.com with SMTP id x4so16824573pfj.1
-        for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 05:42:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tErkCosgVrVsY9HwXyFuLDBw31Us8x14nZ20eKCJlIU=;
-        b=D+BxIZZlaxiv2eMBSwyLnJS4slW9SQthFSjAIni2i9wN/XHny19/nTDAt8rdWEdP5p
-         Ouv9cDtUYXFFo2CDAqucYqxRYaDnN8pUohuCZ01Q5iK5LV1DGgTDGJuYDPHv8UMxQ6y5
-         IOOSRzyidXrSWjgldlSlAUZ7iDVZd0hhxb6b5M/1mVVFUSjpYPtWCB+e0jaAgQaLPnfw
-         +ZQUMyovOD9eyjtC2WerWYKg3a2LBIiHw21RGb2W6oU1aVqam1zFRjSaS56GKaDK/pIy
-         PJvRpeAtTzff1viVFPZagZBpxXQfAEQKZjnGMlWcqbbGrIWW3qRkwrJgVz6U5DE8xjtk
-         An9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tErkCosgVrVsY9HwXyFuLDBw31Us8x14nZ20eKCJlIU=;
-        b=vTh2qgrxLn5/V3DkN/bTxWQ9goW+9Dh58qIEs3a9FCl9Ez382kDNNfnShZSj69hnu2
-         mtIlrPeA71xTPMMuY2ZMODwEXTpTo3NwIHjiIBv040Xj6AtZ8iFMFVHduTiwyIiS1mS1
-         xupq97Xti6gJbHp1+urNyxrMehc4whmshSA3abfmSRxrd1TgFNpjhNOmLO7oBOy/U8vS
-         iW1VznlTHGeueCc5m/yGYpy38Cbgk3wRn1P7jpMKlquClsGFhfPHu1S9AfrPXBW2KNQb
-         X1LRCoRVBZlNpA2SLNYvxbKnCD0RJyAu0n+rBtf2+BVGFGjIWJV0cvC3HYmsSCp4sAqm
-         SOpA==
-X-Gm-Message-State: AFqh2kp+mDEbItsoLjNhqkkEa2waTwJqIQMwLKKe++Sn0X9nWr8slh8v
-	TXzwnBCipt4CBW9smMIEtgnlfwbcJRl9pGtF
-X-Google-Smtp-Source: AMrXdXu7lYyfPTqoQcyUt78UxBQCjTNeeTOYmqdsUP/GACWq/O0SrXccfdV64V/2BD55P6CDuBZysA==
-X-Received: by 2002:a62:1996:0:b0:582:d97d:debc with SMTP id 144-20020a621996000000b00582d97ddebcmr10117988pfz.3.1673876549769;
-        Mon, 16 Jan 2023 05:42:29 -0800 (PST)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id a20-20020aa79714000000b0058d9a5bac88sm2532974pfg.203.2023.01.16.05.42.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jan 2023 05:42:29 -0800 (PST)
-Message-ID: <c5632908-1b0f-af1f-4754-bf1d0027a6dc@kernel.dk>
-Date: Mon, 16 Jan 2023 06:42:28 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DE2210C
+	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 13:54:19 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pHPwH-0000xz-5w; Mon, 16 Jan 2023 14:54:17 +0100
+Message-ID: <6d075006-7f32-7d39-6d96-4a94d4dbdf40@leemhuis.info>
+Date: Mon, 16 Jan 2023 14:54:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
 Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216932_-_io=5furing_with_?=
  =?UTF-8?Q?libvirt_cause_kernel_NULL_pointer_dereference_since_6=2e1=2e5?=
-Content-Language: en-US
-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Content-Language: en-US, de-DE
+To: Jens Axboe <axboe@kernel.dk>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
 Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
  io-uring@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
  "Sergey V." <truesmb@gmail.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 References: <74347fe1-ac68-2661-500d-b87fab6994f7@leemhuis.info>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <74347fe1-ac68-2661-500d-b87fab6994f7@leemhuis.info>
+ <c5632908-1b0f-af1f-4754-bf1d0027a6dc@kernel.dk>
+From: "Linux kernel regression tracking (#update)" <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <c5632908-1b0f-af1f-4754-bf1d0027a6dc@kernel.dk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673877259;679d0550;
+X-HE-SMSGID: 1pHPwH-0000xz-5w
 
-On 1/16/23 6:17?AM, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
-> Hi, this is your Linux kernel regression tracker.
+On 16.01.23 14:42, Jens Axboe wrote:
+> On 1/16/23 6:17?AM, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
+>> Hi, this is your Linux kernel regression tracker.
+>>
+>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>> kernel developer don't keep an eye on it, I decided to forward it by
+>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216932 :
 > 
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developer don't keep an eye on it, I decided to forward it by
-> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216932 :
+> Looks like:
+> 
+> commit 6d47e0f6a535701134d950db65eb8fe1edf0b575
+> Author: Jens Axboe <axboe@kernel.dk>
+> Date:   Wed Jan 4 08:52:06 2023 -0700
+> 
+>     block: don't allow splitting of a REQ_NOWAIT bio
+> 
+> got picked up by stable, but not the required prep patch:
+> 
+> 
+> commit 613b14884b8595e20b9fac4126bf627313827fbe
+> Author: Jens Axboe <axboe@kernel.dk>
+> Date:   Wed Jan 4 08:51:19 2023 -0700
+> 
+>     block: handle bio_split_to_limits() NULL return
+> 
+> Greg/team, can you pick the latter too? It'll pick cleanly for
+> 6.1-stable, not sure how far back the other patch has gone yet.
 
-Looks like:
+Jens, many thx for looking so quickly into this!
 
-commit 6d47e0f6a535701134d950db65eb8fe1edf0b575
-Author: Jens Axboe <axboe@kernel.dk>
-Date:   Wed Jan 4 08:52:06 2023 -0700
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
 
-    block: don't allow splitting of a REQ_NOWAIT bio
+#regzbot fix: block: handle bio_split_to_limits() NULL return
+#regzbot ignore-activity
 
-got picked up by stable, but not the required prep patch:
 
-
-commit 613b14884b8595e20b9fac4126bf627313827fbe
-Author: Jens Axboe <axboe@kernel.dk>
-Date:   Wed Jan 4 08:51:19 2023 -0700
-
-    block: handle bio_split_to_limits() NULL return
-
-Greg/team, can you pick the latter too? It'll pick cleanly for
-6.1-stable, not sure how far back the other patch has gone yet.
-
--- 
-Jens Axboe
 
