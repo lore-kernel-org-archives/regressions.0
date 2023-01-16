@@ -1,118 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777EA1363
-	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 08:12:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4385AC433D2;
-	Mon, 16 Jan 2023 08:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1673856756;
-	bh=WcIVGhhIJd57HmWTdUrkvlJouTMGu4zpz/MuC9iSurc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rq5MTjXE75d9M00WJrDfQodfZimmgH7p9fFUN3wc9mzEAMyZw0AbRzjsWznYVkFfT
-	 fz4Ig8UB9FBwIZiP8OMxvR0MRslDaH7D4UyAD8pw4/oPVSXwLGwBsO56qk50KoohpH
-	 8XA5Dg61doYwB+7USg68ECLTE3cypOp7mImpV8o3ovLr8fuTAJG7/8ZNVOiwviUlZi
-	 XrTAYPXnFQkAXTuCKdG1zyXCvIvkwoPRAiPdtgxqZm8F9YBBIxgufJZ9d0n5q6b1G5
-	 oi8xmHtm04no1RKd+G0aFC/1mnjH+llB+f8Io6f3jMSvZYFucQKVKWJX3Ar1OwZrYu
-	 jh8EtWNdUX3AA==
-Date: Mon, 16 Jan 2023 10:12:31 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jan Dabros <jsd@semihalf.com>, regressions@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-integrity@vger.kernel.org,
-	Dominik Brodowski <linux@dominikbrodowski.net>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Johannes Altmanninger <aclopte@gmail.com>, stable@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v2] tpm: Allow system suspend to continue when TPM
- suspend fails
-Message-ID: <Y8UG77zvJeic7Cyc@kernel.org>
-References: <Y7dPV5BK6jk1KvX+@zx2c4.com>
- <20230106030156.3258307-1-Jason@zx2c4.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0761C06
+	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 10:15:07 +0000 (UTC)
+Received: by mail-pl1-f182.google.com with SMTP id z13so2061968plg.6
+        for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 02:15:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bxvo5PRWAMnMhPhKPqi0zZIa8lc5uYeIQUDZrRe/SdA=;
+        b=GX4KY1aAd9SKyx3gs+tVjjyrbSYAp0c8FajrwJBFxaFSqMmVjoGmOkUxRHg2RAzS1o
+         Q0bguuONxvLILR6CaRY3b9zRxREh8ciQ2yYXCDA7+Uz0KHQtD0F+snfBfqtN0shiVKhZ
+         znxHuzNApPQZOWpejDOWrvkR2jPu5YJ31kN+oJFnwPBiMIfElQBHNOPJ/kRv/TBFyTeJ
+         iSI8uFyACQg5EMU2gaqe8eH9re23eGkkWgcWVQjTkT+22f7YSA2PM+8QKIJT1NDLwPsR
+         KAsRqYWgiTOvnfDcYQJnBr8aEhN15iEqpZpfFCpO9guJ3x3RPWIciTdp8uaulvjcLlzR
+         CxGA==
+X-Gm-Message-State: AFqh2koP//q2wwFLm7j7seA+CTElcL1d9Ms/TdDnCy1nySF96Erp0Fmg
+	HfWunhtYVrHN9DURFZRbU3bwBQ8RCLxssG0=
+X-Google-Smtp-Source: AMrXdXvw4I/b7X3N3UDU0ic1K/yzPguhPiKMXtFQCXTvOi8hzNdLcY3tM7cH0TKjOJ54X2AcgJnV2A==
+X-Received: by 2002:a17:902:7583:b0:189:4bf4:2cfc with SMTP id j3-20020a170902758300b001894bf42cfcmr88306738pll.31.1673864106810;
+        Mon, 16 Jan 2023 02:15:06 -0800 (PST)
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com. [209.85.214.174])
+        by smtp.gmail.com with ESMTPSA id y16-20020a170902b49000b00192d553d3d2sm18873412plr.157.2023.01.16.02.15.05
+        for <regressions@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Jan 2023 02:15:05 -0800 (PST)
+Received: by mail-pl1-f174.google.com with SMTP id b17so22358486pld.7
+        for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 02:15:05 -0800 (PST)
+X-Received: by 2002:a17:902:a505:b0:192:d553:d3c6 with SMTP id
+ s5-20020a170902a50500b00192d553d3c6mr729996plq.103.1673864104630; Mon, 16 Jan
+ 2023 02:15:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230106030156.3258307-1-Jason@zx2c4.com>
+References: <CAPH51bc1ZoP2ukJJh8nfrNY1FCp1nk7AP0jGGCvoskq2XbmAoA@mail.gmail.com>
+ <029045a9-5006-e663-571f-b67344fa3a50@leemhuis.info> <2f866122-6a56-dfc7-9add-5168a4e796b2@leemhuis.info>
+In-Reply-To: <2f866122-6a56-dfc7-9add-5168a4e796b2@leemhuis.info>
+From: Peifeng Qiu <linux@qiupf.dev>
+Date: Mon, 16 Jan 2023 19:14:53 +0900
+X-Gmail-Original-Message-ID: <CAPH51bdcXFCiHrFPnMYGznsrCTOHDB0fyujFy3y5e8PWWYnnbQ@mail.gmail.com>
+Message-ID: <CAPH51bdcXFCiHrFPnMYGznsrCTOHDB0fyujFy3y5e8PWWYnnbQ@mail.gmail.com>
+Subject: Re: Missing sriov_numvfs after removal of EfiMemoryMappedIO from E820 map
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: bhelgaas@google.com, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Jan 06, 2023 at 04:01:56AM +0100, Jason A. Donenfeld wrote:
-> TPM 1 is sometimes broken across system suspends, due to races or
-> locking issues or something else that haven't been diagnosed or fixed
-> yet, most likely having to do with concurrent reads from the TPM's
-> hardware random number generator driver. These issues prevent the system
-> from actually suspending, with errors like:
-> 
->   tpm tpm0: A TPM error (28) occurred continue selftest
->   ...
->   tpm tpm0: A TPM error (28) occurred attempting get random
->   ...
->   tpm tpm0: Error (28) sending savestate before suspend
->   tpm_tis 00:08: PM: __pnp_bus_suspend(): tpm_pm_suspend+0x0/0x80 returns 28
->   tpm_tis 00:08: PM: dpm_run_callback(): pnp_bus_suspend+0x0/0x10 returns 28
->   tpm_tis 00:08: PM: failed to suspend: error 28
->   PM: Some devices failed to suspend, or early wake event detected
-> 
-> This issue was partially fixed by 23393c646142 ("char: tpm: Protect
-> tpm_pm_suspend with locks"), in a last minute 6.1 commit that Linus took
-> directly because the TPM maintainers weren't available. However, it
-> seems like this just addresses the most common cases of the bug, rather
-> than addressing it entirely. So there are more things to fix still,
-> apparently.
-> 
-> In lieu of actually fixing the underlying bug, just allow system suspend
-> to continue, so that laptops still go to sleep fine. Later, this can be
-> reverted when the real bug is fixed.
-> 
-> Link: https://lore.kernel.org/lkml/7cbe96cf-e0b5-ba63-d1b4-f63d2e826efa@suse.cz/
-> Cc: stable@vger.kernel.org # 6.1+
-> Reported-by: Vlastimil Babka <vbabka@suse.cz>
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> ---
-> This is basically untested and I haven't worked out if there are any
-> awful implications of letting the system sleep when TPM suspend fails.
-> Maybe some PCRs get cleared and that will make everything explode on
-> resume? Maybe it doesn't matter? Somebody well versed in TPMology should
-> probably [n]ack this approach.
-> 
->  drivers/char/tpm/tpm-interface.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-> index d69905233aff..6df9067ef7f9 100644
-> --- a/drivers/char/tpm/tpm-interface.c
-> +++ b/drivers/char/tpm/tpm-interface.c
-> @@ -412,7 +412,10 @@ int tpm_pm_suspend(struct device *dev)
->  	}
->  
->  suspended:
-> -	return rc;
-> +	if (rc)
-> +		pr_err("Unable to suspend tpm-%d (error %d), but continuing system suspend\n",
-> +		       chip->dev_num, rc);
-> +	return 0;
->  }
->  EXPORT_SYMBOL_GPL(tpm_pm_suspend);
->  
-> -- 
-> 2.39.0
-> 
+On Mon, Jan 16, 2023 at 12:41 AM Linux kernel regression tracking
+(Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>
+> Forget to mention one small detail:
+>
+> On 15.01.23 15:21, Linux kernel regression tracking (Thorsten Leemhuis)
+> wrote:
+> > [CCing the regression list, as it should be in the loop for regressions:
+> > https://docs.kernel.org/admin-guide/reporting-regressions.html]
+> >
+> > Hi, this is your Linux kernel regression tracker.
+> >
+> > On 15.01.23 10:21, Peifeng Qiu wrote:
+> >>
+> >> I'm using a dual Xeon system with Intel e810 25G network card and make use
+> >> of SRIOV feature heavily. I have a script to setup the NIC the first step is
+> >> echo $VFS > /sys/class/net/$DEVNAME/device/sriov_numvfs
+> >>
+> >> After switching from v6.1 to v6.2-rc1 "sriov_numvfs" is no longer present. If I
+> >> switch back to v6.1 it's back. Command line parameters are the same so it's
+> >> most likely kernel changes. I did git bisect and found the culprit to be
+> >> 07eab0901ed(efi/x86: Remove EfiMemoryMappedIO from E820 map)
+> >
+> > This is not my area of expertise, but there is another report about an
+> > issue that was bisected to that particular commit:
+> >
+> > https://lore.kernel.org/lkml/ac2693d8-8ba3-72e0-5b66-b3ae008d539d@linux.intel.com/
+> >
+> > A fix for that one was posted here:
+> >
+> > https://lore.kernel.org/lkml/20230110180243.1590045-1-helgaas@kernel.org/
+> >
+> > You might want to look into the report and if it looks like a possible
+> > duplicate give the proposed fix a try.
+>
+> FWIW, that patch was recently mainlined and thus will be in 6.2-rc4 that
+> Linus will likely release in a few hours.
+>
+> Ciao, Thorsten
 
-Let me read all the threads through starting from the original report. I've
-had emails piling up because of getting sick before holiday, and holiday
-season after that.
+I just tested the latest v6.2-rc4 and I can confirm that the issue is
+fixed. Thanks!
 
-This looks sane
-
-Apologies for the lack of response.
-
-BR, Jarkko
+Best regards,
+Peifeng Qiu
