@@ -1,147 +1,118 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 582287B
-	for <regressions@lists.linux.dev>; Sun, 15 Jan 2023 21:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1673819119;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=itG3ZF4MAETUDAKR3A/Ih1TMp9lYsHlIkkE2cbFYorM=;
-	b=QV2FFSvuxWFVtaumXZEzNZ36MlQhAoX7rb9i7L7clTFCfh7+7PCp61uQ4uigjXg6dR4Zi7
-	RYRvD6qMgx09n1Q5g32WMpmMQnscquG7yX10yViyCoPpqK214lJjOv55d9KN6LmxOxFU9j
-	biYk5vtBIso98GkDMwxjJHJEwVebUw0=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-584-bAlm-ZzHN4Chh23ER-xI_g-1; Sun, 15 Jan 2023 16:45:17 -0500
-X-MC-Unique: bAlm-ZzHN4Chh23ER-xI_g-1
-Received: by mail-qt1-f200.google.com with SMTP id k7-20020ac84747000000b003a87ca26200so12227657qtp.6
-        for <regressions@lists.linux.dev>; Sun, 15 Jan 2023 13:45:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=itG3ZF4MAETUDAKR3A/Ih1TMp9lYsHlIkkE2cbFYorM=;
-        b=Vx+2XcN96tmQ1rWziY/Dwry10gI3pP5bxEHS1Q6JK22dHALWM/rzV8dJCpcBQ0VK0V
-         JW+SPzIdaDgpS5sp72iRirN7FIGP2Chvv6REhQX8OOyD3s0B+OcDoKhf0o7hnmEWd5s7
-         ZnChvW37noNYYmetGUn/1rNi22D5mcS9scaGgwEzI6J/N24YgvYn6maDbZLlilja8VM2
-         pKqRQPotp2/0sExWQtnE+EVoQImvv1vKt+hSeukEj54WQKFsuBcQ4eJT5DMP+qVZPTte
-         1Lu1Xr4Cz721m/NYFImGk1xoN4iL/Q/Bl3vvcR11beaO9WuUADQjMPDPxTPAL/PwPjO2
-         uPSA==
-X-Gm-Message-State: AFqh2kq32/wSP1fZ+5WNA96ncoDCca3yJyyKB7j6cqJ2RX0MjBuexA5Q
-	BCDNEW5Rp5K+aIoxf0bL+8qPDFnMgSCaI11JoUEbBqawu5gJjYB/YlCZl/8cSP1Y6s83COp6ecr
-	zfnmeGli2y6rcpIJKeBbWCvGqpu/b2qTozrQxCFM=
-X-Received: by 2002:ad4:46c6:0:b0:531:bf0f:74e9 with SMTP id pm6-20020ad446c6000000b00531bf0f74e9mr3851562qvb.16.1673819116964;
-        Sun, 15 Jan 2023 13:45:16 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXtfUw/WKxs1P5lWECd2XEfFTLxO8sx4RmRDJZvTFCEjlwRQcOTU3yuKkD11Yo130rqXWwfmlcP/EzkffuCj6aU=
-X-Received: by 2002:ad4:46c6:0:b0:531:bf0f:74e9 with SMTP id
- pm6-20020ad446c6000000b00531bf0f74e9mr3851560qvb.16.1673819116738; Sun, 15
- Jan 2023 13:45:16 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777EA1363
+	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 08:12:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4385AC433D2;
+	Mon, 16 Jan 2023 08:12:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1673856756;
+	bh=WcIVGhhIJd57HmWTdUrkvlJouTMGu4zpz/MuC9iSurc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rq5MTjXE75d9M00WJrDfQodfZimmgH7p9fFUN3wc9mzEAMyZw0AbRzjsWznYVkFfT
+	 fz4Ig8UB9FBwIZiP8OMxvR0MRslDaH7D4UyAD8pw4/oPVSXwLGwBsO56qk50KoohpH
+	 8XA5Dg61doYwB+7USg68ECLTE3cypOp7mImpV8o3ovLr8fuTAJG7/8ZNVOiwviUlZi
+	 XrTAYPXnFQkAXTuCKdG1zyXCvIvkwoPRAiPdtgxqZm8F9YBBIxgufJZ9d0n5q6b1G5
+	 oi8xmHtm04no1RKd+G0aFC/1mnjH+llB+f8Io6f3jMSvZYFucQKVKWJX3Ar1OwZrYu
+	 jh8EtWNdUX3AA==
+Date: Mon, 16 Jan 2023 10:12:31 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Jan Dabros <jsd@semihalf.com>, regressions@lists.linux.dev,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-integrity@vger.kernel.org,
+	Dominik Brodowski <linux@dominikbrodowski.net>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Johannes Altmanninger <aclopte@gmail.com>, stable@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH v2] tpm: Allow system suspend to continue when TPM
+ suspend fails
+Message-ID: <Y8UG77zvJeic7Cyc@kernel.org>
+References: <Y7dPV5BK6jk1KvX+@zx2c4.com>
+ <20230106030156.3258307-1-Jason@zx2c4.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20221228144914.z7t7a4fdwvbblnak@wslaptop>
-In-Reply-To: <20221228144914.z7t7a4fdwvbblnak@wslaptop>
-From: David Airlie <airlied@redhat.com>
-Date: Mon, 16 Jan 2023 07:45:05 +1000
-Message-ID: <CAMwc25rY4xpn0yvCScMr6Hk9pFSdvt=9QOypSQDfj1d5tWmtvA@mail.gmail.com>
-Subject: Re: [REGRESSION] GM20B probe fails after commit 2541626cfb79
-To: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-Cc: regressions@lists.linux.dev, bskeggs@redhat.com, 
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230106030156.3258307-1-Jason@zx2c4.com>
 
-On Thu, Dec 29, 2022 at 12:58 AM Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt> wrote:
->
-> Hello,
->
-> Commit 2541626cfb79 breaks GM20B probe with
-> the following kernel log:
->
-> [    2.153892] ------------[ cut here ]------------
-> [    2.153897] WARNING: CPU: 1 PID: 36 at drivers/gpu/drm/nouveau/nvkm/subdev/mmu/vmmgf100.c:273 gf100_vmm_valid+0x2c4/0x390
-> [    2.153916] Modules linked in:
-> [    2.153922] CPU: 1 PID: 36 Comm: kworker/u8:1 Not tainted 6.1.0+ #1
-> [    2.153929] Hardware name: Google Pixel C (DT)
-> [    2.153933] Workqueue: events_unbound deferred_probe_work_func
-> [    2.153943] pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> [    2.153950] pc : gf100_vmm_valid+0x2c4/0x390
-> [    2.153959] lr : gf100_vmm_valid+0xb4/0x390
-> [    2.153966] sp : ffffffc009e134b0
-> [    2.153969] x29: ffffffc009e134b0 x28: 0000000000000000 x27: ffffffc008fd44c8
-> [    2.153979] x26: 00000000ffffffea x25: ffffffc0087b98d0 x24: ffffff8080f89038
-> [    2.153987] x23: ffffff8081fadc08 x22: 0000000000000000 x21: 0000000000000000
-> [    2.153995] x20: ffffff8080f8a000 x19: ffffffc009e13678 x18: 0000000000000000
-> [    2.154003] x17: f37a8b93418958e6 x16: ffffffc009f0d000 x15: 0000000000000000
-> [    2.154011] x14: 0000000000000002 x13: 000000000003a020 x12: ffffffc008000000
-> [    2.154019] x11: 0000000102913000 x10: 0000000000000000 x9 : 0000000000000000
-> [    2.154026] x8 : ffffffc009e136d8 x7 : ffffffc008fd44c8 x6 : ffffff80803d0f00
-> [    2.154034] x5 : 0000000000000000 x4 : ffffff8080f88c00 x3 : 0000000000000010
-> [    2.154041] x2 : 000000000000000c x1 : 00000000ffffffea x0 : 00000000ffffffea
-> [    2.154050] Call trace:
-> [    2.154053]  gf100_vmm_valid+0x2c4/0x390
-> [    2.154061]  nvkm_vmm_map_valid+0xd4/0x204
-> [    2.154069]  nvkm_vmm_map_locked+0xa4/0x344
-> [    2.154076]  nvkm_vmm_map+0x50/0x84
-> [    2.154083]  nvkm_firmware_mem_map+0x84/0xc4
-> [    2.154094]  nvkm_falcon_fw_oneinit+0xc8/0x320
-> [    2.154101]  nvkm_acr_oneinit+0x428/0x5b0
-> [    2.154109]  nvkm_subdev_oneinit_+0x50/0x104
-> [    2.154114]  nvkm_subdev_init_+0x3c/0x12c
-> [    2.154119]  nvkm_subdev_init+0x60/0xa0
-> [    2.154125]  nvkm_device_init+0x14c/0x2a0
-> [    2.154133]  nvkm_udevice_init+0x60/0x9c
-> [    2.154140]  nvkm_object_init+0x48/0x1b0
-> [    2.154144]  nvkm_ioctl_new+0x168/0x254
-> [    2.154149]  nvkm_ioctl+0xd0/0x220
-> [    2.154153]  nvkm_client_ioctl+0x10/0x1c
-> [    2.154162]  nvif_object_ctor+0xf4/0x22c
-> [    2.154168]  nvif_device_ctor+0x28/0x70
-> [    2.154174]  nouveau_cli_init+0x150/0x590
-> [    2.154180]  nouveau_drm_device_init+0x60/0x2a0
-> [    2.154187]  nouveau_platform_device_create+0x90/0xd0
-> [    2.154193]  nouveau_platform_probe+0x3c/0x9c
-> [    2.154200]  platform_probe+0x68/0xc0
-> [    2.154207]  really_probe+0xbc/0x2dc
-> [    2.154211]  __driver_probe_device+0x78/0xe0
-> [    2.154216]  driver_probe_device+0xd8/0x160
-> [    2.154221]  __device_attach_driver+0xb8/0x134
-> [    2.154226]  bus_for_each_drv+0x78/0xd0
-> [    2.154230]  __device_attach+0x9c/0x1a0
-> [    2.154234]  device_initial_probe+0x14/0x20
-> [    2.154239]  bus_probe_device+0x98/0xa0
-> [    2.154243]  deferred_probe_work_func+0x88/0xc0
-> [    2.154247]  process_one_work+0x204/0x40c
-> [    2.154256]  worker_thread+0x230/0x450
-> [    2.154261]  kthread+0xc8/0xcc
-> [    2.154266]  ret_from_fork+0x10/0x20
-> [    2.154273] ---[ end trace 0000000000000000 ]---
-> [    2.154278] nouveau 57000000.gpu: pmu: map -22
-> [    2.154285] nouveau 57000000.gpu: acr: one-time init failed, -22
-> [    2.154559] nouveau 57000000.gpu: init failed with -22
-> [    2.154564] nouveau: DRM-master:00000000:00000080: init failed with -22
-> [    2.154574] nouveau 57000000.gpu: DRM-master: Device allocation failed: -22
-> [    2.162905] nouveau: probe of 57000000.gpu failed with error -22
->
-> #regzbot introduced: 2541626cfb79
+On Fri, Jan 06, 2023 at 04:01:56AM +0100, Jason A. Donenfeld wrote:
+> TPM 1 is sometimes broken across system suspends, due to races or
+> locking issues or something else that haven't been diagnosed or fixed
+> yet, most likely having to do with concurrent reads from the TPM's
+> hardware random number generator driver. These issues prevent the system
+> from actually suspending, with errors like:
+> 
+>   tpm tpm0: A TPM error (28) occurred continue selftest
+>   ...
+>   tpm tpm0: A TPM error (28) occurred attempting get random
+>   ...
+>   tpm tpm0: Error (28) sending savestate before suspend
+>   tpm_tis 00:08: PM: __pnp_bus_suspend(): tpm_pm_suspend+0x0/0x80 returns 28
+>   tpm_tis 00:08: PM: dpm_run_callback(): pnp_bus_suspend+0x0/0x10 returns 28
+>   tpm_tis 00:08: PM: failed to suspend: error 28
+>   PM: Some devices failed to suspend, or early wake event detected
+> 
+> This issue was partially fixed by 23393c646142 ("char: tpm: Protect
+> tpm_pm_suspend with locks"), in a last minute 6.1 commit that Linus took
+> directly because the TPM maintainers weren't available. However, it
+> seems like this just addresses the most common cases of the bug, rather
+> than addressing it entirely. So there are more things to fix still,
+> apparently.
+> 
+> In lieu of actually fixing the underlying bug, just allow system suspend
+> to continue, so that laptops still go to sleep fine. Later, this can be
+> reverted when the real bug is fixed.
+> 
+> Link: https://lore.kernel.org/lkml/7cbe96cf-e0b5-ba63-d1b4-f63d2e826efa@suse.cz/
+> Cc: stable@vger.kernel.org # 6.1+
+> Reported-by: Vlastimil Babka <vbabka@suse.cz>
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> ---
+> This is basically untested and I haven't worked out if there are any
+> awful implications of letting the system sleep when TPM suspend fails.
+> Maybe some PCRs get cleared and that will make everything explode on
+> resume? Maybe it doesn't matter? Somebody well versed in TPMology should
+> probably [n]ack this approach.
+> 
+>  drivers/char/tpm/tpm-interface.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+> index d69905233aff..6df9067ef7f9 100644
+> --- a/drivers/char/tpm/tpm-interface.c
+> +++ b/drivers/char/tpm/tpm-interface.c
+> @@ -412,7 +412,10 @@ int tpm_pm_suspend(struct device *dev)
+>  	}
+>  
+>  suspended:
+> -	return rc;
+> +	if (rc)
+> +		pr_err("Unable to suspend tpm-%d (error %d), but continuing system suspend\n",
+> +		       chip->dev_num, rc);
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(tpm_pm_suspend);
+>  
+> -- 
+> 2.39.0
+> 
 
-As a quick check can you try changing
+Let me read all the threads through starting from the original report. I've
+had emails piling up because of getting sick before holiday, and holiday
+season after that.
 
-drivers/gpu/drm/nouveau/nvkm/core/firmware.c:nvkm_firmware_mem_target
-from NVKM_MEM_TARGET_HOST to NVKM_MEM_TARGET_NCOH ?
+This looks sane
 
-Dave.
->
-> Thanks,
->
-> Diogo Ivo
->
+Apologies for the lack of response.
 
+BR, Jarkko
