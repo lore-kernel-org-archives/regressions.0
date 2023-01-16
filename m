@@ -1,45 +1,45 @@
 Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6E9E29A8
-	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 15:44:39 +0000 (UTC)
-Received: by mail-pj1-f45.google.com with SMTP id w4-20020a17090ac98400b002186f5d7a4cso34314661pjt.0
-        for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 07:44:39 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079D83238
+	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 15:50:22 +0000 (UTC)
+Received: by mail-pj1-f45.google.com with SMTP id v23so29498654pju.3
+        for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 07:50:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ep+gu8Wzxz1XzGkyuWB0bLCmC8cV8aaLkxDrtlaBNIE=;
-        b=c9zNawnK2UWJhD/sNZEYHGKiNRlWVDyJijBtFtC8agG3fvskxGdpuCfktsi/Lotk9X
-         pIx7QRICwargwIAnL5DuRxsUS0SIYEuq1t07E1RKcyacojSWF3KkzwrFGAyqlMOiV1IE
-         s7OkG9vlFc4Al7DdkOWL+V9RVs/rhEMiNvWZRTy8vZgKc/ZCZK3++xFtE6u4c83mtXN8
-         hftxLgO3Rv1kD2AcwM7y82t3Oh+0u+dKixBRpiwSgDAjNKF2Z3lwGPeWVXj4ZpehAVnm
-         HYIj23INl6+EAGxC3EeAiGIAaNeYB+lhXaKlP48JC0WPEhaOv03T7bmgUjR9MAPctPuA
-         t5DA==
+        bh=5OIW1YGG+0Oc0J1muJV3BXbF4aV089CCWwP+GB9Sy1o=;
+        b=wnbSyIZz9APhU+54OJFnTurBzytr+vU60b42/0tHgObtF1eP+0BEFiHjFpzJ7rGCLv
+         nYqdmvlLNeZZcJ9S1zhbpP2YNoW6Nb2j6vKCQwOtnM1w5TVPclmw/OXGDnxNPn/7jFTe
+         fSIlPauAMVHRqm58JlvOiZmdOJVrZc8/YxN4P6OSlM5aw1uKvN6yuLmitVnroX+XcDuL
+         R0H8eT/3GZk/jNzNCSqwwIOD9Lit+WN95QfTNSzXXls8XRM9kb2aSJOYbrETA5rNdnoR
+         KzmjdGQMTOKRYlGrJsbFzHVq2hw8g+g68uc8qg0lo7vyZHLH27WonytURscI5OKM+hLC
+         XOyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ep+gu8Wzxz1XzGkyuWB0bLCmC8cV8aaLkxDrtlaBNIE=;
-        b=MO8LvUI3jdQfZe1EyWZiEwUnoWn7aWw14W60/7Ys+XnuKh3yxIseO7WN2PMpZfdN31
-         20W3hRHD3MdmXaOR8wPHECLZp5+NtMu3BtSBPayiElLbVEBfYFQpS11/8bnp5OYrAzn9
-         tOZAAYZ4rc49h6m17JBgCvKb16pnM57irURMxc9Ca2/F8fZTesN2jZyKv8YXKEmOLYw7
-         oXXx74214DnAaQm/qT0u+xYDyl5iWHzWp6UtS37V9lAgzdCoLPxfMKJU1VhKduGlxt+x
-         aMp7APGvyMNkZ2eMqPhgxLWKYZtareXjAVGXSTlQ2SQgfyt09fr8Mgvy9V8kZt3J9dEc
-         Br1w==
-X-Gm-Message-State: AFqh2kqzc9+Itd489sIbdW52UyVOaWr59tW3lWZ06++ADnA7eZPvBzwM
-	wSvWT17MskDeo2NKshX2fVBpbg==
-X-Google-Smtp-Source: AMrXdXt0BZIJaIf2dPN5YJX2ElhkSG66V59emcBOnQUbzsek5vKyKYZiPt7whP8yZXNyuRHMVUbr5Q==
-X-Received: by 2002:a17:902:d3c9:b0:189:b74f:46ad with SMTP id w9-20020a170902d3c900b00189b74f46admr53348plb.3.1673883879034;
-        Mon, 16 Jan 2023 07:44:39 -0800 (PST)
+        bh=5OIW1YGG+0Oc0J1muJV3BXbF4aV089CCWwP+GB9Sy1o=;
+        b=tb1bEbR/ES1dg/l4yPKBtSzOC5S6X6Xax5TFG05vfInHCn9F5D+XAqF0MKm+IxUcZ/
+         f23/JkZ1TYRN93BqJED7tcLPGkdD4jtBl3j9FxGhXRgu+XWRWSDVPfyjUwP5HFBW6uhJ
+         1A1xXWxQDqI/5xeO+zpj/ovQL141/smyw9vDlJ4JQqZRITrzXxnXzzQOL5ENMroZaE9v
+         qjK9aqAI/F3y0s9NS+GZBlJXksA72EFlaZusdXc6t4D61hQ+vmfBNxswJFlDWPOafn23
+         IpPXHZnWaRUsLtmRpQ/hCtzMDF4OBn11tQY95u9mf6BCPOhPyh5h8AlEt6oB5e6WUSFc
+         MkpQ==
+X-Gm-Message-State: AFqh2kqBXzOaAcdw0hkv5dfGTlWdNFfN6ZO/EnvcbPKxhI8MyN8WNlkj
+	tR0HAeYJodi5AQux7h6O9XzBOQ==
+X-Google-Smtp-Source: AMrXdXs0iug+d4vwdkOUuACUsQG9ZMBQj4SmNkBFcLdpJa/Eme6Oz9otbvTbBuqoUyJEFgoRyn0tjg==
+X-Received: by 2002:a05:6a21:8cc4:b0:af:cc4e:f2d with SMTP id ta4-20020a056a218cc400b000afcc4e0f2dmr23839657pzb.0.1673884222225;
+        Mon, 16 Jan 2023 07:50:22 -0800 (PST)
 Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e3-20020a17090301c300b00172cb8b97a8sm5715112plh.5.2023.01.16.07.44.38
+        by smtp.gmail.com with ESMTPSA id h18-20020a656392000000b0046b1dabf9a8sm15949662pgv.70.2023.01.16.07.50.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jan 2023 07:44:38 -0800 (PST)
-Message-ID: <e921f92d-52ac-1dc7-7720-c270910c2a2d@kernel.dk>
-Date: Mon, 16 Jan 2023 08:44:37 -0700
+        Mon, 16 Jan 2023 07:50:21 -0800 (PST)
+Message-ID: <0857ddf2-89a9-231b-89da-57cacc7342d5@kernel.dk>
+Date: Mon, 16 Jan 2023 08:50:20 -0700
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -51,6 +51,7 @@ User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
 Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216932_-_io=5furing_with_?=
  =?UTF-8?Q?libvirt_cause_kernel_NULL_pointer_dereference_since_6=2e1=2e5?=
 Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
  "stable@vger.kernel.org" <stable@vger.kernel.org>, io-uring@vger.kernel.org,
@@ -58,57 +59,65 @@ Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
 References: <74347fe1-ac68-2661-500d-b87fab6994f7@leemhuis.info>
  <c5632908-1b0f-af1f-4754-bf1d0027a6dc@kernel.dk>
  <a862915b-66f3-9ad8-77d4-4b9ce7044037@kernel.dk> <Y8VkB6Q2xqeut5N8@kroah.com>
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <Y8VkB6Q2xqeut5N8@kroah.com>
+ <e921f92d-52ac-1dc7-7720-c270910c2a2d@kernel.dk>
+In-Reply-To: <e921f92d-52ac-1dc7-7720-c270910c2a2d@kernel.dk>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 1/16/23 7:49 AM, Greg Kroah-Hartman wrote:
-> On Mon, Jan 16, 2023 at 07:13:40AM -0700, Jens Axboe wrote:
->> On 1/16/23 6:42 AM, Jens Axboe wrote:
->>> On 1/16/23 6:17?AM, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
->>>> Hi, this is your Linux kernel regression tracker.
+On 1/16/23 8:44 AM, Jens Axboe wrote:
+> On 1/16/23 7:49 AM, Greg Kroah-Hartman wrote:
+>> On Mon, Jan 16, 2023 at 07:13:40AM -0700, Jens Axboe wrote:
+>>> On 1/16/23 6:42 AM, Jens Axboe wrote:
+>>>> On 1/16/23 6:17?AM, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
+>>>>> Hi, this is your Linux kernel regression tracker.
+>>>>>
+>>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
+>>>>> kernel developer don't keep an eye on it, I decided to forward it by
+>>>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216932 :
 >>>>
->>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->>>> kernel developer don't keep an eye on it, I decided to forward it by
->>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216932 :
+>>>> Looks like:
+>>>>
+>>>> commit 6d47e0f6a535701134d950db65eb8fe1edf0b575
+>>>> Author: Jens Axboe <axboe@kernel.dk>
+>>>> Date:   Wed Jan 4 08:52:06 2023 -0700
+>>>>
+>>>>     block: don't allow splitting of a REQ_NOWAIT bio
+>>>>
+>>>> got picked up by stable, but not the required prep patch:
+>>>>
+>>>>
+>>>> commit 613b14884b8595e20b9fac4126bf627313827fbe
+>>>> Author: Jens Axboe <axboe@kernel.dk>
+>>>> Date:   Wed Jan 4 08:51:19 2023 -0700
+>>>>
+>>>>     block: handle bio_split_to_limits() NULL return
+>>>>
+>>>> Greg/team, can you pick the latter too? It'll pick cleanly for
+>>>> 6.1-stable, not sure how far back the other patch has gone yet.
 >>>
->>> Looks like:
+>>> Looked back, and 5.15 has it too, but the cherry-pick won't work
+>>> on that kernel.
 >>>
->>> commit 6d47e0f6a535701134d950db65eb8fe1edf0b575
->>> Author: Jens Axboe <axboe@kernel.dk>
->>> Date:   Wed Jan 4 08:52:06 2023 -0700
->>>
->>>     block: don't allow splitting of a REQ_NOWAIT bio
->>>
->>> got picked up by stable, but not the required prep patch:
->>>
->>>
->>> commit 613b14884b8595e20b9fac4126bf627313827fbe
->>> Author: Jens Axboe <axboe@kernel.dk>
->>> Date:   Wed Jan 4 08:51:19 2023 -0700
->>>
->>>     block: handle bio_split_to_limits() NULL return
->>>
->>> Greg/team, can you pick the latter too? It'll pick cleanly for
->>> 6.1-stable, not sure how far back the other patch has gone yet.
+>>> Here's one for 5.15-stable that I verified crashes before this one,
+>>> and works with it. Haven't done an allmodconfig yet...
 >>
->> Looked back, and 5.15 has it too, but the cherry-pick won't work
->> on that kernel.
->>
->> Here's one for 5.15-stable that I verified crashes before this one,
->> and works with it. Haven't done an allmodconfig yet...
+>> All now queued up, thanks!
 > 
-> All now queued up, thanks!
+> Thanks Greg! This one was my fault, as it was a set of 2 patches and
+> I only marked 2/2 for stable. But how is that best handled? 1/2 could've
+> been marked stable as well, but I don't think that would have prevented
+> 2/2 applying fine and 1/2 failing and hence not getting queued up until
+> I would've done a backport.
+> 
+> What's the recommended way to describe the dependency that you only
+> want 2/2 applied when 1/2 is in as well?
 
-Thanks Greg! This one was my fault, as it was a set of 2 patches and
-I only marked 2/2 for stable. But how is that best handled? 1/2 could've
-been marked stable as well, but I don't think that would have prevented
-2/2 applying fine and 1/2 failing and hence not getting queued up until
-I would've done a backport.
+What I'm asking is if we have something like Depends-on or similar
+that would explain this dependency. Then patch 2/2 could have:
 
-What's the recommended way to describe the dependency that you only
-want 2/2 applied when 1/2 is in as well?
+Depends-on: 613b14884b85 ("block: handle bio_split_to_limits() NULL return")
+
+and then it'd be clear that either both get added, or none of them.
 
 -- 
 Jens Axboe
