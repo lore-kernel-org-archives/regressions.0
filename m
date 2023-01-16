@@ -1,13 +1,44 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31DE2210C
-	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 13:54:19 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pHPwH-0000xz-5w; Mon, 16 Jan 2023 14:54:17 +0100
-Message-ID: <6d075006-7f32-7d39-6d96-4a94d4dbdf40@leemhuis.info>
-Date: Mon, 16 Jan 2023 14:54:16 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641F723A8
+	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 14:00:05 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id A16613765F;
+	Mon, 16 Jan 2023 14:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1673877603; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z97s89bx2ilPOW9UqwgUScH5OfS1ybbn2p0m+3QWpCU=;
+	b=XWq7RGyfYnE0B+M0Wv2lkFIM7N6yXS4lZd16Jlcv464CBESPPCxOOSjg45mv82oukVoFsH
+	JvMSPIU1U3d3aOZtKuRode0Tmq0sb5l3lykGk8z0ISEzZ1mjAemF5avshQJ2zutG4C6PF/
+	gZ5BxmN7+hN9mZrqhmFtf/rp0ZzMcGw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1673877603;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=z97s89bx2ilPOW9UqwgUScH5OfS1ybbn2p0m+3QWpCU=;
+	b=Rc2krZfWcSlw2BqRt9aOe+ckPIlATBAlcERNETTAUfGGDhzHhcO2QinpDpuG7UVmprkb2f
+	lnJZWtKtjULKegCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 72B14138FE;
+	Mon, 16 Jan 2023 14:00:03 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id gx9PG2NYxWNFUgAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Mon, 16 Jan 2023 14:00:03 +0000
+Message-ID: <af2e5a17-514b-8759-2464-7ebb384a17ba@suse.cz>
+Date: Mon, 16 Jan 2023 15:00:03 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,64 +46,122 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216932_-_io=5furing_with_?=
- =?UTF-8?Q?libvirt_cause_kernel_NULL_pointer_dereference_since_6=2e1=2e5?=
-Content-Language: en-US, de-DE
-To: Jens Axboe <axboe@kernel.dk>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
- io-uring@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
- "Sergey V." <truesmb@gmail.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <74347fe1-ac68-2661-500d-b87fab6994f7@leemhuis.info>
- <c5632908-1b0f-af1f-4754-bf1d0027a6dc@kernel.dk>
-From: "Linux kernel regression tracking (#update)" <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <c5632908-1b0f-af1f-4754-bf1d0027a6dc@kernel.dk>
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v2] tpm: Allow system suspend to continue when TPM suspend
+ fails
+Content-Language: en-US
+To: Jarkko Sakkinen <jarkko@kernel.org>, "Jason A. Donenfeld"
+ <Jason@zx2c4.com>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+ James Bottomley <James.Bottomley@hansenpartnership.com>,
+ Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Jan Dabros <jsd@semihalf.com>, regressions@lists.linux.dev,
+ LKML <linux-kernel@vger.kernel.org>, linux-integrity@vger.kernel.org,
+ Dominik Brodowski <linux@dominikbrodowski.net>,
+ Herbert Xu <herbert@gondor.apana.org.au>,
+ Johannes Altmanninger <aclopte@gmail.com>, stable@vger.kernel.org,
+ Linus Torvalds <torvalds@linux-foundation.org>
+References: <Y7dPV5BK6jk1KvX+@zx2c4.com>
+ <20230106030156.3258307-1-Jason@zx2c4.com> <Y8U4kwTPpMet13Ks@kernel.org>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <Y8U4kwTPpMet13Ks@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673877259;679d0550;
-X-HE-SMSGID: 1pHPwH-0000xz-5w
 
-On 16.01.23 14:42, Jens Axboe wrote:
-> On 1/16/23 6:17?AM, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
->> Hi, this is your Linux kernel regression tracker.
->>
->> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->> kernel developer don't keep an eye on it, I decided to forward it by
->> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216932 :
+On 1/16/23 12:44, Jarkko Sakkinen wrote:
+> On Fri, Jan 06, 2023 at 04:01:56AM +0100, Jason A. Donenfeld wrote:
+>> TPM 1 is sometimes broken across system suspends, due to races or
+>> locking issues or something else that haven't been diagnosed or fixed
+>> yet, most likely having to do with concurrent reads from the TPM's
+>> hardware random number generator driver. These issues prevent the system
+>> from actually suspending, with errors like:
+>> 
+>>   tpm tpm0: A TPM error (28) occurred continue selftest
+>>   ...
 > 
-> Looks like:
+> <REMOVE>
 > 
-> commit 6d47e0f6a535701134d950db65eb8fe1edf0b575
-> Author: Jens Axboe <axboe@kernel.dk>
-> Date:   Wed Jan 4 08:52:06 2023 -0700
+>>   tpm tpm0: A TPM error (28) occurred attempting get random
+>>   ...
+>>   tpm tpm0: Error (28) sending savestate before suspend
+>>   tpm_tis 00:08: PM: __pnp_bus_suspend(): tpm_pm_suspend+0x0/0x80 returns 28
+>>   tpm_tis 00:08: PM: dpm_run_callback(): pnp_bus_suspend+0x0/0x10 returns 28
+>>   tpm_tis 00:08: PM: failed to suspend: error 28
+>>   PM: Some devices failed to suspend, or early wake event detected
 > 
->     block: don't allow splitting of a REQ_NOWAIT bio
+> </REMOVE>
 > 
-> got picked up by stable, but not the required prep patch:
-> 
-> 
-> commit 613b14884b8595e20b9fac4126bf627313827fbe
-> Author: Jens Axboe <axboe@kernel.dk>
-> Date:   Wed Jan 4 08:51:19 2023 -0700
-> 
->     block: handle bio_split_to_limits() NULL return
-> 
-> Greg/team, can you pick the latter too? It'll pick cleanly for
-> 6.1-stable, not sure how far back the other patch has gone yet.
+> Unrelated to thix particular fix.
 
-Jens, many thx for looking so quickly into this!
+Not sure I understand.
+AFAIK this is not a proper fix, but a workaround for when laptop suspend no
+longer works because TPM fails to suspend. The error messages quoted above
+are very much related to the problem of suspend not working, and this patch
+did work as advertised at least for me. I see errors but they don't prevent
+suspend anymore:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+https://lore.kernel.org/all/58d7a42c-9e6b-ab2a-617f-d5e373bf63cb@suse.cz/
 
-#regzbot fix: block: handle bio_split_to_limits() NULL return
-#regzbot ignore-activity
+>> This issue was partially fixed by 23393c646142 ("char: tpm: Protect
+>> tpm_pm_suspend with locks"), in a last minute 6.1 commit that Linus took
+>> directly because the TPM maintainers weren't available. However, it
+>> seems like this just addresses the most common cases of the bug, rather
+>> than addressing it entirely. So there are more things to fix still,
+>> apparently.
+>> 
+>> In lieu of actually fixing the underlying bug, just allow system suspend
+>> to continue, so that laptops still go to sleep fine. Later, this can be
+>> reverted when the real bug is fixed.
+>> 
+>> Link: https://lore.kernel.org/lkml/7cbe96cf-e0b5-ba63-d1b4-f63d2e826efa@suse.cz/
+>> Cc: stable@vger.kernel.org # 6.1+
+>> Reported-by: Vlastimil Babka <vbabka@suse.cz>
+>> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+>> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+>> ---
+>> This is basically untested and I haven't worked out if there are any
+>> awful implications of letting the system sleep when TPM suspend fails.
+>> Maybe some PCRs get cleared and that will make everything explode on
+>> resume? Maybe it doesn't matter? Somebody well versed in TPMology should
+>> probably [n]ack this approach.
+>> 
+>>  drivers/char/tpm/tpm-interface.c | 5 ++++-
+>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+>> index d69905233aff..6df9067ef7f9 100644
+>> --- a/drivers/char/tpm/tpm-interface.c
+>> +++ b/drivers/char/tpm/tpm-interface.c
+>> @@ -412,7 +412,10 @@ int tpm_pm_suspend(struct device *dev)
+>>  	}
+>>  
+>>  suspended:
+>> -	return rc;
+>> +	if (rc)
+>> +		pr_err("Unable to suspend tpm-%d (error %d), but continuing system suspend\n",
+>> +		       chip->dev_num, rc);
+>> +	return 0;
+>>  }
+>>  EXPORT_SYMBOL_GPL(tpm_pm_suspend);
+>>  
+>> -- 
+>> 2.39.0
+>> 
+> 
+> This tpm_tis local issue, nothing to do with tpm_pm_suspend(). Executing
+> the selftest as part of wake up, is TPM 1.2 dTPM specific requirement, and
+> the call is located in tpm_tis_resume() [*].
+> 
+> [*] https://lore.kernel.org/lkml/Y8U1QxA4GYvPWDky@kernel.org/
 
+Yes the changelog at the top does say "due to races or locking issues or
+something else that haven't been diagnosed or fixed yet"
 
+I don't know what causes the TPM to start returning error 28 on resume and
+never recover from it. But it didn't happen before hwrng started using the
+TPM. Before that, it was probably just the selftest ever doing anything with
+the TPM, and on its own I don't recall it ever (before 6.1) failing and
+preventing further suspend/resume.
+
+> BR, Jarkko
 
