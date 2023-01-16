@@ -1,125 +1,122 @@
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079D83238
-	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 15:50:22 +0000 (UTC)
-Received: by mail-pj1-f45.google.com with SMTP id v23so29498654pju.3
-        for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 07:50:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5OIW1YGG+0Oc0J1muJV3BXbF4aV089CCWwP+GB9Sy1o=;
-        b=wnbSyIZz9APhU+54OJFnTurBzytr+vU60b42/0tHgObtF1eP+0BEFiHjFpzJ7rGCLv
-         nYqdmvlLNeZZcJ9S1zhbpP2YNoW6Nb2j6vKCQwOtnM1w5TVPclmw/OXGDnxNPn/7jFTe
-         fSIlPauAMVHRqm58JlvOiZmdOJVrZc8/YxN4P6OSlM5aw1uKvN6yuLmitVnroX+XcDuL
-         R0H8eT/3GZk/jNzNCSqwwIOD9Lit+WN95QfTNSzXXls8XRM9kb2aSJOYbrETA5rNdnoR
-         KzmjdGQMTOKRYlGrJsbFzHVq2hw8g+g68uc8qg0lo7vyZHLH27WonytURscI5OKM+hLC
-         XOyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:cc:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5OIW1YGG+0Oc0J1muJV3BXbF4aV089CCWwP+GB9Sy1o=;
-        b=tb1bEbR/ES1dg/l4yPKBtSzOC5S6X6Xax5TFG05vfInHCn9F5D+XAqF0MKm+IxUcZ/
-         f23/JkZ1TYRN93BqJED7tcLPGkdD4jtBl3j9FxGhXRgu+XWRWSDVPfyjUwP5HFBW6uhJ
-         1A1xXWxQDqI/5xeO+zpj/ovQL141/smyw9vDlJ4JQqZRITrzXxnXzzQOL5ENMroZaE9v
-         qjK9aqAI/F3y0s9NS+GZBlJXksA72EFlaZusdXc6t4D61hQ+vmfBNxswJFlDWPOafn23
-         IpPXHZnWaRUsLtmRpQ/hCtzMDF4OBn11tQY95u9mf6BCPOhPyh5h8AlEt6oB5e6WUSFc
-         MkpQ==
-X-Gm-Message-State: AFqh2kqBXzOaAcdw0hkv5dfGTlWdNFfN6ZO/EnvcbPKxhI8MyN8WNlkj
-	tR0HAeYJodi5AQux7h6O9XzBOQ==
-X-Google-Smtp-Source: AMrXdXs0iug+d4vwdkOUuACUsQG9ZMBQj4SmNkBFcLdpJa/Eme6Oz9otbvTbBuqoUyJEFgoRyn0tjg==
-X-Received: by 2002:a05:6a21:8cc4:b0:af:cc4e:f2d with SMTP id ta4-20020a056a218cc400b000afcc4e0f2dmr23839657pzb.0.1673884222225;
-        Mon, 16 Jan 2023 07:50:22 -0800 (PST)
-Received: from [192.168.1.136] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id h18-20020a656392000000b0046b1dabf9a8sm15949662pgv.70.2023.01.16.07.50.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Jan 2023 07:50:21 -0800 (PST)
-Message-ID: <0857ddf2-89a9-231b-89da-57cacc7342d5@kernel.dk>
-Date: Mon, 16 Jan 2023 08:50:20 -0700
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C673238
+	for <regressions@lists.linux.dev>; Mon, 16 Jan 2023 15:52:12 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pHRmB-0004On-Na; Mon, 16 Jan 2023 16:51:59 +0100
+Message-ID: <954a693d-09aa-1033-384a-53debf2a2d1c@leemhuis.info>
+Date: Mon, 16 Jan 2023 16:51:58 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: =?UTF-8?Q?Re=3a_=5bregression=5d_Bug=c2=a0216932_-_io=5furing_with_?=
- =?UTF-8?Q?libvirt_cause_kernel_NULL_pointer_dereference_since_6=2e1=2e5?=
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- "stable@vger.kernel.org" <stable@vger.kernel.org>, io-uring@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, "Sergey V." <truesmb@gmail.com>
-References: <74347fe1-ac68-2661-500d-b87fab6994f7@leemhuis.info>
- <c5632908-1b0f-af1f-4754-bf1d0027a6dc@kernel.dk>
- <a862915b-66f3-9ad8-77d4-4b9ce7044037@kernel.dk> <Y8VkB6Q2xqeut5N8@kroah.com>
- <e921f92d-52ac-1dc7-7720-c270910c2a2d@kernel.dk>
-In-Reply-To: <e921f92d-52ac-1dc7-7720-c270910c2a2d@kernel.dk>
+Subject: Re: spidev regression in 6.2-rc kernel
+Content-Language: en-US, de-DE
+To: Francesco Dolcini <francesco@dolcini.it>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Mark Brown <broonie@kernel.org>,
+ bartosz.golaszewski@linaro.org
+Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ max.krummenacher@toradex.com,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <Y8U9vrwzHVAyBZHK@francesco-nb.int.toradex.com>
+From: "Linux kernel regression tracking (#adding)" <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <Y8U9vrwzHVAyBZHK@francesco-nb.int.toradex.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1673884332;19c813c4;
+X-HE-SMSGID: 1pHRmB-0004On-Na
 
-On 1/16/23 8:44 AM, Jens Axboe wrote:
-> On 1/16/23 7:49 AM, Greg Kroah-Hartman wrote:
->> On Mon, Jan 16, 2023 at 07:13:40AM -0700, Jens Axboe wrote:
->>> On 1/16/23 6:42 AM, Jens Axboe wrote:
->>>> On 1/16/23 6:17?AM, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
->>>>> Hi, this is your Linux kernel regression tracker.
->>>>>
->>>>> I noticed a regression report in bugzilla.kernel.org. As many (most?)
->>>>> kernel developer don't keep an eye on it, I decided to forward it by
->>>>> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216932 :
->>>>
->>>> Looks like:
->>>>
->>>> commit 6d47e0f6a535701134d950db65eb8fe1edf0b575
->>>> Author: Jens Axboe <axboe@kernel.dk>
->>>> Date:   Wed Jan 4 08:52:06 2023 -0700
->>>>
->>>>     block: don't allow splitting of a REQ_NOWAIT bio
->>>>
->>>> got picked up by stable, but not the required prep patch:
->>>>
->>>>
->>>> commit 613b14884b8595e20b9fac4126bf627313827fbe
->>>> Author: Jens Axboe <axboe@kernel.dk>
->>>> Date:   Wed Jan 4 08:51:19 2023 -0700
->>>>
->>>>     block: handle bio_split_to_limits() NULL return
->>>>
->>>> Greg/team, can you pick the latter too? It'll pick cleanly for
->>>> 6.1-stable, not sure how far back the other patch has gone yet.
->>>
->>> Looked back, and 5.15 has it too, but the cherry-pick won't work
->>> on that kernel.
->>>
->>> Here's one for 5.15-stable that I verified crashes before this one,
->>> and works with it. Haven't done an allmodconfig yet...
->>
->> All now queued up, thanks!
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+On 16.01.23 13:06, Francesco Dolcini wrote:
+> Hello,
+> we spotted a regression on spidev on latest 6.2-rc kernel.
 > 
-> Thanks Greg! This one was my fault, as it was a set of 2 patches and
-> I only marked 2/2 for stable. But how is that best handled? 1/2 could've
-> been marked stable as well, but I don't think that would have prevented
-> 2/2 applying fine and 1/2 failing and hence not getting queued up until
-> I would've done a backport.
+> [  214.047619]
+> [  214.049198] ============================================
+> [  214.054533] WARNING: possible recursive locking detected
+> [  214.059858] 6.2.0-rc3-0.0.0-devel+git.97ec4d559d93 #1 Not tainted
+> [  214.065969] --------------------------------------------
+> [  214.071290] spidev_test/1454 is trying to acquire lock:
+> [  214.076530] c4925dbc (&spidev->spi_lock){+.+.}-{3:3}, at: spidev_ioctl+0x8e0/0xab8
+> [  214.084164]
+> [  214.084164] but task is already holding lock:
+> [  214.090007] c4925dbc (&spidev->spi_lock){+.+.}-{3:3}, at: spidev_ioctl+0x44/0xab8
+> [  214.097537]
+> [  214.097537] other info that might help us debug this:
+> [  214.104075]  Possible unsafe locking scenario:
+> [  214.104075]
+> [  214.110004]        CPU0
+> [  214.112461]        ----
+> [  214.114916]   lock(&spidev->spi_lock);
+> [  214.118687]   lock(&spidev->spi_lock);
+> [  214.122457]
+> [  214.122457]  *** DEADLOCK ***
+> [  214.122457]
+> [  214.128386]  May be due to missing lock nesting notation
+> [  214.128386]
+> [  214.135183] 2 locks held by spidev_test/1454:
+> [  214.139553]  #0: c4925dbc (&spidev->spi_lock){+.+.}-{3:3}, at: spidev_ioctl+0x44/0xab8
+> [  214.147524]  #1: c4925e14 (&spidev->buf_lock){+.+.}-{3:3}, at: spidev_ioctl+0x70/0xab8
+> [  214.155493]
+> [  214.155493] stack backtrace:
+> [  214.159861] CPU: 0 PID: 1454 Comm: spidev_test Not tainted 6.2.0-rc3-0.0.0-devel+git.97ec4d559d93 #1
+> [  214.169012] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+> [  214.175555]  unwind_backtrace from show_stack+0x10/0x14
+> [  214.180819]  show_stack from dump_stack_lvl+0x60/0x90
+> [  214.185900]  dump_stack_lvl from __lock_acquire+0x874/0x2858
+> [  214.191584]  __lock_acquire from lock_acquire+0xfc/0x378
+> [  214.196918]  lock_acquire from __mutex_lock+0x9c/0x8a8
+> [  214.202083]  __mutex_lock from mutex_lock_nested+0x1c/0x24
+> [  214.207597]  mutex_lock_nested from spidev_ioctl+0x8e0/0xab8
+> [  214.213284]  spidev_ioctl from sys_ioctl+0x4d0/0xe2c
+> [  214.218277]  sys_ioctl from ret_fast_syscall+0x0/0x1c
+> [  214.223351] Exception stack(0xe75cdfa8 to 0xe75cdff0)
+> [  214.228422] dfa0:                   00000000 00001000 00000003 40206b00 bee266e8 bee266e0
+> [  214.236617] dfc0: 00000000 00001000 006a71a0 00000036 004c0040 004bfd18 00000000 00000003
+> [  214.244809] dfe0: 00000036 bee266c8 b6f16dc5 b6e8e5f6
 > 
-> What's the recommended way to describe the dependency that you only
-> want 2/2 applied when 1/2 is in as well?
+> 
+> This is not running the latest rc4, but on sha 97ec4d559d93 (this is
+> just what our CI had available when this test was run). I was not able
+> to bisect it, but it seems something that you could have introduced.
+> 
+> The log is from an apalis-imx6, but I have the same on other ARM SOC.
 
-What I'm asking is if we have something like Depends-on or similar
-that would explain this dependency. Then patch 2/2 could have:
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-Depends-on: 613b14884b85 ("block: handle bio_split_to_limits() NULL return")
+#regzbot ^introduced 1f4d2dd45b6e
+#regzbot title spi: spidev: recursive locking error
+#regzbot monitor:
+https://lore.kernel.org/all/20230116144149.305560-1-brgl@bgdev.pl/
+#regzbot fix: spi: spidev: fix a recursive locking error
+#regzbot ignore-activity
 
-and then it'd be clear that either both get added, or none of them.
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
--- 
-Jens Axboe
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
-
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
