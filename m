@@ -1,103 +1,119 @@
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241671FC4
-	for <regressions@lists.linux.dev>; Tue, 17 Jan 2023 08:33:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673944438; x=1705480438;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0T4IZGdpXC0a4vVV3lEfRA4t5fR3xO5F8rQbdyDYC/Q=;
-  b=Ihqoiw2JxsoHuBEj6cR13V+aKRhxecdBzjmAS/cX6VKAzCmDbuA18blw
-   brpCcomQOXcD4FwAPecYT8LnqV02nyngQ3j37byWzhgdFxcBJ+n5wErcf
-   AJ7z/L1c8BlYAX3ifi3gJ4lbi2QEdM7BUdu2hc/Uf4yQ+NcjJP47uE9uw
-   uPnP+hZ9JOR06gd1klfjTwp/rpjXV06JV3MUHSaFD8lNFEyybjN37n8rd
-   mPeA8jJ9YYqkxCzIdyWAaLY0kcyxfcGeTKAZ//dNg+HBqKNi+m77tq65v
-   vy4RDI3OQhkfTKXaEh9m89/o8PLQfsSp4IfQmHT8b76AG8P146muz4vRv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="326710511"
-X-IronPort-AV: E=Sophos;i="5.97,222,1669104000"; 
-   d="scan'208";a="326710511"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 00:33:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10592"; a="722566715"
-X-IronPort-AV: E=Sophos;i="5.97,222,1669104000"; 
-   d="scan'208";a="722566715"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Jan 2023 00:33:34 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1pHhPQ-00ARvU-0a;
-	Tue, 17 Jan 2023 10:33:32 +0200
-Date: Tue, 17 Jan 2023 10:33:31 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, regressions@lists.linux.dev,
-	Raul Rangel <rrangel@chromium.org>, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] gpiolib: acpi: Allow ignoring wake capability on
- pins that aren't in _AEI
-Message-ID: <Y8ZdWx018I75E+vI@smile.fi.intel.com>
-References: <20230116193702.31356-1-mario.limonciello@amd.com>
- <20230116193702.31356-2-mario.limonciello@amd.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540931FDC
+	for <regressions@lists.linux.dev>; Tue, 17 Jan 2023 10:19:44 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 83A8D38319;
+	Tue, 17 Jan 2023 10:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1673950781; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=UTVHq9dqZLKTnxoacLYbqbw1DksZEoMSGKP4V1CCGyE=;
+	b=otgKSDs/4JpBatRD9Uyk6RUBbfoOxcFlHu2acUs6DQetNtZ/n4o7KQBNf97dA84Wqop5Gx
+	FUh7bLqlED5rcOegRYsHenWz15hsjmEovM8WQa5KXoLfCuJmOQd8YQHU0EQs+lo3g39stP
+	Lyo4lXcZa2nOfpMbDBAE/8oIvE6QNZw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1673950781;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=UTVHq9dqZLKTnxoacLYbqbw1DksZEoMSGKP4V1CCGyE=;
+	b=Sst3FRrTIY5EJQy/YcXbA4kWi2X6HIK1fMH/lBV6B5b/+R6+/8eF4sLu/pvadiVxhC9GNn
+	u4PH6rwKzK+pluCg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 530BA13357;
+	Tue, 17 Jan 2023 10:19:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id faB5Ez12xmO+FwAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Tue, 17 Jan 2023 10:19:41 +0000
+From: Vlastimil Babka <vbabka@suse.cz>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	regressions@leemhuis.info,
+	regressions@lists.linux.dev,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Fabian Vogt <fvogt@suse.com>,
+	=?UTF-8?q?Jakub=20Mat=C4=9Bna?= <matenajakub@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH for 6.1 regression] mm, mremap: fix mremap() expanding for vma's with vm_ops->close()
+Date: Tue, 17 Jan 2023 11:19:39 +0100
+Message-Id: <20230117101939.9753-1-vbabka@suse.cz>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230116193702.31356-2-mario.limonciello@amd.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 16, 2023 at 01:37:01PM -0600, Mario Limonciello wrote:
-> Using the `ignore_wake` quirk or module parameter doesn't work for any pin
-> that has been specified in the _CRS instead of _AEI.
-> 
-> Extend the `acpi_gpio_irq_is_wake` check to cover both places.
+Fabian has reported another regression in 6.1 due to ca3d76b0aa80 ("mm:
+add merging after mremap resize"). The problem is that vma_merge() can
+fail when vma has a vm_ops->close() method, causing is_mergeable_vma()
+test to be negative. This was happening for vma mapping a file from
+fuse-overlayfs, which does have the method. But when we are simply
+expanding the vma, we never remove it due to the "merge" with the added
+area, so the test should not prevent the expansion.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+As a quick fix, check for such vmas and expand them using vma_adjust()
+directly as was done before commit ca3d76b0aa80. For a more robust long
+term solution we should try to limit the check for vma_ops->close only
+to cases that actually result in vma removal, so that no merge would be
+prevented unnecessarily.
 
-> Suggested-by: Raul Rangel <rrangel@chromium.org>
-> Link: https://gitlab.freedesktop.org/drm/amd/-/issues/1722#note_1722335
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/gpio/gpiolib-acpi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-> index bed0380c51360..4287555a12408 100644
-> --- a/drivers/gpio/gpiolib-acpi.c
-> +++ b/drivers/gpio/gpiolib-acpi.c
-> @@ -385,7 +385,7 @@ static bool acpi_gpio_in_ignore_list(const char *ignore_list, const char *contro
->  }
->  
->  static bool acpi_gpio_irq_is_wake(struct device *parent,
-> -				  struct acpi_resource_gpio *agpio)
-> +				  const struct acpi_resource_gpio *agpio)
->  {
->  	unsigned int pin = agpio->pin_table[0];
->  
-> @@ -778,7 +778,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
->  		lookup->info.pin_config = agpio->pin_config;
->  		lookup->info.debounce = agpio->debounce_timeout;
->  		lookup->info.gpioint = gpioint;
-> -		lookup->info.wake_capable = agpio->wake_capable == ACPI_WAKE_CAPABLE;
-> +		lookup->info.wake_capable = acpi_gpio_irq_is_wake(&lookup->info.adev->dev, agpio);
->  
->  		/*
->  		 * Polarity and triggering are only specified for GpioInt
-> -- 
-> 2.34.1
-> 
+Reported-by: Fabian Vogt <fvogt@suse.com>
+Link: https://bugzilla.suse.com/show_bug.cgi?id=1206359#c35
+Fixes: ca3d76b0aa80 ("mm: add merging after mremap resize")
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Jakub Matěna <matenajakub@gmail.com>
+Cc: <stable@vger.kernel.org>
+Tested-by: Fabian Vogt <fvogt@suse.com>
+---
+Thorsten: this should be added to the previous regression which wasn't
+fully fixed by the previous patch:
+https://linux-regtracking.leemhuis.info/regzbot/regression/20221216163227.24648-1-vbabka@suse.cz/
+ mm/mremap.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
+diff --git a/mm/mremap.c b/mm/mremap.c
+index fe587c5d6591..1e234fd95547 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -1032,11 +1032,22 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
+ 			 * the already existing vma (expand operation itself) and possibly also
+ 			 * with the next vma if it becomes adjacent to the expanded vma and
+ 			 * otherwise compatible.
++			 *
++			 * However, vma_merge() can currently fail due to is_mergeable_vma()
++			 * check for vm_ops->close (see the comment there). Yet this should not
++			 * prevent vma expanding, so perform a simple expand for such vma.
++			 * Ideally the check for close op should be only done when a vma would
++			 * be actually removed due to a merge.
+ 			 */
+-			vma = vma_merge(mm, vma, extension_start, extension_end,
++			if (!vma->vm_ops || !vma->vm_ops->close) {
++				vma = vma_merge(mm, vma, extension_start, extension_end,
+ 					vma->vm_flags, vma->anon_vma, vma->vm_file,
+ 					extension_pgoff, vma_policy(vma),
+ 					vma->vm_userfaultfd_ctx, anon_vma_name(vma));
++			} else if (vma_adjust(vma, vma->vm_start, addr + new_len,
++                                   vma->vm_pgoff, NULL)) {
++				vma = NULL;
++			}
+ 			if (!vma) {
+ 				vm_unacct_memory(pages);
+ 				ret = -ENOMEM;
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.38.1
 
