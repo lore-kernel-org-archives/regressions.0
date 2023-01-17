@@ -1,119 +1,110 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540931FDC
-	for <regressions@lists.linux.dev>; Tue, 17 Jan 2023 10:19:44 +0000 (UTC)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0815B23A8
+	for <regressions@lists.linux.dev>; Tue, 17 Jan 2023 12:15:24 +0000 (UTC)
+Received: from [141.14.220.45] (g45.guest.molgen.mpg.de [141.14.220.45])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 83A8D38319;
-	Tue, 17 Jan 2023 10:19:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1673950781; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UTVHq9dqZLKTnxoacLYbqbw1DksZEoMSGKP4V1CCGyE=;
-	b=otgKSDs/4JpBatRD9Uyk6RUBbfoOxcFlHu2acUs6DQetNtZ/n4o7KQBNf97dA84Wqop5Gx
-	FUh7bLqlED5rcOegRYsHenWz15hsjmEovM8WQa5KXoLfCuJmOQd8YQHU0EQs+lo3g39stP
-	Lyo4lXcZa2nOfpMbDBAE/8oIvE6QNZw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1673950781;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=UTVHq9dqZLKTnxoacLYbqbw1DksZEoMSGKP4V1CCGyE=;
-	b=Sst3FRrTIY5EJQy/YcXbA4kWi2X6HIK1fMH/lBV6B5b/+R6+/8eF4sLu/pvadiVxhC9GNn
-	u4PH6rwKzK+pluCg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-	(No client certificate requested)
-	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 530BA13357;
-	Tue, 17 Jan 2023 10:19:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-	by imap2.suse-dmz.suse.de with ESMTPSA
-	id faB5Ez12xmO+FwAAMHmgww
-	(envelope-from <vbabka@suse.cz>); Tue, 17 Jan 2023 10:19:41 +0000
-From: Vlastimil Babka <vbabka@suse.cz>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	regressions@leemhuis.info,
-	regressions@lists.linux.dev,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Fabian Vogt <fvogt@suse.com>,
-	=?UTF-8?q?Jakub=20Mat=C4=9Bna?= <matenajakub@gmail.com>,
-	stable@vger.kernel.org
-Subject: [PATCH for 6.1 regression] mm, mremap: fix mremap() expanding for vma's with vm_ops->close()
-Date: Tue, 17 Jan 2023 11:19:39 +0100
-Message-Id: <20230117101939.9753-1-vbabka@suse.cz>
-X-Mailer: git-send-email 2.38.1
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id E671E61CC40F9;
+	Tue, 17 Jan 2023 13:15:18 +0100 (CET)
+Message-ID: <90dab560-da68-6fa1-57e5-7afa8aedfe4c@molgen.mpg.de>
+Date: Tue, 17 Jan 2023 13:15:18 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [5.15] Backport commit 0c25422d34b4 (scsi: mpt3sas: Remove
+ scsi_dma_map() error messages)
+Content-Language: en-US
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+To: stable@vger.kernel.org
+Cc: Greg KH <gregkh@linuxfoundation.org>, regressions@lists.linux.dev,
+ Christoph Hellwig <hch@lst.de>,
+ Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
+ Sathya Prakash <sathya.prakash@broadcom.com>,
+ Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
+ MPT-FusionLinux.pdl@broadcom.com,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ John Pittman <jpittman@redhat.com>, linux-scsi@vger.kernel.org,
+ it+linux-scsi@molgen.mpg.de, Laurence Oberman <loberman@redhat.com>,
+ djeffery@redhat.com
+References: <693e9047-f52a-b426-616a-6157505e5165@molgen.mpg.de>
+In-Reply-To: <693e9047-f52a-b426-616a-6157505e5165@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Fabian has reported another regression in 6.1 due to ca3d76b0aa80 ("mm:
-add merging after mremap resize"). The problem is that vma_merge() can
-fail when vma has a vm_ops->close() method, causing is_mergeable_vma()
-test to be negative. This was happening for vma mapping a file from
-fuse-overlayfs, which does have the method. But when we are simply
-expanding the vma, we never remove it due to the "merge" with the added
-area, so the test should not prevent the expansion.
+[Cc: +loberman@redhat.com, +djeffery@redhat.com]
 
-As a quick fix, check for such vmas and expand them using vma_adjust()
-directly as was done before commit ca3d76b0aa80. For a more robust long
-term solution we should try to limit the check for vma_ops->close only
-to cases that actually result in vma removal, so that no merge would be
-prevented unnecessarily.
-
-Reported-by: Fabian Vogt <fvogt@suse.com>
-Link: https://bugzilla.suse.com/show_bug.cgi?id=1206359#c35
-Fixes: ca3d76b0aa80 ("mm: add merging after mremap resize")
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Jakub Matěna <matenajakub@gmail.com>
-Cc: <stable@vger.kernel.org>
-Tested-by: Fabian Vogt <fvogt@suse.com>
----
-Thorsten: this should be added to the previous regression which wasn't
-fully fixed by the previous patch:
-https://linux-regtracking.leemhuis.info/regzbot/regression/20221216163227.24648-1-vbabka@suse.cz/
- mm/mremap.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/mm/mremap.c b/mm/mremap.c
-index fe587c5d6591..1e234fd95547 100644
---- a/mm/mremap.c
-+++ b/mm/mremap.c
-@@ -1032,11 +1032,22 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned long, old_len,
- 			 * the already existing vma (expand operation itself) and possibly also
- 			 * with the next vma if it becomes adjacent to the expanded vma and
- 			 * otherwise compatible.
-+			 *
-+			 * However, vma_merge() can currently fail due to is_mergeable_vma()
-+			 * check for vm_ops->close (see the comment there). Yet this should not
-+			 * prevent vma expanding, so perform a simple expand for such vma.
-+			 * Ideally the check for close op should be only done when a vma would
-+			 * be actually removed due to a merge.
- 			 */
--			vma = vma_merge(mm, vma, extension_start, extension_end,
-+			if (!vma->vm_ops || !vma->vm_ops->close) {
-+				vma = vma_merge(mm, vma, extension_start, extension_end,
- 					vma->vm_flags, vma->anon_vma, vma->vm_file,
- 					extension_pgoff, vma_policy(vma),
- 					vma->vm_userfaultfd_ctx, anon_vma_name(vma));
-+			} else if (vma_adjust(vma, vma->vm_start, addr + new_len,
-+                                   vma->vm_pgoff, NULL)) {
-+				vma = NULL;
-+			}
- 			if (!vma) {
- 				vm_unacct_memory(pages);
- 				ret = -ENOMEM;
--- 
-2.38.1
-
+Am 16.01.23 um 15:23 schrieb Paul Menzel:
+> Dear Linux folks,
+> 
+> 
+> Could you please apply commit 0c25422d34b4 (scsi: mpt3sas: Remove 
+> scsi_dma_map() error messages) to the 5.15.y series?
+> 
+> commit 0c25422d34b4726b2707d5f38560943155a91b80
+> Author: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+> Date:   Thu Mar 3 19:32:03 2022 +0530
+> 
+>      scsi: mpt3sas: Remove scsi_dma_map() error messages
+> 
+>      When scsi_dma_map() fails by returning a sges_left value less than zero,
+>      the amount of logging produced can be extremely high.  In a recent end-user
+>      environment, 1200 messages per second were being sent to the log buffer.
+>      This eventually overwhelmed the system and it stalled.
+> 
+>      These error messages are not needed. Remove them.
+> 
+>      Link: https://lore.kernel.org/r/20220303140203.12642-1-sreekanth.reddy@broadcom.com
+>      Suggested-by: Christoph Hellwig <hch@lst.de>
+>      Signed-off-by: Sreekanth Reddy <sreekanth.reddy@broadcom.com>
+>      Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+> 
+> We see this regression after upgrading from Linux 5.10 to 5.15 on our 
+> file servers with Broadcom/LSI SAS3008 PCI-Express Fusion-MPT SAS-3 
+> (mpt3sas) – though luckily our systems do not stall/crash.
+> 
+> The commit message does not say anything about, what commit caused these 
+> error to be appearing – the log statements have been there since 
+> v4.20-rc1, if I am not mistaken, so it must be something else –, and 
+> also do not mention, why these log messages are not needed, but the new 
+> error condition is actually expected.
+> 
+> In the Canonical/Ubuntu bug tracker I found the explanation below [2].
+> 
+>> 2. mpt3sas: Remove scsi_dma_map errors messages:
+>> When driver set the DMA mask to 32bit then we observe that the
+>> SWIOTLB bounce buffers are getting exhausted quickly. For most of the
+>> IOs driver observe that scsi_dma_map() API returned with failure
+>> status and hence driver was printing below error message. Since this
+>> error message is getting printed per IO and if user issues heavy IOs
+>> then we observe that kernel overwhelmed with this error message. Also
+>> we will observe the kernel panic when the serial console is enabled.
+>> So to limit this issue, we removed this error message though this
+>> patch.
+>> "scsi_dma_map failed: request for 1310720 bytes!"
+> 
+> The Launchpad issue was created in March 2022, and the fixed Linux 
+> kernel package 5.15.0-53.59 for Ubuntu 22.04 released on November 15th, 
+> 2022.
+> 
+> Sreekanth, looking again, you are the patch author, one of the Broadcom 
+> maintainers (LSILOGIC MPT FUSION DRIVERS (FC/SAS/SPI)) and created the 
+> Launchpad bug report. I am surprised you didn’t get it backported upstream.
+> 
+> 
+> Kind regards,
+> 
+> Paul
+> 
+> 
+> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=master&id=0c25422d34b4726b2707d5f38560943155a91b80
+> [2]: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1965927
+>      "[Ubuntu 22.04] mpt3sas: Request to include latest bug fix patches"
