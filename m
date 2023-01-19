@@ -1,13 +1,44 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF26F7485
-	for <regressions@lists.linux.dev>; Thu, 19 Jan 2023 14:44:16 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pIW9D-0004rQ-Rv; Thu, 19 Jan 2023 15:44:11 +0100
-Message-ID: <27bd67f4-8b08-6c5b-137c-e9ef543e6d56@leemhuis.info>
-Date: Thu, 19 Jan 2023 15:44:11 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA317485
+	for <regressions@lists.linux.dev>; Thu, 19 Jan 2023 14:55:14 +0000 (UTC)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 13B49208B8;
+	Thu, 19 Jan 2023 14:49:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1674139754; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DPS4obwwsmfPtCuVpCuOX+Y34p5KNkQnrFysGNasucA=;
+	b=SXEWsqfCR02LELaF+lEocgRPIQEH0/KaC1PeLFzh7CwYvNJYGyNgbf7C47jaQjlRBmjuLv
+	lKxNBfOt22gvtIjJqCcTDyk2yxWnOXXwbl22RcLQB+YDfzjm3wxgytxod2acEX+DZgct7i
+	XZjWUySRyc/P9OmK2OuXKljEgWSTlH0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1674139754;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DPS4obwwsmfPtCuVpCuOX+Y34p5KNkQnrFysGNasucA=;
+	b=0uH9M1oLQ4hpPtsy4jOkl/VNbFm+mHAJY9ZowysrEtElD8Qzzn2wo7oy2HW+PZ/FNC+rUl
+	amKX1wOF2qY4A9Ag==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+	(No client certificate requested)
+	by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E841E139ED;
+	Thu, 19 Jan 2023 14:49:13 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+	by imap2.suse-dmz.suse.de with ESMTPSA
+	id NTwpOGlYyWPlMQAAMHmgww
+	(envelope-from <vbabka@suse.cz>); Thu, 19 Jan 2023 14:49:13 +0000
+Message-ID: <f58d5183-5dfc-c908-ac9a-baf9339c9387@suse.cz>
+Date: Thu, 19 Jan 2023 15:49:13 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -15,85 +46,90 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [bisected] clang 15 built kernel fails to boot, stuck at "Loading
- Linux 6.1.1 ...", gcc 12 built kernel with same config boots fine
-Content-Language: en-US, de-DE
-To: "Erhard F." <erhard_f@mailbox.org>, sandipan.das@amd.com
-Cc: peterz@infradead.org, linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20230119022303.177052e4@yea>
-From: "Linux kernel regression tracking (#adding)" <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <20230119022303.177052e4@yea>
+ Thunderbird/102.6.1
+Subject: Re: [PATCH for 6.1 regression] mm, mremap: fix mremap() expanding for
+ vma's with vm_ops->close()
+Content-Language: en-US
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Fabian Vogt <fvogt@suse.com>, =?UTF-8?Q?Jakub_Mat=c4=9bna?=
+ <matenajakub@gmail.com>, stable@vger.kernel.org,
+ Thorsten Leemhuis <regressions@leemhuis.info>
+References: <20230117101939.9753-1-vbabka@suse.cz>
+ <2f03bd25-bfa1-a8fe-558e-ae3ce22b97fa@leemhuis.info>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <2f03bd25-bfa1-a8fe-558e-ae3ce22b97fa@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674139456;9861e6b7;
-X-HE-SMSGID: 1pIW9D-0004rQ-Rv
+Content-Transfer-Encoding: 8bit
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
+On 1/19/23 14:37, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
+> On 17.01.23 11:19, Vlastimil Babka wrote:
+>> Fabian has reported another regression in 6.1 due to ca3d76b0aa80 ("mm:
+>> add merging after mremap resize"). The problem is that vma_merge() can
+>> fail when vma has a vm_ops->close() method, causing is_mergeable_vma()
+>> test to be negative. This was happening for vma mapping a file from
+>> fuse-overlayfs, which does have the method. But when we are simply
+>> expanding the vma, we never remove it due to the "merge" with the added
+>> area, so the test should not prevent the expansion.
+>> 
+>> As a quick fix, check for such vmas and expand them using vma_adjust()
+>> directly as was done before commit ca3d76b0aa80. For a more robust long
+>> term solution we should try to limit the check for vma_ops->close only
+>> to cases that actually result in vma removal, so that no merge would be
+>> prevented unnecessarily.
+>> 
+>> Reported-by: Fabian Vogt <fvogt@suse.com>
+>> Link: https://bugzilla.suse.com/show_bug.cgi?id=1206359#c35
+>> Fixes: ca3d76b0aa80 ("mm: add merging after mremap resize")
+>> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+>> Cc: Jakub Matěna <matenajakub@gmail.com>
+>> Cc: <stable@vger.kernel.org>
+>> Tested-by: Fabian Vogt <fvogt@suse.com>
+>> ---
+> 
+> Thx for highlighting it and CCing me.
+> 
+> Quick question: how fast do you think this should head towards mainline?
+> 
+> The patch landed in next today, so that step in the process is already
+> covered. But is the issue serious enough to say "send this to Linus
+> after it was a day or two in next, so it can be quickly backported to
+> stable"?
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+I think it's not as serious as the previous one, the conditions should be
+more rare. But you made me realize I should probably reply to the "stalls in
+qemu" one in that sense. Thanks!
 
-On 19.01.23 02:23, Erhard F. wrote:
-> Hi!
+>> Thorsten: this should be added to the previous regression which wasn't
+>> fully fixed by the previous patch:
+>> https://linux-regtracking.leemhuis.info/regzbot/regression/20221216163227.24648-1-vbabka@suse.cz/
+>>  mm/mremap.c | 13 ++++++++++++-
+>>  1 file changed, 12 insertions(+), 1 deletion(-)
+>> [...]
 > 
-> I did a kernel bisect for an issue I originally posted on https://github.com/ClangBuiltLinux/linux/issues/1774
+> In that case let me just briefly drop a link to the regression, as
+> regzbot will notice that and file is as an activity.
 > 
-> It is about kernel 6.1.x not booting on my machines when built with clang. A gcc built kernel with the same config just works fine. Turns out kernel v6.2-rc4 and earlier v6.2-rc are still affected.
+> https://lore.kernel.org/lkml/20221216163227.24648-1-vbabka@suse.cz/
 > 
-> I did a kernel bisect which revealed this commit:
+> And simply consider your patch submission as a new report I track
+> separately:
 > 
->  # git bisect bad
-> 706460a96fc654e80b6bed1f562b00d2ce9f2f4d is the first bad commit
-> commit 706460a96fc654e80b6bed1f562b00d2ce9f2f4d
-> Author: Sandipan Das <sandipan.das@amd.com>
-> Date:   Thu Aug 11 17:59:51 2022 +0530
+> #regzbot introduced ca3d76b0aa80 ^
+> https://bugzilla.suse.com/show_bug.cgi?id=1206359#c35
+> #regzbot title mm, mremap: another issue with mremap not fully fixed
+> with the previous fix for the regression
+> #regzbot fix: mm, mremap: fix mremap() expanding for vma's with
+> vm_ops->close()
+> #regzbot ignore-activity
 > 
->     perf/x86/amd/core: Add generic branch record interfaces
->     
->     AMD processors that are capable of recording branches support either Branch
->     Sampling (BRS) or Last Branch Record (LBR). In preparation for adding Last
->     Branch Record Extension Version 2 (LbrExtV2) support, introduce new static
->     calls which act as gateways to call into the feature-dependent functions
->     based on what is available on the processor.
->     
->     Signed-off-by: Sandipan Das <sandipan.das@amd.com>
->     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->     Link: https://lore.kernel.org/r/b75dbc32663cb395f0d701167e952c6a6b0445a3.1660211399.git.sandipan.das@amd.com
+> Not ideal, but that will make sure it's on regzbot radar (where way too
+> many dots appear currently, as I'm a bit behind with things... :-/ )
 > 
->  arch/x86/events/amd/core.c | 34 ++++++++++++++++++++++------------
->  1 file changed, 22 insertions(+), 12 deletions(-)
-> 
-> 
-> For more details please have a look at https://github.com/ClangBuiltLinux/linux/issues/1774
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
-
-#regzbot introduced 706460a96fc654e80b6be ^
-https://github.com/ClangBuiltLinux/linux/issues/1774
-#regzbot title perf/x86/amd/core: clang 15 built kernel fails to boot
-#regzbot ignore-activity
-
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
-
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
