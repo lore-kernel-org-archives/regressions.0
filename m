@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5CC7481
-	for <regressions@lists.linux.dev>; Thu, 19 Jan 2023 14:33:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF26F7485
+	for <regressions@lists.linux.dev>; Thu, 19 Jan 2023 14:44:16 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pIVzD-0002Km-CV; Thu, 19 Jan 2023 15:33:51 +0100
-Message-ID: <fcec3c78-b5d9-eb48-0fc0-d1f27de87f23@leemhuis.info>
-Date: Thu, 19 Jan 2023 15:33:50 +0100
+	id 1pIW9D-0004rQ-Rv; Thu, 19 Jan 2023 15:44:11 +0100
+Message-ID: <27bd67f4-8b08-6c5b-137c-e9ef543e6d56@leemhuis.info>
+Date: Thu, 19 Jan 2023 15:44:11 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,114 +16,69 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
+Subject: Re: [bisected] clang 15 built kernel fails to boot, stuck at "Loading
+ Linux 6.1.1 ...", gcc 12 built kernel with same config boots fine
 Content-Language: en-US, de-DE
-To: bskeggs@redhat.com, Karol Herbst <kherbst@redhat.com>,
- Lyude Paul <lyude@redhat.com>
-References: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
-From: "Linux kernel regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Chris Clayton <chris2553@googlemail.com>,
- LKML <linux-kernel@vger.kernel.org>,
- ML dri-devel <dri-devel@lists.freedesktop.org>,
- ML nouveau <nouveau@lists.freedesktop.org>,
+To: "Erhard F." <erhard_f@mailbox.org>, sandipan.das@amd.com
+Cc: peterz@infradead.org, linux-kernel@vger.kernel.org,
  Linux kernel regressions list <regressions@lists.linux.dev>
-In-Reply-To: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
+References: <20230119022303.177052e4@yea>
+From: "Linux kernel regression tracking (#adding)" <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230119022303.177052e4@yea>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674138835;249ab969;
-X-HE-SMSGID: 1pIVzD-0002Km-CV
-
-[adding various lists and the two other nouveau maintainers to the list
-of recipients]
-
-For the rest of this mail:
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674139456;9861e6b7;
+X-HE-SMSGID: 1pIW9D-0004rQ-Rv
 
 [TLDR: I'm adding this report to the list of tracked Linux kernel
 regressions; the text you find below is based on a few templates
 paragraphs you might have encountered already in similar form.
 See link in footer if these mails annoy you.]
 
-On 18.01.23 21:59, Chris Clayton wrote:
-> Hi.
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+On 19.01.23 02:23, Erhard F. wrote:
+> Hi!
 > 
-> I build and installed the lastest development kernel earlier this week. I've found that when I try the laptop down (or
-> reboot it), it hangs right at the end of closing the current session. The last line I see on  the screen when rebooting is:
+> I did a kernel bisect for an issue I originally posted on https://github.com/ClangBuiltLinux/linux/issues/1774
 > 
-> 	sd 4:0:0:0: [sda] Synchronising SCSI cache
+> It is about kernel 6.1.x not booting on my machines when built with clang. A gcc built kernel with the same config just works fine. Turns out kernel v6.2-rc4 and earlier v6.2-rc are still affected.
 > 
-> when closing down I see one additional line:
+> I did a kernel bisect which revealed this commit:
 > 
-> 	sd 4:0:0:0 [sda]Stopping disk
+>  # git bisect bad
+> 706460a96fc654e80b6bed1f562b00d2ce9f2f4d is the first bad commit
+> commit 706460a96fc654e80b6bed1f562b00d2ce9f2f4d
+> Author: Sandipan Das <sandipan.das@amd.com>
+> Date:   Thu Aug 11 17:59:51 2022 +0530
 > 
-> In both cases the machine then hangs and I have to hold down the power button fot a few seconds to switch it off.
+>     perf/x86/amd/core: Add generic branch record interfaces
+>     
+>     AMD processors that are capable of recording branches support either Branch
+>     Sampling (BRS) or Last Branch Record (LBR). In preparation for adding Last
+>     Branch Record Extension Version 2 (LbrExtV2) support, introduce new static
+>     calls which act as gateways to call into the feature-dependent functions
+>     based on what is available on the processor.
+>     
+>     Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+>     Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>     Link: https://lore.kernel.org/r/b75dbc32663cb395f0d701167e952c6a6b0445a3.1660211399.git.sandipan.das@amd.com
 > 
-> Linux 6.1 is OK but 6.2-rc1 hangs, so I bisected between this two and landed on:
-> 
-> 	# first bad commit: [0e44c21708761977dcbea9b846b51a6fb684907a] drm/nouveau/flcn: new code to load+boot simple HS FWs
-> (VPR scrubber)
-> 
-> I built and installed a kernel with f15cde64b66161bfa74fb58f4e5697d8265b802e (the parent of the bad commit) checked out
-> and that shuts down and reboots fine. It the did the same with the bad commit checked out and that does indeed hang, so
-> I'm confident the bisect outcome is OK.
-> 
-> Kernels 6.1.6 and 5.15.88 are also OK.
-> 
-> My system had dual GPUs - one intel and one NVidia. Related extracts from 'lscpi -v' is:
-> 
-> 00:02.0 VGA compatible controller: Intel Corporation CometLake-H GT2 [UHD Graphics] (rev 05) (prog-if 00 [VGA controller])
->         Subsystem: CLEVO/KAPOK Computer CometLake-H GT2 [UHD Graphics]
-> 
->         Flags: bus master, fast devsel, latency 0, IRQ 142
-> 
->         Memory at c2000000 (64-bit, non-prefetchable) [size=16M]
-> 
->         Memory at a0000000 (64-bit, prefetchable) [size=256M]
-> 
->         I/O ports at 5000 [size=64]
-> 
->         Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
-> 
->         Capabilities: [40] Vendor Specific Information: Len=0c <?>
-> 
->         Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
-> 
->         Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
-> 
->         Capabilities: [d0] Power Management version 2
-> 
->         Kernel driver in use: i915
-> 
->         Kernel modules: i915
+>  arch/x86/events/amd/core.c | 34 ++++++++++++++++++++++------------
+>  1 file changed, 22 insertions(+), 12 deletions(-)
 > 
 > 
-> 01:00.0 VGA compatible controller: NVIDIA Corporation TU117M [GeForce GTX 1650 Ti Mobile] (rev a1) (prog-if 00 [VGA
-> controller])
->         Subsystem: CLEVO/KAPOK Computer TU117M [GeForce GTX 1650 Ti Mobile]
->         Flags: bus master, fast devsel, latency 0, IRQ 141
->         Memory at c4000000 (32-bit, non-prefetchable) [size=16M]
->         Memory at b0000000 (64-bit, prefetchable) [size=256M]
->         Memory at c0000000 (64-bit, prefetchable) [size=32M]
->         I/O ports at 4000 [size=128]
->         Expansion ROM at c3000000 [disabled] [size=512K]
->         Capabilities: [60] Power Management version 3
->         Capabilities: [68] MSI: Enable+ Count=1/1 Maskable- 64bit+
->         Capabilities: [78] Express Legacy Endpoint, MSI 00
->         Kernel driver in use: nouveau
->         Kernel modules: nouveau
-> 
-> DRI_PRIME=1 is exported in one of my init scripts (yes, I am still using sysvinit).
-> 
-> I've attached the bisect.log, but please let me know if I can provide any other diagnostics. Please cc me as I'm not
-> subscribed.
+> For more details please have a look at https://github.com/ClangBuiltLinux/linux/issues/1774
 
 Thanks for the report. To be sure the issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced e44c2170876197
-#regzbot title drm: nouveau: hangs on poweroff/reboot
+#regzbot introduced 706460a96fc654e80b6be ^
+https://github.com/ClangBuiltLinux/linux/issues/1774
+#regzbot title perf/x86/amd/core: clang 15 built kernel fails to boot
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
