@@ -1,216 +1,100 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 391AD6FC2
-	for <regressions@lists.linux.dev>; Thu, 19 Jan 2023 12:24:17 +0000 (UTC)
-Received: by mail-wm1-f43.google.com with SMTP id f19-20020a1c6a13000000b003db0ef4dedcso3439235wmc.4
-        for <regressions@lists.linux.dev>; Thu, 19 Jan 2023 04:24:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FX9Mfb24gJlsHgP4a0XeQNRlaL2qfOwNv92m+typ/N8=;
-        b=EjyrwTQV2Uxkw5+IYFQVyabv07socjV7JD9qoNWI7WGpQoWtdZZzV2hw2RIYIInkCS
-         Tqt3nlwS5cFpxuZwph73GXB99gFcJ+HBmuuP9zT6tYdkx7uirGVWbMT6MHraMEed7AyC
-         c+0bb4Vdippv1uG28Q6+S3EaXqGsVWaT7lT8CFXmLlw0x8IHIKWYU4iOeKF/fhGPiG5f
-         AT746iEhWiiefL1jtWCeEXWvxYcHC8DKqAknx8vNC8YNVeTkgKJysRQGWm33qtYGdubI
-         KEGnqNvzhUmneX9Pfo287GpFoWdXwKBusXKr74r+WTX/n00ipLu/Dd0W0R/ijKOiJeLs
-         bqrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FX9Mfb24gJlsHgP4a0XeQNRlaL2qfOwNv92m+typ/N8=;
-        b=w7sPWqIKzF8jfLccwNlw9uIzcda2NCHRDYSAo8/uMAGy3GETB+C7T2vV+QfkLKNFQr
-         yXr6L6cjzktgZNJwrBt9ZO8X04HXaaoUhEg0jEyTUPVDRD82Pu/cG/BOj2h/LwwQR+yz
-         8ueHHSVdlj43iwVDOSUDmc6zbCLcrI/C0S4od3WcPD9X+5g3p77ljOnwvFz6mYdn+ofs
-         dcu/CvdeC4J0C2MpSry7yIf52Z0fNueqv/Hy9CPWOkboj1z+h/sTVZsIz1g0zmyNt+2t
-         cuZa28eN6ZDx3sTKIxJZIwO4LBBLD5uFntQds3wGTp3lz1FahbvB1YtVXkUrgg23fZB5
-         Yybg==
-X-Gm-Message-State: AFqh2krdZaFhReZ522Ljr3+bUggNWZ2vSW3+Os9kioFLMPZ6X3uhhlBD
-	hGRldlGXz7D9xmE+7p2OuRk=
-X-Google-Smtp-Source: AMrXdXtL0Czzu3r5rTHxGVeZDdrr/t86wi3Oz99Him2TnvwyX48P5OCan+l3t7eBv9N/HUKLXcg1Fw==
-X-Received: by 2002:a05:600c:3d96:b0:3db:26b7:2fc8 with SMTP id bi22-20020a05600c3d9600b003db26b72fc8mr1125857wmb.39.1674131055307;
-        Thu, 19 Jan 2023 04:24:15 -0800 (PST)
-Received: from [10.0.10.31] (rejtana.telefonserwis.pl. [91.231.125.228])
-        by smtp.gmail.com with ESMTPSA id bp28-20020a5d5a9c000000b00273cd321a1bsm33725760wrb.107.2023.01.19.04.24.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Jan 2023 04:24:14 -0800 (PST)
-Message-ID: <744de70c-782d-5d36-87fc-e6b92ac84190@gmail.com>
-Date: Thu, 19 Jan 2023 13:24:13 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1CC17CD
+	for <regressions@lists.linux.dev>; Thu, 19 Jan 2023 13:37:30 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pIV6d-0005xG-34; Thu, 19 Jan 2023 14:37:27 +0100
+Message-ID: <2f03bd25-bfa1-a8fe-558e-ae3ce22b97fa@leemhuis.info>
+Date: Thu, 19 Jan 2023 14:37:26 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [Intel-wired-lan] Supermicro AOC-STGN-I1S (Intel 82599EN based
- 10G adapter) - poor network perfomance after moving to Debian 11.5
-Content-Language: pl
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: intel-wired-lan@osuosl.org, regressions@lists.linux.dev
-References: <d1530cba-1a72-cae8-6a04-ed8ec0f82e6e@gmail.com>
- <652bf236-d97e-832c-e0f3-24927a46d7ad@molgen.mpg.de>
-From: Bartek Kois <bartek.kois@gmail.com>
-In-Reply-To: <652bf236-d97e-832c-e0f3-24927a46d7ad@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [PATCH for 6.1 regression] mm, mremap: fix mremap() expanding for
+ vma's with vm_ops->close()
+Content-Language: en-US, de-DE
+To: Vlastimil Babka <vbabka@suse.cz>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ regressions@lists.linux.dev, Fabian Vogt <fvogt@suse.com>,
+ =?UTF-8?Q?Jakub_Mat=c4=9bna?= <matenajakub@gmail.com>, stable@vger.kernel.org
+References: <20230117101939.9753-1-vbabka@suse.cz>
+From: "Linux kernel regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <20230117101939.9753-1-vbabka@suse.cz>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674135450;094ed74d;
+X-HE-SMSGID: 1pIV6d-0005xG-34
 
+On 17.01.23 11:19, Vlastimil Babka wrote:
+> Fabian has reported another regression in 6.1 due to ca3d76b0aa80 ("mm:
+> add merging after mremap resize"). The problem is that vma_merge() can
+> fail when vma has a vm_ops->close() method, causing is_mergeable_vma()
+> test to be negative. This was happening for vma mapping a file from
+> fuse-overlayfs, which does have the method. But when we are simply
+> expanding the vma, we never remove it due to the "merge" with the added
+> area, so the test should not prevent the expansion.
+> 
+> As a quick fix, check for such vmas and expand them using vma_adjust()
+> directly as was done before commit ca3d76b0aa80. For a more robust long
+> term solution we should try to limit the check for vma_ops->close only
+> to cases that actually result in vma removal, so that no merge would be
+> prevented unnecessarily.
+> 
+> Reported-by: Fabian Vogt <fvogt@suse.com>
+> Link: https://bugzilla.suse.com/show_bug.cgi?id=1206359#c35
+> Fixes: ca3d76b0aa80 ("mm: add merging after mremap resize")
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Jakub Matěna <matenajakub@gmail.com>
+> Cc: <stable@vger.kernel.org>
+> Tested-by: Fabian Vogt <fvogt@suse.com>
+> ---
 
-W dniu 19.01.2023 o 11:17, Paul Menzel pisze:
->
-> #regzbot ^introduced: 4.9.88..5.10.149
->
-> Dear Bartek,
->
->
-> Am 14.01.23 um 11:23 schrieb Bartek Kois:
->
->> After moving from Debian 9.7 to 11.5 as soon as I perform "ip link 
->> set enp1s0 up" for my 10G adapter (AOC-STGN-I1S - Intel 82599EN based 
->> 10G adapter) I am experiencing high cpu load (even if no traffic is 
->> passing through the adapter) and network performance is low (when 
->> network is connected).
->
-> How do you test the network performance? Please give exact numbers for 
-> comparison.
->
-I am using this server as a router for my subscribers with iptables (for 
-NAT and firewall) and hfsc (for QoS). First I encountered this problem 
-while migrating form Debian 9.7 to 11.5. Routers based  on Supermicro 
-X11SSL-F (Intel® C232 chipset) works with no problems after that 
-migration, but routers based on Supermicro X9SCL (Intel C202 PCH) and 
-Supermicro X10SLL+-F (Intel C222 Express PCH) starts behaving strangely 
-with high cpu load (0.5-0.8 while before it was around 0.0-0.1) and 
-subscribers not being able to utilize their plans. I tried to strip down 
-the problem and ends up with clean system with no iptables or hfsc rules 
-behaving the same (higher load) right after setting the 10G link upeven 
-if no traffic is passing by.
+Thx for highlighting it and CCing me.
 
->> The cpu load is oscillating between 0.1 and 0.3 on vanilla system
->> with no network attached. The problem can be observed on the 
->> following platforms: Supermicro X9SCL (Intel C202 PCH) and
->> Supermicro X10SLL+-F (Intel C222 Express PCH), but for the Supermicro
->> X11SSL-F (Intel® C232 chipset) everything is working well.
->>
->> Tested environments:
->> Debian 9.7 - Linux 4.9.0-6-amd64 #1 SMP Debian 4.9.88-1+deb9u1 
->> (2018-05-07) x86_64 GNU/Linux [all platforms working well with no 
->> problems: Supermicro X9SCL (Intel C202 PCH), Supermicro X10SLL+-F 
->> (Intel C222 Express PCH), Supermicro X11SSL-F (Intel® C232 chipset)]
->
->> Debian 11.5 - Linux 5.10.0-19-amd64 #1 SMP Debian 5.10.149-2 
->> (2022-10-21) x86_64 GNU/Linux  [older platforms: Supermicro X9SCL 
->> (Intel C202 PCH), Supermicro X10SLL+-F (Intel C222 Express PCH) 
->> behave problematic as described above | newer platform: Supermicro 
->> X11SSL-F (Intel® C232 chipset) working well with no problems]
->
-> Maybe create a bug at the Linux kernel bug tracker [1], where you can 
-> attach all the logs (`dmesg`, `lspci -nnk -s …`, …).
->
-I`ve already reported that to the Debian team 
-ttps://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1024763, but so far 
-nobody took care of this issue so far.
+Quick question: how fast do you think this should head towards mainline?
 
->> So far to solve the problem I was trying to upgrade system to the 
->> newest stable version, upgrade kernel to version 6.x, upgrade ixgbe 
->> driver to the newest version but with no luck.
->
-> Thank you for checking that. Too bad it’s still present. To rule out 
-> some user space problem, could you test Debian 9.7 with a stable Linux 
-> release, currently 6.1.7?
->
-> What does `sudo perf top --sort comm,dso` show, where the time is spent?
+The patch landed in next today, so that step in the process is already
+covered. But is the issue serious enough to say "send this to Linus
+after it was a day or two in next, so it can be quickly backported to
+stable"?
 
-During my first test in real enviroment with subscribers I gether the 
-following data through the perf:
+> Thorsten: this should be added to the previous regression which wasn't
+> fully fixed by the previous patch:
+> https://linux-regtracking.leemhuis.info/regzbot/regression/20221216163227.24648-1-vbabka@suse.cz/
+>  mm/mremap.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> [...]
 
-   27.83%  [kernel]                   [k] strncpy
-   14.80%  [kernel]                   [k] nft_do_chain
-    7.61%  [kernel]                   [k] memcmp
-    5.63%  [kernel]                   [k] nft_meta_get_eval
-    3.14%  [kernel]                   [k] nft_cmp_eval
-    2.79%  [kernel]                   [k] asm_exc_nmi
-    1.07%  [kernel]                   [k] module_get_kallsym
-    0.92%  [kernel]                   [k] kallsyms_expand_symbol.constprop.0
-    0.85%  [kernel]                   [k] ixgbe_poll
-    0.75%  [kernel]                   [k] format_decode
-    0.61%  [kernel]                   [k] number
-    0.56%  [kernel]                   [k] menu_select
-    0.54%  [kernel]                   [k] clflush_cache_range
-    0.52%  [kernel]                   [k] cpuidle_enter_state
-    0.51%  [kernel]                   [k] vsnprintf
-    0.50%  [kernel]                   [k] u32_classify
-    0.49%  [kernel]                   [k] fib_table_lookup
-    0.40%  [kernel]                   [k] dma_pte_clear_level
-    0.39%  [kernel]                   [k] domain_mapping
-    0.36%  [kernel]                   [k] ixgbe_xmit_fram
+In that case let me just briefly drop a link to the regression, as
+regzbot will notice that and file is as an activity.
 
+https://lore.kernel.org/lkml/20221216163227.24648-1-vbabka@suse.cz/
 
-     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM TIME+ COMMAND
-      18 root      20   0       0      0      0 S  28.2   0.0 7:06.27 
-ksoftirqd/1
-      12 root      20   0       0      0      0 R  12.0   0.0 4:10.88 
-ksoftirqd/0
-      23 root      20   0       0      0      0 S   6.0   0.0 4:36.08 
-ksoftirqd/2
-      28 root      20   0       0      0      0 S   5.3   0.0 6:46.47 
-ksoftirqd/3
-  846449 root      20   0       0      0      0 I   1.0   0.0 0:01.61 
-kworker/0:0-events_power_efficient
-      13 root      20   0       0      0      0 I   0.3   0.0 0:13.50 
-rcu_sched
-    8264 root      20   0  101536   6944   4824 S   0.3   0.2 0:07.77 dhcpd
-       1 root      20   0  164048  10184   7672 S   0.0   0.3 0:04.52 
-systemd
-       2 root      20   0       0      0      0 S   0.0   0.0 0:00.00 
-kthreadd
-       3 root       0 -20       0      0      0 I   0.0   0.0 0:00.00 rcu_gp
-       4 root       0 -20       0      0      0 I   0.0   0.0 0:00.00 
-rcu_par_gp
-       6 root       0 -20       0      0      0 I   0.0   0.0 0:00.00 
-kworker/0:0H-events_highpri
-       9 root       0 -20       0      0      0 I   0.0   0.0 0:00.00 
-mm_percpu_wq
-      10 root      20   0       0      0      0 S   0.0   0.0 0:00.00 
-rcu_tasks_rude_
-      11 root      20   0       0      0      0 S   0.0   0.0 0:00.00 
-rcu_tasks_trace
-      14 root      rt   0       0      0      0 S   0.0   0.0 0:00.26 
-migration/0
+And simply consider your patch submission as a new report I track
+separately:
 
->
->> Supermicro support suggested as follows:
->> it might be kernel related debian 11.5 has kernel 5.10 which is a 
->> recent kernel it might not properly support the chipsets for X9 
->> therefore i suggest to use RHEL or CentOS as they use much older 
->> kernel versions. I expect that with ubuntu 20.04 you see the same 
->> problem it uses kernel 5.4
-> Testing another GNU/Linux distribution for another data point, might 
-> be a good idea.
->
-> As nobody has responded yet, bisecting the issue is probably the 
-> fastest way to get to the bottom of this. Luckily the problem seems 
-> reproducible and you seem to be able to build a Linux kernel yourself, 
-> so that should work. (For testing purposes you could also test with 
-> Ubuntu, as they provide Linux kernel builds for (almost) all releases 
-> in their Linux kernel mainline PPA [2].)
->
-Of course  I can try Ubuntu and report how it is working.
+#regzbot introduced ca3d76b0aa80 ^
+https://bugzilla.suse.com/show_bug.cgi?id=1206359#c35
+#regzbot title mm, mremap: another issue with mremap not fully fixed
+with the previous fix for the regression
+#regzbot fix: mm, mremap: fix mremap() expanding for vma's with
+vm_ops->close()
+#regzbot ignore-activity
 
-Best regards
+Not ideal, but that will make sure it's on regzbot radar (where way too
+many dots appear currently, as I'm a bit behind with things... :-/ )
 
-Bartek Kois
-
->
-> Kind regards,
->
-> Paul
->
->
-> [1]: https://bugzilla.kernel.org/
-> [2]: https://kernel.ubuntu.com/~kernel-ppa/mainline/
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
