@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E1CC17CD
-	for <regressions@lists.linux.dev>; Thu, 19 Jan 2023 13:37:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B3237471
+	for <regressions@lists.linux.dev>; Thu, 19 Jan 2023 13:50:19 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pIV6d-0005xG-34; Thu, 19 Jan 2023 14:37:27 +0100
-Message-ID: <2f03bd25-bfa1-a8fe-558e-ae3ce22b97fa@leemhuis.info>
-Date: Thu, 19 Jan 2023 14:37:26 +0100
+	id 1pIUgA-0005xy-F9; Thu, 19 Jan 2023 14:10:06 +0100
+Message-ID: <849c43bc-7488-72a6-f6fc-8700639b0c79@leemhuis.info>
+Date: Thu, 19 Jan 2023 14:10:05 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,85 +16,66 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [PATCH for 6.1 regression] mm, mremap: fix mremap() expanding for
- vma's with vm_ops->close()
+Subject: Re: regression on aarch64? panic on boot
 Content-Language: en-US, de-DE
-To: Vlastimil Babka <vbabka@suse.cz>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- regressions@lists.linux.dev, Fabian Vogt <fvogt@suse.com>,
- =?UTF-8?Q?Jakub_Mat=c4=9bna?= <matenajakub@gmail.com>, stable@vger.kernel.org
-References: <20230117101939.9753-1-vbabka@suse.cz>
-From: "Linux kernel regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-In-Reply-To: <20230117101939.9753-1-vbabka@suse.cz>
+To: Klaus Jensen <its@irrelevant.dk>, Christoph Hellwig <hch@lst.de>
+Cc: Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+ Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <Y8XINx8fpGPKudW6@cormorant.local>
+From: "Linux kernel regression tracking (#adding)" <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <Y8XINx8fpGPKudW6@cormorant.local>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674135450;094ed74d;
-X-HE-SMSGID: 1pIV6d-0005xG-34
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674136219;8fb36d0c;
+X-HE-SMSGID: 1pIUgA-0005xy-F9
 
-On 17.01.23 11:19, Vlastimil Babka wrote:
-> Fabian has reported another regression in 6.1 due to ca3d76b0aa80 ("mm:
-> add merging after mremap resize"). The problem is that vma_merge() can
-> fail when vma has a vm_ops->close() method, causing is_mergeable_vma()
-> test to be negative. This was happening for vma mapping a file from
-> fuse-overlayfs, which does have the method. But when we are simply
-> expanding the vma, we never remove it due to the "merge" with the added
-> area, so the test should not prevent the expansion.
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+On 16.01.23 22:57, Klaus Jensen wrote:
 > 
-> As a quick fix, check for such vmas and expand them using vma_adjust()
-> directly as was done before commit ca3d76b0aa80. For a more robust long
-> term solution we should try to limit the check for vma_ops->close only
-> to cases that actually result in vma removal, so that no merge would be
-> prevented unnecessarily.
+> I'm getting panics when booting from a QEMU hw/nvme device on an aarch64
+> guest in roughly 20% of boots on v6.2-rc4. Example panic below.
 > 
-> Reported-by: Fabian Vogt <fvogt@suse.com>
-> Link: https://bugzilla.suse.com/show_bug.cgi?id=1206359#c35
-> Fixes: ca3d76b0aa80 ("mm: add merging after mremap resize")
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Jakub Matěna <matenajakub@gmail.com>
-> Cc: <stable@vger.kernel.org>
-> Tested-by: Fabian Vogt <fvogt@suse.com>
-> ---
-
-Thx for highlighting it and CCing me.
-
-Quick question: how fast do you think this should head towards mainline?
-
-The patch landed in next today, so that step in the process is already
-covered. But is the issue serious enough to say "send this to Linus
-after it was a day or two in next, so it can be quickly backported to
-stable"?
-
-> Thorsten: this should be added to the previous regression which wasn't
-> fully fixed by the previous patch:
-> https://linux-regtracking.leemhuis.info/regzbot/regression/20221216163227.24648-1-vbabka@suse.cz/
->  mm/mremap.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+> I've bisected it to commit eac3ef262941 ("nvme-pci: split the initial
+> probe from the rest path").
+> 
+> I'm not seeing this on any other emulated platforms that I'm currently
+> testing (x86_64, riscv32/64, mips32/64 and sparc64).
 > [...]
 
-In that case let me just briefly drop a link to the regression, as
-regzbot will notice that and file is as an activity.
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-https://lore.kernel.org/lkml/20221216163227.24648-1-vbabka@suse.cz/
-
-And simply consider your patch submission as a new report I track
-separately:
-
-#regzbot introduced ca3d76b0aa80 ^
-https://bugzilla.suse.com/show_bug.cgi?id=1206359#c35
-#regzbot title mm, mremap: another issue with mremap not fully fixed
-with the previous fix for the regression
-#regzbot fix: mm, mremap: fix mremap() expanding for vma's with
-vm_ops->close()
+#regzbot ^introduced eac3ef262941
+#regzbot title nvme: occasional boot problems due to the newly supported
+async driver probe
 #regzbot ignore-activity
 
-Not ideal, but that will make sure it's on regzbot radar (where way too
-many dots appear currently, as I'm a bit behind with things... :-/ )
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
 Everything you wanna know about Linux kernel regression tracking:
 https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
+That page also explains what to do if mails like this annoy you.
+
