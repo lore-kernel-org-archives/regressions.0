@@ -1,98 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87767E
-	for <regressions@lists.linux.dev>; Sat, 21 Jan 2023 00:07:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A019C433EF;
-	Sat, 21 Jan 2023 00:07:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1674259631;
-	bh=p3Y079nnkl3K5cMAQ/Y53zKuPpFrZ5vU9hR0A7lmpqk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YELDPd1k9OyyD5e4D/rOONQPFPMDNok955AbR4Zgm2U5vhyJy8sg44W4YO/E92Una
-	 hCXxltJOYLqdhoVvJAsTFT52PYG25MDOtQFSZ0BJskTyh4A0/oR3nyoz+Imz6RXRP/
-	 AKsotEJ/KiBui8rBDxjyifweSTDzkG4dObOzfupoKA/tJepmJBzQyU1vp50XboctRB
-	 HV8zJ3Ytu5z4cgmmKOvUq84ZrjN9i1vO8dfKpyTD52tIbSACo0icjst2YFyyyQxZfc
-	 MpTnapVsEV/6HbuUi0ZZHwxuOTuddbzOJ5+iOssbDEqgDuiCiki3qsDVAShRbxOv6c
-	 LaHwJ+u0lRIpw==
-Date: Sat, 21 Jan 2023 00:07:08 +0000
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Jan Dabros <jsd@semihalf.com>, regressions@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-integrity@vger.kernel.org,
-	Dominik Brodowski <linux@dominikbrodowski.net>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Johannes Altmanninger <aclopte@gmail.com>, stable@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v2] tpm: Allow system suspend to continue when TPM
- suspend fails
-Message-ID: <Y8ssrKlWh9rsptKe@kernel.org>
-References: <Y7dPV5BK6jk1KvX+@zx2c4.com>
- <20230106030156.3258307-1-Jason@zx2c4.com>
- <Y8UG77zvJeic7Cyc@kernel.org>
- <CAHmME9oj5V9eWNtVPZ0HF6Kx0but-4KW-+yQnt_gyGj8w5QPbg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B672E362
+	for <regressions@lists.linux.dev>; Sat, 21 Jan 2023 12:32:50 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pJD2t-0004b6-4q; Sat, 21 Jan 2023 13:32:31 +0100
+Message-ID: <3af98200-7240-9e93-bd6a-d0e2f71ab1c4@leemhuis.info>
+Date: Sat, 21 Jan 2023 13:32:30 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHmME9oj5V9eWNtVPZ0HF6Kx0but-4KW-+yQnt_gyGj8w5QPbg@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] pinctrl: aspeed: Force to disable the function's signal
+Content-Language: en-US, de-DE
+To: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Billy Tsai <billy_tsai@aspeedtech.com>, linux-aspeed@lists.ozlabs.org,
+ openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20220818101839.28860-1-billy_tsai@aspeedtech.com>
+ <CACRpkdYpp_1JJQmuX27pECxN0cjzciCuETLPTrSYKqpX0FPABQ@mail.gmail.com>
+ <e501d2fb-aaa0-470d-a8d5-5f8e97898df7@beta.fastmail.com>
+ <CACPK8XfQ=uarsOgJ7LaXqLyGG2vSF-47RkAEV=T2gruapx-yfg@mail.gmail.com>
+From: "Linux kernel regression tracking (#adding)" <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <CACPK8XfQ=uarsOgJ7LaXqLyGG2vSF-47RkAEV=T2gruapx-yfg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674304370;2eadc633;
+X-HE-SMSGID: 1pJD2t-0004b6-4q
 
-On Mon, Jan 16, 2023 at 03:03:17PM +0100, Jason A. Donenfeld wrote:
-> Hi Jarkko,
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+On 19.01.23 02:54, Joel Stanley wrote:
+> On Fri, 26 Aug 2022 at 22:48, Andrew Jeffery <andrew@aj.id.au> wrote:
+>> On Sat, 27 Aug 2022, at 07:26, Linus Walleij wrote:
+>>> On Thu, Aug 18, 2022 at 12:18 PM Billy Tsai <billy_tsai@aspeedtech.com> wrote:
+>>>
+>>>> When the driver want to disable the signal of the function, it doesn't
+>>>> need to query the state of the mux function's signal on a pin. The
+>>>> condition below will miss the disable of the signal:
 > 
-> On Mon, Jan 16, 2023 at 9:12 AM Jarkko Sakkinen <jarkko@kernel.org> wrote:
-> > > diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-> > > index d69905233aff..6df9067ef7f9 100644
-> > > --- a/drivers/char/tpm/tpm-interface.c
-> > > +++ b/drivers/char/tpm/tpm-interface.c
-> > > @@ -412,7 +412,10 @@ int tpm_pm_suspend(struct device *dev)
-> > >       }
-> > >
-> > >  suspended:
-> > > -     return rc;
-> > > +     if (rc)
-> > > +             pr_err("Unable to suspend tpm-%d (error %d), but continuing system suspend\n",
-> > > +                    chip->dev_num, rc);
-> > > +     return 0;
-> > >  }
-> > >  EXPORT_SYMBOL_GPL(tpm_pm_suspend);
-> > >
-> > > --
-> > > 2.39.0
-> > >
-> >
-> > Let me read all the threads through starting from the original report. I've
-> > had emails piling up because of getting sick before holiday, and holiday
-> > season after that.
-> >
-> > This looks sane
+>>> I can't see the verdict for this patch? Will there be a new
+>>> version, or are we in the middle of a discussion?
+>>> I'd really like Andrew's ACK on the result before merging.
+>>
+>> Apologies, it's been a bit of A Week :)
+>>
+>> Given the approach has been discussed with the IP designer and solves a bug I'm okay for it to be merged. If we run into issues it is easy enough to back it out.
 > 
-> No, not really. I mean, it was sane under the circumstances of, "I'm
-> not going to spend time fixing this for real if the maintainers aren't
-> around," and it fixed the suspend issue. But it doesn't actually fix
-> any real tpm issue. The real issue, AFAICT, is there's some sort of
-> race between the tpm rng read command and either suspend or wakeup or
-> selftest. One of these is missing some locking. And then commands step
-> on each other and the tpm gets upset. This is probably something that
-> should be fixed. I assume the "Fixes: ..." tag will actually go quite
-> far back, with recent things only unearthing a somewhat old bug. But
-> just a hunch.
+> As foreseen by Andrew, this caused a regression. On the Romulus
+> machine the device tree contains a gpio hog for GPIO S7. With the
+> patch applied:
 > 
-> Jason
+> [    0.384796] aspeed-g5-pinctrl 1e6e2080.pinctrl: request pin 151
+> (AA20) for 1e780000.gpio:943
+> [    0.385009] Muxing pin 151 for GPIO
+> [    0.385081] Disabling signal VPOB9 for VPO
+> [    0.402291] aspeed-g5-pinctrl 1e6e2080.pinctrl: Failed to acquire
+> regmap for IP block 1
+> [    0.402521] aspeed-g5-pinctrl 1e6e2080.pinctrl: request() failed for pin 151
+> 
+> The code path is aspeed-gpio -> pinmux-g5 -> regmap -> clk, and the
+> of_clock code returns an error as it doesn't have a valid struct
+> clk_hw pointer. The regmap call happens because pinmux wants to check
+> the GFX node (IP block 1) to query bits there.
+> 
+> For reference, reverting the patch gives us this trace:
+> 
+> [    0.393160] Muxing pin 151 for GPIO
+> [    0.393267] Disabling signal VPOB9 for VPO
+> [    0.393383] Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
+> [    0.393552] Disabling signal VPOB9 for VPOOFF1
+> [    0.393681] Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
+> [    0.393835] Disabling signal VPOB9 for VPOOFF2
+> [    0.393965] Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
+> [    0.394097] Enabling signal GPIOS7 for GPIOS7
+> [    0.394217] Muxed pin 151 as GPIOS7
+> [    0.394411] gpio-943 (seq_cont): hogged as output/low
+> 
+> This can be reproduced in qemu without userspace:
+> 
+> qemu-system-arm -M romulus-bmc -nographic -kernel arch/arm/boot/zImage
+> -dtb arch/arm/boot/dts/aspeed-bmc-opp-romulus.dtb -no-reboot
+> 
+> Billy, do you have any suggestions?
 
-See my response to Vlastimil:
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-https://lore.kernel.org/linux-integrity/Y8sr7YJ8e8eSpPFv@kernel.org/
+#regzbot ^introduced cf517fef601b
+#regzbot title pinctrl: aspeed-g5-pinctrl 1e6e2080.pinctrl: Failed to
+acquire regmap for IP block 1
+#regzbot ignore-activity
 
-Can you try what happens if you do not call tpm_add_hwrng()?
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
-BR, Jarkko
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
