@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B672E362
-	for <regressions@lists.linux.dev>; Sat, 21 Jan 2023 12:32:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89202561
+	for <regressions@lists.linux.dev>; Sat, 21 Jan 2023 13:20:25 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pJD2t-0004b6-4q; Sat, 21 Jan 2023 13:32:31 +0100
-Message-ID: <3af98200-7240-9e93-bd6a-d0e2f71ab1c4@leemhuis.info>
-Date: Sat, 21 Jan 2023 13:32:30 +0100
+	id 1pJDnC-0003vx-GU; Sat, 21 Jan 2023 14:20:23 +0100
+Message-ID: <0eabbe98-db6e-b5db-ca5b-3f212bf2f734@leemhuis.info>
+Date: Sat, 21 Jan 2023 14:20:22 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,25 +16,20 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH] pinctrl: aspeed: Force to disable the function's signal
+Subject: Re: Is there a known boot failure with 6.2-rc and the Intel SDV EFI
+ systems?
 Content-Language: en-US, de-DE
-To: Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Billy Tsai <billy_tsai@aspeedtech.com>, linux-aspeed@lists.ozlabs.org,
- openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+To: James Bottomley <James.Bottomley@HansenPartnership.com>,
+ linux-efi@vger.kernel.org,
  Linux kernel regressions list <regressions@lists.linux.dev>
-References: <20220818101839.28860-1-billy_tsai@aspeedtech.com>
- <CACRpkdYpp_1JJQmuX27pECxN0cjzciCuETLPTrSYKqpX0FPABQ@mail.gmail.com>
- <e501d2fb-aaa0-470d-a8d5-5f8e97898df7@beta.fastmail.com>
- <CACPK8XfQ=uarsOgJ7LaXqLyGG2vSF-47RkAEV=T2gruapx-yfg@mail.gmail.com>
+References: <f2503170d12dc567c00998d4e72ba806f7677730.camel@HansenPartnership.com>
 From: "Linux kernel regression tracking (#adding)" <regressions@leemhuis.info>
 Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CACPK8XfQ=uarsOgJ7LaXqLyGG2vSF-47RkAEV=T2gruapx-yfg@mail.gmail.com>
+In-Reply-To: <f2503170d12dc567c00998d4e72ba806f7677730.camel@HansenPartnership.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674304370;2eadc633;
-X-HE-SMSGID: 1pJD2t-0004b6-4q
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674307225;d3cbbc87;
+X-HE-SMSGID: 1pJDnC-0003vx-GU
 
 [TLDR: I'm adding this report to the list of tracked Linux kernel
 regressions; the text you find below is based on a few templates
@@ -44,67 +39,24 @@ See link in footer if these mails annoy you.]
 [CCing the regression list, as it should be in the loop for regressions:
 https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On 19.01.23 02:54, Joel Stanley wrote:
-> On Fri, 26 Aug 2022 at 22:48, Andrew Jeffery <andrew@aj.id.au> wrote:
->> On Sat, 27 Aug 2022, at 07:26, Linus Walleij wrote:
->>> On Thu, Aug 18, 2022 at 12:18 PM Billy Tsai <billy_tsai@aspeedtech.com> wrote:
->>>
->>>> When the driver want to disable the signal of the function, it doesn't
->>>> need to query the state of the mux function's signal on a pin. The
->>>> condition below will miss the disable of the signal:
-> 
->>> I can't see the verdict for this patch? Will there be a new
->>> version, or are we in the middle of a discussion?
->>> I'd really like Andrew's ACK on the result before merging.
->>
->> Apologies, it's been a bit of A Week :)
->>
->> Given the approach has been discussed with the IP designer and solves a bug I'm okay for it to be merged. If we run into issues it is easy enough to back it out.
-> 
-> As foreseen by Andrew, this caused a regression. On the Romulus
-> machine the device tree contains a gpio hog for GPIO S7. With the
-> patch applied:
-> 
-> [    0.384796] aspeed-g5-pinctrl 1e6e2080.pinctrl: request pin 151
-> (AA20) for 1e780000.gpio:943
-> [    0.385009] Muxing pin 151 for GPIO
-> [    0.385081] Disabling signal VPOB9 for VPO
-> [    0.402291] aspeed-g5-pinctrl 1e6e2080.pinctrl: Failed to acquire
-> regmap for IP block 1
-> [    0.402521] aspeed-g5-pinctrl 1e6e2080.pinctrl: request() failed for pin 151
-> 
-> The code path is aspeed-gpio -> pinmux-g5 -> regmap -> clk, and the
-> of_clock code returns an error as it doesn't have a valid struct
-> clk_hw pointer. The regmap call happens because pinmux wants to check
-> the GFX node (IP block 1) to query bits there.
-> 
-> For reference, reverting the patch gives us this trace:
-> 
-> [    0.393160] Muxing pin 151 for GPIO
-> [    0.393267] Disabling signal VPOB9 for VPO
-> [    0.393383] Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
-> [    0.393552] Disabling signal VPOB9 for VPOOFF1
-> [    0.393681] Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
-> [    0.393835] Disabling signal VPOB9 for VPOOFF2
-> [    0.393965] Want SCU8C[0x00000080]=0x1, got 0x0 from 0x00000000
-> [    0.394097] Enabling signal GPIOS7 for GPIOS7
-> [    0.394217] Muxed pin 151 as GPIOS7
-> [    0.394411] gpio-943 (seq_cont): hogged as output/low
-> 
-> This can be reproduced in qemu without userspace:
-> 
-> qemu-system-arm -M romulus-bmc -nographic -kernel arch/arm/boot/zImage
-> -dtb arch/arm/boot/dts/aspeed-bmc-opp-romulus.dtb -no-reboot
-> 
-> Billy, do you have any suggestions?
+On 20.01.23 00:13, James Bottomley wrote:
+> I've got a Rainbow Bridge SDV I mostly use for TPM work, and I haven't
+> updated it in a while.  Today I found that the recent 6.2-rc4 kernel
+> won't boot and won't emit any kernel messages signalling a failure
+> somewhere in the handoff code.  I did put some EFI boot stub prints in
+> and verified it gets all the way to exit_boot_services before the
+> problem, so it smells like it fails initializing the EFI console for
+> runtime.  I've also verified that v6.1 release works just fine, so it
+> looks like something that went into EFI in the recent merge window. 
+> I'm starting to bisect now, but thought I'd ask in case anyone else has
+> already debugged this.
 
 Thanks for the report. To be sure the issue doesn't fall through the
 cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
 tracking bot:
 
-#regzbot ^introduced cf517fef601b
-#regzbot title pinctrl: aspeed-g5-pinctrl 1e6e2080.pinctrl: Failed to
-acquire regmap for IP block 1
+#regzbot ^introduced v6.1..v6.2-rc4
+#regzbot title boot failure with 6.2 on Intel SDV EFI systems
 #regzbot ignore-activity
 
 This isn't a regression? This issue or a fix for it are already
