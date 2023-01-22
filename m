@@ -1,82 +1,217 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74123C1C
-	for <regressions@lists.linux.dev>; Sun, 22 Jan 2023 19:18:16 +0000 (UTC)
-Received: by mail-qt1-f174.google.com with SMTP id jr19so6962277qtb.7
-        for <regressions@lists.linux.dev>; Sun, 22 Jan 2023 11:18:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CMi5cwx+cuHLMcTtoOxFI0oclaxImm0+s+XfYyjkeoA=;
-        b=Bp9RENQ8zHgKuj9u4YKL4QldSznJ/HWt/kX1f9R/Zym68wO1GD9Piyxd+b+TpO//pr
-         d+QAq4jC2+iaAiqhwxQK6uoPDapzbqkXYDP1LwOwcEHKkjTxGYZBvyrgLiYh9ZxTlepV
-         WiAUNuz7/gXQ1ALOWdCgpVlRS20DBXc9XwRNc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CMi5cwx+cuHLMcTtoOxFI0oclaxImm0+s+XfYyjkeoA=;
-        b=Yxgf8yTTDLdb1hHoXK0Db6fI15CDEipeMa5eK3vqsFnmXbnlqc6bEZNhI4O34uGPpR
-         6KvyVV5ZJsL+5Y6xEhO56kdh2zw++B2DyuQ76u6TDwxT+0zKOWNlXzImTPeuWAmDJC7x
-         9CIDot+NuQficzQF4YE0vg2N1PosUOq5eMU1yTvuae3LLcAodXvqgAeEz5uijikS9fDi
-         jmSaI3NIpa8RV0NtfIYgJpp7tUdrnu4pdjiQwnvEf4196br7pTi/l+30Vb7QIC4tkYxx
-         F2rhjkRDuVRCZ2xNGoGNocthf8xaRfwzjr3ZTKrbaI4VF3KZkywnAwoGCeHKv0UdOUuR
-         jxzg==
-X-Gm-Message-State: AFqh2kr8TqYZezEEIYmeHMfCsUFZGDK0gT97MZDzHjf9jxS2ec4oFR9W
-	Wk7IDF2H/OawaLioBlK4GF/MHpiBms5tzmgd
-X-Google-Smtp-Source: AMrXdXuwdiT1ovidjLk2YQab5kqWKaV6m8CnTVU16kWw61Iyp4un0HHcbZ3CPAz0jhLpt4VE960wbQ==
-X-Received: by 2002:a05:622a:418c:b0:3b6:45f1:4933 with SMTP id cd12-20020a05622a418c00b003b645f14933mr31125612qtb.66.1674415095436;
-        Sun, 22 Jan 2023 11:18:15 -0800 (PST)
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com. [209.85.222.181])
-        by smtp.gmail.com with ESMTPSA id y11-20020a05620a25cb00b006bbf85cad0fsm30450707qko.20.2023.01.22.11.18.14
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Jan 2023 11:18:14 -0800 (PST)
-Received: by mail-qk1-f181.google.com with SMTP id s19so5372450qkg.7
-        for <regressions@lists.linux.dev>; Sun, 22 Jan 2023 11:18:14 -0800 (PST)
-X-Received: by 2002:a37:45d3:0:b0:706:96dd:8d4a with SMTP id
- s202-20020a3745d3000000b0070696dd8d4amr1061783qka.336.1674415094596; Sun, 22
- Jan 2023 11:18:14 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FE83D9F
+	for <regressions@lists.linux.dev>; Sun, 22 Jan 2023 20:28:41 +0000 (UTC)
+Received: from [192.168.0.2] (ip5f5ae93c.dynamic.kabel-deutschland.de [95.90.233.60])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	(Authenticated sender: pmenzel)
+	by mx.molgen.mpg.de (Postfix) with ESMTPSA id C3AB261CC40F9;
+	Sun, 22 Jan 2023 21:28:32 +0100 (CET)
+Message-ID: <05d381af-5ccb-0d87-97d3-e2fc4ce870fc@molgen.mpg.de>
+Date: Sun, 22 Jan 2023 21:28:32 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAHk-=wg+E9tTCrSqBOxejUX11f8ebyRWQ+4exC=cmOEupX_d7Q@mail.gmail.com>
- <8ec65f01-89fe-bd6f-a2c2-f4dfc0555cc2@leemhuis.info>
-In-Reply-To: <8ec65f01-89fe-bd6f-a2c2-f4dfc0555cc2@leemhuis.info>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 22 Jan 2023 11:17:58 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgkzFgUsU+M55xSzG3hzYajDOqXFzDwnoyRzwKDbEmzag@mail.gmail.com>
-Message-ID: <CAHk-=wgkzFgUsU+M55xSzG3hzYajDOqXFzDwnoyRzwKDbEmzag@mail.gmail.com>
-Subject: Re: Linux 6.2-rc5
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Vlastimil Babka <vbabka@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Greg KH <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [Intel-wired-lan] Supermicro AOC-STGN-I1S (Intel 82599EN based
+ 10G adapter) - poor network perfomance after moving to Debian 11.5
+Content-Language: en-US
+To: Bartek Kois <bartek.kois@gmail.com>
+Cc: intel-wired-lan@osuosl.org, regressions@lists.linux.dev
+References: <d1530cba-1a72-cae8-6a04-ed8ec0f82e6e@gmail.com>
+ <652bf236-d97e-832c-e0f3-24927a46d7ad@molgen.mpg.de>
+ <744de70c-782d-5d36-87fc-e6b92ac84190@gmail.com>
+ <30de7b89-6a4f-8dab-d671-027140bbb52b@gmail.com>
+ <d20a0ae8-d46e-2b8a-5587-5416e9013643@molgen.mpg.de>
+ <3b957674-a559-ac1e-27b8-b81e6eeffe75@gmail.com>
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <3b957674-a559-ac1e-27b8-b81e6eeffe75@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jan 22, 2023 at 5:49 AM Linux kernel regression tracking
-(Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
->
-> Huh, a -rc on Saturday evening? That's unusual.
+Dear Bartek,
 
-Heh. It's my wedding anniversary today.. Not that I won't sit in front
-of the computer anyway, but I didn't want to have anything actually
-pending.
 
-> But nevertheless there is one thing I want to bring up, even if -rc5 is
-> already out: Vlastimil asked me explicitly to highlight ```Revert
-> "mm/compaction: fix set skip in fast_find_migrateblock"```[1] in my
-> weekly report[2], as me would prefer if that patch could head to
-> mainline and especially stable rather sooner than later.
+Am 19.01.23 um 18:17 schrieb Bartek Kois:
+> W dniu 19.01.2023 o 18:09, Paul Menzel pisze:
 
-Ok, I assume I'll get it from Andrew one of these days. Thanks for the heads-up.
+>> Am 19.01.23 um 17:58 schrieb Bartek Kois:
+>>> W dniu 19.01.2023 o 13:24, Bartek Kois pisze:
+>>>>
+>>>> W dniu 19.01.2023 o 11:17, Paul Menzel pisze:
+>>>>>
+>>>>> #regzbot ^introduced: 4.9.88..5.10.149
+>>
+>>>>> Am 14.01.23 um 11:23 schrieb Bartek Kois:
+>>>>>
+>>>>>> After moving from Debian 9.7 to 11.5 as soon as I perform "ip link 
+>>>>>> set enp1s0 up" for my 10G adapter (AOC-STGN-I1S - Intel 82599EN 
+>>>>>> based 10G adapter) I am experiencing high cpu load (even if no 
+>>>>>> traffic is passing through the adapter) and network performance is 
+>>>>>> low (when network is connected).
+>>>>>
+>>>>> How do you test the network performance? Please give exact numbers 
+>>>>> for comparison.
+>>>>>
+>>>> I am using this server as a router for my subscribers with iptables 
+>>>> (for NAT and firewall) and hfsc (for QoS). First I encountered this 
+>>>> problem while migrating form Debian 9.7 to 11.5. Routers based  on 
+>>>> Supermicro X11SSL-F (Intel® C232 chipset) works with no problems 
+>>>> after that migration, but routers based on Supermicro X9SCL (Intel 
+>>>> C202 PCH) and Supermicro X10SLL+-F (Intel C222 Express PCH) starts 
+>>>> behaving strangely with high cpu load (0.5-0.8 while before it was 
+>>>> around 0.0-0.1) and subscribers not being able to utilize their 
+>>>> plans. I tried to strip down the problem and ends up with clean 
+>>>> system with no iptables or hfsc rules behaving the same (higher 
+>>>> load) right after setting the 10G link upeven if no traffic is 
+>>>> passing by.
+>>>>
+>>>>>> The cpu load is oscillating between 0.1 and 0.3 on vanilla system
+>>>>>> with no network attached. The problem can be observed on the 
+>>>>>> following platforms: Supermicro X9SCL (Intel C202 PCH) and
+>>>>>> Supermicro X10SLL+-F (Intel C222 Express PCH), but for the Supermicro
+>>>>>> X11SSL-F (Intel® C232 chipset) everything is working well.
+>>>>>>
+>>>>>> Tested environments:
+>>>>>> Debian 9.7 - Linux 4.9.0-6-amd64 #1 SMP Debian 4.9.88-1+deb9u1 
+>>>>>> (2018-05-07) x86_64 GNU/Linux [all platforms working well with no 
+>>>>>> problems: Supermicro X9SCL (Intel C202 PCH), Supermicro X10SLL+-F 
+>>>>>> (Intel C222 Express PCH), Supermicro X11SSL-F (Intel® C232 chipset)]
+>>>>>
+>>>>>> Debian 11.5 - Linux 5.10.0-19-amd64 #1 SMP Debian 5.10.149-2 
+>>>>>> (2022-10-21) x86_64 GNU/Linux [older platforms: Supermicro X9SCL 
+>>>>>> (Intel C202 PCH), Supermicro X10SLL+-F (Intel C222 Express PCH) 
+>>>>>> behave problematic as described above | newer platform: Supermicro 
+>>>>>> X11SSL-F (Intel® C232 chipset) working well with no problems]
+>>>>>
+>>>>> Maybe create a bug at the Linux kernel bug tracker [1], where you 
+>>>>> can attach all the logs (`dmesg`, `lspci -nnk -s …`, …).
+>>>>>
+>>>> I`ve already reported that to the Debian team 
+>>>> ttps://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1024763, but so far 
+>>>> nobody took care of this issue so far.
+>>>>
+>>>>>> So far to solve the problem I was trying to upgrade system to the 
+>>>>>> newest stable version, upgrade kernel to version 6.x, upgrade 
+>>>>>> ixgbe driver to the newest version but with no luck.
+>>>>>
+>>>>> Thank you for checking that. Too bad it’s still present. To rule 
+>>>>> out some user space problem, could you test Debian 9.7 with a 
+>>>>> stable Linux release, currently 6.1.7?
+>>>>>
+>>>>> What does `sudo perf top --sort comm,dso` show, where the time is 
+>>>>> spent?
+>>>>
+>>>> During my first test in real enviroment with subscribers I gether 
+>>>> the following data through the perf:
+>>>>
+>>>>   27.83%  [kernel]                   [k] strncpy
+>>>>   14.80%  [kernel]                   [k] nft_do_chain
+>>>>    7.61%  [kernel]                   [k] memcmp
+>>>>    5.63%  [kernel]                   [k] nft_meta_get_eval
+>>>>    3.14%  [kernel]                   [k] nft_cmp_eval
+>>>>    2.79%  [kernel]                   [k] asm_exc_nmi
+>>>>    1.07%  [kernel]                   [k] module_get_kallsym
+>>>>    0.92%  [kernel]                   [k] kallsyms_expand_symbol.constprop.0
+>>>>    0.85%  [kernel]                   [k] ixgbe_poll
+>>>>    0.75%  [kernel]                   [k] format_decode
+>>>>    0.61%  [kernel]                   [k] number
+>>>>    0.56%  [kernel]                   [k] menu_select
+>>>>    0.54%  [kernel]                   [k] clflush_cache_range
+>>>>    0.52%  [kernel]                   [k] cpuidle_enter_state
+>>>>    0.51%  [kernel]                   [k] vsnprintf
+>>>>    0.50%  [kernel]                   [k] u32_classify
+>>>>    0.49%  [kernel]                   [k] fib_table_lookup
+>>>>    0.40%  [kernel]                   [k] dma_pte_clear_level
+>>>>    0.39%  [kernel]                   [k] domain_mapping
+>>>>    0.36%  [kernel]                   [k] ixgbe_xmit_fram
+>>>>
+>>>>
+>>>>     PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM TIME+ COMMAND
+>>>>      18 root      20   0       0      0      0 S  28.2   0.0 7:06.27 ksoftirqd/1
+>>>>      12 root      20   0       0      0      0 R  12.0   0.0 4:10.88 ksoftirqd/0
+>>
+>> […]
+>>
+>> Do you see different behavior in `/proc/interrupts`?
+>>
+> This is how it looks like for Debian 11.5 - Linux 5.10.0-19-amd64 #1 SMP 
+> Debian 5.10.149-2 (2022-10-21) x86_64 GNU/Linux on Supermicro X10SLL+-F 
+> (Intel C222 Express PCH):
+> 
+>        1 root      20   0  163948  10288   7696 S   0.0   0.1 0:39.58 systemd
 
-I'm going to do an rc8 regardless, so we're not quite at the end of
-the release yet.
+[…]
 
-                 Linus
+The content of `/proc/interrupts` has a different format on my system.
+
+```
+$ head -3 /proc/interrupts
+            CPU0       CPU1       CPU2       CPU3
+   1:      55560          0        113          0  IR-IO-APIC   1-edge 
+    i8042
+   8:          0          0          0          0  IR-IO-APIC   8-edge 
+    rtc0
+```
+[…]
+
+> and for Debian 9.7 - Linux 4.9.0-6-amd64 #1 SMP Debian 4.9.88-1+deb9u1 
+> on Supermicro X10SLL+-F (Intel C222 Express PCH)
+> 
+> 31659 root      20   0       0      0      0 S   0.3  0.0 0:00.92 
+> kworker/7:0
+>      1 root      20   0   57032   6736   5256 S   0.0  0.1 2:28.14 systemd
+
+[…]
+>>>>>> Supermicro support suggested as follows:
+>>>>>> it might be kernel related debian 11.5 has kernel 5.10 which is a 
+>>>>>> recent kernel it might not properly support the chipsets for X9 
+>>>>>> therefore i suggest to use RHEL or CentOS as they use much older 
+>>>>>> kernel versions. I expect that with ubuntu 20.04 you see the same 
+>>>>>> problem it uses kernel 5.4
+>>>>> >>> Testing another GNU/Linux distribution for another data point, 
+>>>>> might
+>>>>> be a good idea.
+>>>>>
+>>>>> As nobody has responded yet, bisecting the issue is probably the 
+>>>>> fastest way to get to the bottom of this. Luckily the problem seems 
+>>>>> reproducible and you seem to be able to build a Linux kernel 
+>>>>> yourself, so that should work. (For testing purposes you could also 
+>>>>> test with Ubuntu, as they provide Linux kernel builds for (almost) 
+>>>>> all releases in their Linux kernel mainline PPA [2].)
+>>>>>
+>>>> Of course  I can try Ubuntu and report how it is working.
+>>>>
+>>> Ubuntu (5.15.0-43-generic) seems to be working in the same way 
+>>> generating higher load after executing "ip link set enp1s0 up".
+>>
+>> That is good to know. (Is this Ubuntu 22.04?) What about Ubuntu 20.04 
+>> with Linux 5.4, and Ubuntu 18.04 with 4.15?
+>>
+>> Anyway, I think, you won’t come around bisecting. Another hint, make 
+>> sure that you can build a 4.9 Linux kernel yourself, that does not 
+>> exhibit that issue.
+>>
+> That`s right, it is 22.04. I don`t have to build it. Standard kernel 
+> Linux 4.9.0-6-amd64 from Debian 9.7 worked without problems for past 4 
+> years.
+
+If nobody of the developers/maintainers is going to step up, you are on 
+your own. Again, as you can reproduce this easily, the fastest way is to 
+bisect the issue, which you can do on your own.
+
+
+Kind regards,
+
+Paul
+
+
+>>>>> [1]: https://bugzilla.kernel.org/
+>>>>> [2]: https://kernel.ubuntu.com/~kernel-ppa/mainline/
