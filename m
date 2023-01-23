@@ -1,320 +1,283 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9A4EA5
-	for <regressions@lists.linux.dev>; Mon, 23 Jan 2023 10:29:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E05DEC4339C
-	for <regressions@lists.linux.dev>; Mon, 23 Jan 2023 10:29:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1674469767;
-	bh=eLy3ZwUNPCOfUmFDyyoeaPNZfS/dPaAwiiyAf1av1M4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=A92Z87fJEPf9AlE/Kc1aPx+PSykDd2vk40N38D3nzR+Avb2v9kbKWXeF5ttxY3fzC
-	 P2y4Sl2XxBwCH+DVfBamzovQgjtfx8wRb3K63Bk10MMOtAB9CQbmyFZlb9GubBxPbe
-	 8CGm9b0ApFwjBnaulOM9NO7Jrdxy2TUdH5PHbbuvTQmZrvl0DPZCRl9LvdqMcLqjM6
-	 EI5nq9P23+pGteuTiSw8RKVQtgaU2Wnw5z470IBQyCYTN133df0FDLWfMY2eoLNm9r
-	 kz3jviNUcB3CPXI12/T82hqpDGw8yYSI925s28wbVJ5mGftJx1Ft4W5DSvVsV57A1T
-	 rTSoA64a8fOWw==
-Received: by mail-oi1-f170.google.com with SMTP id s124so9961940oif.1
-        for <regressions@lists.linux.dev>; Mon, 23 Jan 2023 02:29:27 -0800 (PST)
-X-Gm-Message-State: AFqh2krMUaioIOCYF/hwx7hza7sLhQzGkxZriDgSLoejBvMbgRYiYDJw
-	ivBKdDKADPNfhkBLMKiAW9/P3wU2D5szwrwQJ/Y=
-X-Google-Smtp-Source: AMrXdXvP0j7Re9LRugRpRcyvxeXtXcihpFYJpjrlRsp1tqVMUTbWox/vLzyCnD7uAb7FlG5YF03r2jg5jtymUhe2zrg=
-X-Received: by 2002:a05:6808:1b28:b0:35e:ac60:2452 with SMTP id
- bx40-20020a0568081b2800b0035eac602452mr1064579oib.92.1674469766854; Mon, 23
- Jan 2023 02:29:26 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A597C
+	for <regressions@lists.linux.dev>; Mon, 23 Jan 2023 18:38:42 +0000 (UTC)
+Received: by mail-wm1-f48.google.com with SMTP id g10so9789446wmo.1
+        for <regressions@lists.linux.dev>; Mon, 23 Jan 2023 10:38:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WTk0I1+zDNETlCuyCHI7lHTcIiaDgd+2OizKfkWjUYU=;
+        b=JQgevstJzf6j9hiSW0UOQPg9tt4rOipWq3pEbKBhN7qpvpBQGQLFQr9VSqvJe9np4H
+         FoRPZLi7MxOG/Hnb5dVFyx4Lq2Sra6gCudQDima0wxFCXFfPxIgfIZWOYB8GYTWPlg0g
+         s7+oQoReYld0lHbCOI9wM951ZTf5F/NLr6CDLX3dAh4y5PNRacI5qvr1pkFFYYW6PJfj
+         TJLYTocekrUdTFZIbF40vQjX56b3PgG+ygRkQGXZlEag+QWbUk4uk8ZCCeR95mIusTaL
+         KipsqAOqeTDvju17X15pJAfGAFTAJJ+CI4xblpdto1bvdmlxBtxV/i1fMFERBjyrrRhW
+         wcdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WTk0I1+zDNETlCuyCHI7lHTcIiaDgd+2OizKfkWjUYU=;
+        b=hRKPITFZMS8+a6Uz25xtSsw97VSRj/VM8gjX2nZo0DR7vFGdNRDnJZW5FZ2vHNrgYS
+         dhxY33qrTKoiLi4+Fwi5Gf7tI1xy7uWjXIfmpVPAe0c3QEUs7gmi4heimjvwSrBo1rl5
+         fD2XhDBjh34+/POALwSXeTMKBxuA+vt4BmqISKiWkHi7PMvP7rUX9ffS7tIbNFo5suOh
+         oGa8DhNuMMaEBUdKtAwjrsJPYiknvwxgwSXElPHxxkvqZvOUWbvEohOfdPw6PJXC6XSH
+         6mTi8AedZ9lEC0v9v3Dav7t0tdYwfz9JLvv5O8AAVC3H7wG+Dspk+4LsEWbjckRvM82o
+         FvqA==
+X-Gm-Message-State: AFqh2kpzSuGoRqcB2pu7856s2L4VbEyD5wLrwTGLGX4hhcC9ezFufsCj
+	0cad/4xjfFt8URJtb30iGp3PpLYqQbo=
+X-Google-Smtp-Source: AMrXdXtfj4uALubaxEP8mxGbo0mFxd7xxZQj6mrLU/+J4z7M8aUIK/u66CxzokoDedM6G3rT82h5RQ==
+X-Received: by 2002:a05:600c:a54:b0:3db:887:8c8c with SMTP id c20-20020a05600c0a5400b003db08878c8cmr23357939wmq.27.1674499120924;
+        Mon, 23 Jan 2023 10:38:40 -0800 (PST)
+Received: from [10.0.1.21] ([91.231.125.82])
+        by smtp.gmail.com with ESMTPSA id f14-20020a05600c154e00b003daff80f16esm15752400wmg.27.2023.01.23.10.38.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jan 2023 10:38:40 -0800 (PST)
+Message-ID: <a3be4866-5689-1276-5db4-168885a97091@gmail.com>
+Date: Mon, 23 Jan 2023 19:38:39 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <ae169fc6-f504-28f0-a098-6fa6a4dfb612@leemhuis.info>
- <20230102154050.GJ11562@twin.jikos.cz> <ac2f141b-b03a-6054-8250-d27a5b568027@gmx.com>
- <03ad09d2-0c0e-ed82-509a-9758fbc81f64@prnet.org> <CAL3q7H75DScFAnUGHFn9x=ZmnCbd_u3+KsLU6qKOGPeVogOQwg@mail.gmail.com>
- <544a0942-d505-148e-9b65-f5b366a3a0e3@prnet.org> <CAL3q7H7b+hrro9weiE2fLFMwvUm0PBjKPqetpQyGHUFqQd8s=w@mail.gmail.com>
- <ec38dc9b-6e54-7166-402a-fe92c38170d0@prnet.org> <CAL3q7H7anKa6ova5MYx4ZDsz6gwaq-K0OSRZuNEo-hNft7pZHQ@mail.gmail.com>
- <3b5c7161-1a48-619b-b6b3-1868b7695c97@prnet.org> <CAL3q7H7pEYNpzZYgNRxXwMz6ftCK53u46CQjPAh8nTO4ixgYwg@mail.gmail.com>
- <CAL3q7H5bdpH621LRO+mr98r_MBhNFLU3q1NQ8erOjZFkFAzf-A@mail.gmail.com>
- <d4f0758b-d11c-aee8-43df-885233a14a80@prnet.org> <ed7d2424-fb13-eccf-11ea-ac08c618f5aa@prnet.org>
-In-Reply-To: <ed7d2424-fb13-eccf-11ea-ac08c618f5aa@prnet.org>
-From: Filipe Manana <fdmanana@kernel.org>
-Date: Mon, 23 Jan 2023 10:28:50 +0000
-X-Gmail-Original-Message-ID: <CAL3q7H4zfz-9Mb=kScsQ_a1G9NX4ayPZStnSvNNYsbhpoY0wmg@mail.gmail.com>
-Message-ID: <CAL3q7H4zfz-9Mb=kScsQ_a1G9NX4ayPZStnSvNNYsbhpoY0wmg@mail.gmail.com>
-Subject: Re: [regression] Bug 216851 - btrfs write time corrupting for log tree
-To: David Arendt <admin@prnet.org>
-Cc: Qu Wenruo <quwenruo.btrfs@gmx.com>, dsterba@suse.cz, 
-	Thorsten Leemhuis <regressions@leemhuis.info>, linux-btrfs <linux-btrfs@vger.kernel.org>, 
-	Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	LKML <linux-kernel@vger.kernel.org>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [Intel-wired-lan] Supermicro AOC-STGN-I1S (Intel 82599EN based
+ 10G adapter) - poor network perfomance after moving to Debian 11.5
+Content-Language: pl
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: intel-wired-lan@osuosl.org, regressions@lists.linux.dev
+References: <d1530cba-1a72-cae8-6a04-ed8ec0f82e6e@gmail.com>
+ <652bf236-d97e-832c-e0f3-24927a46d7ad@molgen.mpg.de>
+ <744de70c-782d-5d36-87fc-e6b92ac84190@gmail.com>
+ <30de7b89-6a4f-8dab-d671-027140bbb52b@gmail.com>
+ <d20a0ae8-d46e-2b8a-5587-5416e9013643@molgen.mpg.de>
+ <3b957674-a559-ac1e-27b8-b81e6eeffe75@gmail.com>
+ <05d381af-5ccb-0d87-97d3-e2fc4ce870fc@molgen.mpg.de>
+From: Bartek Kois <bartek.kois@gmail.com>
+In-Reply-To: <05d381af-5ccb-0d87-97d3-e2fc4ce870fc@molgen.mpg.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jan 22, 2023 at 3:53 PM David Arendt <admin@prnet.org> wrote:
+
+W dniu 22.01.2023 o 21:28, Paul Menzel pisze:
+> Dear Bartek,
 >
-> On 1/10/23 22:12, David Arendt wrote:
-> Hi,
 >
-> In 6.2-rc3 + your patches, the problem did not appear within 2 weeks. I
-> skipped rc4 and today I upgraded to 6.2-rc5 which should have to patches
-> included (or not ?). About one hour later, the filesystem turned again
-> read-only with the following kernel log entries:
+> Am 19.01.23 um 18:17 schrieb Bartek Kois:
+>> W dniu 19.01.2023 o 18:09, Paul Menzel pisze:
+>
+>>> Am 19.01.23 um 17:58 schrieb Bartek Kois:
+>>>> W dniu 19.01.2023 o 13:24, Bartek Kois pisze:
+>>>>>
+>>>>> W dniu 19.01.2023 o 11:17, Paul Menzel pisze:
+>>>>>>
+>>>>>> #regzbot ^introduced: 4.9.88..5.10.149
+>>>
+>>>>>> Am 14.01.23 um 11:23 schrieb Bartek Kois:
+>>>>>>
+>>>>>>> After moving from Debian 9.7 to 11.5 as soon as I perform "ip 
+>>>>>>> link set enp1s0 up" for my 10G adapter (AOC-STGN-I1S - Intel 
+>>>>>>> 82599EN based 10G adapter) I am experiencing high cpu load (even 
+>>>>>>> if no traffic is passing through the adapter) and network 
+>>>>>>> performance is low (when network is connected).
+>>>>>>
+>>>>>> How do you test the network performance? Please give exact 
+>>>>>> numbers for comparison.
+>>>>>>
+>>>>> I am using this server as a router for my subscribers with 
+>>>>> iptables (for NAT and firewall) and hfsc (for QoS). First I 
+>>>>> encountered this problem while migrating form Debian 9.7 to 11.5. 
+>>>>> Routers based  on Supermicro X11SSL-F (Intel® C232 chipset) works 
+>>>>> with no problems after that migration, but routers based on 
+>>>>> Supermicro X9SCL (Intel C202 PCH) and Supermicro X10SLL+-F (Intel 
+>>>>> C222 Express PCH) starts behaving strangely with high cpu load 
+>>>>> (0.5-0.8 while before it was around 0.0-0.1) and subscribers not 
+>>>>> being able to utilize their plans. I tried to strip down the 
+>>>>> problem and ends up with clean system with no iptables or hfsc 
+>>>>> rules behaving the same (higher load) right after setting the 10G 
+>>>>> link upeven if no traffic is passing by.
+>>>>>
+>>>>>>> The cpu load is oscillating between 0.1 and 0.3 on vanilla system
+>>>>>>> with no network attached. The problem can be observed on the 
+>>>>>>> following platforms: Supermicro X9SCL (Intel C202 PCH) and
+>>>>>>> Supermicro X10SLL+-F (Intel C222 Express PCH), but for the 
+>>>>>>> Supermicro
+>>>>>>> X11SSL-F (Intel® C232 chipset) everything is working well.
+>>>>>>>
+>>>>>>> Tested environments:
+>>>>>>> Debian 9.7 - Linux 4.9.0-6-amd64 #1 SMP Debian 4.9.88-1+deb9u1 
+>>>>>>> (2018-05-07) x86_64 GNU/Linux [all platforms working well with 
+>>>>>>> no problems: Supermicro X9SCL (Intel C202 PCH), Supermicro 
+>>>>>>> X10SLL+-F (Intel C222 Express PCH), Supermicro X11SSL-F (Intel® 
+>>>>>>> C232 chipset)]
+>>>>>>
+>>>>>>> Debian 11.5 - Linux 5.10.0-19-amd64 #1 SMP Debian 5.10.149-2 
+>>>>>>> (2022-10-21) x86_64 GNU/Linux [older platforms: Supermicro X9SCL 
+>>>>>>> (Intel C202 PCH), Supermicro X10SLL+-F (Intel C222 Express PCH) 
+>>>>>>> behave problematic as described above | newer platform: 
+>>>>>>> Supermicro X11SSL-F (Intel® C232 chipset) working well with no 
+>>>>>>> problems]
+>>>>>>
+>>>>>> Maybe create a bug at the Linux kernel bug tracker [1], where you 
+>>>>>> can attach all the logs (`dmesg`, `lspci -nnk -s …`, …).
+>>>>>>
+>>>>> I`ve already reported that to the Debian team 
+>>>>> ttps://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1024763, but so 
+>>>>> far nobody took care of this issue so far.
+>>>>>
+>>>>>>> So far to solve the problem I was trying to upgrade system to 
+>>>>>>> the newest stable version, upgrade kernel to version 6.x, 
+>>>>>>> upgrade ixgbe driver to the newest version but with no luck.
+>>>>>>
+>>>>>> Thank you for checking that. Too bad it’s still present. To rule 
+>>>>>> out some user space problem, could you test Debian 9.7 with a 
+>>>>>> stable Linux release, currently 6.1.7?
+>>>>>>
+>>>>>> What does `sudo perf top --sort comm,dso` show, where the time is 
+>>>>>> spent?
+>>>>>
+>>>>> During my first test in real enviroment with subscribers I gether 
+>>>>> the following data through the perf:
+>>>>>
+>>>>>   27.83%  [kernel]                   [k] strncpy
+>>>>>   14.80%  [kernel]                   [k] nft_do_chain
+>>>>>    7.61%  [kernel]                   [k] memcmp
+>>>>>    5.63%  [kernel]                   [k] nft_meta_get_eval
+>>>>>    3.14%  [kernel]                   [k] nft_cmp_eval
+>>>>>    2.79%  [kernel]                   [k] asm_exc_nmi
+>>>>>    1.07%  [kernel]                   [k] module_get_kallsym
+>>>>>    0.92%  [kernel]                   [k] 
+>>>>> kallsyms_expand_symbol.constprop.0
+>>>>>    0.85%  [kernel]                   [k] ixgbe_poll
+>>>>>    0.75%  [kernel]                   [k] format_decode
+>>>>>    0.61%  [kernel]                   [k] number
+>>>>>    0.56%  [kernel]                   [k] menu_select
+>>>>>    0.54%  [kernel]                   [k] clflush_cache_range
+>>>>>    0.52%  [kernel]                   [k] cpuidle_enter_state
+>>>>>    0.51%  [kernel]                   [k] vsnprintf
+>>>>>    0.50%  [kernel]                   [k] u32_classify
+>>>>>    0.49%  [kernel]                   [k] fib_table_lookup
+>>>>>    0.40%  [kernel]                   [k] dma_pte_clear_level
+>>>>>    0.39%  [kernel]                   [k] domain_mapping
+>>>>>    0.36%  [kernel]                   [k] ixgbe_xmit_fram
+>>>>>
+>>>>>
+>>>>>     PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM TIME+ 
+>>>>> COMMAND
+>>>>>      18 root      20   0       0      0      0 S  28.2 0.0 7:06.27 
+>>>>> ksoftirqd/1
+>>>>>      12 root      20   0       0      0      0 R  12.0 0.0 4:10.88 
+>>>>> ksoftirqd/0
+>>>
+>>> […]
+>>>
+>>> Do you see different behavior in `/proc/interrupts`?
+>>>
+>> This is how it looks like for Debian 11.5 - Linux 5.10.0-19-amd64 #1 
+>> SMP Debian 5.10.149-2 (2022-10-21) x86_64 GNU/Linux on Supermicro 
+>> X10SLL+-F (Intel C222 Express PCH):
+>>
+>>        1 root      20   0  163948  10288   7696 S   0.0   0.1 0:39.58 
+>> systemd
+>
+> […]
+>
+> The content of `/proc/interrupts` has a different format on my system.
+>
+> ```
+> $ head -3 /proc/interrupts
+>            CPU0       CPU1       CPU2       CPU3
+>   1:      55560          0        113          0  IR-IO-APIC 1-edge    
+> i8042
+>   8:          0          0          0          0  IR-IO-APIC 8-edge    
+> rtc0
+> ```
+> […]
+>
+>> and for Debian 9.7 - Linux 4.9.0-6-amd64 #1 SMP Debian 
+>> 4.9.88-1+deb9u1 on Supermicro X10SLL+-F (Intel C222 Express PCH)
+>>
+>> 31659 root      20   0       0      0      0 S   0.3  0.0 0:00.92 
+>> kworker/7:0
+>>      1 root      20   0   57032   6736   5256 S   0.0  0.1 2:28.14 
+>> systemd
+>
+> […]
+>>>>>>> Supermicro support suggested as follows:
+>>>>>>> it might be kernel related debian 11.5 has kernel 5.10 which is 
+>>>>>>> a recent kernel it might not properly support the chipsets for 
+>>>>>>> X9 therefore i suggest to use RHEL or CentOS as they use much 
+>>>>>>> older kernel versions. I expect that with ubuntu 20.04 you see 
+>>>>>>> the same problem it uses kernel 5.4
+>>>>>> >>> Testing another GNU/Linux distribution for another data 
+>>>>>> point, might
+>>>>>> be a good idea.
+>>>>>>
+>>>>>> As nobody has responded yet, bisecting the issue is probably the 
+>>>>>> fastest way to get to the bottom of this. Luckily the problem 
+>>>>>> seems reproducible and you seem to be able to build a Linux 
+>>>>>> kernel yourself, so that should work. (For testing purposes you 
+>>>>>> could also test with Ubuntu, as they provide Linux kernel builds 
+>>>>>> for (almost) all releases in their Linux kernel mainline PPA [2].)
+>>>>>>
+>>>>> Of course  I can try Ubuntu and report how it is working.
+>>>>>
+>>>> Ubuntu (5.15.0-43-generic) seems to be working in the same way 
+>>>> generating higher load after executing "ip link set enp1s0 up".
+>>>
+>>> That is good to know. (Is this Ubuntu 22.04?) What about Ubuntu 
+>>> 20.04 with Linux 5.4, and Ubuntu 18.04 with 4.15?
+>>>
+>>> Anyway, I think, you won’t come around bisecting. Another hint, make 
+>>> sure that you can build a 4.9 Linux kernel yourself, that does not 
+>>> exhibit that issue.
+>>>
+>> That`s right, it is 22.04. I don`t have to build it. Standard kernel 
+>> Linux 4.9.0-6-amd64 from Debian 9.7 worked without problems for past 
+>> 4 years.
+>
+> If nobody of the developers/maintainers is going to step up, you are 
+> on your own. Again, as you can reproduce this easily, the fastest way 
+> is to bisect the issue, which you can do on your own.
 
-Ok, so 6.2-rc5 has the first 5 patches of the patchset.
-If the whole patchset fixed the problem for 2 weeks, then I think
-there's only one thing left to test, which is to add patch 6 on top of
-6.2-rc5:
+How can I invastigate that futher? I thought about trying to change some 
+of the parameters related to ixgbe driver and observe if anything is 
+changing, but when I am trying to do:
 
-https://lore.kernel.org/linux-btrfs/ff77f41924e197d99e62ef323f03467c87ef43a0.1673361215.git.fdmanana@suse.com/
+sudo modprobe ixgbe IntMode=0
 
-Are you able to try that?
+I get the following error in the dmesg:
 
-Thanks.
+[ 2137.324772] ixgbe: unknown parameter 'IntMode' ignored <<<<<<<<<
+[ 2137.324848] ixgbe: Intel(R) 10 Gigabit PCI Express Network Driver
+[ 2137.324848] ixgbe: Copyright (c) 1999-2016 Intel Corporation.
+[ 2138.505751] ixgbe 0000:02:00.0: Multiqueue Enabled: Rx Queue count = 
+4, Tx Queue count = 4 XDP Queue count = 0
+[ 2138.506049] ixgbe 0000:02:00.0: 32.000 Gb/s available PCIe bandwidth 
+(5.0 GT/s PCIe x8 link)
+[ 2138.506134] ixgbe 0000:02:00.0: MAC: 2, PHY: 1, PBA No: 0210FF-0FF
+[ 2138.506137] ixgbe 0000:02:00.0: ac:1f:6b:ab:fa:70
+[ 2138.510537] ixgbe 0000:02:00.0 enp2s0: renamed from eth0
+[ 2138.537452] ixgbe 0000:02:00.0: Intel(R) 10 Gigabit Network Connection
 
+How should I use those parameters?
+
+Best regards
+
+Bartek Kois
 
 >
-> [ 7611.406077] BTRFS critical (device sda2): corrupt leaf:
-> root=18446744073709551610 block=75971280896 slot=71, bad key order, prev
-> (484119 96 1358553) current (484119 96 1358532)
-> [ 7611.406087] BTRFS info (device sda2): leaf 75971280896 gen 5130699
-> total ptrs 105 free space 10909 owner 18446744073709551610
-> [ 7611.406090]     item 0 key (484119 1 0) itemoff 16123 itemsize 160
-> [ 7611.406091]         inode generation 45 size 2198 mode 40700
-> [ 7611.406093]     item 1 key (484119 12 484118) itemoff 16097 itemsize 26
-> [ 7611.406094]     item 2 key (484119 72 15) itemoff 16089 itemsize 8
-> [ 7611.406095]     item 3 key (484119 72 20) itemoff 16081 itemsize 8
-> [ 7611.406097]     item 4 key (484119 72 25) itemoff 16073 itemsize 8
-> [ 7611.406098]     item 5 key (484119 72 30) itemoff 16065 itemsize 8
-> [ 7611.406099]     item 6 key (484119 72 32630) itemoff 16057 itemsize 8
-> [ 7611.406100]     item 7 key (484119 72 40332) itemoff 16049 itemsize 8
-> [ 7611.406101]     item 8 key (484119 72 40335) itemoff 16041 itemsize 8
-> [ 7611.406102]     item 9 key (484119 72 93630) itemoff 16033 itemsize 8
-> [ 7611.406104]     item 10 key (484119 72 101741) itemoff 16025 itemsize 8
-> [ 7611.406105]     item 11 key (484119 72 131485) itemoff 16017 itemsize 8
-> [ 7611.406106]     item 12 key (484119 72 183799) itemoff 16009 itemsize 8
-> [ 7611.406108]     item 13 key (484119 72 183801) itemoff 16001 itemsize 8
-> [ 7611.406109]     item 14 key (484119 72 203038) itemoff 15993 itemsize 8
-> [ 7611.406110]     item 15 key (484119 72 254997) itemoff 15985 itemsize 8
-> [ 7611.406111]     item 16 key (484119 72 255172) itemoff 15977 itemsize 8
-> [ 7611.406112]     item 17 key (484119 72 255208) itemoff 15969 itemsize 8
-> [ 7611.406113]     item 18 key (484119 72 256848) itemoff 15961 itemsize 8
-> [ 7611.406115]     item 19 key (484119 72 264839) itemoff 15953 itemsize 8
-> [ 7611.406116]     item 20 key (484119 72 266090) itemoff 15945 itemsize 8
-> [ 7611.406117]     item 21 key (484119 72 266976) itemoff 15937 itemsize 8
-> [ 7611.406118]     item 22 key (484119 72 267056) itemoff 15929 itemsize 8
-> [ 7611.406120]     item 23 key (484119 72 302340) itemoff 15921 itemsize 8
-> [ 7611.406121]     item 24 key (484119 72 513980) itemoff 15913 itemsize 8
-> [ 7611.406122]     item 25 key (484119 72 848319) itemoff 15905 itemsize 8
-> [ 7611.406123]     item 26 key (484119 72 848845) itemoff 15897 itemsize 8
-> [ 7611.406124]     item 27 key (484119 72 938962) itemoff 15889 itemsize 8
-> [ 7611.406125]     item 28 key (484119 72 1001565) itemoff 15881 itemsize 8
-> [ 7611.406127]     item 29 key (484119 72 1268172) itemoff 15873 itemsize 8
-> [ 7611.406128]     item 30 key (484119 72 1298657) itemoff 15865 itemsize 8
-> [ 7611.406129]     item 31 key (484119 72 1299762) itemoff 15857 itemsize 8
-> [ 7611.406130]     item 32 key (484119 72 1336351) itemoff 15849 itemsize 8
-> [ 7611.406131]     item 33 key (484119 72 1356235) itemoff 15841 itemsize 8
-> [ 7611.406133]     item 34 key (484119 72 1356237) itemoff 15833 itemsize 8
-> [ 7611.406134]     item 35 key (484119 72 1357416) itemoff 15825 itemsize 8
-> [ 7611.406135]     item 36 key (484119 72 1357797) itemoff 15817 itemsize 8
-> [ 7611.406137]     item 37 key (484119 72 1358273) itemoff 15809 itemsize 8
-> [ 7611.406138]     item 38 key (484119 72 1358275) itemoff 15801 itemsize 8
-> [ 7611.406139]     item 39 key (484119 72 1358278) itemoff 15793 itemsize 8
-> [ 7611.406141]     item 40 key (484119 72 1358448) itemoff 15785 itemsize 8
-> [ 7611.406142]     item 41 key (484119 72 1358449) itemoff 15777 itemsize 8
-> [ 7611.406143]     item 42 key (484119 72 1358452) itemoff 15769 itemsize 8
-> [ 7611.406144]     item 43 key (484119 72 1358453) itemoff 15761 itemsize 8
-> [ 7611.406145]     item 44 key (484119 72 1358456) itemoff 15753 itemsize 8
-> [ 7611.406147]     item 45 key (484119 72 1358457) itemoff 15745 itemsize 8
-> [ 7611.406148]     item 46 key (484119 72 1358460) itemoff 15737 itemsize 8
-> [ 7611.406149]     item 47 key (484119 72 1358461) itemoff 15729 itemsize 8
-> [ 7611.406150]     item 48 key (484119 72 1358463) itemoff 15721 itemsize 8
-> [ 7611.406151]     item 49 key (484119 72 1358469) itemoff 15713 itemsize 8
-> [ 7611.406153]     item 50 key (484119 72 1358485) itemoff 15705 itemsize 8
-> [ 7611.406154]     item 51 key (484119 72 1358486) itemoff 15697 itemsize 8
-> [ 7611.406155]     item 52 key (484119 72 1358499) itemoff 15689 itemsize 8
-> [ 7611.406156]     item 53 key (484119 72 1358502) itemoff 15681 itemsize 8
-> [ 7611.406157]     item 54 key (484119 72 1358513) itemoff 15673 itemsize 8
-> [ 7611.406159]     item 55 key (484119 72 1358514) itemoff 15665 itemsize 8
-> [ 7611.406160]     item 56 key (484119 72 1358515) itemoff 15657 itemsize 8
-> [ 7611.406161]     item 57 key (484119 72 1358516) itemoff 15649 itemsize 8
-> [ 7611.406162]     item 58 key (484119 72 1358543) itemoff 15641 itemsize 8
-> [ 7611.406164]     item 59 key (484119 72 1358546) itemoff 15633 itemsize 8
-> [ 7611.406165]     item 60 key (484119 72 1358548) itemoff 15625 itemsize 8
-> [ 7611.406166]     item 61 key (484119 72 1358552) itemoff 15617 itemsize 8
-> [ 7611.406167]     item 62 key (484119 96 1358532) itemoff 15566 itemsize 51
-> [ 7611.406168]     item 63 key (484119 96 1358534) itemoff 15508 itemsize 58
-> [ 7611.406170]     item 64 key (484119 96 1358536) itemoff 15465 itemsize 43
-> [ 7611.406171]     item 65 key (484119 96 1358541) itemoff 15431 itemsize 34
-> [ 7611.406172]     item 66 key (484119 96 1358545) itemoff 15383 itemsize 48
-> [ 7611.406173]     item 67 key (484119 96 1358549) itemoff 15330 itemsize 53
-> [ 7611.406174]     item 68 key (484119 96 1358550) itemoff 15283 itemsize 47
-> [ 7611.406175]     item 69 key (484119 96 1358551) itemoff 15234 itemsize 49
-> [ 7611.406177]     item 70 key (484119 96 1358553) itemoff 15196 itemsize 38
-> [ 7611.406178]     item 71 key (484119 96 1358532) itemoff 15145 itemsize 51
-> [ 7611.406179]     item 72 key (484119 96 1358534) itemoff 15087 itemsize 58
-> [ 7611.406180]     item 73 key (484119 96 1358536) itemoff 15044 itemsize 43
-> [ 7611.406181]     item 74 key (484119 96 1358541) itemoff 15010 itemsize 34
-> [ 7611.406182]     item 75 key (484119 96 1358545) itemoff 14962 itemsize 48
-> [ 7611.406184]     item 76 key (484119 96 1358549) itemoff 14909 itemsize 53
-> [ 7611.406185]     item 77 key (484119 96 1358550) itemoff 14862 itemsize 47
-> [ 7611.406186]     item 78 key (484119 96 1358551) itemoff 14813 itemsize 49
-> [ 7611.406187]     item 79 key (484119 96 1358553) itemoff 14775 itemsize 38
-> [ 7611.406188]     item 80 key (484128 1 0) itemoff 14615 itemsize 160
-> [ 7611.406189]         inode generation 45 size 98304 mode 100644
-> [ 7611.406190]     item 81 key (484128 108 0) itemoff 14562 itemsize 53
-> [ 7611.406192]         extent data disk bytenr 10745529716736 nr 65536
-> [ 7611.406193]         extent data offset 0 nr 65536 ram 65536
-> [ 7611.406194]     item 82 key (484129 1 0) itemoff 14402 itemsize 160
-> [ 7611.406195]         inode generation 45 size 26214400 mode 100644
-> [ 7611.406196]     item 83 key (484129 108 98304) itemoff 14349 itemsize 53
-> [ 7611.406197]         extent data disk bytenr 10744232108032 nr 65536
-> [ 7611.406198]         extent data offset 0 nr 65536 ram 65536
-> [ 7611.406198]     item 84 key (484129 108 589824) itemoff 14296 itemsize 53
-> [ 7611.406200]         extent data disk bytenr 10745529593856 nr 32768
-> [ 7611.406200]         extent data offset 0 nr 32768 ram 32768
-> [ 7611.406201]     item 85 key (484129 108 4685824) itemoff 14243
-> itemsize 53
-> [ 7611.406203]         extent data disk bytenr 10744231481344 nr 32768
-> [ 7611.406203]         extent data offset 0 nr 32768 ram 32768
-> [ 7611.406204]     item 86 key (484129 108 11468800) itemoff 14190
-> itemsize 53
-> [ 7611.406205]         extent data disk bytenr 10745067331584 nr 32768
-> [ 7611.406206]         extent data offset 0 nr 32768 ram 32768
-> [ 7611.406207]     item 87 key (484129 108 13139968) itemoff 14137
-> itemsize 53
-> [ 7611.406208]         extent data disk bytenr 10745022545920 nr 32768
-> [ 7611.406209]         extent data offset 0 nr 32768 ram 32768
-> [ 7611.406210]     item 88 key (484129 108 13795328) itemoff 14084
-> itemsize 53
-> [ 7611.406211]         extent data disk bytenr 10744891514880 nr 32768
-> [ 7611.406212]         extent data offset 0 nr 32768 ram 32768
-> [ 7611.406213]     item 89 key (484129 108 20185088) itemoff 14031
-> itemsize 53
-> [ 7611.406214]         extent data disk bytenr 10745022578688 nr 32768
-> [ 7611.406215]         extent data offset 0 nr 32768 ram 32768
-> [ 7611.406216]     item 90 key (484129 108 22347776) itemoff 13978
-> itemsize 53
-> [ 7611.406217]         extent data disk bytenr 10744205844480 nr 32768
-> [ 7611.406218]         extent data offset 0 nr 32768 ram 32768
-> [ 7611.406218]     item 91 key (484129 108 23429120) itemoff 13925
-> itemsize 53
-> [ 7611.406220]         extent data disk bytenr 10745067364352 nr 32768
-> [ 7611.406220]         extent data offset 0 nr 32768 ram 32768
-> [ 7611.406221]     item 92 key (484129 108 24870912) itemoff 13872
-> itemsize 53
-> [ 7611.406222]         extent data disk bytenr 10745022611456 nr 32768
-> [ 7611.406223]         extent data offset 0 nr 32768 ram 32768
-> [ 7611.406224]     item 93 key (484129 108 25001984) itemoff 13819
-> itemsize 53
-> [ 7611.406225]         extent data disk bytenr 10745022709760 nr 32768
-> [ 7611.406226]         extent data offset 0 nr 32768 ram 32768
-> [ 7611.406227]     item 94 key (484129 108 25165824) itemoff 13766
-> itemsize 53
-> [ 7611.406228]         extent data disk bytenr 10745022742528 nr 32768
-> [ 7611.406229]         extent data offset 0 nr 32768 ram 32768
-> [ 7611.406230]     item 95 key (484147 1 0) itemoff 13606 itemsize 160
-> [ 7611.406231]         inode generation 45 size 886 mode 40755
-> [ 7611.406232]     item 96 key (484147 72 4) itemoff 13598 itemsize 8
-> [ 7611.406233]     item 97 key (484147 72 27) itemoff 13590 itemsize 8
-> [ 7611.406234]     item 98 key (484147 72 35) itemoff 13582 itemsize 8
-> [ 7611.406235]     item 99 key (484147 72 40) itemoff 13574 itemsize 8
-> [ 7611.406236]     item 100 key (484147 72 45) itemoff 13566 itemsize 8
-> [ 7611.406238]     item 101 key (484147 72 52) itemoff 13558 itemsize 8
-> [ 7611.406239]     item 102 key (484147 72 61) itemoff 13550 itemsize 8
-> [ 7611.406240]     item 103 key (484147 72 65) itemoff 13542 itemsize 8
-> [ 7611.406241]     item 104 key (484147 72 88) itemoff 13534 itemsize 8
-> [ 7611.406242] BTRFS error (device sda2): block=75971280896 write time
-> tree block corruption detected
-> [ 7611.406255] ------------[ cut here ]------------
-> [ 7611.406256] WARNING: CPU: 5 PID: 32347 at fs/btrfs/disk-io.c:376
-> csum_one_extent_buffer+0x136/0x140
-> [ 7611.406261] Modules linked in: zfs(PO) zunicode(PO) zzstd(O) zlua(O)
-> zavl(PO) icp(PO) zcommon(PO) znvpair(PO) spl(O)
-> [ 7611.406270] CPU: 5 PID: 32347 Comm: mozStorage #2 Tainted: P
-> W  O       6.2.0-rc5 #1
-> [ 7611.406272] Hardware name: ASUS All Series/H87M-PRO, BIOS 2102 10/28/2014
-> [ 7611.406273] RIP: 0010:csum_one_extent_buffer+0x136/0x140
-> [ 7611.406275] Code: 48 c1 e2 29 48 03 53 70 48 c1 fa 06 81 e1 ff 0f 00
-> 00 48 c1 e2 0c 48 01 ca b9 11 ff ff 01 48 c1 e1 27 48 83 7c 0a 58 fa 75
-> 98 <0f> 0b eb 94 66 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90
-> [ 7611.406277] RSP: 0018:ffffc9000d803850 EFLAGS: 00010246
-> [ 7611.406279] RAX: 00000000ffffff8b RBX: ffff888411886200 RCX:
-> ffff888000000000
-> [ 7611.406280] RDX: 0000000479022000 RSI: 0000000000000001 RDI:
-> ffff8887fdd5b280
-> [ 7611.406282] RBP: ffff888102fa3000 R08: 00000000ffffdfff R09:
-> 00000000ffffdfff
-> [ 7611.406283] R10: ffffffff82854220 R11: ffffffff82854220 R12:
-> ffff888102fa3000
-> [ 7611.406284] R13: 0000000000001000 R14: ffffea0011e40880 R15:
-> ffff888102fa3000
-> [ 7611.406285] FS:  00007f43d72986c0(0000) GS:ffff8887fdd40000(0000)
-> knlGS:0000000000000000
-> [ 7611.406287] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 7611.406288] CR2: 00007f246eb9e000 CR3: 000000040de5e005 CR4:
-> 00000000001706e0
-> [ 7611.406289] Call Trace:
-> [ 7611.406291]  <TASK>
-> [ 7611.406293]  btree_csum_one_bio+0x220/0x2a0
-> [ 7611.406295]  btrfs_submit_metadata_bio+0x84/0xc0
-> [ 7611.406297]  submit_one_bio+0xbd/0x110
-> [ 7611.406300]  btree_write_cache_pages+0x721/0x790
-> [ 7611.406303]  ? __pfx_end_bio_extent_buffer_writepage+0x10/0x10
-> [ 7611.406306]  ? btrfs_search_slot+0x8a5/0xc70
-> [ 7611.406309]  do_writepages+0x99/0x180
-> [ 7611.406313]  ? btrfs_read_extent_buffer+0x8a/0x130
-> [ 7611.406314]  ? merge_state.part.0+0x41/0xf0
-> [ 7611.406317]  filemap_fdatawrite_wbc+0x5a/0x80
-> [ 7611.406321]  __filemap_fdatawrite_range+0x45/0x50
-> [ 7611.406323]  btrfs_write_marked_extents+0x52/0x120
-> [ 7611.406326]  btrfs_sync_log+0x1ce/0x9a0
-> [ 7611.406329]  ? btrfs_unlock_up_safe+0x69/0xc0
-> [ 7611.406332]  ? btrfs_search_forward+0x260/0x340
-> [ 7611.406334]  ? log_new_dir_dentries.isra.0+0x36c/0x390
-> [ 7611.406335]  ? __pfx_autoremove_wake_function+0x10/0x10
-> [ 7611.406339]  ? log_new_dir_dentries.isra.0+0x36c/0x390
-> [ 7611.406340]  ? btrfs_log_inode_parent+0x3e0/0xdf0
-> [ 7611.406342]  ? pagevec_lookup_range_tag+0x1f/0x30
-> [ 7611.406345]  ? __filemap_fdatawait_range+0x46/0xe0
-> [ 7611.406347]  ? perf_event_exec+0xe0/0x310
-> [ 7611.406350]  ? wait_current_trans+0x15/0xe0
-> [ 7611.406353]  ? kmem_cache_alloc+0x226/0x380
-> [ 7611.406357]  ? join_transaction+0x1b/0x3f0
-> [ 7611.406359]  ? dput+0xaf/0x2d0
-> [ 7611.406361]  btrfs_sync_file+0x31f/0x4e0
-> [ 7611.406364]  __x64_sys_fsync+0x32/0x60
-> [ 7611.406367]  do_syscall_64+0x42/0x90
-> [ 7611.406371]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
-> [ 7611.406375] RIP: 0033:0x7f440320651a
-> [ 7611.406377] Code: 48 3d 00 f0 ff ff 77 48 c3 0f 1f 80 00 00 00 00 48
-> 83 ec 18 89 7c 24 0c e8 13 71 f8 ff 8b 7c 24 0c 89 c2 b8 4a 00 00 00 0f
-> 05 <48> 3d 00 f0 ff ff 77 36 89 d7 89 44 24 0c e8 73 71 f8 ff 8b 44 24
-> [ 7611.406378] RSP: 002b:00007f43d7297170 EFLAGS: 00000293 ORIG_RAX:
-> 000000000000004a
-> [ 7611.406381] RAX: ffffffffffffffda RBX: 00007f43ee222be8 RCX:
-> 00007f440320651a
-> [ 7611.406382] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
-> 0000000000000090
-> [ 7611.406383] RBP: 0000000000000000 R08: 0000000000000000 R09:
-> 00007f440255e000
-> [ 7611.406384] R10: 0000000000000000 R11: 0000000000000293 R12:
-> 00007f43d63ed038
-> [ 7611.406385] R13: 0000000000000000 R14: 0000000000000002 R15:
-> 0000000000000000
-> [ 7611.406387]  </TASK>
-> [ 7611.406387] ---[ end trace 0000000000000000 ]---
-> [ 7611.459735] BTRFS error (device sda2: state AL): Transaction aborted
-> (error -5)
-> [ 7611.459742] BTRFS: error (device sda2: state AL) in
-> free_log_tree:3248: errno=-5 IO failure
-> [ 7611.459744] BTRFS info (device sda2: state EAL): forced readonly
-> [ 7611.463492] BTRFS warning (device sda2: state EAL): Skipping commit
-> of aborted transaction.
-> [ 7611.463498] BTRFS: error (device sda2: state EAL) in
-> cleanup_transaction:1984: errno=-5 IO failure
+> Kind regards,
 >
-> Thanks in advance,
+> Paul
 >
-> David Arendt
 >
+>>>>>> [1]: https://bugzilla.kernel.org/
+>>>>>> [2]: https://kernel.ubuntu.com/~kernel-ppa/mainline/
