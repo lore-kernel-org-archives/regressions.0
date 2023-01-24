@@ -1,79 +1,150 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CB363DF
-	for <regressions@lists.linux.dev>; Tue, 24 Jan 2023 14:31:21 +0000 (UTC)
-Received: by mail-oi1-f180.google.com with SMTP id r132so13406287oif.10
-        for <regressions@lists.linux.dev>; Tue, 24 Jan 2023 06:31:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8aIBjSXUfpYCdPRZCAqFHfonN341BvCufsa1ALucXT4=;
-        b=diKKU4qNqun4yyyiEF/WTOZZxoDHmlcP91UYxpf4Yzc4fIyoG1PMt/f6EGUn/TpATr
-         yX/p1MLRZpwYNJGNRsb1iJXaXjtuEESCwBagQqBqzkwWjSIhn1SRpweC+iePXKhdvsPV
-         6QtzwkbHLCe1+6Xf1GUgPbQLGLtXZ49OinfDfpwWs1ubb7Wd367HswbxtKxDdws71VCo
-         A8660rEu1OvSfjWwJQMo9pct8uRpIgRai8qw5qN1sDpmS9T608vD8aT16+DWrtsJoTdy
-         I77kG4xTS2QJs1vop2KRr6EdrlCSunlqccJRSNK0PEYUUnye+EW5GQF6ImGSONmk8VsE
-         ymrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8aIBjSXUfpYCdPRZCAqFHfonN341BvCufsa1ALucXT4=;
-        b=VGmUIu/+qevVzbo0GdD/t29pmouV8EGfztuGvn/3F3zv3cXctQwWg1VLRkuFwz8qhC
-         SPwGfuRH1YhW5DyKCW7vYgYn+C16hzoCY1eys2M1JoQtLMwh8LEU1f1qxofx6wSDBfec
-         rrXbalLPLsdVGO36KI0GIDGEQWAwZ7f9DY+sOIyzqOrDILPpuId2TVfl/4lhEgNGvlrH
-         ecyOcJ2fd7l4IfpPvR/BUj9Q9HJONnbcxDpNG8JwtjiE4Mxtm0aulaPDS3E4Qo8y9cx/
-         mRk7FYYrcjw4nHBK+cn7Vv8f/0ceVwgDt+TH2Yw3klhunR3IauOPHF+1cGuyNNGt5ifK
-         i6zg==
-X-Gm-Message-State: AFqh2krGG17bom25Ksmb0uXSw6ej8wF+RLOhvCOtk4nsfSzGWyK9NG6q
-	/GEeID77ga5vvSHqaP+GFtCyXilVFpxV3gv8AvA=
-X-Google-Smtp-Source: AMrXdXtSqXT4h0olGTZ895AIXRb5yq00BRJP7OfVu5gTPWUGSwcpAlbcRtpJ9syrnsIl4U0Fnzw+mizMT3fe13l5vBE=
-X-Received: by 2002:aca:ac12:0:b0:364:a686:4444 with SMTP id
- v18-20020acaac12000000b00364a6864444mr2103482oie.298.1674570680763; Tue, 24
- Jan 2023 06:31:20 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F2F8F4B
+	for <regressions@lists.linux.dev>; Tue, 24 Jan 2023 19:48:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5104C433D2;
+	Tue, 24 Jan 2023 19:48:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1674589692;
+	bh=F4gF1F3iz5i02PnKb+GE9T/ZCqrRA7tFJkyCVR5lEa4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oElI71mzWtnW4cPlpZ2UwLLbzQwVw8NtcaqjwzStST57swmH25DMwOv8LfgU4hEtd
+	 Q0lqwX/KZrLXkb9Lz9o4m3fAf+oe04tgnto7ZifXK4trhvnLDyxdgfXkwH7W/7MYqd
+	 3KzfyOWoj3LgwE4rYJkqQGX1lYJPlNP5ebtkDRUZkjapkXE7jyB0/RxtrRafu38JKp
+	 68KXjU+j0XSYQJKRjTk9+P5jCxpAv/JLsqqDPh/S71jwRSWWijRpyevureWbr89TGL
+	 AP/1CyDzqFfyzSerXsbBWaTDOWt9TlkpbHVIyX9SkKGYRbBoHFPbaLvT+PsoHJm0jq
+	 j/oAZul+OyzXw==
+Date: Tue, 24 Jan 2023 19:48:05 +0000
+From: Will Deacon <will@kernel.org>
+To: Waiman Long <longman@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Phil Auld <pauld@redhat.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	regressions@leemhuis.info
+Subject: Re: [PATCH v2] sched: Store restrict_cpus_allowed_ptr() call state
+Message-ID: <20230124194805.GA27257@willie-the-truck>
+References: <20230121021749.55313-1-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CALFERdzKUodLsm6=Ub3g2+PxpNpPtPq3bGBLbff=eZr9_S=YVA@mail.gmail.com>
- <Y89n98fRfTpLmPUg@kroah.com> <CAFJ_xbqMx8LsD_Ry70jnqVmmhyGjTFpA-Gv7SpRR21v3Djr1DA@mail.gmail.com>
- <CALFERdxxAt5+Y0nxbEieYSZX8YLTA9aogtGWLLZBEpGdbWxT-g@mail.gmail.com> <CAFJ_xbrAVZDtXwe0Ku0V7b1xp580N+ao0caCRP1xiHBr11oKyQ@mail.gmail.com>
-In-Reply-To: <CAFJ_xbrAVZDtXwe0Ku0V7b1xp580N+ao0caCRP1xiHBr11oKyQ@mail.gmail.com>
-From: Sasa Ostrouska <casaxa@gmail.com>
-Date: Tue, 24 Jan 2023 15:31:08 +0100
-Message-ID: <CALFERdwpbQdpnyLuHxo67S4KC=if97AzLGDRVEo+u-HN2Tu0fg@mail.gmail.com>
-Subject: Re: Google Pixelbook EVE, no sound in kernel 6.1.x
-To: Lukasz Majczak <lma@semihalf.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org, 
-	regressions@lists.linux.dev, 
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, 
-	Cezary Rojewski <cezary.rojewski@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230121021749.55313-1-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Jan 24, 2023 at 1:11 PM Lukasz Majczak <lma@semihalf.com> wrote:
->
-> > If you need anything else just let me know.
-> >
-> > Thanks
-> > Sasa
->
-> Sasa,
->
-> Thank you for sharing logs from the working version - could you also
-> provide dmesg for the no sound scenario? You can also share them using
-> e.g. https://gist.github.com/ .
+Hi Waiman,
 
-Lukasz thanks, sure, will provide that too but let me reboot into the
-non working kernel.
-Will post it on gist.github.com and post the link here.
+[+Thorsten given where we are in the release cycle]
 
-Rgds
-Sasa
->
-> Best regards,
-> Lukasz
+On Fri, Jan 20, 2023 at 09:17:49PM -0500, Waiman Long wrote:
+> The user_cpus_ptr field was originally added by commit b90ca8badbd1
+> ("sched: Introduce task_struct::user_cpus_ptr to track requested
+> affinity"). It was used only by arm64 arch due to possible asymmetric
+> CPU setup.
+> 
+> Since commit 8f9ea86fdf99 ("sched: Always preserve the user requested
+> cpumask"), task_struct::user_cpus_ptr is repurposed to store user
+> requested cpu affinity specified in the sched_setaffinity().
+> 
+> This results in a performance regression in an arm64 system when booted
+> with "allow_mismatched_32bit_el0" on the command-line. The arch code will
+> (amongst other things) calls force_compatible_cpus_allowed_ptr() and
+> relax_compatible_cpus_allowed_ptr() when exec()'ing a 32-bit or a 64-bit
+> task respectively. Now a call to relax_compatible_cpus_allowed_ptr()
+> will always result in a __sched_setaffinity() call whether there is a
+> previous force_compatible_cpus_allowed_ptr() call or not.
+
+I'd argue it's more than just a performance regression -- the affinity
+masks are set incorrectly, which is a user visible thing
+(i.e. sched_getaffinity() gives unexpected values).
+
+> In order to fix this regression, a new scheduler flag
+> task_struct::cpus_allowed_restricted is now added to track if
+> force_compatible_cpus_allowed_ptr() has been called before or not. This
+> patch also updates the comments in force_compatible_cpus_allowed_ptr()
+> and relax_compatible_cpus_allowed_ptr() and handles their interaction
+> with sched_setaffinity().
+> 
+> Fixes: 8f9ea86fdf99 ("sched: Always preserve the user requested cpumask")
+> Reported-by: Will Deacon <will@kernel.org>
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  include/linux/sched.h |  3 +++
+>  kernel/sched/core.c   | 46 ++++++++++++++++++++++++++++++++++---------
+>  kernel/sched/sched.h  |  2 ++
+>  3 files changed, 42 insertions(+), 9 deletions(-)
+
+I find this pretty invasive, but I guess it's up to Peter and Ingo.
+It also doesn't the whole problem for me; see below.
+
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 853d08f7562b..f93f62a1f858 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -886,6 +886,9 @@ struct task_struct {
+>  	unsigned			sched_contributes_to_load:1;
+>  	unsigned			sched_migrated:1;
+>  
+> +	/* restrict_cpus_allowed_ptr() bit, serialized by scheduler locks */
+> +	unsigned			cpus_allowed_restricted:1;
+> +
+>  	/* Force alignment to the next boundary: */
+>  	unsigned			:0;
+>  
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index bb1ee6d7bdde..48234dc9005b 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -2999,15 +2999,40 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+>  	struct rq *rq;
+>  
+>  	rq = task_rq_lock(p, &rf);
+> +
+> +	if (ctx->flags & (SCA_CLR_RESTRICT | SCA_SET_RESTRICT)) {
+> +		p->cpus_allowed_restricted = 0;
+
+I don't think this is ever called on the SCA_SET_RESTRICT path, as
+restrict_cpus_allowed_ptr() calls __set_cpus_allowed_ptr_locked() directly.
+In my testing, we see a failure in the following sequence:
+
+  1. A 64-bit task has an affinity of 0xf
+  2. It exec()s a 32-bit program and is forcefully restricted to the set
+     of 32-bit-capable cores. Let's say that new mask is 0xc
+  3. The 32-bit task now exec()s a 64-bit program again
+
+And now we're still stuck with 0xc after step 3 whereas we should restore
+0xf.
+
+> +	} else if (p->cpus_allowed_restricted) {
+> +		/*
+> +		 * If force_compatible_cpus_allowed_ptr() has been called,
+> +		 * we can't extend cpumask to beyond what is in cpus_mask.
+> +		 */
+> +		if (!cpumask_and(rq->scratch_mask, ctx->new_mask,
+> +				 &p->cpus_mask)) {
+> +			task_rq_unlock(rq, p, &rf);
+> +			return -EINVAL;
+> +		}
+
+Why is this masking actually needed? __sched_setaffinity() already
+takes into account the task_cpu_possible_mask(), which is why I asked you
+before [1] about cases where the saved affinity is not simply a superset
+of the effective affinity.
+
+Thanks,
+
+Will
+
+[1] https://lore.kernel.org/r/20230120175931.GA22417@willie-the-truck
