@@ -1,66 +1,71 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08BC9110F
-	for <regressions@lists.linux.dev>; Thu, 26 Jan 2023 11:47:50 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pL0jH-0007Co-LV; Thu, 26 Jan 2023 12:47:43 +0100
-Message-ID: <483d0045-f71c-5a85-fb4d-5eee3010da7c@leemhuis.info>
-Date: Thu, 26 Jan 2023 12:47:43 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B4F23B7
+	for <regressions@lists.linux.dev>; Thu, 26 Jan 2023 12:11:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C397CC433D2;
+	Thu, 26 Jan 2023 12:11:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1674735086;
+	bh=KPkKSD7aWhYpforFO0pJPJv3XA4UUvnD2v1EFugEgqY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DsfeXP3MPywBfapf1j68U2fsYoRWJr1DaPzWi74NDujNgTDyNgQ1iInlpLvOBPWhZ
+	 dgbjF41INaKWSTmLGbC6hUi2hlVxaE3zeJX6nAjNxaHhzv2MWnLknFBp41TOIT81B2
+	 ln/BLPiIuK03YBpKim2U/tMG4LCKbrlthnwZlrX9s7FWpYyliW/zSN25yS4zXbq6o1
+	 oDeL383myENTyDldeQc8KuV4Re3HOXcuwLoBBFx/2jrf/CCCq6GjCcNSUwdCT4iLtw
+	 qDQ0oKQdF6wfufBEEOLwk+7/zpHzn/jpN3EV9/3fihC2XnpD7F9xiZbGBioLd3EI44
+	 Yv4H+MnVBlyxQ==
+Date: Thu, 26 Jan 2023 06:11:24 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Takashi Iwai <tiwai@suse.de>, linux-pci@vger.kernel.org,
+	alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+	"Zeno R.R. Davatz" <zdavatz@gmail.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	Antonino Daplas <adaplas@gmail.com>, Helge Deller <deller@gmx.de>,
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	regressions@lists.linux.dev
+Subject: Re: [REGRESSION] [Bug 216859] New: PCI bridge to bus boot hang at
+ enumeration
+Message-ID: <20230126121124.GA1258686@bhelgaas>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [bisected] clang 15 built kernel fails to boot, stuck at "Loading
- Linux 6.1.1 ...", gcc 12 built kernel with same config boots fine
-Content-Language: en-US, de-DE
-From: "Linux kernel regression tracking (#update)" <regressions@leemhuis.info>
-To: "Erhard F." <erhard_f@mailbox.org>, sandipan.das@amd.com
-Cc: peterz@infradead.org, linux-kernel@vger.kernel.org,
- Linux kernel regressions list <regressions@lists.linux.dev>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20230119022303.177052e4@yea>
- <27bd67f4-8b08-6c5b-137c-e9ef543e6d56@leemhuis.info>
-In-Reply-To: <27bd67f4-8b08-6c5b-137c-e9ef543e6d56@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674733671;6d5d7497;
-X-HE-SMSGID: 1pL0jH-0007Co-LV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230112200819.GA1785077@bhelgaas>
 
-[TLDR: a developer afaics forgot to use proper Link: tags when
-submitting changes that apparently address the regression discussed in
-this thread. This forces me to write this mail, which sole purpose it to
-update the state of this tracked Linux kernel regression.]
+[+cc folks from 145eed48de27 and framebuffer folks, regression list]
 
-On 19.01.23 15:44, Linux kernel regression tracking (#adding) wrote:
-> On 19.01.23 02:23, Erhard F. wrote:
->> Hi!
->>
->> I did a kernel bisect for an issue I originally posted on https://github.com/ClangBuiltLinux/linux/issues/1774
->>
->> It is about kernel 6.1.x not booting on my machines when built with clang. A gcc built kernel with the same config just works fine. Turns out kernel v6.2-rc4 and earlier v6.2-rc are still affected.
->>
->> I did a kernel bisect which revealed this commit:
-> [...]
-> 
-> #regzbot introduced 706460a96fc654e80b6be ^
-> https://github.com/ClangBuiltLinux/linux/issues/1774
-> #regzbot title perf/x86/amd/core: clang 15 built kernel fails to boot
-> #regzbot ignore-activity
+On Thu, Jan 12, 2023 at 02:08:19PM -0600, Bjorn Helgaas wrote:
+> On Wed, Dec 28, 2022 at 06:02:48AM -0600, Bjorn Helgaas wrote:
+> > On Wed, Dec 28, 2022 at 08:37:52AM +0000, bugzilla-daemon@kernel.org wrote:
+> > > https://bugzilla.kernel.org/show_bug.cgi?id=216859
+> > 
+> > >            Summary: PCI bridge to bus boot hang at enumeration
+> > >     Kernel Version: 6.1-rc1
+> > > ...
+> > 
+> > > With Kernel 6.1-rc1 the enumeration process stopped working for me,
+> > > see attachments.
+> > > 
+> > > The enumeration works fine with Kernel 6.0 and below.
+> > > 
+> > > Same problem still exists with v6.1. and v6.2.-rc1
 
-#regzbot monitor:
-https://lore.kernel.org/all/20230123205915.751729592@infradead.org/
-#regzbot fix: x86/static_call: Add support for Jcc tail-calls
-#regzbot ignore-activity
+This is a regression between v6.0 and v6.1-rc1.  Console output during
+boot freezes after nvidiafb deactivates the VGA console.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+It was a lot of work for Zeno, but we finally isolated this console
+hang to 145eed48de27 ("fbdev: Remove conflicting devices on PCI bus").
+
+The system actually does continue to boot and is accessible via ssh, 
+but the console appears hung, at least for output.  More details in
+the bugzilla starting at
+https://bugzilla.kernel.org/show_bug.cgi?id=216859#c47 .
+
+Bjorn
