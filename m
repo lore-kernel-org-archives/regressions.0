@@ -1,21 +1,21 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A593222
-	for <regressions@lists.linux.dev>; Thu, 26 Jan 2023 15:55:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A84EDC433EF;
-	Thu, 26 Jan 2023 15:55:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9112C3222
+	for <regressions@lists.linux.dev>; Thu, 26 Jan 2023 16:11:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 671B9C433EF;
+	Thu, 26 Jan 2023 16:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1674748531;
-	bh=JsaqBugdvm0bKSn7JKiVG39TV2mp7Z1zU4P2n5J37Y8=;
+	s=k20201202; t=1674749478;
+	bh=FDWqGrT6gli+ZkXUcX+XibAU3+og5P3uR2DttrVJRh8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XiZqiEicyPY8ZmKU5MdtBbnox3cw+bw0efxeN2ntwi3YjyqlJqRxq79RYKjxQ1YWL
-	 swIKChF3Q7GCzUlWFuz2xdpdnvN1/Cb96xo3spb/u9ekIbWg0KcZyka6us+tEqWrxb
-	 GtCR6dm6dC+k3CStz0TGxhQ26KXITzOZONhSTX1FtLnX7X0SsIQMLiTRQ7z6gk1MJg
-	 9ohtSjlym9jH1vkZ+5iBw1h+DDZnywOu6FFYltb4583I2Q/D1k3W1wm+H1iTbBxL16
-	 7PYW6OqH7Sqk0XWnqJMxEvrrKIYcM8qxm0jvKKIH6l4lTsWxuUQoJmiOD7y+GCtss3
-	 asczqX8cFsSXQ==
-Date: Thu, 26 Jan 2023 15:55:24 +0000
+	b=EvNf2S1ORgBG2zoPoQee2NLX8ya3baKZbJ37WLDapr7D8T5eW4vaEkxLGKBpkm/UT
+	 hv4RE5WLtrNGhuP4q2nuPc0ENESA5u7bg5TEPorPkl00g93Kgtn6w1OSKnuq2NuJ+X
+	 iEd13d2EdH8uryylSAUkclcx7SvoTstFzcYiKcOOUSoR6tOvwhrMRCjXnWhVUOjBHI
+	 qsCLnJMm/58Nofj0UoqPrkNK8zPt25H3iybePB0zdRPnkMYLcO+6rZxuwq+wHLpTR6
+	 ihpWgc7W0yhdTRP7r1CUOdAl5qW0p8WMldV1JSsBawk+PWCQcmf78oJgo7ORfJ60dh
+	 o8WP3XAoiCryA==
+Date: Thu, 26 Jan 2023 16:11:11 +0000
 From: Will Deacon <will@kernel.org>
 To: Waiman Long <longman@redhat.com>
 Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
@@ -31,10 +31,10 @@ Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
 	regressions@leemhuis.info
 Subject: Re: [PATCH v2] sched: Store restrict_cpus_allowed_ptr() call state
-Message-ID: <20230126155524.GA29438@willie-the-truck>
+Message-ID: <20230126161110.GB29438@willie-the-truck>
 References: <20230121021749.55313-1-longman@redhat.com>
  <20230124194805.GA27257@willie-the-truck>
- <70cf3890-efb1-cf35-2f94-f2b09092231f@redhat.com>
+ <fdf76fb2-1da4-2d72-7eb3-21137a7d6845@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -43,67 +43,53 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <70cf3890-efb1-cf35-2f94-f2b09092231f@redhat.com>
+In-Reply-To: <fdf76fb2-1da4-2d72-7eb3-21137a7d6845@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Jan 24, 2023 at 03:08:09PM -0500, Waiman Long wrote:
+On Tue, Jan 24, 2023 at 03:24:36PM -0500, Waiman Long wrote:
 > On 1/24/23 14:48, Will Deacon wrote:
 > > On Fri, Jan 20, 2023 at 09:17:49PM -0500, Waiman Long wrote:
-> > > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > > index 853d08f7562b..f93f62a1f858 100644
-> > > --- a/include/linux/sched.h
-> > > +++ b/include/linux/sched.h
-> > > @@ -886,6 +886,9 @@ struct task_struct {
-> > >   	unsigned			sched_contributes_to_load:1;
-> > >   	unsigned			sched_migrated:1;
-> > > +	/* restrict_cpus_allowed_ptr() bit, serialized by scheduler locks */
-> > > +	unsigned			cpus_allowed_restricted:1;
-> > > +
-> > >   	/* Force alignment to the next boundary: */
-> > >   	unsigned			:0;
-> > > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > > index bb1ee6d7bdde..48234dc9005b 100644
-> > > --- a/kernel/sched/core.c
-> > > +++ b/kernel/sched/core.c
-> > > @@ -2999,15 +2999,40 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
-> > >   	struct rq *rq;
-> > >   	rq = task_rq_lock(p, &rf);
-> > > +
-> > > +	if (ctx->flags & (SCA_CLR_RESTRICT | SCA_SET_RESTRICT)) {
-> > > +		p->cpus_allowed_restricted = 0;
-> > I don't think this is ever called on the SCA_SET_RESTRICT path, as
-> > restrict_cpus_allowed_ptr() calls __set_cpus_allowed_ptr_locked() directly.
-> > In my testing, we see a failure in the following sequence:
-> > 
-> >    1. A 64-bit task has an affinity of 0xf
-> >    2. It exec()s a 32-bit program and is forcefully restricted to the set
-> >       of 32-bit-capable cores. Let's say that new mask is 0xc
-> >    3. The 32-bit task now exec()s a 64-bit program again
-> > 
-> > And now we're still stuck with 0xc after step 3 whereas we should restore
-> > 0xf.
-> I am sorry that missed it. You are right. For setting the
-> cpus_allowed_restricted bit, it should be done directly in
-> restrict_cpus_allowed_ptr().
-> > > +	} else if (p->cpus_allowed_restricted) {
-> > > +		/*
-> > > +		 * If force_compatible_cpus_allowed_ptr() has been called,
-> > > +		 * we can't extend cpumask to beyond what is in cpus_mask.
-> > > +		 */
-> > > +		if (!cpumask_and(rq->scratch_mask, ctx->new_mask,
-> > > +				 &p->cpus_mask)) {
-> > > +			task_rq_unlock(rq, p, &rf);
-> > > +			return -EINVAL;
-> > > +		}
-> > Why is this masking actually needed? __sched_setaffinity() already
-> > takes into account the task_cpu_possible_mask(), which is why I asked you
-> > before [1] about cases where the saved affinity is not simply a superset
-> > of the effective affinity.
+> > > The user_cpus_ptr field was originally added by commit b90ca8badbd1
+> > > ("sched: Introduce task_struct::user_cpus_ptr to track requested
+> > > affinity"). It was used only by arm64 arch due to possible asymmetric
+> > > CPU setup.
+> > > 
+> > > Since commit 8f9ea86fdf99 ("sched: Always preserve the user requested
+> > > cpumask"), task_struct::user_cpus_ptr is repurposed to store user
+> > > requested cpu affinity specified in the sched_setaffinity().
+> > > 
+> > > This results in a performance regression in an arm64 system when booted
+> > > with "allow_mismatched_32bit_el0" on the command-line. The arch code will
+> > > (amongst other things) calls force_compatible_cpus_allowed_ptr() and
+> > > relax_compatible_cpus_allowed_ptr() when exec()'ing a 32-bit or a 64-bit
+> > > task respectively. Now a call to relax_compatible_cpus_allowed_ptr()
+> > > will always result in a __sched_setaffinity() call whether there is a
+> > > previous force_compatible_cpus_allowed_ptr() call or not.
+> > I'd argue it's more than just a performance regression -- the affinity
+> > masks are set incorrectly, which is a user visible thing
+> > (i.e. sched_getaffinity() gives unexpected values).
 > 
-> I kind of overlook the use of task_cpu_possible_mask() in
-> __set_cpus_allowed_ptr_locked. So we don't really need that masking. That
-> make the patch even simpler then. I will send out a v3.
+> Can your elaborate a bit more on what you mean by getting unexpected
+> sched_getaffinity() results? You mean the result is wrong after a
+> relax_compatible_cpus_allowed_ptr(). Right?
 
-Thanks; I'll give it a spin when I see it.
+Yes, as in the original report. If, on a 4-CPU system, I do the following
+with v6.1 and "allow_mismatched_32bit_el0" on the kernel cmdline:
+
+# for c in `seq 1 3`; do echo 0 > /sys/devices/system/cpu/cpu$c/online; done
+# yes > /dev/null &
+[1] 334
+# taskset -p 334
+pid 334's current affinity mask: 1
+# for c in `seq 1 3`; do echo 1 > /sys/devices/system/cpu/cpu$c/online; done
+# taskset -p 334
+pid 334's current affinity mask: f
+
+but with v6.2-rc5 that last taskset invocation gives:
+
+pid 334's current affinity mask: 1
+
+so, yes, the performance definitely regresses, but that's because the
+affinity mask is wrong!
 
 Will
