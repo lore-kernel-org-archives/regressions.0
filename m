@@ -1,69 +1,133 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63DE290D
-	for <regressions@lists.linux.dev>; Fri, 27 Jan 2023 12:52:51 +0000 (UTC)
-Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pLODp-0001vu-Om; Fri, 27 Jan 2023 13:52:49 +0100
-Message-ID: <cea5051b-1a13-45a9-6cbe-a664a9cd1d88@leemhuis.info>
-Date: Fri, 27 Jan 2023 13:52:49 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1487290D
+	for <regressions@lists.linux.dev>; Fri, 27 Jan 2023 13:03:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 007BBC433EF;
+	Fri, 27 Jan 2023 13:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1674824592;
+	bh=3q9WdGMixFx1ZmvLwgUEx1kq+2d51k4z5LpTi+bEFsk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=g14P7+Bca9TKg+94E1NOtW+mwubpw3YSNYtmOjjFnQSnqBkDIlex5DW0zX0ovYr32
+	 jJRoeC5yCGu/LN2wJkfpUSVsAAQXSOj7NB2i4fiaawzyEfYdNzyqiWSvP0mCqxJ3np
+	 YOj9Q24n0z+WvGHgtf31Z7FEY5/wkN1yfMYUT7y5xVJo6vZ8GIfdK5ItcGvDaB7H7W
+	 6vd6pbe/D8ICMrLwnwwFB+1VlzEDwSBXLG3W7q9FQfybUkTAh4yaA2J9IiyT2C7Wwr
+	 1vaw3FqTwCtZWVIHL6cbH8euOtUZs3x4fRp9ISy19Y/fiWaWaQFzIzoYUuuCDxGvU8
+	 PS7Q9i/jp+AJg==
+Date: Fri, 27 Jan 2023 13:03:06 +0000
+From: Will Deacon <will@kernel.org>
+To: Waiman Long <longman@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Phil Auld <pauld@redhat.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+	regressions@leemhuis.info
+Subject: Re: [PATCH v2] sched: Store restrict_cpus_allowed_ptr() call state
+Message-ID: <20230127130251.GB30605@willie-the-truck>
+References: <20230121021749.55313-1-longman@redhat.com>
+ <20230124194805.GA27257@willie-the-truck>
+ <fdf76fb2-1da4-2d72-7eb3-21137a7d6845@redhat.com>
+ <20230126161110.GB29438@willie-the-truck>
+ <af7488b7-9bed-69c2-274f-90ce05f8b435@redhat.com>
+ <9861c077-55c6-60f4-02ea-bd0138945c16@redhat.com>
+ <a7a82b63-e978-6ee2-38fb-c77ee9fed481@redhat.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] ALSA: hda/hdmi: Use only dynamic PCM device allocation
- #forregzbot
-Content-Language: en-US, de-DE
-From: "Linux kernel regression tracking (#update)" <regressions@leemhuis.info>
-To: ALSA development <alsa-devel@alsa-project.org>
-Cc: amd-gfx@lists.freedesktop.org,
- "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-References: <20220922084017.25925-1-perex@perex.cz>
- <1c9c00dec72c241a399b3b7c0a305382a5712529.camel@bi-co.net>
- <163d5366-35d9-f7db-cf50-796d6b011c0a@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <163d5366-35d9-f7db-cf50-796d6b011c0a@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674823971;dfef2cc9;
-X-HE-SMSGID: 1pLODp-0001vu-Om
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a7a82b63-e978-6ee2-38fb-c77ee9fed481@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
-
-On 26.12.22 14:26, Thorsten Leemhuis wrote:
-> On 25.12.22 13:14, Michael Laß wrote:
->> CC'ing amd-gfx as this might be an issue in the amd driver.
->>
->> This change causes a regression in Linux 6.1 at least on some AMD APUs.
->> There are reports from users with Ryzen 4750U, 5800U and 5850U chips
->> where the HDMI sound devices don't show up anymore. I'm affected by
->> this as well.
->>
->> Reverting this commit (ef6f5494) makes the HDMI audio devices show up
->> again. I verified that this is still an issue in current Linux git
->> (72a85e2b).
+On Thu, Jan 26, 2023 at 08:56:51PM -0500, Waiman Long wrote:
+> On 1/26/23 15:58, Waiman Long wrote:
+> > On 1/26/23 15:49, Waiman Long wrote:
+> > > On 1/26/23 11:11, Will Deacon wrote:
+> > > > On Tue, Jan 24, 2023 at 03:24:36PM -0500, Waiman Long wrote:
+> > > > > On 1/24/23 14:48, Will Deacon wrote:
+> > > > > > On Fri, Jan 20, 2023 at 09:17:49PM -0500, Waiman Long wrote:
+> > > > > > > The user_cpus_ptr field was originally added by commit b90ca8badbd1
+> > > > > > > ("sched: Introduce task_struct::user_cpus_ptr to track requested
+> > > > > > > affinity"). It was used only by arm64 arch due to
+> > > > > > > possible asymmetric
+> > > > > > > CPU setup.
+> > > > > > > 
+> > > > > > > Since commit 8f9ea86fdf99 ("sched: Always preserve
+> > > > > > > the user requested
+> > > > > > > cpumask"), task_struct::user_cpus_ptr is repurposed to store user
+> > > > > > > requested cpu affinity specified in the sched_setaffinity().
+> > > > > > > 
+> > > > > > > This results in a performance regression in an arm64
+> > > > > > > system when booted
+> > > > > > > with "allow_mismatched_32bit_el0" on the
+> > > > > > > command-line. The arch code will
+> > > > > > > (amongst other things) calls force_compatible_cpus_allowed_ptr() and
+> > > > > > > relax_compatible_cpus_allowed_ptr() when exec()'ing
+> > > > > > > a 32-bit or a 64-bit
+> > > > > > > task respectively. Now a call to relax_compatible_cpus_allowed_ptr()
+> > > > > > > will always result in a __sched_setaffinity() call
+> > > > > > > whether there is a
+> > > > > > > previous force_compatible_cpus_allowed_ptr() call or not.
+> > > > > > I'd argue it's more than just a performance regression
+> > > > > > -- the affinity
+> > > > > > masks are set incorrectly, which is a user visible thing
+> > > > > > (i.e. sched_getaffinity() gives unexpected values).
+> > > > > Can your elaborate a bit more on what you mean by getting unexpected
+> > > > > sched_getaffinity() results? You mean the result is wrong after a
+> > > > > relax_compatible_cpus_allowed_ptr(). Right?
+> > > > Yes, as in the original report. If, on a 4-CPU system, I do the
+> > > > following
+> > > > with v6.1 and "allow_mismatched_32bit_el0" on the kernel cmdline:
+> > > > 
+> > > > # for c in `seq 1 3`; do echo 0 >
+> > > > /sys/devices/system/cpu/cpu$c/online; done
+> > > > # yes > /dev/null &
+> > > > [1] 334
+> > > > # taskset -p 334
+> > > > pid 334's current affinity mask: 1
+> > > > # for c in `seq 1 3`; do echo 1 >
+> > > > /sys/devices/system/cpu/cpu$c/online; done
+> > > > # taskset -p 334
+> > > > pid 334's current affinity mask: f
+> > > > 
+> > > > but with v6.2-rc5 that last taskset invocation gives:
+> > > > 
+> > > > pid 334's current affinity mask: 1
+> > > > 
+> > > > so, yes, the performance definitely regresses, but that's because the
+> > > > affinity mask is wrong!
+> > > 
+> > > I see what you mean now. Hotplug doesn't work quite well now because
+> > > user_cpus_ptr has been repurposed to store the value set of
+> > > sched_setaffinity() but not the previous cpus_mask before
+> > > force_compatible_cpus_allowed_ptr().
+> > > 
+> > > One possible solution is to modify the hotplug related code to check
+> > > for the cpus_allowed_restricted, and if set, check
+> > > task_cpu_possible_mask() to see if the cpu can be added back to its
+> > > cpus_mask. I will take a further look at that later.
+> > 
+> > Wait, I think the cpuset hotplug code should be able to restore the
+> > right cpumask since task_cpu_possible_mask() is used there. Is cpuset
+> > enabled? Does the test works without allow_mismatched_32bit_el0?
 > 
-> Thanks for the report. To be sure below issue doesn't fall through the
-> cracks unnoticed, I'm adding it to regzbot, my Linux kernel regression
-> tracking bot:
-> 
-> #regzbot ^introduced ef6f5494faf6a37c74990689a
-> #regzbot title alsa: hda/hdmi: HDMI sound devices don't show up anymore
-> with some AMD APUs
-> #regzbot ignore-activity
+> BTW, if the test result is from running on a kernel built with the v2 patch,
+> it is the unexpected result. That should be fixed in the v3 patch.
 
-#regzbot fix: 090ddad4c7a9
-#regzbot ignore-activity
+The failure listed above is on vanilla v6.2-rc5. Your v2 has other issues,
+as described in:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+https://lore.kernel.org/r/20230124194805.GA27257@willie-the-truck
 
+Will
