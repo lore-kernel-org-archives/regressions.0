@@ -1,201 +1,217 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2052.outbound.protection.outlook.com [40.107.212.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A47D2907
-	for <regressions@lists.linux.dev>; Fri, 27 Jan 2023 15:02:44 +0000 (UTC)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NEwhpVarJ9h9NSRJiWA+67/4OsitkerIEUQgRegbm/rqFXAJqs5jmjujpptL/26Ks/0WQJZlFJaRzpDwzrYHStrjs81uyZ/S6lKOv5mmJxymy8x4wQML9a0Nma1OUzemFMGVwnZJyps4HdLc48267hpH15avm4M91hN8Pmd8DEOl6nYctcevlWtqbdDRm7dIWTv4XVmz/cSlACM/HPmFY/FIacTcZlTOi2owlqOu1Pae6v3F5ZVNjCCGnz5T/G89Iv9jJzBcBWvMKUsuwIRlfl8DIrvtRGzhG21mkW9HIRIsQbD8ZSFC8EjZs7CdtSfCjYBOTLs+pBjfRpMt3RxAdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TF1lZPUIVDovse/2esRGy+1uRoeneuUrnVV92zLZGCY=;
- b=SAeTtIh1xrKJhHUg38aoJdjhpsorbY9sSJ+dqh5YP1O7m9QmFZ8lAd6fKkfsHDI7IBmNKpayY2WroE/qGJB+y8e70Ql2Gc/k/2lQA6mAtcIAlOrAIo+Zui7r7gXgjTxcAanFlww5AEQDRO3nJaV7kgN6ufdtebJzCcrri7YRw8y07Om0DqeUJNv4vGG0btIRnYNECz4yaLraHas6fqCyegnBINgYEvUDnwrCzCoG9flbosxkIHO1oXOtawe6BfwJPCjm8NXwCcAfRgiWv4hhfkv+UsD/HFto0mS6JddUnfabr1DNdGzh9ZGggb/PO0YYN2X/olCbQjTQpd5Eyd4Vpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TF1lZPUIVDovse/2esRGy+1uRoeneuUrnVV92zLZGCY=;
- b=c7jp+2WLgqfUkyBYfVq6EwaHS2z0X/a0mCp5u/ckU4WHbg8yVhAJ0LQofRR9l0un66qmqJ4tA8mZEvsyIWwIDjTYmJxPPrZbC504tN5rTYBxFd9t49oycIhjHVKo/MNW+R4ad74COgvFGQFvHI52L0zNBQ/raaYtqRJv5jyfm5Q=
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by SJ0PR12MB5674.namprd12.prod.outlook.com (2603:10b6:a03:42c::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.23; Fri, 27 Jan
- 2023 15:02:42 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a59e:bafb:f202:313c]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a59e:bafb:f202:313c%7]) with mapi id 15.20.6043.022; Fri, 27 Jan 2023
- 15:02:41 +0000
-From: "Limonciello, Mario" <Mario.Limonciello@amd.com>
-To: Linux regressions mailing list <regressions@lists.linux.dev>, Greg KH
-	<gregkh@linuxfoundation.org>
-CC: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"stable@vger.kernel.org" <stable@vger.kernel.org>,
-	"stanislav.lisovskiy@intel.com" <stanislav.lisovskiy@intel.com>, "Zuo, Jerry"
-	<Jerry.Zuo@amd.com>, "amd-gfx@lists.freedesktop.org"
-	<amd-gfx@lists.freedesktop.org>, "Lin, Wayne" <Wayne.Lin@amd.com>, Guenter
- Roeck <linux@roeck-us.net>, "bskeggs@redhat.com" <bskeggs@redhat.com>
-Subject: RE: [PATCH] Revert "drm/display/dp_mst: Move all payload info into
- the atomic state"
-Thread-Topic: [PATCH] Revert "drm/display/dp_mst: Move all payload info into
- the atomic state"
-Thread-Index: AQHZJmMAtR5rbDYwjEqZfEqNL1EmRa6noYAAgAABQQCAClWHAIAAGqcAgABgXGA=
-Date: Fri, 27 Jan 2023 15:02:41 +0000
-Message-ID:
- <MN0PR12MB610184AF496001F3B92706BDE2CC9@MN0PR12MB6101.namprd12.prod.outlook.com>
-References: <20230112085044.1706379-1-Wayne.Lin@amd.com>
- <20230120174634.GA889896@roeck-us.net>
- <a9deecb3-5955-ee4e-c76f-2654ee9f1a92@amd.com> <Y9N/wiIL758c3ozv@kroah.com>
- <36e72298-e9d3-967e-8b14-7197719953cb@leemhuis.info>
-In-Reply-To: <36e72298-e9d3-967e-8b14-7197719953cb@leemhuis.info>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels: MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Enabled=true;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SetDate=2023-01-27T15:02:42Z;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Method=Privileged;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_Name=Public-AIP 2.0;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ActionId=bf81b653-a3a8-44ac-9756-4a87b9cb5b15;
- MSIP_Label_d4243a53-6221-4f75-8154-e4b33a5707a1_ContentBits=1
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_enabled: true
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_setdate: 2023-01-27T15:02:42Z
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_method: Privileged
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_name: Public-AIP 2.0
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_siteid:
- 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_actionid:
- cccb8bad-fb38-46c1-bdd1-5b55f7ad7481
-msip_label_d4243a53-6221-4f75-8154-e4b33a5707a1_contentbits: 0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN0PR12MB6101:EE_|SJ0PR12MB5674:EE_
-x-ms-office365-filtering-correlation-id: 2c839337-7dfc-49ab-b31a-08db007789f3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- m0/OeXCMofPmHSpOwxGfkzDfheIH7Z122mdgC2oZegwG2h3LoOnlmZYYs0kjUrnkJOydf2q9bWxJVhAN663GaHzFOtf1bhNiDX77heGblr8ZS5TN1vn2v6Bq9GhspyjqdxWYt+swMon/JIQ1iaD1D05XdYMbYpkthOzYzmRQ7g8eREF5jRvMBN/AzgH2j6IG9npv58IE2/0/LafNCsCTC2iyGKdLpvEASMLzIErDlAjxHbBiHApLhNt5LTZxZ1HIi/DvX8Kuek8o7LaPBk4Hr7DDNWBq4pD7miZl3WTzo/HDCfJ1wc/vmTjH60wj5LpzyaQTQEPsmlsJYoNxexf+3KR3f3hSzCopg/HOSdNM5VoQOZMs010BC1HbxWcpJoYQE9x3qQK7QO0JEl89I23fqA7wJWBpkDbiU/yQJXh026bEunypMXT8uPHw1lmRaFDjzm9bUPHbVA3gFs7qlCV2PILmRc4/gDDiZwbI9PAmvmCGelovwrVvYr7x9Cxh2GwVM7QsfdKGyxYLNfxy+fVVH1/MsbIaWFYskUB0+Mw4u9dIa4dHZy5V0fxWIc+BLcurzD4Qywm3r7H5ojDqy0Wsqq1vNuPTtbV8++HRhqplRUeCGNKZ8IXPN8MumQgEI4pBkhbRo5tI4ve2TyDD4e6tCCMlUKQo8vwmwcFLkoQEwmTEt5avFX0Bny+7vX9hK573dP54Btdn0mEy2afUqfjGTZMitDc6ongDjY+ajNsOVtY=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(396003)(136003)(376002)(366004)(39860400002)(451199018)(33656002)(2906002)(54906003)(110136005)(83380400001)(7696005)(478600001)(316002)(966005)(26005)(71200400001)(6506007)(53546011)(186003)(9686003)(8936002)(38070700005)(122000001)(38100700002)(5660300002)(52536014)(86362001)(4326008)(55016003)(41300700001)(66946007)(76116006)(66476007)(8676002)(64756008)(66556008)(66446008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?WVR1Rlp1N1pmZm16QSszSlJDWEJJczIxYVVWckY5UDRabDI2dENhWjhFWGpF?=
- =?utf-8?B?OEhMd2NXWWNLVDV0SndDaGVlZkRVRUpCOCtpa3BMTHl3S0wwMmlXaWg1bkxI?=
- =?utf-8?B?NkU2RmR0VDZmRDBoNFlFSUlpOWp4STFHd1JyVzlMaG1SbVdaWDEzS3NoM2lG?=
- =?utf-8?B?eUZ3L09va1h1STZOOXdwZDgyUlNML2pXR2Y5YmRqL2tTZE9SRVJYbnpON1BZ?=
- =?utf-8?B?b1ZOUm9qYjRGTVR2MnFFY2dvZlRvazFGc1NlOTE4TFh3bXFrcUhud0luRS9u?=
- =?utf-8?B?aTVacGEybGxzUCt5NDUwZURpenp6OVZZTXF0OWRKMWlzWHo0ODJDV3cybnFr?=
- =?utf-8?B?R29CWHBCMVptb3h5RkwxRWJuT0NhRG1uazUzSHZRVTJQMmZrN1QrajlzRnA5?=
- =?utf-8?B?QWNIZWJZdy9ZRU1UN090SHNBV2ZMN0Z2K1E0TWhEcitJeDl3Z2p0UzkwcW5D?=
- =?utf-8?B?Z0Q4QnQ2TEkzSDg0WmMxVE9XTkFHVVJGMndFUGNNZ3NBeUFMUDlYaHFKVmoy?=
- =?utf-8?B?WE1DWEIwaDBRSTNITEVnQ1pVckFzNzdHU0JFenNSQlV6MHhwQ3c2N1JrbVk5?=
- =?utf-8?B?eGNKUkFXaitkOUVTSnJRaGVhSmJlKzEvYndyTGdQN0d5bSszM0xYeXcyNWEy?=
- =?utf-8?B?cnM4L09FK1ZpenVzUjV5Z1BvTEF2dmxlVVRoWUgyL2diSVNSZGRacVQvZjlH?=
- =?utf-8?B?VVlEYUZoOHZ0dW5vZkIxUzlMTk5uRjFLYzl4V2VadnNmOWVsRmhtcy9zTDFh?=
- =?utf-8?B?QlY1Q0ZEWGpzeU1jN1FLcnVnUm1ISTBGNWtqRDVWMmZXMzVUZ1ZWdzU4cVdM?=
- =?utf-8?B?alA4RVplR1BXd01tT0dBNUE3ZFRielBuVDZIRVBzbUVMWElOSGVTMCtTaUJR?=
- =?utf-8?B?Yi9qOE44b1IweDZhT2hsZW9LSG1JUHFsZXppaENMa28yQ0hNRSt1NFRsTVRX?=
- =?utf-8?B?RTZyaVEzV0VQY0EvWnpUYzZCcWR3cnpqdFVFazAvNnRJdFVyVVVWaENkUnNZ?=
- =?utf-8?B?Umo3MnFObnVFN2NjOTAyZnpTNFp3YVVoZ2dyd3hwWVJabXRKcmtOUElnYVR6?=
- =?utf-8?B?RnBHVWNHaEltZnAyZUpJbyttRE02T0hzZ295b0o0OWNudkpzU0xPMkZ5cVVh?=
- =?utf-8?B?T25vblJtTzNHbExiTU95RlBRQnRIVkpibk14Q3JxY01XbURzZEZkdTcyOUF1?=
- =?utf-8?B?ZHI0Z0kvMVVvWU1kdTl2V3QybUd4emVUb1hNd2xlTkFjMG9pNzF5MDJXTFpR?=
- =?utf-8?B?MUxiZ3pIR2dnOFgxSWhUNVhrZDkyV1BScGMvN3VLMURTY1QrZFZwTGdheDNY?=
- =?utf-8?B?d3UzOXg0K2MzZWgwa3Uvc1lWekFmUGlSUTBoOGVJZHFMSEpiSGxkcHZ2OVdJ?=
- =?utf-8?B?WDJKK05MZG9sL09ieWtmRUlTZS9rOEgzdENpQ05ndEJEdThOa1drWHdMSy90?=
- =?utf-8?B?bEsrRllvRkxCQ0htcWRpbmFBM0U2enlMNmRXd0ZpMFduakl6TVlPN0xwa0dU?=
- =?utf-8?B?aEh0K040N2pGSXdzUGhha2Jjd3M1R2VvYTIxTmY4OU1FMDBzM3Z6aElJRlMz?=
- =?utf-8?B?SnorczhFVlpWUm5mYzc4elpJVmVCS1pLNWxRRlVPNCtNL1ZTbmlZR0pzWmYy?=
- =?utf-8?B?Ymk1c3cxbXQ5VXN6cit0OU9ONisrek92dFc4VDhkYmlHd25Ld0hkWHdPSzZl?=
- =?utf-8?B?M0xQVmdua0FhcW5HcHl3ZnlzM3RTaUIvdGJYUlZ2V2VvVFVIUkp4MEU3bjRn?=
- =?utf-8?B?Z1NEay9uS2h6NGVHSXJzVlk0TjBkREhzRFMvQ2YyYm05NHdPL3cra3FkMFkz?=
- =?utf-8?B?cCs4V1RuNzBVZ0QzT0YzT2k5TncvbU9wYnlaTGIyR2R6TmIzM1p1SWZtMUZM?=
- =?utf-8?B?VHFYOVFUbUk5N3hadjFyYkt1RVYrT0RRK2poa1FMdlJJTDM1MzU1V3AvRnRh?=
- =?utf-8?B?MUszcXRSQmZDUE92RGkyK3BIRlhSOXdIOCtCTFRmWmpNbjdsazQrQ1dqMHJs?=
- =?utf-8?B?dS82NWEzRWhlcjFTN2VKd1pzR0doL09Ua2xxYWFzdnBwZXdhVmVYODRIQ0hO?=
- =?utf-8?B?Y0dpcmlCZjY0VFNHSHp3bXBYNm9QYWNyTmt2RkU2OGdXekMvclA1NnVTSmh0?=
- =?utf-8?Q?EyJA=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7DB187F
+	for <regressions@lists.linux.dev>; Fri, 27 Jan 2023 19:41:49 +0000 (UTC)
+Received: by mail-wr1-f41.google.com with SMTP id b7so5922837wrt.3
+        for <regressions@lists.linux.dev>; Fri, 27 Jan 2023 11:41:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8sqgBAHL6reJV8ollJKxBdeycbLwtiWt9lw7yHofJ+o=;
+        b=ev754F3r9umuRR7Kd1IlwkH/wy1GsuX/xv2o8gjfTHfnw2jZIxdec6h8OZ7A4U1Ie/
+         Ixle02lE+0cjC7sF3HFxWrLT6RMcefSg1cSAoyX3uo/I7Q1BuU4XoaGZIU48jWninUhy
+         zubv0TlYkmFKyOVxz4XkDmLQ84GBH3cemG2GLVq6c5xgKmiq+m5WFM8FawXz1FWs99M6
+         MRaw7MiY9axrRcZ1OEaAzzqHIqFwPQnjpvlUm2j+aL0etaDwCFPZLS0Tk1FEHjNDW1X6
+         LPCls/N89/lpJl66pw4pXbObmrkRFp0iQKjMAme9dbe1+6VBN3lJ6o2FVxpNtgnUbFbS
+         PUmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8sqgBAHL6reJV8ollJKxBdeycbLwtiWt9lw7yHofJ+o=;
+        b=os2//d0LvURbzu4MRBNBd6fpR6ICHzZ4nO1ZuVPW4ZFCjRw/TOOewiXs3eRtGZREG9
+         GBqTDYg6Y66l9OrfuCCfxMsYR2sJ8AZFqhTigkHUd8hyduFYiLF+2ZEnkYsKDxdapB6v
+         TFp3p9lut22UyFjtKhnceSMBlMpPhCIX5QTm/G+Xy+ifAvF8boL9hxJr3eYCoxvky7U+
+         SfxpVLJLwhqMByWdCfXG1IZ7DCyL+Ll61KAStc9jrq6vvBCS046Bh36LEsWXRA0Uhu5+
+         TFnL0Y+cDdlWC4dAzxjDDouSUaGJf2WAZMhlFA1KDIYcIYRckxVsgazZZVIjBxu7MLKf
+         WPNQ==
+X-Gm-Message-State: AFqh2kq8AAwX7CjQe5W1WEmNmzGM+x2IuM6+unZXqTTc0YnYeqHvhXgg
+	Gx6kWsz8z6nlqO842wnYq98=
+X-Google-Smtp-Source: AMrXdXvgdY8iMSHPg3caqt8+mznS+ppnCOCN8jFs3bKnFQP3cGJZMJhfvzEIJelSi4nyVe5HeBtf8g==
+X-Received: by 2002:a5d:6a46:0:b0:2bd:c856:6de0 with SMTP id t6-20020a5d6a46000000b002bdc8566de0mr38199087wrw.21.1674848507822;
+        Fri, 27 Jan 2023 11:41:47 -0800 (PST)
+Received: from [192.168.1.10] (97e09f27.skybroadband.com. [151.224.159.39])
+        by smtp.googlemail.com with ESMTPSA id n9-20020a5d4c49000000b002bfb7c2430bsm4827027wrt.19.2023.01.27.11.41.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 27 Jan 2023 11:41:47 -0800 (PST)
+Message-ID: <eb3c6b89-b6f2-311b-7387-14a9014bd36c@googlemail.com>
+Date: Fri, 27 Jan 2023 19:41:44 +0000
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c839337-7dfc-49ab-b31a-08db007789f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jan 2023 15:02:41.7990
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gx71aLPLiEkTe9lP69Ckts4JP2Q9i8+WG/sUWcLdFQFlPp+Ox8aVH6XCDhZUBkvHdjNS/VikFmw3TxSJTN8UoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5674
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
+To: Karol Herbst <kherbst@redhat.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: bskeggs@redhat.com, Lyude Paul <lyude@redhat.com>,
+ LKML <linux-kernel@vger.kernel.org>,
+ ML dri-devel <dri-devel@lists.freedesktop.org>,
+ ML nouveau <nouveau@lists.freedesktop.org>
+References: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
+ <fcec3c78-b5d9-eb48-0fc0-d1f27de87f23@leemhuis.info>
+ <b21fa1f6-a71d-5657-8596-ee0be73185ea@leemhuis.info>
+ <CACO55tsgc7mmmYBQATqG=zUmO22A1uA3_+A0krdCoORj4PirXg@mail.gmail.com>
+Content-Language: en-GB
+From: Chris Clayton <chris2553@googlemail.com>
+In-Reply-To: <CACO55tsgc7mmmYBQATqG=zUmO22A1uA3_+A0krdCoORj4PirXg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-W1B1YmxpY10NCg0KDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGlu
-dXgga2VybmVsIHJlZ3Jlc3Npb24gdHJhY2tpbmcgKFRob3JzdGVuIExlZW1odWlzKQ0KPiA8cmVn
-cmVzc2lvbnNAbGVlbWh1aXMuaW5mbz4NCj4gU2VudDogRnJpZGF5LCBKYW51YXJ5IDI3LCAyMDIz
-IDAzOjE1DQo+IFRvOiBHcmVnIEtIIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IExpbW9u
-Y2llbGxvLCBNYXJpbw0KPiA8TWFyaW8uTGltb25jaWVsbG9AYW1kLmNvbT4NCj4gQ2M6IGRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc7IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IHN0
-YW5pc2xhdi5saXNvdnNraXlAaW50ZWwuY29tOyBadW8sIEplcnJ5IDxKZXJyeS5adW9AYW1kLmNv
-bT47IGFtZC0NCj4gZ2Z4QGxpc3RzLmZyZWVkZXNrdG9wLm9yZzsgTGluLCBXYXluZSA8V2F5bmUu
-TGluQGFtZC5jb20+OyBHdWVudGVyDQo+IFJvZWNrIDxsaW51eEByb2Vjay11cy5uZXQ+OyBic2tl
-Z2dzQHJlZGhhdC5jb20NCj4gU3ViamVjdDogUmU6IFtQQVRDSF0gUmV2ZXJ0ICJkcm0vZGlzcGxh
-eS9kcF9tc3Q6IE1vdmUgYWxsIHBheWxvYWQgaW5mbyBpbnRvDQo+IHRoZSBhdG9taWMgc3RhdGUi
-DQo+IA0KPiBPbiAyNy4wMS4yMyAwODozOSwgR3JlZyBLSCB3cm90ZToNCj4gPiBPbiBGcmksIEph
-biAyMCwgMjAyMyBhdCAxMTo1MTowNEFNIC0wNjAwLCBMaW1vbmNpZWxsbywgTWFyaW8gd3JvdGU6
-DQo+ID4+IE9uIDEvMjAvMjAyMyAxMTo0NiwgR3VlbnRlciBSb2VjayB3cm90ZToNCj4gPj4+IE9u
-IFRodSwgSmFuIDEyLCAyMDIzIGF0IDA0OjUwOjQ0UE0gKzA4MDAsIFdheW5lIExpbiB3cm90ZToN
-Cj4gPj4+PiBUaGlzIHJldmVydHMgY29tbWl0IDRkMDdiMGJjNDAzNDAzNDM4ZDljZjg4NDUwNTA2
-MjQwYzVmYWY5MmYuDQo+ID4+Pj4NCj4gPj4+PiBbV2h5XQ0KPiA+Pj4+IENoYW5nZXMgY2F1c2Ug
-cmVncmVzc2lvbiBvbiBhbWRncHUgbXN0Lg0KPiA+Pj4+IEUuZy4NCj4gPj4+PiBJbiBmaWxsX2Rj
-X21zdF9wYXlsb2FkX3RhYmxlX2Zyb21fZHJtKCksIGFtZGdwdSBleHBlY3RzIHRvDQo+IGFkZC9y
-ZW1vdmUgcGF5bG9hZA0KPiA+Pj4+IG9uZSBieSBvbmUgYW5kIGNhbGwgZmlsbF9kY19tc3RfcGF5
-bG9hZF90YWJsZV9mcm9tX2RybSgpIHRvIHVwZGF0ZQ0KPiB0aGUgSFcNCj4gPj4+PiBtYWludGFp
-bmVkIHBheWxvYWQgdGFibGUuIEJ1dCBwcmV2aW91cyBjaGFuZ2UgdHJpZXMgdG8gZ28gdGhyb3Vn
-aCBhbGwNCj4gdGhlDQo+ID4+Pj4gcGF5bG9hZHMgaW4gbXN0X3N0YXRlIGFuZCB1cGRhdGUgYW1k
-cHVnIGh3IG1haW50YWluZWQgdGFibGUgaW4gb25jZQ0KPiBldmVyeXRpbWUNCj4gPj4+PiBkcml2
-ZXIgb25seSB0cmllcyB0byBhZGQvcmVtb3ZlIGEgc3BlY2lmaWMgcGF5bG9hZCBzdHJlYW0gb25s
-eS4gVGhlDQo+IG5ld2x5DQo+ID4+Pj4gZGVzaWduIGlkZWEgY29uZmxpY3RzIHdpdGggdGhlIGlt
-cGxlbWVudGF0aW9uIGluIGFtZGdwdSBub3dhZGF5cy4NCj4gPj4+Pg0KPiA+Pj4+IFtIb3ddDQo+
-ID4+Pj4gUmV2ZXJ0IHRoaXMgcGF0Y2ggZmlyc3QuIEFmdGVyIGFkZHJlc3NpbmcgYWxsIHJlZ3Jl
-c3Npb24gcHJvYmxlbXMgY2F1c2VkDQo+IGJ5DQo+ID4+Pj4gdGhpcyBwcmV2aW91cyBwYXRjaCwg
-d2lsbCBhZGQgaXQgYmFjayBhbmQgYWRqdXN0IGl0Lg0KPiA+Pj4NCj4gPj4+IEhhcyB0aGVyZSBi
-ZWVuIGFueSBwcm9ncmVzcyBvbiB0aGlzIHJldmVydCwgb3Igb24gZml4aW5nIHRoZSB1bmRlcmx5
-aW5nDQo+ID4+PiBwcm9ibGVtID8NCj4gPj4+DQo+ID4+PiBUaGFua3MsDQo+ID4+PiBHdWVudGVy
-DQo+ID4+DQo+ID4+IEhpIEd1ZW50ZXIsDQo+ID4+DQo+ID4+IFdheW5lIGlzIE9PTyBmb3IgQ05Z
-LCBidXQgbGV0IG1lIHVwZGF0ZSB5b3UuDQo+ID4+DQo+ID4+IEhhcnJ5IGhhcyBzZW50IG91dCB0
-aGlzIHNlcmllcyB3aGljaCBpcyBhIGNvbGxlY3Rpb24gb2YgcHJvcGVyIGZpeGVzLg0KPiA+PiBo
-dHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvc2VyaWVzLzExMzEyNS8NCj4gPj4NCj4g
-Pj4gT25jZSB0aGF0J3MgcmV2aWV3ZWQgYW5kIGFjY2VwdGVkLCA0IG9mIHRoZW0gYXJlIGFwcGxp
-Y2FibGUgZm9yIDYuMS4NCj4gPg0KPiA+IEFueSBoaW50IG9uIHdoZW4gdGhvc2Ugd2lsbCBiZSBy
-ZXZpZXdlZCBhbmQgYWNjZXB0ZWQ/ICBwYXRjaHdvcmsNCj4gZG9lc24ndA0KPiA+IHNob3cgYW55
-IGFjdGl2aXR5IG9uIHRoZW0sIG9yIGF0IGxlYXN0IEkgY2FuJ3QgZmlndXJlIGl0IG91dC4uLg0K
-PiANCj4gSSBkaWRuJ3QgbG9vayBjbG9zZXIgKGhlbmNlIHBsZWFzZSBjb3JyZWN0IG1lIGlmIEkn
-bSB3cm9uZyksIGJ1dCB0aGUNCj4gY29yZSBjaGFuZ2VzIGFmYWljcyBhcmUgaW4gdGhlIERSTSBw
-dWxsIGFpcmxpZWQgc2VuZCBhIGZldyBob3VycyBhZ28gdG8NCj4gTGludXMgKG5vdGUgdGhlICJh
-bWRncHUgW+KApl0gRFAgTVNUIGZpeGVzIiBsaW5lKToNCj4gDQo+IGh0dHBzOi8vbG9yZS5rZXJu
-ZWwub3JnL2FsbC9DQVBNJTNEOXR6dXU0eG54NlQ1djdzS3NLJTJCQTVIRWFQT2MxaWUNCj4gTXl6
-TlNZUVpHenRKJTNENlF3QG1haWwuZ21haWwuY29tLw0KDQpUaGF0J3MgcmlnaHQuICBUaGVyZSBh
-cmUgNCBjb21taXRzIGluIHRoYXQgUFIgd2l0aCB0aGUgYXBwcm9wcmlhdGUgc3RhYmxlIHRhZ3MN
-CnRoYXQgc2hvdWxkIGZpeCB0aGUgbWFqb3JpdHkgb2YgdGhlIE1TVCBpc3N1ZXMgaW50cm9kdWNl
-ZCBpbiA2LjEgYnkgNGQwN2IwYmM0MDM0MA0KKCJkcm0vZGlzcGxheS9kcF9tc3Q6IE1vdmUgYWxs
-IHBheWxvYWQgaW5mbyBpbnRvIHRoZSBhdG9taWMgc3RhdGUiKToNCg0KICAgICAgZHJtL2FtZGdw
-dS9kaXNwbGF5L21zdDogRml4IG1zdF9zdGF0ZS0+cGJuX2RpdiBhbmQgc2xvdCBjb3VudCBhc3Np
-Z25tZW50cw0KICAgICAgZHJtL2FtZGdwdS9kaXNwbGF5L21zdDogbGltaXQgcGF5bG9hZCB0byBi
-ZSB1cGRhdGVkIG9uZSBieSBvbmUNCiAgICAgIGRybS9hbWRncHUvZGlzcGxheS9tc3Q6IHVwZGF0
-ZSBtc3RfbWdyIHJlbGV2YW50IHZhcmlhYmxlIHdoZW4gbG9uZyBIUEQNCiAgICAgIGRybS9kaXNw
-bGF5L2RwX21zdDogQ29ycmVjdCB0aGUga3JlZiBvZiBwb3J0Lg0KDQpUaGVyZSB3aWxsIGJlIGZv
-bGxvdyB1cHMgZm9yIGFueSByZW1haW5pbmcgY29ybmVyIGNhc2VzLg0KDQo+IA0KPiBDaWFvLCBU
-aG9yc3RlbiAod2VhcmluZyBoaXMgJ3RoZSBMaW51eCBrZXJuZWwncyByZWdyZXNzaW9uIHRyYWNr
-ZXInIGhhdCkNCj4gLS0NCj4gRXZlcnl0aGluZyB5b3Ugd2FubmEga25vdyBhYm91dCBMaW51eCBr
-ZXJuZWwgcmVncmVzc2lvbiB0cmFja2luZzoNCj4gaHR0cHM6Ly9saW51eC1yZWd0cmFja2luZy5s
-ZWVtaHVpcy5pbmZvL2Fib3V0LyN0bGRyDQo+IElmIEkgZGlkIHNvbWV0aGluZyBzdHVwaWQsIHBs
-ZWFzZSB0ZWxsIG1lLCBhcyBleHBsYWluZWQgb24gdGhhdCBwYWdlLg0K
+[Resend because the mail client on my phone dedcided to turn HTML on behinf my back, so my repluy got bounced.]
+
+Thanks Karol.
+
+I sent the original report to Ben and LKML. Thorsten then added you, Lyude Paul and the dri-devel and nouveau  mail
+lists. So you should have received this report on or about January 19.
+
+Chris
+
+On 27/01/2023 11:35, Karol Herbst wrote:
+> Where was the original email sent to anyway, because I don't have it at all.
+> 
+> Anyhow, I suspect we want to fetch logs to see what's happening, but
+> due to the nature of this bug it might get difficult.
+> 
+> I'm checking out the laptops I have here if I can reproduce this
+> issue, but I think all mine with Turing GPUs are fine.
+> 
+> Maybe Ben has any idea what might be wrong with
+> 0e44c21708761977dcbea9b846b51a6fb684907a or if that's an issue which
+> is already fixed by not upstreamed patches as I think I remember Ben
+> to talk about something like that recently.
+> 
+> Karol
+> 
+> On Fri, Jan 27, 2023 at 12:20 PM Linux kernel regression tracking
+> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+>>
+>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
+>> to make this easily accessible to everyone.
+>>
+>> @nouveau-maintainers, did anyone take a look at this? The report is
+>> already 8 days old and I don't see a single reply. Sure, we'll likely
+>> get a -rc8, but still it would be good to not fix this on the finish line.
+>>
+>> Chris, btw, did you try if you can revert the commit on top of latest
+>> mainline? And if so, does it fix the problem?
+>>
+>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>> --
+>> Everything you wanna know about Linux kernel regression tracking:
+>> https://linux-regtracking.leemhuis.info/about/#tldr
+>> If I did something stupid, please tell me, as explained on that page.
+>>
+>> #regzbot poke
+>>
+>> On 19.01.23 15:33, Linux kernel regression tracking (Thorsten Leemhuis)
+>> wrote:
+>>> [adding various lists and the two other nouveau maintainers to the list
+>>> of recipients]
+>>
+>>> On 18.01.23 21:59, Chris Clayton wrote:
+>>>> Hi.
+>>>>
+>>>> I build and installed the lastest development kernel earlier this week. I've found that when I try the laptop down (or
+>>>> reboot it), it hangs right at the end of closing the current session. The last line I see on  the screen when rebooting is:
+>>>>
+>>>>      sd 4:0:0:0: [sda] Synchronising SCSI cache
+>>>>
+>>>> when closing down I see one additional line:
+>>>>
+>>>>      sd 4:0:0:0 [sda]Stopping disk
+>>>>
+>>>> In both cases the machine then hangs and I have to hold down the power button fot a few seconds to switch it off.
+>>>>
+>>>> Linux 6.1 is OK but 6.2-rc1 hangs, so I bisected between this two and landed on:
+>>>>
+>>>>      # first bad commit: [0e44c21708761977dcbea9b846b51a6fb684907a] drm/nouveau/flcn: new code to load+boot simple HS FWs
+>>>> (VPR scrubber)
+>>>>
+>>>> I built and installed a kernel with f15cde64b66161bfa74fb58f4e5697d8265b802e (the parent of the bad commit) checked out
+>>>> and that shuts down and reboots fine. It the did the same with the bad commit checked out and that does indeed hang, so
+>>>> I'm confident the bisect outcome is OK.
+>>>>
+>>>> Kernels 6.1.6 and 5.15.88 are also OK.
+>>>>
+>>>> My system had dual GPUs - one intel and one NVidia. Related extracts from 'lscpi -v' is:
+>>>>
+>>>> 00:02.0 VGA compatible controller: Intel Corporation CometLake-H GT2 [UHD Graphics] (rev 05) (prog-if 00 [VGA controller])
+>>>>         Subsystem: CLEVO/KAPOK Computer CometLake-H GT2 [UHD Graphics]
+>>>>
+>>>>         Flags: bus master, fast devsel, latency 0, IRQ 142
+>>>>
+>>>>         Memory at c2000000 (64-bit, non-prefetchable) [size=16M]
+>>>>
+>>>>         Memory at a0000000 (64-bit, prefetchable) [size=256M]
+>>>>
+>>>>         I/O ports at 5000 [size=64]
+>>>>
+>>>>         Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
+>>>>
+>>>>         Capabilities: [40] Vendor Specific Information: Len=0c <?>
+>>>>
+>>>>         Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
+>>>>
+>>>>         Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
+>>>>
+>>>>         Capabilities: [d0] Power Management version 2
+>>>>
+>>>>         Kernel driver in use: i915
+>>>>
+>>>>         Kernel modules: i915
+>>>>
+>>>>
+>>>> 01:00.0 VGA compatible controller: NVIDIA Corporation TU117M [GeForce GTX 1650 Ti Mobile] (rev a1) (prog-if 00 [VGA
+>>>> controller])
+>>>>         Subsystem: CLEVO/KAPOK Computer TU117M [GeForce GTX 1650 Ti Mobile]
+>>>>         Flags: bus master, fast devsel, latency 0, IRQ 141
+>>>>         Memory at c4000000 (32-bit, non-prefetchable) [size=16M]
+>>>>         Memory at b0000000 (64-bit, prefetchable) [size=256M]
+>>>>         Memory at c0000000 (64-bit, prefetchable) [size=32M]
+>>>>         I/O ports at 4000 [size=128]
+>>>>         Expansion ROM at c3000000 [disabled] [size=512K]
+>>>>         Capabilities: [60] Power Management version 3
+>>>>         Capabilities: [68] MSI: Enable+ Count=1/1 Maskable- 64bit+
+>>>>         Capabilities: [78] Express Legacy Endpoint, MSI 00
+>>>>         Kernel driver in use: nouveau
+>>>>         Kernel modules: nouveau
+>>>>
+>>>> DRI_PRIME=1 is exported in one of my init scripts (yes, I am still using sysvinit).
+>>>>
+>>>> I've attached the bisect.log, but please let me know if I can provide any other diagnostics. Please cc me as I'm not
+>>>> subscribed.
+>>>
+>>> Thanks for the report. To be sure the issue doesn't fall through the
+>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+>>> tracking bot:
+>>>
+>>> #regzbot ^introduced e44c2170876197
+>>> #regzbot title drm: nouveau: hangs on poweroff/reboot
+>>> #regzbot ignore-activity
+>>>
+>>> This isn't a regression? This issue or a fix for it are already
+>>> discussed somewhere else? It was fixed already? You want to clarify when
+>>> the regression started to happen? Or point out I got the title or
+>>> something else totally wrong? Then just reply and tell me -- ideally
+>>> while also telling regzbot about it, as explained by the page listed in
+>>> the footer of this mail.
+>>>
+>>> Developers: When fixing the issue, remember to add 'Link:' tags pointing
+>>> to the report (the parent of this mail). See page linked in footer for
+>>> details.
+>>>
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+>>> --
+>>> Everything you wanna know about Linux kernel regression tracking:
+>>> https://linux-regtracking.leemhuis.info/about/#tldr
+>>> That page also explains what to do if mails like this annoy you.
+>>
+> 
