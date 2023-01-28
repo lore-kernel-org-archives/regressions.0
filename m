@@ -1,216 +1,76 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8FC33232
-	for <regressions@lists.linux.dev>; Sat, 28 Jan 2023 11:29:37 +0000 (UTC)
-Received: by mail-wr1-f44.google.com with SMTP id q5so7186921wrv.0
-        for <regressions@lists.linux.dev>; Sat, 28 Jan 2023 03:29:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JZ1xTDKyjH5p8vliIZMR6idzBEt9CT83BKCLR4uL47U=;
-        b=b8ycbPxp3whx6/XEh4a8jC6lqNyM4v4LqLtl0bW6c/TrTn68SSFdUqkyQpIUbg3iJb
-         vOsQu/p7o0zfr8vrTD8mw4O3zgFPAYBtSOMGZDrNwCdJpu7H0zt0FFSxsj09d4SXoAtZ
-         8FDpWyUq4YaQWsZe30AqU6CjJNvErLG0MEEt6Tad9U95F+F5tXFki/4SG3U5ksJIXDjn
-         tq/Zx6Ay0O5slTRzkxbwz0Tg83IRFQ7IdqJUFBflg/hKLJKRhIq69B+bNnullCdr+h/v
-         dUPickcVjXMYwXMhTLHzg+WlT0gGBZl/cAtrOJDJ09zWKshm6qKDhFWmrWz3YgVJg4I3
-         QvtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JZ1xTDKyjH5p8vliIZMR6idzBEt9CT83BKCLR4uL47U=;
-        b=LZdjGKDoLtK2CjN+ayJH2Ds/XCLhnPmlIHRS12X6c+LaToqxpjdc2sE5mZFt96c2Hz
-         vilrVbxZVl5f4jdPX+lO7GOb688Hpgsci/QRZsoAVbf1OmrQIs3XYtDdued5t8L8853g
-         KRjkfT3RHePg4/nxdP/JVS51g8nhqc0q8rABPcR9bRV2qCMHfcjjZ4PKaVuLUbKUUvZF
-         XNWHRcPV6TP9sPx4xEESIdjmUof74WTSnRT0/T/R3f3+OsGaZEriX+Mh8MvdE7sAGzZo
-         FTmlTGCCjSJywvujA6ZaoCLXP6Xlp+GB+TqJL/SO6clPUHccif6U0M7eptVEjb2S+5o1
-         VFvg==
-X-Gm-Message-State: AO0yUKX8m/BERZjz9Vbu8rAw0GYGVh0BJ8C198UjQtETYxyyxxuInO1a
-	QQessiQD5iMpoZdBhTMOOeTiK5pd648=
-X-Google-Smtp-Source: AK7set8jZBChQ4Mh1964/1gOr1EHny2Xr+bR6F+kxFYXVwe6cfyTwJ7DZORX26wfiUEPOtTTV23brQ==
-X-Received: by 2002:a5d:534c:0:b0:2bf:cfc0:ac71 with SMTP id t12-20020a5d534c000000b002bfcfc0ac71mr6538619wrv.53.1674905375766;
-        Sat, 28 Jan 2023 03:29:35 -0800 (PST)
-Received: from [192.168.1.10] (97e09f27.skybroadband.com. [151.224.159.39])
-        by smtp.googlemail.com with ESMTPSA id x26-20020a1c7c1a000000b003db01178b62sm10298989wmc.40.2023.01.28.03.29.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 28 Jan 2023 03:29:35 -0800 (PST)
-Message-ID: <ab1b0f73-6b4e-8602-2999-b7bec25d92db@googlemail.com>
-Date: Sat, 28 Jan 2023 11:29:33 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 145995CA1
+	for <regressions@lists.linux.dev>; Sat, 28 Jan 2023 14:26:22 +0000 (UTC)
+Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6AF661EC04DA;
+	Sat, 28 Jan 2023 15:26:10 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+	t=1674915970;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+	bh=lBFGP4yA9k5cO2OLJZCLuNTIHgdD3+vaWhJ4I1sxvM8=;
+	b=AfJTMGFn5O5ltgpj5wdZsOMxfOG21YLDguHUh+Oulfh93dCDMNc19PIu/BNcm/hUvbdKgE
+	GVSwQ+8KgFuZT5ARsolPiWAtc4kR0mctikdlWuKFKH1c4Y7ZYyaYCAgpV8Lid6e0xZI5zz
+	evcMq872nYblde6/DG7F15KQLL8Te7M=
+Date: Sat, 28 Jan 2023 15:26:00 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Alexander Potapenko <glider@google.com>,
+	Marco Elver <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>,
+	linux-mm <linux-mm@kvack.org>, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Failure during Stack Depot allocating hash table of 1048576
+ entries with kvcalloc
+Message-ID: <Y9UweHxSfPiAqgZx@zn.tnic>
+References: <Y8Fq5m0CLfcFLCOY@zn.tnic>
+ <07e42002-e78d-7947-19a7-0dd035466f50@alu.unizg.hr>
+ <Y9UBFNwBeuePPsk3@zn.tnic>
+ <d4871e70-c7c9-e638-d7c0-304ec8aea77b@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- bskeggs@redhat.com, Karol Herbst <kherbst@redhat.com>,
- Lyude Paul <lyude@redhat.com>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- ML dri-devel <dri-devel@lists.freedesktop.org>,
- ML nouveau <nouveau@lists.freedesktop.org>
-References: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
- <fcec3c78-b5d9-eb48-0fc0-d1f27de87f23@leemhuis.info>
- <b21fa1f6-a71d-5657-8596-ee0be73185ea@leemhuis.info>
- <3ab28896-70e9-6f90-5b97-e5397b06e715@googlemail.com>
- <a163dd7b-c5d1-a07b-a816-7a2dfd3edfd4@leemhuis.info>
-Content-Language: en-GB
-From: Chris Clayton <chris2553@googlemail.com>
-In-Reply-To: <a163dd7b-c5d1-a07b-a816-7a2dfd3edfd4@leemhuis.info>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d4871e70-c7c9-e638-d7c0-304ec8aea77b@leemhuis.info>
 
-
-
-On 28/01/2023 05:42, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
-> On 27.01.23 20:46, Chris Clayton wrote:
->> [Resend because the mail client on my phone decided to turn HTML on behind my back, so my reply got bounced.]
->>
->> Thanks Thorsten.
->>
->> I did try to revert but it didnt revert cleanly and I don't have the knowledge to fix it up.
->>
->> The patch was part of a merge that included a number of related patches. Tomorrow, I'll try to revert the lot and report
->> back.
+On Sat, Jan 28, 2023 at 02:55:58PM +0100, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
+> On 28.01.23 12:03, Borislav Petkov wrote:
+> > On Sat, Jan 28, 2023 at 03:41:50AM +0100, Mirsad Goran Todorovac wrote:
+> >> This appears to be a duplicate of the report:
+> >> https://lore.kernel.org/linux-mm/2c677d85-820c-d41a-fc98-7d3974b49e42@alu.unizg.hr/raw
+> > 
+> > Yah, looks like
+> > 
+> > 56a61617dd22 ("mm: use stack_depot for recording kmemleak's backtrace")
+> > 
+> > needs to be reverted.
 > 
-> You are free to do so, but there is no need for that from my side. I
-> only wanted to know if a simple revert would do the trick; if it
-> doesn't, it in my experience often is best to leave things to the
-> developers of the code in question, 
-
-Sound advice, Thorsten. Way to many conflicts for me to resolve.
-
-as they know it best and thus have a
-> better idea which hidden side effect a more complex revert might have.
+> Unless I'm missing something (which might easily be the case) there is a
+> patch for that issue in -mm already:
 > 
-> Ciao, Thorsten
+> https://lore.kernel.org/all/20230119224022.80752C433F0@smtp.kernel.org/
 > 
->> On 27/01/2023 11:20, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
->>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
->>> to make this easily accessible to everyone.
->>>
->>> @nouveau-maintainers, did anyone take a look at this? The report is
->>> already 8 days old and I don't see a single reply. Sure, we'll likely
->>> get a -rc8, but still it would be good to not fix this on the finish line.
->>>
->>> Chris, btw, did you try if you can revert the commit on top of latest
->>> mainline? And if so, does it fix the problem?
->>>
->>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>> --
->>> Everything you wanna know about Linux kernel regression tracking:
->>> https://linux-regtracking.leemhuis.info/about/#tldr
->>> If I did something stupid, please tell me, as explained on that page.
->>>
->>> #regzbot poke
->>>
->>> On 19.01.23 15:33, Linux kernel regression tracking (Thorsten Leemhuis)
->>> wrote:
->>>> [adding various lists and the two other nouveau maintainers to the list
->>>> of recipients]
->>>
->>>> On 18.01.23 21:59, Chris Clayton wrote:
->>>>> Hi.
->>>>>
->>>>> I build and installed the lastest development kernel earlier this week. I've found that when I try the laptop down (or
->>>>> reboot it), it hangs right at the end of closing the current session. The last line I see on  the screen when rebooting is:
->>>>>
->>>>> 	sd 4:0:0:0: [sda] Synchronising SCSI cache
->>>>>
->>>>> when closing down I see one additional line:
->>>>>
->>>>> 	sd 4:0:0:0 [sda]Stopping disk
->>>>>
->>>>> In both cases the machine then hangs and I have to hold down the power button fot a few seconds to switch it off.
->>>>>
->>>>> Linux 6.1 is OK but 6.2-rc1 hangs, so I bisected between this two and landed on:
->>>>>
->>>>> 	# first bad commit: [0e44c21708761977dcbea9b846b51a6fb684907a] drm/nouveau/flcn: new code to load+boot simple HS FWs
->>>>> (VPR scrubber)
->>>>>
->>>>> I built and installed a kernel with f15cde64b66161bfa74fb58f4e5697d8265b802e (the parent of the bad commit) checked out
->>>>> and that shuts down and reboots fine. It the did the same with the bad commit checked out and that does indeed hang, so
->>>>> I'm confident the bisect outcome is OK.
->>>>>
->>>>> Kernels 6.1.6 and 5.15.88 are also OK.
->>>>>
->>>>> My system had dual GPUs - one intel and one NVidia. Related extracts from 'lscpi -v' is:
->>>>>
->>>>> 00:02.0 VGA compatible controller: Intel Corporation CometLake-H GT2 [UHD Graphics] (rev 05) (prog-if 00 [VGA controller])
->>>>>         Subsystem: CLEVO/KAPOK Computer CometLake-H GT2 [UHD Graphics]
->>>>>
->>>>>         Flags: bus master, fast devsel, latency 0, IRQ 142
->>>>>
->>>>>         Memory at c2000000 (64-bit, non-prefetchable) [size=16M]
->>>>>
->>>>>         Memory at a0000000 (64-bit, prefetchable) [size=256M]
->>>>>
->>>>>         I/O ports at 5000 [size=64]
->>>>>
->>>>>         Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
->>>>>
->>>>>         Capabilities: [40] Vendor Specific Information: Len=0c <?>
->>>>>
->>>>>         Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
->>>>>
->>>>>         Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
->>>>>
->>>>>         Capabilities: [d0] Power Management version 2
->>>>>
->>>>>         Kernel driver in use: i915
->>>>>
->>>>>         Kernel modules: i915
->>>>>
->>>>>
->>>>> 01:00.0 VGA compatible controller: NVIDIA Corporation TU117M [GeForce GTX 1650 Ti Mobile] (rev a1) (prog-if 00 [VGA
->>>>> controller])
->>>>>         Subsystem: CLEVO/KAPOK Computer TU117M [GeForce GTX 1650 Ti Mobile]
->>>>>         Flags: bus master, fast devsel, latency 0, IRQ 141
->>>>>         Memory at c4000000 (32-bit, non-prefetchable) [size=16M]
->>>>>         Memory at b0000000 (64-bit, prefetchable) [size=256M]
->>>>>         Memory at c0000000 (64-bit, prefetchable) [size=32M]
->>>>>         I/O ports at 4000 [size=128]
->>>>>         Expansion ROM at c3000000 [disabled] [size=512K]
->>>>>         Capabilities: [60] Power Management version 3
->>>>>         Capabilities: [68] MSI: Enable+ Count=1/1 Maskable- 64bit+
->>>>>         Capabilities: [78] Express Legacy Endpoint, MSI 00
->>>>>         Kernel driver in use: nouveau
->>>>>         Kernel modules: nouveau
->>>>>
->>>>> DRI_PRIME=1 is exported in one of my init scripts (yes, I am still using sysvinit).
->>>>>
->>>>> I've attached the bisect.log, but please let me know if I can provide any other diagnostics. Please cc me as I'm not
->>>>> subscribed.
->>>>
->>>> Thanks for the report. To be sure the issue doesn't fall through the
->>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
->>>> tracking bot:
->>>>
->>>> #regzbot ^introduced e44c2170876197
->>>> #regzbot title drm: nouveau: hangs on poweroff/reboot
->>>> #regzbot ignore-activity
->>>>
->>>> This isn't a regression? This issue or a fix for it are already
->>>> discussed somewhere else? It was fixed already? You want to clarify when
->>>> the regression started to happen? Or point out I got the title or
->>>> something else totally wrong? Then just reply and tell me -- ideally
->>>> while also telling regzbot about it, as explained by the page listed in
->>>> the footer of this mail.
->>>>
->>>> Developers: When fixing the issue, remember to add 'Link:' tags pointing
->>>> to the report (the parent of this mail). See page linked in footer for
->>>> details.
->>>>
->>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>> --
->>>> Everything you wanna know about Linux kernel regression tracking:
->>>> https://linux-regtracking.leemhuis.info/about/#tldr
->>>> That page also explains what to do if mails like this annoy you.
->>
->>
+> Or where two different issues discussed in the thread Mirsad mentioned
+> above?
+
+Probably the same issue. This one fixes the issue on my machine - thanks!
+
+Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
