@@ -1,97 +1,130 @@
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D66BD07
-	for <regressions@lists.linux.dev>; Sun, 29 Jan 2023 02:17:33 +0000 (UTC)
-Received: by mail-vs1-f47.google.com with SMTP id k6so9170520vsk.1
-        for <regressions@lists.linux.dev>; Sat, 28 Jan 2023 18:17:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=draconx-ca.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=CqUkrj8PHX+LFqPLuqpniwW9pHO+zUoKSvlGNgXdRpQ=;
-        b=AUCiyAaOAEzNvGGuPpreMC/9xLYE0S3cPh5UGxJ970JY9cio41paghbZZpvrYUgj33
-         EtQ/v3jd6W14OS3yd1Zgjo8svgWfkxKQLV+nHOoecsAetUTo7Cq0zQbteW+BmfffNMzV
-         OXpCnvqD2ZA8pkDrNP1Zh8TsSXLA00QV+14nqbW/JLWKvs69eXx5iAkwkAEuTJeEkSyU
-         8Wwr65sEL6S09amNZS2kd7aWLDt18IiGmEF5Ld/oPgJrj0ogOvJbz6aDKP1mEsRvglHY
-         M32NXMyYCTrj/Vk68OG2caXKA3BqhaMt1TxwqtpIow1m0BIoiFoR3LBHc2TTqoGhbrmI
-         44ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CqUkrj8PHX+LFqPLuqpniwW9pHO+zUoKSvlGNgXdRpQ=;
-        b=5YQdXINM3La3+kOEgKRETMMInQnBHfFK6oimw+4D5rr4bTjBf6IvKD6yQND5g+eVcn
-         ptd1asjC6zaCKXKLfYbQ4HD8HZ+uOVX7JWnNLB8Ar5XSvYp/gat8WQVObNefdAmhLsep
-         F6rQr8HQSm9F9peKrbAHlXcOAfZCAoS7qTEhAt18ZYbajDbHBECeZ4eA/fM0khw0jsMn
-         2b3nAIwyzmDvQTwZQuFGMJFdMo7bO8tq7eRb/r6+430mOcCL8RhrH7f2IFEltOcNid0W
-         O+KD1ir97rn767mPazU9VFHDXN/nZH2wGjT9+Y4oV/i310p5KmBoKTKIl0/yzQ92cDDI
-         y2Lg==
-X-Gm-Message-State: AFqh2krk3sKEySmcd4W577qfOsBqpEwYr0531dUPcERBA8C9JNi1MJbg
-	h4i/xeObqOcm3gSzrV9bVgTQZmvtzVqPagboDJP4vA==
-X-Google-Smtp-Source: AMrXdXviHzhrbdKhdyGotEDUarg0RWbtMp2NCzRPwnh2r/CyZEpvs6jZZx4PLx295m/fi0lov7w8YP33xdctPtYbT8o=
-X-Received: by 2002:a67:2245:0:b0:3ce:c8fd:ddf0 with SMTP id
- i66-20020a672245000000b003cec8fdddf0mr7110711vsi.18.1674958652331; Sat, 28
- Jan 2023 18:17:32 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0555220EF
+	for <regressions@lists.linux.dev>; Sun, 29 Jan 2023 13:31:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573CFC433EF;
+	Sun, 29 Jan 2023 13:31:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1674999112;
+	bh=vbOcOQvLI7LJlxcTePJ5Zy1AAvu47HqN45gtrJuttt4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P6GacKiwueCw3hOihvbZQYjL+kShUibaANrpvwDF2j7San2zs3U8gCZl7/4ti7Wcl
+	 NsNyi36DdWbyg4i7M8gB6ooxQvWE+U9vQCVthKZYrwQtIBN99Os0jYzTdfS0y0kyFz
+	 uMpK5+mQyoE6XBmMqfzR9zWcSRSmABylszZFXvyU=
+Date: Sun, 29 Jan 2023 14:31:49 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>,
+	"stanislav.lisovskiy@intel.com" <stanislav.lisovskiy@intel.com>,
+	"Zuo, Jerry" <Jerry.Zuo@amd.com>,
+	"amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+	"Lin, Wayne" <Wayne.Lin@amd.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	"bskeggs@redhat.com" <bskeggs@redhat.com>
+Subject: Re: [PATCH] Revert "drm/display/dp_mst: Move all payload info into
+ the atomic state"
+Message-ID: <Y9Z1RdnfM4ypM/zW@kroah.com>
+References: <20230112085044.1706379-1-Wayne.Lin@amd.com>
+ <20230120174634.GA889896@roeck-us.net>
+ <a9deecb3-5955-ee4e-c76f-2654ee9f1a92@amd.com>
+ <Y9N/wiIL758c3ozv@kroah.com>
+ <36e72298-e9d3-967e-8b14-7197719953cb@leemhuis.info>
+ <MN0PR12MB610184AF496001F3B92706BDE2CC9@MN0PR12MB6101.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Received: by 2002:a05:6130:1015:b0:559:9619:d862 with HTTP; Sat, 28 Jan 2023
- 18:17:31 -0800 (PST)
-X-Originating-IP: [24.53.241.20]
-From: Nick Bowler <nbowler@draconx.ca>
-Date: Sat, 28 Jan 2023 21:17:31 -0500
-Message-ID: <CADyTPExpEqaJiMGoV+Z6xVgL50ZoMJg49B10LcZ=8eg19u34BA@mail.gmail.com>
-Subject: PROBLEM: sparc64 random crashes starting w/ Linux 6.1 (regression)
-To: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, 
-	regressions@lists.linux.dev
-Cc: Peter Xu <peterx@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <MN0PR12MB610184AF496001F3B92706BDE2CC9@MN0PR12MB6101.namprd12.prod.outlook.com>
 
-Hi,
+On Fri, Jan 27, 2023 at 03:02:41PM +0000, Limonciello, Mario wrote:
+> [Public]
+> 
+> 
+> 
+> > -----Original Message-----
+> > From: Linux kernel regression tracking (Thorsten Leemhuis)
+> > <regressions@leemhuis.info>
+> > Sent: Friday, January 27, 2023 03:15
+> > To: Greg KH <gregkh@linuxfoundation.org>; Limonciello, Mario
+> > <Mario.Limonciello@amd.com>
+> > Cc: dri-devel@lists.freedesktop.org; stable@vger.kernel.org;
+> > stanislav.lisovskiy@intel.com; Zuo, Jerry <Jerry.Zuo@amd.com>; amd-
+> > gfx@lists.freedesktop.org; Lin, Wayne <Wayne.Lin@amd.com>; Guenter
+> > Roeck <linux@roeck-us.net>; bskeggs@redhat.com
+> > Subject: Re: [PATCH] Revert "drm/display/dp_mst: Move all payload info into
+> > the atomic state"
+> > 
+> > On 27.01.23 08:39, Greg KH wrote:
+> > > On Fri, Jan 20, 2023 at 11:51:04AM -0600, Limonciello, Mario wrote:
+> > >> On 1/20/2023 11:46, Guenter Roeck wrote:
+> > >>> On Thu, Jan 12, 2023 at 04:50:44PM +0800, Wayne Lin wrote:
+> > >>>> This reverts commit 4d07b0bc403403438d9cf88450506240c5faf92f.
+> > >>>>
+> > >>>> [Why]
+> > >>>> Changes cause regression on amdgpu mst.
+> > >>>> E.g.
+> > >>>> In fill_dc_mst_payload_table_from_drm(), amdgpu expects to
+> > add/remove payload
+> > >>>> one by one and call fill_dc_mst_payload_table_from_drm() to update
+> > the HW
+> > >>>> maintained payload table. But previous change tries to go through all
+> > the
+> > >>>> payloads in mst_state and update amdpug hw maintained table in once
+> > everytime
+> > >>>> driver only tries to add/remove a specific payload stream only. The
+> > newly
+> > >>>> design idea conflicts with the implementation in amdgpu nowadays.
+> > >>>>
+> > >>>> [How]
+> > >>>> Revert this patch first. After addressing all regression problems caused
+> > by
+> > >>>> this previous patch, will add it back and adjust it.
+> > >>>
+> > >>> Has there been any progress on this revert, or on fixing the underlying
+> > >>> problem ?
+> > >>>
+> > >>> Thanks,
+> > >>> Guenter
+> > >>
+> > >> Hi Guenter,
+> > >>
+> > >> Wayne is OOO for CNY, but let me update you.
+> > >>
+> > >> Harry has sent out this series which is a collection of proper fixes.
+> > >> https://patchwork.freedesktop.org/series/113125/
+> > >>
+> > >> Once that's reviewed and accepted, 4 of them are applicable for 6.1.
+> > >
+> > > Any hint on when those will be reviewed and accepted?  patchwork
+> > doesn't
+> > > show any activity on them, or at least I can't figure it out...
+> > 
+> > I didn't look closer (hence please correct me if I'm wrong), but the
+> > core changes afaics are in the DRM pull airlied send a few hours ago to
+> > Linus (note the "amdgpu […] DP MST fixes" line):
+> > 
+> > https://lore.kernel.org/all/CAPM%3D9tzuu4xnx6T5v7sKsK%2BA5HEaPOc1ie
+> > MyzNSYQZGztJ%3D6Qw@mail.gmail.com/
+> 
+> That's right.  There are 4 commits in that PR with the appropriate stable tags
+> that should fix the majority of the MST issues introduced in 6.1 by 4d07b0bc40340
+> ("drm/display/dp_mst: Move all payload info into the atomic state"):
+> 
+>       drm/amdgpu/display/mst: Fix mst_state->pbn_div and slot count assignments
+>       drm/amdgpu/display/mst: limit payload to be updated one by one
+>       drm/amdgpu/display/mst: update mst_mgr relevant variable when long HPD
+>       drm/display/dp_mst: Correct the kref of port.
+> 
+> There will be follow ups for any remaining corner cases.
 
-Starting with Linux 6.1.y, my sparc64 (Sun Ultra 60) system is very
-unstable, with userspace processes randomly crashing with all kinds of
-different weird errors.  The same problem occurs on 6.2-rc5.  Linux
-6.0.y is OK.
+Great, thanks for this, all are now queued up in the 6.1.y queue.
 
-Usually, it manifests with ssh connections just suddenly dropping out
-like this:
-
-  malloc(): unaligned tcache chunk detected
-  Connection to alectrona closed.
-
-but other kinds of failures (random segfaults, bus errors, etc.) are
-seen too.
-
-I have not ever seen the kernel itself oops or anything like that, there
-are no abnormal kernel log messages of any kind; except for the normal
-ones that get printed when processes segfault, like this one:
-
-  [  563.085851] zsh[2073]: segfault at 10 ip 00000000f7a7c09c (rpc
-00000000f7a7c0a0) sp 00000000ff8f5e08 error 1 in
-libc.so.6[f7960000+1b2000]
-
-I was able to reproduce this fairly reliably by using GNU ddrescue to
-dump a disk from the dvd drive -- things usually go awry after a minute
-or two.  So I was able to bisect to this commit:
-
-  2e3468778dbe3ec389a10c21a703bb8e5be5cfbc is the first bad commit
-  commit 2e3468778dbe3ec389a10c21a703bb8e5be5cfbc
-  Author: Peter Xu <peterx@redhat.com>
-  Date:   Thu Aug 11 12:13:29 2022 -0400
-
-      mm: remember young/dirty bit for page migrations
-
-This does not revert cleanly on master, but I ran my test on the
-immediately preceding commit (0ccf7f168e17: "mm/thp: carry over dirty
-bit when thp splits on pmd") extra times and I am unable to get this
-one to crash, so reasonably confident in this bisection result...
-
-Let me know if you need any more info!
-
-Thanks,
-  Nick
+greg k-h
