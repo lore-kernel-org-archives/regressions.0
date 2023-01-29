@@ -1,84 +1,77 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83DB62FB2
-	for <regressions@lists.linux.dev>; Sun, 29 Jan 2023 19:32:35 +0000 (UTC)
-Received: by mail-ej1-f41.google.com with SMTP id ud5so26425667ejc.4
-        for <regressions@lists.linux.dev>; Sun, 29 Jan 2023 11:32:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=731c7w/fO+KMHGo0w8O/rvDRhDiYETDvCd48ycqNrIY=;
-        b=U6OH8YqWvPH8uv2AxM2xB52mih92LQ7Afl+E2hHmSDXDqLOLgW5OulvgkmnZuIpU+k
-         Pjzj/Xq45PGuLPJqJVAH0IxNpST/xk98h2JKXncEiOO7zAmzeE1sIZOUrgLXVO3ZL2tX
-         PX8vjC98zcRUeZ/sp0spcJVMd2QMrQSnpF/2c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=731c7w/fO+KMHGo0w8O/rvDRhDiYETDvCd48ycqNrIY=;
-        b=QpNZJtFbokAgQOK8lkvYocKg1ewasEcF4VqgRROhc/b+1MessJCqwL00q8G4tzc+Yu
-         +IpVWbUeTiqdBbBnNury3tZP//Mvte3GpzingohPIS9ptOuDRmvk9pR/Z5ZHk2HA+DC8
-         9stW3A+AE8GygSMCpHCwPj+0dWFdIQY6VJbhSaiLdCadLWRO30bOR2v+HqnNA8VWjRoo
-         wYbxh/lE+xnB1ZU2hvDeeMPk4y+s6076IyPVIDuInKHVrobnSsBIY8p9VCJgrtlCcgcX
-         ndw0fE6UkWnlMpELfE89CJ4AYqi7govKT1jqlDMD3Ab2ibvcaQXyciKNkpWzWFj4yPdK
-         SAUg==
-X-Gm-Message-State: AO0yUKVMw7MJnJfz7V5IbIPlYYx8m9wYiH5+PEHUtFJA5N4CEkwXjKho
-	oWU3WvHhX/CO4f7ocYIIALF06eczQBBOc3Pbv/Y=
-X-Google-Smtp-Source: AK7set/Gc8BwSz+dFpSBeqTnSdFkcQ76EeB1/fhS3fFR8E6LAJXQ/iVQ+kILH451aX5z3QpJp1diGA==
-X-Received: by 2002:a17:906:d8c4:b0:87f:546d:7cb5 with SMTP id re4-20020a170906d8c400b0087f546d7cb5mr8021127ejb.37.1675020753401;
-        Sun, 29 Jan 2023 11:32:33 -0800 (PST)
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com. [209.85.218.51])
-        by smtp.gmail.com with ESMTPSA id d27-20020a170906041b00b00887f6c39ac0sm874860eja.98.2023.01.29.11.32.32
-        for <regressions@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 29 Jan 2023 11:32:32 -0800 (PST)
-Received: by mail-ej1-f51.google.com with SMTP id m2so25939226ejb.8
-        for <regressions@lists.linux.dev>; Sun, 29 Jan 2023 11:32:32 -0800 (PST)
-X-Received: by 2002:a17:906:1e94:b0:889:2908:a9c8 with SMTP id
- e20-20020a1709061e9400b008892908a9c8mr81182ejj.82.1675020752273; Sun, 29 Jan
- 2023 11:32:32 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC492F30
+	for <regressions@lists.linux.dev>; Sun, 29 Jan 2023 20:50:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D0BC433D2;
+	Sun, 29 Jan 2023 20:50:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1675025415;
+	bh=q2/HBKoBXD27IsM9BwIx6UYtt4IZ81bwAZpNuwPW1mI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Eq4biyfZVG2QI1zTo6yR+B4/q9iceaRN8JW4pzEX1aWvzA9v0v93OX7XiXRPwHIch
+	 7UnnHGIio06rN1J1vtBXb2atgLTMw8bmHBR5gKOjOOZ12vyB5QelI/0NH+RKPkfJQi
+	 cEyu9qHj1+CFd0zft2mv0CvFKXIbOYoJx+H6MNPk=
+Date: Sun, 29 Jan 2023 12:50:14 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Mirsad
+ Goran Todorovac <mirsad.todorovac@alu.unizg.hr>, Vlastimil Babka
+ <vbabka@suse.cz>, Alexander Potapenko <glider@google.com>, Marco Elver
+ <elver@google.com>, Dmitry Vyukov <dvyukov@google.com>, linux-mm
+ <linux-mm@kvack.org>, lkml <linux-kernel@vger.kernel.org>, Zhaoyang Huang
+ <zhaoyang.huang@unisoc.com>
+Subject: Re: Failure during Stack Depot allocating hash table of 1048576
+ entries with kvcalloc
+Message-Id: <20230129125014.fcd459335c9b8eae71067c1a@linux-foundation.org>
+In-Reply-To: <Y9UweHxSfPiAqgZx@zn.tnic>
+References: <Y8Fq5m0CLfcFLCOY@zn.tnic>
+	<07e42002-e78d-7947-19a7-0dd035466f50@alu.unizg.hr>
+	<Y9UBFNwBeuePPsk3@zn.tnic>
+	<d4871e70-c7c9-e638-d7c0-304ec8aea77b@leemhuis.info>
+	<Y9UweHxSfPiAqgZx@zn.tnic>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-References: <167501403214.1314424.14370223374691112185@leemhuis.info>
-In-Reply-To: <167501403214.1314424.14370223374691112185@leemhuis.info>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 29 Jan 2023 11:32:15 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wgnBBJ7hDSz5T+2FMF0JhE1Jmf6=tZEytQ6n1jZ4m2s=w@mail.gmail.com>
-Message-ID: <CAHk-=wgnBBJ7hDSz5T+2FMF0JhE1Jmf6=tZEytQ6n1jZ4m2s=w@mail.gmail.com>
-Subject: Re: Linux regressions report for mainline [2023-01-29]
-To: "Regzbot (on behalf of Thorsten Leemhuis)" <regressions@leemhuis.info>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jan 29, 2023 at 9:42 AM Regzbot (on behalf of Thorsten
-Leemhuis) <regressions@leemhuis.info> wrote:
->
-> * Andrew afaics didn=E2=80=99t sent a revert[1] from Vlastimir your way
+On Sat, 28 Jan 2023 15:26:00 +0100 Borislav Petkov <bp@alien8.de> wrote:
 
-Ok, I applied this one as tiny and clear and hitting actual user loads.
+> On Sat, Jan 28, 2023 at 02:55:58PM +0100, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
+> > On 28.01.23 12:03, Borislav Petkov wrote:
+> > > On Sat, Jan 28, 2023 at 03:41:50AM +0100, Mirsad Goran Todorovac wrote:
+> > >> This appears to be a duplicate of the report:
+> > >> https://lore.kernel.org/linux-mm/2c677d85-820c-d41a-fc98-7d3974b49e42@alu.unizg.hr/raw
+> > > 
+> > > Yah, looks like
+> > > 
+> > > 56a61617dd22 ("mm: use stack_depot for recording kmemleak's backtrace")
+> > > 
+> > > needs to be reverted.
+> > 
+> > Unless I'm missing something (which might easily be the case) there is a
+> > patch for that issue in -mm already:
+> > 
+> > https://lore.kernel.org/all/20230119224022.80752C433F0@smtp.kernel.org/
+> > 
+> > Or where two different issues discussed in the thread Mirsad mentioned
+> > above?
+> 
+> Probably the same issue. This one fixes the issue on my machine - thanks!
+> 
+> Tested-by: Borislav Petkov (AMD) <bp@alien8.de>
+> 
 
-> * A fix[1] for a stack_depot/kmemleak issue is in next for a while alread=
-y too[2]
+OK, thanks, I didn't realize this issue was so serious.
 
-This one I left alone, since it's a bit more involved and the use-case
-is more esoteric too.
+I reordered Zhaoyang Huang's series so that "mm: use
+stack_depot_early_init for kmemleak" comes ahead of "mm: move
+KMEMLEAK's Kconfig items from lib to mm" and I've staged "mm: use
+stack_depot_early_init for kmemleak" in the mm-hotfixes branch for
+upstream merging in this -rc cycle.
 
-> * a fix for a spi issue[1] is also sitting in next for two weeks now :-( =
-#sigh
-
-Leaving this alone too for now.
-
-And in other news, the input regression revert you mentioned earlier
-got pulled this morning.
-
-               Linus
