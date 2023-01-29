@@ -1,179 +1,163 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2F033DF
-	for <regressions@lists.linux.dev>; Sun, 29 Jan 2023 22:14:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1675030471;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aQ2EG58lEBfBcoyGXMvMMXH2dCLi5wC9HNZTuXZVe0I=;
-	b=MLkmp4rUPZS5+UAt3pv7OBGIH/+gQ7eUT2qawYHDVnGzT9YMHXGGr6rY9EtfPbk3LJjvV3
-	1C4oYAGvEY8pDYHSo4/aTm0Sr43B/FQ8xmIdk4P/alxE/BF1BnSsC0Oj2OLggV4ZHwoMo+
-	fO5C3OAyOZnDofVWly0tqtaEdtT4hXQ=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-520-fBHku0mbOAil1eUX0GXUZQ-1; Sun, 29 Jan 2023 17:14:30 -0500
-X-MC-Unique: fBHku0mbOAil1eUX0GXUZQ-1
-Received: by mail-qt1-f200.google.com with SMTP id f2-20020ac80682000000b003b6364059d2so4153041qth.9
-        for <regressions@lists.linux.dev>; Sun, 29 Jan 2023 14:14:30 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5723212
+	for <regressions@lists.linux.dev>; Sun, 29 Jan 2023 22:36:18 +0000 (UTC)
+Received: by mail-qt1-f179.google.com with SMTP id jr19so8602311qtb.7
+        for <regressions@lists.linux.dev>; Sun, 29 Jan 2023 14:36:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fFrh0pKgZJpJJGzsGCczy6pWPp4yact3E0+EfHTzMNw=;
+        b=hnvlVNOjrI+AvOzslffuR1SuQniLkMRo+KVfz8SIXleBn4oyaRo9ILzvwX3RucBYjF
+         VTNMVG2011Yaue4fwXArSMl+UXvNvTZvN/fECB8qfmMOqnhlnOeNtoB7S7IXXOfTfvWA
+         9KoOjuEruHQwGshB3DZvjxje10Ur1aq2CDjwRWkVgGx4N9tKpGQX254t/P2ZFPLZlyB5
+         /iw4UPwX0KgJ2Ww/dHzhLB3WWmgr7TVjtzSeALS1Pwf/7veGz3TgLfS12kBRt+pYVgsv
+         lQ0Q6lMBml/bv9JVcg5Cc1qHAW2sajyMheLPRUF5wLz9g2LHrHOsQLeG8xfFffosIe68
+         Uudw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aQ2EG58lEBfBcoyGXMvMMXH2dCLi5wC9HNZTuXZVe0I=;
-        b=O44MB4lBlaSS1c7rKp09rxYRFV9yFc341KYXQ67q4Nifi0DNrz0qYhZZPh2GUCi8eB
-         zU7a/yRW+2IRVf+UHPT2It4KG0BRwccxWDXFeqflUQMG4XgDifBEuPOvnxeuhLSTpxsq
-         yQEkj3dz+bHV/EDQ1Nd8nz7hoBp++I+o2/s+lekrQJwWnWD2O+7sBGxS7uh/F6S/6i6H
-         Imy9CG6J+duLVTfYwu2DgZ2Inux62WXtZnk0f2rOfffirYIsf5nvjq1zbGhv0me5c9ph
-         7U17jPZ4BnHNng/V/SCXBlnlZOXwYBq/pn2MIxBeJtio3eOBCRxUOXP181EurNiIAC9M
-         GaMA==
-X-Gm-Message-State: AO0yUKVeo0+pSYiFIC+aHIQhMXDrqngB5nI3lc7Yvb+KmFGpW59TX9t2
-	IIMHM1iFBDrihYzo+cnWPt7XyoxIBVuWvsFNo6xvBmK2BbokzIMVha2ur2QIBmuVJG3l8c6jUPL
-	CvITN/112d7KCNV/EuSYBT2s=
-X-Received: by 2002:a05:622a:1d3:b0:3b6:2cc8:e120 with SMTP id t19-20020a05622a01d300b003b62cc8e120mr11266305qtw.39.1675030469743;
-        Sun, 29 Jan 2023 14:14:29 -0800 (PST)
-X-Google-Smtp-Source: AK7set/c8nGKoE4Pi+rMw4N7aF4GlFF+SuNMvKDIkWAl5IXNZZcNu/VR2VsrTBbWYqFYWWq3QARq4A==
-X-Received: by 2002:a05:622a:1d3:b0:3b6:2cc8:e120 with SMTP id t19-20020a05622a01d300b003b62cc8e120mr11266279qtw.39.1675030469392;
-        Sun, 29 Jan 2023 14:14:29 -0800 (PST)
-Received: from x1n (bras-base-aurron9127w-grc-56-70-30-145-63.dsl.bell.ca. [70.30.145.63])
-        by smtp.gmail.com with ESMTPSA id z18-20020ac83e12000000b003b8332f49e0sm3864086qtf.1.2023.01.29.14.14.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 29 Jan 2023 14:14:28 -0800 (PST)
-Date: Sun, 29 Jan 2023 17:14:27 -0500
-From: Peter Xu <peterx@redhat.com>
-To: Nick Bowler <nbowler@draconx.ca>
-Cc: linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-	regressions@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: PROBLEM: sparc64 random crashes starting w/ Linux 6.1
- (regression)
-Message-ID: <Y9bvwz4FIOQ+D8c4@x1n>
-References: <CADyTPExpEqaJiMGoV+Z6xVgL50ZoMJg49B10LcZ=8eg19u34BA@mail.gmail.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fFrh0pKgZJpJJGzsGCczy6pWPp4yact3E0+EfHTzMNw=;
+        b=VWECWXLTmBsK2krQnvyNnMAQU/AUuZ4v7KRNNS6d18yEFyTZdXzQ1VuJyFjcpK15rA
+         fSfHIUFGzDKU/a5UjxFIB9SMDOKdCF69oKwpFilFOxMTxS5tgCdhHkN4OsmjN0jdDveO
+         iJ+7wXMj2vq98GsP5GkOS9Peq+gOBAeNCyLl5Xx7uSut5gjDoBVnBIGxVSN9jzGyaoLH
+         ocorjuAolNui7Puh2BJWuz938TnIH8BfPfvwMAzEE3krCcqLs49XW4QakWzDcqriQLvL
+         ZcUYQQuk2McDevnBgqU1WNYcto1oZA0vcPswrHfcNa0pFqz7QiGmVBmLMALXspSL6mSo
+         5PJw==
+X-Gm-Message-State: AO0yUKXYM73X/N8yeosFcfvvQocy16hDoIrPqdpKqkPwnFFl4hbPn4wv
+	Dr1ryorZwFD8/6LJmjIOCRZnduPspisZKNFF34M=
+X-Google-Smtp-Source: AK7set/DSZ+qZ9zPwwft+8UYO6LW4i0sH3FWdbd0fn7nbj3vChP2x8bfT36nlqLzIbGOuIG5cAE71jtS4Wn3QYPDn+A=
+X-Received: by 2002:ac8:5e0e:0:b0:3b8:6577:8c31 with SMTP id
+ h14-20020ac85e0e000000b003b865778c31mr187218qtx.339.1675031777858; Sun, 29
+ Jan 2023 14:36:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <CADyTPExpEqaJiMGoV+Z6xVgL50ZoMJg49B10LcZ=8eg19u34BA@mail.gmail.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <CACAvsv4_XJLSwnA-s0BXLVbBCESDfnK7kx5-WUPd2+vdJuMojg@mail.gmail.com>
+ <20230127103959.5nqk57sb7qchtaw6@wslaptop>
+In-Reply-To: <20230127103959.5nqk57sb7qchtaw6@wslaptop>
+From: Ben Skeggs <skeggsb@gmail.com>
+Date: Mon, 30 Jan 2023 08:36:06 +1000
+Message-ID: <CACAvsv5sA8pmhYEVhJk9PEAWyKRZYvcsSHa-04CsJxgu7+YEiw@mail.gmail.com>
+Subject: Re: [REGRESSION] GM20B probe fails after commit 2541626cfb79
+To: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+Cc: airlied@redhat.com, nouveau@lists.freedesktop.org, 
+	regressions@lists.linux.dev, dri-devel@lists.freedesktop.org, 
+	kwizart@gmail.com, kherbst@redhat.com
+Content-Type: multipart/mixed; boundary="0000000000001b9a0b05f36eba2d"
 
-On Sat, Jan 28, 2023 at 09:17:31PM -0500, Nick Bowler wrote:
-> Hi,
+--0000000000001b9a0b05f36eba2d
+Content-Type: text/plain; charset="UTF-8"
 
-Hi, Nick,
+On Fri, 27 Jan 2023 at 20:42, Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt> wrote:
+>
+> On Fri, Jan 27, 2023 at 04:00:59PM +1000, Ben Skeggs wrote:
+> > On Fri, 20 Jan 2023 at 21:37, Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt> wrote:
+> > >
+> > > On Wed, Jan 18, 2023 at 11:28:49AM +1000, Ben Skeggs wrote:
+> > > > On Mon, 16 Jan 2023 at 22:27, Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt> wrote:
+> > > > > On Mon, Jan 16, 2023 at 07:45:05AM +1000, David Airlie wrote:
+> > > > > > As a quick check can you try changing
+> > > > > >
+> > > > > > drivers/gpu/drm/nouveau/nvkm/core/firmware.c:nvkm_firmware_mem_target
+> > > > > > from NVKM_MEM_TARGET_HOST to NVKM_MEM_TARGET_NCOH ?
+> > >
+> > > > In addition to Dave's change, can you try changing the
+> > > > nvkm_falcon_load_dmem() call in gm20b_pmu_init() to:
+> > > >
+> > > > nvkm_falcon_pio_wr(falcon, (u8 *)&args, 0, 0, DMEM, addr_args,
+> > > > sizeof(args), 0, false);
+> > >
+> > > Chiming in just to say that with this change I see the same as Nicolas
+> > > except that the init message size is 255 instead of 0:
+> > >
+> > > [    2.196934] nouveau 57000000.gpu: pmu: unexpected init message size 255 vs 42
+> > I've attached an entirely untested patch (to go on top of the other
+> > hacks/fixes so far), that will hopefully get us a little further.
+>
+> Hello,
+>
+> Thank you for the patch! I can confirm that it fixes the problem
+> on the Pixel C, and everything works as before the regression.
+> With this, for the combination of patches
+>
+> Tested-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+>
+> which I can resend after testing the final patch version.
+Thank you (both!) for testing!
 
-> 
-> Starting with Linux 6.1.y, my sparc64 (Sun Ultra 60) system is very
-> unstable, with userspace processes randomly crashing with all kinds of
-> different weird errors.  The same problem occurs on 6.2-rc5.  Linux
-> 6.0.y is OK.
-> 
-> Usually, it manifests with ssh connections just suddenly dropping out
-> like this:
-> 
->   malloc(): unaligned tcache chunk detected
->   Connection to alectrona closed.
-> 
-> but other kinds of failures (random segfaults, bus errors, etc.) are
-> seen too.
-> 
-> I have not ever seen the kernel itself oops or anything like that, there
-> are no abnormal kernel log messages of any kind; except for the normal
-> ones that get printed when processes segfault, like this one:
-> 
->   [  563.085851] zsh[2073]: segfault at 10 ip 00000000f7a7c09c (rpc
-> 00000000f7a7c0a0) sp 00000000ff8f5e08 error 1 in
-> libc.so.6[f7960000+1b2000]
-> 
-> I was able to reproduce this fairly reliably by using GNU ddrescue to
-> dump a disk from the dvd drive -- things usually go awry after a minute
-> or two.  So I was able to bisect to this commit:
-> 
->   2e3468778dbe3ec389a10c21a703bb8e5be5cfbc is the first bad commit
->   commit 2e3468778dbe3ec389a10c21a703bb8e5be5cfbc
->   Author: Peter Xu <peterx@redhat.com>
->   Date:   Thu Aug 11 12:13:29 2022 -0400
-> 
->       mm: remember young/dirty bit for page migrations
-> 
-> This does not revert cleanly on master, but I ran my test on the
-> immediately preceding commit (0ccf7f168e17: "mm/thp: carry over dirty
-> bit when thp splits on pmd") extra times and I am unable to get this
-> one to crash, so reasonably confident in this bisection result...
+I've attached a "final" version of a patch that I'll send (assuming it
+still works ;)) after re-testing.  There's only a minor change to
+avoid breaking the non-Tegra path, so I expect it should be fine.
 
-There's a similar report previously but interestingly it was exactly
-reported against commit 0ccf7f168e17, which was the one you reported all
-good:
+Ben.
+>
+> Thanks,
+> Diogo
 
-https://lore.kernel.org/all/20221021160603.GA23307@u164.east.ru/
+--0000000000001b9a0b05f36eba2d
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-drm-nouveau-acr-gm20b-regression-fixes.patch"
+Content-Disposition: attachment; 
+	filename="0001-drm-nouveau-acr-gm20b-regression-fixes.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_ldhynvap0>
+X-Attachment-Id: f_ldhynvap0
 
-It's probably because for some reason the thp split didn't really happen in
-your system (maybe thp disabled?) or it should break too. It also means
-624a2c94f5b7a didn't really fix all the issues.  So I assumed that's the
-only issue we had after verified with 624a2c94f5b7a on two existing
-reproducers and we assumed all issues fixed.
-
-However then with this report I looked into the whole set and I did notice
-the page migration code actually has similar problem.  Sorry I should have
-noticed this even earlier.  So very likely the previous two reports came
-from environment where page migration is either rare or not enabled.  And
-now I suspect your system has page migration enabled.
-
-Could you try below patch to see whether it fixes your problem?  It should
-cover the last piece of possible issue with dirty bit on sparc after that
-patchset.  It's based on latest master branch (commit ab072681eabe1ce0).
-
----8<---
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index abe6cfd92ffa..f15ea5b389f6 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -3272,15 +3272,17 @@ void remove_migration_pmd(struct page_vma_mapped_walk *pvmw, struct page *new)
-        pmde = mk_huge_pmd(new, READ_ONCE(vma->vm_page_prot));
-        if (pmd_swp_soft_dirty(*pvmw->pmd))
-                pmde = pmd_mksoft_dirty(pmde);
--       if (is_writable_migration_entry(entry))
--               pmde = maybe_pmd_mkwrite(pmde, vma);
-        if (pmd_swp_uffd_wp(*pvmw->pmd))
--               pmde = pmd_wrprotect(pmd_mkuffd_wp(pmde));
-+               pmde = pmd_mkuffd_wp(pmde);
-        if (!is_migration_entry_young(entry))
-                pmde = pmd_mkold(pmde);
-        /* NOTE: this may contain setting soft-dirty on some archs */
-        if (PageDirty(new) && is_migration_entry_dirty(entry))
-                pmde = pmd_mkdirty(pmde);
-+       if (is_writable_migration_entry(entry))
-+               pmde = maybe_pmd_mkwrite(pmde, vma);
-+       else
-+               pmde = pmd_wrprotect(pmde);
- 
-        if (PageAnon(new)) {
-                rmap_t rmap_flags = RMAP_COMPOUND;
-diff --git a/mm/migrate.c b/mm/migrate.c
-index a4d3fc65085f..cc5455614e01 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -224,6 +224,8 @@ static bool remove_migration_pte(struct folio *folio,
-                        pte = maybe_mkwrite(pte, vma);
-                else if (pte_swp_uffd_wp(*pvmw.pte))
-                        pte = pte_mkuffd_wp(pte);
-+               else
-+                       pte = pte_wrprotect(pte);
- 
-                if (folio_test_anon(folio) && !is_readable_migration_entry(entry))
-                        rmap_flags |= RMAP_EXCLUSIVE;
----8<---
-
-Thanks,
-
--- 
-Peter Xu
-
+RnJvbSBiZmMxYjg0ZDI2Y2EyOGY3OGEwN2Q0OTRiMDgxM2ZlNjQyZTgwYmJlIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBCZW4gU2tlZ2dzIDxic2tlZ2dzQHJlZGhhdC5jb20+CkRhdGU6
+IEZyaSwgMjcgSmFuIDIwMjMgMTU6NDI6MjcgKzEwMDAKU3ViamVjdDogW1BBVENIXSBkcm0vbm91
+dmVhdS9hY3IvZ20yMGI6IHJlZ3Jlc3Npb24gZml4ZXMKCk1pc3NlZCBzb21lIFRlZ3JhLXNwZWNp
+ZmljIHF1aXJrcyB3aGVuIHJld29ya2luZyBBQ1IgdG8gc3VwcG9ydCBBbXBlcmUuCgpGaXhlczog
+MjU0MTYyNmNmYjc5ICgiZHJtL25vdXZlYXUvYWNyOiB1c2UgY29tbW9uIGZhbGNvbiBIUyBGVyBj
+b2RlIGZvcglBQ1IgRldzIikKU2lnbmVkLW9mZi1ieTogQmVuIFNrZWdncyA8YnNrZWdnc0ByZWRo
+YXQuY29tPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9ub3V2ZWF1L252a20vY29yZS9maXJtd2FyZS5j
+ICAgIHwgIDMgKysrCiBkcml2ZXJzL2dwdS9kcm0vbm91dmVhdS9udmttL2ZhbGNvbi9nbTIwMC5j
+ICAgICB8IDE0ICsrKysrKysrKysrKystCiBkcml2ZXJzL2dwdS9kcm0vbm91dmVhdS9udmttL3N1
+YmRldi9wbXUvZ20yMGIuYyB8ICAyICstCiAzIGZpbGVzIGNoYW5nZWQsIDE3IGluc2VydGlvbnMo
+KyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL25vdXZlYXUv
+bnZrbS9jb3JlL2Zpcm13YXJlLmMgYi9kcml2ZXJzL2dwdS9kcm0vbm91dmVhdS9udmttL2NvcmUv
+ZmlybXdhcmUuYwppbmRleCBmY2YyYTAwMmY2Y2IuLjkxZmI0OTRkNDAwOSAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL25vdXZlYXUvbnZrbS9jb3JlL2Zpcm13YXJlLmMKKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL25vdXZlYXUvbnZrbS9jb3JlL2Zpcm13YXJlLmMKQEAgLTE1MSw2ICsxNTEsOSBA
+QCBudmttX2Zpcm13YXJlX21lbV9wYWdlKHN0cnVjdCBudmttX21lbW9yeSAqbWVtb3J5KQogc3Rh
+dGljIGVudW0gbnZrbV9tZW1vcnlfdGFyZ2V0CiBudmttX2Zpcm13YXJlX21lbV90YXJnZXQoc3Ry
+dWN0IG52a21fbWVtb3J5ICptZW1vcnkpCiB7CisJaWYgKG52a21fZmlybXdhcmVfbWVtKG1lbW9y
+eSktPmRldmljZS0+ZnVuYy0+dGVncmEpCisJCXJldHVybiBOVktNX01FTV9UQVJHRVRfTkNPSDsK
+KwogCXJldHVybiBOVktNX01FTV9UQVJHRVRfSE9TVDsKIH0KIApkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL25vdXZlYXUvbnZrbS9mYWxjb24vZ20yMDAuYyBiL2RyaXZlcnMvZ3B1L2RybS9u
+b3V2ZWF1L252a20vZmFsY29uL2dtMjAwLmMKaW5kZXggMzkzYWRlOWY3ZTZjLi5iN2RhM2FiNDRj
+MjcgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9ub3V2ZWF1L252a20vZmFsY29uL2dtMjAw
+LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL25vdXZlYXUvbnZrbS9mYWxjb24vZ20yMDAuYwpAQCAt
+NDgsNiArNDgsMTYgQEAgZ20yMDBfZmxjbl9waW9fZG1lbV9yZChzdHJ1Y3QgbnZrbV9mYWxjb24g
+KmZhbGNvbiwgdTggcG9ydCwgY29uc3QgdTggKmltZywgaW50IGwKIAkJaW1nICs9IDQ7CiAJCWxl
+biAtPSA0OwogCX0KKworCS8qIFNpZ2guICBUZWdyYSBQTVUgRlcncyBpbml0IG1lc3NhZ2UuLi4g
+Ki8KKwlpZiAobGVuKSB7CisJCXUzMiBkYXRhID0gbnZrbV9mYWxjb25fcmQzMihmYWxjb24sIDB4
+MWM0ICsgKHBvcnQgKiA4KSk7CisKKwkJd2hpbGUgKGxlbi0tKSB7CisJCQkqKHU4ICopaW1nKysg
+PSBkYXRhICYgMHhmZjsKKwkJCWRhdGEgPj49IDg7CisJCX0KKwl9CiB9CiAKIHN0YXRpYyB2b2lk
+CkBAIC02NCw2ICs3NCw4IEBAIGdtMjAwX2ZsY25fcGlvX2RtZW1fd3Ioc3RydWN0IG52a21fZmFs
+Y29uICpmYWxjb24sIHU4IHBvcnQsIGNvbnN0IHU4ICppbWcsIGludCBsCiAJCWltZyArPSA0Owog
+CQlsZW4gLT0gNDsKIAl9CisKKwlXQVJOX09OKGxlbik7CiB9CiAKIHN0YXRpYyB2b2lkCkBAIC03
+NCw3ICs4Niw3IEBAIGdtMjAwX2ZsY25fcGlvX2RtZW1fd3JfaW5pdChzdHJ1Y3QgbnZrbV9mYWxj
+b24gKmZhbGNvbiwgdTggcG9ydCwgYm9vbCBzZWMsIHUzMiBkCiAKIGNvbnN0IHN0cnVjdCBudmtt
+X2ZhbGNvbl9mdW5jX3BpbwogZ20yMDBfZmxjbl9kbWVtX3BpbyA9IHsKLQkubWluID0gNCwKKwku
+bWluID0gMSwKIAkubWF4ID0gMHgxMDAsCiAJLndyX2luaXQgPSBnbTIwMF9mbGNuX3Bpb19kbWVt
+X3dyX2luaXQsCiAJLndyID0gZ20yMDBfZmxjbl9waW9fZG1lbV93ciwKZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9ub3V2ZWF1L252a20vc3ViZGV2L3BtdS9nbTIwYi5jIGIvZHJpdmVycy9n
+cHUvZHJtL25vdXZlYXUvbnZrbS9zdWJkZXYvcG11L2dtMjBiLmMKaW5kZXggYTcyNDAzNzc3MzI5
+Li4yZWQwNGRhMzYyMWQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9ub3V2ZWF1L252a20v
+c3ViZGV2L3BtdS9nbTIwYi5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9ub3V2ZWF1L252a20vc3Vi
+ZGV2L3BtdS9nbTIwYi5jCkBAIC0yMjUsNyArMjI1LDcgQEAgZ20yMGJfcG11X2luaXQoc3RydWN0
+IG52a21fcG11ICpwbXUpCiAKIAlwbXUtPmluaXRtc2dfcmVjZWl2ZWQgPSBmYWxzZTsKIAotCW52
+a21fZmFsY29uX2xvYWRfZG1lbShmYWxjb24sICZhcmdzLCBhZGRyX2FyZ3MsIHNpemVvZihhcmdz
+KSwgMCk7CisJbnZrbV9mYWxjb25fcGlvX3dyKGZhbGNvbiwgKHU4ICopJmFyZ3MsIDAsIDAsIERN
+RU0sIGFkZHJfYXJncywgc2l6ZW9mKGFyZ3MpLCAwLCBmYWxzZSk7CiAJbnZrbV9mYWxjb25fc3Rh
+cnQoZmFsY29uKTsKIAlyZXR1cm4gMDsKIH0KLS0gCjIuMzUuMQoK
+--0000000000001b9a0b05f36eba2d--
