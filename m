@@ -1,119 +1,268 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94B5420E3
-	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 12:22:42 +0000 (UTC)
-Received: by mail-oi1-f177.google.com with SMTP id p185so9874821oif.2
-        for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 04:22:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=n8cbCglwHAcL5prmHxuFLmpiN5Psq3XwYbiERoq55tI=;
-        b=i/JRzgzZiy1z9MybJRM1NpsJwMtAbgpMQRLckLJFr9+VlH6fPg//Mfk9DsjqYQocon
-         UrD88pb7noOmDvAnv0BIglhe7BZBstgynNkNyMVbU+cdiAtSNtTSFSY5laEGpUShlPaC
-         dm+C5RblNemLnxFGhxovNs24xIhuWKcwEcWvXk9sO/rpQfZbIRHclWl5uHoqa0X1khW7
-         91cQPOoOoCS6plR7eDj1yzZXMvP2kS9lCCCCmCyP3nsluWShkZymPHG5+iEnldG3VWST
-         tslyD3ZH6YX6eloRebkHl8XBseSuPRVhDDjc0bpbbdjC4/AwYnWFm+dUaQTQqlr+xt87
-         OhwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=n8cbCglwHAcL5prmHxuFLmpiN5Psq3XwYbiERoq55tI=;
-        b=zH8EY3dkR82O7c2LL1ou0aHohrC0ZqURpr5gpsRcVYE3ZbnDWgiKRAKuCEqkhZJa50
-         CaLyfY8Q67cPh/9OB1RTUUzkOPpnT8ENdd9WGvC9C/TSER5SnZdjKqpfJ+KUk1VluVFx
-         alljOSYLYjZzF4jABOM8sw6yBnLLWk8G58O2Qe3RYgqBZvdOpB45rFykkr8JChNydF2k
-         TEjs2eIExz+Tn1sB+LnohTFRfig29nEoT5A21L/BS+orbphFvGz0q0Ef0mr3gmChY/8m
-         Q4HDoKdxty5D9TLX/8WeNxqaMbCSpTacBhcVXzyGvkj8g3tqJe8XHAT7yXJR0DPADqnB
-         NENA==
-X-Gm-Message-State: AO0yUKWGNV9qphNfbr5/1F3huJ+6yBurrZG8I8SlEYBJ98wPHHdqDi/5
-	2Hd3Ajs0P5NJGF1NomDhc6pdxSUVqYA1rf1btSw=
-X-Google-Smtp-Source: AK7set+tiAOFfpxgEKn/8wIu+nDD8rbcUkkr3YWYSinED0/lsmCG4W9fI2MqhYmAKvvCkYI5ZHXuLz5zhet5DxARoqY=
-X-Received: by 2002:a05:6808:d47:b0:378:15e:c61d with SMTP id
- w7-20020a0568080d4700b00378015ec61dmr718980oik.298.1675081361573; Mon, 30 Jan
- 2023 04:22:41 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A793362
+	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 12:35:24 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pMTNV-0004kO-85; Mon, 30 Jan 2023 13:35:17 +0100
+Message-ID: <c0c58ec0-3cb2-5385-eeac-6ca37b6b1509@leemhuis.info>
+Date: Mon, 30 Jan 2023 13:35:16 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAJD_bPJ1VYTSQvogui4S9xWn9jQzQq8JRXOzXmus+qoRyrybOA@mail.gmail.com>
- <Y9Vg26wjGfkCicYv@kroah.com> <CAJD_bPLkkgbk+GO66Ec9RmiW6MfYrG32WP75oLzXsz2+rpREWg@mail.gmail.com>
- <CAJD_bPK=m0mX8_Qq=6iwD8sL8AkR99PEzBbE3RcSaJmxuJmW6g@mail.gmail.com>
- <02834fa9-4fb0-08fb-4b5f-e9646c1501d6@leemhuis.info> <288d7ff4-75aa-7ad1-c49c-579373cab3ed@intel.com>
-In-Reply-To: <288d7ff4-75aa-7ad1-c49c-579373cab3ed@intel.com>
-From: Sasa Ostrouska <casaxa@gmail.com>
-Date: Mon, 30 Jan 2023 13:22:30 +0100
-Message-ID: <CALFERdw=GwNYafR3q=5=k=H_jrzTZMyDBQLouFGV0JGu8i9sCg@mail.gmail.com>
-Subject: Re: Google Pixelbook EVE, no sound in kernel 6.1.x
-To: Cezary Rojewski <cezary.rojewski@intel.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>, Jason Montleon <jmontleo@redhat.com>, 
-	Greg KH <gregkh@linuxfoundation.org>, lma@semihalf.com, 
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, stable@vger.kernel.org, 
-	Takashi Iwai <tiwai@suse.de>, 
-	=?UTF-8?B?YW1hZGV1c3ogU8WCYXdpxYRza2k=?= <amadeuszx.slawinski@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH V2 2/2] PCI: Add quirk for LS7A to avoid reboot failure
+Content-Language: en-US, de-DE
+To: Huacai Chen <chenhuacai@gmail.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Huacai Chen <chenhuacai@loongson.cn>, Bjorn Helgaas
+ <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+ Rob Herring <robh@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
+ <kw@linux.com>, linux-pci@vger.kernel.org, Jianmin Lv
+ <lvjianmin@loongson.cn>, Xuefeng Li <lixuefeng@loongson.cn>,
+ Jiaxun Yang <jiaxun.yang@flygoat.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+References: <CAAhV-H59FLAFGD8oDZGjXWgL2ei_L=rYAaFWWp1skUT9nUPVYg@mail.gmail.com>
+ <20230120153644.GA636025@bhelgaas>
+ <CAAhV-H4LDn4YmM6Cwse-yjEeooeyqQ4Gy0gPxN0WS=H6KmuSJw@mail.gmail.com>
+From: Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <CAAhV-H4LDn4YmM6Cwse-yjEeooeyqQ4Gy0gPxN0WS=H6KmuSJw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675082124;c41d7cc5;
+X-HE-SMSGID: 1pMTNV-0004kO-85
 
-On Mon, Jan 30, 2023 at 1:15 PM Cezary Rojewski
-<cezary.rojewski@intel.com> wrote:
->
-> On 2023-01-30 12:27 PM, Linux kernel regression tracking (Thorsten
-> Leemhuis) wrote:
-> > On 30.01.23 07:33, Jason Montleon wrote:
-> >> I ran a bisect back further while patching in
-> >> f2bd1c5ae2cb0cf9525c9bffc0038c12dd7e1338.
-> >
-> > Cezary Rojewski, you authored this change which appears to cause a
-> > regression. Do you maybe have an idea what's wrong here?
->
->
-> Hello,
->
-> Sitting with Lukasz and debugging this.
->
-> Please note that messages seen in the logs:
-> [    8.538645] snd_soc_skl 0000:00:1f.3: ASoC: no sink widget found for
-> AEC Capture
-> [    8.538654] snd_soc_skl 0000:00:1f.3: ASoC: Failed to add route
-> echo_ref_out cpr 7 -> direct -> AEC Capture
->
-> and:
-> [    8.614993] rt5663 i2c-10EC5663:00: sysclk < 384 x fs, disable i2s asrc
-> [    8.617460] HDMI HDA Codec ehdaudio0D2: hdac_hdmi_present_sense:
-> disconnect for pin:port 5:0
-> [    8.617581] HDMI HDA Codec ehdaudio0D2: hdac_hdmi_present_sense:
-> disconnect for pin:port 6:0
-> [    8.617712] HDMI HDA Codec ehdaudio0D2: hdac_hdmi_present_sense:
-> disconnect for pin:port 7:0
->
-> seem to be just noise, these are present even in working configuration.
-> Looks like topology and AudioDSP firmware loads fine. However, one or
-> more of sound cards component is deferred when probing what results in
-> no error in the logs but still lack of audio.
->
-> We managed to reproduce the problem on Lukasz' Eve machine. If hardware
-> cooperates, we should be able to narrow down the problem quickly from
-> here. Our suspect - something (a patch or two) is missing in sound/soc
-> in Fedora tree. Our CI which also covers upstream skylake-driver with
-> HDAudio (e.g.: rt274/rt286/rt298) and I2S (same examples) configurations
-> show no signs of regression. Thus, this is probably Chromebook-specific.
->
-> My opinion stands at - none of the patches mentioned during the
-> discussion is the real problem. All of these were in fact addressing
-> real problems with audio stack stability/reloading.
->
-> Will reply once more is known.
->
->
-> Kind regards,
-> Czarek
+On 21.01.23 16:10, Huacai Chen wrote:
+> On Fri, Jan 20, 2023 at 11:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>
+>> On Fri, Jan 20, 2023 at 09:31:43PM +0800, Huacai Chen wrote:
+>>> On Thu, Jan 19, 2023 at 8:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>> On Thu, Jan 19, 2023 at 08:25:20PM +0800, Huacai Chen wrote:
+>>>>> Ping?
+>>>>
+>>>> I suggested another possible way to do this that wasn't so much of a
+>>>> special case.  Did you explore that at all?
+>>>
+>>> That is a little difficult for me, but what is worse is that the root
+>>> cause doesn't come from gpu or console drivers, but from the root
+>>> port. That means: even if we can workaround the gpu issue in another
+>>> way, there are still problems on other devices. Besides the graphics
+>>> card, the most frequent problematic device is the sata controller
+>>> connected on LS7A chipset, there are incomplete I/O accesses after the
+>>> root port disabled and also cause reboot failure.
+>>
+>> Yes, SATA sounds like another case where we want to use the device
+>> after we call the driver's remove/shutdown method.  That's not
+>> *worse*, it's just another case where we might have to mark devices
+>> for special handling.
+> That needs too much effort because we need to modify nearly every pci
+> driver, and it exceeds my ability. :)
 
-Dear Czarek, many thanks for the answer and taking care of it. If
-needed something from my side please jest let me know
-and I will try to do it.
+Just wondering: what's the status here? This looks stalled.
 
-Rgds
-Sasa
+I'm asking, as the patches in this thread are supposed to fix this
+regression:
+https://bugzilla.kernel.org/show_bug.cgi?id=216884
+
+Or should we try to find a different fix/workaround because the proper
+solution discussed in this thread needs more time?
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+>> If we remove/shutdown *any* Root Port, not just LS7A, I think the idea
+>> of assuming downstream devices can continue to work as usual is a
+>> little suspect.  They might continue to work by accident today, but it
+>> doesn't seem like a robust design.
+> The existing design works for so many years, so it is mostly
+> reasonable. For the LS7A case, the root cause comes from the root
+> port, so a workaround on the root port seems somewhat reasonable.
+> 
+> Huacai
+>>
+>>>> I know there's no *existing* way to mark devices that we need to use
+>>>> all the way through shutdown or reboot, but if it makes sense, there's
+>>>> no reason we couldn't add one.  That has the potential of being more
+>>>> generic, e.g., we could do it for all console devices, as opposed to
+>>>> quirking a Root Port that just happens to be in the path to the
+>>>> console.
+>>>>
+>>>>> On Sat, Jan 7, 2023 at 10:25 AM Huacai Chen <chenhuacai@gmail.com> wrote:
+>>>>>> On Fri, Jan 6, 2023 at 11:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>>>>> On Fri, Jan 06, 2023 at 05:51:43PM +0800, Huacai Chen wrote:
+>>>>>>>> After cc27b735ad3a7557 ("PCI/portdrv: Turn off PCIe
+>>>>>>>> services during shutdown") we observe poweroff/reboot
+>>>>>>>> failures on systems with LS7A chipset.
+>>>>>>>>
+>>>>>>>> We found that if we remove "pci_command &=
+>>>>>>>> ~PCI_COMMAND_MASTER" in do_pci_disable_device(), it can
+>>>>>>>> work well. The hardware engineer says that the root cause
+>>>>>>>> is that CPU is still accessing PCIe devices while
+>>>>>>>> poweroff/reboot, and if we disable the Bus Master Bit at
+>>>>>>>> this time, the PCIe controller doesn't forward requests to
+>>>>>>>> downstream devices, and also does not send TIMEOUT to CPU,
+>>>>>>>> which causes CPU wait forever (hardware deadlock).
+>>>>>>>>
+>>>>>>>> To be clear, the sequence is like this:
+>>>>>>>>
+>>>>>>>>   - CPU issues MMIO read to device below Root Port
+>>>>>>>>
+>>>>>>>>   - LS7A Root Port fails to forward transaction to secondary bus
+>>>>>>>>     because of LS7A Bus Master defect
+>>>>>>>>
+>>>>>>>>   - CPU hangs waiting for response to MMIO read
+>>>>>>>>
+>>>>>>>> Then how is userspace able to use a device after the
+>>>>>>>> device is removed?
+>>>>>>>>
+>>>>>>>> To give more details, let's take the graphics driver (e.g.
+>>>>>>>> amdgpu) as an example. The userspace programs call
+>>>>>>>> printf() to display "shutting down xxx service" during
+>>>>>>>> shutdown/reboot, or the kernel calls printk() to display
+>>>>>>>> something during shutdown/reboot. These can happen at any
+>>>>>>>> time, even after we call pcie_port_device_remove() to
+>>>>>>>> disable the pcie port on the graphic card.
+>>>>>>>>
+>>>>>>>> The call stack is: printk() --> call_console_drivers() -->
+>>>>>>>> con->write() --> vt_console_print() --> fbcon_putcs()
+>>>>>>>>
+>>>>>>>> This scenario happens because userspace programs (or the
+>>>>>>>> kernel itself) don't know whether a device is 'usable',
+>>>>>>>> they just use it, at any time.
+>>>>>>>
+>>>>>>> Thanks for this background.  So basically we want to call
+>>>>>>> .remove() on a console device (or a bridge leading to it),
+>>>>>>> but we expect it to keep working as usual afterwards?
+>>>>>>>
+>>>>>>> That seems a little weird.  Is that the design we want?
+>>>>>>> Maybe we should have a way to mark devices so we don't
+>>>>>>> remove them during shutdown or reboot?
+>>>>>>
+>>>>>> Sounds reasonable, but it seems no existing way can mark this.
+>>>>>>
+>>>>>> Huacai
+>>>>>>>
+>>>>>>>> This hardware behavior is a PCIe protocol violation (Bus Master should
+>>>>>>>> not be involved in CPU MMIO transactions), and it will be fixed in new
+>>>>>>>> revisions of hardware (add timeout mechanism for CPU read request,
+>>>>>>>> whether or not Bus Master bit is cleared).
+>>>>>>>>
+>>>>>>>> On some x86 platforms, radeon/amdgpu devices can cause similar problems
+>>>>>>>> [1][2]. Once before I wanted to make a single patch to solve "all of
+>>>>>>>> these problems" together, but it seems unreasonable because maybe they
+>>>>>>>> are not exactly the same problem. So, this patch add a new function
+>>>>>>>> pcie_portdrv_shutdown(), a slight modified copy of pcie_portdrv_remove()
+>>>>>>>> dedicated for the shutdown path, and then add a quirk just for LS7A to
+>>>>>>>> avoid clearing Bus Master bit in pcie_portdrv_shutdown(). Leave other
+>>>>>>>> platforms behave as before.
+>>>>>>>>
+>>>>>>>> [1] https://bugs.freedesktop.org/show_bug.cgi?id=97980
+>>>>>>>> [2] https://bugs.freedesktop.org/show_bug.cgi?id=98638
+>>>>>>>>
+>>>>>>>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+>>>>>>>> ---
+>>>>>>>>  drivers/pci/controller/pci-loongson.c | 17 +++++++++++++++++
+>>>>>>>>  drivers/pci/pcie/portdrv.c            | 21 +++++++++++++++++++--
+>>>>>>>>  include/linux/pci.h                   |  1 +
+>>>>>>>>  3 files changed, 37 insertions(+), 2 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+>>>>>>>> index 759ec211c17b..641308ba4126 100644
+>>>>>>>> --- a/drivers/pci/controller/pci-loongson.c
+>>>>>>>> +++ b/drivers/pci/controller/pci-loongson.c
+>>>>>>>> @@ -93,6 +93,24 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>>>>>>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>>>>>>>                       DEV_PCIE_PORT_2, loongson_mrrs_quirk);
+>>>>>>>>
+>>>>>>>> +static void loongson_bmaster_quirk(struct pci_dev *pdev)
+>>>>>>>> +{
+>>>>>>>> +     /*
+>>>>>>>> +      * Some Loongson PCIe ports will cause CPU deadlock if there is
+>>>>>>>> +      * MMIO access to a downstream device when the root port disable
+>>>>>>>> +      * the Bus Master bit during poweroff/reboot.
+>>>>>>>> +      */
+>>>>>>>> +     struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
+>>>>>>>> +
+>>>>>>>> +     bridge->no_dis_bmaster = 1;
+>>>>>>>> +}
+>>>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>>>>>>> +                     DEV_PCIE_PORT_0, loongson_bmaster_quirk);
+>>>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>>>>>>> +                     DEV_PCIE_PORT_1, loongson_bmaster_quirk);
+>>>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+>>>>>>>> +                     DEV_PCIE_PORT_2, loongson_bmaster_quirk);
+>>>>>>>> +
+>>>>>>>>  static void loongson_pci_pin_quirk(struct pci_dev *pdev)
+>>>>>>>>  {
+>>>>>>>>       pdev->pin = 1 + (PCI_FUNC(pdev->devfn) & 3);
+>>>>>>>> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
+>>>>>>>> index 2cc2e60bcb39..96f45c444422 100644
+>>>>>>>> --- a/drivers/pci/pcie/portdrv.c
+>>>>>>>> +++ b/drivers/pci/pcie/portdrv.c
+>>>>>>>> @@ -501,7 +501,6 @@ static void pcie_port_device_remove(struct pci_dev *dev)
+>>>>>>>>  {
+>>>>>>>>       device_for_each_child(&dev->dev, NULL, remove_iter);
+>>>>>>>>       pci_free_irq_vectors(dev);
+>>>>>>>> -     pci_disable_device(dev);
+>>>>>>>>  }
+>>>>>>>>
+>>>>>>>>  /**
+>>>>>>>> @@ -727,6 +726,24 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
+>>>>>>>>       }
+>>>>>>>>
+>>>>>>>>       pcie_port_device_remove(dev);
+>>>>>>>> +
+>>>>>>>> +     pci_disable_device(dev);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static void pcie_portdrv_shutdown(struct pci_dev *dev)
+>>>>>>>> +{
+>>>>>>>> +     struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+>>>>>>>> +
+>>>>>>>> +     if (pci_bridge_d3_possible(dev)) {
+>>>>>>>> +             pm_runtime_forbid(&dev->dev);
+>>>>>>>> +             pm_runtime_get_noresume(&dev->dev);
+>>>>>>>> +             pm_runtime_dont_use_autosuspend(&dev->dev);
+>>>>>>>> +     }
+>>>>>>>> +
+>>>>>>>> +     pcie_port_device_remove(dev);
+>>>>>>>> +
+>>>>>>>> +     if (!bridge->no_dis_bmaster)
+>>>>>>>> +             pci_disable_device(dev);
+>>>>>>>>  }
+>>>>>>>>
+>>>>>>>>  static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
+>>>>>>>> @@ -777,7 +794,7 @@ static struct pci_driver pcie_portdriver = {
+>>>>>>>>
+>>>>>>>>       .probe          = pcie_portdrv_probe,
+>>>>>>>>       .remove         = pcie_portdrv_remove,
+>>>>>>>> -     .shutdown       = pcie_portdrv_remove,
+>>>>>>>> +     .shutdown       = pcie_portdrv_shutdown,
+>>>>>>>>
+>>>>>>>>       .err_handler    = &pcie_portdrv_err_handler,
+>>>>>>>>
+>>>>>>>> diff --git a/include/linux/pci.h b/include/linux/pci.h
+>>>>>>>> index 3df2049ec4a8..a64dbcb89231 100644
+>>>>>>>> --- a/include/linux/pci.h
+>>>>>>>> +++ b/include/linux/pci.h
+>>>>>>>> @@ -573,6 +573,7 @@ struct pci_host_bridge {
+>>>>>>>>       unsigned int    ignore_reset_delay:1;   /* For entire hierarchy */
+>>>>>>>>       unsigned int    no_ext_tags:1;          /* No Extended Tags */
+>>>>>>>>       unsigned int    no_inc_mrrs:1;          /* No Increase MRRS */
+>>>>>>>> +     unsigned int    no_dis_bmaster:1;       /* No Disable Bus Master */
+>>>>>>>>       unsigned int    native_aer:1;           /* OS may use PCIe AER */
+>>>>>>>>       unsigned int    native_pcie_hotplug:1;  /* OS may use PCIe hotplug */
+>>>>>>>>       unsigned int    native_shpc_hotplug:1;  /* OS may use SHPC hotplug */
+>>>>>>>> --
+>>>>>>>> 2.31.1
+>>>>>>>>
