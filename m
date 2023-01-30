@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57F9A23A6
-	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 12:54:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCB12560
+	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 12:56:01 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pMTfs-0000cR-QZ; Mon, 30 Jan 2023 13:54:16 +0100
-Message-ID: <d018d4ba-802d-76f4-0892-97b033fbc7bb@leemhuis.info>
-Date: Mon, 30 Jan 2023 13:54:16 +0100
+	id 1pMThV-000108-VP; Mon, 30 Jan 2023 13:55:58 +0100
+Message-ID: <f7e7da82-2050-1866-e5b4-b7e9ea778b89@leemhuis.info>
+Date: Mon, 30 Jan 2023 13:55:57 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,44 +16,62 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [Bug 216888] New: "sysfs: cannot create duplicate filename
- /dma/dma0chan0" with 68dbe80f ("crypto: ccp - Release dma channels before
- dmaengine unrgister")
+Subject: Re: Network performance regression with linux 6.1.y. Issue bisected
+ to "5eddb24901ee49eee23c0bfce6af2e83fd5679bd" (gro: add support of (hw)gro
+ packets to gro stack)
 Content-Language: en-US, de-DE
-From: "Linux kernel regression tracking (#update)" <regressions@leemhuis.info>
-To: Bjorn Helgaas <helgaas@kernel.org>, Koba Ko <koba.ko@canonical.com>
-Cc: vsd@suremail.info, Tom Lendacky <thomas.lendacky@amd.com>,
- John Allen <john.allen@amd.com>, =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?=
- <kw@linux.com>, linux-crypto@vger.kernel.org, linux-pci@vger.kernel.org,
- regressions@lists.linux.dev
+From: "Linux kernel regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+To: Jaroslav Pulchart <jaroslav.pulchart@gooddata.com>, edumazet@google.com,
+ netdev@vger.kernel.org, lixiaoyan@google.com, pabeni@redhat.com,
+ davem@davemloft.net,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Cc: Igor Raits <igor.raits@gooddata.com>
 Reply-To: Thorsten Leemhuis <regressions@leemhuis.info>,
  Linux regressions mailing list <regressions@lists.linux.dev>
-References: <20230105174736.GA1154719@bhelgaas>
- <7b38ae22-b13d-64af-7c79-a56cdba26754@leemhuis.info>
-In-Reply-To: <7b38ae22-b13d-64af-7c79-a56cdba26754@leemhuis.info>
+References: <CAK8fFZ5pzMaw3U1KXgC_OK4shKGsN=HDcR62cfPOuL0umXE1Ww@mail.gmail.com>
+ <adb0129f-0570-6a11-7ea6-3ee7d851bb50@leemhuis.info>
+In-Reply-To: <adb0129f-0570-6a11-7ea6-3ee7d851bb50@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675083263;005e1756;
-X-HE-SMSGID: 1pMTfs-0000cR-QZ
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675083362;02bc8653;
+X-HE-SMSGID: 1pMThV-000108-VP
 
 [TLDR: This mail in primarily relevant for Linux kernel regression
 tracking. See link in footer if these mails annoy you.]
 
-On 06.01.23 09:38, Linux kernel regression tracking (#adding) wrote:
-> On 05.01.23 18:47, Bjorn Helgaas wrote:
->> Per the report, this is a regression and reverting 68dbe80f5b51
->> ("crypto: ccp - Release dma channels before dmaengine unrgister"),
->> which appeared in v6.1, avoids the problem.
->>
->> The bugzilla is assigned to PCI, and I know PCI does have similar
->> sysfs duplicate filename issues, but I don't know whether this
->> instance is related to 68dbe80f5b51 or to the PCI core.
->>
->> On Thu, Jan 05, 2023 at 03:12:26PM +0000, bugzilla-daemon@kernel.org wrote:
->>> https://bugzilla.kernel.org/show_bug.cgi?id=216888
+On 06.01.23 09:36, Linux kernel regression tracking (#adding) wrote:
 
-#regzbot fix: crypto: ccp - Failure on re-initialization due to
-duplicate sysfs filename
+> On 05.01.23 18:37, Jaroslav Pulchart wrote:
+>> Hello,
+>>
+>> I would like to report a 6.1,y regression in a network performance
+>> observed when using "git clone".
+>>
+>> BAD: "git clone" speed with kernel 6.1,y:
+>>    # git clone git@github.com:..../.....git
+>>    ...
+>>    Receiving objects:   8% (47797/571306), 20.69 MiB | 3.27 MiB/s
+>>
+>> GOOD: "git clone" speed with kernel 6.0,y:
+>>    # git clone git@github.com:..../.....git
+>>    ...
+>>    Receiving objects:  72% (411341/571306), 181.05 MiB | 60.27 MiB/s
+>>
+>> I bisected the issue to a commit
+>> 5eddb24901ee49eee23c0bfce6af2e83fd5679bd "gro: add support of (hw)gro
+>> packets to gro stack". Reverting it from 6.1.y branch makes the git
+>> clone fast like with 6.0.y.
+> 
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
+> 
+> #regzbot ^introduced 5eddb24901ee49eee23c0bfce6af2e83fd5679bd
+> #regzbot title net: gro: Network performance regressed
+> #regzbot ignore-activity
+
+#regzbot fix: 7871f54e3dee
 
 Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 --
