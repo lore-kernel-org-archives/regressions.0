@@ -1,13 +1,13 @@
 Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29C5BD25
-	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 09:25:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7BD17D9
+	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 09:36:26 +0000 (UTC)
 Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
 	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1pMQPS-0000FW-LW; Mon, 30 Jan 2023 10:25:06 +0100
-Message-ID: <33e30bc9-60d2-3cc1-d6ee-870310db9b54@leemhuis.info>
-Date: Mon, 30 Jan 2023 10:25:06 +0100
+	id 1pMQaO-0002vw-NK; Mon, 30 Jan 2023 10:36:24 +0100
+Message-ID: <a4c166c1-d987-6966-8027-55ddd16e7d5d@leemhuis.info>
+Date: Mon, 30 Jan 2023 10:36:24 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -16,77 +16,32 @@ List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [regression] Bug 216977 - asus t100 touchpad registered but not
- working
-Content-Language: en-US, de-DE
 From: "Linux kernel regression tracking (Thorsten Leemhuis)"
  <regressions@leemhuis.info>
-To: Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Linux kernel regressions list <regressions@lists.linux.dev>,
- LKML <linux-kernel@vger.kernel.org>,
- "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
- jessegodfroy@gmail.com
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
- Linux regressions mailing list <regressions@lists.linux.dev>
-References: <2f4dc626-5287-6ec7-a31d-335e5dbb9119@leemhuis.info>
-In-Reply-To: <2f4dc626-5287-6ec7-a31d-335e5dbb9119@leemhuis.info>
+Content-Language: en-US, de-DE
+To: Linux kernel regressions list <regressions@lists.linux.dev>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Bug 216930 - closing laptop lid wakes from suspend Lenovo Slim 7 Pro
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675070708;99f66ab0;
-X-HE-SMSGID: 1pMQPS-0000FW-LW
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675071386;cca9aec9;
+X-HE-SMSGID: 1pMQaO-0002vw-NK
 
-[resent with Benjamin's proper email address; sorry for the noise]
+[TLDR: Just adding a regression reported to bko to the tracking]
 
-On 30.01.23 10:22, Linux kernel regression tracking (Thorsten Leemhuis)
-wrote:
-> Hi, this is your Linux kernel regression tracker.
-> 
-> I noticed a regression report in bugzilla.kernel.org. As many (most?)
-> kernel developer don't keep an eye on it, I decided to forward it by
-> mail. Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216977 :
-> 
->>  jessegodfroy@gmail.com 2023-01-29 15:44:34 UTC
->>
->> After upgrading the kernel from 6.0 series to the 6.1 the touchpad on my asus t100 no longer works. 
->>
->> The device is registered in dmesg. I believe hid_asus is responsible for the keyboard and touchpad.  The keyboard continues to function, but the touchpad does not. 
->>
->> Jan 29 09:29:53 t100ta-white kernel: asus 0003:0B05:17E0.0001: input,hidraw0: USB HID v1.11 Keyboard [ASUSTek COMPUTER INC. ASUS Base Station(T100)] on usb-0000:00:14.0-3/input0
->> Jan 29 09:29:53 t100ta-white kernel: asus 0003:0B05:17E0.0002: Fixing up Asus T100 keyb report descriptor
->> Jan 29 09:29:53 t100ta-white kernel: asus 0003:0B05:17E0.0002: input,hiddev96,hidraw1: USB HID v1.11 Device [ASUSTek COMPUTER INC. ASUS Base Station(T100)] on usb-0000:00:14.0-3/input1
->> Jan 29 09:29:53 t100ta-white kernel: asus 0003:0B05:17E0.0003: input,hiddev97,hidraw2: USB HID v1.11 Mouse [ASUSTek COMPUTER INC. ASUS Base Station(T100)] on usb-0000:00:14.0-3/input2
->>
->> I do not see any changes to hid_asus that should be responsible for the change in performance.
-> See the ticket for more details.
-> 
-> 
-> [TLDR for the rest of this mail: I'm adding this report to the list of
-> tracked Linux kernel regressions; the text you find below is based on a
-> few templates paragraphs you might have encountered already in similar
-> form.]
-> 
-> BTW, let me use this mail to also add the report to the list of tracked
-> regressions to ensure it's doesn't fall through the cracks:
-> 
-> #regzbot introduced: v6.0..v6.1
-> https://bugzilla.kernel.org/show_bug.cgi?id=216977
-> #regzbot title: input: hid: asus t100 touchpad registered but not working
-> #regzbot ignore-activity
-> 
-> This isn't a regression? This issue or a fix for it are already
-> discussed somewhere else? It was fixed already? You want to clarify when
-> the regression started to happen? Or point out I got the title or
-> something else totally wrong? Then just reply and tell me -- ideally
-> while also telling regzbot about it, as explained by the page listed in
-> the footer of this mail.
-> 
-> Developers: When fixing the issue, remember to add 'Link:' tags pointing
-> to the report (e.g. the buzgzilla ticket and maybe this mail as well, if
-> this thread sees some discussion). See page linked in footer for details.
-> 
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> If I did something stupid, please tell me, as explained on that page.
+I noticed a regression reported in bugzilla.kernel.org that seems to be
+handled there already, nevertheless I'd like to add to the tracking to
+ensure it's doesn't fall through the cracks in the end:
+
+#regzbot introduced: v5.19..v6.0
+https://bugzilla.kernel.org/show_bug.cgi?id=216930
+#regzbot title: closing laptop lid wakes from suspend Lenovo Slim 7 Pro
+#regzbot ignore-activity
+
+See the ticket for details, there were a few replies already.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
