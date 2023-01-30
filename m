@@ -1,45 +1,14 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCFE79D5
-	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 20:19:35 +0000 (UTC)
-Received: by mail-wm1-f49.google.com with SMTP id m16-20020a05600c3b1000b003dc4050c94aso6269789wms.4
-        for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 12:19:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tpokIJDSZzqHSJDGhqSzmkBsCKFTZDnMLuN4zymXWTA=;
-        b=p0UiG900WXM2A1Fw8OzsI7ZJbtaO5S/zOqJ68ReWdWUGEETyfIgZhSr8TogTAmOUtq
-         FGOfY4ejyAUFdAXWBgIgnYX09kyG47Iz/0DmwrUdtGMl255wduEBtfpXNIrlkd4AF2wH
-         /k3vqPQMwPAMHtK5EtZ/8OQyIkZ0awmbXkYq8cAh7u0fBQeGiJGjcM5Ip5tQ/Z1UTOjQ
-         gQ6VBau0vwbxmXQyBKzT2XjrCPXBrsuwpHM2r5cLId6VeyDlv1mvRSoCIDNo00NKToco
-         farotpQCLy8Myx3/gRvHW6leR0rEeTJxi2IgyK3A8g8A8Srf16agT7LStEEaY+AtrwHN
-         ru5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tpokIJDSZzqHSJDGhqSzmkBsCKFTZDnMLuN4zymXWTA=;
-        b=YaqFo62qbhwpBX94mTFkc0gIYoDqXHORqIKlNlEXYkv/q9/z/A4NHGi++0wl/r9Wen
-         i2tdb7pCyJcrZUgKOgMuNRN1N8xsYJzxj13+FlFQBDu7CYBsIgdittXRNQuPBRe9vTUb
-         lPKd9fbZNOunUQOYLNm254rNlyDhrM5B4kbVYUnEeC0bCdpqlcmQd7D420dwyxrjPbvy
-         IdxXBScVHI7H58b/6q1YWUu7INSG+J61mXYhKmLxeKA0eRlmNhFlHiOMFslWZL7lo/pO
-         EBlM72Qm2fNhbM6pJpspNRAqqdH6MJJE3kK7fV5RzBfDvYBxguhHhSJx/au4qH5kvRY/
-         ayLQ==
-X-Gm-Message-State: AO0yUKWewKgsiGFbrKxNTMKAYX7hkMiauAqg799CUZRF+SDc1aFZpzJF
-	02nz5RN1ej65Rozm7e7Bz7k=
-X-Google-Smtp-Source: AK7set8tk0+2xec7Ji1+1KYZ/rXzoxz5g1DJTJYwKacFFYysSvaTKfa7csgh4CGcQ6aRjmeSF23oIg==
-X-Received: by 2002:a7b:c44a:0:b0:3dc:46f6:e5fd with SMTP id l10-20020a7bc44a000000b003dc46f6e5fdmr9804066wmi.7.1675109973685;
-        Mon, 30 Jan 2023 12:19:33 -0800 (PST)
-Received: from [192.168.1.10] (97e09f27.skybroadband.com. [151.224.159.39])
-        by smtp.googlemail.com with ESMTPSA id d33-20020a05600c4c2100b003dc41a9836esm9851172wmp.43.2023.01.30.12.19.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 30 Jan 2023 12:19:32 -0800 (PST)
-Message-ID: <1cdb84ac-f7a8-66ba-98fc-3db302b49a5a@googlemail.com>
-Date: Mon, 30 Jan 2023 20:19:29 +0000
+Received: from ns2.prnet.org (ns2.prnet.org [188.165.43.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FC4B29AC
+	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 21:07:18 +0000 (UTC)
+Received: from secure.prnet.org (mail.intern.prnet.org [192.168.1.206])
+	by ns2.prnet.org (Postfix) with ESMTP id 0901C11A1EA;
+	Mon, 30 Jan 2023 22:08:02 +0100 (CET)
+Received: from [IPV6:2001:7e8:cf00:bc01:9441:d7ff:fede:982a] (unknown [IPv6:2001:7e8:cf00:bc01:9441:d7ff:fede:982a])
+	by secure.prnet.org (Postfix) with ESMTPSA id 225561911BE;
+	Mon, 30 Jan 2023 22:07:10 +0100 (CET)
+Message-ID: <20d7b129-9cdc-19b1-bbd0-d9dd9a92d7d4@prnet.org>
+Date: Mon, 30 Jan 2023 22:07:10 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
@@ -47,200 +16,328 @@ List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: linux-6.2-rc4+ hangs on poweroff/reboot: Bisected
-To: Ben Skeggs <skeggsb@gmail.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
- bskeggs@redhat.com, Karol Herbst <kherbst@redhat.com>,
- Lyude Paul <lyude@redhat.com>, ML nouveau <nouveau@lists.freedesktop.org>,
+ Thunderbird/102.6.1
+Subject: Re: [regression] Bug 216851 - btrfs write time corrupting for log
+ tree
+To: Filipe Manana <fdmanana@kernel.org>
+Cc: Qu Wenruo <quwenruo.btrfs@gmx.com>, dsterba@suse.cz,
+ Thorsten Leemhuis <regressions@leemhuis.info>,
+ linux-btrfs <linux-btrfs@vger.kernel.org>, Chris Mason <clm@fb.com>,
+ Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
  LKML <linux-kernel@vger.kernel.org>,
- ML dri-devel <dri-devel@lists.freedesktop.org>
-References: <b64705e3-2e63-a466-f829-f9568b06766a@googlemail.com>
- <fcec3c78-b5d9-eb48-0fc0-d1f27de87f23@leemhuis.info>
- <b21fa1f6-a71d-5657-8596-ee0be73185ea@leemhuis.info>
- <3ab28896-70e9-6f90-5b97-e5397b06e715@googlemail.com>
- <a163dd7b-c5d1-a07b-a816-7a2dfd3edfd4@leemhuis.info>
- <ab1b0f73-6b4e-8602-2999-b7bec25d92db@googlemail.com>
- <CACAvsv4sOtPjCVnEcKd2RCUqYWxSn5XKyksbS-Bds2qCqyusVw@mail.gmail.com>
-Content-Language: en-GB
-From: Chris Clayton <chris2553@googlemail.com>
-In-Reply-To: <CACAvsv4sOtPjCVnEcKd2RCUqYWxSn5XKyksbS-Bds2qCqyusVw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <ae169fc6-f504-28f0-a098-6fa6a4dfb612@leemhuis.info>
+ <20230102154050.GJ11562@twin.jikos.cz>
+ <ac2f141b-b03a-6054-8250-d27a5b568027@gmx.com>
+ <03ad09d2-0c0e-ed82-509a-9758fbc81f64@prnet.org>
+ <CAL3q7H75DScFAnUGHFn9x=ZmnCbd_u3+KsLU6qKOGPeVogOQwg@mail.gmail.com>
+ <544a0942-d505-148e-9b65-f5b366a3a0e3@prnet.org>
+ <CAL3q7H7b+hrro9weiE2fLFMwvUm0PBjKPqetpQyGHUFqQd8s=w@mail.gmail.com>
+ <ec38dc9b-6e54-7166-402a-fe92c38170d0@prnet.org>
+ <CAL3q7H7anKa6ova5MYx4ZDsz6gwaq-K0OSRZuNEo-hNft7pZHQ@mail.gmail.com>
+ <3b5c7161-1a48-619b-b6b3-1868b7695c97@prnet.org>
+ <CAL3q7H7pEYNpzZYgNRxXwMz6ftCK53u46CQjPAh8nTO4ixgYwg@mail.gmail.com>
+ <CAL3q7H5bdpH621LRO+mr98r_MBhNFLU3q1NQ8erOjZFkFAzf-A@mail.gmail.com>
+ <d4f0758b-d11c-aee8-43df-885233a14a80@prnet.org>
+ <ed7d2424-fb13-eccf-11ea-ac08c618f5aa@prnet.org>
+ <CAL3q7H4zfz-9Mb=kScsQ_a1G9NX4ayPZStnSvNNYsbhpoY0wmg@mail.gmail.com>
+ <51fa20b5-5ac2-ccca-847f-b5a87e604544@prnet.org>
+ <CAL3q7H46_+Z0FpD9+Bunn_Ta66XFgJkqz3SHRxdr4_ySsg=COw@mail.gmail.com>
+Content-Language: en-US
+From: David Arendt <admin@prnet.org>
+In-Reply-To: <CAL3q7H46_+Z0FpD9+Bunn_Ta66XFgJkqz3SHRxdr4_ySsg=COw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Thanks, Ben.
-
-On 30/01/2023 01:09, Ben Skeggs wrote:
-> On Sat, 28 Jan 2023 at 21:29, Chris Clayton <chris2553@googlemail.com> wrote:
->>
->>
->>
->> On 28/01/2023 05:42, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
->>> On 27.01.23 20:46, Chris Clayton wrote:
->>>> [Resend because the mail client on my phone decided to turn HTML on behind my back, so my reply got bounced.]
+On 1/23/23 23:14, Filipe Manana wrote:
+> On Mon, Jan 23, 2023 at 9:06 PM David Arendt <admin@prnet.org> wrote:
+>> On 1/23/23 11:28, Filipe Manana wrote:
+>>> On Sun, Jan 22, 2023 at 3:53 PM David Arendt <admin@prnet.org> wrote:
+>>>> On 1/10/23 22:12, David Arendt wrote:
+>>>> Hi,
 >>>>
->>>> Thanks Thorsten.
->>>>
->>>> I did try to revert but it didnt revert cleanly and I don't have the knowledge to fix it up.
->>>>
->>>> The patch was part of a merge that included a number of related patches. Tomorrow, I'll try to revert the lot and report
->>>> back.
+>>>> In 6.2-rc3 + your patches, the problem did not appear within 2 weeks. I
+>>>> skipped rc4 and today I upgraded to 6.2-rc5 which should have to patches
+>>>> included (or not ?). About one hour later, the filesystem turned again
+>>>> read-only with the following kernel log entries:
+>>> Ok, so 6.2-rc5 has the first 5 patches of the patchset.
+>>> If the whole patchset fixed the problem for 2 weeks, then I think
+>>> there's only one thing left to test, which is to add patch 6 on top of
+>>> 6.2-rc5:
 >>>
->>> You are free to do so, but there is no need for that from my side. I
->>> only wanted to know if a simple revert would do the trick; if it
->>> doesn't, it in my experience often is best to leave things to the
->>> developers of the code in question,
->>
->> Sound advice, Thorsten. Way to many conflicts for me to resolve.
-> Hey,
-> 
-> This is a complete shot-in-the-dark, as I don't see this behaviour on
-> *any* of my boards.  Could you try the attached patch please?
-
-Unfortunately, the patch made no difference.
-
-I've been looking at how the graphics on my laptop is set up, and have a bit of a worry about whether the firmware might
-be playing a part in this problem. In order to offload video decoding to the NVidia TU117 GPU, it seems the scrubber
-firmware must be available, but as far as I know,that has not been released by NVidia. To get it to work, I followed
-what ubuntu have done and the scrubber in /lib/firmware/nvidia/tu117/nvdec/ is a symlink to
-../../tu116/nvdev/scrubber.bin. That, of course, means that some of the firmware loaded is for a different card is being
-loaded. I note that processing related to firmware is being changed in the patch. Might my set up be at the root of my
-problem?
-
-I'll have a fiddle an see what I can work out.
-
-Chris
-
-> 
-> Thanks,
-> Ben.
-> 
->>
->> as they know it best and thus have a
->>> better idea which hidden side effect a more complex revert might have.
+>>> https://lore.kernel.org/linux-btrfs/ff77f41924e197d99e62ef323f03467c87ef43a0.1673361215.git.fdmanana@suse.com/
 >>>
->>> Ciao, Thorsten
+>>> Are you able to try that?
 >>>
->>>> On 27/01/2023 11:20, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
->>>>> Hi, this is your Linux kernel regression tracker. Top-posting for once,
->>>>> to make this easily accessible to everyone.
->>>>>
->>>>> @nouveau-maintainers, did anyone take a look at this? The report is
->>>>> already 8 days old and I don't see a single reply. Sure, we'll likely
->>>>> get a -rc8, but still it would be good to not fix this on the finish line.
->>>>>
->>>>> Chris, btw, did you try if you can revert the commit on top of latest
->>>>> mainline? And if so, does it fix the problem?
->>>>>
->>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>>> --
->>>>> Everything you wanna know about Linux kernel regression tracking:
->>>>> https://linux-regtracking.leemhuis.info/about/#tldr
->>>>> If I did something stupid, please tell me, as explained on that page.
->>>>>
->>>>> #regzbot poke
->>>>>
->>>>> On 19.01.23 15:33, Linux kernel regression tracking (Thorsten Leemhuis)
->>>>> wrote:
->>>>>> [adding various lists and the two other nouveau maintainers to the list
->>>>>> of recipients]
->>>>>
->>>>>> On 18.01.23 21:59, Chris Clayton wrote:
->>>>>>> Hi.
->>>>>>>
->>>>>>> I build and installed the lastest development kernel earlier this week. I've found that when I try the laptop down (or
->>>>>>> reboot it), it hangs right at the end of closing the current session. The last line I see on  the screen when rebooting is:
->>>>>>>
->>>>>>>   sd 4:0:0:0: [sda] Synchronising SCSI cache
->>>>>>>
->>>>>>> when closing down I see one additional line:
->>>>>>>
->>>>>>>   sd 4:0:0:0 [sda]Stopping disk
->>>>>>>
->>>>>>> In both cases the machine then hangs and I have to hold down the power button fot a few seconds to switch it off.
->>>>>>>
->>>>>>> Linux 6.1 is OK but 6.2-rc1 hangs, so I bisected between this two and landed on:
->>>>>>>
->>>>>>>   # first bad commit: [0e44c21708761977dcbea9b846b51a6fb684907a] drm/nouveau/flcn: new code to load+boot simple HS FWs
->>>>>>> (VPR scrubber)
->>>>>>>
->>>>>>> I built and installed a kernel with f15cde64b66161bfa74fb58f4e5697d8265b802e (the parent of the bad commit) checked out
->>>>>>> and that shuts down and reboots fine. It the did the same with the bad commit checked out and that does indeed hang, so
->>>>>>> I'm confident the bisect outcome is OK.
->>>>>>>
->>>>>>> Kernels 6.1.6 and 5.15.88 are also OK.
->>>>>>>
->>>>>>> My system had dual GPUs - one intel and one NVidia. Related extracts from 'lscpi -v' is:
->>>>>>>
->>>>>>> 00:02.0 VGA compatible controller: Intel Corporation CometLake-H GT2 [UHD Graphics] (rev 05) (prog-if 00 [VGA controller])
->>>>>>>         Subsystem: CLEVO/KAPOK Computer CometLake-H GT2 [UHD Graphics]
->>>>>>>
->>>>>>>         Flags: bus master, fast devsel, latency 0, IRQ 142
->>>>>>>
->>>>>>>         Memory at c2000000 (64-bit, non-prefetchable) [size=16M]
->>>>>>>
->>>>>>>         Memory at a0000000 (64-bit, prefetchable) [size=256M]
->>>>>>>
->>>>>>>         I/O ports at 5000 [size=64]
->>>>>>>
->>>>>>>         Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
->>>>>>>
->>>>>>>         Capabilities: [40] Vendor Specific Information: Len=0c <?>
->>>>>>>
->>>>>>>         Capabilities: [70] Express Root Complex Integrated Endpoint, MSI 00
->>>>>>>
->>>>>>>         Capabilities: [ac] MSI: Enable+ Count=1/1 Maskable- 64bit-
->>>>>>>
->>>>>>>         Capabilities: [d0] Power Management version 2
->>>>>>>
->>>>>>>         Kernel driver in use: i915
->>>>>>>
->>>>>>>         Kernel modules: i915
->>>>>>>
->>>>>>>
->>>>>>> 01:00.0 VGA compatible controller: NVIDIA Corporation TU117M [GeForce GTX 1650 Ti Mobile] (rev a1) (prog-if 00 [VGA
->>>>>>> controller])
->>>>>>>         Subsystem: CLEVO/KAPOK Computer TU117M [GeForce GTX 1650 Ti Mobile]
->>>>>>>         Flags: bus master, fast devsel, latency 0, IRQ 141
->>>>>>>         Memory at c4000000 (32-bit, non-prefetchable) [size=16M]
->>>>>>>         Memory at b0000000 (64-bit, prefetchable) [size=256M]
->>>>>>>         Memory at c0000000 (64-bit, prefetchable) [size=32M]
->>>>>>>         I/O ports at 4000 [size=128]
->>>>>>>         Expansion ROM at c3000000 [disabled] [size=512K]
->>>>>>>         Capabilities: [60] Power Management version 3
->>>>>>>         Capabilities: [68] MSI: Enable+ Count=1/1 Maskable- 64bit+
->>>>>>>         Capabilities: [78] Express Legacy Endpoint, MSI 00
->>>>>>>         Kernel driver in use: nouveau
->>>>>>>         Kernel modules: nouveau
->>>>>>>
->>>>>>> DRI_PRIME=1 is exported in one of my init scripts (yes, I am still using sysvinit).
->>>>>>>
->>>>>>> I've attached the bisect.log, but please let me know if I can provide any other diagnostics. Please cc me as I'm not
->>>>>>> subscribed.
->>>>>>
->>>>>> Thanks for the report. To be sure the issue doesn't fall through the
->>>>>> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
->>>>>> tracking bot:
->>>>>>
->>>>>> #regzbot ^introduced e44c2170876197
->>>>>> #regzbot title drm: nouveau: hangs on poweroff/reboot
->>>>>> #regzbot ignore-activity
->>>>>>
->>>>>> This isn't a regression? This issue or a fix for it are already
->>>>>> discussed somewhere else? It was fixed already? You want to clarify when
->>>>>> the regression started to happen? Or point out I got the title or
->>>>>> something else totally wrong? Then just reply and tell me -- ideally
->>>>>> while also telling regzbot about it, as explained by the page listed in
->>>>>> the footer of this mail.
->>>>>>
->>>>>> Developers: When fixing the issue, remember to add 'Link:' tags pointing
->>>>>> to the report (the parent of this mail). See page linked in footer for
->>>>>> details.
->>>>>>
->>>>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>>>>> --
->>>>>> Everything you wanna know about Linux kernel regression tracking:
->>>>>> https://linux-regtracking.leemhuis.info/about/#tldr
->>>>>> That page also explains what to do if mails like this annoy you.
+>>> Thanks.
+>> Hi,
+>>
+>> I have applied this patch to 6.2-rc5 and within an hour of intensive
+>> testing, I was not able to reproduce the bug, so I think this patch
+>> probably resolves the bug.
+>>
+>> I will continue running this configuration and will report back when any
+>> problem arises.
+> Nice, thank you.
+> Please report back after a longer while, so the patch can be added to
+> stable, at least 6.1, since there's another report of the same issue
+> but only on 6.1 (like you).
+
+Hi,
+
+The system was now running stable for a week. From now on, I'm testing 
+6.2-rc6 + patch.
+
+Thanks in advance,
+
+David Arendt
+
+>> Thanks,
+>>
+>> David Arendt
+>>
+>>>> [ 7611.406077] BTRFS critical (device sda2): corrupt leaf:
+>>>> root=18446744073709551610 block=75971280896 slot=71, bad key order, prev
+>>>> (484119 96 1358553) current (484119 96 1358532)
+>>>> [ 7611.406087] BTRFS info (device sda2): leaf 75971280896 gen 5130699
+>>>> total ptrs 105 free space 10909 owner 18446744073709551610
+>>>> [ 7611.406090]     item 0 key (484119 1 0) itemoff 16123 itemsize 160
+>>>> [ 7611.406091]         inode generation 45 size 2198 mode 40700
+>>>> [ 7611.406093]     item 1 key (484119 12 484118) itemoff 16097 itemsize 26
+>>>> [ 7611.406094]     item 2 key (484119 72 15) itemoff 16089 itemsize 8
+>>>> [ 7611.406095]     item 3 key (484119 72 20) itemoff 16081 itemsize 8
+>>>> [ 7611.406097]     item 4 key (484119 72 25) itemoff 16073 itemsize 8
+>>>> [ 7611.406098]     item 5 key (484119 72 30) itemoff 16065 itemsize 8
+>>>> [ 7611.406099]     item 6 key (484119 72 32630) itemoff 16057 itemsize 8
+>>>> [ 7611.406100]     item 7 key (484119 72 40332) itemoff 16049 itemsize 8
+>>>> [ 7611.406101]     item 8 key (484119 72 40335) itemoff 16041 itemsize 8
+>>>> [ 7611.406102]     item 9 key (484119 72 93630) itemoff 16033 itemsize 8
+>>>> [ 7611.406104]     item 10 key (484119 72 101741) itemoff 16025 itemsize 8
+>>>> [ 7611.406105]     item 11 key (484119 72 131485) itemoff 16017 itemsize 8
+>>>> [ 7611.406106]     item 12 key (484119 72 183799) itemoff 16009 itemsize 8
+>>>> [ 7611.406108]     item 13 key (484119 72 183801) itemoff 16001 itemsize 8
+>>>> [ 7611.406109]     item 14 key (484119 72 203038) itemoff 15993 itemsize 8
+>>>> [ 7611.406110]     item 15 key (484119 72 254997) itemoff 15985 itemsize 8
+>>>> [ 7611.406111]     item 16 key (484119 72 255172) itemoff 15977 itemsize 8
+>>>> [ 7611.406112]     item 17 key (484119 72 255208) itemoff 15969 itemsize 8
+>>>> [ 7611.406113]     item 18 key (484119 72 256848) itemoff 15961 itemsize 8
+>>>> [ 7611.406115]     item 19 key (484119 72 264839) itemoff 15953 itemsize 8
+>>>> [ 7611.406116]     item 20 key (484119 72 266090) itemoff 15945 itemsize 8
+>>>> [ 7611.406117]     item 21 key (484119 72 266976) itemoff 15937 itemsize 8
+>>>> [ 7611.406118]     item 22 key (484119 72 267056) itemoff 15929 itemsize 8
+>>>> [ 7611.406120]     item 23 key (484119 72 302340) itemoff 15921 itemsize 8
+>>>> [ 7611.406121]     item 24 key (484119 72 513980) itemoff 15913 itemsize 8
+>>>> [ 7611.406122]     item 25 key (484119 72 848319) itemoff 15905 itemsize 8
+>>>> [ 7611.406123]     item 26 key (484119 72 848845) itemoff 15897 itemsize 8
+>>>> [ 7611.406124]     item 27 key (484119 72 938962) itemoff 15889 itemsize 8
+>>>> [ 7611.406125]     item 28 key (484119 72 1001565) itemoff 15881 itemsize 8
+>>>> [ 7611.406127]     item 29 key (484119 72 1268172) itemoff 15873 itemsize 8
+>>>> [ 7611.406128]     item 30 key (484119 72 1298657) itemoff 15865 itemsize 8
+>>>> [ 7611.406129]     item 31 key (484119 72 1299762) itemoff 15857 itemsize 8
+>>>> [ 7611.406130]     item 32 key (484119 72 1336351) itemoff 15849 itemsize 8
+>>>> [ 7611.406131]     item 33 key (484119 72 1356235) itemoff 15841 itemsize 8
+>>>> [ 7611.406133]     item 34 key (484119 72 1356237) itemoff 15833 itemsize 8
+>>>> [ 7611.406134]     item 35 key (484119 72 1357416) itemoff 15825 itemsize 8
+>>>> [ 7611.406135]     item 36 key (484119 72 1357797) itemoff 15817 itemsize 8
+>>>> [ 7611.406137]     item 37 key (484119 72 1358273) itemoff 15809 itemsize 8
+>>>> [ 7611.406138]     item 38 key (484119 72 1358275) itemoff 15801 itemsize 8
+>>>> [ 7611.406139]     item 39 key (484119 72 1358278) itemoff 15793 itemsize 8
+>>>> [ 7611.406141]     item 40 key (484119 72 1358448) itemoff 15785 itemsize 8
+>>>> [ 7611.406142]     item 41 key (484119 72 1358449) itemoff 15777 itemsize 8
+>>>> [ 7611.406143]     item 42 key (484119 72 1358452) itemoff 15769 itemsize 8
+>>>> [ 7611.406144]     item 43 key (484119 72 1358453) itemoff 15761 itemsize 8
+>>>> [ 7611.406145]     item 44 key (484119 72 1358456) itemoff 15753 itemsize 8
+>>>> [ 7611.406147]     item 45 key (484119 72 1358457) itemoff 15745 itemsize 8
+>>>> [ 7611.406148]     item 46 key (484119 72 1358460) itemoff 15737 itemsize 8
+>>>> [ 7611.406149]     item 47 key (484119 72 1358461) itemoff 15729 itemsize 8
+>>>> [ 7611.406150]     item 48 key (484119 72 1358463) itemoff 15721 itemsize 8
+>>>> [ 7611.406151]     item 49 key (484119 72 1358469) itemoff 15713 itemsize 8
+>>>> [ 7611.406153]     item 50 key (484119 72 1358485) itemoff 15705 itemsize 8
+>>>> [ 7611.406154]     item 51 key (484119 72 1358486) itemoff 15697 itemsize 8
+>>>> [ 7611.406155]     item 52 key (484119 72 1358499) itemoff 15689 itemsize 8
+>>>> [ 7611.406156]     item 53 key (484119 72 1358502) itemoff 15681 itemsize 8
+>>>> [ 7611.406157]     item 54 key (484119 72 1358513) itemoff 15673 itemsize 8
+>>>> [ 7611.406159]     item 55 key (484119 72 1358514) itemoff 15665 itemsize 8
+>>>> [ 7611.406160]     item 56 key (484119 72 1358515) itemoff 15657 itemsize 8
+>>>> [ 7611.406161]     item 57 key (484119 72 1358516) itemoff 15649 itemsize 8
+>>>> [ 7611.406162]     item 58 key (484119 72 1358543) itemoff 15641 itemsize 8
+>>>> [ 7611.406164]     item 59 key (484119 72 1358546) itemoff 15633 itemsize 8
+>>>> [ 7611.406165]     item 60 key (484119 72 1358548) itemoff 15625 itemsize 8
+>>>> [ 7611.406166]     item 61 key (484119 72 1358552) itemoff 15617 itemsize 8
+>>>> [ 7611.406167]     item 62 key (484119 96 1358532) itemoff 15566 itemsize 51
+>>>> [ 7611.406168]     item 63 key (484119 96 1358534) itemoff 15508 itemsize 58
+>>>> [ 7611.406170]     item 64 key (484119 96 1358536) itemoff 15465 itemsize 43
+>>>> [ 7611.406171]     item 65 key (484119 96 1358541) itemoff 15431 itemsize 34
+>>>> [ 7611.406172]     item 66 key (484119 96 1358545) itemoff 15383 itemsize 48
+>>>> [ 7611.406173]     item 67 key (484119 96 1358549) itemoff 15330 itemsize 53
+>>>> [ 7611.406174]     item 68 key (484119 96 1358550) itemoff 15283 itemsize 47
+>>>> [ 7611.406175]     item 69 key (484119 96 1358551) itemoff 15234 itemsize 49
+>>>> [ 7611.406177]     item 70 key (484119 96 1358553) itemoff 15196 itemsize 38
+>>>> [ 7611.406178]     item 71 key (484119 96 1358532) itemoff 15145 itemsize 51
+>>>> [ 7611.406179]     item 72 key (484119 96 1358534) itemoff 15087 itemsize 58
+>>>> [ 7611.406180]     item 73 key (484119 96 1358536) itemoff 15044 itemsize 43
+>>>> [ 7611.406181]     item 74 key (484119 96 1358541) itemoff 15010 itemsize 34
+>>>> [ 7611.406182]     item 75 key (484119 96 1358545) itemoff 14962 itemsize 48
+>>>> [ 7611.406184]     item 76 key (484119 96 1358549) itemoff 14909 itemsize 53
+>>>> [ 7611.406185]     item 77 key (484119 96 1358550) itemoff 14862 itemsize 47
+>>>> [ 7611.406186]     item 78 key (484119 96 1358551) itemoff 14813 itemsize 49
+>>>> [ 7611.406187]     item 79 key (484119 96 1358553) itemoff 14775 itemsize 38
+>>>> [ 7611.406188]     item 80 key (484128 1 0) itemoff 14615 itemsize 160
+>>>> [ 7611.406189]         inode generation 45 size 98304 mode 100644
+>>>> [ 7611.406190]     item 81 key (484128 108 0) itemoff 14562 itemsize 53
+>>>> [ 7611.406192]         extent data disk bytenr 10745529716736 nr 65536
+>>>> [ 7611.406193]         extent data offset 0 nr 65536 ram 65536
+>>>> [ 7611.406194]     item 82 key (484129 1 0) itemoff 14402 itemsize 160
+>>>> [ 7611.406195]         inode generation 45 size 26214400 mode 100644
+>>>> [ 7611.406196]     item 83 key (484129 108 98304) itemoff 14349 itemsize 53
+>>>> [ 7611.406197]         extent data disk bytenr 10744232108032 nr 65536
+>>>> [ 7611.406198]         extent data offset 0 nr 65536 ram 65536
+>>>> [ 7611.406198]     item 84 key (484129 108 589824) itemoff 14296 itemsize 53
+>>>> [ 7611.406200]         extent data disk bytenr 10745529593856 nr 32768
+>>>> [ 7611.406200]         extent data offset 0 nr 32768 ram 32768
+>>>> [ 7611.406201]     item 85 key (484129 108 4685824) itemoff 14243
+>>>> itemsize 53
+>>>> [ 7611.406203]         extent data disk bytenr 10744231481344 nr 32768
+>>>> [ 7611.406203]         extent data offset 0 nr 32768 ram 32768
+>>>> [ 7611.406204]     item 86 key (484129 108 11468800) itemoff 14190
+>>>> itemsize 53
+>>>> [ 7611.406205]         extent data disk bytenr 10745067331584 nr 32768
+>>>> [ 7611.406206]         extent data offset 0 nr 32768 ram 32768
+>>>> [ 7611.406207]     item 87 key (484129 108 13139968) itemoff 14137
+>>>> itemsize 53
+>>>> [ 7611.406208]         extent data disk bytenr 10745022545920 nr 32768
+>>>> [ 7611.406209]         extent data offset 0 nr 32768 ram 32768
+>>>> [ 7611.406210]     item 88 key (484129 108 13795328) itemoff 14084
+>>>> itemsize 53
+>>>> [ 7611.406211]         extent data disk bytenr 10744891514880 nr 32768
+>>>> [ 7611.406212]         extent data offset 0 nr 32768 ram 32768
+>>>> [ 7611.406213]     item 89 key (484129 108 20185088) itemoff 14031
+>>>> itemsize 53
+>>>> [ 7611.406214]         extent data disk bytenr 10745022578688 nr 32768
+>>>> [ 7611.406215]         extent data offset 0 nr 32768 ram 32768
+>>>> [ 7611.406216]     item 90 key (484129 108 22347776) itemoff 13978
+>>>> itemsize 53
+>>>> [ 7611.406217]         extent data disk bytenr 10744205844480 nr 32768
+>>>> [ 7611.406218]         extent data offset 0 nr 32768 ram 32768
+>>>> [ 7611.406218]     item 91 key (484129 108 23429120) itemoff 13925
+>>>> itemsize 53
+>>>> [ 7611.406220]         extent data disk bytenr 10745067364352 nr 32768
+>>>> [ 7611.406220]         extent data offset 0 nr 32768 ram 32768
+>>>> [ 7611.406221]     item 92 key (484129 108 24870912) itemoff 13872
+>>>> itemsize 53
+>>>> [ 7611.406222]         extent data disk bytenr 10745022611456 nr 32768
+>>>> [ 7611.406223]         extent data offset 0 nr 32768 ram 32768
+>>>> [ 7611.406224]     item 93 key (484129 108 25001984) itemoff 13819
+>>>> itemsize 53
+>>>> [ 7611.406225]         extent data disk bytenr 10745022709760 nr 32768
+>>>> [ 7611.406226]         extent data offset 0 nr 32768 ram 32768
+>>>> [ 7611.406227]     item 94 key (484129 108 25165824) itemoff 13766
+>>>> itemsize 53
+>>>> [ 7611.406228]         extent data disk bytenr 10745022742528 nr 32768
+>>>> [ 7611.406229]         extent data offset 0 nr 32768 ram 32768
+>>>> [ 7611.406230]     item 95 key (484147 1 0) itemoff 13606 itemsize 160
+>>>> [ 7611.406231]         inode generation 45 size 886 mode 40755
+>>>> [ 7611.406232]     item 96 key (484147 72 4) itemoff 13598 itemsize 8
+>>>> [ 7611.406233]     item 97 key (484147 72 27) itemoff 13590 itemsize 8
+>>>> [ 7611.406234]     item 98 key (484147 72 35) itemoff 13582 itemsize 8
+>>>> [ 7611.406235]     item 99 key (484147 72 40) itemoff 13574 itemsize 8
+>>>> [ 7611.406236]     item 100 key (484147 72 45) itemoff 13566 itemsize 8
+>>>> [ 7611.406238]     item 101 key (484147 72 52) itemoff 13558 itemsize 8
+>>>> [ 7611.406239]     item 102 key (484147 72 61) itemoff 13550 itemsize 8
+>>>> [ 7611.406240]     item 103 key (484147 72 65) itemoff 13542 itemsize 8
+>>>> [ 7611.406241]     item 104 key (484147 72 88) itemoff 13534 itemsize 8
+>>>> [ 7611.406242] BTRFS error (device sda2): block=75971280896 write time
+>>>> tree block corruption detected
+>>>> [ 7611.406255] ------------[ cut here ]------------
+>>>> [ 7611.406256] WARNING: CPU: 5 PID: 32347 at fs/btrfs/disk-io.c:376
+>>>> csum_one_extent_buffer+0x136/0x140
+>>>> [ 7611.406261] Modules linked in: zfs(PO) zunicode(PO) zzstd(O) zlua(O)
+>>>> zavl(PO) icp(PO) zcommon(PO) znvpair(PO) spl(O)
+>>>> [ 7611.406270] CPU: 5 PID: 32347 Comm: mozStorage #2 Tainted: P
+>>>> W  O       6.2.0-rc5 #1
+>>>> [ 7611.406272] Hardware name: ASUS All Series/H87M-PRO, BIOS 2102 10/28/2014
+>>>> [ 7611.406273] RIP: 0010:csum_one_extent_buffer+0x136/0x140
+>>>> [ 7611.406275] Code: 48 c1 e2 29 48 03 53 70 48 c1 fa 06 81 e1 ff 0f 00
+>>>> 00 48 c1 e2 0c 48 01 ca b9 11 ff ff 01 48 c1 e1 27 48 83 7c 0a 58 fa 75
+>>>> 98 <0f> 0b eb 94 66 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90
+>>>> [ 7611.406277] RSP: 0018:ffffc9000d803850 EFLAGS: 00010246
+>>>> [ 7611.406279] RAX: 00000000ffffff8b RBX: ffff888411886200 RCX:
+>>>> ffff888000000000
+>>>> [ 7611.406280] RDX: 0000000479022000 RSI: 0000000000000001 RDI:
+>>>> ffff8887fdd5b280
+>>>> [ 7611.406282] RBP: ffff888102fa3000 R08: 00000000ffffdfff R09:
+>>>> 00000000ffffdfff
+>>>> [ 7611.406283] R10: ffffffff82854220 R11: ffffffff82854220 R12:
+>>>> ffff888102fa3000
+>>>> [ 7611.406284] R13: 0000000000001000 R14: ffffea0011e40880 R15:
+>>>> ffff888102fa3000
+>>>> [ 7611.406285] FS:  00007f43d72986c0(0000) GS:ffff8887fdd40000(0000)
+>>>> knlGS:0000000000000000
+>>>> [ 7611.406287] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>> [ 7611.406288] CR2: 00007f246eb9e000 CR3: 000000040de5e005 CR4:
+>>>> 00000000001706e0
+>>>> [ 7611.406289] Call Trace:
+>>>> [ 7611.406291]  <TASK>
+>>>> [ 7611.406293]  btree_csum_one_bio+0x220/0x2a0
+>>>> [ 7611.406295]  btrfs_submit_metadata_bio+0x84/0xc0
+>>>> [ 7611.406297]  submit_one_bio+0xbd/0x110
+>>>> [ 7611.406300]  btree_write_cache_pages+0x721/0x790
+>>>> [ 7611.406303]  ? __pfx_end_bio_extent_buffer_writepage+0x10/0x10
+>>>> [ 7611.406306]  ? btrfs_search_slot+0x8a5/0xc70
+>>>> [ 7611.406309]  do_writepages+0x99/0x180
+>>>> [ 7611.406313]  ? btrfs_read_extent_buffer+0x8a/0x130
+>>>> [ 7611.406314]  ? merge_state.part.0+0x41/0xf0
+>>>> [ 7611.406317]  filemap_fdatawrite_wbc+0x5a/0x80
+>>>> [ 7611.406321]  __filemap_fdatawrite_range+0x45/0x50
+>>>> [ 7611.406323]  btrfs_write_marked_extents+0x52/0x120
+>>>> [ 7611.406326]  btrfs_sync_log+0x1ce/0x9a0
+>>>> [ 7611.406329]  ? btrfs_unlock_up_safe+0x69/0xc0
+>>>> [ 7611.406332]  ? btrfs_search_forward+0x260/0x340
+>>>> [ 7611.406334]  ? log_new_dir_dentries.isra.0+0x36c/0x390
+>>>> [ 7611.406335]  ? __pfx_autoremove_wake_function+0x10/0x10
+>>>> [ 7611.406339]  ? log_new_dir_dentries.isra.0+0x36c/0x390
+>>>> [ 7611.406340]  ? btrfs_log_inode_parent+0x3e0/0xdf0
+>>>> [ 7611.406342]  ? pagevec_lookup_range_tag+0x1f/0x30
+>>>> [ 7611.406345]  ? __filemap_fdatawait_range+0x46/0xe0
+>>>> [ 7611.406347]  ? perf_event_exec+0xe0/0x310
+>>>> [ 7611.406350]  ? wait_current_trans+0x15/0xe0
+>>>> [ 7611.406353]  ? kmem_cache_alloc+0x226/0x380
+>>>> [ 7611.406357]  ? join_transaction+0x1b/0x3f0
+>>>> [ 7611.406359]  ? dput+0xaf/0x2d0
+>>>> [ 7611.406361]  btrfs_sync_file+0x31f/0x4e0
+>>>> [ 7611.406364]  __x64_sys_fsync+0x32/0x60
+>>>> [ 7611.406367]  do_syscall_64+0x42/0x90
+>>>> [ 7611.406371]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+>>>> [ 7611.406375] RIP: 0033:0x7f440320651a
+>>>> [ 7611.406377] Code: 48 3d 00 f0 ff ff 77 48 c3 0f 1f 80 00 00 00 00 48
+>>>> 83 ec 18 89 7c 24 0c e8 13 71 f8 ff 8b 7c 24 0c 89 c2 b8 4a 00 00 00 0f
+>>>> 05 <48> 3d 00 f0 ff ff 77 36 89 d7 89 44 24 0c e8 73 71 f8 ff 8b 44 24
+>>>> [ 7611.406378] RSP: 002b:00007f43d7297170 EFLAGS: 00000293 ORIG_RAX:
+>>>> 000000000000004a
+>>>> [ 7611.406381] RAX: ffffffffffffffda RBX: 00007f43ee222be8 RCX:
+>>>> 00007f440320651a
+>>>> [ 7611.406382] RDX: 0000000000000000 RSI: 0000000000000000 RDI:
+>>>> 0000000000000090
+>>>> [ 7611.406383] RBP: 0000000000000000 R08: 0000000000000000 R09:
+>>>> 00007f440255e000
+>>>> [ 7611.406384] R10: 0000000000000000 R11: 0000000000000293 R12:
+>>>> 00007f43d63ed038
+>>>> [ 7611.406385] R13: 0000000000000000 R14: 0000000000000002 R15:
+>>>> 0000000000000000
+>>>> [ 7611.406387]  </TASK>
+>>>> [ 7611.406387] ---[ end trace 0000000000000000 ]---
+>>>> [ 7611.459735] BTRFS error (device sda2: state AL): Transaction aborted
+>>>> (error -5)
+>>>> [ 7611.459742] BTRFS: error (device sda2: state AL) in
+>>>> free_log_tree:3248: errno=-5 IO failure
+>>>> [ 7611.459744] BTRFS info (device sda2: state EAL): forced readonly
+>>>> [ 7611.463492] BTRFS warning (device sda2: state EAL): Skipping commit
+>>>> of aborted transaction.
+>>>> [ 7611.463498] BTRFS: error (device sda2: state EAL) in
+>>>> cleanup_transaction:1984: errno=-5 IO failure
 >>>>
+>>>> Thanks in advance,
 >>>>
+>>>> David Arendt
+>>>>
+
