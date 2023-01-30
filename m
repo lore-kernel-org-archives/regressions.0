@@ -1,93 +1,81 @@
-Received: from mail.schwarzvogel.de (skade.schwarzvogel.de [157.90.210.195])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2669620E1
-	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 10:44:33 +0000 (UTC)
-Received: from klausman by mail.schwarzvogel.de with local (Exim 4.96)
-	(envelope-from <klausman@schwarzvogel.de>)
-	id 1pMReJ-001Gy4-2W;
-	Mon, 30 Jan 2023 11:44:31 +0100
-Date: Mon, 30 Jan 2023 11:44:31 +0100
-From: Tobias Klausmann <klausman@schwarzvogel.de>
-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
-	David Roth <davidroth9@gmail.com>,
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linus <luna+bugzilla@cosmos-ink.net>
-Subject: Re: [Regression] Bug 216885 - HID++ Logitech G903 generates full
- scroll wheel events with every hi-res tick when attached via USB
-Message-ID: <Y9efj49RfzZRIDGY@skade.schwarzvogel.de>
-Mail-Followup-To: Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Linux regressions mailing list <regressions@lists.linux.dev>,
-	Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
-	David Roth <davidroth9@gmail.com>,
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linus <luna+bugzilla@cosmos-ink.net>
-References: <1bb93259-1c9f-5335-a0bf-fc8641b26650@leemhuis.info>
- <be545e72-8312-f213-0250-86a128b7b629@leemhuis.info>
- <CAO-hwJJtK3B2x8CAAYsB41X8D=1EpEYK+nSuVA+fXuz1LHkmSg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD58185E
+	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 11:04:25 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pMRxX-00009o-UI; Mon, 30 Jan 2023 12:04:23 +0100
+Message-ID: <62fb7c9a-179a-f3f0-93b6-5e74f88dad63@leemhuis.info>
+Date: Mon, 30 Jan 2023 12:04:23 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAO-hwJJtK3B2x8CAAYsB41X8D=1EpEYK+nSuVA+fXuz1LHkmSg@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: CIFS NTLM regression still annoying people (was: Re: Linux
+ regressions report for mainline [2023-01-29])
+Content-Language: en-US, de-DE
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Ronnie Sahlberg <lsahlber@redhat.com>, Steve French <stfrench@microsoft.com>
+References: <167501403214.1314424.14370223374691112185@leemhuis.info>
+ <CAHk-=wgnBBJ7hDSz5T+2FMF0JhE1Jmf6=tZEytQ6n1jZ4m2s=w@mail.gmail.com>
+From: "Linux kernel regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+In-Reply-To: <CAHk-=wgnBBJ7hDSz5T+2FMF0JhE1Jmf6=tZEytQ6n1jZ4m2s=w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675076666;cf1c5024;
+X-HE-SMSGID: 1pMRxX-00009o-UI
 
-Hi! 
+On 29.01.23 20:32, Linus Torvalds wrote:
+> On Sun, Jan 29, 2023 at 9:42 AM Regzbot (on behalf of Thorsten
+> Leemhuis) <regressions@leemhuis.info> wrote:
+>>
+>> * Andrew afaics didn’t sent a revert[1] from Vlastimir your way
+> Ok, I applied this one as tiny and clear and hitting actual user loads.
 
-On Mon, 30 Jan 2023, Benjamin Tissoires wrote:
+Great, many thx!
 
-> On Mon, Jan 30, 2023 at 10:56 AM Linux kernel regression tracking
-> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
-> >
-> > [ccing a few people that CCed to the bug]
-> >
-> > Hi, this is your Linux kernel regression tracker.
-> >
-> > On 05.01.23 09:12, Thorsten Leemhuis wrote:
-> > > [...] Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216885 :
-> > >
-> > >>  David Roth 2023-01-04 20:37:22 UTC
-> > >>
-> > >> Created attachment 303526 [details]
-> > >> Libinput record with G903 attached directly to USB
-> > >>
-> > >> Since
-> > >> https://lore.kernel.org/linux-input/20220914132146.6435-1-hadess@hadess.net/T/#u
-> > >> my Logitech G903 has gained hi res support. While normally a good
-> > >> thing, it seems that in this case it leads to generating one normal
-> > >> REL_WHEEL with each REL_WHEEL_HI_RES event instead of just a couple
-> > >> of REL_WHEEL_HI_RES, followed by the standard REL_WHEEL once a
-> > >> notch/tick is reached. This leads to overly sensitive scrolling and
-> > >> makes the wheel basically useless.
-> >
-> > Bastien, Benjamin, Jiri, that problem was reported 25 days ago now and
-> > there is still no fix in sight afaics (please correct me if I'm wrong)
-> > -- and based on the reports I've seen it seem quite a few people are
-> > hitting it. Hence please allow me to ask:
-> >
-> > Wouldn't it be best to revert that change for now (both in mainline and
-> > stable of course) and then reapply it once a fix for this problem is
-> > available? Or
-> 
-> Last I heard was that Bastien was actively trying to understand the
-> problem. I do have a G903 here but it is lacking the feature the
-> reporters have, and so I can not reproduce (there is likely a new
-> firmware/model around).
-> 
-> After a quick search on
-> https://support.logi.com/hc/en-us/search#q=G903&s=all it seems that
-> there are 2 G903: M-R0081 and M-R0068. I only own the 68 one which
-> explains why I can not reproduce it. :(
+>> * A fix[1] for a stack_depot/kmemleak issue is in next for a while already too[2]
+> This one I left alone, since it's a bit more involved and the use-case
+> is more esoteric too.
 
-I have an affected mouse and am willing to try patches/fixes, but my
-kernel coding fu is weak. 
+Totally fine with me and yeah, a bit esoteric. But when somebody bisects
+and report a problem (in this case: Boris) that already fixed in next
+for a few days, my mind yells "what a waste or energy, this could have
+been prevented by mainlining the fix a bit more quickly" -- that's why I
+brought it up.
 
-Best,
-Tobias
+> And in other news, the input regression revert you mentioned earlier
+> got pulled this morning.
+
+Ahh, great.
+
+BTW, there is one thing that still bugs me: every few weeks there is yet
+somebody new[1] complaining about the removal of support for NTLM and
+weaker authentication algorithms from cifs some time ago in
+76a3c92ec9e0. The situation[2] was improved slightly in 2f6f19c7aaad
+("cifs: fix regression in very old smb1 mounts"), but it seems some
+users of Apple Time Capsules or some Epson printer/scanner still can't
+access their devices which apparently still work fine in Windows and
+macOS[1].
+
+Yes, the issue is tricky, as there are security implications here and we
+have nobody that tests this, as you pointed out [3]. Is there
+nevertheless something somebody committed could do? Would we even be
+willing to add that support back in, in case someone commits to maintain
+and regularly test that codepath?
+
+Ciao, Thorsten
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=216682
+[2] https://bugzilla.kernel.org/show_bug.cgi?id=215375
+[3]
+https://lore.kernel.org/all/CAHk-=wjSBvRk-ksUBOiQzJd=e19UZKvOSZs1UHahK5U0QVh6RQ@mail.gmail.com/
