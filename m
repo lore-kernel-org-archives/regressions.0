@@ -1,92 +1,93 @@
-Received: from mail.schwarzvogel.de (skade.schwarzvogel.de [157.90.210.195])
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C4C17D9
-	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 10:09:30 +0000 (UTC)
-Received: from klausman by mail.schwarzvogel.de with local (Exim 4.96)
-	(envelope-from <klausman@schwarzvogel.de>)
-	id 1pMR6I-001Gpf-1w;
-	Mon, 30 Jan 2023 11:09:22 +0100
-Date: Mon, 30 Jan 2023 11:09:22 +0100
-From: Tobias Klausmann <klausman@schwarzvogel.de>
-To: Linux regressions mailing list <regressions@lists.linux.dev>
-Cc: Bastien Nocera <hadess@hadess.net>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Jiri Kosina <jikos@kernel.org>, David Roth <davidroth9@gmail.com>,
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linus <luna+bugzilla@cosmos-ink.net>
-Subject: Re: [Regression] =?iso-8859-1?Q?Bug=A02168?=
- =?iso-8859-1?Q?85_-_HID++_Logitech_G903_generates_full_scroll_whee?=
- =?iso-8859-1?Q?l?= events with every hi-res tick when attached via USB
-Message-ID: <Y9eXUl6ShjMeH/gO@skade.schwarzvogel.de>
-Mail-Followup-To: Linux regressions mailing list <regressions@lists.linux.dev>,
-	Bastien Nocera <hadess@hadess.net>,
-	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-	Jiri Kosina <jikos@kernel.org>, David Roth <davidroth9@gmail.com>,
-	"open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Linus <luna+bugzilla@cosmos-ink.net>
-References: <1bb93259-1c9f-5335-a0bf-fc8641b26650@leemhuis.info>
- <be545e72-8312-f213-0250-86a128b7b629@leemhuis.info>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 575D217D9
+	for <regressions@lists.linux.dev>; Mon, 30 Jan 2023 10:11:22 +0000 (UTC)
+Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1pMR8C-0003fC-8Y; Mon, 30 Jan 2023 11:11:20 +0100
+Message-ID: <ee9518a8-64ce-142d-ecfd-f560978352b0@leemhuis.info>
+Date: Mon, 30 Jan 2023 11:11:19 +0100
 Precedence: bulk
 X-Mailing-List: regressions@lists.linux.dev
 List-Id: <regressions.lists.linux.dev>
 List-Subscribe: <mailto:regressions+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:regressions+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <be545e72-8312-f213-0250-86a128b7b629@leemhuis.info>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: Latest RC causing web browser crash
+Content-Language: en-US, de-DE
+To: Chris McGimpsey-Jones <chrisjones.unixmen@gmail.com>
+References: <CAPaMSD3MM2BTW0REi4onUCPCLzz1B=-x0j9Uuvf2NHUOSefQ-w@mail.gmail.com>
+From: "Linux kernel regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Cc: linux-kernel@vger.kernel.org,
+ Linux kernel regressions list <regressions@lists.linux.dev>
+In-Reply-To: <CAPaMSD3MM2BTW0REi4onUCPCLzz1B=-x0j9Uuvf2NHUOSefQ-w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675073482;403f0e08;
+X-HE-SMSGID: 1pMR8C-0003fC-8Y
 
-Hi! 
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
-On Mon, 30 Jan 2023, Linux kernel regression tracking (Thorsten Leemhuis) wrote:
-> [ccing a few people that CCed to the bug]
-> 
-> Hi, this is your Linux kernel regression tracker.
-> 
-> On 05.01.23 09:12, Thorsten Leemhuis wrote:
-> > [...] Quoting from https://bugzilla.kernel.org/show_bug.cgi?id=216885 :
-> > 
-> >>  David Roth 2023-01-04 20:37:22 UTC
-> >>
-> >> Created attachment 303526 [details]
-> >> Libinput record with G903 attached directly to USB
-> >>
-> >> Since
-> >> https://lore.kernel.org/linux-input/20220914132146.6435-1-hadess@hadess.net/T/#u
-> >> my Logitech G903 has gained hi res support. While normally a good
-> >> thing, it seems that in this case it leads to generating one normal
-> >> REL_WHEEL with each REL_WHEEL_HI_RES event instead of just a couple
-> >> of REL_WHEEL_HI_RES, followed by the standard REL_WHEEL once a
-> >> notch/tick is reached. This leads to overly sensitive scrolling and
-> >> makes the wheel basically useless.
-> 
-> Bastien, Benjamin, Jiri, that problem was reported 25 days ago now and
-> there is still no fix in sight afaics (please correct me if I'm wrong)
-> -- and based on the reports I've seen it seem quite a few people are
-> hitting it. Hence please allow me to ask:
-> 
-> Wouldn't it be best to revert that change for now (both in mainline and
-> stable of course) and then reapply it once a fix for this problem is
-> available? Or
+Hi, this is your Linux kernel regression tracker.
 
-I think there was something cut off or that `Or` is leftovers.
+On 28.01.23 02:14, Chris McGimpsey-Jones wrote:
+> Is anyone else with the latest RC having issues with Google Chrome
+> browser, causing it to crash after a couple of minutes?
 
-As for no fix: correct, there is no fix yet, though the workaround of
-blacklisting the module sortof works. _Not_ having hires support usually
-doesn't break anything, as it's a relatively new feature/functionality,
-and so many pieces of userland (GTK+, Qt etc) need to be explicitly
-configured to use it, and fall back to lowres in a benign way. I would
-have never noticed this if I didn't use a distro kernel on one machine
-(my hand-built ones omit the module entirely).
+FWIW, this is unlikely to get any traction: nearly nobody reads the LKML
+anymore, hence it's unlikely that someone that can help will see it.
 
-That said, figuring out what is going on and what to do is not trivial,
-since most people won't think "kernel" when they notice their mouse's
-behavior has changed. My liberal reporting of bugs with Debian, libinput
-and then the kernel (and linking them) was a deliberate attempt in
-leaving breadcrumbs for people to find.
+> I reverted (temporarily) back to Linux 6.1.0 and it's fine.
+> Tested a couple of times, the issue can be reproduced.
 
-Best,
-Tobias
+Are there any crash dumps that might indicate what might cause the problem?
+
+> I don't know of the relationship between the kernel and web browser
+> and it seems odd the kernel would cause this problem, but there's no
+> disputing it is the cause as I can reproduce the issue.
+
+Well, things like this don't happen frequently, but they do happen.
+Without more data it's just very hard to get to the root of this issue,
+as it could be caused by all sorts of things (mm and drm are two most
+likely suspects, but it could be something totally different).
+
+Could you try to bisect the issue? There are various pages on the net
+that explain how to do that.
+
+Anyway for the rest of this mail:
+
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
+
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
+
+#regzbot ^introduced v6.1..v6.2-rc5
+#regzbot title chrome crashes
+#regzbot ignore-activity
+
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
+
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
